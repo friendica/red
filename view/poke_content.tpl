@@ -8,8 +8,8 @@
 
 <div id="poke-recip-label">$clabel</div>
 <br />
-<input id="recip" type="text" size="64" maxlength="255" value="" name="pokename" autocomplete="off">
-<input id="recip-complete" type="hidden" value="" name="cid">
+<input id="recip" type="text" size="64" maxlength="255" value="$name" name="pokename" autocomplete="off">
+<input id="recip-complete" type="hidden" value="$id" name="cid">
 
 <br />
 <br />

@@ -2818,7 +2818,57 @@ function local_delivery($importer,$data) {
 				$datarray['owner-avatar'] = $importer['thumb'];
 			}
 
-			$r = item_store($datarray);
+			$posted_id = item_store($datarray);
+
+			if(stristr($datarray['verb'],ACTIVITY_POKE)) {
+				$verb = urldecode(substr($datarray['verb'],strpos($datarray['verb'],'#')+1));
+				if(! $verb)
+					continue;
+				$xo = parse_xml_string($datarray['object'],false);
+
+				if(($xo->type == ACTIVITY_OBJ_PERSON) && ($xo->id)) {
+
+					// somebody was poked/prodded. Was it me?
+
+					$links = parse_xml_string("<links>".unxmlify($xo->link)."</links>",false);
+
+			        foreach($links->link as $l) {
+            			$atts = $l->attributes();
+            			switch($atts['rel']) {
+                			case "alternate": 
+								$Blink = $atts['href'];
+								break;
+							default:
+								break;
+			            }
+        			}
+					if($Blink && link_compare($Blink,$a->get_baseurl() . '/profile/' . $importer['nickname'])) {
+
+						// send a notification
+						require_once('include/enotify.php');
+								
+						notification(array(
+							'type'         => NOTIFY_POKE,
+							'notify_flags' => $importer['notify-flags'],
+							'language'     => $importer['language'],
+							'to_name'      => $importer['username'],
+							'to_email'     => $importer['email'],
+							'uid'          => $importer['importer_uid'],
+							'item'         => $datarray,
+							'link'		   => $a->get_baseurl() . '/display/' . $importer['nickname'] . '/' . $posted_id,
+							'source_name'  => stripslashes($datarray['author-name']),
+							'source_link'  => $datarray['author-link'],
+							'source_photo' => ((link_compare($datarray['author-link'],$importer['url'])) 
+								? $importer['thumb'] : $datarray['author-avatar']),
+							'verb'         => $datarray['verb'],
+							'otype'        => 'person',
+							'activity'     => $verb,
+
+						));
+					}
+				}
+			}			
+
 			continue;
 		}
 	}

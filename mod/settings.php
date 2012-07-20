@@ -373,6 +373,8 @@ function settings_post(&$a) {
 		$notify += intval($_POST['notify6']);
 	if(x($_POST,'notify7'))
 		$notify += intval($_POST['notify7']);
+	if(x($_POST,'notify8'))
+		$notify += intval($_POST['notify8']);
 
 	$email_changed = false;
 
@@ -970,6 +972,7 @@ function settings_content(&$a) {
 		'$notify5'	=> array('notify5', t('You receive a private message'), ($notify & NOTIFY_MAIL), NOTIFY_MAIL, ''),
 		'$notify6'  => array('notify6', t('You receive a friend suggestion'), ($notify & NOTIFY_SUGGEST), NOTIFY_SUGGEST, ''),		
 		'$notify7'  => array('notify7', t('You are tagged in a post'), ($notify & NOTIFY_TAGSELF), NOTIFY_TAGSELF, ''),		
+		'$notify8'  => array('notify8', t('You are poked/prodded/etc. in a post'), ($notify & NOTIFY_POKE), NOTIFY_POKE, ''),		
 		
 		
 		'$h_advn' => t('Advanced Account/Page Type Settings'),

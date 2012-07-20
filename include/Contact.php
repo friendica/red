@@ -188,6 +188,7 @@ function contact_photo_menu($contact) {
 	$status_link="";
 	$photos_link="";
 	$posts_link="";
+	$poke_link="";
 
 	$sparkle = false;
 	if($contact['network'] === NETWORK_DFRN) {
@@ -207,10 +208,12 @@ function contact_photo_menu($contact) {
 		$pm_url = $a->get_baseurl() . '/message/new/' . $contact['id'];
 	}
 
+	$poke_link = $a->get_baseurl() . '/poke/?f=&c=' . $contact['id'];
 	$contact_url = $a->get_baseurl() . '/contacts/' . $contact['id'];
 	$posts_link = $a->get_baseurl() . '/network/?cid=' . $contact['id'];
 
 	$menu = Array(
+		t("Poke") => $poke_link,
 		t("View Status") => $status_link,
 		t("View Profile") => $profile_link,
 		t("View Photos") => $photos_link,		

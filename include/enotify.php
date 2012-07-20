@@ -147,6 +147,24 @@ function notification($params) {
 		$itemlink =  $params['link'];
 	}
 
+	if($params['type'] == NOTIFY_POKE) {
+
+		$subject =	sprintf( t('[Friendica:Notify] %1$s poked you') , $params['source_name']);
+		$preamble = sprintf( t('%1$s poked you at %2$s') , $params['source_name'], $sitename);
+		$epreamble = sprintf( t('%1$s [url=%2$s]poked you[/url].') , 
+								'[url=' . $params['source_link'] . ']' . $params['source_name'] . '[/url]',
+								$params['link']); 
+
+		$subject = str_replace('poked', t($params['activity']), $subject);
+		$preamble = str_replace('poked', t($params['activity']), $preamble);
+		$epreamble = str_replace('poked', t($params['activity']), $epreamble);
+
+		$sitelink = t('Please visit %s to view and/or reply to the conversation.');
+		$tsitelink = sprintf( $sitelink, $siteurl );
+		$hsitelink = sprintf( $sitelink, '<a href="' . $siteurl . '">' . $sitename . '</a>');
+		$itemlink =  $params['link'];
+	}
+
 	if($params['type'] == NOTIFY_TAGSHARE) {
 		$subject =	sprintf( t('[Friendica:Notify] %s tagged your post') , $params['source_name']);
 		$preamble = sprintf( t('%1$s tagged your post at %2$s') , $params['source_name'], $sitename);

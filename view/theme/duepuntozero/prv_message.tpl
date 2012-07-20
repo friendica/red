@@ -9,7 +9,7 @@ $parent
 <div id="prvmail-to-label">$to</div>
 
 {{ if $showinputs }}
-<input type="text" id="recip" name="messageto" value="$prefill" maxlength="255" size="64" tabindex="10" />
+<input type="text" id="recip" name="messagerecip" value="$prefill" maxlength="255" size="64" tabindex="10" />
 <input type="hidden" id="recip-complete" name="messageto" value="$preid">
 {{ else }}
 $select

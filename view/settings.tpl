@@ -123,6 +123,7 @@ $group_select
 {{inc field_intcheckbox.tpl with $field=$notify5 }}{{endinc}}
 {{inc field_intcheckbox.tpl with $field=$notify6 }}{{endinc}}
 {{inc field_intcheckbox.tpl with $field=$notify7 }}{{endinc}}
+{{inc field_intcheckbox.tpl with $field=$notify8 }}{{endinc}}
 </div>
 
 </div>
