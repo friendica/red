@@ -10,6 +10,11 @@ home.html
 addon
 *~
 
+# patch attempts
+*.orig
+*.rej
+
+
 #ignore documentation, it should be newly built 
 doc/api
 
