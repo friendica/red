@@ -24,12 +24,12 @@
 	<div id="zregister-email-end"  class="zregister-field-end"></div>
 
 	<label for="zregister-password" id="label-zregister-password" class="zregister-label" >$label_pass1</label>
-	<input type="text" maxlength="72" size="32" name="password" id="zregister-password" class="zregister-input" value="$pass1" >
+	<input type="password" maxlength="72" size="32" name="password" id="zregister-password" class="zregister-input" value="$pass1" >
 	<div id="zregister-password-feedback" class="zregister-feedback"></div>
 	<div id="zregister-password-end"  class="zregister-field-end"></div>
 
 	<label for="zregister-password2" id="label-zregister-password2" class="zregister-label" >$label_pass2</label>
-	<input type="text" maxlength="72" size="32" name="password2" id="zregister-password2" class="zregister-input" value="$pass2" >
+	<input type="password" maxlength="72" size="32" name="password2" id="zregister-password2" class="zregister-input" value="$pass2" >
 	<div id="zregister-password2-feedback" class="zregister-feedback"></div>
 	<div id="zregister-password2-end"  class="zregister-field-end"></div>
 
