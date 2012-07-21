@@ -9,8 +9,8 @@ require_once('include/language.php');
 require_once('include/nav.php');
 require_once('include/cache.php');
 
-define ( 'FRIENDICA_PLATFORM',     'Red');
-define ( 'FRIENDICA_VERSION',      trim(file_get_contents('version.inc')));
+define ( 'FRIENDICA_PLATFORM',     'Friendica Red');
+define ( 'FRIENDICA_VERSION',      trim(file_get_contents('version.inc')) . 'R');
 define ( 'DFRN_PROTOCOL_VERSION',  '2.23'    );
 define ( 'DB_UPDATE_VERSION',      1153      );
 
@@ -573,7 +573,7 @@ if(! class_exists('App')) {
 			$this->page['htmlhead'] = replace_macros($tpl,array(
 				'$baseurl' => $this->get_baseurl(), // FIXME for z_path!!!!
 				'$local_user' => local_user(),
-				'$generator' => 'Friendica' . ' ' . FRIENDICA_VERSION,
+				'$generator' => FRIENDICA_PLATFORM . ' ' . FRIENDICA_VERSION,
 				'$delitem' => t('Delete this item?'),
 				'$comment' => t('Comment'),
 				'$showmore' => t('show more'),
@@ -879,8 +879,6 @@ if(! function_exists('login')) {
 			);
 		}
 
-		$noid = get_config('system','no_openid');
-	
 		$dest_url = $a->get_baseurl(true) . '/' . $a->query_string;
 
 		if(local_user()) {
@@ -898,11 +896,8 @@ if(! function_exists('login')) {
 			'$logout'       => t('Logout'),
 			'$login'        => t('Login'),
 	
-			'$lname'	 	=> array('username', t('Nickname or Email address: ') , '', ''),
-			'$lpassword' 	=> array('password', t('Password: '), '', ''),
-	
-			'$openid'		=> !$noid,
-			'$lopenid'      => array('openid_url', t('Or login using OpenID: '),'',''),
+			'$lname'	 	=> array('username', t('Email') , '', ''),
+			'$lpassword' 	=> array('password', t('Password'), '', ''),
 	
 			'$hiddens'      => $hiddens,
 	

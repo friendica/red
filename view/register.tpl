@@ -11,11 +11,6 @@
 	<p id="register-fill-desc">$fillwith</p>
 	<p id="register-fill-ext">$fillext</p>
 
-	<div id="register-openid-wrapper" >
-			$oidhtml
-	</div>
-	<div id="register-openid-end" ></div>
-
 {{ if $invitations }}
 
 	<p id="register-invite-desc">$invite_desc</p>

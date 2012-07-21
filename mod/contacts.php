@@ -42,7 +42,6 @@ function contacts_init(&$a) {
 
 	$a->page['aside'] .= findpeople_widget();
 
-	$a->page['aside'] .= networks_widget('contacts',$_GET['nets']);
 	$base = $a->get_baseurl();
 
 	$a->page['htmlhead'] .= '<script src="' . $a->get_baseurl(true) . '/library/jquery_ac/friendica.complete.js" ></script>';

@@ -95,7 +95,7 @@ function network_init(&$a) {
 
 	$a->page['aside'] .= group_side('network','network',true,$group_id);
 	$a->page['aside'] .= posted_date_widget($a->get_baseurl() . '/network',local_user(),false);	
-	$a->page['aside'] .= networks_widget($a->get_baseurl(true) . '/network',(x($_GET, 'nets') ? $_GET['nets'] : ''));
+
 	$a->page['aside'] .= saved_searches($search);
 	$a->page['aside'] .= fileas_widget($a->get_baseurl(true) . '/network',(x($_GET, 'file') ? $_GET['file'] : ''));
 
@@ -128,7 +128,6 @@ function saved_searches($search) {
 		. ((x($_GET,'cid'))   ? '&cid='   . $_GET['cid']   : '') 
 		. ((x($_GET,'star'))  ? '&star='  . $_GET['star']  : '')
 		. ((x($_GET,'conv'))  ? '&conv='  . $_GET['conv']  : '')
-		. ((x($_GET,'nets'))  ? '&nets='  . $_GET['nets']  : '')
 		. ((x($_GET,'cmin'))  ? '&cmin='  . $_GET['cmin']  : '')
 		. ((x($_GET,'cmax'))  ? '&cmax='  . $_GET['cmax']  : '')
 		. ((x($_GET,'file'))  ? '&file='  . $_GET['file']  : '');
@@ -353,7 +352,6 @@ function network_content(&$a, $update = 0) {
 	$liked = ((x($_GET,'liked')) ? intval($_GET['liked']) : 0);
 	$conv = ((x($_GET,'conv')) ? intval($_GET['conv']) : 0);
 	$spam = ((x($_GET,'spam')) ? intval($_GET['spam']) : 0);
-	$nets = ((x($_GET,'nets')) ? $_GET['nets'] : '');
 	$cmin = ((x($_GET,'cmin')) ? intval($_GET['cmin']) : 0);
 	$cmax = ((x($_GET,'cmax')) ? intval($_GET['cmax']) : 99);
 	$file = ((x($_GET,'file')) ? $_GET['file'] : '');
@@ -365,19 +363,6 @@ function network_content(&$a, $update = 0) {
 	if($cid)
 		$def_acl = array('allow_cid' => '<' . intval($cid) . '>');
 
-	if($nets) {
-		$r = q("select id from contact where uid = %d and network = '%s' and self = 0",
-			intval(local_user()),
-			dbesc($nets)
-		);
-
-		$str = '';
-		if(count($r))
-			foreach($r as $rr)
-				$str .= '<' . $rr['id'] . '>';
-		if(strlen($str))
-			$def_acl = array('allow_cid' => $str);
-	}
 
 	if(! $update) {
 
@@ -407,15 +392,6 @@ function network_content(&$a, $update = 0) {
 		if($search)
 			$o .= '<h2>' . t('Search Results For:') . ' '  . htmlspecialchars($search) . '</h2>';
 
-		if($group) {
-			if(($t = group_public_members($group)) && (! get_pconfig(local_user(),'system','nowarn_insecure'))) {
-				notice( sprintf( tt('Warning: This group contains %s member from an insecure network.',
-									'Warning: This group contains %s members from an insecure network.',
-									$t), $t ) . EOL);
-				notice( t('Private messages to this group are at risk of public disclosure.') . EOL);
-			}
-		}
-
 		nav_set_selected('network');
 
 		$celeb = ((($a->user['page-flags'] == PAGE_SOAPBOX) || ($a->user['page-flags'] == PAGE_COMMUNITY)) ? true : false);
@@ -427,7 +403,7 @@ function network_content(&$a, $update = 0) {
 			'nickname' => $a->user['nickname'],
 			'lockstate' => ((($group) || ($cid) || ($nets) || (is_array($a->user) && ((strlen($a->user['allow_cid'])) || (strlen($a->user['allow_gid'])) || (strlen($a->user['deny_cid'])) || (strlen($a->user['deny_gid']))))) ? 'lock' : 'unlock'),
 			'acl' => populate_acl((($group || $cid || $nets) ? $def_acl : $a->user), $celeb),
-			'bang' => (($group || $cid || $nets) ? '!' : ''),
+			'bang' => (($group || $cid) ? '!' : ''),
 			'visitor' => 'block',
 			'profile_uid' => local_user()
 		);
@@ -444,7 +420,7 @@ function network_content(&$a, $update = 0) {
 	
 	$sql_options  = (($star) ? " and starred = 1 " : '');
 
-	$sql_nets = (($nets) ? sprintf(" and `contact`.`network` = '%s' ", dbesc($nets)) : '');
+	$sql_nets = '';
 
 	$sql_extra = " AND `item`.`parent` IN ( SELECT `parent` FROM `item` WHERE `id` = `parent` $sql_options ) ";
 
@@ -515,7 +491,6 @@ function network_content(&$a, $update = 0) {
 			. ((x($_GET,'liked'))  ? '&liked='  . $_GET['liked']  : '') 
 			. ((x($_GET,'conv'))   ? '&conv='   . $_GET['conv']   : '') 
 			. ((x($_GET,'spam'))   ? '&spam='   . $_GET['spam']   : '') 
-			. ((x($_GET,'nets'))   ? '&nets='   . $_GET['nets']   : '') 
 			. ((x($_GET,'cmin'))   ? '&cmin='   . $_GET['cmin']   : '') 
 			. ((x($_GET,'cmax'))   ? '&cmax='   . $_GET['cmax']   : '') 
 			. ((x($_GET,'file'))   ? '&file='   . $_GET['file']   : '') 
@@ -538,7 +513,6 @@ function network_content(&$a, $update = 0) {
 		
 				. 'var network_search = "' . $_GET['search'] . '"' . ";\r\n"
 				. 'var network_order = "' . $_GET['order'] . '"' . ";\r\n"
-				. 'var network_nets = "' . $_GET['nets'] . '"' . ";\r\n"
 				. 'var network_file = "' . $_GET['file'] . '"' . ";\r\n"
 				. 'var network_date_end = "' . $datequery . '"' . ";\r\n"
 				. 'var network_date_start = "' . $datequery2 . '"' . ";\r\n"

@@ -23,7 +23,10 @@
 </select>
 <br />
 <br />
-
+<div id="poke-private-desc">$prv_desc</div>
+<input type="checkbox" name="private" value="1" />
+<br />
+<br />
 <input type="submit" name="submit" value="$submit" />
 </form>
 

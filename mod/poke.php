@@ -28,6 +28,8 @@ function poke_init(&$a) {
 		return;
 
 
+	$private = ((x($_GET,'private')) ? intval($_GET['private']) : 0);
+
 	logger('poke: verb ' . $verb . ' contact ' . $contact_id, LOGGER_DEBUG);
 
 
@@ -62,13 +64,14 @@ function poke_init(&$a) {
 	$arr['author-link']   = $poster['url'];
 	$arr['author-avatar'] = $poster['thumb'];
 	$arr['title']         = '';
-	$arr['allow_cid']     = $a->user['allow_cid'];
-	$arr['allow_gid']     = $a->user['allow_gid'];
-	$arr['deny_cid']      = $a->user['deny_cid'];
-	$arr['deny_gid']      = $a->user['deny_gid'];
+	$arr['allow_cid']     = (($private) ? '<' . $target['id']. '>' : $a->user['allow_cid']);
+	$arr['allow_gid']     = (($private) ? '' : $a->user['allow_gid']);
+	$arr['deny_cid']      = (($private) ? '' : $a->user['deny_cid']);
+	$arr['deny_gid']      = (($private) ? '' : $a->user['deny_gid']);
 	$arr['last-child']    = 1;
 	$arr['visible']       = 1;
 	$arr['verb']          = $activity;
+	$arr['private']       = $private;
 	$arr['object-type']   = ACTIVITY_OBJ_PERSON;
 
 	$arr['origin']        = 1;
@@ -150,8 +153,8 @@ EOT;
 
 	$shortlist = array();
 	foreach($verbs as $k => $v)
-		$shortlist[] = array($k,$v[1]);
-
+		if($v[1] !== 'NOTRANSLATION')
+			$shortlist[] = array($k,$v[1]);
 
 	$tpl = get_markup_template('poke_content.tpl');
 
@@ -161,6 +164,7 @@ EOT;
 		'$clabel' => t('Recipient'),
 		'$choice' => t('Choose what you wish to do to recipient'),
 		'$verbs' => $shortlist,
+		'$prv_desc' => t('Make this post private'),
 		'$submit' => t('Submit'),
 		'$name' => $name,
 		'$id' => $id

@@ -202,24 +202,13 @@ function register_content(&$a) {
 	$photo        = ((x($_POST,'photo'))        ? $_POST['photo']        : ((x($_GET,'photo'))        ? hex2bin($_GET['photo'])        : ''));
 	$invite_id    = ((x($_POST,'invite_id'))    ? $_POST['invite_id']    : ((x($_GET,'invite_id'))    ? $_GET['invite_id']             : ''));
 
-	$noid = get_config('system','no_openid');
 
-	if($noid) {
-		$oidhtml = '';
-		$fillwith = '';
-		$fillext = '';
-		$oidlabel = '';
-	}
-	else {
-		$oidhtml = '<label for="register-openid" id="label-register-openid" >$oidlabel</label><input type="text" maxlength="60" size="32" name="openid_url" class="openid" id="register-openid" value="$openid" >';
-		$fillwith = t("You may \x28optionally\x29 fill in this form via OpenID by supplying your OpenID and clicking 'Register'.");
-		$fillext =  t('If you are not familiar with OpenID, please leave that field blank and fill in the rest of the items.');
-		$oidlabel = t("Your OpenID \x28optional\x29: ");
-	}
+	$oidhtml = '';
+	$fillwith = '';
+	$fillext = '';
+	$oidlabel = '';
 
-	// I set this and got even more fake names than before...
-
-	$realpeople = ''; // t('Members of this network prefer to communicate with real people who use their real names.');
+	$realpeople = ''; 
 
 	if(get_config('system','publish_all')) {
 		$profile_publish_reg = '<input type="hidden" name="profile_publish_reg" value="1" />';

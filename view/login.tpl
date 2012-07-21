@@ -7,12 +7,6 @@
 	{{ inc field_password.tpl with $field=$lpassword }}{{ endinc }}
 	</div>
 	
-	{{ if $openid }}
-			<div id="login_openid">
-			{{ inc field_openid.tpl with $field=$lopenid }}{{ endinc }}
-			</div>
-	{{ endif }}
-
 	<div id="login-extra-links">
 		{{ if $register }}<a href="register" title="$register.title" id="register-link">$register.desc</a>{{ endif }}
         <a href="lostpass" title="$lostpass" id="lost-password-link" >$lostlink</a>
