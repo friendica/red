@@ -282,6 +282,26 @@ define ( 'GRAVITY_PARENT',       0);
 define ( 'GRAVITY_LIKE',         3);
 define ( 'GRAVITY_COMMENT',      6);
 
+
+/**
+ * Account Flags
+ */
+
+define ( 'ACCOUNT_OK',           0x0000 );
+define ( 'ACCOUNT_UNVERIFIED',   0x0001 );
+define ( 'ACCOUNT_BLOCKED',      0x0002 );
+define ( 'ACCOUNT_EXPIRED',      0x0004 );
+define ( 'ACCOUNT_REMOVED',      0x0008 );
+
+/**
+ * Account roles
+ */
+
+define ( 'ACCOUNT_ROLE_ADMIN'    0x1000 );
+
+
+
+
 /**
  *
  * Reverse the effect of magic_quotes_gpc if it is enabled.
