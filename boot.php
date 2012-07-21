@@ -352,6 +352,7 @@ function startup() {
 if(! class_exists('App')) {
 	class App {
 
+		public  $account;
 		public  $module_loaded = false;
 		public  $query_string;
 		public  $config;
