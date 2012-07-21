@@ -297,7 +297,7 @@ define ( 'ACCOUNT_REMOVED',      0x0008 );
  * Account roles
  */
 
-define ( 'ACCOUNT_ROLE_ADMIN'    0x1000 );
+define ( 'ACCOUNT_ROLE_ADMIN',    0x1000 );
 
 
 
