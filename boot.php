@@ -585,22 +585,8 @@ if(! class_exists('App')) {
 		}
 
 		function init_pagehead() {
-			$interval = ((local_user()) ? get_pconfig(local_user(),'system','update_interval') : 40000);
-			if($interval < 10000)
-				$interval = 40000;
-
 			$this->page['title'] = $this->config['sitename'];
-			$tpl = file_get_contents('view/head.tpl');
-			$this->page['htmlhead'] = replace_macros($tpl,array(
-				'$baseurl' => $this->get_baseurl(), // FIXME for z_path!!!!
-				'$local_user' => local_user(),
-				'$generator' => FRIENDICA_PLATFORM . ' ' . FRIENDICA_VERSION,
-				'$delitem' => t('Delete this item?'),
-				'$comment' => t('Comment'),
-				'$showmore' => t('show more'),
-				'$showfewer' => t('show fewer'),
-				'$update_interval' => $interval
-			));
+			$this->page['htmlhead'] = file_get_contents('view/head.tpl');
 		}
 
 		function set_curl_code($code) {

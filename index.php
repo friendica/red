@@ -356,9 +356,39 @@ if($a->module != 'install') {
  * Build the page - now that we have all the components
  */
 
-$a->page['htmlhead'] = replace_macros($a->page['htmlhead'], 
-	array('$stylesheet' => current_theme_url(),
-		'$theme' => current_theme() 
+
+$page_css = 'view/theme/' . current_theme() . '/' 
+	. ((x($a->page,'layout')) ? $a->page['layout'] : 'layout' ) . '.css';
+
+if(! file_exists($page_css))
+	$page_css = str_replace('theme/' . current_theme() . '/', '', $page_css);
+
+$module_css = 'view/theme/' . current_theme() . '/mod_' . $a->module . '.css';  
+if(! file_exists($module_css))
+	$module_css = str_replace('theme/' . current_theme() . '/', '', $module_css);
+if(! file_exists($module_css))
+	$module_css = null;
+
+	$interval = ((local_user()) ? get_pconfig(local_user(),'system','update_interval') : 40000);
+	if($interval < 10000)
+		$interval = 40000;
+
+	$a->page['title'] = $a->config['sitename'];
+
+
+	$a->page['htmlhead'] = replace_macros($a->page['htmlhead'], array(
+		'$baseurl' => $a->get_baseurl(),
+		'$local_user' => local_user(),
+		'$generator' => FRIENDICA_PLATFORM . ' ' . FRIENDICA_VERSION,
+		'$delitem' => t('Delete this item?'),
+		'$comment' => t('Comment'),
+		'$showmore' => t('show more'),
+		'$showfewer' => t('show fewer'),
+		'$update_interval' => $interval,
+		'$page_css'   	 => $a->get_baseurl() . '/' . $page_css,
+		'$module_css'    => $a->get_baseurl() . '/' . $module_css,
+		'$stylesheet'    => current_theme_url(),
+		'$theme'         => current_theme() 
 	));
 
 $page    = $a->page;

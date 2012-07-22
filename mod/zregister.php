@@ -1,7 +1,12 @@
 <?php
 
-if(! function_exists('register_post')) {
-function register_post(&$a) {
+
+function zregister_init(&$a) {
+	$a->page['layout'] = 'full';
+}
+
+
+function zregister_post(&$a) {
 
 	global $lang;
 
@@ -155,7 +160,7 @@ function register_post(&$a) {
 	}
 
 	return;
-}}
+}
 
 
 

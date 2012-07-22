@@ -1,11 +1,16 @@
 <meta http-equiv="Content-Type" content="text/html;charset=utf-8" />
 <base href="$baseurl/" />
 <meta name="generator" content="$generator" />
+
 <link rel="stylesheet" href="$baseurl/library/fancybox/jquery.fancybox-1.3.4.css" type="text/css" media="screen" />
 <link rel="stylesheet" href="$baseurl/library/tiptip/tipTip.css" type="text/css" media="screen" />
 <link rel="stylesheet" href="$baseurl/library/jgrowl/jquery.jgrowl.css" type="text/css" media="screen" />
+<link rel="stylesheet" type="text/css" href="$baseurl/library/jslider/bin/jquery.slider.min.css" media="screen" />
 
-<link rel="stylesheet" type="text/css" href="$baseurl/library/jslider/bin/jquery.slider.min.css" />
+<link rel="stylesheet" type="text/css" href="$page_css" media="all" />
+{{ if $mod_css }}
+<link rel="stylesheet" type="text/css" href="$mod_css" media="all" />
+{{ endif }}
 <link rel="stylesheet" type="text/css" href="$stylesheet" media="all" />
 
 <link rel="shortcut icon" href="$baseurl/images/friendica-32.png" />
