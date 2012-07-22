@@ -1,0 +1,20 @@
+
+nav {
+	height: 94px;
+	display: block;
+}
+
+aside {
+	display: block;
+	min-height: 112px;
+	width: 200px;
+	position: absolute;
+	float: left;
+}
+
+
+section {
+	padding-left: 250px;
+	display: block;
+	min-height: 112px;	
+}

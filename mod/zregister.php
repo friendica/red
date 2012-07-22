@@ -2,7 +2,7 @@
 
 
 function zregister_init(&$a) {
-	$a->page['layout'] = 'full';
+	$a->page['template'] = 'full';
 }
 
 

@@ -358,15 +358,17 @@ if($a->module != 'install') {
 
 
 $page_css = 'view/theme/' . current_theme() . '/' 
-	. ((x($a->page,'layout')) ? $a->page['layout'] : 'layout' ) . '.css';
+	. ((x($a->page,'template')) ? $a->page['template'] : 'default' ) . '.css';
 
 if(! file_exists($page_css))
 	$page_css = str_replace('theme/' . current_theme() . '/', '', $page_css);
 
 $module_css = 'view/theme/' . current_theme() . '/mod_' . $a->module . '.css';  
+
 if(! file_exists($module_css))
 	$module_css = str_replace('theme/' . current_theme() . '/', '', $module_css);
-if(! file_exists($module_css))
+
+if(! file_exists($module_css)) 
 	$module_css = null;
 
 	$interval = ((local_user()) ? get_pconfig(local_user(),'system','update_interval') : 40000);
@@ -386,7 +388,7 @@ if(! file_exists($module_css))
 		'$showfewer' => t('show fewer'),
 		'$update_interval' => $interval,
 		'$page_css'   	 => $a->get_baseurl() . '/' . $page_css,
-		'$module_css'    => $a->get_baseurl() . '/' . $module_css,
+		'$module_css'    => (($module_css) ? $a->get_baseurl() . '/' . $module_css : null),
 		'$stylesheet'    => current_theme_url(),
 		'$theme'         => current_theme() 
 	));

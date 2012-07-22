@@ -1,0 +1,10 @@
+
+nav {
+	height: 94px;
+	display: block;
+}
+
+section {
+	display: block;
+	min-height: 112px;	
+}

@@ -87,7 +87,6 @@ blockquote {
 
 /* nav */
 nav {
-	height: 94px;
 	display: block;
 	margin: 0px 10%;
 	border-bottom: 1px solid #babdb6;
@@ -176,14 +175,11 @@ nav #nav-link-wrapper .nav-link {
 aside {
 	display: block;
 	min-height: 112px;
-	width: 200px;
 	margin-left: 10%;
 	padding: 1em;
-	float: left;
 	background-image: url(border.jpg);
 	background-position: top left;
 	background-repeat: no-repeat;
-	position: absolute;
 }
 
 #dfrn-request-link {
@@ -211,16 +207,13 @@ aside {
 section {
 	margin: 0px 10%;
 	padding-top: 1em;
-	padding-left: 250px;
 	padding-right: 1em;
-	display: block;
 	background-color: #ffffff;
 	background-image: url(border.jpg);
 	background-position: top right;
 	background-repeat: no-repeat;
-	min-height: 112px;
-	
 }
+
 .tabs {
 	height: 27px;
 	background-image: url(head.jpg);
@@ -3304,25 +3297,4 @@ ul.menu-popup {
 	position: relative; 
 	left: 5%; 
 	width: 90%;
-}
-
-
-#zregister-form {
-	font-size: 1.4em;	
-}
-
-.zregister-label {
-	float: left;
-	width: 275px;
-}
-
-.zregister-input {
-	float: left;
-	width: 275px;
-	padding: 5px;
-}
-
-.zregister-field-end {
-	clear: both;
-	margin-bottom: 20px;
 }

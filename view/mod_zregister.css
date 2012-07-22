@@ -1,0 +1,27 @@
+
+h2 {
+	margin-left: 15%;
+	margin-top: 15%;
+}
+
+#zregister-form {
+	font-size: 1.4em;	
+	margin-left: 15%;
+	margin-top: 5%;
+}
+
+.zregister-label {
+	float: left;
+	width: 275px;
+}
+
+.zregister-input {
+	float: left;
+	width: 275px;
+	padding: 5px;
+}
+
+.zregister-field-end {
+	clear: both;
+	margin-bottom: 20px;
+}

@@ -8,8 +8,8 @@
 <link rel="stylesheet" type="text/css" href="$baseurl/library/jslider/bin/jquery.slider.min.css" media="screen" />
 
 <link rel="stylesheet" type="text/css" href="$page_css" media="all" />
-{{ if $mod_css }}
-<link rel="stylesheet" type="text/css" href="$mod_css" media="all" />
+{{ if $module_css }}
+<link rel="stylesheet" type="text/css" href="$module_css" media="all" />
 {{ endif }}
 <link rel="stylesheet" type="text/css" href="$stylesheet" media="all" />
 
