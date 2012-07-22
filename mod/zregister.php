@@ -8,13 +8,11 @@ function zregister_init(&$a) {
 
 function zregister_post(&$a) {
 
-	global $lang;
-
 	$verified = 0;
 	$blocked  = 1;
 
 	$arr = array('post' => $_POST);
-	call_hooks('register_post', $arr);
+	call_hooks('zregister_post', $arr);
 
 	$max_dailies = intval(get_config('system','max_daily_registrations'));
 	if($max_dailies) {
@@ -24,21 +22,21 @@ function zregister_post(&$a) {
 		}
 	}
 
-	switch($a->config['register_policy']) {
+	switch(get_config('system','register_policy')) {
 
-	
 	case REGISTER_OPEN:
 		$blocked = 0;
-		$verified = 1;
+		$verified = 0;
 		break;
 
 	case REGISTER_APPROVE:
-		$blocked = 1;
+		$blocked = 0;
 		$verified = 0;
 		break;
 
 	default:
 	case REGISTER_CLOSED:
+		// TODO check against service class and fix this line
 		if((! x($_SESSION,'authenticated') && (! x($_SESSION,'administrator')))) {
 			notice( t('Permission denied.') . EOL );
 			return;
@@ -48,14 +46,14 @@ function zregister_post(&$a) {
 		break;
 	}
 
-	require_once('include/user.php');
+	require_once('include/account.php');
 
 	$arr = $_POST;
 
 	$arr['blocked'] = $blocked;
 	$arr['verified'] = $verified;
 
-	$result = create_user($arr);
+	$result = create_account($arr);
 
 	if(! $result['success']) {
 		notice($result['message']);
@@ -64,11 +62,6 @@ function zregister_post(&$a) {
 
 	$user = $result['user'];
  
-	if($netpublish && $a->config['register_policy'] != REGISTER_APPROVE) {
-		$url = $a->get_baseurl() . '/profile/' . $user['nickname'];
-		proc_run('php',"include/directory.php","$url");
-	}
-
 	$using_invites = get_config('system','invitation_only');
 	$num_invites   = get_config('system','number_invites');
 	$invite_id  = ((x($_POST,'invite_id'))  ? notags(trim($_POST['invite_id']))  : '');
@@ -101,11 +94,9 @@ function zregister_post(&$a) {
 			info( t('Registration successful. Please check your email for further instructions.') . EOL ) ;
 			goaway(z_root());
 		}
-		else {
-			notice( t('Failed to send email message. Here is the message that failed.') . $email_tpl . EOL );
-		}
 	}
 	elseif($a->config['register_policy'] == REGISTER_APPROVE) {
+
 		if(! strlen($a->config['admin_email'])) {
 			notice( t('Your registration can not be processed.') . EOL);
 			goaway(z_root());
@@ -117,7 +108,7 @@ function zregister_post(&$a) {
 			dbesc(datetime_convert()),
 			intval($user['uid']),
 			dbesc($result['password']),
-			dbesc($lang)
+			dbesc($a->language)
 		);
 
 		$r = q("SELECT `language` FROM `user` WHERE `email` = '%s' LIMIT 1",

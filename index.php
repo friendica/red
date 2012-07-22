@@ -27,7 +27,7 @@ $install = ((file_exists('.htconfig.php') && filesize('.htconfig.php')) ? false 
 
 @include(".htconfig.php");
 
-$lang = get_best_language();
+$a->language = $lang = get_best_language();
 	
 load_translation_table($lang);
 

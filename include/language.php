@@ -80,7 +80,8 @@ function push_lang($language) {
 	}
 	$a->strings = array();
 	load_translation_table($language);
-	$lang = $language;
+	$a->language = $lang = $language;
+
 }
 
 function pop_lang() {
@@ -94,7 +95,7 @@ function pop_lang() {
 	else
 		$a->strings = array();
 
-	$lang = $a->langsave;
+	$a->language = $lang = $a->langsave;
 }
 
 

@@ -35,7 +35,7 @@ $a->config['sitename'] = "Friendica Social Network";
 // In order to perform system administration via the admin panel, admin_email
 // must precisely match the email address of the person logged in.
 
-$a->config['register_policy'] = REGISTER_OPEN;
+$a->config['system']['register_policy'] = REGISTER_OPEN;
 $a->config['register_text'] = '';
 $a->config['admin_email'] = '';
 

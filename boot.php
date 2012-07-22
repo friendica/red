@@ -353,6 +353,7 @@ if(! class_exists('App')) {
 	class App {
 
 		public  $account;
+		public  $language;
 		public  $module_loaded = false;
 		public  $query_string;
 		public  $config;

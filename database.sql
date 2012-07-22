@@ -1,51 +1,32 @@
-
 SET SQL_MODE="NO_AUTO_VALUE_ON_ZERO";
-
 
 /*!40101 SET @OLD_CHARACTER_SET_CLIENT=@@CHARACTER_SET_CLIENT */;
 /*!40101 SET @OLD_CHARACTER_SET_RESULTS=@@CHARACTER_SET_RESULTS */;
 /*!40101 SET @OLD_COLLATION_CONNECTION=@@COLLATION_CONNECTION */;
 /*!40101 SET NAMES utf8 */;
 
--- --------------------------------------------------------
-
---
--- Table structure for table `account`
---
 
 CREATE TABLE IF NOT EXISTS `account` (
   `account_id` int(11) NOT NULL AUTO_INCREMENT,
-  `account_name` char(255) NOT NULL,
+  `account_parent` int(10) unsigned NOT NULL,
   `account_password` char(255) NOT NULL,
   `account_email` char(255) NOT NULL,
-  `account_openid` char(255) NOT NULL,
   `account_language` char(16) NOT NULL DEFAULT 'en',
   `account_created` datetime NOT NULL DEFAULT '0000-00-00 00:00:00',
-  `account_verified` tinyint(1) unsigned NOT NULL DEFAULT '0',
-  `account_blocked` tinyint(1) unsigned NOT NULL DEFAULT '0',
+  `account_flags` int(10) unsigned NOT NULL,
+  `account_roles` int(10) unsigned NOT NULL,
   `account_reset` char(255) NOT NULL,
-  `account_removed` tinyint(1) NOT NULL DEFAULT '0',
-  `account_expired` tinyint(1) NOT NULL DEFAULT '0',
   `account_expires` datetime NOT NULL DEFAULT '0000-00-00 00:00:00',
   `account_expire_notified` datetime NOT NULL DEFAULT '0000-00-00 00:00:00',
   `account_service_class` char(32) NOT NULL,
   PRIMARY KEY (`account_id`),
-  KEY `account_name` (`account_name`),
   KEY `account_password` (`account_password`),
   KEY `account_email` (`account_email`),
-  KEY `account_openid` (`account_openid`),
-  KEY `account_verified` (`account_verified`),
-  KEY `account_blocked` (`account_blocked`),
-  KEY `account_removed` (`account_removed`),
-  KEY `account_expired` (`account_expired`),
-  KEY `account_service_class` (`account_service_class`)
+  KEY `account_service_class` (`account_service_class`),
+  KEY `account_parent` (`account_parent`),
+  KEY `account_flags` (`account_flags`),
+  KEY `account_roles` (`account_roles`)
 ) ENGINE=MyISAM DEFAULT CHARSET=utf8;
-
--- --------------------------------------------------------
-
---
--- Table structure for table `addon`
---
 
 CREATE TABLE IF NOT EXISTS `addon` (
   `id` int(11) NOT NULL AUTO_INCREMENT,
@@ -60,12 +41,6 @@ CREATE TABLE IF NOT EXISTS `addon` (
   KEY `name` (`name`),
   KEY `installed` (`installed`)
 ) ENGINE=MyISAM DEFAULT CHARSET=utf8;
-
--- --------------------------------------------------------
-
---
--- Table structure for table `attach`
---
 
 CREATE TABLE IF NOT EXISTS `attach` (
   `id` int(11) NOT NULL AUTO_INCREMENT,
@@ -84,12 +59,6 @@ CREATE TABLE IF NOT EXISTS `attach` (
   PRIMARY KEY (`id`)
 ) ENGINE=MyISAM DEFAULT CHARSET=utf8;
 
--- --------------------------------------------------------
-
---
--- Table structure for table `auth_codes`
---
-
 CREATE TABLE IF NOT EXISTS `auth_codes` (
   `id` varchar(40) NOT NULL,
   `client_id` varchar(20) NOT NULL,
@@ -99,24 +68,12 @@ CREATE TABLE IF NOT EXISTS `auth_codes` (
   PRIMARY KEY (`id`)
 ) ENGINE=MyISAM DEFAULT CHARSET=utf8;
 
--- --------------------------------------------------------
-
---
--- Table structure for table `cache`
---
-
 CREATE TABLE IF NOT EXISTS `cache` (
   `k` char(255) NOT NULL,
   `v` text NOT NULL,
   `updated` datetime NOT NULL,
   PRIMARY KEY (`k`)
 ) ENGINE=MyISAM DEFAULT CHARSET=utf8;
-
--- --------------------------------------------------------
-
---
--- Table structure for table `challenge`
---
 
 CREATE TABLE IF NOT EXISTS `challenge` (
   `id` int(10) unsigned NOT NULL AUTO_INCREMENT,
@@ -128,12 +85,6 @@ CREATE TABLE IF NOT EXISTS `challenge` (
   PRIMARY KEY (`id`)
 ) ENGINE=MyISAM  DEFAULT CHARSET=utf8;
 
--- --------------------------------------------------------
-
---
--- Table structure for table `clients`
---
-
 CREATE TABLE IF NOT EXISTS `clients` (
   `client_id` varchar(20) NOT NULL,
   `pw` varchar(20) NOT NULL,
@@ -144,12 +95,6 @@ CREATE TABLE IF NOT EXISTS `clients` (
   PRIMARY KEY (`client_id`)
 ) ENGINE=MyISAM DEFAULT CHARSET=utf8;
 
--- --------------------------------------------------------
-
---
--- Table structure for table `config`
---
-
 CREATE TABLE IF NOT EXISTS `config` (
   `id` int(10) unsigned NOT NULL AUTO_INCREMENT,
   `cat` char(255) CHARACTER SET ascii NOT NULL,
@@ -158,12 +103,6 @@ CREATE TABLE IF NOT EXISTS `config` (
   PRIMARY KEY (`id`),
   UNIQUE KEY `access` (`cat`,`k`)
 ) ENGINE=MyISAM  DEFAULT CHARSET=utf8;
-
--- --------------------------------------------------------
-
---
--- Table structure for table `contact`
---
 
 CREATE TABLE IF NOT EXISTS `contact` (
   `id` int(11) NOT NULL AUTO_INCREMENT,
@@ -243,12 +182,6 @@ CREATE TABLE IF NOT EXISTS `contact` (
   KEY `forum` (`forum`)
 ) ENGINE=MyISAM  DEFAULT CHARSET=utf8;
 
--- --------------------------------------------------------
-
---
--- Table structure for table `conv`
---
-
 CREATE TABLE IF NOT EXISTS `conv` (
   `id` int(10) unsigned NOT NULL AUTO_INCREMENT,
   `guid` char(64) NOT NULL,
@@ -263,12 +196,6 @@ CREATE TABLE IF NOT EXISTS `conv` (
   KEY `updated` (`updated`)
 ) ENGINE=MyISAM DEFAULT CHARSET=utf8;
 
--- --------------------------------------------------------
-
---
--- Table structure for table `deliverq`
---
-
 CREATE TABLE IF NOT EXISTS `deliverq` (
   `id` int(10) unsigned NOT NULL AUTO_INCREMENT,
   `cmd` char(32) NOT NULL,
@@ -277,13 +204,7 @@ CREATE TABLE IF NOT EXISTS `deliverq` (
   PRIMARY KEY (`id`),
   KEY `item` (`item`),
   KEY `contact` (`contact`)
-) ENGINE=MyISAM DEFAULT CHARSET=utf8;
-
--- --------------------------------------------------------
-
---
--- Table structure for table `event`
---
+) ENGINE=MyISAM  DEFAULT CHARSET=utf8;
 
 CREATE TABLE IF NOT EXISTS `event` (
   `id` int(11) NOT NULL AUTO_INCREMENT,
@@ -315,12 +236,6 @@ CREATE TABLE IF NOT EXISTS `event` (
   KEY `nofinish` (`nofinish`)
 ) ENGINE=MyISAM DEFAULT CHARSET=utf8;
 
--- --------------------------------------------------------
-
---
--- Table structure for table `fcontact`
---
-
 CREATE TABLE IF NOT EXISTS `fcontact` (
   `id` int(10) unsigned NOT NULL AUTO_INCREMENT,
   `url` char(255) NOT NULL,
@@ -343,12 +258,6 @@ CREATE TABLE IF NOT EXISTS `fcontact` (
   KEY `network` (`network`)
 ) ENGINE=MyISAM DEFAULT CHARSET=utf8;
 
--- --------------------------------------------------------
-
---
--- Table structure for table `ffinder`
---
-
 CREATE TABLE IF NOT EXISTS `ffinder` (
   `id` int(10) unsigned NOT NULL AUTO_INCREMENT,
   `uid` int(10) unsigned NOT NULL,
@@ -360,12 +269,6 @@ CREATE TABLE IF NOT EXISTS `ffinder` (
   KEY `fid` (`fid`)
 ) ENGINE=MyISAM DEFAULT CHARSET=utf8;
 
--- --------------------------------------------------------
-
---
--- Table structure for table `fserver`
---
-
 CREATE TABLE IF NOT EXISTS `fserver` (
   `id` int(11) NOT NULL AUTO_INCREMENT,
   `server` char(255) NOT NULL,
@@ -376,12 +279,6 @@ CREATE TABLE IF NOT EXISTS `fserver` (
   KEY `server_2` (`server`),
   KEY `posturl` (`posturl`)
 ) ENGINE=MyISAM DEFAULT CHARSET=utf8;
-
--- --------------------------------------------------------
-
---
--- Table structure for table `fsuggest`
---
 
 CREATE TABLE IF NOT EXISTS `fsuggest` (
   `id` int(11) NOT NULL AUTO_INCREMENT,
@@ -396,12 +293,6 @@ CREATE TABLE IF NOT EXISTS `fsuggest` (
   PRIMARY KEY (`id`)
 ) ENGINE=MyISAM DEFAULT CHARSET=utf8;
 
--- --------------------------------------------------------
-
---
--- Table structure for table `gcign`
---
-
 CREATE TABLE IF NOT EXISTS `gcign` (
   `id` int(11) NOT NULL AUTO_INCREMENT,
   `uid` int(11) NOT NULL,
@@ -410,12 +301,6 @@ CREATE TABLE IF NOT EXISTS `gcign` (
   KEY `uid` (`uid`),
   KEY `gcid` (`gcid`)
 ) ENGINE=MyISAM DEFAULT CHARSET=utf8;
-
--- --------------------------------------------------------
-
---
--- Table structure for table `gcontact`
---
 
 CREATE TABLE IF NOT EXISTS `gcontact` (
   `id` int(10) unsigned NOT NULL AUTO_INCREMENT,
@@ -429,12 +314,6 @@ CREATE TABLE IF NOT EXISTS `gcontact` (
   KEY `name` (`name`),
   KEY `url` (`url`)
 ) ENGINE=MyISAM  DEFAULT CHARSET=utf8;
-
--- --------------------------------------------------------
-
---
--- Table structure for table `glink`
---
 
 CREATE TABLE IF NOT EXISTS `glink` (
   `id` int(10) unsigned NOT NULL AUTO_INCREMENT,
@@ -451,12 +330,6 @@ CREATE TABLE IF NOT EXISTS `glink` (
   KEY `updated` (`updated`)
 ) ENGINE=MyISAM  DEFAULT CHARSET=utf8;
 
--- --------------------------------------------------------
-
---
--- Table structure for table `group`
---
-
 CREATE TABLE IF NOT EXISTS `group` (
   `id` int(10) unsigned NOT NULL AUTO_INCREMENT,
   `uid` int(10) unsigned NOT NULL,
@@ -469,12 +342,6 @@ CREATE TABLE IF NOT EXISTS `group` (
   KEY `deleted` (`deleted`)
 ) ENGINE=MyISAM  DEFAULT CHARSET=utf8;
 
--- --------------------------------------------------------
-
---
--- Table structure for table `group_member`
---
-
 CREATE TABLE IF NOT EXISTS `group_member` (
   `id` int(10) unsigned NOT NULL AUTO_INCREMENT,
   `uid` int(10) unsigned NOT NULL,
@@ -486,24 +353,12 @@ CREATE TABLE IF NOT EXISTS `group_member` (
   KEY `contact-id` (`contact-id`)
 ) ENGINE=MyISAM DEFAULT CHARSET=utf8;
 
--- --------------------------------------------------------
-
---
--- Table structure for table `guid`
---
-
 CREATE TABLE IF NOT EXISTS `guid` (
   `id` int(10) unsigned NOT NULL AUTO_INCREMENT,
   `guid` char(64) NOT NULL,
   PRIMARY KEY (`id`),
   KEY `guid` (`guid`)
 ) ENGINE=MyISAM  DEFAULT CHARSET=utf8;
-
--- --------------------------------------------------------
-
---
--- Table structure for table `hook`
---
 
 CREATE TABLE IF NOT EXISTS `hook` (
   `id` int(11) NOT NULL AUTO_INCREMENT,
@@ -513,12 +368,6 @@ CREATE TABLE IF NOT EXISTS `hook` (
   PRIMARY KEY (`id`),
   KEY `hook` (`hook`)
 ) ENGINE=MyISAM DEFAULT CHARSET=utf8;
-
--- --------------------------------------------------------
-
---
--- Table structure for table `intro`
---
 
 CREATE TABLE IF NOT EXISTS `intro` (
   `id` int(10) unsigned NOT NULL AUTO_INCREMENT,
@@ -542,15 +391,8 @@ CREATE TABLE IF NOT EXISTS `intro` (
   KEY `contact-id` (`contact-id`)
 ) ENGINE=MyISAM  DEFAULT CHARSET=utf8;
 
--- --------------------------------------------------------
-
---
--- Table structure for table `item`
---
-
 CREATE TABLE IF NOT EXISTS `item` (
   `id` int(10) unsigned NOT NULL AUTO_INCREMENT,
-  `guid` char(64) NOT NULL,
   `uri` char(255) CHARACTER SET ascii NOT NULL,
   `uid` int(10) unsigned NOT NULL DEFAULT '0',
   `contact-id` int(10) unsigned NOT NULL DEFAULT '0',
@@ -559,7 +401,6 @@ CREATE TABLE IF NOT EXISTS `item` (
   `gravity` tinyint(1) NOT NULL DEFAULT '0',
   `parent` int(10) unsigned NOT NULL DEFAULT '0',
   `parent-uri` char(255) CHARACTER SET ascii NOT NULL,
-  `extid` char(255) NOT NULL,
   `thr-parent` char(255) NOT NULL,
   `created` datetime NOT NULL,
   `edited` datetime NOT NULL,
@@ -585,10 +426,8 @@ CREATE TABLE IF NOT EXISTS `item` (
   `plink` char(255) NOT NULL,
   `resource-id` char(255) NOT NULL,
   `event-id` int(11) NOT NULL,
-  `tag` mediumtext NOT NULL,
   `attach` mediumtext NOT NULL,
   `inform` mediumtext NOT NULL,
-  `file` mediumtext NOT NULL,
   `location` char(255) NOT NULL,
   `coord` char(255) NOT NULL,
   `allow_cid` mediumtext NOT NULL,
@@ -606,7 +445,6 @@ CREATE TABLE IF NOT EXISTS `item` (
   `deleted` tinyint(1) NOT NULL DEFAULT '0',
   `origin` tinyint(1) NOT NULL DEFAULT '0',
   `forum_mode` tinyint(1) NOT NULL DEFAULT '0',
-  `last-child` tinyint(1) unsigned NOT NULL DEFAULT '1',
   PRIMARY KEY (`id`),
   KEY `uri` (`uri`),
   KEY `uid` (`uid`),
@@ -618,12 +456,9 @@ CREATE TABLE IF NOT EXISTS `item` (
   KEY `edited` (`edited`),
   KEY `visible` (`visible`),
   KEY `deleted` (`deleted`),
-  KEY `last-child` (`last-child`),
   KEY `unseen` (`unseen`),
-  KEY `extid` (`extid`),
   KEY `received` (`received`),
   KEY `starred` (`starred`),
-  KEY `guid` (`guid`),
   KEY `origin` (`origin`),
   KEY `wall` (`wall`),
   KEY `forum_mode` (`forum_mode`),
@@ -637,16 +472,8 @@ CREATE TABLE IF NOT EXISTS `item` (
   FULLTEXT KEY `allow_cid` (`allow_cid`),
   FULLTEXT KEY `allow_gid` (`allow_gid`),
   FULLTEXT KEY `deny_cid` (`deny_cid`),
-  FULLTEXT KEY `deny_gid` (`deny_gid`),
-  FULLTEXT KEY `tag` (`tag`),
-  FULLTEXT KEY `file` (`file`)
+  FULLTEXT KEY `deny_gid` (`deny_gid`)
 ) ENGINE=MyISAM  DEFAULT CHARSET=utf8;
-
--- --------------------------------------------------------
-
---
--- Table structure for table `item_id`
---
 
 CREATE TABLE IF NOT EXISTS `item_id` (
   `iid` int(11) NOT NULL,
@@ -659,24 +486,12 @@ CREATE TABLE IF NOT EXISTS `item_id` (
   KEY `service` (`service`)
 ) ENGINE=MyISAM DEFAULT CHARSET=utf8;
 
--- --------------------------------------------------------
-
---
--- Table structure for table `locks`
---
-
 CREATE TABLE IF NOT EXISTS `locks` (
   `id` int(11) NOT NULL AUTO_INCREMENT,
   `name` char(128) NOT NULL,
   `locked` tinyint(1) NOT NULL DEFAULT '0',
   PRIMARY KEY (`id`)
 ) ENGINE=MyISAM DEFAULT CHARSET=utf8;
-
--- --------------------------------------------------------
-
---
--- Table structure for table `mail`
---
 
 CREATE TABLE IF NOT EXISTS `mail` (
   `id` int(10) unsigned NOT NULL AUTO_INCREMENT,
@@ -709,12 +524,6 @@ CREATE TABLE IF NOT EXISTS `mail` (
   KEY `contact-id` (`contact-id`)
 ) ENGINE=MyISAM DEFAULT CHARSET=utf8;
 
--- --------------------------------------------------------
-
---
--- Table structure for table `mailacct`
---
-
 CREATE TABLE IF NOT EXISTS `mailacct` (
   `id` int(11) NOT NULL AUTO_INCREMENT,
   `uid` int(11) NOT NULL,
@@ -733,12 +542,6 @@ CREATE TABLE IF NOT EXISTS `mailacct` (
   KEY `uid` (`uid`)
 ) ENGINE=MyISAM DEFAULT CHARSET=utf8;
 
--- --------------------------------------------------------
-
---
--- Table structure for table `manage`
---
-
 CREATE TABLE IF NOT EXISTS `manage` (
   `id` int(11) NOT NULL AUTO_INCREMENT,
   `uid` int(11) NOT NULL,
@@ -747,12 +550,6 @@ CREATE TABLE IF NOT EXISTS `manage` (
   KEY `uid` (`uid`),
   KEY `mid` (`mid`)
 ) ENGINE=MyISAM DEFAULT CHARSET=utf8;
-
--- --------------------------------------------------------
-
---
--- Table structure for table `notify`
---
 
 CREATE TABLE IF NOT EXISTS `notify` (
   `id` int(11) NOT NULL AUTO_INCREMENT,
@@ -780,12 +577,6 @@ CREATE TABLE IF NOT EXISTS `notify` (
   KEY `otype` (`otype`)
 ) ENGINE=MyISAM  DEFAULT CHARSET=utf8;
 
--- --------------------------------------------------------
-
---
--- Table structure for table `notify-threads`
---
-
 CREATE TABLE IF NOT EXISTS `notify-threads` (
   `id` int(11) NOT NULL AUTO_INCREMENT,
   `notify-id` int(11) NOT NULL,
@@ -797,12 +588,6 @@ CREATE TABLE IF NOT EXISTS `notify-threads` (
   KEY `receiver-uid` (`receiver-uid`)
 ) ENGINE=MyISAM  DEFAULT CHARSET=utf8;
 
--- --------------------------------------------------------
-
---
--- Table structure for table `pconfig`
---
-
 CREATE TABLE IF NOT EXISTS `pconfig` (
   `id` int(11) NOT NULL AUTO_INCREMENT,
   `uid` int(11) NOT NULL DEFAULT '0',
@@ -812,12 +597,6 @@ CREATE TABLE IF NOT EXISTS `pconfig` (
   PRIMARY KEY (`id`),
   UNIQUE KEY `access` (`uid`,`cat`,`k`)
 ) ENGINE=MyISAM  DEFAULT CHARSET=utf8;
-
--- --------------------------------------------------------
-
---
--- Table structure for table `photo`
---
 
 CREATE TABLE IF NOT EXISTS `photo` (
   `id` int(10) unsigned NOT NULL AUTO_INCREMENT,
@@ -851,12 +630,6 @@ CREATE TABLE IF NOT EXISTS `photo` (
   KEY `contact-id` (`contact-id`)
 ) ENGINE=MyISAM  DEFAULT CHARSET=utf8;
 
--- --------------------------------------------------------
-
---
--- Table structure for table `poll`
---
-
 CREATE TABLE IF NOT EXISTS `poll` (
   `id` int(11) NOT NULL AUTO_INCREMENT,
   `uid` int(11) NOT NULL,
@@ -874,12 +647,6 @@ CREATE TABLE IF NOT EXISTS `poll` (
   KEY `uid` (`uid`)
 ) ENGINE=MyISAM DEFAULT CHARSET=utf8;
 
--- --------------------------------------------------------
-
---
--- Table structure for table `poll_result`
---
-
 CREATE TABLE IF NOT EXISTS `poll_result` (
   `id` int(11) NOT NULL AUTO_INCREMENT,
   `poll_id` int(11) NOT NULL,
@@ -888,12 +655,6 @@ CREATE TABLE IF NOT EXISTS `poll_result` (
   KEY `poll_id` (`poll_id`),
   KEY `choice` (`choice`)
 ) ENGINE=MyISAM DEFAULT CHARSET=utf8;
-
--- --------------------------------------------------------
-
---
--- Table structure for table `profile`
---
 
 CREATE TABLE IF NOT EXISTS `profile` (
   `id` int(11) NOT NULL AUTO_INCREMENT,
@@ -938,15 +699,20 @@ CREATE TABLE IF NOT EXISTS `profile` (
   `publish` tinyint(1) NOT NULL DEFAULT '0',
   `net-publish` tinyint(1) NOT NULL DEFAULT '0',
   PRIMARY KEY (`id`),
+  KEY `uid` (`uid`),
+  KEY `is-default` (`is-default`),
+  KEY `locality` (`locality`),
+  KEY `postal-code` (`postal-code`),
+  KEY `country-name` (`country-name`),
+  KEY `hometown` (`hometown`),
+  KEY `gender` (`gender`),
+  KEY `marital` (`marital`),
+  KEY `sexual` (`sexual`),
+  KEY `publish` (`publish`),
+  KEY `net-publish` (`net-publish`),
   FULLTEXT KEY `pub_keywords` (`pub_keywords`),
   FULLTEXT KEY `prv_keywords` (`prv_keywords`)
 ) ENGINE=MyISAM  DEFAULT CHARSET=utf8;
-
--- --------------------------------------------------------
-
---
--- Table structure for table `profile_check`
---
 
 CREATE TABLE IF NOT EXISTS `profile_check` (
   `id` int(10) unsigned NOT NULL AUTO_INCREMENT,
@@ -961,13 +727,7 @@ CREATE TABLE IF NOT EXISTS `profile_check` (
   KEY `dfrn_id` (`dfrn_id`),
   KEY `sec` (`sec`),
   KEY `expire` (`expire`)
-) ENGINE=MyISAM DEFAULT CHARSET=utf8;
-
--- --------------------------------------------------------
-
---
--- Table structure for table `queue`
---
+) ENGINE=MyISAM  DEFAULT CHARSET=utf8;
 
 CREATE TABLE IF NOT EXISTS `queue` (
   `id` int(11) NOT NULL AUTO_INCREMENT,
@@ -985,12 +745,6 @@ CREATE TABLE IF NOT EXISTS `queue` (
   KEY `batch` (`batch`)
 ) ENGINE=MyISAM DEFAULT CHARSET=utf8;
 
--- --------------------------------------------------------
-
---
--- Table structure for table `register`
---
-
 CREATE TABLE IF NOT EXISTS `register` (
   `id` int(10) unsigned NOT NULL AUTO_INCREMENT,
   `hash` char(255) NOT NULL,
@@ -1004,12 +758,6 @@ CREATE TABLE IF NOT EXISTS `register` (
   KEY `uid` (`uid`)
 ) ENGINE=MyISAM DEFAULT CHARSET=utf8;
 
--- --------------------------------------------------------
-
---
--- Table structure for table `session`
---
-
 CREATE TABLE IF NOT EXISTS `session` (
   `id` bigint(20) unsigned NOT NULL AUTO_INCREMENT,
   `sid` char(255) NOT NULL,
@@ -1019,12 +767,6 @@ CREATE TABLE IF NOT EXISTS `session` (
   KEY `sid` (`sid`),
   KEY `expire` (`expire`)
 ) ENGINE=MyISAM  DEFAULT CHARSET=utf8;
-
--- --------------------------------------------------------
-
---
--- Table structure for table `sign`
---
 
 CREATE TABLE IF NOT EXISTS `sign` (
   `id` int(10) unsigned NOT NULL AUTO_INCREMENT,
@@ -1039,12 +781,6 @@ CREATE TABLE IF NOT EXISTS `sign` (
   KEY `signer` (`signer`)
 ) ENGINE=MyISAM DEFAULT CHARSET=utf8;
 
--- --------------------------------------------------------
-
---
--- Table structure for table `spam`
---
-
 CREATE TABLE IF NOT EXISTS `spam` (
   `id` int(11) NOT NULL AUTO_INCREMENT,
   `uid` int(11) NOT NULL,
@@ -1058,12 +794,6 @@ CREATE TABLE IF NOT EXISTS `spam` (
   KEY `ham` (`ham`),
   KEY `term` (`term`)
 ) ENGINE=MyISAM DEFAULT CHARSET=utf8;
-
--- --------------------------------------------------------
-
---
--- Table structure for table `term`
---
 
 CREATE TABLE IF NOT EXISTS `term` (
   `tid` int(10) unsigned NOT NULL AUTO_INCREMENT,
@@ -1081,12 +811,6 @@ CREATE TABLE IF NOT EXISTS `term` (
   KEY `uid` (`uid`)
 ) ENGINE=MyISAM  DEFAULT CHARSET=utf8;
 
--- --------------------------------------------------------
-
---
--- Table structure for table `tokens`
---
-
 CREATE TABLE IF NOT EXISTS `tokens` (
   `id` varchar(40) NOT NULL,
   `secret` text NOT NULL,
@@ -1099,12 +823,6 @@ CREATE TABLE IF NOT EXISTS `tokens` (
   KEY `expires` (`expires`),
   KEY `uid` (`uid`)
 ) ENGINE=MyISAM DEFAULT CHARSET=utf8;
-
--- --------------------------------------------------------
-
---
--- Table structure for table `user`
---
 
 CREATE TABLE IF NOT EXISTS `user` (
   `uid` int(11) NOT NULL AUTO_INCREMENT,
@@ -1164,12 +882,6 @@ CREATE TABLE IF NOT EXISTS `user` (
   KEY `email` (`email`),
   KEY `account_id` (`account_id`)
 ) ENGINE=MyISAM  DEFAULT CHARSET=utf8;
-
--- --------------------------------------------------------
-
---
--- Table structure for table `userd`
---
 
 CREATE TABLE IF NOT EXISTS `userd` (
   `id` int(11) NOT NULL AUTO_INCREMENT,
