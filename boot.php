@@ -1687,3 +1687,14 @@ function build_querystring($params, $name=null) {
     } 
     return $ret;    
 }
+
+
+// much better way of dealing with c-style args
+
+function argc() {
+	return get_app()->argc;
+}
+
+function argv($x) {
+	return get_app()->argv[$x];
+}
