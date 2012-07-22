@@ -206,6 +206,43 @@ CREATE TABLE IF NOT EXISTS `deliverq` (
   KEY `contact` (`contact`)
 ) ENGINE=MyISAM  DEFAULT CHARSET=utf8;
 
+CREATE TABLE IF NOT EXISTS `entity` (
+  `entity_id` int(10) unsigned NOT NULL AUTO_INCREMENT,
+  `entity_account_id` int(10) unsigned NOT NULL,
+  `entity_name` char(255) NOT NULL,
+  `entity_address` char(255) NOT NULL,
+  `entity_global_id` char(255) NOT NULL,
+  `entity_timezone` char(128) NOT NULL,
+  `entity_location` char(255) NOT NULL,
+  `entity_theme` char(255) NOT NULL,
+  `entity_pubkey` text NOT NULL,
+  `entity_prvkey` text NOT NULL,
+  `entity_privacyflags` int(10) unsigned NOT NULL,
+  `entity_notifyflags` int(10) unsigned NOT NULL DEFAULT '65535',
+  `entity_pageflags` int(10) unsigned NOT NULL,
+  `entity_max_anon_mail` int(11) NOT NULL DEFAULT '10',
+  `entity_max_friend_req` int(11) NOT NULL DEFAULT '10',
+  `entity_default_gid` int(11) NOT NULL,
+  `entity_allow_cid` mediumtext NOT NULL,
+  `entity_allow_gid` mediumtext NOT NULL,
+  `entity_deny_cid` mediumtext NOT NULL,
+  `entity_deny_gid` mediumtext NOT NULL,
+  PRIMARY KEY (`entity_id`),
+  KEY `entity_account_id` (`entity_account_id`),
+  KEY `entity_name` (`entity_name`),
+  KEY `entity_address` (`entity_address`),
+  KEY `entity_global_id` (`entity_global_id`),
+  KEY `entity_timezone` (`entity_timezone`),
+  KEY `entity_location` (`entity_location`),
+  KEY `entity_theme` (`entity_theme`),
+  KEY `entity_privacyflags` (`entity_privacyflags`),
+  KEY `entity_notifyflags` (`entity_notifyflags`),
+  KEY `entity_pageflags` (`entity_pageflags`),
+  KEY `entity_max_anon_mail` (`entity_max_anon_mail`),
+  KEY `entity_max_friend_req` (`entity_max_friend_req`),
+  KEY `entity_default_gid` (`entity_default_gid`)
+) ENGINE=MyISAM DEFAULT CHARSET=utf8;
+
 CREATE TABLE IF NOT EXISTS `event` (
   `id` int(11) NOT NULL AUTO_INCREMENT,
   `uid` int(11) NOT NULL,
