@@ -1,5 +1,6 @@
 <?php
 
+require_once('include/items.php');
 
 function network_init(&$a) {
 	if(! local_user()) {

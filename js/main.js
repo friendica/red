@@ -250,12 +250,16 @@
 						$(this).attr('src',$(this).attr('dst'));
 					});
 					$('#' + prev).after($(this));
+					$("abbr.wall-item-ago-time").timeago();
+
 				}
 				else {
 					$('img',this).each(function() {
 						$(this).attr('src',$(this).attr('dst'));
 					});
 					$('#' + ident).replaceWith($(this));
+					$("abbr.wall-item-ago-time").timeago();
+
 				}
 				prev = ident;
 			});
@@ -295,6 +299,8 @@
 			/* autocomplete @nicknames */
 			$(".comment-edit-form  textarea").contact_autocomplete(baseurl+"/acl");
 		});
+
+
 	}
 
 	function imgbright(node) {
