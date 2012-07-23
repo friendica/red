@@ -653,3 +653,36 @@ function previewTheme(elm) {
 
 }
 
+// This can be used for dynamic "show more" based purely on the 
+// height of the enclosed HTML (which has overflow: hidden).
+// if ($(el).vScrollable()) {
+//    show_more_link(el);
+// }
+// when link is clicked do $(el).css('overflow','visible') 
+//
+// We do this by cloning the element in question but in a hidden div which displays overflow content and compare the heights
+// of the two elements. Then we remove the hidden div we just created.
+
+(function($) {
+    $.fn.vScrollable = function() {
+        return this.each(function() {
+		var el = $(this);
+		var tooHigh = false;
+
+		if(el.css("overflow") == "hidden") {
+            var text = el.html();                               
+            var t = $(this.cloneNode(true))
+				.hide()
+				.css('position', 'absolute')
+				.css('overflow', 'visible')
+				.width(el.width())
+				.height('auto')
+					;
+                el.after(t);
+				tooHigh = (t.height() > el.height()); 
+				el.parentNode.removeChild(el);
+		}
+		return tooHigh;
+	});
+    };
+})(jQuery);
