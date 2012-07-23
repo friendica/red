@@ -26,6 +26,7 @@
 <script type="text/javascript" src="$baseurl/js/jquery.textinputs.js" ></script>
 <script type="text/javascript" src="$baseurl/js/fk.autocomplete.js" ></script>
 <script type="text/javascript" src="$baseurl/library/fancybox/jquery.fancybox-1.3.4.pack.js"></script>
+<script type="text/javascript" src="$baseurl/library/jquery.timeago.js"></script>
 <script type="text/javascript" src="$baseurl/library/tiptip/jquery.tipTip.minified.js"></script>
 <script type="text/javascript" src="$baseurl/library/jgrowl/jquery.jgrowl_minimized.js"></script>
 <script type="text/javascript" src="$baseurl/library/tinymce/jscripts/tiny_mce/tiny_mce_src.js" ></script>
@@ -104,6 +105,25 @@
 		}
 	}
 
+	// jquery.timeago localisations
+
+	var t01 = $t01 ;
+	var t02 = $t02 ;
+	var t03 = "$t03" ;
+	var t04 = "$t04" ;
+	var t05 = "$t05" ;
+	var t06 = "$t06" ;
+	var t07 = "$t07" ;
+	var t08 = "$t08" ;
+	var t09 = "$t09" ;
+	var t10 = "$t10" ;
+	var t11 = "$t11" ;
+	var t12 = "$t12" ;
+	var t13 = "$t13" ;
+	var t14 = "$t14" ;
+	var t15 = "$t15" ;
+	var t16 = "$t16" ;
+	var t17 = $t17 ;
 
 </script>
 

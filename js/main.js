@@ -686,3 +686,31 @@ function previewTheme(elm) {
 	});
     };
 })(jQuery);
+
+
+
+$(document).ready(function() {
+
+jQuery.timeago.settings.strings = {
+	prefixAgo: t01,
+	prefixFromNow: t02,
+	suffixAgo: t03,
+	suffixFromNow: t04,
+	seconds: t05,
+	minute: t06,
+	minutes: t07,
+	hour: t08,
+	hours: t09,
+	day: t10,
+	days: t11,
+	month: t12,
+	months: t13,
+	year: t14,
+	years: t15,
+	wordSeparator: t16,
+	numbers: t17
+};
+
+
+$("abbr.wall-item-ago-time").timeago();
+});

@@ -457,7 +457,7 @@ function conversation(&$a, $items, $mode, $update, $preview = false) {
 
 
 				$body = prepare_body($item,true);
-				
+
 				//$tmp_item = replace_macros($tpl,array(
 				$tmp_item = array(
 					'template' => $tpl,
@@ -473,7 +473,10 @@ function conversation(&$a, $items, $mode, $update, $preview = false) {
 					'title' => template_escape($item['title']),
 					'body' => template_escape($body),
 					'text' => strip_tags(template_escape($body)),
-					'ago' => (($item['app']) ? sprintf( t('%s from %s'),relative_date($item['created']),$item['app']) : relative_date($item['created'])),
+					'ago' => relative_date($item['created']),
+					'app' => $item['app'],
+					'str_app' => sprintf( t(' from %s'), $item['app']),
+					'localtime' => datetime_convert('UTC', date_default_timezone_get(), $item['created'], 'c'),
 					'location' => template_escape($location),
 					'indent' => '',
 					'owner_name' => template_escape($owner_name),
@@ -832,7 +835,10 @@ function conversation(&$a, $items, $mode, $update, $preview = false) {
 					'osparkle' => $osparkle,
 					'sparkle' => $sparkle,
 					'title' => template_escape($item['title']),
-					'ago' => (($item['app']) ? sprintf( t('%s from %s'),relative_date($item['created']),$item['app']) : relative_date($item['created'])),
+					'ago' => datetime_convert('UTC',date_default_timezone_get(),$item['created'],'r'), // relative_date($item['created']),
+					'app' => $item['app'],
+					'str_app' => sprintf( t(' from %s'), $item['app']),
+					'localtime' => datetime_convert('UTC', 'UTC', $item['created'], 'c'),
 					'lock' => $lock,
 					'location' => template_escape($location),
 					'indent' => $indent,

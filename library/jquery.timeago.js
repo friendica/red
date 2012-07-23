@@ -121,7 +121,7 @@
 	function refresh() {
 		var data = prepareData(this);
 		if (!isNaN(data.datetime)) {
-			$(this).text(inWords(data.atetime));
+			$(this).text(inWords(data.datetime));
 		}
 		return this;
 	}
