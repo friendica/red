@@ -21,7 +21,13 @@ h2 {
 	padding: 5px;
 }
 
+.zregister-feedback {
+	float: left;
+	margin-left: 5px;
+}
+
 .zregister-field-end {
 	clear: both;
 	margin-bottom: 20px;
 }
+
