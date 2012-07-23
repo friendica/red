@@ -3,6 +3,29 @@
 
 function zregister_init(&$a) {
 	$a->page['template'] = 'full';
+
+	$cmd = ((argc() > 1) ? argv(1) : '');
+
+
+	if($cmd === 'email_check.json') {
+		$result = array('error' => false, 'message' => '');
+		$email = $_REQUEST['email'];
+
+		if(! allowed_email($email))
+			$result['message'] = t('Your email domain is not among those allowed on this site.');
+		if((! valid_email($email)) || (! validate_email($email)))
+			$result['message'] .= t('Not a valid email address.') . EOL;
+		if($result['message'])
+			$result['error'] = true;
+
+		header('content-type: application/json');
+		echo json_encode($result);
+		killme();		
+	}
+
+
+
+
 }
 
 
@@ -16,7 +39,7 @@ function zregister_post(&$a) {
 
 	$max_dailies = intval(get_config('system','max_daily_registrations'));
 	if($max_dailies) {
-		$r = q("select count(*) as total from user where register_date > UTC_TIMESTAMP - INTERVAL 1 day");
+		$r = q("select count(*) as total from account where account_created > UTC_TIMESTAMP - INTERVAL 1 day");
 		if($r && $r[0]['total'] >= $max_dailies) {
 			return;
 		}
@@ -177,17 +200,29 @@ function zregister_content(&$a) {
 		}
 	}
 
+	// Configurable terms of service link
+
+	$tosurl = get_config('system','tos_url');
+	if(! $tosurl)
+		$tosurl = $a->get_baseurl() . '/help/TermsOfService';
+
+	$toslink = '<a href="' . $tosurl . '" >' . t('Terms of Service') . '</a>';
+
+	// Configurable whether to restrict age or not - default is based on international legal requirements
+	// This can be relaxed if you are on a restricted server that does not share with public servers
+
+	if(get_config('system','no_age_restriction')) 
+		$label_tos = sprintf( t('I accept the %s for this website'), $toslink);
+	else
+		$label_tos = sprintf( t('I am over 13 years of age and accept the %s for this website'), $toslink);
+
 
 	$email        = ((x($_REQUEST,'email'))        ? $_REQUEST['email']        :  "" );
 	$password     = ((x($_REQUEST,'password'))     ? $_REQUEST['password']     :  "" );
 	$password2    = ((x($_REQUEST,'password2'))    ? $_REQUEST['password2']    :  "" );
 	$invite_code  = ((x($_REQUEST,'invite_code'))  ? $_REQUEST['invite_code']  :  "" );
 
-	$tosurl = get_config('system','tos_url');
-	if(! $tosurl)
-		$tosurl = $a->get_baseurl() . '/help/TOS';
 
-	$toslink = '<a href="' . $tosurl . '" >' . t('Terms of Service') . '</a>';
 
 	$o = replace_macros(get_markup_template('zregister.tpl'), array(
 
@@ -201,7 +236,7 @@ function zregister_content(&$a) {
 		'$label_email'  => t('Your email address'),
 		'$label_pass1'  => t('Choose a password'),
 		'$label_pass2'  => t('Please re-enter your password'),
-		'$label_tos'    => sprintf( t('I have read and accept the %s for this website'), $toslink),
+		'$label_tos'    => $label_tos,
 	
 		'$email'        => $email,
 		'$pass1'        => $password,

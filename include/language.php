@@ -110,6 +110,14 @@ function load_translation_table($lang) {
 	}
 	else
 		$a->strings = array();
+
+	// Allow individual strings to be over-ridden on this site
+	// Either for the default language or for all languages
+
+	if(file_exists("view/local-$lang/strings.php")) {
+		include("view/local-$lang/strings.php");
+	}
+
 }}
 
 // translate string if translation exists
