@@ -501,6 +501,7 @@ function network_content(&$a, $update = 0) {
 
 			$a->page['htmlhead'] .= "<script>\r\n" 
 				. "var network_cmd = " . '"' . $a->get_baseurl() . '/network/' . '"' . ";\r\n"
+				. "var network_uid = " . ((local_user()) ? local_user() : 0) . ";\r\n"
 				. "var network_gid = " . (($gid) ? $gid : 0) . ";\r\n"
 				. "var network_cid = " . (($_GET['cid']) ? $_GET['cid'] : 0) . ";\r\n"
 				. "var network_cmin = " . (($_GET['cmin']) ? $_GET['cmin'] : 0) . ";\r\n"
@@ -510,16 +511,31 @@ function network_content(&$a, $update = 0) {
 				. "var network_conv = " . (($_GET['conv']) ? $_GET['conv'] : 0) . ";\r\n"
 				. "var network_spam = " . (($_GET['spam']) ? $_GET['spam'] : 0) . ";\r\n"
 				. "var network_new = " . (($nouveau) ? $nouveau : 0) . ";\r\n"
+				. "var network_page = " . (($a->pager['page'] != 1) ? $a->pager['page'] : 1) . ";\r\n"
 
 		
 				. 'var network_search = "' . $_GET['search'] . '"' . ";\r\n"
 				. 'var network_order = "' . $_GET['order'] . '"' . ";\r\n"
 				. 'var network_file = "' . $_GET['file'] . '"' . ";\r\n"
-				. 'var network_date_end = "' . $datequery . '"' . ";\r\n"
-				. 'var network_date_start = "' . $datequery2 . '"' . ";\r\n"
+				. 'var network_dend = "' . $datequery . '"' . ";\r\n"
+				. 'var network_dbegin = "' . $datequery2 . '"' . ";\r\n"
+
 				. 'function buildCmd() { var bCmd = network_cmd + "?f=" ;
+					if(network_uid) bCmd = bCmd + "&p=" + network_uid;
 					if(network_cmin) bCmd = bCmd + "&cmin=" + network_cmin;
 					if(network_cmax) bCmd = bCmd + "&cmax=" + network_cmax;
+					if(network_gid) { bCmd = bCmd + "&gid=" + network_gid; } else
+					if(network_cid) { bCmd = bCmd + "&cid=" + network_cid; }
+					if(network_star) bCmd = bCmd + "&star=" + network_star;
+					if(network_liked) bCmd = bCmd + "&liked=" + network_liked;
+					if(network_conv) bCmd = bCmd + "&conv=" + network_conv;
+					if(network_spam) bCmd = bCmd + "&spam=" + network_spam;
+					if(network_new) bCmd = bCmd + "&new=" + network_new;
+					if(network_search) bCmd = bCmd + "&search=" + network_search;
+					if(network_file) bCmd = bCmd + "&file=" + network_file;
+					if(network_dend) bCmd = bCmd + "&dend=" + network_dend;
+					if(network_dbegin) bCmd = bCmd + "&dbegin=" + network_dbegin;
+					if(network_page != 1) bCmd = bCmd + "&page=" + network_page;
 
 					return(bCmd);
 				}'

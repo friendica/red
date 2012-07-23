@@ -698,23 +698,23 @@ function previewTheme(elm) {
 $(document).ready(function() {
 
 jQuery.timeago.settings.strings = {
-	prefixAgo: t01,
-	prefixFromNow: t02,
-	suffixAgo: t03,
-	suffixFromNow: t04,
-	seconds: t05,
-	minute: t06,
-	minutes: t07,
-	hour: t08,
-	hours: t09,
-	day: t10,
-	days: t11,
-	month: t12,
-	months: t13,
-	year: t14,
-	years: t15,
-	wordSeparator: t16,
-	numbers: t17
+	prefixAgo: tago01,
+	prefixFromNow: tago02,
+	suffixAgo: tago03,
+	suffixFromNow: tago04,
+	seconds: tago05,
+	minute: tago06,
+	minutes: tago07,
+	hour: tago08,
+	hours: tago09,
+	day: tago10,
+	days: tago11,
+	month: tago12,
+	months: tago13,
+	year: tago14,
+	years: tago15,
+	wordSeparator: tago16,
+	numbers: tago17
 };
 
 

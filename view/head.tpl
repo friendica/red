@@ -107,23 +107,23 @@
 
 	// jquery.timeago localisations
 
-	var t01 = $t01 ;
-	var t02 = $t02 ;
-	var t03 = "$t03" ;
-	var t04 = "$t04" ;
-	var t05 = "$t05" ;
-	var t06 = "$t06" ;
-	var t07 = "$t07" ;
-	var t08 = "$t08" ;
-	var t09 = "$t09" ;
-	var t10 = "$t10" ;
-	var t11 = "$t11" ;
-	var t12 = "$t12" ;
-	var t13 = "$t13" ;
-	var t14 = "$t14" ;
-	var t15 = "$t15" ;
-	var t16 = "$t16" ;
-	var t17 = $t17 ;
+	var tago01 = $t01 ;
+	var tago02 = $t02 ;
+	var tago03 = "$t03" ;
+	var tago04 = "$t04" ;
+	var tago05 = "$t05" ;
+	var tago06 = "$t06" ;
+	var tago07 = "$t07" ;
+	var tago08 = "$t08" ;
+	var tago09 = "$t09" ;
+	var tago10 = "$t10" ;
+	var tago11 = "$t11" ;
+	var tago12 = "$t12" ;
+	var tago13 = "$t13" ;
+	var tago14 = "$t14" ;
+	var tago15 = "$t15" ;
+	var tago16 = "$t16" ;
+	var tago17 = $t17 ;
 
 </script>
 
