@@ -1392,7 +1392,7 @@ body .pageheader{
 	margin-bottom: 10px;
 	}
 /* wall item */
-.tread-wrapper {
+.thread-wrapper {
   border-bottom: 1px solid #D2D2D2;
   position: relative;
   padding: 5px;
@@ -1400,7 +1400,7 @@ body .pageheader{
   width: 775px;
   padding-top: 10px;
 }
-.tread-wrapper a{
+.thread-wrapper a{
   color: #1872A2;
 }
 
@@ -1708,7 +1708,7 @@ body .pageheader{
 .comment-edit-preview .wall-item-container {
   width: 700px;
 }
-.comment-edit-preview .tread-wrapper {
+.comment-edit-preview .thread-wrapper {
   width: 700px;
   padding: 0;
   margin: 10px 0;
@@ -1723,7 +1723,7 @@ body .pageheader{
 #jot-preview-content{
 	margin-top: 30px;}
 	
-#jot-preview-content .tread-wrapper {
+#jot-preview-content .thread-wrapper {
   background-color: #fff797;
 }
 

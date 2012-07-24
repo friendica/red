@@ -1,5 +1,5 @@
 {{ for $threads as $thread }}
-<div id="tread-wrapper-$thread.id" class="tread-wrapper">
+<div id="thread-wrapper-$thread.id" class="thread-wrapper">
 	{{ for $thread.items as $item }}
 		{{if $item.comment_firstcollapsed}}
 			<div class="hide-comments-outer">

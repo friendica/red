@@ -1291,7 +1291,7 @@ transition: all 0.2s ease-in-out;
 		}
 /* wall item */
 /*marker*/
-.tread-wrapper {
+.thread-wrapper {
   border-bottom: 1px solid #D2D2D2;
   position: relative;
   padding: 5px;
@@ -1299,7 +1299,7 @@ transition: all 0.2s ease-in-out;
   width: 775px;
   padding-top: 10px;
 }
-.tread-wrapper a{
+.thread-wrapper a{
   color: #3465A4;
 }
 
@@ -1491,7 +1491,7 @@ transition: all 0.2s ease-in-out;
 .comment-edit-preview .wall-item-container {
   width: 700px;
 }
-.comment-edit-preview .tread-wrapper {
+.comment-edit-preview .thread-wrapper {
   width: 700px;
   padding: 0;
   margin: 10px 0;
@@ -1506,7 +1506,7 @@ transition: all 0.2s ease-in-out;
 #jot-preview-content{
 	margin-top: 30px;}
 	
-#jot-preview-content .tread-wrapper {
+#jot-preview-content .thread-wrapper {
   background-color: #fff797;
 }
 

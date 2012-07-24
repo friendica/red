@@ -900,7 +900,7 @@ section {
   padding: 0px 20px 0px 10px;
 }
 /* wall item */
-.tread-wrapper {
+.thread-wrapper {
   background-color: #eff0f1;
   position: relative;
   padding: 10px;
@@ -1087,7 +1087,7 @@ section {
 .comment-edit-preview .wall-item-container {
   width: 700px;
 }
-.comment-edit-preview .tread-wrapper {
+.comment-edit-preview .thread-wrapper {
   width: 700px;
   padding: 0;
   margin: 10px 0;
@@ -1095,7 +1095,7 @@ section {
 .shiny {
   border-right: 10px solid #ddffdd;
 }
-#jot-preview-content .tread-wrapper {
+#jot-preview-content .thread-wrapper {
   background-color: #ddffdd;
 }
 .hide-comments-outer {
