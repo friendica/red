@@ -1,3 +1,4 @@
+<div id="threads-begin"></div>
 {{ for $threads as $thread }}
 <div id="thread-wrapper-$thread.id" class="thread-wrapper">
 	{{ for $thread.items as $item }}
@@ -21,7 +22,7 @@
 	{{ endfor }}
 </div>
 {{ endfor }}
-
+<div id="threads-end"></div>
 <div id="conversation-end"></div>
 
 {{ if $dropping }}

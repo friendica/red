@@ -2014,6 +2014,118 @@ function local_delivery($importer,$data) {
 	$feed->enable_order_by_date(false);
 	$feed->init();
 
+
+	if($feed->error())
+		logger('local_delivery: Error parsing XML: ' . $feed->error());
+
+
+	// Check at the feed level for updated contact name and/or photo
+
+	$name_updated  = '';
+	$new_name = '';
+	$photo_timestamp = '';
+	$photo_url = '';
+
+
+	$rawtags = $feed->get_feed_tags( NAMESPACE_DFRN, 'owner');
+	if(! $rawtags)
+		$rawtags = $feed->get_feed_tags( SIMPLEPIE_NAMESPACE_ATOM_10, 'author');
+	if($rawtags) {
+		$elems = $rawtags[0]['child'][SIMPLEPIE_NAMESPACE_ATOM_10];
+		if($elems['name'][0]['attribs'][NAMESPACE_DFRN]['updated']) {
+			$name_updated = $elems['name'][0]['attribs'][NAMESPACE_DFRN]['updated'];
+			$new_name = $elems['name'][0]['data'];
+		} 
+		if((x($elems,'link')) && ($elems['link'][0]['attribs']['']['rel'] === 'photo') && ($elems['link'][0]['attribs'][NAMESPACE_DFRN]['updated'])) {
+			$photo_timestamp = datetime_convert('UTC','UTC',$elems['link'][0]['attribs'][NAMESPACE_DFRN]['updated']);
+			$photo_url = $elems['link'][0]['attribs']['']['href'];
+		}
+	}
+
+	if((is_array($contact)) && ($photo_timestamp) && (strlen($photo_url)) && ($photo_timestamp > $importer['avatar-date'])) {
+		logger('local_delivery: Updating photo for ' . $importer['name']);
+		require_once("Photo.php");
+		$photo_failure = false;
+		$have_photo = false;
+
+		$r = q("SELECT `resource-id` FROM `photo` WHERE `contact-id` = %d AND `uid` = %d LIMIT 1",
+			intval($importer['id']),
+			intval($importer['importer_uid'])
+		);
+		if(count($r)) {
+			$resource_id = $r[0]['resource-id'];
+			$have_photo = true;
+		}
+		else {
+			$resource_id = photo_new_resource();
+		}
+			
+		$img_str = fetch_url($photo_url,true);
+		// guess mimetype from headers or filename
+		$type = guess_image_type($photo_url,true);
+		
+		
+		$img = new Photo($img_str, $type);
+		if($img->is_valid()) {
+			if($have_photo) {
+				q("DELETE FROM `photo` WHERE `resource-id` = '%s' AND `contact-id` = %d AND `uid` = %d",
+					dbesc($resource_id),
+					intval($importer['id']),
+					intval($importer['importer_uid'])
+				);
+			}
+				
+			$img->scaleImageSquare(175);
+				
+			$hash = $resource_id;
+			$r = $img->store($importer['importer_uid'], $importer['id'], $hash, basename($photo_url), 'Contact Photos', 4);
+				
+			$img->scaleImage(80);
+			$r = $img->store($importer['importer_uid'], $importer['id'], $hash, basename($photo_url), 'Contact Photos', 5);
+
+			$img->scaleImage(48);
+			$r = $img->store($importer['importer_uid'], $importer['id'], $hash, basename($photo_url), 'Contact Photos', 6);
+
+			$a = get_app();
+
+			q("UPDATE `contact` SET `avatar-date` = '%s', `photo` = '%s', `thumb` = '%s', `micro` = '%s'  
+				WHERE `uid` = %d AND `id` = %d LIMIT 1",
+				dbesc(datetime_convert()),
+				dbesc($a->get_baseurl() . '/photo/' . $hash . '-4.'.$img->getExt()),
+				dbesc($a->get_baseurl() . '/photo/' . $hash . '-5.'.$img->getExt()),
+				dbesc($a->get_baseurl() . '/photo/' . $hash . '-6.'.$img->getExt()),
+				intval($importer['importer_uid']),
+				intval($importer['id'])
+			);
+		}
+	}
+
+	if((is_array($contact)) && ($name_updated) && (strlen($new_name)) && ($name_updated > $contact['name-date'])) {
+		$r = q("select * from contact where uid = %d and id = %d limit 1",
+			intval($importer['importer_uid']),
+			intval($importer['id'])
+		);
+
+		$x = q("UPDATE `contact` SET `name` = '%s', `name-date` = '%s' WHERE `uid` = %d AND `id` = %d LIMIT 1",
+			dbesc(notags(trim($new_name))),
+			dbesc(datetime_convert()),
+			intval($importer['importer_uid']),
+			intval($importer['id'])
+		);
+
+		// do our best to update the name on content items
+
+		if(count($r)) {
+			q("update item set `author-name` = '%s' where `author-name` = '%s' and `author-link` = '%s' and uid = %d",
+				dbesc(notags(trim($new_name))),
+				dbesc($r[0]['name']),
+				dbesc($r[0]['url']),
+				intval($importer['importer_uid'])
+			);
+		}
+	}
+
+
 /*
 	// Currently unsupported - needs a lot of work
 	$reloc = $feed->get_feed_tags( NAMESPACE_DFRN, 'relocate' );

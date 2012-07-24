@@ -8,6 +8,7 @@ require_once('include/datetime.php');
 require_once('include/language.php');
 require_once('include/nav.php');
 require_once('include/cache.php');
+require_once('library/Mobile_Detect/Mobile_Detect.php');
 
 define ( 'FRIENDICA_PLATFORM',     'Friendica Red');
 define ( 'FRIENDICA_VERSION',      trim(file_get_contents('version.inc')) . 'R');
@@ -1454,8 +1455,17 @@ if(! function_exists('current_theme')) {
 	
 		$a = get_app();
 	
-		$system_theme = ((isset($a->config['system']['theme'])) ? $a->config['system']['theme'] : '');
-		$theme_name = ((isset($_SESSION) && x($_SESSION,'theme')) ? $_SESSION['theme'] : $system_theme);
+		$mobile_detect = new Mobile_Detect();
+		$is_mobile = $mobile_detect->isMobile() || $mobile_detect->isTablet();
+	
+		if($is_mobile) {
+			$system_theme = ((isset($a->config['system']['mobile-theme'])) ? $a->config['system']['mobile-theme'] : '');
+			$theme_name = ((isset($_SESSION) && x($_SESSION,'mobile-theme')) ? $_SESSION['mobile-theme'] : $system_theme);
+		}
+		else {
+			$system_theme = ((isset($a->config['system']['theme'])) ? $a->config['system']['theme'] : '');
+			$theme_name = ((isset($_SESSION) && x($_SESSION,'theme')) ? $_SESSION['theme'] : $system_theme);
+		}
 	
 		if($theme_name &&
 				(file_exists('view/theme/' . $theme_name . '/style.css') ||
@@ -1592,18 +1602,21 @@ if(! function_exists('profile_tabs')){
 				'url' => $url,
 				'sel' => ((!isset($tab)&&$a->argv[0]=='profile')?'active':''),
 				'title' => t('Status Messages and Posts'),
+				'id' => 'status-tab',
 			),
 			array(
 				'label' => t('Profile'),
 				'url' 	=> $url.'/?tab=profile',
 				'sel'	=> ((isset($tab) && $tab=='profile')?'active':''),
 				'title' => t('Profile Details'),
+				'id' => 'profile-tab',
 			),
 			array(
 				'label' => t('Photos'),
 				'url'	=> $a->get_baseurl() . '/photos/' . $nickname,
 				'sel'	=> ((!isset($tab)&&$a->argv[0]=='photos')?'active':''),
 				'title' => t('Photo Albums'),
+				'id' => 'photo-tab',
 			),
 		);
 	
@@ -1613,12 +1626,14 @@ if(! function_exists('profile_tabs')){
 				'url'	=> $a->get_baseurl() . '/events',
 				'sel' 	=>((!isset($tab)&&$a->argv[0]=='events')?'active':''),
 				'title' => t('Events and Calendar'),
+				'id' => 'events-tab',
 			);
 			$tabs[] = array(
 				'label' => t('Personal Notes'),
 				'url'	=> $a->get_baseurl() . '/notes',
 				'sel' 	=>((!isset($tab)&&$a->argv[0]=='notes')?'active':''),
 				'title' => t('Only You Can See This'),
+				'id' => 'notes-tab',
 			);
 		}
 
