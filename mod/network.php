@@ -56,11 +56,11 @@ function network_init(&$a) {
                 $dest_url .= "/".$a->argv[1];
             }
 
-			goaway($a->get_baseurl() . $dest_url."?".$dest_qs);
+//			goaway($a->get_baseurl() . $dest_url."?".$dest_qs);
 		}
 	}
 	
-	$group_id = (($a->argc > 1 && intval($a->argv[1])) ? intval($a->argv[1]) : 0);
+	$group_id = ((x($_GET,'gid')) ? intval($_GET['gid']) : 0);
 		  
 	require_once('include/group.php');
 	require_once('include/contact_widgets.php');
@@ -194,9 +194,8 @@ function network_query_get_sel_tab($a) {
 	$spam_active = '';
 	$postord_active = '';
 
-	if(($a->argc > 1 && $a->argv[1] === 'new') 
-		|| ($a->argc > 2 && $a->argv[2] === 'new')) {
-			$new_active = 'active';
+	if(x($_GET,'new')) {
+		$new_active = 'active';
 	}
 	
 	if(x($_GET,'search')) {
@@ -256,26 +255,19 @@ function network_content(&$a, $update = 0) {
 
 	$nouveau = false;
 
-	if($a->argc > 1) {
-		for($x = 1; $x < $a->argc; $x ++) {
-			if(is_a_date_arg($a->argv[$x])) {
-				if($datequery)
-					$datequery2 = escape_tags($a->argv[$x]);
-				else {
-					$datequery = escape_tags($a->argv[$x]);
-					$_GET['order'] = 'post';
-				}
-			}
-			elseif($a->argv[$x] === 'new') {
-				$nouveau = true;
-			}
-			elseif(intval($a->argv[$x])) {
-				$group = intval($a->argv[$x]);
-				$def_acl = array('allow_gid' => '<' . $group . '>');
-			}
-		}
-	}
+	$datequery = ((x($_GET,'dend') && is_a_date_arg($_GET['dend'])) ? notags($_GET['dend']) : '');
+	$datequery2 = ((x($_GET,'dbegin') && is_a_date_arg($_GET['dbegin'])) ? notags($_GET['dbegin']) : '');
+	$nouveau = ((x($_GET,'new')) ? intval($_GET['new']) : 0);
+	$gid = ((x($_GET,'gid')) ? intval($_GET['gid']) : 0);
 
+
+	if($datequery)
+		$_GET['order'] = 'post';
+
+	if($gid) {
+		$group = $gid;
+		$def_acl = array('allow_gid' => '<' . $group . '>');
+	}
 
 	$o = '';
 
@@ -295,32 +287,32 @@ function network_content(&$a, $update = 0) {
 	$tabs = array(
 		array(
 			'label' => t('Commented Order'),
-			'url'=>$a->get_baseurl(true) . '/' . str_replace('/new', '', $cmd) . '?f=&order=comment' . ((x($_GET,'cid')) ? '&cid=' . $_GET['cid'] : ''), 
+			'url'=>$a->get_baseurl(true) . '/' . $cmd . '?f=&order=comment' . ((x($_GET,'cid')) ? '&cid=' . $_GET['cid'] : ''), 
 			'sel'=>$all_active,
 			'title'=> t('Sort by Comment Date'),
 		),
 		array(
 			'label' => t('Posted Order'),
-			'url'=>$a->get_baseurl(true) . '/' . str_replace('/new', '', $cmd) . '?f=&order=post' . ((x($_GET,'cid')) ? '&cid=' . $_GET['cid'] : ''), 
+			'url'=>$a->get_baseurl(true) . '/' . $cmd . '?f=&order=post' . ((x($_GET,'cid')) ? '&cid=' . $_GET['cid'] : ''), 
 			'sel'=>$postord_active,
 			'title' => t('Sort by Post Date'),
 		),
 
 		array(
 			'label' => t('Personal'),
-			'url' => $a->get_baseurl(true) . '/' . str_replace('/new', '', $cmd) . ((x($_GET,'cid')) ? '/?f=&cid=' . $_GET['cid'] : '') . '&conv=1',
+			'url' => $a->get_baseurl(true) . '/' . $cmd . ((x($_GET,'cid')) ? '/?f=&cid=' . $_GET['cid'] : '') . '&conv=1',
 			'sel' => $conv_active,
 			'title' => t('Posts that mention or involve you'),
 		),
 		array(
 			'label' => t('New'),
-			'url' => $a->get_baseurl(true) . '/' . str_replace('/new', '', $cmd) . ($len_naked_cmd ? '/' : '') . 'new' . ((x($_GET,'cid')) ? '/?f=&cid=' . $_GET['cid'] : ''),
+			'url' => $a->get_baseurl(true) . '/' . $cmd . ((x($_GET,'cid')) ? '/?f=&cid=' . $_GET['cid'] : '') . '&new=1',
 			'sel' => $new_active,
 			'title' => t('Activity Stream - by date'),
 		),
 		array(
 			'label' => t('Starred'),
-			'url'=>$a->get_baseurl(true) . '/' . str_replace('/new', '', $cmd) . ((x($_GET,'cid')) ? '/?f=&cid=' . $_GET['cid'] : '') . '&star=1',
+			'url'=>$a->get_baseurl(true) . '/' . $cmd . ((x($_GET,'cid')) ? '/?f=&cid=' . $_GET['cid'] : '') . '&star=1',
 			'sel'=>$starred_active,
 			'title' => t('Favourite Posts'),
 		),

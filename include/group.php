@@ -226,7 +226,7 @@ function group_side($every="contacts",$each="group",$edit = false, $group_id = 0
 				'cid'		=> $cid,
 				'text' 		=> $rr['name'],
 				'selected' 	=> $selected,
-				'href'		=> $each."/".$rr['id'],
+				'href'		=> (($each === 'network') ? $each.'?f=&gid='.$rr['id'] : $each."/".$rr['id']),
 				'edit'		=> $groupedit,
 				'ismember'	=> in_array($rr['id'],$member_of),
 			);
