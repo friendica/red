@@ -1,0 +1,46 @@
+1) Inlcude the JS file into your page (after jQuery):
+
+<script src="http://ajax.googleapis.com/ajax/libs/jquery/1.4.2/jquery.min.js" type="text/javascript"></script>
+
+<script src="JS/jquery.divgrow.js" type="text/javascript"></script>
+
+
+2) Call the divgrow function to any div element you want to grow. initialHeight sets the height of the containers before they are expanded.
+
+<script type="text/javascript">
+    $().ready(function() {
+        $('div.more-block').divgrow({ initialHeight: 147 });
+    });
+
+
+3) Create you container and give it a reference, i.e. by classname "more-block"
+
+    <div class="more-block">
+     <h2>Corns and Callus (Hyperkeratosis)</h2>
+        <p>
+        These occur in areas of the foot that are experiencing excess pressure and/or friction. The body seeks to defend itself by producing extra layers of skin as a form of protection. However as the process continues the accumulation of extra skin exceeds that which is lost naturally so the skin in these vulnerable areas builds up and becomes compacted as the original cause of the process continues. The protective mechanism becomes the problem if left untreated and the cause not addressed.<br />
+        Callus denotes a general area of hard dead skin and a corn is a much more concentrated collection which often goes deep rather than wide. Corns can produce pain completely out of proportion to their size often because of impingement upon nerves or sometimes infection.<br />
+        Treatment of the symptoms is the first step to stopping the pain and discomfort and this is usually addressed without much discomfort by a foot health professional. Treating the cause can be as simple as discarding an ill fitting pair of shoes or may entail a more detailed assessment of individual foot function.<br />
+        Callus is not always caused by mechanical factors but can be a symptom of a systemic disease such as Psoriasis.<br />
+        There are some useful devices to assist in protecting vulnerable areas from corns and callus ? see our recommended <a href="Products.aspx">products page</a>.
+        </p>
+    </div>
+
+
+
+-----------------------------------------------------
+
+Thats it.
+
+Optional arguments:
+
+initialHeight: 100 - (default)
+moreText: "+ Show More" - (default)
+lessText: "- Show Less" - (default)
+showBrackets: true - (default)
+
+e.g.
+
+$('div.more-block').divgrow({ initialHeight: 147, moreText: "give me more", lessText: "thats enough", showBrackets: false });
+
+

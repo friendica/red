@@ -708,35 +708,6 @@ jQuery.timeago.settings.strings = {
 	numbers: tago17
 };
 
-//$('.wall-item-content').each(function() {
-
-//	var totalHeight = 0;
-//	$(this).children().each(function(){
-//			totalHeight += $(this).outerHeight(true); // true = include margins
-//	});
-//	if(totalHeight > 400) {
-//		$(this).css({'overflow-y':'hidden','max-height' : '400px'});
-		
-//	}
-//	else {
-//		$(this).css('overflow-y','visible');
-//	}
-//	});
-
-
-$('.wall-item-content').css({'overflow-y':'hidden','max-height' : '400px'});
-
-$('.wall-item-content').focus(
-		function() {
-		$(this).css('overflow-y','visible')
-			});
-
-$('.wall-item-content').focusout(
-		function() {
-		$(this).css( { 'overflow-y' : 'hidden','max-height' : '400px'});
-		}
-);
-
 
 $("abbr.wall-item-ago-time").timeago();
 });
