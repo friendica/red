@@ -1124,8 +1124,9 @@ input#dfrn-url {
 	margin-left: 10px;
 	/*margin-bottom: 20px;*/
 	/*padding: 20px;*/
-	max-height: 400px;
-	overflow: auto;
+/*	max-height: 400px; */
+/*	overflow-x: auto; */
+/*	overflow-y: auto; */
 }
 
 .wall-item-content img {

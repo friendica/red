@@ -260,6 +260,10 @@ function updateConvItems(mode,data) {
 	}
 	if(mode === 'replace') {
 		// clear existing content
+		$('.thread-wrapper').remove();
+
+		prev = 'threads-begin';
+
 		$('.thread-wrapper',data).each(function() {
 			var ident = $(this).attr('id');
 
@@ -677,42 +681,6 @@ function previewTheme(elm) {
 
 }
 
-// This can be used for dynamic "show more" based purely on the 
-// height of the enclosed HTML (which has overflow: hidden).
-// if ($(el).vScrollable()) {
-//    show_more_link(el);
-// }
-// when link is clicked do $(el).css('overflow','visible') 
-//
-// We do this by cloning the element in question but in a hidden div which displays overflow content and compare the heights
-// of the two elements. Then we remove the hidden div we just created.
-
-(function($) {
-    $.fn.vScrollable = function() {
-        return this.each(function() {
-		var el = $(this);
-		var tooHigh = false;
-
-		if(el.css("overflow") == "hidden") {
-            var text = el.html();                               
-            var t = $(this.cloneNode(true))
-				.hide()
-				.css('position', 'absolute')
-				.css('overflow', 'visible')
-				.width(el.width())
-				.height('auto')
-					;
-                el.after(t);
-				tooHigh = (t.height() > el.height()); 
-				el.parentNode.removeChild(el);
-		}
-		return tooHigh;
-	});
-    };
-})(jQuery);
-
-
-
 $(document).ready(function() {
 
 jQuery.timeago.settings.strings = {
@@ -734,6 +702,35 @@ jQuery.timeago.settings.strings = {
 	wordSeparator: tago16,
 	numbers: tago17
 };
+
+//$('.wall-item-content').each(function() {
+
+//	var totalHeight = 0;
+//	$(this).children().each(function(){
+//			totalHeight += $(this).outerHeight(true); // true = include margins
+//	});
+//	if(totalHeight > 400) {
+//		$(this).css({'overflow-y':'hidden','max-height' : '400px'});
+		
+//	}
+//	else {
+//		$(this).css('overflow-y','visible');
+//	}
+//	});
+
+
+$('.wall-item-content').css({'overflow-y':'hidden','max-height' : '400px'});
+
+$('.wall-item-content').focus(
+		function() {
+		$(this).css('overflow-y','visible')
+			});
+
+$('.wall-item-content').focusout(
+		function() {
+		$(this).css( { 'overflow-y' : 'hidden','max-height' : '400px'});
+		}
+);
 
 
 $("abbr.wall-item-ago-time").timeago();
