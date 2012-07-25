@@ -227,7 +227,11 @@ function updateConvItems(mode,data) {
 				});
 				$('#' + prev).after($(this));
 				$("abbr.wall-item-ago-time").timeago();
-
+				// divgrow doesn't prevent itself from attaching a second (or 500th)
+				// "show more" div to a content region - it also has a few other
+				// issues related to how we're trying to use it. 
+				// disable for now.
+				//				$("div.wall-item-body").divgrow({ initialHeight: 400 });
 			}
 			else {
 				$('img',this).each(function() {
@@ -235,6 +239,8 @@ function updateConvItems(mode,data) {
 				});
 				$('#' + ident).replaceWith($(this));
 				$("abbr.wall-item-ago-time").timeago();
+				//	$("div.wall-item-body").divgrow({ initialHeight: 400 });
+
 			}
 			prev = ident;
 		});
@@ -250,6 +256,8 @@ function updateConvItems(mode,data) {
 				});
 				$('#threads-end').before($(this));
 				$("abbr.wall-item-ago-time").timeago();
+				//	$("div.wall-item-body").divgrow({ initialHeight: 400 });
+
 			}
 			else {
 				$('img',this).each(function() {
@@ -257,6 +265,7 @@ function updateConvItems(mode,data) {
 				});
 				$('#' + ident).replaceWith($(this));
 				$("abbr.wall-item-ago-time").timeago();
+				//	$("div.wall-item-body").divgrow({ initialHeight: 400 });
 			}
 		});
 	}
@@ -276,6 +285,7 @@ function updateConvItems(mode,data) {
 				$('#' + prev).after($(this));
 				$("abbr.wall-item-ago-time").timeago();
 
+				//	$("div.wall-item-body").divgrow({ initialHeight: 400 });
 			}
 			prev = ident;
 		});
@@ -323,8 +333,9 @@ function updateConvItems(mode,data) {
 		var update_url = 'update_' + src + udargs + '&p=' + profile_uid + '&page=' + profile_page + '&msie=' + ((msie) ? 1 : 0);
 
 		$.get(update_url,function(data) {
+				var update_mode = ((page_load) ? 'replace' : 'update');
 			in_progress = false;
-			updateConvItems('update',data);
+			updateConvItems(update_mode,data);
 		});
 
 
@@ -710,4 +721,8 @@ jQuery.timeago.settings.strings = {
 
 
 $("abbr.wall-item-ago-time").timeago();
+$("div.wall-item-body").divgrow({ initialHeight: 400 });
+
+
 });
+
