@@ -8,13 +8,13 @@ require_once('include/group.php');
 function update_network_content(&$a) {
 
 	$profile_uid = intval($_GET['p']);
-
+	$load = (((argc() > 1) && (argv(1) == 'load')) ? 1 : 0);
 	header("Content-type: text/html");
 	echo "<!DOCTYPE html><html><body>\r\n";
 	echo (($_GET['msie'] == 1) ? '<div>' : '<section>');
 
 
-        $text = network_content($a,$profile_uid);
+        $text = network_content($a,$profile_uid, $load);
         $pattern = "/<img([^>]*) src=\"([^\"]*)\"/";
         $replace = "<img\${1} dst=\"\${2}\"";
         $text = preg_replace($pattern, $replace, $text);

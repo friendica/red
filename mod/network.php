@@ -235,7 +235,7 @@ function network_query_get_sel_tab($a) {
 }
 
 
-function network_content(&$a, $update = 0) {
+function network_content(&$a, $update = 0, $load = false) {
 
 	require_once('include/conversation.php');
 
@@ -451,10 +451,6 @@ function network_content(&$a, $update = 0) {
 		if(count($r)) {
 			$sql_extra = " AND `item`.`parent` IN ( SELECT DISTINCT(`parent`) FROM `item` WHERE 1 $sql_options AND `contact-id` = " . intval($cid) . " and deleted = 0 ) ";
 			$o = '<h2>' . t('Contact: ') . $r[0]['name'] . '</h2>' . $o;
-			if($r[0]['network'] === NETWORK_OSTATUS && $r[0]['writable'] && (! get_pconfig(local_user(),'system','nowarn_insecure'))) {
-				notice( t('Private messages to this person are at risk of public disclosure.') . EOL);
-			}
-
 		}
 		else {
 			notice( t('Invalid contact.') . EOL);
@@ -581,7 +577,7 @@ function network_content(&$a, $update = 0) {
 		);
 	}
 
-	if($update) {
+	if($update && ! $load) {
 
 		// only setup pagination on initial page view
 		$pager_sql = '';
@@ -601,8 +597,10 @@ function network_content(&$a, $update = 0) {
 	}
 
 	$simple_update = (($update) ? " and `item`.`unseen` = 1 " : '');
+	if($load)
+		$simple_update = '';
 
-	if($nouveau) {
+	if($nouveau && $load) {
 		// "New Item View" - show all items unthreaded in reverse created date order
 
 		$items = q("SELECT `item`.*, `item`.`id` AS `item_id`, 
@@ -624,8 +622,8 @@ function network_content(&$a, $update = 0) {
 
 		$items = fetch_post_tags($items);
 	}
-	else {
-
+	elseif($load) {
+logger('loading:');
 		// Normal conversation view
 
 
@@ -636,7 +634,7 @@ function network_content(&$a, $update = 0) {
 
 		// Fetch a page full of parent items for this page
 
-		if($update) {
+		if($update && (! $load)) {
 			$r = q("SELECT `parent` AS `item_id`, `contact`.`uid` AS `contact_uid`
 				FROM `item` LEFT JOIN `contact` ON `contact`.`id` = `item`.`contact-id`
 				WHERE `item`.`uid` = %d AND `item`.`visible` = 1 AND
@@ -649,7 +647,6 @@ function network_content(&$a, $update = 0) {
 		}
 		else {
 
-dbg(1);
 			$r = q("SELECT `item`.`id` AS `item_id`, `contact`.`uid` AS `contact_uid`
 				FROM `item` LEFT JOIN `contact` ON `contact`.`id` = `item`.`contact-id`
 				WHERE `item`.`uid` = %d AND `item`.`visible` = 1 AND `item`.`deleted` = 0
@@ -659,7 +656,7 @@ dbg(1);
 				ORDER BY `item`.$ordering DESC $pager_sql ",
 				intval(local_user())
 			);
-dbg(0);
+
 		}
 
 		// Then fetch all the children of the parents that are on this page
@@ -697,6 +694,7 @@ dbg(0);
 		}
 	}
 
+logger('items: ' . count($items));
 
 	// We aren't going to try and figure out at the item, group, and page
 	// level which items you've seen and which you haven't. If you're looking

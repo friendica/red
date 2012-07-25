@@ -33,6 +33,8 @@
 	var last_popup_menu = null;
 	var last_popup_button = null;
 
+	var page_load = true;
+
 	$(function() {
 		$.ajaxSetup({cache: false});
 
@@ -314,7 +316,10 @@ function updateConvItems(mode,data) {
 		prev = 'live-' + src;
 
 		in_progress = true;
-		var udargs = ((netargs.length) ? '/' + netargs : '');
+
+		var udargs = ((page_load) ? '/load' : '');
+		page_load = false;
+
 		var update_url = 'update_' + src + udargs + '&p=' + profile_uid + '&page=' + profile_page + '&msie=' + ((msie) ? 1 : 0);
 
 		$.get(update_url,function(data) {
