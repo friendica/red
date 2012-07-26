@@ -602,6 +602,8 @@ function network_content(&$a, $update = 0, $load = false) {
 	if($load)
 		$simple_update = '';
 
+	$start = dba_timer();
+
 	if($nouveau && $load) {
 		// "New Item View" - show all items unthreaded in reverse created date order
 
@@ -625,7 +627,7 @@ function network_content(&$a, $update = 0, $load = false) {
 		$items = fetch_post_tags($items);
 	}
 	elseif($load) {
-logger('loading:');
+
 		// Normal conversation view
 
 
@@ -696,7 +698,7 @@ logger('loading:');
 		}
 	}
 
-logger('items: ' . count($items));
+// logger('items: ' . count($items));
 
 	// We aren't going to try and figure out at the item, group, and page
 	// level which items you've seen and which you haven't. If you're looking
@@ -714,11 +716,20 @@ logger('items: ' . count($items));
 
 	$mode = (($nouveau) ? 'network-new' : 'network');
 
+	$first = dba_timer();
+
 	$o .= conversation($a,$items,$mode,$update,'client');
+
+
+	$second = dba_timer();
 
 	if(! $update) {
         $o .= alt_pager($a,count($items));
 	}
+
+//	logger('parent dba_timer: ' . sprintf('%01.4f',$first - $start));
+//	logger('child  dba_timer: ' . sprintf('%01.4f',$second - $first));
+
 
 	return $o;
 }

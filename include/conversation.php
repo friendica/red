@@ -311,6 +311,7 @@ function localize_item(&$item){
 if(!function_exists('conversation')) {
 function conversation(&$a, $items, $mode, $update, $page_mode = 'traditional') {
 
+	$tstart = dba_timer();
 
 	require_once('bbcode.php');
 
@@ -522,6 +523,8 @@ function conversation(&$a, $items, $mode, $update, $page_mode = 'traditional') {
 
 			$comments = array();
 			foreach($items as $item) {
+
+
 				if((intval($item['gravity']) == 6) && ($item['id'] != $item['parent'])) {
 					if(! x($comments,$item['parent']))
 						$comments[$item['parent']] = 1;
@@ -548,6 +551,8 @@ function conversation(&$a, $items, $mode, $update, $page_mode = 'traditional') {
 
 
 			foreach($items as $item) {
+
+				$tfirst = dba_timer();
 
 				$comment = '';
 				$template = $tpl;
@@ -872,8 +877,21 @@ function conversation(&$a, $items, $mode, $update, $page_mode = 'traditional') {
 				call_hooks('display_item', $arr);
 
 				$threads[$threadsid]['items'][] = $arr['output'];
+
+				$tlast = dba_timer();
+
+//				logger('render dba_timer: item# ' . $item['id'] . ' ' . sprintf('%01.4f',$tlast - $tfirst));
+
+
+
+
 			}
 		}
+
+//		logger('render total dba_timer: ' . sprintf('%01.4f',$tlast - $tstart));
+
+
+
 	}
 
 //	logger('threads: ' . count($threads) . ' update: ' . $update);
@@ -906,6 +924,10 @@ function conversation(&$a, $items, $mode, $update, $page_mode = 'traditional') {
 			'$dropping' => ($page_dropping?t('Delete Selected Items'):False),
 		));
 	}
+
+	$tfinal = dba_timer();
+//	logger('render template dba_timer: ' . sprintf('%01.4f',$tfinal - $tlast));
+
 
 	return $o;
 }}

@@ -17,6 +17,7 @@ function ping_init(&$a) {
 	$result['notice'] = array();
 	$result['info'] = array();
 
+	$t0 = dba_timer();
 
 	header("content-type: application/json");
 
@@ -89,6 +90,9 @@ function ping_init(&$a) {
 	if($t)
 		$result['notify'] = intval($t[0]['total']);
 
+
+	$t1 = dba_timer();
+
 	$r = q("SELECT `item`.`id`,`item`.`parent`, `item`.`verb`, `item`.`wall`, `item`.`author-name`, 
 		`item`.`author-link`, `item`.`author-avatar`, `item`.`created`, `item`.`object`, 
 		`pitem`.`author-name` as `pname`, `pitem`.`author-link` as `plink` 
@@ -108,12 +112,18 @@ function ping_init(&$a) {
 		}
 	}
 
+
+	$t2 = dba_timer();
+
 	$intros1 = q("SELECT  `intro`.`id`, `intro`.`datetime`, 
 		`fcontact`.`name`, `fcontact`.`url`, `fcontact`.`photo` 
 		FROM `intro` LEFT JOIN `fcontact` ON `intro`.`fid` = `fcontact`.`id`
 		WHERE `intro`.`uid` = %d  AND `intro`.`blocked` = 0 AND `intro`.`ignore` = 0 AND `intro`.`fid`!=0",
 		intval(local_user())
 	);
+
+	$t3 = dba_timer();
+
 	$intros2 = q("SELECT `intro`.`id`, `intro`.`datetime`, 
 		`contact`.`name`, `contact`.`url`, `contact`.`photo` 
 		FROM `intro` LEFT JOIN `contact` ON `intro`.`contact-id` = `contact`.`id`
@@ -123,6 +133,8 @@ function ping_init(&$a) {
 
 	$intros = count($intros1) + count($intros2);
 	$result['intros'] = intval($intros);
+
+	$t4 = dba_timer();
 
 	$myurl = $a->get_baseurl() . '/profile/' . $a->user['nickname'] ;
 	$mails = q("SELECT *,  COUNT(*) AS `total` FROM `mail`
@@ -138,8 +150,18 @@ function ping_init(&$a) {
 		if($regs)
 			$result['register'] = intval($regs[0]['total']);
 	} 
+
+	$t5 = dba_timer();
+
+
+
+	$x = json_encode($result);
 	
-	echo json_encode($result);
+	$t6 = dba_timer();
+
+//	logger('ping timer: ' . sprintf('%01.4f %01.4f %01.4f %01.4f %01.4f %01.4f',$t6 - $t5, $t5 - $t4, $t4 - $t3, $t3 - $t2, $t2 - $t1, $t1 - $t0));
+
+	echo $x;
 	killme();
 
 }

@@ -154,6 +154,27 @@
 					window.location.href=window.location.href 
 				}
 
+
+				// start live update
+
+				if($('#live-network').length)   { src = 'network'; liveUpdate(); }
+				if($('#live-profile').length)   { src = 'profile'; liveUpdate(); }
+				if($('#live-community').length) { src = 'community'; liveUpdate(); }
+				if($('#live-notes').length)     { src = 'notes'; liveUpdate(); }
+				if($('#live-display').length) {
+					if(liking) {
+						liking = 0;
+						window.location.href=window.location.href 
+					}
+				}
+				if($('#live-photos').length) { 
+					if(liking) {
+						liking = 0;
+						window.location.href=window.location.href 
+					}
+				}
+
+
 				if(data.network == 0) { 
 					data.network = ''; 
 					$('#net-update').removeClass('show') 
@@ -188,24 +209,6 @@
 				});
 
 			
-				// start live update
-
-				if($('#live-network').length)   { src = 'network'; liveUpdate(); }
-				if($('#live-profile').length)   { src = 'profile'; liveUpdate(); }
-				if($('#live-community').length) { src = 'community'; liveUpdate(); }
-				if($('#live-notes').length)     { src = 'notes'; liveUpdate(); }
-				if($('#live-display').length) {
-					if(liking) {
-						liking = 0;
-						window.location.href=window.location.href 
-					}
-				}
-				if($('#live-photos').length) { 
-					if(liking) {
-						liking = 0;
-						window.location.href=window.location.href 
-					}
-				}
 
 			}) ;
 		}

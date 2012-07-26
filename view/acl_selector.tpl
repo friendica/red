@@ -16,11 +16,13 @@
 
 <script>
 $(document).ready(function() {
-	if(typeof acl=="undefined"){
-		acl = new ACL(
-			baseurl+"/acl",
-			[ $allowcid,$allowgid,$denycid,$denygid ]
-		);
-	}
+	setTimeout( function () {
+		if(typeof acl=="undefined"){
+			acl = new ACL(
+				baseurl+"/acl",
+				[ $allowcid,$allowgid,$denycid,$denygid ]
+			);
+		}
+	}, 5000 );
 });
 </script>

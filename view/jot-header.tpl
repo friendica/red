@@ -103,6 +103,7 @@ function initEditor(cb){
 
 			}
 		});
+
 		editor = true;
 		// setup acl popup
 		$("a#jot-perms-icon").fancybox({

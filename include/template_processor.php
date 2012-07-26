@@ -189,6 +189,7 @@
 		}
 	
 		public function replace($s, $r) {
+//			$t1 = dba_timer();
 			$this->r = $r;
 			
 			$s = $this->_build_nodes($s);
@@ -199,12 +200,17 @@
 			// remove comments block
 			$s = preg_replace('/{#[^#]*#}/', "" , $s);
 			
+//			$t2 = dba_timer();
+
 			// replace strings recursively (limit to 10 loops)
 			$os = ""; $count=0;
 			while($os!=$s && $count<10){
 				$os=$s; $count++;
 				$s = $this->var_replace($s);
 			}
+//			$t3 = dba_timer();
+//			logger('macro timer: ' . sprintf('%01.4f %01.4f',$t3 - $t2, $t2  - $t1));
+
 			return $s;
 		}
 	}
