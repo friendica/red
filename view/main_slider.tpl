@@ -11,6 +11,7 @@
 	function networkRefresh() {
 		if((document.readyState !== "complete") || (slideTimer !== null))
 			return;
+		setTimeout(function() { $("#profile-jot-text-loading").show(); }, 1000 );
 		slideTimer = setTimeout(networkTimerRefresh,2000);
 	}
 
