@@ -11,10 +11,12 @@
 	function networkRefresh() {
 		if((document.readyState !== "complete") || (slideTimer !== null))
 			return;
-		slideTimer = setTimeout(networkTimerRefresh,5000);
+		slideTimer = setTimeout(networkTimerRefresh,2000);
 	}
 
 	function networkTimerRefresh() {
-		window.location.href = buildCmd();
+		slideTimer = null;
+		page_load = true;
+		liveUpdate();
 	}
 </script>

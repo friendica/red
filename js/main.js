@@ -327,13 +327,19 @@ function updateConvItems(mode,data) {
 
 		in_progress = true;
 
-		var udargs = ((page_load) ? '/load' : '');
-		page_load = false;
+		var update_url;
 
-		var update_url = 'update_' + src + udargs + '&p=' + profile_uid + '&page=' + profile_page + '&msie=' + ((msie) ? 1 : 0);
+		if(typeof buildCmd == 'function') {
+			update_url = buildCmd();
+		}
+		else {
+			var udargs = ((page_load) ? '/load' : '');
+			update_url = 'update_' + src + udargs + '&p=' + profile_uid + '&page=' + profile_page + '&msie=' + ((msie) ? 1 : 0);
+		}
 
 		$.get(update_url,function(data) {
-				var update_mode = ((page_load) ? 'replace' : 'update');
+			var update_mode = ((page_load) ? 'replace' : 'update');
+			page_load = false;
 			in_progress = false;
 			updateConvItems(update_mode,data);
 		});
