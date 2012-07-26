@@ -13,6 +13,7 @@ CREATE TABLE IF NOT EXISTS `account` (
   `account_email` char(255) NOT NULL,
   `account_language` char(16) NOT NULL DEFAULT 'en',
   `account_created` datetime NOT NULL DEFAULT '0000-00-00 00:00:00',
+  `account_lastlog` datetime NOT NULL DEFAULT '0000-00-00 00:00:00',
   `account_flags` int(10) unsigned NOT NULL,
   `account_roles` int(10) unsigned NOT NULL,
   `account_reset` char(255) NOT NULL,
@@ -25,7 +26,9 @@ CREATE TABLE IF NOT EXISTS `account` (
   KEY `account_service_class` (`account_service_class`),
   KEY `account_parent` (`account_parent`),
   KEY `account_flags` (`account_flags`),
-  KEY `account_roles` (`account_roles`)
+  KEY `account_roles` (`account_roles`),
+  KEY `account_lastlog` (`account_lastlog`),
+  KEY `account_expires` (`account_expires`)
 ) ENGINE=MyISAM DEFAULT CHARSET=utf8;
 
 CREATE TABLE IF NOT EXISTS `addon` (
@@ -130,7 +133,7 @@ CREATE TABLE IF NOT EXISTS `contact` (
   `prvkey` text NOT NULL,
   `batch` char(255) NOT NULL,
   `request` text NOT NULL,
-  `notify` text NOT NULL,
+  `notify` char(255) NOT NULL,
   `poll` text NOT NULL,
   `confirm` text NOT NULL,
   `poco` text NOT NULL,
@@ -179,7 +182,8 @@ CREATE TABLE IF NOT EXISTS `contact` (
   KEY `pending` (`pending`),
   KEY `hidden` (`hidden`),
   KEY `archive` (`archive`),
-  KEY `forum` (`forum`)
+  KEY `forum` (`forum`),
+  KEY `notify` (`notify`)
 ) ENGINE=MyISAM  DEFAULT CHARSET=utf8;
 
 CREATE TABLE IF NOT EXISTS `conv` (
@@ -222,6 +226,7 @@ CREATE TABLE IF NOT EXISTS `entity` (
   `entity_pageflags` int(10) unsigned NOT NULL,
   `entity_max_anon_mail` int(11) NOT NULL DEFAULT '10',
   `entity_max_friend_req` int(11) NOT NULL DEFAULT '10',
+  `entity_passwd_reset` char(255) NOT NULL,
   `entity_default_gid` int(11) NOT NULL,
   `entity_allow_cid` mediumtext NOT NULL,
   `entity_allow_gid` mediumtext NOT NULL,
@@ -402,8 +407,19 @@ CREATE TABLE IF NOT EXISTS `hook` (
   `hook` char(255) NOT NULL,
   `file` char(255) NOT NULL,
   `function` char(255) NOT NULL,
+  `priority` int(11) unsigned NOT NULL DEFAULT '0',
   PRIMARY KEY (`id`),
   KEY `hook` (`hook`)
+) ENGINE=MyISAM DEFAULT CHARSET=utf8;
+
+CREATE TABLE IF NOT EXISTS `hubloc` (
+  `hubloc_id` int(10) unsigned NOT NULL AUTO_INCREMENT,
+  `hubloc_zuid` char(255) NOT NULL,
+  `hubloc_url` char(255) NOT NULL,
+  `hubloc_key` text NOT NULL,
+  PRIMARY KEY (`hubloc_id`),
+  KEY `hubloc_zuid` (`hubloc_zuid`),
+  KEY `hubloc_url` (`hubloc_url`)
 ) ENGINE=MyISAM DEFAULT CHARSET=utf8;
 
 CREATE TABLE IF NOT EXISTS `intro` (
@@ -504,6 +520,9 @@ CREATE TABLE IF NOT EXISTS `item` (
   KEY `moderated` (`moderated`),
   KEY `spam` (`spam`),
   KEY `author-name` (`author-name`),
+  KEY `uid_commented` (`uid`,`commented`),
+  KEY `uid_created` (`uid`,`created`),
+  KEY `uid_unseen` (`uid`,`unseen`),
   FULLTEXT KEY `title` (`title`),
   FULLTEXT KEY `body` (`body`),
   FULLTEXT KEY `allow_cid` (`allow_cid`),
