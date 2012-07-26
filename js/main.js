@@ -721,7 +721,7 @@ jQuery.timeago.settings.strings = {
 
 
 $("abbr.wall-item-ago-time").timeago();
-$("div.wall-item-body").divgrow({ initialHeight: 400 });
+//$("div.wall-item-body").divgrow({ initialHeight: 400 });
 
 
 });

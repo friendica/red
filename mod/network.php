@@ -712,7 +712,7 @@ logger('items: ' . count($items));
 
 	$mode = (($nouveau) ? 'network-new' : 'network');
 
-	$o .= conversation($a,$items,$mode,$update);
+	$o .= conversation($a,$items,$mode,$update,'client');
 
 	if(! $update) {
         $o .= alt_pager($a,count($items));

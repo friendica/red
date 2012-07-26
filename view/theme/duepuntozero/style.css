@@ -15,6 +15,9 @@ body {
 	margin: 0px;
 }
 
+abbr {
+	border-bottom: none;
+}
 
 a, a:visited, a:link { color: #3465a4; text-decoration: none; }
 a:hover {text-decoration: underline; }

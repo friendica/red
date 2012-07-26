@@ -309,7 +309,7 @@ function localize_item(&$item){
  */
 
 if(!function_exists('conversation')) {
-function conversation(&$a, $items, $mode, $update, $preview = false) {
+function conversation(&$a, $items, $mode, $update, $page_mode = 'traditional') {
 
 
 	require_once('bbcode.php');
@@ -319,6 +319,7 @@ function conversation(&$a, $items, $mode, $update, $preview = false) {
 	$profile_owner = 0;
 	$page_writeable      = false;
 
+	$preview = (($page_mode === 'preview') ? true : false);
 	$previewing = (($preview) ? ' preview ' : '');
 
 	if($mode === 'network') {
@@ -441,6 +442,7 @@ function conversation(&$a, $items, $mode, $update, $preview = false) {
 
 
 				$drop = array(
+					'pagedropping' => $page_dropping,
 					'dropping' => $dropping,
 					'select' => t('Select'), 
 					'delete' => t('Delete'),
@@ -732,6 +734,7 @@ function conversation(&$a, $items, $mode, $update, $preview = false) {
 					$dropping = true;
 
 				$drop = array(
+					'pagedropping' => $page_dropping,
 					'dropping' => $dropping,
 					'select' => t('Select'), 
 					'delete' => t('Delete'),
@@ -873,9 +876,19 @@ function conversation(&$a, $items, $mode, $update, $preview = false) {
 		}
 	}
 
-	logger('threads: ' . count($threads) . ' update: ' . $update);
+//	logger('threads: ' . count($threads) . ' update: ' . $update);
 
-	if($update) {
+	if($page_mode === 'traditional' || $page_mode === 'preview') {
+		$page_template = get_markup_template("conversation.tpl");
+		$o = replace_macros($page_template, array(
+			'$baseurl' => $a->get_baseurl($ssl_state),
+			'$mode' => $mode,
+			'$user' => $a->user,
+			'$threads' => $threads,
+			'$dropping' => ($page_dropping?t('Delete Selected Items'):False),
+		));
+	}
+	elseif($update) {
 		$page_template = get_markup_template("conv.tpl");
 		$o = replace_macros($page_template, array(
 			'$baseurl' => $a->get_baseurl($ssl_state),
