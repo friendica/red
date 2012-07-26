@@ -336,6 +336,7 @@ function updateConvItems(mode,data) {
 			update_url = buildCmd();
 		}
 		else {
+			page_load = false;
 			var udargs = ((page_load) ? '/load' : '');
 			update_url = 'update_' + src + udargs + '&p=' + profile_uid + '&page=' + profile_page + '&msie=' + ((msie) ? 1 : 0);
 		}
