@@ -14,6 +14,7 @@ function ping_init(&$a) {
 	$result['intros'] = 0;
 	$result['mail'] = 0;
 	$result['register'] = 0;
+	$result['events'] = 0;
 	$result['notice'] = array();
 	$result['info'] = array();
 
@@ -154,6 +155,16 @@ function ping_init(&$a) {
 	$t5 = dba_timer();
 
 
+	$events = q("SELECT count(`event`.`id`) as total FROM `event`
+		WHERE `event`.`uid` = %d AND `start` < '%s' AND `finish` > '%s'
+		ORDER BY `start` ASC ",
+			intval(local_user()),
+			dbesc(datetime_convert('UTC','UTC','now + 1 days')),
+			dbesc(datetime_convert('UTC','UTC','now'))
+	);
+
+	if($events)
+		$result['events'] = intval($events[0]['total']);
 
 	$x = json_encode($result);
 	
