@@ -15,6 +15,7 @@ function ping_init(&$a) {
 	$result['mail'] = 0;
 	$result['register'] = 0;
 	$result['events'] = 0;
+	$result['events_today'] = 0;
 	$result['notice'] = array();
 	$result['info'] = array();
 
@@ -154,17 +155,25 @@ function ping_init(&$a) {
 
 	$t5 = dba_timer();
 
-
-	$events = q("SELECT count(`event`.`id`) as total FROM `event`
+	$events = q("SELECT count(`event`.`id`) as total, start, convert FROM `event`
 		WHERE `event`.`uid` = %d AND `start` < '%s' AND `finish` > '%s'
 		ORDER BY `start` ASC ",
 			intval(local_user()),
-			dbesc(datetime_convert('UTC','UTC','now + 1 days')),
+			dbesc(datetime_convert('UTC','UTC','now + 7 days')),
 			dbesc(datetime_convert('UTC','UTC','now'))
 	);
 
-	if($events)
+	if($events && count($events)) {
 		$result['events'] = intval($events[0]['total']);
+
+		if($result['events']) {
+			$str_now = datetime_convert('UTC',$a->timezone,'now','Y-m-d');
+			foreach($events as $x) {
+				if(datetime_convert('UTC',((intval($x['convert'])) ? $a->timezone : 'UTC'), $x['start'],'Y-m-d') === $str_now)
+					$result['events_today'] ++;
+			}
+		}
+	}
 
 	$x = json_encode($result);
 	
