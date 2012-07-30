@@ -400,6 +400,58 @@ function title_is_body($title, $body) {
 }
 
 
+function get_item_elements($j) {
+
+	$arr = array();
+
+	if(strlen($j->signed))
+		$arr['body']    = htmlentities($j->signed,ENT_COMPAT,'UTF-8');
+	else
+		$arr['body']    = (($j->body) ? htmlentities($j->body,ENT_COMPAT,'UTF-8') : '');
+
+	$arr['created'] = datetime_convert('UTC','UTC',$j->created);
+	$arr['edited']  = datetime_convert('UTC','UTC',$j->edited);
+
+	if($arr['created'] > datetime_convert())
+		$arr['created'] = datetime_convert();
+	if($arr['edited'] > datetime_convert())
+		$arr['edited'] = datetime_convert();
+
+	$arr['title']      = (($j->title)    ? htmlentities($j->title,    ENT_COMPAT,'UTF-8') : '');
+	$arr['app']        = (($j->app)      ? htmlentities($j->app,      ENT_COMPAT,'UTF-8') : '');
+	$arr['uri']        = (($j->uri)      ? htmlentities($j->uri,      ENT_COMPAT,'UTF-8') : '');
+	$arr['puri']       = (($j->puri)     ? htmlentities($j->puri,     ENT_COMPAT,'UTF-8') : '');
+	$arr['plink']      = (($j->plink)    ? htmlentities($j->plink,    ENT_COMPAT,'UTF-8') : '');
+	$arr['location']   = (($j->location) ? htmlentities($j->location, ENT_COMPAT,'UTF-8') : '');
+	$arr['coord']      = (($j->coord)    ? htmlentities($j->coord,    ENT_COMPAT,'UTF-8') : '');
+	$arr['verb']       = (($j->verb)     ? htmlentities($j->verb,     ENT_COMPAT,'UTF-8') : '');
+	$arr['objtype']    = (($j->objtype)  ? htmlentities($j->objtype,  ENT_COMPAT,'UTF-8') : '');
+	$arr['tgttype']    = (($j->tgttype)  ? htmlentities($j->tgttype,  ENT_COMPAT,'UTF-8') : '');
+
+	$arr['obj']        = $j->obj;
+	$arr['tgt']        = $j->tgt;
+
+	$arr['attach']     = $j->attach;
+	$arr['tags']       = $j->tags;
+
+	$arr['privacy']    = $j->privacy;
+
+	$arr['flags']      = intval($j->flags);
+	$arr['types']      = intval($j->types);
+
+	$arr['author']     = $j->author;
+
+	$arr['new']        = 1;
+
+	return $arr;
+
+}
+
+
+
+
+
+
 
 function get_atom_elements($feed,$item) {
 
