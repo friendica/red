@@ -48,3 +48,9 @@ function zot_sign(&$item,$identity) {
 	$item['signed'] = str_replace(array(" ","\t","\n","\r"),array('','','',''),base64url_encode($item['body'],true));
 	$item['signature'] = base64url_encode(rsa_sign($item['signed'],$identity['prvkey']));
 }
+
+// Given an item and an identity, verify the signature.
+
+function zot_verify(&$item,$identity) {
+	return rsa_verify($item[signed'],base64url_decode($item['signature']),$identity['pubkey']);
+}

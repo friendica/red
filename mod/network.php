@@ -459,10 +459,6 @@ function network_content(&$a, $update = 0, $load = false) {
 		}
 	}
 
-	if((! $group) && (! $cid) && (! $update)) {
-		$o .= get_birthdays();
-		$o .= get_events();
-	}
 
 	if(! $update) {
 		// The special div is needed for liveUpdate to kick in for this page.

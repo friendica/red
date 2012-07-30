@@ -124,6 +124,7 @@ function editpost_content(&$a) {
 		'$profile_uid' => $_SESSION['uid'],
 		'$preview' => t('Preview'),
 		'$jotplugins' => $jotplugins,
+		'$mobileapp' => t('Friendica mobile web'),
 	));
 
 	return $o;
