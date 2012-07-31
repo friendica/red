@@ -1655,3 +1655,48 @@ function is_a_date_arg($s) {
 	}
 	return false;
 }
+
+function legal_webbie($s) {
+	if(! strlen($s))
+		return '';
+
+	$x = $s;
+	do {
+		$s = $x;
+		$x = preg_replace('/^([^a-z])(.*?)/',"$2",$s);
+	} while($x != $s);
+
+	return preg_replace('/([^a-z0-9\-\_])/','',$x);
+}
+
+
+function check_webbie($arr) {
+
+	$str = '';
+	$taken = array();
+	if(count($arr)) {
+		foreach($arr as $x) {
+			$y = legal_webbie($x);
+			if(strlen($y)) {
+				if($str)
+					$str .= ',';
+				$str .= "'" . dbesc($y) . "'";
+			}
+		}
+		if(strlen($str)) {
+			$r = q("select entity_address from entity where entity_address in ( $str ) ");
+			if(count($r)) {
+				foreach($r as $rr) {
+					$taken[] = $rr['entity_address'];
+				}
+			}
+			foreach($arr as $x) {
+				if(! in_array($x,$taken)) {
+					return $x;
+				}
+			}
+		}
+	}
+	return '';
+}
+	

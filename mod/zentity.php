@@ -7,21 +7,74 @@ function zentity_init(&$a) {
 	$cmd = ((argc() > 1) ? argv(1) : '');
 
 
-	if($cmd === 'email_check.json') {
+	if($cmd === 'autofill.json') {
+		require_once('library/urlify/URLify.php');
 		$result = array('error' => false, 'message' => '');
-		$email = $_REQUEST['email'];
+		$n = trim($_REQUEST['name']);
 
-		if(! allowed_email($email))
-			$result['message'] = t('Your email domain is not among those allowed on this site');
-		if((! valid_email($email)) || (! validate_email($email)))
-			$result['message'] .= t('Not a valid email address') . EOL;
-		if($result['message'])
-			$result['error'] = true;
+		$x = strtolower(URLify::transliterate($n));
+
+		$test = array();
+
+		// first name
+		$test[] = legal_webbie(substr($x,0,strpos($x,' ')));
+		if($test[0]) {
+			// first name plus first initial of last
+			$test[] = ((strpos($x,' ')) ? $test[0] . legal_webbie(trim(substr($x,strpos($x,' '),2))) : '');
+			// first name plus random number
+			$test[] = $test[0] . mt_rand(1000,9999);
+		}
+		// fullname
+		$test[] = legal_webbie($x);
+		// fullname plus random number
+		$test[] = legal_webbie($x) . mt_rand(1000,9999);
 
 		header('content-type: application/json');
-		echo json_encode($result);
+		echo json_encode(check_webbie($test));
 		killme();		
 	}
+
+	if($cmd === 'checkaddr.json') {
+		require_once('library/urlify/URLify.php');
+		$result = array('error' => false, 'message' => '');
+		$n = trim($_REQUEST['addr']);
+
+		$x = strtolower(URLify::transliterate($n));
+
+		$test = array();
+
+		$n = legal_webbie($x);
+		if(strlen($n)) {
+			$test[] = $n;
+			$test[] = $n . mt_rand(1000,9999);
+		}
+
+		for($y = 0; $y < 100; $y ++)
+			$test[] = 'id' . mt_rand(1000,9999);
+
+//print_r($test);
+
+		header('content-type: application/json');
+		echo json_encode(check_webbie($test));
+		killme();		
+	}
+
+
+
+
+//		print_r($test);
+
+//		if(! allowed_email($email))
+//			$result['message'] = t('Your email domain is not among those allowed on this site');
+//		if((! valid_email($email)) || (! validate_email($email)))
+//			$result['message'] .= t('Not a valid email address') . EOL;
+//		if($result['message'])
+//			$result['error'] = true;
+
+//		header('content-type: application/json');
+//		echo json_encode($result);
+//		killme();		
+
 
 	$pw1 = t("Password too short");
 	$pw2 = t("Passwords do not match");
