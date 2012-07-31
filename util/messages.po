@@ -737,6 +737,10 @@ msgstr ""
 msgid "Example: bob@example.com, mary@example.com"
 msgstr ""
 
+#: ../../mod/editpost.php:135 ../../include/conversation.php:1166
+msgid "Friendica mobile web"
+msgstr ""
+
 #: ../../mod/dfrn_request.php:93
 msgid "This introduction has already been accepted."
 msgstr ""

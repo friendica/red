@@ -127,7 +127,7 @@ EOT;
 
 	}
 	else {
-		$r = q("SELECT `id` FROM `item` WHERE `id` = '%s' OR `uri` = '%s' LIMIT 1",
+		$r = q("SELECT `id`,`deleted` FROM `item` WHERE `id` = '%s' OR `uri` = '%s' LIMIT 1",
 			dbesc($item_id),
 			dbesc($item_id)
 		);
