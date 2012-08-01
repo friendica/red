@@ -27,8 +27,8 @@ function poke_init(&$a) {
 	if(! $contact_id)
 		return;
 
+	$parent = ((x($_GET,'parent')) ? intval($_GET['parent']) : 0);
 
-	$private = ((x($_GET,'private')) ? intval($_GET['private']) : 0);
 
 	logger('poke: verb ' . $verb . ' contact ' . $contact_id, LOGGER_DEBUG);
 
@@ -45,6 +45,35 @@ function poke_init(&$a) {
 
 	$target = $r[0];
 
+	if($parent) {
+		$r = q("select uri, private, allow_cid, allow_gid, deny_cid, deny_gid 
+			from item where id = %d and parent = %d and uid = %d limit 1",
+			intval($parent),
+			intval($parent),
+			intval($uid)
+		);
+		if(count($r)) {
+			$parent_uri = $r[0]['uri'];
+			$private    = $r[0]['private'];
+			$allow_cid  = $r[0]['allow_cid'];
+			$allow_gid  = $r[0]['allow_gid'];
+			$deny_cid   = $r[0]['deny_cid'];
+			$deny_gid   = $r[0]['deny_gid'];
+		}
+	}
+	else {
+
+		$private = ((x($_GET,'private')) ? intval($_GET['private']) : 0);
+
+		$allow_cid     = (($private) ? '<' . $target['id']. '>' : $a->user['allow_cid']);
+		$allow_gid     = (($private) ? '' : $a->user['allow_gid']);
+		$deny_cid      = (($private) ? '' : $a->user['deny_cid']);
+		$deny_gid      = (($private) ? '' : $a->user['deny_gid']);
+	}
+
+
+
+
 	$poster = $a->contact;
 
 	$uri = item_new_uri($a->get_hostname(),$owner_uid);
@@ -53,7 +82,7 @@ function poke_init(&$a) {
 
 	$arr['uid']           = $uid;
 	$arr['uri']           = $uri;
-	$arr['parent-uri']    = $uri;
+	$arr['parent-uri']    = (($parent_uri) ? $parent_uri : $uri);
 	$arr['type']          = 'activity';
 	$arr['wall']          = 1;
 	$arr['contact-id']    = $poster['id'];
@@ -64,10 +93,10 @@ function poke_init(&$a) {
 	$arr['author-link']   = $poster['url'];
 	$arr['author-avatar'] = $poster['thumb'];
 	$arr['title']         = '';
-	$arr['allow_cid']     = (($private) ? '<' . $target['id']. '>' : $a->user['allow_cid']);
-	$arr['allow_gid']     = (($private) ? '' : $a->user['allow_gid']);
-	$arr['deny_cid']      = (($private) ? '' : $a->user['deny_cid']);
-	$arr['deny_gid']      = (($private) ? '' : $a->user['deny_gid']);
+	$arr['allow_cid']     = $allow_cid;
+	$arr['allow_gid']     = $allow_gid;
+	$arr['deny_cid']      = $deny_cid;
+	$arr['deny_gid']      = $deny_gid;
 	$arr['last-child']    = 1;
 	$arr['visible']       = 1;
 	$arr['verb']          = $activity;
@@ -132,12 +161,12 @@ function poke_content(&$a) {
 
 <script>$(document).ready(function() { 
 	var a; 
-	a = $("#recip").autocomplete({ 
+	a = $("#poke-recip").autocomplete({ 
 		serviceUrl: '$base/acl',
 		minChars: 2,
 		width: 350,
 		onSelect: function(value,data) {
-			$("#recip-complete").val(data);
+			$("#poke-recip-complete").val(data);
 		}			
 	});
 	a.setOptions({ params: { type: 'a' }});
@@ -147,6 +176,9 @@ function poke_content(&$a) {
 
 </script>
 EOT;
+
+	$parent = ((x($_GET,'parent')) ? intval($_GET['parent']) : '0');
+
 
 
 	$verbs = get_poke_verbs();
@@ -164,6 +196,7 @@ EOT;
 		'$clabel' => t('Recipient'),
 		'$choice' => t('Choose what you wish to do to recipient'),
 		'$verbs' => $shortlist,
+		'$parent' => $parent,
 		'$prv_desc' => t('Make this post private'),
 		'$submit' => t('Submit'),
 		'$name' => $name,

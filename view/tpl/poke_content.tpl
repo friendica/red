@@ -8,9 +8,9 @@
 
 <div id="poke-recip-label">$clabel</div>
 <br />
-<input id="recip" type="text" size="64" maxlength="255" value="$name" name="pokename" autocomplete="off">
-<input id="recip-complete" type="hidden" value="$id" name="cid">
-
+<input id="poke-recip" type="text" size="64" maxlength="255" value="$name" name="pokename" autocomplete="off" />
+<input id="poke-recip-complete" type="hidden" value="$id" name="cid" />
+<input id="poke-parent" type="hidden" value="$parent" name="parent" />
 <br />
 <br />
 <div id="poke-action-label">$choice</div>
@@ -24,7 +24,7 @@
 <br />
 <br />
 <div id="poke-private-desc">$prv_desc</div>
-<input type="checkbox" name="private" value="1" />
+<input type="checkbox" name="private" {{ if $parent }}disabled="disabled"{{ endif }} value="1" />
 <br />
 <br />
 <input type="submit" name="submit" value="$submit" />

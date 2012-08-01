@@ -430,10 +430,16 @@ function get_markup_template($s) {
 	$a=get_app();
 	$theme = current_theme();
 	
-	if(file_exists("view/theme/$theme/$s"))
+	if(file_exists("view/theme/$theme/tpl/$s"))
+		return file_get_contents("view/theme/$theme/tpl/$s");
+	elseif(file_exists("view/theme/$theme/$s"))
 		return file_get_contents("view/theme/$theme/$s");
+	elseif (x($a->theme_info,"extends") && file_exists("view/theme/".$a->theme_info["extends"]."/tpl/$s"))
+		return file_get_contents("view/theme/".$a->theme_info["extends"]."/tpl/$s");
 	elseif (x($a->theme_info,"extends") && file_exists("view/theme/".$a->theme_info["extends"]."/$s"))
 		return file_get_contents("view/theme/".$a->theme_info["extends"]."/$s");
+	elseif(file_exists("view/tpl/$s"))
+		return file_get_contents("view/tpl/$s");
 	else
 		return file_get_contents("view/$s");
 
@@ -1633,7 +1639,7 @@ function undo_post_tagging($s) {
 
 function fix_mce_lf($s) {
 	$s = str_replace("\r\n","\n",$s);
-	$s = str_replace("\n\n","\n",$s);
+//	$s = str_replace("\n\n","\n",$s);
 	return $s;
 }
 

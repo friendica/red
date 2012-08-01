@@ -357,13 +357,13 @@ if($a->module != 'install') {
  */
 
 
-$page_css = 'view/theme/' . current_theme() . '/' 
+$page_css = 'view/theme/' . current_theme() . '/css/' 
 	. ((x($a->page,'template')) ? $a->page['template'] : 'default' ) . '.css';
 
 if(! file_exists($page_css))
 	$page_css = str_replace('theme/' . current_theme() . '/', '', $page_css);
 
-$module_css = 'view/theme/' . current_theme() . '/mod_' . $a->module . '.css';  
+$module_css = 'view/theme/' . current_theme() . '/css/mod_' . $a->module . '.css';  
 
 if(! file_exists($module_css))
 	$module_css = str_replace('theme/' . current_theme() . '/', '', $module_css);
@@ -420,7 +420,7 @@ $profile = $a->profile;
 
 header("Content-type: text/html; charset=utf-8");
 
-$template = 'view/theme/' . current_theme() . '/' 
+$template = 'view/theme/' . current_theme() . '/php/' 
 	. ((x($a->page,'template')) ? $a->page['template'] : 'default' ) . '.php';
 
 if(file_exists($template))

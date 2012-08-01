@@ -589,7 +589,7 @@ if(! class_exists('App')) {
 
 		function init_pagehead() {
 			$this->page['title'] = $this->config['sitename'];
-			$this->page['htmlhead'] = file_get_contents('view/head.tpl');
+			$this->page['htmlhead'] = get_markup_template('head.tpl');
 		}
 
 		function set_curl_code($code) {
@@ -1070,7 +1070,7 @@ if(! function_exists('profile_load')) {
 		 * load/reload current theme info
 		 */
 
-		$theme_info_file = "view/theme/".current_theme()."/theme.php";
+		$theme_info_file = "view/theme/".current_theme()."/php/theme.php";
 		if (file_exists($theme_info_file)){
 			require_once($theme_info_file);
 		}
@@ -1469,17 +1469,17 @@ if(! function_exists('current_theme')) {
 		}
 	
 		if($theme_name &&
-				(file_exists('view/theme/' . $theme_name . '/style.css') ||
-						file_exists('view/theme/' . $theme_name . '/style.php')))
+				(file_exists('view/theme/' . $theme_name . '/css/style.css') ||
+						file_exists('view/theme/' . $theme_name . '/php/style.php')))
 			return($theme_name);
 	
 		foreach($app_base_themes as $t) {
-			if(file_exists('view/theme/' . $t . '/style.css')||
-					file_exists('view/theme/' . $t . '/style.php'))
+			if(file_exists('view/theme/' . $t . '/css/style.css')||
+					file_exists('view/theme/' . $t . '/php/style.php'))
 				return($t);
 		}
 	
-		$fallback = array_merge(glob('view/theme/*/style.css'),glob('view/theme/*/style.php'));
+		$fallback = array_merge(glob('view/theme/*/css/style.css'),glob('view/theme/*/php/style.php'));
 		if(count($fallback))
 			return (str_replace('view/theme/','', substr($fallback[0],0,-10)));
 	
@@ -1494,9 +1494,9 @@ if(! function_exists('current_theme_url')) {
 	function current_theme_url() {
 		global $a;
 		$t = current_theme();
-		if (file_exists('view/theme/' . $t . '/style.php'))
-			return($a->get_baseurl() . '/view/theme/' . $t . '/style.pcss');
-		return($a->get_baseurl() . '/view/theme/' . $t . '/style.css');
+		if (file_exists('view/theme/' . $t . '/php/style.php'))
+			return($a->get_baseurl() . '/view/theme/' . $t . '/php/style.pcss');
+		return($a->get_baseurl() . '/view/theme/' . $t . '/css/style.css');
 	}
 }
 
