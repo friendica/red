@@ -10,7 +10,7 @@
 
 function zot_new_uid($entity_id) {
 	$rawstr = z_root() . '/' . $entity_id . '.' . mt_rand();
-	return(base64url_encode(hash('whirlpool',$rawstr,true),true));
+	return(base64url_encode(hash('whirlpool',$rawstr,true),true) . '.' . mt_rand());
 }
 
 
@@ -54,3 +54,13 @@ function zot_sign(&$item,$identity) {
 function zot_verify(&$item,$identity) {
 	return rsa_verify($item[signed'],base64url_decode($item['signature']),$identity['pubkey']);
 }
+
+
+
+function zot_notify($entity,$url) {
+	$x = z_post_url($url,
+		array('zot_uid' => $entity_global_id, 'callback' => z_root() . '/zot', 'spec' => ZOT_REVISION));
+	return($x);
+}
+
+		

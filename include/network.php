@@ -182,6 +182,100 @@ function post_url($url,$params, $headers = null, &$redirects = 0, $timeout = 0) 
 	return($body);
 }}
 
+
+
+
+if(! function_exists('z_post_url')) {
+function z_post_url($url,$params, $headers = null, &$redirects = 0, $timeout = 0) {
+
+	$ret = array('return_code' => 0, 'success' => false, 'header' => "", 'body' => "");
+
+	$ch = curl_init($url);
+	if(($redirects > 8) || (! $ch)) 
+		return ret;
+
+	curl_setopt($ch, CURLOPT_HEADER, true);
+	curl_setopt($ch, CURLOPT_RETURNTRANSFER,true);
+	curl_setopt($ch, CURLOPT_POST,1);
+	curl_setopt($ch, CURLOPT_POSTFIELDS,$params);
+	curl_setopt($ch, CURLOPT_USERAGENT, "Friendica");
+
+	if(intval($timeout)) {
+		curl_setopt($ch, CURLOPT_TIMEOUT, $timeout);
+	}
+	else {
+		$curl_time = intval(get_config('system','curl_timeout'));
+		curl_setopt($ch, CURLOPT_TIMEOUT, (($curl_time !== false) ? $curl_time : 60));
+	}
+
+	if(defined('LIGHTTPD')) {
+		if(!is_array($headers)) {
+			$headers = array('Expect:');
+		} else {
+			if(!in_array('Expect:', $headers)) {
+				array_push($headers, 'Expect:');
+			}
+		}
+	}
+	if($headers)
+		curl_setopt($ch, CURLOPT_HTTPHEADER, $headers);
+
+	$check_cert = get_config('system','verifyssl');
+	curl_setopt($ch, CURLOPT_SSL_VERIFYPEER, (($check_cert) ? true : false));
+	$prx = get_config('system','proxy');
+	if(strlen($prx)) {
+		curl_setopt($ch, CURLOPT_HTTPPROXYTUNNEL, 1);
+		curl_setopt($ch, CURLOPT_PROXY, $prx);
+		$prxusr = get_config('system','proxyuser');
+		if(strlen($prxusr))
+			curl_setopt($ch, CURLOPT_PROXYUSERPWD, $prxusr);
+	}
+
+	// don't let curl abort the entire application
+	// if it throws any errors.
+
+	$s = @curl_exec($ch);
+
+	$base = $s;
+	$curl_info = curl_getinfo($ch);
+	$http_code = $curl_info['http_code'];
+
+	$header = '';
+
+	// Pull out multiple headers, e.g. proxy and continuation headers
+	// allow for HTTP/2.x without fixing code
+
+	while(preg_match('/^HTTP\/[1-2].+? [1-5][0-9][0-9]/',$base)) {
+		$chunk = substr($base,0,strpos($base,"\r\n\r\n")+4);
+		$header .= $chunk;
+		$base = substr($base,strlen($chunk));
+	}
+
+	if($http_code == 301 || $http_code == 302 || $http_code == 303) {
+        $matches = array();
+        preg_match('/(Location:|URI:)(.*?)\n/', $header, $matches);
+        $newurl = trim(array_pop($matches));
+		if(strpos($newurl,'/') === 0)
+			$newurl = $url . $newurl;
+        $url_parsed = @parse_url($newurl);
+        if (isset($url_parsed)) {
+            $redirects++;
+			curl_close($ch);
+            return z_post_url($newurl,$params,$headers,$redirects,$timeout);
+        }
+    }
+	$rc = intval($http_code);
+	$ret['return_code'] = $rc;
+	$ret['success'] = (($rc >= 200 && $rc <= 299) ? true : false);
+	$ret['body'] = substr($s,strlen($header));
+	$ret['header'] = $header;
+	curl_close($ch);
+	return($ret);
+}}
+
+
+
+
 // Generic XML return
 // Outputs a basic dfrn XML status structure to STDOUT, with a <status> variable 
 // of $st and an optional text <message> of $message and terminates the current process. 

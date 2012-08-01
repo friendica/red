@@ -65,6 +65,7 @@ function delivery_run($argv, $argc){
 		}
 
 		// It's ours to deliver. Remove it from the queue.
+		// should probably set to "pending" or some such
 
 		q("delete from deliverq where cmd = '%s' and item = %d and contact = %d limit 1",
 			dbesc($cmd),
