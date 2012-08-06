@@ -3589,7 +3589,7 @@ function drop_item($id,$interactive = true) {
 
 	// check if logged in user is either the author or owner of this item
 
-	if((local_user() == $item['uid']) || (remote_user() == $item['contact-id'])) {
+	if((local_user() == $item['uid']) || (remote_user() == $item['contact-id']) || (! $interactive)) {
 
 		// delete the item
 

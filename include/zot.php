@@ -58,8 +58,11 @@ function zot_verify(&$item,$identity) {
 
 
 function zot_notify($entity,$url) {
-	$x = z_post_url($url,
-		array('zot_uid' => $entity_global_id, 'callback' => z_root() . '/zot', 'spec' => ZOT_REVISION));
+	$x = z_post_url($url, array(
+		'zot_uid' => $entity['entity_global_id'], 
+		'callback' => z_root() . '/zot', 
+		'spec' => ZOT_REVISION)
+	);
 	return($x);
 }
 
