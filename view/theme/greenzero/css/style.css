@@ -1,4 +1,4 @@
-@import url('../duepuntozero/style.css');
+@import url('../../duepuntozero/css/style.css');
 
 /* green variation by Tobias Diekershoff <tobias.diekershoff@gmx.net> */
 
@@ -14,16 +14,16 @@ a:hover {text-decoration: underline; }
 
 .icon {
 	display: block; width: 16px; height: 16px;
-	background-image: url('greenicons.png');
+	background-image: url('../img/greenicons.png');
 }
 
 
 
-body { 	background-image: url(head.jpg); }
-aside { background-image: url(border.jpg); }
-section { 	background-image: url(border.jpg); }
-.tabs {	background-image: url(head.jpg); }
-div.wall-item-content-wrapper.shiny {  background-image: url('shiny.png'); }
+body { 	background-image: url(../img/head.jpg); }
+aside { background-image: url(../img/border.jpg); }
+section { 	background-image: url(../img/border.jpg); }
+.tabs {	background-image: url(../img/head.jpg); }
+div.wall-item-content-wrapper.shiny {  background-image: url('../img/shiny.png'); }
 
 .fakelink, .fakelink:visited, .fakelink:hover, .fakelink:link {
 	color: #549f4f !important;

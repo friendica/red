@@ -1,4 +1,4 @@
-@import url('../duepuntozero/style.css');
+@import url('../../duepuntozero/css/style.css');
 
 .vcard .fn {
 	color: orange !important;
@@ -21,16 +21,16 @@
 	background: yellow;
 }
 
-body { 	background-image: url('head.jpg'); }
+body { 	background-image: url('../img/head.jpg'); }
 section { background: #EEFFFF; }
 
 a, a:visited { color: #0000FF; text-decoration: none; }
 a:hover {text-decoration: underline; }
 
 
-aside( 	background-image: url('border.jpg'); }
-.tabs {	background-image: url('head.jpg'); }
-div.wall-item-content-wrapper.shiny {  background-image: url('shiny.png'); }
+aside( 	background-image: url('../img/border.jpg'); }
+.tabs {	background-image: url('../img/head.jpg'); }
+div.wall-item-content-wrapper.shiny {  background-image: url('../img/shiny.png'); }
 
 
 .nav-commlink, .nav-login-link {

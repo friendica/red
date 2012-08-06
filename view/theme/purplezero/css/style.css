@@ -1,0 +1,27 @@
+@import url('../../duepuntozero/css/style.css');
+
+a, a:link, a:visited { color: #7433af; text-decoration: none; }
+a:hover {text-decoration: underline; }
+
+
+body { 	background-image: url(../img/head.jpg); }
+aside( 	background-image: url(../img/border.jpg); }
+section { 	background-image: url(../img/border.jpg); }
+.tabs {	background-image: url(../img/head.jpg); }
+div.wall-item-content-wrapper.shiny {  background-image: url('../img/shiny.png'); }
+
+
+.nav-commlink, .nav-login-link {
+	background-color: #aed3b2;
+
+}
+
+.fakelink, .fakelink:visited {
+	color: #7433af;
+}
+
+.wall-item-name-link {
+	color: #7433af;
+}
+
+
