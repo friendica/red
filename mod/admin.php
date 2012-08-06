@@ -46,8 +46,8 @@ function admin_post(&$a){
 				break;
 			case 'themes':
 				$theme = $a->argv[2];
-				if (is_file("view/theme/$theme/config.php")){
-					require_once("view/theme/$theme/config.php");
+				if (is_file("view/theme/$theme/php/config.php")){
+					require_once("view/theme/$theme/php/config.php");
 					if (function_exists("theme_admin_post")){
 						theme_admin_post($a);
 					}
