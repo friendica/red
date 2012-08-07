@@ -1122,7 +1122,7 @@ input#dfrn-url {
 	height: 50px !important;
 }
 .wall-item-content {
-	/*float: left;*/
+	float: left;
 	/*width: 450px;*/
 	margin-left: 10px;
 	/*margin-bottom: 20px;*/
@@ -1148,7 +1148,7 @@ input#dfrn-url {
 }
 
 .wall-item-body {
-	float: left;
+/*	float: left; */
 	/*width: 450px;*/
 	margin-top: 10px;
 }
