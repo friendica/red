@@ -266,9 +266,9 @@ function get_theme_info($theme){
 	if(file_exists("view/theme/$theme/unsupported"))
 		$info['unsupported'] = true;
 
-	if (!is_file("view/theme/$theme/theme.php")) return $info;
+	if (!is_file("view/theme/$theme/php/theme.php")) return $info;
 	
-	$f = file_get_contents("view/theme/$theme/theme.php");
+	$f = file_get_contents("view/theme/$theme/php/theme.php");
 	$r = preg_match("|/\*.*\*/|msU", $f, $m);
 	
 	
@@ -313,8 +313,8 @@ function get_theme_screenshot($theme) {
 	$a = get_app();
 	$exts = array('.png','.jpg');
 	foreach($exts as $ext) {
-		if(file_exists('view/theme/' . $theme . '/screenshot' . $ext))
-			return($a->get_baseurl() . '/view/theme/' . $theme . '/screenshot' . $ext);
+		if(file_exists('view/theme/' . $theme . '/img/screenshot' . $ext))
+			return($a->get_baseurl() . '/view/theme/' . $theme . '/img/screenshot' . $ext);
 	}
 	return($a->get_baseurl() . '/images/blank.png');
 }
