@@ -5,12 +5,12 @@ function get_theme_config_file($theme){
 	$a = get_app();
 	$base_theme = $a->theme_info['extends'];
 	
-	if (file_exists("view/theme/$theme/config.php")){
-		return "view/theme/$theme/config.php";
+	if (file_exists("view/theme/$theme/php/config.php")){
+		return "view/theme/$theme/php/config.php";
 	} 
-	if (file_exists("view/theme/$base_theme/config.php")){
-		return "view/theme/$base_theme/config.php";
-	}
+	//if (file_exists("view/theme/$base_theme/php/config.php")){
+	//	return "view/theme/$base_theme/php/config.php";
+	//}
 	return null;
 }
 
