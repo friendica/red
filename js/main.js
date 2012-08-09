@@ -303,12 +303,43 @@ function updateConvItems(mode,data) {
 
 	/* autocomplete @nicknames */
 	$(".comment-edit-form  textarea").contact_autocomplete(baseurl+"/acl");
+	
+	var bimgs = $(".wall-item-body > img").not(function() { return this.complete; });
+	var bimgcount = bimgs.length;
 
+	if (bimgcount) {
+		bimgs.load(function() {
+				bimgcount--;
+				if (! bimgcount) {
+					collapseHeight();
+
+				}
+			});
+	} else {
+		collapseHeight();
+	}
+
+
+	//	$(".wall-item-body").each(function() {
+	//	if(! $(this).hasClass('divmore')) {
+	//		$(this).divgrow({ initialHeight: 400, showBrackets: false });
+	//		$(this).addClass('divmore');
+	//	}					
+	//});
 
 }
 
 
-
+	function collapseHeight() {
+		$(".wall-item-body").each(function() {
+				if($(this).height() > 410) {
+				if(! $(this).hasClass('divmore')) {
+					$(this).divgrow({ initialHeight: 400, showBrackets: false });
+					$(this).addClass('divmore');
+				}
+			}					
+		});
+	}
 
 
 
@@ -737,6 +768,7 @@ jQuery.timeago.settings.strings = {
 $("abbr.wall-item-ago-time").timeago();
 //$("div.wall-item-body").divgrow({ initialHeight: 400 });
 
+//reCalcHeight();
 
 });
 
