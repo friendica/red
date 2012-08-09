@@ -9,8 +9,8 @@ function view_init($a){
 	if ($a->argc == 4){
 		$theme = $a->argv[2];
 		$THEMEPATH = "view/theme/$theme";
-		if(file_exists("view/theme/$theme/style.php"))
-			require_once("view/theme/$theme/style.php");
+		if(file_exists("view/theme/$theme/php/style.php"))
+			require_once("view/theme/$theme/php/style.php");
 	}
 	
 	killme();
