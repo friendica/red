@@ -959,6 +959,8 @@ function item_store($arr,$force_parent = false) {
 	$arr['app']           = ((x($arr,'app'))           ? notags(trim($arr['app']))           : '');
 	$arr['origin']        = ((x($arr,'origin'))        ? intval($arr['origin'])              : 0 );
 
+
+	$arr['thr-parent'] = $arr['parent-uri'];
 	if($arr['parent-uri'] === $arr['uri']) {
 		$parent_id = 0;
 		$parent_deleted = 0;
@@ -984,7 +986,6 @@ function item_store($arr,$force_parent = false) {
 			// and re-attach to the conversation parent.
 
 			if($r[0]['uri'] != $r[0]['parent-uri']) {
-				$arr['thr-parent'] = $arr['parent-uri'];
 				$arr['parent-uri'] = $r[0]['parent-uri'];
 				$z = q("SELECT * FROM `item` WHERE `uri` = '%s' AND `parent-uri` = '%s' AND `uid` = %d 
 					ORDER BY `id` ASC LIMIT 1",
@@ -1026,7 +1027,6 @@ function item_store($arr,$force_parent = false) {
 			if($force_parent) {
 				logger('item_store: $force_parent=true, reply converted to top-level post.');
 				$parent_id = 0;
-				$arr['thr-parent'] = $arr['parent-uri'];
 				$arr['parent-uri'] = $arr['uri'];
 				$arr['gravity'] = 0;
 			}

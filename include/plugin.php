@@ -402,3 +402,64 @@ function upgrade_bool_message($bbcode = false) {
 	$x = upgrade_link($bbcode);
 	return t('This action is not available under your subscription plan.') . (($x) ? ' ' . $x : '') ;
 }
+
+
+
+function head_add_css($src,$media = 'screen') {
+	get_app()->css_sources[] = array($src,$type);
+
+}
+
+function head_get_css() {
+	$str = '';
+	$sources = get_app()->css_sources;
+	if(count($sources)) 
+		foreach($sources as $source)
+			$str .= format_css_if_exists($source);
+	return $str;
+}
+
+function format_css_if_exists($source) {
+	
+	if(strpos($source[0],'/') !== false)
+		$path = $source[0];
+	elseif(file_exists('view/theme/'. current_theme() . '/css/' . $source[0]))
+		$path = 'view/theme/'. current_theme() . '/css/' . $source[0];
+	elseif(file_exists('view/theme/'. get_app()->theme_info['extends'] . '/css/' . $source[0]))
+		$path = 'view/theme/'. get_app()->theme_info['extends'] . '/css/' . $source[0];
+	elseif(file_exists('view/css/' . $source[0]))
+		$path = 'view/css/' . $source[0];
+	if($path)
+		return '<link rel="stylesheet" href="' . $path . '" type="text/css" media="' . $source[1] . '" />';
+		
+}
+
+
+function head_add_js($src) {
+	get_app()->js_sources[] = $src;
+}
+
+function head_get_js() {
+	$str = '';
+	$sources = get_app()->js_sources;
+	if(count($sources)) 
+		foreach($sources as $source)
+			$str .= format_js_if_exists($source);
+	return $str;
+}
+
+function format_js_if_exists($source) {
+
+	if(strpos($source,'/') !== false)
+		$path = $source;
+	elseif(file_exists('view/theme/'. current_theme() . '/js/' . $source))
+		$path = 'view/theme/'. current_theme() . '/js/' . $source;
+	elseif(file_exists('view/theme/'. get_app()->theme_info['extends'] . '/js/' . $source))
+		$path = 'view/theme/'. get_app()->theme_info['extends'] . '/js/' . $source;
+	elseif(file_exists('view/js/' . $source))
+		$path = 'view/js/' . $source[0];
+	if($path)
+		return '<script src="' . $source . '" />';
+
+}
+

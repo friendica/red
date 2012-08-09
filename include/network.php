@@ -1169,3 +1169,4 @@ function xml2array($contents, $namespaces = true, $get_attributes=1, $priority =
     
     return($xml_array);
 }  
+

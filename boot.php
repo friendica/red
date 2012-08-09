@@ -382,6 +382,8 @@ if(! class_exists('App')) {
 		public  $plugins;
 		public  $apps = array();
 		public  $identities;
+		public  $css_sources = array();
+		public  $js_sources = array();
 	
 		public $nav_sel;
 

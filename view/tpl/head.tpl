@@ -20,22 +20,28 @@
          title="Search in Friendica" />
 
 <!--[if IE]>
-<script type="text/javascript" src="https://html5shiv.googlecode.com/svn/trunk/html5.js"></script>
+<script src="https://html5shiv.googlecode.com/svn/trunk/html5.js"></script>
 <![endif]-->
-<script type="text/javascript" src="$baseurl/js/jquery.js" ></script>
-<script type="text/javascript" src="$baseurl/js/jquery.textinputs.js" ></script>
-<script type="text/javascript" src="$baseurl/js/fk.autocomplete.js" ></script>
-<script type="text/javascript" src="$baseurl/library/fancybox/jquery.fancybox-1.3.4.pack.js"></script>
-<script type="text/javascript" src="$baseurl/library/jquery.timeago.js"></script>
-<script type="text/javascript" src="$baseurl/library/jquery.divgrow/jquery.divgrow-1.3.1.js"></script>
-<script type="text/javascript" src="$baseurl/library/tiptip/jquery.tipTip.minified.js"></script>
-<script type="text/javascript" src="$baseurl/library/jgrowl/jquery.jgrowl_minimized.js"></script>
-<script type="text/javascript" src="$baseurl/library/tinymce/jscripts/tiny_mce/tiny_mce_src.js" ></script>
-<script type="text/javascript" src="$baseurl/js/acl.js" ></script>
-<script type="text/javascript" src="$baseurl/js/webtoolkit.base64.js" ></script>
-<script type="text/javascript" src="$baseurl/js/main.js" ></script>
+<script src="$baseurl/js/jquery.js" ></script>
+<script src="$baseurl/js/jquery.textinputs.js" ></script>
+<script src="$baseurl/js/fk.autocomplete.js" ></script>
+<script src="$baseurl/library/fancybox/jquery.fancybox-1.3.4.pack.js"></script>
+<script src="$baseurl/library/jquery.timeago.js"></script>
+<script src="$baseurl/library/jquery.divgrow/jquery.divgrow-1.3.1.js"></script>
+<script src="$baseurl/library/tiptip/jquery.tipTip.minified.js"></script>
+<script src="$baseurl/library/jgrowl/jquery.jgrowl_minimized.js"></script>
+<script src="$baseurl/library/tinymce/jscripts/tiny_mce/tiny_mce_src.js" ></script>
+<script src="$baseurl/js/acl.js" ></script>
+<script src="$baseurl/js/webtoolkit.base64.js" ></script>
+<script src="$baseurl/js/main.js" ></script>
+
+{{ if $module_js }}
+<script src="$module_js" ></script>
+{{ endif }}
 
 <script src="$baseurl/library/jslider/bin/jquery.slider.min.js"></script>
+
+
 <script>
 
 	var updateInterval = $update_interval;
@@ -58,6 +64,15 @@
 			$("#comment-edit-text-" + id).addClass("comment-edit-text-empty");
 			$("#mod-cmnt-wrap-" + id).hide();
 			closeMenu("comment-edit-submit-wrapper-" + id);
+		}
+	}
+
+	function showHideCommentBox(id) {
+		if( $('#comment-edit-form-' + id).is(':visible')) {
+			$('#comment-edit-form-' + id).hide();
+		}
+		else {
+			$('#comment-edit-form-' + id).show();
 		}
 	}
 

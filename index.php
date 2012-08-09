@@ -309,26 +309,6 @@ if(stristr( implode("",$_SESSION['sysmsg']), t('Permission denied'))) {
 	header($_SERVER["SERVER_PROTOCOL"] . ' 403 ' . t('Permission denied.'));
 }
 
-/**
- *
- * Report anything which needs to be communicated in the notification area (before the main body)
- *
- */
-	
-/*if(x($_SESSION,'sysmsg')) {
-	$a->page['content'] = "<div id=\"sysmsg\" class=\"error-message\">{$_SESSION['sysmsg']}</div>\r\n"
-		. ((x($a->page,'content')) ? $a->page['content'] : '');
-	$_SESSION['sysmsg']="";
-	unset($_SESSION['sysmsg']);
-}
-if(x($_SESSION,'sysmsg_info')) {
-	$a->page['content'] = "<div id=\"sysmsg_info\" class=\"info-message\">{$_SESSION['sysmsg_info']}</div>\r\n"
-		. ((x($a->page,'content')) ? $a->page['content'] : '');
-	$_SESSION['sysmsg_info']="";
-	unset($_SESSION['sysmsg_info']);
-}*/
-
-
 
 call_hooks('page_end', $a->page['content']);
 
@@ -371,6 +351,17 @@ if(! file_exists($module_css))
 if(! file_exists($module_css)) 
 	$module_css = null;
 
+
+$module_js = 'view/theme/' . current_theme() . '/js/mod_' . $a->module . '.js';  
+
+if(! file_exists($module_js))
+	$module_js = str_replace('theme/' . current_theme() . '/', '', $module_js);
+
+if(! file_exists($module_js)) 
+	$module_js = null;
+
+
+
 	$interval = ((local_user()) ? get_pconfig(local_user(),'system','update_interval') : 40000);
 	if($interval < 10000)
 		$interval = 40000;
@@ -389,6 +380,7 @@ if(! file_exists($module_css))
 		'$update_interval' => $interval,
 		'$page_css'   	 => $a->get_baseurl() . '/' . $page_css,
 		'$module_css'    => (($module_css) ? $a->get_baseurl() . '/' . $module_css : null),
+		'$module_js'    => (($module_js) ? $a->get_baseurl() . '/' . $module_js : null),
 		'$stylesheet'    => current_theme_url(),
 		'$theme'         => current_theme(),
 
