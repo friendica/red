@@ -52,15 +52,16 @@ function zot_sign(&$item,$identity) {
 // Given an item and an identity, verify the signature.
 
 function zot_verify(&$item,$identity) {
-	return rsa_verify($item[signed'],base64url_decode($item['signature']),$identity['pubkey']);
+	return rsa_verify($item['signed'],base64url_decode($item['signature']),$identity['pubkey']);
 }
 
 
 
 function zot_notify($entity,$url) {
 	$x = z_post_url($url, array(
-		'zot_uid' => $entity['entity_global_id'], 
-		'callback' => z_root() . '/zot', 
+		'type' => 'notify',
+		'guid' => $entity['entity_global_id'], 
+		'callback' => z_root() . '/post', 
 		'spec' => ZOT_REVISION)
 	);
 	return($x);

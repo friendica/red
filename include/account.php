@@ -9,7 +9,7 @@ require_once('include/datetime.php');
 
 function create_account($arr) {
 
-	// Required: { email, password, password2, tos }
+	// Required: { email, password }
 
 	$a = get_app();
 	$result = array('success' => false, 'user' => null, 'password' => '', 'message' => '');
@@ -60,26 +60,11 @@ function create_account($arr) {
 
 	$result['password'] = $new_password;
 
-	require_once('include/crypto.php');
-
-	$keys = new_keypair(4096);
-
-	if($keys === false) {
-		$result['message'] .= t('SERIOUS ERROR: Generation of security keys failed.') . EOL;
-		return $result;
-	}
-
-	$default_service_class = get_config('system','default_service_class');
-	if(! $default_service_class)
-		$default_service_class = '';
-
-
-	$prvkey = $keys['prvkey'];
-	$pubkey = $keys['pubkey'];
 
 	$r = q("INSERT INTO account 
-			( account_parent, account_password, account_email, account_language, 
-			account_created, account_flags, account_roles, account_expires, account_service_class )
+			( account_parent,  account_password, account_email, account_language, 
+			  account_created, account_flags,    account_roles, account_expires, 
+			  account_service_class )
 		VALUES ( %d, '%s', '%s', '%s', '%s', %d, %d, '%s', '%s' )",
 		intval($parent),
 		dbesc($password_encoded),

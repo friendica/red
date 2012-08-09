@@ -18,9 +18,7 @@ function zregister_init(&$a) {
 		if($result['message'])
 			$result['error'] = true;
 
-		header('content-type: application/json');
-		echo json_encode($result);
-		killme();		
+		json_return_and_die($result);
 	}
 
 	$pw1 = t("Password too short");

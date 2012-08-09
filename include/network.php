@@ -275,6 +275,13 @@ function z_post_url($url,$params, $headers = null, &$redirects = 0, $timeout = 0
 
 
 
+function json_return_and_die($x) {
+	header("content-type: application/json");
+	echo json_encode($x);
+	killme();
+}
+
+
 
 // Generic XML return
 // Outputs a basic dfrn XML status structure to STDOUT, with a <status> variable 

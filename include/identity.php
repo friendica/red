@@ -4,10 +4,10 @@
 
 class simple_identity {
 
-	private identity_uid;
-	private identity_name;
-	private identity_url;
-	private identity_photo;
+	private $identity_uid;
+	private $identity_name;
+	private $identity_url;
+	private $identity_photo;
 
 	function __construct($uid = '',$name = '',$url = '',$photo = '') {
 		$this->identity_uid    = $uid;

@@ -29,9 +29,7 @@ function zentity_init(&$a) {
 		// fullname plus random number
 		$test[] = legal_webbie($x) . mt_rand(1000,9999);
 
-		header('content-type: application/json');
-		echo json_encode(check_webbie($test));
-		killme();		
+		json_return_and_die(check_webbie($test));
 	}
 
 	if($cmd === 'checkaddr.json') {
@@ -54,9 +52,7 @@ function zentity_init(&$a) {
 
 //print_r($test);
 
-		header('content-type: application/json');
-		echo json_encode(check_webbie($test));
-		killme();		
+		json_return_and_die(check_webbie($test));
 	}
 
 

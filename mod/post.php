@@ -5,47 +5,23 @@
  */
 
 
-require_once('include/salmon.php');
-require_once('include/crypto.php');
-// not yet ready for prime time
-//require_once('include/zot.php');
+require_once('include/zot.php');
 	
 function post_post(&$a) {
 
-	$bulk_delivery = false;
+	$ret = array('result' => false, 'message' => '');
 
-	if($a->argc == 1) {
-		$bulk_delivery = true;
-	}
-	else {
-		$nickname = $a->argv[2];
-		$r = q("SELECT * FROM `user` WHERE `nickname` = '%s' 
-				AND `account_expired` = 0 LIMIT 1",
-			dbesc($nickname)
-		);
-		if(! count($r))
-			http_status_exit(500);
+	$msgtype = ((x($_REQUEST,'type')) ? $_REQUEST['type'] : '');
 
-		$importer = $r[0];
+	if($msgtype === 'notify') {
+
+		// add to receive queue
+		// qreceive_add($_REQUEST);
+
+		$ret['result'] = true;
+		json_return_and_die($ret);
 	}
 
-	$xml = file_get_contents('php://input');
-
-	logger('mod-post: new zot: ' . $xml, LOGGER_DATA);
-
-	if(! $xml)
-		http_status_exit(500);
-
-	$msg = zot_decode($importer,$xml);
-
-	logger('mod-post: decoded msg: ' . print_r($msg,true), LOGGER_DATA);
-
-	if(! is_array($msg))
-		http_status_exit(500);
-
-	$ret = 0;
-	$ret = zot_incoming($bulk_delivery, $importer,$msg);
-	http_status_exit(($ret) ? $ret : 200);
-	// NOTREACHED
 }
+
 
