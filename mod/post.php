@@ -15,6 +15,17 @@ function post_post(&$a) {
 
 	if($msgtype === 'notify') {
 
+		$hub = zot_gethub($_REQUEST['guid']);
+		if(! $hub) {
+			$result = zot_register_hub($_REQUEST);
+			if(! $result) {
+				$ret['message'] = 'Hub not available.';
+				json_return_and_dir($ret);
+			}
+		}
+		// check which hub is primary and take action if mismatched
+
+
 		// add to receive queue
 		// qreceive_add($_REQUEST);
 

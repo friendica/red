@@ -22,7 +22,7 @@ function zot_new_uid($entity_id) {
  *
  */
 
-function zot_get_hubloc($arr,$primary) {
+function zot_get_hubloc($arr,$primary = false) {
 
 	$tmp = '';
 	
@@ -38,7 +38,7 @@ function zot_get_hubloc($arr,$primary) {
 		return array();
 
 	$sql_extra = (($primary) ? " and hubloc_primary = 1 " : "" );
-	return q("select * from hubloc where hubloc_zuid in ( $tmp ) $sql_extra order by hubloc_url");
+	return q("select * from hubloc where hubloc_guid in ( $tmp ) $sql_extra order by hubloc_url");
 
 }
 	 
@@ -60,11 +60,53 @@ function zot_verify(&$item,$identity) {
 function zot_notify($entity,$url) {
 	$x = z_post_url($url, array(
 		'type' => 'notify',
-		'guid' => $entity['entity_global_id'], 
-		'callback' => z_root() . '/post', 
+		'guid' => $entity['entity_global_id'],
+		'hub' => z_root(), 
+		'callback' => '/post', 
 		'spec' => ZOT_REVISION)
 	);
 	return($x);
 }
 
 		
+function zot_gethub($arr) {
+
+	if((x($arr,'hub')) && (x($arr,'guid'))) {
+		$r = q("select * from hubloc 
+				where hubloc_guid = '%s' and hubloc_url = '%s' 
+				limit 1",
+			dbesc($arr['guid']),
+			dbesc($arr['hub'])
+		);
+		if($r && count($r))
+			return $r[0];
+	}
+	return null;
+}
+
+function zot_register_hub($arr) {
+	if((x($arr,'hub')) && (x($arr,'guid'))) {
+		$x = z_fetch_url($arr['hub'] . '/.well-known/zot-guid/' . $arr['guid']);
+		if($x['success']) {
+			$record = json_decode($x['body']);
+			if($record->guid === $arr['guid'] && $record->url === $arr['hub']) {
+				$r = q("insert into hubloc (hubloc_guid, hubloc_primary, hubloc_url, 
+											hubloc_callback, hubloc_sitekey, hubloc_key)
+					values ( '%s', %d, '%s', '%s', '%s', '%s' )",
+					dbesc($arr['guid']),
+					intval($record->primary),
+					dbesc($record->url),
+					dbesc($record->callback),
+					dbesc($record->sitekey),
+					dbesc($record->key)
+				);
+
+				// return the discovery record so we can further process
+
+				if($r)
+					return $record;
+			}
+		}
+	}
+	return false;
+}
