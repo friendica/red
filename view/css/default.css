@@ -6,15 +6,18 @@ nav {
 
 aside {
 	display: block;
-	min-height: 112px;
 	width: 200px;
 	position: absolute;
-	float: left;
+	top: 64px;
+	left: 0;
+	margin-left: 10px;
+/*	float: left; */
 }
 
 
 section {
-	padding-left: 250px;
+	position: absolute;
+	top: 64px;
+	left: 250px;
 	display: block;
-	min-height: 112px;	
 }

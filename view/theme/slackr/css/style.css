@@ -39,17 +39,6 @@ nav #banner img {
 	background: #ffffff !important;
 }
 
-section {
-	margin: 0px 32px;
-}
-
-aside {
-	margin-left: 32px;
-}
-nav {
-	margin-left: 32px;
-	margin-right: 32px;
-}
 
 nav #site-location {
 	top: 80px;
@@ -220,31 +209,3 @@ nav #site-location {
 -o-transform: rotate(4deg);
 }
 
-
-/*
-.jslider .jslider-scale ins {
-    color: #333;
-	font-size: 12px;
-	width: 100px;
-	text-align: center;
-}
-
-.slider {
-	margin-top: 10px;
-	margin-bottom: 15px;
-	height: 32px; 
-}
-
-#main-slider {
-	position: relative; 
-	left: 10%; 
-	width: 90%;
-}
-
-#contact-slider {
-	position: relative; 
-	left: 10%; 
-	width: 90%;
-
-}
-*/
