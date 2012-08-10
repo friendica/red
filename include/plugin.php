@@ -406,8 +406,7 @@ function upgrade_bool_message($bbcode = false) {
 
 
 function head_add_css($src,$media = 'screen') {
-	get_app()->css_sources[] = array($src,$type);
-
+	get_app()->css_sources[] = array($src,$media);
 }
 
 function head_get_css() {
@@ -430,7 +429,7 @@ function format_css_if_exists($source) {
 	elseif(file_exists('view/css/' . $source[0]))
 		$path = 'view/css/' . $source[0];
 	if($path)
-		return '<link rel="stylesheet" href="' . $path . '" type="text/css" media="' . $source[1] . '" />';
+		return '<link rel="stylesheet" href="' . z_root() . '/' . $path . '" type="text/css" media="' . $source[1] . '" />' . "\r\n";
 		
 }
 
@@ -459,7 +458,7 @@ function format_js_if_exists($source) {
 	elseif(file_exists('view/js/' . $source))
 		$path = 'view/js/' . $source[0];
 	if($path)
-		return '<script src="' . $source . '" />';
+		return '<script src="' . z_root() . '/' . $source . '" ></script>' . "\r\n" ;
 
 }
 

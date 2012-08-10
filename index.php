@@ -336,30 +336,18 @@ if($a->module != 'install') {
  * Build the page - now that we have all the components
  */
 
+if(file_exists('view/theme/' . current_theme() . '/php/theme_init.php'))
+	require_once('view/theme/' . current_theme() . '/php/theme_init.php');
+elseif(file_exists('view/theme/' . $a->theme_info['extends'] . '/php/theme_init.php'))
+	require_once('view/theme/' . $a->theme_info['extends'] . '/php/theme_init.php');
+else
+	require_once('view/php/theme_init.php');
 
-$page_css = 'view/theme/' . current_theme() . '/css/' 
-	. ((x($a->page,'template')) ? $a->page['template'] : 'default' ) . '.css';
+head_add_css(((x($a->page,'template')) ? $a->page['template'] : 'default' ) . '.css');
+head_add_css('mod_' . $a->module . '.css');
+head_add_css('style.css');
 
-if(! file_exists($page_css))
-	$page_css = str_replace('theme/' . current_theme() . '/', '', $page_css);
-
-$module_css = 'view/theme/' . current_theme() . '/css/mod_' . $a->module . '.css';  
-
-if(! file_exists($module_css))
-	$module_css = str_replace('theme/' . current_theme() . '/', '', $module_css);
-
-if(! file_exists($module_css)) 
-	$module_css = null;
-
-
-$module_js = 'view/theme/' . current_theme() . '/js/mod_' . $a->module . '.js';  
-
-if(! file_exists($module_js))
-	$module_js = str_replace('theme/' . current_theme() . '/', '', $module_js);
-
-if(! file_exists($module_js)) 
-	$module_js = null;
-
+head_add_js('mod_' . $a->module . '.js');
 
 
 	$interval = ((local_user()) ? get_pconfig(local_user(),'system','update_interval') : 40000);
@@ -378,11 +366,9 @@ if(! file_exists($module_js))
 		'$showmore' => t('show more'),
 		'$showfewer' => t('show fewer'),
 		'$update_interval' => $interval,
-		'$page_css'   	 => $a->get_baseurl() . '/' . $page_css,
-		'$module_css'    => (($module_css) ? $a->get_baseurl() . '/' . $module_css : null),
-		'$module_js'    => (($module_js) ? $a->get_baseurl() . '/' . $module_js : null),
-		'$stylesheet'    => current_theme_url(),
-		'$theme'         => current_theme(),
+		'$head_css' => head_get_css(),
+		'$head_js' => head_get_js(),
+
 
 // localisations for jquery.timeago.js, see https://github.com/rmm5t/jquery-timeago
 // TRANSLATORS - only translate the conditionals if you require them!

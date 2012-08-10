@@ -2,45 +2,19 @@
 <base href="$baseurl/" />
 <meta name="generator" content="$generator" />
 
-<link rel="stylesheet" href="$baseurl/library/fancybox/jquery.fancybox-1.3.4.css" type="text/css" media="screen" />
-<link rel="stylesheet" href="$baseurl/library/tiptip/tipTip.css" type="text/css" media="screen" />
-<link rel="stylesheet" href="$baseurl/library/jgrowl/jquery.jgrowl.css" type="text/css" media="screen" />
-<link rel="stylesheet" type="text/css" href="$baseurl/library/jslider/bin/jquery.slider.min.css" media="screen" />
+<!--[if IE]>
+<script src="https://html5shiv.googlecode.com/svn/trunk/html5.js"></script>
+<![endif]-->
 
-<link rel="stylesheet" type="text/css" href="$page_css" media="all" />
-{{ if $module_css }}
-<link rel="stylesheet" type="text/css" href="$module_css" media="all" />
-{{ endif }}
-<link rel="stylesheet" type="text/css" href="$stylesheet" media="all" />
+$head_css
+
+$head_js
 
 <link rel="shortcut icon" href="$baseurl/images/friendica-32.png" />
 <link rel="search"
          href="$baseurl/opensearch" 
          type="application/opensearchdescription+xml" 
          title="Search in Friendica" />
-
-<!--[if IE]>
-<script src="https://html5shiv.googlecode.com/svn/trunk/html5.js"></script>
-<![endif]-->
-<script src="$baseurl/js/jquery.js" ></script>
-<script src="$baseurl/js/jquery.textinputs.js" ></script>
-<script src="$baseurl/js/fk.autocomplete.js" ></script>
-<script src="$baseurl/library/fancybox/jquery.fancybox-1.3.4.pack.js"></script>
-<script src="$baseurl/library/jquery.timeago.js"></script>
-<script src="$baseurl/library/jquery.divgrow/jquery.divgrow-1.3.1.js"></script>
-<script src="$baseurl/library/tiptip/jquery.tipTip.minified.js"></script>
-<script src="$baseurl/library/jgrowl/jquery.jgrowl_minimized.js"></script>
-<script src="$baseurl/library/tinymce/jscripts/tiny_mce/tiny_mce_src.js" ></script>
-<script src="$baseurl/js/acl.js" ></script>
-<script src="$baseurl/js/webtoolkit.base64.js" ></script>
-<script src="$baseurl/js/main.js" ></script>
-
-{{ if $module_js }}
-<script src="$module_js" ></script>
-{{ endif }}
-
-<script src="$baseurl/library/jslider/bin/jquery.slider.min.js"></script>
-
 
 <script>
 
