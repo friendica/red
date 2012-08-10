@@ -263,6 +263,7 @@ CREATE TABLE IF NOT EXISTS `event` (
   `type` char(255) NOT NULL,
   `nofinish` tinyint(1) NOT NULL DEFAULT '0',
   `adjust` tinyint(1) NOT NULL DEFAULT '1',
+  `ignore` tinyint(1) NOT NULL DEFAULT '0',
   `allow_cid` mediumtext NOT NULL,
   `allow_gid` mediumtext NOT NULL,
   `deny_cid` mediumtext NOT NULL,
@@ -275,7 +276,8 @@ CREATE TABLE IF NOT EXISTS `event` (
   KEY `start` (`start`),
   KEY `finish` (`finish`),
   KEY `adjust` (`adjust`),
-  KEY `nofinish` (`nofinish`)
+  KEY `nofinish` (`nofinish`),
+  KEY `ignore` (`ignore`)
 ) ENGINE=MyISAM DEFAULT CHARSET=utf8;
 
 CREATE TABLE IF NOT EXISTS `fcontact` (
@@ -414,12 +416,16 @@ CREATE TABLE IF NOT EXISTS `hook` (
 
 CREATE TABLE IF NOT EXISTS `hubloc` (
   `hubloc_id` int(10) unsigned NOT NULL AUTO_INCREMENT,
-  `hubloc_zuid` char(255) NOT NULL,
-  `hubloc_url` char(255) NOT NULL,
+  `hubloc_guid` char(255) NOT NULL DEFAULT '',
+  `hubloc_primary` tinyint(3) unsigned NOT NULL DEFAULT '0',
+  `hubloc_url` char(255) NOT NULL DEFAULT '',
+  `hubloc_callback` char(255) NOT NULL DEFAULT '',
+  `hubloc_sitekey` text NOT NULL,
   `hubloc_key` text NOT NULL,
   PRIMARY KEY (`hubloc_id`),
-  KEY `hubloc_zuid` (`hubloc_zuid`),
-  KEY `hubloc_url` (`hubloc_url`)
+  KEY `hubloc_url` (`hubloc_url`),
+  KEY `hubloc_primary` (`hubloc_primary`),
+  KEY `hubloc_guid` (`hubloc_guid`)
 ) ENGINE=MyISAM DEFAULT CHARSET=utf8;
 
 CREATE TABLE IF NOT EXISTS `intro` (
