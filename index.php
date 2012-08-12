@@ -91,19 +91,6 @@ if((x($_GET,'zrl')) && (! $install)) {
 	zrl_init($a);
 }
 
-/**
- *
- * For Mozilla auth manager - still needs sorting, and this might conflict with LRDD header.
- * Apache/PHP lumps the Link: headers into one - and other services might not be able to parse it
- * this way. There's a PHP flag to link the headers because by default this will over-write any other 
- * link header. 
- *
- * What we really need to do is output the raw headers ourselves so we can keep them separate.
- *
- */
- 
-// header('Link: <' . $a->get_baseurl() . '/amcd>; rel="acct-mgmt";');
-
 if((x($_SESSION,'authenticated')) || (x($_POST,'auth-params')) || ($a->module === 'login'))
 	require("auth.php");
 
@@ -117,7 +104,6 @@ if(! x($_SESSION,'authenticated'))
  */
 
 $a->init_pagehead();
-
 
 
 if(! x($_SESSION,'sysmsg'))
@@ -336,12 +322,8 @@ if($a->module != 'install') {
  * Build the page - now that we have all the components
  */
 
-if(file_exists('view/theme/' . current_theme() . '/php/theme_init.php'))
-	require_once('view/theme/' . current_theme() . '/php/theme_init.php');
-elseif(file_exists('view/theme/' . $a->theme_info['extends'] . '/php/theme_init.php'))
-	require_once('view/theme/' . $a->theme_info['extends'] . '/php/theme_init.php');
-else
-	require_once('view/php/theme_init.php');
+
+require_once(theme_include('theme_init.php'));
 
 head_add_css(((x($a->page,'template')) ? $a->page['template'] : 'default' ) . '.css');
 head_add_css('mod_' . $a->module . '.css');
@@ -398,13 +380,11 @@ $profile = $a->profile;
 
 header("Content-type: text/html; charset=utf-8");
 
-$template = 'view/theme/' . current_theme() . '/php/' 
-	. ((x($a->page,'template')) ? $a->page['template'] : 'default' ) . '.php';
-
-if(file_exists($template))
-	require_once($template);
-else
-	require_once(str_replace('theme/' . current_theme() . '/', '', $template));
+require_once(theme_include(
+	((x($a->page,'template')) 
+		? $a->page['template'] 
+		: 'default' ) 
+		. '.php' )); 
 
 session_write_close();
 exit;

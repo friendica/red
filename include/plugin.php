@@ -422,12 +422,9 @@ function format_css_if_exists($source) {
 	
 	if(strpos($source[0],'/') !== false)
 		$path = $source[0];
-	elseif(file_exists('view/theme/'. current_theme() . '/css/' . $source[0]))
-		$path = 'view/theme/'. current_theme() . '/css/' . $source[0];
-	elseif(file_exists('view/theme/'. get_app()->theme_info['extends'] . '/css/' . $source[0]))
-		$path = 'view/theme/'. get_app()->theme_info['extends'] . '/css/' . $source[0];
-	elseif(file_exists('view/css/' . $source[0]))
-		$path = 'view/css/' . $source[0];
+	else
+		$path = theme_include($source[0]);
+
 	if($path)
 		return '<link rel="stylesheet" href="' . z_root() . '/' . $path . '" type="text/css" media="' . $source[1] . '" />' . "\r\n";
 		
@@ -451,14 +448,40 @@ function format_js_if_exists($source) {
 
 	if(strpos($source,'/') !== false)
 		$path = $source;
-	elseif(file_exists('view/theme/'. current_theme() . '/js/' . $source))
-		$path = 'view/theme/'. current_theme() . '/js/' . $source;
-	elseif(file_exists('view/theme/'. get_app()->theme_info['extends'] . '/js/' . $source))
-		$path = 'view/theme/'. get_app()->theme_info['extends'] . '/js/' . $source;
-	elseif(file_exists('view/js/' . $source))
-		$path = 'view/js/' . $source[0];
+	else
+		$path = theme_include($source);
 	if($path)
 		return '<script src="' . z_root() . '/' . $source . '" ></script>' . "\r\n" ;
 
 }
 
+
+function theme_include($file) {
+
+	$paths = array(
+		'view/theme/$theme/$ext/$file',
+		'view/theme/$theme/$file',
+		'view/theme/$parent/$ext/$file',
+		'view/theme/$parent/$file',
+		'view/$ext/$file',
+		'view/$file'
+	);
+
+	$parent = get_app()->theme_info['extends'];
+	if(! $parent)
+		$parent = 'NOPATH';
+
+	foreach($paths as $p) {
+		$f = replace_macros($p,array(
+			'$theme' => current_theme(),
+			'$ext' => substr($file,strrpos($file,'.')+1),
+			'$parent' => $parent,
+			'$file' => $file
+		));
+		if(strstr($f,'NOPATH'))
+			continue;
+		if(file_exists($f))
+			return $f;
+	}
+	return '';
+}
