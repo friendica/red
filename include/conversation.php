@@ -303,6 +303,9 @@ function localize_item(&$item){
 function count_descendants($item) {
 	$total = count($item['children']);
 
+	if($item['verb'] === ACTIVITY_LIKE || $item['verb'] === ACTIVITY_DISLIKE)
+		return 0;
+
 	if($total > 0) {
 		foreach($item['children'] as $child) {
 			$total += count_descendants($child);
@@ -316,7 +319,7 @@ function count_descendants($item) {
  * Recursively prepare a thread for HTML
  */
 
-function prepare_threads_body($a, $items, $cmnt_tpl, $page_writeable, $mode, $profile_owner, $thread_level=1) {
+function prepare_threads_body($a, $items, $cmnt_tpl, $page_writeable, $mode, $profile_owner, $alike, $dlike, $thread_level=1) {
 	$result = array();
 
 	$wall_template = 'wall_thread.tpl';
@@ -333,11 +336,14 @@ function prepare_threads_body($a, $items, $cmnt_tpl, $page_writeable, $mode, $pr
 			$nb_items--;
 			continue;
 		}
+
+		if($item['verb'] === ACTIVITY_LIKE || $item['verb'] === ACTIVITY_DISLIKE) {
+			$nb_items --;
+			continue;
+		}
 		
 		$items_seen++;
 		
-		$alike = array();
-		$dlike = array();
 		$comment = '';
 		$template = $wall_template;
 		$commentww = '';
@@ -408,9 +414,6 @@ function prepare_threads_body($a, $items, $cmnt_tpl, $page_writeable, $mode, $pr
 			$tag = trim($tag);
 			if ($tag!="") $tags[] = bbcode($tag);
 		}
-		
-		like_puller($a,$item,$alike,'like');
-		like_puller($a,$item,$dlike,'dislike');
 
 		$like    = ((x($alike,$item['uri'])) ? format_like($alike[$item['uri']],$alike[$item['uri'] . '-l'],'like',$item['uri']) : '');
 		$dislike = ((x($dlike,$item['uri'])) ? format_like($dlike[$item['uri']],$dlike[$item['uri'] . '-l'],'dislike',$item['uri']) : '');
@@ -530,6 +533,7 @@ function prepare_threads_body($a, $items, $cmnt_tpl, $page_writeable, $mode, $pr
 					'$edurl' => t('Link'),
 					'$edvideo' => t('Video'),
 					'$preview' => t('Preview'),
+					'$indent' => $indent,
 					'$sourceapp' => t($a->sourcename),
 					'$ww' => (($mode === 'network') ? $commentww : '')
 				));
@@ -586,6 +590,7 @@ function prepare_threads_body($a, $items, $cmnt_tpl, $page_writeable, $mode, $pr
 			'comment' => $comment,
 			'previewing' => $previewing,
 			'wait' => t('Please wait'),
+			'thread_level' => $thread_level,
 		);
 
 		$arr = array('item' => $item, 'output' => $tmp_item);
@@ -599,7 +604,7 @@ function prepare_threads_body($a, $items, $cmnt_tpl, $page_writeable, $mode, $pr
 
 		$item_result['children'] = array();
 		if(count($item['children'])) {
-			$item_result['children'] = prepare_threads_body($a, $item['children'], $cmnt_tpl, $page_writeable, $mode, $profile_owner, ($thread_level + 1));
+			$item_result['children'] = prepare_threads_body($a, $item['children'], $cmnt_tpl, $page_writeable, $mode, $profile_owner, $alike, $dlike, ($thread_level + 1));
 		}
 		$item_result['private'] = $item['private'];
 		$item_result['toplevel'] = ($toplevelpost ? 'toplevel_item' : '');
@@ -607,7 +612,7 @@ function prepare_threads_body($a, $items, $cmnt_tpl, $page_writeable, $mode, $pr
 		/*
 		 * I don't like this very much...
 		 */
-		if(get_config('system','thread_allow')) {
+		if(get_config('system','thread_allow') && $a->theme_thread_allow) {
 			$item_result['flatten'] = false;
 			$item_result['threaded'] = true;
 		}
@@ -831,6 +836,7 @@ function conversation(&$a, $items, $mode, $update, $page_mode = 'traditional') {
 					'conv' => (($preview) ? '' : array('href'=> $a->get_baseurl($ssl_state) . '/display/' . $nickname . '/' . $item['id'], 'title'=> t('View in context'))),
 					'previewing' => $previewing,
 					'wait' => t('Please wait'),
+					'thread_level' => 1,
 				);
 
 				$arr = array('item' => $item, 'output' => $tmp_item);
@@ -870,6 +876,11 @@ function conversation(&$a, $items, $mode, $update, $page_mode = 'traditional') {
 			foreach($items as $item) {
 				like_puller($a,$item,$alike,'like');
 				like_puller($a,$item,$dlike,'dislike');
+
+  				if($item['id'] == $item['parent']) {
+  					$threads[] = $item;
+  				}
+
 			}
 
 			$comments_collapsed = false;

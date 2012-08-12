@@ -1072,6 +1072,7 @@ section {
   width: 710px;
   border: 1px solid #2d2d2d;
   margin-top: 10px;
+  background-color: #fce94f;
 }
 .comment-edit-preview .contact-photo {
   width: 32px;
@@ -1965,25 +1966,23 @@ footer {
   opacity: 0.3;
   filter: alpha(opacity=30);
 }
-[class^="comment-edit-bb"] {
+.comment-edit-bb {
   list-style: none;
   display: none;
-  margin: 0px 0 0px 60px;
+  margin: 0px;
+  padding: 0px;
   width: 75%;
 }
-[class^="comment-edit-bb"] > li {
+.comment-edit-bb > li {
   display: inline-block;
   margin: 10px 10px 0 0;
   visibility: none;
-}
-[class^="comment-edit-bb-end"] {
-  clear: both;
 }
 .editicon {
   display: inline-block;
   width: 16px;
   height: 16px;
-  background-image: url(bbedit.png);
+  background-image: url(icons/bbedit.png);
   text-decoration: none;
 }
 .editicon :hover {

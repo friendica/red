@@ -2430,7 +2430,7 @@ function local_delivery($importer,$data) {
 						intval($importer['importer_uid'])
 					);
 					if($r && count($r))
-						$is_a_remote_delete = true;			
+						$is_a_remote_delete = true;
 
 					// Does this have the characteristics of a community or private group comment?
 					// If it's a reply to a wall post on a community/prvgroup page it's a 
@@ -2739,7 +2739,7 @@ function local_delivery($importer,$data) {
 					}
 
 					if($posted_id && $parent) {
-				
+
 						proc_run('php',"include/notifier.php","comment-import","$posted_id");
 					
 						if((! $is_like) && (! $importer['self'])) {

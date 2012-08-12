@@ -6,8 +6,8 @@
 {{endif}}
 <div id="tread-wrapper-$item.id" class="tread-wrapper $item.toplevel">
 <a name="$item.id" ></a>
-<div class="wall-item-outside-wrapper$item.indent$item.previewing wallwall" id="wall-item-outside-wrapper-$item.id" >
-	<div class="wall-item-content-wrapper$item.indent" id="wall-item-content-wrapper-$item.id" >
+<div class="wall-item-outside-wrapper $item.indent$item.previewing wallwall" id="wall-item-outside-wrapper-$item.id" >
+	<div class="wall-item-content-wrapper $item.indent" id="wall-item-content-wrapper-$item.id" >
 		<div class="wall-item-info wallwall" id="wall-item-info-$item.id">
 			<div class="wall-item-photo-wrapper wwto" id="wall-item-ownerphoto-wrapper-$item.id" >
 				<a href="$item.owner_url" target="redir" title="$item.olinktitle" class="wall-item-photo-link" id="wall-item-ownerphoto-link-$item.id">
@@ -78,19 +78,21 @@
 			</div>
 				{{ if $item.drop.dropping }}<input type="checkbox" onclick="checkboxhighlight(this);" title="$item.drop.select" class="item-select" name="itemselected[]" value="$item.id" />{{ endif }}
 			<div class="wall-item-delete-end"></div>
-			{{ if $item.threaded }}
-			{{ if $item.comment }}
-			<div class="wall-item-comment-wrapper" >
-				$item.comment
-			</div>
-			{{ endif }}
-			{{ endif }}
 		</div>
 	</div>	
 	<div class="wall-item-wrapper-end"></div>
 	<div class="wall-item-like $item.indent" id="wall-item-like-$item.id">$item.like</div>
 	<div class="wall-item-dislike $item.indent" id="wall-item-dislike-$item.id">$item.dislike</div>
-<div class="wall-item-outside-wrapper-end$item.indent" ></div>
+
+			{{ if $item.threaded }}
+			{{ if $item.comment }}
+			<div class="wall-item-comment-wrapper $item.indent" >
+				$item.comment
+			</div>
+			{{ endif }}
+			{{ endif }}
+
+<div class="wall-item-outside-wrapper-end $item.indent" ></div>
 </div>
 {{ for $item.children as $item }}
 	{{ inc $item.template }}{{ endinc }}
