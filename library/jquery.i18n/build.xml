@@ -1,0 +1,55 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project name="jquery.i18n" default="jquery.i18n" basedir=".">
+    
+    <tstamp />
+    
+    <loadfile property="version" srcfile="VERSION"/>
+    
+    <property description="Folder for jquery.i18n and min target" name="dist" value="."/>
+    <property name="JQI" value="${dist}/jquery.i18n.js"/>
+    <property name="JQI_MIN" value="${dist}/jquery.i18n.min.js"/>
+    
+    <target name="jquery.i18n" description="Main jquery.i18n build, concatenates source files and replaces @VERSION">
+        <echo message="Building ${JQI}"/>
+        <mkdir dir="${dist}"/>
+        <concat destfile="${JQI}">
+            <fileset file="src/jquery.i18n.js"/>
+        </concat>
+        <replaceregexp match="@VERSION" replace="${version}" flags="g" byline="true" file="${JQI}"/>
+        <replaceregexp match="@DATE" replace="${DSTAMP}${TSTAMP}" file="${JQI}"/>
+        <echo message="${JQI} built."/>
+    </target>
+    
+    <target name="min" depends="jquery.i18n" description="Remove all comments and whitespace, no compression, great in combination with GZip">
+        <echo message="Building ${JQI_MIN}"/>
+        <apply executable="java" parallel="false" verbose="true" dest="${dist}">
+            <fileset dir="${dist}">
+                <include name="jquery.i18n.js"/>
+            </fileset>
+            <arg line="-jar"/>
+            <arg path="build/compiler.jar"/>
+            <arg value="--warning_level"/>
+            <arg value="QUIET"/>
+            <arg value="--js_output_file"/>
+            <targetfile/>
+            <arg value="--js"/>
+            <mapper type="glob" from="jquery.i18n.js" to="tmpmin"/>
+        </apply>
+        <concat destfile="${JQI_MIN}">
+            <filelist files="${JQI}, tmpmin"/>
+            <filterchain>
+                <headfilter lines="11"/>
+            </filterchain>
+        </concat>
+        <concat destfile="${JQI_MIN}" append="yes">
+            <filelist files="tmpmin"/>
+        </concat>
+        <delete file="tmpmin"/>
+        <echo message="${JQI_MIN} built."/>
+    </target>
+    
+    <target name="clean">
+        <delete dir="tmpmin"/>
+    </target>
+    
+</project>

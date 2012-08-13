@@ -1,0 +1,78 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=utf8" />
+<title>jQuery i18n Plugin</title>
+<script type="text/javascript" src="jquery-1.4.2.js"></script>
+<script type="text/javascript" src="../jquery.i18n.min.js"></script>
+
+<script  type="text/javascript">
+$(document).ready(function(){
+	i18n_dict = { 
+		"Example 1"  : "teiän veen",
+		"Example 2"  : "tei'än ve'en",
+		"Example 3"  : "teiä vede",
+		"Example 4"  : "teirän veren",
+		"Example 5"  : "teilän velen",
+		"Example 6"  : "teijjän vejen",
+		"Example 7"  : "teidän veden",
+		"Example 8"  : "teitän veten",
+		"Example 9"  : "teiðän veðen",
+		"Example 10" : "teidhän vethen",
+		"Dynamic Content" : "Your browser window is %s x %s",
+		"Ordered Dynamic Content": "%2$s is the height of your browser window, and %1$s is the width."
+	};
+	
+	$.i18n.setDictionary(i18n_dict);
+	
+	$('input#translate_button').click( function(event) {
+		$('div#example1').text($.i18n._('Example 1'));
+		$('div#example2').text($.i18n._('Example 2'));
+		$('div#example3').text($.i18n._('Example 3'));
+		$('div#example4').text($.i18n._('Example 4'));
+		$('div#example5').text($.i18n._('Example 5'));
+		$('div#example6').text($.i18n._('Example 6'));
+		$('div#example7').text($.i18n._('Example 7'));
+		$('div#example8').text($.i18n._('Example 8'));
+		$('div#example9').text($.i18n._('Example 9'));
+		$('div#example10').text($.i18n._('Example 10'));
+		$('div#dynamic').text($.i18n._('Dynamic Content', [$(document).width(), $(document).height()]));
+		$('div#orderedDynamic').text($.i18n._('Ordered Dynamic Content', [$(document).width(), $(document).height()]));
+	});
+});
+</script>
+<style type="text/css">
+	body {
+		font-size: 30px;
+		text-align: center;
+	}
+	input {
+		font-size: 30px;
+	}
+	p {
+		font-size: 17px;
+	}
+</style>
+
+<body>
+	<p>
+		Click the button to translate the following text into some random Finnish from the 
+		<a href='http://en.wikipedia.org/wiki/Finnish_phonology'>Wikipedia Finnish Phonology Article</a>
+	</p>
+
+	<div id='example1'>Example 1</div>
+	<div id='example2'>Example 2</div>
+	<div id='example3'>Example 3</div>
+	<div id='example4'>Example 4</div>
+	<div id='example5'>Example 5</div>
+	<div id='example6'>Example 6</div>
+	<div id='example7'>Example 7</div>
+	<div id='example8'>Example 8</div>
+	<div id='example9'>Example 9</div>
+	<div id='example10'>Example 10</div>
+	<div id='dynamic'>Dynamic Content</div>
+	<div id='orderedDynamic'>Ordered Dynamic Content</div>
+
+	<input type='button' id='translate_button' value='Internationalize!' />
+</body>
+</html>
