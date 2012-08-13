@@ -387,38 +387,15 @@ function photo_new_resource() {
 }}
 
 
-// wrapper to load a view template, checking for alternate
-// languages before falling back to the default
-
-// obsolete, deprecated.
-
-if(! function_exists('load_view_file')) {
-function load_view_file($s) {
-	global $lang, $a;
-	if(! isset($lang))
-		$lang = 'en';
-	$b = basename($s);
-	$d = dirname($s);
-	if(file_exists("$d/$lang/$b"))
-		return file_get_contents("$d/$lang/$b");
-	
-	$theme = current_theme();
-
-	if(file_exists("$d/theme/$theme/$b"))
-		return file_get_contents("$d/theme/$theme/$b");
-			
-	return file_get_contents($s);
-}}
-
 if(! function_exists('get_intltext_template')) {
 function get_intltext_template($s) {
-	global $lang;
+	global $a;
 
-	if(! isset($lang))
-		$lang = 'en';
+	if(! isset($a->language))
+		$a->language = 'en';
 
-	if(file_exists("view/$lang/$s"))
-		return file_get_contents("view/$lang/$s");
+	if(file_exists("view/{$a->language}/$s"))
+		return file_get_contents("view/{$a->language}/$s");
 	elseif(file_exists("view/en/$s"))
 		return file_get_contents("view/en/$s");
 	else
@@ -1117,7 +1094,7 @@ function unamp($s) {
 
 if(! function_exists('lang_selector')) {
 function lang_selector() {
-	global $lang;
+	global $a;
 	
 	$langs = glob('view/*/strings.php');
 	
@@ -1136,7 +1113,7 @@ function lang_selector() {
 			}
 			$ll = substr($l,5);
 			$ll = substr($ll,0,strrpos($ll,'/'));
-			$selected = (($ll === $lang && (x($_SESSION, 'language'))) ? $ll : $selected);
+			$selected = (($ll === $a->language && (x($_SESSION, 'language'))) ? $ll : $selected);
 			$lang_options[$ll]=$ll;
 		}
 	}

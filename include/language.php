@@ -68,11 +68,11 @@ function get_best_language() {
 
 
 function push_lang($language) {
-	global $lang, $a;
+	global $a;
 
-	$a->langsave = $lang;
+	$a->langsave = $a->language;
 
-	if($language === $lang)
+	if($language === $a->language)
 		return;
 
 	if(isset($a->strings) && count($a->strings)) {
@@ -80,14 +80,14 @@ function push_lang($language) {
 	}
 	$a->strings = array();
 	load_translation_table($language);
-	$a->language = $lang = $language;
+	$a->language = $language;
 
 }
 
 function pop_lang() {
-	global $lang, $a;
+	global $a;
 
-	if($lang === $a->langsave)
+	if($a->language === $a->langsave)
 		return;
 
 	if(isset($a->stringsave))
@@ -95,7 +95,7 @@ function pop_lang() {
 	else
 		$a->strings = array();
 
-	$a->language = $lang = $a->langsave;
+	$a->language = $a->langsave;
 }
 
 
@@ -136,12 +136,11 @@ function t($s) {
 
 if(! function_exists('tt')){
 function tt($singular, $plural, $count){
-	global $lang;
 	$a = get_app();
 
 	if(x($a->strings,$singular)) {
 		$t = $a->strings[$singular];
-		$f = 'string_plural_select_' . str_replace('-','_',$lang);
+		$f = 'string_plural_select_' . str_replace('-','_',$a->language);
 		if(! function_exists($f))
 			$f = 'string_plural_select_default';
 		$k = $f($count);

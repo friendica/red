@@ -100,7 +100,6 @@ function collecturls($message) {
 
 function html2plain($html, $wraplength = 75, $compact = false)
 {
-	global $lang;
 
 	$message = str_replace("\r", "", $html);
 

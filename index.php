@@ -27,9 +27,9 @@ $install = ((file_exists('.htconfig.php') && filesize('.htconfig.php')) ? false 
 
 @include(".htconfig.php");
 
-$a->language = $lang = get_best_language();
+$a->language = get_best_language();
 	
-load_translation_table($lang);
+load_translation_table($a->language);
 
 /**
  *
@@ -81,8 +81,8 @@ if(array_key_exists('system_language',$_POST)) {
 		unset($_SESSION['language']);
 }
 if((x($_SESSION,'language')) && ($_SESSION['language'] !== $lang)) {
-	$lang = $_SESSION['language'];
-	load_translation_table($lang);
+	$a->language = $_SESSION['language'];
+	load_translation_table($a->language);
 }
 
 if((x($_GET,'zrl')) && (! $install)) {
