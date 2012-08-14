@@ -485,3 +485,29 @@ function theme_include($file) {
 	}
 	return '';
 }
+
+
+
+if(! function_exists('get_intltext_template')) {
+function get_intltext_template($s) {
+	global $a;
+
+	if(! isset($a->language))
+		$a->language = 'en';
+
+	if(file_exists("view/{$a->language}/$s"))
+		return file_get_contents("view/{$a->language}/$s");
+	elseif(file_exists("view/en/$s"))
+		return file_get_contents("view/en/$s");
+	else
+		return file_get_contents("view/$s");
+}}
+
+if(! function_exists('get_markup_template')) {
+function get_markup_template($s) {
+
+	$x = theme_include($s);
+	if($x)
+		return file_get_contents($x);
+}}
+

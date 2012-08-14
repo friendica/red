@@ -1,4 +1,83 @@
 
+	function confirmDelete() { return confirm(aStr['delitem']); }
+	function commentOpen(obj,id) {
+		if(obj.value == aStr['comment']) {
+			obj.value = '';
+			$("#comment-edit-text-" + id).addClass("comment-edit-text-full");
+			$("#comment-edit-text-" + id).removeClass("comment-edit-text-empty");
+			$("#mod-cmnt-wrap-" + id).show();
+			openMenu("comment-edit-submit-wrapper-" + id);
+			return true;
+		}
+		return false;
+	}
+	function commentClose(obj,id) {
+		if(obj.value == '') {
+			obj.value = aStr['comment'];
+			$("#comment-edit-text-" + id).removeClass("comment-edit-text-full");
+			$("#comment-edit-text-" + id).addClass("comment-edit-text-empty");
+			$("#mod-cmnt-wrap-" + id).hide();
+			closeMenu("comment-edit-submit-wrapper-" + id);
+			return true;
+		}
+		return false;
+	}
+
+	function showHideCommentBox(id) {
+		if( $('#comment-edit-form-' + id).is(':visible')) {
+			$('#comment-edit-form-' + id).hide();
+		}
+		else {
+			$('#comment-edit-form-' + id).show();
+		}
+	}
+
+
+	function commentInsert(obj,id) {
+		var tmpStr = $("#comment-edit-text-" + id).val();
+		if(tmpStr == '$comment') {
+			tmpStr = '';
+			$("#comment-edit-text-" + id).addClass("comment-edit-text-full");
+			$("#comment-edit-text-" + id).removeClass("comment-edit-text-empty");
+			openMenu("comment-edit-submit-wrapper-" + id);
+		}
+		var ins = $(obj).html();
+		ins = ins.replace('&lt;','<');
+		ins = ins.replace('&gt;','>');
+		ins = ins.replace('&amp;','&');
+		ins = ins.replace('&quot;','"');
+		$("#comment-edit-text-" + id).val(tmpStr + ins);
+	}
+
+	function qCommentInsert(obj,id) {
+		var tmpStr = $("#comment-edit-text-" + id).val();
+		if(tmpStr == aStr['comment']) {
+			tmpStr = '';
+			$("#comment-edit-text-" + id).addClass("comment-edit-text-full");
+			$("#comment-edit-text-" + id).removeClass("comment-edit-text-empty");
+			openMenu("comment-edit-submit-wrapper-" + id);
+		}
+		var ins = $(obj).val();
+		ins = ins.replace('&lt;','<');
+		ins = ins.replace('&gt;','>');
+		ins = ins.replace('&amp;','&');
+		ins = ins.replace('&quot;','"');
+		$("#comment-edit-text-" + id).val(tmpStr + ins);
+		$(obj).val('');
+	}
+
+	function showHideComments(id) {
+		if( $('#collapsed-comments-' + id).is(':visible')) {
+			$('#collapsed-comments-' + id).hide();
+			$('#hide-comments-' + id).html(aStr['showmore']);
+		}
+		else {
+			$('#collapsed-comments-' + id).show();
+			$('#hide-comments-' + id).html(aStr['showfewer']);
+		}
+	}
+
+
   function openClose(theID) {
     if(document.getElementById(theID).style.display == "block") { 
       document.getElementById(theID).style.display = "none" 
@@ -745,23 +824,23 @@ function previewTheme(elm) {
 $(document).ready(function() {
 
 jQuery.timeago.settings.strings = {
-	prefixAgo: tago01,
-	prefixFromNow: tago02,
-	suffixAgo: tago03,
-	suffixFromNow: tago04,
-	seconds: tago05,
-	minute: tago06,
-	minutes: tago07,
-	hour: tago08,
-	hours: tago09,
-	day: tago10,
-	days: tago11,
-	month: tago12,
-	months: tago13,
-	year: tago14,
-	years: tago15,
-	wordSeparator: tago16,
-	numbers: tago17
+	prefixAgo     : aStr['t01'],
+	prefixFromNow : aStr['t02'],
+	suffixAgo     : aStr['t03'],
+	suffixFromNow : aStr['t04'],
+	seconds       : aStr['t05'],
+	minute        : aStr['t06'],
+	minutes       : aStr['t07'],
+	hour          : aStr['t08'],
+	hours         : aStr['t09'],
+	day           : aStr['t10'],
+	days          : aStr['t11'],
+	month         : aStr['t12'],
+	months        : aStr['t13'],
+	year          : aStr['t14'],
+	years         : aStr['t15'],
+	wordSeparator : aStr['t16'],
+	numbers       : aStr['t17'],
 };
 
 

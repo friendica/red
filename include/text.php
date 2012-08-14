@@ -387,42 +387,6 @@ function photo_new_resource() {
 }}
 
 
-if(! function_exists('get_intltext_template')) {
-function get_intltext_template($s) {
-	global $a;
-
-	if(! isset($a->language))
-		$a->language = 'en';
-
-	if(file_exists("view/{$a->language}/$s"))
-		return file_get_contents("view/{$a->language}/$s");
-	elseif(file_exists("view/en/$s"))
-		return file_get_contents("view/en/$s");
-	else
-		return file_get_contents("view/$s");
-}}
-
-if(! function_exists('get_markup_template')) {
-function get_markup_template($s) {
-	$a=get_app();
-	$theme = current_theme();
-	
-	if(file_exists("view/theme/$theme/tpl/$s"))
-		return file_get_contents("view/theme/$theme/tpl/$s");
-	elseif(file_exists("view/theme/$theme/$s"))
-		return file_get_contents("view/theme/$theme/$s");
-	elseif (x($a->theme_info,"extends") && file_exists("view/theme/".$a->theme_info["extends"]."/tpl/$s"))
-		return file_get_contents("view/theme/".$a->theme_info["extends"]."/tpl/$s");
-	elseif (x($a->theme_info,"extends") && file_exists("view/theme/".$a->theme_info["extends"]."/$s"))
-		return file_get_contents("view/theme/".$a->theme_info["extends"]."/$s");
-	elseif(file_exists("view/tpl/$s"))
-		return file_get_contents("view/tpl/$s");
-	else
-		return file_get_contents("view/$s");
-
-}}
-
-
 
 
 
