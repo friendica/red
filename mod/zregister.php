@@ -5,21 +5,23 @@ require_once('include/account.php');
 function zregister_init(&$a) {
 	$a->page['template'] = 'full';
 
+	$result = null;
 	$cmd = ((argc() > 1) ? argv(1) : '');
 
-
-	if($cmd === 'invite_check.json') {
-		$result = check_account_invite($_REQUEST['invite_code']);
-		json_return_and_die($result);
+	switch($cmd) {
+		case 'invite_check.json':
+			$result = check_account_invite($_REQUEST['invite_code']);
+			break;
+		case 'email_check.json':
+			$result = check_account_email($_REQUEST['email']);
+			break;
+		case 'password_check.json':
+			$result = check_account_password($_REQUEST['password']);
+			break;
+		default: 
+			break;
 	}
-
-	if($cmd === 'email_check.json') {
-		$result = check_account_email($_REQUEST['email']);
-		json_return_and_die($result);
-	}
-
-	if($cmd === 'password_check.json') {
-		$result = check_account_password($_REQUEST['password']);
+	if($result) {
 		json_return_and_die($result);
 	}
 }
@@ -218,11 +220,10 @@ function zregister_content(&$a) {
 
 	$enable_tos = 1 - intval(get_config('system','no_termsofservice'));
 
-	$email        = ((x($_REQUEST,'email'))        ? $_REQUEST['email']        :  "" );
-	$password     = ((x($_REQUEST,'password'))     ? $_REQUEST['password']     :  "" );
-	$password2    = ((x($_REQUEST,'password2'))    ? $_REQUEST['password2']    :  "" );
-	$invite_code  = ((x($_REQUEST,'invite_code'))  ? $_REQUEST['invite_code']  :  "" );
-
+	$email        = ((x($_REQUEST,'email'))       ? strip_tags(trim($_REQUEST['email']))       :  "" );
+	$password     = ((x($_REQUEST,'password'))    ? trim($_REQUEST['password'])                :  "" );
+	$password2    = ((x($_REQUEST,'password2'))   ? trim($_REQUEST['password2'])               :  "" );
+	$invite_code  = ((x($_REQUEST,'invite_code')) ? strip_tags(trim($_REQUEST['invite_code'])) :  "" );
 
 
 	$o = replace_macros(get_markup_template('zregister.tpl'), array(
@@ -232,7 +233,7 @@ function zregister_content(&$a) {
 		'$invitations'  => get_config('system','invitation_only'),
 		'$invite_desc'  => t('Membership on this site is by invitation only.'),
 		'$label_invite' => t('Please enter your invitation code'),
-		'$invite_id'    => $invite_id,
+		'$invite_code'  => $invite_code,
 
 		'$label_email'  => t('Your email address'),
 		'$label_pass1'  => t('Choose a password'),

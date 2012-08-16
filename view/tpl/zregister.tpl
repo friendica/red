@@ -10,13 +10,10 @@
 	<p id="register-invite-desc">$invite_desc</p>
 
 	<label for="zregister-invite" id="label-zregister-invite" class="zregister-label">$label_invite</label>
-	<input type="text" maxlength="72" size="32" name="invite_id" id="zregister-invite" class="zregister-input" value="$invite_id" />
-	</div>
+	<input type="text" maxlength="72" size="32" name="invite_code" id="zregister-invite" class="zregister-input" value="$invite_code" />
 	<div id="zregister-invite-feedback" class="zregister-feedback"></div>
 	<div id="zregister-invite-end" class="zregister-field-end"></div>
-
 {{ endif }}
-
 
 	<label for="zregister-email" id="label-zregister-email" class="zregister-label" >$label_email</label>
 	<input type="text" maxlength="72" size="32" name="email" id="zregister-email" class="zregister-input" value="$email" />
