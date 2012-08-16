@@ -73,8 +73,14 @@ function zregister_post(&$a) {
 		notice($result['message']);
 		return;
 	}
+	require_once('include/security.php');
 
+	authenticate_success($result['account'],true,true);
+
+//???
+	// in fact we need the sponsor, not the user
 	$user = $result['user'];
+///
  
 	$using_invites = get_config('system','invitation_only');
 	$num_invites   = get_config('system','number_invites');
@@ -83,9 +89,10 @@ function zregister_post(&$a) {
 
 	if($policy == REGISTER_OPEN ) {
 
-		if($using_invites && $invite_id) {
-			q("delete * from register where hash = '%s' limit 1", dbesc($invite_id));
-			set_pconfig($user['uid'],'system','invites_remaining',$num_invites);
+		if($using_invites && $invite_code) {
+			q("delete * from register where hash = '%s' limit 1", dbesc($invite_code));
+// set $sponsor
+			set_pconfig($sponsor['uid'],'system','invites_remaining',$num_invites);
 		}
 
 		$email_tpl = get_intltext_template("register_open_eml.tpl");
@@ -104,6 +111,10 @@ function zregister_post(&$a) {
 
 		if($res) {
 			info( t('Registration successful. Please check your email for validation instructions.') . EOL ) ;
+			
+
+
+
 			goaway(z_root());
 		}
 	}
@@ -133,7 +144,7 @@ function zregister_post(&$a) {
 
 		if($using_invites && $invite_id) {
 			q("delete * from register where hash = '%s' limit 1", dbesc($invite_id));
-			set_pconfig($user['uid'],'system','invites_remaining',$num_invites);
+			set_pconfig($sponsor['uid'],'system','invites_remaining',$num_invites);
 		}
 
 		$email_tpl = get_intltext_template("register_verify_eml.tpl");

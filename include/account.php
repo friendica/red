@@ -141,6 +141,17 @@ function create_account($arr) {
 		return($result);
 	}
 
+	$r = q("select * from account where account_email = '%s' and password = '%s' limit 1",
+		dbesc($email),
+		dbesc($password_encoded)
+	);
+	if($r && count($r)) {
+		$result['account'] = $r[0];
+	}
+	else {	
+		logger('create_account: could not retrieve newly created account');
+	}
+
 	$result['success'] = true;
 
 	$result['email']    = $email;
