@@ -1,5 +1,6 @@
 <?php
 
+require_once('include/account.php');
 
 function zregister_init(&$a) {
 	$a->page['template'] = 'full';
@@ -56,8 +57,6 @@ function zregister_post(&$a) {
 			$flags = ACCOUNT_UNVERIFIED | ACCOUNT_BLOCKED;
 			break;
 	}
-
-	require_once('include/account.php');
 
 	$arr = $_POST;
 	$arr['account_flags'] = $flags;

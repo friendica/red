@@ -451,7 +451,7 @@ function format_js_if_exists($source) {
 	else
 		$path = theme_include($source);
 	if($path)
-		return '<script src="' . z_root() . '/' . $source . '" ></script>' . "\r\n" ;
+		return '<script src="' . z_root() . '/' . $path . '" ></script>' . "\r\n" ;
 
 }
 
