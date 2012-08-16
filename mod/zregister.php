@@ -7,6 +7,12 @@ function zregister_init(&$a) {
 
 	$cmd = ((argc() > 1) ? argv(1) : '');
 
+
+	if($cmd === 'invite_check.json') {
+		$result = check_account_invite($_REQUEST['invite_code']);
+		json_return_and_die($result);
+	}
+
 	if($cmd === 'email_check.json') {
 		$result = check_account_email($_REQUEST['email']);
 		json_return_and_die($result);

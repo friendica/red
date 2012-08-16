@@ -53,38 +53,55 @@ function check_account_password($password) {
 
 }
 
+function check_account_invite($invite_code) {
+	$result = array('error' => false, 'message' => '');
+
+	$using_invites = get_config('system','invitation_only');
+
+	if($using_invites) {
+		if(! $invite_code) {
+			$result['message'] .= t('An invitation is required.') . EOL;
+		}
+		$r = q("select * from register where `hash` = '%s' limit 1", dbesc($invite_code));
+		if(! results($r)) {
+			$result['message'] .= t('Invitation could not be verified.') . EOL;
+		}
+	}
+	if(strlen($result['message']))
+		$result['error'] = true;
+
+	$arr = array('invite_code' => $invite_code, 'result' => $result);
+	call_hooks('check_account_invite', $arr);
+
+	return $arr['result'];
+
+}
+
+
 function create_account($arr) {
 
 	// Required: { email, password }
 
 	$result = array('success' => false, 'email' => '', 'password' => '', 'message' => '');
 
-	$using_invites = get_config('system','invitation_only');
-	$num_invites   = get_config('system','number_invites');
-
-	$invite_id  = ((x($arr,'invite_id'))  ? notags(trim($arr['invite_id']))  : '');
-	$email      = ((x($arr,'email'))      ? notags(trim($arr['email']))      : '');
-	$password   = ((x($arr,'password'))   ? trim($arr['password'])           : '');
-	$password2  = ((x($arr,'password2'))  ? trim($arr['password2'])          : '');
-	$parent     = ((x($arr,'parent'))     ? intval($arr['parent'])           : 0 );
-	$flags      = ((x($arr,'account_flags')) ? intval($arr['account_flags']) : ACCOUNT_OK);
-
-	if($using_invites) {
-		if(! $invite_id) {
-			$result['message'] .= t('An invitation is required.') . EOL;
-			return $result;
-		}
-		$r = q("select * from register where `hash` = '%s' limit 1", dbesc($invite_id));
-		if(! results($r)) {
-			$result['message'] .= t('Invitation could not be verified.') . EOL;
-			return $result;
-		}
-	} 
+	$invite_code = ((x($arr,'invite_code'))   ? notags(trim($arr['invite_code']))  : '');
+	$email       = ((x($arr,'email'))         ? notags(trim($arr['email']))        : '');
+	$password    = ((x($arr,'password'))      ? trim($arr['password'])             : '');
+	$password2   = ((x($arr,'password2'))     ? trim($arr['password2'])            : '');
+	$parent      = ((x($arr,'parent'))        ? intval($arr['parent'])             : 0 );
+	$flags       = ((x($arr,'account_flags')) ? intval($arr['account_flags'])      : ACCOUNT_OK);
 
 	if((! x($email)) || (! x($password))) {
-		notice( t('Please enter the required information.') . EOL );
-		return;
+		$result['message'] = t('Please enter the required information.');
+		return $result;
 	}
+
+	$invite_result = check_account_invite($invite_code);
+	if(! $invite_result['error']) {
+		$result['message'] = $invite_result['message'];
+		return $result;
+	}
+
 
 	$email_result = check_account_email($email);
 
