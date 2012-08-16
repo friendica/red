@@ -6,17 +6,27 @@ function zregister_init(&$a) {
 
 	$cmd = ((argc() > 1) ? argv(1) : '');
 
-
 	if($cmd === 'email_check.json') {
 		$result = array('error' => false, 'message' => '');
 		$email = $_REQUEST['email'];
+		if(! strlen($email))
+			json_return_and_die($result);
 
-		if(! allowed_email($email))
-			$result['message'] = t('Your email domain is not among those allowed on this site');
 		if((! valid_email($email)) || (! validate_email($email)))
 			$result['message'] .= t('Not a valid email address') . EOL;
+		elseif(! allowed_email($email))
+			$result['message'] = t('Your email domain is not among those allowed on this site');
+		else {	
+			$r = q("select account_email from account where account_email = '%s' limit 1",
+				dbesc($email)
+			);
+			if(count($r)) {
+				$result['message'] .= t('Your email address is already registered at this site.');
+			}
+		}
 		if($result['message'])
 			$result['error'] = true;
+
 
 		json_return_and_die($result);
 	}
@@ -75,50 +85,47 @@ EOT;
 
 function zregister_post(&$a) {
 
-	$verified = 0;
-	$blocked  = 1;
-
-	$arr = array('post' => $_POST);
-	call_hooks('zregister_post', $arr);
-
 	$max_dailies = intval(get_config('system','max_daily_registrations'));
 	if($max_dailies) {
 		$r = q("select count(*) as total from account where account_created > UTC_TIMESTAMP - INTERVAL 1 day");
 		if($r && $r[0]['total'] >= $max_dailies) {
+			notice( t('Maximum daily site registrations exceeded. Please try again tomorrow.') . EOL);
 			return;
 		}
 	}
 
-	switch(get_config('system','register_policy')) {
+	if(! x($_POST,'tos')) {
+		notice( t('Please indicate acceptance of the Terms of Service. Registration failed.') . EOL);
+		return;
+	}
 
-	case REGISTER_OPEN:
-		$blocked = 0;
-		$verified = 0;
-		break;
+	$policy = get_config('system','register_policy');
 
-	case REGISTER_APPROVE:
-		$blocked = 0;
-		$verified = 0;
-		break;
+	switch($policy) {
 
-	default:
-	case REGISTER_CLOSED:
-		// TODO check against service class and fix this line
-		if((! x($_SESSION,'authenticated') && (! x($_SESSION,'administrator')))) {
-			notice( t('Permission denied.') . EOL );
-			return;
-		}
-		$blocked = 1;
-		$verified = 0;
-		break;
+		case REGISTER_OPEN:
+			$flags = ACCOUNT_UNVERIFIED;
+			break;
+
+		case REGISTER_APPROVE:
+			$flags = ACCOUNT_UNVERIFIED | ACCOUNT_BLOCKED;
+			break;
+
+		default:
+		case REGISTER_CLOSED:
+			// TODO check against service class and fix this line
+			//		if((! x($_SESSION,'authenticated') && (! x($_SESSION,'administrator')))) {
+			//			notice( t('Permission denied.') . EOL );
+			//			return;
+			//		}
+			$flags = ACCOUNT_UNVERIFIED | ACCOUNT_BLOCKED;
+			break;
 	}
 
 	require_once('include/account.php');
 
 	$arr = $_POST;
-
-	$arr['blocked'] = $blocked;
-	$arr['verified'] = $verified;
+	$arr['account_flags'] = $flags;
 
 	$result = create_account($arr);
 
@@ -134,7 +141,7 @@ function zregister_post(&$a) {
 	$invite_id  = ((x($_POST,'invite_id'))  ? notags(trim($_POST['invite_id']))  : '');
 
 
-	if( $a->config['register_policy'] == REGISTER_OPEN ) {
+	if($policy == REGISTER_OPEN ) {
 
 		if($using_invites && $invite_id) {
 			q("delete * from register where hash = '%s' limit 1", dbesc($invite_id));
@@ -143,12 +150,11 @@ function zregister_post(&$a) {
 
 		$email_tpl = get_intltext_template("register_open_eml.tpl");
 		$email_tpl = replace_macros($email_tpl, array(
-				'$sitename' => $a->config['sitename'],
-				'$siteurl' =>  $a->get_baseurl(),
-				'$username' => $user['username'],
-				'$email' => $user['email'],
-				'$password' => $result['password'],
-				'$uid' => $user['uid'] ));
+			'$sitename' => $a->config['sitename'],
+			'$siteurl' =>  $a->get_baseurl(),
+			'$email'    => $user['email'],
+			'$password' => $result['password'],
+		));
 
 		$res = mail($user['email'], sprintf(t('Registration details for %s'), $a->config['sitename']),
 			$email_tpl, 
@@ -156,13 +162,12 @@ function zregister_post(&$a) {
 				. 'Content-type: text/plain; charset=UTF-8' . "\n"
 				. 'Content-transfer-encoding: 8bit' );
 
-
 		if($res) {
-			info( t('Registration successful. Please check your email for further instructions.') . EOL ) ;
+			info( t('Registration successful. Please check your email for validation instructions.') . EOL ) ;
 			goaway(z_root());
 		}
 	}
-	elseif($a->config['register_policy'] == REGISTER_APPROVE) {
+	elseif($policy == REGISTER_APPROVE) {
 
 		if(! strlen($a->config['admin_email'])) {
 			notice( t('Your registration can not be processed.') . EOL);
@@ -229,7 +234,7 @@ function zregister_post(&$a) {
 function zregister_content(&$a) {
 
 
-	if((! local_user()) && ($a->config['register_policy'] == REGISTER_CLOSED)) {
+	if(get_config('system','register_policy') == REGISTER_CLOSED) {
 		notice("Permission denied." . EOL);
 		return;
 	}
@@ -260,6 +265,7 @@ function zregister_content(&$a) {
 	else
 		$label_tos = sprintf( t('I am over 13 years of age and accept the %s for this website'), $toslink);
 
+	$enable_tos = 1 - intval(get_config('system','no_termsofservice'));
 
 	$email        = ((x($_REQUEST,'email'))        ? $_REQUEST['email']        :  "" );
 	$password     = ((x($_REQUEST,'password'))     ? $_REQUEST['password']     :  "" );
@@ -281,7 +287,7 @@ function zregister_content(&$a) {
 		'$label_pass1'  => t('Choose a password'),
 		'$label_pass2'  => t('Please re-enter your password'),
 		'$label_tos'    => $label_tos,
-	
+		'$enable_tos'   => $enable_tos,	
 		'$email'        => $email,
 		'$pass1'        => $password,
 		'$pass2'        => $password2,

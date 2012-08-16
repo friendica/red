@@ -11,21 +11,17 @@ function create_account($arr) {
 
 	// Required: { email, password }
 
-	$a = get_app();
-	$result = array('success' => false, 'user' => null, 'password' => '', 'message' => '');
+	$result = array('success' => false, 'email' => '', 'password' => '', 'message' => '');
 
 	$using_invites = get_config('system','invitation_only');
 	$num_invites   = get_config('system','number_invites');
-
 
 	$invite_id  = ((x($arr,'invite_id'))  ? notags(trim($arr['invite_id']))  : '');
 	$email      = ((x($arr,'email'))      ? notags(trim($arr['email']))      : '');
 	$password   = ((x($arr,'password'))   ? trim($arr['password'])           : '');
 	$password2  = ((x($arr,'password2'))  ? trim($arr['password2'])          : '');
 	$parent     = ((x($arr,'parent'))     ? intval($arr['parent'])           : 0 );
-
-	$blocked    = ((x($arr,'blocked'))    ? intval($arr['blocked'])  : 0);
-	$verified   = ((x($arr,'verified'))   ? intval($arr['verified']) : 0);
+	$flags      = ((x($arr,'account_flags')) ? intval($arr['account_flags']) : ACCOUNT_OK);
 
 	if($using_invites) {
 		if(! $invite_id) {
@@ -50,16 +46,19 @@ function create_account($arr) {
 	if((! valid_email($email)) || (! validate_email($email)))
 		$result['message'] .= t('Not a valid email address.') . EOL;
 
+	$r = q("select account_email, account_password from account where email = '%s' limit 1",
+		
+
+
+
 
 	if(strlen($result['message'])) {
 		return $result;
 	}
 
 
+
 	$password_encoded = hash('whirlpool',$password);
-
-	$result['password'] = $new_password;
-
 
 	$r = q("INSERT INTO account 
 			( account_parent,  account_password, account_email, account_language, 
@@ -69,7 +68,7 @@ function create_account($arr) {
 		intval($parent),
 		dbesc($password_encoded),
 		dbesc($email),
-		dbesc($a->language),
+		dbesc(get_best_language()),
 		dbesc(datetime_convert()),
 		dbesc($flags),
 		dbesc(0),
@@ -77,8 +76,16 @@ function create_account($arr) {
 		dbesc($default_service_class)
 
 	);
+	if(! $r) {
+		logger('create_account: DB INSERT failed.');
+		$result['message'] = t('Failed to store account information.');
+		return($result);
+	}
 
 	$result['success'] = true;
+
+	$result['email']    = $email;
+	$result['password'] = $password;
 	return $result;
 
 }
