@@ -7,6 +7,8 @@
 		'comment'   : '$comment',
 		'showmore'  : '$showmore',
 		'showfewer' : '$showfewer',
+		'pwshort'   : '$pwshort',
+		'pwnomatch' : 'pwnomatch',
 
 		't01' :  $t01,
 		't02' :  $t02,

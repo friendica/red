@@ -12,7 +12,8 @@ function check_account_email($email) {
 
 	$result = array('error' => false, 'message' => '');
 
-	// Caution: empty email isn't counted as an error in this function. Check emptiness separately. 
+	// Caution: empty email isn't counted as an error in this function. 
+	// Check for empty value separately. 
 
 	if(! strlen($email))
 		return $result;
@@ -32,10 +33,25 @@ function check_account_email($email) {
 	if($result['message'])
 		$result['error'] = true;
 
-	return $result;
+	$arr = array('email' => $email, 'result' => $result);
+	call_hooks('check_account_email', $arr);
+
+	return $arr['result'];
 }
 
+function check_account_password($password) {
+	$result = array('error' => false, 'message' => '');
 
+	// The only validation we perform by default is pure Javascript to 
+	// check minimum length and that both entered passwords match.
+	// Use hooked functions to perform complexity requirement checks. 
+
+	$arr = array('password' => $password, 'result' => $result);
+	call_hooks('check_account_password', $arr);
+
+	return $arr['result'];
+
+}
 
 function create_account($arr) {
 
@@ -74,6 +90,13 @@ function create_account($arr) {
 
 	if(! $email_result['error']) {
 		$result['message'] = $email_result['message'];
+		return $result;
+	}
+
+	$password_result = check_account_password($password);
+
+	if(! $password_result['error']) {
+		$result['message'] = $password_result['message'];
 		return $result;
 	}
 

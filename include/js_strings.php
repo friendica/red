@@ -6,6 +6,8 @@ function js_strings() {
 		'$comment'   => t('Comment'),
 		'$showmore'  => t('show more'),
 		'$showfewer' => t('show fewer'),
+		'$pwshort'   => t("Password too short"),
+		'$pwnomatch' => t("Passwords do not match"),
 
 		'$t01' => ((t('timeago.prefixAgo') != 'timeago.prefixAgo') ? t('timeago.prefixAgo') : 'null'),
 		'$t02' => ((t('timeago.suffixAgo') != 'timeago.suffixAgo') ? t('timeago.suffixAgo') : 'null'),

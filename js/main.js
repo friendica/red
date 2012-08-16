@@ -851,3 +851,14 @@ $("abbr.wall-item-ago-time").timeago();
 
 });
 
+	function zFormError(elm,x) {
+		if(x) {
+			$(elm).addClass("zform-error");
+			$(elm).removeClass("zform-ok");
+		}
+		else {
+			$(elm).addClass("zform-ok");
+			$(elm).removeClass("zform-error");
+		}											
+	}
+

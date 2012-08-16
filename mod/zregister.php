@@ -11,55 +11,10 @@ function zregister_init(&$a) {
 		json_return_and_die($result);
 	}
 
-	$pw1 = t("Password too short");
-	$pw2 = t("Passwords do not match");
-
-	$a->page['htmlhead'] .= <<< EOT
-<script>
-	function zFormError(elm,x) {
-		if(x) {
-			$(elm).addClass("zform-error");
-			$(elm).removeClass("zform-ok");
-		}
-		else {
-			$(elm).addClass("zform-ok");
-			$(elm).removeClass("zform-error");
-		}											
+	if($cmd === 'password_check.json') {
+		$result = check_account_password($_REQUEST['password']);
+		json_return_and_die($result);
 	}
-	$(document).ready(function() {
-		$("#zregister-email").blur(function() {
-			var zreg_email = $("#zregister-email").val();
-			$.get("zregister/email_check.json?f=&email=" + encodeURIComponent(zreg_email),function(data) {
-				$("#zregister-email-feedback").html(data.message);
-				zFormError("#zregister-email-feedback",data.error);
-			});
-		});
-		$("#zregister-password").blur(function() {
-			if(($("#zregister-password").val()).length < 6 ) {
-				$("#zregister-password-feedback").html("$pw1");
-				zFormError("#zregister-password-feedback",true);
-			}
-			else {
-				$("#zregister-password-feedback").html("");
-				zFormError("#zregister-password-feedback",false);
-			}
-		});
-		$("#zregister-password2").blur(function() {
-			if($("#zregister-password").val() != $("#zregister-password2").val()) {
-				$("#zregister-password2-feedback").html("$pw2");
-				zFormError("#zregister-password2-feedback",true);
-			}
-			else {
-				$("#zregister-password2-feedback").html("");
-				zFormError("#zregister-password2-feedback",false);
-			}
-		});
-	});
-
-</script>
-
-EOT;
-
 }
 
 
