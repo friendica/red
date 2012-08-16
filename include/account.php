@@ -97,7 +97,7 @@ function create_account($arr) {
 	}
 
 	$invite_result = check_account_invite($invite_code);
-	if(! $invite_result['error']) {
+	if($invite_result['error']) {
 		$result['message'] = $invite_result['message'];
 		return $result;
 	}
@@ -105,14 +105,14 @@ function create_account($arr) {
 
 	$email_result = check_account_email($email);
 
-	if(! $email_result['error']) {
+	if($email_result['error']) {
 		$result['message'] = $email_result['message'];
 		return $result;
 	}
 
 	$password_result = check_account_password($password);
 
-	if(! $password_result['error']) {
+	if($password_result['error']) {
 		$result['message'] = $password_result['message'];
 		return $result;
 	}
