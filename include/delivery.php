@@ -148,7 +148,7 @@ function delivery_run($argv, $argc){
 					$item['deleted'] = 1;
 			}
 
-			if((count($items) == 1) && ($items[0]['uri'] === $items[0]['parent-uri'])) {
+			if((count($items) == 1) && ($items[0]['uri'] === $items[0]['parent_uri'])) {
 				logger('delivery: top level post');
 				$top_level = true;
 			}

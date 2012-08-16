@@ -1357,7 +1357,7 @@
 					'contributors' => '',
 					'annotations'  => '',
 					'entities'  => '',
-					'objecttype' => (($item['object-type']) ? $item['object-type'] : ACTIVITY_OBJ_NOTE),
+					'objecttype' => (($item['obj_type']) ? $item['obj_type'] : ACTIVITY_OBJ_NOTE),
 					'verb' => (($item['verb']) ? $item['verb'] : ACTIVITY_POST),
 					'self' => $a->get_baseurl()."/api/statuses/show/".$item['id'].".".$type,
 					'edit' => $a->get_baseurl()."/api/statuses/show/".$item['id'].".".$type,
@@ -1573,10 +1573,10 @@
 		$replyto = '';
 		$sub     = '';
 		if (x($_REQUEST,'replyto')) {
-			$r = q('SELECT `parent-uri`, `title` FROM `mail` WHERE `uid`=%d AND `id`=%d',
+			$r = q('SELECT `parent_uri`, `title` FROM `mail` WHERE `uid`=%d AND `id`=%d',
 					intval(local_user()),
 					intval($_REQUEST['replyto']));
-			$replyto = $r[0]['parent-uri'];
+			$replyto = $r[0]['parent_uri'];
 			$sub     = $r[0]['title'];
 		}
 		else {
@@ -1628,7 +1628,7 @@
 			$sql_extra = "`from-url`='".dbesc( $profile_url )."'";
 		}
 		elseif ($box=="conversation") {
-			$sql_extra = "`parent-uri`='".dbesc( $_GET["uri"] )  ."'";
+			$sql_extra = "`parent_uri`='".dbesc( $_GET["uri"] )  ."'";
 		}
 		elseif ($box=="all") {
 			$sql_extra = "true";

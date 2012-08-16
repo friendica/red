@@ -540,9 +540,9 @@ if ($color=="dark") $color_path = "/diabook-dark/";
 	$aside['$like_title'] = t('Last likes');
 	$aside['$like_items'] = array();
 	$r = q("SELECT `T1`.`created`, `T1`.`liker`, `T1`.`liker-link`, `item`.* FROM 
-			(SELECT `parent-uri`, `created`, `author-name` AS `liker`,`author-link` AS `liker-link` 
-				FROM `item` WHERE `verb`='http://activitystrea.ms/schema/1.0/like' GROUP BY `parent-uri` ORDER BY `created` DESC) AS T1
-			INNER JOIN `item` ON `item`.`uri`=`T1`.`parent-uri` 
+			(SELECT `parent_uri`, `created`, `author-name` AS `liker`,`author-link` AS `liker-link` 
+				FROM `item` WHERE `verb`='http://activitystrea.ms/schema/1.0/like' GROUP BY `parent_uri` ORDER BY `created` DESC) AS T1
+			INNER JOIN `item` ON `item`.`uri`=`T1`.`parent_uri` 
 			WHERE `T1`.`liker-link` LIKE '%s%%' OR `item`.`author-link` LIKE '%s%%'
 			GROUP BY `uri`
 			ORDER BY `T1`.`created` DESC
@@ -554,10 +554,10 @@ if ($color=="dark") $color_path = "/diabook-dark/";
 		$author	 = '<a href="' . $rr['liker-link'] . '">' . $rr['liker'] . '</a>';
 		$objauthor =  '<a href="' . $rr['author-link'] . '">' . $rr['author-name'] . '</a>';
 		
-		//var_dump($rr['verb'],$rr['object-type']); killme();
+		//var_dump($rr['verb'],$rr['obj_type']); killme();
 		switch($rr['verb']){
 			case 'http://activitystrea.ms/schema/1.0/post':
-				switch ($rr['object-type']){
+				switch ($rr['obj_type']){
 					case 'http://activitystrea.ms/schema/1.0/event':
 						$post_type = t('event');
 						break;

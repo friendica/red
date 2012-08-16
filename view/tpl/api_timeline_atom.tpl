@@ -10,7 +10,7 @@
  
  
  <author>
-	<activity:object-type>http://activitystrea.ms/schema/1.0/person</activity:object-type>
+	<activity:obj_type>http://activitystrea.ms/schema/1.0/person</activity:obj_type>
 	<uri>$user.url</uri>
 	<name>$user.name</name>
 	<link rel="alternate" type="text/html" href="$user.url"/>
@@ -31,7 +31,7 @@
 
  <!--Deprecation warning: activity:subject is present only for backward compatibility. It will be removed in the next version of StatusNet.-->
  <activity:subject>
-	<activity:object-type>http://activitystrea.ms/schema/1.0/person</activity:object-type>
+	<activity:obj_type>http://activitystrea.ms/schema/1.0/person</activity:obj_type>
 	<id>$user.contact_url</id>
 	<title>$user.name</title>
 	<link rel="alternate" type="text/html" href="$user.url"/>
@@ -52,7 +52,7 @@
  
   	{{ for $statuses as $status }}
 	<entry>
-		<activity:object-type>$status.objecttype</activity:object-type>
+		<activity:obj_type>$status.objecttype</activity:obj_type>
 		<id>$status.message_id</id>
 		<title>$status.text</title>
 		<content type="html">$status.statusnet_html</content>
@@ -67,7 +67,7 @@
 		</statusnet:notice_info>
 
 		<author>
-			<activity:object-type>http://activitystrea.ms/schema/1.0/person</activity:object-type>
+			<activity:obj_type>http://activitystrea.ms/schema/1.0/person</activity:obj_type>
 			<uri>$status.user.url</uri>
 			<name>$status.user.name</name>
 			<link rel="alternate" type="text/html" href="$status.user.url"/>

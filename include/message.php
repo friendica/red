@@ -36,7 +36,7 @@ function send_message($recipient=0, $body='', $subject='', $replyto=''){
 
 	if(strlen($replyto)) {
 		$reply = true;
-		$r = q("select convid from mail where uid = %d and ( uri = '%s' or `parent-uri` = '%s' ) limit 1",
+		$r = q("select convid from mail where uid = %d and ( uri = '%s' or `parent_uri` = '%s' ) limit 1",
 			intval(local_user()),
 			dbesc($replyto),
 			dbesc($replyto)
@@ -88,7 +88,7 @@ function send_message($recipient=0, $body='', $subject='', $replyto=''){
 
 
 	$r = q("INSERT INTO `mail` ( `uid`, `guid`, `convid`, `from-name`, `from-photo`, `from-url`, 
-		`contact-id`, `title`, `body`, `seen`, `reply`, `replied`, `uri`, `parent-uri`, `created`)
+		`contact-id`, `title`, `body`, `seen`, `reply`, `replied`, `uri`, `parent_uri`, `created`)
 		VALUES ( %d, '%s', %d, '%s', '%s', '%s', %d, '%s', '%s', %d, %d, %d, '%s', '%s', '%s' )",
 		intval(local_user()),
 		dbesc(get_guid()),
@@ -217,7 +217,7 @@ function send_wallmessage($recipient='', $body='', $subject='', $replyto=''){
 	}
 
 	$r = q("INSERT INTO `mail` ( `uid`, `guid`, `convid`, `from-name`, `from-photo`, `from-url`, 
-		`contact-id`, `title`, `body`, `seen`, `reply`, `replied`, `uri`, `parent-uri`, `created`, `unknown`)
+		`contact-id`, `title`, `body`, `seen`, `reply`, `replied`, `uri`, `parent_uri`, `created`, `unknown`)
 		VALUES ( %d, '%s', %d, '%s', '%s', '%s', %d, '%s', '%s', %d, %d, %d, '%s', '%s', '%s', %d )",
 		intval($recipient['uid']),
 		dbesc(get_guid()),

@@ -42,8 +42,8 @@ function update_1000() {
 	q("ALTER TABLE `item` DROP `like`, DROP `dislike` ");
 
 	q("ALTER TABLE `item` ADD `verb` CHAR( 255 ) NOT NULL AFTER `body` ,
-		ADD `object-type` CHAR( 255 ) NOT NULL AFTER `verb` ,
-		ADD `object` TEXT NOT NULL AFTER `object-type` ");
+		ADD `obj_type` CHAR( 255 ) NOT NULL AFTER `verb` ,
+		ADD `object` TEXT NOT NULL AFTER `obj_type` ");
 
 	q("ALTER TABLE `intro` ADD `duplex` TINYINT( 1 ) NOT NULL DEFAULT '0' AFTER `knowyou` ");
 	q("ALTER TABLE `contact` ADD `duplex` TINYINT( 1 ) NOT NULL DEFAULT '0' AFTER `rel` ");
@@ -136,8 +136,8 @@ function update_1012() {
 }
 
 function update_1013() {
-	q("ALTER TABLE `item` ADD `target-type` CHAR( 255 ) NOT NULL 
-		AFTER `object` , ADD `target` TEXT NOT NULL AFTER `target-type`");
+	q("ALTER TABLE `item` ADD `tgt_type` CHAR( 255 ) NOT NULL 
+		AFTER `object` , ADD `target` TEXT NOT NULL AFTER `tgt_type`");
 } 
 
 function update_1014() {
@@ -221,7 +221,7 @@ function update_1019() {
 
 function update_1020() {
 	q("ALTER TABLE `profile` DROP `showwith`");
-	q("ALTER TABLE `item` ADD `thr-parent` CHAR( 255 ) NOT NULL AFTER `parent-uri` ");
+	q("ALTER TABLE `item` ADD `thr-parent` CHAR( 255 ) NOT NULL AFTER `parent_uri` ");
 }
 
 function update_1021() {
@@ -479,7 +479,7 @@ function update_1052() {
 
 
 function update_1053() {
-	q("ALTER TABLE `item` ADD `extid` CHAR( 255 ) NOT NULL AFTER `parent-uri` , ADD INDEX ( `extid` ) ");
+	q("ALTER TABLE `item` ADD `extid` CHAR( 255 ) NOT NULL AFTER `parent_uri` , ADD INDEX ( `extid` ) ");
 }
 
 function update_1054() {
@@ -940,7 +940,7 @@ function update_1109() {
 function update_1110() {
 	q("ALTER TABLE `mail` ADD `reply` TINYINT( 1 ) NOT NULL DEFAULT '0' AFTER `seen`,
 		ADD INDEX ( `reply` ), ADD INDEX ( `uid` ), ADD INDEX ( `guid` ), ADD INDEX ( `seen` ),
-		ADD INDEX ( `uri` ), ADD INDEX ( `parent-uri`), ADD INDEX ( `created` ), ADD INDEX ( `convid` ) ");
+		ADD INDEX ( `uri` ), ADD INDEX ( `parent_uri`), ADD INDEX ( `created` ), ADD INDEX ( `convid` ) ");
 
 }
 

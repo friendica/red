@@ -813,7 +813,7 @@ function item_post(&$a) {
 		if(! $parent)
 			$parent = $post_id;
 
-		$r = q("UPDATE `item` SET `parent` = %d, `parent-uri` = '%s', `plink` = '%s', `changed` = '%s', `visible` = 1
+		$r = q("UPDATE `item` SET `parent` = %d, `parent_uri` = '%s', `plink` = '%s', `changed` = '%s', `visible` = 1
 			WHERE `id` = %d LIMIT 1",
 			intval($parent),
 			dbesc(($parent == $post_id) ? $uri : $parent_item['uri']),

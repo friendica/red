@@ -220,14 +220,14 @@ function photos_post(&$a) {
 
 			// find and delete the corresponding item with all the comments and likes/dislikes
 
-			$r = q("SELECT `parent-uri` FROM `item` WHERE `resource-id` IN ( $str_res ) AND `uid` = %d",
+			$r = q("SELECT `parent_uri` FROM `item` WHERE `resource-id` IN ( $str_res ) AND `uid` = %d",
 				intval($page_owner_uid)
 			);
 			if(count($r)) {
 				foreach($r as $rr) {
-					q("UPDATE `item` SET `deleted` = 1, `changed` = '%s' WHERE `parent-uri` = '%s' AND `uid` = %d",
+					q("UPDATE `item` SET `deleted` = 1, `changed` = '%s' WHERE `parent_uri` = '%s' AND `uid` = %d",
 						dbesc(datetime_convert()),
-						dbesc($rr['parent-uri']),
+						dbesc($rr['parent_uri']),
 						intval($page_owner_uid)
 					);
 
@@ -271,7 +271,7 @@ function photos_post(&$a) {
 				intval($page_owner_uid)
 			);
 			if(count($i)) {
-				q("UPDATE `item` SET `deleted` = 1, `edited` = '%s', `changed` = '%s' WHERE `parent-uri` = '%s' AND `uid` = %d",
+				q("UPDATE `item` SET `deleted` = 1, `edited` = '%s', `changed` = '%s' WHERE `parent_uri` = '%s' AND `uid` = %d",
 					dbesc(datetime_convert()),
 					dbesc(datetime_convert()),
 					dbesc($i[0]['uri']),
@@ -399,7 +399,7 @@ function photos_post(&$a) {
 
 			$arr['uid']           = $page_owner_uid;
 			$arr['uri']           = $uri;
-			$arr['parent-uri']    = $uri; 
+			$arr['parent_uri']    = $uri; 
 			$arr['type']          = 'photo';
 			$arr['wall']          = 1;
 			$arr['resource-id']   = $p[0]['resource-id'];
@@ -564,7 +564,7 @@ function photos_post(&$a) {
 
 					$arr['uid']           = $page_owner_uid;
 					$arr['uri']           = $uri;
-					$arr['parent-uri']    = $uri;
+					$arr['parent_uri']    = $uri;
 					$arr['type']          = 'activity';
 					$arr['wall']          = 1;
 					$arr['contact-id']    = $owner_record['id'];
@@ -581,8 +581,8 @@ function photos_post(&$a) {
 					$arr['deny_gid']      = $p[0]['deny_gid'];
 					$arr['visible']       = 1;
 					$arr['verb']          = ACTIVITY_TAG;
-					$arr['object-type']   = ACTIVITY_OBJ_PERSON;
-					$arr['target-type']   = ACTIVITY_OBJ_PHOTO;
+					$arr['obj_type']   = ACTIVITY_OBJ_PERSON;
+					$arr['tgt_type']   = ACTIVITY_OBJ_PHOTO;
 					$arr['tag']           = $tagged[4];
 					$arr['inform']        = $tagged[2];
 					$arr['origin']        = 1;
@@ -783,7 +783,7 @@ function photos_post(&$a) {
 
 	$arr['uid']           = $page_owner_uid;
 	$arr['uri']           = $uri;
-	$arr['parent-uri']    = $uri;
+	$arr['parent_uri']    = $uri;
 	$arr['type']          = 'photo';
 	$arr['wall']          = 1;
 	$arr['resource-id']   = $photo_hash;
@@ -1225,7 +1225,7 @@ function photos_content(&$a) {
 			$link_item = $linked_items[0];
 			$r = q("SELECT COUNT(*) AS `total`
 				FROM `item` LEFT JOIN `contact` ON `contact`.`id` = `item`.`contact-id`
-				WHERE `parent-uri` = '%s' AND `uri` != '%s' AND `item`.`deleted` = 0 and `item`.`moderated` = 0
+				WHERE `parent_uri` = '%s' AND `uri` != '%s' AND `item`.`deleted` = 0 and `item`.`moderated` = 0
 				AND `contact`.`blocked` = 0 AND `contact`.`pending` = 0
 				AND `item`.`uid` = %d 
 				$sql_extra ",
@@ -1244,7 +1244,7 @@ function photos_content(&$a) {
 				`contact`.`rel`, `contact`.`thumb`, `contact`.`self`, 
 				`contact`.`id` AS `cid`, `contact`.`uid` AS `contact-uid`
 				FROM `item` LEFT JOIN `contact` ON `contact`.`id` = `item`.`contact-id`
-				WHERE `parent-uri` = '%s' AND `uri` != '%s' AND `item`.`deleted` = 0 and `item`.`moderated` = 0
+				WHERE `parent_uri` = '%s' AND `uri` != '%s' AND `item`.`deleted` = 0 and `item`.`moderated` = 0
 				AND `contact`.`blocked` = 0 AND `contact`.`pending` = 0
 				AND `item`.`uid` = %d
 				$sql_extra

@@ -93,7 +93,7 @@ function localize_item(&$item){
 
 		$r = q("SELECT * from `item`,`contact` WHERE 
 				`item`.`contact-id`=`contact`.`id` AND `item`.`uri`='%s';",
-				 dbesc($item['parent-uri']));
+				 dbesc($item['parent_uri']));
 		if(count($r)==0) return;
 		$obj=$r[0];
 		
@@ -102,7 +102,7 @@ function localize_item(&$item){
 		
 		switch($obj['verb']){
 			case ACTIVITY_POST:
-				switch ($obj['object-type']){
+				switch ($obj['obj_type']){
 					case ACTIVITY_OBJ_EVENT:
 						$post_type = t('event');
 						break;
@@ -135,7 +135,7 @@ function localize_item(&$item){
 	}
 	if ($item['verb']=== ACTIVITY_FRIEND){
 
-		if ($item['object-type']=="" || $item['object-type']!== ACTIVITY_OBJ_PERSON) return;
+		if ($item['obj_type']=="" || $item['obj_type']!== ACTIVITY_OBJ_PERSON) return;
 
 		$Aname = $item['author-name'];
 		$Alink = $item['author-link'];
@@ -167,7 +167,7 @@ function localize_item(&$item){
 		$verb = urldecode(substr($item['verb'],strpos($item['verb'],'#')+1));
 		if(! $verb)
 			return;
-		if ($item['object-type']=="" || $item['object-type']!== ACTIVITY_OBJ_PERSON) return;
+		if ($item['obj_type']=="" || $item['obj_type']!== ACTIVITY_OBJ_PERSON) return;
 
 		$Aname = $item['author-name'];
 		$Alink = $item['author-link'];
@@ -209,7 +209,7 @@ function localize_item(&$item){
     if ($item['verb']===ACTIVITY_TAG){
 		$r = q("SELECT * from `item`,`contact` WHERE 
 		`item`.`contact-id`=`contact`.`id` AND `item`.`uri`='%s';",
-		 dbesc($item['parent-uri']));
+		 dbesc($item['parent_uri']));
 		if(count($r)==0) return;
 		$obj=$r[0];
 		
@@ -218,7 +218,7 @@ function localize_item(&$item){
 		
 		switch($obj['verb']){
 			case ACTIVITY_POST:
-				switch ($obj['object-type']){
+				switch ($obj['obj_type']){
 					case ACTIVITY_OBJ_EVENT:
 						$post_type = t('event');
 						break;
@@ -245,7 +245,7 @@ function localize_item(&$item){
 	}
 	if ($item['verb']=== ACTIVITY_FAVORITE){
 
-		if ($item['object-type']== "")
+		if ($item['obj_type']== "")
 			return;
 
 		$Aname = $item['author-name'];
@@ -1402,7 +1402,7 @@ function like_puller($a,$item,&$arr,$mode) {
 			$url = zrl($url);
 
 		if(! $item['thr-parent'])
-			$item['thr-parent'] = $item['parent-uri'];
+			$item['thr-parent'] = $item['parent_uri'];
 
 		if(! ((isset($arr[$item['thr-parent'] . '-l'])) && (is_array($arr[$item['thr-parent'] . '-l']))))
 			$arr[$item['thr-parent'] . '-l'] = array();
@@ -1570,10 +1570,10 @@ function get_item_children($arr, $parent) {
 	foreach($arr as $item) {
 		if($item['id'] != $item['parent']) {
 			if(get_config('system','thread_allow')) {
-				// Fallback to parent-uri if thr-parent is not set
+				// Fallback to parent_uri if thr-parent is not set
 				$thr_parent = $item['thr-parent'];
 				if($thr_parent == '')
-					$thr_parent = $item['parent-uri'];
+					$thr_parent = $item['parent_uri'];
 				
 				if($thr_parent == $parent['uri']) {
 					$item['children'] = get_item_children($arr, $item);

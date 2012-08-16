@@ -439,7 +439,7 @@ function dfrn_confirm_post(&$a,$handsfree = null) {
 				if(count($self)) {
 
 					$arr = array();
-					$arr['uri'] = $arr['parent-uri'] = item_new_uri($a->get_hostname(), $uid); 
+					$arr['uri'] = $arr['parent_uri'] = item_new_uri($a->get_hostname(), $uid); 
 					$arr['uid'] = $uid;
 					$arr['contact-id'] = $self[0]['id'];
 					$arr['wall'] = 1;
@@ -457,7 +457,7 @@ function dfrn_confirm_post(&$a,$handsfree = null) {
 					$BPhoto = '[url=' . $contact['url'] . ']' . '[img]' . $contact['thumb'] . '[/img][/url]';
 
 					$arr['verb'] = ACTIVITY_FRIEND;
-				    $arr['object-type'] = ACTIVITY_OBJ_PERSON;
+				    $arr['obj_type'] = ACTIVITY_OBJ_PERSON;
 					$arr['body'] =  sprintf( t('%1$s is now friends with %2$s'), $A, $B)."\n\n\n".$BPhoto;
 
 					$arr['object'] = '<object><type>' . ACTIVITY_OBJ_PERSON . '</type><title>' . $contact['name'] . '</title>'
@@ -760,7 +760,7 @@ function dfrn_confirm_post(&$a,$handsfree = null) {
 				if(count($self)) {
 
 					$arr = array();
-					$arr['uri'] = $arr['parent-uri'] = item_new_uri($a->get_hostname(), $local_uid); 
+					$arr['uri'] = $arr['parent_uri'] = item_new_uri($a->get_hostname(), $local_uid); 
 					$arr['uid'] = $local_uid;
 					$arr['contact-id'] = $self[0]['id'];
 					$arr['wall'] = 1;
@@ -778,7 +778,7 @@ function dfrn_confirm_post(&$a,$handsfree = null) {
 					$BPhoto = '[url=' . $combined['url'] . ']' . '[img]' . $combined['thumb'] . '[/img][/url]';
 
 					$arr['verb'] = ACTIVITY_JOIN;
-					$arr['object-type'] = ACTIVITY_OBJ_GROUP;
+					$arr['obj_type'] = ACTIVITY_OBJ_GROUP;
 					$arr['body'] =  sprintf( t('%1$s has joined %2$s'), $A, $B)."\n\n\n" .$BPhoto;
 					$arr['object'] = '<object><type>' . ACTIVITY_OBJ_GROUP . '</type><title>' . $combined['name'] . '</title>'
 						. '<id>' . $combined['url'] . '/' . $combined['name'] . '</id>';

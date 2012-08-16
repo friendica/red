@@ -327,7 +327,7 @@ function profile_activity($changed, $value) {
 		return;
 
 	$arr = array();
-	$arr['uri'] = $arr['parent-uri'] = item_new_uri($a->get_hostname(), local_user()); 
+	$arr['uri'] = $arr['parent_uri'] = item_new_uri($a->get_hostname(), local_user()); 
 	$arr['uid'] = local_user();
 	$arr['contact-id'] = $self[0]['id'];
 	$arr['wall'] = 1;
@@ -338,7 +338,7 @@ function profile_activity($changed, $value) {
 	$arr['author-link'] = $arr['owner-link'] = $self[0]['url'];
 	$arr['author-avatar'] = $arr['owner-avatar'] = $self[0]['thumb'];
 	$arr['verb'] = ACTIVITY_UPDATE;
-	$arr['object-type'] = ACTIVITY_OBJ_PROFILE;
+	$arr['obj_type'] = ACTIVITY_OBJ_PROFILE;
 				
 	$A = '[url=' . $self[0]['url'] . ']' . $self[0]['name'] . '[/url]';
 

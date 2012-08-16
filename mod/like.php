@@ -106,7 +106,7 @@ function like_content(&$a) {
 
 
 	$r = q("SELECT * FROM `item` WHERE `verb` = '%s' AND `deleted` = 0 
-		AND `contact-id` = %d AND ( `parent` = '%s' OR `parent-uri` = '%s' OR `thr-parent` = '%s') LIMIT 1",
+		AND `contact-id` = %d AND ( `parent` = '%s' OR `parent_uri` = '%s' OR `thr-parent` = '%s') LIMIT 1",
 		dbesc($activity),
 		intval($contact['id']),
 		dbesc($item_id),
@@ -163,7 +163,7 @@ EOT;
 	$arr['origin'] = 1;
 	$arr['gravity'] = GRAVITY_LIKE;
 	$arr['parent'] = $item['id'];
-	$arr['parent-uri'] = $item['uri'];
+	$arr['parent_uri'] = $item['uri'];
 	$arr['thr-parent'] = $item['uri'];
 	$arr['owner-name'] = $remote_owner['name'];
 	$arr['owner-link'] = $remote_owner['url'];
@@ -178,7 +178,7 @@ EOT;
 	$arr['body'] =  sprintf( $bodyverb, $ulink, $alink, $plink );
 
 	$arr['verb'] = $activity;
-	$arr['object-type'] = $objtype;
+	$arr['obj_type'] = $objtype;
 	$arr['object'] = $obj;
 	$arr['allow_cid'] = $item['allow_cid'];
 	$arr['allow_gid'] = $item['allow_gid'];

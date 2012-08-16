@@ -200,15 +200,15 @@ function message_content(&$a) {
 			goaway($a->get_baseurl(true) . '/message' );
 		}
 		else {
-			$r = q("SELECT `parent-uri`,`convid` FROM `mail` WHERE `id` = %d AND `uid` = %d LIMIT 1",
+			$r = q("SELECT `parent_uri`,`convid` FROM `mail` WHERE `id` = %d AND `uid` = %d LIMIT 1",
 				intval($a->argv[2]),
 				intval(local_user())
 			);
 			if(count($r)) {
-				$parent = $r[0]['parent-uri'];
+				$parent = $r[0]['parent_uri'];
 				$convid = $r[0]['convid'];
 
-				$r = q("DELETE FROM `mail` WHERE `parent-uri` = '%s' AND `uid` = %d ",
+				$r = q("DELETE FROM `mail` WHERE `parent_uri` = '%s' AND `uid` = %d ",
 					dbesc($parent),
 					intval(local_user())
 				);
@@ -294,7 +294,7 @@ function message_content(&$a) {
 
 		
 		$r = q("SELECT count(*) AS `total` FROM `mail` 
-			WHERE `mail`.`uid` = %d GROUP BY `parent-uri` ORDER BY `created` DESC",
+			WHERE `mail`.`uid` = %d GROUP BY `parent_uri` ORDER BY `created` DESC",
 			intval(local_user()),
 			dbesc($myprofile)
 		);
@@ -305,7 +305,7 @@ function message_content(&$a) {
 			`mail`.* , `contact`.`name`, `contact`.`url`, `contact`.`thumb` , `contact`.`network`,
 			count( * ) as count
 			FROM `mail` LEFT JOIN `contact` ON `mail`.`contact-id` = `contact`.`id` 
-			WHERE `mail`.`uid` = %d GROUP BY `parent-uri` ORDER BY `mailcreated` DESC  LIMIT %d , %d ",
+			WHERE `mail`.`uid` = %d GROUP BY `parent_uri` ORDER BY `mailcreated` DESC  LIMIT %d , %d ",
 			intval(local_user()),
 			//
 			intval($a->pager['start']),
@@ -362,10 +362,10 @@ function message_content(&$a) {
 			$contact_id = $r[0]['contact-id'];
 			$convid = $r[0]['convid'];
 
-			$sql_extra = sprintf(" and `mail`.`parent-uri` = '%s' ", dbesc($r[0]['parent-uri']));
+			$sql_extra = sprintf(" and `mail`.`parent_uri` = '%s' ", dbesc($r[0]['parent_uri']));
 			if($convid)
-				$sql_extra = sprintf(" and ( `mail`.`parent-uri` = '%s' OR `mail`.`convid` = '%d' ) ",
-					dbesc($r[0]['parent-uri']),
+				$sql_extra = sprintf(" and ( `mail`.`parent_uri` = '%s' OR `mail`.`convid` = '%d' ) ",
+					dbesc($r[0]['parent_uri']),
 					intval($convid)
 				);  
 
@@ -380,8 +380,8 @@ function message_content(&$a) {
 			return $o;
 		}
 
-		$r = q("UPDATE `mail` SET `seen` = 1 WHERE `parent-uri` = '%s' AND `uid` = %d",
-			dbesc($r[0]['parent-uri']),
+		$r = q("UPDATE `mail` SET `seen` = 1 WHERE `parent_uri` = '%s' AND `uid` = %d",
+			dbesc($r[0]['parent_uri']),
 			intval(local_user())
 		);
 
@@ -434,7 +434,7 @@ function message_content(&$a) {
 
 
 		$select = $message['name'] . '<input type="hidden" name="messageto" value="' . $contact_id . '" />';
-		$parent = '<input type="hidden" name="replyto" value="' . $message['parent-uri'] . '" />';
+		$parent = '<input type="hidden" name="replyto" value="' . $message['parent_uri'] . '" />';
 
 		$tpl = get_markup_template('mail_display.tpl');
 		$o = replace_macros($tpl, array(

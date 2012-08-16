@@ -170,7 +170,7 @@ function notifier_run($argv, $argc){
 				$item['deleted'] = 1;
 		}
 
-		if((count($items) == 1) && ($items[0]['id'] === $target_item['id']) && ($items[0]['uri'] === $items[0]['parent-uri'])) {
+		if((count($items) == 1) && ($items[0]['id'] === $target_item['id']) && ($items[0]['uri'] === $items[0]['parent_uri'])) {
 			logger('notifier: top level post');
 			$top_level = true;
 		}
@@ -365,7 +365,7 @@ function notifier_run($argv, $argc){
 			'$subject'      => xmlify($item['title']),
 			'$created'      => xmlify(datetime_convert('UTC', 'UTC', $item['created'] . '+00:00' , ATOM_TIME)),
 			'$content'      => xmlify($body),
-			'$parent_id'    => xmlify($item['parent-uri'])
+			'$parent_id'    => xmlify($item['parent_uri'])
 		));
 	}
 	elseif($fsuggest) {

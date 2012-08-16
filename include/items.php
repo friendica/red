@@ -224,7 +224,7 @@ function construct_activity_object($item) {
 		if(! $r)
 			return '';
 		if($r->type)
-			$o .= '<as:object-type>' . xmlify($r->type) . '</as:object-type>' . "\r\n";
+			$o .= '<as:obj_type>' . xmlify($r->type) . '</as:obj_type>' . "\r\n";
 		if($r->id)
 			$o .= '<id>' . xmlify($r->id) . '</id>' . "\r\n";
 		if($r->title)
@@ -259,7 +259,7 @@ function construct_activity_target($item) {
 		if(! $r)
 			return '';
 		if($r->type)
-			$o .= '<as:object-type>' . xmlify($r->type) . '</as:object-type>' . "\r\n";
+			$o .= '<as:obj_type>' . xmlify($r->type) . '</as:obj_type>' . "\r\n";
 		if($r->id)
 			$o .= '<id>' . xmlify($r->id) . '</id>' . "\r\n";
 		if($r->title)
@@ -420,13 +420,13 @@ function get_item_elements($j) {
 	$arr['title']      = (($j->title)    ? htmlentities($j->title,    ENT_COMPAT,'UTF-8') : '');
 	$arr['app']        = (($j->app)      ? htmlentities($j->app,      ENT_COMPAT,'UTF-8') : '');
 	$arr['uri']        = (($j->uri)      ? htmlentities($j->uri,      ENT_COMPAT,'UTF-8') : '');
-	$arr['puri']       = (($j->puri)     ? htmlentities($j->puri,     ENT_COMPAT,'UTF-8') : '');
+	$arr['parent_uri'] = (($j->parent_uri) ? htmlentities($j->parent_uri, ENT_COMPAT,'UTF-8') : '');
 	$arr['plink']      = (($j->plink)    ? htmlentities($j->plink,    ENT_COMPAT,'UTF-8') : '');
 	$arr['location']   = (($j->location) ? htmlentities($j->location, ENT_COMPAT,'UTF-8') : '');
 	$arr['coord']      = (($j->coord)    ? htmlentities($j->coord,    ENT_COMPAT,'UTF-8') : '');
 	$arr['verb']       = (($j->verb)     ? htmlentities($j->verb,     ENT_COMPAT,'UTF-8') : '');
-	$arr['objtype']    = (($j->objtype)  ? htmlentities($j->objtype,  ENT_COMPAT,'UTF-8') : '');
-	$arr['tgttype']    = (($j->tgttype)  ? htmlentities($j->tgttype,  ENT_COMPAT,'UTF-8') : '');
+	$arr['obj_type']    = (($j->objtype)  ? htmlentities($j->objtype,  ENT_COMPAT,'UTF-8') : '');
+	$arr['tgt_type']    = (($j->tgttype)  ? htmlentities($j->tgttype,  ENT_COMPAT,'UTF-8') : '');
 
 	$arr['obj']        = $j->obj;
 	$arr['tgt']        = $j->tgt;
@@ -503,7 +503,7 @@ function get_atom_elements($feed,$item) {
 
 	$rawactor = $item->get_item_tags(NAMESPACE_ACTIVITY, 'actor');
 
-	if($rawactor && activity_match($rawactor[0]['child'][NAMESPACE_ACTIVITY]['object-type'][0]['data'],ACTIVITY_OBJ_PERSON)) {
+	if($rawactor && activity_match($rawactor[0]['child'][NAMESPACE_ACTIVITY]['obj_type'][0]['data'],ACTIVITY_OBJ_PERSON)) {
 		$base = $rawactor[0]['child'][SIMPLEPIE_NAMESPACE_ATOM_10]['link'];
 		if($base && count($base)) {
 			foreach($base as $link) {
@@ -535,7 +535,7 @@ function get_atom_elements($feed,$item) {
 
 		$rawactor = $feed->get_feed_tags(NAMESPACE_ACTIVITY, 'subject');
 
-		if($rawactor && activity_match($rawactor[0]['child'][NAMESPACE_ACTIVITY]['object-type'][0]['data'],ACTIVITY_OBJ_PERSON)) {
+		if($rawactor && activity_match($rawactor[0]['child'][NAMESPACE_ACTIVITY]['obj_type'][0]['data'],ACTIVITY_OBJ_PERSON)) {
 			$base = $rawactor[0]['child'][SIMPLEPIE_NAMESPACE_ATOM_10]['link'];
 
 			if($base && count($base)) {
@@ -751,9 +751,9 @@ function get_atom_elements($feed,$item) {
 	if($rawobj) {
 		$res['object'] = '<object>' . "\n";
 		$child = $rawobj[0]['child'];
-		if($child[NAMESPACE_ACTIVITY]['object-type'][0]['data']) {
-			$res['object-type'] = $child[NAMESPACE_ACTIVITY]['object-type'][0]['data'];
-			$res['object'] .= '<type>' . $child[NAMESPACE_ACTIVITY]['object-type'][0]['data'] . '</type>' . "\n";
+		if($child[NAMESPACE_ACTIVITY]['obj_type'][0]['data']) {
+			$res['obj_type'] = $child[NAMESPACE_ACTIVITY]['obj_type'][0]['data'];
+			$res['object'] .= '<type>' . $child[NAMESPACE_ACTIVITY]['obj_type'][0]['data'] . '</type>' . "\n";
 		}	
 		if(x($child[SIMPLEPIE_NAMESPACE_ATOM_10], 'id') && $child[SIMPLEPIE_NAMESPACE_ATOM_10]['id'][0]['data'])
 			$res['object'] .= '<id>' . $child[SIMPLEPIE_NAMESPACE_ATOM_10]['id'][0]['data'] . '</id>' . "\n";
@@ -790,8 +790,8 @@ function get_atom_elements($feed,$item) {
 	if($rawobj) {
 		$res['target'] = '<target>' . "\n";
 		$child = $rawobj[0]['child'];
-		if($child[NAMESPACE_ACTIVITY]['object-type'][0]['data']) {
-			$res['target'] .= '<type>' . $child[NAMESPACE_ACTIVITY]['object-type'][0]['data'] . '</type>' . "\n";
+		if($child[NAMESPACE_ACTIVITY]['obj_type'][0]['data']) {
+			$res['target'] .= '<type>' . $child[NAMESPACE_ACTIVITY]['obj_type'][0]['data'] . '</type>' . "\n";
 		}	
 		if(x($child[SIMPLEPIE_NAMESPACE_ATOM_10], 'id') && $child[SIMPLEPIE_NAMESPACE_ATOM_10]['id'][0]['data'])
 			$res['target'] .= '<id>' . $child[SIMPLEPIE_NAMESPACE_ATOM_10]['id'][0]['data'] . '</id>' . "\n";
@@ -893,7 +893,7 @@ function item_store($arr,$force_parent = false) {
 
 	if(x($arr, 'gravity'))
 		$arr['gravity'] = intval($arr['gravity']);
-	elseif($arr['parent-uri'] === $arr['uri'])
+	elseif($arr['parent_uri'] === $arr['uri'])
 		$arr['gravity'] = 0;
 	elseif(activity_match($arr['verb'],ACTIVITY_POST))
 		$arr['gravity'] = 6;
@@ -942,11 +942,11 @@ function item_store($arr,$force_parent = false) {
 	$arr['coord']         = ((x($arr,'coord'))         ? notags(trim($arr['coord']))         : '');
 	$arr['visible']       = ((x($arr,'visible') !== false) ? intval($arr['visible'])         : 1 );
 	$arr['deleted']       = 0;
-	$arr['parent-uri']    = ((x($arr,'parent-uri'))    ? notags(trim($arr['parent-uri']))    : '');
+	$arr['parent_uri']    = ((x($arr,'parent_uri'))    ? notags(trim($arr['parent_uri']))    : '');
 	$arr['verb']          = ((x($arr,'verb'))          ? notags(trim($arr['verb']))          : '');
-	$arr['object-type']   = ((x($arr,'object-type'))   ? notags(trim($arr['object-type']))   : '');
+	$arr['obj_type']   = ((x($arr,'obj_type'))   ? notags(trim($arr['obj_type']))   : '');
 	$arr['object']        = ((x($arr,'object'))        ? trim($arr['object'])                : '');
-	$arr['target-type']   = ((x($arr,'target-type'))   ? notags(trim($arr['target-type']))   : '');
+	$arr['tgt_type']   = ((x($arr,'tgt_type'))   ? notags(trim($arr['tgt_type']))   : '');
 	$arr['target']        = ((x($arr,'target'))        ? trim($arr['target'])                : '');
 	$arr['plink']         = ((x($arr,'plink'))         ? notags(trim($arr['plink']))         : '');
 	$arr['allow_cid']     = ((x($arr,'allow_cid'))     ? trim($arr['allow_cid'])             : '');
@@ -960,8 +960,8 @@ function item_store($arr,$force_parent = false) {
 	$arr['origin']        = ((x($arr,'origin'))        ? intval($arr['origin'])              : 0 );
 
 
-	$arr['thr-parent'] = $arr['parent-uri'];
-	if($arr['parent-uri'] === $arr['uri']) {
+	$arr['thr-parent'] = $arr['parent_uri'];
+	if($arr['parent_uri'] === $arr['uri']) {
 		$parent_id = 0;
 		$parent_deleted = 0;
 		$allow_cid = $arr['allow_cid'];
@@ -975,7 +975,7 @@ function item_store($arr,$force_parent = false) {
 		// and anything else we need to inherit
 
 		$r = q("SELECT * FROM `item` WHERE `uri` = '%s' AND `uid` = %d ORDER BY `id` ASC LIMIT 1",
-			dbesc($arr['parent-uri']),
+			dbesc($arr['parent_uri']),
 			intval($arr['uid'])
 		);
 
@@ -985,12 +985,12 @@ function item_store($arr,$force_parent = false) {
 			// even though we don't support it now, preserve the info
 			// and re-attach to the conversation parent.
 
-			if($r[0]['uri'] != $r[0]['parent-uri']) {
-				$arr['parent-uri'] = $r[0]['parent-uri'];
-				$z = q("SELECT * FROM `item` WHERE `uri` = '%s' AND `parent-uri` = '%s' AND `uid` = %d 
+			if($r[0]['uri'] != $r[0]['parent_uri']) {
+				$arr['parent_uri'] = $r[0]['parent_uri'];
+				$z = q("SELECT * FROM `item` WHERE `uri` = '%s' AND `parent_uri` = '%s' AND `uid` = %d 
 					ORDER BY `id` ASC LIMIT 1",
-					dbesc($r[0]['parent-uri']),
-					dbesc($r[0]['parent-uri']),
+					dbesc($r[0]['parent_uri']),
+					dbesc($r[0]['parent_uri']),
 					intval($arr['uid'])
 				);
 				if($z && count($z))
@@ -1027,7 +1027,7 @@ function item_store($arr,$force_parent = false) {
 			if($force_parent) {
 				logger('item_store: $force_parent=true, reply converted to top-level post.');
 				$parent_id = 0;
-				$arr['parent-uri'] = $arr['uri'];
+				$arr['parent_uri'] = $arr['uri'];
 				$arr['gravity'] = 0;
 			}
 			else {
@@ -1097,7 +1097,7 @@ function item_store($arr,$force_parent = false) {
 		);
 	}
 
-	if((! $parent_id) || ($arr['parent-uri'] === $arr['uri']))	
+	if((! $parent_id) || ($arr['parent_uri'] === $arr['uri']))	
 		$parent_id = $current_post;
 
  	if(strlen($allow_cid) || strlen($allow_gid) || strlen($deny_cid) || strlen($deny_gid))
@@ -1737,7 +1737,7 @@ function consume_feed($xml,$importer,&$contact, &$hub, $datedir = 0, $pass = 0) 
 					if(! $item['deleted'])
 						logger('consume_feed: deleting item ' . $item['id'] . ' uri=' . $item['uri'], LOGGER_DEBUG);
 
-					if(($item['verb'] === ACTIVITY_TAG) && ($item['object-type'] === ACTIVITY_OBJ_TAGTERM)) {
+					if(($item['verb'] === ACTIVITY_TAG) && ($item['obj_type'] === ACTIVITY_OBJ_TAGTERM)) {
 						$xo = parse_xml_string($item['object'],false);
 						$xt = parse_xml_string($item['target'],false);
 						if($xt->type === ACTIVITY_OBJ_NOTE) {
@@ -1772,10 +1772,10 @@ function consume_feed($xml,$importer,&$contact, &$hub, $datedir = 0, $pass = 0) 
 						}
 					}
 
-					if($item['uri'] == $item['parent-uri']) {
+					if($item['uri'] == $item['parent_uri']) {
 						$r = q("UPDATE `item` SET `deleted` = 1, `edited` = '%s', `changed` = '%s',
 							`body` = '', `title` = ''
-							WHERE `parent-uri` = '%s' AND `uid` = %d",
+							WHERE `parent_uri` = '%s' AND `uid` = %d",
 							dbesc($when),
 							dbesc(datetime_convert()),
 							dbesc($item['uri']),
@@ -1870,14 +1870,14 @@ function consume_feed($xml,$importer,&$contact, &$hub, $datedir = 0, $pass = 0) 
 				}
 
 
-				$datarray['parent-uri'] = $parent_uri;
+				$datarray['parent_uri'] = $parent_uri;
 				$datarray['uid'] = $importer['uid'];
 				$datarray['contact-id'] = $contact['id'];
 				if((activity_match($datarray['verb'],ACTIVITY_LIKE)) || (activity_match($datarray['verb'],ACTIVITY_DISLIKE))) {
 					$datarray['type'] = 'activity';
 					$datarray['gravity'] = GRAVITY_LIKE;
 					// only one like or dislike per person
-					$r = q("select id from item where uid = %d and `contact-id` = %d and verb ='%s' and deleted = 0 and (`parent-uri` = '%s' OR `thr-parent` = '%s') limit 1",
+					$r = q("select id from item where uid = %d and `contact-id` = %d and verb ='%s' and deleted = 0 and (`parent_uri` = '%s' OR `thr-parent` = '%s') limit 1",
 						intval($datarray['uid']),
 						intval($datarray['contact-id']),
 						dbesc($datarray['verb']),
@@ -1888,7 +1888,7 @@ function consume_feed($xml,$importer,&$contact, &$hub, $datedir = 0, $pass = 0) 
 						continue; 
 				}
 
-				if(($datarray['verb'] === ACTIVITY_TAG) && ($datarray['object-type'] === ACTIVITY_OBJ_TAGTERM)) {
+				if(($datarray['verb'] === ACTIVITY_TAG) && ($datarray['obj_type'] === ACTIVITY_OBJ_TAGTERM)) {
 					$xo = parse_xml_string($datarray['object'],false);
 					$xt = parse_xml_string($datarray['target'],false);
 
@@ -1941,7 +1941,7 @@ function consume_feed($xml,$importer,&$contact, &$hub, $datedir = 0, $pass = 0) 
 
 				// special handling for events
 
-				if((x($datarray,'object-type')) && ($datarray['object-type'] === ACTIVITY_OBJ_EVENT)) {
+				if((x($datarray,'obj_type')) && ($datarray['obj_type'] === ACTIVITY_OBJ_EVENT)) {
 					$ev = bbtoevent($datarray['body']);
 					if(x($ev,'desc') && x($ev,'start')) {
 						$ev['uid'] = $importer['uid'];
@@ -2020,7 +2020,7 @@ function consume_feed($xml,$importer,&$contact, &$hub, $datedir = 0, $pass = 0) 
 					$datarray['wall'] = 1;
 				}
 
-				$datarray['parent-uri'] = $item_id;
+				$datarray['parent_uri'] = $item_id;
 				$datarray['uid'] = $importer['uid'];
 				$datarray['contact-id'] = $contact['id'];
 
@@ -2322,7 +2322,7 @@ function local_delivery($importer,$data) {
 		$msg['seen'] = 0;
 		$msg['replied'] = 0;
 		$msg['uri'] = notags(unxmlify($base['id'][0]['data']));
-		$msg['parent-uri'] = notags(unxmlify($base['in-reply-to'][0]['data']));
+		$msg['parent_uri'] = notags(unxmlify($base['in-reply-to'][0]['data']));
 		$msg['created'] = datetime_convert(notags(unxmlify('UTC','UTC',$base['sentdate'][0]['data'])));
 		
 		dbesc_array($msg);
@@ -2396,7 +2396,7 @@ function local_delivery($importer,$data) {
 					intval($importer['importer_uid'])
 				);
 				if(count($r)) {
-					$parent_uri = $r[0]['parent-uri'];
+					$parent_uri = $r[0]['parent_uri'];
 					if($r[0]['id'] != $r[0]['parent'])
 						$is_reply = true;
 				}				
@@ -2420,7 +2420,7 @@ function local_delivery($importer,$data) {
 					$r = q("select `item`.`id`, `item`.`uri`, `item`.`forum_mode`,`item`.`origin`,`item`.`wall`, 
 						`contact`.`name`, `contact`.`url`, `contact`.`thumb` from `item` 
 						LEFT JOIN `contact` ON `contact`.`id` = `item`.`contact-id` 
-						WHERE `item`.`uri` = '%s' AND (`item`.`parent-uri` = '%s' or `item`.`thr-parent` = '%s')
+						WHERE `item`.`uri` = '%s' AND (`item`.`parent_uri` = '%s' or `item`.`thr-parent` = '%s')
 						AND `item`.`uid` = %d 
 						$sql_extra
 						LIMIT 1",
@@ -2464,7 +2464,7 @@ function local_delivery($importer,$data) {
 
 					logger('local_delivery: deleting item ' . $item['id'] . ' uri=' . $item['uri'], LOGGER_DEBUG);
 
-					if(($item['verb'] === ACTIVITY_TAG) && ($item['object-type'] === ACTIVITY_OBJ_TAGTERM)) {
+					if(($item['verb'] === ACTIVITY_TAG) && ($item['obj_type'] === ACTIVITY_OBJ_TAGTERM)) {
 						$xo = parse_xml_string($item['object'],false);
 						$xt = parse_xml_string($item['target'],false);
 
@@ -2501,10 +2501,10 @@ function local_delivery($importer,$data) {
 						}
 					}
 
-					if($item['uri'] == $item['parent-uri']) {
+					if($item['uri'] == $item['parent_uri']) {
 						$r = q("UPDATE `item` SET `deleted` = 1, `edited` = '%s', `changed` = '%s',
 							`body` = '', `title` = ''
-							WHERE `parent-uri` = '%s' AND `uid` = %d",
+							WHERE `parent_uri` = '%s' AND `uid` = %d",
 							dbesc($when),
 							dbesc(datetime_convert()),
 							dbesc($item['uri']),
@@ -2562,7 +2562,7 @@ function local_delivery($importer,$data) {
 			$r = q("select `item`.`id`, `item`.`uri`, `item`.`forum_mode`,`item`.`origin`,`item`.`wall`, 
 				`contact`.`name`, `contact`.`url`, `contact`.`thumb` from `item` 
 				LEFT JOIN `contact` ON `contact`.`id` = `item`.`contact-id` 
-				WHERE `item`.`uri` = '%s' AND (`item`.`parent-uri` = '%s' or `item`.`thr-parent` = '%s')
+				WHERE `item`.`uri` = '%s' AND (`item`.`parent_uri` = '%s' or `item`.`thr-parent` = '%s')
 				AND `item`.`uid` = %d 
 				$sql_extra
 				LIMIT 1",
@@ -2642,7 +2642,7 @@ function local_delivery($importer,$data) {
 
 				$datarray['type'] = 'remote-comment';
 				$datarray['wall'] = 1;
-				$datarray['parent-uri'] = $parent_uri;
+				$datarray['parent_uri'] = $parent_uri;
 				$datarray['uid'] = $importer['importer_uid'];
 				$datarray['owner-name'] = $own[0]['name'];
 				$datarray['owner-link'] = $own[0]['url'];
@@ -2655,19 +2655,19 @@ function local_delivery($importer,$data) {
 					$datarray['gravity'] = GRAVITY_LIKE;
 
 					// only one like or dislike per person
-					$r = q("select id from item where uid = %d and `contact-id` = %d and verb = '%s' and (`thr-parent` = '%s' or `parent-uri` = '%s') and deleted = 0 limit 1",
+					$r = q("select id from item where uid = %d and `contact-id` = %d and verb = '%s' and (`thr-parent` = '%s' or `parent_uri` = '%s') and deleted = 0 limit 1",
 						intval($datarray['uid']),
 						intval($datarray['contact-id']),
 						dbesc($datarray['verb']),
-						dbesc($datarray['parent-uri']),
-						dbesc($datarray['parent-uri'])
+						dbesc($datarray['parent_uri']),
+						dbesc($datarray['parent_uri'])
 		
 					);
 					if($r && count($r))
 						continue; 
 				}
 
-				if(($datarray['verb'] === ACTIVITY_TAG) && ($datarray['object-type'] === ACTIVITY_OBJ_TAGTERM)) {
+				if(($datarray['verb'] === ACTIVITY_TAG) && ($datarray['obj_type'] === ACTIVITY_OBJ_TAGTERM)) {
 					
 					$xo = parse_xml_string($datarray['object'],false);
 					$xt = parse_xml_string($datarray['target'],false);
@@ -2717,13 +2717,13 @@ function local_delivery($importer,$data) {
 				$parent = 0;
 
 				if($posted_id) {
-					$r = q("SELECT `parent`, `parent-uri` FROM `item` WHERE `id` = %d AND `uid` = %d LIMIT 1",
+					$r = q("SELECT `parent`, `parent_uri` FROM `item` WHERE `id` = %d AND `uid` = %d LIMIT 1",
 						intval($posted_id),
 						intval($importer['importer_uid'])
 					);
 					if(count($r)) {
 						$parent = $r[0]['parent'];
-						$parent_uri = $r[0]['parent-uri'];
+						$parent_uri = $r[0]['parent_uri'];
 					}
 			
 					if(! $is_like) {
@@ -2807,14 +2807,14 @@ function local_delivery($importer,$data) {
 					continue;
 				}
 
-				$datarray['parent-uri'] = $parent_uri;
+				$datarray['parent_uri'] = $parent_uri;
 				$datarray['uid'] = $importer['importer_uid'];
 				$datarray['contact-id'] = $importer['id'];
 				if(($datarray['verb'] == ACTIVITY_LIKE) || ($datarray['verb'] == ACTIVITY_DISLIKE)) {
 					$datarray['type'] = 'activity';
 					$datarray['gravity'] = GRAVITY_LIKE;
 					// only one like or dislike per person
-					$r = q("select id from item where uid = %d and `contact-id` = %d and verb ='%s' and deleted = 0 and (`parent-uri` = '%s' OR `thr-parent` = '%s') limit 1",
+					$r = q("select id from item where uid = %d and `contact-id` = %d and verb ='%s' and deleted = 0 and (`parent_uri` = '%s' OR `thr-parent` = '%s') limit 1",
 						intval($datarray['uid']),
 						intval($datarray['contact-id']),
 						dbesc($datarray['verb']),
@@ -2826,7 +2826,7 @@ function local_delivery($importer,$data) {
 
 				}
 
-				if(($datarray['verb'] === ACTIVITY_TAG) && ($datarray['object-type'] === ACTIVITY_OBJ_TAGTERM)) {
+				if(($datarray['verb'] === ACTIVITY_TAG) && ($datarray['obj_type'] === ACTIVITY_OBJ_TAGTERM)) {
 
 					$xo = parse_xml_string($datarray['object'],false);
 					$xt = parse_xml_string($datarray['target'],false);
@@ -2857,7 +2857,7 @@ function local_delivery($importer,$data) {
 			
 				if(!x($datarray['type']) || $datarray['type'] != 'activity') {
 
-					$myconv = q("SELECT `author-link`, `author-avatar`, `parent` FROM `item` WHERE `parent-uri` = '%s' AND `uid` = %d AND `parent` != 0 AND `deleted` = 0",
+					$myconv = q("SELECT `author-link`, `author-avatar`, `parent` FROM `item` WHERE `parent_uri` = '%s' AND `uid` = %d AND `parent` != 0 AND `deleted` = 0",
 						dbesc($parent_uri),
 						intval($importer['importer_uid'])
 					);
@@ -2918,7 +2918,7 @@ function local_delivery($importer,$data) {
 			$item_id  = $item->get_id();
 			$datarray = get_atom_elements($feed,$item);
 
-			if((x($datarray,'object-type')) && ($datarray['object-type'] === ACTIVITY_OBJ_EVENT)) {
+			if((x($datarray,'obj_type')) && ($datarray['obj_type'] === ACTIVITY_OBJ_EVENT)) {
 				$ev = bbtoevent($datarray['body']);
 				if(x($ev,'desc') && x($ev,'start')) {
 					$ev['cid'] = $importer['id'];
@@ -2970,7 +2970,7 @@ function local_delivery($importer,$data) {
 			if($importer['remote_self'])
 				$datarray['wall'] = 1;
 
-			$datarray['parent-uri'] = $item_id;
+			$datarray['parent_uri'] = $item_id;
 			$datarray['uid'] = $importer['importer_uid'];
 			$datarray['contact-id'] = $importer['id'];
 
@@ -3250,8 +3250,8 @@ function atom_entry($item,$type,$author,$owner,$comment = false,$cid = 0) {
 	if(strlen($item['owner-name']))
 		$o .= atom_author('dfrn:owner',$item['owner-name'],$item['owner-link'],80,80,$item['owner-avatar']);
 
-	if(($item['parent'] != $item['id']) || ($item['parent-uri'] !== $item['uri']) || (($item['thr-parent'] !== '') && ($item['thr-parent'] !== $item['uri']))) {
-		$parent_item = (($item['thr-parent']) ? $item['thr-parent'] : $item['parent-uri']);
+	if(($item['parent'] != $item['id']) || ($item['parent_uri'] !== $item['uri']) || (($item['thr-parent'] !== '') && ($item['thr-parent'] !== $item['uri']))) {
+		$parent_item = (($item['thr-parent']) ? $item['thr-parent'] : $item['parent_uri']);
 		$o .= '<thr:in-reply-to ref="' . xmlify($parent_item) . '" type="text/html" href="' .  xmlify($a->get_baseurl() . '/display/' . $owner['nickname'] . '/' . $item['parent']) . '" />' . "\r\n";
 	}
 
@@ -3659,12 +3659,12 @@ function drop_item($id,$interactive = true) {
 
 		// If it's the parent of a comment thread, kill all the kids
 
-		if($item['uri'] == $item['parent-uri']) {
+		if($item['uri'] == $item['parent_uri']) {
 			$r = q("UPDATE `item` SET `deleted` = 1, `edited` = '%s', `changed` = '%s', `body` = '' , `title` = ''
-				WHERE `parent-uri` = '%s' AND `uid` = %d ",
+				WHERE `parent_uri` = '%s' AND `uid` = %d ",
 				dbesc(datetime_convert()),
 				dbesc(datetime_convert()),
-				dbesc($item['parent-uri']),
+				dbesc($item['parent_uri']),
 				intval($item['uid'])
 			);
 			// ignore the result

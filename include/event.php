@@ -352,7 +352,7 @@ function event_store($arr) {
 		$item_arr['uid']           = $arr['uid'];
 		$item_arr['contact-id']    = $arr['cid'];
 		$item_arr['uri']           = $arr['uri'];
-		$item_arr['parent-uri']    = $arr['uri'];
+		$item_arr['parent_uri']    = $arr['uri'];
 		$item_arr['type']          = 'activity';
 		$item_arr['wall']          = (($arr['cid']) ? 0 : 1);
 		$item_arr['contact-id']    = $contact['id'];
@@ -371,7 +371,7 @@ function event_store($arr) {
 		$item_arr['last-child']    = 1;
 		$item_arr['visible']       = 1;
 		$item_arr['verb']          = ACTIVITY_POST;
-		$item_arr['object-type']   = ACTIVITY_OBJ_EVENT;
+		$item_arr['obj_type']   = ACTIVITY_OBJ_EVENT;
 		$item_arr['origin']        = ((intval($arr['cid']) == 0) ? 1 : 0);
 		$item_arr['body']          = format_event_bbcode($event);
 

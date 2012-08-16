@@ -12,7 +12,7 @@
 		<content type="$type" >$content</content>
 
 		<as:actor>
-		<as:object-type>http://activitystrea.ms/schema/1.0/person</as:object-type>
+		<as:obj_type>http://activitystrea.ms/schema/1.0/person</as:obj_type>
 		<id>$profile_page</id>
 		<title></title>
  		<link rel="avatar" type="image/jpeg" media:width="175" media:height="175" href="$photo"/>

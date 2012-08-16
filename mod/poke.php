@@ -82,7 +82,7 @@ function poke_init(&$a) {
 
 	$arr['uid']           = $uid;
 	$arr['uri']           = $uri;
-	$arr['parent-uri']    = (($parent_uri) ? $parent_uri : $uri);
+	$arr['parent_uri']    = (($parent_uri) ? $parent_uri : $uri);
 	$arr['type']          = 'activity';
 	$arr['wall']          = 1;
 	$arr['contact-id']    = $poster['id'];
@@ -101,7 +101,7 @@ function poke_init(&$a) {
 	$arr['visible']       = 1;
 	$arr['verb']          = $activity;
 	$arr['private']       = $private;
-	$arr['object-type']   = ACTIVITY_OBJ_PERSON;
+	$arr['obj_type']   = ACTIVITY_OBJ_PERSON;
 
 	$arr['origin']        = 1;
 	$arr['body']          = '[url=' . $poster['url'] . ']' . $poster['name'] . '[/url]' . ' ' . t($verbs[$verb][0]) . ' ' . '[url=' . $target['url'] . ']' . $target['name'] . '[/url]';
