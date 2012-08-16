@@ -7,6 +7,36 @@ require_once('include/text.php');
 require_once('include/language.php');
 require_once('include/datetime.php');
 
+
+function check_account_email($email) {
+
+	$result = array('error' => false, 'message' => '');
+
+	// Caution: empty email isn't counted as an error in this function. Check emptiness separately. 
+
+	if(! strlen($email))
+		return $result;
+
+	if((! valid_email($email)) || (! validate_email($email)))
+		$result['message'] .= t('Not a valid email address') . EOL;
+	elseif(! allowed_email($email))
+		$result['message'] = t('Your email domain is not among those allowed on this site');
+	else {	
+		$r = q("select account_email from account where account_email = '%s' limit 1",
+			dbesc($email)
+		);
+		if(count($r)) {
+			$result['message'] .= t('Your email address is already registered at this site.');
+		}
+	}
+	if($result['message'])
+		$result['error'] = true;
+
+	return $result;
+}
+
+
+
 function create_account($arr) {
 
 	// Required: { email, password }
@@ -40,23 +70,12 @@ function create_account($arr) {
 		return;
 	}
 
-	if(! allowed_email($email))
-		$result['message'] .= t('Your email domain is not among those allowed on this site.') . EOL;
+	$email_result = check_account_email($email);
 
-	if((! valid_email($email)) || (! validate_email($email)))
-		$result['message'] .= t('Not a valid email address.') . EOL;
-
-	$r = q("select account_email, account_password from account where email = '%s' limit 1",
-		
-
-
-
-
-	if(strlen($result['message'])) {
+	if(! $email_result['error']) {
+		$result['message'] = $email_result['message'];
 		return $result;
 	}
-
-
 
 	$password_encoded = hash('whirlpool',$password);
 

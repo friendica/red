@@ -428,27 +428,33 @@ function get_item_elements($j) {
 	$arr['obj_type']    = (($j->objtype)  ? htmlentities($j->objtype,  ENT_COMPAT,'UTF-8') : '');
 	$arr['tgt_type']    = (($j->tgttype)  ? htmlentities($j->tgttype,  ENT_COMPAT,'UTF-8') : '');
 
-	$arr['obj']        = $j->obj;
-	$arr['tgt']        = $j->tgt;
+	$arr['object']        = $j->object;
+	$arr['target']        = $j->target;
 
 	$arr['attach']     = $j->attach;
 	$arr['tags']       = $j->tags;
 
-	$arr['privacy']    = $j->privacy;
+	$arr['private']    = $j->private;
 
 	$arr['flags']      = intval($j->flags);
-	$arr['types']      = intval($j->types);
 
 	$arr['author']     = $j->author;
 
-	$arr['new']        = 1;
+	// needed still: owner and contact, map flags
 
 	return $arr;
 
 }
 
 
+function encode_item($item) {
 
+
+
+
+	return json_encode($item);
+
+}
 
 
 

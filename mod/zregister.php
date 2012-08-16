@@ -7,27 +7,7 @@ function zregister_init(&$a) {
 	$cmd = ((argc() > 1) ? argv(1) : '');
 
 	if($cmd === 'email_check.json') {
-		$result = array('error' => false, 'message' => '');
-		$email = $_REQUEST['email'];
-		if(! strlen($email))
-			json_return_and_die($result);
-
-		if((! valid_email($email)) || (! validate_email($email)))
-			$result['message'] .= t('Not a valid email address') . EOL;
-		elseif(! allowed_email($email))
-			$result['message'] = t('Your email domain is not among those allowed on this site');
-		else {	
-			$r = q("select account_email from account where account_email = '%s' limit 1",
-				dbesc($email)
-			);
-			if(count($r)) {
-				$result['message'] .= t('Your email address is already registered at this site.');
-			}
-		}
-		if($result['message'])
-			$result['error'] = true;
-
-
+		$result = check_account_email($_REQUEST['email']);
 		json_return_and_die($result);
 	}
 
