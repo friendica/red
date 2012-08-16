@@ -2717,12 +2717,14 @@ function local_delivery($importer,$data) {
 				$parent = 0;
 
 				if($posted_id) {
-					$r = q("SELECT `parent` FROM `item` WHERE `id` = %d AND `uid` = %d LIMIT 1",
+					$r = q("SELECT `parent`, `parent-uri` FROM `item` WHERE `id` = %d AND `uid` = %d LIMIT 1",
 						intval($posted_id),
 						intval($importer['importer_uid'])
 					);
-					if(count($r))
+					if(count($r)) {
 						$parent = $r[0]['parent'];
+						$parent_uri = $r[0]['parent-uri'];
+					}
 			
 					if(! $is_like) {
 						$r1 = q("UPDATE `item` SET `changed` = '%s' WHERE `uid` = %d AND `parent` = %d",
@@ -2762,7 +2764,7 @@ function local_delivery($importer,$data) {
 								'verb'         => ACTIVITY_POST,
 								'otype'        => 'item',
 								'parent'       => $parent,
-
+								'parent_uri'   => $parent_uri,
 							));
 
 						}
@@ -2894,6 +2896,7 @@ function local_delivery($importer,$data) {
 									'verb'         => ACTIVITY_POST,
 									'otype'        => 'item',
 									'parent'       => $conv_parent,
+									'parent_uri'   => $parent_uri
 
 								));
 

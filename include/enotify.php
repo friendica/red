@@ -1,5 +1,7 @@
 <?php
 
+require_once('include/email.php');
+
 function notification($params) {
 
 	logger('notification: entry', LOGGER_DEBUG);
@@ -324,7 +326,7 @@ function notification($params) {
 		// If so, create the record of it and use a message-id smtp header.
 
 		if(!$r) {
-			logger("norify_id:" . intval($notify_id). ", parent: " . intval($params['parent']) . "uid: " . 
+			logger("notify_id:" . intval($notify_id). ", parent: " . intval($params['parent']) . "uid: " . 
 intval($params['uid']), LOGGER_DEBUG);
 			$r = q("insert into `notify-threads` (`notify-id`, `master-parent-item`, `receiver-uid`, `parent-item`)
 				values(%d,%d,%d,%d)",

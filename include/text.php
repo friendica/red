@@ -70,7 +70,8 @@ function notags($string) {
 if(! function_exists('escape_tags')) {
 function escape_tags($string) {
 
-	return(htmlspecialchars($string));
+	return(htmlspecialchars($string, ENT_QUOTES, 'UTF-8', false));
+
 }}
 
 

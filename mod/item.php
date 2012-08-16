@@ -780,6 +780,7 @@ function item_post(&$a) {
 					'verb'         => ACTIVITY_POST,
 					'otype'        => 'item',
 					'parent'       => $parent,
+					'parent_uri'   => $parent_item['uri']
 				));
 			
 			}
