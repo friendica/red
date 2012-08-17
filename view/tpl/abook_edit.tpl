@@ -21,6 +21,10 @@ $slide
 <a href="" style="background-color: #CCC; padding: 3px; border-radius: 5px; margin-left: 15px;">Full Sharing</a><a href="" style="background-color: #CCC; padding: 3px; border-radius: 5px; margin-left: 15px;">Cautious Sharing</a><a href="" style="background-color: #CCC; padding: 3px; border-radius: 5px; margin-left: 15px;">Follow Only</a><br />
 <br />
 
+<div id="abook-advanced" class="fakelink" onclick="openClose('abook-advanced-panel');">Advanced Permissions</div>
+
+<div id="abook-advanced-panel" style="display: none;">
+
 <span class="abook-them">$them</span><span class="abook-me">$me</span>
 <br />
 <br />
@@ -37,6 +41,7 @@ $slide
 
 <br />
 
+</div>
 
 <input class="contact-edit-submit" type="submit" name="submit" value="$submit" />
 

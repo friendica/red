@@ -16,6 +16,8 @@ function ping_init(&$a) {
 	$result['register'] = 0;
 	$result['events'] = 0;
 	$result['events_today'] = 0;
+	$result['birthdays'] = 0;
+	$result['birthdays_today'] = 0;
 	$result['notice'] = array();
 	$result['info'] = array();
 
@@ -155,8 +157,8 @@ function ping_init(&$a) {
 
 	$t5 = dba_timer();
 
-	$events = q("SELECT count(`event`.`id`) as total, start, adjust FROM `event`
-		WHERE `event`.`uid` = %d AND `start` < '%s' AND `finish` > '%s'
+	$events = q("SELECT count(`event`.`id`) as total, type, start, adjust FROM `event`
+		WHERE `event`.`uid` = %d AND `start` < '%s' AND `finish` > '%s' and ignore = 0
 		ORDER BY `start` ASC ",
 			intval(local_user()),
 			dbesc(datetime_convert('UTC','UTC','now + 7 days')),
@@ -169,8 +171,16 @@ function ping_init(&$a) {
 		if($result['events']) {
 			$str_now = datetime_convert('UTC',$a->timezone,'now','Y-m-d');
 			foreach($events as $x) {
-				if(datetime_convert('UTC',((intval($x['adjust'])) ? $a->timezone : 'UTC'), $x['start'],'Y-m-d') === $str_now)
+				$bd = false;
+				if($x['type'] === 'birthday') {
+					$result['birthdays'] ++;
+					$bd = true;
+				}
+				if(datetime_convert('UTC',((intval($x['adjust'])) ? $a->timezone : 'UTC'), $x['start'],'Y-m-d') === $str_now) {
 					$result['events_today'] ++;
+					if($bd)
+						$result['birthdays_today'] ++;
+				}
 			}
 		}
 	}
