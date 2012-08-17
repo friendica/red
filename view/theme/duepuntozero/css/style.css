@@ -2843,6 +2843,32 @@ aside input[type='text'] {
 	
 }
 
+.field_abook_help {
+	color: #888;
+}
+.abook-them {
+	margin-left: 225px;
+	margin-bottom: 15px;
+}
+.abook-me {
+	margin-left: 36px;
+	margin-bottom: 15px;
+}
+.acheckbox {
+	margin-bottom: 5px !important;
+}
+
+#contact-slider {
+	width: 600px !important;
+}
+
+.abook-edit-them, .abook-edit-me {
+	float: left;
+	width: 100px !important;
+}
+.field_abook_help {
+	float: left;
+}
 
 .field .onoff {
 	float: left;

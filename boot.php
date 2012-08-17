@@ -151,29 +151,27 @@ define ( 'NETWORK_GPLUS',            'goog');    // Google+
 
 define ( 'NETWORK_PHANTOM',          'unkn');    // Place holder
 
+
 /**
- * These numbers are used in stored permissions
- * and existing allocations MUST NEVER BE CHANGED
- * OR RE-ASSIGNED! You may only add to them.
+ * Permissions 
  */
 
-$netgroup_ids = array(
-	NETWORK_DFRN     => (-1),
-	NETWORK_ZOT      => (-2),
-	NETWORK_OSTATUS  => (-3),
-	NETWORK_FEED     => (-4),
-	NETWORK_DIASPORA => (-5),
-	NETWORK_MAIL     => (-6),
-	NETWORK_MAIL2    => (-7),
-	NETWORK_FACEBOOK => (-8),
-	NETWORK_LINKEDIN => (-9),
-	NETWORK_XMPP     => (-10),
-	NETWORK_MYSPACE  => (-11),
-	NETWORK_GPLUS    => (-12),
+define ( 'PERMS_VISIBLE',            0x0001);  // Can be seen in my public address book 
+define ( 'PERMS_TRANSMIT',           0x0002);  // Can post to my stream
+define ( 'PERMS_RECEIVE',            0x0004);  // Can receive my posts
+define ( 'PERMS_COMMENT',            0x0008);  // Can comment on my posts
+define ( 'PERMS_POSTWALL',           0x0010);  // Can post to my wall if I allow wall posts
+define ( 'PERMS_TAGWALL',            0x0020);  // Can post to my wall via tags (e.g. community groups)
+define ( 'PERMS_MAIL',               0x0040);  // Can send me email
+define ( 'PERMS_SEEABOOK',           0x0080);  // Can see my address book if it's not public
+define ( 'PERMS_CHAT',               0x0100);  // Can IM me (when available)
+define ( 'PERMS_SEEPERMS',           0x7000);  // Can see these permissions
 
-	NETWORK_PHANTOM  => (-127),
-);
+define ( 'PERMS_FRIEND',             PERMS_VISIBLE|PERMS_TRANSMIT|PERMS_RECEIVE|PERMS_COMMENT|PERMS_POSTWALL|PERMS_MAIL|
+									 PERMS_SEEABOOK|PERMS_CHAT|PERMS_SEEPERMS );  // Can do anything but tag post
 
+define ( 'PERMS_COMMUNITY',          PERMS_VISIBLE|PERMS_RECEIVE|PERMS_COMMENT|PERMS_POSTWALL|PERMS_TAGWALL|
+									 PERMS_SEEABOOK|PERMS_SEEPERMS); // Public group profile
 
 /**
  * Maximum number of "people who like (or don't like) this"  that we will list by name

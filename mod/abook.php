@@ -4,7 +4,7 @@ require_once('include/Contact.php');
 require_once('include/socgraph.php');
 require_once('include/contact_selectors.php');
 
-function contacts_init(&$a) {
+function abook_init(&$a) {
 	if(! local_user())
 		return;
 
@@ -65,7 +65,7 @@ EOT;
 
 }
 
-function contacts_post(&$a) {
+function abook_post(&$a) {
 	
 	if(! local_user())
 		return;
@@ -139,11 +139,11 @@ function contacts_post(&$a) {
 
 
 
-function contacts_content(&$a) {
+function abook_content(&$a) {
 
 	$sort_type = 0;
 	$o = '';
-	nav_set_selected('contacts');
+	nav_set_selected('abook');
 
 
 	if(! local_user()) {
@@ -151,13 +151,13 @@ function contacts_content(&$a) {
 		return;
 	}
 
-	if($a->argc == 3) {
+	if(argc() == 3) {
 
-		$contact_id = intval($a->argv[1]);
+		$contact_id = intval(argv(1));
 		if(! $contact_id)
 			return;
 
-		$cmd = $a->argv[2];
+		$cmd = argv(2);
 
 		$orig_record = q("SELECT * FROM `contact` WHERE `id` = %d AND `uid` = %d AND `self` = 0 LIMIT 1",
 			intval($contact_id),
@@ -255,95 +255,10 @@ function contacts_content(&$a) {
 
 		require_once('include/contact_selectors.php');
 
-		$tpl = get_markup_template("contact_edit.tpl");
-
-		switch($contact['rel']) {
-			case CONTACT_IS_FRIEND:
-				$dir_icon = 'images/lrarrow.gif';
-				$relation_text = t('You are mutual friends with %s');
-				break;
-			case CONTACT_IS_FOLLOWER;
-				$dir_icon = 'images/larrow.gif';
-				$relation_text = t('You are sharing with %s');
-				break;
-	
-			case CONTACT_IS_SHARING;
-				$dir_icon = 'images/rarrow.gif';
-				$relation_text = t('%s is sharing with you');
-				break;
-			default:
-				break;
-		}
-
-		$relation_text = sprintf($relation_text,$contact['name']);
-
-		if(($contact['network'] === NETWORK_DFRN) && ($contact['rel'])) {
-			$url = "redir/{$contact['id']}";
-			$sparkle = ' class="sparkle" ';
-		}
-		else { 
-			$url = $contact['url'];
-			$sparkle = '';
-		}
-
-		$insecure = t('Private communications are not available for this contact.');
-
-		$last_update = (($contact['last-update'] == '0000-00-00 00:00:00') 
-				? t('Never') 
-				: datetime_convert('UTC',date_default_timezone_get(),$contact['last-update'],'D, j M Y, g:i A'));
-
-		if($contact['last-update'] !== '0000-00-00 00:00:00')
-			$last_update .= ' ' . (($contact['last-update'] == $contact['success_update']) ? t("\x28Update was successful\x29") : t("\x28Update was not successful\x29"));
-
-		$lblsuggest = (($contact['network'] === NETWORK_DFRN) ? t('Suggest friends') : '');
-
-		$poll_enabled = (($contact['network'] !== NETWORK_DIASPORA) ? true : false);
-
-		$nettype = sprintf( t('Network type: %s'),network_to_name($contact['network']));
-
-		$common = count_common_friends(local_user(),$contact['id']);
-		$common_text = (($common) ? sprintf( tt('%d contact in common','%d contacts in common', $common),$common) : '');
-
-		$polling = (($contact['network'] === NETWORK_MAIL | $contact['network'] === NETWORK_FEED) ? 'polling' : ''); 
-
-		$x = count_all_friends(local_user(), $contact['id']);
-		$all_friends = (($x) ? t('View all contacts') : '');
-
-		// tabs
-		$tabs = array(
-			array(
-				'label' => (($contact['blocked']) ? t('Unblock') : t('Block') ),
-				'url'   => $a->get_baseurl(true) . '/contacts/' . $contact_id . '/block',
-				'sel'   => '',
-				'title' => t('Toggle Blocked status'),
-			),
-			array(
-				'label' => (($contact['readonly']) ? t('Unignore') : t('Ignore') ),
-				'url'   => $a->get_baseurl(true) . '/contacts/' . $contact_id . '/ignore',
-				'sel'   => '',
-				'title' => t('Toggle Ignored status'),
-			),
-
-			array(
-				'label' => (($contact['archive']) ? t('Unarchive') : t('Archive') ),
-				'url'   => $a->get_baseurl(true) . '/contacts/' . $contact_id . '/archive',
-				'sel'   => '',
-				'title' => t('Toggle Archive status'),
-			),
-			array(
-				'label' => t('Repair'),
-				'url'   => $a->get_baseurl(true) . '/crepair/' . $contact_id,
-				'sel'   => '',
-				'title' => t('Advanced Contact Settings'),
-			)
-		);
-		$tab_tpl = get_markup_template('common_tabs.tpl');
-		$tab_str = replace_macros($tab_tpl, array('$tabs' => $tabs));
-
-		$lost_contact = (($contact['archive'] && $contact['term-date'] != '0000-00-00 00:00:00' && $contact['term-date'] < datetime_convert('','','now')) ? t('Communications lost with this contact!') : '');
+		$tpl = get_markup_template("abook_edit.tpl");
 
 		$slider_tpl = get_markup_template('contact_slider.tpl');
-		$o .= replace_macros($slider_tpl,array(
+		$slide = replace_macros($slider_tpl,array(
 			'$me' => t('Me'),
 			'$val' => $contact['closeness'],
 			'$intimate' => t('Best Friends'),
@@ -351,11 +266,13 @@ function contacts_content(&$a) {
 			'$coworkers' => t('Co-workers'),
 			'$oldfriends' => t('Former Friends'),
 			'$acquaintances' => t('Acquaintances'),
-			'$world' => t('Everybody')
+			'$world' => t('Unknown')
 		));
 
 		$o .= replace_macros($tpl,array(
-			'$header' => t('Contact Editor'),
+
+			'$header' => t('Contact Settings') . ' for ' . $contact['name'],
+			'$slide' => $slide,
 			'$tab_str' => $tab_str,
 			'$submit' => t('Submit'),
 			'$lbl_vis1' => t('Profile Visibility'),
@@ -363,7 +280,22 @@ function contacts_content(&$a) {
 			'$lbl_info1' => t('Contact Information / Notes'),
 			'$infedit' => t('Edit contact notes'),
 			'$close' => $contact['closeness'],
-			'$common_text' => $common_text,
+			'$them' => t('Their Settings'),
+			'$me' => t('My Settings'),
+
+			'$perm01' => array( 'perm01', t('Can be seen in my address book')),
+			'$perm02' => array( 'perm02', t('Can post to my stream')),
+			'$perm03' => array( 'perm03', t('Can see my posts')),
+			'$perm04' => array( 'perm04', t('Can comment on my posts')),
+			'$perm05' => array( 'perm05', t('Can post to my wall'), false, t('if I allow wall posts')),
+			'$perm06' => array( 'perm06', t('Can post to my wall via tags'), false, t('e.g. public groups')),
+			'$perm07' => array( 'perm07', t('Can send me email')),
+			'$perm08' => array( 'perm08', t('Can see my address book'), false, t('if it is not public')),
+			'$perm09' => array( 'perm09', t('Can IM me'), false, t('when available')),
+			'$perm10' => array( 'perm10', t('Can see these permissions')),
+
+
+
 			'$common_link' => $a->get_baseurl(true) . '/common/loc/' . local_user() . '/' . $contact['id'],
 			'$all_friends' => $all_friends,
 			'$relation_text' => $relation_text,
