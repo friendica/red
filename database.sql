@@ -9,6 +9,7 @@ SET SQL_MODE="NO_AUTO_VALUE_ON_ZERO";
 CREATE TABLE IF NOT EXISTS `account` (
   `account_id` int(11) NOT NULL AUTO_INCREMENT,
   `account_parent` int(10) unsigned NOT NULL,
+  `account_salt` char(32) NOT NULL,
   `account_password` char(255) NOT NULL,
   `account_email` char(255) NOT NULL,
   `account_language` char(16) NOT NULL DEFAULT 'en',
@@ -21,7 +22,6 @@ CREATE TABLE IF NOT EXISTS `account` (
   `account_expire_notified` datetime NOT NULL DEFAULT '0000-00-00 00:00:00',
   `account_service_class` char(32) NOT NULL,
   PRIMARY KEY (`account_id`),
-  KEY `account_password` (`account_password`),
   KEY `account_email` (`account_email`),
   KEY `account_service_class` (`account_service_class`),
   KEY `account_parent` (`account_parent`),
@@ -29,7 +29,7 @@ CREATE TABLE IF NOT EXISTS `account` (
   KEY `account_roles` (`account_roles`),
   KEY `account_lastlog` (`account_lastlog`),
   KEY `account_expires` (`account_expires`)
-) ENGINE=MyISAM DEFAULT CHARSET=utf8;
+) ENGINE=MyISAM  DEFAULT CHARSET=utf8;
 
 CREATE TABLE IF NOT EXISTS `addon` (
   `id` int(11) NOT NULL AUTO_INCREMENT,
@@ -111,6 +111,8 @@ CREATE TABLE IF NOT EXISTS `contact` (
   `id` int(11) NOT NULL AUTO_INCREMENT,
   `uid` int(11) NOT NULL COMMENT 'owner uid',
   `created` datetime NOT NULL DEFAULT '0000-00-00 00:00:00',
+  `my_perms` int(10) unsigned NOT NULL DEFAULT '0',
+  `their_perms` int(10) unsigned NOT NULL DEFAULT '0',
   `self` tinyint(1) NOT NULL DEFAULT '0' COMMENT 'boolean 1 == info for local UID, primarily name and photo to use in item displays.',
   `remote_self` tinyint(1) NOT NULL DEFAULT '0',
   `rel` tinyint(1) NOT NULL DEFAULT '0',
@@ -183,7 +185,9 @@ CREATE TABLE IF NOT EXISTS `contact` (
   KEY `hidden` (`hidden`),
   KEY `archive` (`archive`),
   KEY `forum` (`forum`),
-  KEY `notify` (`notify`)
+  KEY `notify` (`notify`),
+  KEY `my_perms` (`my_perms`),
+  KEY `their_perms` (`their_perms`)
 ) ENGINE=MyISAM  DEFAULT CHARSET=utf8;
 
 CREATE TABLE IF NOT EXISTS `conv` (
@@ -395,7 +399,7 @@ CREATE TABLE IF NOT EXISTS `group_member` (
   KEY `uid` (`uid`),
   KEY `gid` (`gid`),
   KEY `contact-id` (`contact-id`)
-) ENGINE=MyISAM DEFAULT CHARSET=utf8;
+) ENGINE=MyISAM  DEFAULT CHARSET=utf8;
 
 CREATE TABLE IF NOT EXISTS `guid` (
   `id` int(10) unsigned NOT NULL AUTO_INCREMENT,
@@ -510,7 +514,6 @@ CREATE TABLE IF NOT EXISTS `item` (
   KEY `contact-id` (`contact-id`),
   KEY `type` (`type`),
   KEY `parent` (`parent`),
-  KEY `parent_uri` (`parent_uri`),
   KEY `created` (`created`),
   KEY `edited` (`edited`),
   KEY `visible` (`visible`),
@@ -529,6 +532,7 @@ CREATE TABLE IF NOT EXISTS `item` (
   KEY `uid_commented` (`uid`,`commented`),
   KEY `uid_created` (`uid`,`created`),
   KEY `uid_unseen` (`uid`,`unseen`),
+  KEY `parent_uri` (`parent_uri`),
   FULLTEXT KEY `title` (`title`),
   FULLTEXT KEY `body` (`body`),
   FULLTEXT KEY `allow_cid` (`allow_cid`),
@@ -579,11 +583,11 @@ CREATE TABLE IF NOT EXISTS `mail` (
   KEY `guid` (`guid`),
   KEY `seen` (`seen`),
   KEY `uri` (`uri`),
-  KEY `parent_uri` (`parent_uri`),
   KEY `created` (`created`),
   KEY `convid` (`convid`),
   KEY `unknown` (`unknown`),
-  KEY `contact-id` (`contact-id`)
+  KEY `contact-id` (`contact-id`),
+  KEY `parent_uri` (`parent_uri`)
 ) ENGINE=MyISAM DEFAULT CHARSET=utf8;
 
 CREATE TABLE IF NOT EXISTS `mailacct` (

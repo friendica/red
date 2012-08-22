@@ -117,14 +117,16 @@ function create_account($arr) {
 		return $result;
 	}
 
-	$password_encoded = hash('whirlpool',$password);
+	$salt = random_string(32);
+	$password_encoded = hash('whirlpool', $salt . $password);
 
 	$r = q("INSERT INTO account 
-			( account_parent,  account_password, account_email, account_language, 
+			( account_parent,  account_salt, account_password, account_email, account_language, 
 			  account_created, account_flags,    account_roles, account_expires, 
 			  account_service_class )
-		VALUES ( %d, '%s', '%s', '%s', '%s', %d, %d, '%s', '%s' )",
+		VALUES ( %d, '%s', '%s', '%s', '%s', '%s', %d, %d, '%s', '%s' )",
 		intval($parent),
+		dbesc($salt),
 		dbesc($password_encoded),
 		dbesc($email),
 		dbesc(get_best_language()),
@@ -159,3 +161,26 @@ function create_account($arr) {
 	return $result;
 
 }
+
+/**
+ * Verify login credentials
+ *
+ * Returns account record on success, null on failure
+ *
+ */
+
+function account_verify_password($email,$pass) {
+	$r = q("select * from account where email = '%s'",
+		dbesc($email)
+	);
+	if(! ($r && count($r)))
+		return null;
+	foreach($r as $record) {
+		if(hash('whirlpool',$record['account_salt'] . $pass) === $record['account_password']) {
+			return $record;
+		}
+	}
+	return null;
+}
+
+
