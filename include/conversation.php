@@ -496,6 +496,13 @@ function prepare_threads_body($a, $items, $cmnt_tpl, $page_writeable, $mode, $pr
 			}
 		}
 
+		if(intval(get_config('system','thread_allow')) && $a->theme_thread_allow) {
+			$comments_threaded = true;
+		}
+		else {
+			$comments_threaded = false;
+		}
+
 		if($page_writeable) {
 			$buttons = array(
 				'like' => array( t("I like this \x28toggle\x29"), t("like")),
@@ -512,7 +519,8 @@ function prepare_threads_body($a, $items, $cmnt_tpl, $page_writeable, $mode, $pr
 					$qcomment = (($qc) ? explode("\n",$qc) : null);
 				}
 				$comment = replace_macros($cmnt_tpl,array(
-					'$return_path' => '', 
+					'$return_path' => '',
+					'$threaded' => $comments_threaded, 
 					'$jsreload' => (($mode === 'display') ? $_SESSION['return_url'] : ''),
 					'$type' => (($mode === 'profile') ? 'wall-comment' : 'net-comment'),
 					'$id' => $item['item_id'],

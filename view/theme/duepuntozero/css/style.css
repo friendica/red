@@ -934,6 +934,9 @@ input#dfrn-url {
 #network-bmark-link {
 	margin-top: 10px;
 }
+.tread-wrapper .wall-item-comment-wrapper {
+	margin-left: 50px;
+}
 
 .wall-item-content-wrapper {
 	margin-top: 10px;
