@@ -25,27 +25,30 @@ function zfinger_init(&$a) {
 
 		$ret['success'] = true;
 
+		// Communication details
+
 		$ret['guid'] = $e['entity_global_id'];
-		$ret['url'] = z_root();
-		$ret['primary'] = (bool) $e['entity_primary'];
-		$ret['callback'] = z_root() . '/' . 'post';
-		$ret['sitekey'] = get_config('system','pubkey');
-		$ret['key'] = $e['pubkey'];
+		$ret['key']  = $e['pubkey'];
+
+		// array of (verified) hubs this entity uses
 
 		$ret['hubs'] = array();
 		$x = zot_get_hubloc(array($e['entity_global_id']));
 		if($x && count($x)) {
 			foreach($x as $hub) {
-				$ret['hubs'][] = array(
-						'primary' => (bool) $hub['hubloc_primary'],
-						'url' => $hub['hubloc_url'],
+				if(! ($hub['hubloc_flags'] & HUBLOC_FLAGS_UNVERIFIED)) {
+					$ret['hubs'][] = array(
+						'primary'  => (($hub['hubloc_flags'] & HUBLOC_FLAGS_PRIMARY) ? true : false),
+						'url'      => $hub['hubloc_url'],
 						'callback' => $hub['hubloc_callback'],
-						'sitekey' => $hub['hubloc_sitekey']
-				);
+						'sitekey'  => $hub['hubloc_sitekey']
+					);
+				}
 			}
 		}
 
-			// more stuff
+
+		// more stuff, e.g. the basic public profile
 
 		json_return_and_die($ret);
 

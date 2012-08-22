@@ -204,6 +204,12 @@ define ( 'NOTIFY_POKE',     0x0200 );
 define ( 'NOTIFY_SYSTEM',   0x8000 );
 
 
+
+define ( 'HUBLOC_FLAGS_PRIMARY',      0x0001);
+define ( 'HUBLOC_FLAGS_UNVERIFIED',   0x0002);
+
+
+
 /**
  * Tag/term types
  */

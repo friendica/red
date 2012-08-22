@@ -19,6 +19,7 @@ function zot_new_uid($entity_id) {
  * Given an array of zot_uid(s), return all distinct hubs
  * If primary is true, return only primary hubs
  * Result is ordered by url to assist in batching.
+ * Return only the first primary hub as there should only be one.
  *
  */
 
@@ -37,8 +38,9 @@ function zot_get_hubloc($arr,$primary = false) {
 	if(! strlen($tmp))
 		return array();
 
-	$sql_extra = (($primary) ? " and hubloc_primary = 1 " : "" );
-	return q("select * from hubloc where hubloc_guid in ( $tmp ) $sql_extra order by hubloc_url");
+	$sql_extra = (($primary) ? " and hubloc_flags & " . intval(HUBLOC_FLAGS_PRIMARY) : "" );
+	$limit = (($primary) ? " limit 1 " : "");
+	return q("select * from hubloc where hubloc_guid in ( $tmp ) $sql_extra order by hubloc_url $limit");
 
 }
 	 
@@ -85,28 +87,31 @@ function zot_gethub($arr) {
 }
 
 function zot_register_hub($arr) {
+	$total = 0;
 	if((x($arr,'hub')) && (x($arr,'guid'))) {
 		$x = z_fetch_url($arr['hub'] . '/.well-known/zot-guid/' . $arr['guid']);
 		if($x['success']) {
 			$record = json_decode($x['body']);
-			if($record->guid === $arr['guid'] && $record->url === $arr['hub']) {
-				$r = q("insert into hubloc (hubloc_guid, hubloc_primary, hubloc_url, 
-											hubloc_callback, hubloc_sitekey, hubloc_key)
-					values ( '%s', %d, '%s', '%s', '%s', '%s' )",
-					dbesc($arr['guid']),
-					intval($record->primary),
-					dbesc($record->url),
-					dbesc($record->callback),
-					dbesc($record->sitekey),
-					dbesc($record->key)
-				);
-
-				// return the discovery record so we can further process
-
-				if($r)
-					return $record;
+			if($record->hub && count($record->hub)) {
+				foreach($record->hub as $h) {
+					// store any hubs we don't know about
+					if( ! zot_gethub(array('hub' => $h->url, 'guid' => $arr['guid']))) {
+						$r = q("insert into hubloc (hubloc_guid, hubloc_flags, hubloc_url, 
+								hubloc_callback, hubloc_sitekey, hubloc_key)
+							values ( '%s', %d, '%s', '%s', '%s', '%s' )",
+							dbesc($arr['guid']),
+							intval((($h->primary) ? HUBLOC_FLAGS_PRIMARY : 0) | HUBLOC_FLAGS_UNVERIFIED ),
+							dbesc($h->url),
+							dbesc($h->callback),
+							dbesc($h->sitekey),
+							dbesc($record->key)
+						);
+						if($r)
+							$total ++;
+					}
+				}
 			}
 		}
 	}
-	return false;
+	return $total;
 }
