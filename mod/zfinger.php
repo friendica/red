@@ -2,7 +2,7 @@
 
 function zfinger_init(&$a) {
 
-logger('args: ' . print_r($a->argv,true));
+	require_once('include/zot.php');
 
 	$ret = array('success' => false, 'message' => '');
 	if(argc() > 1) {
@@ -32,7 +32,20 @@ logger('args: ' . print_r($a->argv,true));
 		$ret['sitekey'] = get_config('system','pubkey');
 		$ret['key'] = $e['pubkey'];
 
-		// more stuff
+		$ret['hubs'] = array();
+		$x = zot_get_hubloc(array($e['entity_global_id']));
+		if($x && count($x)) {
+			foreach($x as $hub) {
+				$ret['hubs'][] = array(
+						'primary' => (bool) $hub['hubloc_primary'],
+						'url' => $hub['hubloc_url'],
+						'callback' => $hub['hubloc_callback'],
+						'sitekey' => $hub['hubloc_sitekey']
+				);
+			}
+		}
+
+			// more stuff
 
 		json_return_and_die($ret);
 
