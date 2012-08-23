@@ -57,11 +57,10 @@ function zregister_post(&$a) {
 
 		default:
 		case REGISTER_CLOSED:
-			// TODO check against service class and fix this line
-			//		if((! x($_SESSION,'authenticated') && (! x($_SESSION,'administrator')))) {
-			//			notice( t('Permission denied.') . EOL );
-			//			return;
-			//		}
+			if(! is_site_admin()) {
+				notice( t('Permission denied.') . EOL );
+				return;
+			}
 			$flags = ACCOUNT_UNVERIFIED | ACCOUNT_BLOCKED;
 			break;
 	}
@@ -79,102 +78,32 @@ function zregister_post(&$a) {
 
 	authenticate_success($result['account'],true,true);
 
-//???
-	// in fact we need the sponsor, not the user
-	$user = $result['user'];
-///
- 
-	$using_invites = get_config('system','invitation_only');
-	$num_invites   = get_config('system','number_invites');
-	$invite_id  = ((x($_POST,'invite_id'))  ? notags(trim($_POST['invite_id']))  : '');
+ 	$using_invites = intval(get_config('system','invitation_only'));
+	$num_invites   = intval(get_config('system','number_invites'));
+	$invite_code   = ((x($_POST,'invite_code'))  ? notags(trim($_POST['invite_code']))  : '');
 
+	if($using_invites && $invite_code) {
+		q("delete * from register where hash = '%s' limit 1", dbesc($invite_code));
+		set_pconfig($result['account']['account_id'],'system','invites_remaining',$num_invites);
+	}
 
 	if($policy == REGISTER_OPEN ) {
-
-		if($using_invites && $invite_code) {
-			q("delete * from register where hash = '%s' limit 1", dbesc($invite_code));
-// set $sponsor
-			set_pconfig($sponsor['uid'],'system','invites_remaining',$num_invites);
-		}
-
-		$email_tpl = get_intltext_template("register_open_eml.tpl");
-		$email_tpl = replace_macros($email_tpl, array(
-			'$sitename' => $a->config['sitename'],
-			'$siteurl' =>  $a->get_baseurl(),
-			'$email'    => $user['email'],
-			'$password' => $result['password'],
-		));
-
-		$res = mail($user['email'], sprintf(t('Registration details for %s'), $a->config['sitename']),
-			$email_tpl, 
-				'From: ' . t('Administrator') . '@' . $_SERVER['SERVER_NAME'] . "\n"
-				. 'Content-type: text/plain; charset=UTF-8' . "\n"
-				. 'Content-transfer-encoding: 8bit' );
-
+		$res = send_verification_email($result['email'],$result['password']);
 		if($res) {
 			info( t('Registration successful. Please check your email for validation instructions.') . EOL ) ;
-			
-
-
-
 			goaway(z_root());
 		}
 	}
 	elseif($policy == REGISTER_APPROVE) {
-
-		if(! strlen($a->config['admin_email'])) {
-			notice( t('Your registration can not be processed.') . EOL);
-			goaway(z_root());
-		}
-
-		$hash = random_string();
-		$r = q("INSERT INTO `register` ( `hash`, `created`, `uid`, `password`, `language` ) VALUES ( '%s', '%s', %d, '%s', '%s' ) ",
-			dbesc($hash),
-			dbesc(datetime_convert()),
-			intval($user['uid']),
-			dbesc($result['password']),
-			dbesc($a->language)
-		);
-
-		$r = q("SELECT `language` FROM `user` WHERE `email` = '%s' LIMIT 1",
-			dbesc($a->config['admin_email'])
-		);
-		if(count($r))
-			push_lang($r[0]['language']);
-		else
-			push_lang('en');
-
-		if($using_invites && $invite_id) {
-			q("delete * from register where hash = '%s' limit 1", dbesc($invite_id));
-			set_pconfig($sponsor['uid'],'system','invites_remaining',$num_invites);
-		}
-
-		$email_tpl = get_intltext_template("register_verify_eml.tpl");
-		$email_tpl = replace_macros($email_tpl, array(
-				'$sitename' => $a->config['sitename'],
-				'$siteurl' =>  $a->get_baseurl(),
-				'$username' => $user['username'],
-				'$email' => $user['email'],
-				'$password' => $result['password'],
-				'$uid' => $user['uid'],
-				'$hash' => $hash
-		 ));
-
-		$res = mail($a->config['admin_email'], sprintf(t('Registration request at %s'), $a->config['sitename']),
-			$email_tpl,
-				'From: ' . t('Administrator') . '@' . $_SERVER['SERVER_NAME'] . "\n"
-				. 'Content-type: text/plain; charset=UTF-8' . "\n"
-				. 'Content-transfer-encoding: 8bit' );
-
-		pop_lang();
-
+		$res = send_reg_approval_email($result);
 		if($res) {
 			info( t('Your registration is pending approval by the site owner.') . EOL ) ;
-			goaway(z_root());
 		}
-
+		else {
+			notice( t('Your registration can not be processed.') . EOL);
+		}
+		goaway(z_root());
 	}
-
 	return;
 }
 

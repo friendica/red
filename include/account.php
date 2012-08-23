@@ -121,9 +121,8 @@ function create_account($arr) {
 	$password_encoded = hash('whirlpool', $salt . $password);
 
 	$r = q("INSERT INTO account 
-			( account_parent,  account_salt, account_password, account_email, account_language, 
-			  account_created, account_flags,    account_roles, account_expires, 
-			  account_service_class )
+			( account_parent,  account_salt,  account_password, account_email,   account_language, 
+			  account_created, account_flags, account_roles,    account_expires, account_service_class )
 		VALUES ( %d, '%s', '%s', '%s', '%s', '%s', %d, %d, '%s', '%s' )",
 		intval($parent),
 		dbesc($salt),
@@ -184,3 +183,79 @@ function account_verify_password($email,$pass) {
 }
 
 
+function send_reg_approval_email($arr) {
+
+	$r = q("select * from account where account_roles & " . intval(ACCOUNT_ROLE_ADMIN));
+	if(! ($r && count($r)))
+		return false;
+
+	$admins = array();
+
+	foreach($r as $rr) {
+		if(strlen($rr['account_email'])) {
+			$admins[] = array('email' => $rr['account_email'], 'lang' => $rr['account_lang']);
+		}
+	}
+
+	if(! count($admins))
+		return false;
+
+	$hash = random_string();
+
+	$r = q("INSERT INTO register ( hash, created, uid, password, language ) VALUES ( '%s', '%s', %d, '%s', '%s' ) ",
+		dbesc($hash),
+		dbesc(datetime_convert()),
+		intval($arr['account']['account_id']),
+		dbesc($arr['password']),
+		dbesc($arr['account']['account_language'])
+	);
+
+	$delivered = 0;
+
+	foreach($admins as $admin) {
+		if(strlen($admin['lang']))
+			push_lang($admin['lang']);
+		else
+			push_lang('en');
+
+
+		$email_msg = replace_macros(get_intltext_template('register_verify_email.tpl'), array(
+			'$sitename' => get_config('config','sitename'),
+			'$siteurl'  =>  z_root(),
+			'$email'    => $arr['email'],
+			'$uid'      => $arr['account']['account_id'],
+			'$hash'     => $hash
+		 ));
+
+		$res = mail($admin['email'], sprintf( t('Registration request at %s'), get_config('config','sitename')),
+			$email_msg,
+			'From: ' . t('Administrator') . '@' . get_app()->get_hostname() . "\n"
+			. 'Content-type: text/plain; charset=UTF-8' . "\n"
+			. 'Content-transfer-encoding: 8bit' 
+		);
+
+		if($res)
+			$delivered ++;
+		pop_lang();
+	}
+
+	return($delivered ? true : false);
+}
+
+function send_verification_email($email,$password) {
+
+	$email_msg = replace_macros(get_intltext_template('register_open_eml.tpl'), array(
+		'$sitename' => $get_config('config','sitename'),
+		'$siteurl' =>  z_root(),
+		'$email'    => $email,
+		'$password' => $password,
+	));
+
+	$res = mail($email, sprintf( t('Registration details for %s'), get_config('config','sitename')),
+		$email_msg, 
+		'From: ' . t('Administrator') . '@' . get_app()->get_hostname() . "\n"
+		. 'Content-type: text/plain; charset=UTF-8' . "\n"
+		. 'Content-transfer-encoding: 8bit' 
+	);
+	return($res ? true : false);
+}
