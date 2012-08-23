@@ -3,7 +3,6 @@
 require_once('include/account.php');
 
 function zregister_init(&$a) {
-	$a->page['template'] = 'full';
 
 	$result = null;
 	$cmd = ((argc() > 1) ? argv(1) : '');

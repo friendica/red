@@ -324,6 +324,10 @@ if($a->module != 'install') {
 
 
 require_once(theme_include('theme_init.php'));
+
+if(($p = theme_include('mod_' . $a->module . '.php')) != '')
+	require_once($p);
+
 require_once('include/js_strings.php');
 
 head_add_css(((x($a->page,'template')) ? $a->page['template'] : 'default' ) . '.css');
