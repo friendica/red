@@ -1,8 +1,8 @@
 <?php
 
+require_once('include/identity.php');
 
 function zentity_init(&$a) {
-	$a->page['template'] = 'full';
 
 	$cmd = ((argc() > 1) ? argv(1) : '');
 
@@ -50,8 +50,6 @@ function zentity_init(&$a) {
 		for($y = 0; $y < 100; $y ++)
 			$test[] = 'id' . mt_rand(1000,9999);
 
-//print_r($test);
-
 		json_return_and_die(check_webbie($test));
 	}
 
@@ -61,57 +59,23 @@ function zentity_init(&$a) {
 
 function zentity_post(&$a) {
 
-	$verified = 0;
-	$blocked  = 1;
-
-	$arr = array('post' => $_POST);
-	call_hooks('zregister_post', $arr);
-
-	$max_dailies = intval(get_config('system','max_daily_registrations'));
-	if($max_dailies) {
-		$r = q("select count(*) as total from account where account_created > UTC_TIMESTAMP - INTERVAL 1 day");
-		if($r && $r[0]['total'] >= $max_dailies) {
-			return;
-		}
-	}
-
-	switch(get_config('system','register_policy')) {
-
-	case REGISTER_OPEN:
-		$blocked = 0;
-		$verified = 0;
-		break;
-
-	case REGISTER_APPROVE:
-		$blocked = 0;
-		$verified = 0;
-		break;
-
-	default:
-	case REGISTER_CLOSED:
-		// TODO check against service class and fix this line
-		if((! x($_SESSION,'authenticated') && (! x($_SESSION,'administrator')))) {
-			notice( t('Permission denied.') . EOL );
-			return;
-		}
-		$blocked = 1;
-		$verified = 0;
-		break;
-	}
-
-	require_once('include/account.php');
-
 	$arr = $_POST;
 
-	$arr['blocked'] = $blocked;
-	$arr['verified'] = $verified;
+	if(($uid = intval(local_user())) == 0) {
+		notice( t('Permission denied.') . EOL );
+		return;
+	}
 
-	$result = create_account($arr);
+	$result = create_identity($arr);
 
 	if(! $result['success']) {
 		notice($result['message']);
 		return;
 	}
+
+
+
+
 
 	$user = $result['user'];
  
