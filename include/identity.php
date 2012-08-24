@@ -9,7 +9,7 @@ function create_identity($arr) {
 	$nick = trim($_POST['nickname']);
 	$name = escape_tags($_POST['name']);
 
-	if(check_webbie(array($nick)) !== 'nick') {
+	if(check_webbie(array($nick)) !== $nick) {
 		$ret['message'] = t('Nickname has unsupported characters or is already being used on this site.');
 		return $ret;
 	}
@@ -22,7 +22,7 @@ function create_identity($arr) {
 	$r = q("insert into entity ( entity_account_id, entity_primary, 
 		entity_name, entity_address, entity_global_id, entity_prvkey,
 		entity_pubkey, entity_pageflags )
-		values( %d, %d, '%s', '%s', '%s' '%s', '%s', %d ) ",
+		values ( %d, %d, '%s', '%s', '%s', '%s', '%s', %d ) ",
 
 		intval(local_user()),
 		intval($primary),

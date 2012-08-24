@@ -158,7 +158,7 @@ function ping_init(&$a) {
 	$t5 = dba_timer();
 
 	$events = q("SELECT count(`event`.`id`) as total, type, start, adjust FROM `event`
-		WHERE `event`.`uid` = %d AND `start` < '%s' AND `finish` > '%s' and ignore = 0
+		WHERE `event`.`uid` = %d AND `start` < '%s' AND `finish` > '%s' and `ignore` = 0
 		ORDER BY `start` ASC ",
 			intval(local_user()),
 			dbesc(datetime_convert('UTC','UTC','now + 7 days')),
