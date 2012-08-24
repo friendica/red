@@ -4,29 +4,36 @@ h2 {
 	margin-top: 15%;
 }
 
-#zregister-form {
+#zentity-form {
 	font-size: 1.4em;	
 	margin-left: 15%;
 	margin-top: 5%;
+	width: 50%;
 }
 
-.zregister-label {
+#zentity-form .descriptive-paragraph {
+	color: #888;
+	margin-left: 20px;
+	margin-bottom: 25px;
+}
+
+.zentity-label {
 	float: left;
 	width: 275px;
 }
 
-.zregister-input {
+.zentity-input {
 	float: left;
 	width: 275px;
 	padding: 5px;
 }
 
-.zregister-feedback {
+.zentity-feedback {
 	float: left;
 	margin-left: 5px;
 }
 
-.zregister-field-end {
+.zentity-field-end {
 	clear: both;
 	margin-bottom: 20px;
 }

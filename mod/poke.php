@@ -76,7 +76,7 @@ function poke_init(&$a) {
 
 	$poster = $a->contact;
 
-	$uri = item_new_uri($a->get_hostname(),$owner_uid);
+	$uri = item_new_uri($a->get_hostname(),$uid);
 
 	$arr = array();
 

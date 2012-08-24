@@ -670,6 +670,39 @@ function get_poke_verbs() {
 	return $arr;
 }
 
+function get_mood_verbs() {
+	
+	// index is present tense verb
+	// value is array containing past tense verb, translation of present, translation of past
+
+	$arr = array(
+		'happy'      => t('happy'),
+		'sad'        => t('sad'),
+		'mellow'     => t('mellow'),
+		'tired'      => t('tired'),
+		'perky'      => t('perky'),
+		'angry'      => t('angry'),
+		'stupefied'  => t('stupified'),
+		'puzzled'    => t('puzzled'),
+		'interested' => t('interested'),
+		'bitter'     => t('bitter'),
+		'cheerful'   => t('cheerful'),
+		'alive'      => t('alive'),
+		'annoyed'    => t('annoyed'),
+		'anxious'    => t('anxious'),
+		'cranky'     => t('cranky'),
+		'disturbed'  => t('disturbed'),
+		'frustrated' => t('frustrated'),
+		'motivated'  => t('motivated'),
+		'relaxed'    => t('relaxed'),
+		'surprised'  => t('surprised'),
+	);
+
+	call_hooks('mood_verbs', $arr);
+	return $arr;
+}
+
+
 /**
  * 
  * Function: smilies

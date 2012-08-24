@@ -1,46 +1,27 @@
 <h2>$title</h2>
 
-<form action="zregister" method="post" id="zregister-form">
+<form action="zentity" method="post" id="zentity-form">
 
-{{ if $registertext }}
-<div id="zregister-desc" style="color: #888; margin-bottom: 50px;" class="descriptive-paragraph">$registertext</div>
-{{ endif }}
+	<div id="zentity-desc" class="descriptive-paragraph">$desc</div>
 
-{{ if $invitations }}
-	<p id="register-invite-desc">$invite_desc</p>
+	<label for="zentity-name" id="label-zentity-name" class="zentity-label" >$label_name</label>
+	<input type="text" name="name" id="zentity-name" class="zentity-input" value="$name" />
+	<div id="zentity-name-feedback" class="zentity-feedback"></div>
+	<div id="zentity-name-end"  class="zentity-field-end"></div>
 
-	<label for="zregister-invite" id="label-zregister-invite" class="zregister-label">$label_invite</label>
-	<input type="text" maxlength="72" size="32" name="invite_id" id="zregister-invite" class="zregister-input" value="$invite_id" >
-	</div>
-	<div id="zregister-invite-feedback" class="zregister-feedback"></div>
-	<div id="zregister-invite-end" class="zregister-field-end"></div>
+	<label for="zentity-nickname" id="label-zentity-nickname" class="zentity-label" >$label_nick</label>
+	<input type="text" name="nickname" id="zentity-nickname" class="zentity-input" value="$nickname" />
+	<div id="zentity-nickname-feedback" class="zentity-feedback"></div>
+	<div id="zentity-nickname-end"  class="zentity-field-end"></div>
 
-{{ endif }}
-
-
-	<label for="zregister-email" id="label-zregister-email" class="zregister-label" >$label_email</label>
-	<input type="text" maxlength="72" size="32" name="email" id="zregister-email" class="zregister-input" value="$email" >
-	<div id="zregister-email-feedback" class="zregister-feedback"></div>
-	<div id="zregister-email-end"  class="zregister-field-end"></div>
-
-	<label for="zregister-password" id="label-zregister-password" class="zregister-label" >$label_pass1</label>
-	<input type="text" maxlength="72" size="32" name="password" id="zregister-password" class="zregister-input" value="$pass1" >
-	<div id="zregister-password-feedback" class="zregister-feedback"></div>
-	<div id="zregister-password-end"  class="zregister-field-end"></div>
-
-	<div class="clear">
-	<div style="color: #888;">$label_pass2</div>
-	<div id="zregister-password2-end"  class="zregister-field-end"></div>
-
-	<div style="margin-bottom: 25px;">&nbsp;</div>
+	<div id="zentity-nick-desc" class="descriptive-paragraph">$nick_desc</div>
 
 
-	<input type="checkbox" name="tos" id="zregister-tos" value="1" >
-	<label for="zregister-tos" id="label-zregister-tos">$label_tos</label>
-	<div id="zregister-tos-feedback" class="zregister-feedback"></div>
-	<div id="zregister-tos-end"  class="zregister-field-end"></div>
+	<input type="checkbox" name="import" id="zentity-import" value="1" />
+	<label for="zentity-import" id="label-zentity-import">$label_import</label>
+	<div id="zentity-import-end" class="zentity-field-end"></div>
 
-	<input type="submit" name="submit" id="zregister-submit-button" value="$submit" />
-	<div id="zregister-submit-end" class="zregister-field-end"></div>
+	<input type="submit" name="submit" id="zentity-submit-button" value="$submit" />
+	<div id="zentity-submit-end" class="zentity-field-end"></div>
 
 </form>

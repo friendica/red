@@ -1,6 +1,17 @@
 <?php
 
 
+function create_identity($arr) {
+
+
+
+
+}
+
+
+
+
+
 
 class simple_identity {
 

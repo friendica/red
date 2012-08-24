@@ -2,7 +2,7 @@
 
 /**
  *
- * Friendica
+ * Friendica Red
  *
  */
 
@@ -244,13 +244,13 @@ if($a->module_loaded) {
 		$func = str_replace('-','_',current_theme()) . '_init';
 		$func($a);
 	}
-//	elseif (x($a->theme_info,"extends") && file_exists("view/theme/".$a->theme_info["extends"]."/theme.php")) {
-//		require_once("view/theme/".$a->theme_info["extends"]."/theme.php");
-//		if(function_exists(str_replace('-','_',$a->theme_info["extends"]) . '_init')) {
-//			$func = str_replace('-','_',$a->theme_info["extends"]) . '_init';
-//			$func($a);
-//		}
-//	}
+	elseif (x($a->theme_info,"extends") && file_exists("view/theme/".$a->theme_info["extends"]."/theme.php")) {
+		require_once("view/theme/".$a->theme_info["extends"]."/theme.php");
+		if(function_exists(str_replace('-','_',$a->theme_info["extends"]) . '_init')) {
+			$func = str_replace('-','_',$a->theme_info["extends"]) . '_init';
+			$func($a);
+		}
+	}
 
 	if(($_SERVER['REQUEST_METHOD'] === 'POST') && (! $a->error)
 		&& (function_exists($a->module . '_post'))
@@ -298,16 +298,6 @@ if(stristr( implode("",$_SESSION['sysmsg']), t('Permission denied'))) {
 
 call_hooks('page_end', $a->page['content']);
 
-
-/**
- *
- * Add a place for the pause/resume Ajax indicator
- *
- */
-
-$a->page['content'] .=  '<div id="pause"></div>';
-
-
 /**
  *
  * Add the navigation (menu) template
@@ -348,10 +338,6 @@ head_add_js('mod_' . $a->module . '.js');
 		'$baseurl' => $a->get_baseurl(),
 		'$local_user' => local_user(),
 		'$generator' => FRIENDICA_PLATFORM . ' ' . FRIENDICA_VERSION,
-		'$delitem' => t('Delete this item?'),
-		'$comment' => t('Comment'),
-		'$showmore' => t('show more'),
-		'$showfewer' => t('show fewer'),
 		'$update_interval' => $interval,
 		'$head_css' => head_get_css(),
 		'$head_js' => head_get_js(),

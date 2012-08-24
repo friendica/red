@@ -35,7 +35,7 @@ function zentity_init(&$a) {
 	if($cmd === 'checkaddr.json') {
 		require_once('library/urlify/URLify.php');
 		$result = array('error' => false, 'message' => '');
-		$n = trim($_REQUEST['addr']);
+		$n = trim($_REQUEST['nick']);
 
 		$x = strtolower(URLify::transliterate($n));
 
@@ -55,71 +55,6 @@ function zentity_init(&$a) {
 		json_return_and_die(check_webbie($test));
 	}
 
-
-
-
-//		print_r($test);
-
-//		if(! allowed_email($email))
-//			$result['message'] = t('Your email domain is not among those allowed on this site');
-//		if((! valid_email($email)) || (! validate_email($email)))
-//			$result['message'] .= t('Not a valid email address') . EOL;
-//		if($result['message'])
-//			$result['error'] = true;
-
-//		header('content-type: application/json');
-//		echo json_encode($result);
-//		killme();		
-
-
-	$pw1 = t("Password too short");
-	$pw2 = t("Passwords do not match");
-
-	$a->page['htmlhead'] .= <<< EOT
-<script>
-	function zFormError(elm,x) {
-		if(x) {
-			$(elm).addClass("zform-error");
-			$(elm).removeClass("zform-ok");
-		}
-		else {
-			$(elm).addClass("zform-ok");
-			$(elm).removeClass("zform-error");
-		}											
-	}
-	$(document).ready(function() {
-		$("#zregister-email").blur(function() {
-			var zreg_email = $("#zregister-email").val();
-			$.get("zregister/email_check.json?f=&email=" + encodeURIComponent(zreg_email),function(data) {
-				$("#zregister-email-feedback").html(data.message);
-				zFormError("#zregister-email-feedback",data.error);
-			});
-		});
-		$("#zregister-password").blur(function() {
-			if(($("#zregister-password").val()).length < 6 ) {
-				$("#zregister-password-feedback").html("$pw1");
-				zFormError("#zregister-password-feedback",true);
-			}
-			else {
-				$("#zregister-password-feedback").html("");
-				zFormError("#zregister-password-feedback",false);
-			}
-		});
-		$("#zregister-password2").blur(function() {
-			if($("#zregister-password").val() != $("#zregister-password2").val()) {
-				$("#zregister-password2-feedback").html("$pw2");
-				zFormError("#zregister-password2-feedback",true);
-			}
-			else {
-				$("#zregister-password2-feedback").html("");
-				zFormError("#zregister-password2-feedback",false);
-			}
-		});
-	});
-
-</script>
-
-EOT;
 
 }
 
@@ -309,7 +244,7 @@ function zentity_content(&$a) {
 	if(get_config('system','no_age_restriction')) 
 		$label_tos = sprintf( t('I accept the %s for this website'), $toslink);
 	else
-		$label_tos = t('Check this box to import an existing identity file from another location');
+		$label_tos = 
 
 
 	$email        = ((x($_REQUEST,'email'))        ? $_REQUEST['email']        :  "" );
@@ -322,20 +257,14 @@ function zentity_content(&$a) {
 	$o = replace_macros(get_markup_template('zentity.tpl'), array(
 
 		'$title'        => t('Create Identity'),
-		'$registertext' => t('An identity is a profile container for a personal profile, blog, public or private group/forum, celebrity page, and more.<br />You may create as many of these as your hub provider allows.'),
-		'$invitations'  => get_config('system','invitation_only'),
-		'$invite_desc'  => t('Membership on this site is by invitation only.'),
-		'$label_invite' => t('Please enter your invitation code'),
-		'$invite_id'    => $invite_id,
+		'$desc'         => t('An identity is a profile container for a personal profile, blog, public or private group/forum, celebrity page, and more. You may create as many of these as your provider allows.'),
 
-		'$label_email'  => t('Full name'),
-		'$label_pass1'  => t('Choose a short nickname'),
-		'$label_pass2'  => t('Your nickname will be used to create an easily remembered web address ("webbie") for your profile.'),
-		'$label_tos'    => $label_tos,
-	
-		'$email'        => $email,
-		'$pass1'        => $password,
-		'$pass2'        => $password2,
+		'$label_name'   => t('Full name'),
+		'$label_nick'   => t('Choose a short nickname'),
+		'$nick_desc'    => t('Your nickname will be used to create an easily remembered web address ("webbie") for your profile.'),
+		'$label_import' => t('Check this box to import an existing identity file from another location'),
+		'$name'         => $name,
+		'$nickname'     => $nickname,
 		'$submit'       => t('Create')
 	));
 
