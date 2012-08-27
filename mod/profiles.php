@@ -213,7 +213,7 @@ function profiles_post(&$a) {
 		}			
 			
 		$r = q("UPDATE `profile` 
-			SET `profile-name` = '%s',
+			SET `profile_name` = '%s',
 			`name` = '%s',
 			`pdesc` = '%s',
 			`gender` = '%s',
@@ -453,7 +453,7 @@ function profiles_content(&$a) {
 		$r1 = q("SELECT `name`, `photo`, `thumb` FROM `profile` WHERE `uid` = %d AND `is-default` = 1 LIMIT 1",
 			intval(local_user()));
 		
-		$r2 = q("INSERT INTO `profile` (`uid` , `profile-name` , `name`, `photo`, `thumb`)
+		$r2 = q("INSERT INTO `profile` (`uid` , `profile_name` , `name`, `photo`, `thumb`)
 			VALUES ( %d, '%s', '%s', '%s', '%s' )",
 			intval(local_user()),
 			dbesc($name),
@@ -462,7 +462,7 @@ function profiles_content(&$a) {
 			dbesc($r1[0]['thumb'])
 		);
 
-		$r3 = q("SELECT `id` FROM `profile` WHERE `uid` = %d AND `profile-name` = '%s' LIMIT 1",
+		$r3 = q("SELECT `id` FROM `profile` WHERE `uid` = %d AND `profile_name` = '%s' LIMIT 1",
 			intval(local_user()),
 			dbesc($name)
 		);
@@ -495,7 +495,7 @@ function profiles_content(&$a) {
 		$r1[0]['is-default'] = 0;
 		$r1[0]['publish'] = 0;	
 		$r1[0]['net-publish'] = 0;	
-		$r1[0]['profile-name'] = dbesc($name);
+		$r1[0]['profile_name'] = dbesc($name);
 
 		dbesc_array($r1[0]);
 
@@ -505,7 +505,7 @@ function profiles_content(&$a) {
 			. implode("', '", array_values($r1[0])) 
 			. "')" );
 
-		$r3 = q("SELECT `id` FROM `profile` WHERE `uid` = %d AND `profile-name` = '%s' LIMIT 1",
+		$r3 = q("SELECT `id` FROM `profile` WHERE `uid` = %d AND `profile_name` = '%s' LIMIT 1",
 			intval(local_user()),
 			dbesc($name)
 		);
@@ -614,7 +614,7 @@ function profiles_content(&$a) {
 			'$disabled' => (($is_default) ? 'onclick="return false;" style="color: #BBBBFF;"' : ''),
 			'$baseurl' => $a->get_baseurl(true),
 			'$profile_id' => $r[0]['id'],
-			'$profile_name' => $r[0]['profile-name'],
+			'$profile_name' => $r[0]['profile_name'],
 			'$default' => (($is_default) ? '<p id="profile-edit-default-desc">' . t('This is your <strong>public</strong> profile.<br />It <strong>may</strong> be visible to anybody using the internet.') . '</p>' : ""),
 			'$name' => $r[0]['name'],
 			'$pdesc' => $r[0]['pdesc'],
@@ -678,7 +678,7 @@ function profiles_content(&$a) {
 					'$photo' => $a->get_cached_avatar_image($rr['thumb']),
 					'$id' => $rr['id'],
 					'$alt' => t('Profile Image'),
-					'$profile_name' => $rr['profile-name'],
+					'$profile_name' => $rr['profile_name'],
 					'$visible' => (($rr['is-default']) ? '<strong>' . t('visible to everybody') . '</strong>' 
 						: '<a href="' . $a->get_baseurl(true) . '/profperm/' . $rr['id'] . '" />' . t('Edit visibility') . '</a>')
 				));

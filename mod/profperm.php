@@ -100,7 +100,7 @@ function profperm_content(&$a) {
 
 		$o .= '<h2>' . t('Profile Visibility Editor') . '</h2>';
 
-		$o .= '<h3>' . t('Profile') . ' \'' . $profile['profile-name'] . '\'</h3>';
+		$o .= '<h3>' . t('Profile') . ' \'' . $profile['profile_name'] . '\'</h3>';
 
 		$o .= '<div id="prof-edit-desc">' . t('Click on a contact to add or remove.') . '</div>';
 

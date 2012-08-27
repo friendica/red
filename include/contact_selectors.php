@@ -9,13 +9,13 @@ function contact_profile_assign($current,$foreign_net) {
 
 	$o .= "<select id=\"contact-profile-selector\" $disabled name=\"profile-assign\" />\r\n";
 
-	$r = q("SELECT `id`, `profile-name` FROM `profile` WHERE `uid` = %d",
+	$r = q("SELECT `id`, `profile_name` FROM `profile` WHERE `uid` = %d",
                         intval($_SESSION['uid']));
 
 	if(count($r)) {
 		foreach($r as $rr) {
 			$selected = (($rr['id'] == $current) ? " selected=\"selected\" " : "");
-			$o .= "<option value=\"{$rr['id']}\" $selected >{$rr['profile-name']}</option>\r\n";
+			$o .= "<option value=\"{$rr['id']}\" $selected >{$rr['profile_name']}</option>\r\n";
 		}
 	}
 	$o .= "</select>\r\n";

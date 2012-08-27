@@ -1205,7 +1205,7 @@ if(! function_exists('profile_sidebar')) {
 						'photo' => $rr['thumb'],
 						'id' => $rr['id'],
 						'alt' => t('Profile Image'),
-						'profile_name' => $rr['profile-name'],
+						'profile_name' => $rr['profile_name'],
 						'isdefault' => $rr['is-default'],
 						'visibile_to_everybody' =>  t('visible to everybody'),
 						'edit_visibility' => t('Edit visibility'),

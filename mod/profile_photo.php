@@ -225,7 +225,7 @@ function profile_photo_content(&$a) {
 		// go ahead as we have jus uploaded a new photo to crop
 	}
 
-	$profiles = q("select `id`,`profile-name` as `name`,`is-default` as `default` from profile where uid = %d",
+	$profiles = q("select `id`,`profile_name` as `name`,`is-default` as `default` from profile where uid = %d",
 		intval(local_user())
 	);
 

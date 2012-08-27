@@ -48,12 +48,13 @@ CREATE TABLE IF NOT EXISTS `addon` (
 ) ENGINE=MyISAM DEFAULT CHARSET=utf8;
 
 CREATE TABLE IF NOT EXISTS `attach` (
-  `id` int(11) NOT NULL AUTO_INCREMENT,
-  `uid` int(11) NOT NULL,
-  `hash` char(64) NOT NULL,
-  `filename` char(255) NOT NULL,
-  `filetype` char(64) NOT NULL,
-  `filesize` int(11) NOT NULL,
+  `id` int(10) unsigned NOT NULL AUTO_INCREMENT,
+  `aid` int(10) unsigned NOT NULL DEFAULT '0',
+  `uid` int(10) unsigned NOT NULL DEFAULT '0',
+  `hash` char(64) NOT NULL DEFAULT '',
+  `filename` char(255) NOT NULL DEFAULT '',
+  `filetype` char(64) NOT NULL DEFAULT '',
+  `filesize` int(10) unsigned NOT NULL DEFAULT '0',
   `data` longblob NOT NULL,
   `created` datetime NOT NULL DEFAULT '0000-00-00 00:00:00',
   `edited` datetime NOT NULL DEFAULT '0000-00-00 00:00:00',
@@ -61,7 +62,10 @@ CREATE TABLE IF NOT EXISTS `attach` (
   `allow_gid` mediumtext NOT NULL,
   `deny_cid` mediumtext NOT NULL,
   `deny_gid` mediumtext NOT NULL,
-  PRIMARY KEY (`id`)
+  PRIMARY KEY (`id`),
+  KEY `aid` (`aid`),
+  KEY `uid` (`uid`),
+  KEY `hash` (`hash`)
 ) ENGINE=MyISAM DEFAULT CHARSET=utf8;
 
 CREATE TABLE IF NOT EXISTS `auth_codes` (
@@ -437,7 +441,7 @@ CREATE TABLE IF NOT EXISTS `hubloc` (
   KEY `hubloc_flags` (`hubloc_flags`),
   KEY `hubloc_guid_sig` (`hubloc_guid_sig`),
   KEY `hubloc_url_sig` (`hubloc_url_sig`)
-) ENGINE=MyISAM DEFAULT CHARSET=utf8;
+) ENGINE=MyISAM  DEFAULT CHARSET=utf8;
 
 CREATE TABLE IF NOT EXISTS `intro` (
   `id` int(10) unsigned NOT NULL AUTO_INCREMENT,
@@ -464,6 +468,7 @@ CREATE TABLE IF NOT EXISTS `intro` (
 CREATE TABLE IF NOT EXISTS `item` (
   `id` int(10) unsigned NOT NULL AUTO_INCREMENT,
   `uri` char(255) CHARACTER SET ascii NOT NULL,
+  `aid` int(10) unsigned NOT NULL DEFAULT '0',
   `uid` int(10) unsigned NOT NULL DEFAULT '0',
   `contact-id` int(10) unsigned NOT NULL DEFAULT '0',
   `type` char(255) NOT NULL,
@@ -540,6 +545,7 @@ CREATE TABLE IF NOT EXISTS `item` (
   KEY `uid_created` (`uid`,`created`),
   KEY `uid_unseen` (`uid`,`unseen`),
   KEY `parent_uri` (`parent_uri`),
+  KEY `aid` (`aid`),
   FULLTEXT KEY `title` (`title`),
   FULLTEXT KEY `body` (`body`),
   FULLTEXT KEY `allow_cid` (`allow_cid`),
@@ -568,6 +574,7 @@ CREATE TABLE IF NOT EXISTS `locks` (
 
 CREATE TABLE IF NOT EXISTS `mail` (
   `id` int(10) unsigned NOT NULL AUTO_INCREMENT,
+  `aid` int(10) unsigned NOT NULL DEFAULT '0',
   `uid` int(10) unsigned NOT NULL,
   `guid` char(64) NOT NULL,
   `from-name` char(255) NOT NULL,
@@ -594,25 +601,8 @@ CREATE TABLE IF NOT EXISTS `mail` (
   KEY `convid` (`convid`),
   KEY `unknown` (`unknown`),
   KEY `contact-id` (`contact-id`),
-  KEY `parent_uri` (`parent_uri`)
-) ENGINE=MyISAM DEFAULT CHARSET=utf8;
-
-CREATE TABLE IF NOT EXISTS `mailacct` (
-  `id` int(11) NOT NULL AUTO_INCREMENT,
-  `uid` int(11) NOT NULL,
-  `server` char(255) NOT NULL,
-  `port` int(11) NOT NULL,
-  `ssltype` char(16) NOT NULL,
-  `mailbox` char(255) NOT NULL,
-  `user` char(255) NOT NULL,
-  `pass` text NOT NULL,
-  `action` int(11) NOT NULL,
-  `movetofolder` char(255) NOT NULL,
-  `reply_to` char(255) NOT NULL,
-  `pubmail` tinyint(1) NOT NULL DEFAULT '0',
-  `last_check` datetime NOT NULL DEFAULT '0000-00-00 00:00:00',
-  PRIMARY KEY (`id`),
-  KEY `uid` (`uid`)
+  KEY `parent_uri` (`parent_uri`),
+  KEY `aid` (`aid`)
 ) ENGINE=MyISAM DEFAULT CHARSET=utf8;
 
 CREATE TABLE IF NOT EXISTS `manage` (
@@ -673,6 +663,7 @@ CREATE TABLE IF NOT EXISTS `pconfig` (
 
 CREATE TABLE IF NOT EXISTS `photo` (
   `id` int(10) unsigned NOT NULL AUTO_INCREMENT,
+  `aid` int(10) unsigned NOT NULL DEFAULT '0',
   `uid` int(10) unsigned NOT NULL,
   `contact-id` int(10) unsigned NOT NULL DEFAULT '0',
   `guid` char(64) NOT NULL,
@@ -700,39 +691,15 @@ CREATE TABLE IF NOT EXISTS `photo` (
   KEY `scale` (`scale`),
   KEY `profile` (`profile`),
   KEY `type` (`type`),
-  KEY `contact-id` (`contact-id`)
+  KEY `contact-id` (`contact-id`),
+  KEY `aid` (`aid`)
 ) ENGINE=MyISAM  DEFAULT CHARSET=utf8;
-
-CREATE TABLE IF NOT EXISTS `poll` (
-  `id` int(11) NOT NULL AUTO_INCREMENT,
-  `uid` int(11) NOT NULL,
-  `q0` mediumtext NOT NULL,
-  `q1` mediumtext NOT NULL,
-  `q2` mediumtext NOT NULL,
-  `q3` mediumtext NOT NULL,
-  `q4` mediumtext NOT NULL,
-  `q5` mediumtext NOT NULL,
-  `q6` mediumtext NOT NULL,
-  `q7` mediumtext NOT NULL,
-  `q8` mediumtext NOT NULL,
-  `q9` mediumtext NOT NULL,
-  PRIMARY KEY (`id`),
-  KEY `uid` (`uid`)
-) ENGINE=MyISAM DEFAULT CHARSET=utf8;
-
-CREATE TABLE IF NOT EXISTS `poll_result` (
-  `id` int(11) NOT NULL AUTO_INCREMENT,
-  `poll_id` int(11) NOT NULL,
-  `choice` int(11) NOT NULL,
-  PRIMARY KEY (`id`),
-  KEY `poll_id` (`poll_id`),
-  KEY `choice` (`choice`)
-) ENGINE=MyISAM DEFAULT CHARSET=utf8;
 
 CREATE TABLE IF NOT EXISTS `profile` (
   `id` int(11) NOT NULL AUTO_INCREMENT,
+  `aid` int(10) unsigned NOT NULL DEFAULT '0',
   `uid` int(11) NOT NULL,
-  `profile-name` char(255) NOT NULL,
+  `profile_name` char(255) NOT NULL,
   `is-default` tinyint(1) NOT NULL DEFAULT '0',
   `hide-friends` tinyint(1) NOT NULL DEFAULT '0',
   `name` char(255) NOT NULL,
@@ -783,6 +750,7 @@ CREATE TABLE IF NOT EXISTS `profile` (
   KEY `sexual` (`sexual`),
   KEY `publish` (`publish`),
   KEY `net-publish` (`net-publish`),
+  KEY `aid` (`aid`),
   FULLTEXT KEY `pub_keywords` (`pub_keywords`),
   FULLTEXT KEY `prv_keywords` (`prv_keywords`)
 ) ENGINE=MyISAM  DEFAULT CHARSET=utf8;
@@ -841,19 +809,6 @@ CREATE TABLE IF NOT EXISTS `session` (
   KEY `expire` (`expire`)
 ) ENGINE=MyISAM  DEFAULT CHARSET=utf8;
 
-CREATE TABLE IF NOT EXISTS `sign` (
-  `id` int(10) unsigned NOT NULL AUTO_INCREMENT,
-  `iid` int(10) unsigned NOT NULL DEFAULT '0',
-  `retract_iid` int(10) unsigned NOT NULL DEFAULT '0',
-  `signed_text` mediumtext NOT NULL,
-  `signature` text NOT NULL,
-  `signer` char(255) NOT NULL,
-  PRIMARY KEY (`id`),
-  KEY `iid` (`iid`),
-  KEY `retract_iid` (`retract_iid`),
-  KEY `signer` (`signer`)
-) ENGINE=MyISAM DEFAULT CHARSET=utf8;
-
 CREATE TABLE IF NOT EXISTS `spam` (
   `id` int(11) NOT NULL AUTO_INCREMENT,
   `uid` int(11) NOT NULL,
@@ -870,7 +825,8 @@ CREATE TABLE IF NOT EXISTS `spam` (
 
 CREATE TABLE IF NOT EXISTS `term` (
   `tid` int(10) unsigned NOT NULL AUTO_INCREMENT,
-  `uid` int(10) unsigned NOT NULL,
+  `aid` int(10) unsigned NOT NULL DEFAULT '0',
+  `uid` int(10) unsigned NOT NULL DEFAULT '0',
   `oid` int(10) unsigned NOT NULL,
   `otype` tinyint(3) unsigned NOT NULL,
   `type` tinyint(3) unsigned NOT NULL,
@@ -881,7 +837,8 @@ CREATE TABLE IF NOT EXISTS `term` (
   KEY `otype` (`otype`),
   KEY `type` (`type`),
   KEY `term` (`term`),
-  KEY `uid` (`uid`)
+  KEY `uid` (`uid`),
+  KEY `aid` (`aid`)
 ) ENGINE=MyISAM  DEFAULT CHARSET=utf8;
 
 CREATE TABLE IF NOT EXISTS `tokens` (

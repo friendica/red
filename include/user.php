@@ -213,7 +213,7 @@ function create_user($arr) {
 	}
 
 	if(x($newuid) !== false) {
-		$r = q("INSERT INTO `profile` ( `uid`, `profile-name`, `is-default`, `name`, `photo`, `thumb`, `publish`, `net-publish` )
+		$r = q("INSERT INTO `profile` ( `uid`, `profile_name`, `is-default`, `name`, `photo`, `thumb`, `publish`, `net-publish` )
 			VALUES ( %d, '%s', %d, '%s', '%s', '%s', %d, %d ) ",
 			intval($newuid),
 			t('default'),
