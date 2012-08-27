@@ -38,7 +38,7 @@ function item_post(&$a) {
 	}
 
 	call_hooks('post_local_start', $_REQUEST);
-//	logger('postinput ' . file_get_contents('php://input'));
+
 	logger('postvars ' . print_r($_REQUEST,true), LOGGER_DATA);
 
 	$api_source = ((x($_REQUEST,'api_source') && $_REQUEST['api_source']) ? true : false);
@@ -191,11 +191,9 @@ function item_post(&$a) {
 		$verb              = $orig_post['verb'];
 		$emailcc           = $orig_post['emailcc'];
 		$app			   = $orig_post['app'];
-//		$categories        = $orig_post['file'];
 		$title             = escape_tags(trim($_REQUEST['title']));
 		$body              = escape_tags(trim($_REQUEST['body']));
 		$private           = $orig_post['private'];
-		$pubmail_enable    = $orig_post['pubmail'];
 
 	}
 	else {
@@ -235,11 +233,6 @@ function item_post(&$a) {
 
 		logger('detected language: ' . $language);
 
-
-
-
-
-
 		$private = ((strlen($str_group_allow) || strlen($str_contact_allow) || strlen($str_group_deny) || strlen($str_contact_deny)) ? 1 : 0);
 
 		// If this is a comment, set the permissions from the parent.
@@ -261,21 +254,6 @@ function item_post(&$a) {
 			$str_group_deny    = $parent_item['deny_gid'];
 		}
 	
-		$pubmail_enable    = ((x($_REQUEST,'pubmail_enable') && intval($_REQUEST['pubmail_enable']) && (! $private)) ? 1 : 0);
-
-		// if using the API, we won't see pubmail_enable - figure out if it should be set
-
-		if($api_source && $profile_uid && $profile_uid == local_user() && (! $private)) {
-			$mail_disabled = ((function_exists('imap_open') && (! get_config('system','imap_disabled'))) ? 0 : 1);
-			if(! $mail_disabled) {
-				$r = q("SELECT * FROM `mailacct` WHERE `uid` = %d AND `server` != '' LIMIT 1",
-					intval(local_user())
-				);
-				if(count($r) && intval($r[0]['pubmail']))
-					$pubmail_enabled = true;
-			}
-		}
-
 		if(! strlen($body)) {
 			if($preview)
 				killme();
@@ -585,7 +563,6 @@ function item_post(&$a) {
 	$datarray['deny_cid']      = $str_contact_deny;
 	$datarray['deny_gid']      = $str_group_deny;
 	$datarray['private']       = $private;
-	$datarray['pubmail']       = $pubmail_enable;
 	$datarray['attach']        = $attachments;
 	$datarray['thr-parent']    = $thr_parent;
 	$datarray['postopts']      = '';
@@ -683,8 +660,8 @@ function item_post(&$a) {
 
 	$r = q("INSERT INTO `item` (`uid`,`type`,`wall`,`gravity`,`contact-id`,`owner-name`,`owner-link`,`owner-avatar`, 
 		`author-name`, `author-link`, `author-avatar`, `created`, `edited`, `commented`, `received`, `changed`, `uri`, `thr-parent`, `title`, `body`, `app`, `lang`, `location`, `coord`, 
-		`inform`, `verb`, `postopts`, `allow_cid`, `allow_gid`, `deny_cid`, `deny_gid`, `private`, `pubmail`, `attach`,`origin`, `moderated`)
-		VALUES( %d, '%s', %d, %d, %d, '%s', '%s', '%s', '%s', '%s', '%s', '%s', '%s', '%s', '%s', '%s', '%s', '%s', '%s', '%s', '%s', '%s', '%s', '%s', '%s', '%s', '%s', '%s', '%s', '%s', '%s', %d, %d, '%s', %d, %d )",
+		`inform`, `verb`, `postopts`, `allow_cid`, `allow_gid`, `deny_cid`, `deny_gid`, `private`, `attach`,`origin`, `moderated`)
+		VALUES( %d, '%s', %d, %d, %d, '%s', '%s', '%s', '%s', '%s', '%s', '%s', '%s', '%s', '%s', '%s', '%s', '%s', '%s', '%s', '%s', '%s', '%s', '%s', '%s', '%s', '%s', '%s', '%s', '%s', '%s', %d, '%s', %d, %d )",
 		intval($datarray['uid']),
 		dbesc($datarray['type']),
 		intval($datarray['wall']),
@@ -717,7 +694,6 @@ function item_post(&$a) {
 		dbesc($datarray['deny_cid']),
 		dbesc($datarray['deny_gid']),
 		intval($datarray['private']),
-		intval($datarray['pubmail']),
 		dbesc($datarray['attach']),
 		intval($datarray['origin']),
 		intval($datarray['moderated'])
@@ -851,31 +827,6 @@ function item_post(&$a) {
 	$datarray['plink'] = $a->get_baseurl() . '/display/' . $user['nickname'] . '/' . $post_id;
 
 	call_hooks('post_local_end', $datarray);
-
-	if(strlen($emailcc) && $profile_uid == local_user()) {
-		$erecips = explode(',', $emailcc);
-		if(count($erecips)) {
-			foreach($erecips as $recip) {
-				$addr = trim($recip);
-				if(! strlen($addr))
-					continue;
-				$disclaimer = '<hr />' . sprintf( t('This message was sent to you by %s, a member of the Friendica social network.'),$a->user['username']) 
-					. '<br />';
-				$disclaimer .= sprintf( t('You may visit them online at %s'), $a->get_baseurl() . '/profile/' . $a->user['nickname']) . EOL;
-				$disclaimer .= t('Please contact the sender by replying to this post if you do not wish to receive these messages.') . EOL; 
-
-				$subject  = email_header_encode('[Friendica]' . ' ' . sprintf( t('%s posted an update.'),$a->user['username']),'UTF-8');
-				$headers  = 'From: ' . email_header_encode($a->user['username'],'UTF-8') . ' <' . $a->user['email'] . '>' . "\n";
-				$headers .= 'MIME-Version: 1.0' . "\n";
-				$headers .= 'Content-Type: text/html; charset=UTF-8' . "\n";
-				$headers .= 'Content-Transfer-Encoding: 8bit' . "\n\n";
-				$link = '<a href="' . $a->get_baseurl() . '/profile/' . $a->user['nickname'] . '"><img src="' . $author['thumb'] . '" alt="' . $a->user['username'] . '" /></a><br /><br />';
-				$html    = prepare_body($datarray);
-				$message = '<html><body>' . $link . $html . $disclaimer . '</body></html>';
-				@mail($addr, $subject, $message, $headers);
-			}
-		}
-	}
 
 	// This is a real juggling act on shared hosting services which kill your processes
 	// e.g. dreamhost. We used to start delivery to our native delivery agents in the background

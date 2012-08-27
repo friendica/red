@@ -58,30 +58,6 @@ function editpost_content(&$a) {
 	$jotplugins = '';
 	$jotnets = '';
 
-	$mail_disabled = ((function_exists('imap_open') && (! get_config('system','imap_disabled'))) ? 0 : 1);
-
-	$mail_enabled = false;
-	$pubmail_enabled = false;
-
-	if(! $mail_disabled) {
-		$r = q("SELECT * FROM `mailacct` WHERE `uid` = %d AND `server` != '' LIMIT 1",
-			intval(local_user())
-		);
-		if(count($r)) {
-			$mail_enabled = true;
-			if(intval($r[0]['pubmail']))
-				$pubmail_enabled = true;
-		}
-	}
-
-	if($mail_enabled) {
-       $selected = (($pubmail_enabled) ? ' checked="checked" ' : '');
-		$jotnets .= '<div class="profile-jot-net"><input type="checkbox" name="pubmail_enable"' . $selected . ' value="1" /> '
-          	. t("Post to Email") . '</div>';
-	}
-					
-
-
 	call_hooks('jot_tool', $jotplugins);
 	call_hooks('jot_networks', $jotnets);
 
@@ -110,7 +86,6 @@ function editpost_content(&$a) {
 		'$defloc' => $a->user['default-location'],
 		'$visitor' => 'none',
 		'$pvisit' => 'none',
-		'$emailcc' => t('CC: email addresses'),
 		'$public' => t('Public post'),
 		'$jotnets' => $jotnets,
 		'$title' => $itm[0]['title'],

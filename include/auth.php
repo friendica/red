@@ -20,8 +20,32 @@ function nuke_session() {
 	unset($_SESSION['page_flags']);
 }
 
+/**
+ * Verify login credentials
+ *
+ * Returns account record on success, null on failure
+ *
+ */
+
+function account_verify_password($email,$pass) {
+	$r = q("select * from account where account_email = '%s'",
+		dbesc($email)
+	);
+	if(! ($r && count($r)))
+		return null;
+	foreach($r as $record) {
+		if(($record['account_flags'] == ACCOUNT_OK) || ($record['account_flags'] == ACCOUNT_UNVERIFIED)
+			&& (hash('whirlpool',$record['account_salt'] . $pass) === $record['account_password'])) {
+			return $record;
+		}
+	}
+	return null;
+}
+
 
 // login/logout 
+
+
 
 
 
@@ -59,6 +83,14 @@ if((isset($_SESSION)) && (x($_SESSION,'authenticated')) && ((! (x($_POST,'auth-p
 			goaway(z_root());
 		}
 
+		$r = q("select * from account where account_id = %d limit 1",
+			intval($_SESSION['account_id'])
+		);
+		if(count($r) && (($r[0]['account_flags'] == ACCOUNT_OK) || ($r[0]['account_flags'] == ACCOUNT_UNVERIFIED)))
+			get_app()->account = $r[0];
+		else
+			$_SESSION['account_id'] = 0;
+
 		$r = q("SELECT `user`.*, `user`.`pubkey` as `upubkey`, `user`.`prvkey` as `uprvkey` 
 		FROM `user` WHERE `uid` = %d AND `blocked` = 0 AND `account_expired` = 0 AND `verified` = 1 LIMIT 1",
 			intval($_SESSION['uid'])
@@ -80,43 +112,6 @@ else {
 
 	if((x($_POST,'password')) && strlen($_POST['password']))
 		$encrypted = hash('whirlpool',trim($_POST['password']));
-	else {
-		if((x($_POST,'openid_url')) && strlen($_POST['openid_url']) ||
-		   (x($_POST,'username')) && strlen($_POST['username'])) {
-
-			$noid = get_config('system','no_openid');
-
-			$openid_url = trim((strlen($_POST['openid_url'])?$_POST['openid_url']:$_POST['username']) );
-
-			// validate_url alters the calling parameter
-
-			$temp_string = $openid_url;
-
-			// if it's an email address or doesn't resolve to a URL, fail.
-
-			if(($noid) || (strpos($temp_string,'@')) || (! validate_url($temp_string))) {
-				$a = get_app();
-				notice( t('Login failed.') . EOL);
-				goaway(z_root());
-				// NOTREACHED
-			}
-
-			// Otherwise it's probably an openid.
-
-                        try {
-			require_once('library/openid.php');
-			$openid = new LightOpenID;
-			$openid->identity = $openid_url;
-			$_SESSION['openid'] = $openid_url;
-			$a = get_app();
-			$openid->returnUrl = $a->get_baseurl(true) . '/openid'; 
-                        goaway($openid->authUrl());
-                        } catch (Exception $e) {
-                            notice( t('We encountered a problem while logging in with the OpenID you provided. Please check the correct spelling of the ID.').'<br /><br >'. t('The error message was:').' '.$e->getMessage());
-                        }
-			// NOTREACHED
-		}
-	}
 
 	if((x($_POST,'auth-params')) && $_POST['auth-params'] === 'login') {
 
@@ -143,6 +138,18 @@ else {
 			$record = $addon_auth['user_record'];
 		}
 		else {
+
+			get_app()->account = account_verify_password($_POST['username'],$_POST['password']);
+
+			if(get_app()->account) {
+				$_SESSION['account_id'] = get_app()->account['account_id'];
+			}
+			else {
+				notice( t('Failed authentication') . EOL);
+			}
+
+			logger('authenticate: ' . print_r(get_app()->account,true));
+
 
 			// process normal login request
 

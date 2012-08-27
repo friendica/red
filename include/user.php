@@ -219,8 +219,8 @@ function create_user($arr) {
 			t('default'),
 			1,
 			dbesc($username),
-			dbesc($a->get_baseurl() . "/photo/profile/{$newuid}.jpg"),
-			dbesc($a->get_baseurl() . "/photo/avatar/{$newuid}.jpg"),
+			dbesc($a->get_baseurl() . "/photo/profile/{$newuid}"),
+			dbesc($a->get_baseurl() . "/photo/avatar/{$newuid}"),
 			intval($publish),
 			intval($netpublish)
 
@@ -239,9 +239,9 @@ function create_user($arr) {
 			datetime_convert(),
 			dbesc($username),
 			dbesc($nickname),
-			dbesc($a->get_baseurl() . "/photo/profile/{$newuid}.jpg"),
-			dbesc($a->get_baseurl() . "/photo/avatar/{$newuid}.jpg"),
-			dbesc($a->get_baseurl() . "/photo/micro/{$newuid}.jpg"),
+			dbesc($a->get_baseurl() . "/photo/profile/{$newuid}"),
+			dbesc($a->get_baseurl() . "/photo/avatar/{$newuid}"),
+			dbesc($a->get_baseurl() . "/photo/micro/{$newuid}"),
 			dbesc($a->get_baseurl() . "/profile/$nickname"),
 			dbesc(normalise_link($a->get_baseurl() . "/profile/$nickname")),
 			dbesc($a->get_baseurl() . "/dfrn_request/$nickname"),

@@ -3,8 +3,6 @@
 require_once('library/ASNValue.class.php');
 require_once('library/asn1.php');
 
-// supported algorithms are 'sha256', 'sha1'
-
 function rsa_sign($data,$key,$alg = 'sha256') {
 
 	$sig = '';

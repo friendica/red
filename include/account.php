@@ -102,7 +102,6 @@ function create_account($arr) {
 		return $result;
 	}
 
-
 	$email_result = check_account_email($email);
 
 	if($email_result['error']) {
@@ -142,7 +141,7 @@ function create_account($arr) {
 		return($result);
 	}
 
-	$r = q("select * from account where account_email = '%s' and password = '%s' limit 1",
+	$r = q("select * from account where account_email = '%s' and account_password = '%s' limit 1",
 		dbesc($email),
 		dbesc($password_encoded)
 	);
@@ -153,34 +152,26 @@ function create_account($arr) {
 		logger('create_account: could not retrieve newly created account');
 	}
 
-	$result['success'] = true;
+	// Set the parent record to the current record_id if no parent was provided
 
+	if(! $parent) {
+		$r = q("update account set account_parent = %d where account_id = %d limit 1",
+			intval($result['account']['account_id']),
+			intval($result['account']['account_id'])
+		);
+		if(! $r) {
+			logger('create_account: failed to set parent');
+		}
+		$result['account']['parent'] = $result['account']['account_id'];
+	}
+
+	$result['success']  = true;
 	$result['email']    = $email;
 	$result['password'] = $password;
 	return $result;
 
 }
 
-/**
- * Verify login credentials
- *
- * Returns account record on success, null on failure
- *
- */
-
-function account_verify_password($email,$pass) {
-	$r = q("select * from account where email = '%s'",
-		dbesc($email)
-	);
-	if(! ($r && count($r)))
-		return null;
-	foreach($r as $record) {
-		if(hash('whirlpool',$record['account_salt'] . $pass) === $record['account_password']) {
-			return $record;
-		}
-	}
-	return null;
-}
 
 
 function send_reg_approval_email($arr) {

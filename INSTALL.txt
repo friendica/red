@@ -32,7 +32,7 @@ link if your cert is self-signed).
 	- Apache with mod-rewrite enabled and "Options All" so you can use a 
 local .htaccess file
 
-	- PHP 5.2+. The later the better. PHP 5.3 is required for communications 
+	- PHP 5.3+. The later the better. PHP 5.3 is required for communications 
 with the Diaspora network and improved security.
 
 		- PHP *command line* access with register_argc_argv set to true in the 

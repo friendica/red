@@ -7,20 +7,21 @@ SET SQL_MODE="NO_AUTO_VALUE_ON_ZERO";
 
 
 CREATE TABLE IF NOT EXISTS `account` (
-  `account_id` int(11) NOT NULL AUTO_INCREMENT,
-  `account_parent` int(10) unsigned NOT NULL,
-  `account_salt` char(32) NOT NULL,
-  `account_password` char(255) NOT NULL,
-  `account_email` char(255) NOT NULL,
+  `account_id` int(10) unsigned NOT NULL AUTO_INCREMENT,
+  `account_parent` int(10) unsigned NOT NULL DEFAULT '0',
+  `account_default_entity` int(10) unsigned NOT NULL DEFAULT '0',
+  `account_salt` char(32) NOT NULL DEFAULT '',
+  `account_password` char(255) NOT NULL DEFAULT '',
+  `account_email` char(255) NOT NULL DEFAULT '',
   `account_language` char(16) NOT NULL DEFAULT 'en',
   `account_created` datetime NOT NULL DEFAULT '0000-00-00 00:00:00',
   `account_lastlog` datetime NOT NULL DEFAULT '0000-00-00 00:00:00',
-  `account_flags` int(10) unsigned NOT NULL,
-  `account_roles` int(10) unsigned NOT NULL,
-  `account_reset` char(255) NOT NULL,
+  `account_flags` int(10) unsigned NOT NULL DEFAULT '0',
+  `account_roles` int(10) unsigned NOT NULL DEFAULT '0',
+  `account_reset` char(255) NOT NULL DEFAULT '',
   `account_expires` datetime NOT NULL DEFAULT '0000-00-00 00:00:00',
   `account_expire_notified` datetime NOT NULL DEFAULT '0000-00-00 00:00:00',
-  `account_service_class` char(32) NOT NULL,
+  `account_service_class` char(32) NOT NULL DEFAULT '',
   PRIMARY KEY (`account_id`),
   KEY `account_email` (`account_email`),
   KEY `account_service_class` (`account_service_class`),
@@ -28,7 +29,8 @@ CREATE TABLE IF NOT EXISTS `account` (
   KEY `account_flags` (`account_flags`),
   KEY `account_roles` (`account_roles`),
   KEY `account_lastlog` (`account_lastlog`),
-  KEY `account_expires` (`account_expires`)
+  KEY `account_expires` (`account_expires`),
+  KEY `account_default_entity` (`account_default_entity`)
 ) ENGINE=MyISAM  DEFAULT CHARSET=utf8;
 
 CREATE TABLE IF NOT EXISTS `addon` (
@@ -216,22 +218,23 @@ CREATE TABLE IF NOT EXISTS `deliverq` (
 
 CREATE TABLE IF NOT EXISTS `entity` (
   `entity_id` int(10) unsigned NOT NULL AUTO_INCREMENT,
-  `entity_account_id` int(10) unsigned NOT NULL,
-  `entity_name` char(255) NOT NULL,
-  `entity_address` char(255) NOT NULL,
-  `entity_global_id` char(255) NOT NULL,
-  `entity_timezone` char(128) NOT NULL,
-  `entity_location` char(255) NOT NULL,
-  `entity_theme` char(255) NOT NULL,
+  `entity_account_id` int(10) unsigned NOT NULL DEFAULT '0',
+  `entity_primary` tinyint(1) unsigned NOT NULL DEFAULT '0',
+  `entity_name` char(255) NOT NULL DEFAULT '',
+  `entity_address` char(255) NOT NULL DEFAULT '',
+  `entity_global_id` char(255) NOT NULL DEFAULT '',
+  `entity_timezone` char(128) NOT NULL DEFAULT '',
+  `entity_location` char(255) NOT NULL DEFAULT '',
+  `entity_theme` char(255) NOT NULL DEFAULT '',
   `entity_pubkey` text NOT NULL,
   `entity_prvkey` text NOT NULL,
-  `entity_privacyflags` int(10) unsigned NOT NULL,
+  `entity_privacyflags` int(10) unsigned NOT NULL DEFAULT '0',
   `entity_notifyflags` int(10) unsigned NOT NULL DEFAULT '65535',
-  `entity_pageflags` int(10) unsigned NOT NULL,
-  `entity_max_anon_mail` int(11) NOT NULL DEFAULT '10',
-  `entity_max_friend_req` int(11) NOT NULL DEFAULT '10',
-  `entity_passwd_reset` char(255) NOT NULL,
-  `entity_default_gid` int(11) NOT NULL,
+  `entity_pageflags` int(10) unsigned NOT NULL DEFAULT '0',
+  `entity_max_anon_mail` int(10) unsigned NOT NULL DEFAULT '10',
+  `entity_max_friend_req` int(10) unsigned NOT NULL DEFAULT '10',
+  `entity_passwd_reset` char(255) NOT NULL DEFAULT '',
+  `entity_default_gid` int(10) unsigned NOT NULL DEFAULT '0',
   `entity_allow_cid` mediumtext NOT NULL,
   `entity_allow_gid` mediumtext NOT NULL,
   `entity_deny_cid` mediumtext NOT NULL,
@@ -249,8 +252,9 @@ CREATE TABLE IF NOT EXISTS `entity` (
   KEY `entity_pageflags` (`entity_pageflags`),
   KEY `entity_max_anon_mail` (`entity_max_anon_mail`),
   KEY `entity_max_friend_req` (`entity_max_friend_req`),
-  KEY `entity_default_gid` (`entity_default_gid`)
-) ENGINE=MyISAM DEFAULT CHARSET=utf8;
+  KEY `entity_default_gid` (`entity_default_gid`),
+  KEY `entity_primary` (`entity_primary`)
+) ENGINE=MyISAM  DEFAULT CHARSET=utf8;
 
 CREATE TABLE IF NOT EXISTS `event` (
   `id` int(11) NOT NULL AUTO_INCREMENT,
@@ -421,15 +425,18 @@ CREATE TABLE IF NOT EXISTS `hook` (
 CREATE TABLE IF NOT EXISTS `hubloc` (
   `hubloc_id` int(10) unsigned NOT NULL AUTO_INCREMENT,
   `hubloc_guid` char(255) NOT NULL DEFAULT '',
-  `hubloc_primary` tinyint(3) unsigned NOT NULL DEFAULT '0',
+  `hubloc_guid_sig` char(255) NOT NULL,
+  `hubloc_flags` int(10) unsigned NOT NULL DEFAULT '0',
   `hubloc_url` char(255) NOT NULL DEFAULT '',
+  `hubloc_url_sig` char(255) NOT NULL,
   `hubloc_callback` char(255) NOT NULL DEFAULT '',
   `hubloc_sitekey` text NOT NULL,
-  `hubloc_key` text NOT NULL,
   PRIMARY KEY (`hubloc_id`),
   KEY `hubloc_url` (`hubloc_url`),
-  KEY `hubloc_primary` (`hubloc_primary`),
-  KEY `hubloc_guid` (`hubloc_guid`)
+  KEY `hubloc_guid` (`hubloc_guid`),
+  KEY `hubloc_flags` (`hubloc_flags`),
+  KEY `hubloc_guid_sig` (`hubloc_guid_sig`),
+  KEY `hubloc_url_sig` (`hubloc_url_sig`)
 ) ENGINE=MyISAM DEFAULT CHARSET=utf8;
 
 CREATE TABLE IF NOT EXISTS `intro` (

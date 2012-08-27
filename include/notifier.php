@@ -439,25 +439,6 @@ function notifier_run($argv, $argc){
 
 	logger('notifier: slaps: ' . print_r($slaps,true), LOGGER_DATA);
 
-	// If this is a public message and pubmail is set on the parent, include all your email contacts
-
-	$mail_disabled = ((function_exists('imap_open') && (! get_config('system','imap_disabled'))) ? 0 : 1);
-
-	if(! $mail_disabled) {
-		if((! strlen($target_item['allow_cid'])) && (! strlen($target_item['allow_gid'])) 
-			&& (! strlen($target_item['deny_cid'])) && (! strlen($target_item['deny_gid'])) 
-			&& (intval($target_item['pubmail']))) {
-			$r = q("SELECT * FROM `contact` WHERE `uid` = %d AND `network` = '%s'",
-				intval($uid),
-				dbesc(NETWORK_MAIL)
-			);
-			if(count($r)) {
-				foreach($r as $rr)
-					$recipients[] = $rr['id'];
-			}
-		}
-	}
-
 	if($followup)
 		$recip_str = $parent['contact-id'];
 	else

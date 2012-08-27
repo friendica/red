@@ -3338,7 +3338,6 @@ function fix_private_photos($s, $uid, $item = null, $cid = 0) {
 			// Only embed locally hosted photos
 			$replace = false;
 			$i = basename($image);
-			$i = str_replace(array('.jpg','.png'),array('',''),$i);
 			$x = strpos($i,'-');
 
 			if($x) {

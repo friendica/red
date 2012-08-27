@@ -70,8 +70,6 @@
 		<div id="profile-jot-acl-wrapper" style="width:auto;height:auto;overflow:auto;">
 			$acl
 			<hr style="clear:both"/>
-			<div id="profile-jot-email-label">$emailcc</div><input type="text" name="emailcc" id="profile-jot-email" title="$emtitle" />
-			<div id="profile-jot-email-end"></div>
 			$jotnets
 		</div>
 	</div>

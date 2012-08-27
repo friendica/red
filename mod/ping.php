@@ -18,6 +18,8 @@ function ping_init(&$a) {
 	$result['events_today'] = 0;
 	$result['birthdays'] = 0;
 	$result['birthdays_today'] = 0;
+	$result['all_events'] = 0;
+	$result['all_events_today'] = 0;
 	$result['notice'] = array();
 	$result['info'] = array();
 
@@ -166,9 +168,9 @@ function ping_init(&$a) {
 	);
 
 	if($events && count($events)) {
-		$result['events'] = intval($events[0]['total']);
+		$result['all_events'] = intval($events[0]['total']);
 
-		if($result['events']) {
+		if($result['all_events']) {
 			$str_now = datetime_convert('UTC',$a->timezone,'now','Y-m-d');
 			foreach($events as $x) {
 				$bd = false;
@@ -176,10 +178,15 @@ function ping_init(&$a) {
 					$result['birthdays'] ++;
 					$bd = true;
 				}
+				else {
+					$result['events'] ++;
+				}
 				if(datetime_convert('UTC',((intval($x['adjust'])) ? $a->timezone : 'UTC'), $x['start'],'Y-m-d') === $str_now) {
-					$result['events_today'] ++;
+					$result['all_events_today'] ++;
 					if($bd)
 						$result['birthdays_today'] ++;
+					else
+						$result['events_today'] ++;
 				}
 			}
 		}

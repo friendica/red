@@ -359,7 +359,8 @@ function startup() {
 if(! class_exists('App')) {
 	class App {
 
-		public  $account;
+		public  $account = null;
+		public  $identity = null;
 		public  $language;
 		public  $module_loaded = false;
 		public  $query_string;
@@ -487,10 +488,6 @@ if(! class_exists('App')) {
 			if(substr($this->cmd,0,1) === '~')
 				$this->cmd = 'profile/' . substr($this->cmd,1);
 
-			// Diaspora style profile url
-
-			if(substr($this->cmd,0,2) === 'u/')
-				$this->cmd = 'profile/' . substr($this->cmd,2);
 
 			/**
 			 *
@@ -528,7 +525,7 @@ if(! class_exists('App')) {
 				$this->module = 'hostxrd';
 			}
 
-			if(strstr($this->cmd,'.well-known/zot-guid/')) {
+			if(strstr($this->cmd,'.well-known/zot-guid')) {
 				$this->argc -= 1;
 				array_shift($this->argv);
 				$this->argv[0] = 'zfinger';
@@ -977,8 +974,14 @@ if(! function_exists('goaway')) {
 	}
 }
 
+function get_account_id() {
+	if(get_app()->account)
+		return intval(get_app()->account['account_id']);
+	return false;
+}
 
-// Returns the uid of locally logged in user or false.
+
+// Returns the entity id of locally logged in user or false.
 
 if(! function_exists('local_user')) {
 	function local_user() {

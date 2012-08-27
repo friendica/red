@@ -1152,7 +1152,7 @@ function generate_user_guid() {
 
 
 
-function base64url_encode($s, $strip_padding = false) {
+function base64url_encode($s, $strip_padding = true) {
 
 	$s = strtr(base64_encode($s),'+/','-_');
 

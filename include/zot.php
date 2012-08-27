@@ -2,15 +2,15 @@
 
 /**
  *
- * @function zot_new_uid($entity_id)
- * @entity_id = integer id of controlling entity
+ * @function zot_new_uid($entity_nick)
+ * @entity_id = unique nickname of controlling entity
  * @returns string
  *
  */
 
-function zot_new_uid($entity_id) {
-	$rawstr = z_root() . '/' . $entity_id . '.' . mt_rand();
-	return(base64url_encode(hash('whirlpool',$rawstr,true),true) . '.' . mt_rand());
+function zot_new_uid($entity_nick) {
+	$rawstr = z_root() . '/' . $entity_nick . '.' . mt_rand();
+	return(base64url_encode(hash('whirlpool',$rawstr,true),true));
 }
 
 
@@ -63,7 +63,9 @@ function zot_notify($entity,$url) {
 	$x = z_post_url($url, array(
 		'type' => 'notify',
 		'guid' => $entity['entity_global_id'],
-		'hub' => z_root(), 
+		'guid_sig' => base64url_encode($guid,$entity['prvkey']),
+		'hub' => z_root(),
+		'hub_sig' => base64url_encode(z_root,$entity['prvkey']), 
 		'callback' => '/post', 
 		'spec' => ZOT_REVISION)
 	);
@@ -73,12 +75,15 @@ function zot_notify($entity,$url) {
 		
 function zot_gethub($arr) {
 
-	if((x($arr,'hub')) && (x($arr,'guid'))) {
+	if((x($arr,'guid')) && (x($arr,'guid_sig')) && (x($arr,'hub')) && (x($arr,'hub_sig'))) {
 		$r = q("select * from hubloc 
-				where hubloc_guid = '%s' and hubloc_url = '%s' 
+				where hubloc_guid = '%s' and hubloc_guid_sig = '%s' 
+				and hubloc_url = '%s' and hubloc_url_sig = '%s'
 				limit 1",
 			dbesc($arr['guid']),
-			dbesc($arr['hub'])
+			dbesc($arr['guid_sig']),
+			dbesc($arr['hub']),
+			dbesc($arr['hub_sig'])
 		);
 		if($r && count($r))
 			return $r[0];
@@ -95,13 +100,19 @@ function zot_register_hub($arr) {
 			if($record->hub && count($record->hub)) {
 				foreach($record->hub as $h) {
 					// store any hubs we don't know about
-					if( ! zot_gethub(array('hub' => $h->url, 'guid' => $arr['guid']))) {
-						$r = q("insert into hubloc (hubloc_guid, hubloc_flags, hubloc_url, 
-								hubloc_callback, hubloc_sitekey, hubloc_key)
-							values ( '%s', %d, '%s', '%s', '%s', '%s' )",
+					if( ! zot_gethub(
+							array('guid' => $arr['guid'],
+								'guid_sig' => $arr['guid_sig'],
+								'hub' => $h->url, 
+								'hub_sig' => $h->url_sig))) {
+						$r = q("insert into hubloc (hubloc_guid, hubloc_guid_sig, hubloc_flags, hubloc_url, 
+								hubloc_url_sig, hubloc_callback, hubloc_sitekey, hubloc_key)
+							values ( '%s', '%s', %d, '%s', '%s', '%s', '%s', '%s' )",
 							dbesc($arr['guid']),
+							dbesc($arr['guid_sig']),
 							intval((($h->primary) ? HUBLOC_FLAGS_PRIMARY : 0) | HUBLOC_FLAGS_UNVERIFIED ),
 							dbesc($h->url),
+							dbesc($h->url_sig),
 							dbesc($h->callback),
 							dbesc($h->sitekey),
 							dbesc($record->key)

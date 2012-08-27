@@ -61,7 +61,7 @@ function zentity_post(&$a) {
 
 	$arr = $_POST;
 
-	if(($uid = intval(local_user())) == 0) {
+	if(($arr['account_id'] = get_account_id()) === false) {
 		notice( t('Permission denied.') . EOL );
 		return;
 	}
@@ -84,44 +84,13 @@ function zentity_post(&$a) {
 
 function zentity_content(&$a) {
 
-
-	if((! local_user()) && ($a->config['register_policy'] == REGISTER_CLOSED)) {
-		notice("Permission denied." . EOL);
+	if(! get_account_id()) {
+		notice( t('Permission denied.') . EOL);
 		return;
 	}
 
-	$max_dailies = intval(get_config('system','max_daily_registrations'));
-	if($max_dailies) {
-		$r = q("select count(*) as total from account where account_created > UTC_TIMESTAMP - INTERVAL 1 day");
-		if($r && $r[0]['total'] >= $max_dailies) {
-			logger('max daily registrations exceeded.');
-			notice( t('This site has exceeded the number of allowed daily account registrations. Please try again tomorrow.') . EOL);
-			return;
-		}
-	}
-
-	// Configurable terms of service link
-
-	$tosurl = get_config('system','tos_url');
-	if(! $tosurl)
-		$tosurl = $a->get_baseurl() . '/help/TermsOfService';
-
-	$toslink = '<a href="' . $tosurl . '" >' . t('Terms of Service') . '</a>';
-
-	// Configurable whether to restrict age or not - default is based on international legal requirements
-	// This can be relaxed if you are on a restricted server that does not share with public servers
-
-	if(get_config('system','no_age_restriction')) 
-		$label_tos = sprintf( t('I accept the %s for this website'), $toslink);
-	else
-		$label_tos = 
-
-
-	$email        = ((x($_REQUEST,'email'))        ? $_REQUEST['email']        :  "" );
-	$password     = ((x($_REQUEST,'password'))     ? $_REQUEST['password']     :  "" );
-	$password2    = ((x($_REQUEST,'password2'))    ? $_REQUEST['password2']    :  "" );
-	$invite_code  = ((x($_REQUEST,'invite_code'))  ? $_REQUEST['invite_code']  :  "" );
-
+	$name         = ((x($_REQUEST,'name'))         ? $_REQUEST['name']         :  "" );
+	$nickname     = ((x($_REQUEST,'nickname'))     ? $_REQUEST['nickname']     :  "" );
 
 
 	$o = replace_macros(get_markup_template('zentity.tpl'), array(

@@ -344,12 +344,6 @@ function prepare_threads_body($a, $items, $cmnt_tpl, $page_writeable, $mode, $pr
 	$total_children = $nb_items;
 	
 	foreach($items as $item) {
-		// prevent private email reply to public conversation from leaking.
-		if($item['network'] === NETWORK_MAIL && local_user() != $item['uid']) {
-			// Don't count it as a visible item
-			$nb_items--;
-			continue;
-		}
 
 		if($item['verb'] === ACTIVITY_LIKE || $item['verb'] === ACTIVITY_DISLIKE) {
 			$nb_items --;
@@ -406,15 +400,13 @@ function prepare_threads_body($a, $items, $cmnt_tpl, $page_writeable, $mode, $pr
 
 		$sp = false;
 		$profile_link = best_link_url($item,$sp);
-		if($profile_link === 'mailbox')
-			$profile_link = '';
 		if($sp)
 			$sparkle = ' sparkle';
 		else
 			$profile_link = zrl($profile_link);					
 
 		$normalised = normalise_link((strlen($item['author-link'])) ? $item['author-link'] : $item['url']);
-		if(($normalised != 'mailbox') && (x($a->contacts,$normalised)))
+		if(x($a->contacts,$normalised))
 			$profile_avatar = $a->contacts[$normalised]['thumb'];
 		else
 			$profile_avatar = (((strlen($item['author-avatar'])) && $diff_author) ? $item['author-avatar'] : $a->get_cached_avatar_image($thumb));
@@ -762,10 +754,6 @@ function conversation(&$a, $items, $mode, $update, $page_mode = 'traditional') {
 				else
 					$nickname = $a->user['nickname'];
 				
-				// prevent private email from leaking.
-				if($item['network'] === NETWORK_MAIL && local_user() != $item['uid'])
-						continue;
-			
 				$profile_name   = ((strlen($item['author-name']))   ? $item['author-name']   : $item['name']);
 				if($item['author-link'] && (! $item['author-name']))
 					$profile_name = $item['author-link'];
@@ -774,15 +762,13 @@ function conversation(&$a, $items, $mode, $update, $page_mode = 'traditional') {
 
 				$sp = false;
 				$profile_link = best_link_url($item,$sp);
-				if($profile_link === 'mailbox')
-					$profile_link = '';
 				if($sp)
 					$sparkle = ' sparkle';
 				else
 					$profile_link = zrl($profile_link);					
 
 				$normalised = normalise_link((strlen($item['author-link'])) ? $item['author-link'] : $item['url']);
-				if(($normalised != 'mailbox') && (x($a->contacts[$normalised])))
+				if(x($a->contacts,$normalised))
 					$profile_avatar = $a->contacts[$normalised]['thumb'];
 				else
 					$profile_avatar = ((strlen($item['author-avatar'])) ? $a->get_cached_avatar_image($item['author-avatar']) : $item['thumb']);
@@ -954,10 +940,6 @@ function conversation(&$a, $items, $mode, $update, $page_mode = 'traditional') {
 
 				}
 				else {
-
-					// prevent private email reply to public conversation from leaking.
-					if($item['network'] === NETWORK_MAIL && local_user() != $item['uid'])
-							continue;
 
 					$comments_seen ++;
 					$comment_lastcollapsed  = false;
@@ -1146,15 +1128,13 @@ function conversation(&$a, $items, $mode, $update, $page_mode = 'traditional') {
 
 				$sp = false;
 				$profile_link = best_link_url($item,$sp);
-				if($profile_link === 'mailbox')
-					$profile_link = '';
 				if($sp)
 					$sparkle = ' sparkle';
 				else
 					$profile_link = zrl($profile_link);					
 
 				$normalised = normalise_link((strlen($item['author-link'])) ? $item['author-link'] : $item['url']);
-				if(($normalised != 'mailbox') && (x($a->contacts,$normalised)))
+				if(x($a->contacts,$normalised))
 					$profile_avatar = $a->contacts[$normalised]['thumb'];
 				else
 					$profile_avatar = (((strlen($item['author-avatar'])) && $diff_author) ? $item['author-avatar'] : $a->get_cached_avatar_image($thumb));
@@ -1346,8 +1326,6 @@ function item_photo_menu($item){
 
 	$sparkle = false;
     $profile_link = best_link_url($item,$sparkle,$ssl_state);
-	if($profile_link === 'mailbox')
-		$profile_link = '';
 
 	if($sparkle) {
 		$cid = intval(basename($profile_link));
@@ -1504,27 +1482,6 @@ function status_editor($a,$x, $notes_cid = 0, $popup=false) {
 	$jotplugins = '';
 	$jotnets = '';
 
-	$mail_disabled = ((function_exists('imap_open') && (! get_config('system','imap_disabled'))) ? 0 : 1);
-
-	$mail_enabled = false;
-	$pubmail_enabled = false;
-
-	if(($x['is_owner']) && (! $mail_disabled)) {
-		$r = q("SELECT * FROM `mailacct` WHERE `uid` = %d AND `server` != '' LIMIT 1",
-			intval(local_user())
-		);
-		if(count($r)) {
-			$mail_enabled = true;
-			if(intval($r[0]['pubmail']))
-				$pubmail_enabled = true;
-		}
-	}
-
-	if($mail_enabled) {
-		$selected = (($pubmail_enabled) ? ' checked="checked" ' : '');
-		$jotnets .= '<div class="profile-jot-net"><input type="checkbox" name="pubmail_enable"' . $selected . ' value="1" /> ' . t("Post to Email") . '</div>';
-	}
-
 	call_hooks('jot_tool', $jotplugins);
 	call_hooks('jot_networks', $jotnets);
 
@@ -1565,7 +1522,6 @@ function status_editor($a,$x, $notes_cid = 0, $popup=false) {
 		'$defloc' => $x['default_location'],
 		'$visitor' => $x['visitor'],
 		'$pvisit' => (($notes_cid) ? 'none' : $x['visitor']),
-		'$emailcc' => t('CC: email addresses'),
 		'$public' => t('Public post'),
 		'$jotnets' => $jotnets,
 		'$emtitle' => t('Example: bob@example.com, mary@example.com'),

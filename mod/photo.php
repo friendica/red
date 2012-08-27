@@ -5,44 +5,20 @@ require_once('include/Photo.php');
 
 function photo_init(&$a) {
 
-	// To-Do:
-	// - checking with realpath
-	// - checking permissions
-	/*
-	$cache = get_config('system','itemcache');
-        if (($cache != '') and is_dir($cache)) {
-		$cachefile = $cache."/".$a->argc."-".$a->argv[1]."-".$a->argv[2]."-".$a->argv[3];
-		if (file_exists($cachefile)) {
-			$data = file_get_contents($cachefile);
-
-			if(function_exists('header_remove')) {
-				header_remove('Pragma');
-				header_remove('pragma');
-			}
-
-			header("Content-type: image/jpeg");
- 			header("Expires: " . gmdate("D, d M Y H:i:s", time() + (3600*24)) . " GMT");
-			header("Cache-Control: max-age=" . (3600*24));
-			echo $data;
-			killme();
-			// NOTREACHED
-		}
-	}*/
-
 	$prvcachecontrol = false;
 
-	switch($a->argc) {
+	switch(argc()) {
 		case 4:
-			$person = $a->argv[3];
-			$customres = intval($a->argv[2]);
-			$type = $a->argv[1];
+			$person = argv(3);
+			$customres = intval(argv(2));
+			$type = argv(1);
 			break;
 		case 3:
-			$person = $a->argv[2];
-			$type = $a->argv[1];
+			$person = argv(2);
+			$type = argv(1);
 			break;
 		case 2:
-			$photo = $a->argv[1];
+			$photo = argv(1);
 			break;
 		case 1:
 		default:
@@ -76,7 +52,7 @@ function photo_init(&$a) {
 				break;
 		}
 
-		$uid = str_replace(array('.jpg','.png'),array('',''), $person);
+		$uid = $person;
 
 		$r = q("SELECT * FROM `photo` WHERE `scale` = %d AND `uid` = %d AND `profile` = 1 LIMIT 1",
 			intval($resolution),
