@@ -9,6 +9,7 @@
 		'showfewer' : '$showfewer',
 		'pwshort'   : '$pwshort',
 		'pwnomatch' : '$pwnomatch',
+		'everybody' : '$everybody',
 
 		't01' :  $t01,
 		't02' :  $t02,

@@ -10,9 +10,6 @@ $nickname_block
 {{inc field_password.tpl with $field=$password1 }}{{endinc}}
 {{inc field_password.tpl with $field=$password2 }}{{endinc}}
 
-{{ if $oid_enable }}
-{{inc field_input.tpl with $field=$openid }}{{endinc}}
-{{ endif }}
 
 <div class="settings-submit-wrapper" >
 <input type="submit" name="submit" class="settings-submit" value="$submit" />

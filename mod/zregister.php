@@ -75,7 +75,6 @@ function zregister_post(&$a) {
 	}
 	require_once('include/security.php');
 
-	authenticate_success($result['account'],true,true);
 
  	$using_invites = intval(get_config('system','invitation_only'));
 	$num_invites   = intval(get_config('system','number_invites'));
@@ -90,7 +89,6 @@ function zregister_post(&$a) {
 		$res = send_verification_email($result['email'],$result['password']);
 		if($res) {
 			info( t('Registration successful. Please check your email for validation instructions.') . EOL ) ;
-			goaway(z_root());
 		}
 	}
 	elseif($policy == REGISTER_APPROVE) {
@@ -103,7 +101,16 @@ function zregister_post(&$a) {
 		}
 		goaway(z_root());
 	}
-	return;
+
+	authenticate_success($result['account'],true,false,true);
+
+	if(! strlen($next_page = get_config('system','workflow_register_next')))
+		$next_page = 'zentity';
+
+	$_SESSION['workflow'] = true;
+	
+	goaway(z_root() . '/' . $next_page);
+
 }
 
 

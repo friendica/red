@@ -16,35 +16,6 @@ function get_theme_config_file($theme){
 
 function settings_init(&$a) {
 
-	// These lines provide the javascript needed by the acl selector
-
-	$a->page['htmlhead'] .= "<script> var ispublic = '" . t('everybody') . "';" ;
-
-	$a->page['htmlhead'] .= <<< EOT
-
-	$(document).ready(function() {
-
-		$('#contact_allow, #contact_deny, #group_allow, #group_deny').change(function() {
-			var selstr;
-			$('#contact_allow option:selected, #contact_deny option:selected, #group_allow option:selected, #group_deny option:selected').each( function() {
-				selstr = $(this).text();
-				$('#jot-perms-icon').removeClass('unlock').addClass('lock');
-				$('#jot-public').hide();
-			});
-			if(selstr == null) { 
-				$('#jot-perms-icon').removeClass('lock').addClass('unlock');
-				$('#jot-public').show();
-			}
-
-		}).trigger('change');
-
-	});
-
-	</script>
-EOT;
-
-
-
 	$tabs = array(
 		array(
 			'label'	=> t('Account settings'),
@@ -671,15 +642,17 @@ function settings_content(&$a) {
 	if(count($p))
 		$profile = $p[0];
 
-	$username   = $a->user['username'];
-	$email      = $a->user['email'];
-	$nickname   = $a->user['nickname'];
-	$timezone   = $a->user['timezone'];
-	$notify     = $a->user['notify-flags'];
-	$defloc     = $a->user['default-location'];
-	$openid     = $a->user['openid'];
-	$maxreq     = $a->user['maxreq'];
-	$expire     = ((intval($a->user['expire'])) ? $a->user['expire'] : '');
+	load_pconfig(local_user(),'expire');
+
+	$username   = $a->identity['entity_name'];
+	$email      = $a->account['account_email'];
+	$nickname   = $a->identity['entity_address'];
+	$timezone   = $a->identity['entity_timezone'];
+	$notify     = $a->identity['entity_notifyflags'];
+	$defloc     = $a->identity['entity_location'];
+
+	$maxreq     = $a->identity['entity_max_friend_req'];
+	$expire     = get_pconfig(local_user(),'expire','content_expire_days');
 	$blockwall  = $a->user['blockwall'];
 	$blocktags  = $a->user['blocktags'];
 	$unkmail    = $a->user['unkmail'];
@@ -714,8 +687,7 @@ function settings_content(&$a) {
 	$post_profilechange = (($post_profilechange===false)? '0': $post_profilechange); // default if not set: 0
 
 	
-	if(! strlen($a->user['timezone']))
-		$timezone = date_default_timezone_get();
+	$timezone = date_default_timezone_get();
 
 
 
@@ -743,15 +715,6 @@ function settings_content(&$a) {
 
 
 	));
-
-	$noid = get_config('system','no_openid');
-
-	if($noid) {
-		$openid_field = false;
-	}
-	else {
-		$openid_field = array('openid_url', t('OpenID:'),$openid, t("\x28Optional\x29 Allow this OpenID to login to this account."));
-	}
 
 
 	$opt_tpl = get_markup_template("field_yesno.tpl");

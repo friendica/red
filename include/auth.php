@@ -5,6 +5,7 @@ require_once('include/security.php');
 
 function nuke_session() {
 	unset($_SESSION['authenticated']);
+	unset($_SESSION['account_id']);
 	unset($_SESSION['uid']);
 	unset($_SESSION['visitor_id']);
 	unset($_SESSION['administrator']);
@@ -70,7 +71,7 @@ if((isset($_SESSION)) && (x($_SESSION,'authenticated')) && ((! (x($_POST,'auth-p
 		}
 	}
 
-	if(x($_SESSION,'uid')) {
+	if(x($_SESSION,'uid') || x($_SESSION,'account_id')) {
 
 		// already logged in user returning
 
@@ -83,18 +84,27 @@ if((isset($_SESSION)) && (x($_SESSION,'authenticated')) && ((! (x($_POST,'auth-p
 			goaway(z_root());
 		}
 
-		$r = q("select * from account where account_id = %d limit 1",
-			intval($_SESSION['account_id'])
-		);
-		if(count($r) && (($r[0]['account_flags'] == ACCOUNT_OK) || ($r[0]['account_flags'] == ACCOUNT_UNVERIFIED)))
-			get_app()->account = $r[0];
-		else
-			$_SESSION['account_id'] = 0;
-
-		$r = q("SELECT `user`.*, `user`.`pubkey` as `upubkey`, `user`.`prvkey` as `uprvkey` 
-		FROM `user` WHERE `uid` = %d AND `blocked` = 0 AND `account_expired` = 0 AND `verified` = 1 LIMIT 1",
-			intval($_SESSION['uid'])
-		);
+		if(x($_SESSION,'account_id')) {
+			$r = q("select * from account where account_id = %d limit 1",
+				intval($_SESSION['account_id'])
+			);
+			if(count($r) && (($r[0]['account_flags'] == ACCOUNT_OK) || ($r[0]['account_flags'] == ACCOUNT_UNVERIFIED))) {
+				get_app()->account = $r[0];
+				authenticate_success($r[0]);
+			}
+			else {
+				$_SESSION['account_id'] = 0;
+				nuke_session();
+				goaway(z_root());
+			}
+		}
+		else {
+				$r = q("SELECT `user`.*, `user`.`pubkey` as `upubkey`, `user`.`prvkey` as `uprvkey` 
+					FROM `user` WHERE `uid` = %d AND `blocked` = 0 
+					AND `account_expired` = 0 AND `verified` = 1 LIMIT 1",
+					intval($_SESSION['uid'])
+				);
+		}
 
 		if(! count($r)) {
 			nuke_session();
@@ -139,7 +149,7 @@ else {
 		}
 		else {
 
-			get_app()->account = account_verify_password($_POST['username'],$_POST['password']);
+			$record = get_app()->account = account_verify_password($_POST['username'],$_POST['password']);
 
 			if(get_app()->account) {
 				$_SESSION['account_id'] = get_app()->account['account_id'];
@@ -153,15 +163,15 @@ else {
 
 			// process normal login request
 
-			$r = q("SELECT `user`.*, `user`.`pubkey` as `upubkey`, `user`.`prvkey` as `uprvkey`  
-				FROM `user` WHERE ( `email` = '%s' OR `nickname` = '%s' ) 
-				AND `password` = '%s' AND `blocked` = 0 AND `account_expired` = 0 AND `verified` = 1 LIMIT 1",
-				dbesc(trim($_POST['username'])),
-				dbesc(trim($_POST['username'])),
-				dbesc($encrypted)
-			);
-			if(count($r))
-				$record = $r[0];
+//			$r = q("SELECT `user`.*, `user`.`pubkey` as `upubkey`, `user`.`prvkey` as `uprvkey`  
+//				FROM `user` WHERE ( `email` = '%s' OR `nickname` = '%s' ) 
+//				AND `password` = '%s' AND `blocked` = 0 AND `account_expired` = 0 AND `verified` = 1 LIMIT 1",
+//				dbesc(trim($_POST['username'])),
+//				dbesc(trim($_POST['username'])),
+//				dbesc($encrypted)
+//			);
+//			if(count($r))
+//				$record = $r[0];
 		}
 
 		if((! $record) || (! count($record))) {

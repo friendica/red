@@ -1,94 +1,146 @@
 <?php
 
-function authenticate_success($user_record, $login_initial = false, $interactive = false) {
+function authenticate_success($user_record, $login_initial = false, $interactive = false,$return = false) {
 
 	$a = get_app();
 
-	$_SESSION['uid'] = $user_record['uid'];
-	$_SESSION['theme'] = $user_record['theme'];
-	$_SESSION['authenticated'] = 1;
-	$_SESSION['page_flags'] = $user_record['page-flags'];
-	$_SESSION['my_url'] = $a->get_baseurl() . '/profile/' . $user_record['nickname'];
-	$_SESSION['my_address'] = $user_record['nickname'] . '@' . substr($a->get_baseurl(),strpos($a->get_baseurl(),'://')+3);
 	$_SESSION['addr'] = $_SERVER['REMOTE_ADDR'];
 
-	$a->user = $user_record;
+//	logger('authenticate_success: ' . print_r($user_record,true));
+//	logger('authenticate_success: ' . print_r($_SESSION,true));
 
-	if($interactive) {
-		if($a->user['login_date'] === '0000-00-00 00:00:00') {
-			$_SESSION['return_url'] = 'profile_photo/new';
-			$a->module = 'profile_photo';
-			info( t("Welcome ") . $a->user['username'] . EOL);
-			info( t('Please upload a profile photo.') . EOL);
+	if(x($user_record,'account_id')) {
+		logger('authenticate_success: Red-style');
+		$a->account = $user_record;
+		$_SESSION['account_id'] = $a->account['account_id'];
+		$_SESSION['authenticated'] = 1;
+		
+		if($login_initial) {
+			q("update account set account_lastlog = '%s' where account_id = %d limit 1",
+				dbesc(datetime_convert()),
+				intval($_SESSION['account_id'])
+			);
+			$a->account['account_lastlog'] = datetime_convert();
+			call_hooks('logged_in', $a->account);
+
 		}
+
+		$uid_to_load = (((x($_SESSION,'uid')) && (intval($_SESSION['uid']))) ? intval($_SESSION['uid']) : 0);
+		if(! $uid_to_load)
+			$uid_to_load = intval($a->account['account_default_entity']);
+
+		if($uid_to_load) {
+			$r = q("select * from entity where entity_id = %d and entity_account_id = %d limit 1",
+				intval($uid_to_load),
+				intval($a->account['account_id'])
+			);
+			if($r && count($r)) {
+				$_SESSION['uid'] = intval($r[0]['entity_id']);
+				$a->identity = $r[0];
+				$_SESSION['theme'] = $a->identity['entity_theme'];
+				date_default_timezone_set($a->identity['entity_timezone']);
+			}
+				
+		}
+
+
+	}
+	else {
+		$_SESSION['uid'] = $user_record['uid'];
+		$_SESSION['theme'] = $user_record['theme'];
+		$_SESSION['authenticated'] = 1;
+		$_SESSION['page_flags'] = $user_record['page-flags'];
+		$_SESSION['my_url'] = $a->get_baseurl() . '/profile/' . $user_record['nickname'];
+		$_SESSION['my_address'] = $user_record['nickname'] . '@' . substr($a->get_baseurl(),strpos($a->get_baseurl(),'://')+3);
+
+		$a->user = $user_record;
+
+		if($interactive) {
+			if($a->user['login_date'] === '0000-00-00 00:00:00') {
+				$_SESSION['return_url'] = 'profile_photo/new';
+				$a->module = 'profile_photo';
+				info( t("Welcome ") . $a->user['username'] . EOL);
+				info( t('Please upload a profile photo.') . EOL);
+			}
+			else
+				info( t("Welcome back ") . $a->user['username'] . EOL);
+		}
+
+		$member_since = strtotime($a->user['register_date']);
+		if(time() < ($member_since + ( 60 * 60 * 24 * 14)))
+			$_SESSION['new_member'] = true;
 		else
-			info( t("Welcome back ") . $a->user['username'] . EOL);
-	}
+			$_SESSION['new_member'] = false;
+		if(strlen($a->user['timezone'])) {
+			date_default_timezone_set($a->user['timezone']);
+			$a->timezone = $a->user['timezone'];
+		}
 
-	$member_since = strtotime($a->user['register_date']);
-	if(time() < ($member_since + ( 60 * 60 * 24 * 14)))
-		$_SESSION['new_member'] = true;
-	else
-		$_SESSION['new_member'] = false;
-	if(strlen($a->user['timezone'])) {
-		date_default_timezone_set($a->user['timezone']);
-		$a->timezone = $a->user['timezone'];
-	}
+		$master_record = $a->user;	
 
-	$master_record = $a->user;	
+		if((x($_SESSION,'submanage')) && intval($_SESSION['submanage'])) {
+			$r = q("select * from user where uid = %d limit 1",
+				intval($_SESSION['submanage'])
+			);
+			if(count($r))
+				$master_record = $r[0];
+		}
 
-	if((x($_SESSION,'submanage')) && intval($_SESSION['submanage'])) {
-		$r = q("select * from user where uid = %d limit 1",
-			intval($_SESSION['submanage'])
+		$r = q("SELECT `uid`,`username`,`nickname` FROM `user` WHERE `password` = '%s' AND `email` = '%s'",
+			dbesc($master_record['password']),
+			dbesc($master_record['email'])
 		);
-		if(count($r))
-			$master_record = $r[0];
-	}
+		if($r && count($r))
+			$a->identities = $r;
+		else
+			$a->identities = array();
 
-	$r = q("SELECT `uid`,`username`,`nickname` FROM `user` WHERE `password` = '%s' AND `email` = '%s'",
-		dbesc($master_record['password']),
-		dbesc($master_record['email'])
-	);
-	if($r && count($r))
-		$a->identities = $r;
-	else
-		$a->identities = array();
-
-	$r = q("select `user`.`uid`, `user`.`username`, `user`.`nickname` 
-		from manage left join user on manage.mid = user.uid 
-		where `manage`.`uid` = %d",
-		intval($master_record['uid'])
-	);
-	if($r && count($r))
-		$a->identities = array_merge($a->identities,$r);
-
-	if($login_initial)
-		logger('auth_identities: ' . print_r($a->identities,true), LOGGER_DEBUG);
-
-	$r = q("SELECT * FROM `contact` WHERE `uid` = %d AND `self` = 1 LIMIT 1",
-		intval($_SESSION['uid']));
-	if(count($r)) {
-		$a->contact = $r[0];
-		$a->cid = $r[0]['id'];
-		$_SESSION['cid'] = $a->cid;
-	}
-
-	header('X-Account-Management-Status: active; name="' . $a->user['username'] . '"; id="' . $a->user['nickname'] .'"');
-
-	if($login_initial) {
-		$l = get_browser_language();
-
-		q("UPDATE `user` SET `login_date` = '%s', `language` = '%s' WHERE `uid` = %d LIMIT 1",
-			dbesc(datetime_convert()),
-			dbesc($l),
-			intval($_SESSION['uid'])
+		$r = q("select `user`.`uid`, `user`.`username`, `user`.`nickname` 
+			from manage left join user on manage.mid = user.uid 
+			where `manage`.`uid` = %d",
+			intval($master_record['uid'])
 		);
+		if($r && count($r))
+			$a->identities = array_merge($a->identities,$r);
 
-		call_hooks('logged_in', $a->user);
+		if($login_initial)
+			logger('auth_identities: ' . print_r($a->identities,true), LOGGER_DEBUG);
 
-		if(($a->module !== 'home') && isset($_SESSION['return_url']))
-			goaway($a->get_baseurl() . '/' . $_SESSION['return_url']);
+		$r = q("SELECT * FROM `contact` WHERE `uid` = %d AND `self` = 1 LIMIT 1",
+			intval($_SESSION['uid']));
+		if(count($r)) {
+			$a->contact = $r[0];
+			$a->cid = $r[0]['id'];
+			$_SESSION['cid'] = $a->cid;
+		}
+
+		header('X-Account-Management-Status: active; name="' . $a->user['username'] . '"; id="' . $a->user['nickname'] .'"');
+
+		if($login_initial) {
+			$l = get_browser_language();
+
+			q("UPDATE `user` SET `login_date` = '%s', `language` = '%s' WHERE `uid` = %d LIMIT 1",
+				dbesc(datetime_convert()),
+				dbesc($l),
+				intval($_SESSION['uid'])
+			);
+
+			call_hooks('logged_in', $a->user);
+
+		}
 	}
+	
+
+	if($return || $_SESSION['workflow']) {
+		unset($_SESSION['workflow']);
+		return;
+	}
+
+	
+
+	if(($a->module !== 'home') && isset($_SESSION['return_url']))
+		goaway($a->get_baseurl() . '/' . $_SESSION['return_url']);
+
 
 }
 

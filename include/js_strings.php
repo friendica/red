@@ -8,6 +8,7 @@ function js_strings() {
 		'$showfewer' => t('show fewer'),
 		'$pwshort'   => t("Password too short"),
 		'$pwnomatch' => t("Passwords do not match"),
+		'$everybody' => t('everybody'),
 
 		'$t01' => ((t('timeago.prefixAgo') != 'timeago.prefixAgo') ? t('timeago.prefixAgo') : 'null'),
 		'$t02' => ((t('timeago.suffixAgo') != 'timeago.suffixAgo') ? t('timeago.suffixAgo') : 'null'),

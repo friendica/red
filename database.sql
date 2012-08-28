@@ -227,7 +227,7 @@ CREATE TABLE IF NOT EXISTS `entity` (
   `entity_name` char(255) NOT NULL DEFAULT '',
   `entity_address` char(255) NOT NULL DEFAULT '',
   `entity_global_id` char(255) NOT NULL DEFAULT '',
-  `entity_timezone` char(128) NOT NULL DEFAULT '',
+  `entity_timezone` char(128) NOT NULL DEFAULT 'UTC',
   `entity_location` char(255) NOT NULL DEFAULT '',
   `entity_theme` char(255) NOT NULL DEFAULT '',
   `entity_pubkey` text NOT NULL,

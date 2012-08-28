@@ -91,6 +91,10 @@ function create_account($arr) {
 	$parent      = ((x($arr,'parent'))        ? intval($arr['parent'])             : 0 );
 	$flags       = ((x($arr,'account_flags')) ? intval($arr['account_flags'])      : ACCOUNT_OK);
 
+	$default_service_class = get_config('system','default_service_class');
+	if($default_service_class === false)
+		$default_service_class = '';
+
 	if((! x($email)) || (! x($password))) {
 		$result['message'] = t('Please enter the required information.');
 		return $result;
@@ -236,7 +240,7 @@ function send_reg_approval_email($arr) {
 function send_verification_email($email,$password) {
 
 	$email_msg = replace_macros(get_intltext_template('register_open_eml.tpl'), array(
-		'$sitename' => $get_config('config','sitename'),
+		'$sitename' => get_config('config','sitename'),
 		'$siteurl' =>  z_root(),
 		'$email'    => $email,
 		'$password' => $password,

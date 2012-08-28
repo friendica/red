@@ -73,7 +73,11 @@ function zentity_post(&$a) {
 		return;
 	}
 
-	return;
+	if(! strlen($next_page = get_config('system','workflow_identity_next')))
+		$next_page = 'settings';
+	
+	goaway(z_root() . '/' . $next_page);
+
 }
 
 
