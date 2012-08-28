@@ -27,7 +27,7 @@ function nav(&$a) {
 	 *
 	 */
 
-	$myident = ((is_array($a->user) && isset($a->user['nickname'])) ? $a->user['nickname'] . '@' : '');
+	$myident = ((is_array($a->identity) && isset($a->identity['entity_address'])) ? $a->identity['entity_address'] . '@' : '');
 		
 	$sitelocation = $myident . substr($a->get_baseurl($ssl_state),strpos($a->get_baseurl($ssl_state),'//') + 2 );
 
@@ -53,10 +53,10 @@ function nav(&$a) {
 		$nav['usermenu'][] = Array('notes/', t('Personal notes'), "", t('Your personal photos'));
 		
 		// user info
-		$r = q("SELECT micro FROM contact WHERE uid=%d AND self=1", intval($a->user['uid']));
+//		$r = q("SELECT micro FROM contact WHERE uid=%d AND self=1", intval($a->user['uid']));
 		$userinfo = array(
-			'icon' => (count($r) ? $a->get_cached_avatar_image($r[0]['micro']) : $a->get_baseurl($ssl_state)."/images/person-48.jpg"),
-			'name' => $a->user['username'],
+			'icon' => $a->get_baseurl($ssl_state)."/images/person-48.jpg",
+			'name' => $a->identity['entity_name'],
 		);
 		
 	}
@@ -117,7 +117,8 @@ function nav(&$a) {
 
 		/* only show friend requests for normal pages. Other page types have automatic friendship. */
 
-		if($_SESSION['page_flags'] == PAGE_NORMAL || $_SESSION['page_flags'] == PAGE_PRVGROUP) {
+//		if($_SESSION['page_flags'] == PAGE_NORMAL || $_SESSION['page_flags'] == PAGE_PRVGROUP) {
+			if($a->identity['entity_pageflags'] == PAGE_NORMAL) {
 			$nav['introductions'] = array('notifications/intros',	t('Introductions'), "", t('Friend Requests'));
 			$nav['notifications'] = array('notifications',	t('Notifications'), "", t('Notifications'));
 			$nav['notifications']['all']=array('notifications/system', t('See all notifications'), "", "");
