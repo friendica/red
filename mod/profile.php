@@ -9,20 +9,15 @@ function profile_init(&$a) {
 
 	$blocked = (((get_config('system','block_public')) && (! local_user()) && (! remote_user())) ? true : false);
 
-	if($a->argc > 1)
-		$which = $a->argv[1];
+	if(argc() > 1)
+		$which = argv(1);
 	else {
-		$r = q("select nickname from user where blocked = 0 and account_expired = 0 and verified = 1 order by rand() limit 1");
-		if(count($r)) {
-			goaway($a->get_baseurl() . '/profile/' . $r[0]['nickname']);
-		}
-		else {
-			logger('profile error: mod_profile ' . $a->query_string, LOGGER_DEBUG);
-			notice( t('Requested profile is not available.') . EOL );
-			$a->error = 404;
-			return;
-		}
+		logger('profile error: mod_profile ' . $a->query_string, LOGGER_DEBUG);
+		notice( t('Requested profile is not available.') . EOL );
+		$a->error = 404;
+		return;
 	}
+
 
 	$profile = 0;
 	if((local_user()) && ($a->argc > 2) && ($a->argv[2] === 'view')) {

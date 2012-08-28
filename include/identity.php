@@ -31,6 +31,7 @@ function identity_check_service_class($account_id) {
 
 function create_identity($arr) {
 
+	$a = get_app();
 	$ret = array('success' => false);
 
 	if(! $arr['account_id']) {
@@ -97,6 +98,93 @@ function create_identity($arr) {
 	);
 	if(! $r)
 		logger('create_identity: Unable to store hub location');
+
+	$newuid = $ret['entity']['entity_id'];
+
+	$r = q("INSERT INTO `profile` ( `uid`, `profile_name`, `is-default`, `name`, `photo`, `thumb`)
+		VALUES ( %d, '%s', %d, '%s', '%s', '%s') ",
+		intval($ret['entity']['entity_id']),
+		t('default'),
+		1,
+		dbesc($ret['entity']['entity_name']),
+		dbesc($a->get_baseurl() . "/photo/profile/{$newuid}"),
+		dbesc($a->get_baseurl() . "/photo/avatar/{$newuid}")
+	);
+
+	$r = q("INSERT INTO `contact` ( `uid`, `created`, `self`, `name`, `nick`, `photo`, `thumb`, `micro`, `blocked`, `pending`, `url`, `name-date`, `uri-date`, `avatar-date`, `closeness` )
+			VALUES ( %d, '%s', 1, '%s', '%s', '%s', '%s', '%s', 0, 0, '%s', '%s', '%s', '%s', 0 ) ",
+			intval($ret['entity']['entity_id']),
+			datetime_convert(),
+			dbesc($ret['entity']['entity_name']),
+			dbesc($ret['entity']['entity_address']),
+			dbesc($a->get_baseurl() . "/photo/profile/{$newuid}"),
+			dbesc($a->get_baseurl() . "/photo/avatar/{$newuid}"),
+			dbesc($a->get_baseurl() . "/photo/micro/{$newuid}"),
+			dbesc($a->get_baseurl() . "/profile/{$ret['entity']['entity_address']}"),
+			dbesc(datetime_convert()),
+			dbesc(datetime_convert()),
+			dbesc(datetime_convert())
+	);
+
+		// Create a group with no members. This allows somebody to use it 
+		// right away as a default group for new contacts. 
+
+	require_once('include/group.php');
+	group_add($ret['entity']['entity_id'], t('Friends'));
+
+
+	// if we have no OpenID photo try to look up an avatar
+	// FIXME - we need the top level account email
+
+	$photo = avatar_img($email);
+	$photo = '';
+
+	// unless there is no avatar-plugin loaded
+	if(strlen($photo)) {
+		require_once('include/Photo.php');
+		$photo_failure = false;
+
+		$filename = basename($photo);
+		$img_str = fetch_url($photo,true);
+		// guess mimetype from headers or filename
+		$type = guess_image_type($photo,true);
+
+		
+		$img = new Photo($img_str, $type);
+		if($img->is_valid()) {
+
+			$img->scaleImageSquare(175);
+
+			$hash = photo_new_resource();
+
+			$r = $img->store($newuid, 0, $hash, $filename, t('Profile Photos'), 4 );
+
+			if($r === false)
+				$photo_failure = true;
+
+			$img->scaleImage(80);
+
+			$r = $img->store($newuid, 0, $hash, $filename, t('Profile Photos'), 5 );
+
+			if($r === false)
+				$photo_failure = true;
+
+			$img->scaleImage(48);
+
+			$r = $img->store($newuid, 0, $hash, $filename, t('Profile Photos'), 6 );
+
+			if($r === false)
+				$photo_failure = true;
+
+			if(! $photo_failure) {
+				q("UPDATE `photo` SET `profile` = 1 WHERE `resource-id` = '%s' ",
+					dbesc($hash)
+				);
+			}
+		}
+	}
+
+	call_hooks('register_account', $newuid);
  
 
 	$ret['success'] = true;

@@ -929,7 +929,8 @@ if(! function_exists('login')) {
 			));
 
 			$tpl = get_markup_template("login.tpl");
-			$_SESSION['return_url'] = $a->query_string;
+			if(strlen($a->query_string))
+					$_SESSION['return_url'] = $a->query_string;
 		}
 
 
@@ -1055,55 +1056,56 @@ if(! function_exists('get_max_import_size')) {
  */
 
 if(! function_exists('profile_load')) {
-	function profile_load(&$a, $nickname, $profile = 0) {
-		if(remote_user()) {
-			$r = q("SELECT `profile-id` FROM `contact` WHERE `id` = %d LIMIT 1",
-					intval($_SESSION['visitor_id']));
-			if(count($r))
-				$profile = $r[0]['profile-id'];
-		}
+function profile_load(&$a, $nickname, $profile = 0) {
+	if(remote_user()) {
+		$r = q("SELECT `profile-id` FROM `contact` WHERE `id` = %d LIMIT 1",
+				intval($_SESSION['visitor_id']));
+		if(count($r))
+			$profile = $r[0]['profile-id'];
+	}
 
-		$r = null;
+	$r = null;
                           
-		if($profile) {
-			$profile_int = intval($profile);
-			$r = q("SELECT `profile`.`uid` AS `profile_uid`, `profile`.* , `contact`.`avatar-date` AS picdate, `user`.* FROM `profile`
-					left join `contact` on `contact`.`uid` = `profile`.`uid` LEFT JOIN `user` ON `profile`.`uid` = `user`.`uid`
-					WHERE `user`.`nickname` = '%s' AND `profile`.`id` = %d and `contact`.`self` = 1 LIMIT 1",
-					dbesc($nickname),
-					intval($profile_int)
-			);
-		}
-		if((! $r) && (!  count($r))) {
-			$r = q("SELECT `profile`.`uid` AS `profile_uid`, `profile`.* , `contact`.`avatar-date` AS picdate, `user`.* FROM `profile`
-					left join `contact` on `contact`.`uid` = `profile`.`uid` LEFT JOIN `user` ON `profile`.`uid` = `user`.`uid`
-					WHERE `user`.`nickname` = '%s' AND `profile`.`is-default` = 1 and `contact`.`self` = 1 LIMIT 1",
-					dbesc($nickname)
-			);
-		}
+	if($profile) {
+		$profile_int = intval($profile);
+		$r = q("SELECT `profile`.`uid` AS `profile_uid`, `profile`.* , `contact`.`avatar-date` AS picdate, entity.* FROM `profile`
+				left join `contact` on `contact`.`uid` = `profile`.`uid` LEFT JOIN entity ON `profile`.`uid` = entity.entity_id
+				WHERE entity.entity_address = '%s' AND `profile`.`id` = %d and `contact`.`self` = 1 LIMIT 1",
+				dbesc($nickname),
+				intval($profile_int)
+		);
+	}
+	if((! $r) && (!  count($r))) {
+		$r = q("SELECT `profile`.`uid` AS `profile_uid`, `profile`.* , `contact`.`avatar-date` AS picdate, `entity`.* FROM `profile`
+			left join `contact` on `contact`.`uid` = `profile`.`uid` LEFT JOIN `entity` ON `profile`.`uid` = entity.entity_id
+			WHERE entity.entity_address = '%s' AND `profile`.`is-default` = 1 and `contact`.`self` = 1 LIMIT 1",
+			dbesc($nickname)
+		);
+	}
 
-		if(($r === false) || (! count($r))) {
-			logger('profile error: ' . $a->query_string, LOGGER_DEBUG);
-			notice( t('Requested profile is not available.') . EOL );
-			$a->error = 404;
-			return;
-		}
+	if(($r === false) || (! count($r))) {
+		logger('profile error: ' . $a->query_string, LOGGER_DEBUG);
+		notice( t('Requested profile is not available.') . EOL );
+		$a->error = 404;
+		return;
+	}
 	
-		// fetch user tags if this isn't the default profile
+	// fetch user tags if this isn't the default profile
 
-		if(! $r[0]['is-default']) {
-			$x = q("select `pub_keywords` from `profile` where uid = %d and `is-default` = 1 limit 1",
-					intval($profile_uid)
-			);
-			if($x && count($x))
-				$r[0]['pub_keywords'] = $x[0]['pub_keywords'];
-		}
+	if(! $r[0]['is-default']) {
+		$x = q("select `pub_keywords` from `profile` where uid = %d and `is-default` = 1 limit 1",
+				intval($profile_uid)
+		);
+		if($x && count($x))
+			$r[0]['pub_keywords'] = $x[0]['pub_keywords'];
+	}
 
-		$a->profile = $r[0];
+	$a->profile = $r[0];
 
 
-		$a->page['title'] = $a->profile['name'] . " @ " . $a->config['sitename'];
-		$_SESSION['theme'] = $a->profile['theme'];
+	$a->page['title'] = $a->profile['entity_name'] . " @ " . $a->config['sitename'];
+// FIXME
+	$_SESSION['theme'] = $a->profile['theme'];
 
 		/**
 		 * load/reload current theme info
