@@ -47,7 +47,7 @@ function ping_init(&$a) {
 		killme();
 	}
 
-	if($a->argc > 1 && $a->argv[1] === 'notify') {
+	if($argc() > 1 && $argv(1) === 'notify') {
 		$t = q("select count(*) as total from notify where uid = %d and seen = 0",
 			intval(local_user())
 		);

@@ -39,17 +39,19 @@
 			</li>
 		{{ endif }}
 		
-		{{ if $nav.notifications }}
-			<li  id="nav-notifications-linkmenu" class="nav-menu-icon"><a href="$nav.notifications.0" rel="#nav-notifications-menu" title="$nav.notifications.1"><span class="icon s22 notify">$nav.notifications.1</span></a>
-				<span id="notify-update" class="nav-notify"></span>
-				<ul id="nav-notifications-menu" class="menu-popup">
-					<!-- TODO: better icons! -->
-					<li id="nav-notifications-mark-all" class="toolbar"><a href="#" onclick="notifyMarkAll(); return false;" title="$nav.notifications.mark.1"><span class="icon s10 edit"></span></a></a><a href="$nav.notifications.all.0" title="$nav.notifications.all.1"><span class="icon s10 plugin"></span></a></li>
-					<li class="empty">$emptynotifications</li>
-				</ul>
-			</li>		
-		{{ endif }}		
-		
+
+	{{ if $nav.notifications }}
+
+		<li id="nav-notifications-linkmenu" class="nav-menu fakelink" onclick="notify_popup(); return false;" title="$nav.notifications.1"><span class="icon s22 notify">$nav.notifications.1</span></a>
+			<span id="notify-update" class="nav-notify"></span>
+			<ul id="nav-notifications-menu" class="menu-popup">
+				<li id="nav-notifications-see-all"><a href="$nav.notifications.all.0">$nav.notifications.all.1</a></li>
+				<li id="nav-notifications-mark-all"><a href="#" onclick="notifyMarkAll(); return false;">$nav.notifications.mark.1</a></li>
+				<li class="empty">$emptynotifications</li>
+			</ul>
+		</li>
+	{{ endif }}		
+
 		<li id="nav-site-linkmenu" class="nav-menu-icon"><a href="#" rel="#nav-site-menu"><span class="icon s22 gear">Site</span></a>
 			<ul id="nav-site-menu" class="menu-popup">
 				{{ if $nav.manage }}<li><a class="$nav.manage.2" href="$nav.manage.0" title="$nav.manage.3">$nav.manage.1</a></li>{{ endif }}				
