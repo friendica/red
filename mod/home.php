@@ -6,11 +6,8 @@ function home_init(&$a) {
 	$ret = array();
 	call_hooks('home_init',$ret);
 
-	if(local_user() && ($a->user['nickname']))
-		goaway( $a->get_baseurl() . "/profile/" . $a->user['nickname'] );
-
-	if(strlen(get_config('system','singleuser')))
-		goaway( $a->get_baseurl() . "/profile/" . get_config('system','singleuser'));
+	if(local_user() && ($a->identity['entity_address']))
+		goaway( $a->get_baseurl() . '/profile/' . $a->identity['entity_address']);
 
 }}
 
@@ -27,7 +24,7 @@ function home_content(&$a) {
 	if(file_exists('home.html'))
  		$o .= file_get_contents('home.html');
 
-	$o .= login(($a->config['register_policy'] == REGISTER_CLOSED) ? 0 : 1);
+	$o .= login(($a->config['system']['register_policy'] == REGISTER_CLOSED) ? 0 : 1);
 	
 	call_hooks("home_content",$o);
 	

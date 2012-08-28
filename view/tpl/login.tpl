@@ -8,7 +8,7 @@
 	</div>
 	
 	<div id="login-extra-links">
-		{{ if $register }}<a href="register" title="$register.title" id="register-link">$register.desc</a>{{ endif }}
+		{{ if $register }}<a href="zregister" title="$register.title" id="register-link">$register.desc</a>{{ endif }}
         <a href="lostpass" title="$lostpass" id="lost-password-link" >$lostlink</a>
 	</div>
 	
