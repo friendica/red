@@ -60,18 +60,8 @@ input {
 
 img { border :0px; }
 
-#id_openid_url, .openid input {
-   background: url(../img/login-bg.gif) no-repeat;
-   background-position: 0 50%;
-   padding-left: 18px;
-}
-.openid:hover {
 
-}
 
-#id_openid_url {
-	width: 384px;
-}
 
 code {
 	font-family: Courier, monospace;
@@ -409,15 +399,31 @@ div.wall-item-content-wrapper.shiny {
 	margin-top: 10px;
 }
 
+#main-login {
+	margin-left: 100px;
+	margin-top: 50px;
+}
 
-#login_standard {
-	width: 210px;
+#main-login #id_username, #main-login #id_password {
+	width: 200px;
+	padding: 10px;
 	float: left;
 }
-#login_openid {
-	width: 210px;
-	margin-left: 250px;
+
+#main-login .field_end {
+	clear: both;
 }
+
+#main-login .field.input label, #main-login .field.password label {
+	float: left;
+	width: 100px;
+}
+
+#login_standard {
+	width: 350px;
+	float: left;
+}
+
 
 #login_standard input,
 #login_openid input {
@@ -430,17 +436,19 @@ div.wall-item-content-wrapper.shiny {
 
 #register-link, #lost-password-link {
 	float: left;
-	font-size: 80%;
-	margin-right: 15px;
+	font-size: 90%;
+	margin-left: 100px;
 }
 
-#login-name-end, #login-password-end, #login-extra-end, #login-submit-end {
-	height: 50px;
+#login-standard-end {
+	clear: both;
 }
 
 #login-submit-button {
-/*	margin-top: 10px; */
-	margin-left: 200px;
+
+	margin-left: 100px;
+	margin-top: 10px;
+/*	margin-left: 200px; */
 }
 
 

@@ -1681,3 +1681,10 @@ function check_webbie($arr) {
 	return '';
 }
 	
+
+function ids_to_querystr($arr,$idx = 'id') {
+	$t = array();
+	foreach($arr as $x)
+		$t[] = $x[$idx];
+	return(implode(',', $t));
+}

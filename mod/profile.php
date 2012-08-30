@@ -20,42 +20,14 @@ function profile_init(&$a) {
 
 
 	$profile = 0;
-	if((local_user()) && ($a->argc > 2) && ($a->argv[2] === 'view')) {
-		$which = $a->user['nickname'];
-		$profile = $a->argv[1];		
+	if((local_user()) && (argc() > 2) && (argv(2) === 'view')) {
+		$which = $a->identity['entity_address'];
+		$profile = argv(1);		
 	}
 
 	profile_load($a,$which,$profile);
 
-	$userblock = (($a->profile['hidewall'] && (! local_user()) && (! remote_user())) ? true : false);
-
-	if((x($a->profile,'page-flags')) && ($a->profile['page-flags'] == PAGE_COMMUNITY)) {
-		$a->page['htmlhead'] .= '<meta name="friendica.community" content="true" />';
-	}
-	if(x($a->profile,'openidserver'))				
-		$a->page['htmlhead'] .= '<link rel="openid.server" href="' . $a->profile['openidserver'] . '" />' . "\r\n";
-	if(x($a->profile,'openid')) {
-		$delegate = ((strstr($a->profile['openid'],'://')) ? $a->profile['openid'] : 'http://' . $a->profile['openid']);
-		$a->page['htmlhead'] .= '<link rel="openid.delegate" href="' . $delegate . '" />' . "\r\n";
-	}
-	// site block
-	if((! $blocked) && (! $userblock)) {
-		$keywords = ((x($a->profile,'pub_keywords')) ? $a->profile['pub_keywords'] : '');
-		$keywords = str_replace(array('#',',',' ',',,'),array('',' ',',',','),$keywords);
-		if(strlen($keywords))
-			$a->page['htmlhead'] .= '<meta name="keywords" content="' . $keywords . '" />' . "\r\n" ;
-	}
-
-	$a->page['htmlhead'] .= '<meta name="dfrn-global-visibility" content="' . (($a->profile['net-publish']) ? 'true' : 'false') . '" />' . "\r\n" ;
-	$a->page['htmlhead'] .= '<link rel="alternate" type="application/atom+xml" href="' . $a->get_baseurl() . '/dfrn_poll/' . $which .'" />' . "\r\n" ;
-	$uri = urlencode('acct:' . $a->profile['nickname'] . '@' . $a->get_hostname() . (($a->path) ? '/' . $a->path : ''));
-	$a->page['htmlhead'] .= '<link rel="lrdd" type="application/xrd+xml" href="' . $a->get_baseurl() . '/xrd/?uri=' . $uri . '" />' . "\r\n";
-	header('Link: <' . $a->get_baseurl() . '/xrd/?uri=' . $uri . '>; rel="lrdd"; type="application/xrd+xml"', false);
-  	
-	$dfrn_pages = array('request', 'confirm', 'notify', 'poll');
-	foreach($dfrn_pages as $dfrn)
-		$a->page['htmlhead'] .= "<link rel=\"dfrn-{$dfrn}\" href=\"".$a->get_baseurl()."/dfrn_{$dfrn}/{$which}\" />\r\n";
-	$a->page['htmlhead'] .= "<link rel=\"dfrn-poco\" href=\"".$a->get_baseurl()."/poco/{$which}\" />\r\n";
+	$a->page['htmlhead'] .= '<link rel="alternate" type="application/atom+xml" href="' . $a->get_baseurl() . '/feed/' . $which .'" />' . "\r\n" ;
 
 }
 
@@ -64,16 +36,16 @@ function profile_content(&$a, $update = 0) {
 
 	$category = $datequery = $datequery2 = '';
 
-	if($a->argc > 2) {
-		for($x = 2; $x < $a->argc; $x ++) {
-			if(is_a_date_arg($a->argv[$x])) {
+	if(argc() > 2) {
+		for($x = 2; $x < argc(); $x ++) {
+			if(is_a_date_arg(argv($x))) {
 				if($datequery)
-					$datequery2 = escape_tags($a->argv[$x]);
+					$datequery2 = escape_tags(argv($x));
 				else
-					$datequery = escape_tags($a->argv[$x]);
+					$datequery = escape_tags(argv($x));
 			}
 			else
-				$category = $a->argv[$x];
+				$category = argv($x);
 		}
 	}
 
@@ -81,7 +53,7 @@ function profile_content(&$a, $update = 0) {
 		$category = ((x($_GET,'category')) ? $_GET['category'] : '');
 	}
 
-	if(get_config('system','block_public') && (! local_user()) && (! remote_user())) {
+	if(get_config('system','block_public') && (! get_account_id()) && (! remote_user())) {
 		return login();
 	}
 
@@ -157,9 +129,6 @@ function profile_content(&$a, $update = 0) {
 		$o .= common_friends_visitor_widget($a->profile['profile_uid']);
 
 
-		if(x($_SESSION,'new_member') && $_SESSION['new_member'] && $is_owner)
-			$o .= '<a href="newmember" id="newmember-tips" style="font-size: 1.2em;"><b>' . t('Tips for New Members') . '</b></a>' . EOL;
-
 		$commpage = (($a->profile['page-flags'] == PAGE_COMMUNITY) ? true : false);
 		$commvisitor = (($commpage && $remote_contact == true) ? true : false);
 
@@ -223,20 +192,7 @@ function profile_content(&$a, $update = 0) {
 			$sql_extra2 .= protect_sprintf(sprintf(" AND item.created >= '%s' ", dbesc(datetime_convert(date_default_timezone_get(),'',$datequery2))));
 		}
 
-                if(! get_pconfig($a->profile['profile_uid'],'system','alt_pager')) {
-		        $r = q("SELECT COUNT(*) AS `total`
-			        FROM `item` LEFT JOIN `contact` ON `contact`.`id` = `item`.`contact-id`
-			        WHERE `item`.`uid` = %d AND `item`.`visible` = 1 AND `item`.`deleted` = 0
-			        and `item`.`moderated` = 0 AND `contact`.`blocked` = 0 AND `contact`.`pending` = 0 
-			        AND `item`.`id` = `item`.`parent` AND `item`.`wall` = 1
-			        $sql_extra $sql_extra2 ",
-			        intval($a->profile['profile_uid'])
-		        );
 
-		        if(count($r)) {
-			        $a->set_pager_total($r[0]['total']);
-		}
-		}
 		$a->set_pager_itemspage(40);
 
 		$pager_sql = sprintf(" LIMIT %d, %d ",intval($a->pager['start']), intval($a->pager['itemspage']));
@@ -254,13 +210,9 @@ function profile_content(&$a, $update = 0) {
 
 	}
 
-	$parents_arr = array();
-	$parents_str = '';
-
 	if(count($r)) {
-		foreach($r as $rr)
-			$parents_arr[] = $rr['item_id'];
-		$parents_str = implode(', ', $parents_arr);
+
+		$parents_str = ids_to_querystr($r,'item_id');
  
 		$items = q("SELECT `item`.*, `item`.`id` AS `item_id`, 
 			`contact`.`name`, `contact`.`photo`, `contact`.`url`, `contact`.`alias`, `contact`.`network`, `contact`.`rel`, 
@@ -305,14 +257,8 @@ function profile_content(&$a, $update = 0) {
 
 	$o .= conversation($a,$items,'profile',$update);
 
-	if(! $update) {
-	  if(! get_pconfig($a->profile['profile_uid'],'system','alt_pager')) {
-		        $o .= paginate($a);
-	        }
-	        else {
-	                $o .= alt_pager($a,count($items));
-	        }
-	}
+	if(! $update)
+		$o .= alt_pager($a,count($items));
 
 	return $o;
 }

@@ -1,5 +1,5 @@
 
-<form action="$dest_url" method="post" >
+<form action="$dest_url" id="$form_id" method="post" >
 	<input type="hidden" name="auth-params" value="login" />
 
 	<div id="login_standard">
@@ -8,10 +8,12 @@
 	</div>
 	
 	<div id="login-extra-links">
-		{{ if $register }}<a href="zregister" title="$register.title" id="register-link">$register.desc</a>{{ endif }}
+		{{ if $register }}<a href="$register.link" title="$register.title" id="register-link">$register.desc</a>{{ endif }}
         <a href="lostpass" title="$lostpass" id="lost-password-link" >$lostlink</a>
 	</div>
 	
+	<div id="login-standard-end"></div>
+
 	<div id="login-submit-wrapper" >
 		<input type="submit" name="submit" id="login-submit-button" value="$login" />
 	</div>

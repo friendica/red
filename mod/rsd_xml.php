@@ -7,8 +7,8 @@ function rsd_xml_content(&$a) {
 	echo '<?xml version="1.0" encoding="UTF-8"?>
  <rsd version="1.0" xmlns="http://archipelago.phrasewise.com/rsd">
    <service>
-     <engineName>Friendika</engineName>
-     <engineLink>http://friendika.com/</engineLink>
+     <engineName>Friendica</engineName>
+     <engineLink>http://friendica.com/</engineLink>
      <apis>
        <api name="Twitter" preferred="true" apiLink="'.$a->get_baseurl().'/api/" blogID="">
          <settings>

@@ -661,14 +661,9 @@ function network_content(&$a, $update = 0, $load = false) {
 
 		// Then fetch all the children of the parents that are on this page
 
-		$parents_arr = array();
-		$parents_str = '';
-
 		if(count($r)) {
-			foreach($r as $rr)
-				if(! in_array($rr['item_id'],$parents_arr))
-					$parents_arr[] = $rr['item_id'];
-			$parents_str = implode(', ', $parents_arr);
+
+			$parents_str = ids_to_querystr($r,'item_id');
 
 			$items = q("SELECT `item`.*, `item`.`id` AS `item_id`,
 				`contact`.`name`, `contact`.`photo`, `contact`.`url`, `contact`.`alias`, `contact`.`rel`, `contact`.`writable`,
@@ -719,9 +714,8 @@ function network_content(&$a, $update = 0, $load = false) {
 
 	$second = dba_timer();
 
-	if(! $update) {
+	if(! $update) 
         $o .= alt_pager($a,count($items));
-	}
 
 //	logger('parent dba_timer: ' . sprintf('%01.4f',$first - $start));
 //	logger('child  dba_timer: ' . sprintf('%01.4f',$second - $first));

@@ -907,14 +907,19 @@ function get_guid($size=16) {
 // returns the complete html for inserting into the page
 
 if(! function_exists('login')) {
-	function login($register = false, $hiddens=false) {
+	function login($register = false, $form_id = 'main-login', $hiddens=false) {
 		$a = get_app();
 		$o = "";
 		$reg = false;
+		$reglink = get_config('system','register_link');
+		if(! strlen($reglink))
+			$reglink = 'zregister';
+
 		if ($register) {
 			$reg = array(
 				'title' => t('Create a New Account'),
-				'desc' => t('Register')
+				'desc' => t('Register'),
+				'link' => $reglink
 			);
 		}
 
@@ -930,7 +935,7 @@ if(! function_exists('login')) {
 
 			$tpl = get_markup_template("login.tpl");
 			if(strlen($a->query_string))
-					$_SESSION['return_url'] = $a->query_string;
+					$_SESSION['login_return_url'] = $a->query_string;
 		}
 
 
@@ -939,7 +944,7 @@ if(! function_exists('login')) {
 			'$dest_url'     => $dest_url,
 			'$logout'       => t('Logout'),
 			'$login'        => t('Login'),
-	
+			'$form_id'      => $form_id,
 			'$lname'	 	=> array('username', t('Email') , '', ''),
 			'$lpassword' 	=> array('password', t('Password'), '', ''),
 	
@@ -1594,13 +1599,14 @@ if(! function_exists('feed_birthday')) {
 }
 
 if(! function_exists('is_site_admin')) {
-	function is_site_admin() {
-		$a = get_app();
-		if(local_user() && x($a->user,'email') && x($a->config,'admin_email') && ($a->user['email'] === $a->config['admin_email']))
-			return true;
-		return false;
-	}
-}
+function is_site_admin() {
+	$a = get_app();
+	if((intval($_SESSION['authenticated'])) 
+		&& (is_array($a->account)) 
+		&& ($a->account['account_roles'] & ACCOUNT_ROLE_ADMIN))
+		return true;
+	return false;
+}}
 
 
 if(! function_exists('load_contact_links')) {
@@ -1672,13 +1678,6 @@ if(! function_exists('profile_tabs')){
 				'sel' 	=>((!isset($tab)&&$a->argv[0]=='events')?'active':''),
 				'title' => t('Events and Calendar'),
 				'id' => 'events-tab',
-			);
-			$tabs[] = array(
-				'label' => t('Personal Notes'),
-				'url'	=> $a->get_baseurl() . '/notes',
-				'sel' 	=>((!isset($tab)&&$a->argv[0]=='notes')?'active':''),
-				'title' => t('Only You Can See This'),
-				'id' => 'notes-tab',
 			);
 		}
 

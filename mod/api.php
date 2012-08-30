@@ -87,7 +87,7 @@ function api_content(&$a) {
 		if(! local_user()) {
 			//TODO: we need login form to redirect to this page
 			notice( t('Please login to continue.') . EOL );
-			return login(false,$request->get_parameters());
+			return login(false,'api-login',$request->get_parameters());
 		}
 		//FKOAuth1::loginUser(4);
 		

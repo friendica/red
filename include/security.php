@@ -136,11 +136,9 @@ function authenticate_success($user_record, $login_initial = false, $interactive
 		return;
 	}
 
-	
-unset($_SESSION['return_url']);
-	if(($a->module !== 'home') && isset($_SESSION['return_url']) && strlen($_SESSION['return_url'])) {
-		$return_url = $_SESSION['return_url'];
-		unset($_SESSION['return_url']);
+	if(($a->module !== 'home') && x($_SESSION,'login_return_url') && strlen($_SESSION['login_return_url'])) {
+		$return_url = $_SESSION['login_return_url'];
+		unset($_SESSION['login_return_url']);
 		goaway($a->get_baseurl() . '/' . $return_url);
 	}
 
