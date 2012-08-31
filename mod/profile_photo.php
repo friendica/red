@@ -28,11 +28,11 @@ function profile_photo_post(&$a) {
 		$is_default_profile = 1;
 
 		if($_REQUEST['profile']) {
-			$r = q("select id, `is-default` from profile where id = %d and uid = %d limit 1",
+			$r = q("select id, `is_default` from profile where id = %d and uid = %d limit 1",
 				intval($_REQUEST['profile']),
 				intval(local_user())
 			);
-			if(count($r) && (! intval($r[0]['is-default'])))
+			if(count($r) && (! intval($r[0]['is_default'])))
 				$is_default_profile = 0;
 		} 
 
@@ -225,7 +225,7 @@ function profile_photo_content(&$a) {
 		// go ahead as we have jus uploaded a new photo to crop
 	}
 
-	$profiles = q("select `id`,`profile_name` as `name`,`is-default` as `default` from profile where uid = %d",
+	$profiles = q("select `id`,`profile_name` as `name`,`is_default` as `default` from profile where uid = %d",
 		intval(local_user())
 	);
 

@@ -33,11 +33,11 @@ function poco_init(&$a) {
  		
 
 	if(! $system_mode) {
-		$r = q("SELECT `user`.*,`profile`.`hide-friends` from user left join profile on `user`.`uid` = `profile`.`uid`
-			where `user`.`nickname` = '%s' and `profile`.`is-default` = 1 limit 1",
+		$r = q("SELECT `user`.*,`profile`.`hide_friends` from user left join profile on `user`.`uid` = `profile`.`uid`
+			where `user`.`nickname` = '%s' and `profile`.`is_default` = 1 limit 1",
 			dbesc($user)
 		);
-		if(! count($r) || $r[0]['hidewall'] || $r[0]['hide-friends'])
+		if(! count($r) || $r[0]['hidewall'] || $r[0]['hide_friends'])
 			http_status_exit(404);
 
 		$user = $r[0];

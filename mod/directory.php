@@ -61,19 +61,19 @@ function directory_content(&$a) {
 
 	if($search)
 		$search = dbesc($search);
-	$sql_extra = ((strlen($search)) ? " AND MATCH (`profile`.`name`, `user`.`nickname`, `pdesc`, `locality`,`region`,`country-name`,`gender`,`marital`,`sexual`,`about`,`romance`,`work`,`education`,`pub_keywords`,`prv_keywords` ) AGAINST ('$search' IN BOOLEAN MODE) " : "");
+	$sql_extra = ((strlen($search)) ? " AND MATCH (`profile`.`name`, `user`.`nickname`, `pdesc`, `locality`,`region`,`country_name`,`gender`,`marital`,`sexual`,`about`,`romance`,`work`,`education`,`pub_keywords`,`prv_keywords` ) AGAINST ('$search' IN BOOLEAN MODE) " : "");
 
 	$publish = ((get_config('system','publish_all')) ? '' : " AND `publish` = 1 " );
 
 
-	$r = q("SELECT COUNT(*) AS `total` FROM `profile` LEFT JOIN `user` ON `user`.`uid` = `profile`.`uid` WHERE `is-default` = 1 $publish AND `user`.`blocked` = 0 $sql_extra ");
+	$r = q("SELECT COUNT(*) AS `total` FROM `profile` LEFT JOIN `user` ON `user`.`uid` = `profile`.`uid` WHERE `is_default` = 1 $publish AND `user`.`blocked` = 0 $sql_extra ");
 	if(count($r))
 		$a->set_pager_total($r[0]['total']);
 
 	$order = " ORDER BY `name` ASC "; 
 
 
-	$r = q("SELECT `profile`.*, `profile`.`uid` AS `profile_uid`, `user`.`nickname`, `user`.`timezone` , `user`.`page-flags` FROM `profile` LEFT JOIN `user` ON `user`.`uid` = `profile`.`uid` WHERE `is-default` = 1 $publish AND `user`.`blocked` = 0 $sql_extra $order LIMIT %d , %d ",
+	$r = q("SELECT `profile`.*, `profile`.`uid` AS `profile_uid`, `user`.`nickname`, `user`.`timezone` , `user`.`page-flags` FROM `profile` LEFT JOIN `user` ON `user`.`uid` = `profile`.`uid` WHERE `is_default` = 1 $publish AND `user`.`blocked` = 0 $sql_extra $order LIMIT %d , %d ",
 		intval($a->pager['start']),
 		intval($a->pager['itemspage'])
 	);
@@ -99,10 +99,10 @@ function directory_content(&$a) {
 					$details .= ', ';
 				$details .= $rr['region'];
 			}
-			if(strlen($rr['country-name'])) {
+			if(strlen($rr['country_name'])) {
 				if(strlen($details))
 					$details .= ', ';
-				$details .= $rr['country-name'];
+				$details .= $rr['country_name'];
 			}
 			if(strlen($rr['dob'])) {
 				if(($years = age($rr['dob'],$rr['timezone'],'')) != 0)
@@ -127,8 +127,8 @@ function directory_content(&$a) {
 			if((x($profile,'address') == 1)
 				|| (x($profile,'locality') == 1)
 				|| (x($profile,'region') == 1)
-				|| (x($profile,'postal-code') == 1)
-				|| (x($profile,'country-name') == 1))
+				|| (x($profile,'postal_code') == 1)
+				|| (x($profile,'country_name') == 1))
 			$location = t('Location:');
 
 			$gender = ((x($profile,'gender') == 1) ? t('Gender:') : False);

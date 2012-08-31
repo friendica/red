@@ -251,7 +251,7 @@ function settings_post(&$a) {
 	$unkmail          = (((x($_POST,'unkmail')) && (intval($_POST['unkmail']) == 1)) ? 1: 0);
 	$cntunkmail       = ((x($_POST,'cntunkmail')) ? intval($_POST['cntunkmail']) : 0);
 	$suggestme        = ((x($_POST,'suggestme')) ? intval($_POST['suggestme'])  : 0);  
-	$hide_friends     = (($_POST['hide-friends'] == 1) ? 1: 0);
+	$hide_friends     = (($_POST['hide_friends'] == 1) ? 1: 0);
 	$hidewall         = (($_POST['hidewall'] == 1) ? 1: 0);
 	$post_newfriend   = (($_POST['post_newfriend'] == 1) ? 1: 0);
 	$post_joingroup   = (($_POST['post_joingroup'] == 1) ? 1: 0);
@@ -387,11 +387,9 @@ function settings_post(&$a) {
 
 	$r = q("UPDATE `profile` 
 		SET `publish` = %d, 
-		`net-publish` = %d,
-		`hide-friends` = %d
-		WHERE `is-default` = 1 AND `uid` = %d LIMIT 1",
+		`hide_friends` = %d
+		WHERE `is_default` = 1 AND `uid` = %d LIMIT 1",
 		intval($publish),
-		intval($net_publish),
 		intval($hide_friends),
 		intval(local_user())
 	);
@@ -636,7 +634,7 @@ function settings_content(&$a) {
 
 	require_once('include/acl_selectors.php');
 
-	$p = q("SELECT * FROM `profile` WHERE `is-default` = 1 AND `uid` = %d LIMIT 1",
+	$p = q("SELECT * FROM `profile` WHERE `is_default` = 1 AND `uid` = %d LIMIT 1",
 		intval(local_user())
 	);
 	if(count($p))
@@ -727,17 +725,11 @@ function settings_content(&$a) {
 		));
 	}
 
-	if(strlen(get_config('system','directory_submit_url'))) {
-		$profile_in_net_dir = replace_macros($opt_tpl,array(
-			'$field' 	=> array('profile_in_netdirectory', t('Publish your default profile in the global social directory?'), $profile['net-publish'], '', array(t('No'),t('Yes'))),
-		));
-	}
-	else
-		$profile_in_net_dir = '';
+	$profile_in_net_dir = '';
 
 
 	$hide_friends = replace_macros($opt_tpl,array(
-			'$field' 	=> array('hide-friends', t('Hide your contact/friend list from viewers of your default profile?'), $profile['hide-friends'], '', array(t('No'),t('Yes'))),
+			'$field' 	=> array('hide_friends', t('Hide your contact/friend list from viewers of your default profile?'), $profile['hide_friends'], '', array(t('No'),t('Yes'))),
 	));
 
 	$hide_wall = replace_macros($opt_tpl,array(
@@ -768,8 +760,7 @@ function settings_content(&$a) {
 
 	));
 
-	$invisible = (((! $profile['publish']) && (! $profile['net-publish']))
-		? true : false);
+	$invisible = ((! $profile['publish']) ? true : false);
 
 	if($invisible)
 		info( t('Profile is <strong>not published</strong>.') . EOL );

@@ -592,7 +592,7 @@ function update_1073() {
 
 function update_1074() {
 	q("ALTER TABLE `user` ADD `hidewall` TINYINT( 1) NOT NULL DEFAULT '0' AFTER `blockwall` ");
-	$r = q("SELECT `uid` FROM `profile` WHERE `is-default` = 1 AND `hidewall` = 1");
+	$r = q("SELECT `uid` FROM `profile` WHERE `is_default` = 1 AND `hidewall` = 1");
 	if(count($r)) {
 		foreach($r as $rr)
 			q("UPDATE `user` SET `hidewall` = 1 WHERE `uid` = %d LIMIT 1",

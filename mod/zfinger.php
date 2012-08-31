@@ -33,6 +33,17 @@ function zfinger_init(&$a) {
 
 	$e = $r[0];
 
+	$id = $e['entity_id'];
+	$r = q("select contact.*, profile.* 
+		from contact left join profile on contact.uid = profile.uid
+		where contact.uid = %d && contact.self = 1 and profile.is_default = 1 limit 1",
+		intval($id)
+	);
+	if($r && count($r)) {
+		$profile = $r[0];
+	}
+
+
 	$ret['success'] = true;
 
 	// Communication details
@@ -42,6 +53,8 @@ function zfinger_init(&$a) {
 	$ret['key']  = $e['entity_pubkey'];
 	$ret['name'] = $e['entity_name'];
 	$ret['address'] = $e['entity_address'];
+
+	$ret['profile'] = $profile;
 
 	// array of (verified) hubs this entity uses
 
@@ -60,9 +73,6 @@ function zfinger_init(&$a) {
 			}
 		}
 	}
-
-
-	// more stuff, e.g. the basic public profile
 
 	json_return_and_die($ret);
 

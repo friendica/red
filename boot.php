@@ -1083,7 +1083,7 @@ function profile_load(&$a, $nickname, $profile = 0) {
 	if((! $r) && (!  count($r))) {
 		$r = q("SELECT `profile`.`uid` AS `profile_uid`, `profile`.* , `contact`.`avatar-date` AS picdate, `entity`.* FROM `profile`
 			left join `contact` on `contact`.`uid` = `profile`.`uid` LEFT JOIN `entity` ON `profile`.`uid` = entity.entity_id
-			WHERE entity.entity_address = '%s' AND `profile`.`is-default` = 1 and `contact`.`self` = 1 LIMIT 1",
+			WHERE entity.entity_address = '%s' AND `profile`.`is_default` = 1 and `contact`.`self` = 1 LIMIT 1",
 			dbesc($nickname)
 		);
 	}
@@ -1097,8 +1097,8 @@ function profile_load(&$a, $nickname, $profile = 0) {
 	
 	// fetch user tags if this isn't the default profile
 
-	if(! $r[0]['is-default']) {
-		$x = q("select `pub_keywords` from `profile` where uid = %d and `is-default` = 1 limit 1",
+	if(! $r[0]['is_default']) {
+		$x = q("select `pub_keywords` from `profile` where uid = %d and `is_default` = 1 limit 1",
 				intval($profile_uid)
 		);
 		if($x && count($x))
@@ -1213,7 +1213,7 @@ if(! function_exists('profile_sidebar')) {
 						'id' => $rr['id'],
 						'alt' => t('Profile Image'),
 						'profile_name' => $rr['profile_name'],
-						'isdefault' => $rr['is-default'],
+						'isdefault' => $rr['is_default'],
 						'visibile_to_everybody' =>  t('visible to everybody'),
 						'edit_visibility' => t('Edit visibility'),
 
@@ -1232,8 +1232,8 @@ if(! function_exists('profile_sidebar')) {
 		if((x($profile,'address') == 1)
 				|| (x($profile,'locality') == 1)
 				|| (x($profile,'region') == 1)
-				|| (x($profile,'postal-code') == 1)
-				|| (x($profile,'country-name') == 1))
+				|| (x($profile,'postal_code') == 1)
+				|| (x($profile,'country_name') == 1))
 			$location = t('Location:');
 
 		$gender = ((x($profile,'gender') == 1) ? t('Gender:') : False);
@@ -1253,7 +1253,7 @@ if(! function_exists('profile_sidebar')) {
 
 		$diaspora = array(
 			'podloc' => $a->get_baseurl(),
-			'searchable' => (($profile['publish'] && $profile['net-publish']) ? 'true' : 'false' ),
+			'searchable' => (($profile['publish']) ? 'true' : 'false' ),
 			'nickname' => $profile['nickname'],
 			'fullname' => $profile['name'],
 			'firstname' => $firstname,
@@ -1577,7 +1577,7 @@ if(! function_exists('feed_birthday')) {
 		if(! strlen($tz))
 			$tz = 'UTC';
 
-		$p = q("SELECT `dob` FROM `profile` WHERE `is-default` = 1 AND `uid` = %d LIMIT 1",
+		$p = q("SELECT `dob` FROM `profile` WHERE `is_default` = 1 AND `uid` = %d LIMIT 1",
 				intval($uid)
 		);
 

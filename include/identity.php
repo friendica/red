@@ -101,7 +101,7 @@ function create_identity($arr) {
 
 	$newuid = $ret['entity']['entity_id'];
 
-	$r = q("INSERT INTO `profile` ( `uid`, `profile_name`, `is-default`, `name`, `photo`, `thumb`)
+	$r = q("INSERT INTO `profile` ( `uid`, `profile_name`, `is_default`, `name`, `photo`, `thumb`)
 		VALUES ( %d, '%s', %d, '%s', '%s', '%s') ",
 		intval($ret['entity']['entity_id']),
 		t('default'),

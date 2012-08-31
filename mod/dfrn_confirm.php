@@ -424,11 +424,11 @@ function dfrn_confirm_post(&$a,$handsfree = null) {
 
 			// Send a new friend post if we are allowed to...
 
-			$r = q("SELECT `hide-friends` FROM `profile` WHERE `uid` = %d AND `is-default` = 1 LIMIT 1",
+			$r = q("SELECT `hide_friends` FROM `profile` WHERE `uid` = %d AND `is_default` = 1 LIMIT 1",
 				intval($uid)
 			);
 
-			if((count($r)) && ($r[0]['hide-friends'] == 0) && ($activity) && (! $hidden)) {
+			if((count($r)) && ($r[0]['hide_friends'] == 0) && ($activity) && (! $hidden)) {
 
 				require_once('include/items.php');
 
@@ -745,11 +745,11 @@ function dfrn_confirm_post(&$a,$handsfree = null) {
 		// Send a new friend post if we are allowed to...
 
 		if($page && intval(get_pconfig($local_uid,'system','post_joingroup'))) {
-			$r = q("SELECT `hide-friends` FROM `profile` WHERE `uid` = %d AND `is-default` = 1 LIMIT 1",
+			$r = q("SELECT `hide_friends` FROM `profile` WHERE `uid` = %d AND `is_default` = 1 LIMIT 1",
 				intval($local_uid)
 			);
 
-			if((count($r)) && ($r[0]['hide-friends'] == 0)) {
+			if((count($r)) && ($r[0]['hide_friends'] == 0)) {
 
 				require_once('include/items.php');
 

@@ -261,7 +261,7 @@
 			$usr = q("select * from user where uid = %d limit 1",
 				intval(local_user())
 			);
-			$profile = q("select * from profile where uid = %d and `is-default` = 1 limit 1",
+			$profile = q("select * from profile where uid = %d and `is_default` = 1 limit 1",
 				intval(local_user())
 			);
 

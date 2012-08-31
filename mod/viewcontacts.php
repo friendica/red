@@ -18,7 +18,7 @@ function viewcontacts_content(&$a) {
 		return;
 	}
 
-	if(((! count($a->profile)) || ($a->profile['hide-friends']))) {
+	if(((! count($a->profile)) || ($a->profile['hide_friends']))) {
 		notice( t('Permission denied.') . EOL);
 		return;
 	} 

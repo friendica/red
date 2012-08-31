@@ -24,7 +24,7 @@ function profiles_post(&$a) {
 		
 		check_form_security_token_redirectOnErr('/profiles', 'profile_edit');
 		
-		$is_default = (($orig[0]['is-default']) ? 1 : 0);
+		$is_default = (($orig[0]['is_default']) ? 1 : 0);
 
 		$profile_name = notags(trim($_POST['profile_name']));
 		if(! strlen($profile_name)) {
@@ -144,7 +144,7 @@ function profiles_post(&$a) {
 		$work = fix_mce_lf(escape_tags(trim($_POST['work'])));
 		$education = fix_mce_lf(escape_tags(trim($_POST['education'])));
 
-		$hide_friends = (($_POST['hide-friends'] == 1) ? 1: 0);
+		$hide_friends = (($_POST['hide_friends'] == 1) ? 1: 0);
 
 
 
@@ -201,7 +201,7 @@ function profiles_post(&$a) {
 				// profile but that doesn't mean we have to broadcast it to everybody.
 			}
 			if($locality != $orig[0]['locality'] || $region != $orig[0]['region']
-				|| $country_name != $orig[0]['country-name']) {
+				|| $country_name != $orig[0]['country_name']) {
  				$changes[] = t('Location');
 				$comma1 = ((($locality) && ($region || $country_name)) ? ', ' : ' ');
 				$comma2 = (($region && $country_name) ? ', ' : '');
@@ -221,8 +221,8 @@ function profiles_post(&$a) {
 			`address` = '%s',
 			`locality` = '%s',
 			`region` = '%s',
-			`postal-code` = '%s',
-			`country-name` = '%s',
+			`postal_code` = '%s',
+			`country_name` = '%s',
 			`marital` = '%s',
 			`with` = '%s',
 			`howlong` = '%s',
@@ -245,7 +245,7 @@ function profiles_post(&$a) {
 			`romance` = '%s',
 			`work` = '%s',
 			`education` = '%s',
-			`hide-friends` = %d
+			`hide_friends` = %d
 			WHERE `id` = %d AND `uid` = %d LIMIT 1",
 			dbesc($profile_name),
 			dbesc($name),
@@ -406,7 +406,7 @@ function profiles_content(&$a) {
 	}
 
 	if(($a->argc > 2) && ($a->argv[1] === "drop") && intval($a->argv[2])) {
-		$r = q("SELECT * FROM `profile` WHERE `id` = %d AND `uid` = %d AND `is-default` = 0 LIMIT 1",
+		$r = q("SELECT * FROM `profile` WHERE `id` = %d AND `uid` = %d AND `is_default` = 0 LIMIT 1",
 			intval($a->argv[2]),
 			intval(local_user())
 		);
@@ -420,7 +420,7 @@ function profiles_content(&$a) {
 
 		// move every contact using this profile as their default to the user default
 
-		$r = q("UPDATE `contact` SET `profile-id` = (SELECT `profile`.`id` AS `profile-id` FROM `profile` WHERE `profile`.`is-default` = 1 AND `profile`.`uid` = %d LIMIT 1) WHERE `profile-id` = %d AND `uid` = %d ",
+		$r = q("UPDATE `contact` SET `profile-id` = (SELECT `profile`.`id` AS `profile-id` FROM `profile` WHERE `profile`.`is_default` = 1 AND `profile`.`uid` = %d LIMIT 1) WHERE `profile-id` = %d AND `uid` = %d ",
 			intval(local_user()),
 			intval($a->argv[2]),
 			intval(local_user())
@@ -450,7 +450,7 @@ function profiles_content(&$a) {
 
 		$name = t('Profile-') . ($num_profiles + 1);
 
-		$r1 = q("SELECT `name`, `photo`, `thumb` FROM `profile` WHERE `uid` = %d AND `is-default` = 1 LIMIT 1",
+		$r1 = q("SELECT `name`, `photo`, `thumb` FROM `profile` WHERE `uid` = %d AND `is_default` = 1 LIMIT 1",
 			intval(local_user()));
 		
 		$r2 = q("INSERT INTO `profile` (`uid` , `profile_name` , `name`, `photo`, `thumb`)
@@ -492,9 +492,8 @@ function profiles_content(&$a) {
 			return;
 		}
 		unset($r1[0]['id']);
-		$r1[0]['is-default'] = 0;
+		$r1[0]['is_default'] = 0;
 		$r1[0]['publish'] = 0;	
-		$r1[0]['net-publish'] = 0;	
 		$r1[0]['profile_name'] = dbesc($name);
 
 		dbesc_array($r1[0]);
@@ -544,13 +543,13 @@ function profiles_content(&$a) {
 		));
 
 
-		$opt_tpl = get_markup_template("profile-hide-friends.tpl");
+		$opt_tpl = get_markup_template("profile-hide_friends.tpl");
 		$hide_friends = replace_macros($opt_tpl,array(
 			'$desc' => t('Hide your contact/friend list from viewers of this profile?'),
 			'$yes_str' => t('Yes'),
 			'$no_str' => t('No'),
-			'$yes_selected' => (($r[0]['hide-friends']) ? " checked=\"checked\" " : ""),
-			'$no_selected' => (($r[0]['hide-friends'] == 0) ? " checked=\"checked\" " : "")
+			'$yes_selected' => (($r[0]['hide_friends']) ? " checked=\"checked\" " : ""),
+			'$no_selected' => (($r[0]['hide_friends'] == 0) ? " checked=\"checked\" " : "")
 		));
 
 		$a->page['htmlhead'] .= "<script type=\"text/javascript\" src=\"js/country.js\" ></script>";
@@ -563,7 +562,7 @@ function profiles_content(&$a) {
 		if(! $f)
 			$f = 'ymd';
 
-		$is_default = (($r[0]['is-default']) ? 1 : 0);
+		$is_default = (($r[0]['is_default']) ? 1 : 0);
 		$tpl = get_markup_template("profile_edit.tpl");
 		$o .= replace_macros($tpl,array(
 			'$form_security_token' => get_form_security_token("profile_edit"),
@@ -623,8 +622,8 @@ function profiles_content(&$a) {
 			'$address' => $r[0]['address'],
 			'$locality' => $r[0]['locality'],
 			'$region' => $r[0]['region'],
-			'$postal_code' => $r[0]['postal-code'],
-			'$country_name' => $r[0]['country-name'],
+			'$postal_code' => $r[0]['postal_code'],
+			'$country_name' => $r[0]['country_name'],
 			'$age' => ((intval($r[0]['dob'])) ? '(' . t('Age: ') . age($r[0]['dob'],$a->user['timezone'],$a->user['timezone']) . ')' : ''),
 			'$gender' => gender_selector($r[0]['gender']),
 			'$marital' => marital_selector($r[0]['marital']),
@@ -679,7 +678,7 @@ function profiles_content(&$a) {
 					'$id' => $rr['id'],
 					'$alt' => t('Profile Image'),
 					'$profile_name' => $rr['profile_name'],
-					'$visible' => (($rr['is-default']) ? '<strong>' . t('visible to everybody') . '</strong>' 
+					'$visible' => (($rr['is_default']) ? '<strong>' . t('visible to everybody') . '</strong>' 
 						: '<a href="' . $a->get_baseurl(true) . '/profperm/' . $rr['id'] . '" />' . t('Edit visibility') . '</a>')
 				));
 			}

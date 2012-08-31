@@ -32,9 +32,9 @@
 			<span class="city-state-zip">
 				<span class="locality">$profile.locality</span>{{ if $profile.locality }}, {{ endif }}
 				<span class="region">$profile.region</span>
-				<span class="postal-code">$profile.postal-code</span>
+				<span class="postal-code">$profile.postal_code</span>
 			</span>
-			{{ if $profile.country-name }}<span class="country-name">$profile.country-name</span>{{ endif }}
+			{{ if $profile.country_name }}<span class="country-name">$profile.country_name</span>{{ endif }}
 		</dd>
 		</dl>
 	{{ endif }}

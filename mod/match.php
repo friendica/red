@@ -11,7 +11,7 @@ function match_content(&$a) {
 
 	$o .= '<h2>' . t('Profile Match') . '</h2>';
 
-	$r = q("SELECT `pub_keywords`, `prv_keywords` FROM `profile` WHERE `is-default` = 1 AND `uid` = %d LIMIT 1",
+	$r = q("SELECT `pub_keywords`, `prv_keywords` FROM `profile` WHERE `is_default` = 1 AND `uid` = %d LIMIT 1",
 		intval(local_user())
 	);
 	if(! count($r))

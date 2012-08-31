@@ -516,7 +516,7 @@ if ($color=="dark") $color_path = "/diabook-dark/";
 
 	$r = q("SELECT `profile`.*, `profile`.`uid` AS `profile_uid`, `user`.`nickname`
 			FROM `profile` LEFT JOIN `user` ON `user`.`uid` = `profile`.`uid` 
-			WHERE `is-default` = 1 $publish AND `user`.`blocked` = 0 $sql_extra $order LIMIT %d , %d ",
+			WHERE `is_default` = 1 $publish AND `user`.`blocked` = 0 $sql_extra $order LIMIT %d , %d ",
 		0,
 		9
 	);
