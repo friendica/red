@@ -57,7 +57,7 @@ function profperm_content(&$a) {
 		}
 		$profile = $r[0];
 
-		$r = q("SELECT * FROM `contact` WHERE `uid` = %d AND `profile-id` = %d",
+		$r = q("SELECT * FROM `contact` WHERE `uid` = %d AND `profile_id` = %d",
 			intval(local_user()),
 			intval($a->argv[1])
 		);
@@ -71,13 +71,13 @@ function profperm_content(&$a) {
 
 		if($change) {
 			if(in_array($change,$ingroup)) {
-				q("UPDATE `contact` SET `profile-id` = 0 WHERE `id` = %d AND `uid` = %d LIMIT 1",
+				q("UPDATE `contact` SET `profile_id` = 0 WHERE `id` = %d AND `uid` = %d LIMIT 1",
 					intval($change),
 					intval(local_user())
 				);
 			}
 			else {
-				q("UPDATE `contact` SET `profile-id` = %d WHERE `id` = %d AND `uid` = %d LIMIT 1",
+				q("UPDATE `contact` SET `profile_id` = %d WHERE `id` = %d AND `uid` = %d LIMIT 1",
 					intval($a->argv[1]),
 					intval($change),
 					intval(local_user())
@@ -85,7 +85,7 @@ function profperm_content(&$a) {
 
 			}
 
-			$r = q("SELECT * FROM `contact` WHERE `uid` = %d AND `profile-id` = %d",
+			$r = q("SELECT * FROM `contact` WHERE `uid` = %d AND `profile_id` = %d",
 				intval(local_user()),
 				intval($a->argv[1])
 			);

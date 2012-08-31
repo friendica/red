@@ -31,7 +31,7 @@ function dfrn_notify_post(&$a) {
 		$dfrn_id = substr($dfrn_id,2);
 	}
 
-	$r = q("SELECT * FROM `challenge` WHERE `dfrn-id` = '%s' AND `challenge` = '%s' LIMIT 1",
+	$r = q("SELECT * FROM `challenge` WHERE `dfrn_id` = '%s' AND `challenge` = '%s' LIMIT 1",
 		dbesc($dfrn_id),
 		dbesc($challenge)
 	);
@@ -40,7 +40,7 @@ function dfrn_notify_post(&$a) {
 		xml_status(3);
 	}
 
-	$r = q("DELETE FROM `challenge` WHERE `dfrn-id` = '%s' AND `challenge` = '%s' LIMIT 1",
+	$r = q("DELETE FROM `challenge` WHERE `dfrn_id` = '%s' AND `challenge` = '%s' LIMIT 1",
 		dbesc($dfrn_id),
 		dbesc($challenge)
 	);
@@ -50,13 +50,13 @@ function dfrn_notify_post(&$a) {
 	$sql_extra = '';
 	switch($direction) {
 		case (-1):
-			$sql_extra = sprintf(" AND ( `issued-id` = '%s' OR `dfrn-id` = '%s' ) ", dbesc($dfrn_id), dbesc($dfrn_id));
+			$sql_extra = sprintf(" AND ( `issued_id` = '%s' OR `dfrn_id` = '%s' ) ", dbesc($dfrn_id), dbesc($dfrn_id));
 			break;
 		case 0:
-			$sql_extra = sprintf(" AND `issued-id` = '%s' AND `duplex` = 1 ", dbesc($dfrn_id));
+			$sql_extra = sprintf(" AND `issued_id` = '%s' AND `duplex` = 1 ", dbesc($dfrn_id));
 			break;
 		case 1:
-			$sql_extra = sprintf(" AND `dfrn-id` = '%s' AND `duplex` = 1 ", dbesc($dfrn_id));
+			$sql_extra = sprintf(" AND `dfrn_id` = '%s' AND `duplex` = 1 ", dbesc($dfrn_id));
 			break;
 		default:
 			xml_status(3);
@@ -190,7 +190,7 @@ function dfrn_notify_content(&$a) {
 
 		$r = q("DELETE FROM `challenge` WHERE `expire` < " . intval(time()));
 
-		$r = q("INSERT INTO `challenge` ( `challenge`, `dfrn-id`, `expire` )
+		$r = q("INSERT INTO `challenge` ( `challenge`, `dfrn_id`, `expire` )
 			VALUES( '%s', '%s', %d ) ",
 			dbesc($hash),
 			dbesc($dfrn_id),
@@ -202,15 +202,15 @@ function dfrn_notify_content(&$a) {
 		$sql_extra = '';
 		switch($direction) {
 			case (-1):
-				$sql_extra = sprintf(" AND ( `issued-id` = '%s' OR `dfrn-id` = '%s' ) ", dbesc($dfrn_id), dbesc($dfrn_id));
+				$sql_extra = sprintf(" AND ( `issued_id` = '%s' OR `dfrn_id` = '%s' ) ", dbesc($dfrn_id), dbesc($dfrn_id));
 				$my_id = $dfrn_id;
 				break;
 			case 0:
-				$sql_extra = sprintf(" AND `issued-id` = '%s' AND `duplex` = 1 ", dbesc($dfrn_id));
+				$sql_extra = sprintf(" AND `issued_id` = '%s' AND `duplex` = 1 ", dbesc($dfrn_id));
 				$my_id = '1:' . $dfrn_id;
 				break;
 			case 1:
-				$sql_extra = sprintf(" AND `dfrn-id` = '%s' AND `duplex` = 1 ", dbesc($dfrn_id));
+				$sql_extra = sprintf(" AND `dfrn_id` = '%s' AND `duplex` = 1 ", dbesc($dfrn_id));
 				$my_id = '0:' . $dfrn_id;
 				break;
 			default:

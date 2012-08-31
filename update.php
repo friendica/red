@@ -48,7 +48,7 @@ function update_1000() {
 	q("ALTER TABLE `intro` ADD `duplex` TINYINT( 1 ) NOT NULL DEFAULT '0' AFTER `knowyou` ");
 	q("ALTER TABLE `contact` ADD `duplex` TINYINT( 1 ) NOT NULL DEFAULT '0' AFTER `rel` ");
  	q("ALTER TABLE `contact` CHANGE `issued-pubkey` `issued-pubkey` TEXT CHARACTER SET utf8 COLLATE utf8_general_ci NOT NULL");  
-	q("ALTER TABLE `contact` ADD `term-date` DATETIME NOT NULL DEFAULT '0000-00-00 00:00:00' AFTER `avatar-date`");
+	q("ALTER TABLE `contact` ADD `term_date` DATETIME NOT NULL DEFAULT '0000-00-00 00:00:00' AFTER `avatar_date`");
 }
 
 function update_1001() {
@@ -64,7 +64,7 @@ function update_1003() {
 	q("ALTER TABLE `contact` DROP `issued-pubkey` , DROP `ret-id` , DROP `ret-pubkey` ");
 	q("ALTER TABLE `contact` ADD `usehub` TINYINT( 1 ) NOT NULL DEFAULT '0' AFTER `ret-aes`");
 	q("ALTER TABLE `contact` ADD `hub-verify` CHAR( 255 ) NOT NULL AFTER `usehub`");
-	q("ALTER TABLE `contact` ADD INDEX ( `uid` ) ,  ADD INDEX ( `self` ),  ADD INDEX ( `issued-id` ),  ADD INDEX ( `dfrn-id` )"); 
+	q("ALTER TABLE `contact` ADD INDEX ( `uid` ) ,  ADD INDEX ( `self` ),  ADD INDEX ( `issued_id` ),  ADD INDEX ( `dfrn_id` )"); 
 	q("ALTER TABLE `contact` ADD INDEX ( `blocked` ),   ADD INDEX ( `readonly` )");
 }
 
@@ -281,7 +281,7 @@ function update_1029() {
 }
 
 function update_1030() {
-	q("ALTER TABLE `contact` ADD `bdyear` CHAR( 4 ) NOT NULL COMMENT 'birthday notify flag' AFTER `profile-id` ");
+	q("ALTER TABLE `contact` ADD `bdyear` CHAR( 4 ) NOT NULL COMMENT 'birthday notify flag' AFTER `profile_id` ");
 
 	q("CREATE TABLE IF NOT EXISTS `event` (
 	`id` INT NOT NULL AUTO_INCREMENT PRIMARY KEY ,

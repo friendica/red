@@ -396,7 +396,7 @@ function settings_post(&$a) {
 
 
 	if($name_change) {
-		q("UPDATE `contact` SET `name` = '%s', `name-date` = '%s' WHERE `uid` = %d AND `self` = 1 LIMIT 1",
+		q("UPDATE `contact` SET `name` = '%s', `name_date` = '%s' WHERE `uid` = %d AND `self` = 1 LIMIT 1",
 			dbesc($username),
 			dbesc(datetime_convert()),
 			intval(local_user())

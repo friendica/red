@@ -84,7 +84,7 @@ function dfrn_request_post(&$a) {
 				);
 	
 				if(count($r)) {
-					if(strlen($r[0]['dfrn-id'])) {
+					if(strlen($r[0]['dfrn_id'])) {
 
 						/**
 						 * We don't need to be here. It has already happened.
@@ -98,8 +98,7 @@ function dfrn_request_post(&$a) {
 				}
 	
 				if(is_array($contact_record)) {
-					$r = q("UPDATE `contact` SET `ret-aes` = %d, hidden = %d WHERE `id` = %d LIMIT 1",
-						intval($aes_allow),
+					$r = q("UPDATE `contact` SET hidden = %d WHERE `id` = %d LIMIT 1",
 						intval($hidden),
 						intval($contact_record['id'])
 					);
@@ -144,7 +143,7 @@ function dfrn_request_post(&$a) {
 					 * Create a contact record on our site for the other person
 					 */
 
-					$r = q("INSERT INTO `contact` ( `uid`, `created`,`url`, `nurl`, `name`, `nick`, `photo`, `site-pubkey`,
+					$r = q("INSERT INTO `contact` ( `uid`, `created`,`url`, `nurl`, `name`, `nick`, `photo`, `site_pubkey`,
 						`request`, `confirm`, `notify`, `poll`, `poco`, `network`, `aes_allow`, `hidden`) 
 						VALUES ( %d, '%s', '%s', '%s', '%s' , '%s', '%s', '%s', '%s', '%s', '%s', '%s', '%s', '%s', %d, %d)",
 						intval(local_user()),
@@ -170,7 +169,7 @@ function dfrn_request_post(&$a) {
 					info( t("Introduction complete.") . EOL);
 				}
 
-				$r = q("select id from contact where uid = %d and url = '%s' and `site-pubkey` = '%s' limit 1",
+				$r = q("select id from contact where uid = %d and url = '%s' and `site_pubkey` = '%s' limit 1",
 					intval(local_user()),
 					dbesc($dfrn_url),
 					$parms['key'] // this was already escaped
@@ -401,9 +400,9 @@ function dfrn_request_post(&$a) {
 					`photo` = '%s', 
 					`thumb` = '%s',
 					`micro` = '%s', 
-					`name-date` = '%s', 
-					`uri-date` = '%s', 
-					`avatar-date` = '%s', 
+					`name_date` = '%s', 
+					`uri_date` = '%s', 
+					`avatar_date` = '%s', 
 					`hidden` = 0,
 					WHERE `id` = %d LIMIT 1
 				",
@@ -466,7 +465,7 @@ function dfrn_request_post(&$a) {
 			);
 
 			if(count($ret)) {
-				if(strlen($ret[0]['issued-id'])) {
+				if(strlen($ret[0]['issued_id'])) {
 					notice( t('You have already introduced yourself here.') . EOL );
 					return;
 				}
@@ -483,9 +482,9 @@ function dfrn_request_post(&$a) {
 			$issued_id = random_string();
 
 			if(is_array($contact_record)) {
-				// There is a contact record but no issued-id, so this
+				// There is a contact record but no issued_id, so this
 				// is a reciprocal introduction from a known contact
-				$r = q("UPDATE `contact` SET `issued-id` = '%s' WHERE `id` = %d LIMIT 1",
+				$r = q("UPDATE `contact` SET `issued_id` = '%s' WHERE `id` = %d LIMIT 1",
 					dbesc($issued_id),
 					intval($contact_record['id'])
 				);
@@ -529,11 +528,11 @@ function dfrn_request_post(&$a) {
 
 
 				$parms['url'] = $url;
-				$parms['issued-id'] = $issued_id;
+				$parms['issued_id'] = $issued_id;
 
 
 				dbesc_array($parms);
-				$r = q("INSERT INTO `contact` ( `uid`, `created`, `url`, `nurl`,`name`, `nick`, `issued-id`, `photo`, `site-pubkey`,
+				$r = q("INSERT INTO `contact` ( `uid`, `created`, `url`, `nurl`,`name`, `nick`, `issued_id`, `photo`, `site_pubkey`,
 					`request`, `confirm`, `notify`, `poll`, `poco`, `network` )
 					VALUES ( %d, '%s', '%s', '%s', '%s', '%s', '%s', '%s', '%s', '%s', '%s', '%s', '%s', '%s', '%s' )",
 					intval($uid),
@@ -542,7 +541,7 @@ function dfrn_request_post(&$a) {
 					dbesc(normalise_link($parms['url'])),
 					$parms['fn'],
 					$parms['nick'],
-					$parms['issued-id'],
+					$parms['issued_id'],
 					$parms['photo'],
 					$parms['key'],
 					$parms['dfrn-request'],
@@ -556,10 +555,10 @@ function dfrn_request_post(&$a) {
 				// find the contact record we just created
 				if($r) {	
 					$r = q("SELECT `id` FROM `contact` 
-						WHERE `uid` = %d AND `url` = '%s' AND `issued-id` = '%s' LIMIT 1",
+						WHERE `uid` = %d AND `url` = '%s' AND `issued_id` = '%s' LIMIT 1",
 						intval($uid),
 						$parms['url'],
-						$parms['issued-id']
+						$parms['issued_id']
 					);
 					if(count($r)) 
 						$contact_record = $r[0];
@@ -725,7 +724,7 @@ function dfrn_request_content(&$a) {
 					$handsfree = array(
 						'uid' => $r[0]['uid'],
 						'node' => $r[0]['nickname'],
-						'dfrn_id' => $r[0]['issued-id'],
+						'dfrn_id' => $r[0]['issued_id'],
 						'intro_id' => $intro[0]['id'],
 						'duplex' => (($r[0]['page-flags'] == PAGE_FREELOVE) ? 1 : 0),
 						'activity' => intval(get_pconfig($r[0]['uid'],'system','post_newfriend'))

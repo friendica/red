@@ -38,7 +38,7 @@ function onepoll_run($argv, $argc){
 	
 	$manual_id  = 0;
 	$generation = 0;
-	$hub_update = false;
+
 	$force      = false;
 	$restart    = false;
 
@@ -73,18 +73,7 @@ function onepoll_run($argv, $argc){
 
 	$xml = false;
 
-	$t = $contact['last-update'];
-
-	if($contact['subhub']) {
-		$poll_interval = get_config('system','pushpoll_frequency');
-		$contact['priority'] = (($poll_interval !== false) ? intval($poll_interval) : 3);
-		$hub_update = false;
-
-		if(datetime_convert('UTC','UTC', 'now') > datetime_convert('UTC','UTC', $t . " + 1 day"))
-				$hub_update = true;
-	}
-	else
-		$hub_update = false;
+	$t = $contact['last_update'];
 
 
 	$importer_uid = $contact['uid'];
@@ -99,17 +88,17 @@ function onepoll_run($argv, $argc){
 
 	logger("onepoll: poll: ({$contact['id']}) IMPORTER: {$importer['name']}, CONTACT: {$contact['name']}");
 
-	$last_update = (($contact['last-update'] === '0000-00-00 00:00:00') 
+	$last_update = (($contact['last_update'] === '0000-00-00 00:00:00') 
 		? datetime_convert('UTC','UTC','now - 7 days', ATOM_TIME)
-		: datetime_convert('UTC','UTC',$contact['last-update'], ATOM_TIME)
+		: datetime_convert('UTC','UTC',$contact['last_update'], ATOM_TIME)
 	);
 
 	if($contact['network'] === NETWORK_DFRN) {
 
-		$idtosend = $orig_id = (($contact['dfrn-id']) ? $contact['dfrn-id'] : $contact['issued-id']);
-		if(intval($contact['duplex']) && $contact['dfrn-id'])
+		$idtosend = $orig_id = (($contact['dfrn_id']) ? $contact['dfrn_id'] : $contact['issued_id']);
+		if(intval($contact['duplex']) && $contact['dfrn_id'])
 			$idtosend = '0:' . $orig_id;
-		if(intval($contact['duplex']) && $contact['issued-id'])
+		if(intval($contact['duplex']) && $contact['issued_id'])
 			$idtosend = '1:' . $orig_id;
 
 		// they have permission to write to us. We already filtered this in the contact query.
@@ -135,8 +124,8 @@ function onepoll_run($argv, $argc){
 
 			mark_for_death($contact);
 
-			// set the last-update so we don't keep polling
-			$r = q("UPDATE `contact` SET `last-update` = '%s' WHERE `id` = %d LIMIT 1",
+			// set the last_update so we don't keep polling
+			$r = q("UPDATE `contact` SET `last_update` = '%s' WHERE `id` = %d LIMIT 1",
 				dbesc(datetime_convert()),
 				intval($contact['id'])
 			);
@@ -149,7 +138,7 @@ function onepoll_run($argv, $argc){
 
 			mark_for_death($contact);
 
-			$r = q("UPDATE `contact` SET `last-update` = '%s' WHERE `id` = %d LIMIT 1",
+			$r = q("UPDATE `contact` SET `last_update` = '%s' WHERE `id` = %d LIMIT 1",
 				dbesc(datetime_convert()),
 				intval($contact['id'])
 			);
@@ -163,17 +152,17 @@ function onepoll_run($argv, $argc){
 			logger("poller: $url replied status 1 - marking for death ");
 
 			// we may not be friends anymore. Will keep trying for one month.
-			// set the last-update so we don't keep polling
+			// set the last_update so we don't keep polling
 
 
-			$r = q("UPDATE `contact` SET `last-update` = '%s' WHERE `id` = %d LIMIT 1",
+			$r = q("UPDATE `contact` SET `last_update` = '%s' WHERE `id` = %d LIMIT 1",
 				dbesc(datetime_convert()),
 				intval($contact['id'])
 			);
 			mark_for_death($contact);
 		}
 		else {
-			if($contact['term-date'] != '0000-00-00 00:00:00') {
+			if($contact['term_date'] != '0000-00-00 00:00:00') {
 				logger("poller: $url back from the dead - removing mark for death");
 				unmark_for_death($contact);
 			}
@@ -228,7 +217,7 @@ function onepoll_run($argv, $argc){
 		logger('poller: received xml : ' . $xml, LOGGER_DATA);
 		if((! strstr($xml,'<?xml')) && (! strstr($xml,'<rss'))) {
 			logger('poller: post_handshake: response from ' . $url . ' did not contain XML.');
-			$r = q("UPDATE `contact` SET `last-update` = '%s' WHERE `id` = %d LIMIT 1",
+			$r = q("UPDATE `contact` SET `last_update` = '%s' WHERE `id` = %d LIMIT 1",
 				dbesc(datetime_convert()),
 				intval($contact['id'])
 			);
@@ -243,30 +232,12 @@ function onepoll_run($argv, $argc){
 	
 		consume_feed($xml,$importer,$contact,$hub,1,2);
 
-		$hubmode = 'subscribe';
-		if($contact['network'] === NETWORK_DFRN || $contact['blocked'] || $contact['readonly'])
-			$hubmode = 'unsubscribe';
 
-		if($contact['network'] === NETWORK_OSTATUS && (! $contact['hub-verify']))
-			$hub_update = true;
-
-		if((strlen($hub)) && ($hub_update) && ($contact['rel'] != CONTACT_IS_FOLLOWER)) {
-			logger('poller: hub ' . $hubmode . ' : ' . $hub . ' contact name : ' . $contact['name'] . ' local user : ' . $importer['name']);
-			$hubs = explode(',', $hub);
-			if(count($hubs)) {
-				foreach($hubs as $h) {
-					$h = trim($h);
-					if(! strlen($h))
-						continue;
-					subscribe_to_hub($h,$importer,$contact,$hubmode);
-				}
-			}
-		}
 	}
 
 	$updated = datetime_convert();
 
-	$r = q("UPDATE `contact` SET `last-update` = '%s', `success_update` = '%s' WHERE `id` = %d LIMIT 1",
+	$r = q("UPDATE `contact` SET `last_update` = '%s', `success_update` = '%s' WHERE `id` = %d LIMIT 1",
 		dbesc($updated),
 		dbesc($updated),
 		intval($contact['id'])

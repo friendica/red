@@ -111,7 +111,7 @@ function contacts_post(&$a) {
 
 	$info = fix_mce_lf(escape_tags(trim($_POST['info'])));
 
-	$r = q("UPDATE `contact` SET `profile-id` = %d, `priority` = %d , `info` = '%s',
+	$r = q("UPDATE `contact` SET `profile_id` = %d, `priority` = %d , `info` = '%s',
 		`hidden` = %d, closeness = %d WHERE `id` = %d AND `uid` = %d LIMIT 1",
 		intval($profile_id),
 		intval($priority),
@@ -288,12 +288,12 @@ function contacts_content(&$a) {
 
 		$insecure = t('Private communications are not available for this contact.');
 
-		$last_update = (($contact['last-update'] == '0000-00-00 00:00:00') 
+		$last_update = (($contact['last_update'] == '0000-00-00 00:00:00') 
 				? t('Never') 
-				: datetime_convert('UTC',date_default_timezone_get(),$contact['last-update'],'D, j M Y, g:i A'));
+				: datetime_convert('UTC',date_default_timezone_get(),$contact['last_update'],'D, j M Y, g:i A'));
 
-		if($contact['last-update'] !== '0000-00-00 00:00:00')
-			$last_update .= ' ' . (($contact['last-update'] == $contact['success_update']) ? t("\x28Update was successful\x29") : t("\x28Update was not successful\x29"));
+		if($contact['last_update'] !== '0000-00-00 00:00:00')
+			$last_update .= ' ' . (($contact['last_update'] == $contact['success_update']) ? t("\x28Update was successful\x29") : t("\x28Update was not successful\x29"));
 
 		$lblsuggest = (($contact['network'] === NETWORK_DFRN) ? t('Suggest friends') : '');
 
@@ -340,7 +340,7 @@ function contacts_content(&$a) {
 		$tab_tpl = get_markup_template('common_tabs.tpl');
 		$tab_str = replace_macros($tab_tpl, array('$tabs' => $tabs));
 
-		$lost_contact = (($contact['archive'] && $contact['term-date'] != '0000-00-00 00:00:00' && $contact['term-date'] < datetime_convert('','','now')) ? t('Communications lost with this contact!') : '');
+		$lost_contact = (($contact['archive'] && $contact['term_date'] != '0000-00-00 00:00:00' && $contact['term_date'] < datetime_convert('','','now')) ? t('Communications lost with this contact!') : '');
 
 		$slider_tpl = get_markup_template('contact_slider.tpl');
 		$o .= replace_macros($slider_tpl,array(
@@ -382,7 +382,7 @@ function contacts_content(&$a) {
 			'$updpub' => t('Update public posts'),
 			'$last_update' => $last_update,
 			'$udnow' => t('Update now'),
-			'$profile_select' => contact_profile_assign($contact['profile-id'],(($contact['network'] !== NETWORK_DFRN) ? true : false)),
+			'$profile_select' => contact_profile_assign($contact['profile_id'],(($contact['network'] !== NETWORK_DFRN) ? true : false)),
 			'$contact_id' => $contact['id'],
 			'$block_text' => (($contact['blocked']) ? t('Unblock') : t('Block') ),
 			'$ignore_text' => (($contact['readonly']) ? t('Unignore') : t('Ignore') ),

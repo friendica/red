@@ -326,7 +326,7 @@
 			'contact_url' => $a->get_baseurl()."/contacts/".$uinfo[0]['cid'],
 			'protected' => false,	
 			'friends_count' => intval($countfriends),
-			'created_at' => api_date($uinfo[0]['name-date']),
+			'created_at' => api_date($uinfo[0]['name_date']),
 			'utc_offset' => "+00:00",
 			'time_zone' => 'UTC', //$uinfo[0]['timezone'],
 			'geo_enabled' => false,
@@ -738,7 +738,7 @@
 
 		$r = q("SELECT `item`.*, `item`.`id` AS `item_id`,
 			`contact`.`name`, `contact`.`photo`, `contact`.`url`, `contact`.`rel`,
-			`contact`.`network`, `contact`.`thumb`, `contact`.`dfrn-id`, `contact`.`self`,
+			`contact`.`network`, `contact`.`thumb`, `contact`.`dfrn_id`, `contact`.`self`,
 			`contact`.`id` AS `cid`, `contact`.`uid` AS `contact-uid`
 			FROM `item`, `contact`
 			WHERE `item`.`uid` = %d
@@ -808,7 +808,7 @@
 
 		/*$r = q("SELECT `item`.*, `item`.`id` AS `item_id`,
 			`contact`.`name`, `contact`.`photo`, `contact`.`url`, `contact`.`rel`,
-			`contact`.`network`, `contact`.`thumb`, `contact`.`dfrn-id`, `contact`.`self`,
+			`contact`.`network`, `contact`.`thumb`, `contact`.`dfrn_id`, `contact`.`self`,
 			`contact`.`id` AS `cid`, `contact`.`uid` AS `contact-uid`
 			FROM `item`, `contact`
 			WHERE `item`.`visible` = 1 and `item`.`moderated` = 0 AND `item`.`deleted` = 0
@@ -887,7 +887,7 @@
 
 		$r = q("SELECT `item`.*, `item`.`id` AS `item_id`,
 			`contact`.`name`, `contact`.`photo`, `contact`.`url`, `contact`.`rel`,
-			`contact`.`network`, `contact`.`thumb`, `contact`.`dfrn-id`, `contact`.`self`,
+			`contact`.`network`, `contact`.`thumb`, `contact`.`dfrn_id`, `contact`.`self`,
 			`contact`.`id` AS `cid`, `contact`.`uid` AS `contact-uid`
 			FROM `item`, `contact`
 			WHERE `item`.`visible` = 1 and `item`.`moderated` = 0 AND `item`.`deleted` = 0
@@ -932,7 +932,7 @@
 
 		$r = q("SELECT `item`.*, `item`.`id` AS `item_id`, `contact`.`nick` as `reply_author`,
 			`contact`.`name`, `contact`.`photo`, `contact`.`url` as `reply_url`, `contact`.`rel`,
-			`contact`.`network`, `contact`.`thumb`, `contact`.`dfrn-id`, `contact`.`self`,
+			`contact`.`network`, `contact`.`thumb`, `contact`.`dfrn_id`, `contact`.`self`,
 			`contact`.`id` AS `cid`, `contact`.`uid` AS `contact-uid`
 			FROM `item`, `contact`
 			WHERE `item`.`visible` = 1 and `item`.`moderated` = 0 AND `item`.`deleted` = 0
@@ -1034,7 +1034,7 @@
 
 		$r = q("SELECT `item`.*, `item`.`id` AS `item_id`, 
 			`contact`.`name`, `contact`.`photo`, `contact`.`url`, `contact`.`rel`,
-			`contact`.`network`, `contact`.`thumb`, `contact`.`dfrn-id`, `contact`.`self`,
+			`contact`.`network`, `contact`.`thumb`, `contact`.`dfrn_id`, `contact`.`self`,
 			`contact`.`id` AS `cid`, `contact`.`uid` AS `contact-uid`
 			FROM `item`, `contact`
 			WHERE `item`.`uid` = %d
@@ -1100,7 +1100,7 @@
 
 		$r = q("SELECT `item`.*, `item`.`id` AS `item_id`, 
 			`contact`.`name`, `contact`.`photo`, `contact`.`url`, `contact`.`rel`,
-			`contact`.`network`, `contact`.`thumb`, `contact`.`dfrn-id`, `contact`.`self`,
+			`contact`.`network`, `contact`.`thumb`, `contact`.`dfrn_id`, `contact`.`self`,
 			`contact`.`id` AS `cid`, `contact`.`uid` AS `contact-uid`
 			FROM `item`, `contact`
 			WHERE `item`.`uid` = %d
@@ -1155,7 +1155,7 @@
 
 			$r = q("SELECT `item`.*, `item`.`id` AS `item_id`,
 				`contact`.`name`, `contact`.`photo`, `contact`.`url`, `contact`.`rel`,
-				`contact`.`network`, `contact`.`thumb`, `contact`.`dfrn-id`, `contact`.`self`,
+				`contact`.`network`, `contact`.`thumb`, `contact`.`dfrn_id`, `contact`.`self`,
 				`contact`.`id` AS `cid`, `contact`.`uid` AS `contact-uid`
 				FROM `item`, `contact`
 				WHERE `item`.`uid` = %d

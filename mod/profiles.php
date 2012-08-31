@@ -289,7 +289,7 @@ function profiles_post(&$a) {
 
 
 		if($namechanged && $is_default) {
-			$r = q("UPDATE `contact` SET `name-date` = '%s' WHERE `self` = 1 AND `uid` = %d LIMIT 1",
+			$r = q("UPDATE `contact` SET `name_date` = '%s' WHERE `self` = 1 AND `uid` = %d LIMIT 1",
 				dbesc(datetime_convert()),
 				intval(local_user())
 			);
@@ -420,7 +420,7 @@ function profiles_content(&$a) {
 
 		// move every contact using this profile as their default to the user default
 
-		$r = q("UPDATE `contact` SET `profile-id` = (SELECT `profile`.`id` AS `profile-id` FROM `profile` WHERE `profile`.`is_default` = 1 AND `profile`.`uid` = %d LIMIT 1) WHERE `profile-id` = %d AND `uid` = %d ",
+		$r = q("UPDATE `contact` SET `profile_id` = (SELECT `profile`.`id` AS `profile_id` FROM `profile` WHERE `profile`.`is_default` = 1 AND `profile`.`uid` = %d LIMIT 1) WHERE `profile_id` = %d AND `uid` = %d ",
 			intval(local_user()),
 			intval($a->argv[2]),
 			intval(local_user())

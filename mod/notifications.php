@@ -191,7 +191,7 @@ function notifications_content(&$a) {
 					'$str_notifytype' => t('Notification type: '),
 					'$notify_type' => (($rr['network'] !== NETWORK_OSTATUS) ? t('Friend/Connect Request') : t('New Follower')),
 					'$dfrn_text' => $dfrn_text,	
-					'$dfrn_id' => $rr['issued-id'],
+					'$dfrn_id' => $rr['issued_id'],
 					'$uid' => $_SESSION['uid'],
 					'$intro_id' => $rr['intro_id'],
 					'$contact_id' => $rr['contact-id'],

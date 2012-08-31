@@ -642,7 +642,7 @@ if(! class_exists('App')) {
 			if($this->cached_profile_picdate[$common_filename]){
 				$this->cached_profile_image[$avatar_image] = $avatar_image . $this->cached_profile_picdate[$common_filename];
 			} else {
-				$r = q("SELECT `contact`.`avatar-date` AS picdate FROM `contact` WHERE `contact`.`thumb` like \"%%/%s\"",
+				$r = q("SELECT `contact`.`avatar_date` AS picdate FROM `contact` WHERE `contact`.`thumb` like \"%%/%s\"",
 					$common_filename);
 				if(! count($r)){
 					$this->cached_profile_image[$avatar_image] = $avatar_image;
@@ -1063,17 +1063,17 @@ if(! function_exists('get_max_import_size')) {
 if(! function_exists('profile_load')) {
 function profile_load(&$a, $nickname, $profile = 0) {
 	if(remote_user()) {
-		$r = q("SELECT `profile-id` FROM `contact` WHERE `id` = %d LIMIT 1",
+		$r = q("SELECT `profile_id` FROM `contact` WHERE `id` = %d LIMIT 1",
 				intval($_SESSION['visitor_id']));
 		if(count($r))
-			$profile = $r[0]['profile-id'];
+			$profile = $r[0]['profile_id'];
 	}
 
 	$r = null;
                           
 	if($profile) {
 		$profile_int = intval($profile);
-		$r = q("SELECT `profile`.`uid` AS `profile_uid`, `profile`.* , `contact`.`avatar-date` AS picdate, entity.* FROM `profile`
+		$r = q("SELECT `profile`.`uid` AS `profile_uid`, `profile`.* , `contact`.`avatar_date` AS picdate, entity.* FROM `profile`
 				left join `contact` on `contact`.`uid` = `profile`.`uid` LEFT JOIN entity ON `profile`.`uid` = entity.entity_id
 				WHERE entity.entity_address = '%s' AND `profile`.`id` = %d and `contact`.`self` = 1 LIMIT 1",
 				dbesc($nickname),
@@ -1081,7 +1081,7 @@ function profile_load(&$a, $nickname, $profile = 0) {
 		);
 	}
 	if((! $r) && (!  count($r))) {
-		$r = q("SELECT `profile`.`uid` AS `profile_uid`, `profile`.* , `contact`.`avatar-date` AS picdate, `entity`.* FROM `profile`
+		$r = q("SELECT `profile`.`uid` AS `profile_uid`, `profile`.* , `contact`.`avatar_date` AS picdate, `entity`.* FROM `profile`
 			left join `contact` on `contact`.`uid` = `profile`.`uid` LEFT JOIN `entity` ON `profile`.`uid` = entity.entity_id
 			WHERE entity.entity_address = '%s' AND `profile`.`is_default` = 1 and `contact`.`self` = 1 LIMIT 1",
 			dbesc($nickname)

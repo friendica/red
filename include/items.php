@@ -52,15 +52,15 @@ function get_feed_for(&$a, $dfrn_id, $owner_nick, $last_update, $direction = 0) 
 		$sql_extra = '';
 		switch($direction) {
 			case (-1):
-				$sql_extra = sprintf(" AND `issued-id` = '%s' ", dbesc($dfrn_id));
+				$sql_extra = sprintf(" AND `issued_id` = '%s' ", dbesc($dfrn_id));
 				$my_id = $dfrn_id;
 				break;
 			case 0:
-				$sql_extra = sprintf(" AND `issued-id` = '%s' AND `duplex` = 1 ", dbesc($dfrn_id));
+				$sql_extra = sprintf(" AND `issued_id` = '%s' AND `duplex` = 1 ", dbesc($dfrn_id));
 				$my_id = '1:' . $dfrn_id;
 				break;
 			case 1:
-				$sql_extra = sprintf(" AND `dfrn-id` = '%s' AND `duplex` = 1 ", dbesc($dfrn_id));
+				$sql_extra = sprintf(" AND `dfrn_id` = '%s' AND `duplex` = 1 ", dbesc($dfrn_id));
 				$my_id = '0:' . $dfrn_id;
 				break;
 			default:
@@ -120,8 +120,8 @@ function get_feed_for(&$a, $dfrn_id, $owner_nick, $last_update, $direction = 0) 
 
 	$r = q("SELECT `item`.*, `item`.`id` AS `item_id`, 
 		`contact`.`name`, `contact`.`network`, `contact`.`photo`, `contact`.`url`, 
-		`contact`.`name-date`, `contact`.`uri-date`, `contact`.`avatar-date`,
-		`contact`.`thumb`, `contact`.`dfrn-id`, `contact`.`self`, 
+		`contact`.`name_date`, `contact`.`uri_date`, `contact`.`avatar_date`,
+		`contact`.`thumb`, `contact`.`dfrn_id`, `contact`.`self`, 
 		`contact`.`id` AS `contact-id`, `contact`.`uid` AS `contact-uid`,
 		`sign`.`signed_text`, `sign`.`signature`, `sign`.`signer`
 		FROM `item` LEFT JOIN `contact` ON `contact`.`id` = `item`.`contact-id`
@@ -162,9 +162,9 @@ function get_feed_for(&$a, $dfrn_id, $owner_nick, $last_update, $direction = 0) 
 		'$profile_page' => xmlify($owner['url']),
 		'$photo'        => xmlify($owner['photo']),
 		'$thumb'        => xmlify($owner['thumb']),
-		'$picdate'      => xmlify(datetime_convert('UTC','UTC',$owner['avatar-date'] . '+00:00' , ATOM_TIME)) ,
-		'$uridate'      => xmlify(datetime_convert('UTC','UTC',$owner['uri-date']    . '+00:00' , ATOM_TIME)) ,
-		'$namdate'      => xmlify(datetime_convert('UTC','UTC',$owner['name-date']   . '+00:00' , ATOM_TIME)) , 
+		'$picdate'      => xmlify(datetime_convert('UTC','UTC',$owner['avatar_date'] . '+00:00' , ATOM_TIME)) ,
+		'$uridate'      => xmlify(datetime_convert('UTC','UTC',$owner['uri_date']    . '+00:00' , ATOM_TIME)) ,
+		'$namdate'      => xmlify(datetime_convert('UTC','UTC',$owner['name_date']   . '+00:00' , ATOM_TIME)) , 
 		'$birthday'     => ((strlen($birthday)) ? '<dfrn:birthday>' . xmlify($birthday) . '</dfrn:birthday>' : ''),
 		'$community'    => (($owner['page-flags'] == PAGE_COMMUNITY) ? '<dfrn:community>1</dfrn:community>' : '')
 	));
@@ -1301,11 +1301,11 @@ function dfrn_deliver($owner,$contact,$atom, $dissolve = false) {
 
 	$a = get_app();
 
-	$idtosend = $orig_id = (($contact['dfrn-id']) ? $contact['dfrn-id'] : $contact['issued-id']);
+	$idtosend = $orig_id = (($contact['dfrn_id']) ? $contact['dfrn_id'] : $contact['issued_id']);
 
-	if($contact['duplex'] && $contact['dfrn-id'])
+	if($contact['duplex'] && $contact['dfrn_id'])
 		$idtosend = '0:' . $orig_id;
-	if($contact['duplex'] && $contact['issued-id'])
+	if($contact['duplex'] && $contact['issued_id'])
 		$idtosend = '1:' . $orig_id;		
 
 	$rino = ((function_exists('mcrypt_encrypt')) ? 1 : 0);
@@ -1474,7 +1474,7 @@ function dfrn_deliver($owner,$contact,$atom, $dissolve = false) {
 		return 3;
 	}
 
-	if($contact['term-date'] != '0000-00-00 00:00:00') {
+	if($contact['term_date'] != '0000-00-00 00:00:00') {
 		logger("dfrn_deliver: $url back from the dead - removing mark for death");
 		require_once('include/Contact.php');
 		unmark_for_death($contact);
@@ -1568,7 +1568,7 @@ function consume_feed($xml,$importer,&$contact, &$hub, $datedir = 0, $pass = 0) 
 		}
 	}
 
-	if((is_array($contact)) && ($photo_timestamp) && (strlen($photo_url)) && ($photo_timestamp > $contact['avatar-date'])) {
+	if((is_array($contact)) && ($photo_timestamp) && (strlen($photo_url)) && ($photo_timestamp > $contact['avatar_date'])) {
 		logger('consume_feed: Updating photo for ' . $contact['name']);
 		require_once("Photo.php");
 		$photo_failure = false;
@@ -1614,7 +1614,7 @@ function consume_feed($xml,$importer,&$contact, &$hub, $datedir = 0, $pass = 0) 
 
 			$a = get_app();
 
-			q("UPDATE `contact` SET `avatar-date` = '%s', `photo` = '%s', `thumb` = '%s', `micro` = '%s'  
+			q("UPDATE `contact` SET `avatar_date` = '%s', `photo` = '%s', `thumb` = '%s', `micro` = '%s'  
 				WHERE `uid` = %d AND `id` = %d LIMIT 1",
 				dbesc(datetime_convert()),
 				dbesc($a->get_baseurl() . '/photo/' . $hash . '-4.'.$img->getExt()),
@@ -1626,13 +1626,13 @@ function consume_feed($xml,$importer,&$contact, &$hub, $datedir = 0, $pass = 0) 
 		}
 	}
 
-	if((is_array($contact)) && ($name_updated) && (strlen($new_name)) && ($name_updated > $contact['name-date'])) {
+	if((is_array($contact)) && ($name_updated) && (strlen($new_name)) && ($name_updated > $contact['name_date'])) {
 		$r = q("select * from contact where uid = %d and id = %d limit 1",
 			intval($contact['uid']),
 			intval($contact['id'])
 		);
 
-		$x = q("UPDATE `contact` SET `name` = '%s', `name-date` = '%s' WHERE `uid` = %d AND `id` = %d LIMIT 1",
+		$x = q("UPDATE `contact` SET `name` = '%s', `name_date` = '%s' WHERE `uid` = %d AND `id` = %d LIMIT 1",
 			dbesc(notags(trim($new_name))),
 			dbesc(datetime_convert()),
 			intval($contact['uid']),
@@ -2100,7 +2100,7 @@ function local_delivery($importer,$data) {
 		}
 	}
 
-	if(($photo_timestamp) && (strlen($photo_url)) && ($photo_timestamp > $importer['avatar-date'])) {
+	if(($photo_timestamp) && (strlen($photo_url)) && ($photo_timestamp > $importer['avatar_date'])) {
 		logger('local_delivery: Updating photo for ' . $importer['name']);
 		require_once("Photo.php");
 		$photo_failure = false;
@@ -2146,7 +2146,7 @@ function local_delivery($importer,$data) {
 
 			$a = get_app();
 
-			q("UPDATE `contact` SET `avatar-date` = '%s', `photo` = '%s', `thumb` = '%s', `micro` = '%s'  
+			q("UPDATE `contact` SET `avatar_date` = '%s', `photo` = '%s', `thumb` = '%s', `micro` = '%s'  
 				WHERE `uid` = %d AND `id` = %d LIMIT 1",
 				dbesc(datetime_convert()),
 				dbesc($a->get_baseurl() . '/photo/' . $hash . '-4.'.$img->getExt()),
@@ -2158,13 +2158,13 @@ function local_delivery($importer,$data) {
 		}
 	}
 
-	if(($name_updated) && (strlen($new_name)) && ($name_updated > $importer['name-date'])) {
+	if(($name_updated) && (strlen($new_name)) && ($name_updated > $importer['name_date'])) {
 		$r = q("select * from contact where uid = %d and id = %d limit 1",
 			intval($importer['importer_uid']),
 			intval($importer['id'])
 		);
 
-		$x = q("UPDATE `contact` SET `name` = '%s', `name-date` = '%s' WHERE `uid` = %d AND `id` = %d LIMIT 1",
+		$x = q("UPDATE `contact` SET `name` = '%s', `name_date` = '%s' WHERE `uid` = %d AND `id` = %d LIMIT 1",
 			dbesc(notags(trim($new_name))),
 			dbesc(datetime_convert()),
 			intval($importer['importer_uid']),
@@ -2199,7 +2199,7 @@ function local_delivery($importer,$data) {
 		$newloc['confirm'] = notags(unxmlify($base['confirm'][0]['data']));
 		$newloc['notify'] = notags(unxmlify($base['notify'][0]['data']));
 		$newloc['poll'] = notags(unxmlify($base['poll'][0]['data']));
-		$newloc['site-pubkey'] = notags(unxmlify($base['site-pubkey'][0]['data']));
+		$newloc['site_pubkey'] = notags(unxmlify($base['site_pubkey'][0]['data']));
 		$newloc['pubkey'] = notags(unxmlify($base['pubkey'][0]['data']));
 		$newloc['prvkey'] = notags(unxmlify($base['prvkey'][0]['data']));
 		
@@ -3165,45 +3165,6 @@ function lose_sharer($importer,$contact,$datarray,$item) {
 	else {
 		contact_remove($contact['id']);
 	}
-}
-
-
-function subscribe_to_hub($url,$importer,$contact,$hubmode = 'subscribe') {
-
-	$a = get_app();
-
-	if(is_array($importer)) {
-		$r = q("SELECT `nickname` FROM `user` WHERE `uid` = %d LIMIT 1",
-			intval($importer['uid'])
-		);
-	}
-
-	if(! count($r))
-		return;
-
-	$push_url = get_config('system','url') . '/pubsub/' . $r[0]['nickname'] . '/' . $contact['id'];
-
-	// Use a single verify token, even if multiple hubs
-
-	$verify_token = ((strlen($contact['hub-verify'])) ? $contact['hub-verify'] : random_string());
-
-	$params= 'hub.mode=' . $hubmode . '&hub.callback=' . urlencode($push_url) . '&hub.topic=' . urlencode($contact['poll']) . '&hub.verify=async&hub.verify_token=' . $verify_token;
-
-	logger('subscribe_to_hub: ' . $hubmode . ' ' . $contact['name'] . ' to hub ' . $url . ' endpoint: '  . $push_url . ' with verifier ' . $verify_token);
-
-	if(! strlen($contact['hub-verify'])) {
-		$r = q("UPDATE `contact` SET `hub-verify` = '%s' WHERE `id` = %d LIMIT 1",
-			dbesc($verify_token),
-			intval($contact['id'])
-		);
-	}
-
-	post_url($url,$params);
-
-	logger('subscribe_to_hub: returns: ' . $a->get_curl_code(), LOGGER_DEBUG);
-			
-	return;
-
 }
 
 

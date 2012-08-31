@@ -110,7 +110,7 @@ function profile_photo_post(&$a) {
 				// we'll set the updated profile-photo timestamp even if it isn't the default profile,
 				// so that browsers will do a cache update unconditionally
 
-				$r = q("UPDATE `contact` SET `avatar-date` = '%s' WHERE `self` = 1 AND `uid` = %d LIMIT 1",
+				$r = q("UPDATE `contact` SET `avatar_date` = '%s' WHERE `self` = 1 AND `uid` = %d LIMIT 1",
 					dbesc(datetime_convert()),
 					intval(local_user())
 				);
@@ -207,7 +207,7 @@ function profile_photo_content(&$a) {
 				dbesc($resource_id)
 				);
 			
-			$r = q("UPDATE `contact` SET `avatar-date` = '%s' WHERE `self` = 1 AND `uid` = %d LIMIT 1",
+			$r = q("UPDATE `contact` SET `avatar_date` = '%s' WHERE `self` = 1 AND `uid` = %d LIMIT 1",
 				dbesc(datetime_convert()),
 				intval(local_user())
 			);

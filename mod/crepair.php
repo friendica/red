@@ -83,9 +83,9 @@ function crepair_post(&$a) {
 		$x = q("UPDATE `contact` SET `photo` = '%s',
 			`thumb` = '%s',
 			`micro` = '%s',
-			`name-date` = '%s',
-			`uri-date` = '%s',
-			`avatar-date` = '%s'
+			`name_date` = '%s',
+			`uri_date` = '%s',
+			`avatar_date` = '%s'
 			WHERE `id` = %d LIMIT 1
 			",
 			dbesc($photos[0]),

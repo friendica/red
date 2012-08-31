@@ -107,7 +107,7 @@ function dfrn_confirm_post(&$a,$handsfree = null) {
 		 *
 		 */
 
-		$r = q("SELECT * FROM `contact` WHERE ( ( `issued-id` != '' AND `issued-id` = '%s' ) OR ( `id` = %d AND `id` != 0 ) ) AND `uid` = %d AND `duplex` = 0 LIMIT 1",
+		$r = q("SELECT * FROM `contact` WHERE ( ( `issued_id` != '' AND `issued_id` = '%s' ) OR ( `id` = %d AND `id` != 0 ) ) AND `uid` = %d AND `duplex` = 0 LIMIT 1",
 			dbesc($dfrn_id),
 			intval($cid),
 			intval($uid)
@@ -124,11 +124,11 @@ function dfrn_confirm_post(&$a,$handsfree = null) {
 
 		$contact_id   = $contact['id'];
 		$relation     = $contact['rel'];
-		$site_pubkey  = $contact['site-pubkey'];
+		$site_pubkey  = $contact['site_pubkey'];
 		$dfrn_confirm = $contact['confirm'];
 		$aes_allow    = $contact['aes_allow'];
 		
-		$network = ((strlen($contact['issued-id'])) ? NETWORK_DFRN : NETWORK_OSTATUS);
+		$network = ((strlen($contact['issued_id'])) ? NETWORK_DFRN : NETWORK_OSTATUS);
 
 		if($contact['network'])
 			$network = $contact['network'];
@@ -256,9 +256,9 @@ function dfrn_confirm_post(&$a,$handsfree = null) {
 						notice( t('Remote site reported: ') . $message . EOL);
 					break;
 				case 1:
-					// birthday paradox - generate new dfrn-id and fall through.
+					// birthday paradox - generate new dfrn_id and fall through.
 					$new_dfrn_id = random_string();
-					$r = q("UPDATE contact SET `issued-id` = '%s' WHERE `id` = %d AND `uid` = %d LIMIT 1",
+					$r = q("UPDATE contact SET `issued_id` = '%s' WHERE `id` = %d AND `uid` = %d LIMIT 1",
 						dbesc($new_dfrn_id),
 						intval($contact_id),
 						intval($uid) 
@@ -324,9 +324,9 @@ function dfrn_confirm_post(&$a,$handsfree = null) {
 				`thumb` = '%s',
 				`micro` = '%s', 
 				`rel` = %d, 
-				`name-date` = '%s', 
-				`uri-date` = '%s', 
-				`avatar-date` = '%s', 
+				`name_date` = '%s', 
+				`uri_date` = '%s', 
+				`avatar_date` = '%s', 
 				`blocked` = 0, 
 				`pending` = 0,
 				`duplex` = %d,
@@ -377,9 +377,9 @@ function dfrn_confirm_post(&$a,$handsfree = null) {
 			$r = q("UPDATE `contact` SET `photo` = '%s', 
 				`thumb` = '%s',
 				`micro` = '%s', 
-				`name-date` = '%s', 
-				`uri-date` = '%s', 
-				`avatar-date` = '%s', 
+				`name_date` = '%s', 
+				`uri_date` = '%s', 
+				`avatar_date` = '%s', 
 				`notify` = '%s',
 				`poll` = '%s',
 				`blocked` = 0, 
@@ -594,7 +594,7 @@ function dfrn_confirm_post(&$a,$handsfree = null) {
 
 		// Decrypt all this stuff we just received
 
-		$foreign_pubkey = $ret[0]['site-pubkey'];
+		$foreign_pubkey = $ret[0]['site_pubkey'];
 		$dfrn_record    = $ret[0]['id'];
 
 		if(! $foreign_pubkey) {
@@ -614,16 +614,16 @@ function dfrn_confirm_post(&$a,$handsfree = null) {
 			$dfrn_pubkey = $public_key;
 		}
 
-		$r = q("SELECT * FROM `contact` WHERE `dfrn-id` = '%s' LIMIT 1",
+		$r = q("SELECT * FROM `contact` WHERE `dfrn_id` = '%s' LIMIT 1",
 			dbesc($decrypted_dfrn_id)
 		);
 		if(count($r)) {
 			$message = t('The ID provided by your system is a duplicate on our system. It should work if you try again.');
-			xml_status(1,$message); // Birthday paradox - duplicate dfrn-id
+			xml_status(1,$message); // Birthday paradox - duplicate dfrn_id
 			// NOTREACHED
 		}
 
-		$r = q("UPDATE `contact` SET `dfrn-id` = '%s', `pubkey` = '%s' WHERE `id` = %d LIMIT 1",
+		$r = q("UPDATE `contact` SET `dfrn_id` = '%s', `pubkey` = '%s' WHERE `id` = %d LIMIT 1",
 			dbesc($decrypted_dfrn_id),
 			dbesc($dfrn_pubkey),
 			intval($dfrn_record)
@@ -634,10 +634,10 @@ function dfrn_confirm_post(&$a,$handsfree = null) {
 		}
 
 		// It's possible that the other person also requested friendship.
-		// If it is a duplex relationship, ditch the issued-id if one exists. 
+		// If it is a duplex relationship, ditch the issued_id if one exists. 
 
 		if($duplex) {
-			$r = q("UPDATE `contact` SET `issued-id` = '' WHERE `id` = %d LIMIT 1",
+			$r = q("UPDATE `contact` SET `issued_id` = '' WHERE `id` = %d LIMIT 1",
 				intval($dfrn_record)
 			);
 		}
@@ -672,9 +672,9 @@ function dfrn_confirm_post(&$a,$handsfree = null) {
 			`thumb` = '%s', 
 			`micro` = '%s',
 			`rel` = %d, 
-			`name-date` = '%s', 
-			`uri-date` = '%s', 
-			`avatar-date` = '%s', 
+			`name_date` = '%s', 
+			`uri_date` = '%s', 
+			`avatar_date` = '%s', 
 			`blocked` = 0, 
 			`pending` = 0,
 			`duplex` = %d, 

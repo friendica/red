@@ -344,9 +344,9 @@ function notifier_run($argv, $argc){
 			'$profile_page' => xmlify($owner['url']),
 			'$photo'        => xmlify($owner['photo']),
 			'$thumb'        => xmlify($owner['thumb']),
-			'$picdate'      => xmlify(datetime_convert('UTC','UTC',$owner['avatar-date'] . '+00:00' , ATOM_TIME)) ,
-			'$uridate'      => xmlify(datetime_convert('UTC','UTC',$owner['uri-date']    . '+00:00' , ATOM_TIME)) ,
-			'$namdate'      => xmlify(datetime_convert('UTC','UTC',$owner['name-date']   . '+00:00' , ATOM_TIME)) ,
+			'$picdate'      => xmlify(datetime_convert('UTC','UTC',$owner['avatar_date'] . '+00:00' , ATOM_TIME)) ,
+			'$uridate'      => xmlify(datetime_convert('UTC','UTC',$owner['uri_date']    . '+00:00' , ATOM_TIME)) ,
+			'$namdate'      => xmlify(datetime_convert('UTC','UTC',$owner['name_date']   . '+00:00' , ATOM_TIME)) ,
 			'$birthday'     => $birthday,
 			'$community'    => (($owner['page-flags'] == PAGE_COMMUNITY) ? '<dfrn:community>1</dfrn:community>' : '')
 
@@ -520,10 +520,10 @@ function notifier_run($argv, $argc){
 					if(link_compare($basepath,$a->get_baseurl())) {
 
 						$nickname = basename($contact['url']);
-						if($contact['issued-id'])
-							$sql_extra = sprintf(" AND `dfrn-id` = '%s' ", dbesc($contact['issued-id']));
+						if($contact['issued_id'])
+							$sql_extra = sprintf(" AND `dfrn_id` = '%s' ", dbesc($contact['issued_id']));
 						else
-							$sql_extra = sprintf(" AND `issued-id` = '%s' ", dbesc($contact['dfrn-id']));
+							$sql_extra = sprintf(" AND `issued_id` = '%s' ", dbesc($contact['dfrn_id']));
 
 						$x = q("SELECT	`contact`.*, `contact`.`uid` AS `importer_uid`, 
 							`contact`.`pubkey` AS `cpubkey`, 

@@ -233,7 +233,7 @@ function create_user($arr) {
 			return $result;
 		}
 		$r = q("INSERT INTO `contact` ( `uid`, `created`, `self`, `name`, `nick`, `photo`, `thumb`, `micro`, `blocked`, `pending`, `url`, `nurl`,
-			`request`, `notify`, `poll`, `confirm`, `poco`, `name-date`, `uri-date`, `avatar-date`, `closeness` )
+			`request`, `notify`, `poll`, `confirm`, `poco`, `name_date`, `uri_date`, `avatar_date`, `closeness` )
 			VALUES ( %d, '%s', 1, '%s', '%s', '%s', '%s', '%s', 0, 0, '%s', '%s', '%s', '%s', '%s', '%s', '%s', '%s', '%s', '%s', 0 ) ",
 			intval($newuid),
 			datetime_convert(),

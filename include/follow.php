@@ -95,7 +95,6 @@ function new_contact($uid,$url,$interactive = false) {
 
 	$writeable = ((($ret['network'] === NETWORK_OSTATUS) && ($ret['notify'])) ? 1 : 0);
 
-	$subhub = (($ret['network'] === NETWORK_OSTATUS) ? true : false);
 
 	$hidden = 0;
 
@@ -112,9 +111,8 @@ function new_contact($uid,$url,$interactive = false) {
 	if(count($r)) {
 		// update contact
 		if($r[0]['rel'] == CONTACT_IS_FOLLOWER || ($network === NETWORK_DIASPORA && $r[0]['rel'] == CONTACT_IS_SHARING)) {
-			q("UPDATE `contact` SET `rel` = %d , `subhub` = %d, `readonly` = 0 WHERE `id` = %d AND `uid` = %d LIMIT 1",
+			q("UPDATE `contact` SET `rel` = %d , `readonly` = 0 WHERE `id` = %d AND `uid` = %d LIMIT 1",
 				intval(CONTACT_IS_FRIEND),
-				intval($subhub),
 				intval($r[0]['id']),
 				intval($uid)
 			);
@@ -152,8 +150,8 @@ function new_contact($uid,$url,$interactive = false) {
 
 		// create contact record 
 		$r = q("INSERT INTO `contact` ( `uid`, `created`, `url`, `nurl`, `addr`, `alias`, `batch`, `notify`, `poll`, `poco`, `name`, `nick`, `photo`, `network`, `pubkey`, `rel`, `priority`,
-			`writable`, `hidden`, `blocked`, `readonly`, `pending`, `subhub` )
-			VALUES ( %d, '%s', '%s', '%s', '%s', '%s', '%s', '%s', '%s', '%s', '%s', '%s', '%s', '%s', '%s', %d, %d, %d, %d, 0, 0, 0, %d ) ",
+			`writable`, `hidden`, `blocked`, `readonly`, `pending` )
+			VALUES ( %d, '%s', '%s', '%s', '%s', '%s', '%s', '%s', '%s', '%s', '%s', '%s', '%s', '%s', '%s', %d, %d, %d, %d, 0, 0, 0) ",
 			intval($uid),
 			dbesc(datetime_convert()),
 			dbesc($ret['url']),
@@ -172,8 +170,7 @@ function new_contact($uid,$url,$interactive = false) {
 			intval($new_relation),
 			intval($ret['priority']),
 			intval($writeable),
-			intval($hidden),
-			intval($subhub)
+			intval($hidden)
 		);
 	}
 
@@ -206,9 +203,9 @@ function new_contact($uid,$url,$interactive = false) {
 	$r = q("UPDATE `contact` SET `photo` = '%s', 
 			`thumb` = '%s',
 			`micro` = '%s', 
-			`name-date` = '%s', 
-			`uri-date` = '%s', 
-			`avatar-date` = '%s'
+			`name_date` = '%s', 
+			`uri_date` = '%s', 
+			`avatar_date` = '%s'
 			WHERE `id` = %d LIMIT 1
 		",
 			dbesc($photos[0]),
@@ -221,7 +218,7 @@ function new_contact($uid,$url,$interactive = false) {
 		);			
 
 
-	// pull feed and consume it, which should subscribe to the hub.
+	// pull feed and consume it
 
 	proc_run('php',"include/poller.php","$contact_id");
 

@@ -111,7 +111,7 @@ function create_identity($arr) {
 		dbesc($a->get_baseurl() . "/photo/avatar/{$newuid}")
 	);
 
-	$r = q("INSERT INTO `contact` ( `uid`, `created`, `self`, `name`, `nick`, `photo`, `thumb`, `micro`, `blocked`, `pending`, `url`, `name-date`, `uri-date`, `avatar-date`, `closeness` )
+	$r = q("INSERT INTO `contact` ( `uid`, `created`, `self`, `name`, `nick`, `photo`, `thumb`, `micro`, `blocked`, `pending`, `url`, `name_date`, `uri_date`, `avatar_date`, `closeness` )
 			VALUES ( %d, '%s', 1, '%s', '%s', '%s', '%s', '%s', 0, 0, '%s', '%s', '%s', '%s', 0 ) ",
 			intval($ret['entity']['entity_id']),
 			datetime_convert(),

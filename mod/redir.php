@@ -18,14 +18,14 @@ function redir_init(&$a) {
 		if((! count($r)) || ($r[0]['network'] !== NETWORK_DFRN))
 			goaway(z_root());
 
-		$dfrn_id = $orig_id = (($r[0]['issued-id']) ? $r[0]['issued-id'] : $r[0]['dfrn-id']);
+		$dfrn_id = $orig_id = (($r[0]['issued_id']) ? $r[0]['issued_id'] : $r[0]['dfrn_id']);
 
-		if($r[0]['duplex'] && $r[0]['issued-id']) {
-			$orig_id = $r[0]['issued-id'];
+		if($r[0]['duplex'] && $r[0]['issued_id']) {
+			$orig_id = $r[0]['issued_id'];
 			$dfrn_id = '1:' . $orig_id;
 		}
-		if($r[0]['duplex'] && $r[0]['dfrn-id']) {
-			$orig_id = $r[0]['dfrn-id'];
+		if($r[0]['duplex'] && $r[0]['dfrn_id']) {
+			$orig_id = $r[0]['dfrn_id'];
 			$dfrn_id = '0:' . $orig_id;
 		}
 

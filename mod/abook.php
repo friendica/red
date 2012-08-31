@@ -111,7 +111,7 @@ function abook_post(&$a) {
 
 	$info = fix_mce_lf(escape_tags(trim($_POST['info'])));
 
-	$r = q("UPDATE `contact` SET `profile-id` = %d, `priority` = %d , `info` = '%s',
+	$r = q("UPDATE `contact` SET `profile_id` = %d, `priority` = %d , `info` = '%s',
 		`hidden` = %d, closeness = %d WHERE `id` = %d AND `uid` = %d LIMIT 1",
 		intval($profile_id),
 		intval($priority),
@@ -314,7 +314,7 @@ function abook_content(&$a) {
 			'$updpub' => t('Update public posts'),
 			'$last_update' => $last_update,
 			'$udnow' => t('Update now'),
-			'$profile_select' => contact_profile_assign($contact['profile-id'],(($contact['network'] !== NETWORK_DFRN) ? true : false)),
+			'$profile_select' => contact_profile_assign($contact['profile_id'],(($contact['network'] !== NETWORK_DFRN) ? true : false)),
 			'$contact_id' => $contact['id'],
 			'$block_text' => (($contact['blocked']) ? t('Unblock') : t('Block') ),
 			'$ignore_text' => (($contact['readonly']) ? t('Unignore') : t('Ignore') ),

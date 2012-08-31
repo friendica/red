@@ -139,8 +139,8 @@ function mark_for_death($contact) {
 	if($contact['archive'])
 		return;
 
-	if($contact['term-date'] == '0000-00-00 00:00:00') {
-		q("UPDATE `contact` SET `term-date` = '%s' WHERE `id` = %d LIMIT 1",
+	if($contact['term_date'] == '0000-00-00 00:00:00') {
+		q("UPDATE `contact` SET `term_date` = '%s' WHERE `id` = %d LIMIT 1",
 				dbesc(datetime_convert()),
 				intval($contact['id'])
 		);
@@ -151,7 +151,7 @@ function mark_for_death($contact) {
 		// so they won't be surprised when the contact vanishes and can take
 		// remedial action if this was a serious mistake or glitch
 
-		$expiry = $contact['term-date'] . ' + 32 days ';
+		$expiry = $contact['term_date'] . ' + 32 days ';
 		if(datetime_convert() > datetime_convert('UTC','UTC',$expiry)) {
 
 			// relationship is really truly dead. 
@@ -172,7 +172,7 @@ function mark_for_death($contact) {
 if(! function_exists('unmark_for_death')) {
 function unmark_for_death($contact) {
 	// It's a miracle. Our dead contact has inexplicably come back to life.
-	q("UPDATE `contact` SET `term-date` = '%s' WHERE `id` = %d LIMIT 1",
+	q("UPDATE `contact` SET `term_date` = '%s' WHERE `id` = %d LIMIT 1",
 		dbesc('0000-00-00 00:00:00'),
 		intval($contact['id'])
 	);

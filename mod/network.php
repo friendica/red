@@ -605,7 +605,7 @@ function network_content(&$a, $update = 0, $load = false) {
 
 		$items = q("SELECT `item`.*, `item`.`id` AS `item_id`, 
 			`contact`.`name`, `contact`.`photo`, `contact`.`url`, `contact`.`rel`, `contact`.`writable`,
-			`contact`.`network`, `contact`.`thumb`, `contact`.`dfrn-id`, `contact`.`self`,
+			`contact`.`network`, `contact`.`thumb`, `contact`.`dfrn_id`, `contact`.`self`,
 			`contact`.`id` AS `cid`, `contact`.`uid` AS `contact-uid`
 			FROM `item`, `contact`
 			WHERE `item`.`uid` = %d AND `item`.`visible` = 1 
@@ -667,7 +667,7 @@ function network_content(&$a, $update = 0, $load = false) {
 
 			$items = q("SELECT `item`.*, `item`.`id` AS `item_id`,
 				`contact`.`name`, `contact`.`photo`, `contact`.`url`, `contact`.`alias`, `contact`.`rel`, `contact`.`writable`,
-				`contact`.`network`, `contact`.`thumb`, `contact`.`dfrn-id`, `contact`.`self`,
+				`contact`.`network`, `contact`.`thumb`, `contact`.`dfrn_id`, `contact`.`self`,
 				`contact`.`id` AS `cid`, `contact`.`uid` AS `contact-uid`
 				FROM `item`, `contact`
 				WHERE `item`.`uid` = %d AND `item`.`visible` = 1 AND `item`.`deleted` = 0
