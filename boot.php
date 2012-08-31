@@ -1493,7 +1493,7 @@ if(! function_exists('proc_run')) {
 
 		$cmdline = implode($args," ");
 		if(get_config('system','proc_windows'))
-			proc_close(proc_open('start /b ' . $cmdline,array(),$foo));
+			proc_close(proc_open('cmd /c start /b ' . $cmdline,array(),$foo));
 		else
 			proc_close(proc_open($cmdline." &",array(),$foo));
 	}

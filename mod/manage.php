@@ -82,32 +82,29 @@ function manage_post(&$a) {
 
 function manage_content(&$a) {
 
-	if(! local_user()) {
+	if(! get_account_id()) {
 		notice( t('Permission denied.') . EOL);
 		return;
 	}
 
-	$o = '<h3>' . t('Manage Identities and/or Pages') . '</h3>';
+	$active = null;
 
-	
-	$o .= '<div id="identity-manage-desc">' . t('Toggle between different identities or community/group pages which share your account details or which you have been granted "manage" permissions') . '</div>';
+	if(local_user()) {
+		$r = q("select * from entity where entity_id = %d limit 1",
+			intval(local_user())
+		);
 
-	$o .= '<div id="identity-manage-choose">' . t('Select an identity to manage: ') . '</div>';
-
-	$o .= '<div id="identity-selector-wrapper">' . "\r\n";
-	$o .= '<form action="manage" method="post" >' . "\r\n";
-	$o .= '<select name="identity" size="4" onchange="this.form.submit();" >' . "\r\n";
-
-	foreach($a->identities as $rr) {
-		$selected = (($rr['nickname'] === $a->user['nickname']) ? ' selected="selected" ' : '');
-		$o .= '<option ' . $selected . 'value="' . $rr['uid'] . '">' . $rr['username'] . ' (' . $rr['nickname'] . ')</option>' . "\r\n";
+		if($r && count($r))
+			$active = $r[0];
 	}
 
-	$o .= '</select>' . "\r\n";
-	$o .= '<div id="identity-select-break"></div>' . "\r\n";
 
-//	$o .= '<input id="identity-submit" type="submit" name="submit" value="' . t('Submit') . '" />';
-	$o .= '</div></form>' . "\r\n";
+	$o = replace_macros(get_markup_template('channels.tpl'), array(
+		'$header' => t('Manage Profile Channels'),
+		'$desc' => t('These are your Profile Channels. Select any Profile Channel to attach and make that the current channel.'),
+		'$active' => $active,
+	));
+
 
 	return $o;
 

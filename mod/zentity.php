@@ -99,8 +99,8 @@ function zentity_content(&$a) {
 
 	$o = replace_macros(get_markup_template('zentity.tpl'), array(
 
-		'$title'        => t('Create Identity'),
-		'$desc'         => t('An identity is a profile container for a personal profile, blog, public or private group/forum, celebrity page, and more. You may create as many of these as your provider allows.'),
+		'$title'        => t('Create a Profile Channel'),
+		'$desc'         => t('A channel is a collection of web resources attached to a profile page. This is typically used to create a personal profile, but may also be used to create a blog, public and private forums, celebrity pages, and more. You may create as many of these as your provider allows.'),
 
 		'$label_name'   => t('Full name'),
 		'$label_nick'   => t('Choose a short nickname'),

@@ -114,7 +114,7 @@ function install_content(&$a) {
 	global $install_wizard_pass, $db;
 	$o = '';
 	$wizard_status = "";
-	$install_title = t('Friendica Social Communications Server - Setup');
+	$install_title = t('Friendica Red Communications Server - Setup');
 	
 
 	
@@ -233,6 +233,7 @@ function install_content(&$a) {
 				'$dbuser' => array('dbuser', t('Database Login Name'), $dbuser, ''),
 				'$dbpass' => array('dbpass', t('Database Login Password'), $dbpass, ''),
 				'$dbdata' => array('dbdata', t('Database Name'), $dbdata, ''),
+
 				'$adminmail' => array('adminmail', t('Site administrator email address'), $adminmail, t('Your account email address must match this in order to use the web admin panel.')),
 
 				
@@ -387,7 +388,7 @@ function check_funcs(&$checks) {
 		$ck_funcs[0]['status']= false;
 		$ck_funcs[0]['help']= t('Error: libCURL PHP module required but not installed.');
 	}
-	if(! function_exists('imagecreatefromjpeg')){
+x	if(! function_exists('imagecreatefromjpeg')){
 		$ck_funcs[1]['status']= false;
 		$ck_funcs[1]['help']= t('Error: GD graphics PHP module with JPEG support required but not installed.');
 	}
@@ -406,8 +407,7 @@ function check_funcs(&$checks) {
 	
 	$checks = array_merge($checks, $ck_funcs);
 	
-	/*if((x($_SESSION,'sysmsg')) && is_array($_SESSION['sysmsg']) && count($_SESSION['sysmsg']))
-		notice( t('Please see the file "INSTALL.txt".') . EOL);*/
+
 }
 
 
@@ -488,7 +488,7 @@ function what_next() {
 		."<p>".t('IMPORTANT: You will need to [manually] setup a scheduled task for the poller.')
 		.t('Please see the file "INSTALL.txt".')			
 		."</p><p>"
-		.t("Go to your new Firendica node <a href='$baseurl/register'>registration page</a> and register as new user. Remember to use the same email you have entered as administrator email. This will allow you to enter the site admin panel.")
+		.t("Go to your new Friendica node <a href='$baseurl/register'>registration page</a> and register as new user. Remember to use the same email you have entered as administrator email. This will allow you to enter the site admin panel.")
 		."</p>";
 }
 
