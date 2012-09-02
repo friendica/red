@@ -9,6 +9,8 @@
 	<div id="zentity-name-feedback" class="zentity-feedback"></div>
 	<div id="zentity-name-end"  class="zentity-field-end"></div>
 
+	<div id="zentity-name-help" class="descriptive-paragraph">$help_name</div>
+
 	<label for="zentity-nickname" id="label-zentity-nickname" class="zentity-label" >$label_nick</label>
 	<input type="text" name="nickname" id="zentity-nickname" class="zentity-input" value="$nickname" />
 	<div id="zentity-nickname-feedback" class="zentity-feedback"></div>

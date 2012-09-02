@@ -99,10 +99,11 @@ function zentity_content(&$a) {
 
 	$o = replace_macros(get_markup_template('zentity.tpl'), array(
 
-		'$title'        => t('Create a Profile Channel'),
-		'$desc'         => t('A channel is a collection of web resources attached to a profile page. This is typically used to create a personal profile, but may also be used to create a blog, public and private forums, celebrity pages, and more. You may create as many of these as your provider allows.'),
+		'$title'        => t('Add a Channel'),
+		'$desc'         => t('A channel is your own collection of related web pages. A channel can be used to hold social network profiles, blogs, conversation groups and forums, celebrity pages, and much more. You may create as many channels as your service provider allows.'),
 
-		'$label_name'   => t('Full name'),
+		'$label_name'   => t('Channel Name'),
+		'$help_name'    => t('Examples: "Bob Jameson", "Lisa and her Horses", "Soccer", "Aviation Group" '),
 		'$label_nick'   => t('Choose a short nickname'),
 		'$nick_desc'    => t('Your nickname will be used to create an easily remembered web address ("webbie") for your channel.'),
 		'$label_import' => t('Check this box to import an existing channel file from another location'),
