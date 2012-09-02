@@ -78,7 +78,7 @@ class dba {
 
 		$this->error = '';
 
-		if ($a->config["system"]["db_log"] != "")
+		if(x($a->config,'system') && x($a->config['system'],'db_log'))
 			$stamp1 = microtime(true);
 
 		if($this->mysqli)
@@ -86,7 +86,7 @@ class dba {
 		else
 			$result = @mysql_query($sql,$this->db);
 
-		if ($a->config["system"]["db_log"] != "") {
+		if(x($a->config,'system') && x($a->config['system'],'db_log')) {
 			$stamp2 = microtime(true);
 			$duration = round($stamp2-$stamp1, 3);
 			if ($duration > $a->config["system"]["db_loglimit"]) {

@@ -508,6 +508,7 @@ if(! class_exists('App')) {
 			$this->argc = count($this->argv);
 			if((array_key_exists('0',$this->argv)) && strlen($this->argv[0])) {
 				$this->module = str_replace(".", "_", $this->argv[0]);
+				$this->module = str_replace("-", "_", $this->module);
 			}
 			else {
 				$this->argc = 1;

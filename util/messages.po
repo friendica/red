@@ -396,8 +396,8 @@ msgstr ""
 #: ../../mod/profile_photo.php:176 ../../mod/profile_photo.php:254
 #: ../../mod/profile_photo.php:263
 #: ../../addon/communityhome/communityhome.php:111
-#: ../../view/theme/diabook/theme.php:599 ../../include/user.php:304
-#: ../../include/user.php:311 ../../include/user.php:318
+#: ../../view/theme/diabook/theme.php:599 ../../include/user.php:318
+#: ../../include/user.php:325 ../../include/user.php:332
 msgid "Profile Photos"
 msgstr ""
 
@@ -2675,61 +2675,106 @@ msgid ""
 "potential friends know exactly how to find you."
 msgstr ""
 
-#: ../../mod/newmember.php:22
+#: ../../mod/newmember.php:32 ../../mod/profperm.php:103
+#: ../../view/theme/diabook/theme.php:128 ../../include/profile_advanced.php:7
+#: ../../include/profile_advanced.php:84 ../../include/nav.php:50
+#: ../../boot.php:1642
+msgid "Profile"
+msgstr ""
+
+#: ../../mod/newmember.php:36 ../../mod/profile_photo.php:211
+msgid "Upload Profile Photo"
+msgstr ""
+
+#: ../../mod/newmember.php:36
 msgid ""
 "Upload a profile photo if you have not done so already. Studies have shown "
 "that people with real photos of themselves are ten times more likely to make "
 "friends than people who do not."
 msgstr ""
 
-#: ../../mod/newmember.php:25
-msgid ""
-"Authorise the Facebook Connector if you currently have a Facebook account "
-"and we will (optionally) import all your Facebook friends and conversations."
+#: ../../mod/newmember.php:38
+msgid "Edit Your Profile"
 msgstr ""
 
-#: ../../mod/newmember.php:27
-msgid ""
-"<em>If</em> this is your own personal server, installing the Facebook addon "
-"may ease your transition to the free social web."
-msgstr ""
-
-#: ../../mod/newmember.php:32
-msgid ""
-"Enter your email access information on your Connector Settings page if you "
-"wish to import and interact with friends or mailing lists from your email "
-"INBOX"
-msgstr ""
-
-#: ../../mod/newmember.php:34
+#: ../../mod/newmember.php:38
 msgid ""
 "Edit your <strong>default</strong> profile to your liking. Review the "
 "settings for hiding your list of friends and hiding the profile from unknown "
 "visitors."
 msgstr ""
 
-#: ../../mod/newmember.php:36
+#: ../../mod/newmember.php:40
+msgid "Profile Keywords"
+msgstr ""
+
+#: ../../mod/newmember.php:40
 msgid ""
 "Set some public keywords for your default profile which describe your "
 "interests. We may be able to find other people with similar interests and "
 "suggest friendships."
 msgstr ""
 
-#: ../../mod/newmember.php:38
+#: ../../mod/newmember.php:44
+msgid "Connecting"
+msgstr ""
+
+#: ../../mod/newmember.php:49 ../../mod/newmember.php:51
+#: ../../addon/facebook/facebook.php:728
+#: ../../include/contact_selectors.php:81
+msgid "Facebook"
+msgstr ""
+
+#: ../../mod/newmember.php:49
+msgid ""
+"Authorise the Facebook Connector if you currently have a Facebook account "
+"and we will (optionally) import all your Facebook friends and conversations."
+msgstr ""
+
+#: ../../mod/newmember.php:51
+msgid ""
+"<em>If</em> this is your own personal server, installing the Facebook addon "
+"may ease your transition to the free social web."
+msgstr ""
+
+#: ../../mod/newmember.php:56
+msgid "Importing Emails"
+msgstr ""
+
+#: ../../mod/newmember.php:56
+msgid ""
+"Enter your email access information on your Connector Settings page if you "
+"wish to import and interact with friends or mailing lists from your email "
+"INBOX"
+msgstr ""
+
+#: ../../mod/newmember.php:58
+msgid "Go to Your Contacts Page"
+msgstr ""
+
+#: ../../mod/newmember.php:58
 msgid ""
 "Your Contacts page is your gateway to managing friendships and connecting "
 "with friends on other networks. Typically you enter their address or site "
 "URL in the <em>Add New Contact</em> dialog."
 msgstr ""
 
-#: ../../mod/newmember.php:40
+#: ../../mod/newmember.php:60
+msgid "Go to Your Site's Directory"
+msgstr ""
+
+#: ../../mod/newmember.php:60
 msgid ""
 "The Directory page lets you find other people in this network or other "
 "federated sites. Look for a <em>Connect</em> or <em>Follow</em> link on "
 "their profile page. Provide your own Identity Address if requested."
 msgstr ""
 
-#: ../../mod/newmember.php:42
+#: ../../mod/newmember.php:62
+msgid "Finding New People"
+msgstr ""
+
+#: ../../mod/newmember.php:62
 msgid ""
 "On the side panel of the Contacts page are several tools to find new "
 "friends. We can match people by interest, look up people by name or "
@@ -2738,14 +2783,41 @@ msgid ""
 "hours."
 msgstr ""
 
-#: ../../mod/newmember.php:44
+#: ../../mod/newmember.php:66 ../../include/group.php:239
+msgid "Groups"
+msgstr ""
+
+#: ../../mod/newmember.php:70
+msgid "Group Your Contacts"
+msgstr ""
+
+#: ../../mod/newmember.php:70
 msgid ""
 "Once you have made some friends, organize them into private conversation "
 "groups from the sidebar of your Contacts page and then you can interact with "
 "each group privately on your Network page."
 msgstr ""
 
-#: ../../mod/newmember.php:46
+#: ../../mod/newmember.php:73
+msgid "Why Aren't My Posts Public?"
+msgstr ""
+
+#: ../../mod/newmember.php:73
+msgid ""
+"Friendica respects your privacy. By default, your posts will only show up to "
+"people you've added as friends. For more information, see the help section "
+"from the link above."
+msgstr ""
+
+#: ../../mod/newmember.php:78
+msgid "Getting Help"
+msgstr ""
+
+#: ../../mod/newmember.php:82
+msgid "Go to the Help Section"
+msgstr ""
+
+#: ../../mod/newmember.php:82
 msgid ""
 "Our <strong>help</strong> pages may be consulted for detail on other program "
 "features and resources."
@@ -4601,11 +4673,6 @@ msgstr ""
 
 #: ../../addon/facebook/facebook.php:700
 msgid "Problems with Facebook Real-Time Updates"
-msgstr ""
-
-#: ../../addon/facebook/facebook.php:728
-#: ../../include/contact_selectors.php:81
-msgid "Facebook"
 msgstr ""
 
 #: ../../addon/facebook/facebook.php:729
@@ -6603,6 +6670,7 @@ msgid "Sex Addict"
 msgstr ""
 
 #: ../../include/profile_selectors.php:42 ../../include/user.php:278
+#: ../../include/user.php:283
 msgid "Friends"
 msgstr ""
 
@@ -6899,10 +6967,6 @@ msgstr ""
 
 #: ../../include/group.php:218
 msgid "edit"
-msgstr ""
-
-#: ../../include/group.php:239
-msgid "Groups"
 msgstr ""
 
 #: ../../include/group.php:240

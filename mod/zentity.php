@@ -104,8 +104,8 @@ function zentity_content(&$a) {
 
 		'$label_name'   => t('Full name'),
 		'$label_nick'   => t('Choose a short nickname'),
-		'$nick_desc'    => t('Your nickname will be used to create an easily remembered web address ("webbie") for your profile.'),
-		'$label_import' => t('Check this box to import an existing identity file from another location'),
+		'$nick_desc'    => t('Your nickname will be used to create an easily remembered web address ("webbie") for your channel.'),
+		'$label_import' => t('Check this box to import an existing channel file from another location'),
 		'$name'         => $name,
 		'$nickname'     => $nickname,
 		'$submit'       => t('Create')
