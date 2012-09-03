@@ -50,12 +50,11 @@ function nav(&$a) {
 		$nav['usermenu'][] = Array('profile/' . $a->user['nickname']. '?tab=profile', t('Profile'), "", t('Your profile page'));
 		$nav['usermenu'][] = Array('photos/' . $a->user['nickname'], t('Photos'), "", t('Your photos'));
 		$nav['usermenu'][] = Array('events/', t('Events'), "", t('Your events'));
-		$nav['usermenu'][] = Array('notes/', t('Personal notes'), "", t('Your personal photos'));
 		
 		// user info
-//		$r = q("SELECT micro FROM contact WHERE uid=%d AND self=1", intval($a->user['uid']));
+		$r = q("SELECT micro FROM contact WHERE uid=%d AND self=1", intval($a->entity['entity_id']));
 		$userinfo = array(
-			'icon' => $a->get_baseurl($ssl_state)."/images/person-48.jpg",
+			'icon' => $a->get_baseurl($ssl_state). $r[0]['micro'],
 			'name' => $a->identity['entity_name'],
 		);
 		
@@ -114,11 +113,7 @@ function nav(&$a) {
 
 		$nav['home'] = array('profile/' . $a->user['nickname'], t('Home'), "", t('Your posts and conversations'));
 
-
-		/* only show friend requests for normal pages. Other page types have automatic friendship. */
-
-//		if($_SESSION['page_flags'] == PAGE_NORMAL || $_SESSION['page_flags'] == PAGE_PRVGROUP) {
-			if($a->identity['entity_pageflags'] == PAGE_NORMAL) {
+		if($a->identity['entity_pageflags'] == PAGE_NORMAL) {
 			$nav['introductions'] = array('notifications/intros',	t('Introductions'), "", t('Friend Requests'));
 			$nav['notifications'] = array('notifications',	t('Notifications'), "", t('Notifications'));
 			$nav['notifications']['all']=array('notifications/system', t('See all notifications'), "", "");
@@ -131,9 +126,7 @@ function nav(&$a) {
 		$nav['messages']['outbox']= array('message/sent', t('Outbox'), "", t('Outbox'));
 		$nav['messages']['new'] = array('message/new', t('New Message'), "", t('New Message'));
 		
-		if(is_array($a->identities) && count($a->identities) > 1) {
-			$nav['manage'] = array('manage', t('Manage'), "", t('Manage other pages'));
-		}
+		$nav['manage'] = array('manage', t('Channel Manager'), "", t('Manage Your Channels'));
 
 		$nav['settings'] = array('settings', t('Settings'),"", t('Account settings'));
 		$nav['profiles'] = array('profiles', t('Profiles'),"", t('Manage/edit profiles'));
