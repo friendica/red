@@ -87,22 +87,46 @@ function manage_content(&$a) {
 		return;
 	}
 
-	$active = null;
-
-	if(local_user()) {
-		$r = q("select * from entity where entity_id = %d limit 1",
-			intval(local_user())
+	$change_channel = ((argc() > 1) ? intval($argv(1)) : 0);
+	if($change_channel) {
+		$r = q("select * from entity where entity_id = %d and entity_account_id = %d limit 1",
+			intval($change_channel),
+			intval(get_account_id())
 		);
-
-		if($r && count($r))
-			$active = $r[0];
+		if($r && count($r)) {
+			$_SESSION['uid'] = intval($r[0]['entity_id']);
+			get_app()->identity = $r[0];
+			$_SESSION['theme'] = $r[0]['entity_theme'];
+			date_default_timezone_set($r[0]['entity_timezone']);
+		}
 	}
 
 
+	$channels = null;
+
+	if(local_user()) {
+		$r = q("select entity.*, contact.* from entity left join contact on entity.entity_id = contact.uid 
+			where entity.entity_account_id = %d and contact.self = 1",
+			intval(get_account_id())
+		);
+
+		if($r && count($r)) {
+			$channels = $r;
+			for($x = 0; $x < count($channels); $x ++)
+				$channels[$x]['link'] = 'manage/' . intval($channels[$x]['entity_id']);
+		}
+	}
+
+	$links = array(
+		array( 'zentity', t('Create a new channel'), t('New Channel'))
+	);
+
+
 	$o = replace_macros(get_markup_template('channels.tpl'), array(
-		'$header' => t('Manage Profile Channels'),
+		'$header' => t('Manage Channels'),
 		'$desc' => t('These are your Profile Channels. Select any Profile Channel to attach and make that the current channel.'),
-		'$active' => $active,
+		'$links' => $links,
+		'$all_channels' => $channels,
 	));
 
 

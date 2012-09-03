@@ -1,6 +1,5 @@
 <h3>$header</h3>
 
-<div id="channels-desc" class="descriptive-text">$desc</div>
 
 {{ if $links }}
 {{ for $links as $l }}
@@ -8,12 +7,10 @@
 {{ endfor }}
 {{ endif }} 
 
-<div align="center">{{ inc channel.tpl with $chn = $active }}</div>
-<div align="center">$act_desc</div>
-
+<div id="channels-desc" class="descriptive-text">$desc</div>
 
 {{ for $all_channels as $chn }}
-{{ inc channel.tpl with $channel = $chn }}
+{{ inc channel.tpl with $channel=$chn }}{{ endinc }}
 {{ endfor }} 
 
 <div class="channels-end"></div>
