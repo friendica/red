@@ -516,22 +516,6 @@ if(! class_exists('App')) {
 				$this->module = 'home';
 			}
 
-			/**
-			 * Special handling for the webfinger/lrdd host XRD file
-			 */
-
-			if($this->cmd === '.well-known/host-meta') {
-				$this->argc = 1;
-				$this->argv = array('hostxrd');
-				$this->module = 'hostxrd';
-			}
-
-			if(strstr($this->cmd,'.well-known/zot-guid')) {
-				$this->argc -= 1;
-				array_shift($this->argv);
-				$this->argv[0] = 'zfinger';
-				$this->module = 'zfinger';
-			}
 
 			/**
 			 * See if there is any page number information, and initialise
