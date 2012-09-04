@@ -40,9 +40,18 @@ function authenticate_success($user_record, $login_initial = false, $interactive
 				$_SESSION['theme'] = $a->identity['entity_theme'];
 				date_default_timezone_set($a->identity['entity_timezone']);
 			}
-				
-		}
 
+			$r = q("SELECT * FROM contact WHERE uid = %d AND self = 1 LIMIT 1",
+				intval($a->identity['entity_id'])
+			);
+
+			if($r && count($r)) {
+				$a->contact = $r[0];
+				$a->cid = $r[0]['id'];
+				$_SESSION['cid'] = $a->cid;
+			}
+
+		}
 
 	}
 	else {
