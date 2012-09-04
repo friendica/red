@@ -226,9 +226,11 @@ CREATE TABLE IF NOT EXISTS `entity` (
   `entity_timezone` char(128) NOT NULL DEFAULT 'UTC',
   `entity_location` char(255) NOT NULL DEFAULT '',
   `entity_theme` char(255) NOT NULL DEFAULT '',
+  `entity_startpage` char(255) NOT NULL DEFAULT '',
   `entity_pubkey` text NOT NULL,
   `entity_prvkey` text NOT NULL,
   `entity_privacyflags` int(10) unsigned NOT NULL DEFAULT '0',
+  `entity_postflags` int(10) unsigned NOT NULL DEFAULT '0',
   `entity_notifyflags` int(10) unsigned NOT NULL DEFAULT '65535',
   `entity_pageflags` int(10) unsigned NOT NULL DEFAULT '0',
   `entity_max_anon_mail` int(10) unsigned NOT NULL DEFAULT '10',
@@ -253,7 +255,8 @@ CREATE TABLE IF NOT EXISTS `entity` (
   KEY `entity_max_anon_mail` (`entity_max_anon_mail`),
   KEY `entity_max_friend_req` (`entity_max_friend_req`),
   KEY `entity_default_gid` (`entity_default_gid`),
-  KEY `entity_primary` (`entity_primary`)
+  KEY `entity_primary` (`entity_primary`),
+  KEY `entity_postflags` (`entity_postflags`)
 ) ENGINE=MyISAM  DEFAULT CHARSET=utf8;
 
 CREATE TABLE IF NOT EXISTS `event` (
