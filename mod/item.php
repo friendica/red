@@ -175,11 +175,12 @@ function item_post(&$a) {
 
 	$user = null;
 
-	$r = q("SELECT * FROM `user` WHERE `uid` = %d LIMIT 1",
+	$r = q("SELECT entity.*, account.* FROM entity left join account on entity.entity_account_id = account.account_id 
+		where entity.entity_id = %d LIMIT 1",
 		intval($profile_uid)
 	);
 	if(count($r))
-		$user = $r[0];
+		$entity = $r[0];
 
 	if($orig_post) {
 		$str_group_allow   = $orig_post['allow_gid'];
@@ -207,10 +208,10 @@ function item_post(&$a) {
 			&& (! array_key_exists('group_allow',$_REQUEST))
 			&& (! array_key_exists('contact_deny',$_REQUEST))
 			&& (! array_key_exists('group_deny',$_REQUEST))) {
-			$str_group_allow   = $user['allow_gid'];
-			$str_contact_allow = $user['allow_cid'];
-			$str_group_deny    = $user['deny_gid'];
-			$str_contact_deny  = $user['deny_cid'];
+			$str_group_allow   = $entity['entity_allow_gid'];
+			$str_contact_allow = $entity['entity_allow_cid'];
+			$str_group_deny    = $entity['entity_deny_gid'];
+			$str_contact_deny  = $entity['entity_deny_cid'];
 		}
 		else {
 
@@ -529,6 +530,7 @@ function item_post(&$a) {
 	$uri = item_new_uri($a->get_hostname(),$profile_uid);
 
 	// Fallback so that we alway have a thr-parent
+
 	if(!$thr_parent)
 		$thr_parent = $uri;
 
@@ -577,7 +579,7 @@ function item_post(&$a) {
 
 	$datarray['parent']        = $parent;
 	$datarray['self']          = $self;
-//	$datarray['prvnets']       = $user['prvnets'];
+
 
 	if($orig_post)
 		$datarray['edit']      = true;
@@ -743,11 +745,11 @@ function item_post(&$a) {
 			if($contact_record != $author) {
 				notification(array(
 					'type'         => NOTIFY_COMMENT,
-					'notify_flags' => $user['notify-flags'],
-					'language'     => $user['language'],
-					'to_name'      => $user['username'],
-					'to_email'     => $user['email'],
-					'uid'          => $user['uid'],
+					'notify_flags' => $entity['entity_notifyflags'],
+					'language'     => $entity['account_language'],
+					'to_name'      => $entity['entity_name'],
+					'to_email'     => $entity['account_email'],
+					'uid'          => $entity['entity_id'],
 					'item'         => $datarray,
 					'link'		   => $a->get_baseurl() . '/display/' . $user['nickname'] . '/' . $post_id,
 					'source_name'  => $datarray['author-name'],
@@ -768,11 +770,11 @@ function item_post(&$a) {
 			if($contact_record != $author) {
 				notification(array(
 					'type'         => NOTIFY_WALL,
-					'notify_flags' => $user['notify-flags'],
-					'language'     => $user['language'],
-					'to_name'      => $user['username'],
-					'to_email'     => $user['email'],
-					'uid'          => $user['uid'],
+					'notify_flags' => $entity['entity_notifyflags'],
+					'language'     => $entity['account_language'],
+					'to_name'      => $entity['entity_name'],
+					'to_email'     => $entity['account_email'],
+					'uid'          => $entity['entity_id'],
 					'item'         => $datarray,
 					'link'		   => $a->get_baseurl() . '/display/' . $user['nickname'] . '/' . $post_id,
 					'source_name'  => $datarray['author-name'],
@@ -793,7 +795,7 @@ function item_post(&$a) {
 			WHERE `id` = %d LIMIT 1",
 			intval($parent),
 			dbesc(($parent == $post_id) ? $uri : $parent_item['uri']),
-			dbesc($a->get_baseurl() . '/display/' . $user['nickname'] . '/' . $post_id),
+			dbesc($a->get_baseurl() . '/display/' . $entity['entity_address'] . '/' . $post_id),
 			dbesc(datetime_convert()),
 			intval($post_id)
 		);
@@ -824,7 +826,7 @@ function item_post(&$a) {
 	);
 
 	$datarray['id']    = $post_id;
-	$datarray['plink'] = $a->get_baseurl() . '/display/' . $user['nickname'] . '/' . $post_id;
+	$datarray['plink'] = $a->get_baseurl() . '/display/' . $entity['entity_address'] . '/' . $post_id;
 
 	call_hooks('post_local_end', $datarray);
 
