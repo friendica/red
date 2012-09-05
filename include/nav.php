@@ -46,15 +46,15 @@ function nav(&$a) {
 		$nav['logout'] = Array('logout',t('Logout'), "", t('End this session'));
 		
 		// user menu
-		$nav['usermenu'][] = Array('profile/' . $a->user['nickname'], t('Status'), "", t('Your posts and conversations'));
-		$nav['usermenu'][] = Array('profile/' . $a->user['nickname']. '?tab=profile', t('Profile'), "", t('Your profile page'));
-		$nav['usermenu'][] = Array('photos/' . $a->user['nickname'], t('Photos'), "", t('Your photos'));
+		$nav['usermenu'][] = Array('profile/' . $a->identity['entity_address'], t('Status'), "", t('Your posts and conversations'));
+		$nav['usermenu'][] = Array('profile/' . $a->identity['entity_address']. '?tab=profile', t('Profile'), "", t('Your profile page'));
+		$nav['usermenu'][] = Array('photos/' . $a->identity['entity_address'], t('Photos'), "", t('Your photos'));
 		$nav['usermenu'][] = Array('events/', t('Events'), "", t('Your events'));
 		
 		// user info
-		$r = q("SELECT micro FROM contact WHERE uid=%d AND self=1", intval($a->entity['entity_id']));
+		$r = q("SELECT micro FROM contact WHERE uid=%d AND self=1", intval($a->identity['entity_id']));
 		$userinfo = array(
-			'icon' => $a->get_baseurl($ssl_state). $r[0]['micro'],
+			'icon' => $r[0]['micro'],
 			'name' => $a->identity['entity_name'],
 		);
 		
@@ -111,7 +111,7 @@ function nav(&$a) {
 
 		$nav['network'] = array('network', t('Network'), "", t('Conversations from your friends'));
 
-		$nav['home'] = array('profile/' . $a->user['nickname'], t('Home'), "", t('Your posts and conversations'));
+		$nav['home'] = array('profile/' . $a->identity['entity_address'], t('Home'), "", t('Your posts and conversations'));
 
 		if($a->identity['entity_pageflags'] == PAGE_NORMAL) {
 			$nav['introductions'] = array('notifications/intros',	t('Introductions'), "", t('Friend Requests'));

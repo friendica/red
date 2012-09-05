@@ -8,7 +8,7 @@ function profile_photo_init(&$a) {
 		return;
 	}
 
-	profile_load($a,$a->user['nickname']);
+	profile_load($a,$a->identity['entity_address']);
 
 }
 
@@ -166,7 +166,7 @@ function profile_photo_content(&$a) {
 		notice( t('Permission denied.') . EOL );
 		return;
 	}
-	
+
 	$newuser = false;
 
 	if($a->argc == 2 && $a->argv[1] === 'new')

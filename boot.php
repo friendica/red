@@ -1064,7 +1064,7 @@ function profile_load(&$a, $nickname, $profile = 0) {
 	}
 
 	$r = null;
-                          
+
 	if($profile) {
 		$profile_int = intval($profile);
 		$r = q("SELECT `profile`.`uid` AS `profile_uid`, `profile`.* , `contact`.`avatar_date` AS picdate, entity.* FROM `profile`
@@ -1074,7 +1074,7 @@ function profile_load(&$a, $nickname, $profile = 0) {
 				intval($profile_int)
 		);
 	}
-	if((! $r) && (!  count($r))) {
+	if(! ($r && count($r))) {
 		$r = q("SELECT `profile`.`uid` AS `profile_uid`, `profile`.* , `contact`.`avatar_date` AS picdate, `entity`.* FROM `profile`
 			left join `contact` on `contact`.`uid` = `profile`.`uid` LEFT JOIN `entity` ON `profile`.`uid` = entity.entity_id
 			WHERE entity.entity_address = '%s' AND `profile`.`is_default` = 1 and `contact`.`self` = 1 LIMIT 1",
@@ -1082,7 +1082,7 @@ function profile_load(&$a, $nickname, $profile = 0) {
 		);
 	}
 
-	if(($r === false) || (! count($r))) {
+	if(! ($r && count($r))) {
 		logger('profile error: ' . $a->query_string, LOGGER_DEBUG);
 		notice( t('Requested profile is not available.') . EOL );
 		$a->error = 404;
