@@ -79,23 +79,18 @@ $hide_friends
 </div>
 <div id="profile-edit-postal-code-end"></div>
 
-<div id="profile-edit-country-name-wrapper" >
-<label id="profile-edit-country-name-label" for="profile-edit-country-name" >$lbl_country </label>
-<select name="country_name" id="profile-edit-country-name" onChange="Fill_States('$region');">
-<option selected="selected" >$country_name</option>
-<option>temp</option>
-</select>
-</div>
-<div id="profile-edit-country-name-end"></div>
 
 <div id="profile-edit-region-wrapper" >
 <label id="profile-edit-region-label" for="profile-edit-region" >$lbl_region </label>
-<select name="region" id="profile-edit-region" onChange="Update_Globals();" >
-<option selected="selected" >$region</option>
-<option>temp</option>
-</select>
+<input type="text" size="32" name="region" id="profile-edit-region" value="$region" />
 </div>
 <div id="profile-edit-region-end"></div>
+
+<div id="profile-edit-country-name-wrapper" >
+<label id="profile-edit-country-name-label" for="profile-edit-country-name" >$lbl_country </label>
+<input type="text" size="32" name="country_name" id="profile-edit-country-name" value="$country_name" />
+</div>
+<div id="profile-edit-country-name-end"></div>
 
 <div id="profile-edit-hometown-wrapper" >
 <label id="profile-edit-hometown-label" for="profile-edit-hometown" >$lbl_hometown </label>

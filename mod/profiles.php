@@ -552,11 +552,6 @@ function profiles_content(&$a) {
 			'$no_selected' => (($r[0]['hide_friends'] == 0) ? " checked=\"checked\" " : "")
 		));
 
-		$a->page['htmlhead'] .= "<script type=\"text/javascript\" src=\"js/country.js\" ></script>";
-
-
-
-
 
 		$f = get_config('system','birthday_input_format');
 		if(! $f)
