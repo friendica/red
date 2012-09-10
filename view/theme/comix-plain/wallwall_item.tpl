@@ -2,14 +2,14 @@
 	<div class="wall-item-content-wrapper $item.indent" id="wall-item-content-wrapper-$item.id" >
 		<div class="wall-item-info wallwall" id="wall-item-info-$item.id">
 			<div class="wall-item-photo-wrapper wwto" id="wall-item-ownerphoto-wrapper-$item.id" >
-				<a href="$item.owner_url" target="redir" title="$item.olinktitle" class="wall-item-photo-link" id="wall-item-ownerphoto-link-$item.id">
+				<a href="$item.owner_url"  title="$item.olinktitle" class="wall-item-photo-link" id="wall-item-ownerphoto-link-$item.id">
 				<img src="$item.owner_photo" class="wall-item-photo$item.osparkle" id="wall-item-ownerphoto-$item.id" style="height: 80px; width: 80px;" alt="$item.owner_name" /></a>
 			</div>
 			<div class="wall-item-arrowphoto-wrapper" ><img src="images/larrow.gif" alt="$item.wall" /></div>
 			<div class="wall-item-photo-wrapper wwfrom" id="wall-item-photo-wrapper-$item.id" 
 				onmouseover="if (typeof t$item.id != 'undefined') clearTimeout(t$item.id); openMenu('wall-item-photo-menu-button-$item.id')"
                 onmouseout="t$item.id=setTimeout('closeMenu(\'wall-item-photo-menu-button-$item.id\'); closeMenu(\'wall-item-photo-menu-$item.id\');',200)">
-				<a href="$item.profile_url" target="redir" title="$item.linktitle" class="wall-item-photo-link" id="wall-item-photo-link-$item.id">
+				<a href="$item.profile_url"  title="$item.linktitle" class="wall-item-photo-link" id="wall-item-photo-link-$item.id">
 				<img src="$item.thumb" class="wall-item-photo$item.sparkle $item.indent" id="wall-item-photo-$item.id" style="height: 80px; width: 80px;" alt="$item.name" /></a>
 				<span onclick="openClose('wall-item-photo-menu-$item.id');" class="fakelink wall-item-photo-menu-button" id="wall-item-photo-menu-button-$item.id">menu</span>
                 <div class="wall-item-photo-menu" id="wall-item-photo-menu-$item.id">
@@ -27,7 +27,7 @@
 			</div>
 		</div>
 		<div class="wall-item-author">
-				<a href="$item.profile_url" target="redir" title="$item.linktitle" class="wall-item-name-link"><span class="wall-item-name$item.sparkle" id="wall-item-name-$item.id" >$item.name</span></a> $item.to <a href="$item.owner_url" target="redir" title="$item.olinktitle" class="wall-item-name-link"><span class="wall-item-name$item.osparkle" id="wall-item-ownername-$item.id">$item.owner_name</span></a> $item.vwall<br />
+				<a href="$item.profile_url"  title="$item.linktitle" class="wall-item-name-link"><span class="wall-item-name$item.sparkle" id="wall-item-name-$item.id" >$item.name</span></a> $item.to <a href="$item.owner_url"  title="$item.olinktitle" class="wall-item-name-link"><span class="wall-item-name$item.osparkle" id="wall-item-ownername-$item.id">$item.owner_name</span></a> $item.vwall<br />
 				<div class="wall-item-ago"  id="wall-item-ago-$item.id">$item.ago</div>				
 		</div>			
 		<div class="wall-item-content" id="wall-item-content-$item.id" >
@@ -51,7 +51,7 @@
 			</div>
 			{{ endif }}
 			{{ if $item.plink }}
-				<div class="wall-item-links-wrapper"><a href="$item.plink.href" title="$item.plink.title" target="external-link" class="icon remote-link"></a></div>
+				<div class="wall-item-links-wrapper"><a href="$item.plink.href" title="$item.plink.title"  class="icon remote-link"></a></div>
 			{{ endif }}
 			{{ if $item.edpost }}
 				<a class="editpost icon pencil" href="$item.edpost.0" title="$item.edpost.1"></a>

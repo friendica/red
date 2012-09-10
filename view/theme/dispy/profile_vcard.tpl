@@ -64,7 +64,7 @@
     <div class="homepage">
     <span class="homepage-label">$homepage</span>
     <span class="homepage-url"><a href="$profile.homepage"
-    target="external-link">$profile.homepage</a></span>
+    >$profile.homepage</a></span>
     </div>{{ endif }}
 
 	{{ inc diaspora_vcard.tpl }}{{ endinc }}

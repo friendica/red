@@ -8,7 +8,7 @@
 	<div class="wall-item-item">
 		<div class="wall-item-info">
 			<div class="contact-photo-wrapper" >
-				<a href="$profile_url" target="redir" title="" class="contact-photo-link" id="wall-item-photo-link-$id">
+				<a href="$profile_url"  title="" class="contact-photo-link" id="wall-item-photo-link-$id">
 					<img src="$thumb" class="contact-photo$sparkle" id="wall-item-photo-$id" alt="$name" />
 				</a>
 				<a href="#" rel="#wall-item-photo-menu-$id" class="contact-photo-menu-button icon s16 menu" id="wall-item-photo-menu-button-$id">menu</a>
@@ -19,7 +19,7 @@
 			</div>
 		</div>
 			<div class="wall-item-actions-author">
-				<a href="$profile_url" target="redir" title="$name" class="wall-item-name-link"><span class="wall-item-name$sparkle">$name</span></a> 
+				<a href="$profile_url"  title="$name" class="wall-item-name-link"><span class="wall-item-name$sparkle">$name</span></a> 
 			<span class="wall-item-ago">-
 			{{ if $plink }}<a class="link" title="$plink.title" href="$plink.href" style="color: #999">$ago</a>{{ else }} $ago {{ endif }}
 			{{ if $lock }} - <span class="fakelink" style="color: #999" onclick="lockview(event,$id);">$lock</span> {{ endif }}

@@ -596,7 +596,7 @@ function micropro($contact, $redirect = false, $class = '', $textmode = false) {
 	if($textmode) {
 		return '<div class="contact-block-textdiv' . $class . '"><a class="contact-block-link' . $class . $sparkle 
 			. (($click) ? ' fakelink' : '') . '" '
-			. (($redir) ? ' target="redir" ' : '')
+			. (($redir) ? '  ' : '')
 			. (($url) ? ' href="' . $url . '"' : '') . $click
 			. '" title="' . $contact['name'] . ' [' . $contact['url'] . ']" alt="' . $contact['name'] 
 			. '" >'. $contact['name'] . '</a></div>' . "\r\n";
@@ -604,7 +604,7 @@ function micropro($contact, $redirect = false, $class = '', $textmode = false) {
 	else {
 		return '<div class="contact-block-div' . $class . '"><a class="contact-block-link' . $class . $sparkle 
 			. (($click) ? ' fakelink' : '') . '" '
-			. (($redir) ? ' target="redir" ' : '')
+			. (($redir) ? '  ' : '')
 			. (($url) ? ' href="' . $url . '"' : '') . $click . ' ><img class="contact-block-img' . $class . $sparkle . '" src="' 
 			. $contact['micro'] . '" title="' . $contact['name'] . ' [' . $contact['url'] . ']" alt="' . $contact['name'] 
 			. '" /></a></div>' . "\r\n";
@@ -648,7 +648,7 @@ function valid_email($x){
 
 if(! function_exists('linkify')) {
 function linkify($s) {
-	$s = preg_replace("/(https?\:\/\/[a-zA-Z0-9\:\/\-\?\&\;\.\=\_\~\#\'\%\$\!\+]*)/", ' <a href="$1" target="external-link">$1</a>', $s);
+	$s = preg_replace("/(https?\:\/\/[a-zA-Z0-9\:\/\-\?\&\;\.\=\_\~\#\'\%\$\!\+]*)/", ' <a href="$1" >$1</a>', $s);
 	$s = preg_replace("/\<(.*?)(src|href)=(.*?)\&amp\;(.*?)\>/ism",'<$1$2=$3&$4>',$s);
 	return($s);
 }}
@@ -940,7 +940,7 @@ function prepare_body($item,$attach = false) {
 					else
 						$the_url = $mtch[1];
 
-					$s .= '<a href="' . strip_tags($the_url) . '" title="' . $title . '" class="attachlink" target="external-link" >' . $icon . '</a>';
+					$s .= '<a href="' . strip_tags($the_url) . '" title="' . $title . '" class="attachlink"  >' . $icon . '</a>';
 				}
 			}
 		}

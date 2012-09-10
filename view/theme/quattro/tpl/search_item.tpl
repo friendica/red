@@ -11,7 +11,7 @@
 			<div class="contact-photo-wrapper"
 				onmouseover="if (typeof t$item.id != 'undefined') clearTimeout(t$item.id); openMenu('wall-item-photo-menu-button-$item.id')" 
 				onmouseout="t$item.id=setTimeout('closeMenu(\'wall-item-photo-menu-button-$item.id\'); closeMenu(\'wall-item-photo-menu-$item.id\');',200)">
-				<a href="$item.profile_url" target="redir" title="$item.linktitle" class="wall-item-photo-link" id="wall-item-photo-link-$item.id">
+				<a href="$item.profile_url"  title="$item.linktitle" class="wall-item-photo-link" id="wall-item-photo-link-$item.id">
 					<img src="$item.thumb" class="contact-photo$item.sparkle" id="wall-item-photo-$item.id" alt="$item.name" />
 				</a>
 				<a href="#" rel="#wall-item-photo-menu-$item.id" class="contact-photo-menu-button icon s16 menu" id="wall-item-photo-menu-button-$item.id">menu</a>
@@ -42,7 +42,7 @@
 		</div>
 		<div class="wall-item-actions">
 			<div class="wall-item-actions-author">
-				<a href="$item.profile_url" target="redir" title="$item.linktitle" class="wall-item-name-link"><span class="wall-item-name$item.sparkle">$item.name</span></a> <span class="wall-item-ago">$item.ago</span>
+				<a href="$item.profile_url"  title="$item.linktitle" class="wall-item-name-link"><span class="wall-item-name$item.sparkle">$item.name</span></a> <span class="wall-item-ago">$item.ago</span>
 			</div>
 			
 			<div class="wall-item-actions-social">

@@ -2,7 +2,7 @@
 	<div class="wall-item-item">
 		<div class="wall-item-info">
 			<div class="contact-photo-wrapper"
-				<a href="$mail.profile_url" target="redir" title="$mail.from_name" class="contact-photo-link" id="wall-item-photo-link-$mail.id">
+				<a href="$mail.profile_url"  title="$mail.from_name" class="contact-photo-link" id="wall-item-photo-link-$mail.id">
 					<img src="$mail.from_photo" class="contact-photo$mail.sparkle" id="wall-item-photo-$mail.id" alt="$mail.from_name" />
 				</a>
 			</div>
@@ -22,7 +22,7 @@
 		</div>
 		<div class="wall-item-actions">
 			<div class="wall-item-actions-author">
-				<a href="$mail.from_url" target="redir" class="wall-item-name-link"><span class="wall-item-name$mail.sparkle">$mail.from_name</span></a> <span class="wall-item-ago">$mail.date</span>
+				<a href="$mail.from_url"  class="wall-item-name-link"><span class="wall-item-name$mail.sparkle">$mail.from_name</span></a> <span class="wall-item-ago">$mail.date</span>
 			</div>
 			
 			<div class="wall-item-actions-social">
