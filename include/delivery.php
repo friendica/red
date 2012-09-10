@@ -322,8 +322,9 @@ function delivery_run($argv, $argc){
 						dbesc($nickname)
 					);
 
-					if(count($x)) {
-						if($owner['page-flags'] == PAGE_COMMUNITY && ! $x[0]['writable']) {
+					if($x && count($x)) {
+						$write_flag = (($x[0]['rel'] == CONTACT_IS_FOLLOWER || $x[0]['rel'] == CONTACT_IS_FRIEND) ? true : false);
+						if((($owner['page-flags'] == PAGE_COMMUNITY) || ($write_flag)) && (! $x[0]['writable'])) {
 							q("update contact set writable = 1 where id = %d limit 1",
 								intval($x[0]['id'])
 							);

@@ -36,6 +36,9 @@ function completeurl($url, $scheme) {
         if ($schemearr["port"] != "")
                 $complete .= ":".$schemearr["port"];
 
+		if(strpos($urlarr['path'],'/') !== 0)
+			$complete .= '/';
+
         $complete .= $urlarr["path"];
 
         if ($urlarr["query"] != "")
@@ -149,17 +152,17 @@ function parseurl_getsiteinfo($url) {
 	}
 
 	if ($siteinfo["image"] == "") {
-                $list = $xpath->query("//img[@src]");
-                foreach ($list as $node) {
-                        $attr = array();
-                        if ($node->attributes->length)
-                                foreach ($node->attributes as $attribute)
-                                        $attr[$attribute->name] = $attribute->value;
+            $list = $xpath->query("//img[@src]");
+            foreach ($list as $node) {
+                $attr = array();
+                if ($node->attributes->length)
+                    foreach ($node->attributes as $attribute)
+                        $attr[$attribute->name] = $attribute->value;
 
 			$src = completeurl($attr["src"], $url);
-			$photodata = getimagesize($src);
+			$photodata = @getimagesize($src);
 
-			if (($photodata[0] > 150) and ($photodata[1] > 150)) {
+			if (($photodata) && ($photodata[0] > 150) and ($photodata[1] > 150)) {
 				if ($photodata[0] > 300) {
 					$photodata[1] = round($photodata[1] * (300 / $photodata[0]));
 					$photodata[0] = 300;
@@ -173,15 +176,15 @@ function parseurl_getsiteinfo($url) {
 								"height"=>$photodata[1]);
 			}
 
-                }
-        } else {
+ 		}
+    } else {
 		$src = completeurl($siteinfo["image"], $url);
 
 		unset($siteinfo["image"]);
 
-		$photodata = getimagesize($src);
+		$photodata = @getimagesize($src);
 
-		if (($photodata[0] > 10) and ($photodata[1] > 10))
+		if (($photodata) && ($photodata[0] > 10) and ($photodata[1] > 10))
 			$siteinfo["images"][] = array("src"=>$src,
 							"width"=>$photodata[0],
 							"height"=>$photodata[1]);

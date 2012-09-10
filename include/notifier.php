@@ -279,7 +279,7 @@ function notifier_run($argv, $argc){
 			// a delivery fork. private groups (forum_mode == 2) do not uplink
 
 			if((intval($parent['forum_mode']) == 1) && (! $top_level) && ($cmd !== 'uplink')) {
-				proc_run('php','include/notifier','uplink',$item_id);
+				proc_run('php','include/notifier.php','uplink',$item_id);
 			}
 
 			$conversants = array();
@@ -543,9 +543,9 @@ function notifier_run($argv, $argc){
 							dbesc($nickname)
 						);
 
-						if(count($x)) {
-
-							if($owner['page-flags'] == PAGE_COMMUNITY && ! $x[0]['writable']) {
+						if($x && count($x)) {
+							$write_flag = (($x[0]['rel'] == CONTACT_IS_FOLLOWER || $x[0]['rel'] == CONTACT_IS_FRIEND) ? true : false);
+							if((($owner['page-flags'] == PAGE_COMMUNITY) || ($write_flag)) && (! $x[0]['writable'])) {
 								q("update contact set writable = 1 where id = %d limit 1",
 									intval($x[0]['id'])
 								);

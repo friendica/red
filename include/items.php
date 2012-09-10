@@ -3557,9 +3557,21 @@ function drop_item($id,$interactive = true) {
 
 	$owner = $item['uid'];
 
+	$cid = 0;
+
 	// check if logged in user is either the author or owner of this item
 
-	if((local_user() == $item['uid']) || (remote_user() == $item['contact-id']) || (! $interactive)) {
+	if(is_array($_SESSION['remote'])) {
+		foreach($_SESSION['remote'] as $visitor) {
+			if($visitor['uid'] == $item['uid'] && $visitor['cid'] == $item['contact-id']) {
+				$cid = $visitor['cid'];
+				break;
+			}
+		}
+	}
+
+
+	if((local_user() == $item['uid']) || ($cid) || (! $interactive)) {
 
 		// delete the item
 

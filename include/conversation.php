@@ -365,12 +365,31 @@ function prepare_threads_body($a, $items, $cmnt_tpl, $page_writeable, $mode, $pr
 		$thumb = $item['thumb'];
 		$indent = '';
 		$osparkle = '';
+		$visiting = false;
 		$lastcollapsed = false;
 		$firstcollapsed = false;
 		$total_children += count_descendants($item);
 
 		$toplevelpost = (($item['id'] == $item['parent']) ? true : false);
+
+
+		if($item['uid'] == local_user())
+			$dropping = true;
+		elseif(is_array($_SESSION['remote'])) {
+			foreach($_SESSION['remote'] as $visitor) {
+				if($visitor['cid'] == $item['contact-id']) {
+					$dropping = true;
+					$visiting = true;
+					break;
+				}
+			}
+		}
+
 		$item_writeable = (($item['writable'] || $item['self']) ? true : false);
+
+		if($visiting && $mode == 'profile')
+			$item_writeable = true;
+
 		$show_comment_box = ((($page_writeable) && ($item_writeable)) ? true : false);
 		$lock = ((($item['private'] == 1) || (($item['uid'] == local_user()) && (strlen($item['allow_cid']) || strlen($item['allow_gid']) 
 			|| strlen($item['deny_cid']) || strlen($item['deny_gid']))))
@@ -382,8 +401,6 @@ function prepare_threads_body($a, $items, $cmnt_tpl, $page_writeable, $mode, $pr
 			$edpost = array($a->get_baseurl($ssl_state)."/editpost/".$item['id'], t("Edit"));
 		else
 			$edpost = false;
-		if((intval($item['contact-id']) && $item['contact-id'] == remote_user()) || ($item['uid'] == local_user()))
-			$dropping = true;
 
 		$drop = array(
 			'dropping' => $dropping,

@@ -280,6 +280,7 @@ function item_post(&$a) {
 
 	$author = null;
 	$self   = false;
+	$contact_id = 0;
 
 	if((local_user()) && (local_user() == $profile_uid)) {
 		$self = true;
@@ -288,9 +289,19 @@ function item_post(&$a) {
 		);
 	}
 	elseif(remote_user()) {
-		$r = q("SELECT * FROM `contact` WHERE `id` = %d LIMIT 1",
-			intval(remote_user())
-		);
+		if(is_array($_SESSION['remote'])) {
+			foreach($_SESSION['remote'] as $v) {
+				if($v['uid'] == $profile_uid) {
+					$contact_id = $v['cid'];
+					break;
+				}
+			}
+		}				
+		if($contact_id) {
+			$r = q("SELECT * FROM `contact` WHERE `id` = %d LIMIT 1",
+				intval($contact_id)
+			);
+		}
 	}
 
 	if(count($r)) {

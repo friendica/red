@@ -54,8 +54,10 @@ function search_init(&$a) {
 		$a->page['aside'] .= search_saved_searches();
 
 	}
-	else
+	else {
 		unset($_SESSION['theme']);
+		unset($_SESSION['mobile-theme']);
+	}
 
 
 
@@ -81,6 +83,7 @@ function search_content(&$a) {
 	require_once("include/bbcode.php");
 	require_once('include/security.php');
 	require_once('include/conversation.php');
+	require_once('include/items.php');
 
 	$o = '<div id="live-search"></div>' . "\r\n";
 

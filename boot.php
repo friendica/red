@@ -156,22 +156,21 @@ define ( 'NETWORK_PHANTOM',          'unkn');    // Place holder
  * Permissions 
  */
 
-define ( 'PERMS_VISIBLE',            0x0001);  // Can be seen in my public address book 
-define ( 'PERMS_TRANSMIT',           0x0002);  // Can post to my stream
-define ( 'PERMS_RECEIVE',            0x0004);  // Can receive my posts
-define ( 'PERMS_COMMENT',            0x0008);  // Can comment on my posts
-define ( 'PERMS_POSTWALL',           0x0010);  // Can post to my wall if I allow wall posts
-define ( 'PERMS_TAGWALL',            0x0020);  // Can post to my wall via tags (e.g. community groups)
-define ( 'PERMS_MAIL',               0x0040);  // Can send me email
-define ( 'PERMS_SEEABOOK',           0x0080);  // Can see my address book if it's not public
-define ( 'PERMS_CHAT',               0x0100);  // Can IM me (when available)
-define ( 'PERMS_SEEPERMS',           0x7000);  // Can see these permissions
 
-define ( 'PERMS_FRIEND',             PERMS_VISIBLE|PERMS_TRANSMIT|PERMS_RECEIVE|PERMS_COMMENT|PERMS_POSTWALL|PERMS_MAIL|
-									 PERMS_SEEABOOK|PERMS_CHAT|PERMS_SEEPERMS );  // Can do anything but tag post
+define ( 'PERMS_R_STREAM',         0x0001); 
+define ( 'PERMS_R_PROFILE',        0x0002);
+define ( 'PERMS_R_PHOTOS',         0x0004); 
+define ( 'PERMS_R_ABOOK',          0x0008); 
 
-define ( 'PERMS_COMMUNITY',          PERMS_VISIBLE|PERMS_RECEIVE|PERMS_COMMENT|PERMS_POSTWALL|PERMS_TAGWALL|
-									 PERMS_SEEABOOK|PERMS_SEEPERMS); // Public group profile
+
+define ( 'PERMS_W_STREAM',         0x0010); 
+define ( 'PERMS_W_WALL',           0x0020);
+define ( 'PERMS_W_TAGWALL',        0x0040); 
+define ( 'PERMS_W_COMMENT',        0x0080); 
+define ( 'PERMS_W_MAIL',           0x0100); 
+define ( 'PERMS_W_PHOTOS',         0x0200);
+define ( 'PERMS_W_CHAT',           0x0400); 
+
 
 // General channel permissions
 
@@ -1056,11 +1055,29 @@ if(! function_exists('get_max_import_size')) {
 
 if(! function_exists('profile_load')) {
 function profile_load(&$a, $nickname, $profile = 0) {
-	if(remote_user()) {
-		$r = q("SELECT `profile_id` FROM `contact` WHERE `id` = %d LIMIT 1",
-				intval($_SESSION['visitor_id']));
-		if(count($r))
-			$profile = $r[0]['profile_id'];
+
+	$user = q("select entity_id from entity where entity_address = '%s' limit 1",
+		dbesc($nickname)
+	);
+		
+	if(! ($user && count($user))) {
+		logger('profile error: ' . $a->query_string, LOGGER_DEBUG);
+		notice( t('Requested account is not available.') . EOL );
+		$a->error = 404;
+		return;
+	}
+
+	if(remote_user() && count($_SESSION['remote'])) {
+		foreach($_SESSION['remote'] as $visitor) {
+			if($visitor['uid'] == $user[0]['entity_id']) {
+				$r = q("SELECT `profile_id` FROM `contact` WHERE `id` = %d LIMIT 1",
+					intval($visitor['cid'])
+				);
+				if(count($r))
+					$profile = $r[0]['profile_id'];
+				break;
+			}
+		}
 	}
 
 	$r = null;
@@ -1176,8 +1193,14 @@ if(! function_exists('profile_sidebar')) {
 
 		// don't show connect link to authenticated visitors either
 
-		if((remote_user()) && ($_SESSION['visitor_visiting'] == $profile['uid']))
-			$connect = False;
+		if(remote_user() && count($_SESSION['remote'])) {
+			foreach($_SESSION['remote'] as $visitor) {
+				if($visitor['uid'] == $profile['uid']) {
+					$connect = false;
+					break;
+				}
+			}
+		}
 
 		if(get_my_url() && $profile['unkmail'])
 			$wallmessage = t('Message');
@@ -1505,6 +1528,12 @@ if(! function_exists('current_theme')) {
 		if($is_mobile) {
 			$system_theme = ((isset($a->config['system']['mobile-theme'])) ? $a->config['system']['mobile-theme'] : '');
 			$theme_name = ((isset($_SESSION) && x($_SESSION,'mobile-theme')) ? $_SESSION['mobile-theme'] : $system_theme);
+
+			if($theme_name === '---') {
+				// user has selected to have the mobile theme be the same as the normal one
+				$system_theme = '';
+				$theme_name = '';
+			}
 		}
 		else {
 			$system_theme = ((isset($a->config['system']['theme'])) ? $a->config['system']['theme'] : '');

@@ -120,13 +120,25 @@ function photos_post(&$a) {
 		$can_post = true;
 	else {
 		if($community_page && remote_user()) {
-			$r = q("SELECT `uid` FROM `contact` WHERE `blocked` = 0 AND `pending` = 0 AND `id` = %d AND `uid` = %d LIMIT 1",
-				intval(remote_user()),
-				intval($page_owner_uid)
-			);
-			if(count($r)) {
-				$can_post = true;
-				$visitor = remote_user();
+			$cid = 0;
+			if(is_array($_SESSION['remote'])) {
+				foreach($_SESSION['remote'] as $v) {
+					if($v['uid'] == $page_owner_uid) {
+						$cid = $v['cid'];
+						break;
+					}
+				}
+			}
+			if($cid) {
+
+				$r = q("SELECT `uid` FROM `contact` WHERE `blocked` = 0 AND `pending` = 0 AND `id` = %d AND `uid` = %d LIMIT 1",
+					intval($cid),
+					intval($page_owner_uid)
+				);
+				if(count($r)) {
+					$can_post = true;
+					$visitor = $cid;
+				}
 			}
 		}
 	}
@@ -887,6 +899,7 @@ function photos_content(&$a) {
 	$visitor        = 0;
 	$contact        = null;
 	$remote_contact = false;
+	$contact_id     = 0;
 
 	$owner_uid = $a->data['user']['uid'];
 
@@ -896,15 +909,26 @@ function photos_content(&$a) {
 		$can_post = true;
 	else {
 		if($community_page && remote_user()) {
-			$r = q("SELECT `uid` FROM `contact` WHERE `blocked` = 0 AND `pending` = 0 AND `id` = %d AND `uid` = %d LIMIT 1",
-				intval(remote_user()),
-				intval($owner_uid)
-			);
-			if(count($r)) {
-				$can_post = true;
-				$contact  = $r[0];
-				$remote_contact = true;
-				$visitor = remote_user();
+			if(is_array($_SESSION['remote'])) {
+				foreach($_SESSION['remote'] as $v) {
+					if($v['uid'] == $owner_uid) {
+						$contact_id = $v['cid'];
+						break;
+					}
+				}
+			}
+			if($contact_id) {
+
+				$r = q("SELECT `uid` FROM `contact` WHERE `blocked` = 0 AND `pending` = 0 AND `id` = %d AND `uid` = %d LIMIT 1",
+					intval($contact_id),
+					intval($owner_uid)
+				);
+				if(count($r)) {
+					$can_post = true;
+					$contact = $r[0];
+					$remote_contact = true;
+					$visitor = $cid;
+				}
 			}
 		}
 	}
@@ -912,15 +936,25 @@ function photos_content(&$a) {
 	// perhaps they're visiting - but not a community page, so they wouldn't have write access
 
 	if(remote_user() && (! $visitor)) {
-		$contact_id = $_SESSION['visitor_id'];
-		$groups = init_groups_visitor($contact_id);
-		$r = q("SELECT * FROM `contact` WHERE `blocked` = 0 AND `pending` = 0 AND `id` = %d AND `uid` = %d LIMIT 1",
-			intval(remote_user()),
-			intval($owner_uid)
-		);
-		if(count($r)) {
-			$contact = $r[0];
-			$remote_contact = true;
+		$contact_id = 0;
+		if(is_array($_SESSION['remote'])) {
+			foreach($_SESSION['remote'] as $v) {
+				if($v['uid'] == $owner_uid) {
+					$contact_id = $v['cid'];
+					break;
+				}
+			}
+		}
+		if($contact_id) {
+			$groups = init_groups_visitor($contact_id);
+			$r = q("SELECT * FROM `contact` WHERE `blocked` = 0 AND `pending` = 0 AND `id` = %d AND `uid` = %d LIMIT 1",
+				intval($contact_id),
+				intval($owner_uid)
+			);
+			if(count($r)) {
+				$contact = $r[0];
+				$remote_contact = true;
+			}
 		}
 	}
 
@@ -1038,8 +1072,13 @@ function photos_content(&$a) {
 			$a->set_pager_itemspage(20);
 		}
 
+		if($_GET['order'] === 'posted')
+			$order = 'ASC';
+		else
+			$order = 'DESC';
+
 		$r = q("SELECT `resource-id`, `id`, `filename`, type, max(`scale`) AS `scale`, `desc` FROM `photo` WHERE `uid` = %d AND `album` = '%s' 
-			AND `scale` <= 4 $sql_extra GROUP BY `resource-id` ORDER BY `created` DESC LIMIT %d , %d",
+			AND `scale` <= 4 $sql_extra GROUP BY `resource-id` ORDER BY `created` $order LIMIT %d , %d",
 			intval($owner_uid),
 			dbesc($album),
 			intval($a->pager['start']),
@@ -1073,9 +1112,16 @@ function photos_content(&$a) {
 			}
 		}
 
+		if($_GET['order'] === 'posted')
+			$o .=  '<div class="photos-upload-link" ><a href="' . $a->get_baseurl() . '/photos/' . $a->data['user']['nickname'] . '/album/' . bin2hex($album) . '" >' . t('Show Newest First') . '</a></div>';
+		else
+			$o .= '<div class="photos-upload-link" ><a href="' . $a->get_baseurl() . '/photos/' . $a->data['user']['nickname'] . '/album/' . bin2hex($album) . '?f=&order=posted" >' . t('Show Oldest First') . '</a></div>';
+
+
 		if($can_post) {
 			$o .= '<div class="photos-upload-link" ><a href="' . $a->get_baseurl() . '/photos/' . $a->data['user']['nickname'] . '/upload/' . bin2hex($album) . '" >' . t('Upload New Photos') . '</a></div>';
 		}
+
 
 		$tpl = get_markup_template('photo_album.tpl');
 		if(count($r))
@@ -1091,7 +1137,8 @@ function photos_content(&$a) {
 				$o .= replace_macros($tpl,array(
 					'$id' => $rr['id'],
 					'$twist' => ' ' . $twist . rand(2,4),
-					'$photolink' => $a->get_baseurl() . '/photos/' . $a->data['user']['nickname'] . '/image/' . $rr['resource-id'],
+					'$photolink' => $a->get_baseurl() . '/photos/' . $a->data['user']['nickname'] . '/image/' . $rr['resource-id']
+						. (($_GET['order'] === 'posted') ? '?f=&order=posted' : ''),
 					'$phototitle' => t('View Photo'),
 					'$imgsrc' => $a->get_baseurl() . '/photo/' . $rr['resource-id'] . '-' . $rr['scale'] . '.' .$ext,
 					'$imgalt' => template_escape($rr['filename']),
@@ -1136,8 +1183,14 @@ function photos_content(&$a) {
 		$prevlink = '';
 		$nextlink = '';
 
+		if($_GET['order'] === 'posted')
+			$order = 'ASC';
+		else
+			$order = 'DESC';
+
+
 		$prvnxt = q("SELECT `resource-id` FROM `photo` WHERE `album` = '%s' AND `uid` = %d AND `scale` = 0 
-			$sql_extra ORDER BY `created` DESC ",
+			$sql_extra ORDER BY `created` $order ",
 			dbesc($ph[0]['album']),
 			intval($owner_uid)
 		); 
@@ -1155,8 +1208,8 @@ function photos_content(&$a) {
 				}
 			}
 			$edit_suffix = ((($cmd === 'edit') && ($can_post)) ? '/edit' : '');
-			$prevlink = $a->get_baseurl() . '/photos/' . $a->data['user']['nickname'] . '/image/' . $prvnxt[$prv]['resource-id'] . $edit_suffix;
-			$nextlink = $a->get_baseurl() . '/photos/' . $a->data['user']['nickname'] . '/image/' . $prvnxt[$nxt]['resource-id'] . $edit_suffix;
+			$prevlink = $a->get_baseurl() . '/photos/' . $a->data['user']['nickname'] . '/image/' . $prvnxt[$prv]['resource-id'] . $edit_suffix . (($_GET['order'] === 'posted') ? '?f=&order=posted' : '');
+			$nextlink = $a->get_baseurl() . '/photos/' . $a->data['user']['nickname'] . '/image/' . $prvnxt[$nxt]['resource-id'] . $edit_suffix . (($_GET['order'] === 'posted') ? '?f=&order=posted' : '');
  		}
 
 
@@ -1433,7 +1486,7 @@ function photos_content(&$a) {
 
 					$drop = '';
 
-					if(($item['contact-id'] == remote_user()) || ($item['uid'] == local_user()))
+					if(($item['contact-id'] == $contact_id) || ($item['uid'] == local_user()))
 						$drop = replace_macros(get_markup_template('photo_drop.tpl'), array('$id' => $item['id'], '$delete' => t('Delete')));
 
 

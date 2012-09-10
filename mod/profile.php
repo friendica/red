@@ -82,8 +82,18 @@ function profile_content(&$a, $update = 0) {
 	$contact = null;
 	$remote_contact = false;
 
-	if(remote_user()) {
-		$contact_id = $_SESSION['visitor_id'];
+	$contact_id = 0;
+
+	if(is_array($_SESSION['remote'])) {
+		foreach($_SESSION['remote'] as $v) {
+			if($v['uid'] == $a->profile['profile_uid']) {
+				$contact_id = $v['cid'];
+				break;
+			}
+		}
+	}
+
+	if($contact_id) {
 		$groups = init_groups_visitor($contact_id);
 		$r = q("SELECT * FROM `contact` WHERE `id` = %d AND `uid` = %d LIMIT 1",
 			intval($contact_id),

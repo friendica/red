@@ -136,9 +136,16 @@ function common_friends_visitor_widget($profile_uid) {
 
 	$cid = $zcid = 0;
 
-	if(can_write_wall($a,$profile_uid))
-		$cid = remote_user();
-	else {
+	if(is_array($_SESSION['remote'])) {
+		foreach($_SESSION['remote'] as $visitor) {
+			if($visitor['uid'] == $profile_uid) {
+				$cid = $visitor['cid'];
+				break;
+			}
+		}
+	}
+
+	if(! $cid) {
 		if(get_my_url()) {
 			$r = q("select id from contact where nurl = '%s' and uid = %d limit 1",
 				dbesc(normalise_link(get_my_url())),

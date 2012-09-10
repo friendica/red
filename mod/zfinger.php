@@ -3,6 +3,7 @@
 function zfinger_init(&$a) {
 
 	require_once('include/zot.php');
+	require_once('include/crypto.php');
 
 	$ret = array('success' => false);
 
@@ -49,7 +50,7 @@ function zfinger_init(&$a) {
 	// Communication details
 
 	$ret['guid'] = $e['entity_global_id'];
-	$ret['guid_sig'] = base64url_encode($e['entity_global_id'],$e['entity_prvkey']);
+	$ret['guid_sig'] = base64url_encode(rsa_sign($e['entity_global_id'],$e['entity_prvkey']));
 	$ret['key']  = $e['entity_pubkey'];
 	$ret['name'] = $e['entity_name'];
 	$ret['address'] = $e['entity_address'];
@@ -66,7 +67,8 @@ function zfinger_init(&$a) {
 				$ret['hubs'][] = array(
 					'primary'  => (($hub['hubloc_flags'] & HUBLOC_FLAGS_PRIMARY) ? true : false),
 					'url'      => $hub['hubloc_url'],
-					'url_sig'  => base64url_encode($hub['hubloc_url'],$e['entity_prvkey']),
+					/// hmmm we probably shouldn't sign somebody else's hub. FIXME
+					'url_sig'  => base64url_encode(rsa_sign($hub['hubloc_url'],$e['entity_prvkey'])),
 					'callback' => $hub['hubloc_callback'],
 					'sitekey'  => $hub['hubloc_sitekey']
 				);

@@ -47,17 +47,9 @@ function tagger_content(&$a) {
 	if(local_user() != $owner_uid)
 		return;
 
-	if(remote_user()) {
-		$r = q("select * from contact where id = %d AND `uid` = %d limit 1",
-			intval(remote_user()),
-			intval($item['uid'])
-		);
-	}
-	else {
-		$r = q("select * from contact where self = 1 and uid = %d limit 1",
-			intval(local_user())
-		);
-	}
+	$r = q("select * from contact where self = 1 and uid = %d limit 1",
+		intval(local_user())
+	);
 	if(count($r))
 			$contact = $r[0];
 	else {

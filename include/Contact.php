@@ -1,6 +1,60 @@
 <?php
 
 
+function map_perms($entity,$zguid) {
+
+	$is_contact = false;
+	$is_site    = false;
+	$is_network = false;
+	$is_anybody = true;
+
+	if(strlen($zguid)) {
+
+		$is_network = true;
+
+		$r = q("select * from contact where guid = '%s' and uid = %d limit 1",
+			dbesc($zguid),
+			intval($entity['entity_id'])
+		);
+		if($r && count($r)) {
+			$is_contact = true;
+			$contact = $r[0];
+		}
+		$r = q("select * from entity where entity_global_id = '%s' limit 1",
+			dbesc($zguid)
+		);
+		if($r && count($r)) {
+			$is_site = true;
+		}
+	}
+
+
+
+
+
+
+}
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 // Included here for completeness, but this is a very dangerous operation.
 // It is the caller's responsibility to confirm the requestor's intent and
 // authorisation to do this.
