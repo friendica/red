@@ -1,15 +1,15 @@
 <?php
 
 
-function map_perms($entity,$zguid) {
+function map_perms($entity,$zguid,$zsig) {
 
 	$is_contact = false;
 	$is_site    = false;
 	$is_network = false;
 	$is_anybody = true;
 
-	if(strlen($zguid)) {
-
+	if(strlen($zguid) && strlen($zsig)) {
+		
 		$is_network = true;
 
 		$r = q("select * from contact where guid = '%s' and uid = %d limit 1",
@@ -20,23 +20,76 @@ function map_perms($entity,$zguid) {
 			$is_contact = true;
 			$contact = $r[0];
 		}
-		$r = q("select * from entity where entity_global_id = '%s' limit 1",
+		$r = q("select * from entity where entity_global_id = '%s'",
 			dbesc($zguid)
 		);
 		if($r && count($r)) {
-			$is_site = true;
+			foreach($r as $rr) {
+				if(base64url_encode(rsa_sign($rr['entity_global_id'],$rr['entity_prvkey'])) === $zsig) {
+					$is_site = true;
+					break;
+				}
+			}
 		}
 	}
 
+	$perms = array(
+		'view_stream'   => array('entity_r_stream',  PERMS_R_STREAM ),
+		'view_profile'  => array('entity_r_profile', PERMS_R_PROFILE),
+		'view_photos'   => array('entity_r_photos',  PERMS_R_PHOTOS),
+		'view_contacts' => array('entity_r_abook',   PERMS_R_ABOOK),
+
+		'send_stream'   => array('entity_w_stream',  PERMS_W_STREAM),
+		'post_wall'     => array('entity_w_wall',    PERMS_W_WALL),
+		'tag_deliver'   => array('entity_w_tagwall', PERMS_W_TAGWALL),
+		'post_comments' => array('entity_w_comment', PERMS_W_COMMENT),
+		'post_mail'     => array('entity_w_mail',    PERMS_W_MAIL),
+		'post_photos'   => array('entity_w_photos',  PERMS_W_PHOTOS),
+		'chat'          => array('entity_w_chat',    PERMS_W_CHAT),
+	);
 
 
+	$ret = array();
 
+	foreach($perms as $k => $v) {
+		$ret[$k] = z_check_perms($k,$v,$entity,$contact,$is_contact,$is_site,$is_network,$is_anybody);
 
+	}
+
+	return $ret;
 
 }
 
+function z_check_perms($k,$v,$entity,$contact,$is_contact,$is_site,$is_network,$is_anybody) {
 
-
+	$allow = (($contact['self']) ? true : false);
+	
+	switch($entity[$v[0]]) {
+		case PERMS_PUBLIC:
+				if($is_anybody)
+					$allow = true;
+				break;
+		case PERMS_NETWORK:
+				if($is_network)
+					$allow = true;
+				break;
+		case PERMS_SITE:
+				if($is_site)
+					$allow = true;
+				break;
+		case PERMS_CONTACTS:
+				if($is_contact)
+					$allow = true;
+				break;
+		case PERMS_SPECIFIC:
+				if($is_contact && is_array($contact) && ($contact['my_perms'] & $v[1]))
+					$allow = true;
+				break;
+		default:
+				break;
+	}
+	return $allow; 
+}
 
 
 

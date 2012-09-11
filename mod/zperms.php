@@ -3,12 +3,15 @@
 function zperms_init(&$a) {
 
 	require_once('include/zot.php');
+	require_once('include/Contact.php');
+	require_once('include/crypto.php');
 
 	$ret = array('success' => false);
 
-	$zguid   = ((x($_REQUEST,'guid')) ? $_REQUEST['guid'] : '');
-	$zaddr   = ((x($_REQUEST,'address')) ? $_REQUEST['address'] : '');
-	$ztarget = ((x($_REQUEST,'target')) ? $_REQUEST['target'] : '');
+	$zguid   = ((x($_REQUEST,'guid'))        ? $_REQUEST['guid']    : '');
+	$zaddr   = ((x($_REQUEST,'address'))     ? $_REQUEST['address'] : '');
+	$ztarget = ((x($_REQUEST,'target'))      ? $_REQUEST['target']  : '');
+	$zsig    = ((x($_REQUEST,'target_sig'))  ? $_REQUEST['target_sig']  : '');
 		
 	$r = null;
 
@@ -31,8 +34,6 @@ function zperms_init(&$a) {
 		$ret['message'] = 'Item not found.';
 		json_return_and_die($ret);
 	}
-
-
 	$e = $r[0];
 
 	$id = $e['entity_id'];
@@ -46,15 +47,16 @@ function zperms_init(&$a) {
 	}
 
 
+
 	$ret['success'] = true;
-
-	// Communication details
-
 	$ret['guid'] = $e['entity_global_id'];
 	$ret['guid_sig'] = base64url_encode(rsa_sign($e['entity_global_id'],$e['entity_prvkey']));
 	$ret['key']  = $e['entity_pubkey'];
 	$ret['name'] = $e['entity_name'];
 	$ret['address'] = $e['entity_address'];
+	$ret['target'] = $ztarget;
+	$ret['target_sig'] = $zsig;
+	$ret['permissions'] =  map_perms($r[0],$ztarget,$zsig);
 
 	$ret['profile'] = $profile;
 
@@ -68,6 +70,7 @@ function zperms_init(&$a) {
 				$ret['hubs'][] = array(
 					'primary'  => (($hub['hubloc_flags'] & HUBLOC_FLAGS_PRIMARY) ? true : false),
 					'url'      => $hub['hubloc_url'],
+					/// hmmm we probably shouldn't sign somebody else's hub. FIXME
 					'url_sig'  => base64url_encode(rsa_sign($hub['hubloc_url'],$e['entity_prvkey'])),
 					'callback' => $hub['hubloc_callback'],
 					'sitekey'  => $hub['hubloc_sitekey']
