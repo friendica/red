@@ -7,6 +7,40 @@ require_once('include/crypto.php');
 require_once('include/Photo.php');
 
 
+function get_public_feed($channel,$params) {
+
+	$type      = 'xml';
+	$begin     = '0000-00-00 00:00:00';
+	$end       = '';
+	$start     = 0;
+	$records   = 40;
+	$direction = 'desc';
+
+	if(is_array($params)) {
+		$type      = ((x($params,'type'))      ? $params['type']      : $type);
+		$begin     = ((x($params,'begin'))     ? $params['begin']     : $begin);
+		$end       = ((x($params,'end'))       ? $params['end']       : $end);
+		$start     = ((x($params,'start'))     ? $params['start']     : $start);
+		$records   = ((x($params,'records'))   ? $params['records']   : $records);
+		$direction = ((x($params,'direction')) ? $params['direction'] : $direction);
+	}
+		
+	switch($type) {
+		case 'json':
+			header("Content-type: application/atom+json");
+			break;
+		case 'xml':
+		default:
+			header("Content-type: application/atom+xml");
+			break;
+	}
+
+
+
+
+
+}
+
 function get_feed_for(&$a, $dfrn_id, $owner_nick, $last_update, $direction = 0) {
 
 
@@ -1231,6 +1265,15 @@ function tag_deliver($uid,$item_id) {
 
 	// send a notification
 
+	// use a local photo if we have one
+
+	$r = q("select thumb from contact where uid = %d and nurl = '%s' limit 1",
+		intval($u[0]['uid']),
+		dbesc(normalise_link($item['author-link']))
+	);
+	$photo = (($r && count($r)) ? $r[0]['thumb'] : $item['author-avatar']);
+
+
 	require_once('include/enotify.php');
 	notification(array(
 		'type'         => NOTIFY_TAGSELF,
@@ -1243,7 +1286,7 @@ function tag_deliver($uid,$item_id) {
 		'link'         => $a->get_baseurl() . '/display/' . $u[0]['nickname'] . '/' . $item['id'],
 		'source_name'  => $item['author-name'],
 		'source_link'  => $item['author-link'],
-		'source_photo' => $item['author-avatar'],
+		'source_photo' => $photo,
 		'verb'         => ACTIVITY_TAG,
 		'otype'        => 'item'
 	));
@@ -1289,6 +1332,59 @@ function tag_deliver($uid,$item_id) {
 	);
 
 	proc_run('php','include/notifier.php','tgroup',$item_id);			
+
+}
+
+
+
+function tgroup_check($uid,$item) {
+
+	$a = get_app();
+
+	$mention = false;
+
+	// check that the message originated elsewhere and is a top-level post
+
+	if(($item['wall']) || ($item['origin']) || ($item['uri'] != $item['parent-uri']))
+		return false;
+
+
+	$u = q("select * from user where uid = %d limit 1",
+		intval($uid)
+	);
+	if(! count($u))
+		return false;
+
+	$community_page = (($u[0]['page-flags'] == PAGE_COMMUNITY) ? true : false);
+	$prvgroup = (($u[0]['page-flags'] == PAGE_PRVGROUP) ? true : false);
+
+
+	$link = normalise_link($a->get_baseurl() . '/profile/' . $u[0]['nickname']);
+
+	// Diaspora uses their own hardwired link URL in @-tags
+	// instead of the one we supply with webfinger
+
+	$dlink = normalise_link($a->get_baseurl() . '/u/' . $u[0]['nickname']);
+
+	$cnt = preg_match_all('/[\@\!]\[url\=(.*?)\](.*?)\[\/url\]/ism',$item['body'],$matches,PREG_SET_ORDER);
+	if($cnt) {
+		foreach($matches as $mtch) {
+			if(link_compare($link,$mtch[1]) || link_compare($dlink,$mtch[1])) {
+				$mention = true;
+				logger('tgroup_check: mention found: ' . $mtch[2]);
+			}
+		}
+	}
+
+	if(! $mention)
+		return false;
+
+	if((! $community_page) && (! $prvgroup))
+		return false;
+
+
+
+	return true;
 
 }
 
@@ -1831,6 +1927,12 @@ function consume_feed($xml,$importer,&$contact, &$hub, $datedir = 0, $pass = 0) 
 				if($pass == 1)
 					continue;
 
+				// not allowed to post
+
+				if($contact['rel'] == CONTACT_IS_FOLLOWER)
+					continue;
+
+
 				// Have we seen it? If not, import it.
 
 				$item_id  = $item->get_id();
@@ -2040,6 +2142,14 @@ function consume_feed($xml,$importer,&$contact, &$hub, $datedir = 0, $pass = 0) 
 					$datarray['owner-link']   = $contact['url'];
 					$datarray['owner-avatar'] = $contact['thumb'];
 				}
+
+				// We've allowed "followers" to reach this point so we can decide if they are 
+				// posting an @-tag delivery, which followers are allowed to do for certain
+				// page types. Now that we've parsed the post, let's check if it is legit. Otherwise ignore it. 
+
+				if(($contact['rel'] == CONTACT_IS_FOLLOWER) && (! tgroup_check($importer['uid'],$datarray)))
+					continue;
+
 
 				$r = item_store($datarray);
 				continue;
@@ -2631,15 +2741,6 @@ function local_delivery($importer,$data) {
 				}
 
 
-				// TODO: make this next part work against both delivery threads of a community post
-
-//				if((! link_compare($datarray['author-link'],$importer['url'])) && (! $community)) {
-//					logger('local_delivery: received relay claiming to be from ' . $importer['url'] . ' however comment author url is ' . $datarray['author-link'] ); 
-					// they won't know what to do so don't report an error. Just quietly die.
-//					return 0;
-//				}					
-
-				// our user with $importer['importer_uid'] is the owner
 
 				$own = q("select name,url,thumb from contact where uid = %d and self = 1 limit 1",
 					intval($importer['importer_uid'])
@@ -2709,15 +2810,6 @@ function local_delivery($importer,$data) {
 					}
 				}
 
-// 				if($community) {
-//					$newtag = '@[url=' . $a->get_baseurl() . '/profile/' . $importer['nickname'] . ']' . $importer['username'] . '[/url]';
-//					if(! stristr($datarray['tag'],$newtag)) {
-//						if(strlen($datarray['tag']))
-//							$datarray['tag'] .= ',';
-//						$datarray['tag'] .= $newtag;
-//					}
-//				}
-
 
 				$posted_id = item_store($datarray);
 				$parent = 0;
@@ -2786,6 +2878,10 @@ function local_delivery($importer,$data) {
 
 				$item_id  = $item->get_id();
 				$datarray = get_atom_elements($feed,$item);
+
+ 				if($importer['rel'] == CONTACT_IS_FOLLOWER)
+ 					continue;
+ 
 
 				$r = q("SELECT `uid`, `edited`, `body` FROM `item` WHERE `uri` = '%s' AND `uid` = %d LIMIT 1",
 					dbesc($item_id),
@@ -2991,6 +3087,9 @@ function local_delivery($importer,$data) {
 				$datarray['owner-link']   = $importer['url'];
 				$datarray['owner-avatar'] = $importer['thumb'];
 			}
+
+			if(($importer['rel'] == CONTACT_IS_FOLLOWER) && (! tgroup_check($importer['importer_uid'],$datarray)))
+				continue;
 
 			$posted_id = item_store($datarray);
 

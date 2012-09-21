@@ -141,6 +141,20 @@ function events_content(&$a) {
 		return;
 	}
 
+	if(($a->argc > 2) && ($a->argv[1] === 'ignore') && intval($a->argv[2])) {
+		$r = q("update event set ignore = 1 where id = %d and uid = %d limit 1",
+			intval($a->argv[2]),
+			intval(local_user())
+		);
+	}
+
+	if(($a->argc > 2) && ($a->argv[1] === 'unignore') && intval($a->argv[2])) {
+		$r = q("update event set ignore = 0 where id = %d and uid = %d limit 1",
+			intval($a->argv[2]),
+			intval(local_user())
+		);
+	}
+
 
 	$htpl = get_markup_template('event_head.tpl');
 	$a->page['htmlhead'] .= replace_macros($htpl,array('$baseurl' => $a->get_baseurl()));
@@ -154,6 +168,7 @@ function events_content(&$a) {
 	$mode = 'view';
 	$y = 0;
 	$m = 0;
+	$ignored = ((x($_REQUEST,'ignored')) ? intval($_REQUEST['ignored']) : 0);
 
 	if($a->argc > 1) {
 		if($a->argc > 2 && $a->argv[1] == 'event') {
@@ -231,10 +246,11 @@ function events_content(&$a) {
 		} else {
 			$r = q("SELECT `event`.*, `item`.`id` AS `itemid`,`item`.`plink`,
 				`item`.`author-name`, `item`.`author-avatar`, `item`.`author-link` FROM `event` LEFT JOIN `item` ON `item`.`event-id` = `event`.`id` 
-				WHERE `event`.`uid` = %d
+				WHERE `event`.`uid` = %d and ignore = %d
 				AND (( `adjust` = 0 AND `finish` >= '%s' AND `start` <= '%s' ) 
 				OR  (  `adjust` = 1 AND `finish` >= '%s' AND `start` <= '%s' )) ",
 				intval(local_user()),
+				intval($ignored),
 				dbesc($start),
 				dbesc($finish),
 				dbesc($adjust_start),

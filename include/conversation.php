@@ -89,7 +89,7 @@ function localize_item(&$item){
 		$item['body'] = item_redir_and_replace_images($extracted['body'], $extracted['images'], $item['contact-id']);
 
 	$xmlhead="<"."?xml version='1.0' encoding='UTF-8' ?".">";
-	if ($item['verb']=== ACTIVITY_LIKE || $item['verb']=== ACTIVITY_DISLIKE){
+	if (activity_match($item['verb'],ACTIVITY_LIKE) || activity_match($item['verb'],ACTIVITY_DISLIKE)){
 
 		$r = q("SELECT * from `item`,`contact` WHERE 
 				`item`.`contact-id`=`contact`.`id` AND `item`.`uri`='%s';",
@@ -122,18 +122,16 @@ function localize_item(&$item){
 
 		$plink = '[url=' . $obj['plink'] . ']' . $post_type . '[/url]';
 
-		switch($item['verb']){
-			case ACTIVITY_LIKE :
-				$bodyverb = t('%1$s likes %2$s\'s %3$s');
-				break;
-			case ACTIVITY_DISLIKE:
-				$bodyverb = t('%1$s doesn\'t like %2$s\'s %3$s');
-				break;
+		if(activity_match($item['verb'],ACTIVITY_LIKE)) {
+			$bodyverb = t('%1$s likes %2$s\'s %3$s');
+		}
+		elseif(activity_match($item['verb'],ACTIVITY_DISLIKE)) {
+			$bodyverb = t('%1$s doesn\'t like %2$s\'s %3$s');
 		}
 		$item['body'] = sprintf($bodyverb, $author, $objauthor, $plink);
 
 	}
-	if ($item['verb']=== ACTIVITY_FRIEND){
+	if (activity_match($item['verb'],ACTIVITY_FRIEND)) {
 
 		if ($item['obj_type']=="" || $item['obj_type']!== ACTIVITY_OBJ_PERSON) return;
 
@@ -220,7 +218,7 @@ function localize_item(&$item){
 		$item['body'] = sprintf($txt, $A, t($verb));
 	}
 
-    if ($item['verb']===ACTIVITY_TAG){
+ 	if (activity_match($item['verb'],ACTIVITY_TAG)) {
 		$r = q("SELECT * from `item`,`contact` WHERE 
 		`item`.`contact-id`=`contact`.`id` AND `item`.`uri`='%s';",
 		 dbesc($item['parent_uri']));
@@ -257,7 +255,7 @@ function localize_item(&$item){
 		$item['body'] = sprintf( t('%1$s tagged %2$s\'s %3$s with %4$s'), $author, $objauthor, $plink, $tag );
 
 	}
-	if ($item['verb']=== ACTIVITY_FAVORITE){
+	if (activity_match($item['verb'],ACTIVITY_FAVORITE)){
 
 		if ($item['obj_type']== "")
 			return;
@@ -315,18 +313,29 @@ function localize_item(&$item){
  * Count the total of comments on this item and its desendants
  */
 function count_descendants($item) {
+
 	$total = count($item['children']);
 
-	if($item['verb'] === ACTIVITY_LIKE || $item['verb'] === ACTIVITY_DISLIKE)
-		return 0;
-
-	if($total > 0) {
-		foreach($item['children'] as $child) {
-			$total += count_descendants($child);
-		}
-	}
+  	if($total > 0) {
+  		foreach($item['children'] as $child) {
+ 			if(! visible_activity($child))
+  				$total --;
+  			$total += count_descendants($child);
+  		}
+  	}
 
 	return $total;
+}
+
+function visible_activity($item) {
+
+	if(activity_match($child['verb'],ACTIVITY_LIKE) || activity_match($child['verb'],ACTIVITY_DISLIKE))
+		return false;
+
+	if(activity_match($item['verb'],ACTIVITY_FOLLOW) && $item['object-type'] === ACTIVITY_OBJ_NOTE && $item['uid'] != local_user())
+		return false;
+
+	return true;
 }
 
 /**
@@ -345,8 +354,9 @@ function prepare_threads_body($a, $items, $cmnt_tpl, $page_writeable, $mode, $pr
 
 	foreach($items as $item) {
 
-		if($item['verb'] === ACTIVITY_LIKE || $item['verb'] === ACTIVITY_DISLIKE) {
+ 		if(! visible_activity($item)) {
 			$nb_items --;
+			$total_children --;
 			continue;
 		}
 
@@ -433,9 +443,19 @@ function prepare_threads_body($a, $items, $cmnt_tpl, $page_writeable, $mode, $pr
 		$location = ((strlen($locate['html'])) ? $locate['html'] : render_location_google($locate));
 
 		$tags=array();
+		$hashtags = array();
+		$mentions = array();
 		foreach(explode(',',$item['tag']) as $tag){
 			$tag = trim($tag);
-			if ($tag!="") $tags[] = bbcode($tag);
+			if ($tag!="") {
+				$t = bbcode($tag);
+				$tags[] = $t;
+				if($t[0] == '#')
+					$hashtags[] = $t;
+				elseif($t[0] == '@')
+					$mentions[] = $t;
+			}
+
 		}
 
 		$like    = ((x($alike,$item['uri'])) ? format_like($alike[$item['uri']],$alike[$item['uri'] . '-l'],'like',$item['uri']) : '');
@@ -586,7 +606,9 @@ function prepare_threads_body($a, $items, $cmnt_tpl, $page_writeable, $mode, $pr
 			'template' => $template,
 
 			'type' => implode("",array_slice(explode("/",$item['verb']),-1)),
-			'tags' => $tags,
+			'tags' => template_escape($tags),
+			'hashtags' => template_escape($hashtags),
+			'mentions' => template_escape($mentions),
 			'body' => template_escape($body),
 			'text' => strip_tags(template_escape($body)),
 			'id' => $item['item_id'],
@@ -777,6 +799,21 @@ function conversation(&$a, $items, $mode, $update, $page_mode = 'traditional') {
 
 
 
+				$tags=array();
+				$hashtags = array();
+				$mentions = array();
+				foreach(explode(',',$item['tag']) as $tag){
+					$tag = trim($tag);
+					if ($tag!="") {
+						$t = bbcode($tag);
+						$tags[] = $t;
+						if($t[0] == '#')
+							$hashtags[] = $t;
+						elseif($t[0] == '@')
+							$mentions[] = $t;
+					}
+				}
+
 				$sp = false;
 				$profile_link = best_link_url($item,$sp);
 				if($sp)
@@ -839,6 +876,9 @@ function conversation(&$a, $items, $mode, $update, $page_mode = 'traditional') {
 					'thumb' => $profile_avatar,
 					'title' => template_escape($item['title']),
 					'body' => template_escape($body),
+					'tags' => template_escape($tags),
+					'hashtags' => template_escape($hashtags),
+					'mentions' => template_escape($mentions),
 					'text' => strip_tags(template_escape($body)),
 					'ago' => relative_date($item['created']),
 					'app' => $item['app'],
@@ -928,9 +968,7 @@ function conversation(&$a, $items, $mode, $update, $page_mode = 'traditional') {
 
 				// We've already parsed out like/dislike for special treatment. We can ignore them now
 
-				if(((activity_match($item['verb'],ACTIVITY_LIKE)) 
-					|| (activity_match($item['verb'],ACTIVITY_DISLIKE))) 
-					&& ($item['id'] != $item['parent']))
+				if((! visible_activity($item)) && ($item['id'] != $item['parent']))
 					continue;
 
 				$toplevelpost = (($item['id'] == $item['parent']) ? true : false);

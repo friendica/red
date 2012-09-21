@@ -307,16 +307,26 @@ function parse_url_content(&$a) {
 
 	$image = "";
 
-        if(sizeof($siteinfo["images"]) > 0){
-            /*
-              Execute below code only if image is present in siteinfo
-             */
-            foreach ($siteinfo["images"] as $imagedata)
-		if($textmode)
-                    $image .= '[img='.$imagedata["width"].'x'.$imagedata["height"].']'.$imagedata["src"].'[/img]';
+	if(sizeof($siteinfo["images"]) > 0){
+		/* Execute below code only if image is present in siteinfo */
+
+		$total_images = 0;
+		$max_images = get_config('system','max_bookmark_images');
+		if($max_images === false)
+			$max_images = 2;
 		else
-                    $image .= '<img height="'.$imagedata["height"].'" width="'.$imagedata["width"].'" src="'.$imagedata["src"].'" alt="photo" />';
+			$max_images = intval($max_images);
+
+		foreach ($siteinfo["images"] as $imagedata) {
+			if($textmode)
+				$image .= '[img='.$imagedata["width"].'x'.$imagedata["height"].']'.$imagedata["src"].'[/img]' . "\n";
+			else
+				$image .= '<img height="'.$imagedata["height"].'" width="'.$imagedata["width"].'" src="'.$imagedata["src"].'" alt="photo" /><br />';
+			$total_images ++;
+			if($max_images && $max_images >= $total_images)
+				break;
         }
+	}
 
 	if(strlen($text)) {
 		if($textmode)

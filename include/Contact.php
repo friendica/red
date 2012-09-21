@@ -8,6 +8,11 @@ function map_perms($entity,$zguid,$zsig) {
 	$is_network = false;
 	$is_anybody = true;
 
+
+	// To avoid sending the lengthy target_sig with each request,
+	// We should provide an array of results for each target
+	// and let the sender match the signature.
+
 	if(strlen($zguid) && strlen($zsig)) {
 		
 		$is_network = true;
