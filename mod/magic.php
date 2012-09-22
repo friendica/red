@@ -5,7 +5,7 @@ function magic_init(&$a) {
 	$url = ((x($_REQUEST,'url')) ? $_REQUEST['url'] : '');
 
 
-	if(local_user() && $argc() > 1 && intval(argv(1))) {
+	if(local_user() && argc() > 1 && intval(argv(1))) {
 
 		$cid = $argv(1);
 
@@ -21,11 +21,14 @@ function magic_init(&$a) {
 		$sec = random_string();
 
 		// Here's how it works in zot... still a fair bit of code to write
-		// Originator (us) posts our id/sig/location/location_sig with a random tracking code.
-		// The other site will call us back asynchronously and do the verification dance.
-		// Once that has happened, we will be issued an encrypted token
-		// We'll redirect to the site with the decrypted token (which is good for one use).  
-
+		// Create a random tracking code and store it
+		// Originator (us) redirects to remote connect url with callback URL and tracking code.
+		// Remote calls us back asynchronously to verify we sent the tracking code.
+		// Reply with a json document providing the identity details
+		// Remote verifies these match a known identity and the site matches a known location
+		// (especially including the current location)
+		// Once that has happened, the original redirect will be given an authenticated session 
+		// and redirected to the chosen page.
 
 
 
@@ -38,30 +41,14 @@ function magic_init(&$a) {
 			intval(time() + 45)
 		);
 
+		$local_callback = z_root() . '/auth';
 
+		logger('mod_magic: ' . $r[0]['name'] . ' ' . $sec, LOGGER_DEBUG); 
+		$dest = (($url) ? '&url=' . urlencode($url) : '');
+		goaway ($hubloc['hubloc_connect'] . "?f=&cb=" . urlencode($local_callback) . $dest . "&token=" . $token);
 
-		$postvars = array();
-
-		$postvars['tracking'] = $sec;
-		
-
-		$ret = $z_post_url($hubloc['hubloc_connect'],$postvars);
-		if($ret['success']) {
-			$j = json_decode($ret['body']);
-			if($j->result && $j->token) {
-				$token = openssl_private_decrypt($j->token,$channel['prvkey']);
-
-
-
-
-
-				logger('mod_magic: ' . $r[0]['name'] . ' ' . $sec, LOGGER_DEBUG); 
-				$dest = (($url) ? '&destination_url=' . $url : '');
-				goaway ($hubloc['hubloc_connect'] . "?f=" . $dest . "&token=" . $token);
-			}
-
-		}
 	}
+
 
 	if(local_user())
 		$handle = $a->user['nickname'] . '@' . substr($a->get_baseurl(),strpos($a->get_baseurl(),'://')+3);
