@@ -145,7 +145,10 @@ $a->apps = $arr['app_menu'];
  * 
  * "module"_init
  * "module"_post (only called if there are $_POST variables)
- * "module"_afterpost
+ * "module"_aside
+ *       $theme_$module_aside (and $extends_$module_aside) are run first if either exist
+ *       if either of these return false, module_aside is not called
+ *           This allows a theme to over-ride the sidebar layout completely. 
  * "module"_content - the string return of this function contains our page body
  *
  * Modules which emit other serialisations besides HTML (XML,JSON, etc.) should do 
@@ -246,8 +249,8 @@ if($a->module_loaded) {
 		$func = str_replace('-','_',current_theme()) . '_init';
 		$func($a);
 	}
-	elseif (x($a->theme_info,"extends") && file_exists("view/theme/".$a->theme_info["extends"]."/theme.php")) {
-		require_once("view/theme/".$a->theme_info["extends"]."/theme.php");
+	elseif (x($a->theme_info,"extends") && file_exists("view/theme/".$a->theme_info["extends"]."/php/theme.php")) {
+		require_once("view/theme/".$a->theme_info["extends"]."/php/theme.php");
 		if(function_exists(str_replace('-','_',$a->theme_info["extends"]) . '_init')) {
 			$func = str_replace('-','_',$a->theme_info["extends"]) . '_init';
 			$func($a);
@@ -262,10 +265,23 @@ if($a->module_loaded) {
 		$func($a);
 	}
 
-	if((! $a->error) && (function_exists($a->module . '_afterpost'))) {
-		call_hooks($a->module . '_mod_afterpost',$placeholder);
-		$func = $a->module . '_afterpost';
-		$func($a);
+
+	if(! $a->error) {
+		$aside_default = true;
+		call_hooks($a->module . '_mod_aside',$placeholder);
+		if(function_exists(str_replace('-','_',current_theme()) . '_' . $a->module . '_aside')) {
+			$func = str_replace('-','_',current_theme()) . '_' . $a->module . '_aside';
+			$aside_default = $func($a);
+		}
+		elseif(x($a->theme_info,"extends") && $aside_default 
+			&& (function_exists(str_replace('-','_',$a->theme_info["extends"]) . '_' . $a->module . '_aside'))) {
+			$func = str_replace('-','_',$a->theme_info["extends"]) . '_' . $a->module . '_aside';
+			$aside_default = $func($a);
+		}
+		elseif(function_exists($a->module . '_aside') && $aside_default) {
+			$func = $a->module . '_aside';
+			$func($a);
+		}
 	}
 
 	if((! $a->error) && (function_exists($a->module . '_content'))) {

@@ -2,22 +2,26 @@
 
 function profile_init(&$a) {
 
+	$a->page['htmlhead'] .= '<link rel="alternate" type="application/atom+xml" href="' . $a->get_baseurl() . '/feed/' . $which .'" />' . "\r\n" ;
+
+}
+
+
+function profile_aside(&$a) {
+
 	require_once('include/contact_widgets.php');
+	require_once('include/items.php');
 
 	if(! x($a->page,'aside'))
 		$a->page['aside'] = '';
 
-	$blocked = (((get_config('system','block_public')) && (! local_user()) && (! remote_user())) ? true : false);
-
 	if(argc() > 1)
 		$which = argv(1);
 	else {
-		logger('profile error: mod_profile ' . $a->query_string, LOGGER_DEBUG);
 		notice( t('Requested profile is not available.') . EOL );
 		$a->error = 404;
 		return;
 	}
-
 
 	$profile = 0;
 	$channel = $a->get_channel();
@@ -27,9 +31,12 @@ function profile_init(&$a) {
 		$profile = argv(1);		
 	}
 
+	$cat = ((x($_REQUEST,'cat')) ? htmlspecialchars($_REQUEST['cat']) : '');
+
 	profile_load($a,$which,$profile);
 
-	$a->page['htmlhead'] .= '<link rel="alternate" type="application/atom+xml" href="' . $a->get_baseurl() . '/feed/' . $which .'" />' . "\r\n" ;
+	$a->page['aside'] .= posted_date_widget($a->get_baseurl(true) . '/profile/' . $a->profile['nickname'],$a->profile['profile_uid'],true);	
+	$a->page['aside'] .= categories_widget($a->get_baseurl(true) . '/profile/' . $a->profile['nickname'],$cat);
 
 }
 
@@ -46,17 +53,11 @@ function profile_content(&$a, $update = 0) {
 				else
 					$datequery = escape_tags(argv($x));
 			}
-			else
-				$category = argv($x);
 		}
 	}
 
-	if(! x($category)) {
-		$category = ((x($_GET,'category')) ? $_GET['category'] : '');
-	}
-
 	if(get_config('system','block_public') && (! get_account_id()) && (! remote_user())) {
-		return login();
+			return login();
 	}
 
 	require_once("include/bbcode.php");
@@ -146,8 +147,6 @@ function profile_content(&$a, $update = 0) {
 
 		$celeb = ((($a->profile['page-flags'] == PAGE_SOAPBOX) || ($a->profile['page-flags'] == PAGE_COMMUNITY)) ? true : false);
 
-		$a->page['aside'] .= posted_date_widget($a->get_baseurl(true) . '/profile/' . $a->profile['nickname'],$a->profile['profile_uid'],true);	
-		$a->page['aside'] .= categories_widget($a->get_baseurl(true) . '/profile/' . $a->profile['nickname'],(x($category) ? xmlify($category) : ''));
 
 		if(can_write_wall($a,$a->profile['profile_uid'])) {
 
