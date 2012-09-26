@@ -599,7 +599,7 @@ if(! class_exists('App')) {
 			$this->channel = $channel;
 		}
 
-		function get_channel()
+		function get_channel() {
 			return $this->channel;
 		}
 

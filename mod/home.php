@@ -8,7 +8,7 @@ function home_init(&$a) {
 
 	$channel = $a->get_channel();
 
-	if(local_user() && $channel && $channel['channel_address']))
+	if(local_user() && $channel && $channel['channel_address'])
 		goaway( $a->get_baseurl() . '/profile/' . $channel['channel_address']);
 
 }}
