@@ -13,7 +13,7 @@ function feed_init(&$a) {
 
 	$channel = '';
 	if(argc() > 1) {
-		$r = q("select * from entity where entity_address = '%s' limit 1",
+		$r = q("select * from channel where channel_address = '%s' limit 1",
 			dbesc(argv(1))
 		);
 		if(!($r && count($r)))
@@ -23,13 +23,13 @@ function feed_init(&$a) {
 
 		// check site and channel permissions
 
-		if(!($channel['entity_r_stream'] & PERMS_PUBLIC))
+		if(!($channel['channel_r_stream'] & PERMS_PUBLIC))
 			killme();
 
 		if((intval(get_config('system','block_public'))) && (! get_account_id()))
 			killme();
  
-		logger('mod_feed: public feed request from ' . $_SERVER['REMOTE_ADDR'] . ' for ' . $channel['entity_address']);
+		logger('mod_feed: public feed request from ' . $_SERVER['REMOTE_ADDR'] . ' for ' . $channel['channel_address']);
 		echo get_public_feed($channel,$params);
 		killme();
 	}

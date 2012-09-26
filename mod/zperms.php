@@ -16,12 +16,12 @@ function zperms_init(&$a) {
 	$r = null;
 
 	if(strlen($zguid)) {
-		$r = q("select * from entity where entity_global_id = '%s' limit 1",
+		$r = q("select * from channel where channel_global_id = '%s' limit 1",
 			dbesc($zguid)
 		);
 	}
 	elseif(strlen($zaddr)) {
-		$r = q("select * from entity where entity_address = '%s' limit 1",
+		$r = q("select * from channel where channel_address = '%s' limit 1",
 			dbesc($zaddr)
 		);
 	}
@@ -36,7 +36,7 @@ function zperms_init(&$a) {
 	}
 	$e = $r[0];
 
-	$id = $e['entity_id'];
+	$id = $e['channel_id'];
 	$r = q("select contact.*, profile.* 
 		from contact left join profile on contact.uid = profile.uid
 		where contact.uid = %d && contact.self = 1 and profile.is_default = 1 limit 1",
@@ -49,21 +49,21 @@ function zperms_init(&$a) {
 
 
 	$ret['success'] = true;
-	$ret['guid'] = $e['entity_global_id'];
-	$ret['guid_sig'] = base64url_encode(rsa_sign($e['entity_global_id'],$e['entity_prvkey']));
-	$ret['key']  = $e['entity_pubkey'];
-	$ret['name'] = $e['entity_name'];
-	$ret['address'] = $e['entity_address'];
+	$ret['guid'] = $e['channel_global_id'];
+	$ret['guid_sig'] = base64url_encode(rsa_sign($e['channel_global_id'],$e['channel_prvkey']));
+	$ret['key']  = $e['channel_pubkey'];
+	$ret['name'] = $e['channel_name'];
+	$ret['address'] = $e['channel_address'];
 	$ret['target'] = $ztarget;
 	$ret['target_sig'] = $zsig;
 	$ret['permissions'] =  map_perms($r[0],$ztarget,$zsig);
 
 	$ret['profile'] = $profile;
 
-	// array of (verified) hubs this entity uses
+	// array of (verified) hubs this channel uses
 
 	$ret['hubs'] = array();
-	$x = zot_get_hubloc(array($e['entity_global_id']));
+	$x = zot_get_hubloc(array($e['channel_global_id']));
 	if($x && count($x)) {
 		foreach($x as $hub) {
 			if(! ($hub['hubloc_flags'] & HUBLOC_FLAGS_UNVERIFIED)) {
@@ -71,7 +71,7 @@ function zperms_init(&$a) {
 					'primary'  => (($hub['hubloc_flags'] & HUBLOC_FLAGS_PRIMARY) ? true : false),
 					'url'      => $hub['hubloc_url'],
 					/// hmmm we probably shouldn't sign somebody else's hub. FIXME
-					'url_sig'  => base64url_encode(rsa_sign($hub['hubloc_url'],$e['entity_prvkey'])),
+					'url_sig'  => base64url_encode(rsa_sign($hub['hubloc_url'],$e['channel_prvkey'])),
 					'callback' => $hub['hubloc_callback'],
 					'sitekey'  => $hub['hubloc_sitekey']
 				);

@@ -6,8 +6,10 @@ function home_init(&$a) {
 	$ret = array();
 	call_hooks('home_init',$ret);
 
-	if(local_user() && ($a->identity['entity_address']))
-		goaway( $a->get_baseurl() . '/profile/' . $a->identity['entity_address']);
+	$channel = $a->get_channel();
+
+	if(local_user() && $channel && $channel['channel_address']))
+		goaway( $a->get_baseurl() . '/profile/' . $channel['channel_address']);
 
 }}
 

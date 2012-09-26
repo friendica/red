@@ -27,27 +27,27 @@ function authenticate_success($user_record, $login_initial = false, $interactive
 
 		$uid_to_load = (((x($_SESSION,'uid')) && (intval($_SESSION['uid']))) ? intval($_SESSION['uid']) : 0);
 		if(! $uid_to_load)
-			$uid_to_load = intval($a->account['account_default_entity']);
+			$uid_to_load = intval($a->account['account_default_channel']);
 
 		if($uid_to_load) {
-			$r = q("select * from entity where entity_id = %d and entity_account_id = %d limit 1",
+			$r = q("select * from channel where channel_id = %d and channel_account_id = %d limit 1",
 				intval($uid_to_load),
 				intval($a->account['account_id'])
 			);
 			if($r && count($r)) {
-				$_SESSION['uid'] = intval($r[0]['entity_id']);
-				$a->identity = $r[0];
-				$_SESSION['theme'] = $a->identity['entity_theme'];
-				date_default_timezone_set($a->identity['entity_timezone']);
+				$_SESSION['uid'] = intval($r[0]['channel_id']);
+				$a->set_channel($r[0]);
+				$_SESSION['theme'] = $r[0]['channel_theme'];
+				date_default_timezone_set($r[0]['channel_timezone']);
 			}
 
-			$r = q("SELECT * FROM contact WHERE uid = %d AND self = 1 LIMIT 1",
-				intval($a->identity['entity_id'])
+			$c = q("SELECT * FROM contact WHERE uid = %d AND self = 1 LIMIT 1",
+				intval($r[0]['channel_id'])
 			);
 
-			if($r && count($r)) {
-				$a->contact = $r[0];
-				$a->cid = $r[0]['id'];
+			if($c && count($c)) {
+				$a->contact = $c[0];
+				$a->cid = $c[0]['id'];
 				$_SESSION['cid'] = $a->cid;
 			}
 

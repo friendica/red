@@ -105,7 +105,7 @@ function zregister_post(&$a) {
 	authenticate_success($result['account'],true,false,true);
 
 	if(! strlen($next_page = get_config('system','workflow_register_next')))
-		$next_page = 'zentity';
+		$next_page = 'zchannel';
 
 	$_SESSION['workflow'] = true;
 	

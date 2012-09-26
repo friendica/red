@@ -320,24 +320,6 @@ function settings_post(&$a) {
 	$str_group_deny    = perms2str($_POST['group_deny']);
 	$str_contact_deny  = perms2str($_POST['contact_deny']);
 
-	$openidserver = $a->user['openidserver'];
-	$openid = normalise_openid($openid);
-
-	// If openid has changed or if there's an openid but no openidserver, try and discover it.
-
-	if($openid != $a->user['openid'] || (strlen($openid) && (! strlen($openidserver)))) {
-		$tmp_str = $openid;
-		if(strlen($tmp_str) && validate_url($tmp_str)) {
-			logger('updating openidserver');
-			require_once('library/openid.php');
-			$open_id_obj = new LightOpenID;
-			$open_id_obj->identity = $openid;
-			$openidserver = $open_id_obj->discover($open_id_obj->identity);
-		}
-		else
-			$openidserver = '';
-	}
-
 	set_pconfig(local_user(),'expire','items', $expire_items);
 	set_pconfig(local_user(),'expire','notes', $expire_notes);
 	set_pconfig(local_user(),'expire','starred', $expire_starred);
@@ -660,15 +642,18 @@ function settings_content(&$a) {
 
 	load_pconfig(local_user(),'expire');
 
-	$username   = $a->identity['entity_name'];
-	$email      = $a->account['account_email'];
-	$nickname   = $a->identity['entity_address'];
-	$timezone   = $a->identity['entity_timezone'];
-	$notify     = $a->identity['entity_notifyflags'];
-	$defloc     = $a->identity['entity_location'];
+	$channel = $a->get_channel();
 
-	$maxreq     = $a->identity['entity_max_friend_req'];
+	$username   = $channel['channel_name'];
+	$email      = $a->account['account_email'];
+	$nickname   = $channel['channel_address'];
+	$timezone   = $channel['channel_timezone'];
+	$notify     = $channel['channel_notifyflags'];
+	$defloc     = $channel['channel_location'];
+
+	$maxreq     = $channel['channel_max_friend_req'];
 	$expire     = get_pconfig(local_user(),'expire','content_expire_days');
+
 	$blockwall  = $a->user['blockwall'];
 	$blocktags  = $a->user['blocktags'];
 	$unkmail    = $a->user['unkmail'];

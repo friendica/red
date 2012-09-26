@@ -7,7 +7,7 @@ require_once('include/crypto.php');
 function identity_check_service_class($account_id) {
 	$ret = array('success' => false, $message => '');
 	
-	$r = q("select count(entity_id) as total from entity were entity_account_id = %d ",
+	$r = q("select count(channel_id) as total from channel were channel_account_id = %d ",
 		intval($account_id)
 	);
 	if(! ($r && count($r))) {
@@ -53,9 +53,9 @@ function create_identity($arr) {
 
 	$primary = true;
 		
-	$r = q("insert into entity ( entity_account_id, entity_primary, 
-		entity_name, entity_address, entity_global_id, entity_prvkey,
-		entity_pubkey, entity_pageflags )
+	$r = q("insert into channel ( channel_account_id, channel_primary, 
+		channel_name, channel_address, channel_global_id, channel_prvkey,
+		channel_pubkey, channel_pageflags )
 		values ( %d, %d, '%s', '%s', '%s', '%s', '%s', %d ) ",
 
 		intval($arr['account_id']),
@@ -68,8 +68,8 @@ function create_identity($arr) {
 		intval(PAGE_NORMAL)
 	);
 			
-	$r = q("select * from entity where entity_account_id = %d 
-		and entity_global_id = '%s' limit 1",
+	$r = q("select * from channel where channel_account_id = %d 
+		and channel_global_id = '%s' limit 1",
 		intval($arr['account_id']),
 		dbesc($guid)
 	);
@@ -79,50 +79,50 @@ function create_identity($arr) {
 		return $ret;
 	}
 	
-	$ret['entity'] = $r[0];
+	$ret['channel'] = $r[0];
 
-	set_default_login_identity($arr['account_id'],$ret['entity']['entity_id'],false);
+	set_default_login_identity($arr['account_id'],$ret['channel']['channel_id'],false);
 	
 	// Create a verified hub location pointing to this site.
 
 	$r = q("insert into hubloc ( hubloc_guid, hubloc_guid_sig, hubloc_flags, 
 		hubloc_url, hubloc_url_sig, hubloc_callback, hubloc_sitekey )
 		values ( '%s', '%s', %d, '%s', '%s', '%s', '%s' )",
-		dbesc($ret['entity']['entity_global_id']),
-		dbesc(base64url_encode(rsa_sign($ret['entity']['entity_global_id'],$ret['entity']['entity_prvkey']))),
+		dbesc($ret['channel']['channel_global_id']),
+		dbesc(base64url_encode(rsa_sign($ret['channel']['channel_global_id'],$ret['channel']['channel_prvkey']))),
 		intval(($primary) ? HUBLOC_FLAGS_PRIMARY : 0),
 		dbesc(z_root()),
-		dbesc(base64url_encode(rsa_sign(z_root(),$ret['entity']['entity_prvkey']))),
+		dbesc(base64url_encode(rsa_sign(z_root(),$ret['channel']['channel_prvkey']))),
 		dbesc(z_root() . '/post'),
 		dbesc(get_config('system','pubkey'))
 	);
 	if(! $r)
 		logger('create_identity: Unable to store hub location');
 
-	$newuid = $ret['entity']['entity_id'];
+	$newuid = $ret['channel']['channel_id'];
 
 	$r = q("INSERT INTO `profile` ( `aid`, `uid`, `profile_name`, `is_default`, `name`, `photo`, `thumb`)
 		VALUES ( %d, %d, '%s', %d, '%s', '%s', '%s') ",
-		intval($ret['entity']['entity_account_id']),
+		intval($ret['channel']['channel_account_id']),
 		intval($newuid),
 		t('default'),
 		1,
-		dbesc($ret['entity']['entity_name']),
+		dbesc($ret['channel']['channel_name']),
 		dbesc($a->get_baseurl() . "/photo/profile/{$newuid}"),
 		dbesc($a->get_baseurl() . "/photo/avatar/{$newuid}")
 	);
 
 	$r = q("INSERT INTO `contact` ( `aid`, `uid`, `created`, `self`, `name`, `nick`, `photo`, `thumb`, `micro`, `blocked`, `pending`, `url`, `name_date`, `uri_date`, `avatar_date`, `closeness` )
 			VALUES ( %d, %d, '%s', 1, '%s', '%s', '%s', '%s', '%s', 0, 0, '%s', '%s', '%s', '%s', 0 ) ",
-			intval($ret['entity']['entity_account_id']),
+			intval($ret['channel']['channel_account_id']),
 			intval($newuid),
 			datetime_convert(),
-			dbesc($ret['entity']['entity_name']),
-			dbesc($ret['entity']['entity_address']),
+			dbesc($ret['channel']['channel_name']),
+			dbesc($ret['channel']['channel_address']),
 			dbesc($a->get_baseurl() . "/photo/profile/{$newuid}"),
 			dbesc($a->get_baseurl() . "/photo/avatar/{$newuid}"),
 			dbesc($a->get_baseurl() . "/photo/micro/{$newuid}"),
-			dbesc($a->get_baseurl() . "/profile/{$ret['entity']['entity_address']}"),
+			dbesc($a->get_baseurl() . "/profile/{$ret['channel']['channel_address']}"),
 			dbesc(datetime_convert()),
 			dbesc(datetime_convert()),
 			dbesc(datetime_convert())
@@ -141,16 +141,16 @@ function create_identity($arr) {
 
 }
 
-// set default identity for account_id to identity_id
+// set default identity for account_id to channel_id
 // if $force is false only do this if there is no current default
 
-function set_default_login_identity($account_id,$entity_id,$force = true) {
-	$r = q("select account_default_entity from account where account_id = %d limit 1",
+function set_default_login_identity($account_id,$channel_id,$force = true) {
+	$r = q("select account_default_channel from account where account_id = %d limit 1",
 		intval($account_id)
 	);
-	if(($r) && (count($r)) && ((! intval($r[0]['account_default_entity'])) || $force)) {
-		$r = q("update account set account_default_entity = %d where account_id = %d limit 1",
-			intval($entity_id),
+	if(($r) && (count($r)) && ((! intval($r[0]['account_default_channel'])) || $force)) {
+		$r = q("update account set account_default_channel = %d where account_id = %d limit 1",
+			intval($channel_id),
 			intval($account_id)
 		);
 	}

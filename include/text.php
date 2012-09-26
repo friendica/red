@@ -1665,10 +1665,10 @@ function check_webbie($arr) {
 			}
 		}
 		if(strlen($str)) {
-			$r = q("select entity_address from entity where entity_address in ( $str ) ");
+			$r = q("select channel_address from channel where channel_address in ( $str ) ");
 			if(count($r)) {
 				foreach($r as $rr) {
-					$taken[] = $rr['entity_address'];
+					$taken[] = $rr['channel_address'];
 				}
 			}
 			foreach($arr as $x) {

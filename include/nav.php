@@ -27,7 +27,9 @@ function nav(&$a) {
 	 *
 	 */
 
-	$myident = ((is_array($a->identity) && isset($a->identity['entity_address'])) ? $a->identity['entity_address'] . '@' : '');
+	$channel = $a->get_channel();
+
+	$myident = ((is_array($channel) && isset($channel['channel_address'])) ? $channel['channel_address'] . '@' : '');
 		
 	$sitelocation = $myident . substr($a->get_baseurl($ssl_state),strpos($a->get_baseurl($ssl_state),'//') + 2 );
 
@@ -46,16 +48,16 @@ function nav(&$a) {
 		$nav['logout'] = Array('logout',t('Logout'), "", t('End this session'));
 		
 		// user menu
-		$nav['usermenu'][] = Array('profile/' . $a->identity['entity_address'], t('Status'), "", t('Your posts and conversations'));
-		$nav['usermenu'][] = Array('profile/' . $a->identity['entity_address']. '?tab=profile', t('Profile'), "", t('Your profile page'));
-		$nav['usermenu'][] = Array('photos/' . $a->identity['entity_address'], t('Photos'), "", t('Your photos'));
+		$nav['usermenu'][] = Array('profile/' . $channel['channel_address'], t('Status'), "", t('Your posts and conversations'));
+		$nav['usermenu'][] = Array('profile/' . $channel['channel_address']. '?tab=profile', t('Profile'), "", t('Your profile page'));
+		$nav['usermenu'][] = Array('photos/' . $channel['channel_address'], t('Photos'), "", t('Your photos'));
 		$nav['usermenu'][] = Array('events/', t('Events'), "", t('Your events'));
 		
 		// user info
-		$r = q("SELECT micro FROM contact WHERE uid=%d AND self=1", intval($a->identity['entity_id']));
+		$r = q("SELECT micro FROM contact WHERE uid=%d AND self=1", intval($channel['channel_id']));
 		$userinfo = array(
 			'icon' => $r[0]['micro'],
-			'name' => $a->identity['entity_name'],
+			'name' => $channel['channel_name'],
 		);
 		
 	}
@@ -111,9 +113,9 @@ function nav(&$a) {
 
 		$nav['network'] = array('network', t('Network'), "", t('Conversations from your friends'));
 
-		$nav['home'] = array('profile/' . $a->identity['entity_address'], t('Home'), "", t('Your posts and conversations'));
+		$nav['home'] = array('profile/' . $channel['channel_address'], t('Home'), "", t('Your posts and conversations'));
 
-		if($a->identity['entity_pageflags'] == PAGE_NORMAL) {
+		if($channel['channel_pageflags'] == PAGE_NORMAL) {
 			$nav['introductions'] = array('notifications/intros',	t('Introductions'), "", t('Friend Requests'));
 			$nav['notifications'] = array('notifications',	t('Notifications'), "", t('Notifications'));
 			$nav['notifications']['all']=array('notifications/system', t('See all notifications'), "", "");

@@ -8,7 +8,8 @@ function profile_photo_init(&$a) {
 		return;
 	}
 
-	profile_load($a,$a->identity['entity_address']);
+	$channel = $a->get_channel();
+	profile_load($a,$channel['channel_address']);
 
 }
 

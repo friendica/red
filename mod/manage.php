@@ -9,18 +9,18 @@ function manage_content(&$a) {
 
 	$change_channel = ((argc() > 1) ? intval(argv(1)) : 0);
 	if($change_channel) {
-		$r = q("select * from entity where entity_id = %d and entity_account_id = %d limit 1",
+		$r = q("select * from channel where channel_id = %d and channel_account_id = %d limit 1",
 			intval($change_channel),
 			intval(get_account_id())
 		);
 		if($r && count($r)) {
-			$_SESSION['uid'] = intval($r[0]['entity_id']);
-			get_app()->identity = $r[0];
-			$_SESSION['theme'] = $r[0]['entity_theme'];
-			date_default_timezone_set($r[0]['entity_timezone']);
+			$_SESSION['uid'] = intval($r[0]['channel_id']);
+			get_app()->set_channel($r[0]);
+			$_SESSION['theme'] = $r[0]['channel_theme'];
+			date_default_timezone_set($r[0]['channel_timezone']);
 		}
-		if($r[0]['entity_startpage'])
-			goaway(z_root() . '/' . $r[0]['entity_startpage']);
+		if($r[0]['channel_startpage'])
+			goaway(z_root() . '/' . $r[0]['channel_startpage']);
 		goaway(z_root());
 	}
 
@@ -28,20 +28,20 @@ function manage_content(&$a) {
 	$channels = null;
 
 	if(local_user()) {
-		$r = q("select entity.*, contact.* from entity left join contact on entity.entity_id = contact.uid 
-			where entity.entity_account_id = %d and contact.self = 1",
+		$r = q("select channel.*, contact.* from channel left join contact on channel.channel_id = contact.uid 
+			where channel.channel_account_id = %d and contact.self = 1",
 			intval(get_account_id())
 		);
 
 		if($r && count($r)) {
 			$channels = $r;
 			for($x = 0; $x < count($channels); $x ++)
-				$channels[$x]['link'] = 'manage/' . intval($channels[$x]['entity_id']);
+				$channels[$x]['link'] = 'manage/' . intval($channels[$x]['channel_id']);
 		}
 	}
 
 	$links = array(
-		array( 'zentity', t('Create a new channel'), t('New Channel'))
+		array( 'zchannel', t('Create a new channel'), t('New Channel'))
 	);
 
 

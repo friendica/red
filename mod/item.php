@@ -175,12 +175,12 @@ function item_post(&$a) {
 
 	$user = null;
 
-	$r = q("SELECT entity.*, account.* FROM entity left join account on entity.entity_account_id = account.account_id 
-		where entity.entity_id = %d LIMIT 1",
+	$r = q("SELECT channel.*, account.* FROM channel left join account on channel.channel_account_id = account.account_id 
+		where channel.channel_id = %d LIMIT 1",
 		intval($profile_uid)
 	);
 	if(count($r))
-		$entity = $r[0];
+		$channel = $r[0];
 
 	if($orig_post) {
 		$str_group_allow   = $orig_post['allow_gid'];
@@ -208,10 +208,10 @@ function item_post(&$a) {
 			&& (! array_key_exists('group_allow',$_REQUEST))
 			&& (! array_key_exists('contact_deny',$_REQUEST))
 			&& (! array_key_exists('group_deny',$_REQUEST))) {
-			$str_group_allow   = $entity['entity_allow_gid'];
-			$str_contact_allow = $entity['entity_allow_cid'];
-			$str_group_deny    = $entity['entity_deny_gid'];
-			$str_contact_deny  = $entity['entity_deny_cid'];
+			$str_group_allow   = $channel['channel_allow_gid'];
+			$str_contact_allow = $channel['channel_allow_cid'];
+			$str_group_deny    = $channel['channel_deny_gid'];
+			$str_contact_deny  = $channel['channel_deny_cid'];
 		}
 		else {
 
@@ -756,11 +756,11 @@ function item_post(&$a) {
 			if($contact_record != $author) {
 				notification(array(
 					'type'         => NOTIFY_COMMENT,
-					'notify_flags' => $entity['entity_notifyflags'],
-					'language'     => $entity['account_language'],
-					'to_name'      => $entity['entity_name'],
-					'to_email'     => $entity['account_email'],
-					'uid'          => $entity['entity_id'],
+					'notify_flags' => $channel['channel_notifyflags'],
+					'language'     => $channel['account_language'],
+					'to_name'      => $channel['channel_name'],
+					'to_email'     => $channel['account_email'],
+					'uid'          => $channel['channel_id'],
 					'item'         => $datarray,
 					'link'		   => $a->get_baseurl() . '/display/' . $user['nickname'] . '/' . $post_id,
 					'source_name'  => $datarray['author-name'],
@@ -781,11 +781,11 @@ function item_post(&$a) {
 			if($contact_record != $author) {
 				notification(array(
 					'type'         => NOTIFY_WALL,
-					'notify_flags' => $entity['entity_notifyflags'],
-					'language'     => $entity['account_language'],
-					'to_name'      => $entity['entity_name'],
-					'to_email'     => $entity['account_email'],
-					'uid'          => $entity['entity_id'],
+					'notify_flags' => $channel['channel_notifyflags'],
+					'language'     => $channel['account_language'],
+					'to_name'      => $channel['channel_name'],
+					'to_email'     => $channel['account_email'],
+					'uid'          => $channel['channel_id'],
 					'item'         => $datarray,
 					'link'		   => $a->get_baseurl() . '/display/' . $user['nickname'] . '/' . $post_id,
 					'source_name'  => $datarray['author-name'],
@@ -806,7 +806,7 @@ function item_post(&$a) {
 			WHERE `id` = %d LIMIT 1",
 			intval($parent),
 			dbesc(($parent == $post_id) ? $uri : $parent_item['uri']),
-			dbesc($a->get_baseurl() . '/display/' . $entity['entity_address'] . '/' . $post_id),
+			dbesc($a->get_baseurl() . '/display/' . $channel['channel_address'] . '/' . $post_id),
 			dbesc(datetime_convert()),
 			intval($post_id)
 		);
@@ -837,7 +837,7 @@ function item_post(&$a) {
 	);
 
 	$datarray['id']    = $post_id;
-	$datarray['plink'] = $a->get_baseurl() . '/display/' . $entity['entity_address'] . '/' . $post_id;
+	$datarray['plink'] = $a->get_baseurl() . '/display/' . $channel['channel_address'] . '/' . $post_id;
 
 	call_hooks('post_local_end', $datarray);
 

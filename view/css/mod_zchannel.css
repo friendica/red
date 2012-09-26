@@ -4,36 +4,36 @@ h2 {
 	margin-top: 15%;
 }
 
-#zentity-form {
+#zchannel-form {
 	font-size: 1.4em;	
 	margin-left: 15%;
 	margin-top: 5%;
 	width: 50%;
 }
 
-#zentity-form .descriptive-paragraph {
+#zchannel-form .descriptive-paragraph {
 	color: #888;
 	margin-left: 20px;
 	margin-bottom: 25px;
 }
 
-.zentity-label {
+.zchannel-label {
 	float: left;
 	width: 275px;
 }
 
-.zentity-input {
+.zchannel-input {
 	float: left;
 	width: 275px;
 	padding: 5px;
 }
 
-.zentity-feedback {
+.zchannel-feedback {
 	float: left;
 	margin-left: 5px;
 }
 
-.zentity-field-end {
+.zchannel-field-end {
 	clear: both;
 	margin-bottom: 20px;
 }

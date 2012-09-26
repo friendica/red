@@ -9,7 +9,7 @@ SET SQL_MODE="NO_AUTO_VALUE_ON_ZERO";
 CREATE TABLE IF NOT EXISTS `account` (
   `account_id` int(10) unsigned NOT NULL AUTO_INCREMENT,
   `account_parent` int(10) unsigned NOT NULL DEFAULT '0',
-  `account_default_entity` int(10) unsigned NOT NULL DEFAULT '0',
+  `account_default_channel` int(10) unsigned NOT NULL DEFAULT '0',
   `account_salt` char(32) NOT NULL DEFAULT '',
   `account_password` char(255) NOT NULL DEFAULT '',
   `account_email` char(255) NOT NULL DEFAULT '',
@@ -30,7 +30,7 @@ CREATE TABLE IF NOT EXISTS `account` (
   KEY `account_roles` (`account_roles`),
   KEY `account_lastlog` (`account_lastlog`),
   KEY `account_expires` (`account_expires`),
-  KEY `account_default_entity` (`account_default_entity`)
+  KEY `account_default_channel` (`account_default_channel`)
 ) ENGINE=MyISAM  DEFAULT CHARSET=utf8;
 
 CREATE TABLE IF NOT EXISTS `addon` (
@@ -92,6 +92,67 @@ CREATE TABLE IF NOT EXISTS `challenge` (
   `type` char(255) NOT NULL,
   `last_update` char(255) NOT NULL,
   PRIMARY KEY (`id`)
+) ENGINE=MyISAM  DEFAULT CHARSET=utf8;
+
+CREATE TABLE IF NOT EXISTS `channel` (
+  `channel_id` int(10) unsigned NOT NULL AUTO_INCREMENT,
+  `channel_account_id` int(10) unsigned NOT NULL DEFAULT '0',
+  `channel_primary` tinyint(1) unsigned NOT NULL DEFAULT '0',
+  `channel_name` char(255) NOT NULL DEFAULT '',
+  `channel_address` char(255) NOT NULL DEFAULT '',
+  `channel_global_id` char(255) NOT NULL DEFAULT '',
+  `channel_timezone` char(128) NOT NULL DEFAULT 'UTC',
+  `channel_location` char(255) NOT NULL DEFAULT '',
+  `channel_theme` char(255) NOT NULL DEFAULT '',
+  `channel_startpage` char(255) NOT NULL DEFAULT '',
+  `channel_pubkey` text NOT NULL,
+  `channel_prvkey` text NOT NULL,
+  `channel_notifyflags` int(10) unsigned NOT NULL DEFAULT '65535',
+  `channel_pageflags` int(10) unsigned NOT NULL DEFAULT '0',
+  `channel_max_anon_mail` int(10) unsigned NOT NULL DEFAULT '10',
+  `channel_max_friend_req` int(10) unsigned NOT NULL DEFAULT '10',
+  `channel_passwd_reset` char(255) NOT NULL DEFAULT '',
+  `channel_default_gid` int(10) unsigned NOT NULL DEFAULT '0',
+  `channel_allow_cid` mediumtext NOT NULL,
+  `channel_allow_gid` mediumtext NOT NULL,
+  `channel_deny_cid` mediumtext NOT NULL,
+  `channel_deny_gid` mediumtext NOT NULL,
+  `channel_r_stream` tinyint(3) unsigned NOT NULL DEFAULT '128',
+  `channel_r_profile` tinyint(3) unsigned NOT NULL DEFAULT '128',
+  `channel_r_photos` tinyint(3) unsigned NOT NULL DEFAULT '128',
+  `channel_r_abook` tinyint(3) unsigned NOT NULL DEFAULT '128',
+  `channel_w_stream` tinyint(3) unsigned NOT NULL DEFAULT '128',
+  `channel_w_wall` tinyint(3) unsigned NOT NULL DEFAULT '128',
+  `channel_w_tagwall` tinyint(3) unsigned NOT NULL DEFAULT '128',
+  `channel_w_comment` tinyint(3) unsigned NOT NULL DEFAULT '128',
+  `channel_w_mail` tinyint(3) unsigned NOT NULL DEFAULT '128',
+  `channel_w_photos` tinyint(3) unsigned NOT NULL DEFAULT '128',
+  `channel_w_chat` tinyint(3) unsigned NOT NULL DEFAULT '128',
+  PRIMARY KEY (`channel_id`),
+  KEY `channel_account_id` (`channel_account_id`),
+  KEY `channel_primary` (`channel_primary`),
+  KEY `channel_name` (`channel_name`),
+  KEY `channel_address` (`channel_address`),
+  KEY `channel_global_id` (`channel_global_id`),
+  KEY `channel_timezone` (`channel_timezone`),
+  KEY `channel_location` (`channel_location`),
+  KEY `channel_theme` (`channel_theme`),
+  KEY `channel_notifyflags` (`channel_notifyflags`),
+  KEY `channel_pageflags` (`channel_pageflags`),
+  KEY `channel_max_anon_mail` (`channel_max_anon_mail`),
+  KEY `channel_max_friend_req` (`channel_max_friend_req`),
+  KEY `channel_default_gid` (`channel_default_gid`),
+  KEY `channel_r_stream` (`channel_r_stream`),
+  KEY `channel_r_profile` (`channel_r_profile`),
+  KEY `channel_r_photos` (`channel_r_photos`),
+  KEY `channel_r_abook` (`channel_r_abook`),
+  KEY `channel_w_stream` (`channel_w_stream`),
+  KEY `channel_w_wall` (`channel_w_wall`),
+  KEY `channel_w_tagwall` (`channel_w_tagwall`),
+  KEY `channel_w_comment` (`channel_w_comment`),
+  KEY `channel_w_mail` (`channel_w_mail`),
+  KEY `channel_w_photos` (`channel_w_photos`),
+  KEY `channel_w_chat` (`channel_w_chat`)
 ) ENGINE=MyISAM  DEFAULT CHARSET=utf8;
 
 CREATE TABLE IF NOT EXISTS `clients` (
@@ -214,66 +275,6 @@ CREATE TABLE IF NOT EXISTS `deliverq` (
   PRIMARY KEY (`id`),
   KEY `item` (`item`),
   KEY `contact` (`contact`)
-) ENGINE=MyISAM  DEFAULT CHARSET=utf8;
-
-CREATE TABLE IF NOT EXISTS `entity` (
-  `entity_id` int(10) unsigned NOT NULL AUTO_INCREMENT,
-  `entity_account_id` int(10) unsigned NOT NULL DEFAULT '0',
-  `entity_primary` tinyint(1) unsigned NOT NULL DEFAULT '0',
-  `entity_name` char(255) NOT NULL DEFAULT '',
-  `entity_address` char(255) NOT NULL DEFAULT '',
-  `entity_global_id` char(255) NOT NULL DEFAULT '',
-  `entity_timezone` char(128) NOT NULL DEFAULT 'UTC',
-  `entity_location` char(255) NOT NULL DEFAULT '',
-  `entity_theme` char(255) NOT NULL DEFAULT '',
-  `entity_startpage` char(255) NOT NULL DEFAULT '',
-  `entity_pubkey` text NOT NULL,
-  `entity_prvkey` text NOT NULL,
-  `entity_notifyflags` int(10) unsigned NOT NULL DEFAULT '65535',
-  `entity_pageflags` int(10) unsigned NOT NULL DEFAULT '0',
-  `entity_max_anon_mail` int(10) unsigned NOT NULL DEFAULT '10',
-  `entity_max_friend_req` int(10) unsigned NOT NULL DEFAULT '10',
-  `entity_passwd_reset` char(255) NOT NULL DEFAULT '',
-  `entity_default_gid` int(10) unsigned NOT NULL DEFAULT '0',
-  `entity_allow_cid` mediumtext NOT NULL,
-  `entity_allow_gid` mediumtext NOT NULL,
-  `entity_deny_cid` mediumtext NOT NULL,
-  `entity_deny_gid` mediumtext NOT NULL,
-  `entity_r_stream` tinyint(3) unsigned NOT NULL DEFAULT '128',
-  `entity_r_profile` tinyint(3) unsigned NOT NULL DEFAULT '128',
-  `entity_r_photos` tinyint(3) unsigned NOT NULL DEFAULT '128',
-  `entity_r_abook` tinyint(3) unsigned NOT NULL DEFAULT '128',
-  `entity_w_stream` tinyint(3) unsigned NOT NULL DEFAULT '128',
-  `entity_w_wall` tinyint(3) unsigned NOT NULL DEFAULT '128',
-  `entity_w_tagwall` tinyint(3) unsigned NOT NULL DEFAULT '128',
-  `entity_w_comment` tinyint(3) unsigned NOT NULL DEFAULT '128',
-  `entity_w_mail` tinyint(3) unsigned NOT NULL DEFAULT '128',
-  `entity_w_photos` tinyint(3) unsigned NOT NULL DEFAULT '128',
-  `entity_w_chat` tinyint(3) unsigned NOT NULL DEFAULT '128',
-  PRIMARY KEY (`entity_id`),
-  KEY `entity_account_id` (`entity_account_id`),
-  KEY `entity_name` (`entity_name`),
-  KEY `entity_address` (`entity_address`),
-  KEY `entity_global_id` (`entity_global_id`),
-  KEY `entity_timezone` (`entity_timezone`),
-  KEY `entity_location` (`entity_location`),
-  KEY `entity_theme` (`entity_theme`),
-  KEY `entity_notifyflags` (`entity_notifyflags`),
-  KEY `entity_pageflags` (`entity_pageflags`),
-  KEY `entity_max_anon_mail` (`entity_max_anon_mail`),
-  KEY `entity_max_friend_req` (`entity_max_friend_req`),
-  KEY `entity_default_gid` (`entity_default_gid`),
-  KEY `entity_primary` (`entity_primary`),
-  KEY `entity_r_stream` (`entity_r_stream`),
-  KEY `entity_r_profile` (`entity_r_profile`),
-  KEY `entity_r_photos` (`entity_r_photos`),
-  KEY `entity_w_stream` (`entity_w_stream`),
-  KEY `entity_w_wall` (`entity_w_wall`),
-  KEY `entity_w_comment` (`entity_w_comment`),
-  KEY `entity_w_mail` (`entity_w_mail`),
-  KEY `entity_w_tagwall` (`entity_w_tagwall`),
-  KEY `entity_w_photos` (`entity_w_photos`),
-  KEY `entity_w_chat` (`entity_w_chat`)
 ) ENGINE=MyISAM  DEFAULT CHARSET=utf8;
 
 CREATE TABLE IF NOT EXISTS `event` (
@@ -450,13 +451,15 @@ CREATE TABLE IF NOT EXISTS `hubloc` (
   `hubloc_url` char(255) NOT NULL DEFAULT '',
   `hubloc_url_sig` char(255) NOT NULL,
   `hubloc_callback` char(255) NOT NULL DEFAULT '',
+  `hubloc_connect` char(255) NOT NULL DEFAULT '',
   `hubloc_sitekey` text NOT NULL,
   PRIMARY KEY (`hubloc_id`),
   KEY `hubloc_url` (`hubloc_url`),
   KEY `hubloc_guid` (`hubloc_guid`),
   KEY `hubloc_flags` (`hubloc_flags`),
   KEY `hubloc_guid_sig` (`hubloc_guid_sig`),
-  KEY `hubloc_url_sig` (`hubloc_url_sig`)
+  KEY `hubloc_url_sig` (`hubloc_url_sig`),
+  KEY `hubloc_connect` (`hubloc_connect`)
 ) ENGINE=MyISAM  DEFAULT CHARSET=utf8;
 
 CREATE TABLE IF NOT EXISTS `intro` (
@@ -571,14 +574,16 @@ CREATE TABLE IF NOT EXISTS `item` (
 ) ENGINE=MyISAM  DEFAULT CHARSET=utf8;
 
 CREATE TABLE IF NOT EXISTS `item_id` (
+  `id` int(10) unsigned NOT NULL AUTO_INCREMENT,
   `iid` int(11) NOT NULL,
   `uid` int(11) NOT NULL,
   `sid` char(255) NOT NULL,
   `service` char(255) NOT NULL,
-  PRIMARY KEY (`iid`),
+  PRIMARY KEY (`id`),
   KEY `uid` (`uid`),
   KEY `sid` (`sid`),
-  KEY `service` (`service`)
+  KEY `service` (`service`),
+  KEY `iid` (`iid`)
 ) ENGINE=MyISAM DEFAULT CHARSET=utf8;
 
 CREATE TABLE IF NOT EXISTS `locks` (

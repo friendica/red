@@ -2,14 +2,14 @@
 
 /**
  *
- * @function zot_new_uid($entity_nick)
- * @entity_id = unique nickname of controlling entity
+ * @function zot_new_uid($channel_nick)
+ * @channel_id = unique nickname of controlling entity
  * @returns string
  *
  */
 
-function zot_new_uid($entity_nick) {
-	$rawstr = z_root() . '/' . $entity_nick . '.' . mt_rand();
+function zot_new_uid($channel_nick) {
+	$rawstr = z_root() . '/' . $channel_nick . '.' . mt_rand();
 	return(base64url_encode(hash('whirlpool',$rawstr,true),true));
 }
 
@@ -59,13 +59,13 @@ function zot_verify(&$item,$identity) {
 
 
 
-function zot_notify($entity,$url) {
+function zot_notify($channel,$url) {
 	$x = z_post_url($url, array(
 		'type' => 'notify',
-		'guid' => $entity['entity_global_id'],
-		'guid_sig' => base64url_encode($guid,$entity['prvkey']),
+		'guid' => $channel['channel_global_id'],
+		'guid_sig' => base64url_encode($guid,$channel['prvkey']),
 		'hub' => z_root(),
-		'hub_sig' => base64url_encode(z_root,$entity['prvkey']), 
+		'hub_sig' => base64url_encode(z_root,$channel['prvkey']), 
 		'callback' => '/post', 
 		'spec' => ZOT_REVISION)
 	);

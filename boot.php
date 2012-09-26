@@ -368,7 +368,8 @@ if(! class_exists('App')) {
 	class App {
 
 		public  $account = null;
-		public  $identity = null;
+		private $channel = null;
+
 		public  $language;
 		public  $module_loaded = false;
 		public  $query_string;
@@ -593,6 +594,15 @@ if(! class_exists('App')) {
 		function get_path() {
 			return $this->path;
 		}
+
+		function set_channel($channel) {
+			$this->channel = $channel;
+		}
+
+		function get_channel()
+			return $this->channel;
+		}
+
 
 		function set_pager_total($n) {
 			$this->pager['total'] = intval($n);
@@ -1056,7 +1066,7 @@ if(! function_exists('get_max_import_size')) {
 if(! function_exists('profile_load')) {
 function profile_load(&$a, $nickname, $profile = 0) {
 
-	$user = q("select entity_id from entity where entity_address = '%s' limit 1",
+	$user = q("select channel_id from channel where channel_address = '%s' limit 1",
 		dbesc($nickname)
 	);
 		
@@ -1069,7 +1079,7 @@ function profile_load(&$a, $nickname, $profile = 0) {
 
 	if(remote_user() && count($_SESSION['remote'])) {
 		foreach($_SESSION['remote'] as $visitor) {
-			if($visitor['uid'] == $user[0]['entity_id']) {
+			if($visitor['uid'] == $user[0]['channel_id']) {
 				$r = q("SELECT `profile_id` FROM `contact` WHERE `id` = %d LIMIT 1",
 					intval($visitor['cid'])
 				);
@@ -1084,17 +1094,17 @@ function profile_load(&$a, $nickname, $profile = 0) {
 
 	if($profile) {
 		$profile_int = intval($profile);
-		$r = q("SELECT `profile`.`uid` AS `profile_uid`, `profile`.* , `contact`.`avatar_date` AS picdate, entity.* FROM `profile`
-				left join `contact` on `contact`.`uid` = `profile`.`uid` LEFT JOIN entity ON `profile`.`uid` = entity.entity_id
-				WHERE entity.entity_address = '%s' AND `profile`.`id` = %d and `contact`.`self` = 1 LIMIT 1",
+		$r = q("SELECT `profile`.`uid` AS `profile_uid`, `profile`.* , `contact`.`avatar_date` AS picdate, channel.* FROM `profile`
+				left join `contact` on `contact`.`uid` = `profile`.`uid` LEFT JOIN channel ON `profile`.`uid` = channel.channel_id
+				WHERE channel.channel_address = '%s' AND `profile`.`id` = %d and `contact`.`self` = 1 LIMIT 1",
 				dbesc($nickname),
 				intval($profile_int)
 		);
 	}
 	if(! ($r && count($r))) {
-		$r = q("SELECT `profile`.`uid` AS `profile_uid`, `profile`.* , `contact`.`avatar_date` AS picdate, `entity`.* FROM `profile`
-			left join `contact` on `contact`.`uid` = `profile`.`uid` LEFT JOIN `entity` ON `profile`.`uid` = entity.entity_id
-			WHERE entity.entity_address = '%s' AND `profile`.`is_default` = 1 and `contact`.`self` = 1 LIMIT 1",
+		$r = q("SELECT `profile`.`uid` AS `profile_uid`, `profile`.* , `contact`.`avatar_date` AS picdate, `channel`.* FROM `profile`
+			left join `contact` on `contact`.`uid` = `profile`.`uid` LEFT JOIN `channel` ON `profile`.`uid` = channel.channel_id
+			WHERE channel.channel_address = '%s' AND `profile`.`is_default` = 1 and `contact`.`self` = 1 LIMIT 1",
 			dbesc($nickname)
 		);
 	}
@@ -1119,7 +1129,7 @@ function profile_load(&$a, $nickname, $profile = 0) {
 	$a->profile = $r[0];
 
 
-	$a->page['title'] = $a->profile['entity_name'] . " @ " . $a->config['sitename'];
+	$a->page['title'] = $a->profile['channel_name'] . " @ " . $a->config['sitename'];
 // FIXME
 	$_SESSION['theme'] = $a->profile['theme'];
 

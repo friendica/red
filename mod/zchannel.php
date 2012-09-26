@@ -2,7 +2,7 @@
 
 require_once('include/identity.php');
 
-function zentity_init(&$a) {
+function zchannel_init(&$a) {
 
 	$cmd = ((argc() > 1) ? argv(1) : '');
 
@@ -57,7 +57,7 @@ function zentity_init(&$a) {
 }
 
 
-function zentity_post(&$a) {
+function zchannel_post(&$a) {
 
 	$arr = $_POST;
 
@@ -73,7 +73,7 @@ function zentity_post(&$a) {
 		return;
 	}
 
-	if(! strlen($next_page = get_config('system','workflow_identity_next')))
+	if(! strlen($next_page = get_config('system','workflow_channel_next')))
 		$next_page = 'settings';
 	
 	goaway(z_root() . '/' . $next_page);
@@ -86,7 +86,7 @@ function zentity_post(&$a) {
 
 
 
-function zentity_content(&$a) {
+function zchannel_content(&$a) {
 
 	if(! get_account_id()) {
 		notice( t('Permission denied.') . EOL);
@@ -97,7 +97,7 @@ function zentity_content(&$a) {
 	$nickname     = ((x($_REQUEST,'nickname'))     ? $_REQUEST['nickname']     :  "" );
 
 
-	$o = replace_macros(get_markup_template('zentity.tpl'), array(
+	$o = replace_macros(get_markup_template('zchannel.tpl'), array(
 
 		'$title'        => t('Add a Channel'),
 		'$desc'         => t('A channel is your own collection of related web pages. A channel can be used to hold social network profiles, blogs, conversation groups and forums, celebrity pages, and much more. You may create as many channels as your service provider allows.'),
