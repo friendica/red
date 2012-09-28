@@ -369,6 +369,7 @@ if(! class_exists('App')) {
 
 		public  $account = null;
 		private $channel = null;
+		private $widgets = array();
 
 		public  $language;
 		public  $module_loaded = false;
@@ -603,6 +604,20 @@ if(! class_exists('App')) {
 			return $this->channel;
 		}
 
+		function set_widget($title,$html, $location = 'aside') {
+			$this->widgets[] = array('title' => $title, 'html' => $html, 'location' => $location);
+		}
+
+		function get_widgets($location) {
+			if($location && count($this->widgets)) {
+				$ret = array();
+				foreach($widgets as $w)
+					if($w['location'] == $location)
+						$ret[] = $w;
+				return $ret;
+			}	
+			return $this->widgets;
+		}		
 
 		function set_pager_total($n) {
 			$this->pager['total'] = intval($n);
@@ -1142,9 +1157,6 @@ function profile_load(&$a, $nickname, $profile = 0) {
 			require_once($theme_info_file);
 		}
 
-		if(! (x($a->page,'aside')))
-			$a->page['aside'] = '';
-
 		if(local_user() && local_user() == $a->profile['uid']) {
 			$a->page['aside'] .= replace_macros(get_markup_template('profile_edlink.tpl'),array(
 				'$editprofile' => t('Edit profile'),
@@ -1154,7 +1166,7 @@ function profile_load(&$a, $nickname, $profile = 0) {
 
 		$block = (((get_config('system','block_public')) && (! local_user()) && (! remote_user())) ? true : false);
 
-		$a->page['aside'] .= profile_sidebar($a->profile, $block);
+		$a->set_widget('profile',profile_sidebar($a->profile, $block));
 
 		/*if(! $block)
 		 $a->page['aside'] .= contact_block();*/

@@ -100,7 +100,7 @@ function ping_init(&$a) {
 	$t1 = dba_timer();
 
 	$r = q("SELECT `item`.`id`,`item`.`parent`, `item`.`verb`, `item`.`wall`, `item`.`author-name`, 
-		`item`.`author-link`, `item`.`author-avatar`, `item`.`created`, `item`.`object`, 
+		`item`.`contact-id`, `item`.`author-link`, `item`.`author-avatar`, `item`.`created`, `item`.`object`, 
 		`pitem`.`author-name` as `pname`, `pitem`.`author-link` as `plink` 
 		FROM `item` INNER JOIN `item` as `pitem` ON  `pitem`.`id`=`item`.`parent`
 		WHERE `item`.`unseen` = 1 AND `item`.`visible` = 1 AND
@@ -109,7 +109,10 @@ function ping_init(&$a) {
 		intval(local_user())
 	);
 
-	if(count($r)) {		
+	if(count($r)) {	
+
+		call_hooks('network_ping', array('items' => $r));
+	
 		foreach ($r as $it) {
 			if($it['wall'])
 				$result['home'] ++;

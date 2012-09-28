@@ -35,8 +35,8 @@ function profile_aside(&$a) {
 
 	profile_load($a,$which,$profile);
 
-	$a->page['aside'] .= posted_date_widget($a->get_baseurl(true) . '/profile/' . $a->profile['nickname'],$a->profile['profile_uid'],true);	
-	$a->page['aside'] .= categories_widget($a->get_baseurl(true) . '/profile/' . $a->profile['nickname'],$cat);
+	$a->set_widget('archive',posted_date_widget($a->get_baseurl(true) . '/profile/' . $a->profile['nickname'],$a->profile['profile_uid'],true));	
+	$a->set_widget('categories',categories_widget($a->get_baseurl(true) . '/profile/' . $a->profile['nickname'],$cat));
 
 }
 

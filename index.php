@@ -158,6 +158,8 @@ $a->apps = $arr['app_menu'];
 
 if(strlen($a->module)) {
 
+
+
 	/**
 	 *
 	 * We will always have a module name.
@@ -176,9 +178,18 @@ if(strlen($a->module)) {
 	 */
 
 	if((! $a->module_loaded) && (file_exists("mod/{$a->module}.php"))) {
-		include_once("mod/{$a->module}.php");
-		$a->module_loaded = true;
+		if((strpos($a->module,'admin') === 0) && (! is_site_admin())) {
+			$a->module_loaded = false;
+			notice( t('Permission denied.') . EOL);
+			goaway(z_root());
+		}
+		else {
+			include_once("mod/{$a->module}.php");
+			$a->module_loaded = true;
+		}
 	}
+
+
 
 	/**
 	 *
@@ -361,6 +372,13 @@ head_add_js('mod_' . $a->module . '.js');
 		'$head_js' => head_get_js(),
 		'$js_strings' => js_strings()
 	));
+
+$arr = $a->get_widgets();
+if(count($arr)) {
+	foreach($arr as $x) {
+		$a->page[$x['location']] .= $x['html']; 
+	}
+}
 
 $page    = $a->page;
 $profile = $a->profile;
