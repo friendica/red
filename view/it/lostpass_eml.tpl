@@ -1,34 +1,32 @@
 
-Caro/a $username,
-	
-	E' arrivata recentemente una richiesta di resettare la password del tuo
-account su $sitename. Per confermare questa richiesta, clicca sul link di
-verifica qui sotto o incollalo nella barra dell'indirizzo del tuo browser web.
+Ciao $[username],
+	Su $[sitename] è stata ricevuta una richiesta di azzeramento di password per un account. 
+Per confermare la richiesta, clicca sul link di verifica
+qui in fondo oppure copialo nella barra degli indirizzi del tuo browser. 
 
-Se NON hai richiesto questa modifica, NON seguire il link e ignora e cancella
-questa mail.
+Se NON hai richiesto l'azzeramento, NON seguire il link
+e ignora e/o cancella questa email. 
 
-La tua password non verrà cambiata finchè non verifichiame che hai richiesto tu
-la modifica.
+La tua password non sarà modificata finché non avremo verificato che
+hai fatto questa richiesta. 
 
-Segui questo link per verificare la tua identità:
+Per verificare la tua identità clicca su:
 
-$reset_link
+$[reset_link]
 
-Riceverai un messaggio contenente la nuova password.
+Dopo la verifica riceverai un messaggio di risposta con la nuova password.
 
-Potrai cambiare questa password dalla pagina delle impostazioni del tuo account
-dopo aver effettuato l'accesso.
+Potrai cambiare la password dalla pagina delle impostazioni dopo aver effettuato l'accesso.
 
-I dettagli d'accesso sono i seguenti:
+I dati di accesso sono i seguenti:
 
-Sito:	$siteurl
-Nome:	$email
+Sito:»$[siteurl]
+Nome utente:»$[email]
 
 
 
 
 Saluti,
-	L'amministratore di $sitename
+	l'amministratore di $[sitename]
 
  

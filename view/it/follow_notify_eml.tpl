@@ -1,14 +1,14 @@
 
-Caro/a $myname,
+Ciao $[myname],
 
-Hai un nuovo seguace a $sitename -  '$requestor'.
+Un nuovo utente ha iniziato a seguirti su $[sitename] - '$[requestor]'.
 
-Puoi visitare il suo profilo a $url.
+Puoi vedere il suo profilo su $[url].
 
-Accedi al tuo sito per approvare o ignorare/cancellare la richiesta.
+Accedi sul tuo sito per approvare o ignorare la richiesta.
 
-$siteurl
+$[siteurl]
 
 Saluti,
 
-	L'amministratore di $sitename 
+	L'amministratore di $[sitename]

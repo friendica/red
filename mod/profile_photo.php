@@ -59,7 +59,7 @@ function profile_photo_post(&$a) {
 		$srcW = $_POST['xfinal'] - $srcX;
 		$srcH = $_POST['yfinal'] - $srcY;
 
-		$r = q("SELECT * FROM `photo` WHERE `resource-id` = '%s' AND `uid` = %d AND `scale` = %d LIMIT 1",
+		$r = q("SELECT * FROM `photo` WHERE `resource_id` = '%s' AND `uid` = %d AND `scale` = %d LIMIT 1",
 			dbesc($image_id),
 			dbesc(local_user()),
 			intval($scale));
@@ -72,21 +72,21 @@ function profile_photo_post(&$a) {
 			if($im->is_valid()) {
 				$im->cropImage(175,$srcX,$srcY,$srcW,$srcH);
 
-				$r = $im->store(local_user(), 0, $base_image['resource-id'],$base_image['filename'], t('Profile Photos'), 4, $is_default_profile);
+				$r = $im->store(local_user(), 0, $base_image['resource_id'],$base_image['filename'], t('Profile Photos'), 4, $is_default_profile);
 
 				if($r === false)
 					notice ( sprintf(t('Image size reduction [%s] failed.'),"175") . EOL );
 
 				$im->scaleImage(80);
 
-				$r = $im->store(local_user(), 0, $base_image['resource-id'],$base_image['filename'], t('Profile Photos'), 5, $is_default_profile);
+				$r = $im->store(local_user(), 0, $base_image['resource_id'],$base_image['filename'], t('Profile Photos'), 5, $is_default_profile);
 			
 				if($r === false)
 					notice( sprintf(t('Image size reduction [%s] failed.'),"80") . EOL );
 
 				$im->scaleImage(48);
 
-				$r = $im->store(local_user(), 0, $base_image['resource-id'],$base_image['filename'], t('Profile Photos'), 6, $is_default_profile);
+				$r = $im->store(local_user(), 0, $base_image['resource_id'],$base_image['filename'], t('Profile Photos'), 6, $is_default_profile);
 			
 				if($r === false)
 					notice( sprintf(t('Image size reduction [%s] failed.'),"48") . EOL );
@@ -94,15 +94,15 @@ function profile_photo_post(&$a) {
 				// If setting for the default profile, unset the profile photo flag from any other photos I own
 
 				if($is_default_profile) {
-					$r = q("UPDATE `photo` SET `profile` = 0 WHERE `profile` = 1 AND `resource-id` != '%s' AND `uid` = %d",
-						dbesc($base_image['resource-id']),
+					$r = q("UPDATE `photo` SET `profile` = 0 WHERE `profile` = 1 AND `resource_id` != '%s' AND `uid` = %d",
+						dbesc($base_image['resource_id']),
 						intval(local_user())
 					);
 				}
 				else {
 					$r = q("update profile set photo = '%s', thumb = '%s' where id = %d and uid = %d limit 1",
-						dbesc($a->get_baseurl() . '/photo/' . $base_image['resource-id'] . '-4'),
-						dbesc($a->get_baseurl() . '/photo/' . $base_image['resource-id'] . '-5'),
+						dbesc($a->get_baseurl() . '/photo/' . $base_image['resource_id'] . '-4'),
+						dbesc($a->get_baseurl() . '/photo/' . $base_image['resource_id'] . '-5'),
 						intval($_REQUEST['profile']),
 						intval(local_user())
 					);
@@ -183,7 +183,7 @@ function profile_photo_content(&$a) {
         
 		$resource_id = $a->argv[2];
 		//die(":".local_user());
-		$r=q("SELECT * FROM `photo` WHERE `uid` = %d AND `resource-id` = '%s' ORDER BY `scale` ASC",
+		$r=q("SELECT * FROM `photo` WHERE `uid` = %d AND `resource_id` = '%s' ORDER BY `scale` ASC",
 			intval(local_user()),
 			dbesc($resource_id)
 			);
@@ -203,7 +203,7 @@ function profile_photo_content(&$a) {
 			$r=q("UPDATE `photo` SET `profile`=0 WHERE `profile`=1 AND `uid`=%d",
 				intval(local_user()));
 			
-			$r=q("UPDATE `photo` SET `profile`=1 WHERE `uid` = %d AND `resource-id` = '%s'",
+			$r=q("UPDATE `photo` SET `profile`=1 WHERE `uid` = %d AND `resource_id` = '%s'",
 				intval(local_user()),
 				dbesc($resource_id)
 				);

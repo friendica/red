@@ -1,22 +1,22 @@
 
-Caro/a $username,
+Ciao $[username],
 
-	'$fn' a '$dfrn_url' ha accettato la tua richiesta di
-connessione a '$sitename'.
+	'$[fn]' di '$[dfrn_url]' ha accettato 
+la tua richiesta di connessione a '$[sitename]'.
 
-	'$fn' ha scelto di accertarti come "fan", che limita alcune forme di
-comunicazione, come i messaggi privati e alcune interazioni con il profilo.
-Se e' una celebrita' o una pagina di community, queste impostazioni
-sono applicate automaticamente.
+	'$[fn]' ha deciso di accettarti come "fan", il che restringe 
+alcune forme di comunicazione - come i messaggi privati e alcune
+interazioni. Se è la pagina di una persona famosa o di una comunità, queste impostazioni saranno
+applicate automaticamente.
 
-	'$fn' puo' decidere di estendere in una relazione piu' permissiva
-nel futuro.
+	'$[fn]' potrebbe decidere di estendere questa relazione in una comunicazione bidirezionale o ancora più permissiva 
+. 
 
-    Comincerai a rivecere gli aggiornamenti pubblici da '$fn', 
-che apparira' sulla tua pagina 'Rete' su
+	Inizierai a ricevere gli aggiornamenti di stato pubblici da '$[fn]', 
+che apparirà nella tua pagina 'Rete'  
 
-$siteurl
+$[siteurl]
 
 Saluti,
 
-	L'amministratore di $sitename
+	l'amministratore di $[sitename]

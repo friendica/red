@@ -1128,7 +1128,7 @@ msgstr "Réglages avancés"
 
 #: ../../mod/search.php:13 ../../mod/network.php:75
 msgid "Saved Searches"
-msgstr "Recherches sauvées"
+msgstr "Recherches"
 
 #: ../../mod/search.php:16 ../../mod/network.php:81
 msgid "Remove term"

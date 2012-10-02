@@ -360,7 +360,7 @@ function item_post(&$a) {
 				$srch = '<' . intval($contact_id) . '>';
 
 				$r = q("SELECT `id` FROM `photo` WHERE `allow_cid` = '%s' AND `allow_gid` = '' AND `deny_cid` = '' AND `deny_gid` = ''
-					AND `resource-id` = '%s' AND `uid` = %d LIMIT 1",
+					AND `resource_id` = '%s' AND `uid` = %d LIMIT 1",
 					dbesc($srch),
 					dbesc($image_uri),
 					intval($profile_uid)
@@ -371,7 +371,7 @@ function item_post(&$a) {
  
 
 				$r = q("UPDATE `photo` SET `allow_cid` = '%s', `allow_gid` = '%s', `deny_cid` = '%s', `deny_gid` = '%s'
-					WHERE `resource-id` = '%s' AND `uid` = %d AND `album` = '%s' ",
+					WHERE `resource_id` = '%s' AND `uid` = %d AND `album` = '%s' ",
 					dbesc($str_contact_allow),
 					dbesc($str_group_allow),
 					dbesc($str_contact_deny),
@@ -540,7 +540,7 @@ function item_post(&$a) {
 
 	$uri = item_new_uri($a->get_hostname(),$profile_uid);
 
-	// Fallback so that we alway have a thr-parent
+	// Fallback so that we alway have a thr_parent
 
 	if(!$thr_parent)
 		$thr_parent = $uri;
@@ -577,7 +577,7 @@ function item_post(&$a) {
 	$datarray['deny_gid']      = $str_group_deny;
 	$datarray['private']       = $private;
 	$datarray['attach']        = $attachments;
-	$datarray['thr-parent']    = $thr_parent;
+	$datarray['thr_parent']    = $thr_parent;
 	$datarray['postopts']      = '';
 	$datarray['origin']        = $origin;
 	$datarray['moderated']     = $allow_moderated;
@@ -672,7 +672,7 @@ function item_post(&$a) {
 
 
 	$r = q("INSERT INTO `item` (`uid`,`type`,`wall`,`gravity`,`contact-id`,`owner-name`,`owner-link`,`owner-avatar`, 
-		`author-name`, `author-link`, `author-avatar`, `created`, `edited`, `commented`, `received`, `changed`, `uri`, `thr-parent`, `title`, `body`, `app`, `lang`, `location`, `coord`, 
+		`author-name`, `author-link`, `author-avatar`, `created`, `edited`, `commented`, `received`, `changed`, `uri`, `thr_parent`, `title`, `body`, `app`, `lang`, `location`, `coord`, 
 		`inform`, `verb`, `postopts`, `allow_cid`, `allow_gid`, `deny_cid`, `deny_gid`, `private`, `attach`,`origin`, `moderated`)
 		VALUES( %d, '%s', %d, %d, %d, '%s', '%s', '%s', '%s', '%s', '%s', '%s', '%s', '%s', '%s', '%s', '%s', '%s', '%s', '%s', '%s', '%s', '%s', '%s', '%s', '%s', '%s', '%s', '%s', '%s', '%s', %d, '%s', %d, %d )",
 		intval($datarray['uid']),
@@ -692,7 +692,7 @@ function item_post(&$a) {
 		dbesc($datarray['received']),
 		dbesc($datarray['changed']),
 		dbesc($datarray['uri']),
-		dbesc($datarray['thr-parent']),
+		dbesc($datarray['thr_parent']),
 		dbesc($datarray['title']),
 		dbesc($datarray['body']),
 		dbesc($datarray['app']),
@@ -979,7 +979,26 @@ function handle_tag($a, &$body, &$inform, &$str_tags, $profile_uid, $tag) {
 						intval($tagcid),
 						intval($profile_uid)
 				);
-			} elseif(strstr($name,'_') || strstr($name,' ')) { //no id
+			}
+			else {
+				$newname = str_replace('_',' ',$name);
+
+				//select someone from this user's contacts by name
+				$r = q("SELECT * FROM `contact` WHERE `name` = '%s' AND `uid` = %d LIMIT 1",
+						dbesc($newname),
+						intval($profile_uid)
+				);
+
+				if(! $r) {
+					//select someone by attag or nick and the name passed in
+					$r = q("SELECT * FROM `contact` WHERE `attag` = '%s' OR `nick` = '%s' AND `uid` = %d ORDER BY `attag` DESC LIMIT 1",
+							dbesc($name),
+							dbesc($name),
+							intval($profile_uid)
+					);
+				}
+			}
+/*			} elseif(strstr($name,'_') || strstr($name,' ')) { //no id
 				//get the real name
 				$newname = str_replace('_',' ',$name);
 				//select someone from this user's contacts by name
@@ -994,7 +1013,7 @@ function handle_tag($a, &$body, &$inform, &$str_tags, $profile_uid, $tag) {
 						dbesc($name),
 						intval($profile_uid)
 				);
-			}
+			}*/
 			//$r is set, if someone could be selected
 			if(count($r)) {
 				$profile = $r[0]['url'];

@@ -138,7 +138,7 @@ function send_message($recipient=0, $body='', $subject='', $replyto=''){
 				$image_uri = substr($image,strrpos($image,'/') + 1);
 				$image_uri = substr($image_uri,0, strpos($image_uri,'-'));
 				$r = q("UPDATE `photo` SET `allow_cid` = '%s'
-					WHERE `resource-id` = '%s' AND `album` = '%s' AND `uid` = %d ",
+					WHERE `resource_id` = '%s' AND `album` = '%s' AND `uid` = %d ",
 					dbesc('<' . $recipient . '>'),
 					dbesc($image_uri),
 					dbesc( t('Wall Photos')),

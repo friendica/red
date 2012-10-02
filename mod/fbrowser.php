@@ -45,9 +45,9 @@ function fbrowser_content($a){
 				$path[]=array($a->get_baseurl()."/fbrowser/image/".$a->argv[2]."/", $album);
 			}
 				
-			$r = q("SELECT `resource-id`, `id`, `filename`, type, min(`scale`) AS `hiq`,max(`scale`) AS `loq`, `desc`  
+			$r = q("SELECT `resource_id`, `id`, `filename`, type, min(`scale`) AS `hiq`,max(`scale`) AS `loq`, `desc`  
 					FROM `photo` WHERE `uid` = %d $sql_extra
-					GROUP BY `resource-id` $sql_extra2",
+					GROUP BY `resource_id` $sql_extra2",
 				intval(local_user())					
 			);
 			
@@ -56,9 +56,9 @@ function fbrowser_content($a){
 				$types = Photo::supportedTypes();
 				$ext = $types[$rr['type']];
 				return array( 
-					$a->get_baseurl() . '/photo/' . $rr['resource-id'] . '-' . $rr['hiq'] . '.' .$ext, 
+					$a->get_baseurl() . '/photo/' . $rr['resource_id'] . '-' . $rr['hiq'] . '.' .$ext, 
 					template_escape($rr['filename']), 
-					$a->get_baseurl() . '/photo/' . $rr['resource-id'] . '-' . $rr['loq'] . '.'. $ext
+					$a->get_baseurl() . '/photo/' . $rr['resource_id'] . '-' . $rr['loq'] . '.'. $ext
 				);
 			}
 			$files = array_map("files1", $r);

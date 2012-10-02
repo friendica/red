@@ -59,8 +59,8 @@ function tagger_content(&$a) {
 
 	$uri = item_new_uri($a->get_hostname(),$owner_uid);
 	$xterm = xmlify($term);
-	$post_type = (($item['resource-id']) ? t('photo') : t('status'));
-	$targettype = (($item['resource-id']) ? ACTIVITY_OBJ_PHOTO : ACTIVITY_OBJ_NOTE ); 
+	$post_type = (($item['resource_id']) ? t('photo') : t('status'));
+	$targettype = (($item['resource_id']) ? ACTIVITY_OBJ_PHOTO : ACTIVITY_OBJ_NOTE ); 
 
 	$link = xmlify('<link rel="alternate" type="text/html" href="' 
 		. $a->get_baseurl() . '/display/' . $owner['nickname'] . '/' . $item['id'] . '" />' . "\n") ;

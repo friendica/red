@@ -149,7 +149,7 @@ function update_1014() {
 			$ph = new Photo($rr['data']);
 			if($ph->is_valid()) {
 				$ph->scaleImage(48);
-				$ph->store($rr['uid'],$rr['contact-id'],$rr['resource-id'],$rr['filename'],$rr['album'],6,(($rr['profile']) ? 1 : 0));
+				$ph->store($rr['uid'],$rr['contact-id'],$rr['resource_id'],$rr['filename'],$rr['album'],6,(($rr['profile']) ? 1 : 0));
 			}
 		}
 	}
@@ -221,7 +221,7 @@ function update_1019() {
 
 function update_1020() {
 	q("ALTER TABLE `profile` DROP `showwith`");
-	q("ALTER TABLE `item` ADD `thr-parent` CHAR( 255 ) NOT NULL AFTER `parent_uri` ");
+	q("ALTER TABLE `item` ADD `thr_parent` CHAR( 255 ) NOT NULL AFTER `parent_uri` ");
 }
 
 function update_1021() {
@@ -499,7 +499,7 @@ function update_1057() {
 }
 
 function update_1058() {
-	q("ALTER TABLE `item` ADD `event-id` INT NOT NULL AFTER `resource-id` ");
+	q("ALTER TABLE `item` ADD `event-id` INT NOT NULL AFTER `resource_id` ");
 }
 
 function update_1059() {
@@ -574,7 +574,7 @@ function update_1070() {
 
 function update_1071() {
 	q("ALTER TABLE `photo` ADD INDEX ( `uid` ) ");
-	q("ALTER TABLE `photo` ADD INDEX ( `resource-id` ) ");
+	q("ALTER TABLE `photo` ADD INDEX ( `resource_id` ) ");
 	q("ALTER TABLE `photo` ADD INDEX ( `album` ) ");
 	q("ALTER TABLE `photo` ADD INDEX ( `scale` ) ");
 	q("ALTER TABLE `photo` ADD INDEX ( `profile` ) ");
@@ -686,13 +686,13 @@ function update_1082() {
 	$r = q("select `id` from `photo` where `guid` != '' limit 1");
 	if($r && count($r))
 		return;
-	$r = q("SELECT distinct(`resource-id`) FROM `photo` WHERE 1 group by `id`");
+	$r = q("SELECT distinct(`resource_id`) FROM `photo` WHERE 1 group by `id`");
 	if(count($r)) {
 		foreach($r as $rr) {
 			$guid = get_guid();
-			q("update `photo` set `guid` = '%s' where `resource-id` = '%s'",
+			q("update `photo` set `guid` = '%s' where `resource_id` = '%s'",
 				dbesc($guid),
-				dbesc($rr['resource-id'])
+				dbesc($rr['resource_id'])
 			);
 		}
 	}

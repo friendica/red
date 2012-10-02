@@ -83,7 +83,7 @@ function photo_init(&$a) {
 			$photo = substr($photo,0,-2);
 		}
 
-		$r = q("SELECT `uid` FROM `photo` WHERE `resource-id` = '%s' AND `scale` = %d LIMIT 1",
+		$r = q("SELECT `uid` FROM `photo` WHERE `resource_id` = '%s' AND `scale` = %d LIMIT 1",
 			dbesc($photo),
 			intval($resolution)
 		);
@@ -93,7 +93,7 @@ function photo_init(&$a) {
 
 			// Now we'll see if we can access the photo
 
-			$r = q("SELECT * FROM `photo` WHERE `resource-id` = '%s' AND `scale` = %d $sql_extra LIMIT 1",
+			$r = q("SELECT * FROM `photo` WHERE `resource_id` = '%s' AND `scale` = %d $sql_extra LIMIT 1",
 				dbesc($photo),
 				intval($resolution)
 			);
@@ -112,7 +112,7 @@ function photo_init(&$a) {
 				// they won't have the photo link, so there's a reasonable chance that the person
 				// might be able to obtain permission to view it.
  
-				$r = q("SELECT * FROM `photo` WHERE `resource-id` = '%s' AND `scale` = %d LIMIT 1",
+				$r = q("SELECT * FROM `photo` WHERE `resource_id` = '%s' AND `scale` = %d LIMIT 1",
 					dbesc($photo),
 					intval($resolution)
 				);

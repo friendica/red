@@ -1,23 +1,25 @@
 
-E' stata ricevuta la richiesta di registrazione di un nuovo utente su
-$sitename che richiede la tua approvazione.
-
-I dettagli di login sono i seguenti:
-
-Nome Completo:	$username
-Sito:	$siteurl
-Nome:	$email
+Su $[sitename] è stata ricevuta una nuova richiesta di registrazione da parte di un utente che richiede 
+la tua approvazione. 
 
 
-Per approvare la richiesta, visita il link:
+I tuoi dati di accesso sono i seguenti:
 
-$siteurl/regmod/allow/$hash 
+Nome completo:»$[username]
+Sito:»$[siteurl]
+Nome utente:»$[email]
 
 
-Per rifiutare la richiesta e rimuovere l'account, visita:
+Per approvare questa richiesta clicca su:
 
-$siteurl/regmod/deny/$hash
+
+$[siteurl]/regmod/allow/$[hash] 
+
+
+Per negare la richiesta e rimuove il profilo, clicca su:
+
+
+$[siteurl]/regmod/deny/$[hash]
 
 
 Grazie.
-

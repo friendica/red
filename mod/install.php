@@ -487,7 +487,7 @@ function what_next() {
 		."<p>".t('IMPORTANT: You will need to [manually] setup a scheduled task for the poller.')
 		.t('Please see the file "INSTALL.txt".')			
 		."</p><p>"
-		.t("Go to your new Friendica node <a href='$baseurl/register'>registration page</a> and register as new user. Remember to use the same email you have entered as administrator email. This will allow you to enter the site admin panel.")
+		.t("Go to your new Friendica node <a href='$baseurl/zregister'>registration page</a> and register as new user. Remember to use the same email you have entered as administrator email. This will allow you to enter the site admin panel.")
 		."</p>";
 }
 

@@ -1,23 +1,22 @@
 
-Caro/a $username,
+Ciao $[username],
 
-	Grandi notizie... '$fn' a '$dfrn_url' ha accettato la tua richiesta di
-di connessione a '$sitename'.
+	Ottime notizie... '$[fn]' di '$[dfrn_url]' ha accettato 
+la tua richiesta di connessione su '$[sitename]'.
 
-Ora siete amici a vicenda e potete scambiarvi aggiornamenti di stato, foto e 
-email senza restrizioni.
+Adesso siete amici reciproci e potete scambiarvi aggiornamenti di stato, foto ed email
+senza restrizioni.
 
-Visita la tua pagina 'Contatti' su $sitename se vuoi fare una qualsiasi modifica
-a questa relazione.
+Vai nella pagina 'Contatti' di $[sitename] se vuoi effettuare 
+qualche modifica riguardo questa relazione 
 
-$siteurl
+$[siteurl]
 
-[Per esempio, puoi voler creare un profilo separato con informazioni che non
-sono disponibili al pubblico generico, e assegnarne i diritti di lettura a 
-'$fn'].
+[Ad esempio, potresti creare un profilo separato con le informazioni che non
+sono disponibili pubblicamente - ed permettere di vederlo a '$[fn]'].
 
-Sinceramente tuo,
+Saluti,
 
-	L'amministratore di $sitename
+	l'amministratore di $[sitename]
 
  

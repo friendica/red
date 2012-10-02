@@ -27,7 +27,7 @@ function photos_init(&$a) {
 
 		$sql_extra = permissions_sql($a->data['user']['uid']);
 
-		$albums = q("SELECT distinct(`album`) AS `album` FROM `photo` WHERE `uid` = %d $sql_extra ",
+		$albums = q("SELECT distinct(`album`) AS `album` FROM `photo` WHERE `uid` = %d $sql_extra order by created desc",
 			intval($a->data['user']['uid'])
 		);
 
@@ -200,14 +200,14 @@ function photos_post(&$a) {
 			// get the list of photos we are about to delete
 
 			if($visitor) {
-				$r = q("SELECT distinct(`resource-id`) as `rid` FROM `photo` WHERE `contact-id` = %d AND `uid` = %d AND `album` = '%s'",
+				$r = q("SELECT distinct(`resource_id`) as `rid` FROM `photo` WHERE `contact-id` = %d AND `uid` = %d AND `album` = '%s'",
 					intval($visitor),
 					intval($page_owner_uid),
 					dbesc($album)
 				);
 			}
 			else {
-				$r = q("SELECT distinct(`resource-id`) as `rid` FROM `photo` WHERE `uid` = %d AND `album` = '%s'",
+				$r = q("SELECT distinct(`resource_id`) as `rid` FROM `photo` WHERE `uid` = %d AND `album` = '%s'",
 					intval(local_user()),
 					dbesc($album)
 				);
@@ -226,13 +226,13 @@ function photos_post(&$a) {
 
 			// remove the associated photos
 
-			q("DELETE FROM `photo` WHERE `resource-id` IN ( $str_res ) AND `uid` = %d",
+			q("DELETE FROM `photo` WHERE `resource_id` IN ( $str_res ) AND `uid` = %d",
 				intval($page_owner_uid)
 			);
 
 			// find and delete the corresponding item with all the comments and likes/dislikes
 
-			$r = q("SELECT `parent_uri` FROM `item` WHERE `resource-id` IN ( $str_res ) AND `uid` = %d",
+			$r = q("SELECT `parent_uri` FROM `item` WHERE `resource_id` IN ( $str_res ) AND `uid` = %d",
 				intval($page_owner_uid)
 			);
 			if(count($r)) {
@@ -261,25 +261,25 @@ function photos_post(&$a) {
 		// same as above but remove single photo
 
 		if($visitor) {
-			$r = q("SELECT `id`, `resource-id` FROM `photo` WHERE `contact-id` = %d AND `uid` = %d AND `resource-id` = '%s' LIMIT 1",
+			$r = q("SELECT `id`, `resource_id` FROM `photo` WHERE `contact-id` = %d AND `uid` = %d AND `resource_id` = '%s' LIMIT 1",
 				intval($visitor),
 				intval($page_owner_uid),
 				dbesc($a->argv[2])
 			);
 		}
 		else {
-			$r = q("SELECT `id`, `resource-id` FROM `photo` WHERE `uid` = %d AND `resource-id` = '%s' LIMIT 1",
+			$r = q("SELECT `id`, `resource_id` FROM `photo` WHERE `uid` = %d AND `resource_id` = '%s' LIMIT 1",
 				intval(local_user()),
 				dbesc($a->argv[2])
 			);
 		}
 		if(count($r)) {
-			q("DELETE FROM `photo` WHERE `uid` = %d AND `resource-id` = '%s'",
+			q("DELETE FROM `photo` WHERE `uid` = %d AND `resource_id` = '%s'",
 				intval($page_owner_uid),
-				dbesc($r[0]['resource-id'])
+				dbesc($r[0]['resource_id'])
 			);
-			$i = q("SELECT * FROM `item` WHERE `resource-id` = '%s' AND `uid` = %d LIMIT 1",
-				dbesc($r[0]['resource-id']),
+			$i = q("SELECT * FROM `item` WHERE `resource_id` = '%s' AND `uid` = %d LIMIT 1",
+				dbesc($r[0]['resource_id']),
 				intval($page_owner_uid)
 			);
 			if(count($i)) {
@@ -324,7 +324,7 @@ function photos_post(&$a) {
 		   ( (intval($_POST['rotate']) == 1) || (intval($_POST['rotate']) == 2) )) {
 			logger('rotate');
 
-			$r = q("select * from photo where `resource-id` = '%s' and uid = %d and scale = 0 limit 1",
+			$r = q("select * from photo where `resource_id` = '%s' and uid = %d and scale = 0 limit 1",
 				dbesc($resource_id),
 				intval($page_owner_uid)
 			);
@@ -337,7 +337,7 @@ function photos_post(&$a) {
 					$width  = $ph->getWidth();
 					$height = $ph->getHeight();
 
-					$x = q("update photo set data = '%s', height = %d, width = %d where `resource-id` = '%s' and uid = %d and scale = 0 limit 1",
+					$x = q("update photo set data = '%s', height = %d, width = %d where `resource_id` = '%s' and uid = %d and scale = 0 limit 1",
 						dbesc($ph->imageString()),
 						intval($height),
 						intval($width),
@@ -350,7 +350,7 @@ function photos_post(&$a) {
 						$width  = $ph->getWidth();
 						$height = $ph->getHeight();
 		
-						$x = q("update photo set data = '%s', height = %d, width = %d where `resource-id` = '%s' and uid = %d and scale = 1 limit 1",
+						$x = q("update photo set data = '%s', height = %d, width = %d where `resource_id` = '%s' and uid = %d and scale = 1 limit 1",
 							dbesc($ph->imageString()),
 							intval($height),
 							intval($width),
@@ -364,7 +364,7 @@ function photos_post(&$a) {
 						$width  = $ph->getWidth();
 						$height = $ph->getHeight();
 
-						$x = q("update photo set data = '%s', height = %d, width = %d where `resource-id` = '%s' and uid = %d and scale = 2 limit 1",
+						$x = q("update photo set data = '%s', height = %d, width = %d where `resource_id` = '%s' and uid = %d and scale = 2 limit 1",
 							dbesc($ph->imageString()),
 							intval($height),
 							intval($width),
@@ -376,13 +376,13 @@ function photos_post(&$a) {
 			}
 		}
 
-		$p = q("SELECT * FROM `photo` WHERE `resource-id` = '%s' AND `uid` = %d ORDER BY `scale` DESC",
+		$p = q("SELECT * FROM `photo` WHERE `resource_id` = '%s' AND `uid` = %d ORDER BY `scale` DESC",
 			dbesc($resource_id),
 			intval($page_owner_uid)
 		);
 		if(count($p)) {
 			$ext = $phototypes[$p[0]['type']];
-			$r = q("UPDATE `photo` SET `desc` = '%s', `album` = '%s', `allow_cid` = '%s', `allow_gid` = '%s', `deny_cid` = '%s', `deny_gid` = '%s' WHERE `resource-id` = '%s' AND `uid` = %d",
+			$r = q("UPDATE `photo` SET `desc` = '%s', `album` = '%s', `allow_cid` = '%s', `allow_gid` = '%s', `deny_cid` = '%s', `deny_gid` = '%s' WHERE `resource_id` = '%s' AND `uid` = %d",
 				dbesc($desc),
 				dbesc($albname),
 				dbesc($str_contact_allow),
@@ -414,7 +414,7 @@ function photos_post(&$a) {
 			$arr['parent_uri']    = $uri; 
 			$arr['type']          = 'photo';
 			$arr['wall']          = 1;
-			$arr['resource-id']   = $p[0]['resource-id'];
+			$arr['resource_id']   = $p[0]['resource_id'];
 			$arr['contact-id']    = $owner_record['id'];
 			$arr['owner-name']    = $owner_record['name'];
 			$arr['owner-link']    = $owner_record['url'];
@@ -430,8 +430,8 @@ function photos_post(&$a) {
 			$arr['visible']       = $visibility;
 			$arr['origin']        = 1;
 			
-			$arr['body']          = '[url=' . $a->get_baseurl() . '/photos/' . $a->data['user']['nickname'] . '/image/' . $p[0]['resource-id'] . ']' 
-						. '[img]' . $a->get_baseurl() . '/photo/' . $p[0]['resource-id'] . '-' . $p[0]['scale'] . '.'. $ext . '[/img]' 
+			$arr['body']          = '[url=' . $a->get_baseurl() . '/photos/' . $a->data['user']['nickname'] . '/image/' . $p[0]['resource_id'] . ']' 
+						. '[img]' . $a->get_baseurl() . '/photo/' . $p[0]['resource_id'] . '-' . $p[0]['scale'] . '.'. $ext . '[/img]' 
 						. '[/url]';
 		
 			$item_id = item_store($arr);
@@ -499,7 +499,25 @@ function photos_post(&$a) {
 									intval($profile_uid)
 								);
 							}
-							elseif(strstr($name,'_') || strstr($name,' ')) {
+							else {
+								$newname = str_replace('_',' ',$name);
+
+								//select someone from this user's contacts by name
+								$r = q("SELECT * FROM `contact` WHERE `name` = '%s' AND `uid` = %d LIMIT 1",
+										dbesc($newname),
+										intval($page_owner_uid)
+								);
+
+								if(! $r) {
+									//select someone by attag or nick and the name passed in
+									$r = q("SELECT * FROM `contact` WHERE `attag` = '%s' OR `nick` = '%s' AND `uid` = %d ORDER BY `attag` DESC LIMIT 1",
+											dbesc($name),
+											dbesc($name),
+											intval($page_owner_uid)
+									);
+								}
+							}
+/*							elseif(strstr($name,'_') || strstr($name,' ')) {
 								$newname = str_replace('_',' ',$name);
 								$r = q("SELECT * FROM `contact` WHERE `name` = '%s' AND `uid` = %d LIMIT 1",
 									dbesc($newname),
@@ -512,7 +530,7 @@ function photos_post(&$a) {
 									dbesc($name),
 									intval($page_owner_uid)
 								);
-							}
+							}*/
 							if(count($r)) {
 								$newname = $r[0]['name'];
 								$profile = $r[0]['url'];
@@ -598,8 +616,8 @@ function photos_post(&$a) {
 					$arr['tag']           = $tagged[4];
 					$arr['inform']        = $tagged[2];
 					$arr['origin']        = 1;
-					$arr['body']          = '[url=' . $tagged[1] . ']' . $tagged[0] . '[/url]' . ' ' . t('was tagged in a') . ' ' . '[url=' . $a->get_baseurl() . '/photos/' . $owner_record['nickname'] . '/image/' . $p[0]['resource-id'] . ']' . t('photo') . '[/url]' . ' ' . t('by') . ' ' . '[url=' . $owner_record['url'] . ']' . $owner_record['name'] . '[/url]' ;
-					$arr['body'] .= "\n\n" . '[url=' . $a->get_baseurl() . '/photos/' . $owner_record['nickname'] . '/image/' . $p[0]['resource-id'] . ']' . '[img]' . $a->get_baseurl() . "/photo/" . $p[0]['resource-id'] . '-' . $best . '.' . $ext . '[/img][/url]' . "\n" ;
+					$arr['body']          = '[url=' . $tagged[1] . ']' . $tagged[0] . '[/url]' . ' ' . t('was tagged in a') . ' ' . '[url=' . $a->get_baseurl() . '/photos/' . $owner_record['nickname'] . '/image/' . $p[0]['resource_id'] . ']' . t('photo') . '[/url]' . ' ' . t('by') . ' ' . '[url=' . $owner_record['url'] . ']' . $owner_record['name'] . '[/url]' ;
+					$arr['body'] .= "\n\n" . '[url=' . $a->get_baseurl() . '/photos/' . $owner_record['nickname'] . '/image/' . $p[0]['resource_id'] . ']' . '[img]' . $a->get_baseurl() . "/photo/" . $p[0]['resource_id'] . '-' . $best . '.' . $ext . '[/img][/url]' . "\n" ;
 
 					$arr['object'] = '<object><type>' . ACTIVITY_OBJ_PERSON . '</type><title>' . $tagged[0] . '</title><id>' . $tagged[1] . '/' . $tagged[0] . '</id>';
 					$arr['object'] .= '<link>' . xmlify('<link rel="alternate" type="text/html" href="' . $tagged[1] . '" />' . "\n");
@@ -608,8 +626,8 @@ function photos_post(&$a) {
 					$arr['object'] .= '</link></object>' . "\n";
 
 					$arr['target'] = '<target><type>' . ACTIVITY_OBJ_PHOTO . '</type><title>' . $p[0]['desc'] . '</title><id>'
-						. $a->get_baseurl() . '/photos/' . $owner_record['nickname'] . '/image/' . $p[0]['resource-id'] . '</id>';
-					$arr['target'] .= '<link>' . xmlify('<link rel="alternate" type="text/html" href="' . $a->get_baseurl() . '/photos/' . $owner_record['nickname'] . '/image/' . $p[0]['resource-id'] . '" />' . "\n" . '<link rel="preview" type="'.$p[0]['type'].'" href="' . $a->get_baseurl() . "/photo/" . $p[0]['resource-id'] . '-' . $best . '.' . $ext . '" />') . '</link></target>';
+						. $a->get_baseurl() . '/photos/' . $owner_record['nickname'] . '/image/' . $p[0]['resource_id'] . '</id>';
+					$arr['target'] .= '<link>' . xmlify('<link rel="alternate" type="text/html" href="' . $a->get_baseurl() . '/photos/' . $owner_record['nickname'] . '/image/' . $p[0]['resource_id'] . '" />' . "\n" . '<link rel="preview" type="'.$p[0]['type'].'" href="' . $a->get_baseurl() . "/photo/" . $p[0]['resource_id'] . '-' . $best . '.' . $ext . '" />') . '</link></target>';
 
 					$item_id = item_store($arr);
 					if($item_id) {
@@ -798,7 +816,7 @@ function photos_post(&$a) {
 	$arr['parent_uri']    = $uri;
 	$arr['type']          = 'photo';
 	$arr['wall']          = 1;
-	$arr['resource-id']   = $photo_hash;
+	$arr['resource_id']   = $photo_hash;
 	$arr['contact-id']    = $owner_record['id'];
 	$arr['owner-name']    = $owner_record['name'];
 	$arr['owner-link']    = $owner_record['url'];
@@ -1062,8 +1080,8 @@ function photos_content(&$a) {
 
 		$album = hex2bin($datum);
 
-		$r = q("SELECT `resource-id`, max(`scale`) AS `scale` FROM `photo` WHERE `uid` = %d AND `album` = '%s' 
-			AND `scale` <= 4 $sql_extra GROUP BY `resource-id`",
+		$r = q("SELECT `resource_id`, max(`scale`) AS `scale` FROM `photo` WHERE `uid` = %d AND `album` = '%s' 
+			AND `scale` <= 4 $sql_extra GROUP BY `resource_id`",
 			intval($owner_uid),
 			dbesc($album)
 		);
@@ -1077,8 +1095,8 @@ function photos_content(&$a) {
 		else
 			$order = 'DESC';
 
-		$r = q("SELECT `resource-id`, `id`, `filename`, type, max(`scale`) AS `scale`, `desc` FROM `photo` WHERE `uid` = %d AND `album` = '%s' 
-			AND `scale` <= 4 $sql_extra GROUP BY `resource-id` ORDER BY `created` $order LIMIT %d , %d",
+		$r = q("SELECT `resource_id`, `id`, `filename`, type, max(`scale`) AS `scale`, `desc` FROM `photo` WHERE `uid` = %d AND `album` = '%s' 
+			AND `scale` <= 4 $sql_extra GROUP BY `resource_id` ORDER BY `created` $order LIMIT %d , %d",
 			intval($owner_uid),
 			dbesc($album),
 			intval($a->pager['start']),
@@ -1137,10 +1155,10 @@ function photos_content(&$a) {
 				$o .= replace_macros($tpl,array(
 					'$id' => $rr['id'],
 					'$twist' => ' ' . $twist . rand(2,4),
-					'$photolink' => $a->get_baseurl() . '/photos/' . $a->data['user']['nickname'] . '/image/' . $rr['resource-id']
+					'$photolink' => $a->get_baseurl() . '/photos/' . $a->data['user']['nickname'] . '/image/' . $rr['resource_id']
 						. (($_GET['order'] === 'posted') ? '?f=&order=posted' : ''),
 					'$phototitle' => t('View Photo'),
-					'$imgsrc' => $a->get_baseurl() . '/photo/' . $rr['resource-id'] . '-' . $rr['scale'] . '.' .$ext,
+					'$imgsrc' => $a->get_baseurl() . '/photo/' . $rr['resource_id'] . '-' . $rr['scale'] . '.' .$ext,
 					'$imgalt' => template_escape($rr['filename']),
 					'$desc'=> template_escape($rr['desc'])
 				));
@@ -1161,14 +1179,14 @@ function photos_content(&$a) {
 		//$o = '';
 		// fetch image, item containing image, then comments
 
-		$ph = q("SELECT * FROM `photo` WHERE `uid` = %d AND `resource-id` = '%s' 
+		$ph = q("SELECT * FROM `photo` WHERE `uid` = %d AND `resource_id` = '%s' 
 			$sql_extra ORDER BY `scale` ASC ",
 			intval($owner_uid),
 			dbesc($datum)
 		);
 
 		if(! count($ph)) {
-			$ph = q("SELECT `id` FROM `photo` WHERE `uid` = %d AND `resource-id` = '%s' 
+			$ph = q("SELECT `id` FROM `photo` WHERE `uid` = %d AND `resource_id` = '%s' 
 				LIMIT 1",
 				intval($owner_uid),
 				dbesc($datum)
@@ -1189,7 +1207,7 @@ function photos_content(&$a) {
 			$order = 'DESC';
 
 
-		$prvnxt = q("SELECT `resource-id` FROM `photo` WHERE `album` = '%s' AND `uid` = %d AND `scale` = 0 
+		$prvnxt = q("SELECT `resource_id` FROM `photo` WHERE `album` = '%s' AND `uid` = %d AND `scale` = 0 
 			$sql_extra ORDER BY `created` $order ",
 			dbesc($ph[0]['album']),
 			intval($owner_uid)
@@ -1197,7 +1215,7 @@ function photos_content(&$a) {
 
 		if(count($prvnxt)) {
 			for($z = 0; $z < count($prvnxt); $z++) {
-				if($prvnxt[$z]['resource-id'] == $ph[0]['resource-id']) {
+				if($prvnxt[$z]['resource_id'] == $ph[0]['resource_id']) {
 					$prv = $z - 1;
 					$nxt = $z + 1;
 					if($prv < 0)
@@ -1208,8 +1226,8 @@ function photos_content(&$a) {
 				}
 			}
 			$edit_suffix = ((($cmd === 'edit') && ($can_post)) ? '/edit' : '');
-			$prevlink = $a->get_baseurl() . '/photos/' . $a->data['user']['nickname'] . '/image/' . $prvnxt[$prv]['resource-id'] . $edit_suffix . (($_GET['order'] === 'posted') ? '?f=&order=posted' : '');
-			$nextlink = $a->get_baseurl() . '/photos/' . $a->data['user']['nickname'] . '/image/' . $prvnxt[$nxt]['resource-id'] . $edit_suffix . (($_GET['order'] === 'posted') ? '?f=&order=posted' : '');
+			$prevlink = $a->get_baseurl() . '/photos/' . $a->data['user']['nickname'] . '/image/' . $prvnxt[$prv]['resource_id'] . $edit_suffix . (($_GET['order'] === 'posted') ? '?f=&order=posted' : '');
+			$nextlink = $a->get_baseurl() . '/photos/' . $a->data['user']['nickname'] . '/image/' . $prvnxt[$nxt]['resource_id'] . $edit_suffix . (($_GET['order'] === 'posted') ? '?f=&order=posted' : '');
  		}
 
 
@@ -1233,7 +1251,7 @@ function photos_content(&$a) {
 		if($can_post && ($ph[0]['uid'] == $owner_uid)) {
 			$tools = array(
 				'edit'	=> array($a->get_baseurl() . '/photos/' . $a->data['user']['nickname'] . '/image/' . $datum . (($cmd === 'edit') ? '' : '/edit'), (($cmd === 'edit') ? t('View photo') : t('Edit photo'))),
-				'profile'=>array($a->get_baseurl() . '/profile_photo/use/'.$ph[0]['resource-id'], t('Use as profile photo')),
+				'profile'=>array($a->get_baseurl() . '/profile_photo/use/'.$ph[0]['resource_id'], t('Use as profile photo')),
 			);
 
 			// lock
@@ -1260,9 +1278,9 @@ function photos_content(&$a) {
 			$prevlink = array($prevlink, '<div class="icon prev"></div>') ;
 
 		$photo = array(
-			'href' => $a->get_baseurl() . '/photo/' . $hires['resource-id'] . '-' . $hires['scale'] . '.' . $phototypes[$hires['type']],
+			'href' => $a->get_baseurl() . '/photo/' . $hires['resource_id'] . '-' . $hires['scale'] . '.' . $phototypes[$hires['type']],
 			'title'=> t('View Full Size'),
-			'src'  => $a->get_baseurl() . '/photo/' . $lores['resource-id'] . '-' . $lores['scale'] . '.' . $phototypes[$lores['type']] . '?f=&_u=' . datetime_convert('','','','ymdhis')
+			'src'  => $a->get_baseurl() . '/photo/' . $lores['resource_id'] . '-' . $lores['scale'] . '.' . $phototypes[$lores['type']] . '?f=&_u=' . datetime_convert('','','','ymdhis')
 		);
 
 		if($nextlink)
@@ -1271,7 +1289,7 @@ function photos_content(&$a) {
 
 		// Do we have an item for this photo?
 
-		$linked_items = q("SELECT * FROM `item` WHERE `resource-id` = '%s' $sql_extra LIMIT 1",
+		$linked_items = q("SELECT * FROM `item` WHERE `resource_id` = '%s' $sql_extra LIMIT 1",
 			dbesc($datum)
 		);
 		if(count($linked_items)) {
@@ -1347,7 +1365,7 @@ function photos_content(&$a) {
 				'$album' => template_escape($ph[0]['album']),
 				'$newalbum' => t('New album name'), 
 				'$nickname' => $a->data['user']['nickname'],
-				'$resource_id' => $ph[0]['resource-id'],
+				'$resource_id' => $ph[0]['resource_id'],
 				'$capt_label' => t('Caption'),
 				'$caption' => template_escape($ph[0]['desc']),
 				'$tag_label' => t('Add a Tag'),
@@ -1534,8 +1552,8 @@ function photos_content(&$a) {
 	// Default - show recent photos with upload link (if applicable)
 	//$o = '';
 
-	$r = q("SELECT `resource-id`, max(`scale`) AS `scale` FROM `photo` WHERE `uid` = %d AND `album` != '%s' AND `album` != '%s' 
-		$sql_extra GROUP BY `resource-id`",
+	$r = q("SELECT `resource_id`, max(`scale`) AS `scale` FROM `photo` WHERE `uid` = %d AND `album` != '%s' AND `album` != '%s' 
+		$sql_extra GROUP BY `resource_id`",
 		intval($a->data['user']['uid']),
 		dbesc('Contact Photos'),
 		dbesc( t('Contact Photos'))
@@ -1545,9 +1563,9 @@ function photos_content(&$a) {
 		$a->set_pager_itemspage(20);
 	}
 
-	$r = q("SELECT `resource-id`, `id`, `filename`, type, `album`, max(`scale`) AS `scale` FROM `photo`
+	$r = q("SELECT `resource_id`, `id`, `filename`, type, `album`, max(`scale`) AS `scale` FROM `photo`
 		WHERE `uid` = %d AND `album` != '%s' AND `album` != '%s'  
-		$sql_extra GROUP BY `resource-id` ORDER BY `created` DESC LIMIT %d , %d",
+		$sql_extra GROUP BY `resource_id` ORDER BY `created` DESC LIMIT %d , %d",
 		intval($a->data['user']['uid']),
 		dbesc('Contact Photos'),
 		dbesc( t('Contact Photos')),
@@ -1570,9 +1588,9 @@ function photos_content(&$a) {
 			$photos[] = array(
 				'id'       => $rr['id'],
 				'twist'    => ' ' . $twist . rand(2,4),
-				'link'  	=> $a->get_baseurl() . '/photos/' . $a->data['user']['nickname'] . '/image/' . $rr['resource-id'],
+				'link'  	=> $a->get_baseurl() . '/photos/' . $a->data['user']['nickname'] . '/image/' . $rr['resource_id'],
 				'title' 	=> t('View Photo'),
-				'src'     	=> $a->get_baseurl() . '/photo/' . $rr['resource-id'] . '-' . ((($rr['scale']) == 6) ? 4 : $rr['scale']) . '.' . $ext,
+				'src'     	=> $a->get_baseurl() . '/photo/' . $rr['resource_id'] . '-' . ((($rr['scale']) == 6) ? 4 : $rr['scale']) . '.' . $ext,
 				'alt'     	=> template_escape($rr['filename']),
 				'album'	=> array(
 					'link'  => $a->get_baseurl() . '/photos/' . $a->data['user']['nickname'] . '/album/' . bin2hex($rr['album']),

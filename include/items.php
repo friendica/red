@@ -1000,7 +1000,7 @@ function item_store($arr,$force_parent = false) {
 	$arr['origin']        = ((x($arr,'origin'))        ? intval($arr['origin'])              : 0 );
 
 
-	$arr['thr-parent'] = $arr['parent_uri'];
+	$arr['thr_parent'] = $arr['parent_uri'];
 	if($arr['parent_uri'] === $arr['uri']) {
 		$parent_id = 0;
 		$parent_deleted = 0;
@@ -1670,12 +1670,12 @@ function consume_feed($xml,$importer,&$contact, &$hub, $datedir = 0, $pass = 0) 
 		$photo_failure = false;
 		$have_photo = false;
 
-		$r = q("SELECT `resource-id` FROM `photo` WHERE `contact-id` = %d AND `uid` = %d LIMIT 1",
+		$r = q("SELECT `resource_id` FROM `photo` WHERE `contact-id` = %d AND `uid` = %d LIMIT 1",
 			intval($contact['id']),
 			intval($contact['uid'])
 		);
 		if(count($r)) {
-			$resource_id = $r[0]['resource-id'];
+			$resource_id = $r[0]['resource_id'];
 			$have_photo = true;
 		}
 		else {
@@ -1690,7 +1690,7 @@ function consume_feed($xml,$importer,&$contact, &$hub, $datedir = 0, $pass = 0) 
 		$img = new Photo($img_str, $type);
 		if($img->is_valid()) {
 			if($have_photo) {
-				q("DELETE FROM `photo` WHERE `resource-id` = '%s' AND `contact-id` = %d AND `uid` = %d",
+				q("DELETE FROM `photo` WHERE `resource_id` = '%s' AND `contact-id` = %d AND `uid` = %d",
 					dbesc($resource_id),
 					intval($contact['id']),
 					intval($contact['uid'])
@@ -1985,7 +1985,7 @@ function consume_feed($xml,$importer,&$contact, &$hub, $datedir = 0, $pass = 0) 
 					$datarray['type'] = 'activity';
 					$datarray['gravity'] = GRAVITY_LIKE;
 					// only one like or dislike per person
-					$r = q("select id from item where uid = %d and `contact-id` = %d and verb ='%s' and deleted = 0 and (`parent_uri` = '%s' OR `thr-parent` = '%s') limit 1",
+					$r = q("select id from item where uid = %d and `contact-id` = %d and verb ='%s' and deleted = 0 and (`parent_uri` = '%s' OR `thr_parent` = '%s') limit 1",
 						intval($datarray['uid']),
 						intval($datarray['contact-id']),
 						dbesc($datarray['verb']),
@@ -2216,12 +2216,12 @@ function local_delivery($importer,$data) {
 		$photo_failure = false;
 		$have_photo = false;
 
-		$r = q("SELECT `resource-id` FROM `photo` WHERE `contact-id` = %d AND `uid` = %d LIMIT 1",
+		$r = q("SELECT `resource_id` FROM `photo` WHERE `contact-id` = %d AND `uid` = %d LIMIT 1",
 			intval($importer['id']),
 			intval($importer['importer_uid'])
 		);
 		if(count($r)) {
-			$resource_id = $r[0]['resource-id'];
+			$resource_id = $r[0]['resource_id'];
 			$have_photo = true;
 		}
 		else {
@@ -2236,7 +2236,7 @@ function local_delivery($importer,$data) {
 		$img = new Photo($img_str, $type);
 		if($img->is_valid()) {
 			if($have_photo) {
-				q("DELETE FROM `photo` WHERE `resource-id` = '%s' AND `contact-id` = %d AND `uid` = %d",
+				q("DELETE FROM `photo` WHERE `resource_id` = '%s' AND `contact-id` = %d AND `uid` = %d",
 					dbesc($resource_id),
 					intval($importer['id']),
 					intval($importer['importer_uid'])
@@ -2536,7 +2536,7 @@ function local_delivery($importer,$data) {
 					$r = q("select `item`.`id`, `item`.`uri`, `item`.`forum_mode`,`item`.`origin`,`item`.`wall`, 
 						`contact`.`name`, `contact`.`url`, `contact`.`thumb` from `item` 
 						LEFT JOIN `contact` ON `contact`.`id` = `item`.`contact-id` 
-						WHERE `item`.`uri` = '%s' AND (`item`.`parent_uri` = '%s' or `item`.`thr-parent` = '%s')
+						WHERE `item`.`uri` = '%s' AND (`item`.`parent_uri` = '%s' or `item`.`thr_parent` = '%s')
 						AND `item`.`uid` = %d 
 						$sql_extra
 						LIMIT 1",
@@ -2678,7 +2678,7 @@ function local_delivery($importer,$data) {
 			$r = q("select `item`.`id`, `item`.`uri`, `item`.`forum_mode`,`item`.`origin`,`item`.`wall`, 
 				`contact`.`name`, `contact`.`url`, `contact`.`thumb` from `item` 
 				LEFT JOIN `contact` ON `contact`.`id` = `item`.`contact-id` 
-				WHERE `item`.`uri` = '%s' AND (`item`.`parent_uri` = '%s' or `item`.`thr-parent` = '%s')
+				WHERE `item`.`uri` = '%s' AND (`item`.`parent_uri` = '%s' or `item`.`thr_parent` = '%s')
 				AND `item`.`uid` = %d 
 				$sql_extra
 				LIMIT 1",
@@ -2762,7 +2762,7 @@ function local_delivery($importer,$data) {
 					$datarray['gravity'] = GRAVITY_LIKE;
 
 					// only one like or dislike per person
-					$r = q("select id from item where uid = %d and `contact-id` = %d and verb = '%s' and (`thr-parent` = '%s' or `parent_uri` = '%s') and deleted = 0 limit 1",
+					$r = q("select id from item where uid = %d and `contact-id` = %d and verb = '%s' and (`thr_parent` = '%s' or `parent_uri` = '%s') and deleted = 0 limit 1",
 						intval($datarray['uid']),
 						intval($datarray['contact-id']),
 						dbesc($datarray['verb']),
@@ -2916,7 +2916,7 @@ function local_delivery($importer,$data) {
 					$datarray['type'] = 'activity';
 					$datarray['gravity'] = GRAVITY_LIKE;
 					// only one like or dislike per person
-					$r = q("select id from item where uid = %d and `contact-id` = %d and verb ='%s' and deleted = 0 and (`parent_uri` = '%s' OR `thr-parent` = '%s') limit 1",
+					$r = q("select id from item where uid = %d and `contact-id` = %d and verb ='%s' and deleted = 0 and (`parent_uri` = '%s' OR `thr_parent` = '%s') limit 1",
 						intval($datarray['uid']),
 						intval($datarray['contact-id']),
 						dbesc($datarray['verb']),
@@ -3316,8 +3316,8 @@ function atom_entry($item,$type,$author,$owner,$comment = false,$cid = 0) {
 	if(strlen($item['owner-name']))
 		$o .= atom_author('dfrn:owner',$item['owner-name'],$item['owner-link'],80,80,$item['owner-avatar']);
 
-	if(($item['parent'] != $item['id']) || ($item['parent_uri'] !== $item['uri']) || (($item['thr-parent'] !== '') && ($item['thr-parent'] !== $item['uri']))) {
-		$parent_item = (($item['thr-parent']) ? $item['thr-parent'] : $item['parent_uri']);
+	if(($item['parent'] != $item['id']) || ($item['parent_uri'] !== $item['uri']) || (($item['thr_parent'] !== '') && ($item['thr_parent'] !== $item['uri']))) {
+		$parent_item = (($item['thr_parent']) ? $item['thr_parent'] : $item['parent_uri']);
 		$o .= '<thr:in-reply-to ref="' . xmlify($parent_item) . '" type="text/html" href="' .  xmlify($a->get_baseurl() . '/display/' . $owner['nickname'] . '/' . $item['parent']) . '" />' . "\r\n";
 	}
 
@@ -3403,7 +3403,7 @@ function fix_private_photos($s, $uid, $item = null, $cid = 0) {
 			if($x) {
 				$res = substr($i,$x+1);
 				$i = substr($i,0,$x);
-				$r = q("SELECT * FROM `photo` WHERE `resource-id` = '%s' AND `scale` = %d AND `uid` = %d",
+				$r = q("SELECT * FROM `photo` WHERE `resource_id` = '%s' AND `scale` = %d AND `uid` = %d",
 					dbesc($i),
 					intval($res),
 					intval($uid)
@@ -3597,7 +3597,7 @@ function item_expire($uid,$days) {
 
 		// Only expire posts, not photos and photo comments
 
-		if($expire_photos==0 && strlen($item['resource-id']))
+		if($expire_photos==0 && strlen($item['resource_id']))
 			continue;
 		if($expire_starred==0 && intval($item['starred']))
 			continue;
@@ -3702,11 +3702,11 @@ function drop_item($id,$interactive = true) {
 		// If item is a link to a photo resource, nuke all the associated photos 
 		// (visitors will not have photo resources)
 		// This only applies to photos uploaded from the photos page. Photos inserted into a post do not
-		// generate a resource-id and therefore aren't intimately linked to the item. 
+		// generate a resource_id and therefore aren't intimately linked to the item. 
 
-		if(strlen($item['resource-id'])) {
-			q("DELETE FROM `photo` WHERE `resource-id` = '%s' AND `uid` = %d ",
-				dbesc($item['resource-id']),
+		if(strlen($item['resource_id'])) {
+			q("DELETE FROM `photo` WHERE `resource_id` = '%s' AND `uid` = %d ",
+				dbesc($item['resource_id']),
 				intval($item['uid'])
 			);
 			// ignore the result

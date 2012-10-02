@@ -304,7 +304,7 @@ function create_user($arr) {
 				$photo_failure = true;
 
 			if(! $photo_failure) {
-				q("UPDATE `photo` SET `profile` = 1 WHERE `resource-id` = '%s' ",
+				q("UPDATE `photo` SET `profile` = 1 WHERE `resource_id` = '%s' ",
 					dbesc($hash)
 				);
 			}

@@ -179,19 +179,6 @@ class Photo {
         if(!$this->is_valid())
             return FALSE;
 
-        if($this->is_imagick()) {
-            /**
-             * If it is not animated, there will be only one iteration here,
-             * so don't bother checking
-             */
-            // Don't forget to go back to the first frame
-            $this->image->setFirstIterator();
-            do {
-                $this->image->resizeImage($max, $max, imagick::FILTER_LANCZOS, 1, true);
-            } while ($this->image->nextImage());
-            return;
-        }
-
         $width = $this->width;
         $height = $this->height;
 
@@ -201,7 +188,18 @@ class Photo {
             return FALSE;
 
         if($width > $max && $height > $max) {
-            if($width > $height) {
+
+			// very tall image (greater than 16:9)
+			// constrain the width - let the height float.
+
+			if((($height * 9) / 16) > $width) {
+				$dest_width = $max;
+     	        $dest_height = intval(( $height * $max ) / $width);
+			}
+
+			// else constrain both dimensions
+
+			elseif($width > $height) {
                 $dest_width = $max;
                 $dest_height = intval(( $height * $max ) / $width);
             }
@@ -217,14 +215,46 @@ class Photo {
             }
             else {
                 if( $height > $max ) {
-                    $dest_width = intval(( $width * $max ) / $height);
-                    $dest_height = $max;
+
+					// very tall image (greater than 16:9)
+					// but width is OK - don't do anything
+
+					if((($height * 9) / 16) > $width) {
+						$dest_width = $width;
+     	        		$dest_height = $height;
+					}
+					else {
+	                    $dest_width = intval(( $width * $max ) / $height);
+    	                $dest_height = $max;
+					}
                 }
                 else {
                     $dest_width = $width;
                     $dest_height = $height;
                 }
             }
+        }
+
+
+        if($this->is_imagick()) {
+            /**
+             * If it is not animated, there will be only one iteration here,
+             * so don't bother checking
+             */
+            // Don't forget to go back to the first frame
+            $this->image->setFirstIterator();
+            do {
+
+				// FIXME - implement horizantal bias for scaling as in followin GD functions
+				// to allow very tall images to be constrained only horizontally. 
+
+                $this->image->scaleImage($dest_width, $dest_height);
+            } while ($this->image->nextImage());
+
+			// FIXME - also we need to copy the new dimensions to $this->height, $this->width as other functions
+			// may rely on it.
+
+            return;
         }
 
 
@@ -341,8 +371,6 @@ class Photo {
         if(!$this->is_valid())
             return FALSE;
 
-        if($this->is_imagick())
-            return $this->scaleImage($min);
 
         $width = $this->width;
         $height = $this->height;
@@ -379,6 +407,8 @@ class Photo {
             }
         }
 
+        if($this->is_imagick())
+            return $this->scaleImage($dest_width,$dest_height);
 
         $dest = imagecreatetruecolor( $dest_width, $dest_height );
         imagealphablending($dest, false);
@@ -401,7 +431,7 @@ class Photo {
         if($this->is_imagick()) {
             $this->image->setFirstIterator();
             do {
-                $this->image->resizeImage($dim, $dim, imagick::FILTER_LANCZOS, 1, false);
+                $this->image->scaleImage($dim, $dim);
             } while ($this->image->nextImage());
             return;
         }
@@ -495,7 +525,7 @@ class Photo {
 
     public function store($uid, $cid, $rid, $filename, $album, $scale, $profile = 0, $allow_cid = '', $allow_gid = '', $deny_cid = '', $deny_gid = '') {
 
-        $x = q("select id from photo where `resource-id` = '%s' and uid = %d and `contact-id` = %d and `scale` = %d limit 1",
+        $x = q("select id from photo where `resource_id` = '%s' and uid = %d and `contact-id` = %d and `scale` = %d limit 1",
                 dbesc($rid),
                 intval($uid),
                 intval($cid),
@@ -505,7 +535,7 @@ class Photo {
             $r = q("UPDATE `photo`
                 set `uid` = %d,
                 `contact-id` = %d,
-                `resource-id` = '%s',
+                `resource_id` = '%s',
                 `created` = '%s',
                 `edited` = '%s',
                 `filename` = '%s',
@@ -544,7 +574,7 @@ class Photo {
         }
         else {
             $r = q("INSERT INTO `photo`
-                ( `uid`, `contact-id`, `resource-id`, `created`, `edited`, `filename`, type, `album`, `height`, `width`, `data`, `scale`, `profile`, `allow_cid`, `allow_gid`, `deny_cid`, `deny_gid` )
+                ( `uid`, `contact-id`, `resource_id`, `created`, `edited`, `filename`, type, `album`, `height`, `width`, `data`, `scale`, `profile`, `allow_cid`, `allow_gid`, `deny_cid`, `deny_gid` )
                 VALUES ( %d, %d, '%s', '%s', '%s', '%s', '%s', '%s', %d, %d, '%s', %d, %d, '%s', '%s', '%s', '%s' )",
                 intval($uid),
                 intval($cid),
@@ -618,12 +648,12 @@ function import_profile_photo($photo,$uid,$cid) {
 
     $a = get_app();
 
-    $r = q("select `resource-id` from photo where `uid` = %d and `contact-id` = %d and `scale` = 4 and `album` = 'Contact Photos' limit 1",
+    $r = q("select `resource_id` from photo where `uid` = %d and `contact-id` = %d and `scale` = 4 and `album` = 'Contact Photos' limit 1",
         intval($uid),
         intval($cid)
     );
     if(count($r)) {
-        $hash = $r[0]['resource-id'];
+        $hash = $r[0]['resource_id'];
     }
     else {
         $hash = photo_new_resource();

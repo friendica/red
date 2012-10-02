@@ -63,7 +63,7 @@ class Item extends BaseObject {
 				if($item['network'] === NETWORK_MAIL && local_user() != $item['uid']) {
 					continue;
 				}
-				if($item['verb'] === ACTIVITY_LIKE || $item['verb'] === ACTIVITY_DISLIKE) {
+				if(! visible_activity($item)) {
 					continue;
 				}
 				$child = new Item($item);
@@ -304,11 +304,9 @@ class Item extends BaseObject {
 		 * Only add what will be displayed
 		 */
 		if($item->get_data_value('network') === NETWORK_MAIL && local_user() != $item->get_data_value('uid')) {
-			logger('[WARN] Item::add_child : Item is a mail ('. $item->get_id() .').', LOGGER_DEBUG);
 			return false;
 		}
-		if($item->get_data_value('verb') === ACTIVITY_LIKE || $item->get_data_value('verb') === ACTIVITY_DISLIKE) {
-			logger('[WARN] Item::add_child : Item is a (dis)like ('. $item->get_id() .').', LOGGER_DEBUG);
+		if(activity_match($item->get_data_value('verb'),ACTIVITY_LIKE) || activity_match($item->get_data_value('verb'),ACTIVITY_DISLIKE)) {
 			return false;
 		}
 		
@@ -634,5 +632,9 @@ class Item extends BaseObject {
 	private function is_visiting() {
 		return $this->visiting;
 	}
+
+
+
+
 }
 ?>

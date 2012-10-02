@@ -378,7 +378,7 @@ function photo_new_resource() {
 	do {
 		$found = false;
 		$resource = hash('md5',uniqid(mt_rand(),true));
-		$r = q("SELECT `id` FROM `photo` WHERE `resource-id` = '%s' LIMIT 1",
+		$r = q("SELECT `id` FROM `photo` WHERE `resource_id` = '%s' LIMIT 1",
 			dbesc($resource)
 		);
 		if(count($r))
@@ -1325,7 +1325,7 @@ function reltoabs($text, $base)
 function item_post_type($item) {
 	if(intval($item['event-id']))
 		return t('event');
-	if(strlen($item['resource-id']))
+	if(strlen($item['resource_id']))
 		return t('photo');
 	if(strlen($item['verb']) && $item['verb'] !== ACTIVITY_POST)
 		return t('activity');

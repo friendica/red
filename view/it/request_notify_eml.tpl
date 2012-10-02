@@ -1,16 +1,17 @@
 
-Caro/a $myname,
+Ciao $[myname],
 
-Hai appena ricevuto una richiesta di connessione su $sitename 
-da  '$requestor'.
+Hai appena ricevuto una richiesta di connessione da $[sitename] 
 
-Puoi visitare il suo profilo a $url.
+da '$[requestor]'.
 
-Accedi al tuo sito per vedere la completa presentazione e approvare o
-ignorare/cancellare la richiesta.
+Puoi visitare il suo profilo su $[url].
 
-$siteurl
+Accedi al tuo sito per vedere la richiesta completa 
+e approva o ignora/annulla la richiesta.
+
+$[siteurl]
 
 Saluti,
 
-	L'amministratore di $sitename
+	l'amministratore di $[sitename]

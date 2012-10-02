@@ -1,20 +1,20 @@
 
-Caro/a $username,
-    La tua password è stata cambiata come richiesto. Segnati questa informazione
-(o cambia immediatamente la password con qualcosa che ti ricorderai).
+Ciao $[username],
+	La tua password è cambiata come hai richiesto. Conserva queste 
+informazioni (oppure cambia immediatamente la password con 
+qualcosa che ti è più facile ricordare).
 
 
-I tui dati di accesso sono i seguenti:
+I tuoi dati di access sono i seguenti:
 
-Sito:	$siteurl
-Nome:	$email
-Password:	$new_password
+Sito:»$[siteurl]
+Nome utente:»$[email]
+Password:»$[new_password]
 
-Puoi cambiare la password dalla pagina delle impostazioni del tuo profilo dopo
-aver effetuato l'accesso.
+Puoi cambiare la tua password dalla pagina delle impostazioni dopo aver effettuato l'accesso.
 
 
 Saluti,
-	L'amministratore di $sitename
+	l'amministratore di $[sitename]
 
  

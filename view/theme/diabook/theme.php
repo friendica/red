@@ -566,7 +566,7 @@ if ($color=="dark") $color_path = "/diabook-dark/";
 				}
 				break;
 			default:
-				if ($rr['resource-id']){
+				if ($rr['resource_id']){
 					$post_type = t('photo');
 					$m=array();	preg_match("/\[url=([^]]*)\]/", $rr['body'], $m);
 					$rr['plink'] = $m[1];
@@ -584,11 +584,11 @@ if ($color=="dark") $color_path = "/diabook-dark/";
 	if($close_lastphotos != "1") {
 	$aside['$photos_title'] = t('Last photos');
 	$aside['$photos_items'] = array();
-	$r = q("SELECT `photo`.`id`, `photo`.`resource-id`, `photo`.`scale`, `photo`.`desc`, `user`.`nickname`, `user`.`username` FROM 
-				(SELECT `resource-id`, MAX(`scale`) as maxscale FROM `photo` 
+	$r = q("SELECT `photo`.`id`, `photo`.`resource_id`, `photo`.`scale`, `photo`.`desc`, `user`.`nickname`, `user`.`username` FROM 
+				(SELECT `resource_id`, MAX(`scale`) as maxscale FROM `photo` 
 					WHERE `profile`=0 AND `contact-id`=0 AND `album` NOT IN ('Contact Photos', '%s', 'Profile Photos', '%s')
-						AND `allow_cid`='' AND `allow_gid`='' AND `deny_cid`='' AND `deny_gid`='' GROUP BY `resource-id`) AS `t1`
-				INNER JOIN `photo` ON `photo`.`resource-id`=`t1`.`resource-id` AND `photo`.`scale` = `t1`.`maxscale`,
+						AND `allow_cid`='' AND `allow_gid`='' AND `deny_cid`='' AND `deny_gid`='' GROUP BY `resource_id`) AS `t1`
+				INNER JOIN `photo` ON `photo`.`resource_id`=`t1`.`resource_id` AND `photo`.`scale` = `t1`.`maxscale`,
 				`user` 
 				WHERE `user`.`uid` = `photo`.`uid`
 				AND `user`.`blockwall`=0
@@ -601,8 +601,8 @@ if ($color=="dark") $color_path = "/diabook-dark/";
 		if(count($r)) {
 		$tpl = file_get_contents( dirname(__file__).'/ch_directory_item.tpl');
 		foreach($r as $rr) {
-			$photo_page = $a->get_baseurl() . '/photos/' . $rr['nickname'] . '/image/' . $rr['resource-id'];
-			$photo_url = $a->get_baseurl() . '/photo/' .  $rr['resource-id'] . '-' . $rr['scale'] .'.jpg';
+			$photo_page = $a->get_baseurl() . '/photos/' . $rr['nickname'] . '/image/' . $rr['resource_id'];
+			$photo_url = $a->get_baseurl() . '/photo/' .  $rr['resource_id'] . '-' . $rr['scale'] .'.jpg';
 		
 			$entry = replace_macros($tpl,array(
 				'$id' => $rr['id'],
