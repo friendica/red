@@ -220,6 +220,27 @@ function can_write_wall(&$a,$owner) {
 }
 
 
+function change_channel($change_channel) {
+
+	$r = false;
+
+	if($change_channel) {
+		$r = q("select * from channel where channel_id = %d and channel_account_id = %d limit 1",
+			intval($change_channel),
+			intval(get_account_id())
+		);
+		if($r && count($r)) {
+			$_SESSION['uid'] = intval($r[0]['channel_id']);
+			get_app()->set_channel($r[0]);
+			$_SESSION['theme'] = $r[0]['channel_theme'];
+			date_default_timezone_set($r[0]['channel_timezone']);
+		}
+	}
+
+	return $r;
+
+}
+
 function permissions_sql($owner_id,$remote_verified = false,$groups = null) {
 
 	$local_user = local_user();

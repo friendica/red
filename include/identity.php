@@ -82,14 +82,18 @@ function create_identity($arr) {
 	$ret['channel'] = $r[0];
 
 	set_default_login_identity($arr['account_id'],$ret['channel']['channel_id'],false);
-	
+
+	$sig = base64url_encode(rsa_sign($ret['channel']['channel_global_id'],$ret['channel']['channel_prvkey']));
+	$hash = base64url_encode(hash('whirlpool',$ret['channel']['channel_global_id'] . $sig,true));
+
 	// Create a verified hub location pointing to this site.
 
-	$r = q("insert into hubloc ( hubloc_guid, hubloc_guid_sig, hubloc_flags, 
+	$r = q("insert into hubloc ( hubloc_guid, hubloc_guid_sig, hubloc_hash, hubloc_flags, 
 		hubloc_url, hubloc_url_sig, hubloc_callback, hubloc_sitekey )
-		values ( '%s', '%s', %d, '%s', '%s', '%s', '%s' )",
+		values ( '%s', '%s', '%s', %d, '%s', '%s', '%s', '%s' )",
 		dbesc($ret['channel']['channel_global_id']),
-		dbesc(base64url_encode(rsa_sign($ret['channel']['channel_global_id'],$ret['channel']['channel_prvkey']))),
+		dbesc($sig),
+		dbesc($hash),
 		intval(($primary) ? HUBLOC_FLAGS_PRIMARY : 0),
 		dbesc(z_root()),
 		dbesc(base64url_encode(rsa_sign(z_root(),$ret['channel']['channel_prvkey']))),
@@ -99,7 +103,22 @@ function create_identity($arr) {
 	if(! $r)
 		logger('create_identity: Unable to store hub location');
 
+
 	$newuid = $ret['channel']['channel_id'];
+
+	$r = q("insert into xchan ( xchan_hash, xchan_guid, xchan_guid_sig, xchan_photo, xchan_addr, xchan_profile, xchan_name ) values ('%s', '%s', '%s', '%s', '%s', '%s', '%s')",
+		dbesc($hash),
+		dbesc($ret['channel']['channel_global_id']),
+		dbesc($sig),
+		dbesc($a->get_baseurl() . "/photo/profile/{$newuid}"),
+		dbesc($ret['channel']['channel_address'] . '@' . $a->get_hostname()),
+		dbesc(z_root() . '/profile/' . $ret['channel']['channel_address']),
+		dbesc($ret['channel']['channel_name'])
+	);
+
+	// Not checking return value. 
+	// It's ok for this to fail if it's an imported channel, and therefore the hash is a duplicate
+		
 
 	$r = q("INSERT INTO `profile` ( `aid`, `uid`, `profile_name`, `is_default`, `name`, `photo`, `thumb`)
 		VALUES ( %d, %d, '%s', %d, '%s', '%s', '%s') ",

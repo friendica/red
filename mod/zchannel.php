@@ -73,6 +73,10 @@ function zchannel_post(&$a) {
 		return;
 	}
 
+	$newuid = $result['channel']['channel_id'];
+
+	change_channel($result['channel']['channel_id']);
+
 	if(! strlen($next_page = get_config('system','workflow_channel_next')))
 		$next_page = 'settings';
 	
