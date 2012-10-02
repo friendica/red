@@ -936,19 +936,16 @@ CREATE TABLE IF NOT EXISTS `userd` (
 ) ENGINE=MyISAM DEFAULT CHARSET=utf8;
 
 CREATE TABLE IF NOT EXISTS `xchan` (
-  `xchan_id` int(10) unsigned NOT NULL AUTO_INCREMENT,
+  `xchan_hash` char(255) NOT NULL,
   `xchan_guid` char(255) NOT NULL DEFAULT '',
-  `xchan_sig` char(255) NOT NULL DEFAULT '',
-  `xchan_hash` char(255) NOT NULL DEFAULT '',
+  `xchan_guid_sig` char(255) NOT NULL DEFAULT '',
   `xchan_photo` char(255) NOT NULL DEFAULT '',
   `xchan_addr` char(255) NOT NULL DEFAULT '',
   `xchan_profile` char(255) NOT NULL DEFAULT '',
   `xchan_name` char(255) NOT NULL DEFAULT '',
   `xchan_network` char(255) NOT NULL DEFAULT '',
-  PRIMARY KEY (`xchan_id`),
+  PRIMARY KEY (`xchan_hash`),
   KEY `xchan_guid` (`xchan_guid`),
-  KEY `xchan_sig` (`xchan_sig`),
-  KEY `xchan_hash` (`xchan_hash`),
   KEY `xchan_addr` (`xchan_addr`),
   KEY `xchan_profile` (`xchan_profile`),
   KEY `xchan_name` (`xchan_name`),
