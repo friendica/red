@@ -62,7 +62,7 @@ function zot_verify(&$item,$identity) {
 function zot_notify($channel,$url) {
 	$x = z_post_url($url, array(
 		'type' => 'notify',
-		'guid' => $channel['channel_global_id'],
+		'guid' => $channel['channel_guid'],
 		'guid_sig' => base64url_encode($guid,$channel['prvkey']),
 		'hub' => z_root(),
 		'hub_sig' => base64url_encode(z_root,$channel['prvkey']), 

@@ -51,25 +51,31 @@ function create_identity($arr) {
 	$guid = zot_new_uid($nick);
 	$key = new_keypair(4096);
 
+
+	$sig = base64url_encode(rsa_sign($guid,$key['prvkey']));
+	$hash = base64url_encode(hash('whirlpool',$guid . $sig,true));
+
 	$primary = true;
 		
 	$r = q("insert into channel ( channel_account_id, channel_primary, 
-		channel_name, channel_address, channel_global_id, channel_prvkey,
-		channel_pubkey, channel_pageflags )
-		values ( %d, %d, '%s', '%s', '%s', '%s', '%s', %d ) ",
+		channel_name, channel_address, channel_guid, channel_guid_sig,
+		channel_hash, channel_prvkey, channel_pubkey, channel_pageflags )
+		values ( %d, %d, '%s', '%s', '%s', '%s', '%s', '%s', '%s', %d ) ",
 
 		intval($arr['account_id']),
 		intval($primary),
 		dbesc($name),
 		dbesc($nick),
 		dbesc($guid),
+		dbesc($sig),
+		dbesc($hash),
 		dbesc($key['prvkey']),
 		dbesc($key['pubkey']),
 		intval(PAGE_NORMAL)
 	);
 			
 	$r = q("select * from channel where channel_account_id = %d 
-		and channel_global_id = '%s' limit 1",
+		and channel_guid = '%s' limit 1",
 		intval($arr['account_id']),
 		dbesc($guid)
 	);
@@ -83,15 +89,13 @@ function create_identity($arr) {
 
 	set_default_login_identity($arr['account_id'],$ret['channel']['channel_id'],false);
 
-	$sig = base64url_encode(rsa_sign($ret['channel']['channel_global_id'],$ret['channel']['channel_prvkey']));
-	$hash = base64url_encode(hash('whirlpool',$ret['channel']['channel_global_id'] . $sig,true));
 
 	// Create a verified hub location pointing to this site.
 
 	$r = q("insert into hubloc ( hubloc_guid, hubloc_guid_sig, hubloc_hash, hubloc_flags, 
 		hubloc_url, hubloc_url_sig, hubloc_callback, hubloc_sitekey )
 		values ( '%s', '%s', '%s', %d, '%s', '%s', '%s', '%s' )",
-		dbesc($ret['channel']['channel_global_id']),
+		dbesc($guid),
 		dbesc($sig),
 		dbesc($hash),
 		intval(($primary) ? HUBLOC_FLAGS_PRIMARY : 0),
@@ -108,7 +112,7 @@ function create_identity($arr) {
 
 	$r = q("insert into xchan ( xchan_hash, xchan_guid, xchan_guid_sig, xchan_photo, xchan_addr, xchan_profile, xchan_name ) values ('%s', '%s', '%s', '%s', '%s', '%s', '%s')",
 		dbesc($hash),
-		dbesc($ret['channel']['channel_global_id']),
+		dbesc($ret['channel']['channel_guid']),
 		dbesc($sig),
 		dbesc($a->get_baseurl() . "/photo/profile/{$newuid}"),
 		dbesc($ret['channel']['channel_address'] . '@' . $a->get_hostname()),

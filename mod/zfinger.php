@@ -13,7 +13,7 @@ function zfinger_init(&$a) {
 	$r = null;
 
 	if(strlen($zguid)) {
-		$r = q("select * from channel where channel_global_id = '%s' limit 1",
+		$r = q("select * from channel where channel_guid = '%s' limit 1",
 			dbesc($zguid)
 		);
 	}
@@ -49,8 +49,8 @@ function zfinger_init(&$a) {
 
 	// Communication details
 
-	$ret['guid'] = $e['channel_global_id'];
-	$ret['guid_sig'] = base64url_encode(rsa_sign($e['channel_global_id'],$e['channel_prvkey']));
+	$ret['guid'] = $e['channel_guid'];
+	$ret['guid_sig'] = base64url_encode(rsa_sign($e['channel_guid'],$e['channel_prvkey']));
 	$ret['key']  = $e['channel_pubkey'];
 	$ret['name'] = $e['channel_name'];
 	$ret['address'] = $e['channel_address'];
@@ -60,7 +60,7 @@ function zfinger_init(&$a) {
 	// array of (verified) hubs this channel uses
 
 	$ret['hubs'] = array();
-	$x = zot_get_hubloc(array($e['channel_global_id']));
+	$x = zot_get_hubloc(array($e['channel_guid']));
 	if($x && count($x)) {
 		foreach($x as $hub) {
 			if(! ($hub['hubloc_flags'] & HUBLOC_FLAGS_UNVERIFIED)) {

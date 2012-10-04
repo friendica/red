@@ -25,12 +25,12 @@ function map_perms($channel,$zguid,$zsig) {
 			$is_contact = true;
 			$contact = $r[0];
 		}
-		$r = q("select * from channel where channel_global_id = '%s'",
+		$r = q("select * from channel where channel_guid = '%s'",
 			dbesc($zguid)
 		);
 		if($r && count($r)) {
 			foreach($r as $rr) {
-				if(base64url_encode(rsa_sign($rr['channel_global_id'],$rr['channel_prvkey'])) === $zsig) {
+				if(base64url_encode(rsa_sign($rr['channel_guid'],$rr['channel_prvkey'])) === $zsig) {
 					$is_site = true;
 					break;
 				}
