@@ -352,14 +352,14 @@ function perms2str($p) {
 // generate a guaranteed unique (for this domain) item ID for ATOM
 // safe from birthday paradox
 
-if(! function_exists('item_new_uri')) {
-function item_new_uri($hostname,$uid) {
+if(! function_exists('item_message_id')) {
+function item_message_id() {
 
 	do {
 		$dups = false;
 		$hash = random_string();
 
-		$uri = "urn:X-dfrn:" . $hostname . ':' . $uid . ':' . $hash;
+		$uri = $hash . '@' . $hostname;
 
 		$r = q("SELECT `id` FROM `item` WHERE `uri` = '%s' LIMIT 1",
 			dbesc($uri));

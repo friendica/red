@@ -209,7 +209,7 @@ function event_store($arr) {
 	$arr['edited']  = (($arr['edited']) ? $arr['edited'] : datetime_convert());
 	$arr['type']    = (($arr['type']) ? $arr['type'] : 'event' );	
 	$arr['cid']     = ((intval($arr['cid'])) ? intval($arr['cid']) : 0);
-	$arr['uri']     = (x($arr,'uri') ? $arr['uri'] : item_new_uri($a->get_hostname(),$arr['uid']));
+	$arr['uri']     = (x($arr,'uri') ? $arr['uri'] : item_message_id());
 	$arr['private'] = ((x($arr,'private')) ? intval($arr['private']) : 0);
 
 	if($arr['cid'])

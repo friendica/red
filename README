@@ -1,8 +1,10 @@
-Friendica RED Social Communications Server
-==========================================
+Friendica RED Interaction Engine
+================================
 
-http://friendica.com
-
-Welcome to the free social web.
+Red is a new concept in electronic communications which is based on our earlier work with Friendica and our pioneering developments in decentralised, federated social networking. 
 
 Red is prototype code and does not currently function. This message will be changed when it approaches stability.
+
+At its heart, Red is a decentralised collection of location agnostic info streams (e.g. "channels") which are attached to permission controlled web resources, and which have the ability to discover each other and interact.
+
+Social networking emulation is one form that these streams can take, but they can take many other forms - limited only by your magination. 

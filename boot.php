@@ -368,9 +368,11 @@ if(! class_exists('App')) {
 	class App {
 
 		public  $account = null;
-		private $channel = null;
-		private $widgets = array();
 
+		private $channel = null;
+		private $observer = null;
+		private $widgets = array();
+		
 		public  $language;
 		public  $module_loaded = false;
 		public  $query_string;
@@ -610,6 +612,15 @@ if(! class_exists('App')) {
 
 		function get_channel() {
 			return $this->channel;
+		}
+
+
+		function set_observer($xchan) {
+			$this->observer = $xchan;
+		}
+
+		function get_observer() {
+			return $this->observer;
 		}
 
 		function set_widget($title,$html, $location = 'aside') {

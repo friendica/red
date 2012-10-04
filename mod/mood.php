@@ -57,7 +57,7 @@ function mood_init(&$a) {
 
 	$poster = $a->contact;
 
-	$uri = item_new_uri($a->get_hostname(),$uid);
+	$uri = item_message_id();
 
 	$action = sprintf( t('%1$s is currently %2$s'), '[url=' . $poster['url'] . ']' . $poster['name'] . '[/url]' , $verbs[$verb]); 
 

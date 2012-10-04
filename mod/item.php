@@ -18,6 +18,7 @@
 require_once('include/crypto.php');
 require_once('include/enotify.php');
 require_once('include/email.php');
+require_once('include/items.php');
 
 function item_post(&$a) {
 
@@ -173,14 +174,28 @@ function item_post(&$a) {
 		$orig_post = $i[0];
 	}
 
-	$user = null;
+	$channel = null;
 
-	$r = q("SELECT channel.*, account.* FROM channel left join account on channel.channel_account_id = account.account_id 
-		where channel.channel_id = %d LIMIT 1",
-		intval($profile_uid)
-	);
-	if(count($r))
-		$channel = $r[0];
+	if(local_user() && local_user() == $profile_uid) {
+		$channel = $a->get_channel();
+		$observer = $a->get_observer();
+	}
+	else {
+		$r = q("SELECT channel.*, account.* FROM channel left join account on channel.channel_account_id = account.account_id 
+			where channel.channel_id = %d LIMIT 1",
+			intval($profile_uid)
+		);
+		if(count($r))
+			$channel = $r[0];
+	}
+
+	if(! $channel) {
+		logger("mod_item: no channel.");
+			if(x($_REQUEST,'return')) 
+				goaway($a->get_baseurl() . "/" . $return_path );
+			killme();
+	}
+
 
 	if($orig_post) {
 		$str_group_allow   = $orig_post['allow_gid'];
@@ -538,7 +553,8 @@ function item_post(&$a) {
 
 	$notify_type = (($parent) ? 'comment-new' : 'wall-new' );
 
-	$uri = item_new_uri($a->get_hostname(),$profile_uid);
+	$uri = item_message_id();
+
 
 	// Fallback so that we alway have a thr_parent
 
@@ -546,17 +562,19 @@ function item_post(&$a) {
 		$thr_parent = $uri;
 
 	$datarray = array();
+
+	if(! $parent)
+		$datarray['parent_uri'] = $uri;
+
+
+	$datarray['aid']           = get_account_id(); // fixme
+
 	$datarray['uid']           = $profile_uid;
 	$datarray['type']          = $post_type;
 	$datarray['wall']          = $wall;
 	$datarray['gravity']       = $gravity;
-	$datarray['contact-id']    = $contact_id;
-	$datarray['owner-name']    = $contact_record['name'];
-	$datarray['owner-link']    = $contact_record['url'];
-	$datarray['owner-avatar']  = $contact_record['thumb'];
-	$datarray['author-name']   = $author['name'];
-	$datarray['author-link']   = $author['url'];
-	$datarray['author-avatar'] = $author['thumb'];
+	$datarray['owner_xchan']   = $observer['xchan_hash']; // fixme
+	$datarray['author_xchan']  = $observer['xchan_hash'];
 	$datarray['created']       = datetime_convert();
 	$datarray['edited']        = datetime_convert();
 	$datarray['commented']     = datetime_convert();
@@ -582,18 +600,6 @@ function item_post(&$a) {
 	$datarray['origin']        = $origin;
 	$datarray['moderated']     = $allow_moderated;
 
-	/**
-	 * These fields are for the convenience of plugins...
-	 * 'self' if true indicates the owner is posting on their own wall
-	 * If parent is 0 it is a top-level post.
-	 */
-
-	$datarray['parent']        = $parent;
-	$datarray['self']          = $self;
-
-
-	if($orig_post)
-		$datarray['edit']      = true;
 
 	// preview mode - prepare the body for display and send it via json
 
@@ -671,53 +677,10 @@ function item_post(&$a) {
 		$post_id = 0;
 
 
-	$r = q("INSERT INTO `item` (`uid`,`type`,`wall`,`gravity`,`contact-id`,`owner-name`,`owner-link`,`owner-avatar`, 
-		`author-name`, `author-link`, `author-avatar`, `created`, `edited`, `commented`, `received`, `changed`, `uri`, `thr_parent`, `title`, `body`, `app`, `lang`, `location`, `coord`, 
-		`inform`, `verb`, `postopts`, `allow_cid`, `allow_gid`, `deny_cid`, `deny_gid`, `private`, `attach`,`origin`, `moderated`)
-		VALUES( %d, '%s', %d, %d, %d, '%s', '%s', '%s', '%s', '%s', '%s', '%s', '%s', '%s', '%s', '%s', '%s', '%s', '%s', '%s', '%s', '%s', '%s', '%s', '%s', '%s', '%s', '%s', '%s', '%s', '%s', %d, '%s', %d, %d )",
-		intval($datarray['uid']),
-		dbesc($datarray['type']),
-		intval($datarray['wall']),
-		intval($datarray['gravity']),
-		intval($datarray['contact-id']),
-		dbesc($datarray['owner-name']),
-		dbesc($datarray['owner-link']),
-		dbesc($datarray['owner-avatar']),
-		dbesc($datarray['author-name']),
-		dbesc($datarray['author-link']),
-		dbesc($datarray['author-avatar']),
-		dbesc($datarray['created']),
-		dbesc($datarray['edited']),
-		dbesc($datarray['commented']),
-		dbesc($datarray['received']),
-		dbesc($datarray['changed']),
-		dbesc($datarray['uri']),
-		dbesc($datarray['thr_parent']),
-		dbesc($datarray['title']),
-		dbesc($datarray['body']),
-		dbesc($datarray['app']),
-		dbesc($datarray['lang']),
-		dbesc($datarray['location']),
-		dbesc($datarray['coord']),
-		dbesc($datarray['inform']),
-		dbesc($datarray['verb']),
-		dbesc($datarray['postopts']),
-		dbesc($datarray['allow_cid']),
-		dbesc($datarray['allow_gid']),
-		dbesc($datarray['deny_cid']),
-		dbesc($datarray['deny_gid']),
-		intval($datarray['private']),
-		dbesc($datarray['attach']),
-		intval($datarray['origin']),
-		intval($datarray['moderated'])
-	);
+	$post_id = item_store($datarray);
 
-	$r = q("SELECT `id` FROM `item` WHERE `uri` = '%s' LIMIT 1",
-		dbesc($datarray['uri']));
-	if(count($r)) {
-		$post_id = $r[0]['id'];
+	if($post_id) {
 		logger('mod_item: saved item ' . $post_id);
-
 
 		if(count($post_tags)) {
 			foreach($post_tags as $tag) {
@@ -840,15 +803,6 @@ function item_post(&$a) {
 	$datarray['plink'] = $a->get_baseurl() . '/display/' . $channel['channel_address'] . '/' . $post_id;
 
 	call_hooks('post_local_end', $datarray);
-
-	// This is a real juggling act on shared hosting services which kill your processes
-	// e.g. dreamhost. We used to start delivery to our native delivery agents in the background
-	// and then run our plugin delivery from the foreground. We're now doing plugin delivery first,
-	// because as soon as you start loading up a bunch of remote delivey processes, *this* page is
-	// likely to get killed off. If you end up looking at an /item URL and a blank page,
-	// it's very likely the delivery got killed before all your friends could be notified.
-	// Currently the only realistic fixes are to use a reliable server - which precludes shared hosting,
-	// or cut back on plugins which do remote deliveries.  
 
 	proc_run('php', "include/notifier.php", $notify_type, "$post_id");
 

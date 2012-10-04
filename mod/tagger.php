@@ -57,7 +57,7 @@ function tagger_content(&$a) {
 		return;
 	}
 
-	$uri = item_new_uri($a->get_hostname(),$owner_uid);
+	$uri = item_message_id();
 	$xterm = xmlify($term);
 	$post_type = (($item['resource_id']) ? t('photo') : t('status'));
 	$targettype = (($item['resource_id']) ? ACTIVITY_OBJ_PHOTO : ACTIVITY_OBJ_NOTE ); 

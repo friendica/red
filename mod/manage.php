@@ -14,8 +14,8 @@ function manage_content(&$a) {
 	if($change_channel) {
 		$r = change_channel($change_channel);
 
-		if($r && $r[0]['channel_startpage'])
-			goaway(z_root() . '/' . $r[0]['channel_startpage']);
+		if($r && $r['channel_startpage'])
+			goaway(z_root() . '/' . $r['channel_startpage']);
 		goaway(z_root());
 	}
 

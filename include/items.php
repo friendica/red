@@ -931,6 +931,7 @@ function item_store($arr,$force_parent = false) {
 		return 0;
 	}
 
+
 	if(x($arr, 'gravity'))
 		$arr['gravity'] = intval($arr['gravity']);
 	elseif($arr['parent_uri'] === $arr['uri'])
@@ -964,14 +965,11 @@ function item_store($arr,$force_parent = false) {
 		$arr['body'] = strip_tags($arr['body']);
 
 
+	$arr['aid']           = ((x($arr,'aid'))           ? intval($arr['aid'])                 : 0);
 	$arr['wall']          = ((x($arr,'wall'))          ? intval($arr['wall'])                : 0);
 	$arr['uri']           = ((x($arr,'uri'))           ? notags(trim($arr['uri']))           : random_string());
-	$arr['author-name']   = ((x($arr,'author-name'))   ? notags(trim($arr['author-name']))   : '');
-	$arr['author-link']   = ((x($arr,'author-link'))   ? notags(trim($arr['author-link']))   : '');
-	$arr['author-avatar'] = ((x($arr,'author-avatar')) ? notags(trim($arr['author-avatar'])) : '');
-	$arr['owner-name']    = ((x($arr,'owner-name'))    ? notags(trim($arr['owner-name']))    : '');
-	$arr['owner-link']    = ((x($arr,'owner-link'))    ? notags(trim($arr['owner-link']))    : '');
-	$arr['owner-avatar']  = ((x($arr,'owner-avatar'))  ? notags(trim($arr['owner-avatar']))  : '');
+	$arr['author_xchan']  = ((x($arr,'author_xchan'))  ? notags(trim($arr['author_xchan']))  : '');
+	$arr['owner_xchan']   = ((x($arr,'owner_xchan'))   ? notags(trim($arr['owner_xchan']))   : '');
 	$arr['created']       = ((x($arr,'created') !== false) ? datetime_convert('UTC','UTC',$arr['created']) : datetime_convert());
 	$arr['edited']        = ((x($arr,'edited')  !== false) ? datetime_convert('UTC','UTC',$arr['edited'])  : datetime_convert());
 	$arr['commented']     = datetime_convert();

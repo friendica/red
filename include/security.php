@@ -25,32 +25,13 @@ function authenticate_success($user_record, $login_initial = false, $interactive
 
 		}
 
-		$uid_to_load = (((x($_SESSION,'uid')) && (intval($_SESSION['uid']))) ? intval($_SESSION['uid']) : 0);
-		if(! $uid_to_load)
-			$uid_to_load = intval($a->account['account_default_channel']);
+		$uid_to_load = (((x($_SESSION,'uid')) && (intval($_SESSION['uid']))) 
+			? intval($_SESSION['uid']) 
+			: intval($a->account['account_default_channel'])
+		);
 
 		if($uid_to_load) {
-			$r = q("select * from channel where channel_id = %d and channel_account_id = %d limit 1",
-				intval($uid_to_load),
-				intval($a->account['account_id'])
-			);
-			if($r && count($r)) {
-				$_SESSION['uid'] = intval($r[0]['channel_id']);
-				$a->set_channel($r[0]);
-				$_SESSION['theme'] = $r[0]['channel_theme'];
-				date_default_timezone_set($r[0]['channel_timezone']);
-			}
-
-			$c = q("SELECT * FROM contact WHERE uid = %d AND self = 1 LIMIT 1",
-				intval($r[0]['channel_id'])
-			);
-
-			if($c && count($c)) {
-				$a->contact = $c[0];
-				$a->cid = $c[0]['id'];
-				$_SESSION['cid'] = $a->cid;
-			}
-
+			change_channel($uid_to_load);
 		}
 
 	}
@@ -222,7 +203,7 @@ function can_write_wall(&$a,$owner) {
 
 function change_channel($change_channel) {
 
-	$r = false;
+	$ret = false;
 
 	if($change_channel) {
 		$r = q("select * from channel where channel_id = %d and channel_account_id = %d limit 1",
@@ -230,14 +211,21 @@ function change_channel($change_channel) {
 			intval(get_account_id())
 		);
 		if($r && count($r)) {
+			$hash = $r[0]['channel_hash'];
 			$_SESSION['uid'] = intval($r[0]['channel_id']);
 			get_app()->set_channel($r[0]);
 			$_SESSION['theme'] = $r[0]['channel_theme'];
 			date_default_timezone_set($r[0]['channel_timezone']);
+			$ret = $r[0];
 		}
+		$x = q("select * from xchan where xchan_hash = '%s' limit 1", 
+			dbesc($hash)
+		);
+		if($x && count($x))
+			get_app()->set_observer($x[0]);
 	}
 
-	return $r;
+	return $ret;
 
 }
 

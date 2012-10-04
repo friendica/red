@@ -405,7 +405,7 @@ function photos_post(&$a) {
 			// Create item container
 
 			$title = '';
-			$uri = item_new_uri($a->get_hostname(),$page_owner_uid);
+			$uri = item_message_id();
 			
 			$arr = array();
 
@@ -588,7 +588,7 @@ function photos_post(&$a) {
 			if(count($taginfo)) {
 				foreach($taginfo as $tagged) {
 		
-					$uri = item_new_uri($a->get_hostname(),$page_owner_uid);
+					$uri = item_message_id();
 
 					$arr = array();
 
@@ -805,7 +805,7 @@ function photos_post(&$a) {
 	}
 	
 	$basename = basename($filename);
-	$uri = item_new_uri($a->get_hostname(), $page_owner_uid);
+	$uri = item_message_id();
 
 	// Create item container
 

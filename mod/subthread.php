@@ -82,7 +82,7 @@ function subthread_content(&$a) {
 		return;
 	}
 
-	$uri = item_new_uri($a->get_hostname(),$owner_uid);
+	$uri = item_message_id();
 
 	$post_type = (($item['resource_id']) ? t('photo') : t('status'));
 	$objtype = (($item['resource_id']) ? ACTIVITY_OBJ_PHOTO : ACTIVITY_OBJ_NOTE ); 

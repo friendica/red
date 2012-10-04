@@ -439,7 +439,7 @@ function dfrn_confirm_post(&$a,$handsfree = null) {
 				if(count($self)) {
 
 					$arr = array();
-					$arr['uri'] = $arr['parent_uri'] = item_new_uri($a->get_hostname(), $uid); 
+					$arr['uri'] = $arr['parent_uri'] = item_message_id();
 					$arr['uid'] = $uid;
 					$arr['contact-id'] = $self[0]['id'];
 					$arr['wall'] = 1;
@@ -760,7 +760,7 @@ function dfrn_confirm_post(&$a,$handsfree = null) {
 				if(count($self)) {
 
 					$arr = array();
-					$arr['uri'] = $arr['parent_uri'] = item_new_uri($a->get_hostname(), $local_uid); 
+					$arr['uri'] = $arr['parent_uri'] = item_message_id();
 					$arr['uid'] = $local_uid;
 					$arr['contact-id'] = $self[0]['id'];
 					$arr['wall'] = 1;
