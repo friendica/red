@@ -191,11 +191,26 @@ function item_post(&$a) {
 
 	if(! $channel) {
 		logger("mod_item: no channel.");
-			if(x($_REQUEST,'return')) 
-				goaway($a->get_baseurl() . "/" . $return_path );
-			killme();
+		if(x($_REQUEST,'return')) 
+			goaway($a->get_baseurl() . "/" . $return_path );
+		killme();
 	}
 
+	$owner_xchan = null;
+
+	$r = q("select * from xchan where xchan_hash = '%s' limit 1",
+		dbesc($channel['channel_hash'])
+	);
+	if($r && count($r)) {
+		$owner_xchan = $r[0];
+	}
+	else {
+		logger("mod_item: no owner.");
+		if(x($_REQUEST,'return')) 
+			goaway($a->get_baseurl() . "/" . $return_path );
+		killme();
+	}
+		
 
 	if($orig_post) {
 		$str_group_allow   = $orig_post['allow_gid'];
@@ -566,14 +581,13 @@ function item_post(&$a) {
 	if(! $parent)
 		$datarray['parent_uri'] = $uri;
 
-
 	$datarray['aid']           = get_account_id(); // fixme
 
 	$datarray['uid']           = $profile_uid;
 	$datarray['type']          = $post_type;
 	$datarray['wall']          = $wall;
 	$datarray['gravity']       = $gravity;
-	$datarray['owner_xchan']   = $observer['xchan_hash']; // fixme
+	$datarray['owner_xchan']   = $owner_xchan['xchan_hash'];
 	$datarray['author_xchan']  = $observer['xchan_hash'];
 	$datarray['created']       = datetime_convert();
 	$datarray['edited']        = datetime_convert();
