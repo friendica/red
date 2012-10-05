@@ -22,6 +22,10 @@ require_once('include/items.php');
 
 function item_post(&$a) {
 
+
+	// This will change. Figure out who the observer is and whether or not
+	// they have permission to post here. Else ignore the post.
+
 	if((! local_user()) && (! remote_user()) && (! x($_REQUEST,'commenter')))
 		return;
 

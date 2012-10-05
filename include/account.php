@@ -77,6 +77,15 @@ function check_account_invite($invite_code) {
 
 }
 
+function check_account_admin($arr) {
+	if(is_site_admin())
+		return true;
+	$admin_mail = trim(get_config('system','admin_email'));
+	if(strlen($admin_email) && $admin_email === trim($arr['email']))
+		return true;
+	return false;
+}
+
 
 function create_account($arr) {
 
@@ -90,6 +99,7 @@ function create_account($arr) {
 	$password2   = ((x($arr,'password2'))     ? trim($arr['password2'])            : '');
 	$parent      = ((x($arr,'parent'))        ? intval($arr['parent'])             : 0 );
 	$flags       = ((x($arr,'account_flags')) ? intval($arr['account_flags'])      : ACCOUNT_OK);
+	$roles       = ((x($arr,'account_roles')) ? intval($arr['account_roles'])      : 0 );
 
 	$default_service_class = get_config('system','default_service_class');
 	if($default_service_class === false)
@@ -98,6 +108,13 @@ function create_account($arr) {
 	if((! x($email)) || (! x($password))) {
 		$result['message'] = t('Please enter the required information.');
 		return $result;
+	}
+
+	if($roles & ACCOUNT_ROLE_ADMIN) {
+		$admin_result = check_account_admin($arr);
+		if(! $admin_result) {
+			$roles = 0;
+		}
 	}
 
 	$invite_result = check_account_invite($invite_code);
@@ -134,7 +151,7 @@ function create_account($arr) {
 		dbesc(get_best_language()),
 		dbesc(datetime_convert()),
 		dbesc($flags),
-		dbesc(0),
+		dbesc($roles),
 		dbesc($expires),
 		dbesc($default_service_class)
 

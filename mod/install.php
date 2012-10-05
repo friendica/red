@@ -6,7 +6,7 @@ $install_wizard_pass=1;
 function install_init(&$a){
 	
 	// $baseurl/install/testrwrite to test if rewite in .htaccess is working
-	if ($a->argc==2 && $a->argv[1]=="testrewrite") {
+	if (argc() ==2  && argv(1)=="testrewrite") {
 		echo "ok";
 		killme();
 	}

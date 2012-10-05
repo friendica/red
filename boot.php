@@ -9,6 +9,7 @@ require_once('include/language.php');
 require_once('include/nav.php');
 require_once('include/cache.php');
 require_once('library/Mobile_Detect/Mobile_Detect.php');
+require_once('object/BaseObject.php');
 
 define ( 'FRIENDICA_PLATFORM',     'Friendica Red');
 define ( 'FRIENDICA_VERSION',      trim(file_get_contents('version.inc')) . 'R');
@@ -327,7 +328,8 @@ define ( 'ACCOUNT_ROLE_ADMIN',    0x1000 );
 
 function startup() {
 	error_reporting(E_ERROR | E_WARNING | E_PARSE);
-	set_time_limit(0);
+
+	@set_time_limit(0);
 
 	// This has to be quite large to deal with embedded private photos
 	ini_set('pcre.backtrack_limit', 500000);
@@ -367,16 +369,16 @@ function startup() {
 if(! class_exists('App')) {
 	class App {
 
-		public  $account = null;
+		public  $account = null;            // account record
 
-		private $channel = null;
-		private $observer = null;
-		private $widgets = array();
+		private $channel = null;            // channel record
+		private $observer = null;           // xchan record
+		private $widgets = array();         // widgets for this page
 		
 		public  $language;
 		public  $module_loaded = false;
 		public  $query_string;
-		public  $config;
+		public  $config;                    // config cache
 		public  $page;
 		public  $profile;
 		public  $user;
@@ -548,6 +550,8 @@ if(! class_exists('App')) {
 			$mobile_detect = new Mobile_Detect();
 			$this->is_mobile = $mobile_detect->isMobile();
 			$this->is_tablet = $mobile_detect->isTablet();
+
+			BaseObject::set_app($this);
 		}
 
 		function get_baseurl($ssl = false) {
@@ -604,6 +608,14 @@ if(! class_exists('App')) {
 
 		function get_path() {
 			return $this->path;
+		}
+
+		function set_account($aid) {
+			$this->account = $aid;
+		}
+
+		function get_account() {
+			return $this->account;
 		}
 
 		function set_channel($channel) {

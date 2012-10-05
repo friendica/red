@@ -13,10 +13,8 @@
  */
 
 require_once('boot.php');
-require_once('object/BaseObject.php');
 
 $a = new App;
-BaseObject::set_app($a);
 
 /**
  *

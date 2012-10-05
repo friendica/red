@@ -37,7 +37,7 @@ $a->config['sitename'] = "Friendica Social Network";
 
 $a->config['system']['register_policy'] = REGISTER_OPEN;
 $a->config['register_text'] = '';
-$a->config['admin_email'] = '';
+$a->config[system']['admin_email'] = '';
 
 // Maximum size of an imported message, 0 is unlimited
 

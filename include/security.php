@@ -10,9 +10,9 @@ function authenticate_success($user_record, $login_initial = false, $interactive
 //	logger('authenticate_success: ' . print_r($_SESSION,true));
 
 	if(x($user_record,'account_id')) {
-		logger('authenticate_success: Red-style');
+//		logger('authenticate_success: Red-style');
 		$a->account = $user_record;
-		$_SESSION['account_id'] = $a->account['account_id'];
+		$_SESSION['account_id'] = $user_record['account_id'];
 		$_SESSION['authenticated'] = 1;
 		
 		if($login_initial) {
