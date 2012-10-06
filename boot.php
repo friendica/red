@@ -316,6 +316,30 @@ define ( 'ACCOUNT_REMOVED',      0x0008 );
 define ( 'ACCOUNT_ROLE_ADMIN',    0x1000 );
 
 
+/**
+ * Item visibility
+ */
+
+define ( 'ITEM_VISIBLE',         0x0000);
+define ( 'ITEM_HIDDEN',          0x0001);
+define ( 'ITEM_BLOCKED',         0x0002);
+define ( 'ITEM_MODERATED',       0x0004);
+define ( 'ITEM_SPAM',            0x0008);
+define ( 'ITEM_DELETED',         0x0010);
+
+/**
+ * Item Flags
+ */
+
+define ( 'ITEM_ORIGIN',          0x0001);
+define ( 'ITEM_UNSEEN',          0x0002);
+define ( 'ITEM_STARRED',         0x0004);
+define ( 'ITEM_UPLINK',          0x0008);
+define ( 'ITEM_UPLINK_PRV',      0x0010);
+define ( 'ITEM_WALL',            0x0020);
+define ( 'ITEM_THREAD_TOP',      0x0040);
+
+
 
 
 /**
