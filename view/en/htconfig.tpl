@@ -31,7 +31,7 @@ $a->config['sitename'] = "My Friend Network";
 // to the email address of an already registered person who can authorise
 // and/or approve/deny the request.
 
-$a->config['register_policy'] = REGISTER_OPEN;
+$a->config['system']['register_policy'] = REGISTER_OPEN;
 $a->config['register_text'] = '';
 $a->config['system']['admin_email'] = '$adminmail';
 
