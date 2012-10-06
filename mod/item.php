@@ -140,7 +140,7 @@ function item_post(&$a) {
 
 	// First check that the parent exists and it is a wall item.
 
-	if((x($_REQUEST,'commenter')) && ((! $parent) || (! $parent_item['wall']))) {
+	if((x($_REQUEST,'commenter')) && ((! $parent) || (! ($parent_item['item_flags'] & ITEM_WALL)))) {
 		notice( t('Permission denied.') . EOL) ;
 		if(x($_REQUEST,'return')) 
 			goaway($a->get_baseurl() . "/" . $return_path );
@@ -224,7 +224,6 @@ function item_post(&$a) {
 		$location          = $orig_post['location'];
 		$coord             = $orig_post['coord'];
 		$verb              = $orig_post['verb'];
-		$emailcc           = $orig_post['emailcc'];
 		$app			   = $orig_post['app'];
 		$title             = escape_tags(trim($_REQUEST['title']));
 		$body              = escape_tags(trim($_REQUEST['body']));
@@ -261,7 +260,6 @@ function item_post(&$a) {
 		$location          = notags(trim($_REQUEST['location']));
 		$coord             = notags(trim($_REQUEST['coord']));
 		$verb              = notags(trim($_REQUEST['verb']));
-		$emailcc           = notags(trim($_REQUEST['emailcc']));
 		$body              = escape_tags(trim($_REQUEST['body']));
 
 		$language = detect_language($body);
@@ -339,7 +337,8 @@ function item_post(&$a) {
 	}
 
 	if(count($r)) {
-		$author = $r[0];
+	// FIXME
+	$author = $r[0];
 		$contact_id = $author['id'];
 	}
 
@@ -358,14 +357,6 @@ function item_post(&$a) {
 
 	$post_type = notags(trim($_REQUEST['type']));
 
-	if($post_type === 'net-comment') {
-		if($parent_item !== null) {
-			if($parent_item['wall'] == 1)
-				$post_type = 'wall-comment';
-			else
-				$post_type = 'remote-comment';
-		}
-	}
 
 	/**
 	 *
@@ -469,17 +460,6 @@ function item_post(&$a) {
 
 	$tags = get_tags($body);
 
-	/**
-	 * add a statusnet style reply tag if the original post was from there
-	 * and we are replying, and there isn't one already
-	 */
-
-	if(($parent_contact) && ($parent_contact['network'] === NETWORK_OSTATUS) 
-		&& ($parent_contact['nick']) && (! in_array('@' . $parent_contact['nick'],$tags))) {
-		$body = '@' . $parent_contact['nick'] . ' ' . $body;
-		$tags[] = '@' . $parent_contact['nick'];
-	}		
-
 	$tagged = array();
 
 	$private_forum = false;
@@ -560,15 +540,21 @@ function item_post(&$a) {
 		}
 	}
 
-	$wall = 0;
-
+	$item_flags = 0;
+	$item_restrict = ITEM_VISIBLE;
+	
 	if($post_type === 'wall' || $post_type === 'wall-comment')
-		$wall = 1;
+		$item_flags = $item_flags | ITEM_WALL;
 
+	if($origin)
+		$item_flags = $item_flags | ITEM_ORIGIN;
+
+	if($moderated)
+		$item_restrict = $item_restrict | ITEM_MODERATED;
+		
+		
 	if(! strlen($verb))
 		$verb = ACTIVITY_POST ;
-
-	$gravity = (($parent) ? 6 : 0 );
 
 	$notify_type = (($parent) ? 'comment-new' : 'wall-new' );
 
@@ -582,15 +568,15 @@ function item_post(&$a) {
 
 	$datarray = array();
 
-	if(! $parent)
+	if(! $parent) {
 		$datarray['parent_uri'] = $uri;
-
+		$item_flags = $item_flags | ITEM_THREAD_TOP;
+	}
+	
 	$datarray['aid']           = get_account_id(); // fixme
 
 	$datarray['uid']           = $profile_uid;
-	$datarray['type']          = $post_type;
-	$datarray['wall']          = $wall;
-	$datarray['gravity']       = $gravity;
+
 	$datarray['owner_xchan']   = $owner_xchan['xchan_hash'];
 	$datarray['author_xchan']  = $observer['xchan_hash'];
 	$datarray['created']       = datetime_convert();
@@ -615,9 +601,6 @@ function item_post(&$a) {
 	$datarray['attach']        = $attachments;
 	$datarray['thr_parent']    = $thr_parent;
 	$datarray['postopts']      = '';
-	$datarray['origin']        = $origin;
-	$datarray['moderated']     = $allow_moderated;
-
 
 	// preview mode - prepare the body for display and send it via json
 
@@ -684,7 +667,7 @@ function item_post(&$a) {
 		);
 
 
-		proc_run('php', "include/notifier.php", 'edit_post', "$post_id");
+		proc_run('php', "include/notifier.php", 'edit_post', $post_id);
 		if((x($_REQUEST,'return')) && strlen($return_path)) {
 			logger('return: ' . $return_path);
 			goaway($a->get_baseurl() . "/" . $return_path );
@@ -796,8 +779,9 @@ function item_post(&$a) {
 		// This way we don't see every picture in your new photo album posted to your wall at once.
 		// They will show up as people comment on them.
 
-		if(! $parent_item['visible']) {
-			$r = q("UPDATE `item` SET `visible` = 1 WHERE `id` = %d LIMIT 1",
+		if(! $parent_item['item_restrict'] & ITEM_HIDDEN) {
+			$r = q("UPDATE `item` SET `item_restrict` = %d WHERE `id` = %d LIMIT 1",
+				intval($parent_item['item_restrict'] - ITEM_HIDDEN),
 				intval($parent_item['id'])
 			);
 		}
@@ -822,7 +806,7 @@ function item_post(&$a) {
 
 	call_hooks('post_local_end', $datarray);
 
-	proc_run('php', "include/notifier.php", $notify_type, "$post_id");
+	proc_run('php', 'include/notifier.php', $notify_type, $post_id);
 
 	logger('post_complete');
 
