@@ -931,20 +931,6 @@ function item_store($arr,$force_parent = false) {
 		return 0;
 	}
 
-
-	if(x($arr, 'gravity'))
-		$arr['gravity'] = intval($arr['gravity']);
-	elseif($arr['parent_uri'] === $arr['uri'])
-		$arr['gravity'] = 0;
-	elseif(activity_match($arr['verb'],ACTIVITY_POST))
-		$arr['gravity'] = 6;
-	else      
-		$arr['gravity'] = 6;   // extensible catchall
-
-	if(! x($arr,'type'))
-		$arr['type']      = 'remote';
-
-
 	$arr['lang'] = detect_language($arr['body']);
 
 	$allowed_languages = get_pconfig($arr['uid'],'system','allowed_languages');
@@ -966,7 +952,6 @@ function item_store($arr,$force_parent = false) {
 
 
 	$arr['aid']           = ((x($arr,'aid'))           ? intval($arr['aid'])                 : 0);
-	$arr['wall']          = ((x($arr,'wall'))          ? intval($arr['wall'])                : 0);
 	$arr['uri']           = ((x($arr,'uri'))           ? notags(trim($arr['uri']))           : random_string());
 	$arr['author_xchan']  = ((x($arr,'author_xchan'))  ? notags(trim($arr['author_xchan']))  : '');
 	$arr['owner_xchan']   = ((x($arr,'owner_xchan'))   ? notags(trim($arr['owner_xchan']))   : '');
@@ -978,13 +963,11 @@ function item_store($arr,$force_parent = false) {
 	$arr['title']         = ((x($arr,'title'))         ? notags(trim($arr['title']))         : '');
 	$arr['location']      = ((x($arr,'location'))      ? notags(trim($arr['location']))      : '');
 	$arr['coord']         = ((x($arr,'coord'))         ? notags(trim($arr['coord']))         : '');
-	$arr['visible']       = ((x($arr,'visible') !== false) ? intval($arr['visible'])         : 1 );
-	$arr['deleted']       = 0;
 	$arr['parent_uri']    = ((x($arr,'parent_uri'))    ? notags(trim($arr['parent_uri']))    : '');
 	$arr['verb']          = ((x($arr,'verb'))          ? notags(trim($arr['verb']))          : '');
-	$arr['obj_type']   = ((x($arr,'obj_type'))   ? notags(trim($arr['obj_type']))   : '');
+	$arr['obj_type']      = ((x($arr,'obj_type'))      ? notags(trim($arr['obj_type']))      : '');
 	$arr['object']        = ((x($arr,'object'))        ? trim($arr['object'])                : '');
-	$arr['tgt_type']   = ((x($arr,'tgt_type'))   ? notags(trim($arr['tgt_type']))   : '');
+	$arr['tgt_type']      = ((x($arr,'tgt_type'))      ? notags(trim($arr['tgt_type']))      : '');
 	$arr['target']        = ((x($arr,'target'))        ? trim($arr['target'])                : '');
 	$arr['plink']         = ((x($arr,'plink'))         ? notags(trim($arr['plink']))         : '');
 	$arr['allow_cid']     = ((x($arr,'allow_cid'))     ? trim($arr['allow_cid'])             : '');
@@ -995,9 +978,10 @@ function item_store($arr,$force_parent = false) {
 	$arr['body']          = ((x($arr,'body'))          ? trim($arr['body'])                  : '');
 	$arr['attach']        = ((x($arr,'attach'))        ? notags(trim($arr['attach']))        : '');
 	$arr['app']           = ((x($arr,'app'))           ? notags(trim($arr['app']))           : '');
-	$arr['origin']        = ((x($arr,'origin'))        ? intval($arr['origin'])              : 0 );
-
-
+	$arr['item_restrict'] = ((x($arr['item_restrict']))? intval($arr['item_restrict']))      : 0 );
+	$arr['item_flags']    = ((x($arr['item_flags']))   ? intval($arr['item_flags']))         : 0 );
+	
+	
 	$arr['thr_parent'] = $arr['parent_uri'];
 	if($arr['parent_uri'] === $arr['uri']) {
 		$parent_id = 0;
@@ -1006,6 +990,7 @@ function item_store($arr,$force_parent = false) {
 		$allow_gid = $arr['allow_gid'];
 		$deny_cid  = $arr['deny_cid'];
 		$deny_gid  = $arr['deny_gid'];
+		$arr['item_flags'] = $arr['item_flags'] | ITEM_TOP_THREAD;
 	}
 	else { 
 
@@ -1036,12 +1021,14 @@ function item_store($arr,$force_parent = false) {
 			}
 
 			$parent_id      = $r[0]['id'];
-			$parent_deleted = $r[0]['deleted'];
+			$parent_deleted = $r[0]['item_restrict'] & ITEM_DELETED;
 			$allow_cid      = $r[0]['allow_cid'];
 			$allow_gid      = $r[0]['allow_gid'];
 			$deny_cid       = $r[0]['deny_cid'];
 			$deny_gid       = $r[0]['deny_gid'];
-			$arr['wall']    = $r[0]['wall'];
+
+			if($r[0]['item_flags']) & ITEM_WALL)
+				$arr['item_flags'] = $arr['item_flags'] | ITEM_WALL; 
 
 			// if the parent is private, force privacy for the entire conversation
 			// This differs from the above settings as it subtly allows comments from 
@@ -1054,7 +1041,7 @@ function item_store($arr,$force_parent = false) {
 			// The original author commented, but as this is a comment, the permissions
 			// weren't fixed up so it will still show the comment as private unless we fix it here. 
 
-			if((intval($r[0]['forum_mode']) == 1) && (! $r[0]['private']))
+			if((intval($r[0]['item_flags'] & ITEM_UPLINK) && (! $r[0]['private']))
 				$arr['private'] = 0;
 		}
 		else {
@@ -1066,7 +1053,7 @@ function item_store($arr,$force_parent = false) {
 				logger('item_store: $force_parent=true, reply converted to top-level post.');
 				$parent_id = 0;
 				$arr['parent_uri'] = $arr['uri'];
-				$arr['gravity'] = 0;
+				$arr['flags'] = $arr['flags'] | ITEM_THREAD_TOP;
 			}
 			else {
 				logger('item_store: item parent was not found - ignoring item');
@@ -1077,6 +1064,10 @@ function item_store($arr,$force_parent = false) {
 		}
 	}
 
+	if($parent_deleted)
+		$arr['item_restrict'] = $arr['item_restrict'] | ITEM_DELETED;
+	
+	
 	$r = q("SELECT `id` FROM `item` WHERE `uri` = '%s' AND `uid` = %d LIMIT 1",
 		dbesc($arr['uri']),
 		intval($arr['uid'])
@@ -1146,14 +1137,13 @@ function item_store($arr,$force_parent = false) {
 	// Set parent id - and also make sure to inherit the parent's ACL's.
 
 	$r = q("UPDATE `item` SET `parent` = %d, `allow_cid` = '%s', `allow_gid` = '%s',
-		`deny_cid` = '%s', `deny_gid` = '%s', `private` = %d, `deleted` = %d WHERE `id` = %d LIMIT 1",
+		`deny_cid` = '%s', `deny_gid` = '%s', `private` = %d WHERE `id` = %d LIMIT 1",
 		intval($parent_id),
 		dbesc($allow_cid),
 		dbesc($allow_gid),
 		dbesc($deny_cid),
 		dbesc($deny_gid),
 		intval($private),
-		intval($parent_deleted),
 		intval($current_post)
 	);
 
@@ -1164,8 +1154,7 @@ function item_store($arr,$force_parent = false) {
 	$arr['deny_cid'] = $deny_cid;
 	$arr['deny_gid'] = $deny_gid;
 	$arr['private'] = $private;
-	$arr['deleted'] = $parent_deleted;
-
+	
 	if(($terms) && (is_array($terms))) {
 		foreach($terms as $t) {
 			q("insert into term (uid,oid,otype,type,term,url)
@@ -1191,15 +1180,6 @@ function item_store($arr,$force_parent = false) {
 		dbesc(datetime_convert()),
 		intval($parent_id)
 	);
-
-	if($dsprsig) {
-		q("insert into sign (`iid`,`signed_text`,`signature`,`signer`) values (%d,'%s','%s','%s') ",
-			intval($current_post),
-			dbesc($dsprsig->signed_text),
-			dbesc($dsprsig->signature),
-			dbesc($dsprsig->signer)
-		);
-	}
 
 	tag_deliver($arr['uid'],$current_post);
 
