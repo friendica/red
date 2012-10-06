@@ -35,9 +35,9 @@ $a->config['system']['language'] = 'cs';
 // na e-mailovou adresu již existující registrované osoby, která může autorizovat
 // a/nebo schvalovat/odmítat žádosti o registraci.
 
-$a->config['register_policy'] = REGISTER_OPEN;
+$a->config['system']['register_policy'] = REGISTER_OPEN;
 $a->config['register_text'] = '';
-$a->config['admin_email'] = '$adminmail';
+$a->config['system']['admin_email'] = '$adminmail';
 
 // Maximální velikost importované zprávy, 0 je neomezeno
 
