@@ -663,7 +663,7 @@ if(! class_exists('App')) {
 			$this->widgets[] = array('title' => $title, 'html' => $html, 'location' => $location);
 		}
 
-		function get_widgets($location) {
+		function get_widgets($location = '') {
 			if($location && count($this->widgets)) {
 				$ret = array();
 				foreach($widgets as $w)

@@ -978,8 +978,8 @@ function item_store($arr,$force_parent = false) {
 	$arr['body']          = ((x($arr,'body'))          ? trim($arr['body'])                  : '');
 	$arr['attach']        = ((x($arr,'attach'))        ? notags(trim($arr['attach']))        : '');
 	$arr['app']           = ((x($arr,'app'))           ? notags(trim($arr['app']))           : '');
-	$arr['item_restrict'] = ((x($arr['item_restrict']))? intval($arr['item_restrict']))      : 0 );
-	$arr['item_flags']    = ((x($arr['item_flags']))   ? intval($arr['item_flags']))         : 0 );
+	$arr['item_restrict'] = ((x($arr,'item_restrict')) ? intval($arr['item_restrict'])       : 0 );
+	$arr['item_flags']    = ((x($arr,'item_flags'))    ? intval($arr['item_flags'])          : 0 );
 	
 	
 	$arr['thr_parent'] = $arr['parent_uri'];
@@ -1027,7 +1027,7 @@ function item_store($arr,$force_parent = false) {
 			$deny_cid       = $r[0]['deny_cid'];
 			$deny_gid       = $r[0]['deny_gid'];
 
-			if($r[0]['item_flags']) & ITEM_WALL)
+			if($r[0]['item_flags'] & ITEM_WALL)
 				$arr['item_flags'] = $arr['item_flags'] | ITEM_WALL; 
 
 			// if the parent is private, force privacy for the entire conversation
@@ -1041,7 +1041,7 @@ function item_store($arr,$force_parent = false) {
 			// The original author commented, but as this is a comment, the permissions
 			// weren't fixed up so it will still show the comment as private unless we fix it here. 
 
-			if((intval($r[0]['item_flags'] & ITEM_UPLINK) && (! $r[0]['private']))
+			if((intval($r[0]['item_flags']) & ITEM_UPLINK) && (! $r[0]['private']))
 				$arr['private'] = 0;
 		}
 		else {
