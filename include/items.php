@@ -265,11 +265,6 @@ function construct_activity_object($item) {
 			$o .= '<title>' . xmlify($r->title) . '</title>' . "\r\n";
 		if($r->link) {
 			if(substr($r->link,0,1) === '<') {
-				// patch up some facebook "like" activity objects that got stored incorrectly
-				// for a couple of months prior to 9-Jun-2011 and generated bad XML.
-				// we can probably remove this hack here and in the following function in a few months time.
-				if(strstr($r->link,'&') && (! strstr($r->link,'&amp;')))
-					$r->link = str_replace('&','&amp;', $r->link);
 				$r->link = preg_replace('/\<link(.*?)\"\>/','<link$1"/>',$r->link);
 				$o .= $r->link;
 			}					
@@ -325,15 +320,11 @@ function construct_activity_target($item) {
 if(! function_exists('limit_body_size')) {
 function limit_body_size($body) {
 
-	logger('limit_body_size: start', LOGGER_DEBUG);
-
 	$maxlen = get_max_import_size();
 
 	// If the length of the body, including the embedded images, is smaller
 	// than the maximum, then don't waste time looking for the images
 	if($maxlen && (strlen($body) > $maxlen)) {
-
-		logger('limit_body_size: the total body length exceeds the limit', LOGGER_DEBUG);
 
 		$orig_body = $body;
 		$new_body = '';
@@ -370,7 +361,6 @@ function limit_body_size($body) {
 
 				if( ($textlen + $img_end) > $maxlen ) {
 					if($textlen < $maxlen) {
-						logger('limit_body_size: the limit happens before the end of a non-embedded image', LOGGER_DEBUG);
 						$new_body = $new_body . substr($orig_body, 0, $maxlen - $textlen);
 						$textlen = $maxlen;
 					}
@@ -392,13 +382,11 @@ function limit_body_size($body) {
 
 		if( ($textlen + strlen($orig_body)) > $maxlen) {
 			if($textlen < $maxlen) {
-				logger('limit_body_size: the limit happens after the end of the last image', LOGGER_DEBUG);
 				$new_body = $new_body . substr($orig_body, 0, $maxlen - $textlen);
 				$textlen = $maxlen;
 			}
 		}
 		else {
-			logger('limit_body_size: the text size with embedded images extracted did not violate the limit', LOGGER_DEBUG);
 			$new_body = $new_body . $orig_body;
 			$textlen += strlen($orig_body);
 		}
@@ -948,8 +936,7 @@ function item_store($arr,$force_parent = false) {
 	// Shouldn't happen but we want to make absolutely sure it doesn't leak from a plugin.
 
 	if((strpos($arr['body'],'<') !== false) || (strpos($arr['body'],'>') !== false)) 
-		$arr['body'] = strip_tags($arr['body']);
-
+		$arr['body'] = escape_tags($arr['body']);
 
 	$arr['aid']           = ((x($arr,'aid'))           ? intval($arr['aid'])                 : 0);
 	$arr['uri']           = ((x($arr,'uri'))           ? notags(trim($arr['uri']))           : random_string());
@@ -1109,9 +1096,9 @@ function item_store($arr,$force_parent = false) {
 		intval($arr['uid'])
 	);
 
-	if(count($r)) {
+	if($r && count($r)) {
 		$current_post = $r[0]['id'];
-		logger('item_store: created item ' . $current_post);
+		logger('item_store: created item ' . $current_post, LOGGER_DEBUG);
 	}
 	else {
 		logger('item_store: could not locate created item');
@@ -1147,13 +1134,15 @@ function item_store($arr,$force_parent = false) {
 		intval($current_post)
 	);
 
-	$arr['id'] = $current_post;
-	$arr['parent'] = $parent_id;
+	$arr['id']        = $current_post;
+	$arr['parent']    = $parent_id;
 	$arr['allow_cid'] = $allow_cid;
 	$arr['allow_gid'] = $allow_gid;
-	$arr['deny_cid'] = $deny_cid;
-	$arr['deny_gid'] = $deny_gid;
-	$arr['private'] = $private;
+	$arr['deny_cid']  = $deny_cid;
+	$arr['deny_gid']  = $deny_gid;
+	$arr['private']   = $private;
+	
+	// Store taxonomy
 	
 	if(($terms) && (is_array($terms))) {
 		foreach($terms as $t) {
@@ -1207,12 +1196,15 @@ function tag_deliver($uid,$item_id) {
 
 	$mention = false;
 
-	$u = q("select * from user where uid = %d limit 1",
+	$u = q("select * from channel where channel_id = %d limit 1",
 		intval($uid)
 	);
 	if(! count($u))
 		return;
 
+		
+		// fixme - look for permissions allowing tag delivery
+		
 	$community_page = (($u[0]['page-flags'] == PAGE_COMMUNITY) ? true : false);
 	$prvgroup = (($u[0]['page-flags'] == PAGE_PRVGROUP) ? true : false);
 
@@ -1253,6 +1245,7 @@ function tag_deliver($uid,$item_id) {
 	);
 	$photo = (($r && count($r)) ? $r[0]['thumb'] : $item['author-avatar']);
 
+// fixme for channels
 
 	require_once('include/enotify.php');
 	notification(array(
