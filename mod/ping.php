@@ -99,13 +99,10 @@ function ping_init(&$a) {
 
 	$t1 = dba_timer();
 
-	$r = q("SELECT `item`.`id`,`item`.`parent`, `item`.`verb`, `item`.`wall`, `item`.`author-name`, 
-		`item`.`contact-id`, `item`.`author-link`, `item`.`author-avatar`, `item`.`created`, `item`.`object`, 
-		`pitem`.`author-name` as `pname`, `pitem`.`author-link` as `plink` 
-		FROM `item` INNER JOIN `item` as `pitem` ON  `pitem`.`id`=`item`.`parent`
-		WHERE `item`.`unseen` = 1 AND `item`.`visible` = 1 AND
-		 `item`.`deleted` = 0 AND `item`.`uid` = %d 
-		ORDER BY `item`.`created` DESC",
+	$r = q("SELECT id, item_restrict, item_flags FROM item
+		WHERE item_restrict = %d and item_flags & %d and `item`.`uid` = %d",
+		intval(ITEM_VISIBLE),
+		intval(ITEM_UNSEEN),
 		intval(local_user())
 	);
 
@@ -115,7 +112,7 @@ function ping_init(&$a) {
 		call_hooks('network_ping', $arr);
 	
 		foreach ($r as $it) {
-			if($it['wall'])
+			if($it['item_flags'] & ITEM_WALL)
 				$result['home'] ++;
 			else
 				$result['network'] ++;

@@ -414,8 +414,8 @@ function network_content(&$a, $update = 0, $load = false) {
 	$sql_options  = (($star) ? " and starred = 1 " : '');
 
 	$sql_nets = '';
-
-	$sql_extra = " AND `item`.`parent` IN ( SELECT `parent` FROM `item` WHERE `id` = `parent` $sql_options ) ";
+// fixme
+	$sql_extra = " AND `item`.`parent` IN ( SELECT `parent` FROM `item` WHERE id = parent $sql_options ) ";
 
 	if($group) {
 		$r = q("SELECT `name`, `id` FROM `group` WHERE `id` = %d AND `uid` = %d LIMIT 1",
@@ -604,15 +604,12 @@ function network_content(&$a, $update = 0, $load = false) {
 		// "New Item View" - show all items unthreaded in reverse created date order
 
 		$items = q("SELECT `item`.*, `item`.`id` AS `item_id`, 
-			`contact`.`name`, `contact`.`photo`, `contact`.`url`, `contact`.`rel`, `contact`.`writable`,
-			`contact`.`network`, `contact`.`thumb`, `contact`.`dfrn_id`, `contact`.`self`,
-			`contact`.`id` AS `cid`, `contact`.`uid` AS `contact-uid`
-			FROM `item`, `contact`
-			WHERE `item`.`uid` = %d AND `item`.`visible` = 1 
-			AND `item`.`deleted` = 0 and `item`.`moderated` = 0
+			o.xchan_name as oname, o.xchan_photo as ophoto, o.xchan_profile as ourl, 
+			a.xchan_name as aname, a.xchan_photo as aphoto, a.xchan_profile as aurl,
+			FROM `item` left join xchan as o on xchan_hash = owner_xchan left join xchan as a
+			on xchan_hash = author_xchan
+			WHERE `item`.`uid` = %d AND item_restrict = 0 
 			$simple_update
-			AND `contact`.`id` = `item`.`contact-id`
-			AND `contact`.`blocked` = 0 AND `contact`.`pending` = 0
 			$sql_extra $sql_nets
 			ORDER BY `item`.`received` DESC $pager_sql ",
 			intval($_SESSION['uid'])
@@ -647,10 +644,8 @@ function network_content(&$a, $update = 0, $load = false) {
 		}
 		else {
 
-			$r = q("SELECT `item`.`id` AS `item_id`, `contact`.`uid` AS `contact_uid`
-				FROM `item` LEFT JOIN `contact` ON `contact`.`id` = `item`.`contact-id`
-				WHERE `item`.`uid` = %d AND `item`.`visible` = 1 AND `item`.`deleted` = 0
-				AND `item`.`moderated` = 0 AND `contact`.`blocked` = 0 AND `contact`.`pending` = 0
+			$r = q("SELECT `item`.`id` AS `item_id`
+				FROM `item` WHERE `item`.`uid` = %d AND `item`.`item_restrict` = 0
 				AND `item`.`parent` = `item`.`id`
 				$sql_extra3 $sql_extra $sql_nets
 				ORDER BY `item`.$ordering DESC $pager_sql ",
@@ -661,18 +656,16 @@ function network_content(&$a, $update = 0, $load = false) {
 
 		// Then fetch all the children of the parents that are on this page
 
-		if(count($r)) {
+		if($r && count($r)) {
 
 			$parents_str = ids_to_querystr($r,'item_id');
 
 			$items = q("SELECT `item`.*, `item`.`id` AS `item_id`,
-				`contact`.`name`, `contact`.`photo`, `contact`.`url`, `contact`.`alias`, `contact`.`rel`, `contact`.`writable`,
-				`contact`.`network`, `contact`.`thumb`, `contact`.`dfrn_id`, `contact`.`self`,
-				`contact`.`id` AS `cid`, `contact`.`uid` AS `contact-uid`
-				FROM `item`, `contact`
-				WHERE `item`.`uid` = %d AND `item`.`visible` = 1 AND `item`.`deleted` = 0
-				AND `item`.`moderated` = 0 AND `contact`.`id` = `item`.`contact-id`
-				AND `contact`.`blocked` = 0 AND `contact`.`pending` = 0
+			o.xchan_name as oname, o.xchan_photo as ophoto, o.xchan_profile as ourl, 
+			a.xchan_name as aname, a.xchan_photo as aphoto, a.xchan_profile as aurl,
+			FROM `item` left join xchan as o on xchan_hash = owner_xchan left join xchan as a
+			on xchan_hash = author_xchan
+				WHERE `item`.`uid` = %d AND `item`.`item_restrict` = 0
 				AND `item`.`parent` IN ( %s )
 				$sql_extra ",
 				intval(local_user()),
@@ -696,8 +689,10 @@ function network_content(&$a, $update = 0, $load = false) {
 	// at the top level network page just mark everything seen. 
 	
 	if((! $group) && (! $cid) && (! $star)) {
-		$r = q("UPDATE `item` SET `unseen` = 0 
-			WHERE `unseen` = 1 AND `uid` = %d",
+		$r = q("UPDATE `item` SET item_flags = item_flags & (! %d)
+			WHERE item_flags & %d AND `uid` = %d",
+			intval(ITEM_UNSEEN),
+			intval(ITEM_UNSEEN),
 			intval(local_user())
 		);
 	}

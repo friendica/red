@@ -227,7 +227,7 @@ function item_post(&$a) {
 		$app			   = $orig_post['app'];
 		$title             = escape_tags(trim($_REQUEST['title']));
 		$body              = escape_tags(trim($_REQUEST['body']));
-		$private           = $orig_post['private'];
+		$private           = $orig_post['item_private'];
 
 	}
 	else {
@@ -273,12 +273,12 @@ function item_post(&$a) {
 		if($parent_item) {
 			$private = 0;
 
-			if(($parent_item['private']) 
+			if(($parent_item['item_private']) 
 				|| strlen($parent_item['allow_cid']) 
 				|| strlen($parent_item['allow_gid']) 
 				|| strlen($parent_item['deny_cid']) 
 				|| strlen($parent_item['deny_gid'])) {
-				$private = (($parent_item['private']) ? $parent_item['private'] : 1);
+				$private = (($parent_item['item_private']) ? $parent_item['item_private'] : 1);
 			}
 
 			$str_contact_allow = $parent_item['allow_cid'];
@@ -597,7 +597,7 @@ function item_post(&$a) {
 	$datarray['allow_gid']     = $str_group_allow;
 	$datarray['deny_cid']      = $str_contact_deny;
 	$datarray['deny_gid']      = $str_group_deny;
-	$datarray['private']       = $private;
+	$datarray['item_private']  = $private;
 	$datarray['attach']        = $attachments;
 	$datarray['thr_parent']    = $thr_parent;
 	$datarray['postopts']      = '';
@@ -707,7 +707,7 @@ function item_post(&$a) {
 
 			// Inherit ACL's from the parent item.
 
-			$r = q("UPDATE `item` SET `allow_cid` = '%s', `allow_gid` = '%s', `deny_cid` = '%s', `deny_gid` = '%s', `private` = %d
+			$r = q("UPDATE `item` SET `allow_cid` = '%s', `allow_gid` = '%s', `deny_cid` = '%s', `deny_gid` = '%s', `item_private` = %d
 				WHERE `id` = %d LIMIT 1",
 				dbesc($parent_item['allow_cid']),
 				dbesc($parent_item['allow_gid']),

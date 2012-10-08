@@ -974,7 +974,7 @@ function item_store($arr,$force_parent = false) {
 	$arr['allow_gid']     = ((x($arr,'allow_gid'))     ? trim($arr['allow_gid'])             : '');
 	$arr['deny_cid']      = ((x($arr,'deny_cid'))      ? trim($arr['deny_cid'])              : '');
 	$arr['deny_gid']      = ((x($arr,'deny_gid'))      ? trim($arr['deny_gid'])              : '');
-	$arr['private']       = ((x($arr,'private'))       ? intval($arr['private'])             : 0 );
+	$arr['item_private']  = ((x($arr,'item_private'))  ? intval($arr['item_private'])        : 0 );
 	$arr['body']          = ((x($arr,'body'))          ? trim($arr['body'])                  : '');
 	$arr['attach']        = ((x($arr,'attach'))        ? notags(trim($arr['attach']))        : '');
 	$arr['app']           = ((x($arr,'app'))           ? notags(trim($arr['app']))           : '');
@@ -1034,15 +1034,15 @@ function item_store($arr,$force_parent = false) {
 			// This differs from the above settings as it subtly allows comments from 
 			// email correspondents to be private even if the overall thread is not. 
 
-			if($r[0]['private'])
-				$arr['private'] = $r[0]['private'];
+			if($r[0]['item_private'])
+				$arr['item_private'] = $r[0]['item_private'];
 
 			// Edge case. We host a public forum that was originally posted to privately.
 			// The original author commented, but as this is a comment, the permissions
 			// weren't fixed up so it will still show the comment as private unless we fix it here. 
 
-			if((intval($r[0]['item_flags']) & ITEM_UPLINK) && (! $r[0]['private']))
-				$arr['private'] = 0;
+			if((intval($r[0]['item_flags']) & ITEM_UPLINK) && (! $r[0]['item_private']))
+				$arr['item_private'] = 0;
 		}
 		else {
 
@@ -1137,7 +1137,7 @@ function item_store($arr,$force_parent = false) {
 	// Set parent id - and also make sure to inherit the parent's ACL's.
 
 	$r = q("UPDATE `item` SET `parent` = %d, `allow_cid` = '%s', `allow_gid` = '%s',
-		`deny_cid` = '%s', `deny_gid` = '%s', `private` = %d WHERE `id` = %d LIMIT 1",
+		`deny_cid` = '%s', `deny_gid` = '%s', `item_private` = %d WHERE `id` = %d LIMIT 1",
 		intval($parent_id),
 		dbesc($allow_cid),
 		dbesc($allow_gid),
@@ -3748,12 +3748,15 @@ function drop_item($id,$interactive = true) {
 
 
 function first_post_date($uid,$wall = false) {
-	$r = q("select id, created from item 
-		where uid = %d and wall = %d and deleted = 0 and visible = 1 AND moderated = 0 
-		and id = parent
+
+	$wall_sql = (($wall) ? sprintf(" and item_flags & %d ", ITEM_WALL) : "" );
+
+	$r = q("select id, created from item
+		where item_restrict = %d and uid = %d and id = parent $wall_sql
 		order by created asc limit 1",
-		intval($uid),
-		intval($wall ? 1 : 0)
+		intval(ITEM_VISIBLE),
+		intval($uid)
+
 	);
 	if(count($r)) {
 //		logger('first_post_date: ' . $r[0]['id'] . ' ' . $r[0]['created'], LOGGER_DATA);
@@ -3818,7 +3821,7 @@ function posted_date_widget($url,$uid,$wall) {
 function fetch_post_tags($items) {
 
 	$tag_finder = array();
-	if(count($items))		
+	if($items && count($items))		
 		foreach($items as $item)
 			if(! in_array($item['item_id'],$tag_finder))
 				$tag_finder[] = $item['item_id'];

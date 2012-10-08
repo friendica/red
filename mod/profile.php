@@ -221,7 +221,7 @@ function profile_content(&$a, $update = 0) {
 
 	}
 
-	if(count($r)) {
+	if($r && count($r)) {
 
 		$parents_str = ids_to_querystr($r,'item_id');
  
