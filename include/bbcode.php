@@ -148,6 +148,10 @@ function bbcode($Text,$preserve_nl = false, $tryoembed = true) {
 	$Text = str_replace("<", "&lt;", $Text);
 	$Text = str_replace(">", "&gt;", $Text);
 
+	// This only matters when looking for tags - otherwise has no meaning
+	
+	$Text = preg_replace("/\[share\](.*?)\[\/share\]/ism", '$1', $Text);
+	
 	// Convert new line chars to html <br /> tags
 
 	// nlbr seems to be hopelessly messed up

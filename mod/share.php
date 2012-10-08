@@ -18,14 +18,14 @@ function share_init(&$a) {
 	if(! count($r) || ($r[0]['private'] == 1))
 		killme();
 
-	$o = '';
+	$o = '[share]';
 
 	$o .= "\xE2\x99\xb2" . ' [url=' . $r[0]['author-link'] . ']' . $r[0]['author-name'] . '[/url]' . "\n";
 	if($r[0]['title'])
 		$o .= '[b]' . $r[0]['title'] . '[/b]' . "\n";
 	$o .= $r[0]['body'] . "\n" ;
 
-	$o .= (($r[0]['plink']) ? '[url=' . $r[0]['plink'] . ']' . t('link') . '[/url]' . "\n" : '');
+	$o .= (($r[0]['plink']) ? '[url=' . $r[0]['plink'] . ']' . t('link') . '[/url]' . "\n" : '') . '[/share]';
 
 	echo $o;
 	killme();  
