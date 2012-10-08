@@ -132,11 +132,16 @@ class Item extends BaseObject {
 		else
 			$profile_link = zrl($profile_link);                 
 
+		$profile_link = zrl($item['author']['xchan_profile']);
+
+
 		$normalised = normalise_link((strlen($item['author-link'])) ? $item['author-link'] : $item['url']);
 		if(($normalised != 'mailbox') && (x($a->contacts,$normalised)))
 			$profile_avatar = $a->contacts[$normalised]['thumb'];
 		else
 			$profile_avatar = (((strlen($item['author-avatar'])) && $diff_author) ? $item['author-avatar'] : $a->get_cached_avatar_image($this->get_data_value('thumb')));
+
+		$profile_avatar = $item['author']['xchan_photo'];
 
 		$locate = array('location' => $item['location'], 'coord' => $item['coord'], 'html' => '');
 		call_hooks('render_location',$locate);

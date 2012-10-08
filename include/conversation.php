@@ -441,6 +441,10 @@ function prepare_threads_body($a, $items, $cmnt_tpl, $page_writeable, $mode, $pr
 		else
 			$profile_avatar = (((strlen($item['author-avatar'])) && $diff_author) ? $item['author-avatar'] : $a->get_cached_avatar_image($thumb));
 
+		$profile_avatar = $item['author']['xchan_photo'];
+		$profile_link = zrl($item['author']['xchan_profile']);
+		$profile_name = $item['author']['xchan_name'];
+
 		$locate = array('location' => $item['location'], 'coord' => $item['coord'], 'html' => '');
 		call_hooks('render_location',$locate);
 		$location = ((strlen($locate['html'])) ? $locate['html'] : render_location_google($locate));
@@ -615,7 +619,7 @@ function prepare_threads_body($a, $items, $cmnt_tpl, $page_writeable, $mode, $pr
 			'body' => template_escape($body),
 			'text' => strip_tags(template_escape($body)),
 			'id' => $item['item_id'],
-			'linktitle' => sprintf( t('View %s\'s profile @ %s'), $profile_name, ((strlen($item['author-link'])) ? $item['author-link'] : $item['url'])),
+			'linktitle' => sprintf( t('View %s\'s profile @ %s'), $profile_name, $profile_link),
 			'olinktitle' => sprintf( t('View %s\'s profile @ %s'), $owner_name, ((strlen($item['owner-link'])) ? $item['owner-link'] : $item['url'])),
 			'to' => t('to'),
 			'wall' => t('Wall-to-Wall'),
@@ -649,6 +653,7 @@ function prepare_threads_body($a, $items, $cmnt_tpl, $page_writeable, $mode, $pr
 			'thread_level' => $thread_level,
 		);
 
+		logger('tmp_item: ' . print_r($tmp_item,true));
 		$arr = array('item' => $item, 'output' => $tmp_item);
 		call_hooks('display_item', $arr);
 
@@ -1196,6 +1201,13 @@ function conversation(&$a, $items, $mode, $update, $page_mode = 'traditional') {
 					$profile_avatar = $a->contacts[$normalised]['thumb'];
 				else
 					$profile_avatar = (((strlen($item['author-avatar'])) && $diff_author) ? $item['author-avatar'] : $a->get_cached_avatar_image($thumb));
+
+
+
+				$profile_avatar = $item['author']['xchan_photo'];
+				$profile_link = zrl($item['author']['xchan_profile']);
+				$profile_name = $item['author']['xchan_name'];
+
 
 				$like    = ((x($alike,$item['uri'])) ? format_like($alike[$item['uri']],$alike[$item['uri'] . '-l'],'like',$item['uri']) : '');
 				$dislike = ((x($dlike,$item['uri'])) ? format_like($dlike[$item['uri']],$dlike[$item['uri'] . '-l'],'dislike',$item['uri']) : '');

@@ -1688,3 +1688,36 @@ function ids_to_querystr($arr,$idx = 'id') {
 		$t[] = $x[$idx];
 	return(implode(',', $t));
 }
+
+function xchan_query(&$items) {
+	$arr = array();
+	if($items && count($items)) {
+		foreach($items as $item) {
+			if($item['owner_xchan'] && (! in_array($item['owner_xchan'],$arr)))
+				$arr[] = "'" . dbesc($item['owner_xchan']) . "'";
+			if($item['author_xchan'] && (! in_array($item['author_xchan'],$arr)))
+				$arr[] = "'" . dbesc($item['author_xchan']) . "'";
+		}
+	}
+	if(count($arr)) {
+		$chans = q("select * from xchan where xchan_hash in (" . implode(',', $arr) . ")");
+	}
+	if($items && count($items) && $chans && count($chans)) {
+		for($x = 0; $x < count($items); $x ++) {
+			$items[$x]['owner'] = find_xchan_in_array($items[$x]['owner_xchan'],$chans);
+			$items[$x]['author'] = find_xchan_in_array($items[$x]['author_xchan'],$chans);
+		}
+	}
+
+}
+
+function find_xchan_in_array($xchan,$arr) {
+	if(count($arr)) {
+		foreach($arr as $x) {
+			if($x['xchan_hash'] === $xchan) {
+				return $x;
+			}
+		}
+	}
+	return array();
+}
