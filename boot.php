@@ -338,7 +338,7 @@ define ( 'ITEM_UPLINK',          0x0008);
 define ( 'ITEM_UPLINK_PRV',      0x0010);
 define ( 'ITEM_WALL',            0x0020);
 define ( 'ITEM_THREAD_TOP',      0x0040);
-
+define ( 'ITEM_NOTSHOWN',        0x0080);  // technically visible but not normally shown (e.g. like/dislike)
 
 
 

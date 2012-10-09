@@ -6,6 +6,21 @@ SET SQL_MODE="NO_AUTO_VALUE_ON_ZERO";
 /*!40101 SET NAMES utf8 */;
 
 
+CREATE TABLE IF NOT EXISTS `abook` (
+  `id` int(10) unsigned NOT NULL AUTO_INCREMENT,
+  `account` int(10) unsigned NOT NULL,
+  `channel` int(10) unsigned NOT NULL,
+  `xchan` char(255) NOT NULL DEFAULT '',
+  `my_perms` int(11) NOT NULL DEFAULT '0',
+  `their_perms` int(11) NOT NULL DEFAULT '0',
+  `closeness` tinyint(3) unsigned NOT NULL DEFAULT '255',
+  `created` datetime NOT NULL DEFAULT '0000-00-00 00:00:00',
+  `updated` datetime NOT NULL DEFAULT '0000-00-00 00:00:00',
+  `connnected` datetime NOT NULL DEFAULT '0000-00-00 00:00:00',
+  `abook_flags` int(11) NOT NULL DEFAULT '0',
+  PRIMARY KEY (`id`)
+) ENGINE=MyISAM DEFAULT CHARSET=utf8;
+
 CREATE TABLE IF NOT EXISTS `account` (
   `account_id` int(10) unsigned NOT NULL AUTO_INCREMENT,
   `account_parent` int(10) unsigned NOT NULL DEFAULT '0',
@@ -849,11 +864,14 @@ CREATE TABLE IF NOT EXISTS `xchan` (
   `xchan_hash` char(255) NOT NULL,
   `xchan_guid` char(255) NOT NULL DEFAULT '',
   `xchan_guid_sig` char(255) NOT NULL DEFAULT '',
+  `xchan_pubkey` text NOT NULL,
   `xchan_photo` char(255) NOT NULL DEFAULT '',
   `xchan_addr` char(255) NOT NULL DEFAULT '',
   `xchan_profile` char(255) NOT NULL DEFAULT '',
   `xchan_name` char(255) NOT NULL DEFAULT '',
   `xchan_network` char(255) NOT NULL DEFAULT '',
+  `xchan_photo_date` datetime NOT NULL DEFAULT '0000-00-00 00:00:00',
+  `xchan_name_date` datetime NOT NULL DEFAULT '0000-00-00 00:00:00',
   PRIMARY KEY (`xchan_hash`),
   KEY `xchan_guid` (`xchan_guid`),
   KEY `xchan_addr` (`xchan_addr`),

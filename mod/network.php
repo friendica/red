@@ -602,20 +602,18 @@ function network_content(&$a, $update = 0, $load = false) {
 
 	if($nouveau && $load) {
 		// "New Item View" - show all items unthreaded in reverse created date order
-/*
-		$items = q("SELECT `item`.*, `item`.`id` AS `item_id`, 
-			o.xchan_name as oname, o.xchan_photo as ophoto, o.xchan_profile as ourl, 
-			a.xchan_name as aname, a.xchan_photo as aphoto, a.xchan_profile as aurl,
-			FROM `item` left join xchan as o on xchan_hash = owner_xchan left join xchan as a
-			on xchan_hash = author_xchan
+
+		$items = q("SELECT `item`.*, `item`.`id` AS `item_id` FROM `item` 
 			WHERE `item`.`uid` = %d AND item_restrict = 0 
 			$simple_update
 			$sql_extra $sql_nets
 			ORDER BY `item`.`received` DESC $pager_sql ",
 			intval($_SESSION['uid'])
 		);
-*/
+
 		require_once('include/items.php');
+
+		xchan_query($items);
 
 		$items = fetch_post_tags($items);
 	}
@@ -632,16 +630,12 @@ function network_content(&$a, $update = 0, $load = false) {
 		// Fetch a page full of parent items for this page
 
 		if($update && (! $load)) {
-/*			$r = q("SELECT `parent` AS `item_id`, `contact`.`uid` AS `contact_uid`
-				FROM `item` LEFT JOIN `contact` ON `contact`.`id` = `item`.`contact-id`
-				WHERE `item`.`uid` = %d AND `item`.`visible` = 1 AND
-				(`item`.`deleted` = 0 OR item.verb = '" . ACTIVITY_LIKE ."' OR item.verb = '" . ACTIVITY_DISLIKE . "')
-				and `item`.`moderated` = 0 and `item`.`unseen` = 1
-				AND `contact`.`blocked` = 0 AND `contact`.`pending` = 0
+			$r = q("SELECT `parent` AS `item_id` FROM `item` 
+				WHERE `item`.`uid` = %d AND `item`.`restrict` = 0 
 				$sql_extra3 $sql_extra $sql_nets ",
 				intval(local_user())
 			);
-*/		}
+		}
 		else {
 
 			$r = q("SELECT `item`.`id` AS `item_id`
@@ -675,7 +669,7 @@ function network_content(&$a, $update = 0, $load = false) {
 
 			$items = conv_sort($items,$ordering);
 
-logger('items: ' . print_r($items,true));
+//logger('items: ' . print_r($items,true));
 
 		} else {
 			$items = array();
@@ -697,6 +691,7 @@ logger('items: ' . print_r($items,true));
 		);
 	}
 
+// fixme
 	// Set this so that the conversation function can find out contact info for our wall-wall items
 	$a->page_contact = $a->contact;
 
