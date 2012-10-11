@@ -153,6 +153,60 @@ function abook_content(&$a) {
 
 	if(argc() == 3) {
 
+
+		$cmd = argv(1);
+		if($cmd === 'profile') {
+			$xchan_hash = argv(2);
+
+			if($xchan_hash) {
+				$r = q("select * from xchan where xchan_hash = '%s' limit 1",
+					dbesc($xchan_hash)
+				);
+				if($r && count($r)) {
+$o .= <<< EOT
+<script language="JavaScript">
+<!--
+function resize_iframe()
+{
+	if(typeof(window.innerHeight) != 'undefined') {
+		var height=window.innerHeight;//Firefox
+	}
+	else {
+		if (typeof(document.body.clientHeight) != 'undefined')
+		{
+			var height=document.body.clientHeight;//IE
+		}
+	}
+
+	//resize the iframe according to the size of the
+	//window (all these should be on the same line)
+	document.getElementById("glu").style.height=parseInt(height-document.getElementById("glu").offsetTop-8)+"px";
+}
+
+// this will resize the iframe every
+// time you change the size of the window.
+window.onresize=resize_iframe; 
+
+//Instead of using this you can use: 
+//	<BODY onresize="resize_iframe()">
+
+
+//-->
+</script>
+
+
+<iframe id="glu" width="100%" src="{$r[0]['xchan_profile']}" onload="resize_iframe()">
+</iframe>
+
+EOT;
+
+
+	//				$o .= '<div id="profile-frame-wrapper" style="width: 100%; height: 100%;"><iframe id="profile-frame" src="' . $r[0]['xchan_profile'] . '" style="width: 100%; height: 100%;"></iframe></div>';
+					return $o;
+				}
+			}
+		}
+
 		$contact_id = intval(argv(1));
 		if(! $contact_id)
 			return;
