@@ -177,16 +177,13 @@ function profile_content(&$a, $update = 0) {
 
 	if($update) {
 
-		$r = q("SELECT distinct(parent) AS `item_id`, `contact`.`uid` AS `contact-uid`
-			FROM `item` LEFT JOIN `contact` ON `contact`.`id` = `item`.`contact-id`
-			WHERE `item`.`uid` = %d AND `item`.`visible` = 1 AND
-			(`item`.`deleted` = 0 OR item.verb = '" . ACTIVITY_LIKE ."' OR item.verb = '" . ACTIVITY_DISLIKE . "')
-			and `item`.`moderated` = 0 and `item`.`unseen` = 1
-			AND `contact`.`blocked` = 0 AND `contact`.`pending` = 0
-			AND `item`.`wall` = 1
+		$r = q("SELECT distinct(parent) AS `item_id` from item
+			WHERE uid = %d AND item_restrict = 0
+			AND item_flags &  %d
 			$sql_extra
-			ORDER BY `item`.`created` DESC",
-			intval($a->profile['profile_uid'])
+			ORDER BY created DESC",
+			intval($a->profile['profile_uid']),
+			intval(ITEM_WALL)
 		);
 
 	}
@@ -208,14 +205,13 @@ function profile_content(&$a, $update = 0) {
 
 		$pager_sql = sprintf(" LIMIT %d, %d ",intval($a->pager['start']), intval($a->pager['itemspage']));
 
-		$r = q("SELECT `item`.`id` AS `item_id`, `contact`.`uid` AS `contact-uid`
-			FROM `item` LEFT JOIN `contact` ON `contact`.`id` = `item`.`contact-id`
-			WHERE `item`.`uid` = %d AND `item`.`visible` = 1 AND `item`.`deleted` = 0
-			and `item`.`moderated` = 0 AND `contact`.`blocked` = 0 AND `contact`.`pending` = 0
-			AND `item`.`id` = `item`.`parent` AND `item`.`wall` = 1
+		$r = q("SELECT id AS item_id FROM item 
+			WHERE uid = %d AND item_restrict = 0
+			AND item_flags & %d
 			$sql_extra $sql_extra2
-			ORDER BY `item`.`created` DESC $pager_sql ",
-			intval($a->profile['profile_uid'])
+			ORDER BY created DESC $pager_sql ",
+			intval($a->profile['profile_uid']),
+			intval(ITEM_WALL|ITEM_THREAD_TOP)
 
 		);
 
@@ -225,21 +221,16 @@ function profile_content(&$a, $update = 0) {
 
 		$parents_str = ids_to_querystr($r,'item_id');
  
-		$items = q("SELECT `item`.*, `item`.`id` AS `item_id`, 
-			`contact`.`name`, `contact`.`photo`, `contact`.`url`, `contact`.`alias`, `contact`.`network`, `contact`.`rel`, 
-			`contact`.`thumb`, `contact`.`self`, `contact`.`writable`, 
-			`contact`.`id` AS `cid`, `contact`.`uid` AS `contact-uid`
-			FROM `item`, `contact`
-			WHERE `item`.`uid` = %d AND `item`.`visible` = 1 AND `item`.`deleted` = 0
-			and `item`.`moderated` = 0
-			AND `contact`.`id` = `item`.`contact-id`
-			AND `contact`.`blocked` = 0 AND `contact`.`pending` = 0
+		$items = q("SELECT `item`.*, `item`.`id` AS `item_id` 
+			FROM `item`
+			WHERE `item`.`uid` = %d AND `item`.`item_restrict` = 0
 			AND `item`.`parent` IN ( %s )
 			$sql_extra ",
 			intval($a->profile['profile_uid']),
 			dbesc($parents_str)
 		);
 
+		xchan_query($items);
 		$items = fetch_post_tags($items);
 		$items = conv_sort($items,'created');
 
@@ -260,8 +251,10 @@ function profile_content(&$a, $update = 0) {
 
 
 	if($is_owner) {
-		$r = q("UPDATE `item` SET `unseen` = 0 
-			WHERE `wall` = 1 AND `unseen` = 1 AND `uid` = %d",
+		$r = q("UPDATE `item` SET `item_flags` = item_flags - %d
+			WHERE item_flags & %d AND `uid` = %d",
+			intval(ITEM_UNSEEN),
+			intval(ITEM_UNSEEN|ITEM_WALL),
 			intval(local_user())
 		);
 	}

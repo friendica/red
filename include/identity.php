@@ -110,14 +110,17 @@ function create_identity($arr) {
 
 	$newuid = $ret['channel']['channel_id'];
 
-	$r = q("insert into xchan ( xchan_hash, xchan_guid, xchan_guid_sig, xchan_photo, xchan_addr, xchan_profile, xchan_name ) values ('%s', '%s', '%s', '%s', '%s', '%s', '%s')",
+	$r = q("insert into xchan ( xchan_hash, xchan_guid, xchan_guid_sig, xchan_photo, xchan_addr, xchan_profile, xchan_name, xchan_network, xchan_photo_date, xchan_name_date ) values ('%s', '%s', '%s', '%s', '%s', '%s', '%s', '%s', '%s', '%s')",
 		dbesc($hash),
 		dbesc($ret['channel']['channel_guid']),
 		dbesc($sig),
 		dbesc($a->get_baseurl() . "/photo/profile/{$newuid}"),
 		dbesc($ret['channel']['channel_address'] . '@' . $a->get_hostname()),
 		dbesc(z_root() . '/profile/' . $ret['channel']['channel_address']),
-		dbesc($ret['channel']['channel_name'])
+		dbesc($ret['channel']['channel_name']),
+		dbesc('zot'),
+		dbesc(datetime_convert()),
+		dbesc(datetime_convert())
 	);
 
 	// Not checking return value. 
@@ -135,21 +138,6 @@ function create_identity($arr) {
 		dbesc($a->get_baseurl() . "/photo/avatar/{$newuid}")
 	);
 
-	$r = q("INSERT INTO `contact` ( `aid`, `uid`, `created`, `self`, `name`, `nick`, `photo`, `thumb`, `micro`, `blocked`, `pending`, `url`, `name_date`, `uri_date`, `avatar_date`, `closeness` )
-			VALUES ( %d, %d, '%s', 1, '%s', '%s', '%s', '%s', '%s', 0, 0, '%s', '%s', '%s', '%s', 0 ) ",
-			intval($ret['channel']['channel_account_id']),
-			intval($newuid),
-			datetime_convert(),
-			dbesc($ret['channel']['channel_name']),
-			dbesc($ret['channel']['channel_address']),
-			dbesc($a->get_baseurl() . "/photo/profile/{$newuid}"),
-			dbesc($a->get_baseurl() . "/photo/avatar/{$newuid}"),
-			dbesc($a->get_baseurl() . "/photo/micro/{$newuid}"),
-			dbesc($a->get_baseurl() . "/profile/{$ret['channel']['channel_address']}"),
-			dbesc(datetime_convert()),
-			dbesc(datetime_convert()),
-			dbesc(datetime_convert())
-	);
 
 	// Create a group with no members. This allows somebody to use it 
 	// right away as a default group for new contacts. 

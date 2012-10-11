@@ -106,6 +106,7 @@ function events_post(&$a) {
 
 
 	$datarray = array();
+	$datarray['hash'] = random_string();
 	$datarray['start'] = $start;
 	$datarray['finish'] = $finish;
 	$datarray['summary'] = $summary;

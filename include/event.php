@@ -209,7 +209,7 @@ function event_store($arr) {
 	$arr['edited']  = (($arr['edited']) ? $arr['edited'] : datetime_convert());
 	$arr['type']    = (($arr['type']) ? $arr['type'] : 'event' );	
 	$arr['cid']     = ((intval($arr['cid'])) ? intval($arr['cid']) : 0);
-	$arr['uri']     = (x($arr,'uri') ? $arr['uri'] : item_message_id());
+	$arr['message_id'] = (x($arr,'message_id') ? $arr['message_id'] : get_message_id());
 	$arr['private'] = ((x($arr,'private')) ? intval($arr['private']) : 0);
 
 	if($arr['cid'])
@@ -286,7 +286,7 @@ function event_store($arr) {
 			intval($arr['uid'])
 		);
 		if(count($r)) {
-			$object = '<object><type>' . xmlify(ACTIVITY_OBJ_EVENT) . '</type><title></title><id>' . xmlify($arr['uri']) . '</id>';
+			$object = '<object><type>' . xmlify(ACTIVITY_OBJ_EVENT) . '</type><title></title><id>' . xmlify($arr['message_id']) . '</id>';
 			$object .= '<content>' . xmlify(format_event_bbcode($arr)) . '</content>';
 			$object .= '</object>' . "\n";
 
@@ -317,9 +317,10 @@ function event_store($arr) {
 
 		// New event. Store it. 
 
-		$r = q("INSERT INTO `event` ( `uid`,`cid`,`uri`,`created`,`edited`,`start`,`finish`,`summary`, `desc`,`location`,`type`,
+		$r = q("INSERT INTO `event` ( `uid`,`account`,`cid`,`message_id`,`created`,`edited`,`start`,`finish`,`summary`, `desc`,`location`,`type`,
 			`adjust`,`nofinish`,`allow_cid`,`allow_gid`,`deny_cid`,`deny_gid`)
-			VALUES ( %d, %d, '%s', '%s', '%s', '%s', '%s', '%s', '%s', '%s', '%s', %d, %d, '%s', '%s', '%s', '%s' ) ",
+			VALUES ( %d, %d, %d, '%s', '%s', '%s', '%s', '%s', '%s', '%s', '%s', '%s', %d, %d, '%s', '%s', '%s', '%s' ) ",
+			intval($arr['account']),
 			intval($arr['uid']),
 			intval($arr['cid']),
 			dbesc($arr['uri']),
@@ -340,8 +341,8 @@ function event_store($arr) {
 
 		);
 
-		$r = q("SELECT * FROM `event` WHERE `uri` = '%s' AND `uid` = %d LIMIT 1",
-			dbesc($arr['uri']),
+		$r = q("SELECT * FROM `event` WHERE `hash` = '%s' AND `uid` = %d LIMIT 1",
+			dbesc($arr['hash']),
 			intval($arr['uid'])
 		);
 		if(count($r))
@@ -349,10 +350,11 @@ function event_store($arr) {
 
 		$item_arr = array();
 
+
 		$item_arr['uid']           = $arr['uid'];
 		$item_arr['contact-id']    = $arr['cid'];
-		$item_arr['uri']           = $arr['uri'];
-		$item_arr['parent_uri']    = $arr['uri'];
+		$item_arr['uri']           = $arr['message_id'];
+		$item_arr['parent_uri']    = $arr['message_id'];
 		$item_arr['type']          = 'activity';
 		$item_arr['wall']          = (($arr['cid']) ? 0 : 1);
 		$item_arr['contact-id']    = $contact['id'];
@@ -376,7 +378,7 @@ function event_store($arr) {
 		$item_arr['body']          = format_event_bbcode($event);
 
 
-		$item_arr['object'] = '<object><type>' . xmlify(ACTIVITY_OBJ_EVENT) . '</type><title></title><id>' . xmlify($arr['uri']) . '</id>';
+		$item_arr['object'] = '<object><type>' . xmlify(ACTIVITY_OBJ_EVENT) . '</type><title></title><id>' . xmlify($arr['message_id']) . '</id>';
 		$item_arr['object'] .= '<content>' . xmlify(format_event_bbcode($event)) . '</content>';
 		$item_arr['object'] .= '</object>' . "\n";
 

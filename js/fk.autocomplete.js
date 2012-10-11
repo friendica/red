@@ -104,7 +104,7 @@ ACPopup.prototype._search = function(){
 		else {
 			txt = tinyMCE.activeEditor.getContent();
 			//			alert(that.searchText + ':' + t);
-			newtxt = txt.replace(that.searchText,t+' ');
+			newtxt = txt.replace('@' + that.searchText, '@' + t + ' ');
 			tinyMCE.activeEditor.setContent(newtxt);
 			tinyMCE.activeEditor.focus();
 			that.close();

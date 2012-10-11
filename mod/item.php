@@ -310,6 +310,8 @@ function item_post(&$a) {
 
 	// get contact info for poster
 
+
+/*
 	$author = null;
 	$self   = false;
 	$contact_id = 0;
@@ -355,6 +357,8 @@ function item_post(&$a) {
 			$contact_record = $r[0];
 	}
 
+*/
+
 	$post_type = notags(trim($_REQUEST['type']));
 
 
@@ -382,7 +386,7 @@ function item_post(&$a) {
 				$image_uri = substr($image_uri,0, strpos($image_uri,'-'));
 				if(! strlen($image_uri))
 					continue;
-				$srch = '<' . intval($contact_id) . '>';
+				$srch = '<' . $owner_xchan['xchan_hash'] . '>';
 
 				$r = q("SELECT `id` FROM `photo` WHERE `allow_cid` = '%s' AND `allow_gid` = '' AND `deny_cid` = '' AND `deny_gid` = ''
 					AND `resource_id` = '%s' AND `uid` = %d LIMIT 1",
@@ -421,19 +425,19 @@ function item_post(&$a) {
 		$attaches = $match[1];
 		if(count($attaches)) {
 			foreach($attaches as $attach) {
-				$r = q("SELECT * FROM `attach` WHERE `uid` = %d AND `id` = %d LIMIT 1",
+				$r = q("select * from attach where uid = %d and hash = '%s' limit 1",
 					intval($profile_uid),
-					intval($attach)
+					dbesc($attach)
 				);				
 				if(count($r)) {
 					$r = q("UPDATE `attach` SET `allow_cid` = '%s', `allow_gid` = '%s', `deny_cid` = '%s', `deny_gid` = '%s'
-						WHERE `uid` = %d AND `id` = %d LIMIT 1",
+						WHERE `uid` = %d AND `hash` = '%s' LIMIT 1",
 						dbesc($str_contact_allow),
 						dbesc($str_group_allow),
 						dbesc($str_contact_deny),
 						dbesc($str_group_deny),
 						intval($profile_uid),
-						intval($attach)
+						dbesc($attach)
 					);
 				}
 			}
@@ -486,11 +490,11 @@ function item_post(&$a) {
 			if($success['replaced']) {
 				$tagged[] = $tag;
 				$post_tags[] = array(
-					'uid' => $profile_uid, 
-					'type' => $success['termtype'],
+					'uid'   => $profile_uid, 
+					'type'  => $success['termtype'],
 					'otype' => TERM_OBJ_POST,
-					'term' => substr($tag,1),
-					'url' => $success['url']
+					'term'  => substr($tag,1),
+					'url'   => $success['url']
 				); 				
 			}
 			if(is_array($success['contact']) && intval($success['contact']['prv'])) {
@@ -504,11 +508,11 @@ function item_post(&$a) {
 		$cats = explode(',',$categories);
 		foreach($cats as $cat) {
 			$post_tags[] = array(
-				'uid' => $profile_uid, 
-				'type' => TERM_CATEGORY,
+				'uid'   => $profile_uid, 
+				'type'  => TERM_CATEGORY,
 				'otype' => TERM_OBJ_POST,
-				'term' => trim($cat),
-				'url' => ''
+				'term'  => trim($cat),
+				'url'   => ''
 			); 				
 		}
 	}
@@ -527,20 +531,20 @@ function item_post(&$a) {
 
 	if(preg_match_all('/(\[attachment\]([0-9]+)\[\/attachment\])/',$body,$match)) {
 		foreach($match[2] as $mtch) {
-			$r = q("SELECT `id`,`filename`,`filesize`,`filetype` FROM `attach` WHERE `uid` = %d AND `id` = %d LIMIT 1",
+			$r = q("SELECT `hash`,`filename`,`filesize`,`filetype` FROM `attach` WHERE `uid` = %d AND `hash` = '%s' LIMIT 1",
 				intval($profile_uid),
-				intval($mtch)
+				dbesc($mtch)
 			);
 			if(count($r)) {
 				if(strlen($attachments))
 					$attachments .= ',';
-				$attachments .= '[attach]href="' . $a->get_baseurl() . '/attach/' . $r[0]['id'] . '" length="' . $r[0]['filesize'] . '" type="' . $r[0]['filetype'] . '" title="' . (($r[0]['filename']) ? $r[0]['filename'] : '') . '"[/attach]'; 
+				$attachments .= '[attach]href="' . $a->get_baseurl() . '/attach/' . $r[0]['hash'] . '" length="' . $r[0]['filesize'] . '" type="' . $r[0]['filetype'] . '" title="' . (($r[0]['filename']) ? $r[0]['filename'] : '') . '"[/attach]'; 
 			}
 			$body = str_replace($match[1],'',$body);
 		}
 	}
 
-	$item_flags = 0;
+	$item_flags = ITEM_UNSEEN;
 	$item_restrict = ITEM_VISIBLE;
 	
 	if($post_type === 'wall' || $post_type === 'wall-comment')
@@ -551,6 +555,8 @@ function item_post(&$a) {
 
 	if($moderated)
 		$item_restrict = $item_restrict | ITEM_MODERATED;
+
+
 		
 		
 	if(! strlen($verb))
@@ -573,8 +579,7 @@ function item_post(&$a) {
 		$item_flags = $item_flags | ITEM_THREAD_TOP;
 	}
 	
-	$datarray['aid']           = get_account_id(); // fixme
-
+	$datarray['aid']           = $channel['account_id'];
 	$datarray['uid']           = $profile_uid;
 
 	$datarray['owner_xchan']   = $owner_xchan['xchan_hash'];
@@ -601,11 +606,15 @@ function item_post(&$a) {
 	$datarray['attach']        = $attachments;
 	$datarray['thr_parent']    = $thr_parent;
 	$datarray['postopts']      = '';
+	$datarray['item_restrict'] = $item_restrict;
+	$datarray['item_flags']    = $item_flags;
+
 
 	// preview mode - prepare the body for display and send it via json
 
 	if($preview) {
 		require_once('include/conversation.php');
+// fixme
 		$o = conversation($a,array(array_merge($contact_record,$datarray)),'search',false,'preview');
 		logger('preview: ' . $o, LOGGER_DEBUG);
 		echo json_encode(array('preview' => $o));
@@ -716,7 +725,7 @@ function item_post(&$a) {
 				intval($parent_item['private']),
 				intval($post_id)
 			);
-
+//fixme
 			if($contact_record != $author) {
 				notification(array(
 					'type'         => NOTIFY_COMMENT,
@@ -741,7 +750,7 @@ function item_post(&$a) {
 		}
 		else {
 			$parent = $post_id;
-
+//fixme
 			if($contact_record != $author) {
 				notification(array(
 					'type'         => NOTIFY_WALL,
