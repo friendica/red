@@ -22,10 +22,15 @@ This information will identify a channel+site pair in the future. When contact i
 
 If a new location is provided, this process is repeated but only the new location needs to be verified and stored.
 
-Messages are sent by providing this information in an HTTP post to the other site, along with a protocol version specifier and type of message. For some message types, the message is included. Others will require a security handshake with the remote site calling back the original to verify the identity assertion and the message is only collected at that time. 
+Messages are sent by providing this information in an HTTP post (*) to the other site, along with a protocol version specifier and type of message and a verification token. For message types which do not require identity validation, the message may be included. Others will require a security handshake with the remote site calling back the original to verify the identity assertion and the message is only collected at that time. 
 
 Multiple messages may be sent, and a callback may  result in the collection of multiple messages destined for this site, not necessarily limited to the channel/location which was asserted. 
  
+
+(*) A POST method is used for many protocol transactions as site "hardening" tools may place overly restrictive length limits on GET data. We are typically sending several encoded/encrypted strings and these requests are likely to fail on some sites and become a nagging support issue if a GET request is used.
+
+The verification token is signed by the remote site and the signed token returned during the callback. This verifies the identity of the callback - by matching with known tokens. 
+
 
 Permissions:
 
