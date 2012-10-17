@@ -660,6 +660,24 @@ CREATE TABLE IF NOT EXISTS `notify-threads` (
   KEY `receiver-uid` (`receiver-uid`)
 ) ENGINE=MyISAM  DEFAULT CHARSET=utf8;
 
+CREATE TABLE IF NOT EXISTS `outq` (
+  `outq_hash` char(255) NOT NULL,
+  `outq_account` int(10) unsigned NOT NULL DEFAULT '0',
+  `outq_channel` int(10) unsigned NOT NULL DEFAULT '0',
+  `outq_xchan` char(255) NOT NULL DEFAULT '',
+  `outq_hub` char(255) NOT NULL DEFAULT '',
+  `outq_created` datetime NOT NULL DEFAULT '0000-00-00 00:00:00',
+  `outq_updated` datetime NOT NULL DEFAULT '0000-00-00 00:00:00',
+  `outq_msg` mediumtext NOT NULL,
+  PRIMARY KEY (`outq_hash`),
+  KEY `outq_account` (`outq_account`),
+  KEY `outq_channel` (`outq_channel`),
+  KEY `outq_xchan` (`outq_xchan`),
+  KEY `outq_hub` (`outq_hub`),
+  KEY `outq_created` (`outq_created`),
+  KEY `outq_updated` (`outq_updated`)
+) ENGINE=MyISAM DEFAULT CHARSET=utf8;
+
 CREATE TABLE IF NOT EXISTS `pconfig` (
   `id` int(11) NOT NULL AUTO_INCREMENT,
   `uid` int(11) NOT NULL DEFAULT '0',

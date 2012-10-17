@@ -622,7 +622,7 @@ function guess_image_type($filename, $fromcurl=false) {
     }
     if (is_null($type)){
         // Guessing from extension? Isn't that... dangerous?
-        if(class_exists('Imagick')) {
+        if(class_exists('Imagick') && file_exists($filename) && is_readable($filename)) {
             /**
              * Well, this not much better,
              * but at least it comes from the data inside the image,
