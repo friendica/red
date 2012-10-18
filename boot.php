@@ -393,12 +393,15 @@ function startup() {
 if(! class_exists('App')) {
 	class App {
 
+		
 		public  $account = null;            // account record
 
 		private $channel = null;            // channel record
 		private $observer = null;           // xchan record
 		private $widgets = array();         // widgets for this page
-		
+
+
+
 		public  $language;
 		public  $module_loaded = false;
 		public  $query_string;
@@ -419,7 +422,6 @@ if(! class_exists('App')) {
 		public  $module;
 		public  $pager;
 		public  $strings;
-		public  $path;
 		public  $hooks;
 		public  $timezone;
 		public  $interactive = true;
@@ -449,6 +451,8 @@ if(! class_exists('App')) {
 		private $scheme;
 		private $hostname;
 		private $baseurl;
+		private $path;
+
 		private $db;
 
 		private $curl_code;
@@ -473,24 +477,15 @@ if(! class_exists('App')) {
 
 			startup();
 
-			$this->scheme = 'http';
-			if(x($_SERVER,'HTTPS') && $_SERVER['HTTPS'])
-				$this->scheme = 'https';
-			elseif(x($_SERVER,'SERVER_PORT') && (intval($_SERVER['SERVER_PORT']) == 443))
-			$this->scheme = 'https';
 
+			$this->scheme = 'http';
+            if(x($_SERVER,'HTTPS') && $_SERVER['HTTPS'])
+                $this->scheme = 'https';
+            elseif(x($_SERVER,'SERVER_PORT') && (intval($_SERVER['SERVER_PORT']) == 443))
+            $this->scheme = 'https';
 
 			if(x($_SERVER,'SERVER_NAME')) {
 				$this->hostname = $_SERVER['SERVER_NAME'];
-
-				// See bug 437 - this didn't work so disabling it
-				//if(stristr($this->hostname,'xn--')) {
-					// PHP or webserver may have converted idn to punycode, so
-					// convert punycode back to utf-8
-				//	require_once('library/simplepie/idn/idna_convert.class.php');
-				//	$x = new idna_convert();
-				//	$this->hostname = $x->decode($_SERVER['SERVER_NAME']);
-				//}
 
 				if(x($_SERVER,'SERVER_PORT') && $_SERVER['SERVER_PORT'] != 80 && $_SERVER['SERVER_PORT'] != 443)
 					$this->hostname .= ':' . $_SERVER['SERVER_PORT'];
@@ -579,42 +574,42 @@ if(! class_exists('App')) {
 		}
 
 		function get_baseurl($ssl = false) {
+           $scheme = $this->scheme;
 
-			$scheme = $this->scheme;
+            if((x($this->config,'system')) && (x($this->config['system'],'ssl_policy'))) {
+                if(intval($this->config['system']['ssl_policy']) === intval(SSL_POLICY_FULL))
+                    $scheme = 'https';
 
-			if((x($this->config,'system')) && (x($this->config['system'],'ssl_policy'))) {
-				if(intval($this->config['system']['ssl_policy']) === intval(SSL_POLICY_FULL))
-					$scheme = 'https';
+                //  Basically, we have $ssl = true on any links which can only be seen by a logged in user
+                //  (and also the login link). Anything seen by an outsider will have it turned off.
 
-				//	Basically, we have $ssl = true on any links which can only be seen by a logged in user
-				//	(and also the login link). Anything seen by an outsider will have it turned off.
+                if($this->config['system']['ssl_policy'] == SSL_POLICY_SELFSIGN) {
+                    if($ssl)
+                        $scheme = 'https';
+                    else
+                        $scheme = 'http';
+                }
+            }
 
-				if($this->config['system']['ssl_policy'] == SSL_POLICY_SELFSIGN) {
-					if($ssl)
-						$scheme = 'https';
-					else
-						$scheme = 'http';
-				}
-			}
-
-			$this->baseurl = $scheme . "://" . $this->hostname . ((isset($this->path) && strlen($this->path)) ? '/' . $this->path : '' );
-			return $this->baseurl;
+            $this->baseurl = $scheme . "://" . $this->hostname . ((isset($this->path) && strlen($this->path)) ? '/' . $this\
+->path : '' );
+            return $this->baseurl;
 		}
 
 		function set_baseurl($url) {
-			$parsed = @parse_url($url);
+            $parsed = @parse_url($url);
 
-			$this->baseurl = $url;
+            $this->baseurl = $url;
 
-			if($parsed) {
-				$this->scheme = $parsed['scheme'];
+            if($parsed) {
+                $this->scheme = $parsed['scheme'];
 
-				$this->hostname = $parsed['host'];
-				if(x($parsed,'port'))
-					$this->hostname .= ':' . $parsed['port'];
-				if(x($parsed,'path'))
-					$this->path = trim($parsed['path'],'\\/');
-			}
+                $this->hostname = $parsed['host'];
+                if(x($parsed,'port'))
+                    $this->hostname .= ':' . $parsed['port'];
+                if(x($parsed,'path'))
+                    $this->path = trim($parsed['path'],'\\/');
+            }
 
 		}
 
