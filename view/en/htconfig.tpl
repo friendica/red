@@ -15,7 +15,9 @@ $default_timezone = '$timezone';
 
 // What is your site name?
 
+$a->config['system']['baseurl'] = '$siteurl';
 $a->config['system']['sitename'] = "My Friend Network";
+$a->config['system']['location_hash'] = '$site_id';
 
 // Your choices are REGISTER_OPEN, REGISTER_APPROVE, or REGISTER_CLOSED.
 // Be certain to create your own personal account before setting 

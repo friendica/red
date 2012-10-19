@@ -591,8 +591,7 @@ if(! class_exists('App')) {
                 }
             }
 
-            $this->baseurl = $scheme . "://" . $this->hostname . ((isset($this->path) && strlen($this->path)) ? '/' . $this\
-->path : '' );
+            $this->baseurl = $scheme . "://" . $this->hostname . ((isset($this->path) && strlen($this->path)) ? '/' . $this->path : '' );
             return $this->baseurl;
 		}
 

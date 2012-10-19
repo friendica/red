@@ -69,6 +69,9 @@ function install_post(&$a) {
 			$phpath = notags(trim($_POST['phpath']));
 			$timezone = notags(trim($_POST['timezone']));
 			$adminmail = notags(trim($_POST['adminmail']));
+			$siteurl = notags(trim($_POST['siteurl']));
+			
+
 
 			// connect to db
 			$db = new dba($dbhost, $dbuser, $dbpass, $dbdata, true);
@@ -80,7 +83,8 @@ function install_post(&$a) {
 				'$dbpass' => $dbpass,
 				'$dbdata' => $dbdata,
 				'$timezone' => $timezone,
-				'$urlpath' => $urlpath,
+				'$siteurl' => $siteurl,
+				'$site_id' => hash('whirlpool', random_string()),
 				'$phpath' => $phpath,
 				'$adminmail' => $adminmail
 			));
@@ -235,7 +239,7 @@ function install_content(&$a) {
 				'$dbdata' => array('dbdata', t('Database Name'), $dbdata, ''),
 
 				'$adminmail' => array('adminmail', t('Site administrator email address'), $adminmail, t('Your account email address must match this in order to use the web admin panel.')),
-
+				'$siteurl' => array('siteurl', t('Website URL'), z_root(), t('Please use SSL (https) URL if available.')),
 				
 
 				'$lbl_10' => t('Please select a default timezone for your website'),
@@ -274,6 +278,8 @@ function install_content(&$a) {
 				'$phpath' => $phpath,
 				
 				'$adminmail' => array('adminmail', t('Site administrator email address'), $adminmail, t('Your account email address must match this in order to use the web admin panel.')),
+
+				'$siteurl' => array('siteurl', t('Website URL'), z_root(), t('Please use SSL (https) URL if available.')),
 
 				
 				'$timezone' => field_timezone('timezone', t('Please select a default timezone for your website'), $timezone, ''),
