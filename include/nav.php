@@ -28,6 +28,9 @@ function nav(&$a) {
 	 */
 
 	$channel = $a->get_channel();
+	$xchan = q("select * from xchan where xchan_hash = '%s' limit 1",
+		dbesc($channel['channel_hash'])
+	);
 
 	$myident = ((is_array($channel) && isset($channel['channel_address'])) ? $channel['channel_address'] . '@' : '');
 		
@@ -55,8 +58,9 @@ function nav(&$a) {
 		
 		// user info
 		$r = q("SELECT micro FROM contact WHERE uid=%d AND self=1", intval($channel['channel_id']));
+	
 		$userinfo = array(
-			'icon' => $r[0]['micro'],
+			'icon' => $xchan[0]['xchan_photo'],
 			'name' => $channel['channel_name'],
 		);
 		
