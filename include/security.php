@@ -206,7 +206,7 @@ function change_channel($change_channel) {
 	$ret = false;
 
 	if($change_channel) {
-		$r = q("select * from channel where channel_id = %d and channel_account_id = %d limit 1",
+		$r = q("select channel.*, xchan.* from channel left join xchan on channel.channel_hash = xchan.xchan_hash where channel_id = %d and channel_account_id = %d limit 1",
 			intval($change_channel),
 			intval(get_account_id())
 		);

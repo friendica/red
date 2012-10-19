@@ -12,7 +12,7 @@ function profiles_post(&$a) {
 
 	call_hooks('profile_post', $_POST);
 
-	if(($a->argc > 1) && ($a->argv[1] !== "new") && intval($a->argv[1])) {
+	if((argc() > 1) && (argv(1) !== "new") && intval(argv(1))) {
 		$orig = q("SELECT * FROM `profile` WHERE `id` = %d AND `uid` = %d LIMIT 1",
 			intval($a->argv[1]),
 			intval(local_user())
@@ -286,11 +286,13 @@ function profiles_post(&$a) {
 		if($r)
 			info( t('Profile updated.') . EOL);
 
+		$channel = $a->get_channel();
 
 		if($namechanged && $is_default) {
-			$r = q("UPDATE `contact` SET `name_date` = '%s' WHERE `self` = 1 AND `uid` = %d LIMIT 1",
+			$r = q("UPDATE xchan SET xchan_name = '%s', xchan_name_date` = '%s' WHERE xchan_hash = '%s' limit 1",
+				dbesc($name),
 				dbesc(datetime_convert()),
-				intval(local_user())
+				dbesc($channel['xchan_hash'])
 			);
 		}
 
@@ -310,17 +312,19 @@ function profile_activity($changed, $value) {
 	if(! local_user() || ! is_array($changed) || ! count($changed))
 		return;
 
-	if($a->user['hidewall'] || get_config('system','block_public'))
-		return;
+// FIXME (lots to fix)
+//	if($a->user['hidewall'] || get_config('system','block_public'))
+//		return;
+
+return;
+
 
 	if(! get_pconfig(local_user(),'system','post_profilechange'))
 		return;
 
 	require_once('include/items.php');
 
-	$self = q("SELECT * FROM `contact` WHERE `self` = 1 AND `uid` = %d LIMIT 1",
-		intval(local_user())
-	);
+	$self = $a->get_channel();
 
 	if(! count($self))
 		return;
@@ -328,14 +332,14 @@ function profile_activity($changed, $value) {
 	$arr = array();
 	$arr['uri'] = $arr['parent_uri'] = item_message_id();
 	$arr['uid'] = local_user();
-	$arr['contact-id'] = $self[0]['id'];
-	$arr['wall'] = 1;
-	$arr['type'] = 'wall';
-	$arr['gravity'] = 0;
-	$arr['origin'] = 1;
-	$arr['author-name'] = $arr['owner-name'] = $self[0]['name'];
-	$arr['author-link'] = $arr['owner-link'] = $self[0]['url'];
-	$arr['author-avatar'] = $arr['owner-avatar'] = $self[0]['thumb'];
+//	$arr['contact-id'] = $self[0]['id'];
+//	$arr['wall'] = 1;
+//	$arr['type'] = 'wall';
+//	$arr['gravity'] = 0;
+//	$arr['origin'] = 1;
+//	$arr['author-name'] = $arr['owner-name'] = $self[0]['name'];
+//	$arr['author-link'] = $arr['owner-link'] = $self[0]['url'];
+//	$arr['author-avatar'] = $arr['owner-avatar'] = $self[0]['thumb'];
 	$arr['verb'] = ACTIVITY_UPDATE;
 	$arr['obj_type'] = ACTIVITY_OBJ_PROFILE;
 				
@@ -368,19 +372,21 @@ function profile_activity($changed, $value) {
 
 	$arr['body'] = $message;  
 
-	$arr['object'] = '<object><type>' . ACTIVITY_OBJ_PROFILE . '</type><title>' . $self[0]['name'] . '</title>'
-	. '<id>' . $self[0]['url'] . '/' . $self[0]['name'] . '</id>';
-	$arr['object'] .= '<link>' . xmlify('<link rel="alternate" type="text/html" href="' . $self[0]['url'] . '?tab=profile' . '" />' . "\n");
-	$arr['object'] .= xmlify('<link rel="photo" type="image/jpeg" href="' . $self[0]['thumb'] . '" />' . "\n");
-	$arr['object'] .= '</link></object>' . "\n";
+//	$arr['object'] = '<object><type>' . ACTIVITY_OBJ_PROFILE . '</type><title>' . $self[0]['name'] . '</title>'
+//	. '<id>' . $self[0]['url'] . '/' . $self[0]['name'] . '</id>';
+//	$arr['object'] .= '<link>' . xmlify('<link rel="alternate" type="text/html" href="' . $self[0]['url'] . '?tab=profile' . '" />' . "\n");
+//	$arr['object'] .= xmlify('<link rel="photo" type="image/jpeg" href="' . $self[0]['thumb'] . '" />' . "\n");
+//	$arr['object'] .= '</link></object>' . "\n";
 
-	$arr['allow_cid'] = $a->user['allow_cid'];
-	$arr['allow_gid'] = $a->user['allow_gid'];
-	$arr['deny_cid']  = $a->user['deny_cid'];
-	$arr['deny_gid']  = $a->user['deny_gid'];
+//	$arr['allow_cid'] = $a->user['allow_cid'];
+//	$arr['allow_gid'] = $a->user['allow_gid'];
+//	$arr['deny_cid']  = $a->user['deny_cid'];
+//	$arr['deny_gid']  = $a->user['deny_gid'];
 
 	$i = item_store($arr);
 	if($i) {
+
+// ??? are we going to change plink structure? I'm guessing yes
 
 		// give it a permanent link
 		q("update item set plink = '%s' where id = %d limit 1",
@@ -404,7 +410,7 @@ function profiles_content(&$a) {
 		return;
 	}
 
-	if(($a->argc > 2) && ($a->argv[1] === "drop") && intval($a->argv[2])) {
+	if((argc() > 2) && (argv(1) === "drop") && intval(argv(2))) {
 		$r = q("SELECT * FROM `profile` WHERE `id` = %d AND `uid` = %d AND `is_default` = 0 LIMIT 1",
 			intval($a->argv[2]),
 			intval(local_user())
@@ -440,7 +446,7 @@ function profiles_content(&$a) {
 
 
 
-	if(($a->argc > 1) && ($a->argv[1] === 'new')) {
+	if((argc() > 1) && (argv(1) === 'new')) {
 		
 		check_form_security_token_redirectOnErr('/profiles', 'profile_new', 't');
 
@@ -476,7 +482,7 @@ function profiles_content(&$a) {
 		goaway($a->get_baseurl(true) . '/profiles');
 	} 
 
-	if(($a->argc > 2) && ($a->argv[1] === 'clone')) {
+	if((argc() > 2) && (argv(1) === 'clone')) {
 		
 		check_form_security_token_redirectOnErr('/profiles', 'profile_clone', 't');
 
@@ -521,7 +527,7 @@ function profiles_content(&$a) {
 	}
 
 
-	if(($a->argc > 1) && (intval($a->argv[1]))) {
+	if((argc() > 1) && (intval(argv(1)))) {
 		$r = q("SELECT * FROM `profile` WHERE `id` = %d AND `uid` = %d LIMIT 1",
 			intval($a->argv[1]),
 			intval(local_user())
