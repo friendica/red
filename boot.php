@@ -1156,19 +1156,22 @@ function profile_load(&$a, $nickname, $profile = 0) {
 
 	$r = null;
 
+//TODO needs avatar_date !!
+
 	if($profile) {
 		$profile_int = intval($profile);
-		$r = q("SELECT `profile`.`uid` AS `profile_uid`, `profile`.* , `contact`.`avatar_date` AS picdate, channel.* FROM `profile`
-				left join `contact` on `contact`.`uid` = `profile`.`uid` LEFT JOIN channel ON `profile`.`uid` = channel.channel_id
-				WHERE channel.channel_address = '%s' AND `profile`.`id` = %d and `contact`.`self` = 1 LIMIT 1",
+		$r = q("SELECT `profile`.`uid` AS `profile_uid`, `profile`.* , channel.* FROM `profile`
+				LEFT JOIN channel ON `profile`.`uid` = channel.channel_id
+				WHERE channel.channel_address = '%s' AND `profile`.`id` = %d LIMIT 1",
 				dbesc($nickname),
 				intval($profile_int)
 		);
 	}
+
 	if(! ($r && count($r))) {
-		$r = q("SELECT `profile`.`uid` AS `profile_uid`, `profile`.* , `contact`.`avatar_date` AS picdate, `channel`.* FROM `profile`
-			left join `contact` on `contact`.`uid` = `profile`.`uid` LEFT JOIN `channel` ON `profile`.`uid` = channel.channel_id
-			WHERE channel.channel_address = '%s' AND `profile`.`is_default` = 1 and `contact`.`self` = 1 LIMIT 1",
+		$r = q("SELECT `profile`.`uid` AS `profile_uid`, `profile`.* , `channel`.* FROM `profile`
+			LEFT JOIN `channel` ON `profile`.`uid` = channel.channel_id
+			WHERE channel.channel_address = '%s' AND `profile`.`is_default` = 1 LIMIT 1",
 			dbesc($nickname)
 		);
 	}
