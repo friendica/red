@@ -52,17 +52,17 @@ function profiles_post(&$a) {
 			$namechanged = true;
 
 
-		$pdesc = notags(trim($_POST['pdesc']));
-		$gender = notags(trim($_POST['gender']));
-		$address = notags(trim($_POST['address']));
-		$locality = notags(trim($_POST['locality']));
-		$region = notags(trim($_POST['region']));
-		$postal_code = notags(trim($_POST['postal_code']));
+		$pdesc        = notags(trim($_POST['pdesc']));
+		$gender       = notags(trim($_POST['gender']));
+		$address      = notags(trim($_POST['address']));
+		$locality     = notags(trim($_POST['locality']));
+		$region       = notags(trim($_POST['region']));
+		$postal_code  = notags(trim($_POST['postal_code']));
 		$country_name = notags(trim($_POST['country_name']));
 		$pub_keywords = notags(trim($_POST['pub_keywords']));
 		$prv_keywords = notags(trim($_POST['prv_keywords']));
-		$marital = notags(trim($_POST['marital']));
-		$howlong = notags(trim($_POST['howlong']));
+		$marital      = notags(trim($_POST['marital']));
+		$howlong      = notags(trim($_POST['howlong']));
 
 		$with = ((x($_POST,'with')) ? notags(trim($_POST['with'])) : '');
 
@@ -96,19 +96,7 @@ function profiles_post(&$a) {
 				}
 				else {
 					$newname = $lookup;
-/*					if(strstr($lookup,' ')) {
-						$r = q("SELECT * FROM `contact` WHERE `name` = '%s' AND `uid` = %d LIMIT 1",
-							dbesc($newname),
-							intval(local_user())
-						);
-					}
-					else {
-						$r = q("SELECT * FROM `contact` WHERE `nick` = '%s' AND `uid` = %d LIMIT 1",
-							dbesc($lookup),
-							intval(local_user())
-						);
-					}*/
-					
+
 					$r = q("SELECT * FROM `contact` WHERE `name` = '%s' AND `uid` = %d LIMIT 1",
 						dbesc($newname),
 						intval(local_user())
@@ -426,14 +414,15 @@ function profiles_content(&$a) {
 			goaway($a->get_baseurl(true) . '/profiles');
 			return; // NOTREACHED
 		}
+		$profile_guid = $r['profile_guid'];
 		
 		check_form_security_token_redirectOnErr('/profiles', 'profile_drop', 't');
 
 		// move every contact using this profile as their default to the user default
 
-		$r = q("UPDATE `contact` SET `profile_id` = (SELECT `profile`.`id` AS `profile_id` FROM `profile` WHERE `profile`.`is_default` = 1 AND `profile`.`uid` = %d LIMIT 1) WHERE `profile_id` = %d AND `uid` = %d ",
+		$r = q("UPDATE abook SET abook_profile = (SELECT profile_guid AS FROM profile WHERE is_default = 1 AND uid = %d LIMIT 1) WHERE abook_profile = '%s' AND `uid` = %d ",
 			intval(local_user()),
-			intval($a->argv[2]),
+			dbesc($profile_guid),
 			intval(local_user())
 		);
 		$r = q("DELETE FROM `profile` WHERE `id` = %d AND `uid` = %d LIMIT 1",
@@ -464,9 +453,11 @@ function profiles_content(&$a) {
 		$r1 = q("SELECT `name`, `photo`, `thumb` FROM `profile` WHERE `uid` = %d AND `is_default` = 1 LIMIT 1",
 			intval(local_user()));
 		
-		$r2 = q("INSERT INTO `profile` (`uid` , `profile_name` , `name`, `photo`, `thumb`)
+		$r2 = q("INSERT INTO `profile` (`aid`, `uid` , `profile_guid`, `profile_name` , `name`, `photo`, `thumb`)
 			VALUES ( %d, '%s', '%s', '%s', '%s' )",
+			intval(get_account_id()),
 			intval(local_user()),
+			dbesc(random_string()),
 			dbesc($name),
 			dbesc($r1[0]['name']),
 			dbesc($r1[0]['photo']),
@@ -506,6 +497,7 @@ function profiles_content(&$a) {
 		$r1[0]['is_default'] = 0;
 		$r1[0]['publish'] = 0;	
 		$r1[0]['profile_name'] = dbesc($name);
+		$r1[0]['profile_guid'] = dbesc(random_string());
 
 		dbesc_array($r1[0]);
 
@@ -539,7 +531,9 @@ function profiles_content(&$a) {
 			return;
 		}
 
-		profile_load($a,$a->user['nickname'],$r[0]['id']);
+		$chan = $a->get_channel();
+
+		profile_load($a,$chan['channel_address'],$r[0]['id']);
 
 		require_once('include/profile_selectors.php');
 

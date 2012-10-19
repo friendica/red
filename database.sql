@@ -18,6 +18,7 @@ CREATE TABLE IF NOT EXISTS `abook` (
   `updated` datetime NOT NULL DEFAULT '0000-00-00 00:00:00',
   `connnected` datetime NOT NULL DEFAULT '0000-00-00 00:00:00',
   `abook_flags` int(11) NOT NULL DEFAULT '0',
+  `abook_profile` char(64) NOT NULL DEFAULT '',
   PRIMARY KEY (`id`)
 ) ENGINE=MyISAM DEFAULT CHARSET=utf8;
 
@@ -724,6 +725,7 @@ CREATE TABLE IF NOT EXISTS `photo` (
 
 CREATE TABLE IF NOT EXISTS `profile` (
   `id` int(11) NOT NULL AUTO_INCREMENT,
+  `profile_guid` char(64) NOT NULL DEFAULT '',
   `aid` int(10) unsigned NOT NULL DEFAULT '0',
   `uid` int(11) NOT NULL,
   `profile_name` char(255) NOT NULL,
@@ -765,6 +767,7 @@ CREATE TABLE IF NOT EXISTS `profile` (
   `thumb` char(255) NOT NULL,
   `publish` tinyint(1) NOT NULL DEFAULT '0',
   PRIMARY KEY (`id`),
+  UNIQUE KEY `guid` (`profile_guid`,`uid`),
   KEY `uid` (`uid`),
   KEY `locality` (`locality`),
   KEY `hometown` (`hometown`),
@@ -777,6 +780,7 @@ CREATE TABLE IF NOT EXISTS `profile` (
   KEY `hide_friends` (`hide_friends`),
   KEY `postal_code` (`postal_code`),
   KEY `country_name` (`country_name`),
+  KEY `profile_guid` (`profile_guid`),
   FULLTEXT KEY `pub_keywords` (`pub_keywords`),
   FULLTEXT KEY `prv_keywords` (`prv_keywords`)
 ) ENGINE=MyISAM  DEFAULT CHARSET=utf8;

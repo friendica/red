@@ -110,10 +110,11 @@ function create_identity($arr) {
 
 	$newuid = $ret['channel']['channel_id'];
 
-	$r = q("insert into xchan ( xchan_hash, xchan_guid, xchan_guid_sig, xchan_photo, xchan_addr, xchan_profile, xchan_name, xchan_network, xchan_photo_date, xchan_name_date ) values ('%s', '%s', '%s', '%s', '%s', '%s', '%s', '%s', '%s', '%s')",
+	$r = q("insert into xchan ( xchan_hash, xchan_guid, xchan_guid_sig, xchan_pubkey, xchan_photo, xchan_addr, xchan_profile, xchan_name, xchan_network, xchan_photo_date, xchan_name_date ) values ('%s', '%s', '%s', '%s', '%s', '%s', '%s', '%s', '%s', '%s', '%s')",
 		dbesc($hash),
 		dbesc($ret['channel']['channel_guid']),
 		dbesc($sig),
+		dbesc($key['pubkey']),
 		dbesc($a->get_baseurl() . "/photo/profile/{$newuid}"),
 		dbesc($ret['channel']['channel_address'] . '@' . $a->get_hostname()),
 		dbesc(z_root() . '/profile/' . $ret['channel']['channel_address']),
@@ -127,10 +128,11 @@ function create_identity($arr) {
 	// It's ok for this to fail if it's an imported channel, and therefore the hash is a duplicate
 		
 
-	$r = q("INSERT INTO `profile` ( `aid`, `uid`, `profile_name`, `is_default`, `name`, `photo`, `thumb`)
-		VALUES ( %d, %d, '%s', %d, '%s', '%s', '%s') ",
+	$r = q("INSERT INTO `profile` ( `aid`, `uid`, `profile_guid`, `profile_name`, `is_default`, `name`, `photo`, `thumb`)
+		VALUES ( %d, %d, '%s', '%s', %d, '%s', '%s', '%s') ",
 		intval($ret['channel']['channel_account_id']),
 		intval($newuid),
+		dbesc(random_string()),
 		t('default'),
 		1,
 		dbesc($ret['channel']['channel_name']),
