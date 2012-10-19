@@ -522,6 +522,7 @@ if(! class_exists('App')) {
 				$this->cmd = 'profile/' . substr($this->cmd,1);
 
 
+
 			/**
 			 *
 			 * Break the URL path into C style argc/argv style arguments for our

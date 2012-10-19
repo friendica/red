@@ -157,7 +157,6 @@ $a->apps = $arr['app_menu'];
 if(strlen($a->module)) {
 
 
-
 	/**
 	 *
 	 * We will always have a module name.

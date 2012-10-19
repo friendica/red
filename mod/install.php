@@ -84,7 +84,7 @@ function install_post(&$a) {
 				'$dbdata' => $dbdata,
 				'$timezone' => $timezone,
 				'$siteurl' => $siteurl,
-				'$site_id' => hash('whirlpool', random_string()),
+				'$site_id' => random_string(),
 				'$phpath' => $phpath,
 				'$adminmail' => $adminmail
 			));

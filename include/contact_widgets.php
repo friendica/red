@@ -111,20 +111,21 @@ function categories_widget($baseurl,$selected = '') {
 		intval($a->profile['profile_uid']),
 		intval(TERM_CATEGORY)
 	);
-	if(count($r)) {
+	if($r && count($r)) {
 		foreach($r as $rr)
-		$terms[] = array('name' => $rr['term'], 'selected' => (($selected == $rr['term']) ? 'selected' : ''));
+			$terms[] = array('name' => $rr['term'], 'selected' => (($selected == $rr['term']) ? 'selected' : ''));
+
+		return replace_macros(get_markup_template('categories_widget.tpl'),array(
+			'$title' => t('Categories'),
+			'$desc' => '',
+			'$sel_all' => (($selected == '') ? 'selected' : ''),
+			'$all' => t('Everything'),
+			'$terms' => $terms,
+			'$base' => $baseurl,
+
+		));
 	}
-
-	return replace_macros(get_markup_template('categories_widget.tpl'),array(
-		'$title' => t('Categories'),
-		'$desc' => '',
-		'$sel_all' => (($selected == '') ? 'selected' : ''),
-		'$all' => t('Everything'),
-		'$terms' => $terms,
-		'$base' => $baseurl,
-
-	));
+	return '';
 }
 
 function common_friends_visitor_widget($profile_uid) {
