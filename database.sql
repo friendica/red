@@ -7,19 +7,30 @@ SET SQL_MODE="NO_AUTO_VALUE_ON_ZERO";
 
 
 CREATE TABLE IF NOT EXISTS `abook` (
-  `id` int(10) unsigned NOT NULL AUTO_INCREMENT,
-  `account` int(10) unsigned NOT NULL,
-  `channel` int(10) unsigned NOT NULL,
-  `xchan` char(255) NOT NULL DEFAULT '',
-  `my_perms` int(11) NOT NULL DEFAULT '0',
-  `their_perms` int(11) NOT NULL DEFAULT '0',
-  `closeness` tinyint(3) unsigned NOT NULL DEFAULT '255',
-  `created` datetime NOT NULL DEFAULT '0000-00-00 00:00:00',
-  `updated` datetime NOT NULL DEFAULT '0000-00-00 00:00:00',
-  `connnected` datetime NOT NULL DEFAULT '0000-00-00 00:00:00',
+  `abook_id` int(10) unsigned NOT NULL AUTO_INCREMENT,
+  `abook_account` int(10) unsigned NOT NULL,
+  `abook_channel` int(10) unsigned NOT NULL,
+  `abook_xchan` char(255) NOT NULL DEFAULT '',
+  `abook_my_perms` int(11) NOT NULL DEFAULT '0',
+  `abook_their_perms` int(11) NOT NULL DEFAULT '0',
+  `abook_closeness` tinyint(3) unsigned NOT NULL DEFAULT '255',
+  `abook_created` datetime NOT NULL DEFAULT '0000-00-00 00:00:00',
+  `abook_updated` datetime NOT NULL DEFAULT '0000-00-00 00:00:00',
+  `abook_connnected` datetime NOT NULL DEFAULT '0000-00-00 00:00:00',
   `abook_flags` int(11) NOT NULL DEFAULT '0',
   `abook_profile` char(64) NOT NULL DEFAULT '',
-  PRIMARY KEY (`id`)
+  PRIMARY KEY (`abook_id`),
+  KEY `abook_account` (`abook_account`),
+  KEY `abook_channel` (`abook_channel`),
+  KEY `abook_xchan` (`abook_xchan`),
+  KEY `abook_my_perms` (`abook_my_perms`),
+  KEY `abook_their_perms` (`abook_their_perms`),
+  KEY `abook_closeness` (`abook_closeness`),
+  KEY `abook_created` (`abook_created`),
+  KEY `abook_updated` (`abook_updated`),
+  KEY `abook_connnected` (`abook_connnected`),
+  KEY `abook_flags` (`abook_flags`),
+  KEY `abook_profile` (`abook_profile`)
 ) ENGINE=MyISAM DEFAULT CHARSET=utf8;
 
 CREATE TABLE IF NOT EXISTS `account` (
@@ -271,7 +282,7 @@ CREATE TABLE IF NOT EXISTS `contact` (
   KEY `my_perms` (`my_perms`),
   KEY `their_perms` (`their_perms`),
   KEY `aid` (`aid`)
-) ENGINE=MyISAM  DEFAULT CHARSET=utf8;
+) ENGINE=MyISAM DEFAULT CHARSET=utf8;
 
 CREATE TABLE IF NOT EXISTS `deliverq` (
   `id` int(10) unsigned NOT NULL AUTO_INCREMENT,
@@ -432,14 +443,14 @@ CREATE TABLE IF NOT EXISTS `group_member` (
   KEY `uid` (`uid`),
   KEY `gid` (`gid`),
   KEY `contact-id` (`contact-id`)
-) ENGINE=MyISAM  DEFAULT CHARSET=utf8;
+) ENGINE=MyISAM DEFAULT CHARSET=utf8;
 
 CREATE TABLE IF NOT EXISTS `guid` (
   `id` int(10) unsigned NOT NULL AUTO_INCREMENT,
   `guid` char(64) NOT NULL,
   PRIMARY KEY (`id`),
   KEY `guid` (`guid`)
-) ENGINE=MyISAM  DEFAULT CHARSET=utf8;
+) ENGINE=MyISAM DEFAULT CHARSET=utf8;
 
 CREATE TABLE IF NOT EXISTS `hook` (
   `id` int(11) NOT NULL AUTO_INCREMENT,
@@ -560,7 +571,7 @@ CREATE TABLE IF NOT EXISTS `item` (
   FULLTEXT KEY `allow_gid` (`allow_gid`),
   FULLTEXT KEY `deny_cid` (`deny_cid`),
   FULLTEXT KEY `deny_gid` (`deny_gid`)
-) ENGINE=MyISAM  DEFAULT CHARSET=utf8;
+) ENGINE=MyISAM DEFAULT CHARSET=utf8;
 
 CREATE TABLE IF NOT EXISTS `item_id` (
   `id` int(10) unsigned NOT NULL AUTO_INCREMENT,
@@ -648,7 +659,7 @@ CREATE TABLE IF NOT EXISTS `notify` (
   KEY `parent` (`parent`),
   KEY `link` (`link`),
   KEY `otype` (`otype`)
-) ENGINE=MyISAM  DEFAULT CHARSET=utf8;
+) ENGINE=MyISAM DEFAULT CHARSET=utf8;
 
 CREATE TABLE IF NOT EXISTS `notify-threads` (
   `id` int(11) NOT NULL AUTO_INCREMENT,
@@ -659,7 +670,7 @@ CREATE TABLE IF NOT EXISTS `notify-threads` (
   PRIMARY KEY (`id`),
   KEY `master-parent-item` (`master-parent-item`),
   KEY `receiver-uid` (`receiver-uid`)
-) ENGINE=MyISAM  DEFAULT CHARSET=utf8;
+) ENGINE=MyISAM DEFAULT CHARSET=utf8;
 
 CREATE TABLE IF NOT EXISTS `outq` (
   `outq_hash` char(255) NOT NULL,
@@ -687,7 +698,7 @@ CREATE TABLE IF NOT EXISTS `pconfig` (
   `v` mediumtext NOT NULL,
   PRIMARY KEY (`id`),
   UNIQUE KEY `access` (`uid`,`cat`,`k`)
-) ENGINE=MyISAM  DEFAULT CHARSET=utf8;
+) ENGINE=MyISAM DEFAULT CHARSET=utf8;
 
 CREATE TABLE IF NOT EXISTS `photo` (
   `id` int(10) unsigned NOT NULL AUTO_INCREMENT,
@@ -721,7 +732,7 @@ CREATE TABLE IF NOT EXISTS `photo` (
   KEY `type` (`type`),
   KEY `contact-id` (`contact-id`),
   KEY `aid` (`aid`)
-) ENGINE=MyISAM  DEFAULT CHARSET=utf8;
+) ENGINE=MyISAM DEFAULT CHARSET=utf8;
 
 CREATE TABLE IF NOT EXISTS `profile` (
   `id` int(11) NOT NULL AUTO_INCREMENT,
@@ -798,7 +809,7 @@ CREATE TABLE IF NOT EXISTS `profile_check` (
   KEY `dfrn_id` (`dfrn_id`),
   KEY `sec` (`sec`),
   KEY `expire` (`expire`)
-) ENGINE=MyISAM  DEFAULT CHARSET=utf8;
+) ENGINE=MyISAM DEFAULT CHARSET=utf8;
 
 CREATE TABLE IF NOT EXISTS `queue` (
   `id` int(11) NOT NULL AUTO_INCREMENT,
@@ -869,7 +880,7 @@ CREATE TABLE IF NOT EXISTS `term` (
   KEY `term` (`term`),
   KEY `uid` (`uid`),
   KEY `aid` (`aid`)
-) ENGINE=MyISAM  DEFAULT CHARSET=utf8;
+) ENGINE=MyISAM DEFAULT CHARSET=utf8;
 
 CREATE TABLE IF NOT EXISTS `tokens` (
   `id` varchar(40) NOT NULL,

@@ -426,13 +426,13 @@ function profiles_content(&$a) {
 
 		// move every contact using this profile as their default to the user default
 
-		$r = q("UPDATE abook SET abook_profile = (SELECT profile_guid AS FROM profile WHERE is_default = 1 AND uid = %d LIMIT 1) WHERE abook_profile = '%s' AND `uid` = %d ",
+		$r = q("UPDATE abook SET abook_profile = (SELECT profile_guid AS FROM profile WHERE is_default = 1 AND uid = %d LIMIT 1) WHERE abook_profile = '%s' AND abook_channel = %d ",
 			intval(local_user()),
 			dbesc($profile_guid),
 			intval(local_user())
 		);
 		$r = q("DELETE FROM `profile` WHERE `id` = %d AND `uid` = %d LIMIT 1",
-			intval($a->argv[2]),
+			intval(argv(2)),
 			intval(local_user())
 		);
 		if($r)
