@@ -312,13 +312,6 @@ function profile_activity($changed, $value) {
 	if(! local_user() || ! is_array($changed) || ! count($changed))
 		return;
 
-// FIXME (lots to fix)
-//	if($a->user['hidewall'] || get_config('system','block_public'))
-//		return;
-
-return;
-
-
 	if(! get_pconfig(local_user(),'system','post_profilechange'))
 		return;
 
@@ -332,18 +325,13 @@ return;
 	$arr = array();
 	$arr['uri'] = $arr['parent_uri'] = item_message_id();
 	$arr['uid'] = local_user();
-//	$arr['contact-id'] = $self[0]['id'];
-//	$arr['wall'] = 1;
-//	$arr['type'] = 'wall';
-//	$arr['gravity'] = 0;
-//	$arr['origin'] = 1;
-//	$arr['author-name'] = $arr['owner-name'] = $self[0]['name'];
-//	$arr['author-link'] = $arr['owner-link'] = $self[0]['url'];
-//	$arr['author-avatar'] = $arr['owner-avatar'] = $self[0]['thumb'];
+	$arr['aid'] = $self['channel_account_id'];
+	$arr['owner_xchan'] = $arr['author_xchan'] = $self['xchan_hash'];
+	$arr['item_flags'] = ITEM_WALL|ITEM_ORIGIN|ITEM_THREAD_TOP;
 	$arr['verb'] = ACTIVITY_UPDATE;
 	$arr['obj_type'] = ACTIVITY_OBJ_PROFILE;
 				
-	$A = '[url=' . $self[0]['url'] . ']' . $self[0]['name'] . '[/url]';
+	$A = '[url=' . $self[0]['xchan_profile'] . ']' . $self[0]['xchan_name'] . '[/url]';
 
 
 	$changes = '';
@@ -360,7 +348,7 @@ return;
 		$changes .= $ch;
 	}
 
-	$prof = '[url=' . $self[0]['url'] . '?tab=profile' . ']' . t('public profile') . '[/url]';	
+	$prof = '[url=' . $self[0]['xchan_profile'] . '?tab=profile' . ']' . t('public profile') . '[/url]';	
 
 	if($t == 1 && strlen($value)) {
 		$message = sprintf( t('%1$s changed %2$s to &ldquo;%3$s&rdquo;'), $A, $changes, $value);
@@ -372,31 +360,29 @@ return;
 
 	$arr['body'] = $message;  
 
-//	$arr['object'] = '<object><type>' . ACTIVITY_OBJ_PROFILE . '</type><title>' . $self[0]['name'] . '</title>'
-//	. '<id>' . $self[0]['url'] . '/' . $self[0]['name'] . '</id>';
-//	$arr['object'] .= '<link>' . xmlify('<link rel="alternate" type="text/html" href="' . $self[0]['url'] . '?tab=profile' . '" />' . "\n");
-//	$arr['object'] .= xmlify('<link rel="photo" type="image/jpeg" href="' . $self[0]['thumb'] . '" />' . "\n");
-//	$arr['object'] .= '</link></object>' . "\n";
+	$links = array();
+	$links[] = array('rel' => 'alternate', 'type' => 'text/html', 'href' => $self[0]['profile'] . '?tab=profile');
+	$links[] = array('rel' => 'photo', 'type' => /*FIXME*/ 'image/jpeg', 'href' => $self[0]['xchan_photo']); 
 
-//	$arr['allow_cid'] = $a->user['allow_cid'];
-//	$arr['allow_gid'] = $a->user['allow_gid'];
-//	$arr['deny_cid']  = $a->user['deny_cid'];
-//	$arr['deny_gid']  = $a->user['deny_gid'];
+	$arr['object'] = json_encode(array(
+		'type' => ACTIVITY_OBJ_PROFILE,
+		'title' => $self[0]['channel_name'],
+		'id' => $self[0]['xchan_profile'] . '/' . $self[0]['xchan_hash'],
+		'link' => $links
+	));
+
+	
+	$arr['allow_cid'] = $self[0]['channel_allow_cid'];
+	$arr['allow_gid'] = $self[0]['channel_allow_gid'];
+	$arr['deny_cid']  = $self[0]['channel_deny_cid'];
+	$arr['deny_gid']  = $self[0]['channel_deny_gid'];
 
 	$i = item_store($arr);
+
 	if($i) {
-
-// ??? are we going to change plink structure? I'm guessing yes
-
-		// give it a permanent link
-		q("update item set plink = '%s' where id = %d limit 1",
-			dbesc($a->get_baseurl() . '/display/' . $a->user['nickname'] . '/' . $i),
-			intval($i)
-		);
-
 	   	proc_run('php',"include/notifier.php","activity","$i");
-
 	}
+
 }
 
 

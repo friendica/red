@@ -579,7 +579,7 @@ function item_post(&$a) {
 		$item_flags = $item_flags | ITEM_THREAD_TOP;
 	}
 	
-	$datarray['aid']           = $channel['account_id'];
+	$datarray['aid']           = $channel['channel_account_id'];
 	$datarray['uid']           = $profile_uid;
 
 	$datarray['owner_xchan']   = $owner_xchan['xchan_hash'];
