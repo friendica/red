@@ -90,7 +90,7 @@ function nav(&$a) {
 	if(! get_config('system','hide_help'))
 		$nav['help'] = array($help_url, t('Help'), "", t('Help and documentation'));
 
-	if(count($a->apps)>0)
+	if(count($a->get_apps()) > 0)
 		$nav['apps'] = array('apps', t('Apps'), "", t('Addon applications, utilities, games'));
 
 	$nav['search'] = array('search', t('Search'), "", t('Search site content'));
@@ -170,7 +170,7 @@ function nav(&$a) {
 		'$emptynotifications' => t('Nothing new here'),
 		'$userinfo' => $userinfo,
 		'$sel' => 	$a->nav_sel,
-		'$apps' => $a->apps,
+		'$apps' => $a->get_apps(),
 	));
 
 	call_hooks('page_header', $a->page['nav']);

@@ -3,25 +3,22 @@
 
 function oexchange_init(&$a) {
 
-	if(($a->argc > 1) && ($a->argv[1] === 'xrd')) {
+	if((argc() > 1) && (argv(1) === 'xrd')) {
 		$tpl = get_markup_template('oexchange_xrd.tpl');
 
 		$o = replace_macros($tpl, array('$base' => $a->get_baseurl()));
 		echo $o;
 		killme();
 	}
-
-
 }
 
 function oexchange_content(&$a) {
 
 	if(! local_user()) {
-		$o = login(false);
-		return $o;
+		return login(false);
 	}
 
-	if(($a->argc > 1) && $a->argv[1] === 'done') {
+	if((argc() > 1) && argv(1) === 'done') {
 		info( t('Post successful.') . EOL);
 		return;
 	}

@@ -126,11 +126,11 @@ else
 
 nav_set_selected('nothing');
 
-$arr = array('app_menu' => $a->apps);
+$arr = array('app_menu' => $a->get_apps());
 
 call_hooks('app_menu', $arr);
 
-$a->apps = $arr['app_menu'];
+$a->set_apps($arr['app_menu']);
 
 /**
  *

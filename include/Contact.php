@@ -353,9 +353,9 @@ function contact_photo_menu($contact) {
 
 
 function random_profile() {
-	$r = q("select url from gcontact where url like '%%://%%/profile/%%' order by rand() limit 1");
-	if(count($r))
-		return dirname($r[0]['url']);
+	$r = q("select xchan_profile from xchan where xchan_network = 'zot' order by rand() limit 1");
+	if($r && count($r))
+		return $r[0]['xchan_profile'];
 	return '';
 }
 

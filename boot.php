@@ -426,7 +426,7 @@ if(! class_exists('App')) {
 		public  $timezone;
 		public  $interactive = true;
 		public  $plugins;
-		public  $apps = array();
+		private  $apps = array();
 		public  $identities;
 		public  $css_sources = array();
 		public  $js_sources = array();
@@ -653,6 +653,15 @@ if(! class_exists('App')) {
 		function get_observer() {
 			return $this->observer;
 		}
+
+		function get_apps() {
+			return $this->apps;
+		}
+
+		function set_apps($arr) {
+			$this->apps = $arr;
+		}
+
 
 		function set_widget($title,$html, $location = 'aside') {
 			$this->widgets[] = array('title' => $title, 'html' => $html, 'location' => $location);
