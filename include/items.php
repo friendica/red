@@ -110,6 +110,7 @@ function get_feed_for(&$a, $dfrn_id, $owner_nick, $last_update, $direction = 0) 
 			killme();
 
 		$contact = $r[0];
+		require_once('include/security.php');
 		$groups = init_groups_visitor($contact['id']);
 
 		if(count($groups)) {

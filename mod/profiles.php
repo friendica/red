@@ -8,6 +8,8 @@ function profiles_post(&$a) {
 		return;
 	}
 
+	require_once('include/activities.php');
+
 	$namechanged = false;
 
 	call_hooks('profile_post', $_POST);
@@ -63,8 +65,29 @@ function profiles_post(&$a) {
 		$prv_keywords = notags(trim($_POST['prv_keywords']));
 		$marital      = notags(trim($_POST['marital']));
 		$howlong      = notags(trim($_POST['howlong']));
+		$sexual       = notags(trim($_POST['sexual']));
+		$homepage     = notags(trim($_POST['homepage']));
+		$hometown     = notags(trim($_POST['hometown']));
+		$politic      = notags(trim($_POST['politic']));
+		$religion     = notags(trim($_POST['religion']));
 
-		$with = ((x($_POST,'with')) ? notags(trim($_POST['with'])) : '');
+		$likes        = fix_mce_lf(escape_tags(trim($_POST['likes'])));
+		$dislikes     = fix_mce_lf(escape_tags(trim($_POST['dislikes'])));
+
+		$about        = fix_mce_lf(escape_tags(trim($_POST['about'])));
+		$interest     = fix_mce_lf(escape_tags(trim($_POST['interest'])));
+		$contact      = fix_mce_lf(escape_tags(trim($_POST['contact'])));
+		$music        = fix_mce_lf(escape_tags(trim($_POST['music'])));
+		$book         = fix_mce_lf(escape_tags(trim($_POST['book'])));
+		$tv           = fix_mce_lf(escape_tags(trim($_POST['tv'])));
+		$film         = fix_mce_lf(escape_tags(trim($_POST['film'])));
+		$romance      = fix_mce_lf(escape_tags(trim($_POST['romance'])));
+		$work         = fix_mce_lf(escape_tags(trim($_POST['work'])));
+		$education    = fix_mce_lf(escape_tags(trim($_POST['education'])));
+
+		$hide_friends = (($_POST['hide_friends'] == 1) ? 1: 0);
+
+		$with         = ((x($_POST,'with')) ? notags(trim($_POST['with'])) : '');
 
 		if(! strlen($howlong))
 			$howlong = '0000-00-00 00:00:00';
@@ -123,27 +146,6 @@ function profiles_post(&$a) {
 				$with = $orig[0]['with'];
 		}
 
-		$sexual = notags(trim($_POST['sexual']));
-		$homepage = notags(trim($_POST['homepage']));
-		$hometown = notags(trim($_POST['hometown']));
-		$politic = notags(trim($_POST['politic']));
-		$religion = notags(trim($_POST['religion']));
-
-		$likes = fix_mce_lf(escape_tags(trim($_POST['likes'])));
-		$dislikes = fix_mce_lf(escape_tags(trim($_POST['dislikes'])));
-
-		$about = fix_mce_lf(escape_tags(trim($_POST['about'])));
-		$interest = fix_mce_lf(escape_tags(trim($_POST['interest'])));
-		$contact = fix_mce_lf(escape_tags(trim($_POST['contact'])));
-		$music = fix_mce_lf(escape_tags(trim($_POST['music'])));
-		$book = fix_mce_lf(escape_tags(trim($_POST['book'])));
-		$tv = fix_mce_lf(escape_tags(trim($_POST['tv'])));
-		$film = fix_mce_lf(escape_tags(trim($_POST['film'])));
-		$romance = fix_mce_lf(escape_tags(trim($_POST['romance'])));
-		$work = fix_mce_lf(escape_tags(trim($_POST['work'])));
-		$education = fix_mce_lf(escape_tags(trim($_POST['education'])));
-
-		$hide_friends = (($_POST['hide_friends'] == 1) ? 1: 0);
 
 
 
@@ -306,84 +308,6 @@ function profiles_post(&$a) {
 }
 
 
-function profile_activity($changed, $value) {
-	$a = get_app();
-
-	if(! local_user() || ! is_array($changed) || ! count($changed))
-		return;
-
-	if(! get_pconfig(local_user(),'system','post_profilechange'))
-		return;
-
-	require_once('include/items.php');
-
-	$self = $a->get_channel();
-
-	if(! count($self))
-		return;
-
-	$arr = array();
-	$arr['uri'] = $arr['parent_uri'] = item_message_id();
-	$arr['uid'] = local_user();
-	$arr['aid'] = $self['channel_account_id'];
-	$arr['owner_xchan'] = $arr['author_xchan'] = $self['xchan_hash'];
-	$arr['item_flags'] = ITEM_WALL|ITEM_ORIGIN|ITEM_THREAD_TOP;
-	$arr['verb'] = ACTIVITY_UPDATE;
-	$arr['obj_type'] = ACTIVITY_OBJ_PROFILE;
-				
-	$A = '[url=' . $self[0]['xchan_profile'] . ']' . $self[0]['xchan_name'] . '[/url]';
-
-
-	$changes = '';
-	$t = count($changed);
-	$z = 0;
-	foreach($changed as $ch) {
-		if(strlen($changes)) {
-			if ($z == ($t - 1))
-				$changes .= t(' and ');
-			else
-				$changes .= ', ';
-		}
-		$z ++;
-		$changes .= $ch;
-	}
-
-	$prof = '[url=' . $self[0]['xchan_profile'] . '?tab=profile' . ']' . t('public profile') . '[/url]';	
-
-	if($t == 1 && strlen($value)) {
-		$message = sprintf( t('%1$s changed %2$s to &ldquo;%3$s&rdquo;'), $A, $changes, $value);
-		$message .= "\n\n" . sprintf( t(' - Visit %1$s\'s %2$s'), $A, $prof);
-	}
-	else
-		$message = 	sprintf( t('%1$s has an updated %2$s, changing %3$s.'), $A, $prof, $changes);
- 
-
-	$arr['body'] = $message;  
-
-	$links = array();
-	$links[] = array('rel' => 'alternate', 'type' => 'text/html', 'href' => $self[0]['profile'] . '?tab=profile');
-	$links[] = array('rel' => 'photo', 'type' => /*FIXME*/ 'image/jpeg', 'href' => $self[0]['xchan_photo']); 
-
-	$arr['object'] = json_encode(array(
-		'type' => ACTIVITY_OBJ_PROFILE,
-		'title' => $self[0]['channel_name'],
-		'id' => $self[0]['xchan_profile'] . '/' . $self[0]['xchan_hash'],
-		'link' => $links
-	));
-
-	
-	$arr['allow_cid'] = $self[0]['channel_allow_cid'];
-	$arr['allow_gid'] = $self[0]['channel_allow_gid'];
-	$arr['deny_cid']  = $self[0]['channel_deny_cid'];
-	$arr['deny_gid']  = $self[0]['channel_deny_gid'];
-
-	$i = item_store($arr);
-
-	if($i) {
-	   	proc_run('php',"include/notifier.php","activity","$i");
-	}
-
-}
 
 
 function profiles_content(&$a) {
@@ -535,18 +459,18 @@ function profiles_content(&$a) {
 			$editselect = 'none';
 
 		$a->page['htmlhead'] .= replace_macros(get_markup_template('profed_head.tpl'), array(
-			'$baseurl' => $a->get_baseurl(true),
+			'$baseurl'    => $a->get_baseurl(true),
 			'$editselect' => $editselect,
 		));
 
 
 		$opt_tpl = get_markup_template("profile-hide_friends.tpl");
 		$hide_friends = replace_macros($opt_tpl,array(
-			'$desc' => t('Hide your contact/friend list from viewers of this profile?'),
-			'$yes_str' => t('Yes'),
-			'$no_str' => t('No'),
+			'$desc'         => t('Hide your contact/friend list from viewers of this profile?'),
+			'$yes_str'      => t('Yes'),
+			'$no_str'       => t('No'),
 			'$yes_selected' => (($r[0]['hide_friends']) ? " checked=\"checked\" " : ""),
-			'$no_selected' => (($r[0]['hide_friends'] == 0) ? " checked=\"checked\" " : "")
+			'$no_selected'  => (($r[0]['hide_friends'] == 0) ? " checked=\"checked\" " : "")
 		));
 
 
@@ -557,89 +481,93 @@ function profiles_content(&$a) {
 		$is_default = (($r[0]['is_default']) ? 1 : 0);
 		$tpl = get_markup_template("profile_edit.tpl");
 		$o .= replace_macros($tpl,array(
+
 			'$form_security_token' => get_form_security_token("profile_edit"),
-			'$profile_clone_link' => 'profiles/clone/' . $r[0]['id'] . '?t=' . get_form_security_token("profile_clone"),
-			'$profile_drop_link' => 'profiles/drop/' . $r[0]['id'] . '?t=' . get_form_security_token("profile_drop"),
-			'$banner' => t('Edit Profile Details'),
-			'$submit' => t('Submit'),
-			'$viewprof' => t('View this profile'),
-			'$cr_prof' => t('Create a new profile using these settings'),
-			'$cl_prof' => t('Clone this profile'),
-			'$del_prof' => t('Delete this profile'),
+			'$profile_clone_link'  => 'profiles/clone/' . $r[0]['id'] . '?t=' 
+				. get_form_security_token("profile_clone"),
+			'$profile_drop_link'   => 'profiles/drop/' . $r[0]['id'] . '?t=' 
+				. get_form_security_token("profile_drop"),
+
+			'$banner'       => t('Edit Profile Details'),
+			'$submit'       => t('Submit'),
+			'$viewprof'     => t('View this profile'),
+			'$cr_prof'      => t('Create a new profile using these settings'),
+			'$cl_prof'      => t('Clone this profile'),
+			'$del_prof'     => t('Delete this profile'),
 			'$lbl_profname' => t('Profile Name:'),
 			'$lbl_fullname' => t('Your Full Name:'),
-			'$lbl_title' => t('Title/Description:'),
-			'$lbl_gender' => t('Your Gender:'),
-			'$lbl_bd' => sprintf( t("Birthday \x28%s\x29:"),datesel_format($f)),
-			'$lbl_address' => t('Street Address:'),
-			'$lbl_city' => t('Locality/City:'),
-			'$lbl_zip' => t('Postal/Zip Code:'),
-			'$lbl_country' => t('Country:'),
-			'$lbl_region' => t('Region/State:'),
-			'$lbl_marital' => t('<span class="heart">&hearts;</span> Marital Status:'),
-			'$lbl_with' => t("Who: \x28if applicable\x29"),
-			'$lbl_ex1' => t('Examples: cathy123, Cathy Williams, cathy@example.com'),
-			'$lbl_howlong' => t('Since [date]:'),
-			'$lbl_sexual' => t('Sexual Preference:'),
+			'$lbl_title'    => t('Title/Description:'),
+			'$lbl_gender'   => t('Your Gender:'),
+			'$lbl_bd'       => sprintf( t("Birthday \x28%s\x29:"),datesel_format($f)),
+			'$lbl_address'  => t('Street Address:'),
+			'$lbl_city'     => t('Locality/City:'),
+			'$lbl_zip'      => t('Postal/Zip Code:'),
+			'$lbl_country'  => t('Country:'),
+			'$lbl_region'   => t('Region/State:'),
+			'$lbl_marital'  => t('<span class="heart">&hearts;</span> Marital Status:'),
+			'$lbl_with'     => t("Who: \x28if applicable\x29"),
+			'$lbl_ex1'      => t('Examples: cathy123, Cathy Williams, cathy@example.com'),
+			'$lbl_howlong'  => t('Since [date]:'),
+			'$lbl_sexual'   => t('Sexual Preference:'),
 			'$lbl_homepage' => t('Homepage URL:'),
 			'$lbl_hometown' => t('Hometown:'),
-			'$lbl_politic' => t('Political Views:'),
+			'$lbl_politic'  => t('Political Views:'),
 			'$lbl_religion' => t('Religious Views:'),
-			'$lbl_pubkey' => t('Public Keywords:'),
-			'$lbl_prvkey' => t('Private Keywords:'),
-			'$lbl_likes' => t('Likes:'),
+			'$lbl_pubkey'   => t('Public Keywords:'),
+			'$lbl_prvkey'   => t('Private Keywords:'),
+			'$lbl_likes'    => t('Likes:'),
 			'$lbl_dislikes' => t('Dislikes:'),
-			'$lbl_ex2' => t('Example: fishing photography software'),
-			'$lbl_pubdsc' => t("\x28Used for suggesting potential friends, can be seen by others\x29"),
-			'$lbl_prvdsc' => t("\x28Used for searching profiles, never shown to others\x29"),
-			'$lbl_about' => t('Tell us about yourself...'),
-			'$lbl_hobbies' => t('Hobbies/Interests'),
-			'$lbl_social' => t('Contact information and Social Networks'),
-			'$lbl_music' => t('Musical interests'),
-			'$lbl_book' => t('Books, literature'),
-			'$lbl_tv' => t('Television'),
-			'$lbl_film' => t('Film/dance/culture/entertainment'),
-			'$lbl_love' => t('Love/romance'),
-			'$lbl_work' => t('Work/employment'),
-			'$lbl_school' => t('School/education'),
-			'$disabled' => (($is_default) ? 'onclick="return false;" style="color: #BBBBFF;"' : ''),
-			'$baseurl' => $a->get_baseurl(true),
-			'$profile_id' => $r[0]['id'],
+			'$lbl_ex2'      => t('Example: fishing photography software'),
+			'$lbl_pubdsc'   => t("\x28Used for suggesting potential friends, can be seen by others\x29"),
+			'$lbl_prvdsc'   => t("\x28Used for searching profiles, never shown to others\x29"),
+			'$lbl_about'    => t('Tell us about yourself...'),
+			'$lbl_hobbies'  => t('Hobbies/Interests'),
+			'$lbl_social'   => t('Contact information and Social Networks'),
+			'$lbl_music'    => t('Musical interests'),
+			'$lbl_book'     => t('Books, literature'),
+			'$lbl_tv'       => t('Television'),
+			'$lbl_film'     => t('Film/dance/culture/entertainment'),
+			'$lbl_love'     => t('Love/romance'),
+			'$lbl_work'     => t('Work/employment'),
+			'$lbl_school'   => t('School/education'),
+			'$disabled'     => (($is_default) ? 'onclick="return false;" style="color: #BBBBFF;"' : ''),
+			'$baseurl'      => $a->get_baseurl(true),
+			'$profile_id'   => $r[0]['id'],
 			'$profile_name' => $r[0]['profile_name'],
-			'$default' => (($is_default) ? '<p id="profile-edit-default-desc">' . t('This is your <strong>public</strong> profile.<br />It <strong>may</strong> be visible to anybody using the internet.') . '</p>' : ""),
-			'$name' => $r[0]['name'],
-			'$pdesc' => $r[0]['pdesc'],
-			'$dob' => dob($r[0]['dob']),
+			'$default'      => (($is_default) ? '<p id="profile-edit-default-desc">' . t('This is your <strong>public</strong> profile.<br />It <strong>may</strong> be visible to anybody using the internet.') . '</p>' : ""),
+			'$name'         => $r[0]['name'],
+			'$pdesc'        => $r[0]['pdesc'],
+			'$dob'          => dob($r[0]['dob']),
 			'$hide_friends' => $hide_friends,
-			'$address' => $r[0]['address'],
-			'$locality' => $r[0]['locality'],
-			'$region' => $r[0]['region'],
-			'$postal_code' => $r[0]['postal_code'],
+			'$address'      => $r[0]['address'],
+			'$locality'     => $r[0]['locality'],
+			'$region'       => $r[0]['region'],
+			'$postal_code'  => $r[0]['postal_code'],
 			'$country_name' => $r[0]['country_name'],
-			'$age' => ((intval($r[0]['dob'])) ? '(' . t('Age: ') . age($r[0]['dob'],$a->user['timezone'],$a->user['timezone']) . ')' : ''),
-			'$gender' => gender_selector($r[0]['gender']),
-			'$marital' => marital_selector($r[0]['marital']),
-			'$with' => strip_tags($r[0]['with']),
-			'$howlong' => ($r[0]['howlong'] === '0000-00-00 00:00:00' ? '' : datetime_convert('UTC',date_default_timezone_get(),$r[0]['howlong'])),
-			'$sexual' => sexpref_selector($r[0]['sexual']),
-			'$about' => $r[0]['about'],
-			'$homepage' => $r[0]['homepage'],
-			'$hometown' => $r[0]['hometown'],
-			'$politic' => $r[0]['politic'],
-			'$religion' => $r[0]['religion'],
+			'$age'          => ((intval($r[0]['dob'])) ? '(' . t('Age: ') . age($r[0]['dob'],$a->user['timezone'],$a->user['timezone']) . ')' : ''),
+			'$gender'       => gender_selector($r[0]['gender']),
+			'$marital'      => marital_selector($r[0]['marital']),
+			'$with'         => strip_tags($r[0]['with']),
+			'$howlong'      => ($r[0]['howlong'] === '0000-00-00 00:00:00' ? '' : datetime_convert('UTC',date_default_timezone_get(),$r[0]['howlong'])),
+			'$sexual'       => sexpref_selector($r[0]['sexual']),
+			'$about'        => $r[0]['about'],
+			'$homepage'     => $r[0]['homepage'],
+			'$hometown'     => $r[0]['hometown'],
+			'$politic'      => $r[0]['politic'],
+			'$religion'     => $r[0]['religion'],
 			'$pub_keywords' => $r[0]['pub_keywords'],
 			'$prv_keywords' => $r[0]['prv_keywords'],
-			'$likes' => $r[0]['likes'],
-			'$dislikes' => $r[0]['dislikes'],
-			'$music' => $r[0]['music'],
-			'$book' => $r[0]['book'],
-			'$tv' => $r[0]['tv'],
-			'$film' => $r[0]['film'],
-			'$interest' => $r[0]['interest'],
-			'$romance' => $r[0]['romance'],
-			'$work' => $r[0]['work'],
-			'$education' => $r[0]['education'],
-			'$contact' => $r[0]['contact']
+			'$likes'        => $r[0]['likes'],
+			'$dislikes'     => $r[0]['dislikes'],
+			'$music'        => $r[0]['music'],
+			'$book'         => $r[0]['book'],
+			'$tv'           => $r[0]['tv'],
+			'$film'         => $r[0]['film'],
+			'$interest'     => $r[0]['interest'],
+			'$romance'      => $r[0]['romance'],
+			'$work'         => $r[0]['work'],
+			'$education'    => $r[0]['education'],
+			'$contact'      => $r[0]['contact']
 		));
 
 		$arr = array('profile' => $r[0], 'entry' => $o);
@@ -670,7 +598,8 @@ function profiles_content(&$a) {
 					'$id' => $rr['id'],
 					'$alt' => t('Profile Image'),
 					'$profile_name' => $rr['profile_name'],
-					'$visible' => (($rr['is_default']) ? '<strong>' . t('visible to everybody') . '</strong>' 
+					'$visible' => (($rr['is_default']) 
+						? '<strong>' . t('visible to everybody') . '</strong>' 
 						: '<a href="' . $a->get_baseurl(true) . '/profperm/' . $rr['id'] . '" />' . t('Edit visibility') . '</a>')
 				));
 			}
