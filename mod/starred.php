@@ -12,24 +12,28 @@ function starred_init(&$a) {
 	if(! $message_id)
 		killme();
 
-	$r = q("SELECT starred FROM item WHERE uid = %d AND id = %d LIMIT 1",
+	$r = q("SELECT item_flags FROM item WHERE uid = %d AND id = %d LIMIT 1",
 		intval(local_user()),
 		intval($message_id)
 	);
 	if(! count($r))
 		killme();
 
-	if(! intval($r[0]['starred']))
-		$starred = 1;
+	$item_flags = $r[0]['item_flags'];
 
-	$r = q("UPDATE item SET starred = %d WHERE uid = %d and id = %d LIMIT 1",
-		intval($starred),
+	if($item_flags & ITEM_STARRED)
+	    $item_flags -= ITEM_STARRED;
+	else
+		$item_flags = $item_flags | ITEM_STARRED;
+
+
+	$r = q("UPDATE item SET item_flags = %d WHERE uid = %d and id = %d LIMIT 1",
+		intval($item_flags),
 		intval(local_user()),
 		intval($message_id)
 	);
  
-	// the json doesn't really matter, it will either be 0 or 1
-
-	echo json_encode($starred);
+	header('Content-type: application/json');
+	echo json_encode(array('result' => intval($item_flags & ITEM_STARRED)));
 	killme();
 }

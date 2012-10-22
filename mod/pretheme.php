@@ -7,7 +7,7 @@ function pretheme_init(&$a) {
 		$info = get_theme_info($theme);
 		if($info) {
 			// unfortunately there will be no translation for this string
-			$desc = $info['description'];
+			$desc    = $info['description'];
 			$version = $info['version'];
 			$credits = $info['credits'];
 		}
