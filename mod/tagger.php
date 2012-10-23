@@ -18,7 +18,7 @@ function tagger_content(&$a) {
 	if(! $term)
 		return;
 
-	$item_id = (($a->argc > 1) ? notags(trim($a->argv[1])) : 0);
+	$item_id = ((argc() > 1) ? notags(trim(argv(1))) : 0);
 
 	logger('tagger: tag ' . $term . ' item ' . $item_id);
 
