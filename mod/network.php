@@ -187,7 +187,6 @@ function network_query_get_sel_tab($a) {
 	$no_active='';
 	$starred_active = '';
 	$new_active = '';
-	$bookmarked_active = '';
 	$all_active = '';
 	$search_active = '';
 	$conv_active = '';
@@ -275,7 +274,7 @@ function network_content(&$a, $update = 0, $load = false) {
 	// TODO: fix this logic, reduce duplication
 	//$a->page['content'] .= '<div class="tabs-wrapper">';
 	
-	list($no_active, $all_active, $postord_active, $conv_active, $new_active, $starred_active, $bookmarked_active, $spam_active) = network_query_get_sel_tab($a);
+	list($no_active, $all_active, $postord_active, $conv_active, $new_active, $starred_active, $spam_active) = network_query_get_sel_tab($a);
 	// if no tabs are selected, defaults to comments
 	if ($no_active=='active') $all_active='active';
 	//echo "<pre>"; var_dump($no_active, $all_active, $postord_active, $conv_active, $new_active, $starred_active, $bookmarked_active, $spam_active); killme();

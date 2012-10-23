@@ -264,9 +264,9 @@ function parse_url_content(&$a) {
 	logger('parse_url: ' . $url);
 
 	if($textmode)
-		$template = $br . '[bookmark=%s]%s[/bookmark]%s' . $br;
+		$template = $br . '[url=%s]%s[/url]%s' . $br;
 	else
-		$template = "<br /><a class=\"bookmark\" href=\"%s\" >%s</a>%s<br />";
+		$template = "<br /><a href=\"%s\" >%s</a>%s<br />";
 
 	$arr = array('url' => $url, 'text' => '');
 
