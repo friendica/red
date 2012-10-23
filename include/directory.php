@@ -6,7 +6,7 @@ function directory_run($argv, $argc){
 
 	cli_startup();		 
 
-	if($argc != 2)
+	if(argc() != 2)
 		return;
 
 	$dir = get_config('system','directory_submit_url');
@@ -14,7 +14,7 @@ function directory_run($argv, $argc){
 	if(! strlen($dir))
 		return;
 
-	$arr = array('url' => $argv[1]);
+	$arr = array('url' => argv(1));
 
 	call_hooks('globaldir_update', $arr);
 
