@@ -28,11 +28,10 @@ include/
   conversation.php
 + cronhooks.php
 ? crypto.php
-  datetime.php
++ datetime.php (todo: html removal)
 ? dba.php
   delivery.php
-  directory.php
-  EmailNotification.php
++ directory.php
 - email.php
   enotify.php
   event.php

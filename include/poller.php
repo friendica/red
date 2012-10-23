@@ -81,8 +81,6 @@ function poller_run($argv, $argc){
 
 	if($d2 != intval($d1)) {
 
-		update_contact_birthdays();
-
 		update_suggestions();
 
 		set_config('system','last_expire_day',$d2);
