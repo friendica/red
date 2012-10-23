@@ -3,8 +3,8 @@ if(class_exists('Conversation'))
 	return;
 
 require_once('boot.php');
-require_once('object/BaseObject.php');
-require_once('object/Item.php');
+require_once('include/BaseObject.php');
+require_once('include/ItemObject.php');
 require_once('include/text.php');
 
 /**
