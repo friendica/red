@@ -3,7 +3,6 @@
  /**
   * Friendica admin
   */
-require_once("include/remoteupdate.php");
 
 
 /**
@@ -64,9 +63,6 @@ function admin_post(&$a){
 			case 'dbsync':
 				admin_page_dbsync_post($a);
 				break;
-			case 'update':
-				admin_page_remoteupdate_post($a);
-				break;
 		}
 	}
 
@@ -97,8 +93,7 @@ function admin_content(&$a) {
 		'users'	 =>	Array($a->get_baseurl(true)."/admin/users/", t("Users") , "users"),
 		'plugins'=>	Array($a->get_baseurl(true)."/admin/plugins/", t("Plugins") , "plugins"),
 		'themes' =>	Array($a->get_baseurl(true)."/admin/themes/", t("Themes") , "themes"),
-		'dbsync' => Array($a->get_baseurl(true)."/admin/dbsync/", t('DB updates'), "dbsync"),
-		//'update' =>	Array($a->get_baseurl(true)."/admin/update/", t("Software Update") , "update")
+		'dbsync' => Array($a->get_baseurl(true)."/admin/dbsync/", t('DB updates'), "dbsync")
 	);
 	
 	/* get plugins admin page */
@@ -151,9 +146,6 @@ function admin_content(&$a) {
 				break;
 			case 'dbsync':
 				$o = admin_page_dbsync($a);
-				break;
-			case 'update':
-				$o = admin_page_remoteupdate($a);
 				break;
 			default:
 				notice( t("Item not found.") );
@@ -1095,61 +1087,3 @@ readable.");
 	));
 }
 
-/**
- * @param App $a
- */
-function admin_page_remoteupdate_post(&$a) {
-	// this function should be called via ajax post
-	if(!is_site_admin()) {
-		return;
-	}
-
-	
-	if (x($_POST,'remotefile') && $_POST['remotefile']!=""){
-		$remotefile = $_POST['remotefile'];
-		$ftpdata = (x($_POST['ftphost'])?$_POST:false);
-		doUpdate($remotefile, $ftpdata);
-	} else {
-		echo "No remote file to download. Abort!";
-	}
-
-	killme();
-}
-
-/**
- * @param App $a
- * @return string
- */
-function admin_page_remoteupdate(&$a) {
-	if(!is_site_admin()) {
-		return login(false);
-	}
-
-	$canwrite = canWeWrite();
-	$canftp = function_exists('ftp_connect');
-	
-	$needupdate = true;
-	$u = checkUpdate();
-	if (!is_array($u)){
-		$needupdate = false;
-		$u = array('','','');
-	}
-	
-	$tpl = get_markup_template("admin_remoteupdate.tpl");
-	return replace_macros($tpl, array(
-		'$baseurl' => $a->get_baseurl(true),
-		'$submit' => t("Update now"),
-		'$close' => t("Close"),
-		'$localversion' => FRIENDICA_VERSION,
-		'$remoteversion' => $u[1],
-		'$needupdate' => $needupdate,
-		'$canwrite' => $canwrite,
-		'$canftp'	=> $canftp,
-		'$ftphost'	=> array('ftphost', t("FTP Host"), '',''),
-		'$ftppath'	=> array('ftppath', t("FTP Path"), '/',''),
-		'$ftpuser'	=> array('ftpuser', t("FTP User"), '',''),
-		'$ftppwd'	=> array('ftppwd', t("FTP Password"), '',''),
-		'$remotefile'=>array('remotefile','', $u['2'],'')
-	));
-	
-}
