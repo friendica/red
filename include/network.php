@@ -1260,3 +1260,87 @@ function xml2array($contents, $namespaces = true, $get_attributes=1, $priority =
     return($xml_array);
 }  
 
+
+function email_header_encode($in_str, $charset) {
+    $out_str = $in_str;
+	$need_to_convert = false;
+
+	for($x = 0; $x < strlen($in_str); $x ++) {
+		if((ord($in_str[$x]) == 0) || ((ord($in_str[$x]) > 128))) {
+			$need_to_convert = true;
+		}
+	}
+
+	if(! $need_to_convert)
+		return $in_str;
+
+    if ($out_str && $charset) {
+
+        // define start delimimter, end delimiter and spacer
+        $end = "?=";
+        $start = "=?" . $charset . "?B?";
+        $spacer = $end . "\r\n " . $start;
+
+        // determine length of encoded text within chunks
+        // and ensure length is even
+        $length = 75 - strlen($start) - strlen($end);
+
+        /*
+            [EDIT BY danbrown AT php DOT net: The following
+            is a bugfix provided by (gardan AT gmx DOT de)
+            on 31-MAR-2005 with the following note:
+            "This means: $length should not be even,
+            but divisible by 4. The reason is that in
+            base64-encoding 3 8-bit-chars are represented
+            by 4 6-bit-chars. These 4 chars must not be
+            split between two encoded words, according
+            to RFC-2047.
+        */
+        $length = $length - ($length % 4);
+
+        // encode the string and split it into chunks
+        // with spacers after each chunk
+        $out_str = base64_encode($out_str);
+        $out_str = chunk_split($out_str, $length, $spacer);
+
+        // remove trailing spacer and
+        // add start and end delimiters
+        $spacer = preg_quote($spacer,'/');
+        $out_str = preg_replace("/" . $spacer . "$/", "", $out_str);
+        $out_str = $start . $out_str . $end;
+    }
+    return $out_str;
+}
+
+function email_send($addr, $subject, $headers, $item) {
+	//$headers .= 'MIME-Version: 1.0' . "\n";
+	//$headers .= 'Content-Type: text/html; charset=UTF-8' . "\n";
+	//$headers .= 'Content-Type: text/plain; charset=UTF-8' . "\n";
+	//$headers .= 'Content-Transfer-Encoding: 8bit' . "\n\n";
+
+	$part = uniqid("", true);
+
+	$html    = prepare_body($item);
+
+	$headers .= "Mime-Version: 1.0\n";
+	$headers .= 'Content-Type: multipart/alternative; boundary="=_'.$part.'"'."\n\n";
+
+	$body = "\n--=_".$part."\n";
+	$body .= "Content-Transfer-Encoding: 8bit\n";
+	$body .= "Content-Type: text/plain; charset=utf-8; format=flowed\n\n";
+
+	$body .= html2plain($html)."\n";
+
+	$body .= "--=_".$part."\n";
+	$body .= "Content-Transfer-Encoding: 8bit\n";
+	$body .= "Content-Type: text/html; charset=utf-8\n\n";
+
+	$body .= '<html><head></head><body style="word-wrap: break-word; -webkit-nbsp-mode: space; -webkit-line-break: after-white-space; ">'.$html."</body></html>\n";
+
+	$body .= "--=_".$part."--";
+
+	//$message = '<html><body>' . $html . '</body></html>';
+	//$message = html2plain($html);
+	logger('notifier: email delivery to ' . $addr);
+	mail($addr, $subject, $body, $headers);
+}

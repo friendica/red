@@ -18,15 +18,15 @@ include/
   api.php
 ? attach.php
 + auth.php
-- bb2diaspora.php
-  bbcode.php
+- bb2diaspora.php (check for function dependencies before removing)
++ bbcode.php
 = cache.php
 = config.php
   Contact.php
   contact_selectors.php
   contact_widgets.php
   conversation.php
-  cronhooks.php
++ cronhooks.php
 ? crypto.php
   datetime.php
 ? dba.php
@@ -46,13 +46,11 @@ include/
 + identity.php
   iquery.php
   items.php
-  jquery_ui
-  js_strings.php
-  language.php
++ js_strings.php
++ language.php
   lock.php
-  markdownify
   message.php
-  msgclean.php
+- msgclean.php
 ? nav.php
   network.php
   notifier.php

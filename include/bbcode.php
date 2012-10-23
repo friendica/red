@@ -5,23 +5,15 @@ require_once('include/event.php');
 
 
 
-function stripcode_br_cb($s) {
-	return '[code]' . str_replace('<br />', '', $s[1]) . '[/code]';
-}
-
-function tryoembed($match){
+function tryoembed($match) {
 	$url = ((count($match)==2)?$match[1]:$match[2]);
-//	logger("tryoembed: $url");
 
 	$o = oembed_fetch_url($url);
-
-	//echo "<pre>"; var_dump($match, $url, $o); killme();
 
 	if ($o->type=="error") return $match[0];
 
 	$html = oembed_format_object($o);
-	return $html; //oembed_iframe($html,$o->width,$o->height);
-
+	return $html; 
 }
 
 // [noparse][i]italic[/i][/noparse] turns into
@@ -115,18 +107,6 @@ function bbcode($Text,$preserve_nl = false, $tryoembed = true) {
 
 	$a = get_app();
 
-	// Move all spaces out of the tags
-	$Text = preg_replace("/\[(\w*)\](\s*)/ism", '$2[$1]', $Text);
-	$Text = preg_replace("/(\s*)\[\/(\w*)\]/ism", '[/$2]$1', $Text);
-
-	// Hide all [noparse] contained bbtags by spacefying them
-	// POSSIBLE BUG --> Will the 'preg' functions crash if there's an embedded image?
-
-	$Text = preg_replace_callback("/\[noparse\](.*?)\[\/noparse\]/ism", 'bb_spacefy',$Text);
-	$Text = preg_replace_callback("/\[nobb\](.*?)\[\/nobb\]/ism", 'bb_spacefy',$Text);
-	$Text = preg_replace_callback("/\[pre\](.*?)\[\/pre\]/ism", 'bb_spacefy',$Text);
-
-
 	// Extract the private images which use data url's since preg has issues with
 	// large data sizes. Stash them away while we do bbcode conversion, and then put them back
 	// in after we've done all the regex matching. We cannot use any preg functions to do this.
@@ -134,6 +114,19 @@ function bbcode($Text,$preserve_nl = false, $tryoembed = true) {
 	$extracted = bb_extract_images($Text);
 	$Text = $extracted['body'];
 	$saved_image = $extracted['images'];
+
+
+	// Move all spaces out of the tags
+	$Text = preg_replace("/\[(\w*)\](\s*)/ism", '$2[$1]', $Text);
+	$Text = preg_replace("/(\s*)\[\/(\w*)\]/ism", '[/$2]$1', $Text);
+
+	// Hide all [noparse] contained bbtags by spacefying them
+
+	$Text = preg_replace_callback("/\[noparse\](.*?)\[\/noparse\]/ism", 'bb_spacefy',$Text);
+	$Text = preg_replace_callback("/\[nobb\](.*?)\[\/nobb\]/ism", 'bb_spacefy',$Text);
+	$Text = preg_replace_callback("/\[pre\](.*?)\[\/pre\]/ism", 'bb_spacefy',$Text);
+
+
 
 	// If we find any event code, turn it into an event.
 	// After we're finished processing the bbcode we'll
@@ -265,8 +258,6 @@ function bbcode($Text,$preserve_nl = false, $tryoembed = true) {
 	$Text = preg_replace("/\[font=(.*?)\](.*?)\[\/font\]/sm","<span style=\"font-family: $1;\">$2</span>",$Text);
 
 	// Declare the format for [code] layout
-
-//	$Text = preg_replace_callback("/\[code\](.*?)\[\/code\]/ism",'stripcode_br_cb',$Text);
 
 	$CodeLayout = '<code>$1</code>';
 	// Check for [code] text

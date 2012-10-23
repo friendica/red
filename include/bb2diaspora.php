@@ -5,7 +5,7 @@ require_once("include/event.php");
 require_once("library/markdown.php");
 require_once("include/html2bbcode.php");
 require_once("include/bbcode.php");
-require_once("include/markdownify/markdownify.php");
+require_once("library/markdownify/markdownify.php");
 
 
 function get_bb_tag_pos($s, $name, $occurance = 1) {
