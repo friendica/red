@@ -1,33 +1,13 @@
 <?php
-require_once("boot.php");
+require_once('boot.php');
+require_once('include/cli_startup.php');
 
 function directory_run($argv, $argc){
-	global $a, $db;
 
-	if(is_null($a)) {
-		$a = new App;
-	}
-  
-	if(is_null($db)) {
-		@include(".htconfig.php");
-		require_once("dba.php");
-		$db = new dba($db_host, $db_user, $db_pass, $db_data);
-				unset($db_host, $db_user, $db_pass, $db_data);
-	};
-
-	load_config('config');
-	load_config('system');
-
+	cli_startup();		 
 
 	if($argc != 2)
 		return;
-
-	load_config('system');
-
-	load_hooks();
-
-
-	$a->set_baseurl(get_config('system','url'));
 
 	$dir = get_config('system','directory_submit_url');
 
