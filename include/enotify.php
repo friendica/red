@@ -1,7 +1,5 @@
 <?php
 
-require_once('include/email.php');
-
 function notification($params) {
 
 	logger('notification: entry', LOGGER_DEBUG);
@@ -442,7 +440,6 @@ intval($params['uid']), LOGGER_DEBUG);
 
 }
 
-require_once('include/email.php');
 
 class enotify {
 	/**

@@ -17,7 +17,6 @@
 
 require_once('include/crypto.php');
 require_once('include/enotify.php');
-require_once('include/email.php');
 require_once('include/items.php');
 
 function item_post(&$a) {
