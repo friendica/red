@@ -209,29 +209,7 @@ function terminate_friendship($user,$self,$contact) {
 
 	require_once('include/datetime.php');
 
-	if($contact['network'] === NETWORK_OSTATUS) {
-
-		$slap = replace_macros(get_markup_template('follow_slap.tpl'), array(
-			'$name' => $user['username'],
-			'$profile_page' => $a->get_baseurl() . '/profile/' . $user['nickname'],
-			'$photo' => $self['photo'],
-			'$thumb' => $self['thumb'],
-			'$published' => datetime_convert('UTC','UTC', 'now', ATOM_TIME),
-			'$item_id' => 'urn:X-dfrn:' . $a->get_hostname() . ':unfollow:' . random_string(),
-			'$title' => '',
-			'$type' => 'text',
-			'$content' => t('stopped following'),
-			'$nick' => $user['nickname'],
-			'$verb' => 'http://ostatus.org/schema/1.0/unfollow', // ACTIVITY_UNFOLLOW,
-			'$ostat_follow' => '' // '<as:verb>http://ostatus.org/schema/1.0/unfollow</as:verb>' . "\r\n"
-		));
-
-		if((x($contact,'notify')) && (strlen($contact['notify']))) {
-			require_once('include/salmon.php');
-			slapper($user,$contact['notify'],$slap);
-		}
-	}
-	elseif($contact['network'] === NETWORK_DFRN) {
+	if($contact['network'] === NETWORK_DFRN) {
 		require_once('include/items.php');
 		dfrn_deliver($user,$contact,'placeholder', 1);
 	}

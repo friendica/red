@@ -449,8 +449,6 @@ function notifier_run($argv, $argc){
 	);
 
 
-	require_once('include/salmon.php');
-
 	$interval = ((get_config('system','delivery_interval') === false) ? 2 : intval(get_config('system','delivery_interval')));
 
 	// delivery loop
@@ -583,39 +581,6 @@ function notifier_run($argv, $argc){
 						add_to_queue($contact['id'],NETWORK_DFRN,$atom);
 					}
 					break;
-				case NETWORK_OSTATUS:
-
-					if(get_config('system','ostatus_disabled') || get_config('system','dfrn_only'))
-						break;
-
-					if($followup && $contact['notify']) {
-						logger('notifier: slapdelivery: ' . $contact['name']);
-						$deliver_status = slapper($owner,$contact['notify'],$slap);
-
-						if($deliver_status == (-1)) {
-							// queue message for redelivery
-							add_to_queue($contact['id'],NETWORK_OSTATUS,$slap);
-						}
-					}
-					else {
-
-						// only send salmon if public - e.g. if it's ok to notify
-						// a public hub, it's ok to send a salmon
-
-						if((count($slaps)) && ($public_message) && (! $expire)) {
-							logger('notifier: slapdelivery: ' . $contact['name']);
-							foreach($slaps as $slappy) {
-								if($contact['notify']) {
-									$deliver_status = slapper($owner,$contact['notify'],$slappy);
-									if($deliver_status == (-1)) {
-										// queue message for redelivery
-										add_to_queue($contact['id'],NETWORK_OSTATUS,$slappy);
-									}
-								}
-							}
-						}
-					}
-					break;
 
 				default:
 					break;
@@ -623,20 +588,6 @@ function notifier_run($argv, $argc){
 		}
 	}
 		
-	// send additional slaps to mentioned remote tags (@foo@example.com)
-
-	if($slap && count($url_recipients) && ($followup || $top_level) && $public_message && (! $expire)) {
-		if(! get_config('system','dfrn_only')) {
-			foreach($url_recipients as $url) {
-				if($url) {
-					logger('notifier: urldelivery: ' . $url);
-					$deliver_status = slapper($owner,$url,$slap);
-					// TODO: redeliver/queue these items on failure, though there is no contact record
-				}
-			}
-		}
-	}
-
 
 	if($public_message) {
 

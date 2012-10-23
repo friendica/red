@@ -100,7 +100,6 @@ function metopem($m,$e) {
 
 function pubrsatome($key,&$m,&$e) {
 	require_once('library/asn1.php');
-	require_once('include/salmon.php');
 
 	$lines = explode("\n",$key);
 	unset($lines[0]);
@@ -125,7 +124,6 @@ function pemtorsa($key) {
 }
 
 function pemtome($key,&$m,&$e) {
-	require_once('include/salmon.php');
 	$lines = explode("\n",$key);
 	unset($lines[0]);
 	unset($lines[count($lines)]);

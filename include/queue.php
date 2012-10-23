@@ -1,36 +1,18 @@
 <?php
 require_once("boot.php");
+require_once('include/cli_startup.php');
 require_once('include/queue_fn.php');
 
 function queue_run($argv, $argc){
-	global $a, $db;
 
-	if(is_null($a)){
-		$a = new App;
-	}
-  
-	if(is_null($db)){
-		@include(".htconfig.php");
-		require_once("dba.php");
-		$db = new dba($db_host, $db_user, $db_pass, $db_data);
-		unset($db_host, $db_user, $db_pass, $db_data);
-	};
+	cli_startup();
+	global $a;
 
-
-	require_once("session.php");
-	require_once("datetime.php");
 	require_once('include/items.php');
 	require_once('include/bbcode.php');
 
-	load_config('config');
-	load_config('system');
-
-	$a->set_baseurl(get_config('system','url'));
-
-	load_hooks();
-
-	if($argc > 1)
-		$queue_id = intval($argv[1]);
+	if(argc() > 1)
+		$queue_id = intval(argv(1));
 	else
 		$queue_id = 0;
 
@@ -82,8 +64,6 @@ function queue_run($argv, $argc){
 
 
 	// delivery loop
-
-	require_once('include/salmon.php');
 
 	foreach($r as $q_item) {
 

@@ -1,46 +1,28 @@
 <?php
 require_once("boot.php");
+require_once('include/cli_startup.php');
 require_once('include/queue_fn.php');
 require_once('include/html2plain.php');
 
 function delivery_run($argv, $argc){
-	global $a, $db;
 
-	if(is_null($a)){
-		$a = new App;
-	}
+	cli_startup();
+	global $a;
 
-	if(is_null($db)) {
-		@include(".htconfig.php");
-		require_once("dba.php");
-		$db = new dba($db_host, $db_user, $db_pass, $db_data);
-		        unset($db_host, $db_user, $db_pass, $db_data);
-	}
-
-	require_once("session.php");
-	require_once("datetime.php");
 	require_once('include/items.php');
 	require_once('include/bbcode.php');
-	require_once('include/email.php');
 
-	load_config('config');
-	load_config('system');
-
-	load_hooks();
-
-	if($argc < 3)
+	if(argc() < 3)
 		return;
-
-	$a->set_baseurl(get_config('system','url'));
 
 	logger('delivery: invoked: ' . print_r($argv,true), LOGGER_DEBUG);
 
-	$cmd        = $argv[1];
-	$item_id    = intval($argv[2]);
+	$cmd        = argv(1);
+	$item_id    = intval(argv(2));
 
-	for($x = 3; $x < $argc; $x ++) {
+	for($x = 3; $x < argc(); $x ++) {
 
-		$contact_id = intval($argv[$x]);
+		$contact_id = intval(argv($x));
 
 		// Some other process may have delivered this item already.
 
