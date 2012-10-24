@@ -141,7 +141,7 @@ class Item extends BaseObject {
 		else
 			$profile_avatar = (((strlen($item['author-avatar'])) && $diff_author) ? $item['author-avatar'] : $a->get_cached_avatar_image($this->get_data_value('thumb')));
 
-		$profile_avatar = $item['author']['xchan_photo'];
+		$profile_avatar = $item['author']['xchan_photo_m'];
 
 		$locate = array('location' => $item['location'], 'coord' => $item['coord'], 'html' => '');
 		call_hooks('render_location',$locate);

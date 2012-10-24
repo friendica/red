@@ -56,7 +56,7 @@ function profile_activity($changed, $value) {
 
 	$links = array();
 	$links[] = array('rel' => 'alternate', 'type' => 'text/html', 'href' => $self[0]['profile'] . '?tab=profile');
-	$links[] = array('rel' => 'photo', 'type' => /*FIXME*/ 'image/jpeg', 'href' => $self[0]['xchan_photo']); 
+	$links[] = array('rel' => 'photo', 'type' => $self[0]['xchan_photo_mimetype'], 'href' => $self[0]['xchan_photo_l']); 
 
 	$arr['object'] = json_encode(array(
 		'type' => ACTIVITY_OBJ_PROFILE,

@@ -14,28 +14,28 @@ function photos_init(&$a) {
 	}
 	$o = '';
 
-	if($a->argc > 1) {
-		$nick = $a->argv[1];
-		$r = q("SELECT * FROM `user` WHERE `nickname` = '%s' AND `blocked` = 0 LIMIT 1",
+	if(argc() > 1) {
+		$nick = argv(1);
+		$r = q("SELECT * FROM channel WHERE channel_address = '%s' LIMIT 1",
 			dbesc($nick)
 		);
 
-		if(! count($r))
+		if(! ($r && count($r)))
 			return;
 
-		$a->data['user'] = $r[0];
+		$a->data['channel'] = $r[0];
 
-		$sql_extra = permissions_sql($a->data['user']['uid']);
+		$sql_extra = permissions_sql($a->data['channel']['channel_id']);
 
 		$albums = q("SELECT distinct(`album`) AS `album` FROM `photo` WHERE `uid` = %d $sql_extra order by created desc",
-			intval($a->data['user']['uid'])
+			intval($a->data['channel']['channel_id'])
 		);
 
 		if(count($albums)) {
 			$a->data['albums'] = $albums;
-
+// FIXME
 			$o .= '<div class="vcard">';
-			$o .= '<div class="fn">' . $a->data['user']['username'] . '</div>';
+			$o .= '<div class="fn">' . $a->data['channel']['channel_name'] . '</div>';
 			$o .= '<div id="profile-photo-wrapper"><img class="photo" style="width: 175px; height: 175px;" src="' . $a->get_cached_avatar_image($a->get_baseurl() . '/photo/profile/' . $a->data['user']['uid']) . '" alt="' . $a->data['user']['username'] . '" /></div>';
 			$o .= '</div>';
 

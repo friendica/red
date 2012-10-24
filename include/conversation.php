@@ -441,7 +441,7 @@ function prepare_threads_body($a, $items, $cmnt_tpl, $page_writeable, $mode, $pr
 		else
 			$profile_avatar = (((strlen($item['author-avatar'])) && $diff_author) ? $item['author-avatar'] : $a->get_cached_avatar_image($thumb));
 
-		$profile_avatar = $item['author']['xchan_photo'];
+		$profile_avatar = $item['author']['xchan_photo_m'];
 		$profile_link = zrl($item['author']['xchan_profile']);
 		$profile_name = $item['author']['xchan_name'];
 
@@ -1204,7 +1204,7 @@ function conversation(&$a, $items, $mode, $update, $page_mode = 'traditional') {
 
 
 
-				$profile_avatar = $item['author']['xchan_photo'];
+				$profile_avatar = $item['author']['xchan_photo_m'];
 				$profile_link = zrl($item['author']['xchan_profile']);
 				$profile_name = $item['author']['xchan_name'];
 

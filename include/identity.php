@@ -110,12 +110,14 @@ function create_identity($arr) {
 
 	$newuid = $ret['channel']['channel_id'];
 
-	$r = q("insert into xchan ( xchan_hash, xchan_guid, xchan_guid_sig, xchan_pubkey, xchan_photo, xchan_addr, xchan_profile, xchan_name, xchan_network, xchan_photo_date, xchan_name_date ) values ('%s', '%s', '%s', '%s', '%s', '%s', '%s', '%s', '%s', '%s', '%s')",
+	$r = q("insert into xchan ( xchan_hash, xchan_guid, xchan_guid_sig, xchan_pubkey, xchan_photo_l, xchan_photo_m, xchan_photo_s, xchan_addr, xchan_profile, xchan_name, xchan_network, xchan_photo_date, xchan_name_date ) values ('%s', '%s', '%s', '%s', '%s', '%s', '%s', '%s', '%s', '%s', '%s', '%s', '%s')",
 		dbesc($hash),
 		dbesc($ret['channel']['channel_guid']),
 		dbesc($sig),
 		dbesc($key['pubkey']),
-		dbesc($a->get_baseurl() . "/photo/profile/{$newuid}"),
+		dbesc($a->get_baseurl() . "/photo/profile/l/{$newuid}"),
+		dbesc($a->get_baseurl() . "/photo/profile/m/{$newuid}"),
+		dbesc($a->get_baseurl() . "/photo/profile/s/{$newuid}"),
 		dbesc($ret['channel']['channel_address'] . '@' . $a->get_hostname()),
 		dbesc(z_root() . '/profile/' . $ret['channel']['channel_address']),
 		dbesc($ret['channel']['channel_name']),

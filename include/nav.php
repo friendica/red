@@ -56,11 +56,8 @@ function nav(&$a) {
 		$nav['usermenu'][] = Array('photos/' . $channel['channel_address'], t('Photos'), "", t('Your photos'));
 		$nav['usermenu'][] = Array('events/', t('Events'), "", t('Your events'));
 		
-		// user info
-		$r = q("SELECT micro FROM contact WHERE uid=%d AND self=1", intval($channel['channel_id']));
-	
-		$userinfo = array(
-			'icon' => $xchan[0]['xchan_photo'],
+			$userinfo = array(
+			'icon' => $xchan[0]['xchan_photo_s'],
 			'name' => $channel['channel_name'],
 		);
 		

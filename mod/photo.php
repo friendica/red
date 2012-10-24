@@ -10,12 +10,8 @@ function photo_init(&$a) {
 	switch(argc()) {
 		case 4:
 			$person = argv(3);
-			$customres = intval(argv(2));
-			$type = argv(1);
-			break;
-		case 3:
-			$person = argv(2);
-			$type = argv(1);
+			$res    = argv(2);
+			$type   = argv(1);
 			break;
 		case 2:
 			$photo = argv(1);
@@ -35,26 +31,27 @@ function photo_init(&$a) {
 		 * Profile photos
 		 */
 
-		switch($type) {
+		if($type === 'profile') {
+			switch($res) {
 
-			case 'profile':
-			case 'custom':
-				$resolution = 4;
-				break;
-			case 'micro':
-				$resolution = 6;
-				$default = 'images/person-48.jpg';
-				break;
-			case 'avatar':
-			default:
-				$resolution = 5;
-				$default = 'images/person-80.jpg';
-				break;
+				case 'm':
+					$resolution = 5;
+					$default = 'images/person-80.jpg';
+					break;
+				case 's':
+					$resolution = 6;
+					$default = 'images/person-48.jpg';
+					break;
+				case 'l':
+				default:
+					$resolution = 4;
+					break;
+			}
 		}
 
 		$uid = $person;
 
-		$r = q("SELECT * FROM `photo` WHERE `scale` = %d AND `uid` = %d AND `profile` = 1 LIMIT 1",
+		$r = q("SELECT * FROM photo WHERE scale = %d AND uid = %d AND profile = 1 LIMIT 1",
 			intval($resolution),
 			intval($uid)
 		);
@@ -74,16 +71,16 @@ function photo_init(&$a) {
 		 */
 
 		$resolution = 0;
-		foreach( Photo::supportedTypes() as $m=>$e){
-			$photo = str_replace(".$e",'',$photo);
-		}
+
+		if(strpos($photo,'.') !== false)
+			$photo = substr($photo,0,strpos($photo,'.'));
 	
 		if(substr($photo,-2,1) == '-') {
 			$resolution = intval(substr($photo,-1,1));
 			$photo = substr($photo,0,-2);
 		}
 
-		$r = q("SELECT `uid` FROM `photo` WHERE `resource_id` = '%s' AND `scale` = %d LIMIT 1",
+		$r = q("SELECT uid FROM photo WHERE resource_id = '%s' AND scale = %d LIMIT 1",
 			dbesc($photo),
 			intval($resolution)
 		);
@@ -93,7 +90,7 @@ function photo_init(&$a) {
 
 			// Now we'll see if we can access the photo
 
-			$r = q("SELECT * FROM `photo` WHERE `resource_id` = '%s' AND `scale` = %d $sql_extra LIMIT 1",
+			$r = q("SELECT * FROM photo WHERE resource_id = '%s' AND scale = %d $sql_extra LIMIT 1",
 				dbesc($photo),
 				intval($resolution)
 			);
@@ -149,10 +146,10 @@ function photo_init(&$a) {
 		}
 	}
 
-	if(isset($customres) && $customres > 0 && $customres < 500) {
+	if(isset($res) && intval($res) && $res < 500) {
 		$ph = new Photo($data, $mimetype);
 		if($ph->is_valid()) {
-			$ph->scaleImageSquare($customres);
+			$ph->scaleImageSquare($res);
 			$data = $ph->imageString();
 			$mimetype = $ph->getType();
 		}
@@ -167,7 +164,7 @@ function photo_init(&$a) {
 		header_remove('pragma');
 	}
 
-	header("Content-type: ".$mimetype);
+	header("Content-type: " . $mimetype);
 
 	if($prvcachecontrol) {
 
