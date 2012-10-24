@@ -138,8 +138,8 @@ function create_identity($arr) {
 		t('default'),
 		1,
 		dbesc($ret['channel']['channel_name']),
-		dbesc($a->get_baseurl() . "/photo/profile/{$newuid}"),
-		dbesc($a->get_baseurl() . "/photo/avatar/{$newuid}")
+		dbesc($a->get_baseurl() . "/photo/profile/l/{$newuid}"),
+		dbesc($a->get_baseurl() . "/photo/profile/m/{$newuid}")
 	);
 
 
