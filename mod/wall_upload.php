@@ -4,22 +4,20 @@ require_once('Photo.php');
 
 function wall_upload_post(&$a) {
 
-	if($a->argc > 1) {
-	        if(! x($_FILES,'media')) {
-		        $nick = $a->argv[1];
-		        $r = q("SELECT `user`.*, `contact`.`id` FROM `user` LEFT JOIN `contact` on `user`.`uid` = `contact`.`uid`  WHERE `user`.`nickname` = '%s' AND `user`.`blocked` = 0 and `contact`.`self` = 1 LIMIT 1",
-			        dbesc($nick)
-		        );
-
-		        if(! count($r))
-                                return;
+	if(argc() > 1) {
+		if(! x($_FILES,'media')) {
+			$nick = argv(1);
 		}
-                else {
+		else {
 			$user_info = api_get_user($a);
-		        $r = q("SELECT `user`.*, `contact`.`id` FROM `user` LEFT JOIN `contact` on `user`.`uid` = `contact`.`uid`  WHERE `user`.`nickname` = '%s' AND `user`.`blocked` = 0 and `contact`.`self` = 1 LIMIT 1",
-			        dbesc($user_info['screen_name'])
-		        );
-                }
+			$nick = $user_info['screen_name'];
+		}
+		$r = q("SELECT channel.* from channel where channel_address = '%s' limit 1",
+			dbesc($nick)
+		);
+		if(! ($r && count($r)))
+			return;
+		$channel = $r[0];
 	}
 	else
 		return;
@@ -28,37 +26,40 @@ function wall_upload_post(&$a) {
 	$can_post  = false;
 	$visitor   = 0;
 
-	$page_owner_uid   = $r[0]['uid'];
-	$default_cid      = $r[0]['id'];
-	$page_owner_nick  = $r[0]['nickname'];
-	$community_page   = (($r[0]['page-flags'] == PAGE_COMMUNITY) ? true : false);
+	$page_owner_uid   = $r[0]['channel_id'];
+//	$default_cid      = $r[0]['id'];
+
+	$page_owner_nick  = $r[0]['channel_address'];
+
+//	$community_page   = (($r[0]['page-flags'] == PAGE_COMMUNITY) ? true : false);
 
 	if((local_user()) && (local_user() == $page_owner_uid))
 		$can_post = true;
-	else {
-		if($community_page && remote_user()) {
-			$cid = 0;
-			if(is_array($_SESSION['remote'])) {
-				foreach($_SESSION['remote'] as $v) {
-					if($v['uid'] == $page_owner_uid) {
-						$cid = $v['cid'];
-						break;
-					}
-				}
-			}
-			if($cid) {
 
-				$r = q("SELECT `uid` FROM `contact` WHERE `blocked` = 0 AND `pending` = 0 AND `id` = %d AND `uid` = %d LIMIT 1",
-					intval($cid),
-					intval($page_owner_uid)
-				);
-				if(count($r)) {
-					$can_post = true;
-					$visitor = $cid;
-				}
-			}
-		}
-	}
+//	else {
+//		if($community_page && remote_user()) {
+//			$cid = 0;
+//			if(is_array($_SESSION['remote'])) {
+//				foreach($_SESSION['remote'] as $v) {
+//					if($v['uid'] == $page_owner_uid) {
+//						$cid = $v['cid'];
+//						break;
+//					}
+//				}
+//			}
+//			if($cid) {
+
+//				$r = q("SELECT `uid` FROM `contact` WHERE `blocked` = 0 AND `pending` = 0 AND `id` = %d AND `uid` = %d LIMIT 1",
+//					intval($cid),
+//					intval($page_owner_uid)
+//				);
+//				if(count($r)) {
+//					$can_post = true;
+//					$visitor = $cid;
+//				}
+//			}
+//		}
+//	}
 
 	if(! $can_post) {
 		notice( t('Permission denied.') . EOL );
