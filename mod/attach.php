@@ -4,17 +4,17 @@ require_once('include/security.php');
 
 function attach_init(&$a) {
 
-	if($a->argc != 2) {
+	if(argc() != 2) {
 		notice( t('Item not available.') . EOL);
 		return;
 	}
 
-	$item_id = intval($a->argv[1]);
+	$hash = argv(1);
 
 	// Check for existence, which will also provide us the owner uid
 
-	$r = q("SELECT * FROM `attach` WHERE `id` = %d LIMIT 1",
-		intval($item_id)
+	$r = q("SELECT * FROM `attach` WHERE `hash` = '%s' LIMIT 1",
+		dbesc($hash)
 	);
 	if(! count($r)) {
 		notice( t('Item was not found.'). EOL);
@@ -25,8 +25,8 @@ function attach_init(&$a) {
 
 	// Now we'll see if we can access the attachment
 
-	$r = q("SELECT * FROM `attach` WHERE `id` = '%d' $sql_extra LIMIT 1",
-		dbesc($item_id)
+	$r = q("SELECT * FROM `attach` WHERE hash = '%s' $sql_extra LIMIT 1",
+		dbesc($hash)
 	);
 
 	if(! count($r)) {

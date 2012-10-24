@@ -57,11 +57,6 @@ Otherwise, enter your password. This will have been initially provided in your r
 After your first login, please visit the 'Settings' page from the top menu bar and change your password to something that you will remember.
 
 
-**Getting Started**
-
-A ['Tips for New Members'](newmember) link will show up on your home page for two weeks to provide some important Getting Started information.
-
-
 **Retrieving Personal Data**
 
 You can export a copy of your personal data in XML format from the "Export personal data" link at the top of your settings  page.

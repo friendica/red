@@ -93,7 +93,7 @@ CREATE TABLE IF NOT EXISTS `attach` (
   KEY `aid` (`aid`),
   KEY `uid` (`uid`),
   KEY `hash` (`hash`)
-) ENGINE=MyISAM DEFAULT CHARSET=utf8;
+) ENGINE=MyISAM  DEFAULT CHARSET=utf8;
 
 CREATE TABLE IF NOT EXISTS `auth_codes` (
   `id` varchar(40) NOT NULL,
@@ -140,6 +140,7 @@ CREATE TABLE IF NOT EXISTS `channel` (
   `channel_pageflags` int(10) unsigned NOT NULL DEFAULT '0',
   `channel_max_anon_mail` int(10) unsigned NOT NULL DEFAULT '10',
   `channel_max_friend_req` int(10) unsigned NOT NULL DEFAULT '10',
+  `channel_expire_days` int(11) NOT NULL DEFAULT '0',
   `channel_passwd_reset` char(255) NOT NULL DEFAULT '',
   `channel_default_gid` int(10) unsigned NOT NULL DEFAULT '0',
   `channel_allow_cid` mediumtext NOT NULL,
@@ -183,7 +184,8 @@ CREATE TABLE IF NOT EXISTS `channel` (
   KEY `channel_w_chat` (`channel_w_chat`),
   KEY `channel_guid` (`channel_guid`),
   KEY `channel_guid_sig` (`channel_guid_sig`),
-  KEY `channel_hash` (`channel_hash`)
+  KEY `channel_hash` (`channel_hash`),
+  KEY `channel_expire_days` (`channel_expire_days`)
 ) ENGINE=MyISAM  DEFAULT CHARSET=utf8;
 
 CREATE TABLE IF NOT EXISTS `clients` (
@@ -571,7 +573,7 @@ CREATE TABLE IF NOT EXISTS `item` (
   FULLTEXT KEY `allow_gid` (`allow_gid`),
   FULLTEXT KEY `deny_cid` (`deny_cid`),
   FULLTEXT KEY `deny_gid` (`deny_gid`)
-) ENGINE=MyISAM DEFAULT CHARSET=utf8;
+) ENGINE=MyISAM  DEFAULT CHARSET=utf8;
 
 CREATE TABLE IF NOT EXISTS `item_id` (
   `id` int(10) unsigned NOT NULL AUTO_INCREMENT,

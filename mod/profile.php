@@ -12,9 +12,6 @@ function profile_aside(&$a) {
 	require_once('include/contact_widgets.php');
 	require_once('include/items.php');
 
-	if(! x($a->page,'aside'))
-		$a->page['aside'] = '';
-
 	if(argc() > 1)
 		$which = argv(1);
 	else {
@@ -59,6 +56,8 @@ function profile_content(&$a, $update = 0) {
 	if(get_config('system','block_public') && (! get_account_id()) && (! remote_user())) {
 			return login();
 	}
+
+	$channel = $a->get_channel();
 
 	require_once("include/bbcode.php");
 	require_once('include/security.php');
@@ -147,16 +146,15 @@ function profile_content(&$a, $update = 0) {
 
 		$celeb = ((($a->profile['page-flags'] == PAGE_SOAPBOX) || ($a->profile['page-flags'] == PAGE_COMMUNITY)) ? true : false);
 
-
 		if(can_write_wall($a,$a->profile['profile_uid'])) {
 
 			$x = array(
 				'is_owner' => $is_owner,
             	'allow_location' => ((($is_owner || $commvisitor) && $a->profile['allow_location']) ? true : false),
 	            'default_location' => (($is_owner) ? $a->user['default-location'] : ''),
-    	        'nickname' => $a->profile['nickname'],
-        	    'lockstate' => (((is_array($a->user) && ((strlen($a->user['allow_cid'])) || (strlen($a->user['allow_gid'])) || (strlen($a->user['deny_cid'])) || (strlen($a->user['deny_gid']))))) ? 'lock' : 'unlock'),
-            	'acl' => (($is_owner) ? populate_acl($a->user, $celeb) : ''),
+    	        'nickname' => $channel['channel_address'],
+        	    'lockstate' => (((strlen($channel['channel_allow_cid'])) || (strlen($channel['channel_allow_gid'])) || (strlen($channel['channel_deny_cid'])) || (strlen($channel['channel_deny_gid']))) ? 'lock' : 'unlock'),
+            	'acl' => (($is_owner) ? populate_acl($channel, $celeb) : ''),
 	            'bang' => '',
     	        'visitor' => (($is_owner || $commvisitor) ? 'block' : 'none'),
         	    'profile_uid' => $a->profile['profile_uid']

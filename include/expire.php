@@ -1,50 +1,31 @@
 <?php
 
-require_once("boot.php");
+require_once('boot.php');
+require_once('include/cli_startup.php');
 
 function expire_run($argv, $argc){
-	global $a, $db;
 
-	if(is_null($a)) {
-		$a = new App;
-	}
-  
-	if(is_null($db)) {
-	    @include(".htconfig.php");
-    	require_once("dba.php");
-	    $db = new dba($db_host, $db_user, $db_pass, $db_data);
-    	unset($db_host, $db_user, $db_pass, $db_data);
-  	};
-
-	require_once('include/session.php');
-	require_once('include/datetime.php');
-	require_once('library/simplepie/simplepie.inc');
-	require_once('include/items.php');
-	require_once('include/Contact.php');
-
-	load_config('config');
-	load_config('system');
-
-
-	$a->set_baseurl(get_config('system','url'));
-
+	cli_startup();
 
 	// physically remove anything that has been deleted for more than two months
 
-	$r = q("delete from item where deleted = 1 and changed < UTC_TIMESTAMP() - INTERVAL 60 DAY");
+	$r = q("delete from item where item_flags & %d and changed < UTC_TIMESTAMP() - INTERVAL 60 DAY",
+		intval(ITEM_DELETED)
+	);
 
 	// make this optional as it could have a performance impact on large sites
 
 	if(intval(get_config('system','optimize_items')))
 		q("optimize table item");
 
-	logger('expire: start');
+	logger('expire: start', LOGGER_DEBUG);
 	
-	$r = q("SELECT `uid`,`username`,`expire` FROM `user` WHERE `expire` != 0");
-	if(count($r)) {
+
+	$r = q("SELECT channel_id, channel_address, channel_expire_days from channel where channel_expire_days != 0");
+	if($r && count($r)) {
 		foreach($r as $rr) {
-			logger('Expire: ' . $rr['username'] . ' interval: ' . $rr['expire'], LOGGER_DEBUG);
-			item_expire($rr['uid'],$rr['expire']);
+			logger('Expire: ' . $rr['channel_address'] . ' interval: ' . $rr['channel_expire_days'], LOGGER_DEBUG);
+			item_expire($rr['channel_id'],$rr['channel_expire_days']);
 		}
 	}
 

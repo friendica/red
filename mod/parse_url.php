@@ -1,4 +1,6 @@
 <?php
+
+
 /* To-Do
 https://developers.google.com/+/plugins/snippet/
 
@@ -342,7 +344,7 @@ function parse_url_content(&$a) {
 
 	$result = sprintf($template,$url,($title) ? $title : $url,$text) . $str_tags;
 
-	logger('parse_url: returns: ' . $result);
+	logger('parse_url: returns: ' . $result, LOGGER_DEBUG);
 
 	echo trim($result);
 	killme();

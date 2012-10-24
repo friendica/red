@@ -9,20 +9,15 @@ function directory_init(&$a) {
 		$a->page['aside'] .= findpeople_widget();
 
 	}
-	else {
-		unset($_SESSION['theme']);
-		unset($_SESSION['mobile-theme']);
+}
+
+function directory_aside(&$a) {
+
+	if(local_user()) {
+		require_once('include/contact_widgets.php');
+		$a->set_widget('find_people',findpeople_widget());
 	}
-
-
 }
-
-
-function directory_post(&$a) {
-	if(x($_POST,'search'))
-		$a->data['search'] = $_POST['search'];
-}
-
 
 
 function directory_content(&$a) {
@@ -35,8 +30,8 @@ function directory_content(&$a) {
 	$o = '';
 	nav_set_selected('directory');
 
-	if(x($a->data,'search'))
-		$search = notags(trim($a->data['search']));
+	if(x($_POST,'search'))
+		$search = notags(trim($_POST['search']));
 	else
 		$search = ((x($_GET,'search')) ? notags(trim(rawurldecode($_GET['search']))) : '');
 

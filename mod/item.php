@@ -528,7 +528,7 @@ function item_post(&$a) {
 	$attachments = '';
 	$match = false;
 
-	if(preg_match_all('/(\[attachment\]([0-9]+)\[\/attachment\])/',$body,$match)) {
+	if(preg_match_all('/(\[attachment\](.*?)\[\/attachment\])/',$body,$match)) {
 		foreach($match[2] as $mtch) {
 			$r = q("SELECT `hash`,`filename`,`filesize`,`filetype` FROM `attach` WHERE `uid` = %d AND `hash` = '%s' LIMIT 1",
 				intval($profile_uid),

@@ -8,8 +8,8 @@ function poco_init(&$a) {
 		http_status_exit(401);
 
 
-	if($a->argc > 1) {
-		$user = notags(trim($a->argv[1]));
+	if(argc() > 1) {
+		$user = notags(trim(argv(1)));
 	}
 	if(! x($user)) {
 		$c = q("select * from pconfig where cat = 'system' and k = 'suggestme' and v = 1");
@@ -18,21 +18,24 @@ function poco_init(&$a) {
 		$system_mode = true;
 	}
 
-	$format = (($_GET['format']) ? $_GET['format'] : 'json');
+	$format = (($_REQUEST['format']) ? $_REQUEST['format'] : 'json');
 
 	$justme = false;
 
-	if($a->argc > 2 && $a->argv[2] === '@me')
+	if(argc() > 2 && argv(2) === '@me')
 		$justme = true;
-	if($a->argc > 3 && $a->argv[3] === '@all')
-		$justme = false;
-	if($a->argc > 3 && $a->argv[3] === '@self')
-		$justme = true;
-	if($a->argc > 4 && intval($a->argv[4]) && $justme == false)
-		$cid = intval($a->argv[4]);
+	if(argc() > 3) {
+		if(argv(3) === '@all')
+			$justme = false;
+		elseif(argv(3) === '@self')
+			$justme = true;
+	}
+	if(argc() > 4 && intval(argv(4)) && $justme == false)
+		$cid = intval(argv(4));
  		
 
 	if(! $system_mode) {
+
 		$r = q("SELECT `user`.*,`profile`.`hide_friends` from user left join profile on `user`.`uid` = `profile`.`uid`
 			where `user`.`nickname` = '%s' and `profile`.`is_default` = 1 limit 1",
 			dbesc($user)

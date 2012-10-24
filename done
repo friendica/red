@@ -35,7 +35,7 @@ include/
 - email.php
   enotify.php
   event.php
-  expire.php
++ expire.php
   fcontact.php
   follow.php
   gprobe.php
@@ -85,7 +85,7 @@ mod/
   allfriends.php
   api.php
 + apps.php
-  attach.php
++ attach.php
 ? auth.php
   cb.php
   common.php
@@ -130,20 +130,19 @@ mod/
   mood.php
   msearch.php
 ? network.php
-  newmember.php
   nogroup.php
   notifications.php
-  notify.php
++ notify.php
 ? oembed.php
 + oexchange.php
 + opensearch.php
-  parse_url.php
+= parse_url.php
 ? photo.php
   photos.php
 + ping.php (needs more work)
   poco.php
   poke.php
-  post.php
+? post.php
 + pretheme.php
   probe.php
 ? profile_photo.php
@@ -176,7 +175,7 @@ mod/
   viewsrc.php
   wall_attach.php
   wallmessage.php
-  wall_upload.php
+? wall_upload.php (needs remote permissions refactor)
   webfinger.php
 + _well_known.php
   xrd.php
