@@ -67,26 +67,29 @@ function profile_photo_post(&$a) {
 		if(count($r)) {
 
 			$base_image = $r[0];
-
+		
 			$im = new Photo($base_image['data'], $base_image['type']);
 			if($im->is_valid()) {
 				$im->cropImage(175,$srcX,$srcY,$srcW,$srcH);
 
-				$r = $im->store(local_user(), 0, $base_image['resource_id'],$base_image['filename'], t('Profile Photos'), 4, $is_default_profile);
+				$r = $im->store(local_user(), 0, $base_image['resource_id'],$base_image['filename'], 
+					t('Profile Photos'), 4, $is_default_profile);
 
 				if($r === false)
 					notice ( sprintf(t('Image size reduction [%s] failed.'),"175") . EOL );
 
 				$im->scaleImage(80);
 
-				$r = $im->store(local_user(), 0, $base_image['resource_id'],$base_image['filename'], t('Profile Photos'), 5, $is_default_profile);
+				$r = $im->store(local_user(), 0, $base_image['resource_id'],$base_image['filename'], 
+					t('Profile Photos'), 5, $is_default_profile);
 			
 				if($r === false)
 					notice( sprintf(t('Image size reduction [%s] failed.'),"80") . EOL );
 
 				$im->scaleImage(48);
 
-				$r = $im->store(local_user(), 0, $base_image['resource_id'],$base_image['filename'], t('Profile Photos'), 6, $is_default_profile);
+				$r = $im->store(local_user(), 0, $base_image['resource_id'],$base_image['filename'], 
+					t('Profile Photos'), 6, $is_default_profile);
 			
 				if($r === false)
 					notice( sprintf(t('Image size reduction [%s] failed.'),"48") . EOL );
@@ -108,12 +111,16 @@ function profile_photo_post(&$a) {
 					);
 				}
 
-				// we'll set the updated profile-photo timestamp even if it isn't the default profile,
+				// We'll set the updated profile-photo timestamp even if it isn't the default profile,
 				// so that browsers will do a cache update unconditionally
 
-				$r = q("UPDATE `contact` SET `avatar_date` = '%s' WHERE `self` = 1 AND `uid` = %d LIMIT 1",
+				$channel = $a->get_channel();
+
+				$r = q("UPDATE xchan set xchan_photo_mimetype = '%s', xchan_photo_date = '%s' 
+					where xchan_hash = '%s' limit 1",
+					dbesc($im->getType()),
 					dbesc(datetime_convert()),
-					intval(local_user())
+					dbesc($channel['xchan_hash'])
 				);
 
 				info( t('Shift-reload the page or clear browser cache if the new photo does not display immediately.') . EOL);
@@ -170,18 +177,18 @@ function profile_photo_content(&$a) {
 
 	$newuser = false;
 
-	if($a->argc == 2 && $a->argv[1] === 'new')
+	if(argc() == 2 && argv(1) === 'new')
 		$newuser = true;
 
-	if( $a->argv[1]=='use'){
-		if ($a->argc<3){
+	if(argv(1) === 'use') {
+		if (argc() < 3) {
 			notice( t('Permission denied.') . EOL );
 			return;
 		};
 		
 //		check_form_security_token_redirectOnErr('/profile_photo', 'profile_photo');
         
-		$resource_id = $a->argv[2];
+		$resource_id = argv(2);
 		//die(":".local_user());
 		$r=q("SELECT * FROM `photo` WHERE `uid` = %d AND `resource_id` = '%s' ORDER BY `scale` ASC",
 			intval(local_user()),
