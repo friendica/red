@@ -139,8 +139,8 @@ function install_content(&$a) {
 	}
 
 	if(x($a->data,'db_failed')) {
-		$txt = t('You may need to import the file "database.sql" manually using phpmyadmin or mysql.') . EOL;
-		$txt .= t('Please see the file "INSTALL.txt".') . EOL ."<hr>" ;
+		$txt = t('You may need to import the file "install/database.sql" manually using phpmyadmin or mysql.') . EOL;
+		$txt .= t('Please see the file "install/INSTALL.txt".') . EOL ."<hr>" ;
 		$txt .= "<pre>".$a->data['db_failed'] . "</pre>". EOL ;
 		$db_return_text .= $txt;
 	}
@@ -205,7 +205,7 @@ function install_content(&$a) {
 				'$pass' => t('System check'),
 				'$checks' => $checks,
 				'$passed' => $checkspassed,
-				'$see_install' => t('Please see the file "INSTALL.txt".'),
+				'$see_install' => t('Please see the file "install/INSTALL.txt".'),
 				'$next' => t('Next'),
 				'$reload' => t('Check again'),
 				'$phpath' => $phpath,
@@ -427,7 +427,7 @@ function check_htconfig(&$checks) {
 		$help = t('The web installer needs to be able to create a file called ".htconfig.php" in the top folder of your web server and it is unable to do so.') .EOL;
 		$help .= t('This is most often a permission setting, as the web server may not be able to write files in your folder - even if you can.').EOL;
 		$help .= t('At the end of this procedure, we will give you a text to save in a file named .htconfig.php in your Friendica top folder.').EOL;
-		$help .= t('You can alternatively skip this procedure and perform a manual installation. Please see the file "INSTALL.txt" for instructions.').EOL; 
+		$help .= t('You can alternatively skip this procedure and perform a manual installation. Please see the file "install/INSTALL.txt" for instructions.').EOL; 
 	}
     
 	check_add($checks, t('.htconfig.php is writable'), $status, false, $help);
@@ -471,7 +471,7 @@ function load_database_rem($v, $i){
 
 function load_database($db) {
 
-	$str = file_get_contents('database.sql');
+	$str = file_get_contents('install/database.sql');
 	$arr = explode(';',$str);
 	$errors = false;
 	foreach($arr as $a) {
@@ -491,7 +491,7 @@ function what_next() {
 	return 
 		t('<h1>What next</h1>')
 		."<p>".t('IMPORTANT: You will need to [manually] setup a scheduled task for the poller.')
-		.t('Please see the file "INSTALL.txt".')			
+		.t('Please see the file "install/INSTALL.txt".')			
 		."</p><p>"
 		.t("Go to your new Friendica node <a href='$baseurl/zregister'>registration page</a> and register as new user. Remember to use the same email you have entered as administrator email. This will allow you to enter the site admin panel.")
 		."</p>";
