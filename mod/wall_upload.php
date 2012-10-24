@@ -129,7 +129,7 @@ function wall_upload_post(&$a) {
 	
 	$smallest = 0;
 
-	$defperm = '<' . $default_cid . '>';
+	$defperm = '<' . $channel['channel_hash'] . '>';
 
 	$r = $ph->store($page_owner_uid, $visitor, $hash, $filename, t('Wall Photos'), 0, 0, $defperm);
 
