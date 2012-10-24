@@ -137,7 +137,7 @@ mod/
 + oexchange.php
 + opensearch.php
 = parse_url.php
-? photo.php
++ photo.php
   photos.php
 + ping.php (needs more work)
   poco.php
@@ -151,7 +151,7 @@ mod/
   profperm.php
   qsearch.php
 + randprof.php
-  redir.php
+- redir.php
 - register.php
   regmod.php
   removeme.php

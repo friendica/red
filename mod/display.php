@@ -3,7 +3,7 @@
 
 function display_content(&$a) {
 
-	if((get_config('system','block_public')) && (! local_user()) && (! remote_user())) {
+	if(intval(get_config('system','block_public')) && (! local_user()) && (! remote_user())) {
 		notice( t('Public access denied.') . EOL);
 		return;
 	}
@@ -19,59 +19,85 @@ function display_content(&$a) {
 	$a->page['htmlhead'] .= get_markup_template('display-head.tpl');
 
 
-	$nick = (($a->argc > 1) ? $a->argv[1] : '');
-	profile_load($a,$nick);
+	if(argc() > 1)
+		$item_hash = argv(2);
 
-	$item_id = (($a->argc > 2) ? intval($a->argv[2]) : 0);
-
-	if(! $item_id) {
+	if(! $item_hash) {
 		$a->error = 404;
 		notice( t('Item not found.') . EOL);
 		return;
 	}
 
-	$groups = array();
+	$observer_is_owner = false;
 
-	$contact = null;
-	$remote_contact = false;
-
-	$contact_id = 0;
-
-	if(is_array($_SESSION['remote'])) {
-		foreach($_SESSION['remote'] as $v) {
-			if($v['uid'] == $a->profile['uid']) {
-				$contact_id = $v['cid'];
-				break;
-			}
-		}
-	}
-
-	if($contact_id) {
-		$groups = init_groups_visitor($contact_id);
-		$r = q("SELECT * FROM `contact` WHERE `id` = %d AND `uid` = %d LIMIT 1",
-			intval($contact_id),
-			intval($a->profile['uid'])
+	if(local_user()) {
+		$r = q("select * from item where uri = '%s' and uid = %d limit 1",
+			dbesc($item_hash),
+			intval(local_user())
 		);
-		if(count($r)) {
-			$contact = $r[0];
-			$remote_contact = true;
-		}
+		if($r && $count($r))
+			$observer_is_owner = true;		
 	}
 
-	if(! $remote_contact) {
-		if(local_user()) {
-			$contact_id = $_SESSION['cid'];
-			$contact = $a->contact;
-		}
-	}
 
-	$r = q("SELECT * FROM `contact` WHERE `uid` = %d AND `self` = 1 LIMIT 1",
-		intval($a->profile['uid'])
-	);
-	if(count($r))
-		$a->page_contact = $r[0];
+	// Checking for visitors is a bit harder, we'll look for this item from any of their friends that they've auth'd
+	// against and see if any of them are writeable.
+	// This will be messy.
 
-	$is_owner = ((local_user()) && (local_user() == $a->profile['profile_uid']) ? true : false);
+//	$nick = (($a->argc > 1) ? $a->argv[1] : '');
+//	profile_load($a,$nick);
+
+//	$item_id = (($a->argc > 2) ? intval($a->argv[2]) : 0);
+
+//	if(! $item_id) {
+//		$a->error = 404;
+//		notice( t('Item not found.') . EOL);
+//		return;
+//	}
+
+//	$groups = array();
+
+//	$contact = null;
+//	$remote_contact = false;
+
+//	$contact_id = 0;
+
+//	if(is_array($_SESSION['remote'])) {
+//		foreach($_SESSION['remote'] as $v) {
+//			if($v['uid'] == $a->profile['uid']) {
+//				$contact_id = $v['cid'];
+//				break;
+//			}
+//		}
+//	}
+
+//	if($contact_id) {
+//		$groups = init_groups_visitor($contact_id);
+//		$r = q("SELECT * FROM `contact` WHERE `id` = %d AND `uid` = %d LIMIT 1",
+//			intval($contact_id),
+//			intval($a->profile['uid'])
+//		);
+//		if(count($r)) {
+//			$contact = $r[0];
+//			$remote_contact = true;
+//		}
+//	}
+
+//	if(! $remote_contact) {
+
+//		if(local_user()) {
+//			$contact_id = $_SESSION['cid'];
+//			$contact = $a->contact;
+//		}
+//	}
+
+//	$r = q("SELECT * FROM `contact` WHERE `uid` = %d AND `self` = 1 LIMIT 1",
+//		intval($a->profile['uid'])
+//	);
+//	if(count($r))
+//		$a->page_contact = $r[0];
+
+//	$is_owner = ((local_user()) && (local_user() == $a->profile['profile_uid']) ? true : false);
 
 	if($a->profile['hidewall'] && (! $is_owner) && (! $remote_contact)) {
 		notice( t('Access to this profile has been restricted.') . EOL);
