@@ -20,7 +20,6 @@ function acl_init(&$a){
 		$search = $_REQUEST['query'];
 	}
 
-logger("acl: $search"); 
 
 	if(! (local_user() || $type == 'x'))
 		return "";
@@ -170,7 +169,7 @@ logger("acl: $search");
 			foreach($r as $g) {
 				$x['photos'][] = $g['micro'];
 				$x['links'][] = $g['url'];
-				$x['suggestions'][] = $g['name'];
+				$x['suggestions'][] = (($type === 'x') ? '@' : '') . $g['name'];
 				$x['data'][] = intval($g['id']);
 			}
 		}

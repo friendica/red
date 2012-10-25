@@ -9,7 +9,7 @@ body {
 	font-family: helvetica,arial,freesans,clean,sans-serif;
 	font-size: 12px;
 	background-color: #ffffff;
-//	background-image: url(../img/head.jpg);
+/*	background-image: url(../img/head.jpg); */
 	background-repeat: repeat-x;
 	color: #000000;
 	margin: 0px;
@@ -36,7 +36,8 @@ abbr {
 .icon.notify {
   background-image: url("../../../../images/icons/22/notify_off.png");
  min-width: 22px;
-  height: 22px; 
+  height: 22px;
+  margin-top: -4px; 
   background-position: left center;
   padding: 1px;
 }
@@ -48,8 +49,8 @@ abbr {
   padding: 1px;
 }
 
-a, a:visited, a:link { color: #3465a4; text-decoration: none; }
-a:hover {text-decoration: underline; }
+a, a:visited, a:link { color: #335577; text-decoration: none; }
+a:hover { color: #5588aa; text-decoration: underline; }
 
 input {
 	border: 1px solid #666666;
@@ -217,13 +218,13 @@ nav #nav-link-wrapper .nav-link {
 }
 
 .tabs {
-	height: 27px;
-	background-image: url(../img/head.jpg);
+	height: 22px;
+/*	background-image: url(../img/head.jpg);
 	background-repeat: repeat-x;	
-	background-position: 0px -20px;
-	border-bottom: 1px solid #babdb6;
+	background-position: 0px -20px; */
+	border-bottom: 1px solid #aaaaaa;
 	padding:0px;
-	margin-right: 15px;
+	margin-right: 10px;
 }
 .tabs li { margin: 0px; list-style: none; }
 .tab {
@@ -237,7 +238,12 @@ nav #nav-link-wrapper .nav-link {
 	font-weight: bold;
 	
 }
-
+ul.tabs {
+	margin-top: 0px;
+	margin-bottom: 0px;
+	list-style-type: none;
+	padding: 0px;
+}
 
 /* footer */
 footer {
@@ -322,7 +328,7 @@ div.wall-item-content-wrapper.shiny {
 
 
 .fakelink, .fakelink:visited, .fakelink:link {
-	color: #3465a4;
+	color: #335577;
 	text-decoration: none;
 	cursor: pointer;
 }
@@ -358,7 +364,7 @@ div.wall-item-content-wrapper.shiny {
 }
 
 .fakelink:hover {
-	color: #3465a4;
+	color: #5588aa;
 	text-decoration: underline;
 	cursor: pointer;
 }
@@ -1189,7 +1195,7 @@ input#dfrn-url {
 
 .wall-item-tools {
 	clear: both;
-	background-image: url("../img/head.jpg");
+/*	background-image: url("../img/head.jpg"); */
     background-position: 0 -20px;
     background-repeat: repeat-x;
    	padding: 5px 10px 0px;
