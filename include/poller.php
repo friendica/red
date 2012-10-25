@@ -23,7 +23,6 @@ function poller_run($argv, $argc){
 	require_once('library/simplepie/simplepie.inc');
 	require_once('include/items.php');
 	require_once('include/Contact.php');
-	require_once('include/email.php');
 	require_once('include/socgraph.php');
 	require_once('include/pidfile.php');
 

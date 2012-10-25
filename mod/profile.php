@@ -57,7 +57,6 @@ function profile_content(&$a, $update = 0) {
 			return login();
 	}
 
-	$channel = $a->get_channel();
 
 	require_once("include/bbcode.php");
 	require_once('include/security.php');
@@ -127,7 +126,7 @@ function profile_content(&$a, $update = 0) {
 		if(x($_GET,'tab'))
 			$tab = notags(trim($_GET['tab']));
 
-		$o.=profile_tabs($a, $is_owner, $a->profile['nickname']);
+		$o .= profile_tabs($a, $is_owner, $a->profile['channel_address']);
 
 
 		if($tab === 'profile') {
@@ -152,8 +151,8 @@ function profile_content(&$a, $update = 0) {
 				'is_owner' => $is_owner,
             	'allow_location' => ((($is_owner || $commvisitor) && $a->profile['allow_location']) ? true : false),
 	            'default_location' => (($is_owner) ? $a->user['default-location'] : ''),
-    	        'nickname' => $channel['channel_address'],
-        	    'lockstate' => (((strlen($channel['channel_allow_cid'])) || (strlen($channel['channel_allow_gid'])) || (strlen($channel['channel_deny_cid'])) || (strlen($channel['channel_deny_gid']))) ? 'lock' : 'unlock'),
+    	        'nickname' => $a->profile['channel_address'],
+        	    'lockstate' => (((strlen($a->profile['channel_allow_cid'])) || (strlen($a->profile['channel_allow_gid'])) || (strlen($a->profile['channel_deny_cid'])) || (strlen($a->profile['channel_deny_gid']))) ? 'lock' : 'unlock'),
             	'acl' => (($is_owner) ? populate_acl($channel, $celeb) : ''),
 	            'bang' => '',
     	        'visitor' => (($is_owner || $commvisitor) ? 'block' : 'none'),

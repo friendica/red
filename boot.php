@@ -1747,8 +1747,10 @@ if(! function_exists('profile_tabs')){
 	function profile_tabs($a, $is_owner=False, $nickname=Null){
 		//echo "<pre>"; var_dump($a->user); killme();
 	
+		$channel = $a->get_channel();
+
 		if (is_null($nickname))
-			$nickname  = $a->user['nickname'];
+			$nickname  = $a->channel['channel_address'];
 		
 		if(x($_GET,'tab'))
 			$tab = notags(trim($_GET['tab']));
@@ -1765,7 +1767,7 @@ if(! function_exists('profile_tabs')){
 			),
 			array(
 				'label' => t('Profile'),
-				'url' 	=> $url.'/?tab=profile',
+				'url' 	=> $url.'?tab=profile',
 				'sel'	=> ((isset($tab) && $tab=='profile')?'active':''),
 				'title' => t('Profile Details'),
 				'id' => 'profile-tab',
