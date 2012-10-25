@@ -17,6 +17,7 @@ head_add_js('js/fk.autocomplete.js');
 head_add_js('library/fancybox/jquery.fancybox-1.3.4.pack.js');
 head_add_js('library/jquery.timeago.js');
 head_add_js('library/jquery.divgrow/jquery.divgrow-1.3.1.js');
+head_add_js('library/jquery_ac/friendica.complete.js');
 head_add_js('library/tiptip/jquery.tipTip.minified.js');
 head_add_js('library/jgrowl/jquery.jgrowl_minimized.js');
 head_add_js('library/tinymce/jscripts/tiny_mce/tiny_mce_src.js');

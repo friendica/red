@@ -384,11 +384,13 @@ if($a->is_mobile || $a->is_tablet) {
 	else {
 		$link = $a->get_baseurl() . '/toggle_mobile?off=1&address=' . curPageURL();
 	}
-	$a->page['footer'] = replace_macros(get_markup_template("toggle_mobile_footer.tpl"), array(
+	$a->page['footer'] .= replace_macros(get_markup_template("toggle_mobile_footer.tpl"), array(
 	                     	'$toggle_link' => $link,
 	                     	'$toggle_text' => t('toggle mobile')
     	                 ));
 }
+
+$a->page['footer'] .= '<div id="powered-by">' . t("Friendica Red") . '</div>';
 
 $page    = $a->page;
 $profile = $a->profile;

@@ -4,8 +4,6 @@
 require_once("include/acl_selectors.php");
 
 function acl_init(&$a){
-	if(!local_user())
-		return "";
 
 
 	$start = (x($_REQUEST,'start')?$_REQUEST['start']:0);
@@ -22,12 +20,19 @@ function acl_init(&$a){
 		$search = $_REQUEST['query'];
 	}
 
+logger("acl: $search"); 
+
+	if(! (local_user() || $type == 'x'))
+		return "";
+
+
 
 	if ($search!=""){
 		$sql_extra = "AND `name` LIKE '%%".dbesc($search)."%%'";
 		$sql_extra2 = "AND (`attag` LIKE '%%".dbesc($search)."%%' OR `name` LIKE '%%".dbesc($search)."%%' OR `nick` LIKE '%%".dbesc($search)."%%')";
+		$sql_extra3 = "AND ( xchan_name like '%%" . dbesc($search) . "%%' )";
 	} else {
-		$sql_extra = $sql_extra2 = "";
+		$sql_extra = $sql_extra2 = $sql_extra3 = "";
 	}
 	
 	// count groups and contacts
@@ -142,11 +147,19 @@ function acl_init(&$a){
 			intval(local_user())
 		);
 	}
+	elseif($type == 'x') {
+		$r = q("SELECT xchan_name as id, xchan_name as name, xchan_photo_s as micro, xchan_profile as url from xchan
+			where 1
+			$sql_extra3
+			ORDER BY `xchan_name` ASC ",
+			intval(local_user())
+		);
+	}
 	else
 		$r = array();
 
 
-	if($type == 'm' || $type == 'a') {
+	if($type == 'm' || $type == 'a' || $type == 'x') {
 		$x = array();
 		$x['query'] = $search;
 		$x['photos'] = array();

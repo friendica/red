@@ -54,29 +54,23 @@
 
 		<li id="nav-site-linkmenu" class="nav-menu-icon"><a href="#" rel="#nav-site-menu"><span class="icon s22 gear">Site</span></a>
 			<ul id="nav-site-menu" class="menu-popup">
-				{{ if $nav.manage }}<li><a class="$nav.manage.2" href="$nav.manage.0" title="$nav.manage.3">$nav.manage.1</a></li>{{ endif }}				
-
 				{{ if $nav.settings }}<li><a class="$nav.settings.2" href="$nav.settings.0" title="$nav.settings.3">$nav.settings.1</a></li>{{ endif }}
+				{{ if $nav.manage }}<li><a class="$nav.manage.2" href="$nav.manage.0" title="$nav.manage.3">$nav.manage.1</a></li>{{ endif }}				
+				{{ if $nav.profiles }}<li><a class="$nav.profiles.2" href="$nav.profiles.0" title="$nav.profiles.3">$nav.profiles.1</a></li>{{ endif }}				
+
 				{{ if $nav.admin }}<li><a class="$nav.admin.2" href="$nav.admin.0" title="$nav.admin.3" >$nav.admin.1</a></li>{{ endif }}
 
 				{{ if $nav.logout }}<li><a class="menu-sep $nav.logout.2" href="$nav.logout.0" title="$nav.logout.3" >$nav.logout.1</a></li>{{ endif }}
 				{{ if $nav.login }}<li><a class="$nav.login.2" href="$nav.login.0" title="$nav.login.3" >$nav.login.1</a><li>{{ endif }}
 			</ul>		
 		</li>
-		
+
 		{{ if $nav.help }} 
 		<li id="nav-help-link" class="nav-menu $sel.help">
 			<a class="$nav.help.2" target="friendika-help" href="$nav.help.0" title="$nav.help.3" >$nav.help.1</a>
 		</li>
 		{{ endif }}
 
-		<li id="nav-search-link" class="nav-menu $sel.search">
-			<a class="$nav.search.2" href="$nav.search.0" title="$nav.search.3" >$nav.search.1</a>
-		</li>
-		<li id="nav-directory-link" class="nav-menu $sel.directory">
-			<a class="$nav.directory.2" href="$nav.directory.0" title="$nav.directory.3" >$nav.directory.1</a>
-		</li>
-		
 		{{ if $nav.apps }}
 			<li id="nav-apps-link" class="nav-menu $sel.apps">
 				<a class=" $nav.apps.2" href="#" rel="#nav-apps-menu" title="$nav.apps.3" >$nav.apps.1</a>
@@ -87,7 +81,18 @@
 				</ul>
 			</li>
 		{{ endif }}
+
+		<li id="nav-searchbar">		
+		<form method="get" action="search">
+		<input id="nav-search-text" type="text" value="" placeholder="$nav.search.1" name="search" title="$nav.search.3" onclick="this.submit();" />
+		</form>
+		</li>
+
+
+
+
 	</ul>
+
 
 </nav>
 <ul id="nav-notifications-template" style="display:none;" rel="template">

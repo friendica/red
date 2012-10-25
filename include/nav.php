@@ -13,6 +13,25 @@ function nav(&$a) {
 	if(!(x($a->page,'nav')))
 		$a->page['nav'] = '';
 
+	$base = $a->get_baseurl($ssl_state);
+    $a->page['htmlhead'] .= <<< EOT
+
+<script>$(document).ready(function() {
+    var a;
+    a = $("#nav-search-text").autocomplete({
+        serviceUrl: '$base/acl',
+        minChars: 2,
+        width: 250,
+    });
+    a.setOptions({ params: { type: 'x' }});
+
+});
+
+</script>
+EOT;
+
+
+
 	/**
 	 * Placeholder div for popup panel
 	 */
@@ -53,6 +72,7 @@ function nav(&$a) {
 		// user menu
 		$nav['usermenu'][] = Array('profile/' . $channel['channel_address'], t('Status'), "", t('Your posts and conversations'));
 		$nav['usermenu'][] = Array('profile/' . $channel['channel_address']. '?tab=profile', t('Profile'), "", t('Your profile page'));
+
 		$nav['usermenu'][] = Array('photos/' . $channel['channel_address'], t('Photos'), "", t('Your photos'));
 		$nav['usermenu'][] = Array('events/', t('Events'), "", t('Your events'));
 		
@@ -153,8 +173,8 @@ function nav(&$a) {
 	$banner = get_config('system','banner');
 
 	if($banner === false) 
-		$banner .= '<a href="http://friendica.com"><img id="logo-img" src="images/fred-32.png" alt="logo" /></a>';
-
+//		$banner .= '<a href="http://friendica.com"><img id="logo-img" src="images/fred-32.png" alt="logo" /></a>';
+		$banner = '';
 
 	$tpl = get_markup_template('nav.tpl');
 

@@ -243,7 +243,16 @@ nav #nav-link-wrapper .nav-link {
 footer {
 	text-align: right;
 	padding-bottom: 1em;
-	padding-right: 3em;
+	padding-right: 3em; 
+}
+
+#powered-by {
+	position: fixed;
+	bottom: 1px;
+	left: 15px;
+	opacity: 0.3;
+	filter:alpha(opacity=30);
+
 }
 
 .birthday-today, .event-today {
@@ -2366,6 +2375,24 @@ aside input[type='text'] {
 	margin-bottom: 25px;
 }
 
+#nav-searchbar {
+	float: right;
+	margin-top: 3px;
+}
+
+#nav-search-text:hover {
+	background-color: #FFFFFF;
+}
+
+#nav-search-text {
+	border-radius: 14px;
+	background-color: #AAAAAA;
+}
+
+#nav-user-linkmenu img {
+	border-radius: 3px;
+}
+
 .location-label, .gender-label, .marital-label, .homepage-label {
 	float: left;
 	text-align: right;
@@ -3362,7 +3389,7 @@ nav .nav-menu {
   border-bottom: 3px solid #888888;
 }
 nav .nav-menu.selected {
-  border-bottom: 3px solid #FF8888;
+  border-bottom: 4px solid #000000;
 }
 nav .nav-notify {
   display: none;
@@ -3520,8 +3547,8 @@ ul.menu-popup {
 	padding: 0px;
 	list-style: none;
 	z-index: 100000;
-	top: 90px;
-	left: 400px;
+/*	top: 90px; */
+/*	left: 400px; */
 }
 #nav-notifications-menu {
 	width: 320px;
