@@ -399,39 +399,40 @@ function photos_post(&$a) {
 		$visibility = 0;
 		if($p[0]['desc'] !== $desc || strlen($rawtags))
 			$visibility = 1;
-		
+
 		if(! $item_id) {
 
 			// Create item container
+
+			$item_flags = ITEM_WALL|ITEM_ORIGIN|ITEM_THREAD_TOP;
+			$item_restrict = (($visibility) ? ITEM_HIDDEN : ITEM_VISIBLE);			
 
 			$title = '';
 			$uri = item_message_id();
 			
 			$arr = array();
 
+			$arr['aid']           = $a->data['channel']['channel_account_id'];
 			$arr['uid']           = $page_owner_uid;
 			$arr['uri']           = $uri;
 			$arr['parent_uri']    = $uri; 
-			$arr['type']          = 'photo';
-			$arr['wall']          = 1;
+			$arr['item_flags']    = $item_flags;
+			$arr['item_restrict'] = $item_restrict;
+			$arr['resource_type'] = 'photo';
 			$arr['resource_id']   = $p[0]['resource_id'];
-			$arr['contact-id']    = $owner_record['id'];
-			$arr['owner-name']    = $owner_record['name'];
-			$arr['owner-link']    = $owner_record['url'];
-			$arr['owner-avatar']  = $owner_record['thumb'];
-			$arr['author-name']   = $owner_record['name'];
-			$arr['author-link']   = $owner_record['url'];
-			$arr['author-avatar'] = $owner_record['thumb'];
+			$arr['owner_xchan']   = $a->data['channel']['channel_hash'];
+			$arr['author_xchan']  = $a->data['channel']['channel_hash']; // FIXME for AUTH guests
+
 			$arr['title']         = $title;
 			$arr['allow_cid']     = $p[0]['allow_cid'];
 			$arr['allow_gid']     = $p[0]['allow_gid'];
 			$arr['deny_cid']      = $p[0]['deny_cid'];
 			$arr['deny_gid']      = $p[0]['deny_gid'];
-			$arr['visible']       = $visibility;
-			$arr['origin']        = 1;
+
+
 			
 			$arr['body']          = '[url=' . $a->get_baseurl() . '/photos/' . $a->data['channel']['channel_address'] . '/image/' . $p[0]['resource_id'] . ']' 
-						. '[img]' . $a->get_baseurl() . '/photo/' . $p[0]['resource_id'] . '-' . $p[0]['scale'] . '.'. $ext . '[/img]' 
+						. '[img]' . $a->get_baseurl() . '/photo/' . $p[0]['resource_id'] . '-' . $p[0]['scale'] . '[/img]' 
 						. '[/url]';
 		
 			$item_id = item_store($arr);
@@ -807,35 +808,37 @@ function photos_post(&$a) {
 	$basename = basename($filename);
 	$uri = item_message_id();
 
+
 	// Create item container
 
+	$item_flags = ITEM_WALL|ITEM_ORIGIN|ITEM_THREAD_TOP;
+	$item_restrict = (($visibility) ? ITEM_HIDDEN : ITEM_VISIBLE);			
+	$title = '';
+	$uri = item_message_id();
+			
 	$arr = array();
 
+	$arr['aid']           = $a->data['channel']['channel_account_id'];
 	$arr['uid']           = $page_owner_uid;
 	$arr['uri']           = $uri;
-	$arr['parent_uri']    = $uri;
-	$arr['type']          = 'photo';
-	$arr['wall']          = 1;
-	$arr['resource_id']   = $photo_hash;
-	$arr['contact-id']    = $owner_record['id'];
-	$arr['owner-name']    = $owner_record['name'];
-	$arr['owner-link']    = $owner_record['url'];
-	$arr['owner-avatar']  = $owner_record['thumb'];
-	$arr['author-name']   = $owner_record['name'];
-	$arr['author-link']   = $owner_record['url'];
-	$arr['author-avatar'] = $owner_record['thumb'];
-	$arr['title']         = '';
+	$arr['parent_uri']    = $uri; 
+	$arr['item_flags']    = $item_flags;
+	$arr['item_restrict'] = $item_restrict;
+	$arr['resource_type'] = 'photo';
+	$arr['resource_id']   = $hoto_hash;
+	$arr['owner_xchan']   = $a->data['channel']['channel_hash'];
+	$arr['author_xchan']  = $a->data['channel']['channel_hash']; // FIXME for AUTH guests
+	$arr['title']         = $title;
 	$arr['allow_cid']     = $str_contact_allow;
 	$arr['allow_gid']     = $str_group_allow;
 	$arr['deny_cid']      = $str_contact_deny;
 	$arr['deny_gid']      = $str_group_deny;
-	$arr['visible']       = $visible;
-	$arr['origin']        = 1;
 
-	$arr['body']          = '[url=' . $a->get_baseurl() . '/photos/' . $owner_record['nickname'] . '/image/' . $photo_hash . ']' 
+
+	$arr['body']          = '[url=' . $a->get_baseurl() . '/photos/' . $a->data['channel']['channel_address'] . '/image/' . $photo_hash . ']' 
 				. '[img]' . $a->get_baseurl() . "/photo/{$photo_hash}-{$smallest}.".$ph->getExt() . '[/img]' 
 				. '[/url]';
-
+		
 	$item_id = item_store($arr);
 
 	if($item_id) {

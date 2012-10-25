@@ -63,9 +63,14 @@ function poller_run($argv, $argc){
 	
 	// expire any expired accounts
 
-	q("UPDATE user SET `account_expired` = 1 where `account_expired` = 0 
-		AND `account_expires_on` != '0000-00-00 00:00:00' 
-		AND `account_expires_on` < UTC_TIMESTAMP() ");
+	q("UPDATE account 
+		SET account_flags = account_flags | %d 
+		where not account_flags & %d 
+		and account_expires != '0000-00-00 00:00:00' 
+		and account_expires < UTC_TIMESTAMP() ",
+		intval(ACCOUNT_EXPIRED),
+		intval(ACCOUNT_EXPIRED)
+	);
   
 	$abandon_days = intval(get_config('system','account_abandon_days'));
 	if($abandon_days < 1)
@@ -144,6 +149,9 @@ function poller_run($argv, $argc){
 		? sprintf(" AND `user`.`login_date` > UTC_TIMESTAMP() - INTERVAL %d DAY ", intval($abandon_days)) 
 		: '' 
 	);
+
+// FIXME
+return;
 
 	$contacts = q("SELECT `contact`.`id` FROM `contact` LEFT JOIN `user` ON `user`.`uid` = `contact`.`uid` 
 		WHERE ( `rel` = %d OR `rel` = %d ) AND `poll` != ''
