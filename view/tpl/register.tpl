@@ -1,57 +1,45 @@
-<h3>$regtitle</h3>
+<h2>$title</h2>
 
 <form action="register" method="post" id="register-form">
 
-	<input type="hidden" name="photo" value="$photo" />
-
-	$registertext
-
-	<p id="register-realpeople">$realpeople</p>
-
-	<p id="register-fill-desc">$fillwith</p>
-	<p id="register-fill-ext">$fillext</p>
-
-{{ if $invitations }}
-
-	<p id="register-invite-desc">$invite_desc</p>
-	<div id="register-invite-wrapper" >
-		<label for="register-invite" id="label-register-invite" >$invite_label</label>
-		<input type="text" maxlength="60" size="32" name="invite_id" id="register-invite" value="$invite_id" >
-	</div>
-	<div id="register-name-end" ></div>
-
+{{ if $registertext }}
+<div id="register-desc" class="descriptive-paragraph">$registertext</div>
 {{ endif }}
 
+{{ if $invitations }}
+	<p id="register-invite-desc">$invite_desc</p>
 
-	<div id="register-name-wrapper" >
-		<label for="register-name" id="label-register-name" >$namelabel</label>
-		<input type="text" maxlength="60" size="32" name="username" id="register-name" value="$username" >
-	</div>
-	<div id="register-name-end" ></div>
+	<label for="register-invite" id="label-register-invite" class="register-label">$label_invite</label>
+	<input type="text" maxlength="72" size="32" name="invite_code" id="register-invite" class="register-input" value="$invite_code" />
+	<div id="register-invite-feedback" class="register-feedback"></div>
+	<div id="register-invite-end" class="register-field-end"></div>
+{{ endif }}
 
+	<label for="register-email" id="label-register-email" class="register-label" >$label_email</label>
+	<input type="text" maxlength="72" size="32" name="email" id="register-email" class="register-input" value="$email" />
+	<div id="register-email-feedback" class="register-feedback"></div>
+	<div id="register-email-end"  class="register-field-end"></div>
 
-	<div id="register-email-wrapper" >
-		<label for="register-email" id="label-register-email" >$addrlabel</label>
-		<input type="text" maxlength="60" size="32" name="email" id="register-email" value="$email" >
-	</div>
-	<div id="register-email-end" ></div>
+	<label for="register-password" id="label-register-password" class="register-label" >$label_pass1</label>
+	<input type="password" maxlength="72" size="32" name="password" id="register-password" class="register-input" value="$pass1" />
+	<div id="register-password-feedback" class="register-feedback"></div>
+	<div id="register-password-end"  class="register-field-end"></div>
 
-	<p id="register-nickname-desc" >$nickdesc</p>
+	<label for="register-password2" id="label-register-password2" class="register-label" >$label_pass2</label>
+	<input type="password" maxlength="72" size="32" name="password2" id="register-password2" class="register-input" value="$pass2" />
+	<div id="register-password2-feedback" class="register-feedback"></div>
+	<div id="register-password2-end"  class="register-field-end"></div>
 
-	<div id="register-nickname-wrapper" >
-		<label for="register-nickname" id="label-register-nickname" >$nicklabel</label>
-		<input type="text" maxlength="60" size="32" name="nickname" id="register-nickname" value="$nickname" ><div id="register-sitename">@$sitename</div>
-	</div>
-	<div id="register-nickname-end" ></div>
+	{{ if $enable_tos }}
+	<input type="checkbox" name="tos" id="register-tos" value="1" />
+	<label for="register-tos" id="label-register-tos">$label_tos</label>
+	<div id="register-tos-feedback" class="register-feedback"></div>
+	<div id="register-tos-end"  class="register-field-end"></div>
+	{{ else }}
+	<input type="hidden" name="tos" value="1" />
+	{{ endif }}
 
-	$publish
+	<input type="submit" name="submit" id="register-submit-button" value="$submit" />
+	<div id="register-submit-end" class="register-field-end"></div>
 
-	<div id="register-submit-wrapper">
-		<input type="submit" name="submit" id="register-submit-button" value="$regbutt" />
-	</div>
-	<div id="register-submit-end" ></div>
 </form>
-
-$license
-
-

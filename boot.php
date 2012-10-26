@@ -990,7 +990,7 @@ if(! function_exists('login')) {
 		$reg = false;
 		$reglink = get_config('system','register_link');
 		if(! strlen($reglink))
-			$reglink = 'zregister';
+			$reglink = 'register';
 
 		if ($register) {
 			$reg = array(

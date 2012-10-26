@@ -1,189 +1,135 @@
 <?php
 
-if(! function_exists('register_post')) {
+require_once('include/account.php');
+
+function register_init(&$a) {
+
+	$result = null;
+	$cmd = ((argc() > 1) ? argv(1) : '');
+
+	switch($cmd) {
+		case 'invite_check.json':
+			$result = check_account_invite($_REQUEST['invite_code']);
+			break;
+		case 'email_check.json':
+			$result = check_account_email($_REQUEST['email']);
+			break;
+		case 'password_check.json':
+			$result = check_account_password($_REQUEST['password']);
+			break;
+		default: 
+			break;
+	}
+	if($result) {
+		json_return_and_die($result);
+	}
+}
+
+
 function register_post(&$a) {
 
-	global $lang;
-
-	$verified = 0;
-	$blocked  = 1;
-
-	$arr = array('post' => $_POST);
-	call_hooks('register_post', $arr);
-
 	$max_dailies = intval(get_config('system','max_daily_registrations'));
-	if($max_dailes) {
-		$r = q("select count(*) as total from user where register_date > UTC_TIMESTAMP - INTERVAL 1 day");
+	if($max_dailies) {
+		$r = q("select count(*) as total from account where account_created > UTC_TIMESTAMP - INTERVAL 1 day");
 		if($r && $r[0]['total'] >= $max_dailies) {
+			notice( t('Maximum daily site registrations exceeded. Please try again tomorrow.') . EOL);
 			return;
 		}
 	}
 
-	switch($a->config['register_policy']) {
-
-	
-	case REGISTER_OPEN:
-		$blocked = 0;
-		$verified = 1;
-		break;
-
-	case REGISTER_APPROVE:
-		$blocked = 1;
-		$verified = 0;
-		break;
-
-	default:
-	case REGISTER_CLOSED:
-		if((! x($_SESSION,'authenticated') && (! x($_SESSION,'administrator')))) {
-			notice( t('Permission denied.') . EOL );
-			return;
-		}
-		$blocked = 1;
-		$verified = 0;
-		break;
+	if(! x($_POST,'tos')) {
+		notice( t('Please indicate acceptance of the Terms of Service. Registration failed.') . EOL);
+		return;
 	}
 
-	require_once('include/user.php');
+	$policy = get_config('system','register_policy');
+
+	switch($policy) {
+
+		case REGISTER_OPEN:
+			$flags = ACCOUNT_UNVERIFIED;
+			break;
+
+		case REGISTER_APPROVE:
+			$flags = ACCOUNT_UNVERIFIED | ACCOUNT_BLOCKED;
+			break;
+
+		default:
+		case REGISTER_CLOSED:
+			if(! is_site_admin()) {
+				notice( t('Permission denied.') . EOL );
+				return;
+			}
+			$flags = ACCOUNT_UNVERIFIED | ACCOUNT_BLOCKED;
+			break;
+	}
 
 	$arr = $_POST;
+	$arr['account_flags'] = $flags;
 
-	$arr['blocked'] = $blocked;
-	$arr['verified'] = $verified;
-
-	$result = create_user($arr);
+	$result = create_account($arr);
 
 	if(! $result['success']) {
 		notice($result['message']);
 		return;
 	}
+	require_once('include/security.php');
 
-	$user = $result['user'];
- 
-	if($netpublish && $a->config['register_policy'] != REGISTER_APPROVE) {
-		$url = $a->get_baseurl() . '/profile/' . $user['nickname'];
-		proc_run('php',"include/directory.php","$url");
+
+ 	$using_invites = intval(get_config('system','invitation_only'));
+	$num_invites   = intval(get_config('system','number_invites'));
+	$invite_code   = ((x($_POST,'invite_code'))  ? notags(trim($_POST['invite_code']))  : '');
+
+	if($using_invites && $invite_code) {
+		q("delete * from register where hash = '%s' limit 1", dbesc($invite_code));
+		set_pconfig($result['account']['account_id'],'system','invites_remaining',$num_invites);
 	}
 
-	$using_invites = get_config('system','invitation_only');
-	$num_invites   = get_config('system','number_invites');
-	$invite_id  = ((x($_POST,'invite_id'))  ? notags(trim($_POST['invite_id']))  : '');
-
-
-	if( $a->config['register_policy'] == REGISTER_OPEN ) {
-
-		if($using_invites && $invite_id) {
-			q("delete * from register where hash = '%s' limit 1", dbesc($invite_id));
-			set_pconfig($user['uid'],'system','invites_remaining',$num_invites);
-		}
-
-		$email_tpl = get_intltext_template("register_open_eml.tpl");
-		$email_tpl = replace_macros($email_tpl, array(
-				'$sitename' => $a->config['sitename'],
-				'$siteurl' =>  $a->get_baseurl(),
-				'$username' => $user['username'],
-				'$email' => $user['email'],
-				'$password' => $result['password'],
-				'$uid' => $user['uid'] ));
-
-		$res = mail($user['email'], sprintf(t('Registration details for %s'), $a->config['sitename']),
-			$email_tpl, 
-				'From: ' . t('Administrator') . '@' . $_SERVER['SERVER_NAME'] . "\n"
-				. 'Content-type: text/plain; charset=UTF-8' . "\n"
-				. 'Content-transfer-encoding: 8bit' );
-
-
+	if($policy == REGISTER_OPEN ) {
+		$res = send_verification_email($result['email'],$result['password']);
 		if($res) {
-			info( t('Registration successful. Please check your email for further instructions.') . EOL ) ;
-			goaway(z_root());
-		}
-		else {
-			notice( t('Failed to send email message. Here is the message that failed.') . $email_tpl . EOL );
+			info( t('Registration successful. Please check your email for validation instructions.') . EOL ) ;
 		}
 	}
-	elseif($a->config['register_policy'] == REGISTER_APPROVE) {
-		if(! strlen($a->config['admin_email'])) {
-			notice( t('Your registration can not be processed.') . EOL);
-			goaway(z_root());
-		}
-
-		$hash = random_string();
-		$r = q("INSERT INTO `register` ( `hash`, `created`, `uid`, `password`, `language` ) VALUES ( '%s', '%s', %d, '%s', '%s' ) ",
-			dbesc($hash),
-			dbesc(datetime_convert()),
-			intval($user['uid']),
-			dbesc($result['password']),
-			dbesc($lang)
-		);
-
-		$r = q("SELECT `language` FROM `user` WHERE `email` = '%s' LIMIT 1",
-			dbesc($a->config['admin_email'])
-		);
-		if(count($r))
-			push_lang($r[0]['language']);
-		else
-			push_lang('en');
-
-		if($using_invites && $invite_id) {
-			q("delete * from register where hash = '%s' limit 1", dbesc($invite_id));
-			set_pconfig($user['uid'],'system','invites_remaining',$num_invites);
-		}
-
-		$email_tpl = get_intltext_template("register_verify_eml.tpl");
-		$email_tpl = replace_macros($email_tpl, array(
-				'$sitename' => $a->config['sitename'],
-				'$siteurl' =>  $a->get_baseurl(),
-				'$username' => $user['username'],
-				'$email' => $user['email'],
-				'$password' => $result['password'],
-				'$uid' => $user['uid'],
-				'$hash' => $hash
-		 ));
-
-		$res = mail($a->config['admin_email'], sprintf(t('Registration request at %s'), $a->config['sitename']),
-			$email_tpl,
-				'From: ' . t('Administrator') . '@' . $_SERVER['SERVER_NAME'] . "\n"
-				. 'Content-type: text/plain; charset=UTF-8' . "\n"
-				. 'Content-transfer-encoding: 8bit' );
-
-		pop_lang();
-
+	elseif($policy == REGISTER_APPROVE) {
+		$res = send_reg_approval_email($result);
 		if($res) {
 			info( t('Your registration is pending approval by the site owner.') . EOL ) ;
-			goaway(z_root());
 		}
-
+		else {
+			notice( t('Your registration can not be processed.') . EOL);
+		}
+		goaway(z_root());
 	}
 
-	return;
-}}
+	authenticate_success($result['account'],true,false,true);
+
+	if(! strlen($next_page = get_config('system','workflow_register_next')))
+		$next_page = 'zchannel';
+
+	$_SESSION['workflow'] = true;
+	
+	goaway(z_root() . '/' . $next_page);
+
+}
 
 
 
 
 
 
-if(! function_exists('register_content')) {
+
 function register_content(&$a) {
 
-	// logged in users can register others (people/pages/groups)
-	// even with closed registrations, unless specifically prohibited by site policy.
-	// 'block_extended_register' blocks all registrations, period.
 
-	$block = get_config('system','block_extended_register');
-
-	if(local_user() && ($block)) {
-		notice("Permission denied." . EOL);
-		return;
-	}
-
-	if((! local_user()) && ($a->config['register_policy'] == REGISTER_CLOSED)) {
+	if(get_config('system','register_policy') == REGISTER_CLOSED) {
 		notice("Permission denied." . EOL);
 		return;
 	}
 
 	$max_dailies = intval(get_config('system','max_daily_registrations'));
-	if($max_dailes) {
-		$r = q("select count(*) as total from user where register_date > UTC_TIMESTAMP - INTERVAL 1 day");
+	if($max_dailies) {
+		$r = q("select count(*) as total from account where account_created > UTC_TIMESTAMP - INTERVAL 1 day");
 		if($r && $r[0]['total'] >= $max_dailies) {
 			logger('max daily registrations exceeded.');
 			notice( t('This site has exceeded the number of allowed daily account registrations. Please try again tomorrow.') . EOL);
@@ -191,80 +137,51 @@ function register_content(&$a) {
 		}
 	}
 
-	if(x($_SESSION,'theme'))
-		unset($_SESSION['theme']);
-	if(x($_SESSION,'mobile-theme'))
-		unset($_SESSION['mobile-theme']);
+	// Configurable terms of service link
+
+	$tosurl = get_config('system','tos_url');
+	if(! $tosurl)
+		$tosurl = $a->get_baseurl() . '/help/TermsOfService';
+
+	$toslink = '<a href="' . $tosurl . '" >' . t('Terms of Service') . '</a>';
+
+	// Configurable whether to restrict age or not - default is based on international legal requirements
+	// This can be relaxed if you are on a restricted server that does not share with public servers
+
+	if(get_config('system','no_age_restriction')) 
+		$label_tos = sprintf( t('I accept the %s for this website'), $toslink);
+	else
+		$label_tos = sprintf( t('I am over 13 years of age and accept the %s for this website'), $toslink);
+
+	$enable_tos = 1 - intval(get_config('system','no_termsofservice'));
+
+	$email        = ((x($_REQUEST,'email'))       ? strip_tags(trim($_REQUEST['email']))       :  "" );
+	$password     = ((x($_REQUEST,'password'))    ? trim($_REQUEST['password'])                :  "" );
+	$password2    = ((x($_REQUEST,'password2'))   ? trim($_REQUEST['password2'])               :  "" );
+	$invite_code  = ((x($_REQUEST,'invite_code')) ? strip_tags(trim($_REQUEST['invite_code'])) :  "" );
 
 
-	$username     = ((x($_POST,'username'))     ? $_POST['username']     : ((x($_GET,'username'))     ? $_GET['username']              : ''));
-	$email        = ((x($_POST,'email'))        ? $_POST['email']        : ((x($_GET,'email'))        ? $_GET['email']                 : ''));
-	$openid_url   = ((x($_POST,'openid_url'))   ? $_POST['openid_url']   : ((x($_GET,'openid_url'))   ? $_GET['openid_url']            : ''));
-	$nickname     = ((x($_POST,'nickname'))     ? $_POST['nickname']     : ((x($_GET,'nickname'))     ? $_GET['nickname']              : ''));
-	$photo        = ((x($_POST,'photo'))        ? $_POST['photo']        : ((x($_GET,'photo'))        ? hex2bin($_GET['photo'])        : ''));
-	$invite_id    = ((x($_POST,'invite_id'))    ? $_POST['invite_id']    : ((x($_GET,'invite_id'))    ? $_GET['invite_id']             : ''));
+	$o = replace_macros(get_markup_template('register.tpl'), array(
 
+		'$title'        => t('Registration'),
+		'$registertext' => get_config('system','register_text'),
+		'$invitations'  => get_config('system','invitation_only'),
+		'$invite_desc'  => t('Membership on this site is by invitation only.'),
+		'$label_invite' => t('Please enter your invitation code'),
+		'$invite_code'  => $invite_code,
 
-	$oidhtml = '';
-	$fillwith = '';
-	$fillext = '';
-	$oidlabel = '';
-
-	$realpeople = ''; 
-
-	if(get_config('system','publish_all')) {
-		$profile_publish_reg = '<input type="hidden" name="profile_publish_reg" value="1" />';
-	}
-	else {
-		$publish_tpl = get_markup_template("profile_publish.tpl");
-		$profile_publish = replace_macros($publish_tpl,array(
-			'$instance'     => 'reg',
-			'$pubdesc'      => t('Include your profile in member directory?'),
-			'$yes_selected' => ' checked="checked" ',
-			'$no_selected'  => '',
-			'$str_yes'      => t('Yes'),
-			'$str_no'       => t('No')
-		));
-	}
-
-
-	$license = '';
-
-	$o = get_markup_template("register.tpl");
-
-	$arr = array('template' => $o);
-
-	call_hooks('register_form',$arr);
-
-	$o = replace_macros($o, array(
-		'$oidhtml' => $oidhtml,
-		'$invitations' => get_config('system','invitation_only'),
-		'$invite_desc' => t('Membership on this site is by invitation only.'),
-		'$invite_label' => t('Your invitation ID: '),
-		'$invite_id' => $invite_id,
-		'$realpeople' => $realpeople,
-		'$regtitle'  => t('Registration'),
-		'$registertext' =>((x($a->config,'register_text'))
-			? '<div class="error-message">' . $a->config['register_text'] . '</div>'
-			: "" ),
-		'$fillwith'  => $fillwith,
-		'$fillext'   => $fillext,
-		'$oidlabel'  => $oidlabel,
-		'$openid'    => $openid_url,
-		'$namelabel' => t('Your Full Name ' . "\x28" . 'e.g. Joe Smith' . "\x29" . ': '),
-		'$addrlabel' => t('Your Email Address: '),
-		'$nickdesc'  => t('Choose a profile nickname. This must begin with a text character. Your profile address on this site will then be \'<strong>nickname@$sitename</strong>\'.'),
-		'$nicklabel' => t('Choose a nickname: '),
-		'$photo'     => $photo,
-		'$publish'   => $profile_publish,
-		'$regbutt'   => t('Register'),
-		'$username'  => $username,
-		'$email'     => $email,
-		'$nickname'  => $nickname,
-		'$license'   => $license,
-		'$sitename'  => $a->get_hostname()
+		'$label_email'  => t('Your email address'),
+		'$label_pass1'  => t('Choose a password'),
+		'$label_pass2'  => t('Please re-enter your password'),
+		'$label_tos'    => $label_tos,
+		'$enable_tos'   => $enable_tos,	
+		'$email'        => $email,
+		'$pass1'        => $password,
+		'$pass2'        => $password2,
+		'$submit'       => t('Register')
 	));
+
 	return $o;
 
-}}
+}
 

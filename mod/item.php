@@ -564,7 +564,9 @@ function item_post(&$a) {
 	$notify_type = (($parent) ? 'comment-new' : 'wall-new' );
 
 	$uri = item_message_id();
-
+	$parent_uri = $uri;
+	if($parent_item)
+		$parent_uri = $parent_item['uri'];
 
 	// Fallback so that we alway have a thr_parent
 
@@ -589,6 +591,7 @@ function item_post(&$a) {
 	$datarray['received']      = datetime_convert();
 	$datarray['changed']       = datetime_convert();
 	$datarray['uri']           = $uri;
+	$datarray['parent_uri']    = $parent_uri;
 	$datarray['title']         = $title;
 	$datarray['body']          = $body;
 	$datarray['app']           = $app;
@@ -774,11 +777,10 @@ function item_post(&$a) {
 		if(! $parent)
 			$parent = $post_id;
 
-		$r = q("UPDATE `item` SET `parent` = %d, `parent_uri` = '%s', `plink` = '%s', `changed` = '%s', `visible` = 1
+		$r = q("UPDATE `item` SET `parent` = %d, `parent_uri` = '%s', `changed` = '%s'
 			WHERE `id` = %d LIMIT 1",
 			intval($parent),
 			dbesc(($parent == $post_id) ? $uri : $parent_item['uri']),
-			dbesc($a->get_baseurl() . '/display/' . $channel['channel_address'] . '/' . $post_id),
 			dbesc(datetime_convert()),
 			intval($post_id)
 		);
@@ -787,7 +789,9 @@ function item_post(&$a) {
 		// This way we don't see every picture in your new photo album posted to your wall at once.
 		// They will show up as people comment on them.
 
-		if(! $parent_item['item_restrict'] & ITEM_HIDDEN) {
+// fixme set item visible as well
+
+		if($parent_item['item_restrict'] & ITEM_HIDDEN) {
 			$r = q("UPDATE `item` SET `item_restrict` = %d WHERE `id` = %d LIMIT 1",
 				intval($parent_item['item_restrict'] - ITEM_HIDDEN),
 				intval($parent_item['id'])

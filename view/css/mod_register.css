@@ -4,29 +4,29 @@ h2 {
 	margin-top: 15%;
 }
 
-#zregister-form {
+#register-form {
 	font-size: 1.4em;	
 	margin-left: 15%;
 	margin-top: 5%;
 }
 
-.zregister-label {
+.register-label {
 	float: left;
 	width: 275px;
 }
 
-.zregister-input {
+.register-input {
 	float: left;
 	width: 275px;
 	padding: 5px;
 }
 
-.zregister-feedback {
+.register-feedback {
 	float: left;
 	margin-left: 45px;
 }
 
-.zregister-field-end {
+.register-field-end {
 	clear: both;
 	margin-bottom: 20px;
 }

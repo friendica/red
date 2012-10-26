@@ -6,38 +6,40 @@
 {{endif}}
 <div id="tread-wrapper-$item.id" class="tread-wrapper $item.toplevel">
 <a name="$item.id" ></a>
-{{ if $item.threaded }}
-<div class="wall-item-outside-wrapper $item.indent$item.previewing threaded" id="wall-item-outside-wrapper-$item.id" >
-{{ else }}
-<div class="wall-item-outside-wrapper $item.indent$item.previewing" id="wall-item-outside-wrapper-$item.id" >
-{{ endif }}
+<div class="wall-item-outside-wrapper $item.indent$item.previewing{{ if $item.owner_url }} wallwall{{ endif }}" id="wall-item-outside-wrapper-$item.id" >
 	<div class="wall-item-content-wrapper $item.indent" id="wall-item-content-wrapper-$item.id" >
-		<div class="wall-item-info" id="wall-item-info-$item.id">
-			<div class="wall-item-photo-wrapper" id="wall-item-photo-wrapper-$item.id" 
-				 onmouseover="if (typeof t$item.id != 'undefined') clearTimeout(t$item.id); openMenu('wall-item-photo-menu-button-$item.id')" 
-				 onmouseout="t$item.id=setTimeout('closeMenu(\'wall-item-photo-menu-button-$item.id\'); closeMenu(\'wall-item-photo-menu-$item.id\');',200)">
-				<a href="$item.profile_url"  title="$item.linktitle" class="wall-item-photo-link" id="wall-item-photo-link-$item.id">
-					<img src="$item.thumb" class="wall-item-photo$item.sparkle" id="wall-item-photo-$item.id" style="height: 80px; width: 80px;" alt="$item.name" />
-				</a>
+		<div class="wall-item-info{{ if $item.owner_url }} wallwall{{ endif }}" id="wall-item-info-$item.id">
+			{{ if $item.owner_url }}
+			<div class="wall-item-photo-wrapper wwto" id="wall-item-ownerphoto-wrapper-$item.id" >
+				<a href="$item.owner_url" target="redir" title="$item.olinktitle" class="wall-item-photo-link" id="wall-item-ownerphoto-link-$item.id">
+				<img src="$item.owner_photo" class="wall-item-photo$item.osparkle" id="wall-item-ownerphoto-$item.id" style="height: 80px; width: 80px;" alt="$item.owner_name" /></a>
+			</div>
+			<div class="wall-item-arrowphoto-wrapper" ><img src="images/larrow.gif" alt="$item.wall" /></div>
+			{{ endif }}
+			<div class="wall-item-photo-wrapper{{ if $item.owner_url }} wwfrom{{ endif }}" id="wall-item-photo-wrapper-$item.id" 
+				onmouseover="if (typeof t$item.id != 'undefined') clearTimeout(t$item.id); openMenu('wall-item-photo-menu-button-$item.id')"
+                onmouseout="t$item.id=setTimeout('closeMenu(\'wall-item-photo-menu-button-$item.id\'); closeMenu(\'wall-item-photo-menu-$item.id\');',200)">
+				<a href="$item.profile_url" target="redir" title="$item.linktitle" class="wall-item-photo-link" id="wall-item-photo-link-$item.id">
+				<img src="$item.thumb" class="wall-item-photo$item.sparkle" id="wall-item-photo-$item.id" style="height: 80px; width: 80px;" alt="$item.name" /></a>
 				<span onclick="openClose('wall-item-photo-menu-$item.id');" class="fakelink wall-item-photo-menu-button" id="wall-item-photo-menu-button-$item.id">menu</span>
-				<div class="wall-item-photo-menu" id="wall-item-photo-menu-$item.id">
-					<ul>
-						$item.item_photo_menu
-					</ul>
-				</div>
+                <div class="wall-item-photo-menu" id="wall-item-photo-menu-$item.id">
+                    <ul>
+                        $item.item_photo_menu
+                    </ul>
+                </div>
+
 			</div>
 			<div class="wall-item-photo-end"></div>
 			<div class="wall-item-wrapper" id="wall-item-wrapper-$item.id" >
 				{{ if $item.lock }}<div class="wall-item-lock"><img src="images/lock_icon.gif" class="lockview" alt="$item.lock" onclick="lockview(event,$item.id);" /></div>
 				{{ else }}<div class="wall-item-lock"></div>{{ endif }}	
-				<div class="wall-item-location" id="wall-item-location-$item.id">$item.location</div>				
+				<div class="wall-item-location" id="wall-item-location-$item.id">$item.location</div>
 			</div>
 		</div>
 		<div class="wall-item-author">
-				<a href="$item.profile_url"  title="$item.linktitle" class="wall-item-name-link"><span class="wall-item-name$item.sparkle" id="wall-item-name-$item.id" >$item.name</span></a>
-				<div class="wall-item-ago" id="wall-item-ago-$item.id" >$item.ago</div>
-				
-		</div>	
+				<a href="$item.profile_url" target="redir" title="$item.linktitle" class="wall-item-name-link"><span class="wall-item-name$item.sparkle" id="wall-item-name-$item.id" >$item.name</span></a>{{ if $item.owner_url }} $item.to <a href="$item.owner_url" target="redir" title="$item.olinktitle" class="wall-item-name-link"><span class="wall-item-name$item.osparkle" id="wall-item-ownername-$item.id">$item.owner_name</span></a> $item.vwall{{ endif }}<br />
+				<div class="wall-item-ago"  id="wall-item-ago-$item.id" title="$item.localtime">$item.ago</div>				
+		</div>			
 		<div class="wall-item-content" id="wall-item-content-$item.id" >
 			<div class="wall-item-title" id="wall-item-title-$item.id">$item.title</div>
 			<div class="wall-item-title-end"></div>
@@ -47,6 +49,15 @@
 							<span class='tag'>$tag</span>
 						{{ endfor }}
 					</div>
+			{{ if $item.has_cats }}
+			<div class="categorytags"><span>$item.txt_cats {{ for $item.categories as $cat }}$cat.name <a href="$cat.removeurl" title="$remove">[$remove]</a> {{ if $cat.last }}{{ else }}, {{ endif }}{{ endfor }}
+			</div>
+			{{ endif }}
+
+			{{ if $item.has_folders }}
+			<div class="filesavetags"><span>$item.txt_folders {{ for $item.folders as $cat }}$cat.name <a href="$cat.removeurl" title="$remove">[$remove]</a> {{ if $cat.last }}{{ else }}, {{ endif }}{{ endfor }}
+			</div>
+			{{ endif }}
 			</div>
 		</div>
 		<div class="wall-item-tools" id="wall-item-tools-$item.id">
@@ -59,7 +70,7 @@
 			</div>
 			{{ endif }}
 			{{ if $item.plink }}
-				<div class="wall-item-links-wrapper"><a href="$item.plink.href" title="$item.plink.title"  class="icon remote-link$item.sparkle"></a></div>
+				<div class="wall-item-links-wrapper"><a href="$item.plink.href" title="$item.plink.title" target="external-link" class="icon remote-link$item.sparkle"></a></div>
 			{{ endif }}
 			{{ if $item.edpost }}
 				<a class="editpost icon pencil" href="$item.edpost.0" title="$item.edpost.1"></a>
@@ -71,39 +82,37 @@
 			{{ endif }}
 			{{ if $item.filer }}
 			<a href="#" id="filer-$item.id" onclick="itemFiler($item.id); return false;" class="filer-item filer-icon" title="$item.filer"></a>
-			{{ endif }}	
+			{{ endif }}			
+			
 			<div class="wall-item-delete-wrapper" id="wall-item-delete-wrapper-$item.id" >
 				{{ if $item.drop.dropping }}<a href="item/drop/$item.id" onclick="return confirmDelete();" class="icon drophide" title="$item.drop.delete" onmouseover="imgbright(this);" onmouseout="imgdull(this);" ></a>{{ endif }}
 			</div>
-				{{ if $item.drop.dropping }}<input type="checkbox" onclick="checkboxhighlight(this);" title="$item.drop.select" class="item-select" name="itemselected[]" value="$item.id" />{{ endif }}
+				{{ if $item.drop.pagedrop }}<input type="checkbox" onclick="checkboxhighlight(this);" title="$item.drop.select" class="item-select" name="itemselected[]" value="$item.id" />{{ endif }}
 			<div class="wall-item-delete-end"></div>
 		</div>
-	</div>
+	</div>	
 	<div class="wall-item-wrapper-end"></div>
 	<div class="wall-item-like $item.indent" id="wall-item-like-$item.id">$item.like</div>
 	<div class="wall-item-dislike $item.indent" id="wall-item-dislike-$item.id">$item.dislike</div>
 
 			{{ if $item.threaded }}
 			{{ if $item.comment }}
-			<div class="wall-item-comment-wrapper$item.indent" >
+			<div class="wall-item-comment-wrapper $item.indent" >
 				$item.comment
 			</div>
 			{{ endif }}
 			{{ endif }}
 
-<div class="wall-item-outside-wrapper-end$item.indent" ></div>
+<div class="wall-item-outside-wrapper-end $item.indent" ></div>
 </div>
 {{ for $item.children as $item }}
 	{{ inc $item.template }}{{ endinc }}
 {{ endfor }}
 
-{{ if $item.comment }}
 {{ if $item.flatten }}
 <div class="wall-item-comment-wrapper" >
 	$item.comment
 </div>
 {{ endif }}
-{{ endif }}
 </div>
 {{if $item.comment_lastcollapsed}}</div>{{endif}}
-

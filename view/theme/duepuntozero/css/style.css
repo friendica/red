@@ -964,10 +964,8 @@ input#dfrn-url {
 
 .wall-item-content-wrapper {
 	margin-top: 10px;
-	border: 1px solid #CCC;
+	border-left: 1px solid #e0e0e0;
 	position: relative;
-	-moz-border-radius: 3px;
-	border-radius: 3px;	
 }
 
 .tread-wrapper .tread-wrapper {
@@ -975,8 +973,9 @@ input#dfrn-url {
 }
 
 .wall-item-content-wrapper.comment {
-#	margin-left: 50px;
-	background: #EEEEEE;
+	background: #ffffff;
+	border-left: 1px solid #e0e0e0;
+	margin-left: 50px;
 }
 
 .wall-item-like.comment, .wall-item-dislike.comment {
@@ -1210,12 +1209,12 @@ input#dfrn-url {
 
 .comment-edit-wrapper {
 	margin-top: 15px;
-	background: #f3f3f3;
+	background: #ffffff;
 	margin-left: 50px;
 }
 
 .comment-wwedit-wrapper {
-	background: #f3f3f3;
+	background: #ffffff;
 }
 
 .comment-edit-photo {
@@ -1235,11 +1234,30 @@ input#dfrn-url {
 .comment-edit-text-empty, .comment-edit-text-full {
 	float: left;
 	margin-top: 10px;
-	-moz-border-radius: 3px;
-	border-radius: 3px;	
-	border: 1px solid #cccccc;
+	border-left: 1px solid #e0e0e0;
 	padding: 3px 1px 1px 3px;
 }
+
+.comment-edit-text-empty {
+	color: gray;
+	height: 1.5em;
+	width: 175px;
+	overflow: auto;
+	margin-bottom: 10px;
+}
+
+.comment-wwedit-wrapper.threaded > .comment-edit-form > .comment-edit-text-empty {
+	height: 1.5em;
+}
+
+.comment-edit-text-full {
+	color: black;
+	height: 150px;
+	width: 350px;
+	overflow: auto;
+}
+
+
 .comment-edit-text-end {
 	clear: both;
 }
@@ -1678,6 +1696,12 @@ input#dfrn-url {
 	width: 587px;
 }
 
+#profile-jot-text_parent, .mceLayout {
+    border-radius: 3px;
+    -moz-border-radius: 3px;
+    box-shadow: 4px 4px 3px 0 #444444;
+}
+
 #profile-jot-text {
 	height: 20px;
 	color:#cccccc;
@@ -1686,6 +1710,137 @@ input#dfrn-url {
 	-moz-border-radius: 3px;
 	border-radius: 3px;	
 }
+#profile-jot-text:hover {
+	color: #000000;
+}
+
+.wall-item-photo, .photo, .contact-block-img, .my-comment-photo {
+    border-radius: 3px;
+    -moz-border-radius: 3px;
+    box-shadow: 4px 4px 3px 0 #444444;
+}
+
+
+#datebrowse-sidebar select {
+    margin-left: 25px;
+    border-radius: 3px;
+    -moz-border-radius: 3px;
+    opacity: 0.3;
+    filter:alpha(opacity=30);
+}
+
+#datebrowse-sidebar select:hover {
+    opacity: 1.0;
+    filter:alpha(opacity=100);
+}
+
+#posted-date-selector {
+    margin-left: 30px !important;
+    margin-top: 5px !important;
+    margin-right: 0px !important;
+    margin-bottom: 0px !important;
+}
+
+#posted-date-selector:hover {
+    box-shadow: 4px 4px 3px 0 #444444;
+    margin-left: 25px !important;
+    margin-top: 0px !important;
+    margin-right: 5px !important;
+    margin-bottom: 5px !important;
+
+}
+
+#side-bar-photos-albums {
+	margin-top: 15px;
+}
+
+#side-bar-photos-albums ul {
+	list-style: none;
+}
+
+.contact-entry-photo img, .profile-match-photo img, #photo-photo img, .directory-photo-img, .photo-album-photo, .photo-top-photo, .profile-jot-text, .group-selected, .nets-selected, .fileas-selected, #profile-jot-submit, .categories-selected {
+    border-radius: 3px;
+    -moz-border-radius: 3px;
+    box-shadow: 4px 4px 3px 0 #444444;
+}
+.settings-widget .selected {
+    border-radius: 3px;
+    -moz-border-radius: 3px;
+    box-shadow: 4px 4px 3px 0 #444444;
+}
+
+#sidebar-page-list .label {
+    margin-left: 5px;
+}
+
+
+.photo {
+    border: 1px solid #AAAAAA;
+}
+
+.photo-top-photo, .photo-album-photo {
+    padding: 10px;
+    max-width: 300px;
+    border: 1px solid #888888;
+}
+
+.rotleft1 {
+-webkit-transform: rotate(-1deg);
+-moz-transform: rotate(-1deg);
+-ms-transform: rotate(-1deg);
+-o-transform: rotate(-1deg);
+}
+
+.rotleft2 {
+-webkit-transform: rotate(-2deg);
+-moz-transform: rotate(-2deg);
+-ms-transform: rotate(-2deg);
+-o-transform: rotate(-2deg);
+}
+
+.rotleft3 {
+-webkit-transform: rotate(-3deg);
+-moz-transform: rotate(-3deg);
+-ms-transform: rotate(-3deg);
+-o-transform: rotate(-3deg);
+}
+
+.rotleft4 {
+-webkit-transform: rotate(-4deg);
+-moz-transform: rotate(-4deg);
+-ms-transform: rotate(-4deg);
+-o-transform: rotate(-4deg);
+}
+
+
+.rotright1 {
+-webkit-transform: rotate(1deg);
+-moz-transform: rotate(1deg);
+-ms-transform: rotate(1deg);
+-o-transform: rotate(1deg);
+}
+
+.rotright2 {
+-webkit-transform: rotate(2deg);
+-moz-transform: rotate(2deg);
+-ms-transform: rotate(2deg);
+-o-transform: rotate(2deg);
+}
+
+.rotright3 {
+-webkit-transform: rotate(3deg);
+-moz-transform: rotate(3deg);
+-ms-transform: rotate(3deg);
+-o-transform: rotate(3deg);
+}
+
+.rotright4 {
+-webkit-transform: rotate(4deg);
+-moz-transform: rotate(4deg);
+-ms-transform: rotate(4deg);
+-o-transform: rotate(4deg);
+}
+
 
 
 /** acl **/
@@ -1793,24 +1948,6 @@ input#dfrn-url {
 /** /acl **/
 
 
-.comment-edit-text-empty {
-	color: gray;
-	height: 5em;
-	width: 175px;
-	overflow: auto;
-	margin-bottom: 10px;
-}
-
-.comment-wwedit-wrapper.threaded > .comment-edit-form > .comment-edit-text-empty {
-	height: 1.5em;
-}
-
-.comment-edit-text-full {
-	color: black;
-	height: 150px;
-	width: 350px;
-	overflow: auto;
-}
 
 #group-new-submit-wrapper {
 	margin-top: 30px;

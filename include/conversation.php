@@ -398,7 +398,11 @@ function prepare_threads_body($a, $items, $cmnt_tpl, $page_writeable, $mode, $pr
 			}
 		}
 
-		$item_writeable = (($item['writable'] || $item['self']) ? true : false);
+		$channel = $a->get_channel();
+
+// FIXME
+//		$item_writeable = (($item['writable'] || $item['self']) ? true : false);
+		$item_writeable = ((local_user() && $channel['channel_hash'] === $item['owner_xchan']) ? true : false);
 
 		if($visiting && $mode == 'profile')
 			$item_writeable = true;
@@ -744,7 +748,9 @@ function conversation(&$a, $items, $mode, $update, $page_mode = 'traditional') {
 
 
 	$page_dropping = ((local_user() && local_user() == $profile_owner) ? true : false);
-		
+
+	$channel = $a->get_channel();
+	$observer = $a->get_observer();		
 
 	if($update)
 		$return_url = $_SESSION['return_url'];
@@ -988,8 +994,8 @@ function conversation(&$a, $items, $mode, $update, $page_mode = 'traditional') {
 				// If there are more than two comments, squash all but the last 2.
 			
 				if($toplevelpost) {
-
-					$item_writeable = (($item['writable'] || $item['self']) ? true : false);
+// FIXME - base this on observer permissions
+					$item_writeable = ((local_user() && $channel['channel_hash'] === $item['owner_xchan']) ? true : false);
 
 					$comments_seen = 0;
 					$comments_collapsed = false;
@@ -1116,9 +1122,9 @@ function conversation(&$a, $items, $mode, $update, $page_mode = 'traditional') {
 							'$parent' => $item['parent'],
 							'$qcomment' => $qcomment,
 							'$profile_uid' =>  $profile_owner,
-							'$mylink' => $a->contact['url'],
+							'$mylink' => $observer['xchan_profile'],
 							'$mytitle' => t('This is you'),
-							'$myphoto' => $a->contact['thumb'],
+							'$myphoto' => $observer['xchan_photo_s'],
 							'$comment' => t('Comment'),
 							'$submit' => t('Submit'),
 							'$edbold' => t('Bold'),
