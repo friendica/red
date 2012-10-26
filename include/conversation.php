@@ -331,13 +331,6 @@ function visible_activity($item) {
 
 	if(activity_match($item['verb'],ACTIVITY_LIKE) || activity_match($item['verb'],ACTIVITY_DISLIKE))
 		return false;
-
-	if(activity_match($item['verb'],ACTIVITY_FOLLOW) && $item['object-type'] === ACTIVITY_OBJ_NOTE) {
-		if(! (($item['self']) && ($item['uid'] == local_user()))) {
-			return false;
-		}
-	}
-
 	return true;
 }
 
@@ -717,6 +710,7 @@ function conversation(&$a, $items, $mode, $update, $page_mode = 'traditional') {
 
 	$profile_owner = 0;
 	$page_writeable      = false;
+	$live_update_div = '';
 
 	$preview = (($page_mode === 'preview') ? true : false);
 	$previewing = (($preview) ? ' preview ' : '');
@@ -724,27 +718,77 @@ function conversation(&$a, $items, $mode, $update, $page_mode = 'traditional') {
 	if($mode === 'network') {
 		$profile_owner = local_user();
 		$page_writeable = true;
+
+       if(!$update) {
+            // The special div is needed for liveUpdate to kick in for this page.
+            // We only launch liveUpdate if you aren't filtering in some incompatible
+            // way and also you aren't writing a comment (discovered in javascript).
+
+            $live_update_div = '<div id="live-network"></div>' . "\r\n"
+                . "<script> var profile_uid = " . $_SESSION['uid']
+                . "; var netargs = '" . substr($a->cmd,8)
+                . '?f='
+                . ((x($_GET,'cid'))    ? '&cid='    . $_GET['cid']    : '')
+                . ((x($_GET,'search')) ? '&search=' . $_GET['search'] : '')
+                . ((x($_GET,'star'))   ? '&star='   . $_GET['star']   : '')
+                . ((x($_GET,'order'))  ? '&order='  . $_GET['order']  : '')
+                . ((x($_GET,'bmark'))  ? '&bmark='  . $_GET['bmark']  : '')
+                . ((x($_GET,'liked'))  ? '&liked='  . $_GET['liked']  : '')
+                . ((x($_GET,'conv'))   ? '&conv='   . $_GET['conv']   : '')
+                . ((x($_GET,'spam'))   ? '&spam='   . $_GET['spam']   : '')
+                . ((x($_GET,'nets'))   ? '&nets='   . $_GET['nets']   : '')
+                . ((x($_GET,'cmin'))   ? '&cmin='   . $_GET['cmin']   : '')
+                . ((x($_GET,'cmax'))   ? '&cmax='   . $_GET['cmax']   : '')
+                . ((x($_GET,'file'))   ? '&file='   . $_GET['file']   : '')
+
+                . "'; var profile_page = " . $a->pager['page'] . "; </script>\r\n";
+        }
+
+
 	}
 
-	if($mode === 'profile') {
+	elseif($mode === 'profile') {
 		$profile_owner = $a->profile['profile_uid'];
 		$page_writeable = can_write_wall($a,$profile_owner);
+
+        if(!$update) {
+            $tab = notags(trim($_GET['tab']));
+            if($tab === 'posts') {
+                // This is ugly, but we can't pass the profile_uid through the session to the ajax updater,
+                // because browser prefetching might change it on us. We have to deliver it with the page.
+
+                $live_update_div = '<div id="live-profile"></div>' . "\r\n"
+                    . "<script> var profile_uid = " . $a->profile['profile_uid']
+                    . "; var netargs = '?f='; var profile_page = " . $a->pager['page'] . "; </script>\r\n";
+            }
+        }
+
+
+
+
 	}
 
-	if($mode === 'notes') {
-		$profile_owner = local_user();
-		$page_writeable = true;
-	}
-
-	if($mode === 'display') {
+	elseif($mode === 'display') {
 		$profile_owner = $a->profile['uid'];
 		$page_writeable = can_write_wall($a,$profile_owner);
+
+	      $live_update_div = '<div id="live-display"></div>' . "\r\n";
+
 	}
 
-	if($mode === 'community') {
+	elseif($mode === 'community') {
 		$profile_owner = 0;
 		$page_writeable = false;
+
+      if(!$update) {
+            $live_update_div = '<div id="live-community"></div>' . "\r\n"
+                . "<script> var profile_uid = -1; var netargs = '/?f='; var profile_page = " . $a->pager['page'] . "; </script>\r\n";
+
+		}
 	}
+    else if($mode === 'search') {
+        $live_update_div = '<div id="live-search"></div>' . "\r\n";
+    }
 
 
 	$page_dropping = ((local_user() && local_user() == $profile_owner) ? true : false);
@@ -765,8 +809,6 @@ function conversation(&$a, $items, $mode, $update, $page_mode = 'traditional') {
 	$items = $cb['items'];
 
 	$cmnt_tpl    = get_markup_template('comment_item.tpl');
-	$tpl         = 'wall_item.tpl';
-	$wallwall    = 'wallwall_item.tpl';
 	$hide_comments_tpl = get_markup_template('hide_comments.tpl');
 
 	$alike = array();
@@ -893,6 +935,13 @@ function conversation(&$a, $items, $mode, $update, $page_mode = 'traditional') {
 					'tags' => template_escape($tags),
 					'hashtags' => template_escape($hashtags),
 					'mentions' => template_escape($mentions),
+                   'txt_cats' => t('Categories:'),
+                    'txt_folders' => t('Filed under:'),
+                    'has_cats' => ((count($categories)) ? 'true' : ''),
+                    'has_folders' => ((count($folders)) ? 'true' : ''),
+                    'categories' => $categories,
+                    'folders' => $folders,
+
 					'text' => strip_tags(template_escape($body)),
 					'ago' => relative_date($item['created']),
 					'app' => $item['app'],
@@ -930,6 +979,67 @@ function conversation(&$a, $items, $mode, $update, $page_mode = 'traditional') {
 		else
 		{
 			// Normal View
+
+           $page_template = get_markup_template("threaded_conversation.tpl");
+
+            require_once('include/ConversationObject.php');
+            require_once('include/ItemObject.php');
+
+            $conv = new Conversation($mode, $preview);
+
+            // get all the topmost parents
+            // this shouldn't be needed, as we should have only them in our array
+            // But for now, this array respects the old style, just in case
+
+            $threads = array();
+            foreach($items as $item) {
+
+                // Can we put this after the visibility check?
+                like_puller($a,$item,$alike,'like');
+                like_puller($a,$item,$dlike,'dislike');
+
+                // Only add what is visible
+                if($item['network'] === NETWORK_MAIL && local_user() != $item['uid']) {
+                    continue;
+                }
+                if(! visible_activity($item)) {
+                    continue;
+                }
+
+                $item['pagedrop'] = $page_dropping;
+
+                if($item['id'] == $item['parent']) {
+                    $item_object = new Item($item);
+                    $conv->add_thread($item_object);
+                }
+            }
+
+            $threads = $conv->get_template_data($alike, $dlike);
+            if(!$threads) {
+                logger('[ERROR] conversation : Failed to get template data.', LOGGER_DEBUG);
+                $threads = array();
+            }
+        }
+    }
+
+    $o = replace_macros($page_template, array(
+        '$baseurl' => $a->get_baseurl($ssl_state),
+        '$live_update' => $live_update_div,
+        '$remove' => t('remove'),
+        '$mode' => $mode,
+        '$user' => $a->user,
+        '$threads' => $threads,
+        '$dropping' => ($page_dropping?t('Delete Selected Items'):False),
+    ));
+
+    return $o;
+
+
+}}
+
+
+/*
+old code
 
 
 			// Figure out how many comments each parent has
@@ -1351,6 +1461,7 @@ function conversation(&$a, $items, $mode, $update, $page_mode = 'traditional') {
 
 	return $o;
 }}
+*/
 
 function best_link_url($item,&$sparkle,$ssl_state = false) {
 

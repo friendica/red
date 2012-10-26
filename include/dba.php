@@ -287,7 +287,3 @@ function dbesc_array(&$arr) {
 }}
 
 
-function dba_timer() {
-	return microtime(true);
-}
-

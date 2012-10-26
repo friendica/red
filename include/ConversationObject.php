@@ -35,7 +35,6 @@ class Conversation extends BaseObject {
 
 		switch($mode) {
 			case 'network':
-			case 'notes':
 				$this->profile_owner = local_user();
 				$this->writable = true;
 				break;
@@ -104,12 +103,8 @@ class Conversation extends BaseObject {
 		/*
 		 * Only add will be displayed
 		 */
-		if($item->get_data_value('network') === NETWORK_MAIL && local_user() != $item->get_data_value('uid')) {
-			logger('[WARN] Conversation::add_thread : Thread is a mail ('. $item->get_id() .').', LOGGER_DEBUG);
-			return false;
-		}
-		if($item->get_data_value('verb') === ACTIVITY_LIKE || $item->get_data_value('verb') === ACTIVITY_DISLIKE) {
-			logger('[WARN] Conversation::add_thread : Thread is a (dis)like ('. $item->get_id() .').', LOGGER_DEBUG);
+
+		if(activity_match($item->get_data_value('verb'),ACTIVITY_LIKE) || activity_match($item->get_data_value('verb'),ACTIVITY_DISLIKE)) {
 			return false;
 		}
 		$item->set_conversation($this);
@@ -130,8 +125,7 @@ class Conversation extends BaseObject {
 		$result = array();
 
 		foreach($this->threads as $item) {
-			if($item->get_data_value('network') === NETWORK_MAIL && local_user() != $item->get_data_value('uid'))
-				continue;
+
 			$item_data = $item->get_template_data($alike, $dlike);
 			if(!$item_data) {
 				logger('[ERROR] Conversation::get_template_data : Failed to get item template data ('. $item->get_id() .').', LOGGER_DEBUG);
@@ -159,4 +153,3 @@ class Conversation extends BaseObject {
 		return false;
 	}
 }
-?>

@@ -11,11 +11,7 @@ require_once('boot.php');
  */
 class Item extends BaseObject {
 	private $data = array();
-	private $template = null;
-	private $available_templates = array(
-		'wall' => 'wall_thread.tpl',
-		'wall2wall' => 'wallwall_thread.tpl'
-	);
+	private $template = 'wall_thread.tpl';
 	private $comment_box_template = 'comment_item.tpl';
 	private $toplevel = false;
 	private $writable = false;
@@ -29,24 +25,31 @@ class Item extends BaseObject {
 	private $wall_to_wall = false;
 	private $threaded = false;
 	private $visiting = false;
+	private $observer = null;
+	private $channel = null;
 
 	public function __construct($data) {
 		$a = $this->get_app();
-		
+				
 		$this->data = $data;
-		$this->set_template('wall');
+		$this->channel = $a->get_channel();
+		$this->observer = $a->get_observer();
+
 		$this->toplevel = ($this->get_id() == $this->get_data_value('parent'));
 
-		if(is_array($_SESSION['remote'])) {
-			foreach($_SESSION['remote'] as $visitor) {
-				if($visitor['cid'] == $this->get_data_value('contact-id')) {
-					$this->visiting = true;
-					break;
-				}
-			}
-		}
-		
+//		if(is_array($_SESSION['remote'])) {
+//			foreach($_SESSION['remote'] as $visitor) {
+//				if($visitor['cid'] == $this->get_data_value('contact-id')) {
+//					$this->visiting = true;
+//					break;
+//				}
+//			}
+//		}
+
+// fixme		
 		$this->writable = ($this->get_data_value('writable') || $this->get_data_value('self'));
+// FIXME - base this on observer permissions
+		$this->writable = ((local_user() && $channel['channel_hash'] === $item['owner_xchan']) ? true : false);
 
 		$ssl_state = ((local_user()) ? true : false);
 		$this->redirect_url = $a->get_baseurl($ssl_state) . '/redir/' . $this->get_data_value('cid') ;
@@ -60,9 +63,6 @@ class Item extends BaseObject {
 				/*
 				 * Only add will be displayed
 				 */
-				if($item['network'] === NETWORK_MAIL && local_user() != $item['uid']) {
-					continue;
-				}
 				if(! visible_activity($item)) {
 					continue;
 				}
@@ -79,12 +79,13 @@ class Item extends BaseObject {
 	 *      _ The data requested on success
 	 *      _ false on failure
 	 */
+
 	public function get_template_data($alike, $dlike, $thread_level=1) {
 		$result = array();
 
-		$a = $this->get_app();
-
-		$item = $this->get_data();
+		$a        = $this->get_app();
+		$observer = $this->observer;
+		$item     = $this->get_data();
 
 		$commentww = '';
 		$sparkle = '';
@@ -308,9 +309,7 @@ class Item extends BaseObject {
 		/*
 		 * Only add what will be displayed
 		 */
-		if($item->get_data_value('network') === NETWORK_MAIL && local_user() != $item->get_data_value('uid')) {
-			return false;
-		}
+
 		if(activity_match($item->get_data_value('verb'),ACTIVITY_LIKE) || activity_match($item->get_data_value('verb'),ACTIVITY_DISLIKE)) {
 			return false;
 		}
@@ -332,7 +331,7 @@ class Item extends BaseObject {
 	}
 
 	/**
-	 * Get all ou children
+	 * Get all our children
 	 */
 	public function get_children() {
 		return $this->children;
@@ -429,17 +428,6 @@ class Item extends BaseObject {
 	}
 
 	/**
-	 * Set template
-	 */
-	private function set_template($name) {
-		if(!x($this->available_templates, $name)) {
-			logger('[ERROR] Item::set_template : Template not available ("'. $name .'").', LOGGER_DEBUG);
-			return false;
-		}
-		$this->template = $this->available_templates[$name];
-	}
-
-	/**
 	 * Get template
 	 */
 	private function get_template() {
@@ -528,9 +516,9 @@ class Item extends BaseObject {
 				'$parent' => $this->get_id(),
 				'$qcomment' => $qcomment,
 				'$profile_uid' =>  $conv->get_profile_owner(),
-				'$mylink' => $a->contact['url'],
+				'$mylink' => $this->observer['xchan_profile'],
 				'$mytitle' => t('This is you'),
-				'$myphoto' => $a->contact['thumb'],
+				'$myphoto' => $this->observer['xchan_photo_s'],
 				'$comment' => t('Comment'),
 				'$submit' => t('Submit'),
 				'$edbold' => t('Bold'),
@@ -574,7 +562,6 @@ class Item extends BaseObject {
 					$this->owner_url = zrl($a->page_contact['url']);
 					$this->owner_photo = $a->page_contact['thumb'];
 					$this->owner_name = $a->page_contact['name'];
-					$this->set_template('wall2wall');
 					$this->wall_to_wall = true;
 				}
 				else if($this->get_data_value('owner-link')) {
@@ -596,7 +583,6 @@ class Item extends BaseObject {
 
 						$this->owner_photo = $this->get_data_value('owner-avatar');
 						$this->owner_name = $this->get_data_value('owner-name');
-						$this->set_template('wall2wall');
 						$this->wall_to_wall = true;
 						// If it is our contact, use a friendly redirect link
 						if((link_compare($this->get_data_value('owner-link'),$this->get_data_value('url'))) 
@@ -611,7 +597,6 @@ class Item extends BaseObject {
 		}
 
 		if(!$this->wall_to_wall) {
-			$this->set_template('wall');
 			$this->owner_url = '';
 			$this->owner_photo = '';
 			$this->owner_name = '';
@@ -642,4 +627,4 @@ class Item extends BaseObject {
 
 
 }
-?>
+

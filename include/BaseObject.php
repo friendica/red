@@ -34,4 +34,4 @@ class BaseObject {
 		self::$app = $app;
 	}
 }
-?>
+

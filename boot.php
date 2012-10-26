@@ -1867,3 +1867,8 @@ function argc() {
 function argv($x) {
 	return get_app()->argv[$x];
 }
+
+function dba_timer() {
+	return microtime(true);
+}
+

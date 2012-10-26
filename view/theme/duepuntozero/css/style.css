@@ -972,6 +972,11 @@ input#dfrn-url {
 	margin-left: 50px;
 }
 
+.tread-end-wrapper {
+    margin-left: 50px;
+}
+
+
 .wall-item-content-wrapper.comment {
 	background: #ffffff;
 	border-left: 1px solid #e0e0e0;
