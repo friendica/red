@@ -7,8 +7,8 @@ function starred_init(&$a) {
 
 	if(! local_user())
 		killme();
-	if($a->argc > 1)
-		$message_id = intval($a->argv[1]);
+	if(argc() > 1)
+		$message_id = intval(argv(1));
 	if(! $message_id)
 		killme();
 
@@ -24,7 +24,7 @@ function starred_init(&$a) {
 	if($item_flags & ITEM_STARRED)
 	    $item_flags -= ITEM_STARRED;
 	else
-		$item_flags = $item_flags | ITEM_STARRED;
+		$item_flags += ITEM_STARRED;
 
 
 	$r = q("UPDATE item SET item_flags = %d WHERE uid = %d and id = %d LIMIT 1",
@@ -32,8 +32,8 @@ function starred_init(&$a) {
 		intval(local_user()),
 		intval($message_id)
 	);
- 
+
 	header('Content-type: application/json');
-	echo json_encode(array('result' => intval($item_flags & ITEM_STARRED)));
+	echo json_encode(array('result' => (($item_flags & ITEM_STARRED) ? 1 : 0)));
 	killme();
 }

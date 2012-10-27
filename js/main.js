@@ -548,7 +548,7 @@ function updateConvItems(mode,data) {
 		ident = ident.toString();
 		$('#like-rotator-' + ident).show();
 		$.get('starred/' + ident, function(data) {
-			if(data.match(/1/)) {
+			if(data.result == 1) {
 				$('#starred-' + ident).addClass('starred');
 				$('#starred-' + ident).removeClass('unstarred');
 				$('#star-' + ident).addClass('hidden');

@@ -513,14 +513,14 @@ function prepare_threads_body($a, $items, $cmnt_tpl, $page_writeable, $mode, $pr
 				}
 			}
 			if($profile_owner == local_user()) {
-				$isstarred = (($item['starred']) ? "starred" : "unstarred");
+				$isstarred = (($item['item_flags'] & ITEM_STARRED) ? "starred" : "unstarred");
 
 				$star = array(
 					'do' => t("add star"),
 					'undo' => t("remove star"),
 					'toggle' => t("toggle star status"),
-					'classdo' => (($item['starred']) ? "hidden" : ""),
-					'classundo' => (($item['starred']) ? "" : "hidden"),
+					'classdo' => (($item['item_flags'] & ITEM_STARRED) ? "hidden" : ""),
+					'classundo' => (($item['item_flags'] & ITEM_STARRED) ? "" : "hidden"),
 					'starred' =>  t('starred'),
 					'tagger' => t("add tag"),
 					'classtagger' => "",
