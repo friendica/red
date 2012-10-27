@@ -2525,7 +2525,7 @@ aside input[type='text'] {
 
 #nav-searchbar {
 	float: right;
-	margin-top: 3px;
+	margin-top: 4px;
 }
 
 #nav-search-text:hover {
@@ -3537,7 +3537,7 @@ nav .nav-menu {
   border-bottom: 3px solid #888888;
 }
 nav .nav-menu.selected {
-  border-bottom: 4px solid #000000;
+  border-bottom: 4px solid #CCCCCC;
 }
 nav .nav-notify {
   display: none;
