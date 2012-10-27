@@ -2,6 +2,7 @@
 
 
 require_once('include/bbcode.php');
+require_once('include/notify.php');
 
 function ping_init(&$a) {
 
@@ -88,7 +89,33 @@ function ping_init(&$a) {
 		killme();
 
 	}
-	
+
+	if(argc() > 1 && (argv(1) === 'network' || argv(1) === 'home')) {
+
+		$result = array();
+
+		$r = q("SELECT id, item_restrict, item_flags FROM item
+			WHERE item_restrict = %d and item_flags & %d and `item`.`uid` = %d",
+			intval(ITEM_VISIBLE),
+			intval(ITEM_UNSEEN),
+			intval(local_user())
+		);
+
+		if($r) {
+			foreach($r as $item) {
+				if((argv(1) === 'home') && (! ($item['item_flags'] & ITEM_HOME)))
+					continue;
+				$result[] = format_notification($item);
+			}
+		}			
+
+		echo json_encode(array( argv(1) => $result));
+		killme();
+
+	}
+
+
+	// Normal ping - just the counts
 
 	$t = q("select count(*) as total from notify where uid = %d and seen = 0",
 		intval(local_user())

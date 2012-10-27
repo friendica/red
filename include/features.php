@@ -16,13 +16,12 @@ function get_features() {
 
 $arr = array(
 
-'multi_delete' => t('Multiple Deletion'),
-'expire'       => t('Content Expiration'),
-'commtag'      => t('Community Tagging'),
-'categories'   => t('Post Categories'),
-'filing'       => t('Saved Folders'),
-'archives'     => t('Archives'),
-
+'multi_delete'   => t('Multiple Deletion'),
+'expire'         => t('Content Expiration'),
+'commtag'        => t('Community Tagging'),
+'categories'     => t('Post Categories'),
+'filing'         => t('Saved Folders'),
+'archives'       => t('Search by Date'),
 
 
 );
