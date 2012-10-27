@@ -2981,8 +2981,8 @@ aside input[type='text'] {
 #lang-select-icon {
 	cursor: pointer;
 	position: absolute;
-	left: 0px;
-	top: 0px;
+	left: 4px;
+	top: 4px;
 	opacity: 0.2;
 	filter:alpha(opacity=20);
 }
