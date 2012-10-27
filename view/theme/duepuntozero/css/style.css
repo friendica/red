@@ -2581,7 +2581,7 @@ aside input[type='text'] {
 	
 
 .fn {
-	padding: 0px 0px 5px 12px;
+	padding: 0px 0px 5px 0px;
 	font-size: 120%;
 	font-weight: bold;
 }
