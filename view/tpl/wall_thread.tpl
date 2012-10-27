@@ -4,7 +4,7 @@
 	</div>
 	<div id="collapsed-comments-$item.id" class="collapsed-comments" style="display: none;">
 {{endif}}
-<div id="tread-wrapper-$item.id" class="tread-wrapper $item.toplevel">
+<div id="thread-wrapper-$item.id" class="thread-wrapper $item.toplevel">
 <a name="$item.id" ></a>
 <div class="wall-item-outside-wrapper $item.indent$item.previewing{{ if $item.owner_url }} wallwall{{ endif }}" id="wall-item-outside-wrapper-$item.id" >
 	<div class="wall-item-content-wrapper $item.indent" id="wall-item-content-wrapper-$item.id" >

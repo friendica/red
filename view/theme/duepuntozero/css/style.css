@@ -958,7 +958,7 @@ input#dfrn-url {
 #network-bmark-link {
 	margin-top: 10px;
 }
-.tread-wrapper .wall-item-comment-wrapper {
+.thread-wrapper .wall-item-comment-wrapper {
 	margin-left: 50px;
 }
 
@@ -968,11 +968,11 @@ input#dfrn-url {
 	position: relative;
 }
 
-.tread-wrapper .tread-wrapper {
+.thread-wrapper .thread-wrapper {
 	margin-left: 50px;
 }
 
-.tread-end-wrapper {
+.thread-end-wrapper {
     margin-left: 50px;
 }
 

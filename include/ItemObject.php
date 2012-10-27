@@ -121,13 +121,17 @@ class Item extends BaseObject {
 
 		$diff_author    = ((link_compare($item['url'],$item['author-link'])) ? false : true);
 		$profile_name   = (((strlen($item['author-name']))   && $diff_author) ? $item['author-name']   : $item['name']);
-		if($item['author-link'] && (! $item['author-name']))
-			$profile_name = $item['author-link'];
+
+		$profile_avatar = $item['author']['xchan_photo_m'];
+		$profile_link = zrl($item['author']['xchan_profile']);
+		$profile_name = $item['author']['xchan_name'];
+
+//		if($item['author-link'] && (! $item['author-name']))
+//			$profile_name = $item['author-link'];
 
 		$sp = false;
-		$profile_link = best_link_url($item,$sp);
-		if($profile_link === 'mailbox')
-			$profile_link = '';
+//		$profile_link = best_link_url($item,$sp);
+
 		if($sp)
 			$sparkle = ' sparkle';
 		else
@@ -136,11 +140,11 @@ class Item extends BaseObject {
 		$profile_link = zrl($item['author']['xchan_profile']);
 
 
-		$normalised = normalise_link((strlen($item['author-link'])) ? $item['author-link'] : $item['url']);
-		if(($normalised != 'mailbox') && (x($a->contacts,$normalised)))
-			$profile_avatar = $a->contacts[$normalised]['thumb'];
-		else
-			$profile_avatar = (((strlen($item['author-avatar'])) && $diff_author) ? $item['author-avatar'] : $a->get_cached_avatar_image($this->get_data_value('thumb')));
+//		$normalised = normalise_link((strlen($item['author-link'])) ? $item['author-link'] : $item['url']);
+//		if(($normalised != 'mailbox') && (x($a->contacts,$normalised)))
+//			$profile_avatar = $a->contacts[$normalised]['thumb'];
+//		else
+//			$profile_avatar = (((strlen($item['author-avatar'])) && $diff_author) ? $item['author-avatar'] : $a->get_cached_avatar_image($this->get_data_value('thumb')));
 
 		$profile_avatar = $item['author']['xchan_photo_m'];
 
