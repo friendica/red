@@ -28,8 +28,6 @@ function item_post(&$a) {
 	if((! local_user()) && (! remote_user()) && (! x($_REQUEST,'commenter')))
 		return;
 
-	logger('get_perms: ' . print_r($a->get_perms(),true));
-
 	require_once('include/security.php');
 
 	$uid = local_user();
@@ -59,6 +57,12 @@ function item_post(&$a) {
 	// If you are unsure, it is prudent (and important) to leave it unset.   
 
 	$origin = (($api_source && array_key_exists('origin',$_REQUEST)) ? intval($_REQUEST['origin']) : 1);
+
+
+
+	$profile_uid = ((x($_REQUEST,'profile_uid')) ? intval($_REQUEST['profile_uid']) : 0);
+	$post_id     = ((x($_REQUEST,'post_id'))     ? intval($_REQUEST['post_id'])     : 0);
+	$app         = ((x($_REQUEST,'source'))      ? strip_tags($_REQUEST['source'])  : '');
 
 
 	$return_path = ((x($_REQUEST,'return')) ? $_REQUEST['return'] : '');
@@ -131,33 +135,10 @@ function item_post(&$a) {
 
 	if($parent) logger('mod_item: item_post parent=' . $parent);
 
-	$profile_uid = ((x($_REQUEST,'profile_uid')) ? intval($_REQUEST['profile_uid']) : 0);
-	$post_id     = ((x($_REQUEST,'post_id'))     ? intval($_REQUEST['post_id'])     : 0);
-	$app         = ((x($_REQUEST,'source'))      ? strip_tags($_REQUEST['source'])  : '');
+	$observer = $a->get_observer();
 
-	$allow_moderated = false;
-
-	// here is where we are going to check for permission to post a moderated comment.
-
-	// First check that the parent exists and it is a wall item.
-
-	if((x($_REQUEST,'commenter')) && ((! $parent) || (! ($parent_item['item_flags'] & ITEM_WALL)))) {
-		notice( t('Permission denied.') . EOL) ;
-		if(x($_REQUEST,'return')) 
-			goaway($a->get_baseurl() . "/" . $return_path );
-		killme();
-	}
-
-	// Now check that it is a page_type of PAGE_BLOG, and that valid personal details
-	// have been provided, and run any anti-spam plugins
-
-
-	// TODO
-
-
-
-
-	if((! can_write_wall($a,$profile_uid)) && (! $allow_moderated)) {
+	if(! perm_is_allowed($profile_uid,$observer['xchan_hash'],(($parent) ? 'post_comments' : 'post_wall'))) {
+		dbg(0);
 		notice( t('Permission denied.') . EOL) ;
 		if(x($_REQUEST,'return')) 
 			goaway($a->get_baseurl() . "/" . $return_path );
@@ -183,7 +164,6 @@ function item_post(&$a) {
 
 	if(local_user() && local_user() == $profile_uid) {
 		$channel = $a->get_channel();
-		$observer = $a->get_observer();
 	}
 	else {
 		$r = q("SELECT channel.*, account.* FROM channel left join account on channel.channel_account_id = account.account_id 
@@ -263,11 +243,12 @@ function item_post(&$a) {
 		$verb              = notags(trim($_REQUEST['verb']));
 		$body              = escape_tags(trim($_REQUEST['body']));
 
-		$language = detect_language($body);
-
-		logger('detected language: ' . $language);
-
-		$private = ((strlen($str_group_allow) || strlen($str_contact_allow) || strlen($str_group_deny) || strlen($str_contact_deny)) ? 1 : 0);
+		$private = ( 
+				(  strlen($str_group_allow) 
+				|| strlen($str_contact_allow) 
+				|| strlen($str_group_deny) 
+				|| strlen($str_contact_deny)
+		) ? 1 : 0);
 
 		// If this is a comment, set the permissions from the parent.
 
@@ -375,75 +356,16 @@ function item_post(&$a) {
 	 *
 	 */
 
-	$match = null;
+	if(! $preview) {
+		fix_attached_photo_permissions($profile_uid,$owner_xchan['xchan_hash'],$body,
+		$str_contact_allow,$str_group_allow,$str_contact_deny,$str_group_deny);
 
-	if((! $preview) && preg_match_all("/\[img\](.*?)\[\/img\]/",$body,$match)) {
-		$images = $match[1];
-		if(count($images)) {
-			foreach($images as $image) {
-				if(! stristr($image,$a->get_baseurl() . '/photo/'))
-					continue;
-				$image_uri = substr($image,strrpos($image,'/') + 1);
-				$image_uri = substr($image_uri,0, strpos($image_uri,'-'));
-				if(! strlen($image_uri))
-					continue;
-				$srch = '<' . $owner_xchan['xchan_hash'] . '>';
+		fix_attached_file_permissions($profile_uid,$owner_xchan['xchan_hash'],$body,
+		$str_contact_allow,$str_group_allow,$str_contact_deny,$str_group_deny);
 
-				$r = q("SELECT `id` FROM `photo` WHERE `allow_cid` = '%s' AND `allow_gid` = '' AND `deny_cid` = '' AND `deny_gid` = ''
-					AND `resource_id` = '%s' AND `uid` = %d LIMIT 1",
-					dbesc($srch),
-					dbesc($image_uri),
-					intval($profile_uid)
-				);
-
-				if(! count($r))
-					continue;
- 
-
-				$r = q("UPDATE `photo` SET `allow_cid` = '%s', `allow_gid` = '%s', `deny_cid` = '%s', `deny_gid` = '%s'
-					WHERE `resource_id` = '%s' AND `uid` = %d AND `album` = '%s' ",
-					dbesc($str_contact_allow),
-					dbesc($str_group_allow),
-					dbesc($str_contact_deny),
-					dbesc($str_group_deny),
-					dbesc($image_uri),
-					intval($profile_uid),
-					dbesc( t('Wall Photos'))
-				);
- 
-			}
-		}
 	}
 
 
-	/**
-	 * Next link in any attachment references we find in the post.
-	 */
-
-	$match = false;
-
-	if((! $preview) && preg_match_all("/\[attachment\](.*?)\[\/attachment\]/",$body,$match)) {
-		$attaches = $match[1];
-		if(count($attaches)) {
-			foreach($attaches as $attach) {
-				$r = q("select * from attach where uid = %d and hash = '%s' limit 1",
-					intval($profile_uid),
-					dbesc($attach)
-				);				
-				if(count($r)) {
-					$r = q("UPDATE `attach` SET `allow_cid` = '%s', `allow_gid` = '%s', `deny_cid` = '%s', `deny_gid` = '%s'
-						WHERE `uid` = %d AND `hash` = '%s' LIMIT 1",
-						dbesc($str_contact_allow),
-						dbesc($str_group_allow),
-						dbesc($str_contact_deny),
-						dbesc($str_group_deny),
-						intval($profile_uid),
-						dbesc($attach)
-					);
-				}
-			}
-		}
-	}
 
 	$body = bb_translate_video($body);
 
@@ -518,7 +440,7 @@ function item_post(&$a) {
 		}
 	}
 
-	logger('post_tags: ' . print_r($post_tags,true));
+//	logger('post_tags: ' . print_r($post_tags,true));
 
 	if(($private_forum) && (! $parent) && (! $private)) {
 		// we tagged a private forum in a top level post and the message was public.
@@ -597,7 +519,6 @@ function item_post(&$a) {
 	$datarray['title']         = $title;
 	$datarray['body']          = $body;
 	$datarray['app']           = $app;
-	$datarray['lang']          = $language;
 	$datarray['location']      = $location;
 	$datarray['coord']         = $coord;
 	$datarray['inform']        = $inform;
@@ -623,22 +544,6 @@ function item_post(&$a) {
 		logger('preview: ' . $o, LOGGER_DEBUG);
 		echo json_encode(array('preview' => $o));
 		killme();
-	}
-
-	// post owner can post in any language they wish; others however are subject to the owner's whims about language acceptance
-
-	if($profile_uid != local_user()) {
-		$allowed_languages = get_pconfig($profile_uid,'system','allowed_languages');
-	
-		if((is_array($allowed_languages)) && ($datarray['lang']) && (! array_key_exists($datarray['lang'],$allowed_languages))) {
-			$translate = array('item' => $datarray, 'from' => $datarray['lang'], 'to' => $allowed_languages, 'translated' => false);
-			call_hooks('item_translate', $translate);
-			if((! $translate['translated']) && (intval(get_pconfig($profile_uid,'system','reject_disallowed_languages')))) {
-				logger('item_store: language ' . $datarray['lang'] . ' not accepted for uid ' . $datarray['uid']);
-				return;
-			}
-			$datarray = $translate['item'];
-		}
 	}
 
 	call_hooks('post_local',$datarray);
@@ -1023,3 +928,78 @@ function handle_tag($a, &$body, &$inform, &$str_tags, $profile_uid, $tag) {
 }
 
 
+
+function fix_attached_photo_permissions($uid,$xchan_hash,$body,
+		$str_contact_allow,$str_group_allow,$str_contact_deny,$str_group_deny) {
+
+	$match = null;
+
+	if(preg_match_all("/\[img\](.*?)\[\/img\]/",$body,$match)) {
+		$images = $match[1];
+		if($images) {
+			foreach($images as $image) {
+				if(! stristr($image,$a->get_baseurl() . '/photo/'))
+					continue;
+				$image_uri = substr($image,strrpos($image,'/') + 1);
+				$image_uri = substr($image_uri,0, strpos($image_uri,'-'));
+				if(! strlen($image_uri))
+					continue;
+				$srch = '<' . $xchan_hash . '>';
+
+				$r = q("SELECT id FROM photo 
+					WHERE allow_cid = '%s' AND allow_gid = '' AND deny_cid = '' AND deny_gid = ''
+					AND resource_id = '%s' AND uid = %d LIMIT 1",
+					dbesc($srch),
+					dbesc($image_uri),
+					intval($uid)
+				);
+
+				if($r) {
+					$r = q("UPDATE photo SET allow_cid = '%s', allow_gid = '%s', deny_cid = '%s', deny_gid = '%s'
+						WHERE resource_id = '%s' AND uid = %d AND album = '%s' ",
+						dbesc($str_contact_allow),
+						dbesc($str_group_allow),
+						dbesc($str_contact_deny),
+						dbesc($str_group_deny),
+						dbesc($image_uri),
+						intval($uid),
+						dbesc( t('Wall Photos'))
+					);
+				}
+			}
+		}
+	}
+}
+
+
+function fix_attached_file_permissions($uid,$xchan_hash,$body,
+		$str_contact_allow,$str_group_allow,$str_contact_deny,$str_group_deny) {
+
+	$match = false;
+
+	if(preg_match_all("/\[attachment\](.*?)\[\/attachment\]/",$body,$match)) {
+		$attaches = $match[1];
+		if($attaches) {
+			foreach($attaches as $attach) {
+				$r = q("select * from attach where uid = %d and hash = '%s' 
+					and allow_cid = '%s' and allow_gid = '' and deny_cid = '' and deny_gid = '' limit 1",
+					intval($uid),
+					dbesc($attach),
+					dbesc('<' . $xchan_hash . '>')
+				);				
+				if($r) {
+					$r = q("UPDATE attach 
+						SET allow_cid = '%s', allow_gid = '%s', deny_cid = '%s', deny_gid = '%s'
+						WHERE uid = %d AND hash = '%s' LIMIT 1",
+						dbesc($str_contact_allow),
+						dbesc($str_group_allow),
+						dbesc($str_contact_deny),
+						dbesc($str_group_deny),
+						intval($uid),
+						dbesc($attach)
+					);
+				}
+			}
+		}
+	}
+}

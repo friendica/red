@@ -155,7 +155,7 @@ function get_all_perms($uid,$observer) {
 }
 
 
-function perm_is_allowed($uid,$observer,$perm_to_check) {
+function perm_is_allowed($uid,$observer,$permission) {
 
 	global $global_perms;
 
