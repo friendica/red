@@ -408,11 +408,13 @@ function network_content(&$a, $update = 0, $load = false) {
 	// desired. 
 
 	
-	$sql_options  = (($star) ? " and starred = 1 " : '');
+	$sql_options  = (($star) 
+		? " and (item_flags & " . intval(ITEM_STARRED) . ")" 
+		: '');
 
 	$sql_nets = '';
-// fixme
-	$sql_extra = " AND `item`.`parent` IN ( SELECT `parent` FROM `item` WHERE id = parent $sql_options ) ";
+
+	$sql_extra = " AND `item`.`parent` IN ( SELECT `parent` FROM `item` WHERE (item_flags & " . intval(ITEM_THREAD_TOP) . ") $sql_options ) ";
 
 	if($group) {
 		$r = q("SELECT `name`, `id` FROM `group` WHERE `id` = %d AND `uid` = %d LIMIT 1",
@@ -587,11 +589,24 @@ function network_content(&$a, $update = 0, $load = false) {
 
 	if(($cmin != 0) || ($cmax != 99)) {
 
-		$sql_nets .= " AND `contact`.`closeness` >= " . intval($cmin) . " ";
-		$sql_nets .= " AND `contact`.`closeness` <= " . intval($cmax) . " ";
+		$sql_nets .= " AND abook.abook_closeness >= " . intval($cmin) . " ";
+		$sql_nets .= " AND abook.abook_closeness <= " . intval($cmax) . " ";
+
+		// This is ugly - but we won't have an abook for everybody as we 
+		// used to have a contact for everybody in Friendica. 
+		// Might be an unknown poster (99) or our own post (0). 
+		// Need to refactor this after a solution presents itself
+
+		if($cmax == 99)
+			$sql_nets .= " OR ( abook.abook_id = NULL AND item.author_xchan != '" . $ch['channel_hash'] . " ) ";
+		if($cmin == 0 && local_user()) {
+			$ch = $a->get_channel();
+			$sql_nets .= " OR ( item.author_xchan = '" . $ch['channel_hash'] . "' ) ";
+		}
+
 	}
 
-	$simple_update = (($update) ? " and `item`.`unseen` = 1 " : '');
+	$simple_update = (($update) ? " and ( item.flags & " . intval(ITEM_UNSEEN) . " ) " : '');
 	if($load)
 		$simple_update = '';
 
@@ -625,26 +640,28 @@ function network_content(&$a, $update = 0, $load = false) {
 				$ordering = "`commented`";
 
 		// Fetch a page full of parent items for this page
-
+dbg(1);
 		if($update && (! $load)) {
-			$r = q("SELECT `parent` AS `item_id` FROM `item` 
-				WHERE `item`.`uid` = %d AND `item`.`restrict` = 0 
+			$r = q("SELECT item.parent AS item_id FROM item
+				left join abook on item.author_xchan = abook.abook_xchan
+				WHERE item.uid = %d AND item.item_restrict = 0 
 				$sql_extra3 $sql_extra $sql_nets ",
 				intval(local_user())
 			);
 		}
 		else {
 
-			$r = q("SELECT `item`.`id` AS `item_id`
-				FROM `item` WHERE `item`.`uid` = %d AND `item`.`item_restrict` = 0
-				AND `item`.`parent` = `item`.`id`
+			$r = q("SELECT item.id AS item_id FROM item 
+				left join abook on item.author_xchan = abook.abook_xchan
+				WHERE item.uid = %d AND item.item_restrict = 0
+				AND item.parent = item.id
 				$sql_extra3 $sql_extra $sql_nets
-				ORDER BY `item`.$ordering DESC $pager_sql ",
+				ORDER BY item.$ordering DESC $pager_sql ",
 				intval(local_user())
 			);
 
 		}
-
+dbg(0);
 		// Then fetch all the children of the parents that are on this page
 
 		if($r && count($r)) {
