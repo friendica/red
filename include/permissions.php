@@ -20,6 +20,14 @@
 	);
 
 
+/**
+ * get_all_perms($uid,$observer)
+ *
+ * @param $uid : The channel_id associated with the resource owner
+ * @param $observer: The xchan_hash representing the observer
+ *
+ * @returns: array of all permissions, key is permission name, value is integer 0 or 1
+ */
 
 function get_all_perms($uid,$observer) {
 

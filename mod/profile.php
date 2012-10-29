@@ -247,14 +247,17 @@ function profile_content(&$a, $update = 0) {
 	}
 
 
+
 	if($is_owner) {
-		$r = q("UPDATE `item` SET `item_flags` = item_flags - %d
-			WHERE item_flags & %d AND `uid` = %d",
+		$r = q("UPDATE item SET item_flags = (item_flags ^ %d)
+			WHERE (item_flags & %d) AND (item_flags & %d) AND uid = %d ",
 			intval(ITEM_UNSEEN),
-			intval(ITEM_UNSEEN|ITEM_WALL),
+			intval(ITEM_UNSEEN),
+			intval(ITEM_WALL),
 			intval(local_user())
 		);
 	}
+
 
 	$o .= conversation($a,$items,'profile',$update);
 

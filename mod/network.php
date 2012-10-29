@@ -678,10 +678,10 @@ function network_content(&$a, $update = 0, $load = false) {
 	// We aren't going to try and figure out at the item, group, and page
 	// level which items you've seen and which you haven't. If you're looking
 	// at the top level network page just mark everything seen. 
-	
+
 	if((! $group) && (! $cid) && (! $star)) {
-		$r = q("UPDATE `item` SET item_flags = item_flags & (! %d)
-			WHERE item_flags & %d AND `uid` = %d",
+		$r = q("UPDATE `item` SET item_flags = ( item_flags ^ %d)
+			WHERE (item_flags & %d) AND `uid` = %d",
 			intval(ITEM_UNSEEN),
 			intval(ITEM_UNSEEN),
 			intval(local_user())

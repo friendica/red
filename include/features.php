@@ -22,7 +22,7 @@ $arr = array(
 'categories'     => t('Post Categories'),
 'filing'         => t('Saved Folders'),
 'archives'       => t('Search by Date'),
-
+'dislike'        => t('Dislike Posts'),
 
 );
 

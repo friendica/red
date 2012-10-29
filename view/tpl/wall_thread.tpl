@@ -66,7 +66,6 @@
 				<a href="#" class="icon like" title="$item.vote.like.0" onclick="dolike($item.id,'like'); return false"></a>
 				<a href="#" class="icon dislike" title="$item.vote.dislike.0" onclick="dolike($item.id,'dislike'); return false"></a>
 				{{ if $item.vote.share }}<a href="#" class="icon recycle wall-item-share-buttons" title="$item.vote.share.0" onclick="jotShare($item.id); return false"></a>{{ endif }}
-				<img id="like-rotator-$item.id" class="like-rotator" src="images/rotator.gif" alt="$item.wait" title="$item.wait" style="display: none;" />
 			</div>
 			{{ endif }}
 			{{ if $item.plink }}
@@ -83,6 +82,7 @@
 			{{ if $item.filer }}
 			<a href="#" id="filer-$item.id" onclick="itemFiler($item.id); return false;" class="filer-item filer-icon" title="$item.filer"></a>
 			{{ endif }}			
+			<img id="like-rotator-$item.id" class="like-rotator" src="images/rotator.gif" alt="$item.wait" title="$item.wait" style="display: none;" />
 			
 			<div class="wall-item-delete-wrapper" id="wall-item-delete-wrapper-$item.id" >
 				{{ if $item.drop.dropping }}<a href="item/drop/$item.id" onclick="return confirmDelete();" class="icon drophide" title="$item.drop.delete" onmouseover="imgbright(this);" onmouseout="imgdull(this);" ></a>{{ endif }}
