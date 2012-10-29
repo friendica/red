@@ -210,7 +210,7 @@ function change_channel($change_channel) {
 			intval($change_channel),
 			intval(get_account_id())
 		);
-		if($r && count($r)) {
+		if($r) {
 			$hash = $r[0]['channel_hash'];
 			$_SESSION['uid'] = intval($r[0]['channel_id']);
 			get_app()->set_channel($r[0]);
@@ -221,8 +221,10 @@ function change_channel($change_channel) {
 		$x = q("select * from xchan where xchan_hash = '%s' limit 1", 
 			dbesc($hash)
 		);
-		if($x && count($x))
+		if($x) {
 			get_app()->set_observer($x[0]);
+			get_app()->set_perms(get_all_perms(local_user(),$hash));
+		}
 	}
 
 	return $ret;

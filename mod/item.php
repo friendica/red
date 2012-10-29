@@ -28,6 +28,8 @@ function item_post(&$a) {
 	if((! local_user()) && (! remote_user()) && (! x($_REQUEST,'commenter')))
 		return;
 
+	logger('get_perms: ' . print_r($a->get_perms(),true));
+
 	require_once('include/security.php');
 
 	$uid = local_user();

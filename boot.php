@@ -8,6 +8,7 @@ require_once('include/datetime.php');
 require_once('include/language.php');
 require_once('include/nav.php');
 require_once('include/cache.php');
+require_once('include/permissions.php');
 require_once('library/Mobile_Detect/Mobile_Detect.php');
 require_once('include/BaseObject.php');
 
@@ -180,6 +181,14 @@ define ( 'PERMS_NETWORK'    , 0x0002 );
 define ( 'PERMS_SITE'       , 0x0004 );
 define ( 'PERMS_CONTACTS'   , 0x0008 );
 define ( 'PERMS_SPECIFIC'   , 0x0080 );
+
+
+// Address book flags
+
+define ( 'ABOOK_FLAG_BLOCKED'    , 0x0001);
+define ( 'ABOOK_FLAG_IGNORED'    , 0x0002);
+define ( 'ABOOK_FLAG_HIDDEN'     , 0x0004);
+
 
 
 /**
@@ -394,11 +403,11 @@ if(! class_exists('App')) {
 	class App {
 
 		
-		public  $account = null;            // account record
-
-		private $channel = null;            // channel record
-		private $observer = null;           // xchan record
-		private $widgets = array();         // widgets for this page
+		public  $account  = null;            // account record
+		private $channel  = null;            // channel record
+		private $observer = null;            // xchan record
+		private $perms    = null;            // observer permissions
+		private $widgets  = array();         // widgets for this page
 
 
 
@@ -652,6 +661,14 @@ if(! class_exists('App')) {
 
 		function get_observer() {
 			return $this->observer;
+		}
+
+		function set_perms($perms) {
+			$this->perms = $perms;
+		}
+
+		function get_perms() {
+			return $this->perms;
 		}
 
 		function get_apps() {
