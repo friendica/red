@@ -424,7 +424,7 @@ class Item extends BaseObject {
 	 */
 	public function get_data_value($name) {
 		if(!isset($this->data[$name])) {
-			logger('[ERROR] Item::get_data_value : Item has no value name "'. $name .'".', LOGGER_DEBUG);
+//			logger('[ERROR] Item::get_data_value : Item has no value name "'. $name .'".', LOGGER_DEBUG);
 			return false;
 		}
 
