@@ -357,7 +357,7 @@ head_add_js('mod_' . $a->module . '.js');
 	if($interval < 10000)
 		$interval = 40000;
 
-	$a->page['title'] = $a->config['sitename'];
+	$a->page['title'] = $a->config['system']['sitename'];
 
 
 	$a->page['htmlhead'] = replace_macros($a->page['htmlhead'], array(
