@@ -22,8 +22,7 @@ function manage_content(&$a) {
 	$channels = null;
 
 	if(local_user()) {
-		$r = q("select channel.*, contact.* from channel left join contact on channel.channel_id = contact.uid 
-			where channel.channel_account_id = %d and contact.self = 1",
+		$r = q("select channel.*, xchan.* from channel left join xchan on channel.channel_hash = xchan.xchan_hash where channel.channel_account_id = %d ",
 			intval(get_account_id())
 		);
 

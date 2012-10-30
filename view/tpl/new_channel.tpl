@@ -1,6 +1,6 @@
 <h2>$title</h2>
 
-<form action="newchannel" method="post" id="newchannel-form">
+<form action="new_channel" method="post" id="newchannel-form">
 
 	<div id="newchannel-desc" class="descriptive-paragraph">$desc</div>
 
