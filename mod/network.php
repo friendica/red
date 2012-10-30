@@ -563,7 +563,7 @@ function network_content(&$a, $update = 0, $load = false) {
 
 	if($conv) {
 		// find a substring of my profile url that can be normalised
-		$myurl = $a->get_baseurl() . '/profile/' . $a->user['nickname'];
+		$myurl = $a->get_baseurl() . '/channel/' . $a->user['nickname'];
 		$myurl = substr($myurl,strpos($myurl,'://')+3);
 		$myurl = str_replace('www.','',$myurl);
 

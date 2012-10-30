@@ -175,7 +175,7 @@ function message_content(&$a) {
 		return;
 	}
 
-	$myprofile = $a->get_baseurl(true) . '/profile/' . $a->user['nickname'];
+	$myprofile = $a->get_baseurl(true) . '/channel/' . $a->user['nickname'];
 
 	$tpl = get_markup_template('mail_head.tpl');
 	$header = replace_macros($tpl, array(

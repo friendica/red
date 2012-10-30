@@ -338,10 +338,10 @@ function notifications_content(&$a) {
 		
 		$notif_tpl = get_markup_template('notifications.tpl');
 		
-		$myurl = $a->get_baseurl(true) . '/profile/'. $a->user['nickname'];
+		$myurl = $a->get_baseurl(true) . '/channel/'. $a->user['nickname'];
 		$myurl = substr($myurl,strpos($myurl,'://')+3);
 		$myurl = str_replace(array('www.','.'),array('','\\.'),$myurl);
-		$diasp_url = str_replace('/profile/','/u/',$myurl);
+		$diasp_url = str_replace('/channel/','/u/',$myurl);
 		$sql_extra .= sprintf(" AND ( `item`.`author-link` regexp '%s' or `item`.`tag` regexp '%s' or `item`.`tag` regexp '%s' ) ",
 			dbesc($myurl . '$'),
 			dbesc($myurl . '\\]'),

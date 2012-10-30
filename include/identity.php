@@ -119,7 +119,7 @@ function create_identity($arr) {
 		dbesc($a->get_baseurl() . "/photo/profile/m/{$newuid}"),
 		dbesc($a->get_baseurl() . "/photo/profile/s/{$newuid}"),
 		dbesc($ret['channel']['channel_address'] . '@' . $a->get_hostname()),
-		dbesc(z_root() . '/profile/' . $ret['channel']['channel_address']),
+		dbesc(z_root() . '/channel/' . $ret['channel']['channel_address']),
 		dbesc($ret['channel']['channel_name']),
 		dbesc('zot'),
 		dbesc(datetime_convert()),

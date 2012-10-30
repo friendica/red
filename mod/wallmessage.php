@@ -68,7 +68,7 @@ function wallmessage_post(&$a) {
 			info( t('Message sent.') . EOL );
 	}
 
-//	goaway($a->get_baseurl() . '/profile/' . $user['nickname']);
+//	goaway($a->get_baseurl() . '/channel/' . $user['nickname']);
 	
 }
 

@@ -45,7 +45,7 @@ function new_contact($uid,$url,$interactive = false) {
 	if($ret['network'] === NETWORK_DFRN) {
 		if($interactive) {
 			if(strlen($a->path))
-				$myaddr = bin2hex($a->get_baseurl() . '/profile/' . $a->user['nickname']);
+				$myaddr = bin2hex($a->get_baseurl() . '/channel/' . $a->user['nickname']);
 			else
 				$myaddr = bin2hex($a->user['nickname'] . '@' . $a->get_hostname());
  

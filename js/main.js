@@ -237,9 +237,8 @@
 				// start live update
 
 				if($('#live-network').length)   { src = 'network'; liveUpdate(); }
-				if($('#live-profile').length)   { src = 'profile'; liveUpdate(); }
+				if($('#live-channel').length)   { src = 'channel'; liveUpdate(); }
 				if($('#live-community').length) { src = 'community'; liveUpdate(); }
-				if($('#live-notes').length)     { src = 'notes'; liveUpdate(); }
 				if($('#live-display').length) {
 					if(liking) {
 						liking = 0;

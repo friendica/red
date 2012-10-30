@@ -70,8 +70,8 @@ EOT;
 		$nav['logout'] = Array('logout',t('Logout'), "", t('End this session'));
 		
 		// user menu
-		$nav['usermenu'][] = Array('profile/' . $channel['channel_address'], t('Status'), "", t('Your posts and conversations'));
-		$nav['usermenu'][] = Array('profile/' . $channel['channel_address']. '?tab=profile', t('Profile'), "", t('Your profile page'));
+		$nav['usermenu'][] = Array('channel/' . $channel['channel_address'], t('Status'), "", t('Your posts and conversations'));
+		$nav['usermenu'][] = Array('profile/' . $channel['channel_address'], t('Profile'), "", t('Your profile page'));
 
 		$nav['usermenu'][] = Array('photos/' . $channel['channel_address'], t('Photos'), "", t('Your photos'));
 		$nav['usermenu'][] = Array('events/', t('Events'), "", t('Your events'));
@@ -134,7 +134,7 @@ EOT;
 
 		$nav['network'] = array('network', t('Network'), "", t('Conversations from your friends'));
 
-		$nav['home'] = array('profile/' . $channel['channel_address'], t('Home'), "", t('Your posts and conversations'));
+		$nav['home'] = array('channel/' . $channel['channel_address'], t('Home'), "", t('Your posts and conversations'));
 
 		if($channel['channel_pageflags'] == PAGE_NORMAL) {
 			$nav['introductions'] = array('notifications/intros',	t('Introductions'), "", t('Friend Requests'));

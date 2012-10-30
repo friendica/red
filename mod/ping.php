@@ -170,7 +170,7 @@ function ping_init(&$a) {
 
 	$t4 = dba_timer();
 
-	$myurl = $a->get_baseurl() . '/profile/' . $a->user['nickname'] ;
+	$myurl = $a->get_baseurl() . '/channel/' . $a->user['nickname'] ;
 	$mails = q("SELECT *,  COUNT(*) AS `total` FROM `mail`
 		WHERE `uid` = %d AND `seen` = 0 AND `from-url` != '%s' ",
 		intval(local_user()),

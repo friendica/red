@@ -83,7 +83,7 @@ function collecturls($message) {
 	$urls = array();
 	foreach ($result as $treffer) {
 		// A list of some links that should be ignored
-		$list = array("/user/", "/tag/", "/group/", "/profile/", "/search?search=", "/search?tag=", "mailto:", "/u/", "/node/",
+		$list = array("/user/", "/tag/", "/group/", "/profile/", "/channel/", "/search?search=", "/search?tag=", "mailto:", "/u/", "/node/",
 				"//facebook.com/profile.php?id=", "//plus.google.com/");
 		foreach ($list as $listitem)
 			if (strpos($treffer[1], $listitem) !== false)

@@ -54,7 +54,7 @@ function gprobe_run($argv, $argc){
 		);
 	}
 	if(count($r))
-		poco_load(0,0,$r[0]['id'], str_replace('/profile/','/poco/',$r[0]['url']));
+		poco_load(0,0,$r[0]['id'], str_replace('/channel/','/poco/',$r[0]['url']));
 		
 	return;
 }

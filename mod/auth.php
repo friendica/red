@@ -76,7 +76,7 @@ function auth_init(&$a) {
 				}
 			}
 			$profile = $r[0]['nickname'];
-			goaway((strlen($destination_url)) ? $destination_url : $a->get_baseurl() . '/profile/' . $profile);
+			goaway((strlen($destination_url)) ? $destination_url : $a->get_baseurl() . '/channel/' . $profile);
 		}
 		goaway(z_root());
 
@@ -451,14 +451,14 @@ function auth_content(&$a) {
 
 		switch($destination_url) {
 			case 'profile':
-				$dest = $a->get_baseurl() . '/profile/' . $profile . '?tab=profile';
+				$dest = $a->get_baseurl() . '/profile/' . $profile ;
 				break;
 			case 'photos':
 				$dest = $a->get_baseurl() . '/photos/' . $profile;
 				break;
 			case 'status':
 			case '':
-				$dest = $a->get_baseurl() . '/profile/' . $profile;
+				$dest = $a->get_baseurl() . '/channel/' . $profile;
 				break;		
 			default:
 				$dest = $destination_url;

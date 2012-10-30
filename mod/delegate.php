@@ -23,7 +23,7 @@ function delegate_content(&$a) {
 		if(count($r)) {
 			$r = q("select id from contact where uid = %d and nurl = '%s' limit 1",
 				intval(local_user()),
-				dbesc(normalise_link($a->get_baseurl() . '/profile/' . $r[0]['nickname']))
+				dbesc(normalise_link($a->get_baseurl() . '/channel/' . $r[0]['nickname']))
 			);
 			if(count($r)) {
 				q("insert into manage ( uid, mid ) values ( %d , %d ) ",

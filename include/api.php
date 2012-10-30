@@ -1011,10 +1011,10 @@
 
 		//$include_entities = (x($_REQUEST,'include_entities')?$_REQUEST['include_entities']:false);
 
-		$myurl = $a->get_baseurl() . '/profile/'. $a->user['nickname'];
+		$myurl = $a->get_baseurl() . '/channel/'. $a->user['nickname'];
 		$myurl = substr($myurl,strpos($myurl,'://')+3);
 		$myurl = str_replace(array('www.','.'),array('','\\.'),$myurl);
-		$diasp_url = str_replace('/profile/','/u/',$myurl);
+		$diasp_url = str_replace('/channel/','/u/',$myurl);
 
 		if (get_config('system','use_fulltext_engine'))
                         $sql_extra .= sprintf(" AND `item`.`parent` IN (SELECT distinct(`parent`) from item where (MATCH(`author-link`) AGAINST ('".'"%s"'."' in boolean mode) or MATCH(`tag`) AGAINST ('".'"%s"'."' in boolean mode) or MATCH(tag) AGAINST ('".'"%s"'."' in boolean mode))) ",
@@ -1623,7 +1623,7 @@
 		
 		$start = $page*$count;
 		
-		$profile_url = $a->get_baseurl() . '/profile/' . $a->user['nickname'];
+		$profile_url = $a->get_baseurl() . '/channel/' . $a->user['nickname'];
 		if ($box=="sentbox") {
 			$sql_extra = "`from-url`='".dbesc( $profile_url )."'";
 		}

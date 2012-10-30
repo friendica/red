@@ -173,7 +173,7 @@ function onepoll_run($argv, $argc){
 
 		if(((float) $res->dfrn_version > 2.21) && ($contact['poco'] == '')) {
 			q("update contact set poco = '%s' where id = %d limit 1",
-				dbesc(str_replace('/profile/','/poco/', $contact['url'])),
+				dbesc(str_replace('/channel/','/poco/', $contact['url'])),
 				intval($contact['id'])
 			);
 		}

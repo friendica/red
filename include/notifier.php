@@ -335,7 +335,7 @@ function notifier_run($argv, $argc){
 
 	$atom .= replace_macros($feed_template, array(
 			'$version'      => xmlify(FRIENDICA_VERSION),
-			'$feed_id'      => xmlify($a->get_baseurl() . '/profile/' . $owner['nickname'] ),
+			'$feed_id'      => xmlify($a->get_baseurl() . '/channel/' . $owner['nickname'] ),
 			'$feed_title'   => xmlify($owner['name']),
 			'$feed_updated' => xmlify(datetime_convert('UTC', 'UTC', $updated . '+00:00' , ATOM_TIME)) ,
 			'$hub'          => $hubxml,

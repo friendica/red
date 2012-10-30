@@ -7,9 +7,9 @@
  */
 
 
-require_once('mod/profile.php');
+require_once('mod/channel.php');
 
-function update_profile_content(&$a) {
+function update_channel_content(&$a) {
 
 	$profile_uid = intval($_GET['p']);
 
@@ -32,7 +32,7 @@ function update_profile_content(&$a) {
 	 *
 	 */
 
-	$text = profile_content($a,$profile_uid);
+	$text = channel_content($a,$profile_uid);
 
 	$pattern = "/<img([^>]*) src=\"([^\"]*)\"/";
 	$replace = "<img\${1} dst=\"\${2}\"";

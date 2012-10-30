@@ -528,7 +528,7 @@ if(! class_exists('App')) {
 			// unix style "homedir"
 
 			if(substr($this->cmd,0,1) === '~')
-				$this->cmd = 'profile/' . substr($this->cmd,1);
+				$this->cmd = 'channel/' . substr($this->cmd,1);
 
 
 
@@ -1772,27 +1772,28 @@ if(! function_exists('profile_tabs')){
 		if(x($_GET,'tab'))
 			$tab = notags(trim($_GET['tab']));
 	
-		$url = $a->get_baseurl() . '/profile/' . $nickname;
+		$url = $a->get_baseurl() . '/channel/' . $nickname;
+		$pr  = $a->get_baseurl() . '/profile/' . $nickname;
 
 		$tabs = array(
 			array(
 				'label'=>t('Status'),
 				'url' => $url,
-				'sel' => ((!isset($tab)&&$a->argv[0]=='profile')?'active':''),
+				'sel' => ((argv(0)=='channel')?'active':''),
 				'title' => t('Status Messages and Posts'),
 				'id' => 'status-tab',
 			),
 			array(
 				'label' => t('Profile'),
-				'url' 	=> $url.'?tab=profile',
-				'sel'	=> ((isset($tab) && $tab=='profile')?'active':''),
+				'url' 	=> $pr,
+				'sel'	=> ((argv(0)=='profile')?'active':''),
 				'title' => t('Profile Details'),
 				'id' => 'profile-tab',
 			),
 			array(
 				'label' => t('Photos'),
 				'url'	=> $a->get_baseurl() . '/photos/' . $nickname,
-				'sel'	=> ((!isset($tab)&&$a->argv[0]=='photos')?'active':''),
+				'sel'	=> ((argv(0)=='photos')?'active':''),
 				'title' => t('Photo Albums'),
 				'id' => 'photo-tab',
 			),
@@ -1802,7 +1803,7 @@ if(! function_exists('profile_tabs')){
 			$tabs[] = array(
 				'label' => t('Events'),
 				'url'	=> $a->get_baseurl() . '/events',
-				'sel' 	=>((!isset($tab)&&$a->argv[0]=='events')?'active':''),
+				'sel' 	=>((argv(0)=='events')?'active':''),
 				'title' => t('Events and Calendar'),
 				'id' => 'events-tab',
 			);
@@ -1836,7 +1837,7 @@ function zrl_init(&$a) {
 function zrl($s,$force = false) {
 	if(! strlen($s))
 		return $s;
-	if((! strpos($s,'/profile/')) && (! $force))
+	if((! strpos($s,'/channel/')) && (! $force))
 		return $s;
 	if($force && substr($s,-1,1) !== '/')
 		$s = $s . '/';

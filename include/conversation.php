@@ -397,7 +397,7 @@ function prepare_threads_body($a, $items, $cmnt_tpl, $page_writeable, $mode, $pr
 //		$item_writeable = (($item['writable'] || $item['self']) ? true : false);
 		$item_writeable = ((local_user() && $channel['channel_hash'] === $item['owner_xchan']) ? true : false);
 
-		if($visiting && $mode == 'profile')
+		if($visiting && $mode == 'channel')
 			$item_writeable = true;
 
 		$show_comment_box = ((($page_writeable) && ($item_writeable)) ? true : false);
@@ -466,7 +466,7 @@ function prepare_threads_body($a, $items, $cmnt_tpl, $page_writeable, $mode, $pr
 		$dislike = ((x($dlike,$item['uri'])) ? format_like($dlike[$item['uri']],$dlike[$item['uri'] . '-l'],'dislike',$item['uri']) : '');
 
 		if($toplevelpost) {
-			if((! $item['self']) && ($mode !== 'profile')) {
+			if((! $item['self']) && ($mode !== 'channel')) {
 				if($item['wall']) {
 
 					// On the network page, I am the owner. On the display page it will be the profile owner.
@@ -569,7 +569,7 @@ function prepare_threads_body($a, $items, $cmnt_tpl, $page_writeable, $mode, $pr
 					'$return_path' => '',
 					'$threaded' => $comments_threaded,
 					'$jsreload' => (($mode === 'display') ? $_SESSION['return_url'] : ''),
-					'$type' => (($mode === 'profile') ? 'wall-comment' : 'net-comment'),
+					'$type' => (($mode === 'channel') ? 'wall-comment' : 'net-comment'),
 					'$id' => $item['item_id'],
 					'$parent' => $item['item_id'],
 					'$qcomment' => $qcomment,
@@ -747,7 +747,7 @@ function conversation(&$a, $items, $mode, $update, $page_mode = 'traditional') {
 
 	}
 
-	elseif($mode === 'profile') {
+	elseif($mode === 'channel') {
 		$profile_owner = $a->profile['profile_uid'];
 		$page_writeable = can_write_wall($a,$profile_owner);
 
@@ -757,7 +757,7 @@ function conversation(&$a, $items, $mode, $update, $page_mode = 'traditional') {
                 // This is ugly, but we can't pass the profile_uid through the session to the ajax updater,
                 // because browser prefetching might change it on us. We have to deliver it with the page.
 
-                $live_update_div = '<div id="live-profile"></div>' . "\r\n"
+                $live_update_div = '<div id="live-channel"></div>' . "\r\n"
                     . "<script> var profile_uid = " . $a->profile['profile_uid']
                     . "; var netargs = '?f='; var profile_page = " . $a->pager['page'] . "; </script>\r\n";
             }
@@ -1156,7 +1156,7 @@ old code
 
 				$osparkle = '';
 
-				if(($toplevelpost) && (! $item['self']) && ($mode !== 'profile')) {
+				if(($toplevelpost) && (! $item['self']) && ($mode !== 'channel')) {
 
 					if($item['wall']) {
 
@@ -1227,7 +1227,7 @@ old code
 						$comment = replace_macros($cmnt_tpl,array(
 							'$return_path' => '', 
 							'$jsreload' => (($mode === 'display') ? $_SESSION['return_url'] : ''),
-							'$type' => (($mode === 'profile') ? 'wall-comment' : 'net-comment'),
+							'$type' => (($mode === 'channel') ? 'wall-comment' : 'net-comment'),
 							'$id' => $item['item_id'],
 							'$parent' => $item['parent'],
 							'$qcomment' => $qcomment,

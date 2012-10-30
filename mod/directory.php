@@ -84,7 +84,7 @@ function directory_content(&$a) {
 		foreach($r as $rr) {
 
 
-			$profile_link = $a->get_baseurl() . '/profile/' . ((strlen($rr['nickname'])) ? $rr['nickname'] : $rr['profile_uid']);
+			$profile_link = $a->get_baseurl() . '/channel/' . $rr['nickname'];
 		
 			$pdesc = (($rr['pdesc']) ? $rr['pdesc'] . '<br />' : '');
 

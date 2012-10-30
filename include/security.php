@@ -40,7 +40,7 @@ function authenticate_success($user_record, $login_initial = false, $interactive
 		$_SESSION['theme'] = $user_record['theme'];
 		$_SESSION['authenticated'] = 1;
 		$_SESSION['page_flags'] = $user_record['page-flags'];
-		$_SESSION['my_url'] = $a->get_baseurl() . '/profile/' . $user_record['nickname'];
+		$_SESSION['my_url'] = $a->get_baseurl() . '/channel/' . $user_record['nickname'];
 		$_SESSION['my_address'] = $user_record['nickname'] . '@' . substr($a->get_baseurl(),strpos($a->get_baseurl(),'://')+3);
 
 		$a->user = $user_record;

@@ -27,7 +27,7 @@ function msearch_post(&$a) {
 		foreach($r as $rr)
 			$results[] = array(
 				'name' => $rr['name'], 
-				'url' => $a->get_baseurl() . '/profile/' . $rr['nickname'], 
+				'url' => $a->get_baseurl() . '/channel/' . $rr['nickname'], 
 				'photo' => $a->get_baseurl() . '/photo/avatar/' . $rr['uid'],
 				'tags' => str_replace(array(',','  '),array(' ',' '),$rr['pub_keywords'])
 			);

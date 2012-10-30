@@ -187,7 +187,7 @@ function get_feed_for(&$a, $dfrn_id, $owner_nick, $last_update, $direction = 0) 
 
 	$atom .= replace_macros($feed_template, array(
 		'$version'      => xmlify(FRIENDICA_VERSION),
-		'$feed_id'      => xmlify($a->get_baseurl() . '/profile/' . $owner_nick),
+		'$feed_id'      => xmlify($a->get_baseurl() . '/channel/' . $owner_nick),
 		'$feed_title'   => xmlify($owner['name']),
 		'$feed_updated' => xmlify(datetime_convert('UTC', 'UTC', 'now' , ATOM_TIME)) ,
 		'$hub'          => $hubxml,
@@ -1218,7 +1218,7 @@ function tag_deliver($uid,$item_id) {
 
 	$item = $i[0];
 
-	$link = normalise_link($a->get_baseurl() . '/profile/' . $u[0]['nickname']);
+	$link = normalise_link($a->get_baseurl() . '/channel/' . $u[0]['nickname']);
 
 	$body = preg_replace("/\[share\](.*?)\[\/share\]/ism", '', $item['body']);
 	
@@ -1332,7 +1332,7 @@ function tgroup_check($uid,$item) {
 	$prvgroup = (($u[0]['page-flags'] == PAGE_PRVGROUP) ? true : false);
 
 
-	$link = normalise_link($a->get_baseurl() . '/profile/' . $u[0]['nickname']);
+	$link = normalise_link($a->get_baseurl() . '/channel/' . $u[0]['nickname']);
 
 	// Diaspora uses their own hardwired link URL in @-tags
 	// instead of the one we supply with webfinger
@@ -2940,7 +2940,7 @@ function local_delivery($importer,$data) {
 					);
 
 					if(count($myconv)) {
-						$importer_url = $a->get_baseurl() . '/profile/' . $importer['nickname'];
+						$importer_url = $a->get_baseurl() . '/channel/' . $importer['nickname'];
 
 						// first make sure this isn't our own post coming back to us from a wall-to-wall event
 						if(! link_compare($datarray['author-link'],$importer_url)) {
@@ -3090,7 +3090,7 @@ function local_delivery($importer,$data) {
 								break;
 			            }
         			}
-					if($Blink && link_compare($Blink,$a->get_baseurl() . '/profile/' . $importer['nickname'])) {
+					if($Blink && link_compare($Blink,$a->get_baseurl() . '/channel/' . $importer['nickname'])) {
 
 						// send a notification
 						require_once('include/enotify.php');

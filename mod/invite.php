@@ -114,7 +114,7 @@ function invite_content(&$a) {
 		'$default_message' => t('You are cordially invited to join me and other close friends on Friendica - and help us to create a better social web.') . "\r\n" . "\r\n"
 			. $linktxt
 			. "\r\n" . "\r\n" . (($invonly) ? t('You will need to supply this invitation code: $invite_code') . "\r\n" . "\r\n" : '') .t('Once you have registered, please connect with me via my profile page at:') 
-			. "\r\n" . "\r\n" . $a->get_baseurl() . '/profile/' . $a->user['nickname']
+			. "\r\n" . "\r\n" . $a->get_baseurl() . '/channel/' . $a->user['nickname']
 			. "\r\n" . "\r\n" . t('For more information about the Friendica project and why we feel it is important, please visit http://friendica.com') . "\r\n" . "\r\n"  ,
 		'$submit' => t('Submit')
 	));
