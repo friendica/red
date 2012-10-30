@@ -188,7 +188,7 @@ define ( 'PERMS_SPECIFIC'   , 0x0080 );
 define ( 'ABOOK_FLAG_BLOCKED'    , 0x0001);
 define ( 'ABOOK_FLAG_IGNORED'    , 0x0002);
 define ( 'ABOOK_FLAG_HIDDEN'     , 0x0004);
-
+define ( 'ABOOK_FLAG_SELF'       , 0x0080);
 
 
 /**

@@ -19,35 +19,45 @@ function settings_init(&$a) {
 	$tabs = array(
 		array(
 			'label'	=> t('Account settings'),
-			'url' 	=> $a->get_baseurl(true).'/settings',
-			'selected'	=> (($a->argc == 1)?'active':''),
-		),	
+			'url' 	=> $a->get_baseurl(true).'/settings/account',
+			'selected'	=> ((argv(1) === 'account') ? 'active' : ''),
+		),
+	
+		array(
+			'label'	=> t('Channel settings'),
+			'url' 	=> $a->get_baseurl(true).'/settings/channel',
+			'selected'	=> ((argv(1) === 'channel') ? 'active' : ''),
+		),
+	
 		array(
 			'label'	=> t('Display settings'),
 			'url' 	=> $a->get_baseurl(true).'/settings/display',
-			'selected'	=> (($a->argc > 1) && ($a->argv[1] === 'display')?'active':''),
+			'selected'	=> ((argv(1) === 'display') ? 'active' : ''),
 		),	
 		
 		array(
 			'label'	=> t('Connector settings'),
 			'url' 	=> $a->get_baseurl(true).'/settings/connectors',
-			'selected'	=> (($a->argc > 1) && ($a->argv[1] === 'connectors')?'active':''),
+			'selected'	=> ((argv(1) === 'connectors') ? 'active' : ''),
 		),
+
 		array(
 			'label'	=> t('Plugin settings'),
 			'url' 	=> $a->get_baseurl(true).'/settings/addon',
-			'selected'	=> (($a->argc > 1) && ($a->argv[1] === 'addon')?'active':''),
+			'selected'	=> ((argv(1) === 'addon') ? 'active' : ''),
 		),
 		array(
 			'label' => t('Connected apps'),
 			'url' => $a->get_baseurl(true) . '/settings/oauth',
-			'selected' => (($a->argc > 1) && ($a->argv[1] === 'oauth')?'active':''),
+			'selected' => ((argv(1) === 'oauth') ? 'active' : ''),
 		),
+
 		array(
 			'label' => t('Export personal data'),
 			'url' => $a->get_baseurl(true) . '/uexport',
 			'selected' => ''
 		),
+
 		array(
 			'label' => t('Remove account'),
 			'url' => $a->get_baseurl(true) . '/removeme',
@@ -73,6 +83,11 @@ function settings_post(&$a) {
 	if(x($_SESSION,'submanage') && intval($_SESSION['submanage']))
 		return;
 
+	if(argc() == 1) {
+		$a->argc = 2;
+		$a->argv[] = 'channel';
+	}
+
 	if(count($a->user) && x($a->user,'uid') && $a->user['uid'] != local_user()) {
 		notice( t('Permission denied.') . EOL);
 		return;
@@ -80,7 +95,7 @@ function settings_post(&$a) {
 
 	$old_page_flags = $a->user['page-flags'];
 
-	if(($a->argc > 1) && ($a->argv[1] === 'oauth') && x($_POST,'remove')){
+	if((argc() > 1) && (argv(1) === 'oauth') && x($_POST,'remove')){
 		check_form_security_token_redirectOnErr('/settings/oauth', 'settings_oauth');
 		
 		$key = $_POST['remove'];
@@ -91,7 +106,7 @@ function settings_post(&$a) {
 		return;			
 	}
 
-	if(($a->argc > 2) && ($a->argv[1] === 'oauth')  && ($a->argv[2] === 'edit'||($a->argv[2] === 'add')) && x($_POST,'submit')) {
+	if((argc() > 2) && (argv(1) === 'oauth')  && (argv(2) === 'edit'||(argv(2) === 'add')) && x($_POST,'submit')) {
 		
 		check_form_security_token_redirectOnErr('/settings/oauth', 'settings_oauth');
 		
@@ -136,14 +151,14 @@ function settings_post(&$a) {
 		return;
 	}
 
-	if(($a->argc > 1) && ($a->argv[1] == 'addon')) {
+	if((argc() > 1) && (argv(1) == 'addon')) {
 		check_form_security_token_redirectOnErr('/settings/addon', 'settings_addon');
 		
 		call_hooks('plugin_settings_post', $_POST);
 		return;
 	}
 
-	if(($a->argc > 1) && ($a->argv[1] == 'connectors')) {
+	if((argc() > 1) && (argv(1) == 'connectors')) {
 		
 		check_form_security_token_redirectOnErr('/settings/connectors', 'settings_connectors');
 		
@@ -151,7 +166,7 @@ function settings_post(&$a) {
 		return;
 	}
 	
-	if(($a->argc > 1) && ($a->argv[1] == 'display')) {
+	if((argc() > 1) && (argv(1) == 'display')) {
 		
 		check_form_security_token_redirectOnErr('/settings/display', 'settings_display');
 
@@ -417,21 +432,27 @@ function settings_content(&$a) {
 	$o = '';
 	nav_set_selected('settings');
 
+	if(argc() == 1) {
+		$a->argc = 2;
+		$a->argv[] = 'channel';
+	}
+
+
 	if(! local_user()) {
 		notice( t('Permission denied.') . EOL );
 		return;
 	}
 
-	if(x($_SESSION,'submanage') && intval($_SESSION['submanage'])) {
-		notice( t('Permission denied.') . EOL );
-		return;
-	}
+//	if(x($_SESSION,'submanage') && intval($_SESSION['submanage'])) {
+//		notice( t('Permission denied.') . EOL );
+//		return;
+//	}
 	
 
 		
-	if(($a->argc > 1) && ($a->argv[1] === 'oauth')) {
+	if((argc() > 1) && (argv(1) === 'oauth')) {
 		
-		if(($a->argc > 2) && ($a->argv[2] === 'add')) {
+		if((argc() > 2) && (argv(2) === 'add')) {
 			$tpl = get_markup_template("settings_oauth_edit.tpl");
 			$o .= replace_macros($tpl, array(
 				'$form_security_token' => get_form_security_token("settings_oauth"),
@@ -447,9 +468,9 @@ function settings_content(&$a) {
 			return $o;
 		}
 		
-		if(($a->argc > 3) && ($a->argv[2] === 'edit')) {
+		if((argc() > 3) && (argv(2) === 'edit')) {
 			$r = q("SELECT * FROM clients WHERE client_id='%s' AND uid=%d",
-					dbesc($a->argv[3]),
+					dbesc(argv(3)),
 					local_user());
 			
 			if (!count($r)){
@@ -473,11 +494,11 @@ function settings_content(&$a) {
 			return $o;
 		}
 		
-		if(($a->argc > 3) && ($a->argv[2] === 'delete')) {
+		if((argc() > 3) && (argv(2) === 'delete')) {
 			check_form_security_token_redirectOnErr('/settings/oauth', 'settings_oauth', 't');
 		
 			$r = q("DELETE FROM clients WHERE client_id='%s' AND uid=%d",
-					dbesc($a->argv[3]),
+					dbesc(argv(3)),
 					local_user());
 			goaway($a->get_baseurl(true)."/settings/oauth/");
 			return;			
@@ -508,7 +529,7 @@ function settings_content(&$a) {
 		return $o;
 		
 	}
-	if(($a->argc > 1) && ($a->argv[1] === 'addon')) {
+	if((argc() > 1) && (argv(1) === 'addon')) {
 		$settings_addons = "";
 		
 		$r = q("SELECT * FROM `hook` WHERE `hook` = 'plugin_settings' ");
@@ -527,7 +548,7 @@ function settings_content(&$a) {
 		return $o;
 	}
 
-	if(($a->argc > 1) && ($a->argv[1] === 'connectors')) {
+	if((argc() > 1) && (argv(1) === 'connectors')) {
 
 		$settings_connectors = "";
 		
@@ -551,7 +572,7 @@ function settings_content(&$a) {
 	/*
 	 * DISPLAY SETTINGS
 	 */
-	if(($a->argc > 1) && ($a->argv[1] === 'display')) {
+	if((argc() > 1) && (argv(1) === 'display')) {
 		$default_theme = get_config('system','theme');
 		if(! $default_theme)
 			$default_theme = 'default';
@@ -632,246 +653,247 @@ function settings_content(&$a) {
 	 * ACCOUNT SETTINGS
 	 */
 
-	require_once('include/acl_selectors.php');
 
-	$p = q("SELECT * FROM `profile` WHERE `is_default` = 1 AND `uid` = %d LIMIT 1",
-		intval(local_user())
-	);
-	if(count($p))
-		$profile = $p[0];
 
-	load_pconfig(local_user(),'expire');
 
-	$channel = $a->get_channel();
 
-	$username   = $channel['channel_name'];
-	$email      = $a->account['account_email'];
-	$nickname   = $channel['channel_address'];
-	$timezone   = $channel['channel_timezone'];
-	$notify     = $channel['channel_notifyflags'];
-	$defloc     = $channel['channel_location'];
+	if(argv(1) === 'channel') {
 
-	$maxreq     = $channel['channel_max_friend_req'];
-	$expire     = get_pconfig(local_user(),'expire','content_expire_days');
+		require_once('include/acl_selectors.php');
 
-	$blockwall  = $a->user['blockwall'];
-	$blocktags  = $a->user['blocktags'];
-	$unkmail    = $a->user['unkmail'];
-	$cntunkmail = $a->user['cntunkmail'];
+		$p = q("SELECT * FROM `profile` WHERE `is_default` = 1 AND `uid` = %d LIMIT 1",
+			intval(local_user())
+		);
+		if(count($p))
+			$profile = $p[0];
 
-	$expire_items = get_pconfig(local_user(), 'expire','items');
-	$expire_items = (($expire_items===false)? '1' : $expire_items); // default if not set: 1
+		load_pconfig(local_user(),'expire');
+
+		$channel = $a->get_channel();
+
+		$username   = $channel['channel_name'];
+		$email      = $a->account['account_email'];
+		$nickname   = $channel['channel_address'];
+		$timezone   = $channel['channel_timezone'];
+		$notify     = $channel['channel_notifyflags'];
+		$defloc     = $channel['channel_location'];
+
+		$maxreq     = $channel['channel_max_friend_req'];
+		$expire     = get_pconfig(local_user(),'expire','content_expire_days');
+
+		$blockwall  = $a->user['blockwall'];
+		$blocktags  = $a->user['blocktags'];
+		$unkmail    = $a->user['unkmail'];
+		$cntunkmail = $a->user['cntunkmail'];
+
+		$expire_items = get_pconfig(local_user(), 'expire','items');
+		$expire_items = (($expire_items===false)? '1' : $expire_items); // default if not set: 1
 	
-	$expire_notes = get_pconfig(local_user(), 'expire','notes');
-	$expire_notes = (($expire_notes===false)? '1' : $expire_notes); // default if not set: 1
+		$expire_notes = get_pconfig(local_user(), 'expire','notes');
+		$expire_notes = (($expire_notes===false)? '1' : $expire_notes); // default if not set: 1
 
-	$expire_starred = get_pconfig(local_user(), 'expire','starred');
-	$expire_starred = (($expire_starred===false)? '1' : $expire_starred); // default if not set: 1
+		$expire_starred = get_pconfig(local_user(), 'expire','starred');
+		$expire_starred = (($expire_starred===false)? '1' : $expire_starred); // default if not set: 1
 	
-	$expire_photos = get_pconfig(local_user(), 'expire','photos');
-	$expire_photos = (($expire_photos===false)? '0' : $expire_photos); // default if not set: 0
+		$expire_photos = get_pconfig(local_user(), 'expire','photos');
+		$expire_photos = (($expire_photos===false)? '0' : $expire_photos); // default if not set: 0
 
-	$expire_network_only = get_pconfig(local_user(), 'expire','network_only');
-	$expire_network_only = (($expire_network_only===false)? '0' : $expire_network_only); // default if not set: 0
+		$expire_network_only = get_pconfig(local_user(), 'expire','network_only');
+		$expire_network_only = (($expire_network_only===false)? '0' : $expire_network_only); // default if not set: 0
 
 
-	$suggestme = get_pconfig(local_user(), 'system','suggestme');
-	$suggestme = (($suggestme===false)? '0': $suggestme); // default if not set: 0
+		$suggestme = get_pconfig(local_user(), 'system','suggestme');
+		$suggestme = (($suggestme===false)? '0': $suggestme); // default if not set: 0
 
-	$post_newfriend = get_pconfig(local_user(), 'system','post_newfriend');
-	$post_newfriend = (($post_newfriend===false)? '0': $post_newfriend); // default if not set: 0
+		$post_newfriend = get_pconfig(local_user(), 'system','post_newfriend');
+		$post_newfriend = (($post_newfriend===false)? '0': $post_newfriend); // default if not set: 0
 
-	$post_joingroup = get_pconfig(local_user(), 'system','post_joingroup');
-	$post_joingroup = (($post_joingroup===false)? '0': $post_joingroup); // default if not set: 0
+		$post_joingroup = get_pconfig(local_user(), 'system','post_joingroup');
+		$post_joingroup = (($post_joingroup===false)? '0': $post_joingroup); // default if not set: 0
 
-	$post_profilechange = get_pconfig(local_user(), 'system','post_profilechange');
-	$post_profilechange = (($post_profilechange===false)? '0': $post_profilechange); // default if not set: 0
+		$post_profilechange = get_pconfig(local_user(), 'system','post_profilechange');
+		$post_profilechange = (($post_profilechange===false)? '0': $post_profilechange); // default if not set: 0
 
 	
-	$timezone = date_default_timezone_get();
+		$timezone = date_default_timezone_get();
 
 
 
-	$pageset_tpl = get_markup_template('pagetypes.tpl');
-	$pagetype = replace_macros($pageset_tpl,array(
-		'$page_normal' 	=> array('page-flags', t('Normal Account Page'), PAGE_NORMAL, 
-									t('This account is a normal personal profile'), 
-									($a->user['page-flags'] == PAGE_NORMAL)),
+		$pageset_tpl = get_markup_template('pagetypes.tpl');
+		$pagetype = replace_macros($pageset_tpl,array(
+			'$page_normal' 	=> array('page-flags', t('Normal Account Page'), PAGE_NORMAL, 
+										t('This account is a normal personal profile'), 
+										($a->user['page-flags'] == PAGE_NORMAL)),
 								
-		'$page_soapbox' 	=> array('page-flags', t('Soapbox Page'), PAGE_SOAPBOX, 
-									t('Automatically approve all connection/friend requests as read-only fans'), 
-									($a->user['page-flags'] == PAGE_SOAPBOX)),
+			'$page_soapbox' 	=> array('page-flags', t('Soapbox Page'), PAGE_SOAPBOX, 
+										t('Automatically approve all connection/friend requests as read-only fans'), 
+										($a->user['page-flags'] == PAGE_SOAPBOX)),
 									
-		'$page_community'	=> array('page-flags', t('Community Forum/Celebrity Account'), PAGE_COMMUNITY, 
-									t('Automatically approve all connection/friend requests as read-write fans'), 
-									($a->user['page-flags'] == PAGE_COMMUNITY)),
+			'$page_community'	=> array('page-flags', t('Community Forum/Celebrity Account'), PAGE_COMMUNITY, 
+										t('Automatically approve all connection/friend requests as read-write fans'), 
+										($a->user['page-flags'] == PAGE_COMMUNITY)),
 									
-		'$page_freelove' 	=> array('page-flags', t('Automatic Friend Page'), PAGE_FREELOVE, 
-									t('Automatically approve all connection/friend requests as friends'), 
-									($a->user['page-flags'] == PAGE_FREELOVE)),
+			'$page_freelove' 	=> array('page-flags', t('Automatic Friend Page'), PAGE_FREELOVE, 
+										t('Automatically approve all connection/friend requests as friends'), 
+										($a->user['page-flags'] == PAGE_FREELOVE)),
 
-		'$page_prvgroup' 	=> array('page-flags', t('Private Forum [Experimental]'), PAGE_PRVGROUP, 
-									t('Private forum - approved members only'), 
-									($a->user['page-flags'] == PAGE_PRVGROUP)),
-
-
-	));
+			'$page_prvgroup' 	=> array('page-flags', t('Private Forum [Experimental]'), PAGE_PRVGROUP, 
+										t('Private forum - approved members only'), 
+										($a->user['page-flags'] == PAGE_PRVGROUP)),
 
 
-	$opt_tpl = get_markup_template("field_yesno.tpl");
-	if(get_config('system','publish_all')) {
-		$profile_in_dir = '<input type="hidden" name="profile_in_directory" value="1" />';
-	}
-	else {
-		$profile_in_dir = replace_macros($opt_tpl,array(
-			'$field' 	=> array('profile_in_directory', t('Publish your default profile in your local site directory?'), $profile['publish'], '', array(t('No'),t('Yes'))),
 		));
-	}
-
-	$profile_in_net_dir = '';
 
 
-	$hide_friends = replace_macros($opt_tpl,array(
-			'$field' 	=> array('hide_friends', t('Hide your contact/friend list from viewers of your default profile?'), $profile['hide_friends'], '', array(t('No'),t('Yes'))),
-	));
+		$opt_tpl = get_markup_template("field_yesno.tpl");
+		if(get_config('system','publish_all')) {
+			$profile_in_dir = '<input type="hidden" name="profile_in_directory" value="1" />';
+		}
+		else {
+			$profile_in_dir = replace_macros($opt_tpl,array(
+				'$field' 	=> array('profile_in_directory', t('Publish your default profile in your local site directory?'), $profile['publish'], '', array(t('No'),t('Yes'))),
+			));
+		}
 
-	$hide_wall = replace_macros($opt_tpl,array(
-			'$field' 	=> array('hidewall',  t('Hide your profile details from unknown viewers?'), $a->user['hidewall'], '', array(t('No'),t('Yes'))),
+		$profile_in_net_dir = '';
 
-	));
 
-	$blockwall = replace_macros($opt_tpl,array(
-			'$field' 	=> array('blockwall',  t('Allow friends to post to your profile page?'), (intval($a->user['blockwall']) ? '0' : '1'), '', array(t('No'),t('Yes'))),
+		$hide_friends = replace_macros($opt_tpl,array(
+				'$field' 	=> array('hide_friends', t('Hide your contact/friend list from viewers of your default profile?'), $profile['hide_friends'], '', array(t('No'),t('Yes'))),
+		));
 
-	));
+		$hide_wall = replace_macros($opt_tpl,array(
+				'$field' 	=> array('hidewall',  t('Hide your profile details from unknown viewers?'), $a->user['hidewall'], '', array(t('No'),t('Yes'))),
+
+		));
+
+		$blockwall = replace_macros($opt_tpl,array(
+				'$field' 	=> array('blockwall',  t('Allow friends to post to your profile page?'), (intval($a->user['blockwall']) ? '0' : '1'), '', array(t('No'),t('Yes'))),
+
+		));
  
 
-	$blocktags = replace_macros($opt_tpl,array(
-			'$field' 	=> array('blocktags',  t('Allow friends to tag your posts?'), (intval($a->user['blocktags']) ? '0' : '1'), '', array(t('No'),t('Yes'))),
+		$blocktags = replace_macros($opt_tpl,array(
+				'$field' 	=> array('blocktags',  t('Allow friends to tag your posts?'), (intval($a->user['blocktags']) ? '0' : '1'), '', array(t('No'),t('Yes'))),
 
-	));
-
-
-	$suggestme = replace_macros($opt_tpl,array(
-			'$field' 	=> array('suggestme',  t('Allow us to suggest you as a potential friend to new members?'), $suggestme, '', array(t('No'),t('Yes'))),
-
-	));
+		));
 
 
-	$unkmail = replace_macros($opt_tpl,array(
-			'$field' 	=> array('unkmail',  t('Permit unknown people to send you private mail?'), $unkmail, '', array(t('No'),t('Yes'))),
+		$suggestme = replace_macros($opt_tpl,array(
+				'$field' 	=> array('suggestme',  t('Allow us to suggest you as a potential friend to new members?'), $suggestme, '', array(t('No'),t('Yes'))),
 
-	));
-
-	$invisible = ((! $profile['publish']) ? true : false);
-
-	if($invisible)
-		info( t('Profile is <strong>not published</strong>.') . EOL );
+		));
 
 
-	$subdir = ((strlen($a->get_path())) ? '<br />' . t('or') . ' ' . $a->get_baseurl(true) . '/channel/' . $nickname : '');
+		$unkmail = replace_macros($opt_tpl,array(
+				'$field' 	=> array('unkmail',  t('Permit unknown people to send you private mail?'), $unkmail, '', array(t('No'),t('Yes'))),
 
-	$tpl_addr = get_markup_template("settings_nick_set.tpl");
+		));
 
-	$prof_addr = replace_macros($tpl_addr,array(
-		'$desc' => t('Your webbie (web-id) is'),
-		'$nickname' => $nickname,
-		'$subdir' => $subdir,
-		'$basepath' => $a->get_hostname()
-	));
+		$invisible = ((! $profile['publish']) ? true : false);
 
-	$stpl = get_markup_template('settings.tpl');
 
-	$celeb = ((($a->user['page-flags'] == PAGE_SOAPBOX) || ($a->user['page-flags'] == PAGE_COMMUNITY)) ? true : false);
+		$subdir = ((strlen($a->get_path())) ? '<br />' . t('or') . ' ' . $a->get_baseurl(true) . '/channel/' . $nickname : '');
 
-	$expire_arr = array(
-		'days' => array('expire',  t("Automatically expire posts after this many days:"), $expire, t('If empty, posts will not expire. Expired posts will be deleted')),
-		'advanced' => t('Advanced expiration settings'),
-		'label' => t('Advanced Expiration'),
-		'items' => array('expire_items',  t("Expire posts:"), $expire_items, '', array(t('No'),t('Yes'))),
-		'notes' => array('expire_notes',  t("Expire personal notes:"), $expire_notes, '', array(t('No'),t('Yes'))),
-		'starred' => array('expire_starred',  t("Expire starred posts:"), $expire_starred, '', array(t('No'),t('Yes'))),
-		'photos' => array('expire_photos',  t("Expire photos:"), $expire_photos, '', array(t('No'),t('Yes'))),		
-		'network_only' => array('expire_network_only',  t("Only expire posts by others:"), $expire_network_only, '', array(t('No'),t('Yes'))),		
-	);
+		$tpl_addr = get_markup_template("settings_nick_set.tpl");
 
-	require_once('include/group.php');
-	$group_select = mini_group_select(local_user(),$a->user['def_gid']);
+		$prof_addr = replace_macros($tpl_addr,array(
+			'$desc' => t('Your webbie (web-id) is'),
+			'$nickname' => $nickname,
+			'$subdir' => $subdir,
+			'$basepath' => $a->get_hostname()
+		));
 
-	$o .= replace_macros($stpl,array(
-		'$ptitle' 	=> t('Account Settings'),
+		$stpl = get_markup_template('settings.tpl');
 
-		'$submit' 	=> t('Submit'),
-		'$baseurl' => $a->get_baseurl(true),
-		'$uid' => local_user(),
-		'$form_security_token' => get_form_security_token("settings"),
-		'$nickname_block' => $prof_addr,
+		$celeb = ((($a->user['page-flags'] == PAGE_SOAPBOX) || ($a->user['page-flags'] == PAGE_COMMUNITY)) ? true : false);
+
+		$expire_arr = array(
+			'days' => array('expire',  t("Automatically expire posts after this many days:"), $expire, t('If empty, posts will not expire. Expired posts will be deleted')),
+			'advanced' => t('Advanced expiration settings'),
+			'label' => t('Advanced Expiration'),
+			'items' => array('expire_items',  t("Expire posts:"), $expire_items, '', array(t('No'),t('Yes'))),
+			'notes' => array('expire_notes',  t("Expire personal notes:"), $expire_notes, '', array(t('No'),t('Yes'))),
+			'starred' => array('expire_starred',  t("Expire starred posts:"), $expire_starred, '', array(t('No'),t('Yes'))),
+			'photos' => array('expire_photos',  t("Expire photos:"), $expire_photos, '', array(t('No'),t('Yes'))),		
+			'network_only' => array('expire_network_only',  t("Only expire posts by others:"), $expire_network_only, '', array(t('No'),t('Yes'))),		
+		);
+
+		require_once('include/group.php');
+		$group_select = mini_group_select(local_user(),$a->user['def_gid']);
+
+		$o .= replace_macros($stpl,array(
+			'$ptitle' 	=> t('Channel Settings'),
+
+			'$submit' 	=> t('Submit'),
+			'$baseurl' => $a->get_baseurl(true),
+			'$uid' => local_user(),
+			'$form_security_token' => get_form_security_token("settings"),
+			'$nickname_block' => $prof_addr,
 		
-		'$h_pass' 	=> t('Password Settings'),
-		'$password1'=> array('npassword', t('New Password:'), '', ''),
-		'$password2'=> array('confirm', t('Confirm:'), '', t('Leave password fields blank unless changing')),
-		'$oid_enable' => (! get_config('system','no_openid')),
-		'$openid'	=> $openid_field,
+			'$h_pass' 	=> t('Password Settings'),
+			'$password1'=> array('npassword', t('New Password:'), '', ''),
+			'$password2'=> array('confirm', t('Confirm:'), '', t('Leave password fields blank unless changing')),
 		
-		'$h_basic' 	=> t('Basic Settings'),
-		'$username' => array('username',  t('Full Name:'), $username,''),
-		'$email' 	=> array('email', t('Email Address:'), $email, ''),
-		'$timezone' => array('timezone_select' , t('Your Timezone:'), select_timezone($timezone), ''),
-		'$defloc'	=> array('defloc', t('Default Post Location:'), $defloc, ''),
-		'$allowloc' => array('allow_location', t('Use Browser Location:'), ($a->user['allow_location'] == 1), ''),
+			'$h_basic' 	=> t('Basic Settings'),
+			'$username' => array('username',  t('Full Name:'), $username,''),
+			'$email' 	=> array('email', t('Email Address:'), $email, ''),
+			'$timezone' => array('timezone_select' , t('Your Timezone:'), select_timezone($timezone), ''),
+			'$defloc'	=> array('defloc', t('Default Post Location:'), $defloc, ''),
+			'$allowloc' => array('allow_location', t('Use Browser Location:'), ($a->user['allow_location'] == 1), ''),
 		
 
-		'$h_prv' 	=> t('Security and Privacy Settings'),
+			'$h_prv' 	=> t('Security and Privacy Settings'),
 
-		'$maxreq' 	=> array('maxreq', t('Maximum Friend Requests/Day:'), $maxreq ,t("\x28to prevent spam abuse\x29")),
-		'$permissions' => t('Default Post Permissions'),
-		'$permdesc' => t("\x28click to open/close\x29"),
-		'$visibility' => $profile['net-publish'],
-		'$aclselect' => populate_acl($a->user,$celeb),
-		'$suggestme' => $suggestme,
-		'$blockwall'=> $blockwall, // array('blockwall', t('Allow friends to post to your profile page:'), !$blockwall, ''),
-		'$blocktags'=> $blocktags, // array('blocktags', t('Allow friends to tag your posts:'), !$blocktags, ''),
+			'$maxreq' 	=> array('maxreq', t('Maximum Friend Requests/Day:'), $maxreq ,t("\x28to prevent spam abuse\x29")),
+			'$permissions' => t('Default Post Permissions'),
+			'$permdesc' => t("\x28click to open/close\x29"),
+			'$visibility' => $profile['net-publish'],
+			'$aclselect' => populate_acl($a->user,$celeb),
+			'$suggestme' => $suggestme,
+			'$blockwall'=> $blockwall, // array('blockwall', t('Allow friends to post to your profile page:'), !$blockwall, ''),
+			'$blocktags'=> $blocktags, // array('blocktags', t('Allow friends to tag your posts:'), !$blocktags, ''),
 
-		'$group_select' => $group_select,
+			'$group_select' => $group_select,
 
 
-		'$expire'	=> $expire_arr,
+			'$expire'	=> $expire_arr,
 
-		'$profile_in_dir' => $profile_in_dir,
-		'$profile_in_net_dir' => $profile_in_net_dir,
-		'$hide_friends' => $hide_friends,
-		'$hide_wall' => $hide_wall,
-		'$unkmail' => $unkmail,		
-		'$cntunkmail' 	=> array('cntunkmail', t('Maximum private messages per day from unknown people:'), $cntunkmail ,t("\x28to prevent spam abuse\x29")),
+			'$profile_in_dir' => $profile_in_dir,
+			'$profile_in_net_dir' => $profile_in_net_dir,
+			'$hide_friends' => $hide_friends,
+			'$hide_wall' => $hide_wall,
+			'$unkmail' => $unkmail,		
+			'$cntunkmail' 	=> array('cntunkmail', t('Maximum private messages per day from unknown people:'), $cntunkmail ,t("\x28to prevent spam abuse\x29")),
 		
 		
-		'$h_not' 	=> t('Notification Settings'),
-		'$activity_options' => t('By default post a status message when:'),
-		'$post_newfriend' => array('post_newfriend',  t('accepting a friend request'), $post_newfriend, ''),
-		'$post_joingroup' => array('post_joingroup',  t('joining a forum/community'), $post_joingroup, ''),
-		'$post_profilechange' => array('post_profilechange',  t('making an <em>interesting</em> profile change'), $post_profilechange, ''),
-		'$lbl_not' 	=> t('Send a notification email when:'),
-		'$notify1'	=> array('notify1', t('You receive an introduction'), ($notify & NOTIFY_INTRO), NOTIFY_INTRO, ''),
-		'$notify2'	=> array('notify2', t('Your introductions are confirmed'), ($notify & NOTIFY_CONFIRM), NOTIFY_CONFIRM, ''),
-		'$notify3'	=> array('notify3', t('Someone writes on your profile wall'), ($notify & NOTIFY_WALL), NOTIFY_WALL, ''),
-		'$notify4'	=> array('notify4', t('Someone writes a followup comment'), ($notify & NOTIFY_COMMENT), NOTIFY_COMMENT, ''),
-		'$notify5'	=> array('notify5', t('You receive a private message'), ($notify & NOTIFY_MAIL), NOTIFY_MAIL, ''),
-		'$notify6'  => array('notify6', t('You receive a friend suggestion'), ($notify & NOTIFY_SUGGEST), NOTIFY_SUGGEST, ''),		
-		'$notify7'  => array('notify7', t('You are tagged in a post'), ($notify & NOTIFY_TAGSELF), NOTIFY_TAGSELF, ''),		
-		'$notify8'  => array('notify8', t('You are poked/prodded/etc. in a post'), ($notify & NOTIFY_POKE), NOTIFY_POKE, ''),		
+			'$h_not' 	=> t('Notification Settings'),
+			'$activity_options' => t('By default post a status message when:'),
+			'$post_newfriend' => array('post_newfriend',  t('accepting a friend request'), $post_newfriend, ''),
+			'$post_joingroup' => array('post_joingroup',  t('joining a forum/community'), $post_joingroup, ''),
+			'$post_profilechange' => array('post_profilechange',  t('making an <em>interesting</em> profile change'), $post_profilechange, ''),
+			'$lbl_not' 	=> t('Send a notification email when:'),
+			'$notify1'	=> array('notify1', t('You receive an introduction'), ($notify & NOTIFY_INTRO), NOTIFY_INTRO, ''),
+			'$notify2'	=> array('notify2', t('Your introductions are confirmed'), ($notify & NOTIFY_CONFIRM), NOTIFY_CONFIRM, ''),
+			'$notify3'	=> array('notify3', t('Someone writes on your profile wall'), ($notify & NOTIFY_WALL), NOTIFY_WALL, ''),
+			'$notify4'	=> array('notify4', t('Someone writes a followup comment'), ($notify & NOTIFY_COMMENT), NOTIFY_COMMENT, ''),
+			'$notify5'	=> array('notify5', t('You receive a private message'), ($notify & NOTIFY_MAIL), NOTIFY_MAIL, ''),
+			'$notify6'  => array('notify6', t('You receive a friend suggestion'), ($notify & NOTIFY_SUGGEST), NOTIFY_SUGGEST, ''),		
+			'$notify7'  => array('notify7', t('You are tagged in a post'), ($notify & NOTIFY_TAGSELF), NOTIFY_TAGSELF, ''),		
+			'$notify8'  => array('notify8', t('You are poked/prodded/etc. in a post'), ($notify & NOTIFY_POKE), NOTIFY_POKE, ''),		
 		
 		
-		'$h_advn' => t('Advanced Account/Page Type Settings'),
-		'$h_descadvn' => t('Change the behaviour of this account for special situations'),
-		'$pagetype' => $pagetype,
+			'$h_advn' => t('Advanced Account/Page Type Settings'),
+			'$h_descadvn' => t('Change the behaviour of this account for special situations'),
+			'$pagetype' => $pagetype,
 		
-	));
+		));
 
-	call_hooks('settings_form',$o);
+		call_hooks('settings_form',$o);
 
-	$o .= '</form>' . "\r\n";
+		$o .= '</form>' . "\r\n";
 
-	return $o;
-
+		return $o;
+	}
 }}
 

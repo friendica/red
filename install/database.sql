@@ -13,7 +13,7 @@ CREATE TABLE IF NOT EXISTS `abook` (
   `abook_xchan` char(255) NOT NULL DEFAULT '',
   `abook_my_perms` int(11) NOT NULL DEFAULT '0',
   `abook_their_perms` int(11) NOT NULL DEFAULT '0',
-  `abook_closeness` tinyint(3) unsigned NOT NULL DEFAULT '255',
+  `abook_closeness` tinyint(3) unsigned NOT NULL DEFAULT '99',
   `abook_created` datetime NOT NULL DEFAULT '0000-00-00 00:00:00',
   `abook_updated` datetime NOT NULL DEFAULT '0000-00-00 00:00:00',
   `abook_connnected` datetime NOT NULL DEFAULT '0000-00-00 00:00:00',
@@ -700,7 +700,7 @@ CREATE TABLE IF NOT EXISTS `pconfig` (
   `v` mediumtext NOT NULL,
   PRIMARY KEY (`id`),
   UNIQUE KEY `access` (`uid`,`cat`,`k`)
-) ENGINE=MyISAM DEFAULT CHARSET=utf8;
+) ENGINE=MyISAM  DEFAULT CHARSET=utf8;
 
 CREATE TABLE IF NOT EXISTS `photo` (
   `id` int(10) unsigned NOT NULL AUTO_INCREMENT,
@@ -734,7 +734,7 @@ CREATE TABLE IF NOT EXISTS `photo` (
   KEY `type` (`type`),
   KEY `contact-id` (`contact-id`),
   KEY `aid` (`aid`)
-) ENGINE=MyISAM DEFAULT CHARSET=utf8;
+) ENGINE=MyISAM  DEFAULT CHARSET=utf8;
 
 CREATE TABLE IF NOT EXISTS `profile` (
   `id` int(11) NOT NULL AUTO_INCREMENT,
@@ -907,7 +907,7 @@ CREATE TABLE IF NOT EXISTS `xchan` (
   `xchan_photo_m` char(255) NOT NULL DEFAULT '',
   `xchan_photo_s` char(255) NOT NULL DEFAULT '',
   `xchan_addr` char(255) NOT NULL DEFAULT '',
-  `xchan_profile` char(255) NOT NULL DEFAULT '',
+  `xchan_url` char(255) NOT NULL DEFAULT '',
   `xchan_name` char(255) NOT NULL DEFAULT '',
   `xchan_network` char(255) NOT NULL DEFAULT '',
   `xchan_photo_date` datetime NOT NULL DEFAULT '0000-00-00 00:00:00',
@@ -915,7 +915,7 @@ CREATE TABLE IF NOT EXISTS `xchan` (
   PRIMARY KEY (`xchan_hash`),
   KEY `xchan_guid` (`xchan_guid`),
   KEY `xchan_addr` (`xchan_addr`),
-  KEY `xchan_profile` (`xchan_profile`),
   KEY `xchan_name` (`xchan_name`),
-  KEY `xchan_network` (`xchan_network`)
+  KEY `xchan_network` (`xchan_network`),
+  KEY `xchan_url` (`xchan_url`)
 ) ENGINE=MyISAM DEFAULT CHARSET=utf8;

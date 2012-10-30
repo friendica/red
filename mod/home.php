@@ -8,8 +8,8 @@ function home_init(&$a) {
 
 	$channel = $a->get_channel();
 
-	if(local_user() && $channel && $channel['xchan_profile'])
-		goaway( $channel['xchan_profile']);
+	if(local_user() && $channel && $channel['xchan_url'])
+		goaway( $channel['xchan_url']);
 
 }}
 

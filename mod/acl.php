@@ -147,7 +147,7 @@ function acl_init(&$a){
 		);
 	}
 	elseif($type == 'x') {
-		$r = q("SELECT xchan_name as id, xchan_name as name, xchan_photo_s as micro, xchan_profile as url from xchan
+		$r = q("SELECT xchan_name as id, xchan_name as name, xchan_photo_s as micro, xchan_url as url from xchan
 			where 1
 			$sql_extra3
 			ORDER BY `xchan_name` ASC ",

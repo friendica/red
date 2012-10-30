@@ -194,13 +194,13 @@ window.onresize=resize_iframe;
 </script>
 
 
-<iframe id="glu" width="100%" src="{$r[0]['xchan_profile']}" onload="resize_iframe()">
+<iframe id="glu" width="100%" src="{$r[0]['xchan_url']}" onload="resize_iframe()">
 </iframe>
 
 EOT;
 
 
-	//				$o .= '<div id="profile-frame-wrapper" style="width: 100%; height: 100%;"><iframe id="profile-frame" src="' . $r[0]['xchan_profile'] . '" style="width: 100%; height: 100%;"></iframe></div>';
+	//				$o .= '<div id="profile-frame-wrapper" style="width: 100%; height: 100%;"><iframe id="profile-frame" src="' . $r[0]['xchan_url'] . '" style="width: 100%; height: 100%;"></iframe></div>';
 					return $o;
 				}
 			}

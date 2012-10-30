@@ -439,7 +439,7 @@ function prepare_threads_body($a, $items, $cmnt_tpl, $page_writeable, $mode, $pr
 			$profile_avatar = (((strlen($item['author-avatar'])) && $diff_author) ? $item['author-avatar'] : $a->get_cached_avatar_image($thumb));
 
 		$profile_avatar = $item['author']['xchan_photo_m'];
-		$profile_link = zrl($item['author']['xchan_profile']);
+		$profile_link = zrl($item['author']['xchan_url']);
 		$profile_name = $item['author']['xchan_name'];
 
 		$locate = array('location' => $item['location'], 'coord' => $item['coord'], 'html' => '');
@@ -1232,7 +1232,7 @@ old code
 							'$parent' => $item['parent'],
 							'$qcomment' => $qcomment,
 							'$profile_uid' =>  $profile_owner,
-							'$mylink' => $observer['xchan_profile'],
+							'$mylink' => $observer['xchan_url'],
 							'$mytitle' => t('This is you'),
 							'$myphoto' => $observer['xchan_photo_s'],
 							'$comment' => t('Comment'),
@@ -1321,7 +1321,7 @@ old code
 
 
 				$profile_avatar = $item['author']['xchan_photo_m'];
-				$profile_link = zrl($item['author']['xchan_profile']);
+				$profile_link = zrl($item['author']['xchan_url']);
 				$profile_name = $item['author']['xchan_name'];
 
 

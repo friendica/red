@@ -123,7 +123,7 @@ class Item extends BaseObject {
 		$profile_name   = (((strlen($item['author-name']))   && $diff_author) ? $item['author-name']   : $item['name']);
 
 		$profile_avatar = $item['author']['xchan_photo_m'];
-		$profile_link = zrl($item['author']['xchan_profile']);
+		$profile_link = zrl($item['author']['xchan_url']);
 		$profile_name = $item['author']['xchan_name'];
 
 //		if($item['author-link'] && (! $item['author-name']))
@@ -137,7 +137,7 @@ class Item extends BaseObject {
 		else
 			$profile_link = zrl($profile_link);                 
 
-		$profile_link = zrl($item['author']['xchan_profile']);
+		$profile_link = zrl($item['author']['xchan_url']);
 
 
 //		$normalised = normalise_link((strlen($item['author-link'])) ? $item['author-link'] : $item['url']);
@@ -520,7 +520,7 @@ class Item extends BaseObject {
 				'$parent' => $this->get_id(),
 				'$qcomment' => $qcomment,
 				'$profile_uid' =>  $conv->get_profile_owner(),
-				'$mylink' => $this->observer['xchan_profile'],
+				'$mylink' => $this->observer['xchan_url'],
 				'$mytitle' => t('This is you'),
 				'$myphoto' => $this->observer['xchan_photo_s'],
 				'$comment' => t('Comment'),
