@@ -130,7 +130,7 @@ function create_identity($arr) {
 	// It's ok for this to fail if it's an imported channel, and therefore the hash is a duplicate
 		
 
-	$r = q("INSERT INTO `profile` ( `aid`, `uid`, `profile_guid`, `profile_name`, `is_default`, `name`, `photo`, `thumb`)
+	$r = q("INSERT INTO profile ( aid, uid, profile_guid, profile_name, is_default, name, photo, thumb)
 		VALUES ( %d, %d, '%s', '%s', %d, '%s', '%s', '%s') ",
 		intval($ret['channel']['channel_account_id']),
 		intval($newuid),
@@ -140,6 +140,17 @@ function create_identity($arr) {
 		dbesc($ret['channel']['channel_name']),
 		dbesc($a->get_baseurl() . "/photo/profile/l/{$newuid}"),
 		dbesc($a->get_baseurl() . "/photo/profile/m/{$newuid}")
+	);
+
+	$r = q("insert into abook ( abook_account, abook_channel, abook_xchan, abook_closeness, abook_created, abook_updated, abook_flags )
+		values ( %d, %d, '%s', %d, '%s', '%s', %d ) ",
+		intval($ret['channel']['channel_account_id']),
+		intval($newuid),
+		dbesc($hash),
+		intval(0),
+		dbesc(datetime_convert()),
+		dbesc(datetime_convert()),
+		intval(ABOOK_FLAG_SELF)
 	);
 
 

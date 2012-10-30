@@ -161,14 +161,16 @@ function channel_content(&$a, $update = 0) {
 
 
 	if($update) {
-
 		$r = q("SELECT distinct(parent) AS `item_id` from item
+			left join abook on item.author_xchan = abook.abook_xchan
 			WHERE uid = %d AND item_restrict = 0
-			AND item_flags &  %d
+			AND (item_flags &  %d)
+			AND ((abook.abook_flags & %d) = 0 or abook.abook_flags is null)
 			$sql_extra
 			ORDER BY created DESC",
 			intval($a->profile['profile_uid']),
-			intval(ITEM_WALL)
+			intval(ITEM_WALL|ITEM_UNSEEN|ITEM_THREAD_TOP),
+			intval(ABOOK_FLAG_BLOCKED)
 		);
 
 	}
@@ -191,12 +193,15 @@ function channel_content(&$a, $update = 0) {
 		$pager_sql = sprintf(" LIMIT %d, %d ",intval($a->pager['start']), intval($a->pager['itemspage']));
 
 		$r = q("SELECT id AS item_id FROM item 
+			left join abook on item.author_xchan = abook.abook_xchan
 			WHERE uid = %d AND item_restrict = 0
-			AND item_flags & %d
+			AND (item_flags &  %d)
+			AND ((abook.abook_flags & %d) = 0 or abook.abook_flags is null)
 			$sql_extra $sql_extra2
 			ORDER BY created DESC $pager_sql ",
 			intval($a->profile['profile_uid']),
-			intval(ITEM_WALL|ITEM_THREAD_TOP)
+			intval(ITEM_WALL|ITEM_THREAD_TOP),
+			intval(ABOOK_FLAG_BLOCKED)
 
 		);
 

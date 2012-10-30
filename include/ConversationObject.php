@@ -38,7 +38,7 @@ class Conversation extends BaseObject {
 				$this->profile_owner = local_user();
 				$this->writable = true;
 				break;
-			case 'profile':
+			case 'channel':
 				$this->profile_owner = $a->profile['profile_uid'];
 				$this->writable = can_write_wall($a,$this->profile_owner);
 				break;

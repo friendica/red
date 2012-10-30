@@ -589,20 +589,22 @@ function network_content(&$a, $update = 0, $load = false) {
 
 	if(($cmin != 0) || ($cmax != 99)) {
 
-		$sql_nets .= " AND abook.abook_closeness >= " . intval($cmin) . " ";
-		$sql_nets .= " AND abook.abook_closeness <= " . intval($cmax) . " ";
+		// Not everybody who shows up in the network stream will be in your address book.
+		// By default those that aren't are assumed to have closeness = 99; but this isn't
+		// recorded anywhere. So if cmax is 99, we'll open the search up to anybody in 
+		// the stream with a NULL address book entry.
 
-		// This is ugly - but we won't have an abook for everybody as we 
-		// used to have a contact for everybody in Friendica. 
-		// Might be an unknown poster (99) or our own post (0). 
-		// Need to refactor this after a solution presents itself
+		$sql_nets .= " AND ";
 
 		if($cmax == 99)
-			$sql_nets .= " OR ( abook.abook_id = NULL AND item.author_xchan != '" . $ch['channel_hash'] . " ) ";
-		if($cmin == 0 && local_user()) {
-			$ch = $a->get_channel();
-			$sql_nets .= " OR ( item.author_xchan = '" . $ch['channel_hash'] . "' ) ";
-		}
+			$sql_nets .= " ( ";
+
+		$sql_nets .= "( abook.abook_closeness >= " . intval($cmin) . " ";
+		$sql_nets .= " AND abook.abook_closeness <= " . intval($cmax) . " ) ";
+
+		if($cmax == 99)
+			$sql_nets .= " OR abook.abook_closeness IS NULL ) ";
+
 
 	}
 
@@ -640,13 +642,15 @@ function network_content(&$a, $update = 0, $load = false) {
 				$ordering = "`commented`";
 
 		// Fetch a page full of parent items for this page
-dbg(1);
+
 		if($update && (! $load)) {
 			$r = q("SELECT item.parent AS item_id FROM item
 				left join abook on item.author_xchan = abook.abook_xchan
-				WHERE item.uid = %d AND item.item_restrict = 0 
+				WHERE item.uid = %d AND item.item_restrict = 0
+				and ((abook.abook_flags & %d) = 0 or abook.abook_flags is null)
 				$sql_extra3 $sql_extra $sql_nets ",
-				intval(local_user())
+				intval(local_user()),
+				intval(ABOOK_FLAG_BLOCKED)
 			);
 		}
 		else {
@@ -655,13 +659,15 @@ dbg(1);
 				left join abook on item.author_xchan = abook.abook_xchan
 				WHERE item.uid = %d AND item.item_restrict = 0
 				AND item.parent = item.id
+				and ((abook.abook_flags & %d) = 0 or abook.abook_flags is null)
 				$sql_extra3 $sql_extra $sql_nets
 				ORDER BY item.$ordering DESC $pager_sql ",
-				intval(local_user())
+				intval(local_user()),
+				intval(ABOOK_FLAG_BLOCKED)
 			);
 
 		}
-dbg(0);
+
 		// Then fetch all the children of the parents that are on this page
 
 		if($r && count($r)) {

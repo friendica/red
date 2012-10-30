@@ -454,7 +454,7 @@ class Item extends BaseObject {
 		if($conv) {
 			// This will allow us to comment on wall-to-wall items owned by our friends
 			// and community forums even if somebody else wrote the post.
-			return ($this->writable || ($this->is_visiting() && $conv->get_mode() == 'profile'));
+			return ($this->writable || ($this->is_visiting() && $conv->get_mode() == 'channel'));
 		}
 		return $this->writable;
 	}
@@ -515,7 +515,7 @@ class Item extends BaseObject {
 				'$return_path' => '',
 				'$threaded' => $this->is_threaded(),
 				'$jsreload' => (($conv->get_mode() === 'display') ? $_SESSION['return_url'] : ''),
-				'$type' => (($conv->get_mode() === 'profile') ? 'wall-comment' : 'net-comment'),
+				'$type' => (($conv->get_mode() === 'channel') ? 'wall-comment' : 'net-comment'),
 				'$id' => $this->get_id(),
 				'$parent' => $this->get_id(),
 				'$qcomment' => $qcomment,
@@ -556,7 +556,7 @@ class Item extends BaseObject {
 		$this->wall_to_wall = false;
 		
 		if($this->is_toplevel()) {
-			if( (! $this->get_data_value('self')) && ($conv->get_mode() !== 'profile')) {
+			if( (! $this->get_data_value('self')) && ($conv->get_mode() !== 'channel')) {
 				if($this->get_data_value('wall')) {
 
 					// On the network page, I am the owner. On the display page it will be the profile owner.
