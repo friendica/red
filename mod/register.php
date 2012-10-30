@@ -105,7 +105,7 @@ function register_post(&$a) {
 	authenticate_success($result['account'],true,false,true);
 
 	if(! strlen($next_page = get_config('system','workflow_register_next')))
-		$next_page = 'zchannel';
+		$next_page = 'new_channel';
 
 	$_SESSION['workflow'] = true;
 	

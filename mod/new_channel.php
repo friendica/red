@@ -2,7 +2,7 @@
 
 require_once('include/identity.php');
 
-function zchannel_init(&$a) {
+function new_channel_init(&$a) {
 
 	$cmd = ((argc() > 1) ? argv(1) : '');
 
@@ -57,7 +57,7 @@ function zchannel_init(&$a) {
 }
 
 
-function zchannel_post(&$a) {
+function new_channel_post(&$a) {
 
 	$arr = $_POST;
 
@@ -90,7 +90,7 @@ function zchannel_post(&$a) {
 
 
 
-function zchannel_content(&$a) {
+function new_channel_content(&$a) {
 
 	if(! get_account_id()) {
 		notice( t('Permission denied.') . EOL);
@@ -101,7 +101,7 @@ function zchannel_content(&$a) {
 	$nickname     = ((x($_REQUEST,'nickname'))     ? $_REQUEST['nickname']     :  "" );
 
 
-	$o = replace_macros(get_markup_template('zchannel.tpl'), array(
+	$o = replace_macros(get_markup_template('new_channel.tpl'), array(
 
 		'$title'        => t('Add a Channel'),
 		'$desc'         => t('A channel is your own collection of related web pages. A channel can be used to hold social network profiles, blogs, conversation groups and forums, celebrity pages, and much more. You may create as many channels as your service provider allows.'),

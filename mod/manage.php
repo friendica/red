@@ -35,7 +35,7 @@ function manage_content(&$a) {
 	}
 
 	$links = array(
-		array( 'zchannel', t('Create a new channel'), t('New Channel'))
+		array( 'new_channel', t('Create a new channel'), t('New Channel'))
 	);
 
 

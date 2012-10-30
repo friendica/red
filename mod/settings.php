@@ -16,6 +16,15 @@ function get_theme_config_file($theme){
 
 function settings_init(&$a) {
 
+
+	// default is channel settings in the absence of other arguments
+
+	if(argc() == 1) {
+		$a->argc = 2;
+		$a->argv[] = 'channel';
+	}
+
+
 	$tabs = array(
 		array(
 			'label'	=> t('Account settings'),
@@ -83,10 +92,6 @@ function settings_post(&$a) {
 	if(x($_SESSION,'submanage') && intval($_SESSION['submanage']))
 		return;
 
-	if(argc() == 1) {
-		$a->argc = 2;
-		$a->argv[] = 'channel';
-	}
 
 	if(count($a->user) && x($a->user,'uid') && $a->user['uid'] != local_user()) {
 		notice( t('Permission denied.') . EOL);
@@ -431,11 +436,6 @@ function settings_content(&$a) {
 
 	$o = '';
 	nav_set_selected('settings');
-
-	if(argc() == 1) {
-		$a->argc = 2;
-		$a->argv[] = 'channel';
-	}
 
 
 	if(! local_user()) {

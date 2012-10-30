@@ -4,36 +4,36 @@ h2 {
 	margin-top: 15%;
 }
 
-#zchannel-form {
+#newchannel-form {
 	font-size: 1.4em;	
 	margin-left: 15%;
 	margin-top: 5%;
 	width: 50%;
 }
 
-#zchannel-form .descriptive-paragraph {
+#newchannel-form .descriptive-paragraph {
 	color: #888;
 	margin-left: 20px;
 	margin-bottom: 25px;
 }
 
-.zchannel-label {
+.newchannel-label {
 	float: left;
 	width: 275px;
 }
 
-.zchannel-input {
+.newchannel-input {
 	float: left;
 	width: 275px;
 	padding: 5px;
 }
 
-.zchannel-feedback {
+.newchannel-feedback {
 	float: left;
 	margin-left: 5px;
 }
 
-.zchannel-field-end {
+.newchannel-field-end {
 	clear: both;
 	margin-bottom: 20px;
 }
