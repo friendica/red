@@ -24,6 +24,7 @@ function abook_init(&$a) {
 		}
 		else {
 			$abook_id = 0;	
+		}
 	}
 
 	if($abook_id) {
@@ -426,8 +427,7 @@ EOT;
 
 	$search = ((x($_REQUEST,'search')) ? notags(trim($_REQUEST['search'])) : '');
 
-
-//	$nets = ((x($_GET,'nets')) ? notags(trim($_GET['nets'])) : '');
+	$nets = ((x($_GET,'nets')) ? notags(trim($_GET['nets'])) : '');
 
 	$tabs = array(
 		array(
@@ -498,17 +498,21 @@ EOT;
 //	$sql_extra2 = ((($sort_type > 0) && ($sort_type <= CONTACT_IS_FRIEND)) ? sprintf(" AND `rel` = %d ",intval($sort_type)) : ''); 
 
 	
-	$r = q("SELECT COUNT(*) AS `total` FROM `contact` 
-		WHERE `uid` = %d AND `self` = 0 AND `pending` = 0 $sql_extra $sql_extra2 ",
-		intval($_SESSION['uid']));
+	$r = q("SELECT COUNT(abook.abook_id) AS total FROM abook left join xchan on abook.abook_xchan = xchan.xchan_hash 
+		where abook_channel = %d and not (abook_flags & %d) $sql_extra $sql_extra2 ",
+		intval(local_user()),
+		intval(ABOOK_FLAG_SELF)
+	);
 	if(count($r)) {
 		$a->set_pager_total($r[0]['total']);
 		$total = $r[0]['total'];
 	}
 
 
-	$r = q("SELECT * FROM `contact` WHERE `uid` = %d AND `self` = 0 AND `pending` = 0 $sql_extra $sql_extra2 ORDER BY `name` ASC LIMIT %d , %d ",
-		intval($_SESSION['uid']),
+	$r = q("SELECT abook.*, xchan.* FROM abook left join xchan on abook.abook_chan = xchan.xchan_hash
+		WHERE abook_channel = %d and not (abook_flags & %d) $sql_extra $sql_extra2 ORDER BY xchan_name LIMIT %d , %d ",
+		intval(local_user()),
+		intval(ABOOK_FLAG_SELF),
 		intval($a->pager['start']),
 		intval($a->pager['itemspage'])
 	);

@@ -67,8 +67,10 @@ function zfinger_init(&$a) {
 				$ret['hubs'][] = array(
 					'primary'  => (($hub['hubloc_flags'] & HUBLOC_FLAGS_PRIMARY) ? true : false),
 					'url'      => $hub['hubloc_url'],
+					'url_sig'  => $hub['hubloc_url_sig'],
 					/// hmmm we probably shouldn't sign somebody else's hub. FIXME
-					'url_sig'  => base64url_encode(rsa_sign($hub['hubloc_url'],$e['channel_prvkey'])),
+					'url_sig2'  => base64url_encode(rsa_sign($hub['hubloc_url'],$e['channel_prvkey'])),
+					'host'     => $hub['hubloc_host'],
 					'callback' => $hub['hubloc_callback'],
 					'sitekey'  => $hub['hubloc_sitekey']
 				);

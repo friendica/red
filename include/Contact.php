@@ -1,7 +1,7 @@
 <?php
 
 
-functino vcard_from_xchan($xchan) {
+function vcard_from_xchan($xchan) {
 	return replace_macros(get_markup_template('xchan_vcard.tpl'),array(
 		$name  => $abook['xchan_name'],
 		$photo => $abook['xchan_photo_l']

@@ -2,13 +2,11 @@
 
 
 //
-// Takes a $uid and a url/handle and adds a new contact
-// Currently if the contact is DFRN, interactive needs to be true, to redirect to the
-// dfrn_request page.
+// Takes a $uid and a url/handle and adds a new channel
 
-// Otherwise this can be used to bulk add statusnet contacts, twitter contacts, etc.
 // Returns an array
 //  $return['success'] boolean true if successful
+//  $return['abook_id'] Address book ID if successful
 //  $return['message'] error text if success is false.
 
 
@@ -18,10 +16,6 @@ function new_contact($uid,$url,$interactive = false) {
 	$result = array('success' => false,'message' => '');
 
 	$a = get_app();
-
-	// remove ajax junk, e.g. Twitter
-
-	$url = str_replace('/#!/','/',$url);
 
 	if(! allowed_url($url)) {
 		$result['message'] = t('Disallowed profile URL.');
@@ -33,14 +27,17 @@ function new_contact($uid,$url,$interactive = false) {
 		return $result;
 	}
 
-	$arr = array('url' => $url, 'contact' => array());
+	$arr = array('url' => $url, 'channel' => array());
 
 	call_hooks('follow', $arr);
 
 	if(x($arr['contact'],'name')) 
 		$ret = $arr['contact'];
 	else
-		$ret = probe_url($url);
+		$ret = zot_probe_url($url);
+
+
+
 
 	if($ret['network'] === NETWORK_DFRN) {
 		if($interactive) {

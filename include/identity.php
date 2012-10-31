@@ -89,18 +89,27 @@ function create_identity($arr) {
 
 	set_default_login_identity($arr['account_id'],$ret['channel']['channel_id'],false);
 
+	// Ensure that there is a host keypair.
+
+	if((! get_config('system','pubkey')) && (! get_config('system','prvkey'))) {
+		$hostkey = new_keypair(4096);
+		set_config('system','pubkey',$hostkey['pubkey']);
+		set_config('system','prvkey',$hostkey['prvkey']);
+	}
+	
 
 	// Create a verified hub location pointing to this site.
 
 	$r = q("insert into hubloc ( hubloc_guid, hubloc_guid_sig, hubloc_hash, hubloc_flags, 
-		hubloc_url, hubloc_url_sig, hubloc_callback, hubloc_sitekey )
-		values ( '%s', '%s', '%s', %d, '%s', '%s', '%s', '%s' )",
+		hubloc_url, hubloc_url_sig, hubloc_host, hubloc_callback, hubloc_sitekey )
+		values ( '%s', '%s', '%s', %d, '%s', '%s', '%s', '%s', '%s' )",
 		dbesc($guid),
 		dbesc($sig),
 		dbesc($hash),
 		intval(($primary) ? HUBLOC_FLAGS_PRIMARY : 0),
 		dbesc(z_root()),
 		dbesc(base64url_encode(rsa_sign(z_root(),$ret['channel']['channel_prvkey']))),
+		dbesc(get_app()->get_hostname()),
 		dbesc(z_root() . '/post'),
 		dbesc(get_config('system','pubkey'))
 	);
@@ -118,7 +127,7 @@ function create_identity($arr) {
 		dbesc($a->get_baseurl() . "/photo/profile/l/{$newuid}"),
 		dbesc($a->get_baseurl() . "/photo/profile/m/{$newuid}"),
 		dbesc($a->get_baseurl() . "/photo/profile/s/{$newuid}"),
-		dbesc($ret['channel']['channel_address'] . '@' . $a->get_hostname()),
+		dbesc($ret['channel']['channel_address'] . '@' . get_app()->get_hostname()),
 		dbesc(z_root() . '/channel/' . $ret['channel']['channel_address']),
 		dbesc($ret['channel']['channel_name']),
 		dbesc('zot'),

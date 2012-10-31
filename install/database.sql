@@ -31,7 +31,7 @@ CREATE TABLE IF NOT EXISTS `abook` (
   KEY `abook_connnected` (`abook_connnected`),
   KEY `abook_flags` (`abook_flags`),
   KEY `abook_profile` (`abook_profile`)
-) ENGINE=MyISAM DEFAULT CHARSET=utf8;
+) ENGINE=MyISAM  DEFAULT CHARSET=utf8;
 
 CREATE TABLE IF NOT EXISTS `account` (
   `account_id` int(10) unsigned NOT NULL AUTO_INCREMENT,
@@ -472,6 +472,7 @@ CREATE TABLE IF NOT EXISTS `hubloc` (
   `hubloc_flags` int(10) unsigned NOT NULL DEFAULT '0',
   `hubloc_url` char(255) NOT NULL DEFAULT '',
   `hubloc_url_sig` char(255) NOT NULL,
+  `hubloc_host` char(255) NOT NULL DEFAULT '',
   `hubloc_callback` char(255) NOT NULL DEFAULT '',
   `hubloc_connect` char(255) NOT NULL DEFAULT '',
   `hubloc_sitekey` text NOT NULL,
@@ -481,7 +482,8 @@ CREATE TABLE IF NOT EXISTS `hubloc` (
   KEY `hubloc_flags` (`hubloc_flags`),
   KEY `hubloc_guid_sig` (`hubloc_guid_sig`),
   KEY `hubloc_url_sig` (`hubloc_url_sig`),
-  KEY `hubloc_connect` (`hubloc_connect`)
+  KEY `hubloc_connect` (`hubloc_connect`),
+  KEY `hubloc_host` (`hubloc_host`)
 ) ENGINE=MyISAM  DEFAULT CHARSET=utf8;
 
 CREATE TABLE IF NOT EXISTS `intro` (

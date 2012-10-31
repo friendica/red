@@ -24,10 +24,10 @@ function follow_init(&$a) {
 		goaway($return_url);
 	}
 
-	info( t('Contact added') . EOL);
+	info( t('Channel added') . EOL);
 
-	if(strstr($return_url,'contacts'))
-		goaway($a->get_baseurl() . '/contacts/' . $contact_id);
+	if(strstr($return_url,'channel'))
+		goaway($a->get_baseurl() . '/channel/' . $result['channel_id']);
 
 	goaway($return_url);
 	// NOTREACHED
