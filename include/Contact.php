@@ -1,6 +1,24 @@
 <?php
 
 
+functino vcard_from_xchan($xchan) {
+	return replace_macros(get_markup_template('xchan_vcard.tpl'),array(
+		$name  => $abook['xchan_name'],
+		$photo => $abook['xchan_photo_l']
+	));
+}
+
+function abook_toggle_flag($abook,$flag) {
+
+	$r = q("UPDATE abook set abook_flags = (abook_flags ^ %d) where abook_id = %d and abook_channel = %d limit 1",
+		intval($flag),
+		intval($abook['abook_id']),
+		intval($abook['abook_channel'])
+	);
+	return $r;
+
+}
+
 
 
 

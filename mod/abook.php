@@ -3,43 +3,36 @@
 require_once('include/Contact.php');
 require_once('include/socgraph.php');
 require_once('include/contact_selectors.php');
+require_once('include/group.php');
+require_once('include/contact_widgets.php');
 
 function abook_init(&$a) {
+
 	if(! local_user())
 		return;
 
-	$contact_id = 0;
-
-	if(($a->argc == 2) && intval($a->argv[1])) {
-		$contact_id = intval($a->argv[1]);
-		$r = q("SELECT * FROM `contact` WHERE `uid` = %d and `id` = %d LIMIT 1",
+	if((argc() == 2) && intval(argv(1))) {
+		$r = q("SELECT abook.*, xchan.* 
+			FROM abook left join xchan on abook_xchan = xchan_hash
+			WHERE abook_channel = %d and abook_id = %d LIMIT 1",
 			intval(local_user()),
-			intval($contact_id)
+			intval(argv(1))
 		);
-		if(! count($r)) {
-			$contact_id = 0;
+		if($r) {
+			$a->data['abook'] = $r[0];
+			$abook_id = $r[0]['abook_id'];
 		}
+		else {
+			$abook_id = 0;	
 	}
 
-	require_once('include/group.php');
-	require_once('include/contact_widgets.php');
-
-	if(! x($a->page,'aside'))
-		$a->page['aside'] = '';
-
-	if($contact_id) {
-			$a->data['contact'] = $r[0];
-			$o .= '<div class="vcard">';
-			$o .= '<div class="fn">' . $a->data['contact']['name'] . '</div>';
-			$o .= '<div id="profile-photo-wrapper"><img class="photo" style="width: 175px; height: 175px;" src="' . $a->data['contact']['photo'] . '" alt="' . $a->data['contact']['name'] . '" /></div>';
-			$o .= '</div>';
-			$a->page['aside'] .= $o;
-
-	}	
+	if($abook_id) {
+			$a->page['aside'] .= vcard_from_xchan($r[0]);
+	}
 	else
 		$a->page['aside'] .= follow_widget();
 
-	$a->page['aside'] .= group_side('contacts','group',false,0,$contact_id);
+	$a->page['aside'] .= group_side('contacts','group',false,0,$abook_id);
 
 	$a->page['aside'] .= findpeople_widget();
 
@@ -212,90 +205,88 @@ EOT;
 
 		$cmd = argv(2);
 
-		$orig_record = q("SELECT * FROM `contact` WHERE `id` = %d AND `uid` = %d AND `self` = 0 LIMIT 1",
+		$orig_record = q("SELECT abook.*, xchan.* FROM abook left join xchan on abook_xchan = xchan_hash
+			WHERE abook_id = %d AND abook_channel = %d AND NOT abook_flags & %d LIMIT 1",
 			intval($contact_id),
-			intval(local_user())
+			intval(local_user()),
+			intval(ABOOK_FLAG_SELF)
 		);
 
 		if(! count($orig_record)) {
-			notice( t('Could not access contact record.') . EOL);
-			goaway($a->get_baseurl(true) . '/contacts');
-			return; // NOTREACHED
+			notice( t('Could not access address book record.') . EOL);
+			goaway($a->get_baseurl(true) . '/abook');
 		}
 		
 		if($cmd === 'update') {
 
 			// pull feed and consume it, which should subscribe to the hub.
 			proc_run('php',"include/poller.php","$contact_id");
-			goaway($a->get_baseurl(true) . '/contacts/' . $contact_id);
-			// NOTREACHED
+			goaway($a->get_baseurl(true) . '/abook/' . $contact_id);
+
 		}
 
 		if($cmd === 'block') {
-			$blocked = (($orig_record[0]['blocked']) ? 0 : 1);
-			$r = q("UPDATE `contact` SET `blocked` = %d WHERE `id` = %d AND `uid` = %d LIMIT 1",
-				intval($blocked),
-				intval($contact_id),
-				intval(local_user())
-			);
-			if($r) {
-				//notice( t('Contact has been ') . (($blocked) ? t('blocked') : t('unblocked')) . EOL );
-				info( (($blocked) ? t('Contact has been blocked') : t('Contact has been unblocked')) . EOL );
-			}
-			goaway($a->get_baseurl(true) . '/contacts/' . $contact_id);
-			return; // NOTREACHED
+			if(abook_toggle_flag($orig_record[0],ABOOK_FLAG_BLOCKED))
+				info((($orig_record[0]['abook_flags'] & ABOOK_FLAG_BLOCKED) 
+					? t('Channel has been unblocked') 
+					: t('Channel has been blocked')) . EOL );
+			else
+				notice(t('Unable to set address book parameters.') . EOL);
+			goaway($a->get_baseurl(true) . '/abook/' . $contact_id);
 		}
 
 		if($cmd === 'ignore') {
-			$readonly = (($orig_record[0]['readonly']) ? 0 : 1);
-			$r = q("UPDATE `contact` SET `readonly` = %d WHERE `id` = %d AND `uid` = %d LIMIT 1",
-				intval($readonly),
-				intval($contact_id),
-				intval(local_user())
-			);
-			if($r) {
-				info( (($readonly) ? t('Contact has been ignored') : t('Contact has been unignored')) . EOL );
-			}
-			goaway($a->get_baseurl(true) . '/contacts/' . $contact_id);
-			return; // NOTREACHED
+			if(abook_toggle_flag($orig_record[0],ABOOK_FLAG_IGNORED))
+				info((($orig_record[0]['abook_flags'] & ABOOK_FLAG_IGNORED) 
+					? t('Channel has been unignored') 
+					: t('Channel has been ignored')) . EOL );
+			else
+				notice(t('Unable to set address book parameters.') . EOL);
+			goaway($a->get_baseurl(true) . '/abook/' . $contact_id);
 		}
-
 
 		if($cmd === 'archive') {
-			$archived = (($orig_record[0]['archive']) ? 0 : 1);
-			$r = q("UPDATE `contact` SET `archive` = %d WHERE `id` = %d AND `uid` = %d LIMIT 1",
-				intval($archived),
-				intval($contact_id),
-				intval(local_user())
-			);
-			if($r) {
-				//notice( t('Contact has been ') . (($archived) ? t('archived') : t('unarchived')) . EOL );
-				info( (($archived) ? t('Contact has been archived') : t('Contact has been unarchived')) . EOL );
-			}
-			goaway($a->get_baseurl(true) . '/contacts/' . $contact_id);
-			return; // NOTREACHED
-		}
-
-		if($cmd === 'drop') {
-
-			require_once('include/Contact.php');
-
-			terminate_friendship($a->user,$a->contact,$orig_record[0]);
-
-			contact_remove($orig_record[0]['id']);
-			info( t('Contact has been removed.') . EOL );
-			if(x($_SESSION,'return_url'))
-				goaway($a->get_baseurl(true) . '/' . $_SESSION['return_url']);
+			if(abook_toggle_flag($orig_record[0],ABOOK_FLAG_ARCHIVED))
+				info((($orig_record[0]['abook_flags'] & ABOOK_FLAG_ARCHIVED) 
+					? t('Channel has been unarchived') 
+					: t('Channel has been archived')) . EOL );
 			else
-				goaway($a->get_baseurl(true) . '/contacts');
-			return; // NOTREACHED
+				notice(t('Unable to set address book parameters.') . EOL);
+			goaway($a->get_baseurl(true) . '/abook/' . $contact_id);
 		}
+
+		if($cmd === 'hide') {
+			if(abook_toggle_flag($orig_record[0],ABOOK_FLAG_HIDDEN))
+				info((($orig_record[0]['abook_flags'] & ABOOK_FLAG_HIDDEN) 
+					? t('Channel has been unhidden') 
+					: t('Channel has been hidden')) . EOL );
+			else
+				notice(t('Unable to set address book parameters.') . EOL);
+			goaway($a->get_baseurl(true) . '/abook/' . $contact_id);
+		}
+
+// FIXME
+
+//		if($cmd === 'drop') {
+
+//			require_once('include/Contact.php');
+
+	//		terminate_friendship($a->user,$a->contact,$orig_record[0]);
+
+		//	contact_remove($orig_record[0]['id']);
+			//info( t('Contact has been removed.') . EOL );
+//			if(x($_SESSION,'return_url'))
+	//			goaway($a->get_baseurl(true) . '/' . $_SESSION['return_url']);
+		//	else
+			//	goaway($a->get_baseurl(true) . '/contacts');
+//			return; // NOTREACHED
+	//	}
 	}
 
-	if((x($a->data,'contact')) && (is_array($a->data['contact']))) {
+	if((x($a->data,'abook')) && (is_array($a->data['abook']))) {
 
-		$contact_id = $a->data['contact']['id'];
-		$contact = $a->data['contact'];
+		$contact_id = $a->data['abook']['abook_id'];
+		$contact = $a->data['abook'];
 
 		$editselect = 'exact';
 		if(intval(get_pconfig(local_user(),'system','plaintext')))
@@ -397,82 +388,93 @@ EOT;
 	$blocked = false;
 	$hidden = false;
 	$ignored = false;
+	$archived = false;
+
 	$all = false;
 
 	$_SESSION['return_url'] = $a->query_string;
 
-	if(($a->argc == 2) && ($a->argv[1] === 'all')) {
-		$sql_extra = '';
-		$all = true;
-	}
-	elseif(($a->argc == 2) && ($a->argv[1] === 'blocked')) {
-		$sql_extra = " AND `blocked` = 1 ";
-		$blocked = true;
-	}
-	elseif(($a->argc == 2) && ($a->argv[1] === 'hidden')) {
-		$sql_extra = " AND `hidden` = 1 ";
-		$hidden = true;
-	}
-	elseif(($a->argc == 2) && ($a->argv[1] === 'ignored')) {
-		$sql_extra = " AND `readonly` = 1 ";
-		$ignored = true;
-	}
-	elseif(($a->argc == 2) && ($a->argv[1] === 'archived')) {
-		$sql_extra = " AND `archive` = 1 ";
-		$archived = true;
-	}
-	else
-		$sql_extra = " AND `blocked` = 0 ";
+	$search_flags = 0;
 
-	$search = ((x($_GET,'search')) ? notags(trim($_GET['search'])) : '');
-	$nets = ((x($_GET,'nets')) ? notags(trim($_GET['nets'])) : '');
+	if(argc() == 2) {
+		switch(argv(1)) {
+			case 'blocked':
+				$search_flags = ABOOK_FLAG_BLOCKED;
+				$blocked = true;
+				break;
+			case 'ignored':
+				$search_flags = ABOOK_FLAG_IGNORED;
+				$ignored = true;
+				break;
+			case 'hidden':
+				$search_flags = ABOOK_FLAG_HIDDEN;
+				$hidden = true;
+				break;
+			case 'archived':
+				$search_flags = ABOOK_FLAG_ARCHIVED;
+				$archived = true;
+				break;
+			case 'all':
+			default:
+				$search_flags = 0;
+				$all = true;
+				break;
+		}
+	}
+
+	$sql_extra = "and ( abook_flags & " . $search_flags . " ) ";
+
+	$search = ((x($_REQUEST,'search')) ? notags(trim($_REQUEST['search'])) : '');
+
+
+//	$nets = ((x($_GET,'nets')) ? notags(trim($_GET['nets'])) : '');
 
 	$tabs = array(
 		array(
 			'label' => t('Suggestions'),
 			'url'   => $a->get_baseurl(true) . '/suggest', 
 			'sel'   => '',
-			'title' => t('Suggest potential friends'),
+			'title' => t('Suggest new channels'),
 		),
 		array(
-			'label' => t('All Contacts'),
-			'url'   => $a->get_baseurl(true) . '/contacts/all', 
+			'label' => t('All Channels'),
+			'url'   => $a->get_baseurl(true) . '/channels/all', 
 			'sel'   => ($all) ? 'active' : '',
-			'title' => t('Show all contacts'),
+			'title' => t('Show all channels'),
 		),
 		array(
 			'label' => t('Unblocked'),
-			'url'   => $a->get_baseurl(true) . '/contacts',
+			'url'   => $a->get_baseurl(true) . '/channels',
 			'sel'   => ((! $all) && (! $blocked) && (! $hidden) && (! $search) && (! $nets) && (! $ignored) && (! $archived)) ? 'active' : '',
-			'title' => t('Only show unblocked contacts'),
+			'title' => t('Only show unblocked channels'),
 		),
 
 		array(
 			'label' => t('Blocked'),
-			'url'   => $a->get_baseurl(true) . '/contacts/blocked',
+			'url'   => $a->get_baseurl(true) . '/channels/blocked',
 			'sel'   => ($blocked) ? 'active' : '',
-			'title' => t('Only show blocked contacts'),
+			'title' => t('Only show blocked channels'),
 		),
 
 		array(
 			'label' => t('Ignored'),
-			'url'   => $a->get_baseurl(true) . '/contacts/ignored',
+			'url'   => $a->get_baseurl(true) . '/channels/ignored',
 			'sel'   => ($ignored) ? 'active' : '',
-			'title' => t('Only show ignored contacts'),
+			'title' => t('Only show ignored channels'),
 		),
 
 		array(
 			'label' => t('Archived'),
-			'url'   => $a->get_baseurl(true) . '/contacts/archived',
+			'url'   => $a->get_baseurl(true) . '/channels/archived',
 			'sel'   => ($archived) ? 'active' : '',
-			'title' => t('Only show archived contacts'),
+			'title' => t('Only show archived channels'),
 		),
 
 		array(
 			'label' => t('Hidden'),
-			'url'   => $a->get_baseurl(true) . '/contacts/hidden',
+			'url'   => $a->get_baseurl(true) . '/channels/hidden',
 			'sel'   => ($hidden) ? 'active' : '',
-			'title' => t('Only show hidden contacts'),
+			'title' => t('Only show hidden channel s'),
 		),
 
 	);
@@ -488,12 +490,12 @@ EOT;
 		$search_txt = dbesc(protect_sprintf(preg_quote($search)));
 		$searching = true;
 	}
-	$sql_extra .= (($searching) ? " AND `name` REGEXP '$search_txt' " : "");
+	$sql_extra .= (($searching) ? " AND xchan_name '$search_txt' " : "");
 
 	if($nets)
-		$sql_extra .= sprintf(" AND network = '%s' ", dbesc($nets));
+		$sql_extra .= sprintf(" AND xchan_network = '%s' ", dbesc($nets));
  
-	$sql_extra2 = ((($sort_type > 0) && ($sort_type <= CONTACT_IS_FRIEND)) ? sprintf(" AND `rel` = %d ",intval($sort_type)) : ''); 
+//	$sql_extra2 = ((($sort_type > 0) && ($sort_type <= CONTACT_IS_FRIEND)) ? sprintf(" AND `rel` = %d ",intval($sort_type)) : ''); 
 
 	
 	$r = q("SELECT COUNT(*) AS `total` FROM `contact` 
