@@ -31,8 +31,8 @@ function new_contact($uid,$url,$channel,$interactive = false) {
 
 	call_hooks('follow', $arr);
 
-	if(x($arr['contact'],'name')) 
-		$ret = $arr['contact'];
+	if($arr['channel']['success'])) 
+		$ret = $arr['channel'];
 	else
 		$ret = zot_finger($url,$channel,false);
 
@@ -41,118 +41,70 @@ function new_contact($uid,$url,$channel,$interactive = false) {
 
 	}
 
-//	logger('follow: ' . print_r($j,true));
+	logger('follow: ' . $url . ' ' . print_r($j,true));
 	killme();
 
 
-	if($ret['network'] === NETWORK_DFRN) {
-		if($interactive) {
-			if(strlen($a->path))
-				$myaddr = bin2hex($a->get_baseurl() . '/channel/' . $a->user['nickname']);
-			else
-				$myaddr = bin2hex($a->user['nickname'] . '@' . $a->get_hostname());
- 
-			goaway($ret['request'] . "&addr=$myaddr");
-		
-			// NOTREACHED
-		}
-	}
-	else {
-		if(get_config('system','dfrn_only')) {
-			$result['message'] = t('This site is not configured to allow communications with other networks.') . EOL;
-			$result['message'] != t('No compatible communication protocols or feeds were discovered.') . EOL;
-			return $result;
-		}
-	}
-	
-	// do we have enough information?
-	
-	if(! ((x($ret,'name')) && (x($ret,'poll')) && ((x($ret,'url')) || (x($ret,'addr'))))) {
-		$result['message'] .=  t('The profile address specified does not provide adequate information.') . EOL;
-		if(! x($ret,'poll'))
-			$result['message'] .= t('No compatible communication protocols or feeds were discovered.') . EOL;
-		if(! x($ret,'name'))
-			$result['message'] .=  t('An author or name was not found.') . EOL;
-		if(! x($ret,'url'))
-			$result['message'] .=  t('No browser URL could be matched to this address.') . EOL;
-		if(strpos($url,'@') !== false) {
-			$result['message'] .=  t('Unable to match @-style Identity Address with a known protocol or email contact.') . EOL;
-			$result['message'] .=  t('Use mailto: in front of address to force email check.') . EOL;
-		}
+	if(! ($j->success && $j->guid)) {
+		$result['message'] = t('Unable to communicate with requested channel.');
 		return $result;
 	}
 
-	if($ret['network'] === NETWORK_OSTATUS && get_config('system','ostatus_disabled')) {
-		$result['message'] .= t('The profile address specified belongs to a network which has been disabled on this site.') . EOL;
-		$ret['notify'] = '';
-	}
 
+	// check service class limits
 
-
-
-
-
-	if(! $ret['notify']) {
-		$result['message'] .=  t('Limited profile. This person will be unable to receive direct/personal notifications from you.') . EOL;
-	}
-
-	$writeable = ((($ret['network'] === NETWORK_OSTATUS) && ($ret['notify'])) ? 1 : 0);
-
-
-	$hidden = 0;
-
-	// check if we already have a contact
-	// the poll url is more reliable than the profile url, as we may have
-	// indirect links or webfinger links
-
-	$r = q("SELECT * FROM `contact` WHERE `uid` = %d AND `poll` = '%s' LIMIT 1",
+	$r = q("select count(*) as total from abook where abook_channel = %d and not (abook_flags & %d)",
 		intval($uid),
-		dbesc($ret['poll'])
-	);			
+		intval(ABOOK_FLAG_SELF)
+	);
+	if($r)
+		$total_channels = $r[0]['total'];
 
-
-	if(count($r)) {
-		// update contact
-		if($r[0]['rel'] == CONTACT_IS_FOLLOWER || ($network === NETWORK_DIASPORA && $r[0]['rel'] == CONTACT_IS_SHARING)) {
-			q("UPDATE `contact` SET `rel` = %d , `readonly` = 0 WHERE `id` = %d AND `uid` = %d LIMIT 1",
-				intval(CONTACT_IS_FRIEND),
-				intval($r[0]['id']),
-				intval($uid)
-			);
-		}
+	if(! service_class_allows($uid,'total_channels',$total_channels)) {
+		$result['message'] .= upgrade_message();
+		return $result;
 	}
-	else {
 
+	// do we have an xchan and hubloc?
+	// If not, create them.	
 
-		// check service class limits
+	$xchan_hash = base64_urlencode(hash('whirlpool',$j->quid . $j->guid_sg, true));
 
-		$r = q("select count(*) as total from contact where uid = %d and pending = 0 and self = 0",
-			intval($uid)
+	$r = q("select * from xchan where xchan_hash = '%s' limit 1",
+		dbesc($xchan_hash)
+	);	
+	if(! $r) {
+		$x = q("insert into xchan ( xchan_hash, xchan_guid, xchan_guid_sig, xchan_pubkey, xchan_photo_mimetype,
+				xchan_photo_l, xchan_addr, xchan_url, xchan_name, xchan_network, xchan_photo_date, xchan_name_date)
+				values ( '%s', '%s', '%s', '%s' , '%s', '%s', '%s', '%s', '%s', '%s', '%s', '%s') ",
+			dbesc($xchan_hash),
+			dbesc($j->guid),
+			dbesc($j->guid_sig),
+			dbesc($j->key),
+			dbesc($j->photo_mimetype),
+			dbesc($j->photo),
+			dbesc($j->address),
+			dbesc($j->url),
+			dbesc($j->name),
+			dbesc('zot'),
+			dbesc($j->photo_updated),
+			dbesc($j->name_updated)
 		);
-		if(count($r))
-			$total_contacts = $r[0]['total'];
+	}
 
-		if(! service_class_allows($uid,'total_contacts',$total_contacts)) {
-			$result['message'] .= upgrade_message();
-			return $result;
-		}
 
-		$r = q("select count(network) as total from contact where uid = %d and network = '%s' and pending = 0 and self = 0",
-			intval($uid),
-			dbesc($network)
-		);
-		if(count($r))
-			$total_network = $r[0]['total'];
 
-		if(! service_class_allows($uid,'total_contacts_' . $network,$total_network)) {
-			$result['message'] .= upgrade_message();
-			return $result;
-		}
 
-		$new_relation = (($ret['network'] === NETWORK_MAIL) ? CONTACT_IS_FRIEND : CONTACT_IS_SHARING);
+	// Do we already have an abook entry?
+	// go directly to the abook edit page.
 
-		// create contact record 
-		$r = q("INSERT INTO `contact` ( `uid`, `created`, `url`, `nurl`, `addr`, `alias`, `batch`, `notify`, `poll`, `poco`, `name`, `nick`, `photo`, `network`, `pubkey`, `rel`, `priority`,
+
+
+	
+
+
+
+	$r = q("INSERT INTO `contact` ( `uid`, `created`, `url`, `nurl`, `addr`, `alias`, `batch`, `notify`, `poll`, `poco`, `name`, `nick`, `photo`, `network`, `pubkey`, `rel`, `priority`,
 			`writable`, `hidden`, `blocked`, `readonly`, `pending` )
 			VALUES ( %d, '%s', '%s', '%s', '%s', '%s', '%s', '%s', '%s', '%s', '%s', '%s', '%s', '%s', '%s', %d, %d, %d, %d, 0, 0, 0) ",
 			intval($uid),
