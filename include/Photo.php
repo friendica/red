@@ -523,18 +523,18 @@ class Photo {
 
 
 
-    public function store($uid, $cid, $rid, $filename, $album, $scale, $profile = 0, $allow_cid = '', $allow_gid = '', $deny_cid = '', $deny_gid = '') {
+    public function store($uid, $xchan, $rid, $filename, $album, $scale, $profile = 0, $allow_cid = '', $allow_gid = '', $deny_cid = '', $deny_gid = '') {
 
-        $x = q("select id from photo where `resource_id` = '%s' and uid = %d and `contact-id` = %d and `scale` = %d limit 1",
+        $x = q("select id from photo where `resource_id` = '%s' and uid = %d and `xchan` = '%s' and `scale` = %d limit 1",
                 dbesc($rid),
                 intval($uid),
-                intval($cid),
+                intval($xchan),
                 intval($scale)
         );
         if(count($x)) {
             $r = q("UPDATE `photo`
                 set `uid` = %d,
-                `contact-id` = %d,
+                `xchan` = '%s',
                 `resource_id` = '%s',
                 `created` = '%s',
                 `edited` = '%s',
@@ -553,7 +553,7 @@ class Photo {
                 where id = %d limit 1",
 
                 intval($uid),
-                intval($cid),
+                dbesc($xchan),
                 dbesc($rid),
                 dbesc(datetime_convert()),
                 dbesc(datetime_convert()),
@@ -574,10 +574,10 @@ class Photo {
         }
         else {
             $r = q("INSERT INTO `photo`
-                ( `uid`, `contact-id`, `resource_id`, `created`, `edited`, `filename`, type, `album`, `height`, `width`, `data`, `scale`, `profile`, `allow_cid`, `allow_gid`, `deny_cid`, `deny_gid` )
-                VALUES ( %d, %d, '%s', '%s', '%s', '%s', '%s', '%s', %d, %d, '%s', %d, %d, '%s', '%s', '%s', '%s' )",
+                ( `uid`, `xchan`, `resource_id`, `created`, `edited`, `filename`, type, `album`, `height`, `width`, `data`, `scale`, `profile`, `allow_cid`, `allow_gid`, `deny_cid`, `deny_gid` )
+                VALUES ( %d, '%s', '%s', '%s', '%s', '%s', '%s', '%s', %d, %d, '%s', %d, %d, '%s', '%s', '%s', '%s' )",
                 intval($uid),
-                intval($cid),
+                dbesc($xchan),
                 dbesc($rid),
                 dbesc(datetime_convert()),
                 dbesc(datetime_convert()),
@@ -644,15 +644,14 @@ function guess_image_type($filename, $fromcurl=false) {
 
 }
 
-function import_profile_photo($photo,$uid,$cid) {
+function import_profile_photo($photo,$xchan) {
 
     $a = get_app();
 
-    $r = q("select `resource_id` from photo where `uid` = %d and `contact-id` = %d and `scale` = 4 and `album` = 'Contact Photos' limit 1",
-        intval($uid),
-        intval($cid)
+    $r = q("select `resource_id` from photo where xchan = '%s' and `scale` = 4 limit 1",
+        dbesc($xchan)
     );
-    if(count($r)) {
+    if($r) {
         $hash = $r[0]['resource_id'];
     }
     else {
@@ -670,28 +669,28 @@ function import_profile_photo($photo,$uid,$cid) {
 
         $img->scaleImageSquare(175);
 
-        $r = $img->store($uid, $cid, $hash, $filename, 'Contact Photos', 4 );
+        $r = $img->store(0, $xchan, $hash, $filename, 'Contact Photos', 4 );
 
         if($r === false)
             $photo_failure = true;
 
         $img->scaleImage(80);
 
-        $r = $img->store($uid, $cid, $hash, $filename, 'Contact Photos', 5 );
+        $r = $img->store(0, $xchan, $hash, $filename, 'Contact Photos', 5 );
 
         if($r === false)
             $photo_failure = true;
 
         $img->scaleImage(48);
 
-        $r = $img->store($uid, $cid, $hash, $filename, 'Contact Photos', 6 );
+        $r = $img->store(0, $xchan, $hash, $filename, 'Contact Photos', 6 );
 
         if($r === false)
             $photo_failure = true;
 
-        $photo = $a->get_baseurl() . '/photo/' . $hash . '-4.' . $img->getExt();
-        $thumb = $a->get_baseurl() . '/photo/' . $hash . '-5.' . $img->getExt();
-        $micro = $a->get_baseurl() . '/photo/' . $hash . '-6.' . $img->getExt();
+        $photo = $a->get_baseurl() . '/photo/' . $hash . '-4';
+        $thumb = $a->get_baseurl() . '/photo/' . $hash . '-5';
+        $micro = $a->get_baseurl() . '/photo/' . $hash . '-6';
     }
     else
         $photo_failure = true;
@@ -700,8 +699,9 @@ function import_profile_photo($photo,$uid,$cid) {
         $photo = $a->get_baseurl() . '/images/person-175.jpg';
         $thumb = $a->get_baseurl() . '/images/person-80.jpg';
         $micro = $a->get_baseurl() . '/images/person-48.jpg';
+		$type = 'image/jpeg';
     }
 
-    return(array($photo,$thumb,$micro));
+    return(array($photo,$thumb,$micro,$type));
 
 }

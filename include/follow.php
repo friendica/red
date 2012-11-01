@@ -70,6 +70,8 @@ function new_contact($uid,$url,$channel,$interactive = false) {
 
 	$xchan_hash = base64_urlencode(hash('whirlpool',$j->quid . $j->guid_sg, true));
 
+// FIXME - verify the signature
+
 	$r = q("select * from xchan where xchan_hash = '%s' limit 1",
 		dbesc($xchan_hash)
 	);	
@@ -90,14 +92,59 @@ function new_contact($uid,$url,$channel,$interactive = false) {
 			dbesc($j->photo_updated),
 			dbesc($j->name_updated)
 		);
+
+		require_once("Photo.php");
+
+		$photos = import_profile_photo($j->photo,0,$contact_id);
+		$r = q("update xchan set xchan_photo_l = '%s', xchan_photo_m = '%s', xchan_photo_s' = '%s', xchan_photo_mimetype = '%s'
+				where xchan_hash = '%s' limit 1",
+				dbesc($photos[0]),
+				dbesc($photos[1]),
+				dbesc($photos[2]),
+				dbesc($photos[3]),
+				dbesc($xchan_hash)
+		);
+	}				
+
+	if($j->locations) {
+		foreach($j->locations as $location) {
+			$r = q("select * from hubloc where hubloc_hash = '%s' and hubloc_url = '%s' limit 1",
+				dbesc($xchan_hash),
+				dbesc($location['url'])
+			);
+			if($r)
+				continue;
+			
+// FIXME verify the signature
+
+			$r = q("insert into hubloc ( hubloc_guid, hubloc_guid_sig, hubloc_hash, hubloc_addr, hubloc_flags, hubloc_url, hubloc_url_sig, hubloc_host, hubloc_callback, hubloc_sitekey)
+					values ( '%s','%s','%s','%s', %d ,'%s','%s','%s','%s','%s')",
+				dbesc($j->guid),
+				dbesc($j->guid_sig),
+				dbesc($xchan_hash),
+				dbesc($location['address']),
+				intval((intval($location['primary'])) ? HUBLOC_FLAGS_PRIMARY : 0),
+				dbesc($location['url']),
+				dbesc($location['url_sig']),
+				dbesc($location['host']),
+				dbesc($location['callback']),
+				dbesc($location['sitekey'])
+			);
+
+		}
+
 	}
-
-
 
 
 	// Do we already have an abook entry?
 	// go directly to the abook edit page.
 
+
+	// Else create an entry
+
+
+
+	// Then send a ping/message to the other side
 
 
 	
@@ -151,31 +198,8 @@ function new_contact($uid,$url,$channel,$interactive = false) {
 		group_add_member($uid,'',$contact_id,$g[0]['def_gid']);
 	}
 
-	require_once("Photo.php");
-
-	$photos = import_profile_photo($ret['photo'],$uid,$contact_id);
-
-	$r = q("UPDATE `contact` SET `photo` = '%s', 
-			`thumb` = '%s',
-			`micro` = '%s', 
-			`name_date` = '%s', 
-			`uri_date` = '%s', 
-			`avatar_date` = '%s'
-			WHERE `id` = %d LIMIT 1
-		",
-			dbesc($photos[0]),
-			dbesc($photos[1]),
-			dbesc($photos[2]),
-			dbesc(datetime_convert()),
-			dbesc(datetime_convert()),
-			dbesc(datetime_convert()),
-			intval($contact_id)
-		);			
-
-
-	// pull feed and consume it
 */
-	proc_run('php',"include/poller.php","$contact_id");
+
 
 	$result['success'] = true;
 	return $result;
