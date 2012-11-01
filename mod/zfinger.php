@@ -7,11 +7,12 @@ function zfinger_init(&$a) {
 
 	$ret = array('success' => false);
 
-	$zguid   = ((x($_REQUEST,'guid')) ? $_REQUEST['guid'] : '');
-	$zaddr   = ((x($_REQUEST,'address')) ? $_REQUEST['address'] : '');
-	$ztarget = ((x($_REQUEST,'target'))      ? $_REQUEST['target']  : '');
-	$zsig    = ((x($_REQUEST,'target_sig'))  ? $_REQUEST['target_sig']  : '');
-		
+	$zguid   = ((x($_REQUEST,'guid'))        ? $_REQUEST['guid'] : '');
+	$zaddr   = ((x($_REQUEST,'address'))     ? $_REQUEST['address'] : '');
+	$ztarget = ((x($_REQUEST,'target'))      ? trim($_REQUEST['target'])  : '');
+	$zsig    = ((x($_REQUEST,'target_sig'))  ? trim($_REQUEST['target_sig'])  : '');
+
+
 	$r = null;
 
 	if(strlen($zguid)) {
@@ -63,23 +64,28 @@ function zfinger_init(&$a) {
 	$ret['photo_updated'] = $e['xchan_photo_date'];
 	$ret['target']        = $ztarget;
 	$ret['target_sig']    = $zsig;
-	$ret['permissions']   = map_perms($r[0],$ztarget,$zsig);
+
+	$ret['permissions']   = get_all_perms($e['channel_id'],(($ztarget && $zsig) 
+			? base64url_encode(hash('whirlpool',$ztarget . $zsig,true)) 
+			: '' ),false);
+
+
 
 //	$ret['profile']  = $profile;
 
 	// array of (verified) hubs this channel uses
 
-	$ret['hubs'] = array();
+	$ret['locations'] = array();
 	$x = zot_get_hubloc(array($e['channel_hash']));
 	if($x && count($x)) {
 		foreach($x as $hub) {
 			if(! ($hub['hubloc_flags'] & HUBLOC_FLAGS_UNVERIFIED)) {
-				$ret['hubs'][] = array(
+				$ret['locations'][] = array(
+					'host'     => $hub['hubloc_host'],
+					'address'  => $hub['hubloc_addr'],
 					'primary'  => (($hub['hubloc_flags'] & HUBLOC_FLAGS_PRIMARY) ? true : false),
 					'url'      => $hub['hubloc_url'],
 					'url_sig'  => $hub['hubloc_url_sig'],
-					'host'     => $hub['hubloc_host'],
-					'address'  => $hub['hubloc_addr'],
 					'callback' => $hub['hubloc_callback'],
 					'sitekey'  => $hub['hubloc_sitekey']
 				);

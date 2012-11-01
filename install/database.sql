@@ -128,7 +128,7 @@ CREATE TABLE IF NOT EXISTS `channel` (
   `channel_name` char(255) NOT NULL DEFAULT '',
   `channel_address` char(255) NOT NULL DEFAULT '',
   `channel_guid` char(255) NOT NULL DEFAULT '',
-  `channel_guid_sig` char(255) NOT NULL DEFAULT '',
+  `channel_guid_sig` text NOT NULL,
   `channel_hash` char(255) NOT NULL DEFAULT '',
   `channel_timezone` char(128) NOT NULL DEFAULT 'UTC',
   `channel_location` char(255) NOT NULL DEFAULT '',
@@ -183,7 +183,6 @@ CREATE TABLE IF NOT EXISTS `channel` (
   KEY `channel_w_photos` (`channel_w_photos`),
   KEY `channel_w_chat` (`channel_w_chat`),
   KEY `channel_guid` (`channel_guid`),
-  KEY `channel_guid_sig` (`channel_guid_sig`),
   KEY `channel_hash` (`channel_hash`),
   KEY `channel_expire_days` (`channel_expire_days`)
 ) ENGINE=MyISAM  DEFAULT CHARSET=utf8;

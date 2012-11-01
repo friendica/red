@@ -72,6 +72,57 @@ function zot_notify($channel,$url) {
 	return($x);
 }
 
+function zot_finger($webbie,$channel) {
+
+	if(strpos($webbie,'@') === false) {
+		$address = $webbie;
+		$host = get_app()->get_hostname();
+	}
+	else {
+		$address = substr($webbie,0,strpos($webbie,'@'));
+		$host = substr($webbie,strpos($webbie,'@')+1);
+	}
+
+	$xchan_addr = $address . '@' . $host;
+
+	$r = q("select xchan.*, hubloc.* from xchan 
+			left join hubloc on xchan_hash = hubloc_hash
+			where xchan_addr = '%s' and (hubloc_flags & %d) limit 1",
+		dbesc($xchan_address),
+		intval(HUBLOC_FLAGS_PRIMARY)
+	);
+
+	if($r) {
+		$url = $r[0]['hubloc_url'];
+	}
+	else {
+		$url = 'https://' . $host;
+	}
+	
+	$rhs = '/.well-known/zot-guid';
+
+	if($channel) {
+		$postvars = array(
+			'address' => $address,
+			'target'  => $channel['channel_guid'],
+			'target_sig' => $channel['channel_guid_sig']
+		);
+		$result = z_post_url($url . $rhs,$postvars);
+		if(! $result['success'])
+			$result = z_post_url('http://' . $host . $rhs,$postvars);
+	}		
+	else {
+		$rhs .= 'address=' . urlencode($address);
+
+		$result =  z_fetch_url($url . $rhs);
+		if(! $result['success'])
+			$result = z_fetch_url('http://' . $host . $rhs);
+	}
+	
+	return $result;	 
+
+}
+
 		
 function zot_gethub($arr) {
 
