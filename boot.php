@@ -864,14 +864,14 @@ if(! function_exists('check_config')) {
 		if($build != DB_UPDATE_VERSION) {
 			$stored = intval($build);
 			$current = intval(DB_UPDATE_VERSION);
-			if(($stored < $current) && file_exists('update.php')) {
+			if(($stored < $current) && file_exists('install/update.php')) {
 
 				load_config('database');
 
 				// We're reporting a different version than what is currently installed.
 				// Run any existing update scripts to bring the database up to current.
 
-				require_once('update.php');
+				require_once('install/update.php');
 
 				// make sure that boot.php and update.php are the same release, we might be
 				// updating right this very second and the correct version of the update.php

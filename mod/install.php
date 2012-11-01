@@ -336,7 +336,7 @@ function check_php(&$phpath, &$checks) {
 	
 	if($passed) {
 		$str = autoname(8);
-		$cmd = "$phpath testargs.php $str";
+		$cmd = "$phpath install/testargs.php $str";
 		$result = trim(shell_exec($cmd));
 		$passed2 = $result == $str;
 		$help = "";
