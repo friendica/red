@@ -11,7 +11,7 @@
 
 require_once('include/zot.php');
 
-function new_contact($uid,$url,$channel.$interactive = false) {
+function new_contact($uid,$url,$channel,$interactive = false) {
 
 	$result = array('success' => false,'message' => '');
 
