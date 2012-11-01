@@ -31,7 +31,7 @@ function new_contact($uid,$url,$channel,$interactive = false) {
 
 	call_hooks('follow', $arr);
 
-	if($arr['channel']['success'])) 
+	if($arr['channel']['success']) 
 		$ret = $arr['channel'];
 	else
 		$ret = zot_finger($url,$channel,false);
@@ -102,7 +102,7 @@ function new_contact($uid,$url,$channel,$interactive = false) {
 
 	
 
-
+/*
 
 	$r = q("INSERT INTO `contact` ( `uid`, `created`, `url`, `nurl`, `addr`, `alias`, `batch`, `notify`, `poll`, `poco`, `name`, `nick`, `photo`, `network`, `pubkey`, `rel`, `priority`,
 			`writable`, `hidden`, `blocked`, `readonly`, `pending` )
@@ -174,9 +174,12 @@ function new_contact($uid,$url,$channel,$interactive = false) {
 
 
 	// pull feed and consume it
-
+*/
 	proc_run('php',"include/poller.php","$contact_id");
 
 	$result['success'] = true;
 	return $result;
+
+
+
 }

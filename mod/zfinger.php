@@ -60,7 +60,7 @@ function zfinger_init(&$a) {
 	$ret['name']           = $e['xchan_name'];
 	$ret['name_updated']   = $e['xchan_name_date'];
 	$ret['address']        = $e['xchan_addr'];
-	$ret['photo_mimetype'] = $e['xchan_photo_mimetype'],
+	$ret['photo_mimetype'] = $e['xchan_photo_mimetype'];
 	$ret['photo']          = $e['xchan_photo_l'];
 	$ret['photo_updated']  = $e['xchan_photo_date'];
 	$ret['url']            = $e['xchan_url'];
