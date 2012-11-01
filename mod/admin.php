@@ -471,7 +471,7 @@ function admin_page_dbsync(&$a) {
 	}
 
 	if($a->argc > 2 && intval($a->argv[2])) {
-		require_once('update.php');
+		require_once('install/update.php');
 		$func = 'update_' . intval($a->argv[2]);
 		if(function_exists($func)) {
 			$retval = $func();
