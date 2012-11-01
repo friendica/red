@@ -40,7 +40,7 @@ function zot_get_hubloc($arr,$primary = false) {
 
 	$sql_extra = (($primary) ? " and hubloc_flags & " . intval(HUBLOC_FLAGS_PRIMARY) : "" );
 	$limit = (($primary) ? " limit 1 " : "");
-	return q("select * from hubloc where hubloc_guid in ( $tmp ) $sql_extra order by hubloc_url $limit");
+	return q("select * from hubloc where hubloc_hash in ( $tmp ) $sql_extra order by hubloc_url $limit");
 
 }
 	 
