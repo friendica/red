@@ -54,16 +54,17 @@ function zfinger_init(&$a) {
 
 	// Communication details
 
-	$ret['guid']          = $e['xchan_guid'];
-	$ret['guid_sig']      = $e['xchan_guid_sig'];
-	$ret['key']           = $e['xchan_pubkey'];
-	$ret['name']          = $e['xchan_name'];
-	$ret['name_updated']  = $e['xchan_name_date'];
-	$ret['address']       = $e['xchan_addr'];
-	$ret['photo']         = $e['xchan_photo_l'];
-	$ret['photo_updated'] = $e['xchan_photo_date'];
-	$ret['target']        = $ztarget;
-	$ret['target_sig']    = $zsig;
+	$ret['guid']           = $e['xchan_guid'];
+	$ret['guid_sig']       = $e['xchan_guid_sig'];
+	$ret['key']            = $e['xchan_pubkey'];
+	$ret['name']           = $e['xchan_name'];
+	$ret['name_updated']   = $e['xchan_name_date'];
+	$ret['address']        = $e['xchan_addr'];
+	$ret['photo_mimetype'] = $e['xchan_photo_mimetype'],
+	$ret['photo']          = $e['xchan_photo_l'];
+	$ret['photo_updated']  = $e['xchan_photo_date'];
+	$ret['target']         = $ztarget;
+	$ret['target_sig']     = $zsig;
 
 	$ret['permissions']   = get_all_perms($e['channel_id'],(($ztarget && $zsig) 
 			? base64url_encode(hash('whirlpool',$ztarget . $zsig,true)) 
