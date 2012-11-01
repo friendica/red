@@ -467,11 +467,11 @@ CREATE TABLE IF NOT EXISTS `hook` (
 CREATE TABLE IF NOT EXISTS `hubloc` (
   `hubloc_id` int(10) unsigned NOT NULL AUTO_INCREMENT,
   `hubloc_guid` char(255) NOT NULL DEFAULT '',
-  `hubloc_guid_sig` char(255) NOT NULL,
+  `hubloc_guid_sig` text NOT NULL,
   `hubloc_hash` char(255) NOT NULL,
   `hubloc_flags` int(10) unsigned NOT NULL DEFAULT '0',
   `hubloc_url` char(255) NOT NULL DEFAULT '',
-  `hubloc_url_sig` char(255) NOT NULL,
+  `hubloc_url_sig` text NOT NULL,
   `hubloc_host` char(255) NOT NULL DEFAULT '',
   `hubloc_callback` char(255) NOT NULL DEFAULT '',
   `hubloc_connect` char(255) NOT NULL DEFAULT '',
@@ -480,8 +480,6 @@ CREATE TABLE IF NOT EXISTS `hubloc` (
   KEY `hubloc_url` (`hubloc_url`),
   KEY `hubloc_guid` (`hubloc_guid`),
   KEY `hubloc_flags` (`hubloc_flags`),
-  KEY `hubloc_guid_sig` (`hubloc_guid_sig`),
-  KEY `hubloc_url_sig` (`hubloc_url_sig`),
   KEY `hubloc_connect` (`hubloc_connect`),
   KEY `hubloc_host` (`hubloc_host`)
 ) ENGINE=MyISAM  DEFAULT CHARSET=utf8;
@@ -902,7 +900,7 @@ CREATE TABLE IF NOT EXISTS `tokens` (
 CREATE TABLE IF NOT EXISTS `xchan` (
   `xchan_hash` char(255) NOT NULL,
   `xchan_guid` char(255) NOT NULL DEFAULT '',
-  `xchan_guid_sig` char(255) NOT NULL DEFAULT '',
+  `xchan_guid_sig` text NOT NULL,
   `xchan_pubkey` text NOT NULL,
   `xchan_photo_mimetype` char(32) NOT NULL DEFAULT 'image/jpeg',
   `xchan_photo_l` char(255) NOT NULL DEFAULT '',
