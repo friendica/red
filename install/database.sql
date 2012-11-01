@@ -469,6 +469,7 @@ CREATE TABLE IF NOT EXISTS `hubloc` (
   `hubloc_guid` char(255) NOT NULL DEFAULT '',
   `hubloc_guid_sig` text NOT NULL,
   `hubloc_hash` char(255) NOT NULL,
+  `hubloc_addr` char(255) NOT NULL DEFAULT '',
   `hubloc_flags` int(10) unsigned NOT NULL DEFAULT '0',
   `hubloc_url` char(255) NOT NULL DEFAULT '',
   `hubloc_url_sig` text NOT NULL,
@@ -481,7 +482,8 @@ CREATE TABLE IF NOT EXISTS `hubloc` (
   KEY `hubloc_guid` (`hubloc_guid`),
   KEY `hubloc_flags` (`hubloc_flags`),
   KEY `hubloc_connect` (`hubloc_connect`),
-  KEY `hubloc_host` (`hubloc_host`)
+  KEY `hubloc_host` (`hubloc_host`),
+  KEY `hubloc_addr` (`hubloc_addr`)
 ) ENGINE=MyISAM  DEFAULT CHARSET=utf8;
 
 CREATE TABLE IF NOT EXISTS `intro` (

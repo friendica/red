@@ -79,6 +79,7 @@ function zfinger_init(&$a) {
 					'url'      => $hub['hubloc_url'],
 					'url_sig'  => $hub['hubloc_url_sig'],
 					'host'     => $hub['hubloc_host'],
+					'address'  => $hub['hubloc_addr'],
 					'callback' => $hub['hubloc_callback'],
 					'sitekey'  => $hub['hubloc_sitekey']
 				);
