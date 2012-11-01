@@ -11,6 +11,17 @@ function manage_content(&$a) {
 
 	$change_channel = ((argc() > 1) ? intval(argv(1)) : 0);
 
+	if((argc() > 2) && (argv(2) === 'primary')) {
+		q("update channel set channel_primary = 0 where channel_account_id = %d",
+			intval(get_account_id())
+		);
+		q("update channel set channel_primary = 1 where channel_id = %d and channel_account_id = %d limit 1",
+			intval($change_channel),
+			intval(get_account_id())
+		);
+		goaway(z_root() . '/manage');
+	}
+
 	if($change_channel) {
 		$r = change_channel($change_channel);
 
@@ -39,10 +50,12 @@ function manage_content(&$a) {
 
 
 	$o = replace_macros(get_markup_template('channels.tpl'), array(
-		'$header'       => t('Channel Manager'),
-		'$desc'         => t('Attach to one of your channels by selecting it.'),
-		'$links'        => $links,
-		'$all_channels' => $channels,
+		'$header'           => t('Channel Manager'),
+		'$desc'             => t('Attach to one of your channels by selecting it.'),
+		'$msg_primary'      => t('Default Channel'),
+		'$msg_make_primary' => t('Make Default'),
+		'$links'            => $links,
+		'$all_channels'     => $channels,
 	));
 
 

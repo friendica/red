@@ -1,0 +1,14 @@
+
+
+#channels-desc {
+	margin-top: 15px;
+	margin-bottom: 20px;
+}
+
+.channel-selection {
+	width: 120px;
+	float: left;
+}
+.channels-end {
+	clear: both;
+}
