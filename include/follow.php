@@ -2,28 +2,28 @@
 
 
 //
-// Takes a $uid and a url/handle and adds a new channel
+// Takes a $uid and the channel associated with the uid, and a url/handle and adds a new channel
 
 // Returns an array
 //  $return['success'] boolean true if successful
 //  $return['abook_id'] Address book ID if successful
 //  $return['message'] error text if success is false.
 
+require_once('include/zot.php');
 
-
-function new_contact($uid,$url,$interactive = false) {
+function new_contact($uid,$url,$channel.$interactive = false) {
 
 	$result = array('success' => false,'message' => '');
 
 	$a = get_app();
 
 	if(! allowed_url($url)) {
-		$result['message'] = t('Disallowed profile URL.');
+		$result['message'] = t('Channel is blocked on this site.');
 		return $result;
 	}
 
 	if(! $url) {
-		$result['message'] = t('Connect URL missing.');
+		$result['message'] = t('Channel location missing.');
 		return $result;
 	}
 
@@ -34,9 +34,15 @@ function new_contact($uid,$url,$interactive = false) {
 	if(x($arr['contact'],'name')) 
 		$ret = $arr['contact'];
 	else
-		$ret = zot_probe_url($url);
+		$ret = zot_finger($url,$channel,false);
 
+	if($ret['success']) {
+		$j = json_decode($ret['body']);
 
+	}
+
+//	logger('follow: ' . print_r($j,true));
+	killme();
 
 
 	if($ret['network'] === NETWORK_DFRN) {

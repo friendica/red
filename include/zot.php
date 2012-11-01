@@ -74,6 +74,8 @@ function zot_notify($channel,$url) {
 
 function zot_finger($webbie,$channel) {
 
+
+	logger('zot_finger:' . print_r($channel,true));
 	if(strpos($webbie,'@') === false) {
 		$address = $webbie;
 		$host = get_app()->get_hostname();
