@@ -660,6 +660,10 @@ function settings_content(&$a) {
 	if(argv(1) === 'channel') {
 
 		require_once('include/acl_selectors.php');
+		require_once('include/permissions.php');
+
+
+
 
 		$p = q("SELECT * FROM `profile` WHERE `is_default` = 1 AND `uid` = %d LIMIT 1",
 			intval(local_user())
@@ -670,6 +674,40 @@ function settings_content(&$a) {
 		load_pconfig(local_user(),'expire');
 
 		$channel = $a->get_channel();
+
+
+		global $global_perms;
+
+		$perms = perms_text();
+		$permiss = array();
+
+		$perm_cats = array(
+			array( t('Only those you allow'), PERMS_SPECIFIC), 
+			array( t('Anybody in your address book'), PERMS_CONTACTS),
+			array( t('Anybody on this hub/website'), PERMS_SITE),
+			array( t('Anybody in the network'), PERMS_NETWORK),
+			array( t('Anybody'), PERMS_PUBLIC)
+		);
+
+
+		foreach($perms as $k => $perm) {
+
+			$permiss[$k] = array(
+				'key' => $k,
+				'label' => $perm,
+				'fields' => array()
+			);
+			$column = $global_perms[$k][0];
+			foreach($perm_cats as $cat) {
+				$permiss[$k]['fields'][] = array( $column, $cat[0], $cat[1], '', (($channel[$column] == $cat[1]) ? '1' : ''));
+			}
+			
+		}
+
+
+logger('permiss: ' . print_r($permiss,true));
+
+
 
 		$username   = $channel['channel_name'];
 		$email      = $a->account['account_email'];
@@ -819,6 +857,10 @@ function settings_content(&$a) {
 			'network_only' => array('expire_network_only',  t("Only expire posts by others:"), $expire_network_only, '', array(t('No'),t('Yes'))),		
 		);
 
+
+
+
+
 		require_once('include/group.php');
 		$group_select = mini_group_select(local_user(),$a->user['def_gid']);
 
@@ -844,6 +886,8 @@ function settings_content(&$a) {
 		
 
 			'$h_prv' 	=> t('Security and Privacy Settings'),
+
+			'$permiss_arr' => $permiss,
 
 			'$maxreq' 	=> array('maxreq', t('Maximum Friend Requests/Day:'), $maxreq ,t("\x28to prevent spam abuse\x29")),
 			'$permissions' => t('Default Post Permissions'),

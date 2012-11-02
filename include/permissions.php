@@ -20,6 +20,28 @@
 	);
 
 
+
+function perms_text() {
+	$perms_text = array(
+		'view_stream' => t('Who can view your channel stream and posts'),
+		'view_profile' => t('Who can view your channel profile'),
+		'view_photos' => t('Who can view your photo albums'),
+		'view_contacts' => t('Who can view your address book'),
+
+		'send_stream' => t('Who can send you their channel stream and posts'),
+		'post_wall' => t('Who can post on your channel page'),
+		'post_comments' => t('Who can comment on your posts'),
+		'post_mail' => t('Who can send you private mail messages'),
+		'post_photos' => t('Who can post photos to your photo albums'),
+		'tag_deliver' => t('Who can forward to all your channel contacts via post tags'),
+		'chat' => t('Who can chat with you (when available)')
+	);
+	return $perms_text;
+}
+		
+
+
+
 /**
  * get_all_perms($uid,$observer)
  *

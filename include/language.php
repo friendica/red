@@ -125,7 +125,7 @@ function load_translation_table($lang) {
 if(! function_exists('t')) {
 function t($s) {
 
-	$a = get_app();
+	global $a;
 
 	if(x($a->strings,$s)) {
 		$t = $a->strings[$s];

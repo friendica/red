@@ -1,0 +1,16 @@
+.settings-permission-label {
+	font-weight: bold;
+	margin-bottom: 10px;
+}
+#settings-permissions-wrapper .field {
+	margin-left: 15px;
+	padding-bottom: 0px;
+	margin-bottom: 0px;
+}
+#settings-permissions-wrapper .field label{
+	width: 200px;
+}
+#settings-permissions-wrapper .field input{
+	text-align: left;
+	width: 50px;
+}

@@ -17,7 +17,8 @@ function new_channel_init(&$a) {
 		$test = array();
 
 		// first name
-		$test[] = legal_webbie(substr($x,0,strpos($x,' ')));
+		if(strpos($x,' '))
+			$test[] = legal_webbie(substr($x,0,strpos($x,' ')));
 		if($test[0]) {
 			// first name plus first initial of last
 			$test[] = ((strpos($x,' ')) ? $test[0] . legal_webbie(trim(substr($x,strpos($x,' '),2))) : '');

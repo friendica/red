@@ -35,6 +35,23 @@ $nickname_block
 
 <input type="hidden" name="visibility" value="$visibility" />
 
+
+
+<div id="settings-permissions-wrapper">
+{{ for $permiss_arr as $permit }}
+<div id="settings-perms-$permit.key" class="settings-permission-label">$permit.label</div>
+{{ for $permit.fields as $radio }}
+
+	{{inc field_radio.tpl with $field=$radio }}{{endinc}}
+
+{{ endfor }}
+{{ endfor }}
+</div>
+
+
+
+
+
 {{inc field_input.tpl with $field=$maxreq }}{{endinc}}
 
 $profile_in_dir
@@ -72,7 +89,6 @@ $unkmail
 	</div>
 
 </div>
-
 
 <div id="settings-default-perms" class="settings-default-perms" >
 	<a href="#profile-jot-acl-wrapper" id="settings-default-perms-menu" class='popupbox'>$permissions $permdesc</a>
