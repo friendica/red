@@ -237,10 +237,13 @@ function settings_post(&$a) {
 		}
 
 		if(! $err) {
-			$password = hash('whirlpool',$newpass);
-			$r = q("UPDATE `user` SET `password` = '%s' WHERE `uid` = %d LIMIT 1",
-				dbesc($password),
-				intval(local_user())
+
+			$salt = random_string(32);
+			$password_encoded = hash('whirlpool', $salt . $newpass);
+			$r = q("update account set account_salt = '%s', account_password = '%s' where account_id = %d limit 1",
+				dbesc($salt),
+				dbesc($password_encoded),
+				intval(get_account_id())
 			);
 			if($r)
 				info( t('Password changed.') . EOL);
@@ -281,6 +284,22 @@ function settings_post(&$a) {
 	$post_newfriend   = (($_POST['post_newfriend'] == 1) ? 1: 0);
 	$post_joingroup   = (($_POST['post_joingroup'] == 1) ? 1: 0);
 	$post_profilechange   = (($_POST['post_profilechange'] == 1) ? 1: 0);
+
+	$arr = array();
+	$arr['channel_r_stream']   = (($_POST['channel_r_stream'])  ? $_POST['channel_r_stream']  : 0);
+	$arr['channel_r_profile']  = (($_POST['channel_r_profile']) ? $_POST['channel_r_profile'] : 0);
+	$arr['channel_r_photos']   = (($_POST['channel_r_photos'])  ? $_POST['channel_r_photos']  : 0);
+	$arr['channel_r_abook']    = (($_POST['channel_r_abook'])   ? $_POST['channel_r_abook']   : 0);
+	$arr['channel_w_stream']   = (($_POST['channel_w_stream'])  ? $_POST['channel_w_stream']  : 0);
+	$arr['channel_w_wall']     = (($_POST['channel_w_wall'])    ? $_POST['channel_w_wall']    : 0);
+	$arr['channel_w_tagwall']  = (($_POST['channel_w_tagwall']) ? $_POST['channel_w_tagwall'] : 0);
+	$arr['channel_w_comment']  = (($_POST['channel_w_comment']) ? $_POST['channel_w_comment'] : 0);
+	$arr['channel_w_mail']     = (($_POST['channel_w_mail'])    ? $_POST['channel_w_mail']    : 0);
+	$arr['channel_w_photos']   = (($_POST['channel_w_photos'])  ? $_POST['channel_w_photos']  : 0);
+	$arr['channel_w_chat']     = (($_POST['channel_w_chat'])    ? $_POST['channel_w_chat']    : 0);
+
+
+
 
 	$notify = 0;
 
@@ -365,6 +384,7 @@ function settings_post(&$a) {
 		}
 	}
 
+/*
 	$r = q("UPDATE `user` SET `username` = '%s', `email` = '%s', `openid` = '%s', `timezone` = '%s',  `allow_cid` = '%s', `allow_gid` = '%s', `deny_cid` = '%s', `deny_gid` = '%s', `notify-flags` = %d, `page-flags` = %d, `default-location` = '%s', `allow_location` = %d, `maxreq` = %d, `expire` = %d, `openidserver` = '%s', `def_gid` = %d, `blockwall` = %d, `hidewall` = %d, `blocktags` = %d, `unkmail` = %d, `cntunkmail` = %d  WHERE `uid` = %d LIMIT 1",
 			dbesc($username),
 			dbesc($email),
@@ -389,6 +409,29 @@ function settings_post(&$a) {
 			intval($cntunkmail),
 			intval(local_user())
 	);
+*/
+
+	$r = q("update channel set channel_r_stream = %d, channel_r_profile = %d, channel_r_photos = %d, channel_r_abook = %d, channel_w_stream = %d, channel_w_wall = %d, channel_w_tagwall = %d, channel_w_comment = %d, channel_w_mail = %d, channel_w_photos = %d, channel_w_chat = %d where channel_id = %d limit 1",
+		intval($arr['channel_r_stream']),
+		intval($arr['channel_r_profile']),
+		intval($arr['channel_r_photos']),
+		intval($arr['channel_r_abook']), 
+		intval($arr['channel_w_stream']),
+		intval($arr['channel_w_wall']),  
+		intval($arr['channel_w_tagwall']),
+		intval($arr['channel_w_comment']),
+		intval($arr['channel_w_mail']),   
+		intval($arr['channel_w_photos']), 
+		intval($arr['channel_w_chat']),
+		intval(local_user())
+	);   
+
+
+
+
+
+
+
 	if($r)
 		info( t('Settings updated.') . EOL);
 
@@ -402,19 +445,19 @@ function settings_post(&$a) {
 	);
 
 
-	if($name_change) {
-		q("UPDATE `contact` SET `name` = '%s', `name_date` = '%s' WHERE `uid` = %d AND `self` = 1 LIMIT 1",
-			dbesc($username),
-			dbesc(datetime_convert()),
-			intval(local_user())
-		);
-	}		
+//	if($name_change) {
+//		q("UPDATE `contact` SET `name` = '%s', `name_date` = '%s' WHERE `uid` = %d AND `self` = 1 LIMIT 1",
+//			dbesc($username),
+//			dbesc(datetime_convert()),
+//			intval(local_user())
+//		);
+//	}		
 
 	if(($old_visibility != $net_publish) || ($page_flags != $old_page_flags)) {
 		// Update global directory in background
 		$url = $_SESSION['my_url'];
-		if($url && strlen(get_config('system','directory_submit_url')))
-			proc_run('php',"include/directory.php","$url");
+//		if($url && strlen(get_config('system','directory_submit_url')))
+//			proc_run('php',"include/directory.php","$url");
 
 	}
 
@@ -682,7 +725,7 @@ function settings_content(&$a) {
 		$permiss = array();
 
 		$perm_cats = array(
-			array( t('Only those you allow'), PERMS_SPECIFIC), 
+			array( t('Only those you specifically allow'), PERMS_SPECIFIC), 
 			array( t('Anybody in your address book'), PERMS_CONTACTS),
 			array( t('Anybody on this hub/website'), PERMS_SITE),
 			array( t('Anybody in the network'), PERMS_NETWORK),
@@ -699,6 +742,8 @@ function settings_content(&$a) {
 			);
 			$column = $global_perms[$k][0];
 			foreach($perm_cats as $cat) {
+				if((! $global_perms[$k][2]) && $cat[1] == PERMS_PUBLIC)
+					continue;
 				$permiss[$k]['fields'][] = array( $column, $cat[0], $cat[1], '', (($channel[$column] == $cat[1]) ? '1' : ''));
 			}
 			
