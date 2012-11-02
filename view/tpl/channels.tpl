@@ -7,10 +7,16 @@
 {{ endfor }}
 {{ endif }} 
 
+{{ if $selected }}
+<div id="channels-selected">$msg_selected</div>
+{{ inc channel.tpl with $channel=$selected }}{{ endinc }}
+<div class="channels-end selected"></div>
+{{ endif }}
+
 <div id="channels-desc" class="descriptive-text">$desc</div>
 
 {{ for $all_channels as $chn }}
 {{ inc channel.tpl with $channel=$chn }}{{ endinc }}
 {{ endfor }} 
 
-<div class="channels-end"></div>
+<div class="channels-end all"></div>
