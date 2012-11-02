@@ -20,10 +20,16 @@ function photos_init(&$a) {
 			dbesc($nick)
 		);
 
-		if(! ($r && count($r)))
+		if(! $r)
 			return;
 
 		$a->data['channel'] = $r[0];
+
+		$o .= '<div class="vcard">';
+		$o .= '<div class="fn">' . $a->data['channel']['channel_name'] . '</div>';
+		$o .= '<div id="profile-photo-wrapper"><img class="photo" style="width: 175px; height: 175px;" src="' . $a->get_cached_avatar_image($a->get_baseurl() . '/photo/profile/l/' . $a->data['channel']['channel_id']) . '" alt="' . $a->data['channel']['channel_name'] . '" /></div>';
+		$o .= '</div>';
+
 
 		$sql_extra = permissions_sql($a->data['channel']['channel_id']);
 
@@ -34,11 +40,6 @@ function photos_init(&$a) {
 		if(count($albums)) {
 			$a->data['albums'] = $albums;
 // FIXME
-			$o .= '<div class="vcard">';
-			$o .= '<div class="fn">' . $a->data['channel']['channel_name'] . '</div>';
-			$o .= '<div id="profile-photo-wrapper"><img class="photo" style="width: 175px; height: 175px;" src="' . $a->get_cached_avatar_image($a->get_baseurl() . '/photo/profile/l/' . $a->data['channel']['channel_id']) . '" alt="' . $a->data['channel']['channel_name'] . '" /></div>';
-			$o .= '</div>';
-
 			$albums_visible = ((intval($a->data['user']['hidewall']) && (! local_user()) && (! remote_user())) ? false : true);	
 
 			if($albums_visible) {
