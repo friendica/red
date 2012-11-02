@@ -54,8 +54,6 @@ function zfinger_init(&$a) {
 
 	// Communication details
 
-	$ret['hash']           = $e['xchan_hash'];
-	$ret['calc']           = base64url_encode(hash('whirlpool',$e['xchan_guid'] . $e['xchan_guid_sig'],true));
 	$ret['guid']           = $e['xchan_guid'];
 	$ret['guid_sig']       = $e['xchan_guid_sig'];
 	$ret['key']            = $e['xchan_pubkey'];

@@ -70,6 +70,9 @@ function new_contact($uid,$url,$channel,$interactive = false) {
 
 	$x = import_xchan_from_json($j);
 
+	if(! $x['success']) 
+		return $x;
+
 	// Do we already have an abook entry?
 	// go directly to the abook edit page.
 

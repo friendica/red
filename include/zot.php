@@ -188,10 +188,16 @@ function zot_register_hub($arr) {
 
 function import_xchan_from_json($j) {
 
+	$ret = array('success' => false);
+
 	$xchan_hash = base64url_encode(hash('whirlpool',$j->guid . $j->guid_sig, true));
 	$import_photos = false;
 
-// FIXME - verify the signature
+	if(! rsa_verify($j->guid,base64url_decode($j->guid_sig),$j->key)) {
+		logger('import_xchan_from_json: Unable to verify channel signature for ' . $j->address);
+		$ret['message'] = t('Unable to verify channel signature');
+		return $ret;
+	}
 
 	$r = q("select * from xchan where xchan_hash = '%s' limit 1",
 		dbesc($xchan_hash)
@@ -248,6 +254,12 @@ function import_xchan_from_json($j) {
 
 	if($j->locations) {
 		foreach($j->locations as $location) {
+			if(! rsa_verify($location->url,base64url_decode($location->url_sig),$j->key)) {
+				logger('import_xchan_from_json: Unable to verify site signature for ' . $location->url);
+				$ret['message'] .= sprintf( t('Unable to verify site signature for %s'), $location->url) . EOL;
+				continue;
+			}
+
 			$r = q("select * from hubloc where hubloc_hash = '%s' and hubloc_url = '%s' limit 1",
 				dbesc($xchan_hash),
 				dbesc($location->url)
@@ -261,7 +273,6 @@ function import_xchan_from_json($j) {
 				}
 				continue;
 			}
-// FIXME verify the signature
 
 			$r = q("insert into hubloc ( hubloc_guid, hubloc_guid_sig, hubloc_hash, hubloc_addr, hubloc_flags, hubloc_url, hubloc_url_sig, hubloc_host, hubloc_callback, hubloc_sitekey)
 					values ( '%s','%s','%s','%s', %d ,'%s','%s','%s','%s','%s')",
@@ -281,4 +292,8 @@ function import_xchan_from_json($j) {
 
 	}
 
+	if(! x($ret,'message')) {
+		$ret['success'] = true;
+	}
+	return $ret;
 }
