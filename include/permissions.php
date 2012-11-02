@@ -4,10 +4,10 @@
 function get_perms() {
 	$global_perms = array(
 		// Read only permissions
-		'view_stream'   => array('channel_r_stream',  intval(PERMS_R_STREAM),  true, t('Who can view your channel stream and posts')),
-		'view_profile'  => array('channel_r_profile', intval(PERMS_R_PROFILE), true, t('Who can view your channel profile')),
-		'view_photos'   => array('channel_r_photos',  intval(PERMS_R_PHOTOS),  true, t('Who can view your photo albums')),
-		'view_contacts' => array('channel_r_abook',   intval(PERMS_R_ABOOK),   true, t('Who can view your address book')),
+		'view_stream'   => array('channel_r_stream',  intval(PERMS_R_STREAM),  true, t('Who can view your "public" stream and posts')),
+		'view_profile'  => array('channel_r_profile', intval(PERMS_R_PROFILE), true, t('Who can view your "public" channel profile')),
+		'view_photos'   => array('channel_r_photos',  intval(PERMS_R_PHOTOS),  true, t('Who can view your "public" photo albums')),
+		'view_contacts' => array('channel_r_abook',   intval(PERMS_R_ABOOK),   true, t('Who can view your "public" address book')),
 
 		// Write permissions
 		'send_stream'   => array('channel_w_stream',  intval(PERMS_W_STREAM),  false, t('Who can send you their channel stream and posts')),

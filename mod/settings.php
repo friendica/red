@@ -721,15 +721,15 @@ function settings_content(&$a) {
 
 		$global_perms = get_perms();
 
-		$perms = perms_text();
 		$permiss = array();
 
 		$perm_cats = array(
+			array( t('Nobody except yourself'), 0),
 			array( t('Only those you specifically allow'), PERMS_SPECIFIC), 
 			array( t('Anybody in your address book'), PERMS_CONTACTS),
-			array( t('Anybody on this hub/website'), PERMS_SITE),
-			array( t('Anybody in the network'), PERMS_NETWORK),
-			array( t('Anybody'), PERMS_PUBLIC)
+			array( t('Anybody on this website'), PERMS_SITE),
+			array( t('Anybody in this network'), PERMS_NETWORK),
+			array( t('Anybody on the internet'), PERMS_PUBLIC)
 		);
 
 
