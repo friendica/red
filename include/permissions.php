@@ -1,7 +1,6 @@
 <?php
 
 
-
 	$global_perms = array(
 		// Read only permissions
 		'view_stream'   => array('channel_r_stream',  PERMS_R_STREAM,  true),
@@ -20,6 +19,9 @@
 	);
 
 
+// Since these include the translation function - they couldn't be included
+// in $global_perms without causing an include dependency, so we provide a parallel 
+// array which isn't global.
 
 function perms_text() {
 	$perms_text = array(
@@ -48,7 +50,7 @@ function perms_text() {
  * @param $uid : The channel_id associated with the resource owner
  * @param $observer: The xchan_hash representing the observer
  *
- * @returns: array of all permissions, key is permission name, value is integer 0 or 1
+ * @returns: array of all permissions, key is permission name, value is true or false
  */
 
 function get_all_perms($uid,$observer,$internal_use = true) {
@@ -74,11 +76,9 @@ function get_all_perms($uid,$observer,$internal_use = true) {
 		$channel_perm = $permission[0];
 
 		if(! $channel_checked) {
-			$r = q("select %s, channel_hash from channel where channel_id = %d limit 1",
-				dbesc($channel_perm),
+			$r = q("select * from channel where channel_id = %d limit 1",
 				intval($uid)
 			);
-
 			$channel_checked = true;
 		}
 
