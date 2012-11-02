@@ -78,10 +78,12 @@ function zfinger_init(&$a) {
 
 // FIXME encrypt permissions when targeted so that only the target can view them, requires sending the pubkey and also checking that the target_sig is signed with that pubkey and isn't a forgery. 
 
-	$ret['permissions']   = get_all_perms($e['channel_id'],(($ztarget && $zsig) 
+
+	$permissions = get_all_perms($e['channel_id'],(($ztarget && $zsig) 
 			? base64url_encode(hash('whirlpool',$ztarget . $zsig,true)) 
 			: '' ),false);
 
+	$ret['permissions'] = (($ztarget) ? aes_encapsulate(json_encode($permissions),$zkey) : $permissions);
 
 
 //	$ret['profile']  = $profile;

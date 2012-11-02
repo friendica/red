@@ -80,7 +80,20 @@ function new_contact($uid,$url,$channel,$interactive = false) {
 
 	$global_perms = get_perms();
 
-	foreach($j->permissions as $k => $v) {
+	if($j->permissions->data) {
+		$permissions = aes_unencapsulate(array(
+			'data' => $j->permissions->data,
+			'key'  => $j->permissions->key,
+			'iv'   => $j->permissions->iv),
+			$channel['channel_prvkey']);
+		if($permissions)
+			$permissions = json_decode($permissions);
+		logger('decrypted permissions: ' . print_r($permissions,true), LOGGER_DATA);
+	}
+	else
+		$permissions = $j->permissions;
+
+	foreach($permissions as $k => $v) {
 		if($v) {
 			$their_perms = $their_perms | intval($global_perms[$k][1]);
 		}
