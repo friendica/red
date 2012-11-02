@@ -42,7 +42,7 @@ function new_contact($uid,$url,$channel,$interactive = false) {
 	}
 
 	logger('follow: ' . $url . ' ' . print_r($j,true));
-	killme();
+//	killme();
 
 
 	if(! ($j->success && $j->guid)) {
@@ -68,76 +68,24 @@ function new_contact($uid,$url,$channel,$interactive = false) {
 	// do we have an xchan and hubloc?
 	// If not, create them.	
 
-	$xchan_hash = base64_urlencode(hash('whirlpool',$j->quid . $j->guid_sg, true));
-
-// FIXME - verify the signature
-
-	$r = q("select * from xchan where xchan_hash = '%s' limit 1",
-		dbesc($xchan_hash)
-	);	
-	if(! $r) {
-		$x = q("insert into xchan ( xchan_hash, xchan_guid, xchan_guid_sig, xchan_pubkey, xchan_photo_mimetype,
-				xchan_photo_l, xchan_addr, xchan_url, xchan_name, xchan_network, xchan_photo_date, xchan_name_date)
-				values ( '%s', '%s', '%s', '%s' , '%s', '%s', '%s', '%s', '%s', '%s', '%s', '%s') ",
-			dbesc($xchan_hash),
-			dbesc($j->guid),
-			dbesc($j->guid_sig),
-			dbesc($j->key),
-			dbesc($j->photo_mimetype),
-			dbesc($j->photo),
-			dbesc($j->address),
-			dbesc($j->url),
-			dbesc($j->name),
-			dbesc('zot'),
-			dbesc($j->photo_updated),
-			dbesc($j->name_updated)
-		);
-
-		require_once("Photo.php");
-
-		$photos = import_profile_photo($j->photo,0,$contact_id);
-		$r = q("update xchan set xchan_photo_l = '%s', xchan_photo_m = '%s', xchan_photo_s' = '%s', xchan_photo_mimetype = '%s'
-				where xchan_hash = '%s' limit 1",
-				dbesc($photos[0]),
-				dbesc($photos[1]),
-				dbesc($photos[2]),
-				dbesc($photos[3]),
-				dbesc($xchan_hash)
-		);
-	}				
-
-	if($j->locations) {
-		foreach($j->locations as $location) {
-			$r = q("select * from hubloc where hubloc_hash = '%s' and hubloc_url = '%s' limit 1",
-				dbesc($xchan_hash),
-				dbesc($location['url'])
-			);
-			if($r)
-				continue;
-			
-// FIXME verify the signature
-
-			$r = q("insert into hubloc ( hubloc_guid, hubloc_guid_sig, hubloc_hash, hubloc_addr, hubloc_flags, hubloc_url, hubloc_url_sig, hubloc_host, hubloc_callback, hubloc_sitekey)
-					values ( '%s','%s','%s','%s', %d ,'%s','%s','%s','%s','%s')",
-				dbesc($j->guid),
-				dbesc($j->guid_sig),
-				dbesc($xchan_hash),
-				dbesc($location['address']),
-				intval((intval($location['primary'])) ? HUBLOC_FLAGS_PRIMARY : 0),
-				dbesc($location['url']),
-				dbesc($location['url_sig']),
-				dbesc($location['host']),
-				dbesc($location['callback']),
-				dbesc($location['sitekey'])
-			);
-
-		}
-
-	}
-
+	$x = import_xchan_from_json($j);
 
 	// Do we already have an abook entry?
 	// go directly to the abook edit page.
+
+	$their_perms = 0;
+
+	$global_perms = get_perms();
+
+	foreach($j->permissions as $k => $v) {
+		logger('perm: ' . $k . ' = ' . $v);
+		logger('global: ' . print_r($global_perms[$k],true));
+		if($v)
+			$their_perms = $their_perms | intval($global_perms[$k][1]);
+	}
+
+	logger('Permissions: ' . $their_perms);
+
 
 
 	// Else create an entry

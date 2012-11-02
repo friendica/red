@@ -719,7 +719,7 @@ function settings_content(&$a) {
 		$channel = $a->get_channel();
 
 
-		global $global_perms;
+		$global_perms = get_perms();
 
 		$perms = perms_text();
 		$permiss = array();

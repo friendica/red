@@ -179,3 +179,105 @@ function zot_register_hub($arr) {
 	}
 	return $total;
 }
+
+
+// Takes a json array from zot_finger and imports the xchan and hublocs
+// If the xchan already exists, update the name and photo if these have changed.
+// 
+
+
+function import_xchan_from_json($j) {
+
+	$xchan_hash = base64url_encode(hash('whirlpool',$j->quid . $j->guid_sig, true));
+	$import_photos = false;
+
+// FIXME - verify the signature
+
+	$r = q("select * from xchan where xchan_hash = '%s' limit 1",
+		dbesc($xchan_hash)
+	);	
+	if($r) {
+		if($r[0]['xchan_photo_date'] != $j->photo_updated)
+			$update_photos = true;
+		if($r[0]['xchan_name_date'] != $j->name_updated) {
+			$r = q("update xchan set xchan_name = '%s', xchan_name_date = '%s' where xchan_hash = '%s' limit 1",
+				dbesc($j->name),
+				dbesc($j->name_updated),
+				dbesc($xchan_hash)
+			);
+		}
+	}
+	else {
+		$import_photos = true;
+		$x = q("insert into xchan ( xchan_hash, xchan_guid, xchan_guid_sig, xchan_pubkey, xchan_photo_mimetype,
+				xchan_photo_l, xchan_addr, xchan_url, xchan_name, xchan_network, xchan_photo_date, xchan_name_date)
+				values ( '%s', '%s', '%s', '%s' , '%s', '%s', '%s', '%s', '%s', '%s', '%s', '%s') ",
+			dbesc($xchan_hash),
+			dbesc($j->guid),
+			dbesc($j->guid_sig),
+			dbesc($j->key),
+			dbesc($j->photo_mimetype),
+			dbesc($j->photo),
+			dbesc($j->address),
+			dbesc($j->url),
+			dbesc($j->name),
+			dbesc('zot'),
+			dbesc($j->photo_updated),
+			dbesc($j->name_updated)
+		);
+
+	}				
+
+
+	if($import_photos) {
+
+		require_once("Photo.php");
+
+		$photos = import_profile_photo($j->photo,0,$xchan_hash);
+		$r = q("update xchan set xchan_photo_date = '%s', xchan_photo_l = '%s', xchan_photo_m = '%s', xchan_photo_s = '%s', xchan_photo_mimetype = '%s'
+				where xchan_hash = '%s' limit 1",
+				dbesc($j->photo_updated),
+				dbesc($photos[0]),
+				dbesc($photos[1]),
+				dbesc($photos[2]),
+				dbesc($photos[3]),
+				dbesc($xchan_hash)
+		);
+	}
+
+	if($j->locations) {
+		foreach($j->locations as $location) {
+			$r = q("select * from hubloc where hubloc_hash = '%s' and hubloc_url = '%s' limit 1",
+				dbesc($xchan_hash),
+				dbesc($location->url)
+			);
+			if($r) {
+				if(($r[0]['hubloc_flags'] & HUBLOC_FLAGS_PRIMARY) && (! $location->primary)) {
+					$r = q("update hubloc set hubloc_flags = (hubloc_flags ^ %d) where hubloc_id = %d limit 1",
+						intval(HUBLOC_FLAGS_PRIMARY),
+						intval($r[0]['hubloc_id'])
+					);
+				}
+				continue;
+			}
+// FIXME verify the signature
+
+			$r = q("insert into hubloc ( hubloc_guid, hubloc_guid_sig, hubloc_hash, hubloc_addr, hubloc_flags, hubloc_url, hubloc_url_sig, hubloc_host, hubloc_callback, hubloc_sitekey)
+					values ( '%s','%s','%s','%s', %d ,'%s','%s','%s','%s','%s')",
+				dbesc($j->guid),
+				dbesc($j->guid_sig),
+				dbesc($xchan_hash),
+				dbesc($location->address),
+				intval((intval($location->primary)) ? HUBLOC_FLAGS_PRIMARY : 0),
+				dbesc($location->url),
+				dbesc($location->url_sig),
+				dbesc($location->host),
+				dbesc($location->callback),
+				dbesc($location->sitekey)
+			);
+
+		}
+
+	}
+
+}

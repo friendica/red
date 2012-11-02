@@ -1,22 +1,25 @@
 <?php
 
 
+function get_perms() {
 	$global_perms = array(
 		// Read only permissions
-		'view_stream'   => array('channel_r_stream',  PERMS_R_STREAM,  true),
-		'view_profile'  => array('channel_r_profile', PERMS_R_PROFILE, true),
-		'view_photos'   => array('channel_r_photos',  PERMS_R_PHOTOS,  true),
-		'view_contacts' => array('channel_r_abook',   PERMS_R_ABOOK,   true),
+		'view_stream'   => array('channel_r_stream',  intval(PERMS_R_STREAM),  true),
+		'view_profile'  => array('channel_r_profile', intval(PERMS_R_PROFILE), true),
+		'view_photos'   => array('channel_r_photos',  intval(PERMS_R_PHOTOS),  true),
+		'view_contacts' => array('channel_r_abook',   intval(PERMS_R_ABOOK),   true),
 
 		// Write permissions
-		'send_stream'   => array('channel_w_stream',  PERMS_W_STREAM,  false),
-		'post_wall'     => array('channel_w_wall',    PERMS_W_WALL,    false),
-		'tag_deliver'   => array('channel_w_tagwall', PERMS_W_TAGWALL, false),
-		'post_comments' => array('channel_w_comment', PERMS_W_COMMENT, false),
-		'post_mail'     => array('channel_w_mail',    PERMS_W_MAIL,    false),
-		'post_photos'   => array('channel_w_photos',  PERMS_W_PHOTOS,  false),
-		'chat'          => array('channel_w_chat',    PERMS_W_CHAT,    false),
+		'send_stream'   => array('channel_w_stream',  intval(PERMS_W_STREAM),  false),
+		'post_wall'     => array('channel_w_wall',    intval(PERMS_W_WALL),    false),
+		'tag_deliver'   => array('channel_w_tagwall', intval(PERMS_W_TAGWALL), false),
+		'post_comments' => array('channel_w_comment', intval(PERMS_W_COMMENT), false),
+		'post_mail'     => array('channel_w_mail',    intval(PERMS_W_MAIL),    false),
+		'post_photos'   => array('channel_w_photos',  intval(PERMS_W_PHOTOS),  false),
+		'chat'          => array('channel_w_chat',    intval(PERMS_W_CHAT),    false),
 	);
+	return $global_perms;
+}
 
 
 // Since these include the translation function - they couldn't be included
@@ -55,7 +58,7 @@ function perms_text() {
 
 function get_all_perms($uid,$observer,$internal_use = true) {
 
-	global $global_perms;
+	$global_perms = get_perms();
 
 	// Save lots of individual lookups
 
@@ -94,13 +97,15 @@ function get_all_perms($uid,$observer,$internal_use = true) {
 			continue;
 		}
 
-		// If it's an unauthenticated observer, we only need to see if PERMS_PUBLIC is set
-
-		if(! $observer) {
-			$ret[$perm_name] = (($r[0][$channel_perm] & PERMS_PUBLIC) ? true : false);
+		if($r[0][$channel_perm] & PERMS_PUBLIC) {
+			$ret[$perm_name] = true;
 			continue;
 		}
 
+		if(! $observer) {
+			$ret[$perm_name] = false;
+			continue;
+		}
 
 		// If we're still here, we have an observer, which means they're in the network.
 
@@ -188,7 +193,7 @@ function get_all_perms($uid,$observer,$internal_use = true) {
 
 function perm_is_allowed($uid,$observer,$permission) {
 
-	global $global_perms;
+	$global_perms = get_perms();
 
 	// First find out what the channel owner declared permissions to be.
 
@@ -206,10 +211,14 @@ function perm_is_allowed($uid,$observer,$permission) {
 	if($r[0]['channel_hash'] === $observer)
 		return true;
 
+	
+	if($r[0][$channel_perm] & PERMS_PUBLIC)
+		return true;
+
 	// If it's an unauthenticated observer, we only need to see if PERMS_PUBLIC is set
 
 	if(! $observer) {
-		return(($r[0][$channel_perm] & PERMS_PUBLIC) ? true : false);
+		return false;
 	}
 
 	// If we're still here, we have an observer, which means they're in the network.

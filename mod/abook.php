@@ -509,7 +509,7 @@ EOT;
 	}
 
 
-	$r = q("SELECT abook.*, xchan.* FROM abook left join xchan on abook.abook_chan = xchan.xchan_hash
+	$r = q("SELECT abook.*, xchan.* FROM abook left join xchan on abook.abook_xchan = xchan.xchan_hash
 		WHERE abook_channel = %d and not (abook_flags & %d) $sql_extra $sql_extra2 ORDER BY xchan_name LIMIT %d , %d ",
 		intval(local_user()),
 		intval(ABOOK_FLAG_SELF),
