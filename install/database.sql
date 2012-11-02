@@ -707,6 +707,7 @@ CREATE TABLE IF NOT EXISTS `photo` (
   `id` int(10) unsigned NOT NULL AUTO_INCREMENT,
   `aid` int(10) unsigned NOT NULL DEFAULT '0',
   `uid` int(10) unsigned NOT NULL,
+  `xchan` char(255) NOT NULL DEFAULT '',
   `contact-id` int(10) unsigned NOT NULL DEFAULT '0',
   `guid` char(64) NOT NULL,
   `resource_id` char(255) NOT NULL,
@@ -734,7 +735,8 @@ CREATE TABLE IF NOT EXISTS `photo` (
   KEY `profile` (`profile`),
   KEY `type` (`type`),
   KEY `contact-id` (`contact-id`),
-  KEY `aid` (`aid`)
+  KEY `aid` (`aid`),
+  KEY `xchan` (`xchan`)
 ) ENGINE=MyISAM  DEFAULT CHARSET=utf8;
 
 CREATE TABLE IF NOT EXISTS `profile` (
