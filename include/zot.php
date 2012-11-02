@@ -75,7 +75,6 @@ function zot_notify($channel,$url) {
 function zot_finger($webbie,$channel) {
 
 
-	logger('zot_finger:' . print_r($channel,true));
 	if(strpos($webbie,'@') === false) {
 		$address = $webbie;
 		$host = get_app()->get_hostname();
@@ -105,9 +104,10 @@ function zot_finger($webbie,$channel) {
 
 	if($channel) {
 		$postvars = array(
-			'address' => $address,
-			'target'  => $channel['channel_guid'],
-			'target_sig' => $channel['channel_guid_sig']
+			'address'    => $address,
+			'target'     => $channel['channel_guid'],
+			'target_sig' => $channel['channel_guid_sig'],
+			'key'        => $channel['channel_pubkey']
 		);
 		$result = z_post_url($url . $rhs,$postvars);
 		if(! $result['success'])

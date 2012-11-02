@@ -7,11 +7,19 @@ function zfinger_init(&$a) {
 
 	$ret = array('success' => false);
 
-	$zguid   = ((x($_REQUEST,'guid'))        ? $_REQUEST['guid'] : '');
-	$zaddr   = ((x($_REQUEST,'address'))     ? $_REQUEST['address'] : '');
-	$ztarget = ((x($_REQUEST,'target'))      ? trim($_REQUEST['target'])  : '');
-	$zsig    = ((x($_REQUEST,'target_sig'))  ? trim($_REQUEST['target_sig'])  : '');
+	$zguid   = ((x($_REQUEST,'guid'))        ? $_REQUEST['guid']       : '');
+	$zaddr   = ((x($_REQUEST,'address'))     ? $_REQUEST['address']    : '');
+	$ztarget = ((x($_REQUEST,'target'))      ? $_REQUEST['target']     : '');
+	$zsig    = ((x($_REQUEST,'target_sig'))  ? $_REQUEST['target_sig'] : '');
+	$zkey    = ((x($_REQUEST,'key'))         ? $_REQUEST['key']        : '');
 
+	if($ztarget) {
+		if((! $zkey) || (! $zsig) || (! rsa_verify($ztarget,base64url_decode($zsig),$zkey))) {
+			logger('zfinger: invalid target signature');
+			$ret['message'] = t("invalid target signature");
+			json_return_and_die($ret);
+		}
+	}
 
 	$r = null;
 
