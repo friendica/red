@@ -11,14 +11,17 @@ function manage_content(&$a) {
 
 	$change_channel = ((argc() > 1) ? intval(argv(1)) : 0);
 
-	if((argc() > 2) && (argv(2) === 'primary')) {
-		q("update channel set channel_primary = 0 where channel_account_id = %d",
-			intval(get_account_id())
-		);
-		q("update channel set channel_primary = 1 where channel_id = %d and channel_account_id = %d limit 1",
+	if((argc() > 2) && (argv(2) === 'default')) {
+		$r = q("select channel_id from channel where channel_id = %d and channel_account_id = %d limit 1",
 			intval($change_channel),
 			intval(get_account_id())
 		);
+		if($r) {
+			q("update account set account_default_channel = %d where account_id = %d limit 1",
+				intval($change_channel),
+				intval(get_account_id())
+			);
+		}
 		goaway(z_root() . '/manage');
 	}
 
@@ -38,6 +41,7 @@ function manage_content(&$a) {
 		);
 
 		$selected_channel = null;
+		$account = get_app()->get_account();
 
 		if($r && count($r)) {
 			$channels = $r;
@@ -45,7 +49,8 @@ function manage_content(&$a) {
 				$channels[$x]['link'] = 'manage/' . intval($channels[$x]['channel_id']);
 				if($channels[$x]['channel_id'] == local_user())
 					$selected_channel = $channels[$x];
-				$channels[$x]['primary_links'] = '1';
+				$channels[$x]['default'] = (($channels[$x]['channel_id'] == $account['account_default_channel']) ? "1" : ''); 
+				$channels[$x]['default_links'] = '1';
 			}
 		}
 	}
@@ -60,8 +65,8 @@ function manage_content(&$a) {
 		'$msg_selected'     => t('Current Channel'),
 		'$selected'         => $selected_channel,
 		'$desc'             => t('Attach to one of your channels by selecting it.'),
-		'$msg_primary'      => t('Default Channel'),
-		'$msg_make_primary' => t('Make Default'),
+		'$msg_default'      => t('Default Channel'),
+		'$msg_make_default' => t('Make Default'),
 		'$links'            => $links,
 		'$all_channels'     => $channels,
 	));
