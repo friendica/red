@@ -4,47 +4,22 @@
 function get_perms() {
 	$global_perms = array(
 		// Read only permissions
-		'view_stream'   => array('channel_r_stream',  intval(PERMS_R_STREAM),  true),
-		'view_profile'  => array('channel_r_profile', intval(PERMS_R_PROFILE), true),
-		'view_photos'   => array('channel_r_photos',  intval(PERMS_R_PHOTOS),  true),
-		'view_contacts' => array('channel_r_abook',   intval(PERMS_R_ABOOK),   true),
+		'view_stream'   => array('channel_r_stream',  intval(PERMS_R_STREAM),  true, t('Who can view your channel stream and posts')),
+		'view_profile'  => array('channel_r_profile', intval(PERMS_R_PROFILE), true, t('Who can view your channel profile')),
+		'view_photos'   => array('channel_r_photos',  intval(PERMS_R_PHOTOS),  true, t('Who can view your photo albums')),
+		'view_contacts' => array('channel_r_abook',   intval(PERMS_R_ABOOK),   true, t('Who can view your address book')),
 
 		// Write permissions
-		'send_stream'   => array('channel_w_stream',  intval(PERMS_W_STREAM),  false),
-		'post_wall'     => array('channel_w_wall',    intval(PERMS_W_WALL),    false),
-		'tag_deliver'   => array('channel_w_tagwall', intval(PERMS_W_TAGWALL), false),
-		'post_comments' => array('channel_w_comment', intval(PERMS_W_COMMENT), false),
-		'post_mail'     => array('channel_w_mail',    intval(PERMS_W_MAIL),    false),
-		'post_photos'   => array('channel_w_photos',  intval(PERMS_W_PHOTOS),  false),
-		'chat'          => array('channel_w_chat',    intval(PERMS_W_CHAT),    false),
+		'send_stream'   => array('channel_w_stream',  intval(PERMS_W_STREAM),  false, t('Who can send you their channel stream and posts')),
+		'post_wall'     => array('channel_w_wall',    intval(PERMS_W_WALL),    false, t('Who can post on your channel page')),
+		'post_comments' => array('channel_w_comment', intval(PERMS_W_COMMENT), false, t('Who can comment on your posts')),
+		'post_mail'     => array('channel_w_mail',    intval(PERMS_W_MAIL),    false, t('Who can send you private mail messages')),
+		'post_photos'   => array('channel_w_photos',  intval(PERMS_W_PHOTOS),  false, t('Who can post photos to your photo albums')),
+		'tag_deliver'   => array('channel_w_tagwall', intval(PERMS_W_TAGWALL), false, t('Who can forward to all your channel contacts via post tags')),
+		'chat'          => array('channel_w_chat',    intval(PERMS_W_CHAT),    false, t('Who can chat with you (when available)')),
 	);
 	return $global_perms;
 }
-
-
-// Since these include the translation function - they couldn't be included
-// in $global_perms without causing an include dependency, so we provide a parallel 
-// array which isn't global.
-
-function perms_text() {
-	$perms_text = array(
-		'view_stream' => t('Who can view your channel stream and posts'),
-		'view_profile' => t('Who can view your channel profile'),
-		'view_photos' => t('Who can view your photo albums'),
-		'view_contacts' => t('Who can view your address book'),
-
-		'send_stream' => t('Who can send you their channel stream and posts'),
-		'post_wall' => t('Who can post on your channel page'),
-		'post_comments' => t('Who can comment on your posts'),
-		'post_mail' => t('Who can send you private mail messages'),
-		'post_photos' => t('Who can post photos to your photo albums'),
-		'tag_deliver' => t('Who can forward to all your channel contacts via post tags'),
-		'chat' => t('Who can chat with you (when available)')
-	);
-	return $perms_text;
-}
-		
-
 
 
 /**

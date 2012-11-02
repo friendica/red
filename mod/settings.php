@@ -733,16 +733,16 @@ function settings_content(&$a) {
 		);
 
 
-		foreach($perms as $k => $perm) {
+		foreach($global_perms as $k => $perm) {
 
 			$permiss[$k] = array(
 				'key' => $k,
-				'label' => $perm,
+				'label' => $perm[3],
 				'fields' => array()
 			);
-			$column = $global_perms[$k][0];
+			$column = $perm[0];
 			foreach($perm_cats as $cat) {
-				if((! $global_perms[$k][2]) && $cat[1] == PERMS_PUBLIC)
+				if((! $perm[2]) && $cat[1] == PERMS_PUBLIC)
 					continue;
 				$permiss[$k]['fields'][] = array( $column, $cat[0], $cat[1], '', (($channel[$column] == $cat[1]) ? '1' : ''));
 			}
