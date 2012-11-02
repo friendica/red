@@ -188,7 +188,7 @@ function zot_register_hub($arr) {
 
 function import_xchan_from_json($j) {
 
-	$xchan_hash = base64url_encode(hash('whirlpool',$j->quid . $j->guid_sig, true));
+	$xchan_hash = base64url_encode(hash('whirlpool',$j->guid . $j->guid_sig, true));
 	$import_photos = false;
 
 // FIXME - verify the signature
@@ -196,6 +196,7 @@ function import_xchan_from_json($j) {
 	$r = q("select * from xchan where xchan_hash = '%s' limit 1",
 		dbesc($xchan_hash)
 	);	
+
 	if($r) {
 		if($r[0]['xchan_photo_date'] != $j->photo_updated)
 			$update_photos = true;

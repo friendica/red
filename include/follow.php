@@ -78,13 +78,11 @@ function new_contact($uid,$url,$channel,$interactive = false) {
 	$global_perms = get_perms();
 
 	foreach($j->permissions as $k => $v) {
-		logger('perm: ' . $k . ' = ' . $v);
-		logger('global: ' . print_r($global_perms[$k],true));
-		if($v)
+		if($v) {
 			$their_perms = $their_perms | intval($global_perms[$k][1]);
+		}
 	}
 
-	logger('Permissions: ' . $their_perms);
 
 
 
