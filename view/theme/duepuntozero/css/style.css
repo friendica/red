@@ -152,6 +152,7 @@ nav #banner #logo-text a {
 nav #banner #logo-text a:hover { text-decoration: none; }
 
 
+
 .nav-commlink, .nav-login-link {
     display: block;
     height: 15px;
@@ -3484,7 +3485,7 @@ nav {
   left: 0px;
   top: 0px;
   padding: 0px;
-  background-color: #888888;
+  background-color: #5a5a5a;
   color: #ffffff;
   z-index: 100;
   -webkit-box-shadow: 0px 0px 10px rgba(0, 0, 0, 0.7);
@@ -3539,7 +3540,7 @@ nav .nav-menu {
   padding: 5px;
   margin: 3px 15px 0px;
   font-size: 14px;
-  border-bottom: 3px solid #888888;
+  border-bottom: 3px solid #5a5a5a;
 }
 nav .nav-menu.selected {
   border-bottom: 4px solid #CCCCCC;
@@ -3658,6 +3659,10 @@ header #banner {
   overflow: hidden;
   text-align: center;
   width: 100%;
+
+  color: red;
+  font-weight: bold;
+  font-size: 2em;
 }
 header #banner a,
 header #banner a:active,

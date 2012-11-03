@@ -390,8 +390,6 @@ if($a->is_mobile || $a->is_tablet) {
     	                 ));
 }
 
-$a->page['footer'] .= '<div id="powered-by">' . t("Friendica Red") . '</div>';
-
 $page    = $a->page;
 $profile = $a->profile;
 

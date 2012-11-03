@@ -86,10 +86,11 @@ function fileas_widget($baseurl,$selected = '') {
 		intval(local_user()),
 		intval(TERM_FILE)
 	);
-	if(count($r)) {
-		foreach($r as $rr)
+	if(! $r)
+		return;
+
+	foreach($r as $rr)
 		$terms[] = array('name' => $rr['term'], 'selected' => (($selected == $rr['term']) ? 'selected' : ''));
-	}
 
 	return replace_macros(get_markup_template('fileas_widget.tpl'),array(
 		'$title' => t('Saved Folders'),
