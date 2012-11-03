@@ -1092,13 +1092,19 @@ input#dfrn-url {
 
 .wall-item-like-buttons {
 	float: left;
-	margin-right: 10px;
+/*	margin-right: 10px; */
 /*	padding-right: 10px; */
 /*	border-right: 2px solid #fff; */
 }
 
 .like-rotator {
 	margin-left: 5px;
+}
+.icon.dislike {
+	margin-left: 3px;
+}
+.icon.remote-link {
+	margin-left: 10px;
 }
 
 .wall-item-like-buttons > a,
@@ -1112,7 +1118,6 @@ input#dfrn-url {
 
 .wall-item-share-buttons {
 	margin-left: 10px;
-	margin-right: 10px;
 }
 
 .editpost {
