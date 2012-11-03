@@ -143,7 +143,7 @@ function bbcode($Text,$preserve_nl = false, $tryoembed = true) {
 
 	// This only matters when looking for tags - otherwise has no meaning
 	
-	$Text = preg_replace("/\[share\](.*?)\[\/share\]/ism", '$1', $Text);
+	$Text = str_replace(array('[share]','[/share]'), array('',''), $Text);
 	
 	// Convert new line chars to html <br /> tags
 
