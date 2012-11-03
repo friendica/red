@@ -121,6 +121,9 @@ EOT;
 
 function saved_searches($search) {
 
+	if(! feature_enabled(local_user(),'savedsearch'))
+		return '';
+
 	$a = get_app();
 
 	$srchurl = '/network?f=' 

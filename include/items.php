@@ -3796,9 +3796,7 @@ function posted_dates($uid,$wall) {
 function posted_date_widget($url,$uid,$wall) {
 	$o = '';
 
-	// For former Facebook folks that left because of "timeline"
-
-	if($wall && intval(get_pconfig($uid,'system','no_wall_archive_widget')))
+	if(! feature_enabled($uid,'archives'))
 		return $o;
 
 	$ret = posted_dates($uid,$wall);

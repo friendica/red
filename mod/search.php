@@ -2,6 +2,9 @@
 
 function search_saved_searches() {
 
+	if(! feature_enabled(local_user(),'savedsearch'))
+		return '';
+
 	$o = '';
 
 	$r = q("select `tid`,`term` from `term` WHERE `uid` = %d and type = %d",

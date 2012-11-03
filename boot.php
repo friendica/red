@@ -11,6 +11,7 @@ require_once('include/cache.php');
 require_once('include/permissions.php');
 require_once('library/Mobile_Detect/Mobile_Detect.php');
 require_once('include/BaseObject.php');
+require_once('include/features.php');
 
 define ( 'FRIENDICA_PLATFORM',     'Friendica Red');
 define ( 'FRIENDICA_VERSION',      trim(file_get_contents('version.inc')) . 'R');
