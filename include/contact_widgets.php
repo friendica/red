@@ -3,8 +3,8 @@
 function follow_widget() {
 
 	return replace_macros(get_markup_template('follow.tpl'),array(
-		'$connect' => t('Add New Channel'),
-		'$desc' => t('Enter webbie (channel location)'),
+		'$connect' => t('Add New Connection'),
+		'$desc' => t('Enter the channel address'),
 		'$hint' => t('Example: bob@example.com, http://example.com/barbara'),
 		'$follow' => t('Connect')
 	));

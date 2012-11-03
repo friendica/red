@@ -1767,7 +1767,7 @@ if(! function_exists('profile_tabs')){
 		$channel = $a->get_channel();
 
 		if (is_null($nickname))
-			$nickname  = $a->channel['channel_address'];
+			$nickname  = $channel['channel_address'];
 		
 		if(x($_GET,'tab'))
 			$tab = notags(trim($_GET['tab']));

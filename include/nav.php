@@ -153,7 +153,7 @@ EOT;
 
 		$nav['settings'] = array('settings', t('Settings'),"", t('Account settings'));
 		$nav['profiles'] = array('profiles', t('Profiles'),"", t('Manage/edit profiles'));
-		$nav['contacts'] = array('abook', t('Address Book'),"", t('Manage/edit friends and channels'));
+		$nav['contacts'] = array('connections', t('Connections'),"", t('Manage/edit friends and channels'));
 	}
 
 	/**

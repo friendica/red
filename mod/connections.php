@@ -6,7 +6,7 @@ require_once('include/contact_selectors.php');
 require_once('include/group.php');
 require_once('include/contact_widgets.php');
 
-function abook_init(&$a) {
+function connections_init(&$a) {
 
 	if(! local_user())
 		return;
@@ -58,7 +58,7 @@ EOT;
 
 }
 
-function abook_post(&$a) {
+function connections_post(&$a) {
 	
 	if(! local_user())
 		return;
@@ -132,11 +132,11 @@ function abook_post(&$a) {
 
 
 
-function abook_content(&$a) {
+function connections_content(&$a) {
 
 	$sort_type = 0;
 	$o = '';
-	nav_set_selected('abook');
+	nav_set_selected('connections');
 
 
 	if(! local_user()) {
@@ -215,14 +215,14 @@ EOT;
 
 		if(! count($orig_record)) {
 			notice( t('Could not access address book record.') . EOL);
-			goaway($a->get_baseurl(true) . '/abook');
+			goaway($a->get_baseurl(true) . '/connections');
 		}
 		
 		if($cmd === 'update') {
 
 			// pull feed and consume it, which should subscribe to the hub.
 			proc_run('php',"include/poller.php","$contact_id");
-			goaway($a->get_baseurl(true) . '/abook/' . $contact_id);
+			goaway($a->get_baseurl(true) . '/connections/' . $contact_id);
 
 		}
 
@@ -233,7 +233,7 @@ EOT;
 					: t('Channel has been blocked')) . EOL );
 			else
 				notice(t('Unable to set address book parameters.') . EOL);
-			goaway($a->get_baseurl(true) . '/abook/' . $contact_id);
+			goaway($a->get_baseurl(true) . '/connections/' . $contact_id);
 		}
 
 		if($cmd === 'ignore') {
@@ -243,7 +243,7 @@ EOT;
 					: t('Channel has been ignored')) . EOL );
 			else
 				notice(t('Unable to set address book parameters.') . EOL);
-			goaway($a->get_baseurl(true) . '/abook/' . $contact_id);
+			goaway($a->get_baseurl(true) . '/connections/' . $contact_id);
 		}
 
 		if($cmd === 'archive') {
@@ -253,7 +253,7 @@ EOT;
 					: t('Channel has been archived')) . EOL );
 			else
 				notice(t('Unable to set address book parameters.') . EOL);
-			goaway($a->get_baseurl(true) . '/abook/' . $contact_id);
+			goaway($a->get_baseurl(true) . '/connections/' . $contact_id);
 		}
 
 		if($cmd === 'hide') {
@@ -263,7 +263,7 @@ EOT;
 					: t('Channel has been hidden')) . EOL );
 			else
 				notice(t('Unable to set address book parameters.') . EOL);
-			goaway($a->get_baseurl(true) . '/abook/' . $contact_id);
+			goaway($a->get_baseurl(true) . '/connections/' . $contact_id);
 		}
 
 // FIXME
@@ -434,47 +434,47 @@ EOT;
 			'label' => t('Suggestions'),
 			'url'   => $a->get_baseurl(true) . '/suggest', 
 			'sel'   => '',
-			'title' => t('Suggest new channels'),
+			'title' => t('Suggest new connections'),
 		),
 		array(
-			'label' => t('All Channels'),
-			'url'   => $a->get_baseurl(true) . '/channels/all', 
+			'label' => t('All Connections'),
+			'url'   => $a->get_baseurl(true) . '/connections/all', 
 			'sel'   => ($all) ? 'active' : '',
-			'title' => t('Show all channels'),
+			'title' => t('Show all connections'),
 		),
 		array(
 			'label' => t('Unblocked'),
-			'url'   => $a->get_baseurl(true) . '/channels',
+			'url'   => $a->get_baseurl(true) . '/connections',
 			'sel'   => ((! $all) && (! $blocked) && (! $hidden) && (! $search) && (! $nets) && (! $ignored) && (! $archived)) ? 'active' : '',
-			'title' => t('Only show unblocked channels'),
+			'title' => t('Only show unblocked connections'),
 		),
 
 		array(
 			'label' => t('Blocked'),
-			'url'   => $a->get_baseurl(true) . '/channels/blocked',
+			'url'   => $a->get_baseurl(true) . '/connections/blocked',
 			'sel'   => ($blocked) ? 'active' : '',
-			'title' => t('Only show blocked channels'),
+			'title' => t('Only show blocked connections'),
 		),
 
 		array(
 			'label' => t('Ignored'),
-			'url'   => $a->get_baseurl(true) . '/channels/ignored',
+			'url'   => $a->get_baseurl(true) . '/connections/ignored',
 			'sel'   => ($ignored) ? 'active' : '',
-			'title' => t('Only show ignored channels'),
+			'title' => t('Only show ignored connections'),
 		),
 
 		array(
 			'label' => t('Archived'),
-			'url'   => $a->get_baseurl(true) . '/channels/archived',
+			'url'   => $a->get_baseurl(true) . '/connections/archived',
 			'sel'   => ($archived) ? 'active' : '',
-			'title' => t('Only show archived channels'),
+			'title' => t('Only show archived connections'),
 		),
 
 		array(
 			'label' => t('Hidden'),
-			'url'   => $a->get_baseurl(true) . '/channels/hidden',
+			'url'   => $a->get_baseurl(true) . '/connections/hidden',
 			'sel'   => ($hidden) ? 'active' : '',
-			'title' => t('Only show hidden channel s'),
+			'title' => t('Only show hidden connections'),
 		),
 
 	);
@@ -572,11 +572,11 @@ EOT;
 	
 	$tpl = get_markup_template("contacts-template.tpl");
 	$o .= replace_macros($tpl,array(
-		'$header' => t('Contacts') . (($nets) ? ' - ' . network_to_name($nets) : ''),
+		'$header' => t('Connnections') . (($nets) ? ' - ' . network_to_name($nets) : ''),
 		'$tabs' => $t,
 		'$total' => $total,
 		'$search' => $search_hdr,
-		'$desc' => t('Search your contacts'),
+		'$desc' => t('Search your connnections'),
 		'$finding' => (($searching) ? t('Finding: ') . "'" . $search . "'" : ""),
 		'$submit' => t('Find'),
 		'$cmd' => $a->cmd,
