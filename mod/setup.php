@@ -3,9 +3,9 @@
 $install_wizard_pass=1;
 
 
-function install_init(&$a){
+function setup_init(&$a){
 	
-	// $baseurl/install/testrwrite to test if rewite in .htaccess is working
+	// $baseurl/setup/testrwrite to test if rewite in .htaccess is working
 	if (argc() ==2  && argv(1)=="testrewrite") {
 		echo "ok";
 		killme();
@@ -16,7 +16,7 @@ function install_init(&$a){
 
 }
 
-function install_post(&$a) {
+function setup_post(&$a) {
 	global $install_wizard_pass, $db;
 
 	switch($install_wizard_pass) {
@@ -113,7 +113,7 @@ function get_db_errno() {
 		return mysql_errno();
 }		
 
-function install_content(&$a) {
+function setup_content(&$a) {
 
 	global $install_wizard_pass, $db;
 	$o = '';
@@ -439,7 +439,7 @@ function check_htaccess(&$checks) {
 	$status = true;
 	$help = "";
 	if (function_exists('curl_init')){
-        $test = fetch_url($a->get_baseurl()."/install/testrewrite");
+        $test = fetch_url($a->get_baseurl()."/setup/testrewrite");
         if ($test!="ok") {
             $status = false;
             $help = t('Url rewrite in .htaccess is not working. Check your server configuration.');

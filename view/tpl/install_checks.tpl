@@ -1,6 +1,6 @@
 <h1>$title</h1>
 <h2>$pass</h2>
-<form  action="$baseurl/index.php?q=install" method="post">
+<form  action="$baseurl/index.php?q=setup" method="post">
 <table>
 {{ for $checks as $check }}
 	<tr><td>$check.title </td><td><span class="icon s22 {{if $check.status}}on{{else}}{{if$check.required}}off{{else}}yellow{{endif}}{{endif}}"></td><td>{{if $check.required}}(required){{endif}}</td></tr>

@@ -13,7 +13,7 @@ $info_03
 <h3 class="error-message">$status</h3>
 {{ endif }}
 
-<form id="install-form" action="$baseurl/install" method="post">
+<form id="install-form" action="$baseurl/setup" method="post">
 
 <input type="hidden" name="phpath" value="$phpath" />
 <input type="hidden" name="pass" value="3" />

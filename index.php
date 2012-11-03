@@ -120,7 +120,7 @@ if(! x($_SESSION,'sysmsg_info'))
 
 
 if($install)
-	$a->module = 'install';
+	$a->module = 'setup';
 else
 	check_config($a);
 
