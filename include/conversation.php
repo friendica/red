@@ -853,7 +853,7 @@ function conversation(&$a, $items, $mode, $update, $page_mode = 'traditional') {
 				if($item['author-link'] && (! $item['author-name']))
 					$profile_name = $item['author-link'];
 
-
+				
 
 				$tags=array();
 				$hashtags = array();
@@ -882,6 +882,11 @@ function conversation(&$a, $items, $mode, $update, $page_mode = 'traditional') {
 					$profile_avatar = $a->contacts[$normalised]['thumb'];
 				else
 					$profile_avatar = ((strlen($item['author-avatar'])) ? $a->get_cached_avatar_image($item['author-avatar']) : $item['thumb']);
+
+				$profile_name = $item['author']['xchan_name'];
+				$profile_link = $item['author']['xchan_url'];
+				$profile_avatar = $item['author']['xchan_photo_m'];
+
 
 				$locate = array('location' => $item['location'], 'coord' => $item['coord'], 'html' => '');
 				call_hooks('render_location',$locate);
@@ -923,7 +928,7 @@ function conversation(&$a, $items, $mode, $update, $page_mode = 'traditional') {
 					'template' => $tpl,
 					'tags' => $tags,
 					'id' => (($preview) ? 'P0' : $item['item_id']),
-					'linktitle' => sprintf( t('View %s\'s profile @ %s'), $profile_name, ((strlen($item['author-link'])) ? $item['author-link'] : $item['url'])),
+					'linktitle' => sprintf( t('View %s\'s profile @ %s'), $profile_name, $profile_url),
 					'profile_url' => $profile_link,
 					'item_photo_menu' => item_photo_menu($item),
 					'name' => template_escape($profile_name),

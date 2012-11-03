@@ -138,7 +138,6 @@ function item_post(&$a) {
 	$observer = $a->get_observer();
 
 	if(! perm_is_allowed($profile_uid,$observer['xchan_hash'],(($parent) ? 'post_comments' : 'post_wall'))) {
-		dbg(0);
 		notice( t('Permission denied.') . EOL) ;
 		if(x($_REQUEST,'return')) 
 			goaway($a->get_baseurl() . "/" . $return_path );
@@ -539,8 +538,10 @@ function item_post(&$a) {
 
 	if($preview) {
 		require_once('include/conversation.php');
-// fixme
-		$o = conversation($a,array(array_merge($contact_record,$datarray)),'search',false,'preview');
+
+		$datarray['owner'] = $owner_xchan;
+		$datarray['author'] = $observer;
+		$o = conversation($a,array($datarray),'search',false,'preview');
 		logger('preview: ' . $o, LOGGER_DEBUG);
 		echo json_encode(array('preview' => $o));
 		killme();
