@@ -1684,6 +1684,8 @@ function status_editor($a,$x, $notes_cid = 0, $popup=false) {
 	$jotplugins = '';
 	$jotnets = '';
 
+	$catsenabled = feature_enabled($x['profile_uid'],'categories');
+	
 	call_hooks('jot_tool', $jotplugins);
 	call_hooks('jot_networks', $jotnets);
 
@@ -1712,6 +1714,7 @@ function status_editor($a,$x, $notes_cid = 0, $popup=false) {
 		'$shortnoloc' => t('clear location'),
 		'$title' => "",
 		'$placeholdertitle' => t('Set title'),
+		'$catsenabled' => $catsenabled,
 		'$category' => "",
 		'$placeholdercategory' => t('Categories (comma-separated list)'),
 		'$wait' => t('Please wait'),

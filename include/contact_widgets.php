@@ -104,8 +104,11 @@ function fileas_widget($baseurl,$selected = '') {
 }
 
 function categories_widget($baseurl,$selected = '') {
-	$a = get_app();
 
+	if(! featured_enabled($a->profile['profile_uid'],'categories'))
+		return '';
+
+	$a = get_app();
 
 	$terms = array();
 	$r = q("select distinct(term) from term where uid = %d and type = %d order by term asc",
