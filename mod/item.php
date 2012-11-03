@@ -938,7 +938,7 @@ function fix_attached_photo_permissions($uid,$xchan_hash,$body,
 		$images = $match[1];
 		if($images) {
 			foreach($images as $image) {
-				if(! stristr($image,$a->get_baseurl() . '/photo/'))
+				if(! stristr($image,get_app()->get_baseurl() . '/photo/'))
 					continue;
 				$image_uri = substr($image,strrpos($image,'/') + 1);
 				$image_uri = substr($image_uri,0, strpos($image_uri,'-'));
