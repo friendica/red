@@ -7,7 +7,7 @@ function validate_members(&$item) {
 function group_init(&$a) {
 	if(local_user()) {
 		require_once('include/group.php');
-		$a->page['aside'] = group_side('contacts','group',false,(($a->argc > 1) ? intval($a->argv[1]) : 0));
+		$a->page['aside'] = group_side('collections','group',false,(($a->argc > 1) ? intval($a->argv[1]) : 0));
 	}
 }
 
@@ -26,15 +26,15 @@ function group_post(&$a) {
 		$name = notags(trim($_POST['groupname']));
 		$r = group_add(local_user(),$name);
 		if($r) {
-			info( t('Group created.') . EOL );
+			info( t('Collection created.') . EOL );
 			$r = group_byname(local_user(),$name);
 			if($r)
 				goaway($a->get_baseurl() . '/group/' . $r);
 		}
 		else
-			notice( t('Could not create group.') . EOL );	
+			notice( t('Could not create collection.') . EOL );	
 		goaway($a->get_baseurl() . '/group');
-		return; // NOTREACHED
+
 	}
 	if(($a->argc == 2) && (intval($a->argv[1]))) {
 		check_form_security_token_redirectOnErr('/group', 'group_edit');
@@ -44,9 +44,9 @@ function group_post(&$a) {
 			intval(local_user())
 		);
 		if(! count($r)) {
-			notice( t('Channel group not found.') . EOL );
-			goaway($a->get_baseurl() . '/contacts');
-			return; // NOTREACHED
+			notice( t('Collection not found.') . EOL );
+			goaway($a->get_baseurl() . '/connections');
+
 		}
 		$group = $r[0];
 		$groupname = notags(trim($_POST['groupname']));
@@ -57,7 +57,7 @@ function group_post(&$a) {
 				intval($group['id'])
 			);
 			if($r)
-				info( t('Channel group name changed.') . EOL );
+				info( t('Collection name changed.') . EOL );
 		}
 
 		$a->page['aside'] = group_side();
@@ -87,8 +87,8 @@ function group_content(&$a) {
 	if(($a->argc == 2) && ($a->argv[1] === 'new')) {
 		
 		return replace_macros($tpl, $context + array(
-			'$title' => t('Create a group of contacts/friends.'),
-			'$gname' => array('groupname',t('Channel Group Name: '), '', ''),
+			'$title' => t('Create a collection of connections.'),
+			'$gname' => array('groupname',t('Collection Name: '), '', ''),
 			'$gid' => 'new',
 			'$form_security_token' => get_form_security_token("group_edit"),
 		));
@@ -107,9 +107,9 @@ function group_content(&$a) {
 			if(count($r)) 
 				$result = group_rmv(local_user(),$r[0]['name']);
 			if($result)
-				info( t('Channel group removed.') . EOL);
+				info( t('Collection removed.') . EOL);
 			else
-				notice( t('Unable to remove channel group.') . EOL);
+				notice( t('Unable to remove collection.') . EOL);
 		}
 		goaway($a->get_baseurl() . '/group');
 		// NOTREACHED
@@ -134,8 +134,8 @@ function group_content(&$a) {
 			intval(local_user())
 		);
 		if(! count($r)) {
-			notice( t('Channel group not found.') . EOL );
-			goaway($a->get_baseurl() . '/contacts');
+			notice( t('Collection not found.') . EOL );
+			goaway($a->get_baseurl() . '/connnections');
 		}
 		$group = $r[0];
 		$members = group_get_members($group['id']);
@@ -173,8 +173,8 @@ function group_content(&$a) {
 
 		
 		$context = $context + array(
-			'$title' => t('Contact Group Editor'),
-			'$gname' => array('groupname',t('Channel Group Name: '),$group['name'], ''),
+			'$title' => t('Collection Editor'),
+			'$gname' => array('groupname',t('Collection Name: '),$group['name'], ''),
 			'$gid' => $group['id'],
 			'$drop' => $drop_txt,
 			'$form_security_token' => get_form_security_token('group_edit'),
@@ -188,7 +188,7 @@ function group_content(&$a) {
 	$groupeditor = array(
 		'label_members' => t('Members'),
 		'members' => array(),
-		'label_contacts' => t('All Active Channels'),
+		'label_contacts' => t('All Connected Channels'),
 		'contacts' => array(),
 	);
 		

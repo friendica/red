@@ -201,7 +201,7 @@ function mini_group_select($uid,$gid = 0) {
 		}
 
 	}
-	logger('groups: ' . print_r($grps,true));
+	logger('mini_group_select: ' . print_r($grps,true), LOGGER_DATA);
 
 	$o = replace_macros(get_markup_template('group_selection.tpl'), array(
 		'$label' => t('Default privacy group for new contacts'),
@@ -223,7 +223,7 @@ function group_side($every="contacts",$each="group",$edit = false, $group_id = 0
 	$groups = array();
 	
 	$groups[] = array(
-		'text' 	=> t('Everybody'),
+		'text' 	=> t('All Connections'),
 		'id' => 0,
 		'selected' => (($group_id == 0) ? 'group-selected' : ''),
 		'href' 	=> $every,
@@ -267,10 +267,10 @@ function group_side($every="contacts",$each="group",$edit = false, $group_id = 0
 	
 	$tpl = get_markup_template("group_side.tpl");
 	$o = replace_macros($tpl, array(
-		'$title'		=> t('Channel Groups'),
-		'$edittext'     => t('Edit channel group'),
-		'$createtext' 	=> t('Create a new channel group'),
-		'$ungrouped'    => (($every === 'contacts') ? t('Channels not in any group') : ''),
+		'$title'		=> t('Collections'),
+		'$edittext'     => t('Edit collection'),
+		'$createtext' 	=> t('Create a new collection'),
+		'$ungrouped'    => (($every === 'contacts') ? t('Channels not in any collection') : ''),
 		'$groups'		=> $groups,
 		'$add'			=> t('add'),
 	));

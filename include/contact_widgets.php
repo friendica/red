@@ -26,12 +26,12 @@ function findpeople_widget() {
 	}
  
 	return replace_macros(get_markup_template('peoplefind.tpl'),array(
-		'$findpeople' => t('Find People'),
+		'$findpeople' => t('Find Channels'),
 		'$desc' => t('Enter name or interest'),
 		'$label' => t('Connect/Follow'),
 		'$hint' => t('Examples: Robert Morgenstein, Fishing'),
 		'$findthem' => t('Find'),
-		'$suggest' => t('Friend Suggestions'),
+		'$suggest' => t('Channel Suggestions'),
 		'$similar' => t('Similar Interests'),
 		'$random' => t('Random Profile'),
 		'$inv' => t('Invite Friends')

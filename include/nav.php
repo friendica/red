@@ -149,18 +149,18 @@ EOT;
 		$nav['messages']['outbox']= array('message/sent', t('Outbox'), "", t('Outbox'));
 		$nav['messages']['new'] = array('message/new', t('New Message'), "", t('New Message'));
 		
-		$nav['manage'] = array('manage', t('Channel Manager'), "", t('Manage Your Channels'));
+		$nav['manage'] = array('manage', t('Channel Select'), "", t('Manage Your Channels'));
 
-		$nav['settings'] = array('settings', t('Settings'),"", t('Account settings'));
-		$nav['profiles'] = array('profiles', t('Profiles'),"", t('Manage/edit profiles'));
-		$nav['contacts'] = array('connections', t('Connections'),"", t('Manage/edit friends and channels'));
+		$nav['settings'] = array('settings', t('Settings'),"", t('Account/Channel Settings'));
+		$nav['profiles'] = array('profiles', t('Profiles'),"", t('Manage/Edit Profiles'));
+		$nav['contacts'] = array('connections', t('Connections'),"", t('Manage/Edit Friends and Connections'));
 	}
 
 	/**
 	 * Admin page
 	 */
 	 if (is_site_admin()){
-		 $nav['admin'] = array('admin/', t('Admin'), "", t('Site setup and configuration'));
+		 $nav['admin'] = array('admin/', t('Admin'), "", t('Site Setup and Configuration'));
 	 }
 
 
