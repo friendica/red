@@ -1001,7 +1001,9 @@ function conversation(&$a, $items, $mode, $update, $page_mode = 'traditional') {
 
                 // Can we put this after the visibility check?
                 like_puller($a,$item,$alike,'like');
-                like_puller($a,$item,$dlike,'dislike');
+
+				if(feature_enabled($profile_uid,'dislike'))
+	                like_puller($a,$item,$dlike,'dislike');
 
                 // Only add what is visible
                 if($item['network'] === NETWORK_MAIL && local_user() != $item['uid']) {
@@ -1069,7 +1071,8 @@ old code
 
 			foreach($items as $item) {
 				like_puller($a,$item,$alike,'like');
-				like_puller($a,$item,$dlike,'dislike');
+				if(feature_enabled($profile_uid,'dislike'))
+	                like_puller($a,$item,$dlike,'dislike');
 
   				if($item['id'] == $item['parent']) {
   					$threads[] = $item;
@@ -1401,6 +1404,7 @@ old code
 					'vote' => $likebuttons,
 					'like' => $like,
 					'dislike' => $dislike,
+					'nolike' => ((feature_enabled($profile_uid,'dislike')) ? '1' : ''),
 					'comment' => $comment,
 					'previewing' => $previewing,
 					'wait' => t('Please wait'),

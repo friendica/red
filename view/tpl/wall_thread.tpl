@@ -64,7 +64,9 @@
 			{{ if $item.vote }}
 			<div class="wall-item-like-buttons" id="wall-item-like-buttons-$item.id">
 				<a href="#" class="icon like" title="$item.vote.like.0" onclick="dolike($item.id,'like'); return false"></a>
+				{{ if $item.nolike }}
 				<a href="#" class="icon dislike" title="$item.vote.dislike.0" onclick="dolike($item.id,'dislike'); return false"></a>
+				{{ endif }}
 				{{ if $item.vote.share }}<a href="#" class="icon recycle wall-item-share-buttons" title="$item.vote.share.0" onclick="jotShare($item.id); return false"></a>{{ endif }}
 			</div>
 			{{ endif }}
