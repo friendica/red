@@ -39,6 +39,12 @@ function settings_init(&$a) {
 		),
 	
 		array(
+			'label'	=> t('Additional features'),
+			'url' 	=> $a->get_baseurl(true).'/settings/features',
+			'selected'	=> ((argv(1) === 'features') ? 'active' : ''),
+		),
+
+		array(
 			'label'	=> t('Display settings'),
 			'url' 	=> $a->get_baseurl(true).'/settings/display',
 			'selected'	=> ((argv(1) === 'display') ? 'active' : ''),
@@ -160,6 +166,18 @@ function settings_post(&$a) {
 		check_form_security_token_redirectOnErr('/settings/addon', 'settings_addon');
 		
 		call_hooks('plugin_settings_post', $_POST);
+		return;
+	}
+
+
+
+	if((argc() > 1) && (argv(1) === 'features')) {
+		check_form_security_token_redirectOnErr('/settings/features', 'settings_features');
+		foreach($_POST as $k => $v) {
+			if(strpos($k,'feature_') === 0) {
+				set_pconfig(local_user(),'feature',substr($k,8),((intval($v)) ? 1 : 0));
+			}
+		}
 		return;
 	}
 
@@ -590,6 +608,30 @@ function settings_content(&$a) {
 		));
 		return $o;
 	}
+
+
+	if((argc() > 1) && (argv(1) === 'features')) {
+		
+		$arr = array();
+		$features = get_features();
+		foreach($features as $f) {
+			$arr[] = array('feature_' .$f[0],$f[1],((intval(get_pconfig(local_user(),'feature',$f[0]))) ? "1" : ''),$f[2],array(t('Off'),t('On')));
+		}
+		
+		
+		$tpl = get_markup_template("settings_features.tpl");
+		$o .= replace_macros($tpl, array(
+			'$form_security_token' => get_form_security_token("settings_features"),
+			'$title'	=> t('Additional Features'),
+			'$features' => $arr,
+			'$submit'   => t('Submit')
+		));
+		return $o;
+	}
+
+
+
+
 
 	if((argc() > 1) && (argv(1) === 'connectors')) {
 

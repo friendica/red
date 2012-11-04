@@ -3077,6 +3077,7 @@ aside input[type='text'] {
 .field .onoff {
 	float: left;
 	width: 80px;
+	margin-right: 15px;
 }
 .field .onoff a {
 	display: block;
