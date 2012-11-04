@@ -150,6 +150,11 @@ function unregister_hook($hook,$file,$function) {
 }}
 
 
+//
+// It might not be obvious but themes can manually add hooks to the $a->hooks
+// array in their theme_init() and use this to customise the app behaviour.  
+//
+
 if(! function_exists('load_hooks')) {
 function load_hooks() {
 	$a = get_app();
@@ -171,8 +176,6 @@ function call_hooks($name, &$data = null) {
 
 	if((is_array($a->hooks)) && (array_key_exists($name,$a->hooks))) {
 		foreach($a->hooks[$name] as $hook) {
-			// define THISPLUGIN, make life easy to plugin devs :-)
-			define("THISPLUGIN", $hook[0]);
 			@include_once($hook[0]);
 			if(function_exists($hook[1])) {
 				$func = $hook[1];
