@@ -105,7 +105,7 @@ function fileas_widget($baseurl,$selected = '') {
 
 function categories_widget($baseurl,$selected = '') {
 
-	if(! featured_enabled($a->profile['profile_uid'],'categories'))
+	if(! feature_enabled($a->profile['profile_uid'],'categories'))
 		return '';
 
 	$a = get_app();
