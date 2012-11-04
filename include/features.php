@@ -16,14 +16,15 @@ function get_features() {
 
 $arr = array(
 
-'multi_delete'   => t('Multiple Deletion'),
-'expire'         => t('Content Expiration'),
-'commtag'        => t('Community Tagging'),
-'categories'     => t('Post Categories'),
-'filing'         => t('Saved Folders'),
-'archives'       => t('Search by Date'),
-'dislike'        => t('Dislike Posts'),
-'savedsearch'    => t('Saved Searches'),
+array('multi_delete', t('Multiple Deletion'),  t('Select and delete multiple posts/comments at once')),
+array('expire',       t('Content Expiration'), t('Remove old posts/comments after a period of time')),
+array('commtag',      t('Community Tagging'),  t('Tag existing posts and share the links')),
+array('categories',   t('Post Categories'),    t('Add categories to your channel postings')),
+array('filing',       t('Saved Folders'),      t('Ability to file posts under easily remembered names')),
+array('archives',     t('Search by Date'),     t('Select posts by date ranges')),
+array('dislike',      t('Dislike Posts'),      t('Ability to dislike posts/comments')),
+array('savedsearch',  t('Saved Searches'),     t('Save search terms for re-use')),
+array('preview',      t('Post Preview'),       t('Preview posts and comments before publishing them')),
 
 );
 
