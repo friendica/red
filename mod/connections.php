@@ -289,9 +289,9 @@ EOT;
 		$contact_id = $a->data['abook']['abook_id'];
 		$contact = $a->data['abook'];
 
-		$editselect = 'exact';
-		if(intval(get_pconfig(local_user(),'system','plaintext')))
-			$editselect = 'none';
+		$editselect = 'none';
+		if(feature_enabled(local_user(),'richtext'))
+			$editselect = 'exact';
 
 		$a->page['htmlhead'] .= replace_macros(get_markup_template('contact_head.tpl'), array(
 			'$baseurl' => $a->get_baseurl(true),

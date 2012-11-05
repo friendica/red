@@ -1661,9 +1661,9 @@ function status_editor($a,$x,$popup=false) {
 
 	$geotag = (($x['allow_location']) ? get_markup_template('jot_geotag.tpl') : '');
 
-	$plaintext = false;
-	if(local_user() && intval(get_pconfig(local_user(),'system','plaintext')))
-		$plaintext = true;
+	$plaintext = true;
+	if(feature_enabled(local_user(),'richtext'))
+		$plaintext = false;
 
 	$tpl = get_markup_template('jot-header.tpl');
 	

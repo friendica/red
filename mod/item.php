@@ -283,7 +283,7 @@ function item_post(&$a) {
 	// First figure out if it's a status post that would've been
 	// created using tinymce. Otherwise leave it alone. 
 
-	$plaintext = (local_user() ? intval(get_pconfig(local_user(),'system','plaintext')) : 0);
+	$plaintext = ((feature_enabled($profile_uid,'richtext')) ? false : true);
 	if((! $parent) && (! $api_source) && (! $plaintext)) {
 		$body = fix_mce_lf($body);
 	}

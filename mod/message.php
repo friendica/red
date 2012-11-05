@@ -50,10 +50,7 @@ function message_post(&$a) {
 	$body      = ((x($_REQUEST,'body'))      ? escape_tags(trim($_REQUEST['body'])) : '');
 	$recipient = ((x($_REQUEST,'messageto')) ? intval($_REQUEST['messageto'])       : 0 );
 
-	// Work around doubled linefeeds in Tinymce 3.5b2
-
-	$plaintext = intval(get_pconfig(local_user(),'system','plaintext'));
-	if(! $plaintext) {
+	if(feature_enabled(local_user(),'richtext')) {
 		$body = fix_mce_lf($body);
 	}
 	

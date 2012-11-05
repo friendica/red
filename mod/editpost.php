@@ -28,9 +28,9 @@ function editpost_content(&$a) {
 		return;
 	}
 
-	$plaintext = false;
-	if(local_user() && intval(get_pconfig(local_user(),'system','plaintext')))
-		$plaintext = true;
+	$plaintext = true;
+	if(feature_enabled(local_user(),'richtext'))
+		$plaintext = false;
 
 
 	$o .= '<h2>' . t('Edit post') . '</h2>';

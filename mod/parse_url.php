@@ -237,12 +237,8 @@ function parse_url_content(&$a) {
 	$text = null;
 	$str_tags = '';
 
-	$textmode = false;
-	if(local_user() && intval(get_pconfig(local_user(),'system','plaintext')))
-		$textmode = true;
 
-	//if($textmode)
-	$br = (($textmode) ? "\n" : '<br />');
+	$br = "\n";
 
 	if(x($_GET,'binurl'))
 		$url = trim(hex2bin($_GET['binurl']));
@@ -265,10 +261,7 @@ function parse_url_content(&$a) {
 
 	logger('parse_url: ' . $url);
 
-	if($textmode)
-		$template = $br . '[url=%s]%s[/url]%s' . $br;
-	else
-		$template = "<br /><a href=\"%s\" >%s</a>%s<br />";
+	$template = $br . '[url=%s]%s[/url]%s' . $br;
 
 	$arr = array('url' => $url, 'text' => '');
 
@@ -282,10 +275,8 @@ function parse_url_content(&$a) {
 
 	if($url && $title && $text) {
 
-		if($textmode)
-			$text = $br . '[quote]' . trim($text) . '[/quote]' . $br;
-		else
-			$text = '<br /><blockquote>' . trim($text) . '</blockquote><br />';
+
+		$text = $br . '[quote]' . trim($text) . '[/quote]' . $br;
 
 		$title = str_replace(array("\r","\n"),array('',''),$title);
 
@@ -320,10 +311,7 @@ function parse_url_content(&$a) {
 			$max_images = intval($max_images);
 
 		foreach ($siteinfo["images"] as $imagedata) {
-			if($textmode)
-				$image .= '[img='.$imagedata["width"].'x'.$imagedata["height"].']'.$imagedata["src"].'[/img]' . "\n";
-			else
-				$image .= '<img height="'.$imagedata["height"].'" width="'.$imagedata["width"].'" src="'.$imagedata["src"].'" alt="photo" /><br />';
+			$image .= '[img='.$imagedata["width"].'x'.$imagedata["height"].']'.$imagedata["src"].'[/img]' . "\n";
 			$total_images ++;
 			if($max_images && $max_images >= $total_images)
 				break;
@@ -331,10 +319,7 @@ function parse_url_content(&$a) {
 	}
 
 	if(strlen($text)) {
-		if($textmode)
-			$text = $br.'[quote]'.trim($text).'[/quote]'.$br ;
-		else
-			$text = '<br /><blockquote>'.trim($text).'</blockquote><br />';
+		$text = $br.'[quote]'.trim($text).'[/quote]'.$br ;
 	}
 
 	if($image) {

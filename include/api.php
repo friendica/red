@@ -480,8 +480,8 @@
 		return null;
 	}
 
-/*Waitman Gobble Mod*/
-        function api_statuses_mediap(&$a, $type) {
+
+    function api_statuses_mediap(&$a, $type) {
                 if (local_user()===false) {
                         logger('api_statuses_update: no user');
                         return false;
@@ -508,7 +508,7 @@
 		
                 $a->argv[1]=$user_info['screen_name']; //should be set to username?
 		
-		$_REQUEST['hush']='yeah'; //tell wall_upload function to return img info instead of echo
+		$_REQUEST['silent']='1'; //tell wall_upload function to return img info instead of echo
                 require_once('mod/wall_upload.php');
 		$bebop = wall_upload_post($a);
                 
@@ -521,7 +521,7 @@
                 return api_status_show($a,$type);
         }
         api_register_func('api/statuses/mediap','api_statuses_mediap', true);
-/*Waitman Gobble Mod*/
+
 
 
 	function api_statuses_update(&$a, $type) {
@@ -575,7 +575,7 @@
 			$_REQUEST['type'] = 'wall';
 			if(x($_FILES,'media')) {
 				// upload the image if we have one
-				$_REQUEST['hush']='yeah'; //tell wall_upload function to return img info instead of echo
+				$_REQUEST['silent']='1'; //tell wall_upload function to return img info instead of echo
 				require_once('mod/wall_upload.php');
 				$media = wall_upload_post($a);
 				if(strlen($media)>0)

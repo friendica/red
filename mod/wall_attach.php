@@ -135,12 +135,7 @@ function wall_attach_post(&$a) {
 		killme();
 	}
 
-	$lf = '<br />';
-
-	if(local_user() && intval(get_pconfig(local_user(),'system','plaintext')))
-		$lf = "\n";
-
-	echo  $lf . $lf . '[attachment]' . $r[0]['hash'] . '[/attachment]' . $lf;
+	echo  "\n\n" . '[attachment]' . $r[0]['hash'] . '[/attachment]' . "\n";
 	
 	killme();
 	// NOTREACHED
