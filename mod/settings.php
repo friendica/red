@@ -765,7 +765,7 @@ function settings_content(&$a) {
 
 		$permiss = array();
 
-		$perm_cats = array(
+		$perm_opts = array(
 			array( t('Nobody except yourself'), 0),
 			array( t('Only those you specifically allow'), PERMS_SPECIFIC), 
 			array( t('Anybody in your address book'), PERMS_CONTACTS),
@@ -776,23 +776,17 @@ function settings_content(&$a) {
 
 
 		foreach($global_perms as $k => $perm) {
-
-			$permiss[$k] = array(
-				'key' => $k,
-				'label' => $perm[3],
-				'fields' => array()
-			);
-			$column = $perm[0];
-			foreach($perm_cats as $cat) {
-				if((! $perm[2]) && $cat[1] == PERMS_PUBLIC)
+			$options = array();
+			foreach($perm_opts as $opt) {
+				if((! $perm[2]) && $opt[1] == PERMS_PUBLIC)
 					continue;
-				$permiss[$k]['fields'][] = array( $column, $cat[0], $cat[1], '', (($channel[$column] == $cat[1]) ? '1' : ''));
+				$options[$opt[1]] = $opt[0];
 			}
-			
+			$permiss[] = array($k,$perm[3],$channel[$perm[0]],$perm[4],$options);			
 		}
 
 
-logger('permiss: ' . print_r($permiss,true));
+//		logger('permiss: ' . print_r($permiss,true));
 
 
 

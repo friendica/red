@@ -39,15 +39,14 @@ $nickname_block
 
 <div id="settings-permissions-wrapper">
 {{ for $permiss_arr as $permit }}
-<div id="settings-perms-$permit.key" class="settings-permission-label">$permit.label</div>
-{{ for $permit.fields as $radio }}
-
-	{{inc field_radio.tpl with $field=$radio }}{{endinc}}
-
-{{ endfor }}
+{{inc field_select.tpl with $field=$permit }}{{endinc}}
 {{ endfor }}
 </div>
 
+
+<div class="settings-submit-wrapper" >
+<input type="submit" name="submit" class="settings-submit" value="$submit" />
+</div>
 
 
 

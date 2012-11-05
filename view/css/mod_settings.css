@@ -1,17 +1,8 @@
-.settings-permission-label {
-	margin-top: 10px;
-	font-weight: bold;
+#settings-permissions-wrapper .field {
 	margin-bottom: 10px;
 }
-#settings-permissions-wrapper .field {
-	margin-left: 15px;
-	padding-bottom: 0px;
-	margin-bottom: 0px;
-}
 #settings-permissions-wrapper .field label{
-	width: 200px;
+	width: 350px;
+	font-weight: bold;
 }
-#settings-permissions-wrapper .field input{
-	text-align: left;
-	width: 50px;
-}
+
