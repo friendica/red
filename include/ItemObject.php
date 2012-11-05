@@ -11,7 +11,7 @@ require_once('boot.php');
  */
 class Item extends BaseObject {
 	private $data = array();
-	private $template = 'wall_thread.tpl';
+	private $template = 'conv_item.tpl';
 	private $comment_box_template = 'comment_item.tpl';
 	private $toplevel = false;
 	private $writable = false;
@@ -104,19 +104,31 @@ class Item extends BaseObject {
 			? t('Private Message')
 			: false);
 		$shareable = ((($conv->get_profile_owner() == local_user()) && ($item['private'] != 1)) ? true : false);
+
 		if(local_user() && link_compare($a->contact['url'],$item['author-link']))
 			$edpost = array($a->get_baseurl($ssl_state)."/editpost/".$item['id'], t("Edit"));
 		else
 			$edpost = false;
-		if(($this->get_data_value('uid') == local_user()) || $this->is_visiting())
+
+// FIXME - this is wrong.
+//		if(($this->get_data_value('uid') == local_user()) || $this->is_visiting())
+
+		if($this->get_data_value('uid') == local_user())
 			$dropping = true;
 
-		$drop = array(
-			'dropping' => $dropping,
-			'select' => t('Select'), 
-			'delete' => t('Delete'),
-		);
-		
+		if($dropping) {
+			$drop = array(
+				'dropping' => $dropping,
+				'delete' => t('Delete'),
+			);
+		}		
+
+		if($observer_is_pageowner) {		
+			$multidrop = array(
+				'select' => t('Select'), 
+			);
+		}
+
 		$filer = (($conv->get_profile_owner() == local_user()) ? t("save to folder") : false);
 
 		$diff_author    = ((link_compare($item['url'],$item['author-link'])) ? false : true);
@@ -158,8 +170,8 @@ class Item extends BaseObject {
 			if ($tag!="") $tags[] = bbcode($tag);
 		}
 
-		$like    = ((x($alike,$item['uri'])) ? format_like($alike[$item['uri']],$alike[$item['uri'] . '-l'],'like',$item['uri']) : '');
-		$dislike = ((x($dlike,$item['uri']) && feature_enabled($conv->get_profile_owner(),'dislike')) ? format_like($dlike[$item['uri']],$dlike[$item['uri'] . '-l'],'dislike',$item['uri']) : '');
+		$showlike    = ((x($alike,$item['uri'])) ? format_like($alike[$item['uri']],$alike[$item['uri'] . '-l'],'like',$item['uri']) : '');
+		$showdislike = ((x($dlike,$item['uri']) && feature_enabled($conv->get_profile_owner(),'dislike')) ? format_like($dlike[$item['uri']],$dlike[$item['uri'] . '-l'],'dislike',$item['uri']) : '');
 
 		/*
 		 * We should avoid doing this all the time, but it depends on the conversation mode
@@ -173,7 +185,8 @@ class Item extends BaseObject {
 		
 		if($this->is_toplevel()) {
 			if($conv->get_profile_owner() == local_user()) {
-				$isstarred = (($item['item_flags'] & ITEM_STARRED) ? "starred" : "unstarred");
+
+// FIXME we don't need all this stuff, some can be done in the template
 
 				$star = array(
 					'do' => t("add star"),
@@ -181,8 +194,12 @@ class Item extends BaseObject {
 					'toggle' => t("toggle star status"),
 					'classdo' => (($item['item_flags'] & ITEM_STARRED) ? "hidden" : ""),
 					'classundo' => (($item['item_flags'] & ITEM_STARRED) ? "" : "hidden"),
+					'isstarred' => (($item['item_flags'] & ITEM_STARRED) ? "starred" : "unstarred"),
 					'starred' =>  t('starred'),
-					'tagger' => t("add tag"),
+				);
+
+				$tagger = array(
+					'tagit' => t("add tag"),
 					'classtagger' => "",
 				);
 			}
@@ -191,11 +208,10 @@ class Item extends BaseObject {
 		}
 
 		if($conv->is_writable()) {
-			$buttons = array(
-				'like' => array( t("I like this \x28toggle\x29"), t("like")),
-				'dislike' => array( t("I don't like this \x28toggle\x29"), t("dislike")),
-			);
-			if ($shareable) $buttons['share'] = array( t('Share this'), t('share'));
+			$like = array( t("I like this \x28toggle\x29"), t("like"));
+			$dislike = array( t("I don't like this \x28toggle\x29"), t("dislike"));
+			if ($shareable)
+				$share = array( t('Share this'), t('share'));
 		}
 
 		if(strcmp(datetime_convert('UTC','UTC',$item['created']),datetime_convert('UTC','UTC','now - 12 hours')) > 0)
@@ -233,17 +249,22 @@ class Item extends BaseObject {
 			'owner_url' => $this->get_owner_url(),
 			'owner_photo' => $this->get_owner_photo(),
 			'owner_name' => template_escape($this->get_owner_name()),
-			'plink' => get_plink($item),
-			'edpost' => $edpost,
-			'isstarred' => $isstarred,
-			'star' => $star,
-			'filer' => $filer,
-			'drop' => $drop,
-			'vote' => $buttons,
-			'like' => $like,
-			'dislike' => $dislike,
-			'nolike' => ((feature_enabled($conv->get_profile_owner(),'dislike')) ? '1' : ''),
 
+// Item toolbar buttons
+			'like'      => $like,
+			'dislike'   => ((feature_enabled($conv->get_profile_owner(),'dislike')) ? $dislike : ''),
+			'share'     => $share,
+			'plink'     => get_plink($item),
+			'edpost'    => ((feature_enabled($conv->get_profile_owner(),'edit_posts')) ? $edpost : ''),
+			'star'      => $star,
+			'tagger'    => ((feature_enabled($conv->get_profile_owner(),'commtag')) ? $tagger : ''),
+			'filer'     => ((feature_enabled($conv->get_profile_owner(),'filing')) ? $filer : ''),
+			'drop'      => $drop,
+			'multidrop' => ((feature_enabled($conv->get_profile_owner(),'multi_delete')) ? $multidrop : ''),
+// end toolbar buttons
+
+			'showlike' => $showlike,
+			'showdislike' => $showdislike,
 			'comment' => $this->get_comment_box($indent),
 			'previewing' => ($conv->is_preview() ? ' preview ' : ''),
 			'wait' => t('Please wait'),

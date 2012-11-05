@@ -342,6 +342,7 @@ div.wall-item-content-wrapper.shiny {
 	cursor: pointer;
 }
 
+
 #group-sidebar {
 	margin-bottom: 10px;
 }
@@ -1091,56 +1092,14 @@ input#dfrn-url {
 	width: 100%;
 }
 
-.wall-item-like-buttons {
+
+.item-tool {
 	float: left;
-/*	margin-right: 10px; */
-/*	padding-right: 10px; */
-/*	border-right: 2px solid #fff; */
+	margin-right: 8px;
 }
 
 .like-rotator {
 	margin-left: 5px;
-}
-.icon.dislike {
-	margin-left: 3px;
-}
-.icon.remote-link {
-	margin-left: 10px;
-}
-
-.wall-item-like-buttons > a,
-.wall-item-like-buttons > img {
-	float: left;
-}
-
-.wall-item-like-buttons img {
-	cursor: pointer;
-}
-
-.wall-item-share-buttons {
-	margin-left: 10px;
-}
-
-.editpost {
-	margin-left: 10px;
-	float: left;
-}
-.star-item {
-	margin-left: 10px;
-	float: left;	
-}
-.tag-item {
-	margin-left: 10px;
-	float: left;	
-}
-
-.filer-item {
-	margin-left: 10px;
-	float: left;
-}
-
-.wall-item-links-wrapper {
-	float: left;
 }
 
 .wall-item-delete-wrapper {
@@ -1154,7 +1113,6 @@ input#dfrn-url {
 .wall-item-delete-icon {
 	border: none;
 }
-
 
 .wall-item-wrapper-end {
 	clear: both;

@@ -25,6 +25,7 @@ array('archives',     t('Search by Date'),     t('Select posts by date ranges'))
 array('dislike',      t('Dislike Posts'),      t('Ability to dislike posts/comments')),
 array('savedsearch',  t('Saved Searches'),     t('Save search terms for re-use')),
 array('preview',      t('Post Preview'),       t('Preview posts and comments before publishing them')),
+array('edit_posts',   t('Edit Sent Posts'),    t('Edit/correct posts and comments after sending')),
 
 );
 
