@@ -1655,7 +1655,7 @@ function format_like($cnt,$arr,$type,$id) {
 }}
 
 
-function status_editor($a,$x, $notes_cid = 0, $popup=false) {
+function status_editor($a,$x,$popup=false) {
 
 	$o = '';
 
@@ -1688,15 +1688,8 @@ function status_editor($a,$x, $notes_cid = 0, $popup=false) {
 	$jotplugins = '';
 	$jotnets = '';
 
-	$catsenabled = feature_enabled($x['profile_uid'],'categories');
-	
 	call_hooks('jot_tool', $jotplugins);
 	call_hooks('jot_networks', $jotnets);
-
-	if($notes_cid)
-		$jotnets .= '<input type="hidden" name="contact_allow[]" value="' . $notes_cid .'" />';
-
-	$tpl = replace_macros($tpl,array('$jotplugins' => $jotplugins));
 
 	$o .= replace_macros($tpl,array(
 		'$return_path' => $a->query_string,
@@ -1718,7 +1711,7 @@ function status_editor($a,$x, $notes_cid = 0, $popup=false) {
 		'$shortnoloc' => t('clear location'),
 		'$title' => "",
 		'$placeholdertitle' => t('Set title'),
-		'$catsenabled' => $catsenabled,
+		'$catsenabled' => ((feature_enabled($x['profile_uid'],'categories')) ? 'categories' : ''),
 		'$category' => "",
 		'$placeholdercategory' => t('Categories (comma-separated list)'),
 		'$wait' => t('Please wait'),
@@ -1738,8 +1731,9 @@ function status_editor($a,$x, $notes_cid = 0, $popup=false) {
 		'$acl' => $x['acl'],
 		'$bang' => $x['bang'],
 		'$profile_uid' => $x['profile_uid'],
-		'$preview' => t('Preview'),
+		'$preview' => ((feature_enabled($x['profile_uid'],'preview')) ? t('Preview') : ''),
 		'$sourceapp' => t($a->sourcename),
+		'$jotplugins' => $jotplugins,
 	));
 
 

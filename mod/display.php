@@ -118,7 +118,7 @@ function display_content(&$a) {
 			'visitor' => 'block',
 			'profile_uid' => local_user()
 		);	
-		$o .= status_editor($a,$x,0,true);
+		$o .= status_editor($a,$x,true);
 
 
 	$sql_extra = item_permissions_sql($a->profile['uid'],$remote_contact,$groups);

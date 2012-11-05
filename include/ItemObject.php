@@ -556,7 +556,7 @@ class Item extends BaseObject {
 				'$edimg' => t('Image'),
 				'$edurl' => t('Link'),
 				'$edvideo' => t('Video'),
-				'$preview' => t('Preview'),
+				'$preview' => ((feature_enabled($conv->get_profile_owner(),'preview')) ? t('Preview') : ''),
 				'$indent' => $indent,
 				'$sourceapp' => t($a->sourcename),
 				'$ww' => (($conv->get_mode() === 'network') ? $ww : '')

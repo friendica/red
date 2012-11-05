@@ -53,13 +53,14 @@
 		<a href="#profile-jot-acl-wrapper" id="jot-perms-icon" class="icon $lockstate"  title="$permset" ></a>$bang
 	</div>
 
-	<span onclick="preview_post();" id="jot-preview-link" class="fakelink">$preview</span>
+	{{ if $preview }}<span onclick="preview_post();" id="jot-preview-link" class="fakelink">$preview</span>{{ endif }}
+
 
 	<div id="profile-jot-perms-end"></div>
 
 
 	<div id="profile-jot-plugin-wrapper">
-  	$jotplugins
+	$jotplugins
 	</div>
 
 	<div id="profile-rotator-wrapper" style="display: $visitor;" >

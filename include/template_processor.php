@@ -71,7 +71,7 @@
 				$val = $this->_get_var($args[2]);
 			}
 			$x = preg_split("|{{ *else *}}|", $args[3]);
-			return ( $val ? $x[0] : (isset($x[1]) ? $x[1] : ""));
+			return ( ($val) ? $x[0] : (isset($x[1]) ? $x[1] : ""));
 		}
 		
 		/**
