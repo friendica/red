@@ -60,7 +60,16 @@ function like_content(&$a) {
 		dbesc($item['owner_xchan'])
 	);
 	if($r)
-		$remote_owner = $r[0];
+		$thread_owner = $r[0];
+	else
+		killme();
+
+
+	$r = q("select * from xchan where xchan_hash = '%s' limit 1",
+		dbesc($item['author_xchan'])
+	);
+	if($r)
+		$item_owner = $r[0];
 	else
 		killme();
 
@@ -77,7 +86,7 @@ function like_content(&$a) {
 //		if(! count($r))
 //			return;
 //		if(! $r[0]['self'])
-//			$remote_owner = $r[0];
+//			$thread_owner = $r[0];
 //	}
 
 	// this represents the post owner on this system. 
@@ -94,8 +103,8 @@ function like_content(&$a) {
 //		return;
 //	}
 
-//	if(! $remote_owner)
-//		$remote_owner = $owner;
+//	if(! $thread_owner)
+//		$thread_owner = $owner;
 
 
 	// This represents the person posting
@@ -119,7 +128,7 @@ function like_content(&$a) {
 	$r = q("SELECT * FROM item WHERE verb = '%s' AND item_restrict = 0 
 		AND owner_xchan = '%s' AND ( parent = %d OR thr_parent = '%s') LIMIT 1",
 		dbesc($activity),
-		dbesc($remote_owner['xchan_hash']),
+		dbesc($thread_owner['xchan_hash']),
 		intval($item_id),
 		dbesc($item['uri'])
 	);
@@ -151,11 +160,20 @@ function like_content(&$a) {
 	$body = $item['body'];
 
 	$obj = json_encode(array(
-		'type' => $objtype,
-		'id'   => $item['uri'],
-		'link' => $links,
-		'title' => $item['title'],
-		'content' => $item['body']
+		'type'    => $objtype,
+		'id'      => $item['uri'],
+		'link'    => $links,
+		'title'   => $item['title'],
+		'content' => $item['body'],
+		'author'  => array(
+			'name'     => $item_author['xchan_name'],
+			'address'  => $item_author['xchan_addr'],
+			'guid'     => $item_author['xchan_guid'],
+			'guid_sig' => $item_author['xchan_guid_sig'],
+			'link'     => array(
+				array('rel' => 'alternate', 'type' => 'text/html', 'href' => $item_author['xchan_url']),
+				array('rel' => 'photo', 'type' => $item_author['xchan_photo_mimetype'], 'href' => $item_author['xchan_photo_m'])),
+			),
 	));
 
 	if($verb === 'like')
@@ -179,24 +197,24 @@ function like_content(&$a) {
 	$arr['parent']       = $item['id'];
 	$arr['parent_uri']   = $item['uri'];
 	$arr['thr_parent']   = $item['uri'];
-	$arr['owner_xchan']  = $remote_owner['xchan_hash'];
+	$arr['owner_xchan']  = $thread_owner['xchan_hash'];
 	$arr['author_xchan'] = $observer['xchan_hash'];
 
 	
-	$ulink = '[url=' . $remote_owner['xchan_url'] . ']' . $remote_owner['xchan_name'] . '[/url]';
+	$ulink = '[url=' . $item_owner['xchan_url'] . ']' . $item_owner['xchan_name'] . '[/url]';
 	$alink = '[url=' . $observer['xchan_url'] . ']' . $observer['xchan_name'] . '[/url]';
 	$plink = '[url=' . $a->get_baseurl() . '/display/' . $item['uri'] . ']' . $post_type . '[/url]';
-	$arr['body'] =  sprintf( $bodyverb, $ulink, $alink, $plink );
+	
+	$arr['body']          =  sprintf( $bodyverb, $ulink, $alink, $plink );
 
-	$arr['verb'] = $activity;
-	$arr['obj_type'] = $objtype;
-	$arr['object'] = $obj;
+	$arr['verb']          = $activity;
+	$arr['obj_type']      = $objtype;
+	$arr['object']        = $obj;
 
-	$arr['allow_cid'] = $item['allow_cid'];
-	$arr['allow_gid'] = $item['allow_gid'];
-	$arr['deny_cid'] = $item['deny_cid'];
-	$arr['deny_gid'] = $item['deny_gid'];
-
+	$arr['allow_cid']     = $item['allow_cid'];
+	$arr['allow_gid']     = $item['allow_gid'];
+	$arr['deny_cid']      = $item['deny_cid'];
+	$arr['deny_gid']      = $item['deny_gid'];
 
 	$post_id = item_store($arr);	
 
