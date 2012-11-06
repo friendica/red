@@ -11,6 +11,9 @@ function like_content(&$a) {
 		return;
 	}
 
+	$observer = $a->get_observer();
+
+
 	$verb = notags(trim($_GET['verb']));
 
 	if(! $verb)
@@ -57,52 +60,54 @@ function like_content(&$a) {
 
 	$remote_owner = null;
 
-	if(! $item['wall']) {
+// fixme
+//	if(! $item['wall']) {
 		// The top level post may have been written by somebody on another system
-		$r = q("SELECT * FROM `contact` WHERE `id` = %d AND `uid` = %d LIMIT 1",
-			intval($item['contact-id']),
-			intval($item['uid'])
-		);
-		if(! count($r))
-			return;
-		if(! $r[0]['self'])
-			$remote_owner = $r[0];
-	}
+
+//		$r = q("SELECT * FROM `contact` WHERE `id` = %d AND `uid` = %d LIMIT 1",
+//			intval($item['contact-id']),
+//			intval($item['uid'])
+//		);
+//		if(! count($r))
+//			return;
+//		if(! $r[0]['self'])
+//			$remote_owner = $r[0];
+//	}
 
 	// this represents the post owner on this system. 
 
-	$r = q("SELECT `contact`.*, `user`.`nickname` FROM `contact` LEFT JOIN `user` ON `contact`.`uid` = `user`.`uid`
-		WHERE `contact`.`self` = 1 AND `contact`.`uid` = %d LIMIT 1",
-		intval($owner_uid)
-	);
-	if(count($r))
-		$owner = $r[0];
+//	$r = q("SELECT `contact`.*, `user`.`nickname` FROM `contact` LEFT JOIN `user` ON `contact`.`uid` = `user`.`uid`
+//		WHERE `contact`.`self` = 1 AND `contact`.`uid` = %d LIMIT 1",
+//		intval($owner_uid)
+//	);
+//	if(count($r))
+//		$owner = $r[0];
 
-	if(! $owner) {
-		logger('like: no owner');
-		return;
-	}
+//	if(! $owner) {
+//		logger('like: no owner');
+//		return;
+//	}
 
-	if(! $remote_owner)
-		$remote_owner = $owner;
+//	if(! $remote_owner)
+//		$remote_owner = $owner;
 
 
 	// This represents the person posting
 
-	if((local_user()) && (local_user() == $owner_uid)) {
-		$contact = $owner;
-	}
-	else {
-		$r = q("SELECT * FROM `contact` WHERE `id` = %d AND `uid` = %d LIMIT 1",
-			intval($_SESSION['visitor_id']),
-			intval($owner_uid)
-		);
-		if(count($r))
-			$contact = $r[0];
-	}
-	if(! $contact) {
-		return;
-	}
+//	if((local_user()) && (local_user() == $owner_uid)) {
+//		$contact = $owner;
+//	}
+//	else {
+//		$r = q("SELECT * FROM `contact` WHERE `id` = %d AND `uid` = %d LIMIT 1",
+//			intval($_SESSION['visitor_id']),
+//			intval($owner_uid)
+//		);
+//		if(count($r))
+//			$contact = $r[0];
+//	}
+//	if(! $contact) {
+//		return;
+//	}
 
 
 	$r = q("SELECT * FROM `item` WHERE `verb` = '%s' AND `deleted` = 0 
@@ -127,24 +132,26 @@ function like_content(&$a) {
 		return;
 	}
 
+
+
 	$uri = item_message_id();
 
-	$post_type = (($item['resource_id']) ? t('photo') : t('status'));
-	$objtype = (($item['resource_id']) ? ACTIVITY_OBJ_PHOTO : ACTIVITY_OBJ_NOTE ); 
-	$link = xmlify('<link rel="alternate" type="text/html" href="' . $a->get_baseurl() . '/display/' . $owner['nickname'] . '/' . $item['id'] . '" />' . "\n") ;
+	$post_type = (($item['resource_id'] === 'photo') ? $t('photo') : t('status'));
+
+	$links = array(array('rel' => 'alternate','type' => 'text/html', 
+		'href' => z_root() . '/display/' . $item['uri']));
+	$objtype = (($item['resource_id'] === 'photo') ? ACTIVITY_OBJ_PHOTO : ACTIVITY_OBJ_NOTE ); 
+
 	$body = $item['body'];
 
-	$obj = <<< EOT
+	$obj = json_encode(array(
+		'type' => $objtype,
+		'id'   => $item['uri'],
+		'link' => $links,
+		'title' => $item['title'],
+		'content' => $item['body']
+	));
 
-	<object>
-		<type>$objtype</type>
-		<local>1</local>
-		<id>{$item['uri']}</id>
-		<link>$link</link>
-		<title></title>
-		<content>$body</content>
-	</object>
-EOT;
 	if($verb === 'like')
 		$bodyverb = t('%1$s likes %2$s\'s %3$s');
 	if($verb === 'dislike')
@@ -157,20 +164,17 @@ EOT;
 
 	$arr['uri'] = $uri;
 	$arr['uid'] = $owner_uid;
-	$arr['contact-id'] = $contact['id'];
+//	$arr['contact-id'] = $contact['id'];
 	$arr['type'] = 'activity';
-	$arr['wall'] = $item['wall'];
-	$arr['origin'] = 1;
-	$arr['gravity'] = GRAVITY_LIKE;
+//	$arr['wall'] = $item['wall'];
+//	$arr['origin'] = 1;
+//	$arr['gravity'] = GRAVITY_LIKE;
 	$arr['parent'] = $item['id'];
 	$arr['parent_uri'] = $item['uri'];
 	$arr['thr_parent'] = $item['uri'];
-	$arr['owner-name'] = $remote_owner['name'];
-	$arr['owner-link'] = $remote_owner['url'];
-	$arr['owner-avatar'] = $remote_owner['thumb'];
-	$arr['author-name'] = $contact['name'];
-	$arr['author-link'] = $contact['url'];
-	$arr['author-avatar'] = $contact['thumb'];
+	$arr['owner_xchan'] = $remote_owner['xchan_hash'];
+	$arr['author_xchan'] = $observer['xchan_hash'];
+
 	
 	$ulink = '[url=' . $contact['url'] . ']' . $contact['name'] . '[/url]';
 	$alink = '[url=' . $item['author-link'] . ']' . $item['author-name'] . '[/url]';
@@ -180,21 +184,24 @@ EOT;
 	$arr['verb'] = $activity;
 	$arr['obj_type'] = $objtype;
 	$arr['object'] = $obj;
+
 	$arr['allow_cid'] = $item['allow_cid'];
 	$arr['allow_gid'] = $item['allow_gid'];
 	$arr['deny_cid'] = $item['deny_cid'];
 	$arr['deny_gid'] = $item['deny_gid'];
-	$arr['visible'] = 1;
-	$arr['unseen'] = 1;
+
+
+//	$arr['visible'] = 1;
+//	$arr['unseen'] = 1;
 
 	$post_id = item_store($arr);	
 
-	if(! $item['visible']) {
-		$r = q("UPDATE `item` SET `visible` = 1 WHERE `id` = %d AND `uid` = %d LIMIT 1",
-			intval($item['id']),
-			intval($owner_uid)
-		);
-	}			
+//	if(! $item['visible']) {
+//		$r = q("UPDATE `item` SET `visible` = 1 WHERE `id` = %d AND `uid` = %d LIMIT 1",
+//			intval($item['id']),
+//			intval($owner_uid)
+//		);
+//	}			
 
 
 	$arr['id'] = $post_id;
@@ -204,7 +211,6 @@ EOT;
 	proc_run('php',"include/notifier.php","like","$post_id");
 
 	killme();
-	return; // NOTREACHED
 }
 
 

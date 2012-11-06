@@ -447,8 +447,8 @@ function get_item_elements($j) {
 	$arr['location']   = (($j->location) ? htmlentities($j->location, ENT_COMPAT,'UTF-8') : '');
 	$arr['coord']      = (($j->coord)    ? htmlentities($j->coord,    ENT_COMPAT,'UTF-8') : '');
 	$arr['verb']       = (($j->verb)     ? htmlentities($j->verb,     ENT_COMPAT,'UTF-8') : '');
-	$arr['obj_type']    = (($j->objtype)  ? htmlentities($j->objtype,  ENT_COMPAT,'UTF-8') : '');
-	$arr['tgt_type']    = (($j->tgttype)  ? htmlentities($j->tgttype,  ENT_COMPAT,'UTF-8') : '');
+	$arr['obj_type']   = (($j->objtype)  ? htmlentities($j->objtype,  ENT_COMPAT,'UTF-8') : '');
+	$arr['tgt_type']   = (($j->tgttype)  ? htmlentities($j->tgttype,  ENT_COMPAT,'UTF-8') : '');
 
 	$arr['object']        = $j->object;
 	$arr['target']        = $j->target;

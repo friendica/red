@@ -25,7 +25,7 @@ function profile_activity($changed, $value) {
 	$arr['verb'] = ACTIVITY_UPDATE;
 	$arr['obj_type'] = ACTIVITY_OBJ_PROFILE;
 				
-	$A = '[url=' . $self[0]['xchan_url'] . ']' . $self[0]['xchan_name'] . '[/url]';
+	$A = '[url=' . z_root() . '/profile/' . $self[0]['xchan_addr'] . ']' . $self[0]['xchan_name'] . '[/url]';
 
 
 	$changes = '';
@@ -42,7 +42,7 @@ function profile_activity($changed, $value) {
 		$changes .= $ch;
 	}
 
-	$prof = '[url=' . $self[0]['xchan_url'] . '?tab=profile' . ']' . t('public profile') . '[/url]';	
+	$prof = '[url=' . z_root() . '/profile/' . $self[0]['xchan_addr'] . ']' . t('public profile') . '[/url]';	
 
 	if($t == 1 && strlen($value)) {
 		$message = sprintf( t('%1$s changed %2$s to &ldquo;%3$s&rdquo;'), $A, $changes, $value);
@@ -55,14 +55,14 @@ function profile_activity($changed, $value) {
 	$arr['body'] = $message;  
 
 	$links = array();
-	$links[] = array('rel' => 'alternate', 'type' => 'text/html', 'href' => $self[0]['profile'] . '?tab=profile');
+	$links[] = array('rel' => 'alternate', 'type' => 'text/html', 'href' => z_root() . '/profile/' . $self[0]['xchan_addr']);
 	$links[] = array('rel' => 'photo', 'type' => $self[0]['xchan_photo_mimetype'], 'href' => $self[0]['xchan_photo_l']); 
 
 	$arr['object'] = json_encode(array(
-		'type' => ACTIVITY_OBJ_PROFILE,
+		'type'  => ACTIVITY_OBJ_PROFILE,
 		'title' => $self[0]['channel_name'],
-		'id' => $self[0]['xchan_url'] . '/' . $self[0]['xchan_hash'],
-		'link' => $links
+		'id'    => $self[0]['xchan_url'] . '/' . $self[0]['xchan_hash'],
+		'link'  => $links
 	));
 
 	

@@ -137,11 +137,6 @@ nav #site-location {
 }
 
 
-nav #banner {
-	display: block;
-    margin-top: 14px;
-	position: absolute;
-}
 nav #banner #logo-text a {
 	font-size: 40px;
 	font-weight: bold;
@@ -150,6 +145,38 @@ nav #banner #logo-text a {
 
 }
 nav #banner #logo-text a:hover { text-decoration: none; }
+
+header #site-location {
+  display: none;
+}
+header #banner {
+  overflow: hidden;
+  text-align: center;
+  width: 100%;
+  font-size: 2.2em;
+  font-family: tahoma, "Lucida Sans", sans;
+  color: red;
+  font-weight: bold;
+
+}
+header #banner a,
+header #banner a:active,
+header #banner a:visited,
+header #banner a:link,
+header #banner a:hover {
+  color: #ffffff;
+  text-decoration: none;
+  outline: none;
+  vertical-align: bottom;
+}
+header #banner #logo-img {
+  height: 22px;
+  margin-top: 5px;
+}
+header #banner #logo-text {
+  font-size: 22px;
+}
+
 
 
 
@@ -3610,35 +3637,6 @@ header {
 
   z-index: 110;
   color: #ffffff;
-}
-header #site-location {
-  display: none;
-}
-header #banner {
-  overflow: hidden;
-  text-align: center;
-  width: 100%;
-
-  color: red;
-  font-weight: bold;
-  font-size: 2em;
-}
-header #banner a,
-header #banner a:active,
-header #banner a:visited,
-header #banner a:link,
-header #banner a:hover {
-  color: #ffffff;
-  text-decoration: none;
-  outline: none;
-  vertical-align: bottom;
-}
-header #banner #logo-img {
-  height: 22px;
-  margin-top: 5px;
-}
-header #banner #logo-text {
-  font-size: 22px;
 }
 
 
