@@ -44,7 +44,7 @@ function like_content(&$a) {
 
 	if(! $item_id || (! $r)) {
 		logger('like: no item ' . $item_id);
-		return;
+		killme();
 	}
 
 	$item = $r[0];
@@ -53,10 +53,16 @@ function like_content(&$a) {
 
 	if(! perm_is_allowed($owner_uid,$observer['xchan_hash'],'post_comments')) {
 		notice( t('Permission denied') . EOL);
-		return;
+		killme();
 	}
 
-	$remote_owner = $item['owner_xchan'];
+	$r = q("select * from xchan where xchan_hash = '%s' limit 1",
+		dbesc($item['owner_xchan'])
+	);
+	if($r)
+		$remote_owner = $r[0];
+	else
+		killme();
 
 
 
@@ -110,11 +116,10 @@ function like_content(&$a) {
 //	}
 
 
-	$r = q("SELECT * FROM item WHERE verb = '%s' AND ( item_restrict & %d )
+	$r = q("SELECT * FROM item WHERE verb = '%s' AND item_restrict = 0 
 		AND owner_xchan = '%s' AND ( parent = %d OR thr_parent = '%s') LIMIT 1",
 		dbesc($activity),
-		intval(ITEM_DELETED),
-		dbesc($remote_owner),
+		dbesc($remote_owner['xchan_hash']),
 		intval($item_id),
 		dbesc($item['uri'])
 	);
@@ -174,7 +179,7 @@ function like_content(&$a) {
 	$arr['parent']       = $item['id'];
 	$arr['parent_uri']   = $item['uri'];
 	$arr['thr_parent']   = $item['uri'];
-	$arr['owner_xchan']  = $remote_owner;
+	$arr['owner_xchan']  = $remote_owner['xchan_hash'];
 	$arr['author_xchan'] = $observer['xchan_hash'];
 
 	

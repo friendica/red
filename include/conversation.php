@@ -89,15 +89,17 @@ function localize_item(&$item){
 		$item['body'] = item_redir_and_replace_images($extracted['body'], $extracted['images'], $item['contact-id']);
 
 	$xmlhead="<"."?xml version='1.0' encoding='UTF-8' ?".">";
+/*
 	if (activity_match($item['verb'],ACTIVITY_LIKE) || activity_match($item['verb'],ACTIVITY_DISLIKE)){
 
+// FIXME we shouldn't have a DB lookup on every item
 		$r = q("SELECT * from `item`,`contact` WHERE 
 				`item`.`contact-id`=`contact`.`id` AND `item`.`uri`='%s';",
 				 dbesc($item['parent_uri']));
 		if(count($r)==0) return;
 		$obj=$r[0];
 		
-		$author	 = '[url=' . $item['author-link'] . ']' . $item['author-name'] . '[/url]';
+		$author	 = '[url=' . $item['author']['xchan_url'] . ']' . $item['author']['xchan_name'] . '[/url]';
 		$objauthor =  '[url=' . $obj['author-link'] . ']' . $obj['author-name'] . '[/url]';
 		
 		switch($obj['verb']){
@@ -131,6 +133,7 @@ function localize_item(&$item){
 		$item['body'] = sprintf($bodyverb, $author, $objauthor, $plink);
 
 	}
+*/
 	if (activity_match($item['verb'],ACTIVITY_FRIEND)) {
 
 		if ($item['obj_type']=="" || $item['obj_type']!== ACTIVITY_OBJ_PERSON) return;
@@ -1599,7 +1602,7 @@ function like_puller($a,$item,&$arr,$mode) {
 	$verb = (($mode === 'like') ? ACTIVITY_LIKE : ACTIVITY_DISLIKE);
 
 	if((activity_match($item['verb'],$verb)) && ($item['id'] != $item['parent'])) {
-		$url = $item['author-link'];
+		$url = $item['author']['xchan_url'];
 		if((local_user()) && (local_user() == $item['uid']) && ($item['network'] === 'dfrn') && (! $item['self']) && (link_compare($item['author-link'],$item['url']))) {
 			$url = $a->get_baseurl(true) . '/redir/' . $item['contact-id'];
 			$sparkle = ' class="sparkle" ';
@@ -1616,7 +1619,7 @@ function like_puller($a,$item,&$arr,$mode) {
 			$arr[$item['thr_parent']] = 1;
 		else
 			$arr[$item['thr_parent']] ++;
-		$arr[$item['thr_parent'] . '-l'][] = '<a href="'. $url . '"'. $sparkle .'>' . $item['author-name'] . '</a>';
+		$arr[$item['thr_parent'] . '-l'][] = '<a href="'. $url . '"'. $sparkle .'>' . $item['author']['xchan_name'] . '</a>';
 	}
 	return;
 }}
