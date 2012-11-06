@@ -17,15 +17,15 @@ function profile_activity($changed, $value) {
 		return;
 
 	$arr = array();
-	$arr['uri'] = $arr['parent_uri'] = item_message_id();
-	$arr['uid'] = local_user();
-	$arr['aid'] = $self['channel_account_id'];
+	$arr['uri']         = $arr['parent_uri'] = item_message_id();
+	$arr['uid']         = local_user();
+	$arr['aid']         = $self['channel_account_id'];
 	$arr['owner_xchan'] = $arr['author_xchan'] = $self['xchan_hash'];
-	$arr['item_flags'] = ITEM_WALL|ITEM_ORIGIN|ITEM_THREAD_TOP;
-	$arr['verb'] = ACTIVITY_UPDATE;
-	$arr['obj_type'] = ACTIVITY_OBJ_PROFILE;
+	$arr['item_flags']  = ITEM_WALL|ITEM_ORIGIN|ITEM_THREAD_TOP;
+	$arr['verb']        = ACTIVITY_UPDATE;
+	$arr['obj_type']    = ACTIVITY_OBJ_PROFILE;
 				
-	$A = '[url=' . z_root() . '/profile/' . $self[0]['xchan_addr'] . ']' . $self[0]['xchan_name'] . '[/url]';
+	$A = '[url=' . z_root() . '/channel/' . $self['channel_address'] . ']' . $self['channel_name'] . '[/url]';
 
 
 	$changes = '';
@@ -42,11 +42,11 @@ function profile_activity($changed, $value) {
 		$changes .= $ch;
 	}
 
-	$prof = '[url=' . z_root() . '/profile/' . $self[0]['xchan_addr'] . ']' . t('public profile') . '[/url]';	
+	$prof = '[url=' . z_root() . '/profile/' . $self['channel_address'] . ']' . t('public profile') . '[/url]';	
 
 	if($t == 1 && strlen($value)) {
 		$message = sprintf( t('%1$s changed %2$s to &ldquo;%3$s&rdquo;'), $A, $changes, $value);
-		$message .= "\n\n" . sprintf( t(' - Visit %1$s\'s %2$s'), $A, $prof);
+		$message .= "\n\n" . sprintf( t('Visit %1$s\'s %2$s'), $A, $prof);
 	}
 	else
 		$message = 	sprintf( t('%1$s has an updated %2$s, changing %3$s.'), $A, $prof, $changes);
@@ -54,22 +54,24 @@ function profile_activity($changed, $value) {
 
 	$arr['body'] = $message;  
 
-	$links = array();
-	$links[] = array('rel' => 'alternate', 'type' => 'text/html', 'href' => z_root() . '/profile/' . $self[0]['xchan_addr']);
-	$links[] = array('rel' => 'photo', 'type' => $self[0]['xchan_photo_mimetype'], 'href' => $self[0]['xchan_photo_l']); 
+	$links   = array();
+	$links[] = array('rel' => 'alternate', 'type' => 'text/html', 
+		'href' => z_root() . '/profile/' . $self['channel_address']);
+	$links[] = array('rel' => 'photo', 'type' => $self['xchan_photo_mimetype'], 
+		'href' => $self['xchan_photo_l']); 
 
 	$arr['object'] = json_encode(array(
 		'type'  => ACTIVITY_OBJ_PROFILE,
-		'title' => $self[0]['channel_name'],
-		'id'    => $self[0]['xchan_url'] . '/' . $self[0]['xchan_hash'],
+		'title' => $self['channel_name'],
+		'id'    => $self['xchan_url'] . '/' . $self['xchan_hash'],
 		'link'  => $links
 	));
 
 	
-	$arr['allow_cid'] = $self[0]['channel_allow_cid'];
-	$arr['allow_gid'] = $self[0]['channel_allow_gid'];
-	$arr['deny_cid']  = $self[0]['channel_deny_cid'];
-	$arr['deny_gid']  = $self[0]['channel_deny_gid'];
+	$arr['allow_cid'] = $self['channel_allow_cid'];
+	$arr['allow_gid'] = $self['channel_allow_gid'];
+	$arr['deny_cid']  = $self['channel_deny_cid'];
+	$arr['deny_gid']  = $self['channel_deny_gid'];
 
 	$i = item_store($arr);
 
