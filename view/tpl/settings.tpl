@@ -5,21 +5,9 @@ $nickname_block
 <form action="settings" id="settings-form" method="post" autocomplete="off" >
 <input type='hidden' name='form_security_token' value='$form_security_token'>
 
-<h3 class="settings-heading">$h_pass</h3>
-
-{{inc field_password.tpl with $field=$password1 }}{{endinc}}
-{{inc field_password.tpl with $field=$password2 }}{{endinc}}
-
-
-<div class="settings-submit-wrapper" >
-<input type="submit" name="submit" class="settings-submit" value="$submit" />
-</div>
-
-
 <h3 class="settings-heading">$h_basic</h3>
 
 {{inc field_input.tpl with $field=$username }}{{endinc}}
-{{inc field_input.tpl with $field=$email }}{{endinc}}
 {{inc field_custom.tpl with $field=$timezone }}{{endinc}}
 {{inc field_input.tpl with $field=$defloc }}{{endinc}}
 {{inc field_checkbox.tpl with $field=$allowloc }}{{endinc}}
@@ -50,25 +38,14 @@ $nickname_block
 
 
 
-
-{{inc field_input.tpl with $field=$maxreq }}{{endinc}}
-
 $profile_in_dir
-
-$profile_in_net_dir
-
-$hide_friends
-
-$hide_wall
-
-$blockwall
 
 $blocktags
 
 $suggestme
 
-$unkmail
 
+{{inc field_input.tpl with $field=$maxreq }}{{endinc}}
 
 {{inc field_input.tpl with $field=$cntunkmail }}{{endinc}}
 

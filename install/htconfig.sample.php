@@ -38,7 +38,7 @@ $a->config['sitename'] = "Friendica Social Network";
 
 $a->config['system']['register_policy'] = REGISTER_OPEN;
 $a->config['register_text'] = '';
-$a->config[system']['admin_email'] = '';
+$a->config['system']['admin_email'] = '';
 
 // Maximum size of an imported message, 0 is unlimited
 
@@ -55,40 +55,20 @@ $a->config['php_path'] = 'php';
 // You shouldn't need to change anything else.
 // Location of global directory submission page. 
 
-$a->config['system']['directory_submit_url'] = 'http://dir.friendika.com/submit';
-$a->config['system']['directory_search_url'] = 'http://dir.friendika.com/directory?search=';
+$a->config['system']['directory_submit_url'] = 'http://dir.friendica.com/submit';
+$a->config['system']['directory_search_url'] = 'http://dir.friendica.com/directory?search=';
 
 // PuSH - aka pubsubhubbub URL. This makes delivery of public posts as fast as private posts
 
 $a->config['system']['huburl'] = 'http://pubsubhubbub.appspot.com';
 
-// Server-to-server private message encryption (RINO) is allowed by default. 
-// Encryption will only be provided if this setting is true and the
-// PHP mcrypt extension is installed on both systems 
-
-$a->config['system']['rino_encrypt'] = true;
-
 // allowed themes (change this from admin panel after installation)
 
-$a->config['system']['allowed_themes'] = 'dispy,quattro,vier,darkzero,duepuntozero,greenzero,purplezero,slackr,diabook';
+$a->config['system']['allowed_themes'] = 'duepuntozero';
 
 // default system theme
 
 $a->config['system']['theme'] = 'duepuntozero';
 
 
-// By default allow pseudonyms
 
-$a->config['system']['no_regfullname'] = true;
-
-// If set to true the priority settings of ostatus contacts are used
-$a->config['system']['ostatus_use_priority'] = false;
-
-// If enabled, all items are cached in the given directory
-$a->config['system']['itemcache'] = "";
-
-// If enabled, the lockpath is used for a lockfile to check if the poller is running
-$a->config['system']['lockpath'] = "";
-
-// If enabled, the MyBB fulltext engine is used
-// $a->config['system']['use_fulltext_engine'] = true;

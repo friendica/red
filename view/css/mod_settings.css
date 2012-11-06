@@ -3,6 +3,13 @@
 }
 #settings-permissions-wrapper .field label{
 	width: 350px;
-	font-weight: bold;
 }
 
+.settings-submit-wrapper {
+	margin-bottom: 10px;
+}
+
+#settings-remove-account-link {
+	margin-top: 15px;
+	margin-bottom: 45px;
+}

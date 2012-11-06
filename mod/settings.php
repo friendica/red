@@ -45,22 +45,17 @@ function settings_init(&$a) {
 		),
 
 		array(
+			'label'	=> t('Feature settings'),
+			'url' 	=> $a->get_baseurl(true).'/settings/featured',
+			'selected'	=> ((argv(1) === 'addon') ? 'active' : ''),
+		),
+
+		array(
 			'label'	=> t('Display settings'),
 			'url' 	=> $a->get_baseurl(true).'/settings/display',
 			'selected'	=> ((argv(1) === 'display') ? 'active' : ''),
 		),	
 		
-		array(
-			'label'	=> t('Connector settings'),
-			'url' 	=> $a->get_baseurl(true).'/settings/connectors',
-			'selected'	=> ((argv(1) === 'connectors') ? 'active' : ''),
-		),
-
-		array(
-			'label'	=> t('Plugin settings'),
-			'url' 	=> $a->get_baseurl(true).'/settings/addon',
-			'selected'	=> ((argv(1) === 'addon') ? 'active' : ''),
-		),
 		array(
 			'label' => t('Connected apps'),
 			'url' => $a->get_baseurl(true) . '/settings/oauth',
@@ -73,11 +68,6 @@ function settings_init(&$a) {
 			'selected' => ''
 		),
 
-		array(
-			'label' => t('Remove account'),
-			'url' => $a->get_baseurl(true) . '/removeme',
-			'selected' => ''
-		)
 	);
 	
 	$tabtpl = get_markup_template("generic_links_widget.tpl");
@@ -162,10 +152,14 @@ function settings_post(&$a) {
 		return;
 	}
 
-	if((argc() > 1) && (argv(1) == 'addon')) {
-		check_form_security_token_redirectOnErr('/settings/addon', 'settings_addon');
-		
-		call_hooks('plugin_settings_post', $_POST);
+	if((argc() > 1) && (argv(1) == 'featured')) {
+		check_form_security_token_redirectOnErr('/settings/featured', 'settings_featured');
+
+
+
+
+
+		call_hooks('featured_settings_post', $_POST);
 		return;
 	}
 
@@ -181,14 +175,6 @@ function settings_post(&$a) {
 		return;
 	}
 
-	if((argc() > 1) && (argv(1) == 'connectors')) {
-		
-		check_form_security_token_redirectOnErr('/settings/connectors', 'settings_connectors');
-		
-		call_hooks('connector_settings_post', $_POST);
-		return;
-	}
-	
 	if((argc() > 1) && (argv(1) == 'display')) {
 		
 		check_form_security_token_redirectOnErr('/settings/display', 'settings_display');
@@ -234,45 +220,84 @@ function settings_post(&$a) {
 		return; // NOTREACHED
 	}
 
+
+	if(argc() > 1 && argv(1) === 'account') {
+
+		check_form_security_token_redirectOnErr('/settings/account', 'settings_account');
+	
+		call_hooks('settings_account', $_POST);
+
+		$errs = array();
+
+		if((x($_POST,'npassword')) || (x($_POST,'confirm'))) {
+
+			$newpass = $_POST['npassword'];
+			$confirm = $_POST['confirm'];
+
+			if($newpass != $confirm ) {
+				$errs[] = t('Passwords do not match. Password unchanged.');
+			}
+
+			if((! x($newpass)) || (! x($confirm))) {
+				$errs[] = t('Empty passwords are not allowed. Password unchanged.');
+			}
+
+			if(! $errs) {
+				$salt = random_string(32);
+				$password_encoded = hash('whirlpool', $salt . $newpass);
+				$r = q("update account set account_salt = '%s', account_password = '%s' 
+					where account_id = %d limit 1",
+					dbesc($salt),
+					dbesc($password_encoded),
+					intval(get_account_id())
+				);
+				if($r)
+					info( t('Password changed.') . EOL);
+				else
+					$errs[] = t('Password update failed. Please try again.');
+			}
+		}
+
+		if($errs) {
+			foreach($errs as $err)
+				notice($err . EOL);
+			$errs = array();
+		}
+
+		$email = ((x($_POST,'email')) ? trim(notags($_POST['email'])) : '');
+		if($email != $account['account_email']) {
+			$account = $a->get_account();
+    	    if(! valid_email($email))
+				$errs[] = t('Not valid email.');
+			$adm = trim(get_config('system','admin_email'));
+			if(($adm) && (strcasecmp($email,$adm) == 0)) {
+				$errs[] = t('Protected email. Cannot change to that email.');
+				$email = $a->user['email'];
+			}
+			if(! $errs) {
+				$r = q("update account set account_email = '%s' where account_id = %d limit 1",
+					dbesc($email),
+					intval($account['account_id'])
+				);
+				if(! $r)
+					$errs[] = t('System failure storing new email. Please try again.');
+			}
+		}
+
+		if($errs) {
+			foreach($errs as $err)
+				notice($err . EOL);
+		}
+		goaway($a->get_baseurl(true) . '/settings/account' );
+	}
+
+
 	check_form_security_token_redirectOnErr('/settings', 'settings');
 	
 	call_hooks('settings_post', $_POST);
 
-	if((x($_POST,'npassword')) || (x($_POST,'confirm'))) {
-
-		$newpass = $_POST['npassword'];
-		$confirm = $_POST['confirm'];
-
-		$err = false;
-		if($newpass != $confirm ) {
-			notice( t('Passwords do not match. Password unchanged.') . EOL);
-			$err = true;
-		}
-
-		if((! x($newpass)) || (! x($confirm))) {
-			notice( t('Empty passwords are not allowed. Password unchanged.') . EOL);
-			$err = true;
-		}
-
-		if(! $err) {
-
-			$salt = random_string(32);
-			$password_encoded = hash('whirlpool', $salt . $newpass);
-			$r = q("update account set account_salt = '%s', account_password = '%s' where account_id = %d limit 1",
-				dbesc($salt),
-				dbesc($password_encoded),
-				intval(get_account_id())
-			);
-			if($r)
-				info( t('Password changed.') . EOL);
-			else
-				notice( t('Password update failed. Please try again.') . EOL);
-		}
-	}
-
 	
 	$username         = ((x($_POST,'username'))   ? notags(trim($_POST['username']))     : '');
-	$email            = ((x($_POST,'email'))      ? notags(trim($_POST['email']))        : '');
 	$timezone         = ((x($_POST,'timezone'))   ? notags(trim($_POST['timezone']))     : '');
 	$defloc           = ((x($_POST,'defloc'))     ? notags(trim($_POST['defloc']))       : '');
 	$openid           = ((x($_POST,'openid_url')) ? notags(trim($_POST['openid_url']))   : '');
@@ -338,7 +363,6 @@ function settings_post(&$a) {
 	if(x($_POST,'notify8'))
 		$notify += intval($_POST['notify8']);
 
-	$email_changed = false;
 
 	$err = '';
 
@@ -352,20 +376,6 @@ function settings_post(&$a) {
 			$err .= t(' Name too short.');
 	}
 
-	if($email != $a->user['email']) {
-		$email_changed = true;
-        if(! valid_email($email))
-			$err .= t(' Not valid email.');
-		if((x($a->config,'admin_email')) && (strcasecmp($email,$a->config['admin_email']) == 0)) {
-			$err .= t(' Cannot change to that email.');
-			$email = $a->user['email'];
-		}
-	}
-
-	if(strlen($err)) {
-		notice($err . EOL);
-		return;
-	}
 
 	if($timezone != $a->user['timezone']) {
 		if(strlen($timezone))
@@ -610,6 +620,37 @@ function settings_content(&$a) {
 	}
 
 
+	/*
+	 * ACCOUNT SETTINGS
+	 */
+
+
+	if((argc() > 1) && (argv(1) === 'account')) {
+		$account_settings = "";
+		
+		call_hooks('account_settings', $account_settings);
+
+		$email      = $a->account['account_email'];
+		
+		
+		$tpl = get_markup_template("settings_account.tpl");
+		$o .= replace_macros($tpl, array(
+			'$form_security_token' => get_form_security_token("settings_account"),
+			'$title'	=> t('Account Settings'),
+			'$h_pass' 	=> t('Password Settings'),
+			'$password1'=> array('npassword', t('New Password:'), '', ''),
+			'$password2'=> array('confirm', t('Confirm:'), '', t('Leave password fields blank unless changing')),
+			'$submit' 	=> t('Submit'),
+			'$email' 	=> array('email', t('Email Address:'), $email, ''),
+			'$removeme' => t('Remove Account'),
+			'$permanent' => t('Warning: This action is permanent and cannot be reversed.'),
+			'$account_settings' => $account_settings
+		));
+		return $o;
+	}
+
+
+
 	if((argc() > 1) && (argv(1) === 'features')) {
 		
 		$arr = array();
@@ -734,11 +775,6 @@ function settings_content(&$a) {
 	}
 	
 	
-	/*
-	 * ACCOUNT SETTINGS
-	 */
-
-
 
 
 
@@ -791,7 +827,6 @@ function settings_content(&$a) {
 
 
 		$username   = $channel['channel_name'];
-		$email      = $a->account['account_email'];
 		$nickname   = $channel['channel_address'];
 		$timezone   = $channel['channel_timezone'];
 		$notify     = $channel['channel_notifyflags'];
@@ -917,7 +952,7 @@ function settings_content(&$a) {
 		$tpl_addr = get_markup_template("settings_nick_set.tpl");
 
 		$prof_addr = replace_macros($tpl_addr,array(
-			'$desc' => t('Your webbie (web-id) is'),
+			'$desc' => t('Your channel address (or "webbie") is'),
 			'$nickname' => $nickname,
 			'$subdir' => $subdir,
 			'$basepath' => $a->get_hostname()
@@ -954,9 +989,6 @@ function settings_content(&$a) {
 			'$form_security_token' => get_form_security_token("settings"),
 			'$nickname_block' => $prof_addr,
 		
-			'$h_pass' 	=> t('Password Settings'),
-			'$password1'=> array('npassword', t('New Password:'), '', ''),
-			'$password2'=> array('confirm', t('Confirm:'), '', t('Leave password fields blank unless changing')),
 		
 			'$h_basic' 	=> t('Basic Settings'),
 			'$username' => array('username',  t('Full Name:'), $username,''),
