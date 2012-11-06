@@ -7,11 +7,9 @@ require_once('include/items.php');
 
 function like_content(&$a) {
 
-	if(! local_user() && ! remote_user()) {
-		return;
-	}
 
 	$observer = $a->get_observer();
+
 
 
 	$verb = notags(trim($_GET['verb']));
@@ -35,17 +33,16 @@ function like_content(&$a) {
 	}
 
 
-	$item_id = (($a->argc > 1) ? notags(trim($a->argv[1])) : 0);
+	$item_id = ((argc() > 1) ? notags(trim(argv(1))) : 0);
 
-	logger('like: verb ' . $verb . ' item ' . $item_id);
+	logger('like: verb ' . $verb . ' item ' . $item_id, LOGGER_DEBUG);
 
 
-	$r = q("SELECT * FROM `item` WHERE `id` = '%s' OR `uri` = '%s' LIMIT 1",
-		dbesc($item_id),
+	$r = q("SELECT * FROM item WHERE id = %d and item_restrict = 0 LIMIT 1",
 		dbesc($item_id)
 	);
 
-	if(! $item_id || (! count($r))) {
+	if(! $item_id || (! $r)) {
 		logger('like: no item ' . $item_id);
 		return;
 	}
@@ -54,11 +51,14 @@ function like_content(&$a) {
 
 	$owner_uid = $item['uid'];
 
-	if(! can_write_wall($a,$owner_uid)) {
+	if(! perm_is_allowed($owner_uid,$observer['xchan_hash'],'post_comments')) {
+		notice( t('Permission denied') . EOL);
 		return;
 	}
 
-	$remote_owner = null;
+	$remote_owner = $item['owner_xchan'];
+
+
 
 // fixme
 //	if(! $item['wall']) {
@@ -110,25 +110,26 @@ function like_content(&$a) {
 //	}
 
 
-	$r = q("SELECT * FROM `item` WHERE `verb` = '%s' AND `deleted` = 0 
-		AND `contact-id` = %d AND ( `parent` = '%s' OR `parent_uri` = '%s' OR `thr_parent` = '%s') LIMIT 1",
+	$r = q("SELECT * FROM item WHERE verb = '%s' AND ( item_restrict & %d )
+		AND owner_xchan = '%s' AND ( parent = %d OR thr_parent = '%s') LIMIT 1",
 		dbesc($activity),
-		intval($contact['id']),
-		dbesc($item_id),
-		dbesc($item_id),
+		intval(ITEM_DELETED),
+		dbesc($remote_owner),
+		intval($item_id),
 		dbesc($item['uri'])
 	);
-	if(count($r)) {
+	if($r) {
 		$like_item = $r[0];
 
-		// Already voted, undo it
-		$r = q("UPDATE `item` SET `deleted` = 1, `unseen` = 1, `changed` = '%s' WHERE `id` = %d LIMIT 1",
+		// Already liked/disliked it, delete it
+
+		$r = q("UPDATE item SET item_restrict = ( item_restrict ^ %d ), changed = '%s' WHERE id = %d LIMIT 1",
+			intval(ITEM_DELETED),
 			dbesc(datetime_convert()),
 			intval($like_item['id'])
 		);
 
-		$like_item_id = $like_item['id'];
-		proc_run('php',"include/notifier.php","like","$like_item_id");
+		proc_run('php',"include/notifier.php","like",$like_item['id']);
 		return;
 	}
 
@@ -160,25 +161,26 @@ function like_content(&$a) {
 	if(! isset($bodyverb))
 			return; 
 
+	$item_flags = ITEM_ORIGIN;
+	if($item['item_flags'] & ITEM_WALL)
+		$item_flags |= ITEM_WALL;
+	
+
 	$arr = array();
 
-	$arr['uri'] = $uri;
-	$arr['uid'] = $owner_uid;
-//	$arr['contact-id'] = $contact['id'];
-	$arr['type'] = 'activity';
-//	$arr['wall'] = $item['wall'];
-//	$arr['origin'] = 1;
-//	$arr['gravity'] = GRAVITY_LIKE;
-	$arr['parent'] = $item['id'];
-	$arr['parent_uri'] = $item['uri'];
-	$arr['thr_parent'] = $item['uri'];
-	$arr['owner_xchan'] = $remote_owner['xchan_hash'];
+	$arr['uri']          = $uri;
+	$arr['uid']          = $owner_uid;
+	$arr['item_flags']   = $item_flags;
+	$arr['parent']       = $item['id'];
+	$arr['parent_uri']   = $item['uri'];
+	$arr['thr_parent']   = $item['uri'];
+	$arr['owner_xchan']  = $remote_owner;
 	$arr['author_xchan'] = $observer['xchan_hash'];
 
 	
-	$ulink = '[url=' . $contact['url'] . ']' . $contact['name'] . '[/url]';
-	$alink = '[url=' . $item['author-link'] . ']' . $item['author-name'] . '[/url]';
-	$plink = '[url=' . $a->get_baseurl() . '/display/' . $owner['nickname'] . '/' . $item['id'] . ']' . $post_type . '[/url]';
+	$ulink = '[url=' . $remote_owner['xchan_url'] . ']' . $remote_owner['xchan_name'] . '[/url]';
+	$alink = '[url=' . $observer['xchan_url'] . ']' . $observer['xchan_name'] . '[/url]';
+	$plink = '[url=' . $a->get_baseurl() . '/display/' . $item['uri'] . ']' . $post_type . '[/url]';
 	$arr['body'] =  sprintf( $bodyverb, $ulink, $alink, $plink );
 
 	$arr['verb'] = $activity;
@@ -191,18 +193,7 @@ function like_content(&$a) {
 	$arr['deny_gid'] = $item['deny_gid'];
 
 
-//	$arr['visible'] = 1;
-//	$arr['unseen'] = 1;
-
 	$post_id = item_store($arr);	
-
-//	if(! $item['visible']) {
-//		$r = q("UPDATE `item` SET `visible` = 1 WHERE `id` = %d AND `uid` = %d LIMIT 1",
-//			intval($item['id']),
-//			intval($owner_uid)
-//		);
-//	}			
-
 
 	$arr['id'] = $post_id;
 

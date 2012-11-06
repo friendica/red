@@ -223,6 +223,9 @@
 
 	function NavUpdate() {
 
+		if(liking)
+			$('.like-rotator').hide();
+
 		if(! stopped) {
 
 			var pingCmd = 'ping' + ((localUser != 0) ? '?f=&uid=' + localUser : '');

@@ -61,7 +61,7 @@ function notifier_run($argv, $argc){
 	require_once("datetime.php");
 	require_once('include/items.php');
 	require_once('include/bbcode.php');
-	require_once('include/email.php');
+
 	load_config('config');
 	load_config('system');
 
@@ -92,7 +92,7 @@ function notifier_run($argv, $argc){
 	$top_level = false;
 	$recipients = array();
 	$url_recipients = array();
-
+return;
 	$normal_mode = true;
 
 	if($cmd === 'mail') {
