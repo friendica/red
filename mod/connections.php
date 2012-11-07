@@ -144,18 +144,36 @@ function connections_content(&$a) {
 		return;
 	}
 
+	$xchan = null;
+
 	if(argc() == 3) {
 
+		$cmd = argv(2);
 
-		$cmd = argv(1);
-		if($cmd === 'profile') {
+		if(argv(1) === 'profile') {
 			$xchan_hash = argv(2);
 
 			if($xchan_hash) {
 				$r = q("select * from xchan where xchan_hash = '%s' limit 1",
 					dbesc($xchan_hash)
 				);
-				if($r && count($r)) {
+				if($r) {
+					$xchan = $r[0];
+				}
+			}
+		}
+		elseif(intval(argv(1)) && argv(2) === 'profile') 
+			$r = q("SELECT abook.*, xchan.* 
+				FROM abook left join xchan on abook_xchan = xchan_hash
+				WHERE abook_channel = %d and abook_id = %d LIMIT 1",
+				intval(local_user()),
+				intval(argv(1))
+			);
+			if($r)
+			$xchan = $r[0];
+
+		if($xchan) {
+
 $o .= <<< EOT
 <script language="JavaScript">
 <!--
@@ -188,7 +206,7 @@ window.onresize=resize_iframe;
 </script>
 
 
-<iframe id="glu" width="100%" src="{$r[0]['xchan_url']}" onload="resize_iframe()">
+<iframe id="glu" width="100%" src="{$xchan['xchan_url']}" onload="resize_iframe()">
 </iframe>
 
 EOT;
@@ -196,9 +214,9 @@ EOT;
 
 	//				$o .= '<div id="profile-frame-wrapper" style="width: 100%; height: 100%;"><iframe id="profile-frame" src="' . $r[0]['xchan_url'] . '" style="width: 100%; height: 100%;"></iframe></div>';
 					return $o;
-				}
-			}
+
 		}
+
 
 		$contact_id = intval(argv(1));
 		if(! $contact_id)
@@ -207,7 +225,7 @@ EOT;
 		$cmd = argv(2);
 
 		$orig_record = q("SELECT abook.*, xchan.* FROM abook left join xchan on abook_xchan = xchan_hash
-			WHERE abook_id = %d AND abook_channel = %d AND NOT abook_flags & %d LIMIT 1",
+			WHERE abook_id = %d AND abook_channel = %d AND NOT ( abook_flags & %d ) LIMIT 1",
 			intval($contact_id),
 			intval(local_user()),
 			intval(ABOOK_FLAG_SELF)
@@ -305,7 +323,7 @@ EOT;
 		$slider_tpl = get_markup_template('contact_slider.tpl');
 		$slide = replace_macros($slider_tpl,array(
 			'$me' => t('Me'),
-			'$val' => $contact['closeness'],
+			'$val' => $contact['abook_closeness'],
 			'$intimate' => t('Best Friends'),
 			'$friends' => t('Friends'),
 			'$coworkers' => t('Co-workers'),
@@ -316,7 +334,8 @@ EOT;
 
 		$o .= replace_macros($tpl,array(
 
-			'$header' => t('Contact Settings') . ' for ' . $contact['name'],
+			'$header' => t('Contact Settings') . ' for ' . $contact['xchan_name'],
+			'$viewprof' => t('View Profile'),
 			'$slide' => $slide,
 			'$tab_str' => $tab_str,
 			'$submit' => t('Submit'),
@@ -324,7 +343,7 @@ EOT;
 			'$lbl_vis2' => sprintf( t('Please choose the profile you would like to display to %s when viewing your profile securely.'), $contact['name']),
 			'$lbl_info1' => t('Contact Information / Notes'),
 			'$infedit' => t('Edit contact notes'),
-			'$close' => $contact['closeness'],
+			'$close' => $contact['abook_closeness'],
 			'$them' => t('Their Settings'),
 			'$me' => t('My Settings'),
 
@@ -344,7 +363,7 @@ EOT;
 			'$common_link' => $a->get_baseurl(true) . '/common/loc/' . local_user() . '/' . $contact['id'],
 			'$all_friends' => $all_friends,
 			'$relation_text' => $relation_text,
-			'$visit' => sprintf( t('Visit %s\'s profile [%s]'),$contact['name'],$contact['url']),
+			'$visit' => sprintf( t('Visit %s\'s profile [%s]'),$contact['xchan_name'],$contact['xchan_url']),
 			'$blockunblock' => t('Block/Unblock contact'),
 			'$ignorecont' => t('Ignore contact'),
 			'$lblcrepair' => t("Repair URL settings"),
@@ -360,7 +379,7 @@ EOT;
 			'$last_update' => $last_update,
 			'$udnow' => t('Update now'),
 			'$profile_select' => contact_profile_assign($contact['profile_id'],(($contact['network'] !== NETWORK_DFRN) ? true : false)),
-			'$contact_id' => $contact['id'],
+			'$contact_id' => $contact['abook_id'],
 			'$block_text' => (($contact['blocked']) ? t('Unblock') : t('Block') ),
 			'$ignore_text' => (($contact['readonly']) ? t('Unignore') : t('Ignore') ),
 			'$insecure' => (($contact['network'] !== NETWORK_DFRN && $contact['network'] !== NETWORK_MAIL && $contact['network'] !== NETWORK_FACEBOOK && $contact['network'] !== NETWORK_DIASPORA) ? $insecure : ''),
@@ -423,7 +442,7 @@ EOT;
 		}
 	}
 
-	$sql_extra = "and ( abook_flags & " . $search_flags . " ) ";
+	$sql_extra = (($search_flags) ? "and ( abook_flags & " . $search_flags . " ) " : "");
 
 	$search = ((x($_REQUEST,'search')) ? notags(trim($_REQUEST['search'])) : '');
 
@@ -508,7 +527,6 @@ EOT;
 		$total = $r[0]['total'];
 	}
 
-
 	$r = q("SELECT abook.*, xchan.* FROM abook left join xchan on abook.abook_xchan = xchan.xchan_hash
 		WHERE abook_channel = %d and not (abook_flags & %d) $sql_extra $sql_extra2 ORDER BY xchan_name LIMIT %d , %d ",
 		intval(local_user()),
@@ -540,27 +558,27 @@ EOT;
 					break;
 			}
 			if(($rr['network'] === 'dfrn') && ($rr['rel'])) {
-				$url = "redir/{$rr['id']}";
+				$url = "redir/{$rr['abook_id']}";
 				$sparkle = ' class="sparkle" ';
 			}
 			else { 
-				$url = $rr['url'];
+				$url = $rr['xchan_url'];
 				$sparkle = '';
 			}
 
 
 			$contacts[] = array(
-				'img_hover' => sprintf( t('Visit %s\'s profile [%s]'),$rr['name'],$rr['url']),
+				'img_hover' => sprintf( t('Visit %s\'s profile [%s]'),$rr['xchan_name'],$rr['xchan_url']),
 				'edit_hover' => t('Edit contact'),
 				'photo_menu' => contact_photo_menu($rr),
-				'id' => $rr['id'],
+				'id' => $rr['abook_id'],
 				'alt_text' => $alt_text,
 				'dir_icon' => $dir_icon,
-				'thumb' => $rr['thumb'], 
-				'name' => $rr['name'],
-				'username' => $rr['name'],
+				'thumb' => $rr['xchan_photo_m'], 
+				'name' => $rr['xchan_name'],
+				'username' => $rr['xchan_name'],
 				'sparkle' => $sparkle,
-				'itemurl' => $rr['url'],
+				'itemurl' => $rr['xchan_url'],
 				'url' => $url,
 				'network' => network_to_name($rr['network']),
 			);

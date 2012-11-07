@@ -2,7 +2,7 @@
 <h2>$header</h2>
 
 <br />
-<a href="" style="background-color: #CCC; padding: 10px; border-radius: 5px;">View Profile</a><a href="" style="background-color: #CCC; padding: 10px; border-radius: 5px; margin-left: 20px;">Archive</a>
+<a href="connections/$contact_id/profile">$viewprof</a>
 
 <div id="contact-edit-wrapper">
 <br />

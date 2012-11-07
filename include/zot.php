@@ -294,6 +294,7 @@ function import_xchan_from_json($j) {
 
 	if(! x($ret,'message')) {
 		$ret['success'] = true;
+		$ret['hash'] = $xchan_hash;
 	}
 	return $ret;
 }

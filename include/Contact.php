@@ -3,8 +3,8 @@
 
 function vcard_from_xchan($xchan) {
 	return replace_macros(get_markup_template('xchan_vcard.tpl'),array(
-		$name  => $abook['xchan_name'],
-		$photo => $abook['xchan_photo_l']
+		'$name'  => $xchan['xchan_name'],
+		'$photo' => $xchan['xchan_photo_l']
 	));
 }
 
@@ -206,26 +206,23 @@ function contact_photo_menu($contact) {
 	$poke_link="";
 
 	$sparkle = false;
-	if($contact['network'] === NETWORK_DFRN) {
+	if($contact['xchan_network'] === NETWORK_ZOT) {
 		$sparkle = true;
-		$profile_link = $a->get_baseurl() . '/redir/' . $contact['id'];
+		$profile_link = $a->get_baseurl() . '/magic?f=&id=' . $contact['abook_id'];
 	}
 	else
-		$profile_link = $contact['url'];
-
-	if($profile_link === 'mailbox')
-		$profile_link = '';
+		$profile_link = $contact['xchan_url'];
 
 	if($sparkle) {
-		$status_link = $profile_link . "?url=status";
-		$photos_link = $profile_link . "?url=photos";
-		$profile_link = $profile_link . "?url=profile";
-		$pm_url = $a->get_baseurl() . '/message/new/' . $contact['id'];
+		$status_link = $profile_link . "&url=status";
+		$photos_link = $profile_link . "&url=photos";
+		$profile_link = $profile_link . "&url=profile";
+		$pm_url = $a->get_baseurl() . '/message/new/' . $contact['xchan_hash'];
 	}
 
-	$poke_link = $a->get_baseurl() . '/poke/?f=&c=' . $contact['id'];
-	$contact_url = $a->get_baseurl() . '/contacts/' . $contact['id'];
-	$posts_link = $a->get_baseurl() . '/network/?cid=' . $contact['id'];
+	$poke_link = $a->get_baseurl() . '/poke/?f=&c=' . $contact['abook_id'];
+	$contact_url = $a->get_baseurl() . '/connections/' . $contact['abook_id'];
+	$posts_link = $a->get_baseurl() . '/network/?cid=' . $contact['abook_id'];
 
 	$menu = Array(
 		t("Poke") => $poke_link,
@@ -245,10 +242,7 @@ function contact_photo_menu($contact) {
 	$o = "";
 	foreach($menu as $k=>$v){
 		if ($v!="") {
-			if(($k !== t("Network Posts")) && ($k !== t("Send PM")) && ($k !== t('Edit Contact')))
-				$o .= "<li><a target=\"redir\" href=\"$v\">$k</a></li>\n";
-			else
-				$o .= "<li><a href=\"$v\">$k</a></li>\n";
+			$o .= "<li><a href=\"$v\">$k</a></li>\n";
 		}
 	}
 	return $o;

@@ -73,6 +73,8 @@ function new_contact($uid,$url,$channel,$interactive = false) {
 	if(! $x['success']) 
 		return $x;
 
+	$xchan_hash = $x['hash'];
+
 	// Do we already have an abook entry?
 	// go directly to the abook edit page.
 
@@ -100,9 +102,19 @@ function new_contact($uid,$url,$channel,$interactive = false) {
 	}
 
 
+	$r = q("insert into abook ( abook_account, abook_channel, abook_xchan, abook_their_perms, abook_created, abook_updated )
+		values( %d, %d, '%s', %d, '%s', '%s' ) ",
+		intval(get_account_id()),
+		intval(local_user()),
+		dbesc($xchan_hash),
+		intval($their_perms),
+		dbesc(datetime_convert()),
+		dbesc(datetime_convert())
+	);
+	if(! $r)
+		logger('mod_follow: abook creation failed');
+	
 
-
-	// Else create an entry
 
 
 
