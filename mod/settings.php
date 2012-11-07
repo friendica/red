@@ -2,15 +2,15 @@
 
 
 function get_theme_config_file($theme){
-	$a = get_app();
-	$base_theme = $a->theme_info['extends'];
+
+	$base_theme = get_app()->theme_info['extends'];
 	
 	if (file_exists("view/theme/$theme/php/config.php")){
 		return "view/theme/$theme/php/config.php";
 	} 
-	//if (file_exists("view/theme/$base_theme/php/config.php")){
-	//	return "view/theme/$base_theme/php/config.php";
-	//}
+	if (file_exists("view/theme/$base_theme/php/config.php")){
+		return "view/theme/$base_theme/php/config.php";
+	}
 	return null;
 }
 
@@ -179,7 +179,7 @@ function settings_post(&$a) {
 		
 		check_form_security_token_redirectOnErr('/settings/display', 'settings_display');
 
-		$theme = ((x($_POST,'theme')) ? notags(trim($_POST['theme']))  : $a->user['theme']);
+		$theme = ((x($_POST,'theme')) ? notags(trim($_POST['theme']))  : $a->channel['channel_theme']);
 		$mobile_theme = ((x($_POST,'mobile_theme')) ? notags(trim($_POST['mobile_theme']))  : '');
 		$nosmile = ((x($_POST,'nosmile')) ? intval($_POST['nosmile'])  : 0);  
 		$browser_update   = ((x($_POST,'browser_update')) ? intval($_POST['browser_update']) : 0);
@@ -201,7 +201,7 @@ function settings_post(&$a) {
 		set_pconfig(local_user(),'system','no_smilies',$nosmile);
 
 
-		if ($theme == $a->user['theme']){
+		if ($theme == $a->channel['channel_theme']){
 			// call theme_post only if theme has not been changed
 			if( ($themeconfigfile = get_theme_config_file($theme)) != null){
 				require_once($themeconfigfile);
@@ -209,8 +209,7 @@ function settings_post(&$a) {
 			}
 		}
 
-
-		$r = q("UPDATE `user` SET `theme` = '%s' WHERE `uid` = %d LIMIT 1",
+		$r = q("UPDATE channel SET channel_theme = '%s' WHERE channel_id = %d LIMIT 1",
 				dbesc($theme),
 				intval(local_user())
 		);

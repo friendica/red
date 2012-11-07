@@ -58,6 +58,7 @@ function channel_content(&$a, $update = 0) {
 	}
 
 
+
 	require_once("include/bbcode.php");
 	require_once('include/security.php');
 	require_once('include/conversation.php');

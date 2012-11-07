@@ -260,7 +260,7 @@ function admin_page_site_post(&$a){
 	$ostatus_disabled   =   !((x($_POST,'ostatus_disabled')) ? True  :   False);
 	$diaspora_enabled   =   ((x($_POST,'diaspora_enabled')) ? True   :  False);
 	$ssl_policy         =   ((x($_POST,'ssl_policy')) ? intval($_POST['ssl_policy']) : 0);
-
+/*
 	if($ssl_policy != intval(get_config('system','ssl_policy'))) {
 		if($ssl_policy == SSL_POLICY_FULL) {
 			q("update `contact` set 
@@ -301,6 +301,7 @@ function admin_page_site_post(&$a){
 			);
 		}
 	}
+*/
 	set_config('system','ssl_policy',$ssl_policy);
 	set_config('system','delivery_interval',$delivery_interval);
 	set_config('system','poll_interval',$poll_interval);
@@ -874,8 +875,8 @@ function admin_page_themes(&$a){
     if($files) {
         foreach($files as $file) {
             $f = basename($file);
-            $is_experimental = intval(file_exists($file . '/experimental'));
-			$is_supported = 1-(intval(file_exists($file . '/unsupported'))); // Is not used yet
+            $is_experimental = intval(file_exists($file . '/.experimental'));
+			$is_supported = 1-(intval(file_exists($file . '/.unsupported'))); // Is not used yet
 			$is_allowed = intval(in_array($f,$allowed_themes));
 			$themes[] = array('name' => $f, 'experimental' => $is_experimental, 'supported' => $is_supported, 'allowed' => $is_allowed);
         }

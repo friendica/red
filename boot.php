@@ -405,8 +405,9 @@ if(! class_exists('App')) {
 
 		
 		public  $account  = null;            // account record
-		private $channel  = null;            // channel record
-		private $observer = null;            // xchan record
+		public  $channel  = null;            // channel record
+		public  $observer = null;            // xchan record
+
 		private $perms    = null;            // observer permissions
 		private $widgets  = array();         // widgets for this page
 
@@ -440,6 +441,7 @@ if(! class_exists('App')) {
 		public  $identities;
 		public  $css_sources = array();
 		public  $js_sources = array();
+		public  $theme_info = array();
 	
 		public $nav_sel;
 
