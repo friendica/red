@@ -1620,7 +1620,7 @@ if(! function_exists('proc_run')) {
 
 if(! function_exists('current_theme')) {
 	function current_theme(){
-		$app_base_themes = array('duepuntozero', 'dispy', 'quattro');
+		$app_base_themes = array('redbasic');
 	
 		$a = get_app();
 	

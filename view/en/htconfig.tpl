@@ -49,7 +49,7 @@ $a->config['system']['directory_search_url'] = 'http://dir.friendica.com/directo
 
 // default system theme
 
-$a->config['system']['theme'] = 'duepuntozero';
+$a->config['system']['theme'] = 'redbasic';
 
 // By default allow pseudonyms
 
