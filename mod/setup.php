@@ -31,6 +31,8 @@ function setup_post(&$a) {
 			$dbpass = notags(trim($_POST['dbpass']));
 			$dbdata = notags(trim($_POST['dbdata']));
 			$phpath = notags(trim($_POST['phpath']));
+			$adminmail = notags(trim($_POST['adminmail']));
+			$siteurl = notags(trim($_POST['siteurl']));
 
 			require_once("dba.php");
 			unset($db);
@@ -221,6 +223,8 @@ function setup_content(&$a) {
 			$dbpass = notags(trim($_POST['dbpass']));
 			$dbdata = notags(trim($_POST['dbdata']));
 			$phpath = notags(trim($_POST['phpath']));
+			$adminmail = notags(trim($_POST['adminmail']));
+			$siteurl = notags(trim($_POST['siteurl']));
 			
 
 			$tpl = get_markup_template('install_db.tpl');
@@ -262,6 +266,7 @@ function setup_content(&$a) {
 			$phpath = notags(trim($_POST['phpath']));
 			
 			$adminmail = notags(trim($_POST['adminmail']));
+			$siteurl = notags(trim($_POST['siteurl']));
 			$timezone = ((x($_POST,'timezone')) ? ($_POST['timezone']) : 'America/Los_Angeles');
 			
 			$tpl = get_markup_template('install_settings.tpl');
