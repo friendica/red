@@ -1721,3 +1721,19 @@ function find_xchan_in_array($xchan,$arr) {
 	}
 	return array();
 }
+
+function get_json_rel_link($j,$rel) {
+	if(count($j))
+		foreach($j as $l)
+			if($l->rel === $rel)
+				return $l->href;
+	return '';
+}
+
+
+// Lots of code to write here
+
+function magic_link($s) {
+	return $s;
+}
+	

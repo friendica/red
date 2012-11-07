@@ -88,52 +88,59 @@ function localize_item(&$item){
 	if($extracted['images'])
 		$item['body'] = item_redir_and_replace_images($extracted['body'], $extracted['images'], $item['contact-id']);
 
-	$xmlhead="<"."?xml version='1.0' encoding='UTF-8' ?".">";
-/*
+	logger('localize');
+
 	if (activity_match($item['verb'],ACTIVITY_LIKE) || activity_match($item['verb'],ACTIVITY_DISLIKE)){
 
-// FIXME we shouldn't have a DB lookup on every item
-		$r = q("SELECT * from `item`,`contact` WHERE 
-				`item`.`contact-id`=`contact`.`id` AND `item`.`uri`='%s';",
-				 dbesc($item['parent_uri']));
-		if(count($r)==0) return;
-		$obj=$r[0];
+		$obj= json_decode($item['object']);
 		
-		$author	 = '[url=' . $item['author']['xchan_url'] . ']' . $item['author']['xchan_name'] . '[/url]';
-		$objauthor =  '[url=' . $obj['author-link'] . ']' . $obj['author-name'] . '[/url]';
+//		logger('object: ' . print_r($obj,true));
+
+		if($obj->author && $obj->author->link)
+			$author_link = get_json_rel_link($obj->author->link,'alternate');
+		else
+			$author_link = '';
+
+		$author_name = (($obj->author && $obj->author->name) ? $obj->author->name : '');
+
+		$item_url = get_json_rel_link($obj->link,'alternate');
+
+
+		// If we couldn't parse something useful, don't bother translating.
+		// We need something better than zrl here, probably magic_link(), but it needs writing
+
+		if($author_link && $author_name && $item_url) {
+			
+			$author	 = '[url=' . zrl($item['author']['xchan_url']) . ']' . $item['author']['xchan_name'] . '[/url]';
+			$objauthor =  '[url=' . zrl($author_link) . ']' . $author_name . '[/url]';
 		
-		switch($obj['verb']){
-			case ACTIVITY_POST:
-				switch ($obj['obj_type']){
-					case ACTIVITY_OBJ_EVENT:
-						$post_type = t('event');
-						break;
-					default:
-						$post_type = t('status');
-				}
-				break;
-			default:
-				if($obj['resource_id']){
+			switch($obj->type) {
+				case ACTIVITY_OBJ_PHOTO:
 					$post_type = t('photo');
-					$m=array(); preg_match("/\[url=([^]]*)\]/", $obj['body'], $m);
-					$rr['plink'] = $m[1];
-				} else {
+					break;
+				case ACTIVITY_OBJ_EVENT:
+					$post_type = t('event');
+					break;
+				case ACTIVITY_OBJ_NOTE:
+				default:
 					$post_type = t('status');
-				}
-		}
+					break;
+			}
 
-		$plink = '[url=' . $obj['plink'] . ']' . $post_type . '[/url]';
+			$plink = '[url=' . zrl($item_url) . ']' . $post_type . '[/url]';
 
-		if(activity_match($item['verb'],ACTIVITY_LIKE)) {
-			$bodyverb = t('%1$s likes %2$s\'s %3$s');
+			if(activity_match($item['verb'],ACTIVITY_LIKE)) {
+				$bodyverb = t('%1$s likes %2$s\'s %3$s');
+			}
+			elseif(activity_match($item['verb'],ACTIVITY_DISLIKE)) {
+				$bodyverb = t('%1$s doesn\'t like %2$s\'s %3$s');
+			}
+			$item['body'] = sprintf($bodyverb, $author, $objauthor, $plink);
+
 		}
-		elseif(activity_match($item['verb'],ACTIVITY_DISLIKE)) {
-			$bodyverb = t('%1$s doesn\'t like %2$s\'s %3$s');
-		}
-		$item['body'] = sprintf($bodyverb, $author, $objauthor, $plink);
 
 	}
-*/
+
 	if (activity_match($item['verb'],ACTIVITY_FRIEND)) {
 
 		if ($item['obj_type']=="" || $item['obj_type']!== ACTIVITY_OBJ_PERSON) return;

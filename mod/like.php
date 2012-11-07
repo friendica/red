@@ -69,7 +69,7 @@ function like_content(&$a) {
 		dbesc($item['author_xchan'])
 	);
 	if($r)
-		$item_owner = $r[0];
+		$item_author = $r[0];
 	else
 		killme();
 
