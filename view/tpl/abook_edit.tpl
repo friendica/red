@@ -1,14 +1,18 @@
 
 <h2>$header</h2>
 
-<br />
-<a href="connections/$contact_id/profile">$viewprof</a>
+
+<div id="connection-flag-tabs">
+$tabs
+</div>
 
 <div id="contact-edit-wrapper">
 <br />
 <h3>Slide to adjust your degree of friendship</h3>
 
 $slide
+
+
 
 <h3>Permissions</h3>
 

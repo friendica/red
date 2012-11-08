@@ -307,9 +307,56 @@ EOT;
 		$contact_id = $a->data['abook']['abook_id'];
 		$contact = $a->data['abook'];
 
-		$editselect = 'none';
-		if(feature_enabled(local_user(),'richtext'))
-			$editselect = 'exact';
+
+	$tabs = array(
+
+		array(
+			'label' => t('View Profile'),
+			'url'   => $a->get_baseurl(true) . '/connections/' . $contact['abook_id'] . '/profile', 
+			'sel'   => '',
+			'title' => sprintf( t('View %s\'s profile'), $contact['xchan_name']),
+		),
+
+		array(
+			'label' => (($contact['abook_flags'] & ABOOK_FLAG_BLOCKED) ? t('Unblock') : t('Block')),
+			'url'   => $a->get_baseurl(true) . '/connections/' . $contact['abook_id'] . '/block', 
+			'sel'   => (($contact['abook_flags'] & ABOOK_FLAG_BLOCKED) ? 'active' : ''),
+			'title' => t('Block or Unblock this connection'),
+		),
+
+		array(
+			'label' => (($contact['abook_flags'] & ABOOK_FLAG_IGNORED) ? t('Unignore') : t('Ignore')),
+			'url'   => $a->get_baseurl(true) . '/connections/' . $contact['abook_id'] . '/ignore', 
+			'sel'   => (($contact['abook_flags'] & ABOOK_FLAG_IGNORED) ? 'active' : ''),
+			'title' => t('Ignore or Unignore this connection'),
+		),
+		array(
+			'label' => (($contact['abook_flags'] & ABOOK_FLAG_ARCHIVED) ? t('Unarchive') : t('Archive')),
+			'url'   => $a->get_baseurl(true) . '/connections/' . $contact['abook_id'] . '/archive', 
+			'sel'   => (($contact['abook_flags'] & ABOOK_FLAG_ARCHIVED) ? 'active' : ''),
+			'title' => t('Archive or Unarchive this connection'),
+		),
+		array(
+			'label' => (($contact['abook_flags'] & ABOOK_FLAG_HIDDEN) ? t('Unhide') : t('Hide')),
+			'url'   => $a->get_baseurl(true) . '/connections/' . $contact['abook_id'] . '/hide', 
+			'sel'   => (($contact['abook_flags'] & ABOOK_FLAG_HIDDEN) ? 'active' : ''),
+			'title' => t('Hide or Unhide this connection'),
+		),
+
+		array(
+			'label' => t('Delete'),
+			'url'   => $a->get_baseurl(true) . '/connections/' . $contact['abook_id'] . '/drop', 
+			'sel'   => '',
+			'title' => t('Delete this connection'),
+		),
+
+	);
+
+	$tab_tpl = get_markup_template('common_tabs.tpl');
+	$t = replace_macros($tab_tpl, array('$tabs'=>$tabs));
+
+
+
 
 		$a->page['htmlhead'] .= replace_macros(get_markup_template('contact_head.tpl'), array(
 			'$baseurl' => $a->get_baseurl(true),
@@ -326,7 +373,6 @@ EOT;
 			'$val' => $contact['abook_closeness'],
 			'$intimate' => t('Best Friends'),
 			'$friends' => t('Friends'),
-			'$coworkers' => t('Co-workers'),
 			'$oldfriends' => t('Former Friends'),
 			'$acquaintances' => t('Acquaintances'),
 			'$world' => t('Unknown')
@@ -337,6 +383,7 @@ EOT;
 			'$header' => t('Contact Settings') . ' for ' . $contact['xchan_name'],
 			'$viewprof' => t('View Profile'),
 			'$slide' => $slide,
+			'$tabs' => $t,
 			'$tab_str' => $tab_str,
 			'$submit' => t('Submit'),
 			'$lbl_vis1' => t('Profile Visibility'),

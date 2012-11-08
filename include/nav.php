@@ -152,7 +152,9 @@ EOT;
 		$nav['manage'] = array('manage', t('Channel Select'), "", t('Manage Your Channels'));
 
 		$nav['settings'] = array('settings', t('Settings'),"", t('Account/Channel Settings'));
-		$nav['profiles'] = array('profiles', t('Profiles'),"", t('Manage/Edit Profiles'));
+		if(feature_enabled(local_user(),'multi_profiles'))
+			$nav['profiles'] = array('profiles', t('Profiles'),"", t('Manage/Edit Profiles'));
+
 		$nav['contacts'] = array('connections', t('Connections'),"", t('Manage/Edit Friends and Connections'));
 	}
 
