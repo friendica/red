@@ -55,7 +55,7 @@ function viewcontacts_content(&$a) {
 		if($is_owner && ($rr['network'] === NETWORK_DFRN) && ($rr['rel']))
 			$url = 'redir/' . $rr['id'];
 		else
-			$url = zrl($url);
+			$url = zid($url);
 
 		$contacts[] = array(
 			'id' => $rr['id'],

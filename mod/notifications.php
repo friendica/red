@@ -149,7 +149,7 @@ function notifications_content(&$a) {
 						'$contact_id' => $rr['contact-id'],
 						'$photo' => ((x($rr,'fphoto')) ? $rr['fphoto'] : "images/person-175.jpg"),
 						'$fullname' => $rr['fname'],
-						'$url' => zrl($rr['furl']),
+						'$url' => zid($rr['furl']),
 						'$hidden' => array('hidden', t('Hide this contact from others'), ($rr['hidden'] == 1), ''),
 						'$activity' => array('activity', t('Post a new friend activity'), (intval(get_pconfig(local_user(),'system','post_newfriend')) ? '1' : 0), t('if applicable')),
 
@@ -199,7 +199,7 @@ function notifications_content(&$a) {
 					'$fullname' => $rr['name'],
 					'$hidden' => array('hidden', t('Hide this contact from others'), ($rr['hidden'] == 1), ''),
 					'$activity' => array('activity', t('Post a new friend activity'), (intval(get_pconfig(local_user(),'system','post_newfriend')) ? '1' : 0), t('if applicable')),
-					'$url' => zrl($rr['url']),
+					'$url' => zid($rr['url']),
 					'$knowyou' => $knowyou,
 					'$approve' => t('Approve'),
 					'$note' => $rr['note'],

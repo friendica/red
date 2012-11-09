@@ -107,12 +107,12 @@ function localize_item(&$item){
 
 
 		// If we couldn't parse something useful, don't bother translating.
-		// We need something better than zrl here, probably magic_link(), but it needs writing
+		// We need something better than zid here, probably magic_link(), but it needs writing
 
 		if($author_link && $author_name && $item_url) {
 			
-			$author	 = '[url=' . zrl($item['author']['xchan_url']) . ']' . $item['author']['xchan_name'] . '[/url]';
-			$objauthor =  '[url=' . zrl($author_link) . ']' . $author_name . '[/url]';
+			$author	 = '[url=' . zid($item['author']['xchan_url']) . ']' . $item['author']['xchan_name'] . '[/url]';
+			$objauthor =  '[url=' . zid($author_link) . ']' . $author_name . '[/url]';
 		
 			switch($obj->type) {
 				case ACTIVITY_OBJ_PHOTO:
@@ -127,7 +127,7 @@ function localize_item(&$item){
 					break;
 			}
 
-			$plink = '[url=' . zrl($item_url) . ']' . $post_type . '[/url]';
+			$plink = '[url=' . zid($item_url) . ']' . $post_type . '[/url]';
 
 			if(activity_match($item['verb'],ACTIVITY_LIKE)) {
 				$bodyverb = t('%1$s likes %2$s\'s %3$s');
@@ -164,9 +164,9 @@ function localize_item(&$item){
 
 		}
 
-		$A = '[url=' . zrl($Alink) . ']' . $Aname . '[/url]';
-		$B = '[url=' . zrl($Blink) . ']' . $Bname . '[/url]';
-		if ($Bphoto!="") $Bphoto = '[url=' . zrl($Blink) . '][img]' . $Bphoto . '[/img][/url]';
+		$A = '[url=' . zid($Alink) . ']' . $Aname . '[/url]';
+		$B = '[url=' . zid($Blink) . ']' . $Bname . '[/url]';
+		if ($Bphoto!="") $Bphoto = '[url=' . zid($Blink) . '][img]' . $Bphoto . '[/img][/url]';
 
 		$item['body'] = sprintf( t('%1$s is now friends with %2$s'), $A, $B)."\n\n\n".$Bphoto;
 
@@ -196,9 +196,9 @@ function localize_item(&$item){
 
 		}
 
-		$A = '[url=' . zrl($Alink) . ']' . $Aname . '[/url]';
-		$B = '[url=' . zrl($Blink) . ']' . $Bname . '[/url]';
-		if ($Bphoto!="") $Bphoto = '[url=' . zrl($Blink) . '][img=80x80]' . $Bphoto . '[/img][/url]';
+		$A = '[url=' . zid($Alink) . ']' . $Aname . '[/url]';
+		$B = '[url=' . zid($Blink) . ']' . $Bname . '[/url]';
+		if ($Bphoto!="") $Bphoto = '[url=' . zid($Blink) . '][img=80x80]' . $Bphoto . '[/img][/url]';
 
 		// we can't have a translation string with three positions but no distinguishable text
 		// So here is the translate string.
@@ -221,7 +221,7 @@ function localize_item(&$item){
 
 		$Aname = $item['author-name'];
 		$Alink = $item['author-link'];
-		$A = '[url=' . zrl($Alink) . ']' . $Aname . '[/url]';
+		$A = '[url=' . zid($Alink) . ']' . $Aname . '[/url]';
 		
 		$txt = t('%1$s is currently %2$s');
 
@@ -235,8 +235,8 @@ function localize_item(&$item){
 		if(count($r)==0) return;
 		$obj=$r[0];
 		
-		$author	 = '[url=' . zrl($item['author-link']) . ']' . $item['author-name'] . '[/url]';
-		$objauthor =  '[url=' . zrl($obj['author-link']) . ']' . $obj['author-name'] . '[/url]';
+		$author	 = '[url=' . zid($item['author-link']) . ']' . $item['author-name'] . '[/url]';
+		$objauthor =  '[url=' . zid($obj['author-link']) . ']' . $obj['author-name'] . '[/url]';
 		
 		switch($obj['verb']){
 			case ACTIVITY_POST:
@@ -285,8 +285,8 @@ function localize_item(&$item){
 				$target = $r[0];
 				$Bname = $target['author-name'];
 				$Blink = $target['author-link'];
-				$A = '[url=' . zrl($Alink) . ']' . $Aname . '[/url]';
-				$B = '[url=' . zrl($Blink) . ']' . $Bname . '[/url]';
+				$A = '[url=' . zid($Alink) . ']' . $Aname . '[/url]';
+				$B = '[url=' . zid($Blink) . ']' . $Bname . '[/url]';
 				$P = '[url=' . $target['plink'] . ']' . t('post/item') . '[/url]';
 				$item['body'] = sprintf( t('%1$s marked %2$s\'s %3$s as favorite'), $A, $B, $P)."\n";
 
@@ -296,15 +296,15 @@ function localize_item(&$item){
 	$matches = null;
 	if(preg_match_all('/@\[url=(.*?)\]/is',$item['body'],$matches,PREG_SET_ORDER)) {
 		foreach($matches as $mtch) {
-			if(! strpos($mtch[1],'zrl='))
-				$item['body'] = str_replace($mtch[0],'@[url=' . zrl($mtch[1]). ']',$item['body']);
+			if(! strpos($mtch[1],'zid='))
+				$item['body'] = str_replace($mtch[0],'@[url=' . zid($mtch[1]). ']',$item['body']);
 		}
 	}
 
-	// add zrl's to public images
+	// add zid's to public images
 	if(preg_match_all('/\[url=(.*?)\/photos\/(.*?)\/image\/(.*?)\]\[img(.*?)\]h(.*?)\[\/img\]\[\/url\]/is',$item['body'],$matches,PREG_SET_ORDER)) {
 		foreach($matches as $mtch) {
-				$item['body'] = str_replace($mtch[0],'[url=' . zrl($mtch[1] . '/photos/' . $mtch[2] . '/image/' . $mtch[3] ,true) . '][img' . $mtch[4] . ']h' . $mtch[5]  . '[/img][/url]',$item['body']);
+				$item['body'] = str_replace($mtch[0],'[url=' . zid($mtch[1] . '/photos/' . $mtch[2] . '/image/' . $mtch[3] ,true) . '][img' . $mtch[4] . ']h' . $mtch[5]  . '[/img][/url]',$item['body']);
 		}
 	}
 
@@ -440,7 +440,7 @@ function prepare_threads_body($a, $items, $cmnt_tpl, $page_writeable, $mode, $pr
 		if($sp)
 			$sparkle = ' sparkle';
 		else
-			$profile_link = zrl($profile_link);
+			$profile_link = zid($profile_link);
 
 		$normalised = normalise_link((strlen($item['author-link'])) ? $item['author-link'] : $item['url']);
 		if(x($a->contacts,$normalised))
@@ -449,7 +449,7 @@ function prepare_threads_body($a, $items, $cmnt_tpl, $page_writeable, $mode, $pr
 			$profile_avatar = (((strlen($item['author-avatar'])) && $diff_author) ? $item['author-avatar'] : $a->get_cached_avatar_image($thumb));
 
 		$profile_avatar = $item['author']['xchan_photo_m'];
-		$profile_link = zrl($item['author']['xchan_url']);
+		$profile_link = zid($item['author']['xchan_url']);
 		$profile_name = $item['author']['xchan_name'];
 
 		$locate = array('location' => $item['location'], 'coord' => $item['coord'], 'html' => '');
@@ -483,7 +483,7 @@ function prepare_threads_body($a, $items, $cmnt_tpl, $page_writeable, $mode, $pr
 					// This will have been stored in $a->page_contact by our calling page.
 					// Put this person as the wall owner of the wall-to-wall notice.
 
-					$owner_url = zrl($a->page_contact['url']);
+					$owner_url = zid($a->page_contact['url']);
 					$owner_photo = $a->page_contact['thumb'];
 					$owner_name = $a->page_contact['name'];
 					$template = $wallwall_template;
@@ -518,7 +518,7 @@ function prepare_threads_body($a, $items, $cmnt_tpl, $page_writeable, $mode, $pr
 							$osparkle = ' sparkle';
 						}
 						else
-							$owner_url = zrl($owner_url);
+							$owner_url = zid($owner_url);
 					}
 				}
 			}
@@ -885,7 +885,7 @@ function conversation(&$a, $items, $mode, $update, $page_mode = 'traditional') {
 				if($sp)
 					$sparkle = ' sparkle';
 				else
-					$profile_link = zrl($profile_link);
+					$profile_link = zid($profile_link);
 
 				$normalised = normalise_link((strlen($item['author-link'])) ? $item['author-link'] : $item['url']);
 				if(x($a->contacts,$normalised))
@@ -1182,7 +1182,7 @@ old code
 						// This will have been stored in $a->page_contact by our calling page.
 						// Put this person as the wall owner of the wall-to-wall notice.
 
-						$owner_url = zrl($a->page_contact['url']);
+						$owner_url = zid($a->page_contact['url']);
 						$owner_photo = $a->page_contact['thumb'];
 						$owner_name = $a->page_contact['name'];
 						$template = $wallwall;
@@ -1218,7 +1218,7 @@ old code
 								$osparkle = ' sparkle';
 							}
 							else
-								$owner_url = zrl($owner_url);
+								$owner_url = zid($owner_url);
 						}
 					}
 				}
@@ -1328,7 +1328,7 @@ old code
 				if($sp)
 					$sparkle = ' sparkle';
 				else
-					$profile_link = zrl($profile_link);					
+					$profile_link = zid($profile_link);					
 
 				$normalised = normalise_link((strlen($item['author-link'])) ? $item['author-link'] : $item['url']);
 				if(x($a->contacts,$normalised))
@@ -1339,7 +1339,7 @@ old code
 
 
 				$profile_avatar = $item['author']['xchan_photo_m'];
-				$profile_link = zrl($item['author']['xchan_url']);
+				$profile_link = zid($item['author']['xchan_url']);
 				$profile_name = $item['author']['xchan_name'];
 
 
@@ -1547,7 +1547,7 @@ function item_photo_menu($item){
 		$zurl = '';
 	}
 	else {
-		$profile_link = zrl($profile_link);
+		$profile_link = zid($profile_link);
 		if(local_user() && local_user() == $item['uid'] && link_compare($item['url'],$item['author-link'])) {
 			$cid = $item['contact-id'];
 		}
@@ -1615,7 +1615,7 @@ function like_puller($a,$item,&$arr,$mode) {
 			$sparkle = ' class="sparkle" ';
 		}
 		else
-			$url = zrl($url);
+			$url = zid($url);
 
 		if(! $item['thr_parent'])
 			$item['thr_parent'] = $item['parent_uri'];

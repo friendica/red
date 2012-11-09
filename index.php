@@ -85,10 +85,12 @@ if((x($_SESSION,'language')) && ($_SESSION['language'] !== $lang)) {
 	load_translation_table($a->language);
 }
 
-if((x($_GET,'zrl')) && (! $install)) {
-	$_SESSION['my_url'] = $_GET['zrl'];
-	$a->query_string = preg_replace('/[\?&]zrl=(.*?)([\?&]|$)/is','',$a->query_string);
-	zrl_init($a);
+if((x($_GET,'zid')) && (! $install)) {
+	$a->query_string = preg_replace('/[\?&]zid=(.*?)([\?&]|$)/is','',$a->query_string);
+	if(! local_user()) {
+		$_SESSION['my_address'] = $_GET['zid'];
+		zid_init($a);
+	}
 }
 
 if((x($_SESSION,'authenticated')) || (x($_POST,'auth-params')) || ($a->module === 'login'))

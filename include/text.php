@@ -230,7 +230,7 @@ function paginate(&$a) {
 	$o = '';
 	$stripped = preg_replace('/(&page=[0-9]*)/','',$a->query_string);
 
-//	$stripped = preg_replace('/&zrl=(.*?)([\?&]|$)/ism','',$stripped);
+//	$stripped = preg_replace('/&zid=(.*?)([\?&]|$)/ism','',$stripped);
 
 	$stripped = str_replace('q=','',$stripped);
 	$stripped = trim($stripped,'/');
@@ -588,7 +588,7 @@ function micropro($contact, $redirect = false, $class = '', $textmode = false) {
 			$sparkle = ' sparkle';
 		}
 		else
-			$url = zrl($url);
+			$url = zid($url);
 	}
 	$click = ((x($contact,'click')) ? ' onclick="' . $contact['click'] . '" ' : '');
 	if($click)

@@ -222,6 +222,9 @@ function change_channel($change_channel) {
 			dbesc($hash)
 		);
 		if($x) {
+			$_SESSION['my_url'] = $x[0]['xchan_url'];
+			$_SESSION['my_address'] = $x[0]['xchan_addr'];
+
 			get_app()->set_observer($x[0]);
 			get_app()->set_perms(get_all_perms(local_user(),$hash));
 		}

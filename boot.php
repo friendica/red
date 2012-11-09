@@ -1829,26 +1829,33 @@ function get_my_url() {
 	return false;
 }
 
-function zrl_init(&$a) {
+function get_my_address() {
+	if(x($_SESSION,'my_address'))
+		return $_SESSION['my_address'];
+	return false;
+}
+
+function zid_init(&$a) {
 	$tmp_str = get_my_url();
 	if(validate_url($tmp_str)) {
 		proc_run('php','include/gprobe.php',bin2hex($tmp_str));
-		$arr = array('zrl' => $tmp_str, 'url' => $a->cmd);
-		call_hooks('zrl_init',$arr);
+		$arr = array('zid' => $tmp_str, 'url' => $a->cmd);
+		call_hooks('zid_init',$arr);
 	}
 }
 
-function zrl($s,$force = false) {
+function zid($s,$force = false) {
 	if(! strlen($s))
 		return $s;
-	if((! strpos($s,'/channel/')) && (! $force))
-		return $s;
-	if($force && substr($s,-1,1) !== '/')
-		$s = $s . '/';
+	$has_params = ((strpos($s,'?')) ? true : false);
+	if(! $has_params)
+		$has_params = ((strpos($s,'&')) ? true : false);
 	$achar = strpos($s,'?') ? '&' : '?';
+
 	$mine = get_my_url();
+	$myaddr = get_my_address();
 	if($mine and ! link_compare($mine,$s))
-		return $s . $achar . 'zrl=' . urlencode($mine);
+		return $s . (($has_params) ? '' : '/') . $achar . 'zid=' . urlencode($myaddr);
 	return $s;
 }
 

@@ -135,7 +135,7 @@ class Item extends BaseObject {
 		$profile_name   = (((strlen($item['author-name']))   && $diff_author) ? $item['author-name']   : $item['name']);
 
 		$profile_avatar = $item['author']['xchan_photo_m'];
-		$profile_link = zrl($item['author']['xchan_url']);
+		$profile_link = zid($item['author']['xchan_url']);
 		$profile_name = $item['author']['xchan_name'];
 
 //		if($item['author-link'] && (! $item['author-name']))
@@ -147,9 +147,9 @@ class Item extends BaseObject {
 		if($sp)
 			$sparkle = ' sparkle';
 		else
-			$profile_link = zrl($profile_link);                 
+			$profile_link = zid($profile_link);                 
 
-		$profile_link = zrl($item['author']['xchan_url']);
+		$profile_link = zid($item['author']['xchan_url']);
 
 
 //		$normalised = normalise_link((strlen($item['author-link'])) ? $item['author-link'] : $item['url']);
@@ -586,7 +586,7 @@ class Item extends BaseObject {
 					// This will have been stored in $a->page_contact by our calling page.
 					// Put this person as the wall owner of the wall-to-wall notice.
 
-					$this->owner_url = zrl($a->page_contact['url']);
+					$this->owner_url = zid($a->page_contact['url']);
 					$this->owner_photo = $a->page_contact['thumb'];
 					$this->owner_name = $a->page_contact['name'];
 					$this->wall_to_wall = true;
@@ -617,7 +617,7 @@ class Item extends BaseObject {
 							$this->owner_url = $this->get_redirect_url();
 						}
 						else
-							$this->owner_url = zrl($this->get_data_value('owner-link'));
+							$this->owner_url = zid($this->get_data_value('owner-link'));
 					}
 				}
 			}

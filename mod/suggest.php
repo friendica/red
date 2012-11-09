@@ -52,7 +52,7 @@ function suggest_content(&$a) {
 		$connlnk = $a->get_baseurl() . '/follow/?url=' . (($rr['connect']) ? $rr['connect'] : $rr['url']);			
 
 		$o .= replace_macros($tpl,array(
-			'$url' => zrl($rr['url']),
+			'$url' => zid($rr['url']),
 			'$name' => $rr['name'],
 			'$photo' => $rr['photo'],
 			'$ignlnk' => $a->get_baseurl() . '/suggest?ignore=' . $rr['id'],

@@ -196,7 +196,7 @@ function dfrn_request_post(&$a) {
 				
 				// (ignore reply, nothing we can do it failed)
 
-				goaway(zrl($dfrn_url));
+				goaway(zid($dfrn_url));
 				return; // NOTREACHED
 
 			}
@@ -780,7 +780,7 @@ function dfrn_request_content(&$a) {
 			$myaddr = ((x($_GET,'address')) ? $_GET['address'] : '');
 		}
 
-		// last, try a zrl
+		// last, try a zid
 		if(! strlen($myaddr))
 			$myaddr = get_my_url();
 

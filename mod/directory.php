@@ -41,7 +41,7 @@ function directory_content(&$a) {
 	$gdirpath = dirname(get_config('system','directory_submit_url'));
 	if(strlen($gdirpath)) {
 		$globaldir = '<ul><li><div id="global-directory-link"><a href="'
-		. zrl($gdirpath,true) . '">' . t('Global Directory') . '</a></div></li></ul>';
+		. zid($gdirpath,true) . '">' . t('Global Directory') . '</a></div></li></ul>';
 	}
 
 	$admin = '';

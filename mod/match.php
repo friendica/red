@@ -51,7 +51,7 @@ function match_content(&$a) {
 				
 				$connlnk = $a->get_baseurl() . '/follow/?url=' . $jj->url;
 				$o .= replace_macros($tpl,array(
-					'$url' => zrl($jj->url),
+					'$url' => zid($jj->url),
 					'$name' => $jj->name,
 					'$photo' => $jj->photo,
 					'$inttxt' => ' ' . t('is interested in:'),
