@@ -25,7 +25,6 @@
 
 	{{ if $gender }}<dl class="mf"><dt class="gender-label">$gender</dt> <dd class="x-gender">$profile.gender</dd></dl>{{ endif }}
 	
-	{{ if $profile.pubkey }}<div class="key" style="display:none;">$profile.pubkey</div>{{ endif }}
 
 	{{ if $marital }}<dl class="marital"><dt class="marital-label"><span class="heart">&hearts;</span>$marital</dt><dd class="marital-text">$profile.marital</dd></dl>{{ endif }}
 

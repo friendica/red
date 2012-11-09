@@ -1280,6 +1280,8 @@ if(! function_exists('profile_sidebar')) {
 
 		$a = get_app();
 
+		$observer = $a->get_observer();
+
 		$o = '';
 		$location = false;
 		$address = false;
@@ -1315,7 +1317,7 @@ if(! function_exists('profile_sidebar')) {
 
 
 		// show edit profile to yourself
-		if ($profile['uid'] == local_user()) {
+		if ($profile['uid'] == local_user() && feature_enabled(local_user(),'multi_profiles')) {
 			$profile['edit'] = array($a->get_baseurl(). '/profiles', t('Profiles'),"", t('Manage/edit profiles'));
 		
 			$r = q("SELECT * FROM `profile` WHERE `uid` = %d",
@@ -1373,21 +1375,14 @@ if(! function_exists('profile_sidebar')) {
 				? trim(substr($profile['name'],0,strpos($profile['name'],' '))) : $profile['name']);
 		$lastname = (($firstname === $profile['name']) ? '' : trim(substr($profile['name'],strlen($firstname))));
 
-		$diaspora = array(
-			'podloc' => $a->get_baseurl(),
-			'searchable' => (($profile['publish']) ? 'true' : 'false' ),
-			'nickname' => $profile['nickname'],
-			'fullname' => $profile['name'],
-			'firstname' => $firstname,
-			'lastname' => $lastname,
-			'photo300' => $a->get_cached_avatar_image($a->get_baseurl() . '/photo/custom/300/' . $profile['uid'] . '.jpg'),
-			'photo100' => $a->get_cached_avatar_image($a->get_baseurl() . '/photo/custom/100/' . $profile['uid'] . '.jpg'),
-			'photo50' => $a->get_cached_avatar_image($a->get_baseurl() . '/photo/custom/50/'  . $profile['uid'] . '.jpg'),
-		);
+logger('observer' . print_r($observer,true));
+logger('uid' . $profile['uid']);
 
-		if (!$block){
+		if(is_array($observer) 
+			&& perm_is_allowed($profile['uid'],$observer['xchan_hash'],'view_contacts')) {
 			$contact_block = contact_block();
 		}
+
 
 
 		$tpl = get_markup_template('profile_vcard.tpl');

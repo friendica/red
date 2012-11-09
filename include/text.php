@@ -522,6 +522,7 @@ function contact_block() {
 	$o = '';
 	$a = get_app();
 
+logger('contact block');
 	$shown = get_pconfig($a->profile['uid'],'system','display_friend_count');
 	if($shown === false)
 		$shown = 24;
@@ -530,7 +531,7 @@ function contact_block() {
 
 	if((! is_array($a->profile)) || ($a->profile['hide_friends']))
 		return $o;
-	$r = q("SELECT COUNT(*) AS `total` FROM `contact` WHERE `uid` = %d AND `self` = 0 AND `blocked` = 0 and `pending` = 0 AND `hidden` = 0 AND `archive` = 0",
+	$r = q("SELECT COUNT(*) AS total FROM abook WHERE abook_channel = %d and abook_flags = 0",
 			intval($a->profile['uid'])
 	);
 	if(count($r)) {
@@ -541,10 +542,12 @@ function contact_block() {
 		$micropro = Null;
 		
 	} else {
-		$r = q("SELECT * FROM `contact` WHERE `uid` = %d AND `self` = 0 AND `blocked` = 0 and `pending` = 0 AND `hidden` = 0 AND `archive` = 0 ORDER BY RAND() LIMIT %d",
+dbg(1);
+		$r = q("SELECT abook.*, xchan.* FROM abook left join xchan on abook.abook_xchan = xchan.xchan_hash WHERE abook_channel = %d AND abook_flags = 0 ORDER BY RAND() LIMIT %d",
 				intval($a->profile['uid']),
 				intval($shown)
 		);
+dbg(0);
 		if(count($r)) {
 			$contacts = sprintf( tt('%d Contact','%d Contacts', $total),$total);
 			$micropro = Array();
@@ -575,14 +578,14 @@ function micropro($contact, $redirect = false, $class = '', $textmode = false) {
 	if($class)
 		$class = ' ' . $class;
 
-	$url = $contact['url'];
+	$url = $contact['xchan_url'];
 	$sparkle = '';
 	$redir = false;
 
 	if($redirect) {
 		$a = get_app();
-		$redirect_url = $a->get_baseurl() . '/redir/' . $contact['id'];
-		if(local_user() && ($contact['uid'] == local_user()) && ($contact['network'] === 'dfrn')) {
+		$redirect_url = $a->get_baseurl() . '/magic/' . $contact['abook_id'];
+		if(local_user() && ($contact['abook_channel'] == local_user()) && ($contact['xchan_network'] === NETWORK_ZOT)) {
 			$redir = true;
 			$url = $redirect_url;
 			$sparkle = ' sparkle';
@@ -598,15 +601,15 @@ function micropro($contact, $redirect = false, $class = '', $textmode = false) {
 			. (($click) ? ' fakelink' : '') . '" '
 			. (($redir) ? '  ' : '')
 			. (($url) ? ' href="' . $url . '"' : '') . $click
-			. '" title="' . $contact['name'] . ' [' . $contact['url'] . ']" alt="' . $contact['name'] 
-			. '" >'. $contact['name'] . '</a></div>' . "\r\n";
+			. '" title="' . $contact['xchan_name'] . ' [' . $contact['xchan_url'] . ']" alt="' . $contact['xchan_name'] 
+			. '" >'. $contact['xchan_name'] . '</a></div>' . "\r\n";
 	}
 	else {
 		return '<div class="contact-block-div' . $class . '"><a class="contact-block-link' . $class . $sparkle 
 			. (($click) ? ' fakelink' : '') . '" '
 			. (($redir) ? '  ' : '')
 			. (($url) ? ' href="' . $url . '"' : '') . $click . ' ><img class="contact-block-img' . $class . $sparkle . '" src="' 
-			. $contact['micro'] . '" title="' . $contact['name'] . ' [' . $contact['url'] . ']" alt="' . $contact['name'] 
+			. $contact['xchan_photo_s'] . '" title="' . $contact['xchan_name'] . ' [' . $contact['xchan_url'] . ']" alt="' . $contact['xchan_name'] 
 			. '" /></a></div>' . "\r\n";
 	}
 }}
