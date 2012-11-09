@@ -36,8 +36,6 @@ EOT;
 	 * Placeholder div for popup panel
 	 */
 
-	$a->page['nav'] .= '<div id="panel" style="display: none;"></div>' ;
-
 	/**
 	 *
 	 * Our network is distributed, and as you visit friends some of the 
@@ -46,14 +44,17 @@ EOT;
 	 *
 	 */
 
-	$channel = $a->get_channel();
-	$xchan = q("select * from xchan where xchan_hash = '%s' limit 1",
-		dbesc($channel['channel_hash'])
-	);
+	if(local_user()) {
+		$channel = $a->get_channel();
+		$observer = $a->get_observer();
+	}
+	elseif(remote_user())
+		$observer = $a->get_observer();
+	
 
-	$myident = ((is_array($channel) && isset($channel['channel_address'])) ? $channel['channel_address'] . '@' : '');
+	$myident = (($channel) ? $channel['xchan_address'] : '');
 		
-	$sitelocation = $myident . substr($a->get_baseurl($ssl_state),strpos($a->get_baseurl($ssl_state),'//') + 2 );
+	$sitelocation = (($myident) ? $myident : $a->get_hostname());
 
 
 	// nav links: array of array('href', 'text', 'extra css classes', 'title')
@@ -76,16 +77,20 @@ EOT;
 		$nav['usermenu'][] = Array('photos/' . $channel['channel_address'], t('Photos'), "", t('Your photos'));
 		$nav['usermenu'][] = Array('events/', t('Events'), "", t('Your events'));
 		
-			$userinfo = array(
-			'icon' => $xchan[0]['xchan_photo_s'],
-			'name' => $channel['channel_name'],
-		);
-		
 	}
 	else {
 		$nav['login'] = Array('login',t('Login'), ($a->module == 'login'?'selected':''), t('Sign in'));
 	}
 
+	if($observer) {
+			$userinfo = array(
+			'icon' => $observer['xchan_photo_s'],
+			'name' => $observer['xchan_addr'],
+		);
+	}
+
+
+	$nav['lock'] = array('rmagic','',(($observer) ? 'lock' : 'unlock'), (($observer) ? $observer['xchan_addr'] : t('Click to authenticate to your home hub')));
 
 	/**
 	 * "Home" should also take you home from an authenticated remote profile connection
@@ -188,6 +193,7 @@ EOT;
 		'$banner' =>  $banner,
 		'$emptynotifications' => t('Nothing new here'),
 		'$userinfo' => $userinfo,
+		'$localuser' => local_user(),
 		'$sel' => 	$a->nav_sel,
 		'$apps' => $a->get_apps(),
 	));

@@ -1,13 +1,18 @@
 <header>
-	{# $langselector #}
-
 	<div id="site-location">$sitelocation</div>
 	<div id="banner">$banner</div>
 </header>
 <nav>
 	<ul>
+		{{ if $nav.lock }}
+			<li id="nav-rmagic-link" class="nav-menu-icon" >
+				<a class="icon $nav.lock.2" href="$nav.lock.0" title="$nav.lock.3" >$nav.lock.1</a>
+			</li>
+		{{ endif }}
+
 		{{ if $userinfo }}
 			<li id="nav-user-linkmenu" class="nav-menu-icon"><a href="#" rel="#nav-user-menu" title="$sitelocation"><img src="$userinfo.icon" alt="$userinfo.name"></a>
+				{{ if $localuser }}
 				<ul id="nav-user-menu" class="menu-popup">
 					{{ for $nav.usermenu as $usermenu }}
 						<li><a class="$usermenu.2" href="$usermenu.0" title="$usermenu.3">$usermenu.1</a></li>
@@ -17,6 +22,7 @@
 					{{ if $nav.messages }}<li><a class="$nav.messages.2" href="$nav.messages.0" title="$nav.messages.3" >$nav.messages.1</a></li>{{ endif }}
 					{{ if $nav.contacts }}<li><a class="$nav.contacts.2" href="$nav.contacts.0" title="$nav.contacts.3" >$nav.contacts.1</a></li>{{ endif }}	
 				</ul>
+				{{ endif }}
 			</li>
 		{{ endif }}
 		
@@ -100,3 +106,4 @@
 </ul>
 
 <div style="position: fixed; top: 3px; left: 5px; z-index:9999">$langselector</div>
+<div id="panel" style="display: none;"></div>
