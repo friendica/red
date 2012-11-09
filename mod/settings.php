@@ -328,17 +328,17 @@ function settings_post(&$a) {
 	$post_profilechange   = (($_POST['post_profilechange'] == 1) ? 1: 0);
 
 	$arr = array();
-	$arr['channel_r_stream']   = (($_POST['channel_r_stream'])  ? $_POST['channel_r_stream']  : 0);
-	$arr['channel_r_profile']  = (($_POST['channel_r_profile']) ? $_POST['channel_r_profile'] : 0);
-	$arr['channel_r_photos']   = (($_POST['channel_r_photos'])  ? $_POST['channel_r_photos']  : 0);
-	$arr['channel_r_abook']    = (($_POST['channel_r_abook'])   ? $_POST['channel_r_abook']   : 0);
-	$arr['channel_w_stream']   = (($_POST['channel_w_stream'])  ? $_POST['channel_w_stream']  : 0);
-	$arr['channel_w_wall']     = (($_POST['channel_w_wall'])    ? $_POST['channel_w_wall']    : 0);
-	$arr['channel_w_tagwall']  = (($_POST['channel_w_tagwall']) ? $_POST['channel_w_tagwall'] : 0);
-	$arr['channel_w_comment']  = (($_POST['channel_w_comment']) ? $_POST['channel_w_comment'] : 0);
-	$arr['channel_w_mail']     = (($_POST['channel_w_mail'])    ? $_POST['channel_w_mail']    : 0);
-	$arr['channel_w_photos']   = (($_POST['channel_w_photos'])  ? $_POST['channel_w_photos']  : 0);
-	$arr['channel_w_chat']     = (($_POST['channel_w_chat'])    ? $_POST['channel_w_chat']    : 0);
+	$arr['channel_r_stream']   = (($_POST['view_stream'])   ? $_POST['view_stream']   : 0);
+	$arr['channel_r_profile']  = (($_POST['view_profile'])  ? $_POST['view_profile']  : 0);
+	$arr['channel_r_photos']   = (($_POST['view_photos'])   ? $_POST['view_photos']   : 0);
+	$arr['channel_r_abook']    = (($_POST['view_contacts']) ? $_POST['view_contacts'] : 0);
+	$arr['channel_w_stream']   = (($_POST['send_stream'])   ? $_POST['send_stream']   : 0);
+	$arr['channel_w_wall']     = (($_POST['post_wall'])     ? $_POST['post_wall']     : 0);
+	$arr['channel_w_tagwall']  = (($_POST['tag_deliver'])   ? $_POST['tag_deliver']   : 0);
+	$arr['channel_w_comment']  = (($_POST['post_comments']) ? $_POST['post_comments'] : 0);
+	$arr['channel_w_mail']     = (($_POST['post_mail'])     ? $_POST['post_mail']     : 0);
+	$arr['channel_w_photos']   = (($_POST['post_photos'])   ? $_POST['post_photos']   : 0);
+	$arr['channel_w_chat']     = (($_POST['chat'])          ? $_POST['chat']          : 0);
 
 
 

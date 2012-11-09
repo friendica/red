@@ -16,7 +16,7 @@ $slide
 
 <h3>Permissions</h3>
 
-<form action="abook/$contact_id" method="post" >
+<form action="connections/$contact_id" method="post" >
 <input type="hidden" name="contact_id" value="$contact_id">
 <input id="contact-closeness-mirror" type="hidden" name="closeness" value="$close" />
 
@@ -32,17 +32,9 @@ $slide
 <span class="abook-them">$them</span><span class="abook-me">$me</span>
 <br />
 <br />
-{{inc field_acheckbox.tpl with $field=$perm01 }}{{endinc}}
-{{inc field_acheckbox.tpl with $field=$perm02 }}{{endinc}}
-{{inc field_acheckbox.tpl with $field=$perm03 }}{{endinc}}
-{{inc field_acheckbox.tpl with $field=$perm04 }}{{endinc}}
-{{inc field_acheckbox.tpl with $field=$perm05 }}{{endinc}}
-{{inc field_acheckbox.tpl with $field=$perm06 }}{{endinc}}
-{{inc field_acheckbox.tpl with $field=$perm07 }}{{endinc}}
-{{inc field_acheckbox.tpl with $field=$perm08 }}{{endinc}}
-{{inc field_acheckbox.tpl with $field=$perm09 }}{{endinc}}
-{{inc field_acheckbox.tpl with $field=$perm10 }}{{endinc}}
-
+{{ for $perms as $prm }}
+{{inc field_acheckbox.tpl with $field=$prm }}{{endinc}}
+{{ endfor }}
 <br />
 
 </div>

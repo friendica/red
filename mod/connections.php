@@ -63,18 +63,18 @@ function connections_post(&$a) {
 	if(! local_user())
 		return;
 
-	$contact_id = intval($a->argv[1]);
+	$contact_id = intval(argv(1));
 	if(! $contact_id)
 		return;
 
-	$orig_record = q("SELECT * FROM `contact` WHERE `id` = %d AND `uid` = %d LIMIT 1",
+	$orig_record = q("SELECT * FROM abook WHERE abook_id = %d AND abook_channel = %d LIMIT 1",
 		intval($contact_id),
 		intval(local_user())
 	);
 
-	if(! count($orig_record)) {
+	if(! $orig_record) {
 		notice( t('Could not access contact record.') . EOL);
-		goaway($a->get_baseurl(true) . '/contacts');
+		goaway($a->get_baseurl(true) . '/connnections');
 		return; // NOTREACHED
 	}
 
@@ -102,29 +102,41 @@ function connections_post(&$a) {
 	if($closeness < 0)
 		$closeness = 99;
 
-	$info = fix_mce_lf(escape_tags(trim($_POST['info'])));
+	$abook_my_perms = 0;
 
-	$r = q("UPDATE `contact` SET `profile_id` = %d, `priority` = %d , `info` = '%s',
-		`hidden` = %d, closeness = %d WHERE `id` = %d AND `uid` = %d LIMIT 1",
+	foreach($_POST as $k => $v) {
+		if(strpos($k,'perms_') === 0) {
+			$abook_my_perms += $v;
+		}
+	}			
+
+
+
+
+	$r = q("UPDATE abook SET abook_profile = %d, abook_my_perms = %d , abook_closeness = %d
+		where abook_id = %d AND abook_channel = %d LIMIT 1",
 		intval($profile_id),
-		intval($priority),
-		dbesc($info),
-		intval($hidden),
+		intval($abook_my_perms),
 		intval($closeness),
 		intval($contact_id),
 		intval(local_user())
 	);
 	if($r)
-		info( t('Contact updated.') . EOL);
+		info( t('Connection updated.') . EOL);
 	else
-		notice( t('Failed to update contact record.') . EOL);
+		notice( t('Failed to update connnection record.') . EOL);
 
-	$r = q("select * from contact where id = %d and uid = %d limit 1",
-		intval($contact_id),
-		intval(local_user())
+
+	// Refresh the structure in memory with the new data
+
+	$r = q("SELECT abook.*, xchan.* 
+		FROM abook left join xchan on abook_xchan = xchan_hash
+		WHERE abook_channel = %d and abook_id = %d LIMIT 1",
+		intval(local_user()),
+		intval($contact_id)
 	);
-	if($r && count($r))
-		$a->data['contact'] = $r[0];
+	if($r)
+		$a->data['abook'] = $r[0];
 
 	return;
 
@@ -378,6 +390,15 @@ EOT;
 			'$world' => t('Unknown')
 		));
 
+		$perms = array();
+		$channel = $a->get_channel();
+
+		$global_perms = get_perms();
+		foreach($global_perms as $k => $v) {
+			$perms[] = array('perms_' . $k, $v[3], (($contact['abook_their_perms'] & $v[1]) ? "1" : ""),(($contact['abook_my_perms'] & $v[1]) ? "1" : ""), $v[1], (($channel[$v[0]] == PERMS_SPECIFIC) ? '' : '1'), $v[4]);
+		}
+
+
 		$o .= replace_macros($tpl,array(
 
 			'$header' => t('Contact Settings') . ' for ' . $contact['xchan_name'],
@@ -393,18 +414,7 @@ EOT;
 			'$close' => $contact['abook_closeness'],
 			'$them' => t('Their Settings'),
 			'$me' => t('My Settings'),
-
-			'$perm01' => array( 'perm01', t('Can be seen in my address book')),
-			'$perm02' => array( 'perm02', t('Can post to my stream')),
-			'$perm03' => array( 'perm03', t('Can see my posts')),
-			'$perm04' => array( 'perm04', t('Can comment on my posts')),
-			'$perm05' => array( 'perm05', t('Can post to my wall'), false, t('if I allow wall posts')),
-			'$perm06' => array( 'perm06', t('Can post to my wall via tags'), false, t('e.g. public groups')),
-			'$perm07' => array( 'perm07', t('Can send me email')),
-			'$perm08' => array( 'perm08', t('Can see my address book'), false, t('if it is not public')),
-			'$perm09' => array( 'perm09', t('Can IM me'), false, t('when available')),
-			'$perm10' => array( 'perm10', t('Can see these permissions')),
-
+			'$perms' => $perms,
 
 
 			'$common_link' => $a->get_baseurl(true) . '/common/loc/' . local_user() . '/' . $contact['id'],

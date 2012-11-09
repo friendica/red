@@ -4,19 +4,19 @@
 function get_perms() {
 	$global_perms = array(
 		// Read only permissions
-		'view_stream'   => array('channel_r_stream',  intval(PERMS_R_STREAM),  true, t('Who can view your "public" stream and posts'), ''),
-		'view_profile'  => array('channel_r_profile', intval(PERMS_R_PROFILE), true, t('Who can view your "public" channel profile'), ''),
-		'view_photos'   => array('channel_r_photos',  intval(PERMS_R_PHOTOS),  true, t('Who can view your "public" photo albums'), ''),
-		'view_contacts' => array('channel_r_abook',   intval(PERMS_R_ABOOK),   true, t('Who can view your "public" address book'), ''),
+		'view_stream'   => array('channel_r_stream',  intval(PERMS_R_STREAM),  true, t('Can view my "public" stream and posts'), ''),
+		'view_profile'  => array('channel_r_profile', intval(PERMS_R_PROFILE), true, t('Can view my "public" channel profile'), ''),
+		'view_photos'   => array('channel_r_photos',  intval(PERMS_R_PHOTOS),  true, t('Can view my "public" photo albums'), ''),
+		'view_contacts' => array('channel_r_abook',   intval(PERMS_R_ABOOK),   true, t('Can view my "public" address book'), ''),
 
 		// Write permissions
-		'send_stream'   => array('channel_w_stream',  intval(PERMS_W_STREAM),  false, t('Who can send you their channel stream and posts'), ''),
-		'post_wall'     => array('channel_w_wall',    intval(PERMS_W_WALL),    false, t('Who can post on your channel page'), ''),
-		'post_comments' => array('channel_w_comment', intval(PERMS_W_COMMENT), false, t('Who can comment on your posts'), ''),
-		'post_mail'     => array('channel_w_mail',    intval(PERMS_W_MAIL),    false, t('Who can send you private mail messages'), ''),
-		'post_photos'   => array('channel_w_photos',  intval(PERMS_W_PHOTOS),  false, t('Who can post photos to your photo albums'), ''),
-		'tag_deliver'   => array('channel_w_tagwall', intval(PERMS_W_TAGWALL), false, t('Who can forward to all your channel contacts via post tags'), t('Advanced - useful for creating group forum channels')),
-		'chat'          => array('channel_w_chat',    intval(PERMS_W_CHAT),    false, t('Who can chat with you (when available)'), t('Requires compatible chat plugin')),
+		'send_stream'   => array('channel_w_stream',  intval(PERMS_W_STREAM),  false, t('Can send me their channel stream and posts'), ''),
+		'post_wall'     => array('channel_w_wall',    intval(PERMS_W_WALL),    false, t('Can post on my channel page ("wall")'), ''),
+		'post_comments' => array('channel_w_comment', intval(PERMS_W_COMMENT), false, t('Can comment on my posts'), ''),
+		'post_mail'     => array('channel_w_mail',    intval(PERMS_W_MAIL),    false, t('Can send me private mail messages'), ''),
+		'post_photos'   => array('channel_w_photos',  intval(PERMS_W_PHOTOS),  false, t('Can post photos to my photo albums'), ''),
+		'tag_deliver'   => array('channel_w_tagwall', intval(PERMS_W_TAGWALL), false, t('Can forward to all my channel contacts via post tags'), t('Advanced - useful for creating group forum channels')),
+		'chat'          => array('channel_w_chat',    intval(PERMS_W_CHAT),    false, t('Can chat with me (when available)'), t('Requires compatible chat plugin')),
 	);
 	return $global_perms;
 }
