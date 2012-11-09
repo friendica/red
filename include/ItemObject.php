@@ -256,7 +256,7 @@ class Item extends BaseObject {
 			'share'     => $share,
 			'plink'     => get_plink($item),
 			'edpost'    => ((feature_enabled($conv->get_profile_owner(),'edit_posts')) ? $edpost : ''),
-			'star'      => $star,
+			'star'      => ((feature_enabled($conv->get_profile_owner(),'star_posts')) ? $star : ''),
 			'tagger'    => ((feature_enabled($conv->get_profile_owner(),'commtag')) ? $tagger : ''),
 			'filer'     => ((feature_enabled($conv->get_profile_owner(),'filing')) ? $filer : ''),
 			'drop'      => $drop,

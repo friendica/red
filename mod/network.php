@@ -310,20 +310,29 @@ function network_content(&$a, $update = 0, $load = false) {
 			'sel' => $new_active,
 			'title' => t('Activity Stream - by date'),
 		),
-		array(
+
+	);
+
+	if(feature_enabled(local_user(),'star_posts')) 
+		$tabs[] = array(
 			'label' => t('Starred'),
 			'url'=>$a->get_baseurl(true) . '/' . $cmd . ((x($_GET,'cid')) ? '/?f=&cid=' . $_GET['cid'] : '') . '&star=1',
 			'sel'=>$starred_active,
 			'title' => t('Favourite Posts'),
-		),
-//		array(
-//			'label' => t('Spam'),
-//			'url'=>$a->get_baseurl(true) . '/network?f=&spam=1'
-//			'sel'=> $spam_active,
-//			'title' => t('Posts flagged as SPAM'),
-//		),	
+		);
 
-	);
+	// Not yet implemented
+
+	if(feature_enabled(local_user(),'spam_filter')) 
+		$tabs[] = array(
+			'label' => t('Spam'),
+			'url'=>$a->get_baseurl(true) . '/network?f=&spam=1',
+			'sel'=> $spam_active,
+			'title' => t('Posts flagged as SPAM'),
+		);	
+
+
+
 	
 	// save selected tab, but only if not in search or file mode
 	if(!x($_GET,'search') && !x($_GET,'file')) {
