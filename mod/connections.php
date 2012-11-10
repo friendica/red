@@ -20,43 +20,23 @@ function connections_init(&$a) {
 		);
 		if($r) {
 			$a->data['abook'] = $r[0];
-			$abook_id = $r[0]['abook_id'];
-		}
-		else {
-			$abook_id = 0;	
 		}
 	}
+}
 
-	if($abook_id) {
-			$a->page['aside'] .= vcard_from_xchan($r[0]);
-	}
+function connections_aside(&$a) {
+
+	if(x($a->data,'abook'))
+		$a->set_widget('vcard',vcard_from_xchan($a->data['abook']));
 	else
-		$a->page['aside'] .= follow_widget();
+		$a->set_widget('follow', follow_widget());
 
-	$a->page['aside'] .= group_side('contacts','group',false,0,$abook_id);
-
-	$a->page['aside'] .= findpeople_widget();
-
-	$base = $a->get_baseurl();
-
-	$a->page['htmlhead'] .= <<< EOT
-
-<script>$(document).ready(function() { 
-	var a; 
-	a = $("#contacts-search").autocomplete({ 
-		serviceUrl: '$base/acl',
-		minChars: 2,
-		width: 350,
-	});
-	a.setOptions({ params: { type: 'a' }});
-
-}); 
-
-</script>
-EOT;
-
+	$a->set_widget('collections', group_side('connnections','group',false,0,$abook_id));
+	$a->set_widget('fidpeople',findpeople_widget());
 
 }
+
+
 
 function connections_post(&$a) {
 	
@@ -296,22 +276,20 @@ EOT;
 			goaway($a->get_baseurl(true) . '/connections/' . $contact_id);
 		}
 
+
+		if($cmd === 'drop') {
+
+			require_once('include/Contact.php');
 // FIXME
+//			terminate_friendship($a->get_channel(),$orig_record[0]);
 
-//		if($cmd === 'drop') {
+			contact_remove($orig_record[0]['abook_id']);
+			info( t('Contact has been removed.') . EOL );
+			if(x($_SESSION,'return_url'))
+				goaway($a->get_baseurl(true) . '/' . $_SESSION['return_url']);
+			goaway($a->get_baseurl(true) . '/contacts');
 
-//			require_once('include/Contact.php');
-
-	//		terminate_friendship($a->user,$a->contact,$orig_record[0]);
-
-		//	contact_remove($orig_record[0]['id']);
-			//info( t('Contact has been removed.') . EOL );
-//			if(x($_SESSION,'return_url'))
-	//			goaway($a->get_baseurl(true) . '/' . $_SESSION['return_url']);
-		//	else
-			//	goaway($a->get_baseurl(true) . '/contacts');
-//			return; // NOTREACHED
-	//	}
+		}
 	}
 
 	if((x($a->data,'abook')) && (is_array($a->data['abook']))) {
@@ -558,8 +536,6 @@ EOT;
 	$tab_tpl = get_markup_template('common_tabs.tpl');
 	$t = replace_macros($tab_tpl, array('$tabs'=>$tabs));
 
-
-
 	$searching = false;
 	if($search) {
 		$search_hdr = $search;
@@ -570,10 +546,7 @@ EOT;
 
 	if($nets)
 		$sql_extra .= sprintf(" AND xchan_network = '%s' ", dbesc($nets));
- 
-//	$sql_extra2 = ((($sort_type > 0) && ($sort_type <= CONTACT_IS_FRIEND)) ? sprintf(" AND `rel` = %d ",intval($sort_type)) : ''); 
-
-	
+ 	
 	$r = q("SELECT COUNT(abook.abook_id) AS total FROM abook left join xchan on abook.abook_xchan = xchan.xchan_hash 
 		where abook_channel = %d and not (abook_flags & %d) $sql_extra $sql_extra2 ",
 		intval(local_user()),
@@ -598,30 +571,8 @@ EOT;
 
 		foreach($r as $rr) {
 
-			switch($rr['rel']) {
-				case CONTACT_IS_FRIEND:
-					$dir_icon = 'images/lrarrow.gif';
-					$alt_text = t('Mutual Friendship');
-					break;
-				case  CONTACT_IS_FOLLOWER;
-					$dir_icon = 'images/larrow.gif';
-					$alt_text = t('is a fan of yours');
-					break;
-				case CONTACT_IS_SHARING;
-					$dir_icon = 'images/rarrow.gif';
-					$alt_text = t('you are a fan of');
-					break;
-				default:
-					break;
-			}
-			if(($rr['network'] === 'dfrn') && ($rr['rel'])) {
-				$url = "redir/{$rr['abook_id']}";
-				$sparkle = ' class="sparkle" ';
-			}
-			else { 
-				$url = $rr['xchan_url'];
-				$sparkle = '';
-			}
+			$url = "magic/{$rr['abook_id']}";
+			$sparkle = ' class="sparkle" ';
 
 
 			$contacts[] = array(
