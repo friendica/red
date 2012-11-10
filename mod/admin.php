@@ -15,16 +15,9 @@ function admin_post(&$a){
 		return;
 	}
 
-	// do not allow a page manager to access the admin panel at all.
-
-	if(x($_SESSION,'submanage') && intval($_SESSION['submanage']))
-		return;
-	
-
-
 	// urls
-	if ($a->argc > 1){
-		switch ($a->argv[1]){
+	if (argc() > 1){
+		switch (argv(1)){
 			case 'site':
 				admin_page_site_post($a);
 				break;
@@ -32,21 +25,22 @@ function admin_post(&$a){
 				admin_page_users_post($a);
 				break;
 			case 'plugins':
-				if ($a->argc > 2 && 
-					is_file("addon/".$a->argv[2]."/".$a->argv[2].".php")){
-						@include_once("addon/".$a->argv[2]."/".$a->argv[2].".php");
-						if(function_exists($a->argv[2].'_plugin_admin_post')) {
-							$func = $a->argv[2].'_plugin_admin_post';
+				if (argc() > 2 && 
+					is_file("addon/" . argv(2) . "/" . argv(2) . ".php")){
+						@include_once("addon/" . argv(2) . "/" . argv(2) . ".php");
+						if(function_exists(argv(2).'_plugin_admin_post')) {
+							$func = argv(2) . '_plugin_admin_post';
 							$func($a);
 						}
 				}
-				goaway($a->get_baseurl(true) . '/admin/plugins/' . $a->argv[2] );
+				goaway($a->get_baseurl(true) . '/admin/plugins/' . argv(2) );
 				return; // NOTREACHED
 				break;
 			case 'themes':
-				$theme = $a->argv[2];
+				$theme = argv(2);
 				if (is_file("view/theme/$theme/php/config.php")){
 					require_once("view/theme/$theme/php/config.php");
+// fixme add parent theme if derived
 					if (function_exists("theme_admin_post")){
 						theme_admin_post($a);
 					}
@@ -79,9 +73,6 @@ function admin_content(&$a) {
 	if(!is_site_admin()) {
 		return login(false);
 	}
-
-	if(x($_SESSION,'submanage') && intval($_SESSION['submanage']))
-		return "";
 
 	/**
 	 * Side bar links
@@ -127,8 +118,8 @@ function admin_content(&$a) {
 	$o = '';
 	
 	// urls
-	if ($a->argc > 1){
-		switch ($a->argv[1]){
+	if (argc() > 1){
+		switch (argv(1)) {
 			case 'site':
 				$o = admin_page_site($a);
 				break;
@@ -170,20 +161,10 @@ function admin_content(&$a) {
  * @return string
  */
 function admin_page_summary(&$a) {
-	$r = q("SELECT `page-flags`, COUNT(uid) as `count` FROM `user` GROUP BY `page-flags`");
-	$accounts = Array(
-		Array( t('Normal Account'), 0),
-		Array( t('Soapbox Account'), 0),
-		Array( t('Community/Celebrity Account'), 0),
-		Array( t('Automatic Friend Account'), 0),
-		Array( t('Blog Account'), 0),
-		Array( t('Private Forum'), 0)
-	);
 
-	$users=0;
-	foreach ($r as $u){ $accounts[$u['page-flags']][1] = $u['count']; $users+= $u['count']; }
 
-	logger('accounts: ' . print_r($accounts,true),LOGGER_DATA);
+	// list total user accounts, expirations etc.
+
 
 	$r = q("SELECT COUNT(id) as `count` FROM `register`");
 	$pending = $r[0]['count'];
@@ -307,15 +288,14 @@ function admin_page_site_post(&$a){
 	set_config('system','poll_interval',$poll_interval);
 	set_config('system','maxloadavg',$maxloadavg);
 	set_config('config','sitename',$sitename);
-	if ($banner==""){
-		// don't know why, but del_config doesn't work...
-		q("DELETE FROM `config` WHERE `cat` = '%s' AND `k` = '%s' LIMIT 1",
-			dbesc("system"),
-			dbesc("banner")
-		);
-	} else {
+
+	if ($banner=="") {
+		del_config('system','banner');
+	} 
+	else {
 		set_config('system','banner', $banner);
 	}
+
 	set_config('system','language', $language);
 	set_config('system','theme', $theme);
 	set_config('system','maximagesize', $maximagesize);
@@ -327,15 +307,13 @@ function admin_page_site_post(&$a){
 	set_config('system','allowed_email', $allowed_email);
 	set_config('system','block_public', $block_public);
 	set_config('system','publish_all', $force_publish);
-	if ($global_directory==""){
-		// don't know why, but del_config doesn't work...
-		q("DELETE FROM `config` WHERE `cat` = '%s' AND `k` = '%s' LIMIT 1",
-			dbesc("system"),
-			dbesc("directory_submit_url")
-		);
-	} else {
+	if($global_directory=="") {
+		del_config('system','directory_submit_url');
+	} 
+	else {
 		set_config('system','directory_submit_url', $global_directory);
 	}
+
 	set_config('system','thread_allow', $thread_allow);
 
 	set_config('system','block_extended_register', $no_multi_reg);
@@ -383,7 +361,7 @@ function admin_page_site(&$a) {
 	if($files) {
 		foreach($files as $file) {
 			$f = basename($file);
-			$theme_name = ((file_exists($file . '/experimental')) ?  sprintf("%s - \x28Experimental\x29", $f) : $f);
+			$theme_name = ((file_exists($file . '/.experimental')) ?  sprintf("%s - Experimental", $f) : $f);
 			$theme_choices[$f] = $theme_name;
 		}
 	}
@@ -392,22 +370,19 @@ function admin_page_site(&$a) {
 	/* Banner */
 	$banner = get_config('system','banner');
 	if($banner == false) 
-		$banner = '<a href="http://friendica.com"><img id="logo-img" src="images/friendica-32.png" alt="logo" /></a><span id="logo-text"><a href="http://friendica.com">Friendica</a></span>';
+		$banner = 'red';
 	$banner = htmlspecialchars($banner);
 	
-	//echo "<pre>"; var_dump($lang_choices); die("</pre>");
-
 	/* Register policy */
 	$register_choices = Array(
-		REGISTER_CLOSED => t("Closed"),
+		REGISTER_CLOSED  => t("Closed"),
 		REGISTER_APPROVE => t("Requires approval"),
-		REGISTER_OPEN => t("Open")
+		REGISTER_OPEN    => t("Open")
 	); 
 
 	$ssl_choices = array(
-		SSL_POLICY_NONE => t("No SSL policy, links will track page SSL state"),
-		SSL_POLICY_FULL => t("Force all links to use SSL"),
-		SSL_POLICY_SELFSIGN => t("Self-signed certificate, use SSL for local links only (discouraged)")
+		SSL_POLICY_NONE     => t("No SSL policy, links will track page SSL state"),
+		SSL_POLICY_FULL     => t("Force all links to use SSL")
 	);
 
 	$t = get_markup_template("admin_site.tpl");
@@ -428,7 +403,6 @@ function admin_page_site(&$a) {
 		'$theme' 			=> array('theme', t("System theme"), get_config('system','theme'), t("Default system theme - may be over-ridden by user profiles - <a href='#' id='cnftheme'>change theme settings</a>"), $theme_choices),
 		'$ssl_policy'       => array('ssl_policy', t("SSL link policy"), (string) intval(get_config('system','ssl_policy')), t("Determines whether generated links should be forced to use SSL"), $ssl_choices),
 		'$maximagesize'		=> array('maximagesize', t("Maximum image size"), get_config('system','maximagesize'), t("Maximum size in bytes of uploaded images. Default is 0, which means no limits.")),
-
 		'$register_policy'	=> array('register_policy', t("Register policy"), $a->config['register_policy'], "", $register_choices),
 		'$register_text'	=> array('register_text', t("Register text"), htmlentities($a->config['register_text'], ENT_QUOTES, 'UTF-8'), t("Will be displayed prominently on the registration page.")),
 		'$abandon_days'     => array('abandon_days', t('Accounts abandoned after x days'), get_config('system','account_abandon_days'), t('Will not waste system resources polling external sites for abandonded accounts. Enter 0 for no time limit.')),
@@ -437,17 +411,8 @@ function admin_page_site(&$a) {
 		'$block_public'		=> array('block_public', t("Block public"), get_config('system','block_public'), t("Check to block public access to all otherwise public personal pages on this site unless you are currently logged in.")),
 		'$force_publish'	=> array('publish_all', t("Force publish"), get_config('system','publish_all'), t("Check to force all profiles on this site to be listed in the site directory.")),
 		'$global_directory'	=> array('directory_submit_url', t("Global directory update URL"), get_config('system','directory_submit_url'), t("URL to update the global directory. If this is not set, the global directory is completely unavailable to the application.")),
-		'$thread_allow'		=> array('thread_allow', t("Allow threaded items"), get_config('system','thread_allow'), t("Allow infinite level threading for items on this site.")),
 			
-		'$no_multi_reg'		=> array('no_multi_reg', t("Block multiple registrations"),  get_config('system','block_extended_register'), t("Disallow users to register additional accounts for use as pages.")),
-		'$no_openid'		=> array('no_openid', t("OpenID support"), !get_config('system','no_openid'), t("OpenID support for registration and logins.")),
-		'$no_regfullname'	=> array('no_regfullname', t("Fullname check"), !get_config('system','no_regfullname'), t("Force users to register with a space between firstname and lastname in Full name, as an antispam measure")),
-		'$no_utf'			=> array('no_utf', t("UTF-8 Regular expressions"), !get_config('system','no_utf'), t("Use PHP UTF8 regular expressions")),
 		'$no_community_page' => array('no_community_page', t("Show Community Page"), !get_config('system','no_community_page'), t("Display a Community page showing all recent public postings on this site.")),
-		'$ostatus_disabled' => array('ostatus_disabled', t("Enable OStatus support"), !get_config('system','ostatus_disable'), t("Provide built-in OStatus \x28identi.ca, status.net, etc.\x29 compatibility. All communications in OStatus are public, so privacy warnings will be occasionally displayed.")),	
-		'$diaspora_enabled' => array('diaspora_enabled', t("Enable Diaspora support"), get_config('system','diaspora_enabled'), t("Provide built-in Diaspora network compatibility.")),	
-		'$dfrn_only'        => array('dfrn_only', t('Only allow Friendica contacts'), get_config('system','dfrn_only'), t("All contacts must use Friendica protocols. All other built-in communication protocols disabled.")),
-		'$verifyssl' 		=> array('verifyssl', t("Verify SSL"), get_config('system','verifyssl'), t("If you wish, you can turn on strict certificate checking. This will mean you cannot connect (at all) to self-signed SSL sites.")),
 		'$proxyuser'		=> array('proxyuser', t("Proxy user"), get_config('system','proxyuser'), ""),
 		'$proxy'			=> array('proxy', t("Proxy URL"), get_config('system','proxy'), ""),
 		'$timeout'			=> array('timeout', t("Network timeout"), (x(get_config('system','curl_timeout'))?get_config('system','curl_timeout'):60), t("Value is in seconds. Set to 0 for unlimited (not recommended).")),
@@ -465,15 +430,15 @@ function admin_page_dbsync(&$a) {
 
 	$o = '';
 
-	if($a->argc > 3 && intval($a->argv[3]) && $a->argv[2] === 'mark') {
-		set_config('database', 'update_' . intval($a->argv[3]), 'success');
+	if(argc() > 3 && intval(argv(3)) && argv(2) === 'mark') {
+		set_config('database', 'update_' . intval(argv(3)), 'success');
 		info( t('Update has been marked successful') . EOL);
 		goaway($a->get_baseurl(true) . '/admin/dbsync');
 	}
 
-	if($a->argc > 2 && intval($a->argv[2])) {
+	if(argc() > 2 && intval(argv(2))) {
 		require_once('install/update.php');
-		$func = 'update_' . intval($a->argv[2]);
+		$func = 'update_' . intval(argv(2));
 		if(function_exists($func)) {
 			$retval = $func();
 			if($retval === UPDATE_FAILED) {
@@ -507,7 +472,7 @@ function admin_page_dbsync(&$a) {
 	$o = replace_macros(get_markup_template('failed_updates.tpl'),array(
 		'$base' => $a->get_baseurl(true),
 		'$banner' => t('Failed Updates'),
-		'$desc' => t('This does not include updates prior to 1139, which did not return a status.'),
+		'$desc' => '',
 		'$mark' => t('Mark success (if update was manually applied)'),
 		'$apply' => t('Attempt to execute this update step automatically'),
 		'$failed' => $failed
@@ -530,7 +495,8 @@ function admin_page_users_post(&$a){
 
 	if (x($_POST,'page_users_block')){
 		foreach($users as $uid){
-			q("UPDATE `user` SET `blocked`=1-`blocked` WHERE `uid`=%s",
+			q("UPDATE account SET account_flags = (account_flags & %d) where account_id = %d limit 1",
+				intval(ACCOUNT_BLOCKED),
 				intval( $uid )
 			);
 		}
@@ -565,15 +531,18 @@ function admin_page_users_post(&$a){
  * @return string
  */
 function admin_page_users(&$a){
-	if ($a->argc>2) {
-		$uid = $a->argv[3];
-		$user = q("SELECT * FROM `user` WHERE `uid`=%d", intval($uid));
-		if (count($user)==0){
-			notice( 'User not found' . EOL);
+	if (argc() > 2) {
+		$uid = argv(3);
+		$account = q("SELECT * FROM account WHERE account_id = %d", 
+			intval($uid)
+		);
+
+		if (! $account) {
+			notice( t('Account not found') . EOL);
 			goaway($a->get_baseurl(true) . '/admin/users' );
-			return ''; // NOTREACHED
 		}		
-		switch($a->argv[2]){
+
+		switch(argv(2)){
 			case "delete":{
                 check_form_security_token_redirectOnErr('/admin/users', 'admin_users', 't');
 				// delete user
@@ -584,11 +553,12 @@ function admin_page_users(&$a){
 			}; break;
 			case "block":{
                 check_form_security_token_redirectOnErr('/admin/users', 'admin_users', 't');
-				q("UPDATE `user` SET `blocked`=%d WHERE `uid`=%s",
-					intval( 1-$user[0]['blocked'] ),
+				q("UPDATE account SET account_flags = ( account_flags ^ %d ) where account_id = %d",
+					intval(ACCOUNT_BLOCKED),
 					intval( $uid )
 				);
-				notice( sprintf( ($user[0]['blocked']?t("User '%s' unblocked"):t("User '%s' blocked")) , $user[0]['username']) . EOL);
+
+				notice( sprintf( (($account['account_flags'] & ACCOUNT_BLOCKED) ? t("User '%s' unblocked"):t("User '%s' blocked")) , $account[0]['account_email']) . EOL);
 			}; break;
 		}
 		goaway($a->get_baseurl(true) . '/admin/users' );
@@ -605,12 +575,13 @@ function admin_page_users(&$a){
 	
 	/* get users */
 
-	$total = q("SELECT count(*) as total FROM `user` where 1");
+	$total = q("SELECT count(*) as total FROM account where 1");
 	if(count($total)) {
 		$a->set_pager_total($total[0]['total']);
 		$a->set_pager_itemspage(100);
 	}
 	
+// FIXME this is borked since there is no more user table
 	
 	$users = q("SELECT `user` . * , `contact`.`name` , `contact`.`url` , `contact`.`micro`, `lastitem`.`lastitem_date`
 				FROM
