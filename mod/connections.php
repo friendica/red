@@ -90,9 +90,6 @@ function connections_post(&$a) {
 		}
 	}			
 
-
-
-
 	$r = q("UPDATE abook SET abook_profile = %d, abook_my_perms = %d , abook_closeness = %d
 		where abook_id = %d AND abook_channel = %d LIMIT 1",
 		intval($profile_id),
@@ -106,6 +103,11 @@ function connections_post(&$a) {
 	else
 		notice( t('Failed to update connnection record.') . EOL);
 
+
+	if((x($a->data,'abook')) && $a->data['abook']['abook_my_perms'] != $abook_my_perms) {
+		// FIXME - this message type is not yet handled in the notifier
+		proc_run('php', 'include/notifier.php', 'permission_update', $contact_id);
+	}
 
 	// Refresh the structure in memory with the new data
 
