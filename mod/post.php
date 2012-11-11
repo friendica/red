@@ -11,12 +11,16 @@ function post_post(&$a) {
 
 	$ret = array('result' => false, 'message' => '');
 
-	$msgtype = ((x($_REQUEST,'type')) ? $_REQUEST['type'] : '');
+	$msgtype = ((array_key_exists('type',$_REQUEST)) ? $_REQUEST['type'] : '');
 
-	$hub = zot_gethub($_REQUEST);
+	if(array_key_exists('sender',$_REQUEST)) {
+		$j_sender = json_decode($_REQUEST['sender']);
+	}	
+
+	$hub = zot_gethub($j_sender);
 	if(! $hub) {
-		$result = zot_register_hub($_REQUEST);
-		if((! $result) || (! zot_gethub($_REQUEST))) {
+		$result = zot_register_hub($j_sender);
+		if((! $result['success']) || (! zot_gethub($j_sender))) {
 			$ret['message'] = 'Hub not available.';
 			json_return_and_die($ret);
 		}

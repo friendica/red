@@ -59,15 +59,18 @@ function zot_verify(&$item,$identity) {
 
 
 
-function zot_notify($channel,$url,$type = 'notify') {
+function zot_notify($channel,$url,$type = 'notify',$recipients = null) {
 	$x = z_post_url($url, array(
 		'type' => $type,
-		'guid' => $channel['channel_guid'],
-		'guid_sig' => base64url_encode($guid,$channel['prvkey']),
-		'hub' => z_root(),
-		'hub_sig' => base64url_encode(z_root,$channel['prvkey']), 
-		'callback' => '/post', 
-		'spec' => ZOT_REVISION)
+		'sender' => json_encode(array(
+			'guid' => $channel['channel_guid'],
+			'guid_sig' => base64url_encode($guid,$channel['prvkey']),
+			'hub' => z_root(),
+			'hub_sig' => base64url_encode(z_root,$channel['prvkey'])
+		)), 
+		'recipients' => json_encode($recipients), 
+		'callback' => '/post',
+		'version' => ZOT_REVISION)
 	);
 	return($x);
 }
@@ -100,7 +103,7 @@ function zot_finger($webbie,$channel) {
 		$url = 'https://' . $host;
 	}
 	
-	$rhs = '/.well-known/zot-guid';
+	$rhs = '/.well-known/zot-info';
 
 	if($channel) {
 		$postvars = array(
@@ -146,7 +149,7 @@ function zot_refresh($them,$channel) {
 	if(! $guid_hash)
 		return;
 	
-	$rhs = '/.well-known/zot-guid';
+	$rhs = '/.well-known/zot-info';
 
 	$postvars = array(
 		'guid_hash'  => $guid_hash,
@@ -206,17 +209,16 @@ function zot_refresh($them,$channel) {
 }
 
 		
-function zot_gethub($arr) {
-
-	if((x($arr,'guid')) && (x($arr,'guid_sig')) && (x($arr,'hub')) && (x($arr,'hub_sig'))) {
+function zot_gethub($jarr) {
+	if($jarr->guid && $jarr->guid_sig && $jarr->hub && $jarr->hub_sig) {
 		$r = q("select * from hubloc 
 				where hubloc_guid = '%s' and hubloc_guid_sig = '%s' 
 				and hubloc_url = '%s' and hubloc_url_sig = '%s'
 				limit 1",
-			dbesc($arr['guid']),
-			dbesc($arr['guid_sig']),
-			dbesc($arr['hub']),
-			dbesc($arr['hub_sig'])
+			dbesc($jarr->guid),
+			dbesc($jarr->guid_sig),
+			dbesc($jarr->hub),
+			dbesc($jarr->hub_sig)
 		);
 		if($r && count($r))
 			return $r[0];
@@ -225,39 +227,23 @@ function zot_gethub($arr) {
 }
 
 function zot_register_hub($arr) {
-	$total = 0;
-	if((x($arr,'hub')) && (x($arr,'guid'))) {
-		$x = z_fetch_url($arr['hub'] . '/.well-known/zot-guid/' . $arr['guid']);
+
+	$result = array('success' => false);
+
+	if($arr->hub && $arr->hub_sig && $arr->guid && $arr->guid_sig) {
+
+		$guid_hash = base64url_encode(hash('whirlpool',$arr->guid . $arr->guid_sig, true));
+
+		$x = z_fetch_url($arr->hub . '/.well-known/zot-info/?f=&hash=' . $guid_hash);
+
 		if($x['success']) {
 			$record = json_decode($x['body']);
-			if($record->hub && count($record->hub)) {
-				foreach($record->hub as $h) {
-					// store any hubs we don't know about
-					if( ! zot_gethub(
-							array('guid' => $arr['guid'],
-								'guid_sig' => $arr['guid_sig'],
-								'hub' => $h->url, 
-								'hub_sig' => $h->url_sig))) {
-						$r = q("insert into hubloc (hubloc_guid, hubloc_guid_sig, hubloc_flags, hubloc_url, 
-								hubloc_url_sig, hubloc_callback, hubloc_sitekey, hubloc_key)
-							values ( '%s', '%s', %d, '%s', '%s', '%s', '%s', '%s' )",
-							dbesc($arr['guid']),
-							dbesc($arr['guid_sig']),
-							intval((($h->primary) ? HUBLOC_FLAGS_PRIMARY : 0) | HUBLOC_FLAGS_UNVERIFIED ),
-							dbesc($h->url),
-							dbesc($h->url_sig),
-							dbesc($h->callback),
-							dbesc($h->sitekey),
-							dbesc($record->key)
-						);
-						if($r)
-							$total ++;
-					}
-				}
-			}
+			$c = import_xchan_from_json($record);
+			if($c['success'])
+				$result['success'] = true;			
 		}
 	}
-	return $total;
+	return $result;
 }
 
 

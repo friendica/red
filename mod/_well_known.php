@@ -9,7 +9,7 @@ function _well_known_init(&$a){
 				hostxrd_init($a);
 				break;
 
-			case 'zot-guid':
+			case 'zot-info':
 				$a->argc -= 1;
 				array_shift($a->argv);
 				$a->argv[0] = 'zfinger';
