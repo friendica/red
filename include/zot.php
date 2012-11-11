@@ -59,9 +59,9 @@ function zot_verify(&$item,$identity) {
 
 
 
-function zot_notify($channel,$url) {
+function zot_notify($channel,$url,$type = 'notify') {
 	$x = z_post_url($url, array(
-		'type' => 'notify',
+		'type' => $type,
 		'guid' => $channel['channel_guid'],
 		'guid_sig' => base64url_encode($guid,$channel['prvkey']),
 		'hub' => z_root(),
@@ -122,6 +122,86 @@ function zot_finger($webbie,$channel) {
 	}
 	
 	return $result;	 
+
+}
+
+function zot_refresh($them,$channel) {
+
+	if($them['hubloc_url'])
+		$url = $them['hubloc_url'];
+	else {
+		$r = q("select hubloc_url from hubloc where hubloc_hash = '%s' and hubloc_flags & %d limit 1",
+			dbesc($them['xchan_hash']),
+			intval(HUBLOC_FLAGS_PRIMARY)
+		);
+		if($r)
+			$url = $r[0]['hubloc_url'];
+	}
+	if(! $url)
+		return;
+
+	if($them['xchan_hash'])
+		$guid_hash = $them['xchan_hash'];
+	
+	if(! $guid_hash)
+		return;
+	
+	$rhs = '/.well-known/zot-guid';
+
+	$postvars = array(
+		'guid_hash'  => $guid_hash,
+		'target'     => $channel['channel_guid'],
+		'target_sig' => $channel['channel_guid_sig'],
+		'key'        => $channel['channel_pubkey']
+	);
+	$result = z_post_url($url . $rhs,$postvars);
+	
+	if($result['success']) {
+
+		$j = json_decode($result['body']);
+
+		$x = import_xchan_from_json($j);
+
+		if(! $x['success']) 
+			return $x;
+
+		$xchan_hash = $x['hash'];
+
+		$their_perms = 0;
+
+		$global_perms = get_perms();
+
+		if($j->permissions->data) {
+			$permissions = aes_unencapsulate(array(
+				'data' => $j->permissions->data,
+				'key'  => $j->permissions->key,
+				'iv'   => $j->permissions->iv),
+				$channel['channel_prvkey']);
+			if($permissions)
+				$permissions = json_decode($permissions);
+			logger('decrypted permissions: ' . print_r($permissions,true), LOGGER_DATA);
+		}
+		else
+			$permissions = $j->permissions;
+
+		foreach($permissions as $k => $v) {
+			if($v) {
+				$their_perms = $their_perms | intval($global_perms[$k][1]);
+			}
+		}
+
+		$r = q("update abook set their_perms = %d where abook_xchan = '%s' and abook_channel = %d limit 1",
+			intval($their_perms),
+			dbesc($channel['channel_hash']),
+			intval($channel['channel_id'])
+		);
+		if(! $r)
+			logger('abook update failed');
+	
+		return true;
+
+	}
+	return false;
 
 }
 

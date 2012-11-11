@@ -7,7 +7,7 @@ function zfinger_init(&$a) {
 
 	$ret = array('success' => false);
 
-	$zguid   = ((x($_REQUEST,'guid'))        ? $_REQUEST['guid']       : '');
+	$zhash   = ((x($_REQUEST,'guid_hash'))   ? $_REQUEST['guid_hash']  : '');
 	$zaddr   = ((x($_REQUEST,'address'))     ? $_REQUEST['address']    : '');
 	$ztarget = ((x($_REQUEST,'target'))      ? $_REQUEST['target']     : '');
 	$zsig    = ((x($_REQUEST,'target_sig'))  ? $_REQUEST['target_sig'] : '');
@@ -25,8 +25,8 @@ function zfinger_init(&$a) {
 
 	if(strlen($zguid)) {
 		$r = q("select channel.*, xchan.* from channel left join xchan on channel_hash = xchan_hash 
-			where channel_guid = '%s' limit 1",
-			dbesc($zguid)
+			where channel_hash = '%s' limit 1",
+			dbesc($zhash)
 		);
 	}
 	elseif(strlen($zaddr)) {
