@@ -71,7 +71,7 @@ function zot_notify($channel,$url,$type = 'notify',$recipients = null, $remote_k
 		)), 
 		'recipients' => json_encode($recipients), 
 		'callback' => '/post',
-		'version' => ZOT_REVISION)
+		'version' => ZOT_REVISION
 	);
 
 	// Hush-hush ultra top-secret mode
