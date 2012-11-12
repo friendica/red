@@ -59,8 +59,9 @@ function zot_verify(&$item,$identity) {
 
 
 
-function zot_notify($channel,$url,$type = 'notify',$recipients = null) {
-	$x = z_post_url($url, array(
+function zot_notify($channel,$url,$type = 'notify',$recipients = null, $remote_key = null) {
+
+	$params = array(
 		'type' => $type,
 		'sender' => json_encode(array(
 			'guid' => $channel['channel_guid'],
@@ -72,6 +73,14 @@ function zot_notify($channel,$url,$type = 'notify',$recipients = null) {
 		'callback' => '/post',
 		'version' => ZOT_REVISION)
 	);
+
+	// Hush-hush ultra top-secret mode
+
+	if($remote_key) {
+		$params = aes_encapsulate($params,$remote_key);
+	}
+
+	$x = z_post_url($url,$prams);
 	return($x);
 }
 

@@ -341,7 +341,12 @@ function sanitise_acl(&$item) {
 if(! function_exists('perms2str')) {
 function perms2str($p) {
 	$ret = '';
-	$tmp = $p;
+
+	if(is_array($p))
+		$tmp = $p;
+	else
+		$tmp = explode(',',$p);
+
 	if(is_array($tmp)) {
 		array_walk($tmp,'sanitise_acl');
 		$ret = implode('',$tmp);
