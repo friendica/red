@@ -87,7 +87,7 @@ mod/
 + apps.php
 + attach.php
 ? auth.php
-  cb.php
+- cb.php
   common.php
   community.php
   contactgroup.php

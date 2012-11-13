@@ -202,7 +202,7 @@ function z_fetch_url($url,$binary = false, &$redirects = 0, $timeout = 0, $accep
 	}
 
 	@curl_setopt($ch, CURLOPT_RETURNTRANSFER,true);
-	@curl_setopt($ch, CURLOPT_USERAGENT, "Mozilla/5.0 (compatible; Friendica)");
+	@curl_setopt($ch, CURLOPT_USERAGENT, "Mozilla/5.0 (compatible; Friendica Red)");
 
 
 	if(intval($timeout)) {
@@ -212,11 +212,8 @@ function z_fetch_url($url,$binary = false, &$redirects = 0, $timeout = 0, $accep
 		$curl_time = intval(get_config('system','curl_timeout'));
 		@curl_setopt($ch, CURLOPT_TIMEOUT, (($curl_time !== false) ? $curl_time : 60));
 	}
-	// by default we will allow self-signed certs
-	// but you can override this
 
-	$check_cert = get_config('system','verifyssl');
-	@curl_setopt($ch, CURLOPT_SSL_VERIFYPEER, (($check_cert) ? true : false));
+	@curl_setopt($ch, CURLOPT_SSL_VERIFYPEER, true);
 
 	$prx = get_config('system','proxy');
 	if(strlen($prx)) {
@@ -310,8 +307,9 @@ function z_post_url($url,$params, $headers = null, &$redirects = 0, $timeout = 0
 	if($headers)
 		curl_setopt($ch, CURLOPT_HTTPHEADER, $headers);
 
-	$check_cert = get_config('system','verifyssl');
-	curl_setopt($ch, CURLOPT_SSL_VERIFYPEER, (($check_cert) ? true : false));
+
+	curl_setopt($ch, CURLOPT_SSL_VERIFYPEER, true);
+
 	$prx = get_config('system','proxy');
 	if(strlen($prx)) {
 		curl_setopt($ch, CURLOPT_HTTPPROXYTUNNEL, 1);
