@@ -6,7 +6,7 @@ function viewsrc_content(&$a) {
 	$o = '';
 
 	$item_id = ((argc() > 1) ? intval(argv(1)) : 0);
-	$raw_output = ((argc() > 2 && argv[2] === 'raw') ? true : false);
+	$json    = ((argc() > 2 && argv[2] === 'json') ? true : false);
 
 	if(! local_user()) {
 		notice( t('Permission denied.') . EOL);
@@ -25,7 +25,7 @@ function viewsrc_content(&$a) {
 		);
 
 		if($r)
-			$o = (($raw_output) ? $r[0]['body'] : str_replace("\n",'<br />',$r[0]['body']));
+			$o = (($json) ? json_encode($r[0]['body']) : str_replace("\n",'<br />',$r[0]['body']));
 	}
 
 	if(is_ajax()) {
