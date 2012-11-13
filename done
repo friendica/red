@@ -33,7 +33,7 @@ include/
   delivery.php
 + directory.php
 - email.php
-  enotify.php
++ enotify.php
   event.php
 + expire.php
   fcontact.php
@@ -56,7 +56,7 @@ include/
   oauth.php
   oembed.php
   onepoll.php
-  Photo.php
+? Photo.php
   pidfile.php
 ? plugin.php
   poller.php
@@ -65,7 +65,7 @@ include/
   queue_fn.php
   queue.php
   quoteconvert.php
-  salmon.php
+- salmon.php
   Scrape.php
 + security.php
 ? session.php
@@ -118,7 +118,7 @@ mod/
   install.php
   invite.php
 + item.php
-  like.php
++ like.php
   lockview.php
 + login.php
   lostpass.php
@@ -172,8 +172,8 @@ mod/
   update_profile.php
   viewcontacts.php
   view.php
-  viewsrc.php
-  wall_attach.php
++ viewsrc.php
+? wall_attach.php (needs remote permissions refactor)
   wallmessage.php
 ? wall_upload.php (needs remote permissions refactor)
   webfinger.php
