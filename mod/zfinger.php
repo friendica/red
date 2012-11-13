@@ -7,11 +7,13 @@ function zfinger_init(&$a) {
 
 	$ret = array('success' => false);
 
-	$zhash   = ((x($_REQUEST,'guid_hash'))   ? $_REQUEST['guid_hash']  : '');
-	$zaddr   = ((x($_REQUEST,'address'))     ? $_REQUEST['address']    : '');
-	$ztarget = ((x($_REQUEST,'target'))      ? $_REQUEST['target']     : '');
-	$zsig    = ((x($_REQUEST,'target_sig'))  ? $_REQUEST['target_sig'] : '');
-	$zkey    = ((x($_REQUEST,'key'))         ? $_REQUEST['key']        : '');
+	$zhash     = ((x($_REQUEST,'guid_hash'))  ? $_REQUEST['guid_hash']  : '');
+	$zguid     = ((x($_REQUEST,'guid'))       ? $_REQUEST['guid']       : '');
+	$zguid_sig = ((x($_REQUEST,'guid_sig'))   ? $_REQUEST['guid_sig']   : '');
+	$zaddr     = ((x($_REQUEST,'address'))    ? $_REQUEST['address']    : '');
+	$ztarget   = ((x($_REQUEST,'target'))     ? $_REQUEST['target']     : '');
+	$zsig      = ((x($_REQUEST,'target_sig')) ? $_REQUEST['target_sig'] : '');
+	$zkey      = ((x($_REQUEST,'key'))        ? $_REQUEST['key']        : '');
 
 	if($ztarget) {
 		if((! $zkey) || (! $zsig) || (! rsa_verify($ztarget,base64url_decode($zsig),$zkey))) {
@@ -23,10 +25,17 @@ function zfinger_init(&$a) {
 
 	$r = null;
 
-	if(strlen($zguid)) {
+	if(strlen($zhash)) {
 		$r = q("select channel.*, xchan.* from channel left join xchan on channel_hash = xchan_hash 
 			where channel_hash = '%s' limit 1",
 			dbesc($zhash)
+		);
+	}
+	if(strlen($zguid) && strlen($zguid_sig)) {
+		$r = q("select channel.*, xchan.* from channel left join xchan on channel_hash = xchan_hash 
+			where channel_guid = '%s' and channel_guid_sig = '%s' limit 1",
+			dbesc($zguid),
+			dbesc($zguid_sig)
 		);
 	}
 	elseif(strlen($zaddr)) {
@@ -40,7 +49,7 @@ function zfinger_init(&$a) {
 		json_return_and_die($ret);
 	}
 
-	if(! ($r && count($r))) {
+	if(! $r) {
 		$ret['message'] = 'Item not found.';
 		json_return_and_die($ret);
 	}
@@ -48,6 +57,8 @@ function zfinger_init(&$a) {
 	$e = $r[0];
 
 	$id = $e['channel_id'];
+
+//  This is for birthdays and keywords, but must check access permissions
 //	$r = q("select contact.*, profile.* 
 //		from contact left join profile on contact.uid = profile.uid
 //		where contact.uid = %d && contact.self = 1 and profile.is_default = 1 limit 1",

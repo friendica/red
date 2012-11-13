@@ -69,10 +69,12 @@ function zot_notify($channel,$url,$type = 'notify',$recipients = null, $remote_k
 			'hub' => z_root(),
 			'hub_sig' => base64url_encode(z_root,$channel['prvkey'])
 		)), 
-		'recipients' => json_encode($recipients), 
 		'callback' => '/post',
 		'version' => ZOT_REVISION
 	);
+
+	if($recipients)
+		$params['recipients'] = json_encode($recipients);
 
 	// Hush-hush ultra top-secret mode
 
@@ -137,7 +139,7 @@ function zot_finger($webbie,$channel) {
 
 }
 
-function zot_refresh($them,$channel) {
+function zot_refresh($them,$channel = null) {
 
 	if($them['hubloc_url'])
 		$url = $them['hubloc_url'];
@@ -152,20 +154,26 @@ function zot_refresh($them,$channel) {
 	if(! $url)
 		return;
 
-	if($them['xchan_hash'])
-		$guid_hash = $them['xchan_hash'];
-	
-	if(! $guid_hash)
-		return;
-	
+	$postvars = array();
+
+	if($channel) {
+		$postvars['target']     = $channel['channel_guid'];
+		$postvars['target_sig'] = $channel['channel_guid_sig'];
+		$postvars['key']        = $channel['channel_pubkey'];
+	}
+
+	if(array_key_exists('xchan_addr',$them) && $them['xchan_addr'])
+		$postvars['address'] = $them['xchan_addr'];
+	if(array_key_exists('xchan_hash',$them) && $them['xchan_hash'])
+		$postvars['guid_hash'] = $them['xchan_hash'];
+	if(array_key_exists('xchan_guid',$them) && $them['xchan_guid'] 
+		&& array_key_exists('xchan_guid_sig',$them) && $them['xchan_guid_sig']) {
+		$postvars['guid'] = $them['xchan_guid'];
+		$postvars['guid_sig'] = $them['xchan_guid_sig'];
+	}
+
 	$rhs = '/.well-known/zot-info';
 
-	$postvars = array(
-		'guid_hash'  => $guid_hash,
-		'target'     => $channel['channel_guid'],
-		'target_sig' => $channel['channel_guid_sig'],
-		'key'        => $channel['channel_pubkey']
-	);
 	$result = z_post_url($url . $rhs,$postvars);
 	
 	if($result['success']) {
@@ -181,37 +189,39 @@ function zot_refresh($them,$channel) {
 
 		$their_perms = 0;
 
-		$global_perms = get_perms();
 
-		if($j->permissions->data) {
-			$permissions = aes_unencapsulate(array(
-				'data' => $j->permissions->data,
-				'key'  => $j->permissions->key,
-				'iv'   => $j->permissions->iv),
-				$channel['channel_prvkey']);
-			if($permissions)
-				$permissions = json_decode($permissions);
-			logger('decrypted permissions: ' . print_r($permissions,true), LOGGER_DATA);
-		}
-		else
-			$permissions = $j->permissions;
-
-		foreach($permissions as $k => $v) {
-			if($v) {
-				$their_perms = $their_perms | intval($global_perms[$k][1]);
+		if($channel) {
+			$global_perms = get_perms();
+			if($j->permissions->data) {
+				$permissions = aes_unencapsulate(array(
+					'data' => $j->permissions->data,
+					'key'  => $j->permissions->key,
+					'iv'   => $j->permissions->iv),
+					$channel['channel_prvkey']);
+				if($permissions)
+					$permissions = json_decode($permissions);
+				logger('decrypted permissions: ' . print_r($permissions,true), LOGGER_DATA);
 			}
+			else
+				$permissions = $j->permissions;
+
+			foreach($permissions as $k => $v) {
+				if($v) {
+					$their_perms = $their_perms | intval($global_perms[$k][1]);
+				}
+			}
+
+			$r = q("update abook set their_perms = %d 
+				where abook_xchan = '%s' and abook_channel = %d limit 1",
+				intval($their_perms),
+				dbesc($channel['channel_hash']),
+				intval($channel['channel_id'])
+			);
+			if(! $r)
+				logger('abook update failed');
 		}
 
-		$r = q("update abook set their_perms = %d where abook_xchan = '%s' and abook_channel = %d limit 1",
-			intval($their_perms),
-			dbesc($channel['channel_hash']),
-			intval($channel['channel_id'])
-		);
-		if(! $r)
-			logger('abook update failed');
-	
 		return true;
-
 	}
 	return false;
 
