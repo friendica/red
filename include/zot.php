@@ -213,11 +213,14 @@ function zot_refresh($them,$channel = null) {
 			}
 
 			$r = q("update abook set abook_their_perms = %d 
-				where abook_xchan = '%s' and abook_channel = %d limit 1",
+				where abook_xchan = '%s' and abook_channel = %d 
+				and not (abook_flags & %d) limit 1",
 				intval($their_perms),
-				dbesc($channel['channel_hash']),
-				intval($channel['channel_id'])
+				dbesc($x['hash']),
+				intval($channel['channel_id']),
+				intval(ABOOK_FLAG_SELF)
 			);
+
 			if(! $r)
 				logger('abook update failed');
 		}
