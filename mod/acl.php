@@ -139,10 +139,10 @@ function acl_init(&$a){
 		);
 	}
 	elseif($type == 'a') {
-		$r = q("SELECT `id`, `name`, `nick`, `micro`, `network`, `url`, `attag` FROM `contact` 
-			WHERE `uid` = %d AND `pending` = 0
-			$sql_extra2
-			ORDER BY `name` ASC ",
+		$r = q("SELECT abook_id as id, xchan_name as name, xchan_addr as nick, xchan_photo_s as micro, xchan_network as network, xchan_url as url, xchan_addr as attag FROM abook left join xchan on abook_xchan = xchan_hash
+			WHERE abook_channel = %d
+			$sql_extra3
+			ORDER BY xchan_name ASC ",
 			intval(local_user())
 		);
 	}
@@ -160,17 +160,17 @@ function acl_init(&$a){
 
 	if($type == 'm' || $type == 'a' || $type == 'x') {
 		$x = array();
-		$x['query'] = $search;
-		$x['photos'] = array();
-		$x['links'] = array();
+		$x['query']       = $search;
+		$x['photos']      = array();
+		$x['links']       = array();
 		$x['suggestions'] = array();
-		$x['data'] = array();
+		$x['data']        = array();
 		if(count($r)) {
 			foreach($r as $g) {
-				$x['photos'][] = $g['micro'];
-				$x['links'][] = $g['url'];
+				$x['photos'][]      = $g['micro'];
+				$x['links'][]       = $g['url'];
 				$x['suggestions'][] = (($type === 'x') ? '@' : '') . $g['name'];
-				$x['data'][] = intval($g['id']);
+				$x['data'][]        = intval($g['id']);
 			}
 		}
 		echo json_encode($x);
@@ -180,13 +180,13 @@ function acl_init(&$a){
 	if(count($r)) {
 		foreach($r as $g){
 			$contacts[] = array(
-				"type"  => "c",
-				"photo" => $g['micro'],
-				"name"  => $g['name'],
-				"id"	=> intval($g['id']),
+				"type"    => "c",
+				"photo"   => $g['micro'],
+				"name"    => $g['name'],
+				"id"	  => intval($g['id']),
 				"network" => $g['network'],
-				"link" => $g['url'],
-				"nick" => ($g['attag']) ? $g['attag'] : $g['nick'],
+				"link"    => $g['url'],
+				"nick"    => $g['nick'],
 			);
 		}			
 	}

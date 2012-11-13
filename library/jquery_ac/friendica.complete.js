@@ -167,8 +167,10 @@
         default:
           return;
       }
-      e.stopImmediatePropagation();
-      e.preventDefault();
+      if(e.keyCode != 13) {
+         e.stopImmediatePropagation();
+         e.preventDefault();
+      }
     },
 
     onKeyUp: function(e) {

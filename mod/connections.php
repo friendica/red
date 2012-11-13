@@ -544,7 +544,7 @@ EOT;
 		$search_txt = dbesc(protect_sprintf(preg_quote($search)));
 		$searching = true;
 	}
-	$sql_extra .= (($searching) ? " AND xchan_name '$search_txt' " : "");
+	$sql_extra .= (($searching) ? protect_sprintf(" AND xchan_name like '%$search_txt%' ") : "");
 
 	if($nets)
 		$sql_extra .= sprintf(" AND xchan_network = '%s' ", dbesc($nets));
@@ -573,12 +573,8 @@ EOT;
 
 		foreach($r as $rr) {
 
-			$url = "magic/{$rr['abook_id']}";
-			$sparkle = ' class="sparkle" ';
-
-
 			$contacts[] = array(
-				'img_hover' => sprintf( t('Visit %s\'s profile [%s]'),$rr['xchan_name'],$rr['xchan_url']),
+				'img_hover' => sprintf( t('%1$s [%2$s]'),$rr['xchan_name'],$rr['xchan_url']),
 				'edit_hover' => t('Edit contact'),
 				'photo_menu' => contact_photo_menu($rr),
 				'id' => $rr['abook_id'],
@@ -588,8 +584,8 @@ EOT;
 				'name' => $rr['xchan_name'],
 				'username' => $rr['xchan_name'],
 				'sparkle' => $sparkle,
-				'itemurl' => $rr['xchan_url'],
-				'url' => $url,
+				'edit' => z_root() . '/connections/' . $rr['abook_id'],
+				'url' => $rr['xchan_url'],
 				'network' => network_to_name($rr['network']),
 			);
 		}
