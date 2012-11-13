@@ -9,6 +9,8 @@ require_once('include/zot.php');
 	
 function post_post(&$a) {
 
+	logger('mod_zot: ' . print_r($_REQUEST,true), LOGGER_DEBUG);
+
 	$ret = array('result' => false);
 
 	if(array_key_exists('iv',$_REQUEST)) {
@@ -31,6 +33,7 @@ function post_post(&$a) {
 		$result = zot_register_hub($j_sender);
 		if((! $result['success']) || (! zot_gethub($j_sender))) {
 			$ret['message'] = 'Hub not available.';
+			logger('mod_zot: no hub');
 			json_return_and_die($ret);
 		}
 	}

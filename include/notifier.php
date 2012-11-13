@@ -40,41 +40,74 @@ require_once('include/html2plain.php');
  *		wall-new				(in photos.php, item.php)
  *
  * and ITEM_ID is the id of the item in the database that needs to be sent to others.
+ *
+ * ZOT 
+ *       permission_updated     abook_id
+ *
  */
+
+require_once('include/cli_startup.php');
+require_once('include/zot.php');
 
 
 function notifier_run($argv, $argc){
-	global $a, $db;
 
-	if(is_null($a)){
-		$a = new App;
-	}
-  
-	if(is_null($db)) {
-		@include(".htconfig.php");
-		require_once("dba.php");
-		$db = new dba($db_host, $db_user, $db_pass, $db_data);
-		        unset($db_host, $db_user, $db_pass, $db_data);
-	}
+	cli_startup();
+
+	$a = get_app();
 
 	require_once("session.php");
 	require_once("datetime.php");
 	require_once('include/items.php');
 	require_once('include/bbcode.php');
 
-	load_config('config');
-	load_config('system');
-
-	load_hooks();
-
 	if($argc < 3)
 		return;
 
-	$a->set_baseurl(get_config('system','url'));
 
 	logger('notifier: invoked: ' . print_r($argv,true), LOGGER_DEBUG);
 
 	$cmd = $argv[1];
+
+	$item_id = $argv[2];
+
+	$extra = (($argc > 3) ? $argv[3] : null);
+
+	if($cmd == 'permission_update') {
+		// Get the recipient	
+		$r = q("select abook.*, hubloc.* from abook 
+			left join hubloc on hubloc_hash = abook_xchan
+			where abook_id = %d limit 1",
+			intval($item_id)
+		);
+		if($r) {
+			// Get the sender
+			$s = q("select * from channel where channel_id = %d limit 1",
+				intval($r[0]['abook_channel'])
+			);
+			if($s) {
+
+				// send a refresh message to each hub they have registered here	
+				$h = q("select * from hubloc where hubloc_hash = '%s'",
+					dbesc($r[0]['hubloc_hash'])
+				);
+				if($h) {
+					foreach($h as $hh) {
+						$result = zot_notify($s[0],$hh['hubloc_callback'],'refresh',array(array(
+							'guid' => $hh['hubloc_guid'],
+							'guid_sig' => $hh['hubloc_guid_sig'],
+							'url' => $hh['hubloc_url'])
+						));	
+						// should probably queue these
+					}
+				}
+			}
+		}
+	}	
+
+return;
+
+
 
 	switch($cmd) {
 		case 'mail':

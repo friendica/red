@@ -135,7 +135,7 @@ function get_all_perms($uid,$observer,$internal_use = true) {
 			// Check if this is a write permission and they are being ignored
 			// This flag is only visible internally.
 
-			if(($internal_use) && (! $global_perms[$permission][2]) && ($x[0]['abook_flags'] & ABOOK_FLAG_IGNORED)) {
+			if(($internal_use) && (! $global_perms[$perm_name][2]) && ($x[0]['abook_flags'] & ABOOK_FLAG_IGNORED)) {
 				$ret[$perm_name] = false;
 				continue;
 			}
@@ -149,7 +149,7 @@ function get_all_perms($uid,$observer,$internal_use = true) {
 		// Permission granted to certain channels. Let's see if the observer is one of them
 
 		if(($r) && ($r[0][$channel_perm] & PERMS_SPECIFIC)) {
-			if(($x) && ($x[0]['abook_my_perms'] & $global_perms[$permission][1])) {
+			if(($x) && ($x[0]['abook_my_perms'] & $global_perms[$perm_name][1])) {
 				$ret[$perm_name] = true;
 				continue;
 			}

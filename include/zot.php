@@ -1,5 +1,6 @@
 <?php
 
+require_once('include/crypto.php');
 /**
  *
  * @function zot_new_uid($channel_nick)
@@ -65,9 +66,9 @@ function zot_notify($channel,$url,$type = 'notify',$recipients = null, $remote_k
 		'type' => $type,
 		'sender' => json_encode(array(
 			'guid' => $channel['channel_guid'],
-			'guid_sig' => base64url_encode($guid,$channel['prvkey']),
-			'hub' => z_root(),
-			'hub_sig' => base64url_encode(z_root,$channel['prvkey'])
+			'guid_sig' => base64url_encode(rsa_sign($channel['channel_guid'],$channel['channel_prvkey'])),
+			'url' => z_root(),
+			'url_sig' => base64url_encode(rsa_sign(z_root(),$channel['channel_prvkey']))
 		)), 
 		'callback' => '/post',
 		'version' => ZOT_REVISION
@@ -82,7 +83,7 @@ function zot_notify($channel,$url,$type = 'notify',$recipients = null, $remote_k
 		$params = aes_encapsulate($params,$remote_key);
 	}
 
-	$x = z_post_url($url,$prams);
+	$x = z_post_url($url,$params);
 	return($x);
 }
 
@@ -211,7 +212,7 @@ function zot_refresh($them,$channel = null) {
 				}
 			}
 
-			$r = q("update abook set their_perms = %d 
+			$r = q("update abook set abook_their_perms = %d 
 				where abook_xchan = '%s' and abook_channel = %d limit 1",
 				intval($their_perms),
 				dbesc($channel['channel_hash']),
@@ -229,15 +230,16 @@ function zot_refresh($them,$channel = null) {
 
 		
 function zot_gethub($jarr) {
-	if($jarr->guid && $jarr->guid_sig && $jarr->hub && $jarr->hub_sig) {
+
+	if($jarr->guid && $jarr->guid_sig && $jarr->url && $jarr->url_sig) {
 		$r = q("select * from hubloc 
 				where hubloc_guid = '%s' and hubloc_guid_sig = '%s' 
 				and hubloc_url = '%s' and hubloc_url_sig = '%s'
 				limit 1",
 			dbesc($jarr->guid),
 			dbesc($jarr->guid_sig),
-			dbesc($jarr->hub),
-			dbesc($jarr->hub_sig)
+			dbesc($jarr->url),
+			dbesc($jarr->url_sig)
 		);
 		if($r && count($r))
 			return $r[0];

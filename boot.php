@@ -1604,7 +1604,7 @@ if(! function_exists('proc_run')) {
 			return;
 
 		if(count($args) && $args[0] === 'php')
-			$args[0] = ((x($a->config,'php_path')) && (strlen($a->config['php_path'])) ? $a->config['php_path'] : 'php');
+			$args[0] = ((x($a->config,'system')) && (x($a->config['system'],'php_path')) && (strlen($a->config['system']['php_path'])) ? $a->config['system']['php_path'] : 'php');
 		for($x = 0; $x < count($args); $x ++)
 			$args[$x] = escapeshellarg($args[$x]);
 
