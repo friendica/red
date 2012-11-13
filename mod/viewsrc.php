@@ -6,7 +6,7 @@ function viewsrc_content(&$a) {
 	$o = '';
 
 	$item_id = ((argc() > 1) ? intval(argv(1)) : 0);
-	$json    = ((argc() > 2 && argv[2] === 'json') ? true : false);
+	$json    = ((argc() > 2 && argv(2) === 'json') ? true : false);
 
 	if(! local_user()) {
 		notice( t('Permission denied.') . EOL);
