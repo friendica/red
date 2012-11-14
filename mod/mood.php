@@ -96,6 +96,10 @@ function mood_init(&$a) {
 	}
 
 	call_hooks('post_local_end', $arr);
+
+	if($_SESSION['return_url'])
+		goaway(z_root() . '/' . $_SESSION['return_url']);
+
 	return;
 }
 

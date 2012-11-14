@@ -47,7 +47,6 @@ include/
   items.php
 + js_strings.php
 + language.php
-  lock.php
   message.php
 - msgclean.php
 ? nav.php
@@ -64,7 +63,6 @@ include/
   profile_selectors.php
   queue_fn.php
   queue.php
-  quoteconvert.php
 - salmon.php
   Scrape.php
 + security.php
@@ -126,7 +124,6 @@ mod/
 + manage.php
   match.php
   message.php
-  modexp.php
 ? mood.php
   msearch.php
 ? network.php
