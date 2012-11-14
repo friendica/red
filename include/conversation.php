@@ -83,7 +83,7 @@ function item_redir_and_replace_images($body, $images, $cid) {
  * Render actions localized
  */
 
-function localize_item(&$item,$brief = false){
+function localize_item(&$item){
 
 	$extracted = item_extract_images($item['body']);
 	if($extracted['images'])
@@ -93,18 +93,16 @@ function localize_item(&$item,$brief = false){
 
 	if (activity_match($item['verb'],ACTIVITY_LIKE) || activity_match($item['verb'],ACTIVITY_DISLIKE)){
 
-		$obj= json_decode($item['object']);
+		$obj= json_decode($item['object'],true);
 		
-//		logger('object: ' . print_r($obj,true));
-
-		if($obj->author && $obj->author->link)
-			$author_link = get_json_rel_link($obj->author->link,'alternate');
+		if($obj['author'] && $obj['author']['link'])
+			$author_link = get_rel_link($obj['author']['link'],'alternate');
 		else
 			$author_link = '';
 
-		$author_name = (($obj->author && $obj->author->name) ? $obj->author->name : '');
+		$author_name = (($obj['author'] && $obj['author']['name']) ? $obj['author']['name'] : '');
 
-		$item_url = get_json_rel_link($obj->link,'alternate');
+		$item_url = get_rel_link($obj['link'],'alternate');
 
 
 		// If we couldn't parse something useful, don't bother translating.
@@ -139,7 +137,7 @@ function localize_item(&$item,$brief = false){
 			elseif(activity_match($item['verb'],ACTIVITY_DISLIKE)) {
 				$bodyverb = t('%1$s doesn\'t like %2$s\'s %3$s');
 			}
-			$item['body'] = sprintf($bodyverb, $author, $objauthor, $plink);
+			$item['body'] = $item['localize'] = sprintf($bodyverb, $author, $objauthor, $plink);
 
 		}
 
@@ -149,56 +147,48 @@ function localize_item(&$item,$brief = false){
 
 		if ($item['obj_type']=="" || $item['obj_type']!== ACTIVITY_OBJ_PERSON) return;
 
-		$Aname = $item['author-name'];
-		$Alink = $item['author-link'];
+		$Aname = $item['author']['xchan_name'];
+		$Alink = $item['author']['xchan_url'];
 
-		$xmlhead="<"."?xml version='1.0' encoding='UTF-8' ?".">";
 
-		$obj = parse_xml_string($xmlhead.$item['object']);
-		$links = parse_xml_string($xmlhead."<links>".unxmlify($obj->link)."</links>");
+		$obj= json_decode($item['object'],true);
+		
+		$Blink = $Bphoto = '';
 
-		$Bname = $obj->title;
-		$Blink = ""; $Bphoto = "";
-		foreach ($links->link as $l){
-			$atts = $l->attributes();
-			switch($atts['rel']){
-				case "alternate": $Blink = $atts['href'];
-				case "photo": $Bphoto = $atts['href'];
-			}
-
+		if($obj['link']) {
+			$Blink  = get_rel_link($obj['link'],'alternate');
+			$Bphoto = get_rel_link($obj['link'],'photo');
 		}
+		$Bname = $obj['title'];
+
 
 		$A = '[url=' . zid($Alink) . ']' . $Aname . '[/url]';
 		$B = '[url=' . zid($Blink) . ']' . $Bname . '[/url]';
-		if ($Bphoto!="") $Bphoto = '[url=' . zid($Blink) . '][img]' . $Bphoto . '[/img][/url]';
+		if ($Bphoto!="") $Bphoto = '[url=' . zid($Blink) . '][img=80x80]' . $Bphoto . '[/img][/url]';
 
-		$item['body'] = sprintf( t('%1$s is now friends with %2$s'), $A, $B)."\n\n\n".$Bphoto;
-
+		$item['body'] = $item['localize'] = sprintf( t('%1$s is now friends with %2$s'), $A, $B);
+		$item['body'] .= "\n\n\n" . $Bphoto;
 	}
+
 	if (stristr($item['verb'],ACTIVITY_POKE)) {
 		$verb = urldecode(substr($item['verb'],strpos($item['verb'],'#')+1));
 		if(! $verb)
 			return;
 		if ($item['obj_type']=="" || $item['obj_type']!== ACTIVITY_OBJ_PERSON) return;
 
-		$Aname = $item['author-name'];
-		$Alink = $item['author-link'];
+		$Aname = $item['author']['xchan_name'];
+		$Alink = $item['author']['xchan_url'];
 
-		$xmlhead="<"."?xml version='1.0' encoding='UTF-8' ?".">";
 
-		$obj = parse_xml_string($xmlhead.$item['object']);
-		$links = parse_xml_string($xmlhead."<links>".unxmlify($obj->link)."</links>");
+		$obj= json_decode($item['object'],true);
+		
+		$Blink = $Bphoto = '';
 
-		$Bname = $obj->title;
-		$Blink = ""; $Bphoto = "";
-		foreach ($links->link as $l){
-			$atts = $l->attributes();
-			switch($atts['rel']){
-				case "alternate": $Blink = $atts['href'];
-				case "photo": $Bphoto = $atts['href'];
-			}
-
+		if($obj['link']) {
+			$Blink  = get_rel_link($obj['link'],'alternate');
+			$Bphoto = get_rel_link($obj['link'],'photo');
 		}
+		$Bname = $obj['title'];
 
 		$A = '[url=' . zid($Alink) . ']' . $Aname . '[/url]';
 		$B = '[url=' . zid($Blink) . ']' . $Bname . '[/url]';
@@ -215,7 +205,8 @@ function localize_item(&$item,$brief = false){
 
 		// then do the sprintf on the translation string
 
-		$item['body'] = sprintf($txt, $A, $B). "\n\n\n" . $Bphoto;
+		$item['body'] = $item['localize'] = sprintf($txt, $A, $B);
+		$item['body'] .= "\n\n\n" . $Bphoto;
 
 	}
 	if (stristr($item['verb'],ACTIVITY_MOOD)) {
@@ -223,14 +214,18 @@ function localize_item(&$item,$brief = false){
 		if(! $verb)
 			return;
 
-		$Aname = $item['author-name'];
-		$Alink = $item['author-link'];
+		$Aname = $item['author']['xchan_name'];
+		$Alink = $item['author']['xchan_url'];
+
 		$A = '[url=' . zid($Alink) . ']' . $Aname . '[/url]';
 		
 		$txt = t('%1$s is currently %2$s');
 
 		$item['body'] = sprintf($txt, $A, t($verb));
 	}
+/*
+// FIXME store parent item as object or target
+// (and update to json storage)
 
  	if (activity_match($item['verb'],ACTIVITY_TAG)) {
 		$r = q("SELECT * from `item`,`contact` WHERE 
@@ -269,13 +264,14 @@ function localize_item(&$item,$brief = false){
 		$item['body'] = sprintf( t('%1$s tagged %2$s\'s %3$s with %4$s'), $author, $objauthor, $plink, $tag );
 
 	}
+
 	if (activity_match($item['verb'],ACTIVITY_FAVORITE)){
 
 		if ($item['obj_type']== "")
 			return;
 
-		$Aname = $item['author-name'];
-		$Alink = $item['author-link'];
+		$Aname = $item['author']['xchan_name'];
+		$Alink = $item['author']['xchan_url'];
 
 		$xmlhead="<"."?xml version='1.0' encoding='UTF-8' ?".">";
 
@@ -297,6 +293,8 @@ function localize_item(&$item,$brief = false){
 			}
 		}
 	}
+*/
+
 	$matches = null;
 	if(preg_match_all('/@\[url=(.*?)\]/is',$item['body'],$matches,PREG_SET_ORDER)) {
 		foreach($matches as $mtch) {

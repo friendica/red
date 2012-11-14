@@ -364,7 +364,7 @@ function item_message_id() {
 		$dups = false;
 		$hash = random_string();
 
-		$uri = $hash . '@' . $hostname;
+		$uri = $hash . '@' . get_app()->get_hostname();
 
 		$r = q("SELECT `id` FROM `item` WHERE `uri` = '%s' LIMIT 1",
 			dbesc($uri));
@@ -527,8 +527,8 @@ function contact_block() {
 	$o = '';
 	$a = get_app();
 
-logger('contact block');
 	$shown = get_pconfig($a->profile['uid'],'system','display_friend_count');
+
 	if($shown === false)
 		$shown = 24;
 	if($shown == 0)
@@ -1730,11 +1730,11 @@ function find_xchan_in_array($xchan,$arr) {
 	return array();
 }
 
-function get_json_rel_link($j,$rel) {
+function get_rel_link($j,$rel) {
 	if(count($j))
 		foreach($j as $l)
-			if($l->rel === $rel)
-				return $l->href;
+			if($l['rel'] === $rel)
+				return $l['href'];
 	return '';
 }
 

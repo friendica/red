@@ -127,7 +127,7 @@ mod/
   match.php
   message.php
   modexp.php
-  mood.php
+? mood.php
   msearch.php
 ? network.php
   nogroup.php
