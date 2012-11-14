@@ -82,7 +82,8 @@ function item_redir_and_replace_images($body, $images, $cid) {
 /**
  * Render actions localized
  */
-function localize_item(&$item){
+
+function localize_item(&$item,$brief = false){
 
 	$extracted = item_extract_images($item['body']);
 	if($extracted['images'])
@@ -123,7 +124,10 @@ function localize_item(&$item){
 					break;
 				case ACTIVITY_OBJ_NOTE:
 				default:
-					$post_type = t('status');
+					if(! ($item_flags & ITEM_THREAD_TOP))
+						$post_type = t('comment');
+					else
+						$post_type = t('status');
 					break;
 			}
 

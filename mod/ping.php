@@ -102,6 +102,7 @@ function ping_init(&$a) {
 		);
 
 		if($r) {
+			xchan_query($r);
 			foreach($r as $item) {
 				if((argv(1) === 'home') && (! ($item['item_flags'] & ITEM_HOME)))
 					continue;
