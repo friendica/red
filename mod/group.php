@@ -115,15 +115,19 @@ function group_content(&$a) {
 		// NOTREACHED
 	}
 
-	if(($a->argc > 2) && intval($a->argv[1]) && intval($a->argv[2])) {
+
+	if((argc() > 2) && intval(argv(1)) && argv(2)) {
 		check_form_security_token_ForbiddenOnErr('group_member_change', 't');
-		
-		$r = q("SELECT `id` FROM `contact` WHERE `id` = %d AND `uid` = %d and `self` = 0 and `blocked` = 0 AND `pending` = 0 LIMIT 1",
-			intval($a->argv[2]),
-			intval(local_user())
+
+		$r = q("SELECT abook_xchan from abook where abook_xchan = '%s' and abook_channel = %d and not (abook_flags & %d) and not (abook_flags & %d) limit 1",
+			dbesc(argv(2)),
+			intval(local_user()),
+			intval(ABOOK_FLAG_SELF),
+			intval(ABOOK_FLAG_BLOCKED)
 		);
 		if(count($r))
-			$change = intval($a->argv[2]);
+			$change = argv(2);
+
 	}
 
 	if(($a->argc > 1) && (intval($a->argv[1]))) {
@@ -138,14 +142,19 @@ function group_content(&$a) {
 			goaway($a->get_baseurl() . '/connnections');
 		}
 		$group = $r[0];
+
 		$members = group_get_members($group['id']);
+
 		$preselected = array();
 		if(count($members))	{
 			foreach($members as $member)
-				$preselected[] = $member['id'];
+				$preselected[] = $member['xchan_hash'];
 		}
 
+
+
 		if($change) {
+
 			if(in_array($change,$preselected)) {
 				group_rmv_member(local_user(),$group['name'],$change);
 			}
@@ -154,12 +163,14 @@ function group_content(&$a) {
 			}
 
 			$members = group_get_members($group['id']);
+
 			$preselected = array();
 			if(count($members))	{
 				foreach($members as $member)
-					$preselected[] = $member['id'];
+					$preselected[] = $member['xchan_hash'];
 			}
 		}
+
 
 
 		$drop_tpl = get_markup_template('group_drop.tpl');
@@ -195,23 +206,25 @@ function group_content(&$a) {
 	$sec_token = addslashes(get_form_security_token('group_member_change'));
 	$textmode = (($switchtotext && (count($members) > $switchtotext)) ? true : false);
 	foreach($members as $member) {
-		if($member['url']) {
-			$member['click'] = 'groupChangeMember(' . $group['id'] . ',' . $member['id'] . ',\'' . $sec_token . '\'); return true;';
+		if($member['xchan_url']) {
+			$member['click'] = 'groupChangeMember(' . $group['id'] . ',\'' . $member['xchan_hash'] . '\',\'' . $sec_token . '\'); return true;';
 			$groupeditor['members'][] = micropro($member,true,'mpgroup', $textmode);
 		}
 		else
-			group_rmv_member(local_user(),$group['name'],$member['id']);
+			group_rmv_member(local_user(),$group['name'],$member['xchan_hash']);
 	}
 
-	$r = q("SELECT * FROM `contact` WHERE `uid` = %d AND `blocked` = 0 and `pending` = 0 and `self` = 0 ORDER BY `name` ASC",
-		intval(local_user())
+	$r = q("SELECT abook.*, xchan.* FROM `abook` left join xchan on abook_xchan = xchan_hash WHERE `abook_channel` = %d AND  not (abook_flags & %d) and not (abook_flags & %d) order by xchan_name asc",
+		intval(local_user()),
+		intval(ABOOK_FLAG_BLOCKED),
+		intval(ABOOK_FLAG_SELF)
 	);
 
 	if(count($r)) {
 		$textmode = (($switchtotext && (count($r) > $switchtotext)) ? true : false);
 		foreach($r as $member) {
-			if(! in_array($member['id'],$preselected)) {
-				$member['click'] = 'groupChangeMember(' . $group['id'] . ',' . $member['id'] . ',\'' . $sec_token . '\'); return true;';
+			if(! in_array($member['xchan_hash'],$preselected)) {
+				$member['click'] = 'groupChangeMember(' . $group['id'] . ',\'' . $member['xchan_hash'] . '\',\'' . $sec_token . '\'); return true;';
 				$groupeditor['contacts'][] = micropro($member,true,'mpall', $textmode);
 			}
 		}

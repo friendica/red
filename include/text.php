@@ -549,12 +549,12 @@ function contact_block() {
 		$micropro = Null;
 		
 	} else {
-dbg(1);
+
 		$r = q("SELECT abook.*, xchan.* FROM abook left join xchan on abook.abook_xchan = xchan.xchan_hash WHERE abook_channel = %d AND abook_flags = 0 ORDER BY RAND() LIMIT %d",
 				intval($a->profile['uid']),
 				intval($shown)
 		);
-dbg(0);
+
 		if(count($r)) {
 			$contacts = sprintf( tt('%d Contact','%d Contacts', $total),$total);
 			$micropro = Array();
