@@ -39,7 +39,7 @@ include/
   fcontact.php
   follow.php
   gprobe.php
-  group.php
++ group.php
   html2bbcode.php
   html2plain.php
 + identity.php

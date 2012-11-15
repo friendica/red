@@ -310,16 +310,18 @@ function alt_pager(&$a, $i) {
 
 if(! function_exists('expand_acl')) {
 function expand_acl($s) {
-	// turn string array of angle-bracketed elements into numeric array
-	// e.g. "<1><2><3>" => array(1,2,3);
+
+	// turn string array of angle-bracketed elements into string array
+	// e.g. "<123xyz><246qyo><sxo33e>" => array(123xyz,246qyo,sxo33e);
+
 	$ret = array();
 
 	if(strlen($s)) {
 		$t = str_replace('<','',$s);
 		$a = explode('>',$t);
 		foreach($a as $aa) {
-			if(intval($aa))
-				$ret[] = intval($aa);
+			if($aa)
+				$ret[] = $aa;
 		}
 	}
 	return $ret;
@@ -330,7 +332,7 @@ function expand_acl($s) {
 if(! function_exists('sanitise_acl')) {
 function sanitise_acl(&$item) {
 	if(intval($item))
-		$item = '<' . intval(notags(trim($item))) . '>';
+		$item = '<' . notags(trim($item)) . '>';
 	else
 		unset($item);
 }}

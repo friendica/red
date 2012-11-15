@@ -50,31 +50,32 @@ function group_rmv($uid,$name) {
 			return false;
 
 		// remove group from default posting lists
-		$r = q("SELECT def_gid, allow_gid, deny_gid FROM user WHERE uid = %d LIMIT 1",
+		$r = q("SELECT channel_default_gid, channel_allow_gid, channel_deny_gid FROM channel WHERE channel_id = %d LIMIT 1",
 		       intval($uid)
 		);
 		if($r) {
 			$user_info = $r[0];
 			$change = false;
 
-			if($user_info['def_gid'] == $group_id) {
-				$user_info['def_gid'] = 0;
+			if($user_info['channel_default_gid'] == $group_id) {
+				$user_info['channel_default_gid'] = 0;
 				$change = true;
 			}
-			if(strpos($user_info['allow_gid'], '<' . $group_id . '>') !== false) {
-				$user_info['allow_gid'] = str_replace('<' . $group_id . '>', '', $user_info['allow_gid']);
+			if(strpos($user_info['channel_allow_gid'], '<' . $group_id . '>') !== false) {
+				$user_info['channel_allow_gid'] = str_replace('<' . $group_id . '>', '', $user_info['channel_allow_gid']);
 				$change = true;
 			}
-			if(strpos($user_info['deny_gid'], '<' . $group_id . '>') !== false) {
-				$user_info['deny_gid'] = str_replace('<' . $group_id . '>', '', $user_info['deny_gid']);
+			if(strpos($user_info['channel_deny_gid'], '<' . $group_id . '>') !== false) {
+				$user_info['channel_deny_gid'] = str_replace('<' . $group_id . '>', '', $user_info['channel_deny_gid']);
 				$change = true;
 			}
 
 			if($change) {
-				q("UPDATE user SET def_gid = %d, allow_gid = '%s', deny_gid = '%s' WHERE uid = %d",
-				  intval($user_info['def_gid']),
-				  dbesc($user_info['allow_gid']),
-				  dbesc($user_info['deny_gid']),
+				q("UPDATE channel SET channel_default_gid = %d, channel_allow_gid = '%s', channel_deny_gid = '%s' 
+				WHERE channel_id = %d",
+				  intval($user_info['channel_default_gid']),
+				  dbesc($user_info['channel_allow_gid']),
+				  dbesc($user_info['channel_deny_gid']),
 				  intval($uid)
 				);
 			}
@@ -117,10 +118,10 @@ function group_rmv_member($uid,$name,$member) {
 		return false;
 	if(! ( $uid && $gid && $member))
 		return false;
-	$r = q("DELETE FROM `group_member` WHERE `uid` = %d AND `gid` = %d AND `contact-id` = %d LIMIT 1 ",
+	$r = q("DELETE FROM `group_member` WHERE `uid` = %d AND `gid` = %d AND xchan = '%s' LIMIT 1 ",
 		intval($uid),
 		intval($gid),
-		intval($member)
+		dbesc($member)
 	);
 	return $r;
 	
@@ -134,21 +135,21 @@ function group_add_member($uid,$name,$member,$gid = 0) {
 	if((! $gid) || (! $uid) || (! $member))
 		return false;
 
-	$r = q("SELECT * FROM `group_member` WHERE `uid` = %d AND `gid` = %d AND `contact-id` = %d LIMIT 1",	
+	$r = q("SELECT * FROM `group_member` WHERE `uid` = %d AND `gid` = %d AND `xchan` = '%s' LIMIT 1",	
 		intval($uid),
 		intval($gid),
-		intval($member)
+		dbesc($member)
 	);
 	if(count($r))
 		return true;	// You might question this, but 
 				// we indicate success because the group member was in fact created
 				// -- It was just created at another time
  	if(! count($r))
-		$r = q("INSERT INTO `group_member` (`uid`, `gid`, `contact-id`)
+		$r = q("INSERT INTO `group_member` (`uid`, `gid`, `xchan`)
 			VALUES( %d, %d, %d ) ",
 			intval($uid),
 			intval($gid),
-			intval($member)
+			dbesc($member)
 	);
 	return $r;
 }
@@ -156,9 +157,9 @@ function group_add_member($uid,$name,$member,$gid = 0) {
 function group_get_members($gid) {
 	$ret = array();
 	if(intval($gid)) {
-		$r = q("SELECT `group_member`.`contact-id`, `contact`.* FROM `group_member` 
-			LEFT JOIN `contact` ON `contact`.`id` = `group_member`.`contact-id` 
-			WHERE `gid` = %d AND `group_member`.`uid` = %d ORDER BY `contact`.`name` ASC ",
+		$r = q("SELECT abook.*,xchan.* FROM `group_member` 
+			LEFT JOIN abook ON abook_xchan = `group_member`.`xchan` left join xchan on xchan_hash = abook_xchan
+			WHERE `gid` = %d AND `group_member`.`uid` = %d ORDER BY xchan_name ASC ",
 			intval($gid),
 			intval(local_user())
 		);
@@ -167,24 +168,6 @@ function group_get_members($gid) {
 	}
 	return $ret;
 }
-
-function group_public_members($gid) {
-	$ret = 0;
-	if(intval($gid)) {
-		$r = q("SELECT `contact`.`id` AS `contact-id` FROM `group_member` 
-			LEFT JOIN `contact` ON `contact`.`id` = `group_member`.`contact-id` 
-			WHERE `gid` = %d AND `group_member`.`uid` = %d 
-			AND  `contact`.`network` = '%s' AND `contact`.`notify` != '' ",
-			intval($gid),
-			intval(local_user()),
-			dbesc(NETWORK_OSTATUS)
-		);		
-		if(count($r))
-			$ret = count($r);
-	}
-	return $ret;
-}
-
 
 function mini_group_select($uid,$gid = 0) {
 	
@@ -213,7 +196,7 @@ function mini_group_select($uid,$gid = 0) {
 
 
 
-function group_side($every="contacts",$each="group",$edit = false, $group_id = 0, $cid = 0) {
+function group_side($every="contacts",$each="group",$edit = false, $group_id = 0, $cid = '') {
 
 	$o = '';
 
@@ -283,20 +266,22 @@ function expand_groups($a) {
 	if(! (is_array($a) && count($a)))
 		return array();
 	$groups = implode(',', $a);
+
 	$groups = dbesc($groups);
-	$r = q("SELECT `contact-id` FROM `group_member` WHERE `gid` IN ( $groups )");
+	stringify_array_elms($groups);
+	$r = q("SELECT xchan FROM `group_member` WHERE `gid` IN ( $groups )");
 	$ret = array();
 	if(count($r))
 		foreach($r as $rr)
-			$ret[] = $rr['contact-id'];
+			$ret[] = $rr['xchan'];
 	return $ret;
 }
 
 
 function member_of($c) {
 
-	$r = q("SELECT `group`.`name`, `group`.`id` FROM `group` LEFT JOIN `group_member` ON `group_member`.`gid` = `group`.`id` WHERE `group_member`.`contact-id` = %d AND `group`.`deleted` = 0 ORDER BY `group`.`name`  ASC ",
-		intval($c)
+	$r = q("SELECT `group`.`name`, `group`.`id` FROM `group` LEFT JOIN `group_member` ON `group_member`.`gid` = `group`.`id` WHERE `group_member`.`xchan` = '%s' AND `group`.`deleted` = 0 ORDER BY `group`.`name`  ASC ",
+		dbesc($c)
 	);
 
 	return $r;
@@ -305,9 +290,9 @@ function member_of($c) {
 
 function groups_containing($uid,$c) {
 
-	$r = q("SELECT `gid` FROM `group_member` WHERE `uid` = %d AND `group_member`.`contact-id` = %d ",
+	$r = q("SELECT `gid` FROM `group_member` WHERE `uid` = %d AND `group_member`.`xchan` = '%s' ",
 		intval($uid),
-		intval($c)
+		dbesc($c)
 	);
 
 	$ret = array();
