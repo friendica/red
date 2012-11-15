@@ -108,7 +108,7 @@ mod/
   follow.php
   friendica.php
   fsuggest.php
-  group.php
++ group.php
   hcard.php
   help.php
 + home.php

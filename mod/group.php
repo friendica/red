@@ -1,16 +1,11 @@
 <?php
 
-function validate_members(&$item) {
-	$item = intval($item);
-}
-
-function group_init(&$a) {
+function group_aside(&$a) {
 	if(local_user()) {
 		require_once('include/group.php');
-		$a->page['aside'] = group_side('collections','group',false,(($a->argc > 1) ? intval($a->argv[1]) : 0));
+		$a->set_widget('groups_edit',group_side('collections','group',false,(($a->argc > 1) ? intval($a->argv[1]) : 0)));
 	}
 }
-
 
 
 function group_post(&$a) {
@@ -20,7 +15,7 @@ function group_post(&$a) {
 		return;
 	}
 
-	if(($a->argc == 2) && ($a->argv[1] === 'new')) {
+	if((argc() == 2) && (argv(1) === 'new')) {
 		check_form_security_token_redirectOnErr('/group/new', 'group_edit');
 		
 		$name = notags(trim($_POST['groupname']));
@@ -36,14 +31,14 @@ function group_post(&$a) {
 		goaway($a->get_baseurl() . '/group');
 
 	}
-	if(($a->argc == 2) && (intval($a->argv[1]))) {
+	if((argc() == 2) && (intval(argv(1)))) {
 		check_form_security_token_redirectOnErr('/group', 'group_edit');
 		
 		$r = q("SELECT * FROM `group` WHERE `id` = %d AND `uid` = %d LIMIT 1",
-			intval($a->argv[1]),
+			intval(argv(1)),
 			intval(local_user())
 		);
-		if(! count($r)) {
+		if(! $r) {
 			notice( t('Collection not found.') . EOL );
 			goaway($a->get_baseurl() . '/connections');
 
@@ -60,7 +55,7 @@ function group_post(&$a) {
 				info( t('Collection name changed.') . EOL );
 		}
 
-		$a->page['aside'] = group_side();
+		goaway(z_root() . '/group/' . argv(1) . '/' . argv(2));
 	}
 	return;	
 }
@@ -84,7 +79,7 @@ function group_content(&$a) {
 	$tpl = get_markup_template('group_edit.tpl');
 	$context = array('$submit' => t('Submit'));
 
-	if(($a->argc == 2) && ($a->argv[1] === 'new')) {
+	if((argc() == 2) && (argv(1) === 'new')) {
 		
 		return replace_macros($tpl, $context + array(
 			'$title' => t('Create a collection of connections.'),
@@ -96,15 +91,15 @@ function group_content(&$a) {
 
 	}
 
-	if(($a->argc == 3) && ($a->argv[1] === 'drop')) {
+	if((argc() == 3) && (argv(1) === 'drop')) {
 		check_form_security_token_redirectOnErr('/group', 'group_drop', 't');
 		
-		if(intval($a->argv[2])) {
+		if(intval(argv(2))) {
 			$r = q("SELECT `name` FROM `group` WHERE `id` = %d AND `uid` = %d LIMIT 1",
-				intval($a->argv[2]),
+				intval(argv(2)),
 				intval(local_user())
 			);
-			if(count($r)) 
+			if($r) 
 				$result = group_rmv(local_user(),$r[0]['name']);
 			if($result)
 				info( t('Collection removed.') . EOL);
@@ -130,14 +125,14 @@ function group_content(&$a) {
 
 	}
 
-	if(($a->argc > 1) && (intval($a->argv[1]))) {
+	if((argc() > 1) && (intval(argv(1)))) {
 
 		require_once('include/acl_selectors.php');
 		$r = q("SELECT * FROM `group` WHERE `id` = %d AND `uid` = %d AND `deleted` = 0 LIMIT 1",
-			intval($a->argv[1]),
+			intval(argv(1)),
 			intval(local_user())
 		);
-		if(! count($r)) {
+		if(! $r) {
 			notice( t('Collection not found.') . EOL );
 			goaway($a->get_baseurl() . '/connnections');
 		}
@@ -150,8 +145,6 @@ function group_content(&$a) {
 			foreach($members as $member)
 				$preselected[] = $member['xchan_hash'];
 		}
-
-
 
 		if($change) {
 
@@ -171,16 +164,12 @@ function group_content(&$a) {
 			}
 		}
 
-
-
 		$drop_tpl = get_markup_template('group_drop.tpl');
 		$drop_txt = replace_macros($drop_tpl, array(
 			'$id' => $group['id'],
 			'$delete' => t('Delete'),
 			'$form_security_token' => get_form_security_token("group_drop"),
 		));
-
-		$celeb = ((($a->user['page-flags'] == PAGE_SOAPBOX) || ($a->user['page-flags'] == PAGE_COMMUNITY)) ? true : false);
 
 		
 		$context = $context + array(

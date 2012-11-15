@@ -32,7 +32,7 @@ function connections_aside(&$a) {
 		$a->set_widget('follow', follow_widget());
 
 	$a->set_widget('collections', group_side('connnections','group',false,0,$abook_id));
-	$a->set_widget('fidpeople',findpeople_widget());
+	$a->set_widget('findpeople',findpeople_widget());
 
 }
 
