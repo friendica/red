@@ -73,6 +73,9 @@ function notifier_run($argv, $argc){
 
 	$extra = (($argc > 3) ? $argv[3] : null);
 
+	if(! $item_id)
+		return;
+
 	if($cmd == 'permission_update') {
 		// Get the recipient	
 		$r = q("select abook.*, hubloc.* from abook 
@@ -105,19 +108,6 @@ function notifier_run($argv, $argc){
 		}
 	}	
 
-return;
-
-
-
-	switch($cmd) {
-		case 'mail':
-		default:
-			$item_id = intval($argv[2]);
-			if(! $item_id){
-				return;
-			}
-			break;
-	}
 
 	$expire = false;
 	$mail = false;
@@ -125,7 +115,6 @@ return;
 	$top_level = false;
 	$recipients = array();
 	$url_recipients = array();
-return;
 	$normal_mode = true;
 
 	if($cmd === 'mail') {
@@ -169,32 +158,32 @@ return;
 	}
 	else {
 
-		// find ancestors
-		$r = q("SELECT * FROM `item` WHERE `id` = %d and visible = 1 and moderated = 0 LIMIT 1",
+		// Normal items - find ancestors
+
+		$r = q("SELECT * FROM `item` WHERE `id` = %d and item_restrict = 0 LIMIT 1",
 			intval($item_id)
 		);
 
-		if((! count($r)) || (! intval($r[0]['parent']))) {
+		if((! $r) || (! intval($r[0]['parent']))) {
 			return;
 		}
+
+		xchan_query($r);
 
 		$target_item = $r[0];
 		$parent_id = intval($r[0]['parent']);
 		$uid = $r[0]['uid'];
 		$updated = $r[0]['edited'];
 
-		// POSSIBLE CLEANUP --> The following seems superfluous. We've already checked for "if (! intval($r[0]['parent']))" a few lines up
-		if(! $parent_id)
-			return;
-
-		$items = q("SELECT `item`.*, `sign`.`signed_text`,`sign`.`signature`,`sign`.`signer` 
-			FROM `item` LEFT JOIN `sign` ON `sign`.`iid` = `item`.`id` WHERE `parent` = %d and visible = 1 and moderated = 0 ORDER BY `id` ASC",
+		$items = q("SELECT * from item where parent = %d and item_restrict = 0 order by id asc",
 			intval($parent_id)
 		);
 
 		if(! count($items)) {
 			return;
 		}
+
+		xchan_query($items);
 
 		// avoid race condition with deleting entries
 
@@ -203,18 +192,16 @@ return;
 				$item['deleted'] = 1;
 		}
 
-		if((count($items) == 1) && ($items[0]['id'] === $target_item['id']) && ($items[0]['uri'] === $items[0]['parent_uri'])) {
+		if((count($items) == 1) && ($items[0]['id'] === $target_item['id']) && ($items[0]['item_flags'] & ITEM_THREAD_TOP)) {
 			logger('notifier: top level post');
 			$top_level = true;
 		}
-
 	}
 
-	$r = q("SELECT `contact`.*, `user`.`pubkey` AS `upubkey`, `user`.`prvkey` AS `uprvkey`, 
-		`user`.`timezone`, `user`.`nickname`, `user`.`page-flags`
-		FROM `contact` LEFT JOIN `user` ON `user`.`uid` = `contact`.`uid` 
-		WHERE `contact`.`uid` = %d AND `contact`.`self` = 1 LIMIT 1",
-		intval($uid)
+	$r = q("SELECT abook.*, channel.* from abook left join channel on abook_xchan = channel_hash 
+		where channel_id = %d and (abook_flags & %d ) limit 1",
+		intval($uid),
+		intval(ABOOK_FLAG_SELF)
 	);
 
 	if(! count($r))
@@ -222,7 +209,8 @@ return;
 
 	$owner = $r[0];
 
-	$walltowall = ((($top_level) && ($owner['id'] != $items[0]['contact-id'])) ? true : false);
+// FIXME
+//	$walltowall = ((($top_level) && ($owner['id'] != $items[0]['contact-id'])) ? true : false);
 
 	$hub = get_config('system','huburl');
 
@@ -230,15 +218,13 @@ return;
 	$public_message = true;
 
 	// fill this in with a single salmon slap if applicable
-	$slap = '';
+
 
 	if(! ($mail || $fsuggest)) {
 
 		require_once('include/group.php');
 
 		$parent = $items[0];
-
-
 
 		// This is IMPORTANT!!!!
 
@@ -257,7 +243,7 @@ return;
 
 		$relay_to_owner = false;
 	
-		$relay_origin_check = (((intval($target_item['origin'])) && (! intval($parent['origin']))) ? true : false);
+		$relay_origin_check = ((($target_item['item_flags'] & ITEM_ORIGIN) && (!($parent['item_flags'] & ITEM_ORIGIN))) ? true : false);
 
 		/**
 		 *
@@ -268,12 +254,13 @@ return;
 		 */
  
 
-		if((! $top_level) && ($parent['wall'] == 0) && ($relay_origin_check) && (! $expire))
+		if((! $top_level) && (! ($parent['item_flags'] & ITEM_WALL)) && ($relay_origin_check) && (! $expire))
 			$relay_to_owner = true;
 
-		if(($cmd === 'uplink') && (intval($parent['forum_mode']) == 1) && (! $top_level)) {
-			$relay_to_owner = true;			
-		} 
+//FIXME
+//		if(($cmd === 'uplink') && (intval($parent['forum_mode']) == 1) && (! $top_level)) {
+//			$relay_to_owner = true;			
+//		} 
 
 		if(! $relay_origin_check)
 			$relay_to_owner = false;
@@ -284,14 +271,14 @@ return;
 			// local followup to remote post
 			$followup = true;
 			$public_message = false; // not public
-			$conversant_str = dbesc($parent['contact-id']);
+			$conversant_str = dbesc($parent['owner_xchan']);
 		}
 		else {
 			$followup = false;
 
 			// don't send deletions onward for other people's stuff
 
-			if($target_item['deleted'] && (! intval($target_item['wall']))) {
+			if(($target_item['item_restrict'] & ITEM_DELETED) && (!($target_item['item_flags'] & ITEM_WALL))) {
 				logger('notifier: ignoring delete notification for non-wall item');
 				return;
 			}
@@ -303,6 +290,8 @@ return;
 				$public_message = false; // private recipients, not public
 			}
 
+// FIXME - expand_acl now takes xchan_hashes
+
 			$allow_people = expand_acl($parent['allow_cid']);
 			$allow_groups = expand_groups(expand_acl($parent['allow_gid']));
 			$deny_people  = expand_acl($parent['deny_cid']);
@@ -310,17 +299,20 @@ return;
 
 			// if our parent is a public forum (forum_mode == 1), uplink to the origional author causing
 			// a delivery fork. private groups (forum_mode == 2) do not uplink
-
-			if((intval($parent['forum_mode']) == 1) && (! $top_level) && ($cmd !== 'uplink')) {
-				proc_run('php','include/notifier.php','uplink',$item_id);
-			}
+// FIXME for tag delivery
+//			if((intval($parent['forum_mode']) == 1) && (! $top_level) && ($cmd !== 'uplink')) {
+//				proc_run('php','include/notifier.php','uplink',$item_id);
+//			}
 
 			$conversants = array();
 
 			foreach($items as $item) {
-				$recipients[] = $item['contact-id'];
-				$conversants[] = $item['contact-id'];
-				// pull out additional tagged people to notify (if public message)
+
+				$recipients[]  = $item['author_xchan'];
+				$conversants[] = $item['author_xchan'];
+
+// FIXME add tagged people
+/*				// pull out additional tagged people to notify (if public message)
 				if($public_message && strlen($item['inform'])) {
 					$people = explode(',',$item['inform']);
 					foreach($people as $person) {
@@ -333,25 +325,42 @@ return;
 						}
 					}
 				}
+*/
 			}
 
-			logger('notifier: url_recipients' . print_r($url_recipients,true));
+			if($url_recipients)
+				logger('notifier: url_recipients' . print_r($url_recipients,true), LOGGER_DEBUG);
+
 
 			$conversants = array_unique($conversants);
+			stringify_array_elms($conversants);
+			$conversant_str = dbesc(implode(', ',$conversants));
+
 
 
 			$recipients = array_unique(array_merge($recipients,$allow_people,$allow_groups));
 			$deny = array_unique(array_merge($deny_people,$deny_groups));
 			$recipients = array_diff($recipients,$deny);
-
-			$conversant_str = dbesc(implode(', ',$conversants));
 		}
 
-		$r = q("SELECT * FROM `contact` WHERE `id` IN ( $conversant_str ) AND `blocked` = 0 AND `pending` = 0 AND `archive` = 0");
+// FIXME - restrict this to those with permission to receive content
 
-		if(count($r))
+		$r = q("SELECT xchan.*, abook.* FROM xchan left join abook on xchan_hash = abook_chan 
+			WHERE xchan_hash IN ( $conversant_str ) AND not ((abook_flags & %d) || (abook_flags & %d)) ",
+			intval(ABOOK_FLAG_BLOCKED),
+			intval(ABOOK_FLAG_ARCHIVED)
+		);
+
+		if($r)
 			$contacts = $r;
 	}
+
+
+
+	// Now we have our item or items and a list of recipients
+	// Convert them to json messages and stick them in the queue.
+
+
 
 	$feed_template = get_markup_template('atom_feed.tpl');
 	$mail_template = get_markup_template('atom_mail.tpl');
@@ -471,6 +480,8 @@ return;
 	logger('notifier: ' . $atom, LOGGER_DATA);
 
 	logger('notifier: slaps: ' . print_r($slaps,true), LOGGER_DATA);
+
+	stringify_array_elms($recipients);
 
 	if($followup)
 		$recip_str = $parent['contact-id'];
@@ -683,15 +694,6 @@ return;
 		}
 
 	}
-
-	// If the item was deleted, clean up the `sign` table
-	if($target_item['deleted']) {
-		$r = q("DELETE FROM sign where `retract_iid` = %d",
-			intval($target_item['id'])
-		);
-	}
-
-	logger('notifier: calling hooks', LOGGER_DEBUG);
 
 	if($normal_mode)
 		call_hooks('notifier_normal',$target_item);

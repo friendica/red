@@ -1745,3 +1745,7 @@ function magic_link($s) {
 	return $s;
 }
 	
+function stringify_array_elms(&$arr) {
+	for($x = 0; $x < count($arr); $x ++)
+		$arr[$x] = "'" . $arr[$x] . "'";
+}
