@@ -470,11 +470,33 @@ function get_item_elements($j) {
 
 
 function encode_item($item) {
+	$x = array();
 
+	$x['message_id']     = $item['uri'];
+	$x['message_top']    = $item['parent_uri'];
+	$x['message_parent'] = $item['thr_parent'];
+	$x['created']        = $item['created'];
+	$x['edited']         = $item['edited'];
+	$x['title']          = $item['title'];
+	$x['body']           = $item['body'];
+	$x['app']            = $item['app'];
+	$x['verb']           = $item['verb'];
+	$x['object_type']    = $item['obj_type'];
+	$x['target_type']    = $item['tgt_type'];
+	$x['permalink']      = $item['plink'];
+	$x['location']       = $item['location'];
+	$x['longlat']        = $item['coord'];
 
+	$x['owner']          = array();
+	$x['author']         = array();
+	$x['object']         = array();
+	$x['target']         = array();
+	$x['attach']         = array();
+	$x['restrictions']   = array();
+	$x['flags']          = array();
+	$x['tags']           = array();
 
-
-	return json_encode($item);
+	return $x;
 
 }
 
