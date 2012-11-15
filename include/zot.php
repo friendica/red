@@ -45,22 +45,11 @@ function zot_get_hubloc($arr,$primary = false) {
 
 }
 	 
-// Given an item and an identity, sign the data.
-
-function zot_sign(&$item,$identity) {
-	$item['signed'] = str_replace(array(" ","\t","\n","\r"),array('','','',''),base64url_encode($item['body'],true));
-	$item['signature'] = base64url_encode(rsa_sign($item['signed'],$identity['prvkey']));
-}
-
-// Given an item and an identity, verify the signature.
-
-function zot_verify(&$item,$identity) {
-	return rsa_verify($item['signed'],base64url_decode($item['signature']),$identity['pubkey']);
-}
-
-
-
 function zot_notify($channel,$url,$type = 'notify',$recipients = null, $remote_key = null) {
+
+
+// FIXME json encode all params
+// build the packet externally so that here we really are doing just a zot of the packet. 
 
 	$params = array(
 		'type' => $type,
@@ -74,6 +63,7 @@ function zot_notify($channel,$url,$type = 'notify',$recipients = null, $remote_k
 		'version' => ZOT_REVISION
 	);
 
+
 	if($recipients)
 		$params['recipients'] = json_encode($recipients);
 
@@ -85,6 +75,46 @@ function zot_notify($channel,$url,$type = 'notify',$recipients = null, $remote_k
 
 	$x = z_post_url($url,$params);
 	return($x);
+}
+
+/*
+ *
+ * zot_build_packet builds a notification packet that you can either
+ * store in the queue with a message array or call zot_zot to immediately 
+ * zot it to the other side
+ *
+ */
+
+function zot_build_packet($channel,$type = 'notify',$recipients = null, $remote_key = null) {
+
+	$data = array(
+		'type' => $type,
+		'sender' => array(
+			'guid' => $channel['channel_guid'],
+			'guid_sig' => base64url_encode(rsa_sign($channel['channel_guid'],$channel['channel_prvkey'])),
+			'url' => z_root(),
+			'url_sig' => base64url_encode(rsa_sign(z_root(),$channel['channel_prvkey']))
+		), 
+		'callback' => '/post',
+		'version' => ZOT_REVISION
+	);
+
+
+	if($recipients)
+		$data['recipients'] = $recipients;
+
+	// Hush-hush ultra top-secret mode
+
+	if($remote_key) {
+		$data = aes_encapsulate($data,$remote_key);
+	}
+
+	return json_encode($data);
+}
+
+
+function zot_zot($url,$data) {
+	return z_post_url($url,array('data' => $data));
 }
 
 function zot_finger($webbie,$channel) {
@@ -388,3 +418,122 @@ function import_xchan_from_json($j) {
 	}
 	return $ret;
 }
+
+// Takes a json associative array from zot_finger and imports the xchan and hublocs
+// If the xchan already exists, update the name and photo if these have changed.
+// 
+
+
+function import_xchan($j) {
+
+	$ret = array('success' => false);
+
+	$xchan_hash = base64url_encode(hash('whirlpool',$j['guid'] . $j['guid_sig'], true));
+	$import_photos = false;
+
+	if(! rsa_verify($j['guid'],base64url_decode($j['guid_sig']),$j['key'])) {
+		logger('import_xchan_from_json: Unable to verify channel signature for ' . $j['address']);
+		$ret['message'] = t('Unable to verify channel signature');
+		return $ret;
+	}
+
+	$r = q("select * from xchan where xchan_hash = '%s' limit 1",
+		dbesc($xchan_hash)
+	);	
+
+	if($r) {
+		if($r[0]['xchan_photo_date'] != $j['photo_updated'])
+			$update_photos = true;
+		if($r[0]['xchan_name_date'] != $j['name_updated']) {
+			$r = q("update xchan set xchan_name = '%s', xchan_name_date = '%s' where xchan_hash = '%s' limit 1",
+				dbesc($j['name']),
+				dbesc($j['name_updated']),
+				dbesc($xchan_hash)
+			);
+		}
+	}
+	else {
+		$import_photos = true;
+		$x = q("insert into xchan ( xchan_hash, xchan_guid, xchan_guid_sig, xchan_pubkey, xchan_photo_mimetype,
+				xchan_photo_l, xchan_addr, xchan_url, xchan_name, xchan_network, xchan_photo_date, xchan_name_date)
+				values ( '%s', '%s', '%s', '%s' , '%s', '%s', '%s', '%s', '%s', '%s', '%s', '%s') ",
+			dbesc($xchan_hash),
+			dbesc($j['guid']),
+			dbesc($j['guid_sig']),
+			dbesc($j['key']),
+			dbesc($j['photo_mimetype']),
+			dbesc($j['photo']),
+			dbesc($j['address']),
+			dbesc($j['url']),
+			dbesc($j['name']),
+			dbesc('zot'),
+			dbesc($j['photo_updated']),
+			dbesc($j['name_updated'])
+		);
+
+	}				
+
+
+	if($import_photos) {
+
+		require_once("Photo.php");
+
+		$photos = import_profile_photo($j['photo'],0,$xchan_hash);
+		$r = q("update xchan set xchan_photo_date = '%s', xchan_photo_l = '%s', xchan_photo_m = '%s', xchan_photo_s = '%s', xchan_photo_mimetype = '%s'
+				where xchan_hash = '%s' limit 1",
+				dbesc($j['photo_updated']),
+				dbesc($photos[0]),
+				dbesc($photos[1]),
+				dbesc($photos[2]),
+				dbesc($photos[3]),
+				dbesc($xchan_hash)
+		);
+	}
+
+	if($j['locations']) {
+		foreach($j['locations'] as $location) {
+			if(! rsa_verify($location['url'],base64url_decode($location['url_sig']),$j['key'])) {
+				logger('import_xchan_from_json: Unable to verify site signature for ' . $location['url']);
+				$ret['message'] .= sprintf( t('Unable to verify site signature for %s'), $location['url']) . EOL;
+				continue;
+			}
+
+			$r = q("select * from hubloc where hubloc_hash = '%s' and hubloc_url = '%s' limit 1",
+				dbesc($xchan_hash),
+				dbesc($location['url'])
+			);
+			if($r) {
+				if(($r[0]['hubloc_flags'] & HUBLOC_FLAGS_PRIMARY) && (! $location['primary'])) {
+					$r = q("update hubloc set hubloc_flags = (hubloc_flags ^ %d) where hubloc_id = %d limit 1",
+						intval(HUBLOC_FLAGS_PRIMARY),
+						intval($r[0]['hubloc_id'])
+					);
+				}
+				continue;
+			}
+
+			$r = q("insert into hubloc ( hubloc_guid, hubloc_guid_sig, hubloc_hash, hubloc_addr, hubloc_flags, hubloc_url, hubloc_url_sig, hubloc_host, hubloc_callback, hubloc_sitekey)
+					values ( '%s','%s','%s','%s', %d ,'%s','%s','%s','%s','%s')",
+				dbesc($j['guid']),
+				dbesc($j['guid_sig']),
+				dbesc($xchan_hash),
+				dbesc($location['address']),
+				intval((intval($location['primary'])) ? HUBLOC_FLAGS_PRIMARY : 0),
+				dbesc($location['url']),
+				dbesc($location['url_sig']),
+				dbesc($location['host']),
+				dbesc($location['callback']),
+				dbesc($location['sitekey'])
+			);
+
+		}
+
+	}
+
+	if(! x($ret,'message')) {
+		$ret['success'] = true;
+		$ret['hash'] = $xchan_hash;
+	}
+	return $ret;
+}
+
