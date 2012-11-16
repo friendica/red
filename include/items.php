@@ -504,6 +504,12 @@ function encode_item($item) {
 
 	logger('encode_item: ' . print_r($item,true));
 
+	if($item['item_restrict']  & ITEM_DELETED) {
+		$x['message_id'] = $item['uri'];
+		$x['flags'] = array('deleted');
+		return $x;
+	}
+
 	$x['message_id']     = $item['uri'];
 	$x['message_top']    = $item['parent_uri'];
 	$x['message_parent'] = $item['thr_parent'];
@@ -527,9 +533,8 @@ function encode_item($item) {
 		$x['target']     = json_decode($item['target'],true);
 	if($item['attach'])
 		$x['attach']     = json_decode($item['attach'],true);
-
-	$x['restrictions']   = array();
-	$x['flags']          = array();
+	if($y = encode_item_flags($item))
+		$x['flags']      = $y;
 	if($item['term'])
 		$x['tags']       = encode_item_terms($item['term']);
 
@@ -566,6 +571,22 @@ function encode_item_terms($terms) {
 function termtype($t) {
 	$types = array('unknown','hashtag','mention','category','private_category','file','search');
 	return(($types[$t]) ? $types[$t] : 'unknown');
+}
+
+
+function encode_item_flags($item) {
+
+//	most of item_flags and item_restrict are local settings which don't apply when transmitted.
+//  We may need those for the case of syncing other hub locations which you are attached to.
+//  ITEM_DELETED is handled in encode_item directly so we don't need to handle it here. 
+
+	$ret = array();
+	if($item['flags'] & ITEM_THREAD_TOP)
+		$ret[] = 'thread_parent';
+	if($item['flags'] & ITEM_NSFW)
+		$ret[] = 'nsfw';
+	
+	return $ret;
 }
 
 function get_atom_elements($feed,$item) {

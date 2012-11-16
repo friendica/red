@@ -2,6 +2,12 @@
 
 
 function get_perms() {
+
+// thinking about making element[2] a bitmask instead of boolean so that we can provide a list of applicable selections
+// for any given permission. Currently we use the boolean to disallow write access to "everybody", but we also want to be
+// able to handle troublesome settings such as allowing channel_w_stream to anybody in the network. You can allow it, but 
+// there's no way to implement sending it. 
+
 	$global_perms = array(
 		// Read only permissions
 		'view_stream'   => array('channel_r_stream',  intval(PERMS_R_STREAM),  true, t('Can view my "public" stream and posts'), ''),

@@ -204,6 +204,7 @@ function call_hooks($name, &$data = null) {
  * 	 * Version: 1.2.3
  *   * Author: John <profile url>
  *   * Author: Jane <email>
+ *   * Compat: Red [(version)], Friendica [(version)]
  *   *
  */
 
@@ -213,7 +214,8 @@ function get_plugin_info($plugin){
 		'name' => $plugin,
 		'description' => "",
 		'author' => array(),
-		'version' => ""
+		'version' => "",
+		'compat' => ""
 	);
 	
 	if (!is_file("addon/$plugin/$plugin.php")) return $info;
@@ -258,6 +260,7 @@ function get_plugin_info($plugin){
  * 	 * Version: 1.2.3
  *   * Author: John <profile url>
  *   * Maintainer: Jane <profile url>
+ *   * Compat: Friendica [(version)], Red [(version)]
  *   *
  */
 
@@ -270,6 +273,7 @@ function get_theme_info($theme){
 		'maintainer' => array(),
 		'version' => "",
 		'credits' => "",
+		'compat' => "",
 		'experimental' => false,
 		'unsupported' => false
 	);
