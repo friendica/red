@@ -103,7 +103,7 @@ function notifier_run($argv, $argc){
 						));
 						if($data) {
 							$result = zot_zot($hh['hubloc_callback'],$data);
-
+// zot_queue_item is not yet written
 //							if(! $result['success']
 //								zot_queue_item();
 
@@ -199,10 +199,15 @@ function notifier_run($argv, $argc){
 			$top_level_post = false;
 		}
 
+		$encoded_item = encode_item($target_item);
+		
 		$relay_to_owner = (((! $top_level_post) && ($target_item['item_flags'] & ITEM_ORIGIN)) ? true : false);
 		if($relay_to_owner) {
 			logger('notifier: followup relay', LOGGER_DEBUG);
 			$recipients = array($parent_item['owner_xchan']);
+			if(! $encoded_item['flags'])
+				$encoded_item['flags'] = array();
+			$encoded_item['flags'][] = 'relay';
 		}
 		else {
 			logger('notifier: normal distribution', LOGGER_DEBUG);
@@ -210,22 +215,32 @@ function notifier_run($argv, $argc){
 
 			// FIXME add any additional recipients such as mentions, etc.
 
+
+			// don't send deletions onward for other people's stuff
+			// TODO verify this is needed - copied logic from same place in old code
+
+			if(($target_item['item_restrict'] & ITEM_DELETED) && (!($target_item['item_flags'] & ITEM_WALL))) {
+				logger('notifier: ignoring delete notification for non-wall item');
+				return;
+			}
+
+
 		}
-
-
-		$encoded_item = encode_item($target_item);
 
 		logger('notifier: encoded item: ' . print_r($encoded_item,true));
 
 		stringify_array_elms($recipients);
-
 		logger('notifier: recipients: ' . print_r($recipients,true));
 
 
 
 		// get all hubs we need to talk to.
 
+		// do local delivery or local delivery queueing for anybody on our own hub
 
+		// queue everything else
+
+		// trigger delivery
 
 return;
 

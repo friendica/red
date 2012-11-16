@@ -358,7 +358,7 @@ define ( 'ITEM_WALL',            0x0020);
 define ( 'ITEM_THREAD_TOP',      0x0040);
 define ( 'ITEM_NOTSHOWN',        0x0080);  // technically visible but not normally shown (e.g. like/dislike)
 define ( 'ITEM_NSFW',            0x0100);
-
+define ( 'ITEM_RELAY',           0x0200);  // used only in the communication layers, not stored
 
 
 /**
