@@ -439,12 +439,12 @@ CREATE TABLE IF NOT EXISTS `group_member` (
   `id` int(10) unsigned NOT NULL AUTO_INCREMENT,
   `uid` int(10) unsigned NOT NULL,
   `gid` int(10) unsigned NOT NULL,
-  `contact-id` int(10) unsigned NOT NULL,
+  `xchan` char(255) NOT NULL DEFAULT '',
   PRIMARY KEY (`id`),
   KEY `uid` (`uid`),
   KEY `gid` (`gid`),
-  KEY `contact-id` (`contact-id`)
-) ENGINE=MyISAM DEFAULT CHARSET=utf8;
+  KEY `xchan` (`xchan`)
+) ENGINE=MyISAM  DEFAULT CHARSET=utf8;
 
 CREATE TABLE IF NOT EXISTS `guid` (
   `id` int(10) unsigned NOT NULL AUTO_INCREMENT,
@@ -591,13 +591,6 @@ CREATE TABLE IF NOT EXISTS `item_id` (
   KEY `iid` (`iid`)
 ) ENGINE=MyISAM DEFAULT CHARSET=utf8;
 
-CREATE TABLE IF NOT EXISTS `locks` (
-  `id` int(11) NOT NULL AUTO_INCREMENT,
-  `name` char(128) NOT NULL,
-  `locked` tinyint(1) NOT NULL DEFAULT '0',
-  PRIMARY KEY (`id`)
-) ENGINE=MyISAM DEFAULT CHARSET=utf8;
-
 CREATE TABLE IF NOT EXISTS `mail` (
   `id` int(10) unsigned NOT NULL AUTO_INCREMENT,
   `aid` int(10) unsigned NOT NULL DEFAULT '0',
@@ -681,16 +674,15 @@ CREATE TABLE IF NOT EXISTS `outq` (
   `outq_hash` char(255) NOT NULL,
   `outq_account` int(10) unsigned NOT NULL DEFAULT '0',
   `outq_channel` int(10) unsigned NOT NULL DEFAULT '0',
-  `outq_xchan` char(255) NOT NULL DEFAULT '',
-  `outq_hub` char(255) NOT NULL DEFAULT '',
+  `outq_posturl` char(255) NOT NULL DEFAULT '',
   `outq_created` datetime NOT NULL DEFAULT '0000-00-00 00:00:00',
   `outq_updated` datetime NOT NULL DEFAULT '0000-00-00 00:00:00',
+  `outq_notify` mediumtext NOT NULL,
   `outq_msg` mediumtext NOT NULL,
   PRIMARY KEY (`outq_hash`),
   KEY `outq_account` (`outq_account`),
   KEY `outq_channel` (`outq_channel`),
-  KEY `outq_xchan` (`outq_xchan`),
-  KEY `outq_hub` (`outq_hub`),
+  KEY `outq_hub` (`outq_posturl`),
   KEY `outq_created` (`outq_created`),
   KEY `outq_updated` (`outq_updated`)
 ) ENGINE=MyISAM DEFAULT CHARSET=utf8;
@@ -887,7 +879,7 @@ CREATE TABLE IF NOT EXISTS `term` (
   KEY `term` (`term`),
   KEY `uid` (`uid`),
   KEY `aid` (`aid`)
-) ENGINE=MyISAM DEFAULT CHARSET=utf8;
+) ENGINE=MyISAM  DEFAULT CHARSET=utf8;
 
 CREATE TABLE IF NOT EXISTS `tokens` (
   `id` varchar(40) NOT NULL,
