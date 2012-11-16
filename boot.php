@@ -224,6 +224,13 @@ define ( 'NOTIFY_POKE',     0x0200 );
 define ( 'NOTIFY_SYSTEM',   0x8000 );
 
 
+// We need a flag to designate that a site is a 
+// global directory mirror, but probably doesn't
+// belong in hubloc.
+// This indicates a need for an 'xsite' table
+// which contains only sites and not people.
+// Then we might have to revisit hubloc as a
+// linked structure between xchan and xsite
 
 define ( 'HUBLOC_FLAGS_PRIMARY',      0x0001);
 define ( 'HUBLOC_FLAGS_UNVERIFIED',   0x0002);
@@ -350,6 +357,7 @@ define ( 'ITEM_UPLINK_PRV',      0x0010);
 define ( 'ITEM_WALL',            0x0020);
 define ( 'ITEM_THREAD_TOP',      0x0040);
 define ( 'ITEM_NOTSHOWN',        0x0080);  // technically visible but not normally shown (e.g. like/dislike)
+define ( 'ITEM_NSFW',            0x0100);
 
 
 
