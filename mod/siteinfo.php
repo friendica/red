@@ -1,6 +1,6 @@
 <?php
 
-function friendica_init(&$a) {
+function siteinfo_init(&$a) {
 
 	if ($a->argv[1]=="json"){
 		$register_policy = Array('REGISTER_CLOSED', 'REGISTER_APPROVE', 'REGISTER_OPEN');
