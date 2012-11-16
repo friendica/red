@@ -6,6 +6,36 @@ require_once('include/crypto.php');
 require_once('include/Photo.php');
 
 
+
+function collect_recipients($item) {
+
+	if($item['allow_cid'] || $item['allow_gid'] || $item['deny_cid'] || $item['deny_gid']) {
+		$allow_people = expand_acl($item['allow_cid']);
+		$allow_groups = expand_groups(expand_acl($item['allow_gid']));
+		$deny_people  = expand_acl($item['deny_cid']);
+		$deny_groups  = expand_groups(expand_acl($item['deny_gid']));
+
+		$recipients = array_unique(array_merge($allow_people,$allow_groups));
+		$deny = array_unique(array_merge($deny_people,$deny_groups));
+		$recipients = array_diff($recipients,$deny);
+	}
+	else {
+		$recipients = array();
+		$r = q("select * from abook where abook_channel = %d and not (abook_flags & %d) ",
+			intval($item['uid']),
+			intval(ABOOK_FLAG_SELF)
+		);
+		if($r) {
+			foreach($r as $rr) {
+				// FIXME check permissions of each
+				$recipients[] = $rr['abook_xchan'];
+			}
+		}
+	}
+	return $recipients;
+}
+
+
 function get_public_feed($channel,$params) {
 
 	$type      = 'xml';
@@ -472,6 +502,8 @@ function get_item_elements($j) {
 function encode_item($item) {
 	$x = array();
 
+	logger('encode_item: ' . print_r($item,true));
+
 	$x['message_id']     = $item['uri'];
 	$x['message_top']    = $item['parent_uri'];
 	$x['message_parent'] = $item['thr_parent'];
@@ -487,21 +519,54 @@ function encode_item($item) {
 	$x['location']       = $item['location'];
 	$x['longlat']        = $item['coord'];
 
-	$x['owner']          = array();
-	$x['author']         = array();
-	$x['object']         = array();
-	$x['target']         = array();
-	$x['attach']         = array();
+	$x['owner']          = encode_item_xchan($item['owner']);
+	$x['author']         = encode_item_xchan($item['author']);
+	if($item['object'])
+		$x['object']     = json_decode($item['object'],true);
+	if($item['target'])
+		$x['target']     = json_decode($item['target'],true);
+	if($item['attach'])
+		$x['attach']     = json_decode($item['attach'],true);
+
 	$x['restrictions']   = array();
 	$x['flags']          = array();
-	$x['tags']           = array();
+	if($item['term'])
+		$x['tags']       = encode_item_terms($item['term']);
 
 	return $x;
 
 }
 
+function encode_item_xchan($xchan) {
 
+	$ret = array();
+	$ret['name']     = $xchan['xchan_name'];
+	$ret['address']  = $xchan['xchan_addr'];
+	$ret['url']      = $xchan['hubloc_url'];
+	$ret['photo']    = array('mimetype' => $xchan['xchan_photo_mimetype'], 'src' => $xchan['xchan_photo_m']);
+	$ret['guid']     = $xchan['xchan_guid'];
+	$ret['guid_sig'] = $xchan['xchan_guid_sig'];
+	return $ret;
+}
 
+function encode_item_terms($terms) {
+	$ret = array();	
+
+	$allowed_export_terms = array( TERM_UNKNOWN, TERM_HASHTAG, TERM_MENTION, TERM_CATEGORY );
+
+	if($terms) {
+		foreach($terms as $term) {
+			if(in_array($term['type'],$allowed_export_terms))
+				$ret = array('tag' => $term['term'], 'url' => $term['url'], 'type' => termtype($term['type']));
+		}
+	}
+	return $ret;
+}
+
+function termtype($t) {
+	$types = array('unknown','hashtag','mention','category','private_category','file','search');
+	return(($types[$t]) ? $types[$t] : 'unknown');
+}
 
 function get_atom_elements($feed,$item) {
 
@@ -3838,11 +3903,20 @@ function posted_date_widget($url,$uid,$wall) {
 function fetch_post_tags($items) {
 
 	$tag_finder = array();
-	if($items && count($items))		
-		foreach($items as $item)
-			if(! in_array($item['item_id'],$tag_finder))
-				$tag_finder[] = $item['item_id'];
+	if($items) {		
+		foreach($items as $item) {
+			if(array_key_exists('item_id',$item)) {
+				if(! in_array($item['item_id'],$tag_finder))
+					$tag_finder[] = $item['item_id'];
+			}
+			else {
+				if(! in_array($item['id'],$tag_finder))
+					$tag_finder[] = $item['id'];
+			}
+		}
+	}
 	$tag_finder_str = implode(', ', $tag_finder);
+
 
 	if(strlen($tag_finder_str)) {
 		$tags = q("select * from term where oid in ( %s ) and otype = %d",
@@ -3851,13 +3925,23 @@ function fetch_post_tags($items) {
 		);
 	}
 
+
 	for($x = 0; $x < count($items); $x ++) {
 		if(count($tags)) {
 			foreach($tags as $t) {
-				if($t['oid'] == $items[$x]['item_id']) {
-					if(! is_array($items[$x]['term']))
-						$items[$x]['term'] = array();
-					$items[$x]['term'][] = $t;
+				if(array_key_exists('item_id',$items[$x])) {
+					if($t['oid'] == $items[$x]['item_id']) {
+						if(! is_array($items[$x]['term']))
+							$items[$x]['term'] = array();
+						$items[$x]['term'][] = $t;
+					}
+				}
+				else {
+					if($t['oid'] == $items[$x]['id']) {
+						if(! is_array($items[$x]['term']))
+							$items[$x]['term'] = array();
+						$items[$x]['term'][] = $t;
+					}
 				}
 			}
 		}

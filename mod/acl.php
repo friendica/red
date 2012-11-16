@@ -91,7 +91,7 @@ function acl_init(&$a){
 	
 	if ($type=='' || $type=='g'){
 		
-		$r = q("SELECT `group`.`id`, `group`.`name`, GROUP_CONCAT(DISTINCT `group_member`.`contact-id` SEPARATOR ',') as uids
+		$r = q("SELECT `group`.`id`, `group`.`name`, GROUP_CONCAT(DISTINCT `group_member`.`xchan` SEPARATOR ',') as uids
 				FROM `group`,`group_member` 
 				WHERE `group`.`deleted` = 0 AND `group`.`uid` = %d 
 					AND `group_member`.`gid`=`group`.`id`

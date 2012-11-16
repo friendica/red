@@ -1710,7 +1710,8 @@ function xchan_query(&$items) {
 		}
 	}
 	if(count($arr)) {
-		$chans = q("select * from xchan where xchan_hash in (" . implode(',', $arr) . ")");
+		$chans = q("select xchan.*,hubloc.* from xchan left join hubloc on hubloc_hash = xchan_hash
+			where xchan_hash in (" . implode(',', $arr) . ") and ( hubloc_flags & " . intval(HUBLOC_FLAGS_PRIMARY) . " )");
 	}
 	if($items && count($items) && $chans && count($chans)) {
 		for($x = 0; $x < count($items); $x ++) {

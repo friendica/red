@@ -96,12 +96,19 @@ function notifier_run($argv, $argc){
 				);
 				if($h) {
 					foreach($h as $hh) {
-						$result = zot_notify($s[0],$hh['hubloc_callback'],'refresh',array(array(
+						$data = zot_build_packet($s[0],'refresh',array(array(
 							'guid' => $hh['hubloc_guid'],
 							'guid_sig' => $hh['hubloc_guid_sig'],
 							'url' => $hh['hubloc_url'])
-						));	
-						// should probably queue these
+						));
+						if($data) {
+							$result = zot_zot($hh['hubloc_callback'],$data);
+
+//							if(! $result['success']
+//								zot_queue_item();
+
+						}	
+
 					}
 				}
 			}
@@ -158,19 +165,77 @@ function notifier_run($argv, $argc){
 	}
 	else {
 
-		// Normal items - find ancestors
+		// Normal items
 
-		$r = q("SELECT * FROM `item` WHERE `id` = %d and item_restrict = 0 LIMIT 1",
+		// Fetch the target item
+
+		$r = q("SELECT * FROM item WHERE id = %d and parent != 0 LIMIT 1",
 			intval($item_id)
 		);
 
-		if((! $r) || (! intval($r[0]['parent']))) {
+		if(! $r)
 			return;
-		}
 
 		xchan_query($r);
-
+		$r = fetch_post_tags($r);
+		
 		$target_item = $r[0];
+		
+		if($target_item['id'] == $target_item['parent']) {
+			$parent_item = $target_item;
+			$top_level_post = true;
+		}
+		else {
+			// fetch the parent item
+			$r = q("SELECT * from item where id = %d order by id asc",
+				intval($parent_id)
+			);
+			if(! $r)
+				return;
+			xchan_query($r);
+			$r = fetch_post_tags($r);
+		
+			$parent_item = $r[0];
+			$top_level_post = false;
+		}
+
+		$relay_to_owner = (((! $top_level_post) && ($target_item['item_flags'] & ITEM_ORIGIN)) ? true : false);
+		if($relay_to_owner) {
+			logger('notifier: followup relay', LOGGER_DEBUG);
+			$recipients = array($parent_item['owner_xchan']);
+		}
+		else {
+			logger('notifier: normal distribution', LOGGER_DEBUG);
+			$recipients = collect_recipients($parent_item);
+
+			// FIXME add any additional recipients such as mentions, etc.
+
+		}
+
+
+		$encoded_item = encode_item($target_item);
+
+		logger('notifier: encoded item: ' . print_r($encoded_item,true));
+
+		stringify_array_elms($recipients);
+
+		logger('notifier: recipients: ' . print_r($recipients,true));
+
+
+
+		// get all hubs we need to talk to.
+
+
+
+return;
+
+
+
+
+
+
+
+
 		$parent_id = intval($r[0]['parent']);
 		$uid = $r[0]['uid'];
 		$updated = $r[0]['edited'];
@@ -290,8 +355,6 @@ function notifier_run($argv, $argc){
 				$public_message = false; // private recipients, not public
 			}
 
-// FIXME - expand_acl now takes xchan_hashes
-
 			$allow_people = expand_acl($parent['allow_cid']);
 			$allow_groups = expand_groups(expand_acl($parent['allow_gid']));
 			$deny_people  = expand_acl($parent['deny_cid']);
@@ -303,6 +366,10 @@ function notifier_run($argv, $argc){
 //			if((intval($parent['forum_mode']) == 1) && (! $top_level) && ($cmd !== 'uplink')) {
 //				proc_run('php','include/notifier.php','uplink',$item_id);
 //			}
+
+
+
+
 
 			$conversants = array();
 
