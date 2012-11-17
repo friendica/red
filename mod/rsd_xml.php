@@ -1,13 +1,13 @@
 <?php
 
-
+// What do we need this for?
 
 function rsd_xml_content(&$a) {
 	header ("Content-Type: text/xml");
 	echo '<?xml version="1.0" encoding="UTF-8"?>
  <rsd version="1.0" xmlns="http://archipelago.phrasewise.com/rsd">
    <service>
-     <engineName>Friendica</engineName>
+     <engineName>Red</engineName>
      <engineLink>http://friendica.com/</engineLink>
      <apis>
        <api name="Twitter" preferred="true" apiLink="'.$a->get_baseurl().'/api/" blogID="">
