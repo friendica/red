@@ -452,47 +452,50 @@ function title_is_body($title, $body) {
 }
 
 
-function get_item_elements($j) {
+function get_item_elements($x) {
 
 	$arr = array();
 
-	if(strlen($j->signed))
-		$arr['body']    = htmlentities($j->signed,ENT_COMPAT,'UTF-8');
-	else
-		$arr['body']    = (($j->body) ? htmlentities($j->body,ENT_COMPAT,'UTF-8') : '');
+	$arr['body']         = (($x['body']) ? htmlentities($x['body'],ENT_COMPAT,'UTF-8') : '');
 
-	$arr['created'] = datetime_convert('UTC','UTC',$j->created);
-	$arr['edited']  = datetime_convert('UTC','UTC',$j->edited);
+	$arr['created']      = datetime_convert('UTC','UTC',$x['created']);
+	$arr['edited']       = datetime_convert('UTC','UTC',$x['edited']);
 
 	if($arr['created'] > datetime_convert())
-		$arr['created'] = datetime_convert();
+		$arr['created']  = datetime_convert();
 	if($arr['edited'] > datetime_convert())
-		$arr['edited'] = datetime_convert();
+		$arr['edited']   = datetime_convert();
 
-	$arr['title']      = (($j->title)    ? htmlentities($j->title,    ENT_COMPAT,'UTF-8') : '');
-	$arr['app']        = (($j->app)      ? htmlentities($j->app,      ENT_COMPAT,'UTF-8') : '');
-	$arr['uri']        = (($j->uri)      ? htmlentities($j->uri,      ENT_COMPAT,'UTF-8') : '');
-	$arr['parent_uri'] = (($j->parent_uri) ? htmlentities($j->parent_uri, ENT_COMPAT,'UTF-8') : '');
-	$arr['plink']      = (($j->plink)    ? htmlentities($j->plink,    ENT_COMPAT,'UTF-8') : '');
-	$arr['location']   = (($j->location) ? htmlentities($j->location, ENT_COMPAT,'UTF-8') : '');
-	$arr['coord']      = (($j->coord)    ? htmlentities($j->coord,    ENT_COMPAT,'UTF-8') : '');
-	$arr['verb']       = (($j->verb)     ? htmlentities($j->verb,     ENT_COMPAT,'UTF-8') : '');
-	$arr['obj_type']   = (($j->objtype)  ? htmlentities($j->objtype,  ENT_COMPAT,'UTF-8') : '');
-	$arr['tgt_type']   = (($j->tgttype)  ? htmlentities($j->tgttype,  ENT_COMPAT,'UTF-8') : '');
+	$arr['title']        = (($x['title'])    ? htmlentities($x['title'],    ENT_COMPAT,'UTF-8') : '');
+	$arr['app']          = (($x['app'])      ? htmlentities($x['app'],      ENT_COMPAT,'UTF-8') : '');
+	$arr['uri']          = (($x['message_id'])      ? htmlentities($x['message_id'],      ENT_COMPAT,'UTF-8') : '');
+	$arr['parent_uri']   = (($x['message_top']) ? htmlentities($x['message_top'], ENT_COMPAT,'UTF-8') : '');
+	$arr['thr_parent']   = (($x['message_parent']) ? htmlentities($x['message_parent'], ENT_COMPAT,'UTF-8') : '');
 
-	$arr['object']        = $j->object;
-	$arr['target']        = $j->target;
+	$arr['plink']        = (($x['permalink'])    ? htmlentities($x['permaplink'],    ENT_COMPAT,'UTF-8') : '');
+	$arr['location']     = (($x['location']) ? htmlentities($x['location'], ENT_COMPAT,'UTF-8') : '');
+	$arr['coord']        = (($x['longlat'])    ? htmlentities($x['longlat'],    ENT_COMPAT,'UTF-8') : '');
+	$arr['verb']         = (($x['verb'])     ? htmlentities($x['verb'],     ENT_COMPAT,'UTF-8') : '');
+	$arr['obj_type']     = (($x['object_type'])  ? htmlentities($x['object_type'],  ENT_COMPAT,'UTF-8') : '');
+	$arr['tgt_type']     = (($x['target_type'])  ? htmlentities($x['target_type'],  ENT_COMPAT,'UTF-8') : '');
 
-	$arr['attach']     = $j->attach;
-	$arr['tags']       = $j->tags;
+	$arr['object']       = $x['object'];
+	$arr['target']       = $x['target'];
 
-	$arr['private']    = $j->private;
+	$arr['attach']       = $x['attach'];
+	$arr['tags']         = $x['tags'];
 
-	$arr['flags']      = intval($j->flags);
+	// FIXME map the tag types to our symbolic constants
 
-	$arr['author']     = $j->author;
+	$arr['author_xchan'] = base64url_encode(hash('whirlpool',$x['author']['guid'] . $x['author']['guid_sig'], true));
+	$arr['owner_xchan']  = base64url_encode(hash('whirlpool',$x['owner']['guid'] . $x['owner']['guid_sig'], true));
 
-	// needed still: owner and contact, map flags
+	// FIXME look up author and owner and verify them if we don't have an xchan and hubloc for them already
+	// FIXME map the flags and add our default flags
+
+
+	//	$arr['flags']    = intval($j->flags);
+
 
 	return $arr;
 
@@ -585,6 +588,8 @@ function encode_item_flags($item) {
 		$ret[] = 'thread_parent';
 	if($item['flags'] & ITEM_NSFW)
 		$ret[] = 'nsfw';
+	if($item['flags'] & ITEM_PRIVATE)
+		$ret[] = 'private';
 	
 	return $ret;
 }
