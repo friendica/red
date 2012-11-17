@@ -479,28 +479,44 @@ function get_item_elements($x) {
 	$arr['obj_type']     = (($x['object_type'])  ? htmlentities($x['object_type'],  ENT_COMPAT,'UTF-8') : '');
 	$arr['tgt_type']     = (($x['target_type'])  ? htmlentities($x['target_type'],  ENT_COMPAT,'UTF-8') : '');
 
-	$arr['object']       = $x['object'];
-	$arr['target']       = $x['target'];
+	$arr['object']       = activity_sanitise($x['object']);
+	$arr['target']       = activity_sanitise($x['target']);
 
-	$arr['attach']       = $x['attach'];
-	$arr['tags']         = $x['tags'];
+	$arr['attach']       = activity_sanitise($x['attach']);
+	$arr['term']         = decode_tags($x['tags']);
 
-	// FIXME map the tag types to our symbolic constants
+	// Here's the deal - the site might be down or whatever but if there's a new person you've never
+	// seen before sending stuff to your stream, we MUST be able to look them up and import their data from their
+	// hub and verify that they are legit - or else we're going to toss the post. We only need to do this
+	// once, and after that your hub knows them. Sure some info is in the post, but it's only a transit identifier
+	// and not enough info to be able to look you up from your hash - which is the only thing stored with the post.
 
-	$arr['author_xchan'] = base64url_encode(hash('whirlpool',$x['author']['guid'] . $x['author']['guid_sig'], true));
-	$arr['owner_xchan']  = base64url_encode(hash('whirlpool',$x['owner']['guid'] . $x['owner']['guid_sig'], true));
+	if(import_author_xchan($x['author']))
+		$arr['author_xchan'] = base64url_encode(hash('whirlpool',$x['author']['guid'] . $x['author']['guid_sig'], true));
+	else
+		return array();
 
-	// FIXME look up author and owner and verify them if we don't have an xchan and hubloc for them already
-	// FIXME map the flags and add our default flags
-
-
-	//	$arr['flags']    = intval($j->flags);
+	if(import_author_xchan($x['owner']))
+		$arr['owner_xchan']  = base64url_encode(hash('whirlpool',$x['owner']['guid'] . $x['owner']['guid_sig'], true));
+	else
+		return array();
 
 
 	return $arr;
 
 }
 
+function import_author_xchan($x) {
+	$r = q("select hubloc_url from hubloc where hubloc_guid = '%s' and hubloc_guid_sig = '%s' and (hubloc_flags & %d) limit 1",
+		dbesc($x['guid']),
+		dbesc($x['guid_sig']),
+		intval(HUBLOG_FLAGS_PRIMARY)
+	);
+	if($r)
+		return true;
+	$them = array('hubloc_url' => $x['url'],'xchan_guid' => $x['guid'], 'xchan_guid_sig' => $x['guid_sig']);
+	return zot_refresh($them);
+}
 
 function encode_item($item) {
 	$x = array();
@@ -565,7 +581,7 @@ function encode_item_terms($terms) {
 	if($terms) {
 		foreach($terms as $term) {
 			if(in_array($term['type'],$allowed_export_terms))
-				$ret = array('tag' => $term['term'], 'url' => $term['url'], 'type' => termtype($term['type']));
+				$ret[] = array('tag' => $term['term'], 'url' => $term['url'], 'type' => termtype($term['type']));
 		}
 	}
 	return $ret;
@@ -576,6 +592,59 @@ function termtype($t) {
 	return(($types[$t]) ? $types[$t] : 'unknown');
 }
 
+function decode_tags($t) {
+
+	if($t) {
+		$ret = array();
+		foreach($t as $x) {
+			$tag = array();
+			$tag['term'] = htmlentities($x['term'],  ENT_COMPAT,'UTF-8');
+			$tag['url']  = htmlentities($x['url'],  ENT_COMPAT,'UTF-8');
+			switch($x['type']) {
+				case 'hashtag':
+					$tag['type'] = TERM_HASHTAG;
+					break;
+				case 'mention':
+					$tag['type'] = TERM_MENTION;
+					break;
+				case 'category':
+					$tag['type'] = TERM_CATEGORY;
+					break;
+				case 'private_category':
+					$tag['type'] = TERM_PCATEGORY;
+					break;
+				case 'file':
+					$tag['type'] = TERM_FILE;
+					break;
+				case 'search':
+					$tag['type'] = TERM_SEARCH;
+					break;
+				default:
+				case 'unknown':
+					$tag['type'] = TERM_UNKNOWN;
+					break;
+			}
+			$ret[] = $tag;
+		}
+		return $ret;
+	}
+	return '';
+
+}
+
+function activity_sanitise($arr) {
+	if($arr) {
+		$ret = array();
+		foreach($arr as $k => $x) {
+			if(is_array($x))
+				$ret[$k] = activity_sanitise($x);
+			else
+				$ret[$k] = htmlentities($x, ENT_COMPAT,'UTF-8');
+		}
+		return $ret;
+	}
+	return '';
+}
 
 function encode_item_flags($item) {
 
