@@ -210,7 +210,6 @@ function delivery_run($argv, $argc){
 
 		logger('notifier: slaps: ' . print_r($slaps,true), LOGGER_DATA);
 
-		require_once('include/salmon.php');
 
 		if($contact['self'])
 			continue;
