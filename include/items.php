@@ -7,7 +7,7 @@ require_once('include/Photo.php');
 
 
 
-function collect_recipients($item) {
+function collect_recipients($item,&$private) {
 
 	if($item['allow_cid'] || $item['allow_gid'] || $item['deny_cid'] || $item['deny_gid']) {
 		$allow_people = expand_acl($item['allow_cid']);
@@ -18,6 +18,7 @@ function collect_recipients($item) {
 		$recipients = array_unique(array_merge($allow_people,$allow_groups));
 		$deny = array_unique(array_merge($deny_people,$deny_groups));
 		$recipients = array_diff($recipients,$deny);
+		$private = true;
 	}
 	else {
 		$recipients = array();
@@ -31,6 +32,7 @@ function collect_recipients($item) {
 				$recipients[] = $rr['abook_xchan'];
 			}
 		}
+		$private = false;
 	}
 	return $recipients;
 }

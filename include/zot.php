@@ -85,7 +85,7 @@ function zot_notify($channel,$url,$type = 'notify',$recipients = null, $remote_k
  *
  */
 
-function zot_build_packet($channel,$type = 'notify',$recipients = null, $remote_key = null) {
+function zot_build_packet($channel,$type = 'notify',$recipients = null, $remote_key = null, $secret = null) {
 
 	$data = array(
 		'type' => $type,
@@ -102,6 +102,9 @@ function zot_build_packet($channel,$type = 'notify',$recipients = null, $remote_
 
 	if($recipients)
 		$data['recipients'] = $recipients;
+
+	if($secret)
+		$data['secret'] = $secret; 
 
 	// Hush-hush ultra top-secret mode
 

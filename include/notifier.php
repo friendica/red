@@ -209,16 +209,17 @@ function notifier_run($argv, $argc){
 		if($relay_to_owner) {
 			logger('notifier: followup relay', LOGGER_DEBUG);
 			$recipients = array($parent_item['owner_xchan']);
+			$private = true;
 			if(! $encoded_item['flags'])
 				$encoded_item['flags'] = array();
 			$encoded_item['flags'][] = 'relay';
 		}
 		else {
 			logger('notifier: normal distribution', LOGGER_DEBUG);
-			$recipients = collect_recipients($parent_item);
+			$private = false;
+			$recipients = collect_recipients($parent_item,$private);
 
 			// FIXME add any additional recipients such as mentions, etc.
-
 
 			// don't send deletions onward for other people's stuff
 			// TODO verify this is needed - copied logic from same place in old code
@@ -227,8 +228,6 @@ function notifier_run($argv, $argc){
 				logger('notifier: ignoring delete notification for non-wall item');
 				return;
 			}
-
-
 		}
 
 		logger('notifier: encoded item: ' . print_r($encoded_item,true));
@@ -238,6 +237,9 @@ function notifier_run($argv, $argc){
 			return;
 		logger('notifier: recipients: ' . print_r($recipients,true));
 
+		// Now we have collected recipients (except for external mentions, FIXME)
+		// Let's reduce this to a set of hubs.
+
 		$r = q("select distinct(hubloc_callback),hubloc_host,hubloc_sitekey from hubloc 
 			where hubloc_hash in (" . implode(',',$recipients) . ") group by hubloc_callback");
 		if(! $r) {
@@ -245,8 +247,6 @@ function notifier_run($argv, $argc){
 			return;
 		}
 		$hubs = $r;
-		if(! $hubs)
-			return;
 			 
 		$interval = ((get_config('system','delivery_interval') !== false) 
 				? intval(get_config('system','delivery_interval')) : 2 );
@@ -260,8 +260,8 @@ function notifier_run($argv, $argc){
 		$current_count = 0;
 
 		foreach($hubs as $hub) {
-			$n = zot_build_packet($channel,'notify',null,null);
 			$hash = random_string();
+			$n = zot_build_packet($channel,'notify',null,(($private) ? $hub['hubloc_sitekey'],$hash);
 			q("insert into outq ( outq_hash, outq_account, outq_channel, outq_posturl, outq_created, outq_updated, outq_notify, outq_msg ) values ( '%s', %d, %d, '%s', '%s', '%s', '%s', '%s' )",
 				dbesc($hash),
 				intval($target_item['aid']),
