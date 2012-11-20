@@ -565,3 +565,71 @@ function zot_process_response($arr,$outq) {
 
 	logger('zot_process_response: ' . print_r($x,true), LOGGER_DATA);
 }
+
+function zot_fetch($arr) {
+
+	logger('zot_fetch: ' . print_r($arr,true), LOGGER_DATA);
+
+	$url = $arr['sender']['url'] . $arr['callback'];
+
+	$ret_hub = zot_gethub($arr['sender']);
+	if(! $ret_hub) {
+		logger('zot_fetch: not ret_hub');
+		return;
+	}
+	
+
+	$ret_secret = json_encode(array($arr['secret'],'secret_sig' => base64url_encode(rsa_sign($arr['secret'],get_config('system','prvkey')))));
+	
+
+	$data = array(
+		'type'    => 'pickup',
+		'url'     => z_root(),
+		'callback_sig' => base64url_encode(rsa_sign(z_root() . '/post',get_config('system','prvkey'))),
+		'callback' => z_root() . '/post',
+		'secret' => $arr['secret'],
+		'secret_sig' => base64url_encode(rsa_sign($arr['secret'],get_config('system','prvkey')))
+	);
+
+
+	$datatosend = json_encode(aes_encapsulate(json_encode($data),$ret_hub['hubloc_sitekey']));
+	
+	$fetch = zot_zot($url,$datatosend);
+
+	$result = zot_import($fetch);
+
+}
+
+
+function zot_import($arr) {
+
+	logger('zot_import: ' . print_r($arr,true), LOGGER_DATA);
+	logger('zot_import: data' . print_r($data,true), LOGGER_DATA);
+
+	$data = json_decode($arr['body'],true);
+	if(array_key_exists('iv',$data)) {
+		$data = json_decode(aes_unencapsulate($data,get_config('system','prvkey')),true);
+    }
+
+	$incoming = $data['pickup'];
+	if(is_array($incoming)) {
+		foreach($incoming as $i) {
+			if($i['notify'] && $i['notify']['recipients']) {
+				// look for our site members in the recipient list
+				// (fix the notifier to send them...)
+
+			}
+			else {
+				// look for any site members who are accepting posts from this sender
+
+			}
+			if($i['message'] && $i['message']['type'] === 'activity') {
+				// process the message
+
+
+
+
+			}
+		}
+	}
+}

@@ -522,6 +522,7 @@ function import_author_xchan($x) {
 
 function encode_item($item) {
 	$x = array();
+	$x['type'] = 'activity';
 
 	logger('encode_item: ' . print_r($item,true));
 
