@@ -184,6 +184,8 @@ function notifier_run($argv, $argc){
 		$s = q("select * from channel where channel_id = %d limit 1",
 			intval($target_item['uid'])
 		);
+		if($s)
+			$channel = $s[0];
 
 		if($target_item['id'] == $target_item['parent']) {
 			$parent_item = $target_item;
@@ -261,12 +263,13 @@ function notifier_run($argv, $argc){
 
 		foreach($hubs as $hub) {
 			$hash = random_string();
-			$n = zot_build_packet($channel,'notify',null,(($private) ? $hub['hubloc_sitekey'],$hash);
-			q("insert into outq ( outq_hash, outq_account, outq_channel, outq_posturl, outq_created, outq_updated, outq_notify, outq_msg ) values ( '%s', %d, %d, '%s', '%s', '%s', '%s', '%s' )",
+			$n = zot_build_packet($channel,'notify',null,(($private) ? $hub['hubloc_sitekey'] : null),$hash);
+			q("insert into outq ( outq_hash, outq_account, outq_channel, outq_posturl, outq_async, outq_created, outq_updated, outq_notify, outq_msg ) values ( '%s', %d, %d, '%s', %d, '%s', '%s', '%s', '%s' )",
 				dbesc($hash),
 				intval($target_item['aid']),
 				intval($target_item['uid']),
 				dbesc($hub['hubloc_callback']),
+				intval(1),
 				dbesc(datetime_convert()),
 				dbesc(datetime_convert()),
 				dbesc($n),

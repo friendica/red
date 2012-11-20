@@ -675,6 +675,8 @@ CREATE TABLE IF NOT EXISTS `outq` (
   `outq_account` int(10) unsigned NOT NULL DEFAULT '0',
   `outq_channel` int(10) unsigned NOT NULL DEFAULT '0',
   `outq_posturl` char(255) NOT NULL DEFAULT '',
+  `outq_async` tinyint(1) NOT NULL DEFAULT '0',
+  `outq_delivered` tinyint(1) NOT NULL DEFAULT '0',
   `outq_created` datetime NOT NULL DEFAULT '0000-00-00 00:00:00',
   `outq_updated` datetime NOT NULL DEFAULT '0000-00-00 00:00:00',
   `outq_notify` mediumtext NOT NULL,
@@ -684,7 +686,9 @@ CREATE TABLE IF NOT EXISTS `outq` (
   KEY `outq_channel` (`outq_channel`),
   KEY `outq_hub` (`outq_posturl`),
   KEY `outq_created` (`outq_created`),
-  KEY `outq_updated` (`outq_updated`)
+  KEY `outq_updated` (`outq_updated`),
+  KEY `outq_async` (`outq_async`),
+  KEY `outq_delivered` (`outq_delivered`)
 ) ENGINE=MyISAM DEFAULT CHARSET=utf8;
 
 CREATE TABLE IF NOT EXISTS `pconfig` (

@@ -212,9 +212,9 @@ function zot_refresh($them,$channel = null) {
 	
 	if($result['success']) {
 
-		$j = json_decode($result['body']);
+		$j = json_decode($result['body'],true);
 
-		$x = import_xchan_from_json($j);
+		$x = import_xchan($j);
 
 		if(! $x['success']) 
 			return $x;
@@ -226,18 +226,18 @@ function zot_refresh($them,$channel = null) {
 
 		if($channel) {
 			$global_perms = get_perms();
-			if($j->permissions->data) {
+			if($j['permissions']['data']) {
 				$permissions = aes_unencapsulate(array(
-					'data' => $j->permissions->data,
-					'key'  => $j->permissions->key,
-					'iv'   => $j->permissions->iv),
+					'data' => $j['permissions']['data'],
+					'key'  => $j['permissions']['key'],
+					'iv'   => $j['permissions']['iv']),
 					$channel['channel_prvkey']);
 				if($permissions)
-					$permissions = json_decode($permissions);
+					$permissions = json_decode($permissions,true);
 				logger('decrypted permissions: ' . print_r($permissions,true), LOGGER_DATA);
 			}
 			else
-				$permissions = $j->permissions;
+				$permissions = $j['permissions'];
 
 			foreach($permissions as $k => $v) {
 				if($v) {
@@ -265,17 +265,17 @@ function zot_refresh($them,$channel = null) {
 }
 
 		
-function zot_gethub($jarr) {
+function zot_gethub($arr) {
 
-	if($jarr->guid && $jarr->guid_sig && $jarr->url && $jarr->url_sig) {
+	if($arr['guid'] && $arr['guid_sig'] && $arr['url'] && $arr['url_sig']) {
 		$r = q("select * from hubloc 
 				where hubloc_guid = '%s' and hubloc_guid_sig = '%s' 
 				and hubloc_url = '%s' and hubloc_url_sig = '%s'
 				limit 1",
-			dbesc($jarr->guid),
-			dbesc($jarr->guid_sig),
-			dbesc($jarr->url),
-			dbesc($jarr->url_sig)
+			dbesc($arr['guid']),
+			dbesc($arr['guid_sig']),
+			dbesc($arr['url']),
+			dbesc($arr['url_sig'])
 		);
 		if($r && count($r))
 			return $r[0];
@@ -287,15 +287,15 @@ function zot_register_hub($arr) {
 
 	$result = array('success' => false);
 
-	if($arr->hub && $arr->hub_sig && $arr->guid && $arr->guid_sig) {
+	if($arr['hub'] && $arr['hub_sig'] && $arr['guid'] && $arr['guid_sig']) {
 
-		$guid_hash = base64url_encode(hash('whirlpool',$arr->guid . $arr->guid_sig, true));
+		$guid_hash = base64url_encode(hash('whirlpool',$arr['guid'] . $arr['guid_sig'], true));
 
-		$x = z_fetch_url($arr->hub . '/.well-known/zot-info/?f=&hash=' . $guid_hash);
+		$x = z_fetch_url($arr['hub'] . '/.well-known/zot-info/?f=&hash=' . $guid_hash);
 
 		if($x['success']) {
-			$record = json_decode($x['body']);
-			$c = import_xchan_from_json($record);
+			$record = json_decode($x['body'],true);
+			$c = import_xchan($record);
 			if($c['success'])
 				$result['success'] = true;			
 		}
@@ -427,15 +427,15 @@ function import_xchan_from_json($j) {
 // 
 
 
-function import_xchan($j) {
+function import_xchan($arr) {
 
 	$ret = array('success' => false);
 
-	$xchan_hash = base64url_encode(hash('whirlpool',$j['guid'] . $j['guid_sig'], true));
+	$xchan_hash = base64url_encode(hash('whirlpool',$arr['guid'] . $arr['guid_sig'], true));
 	$import_photos = false;
 
-	if(! rsa_verify($j['guid'],base64url_decode($j['guid_sig']),$j['key'])) {
-		logger('import_xchan_from_json: Unable to verify channel signature for ' . $j['address']);
+	if(! rsa_verify($arr['guid'],base64url_decode($arr['guid_sig']),$arr['key'])) {
+		logger('import_xchan_from_json: Unable to verify channel signature for ' . $arr['address']);
 		$ret['message'] = t('Unable to verify channel signature');
 		return $ret;
 	}
@@ -445,12 +445,12 @@ function import_xchan($j) {
 	);	
 
 	if($r) {
-		if($r[0]['xchan_photo_date'] != $j['photo_updated'])
+		if($r[0]['xchan_photo_date'] != $arr['photo_updated'])
 			$update_photos = true;
-		if($r[0]['xchan_name_date'] != $j['name_updated']) {
+		if($r[0]['xchan_name_date'] != $arr['name_updated']) {
 			$r = q("update xchan set xchan_name = '%s', xchan_name_date = '%s' where xchan_hash = '%s' limit 1",
-				dbesc($j['name']),
-				dbesc($j['name_updated']),
+				dbesc($arr['name']),
+				dbesc($arr['name_updated']),
 				dbesc($xchan_hash)
 			);
 		}
@@ -461,17 +461,17 @@ function import_xchan($j) {
 				xchan_photo_l, xchan_addr, xchan_url, xchan_name, xchan_network, xchan_photo_date, xchan_name_date)
 				values ( '%s', '%s', '%s', '%s' , '%s', '%s', '%s', '%s', '%s', '%s', '%s', '%s') ",
 			dbesc($xchan_hash),
-			dbesc($j['guid']),
-			dbesc($j['guid_sig']),
-			dbesc($j['key']),
-			dbesc($j['photo_mimetype']),
-			dbesc($j['photo']),
-			dbesc($j['address']),
-			dbesc($j['url']),
-			dbesc($j['name']),
+			dbesc($arr['guid']),
+			dbesc($arr['guid_sig']),
+			dbesc($arr['key']),
+			dbesc($arr['photo_mimetype']),
+			dbesc($arr['photo']),
+			dbesc($arr['address']),
+			dbesc($arr['url']),
+			dbesc($arr['name']),
 			dbesc('zot'),
-			dbesc($j['photo_updated']),
-			dbesc($j['name_updated'])
+			dbesc($arr['photo_updated']),
+			dbesc($arr['name_updated'])
 		);
 
 	}				
@@ -481,10 +481,10 @@ function import_xchan($j) {
 
 		require_once("Photo.php");
 
-		$photos = import_profile_photo($j['photo'],0,$xchan_hash);
+		$photos = import_profile_photo($arr['photo'],0,$xchan_hash);
 		$r = q("update xchan set xchan_photo_date = '%s', xchan_photo_l = '%s', xchan_photo_m = '%s', xchan_photo_s = '%s', xchan_photo_mimetype = '%s'
 				where xchan_hash = '%s' limit 1",
-				dbesc($j['photo_updated']),
+				dbesc($arr['photo_updated']),
 				dbesc($photos[0]),
 				dbesc($photos[1]),
 				dbesc($photos[2]),
@@ -493,9 +493,9 @@ function import_xchan($j) {
 		);
 	}
 
-	if($j['locations']) {
-		foreach($j['locations'] as $location) {
-			if(! rsa_verify($location['url'],base64url_decode($location['url_sig']),$j['key'])) {
+	if($arr['locations']) {
+		foreach($arr['locations'] as $location) {
+			if(! rsa_verify($location['url'],base64url_decode($location['url_sig']),$arr['key'])) {
 				logger('import_xchan_from_json: Unable to verify site signature for ' . $location['url']);
 				$ret['message'] .= sprintf( t('Unable to verify site signature for %s'), $location['url']) . EOL;
 				continue;
@@ -517,8 +517,8 @@ function import_xchan($j) {
 
 			$r = q("insert into hubloc ( hubloc_guid, hubloc_guid_sig, hubloc_hash, hubloc_addr, hubloc_flags, hubloc_url, hubloc_url_sig, hubloc_host, hubloc_callback, hubloc_sitekey)
 					values ( '%s','%s','%s','%s', %d ,'%s','%s','%s','%s','%s')",
-				dbesc($j['guid']),
-				dbesc($j['guid_sig']),
+				dbesc($arr['guid']),
+				dbesc($arr['guid_sig']),
 				dbesc($xchan_hash),
 				dbesc($location['address']),
 				intval((intval($location['primary'])) ? HUBLOC_FLAGS_PRIMARY : 0),
@@ -540,3 +540,28 @@ function import_xchan($j) {
 	return $ret;
 }
 
+function zot_process_response($arr,$outq) {
+	if(! $arr['success'])
+		return;
+
+	$x = json_decode($arr['body'],true);
+
+	// synchronous message types are handled immediately
+	// async messages remain in the queue until processed.
+
+	if(intval($outq['outq_async'])) {
+		$r = q("update outq set outq_delivered = 1, outq_updated = '%s' where outq_hash = '%s' and outq_channel = %d limit 1",
+			dbesc(datetime_convert()),
+			dbesc($outq['outq_hash']),
+			intval($outq['outq_channel'])
+		);
+	}
+	else {
+		$r = q("delete from outq where outq_hash = '%s' and outq_channel = %d limit 1",
+			dbesc($outq['outq_hash']),
+			intval($outq['outq_channel'])
+		);
+	}
+
+	logger('zot_process_response: ' . print_r($x,true), LOGGER_DATA);
+}
