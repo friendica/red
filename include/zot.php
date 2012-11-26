@@ -614,21 +614,43 @@ function zot_import($arr) {
 	$incoming = $data['pickup'];
 	if(is_array($incoming)) {
 		foreach($incoming as $i) {
+
+			$deliveries = null;
+
 			if($i['notify'] && $i['notify']['recipients']) {
-				// look for our site members in the recipient list
-				// (fix the notifier to send them...)
+				$recip_arr = array();
+				foreach($i['notify']['recipients'] as $recip) {
+					$recip_arr[] =  array('hash' => base64url_encode(hash('whirlpool',$recip['guid'] . $recip['guid_sig'], true)));
+				}
+				stringify_array_elms($recip_arr);
+				$recips = ids_to_querystr($recip_arr,'hash');
+
+				$r = q("select * from channel where channel_hash in ( " . $recips . " ) ");
+				if(! $r)
+					continue;
+
+				$deliveries = $r;
+
+				// We found somebody on this site that's in the recipient list. 
+
 
 			}
 			else {
-				// look for any site members who are accepting posts from this sender
+
+				// Public post. look for any site members who are accepting posts from this sender
+
+
 
 			}
-			if($i['message'] && $i['message']['type'] === 'activity') {
+			if(! $deliveries)
+				continue;			
+			if($i['message']) { 
+				if($i['message']['type'] === 'activity') {
 				// process the message
+				}
+				elseif($i['message']['type'] === 'mail') {
 
-
-
-
+				}
 			}
 		}
 	}
