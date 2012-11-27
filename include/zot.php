@@ -604,20 +604,23 @@ function zot_fetch($arr) {
 function zot_import($arr) {
 
 	logger('zot_import: ' . print_r($arr,true), LOGGER_DATA);
-	logger('zot_import: data' . print_r($data,true), LOGGER_DATA);
 
 	$data = json_decode($arr['body'],true);
 	if(array_key_exists('iv',$data)) {
 		$data = json_decode(aes_unencapsulate($data,get_config('system','prvkey')),true);
     }
 
+	logger('zot_import: data' . print_r($data,true), LOGGER_DATA);
+
 	$incoming = $data['pickup'];
 	if(is_array($incoming)) {
 		foreach($incoming as $i) {
-
+			$i['notify'] = json_decode($i['notify'],true);
+			$i['message'] = json_decode($i['message'],true);
 			$deliveries = null;
 
-			if($i['notify'] && $i['notify']['recipients']) {
+			if($i['notify'] && array_key_exists('recipients',$i['notify']) && count($i['notify']['recipients'])) {
+				logger('specific recipients');
 				$recip_arr = array();
 				foreach($i['notify']['recipients'] as $recip) {
 					$recip_arr[] =  array('hash' => base64url_encode(hash('whirlpool',$recip['guid'] . $recip['guid_sig'], true)));
@@ -625,7 +628,7 @@ function zot_import($arr) {
 				stringify_array_elms($recip_arr);
 				$recips = ids_to_querystr($recip_arr,'hash');
 
-				$r = q("select * from channel where channel_hash in ( " . $recips . " ) ");
+				$r = q("select channel_hash as hash from channel where channel_hash in ( " . $recips . " ) ");
 				if(! $r)
 					continue;
 
@@ -636,17 +639,24 @@ function zot_import($arr) {
 
 			}
 			else {
+				logger('public post');
 
 				// Public post. look for any site members who are accepting posts from this sender
-
-
-
+				$deliveries = public_recips($i);
 			}
 			if(! $deliveries)
-				continue;			
+				continue;
+			
 			if($i['message']) { 
 				if($i['message']['type'] === 'activity') {
-				// process the message
+					$arr = get_item_elements($i);
+
+					logger('Activity received: ' . print_r($arr,true));
+					logger('Activity recipients: ' . print_r($deliveries,true));
+
+
+					// process the message
+
 				}
 				elseif($i['message']['type'] === 'mail') {
 
@@ -654,4 +664,53 @@ function zot_import($arr) {
 			}
 		}
 	}
+}
+
+
+
+
+function public_recips($msg) {
+
+	logger('public_recips: ' . print_r($msg,true));
+
+	if($msg['message']['type'] === 'activity') {
+		if(array_key_exists('flags',$msg['message']) && in_array('thread_parent', $msg['message']['flags'])) {
+			$col = 'channel_w_stream';
+			$field = PERMS_W_STREAM;
+		}
+		else {
+			$col = 'channel_w_comment';
+			$field = PERMS_W_COMMENT;
+		}
+	}
+	elseif($msg['message']['type'] === 'mail') {
+		$col = 'channel_w_mail';
+		$field = PERMS_W_MAIL;
+	}
+
+	if(! $col)
+		return NULL;
+
+	if($msg['notify']['sender']['url'] === z_root())
+		$sql = " where (( " . $col . " & " . PERMS_NETWORK . " )  or ( " . $col . " & " . PERMS_SITE . " )) ";				
+	else
+		$sql = " where ( " . $col . " & " . PERMS_NETWORK . " ) " ;
+
+	$r = q("select channel_hash as hash from channel " . $sql );
+
+	if(! $r)
+		$r = array();
+
+	$x = q("select channel_hash as hash from channel left join abook on abook_channel = channel_id where abook_xchan = '%s'
+		and ( " . $col . " & " . PERMS_SPECIFIC . " )  and ( abook_my_perms & " . $field . " ) ",
+		dbesc(base64url_encode(hash('whirlpool',$msg['notify']['sender']['guid'] . $msg['notify']['sender']['guid_sig'], true)))
+	); 
+
+	if(! $x)
+		$x = array();
+
+	$r = array_merge($r,$x);
+
+
+	return $r;
 }

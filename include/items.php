@@ -656,11 +656,11 @@ function encode_item_flags($item) {
 //  ITEM_DELETED is handled in encode_item directly so we don't need to handle it here. 
 
 	$ret = array();
-	if($item['flags'] & ITEM_THREAD_TOP)
+	if($item['item_flags'] & ITEM_THREAD_TOP)
 		$ret[] = 'thread_parent';
-	if($item['flags'] & ITEM_NSFW)
+	if($item['item_flags'] & ITEM_NSFW)
 		$ret[] = 'nsfw';
-	if($item['flags'] & ITEM_PRIVATE)
+	if($item['item_flags'] & ITEM_PRIVATE)
 		$ret[] = 'private';
 	
 	return $ret;
