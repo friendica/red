@@ -487,6 +487,9 @@ function get_item_elements($x) {
 	$arr['attach']       = activity_sanitise($x['attach']);
 	$arr['term']         = decode_tags($x['tags']);
 
+	$arr['item_private'] = ((array_key_exists('flags',$x) && is_array($x['flags']) && in_array('private',$x['flags'])) ? 1 : 0);
+
+
 	// Here's the deal - the site might be down or whatever but if there's a new person you've never
 	// seen before sending stuff to your stream, we MUST be able to look them up and import their data from their
 	// hub and verify that they are legit - or else we're going to toss the post. We only need to do this
@@ -660,7 +663,7 @@ function encode_item_flags($item) {
 		$ret[] = 'thread_parent';
 	if($item['item_flags'] & ITEM_NSFW)
 		$ret[] = 'nsfw';
-	if($item['item_flags'] & ITEM_PRIVATE)
+	if($item['item_private'])
 		$ret[] = 'private';
 	
 	return $ret;
