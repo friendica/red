@@ -1167,7 +1167,7 @@ function item_store($arr,$force_parent = false) {
 		$allow_gid = $arr['allow_gid'];
 		$deny_cid  = $arr['deny_cid'];
 		$deny_gid  = $arr['deny_gid'];
-		$arr['item_flags'] = $arr['item_flags'] | ITEM_TOP_THREAD;
+		$arr['item_flags'] = $arr['item_flags'] | ITEM_THREAD_TOP;
 	}
 	else { 
 

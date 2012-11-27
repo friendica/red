@@ -666,7 +666,7 @@ function network_content(&$a, $update = 0, $load = false) {
 			);
 		}
 		else {
-
+dbg(1);
 			$r = q("SELECT item.id AS item_id FROM item 
 				left join abook on item.author_xchan = abook.abook_xchan
 				WHERE item.uid = %d AND item.item_restrict = 0
@@ -677,7 +677,7 @@ function network_content(&$a, $update = 0, $load = false) {
 				intval(local_user()),
 				intval(ABOOK_FLAG_BLOCKED)
 			);
-
+dbg(0);
 		}
 
 		// Then fetch all the children of the parents that are on this page
