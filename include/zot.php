@@ -108,10 +108,12 @@ function zot_build_packet($channel,$type = 'notify',$recipients = null, $remote_
 	if($secret)
 		$data['secret'] = $secret; 
 
+	logger('zot_build_packet: ' . print_r($data,true));
+
 	// Hush-hush ultra top-secret mode
 
 	if($remote_key) {
-		$data = aes_encapsulate($data,$remote_key);
+		$data = aes_encapsulate(json_encode($data),$remote_key);
 	}
 
 	return json_encode($data);

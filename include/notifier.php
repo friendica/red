@@ -168,15 +168,16 @@ function notifier_run($argv, $argc){
 		// Normal items
 
 		// Fetch the target item
-
+dbg(1);
 		$r = q("SELECT * FROM item WHERE id = %d and parent != 0 LIMIT 1",
 			intval($item_id)
 		);
 
 		if(! $r)
 			return;
-
+logger('notify1');
 		xchan_query($r);
+dbg(0);
 		$r = fetch_post_tags($r);
 		
 		$target_item = $r[0];
@@ -187,6 +188,7 @@ function notifier_run($argv, $argc){
 		if($s)
 			$channel = $s[0];
 
+logger('notify2');
 		if($target_item['id'] == $target_item['parent']) {
 			$parent_item = $target_item;
 			$top_level_post = true;
@@ -194,8 +196,11 @@ function notifier_run($argv, $argc){
 		else {
 			// fetch the parent item
 			$r = q("SELECT * from item where id = %d order by id asc",
-				intval($parent_id)
+				intval($target_item['parent'])
 			);
+
+logger('notify3');
+
 			if(! $r)
 				return;
 			xchan_query($r);
@@ -204,6 +209,7 @@ function notifier_run($argv, $argc){
 			$parent_item = $r[0];
 			$top_level_post = false;
 		}
+logger('notify4');
 
 		$encoded_item = encode_item($target_item);
 		
