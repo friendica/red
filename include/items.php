@@ -489,6 +489,8 @@ function get_item_elements($x) {
 
 	$arr['item_private'] = ((array_key_exists('flags',$x) && is_array($x['flags']) && in_array('private',$x['flags'])) ? 1 : 0);
 
+	if(array_key_exists('flags',$x) && in_array('deleted',$x['flags']))
+		$arr['item_restrict'] = ITEM_DELETED; 
 
 	// Here's the deal - the site might be down or whatever but if there's a new person you've never
 	// seen before sending stuff to your stream, we MUST be able to look them up and import their data from their
@@ -1262,7 +1264,7 @@ function item_store($arr,$force_parent = false) {
 	// pull out all the taxonomy stuff for separate storage
 
 	$terms = null;
-	if(x($arr,'term')) {
+	if(array_key_exists('term',$arr)) {
 		$terms = $arr['term'];
 		unset($arr['term']);
 	}

@@ -1,6 +1,8 @@
 <?php
 
 require_once('include/crypto.php');
+require_once('include/items.php');
+
 /**
  *
  * @function zot_new_uid($channel_nick)
@@ -615,11 +617,11 @@ function zot_import($arr) {
 	$incoming = $data['pickup'];
 	if(is_array($incoming)) {
 		foreach($incoming as $i) {
-			$i['notify'] = json_decode($i['notify'],true);
-			$i['message'] = json_decode($i['message'],true);
+
+			$i['notify']['sender']['hash'] = base64url_encode(hash('whirlpool',$i['notify']['sender']['guid'] . $i['notify']['sender']['guid_sig'], true));
 			$deliveries = null;
 
-			if($i['notify'] && array_key_exists('recipients',$i['notify']) && count($i['notify']['recipients'])) {
+			if(array_key_exists('recipients',$i['notify']) && count($i['notify']['recipients'])) {
 				logger('specific recipients');
 				$recip_arr = array();
 				foreach($i['notify']['recipients'] as $recip) {
@@ -649,14 +651,13 @@ function zot_import($arr) {
 			
 			if($i['message']) { 
 				if($i['message']['type'] === 'activity') {
-					$arr = get_item_elements($i);
+					$arr = get_item_elements($i['message']);
 
 					logger('Activity received: ' . print_r($arr,true));
 					logger('Activity recipients: ' . print_r($deliveries,true));
-
-
-					// process the message
-
+dbg(1);
+					process_delivery($i['notify']['sender'],$arr,$deliveries);
+dbg(0);
 				}
 				elseif($i['message']['type'] === 'mail') {
 
@@ -666,6 +667,13 @@ function zot_import($arr) {
 	}
 }
 
+
+// A public message with no listed recipients can be delivered to anybody who
+// has PERMS_NETWORK for that type of post, or PERMS_SITE and is one the same
+// site, or PERMS_SPECIFIC and the sender is a contact who is granted 
+// permissions via their connection permissions in the address book.
+// Here we take a given message and construct a list of hashes of everybody
+// on the site that we should deliver to.  
 
 
 
@@ -703,7 +711,7 @@ function public_recips($msg) {
 
 	$x = q("select channel_hash as hash from channel left join abook on abook_channel = channel_id where abook_xchan = '%s'
 		and ( " . $col . " & " . PERMS_SPECIFIC . " )  and ( abook_my_perms & " . $field . " ) ",
-		dbesc(base64url_encode(hash('whirlpool',$msg['notify']['sender']['guid'] . $msg['notify']['sender']['guid_sig'], true)))
+		dbesc($msg['notify']['sender']['hash'])
 	); 
 
 	if(! $x)
@@ -714,3 +722,79 @@ function public_recips($msg) {
 
 	return $r;
 }
+
+
+function process_delivery($sender,$arr,$deliveries) {
+
+	
+	foreach($deliveries as $d) {
+		$r = q("select * from channel where channel_hash = '%s' limit 1",
+			dbesc($d['hash'])
+		);
+
+		if(! $r)
+			continue;
+
+		$channel = $r[0];
+
+		$perm = (($arr['uri'] == $arr['parent_uri']) ? 'send_stream' : 'post_comments');
+
+		if(! perm_is_allowed($channel['channel_id'],$sender['hash'],$perm)) {
+			logger("permission denied for delivery {$channel['channel_id']}");
+			continue;
+		}
+
+		if($arr['item_restrict'] & ITEM_DELETED) {
+			delete_imported_item($sender,$arr,$channel['channel_id']);
+			continue;
+		}
+
+		$r = q("select edited from item where uri = '%s' and uid = %d limit 1",
+			dbesc($arr['uri']),
+			intval($channel['uid'])
+		);
+		if($r)
+			update_imported_item($sender,$arr,$channel['channel_id']);
+		else {
+			$arr['aid'] = $channel['channel_account_id'];
+			$arr['uid'] = $channel['channel_id'];
+			$item_id = item_store($arr);
+		}
+	}
+}
+
+function update_imported_item($sender,$item,$uid) {
+// FIXME
+	logger('item exists: updating or ignoring');
+
+}
+
+function delete_imported_item($sender,$item,$uid) {
+
+	$r = q("select id from item where author_xchan = '%s' or owner_xchan = '%s'
+		and uri = '%s' and uid = %d limit 1",
+		dbesc($sender['hash']),
+		dbesc($sender['hash']),
+		dbesc($item['uri']),
+		intval($uid)
+	);
+	if(! $r) {
+		logger('delete_imported_item: failed: ownership issue');
+		return;
+	}
+		
+	$r = q("update item set body = '', title = '', item_restrict = %d, edited = '%s', changed = '%s'
+		where ( thr_parent = '%s' or parent_uri = '%s' ) and uid = %d",
+		intval(ITEM_DELETED),
+		dbesc(datetime_convert()),
+		dbesc(datetime_convert()),
+		dbesc($item['uri']),
+		dbesc($item['uri']),
+		intval($uid)
+	);
+
+	if(! $r)
+		logger("delete_imported_item: db update failed. Item = {$item['uri']} uid = $uid");
+
+}
+

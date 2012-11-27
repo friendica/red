@@ -79,7 +79,7 @@ function post_post(&$a) {
 			$ret['success'] = true;
 			$ret['pickup'] = array();
 			foreach($r as $rr) {
-				$ret['pickup'][] = array('notify' => $rr['outq_notify'],'message' => $rr['outq_msg']);
+				$ret['pickup'][] = array('notify' => json_decode($rr['outq_notify'],true),'message' => json_decode($rr['outq_msg'],true));
 
 				$x = q("delete from outq where outq_hash = '%s' limit 1",
 					dbesc($rr['outq_hash'])
