@@ -43,6 +43,7 @@ require_once('include/html2plain.php');
  *
  * ZOT 
  *       permission_updated     abook_id
+ *       relay					item_id (item was relayed to owner, we will deliver it as owner)
  *
  */
 
@@ -168,16 +169,16 @@ function notifier_run($argv, $argc){
 		// Normal items
 
 		// Fetch the target item
-dbg(1);
+
 		$r = q("SELECT * FROM item WHERE id = %d and parent != 0 LIMIT 1",
 			intval($item_id)
 		);
 
 		if(! $r)
 			return;
-logger('notify1');
+
 		xchan_query($r);
-dbg(0);
+
 		$r = fetch_post_tags($r);
 		
 		$target_item = $r[0];
@@ -188,7 +189,7 @@ dbg(0);
 		if($s)
 			$channel = $s[0];
 
-logger('notify2');
+
 		if($target_item['id'] == $target_item['parent']) {
 			$parent_item = $target_item;
 			$top_level_post = true;
@@ -199,8 +200,6 @@ logger('notify2');
 				intval($target_item['parent'])
 			);
 
-logger('notify3');
-
 			if(! $r)
 				return;
 			xchan_query($r);
@@ -209,7 +208,7 @@ logger('notify3');
 			$parent_item = $r[0];
 			$top_level_post = false;
 		}
-logger('notify4');
+
 
 		$encoded_item = encode_item($target_item);
 		
@@ -224,6 +223,8 @@ logger('notify4');
 		}
 		else {
 			logger('notifier: normal distribution', LOGGER_DEBUG);
+			if($cmd === 'relay')
+				logger('notifier: owner relay');
 			$private = false;
 			$recipients = collect_recipients($parent_item,$private);
 
@@ -265,7 +266,6 @@ logger('notify4');
 			$deliveries_per_process = 1;
 
 		$deliver = array();
-		$current_count = 0;
 
 		foreach($hubs as $hub) {
 			$hash = random_string();
@@ -282,8 +282,8 @@ logger('notify4');
 				dbesc(json_encode($encoded_item))
 			);
 			$deliver[] = $hash;
-			$current_count ++;
-			if($current_count >= $deliveries_per_process) {
+
+			if(count($deliver) >= $deliveries_per_process) {
 				proc_run('php','include/deliver.php',$deliver);
 				$deliver = array();
 				if($interval)

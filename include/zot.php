@@ -610,6 +610,9 @@ function zot_import($arr) {
 	logger('zot_import: ' . print_r($arr,true), LOGGER_DATA);
 
 	$data = json_decode($arr['body'],true);
+
+	logger('zot_import: data1: ' . print_r($data,true));
+
 	if(array_key_exists('iv',$data)) {
 		$data = json_decode(aes_unencapsulate($data,get_config('system','prvkey')),true);
     }
@@ -619,6 +622,10 @@ function zot_import($arr) {
 	$incoming = $data['pickup'];
 	if(is_array($incoming)) {
 		foreach($incoming as $i) {
+
+			if(array_key_exists('iv',$i['notify'])) {
+				$i['notify'] = json_decode(aes_unencapsulate($i['notify'],get_config('system','prvkey')),true);
+    		}
 
 			$i['notify']['sender']['hash'] = base64url_encode(hash('whirlpool',$i['notify']['sender']['guid'] . $i['notify']['sender']['guid_sig'], true));
 			$deliveries = null;
@@ -658,7 +665,8 @@ function zot_import($arr) {
 					logger('Activity received: ' . print_r($arr,true));
 					logger('Activity recipients: ' . print_r($deliveries,true));
 dbg(1);
-					process_delivery($i['notify']['sender'],$arr,$deliveries);
+					$relay = ((array_key_exists('flags',$i['message']) && in_array('relay',$i['message']['flags'])) ? true : false);
+					process_delivery($i['notify']['sender'],$arr,$deliveries,$relay);
 dbg(0);
 				}
 				elseif($i['message']['type'] === 'mail') {
@@ -726,7 +734,7 @@ function public_recips($msg) {
 }
 
 
-function process_delivery($sender,$arr,$deliveries) {
+function process_delivery($sender,$arr,$deliveries,$relay) {
 
 	
 	foreach($deliveries as $d) {
@@ -745,29 +753,38 @@ function process_delivery($sender,$arr,$deliveries) {
 			logger("permission denied for delivery {$channel['channel_id']}");
 			continue;
 		}
+	
 
 		if($arr['item_restrict'] & ITEM_DELETED) {
 			delete_imported_item($sender,$arr,$channel['channel_id']);
 			continue;
 		}
 
-		$r = q("select edited from item where uri = '%s' and uid = %d limit 1",
+		$r = q("select id, edited from item where uri = '%s' and uid = %d limit 1",
 			dbesc($arr['uri']),
-			intval($channel['uid'])
+			intval($channel['channel_id'])
 		);
-		if($r)
-			update_imported_item($sender,$arr,$channel['channel_id']);
+		if($r) {
+			if($arr['edited'] > $r[0]['edited'])
+				update_imported_item($sender,$arr,$channel['channel_id']);
+			$item_id = $r[0]['id'];
+		}
 		else {
 			$arr['aid'] = $channel['channel_account_id'];
 			$arr['uid'] = $channel['channel_id'];
 			$item_id = item_store($arr);
+		}
+
+		if($relay && $item_id) {
+			logger('process_delivery: invoking relay');
+			proc_run('php','include/notifier.php','relay',intval($item_id));
 		}
 	}
 }
 
 function update_imported_item($sender,$item,$uid) {
 // FIXME
-	logger('item exists: updating or ignoring');
+	logger('update_imported_item');
 
 }
 

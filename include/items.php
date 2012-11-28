@@ -1249,7 +1249,7 @@ function item_store($arr,$force_parent = false) {
 		dbesc($arr['uri']),
 		intval($arr['uid'])
 	);
-	if($r && count($r)) {
+	if($r) {
 		logger('item-store: duplicate item ignored. ' . print_r($arr,true));
 		return 0;
 	}
