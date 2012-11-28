@@ -96,10 +96,6 @@ if((x($_GET,'zid')) && (! $install)) {
 if((x($_SESSION,'authenticated')) || (x($_POST,'auth-params')) || ($a->module === 'login'))
 	require("auth.php");
 
-if(! x($_SESSION,'authenticated'))
-	header('X-Account-Management-Status: none');
-
-
 /*
  * Create the page head after setting the language
  * and getting any auth credentials
@@ -172,22 +168,29 @@ if(strlen($a->module)) {
 			$a->module_loaded = true;
 	}
 
+
+	if((strpos($a->module,'admin') === 0) && (! is_site_admin())) {
+		$a->module_loaded = false;
+		notice( t('Permission denied.') . EOL);
+		goaway(z_root());
+	}
+
 	/**
-	 * If not, next look for a 'standard' program module in the 'mod' directory
+	 * If the site has a custom module to over-ride the standard module, use it.
+	 * Otherwise, look for the standard program module in the 'mod' directory
 	 */
 
-	if((! $a->module_loaded) && (file_exists("mod/{$a->module}.php"))) {
-		if((strpos($a->module,'admin') === 0) && (! is_site_admin())) {
-			$a->module_loaded = false;
-			notice( t('Permission denied.') . EOL);
-			goaway(z_root());
+
+	if(! $a->module_loaded) {
+		if(file_exists("custom/{$a->module}.php")) {
+			include_once("custom/{$a->module}.php");
+			$a->module_loaded = true;
 		}
-		else {
+		elseif(file_exists("mod/{$a->module}.php")) {
 			include_once("mod/{$a->module}.php");
 			$a->module_loaded = true;
 		}
 	}
-
 
 
 	/**
