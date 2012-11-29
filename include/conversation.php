@@ -660,7 +660,6 @@ function prepare_threads_body($a, $items, $cmnt_tpl, $page_writeable, $mode, $pr
 			'thread_level' => $thread_level,
 		);
 
-		logger('tmp_item: ' . print_r($tmp_item,true));
 		$arr = array('item' => $item, 'output' => $tmp_item);
 		call_hooks('display_item', $arr);
 
@@ -802,6 +801,10 @@ function conversation(&$a, $items, $mode, $update, $page_mode = 'traditional') {
 
 
 	$page_dropping = ((local_user() && local_user() == $profile_owner) ? true : false);
+
+	if(! feature_enabled($profile_owner,'multi_delete'))
+		$page_dropping = false;
+
 
 	$channel = $a->get_channel();
 	$observer = $a->get_observer();		
@@ -950,7 +953,7 @@ function conversation(&$a, $items, $mode, $update, $page_mode = 'traditional') {
 					'tags' => template_escape($tags),
 					'hashtags' => template_escape($hashtags),
 					'mentions' => template_escape($mentions),
-                   'txt_cats' => t('Categories:'),
+					'txt_cats' => t('Categories:'),
                     'txt_folders' => t('Filed under:'),
                     'has_cats' => ((count($categories)) ? 'true' : ''),
                     'has_folders' => ((count($folders)) ? 'true' : ''),
@@ -995,8 +998,6 @@ function conversation(&$a, $items, $mode, $update, $page_mode = 'traditional') {
 		{
 			// Normal View
 
-           $page_template = get_markup_template("threaded_conversation.tpl");
-
             require_once('include/ConversationObject.php');
             require_once('include/ItemObject.php');
 
@@ -1023,7 +1024,12 @@ function conversation(&$a, $items, $mode, $update, $page_mode = 'traditional') {
                     continue;
                 }
 
+
+				
+
                 $item['pagedrop'] = $page_dropping;
+
+				
 
                 if($item['id'] == $item['parent']) {
                     $item_object = new Item($item);
@@ -1036,8 +1042,21 @@ function conversation(&$a, $items, $mode, $update, $page_mode = 'traditional') {
                 logger('[ERROR] conversation : Failed to get template data.', LOGGER_DEBUG);
                 $threads = array();
             }
+
         }
     }
+
+
+	if($page_mode === 'traditional' || $page_mode === 'preview') {
+		$page_template = get_markup_template("threaded_conversation.tpl");
+	}
+	elseif($update) {
+		$page_template = get_markup_template("convobj.tpl");
+	}
+	else {
+		$page_template = get_markup_template("conv_frame.tpl");
+		$threads = null;
+	}
 
     $o = replace_macros($page_template, array(
         '$baseurl' => $a->get_baseurl($ssl_state),

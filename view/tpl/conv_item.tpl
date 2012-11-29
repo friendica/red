@@ -98,24 +98,18 @@
 	<div class="wall-item-like $item.indent" id="wall-item-like-$item.id">$item.showlike</div>
 	<div class="wall-item-dislike $item.indent" id="wall-item-dislike-$item.id">$item.showdislike</div>
 
-			{{ if $item.threaded }}
-			{{ if $item.comment }}
-			<div class="wall-item-comment-wrapper $item.indent" >
-				$item.comment
-			</div>
-			{{ endif }}
-			{{ endif }}
-
 <div class="wall-item-outside-wrapper-end $item.indent" ></div>
 </div>
+{{ if $item.toplevel }}
 {{ for $item.children as $item }}
 	{{ inc $item.template }}{{ endinc }}
 {{ endfor }}
+{{ endif }}
 
-{{ if $item.flatten }}
 <div class="wall-item-comment-wrapper" >
 	$item.comment
 </div>
-{{ endif }}
+
+
 </div>
 {{if $item.comment_lastcollapsed}}</div>{{endif}}

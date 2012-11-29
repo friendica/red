@@ -51,6 +51,7 @@ class Item extends BaseObject {
 // FIXME - base this on observer permissions
 		$this->writable = ((local_user() && $channel['channel_hash'] === $item['owner_xchan']) ? true : false);
 
+
 		$ssl_state = ((local_user()) ? true : false);
 		$this->redirect_url = $a->get_baseurl($ssl_state) . '/redir/' . $this->get_data_value('cid') ;
 
@@ -473,6 +474,8 @@ class Item extends BaseObject {
 	 */
 	private function is_writable() {
 		$conv = $this->get_conversation();
+
+		return true;
 
 		if($conv) {
 			// This will allow us to comment on wall-to-wall items owned by our friends

@@ -302,7 +302,7 @@ function updateConvItems(mode,data) {
 	if(mode === 'update') {
 		prev = 'threads-begin';
 
-		$('.thread-wrapper',data).each(function() {
+		$('.thread-wrapper.toplevel_item',data).each(function() {
 			var ident = $(this).attr('id');
 
 			if($('#' + ident).length == 0 && profile_page == 1) {
@@ -331,7 +331,7 @@ function updateConvItems(mode,data) {
 	}
 	if(mode === 'append') {
 		next = 'threads-end';
-		$('.thread-wrapper',data).each(function() {
+		$('.thread-wrapper.toplevel_item',data).each(function() {
 			var ident = $(this).attr('id');
 
 			if($('#' + ident).length == 0) {
@@ -359,7 +359,7 @@ function updateConvItems(mode,data) {
 
 		prev = 'threads-begin';
 
-		$('.thread-wrapper',data).each(function() {
+		$('.thread-wrapper.toplevel_item',data).each(function() {
 			var ident = $(this).attr('id');
 
 			if($('#' + ident).length == 0 && profile_page == 1) {
