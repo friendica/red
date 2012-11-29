@@ -654,17 +654,22 @@ function settings_content(&$a) {
 		
 		$arr = array();
 		$features = get_features();
-		foreach($features as $f) {
-			$arr[] = array('feature_' .$f[0],$f[1],((intval(get_pconfig(local_user(),'feature',$f[0]))) ? "1" : ''),$f[2],array(t('Off'),t('On')));
+
+		foreach($features as $fname => $fdata) {
+			$arr[$fname] = array();
+			$arr[$fname][0] = $fdata[0];
+			foreach(array_slice($fdata,1) as $f) {
+				$arr[$fname][1][] = array('feature_' .$f[0],$f[1],((intval(get_pconfig(local_user(),'feature',$f[0]))) ? "1" : ''),$f[2],array(t('Off'),t('On')));
+			}
 		}
-		
 		
 		$tpl = get_markup_template("settings_features.tpl");
 		$o .= replace_macros($tpl, array(
 			'$form_security_token' => get_form_security_token("settings_features"),
 			'$title'	=> t('Additional Features'),
 			'$features' => $arr,
-			'$submit'   => t('Submit')
+			'$submit'   => t('Submit'),
+			'$field_yesno'  => 'field_yesno.tpl',
 		));
 		return $o;
 	}

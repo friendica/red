@@ -359,16 +359,19 @@ EOT;
 
 		$tpl = get_markup_template("abook_edit.tpl");
 
-		$slider_tpl = get_markup_template('contact_slider.tpl');
-		$slide = replace_macros($slider_tpl,array(
-			'$me' => t('Me'),
-			'$val' => $contact['abook_closeness'],
-			'$intimate' => t('Best Friends'),
-			'$friends' => t('Friends'),
-			'$oldfriends' => t('Former Friends'),
-			'$acquaintances' => t('Acquaintances'),
-			'$world' => t('Unknown')
-		));
+		if(feature_enabled(local_user(),'affinity')) {
+
+			$slider_tpl = get_markup_template('contact_slider.tpl');
+			$slide = replace_macros($slider_tpl,array(
+				'$me' => t('Me'),
+				'$val' => $contact['abook_closeness'],
+				'$intimate' => t('Best Friends'),
+				'$friends' => t('Friends'),
+				'$oldfriends' => t('Former Friends'),
+				'$acquaintances' => t('Acquaintances'),
+				'$world' => t('Unknown')
+			));
+		}
 
 		$perms = array();
 		$channel = $a->get_channel();
