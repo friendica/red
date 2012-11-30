@@ -42,7 +42,7 @@ require_once('include/html2plain.php');
  * and ITEM_ID is the id of the item in the database that needs to be sent to others.
  *
  * ZOT 
- *       permission_updated     abook_id
+ *       permission_update      abook_id
  *       relay					item_id (item was relayed to owner, we will deliver it as owner)
  *
  */
@@ -114,6 +114,8 @@ function notifier_run($argv, $argc){
 				}
 			}
 		}
+
+		return;
 	}	
 
 

@@ -248,18 +248,38 @@ function zot_refresh($them,$channel = null) {
 					$their_perms = $their_perms | intval($global_perms[$k][1]);
 				}
 			}
-
-			$r = q("update abook set abook_their_perms = %d 
-				where abook_xchan = '%s' and abook_channel = %d 
-				and not (abook_flags & %d) limit 1",
-				intval($their_perms),
+dbg(1);
+			$r = q("select * from abook where abook_xchan = '%s' and abook_channel = %d and not (abook_flags & %d) limit 1",
 				dbesc($x['hash']),
 				intval($channel['channel_id']),
 				intval(ABOOK_FLAG_SELF)
 			);
-
-			if(! $r)
-				logger('abook update failed');
+			if($r) {		
+				$y = q("update abook set abook_their_perms = %d 
+					where abook_xchan = '%s' and abook_channel = %d 
+					and not (abook_flags & %d) limit 1",
+					intval($their_perms),
+					dbesc($x['hash']),
+					intval($channel['channel_id']),
+					intval(ABOOK_FLAG_SELF)
+				);
+				if(! $y)
+					logger('abook update failed');
+			}
+			else {
+				$y = q("insert into abook ( abook_account, abook_channel, abook_xchan, abook_their_perms, abook_created, abook_updated, abook_flags ) values ( %d, %d, '%s', %d, '%s', '%s', %d )",
+					intval($channel['channel_account_id']),
+					intval($channel['channel_id']),
+					dbesc($x['hash']),
+					intval($their_perms),
+					dbesc(datetime_convert()),
+					dbesc(datetime_convert()),
+					intval(ABOOK_FLAG_BLOCKED|ABOOK_FLAG_IGNORED|ABOOK_FLAG_PENDING)
+				);
+				if($y)
+					logger("New introduction received for {$channel['channel_name']}");
+			}
+dbg(0);	
 		}
 
 		return true;

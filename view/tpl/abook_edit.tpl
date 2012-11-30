@@ -7,12 +7,13 @@ $tabs
 </div>
 
 <div id="contact-edit-wrapper">
-<br />
-<h3>Slide to adjust your degree of friendship</h3>
+
+{{ if $slide }}
+<h3>$lbl_slider</h3>
 
 $slide
 
-
+{{ endif }}
 
 <h3>Permissions</h3>
 

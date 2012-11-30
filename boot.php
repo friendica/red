@@ -190,6 +190,7 @@ define ( 'ABOOK_FLAG_BLOCKED'    , 0x0001);
 define ( 'ABOOK_FLAG_IGNORED'    , 0x0002);
 define ( 'ABOOK_FLAG_HIDDEN'     , 0x0004);
 define ( 'ABOOK_FLAG_ARCHIVED'   , 0x0008);
+define ( 'ABOOK_FLAG_PENDING'    , 0x0010);
 define ( 'ABOOK_FLAG_SELF'       , 0x0080);
 
 

@@ -386,6 +386,7 @@ EOT;
 
 			'$header' => t('Contact Settings') . ' for ' . $contact['xchan_name'],
 			'$viewprof' => t('View Profile'),
+			'$lbl_slider' => t('Slide to adjust your degree of friendship'),
 			'$slide' => $slide,
 			'$tabs' => $t,
 			'$tab_str' => $tab_str,
@@ -449,7 +450,7 @@ EOT;
 	$hidden = false;
 	$ignored = false;
 	$archived = false;
-
+	$unblocked = false;
 	$all = false;
 
 	$_SESSION['return_url'] = $a->query_string;
@@ -479,10 +480,18 @@ EOT;
 				$search_flags = 0;
 				$all = true;
 				break;
+
 		}
+
+		$sql_extra = (($search_flags) ? " and ( abook_flags & " . $search_flags . " ) " : "");
+
+
+	}
+	else {
+		$sql_extra = " and not ( abook_flags & " . ABOOK_FLAG_BLOCKED . " ) ";
+		$unblocked = true;
 	}
 
-	$sql_extra = (($search_flags) ? "and ( abook_flags & " . $search_flags . " ) " : "");
 
 	$search = ((x($_REQUEST,'search')) ? notags(trim($_REQUEST['search'])) : '');
 
@@ -504,7 +513,7 @@ EOT;
 		array(
 			'label' => t('Unblocked'),
 			'url'   => $a->get_baseurl(true) . '/connections',
-			'sel'   => ((! $all) && (! $blocked) && (! $hidden) && (! $search) && (! $nets) && (! $ignored) && (! $archived)) ? 'active' : '',
+			'sel'   => (($unblocked) && (! $search) && (! $nets)) ? 'active' : '',
 			'title' => t('Only show unblocked connections'),
 		),
 
@@ -561,7 +570,7 @@ EOT;
 		$a->set_pager_total($r[0]['total']);
 		$total = $r[0]['total'];
 	}
-
+dbg(1);
 	$r = q("SELECT abook.*, xchan.* FROM abook left join xchan on abook.abook_xchan = xchan.xchan_hash
 		WHERE abook_channel = %d and not (abook_flags & %d) $sql_extra $sql_extra2 ORDER BY xchan_name LIMIT %d , %d ",
 		intval(local_user()),
@@ -569,7 +578,7 @@ EOT;
 		intval($a->pager['start']),
 		intval($a->pager['itemspage'])
 	);
-
+dbg(0);
 	$contacts = array();
 
 	if(count($r)) {
