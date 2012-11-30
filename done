@@ -30,21 +30,21 @@ include/
 ? crypto.php
 + datetime.php (todo: html removal)
 ? dba.php
-  delivery.php
+? delivery.php
 + directory.php
 - email.php
 + enotify.php
   event.php
 + expire.php
   fcontact.php
-  follow.php
+? follow.php
   gprobe.php
 + group.php
   html2bbcode.php
   html2plain.php
 + identity.php
   iquery.php
-  items.php
+? items.php
 + js_strings.php
 + language.php
   message.php
@@ -56,7 +56,6 @@ include/
   oembed.php
   onepoll.php
 ? Photo.php
-  pidfile.php
 ? plugin.php
   poller.php
 ? profile_advanced.php
@@ -109,11 +108,11 @@ mod/
   friendica.php -> moved to siteinfo.php, require HTML templating, more
   fsuggest.php
 + group.php
-  hcard.php
+- hcard.php -> not needed
   help.php
 + home.php
-  hostxrd.php
-  install.php
+  hostxrd.php -> probably not needed
+? install.php
   invite.php
 + item.php
 + like.php
@@ -137,7 +136,7 @@ mod/
 + photo.php
   photos.php
 + ping.php (needs more work)
-  poco.php
++ poco.php
   poke.php
 ? post.php
 + pretheme.php
@@ -171,7 +170,7 @@ mod/
   view.php
 + viewsrc.php
 ? wall_attach.php (needs remote permissions refactor)
-  wallmessage.php
+- wallmessage.php
 ? wall_upload.php (needs remote permissions refactor)
   webfinger.php
 + _well_known.php

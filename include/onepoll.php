@@ -24,7 +24,6 @@ function onepoll_run($argv, $argc){
 	require_once('include/Contact.php');
 	require_once('include/email.php');
 	require_once('include/socgraph.php');
-	require_once('include/pidfile.php');
 	require_once('include/queue_fn.php');
 
 	load_config('config');
