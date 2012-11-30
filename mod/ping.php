@@ -93,23 +93,23 @@ function ping_init(&$a) {
 	if(argc() > 1 && (argv(1) === 'network' || argv(1) === 'home')) {
 
 		$result = array();
-
-		$r = q("SELECT id, item_restrict, item_flags FROM item
-			WHERE item_restrict = %d and item_flags & %d and `item`.`uid` = %d",
+dbg(1);
+		$r = q("SELECT * FROM item
+			WHERE item_restrict = %d and ( item_flags & %d ) and uid = %d",
 			intval(ITEM_VISIBLE),
 			intval(ITEM_UNSEEN),
 			intval(local_user())
 		);
-
+dbg(0);
 		if($r) {
 			xchan_query($r);
 			foreach($r as $item) {
-				if((argv(1) === 'home') && (! ($item['item_flags'] & ITEM_HOME)))
+				if((argv(1) === 'home') && (! ($item['item_flags'] & ITEM_WALL)))
 					continue;
 				$result[] = format_notification($item);
 			}
 		}			
-
+		logger('ping: ' . print_r($result,true));
 		echo json_encode(array( argv(1) => $result));
 		killme();
 

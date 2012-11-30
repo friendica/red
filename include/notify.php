@@ -5,7 +5,7 @@ function format_notification($item) {
 
 	$ret = '';
 
-return array();
+// return array();
 
 
 	require_once('include/conversation.php');
@@ -28,13 +28,13 @@ return array();
 	// convert this logic into a json array just like the system notifications
 
 	return array(
-		'notify_link' => $a->get_baseurl() . '/notify/view/' . $zz['id'], 
-		'name' => $zz['name'],
-		'url' => $zz['url'],
-		'photo' => $zz['photo'],
-		'when' => relative_date($zz['date']), 
-		'class' => (($zz['seen']) ? 'notify-seen' : 'notify-unseen'), 
-		'message' => strip_tags(bbcode($zz['msg']))
+		'notify_link' => z_root() . '/notify/view_item/' . $item['id'], 
+		'name' => $item['author']['xchan_name'],
+		'url' => $item['author']['xchan_url'],
+		'photo' => $item['author']['xchan_photo_s'],
+		'when' => relative_date($item['created']), 
+		'class' => (($item['item_flags'] & ITEM_UNSEEN) ? 'notify-unseen' : 'notify-seen'), 
+		'message' => strip_tags(bbcode($itemem_text))
 	);
 
 }

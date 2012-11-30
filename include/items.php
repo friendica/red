@@ -1158,6 +1158,7 @@ function item_store($arr,$force_parent = false) {
 	$arr['item_restrict'] = ((x($arr,'item_restrict')) ? intval($arr['item_restrict'])       : 0 );
 	$arr['item_flags']    = ((x($arr,'item_flags'))    ? intval($arr['item_flags'])          : 0 );
 	
+	$arr['item_flags'] = $arr['item_flags'] | ITEM_UNSEEN;
 	
 	$arr['thr_parent'] = $arr['parent_uri'];
 	if($arr['parent_uri'] === $arr['uri']) {
