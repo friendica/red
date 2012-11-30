@@ -8,6 +8,9 @@ function poco_init(&$a) {
 		http_status_exit(401);
 
 
+	$observer = $a->get_observer();
+
+
 	if(argc() > 1) {
 		$user = notags(trim(argv(1)));
 	}
@@ -36,35 +39,38 @@ function poco_init(&$a) {
 
 	if(! $system_mode) {
 
-		$r = q("SELECT `user`.*,`profile`.`hide_friends` from user left join profile on `user`.`uid` = `profile`.`uid`
-			where `user`.`nickname` = '%s' and `profile`.`is_default` = 1 limit 1",
+		$r = q("SELECT channel.channel_id from channel where channel_address = '%s' limit 1",
 			dbesc($user)
 		);
-		if(! count($r) || $r[0]['hidewall'] || $r[0]['hide_friends'])
+		if(! $r)
 			http_status_exit(404);
 
-		$user = $r[0];
+		$channel_id = $r[0]['channel_id'];
+
+		if(! perm_is_allowed($channel_id,$observer,'view_contacts'))
+			http_status_exit(404);
+
 	}
 
 	if($justme)
-		$sql_extra = " and `contact`.`self` = 1 ";
+		$sql_extra = " and ( abook_flags & " . ABOOK_FLAG_SELF . " ) ";
 	else
-		$sql_extra = " and `contact`.`self` = 0 ";
+		$sql_extra = " and abook_flags = 0 ";
 
 	if($cid)
-		$sql_extra = sprintf(" and `contact`.`id` = %d ",intval($cid));
+		$sql_extra = sprintf(" and abook_id = %d ",intval($cid));
 
 	if($system_mode) {
-		$r = q("SELECT count(*) as `total` from `contact` where self = 1 
-			and uid in (select uid from pconfig where cat = 'system' and k = 'suggestme' and v = 1) ");
+		$r = q("SELECT count(*) as `total` from abook where ( abook_flags & " . ABOOK_FLAG_SELF . 
+			" ) and abook_channel in (select uid from pconfig where cat = 'system' and k = 'suggestme' and v = 1) ");
 	}
 	else {
-		$r = q("SELECT count(*) as `total` from `contact` where `uid` = %d and blocked = 0 and pending = 0 and hidden = 0
+		$r = q("SELECT count(*) as `total` from abook where abook_channel = %d 
 			$sql_extra ",
-			intval($user['uid'])
+			intval($channel_id)
 		);
 	}
-	if(count($r))
+	if($r)
 		$totalResults = intval($r[0]['total']);
 	else
 		$totalResults = 0;
@@ -76,21 +82,21 @@ function poco_init(&$a) {
 
 
 	if($system_mode) {
-		$r = q("SELECT * from contact where self = 1 
-			and uid in (select uid from pconfig where cat = 'system' and k = 'suggestme' and v = 1) limit %d, %d ",
+		$r = q("SELECT abook.*, xchan.* from abook left join xchan on abook_xchan = xchan_hash where ( abook_flags & " . ABOOK_FLAG_SELF . 
+			" ) and abook_channel in (select uid from pconfig where cat = 'system' and k = 'suggestme' and v = 1) limit %d, %d ",
 			intval($startIndex),
 			intval($itemsPerPage)
 		);
 	}
 	else {
-
-		$r = q("SELECT * from `contact` where `uid` = %d and blocked = 0 and pending = 0 and hidden = 0
+		$r = q("SELECT abook.*, xchan.* from abook left join xchan on abook_xchan = xchan_hash where abook_channel = %d 
 			$sql_extra LIMIT %d, %d",
-			intval($user['uid']),
+			intval($channel_id),
 			intval($startIndex),
 			intval($itemsPerPage)
 		);
 	}
+
 	$ret = array();
 	if(x($_GET,'sorted'))
 		$ret['sorted'] = 'false';
@@ -107,10 +113,16 @@ function poco_init(&$a) {
 
 	$fields_ret = array(
 		'id' => false,
+		'guid' => false,
+		'guid_sig' => false,
+		'hash' => false,
 		'displayName' => false,
 		'urls' => false,
 		'preferredUsername' => false,
 		'photos' => false
+
+
+
 	);
 
 	if((! x($_GET,'fields')) || ($_GET['fields'] === '@all'))
@@ -127,18 +139,25 @@ function poco_init(&$a) {
 			foreach($r as $rr) {
 				$entry = array();
 				if($fields_ret['id'])
-					$entry['id'] = $rr['id'];
+					$entry['id'] = $rr['abook_id'];
+				if($fields_ret['guid'])
+					$entry['guid'] = $rr['xchan_guid'];
+				if($fields_ret['guid_sig'])
+					$entry['guid_sig'] = $rr['xchan_guid_sig'];
+				if($fields_ret['hash'])
+					$entry['hash'] = $rr['xchan_hash'];
+
 				if($fields_ret['displayName'])
-					$entry['displayName'] = $rr['name'];
+					$entry['displayName'] = $rr['xchan_name'];
 				if($fields_ret['urls']) {
-					$entry['urls'] = array(array('value' => $rr['url'], 'type' => 'profile'));
+					$entry['urls'] = array(array('value' => $rr['xchan_url'], 'type' => 'profile'));
 					if($rr['addr'] && ($rr['network'] !== NETWORK_MAIL))
-						$entry['urls'][] = array('value' => 'acct:' . $rr['addr'], 'type' => 'webfinger');  
+						$entry['urls'][] = array('value' => 'acct:' . $rr['xchan_addr'], 'type' => 'zot');  
 				}
 				if($fields_ret['preferredUsername'])
-					$entry['preferredUsername'] = $rr['nick'];
+					$entry['preferredUsername'] = substr($rr['xchan_addr'],0,strpos($rr['xchan_addr'],'@'));
 				if($fields_ret['photos'])
-					$entry['photos'] = array(array('value' => $rr['photo'], 'type' => 'profile'));
+					$entry['photos'] = array(array('value' => $rr['xchan_photo_l'], 'mimetype' => $rr['xchan_photo_mimetype'], 'type' => 'profile'));
 				$ret['entry'][] = $entry;
 			}
 		}
