@@ -53,7 +53,7 @@ function new_contact($uid,$url,$channel,$interactive = false) {
 
 	// check service class limits
 
-	$r = q("select count(*) as total from abook where abook_channel = %d and not (abook_flags & %d)",
+	$r = q("select count(*) as total from abook where abook_channel = %d and not (abook_flags & %d) ",
 		intval($uid),
 		intval(ABOOK_FLAG_SELF)
 	);

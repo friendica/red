@@ -219,10 +219,11 @@ EOT;
 		$cmd = argv(2);
 
 		$orig_record = q("SELECT abook.*, xchan.* FROM abook left join xchan on abook_xchan = xchan_hash
-			WHERE abook_id = %d AND abook_channel = %d AND NOT ( abook_flags & %d ) LIMIT 1",
+			WHERE abook_id = %d AND abook_channel = %d AND NOT ( abook_flags & %d ) and not abook_flags & %d) LIMIT 1",
 			intval($contact_id),
 			intval(local_user()),
-			intval(ABOOK_FLAG_SELF)
+			intval(ABOOK_FLAG_SELF),
+			intval(ABOOK_FLAG_PENDING)
 		);
 
 		if(! count($orig_record)) {
@@ -562,9 +563,10 @@ EOT;
 		$sql_extra .= sprintf(" AND xchan_network = '%s' ", dbesc($nets));
  	
 	$r = q("SELECT COUNT(abook.abook_id) AS total FROM abook left join xchan on abook.abook_xchan = xchan.xchan_hash 
-		where abook_channel = %d and not (abook_flags & %d) $sql_extra $sql_extra2 ",
+		where abook_channel = %d and not (abook_flags & %d) and not (abook_flags & %d) $sql_extra $sql_extra2 ",
 		intval(local_user()),
-		intval(ABOOK_FLAG_SELF)
+		intval(ABOOK_FLAG_SELF),
+		intval(ABOOK_FLAG_PENDING)
 	);
 	if(count($r)) {
 		$a->set_pager_total($r[0]['total']);
@@ -572,9 +574,10 @@ EOT;
 	}
 dbg(1);
 	$r = q("SELECT abook.*, xchan.* FROM abook left join xchan on abook.abook_xchan = xchan.xchan_hash
-		WHERE abook_channel = %d and not (abook_flags & %d) $sql_extra $sql_extra2 ORDER BY xchan_name LIMIT %d , %d ",
+		WHERE abook_channel = %d and not (abook_flags & %d) and not (abook_flags & %d) $sql_extra $sql_extra2 ORDER BY xchan_name LIMIT %d , %d ",
 		intval(local_user()),
 		intval(ABOOK_FLAG_SELF),
+		intval(ABOOK_FLAG_PENDING),
 		intval($a->pager['start']),
 		intval($a->pager['itemspage'])
 	);
