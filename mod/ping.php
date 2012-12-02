@@ -93,20 +93,50 @@ function ping_init(&$a) {
 	if(argc() > 1 && (argv(1) === 'network' || argv(1) === 'home')) {
 
 		$result = array();
-dbg(1);
+
 		$r = q("SELECT * FROM item
 			WHERE item_restrict = %d and ( item_flags & %d ) and uid = %d",
 			intval(ITEM_VISIBLE),
 			intval(ITEM_UNSEEN),
 			intval(local_user())
 		);
-dbg(0);
+
 		if($r) {
 			xchan_query($r);
 			foreach($r as $item) {
 				if((argv(1) === 'home') && (! ($item['item_flags'] & ITEM_WALL)))
 					continue;
 				$result[] = format_notification($item);
+			}
+		}			
+		logger('ping: ' . print_r($result,true));
+		echo json_encode(array( argv(1) => $result));
+		killme();
+
+	}
+
+	if(argc() > 1 && (argv(1) === 'connect')) {
+
+		$result = array();
+
+		$r = q("SELECT abook.*, xchan.* FROM abook left join xchan on abook_xchan = xchan_hash
+			WHERE abook_channel = %d and (abook_flags & %d) and not (abook_flags & %d)",
+			intval(local_user()),
+			intval(ABOOK_FLAG_PENDING),
+			intval(ABOOK_FLAG_SELF)
+		);
+
+		if($r) {
+			foreach($r as $rr) {
+				$result[] = array(
+					'notify_link' => $a->get_baseurl() . '/notify/view-intro/' . $rr['abook_id'],
+					'name' => $rr['xchan_name'],
+					'url' => $rr['xchan_url'],
+					'photo' => $rr['xchan_photo_s'],
+					'when' => relative_date($rr['abook_created']), 
+					'class' => ('notify-unseen'), 
+					'message' => strip_tags(sprintf( t("Connection request from %s"), $rr['xchan_name']))
+				);
 			}
 		}			
 		logger('ping: ' . print_r($result,true));
