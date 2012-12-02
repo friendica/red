@@ -249,41 +249,58 @@ function zot_refresh($them,$channel = null) {
 				}
 			}
 
-			$r = q("select * from abook where abook_xchan = '%s' and abook_channel = %d and not (abook_flags & %d) and not ( abook_flags & %d) limit 1",
+			$r = q("select * from abook where abook_xchan = '%s' and abook_channel = %d and not (abook_flags & %d) limit 1",
 				dbesc($x['hash']),
 				intval($channel['channel_id']),
-				intval(ABOOK_FLAG_SELF),
-				intval(ABOOK_FLAG_PENDING)
+				intval(ABOOK_FLAG_SELF)
 			);
 			if($r) {		
 				$y = q("update abook set abook_their_perms = %d 
 					where abook_xchan = '%s' and abook_channel = %d 
-					and not (abook_flags & %d) and not ( abook_flags & %d) limit 1",
+					and not (abook_flags & %d) limit 1",
 					intval($their_perms),
 					dbesc($x['hash']),
 					intval($channel['channel_id']),
-					intval(ABOOK_FLAG_SELF),
-					intval(ABOOK_FLAG_PENDING)
+					intval(ABOOK_FLAG_SELF)
 				);
 				if(! $y)
 					logger('abook update failed');
 			}
 			else {
-				$y = q("insert into abook ( abook_account, abook_channel, abook_xchan, abook_their_perms, abook_created, abook_updated, abook_flags ) values ( %d, %d, '%s', %d, '%s', '%s', %d )",
+				$default_perms = 0;
+				// look for default permissions to apply in return - e.g. auto-friend
+				$z = q("select * from abook where abook_channel = %d and (abook_flags & %d) limit 1",
+					intval($channel['channel_id']),
+					intval(ABOOK_FLAG_SELF)
+				);
+				if($z)
+					$default_perms = intval($z[0]['my_perms']);		
+
+				$y = q("insert into abook ( abook_account, abook_channel, abook_xchan, abook_their_perms, abook_my_perms, abook_created, abook_updated, abook_flags ) values ( %d, %d, '%s', %d, '%s', '%s', %d )",
 					intval($channel['channel_account_id']),
 					intval($channel['channel_id']),
 					dbesc($x['hash']),
 					intval($their_perms),
+					intval($default_perms),
 					dbesc(datetime_convert()),
 					dbesc(datetime_convert()),
-					intval(ABOOK_FLAG_BLOCKED|ABOOK_FLAG_IGNORED|ABOOK_FLAG_PENDING)
+					intval(($default_perms) ? 0 : ABOOK_FLAG_BLOCKED|ABOOK_FLAG_IGNORED|ABOOK_FLAG_PENDING)
 				);
-				if($y)
+				if($y) {
 					logger("New introduction received for {$channel['channel_name']}");
+					if($default_perms) {
+						// send back a permissions update for auto-friend/auto-permissions
+						$z = q("select * from abook where abook_xchan = '%s' and abook_channel = %d and not (abook_flags & %d) limit 1",
+							dbesc($x['hash']),
+							intval($channel['channel_id']),
+							intval(ABOOK_FLAG_SELF)
+						);
+						if($z)
+							proc_run('php','include/notifier.php','permissions_update',$z[0]['abook_id']);
+					}
+				}
 			}
-
 		}
-
 		return true;
 	}
 	return false;
