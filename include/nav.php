@@ -142,12 +142,12 @@ EOT;
 		$nav['home'] = array('channel/' . $channel['channel_address'], t('Home'), "", t('Your posts and conversations'));
 
 		if($channel['channel_pageflags'] == PAGE_NORMAL) {
-			$nav['introductions'] = array('notifications/intros',	t('Introductions'), "", t('Friend Requests'));
-			$nav['notifications'] = array('notifications',	t('Notifications'), "", t('Notifications'));
-			$nav['notifications']['all']=array('notifications/system', t('See all notifications'), "", "");
-			$nav['notifications']['mark'] = array('', t('Mark all system notifications seen'), '','');
-
+			$nav['introductions'] = array('notifications/intros',	t('Introductions'), "", t('Connection Requests'));
 		}
+
+		$nav['notifications'] = array('notifications',	t('Notifications'), "", t('Notifications'));
+		$nav['notifications']['all']=array('notifications/system', t('See all notifications'), "", "");
+		$nav['notifications']['mark'] = array('', t('Mark all system notifications seen'), '','');
 
 		$nav['messages'] = array('message', t('Messages'), "", t('Private mail'));
 		$nav['messages']['inbox'] = array('message', t('Inbox'), "", t('Inbox'));
