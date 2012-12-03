@@ -703,15 +703,16 @@ function zot_import($arr) {
 
 					logger('Activity received: ' . print_r($arr,true));
 					logger('Activity recipients: ' . print_r($deliveries,true));
-dbg(1);
+
 					$relay = ((array_key_exists('flags',$i['message']) && in_array('relay',$i['message']['flags'])) ? true : false);
 					process_delivery($i['notify']['sender'],$arr,$deliveries,$relay);
-dbg(0);
+
 				}
 				elseif($i['message']['type'] === 'mail') {
 
 				}
 			}
+
 		}
 	}
 }
