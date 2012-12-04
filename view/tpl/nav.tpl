@@ -26,12 +26,6 @@
 			</li>
 		{{ endif }}
 		
-		{{ if $nav.community }}
-			<li id="nav-community-link" class="nav-menu $sel.community">
-				<a class="$nav.community.2" href="$nav.community.0" title="$nav.community.3" >$nav.community.1</a>
-			</li>
-		{{ endif }}
-		
 		{{ if $nav.network }}
 			<li id="nav-network-link" class="nav-menu $sel.network">
 				<a class="$nav.network.2" href="$nav.network.0" title="$nav.network.3" >$nav.network.1</a>
@@ -42,6 +36,13 @@
 			<li id="nav-home-link" class="nav-menu $sel.home">
 				<a class="$nav.home.2" href="$nav.home.0" title="$nav.home.3" >$nav.home.1</a>
 				<span id="home-update" class="nav-notify"></span>
+			</li>
+		{{ endif }}
+		
+		{{ if $nav.intros }}
+			<li id="nav-intros-link" class="nav-menu $sel.intros">
+				<a class="$nav.intros.2" href="$nav.intros.0" title="$nav.intros.3" >$nav.intros.1</a>
+				<span id="intro-update" class="nav-notify"></span>
 			</li>
 		{{ endif }}
 		

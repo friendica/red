@@ -119,14 +119,6 @@ EOT;
 
 	$gdirpath = 'directory';
 
-	if(strlen(get_config('system','singleuser'))) {
-		$gdir = dirname(get_config('system','directory_submit_url'));
-		if(strlen($gdir))
-			$gdirpath = $gdir;
-	}
-	elseif(! get_config('system','no_community_page'))
-		$nav['community'] = array('community', t('Community'), "", t('Conversations on this site'));
-
 	$nav['directory'] = array($gdirpath, t('Directory'), "", t('People directory')); 
 
 	/**
@@ -141,9 +133,8 @@ EOT;
 
 		$nav['home'] = array('channel/' . $channel['channel_address'], t('Home'), "", t('Your posts and conversations'));
 
-		if($channel['channel_pageflags'] == PAGE_NORMAL) {
-			$nav['introductions'] = array('notifications/intros',	t('Introductions'), "", t('Connection Requests'));
-		}
+		$nav['intros'] = array('intro',	t('Introductions'), "", t('New Connections'));
+
 
 		$nav['notifications'] = array('notifications',	t('Notifications'), "", t('Notifications'));
 		$nav['notifications']['all']=array('notifications/system', t('See all notifications'), "", "");
@@ -212,7 +203,7 @@ function nav_set_selected($item){
 		'network' 		=> null,
 		'home'			=> null,
 		'profiles'		=> null,
-		'introductions' => null,
+		'intros'        => null,
 		'notifications'	=> null,
 		'messages'		=> null,
 		'directory'	    => null,
