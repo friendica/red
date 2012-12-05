@@ -1,9 +1,9 @@
 <div class="mail-conv-outside-wrapper">
 	<div class="mail-conv-sender" >
 		<a href="$mail.from_url" class="mail-conv-sender-url" ><img class="mframe mail-conv-sender-photo$mail.sparkle" src="$mail.from_photo" heigth="80" width="80" alt="$mail.from_name" /></a>
+		<div class="mail-conv-sender-name" >$mail.from_name</div>
 	</div>
 	<div class="mail-conv-detail" >
-		<div class="mail-conv-sender-name" >$mail.from_name</div>
 		<div class="mail-conv-date">$mail.date</div>
 		<div class="mail-conv-subject">$mail.subject</div>
 		<div class="mail-conv-body">$mail.body</div>

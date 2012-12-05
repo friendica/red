@@ -194,6 +194,13 @@ define ( 'ABOOK_FLAG_PENDING'    , 0x0010);
 define ( 'ABOOK_FLAG_SELF'       , 0x0080);
 
 
+
+define ( 'MAIL_DELETED',       0x0001);
+define ( 'MAIL_REPLIED',       0x0002);
+define ( 'MAIL_ISREPLY',       0x0004);
+define ( 'MAIL_SEEN',          0x0008);
+
+
 /**
  * Maximum number of "people who like (or don't like) this"  that we will list by name
  */

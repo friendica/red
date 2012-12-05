@@ -8,7 +8,7 @@ function message_init(&$a) {
 	$new = array(
 		'label' => t('New Message'),
 		'url' => $a->get_baseurl(true) . '/message/new',
-		'sel'=> ($a->argv[1] == 'new'),
+		'sel'=> (argv(1) == 'new'),
 	);
 	
 	$tpl = get_markup_template('message_side.tpl');
@@ -48,13 +48,13 @@ function message_post(&$a) {
 	$replyto   = ((x($_REQUEST,'replyto'))   ? notags(trim($_REQUEST['replyto']))   : '');
 	$subject   = ((x($_REQUEST,'subject'))   ? notags(trim($_REQUEST['subject']))   : '');
 	$body      = ((x($_REQUEST,'body'))      ? escape_tags(trim($_REQUEST['body'])) : '');
-	$recipient = ((x($_REQUEST,'messageto')) ? intval($_REQUEST['messageto'])       : 0 );
+	$recipient = ((x($_REQUEST,'messageto')) ? notags(trim($_REQUEST['messageto'])) : '');
 
 	if(feature_enabled(local_user(),'richtext')) {
 		$body = fix_mce_lf($body);
 	}
 	
-	$ret = send_message($recipient, $body, $subject, $replyto);
+	$ret = send_message(local_user(), $recipient, $body, $subject, $replyto);
 	$norecip = false;
 
 	switch($ret){
@@ -181,13 +181,13 @@ function message_content(&$a) {
 	));
 
 
-	if(($a->argc == 3) && ($a->argv[1] === 'drop' || $a->argv[1] === 'dropconv')) {
-		if(! intval($a->argv[2]))
+	if((argc() == 3) && (argv(1) === 'drop' || argv(1) === 'dropconv')) {
+		if(! intval(argv(2)))
 			return;
-		$cmd = $a->argv[1];
+		$cmd = argv(1);
 		if($cmd === 'drop') {
-			$r = q("DELETE FROM `mail` WHERE `id` = %d AND `uid` = %d LIMIT 1",
-				intval($a->argv[2]),
+			$r = q("DELETE FROM `mail` WHERE `id` = %d AND channel_id = %d LIMIT 1",
+				intval(argv(2)),
 				intval(local_user())
 			);
 			if($r) {
@@ -196,15 +196,15 @@ function message_content(&$a) {
 			goaway($a->get_baseurl(true) . '/message' );
 		}
 		else {
-			$r = q("SELECT `parent_uri`,`convid` FROM `mail` WHERE `id` = %d AND `uid` = %d LIMIT 1",
-				intval($a->argv[2]),
+			$r = q("SELECT `parent_uri` FROM `mail` WHERE `id` = %d AND channel_id = %d LIMIT 1",
+				intval(argv(2)),
 				intval(local_user())
 			);
 			if(count($r)) {
 				$parent = $r[0]['parent_uri'];
-				$convid = $r[0]['convid'];
 
-				$r = q("DELETE FROM `mail` WHERE `parent_uri` = '%s' AND `uid` = %d ",
+
+				$r = q("DELETE FROM `mail` WHERE `parent_uri` = '%s' AND channel_id = %d ",
 					dbesc($parent),
 					intval(local_user())
 				);
@@ -217,21 +217,24 @@ function message_content(&$a) {
 	
 	}
 
-	if(($a->argc > 1) && ($a->argv[1] === 'new')) {
+	$channel = $a->get_channel();
+
+	if((argc() > 1) && ($a->argv[1] === 'new')) {
 		
 		$o .= $header;
 		
 		$plaintext = false;
 		if(intval(get_pconfig(local_user(),'system','plaintext')))
 			$plaintext = true;
-
+		if(! feature_enabled(local_user(),'richtext'))
+			$plaintext = true;
 
 		$tpl = get_markup_template('msg-header.tpl');
 
 		$a->page['htmlhead'] .= replace_macros($tpl, array(
 			'$baseurl' => $a->get_baseurl(true),
 			'$editselect' => (($plaintext) ? 'none' : '/(profile-jot-text|prvmail-text)/'),
-			'$nickname' => $a->user['nickname'],
+			'$nickname' => $channel['channel_addr'],
 			'$linkurl' => t('Please enter a link URL:')
 		));
 	
@@ -241,14 +244,15 @@ function message_content(&$a) {
 		$prename = $preurl = $preid = '';
 
 		if($preselect) {
-			$r = q("select name, url, id from contact where uid = %d and id = %d limit 1",
+			$r = q("select abook.*, xchan.* from abook left join xchan on abook_xchan = xchan_hash
+				where abook_channel = %d and abook_id = %d limit 1",
 				intval(local_user()),
-				intval($a->argv[2])
+				intval(argv(2))
 			);
-			if(count($r)) {
-				$prename = $r[0]['name'];
-				$preurl = $r[0]['url'];
-				$preid = $r[0]['id'];
+			if($r) {
+				$prename = $r[0]['xchan_name'];
+				$preurl = $r[0]['xchan_url'];
+				$preid = $r[0]['abook_id'];
 			}
 		}	 
 
@@ -282,7 +286,7 @@ function message_content(&$a) {
 		return $o;
 	}
 
-	if($a->argc == 1) {
+	if(argc() == 1) {
 
 		// list messages
 
@@ -290,103 +294,110 @@ function message_content(&$a) {
 
 		
 		$r = q("SELECT count(*) AS `total` FROM `mail` 
-			WHERE `mail`.`uid` = %d GROUP BY `parent_uri` ORDER BY `created` DESC",
-			intval(local_user()),
-			dbesc($myprofile)
+			WHERE channel_id = %d",
+			intval(local_user())
 		);
-		if(count($r))
+		if($r)
 			$a->set_pager_total($r[0]['total']);
 
-		$r = q("SELECT max(`mail`.`created`) AS `mailcreated`, min(`mail`.`seen`) AS `mailseen`, 
-			`mail`.* , `contact`.`name`, `contact`.`url`, `contact`.`thumb` , `contact`.`network`,
-			count( * ) as count
-			FROM `mail` LEFT JOIN `contact` ON `mail`.`contact-id` = `contact`.`id` 
-			WHERE `mail`.`uid` = %d GROUP BY `parent_uri` ORDER BY `mailcreated` DESC  LIMIT %d , %d ",
+		$r = q("SELECT * from mail WHERE channel_id = %d order by created desc limit %d, %d",
 			intval(local_user()),
-			//
 			intval($a->pager['start']),
 			intval($a->pager['itemspage'])
 		);
-
-		if(! count($r)) {
+		if(! $r) {
 			info( t('No messages.') . EOL);
 			return $o;
 		}
 
+		$chans = array();
+		foreach($r as $rr) {
+			$s = "'" . dbesc(trim($rr['from_xchan'])) . "'";
+			if(! in_array($s,$chans))
+				$chans[] = $s;
+			$s = "'" . dbesc(trim($rr['to_xchan'])) . "'";
+			if(! in_array($s,$chans))
+				$chans[] = $s;
+ 		}
+
+		$c = q("select * from xchan where xchan_hash in (" . implode(',',$chans) . ")");
+		
 		$tpl = get_markup_template('mail_list.tpl');
 		foreach($r as $rr) {
-			if($rr['unknown']) {
-				$partecipants = sprintf( t("Unknown sender - %s"),$rr['from-name']);
-			}
-			elseif (link_compare($rr['from-url'],$myprofile)){
-				$partecipants = sprintf( t("You and %s"), $rr['name']);
-			}
-			else {
-				$partecipants = sprintf( t("%s and You"), $rr['from-name']);
-			}
-			
+			$rr['from'] = find_xchan_in_array($rr['from_xchan'],$c);
+			$rr['to']   = find_xchan_in_array($rr['to_xchan'],$c);
+			$rr['seen'] = (($rr['mail_flags'] & MAIL_SEEN) ? 1 : "");
+
 			$o .= replace_macros($tpl, array(
 				'$id' => $rr['id'],
-				'$from_name' => $partecipants,
-				'$from_url' => (($rr['network'] === NETWORK_DFRN) ? $a->get_baseurl(true) . '/redir/' . $rr['contact-id'] : $rr['url']),
-				'$sparkle' => ' sparkle',
-				'$from_photo' => (($rr['thumb']) ? $rr['thumb'] : $rr['from-photo']),
-				'$subject' => template_escape((($rr['mailseen']) ? $rr['title'] : '<strong>' . $rr['title'] . '</strong>')),
-				'$delete' => t('Delete conversation'),
+				'$from_name' => template_escape($rr['from']['xchan_name']),
+				'$from_url' =>  z_root() . '/chanview/?f=&hash=' . $rr['from_xchan'],
+				'$from_photo' => $rr['from']['xchan_photo_s'],
+				'$to_name' => template_escape($rr['to']['xchan_name']),
+				'$to_url' =>  z_root() . '/chanview/?f=&hash=' . $rr['to_xchan'],
+				'$to_photo' => $rr['to']['xchan_photo_s'],
+				'$subject' => template_escape((($rr['seen']) ? $rr['title'] : '<strong>' . $rr['title'] . '</strong>')),
+				'$delete' => t('Delete message'),
 				'$body' => template_escape($rr['body']),
-				'$to_name' => template_escape($rr['name']),
-				'$date' => datetime_convert('UTC',date_default_timezone_get(),$rr['mailcreated'], t('D, d M Y - g:i A')),
-				'$seen' => $rr['mailseen'],
-				'$count' => sprintf( tt('%d message', '%d messages', $rr['count']), $rr['count']),
+				'$date' => datetime_convert('UTC',date_default_timezone_get(),$rr['created'], t('D, d M Y - g:i A')),
+				'$seen' => $rr['seen']
 			));
 		}
 		$o .= paginate($a);	
 		return $o;
 	}
 
-	if(($a->argc > 1) && (intval($a->argv[1]))) {
+	if((argc() > 1) && (intval(argv(1)))) {
 
 		$o .= $header;
 
-		$r = q("SELECT `mail`.*, `contact`.`name`, `contact`.`url`, `contact`.`thumb` 
-			FROM `mail` LEFT JOIN `contact` ON `mail`.`contact-id` = `contact`.`id` 
-			WHERE `mail`.`uid` = %d AND `mail`.`id` = %d LIMIT 1",
+		$r = q("SELECT parent_uri from mail WHERE channel_id = %d and id = %d limit 1",
 			intval(local_user()),
-			intval($a->argv[1])
+			intval(argv(1))
 		);
-		if(count($r)) { 
-			$contact_id = $r[0]['contact-id'];
-			$convid = $r[0]['convid'];
 
-			$sql_extra = sprintf(" and `mail`.`parent_uri` = '%s' ", dbesc($r[0]['parent_uri']));
-			if($convid)
-				$sql_extra = sprintf(" and ( `mail`.`parent_uri` = '%s' OR `mail`.`convid` = '%d' ) ",
-					dbesc($r[0]['parent_uri']),
-					intval($convid)
-				);  
-
-			$messages = q("SELECT `mail`.*, `contact`.`name`, `contact`.`url`, `contact`.`thumb` 
-				FROM `mail` LEFT JOIN `contact` ON `mail`.`contact-id` = `contact`.`id` 
-				WHERE `mail`.`uid` = %d $sql_extra ORDER BY `mail`.`created` ASC",
-				intval(local_user())
-			);
-		}
-		if(! count($messages)) {
-			notice( t('Message not available.') . EOL );
+		if(! $r) {
+			info( t('Message not found.') . EOL);
 			return $o;
 		}
 
-		$r = q("UPDATE `mail` SET `seen` = 1 WHERE `parent_uri` = '%s' AND `uid` = %d",
+		$messages = q("select * from mail where parent_uri = '%s' and channel_id = %d order by created asc",
 			dbesc($r[0]['parent_uri']),
 			intval(local_user())
 		);
 
+		if(! $messages) {
+			info( t('Message not found.') . EOL);
+			return $o;
+		}
+
+		$chans = array();
+		foreach($messages as $rr) {
+			$s = "'" . dbesc(trim($rr['from_xchan'])) . "'";
+			if(! in_array($s,$chans))
+				$chans[] = $s;
+			$s = "'" . dbesc(trim($rr['to_xchan'])) . "'";
+			if(! in_array($s,$chans))
+				$chans[] = $s;
+ 		}
+
+
+dbg(1);
+		$c = q("select * from xchan where xchan_hash in (" . implode(',',$chans) . ")");
+
+		$r = q("UPDATE `mail` SET mail_flags = (mail_flags ^ %d) where not (mail_flags & %d) and parent_uri = '%s' AND channel_id = %d",
+			intval(MAIL_SEEN),
+			intval(MAIL_SEEN),
+			dbesc($r[0]['parent_uri']),
+			intval(local_user())
+		);
+dbg(0);
 		require_once("include/bbcode.php");
 
 		$tpl = get_markup_template('msg-header.tpl');
 	
 		$a->page['htmlhead'] .= replace_macros($tpl, array(
-			'$nickname' => $a->user['nickname'],
+			'$nickname' => $channel['channel_addr'],
 			'$baseurl' => $a->get_baseurl(true)
 		));
 
@@ -396,40 +407,39 @@ function message_content(&$a) {
 		$unknown = false;
 
 		foreach($messages as $message) {
-			if($message['unknown'])
-				$unknown = true;
-			if($message['from-url'] == $myprofile) {
-				$from_url = $myprofile;
-				$sparkle = '';
-			}
-			else {
-				$from_url = $a->get_baseurl(true) . '/redir/' . $message['contact-id'];
-				$sparkle = ' sparkle';
-			}
+			$message['from'] = find_xchan_in_array($message['from_xchan'],$c);
+			$message['to']   = find_xchan_in_array($message['to_xchan'],$c);
 
 
-			$extracted = item_extract_images($message['body']);
-			if($extracted['images'])
-				$message['body'] = item_redir_and_replace_images($extracted['body'], $extracted['images'], $message['contact-id']);
+logger('message: ' . print_r($message,true));
+
+//			$extracted = item_extract_images($message['body']);
+//			if($extracted['images'])
+//				$message['body'] = item_redir_and_replace_images($extracted['body'], $extracted['images'], $message['contact-id']);
 
 			$mails[] = array(
 				'id' => $message['id'],
-				'from_name' => template_escape($message['from-name']),
-				'from_url' => $from_url,
-				'sparkle' => $sparkle,
-				'from_photo' => $message['from-photo'],
+				'from_name' => template_escape($message['from']['xchan_name']),
+				'from_url' =>  z_root() . '/chanview/?f=&hash=' . $message['from_xchan'],
+				'from_photo' => $message['from']['xchan_photo_m'],
+				'to_name' => template_escape($message['to']['xchan_name']),
+				'to_url' =>  z_root() . '/chanview/?f=&hash=' . $message['to_xchan'],
+				'to_photo' => $message['to']['xchan_photo_m'],
 				'subject' => template_escape($message['title']),
 				'body' => template_escape(smilies(bbcode($message['body']))),
 				'delete' => t('Delete message'),
-				'to_name' => template_escape($message['name']),
 				'date' => datetime_convert('UTC',date_default_timezone_get(),$message['created'],'D, d M Y - g:i A'),
 			);
 				
 			$seen = $message['seen'];
+
 		}
 
+		logger('mails: ' . print_r($mails,true));
 
-		$select = $message['name'] . '<input type="hidden" name="messageto" value="' . $contact_id . '" />';
+		$recp = (($message['from_xchan'] === $channel['channel_hash']) ? 'to_xchan' : 'from_xchan');
+
+		$select = $message[$recp]['xchan_name'] . '<input type="hidden" name="messageto" value="' . $message[$recp]['xchan_hash'] . '" />';
 		$parent = '<input type="hidden" name="replyto" value="' . $message['parent_uri'] . '" />';
 
 		$tpl = get_markup_template('mail_display.tpl');

@@ -200,12 +200,13 @@ function ping_init(&$a) {
 	$result['intros'] = intval($intros);
 
 	$t4 = dba_timer();
+	$channel = get_app()->get_channel();
 
-	$myurl = $a->get_baseurl() . '/channel/' . $a->user['nickname'] ;
-	$mails = q("SELECT *,  COUNT(*) AS `total` FROM `mail`
-		WHERE `uid` = %d AND `seen` = 0 AND `from-url` != '%s' ",
+	$mails = q("SELECT count(id) as total from mail
+		WHERE channel_id = %d AND not (mail_flags & %d) and from_xchan != '%s' ",
 		intval(local_user()),
-		dbesc($myurl)
+		intval(MAIL_SEEN),		
+		dbesc($channel['channel_hash'])
 	);
 	if($mails)
 		$result['mail'] = intval($mails[0]['total']);

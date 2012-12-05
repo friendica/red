@@ -127,15 +127,11 @@ function acl_init(&$a){
 		);
 	}
 	elseif($type == 'm') {
-		$r = q("SELECT `id`, `name`, `nick`, `micro`, `network`, `url`, `attag` FROM `contact` 
-			WHERE `uid` = %d AND `self` = 0 AND `blocked` = 0 AND `pending` = 0 AND `archive` = 0
-			AND `network` IN ('%s','%s','%s')
-			$sql_extra2
-			ORDER BY `name` ASC ",
-			intval(local_user()),
-			dbesc(NETWORK_DFRN),
-			dbesc(NETWORK_ZOT),
-			dbesc(NETWORK_DIASPORA)
+		$r = q("SELECT xchan_hash as id, xchan_name as name, xchan_photo_s as micro, xchan_url as url from xchan
+			where 1
+			$sql_extra3
+			ORDER BY `xchan_name` ASC ",
+			intval(local_user())
 		);
 	}
 	elseif($type == 'a') {
@@ -170,7 +166,7 @@ function acl_init(&$a){
 				$x['photos'][]      = $g['micro'];
 				$x['links'][]       = $g['url'];
 				$x['suggestions'][] = (($type === 'x') ? '@' : '') . $g['name'];
-				$x['data'][]        = intval($g['id']);
+				$x['data'][]        = $g['id'];
 			}
 		}
 		echo json_encode($x);

@@ -1,11 +1,10 @@
 <?php
 
-	// send a private message
+
+// send a private message
 	
 
-
-
-function send_message($recipient=0, $body='', $subject='', $replyto=''){ 
+function send_message($uid = 0, $recipient='', $body='', $subject='', $replyto=''){ 
 
 	$a = get_app();
 
@@ -14,106 +13,59 @@ function send_message($recipient=0, $body='', $subject='', $replyto=''){
 	if(! strlen($subject))
 		$subject = t('[no subject]');
 
-	$me = q("SELECT * FROM `contact` WHERE `uid` = %d AND `self` = 1 LIMIT 1",
-		intval(local_user())
-	);
-	$contact = q("SELECT * FROM `contact` WHERE `id` = %d AND `uid` = %d LIMIT 1",
-			intval($recipient),
-			intval(local_user())
-	);
 
-	if(! (count($me) && (count($contact)))) {
-		return -2;
+	if($uid) {
+		$r = q("select * from channel where channel_id = %d limit 1",
+			intval($uid)
+		);
+		if($r)
+			$channel = $r[0];
+	}
+	else {
+		$channel = get_app()->get_channel();
 	}
 
-	$hash = random_string();
- 	$uri = 'urn:X-dfrn:' . $a->get_baseurl() . ':' . local_user() . ':' . $hash ;
 
-	$convid = 0;
-	$reply = false;
+	do {
+		$dups = false;
+		$hash = random_string();
 
-	// look for any existing conversation structure
+		$uri = $hash . '@' . get_app()->get_hostname();
 
-	if(strlen($replyto)) {
-		$reply = true;
-		$r = q("select convid from mail where uid = %d and ( uri = '%s' or `parent_uri` = '%s' ) limit 1",
-			intval(local_user()),
-			dbesc($replyto),
-			dbesc($replyto)
-		);
+		$r = q("SELECT `id` FROM mail WHERE `uri` = '%s' LIMIT 1",
+			dbesc($uri));
 		if(count($r))
-			$convid = $r[0]['convid'];
-	}		
+			$dups = true;
+	} while($dups == true);
 
-	if(! $convid) {
-
-		// create a new conversation
-
-		$conv_guid = get_guid();
-
-		$recip_host = substr($contact[0]['url'],strpos($contact[0]['url'],'://')+3);
-		$recip_host = substr($recip_host,0,strpos($recip_host,'/'));
-
-		$recip_handle = (($contact[0]['addr']) ? $contact[0]['addr'] : $contact[0]['nick'] . '@' . $recip_host);
-		$sender_handle = $a->user['nickname'] . '@' . substr($a->get_baseurl(), strpos($a->get_baseurl(),'://') + 3);
-
-		$handles = $recip_handle . ';' . $sender_handle;
-
-		$r = q("insert into conv (uid,guid,creator,created,updated,subject,recips) values(%d, '%s', '%s', '%s', '%s', '%s', '%s') ",
-			intval(local_user()),
-			dbesc($conv_guid),
-			dbesc($sender_handle),
-			dbesc(datetime_convert()),
-			dbesc(datetime_convert()),
-			dbesc($subject),
-			dbesc($handles)
-		);
-
-		$r = q("select * from conv where guid = '%s' and uid = %d limit 1",
-			dbesc($conv_guid),
-			intval(local_user())
-		);
-		if(count($r))
-			$convid = $r[0]['id'];
-	}
-
-	if(! $convid) {
-		logger('send message: conversation not found.');
-		return -4;
-	}
 
 	if(! strlen($replyto)) {
 		$replyto = $uri;
 	}
 
+	
 
-	$r = q("INSERT INTO `mail` ( `uid`, `guid`, `convid`, `from-name`, `from-photo`, `from-url`, 
-		`contact-id`, `title`, `body`, `seen`, `reply`, `replied`, `uri`, `parent_uri`, `created`)
-		VALUES ( %d, '%s', %d, '%s', '%s', '%s', %d, '%s', '%s', %d, %d, %d, '%s', '%s', '%s' )",
+	$r = q("INSERT INTO `mail` (  account_id, channel_id, from_xchan, to_xchan, title, body, uri, parent_uri, created )
+		VALUES ( %d, %d, '%s', '%s', '%s', '%s', '%s', '%s', '%s' )",
+		intval($channel['channel_account_id']),
 		intval(local_user()),
-		dbesc(get_guid()),
-		intval($convid),
-		dbesc($me[0]['name']),
-		dbesc($me[0]['thumb']),
-		dbesc($me[0]['url']),
-		intval($recipient),
+		dbesc($channel['channel_hash']),
+		dbesc($recipient),
 		dbesc($subject),
 		dbesc($body),
-		1,
-		intval($reply),
-		0,
 		dbesc($uri),
 		dbesc($replyto),
-		datetime_convert()
+		dbesc(datetime_convert())
 	);
 
 
-	$r = q("SELECT * FROM `mail` WHERE `uri` = '%s' and `uid` = %d LIMIT 1",
+	$r = q("SELECT * FROM `mail` WHERE uri = '%s' and channel_id = %d LIMIT 1",
 		dbesc($uri),
 		intval(local_user())
 	);
 	if(count($r))
 		$post_id = $r[0]['id'];
+
 
 	/**
 	 *
@@ -158,85 +110,3 @@ function send_message($recipient=0, $body='', $subject='', $replyto=''){
 }
 
 
-
-
-
-function send_wallmessage($recipient='', $body='', $subject='', $replyto=''){ 
-
-	$a = get_app();
-
-	if(! $recipient) return -1;
-	
-	if(! strlen($subject))
-		$subject = t('[no subject]');
-
-	$hash = random_string();
- 	$uri = 'urn:X-dfrn:' . $a->get_baseurl() . ':' . local_user() . ':' . $hash ;
-
-	$convid = 0;
-	$reply = false;
-
-	require_once('include/Scrape.php');
-
-	$me = probe_url($replyto);
-
-	if(! $me['name'])
-		return -2;
-
-	$conv_guid = get_guid();
-
-	$recip_handle = $recipient['nickname'] . '@' . substr($a->get_baseurl(), strpos($a->get_baseurl(),'://') + 3);
-
-	$sender_nick = basename($replyto);
-	$sender_host = substr($replyto,strpos($replyto,'://')+3);
-	$sender_host = substr($sender_host,0,strpos($sender_host,'/'));
-	$sender_handle = $sender_nick . '@' . $sender_host;
-
-	$handles = $recip_handle . ';' . $sender_handle;
-
-	$r = q("insert into conv (uid,guid,creator,created,updated,subject,recips) values(%d, '%s', '%s', '%s', '%s', '%s', '%s') ",
-		intval(local_user()),
-		dbesc($conv_guid),
-		dbesc($sender_handle),
-		dbesc(datetime_convert()),
-		dbesc(datetime_convert()),
-		dbesc($subject),
-		dbesc($handles)
-	);
-
-	$r = q("select * from conv where guid = '%s' and uid = %d limit 1",
-		dbesc($conv_guid),
-		intval($recipient['uid'])
-	);
-	if(count($r))
-		$convid = $r[0]['id'];
-
-	if(! $convid) {
-		logger('send message: conversation not found.');
-		return -4;
-	}
-
-	$r = q("INSERT INTO `mail` ( `uid`, `guid`, `convid`, `from-name`, `from-photo`, `from-url`, 
-		`contact-id`, `title`, `body`, `seen`, `reply`, `replied`, `uri`, `parent_uri`, `created`, `unknown`)
-		VALUES ( %d, '%s', %d, '%s', '%s', '%s', %d, '%s', '%s', %d, %d, %d, '%s', '%s', '%s', %d )",
-		intval($recipient['uid']),
-		dbesc(get_guid()),
-		intval($convid),
-		dbesc($me['name']),
-		dbesc($me['photo']),
-		dbesc($me['url']),
-		0,
-		dbesc($subject),
-		dbesc($body),
-		0,
-		0,
-		0,
-		dbesc($uri),
-		dbesc($replyto),
-		datetime_convert(),
-		1
-	);
-
-	return 0;
-
-}

@@ -594,7 +594,8 @@ CREATE TABLE IF NOT EXISTS `item_id` (
 CREATE TABLE IF NOT EXISTS `mail` (
   `id` int(10) unsigned NOT NULL AUTO_INCREMENT,
   `mail_flags` int(10) unsigned NOT NULL DEFAULT '0',
-  `author_xchan` char(255) NOT NULL DEFAULT '',
+  `from_xchan` char(255) NOT NULL DEFAULT '',
+  `to_xchan` char(255) NOT NULL DEFAULT '',
   `account_id` int(10) unsigned NOT NULL DEFAULT '0',
   `channel_id` int(10) unsigned NOT NULL,
   `title` char(255) NOT NULL,
@@ -606,11 +607,12 @@ CREATE TABLE IF NOT EXISTS `mail` (
   KEY `uri` (`uri`),
   KEY `created` (`created`),
   KEY `mail_flags` (`mail_flags`),
-  KEY `author_xchan` (`author_xchan`),
   KEY `account_id` (`account_id`),
   KEY `channel_id` (`channel_id`),
-  KEY `parent_uri` (`parent_uri`)
-) ENGINE=MyISAM DEFAULT CHARSET=utf8;
+  KEY `parent_uri` (`parent_uri`),
+  KEY `from_xchan` (`from_xchan`),
+  KEY `to_xchan` (`to_xchan`)
+) ENGINE=MyISAM  DEFAULT CHARSET=utf8;
 
 CREATE TABLE IF NOT EXISTS `manage` (
   `id` int(11) NOT NULL AUTO_INCREMENT,

@@ -5,7 +5,7 @@ $(document).ready(function() {
 		minChars: 2,
 		width: 350,
 	});
-	a.setOptions({ params: { type: 'a' }});
+	a.setOptions({ params: { autoSubmit: true, type: 'a' }});
 
 }); 
 
