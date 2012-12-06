@@ -1629,7 +1629,12 @@ function mail_store($arr) {
 	$arr['body']          = ((x($arr,'body'))          ? trim($arr['body'])                  : '');
 	$arr['mail_flags']    = ((x($arr,'mail_flags'))    ? intval($arr['mail_flags'])          : 0 );
 	
-	
+
+	if(! $arr['parent_uri']) {
+		logger('mail_store: missing parent');
+		$arr['parent_uri'] = $arr['uri'];
+	}
+
 	$r = q("SELECT `id` FROM mail WHERE `uri` = '%s' AND channel_id = %d LIMIT 1",
 		dbesc($arr['uri']),
 		intval($arr['channel_id'])

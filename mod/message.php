@@ -437,7 +437,7 @@ logger('message: ' . print_r($message,true));
 
 		logger('mails: ' . print_r($mails,true));
 
-		$recp = (($message['from_xchan'] === $channel['channel_hash']) ? 'to_xchan' : 'from_xchan');
+		$recp = (($message['from_xchan'] === $channel['channel_hash']) ? 'to' : 'from');
 
 		$select = $message[$recp]['xchan_name'] . '<input type="hidden" name="messageto" value="' . $message[$recp]['xchan_hash'] . '" />';
 		$parent = '<input type="hidden" name="replyto" value="' . $message['parent_uri'] . '" />';
