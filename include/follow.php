@@ -34,7 +34,7 @@ function new_contact($uid,$url,$channel,$interactive = false) {
 	if($arr['channel']['success']) 
 		$ret = $arr['channel'];
 	else
-		$ret = zot_finger($url,$channel,false);
+		$ret = zot_finger($url,$channel);
 
 	if($ret['success']) {
 		$j = json_decode($ret['body']);
