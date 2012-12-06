@@ -29,7 +29,10 @@ function acl_init(&$a){
 	if ($search!=""){
 		$sql_extra = "AND `name` LIKE '%%".dbesc($search)."%%'";
 		$sql_extra2 = "AND (`attag` LIKE '%%".dbesc($search)."%%' OR `name` LIKE '%%".dbesc($search)."%%' OR `nick` LIKE '%%".dbesc($search)."%%')";
-		$sql_extra3 = "AND ( xchan_name like '%%" . dbesc($search) . "%%' )";
+
+		$col = ((strpos($search,'@') !== false) ? 'xchan_addr' : 'xchan_name' );
+		$sql_extra3 = "AND $col like " . protect_sprintf( "'%" . dbesc($search) . "%'" ) . " ";
+
 	} else {
 		$sql_extra = $sql_extra2 = $sql_extra3 = "";
 	}
@@ -127,12 +130,16 @@ function acl_init(&$a){
 		);
 	}
 	elseif($type == 'm') {
-		$r = q("SELECT xchan_hash as id, xchan_name as name, xchan_photo_s as micro, xchan_url as url from xchan
-			where 1
+dbg(1);
+		$r = q("SELECT xchan_hash as id, xchan_name as name, xchan_addr as nick, xchan_photo_s as micro, xchan_url as url 
+			FROM abook left join xchan on abook_xchan = xchan_hash
+			WHERE abook_channel = %d and ( (abook_their_perms = null) or (abook_their_perms & %d ))
 			$sql_extra3
 			ORDER BY `xchan_name` ASC ",
-			intval(local_user())
+			intval(local_user()),
+			intval(PERMS_W_MAIL)
 		);
+dbg(0);
 	}
 	elseif($type == 'a') {
 		$r = q("SELECT abook_id as id, xchan_name as name, xchan_addr as nick, xchan_photo_s as micro, xchan_network as network, xchan_url as url, xchan_addr as attag FROM abook left join xchan on abook_xchan = xchan_hash

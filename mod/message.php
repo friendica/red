@@ -2,6 +2,7 @@
 
 require_once('include/acl_selectors.php');
 require_once('include/message.php');
+require_once('include/zot.php');
 
 function message_init(&$a) {
 	$tabs = array();
@@ -45,10 +46,64 @@ function message_post(&$a) {
 		return;
 	}
 
-	$replyto   = ((x($_REQUEST,'replyto'))   ? notags(trim($_REQUEST['replyto']))   : '');
-	$subject   = ((x($_REQUEST,'subject'))   ? notags(trim($_REQUEST['subject']))   : '');
-	$body      = ((x($_REQUEST,'body'))      ? escape_tags(trim($_REQUEST['body'])) : '');
-	$recipient = ((x($_REQUEST,'messageto')) ? notags(trim($_REQUEST['messageto'])) : '');
+	$replyto   = ((x($_REQUEST,'replyto'))      ? notags(trim($_REQUEST['replyto']))      : '');
+	$subject   = ((x($_REQUEST,'subject'))      ? notags(trim($_REQUEST['subject']))      : '');
+	$body      = ((x($_REQUEST,'body'))         ? escape_tags(trim($_REQUEST['body']))    : '');
+	$recipient = ((x($_REQUEST,'messageto'))    ? notags(trim($_REQUEST['messageto']))    : '');
+	$rstr      = ((x($_REQUEST,'messagerecip')) ? notags(trim($_REQUEST['messagerecip'])) : '');
+
+	if(! $recipient) {
+		$channel = $a->get_channel();
+
+		$ret = zot_finger($rstr,$channel);
+
+		if(! $ret) {
+			notice( t('Unable to lookup recipient.') . EOL);
+			return;
+		} 
+		$j = json_decode($ret['body'],true);
+
+		logger('message_post: lookup: ' . $url . ' ' . print_r($j,true));
+
+		if(! ($j['success'] && $j['guid'])) {
+			notice( t('Unable to communicate with requested channel.'));
+			return;
+		}
+
+		$x = import_xchan($j);
+
+		if(! $x['success']) {
+			notice( t('Cannot verify requested channel.'));
+			return;
+		}
+
+		$recipient = $x['hash'];
+
+		$their_perms = 0;
+
+		$global_perms = get_perms();
+
+		if($j['permissions']['data']) {
+			$permissions = aes_unencapsulate($j['permissions'],$channel['channel_prvkey']);
+			if($permissions)
+				$permissions = json_decode($permissions);
+			logger('decrypted permissions: ' . print_r($permissions,true), LOGGER_DATA);
+		}
+		else
+			$permissions = $j['permissions'];
+
+		foreach($permissions as $k => $v) {
+			if($v) {
+				$their_perms = $their_perms | intval($global_perms[$k][1]);
+			}
+		}
+
+		if(! ($their_perms & PERMS_W_MAIL)) {
+ 			notice( t('Selected channel has private message restrictions. Send failed.'));
+			return;
+		}
+	}
+
 
 	if(feature_enabled(local_user(),'richtext')) {
 		$body = fix_mce_lf($body);
