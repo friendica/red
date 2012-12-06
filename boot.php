@@ -1256,12 +1256,12 @@ function profile_load(&$a, $nickname, $profile = 0) {
 			require_once($theme_info_file);
 		}
 
-		if(local_user() && local_user() == $a->profile['uid']) {
-			$a->page['aside'] .= replace_macros(get_markup_template('profile_edlink.tpl'),array(
-				'$editprofile' => t('Edit profile'),
-				'$profid' => $a->profile['id']
-			));
-		}
+//		if(local_user() && local_user() == $a->profile['uid']) {
+//			$a->page['aside'] .= replace_macros(get_markup_template('profile_edlink.tpl'),array(
+//				'$editprofile' => t('Edit profile'),
+//				'$profid' => $a->profile['id']
+//			));
+//		}
 
 		$block = (((get_config('system','block_public')) && (! local_user()) && (! remote_user())) ? true : false);
 
@@ -1306,6 +1306,9 @@ if(! function_exists('profile_sidebar')) {
 		if((! is_array($profile)) && (! count($profile)))
 			return $o;
 
+
+		$is_owner = (($profile['uid'] == local_user()) ? true : false);
+
 		$profile['picdate'] = urlencode($profile['picdate']);
 
 		call_hooks('profile_sidebar_enter', $profile);
@@ -1333,17 +1336,24 @@ if(! function_exists('profile_sidebar')) {
 
 
 		// show edit profile to yourself
-		if ($profile['uid'] == local_user() && feature_enabled(local_user(),'multi_profiles')) {
-			$profile['edit'] = array($a->get_baseurl(). '/profiles', t('Profiles'),"", t('Manage/edit profiles'));
-		
+		if($is_owner) {
+
+			$profile['menu'] = array(
+				'chg_photo' => t('Change profile photo'),
+				'entries' => array(),
+			);
+
+
+			if(feature_enabled(local_user(),'multi_profiles')) {
+				$profile['edit'] = array($a->get_baseurl(). '/profiles', t('Profiles'),"", t('Manage/edit profiles'));
+				$profile['menu']['cr_new'] = t('Create New Profile');
+			}
+			else
+				$profile['edit'] = array($a->get_baseurl() . '/profiles/' . $profile['id'], t('Edit Profile'),'',t('Edit Profile'));
+						
 			$r = q("SELECT * FROM `profile` WHERE `uid` = %d",
 					local_user());
 		
-			$profile['menu'] = array(
-				'chg_photo' => t('Change profile photo'),
-				'cr_new' => t('Create New Profile'),
-				'entries' => array(),
-			);
 
 			if(count($r)) {
 
