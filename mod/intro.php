@@ -31,6 +31,12 @@ function intro_post(&$a) {
 
 }
 
+function intro_aside(&$a) {
+	require_once('include/contact_widgets.php');
+
+	$a->set_widget('follow', follow_widget());
+
+}
 
 
 function intro_content(&$a) {
@@ -54,12 +60,12 @@ function intro_content(&$a) {
 		$a->set_pager_total($r[0]['total']);
 		if(! intval($r[0]['total'])) {
 			notice( t('No pending introductions.') . EOL);	
-			return;
+			return $o;
 		}
 	}
 	else {
 		notice( t('System error. Please try again later.') . EOL);
-		return;
+		return $o;
 	}
 
 	$r = q("select abook.*, xchan.* from abook left join xchan on abook_xchan = xchan_hash where abook_channel = %d and (abook_flags & %d) and not (abook_flags & %d) LIMIT %d, %d",
