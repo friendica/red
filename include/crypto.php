@@ -4,13 +4,17 @@ require_once('library/ASNValue.class.php');
 require_once('library/asn1.php');
 
 function rsa_sign($data,$key,$alg = 'sha256') {
-
+	if(! $key)
+		return 'no key';
 	$sig = '';
 	openssl_sign($data,$sig,$key,$alg);
 	return $sig;
 }
 
 function rsa_verify($data,$sig,$key,$alg = 'sha256') {
+
+	if(! $key)
+		return false;
 
 	$verify = openssl_verify($data,$sig,$key,$alg);
 	return $verify;

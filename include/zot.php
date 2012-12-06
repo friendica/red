@@ -666,6 +666,8 @@ function zot_import($arr) {
 				$i['notify'] = json_decode(aes_unencapsulate($i['notify'],get_config('system','prvkey')),true);
     		}
 
+			logger('zot_import: notify: ' . print_r($i['notify'],true));
+
 			$i['notify']['sender']['hash'] = base64url_encode(hash('whirlpool',$i['notify']['sender']['guid'] . $i['notify']['sender']['guid_sig'], true));
 			$deliveries = null;
 
@@ -673,11 +675,13 @@ function zot_import($arr) {
 				logger('specific recipients');
 				$recip_arr = array();
 				foreach($i['notify']['recipients'] as $recip) {
-					$recip_arr[] =  array('hash' => base64url_encode(hash('whirlpool',$recip['guid'] . $recip['guid_sig'], true)));
+					$recip_arr[] =  base64url_encode(hash('whirlpool',$recip['guid'] . $recip['guid_sig'], true));
 				}
+				logger('recip_arr: ' . print_r($recip_arr,true));
 				stringify_array_elms($recip_arr);
-				$recips = ids_to_querystr($recip_arr,'hash');
-
+				logger('recip_arr: ' . print_r($recip_arr,true));
+				$recips = implode(',',$recip_arr);
+				logger('recips: ' . $recips);
 				$r = q("select channel_hash as hash from channel where channel_hash in ( " . $recips . " ) ");
 				if(! $r)
 					continue;
@@ -709,6 +713,13 @@ function zot_import($arr) {
 
 				}
 				elseif($i['message']['type'] === 'mail') {
+					$arr = get_mail_elements($i['message']);
+
+					logger('Mail received: ' . print_r($arr,true));
+					logger('Mail recipients: ' . print_r($deliveries,true));
+
+
+					process_mail_delivery($i['notify']['sender'],$arr,$deliveries);
 
 				}
 			}
@@ -822,6 +833,7 @@ function process_delivery($sender,$arr,$deliveries,$relay) {
 	}
 }
 
+
 function update_imported_item($sender,$item,$uid) {
 // FIXME
 	logger('update_imported_item');
@@ -857,3 +869,36 @@ function delete_imported_item($sender,$item,$uid) {
 
 }
 
+function process_mail_delivery($sender,$arr,$deliveries) {
+
+	
+	foreach($deliveries as $d) {
+		$r = q("select * from channel where channel_hash = '%s' limit 1",
+			dbesc($d['hash'])
+		);
+
+		if(! $r)
+			continue;
+
+		$channel = $r[0];
+
+		if(! perm_is_allowed($channel['channel_id'],$sender['hash'],'post_mail')) {
+			logger("permission denied for mail delivery {$channel['channel_id']}");
+			continue;
+		}
+	
+		$r = q("select id from mail where uri = '%s' and channel_id = %d limit 1",
+			dbesc($arr['uri']),
+			intval($channel['channel_id'])
+		);
+		if($r) {
+			logger('duplicate mail received');
+			continue;
+		}
+		else {
+			$arr['account_id'] = $channel['channel_account_id'];
+			$arr['channel_id'] = $channel['channel_id'];
+			$item_id = mail_store($arr);
+		}
+	}
+}

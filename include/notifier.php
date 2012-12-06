@@ -130,16 +130,26 @@ function notifier_run($argv, $argc){
 	if($cmd === 'mail') {
 		$normal_mode = false;
 		$mail = true;
+		$private = true;
 		$message = q("SELECT * FROM `mail` WHERE `id` = %d LIMIT 1",
 				intval($item_id)
 		);
 		if(! count($message)){
 			return;
 		}
-		$uid = $message[0]['uid'];
-		$recipients[] = $message[0]['contact-id'];
+		xchan_mail_query($message[0]);
+		$uid = $message[0]['channel_id'];
+		$recipients[] = $message[0]['to_xchan'];
 		$item = $message[0];
 
+		$encoded_item = encode_mail($item);
+dbg(1);
+		$s = q("select * from channel where channel_id = %d limit 1",
+			intval($item['channel_id'])
+		);
+		if($s)
+			$channel = $s[0];
+dbg(0);
 	}
 	elseif($cmd === 'expire') {
 		$normal_mode = false;
@@ -241,66 +251,80 @@ function notifier_run($argv, $argc){
 			}
 		}
 
-		logger('notifier: encoded item: ' . print_r($encoded_item,true));
-
-		stringify_array_elms($recipients);
-		if(! $recipients)
-			return;
-		logger('notifier: recipients: ' . print_r($recipients,true));
-
-		// Now we have collected recipients (except for external mentions, FIXME)
-		// Let's reduce this to a set of hubs.
-
-		$r = q("select distinct(hubloc_callback),hubloc_host,hubloc_sitekey from hubloc 
-			where hubloc_hash in (" . implode(',',$recipients) . ") group by hubloc_callback");
-		if(! $r) {
-			logger('notifier: no hubs');
-			return;
-		}
-		$hubs = $r;
-			 
-		$interval = ((get_config('system','delivery_interval') !== false) 
-				? intval(get_config('system','delivery_interval')) : 2 );
-
-		$deliveries_per_process = intval(get_config('system','delivery_batch_count'));
-
-		if($deliveries_per_process <= 0)
-			$deliveries_per_process = 1;
-
-		$deliver = array();
-
-		foreach($hubs as $hub) {
-			$hash = random_string();
-			$n = zot_build_packet($channel,'notify',null,(($private) ? $hub['hubloc_sitekey'] : null),$hash);
-			q("insert into outq ( outq_hash, outq_account, outq_channel, outq_posturl, outq_async, outq_created, outq_updated, outq_notify, outq_msg ) values ( '%s', %d, %d, '%s', %d, '%s', '%s', '%s', '%s' )",
-				dbesc($hash),
-				intval($target_item['aid']),
-				intval($target_item['uid']),
-				dbesc($hub['hubloc_callback']),
-				intval(1),
-				dbesc(datetime_convert()),
-				dbesc(datetime_convert()),
-				dbesc($n),
-				dbesc(json_encode($encoded_item))
-			);
-			$deliver[] = $hash;
-
-			if(count($deliver) >= $deliveries_per_process) {
-				proc_run('php','include/deliver.php',$deliver);
-				$deliver = array();
-				if($interval)
-					@time_sleep_until(microtime(true) + (float) $interval);
-			}
-		}
-
-		// catch any stragglers
-
-		if(count($deliver)) {
-			proc_run('php','include/deliver.php',$deliver);
-		}
-	
 	}
 
+	// Generic delivery section, we have an encoded item and recipients
+	// Now start the delivery process
+
+	logger('notifier: encoded item: ' . print_r($encoded_item,true));
+
+	stringify_array_elms($recipients);
+	if(! $recipients)
+		return;
+	logger('notifier: recipients: ' . print_r($recipients,true));
+
+
+	$env_recips = null;
+	if($private) {
+		$r = q("select xchan_guid, xchan_guid_sig from xchan where xchan_hash in (" . implode(',',$recipients) . ")");
+		if($r) {
+			$env_recips = array();
+			foreach($r as $rr)
+				$env_recips[] = array('guid' => $rr['xchan_guid'],'guid_sig' => $rr['xchan_guid_sig']);
+		}
+	}
+
+	// Now we have collected recipients (except for external mentions, FIXME)
+	// Let's reduce this to a set of hubs.
+
+	$r = q("select distinct(hubloc_callback),hubloc_host,hubloc_sitekey from hubloc 
+		where hubloc_hash in (" . implode(',',$recipients) . ") group by hubloc_callback");
+	if(! $r) {
+		logger('notifier: no hubs');
+		return;
+	}
+	$hubs = $r;
+			 
+	$interval = ((get_config('system','delivery_interval') !== false) 
+			? intval(get_config('system','delivery_interval')) : 2 );
+
+	$deliveries_per_process = intval(get_config('system','delivery_batch_count'));
+
+	if($deliveries_per_process <= 0)
+		$deliveries_per_process = 1;
+
+	$deliver = array();
+
+	foreach($hubs as $hub) {
+		$hash = random_string();
+		$n = zot_build_packet($channel,'notify',$env_recips,(($private) ? $hub['hubloc_sitekey'] : null),$hash);
+		q("insert into outq ( outq_hash, outq_account, outq_channel, outq_posturl, outq_async, outq_created, outq_updated, outq_notify, outq_msg ) values ( '%s', %d, %d, '%s', %d, '%s', '%s', '%s', '%s' )",
+			dbesc($hash),
+			intval($target_item['aid']),
+			intval($target_item['uid']),
+			dbesc($hub['hubloc_callback']),
+			intval(1),
+			dbesc(datetime_convert()),
+			dbesc(datetime_convert()),
+			dbesc($n),
+			dbesc(json_encode($encoded_item))
+		);
+		$deliver[] = $hash;
+
+		if(count($deliver) >= $deliveries_per_process) {
+			proc_run('php','include/deliver.php',$deliver);
+			$deliver = array();
+			if($interval)
+				@time_sleep_until(microtime(true) + (float) $interval);
+		}
+	}
+
+	// catch any stragglers
+
+	if(count($deliver)) {
+		proc_run('php','include/deliver.php',$deliver);
+	}
+	
 	if($normal_mode)
 		call_hooks('notifier_normal',$target_item);
 

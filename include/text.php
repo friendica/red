@@ -1722,6 +1722,27 @@ function xchan_query(&$items) {
 
 }
 
+function xchan_mail_query(&$item) {
+	$arr = array();
+	$chans = null;
+	if($item) {
+		if($item['from_xchan'] && (! in_array($item['from_xchan'],$arr)))
+			$arr[] = "'" . dbesc($item['from_xchan']) . "'";
+		if($item['to_xchan'] && (! in_array($item['to_xchan'],$arr)))
+			$arr[] = "'" . dbesc($item['to_xchan']) . "'";
+	}
+
+	if(count($arr)) {
+		$chans = q("select xchan.*,hubloc.* from xchan left join hubloc on hubloc_hash = xchan_hash
+			where xchan_hash in (" . implode(',', $arr) . ") and ( hubloc_flags & " . intval(HUBLOC_FLAGS_PRIMARY) . " )");
+	}
+	if($chans) {
+		$item['from'] = find_xchan_in_array($item['from_xchan'],$chans);
+		$item['to']  = find_xchan_in_array($item['to_xchan'],$chans);
+	}
+}
+
+
 function find_xchan_in_array($xchan,$arr) {
 	if(count($arr)) {
 		foreach($arr as $x) {

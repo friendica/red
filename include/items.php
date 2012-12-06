@@ -514,6 +514,7 @@ function get_item_elements($x) {
 
 }
 
+
 function import_author_xchan($x) {
 	$r = q("select hubloc_url from hubloc where hubloc_guid = '%s' and hubloc_guid_sig = '%s' and (hubloc_flags & %d) limit 1",
 		dbesc($x['guid']),
@@ -671,6 +672,58 @@ function encode_item_flags($item) {
 	
 	return $ret;
 }
+
+function encode_mail($item) {
+	$x = array();
+	$x['type'] = 'mail';
+
+	logger('encode_mail: ' . print_r($item,true));
+
+	$x['message_id']     = $item['uri'];
+	$x['message_parent'] = $item['parent_uri'];
+	$x['created']        = $item['created'];
+	$x['title']          = $item['title'];
+	$x['body']           = $item['body'];
+	$x['from']           = encode_item_xchan($item['from']);
+	$x['to']             = encode_item_xchan($item['to']);
+
+	return $x;
+}
+
+
+
+function get_mail_elements($x) {
+
+	$arr = array();
+
+	$arr['body']         = (($x['body']) ? htmlentities($x['body'],ENT_COMPAT,'UTF-8') : '');
+
+	$arr['created']      = datetime_convert('UTC','UTC',$x['created']);
+
+	if($arr['created'] > datetime_convert())
+		$arr['created']  = datetime_convert();
+
+	$arr['title']        = (($x['title'])    ? htmlentities($x['title'],    ENT_COMPAT,'UTF-8') : '');
+	$arr['uri']          = (($x['message_id'])      ? htmlentities($x['message_id'],      ENT_COMPAT,'UTF-8') : '');
+	$arr['parent_uri']   = (($x['message_parent']) ? htmlentities($x['message_parent'], ENT_COMPAT,'UTF-8') : '');
+
+
+	if(import_author_xchan($x['from']))
+		$arr['from_xchan'] = base64url_encode(hash('whirlpool',$x['from']['guid'] . $x['from']['guid_sig'], true));
+	else
+		return array();
+
+	if(import_author_xchan($x['to']))
+		$arr['to_xchan']  = base64url_encode(hash('whirlpool',$x['to']['guid'] . $x['to']['guid_sig'], true));
+	else
+		return array();
+
+
+	return $arr;
+
+}
+
+
 
 function get_atom_elements($feed,$item) {
 
@@ -1553,6 +1606,82 @@ function tgroup_check($uid,$item) {
 
 	return true;
 
+}
+
+
+function mail_store($arr) {
+
+	if(! $arr['channel_id']) {
+		logger('mail_store: no uid');
+		return 0;
+	}
+
+	if((strpos($arr['body'],'<') !== false) || (strpos($arr['body'],'>') !== false)) 
+		$arr['body'] = escape_tags($arr['body']);
+
+	$arr['account_id']    = ((x($arr,'account_id'))           ? intval($arr['account_id'])                 : 0);
+	$arr['uri']           = ((x($arr,'uri'))           ? notags(trim($arr['uri']))           : random_string());
+	$arr['from_xchan']    = ((x($arr,'from_xchan'))  ? notags(trim($arr['from_xchan']))  : '');
+	$arr['to_xchan']   = ((x($arr,'to_xchan'))   ? notags(trim($arr['to_xchan']))   : '');
+	$arr['created']       = ((x($arr,'created') !== false) ? datetime_convert('UTC','UTC',$arr['created']) : datetime_convert());
+	$arr['title']         = ((x($arr,'title'))         ? notags(trim($arr['title']))         : '');
+	$arr['parent_uri']    = ((x($arr,'parent_uri'))    ? notags(trim($arr['parent_uri']))    : '');
+	$arr['body']          = ((x($arr,'body'))          ? trim($arr['body'])                  : '');
+	$arr['mail_flags']    = ((x($arr,'mail_flags'))    ? intval($arr['mail_flags'])          : 0 );
+	
+	
+	$r = q("SELECT `id` FROM mail WHERE `uri` = '%s' AND channel_id = %d LIMIT 1",
+		dbesc($arr['uri']),
+		intval($arr['channel_id'])
+	);
+	if($r) {
+		logger('mail_store: duplicate item ignored. ' . print_r($arr,true));
+		return 0;
+	}
+
+	call_hooks('post_mail',$arr);
+
+	if(x($arr,'cancel')) {
+		logger('mail_store: post cancelled by plugin.');
+		return 0;
+	}
+
+	dbesc_array($arr);
+
+	logger('mail_store: ' . print_r($arr,true), LOGGER_DATA);
+
+	$r = dbq("INSERT INTO mail (`" 
+			. implode("`, `", array_keys($arr)) 
+			. "`) VALUES ('" 
+			. implode("', '", array_values($arr)) 
+			. "')" );
+
+	// find the item we just created
+
+	$r = q("SELECT `id` FROM mail WHERE `uri` = '%s' AND `channel_id` = %d ORDER BY `id` ASC ",
+		$arr['uri'],           // already dbesc'd
+		intval($arr['channel_id'])
+	);
+
+	if($r) {
+		$current_post = $r[0]['id'];
+		logger('mail_store: created item ' . $current_post, LOGGER_DEBUG);
+	}
+	else {
+		logger('mail_store: could not locate created item');
+		return 0;
+	}
+	if(count($r) > 1) {
+		logger('mail_store: duplicated post occurred. Removing duplicates.');
+		q("DELETE FROM mail WHERE `uri` = '%s' AND `channel_id` = %d AND `id` != %d ",
+			$arr['uri'],
+			intval($arr['channel_id']),
+			intval($current_post)
+		);
+	}
+
+	call_hooks('post_mail_end',$arr);
+	return $current_post;
 }
 
 
