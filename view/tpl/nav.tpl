@@ -10,21 +10,6 @@
 			</li>
 		{{ endif }}
 
-		{{ if $userinfo }}
-			<li id="nav-user-linkmenu" class="nav-menu-icon"><a href="#" rel="#nav-user-menu" title="$userinfo.name"><img src="$userinfo.icon" alt="$userinfo.name"></a>
-				{{ if $localuser }}
-				<ul id="nav-user-menu" class="menu-popup">
-					{{ for $nav.usermenu as $usermenu }}
-						<li><a class="$usermenu.2" href="$usermenu.0" title="$usermenu.3">$usermenu.1</a></li>
-					{{ endfor }}
-					
-					{{ if $nav.notifications }}<li><a class="$nav.notifications.2" href="$nav.notifications.0" title="$nav.notifications.3" >$nav.notifications.1</a></li>{{ endif }}
-					{{ if $nav.messages }}<li><a class="$nav.messages.2" href="$nav.messages.0" title="$nav.messages.3" >$nav.messages.1</a></li>{{ endif }}
-					{{ if $nav.contacts }}<li><a class="$nav.contacts.2" href="$nav.contacts.0" title="$nav.contacts.3" >$nav.contacts.1</a></li>{{ endif }}	
-				</ul>
-				{{ endif }}
-			</li>
-		{{ endif }}
 		
 		{{ if $nav.network }}
 			<li id="nav-network-link" class="nav-menu $sel.network">
@@ -71,6 +56,22 @@
 				{{ if $nav.login }}<li><a class="$nav.login.2" href="$nav.login.0" title="$nav.login.3" >$nav.login.1</a><li>{{ endif }}
 			</ul>		
 		</li>
+
+		{{ if $userinfo }}
+			<li id="nav-user-linkmenu" class="nav-menu-icon"><a href="#" rel="#nav-user-menu" title="$userinfo.name"><img src="$userinfo.icon" alt="$userinfo.name"></a>
+				{{ if $localuser }}
+				<ul id="nav-user-menu" class="menu-popup">
+					{{ for $nav.usermenu as $usermenu }}
+						<li><a class="$usermenu.2" href="$usermenu.0" title="$usermenu.3">$usermenu.1</a></li>
+					{{ endfor }}
+					
+					{{ if $nav.notifications }}<li><a class="$nav.notifications.2" href="$nav.notifications.0" title="$nav.notifications.3" >$nav.notifications.1</a></li>{{ endif }}
+					{{ if $nav.messages }}<li><a class="$nav.messages.2" href="$nav.messages.0" title="$nav.messages.3" >$nav.messages.1</a></li>{{ endif }}
+					{{ if $nav.contacts }}<li><a class="$nav.contacts.2" href="$nav.contacts.0" title="$nav.contacts.3" >$nav.contacts.1</a></li>{{ endif }}	
+				</ul>
+				{{ endif }}
+			</li>
+		{{ endif }}
 
 		{{ if $nav.help }} 
 		<li id="nav-help-link" class="nav-menu $sel.help">

@@ -409,13 +409,13 @@ div.wall-item-content-wrapper.shiny {
 	margin-bottom: 25px;
 }
 
-#label-register-name, #label-register-email, #label-register-nickname, #label-register-openid {
+#label-register-name, #label-register-nickname, #label-register-openid {
 	float: left;
 	width: 350px;
 	margin-top: 10px;
 }
 
-#register-name, #register-email, #register-nickname {
+#register-name, #register-nickname {
 	float: left;
 	margin-top: 10px;
 	width: 150px;
@@ -659,6 +659,7 @@ input#dfrn-url {
 .profile-edit-side-link {
 	opacity: 0.3;
 	filter:alpha(opacity=30);
+	float: right;
 }
 .profile-edit-side-link:hover {
 	opacity: 1.0;
@@ -3552,6 +3553,7 @@ nav #nav-help-link,
 nav #nav-search-link,
 nav #nav-directory-link,
 nav #nav-apps-link,
+nav #nav-user-linkmenu,
 nav #nav-site-linkmenu {
   float: right;
 }

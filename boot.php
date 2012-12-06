@@ -626,6 +626,12 @@ if(! class_exists('App')) {
 		}
 
 		function set_baseurl($url) {
+
+			if(is_array($this->config) && array_key_exists('system',$this->config) &&
+				array_key_exists('baseurl',$this->config['system']) && strlen($this->config['system']['baseurl'])) {
+				$url = $a->config['system']['baseurl'];
+			}
+
             $parsed = @parse_url($url);
 
             $this->baseurl = $url;
@@ -860,13 +866,13 @@ function is_ajax() {
 
 
 if(! function_exists('check_config')) {
-	function check_config(&$a) {
+function check_config(&$a) {
 
 		$build = get_config('system','build');
 		if(! x($build))
 			$build = set_config('system','build',DB_UPDATE_VERSION);
 
-		$url = get_config('system','url');
+//		$url = get_config('system','baseurl');
 
 		// if the url isn't set or the stored url is radically different
 		// than the currently visited url, store the current value accordingly.
@@ -874,10 +880,10 @@ if(! function_exists('check_config')) {
 		// and www.example.com vs example.com.
 		// We will only change the url to an ip address if there is no existing setting
 
-		if(! x($url))
-			$url = set_config('system','url',$a->get_baseurl());
-		if((! link_compare($url,$a->get_baseurl())) && (! preg_match("/^(\d{1,3})\.(\d{1,3})\.(\d{1,3})\.(\d{1,3})$/",$a->get_hostname)))
-			$url = set_config('system','url',$a->get_baseurl());
+//		if(! x($url))
+//			$url = set_config('system','baseurl',$a->get_baseurl());
+//		if((! link_compare($url,$a->get_baseurl())) && (! preg_match("/^(\d{1,3})\.(\d{1,3})\.(\d{1,3})\.(\d{1,3})$/",$a->get_hostname)))
+//			$url = set_config('system','baseurl',$a->get_baseurl());
 
 
 

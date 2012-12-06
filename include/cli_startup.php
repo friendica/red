@@ -24,7 +24,7 @@ function cli_startup() {
 	load_config('config');
 	load_config('system');
 
-	$a->set_baseurl(get_config('system','url'));
+	$a->set_baseurl(get_config('system','baseurl'));
 
 	load_hooks();
 

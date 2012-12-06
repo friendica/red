@@ -40,7 +40,7 @@ function poller_run($argv, $argc){
 	}
 
 
-	$a->set_baseurl(get_config('system','url'));
+	$a->set_baseurl(get_config('system','baseurl'));
 
 	load_hooks();
 

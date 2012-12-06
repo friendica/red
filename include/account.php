@@ -263,7 +263,7 @@ function send_verification_email($email,$password) {
 		'$password' => $password,
 	));
 
-	$res = mail($email, sprintf( t('Registration details for %s'), get_config('config','sitename')),
+	$res = mail($email, sprintf( t('Registration details for %s'), get_config('system','sitename')),
 		$email_msg, 
 		'From: ' . t('Administrator') . '@' . get_app()->get_hostname() . "\n"
 		. 'Content-type: text/plain; charset=UTF-8' . "\n"
