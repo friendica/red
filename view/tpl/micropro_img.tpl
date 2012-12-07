@@ -1,0 +1,1 @@
+<div class="contact-block-div{{if $class}} $class{{endif}}"><a class="contact-block-link{{if $class}} $class{{endif}}{{if $click}} fakelink{{endif}}" href="{{if $click}}#{{else}}$url{{endif}}" {{if $click}}onclick="$click"{{endif}}><img class="contact-block-img{{if $class}} $class{{endif}}" src="$photo" title="$title" alt="$name" /></a></div>

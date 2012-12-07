@@ -27,8 +27,8 @@ function acl_init(&$a){
 
 
 	if ($search!=""){
-		$sql_extra = "AND `name` LIKE '%%".dbesc($search)."%%'";
-		$sql_extra2 = "AND (`attag` LIKE '%%".dbesc($search)."%%' OR `name` LIKE '%%".dbesc($search)."%%' OR `nick` LIKE '%%".dbesc($search)."%%')";
+		$sql_extra = " AND `name` LIKE " . protect_sprintf( "'%" . dbesc($search) . "%'" ) . " ";
+		$sql_extra2 = "AND ( xchan_name LIKE " . protect_sprintf( "'%" . dbesc($search) . "%'" ) . " OR xchan_addr LIKE " . protect_sprintf( "'%" . dbesc($search) . "%'" ) . ") ";
 
 		$col = ((strpos($search,'@') !== false) ? 'xchan_addr' : 'xchan_name' );
 		$sql_extra3 = "AND $col like " . protect_sprintf( "'%" . dbesc($search) . "%'" ) . " ";
@@ -48,14 +48,14 @@ function acl_init(&$a){
 	}
 	
 	if ($type=='' || $type=='c'){
-		$r = q("SELECT COUNT(`id`) AS c FROM `contact` 
-				WHERE `uid` = %d AND `self` = 0 
-				AND `blocked` = 0 AND `pending` = 0 AND `archive` = 0
-				AND `notify` != '' $sql_extra2" ,
-			intval(local_user())
+		$r = q("SELECT COUNT(abook_id) AS c FROM abook left join xchan on abook_xchan = xchan_hash 
+				WHERE abook_channel = %d AND not ( abook_flags & %d ) $sql_extra2" ,
+			intval(local_user()),
+			intval(ABOOK_FLAG_SELF|ABOOK_FLAG_BLOCKED|ABOOK_FLAG_PENDING|ABOOK_FLAG_ARCHIVE)
 		);
 		$contact_count = (int)$r[0]['c'];
 	} 
+
 	elseif ($type == 'm') {
 
 		// autocomplete for Private Messages
@@ -94,7 +94,8 @@ function acl_init(&$a){
 	
 	if ($type=='' || $type=='g'){
 		
-		$r = q("SELECT `group`.`id`, `group`.`name`, GROUP_CONCAT(DISTINCT `group_member`.`xchan` SEPARATOR ',') as uids
+		$r = q("SELECT `group`.`id`, `group`.`hash`, `group`.`name`, 
+				GROUP_CONCAT(DISTINCT `group_member`.`xchan` SEPARATOR ',') as uids
 				FROM `group`,`group_member` 
 				WHERE `group`.`deleted` = 0 AND `group`.`uid` = %d 
 					AND `group_member`.`gid`=`group`.`id`
@@ -113,24 +114,24 @@ function acl_init(&$a){
 				"type"  => "g",
 				"photo" => "images/twopeople.png",
 				"name"  => $g['name'],
-				"id"	=> intval($g['id']),
-				"uids"  => array_map("intval", explode(",",$g['uids'])),
+				"id"	=> $g['id'],
+				"xid"   => $g['hash'],
+				"uids"  => explode(",",$g['uids']),
 				"link"  => ''
 			);
 		}
 	}
 	
-	if ($type=='' || $type=='c'){
-	
-		$r = q("SELECT `id`, `name`, `nick`, `micro`, `network`, `url`, `attag` FROM `contact` 
-			WHERE `uid` = %d AND `self` = 0 AND `blocked` = 0 AND `pending` = 0 AND `archive` = 0 AND `notify` != ''
-			$sql_extra2
-			ORDER BY `name` ASC ",
-			intval(local_user())
+	if ($type=='' || $type=='c') {
+		$r = q("SELECT abook_id as id, xchan_hash as hash, xchan_name as name, xchan_photo_s as micro, xchan_url as url, xchan_addr as nick 
+				FROM abook left join xchan on abook_xchan = xchan_hash 
+				WHERE abook_channel = %d AND not ( abook_flags & %d ) $sql_extra2 order by xchan_name asc" ,
+			intval(local_user()),
+			intval(ABOOK_FLAG_SELF|ABOOK_FLAG_BLOCKED|ABOOK_FLAG_PENDING|ABOOK_FLAG_ARCHIVE)
 		);
 	}
 	elseif($type == 'm') {
-dbg(1);
+
 		$r = q("SELECT xchan_hash as id, xchan_name as name, xchan_addr as nick, xchan_photo_s as micro, xchan_url as url 
 			FROM abook left join xchan on abook_xchan = xchan_hash
 			WHERE abook_channel = %d and ( (abook_their_perms = null) or (abook_their_perms & %d ))
@@ -139,7 +140,6 @@ dbg(1);
 			intval(local_user()),
 			intval(PERMS_W_MAIL)
 		);
-dbg(0);
 	}
 	elseif($type == 'a') {
 		$r = q("SELECT abook_id as id, xchan_name as name, xchan_addr as nick, xchan_photo_s as micro, xchan_network as network, xchan_url as url, xchan_addr as attag FROM abook left join xchan on abook_xchan = xchan_hash
@@ -186,8 +186,8 @@ dbg(0);
 				"type"    => "c",
 				"photo"   => $g['micro'],
 				"name"    => $g['name'],
-				"id"	  => intval($g['id']),
-				"network" => $g['network'],
+				"id"	  => $g['id'],
+				"xid"     => $g['hash'],
 				"link"    => $g['url'],
 				"nick"    => $g['nick'],
 			);

@@ -528,7 +528,7 @@ class Photo {
         $x = q("select id from photo where `resource_id` = '%s' and uid = %d and `xchan` = '%s' and `scale` = %d limit 1",
                 dbesc($rid),
                 intval($uid),
-                intval($xchan),
+                dbesc($xchan),
                 intval($scale)
         );
         if(count($x)) {

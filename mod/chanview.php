@@ -22,7 +22,11 @@ function chanview_content(&$a) {
 		);
 	}	
 	elseif($_REQUEST['url']) {
-		$r = array(array('xchan_url' => $_REQUEST['url']));
+		$r = q("select * from xchan where xchan_url = '%s' limit 1",
+			dbesc($_REQUEST['url'])
+		);
+		if(! $r)
+			$r = array(array('xchan_url' => $_REQUEST['url']));
 	}
 	if($r) {
 		$xchan = $r[0];

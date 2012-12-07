@@ -2,9 +2,22 @@
 
 
 function vcard_from_xchan($xchan) {
+
+	$connect = false;
+	if(local_user()) {
+		$r = q("select * from abook where abook_xchan = '%s' and abook_channel = %d limit 1",
+			dbesc($xchan['xchan_hash']),
+			intval(local_user())
+		);
+		if(! $r)
+			$connect = t('Connect');
+	}
+	
 	return replace_macros(get_markup_template('xchan_vcard.tpl'),array(
-		'$name'  => $xchan['xchan_name'],
-		'$photo' => $xchan['xchan_photo_l']
+		'$name'    => $xchan['xchan_name'],
+		'$photo'   => $xchan['xchan_photo_l'],
+		'$url'     => $xchan['xchan_addr'],
+		'$connect' => $connect
 	));
 }
 

@@ -406,7 +406,7 @@ function import_xchan_from_json($j) {
 
 		require_once("Photo.php");
 
-		$photos = import_profile_photo($j->photo,0,$xchan_hash);
+		$photos = import_profile_photo($j->photo,$xchan_hash);
 		$r = q("update xchan set xchan_photo_date = '%s', xchan_photo_l = '%s', xchan_photo_m = '%s', xchan_photo_s = '%s', xchan_photo_mimetype = '%s'
 				where xchan_hash = '%s' limit 1",
 				dbesc($j->photo_updated),
@@ -524,7 +524,7 @@ function import_xchan($arr) {
 
 		require_once("Photo.php");
 
-		$photos = import_profile_photo($arr['photo'],0,$xchan_hash);
+		$photos = import_profile_photo($arr['photo'],$xchan_hash);
 		$r = q("update xchan set xchan_photo_date = '%s', xchan_photo_l = '%s', xchan_photo_m = '%s', xchan_photo_s = '%s', xchan_photo_mimetype = '%s'
 				where xchan_hash = '%s' limit 1",
 				dbesc($arr['photo_updated']),
@@ -870,7 +870,6 @@ function delete_imported_item($sender,$item,$uid) {
 }
 
 function process_mail_delivery($sender,$arr,$deliveries) {
-
 	
 	foreach($deliveries as $d) {
 		$r = q("select * from channel where channel_hash = '%s' limit 1",

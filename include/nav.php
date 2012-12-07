@@ -23,7 +23,7 @@ function nav(&$a) {
         minChars: 2,
         width: 250,
     });
-    a.setOptions({ params: { autoSubmit: true, type: 'x' }});
+    a.setOptions({ autoSubmit: true, params: { type: 'x' }});
 
 });
 

@@ -425,6 +425,7 @@ CREATE TABLE IF NOT EXISTS `glink` (
 
 CREATE TABLE IF NOT EXISTS `group` (
   `id` int(10) unsigned NOT NULL AUTO_INCREMENT,
+  `hash` char(255) NOT NULL DEFAULT '',
   `uid` int(10) unsigned NOT NULL,
   `visible` tinyint(1) NOT NULL DEFAULT '0',
   `deleted` tinyint(1) NOT NULL DEFAULT '0',
@@ -432,7 +433,8 @@ CREATE TABLE IF NOT EXISTS `group` (
   PRIMARY KEY (`id`),
   KEY `uid` (`uid`),
   KEY `visible` (`visible`),
-  KEY `deleted` (`deleted`)
+  KEY `deleted` (`deleted`),
+  KEY `hash` (`hash`)
 ) ENGINE=MyISAM  DEFAULT CHARSET=utf8;
 
 CREATE TABLE IF NOT EXISTS `group_member` (
@@ -708,6 +710,7 @@ CREATE TABLE IF NOT EXISTS `photo` (
   `type` char(128) NOT NULL DEFAULT 'image/jpeg',
   `height` smallint(6) NOT NULL,
   `width` smallint(6) NOT NULL,
+  `size` int(10) unsigned NOT NULL DEFAULT '0',
   `data` mediumblob NOT NULL,
   `scale` tinyint(3) NOT NULL,
   `profile` tinyint(1) NOT NULL DEFAULT '0',
@@ -724,7 +727,8 @@ CREATE TABLE IF NOT EXISTS `photo` (
   KEY `type` (`type`),
   KEY `contact-id` (`contact-id`),
   KEY `aid` (`aid`),
-  KEY `xchan` (`xchan`)
+  KEY `xchan` (`xchan`),
+  KEY `size` (`size`)
 ) ENGINE=MyISAM  DEFAULT CHARSET=utf8;
 
 CREATE TABLE IF NOT EXISTS `profile` (

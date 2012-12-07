@@ -47,16 +47,6 @@
 	{{ if $homepage }}<dl class="homepage"><dt class="homepage-label">$homepage</dt><dd class="homepage-url"><a href="$profile.homepage" >$profile.homepage</a></dd></dl>{{ endif }}
 
 	
-	<div id="profile-extra-links">
-		<ul>
-			{{ if $connect }}
-				<li><a id="dfrn-request-link" href="dfrn_request/$profile.nickname">$connect</a></li>
-			{{ endif }}
-			{{ if $wallmessage }}
-				<li><a id="wallmessage-link" href="wallmessage/$profile.nickname">$wallmessage</a></li>
-			{{ endif }}
-		</ul>
-	</div>
 </div>
 
 $contact_block

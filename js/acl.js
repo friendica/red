@@ -105,7 +105,7 @@ ACL.prototype.on_button_hide = function(event){
 
 ACL.prototype.set_allow = function(itemid){
 	type = itemid[0];
-	id 	 = parseInt(itemid.substr(1));
+	id 	 = itemid.substr(1);
 	switch(type){
 		case "g":
 			if (that.allow_gid.indexOf(id)<0){
@@ -129,7 +129,7 @@ ACL.prototype.set_allow = function(itemid){
 
 ACL.prototype.set_deny = function(itemid){
 	type = itemid[0];
-	id 	 = parseInt(itemid.substr(1));
+	id 	 = itemid.substr(1);
 	switch(type){
 		case "g":
 			if (that.deny_gid.indexOf(id)<0){
@@ -178,7 +178,7 @@ ACL.prototype.update_view = function(){
 	$("#acl-list-content .acl-list-item").each(function(){
 		itemid = $(this).attr('id');
 		type = itemid[0];
-		id 	 = parseInt(itemid.substr(1));
+		id 	 = itemid.substr(1);
 		
 		btshow = $(this).children(".acl-button-show").removeClass("selected");
 		bthide = $(this).children(".acl-button-hide").removeClass("selected");	
@@ -248,7 +248,7 @@ ACL.prototype.populate = function(data){
 	that.list_content.height(height);
 	$(data.items).each(function(){
 		html = "<div class='acl-list-item {4} {5}' title='{6}' id='{2}{3}'>"+that.item_tpl+"</div>";
-		html = html.format( this.photo, this.name, this.type, this.id, '', this.network, this.link );
+		html = html.format( this.photo, this.name, this.type, this.xid, '', this.network, this.link );
 		if (this.uids!=undefined) that.group_uids[this.id] = this.uids;
 		//console.log(html);
 		that.list_content.append(html);
