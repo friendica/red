@@ -114,7 +114,8 @@ function acl_init(&$a){
 				"type"  => "g",
 				"photo" => "images/twopeople.png",
 				"name"  => $g['name'],
-				"id"	=> $g['hash'],
+				"id"	=> $g['id'],
+				"xid"   => $g['hash'],
 				"uids"  => explode(",",$g['uids']),
 				"link"  => ''
 			);
@@ -122,7 +123,7 @@ function acl_init(&$a){
 	}
 	
 	if ($type=='' || $type=='c') {
-		$r = q("SELECT xchan_hash as id, xchan_name as name, xchan_photo_s as micro, xchan_url as url, xchan_addr as nick 
+		$r = q("SELECT abook_id as id, xchan_hash as hash, xchan_name as name, xchan_photo_s as micro, xchan_url as url, xchan_addr as nick 
 				FROM abook left join xchan on abook_xchan = xchan_hash 
 				WHERE abook_channel = %d AND not ( abook_flags & %d ) $sql_extra2 order by xchan_name asc" ,
 			intval(local_user()),
@@ -186,6 +187,7 @@ function acl_init(&$a){
 				"photo"   => $g['micro'],
 				"name"    => $g['name'],
 				"id"	  => $g['id'],
+				"xid"     => $g['hash'],
 				"link"    => $g['url'],
 				"nick"    => $g['nick'],
 			);
