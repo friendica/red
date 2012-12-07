@@ -1281,6 +1281,7 @@ width: 90%;
 #profile-jot-plugin-wrapper,
 #profile-jot-submit-wrapper {
 	margin-top: 15px;
+	width:90%;
 }
 
 #profile-jot-submit {
@@ -1335,12 +1336,23 @@ width: 90%;
 }
 
 #profile-jot-perms {
-	float: left;
+	float: right;
 	margin-left: 100px;
 	font-weight: bold;
 	font-size: 1.2em;
+	height: auto;
+	width: auto;
+	background-color: #dd0000;
+	border-radius: 5px;
+	border: 2px outset;
+	box-shadow: 5px 5px 5px #666;
+	margin-right: 8px;
+	padding: 4px;
 }
 
+#profile-jot-perms:active {
+    box-shadow: 0 0 0 0;
+}
 
 #profile-jot-perms-end {
 	/*clear: left;*/
@@ -1784,11 +1796,32 @@ height: 100% !important;
 	list-style: none;
 }
 
-.contact-entry-photo img, .profile-match-photo img, #photo-photo img, .directory-photo-img, .photo-album-photo, .photo-top-photo, .group-selected, .nets-selected, .fileas-selected, #profile-jot-submit, .categories-selected {
+.contact-entry-photo img, .profile-match-photo img, #photo-photo img, .directory-photo-img, .photo-album-photo, .photo-top-photo, .group-selected, .nets-selected, .fileas-selected, .categories-selected {
     border-radius: 5px;
     -moz-border-radius: 5px;
     box-shadow: 4px 4px 3px 0 #444444;
 }
+
+#profile-jot-submit {
+    height: auto;
+    background-color: #dd0000;
+    color: #eeeeec;
+    font-weight: bold;
+    -webkit-border-radius: 5px;
+    -moz-border-radius: 5px;
+    border-radius: 5px;
+    border: 2px outset #222420 !important;
+    margin: 0;
+    float: right;
+    text-shadow: 1px 1px #111;
+    width: auto;
+    box-shadow: 5px 5px 5px #444;
+}
+
+#profile-jot-submit:active {
+    box-shadow: 0 0 0 0;
+}
+
 .settings-widget .selected {
     border-radius: 5px;
     -moz-border-radius: 5px;
@@ -3006,9 +3039,10 @@ aside input[type='text'] {
 	cursor: pointer;
 	position: absolute;
 	left: 4px;
-	top: 4px;
-	opacity: 0.2;
-	filter:alpha(opacity=20);
+/*because of the shape, if this is lined up properly it looks like it's lined up wrong...
+lining it up too high is the only way to make it look correctly aligned.  The human
+brain is weird like that */
+	top: 2px;
 }
 
 #lang-select-icon:hover {
@@ -3275,7 +3309,7 @@ aside input[type='text'] {
 
 .tools { background-position: 0px -32px;}
 .lock { background-position: -16px -32px;}
-.unlock { background-position: -32px -32px;}
+.unlock { background: url(../img/jotperms.png) no-repeat;}
 .video { background-position: -48px -32px;}
 .youtube { background-position: -64px -32px;}
 .attach { background-position: -80px -32px; }
