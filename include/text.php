@@ -545,7 +545,7 @@ function contact_block() {
 		$total = intval($r[0]['total']);
 	}
 	if(! $total) {
-		$contacts = t('No contacts');
+		$contacts = t('No connnections');
 		$micropro = Null;
 		
 	} else {
@@ -556,7 +556,7 @@ function contact_block() {
 		);
 
 		if(count($r)) {
-			$contacts = sprintf( tt('%d Contact','%d Contacts', $total),$total);
+			$contacts = sprintf( tt('%d Connection','%d Connections', $total),$total);
 			$micropro = Array();
 			foreach($r as $rr) {
 				$micropro[] = micropro($rr,true,'mpfriend');
@@ -568,7 +568,7 @@ function contact_block() {
 	$o = replace_macros($tpl, array(
 		'$contacts' => $contacts,
 		'$nickname' => $a->profile['nickname'],
-		'$viewcontacts' => t('View Contacts'),
+		'$viewcontacts' => t('View Connnections'),
 		'$micropro' => $micropro,
 	));
 
@@ -579,46 +579,35 @@ function contact_block() {
 
 }}
 
+
+function chanlink_hash($s) {
+	return z_root() . '/chanview?f=&hash=' . urlencode($s);
+}
+
+function chanlink_url($s) {
+	return z_root() . '/chanview?f=&url=' . urlencode($s);
+}
+
+
+function chanlink_cid($d) {
+	return z_root() . '/chanview?f=&cid=' . intval($d);
+}
+
+
+
 if(! function_exists('micropro')) {
 function micropro($contact, $redirect = false, $class = '', $textmode = false) {
 
-	if($class)
-		$class = ' ' . $class;
+	$url = chanlink_hash($contact['xchan_hash']);
 
-	$url = $contact['xchan_url'];
-	$sparkle = '';
-	$redir = false;
-
-	if($redirect) {
-		$a = get_app();
-		$redirect_url = $a->get_baseurl() . '/magic/' . $contact['abook_id'];
-		if(local_user() && ($contact['abook_channel'] == local_user()) && ($contact['xchan_network'] === NETWORK_ZOT)) {
-			$redir = true;
-			$url = $redirect_url;
-			$sparkle = ' sparkle';
-		}
-		else
-			$url = zid($url);
-	}
-	$click = ((x($contact,'click')) ? ' onclick="' . $contact['click'] . '" ' : '');
-	if($click)
-		$url = '';
-	if($textmode) {
-		return '<div class="contact-block-textdiv' . $class . '"><a class="contact-block-link' . $class . $sparkle 
-			. (($click) ? ' fakelink' : '') . '" '
-			. (($redir) ? '  ' : '')
-			. (($url) ? ' href="' . $url . '"' : '') . $click
-			. '" title="' . $contact['xchan_name'] . ' [' . $contact['xchan_url'] . ']" alt="' . $contact['xchan_name'] 
-			. '" >'. $contact['xchan_name'] . '</a></div>' . "\r\n";
-	}
-	else {
-		return '<div class="contact-block-div' . $class . '"><a class="contact-block-link' . $class . $sparkle 
-			. (($click) ? ' fakelink' : '') . '" '
-			. (($redir) ? '  ' : '')
-			. (($url) ? ' href="' . $url . '"' : '') . $click . ' ><img class="contact-block-img' . $class . $sparkle . '" src="' 
-			. $contact['xchan_photo_s'] . '" title="' . $contact['xchan_name'] . ' [' . $contact['xchan_url'] . ']" alt="' . $contact['xchan_name'] 
-			. '" /></a></div>' . "\r\n";
-	}
+	return replace_macros(get_markup_template(($textmode)?'micropro_txt.tpl':'micropro_img.tpl'),array(
+		'$click' => $click,
+		'$class' => $class,
+		'$url' => $url,
+		'$photo' => $contact['xchan_photo_s'],
+		'$name' => $contact['xchan_name'],
+		'$title' => $contact['xchan_name'] . ' [' . $contact['xchan_addr'] . ']',
+	));
 }}
 
 
