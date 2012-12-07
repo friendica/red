@@ -26,8 +26,20 @@ function group_add($uid,$name) {
 			}
 			return true;
 		}
-		$r = q("INSERT INTO `group` ( `uid`, `name` )
-			VALUES( %d, '%s' ) ",
+
+		do {
+			$dups = false;
+			$hash = random_string() . $name;
+
+			$r = q("SELECT id FROM group WHERE hash = '%s' LIMIT 1", dbesc($hash));
+			if(count($r))
+				$dups = true;
+		} while($dups == true);
+
+
+		$r = q("INSERT INTO `group` ( hash, uid, name )
+			VALUES( '%s', %d, '%s' ) ",
+			dbesc($hash),
 			intval($uid),
 			dbesc($name)
 		);
