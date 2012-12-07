@@ -331,7 +331,7 @@ function expand_acl($s) {
 
 if(! function_exists('sanitise_acl')) {
 function sanitise_acl(&$item) {
-	if(intval($item))
+	if(strlen($item))
 		$item = '<' . notags(trim($item)) . '>';
 	else
 		unset($item);
