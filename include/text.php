@@ -70,7 +70,7 @@ function notags($string) {
 if(! function_exists('escape_tags')) {
 function escape_tags($string) {
 
-	return(htmlspecialchars($string, ENT_QUOTES, 'UTF-8', false));
+	return(htmlspecialchars($string, ENT_COMPAT, 'UTF-8', false));
 
 }}
 
@@ -963,7 +963,7 @@ function prepare_body($item,$attach = false) {
 		foreach($terms as $t) {
 			if(strlen($x))
 				$x .= ',';
-			$x .= htmlspecialchars($t['term'],ENT_QUOTES,'UTF-8') 
+			$x .= htmlspecialchars($t['term'],ENT_COMPAT,'UTF-8') 
 				. ((local_user() == $item['uid']) ? ' <a href="' . $a->get_baseurl() . '/filerm/' . $item['id'] . '?f=&cat=' . urlencode($t['term']) . '" title="' . t('remove') . '" >' . t('[remove]') . '</a>' : '');
 		}
 		if(strlen($x))
@@ -978,7 +978,7 @@ function prepare_body($item,$attach = false) {
 		foreach($terms as $t) {
 			if(strlen($x))
 				$x .= '&nbsp;&nbsp;&nbsp;';
-			$x .= htmlspecialchars($t['term'],ENT_QUOTES,'UTF-8') 
+			$x .= htmlspecialchars($t['term'],ENT_COMPAT,'UTF-8') 
 				. ' <a href="' . $a->get_baseurl() . '/filerm/' . $item['id'] . '?f=&term=' . urlencode($t['term']) . '" title="' . t('remove') . '" >' . t('[remove]') . '</a>';
 		}
 		if(strlen($x) && (local_user() == $item['uid']))
