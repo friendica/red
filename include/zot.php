@@ -870,7 +870,6 @@ function delete_imported_item($sender,$item,$uid) {
 }
 
 function process_mail_delivery($sender,$arr,$deliveries) {
-
 	
 	foreach($deliveries as $d) {
 		$r = q("select * from channel where channel_hash = '%s' limit 1",
