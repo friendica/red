@@ -1334,12 +1334,6 @@ if(! function_exists('profile_sidebar')) {
 			}
 		}
 
-		if(get_my_url() && $profile['unkmail'])
-			$wallmessage = t('Message');
-		else
-			$wallmessage = false;
-
-
 
 		// show edit profile to yourself
 		if($is_owner) {
