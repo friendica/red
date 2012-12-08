@@ -378,6 +378,8 @@ head_add_js('mod_' . $a->module . '.js');
 $arr = $a->get_widgets();
 if(count($arr)) {
 	foreach($arr as $x) {
+		if(! array_key_exists($x['location'],$a->page))
+			$a->page[$x['location']] = '';
 		$a->page[$x['location']] .= $x['html']; 
 	}
 }

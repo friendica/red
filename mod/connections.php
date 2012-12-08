@@ -26,12 +26,14 @@ function connections_init(&$a) {
 
 function connections_aside(&$a) {
 
-	if(x($a->data,'abook'))
+	if(x($a->data,'abook')) {
 		$a->set_widget('vcard',vcard_from_xchan($a->data['abook']));
-	else
+	}
+	else {
 		$a->set_widget('follow', follow_widget());
+	}
 
-	$a->set_widget('collections', group_side('connnections','group',false,0,$abook_id));
+	$a->set_widget('collections', group_side('connnections','group',false,0,((array_key_exists('abook',$a->data)) ? $a->data['abook']['abook_id'] : '')));
 	$a->set_widget('findpeople',findpeople_widget());
 
 }
@@ -340,7 +342,6 @@ function connections_content(&$a) {
 			'$lblrecent' => t('View conversations'),
 			'$lblsuggest' => $lblsuggest,
 			'$delete' => t('Delete contact'),
-			'$nettype' => $nettype,
 			'$poll_interval' => contact_poll_interval($contact['priority'],(! $poll_enabled)),
 			'$poll_enabled' => $poll_enabled,
 			'$lastupdtext' => t('Last update:'),
@@ -348,12 +349,10 @@ function connections_content(&$a) {
 			'$updpub' => t('Update public posts'),
 			'$last_update' => $last_update,
 			'$udnow' => t('Update now'),
-			'$profile_select' => contact_profile_assign($contact['profile_id'],(($contact['network'] !== NETWORK_DFRN) ? true : false)),
+//			'$profile_select' => contact_profile_assign($contact['profile_id'],(($contact['network'] !== NETWORK_DFRN) ? true : false)),
 			'$contact_id' => $contact['abook_id'],
 			'$block_text' => (($contact['blocked']) ? t('Unblock') : t('Block') ),
 			'$ignore_text' => (($contact['readonly']) ? t('Unignore') : t('Ignore') ),
-			'$insecure' => (($contact['network'] !== NETWORK_DFRN && $contact['network'] !== NETWORK_MAIL && $contact['network'] !== NETWORK_FACEBOOK && $contact['network'] !== NETWORK_DIASPORA) ? $insecure : ''),
-			'$info' => $contact['info'],
 			'$blocked' => (($contact['blocked']) ? t('Currently blocked') : ''),
 			'$ignored' => (($contact['readonly']) ? t('Currently ignored') : ''),
 			'$archived' => (($contact['archive']) ? t('Currently archived') : ''),
@@ -421,10 +420,7 @@ function connections_content(&$a) {
 		$unblocked = true;
 	}
 
-
 	$search = ((x($_REQUEST,'search')) ? notags(trim($_REQUEST['search'])) : '');
-
-	$nets = ((x($_GET,'nets')) ? notags(trim($_GET['nets'])) : '');
 
 	$tabs = array(
 		array(
@@ -487,8 +483,6 @@ function connections_content(&$a) {
 	}
 	$sql_extra .= (($searching) ? protect_sprintf(" AND xchan_name like '%$search_txt%' ") : "");
 
-	if($nets)
-		$sql_extra .= sprintf(" AND xchan_network = '%s' ", dbesc($nets));
  	
 	$r = q("SELECT COUNT(abook.abook_id) AS total FROM abook left join xchan on abook.abook_xchan = xchan.xchan_hash 
 		where abook_channel = %d and not (abook_flags & %d) and not (abook_flags & %d) $sql_extra $sql_extra2 ",
@@ -500,7 +494,7 @@ function connections_content(&$a) {
 		$a->set_pager_total($r[0]['total']);
 		$total = $r[0]['total'];
 	}
-dbg(1);
+
 	$r = q("SELECT abook.*, xchan.* FROM abook left join xchan on abook.abook_xchan = xchan.xchan_hash
 		WHERE abook_channel = %d and not (abook_flags & %d) and not (abook_flags & %d) $sql_extra $sql_extra2 ORDER BY xchan_name LIMIT %d , %d ",
 		intval(local_user()),
@@ -509,7 +503,7 @@ dbg(1);
 		intval($a->pager['start']),
 		intval($a->pager['itemspage'])
 	);
-dbg(0);
+
 	$contacts = array();
 
 	if(count($r)) {

@@ -52,7 +52,7 @@ EOT;
 		$observer = $a->get_observer();
 	
 
-	$myident = (($channel) ? $channel['xchan_address'] : '');
+	$myident = (($channel) ? $channel['xchan_addr'] : '');
 		
 	$sitelocation = (($myident) ? $myident : $a->get_hostname());
 

@@ -121,7 +121,7 @@ function authenticate_success($user_record, $login_initial = false, $interactive
 	}
 	
 
-	if($return || $_SESSION['workflow']) {
+	if($return || x($_SESSION,'workflow')) {
 		unset($_SESSION['workflow']);
 		return;
 	}

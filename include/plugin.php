@@ -484,8 +484,11 @@ function theme_include($file) {
 		'view/$file'
 	);
 
-	$parent = get_app()->theme_info['extends'];
-	if(! $parent)
+	$theme_info = get_app()->theme_info;
+
+	if(array_key_exists('extends',$theme_info))
+		$parent = $theme_info['extends'];
+	else
 		$parent = 'NOPATH';
 
 	foreach($paths as $p) {
