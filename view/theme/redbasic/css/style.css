@@ -3599,7 +3599,7 @@ nav .nav-menu {
   padding: 5px;
   margin: 3px 15px 0px;
   font-size: 14px;
-  border-bottom: 3px solid #5a5a5a;
+  border-bottom: 3px solid #d00;
 }
 nav .nav-menu.selected {
   border-bottom: 4px solid #CCCCCC;
