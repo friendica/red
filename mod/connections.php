@@ -330,8 +330,11 @@ function connections_content(&$a) {
 			'$them' => t('Their Settings'),
 			'$me' => t('My Settings'),
 			'$perms' => $perms,
-
-
+			'$full' => t('Full Sharing'),
+			'$cautious' => t('Cautious Sharing'),
+			'$follow' => t('Follow Only'),
+			'$advanced' => t('Advanced Permissions'),
+			'$quick' => t('Quick Links'),
 			'$common_link' => $a->get_baseurl(true) . '/common/loc/' . local_user() . '/' . $contact['id'],
 			'$all_friends' => $all_friends,
 			'$relation_text' => $relation_text,

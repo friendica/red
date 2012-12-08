@@ -19,3 +19,33 @@ $(".autocomplete-w1 .selected").keyup(function(event){
 			$("#contacts-search-submit").click();
 		}
 });
+
+
+function connectFullShare() {
+	$('#me_id_perms_view_stream').attr('checked','checked');
+	$('#me_id_perms_view_profile').attr('checked','checked');
+	$('#me_id_perms_view_photos').attr('checked','checked');
+	$('#me_id_perms_view_contacts').attr('checked','checked');
+	$('#me_id_perms_send_stream').attr('checked','checked');
+	$('#me_id_perms_post_wall').attr('checked','checked');
+	$('#me_id_perms_post_comments').attr('checked','checked');
+	$('#me_id_perms_post_mail').attr('checked','checked');
+	$('#me_id_perms_chat').attr('checked','checked');
+
+}
+
+function connectCautiousShare() {
+	$('#me_id_perms_view_stream').attr('checked','checked');
+	$('#me_id_perms_view_profile').attr('checked','checked');
+	$('#me_id_perms_view_photos').attr('checked','checked');
+	$('#me_id_perms_send_stream').attr('checked','checked');
+	$('#me_id_perms_post_comments').attr('checked','checked');
+	$('#me_id_perms_post_mail').attr('checked','checked');
+
+}
+
+function connectFollowOnly() {
+	$('#me_id_perms_send_stream').attr('checked','checked');
+
+}
+
