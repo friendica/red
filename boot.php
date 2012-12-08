@@ -1250,8 +1250,9 @@ function profile_load(&$a, $nickname, $profile = 0) {
 
 
 	$a->page['title'] = $a->profile['channel_name'] . " @ " . $a->config['sitename'];
-// FIXME
-	$_SESSION['theme'] = $a->profile['theme'];
+
+
+	$_SESSION['theme'] = $a->profile['channel_theme'];
 
 		/**
 		 * load/reload current theme info
