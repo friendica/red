@@ -34,7 +34,7 @@ abbr {
   text-indent: 0px;
 }
 .icon.notify {
-  background-image: url("../../../../images/icons/22/notify_off.png");
+  background-image: url("../img/notify_on.png");
  min-width: 22px;
   height: 22px;
   margin-top: -4px; 
@@ -49,13 +49,13 @@ abbr {
   padding: 1px;
 }
 
-a, a:visited, a:link { color: #335577; text-decoration: none; }
-a:hover { color: #5588aa; text-decoration: underline; }
+a, a:visited, a:link { color: #dd0000; text-decoration: none; }
+a:hover { color: #dd0000; text-decoration: underline; }
 
 input {
 	border: 1px solid #666666;
-	-moz-border-radius: 3px;
-	border-radius: 3px;	
+	-moz-border-radius: 5px;
+	border-radius: 5px;	
 	padding: 3px;
 }
 
@@ -155,7 +155,7 @@ header #banner {
   width: 100%;
   font-size: 2.2em;
   font-family: tahoma, "Lucida Sans", sans;
-  color: red;
+  color: #eec;
   font-weight: bold;
 
 }
@@ -164,7 +164,7 @@ header #banner a:active,
 header #banner a:visited,
 header #banner a:link,
 header #banner a:hover {
-  color: #ffffff;
+  color: #eec;
   text-decoration: none;
   outline: none;
   vertical-align: bottom;
@@ -193,8 +193,8 @@ header #banner #logo-text {
 	border-bottom: 0px;
 	background-color: #aec0d3;
 	color: #565854;		
-	-moz-border-radius: 3px 3px 0px 0px;
-	border-radius: 3px 3px 0px 0px;	
+	-moz-border-radius: 5px 5px 0px 0px;
+	border-radius: 5px 5px 0px 0px;	
 }
 nav .nav-link {
 	float: right;
@@ -294,9 +294,7 @@ footer {
 }
 
 div.wall-item-content-wrapper.shiny {
-  background-image: url('../img/shiny.png');
-  background-position: -5px 30px;
-  background-repeat:no-repeat;
+	background: #f4f4f4;
 }
 
 .preview {
@@ -332,11 +330,13 @@ div.wall-item-content-wrapper.shiny {
 #jot-title, #jot-category {
 	border: 0px;
 	margin: 0px;
+	padding: 8px;
 	height: 20px;
 	width: 530px;
 	margin-bottom: 5px;
 	font-weight: bold;
-	border: 1px solid #ffffff;
+	border: solid 1px #ccc;
+	box-shadow: 5px 5px 5px #666 inset;
 }
 
 #jot-title::-webkit-input-placeholder{font-weight: normal;}
@@ -376,8 +376,8 @@ div.wall-item-content-wrapper.shiny {
 
 .group-selected, .nets-selected, .fileas-selected, .categories-selected {
 	padding: 3px;
-	-moz-border-radius: 3px;
-	border-radius: 3px;	
+	-moz-border-radius: 5px;
+	border-radius: 5px;	
 	border: 1px solid #CCCCCC;
 	background: #F8F8F8;
 	font-weight: bold;
@@ -385,8 +385,8 @@ div.wall-item-content-wrapper.shiny {
 
 .settings-widget .selected {
 	padding: 3px;
-	-moz-border-radius: 3px;
-	border-radius: 3px;	
+	-moz-border-radius: 5px;
+	border-radius: 5px;	
 	border: 1px solid #CCCCCC;
 	background: #F8F8F8;
 	font-weight: bold;
@@ -1131,7 +1131,10 @@ input#dfrn-url {
 }
 
 .wall-item-delete-wrapper {
-	float: right;
+	/* TODO 
+	This should really go somewhere at the right, but for now, that leaves
+	it dangling at the edge of whitespace, so we'll put it with the other wall item tools for the time being */
+	float: left;
 }
 
 .wall-item-delete-end {
@@ -1169,7 +1172,9 @@ input#dfrn-url {
 }
 
 .wall-item-content img {
-  max-width: 700px;
+  max-height: 95% !important;
+  max-width: 95% !important;
+  box-shadow: 8px 8px 8px #666;
 }
 
 
@@ -1183,6 +1188,12 @@ input#dfrn-url {
 	clear: both;
 }
 
+.thread-wrapper.toplevel_item {
+border-bottom: 1px #000 solid;
+padding: 30px;
+width: 90%;
+}
+
 .wall-item-body {
 /*	float: left; */
 	/*width: 450px;*/
@@ -1194,15 +1205,12 @@ input#dfrn-url {
 /*	background-image: url("../img/head.jpg"); */
     background-position: 0 -20px;
     background-repeat: repeat-x;
-   	padding: 5px 10px 0px;
+    background: #eee;
+   	padding: 5px 10px;
 }
 .wall-item-author {
 	margin-top: 10px;
 }
-
-.comment .wall-item-tools {
-	background:none;
-} 
 
 .comment-edit-wrapper {
 	margin-top: 15px;
@@ -1231,8 +1239,11 @@ input#dfrn-url {
 .comment-edit-text-empty, .comment-edit-text-full {
 	float: left;
 	margin-top: 10px;
-	border-left: 1px solid #e0e0e0;
 	padding: 3px 1px 1px 3px;
+	border: 1px solid #ccc;
+	padding: 8px;
+	border-radius: 5px 5px 5px 5px;
+	box-shadow: 5px 5px 5px #666 inset;
 }
 
 .comment-edit-text-empty {
@@ -1250,7 +1261,7 @@ input#dfrn-url {
 .comment-edit-text-full {
 	color: black;
 	height: 150px;
-	width: 350px;
+	width: 80%;
 	overflow: auto;
 }
 
@@ -1270,6 +1281,7 @@ input#dfrn-url {
 #profile-jot-plugin-wrapper,
 #profile-jot-submit-wrapper {
 	margin-top: 15px;
+	width:90%;
 }
 
 #profile-jot-submit {
@@ -1324,12 +1336,23 @@ input#dfrn-url {
 }
 
 #profile-jot-perms {
-	float: left;
+	float: right;
 	margin-left: 100px;
 	font-weight: bold;
 	font-size: 1.2em;
+	height: auto;
+	width: auto;
+	background-color: #dd0000;
+	border-radius: 5px;
+	border: 2px outset;
+	box-shadow: 5px 5px 5px #666;
+	margin-right: 8px;
+	padding: 4px;
 }
 
+#profile-jot-perms:active {
+    box-shadow: 0 0 0 0;
+}
 
 #profile-jot-perms-end {
 	/*clear: left;*/
@@ -1693,35 +1716,53 @@ input#dfrn-url {
 	width: 587px;
 }
 
+/* TinyMCE */
+
+DIV#profile-jot-text_toolbargroup{
+background: #333;
+border: 1px #111;
+box-shadow: 5px 5px 5px #000 inset;
+}
+
+
 #profile-jot-text_parent, .mceLayout {
-    border-radius: 3px;
-    -moz-border-radius: 3px;
+    border-radius: 5px;
+    -moz-border-radius: 5px;
     box-shadow: 4px 4px 3px 0 #444444;
 }
 
+iframe#profile-jot-text_ifr {
+width: 100% !important;
+height: 100% !important;
+}
+
+/* Not MCE */
+
 #profile-jot-text {
 	height: 20px;
-	color:#cccccc;
+	color:#000;
 	border: 1px solid #cccccc;
-	padding: 3px 0px 0px 5px;
-	-moz-border-radius: 3px;
+	padding: 8px;
+	width: 90%;
+	-moz-border-radius: 5px;
 	border-radius: 3px;	
+	box-shadow: 4px 4px 3px 0 #666 inset;
 }
 #profile-jot-text:hover {
 	color: #000000;
 }
 
 .wall-item-photo, .photo, .contact-block-img, .my-comment-photo {
-    border-radius: 3px;
-    -moz-border-radius: 3px;
+    border-radius: 5px;
+    -moz-border-radius: 5px;
     box-shadow: 4px 4px 3px 0 #444444;
 }
 
 
 #datebrowse-sidebar select {
     margin-left: 25px;
-    border-radius: 3px;
-    -moz-border-radius: 3px;
+    border-radius: 5px;
+    -moz-border-radius: 5px;
     opacity: 0.3;
     filter:alpha(opacity=30);
 }
@@ -1755,14 +1796,35 @@ input#dfrn-url {
 	list-style: none;
 }
 
-.contact-entry-photo img, .profile-match-photo img, #photo-photo img, .directory-photo-img, .photo-album-photo, .photo-top-photo, .profile-jot-text, .group-selected, .nets-selected, .fileas-selected, #profile-jot-submit, .categories-selected {
-    border-radius: 3px;
-    -moz-border-radius: 3px;
+.contact-entry-photo img, .profile-match-photo img, #photo-photo img, .directory-photo-img, .photo-album-photo, .photo-top-photo, .group-selected, .nets-selected, .fileas-selected, .categories-selected {
+    border-radius: 5px;
+    -moz-border-radius: 5px;
     box-shadow: 4px 4px 3px 0 #444444;
 }
+
+#profile-jot-submit {
+    height: auto;
+    background-color: #dd0000;
+    color: #eeeeec;
+    font-weight: bold;
+    -webkit-border-radius: 5px;
+    -moz-border-radius: 5px;
+    border-radius: 5px;
+    border: 2px outset #222420 !important;
+    margin: 0;
+    float: right;
+    text-shadow: 1px 1px #111;
+    width: auto;
+    box-shadow: 5px 5px 5px #444;
+}
+
+#profile-jot-submit:active {
+    box-shadow: 0 0 0 0;
+}
+
 .settings-widget .selected {
-    border-radius: 3px;
-    -moz-border-radius: 3px;
+    border-radius: 5px;
+    -moz-border-radius: 5px;
     box-shadow: 4px 4px 3px 0 #444444;
 }
 
@@ -1918,9 +1980,9 @@ input#dfrn-url {
 	background-position: 3px 3px;
 	background-repeat: no-repeat;
 	margin-right: 5px;
-	-webkit-border-radius: 2px ;
-	-moz-border-radius: 2px;
-	border-radius: 2px;
+	-webkit-border-radius: 5px ;
+	-moz-border-radius: 5px;
+	border-radius: 5px;
 	padding-left: 15px;
 }
 #acl-wrapper a:hover {
@@ -2521,16 +2583,18 @@ aside input[type='text'] {
 }
 
 #nav-search-text:hover {
-	background-color: #FFFFFF;
+	background-color: #FFF;
+	color: #000;
 }
 
 #nav-search-text {
 	border-radius: 14px;
 	background-color: #AAAAAA;
+	color: #eec;
 }
 
 #nav-user-linkmenu img {
-	border-radius: 3px;
+	border-radius: 5px;
 }
 
 .location-label, .gender-label, .marital-label, .homepage-label {
@@ -2576,6 +2640,7 @@ aside input[type='text'] {
 	padding: 0px 0px 5px 0px;
 	font-size: 120%;
 	font-weight: bold;
+	color: #dd0000;
 }
 
 .vcard .title {
@@ -2974,9 +3039,10 @@ aside input[type='text'] {
 	cursor: pointer;
 	position: absolute;
 	left: 4px;
-	top: 4px;
-	opacity: 0.2;
-	filter:alpha(opacity=20);
+/*because of the shape, if this is lined up properly it looks like it's lined up wrong...
+lining it up too high is the only way to make it look correctly aligned.  The human
+brain is weird like that */
+	top: 2px;
 }
 
 #lang-select-icon:hover {
@@ -3243,7 +3309,7 @@ aside input[type='text'] {
 
 .tools { background-position: 0px -32px;}
 .lock { background-position: -16px -32px;}
-.unlock { background-position: -32px -32px;}
+.unlock { background: url(../img/jotperms.png) no-repeat;}
 .video { background-position: -48px -32px;}
 .youtube { background-position: -64px -32px;}
 .attach { background-position: -80px -32px; }
@@ -3445,6 +3511,11 @@ div.jGrowl div.info {
 	text-align: center;
 }
 
+.jslider .jslider-bg,
+.jslider .jslider-pointer {
+  background: url("../img/slider.png") !important;
+}
+
 .slider {
 	margin-top: 10px;
 	margin-bottom: 30px;
@@ -3472,8 +3543,8 @@ nav {
   left: 0px;
   top: 0px;
   padding: 0px;
-  background-color: #5a5a5a;
-  color: #ffffff;
+  background-color: #d00;
+  color: #eec;
   z-index: 100;
   -webkit-box-shadow: 0px 0px 10px rgba(0, 0, 0, 0.7);
   -moz-box-shadow: 0px 0px 10px rgba(0, 0, 0, 0.7);
@@ -3501,6 +3572,7 @@ nav ul li {
 nav ul li .menu-popup {
   left: 0px;
   right: auto;
+  top: 33px;
 }
 nav .nav-menu-icon {
   position: relative;
@@ -3533,18 +3605,11 @@ nav .nav-menu.selected {
   border-bottom: 4px solid #CCCCCC;
 }
 nav .nav-notify {
-  display: none;
-  position: absolute;
-  background-color: #dc0000;
+  background-color: #0d0;
+  color: #fff;
   -moz-border-radius: 5px 5px 5px 5px;
   -webkit-border-radius: 5px 5px 5px 5px;
   border-radius: 5px 5px 5px 5px;
-  font-size: 10px;
-  padding: 1px 3px;
-  top: 0px;
-  right: -10px;
-  min-width: 15px;
-  text-align: right;
 }
 nav .nav-notify.show {
   display: block;
@@ -3576,12 +3641,11 @@ ul.menu-popup {
   position: absolute;
   display: none;
   width: 10em;
-  background: #ffffff;
-  color: #2d2d2d;
-  margin: 0px;
+  background: #dd0000;
+  color: #eec;
   padding: 0px;
   list-style: none;
-  border: 3px solid #364e59;
+  border-radius: 0px 0px 20px 20px;
   z-index: 100000;
   -webkit-box-shadow: 0px 5px 10px rgba(0, 0, 0, 0.7);
   -moz-box-shadow: 0px 5px 10px rgba(0, 0, 0, 0.7);
@@ -3589,7 +3653,7 @@ ul.menu-popup {
 }
 ul.menu-popup a {
   display: block;
-  color: #2d2d2d;
+  color: #eec;
   padding: 5px 10px;
   text-decoration: none;
 }
