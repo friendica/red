@@ -23,6 +23,21 @@ define ( 'EOL',                    "<br />\r\n"     );
 define ( 'ATOM_TIME',              'Y-m-d\TH:i:s\Z' );
 
 
+
+define ( 'DIRECTORY_MODE_NORMAL',      0x0000);  // This is technically DIRECTORY_MODE_TERTIARY, but it's the default, hence 0x0000
+define ( 'DIRECTORY_MODE_PRIMARY',     0x0001);
+define ( 'DIRECTORY_MODE_SECONDARY',   0x0002);
+define ( 'DIRECTORY_MODE_STANDALONE',  0x0100);      
+
+// We will look for upstream directories whenever me make contact
+// with other sites, but if this is a new installation and isn't
+// a standalone hub, we need to seed the service with a starting
+// point to go out and find the rest of the world.
+
+define ( 'DIRECTORY_REALM',            'RED_GLOBAL');
+define ( 'DIRECTORY_FALLBACK_MASTER',  'https://zothub.com');
+
+
 /**
  *
  * Image storage quality. Lower numbers save space at cost of image detail.
