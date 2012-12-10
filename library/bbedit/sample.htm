@@ -1,0 +1,37 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head runat="server">
+    <link href="editor.css" rel="Stylesheet" type="text/css" />
+	<script src="editor.js" type="text/javascript"></script>
+</head>
+<body>
+<form onsubmit="doCheck();"> <!--THIS IS IMPORTANT-->
+	
+	
+	<div class="richeditor">
+		<div class="editbar">
+			<button title="bold" onclick="doClick('bold');" type="button"><b>B</b></button>
+			<button title="italic" onclick="doClick('italic');" type="button"><i>I</i></button>
+			<button title="underline" onclick="doClick('underline');" type="button"><u>U</u></button>
+			<button title="hyperlink" onclick="doLink();" type="button" style="background-image:url('images/url.gif');"></button>
+			<button title="image" onclick="doImage();" type="button" style="background-image:url('images/img.gif');"></button>
+			<button title="list" onclick="doClick('InsertUnorderedList');" type="button" style="background-image:url('images/icon_list.gif');"></button>
+			<button title="color" onclick="showColorGrid2('none')" type="button" style="background-image:url('images/colors.gif');"></button><span id="colorpicker201" class="colorpicker201"></span>
+			<button title="quote" onclick="doQuote();" type="button" style="background-image:url('images/icon_quote.png');"></button>
+			<button title="youtube" onclick="InsertYoutube();" type="button" style="background-image:url('images/icon_youtube.gif');"></button>
+			<button title="switch to source" type="button" onclick="javascript:SwitchEditor()" style="background-image:url('images/icon_html.gif');"></button>
+		</div>
+		<div class="container">
+		<textarea id="tbMsg" style="height:150px;width:100%;"></textarea>
+		</div>
+	</div>
+	<script type="text/javascript">
+		initEditor("tbMsg", true);
+	</script>
+	<input type="submit" onclick="doCheck();" />
+	
+	
+	
+</form>
+</body>
+</html>
