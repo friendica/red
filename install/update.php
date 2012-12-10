@@ -1,6 +1,6 @@
 <?php
 
-define( 'UPDATE_VERSION' , 1000 );
+define( 'UPDATE_VERSION' , 1001 );
 
 /**
  *
@@ -35,5 +35,11 @@ define( 'UPDATE_VERSION' , 1000 );
  *
  */
 
-// function update_r1000()
+function update_r1000() {
+	$r = q("ALTER TABLE `channel` ADD `channel_a_delegate` TINYINT( 3 ) UNSIGNED NOT NULL DEFAULT '0', ADD INDEX ( `channel_a_delegate` )");
+	if($r)
+		return UPDATE_SUCCESS;
+	return UPDATE_FAILED;
+}
+
 

@@ -158,6 +158,7 @@ CREATE TABLE IF NOT EXISTS `channel` (
   `channel_w_mail` tinyint(3) unsigned NOT NULL DEFAULT '128',
   `channel_w_photos` tinyint(3) unsigned NOT NULL DEFAULT '128',
   `channel_w_chat` tinyint(3) unsigned NOT NULL DEFAULT '128',
+  `channel_a_delegate` tinyint(3) unsigned NOT NULL DEFAULT '0',
   PRIMARY KEY (`channel_id`),
   KEY `channel_account_id` (`channel_account_id`),
   KEY `channel_primary` (`channel_primary`),
@@ -184,7 +185,8 @@ CREATE TABLE IF NOT EXISTS `channel` (
   KEY `channel_w_chat` (`channel_w_chat`),
   KEY `channel_guid` (`channel_guid`),
   KEY `channel_hash` (`channel_hash`),
-  KEY `channel_expire_days` (`channel_expire_days`)
+  KEY `channel_expire_days` (`channel_expire_days`),
+  KEY `channel_a_delegate` (`channel_a_delegate`)
 ) ENGINE=MyISAM  DEFAULT CHARSET=utf8;
 
 CREATE TABLE IF NOT EXISTS `clients` (
