@@ -1719,21 +1719,27 @@ width: 90%;
 /* TinyMCE */
 
 DIV#profile-jot-text_toolbargroup{
-background: #333;
+background: #FFF;
 border: 1px #111;
-box-shadow: 5px 5px 5px #000 inset;
+/*box-shadow: 5px 5px 5px #000 inset;*/
 }
 
-
+/*
 #profile-jot-text_parent, .mceLayout {
     border-radius: 5px;
     -moz-border-radius: 5px;
     box-shadow: 4px 4px 3px 0 #444444;
 }
+*/
+
 
 iframe#profile-jot-text_ifr {
 width: 100% !important;
 height: 100% !important;
+box-shadow: 5px 5px 5px #000 inset !important;}
+
+tr.mceLast {
+
 }
 
 /* Not MCE */

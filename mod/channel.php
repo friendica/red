@@ -53,6 +53,7 @@ function channel_content(&$a, $update = 0) {
 		}
 	}
 
+
 	if(get_config('system','block_public') && (! get_account_id()) && (! remote_user())) {
 			return login();
 	}
@@ -64,8 +65,11 @@ function channel_content(&$a, $update = 0) {
 	require_once('include/conversation.php');
 	require_once('include/acl_selectors.php');
 	require_once('include/items.php');
+	require_once('include/permissions.php');
+
 
 	$groups = array();
+
 
 	$tab = 'posts';
 	$o = '';
@@ -80,46 +84,16 @@ function channel_content(&$a, $update = 0) {
 		}
 	}
 
+	$observer = $a->get_observer();
+	$ob_hash = (($observer) ? $observer['xchan_hash'] : '');
 
-	$contact = null;
-	$remote_contact = false;
+	$perms = get_all_perms($a->profile['profile_uid'],$ob_hash);
 
-	$contact_id = 0;
-
-	if(is_array($_SESSION['remote'])) {
-		foreach($_SESSION['remote'] as $v) {
-			if($v['uid'] == $a->profile['profile_uid']) {
-				$contact_id = $v['cid'];
-				break;
-			}
-		}
-	}
-
-	if($contact_id) {
-		$groups = init_groups_visitor($contact_id);
-		$r = q("SELECT * FROM `contact` WHERE `id` = %d AND `uid` = %d LIMIT 1",
-			intval($contact_id),
-			intval($a->profile['profile_uid'])
-		);
-		if(count($r)) {
-			$contact = $r[0];
-			$remote_contact = true;
-		}
-	}
-
-	if(! $remote_contact) {
-		if(local_user()) {
-			$contact_id = $_SESSION['cid'];
-			$contact = $a->contact;
-		}
-	}
-
-	$is_owner = ((local_user()) && (local_user() == $a->profile['profile_uid']) ? true : false);
-
-	if($a->profile['hidewall'] && (! $is_owner) && (! $remote_contact)) {
-		notice( t('Access to this profile has been restricted.') . EOL);
+	if(! $perms['view_stream']) {
+		notice( t('Permission denied.') . EOL);
 		return;
 	}
+
 
 	if(! $update) {
 
@@ -129,22 +103,17 @@ function channel_content(&$a, $update = 0) {
 		$o .= common_friends_visitor_widget($a->profile['profile_uid']);
 
 
-		$commpage = (($a->profile['page-flags'] == PAGE_COMMUNITY) ? true : false);
-		$commvisitor = (($commpage && $remote_contact == true) ? true : false);
-
-		$celeb = ((($a->profile['page-flags'] == PAGE_SOAPBOX) || ($a->profile['page-flags'] == PAGE_COMMUNITY)) ? true : false);
-
-		if(can_write_wall($a,$a->profile['profile_uid'])) {
+		if($perms['post_wall']) {
 
 			$x = array(
 				'is_owner' => $is_owner,
-            	'allow_location' => ((($is_owner || $commvisitor) && $a->profile['allow_location']) ? true : false),
+            	'allow_location' => ((($is_owner || $observer) && $a->profile['allow_location']) ? true : false),
 	            'default_location' => (($is_owner) ? $a->user['default-location'] : ''),
     	        'nickname' => $a->profile['channel_address'],
         	    'lockstate' => (((strlen($a->profile['channel_allow_cid'])) || (strlen($a->profile['channel_allow_gid'])) || (strlen($a->profile['channel_deny_cid'])) || (strlen($a->profile['channel_deny_gid']))) ? 'lock' : 'unlock'),
-            	'acl' => (($is_owner) ? populate_acl($channel, $celeb) : ''),
+            	'acl' => (($is_owner) ? populate_acl($channel, false) : ''),
 	            'bang' => '',
-    	        'visitor' => (($is_owner || $commvisitor) ? 'block' : 'none'),
+    	        'visitor' => (($is_owner || $observer) ? 'block' : 'none'),
         	    'profile_uid' => $a->profile['profile_uid']
         	);
 
@@ -158,6 +127,7 @@ function channel_content(&$a, $update = 0) {
 	 * Get permissions SQL - if $remote_contact is true, our remote user has been pre-verified and we already have fetched his/her groups
 	 */
 
+// fixme
 	$sql_extra = item_permissions_sql($a->profile['profile_uid'],$remote_contact,$groups);
 
 
@@ -211,7 +181,7 @@ function channel_content(&$a, $update = 0) {
 
 	}
 
-	if($r && count($r)) {
+	if($r) {
 
 		$parents_str = ids_to_querystr($r,'item_id');
  
@@ -233,7 +203,7 @@ function channel_content(&$a, $update = 0) {
 	}
 
 
-	if((! $update) && ($tab === 'posts')) {
+	if(! $update) {
 
 		// This is ugly, but we can't pass the profile_uid through the session to the ajax updater,
 		// because browser prefetching might change it on us. We have to deliver it with the page.

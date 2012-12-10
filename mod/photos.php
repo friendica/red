@@ -25,6 +25,9 @@ function photos_init(&$a) {
 
 		$a->data['channel'] = $r[0];
 
+		$observer = $a->get_observer();
+		$a->data['perms'] = get_all_perms($r[0]['channel_id'],(($observer) ? $observer['xchan_hash'] : ''));
+
 		$o .= '<div class="vcard">';
 		$o .= '<div class="fn">' . $a->data['channel']['channel_name'] . '</div>';
 		$o .= '<div id="profile-photo-wrapper"><img class="photo" style="width: 175px; height: 175px;" src="' . $a->get_cached_avatar_image($a->get_baseurl() . '/photo/profile/l/' . $a->data['channel']['channel_id']) . '" alt="' . $a->data['channel']['channel_name'] . '" /></div>';
@@ -1394,7 +1397,7 @@ function photos_content(&$a) {
 
 			$likebuttons = '';
 
-			if($can_post || can_write_wall($a,$owner_uid)) {
+			if($can_post || $a->data['perms']['post_comments']) {
 				$likebuttons = replace_macros($like_tpl,array(
 					'$id' => $link_item['id'],
 					'$likethis' => t("I like this \x28toggle\x29"),
@@ -1406,7 +1409,7 @@ function photos_content(&$a) {
 
 			$comments = '';
 			if(! count($r)) {
-				if($can_post || can_write_wall($a,$owner_uid)) {
+				if($can_post || $a->data['perms']['post_comments']) {
 					$comments .= replace_macros($cmnt_tpl,array(
 						'$return_path' => '', 
 						'$jsreload' => $return_url,
@@ -1444,7 +1447,7 @@ function photos_content(&$a) {
 
 
 
-				if($can_post || can_write_wall($a,$owner_uid)) {
+				if($can_post || $a->data['perms']['post_comments']) {
 					$comments .= replace_macros($cmnt_tpl,array(
 						'$return_path' => '',
 						'$jsreload' => $return_url,
@@ -1471,7 +1474,7 @@ function photos_content(&$a) {
 
 					$redirect_url = $a->get_baseurl() . '/redir/' . $item['cid'] ;
 			
-					if($can_post || can_write_wall($a,$owner_uid)) {
+					if($can_post || $a->data['perms']['post_comments']) {
 						$comments .= replace_macros($cmnt_tpl,array(
 							'$return_path' => '',
 							'$jsreload' => $return_url,

@@ -406,7 +406,7 @@ function conversation(&$a, $items, $mode, $update, $page_mode = 'traditional') {
 
 	elseif($mode === 'channel') {
 		$profile_owner = $a->profile['profile_uid'];
-		$page_writeable = can_write_wall($a,$profile_owner);
+		$page_writeable = ($profile_owner == local_user());
 
         if(!$update) {
             $tab = notags(trim($_GET['tab']));
@@ -427,22 +427,12 @@ function conversation(&$a, $items, $mode, $update, $page_mode = 'traditional') {
 
 	elseif($mode === 'display') {
 		$profile_owner = $a->profile['uid'];
-		$page_writeable = can_write_wall($a,$profile_owner);
+		$page_writeable = ($profile_owner == local_user());
 
 	      $live_update_div = '<div id="live-display"></div>' . "\r\n";
 
 	}
 
-	elseif($mode === 'community') {
-		$profile_owner = 0;
-		$page_writeable = false;
-
-      if(!$update) {
-            $live_update_div = '<div id="live-community"></div>' . "\r\n"
-                . "<script> var profile_uid = -1; var netargs = '/?f='; var profile_page = " . $a->pager['page'] . "; </script>\r\n";
-
-		}
-	}
     else if($mode === 'search') {
         $live_update_div = '<div id="live-search"></div>' . "\r\n";
     }

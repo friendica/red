@@ -28,10 +28,12 @@ function subthread_content(&$a) {
 	$item = $r[0];
 
 	$owner_uid = $item['uid'];
+	$observer = $a->get_observer();
+	$ob_hash = (($observer) ? $observer['xchan_hash'] : '');
 
-	if(! can_write_wall($a,$owner_uid)) {
+	if(! perm_is_allowed($owner_uid,$ob_hash,'post_comments'))
 		return;
-	}
+
 
 	$remote_owner = null;
 

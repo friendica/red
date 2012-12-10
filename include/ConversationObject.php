@@ -33,6 +33,9 @@ class Conversation extends BaseObject {
 
 		$a = $this->get_app();
 
+		$observer = $a->get_observer();
+		$ob_hash = (($observer) ? $observer['xchan_hash'] : '');
+
 		switch($mode) {
 			case 'network':
 				$this->profile_owner = local_user();
@@ -40,11 +43,11 @@ class Conversation extends BaseObject {
 				break;
 			case 'channel':
 				$this->profile_owner = $a->profile['profile_uid'];
-				$this->writable = can_write_wall($a,$this->profile_owner);
+				$this->writable = perm_is_allowed($this->profile_owner,$ob_hash,'post_comments');
 				break;
 			case 'display':
 				$this->profile_owner = $a->profile['uid'];
-				$this->writable = can_write_wall($a,$this->profile_owner);
+				$this->writable = perm_is_allowed($this->profile_owner,$ob_hash,'post_comments');
 				break;
 			default:
 				logger('[ERROR] Conversation::set_mode : Unhandled mode ('. $mode .').', LOGGER_DEBUG);
