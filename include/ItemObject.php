@@ -52,8 +52,6 @@ class Item extends BaseObject {
 		$this->writable = ((local_user() && $channel['channel_hash'] === $item['owner_xchan']) ? true : false);
 
 
-		$ssl_state = ((local_user()) ? true : false);
-		$this->redirect_url = $a->get_baseurl($ssl_state) . '/redir/' . $this->get_data_value('cid') ;
 
 		if(get_config('system','thread_allow') && $a->theme_thread_allow && !$this->is_toplevel())
 			$this->threaded = true;
@@ -136,28 +134,12 @@ class Item extends BaseObject {
 		$profile_name   = (((strlen($item['author-name']))   && $diff_author) ? $item['author-name']   : $item['name']);
 
 		$profile_avatar = $item['author']['xchan_photo_m'];
-		$profile_link = zid($item['author']['xchan_url']);
+		$profile_link = $a->get_baseurl() . '/chanview/?f=&url=' . $item['author']['xchan_url'];
 		$profile_name = $item['author']['xchan_name'];
 
 //		if($item['author-link'] && (! $item['author-name']))
 //			$profile_name = $item['author-link'];
 
-		$sp = false;
-//		$profile_link = best_link_url($item,$sp);
-
-		if($sp)
-			$sparkle = ' sparkle';
-		else
-			$profile_link = zid($profile_link);                 
-
-		$profile_link = zid($item['author']['xchan_url']);
-
-
-//		$normalised = normalise_link((strlen($item['author-link'])) ? $item['author-link'] : $item['url']);
-//		if(($normalised != 'mailbox') && (x($a->contacts,$normalised)))
-//			$profile_avatar = $a->contacts[$normalised]['thumb'];
-//		else
-//			$profile_avatar = (((strlen($item['author-avatar'])) && $diff_author) ? $item['author-avatar'] : $a->get_cached_avatar_image($this->get_data_value('thumb')));
 
 		$profile_avatar = $item['author']['xchan_photo_m'];
 
