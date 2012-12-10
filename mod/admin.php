@@ -189,7 +189,7 @@ function admin_page_summary(&$a) {
 		'$accounts' => $accounts,
 		'$pending' => Array( t('Pending registrations'), $pending),
 		'$version' => Array( t('Version'), FRIENDICA_VERSION),
-		'$build' =>  get_config('system','build'),
+		'$build' =>  get_config('system','db_version'),
 		'$plugins' => Array( t('Active plugins'), $a->plugins )
 	));
 }
@@ -431,14 +431,16 @@ function admin_page_dbsync(&$a) {
 	$o = '';
 
 	if(argc() > 3 && intval(argv(3)) && argv(2) === 'mark') {
-		set_config('database', 'update_' . intval(argv(3)), 'success');
+		set_config('database', 'update_r' . intval(argv(3)), 'success');
+		if(intval(get_config('system','db_version')) <= intval(argv(3)))
+			set_config('system','db_version',intval(argv(3)) + 1);
 		info( t('Update has been marked successful') . EOL);
 		goaway($a->get_baseurl(true) . '/admin/dbsync');
 	}
 
 	if(argc() > 2 && intval(argv(2))) {
 		require_once('install/update.php');
-		$func = 'update_' . intval(argv(2));
+		$func = 'update_r' . intval(argv(2));
 		if(function_exists($func)) {
 			$retval = $func();
 			if($retval === UPDATE_FAILED) {
@@ -460,7 +462,7 @@ function admin_page_dbsync(&$a) {
 	$r = q("select * from config where `cat` = 'database' ");
 	if(count($r)) {
 		foreach($r as $rr) {
-			$upd = intval(substr($rr['k'],7));
+			$upd = intval(substr($rr['k'],8));
 			if($upd < 1139 || $rr['v'] === 'success')
 				continue;
 			$failed[] = $upd;

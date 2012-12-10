@@ -17,7 +17,7 @@ define ( 'FRIENDICA_PLATFORM',     'Friendica Red');
 define ( 'FRIENDICA_VERSION',      trim(file_get_contents('version.inc')) . 'R');
 define ( 'DFRN_PROTOCOL_VERSION',  '2.23'    );
 define ( 'ZOT_REVISION',               1     ); 
-define ( 'DB_UPDATE_VERSION',       1154     );
+define ( 'DB_UPDATE_VERSION',       1000     );
 
 define ( 'EOL',                    "<br />\r\n"     );
 define ( 'ATOM_TIME',              'Y-m-d\TH:i:s\Z' );
@@ -868,9 +868,9 @@ function is_ajax() {
 if(! function_exists('check_config')) {
 function check_config(&$a) {
 
-		$build = get_config('system','build');
+		$build = get_config('system','db_version');
 		if(! x($build))
-			$build = set_config('system','build',DB_UPDATE_VERSION);
+			$build = set_config('system','db_version',DB_UPDATE_VERSION);
 
 //		$url = get_config('system','baseurl');
 
@@ -906,7 +906,7 @@ function check_config(&$a) {
 				if(DB_UPDATE_VERSION == UPDATE_VERSION) {
 
 					for($x = $stored; $x < $current; $x ++) {
-						if(function_exists('update_' . $x)) {
+						if(function_exists('update_r' . $x)) {
 
 							// There could be a lot of processes running or about to run.
 							// We want exactly one process to run the update command.
@@ -916,13 +916,13 @@ function check_config(&$a) {
 							// If the update fails or times-out completely you may need to
 							// delete the config entry to try again.
 
-							if(get_config('database','update_' . $x))
+							if(get_config('database','update_r' . $x))
 								break;
-							set_config('database','update_' . $x, '1');
+							set_config('database','update_r' . $x, '1');
 
 							// call the specific update
 
-							$func = 'update_' . $x;
+							$func = 'update_r' . $x;
 							$retval = $func();
 							if($retval) {
 								//send the administrator an e-mail
@@ -943,11 +943,11 @@ function check_config(&$a) {
 								logger('CRITICAL: Update Failed: '. $x);
 							}
 							else
-								set_config('database','update_' . $x, 'success');
+								set_config('database','update_r' . $x, 'success');
 								
 						}
 					}
-					set_config('system','build', DB_UPDATE_VERSION);
+					set_config('system','db_version', DB_UPDATE_VERSION);
 				}
 			}
 		}
