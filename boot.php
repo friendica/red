@@ -1770,13 +1770,13 @@ if(! function_exists('load_contact_links')) {
 		if(! $uid || x($a->contacts,'empty'))
 			return;
 
-		$r = q("SELECT `id`,`network`,`url`,`thumb` FROM `contact` WHERE `uid` = %d AND `self` = 0 AND `blocked` = 0 ",
-				intval($uid)
+		$r = q("SELECT abook_id, abook_flags, abook_my_perms, abook_their_perms, xchan_hash, xchan_photo_m, xchan_name, xchan_url from abook left join xchan on abook_xchan = xchan_hash where abook_channel = %d and not (abook_flags & %d) ",
+			intval($uid),
+			intval(ABOOK_FLAG_SELF)
 		);
-		if(count($r)) {
+		if($r) {
 			foreach($r as $rr){
-				$url = normalise_link($rr['url']);
-				$ret[$url] = $rr;
+				$ret[$rr['xchan_hash']] = $rr;
 			}
 		}
 		else

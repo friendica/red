@@ -712,7 +712,7 @@ function conversation(&$a, $items, $mode, $update, $page_mode = 'traditional') {
 }}
 
 
-function best_link_url($item,&$sparkle,$ssl_state = false) {
+function best_link_url($item) {
 
 	$a = get_app();
 
@@ -745,60 +745,40 @@ function best_link_url($item,&$sparkle,$ssl_state = false) {
 if(! function_exists('item_photo_menu')){
 function item_photo_menu($item){
 	$a = get_app();
+	$contact = null;
 
 	$ssl_state = false;
 
 	if(local_user()) {
 		$ssl_state = true;
-		 if(! count($a->contacts))
+		if(! count($a->contacts))
 			load_contact_links(local_user());
+		$channel = $a->get_channel();
+		$channel_hash = (($channel) ? $channel['channel_hash'] : '');
 	}
+
 	$sub_link="";
 	$poke_link="";
 	$contact_url="";
 	$pm_url="";
-	$status_link="";
-	$photos_link="";
-	$posts_link="";
 
-	if((local_user()) && local_user() == $item['uid'] && $item['parent'] == $item['id'] && (! $item['self'])) {
+	if((local_user()) && local_user() == $item['uid'] && $item['parent'] == $item['id'] 
+		&& $channel && ($channel_hash != $item['author_xchan'])) {
 		$sub_link = 'javascript:dosubthread(' . $item['id'] . '); return false;';
 	}
 
-	$sparkle = false;
-    $profile_link = best_link_url($item,$sparkle,$ssl_state);
+    $profile_link = z_root() . "/chanview/?f=&hash=" . $item['author_xchan'];
+	$pm_url = $a->get_baseurl($ssl_state) . '/message/new/?f=&hash=' . $item['author_xchan'];
 
-	if($sparkle) {
-		$cid = intval(basename($profile_link));
-		$status_link = $profile_link . "?url=status";
-		$photos_link = $profile_link . "?url=photos";
-		$profile_link = $profile_link . "?url=profile";
-		$pm_url = $a->get_baseurl($ssl_state) . '/message/new/' . $cid;
-		$zurl = '';
-	}
-	else {
-		$profile_link = zid($profile_link);
-		if(local_user() && local_user() == $item['uid'] && link_compare($item['url'],$item['author-link'])) {
-			$cid = $item['contact-id'];
-		}
-		else {
-			$cid = 0;
-		}
-	}
-	if(($cid) && (! $item['self'])) {
-		$poke_link = $a->get_baseurl($ssl_state) . '/poke/?f=&c=' . $cid;
-		$contact_url = $a->get_baseurl($ssl_state) . '/contacts/' . $cid;
-		$posts_link = $a->get_baseurl($ssl_state) . '/network/?cid=' . $cid;
+	if($a->contacts && array_key_exists($item['author_xchan'],$a->contacts))
+		$contact = $a->contacts[$item['author_xchan']];
+
+	if($contact) {
+		$poke_link = $a->get_baseurl($ssl_state) . '/poke/?f=&c=' . $contact['abook_id'];
+		$contact_url = $a->get_baseurl($ssl_state) . '/connnections/' . $contact['abook_id'];
+		$posts_link = $a->get_baseurl($ssl_state) . '/network/?cid=' . $contact['abook_id'];
 
 		$clean_url = normalise_link($item['author-link']);
-
-		if((local_user()) && (local_user() == $item['uid'])) {
-			if(isset($a->contacts) && x($a->contacts,$clean_url)) {
-				if($a->contacts[$clean_url]['network'] === NETWORK_DIASPORA) {
-					$pm_url = $a->get_baseurl($ssl_state) . '/message/new/' . $cid;
-				}
-			}
-		}
 
 	}
 
