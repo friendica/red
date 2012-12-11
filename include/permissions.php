@@ -67,22 +67,60 @@ function get_all_perms($uid,$observer,$internal_use = true) {
 			$channel_checked = true;
 		}
 
+		// The uid provided doesn't exist. This would be a big fail.
+
 		if(! $r) {
 			$ret[$perm_name] = false;
 			continue;
 		}
 
-		// Check if this $uid is actually the $observer
 
-		if($r[0]['channel_hash'] === $observer) {
+		// Next we're going to check for blocked or ignored contacts.
+		// These take priority over all other settings.
+
+		if($observer) {
+			if(! $abook_checked) {
+				$x = q("select abook_my_perms, abook_flags from abook 
+					where abook_channel = %d and abook_xchan = '%s' limit 1",
+					intval($uid),
+					dbesc($observer)
+				);
+				$abook_checked = true;
+			}
+
+			// If they're blocked - they can't read or write
+ 
+			if(($x) && ($x[0]['abook_flags'] & ABOOK_FLAG_BLOCKED)) {
+				$ret[$perm_name] = false;
+				continue;
+			}
+
+			// Check if this is a write permission and they are being ignored
+			// This flag is only visible internally.
+
+			if(($x) && ($internal_use) && (! $global_perms[$perm_name][2]) && ($x[0]['abook_flags'] & ABOOK_FLAG_IGNORED)) {
+				$ret[$perm_name] = false;
+				continue;
+			}
+		}
+
+		// Check if this $uid is actually the $observer - if it's your content
+		// you always have permission to do anything
+
+		if(($observer) && ($r[0]['channel_hash'] === $observer)) {
 			$ret[$perm_name] = true;
 			continue;
 		}
+
+		// Anybody at all (that wasn't blocked or ignored). They have permission.
 
 		if($r[0][$channel_perm] & PERMS_PUBLIC) {
 			$ret[$perm_name] = true;
 			continue;
 		}
+
+		// From here on out, we need to know who they are. If we can't figure it
+		// out, permission is denied.
 
 		if(! $observer) {
 			$ret[$perm_name] = false;
@@ -116,38 +154,16 @@ function get_all_perms($uid,$observer,$internal_use = true) {
 		}	
 
 		// If PERMS_CONTACTS or PERMS_SPECIFIC, they need to be in your address book
-		// and not blocked/ignored
+		// $x is a valid address book entry
 
-		if(! $abook_checked) {
-			$x = q("select abook_my_perms, abook_flags from abook 
-				where abook_channel = %d and abook_xchan = '%s' limit 1",
-				intval($uid),
-				dbesc($observer)
-			);
-			$abook_checked = true;
-		}
-
-
-		// If they're blocked - they can't read or write
- 
-		if((! $x) || ($x[0]['abook_flags'] & ABOOK_FLAG_BLOCKED)) {
+		if(! $x) {
 			$ret[$perm_name] = false;
 			continue;
 		}
-		
-		// If we're still going, they are a contact
 
-		if($r && $r[0][$channel_perm] & PERMS_CONTACTS) {
+		if(($r) && ($r[0][$channel_perm] & PERMS_CONTACTS)) {
 
-			// Check if this is a write permission and they are being ignored
-			// This flag is only visible internally.
-
-			if(($internal_use) && (! $global_perms[$perm_name][2]) && ($x[0]['abook_flags'] & ABOOK_FLAG_IGNORED)) {
-				$ret[$perm_name] = false;
-				continue;
-			}
-
-			// Otherwise they're a contact, so they have permission
+			// They're a contact, so they have permission
 
 			$ret[$perm_name] = true;
 			continue;
@@ -156,7 +172,7 @@ function get_all_perms($uid,$observer,$internal_use = true) {
 		// Permission granted to certain channels. Let's see if the observer is one of them
 
 		if(($r) && ($r[0][$channel_perm] & PERMS_SPECIFIC)) {
-			if(($x) && ($x[0]['abook_my_perms'] & $global_perms[$perm_name][1])) {
+			if(($x[0]['abook_my_perms'] & $global_perms[$perm_name][1])) {
 				$ret[$perm_name] = true;
 				continue;
 			}
@@ -187,6 +203,23 @@ function perm_is_allowed($uid,$observer,$permission) {
 	);
 	if(! $r)
 		return false;
+
+	if($observer) {
+		$x = q("select abook_my_perms, abook_flags from abook where abook_channel = %d and abook_xchan = '%s' limit 1",
+			intval($uid),
+			dbesc($observer)
+		);
+
+		// If they're blocked - they can't read or write
+ 
+		if(($x) && ($x[0]['abook_flags'] & ABOOK_FLAG_BLOCKED))
+			return false;
+		
+		if(($x) && (! $global_perms[$permission][2]) && ($x[0]['abook_flags'] & ABOOK_FLAG_IGNORED))
+			return false;
+
+	}
+
 
 	// Check if this $uid is actually the $observer
 
@@ -220,36 +253,17 @@ function perm_is_allowed($uid,$observer,$permission) {
 		return false;
 	}	
 
-	// If PERMS_CONTACTS or PERMS_SPECIFIC, they need to be in your address book
-	// and not blocked/ignored
-
-	$x = q("select abook_my_perms, abook_flags from abook where abook_channel = %d and abook_xchan = '%s' limit 1",
-		intval($uid),
-		dbesc($observer)
-	);
-
-	// If they're blocked - they can't read or write
- 
-	if((! $x) || ($x[0]['abook_flags'] & ABOOK_FLAG_BLOCKED))
+	if(! $x) {
 		return false;
-		
-	// If we're still going, they are a contact
+	}
 
 	if($r[0][$channel_perm] & PERMS_CONTACTS) {
-
-		// Check if this is a write permission and they are being ignored
-
-		if((! $global_perms[$permission][2]) && ($x[0]['abook_flags'] & ABOOK_FLAG_IGNORED))
-			return false;
-
-		// Otherwise they're a contact, so they have permission
-
 		return true;
 	}
 
 	// Permission granted to certain channels. Let's see if the observer is one of them
 
-	if($r[0][$channel_perm] & PERMS_SPECIFIC) {
+	if(($r) && $r[0][$channel_perm] & PERMS_SPECIFIC) {
 		if($x[0]['abook_my_perms'] & $global_perms[$permission][1])
 			return true;
 	}
