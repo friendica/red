@@ -111,7 +111,8 @@
 	var commentBusy = false;
 	var last_popup_menu = null;
 	var last_popup_button = null;
-
+	var scroll_next = false;
+	var next_page = 1;
 	var page_load = true;
 
 	$(function() {
@@ -445,6 +446,13 @@ function updateConvItems(mode,data) {
 		var update_url;
 
 		if(typeof buildCmd == 'function') {
+			if(scroll_next) {
+				network_page = next_page;
+				page_load = true;
+			}
+			else {
+				network_page = 1;
+			}
 			update_url = buildCmd();
 		}
 		else {
@@ -458,7 +466,10 @@ function updateConvItems(mode,data) {
 
 		$.get(update_url,function(data) {
 			var update_mode = ((page_load) ? 'replace' : 'update');
+			if(scroll_next)
+				update_mode = 'append';
 			page_load = false;
+			scroll_next = false;
 			in_progress = false;
 			updateConvItems(update_mode,data);
 			$("#profile-jot-text-loading").hide();
@@ -466,6 +477,7 @@ function updateConvItems(mode,data) {
 
 
 	}
+
 
 	function imgbright(node) {
 		$(node).removeClass("drophide").addClass("drop");
@@ -856,6 +868,33 @@ $("abbr.wall-item-ago-time").timeago();
 //$("div.wall-item-body").divgrow({ initialHeight: 400 });
 
 //reCalcHeight();
+
+
+$(window).scroll(function () {                 
+	if(typeof buildCmd == 'function') {
+		$('#more').hide();                 
+		$('#no-more').hide();                 
+	
+		if($(window).scrollTop() + $(window).height() > $(document).height() - 200) {
+			$('#more').css("top","400");
+			$('#more').show();
+		}
+	
+		if($(window).scrollTop() + $(window).height() == $(document).height()) {
+			$('#more').hide();
+			$('#no-more').hide();
+			//			alert('scroll');
+			next_page++;
+			scroll_next = true;
+			liveUpdate();
+
+		}
+	}
+});
+
+
+
+
 
 });
 
