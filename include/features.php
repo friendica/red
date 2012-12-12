@@ -21,6 +21,8 @@ function get_features() {
 			t('General Features'),
 			array('expire',         t('Content Expiration'),		t('Remove old posts/comments after a period of time')),
 			array('multi_profiles', t('Multiple Profiles'),			t('Ability to create multiple profiles')),
+			array('webpages',       t('Web Pages'),                 t('Provide managed web pages on your channel'),
+
 		),
 
 		// Post composition

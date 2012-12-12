@@ -368,6 +368,8 @@ define ( 'ITEM_BLOCKED',         0x0002);
 define ( 'ITEM_MODERATED',       0x0004);
 define ( 'ITEM_SPAM',            0x0008);
 define ( 'ITEM_DELETED',         0x0010);
+define ( 'ITEM_UNPUBLISHED',     0x0020);
+define ( 'ITEM_WEBPAGE',         0x0040);  // is a static web page, not a conversational item
 
 /**
  * Item Flags
