@@ -19,6 +19,14 @@ abbr {
 	border-bottom: none;
 }
 
+/*Should we be doing this here, or should we be changing default.css? */
+
+aside {
+box-shadow: 3px 3px 3px #ccc;
+border: none;
+border-radius: 0px 0px 20px 0px;
+width: 210px;
+}
 
 /* icons */
 .icon {
@@ -112,7 +120,7 @@ blockquote {
 nav {
 	display: block;
 /*	margin: 0px 10%; */
-	border-bottom: 1px solid #babdb6;
+	border-bottom: 1px solid #d00;
 }
 nav #site-location {
 	color: #888a85;
@@ -337,6 +345,7 @@ div.wall-item-content-wrapper.shiny {
 	font-weight: bold;
 	border: solid 1px #ccc;
 	box-shadow: 5px 5px 5px #666 inset;
+	border-radius: 20px;
 }
 
 #jot-title::-webkit-input-placeholder{font-weight: normal;}
@@ -405,44 +414,6 @@ div.wall-item-content-wrapper.shiny {
 	margin-bottom: 10px;
 }
 
-#register-fill-ext {
-	margin-bottom: 25px;
-}
-
-#label-register-name, #label-register-nickname, #label-register-openid {
-	float: left;
-	width: 350px;
-	margin-top: 10px;
-}
-
-#register-name, #register-nickname {
-	float: left;
-	margin-top: 10px;
-	width: 150px;
-}
-
-#register-openid {
-	float: left;
-	margin-top: 10px;
-	width: 130px;
-}
-
-#register-name-end, #register-email-end, #register-nickname-end, #register-submit-end, #register-openid-end {
-	clear: both;
-}
-
-#register-nickname-desc {
-	margin-top: 30px;
-	width: 650px;
-}
-#register-sitename {
-	float: left;
-	margin-top: 10px;
-}
-
-#register-submit-button {
-	margin-top: 10px;
-}
 
 #main-login {
 	margin-left: 100px;
@@ -496,6 +467,8 @@ div.wall-item-content-wrapper.shiny {
 /*	margin-left: 200px; */
 }
 
+
+/* TODO - we don't use DFRN anymore.  These probably have different names now.  Check and clean up later */
 
 input#dfrn-url {
 	float: left;
@@ -992,14 +965,21 @@ input#dfrn-url {
 	margin-left: 50px;
 }
 
-.wall-item-content-wrapper {
-	margin-top: 10px;
-	border-left: 1px solid #e0e0e0;
-	position: relative;
-}
+/* Give the top level post bigger shadows than the comments.  This makes them appear "higher" and the comments "lower", which separates posts from each other reasonably without literally drawing a line under it */
 
-.thread-wrapper .thread-wrapper {
+.wall-item-content-wrapper {
+	margin-top: 30px;
+	position: relative;
+	background: #fff;
+	border-radius: 20px;
+	box-shadow: 15px 15px 15px #111;
+
+}
+.wall-item-content-wrapper.comment {
+	background: #fff;
+	border-left: 1px solid #e0e0e0;
 	margin-left: 50px;
+	box-shadow: 5px 5px 5px #222;
 }
 
 .thread-end-wrapper {
@@ -1162,13 +1142,8 @@ input#dfrn-url {
 }
 .wall-item-content {
 	float: left;
-	/*width: 450px;*/
 	margin-left: 10px;
-	/*margin-bottom: 20px;*/
-	/*padding: 20px;*/
-/*	max-height: 400px; */
-/*	overflow-x: auto; */
-/*	overflow-y: auto; */
+	overflow: auto;
 }
 
 .wall-item-content img {
@@ -1177,7 +1152,9 @@ input#dfrn-url {
   box-shadow: 8px 8px 8px #666;
 }
 
-
+.wall-item-content img.smiley {
+    box-shadow: none;
+}
 .wall-item-title {
 	float: left;
 	font-weight: bold;
@@ -1206,8 +1183,14 @@ width: 90%;
     background-position: 0 -20px;
     background-repeat: repeat-x;
     background: #eee;
-   	padding: 5px 10px;
+    padding: 5px 10px;
+    border-radius: 0px 0px 20px 20px;
 }
+
+.wall-item-like {
+margin: 15px;
+}
+
 .wall-item-author {
 	margin-top: 10px;
 }
@@ -1249,7 +1232,7 @@ width: 90%;
 .comment-edit-text-empty {
 	color: gray;
 	height: 1.5em;
-	width: 175px;
+	width: 80%;  /*Too wide? */
 	overflow: auto;
 	margin-bottom: 10px;
 }
@@ -1430,42 +1413,6 @@ width: 90%;
 	color: #4444FF;
 	font-weight: bold;
 	margin-bottom: 20px;
-}
-
-
-.directory-end {
-	clear: both;
-}
-.directory-name {
-	text-align: center;
-}
-.directory-photo {
-	margin-left: 25px;
-}
-.directory-details {
-	font-size: 0.7em;
-	text-align: center;
-	margin-left: 5px;
-	margin-right: 5px;
-}
-.directory-item {
-	float: left;
-	width: 225px;
-	height: 260px;
-	overflow: auto;
-}
-
-#directory-search-wrapper {
-	margin-top: 20px;
-	margin-right: 20px;
-	margin-bottom: 50px;
-}
-
-#directory-search-end {
-}
-
-.directory-photo-img {
-	border: none;
 }
 
 
@@ -1751,7 +1698,7 @@ tr.mceLast {
 	padding: 8px;
 	width: 90%;
 	-moz-border-radius: 5px;
-	border-radius: 3px;	
+	border-radius: 20px;	
 	box-shadow: 4px 4px 3px 0 #666 inset;
 }
 #profile-jot-text:hover {
@@ -1839,72 +1786,6 @@ tr.mceLast {
 }
 
 
-.photo {
-    border: 1px solid #AAAAAA;
-}
-
-.photo-top-photo, .photo-album-photo {
-    padding: 10px;
-    max-width: 300px;
-    border: 1px solid #888888;
-}
-
-.rotleft1 {
--webkit-transform: rotate(-1deg);
--moz-transform: rotate(-1deg);
--ms-transform: rotate(-1deg);
--o-transform: rotate(-1deg);
-}
-
-.rotleft2 {
--webkit-transform: rotate(-2deg);
--moz-transform: rotate(-2deg);
--ms-transform: rotate(-2deg);
--o-transform: rotate(-2deg);
-}
-
-.rotleft3 {
--webkit-transform: rotate(-3deg);
--moz-transform: rotate(-3deg);
--ms-transform: rotate(-3deg);
--o-transform: rotate(-3deg);
-}
-
-.rotleft4 {
--webkit-transform: rotate(-4deg);
--moz-transform: rotate(-4deg);
--ms-transform: rotate(-4deg);
--o-transform: rotate(-4deg);
-}
-
-
-.rotright1 {
--webkit-transform: rotate(1deg);
--moz-transform: rotate(1deg);
--ms-transform: rotate(1deg);
--o-transform: rotate(1deg);
-}
-
-.rotright2 {
--webkit-transform: rotate(2deg);
--moz-transform: rotate(2deg);
--ms-transform: rotate(2deg);
--o-transform: rotate(2deg);
-}
-
-.rotright3 {
--webkit-transform: rotate(3deg);
--moz-transform: rotate(3deg);
--ms-transform: rotate(3deg);
--o-transform: rotate(3deg);
-}
-
-.rotright4 {
--webkit-transform: rotate(4deg);
--moz-transform: rotate(4deg);
--ms-transform: rotate(4deg);
--o-transform: rotate(4deg);
-}
 
 
 
@@ -2098,82 +1979,7 @@ a.mail-list-link {
     padding: 4px 0;
 }
 
-/*
-*a.mail-list-link:hover {
-*	background-color: #15607B;
-*	color: #F5F6FB;
-*}
-*/
 
-.mail-list-outside-wrapper-end {
-	clear: both;
-}
-
-.mail-list-outside-wrapper {
-	margin-top: 30px;
-}
-
-.mail-list-delete-wrapper {
-	float: right;
-	margin-right: 30px;
-	margin-top: 15px;
-}
-
-.mail-list-delete-icon {
-	border: none;
-}
-
-.mail-conv-sender,
-.mail-conv-detail {
-	float: left;
-}
-.mail-conv-detail {
-	margin-left: 20px;
-	width: 500px;
-}
-
-.mail-conv-subject {
-    font-size: 1.4em;
-    margin: 10px 0;
-}
-
-.mail-conv-outside-wrapper-end {
-	clear: both;
-}
-
-.mail-conv-outside-wrapper {
-	margin-top: 30px;
-}
-
-.mail-conv-delete-wrapper {
-	float: right;
-	margin-right: 30px;
-	margin-top: 15px;
-}
-.mail-conv-break {
-	clear: both;
-}
-
-.mail-conv-delete-icon {
-	border: none;
-}
-
-.message-links ul {
-	list-style-type: none;
-	padding: 0px;
-}
-
-.message-links li {
-	margin-top: 10px;
-	float: left;
-}
-.message-links a {
-	padding: 3px 5px;
-}
-
-.message-links-end {
-	clear: both;
-}
 
 #sidebar-group-list ul {
 	list-style-type: none;
@@ -2259,112 +2065,6 @@ aside input[type='text'] {
 }
 
 
-/*.photos {
-	height: auto;
-	overflow: auto;
-}*/
-
-.photos-end {
-	clear: both;
-	margin-bottom: 25px;
-}
-
-.photo-album-image-wrapper {
-	float: left;
-	margin-top: 15px;
-	margin-right: 15px;
-	margin-left: 15px;
-/*	width: 200px; height: 200px; 
-	overflow: hidden; 
-	position: relative; */
-}
-.photo-album-image-wrapper .caption {
-	display: none; 
- 	width: 100%;
-/* 	position: absolute; */
- 	bottom: 0px; 
- 	padding: 0.5em 0.5em 0px 0.5em;
- 	background-color: rgba(245, 245, 255, 0.8);
- 	border-bottom: 2px solid #CCC;
- 	margin: 0px;
-}
-.photo-album-image-wrapper a:hover .caption {
-	display:block;
-}
-
-#photo-album-end {
-	clear: both;
-	margin-bottom: 25px;
-}
-
-.photo-top-image-wrapper {
-/*	position: relative; */
-	float: left;
-	margin-top: 15px;
-	margin-right: 15px;
-	margin-left: 15px;
-	margin-bottom: 15px;
-/*	width: 200px; height: 200px; 
-	overflow: hidden; */
-}
-.photo-top-album-name {
- 	width: 100%;
- 	min-height: 2em;
-/* 	position: absolute;  */
- 	bottom: 0px; 
- 	padding: 0px 3px;
- 	padding-top: 0.5em;
- 	background-color: rgb(255, 255, 255);
-}
-#photo-top-end {
-	clear: both;
-}
-
-#photo-top-links {
-	margin-bottom: 30px;
-	margin-left: 30px;
-}
-
-#photos-upload-newalbum-div {
-	float: left;
-	width: 175px;
-}
-
-#photos-upload-noshare {
-	margin-bottom: 10px;
-}
-#photos-upload-existing-album-text {
-	float: left;
-	width: 175px;
-}
-#photos-upload-newalbum {
-	float: left;
-}
-#photos-upload-album-select {
-	float: left;
-}
-
-#photos-upload-spacer {
-	margin-top: 25px;
-}
-#photos-upload-new-end, #photos-upload-exist-end {
-	clear: both;
-}
-#photos-upload-exist-end {
-	margin-bottom: 15px;
-}
-#photos-upload-submit {
-	margin-top: 15px;
-}
-
-#photos_upload_applet_wrapper {
-	margin-bottom: 15px;
-}
-
-#photos-upload-no-java-message {
-	margin-bottom: 15px;
-}
-
 #profile-jot-desc {
 	/*float: left;*/
 	width: 480px;
@@ -2393,22 +2093,6 @@ aside input[type='text'] {
 	/* clear: both; */ 
 }
 
-#photos-upload-select-files-text {
-	margin-top: 15px;
-	margin-bottom: 15px;
-}
-
-#photos-upload-perms-menu, #photos-upload-perms-menu:visited, #photos-upload-perms-menu:link {
-	color: #8888FF;
-	text-decoration: none;
-	cursor: pointer;
-}
-
-#photos-upload-perms-menu:hover {
-	color: #0000FF;
-	text-decoration: underline;
-	cursor: pointer;
-}
 
 
 #settings-default-perms-menu {
@@ -2416,66 +2100,6 @@ aside input[type='text'] {
 	margin-bottom: 15px;
 }
 
-#photo-edit-caption-label, #photo-edit-tags-label, #photo-edit-albumname-label, #photo-edit-rotate-label {
-	float: left;
-	width: 150px;
-}
-
-#photo-edit-perms-end {
-	margin-bottom: 15px;
-}
-
-#photo-edit-caption, #photo-edit-newtag, #photo-edit-albumname, #photo-edit-rotate {
-	float: left;
-	margin-bottom: 25px;
-}
-#photo-edit-link-wrap {
-	margin-bottom: 15px;
-}
-#photo-like-div {
-	margin-bottom: 25px;
-}
-
-#photo-edit-caption-end, #photo-edit-tags-end, #photo-edit-albumname-end, #photo-edit-rotate-end {
-	clear: both;
-}
-
-#photo-edit-rotate-end {
-	margin-bottom: 15px;
-}
-
-#photo-edit-delete-button {
-	margin-left: 200px;
-}
-#photo-edit-end {
-	margin-bottom: 35px;
-}
-#photo-caption {
-	font-size: 110%;
-	font-weight: bold;
-	margin-top: 15px;
-	margin-bottom: 15px;
-}
-
-#in-this-photo-text {
-	color: #0000FF;
-	margin-left: 30px;
-}
-
-#in-this-photo {
-	margin-left: 60px;
-	margin-top: 10px;
-	margin-bottom: 20px;
-}
-
-#photo-album-edit-submit, #photo-album-edit-drop {
-	margin-top: 15px;
-	margin-bottom: 15px;
-}
-
-#photo-album-edit-drop {
-	margin-left: 200px;
-}
 
 .group-delete-wrapper {
 	float: right;
@@ -3166,67 +2790,6 @@ brain is weird like that */
 
 .field.radio .field_help { margin-left: 0px; }
 
-/**
- * ADMIN
- */
-#pending-update {
-	float:right;
-	color: #ffffff;
-	font-weight: bold;
-	background-color: #FF0000;
-	padding: 0em 0.3em;
-	
-}
-#adminpage dl {
-	clear: left;
-	margin-bottom: 2px;
-	padding-bottom: 2px;
-	border-bottom: 1px solid black;
-}
-#adminpage dt {
-	width: 200px;
-	float: left;
-	font-weight: bold;
-}
-#adminpage dd {
-	margin-left: 200px;
-}
-
-#adminpage h3 {
-	border-bottom: 1px solid #cccccc;
-}
-#adminpage .field label {
-	font-weight: bold;
-}
-#adminpage .submit {
-	clear:left;
-	text-align: right;
-}
-
-#adminpage #pluginslist {
-	margin: 0px; padding: 0px;
-}
-#adminpage .plugin {
-	list-style: none;
-	display: block;
-	border: 1px solid #888888;
-	padding: 1em;
-	margin-bottom: 5px;
-	clear: left;
-}
-#adminpage .plugin .desc { margin-left: 2.5em;}
-#adminpage .toggleplugin {
-	float:left;
-	margin-right: 1em;
-}
-
-#adminpage table {width:100%; border-bottom: 1px solid #000000; margin: 5px 0px;}
-#adminpage table th { text-align: left;}
-#adminpage td .icon { float: left;}
-#adminpage table#users img { width: 16px; height: 16px; }
-#adminpage table tr:hover { background-color: #bbc7d7; }
-#adminpage .selectall { text-align: right; }
-
 /*
  * UPDATE
  */
@@ -3555,6 +3118,23 @@ nav {
   -webkit-box-shadow: 0px 0px 10px rgba(0, 0, 0, 0.7);
   -moz-box-shadow: 0px 0px 10px rgba(0, 0, 0, 0.7);
   box-shadow: 0px 0px 10px rgba(0, 0, 0, 0.7);
+
+/* TODO find a better way to do this without different code for every single browser.  */
+
+  background-image: linear-gradient(bottom, #f00 26%, #b00 82%);
+  background-image: -o-linear-gradient(bottom, #f00 26%, #b00 82%);
+  background-image: -moz-linear-gradient(bottom, #f00 26%, #b00 82%);
+  background-image: -webkit-linear-gradient(bottom, #f00 26%, #b00 82%);
+  background-image: -ms-linear-gradient(bottom, #f00 26%, #b00 82%);
+
+  background-image: -webkit-gradient(
+linear,
+left bottom,
+left top,
+color-stop(0.26, #f00),
+color-stop(0.82, #b00)
+);
+
 }
 nav a,
 nav a:active,
@@ -3664,7 +3244,8 @@ ul.menu-popup a {
   text-decoration: none;
 }
 ul.menu-popup a:hover {
-  background-color: #ccff42;
+  background-color: #eec;
+  color: #d00;
 }
 ul.menu-popup .menu-sep {
   border-top: 1px solid #9eabb0;

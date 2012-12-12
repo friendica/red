@@ -1,1 +1,78 @@
  
+
+/*
+*a.mail-list-link:hover {
+*	background-color: #15607B;
+*	color: #F5F6FB;
+*}
+*/
+
+.mail-list-outside-wrapper-end {
+	clear: both;
+}
+
+.mail-list-outside-wrapper {
+	margin-top: 30px;
+}
+
+.mail-list-delete-wrapper {
+	float: right;
+	margin-right: 30px;
+	margin-top: 15px;
+}
+
+.mail-list-delete-icon {
+	border: none;
+}
+
+.mail-conv-sender,
+.mail-conv-detail {
+	float: left;
+}
+.mail-conv-detail {
+	margin-left: 20px;
+	width: 500px;
+}
+
+.mail-conv-subject {
+    font-size: 1.4em;
+    margin: 10px 0;
+}
+
+.mail-conv-outside-wrapper-end {
+	clear: both;
+}
+
+.mail-conv-outside-wrapper {
+	margin-top: 30px;
+}
+
+.mail-conv-delete-wrapper {
+	float: right;
+	margin-right: 30px;
+	margin-top: 15px;
+}
+.mail-conv-break {
+	clear: both;
+}
+
+.mail-conv-delete-icon {
+	border: none;
+}
+
+.message-links ul {
+	list-style-type: none;
+	padding: 0px;
+}
+
+.message-links li {
+	margin-top: 10px;
+	float: left;
+}
+.message-links a {
+	padding: 3px 5px;
+}
+
+.message-links-end {
+	clear: both;
+}
