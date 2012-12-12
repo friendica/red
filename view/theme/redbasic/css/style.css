@@ -19,6 +19,14 @@ abbr {
 	border-bottom: none;
 }
 
+/*Should we be doing this here, or should we be changing default.css? */
+
+aside {
+box-shadow: 3px 3px 3px #ccc;
+border: none;
+border-radius: 0px 0px 20px 0px;
+width: 210px;
+}
 
 /* icons */
 .icon {
@@ -112,7 +120,7 @@ blockquote {
 nav {
 	display: block;
 /*	margin: 0px 10%; */
-	border-bottom: 1px solid #babdb6;
+	border-bottom: 1px solid #d00;
 }
 nav #site-location {
 	color: #888a85;
@@ -337,6 +345,7 @@ div.wall-item-content-wrapper.shiny {
 	font-weight: bold;
 	border: solid 1px #ccc;
 	box-shadow: 5px 5px 5px #666 inset;
+	border-radius: 20px;
 }
 
 #jot-title::-webkit-input-placeholder{font-weight: normal;}
@@ -956,14 +965,21 @@ input#dfrn-url {
 	margin-left: 50px;
 }
 
-.wall-item-content-wrapper {
-	margin-top: 10px;
-	border-left: 1px solid #e0e0e0;
-	position: relative;
-}
+/* Give the top level post bigger shadows than the comments.  This makes them appear "higher" and the comments "lower", which separates posts from each other reasonably without literally drawing a line under it */
 
-.thread-wrapper .thread-wrapper {
+.wall-item-content-wrapper {
+	margin-top: 30px;
+	position: relative;
+	background: #fff;
+	border-radius: 20px;
+	box-shadow: 15px 15px 15px #111;
+
+}
+.wall-item-content-wrapper.comment {
+	background: #fff;
+	border-left: 1px solid #e0e0e0;
 	margin-left: 50px;
+	box-shadow: 5px 5px 5px #222;
 }
 
 .thread-end-wrapper {
@@ -1126,13 +1142,8 @@ input#dfrn-url {
 }
 .wall-item-content {
 	float: left;
-	/*width: 450px;*/
 	margin-left: 10px;
-	/*margin-bottom: 20px;*/
-	/*padding: 20px;*/
-/*	max-height: 400px; */
-/*	overflow-x: auto; */
-/*	overflow-y: auto; */
+	overflow: auto;
 }
 
 .wall-item-content img {
@@ -1141,7 +1152,9 @@ input#dfrn-url {
   box-shadow: 8px 8px 8px #666;
 }
 
-
+.wall-item-content img.smiley {
+    box-shadow: none;
+}
 .wall-item-title {
 	float: left;
 	font-weight: bold;
@@ -1170,8 +1183,14 @@ width: 90%;
     background-position: 0 -20px;
     background-repeat: repeat-x;
     background: #eee;
-   	padding: 5px 10px;
+    padding: 5px 10px;
+    border-radius: 0px 0px 20px 20px;
 }
+
+.wall-item-like {
+margin: 15px;
+}
+
 .wall-item-author {
 	margin-top: 10px;
 }
@@ -1213,7 +1232,7 @@ width: 90%;
 .comment-edit-text-empty {
 	color: gray;
 	height: 1.5em;
-	width: 175px;
+	width: 80%;  /*Too wide? */
 	overflow: auto;
 	margin-bottom: 10px;
 }
@@ -1679,7 +1698,7 @@ tr.mceLast {
 	padding: 8px;
 	width: 90%;
 	-moz-border-radius: 5px;
-	border-radius: 3px;	
+	border-radius: 20px;	
 	box-shadow: 4px 4px 3px 0 #666 inset;
 }
 #profile-jot-text:hover {
@@ -3099,6 +3118,23 @@ nav {
   -webkit-box-shadow: 0px 0px 10px rgba(0, 0, 0, 0.7);
   -moz-box-shadow: 0px 0px 10px rgba(0, 0, 0, 0.7);
   box-shadow: 0px 0px 10px rgba(0, 0, 0, 0.7);
+
+/* TODO find a better way to do this without different code for every single browser.  */
+
+  background-image: linear-gradient(bottom, #f00 26%, #b00 82%);
+  background-image: -o-linear-gradient(bottom, #f00 26%, #b00 82%);
+  background-image: -moz-linear-gradient(bottom, #f00 26%, #b00 82%);
+  background-image: -webkit-linear-gradient(bottom, #f00 26%, #b00 82%);
+  background-image: -ms-linear-gradient(bottom, #f00 26%, #b00 82%);
+
+  background-image: -webkit-gradient(
+linear,
+left bottom,
+left top,
+color-stop(0.26, #f00),
+color-stop(0.82, #b00)
+);
+
 }
 nav a,
 nav a:active,
@@ -3208,7 +3244,8 @@ ul.menu-popup a {
   text-decoration: none;
 }
 ul.menu-popup a:hover {
-  background-color: #ccff42;
+  background-color: #eec;
+  color: #d00;
 }
 ul.menu-popup .menu-sep {
   border-top: 1px solid #9eabb0;
