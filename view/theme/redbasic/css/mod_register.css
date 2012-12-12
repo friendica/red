@@ -1,1 +1,41 @@
- 
+/*TODO - we don't actually want all of this, and we do want some new bits.  For now, just make style.css smaller, we'll clean it up later */
+
+
+#register-fill-ext {
+	margin-bottom: 25px;
+}
+
+#label-register-name, #label-register-nickname, #label-register-openid {
+	float: left;
+	width: 350px;
+	margin-top: 10px;
+}
+
+#register-name, #register-nickname {
+	float: left;
+	margin-top: 10px;
+	width: 150px;
+}
+
+#register-openid {
+	float: left;
+	margin-top: 10px;
+	width: 130px;
+}
+
+#register-name-end, #register-email-end, #register-nickname-end, #register-submit-end, #register-openid-end {
+	clear: both;
+}
+
+#register-nickname-desc {
+	margin-top: 30px;
+	width: 650px;
+}
+#register-sitename {
+	float: left;
+	margin-top: 10px;
+}
+
+#register-submit-button {
+	margin-top: 10px;
+}
