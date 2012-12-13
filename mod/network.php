@@ -495,57 +495,26 @@ function network_content(&$a, $update = 0, $load = false) {
 			. "'; var profile_page = " . $a->pager['page'] . ";</script>";
 
 
-			$a->page['htmlhead'] .= "<script>\r\n" 
-				. "var network_cmd = " . '"' . $a->get_baseurl() . '/update_network' . '"' . ";\r\n"
-				. "var network_uid = " . ((local_user()) ? local_user() : 0) . ";\r\n"
-				. "var network_gid = " . (($gid) ? $gid : 0) . ";\r\n"
-				. "var network_cid = " . (($_GET['cid']) ? $_GET['cid'] : 0) . ";\r\n"
-				. "var network_cmin = " . (($_GET['cmin']) ? $_GET['cmin'] : 0) . ";\r\n"
-				. "var network_cmax = " . (($_GET['cmax']) ? $_GET['cmax'] : 99) . ";\r\n"
-				. "var network_star = " . (($_GET['star']) ? $_GET['star'] : 0) . ";\r\n"
-				. "var network_liked = " . (($_GET['liked']) ? $_GET['liked'] : 0) . ";\r\n"
-				. "var network_conv = " . (($_GET['conv']) ? $_GET['conv'] : 0) . ";\r\n"
-				. "var network_spam = " . (($_GET['spam']) ? $_GET['spam'] : 0) . ";\r\n"
-				. "var network_new = " . (($nouveau) ? $nouveau : 0) . ";\r\n"
-				. "var network_page = " . (($a->pager['page'] != 1) ? $a->pager['page'] : 1) . ";\r\n"
-
-		
-				. 'var network_search = "' . $_GET['search'] . '"' . ";\r\n"
-				. 'var network_order = "' . $_GET['order'] . '"' . ";\r\n"
-				. 'var network_file = "' . $_GET['file'] . '"' . ";\r\n"
-				. 'var network_dend = "' . $datequery . '"' . ";\r\n"
-				. 'var network_dbegin = "' . $datequery2 . '"' . ";\r\n"
-
-				. 'function buildCmd() {
-					var udargs = ((page_load) ? "/load" : "");
-					var bCmd = network_cmd + udargs + "?f=" ;
-					if(network_uid) bCmd = bCmd + "&p=" + network_uid;
-					if(network_cmin != 0) bCmd = bCmd + "&cmin=" + network_cmin;
-					if(network_cmax != 99) bCmd = bCmd + "&cmax=" + network_cmax;
-					if(network_gid != 0) { bCmd = bCmd + "&gid=" + network_gid; } else
-					if(network_cid != 0) { bCmd = bCmd + "&cid=" + network_cid; }
-					if(network_star != 0) bCmd = bCmd + "&star=" + network_star;
-					if(network_liked != 0) bCmd = bCmd + "&liked=" + network_liked;
-					if(network_conv!= 0) bCmd = bCmd + "&conv=" + network_conv;
-					if(network_spam != 0) bCmd = bCmd + "&spam=" + network_spam;
-					if(network_new != 0) bCmd = bCmd + "&new=" + network_new;
-					if(network_search != "") bCmd = bCmd + "&search=" + network_search;
-					if(network_file != "") bCmd = bCmd + "&file=" + network_file;
-					if(network_dend != "") bCmd = bCmd + "&dend=" + network_dend;
-					if(network_dbegin != "") bCmd = bCmd + "&dbegin=" + network_dbegin;
-					if(network_page != 1) bCmd = bCmd + "&page=" + network_page;
-
-					return(bCmd);
-				}'
-
-			 	. "</script>\r\n";
-
-			;
-
-
-
-
-
+		$a->page['htmlhead'] .= replace_macros(get_markup_template("build_query.tpl"),array(
+			'$baseurl' => z_root(),
+			'$uid' => ((local_user()) ? local_user() : '0'),
+			'$gid' => (($gid) ? $gid : '0'),
+			'$cid' => (($cid) ? $cid : '0'),
+			'$cmin' => (($cmin) ? $cmin : '0'),
+			'$cmax' => (($cmax) ? $cmax : '0'),
+			'$star' => (($star) ? $star : '0'),
+			'$liked' => (($liked) ? $liked : '0'),
+			'$conv' => (($conv) ? $conv : '0'),
+			'$spam' => (($spam) ? $spam : '0'),
+			'$nouveau' => (($nouveau) ? $nouveau : '0'),
+			'$wall' => '0',
+			'$page' => (($a->pager['page'] != 1) ? $a->pager['page'] : 1),
+			'$search' => $search,
+			'$order' => $order,
+			'$file' => $file,
+			'$dend' => $datequery,
+			'$dbegin' => $datequery2
+		));
 	}
 
 	$sql_extra3 = '';

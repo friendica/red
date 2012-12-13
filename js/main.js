@@ -447,11 +447,11 @@ function updateConvItems(mode,data) {
 
 		if(typeof buildCmd == 'function') {
 			if(scroll_next) {
-				network_page = next_page;
+				bParam_page = next_page;
 				page_load = true;
 			}
 			else {
-				network_page = 1;
+				bParam_page = 1;
 			}
 			update_url = buildCmd();
 		}
