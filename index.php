@@ -346,6 +346,9 @@ if($a->module != 'install') {
 
 require_once(theme_include('theme_init.php'));
 
+if(($p = theme_include(current_theme() . '.js')) != '')
+	head_add_js($p);
+
 if(($p = theme_include('mod_' . $a->module . '.php')) != '')
 	require_once($p);
 

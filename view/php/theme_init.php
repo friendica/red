@@ -9,8 +9,6 @@ head_add_css('library/tiptip/tipTip.css');
 head_add_css('library/jgrowl/jquery.jgrowl.css');
 head_add_css('library/jslider/bin/jquery.slider.min.css');
 
-
-
 head_add_js('js/jquery.js');
 head_add_js('js/jquery.textinputs.js');
 head_add_js('js/fk.autocomplete.js');
@@ -25,3 +23,4 @@ head_add_js('js/acl.js');
 head_add_js('js/webtoolkit.base64.js');
 head_add_js('js/main.js');
 head_add_js('library/jslider/bin/jquery.slider.min.js');
+head_add_js('docready.js');

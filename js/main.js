@@ -870,6 +870,23 @@ $("abbr.wall-item-ago-time").timeago();
 //reCalcHeight();
 
 
+
+
+
+});
+
+	function zFormError(elm,x) {
+		if(x) {
+			$(elm).addClass("zform-error");
+			$(elm).removeClass("zform-ok");
+		}
+		else {
+			$(elm).addClass("zform-ok");
+			$(elm).removeClass("zform-error");
+		}											
+	}
+
+
 $(window).scroll(function () {                 
 	if(typeof buildCmd == 'function') {
 		$('#more').hide();                 
@@ -892,20 +909,4 @@ $(window).scroll(function () {
 	}
 });
 
-
-
-
-
-});
-
-	function zFormError(elm,x) {
-		if(x) {
-			$(elm).addClass("zform-error");
-			$(elm).removeClass("zform-ok");
-		}
-		else {
-			$(elm).addClass("zform-ok");
-			$(elm).removeClass("zform-error");
-		}											
-	}
 
