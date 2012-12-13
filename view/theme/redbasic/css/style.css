@@ -26,6 +26,7 @@ box-shadow: 3px 3px 3px #ccc;
 border: none;
 border-radius: 0px 0px 20px 0px;
 width: 210px;
+color: #d00;
 }
 
 /* icons */
@@ -82,6 +83,7 @@ code {
 	color: #444;
 	padding: 10px;
 	margin-top: 20px; 
+	max-width: 80%;
 }
 
 blockquote {
@@ -303,6 +305,7 @@ footer {
 
 div.wall-item-content-wrapper.shiny {
 	background: #f4f4f4;
+	border: none;
 }
 
 .preview {
@@ -972,7 +975,8 @@ input#dfrn-url {
 	position: relative;
 	background: #fff;
 	border-radius: 20px;
-	box-shadow: 15px 15px 15px #111;
+	box-shadow: 12px 12px 12px #111;
+	border: 1px solid #eec;
 
 }
 .wall-item-content-wrapper.comment {
@@ -1166,7 +1170,6 @@ input#dfrn-url {
 }
 
 .thread-wrapper.toplevel_item {
-border-bottom: 1px #000 solid;
 padding: 30px;
 width: 90%;
 }
@@ -1185,6 +1188,7 @@ width: 90%;
     background: #eee;
     padding: 5px 10px;
     border-radius: 0px 0px 20px 20px;
+    border: 1px #eec solid;
 }
 
 .wall-item-like {
@@ -2055,7 +2059,7 @@ aside input[type='text'] {
 }
 
 .widget {
-	border: 1px solid #DDDDDD;
+	border-bottom: 1px solid #eec;
 	padding: 8px;
 	margin-top: 5px;
 	-moz-border-radius:5px;
