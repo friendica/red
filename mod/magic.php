@@ -49,63 +49,21 @@ function magic_init(&$a) {
 			// Just redirect.
 			goaway($desturl);
 		}
-
- 
-
-				
-	
-
-		$cid = $argv(1);
-
-		$r = q("SELECT * FROM `contact` WHERE `id` = %d AND `uid` = %d LIMIT 1",
-			intval($cid),
-			intval(local_user())
-		);
-
-		if(! ($r && count($r)))
-			goaway(z_root());
-
-
-		$sec = random_string();
-
-		// Here's how it works in zot... still a fair bit of code to write
-		// Create a random tracking code and store it
-		// Originator (us) redirects to remote connect url with callback URL and tracking code.
-		// Remote calls us back asynchronously to verify we sent the tracking code.
-		// Reply with a json document providing the identity details
-		// Remote verifies these match a known identity and the site matches a known location
-		// (especially including the current location)
-		// Once that has happened, the original redirect will be given an authenticated session 
-		// and redirected to the chosen page.
-
-
-
-		q("INSERT INTO `profile_check` ( `uid`, `cid`, `dfrn_id`, `sec`, `expire`)
-			VALUES( %d, %s, '%s', '%s', %d )",
-			intval(local_user()),
-			intval($cid),
-			dbesc($dfrn_id),
-			dbesc($sec),
-			intval(time() + 45)
-		);
-
-		$local_callback = z_root() . '/auth';
-
-		logger('mod_magic: ' . $r[0]['name'] . ' ' . $sec, LOGGER_DEBUG); 
-		$dest = (($url) ? '&url=' . urlencode($url) : '');
-		goaway ($hubloc['hubloc_connect'] . "?f=&cb=" . urlencode($local_callback) . $dest . "&token=" . $token);
-
-	}
-
-
-	if(local_user())
-		$handle = $a->user['nickname'] . '@' . substr($a->get_baseurl(),strpos($a->get_baseurl(),'://')+3);
-	if(remote_user())
-		$handle = $_SESSION['handle'];
-
-	if($url) {
-		$url = str_replace('{zid}','&zid=' . $handle,$url);
-		goaway($url);
+		$recip = array(array('guid' => $x[0]['hubloc_guid'],'guid_sig' => $x[0]['hubloc_guid_sig']));
+ 		$channel = $a->get_channel();
+		$hash = random_string();
+		$packet = zot_build_packet($channel,'auth',$recip,$x[0]['hubloc_sitekey'],$hash);
+		$result = zot_zot($x[0]['hubloc_callback'],$packet);
+		if($result['success']) {
+			$j = json_decode($result['body'],true);
+			if($j['iv']) {
+				$y = aes_unencapsulate($j,$channel['prvkey']);
+				$j = json_decode($y,true);
+			}
+			if($y['token'])
+				goaway($x[0]['callback'] . '?f=&token=' . $token . '&dest=' . $dest);
+		}
+		goaway($dest);
 	}
 
 	goaway(z_root());
