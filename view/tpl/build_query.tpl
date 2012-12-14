@@ -1,11 +1,8 @@
 <script> 
 
-	var bParam_cmd = "$baseurl/update_network";
+	var bParam_cmd = "$baseurl/update_$pgtype";
 
-	var bParam_wall = $wall;
 
-	if(bParam_wall) { bParam_cmd = "$baseurl/update_channel"; }
-		
 	var bParam_uid = $uid;
 	var bParam_gid = $gid;
 	var bParam_cid = $cid;
@@ -17,6 +14,7 @@
 	var bParam_spam = $spam;
 	var bParam_new = $nouveau;
 	var bParam_page = $page;
+	var bParam_wall = $wall;
 
 	var bParam_search = "$search";
 	var bParam_order = "$order";

@@ -497,6 +497,7 @@ function network_content(&$a, $update = 0, $load = false) {
 
 		$a->page['htmlhead'] .= replace_macros(get_markup_template("build_query.tpl"),array(
 			'$baseurl' => z_root(),
+			'$pgtype' => 'network',
 			'$uid' => ((local_user()) ? local_user() : '0'),
 			'$gid' => (($gid) ? $gid : '0'),
 			'$cid' => (($cid) ? $cid : '0'),
