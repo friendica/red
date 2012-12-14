@@ -894,6 +894,21 @@ CREATE TABLE IF NOT EXISTS `tokens` (
   KEY `uid` (`uid`)
 ) ENGINE=MyISAM DEFAULT CHARSET=utf8;
 
+CREATE TABLE IF NOT EXISTS `verify` (
+  `id` int(10) unsigned NOT NULL,
+  `channel` int(10) unsigned NOT NULL DEFAULT '0',
+  `type` char(32) NOT NULL DEFAULT '',
+  `token` char(255) NOT NULL DEFAULT '',
+  `meta` char(255) NOT NULL DEFAULT '',
+  `created` datetime NOT NULL DEFAULT '0000-00-00 00:00:00',
+  PRIMARY KEY (`id`),
+  KEY `channel` (`channel`),
+  KEY `type` (`type`),
+  KEY `token` (`token`),
+  KEY `meta` (`meta`),
+  KEY `created` (`created`)
+) ENGINE=MyISAM DEFAULT CHARSET=utf8;
+
 CREATE TABLE IF NOT EXISTS `xchan` (
   `xchan_hash` char(255) NOT NULL,
   `xchan_guid` char(255) NOT NULL DEFAULT '',

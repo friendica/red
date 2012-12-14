@@ -49,9 +49,21 @@ function magic_init(&$a) {
 			// Just redirect.
 			goaway($desturl);
 		}
+
+		$token = random_string();
+
 		$recip = array(array('guid' => $x[0]['hubloc_guid'],'guid_sig' => $x[0]['hubloc_guid_sig']));
  		$channel = $a->get_channel();
 		$hash = random_string();
+
+		$r = q("insert into verify ( type, channel, token, meta, created) values ('%s','%d','%s','%s','%s')",
+			dbesc('auth'),
+			intval($channel['channel_id']),
+			dbesc($token),
+			dbesc($hubloc['hubloc_hash']),
+			dbesc(datetime_convert())
+		);
+
 		$packet = zot_build_packet($channel,'auth',$recip,$x[0]['hubloc_sitekey'],$hash);
 		$result = zot_zot($x[0]['hubloc_callback'],$packet);
 		if($result['success']) {
@@ -60,8 +72,14 @@ function magic_init(&$a) {
 				$y = aes_unencapsulate($j,$channel['prvkey']);
 				$j = json_decode($y,true);
 			}
-			if($y['token'])
-				goaway($x[0]['callback'] . '?f=&token=' . $token . '&dest=' . $dest);
+			if($j['token'] && $j['ticket'] && $j['token'] === $token) {
+				$r = q("delete from verify where token = '%s' and type = '%s' and channel = %d limit 1",
+					dbesc($token),
+					dbesc('auth'),
+					intval($channel['channel_id'])
+				);				
+				goaway($x[0]['callback'] . '?f=&ticket=' . $ticket . '&dest=' . $dest);
+			}
 		}
 		goaway($dest);
 	}
