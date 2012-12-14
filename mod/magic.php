@@ -3,9 +3,57 @@
 function magic_init(&$a) {
 
 	$url = ((x($_REQUEST,'url')) ? $_REQUEST['url'] : '');
+	$addr = ((x($_REQUEST,'addr')) ? $_REQUEST['addr'] : '');
+	$hash = ((x($_REQUEST,'hash')) ? $_REQUEST['hash'] : '');
+	$dest = ((x($_REQUEST,'dest')) ? $_REQUEST['dest'] : '');
 
 
-	if(local_user() && argc() > 1 && intval(argv(1))) {
+	if(local_user()) { 
+
+		if($hash) {
+			$x = q("select xchan.xchan_url, hubloc.* from xchan left join hubloc on xchan_hash = hubloc_hash
+				where hublock_hash = '%s' and (hubloc_flags & %d) limit 1",
+				intval(HUBLOC_FLAGS_PRIMARY)
+			);
+		}
+		elseif($addr) {
+			$x = q("select hubloc.* from xchan left join hubloc on xchan_hash = hubloc_hash 
+				where xchan_addr = '%s' and (hubloc_flags & %d) limit 1",
+				dbesc($addr),
+				intval(HUBLOC_FLAGS_PRIMARY)
+			);
+		}
+
+		if(! $x) {
+			notice( t('Channel not found.') . EOL);
+			return;
+		}
+
+		if($x[0]['hubloc_url'] === z_root()) {
+			$webbie = substr($x[0]['hubloc_addr'],0,strpos('@',$x[0]['hubloc_addr']));
+			switch($dest) {
+				case 'channel':
+					$desturl = z_root() . '/channel/' . $webbie;
+					break;
+				case 'photos':
+					$desturl = z_root() . '/photos/' . $webbie;
+					break;
+				case 'profile':
+					$desturl = z_root() . '/profile/' . $webbie;
+					break;
+				default:
+					$desturl = $dest;
+					break;
+			}
+			// We are already authenticated on this site and a registered observer.
+			// Just redirect.
+			goaway($desturl);
+		}
+
+ 
+
+				
+	
 
 		$cid = $argv(1);
 

@@ -40,7 +40,7 @@ function chanview_content(&$a) {
 	}
 
 	$o = replace_macros(get_markup_template('chanview.tpl'),array(
-		'$url' => $xchan['xchan_url']
+		'$url' => z_root() . '/magic?f=&dest=' . $xchan['xchan_url'] . '&addr=' . $xchan['xchan_addr']
 	));
 
 	return $o;

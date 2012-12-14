@@ -55,10 +55,9 @@ function create_identity($arr) {
 	$sig = base64url_encode(rsa_sign($guid,$key['prvkey']));
 	$hash = base64url_encode(hash('whirlpool',$guid . $sig,true));
 
-	$r = q("select channel_id from channel where channel_account_id = %d and channel_primary = 1 limit 1",
-		intval($arr['account_id'])
-	);
-	$primary = (! $r) ? true : false;
+	// Force primary until importation works, then we'll offer a choice
+
+	$primary = true;
 		
 	$r = q("insert into channel ( channel_account_id, channel_primary, 
 		channel_name, channel_address, channel_guid, channel_guid_sig,
