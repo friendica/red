@@ -127,7 +127,7 @@ function channel_content(&$a, $update = 0, $load = false) {
 	 * Get permissions SQL - if $remote_contact is true, our remote user has been pre-verified and we already have fetched his/her groups
 	 */
 
-// fixme
+
 	$sql_extra = item_permissions_sql($a->profile['profile_uid'],$remote_contact,$groups);
 
 

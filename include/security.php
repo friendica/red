@@ -182,7 +182,8 @@ function permissions_sql($owner_id,$remote_verified = false,$groups = null) {
 	$sql = " AND allow_cid = '' 
 			 AND allow_gid = '' 
 			 AND deny_cid  = '' 
-			 AND deny_gid  = '' 
+			 AND deny_gid  = ''  
+			
 	";
 
 	/**
@@ -201,53 +202,30 @@ function permissions_sql($owner_id,$remote_verified = false,$groups = null) {
 	 * done this and passed the groups into this function.
 	 */
 
-	elseif($remote_user) {
 
-		if(! $remote_verified) {
-			$r = q("SELECT id FROM contact WHERE id = %d AND uid = %d AND blocked = 0 LIMIT 1",
-				intval($remote_user),
-				intval($owner_id)
-			);
-			if(count($r)) {
-				$remote_verified = true;
-				$groups = init_groups_visitor($remote_user);
-			}
-		}
-		if($remote_verified) {
-		
-			$gs = '<<>>'; // should be impossible to match
+	else {
+		$observer = get_app()->get_observer();
+		$groups = init_groups_visitor($remote_user);
 
-			if(is_array($groups) && count($groups)) {
-				foreach($groups as $g)
-					$gs .= '|<' . intval($g) . '>';
-			} 
+		$gs = '<<>>'; // should be impossible to match
 
-			/*$sql = sprintf(
-				" AND ( allow_cid = '' OR allow_cid REGEXP '<%d>' ) 
-				  AND ( deny_cid  = '' OR  NOT deny_cid REGEXP '<%d>' ) 
-				  AND ( allow_gid = '' OR allow_gid REGEXP '%s' )
-				  AND ( deny_gid  = '' OR NOT deny_gid REGEXP '%s')
-				",
-				intval($remote_user),
-				intval($remote_user),
-				dbesc($gs),
-				dbesc($gs)
-			);*/
-			$sql = sprintf(
-				" AND ( NOT (deny_cid REGEXP '<%d>' OR deny_gid REGEXP '%s')
-				  AND ( allow_cid REGEXP '<%d>' OR allow_gid REGEXP '%s' OR ( allow_cid = '' AND allow_gid = '') )
-				  )
-				",
-				intval($remote_user),
-				dbesc($gs),
-				intval($remote_user),
-				dbesc($gs)
-			);
-		}
+		if(is_array($groups) && count($groups)) {
+			foreach($groups as $g)
+				$gs .= '|<' . $g . '>';
+		} 
+		$sql = sprintf(
+			" AND ( NOT (deny_cid like '<%s>' OR deny_gid REGEXP '%s')
+			  AND ( allow_cid like '<%s>' OR allow_gid REGEXP '%s' OR ( allow_cid = '' AND allow_gid = '') )
+			  )
+			",
+			dbesc(protect_sprintf( '%' . $remote_user . '%')),
+			dbesc($gs),
+			dbesc(protect_sprintf( '%' . $remote_user . '%')),
+			dbesc($gs)
+		);
 	}
 	return $sql;
 }
-
 
 function item_permissions_sql($owner_id,$remote_verified = false,$groups = null) {
 
@@ -260,12 +238,8 @@ function item_permissions_sql($owner_id,$remote_verified = false,$groups = null)
 	 * default permissions - anonymous user
 	 */
 
-	$sql = " AND allow_cid = '' 
-			 AND allow_gid = '' 
-			 AND deny_cid  = '' 
-			 AND deny_gid  = '' 
-			 AND private = 0
-	";
+	$sql = " AND not (item_flags & " . ITEM_PRIVATE . ") ";  
+			
 
 	/**
 	 * Profile owner - everything is visible
@@ -283,43 +257,31 @@ function item_permissions_sql($owner_id,$remote_verified = false,$groups = null)
 	 * done this and passed the groups into this function.
 	 */
 
-	elseif($remote_user) {
 
-		if(! $remote_verified) {
-			$r = q("SELECT id FROM contact WHERE id = %d AND uid = %d AND blocked = 0 LIMIT 1",
-				intval($remote_user),
-				intval($owner_id)
-			);
-			if(count($r)) {
-				$remote_verified = true;
-				$groups = init_groups_visitor($remote_user);
-			}
-		}
-		if($remote_verified) {
-		
-			$gs = '<<>>'; // should be impossible to match
+	else {
+		$observer = get_app()->get_observer();
+		$groups = init_groups_visitor($remote_user);
 
-			if(is_array($groups) && count($groups)) {
-				foreach($groups as $g)
-					$gs .= '|<' . intval($g) . '>';
-			} 
+		$gs = '<<>>'; // should be impossible to match
 
-			$sql = sprintf(
-				" AND ( private = 0 OR ( private = 1 AND wall = 1 AND ( allow_cid = '' OR allow_cid REGEXP '<%d>' ) 
-				  AND ( deny_cid  = '' OR  NOT deny_cid REGEXP '<%d>' ) 
-				  AND ( allow_gid = '' OR allow_gid REGEXP '%s' )
-				  AND ( deny_gid  = '' OR NOT deny_gid REGEXP '%s'))) 
-				",
-				intval($remote_user),
-				intval($remote_user),
-				dbesc($gs),
-				dbesc($gs)
-			);
-		}
+		if(is_array($groups) && count($groups)) {
+			foreach($groups as $g)
+				$gs .= '|<' . $g . '>';
+		} 
+		$sql = sprintf(
+			" AND ( NOT (deny_cid like '<%s>' OR deny_gid REGEXP '%s')
+			  AND ( allow_cid like '<%s>' OR allow_gid REGEXP '%s' OR ( allow_cid = '' AND allow_gid = '') )
+			  )
+			",
+			dbesc(protect_sprintf( '%' . $remote_user . '%')),
+			dbesc($gs),
+			dbesc(protect_sprintf( '%' . $remote_user . '%')),
+			dbesc($gs)
+		);
 	}
-
 	return $sql;
 }
+
 
 
 /*
@@ -388,8 +350,7 @@ function check_form_security_token_ForbiddenOnErr($typename = '', $formname = 'f
 if(! function_exists('init_groups_visitor')) {
 function init_groups_visitor($contact_id) {
 	$groups = array();
-	$r = q("SELECT `gid` FROM `group_member` 
-		WHERE `contact-id` = %d ",
+	$r = q("SELECT gid FROM group_member WHERE xchan = '%s' ",
 		intval($contact_id)
 	);
 	if(count($r)) {
