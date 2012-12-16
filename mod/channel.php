@@ -38,7 +38,7 @@ function channel_aside(&$a) {
 }
 
 
-function channel_content(&$a, $update = 0) {
+function channel_content(&$a, $update = 0, $load = false) {
 
 	$category = $datequery = $datequery2 = '';
 
@@ -131,7 +131,7 @@ function channel_content(&$a, $update = 0) {
 	$sql_extra = item_permissions_sql($a->profile['profile_uid'],$remote_contact,$groups);
 
 
-	if($update) {
+	if(($update) && (! $load)) {
 		$r = q("SELECT distinct(parent) AS `item_id` from item
 			left join abook on item.author_xchan = abook.abook_xchan
 			WHERE uid = %d AND item_restrict = 0
@@ -165,20 +165,24 @@ function channel_content(&$a, $update = 0) {
 
 		$pager_sql = sprintf(" LIMIT %d, %d ",intval($a->pager['start']), intval($a->pager['itemspage']));
 
-		$r = q("SELECT id AS item_id FROM item 
-			left join abook on item.author_xchan = abook.abook_xchan
-			WHERE uid = %d AND item_restrict = 0
-			AND (item_flags &  %d) and (item_flags & %d)
-			AND ((abook.abook_flags & %d) = 0 or abook.abook_flags is null)
-			$sql_extra $sql_extra2
-			ORDER BY created DESC $pager_sql ",
-			intval($a->profile['profile_uid']),
-			intval(ITEM_WALL),
-			intval(ITEM_THREAD_TOP),
-			intval(ABOOK_FLAG_BLOCKED)
+		if($load) {
+			$r = q("SELECT id AS item_id FROM item 
+				left join abook on item.author_xchan = abook.abook_xchan
+				WHERE uid = %d AND item_restrict = 0
+				AND (item_flags &  %d) and (item_flags & %d)
+				AND ((abook.abook_flags & %d) = 0 or abook.abook_flags is null)
+				$sql_extra $sql_extra2
+				ORDER BY created DESC $pager_sql ",
+				intval($a->profile['profile_uid']),
+				intval(ITEM_WALL),
+				intval(ITEM_THREAD_TOP),
+				intval(ABOOK_FLAG_BLOCKED)
 
-		);
-
+			);
+		}
+		else {
+			$r = array();
+		}
 	}
 
 	if($r) {
@@ -203,14 +207,40 @@ function channel_content(&$a, $update = 0) {
 	}
 
 
-	if(! $update) {
+	if((! $update) && (! $load)) {
 
 		// This is ugly, but we can't pass the profile_uid through the session to the ajax updater,
 		// because browser prefetching might change it on us. We have to deliver it with the page.
 
-		$o .= '<div id="live-profile"></div>' . "\r\n";
+		$o .= '<div id="live-channel"></div>' . "\r\n";
 		$o .= "<script> var profile_uid = " . $a->profile['profile_uid'] 
 			. "; var netargs = '?f='; var profile_page = " . $a->pager['page'] . "; </script>\r\n";
+
+
+		$a->page['htmlhead'] .= replace_macros(get_markup_template("build_query.tpl"),array(
+			'$baseurl' => z_root(),
+			'$pgtype' => 'channel',
+			'$uid' => ((local_user()) ? local_user() : '0'),
+			'$gid' => '0',
+			'$cid' => '0',
+			'$cmin' => '0',
+			'$cmax' => '0',
+			'$star' => '0',
+			'$liked' => '0',
+			'$conv' => '0',
+			'$spam' => '0',
+			'$nouveau' => '0',
+			'$wall' => '1',
+			'$page' => (($a->pager['page'] != 1) ? $a->pager['page'] : 1),
+			'$search' => '',
+			'$order' => '',
+			'$file' => '',
+			'$cats' => (($category) ? $category : ''),
+			'$dend' => $datequery,
+			'$dbegin' => $datequery2
+		));
+
+
 	}
 
 
@@ -226,7 +256,7 @@ function channel_content(&$a, $update = 0) {
 	}
 
 
-	$o .= conversation($a,$items,'channel',$update);
+	$o .= conversation($a,$items,'channel',$update,'client');
 
 	if(! $update)
 		$o .= alt_pager($a,count($items));

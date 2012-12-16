@@ -340,10 +340,6 @@ function network_content(&$a, $update = 0, $load = false) {
 	}
 
 
-
-
-	
-
 	$contact_id = $a->cid;
 
 	require_once('include/acl_selectors.php');
@@ -513,6 +509,7 @@ function network_content(&$a, $update = 0, $load = false) {
 			'$search' => $search,
 			'$order' => $order,
 			'$file' => $file,
+			'$cats' =? '',
 			'$dend' => $datequery,
 			'$dbegin' => $datequery2
 		));

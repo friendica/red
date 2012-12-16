@@ -12,6 +12,7 @@ require_once('mod/channel.php');
 function update_channel_content(&$a) {
 
 	$profile_uid = intval($_GET['p']);
+	$load = (((argc() > 1) && (argv(1) == 'load')) ? 1 : 0);
 
 	header("Content-type: text/html");
 	echo "<!DOCTYPE html><html><body>\r\n";
@@ -32,7 +33,7 @@ function update_channel_content(&$a) {
 	 *
 	 */
 
-	$text = channel_content($a,$profile_uid);
+	$text = channel_content($a,$profile_uid,$load);
 
 	$pattern = "/<img([^>]*) src=\"([^\"]*)\"/";
 	$replace = "<img\${1} dst=\"\${2}\"";
