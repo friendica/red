@@ -477,7 +477,7 @@ function get_item_elements($x) {
 	$arr['parent_uri']   = (($x['message_top']) ? htmlentities($x['message_top'], ENT_COMPAT,'UTF-8') : '');
 	$arr['thr_parent']   = (($x['message_parent']) ? htmlentities($x['message_parent'], ENT_COMPAT,'UTF-8') : '');
 
-	$arr['plink']        = (($x['permalink'])    ? htmlentities($x['permaplink'],    ENT_COMPAT,'UTF-8') : '');
+	$arr['plink']        = (($x['permalink'])    ? htmlentities($x['permalink'],    ENT_COMPAT,'UTF-8') : '');
 	$arr['location']     = (($x['location']) ? htmlentities($x['location'], ENT_COMPAT,'UTF-8') : '');
 	$arr['coord']        = (($x['longlat'])    ? htmlentities($x['longlat'],    ENT_COMPAT,'UTF-8') : '');
 	$arr['verb']         = (($x['verb'])     ? htmlentities($x['verb'],     ENT_COMPAT,'UTF-8') : '');
@@ -1217,6 +1217,12 @@ function item_store($arr,$force_parent = false) {
 	$arr['item_flags'] = $arr['item_flags'] | ITEM_UNSEEN;
 	
 	$arr['thr_parent'] = $arr['parent_uri'];
+
+	$arr['llink'] = z_root() . '/display/' . $arr['uri'];
+
+	if(! $arr['plink'])
+		$arr['plink = $arr['llink'];
+
 	if($arr['parent_uri'] === $arr['uri']) {
 		$parent_id = 0;
 		$parent_deleted = 0;

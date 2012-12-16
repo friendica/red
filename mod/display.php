@@ -19,6 +19,8 @@ function display_content(&$a) {
 	$a->page['htmlhead'] .= get_markup_template('display-head.tpl');
 
 
+
+
 	if(argc() > 1)
 		$item_hash = argv(2);
 
