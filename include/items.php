@@ -1221,7 +1221,7 @@ function item_store($arr,$force_parent = false) {
 	$arr['llink'] = z_root() . '/display/' . $arr['uri'];
 
 	if(! $arr['plink'])
-		$arr['plink = $arr['llink'];
+		$arr['plink'] = $arr['llink'];
 
 	if($arr['parent_uri'] === $arr['uri']) {
 		$parent_id = 0;
