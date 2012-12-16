@@ -9,8 +9,9 @@ body {
 	font-family: helvetica,arial,freesans,clean,sans-serif;
 	font-size: 12px;
 	background-color: #ffffff;
+	/*TODO - adding a background was the right decision...but I'm not sure if this is the right background.  Fortunately, the same artist has lots of PD backgrounds we can try.  We'll leave this particular snake on a life support machine for the time being.  */
 	background-image: url(../img/bg.png);
-	background-repeat: repeat-x;
+	background-repeat: repeat;
 	color: #000000;
 	margin: 0px;
 }
@@ -24,6 +25,7 @@ border: none;
 border-radius: 0px 0px 20px 0px;
 width: 210px;
 color: #d00;
+background: #fff;
 }
 
 
@@ -82,6 +84,7 @@ code {
 	padding: 10px;
 	margin-top: 20px; 
 	max-width: 80%;
+	margin-left: 45px;
 }
 
 blockquote {
@@ -1246,7 +1249,7 @@ margin: 15px;
 }
 
 .comment-wwedit-wrapper {
-	background: #ffffff;
+	
 }
 
 .comment-edit-photo {
@@ -1279,14 +1282,6 @@ height: 1.5em;
 width: 80%; /*Too wide? */
 overflow: auto;
 margin-bottom: 10px;
-}
-
-.comment-edit-text-empty {
-	color: gray;
-	height: 1.5em;
-	width: 175px;
-	overflow: auto;
-	margin-bottom: 10px;
 }
 
 .comment-wwedit-wrapper.threaded > .comment-edit-form > .comment-edit-text-empty {
@@ -2624,13 +2619,13 @@ aside input[type='text'] {
 
 #nav-search-text:hover {
 	background-color: #FFF;
-	color: #000;
+	opacity: 1;
 }
 
 #nav-search-text {
 	border-radius: 14px;
-	background-color: #AAAAAA;
-	color: #eec;
+	background-color: #fff;
+	opacity: 0.92;
 }
 
 #nav-user-linkmenu img {
