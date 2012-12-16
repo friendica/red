@@ -509,7 +509,7 @@ function network_content(&$a, $update = 0, $load = false) {
 			'$search' => $search,
 			'$order' => $order,
 			'$file' => $file,
-			'$cats' =? '',
+			'$cats' => '',
 			'$dend' => $datequery,
 			'$dbegin' => $datequery2
 		));

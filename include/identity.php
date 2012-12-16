@@ -147,7 +147,7 @@ function create_identity($arr) {
 		intval($ret['channel']['channel_account_id']),
 		intval($newuid),
 		dbesc(random_string()),
-		t('default'),
+		t('Default Profile'),
 		1,
 		dbesc($ret['channel']['channel_name']),
 		dbesc($a->get_baseurl() . "/photo/profile/l/{$newuid}"),
