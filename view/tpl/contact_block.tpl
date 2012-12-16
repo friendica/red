@@ -1,5 +1,5 @@
 <div id="contact-block">
-<h4 class="contact-block-h4">$contacts</h4>
+<div id="contact-block-numcontacts">$contacts</div>
 {{ if $micropro }}
 		<a class="allcontact-link" href="viewcontacts/$nickname">$viewcontacts</a>
 		<div class='contact-block-content'>

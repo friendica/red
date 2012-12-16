@@ -48,7 +48,7 @@
 
 	
 </div>
-
+<div id="vcard-end"></div>
 $contact_block
 
 

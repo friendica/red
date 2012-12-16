@@ -22,9 +22,9 @@ abbr {
 /*Should we be doing this here, or should we be changing default.css? */
 
 aside {
-box-shadow: 3px 3px 3px #ccc;
+/*box-shadow: 3px 3px 3px #ccc;*/
 border: none;
-border-radius: 0px 0px 20px 0px;
+/*border-radius: 0px 0px 20px 0px;*/
 width: 210px;
 color: #d00;
 }
@@ -347,8 +347,8 @@ div.wall-item-content-wrapper.shiny {
 	margin-bottom: 5px;
 	font-weight: bold;
 	border: solid 1px #ccc;
-	box-shadow: 5px 5px 5px #666 inset;
-	border-radius: 20px;
+/*	box-shadow: 5px 5px 5px #666 inset; */
+	border-radius: 5px;
 }
 
 #jot-title::-webkit-input-placeholder{font-weight: normal;}
@@ -965,8 +965,8 @@ input#dfrn-url {
 	margin-top: 30px;
 	position: relative;
 	background: #fff;
-	border-radius: 20px;
-	box-shadow: 12px 12px 12px #111;
+	border-radius: 5px;
+/*	box-shadow: 12px 12px 12px #111; */
 	border: 1px solid #eec;
 
 }
@@ -974,7 +974,7 @@ input#dfrn-url {
 	background: #fff;
 	border-left: 1px solid #e0e0e0;
 	margin-left: 50px;
-	box-shadow: 5px 5px 5px #222;
+/*	box-shadow: 5px 5px 5px #222; */
 }
 
 .thread-end-wrapper {
@@ -1144,7 +1144,7 @@ input#dfrn-url {
 .wall-item-content img {
   max-height: 95% !important;
   max-width: 95% !important;
-  box-shadow: 8px 8px 8px #666;
+/*  box-shadow: 8px 8px 8px #666; can't really have this because of smileys */
 }
 
 .wall-item-content img.smiley {
@@ -1174,12 +1174,12 @@ width: 90%;
 .wall-item-tools {
 	clear: both;
 /*	background-image: url("../img/head.jpg"); */
-    background-position: 0 -20px;
+/*    background-position: 0 -20px;
     background-repeat: repeat-x;
     background: #eee;
     padding: 5px 10px;
     border-radius: 0px 0px 20px 20px;
-    border: 1px #eec solid;
+    border: 1px #eec solid; */
 }
 
 .wall-item-like {
@@ -1221,7 +1221,7 @@ margin: 15px;
 	border: 1px solid #ccc;
 	padding: 8px;
 	border-radius: 5px 5px 5px 5px;
-	box-shadow: 5px 5px 5px #666 inset;
+/*	box-shadow: 5px 5px 5px #666 inset; */
 }
 
 .comment-edit-text-empty {
@@ -1693,8 +1693,8 @@ tr.mceLast {
 	padding: 8px;
 	width: 90%;
 	-moz-border-radius: 5px;
-	border-radius: 20px;	
-	box-shadow: 4px 4px 3px 0 #666 inset;
+	border-radius: 5px;	
+/*	box-shadow: 4px 4px 3px 0 #666 inset; */
 }
 #profile-jot-text:hover {
 	color: #000000;
@@ -2042,6 +2042,19 @@ aside input[type='text'] {
 .sparkle {
 	cursor: url('../img/lock.cur'), pointer;
 /*	cursor: pointer !important; */
+}
+
+#vcard-end {
+	clear: both;
+}
+
+#contact-block {
+	margin-top: 25px;
+}
+
+#contact-block-numcontacts {
+	font-weight: bold;
+	margin-bottom:8px;
 }
 
 .contact-block-div {
@@ -2727,7 +2740,7 @@ brain is weird like that */
 
 .tools { background-position: 0px -32px;}
 .lock { background-position: -16px -32px;}
-.unlock { background: url(../img/jotperms.png) no-repeat;}
+.unlock { background-position: -32px -32px; }
 .video { background-position: -48px -32px;}
 .youtube { background-position: -64px -32px;}
 .attach { background-position: -80px -32px; }
@@ -3034,7 +3047,7 @@ nav .nav-menu {
   padding: 5px;
   margin: 3px 15px 0px;
   font-size: 14px;
-  border-bottom: 3px solid #d00;
+  border-bottom: 3px solid #ff0000;
 }
 nav .nav-menu.selected {
   border-bottom: 4px solid #CCCCCC;
@@ -3212,3 +3225,6 @@ ul.menu-popup {
 	background: #DDDDDD;
 }
 
+#page-spinner {
+	margin-left: 50%;
+}
