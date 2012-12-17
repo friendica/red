@@ -74,6 +74,9 @@ function channel_content(&$a, $update = 0, $load = false) {
 	$tab = 'posts';
 	$o = '';
 
+
+	$is_owner = (((local_user()) && ($a->profile['profile_uid'] == local_user())) ? true : false);
+
 	if($update) {
 		// Ensure we've got a profile owner if updating.
 		$a->profile['profile_uid'] = $update;

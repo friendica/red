@@ -9,8 +9,8 @@ function network_query($a,$arr) {
 
 	$ordering = (($arr['order'] === 'post') ? "`created`" : "`commented`") . " DESC ";
 
-	$itemspage = get_pconfig($arr['uid'],'system','itemspage_network');
-	$a->set_pager_itemspage(((intval($itemspage_network)) ? $itemspage_network : 40));
+	$itemspage = get_pconfig($arr['uid'],'system','itemspage');
+	$a->set_pager_itemspage(((intval($itemspage)) ? $itemspage : 40));
 
 	$pager_sql = ((intval($arr['update'])) ? '' : sprintf(" LIMIT %d, %d ",intval($a->pager['start']), intval($a->pager['itemspage'])));  
 

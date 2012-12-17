@@ -6,7 +6,7 @@
 {{inc field_themeselect.tpl with $field=$theme }}{{endinc}}
 {{inc field_themeselect.tpl with $field=$mobile_theme }}{{endinc}}
 {{inc field_input.tpl with $field=$ajaxint }}{{endinc}}
-{{inc field_input.tpl with $field=$itemspage_network }}{{endinc}}
+{{inc field_input.tpl with $field=$itemspage }}{{endinc}}
 {{inc field_checkbox.tpl with $field=$nosmile}}{{endinc}}
 
 

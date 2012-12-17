@@ -698,6 +698,13 @@ input#dfrn-url {
 	padding: 12px;
 }
 
+#profiles-menu.menu-popup {
+  left: 200px;
+  right: auto;
+  top: 22px;
+}
+
+
 #profile-edit-profile-name-label,
 #profile-edit-name-label,
 #profile-edit-pdesc-label,
@@ -1161,7 +1168,7 @@ input#dfrn-url {
 }
 
 .thread-wrapper.toplevel_item {
-padding: 30px;
+/*padding: 30px; */
 width: 90%;
 }
 
@@ -2115,13 +2122,20 @@ aside input[type='text'] {
 
 #nav-search-text:hover {
 	background-color: #FFF;
-	color: #000;
+	color: #000; 
 }
 
 #nav-search-text {
 	border-radius: 14px;
 	background-color: #AAAAAA;
-	color: #eec;
+	color: #eec; 
+}
+
+/* this doesn't seem to work */
+
+#nav-search-text::-moz-placeholder { color: #444; }
+#nav-search-text::-webkit-input-placeholder {
+	color: #444 !important;
 }
 
 #nav-user-linkmenu img {
@@ -3093,7 +3107,7 @@ ul.menu-popup {
   color: #eec;
   padding: 0px;
   list-style: none;
-  border-radius: 0px 0px 20px 20px;
+/*  border-radius: 0px 0px 20px 20px; */
   z-index: 100000;
   -webkit-box-shadow: 0px 5px 10px rgba(0, 0, 0, 0.7);
   -moz-box-shadow: 0px 5px 10px rgba(0, 0, 0, 0.7);
