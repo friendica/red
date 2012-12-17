@@ -9,7 +9,6 @@ body {
 	font-family: helvetica,arial,freesans,clean,sans-serif;
 	font-size: 12px;
 	background-color: #ffffff;
-	/*TODO - adding a background was the right decision...but I'm not sure if this is the right background.  Fortunately, the same artist has lots of PD backgrounds we can try.  We'll leave this particular snake on a life support machine for the time being.  */
 	background-image: url(../img/bg.png);
 	background-repeat: repeat;
 	color: #000000;
@@ -51,7 +50,31 @@ background: #fff;
   padding: 1px;
 }
 .icon.gear {
-  background-image: url("../../../../images/icons/22/gear.png");
+  background-image: url("../img/settings.png");
+ min-width: 22px;
+  height: 22px; 
+  background-position: left center;
+  padding: 1px;
+}
+
+.icon.home {
+  background-image: url("../img/home.png");
+ min-width: 22px;
+  height: 22px; 
+  background-position: left center;
+  padding: 1px;
+}
+
+.icon.network {
+  background-image: url("../img/network.png");
+ min-width: 22px;
+  height: 22px; 
+  background-position: left center;
+  padding: 1px;
+}
+
+.icon.introductions {
+  background-image: url("../img/introductions.png");
  min-width: 22px;
   height: 22px; 
   background-position: left center;
@@ -256,33 +279,49 @@ nav #nav-link-wrapper .nav-link {
 	font-weight: bold;
 	background-color: #3465a4;
 }
-
 .tabs {
-	height: 22px;
-/*	background-image: url(../img/head.jpg);
-	background-repeat: repeat-x;	
-	background-position: 0px -20px; */
-	border-bottom: 1px solid #aaaaaa;
-	padding:0px;
-	margin-right: 10px;
+    list-style: none;
+    margin: 15px 0px;
+    padding: 0;
+   }
+.tabs li {
+    display: inline;
+    font-weight: bold;
 }
-.tabs li { margin: 0px; list-style: none; }
 .tab {
-	display:block;
-	float:left;
-	padding: 0.4em;
-	//margin-right: 1em;
-	margin-right: 3px ;
+    height: auto;
+    background-color: #fff;
+    color: #f00;
+    font-weight: bold;
+    -webkit-border-radius: 5px;
+    -moz-border-radius: 5px;
+    border-radius: 5px;
+    margin: 0;
+    width: auto;
+    box-shadow: 5px 5px 5px #444;
+    margin-left: 8px;
+    padding: 4px;
+}
+.tab:hover, .tab.active:hover {
+    background: #fff;
+    color: #f00; 
+ ;
+}
+.tab:active {
+    background: #fff;
+    color: #f00;
 }
 .tab.active {
-	font-weight: bold;
-	
+    background: #fff;
+    color: #f00; 
+    box-shadow: 3px 3px 3px #333 inset;
+    padding: 5px; /* another strageness of the human mind - has to be larger than inactive tabs, or it looks smaller than them */
 }
-ul.tabs {
-	margin-top: 0px;
-	margin-bottom: 0px;
-	list-style-type: none;
-	padding: 0px;
+
+.tab a {
+    border: 0;
+    text-decoration: none;
+    color: #f00;
 }
 
 /* footer */
@@ -1008,7 +1047,6 @@ input#dfrn-url {
 /* Give the top level post bigger shadows than the comments.  This makes them appear "higher" and the comments "lower", which separates posts from each other reasonably without literally drawing a line under it */
 
 .wall-item-content-wrapper {
-	margin-top: 30px;
 	position: relative;
 	background: #fff;
 	border-radius: 20px;
