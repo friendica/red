@@ -46,7 +46,7 @@
 			foreach($keys as $k) {
 				$val = (isset($val[$k]) ? $val[$k] : null);
 			}
-			return $val;
+			return template_escape($val);
 		}
 		
 		/**
@@ -196,12 +196,49 @@
 			 * 							(subgrup 1), match close bracket
 			 */
 			if (preg_match_all('/\$(\[)?([a-zA-Z0-9-_]+\.?)+(?(1)\])/', $s,$m)){
-				
-				foreach($m[0] as $var){
-					$varn = str_replace(array("[","]"), array("",""), $var);
-					$val = $this->_get_var($varn, true);
-					if ($val!=KEY_NOT_EXISTS)
-						$s = str_replace($var, $val, $s);
+					foreach($m[0] as $var){
+
+              $exp = str_replace(array("[", "]"), array("", ""), $var);
+                $exptks = explode("|", $exp);
+
+                $varn = $exptks[0];
+                unset($exptks[0]);
+                $val = $this->_get_var($varn, true);
+                if ($val != KEY_NOT_EXISTS) {
+                    /* run filters */
+                    /*
+                     * Filter are in form of:
+                     * filtername:arg:arg:arg
+                     *
+                     * "filtername" is function name
+                     * "arg"s are optional, var value is appended to the end
+                     *          if one "arg"==='x' , is replaced with var value
+                     *
+                     * examples:
+                     * $item.body|htmlspecialchars              // escape html chars
+                     * $item.body|htmlspecialchars|strtoupper   // escape html and uppercase result
+                     * $item.created|date:%Y %M %j              // format date (created is a timestamp)
+                     * $item.body|str_replace:cat:dog           // replace all "cat" with "dog"
+                     * $item.body|str_replace:cat:dog:x:1       // replace one "cat" with "dog"
+
+                     */
+                    foreach ($exptks as $filterstr) {
+                        $filter = explode(":", $filterstr);
+                        $filtername = $filter[0];
+                        unset($filter[0]);
+                        $valkey = array_search("x", $filter);
+                        if ($valkey === false) {
+                            $filter[] = $val;
+                        } else {
+                            $filter[$valkey] = $val;
+                        }
+                        if (function_exists($filtername)) {
+                            $val = call_user_func_array($filtername, $filter);
+                        }
+                    }
+                    $s = str_replace($var, $val, $s);
+
+					}
 				}
 			}
 			

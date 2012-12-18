@@ -187,9 +187,9 @@ function settings_post(&$a) {
 		if($browser_update < 10000)
 			$browser_update = 10000;
 
-		$itemspage_network   = ((x($_POST,'itemspage_network')) ? intval($_POST['itemspage_network']) : 40);
-		if($itemspage_network > 100)
-			$itemspage_network = 100;
+		$itemspage   = ((x($_POST,'itemspage')) ? intval($_POST['itemspage']) : 40);
+		if($itemspage > 100)
+			$itemspage = 100;
 
 
 		if($mobile_theme !== '') {
@@ -197,7 +197,7 @@ function settings_post(&$a) {
 		}
 
 		set_pconfig(local_user(),'system','update_interval', $browser_update);
-		set_pconfig(local_user(),'system','itemspage_network', $itemspage_network);
+		set_pconfig(local_user(),'system','itemspage', $itemspage);
 		set_pconfig(local_user(),'system','no_smilies',$nosmile);
 
 
@@ -745,8 +745,8 @@ function settings_content(&$a) {
 		$browser_update = intval(get_pconfig(local_user(), 'system','update_interval'));
 		$browser_update = (($browser_update == 0) ? 40 : $browser_update / 1000); // default if not set: 40 seconds
 
-		$itemspage_network = intval(get_pconfig(local_user(), 'system','itemspage_network'));
-		$itemspage_network = (($itemspage_network > 0 && $itemspage_network < 101) ? $itemspage_network : 40); // default if not set: 40 items
+		$itemspage = intval(get_pconfig(local_user(), 'system','itemspage'));
+		$itemspage = (($itemspage > 0 && $itemspage < 101) ? $itemspage : 40); // default if not set: 40 items
 		
 		$nosmile = get_pconfig(local_user(),'system','no_smilies');
 		$nosmile = (($nosmile===false)? '0': $nosmile); // default if not set: 0
@@ -769,7 +769,7 @@ function settings_content(&$a) {
 			'$theme'	=> array('theme', t('Display Theme:'), $theme_selected, '', $themes, 'preview'),
 			'$mobile_theme'	=> array('mobile_theme', t('Mobile Theme:'), $mobile_theme_selected, '', $mobile_themes, ''),
 			'$ajaxint'   => array('browser_update',  t("Update browser every xx seconds"), $browser_update, t('Minimum of 10 seconds, no maximum')),
-			'$itemspage_network'   => array('itemspage_network',  t("Number of items to display on the network page:"), $itemspage_network, t('Maximum of 100 items')),
+			'$itemspage'   => array('itemspage',  t("Maximum number of conversations to load at any time:"), $itemspage, t('Maximum of 100 items')),
 			'$nosmile'	=> array('nosmile', t("Don't show emoticons"), $nosmile, ''),
 			
 			'$theme_config' => $theme_config,

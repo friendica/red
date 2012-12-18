@@ -9,3 +9,6 @@
 </div>
 <div id="item-delete-selected-end"></div>
 {{ endif }}
+
+<img id="page-spinner" src="images/rotator.gif" alt="$wait" title="$wait" style="display: none;" />
+

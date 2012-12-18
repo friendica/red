@@ -209,7 +209,7 @@ class Item extends BaseObject {
 			
 			'type' => implode("",array_slice(explode("/",$item['verb']),-1)),
 			'tags' => $tags,
-			'body' => template_escape($body),
+			'body' => $body,
 			'text' => strip_tags(template_escape($body)),
 			'id' => $this->get_id(),
 			'linktitle' => sprintf( t('View %s\'s profile @ %s'), $profile_name, ((strlen($item['author-link'])) ? $item['author-link'] : $item['url'])),

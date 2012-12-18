@@ -462,7 +462,7 @@ function updateConvItems(mode,data) {
 		}
 
 		if(page_load)
-			$("#profile-jot-text-loading").show();
+			$("#page-spinner").show();
 
 		$.get(update_url,function(data) {
 			var update_mode = ((page_load) ? 'replace' : 'update');
@@ -472,7 +472,7 @@ function updateConvItems(mode,data) {
 			scroll_next = false;
 			in_progress = false;
 			updateConvItems(update_mode,data);
-			$("#profile-jot-text-loading").hide();
+			$("#page-spinner").hide();
 		});
 
 

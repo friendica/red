@@ -703,6 +703,7 @@ function conversation(&$a, $items, $mode, $update, $page_mode = 'traditional') {
         '$mode' => $mode,
         '$user' => $a->user,
         '$threads' => $threads,
+		'$wait' => t('Loading...'),
         '$dropping' => ($page_dropping?t('Delete Selected Items'):False),
     ));
 
