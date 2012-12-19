@@ -22,7 +22,13 @@ function queue_run($argv, $argc){
 
 	$interval = ((get_config('system','delivery_interval') === false) ? 2 : intval(get_config('system','delivery_interval')));
 
-	$r = q("select * from deliverq where 1");
+//	$r = q("select * from deliverq where 1");
+//FIXME
+	$r = array();
+
+return;
+
+
 	if(count($r)) {
 		foreach($r as $rr) {
 			logger('queue: deliverq');

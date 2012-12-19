@@ -143,13 +143,13 @@ function notifier_run($argv, $argc){
 		$item = $message[0];
 
 		$encoded_item = encode_mail($item);
-dbg(1);
+
 		$s = q("select * from channel where channel_id = %d limit 1",
 			intval($item['channel_id'])
 		);
 		if($s)
 			$channel = $s[0];
-dbg(0);
+
 	}
 	elseif($cmd === 'expire') {
 		$normal_mode = false;
