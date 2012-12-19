@@ -339,8 +339,7 @@ function settings_post(&$a) {
 	$arr['channel_w_mail']     = (($_POST['post_mail'])     ? $_POST['post_mail']     : 0);
 	$arr['channel_w_photos']   = (($_POST['post_photos'])   ? $_POST['post_photos']   : 0);
 	$arr['channel_w_chat']     = (($_POST['chat'])          ? $_POST['chat']          : 0);
-
-
+	$arr['channel_a_delegate'] = (($_POST['delegate'])      ? $_POST['delegate']      : 0);
 
 
 	$notify = 0;
@@ -438,7 +437,7 @@ function settings_post(&$a) {
 	);
 */
 
-	$r = q("update channel set channel_r_stream = %d, channel_r_profile = %d, channel_r_photos = %d, channel_r_abook = %d, channel_w_stream = %d, channel_w_wall = %d, channel_w_tagwall = %d, channel_w_comment = %d, channel_w_mail = %d, channel_w_photos = %d, channel_w_chat = %d where channel_id = %d limit 1",
+	$r = q("update channel set channel_r_stream = %d, channel_r_profile = %d, channel_r_photos = %d, channel_r_abook = %d, channel_w_stream = %d, channel_w_wall = %d, channel_w_tagwall = %d, channel_w_comment = %d, channel_w_mail = %d, channel_w_photos = %d, channel_w_chat = %d, channel_a_delegate = %d where channel_id = %d limit 1",
 		intval($arr['channel_r_stream']),
 		intval($arr['channel_r_profile']),
 		intval($arr['channel_r_photos']),
@@ -450,6 +449,7 @@ function settings_post(&$a) {
 		intval($arr['channel_w_mail']),   
 		intval($arr['channel_w_photos']), 
 		intval($arr['channel_w_chat']),
+		intval($arr['channel_a_delegate']),
 		intval(local_user())
 	);   
 
@@ -480,13 +480,15 @@ function settings_post(&$a) {
 //		);
 //	}		
 
-	if(($old_visibility != $net_publish) || ($page_flags != $old_page_flags)) {
+//	if(($old_visibility != $net_publish) || ($page_flags != $old_page_flags)) {
 		// Update global directory in background
 		$url = $_SESSION['my_url'];
 //		if($url && strlen(get_config('system','directory_submit_url')))
-//			proc_run('php',"include/directory.php","$url");
 
-	}
+
+	proc_run('php','include/directory.php',local_user());
+
+//	}
 
 	//$_SESSION['theme'] = $theme;
 	if($email_changed && $a->config['register_policy'] == REGISTER_VERIFY) {
