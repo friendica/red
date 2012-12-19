@@ -299,7 +299,7 @@ CREATE TABLE IF NOT EXISTS `deliverq` (
 
 CREATE TABLE IF NOT EXISTS `event` (
   `id` int(11) NOT NULL AUTO_INCREMENT,
-  `account` int(10) unsigned NOT NULL DEFAULT '0',
+  `aid` int(10) unsigned NOT NULL DEFAULT '0',
   `uid` int(11) NOT NULL,
   `cid` int(11) NOT NULL,
   `message_id` char(255) NOT NULL,
@@ -328,7 +328,7 @@ CREATE TABLE IF NOT EXISTS `event` (
   KEY `adjust` (`adjust`),
   KEY `nofinish` (`nofinish`),
   KEY `ignore` (`ignore`),
-  KEY `account` (`account`)
+  KEY `aid` (`aid`)
 ) ENGINE=MyISAM DEFAULT CHARSET=utf8;
 
 CREATE TABLE IF NOT EXISTS `fcontact` (

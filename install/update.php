@@ -1,6 +1,6 @@
 <?php
 
-define( 'UPDATE_VERSION' , 1002 );
+define( 'UPDATE_VERSION' , 1003 );
 
 /**
  *
@@ -56,6 +56,16 @@ function update_r1001() {
 
 	$r2 = q("alter table `verify` add index (`channel`), add index (`type`), add index (`token`),
 		add index (`meta`), add index (`created`)");
+
+	if($r && $r2)
+		return UPDATE_SUCCESS;
+	return UPDATE_FAILED;
+}
+
+
+function update_r1002() {
+	$r = q("ALTER TABLE `event` CHANGE `account` `aid` INT( 10 ) UNSIGNED NOT NULL DEFAULT '0'");
+	$r2 = q("alter table `event` drop index `account`, add index (`aid`)");
 
 	if($r && $r2)
 		return UPDATE_SUCCESS;
