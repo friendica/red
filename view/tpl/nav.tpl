@@ -33,7 +33,7 @@
 
 		{{ if $nav.intros }}
 			<li id="nav-intros-link" class="nav-menu $sel.intros">
-				<a class="$nav.intros.2" href="$nav.intros.0" title="$nav.intros.3" ><span class="icon introductions">$nav.intros.1</a>
+				<a class="$nav.intros.2" href="$nav.intros.0" title="$nav.intros.3" >$nav.intros.1</a>
 				<span id="intro-update" class="nav-notify"></span>
 			</li>
 		{{ endif }}
