@@ -280,7 +280,26 @@
 				if(data.notify == 0) { data.notify = ''; $('#notify-update').removeClass('show') } else { $('#notify-update').addClass('show') }
 				$('#notify-update').html(data.notify);
 
-				
+				if(data.register == 0) { data.register = ''; $('#register-update').removeClass('show') } else { $('#register-update').addClass('show') }
+				$('#register-update').html(data.register);
+
+				if(data.events == 0) { data.events = ''; $('#events-update').removeClass('show') } else { $('#events-update').addClass('show') }
+				$('#events-update').html(data.events);
+
+				if(data.events_today == 0) { data.events_today = ''; $('#events-today-update').removeClass('show') } else { $('#events-today-update').addClass('show') }
+				$('#events-today-update').html(data.events_today);
+
+				if(data.birthdays == 0) { data.birthdays = ''; $('#birthdays-update').removeClass('show') } else { $('#birthdays-update').addClass('show') }
+				$('#birthdays-update').html(data.birthdays);
+
+				if(data.birthdays_today == 0) { data.birthdays_today = ''; $('#birthdays-today-update').removeClass('show') } else { $('#birthdays-today-update').addClass('show') }
+				$('#birthdays-today-update').html(data.birthdays_today);
+
+				if(data.all_events == 0) { data.all_events = ''; $('#all-events-update').removeClass('show') } else { $('#all-events-update').addClass('show') }
+				$('#all-events-update').html(data.all_events);
+				if(data.all_events_today == 0) { data.all_events_today = ''; $('#all-events-today-update').removeClass('show') } else { $('#all-events-today-update').addClass('show') }
+				$('#all-events-today-update').html(data.all_events_today);
+
 
 				$(data.notice).each(function() {
 					$.jGrowl(this.message, { sticky: true, theme: 'notice' });
@@ -487,12 +506,13 @@ function updateConvItems(mode,data) {
 		$(node).removeClass("drop").addClass("drophide");
 	}
 
-	function notify_popup() {
+	function notify_popup(notifyType) {
 
 		if($("#nav-notifications-menu").is(":visible")) {
 			$("#nav-notifications-menu").hide();
 			return;
 		}
+
 
 		/* notifications template */
 		var notifications_tpl= unescape($("#nav-notifications-template[rel=template]").html());
@@ -502,7 +522,7 @@ function updateConvItems(mode,data) {
 		
 		var notify_menu = $("#nav-notifications-menu");
 
-		var pingExCmd = 'ping/notify' + ((localUser != 0) ? '?f=&uid=' + localUser : '');
+		var pingExCmd = 'ping/' + notifyType + ((localUser != 0) ? '?f=&uid=' + localUser : '');
 		$.get(pingExCmd,function(data) {
 
 			if(data.invalid == 1) { 

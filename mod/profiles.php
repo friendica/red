@@ -299,10 +299,7 @@ function profiles_post(&$a) {
 		}
 
 		if($is_default) {
-			// Update global directory in background
-			$url = $_SESSION['my_url'];
-			if($url && strlen(get_config('system','directory_submit_url')))
-				proc_run('php',"include/directory.php","$url");
+			proc_run('php','include/directory.php',local_user());
 		}
 	}
 }

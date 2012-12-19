@@ -13,17 +13,24 @@
 		
 		{{ if $nav.network }}
 			<li id="nav-network-link" class="nav-menu $sel.network">
-				<a class="$nav.network.2" href="$nav.network.0" title="$nav.network.3" ><span class="icon network">$nav.network.1</span></a>
-				<span id="net-update" class="nav-notify"></span>
+				<a class="$nav.network.2" href="$nav.network.0" title="$nav.network.3" >$nav.network.1</a>
+				<span id="net-update" class="nav-notify fakelink" onclick="notify_popup('network'); return false;" ></span>
 			</li>
 		{{ endif }}
 		{{ if $nav.home }}
 			<li id="nav-home-link" class="nav-menu $sel.home">
-				<a class="$nav.home.2" href="$nav.home.0" title="$nav.home.3" ><span class="icon home">$nav.home.1</span></a>
-				<span id="home-update" class="nav-notify"></span>
+				<a class="$nav.home.2" href="$nav.home.0" title="$nav.home.3" >$nav.home.1</a>
+				<span id="home-update" class="nav-notify fakelink" onclick="notify_popup('home'); return false;" ></span>
 			</li>
 		{{ endif }}
-		
+
+		{{ if $nav.all_events }}
+			<li id="nav-all-events-link" class="nav-menu $sel.all_events">
+				<a class="$nav.all_events.2" href="$nav.all_events.0" title="$nav.all_events.3" >$nav.all_events.1</a>
+				<span id="all-events-update" class="nav-notify fakelink" onclick="notify_popup('all_events'); return false;" ></span>
+			</li>
+		{{ endif }}
+
 		{{ if $nav.intros }}
 			<li id="nav-intros-link" class="nav-menu $sel.intros">
 				<a class="$nav.intros.2" href="$nav.intros.0" title="$nav.intros.3" ><span class="icon introductions">$nav.intros.1</a>
@@ -34,7 +41,7 @@
 
 	{{ if $nav.notifications }}
 
-		<li id="nav-notifications-linkmenu" class="nav-menu fakelink" onclick="notify_popup(); return false;" title="$nav.notifications.1"><span class="icon s22 notify">$nav.notifications.1</span></a>
+		<li id="nav-notifications-linkmenu" class="nav-menu fakelink" onclick="notify_popup('notify'); return false;" title="$nav.notifications.1"><span class="icon s22 notify">$nav.notifications.1</span></a>
 			<span id="notify-update" class="nav-notify"></span>
 			<ul id="nav-notifications-menu" class="menu-popup">
 				<li id="nav-notifications-see-all"><a href="$nav.notifications.all.0">$nav.notifications.all.1</a></li>
