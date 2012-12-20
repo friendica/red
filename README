@@ -3,8 +3,9 @@ Friendica RED Interaction Engine
 
 Red is a new concept in electronic communications which is based on our earlier work with Friendica and our pioneering developments in decentralised, federated social networking. 
 
-Red is prototype code and does not currently function. This message will be changed when it approaches stability.
+Red is prototype code and has limited functionality at the present time. This message will be changed when it approaches stability.
 
-At its heart, Red is a decentralised collection of location agnostic info streams (e.g. "channels") which are attached to permission controlled web resources, and which have the ability to discover each other and interact.
+At its heart, Red is a decentralised collection of location agnostic info streams (e.g. "channels") which are attached to permission controlled web resources, and which have the ability to discover each other and interact. You could call it a type of social network, but that would be degrading. This is a different concept in online communications, starting where social networks leave off and extending those somewhat primitive types of interactions in new ways - particularly when it comes to privacy.  
+  
 
 Social networking emulation is one form that these streams can take, but they can take many other forms - limited only by your imagination. 
