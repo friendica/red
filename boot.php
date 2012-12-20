@@ -638,7 +638,7 @@ if(! class_exists('App')) {
                         $scheme = 'http';
                 }
             }
-
+			
             $this->baseurl = $scheme . "://" . $this->hostname . ((isset($this->path) && strlen($this->path)) ? '/' . $this->path : '' );
             return $this->baseurl;
 		}
@@ -647,7 +647,7 @@ if(! class_exists('App')) {
 
 			if(is_array($this->config) && array_key_exists('system',$this->config) &&
 				array_key_exists('baseurl',$this->config['system']) && strlen($this->config['system']['baseurl'])) {
-				$url = $a->config['system']['baseurl'];
+				$url = $this->config['system']['baseurl'];
 			}
 
             $parsed = @parse_url($url);

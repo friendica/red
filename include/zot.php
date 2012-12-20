@@ -284,7 +284,7 @@ function zot_refresh($them,$channel = null) {
 					intval($default_perms),
 					dbesc(datetime_convert()),
 					dbesc(datetime_convert()),
-					intval(($default_perms) ? 0 : ABOOK_FLAG_BLOCKED|ABOOK_FLAG_IGNORED|ABOOK_FLAG_PENDING)
+					intval(($default_perms) ? 0 : ABOOK_FLAG_PENDING)
 				);
 				if($y) {
 					logger("New introduction received for {$channel['channel_name']}");
