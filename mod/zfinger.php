@@ -128,8 +128,8 @@ function zfinger_init(&$a) {
 	$dirmode = get_config('system','directory_mode');
 	if(($dirmode === false) || ($dirmode == DIRECTORY_MODE_NORMAL))
 		$ret['site']['directory_mode'] = 'normal';
-	if($dirmode == DIRECTORY_MODE_MASTER)
-		$ret['site']['directory_mode'] = 'master';
+	if($dirmode == DIRECTORY_MODE_PRIMARY)
+		$ret['site']['directory_mode'] = 'primary';
 	elseif($dirmode == DIRECTORY_MODE_SECONDARY)
 		$ret['site']['directory_mode'] = 'secondary';
 	elseif($dirmode == DIRECTORY_MODE_STANDALONE)
