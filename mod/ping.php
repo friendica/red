@@ -158,7 +158,7 @@ function ping_init(&$a) {
 	$t1 = dba_timer();
 
 	$r = q("SELECT id, item_restrict, item_flags FROM item
-		WHERE item_restrict = %d and ( item_flags & %d ) and uid = %d",
+		WHERE (item_restrict = %d) and ( item_flags & %d ) and uid = %d",
 		intval(ITEM_VISIBLE),
 		intval(ITEM_UNSEEN),
 		intval(local_user())
