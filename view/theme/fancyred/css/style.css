@@ -1240,6 +1240,30 @@ input#dfrn-url {
   box-shadow: none;
 }
 
+a.divgrow-showmore {
+bottom: 0pt;
+left: 0pt;
+cursor: pointer;
+/*TODO make this work in not-Firefox */
+background-image: -moz-linear-gradient(center top, #ccc 0%, #000 95%);
+height: 30px;
+text-shadow: 0pt 0pt 7px #000;
+background-color: transparent;
+border-radius: 0pt 0pt 3px 3px;
+border-bottom: 2px solid #ff0;
+color: #ff0;
+font-size: 0.8em;
+line-height: 48px;
+text-align: center;
+right: 0pt;
+position: absolute;
+/*Stop it blocking wall-item-tools*/
+margin-bottom: 24px;
+/*Make it work with non-shiny posts */
+opacity: 0.6;
+
+}
+
 .wall-item-title {
 	float: left;
 	font-weight: bold;
