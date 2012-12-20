@@ -1,6 +1,6 @@
 <?php
 
-define( 'UPDATE_VERSION' , 1003 );
+define( 'UPDATE_VERSION' , 1005 );
 
 /**
  *
@@ -69,6 +69,31 @@ function update_r1002() {
 
 	q("drop table contact");
 	q("drop table deliverq");
+
+	if($r && $r2)
+		return UPDATE_SUCCESS;
+	return UPDATE_FAILED;
+}
+
+
+function update_r1003() {
+	$r = q("ALTER TABLE `xchan` ADD `xchan_flags` INT UNSIGNED NOT NULL DEFAULT '0' AFTER `xchan_network` ,
+ADD INDEX ( `xchan_flags` ) ");
+	if($r)
+		return UPDATE_SUCCESS;
+	return UPDATE_FAILED;
+}
+
+function update_r1004() {
+	$r = q("CREATE TABLE if not exists `site` (
+`site_url` CHAR( 255 ) NOT NULL ,
+`site_flags` INT NOT NULL DEFAULT '0',
+`site_update` DATETIME NOT NULL DEFAULT '0000-00-00 00:00:00',
+`site_directory` CHAR( 255 ) NOT NULL DEFAULT '',
+PRIMARY KEY ( `site_url` )
+) ENGINE = MYISAM ");
+
+	$r2 = q("alter table site add index (site_flags), add index (site_update), add index (site_directory) ");
 
 	if($r && $r2)
 		return UPDATE_SUCCESS;
