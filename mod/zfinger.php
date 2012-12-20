@@ -123,6 +123,20 @@ function zfinger_init(&$a) {
 		}
 	}
 
+	$ret['site'] = array();
+	$ret['site']['url'] = z_root();
+	$dirmode = get_config('system','directory_mode');
+	if(($dirmode === false) || ($dirmode == DIRECTORY_MODE_NORMAL))
+		$ret['site']['directory_mode'] = 'normal';
+	if($dirmode == DIRECTORY_MODE_MASTER)
+		$ret['site']['directory_mode'] = 'master';
+	elseif($dirmode == DIRECTORY_MODE_SECONDARY)
+		$ret['site']['directory_mode'] = 'secondary';
+	elseif($dirmode == DIRECTORY_MODE_STANDALONE)
+		$ret['site']['directory_mode'] = 'standalone';
+	if($dirmode != DIRECTORY_MODE_NORMAL)
+		$ret['site']['directory_url'] = z_root() . '/dir';
+ 
 	json_return_and_die($ret);
 
 }
