@@ -158,7 +158,7 @@ function ping_init(&$a) {
 	$t1 = dba_timer();
 
 	$r = q("SELECT id, item_restrict, item_flags FROM item
-		WHERE item_restrict = %d and ( item_flags & %d ) and uid = %d",
+		WHERE (item_restrict = %d) and ( item_flags & %d ) and uid = %d",
 		intval(ITEM_VISIBLE),
 		intval(ITEM_UNSEEN),
 		intval(local_user())
@@ -180,24 +180,15 @@ function ping_init(&$a) {
 
 	$t2 = dba_timer();
 
-	$intros1 = q("SELECT  `intro`.`id`, `intro`.`datetime`, 
-		`fcontact`.`name`, `fcontact`.`url`, `fcontact`.`photo` 
-		FROM `intro` LEFT JOIN `fcontact` ON `intro`.`fid` = `fcontact`.`id`
-		WHERE `intro`.`uid` = %d  AND `intro`.`blocked` = 0 AND `intro`.`ignore` = 0 AND `intro`.`fid`!=0",
+	$intr = q("select count(abook_id) as total from abook where (abook_flags & %d) and abook_channel = %d",
+		intval(ABOOK_FLAG_PENDING),
 		intval(local_user())
 	);
 
 	$t3 = dba_timer();
 
-	$intros2 = q("SELECT `intro`.`id`, `intro`.`datetime`, 
-		`contact`.`name`, `contact`.`url`, `contact`.`photo` 
-		FROM `intro` LEFT JOIN `contact` ON `intro`.`contact-id` = `contact`.`id`
-		WHERE `intro`.`uid` = %d  AND `intro`.`blocked` = 0 AND `intro`.`ignore` = 0 AND `intro`.`contact-id`!=0",
-		intval(local_user())
-	);
-
-	$intros = count($intros1) + count($intros2);
-	$result['intros'] = intval($intros);
+	if($intr)
+		$result['intros'] = intval($intr[0]['total']);
 
 	$t4 = dba_timer();
 	$channel = get_app()->get_channel();

@@ -1,11 +1,9 @@
-<?php
+g<?php
 require_once('boot.php');
 require_once('include/zot.php');
 require_once('include/cli_startup.php');
+require_once('include/dir_fns.php');
 
-function find_upstream_directory($dirmode) {
-	return;
-}
 
 function directory_run($argv, $argc){
 

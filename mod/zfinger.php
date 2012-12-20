@@ -58,6 +58,9 @@ function zfinger_init(&$a) {
 
 	$id = $e['channel_id'];
 
+	$searchable = (($e['channel_pageflags'] & PAGE_HIDDEN) ? false : true);
+ 
+
 //  This is for birthdays and keywords, but must check access permissions
 //	$r = q("select contact.*, profile.* 
 //		from contact left join profile on contact.uid = profile.uid
@@ -86,6 +89,7 @@ function zfinger_init(&$a) {
 	$ret['name_updated']   = $e['xchan_name_date'];
 	$ret['target']         = $ztarget;
 	$ret['target_sig']     = $zsig;
+	$ret['searchable']     = $searchable;
 
 // FIXME encrypt permissions when targeted so that only the target can view them, requires sending the pubkey and also checking that the target_sig is signed with that pubkey and isn't a forgery. 
 
@@ -119,6 +123,20 @@ function zfinger_init(&$a) {
 		}
 	}
 
+	$ret['site'] = array();
+	$ret['site']['url'] = z_root();
+	$dirmode = get_config('system','directory_mode');
+	if(($dirmode === false) || ($dirmode == DIRECTORY_MODE_NORMAL))
+		$ret['site']['directory_mode'] = 'normal';
+	if($dirmode == DIRECTORY_MODE_PRIMARY)
+		$ret['site']['directory_mode'] = 'primary';
+	elseif($dirmode == DIRECTORY_MODE_SECONDARY)
+		$ret['site']['directory_mode'] = 'secondary';
+	elseif($dirmode == DIRECTORY_MODE_STANDALONE)
+		$ret['site']['directory_mode'] = 'standalone';
+	if($dirmode != DIRECTORY_MODE_NORMAL)
+		$ret['site']['directory_url'] = z_root() . '/dir';
+ 
 	json_return_and_die($ret);
 
 }

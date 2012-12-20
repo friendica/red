@@ -1,0 +1,12 @@
+.form-label {
+	margin-bottom: 15px;
+	float: left;
+	width: 150px;
+}
+.form-input {
+	margin-bottom: 15px;
+}
+
+#profile-photo-submit-wrapper {
+	clear: both;
+}

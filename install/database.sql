@@ -208,7 +208,6 @@ CREATE TABLE IF NOT EXISTS `config` (
   UNIQUE KEY `access` (`cat`,`k`)
 ) ENGINE=MyISAM  DEFAULT CHARSET=utf8;
 
-
 CREATE TABLE IF NOT EXISTS `event` (
   `id` int(11) NOT NULL AUTO_INCREMENT,
   `aid` int(10) unsigned NOT NULL DEFAULT '0',
@@ -761,6 +760,17 @@ CREATE TABLE IF NOT EXISTS `session` (
   KEY `expire` (`expire`)
 ) ENGINE=MyISAM  DEFAULT CHARSET=utf8;
 
+CREATE TABLE IF NOT EXISTS `site` (
+  `site_url` char(255) NOT NULL,
+  `site_flags` int(11) NOT NULL DEFAULT '0',
+  `site_update` datetime NOT NULL DEFAULT '0000-00-00 00:00:00',
+  `site_directory` char(255) NOT NULL DEFAULT '',
+  PRIMARY KEY (`site_url`),
+  KEY `site_flags` (`site_flags`),
+  KEY `site_update` (`site_update`),
+  KEY `site_directory` (`site_directory`)
+) ENGINE=MyISAM DEFAULT CHARSET=utf8;
+
 CREATE TABLE IF NOT EXISTS `spam` (
   `id` int(11) NOT NULL AUTO_INCREMENT,
   `uid` int(11) NOT NULL,
@@ -834,6 +844,7 @@ CREATE TABLE IF NOT EXISTS `xchan` (
   `xchan_url` char(255) NOT NULL DEFAULT '',
   `xchan_name` char(255) NOT NULL DEFAULT '',
   `xchan_network` char(255) NOT NULL DEFAULT '',
+  `xchan_flags` int(10) unsigned NOT NULL DEFAULT '0',
   `xchan_photo_date` datetime NOT NULL DEFAULT '0000-00-00 00:00:00',
   `xchan_name_date` datetime NOT NULL DEFAULT '0000-00-00 00:00:00',
   PRIMARY KEY (`xchan_hash`),
@@ -841,5 +852,6 @@ CREATE TABLE IF NOT EXISTS `xchan` (
   KEY `xchan_addr` (`xchan_addr`),
   KEY `xchan_name` (`xchan_name`),
   KEY `xchan_network` (`xchan_network`),
-  KEY `xchan_url` (`xchan_url`)
+  KEY `xchan_url` (`xchan_url`),
+  KEY `xchan_flags` (`xchan_flags`)
 ) ENGINE=MyISAM DEFAULT CHARSET=utf8;

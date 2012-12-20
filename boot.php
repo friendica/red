@@ -17,7 +17,7 @@ define ( 'FRIENDICA_PLATFORM',     'Friendica Red');
 define ( 'FRIENDICA_VERSION',      trim(file_get_contents('version.inc')) . 'R');
 define ( 'DFRN_PROTOCOL_VERSION',  '2.23'    );
 define ( 'ZOT_REVISION',               1     ); 
-define ( 'DB_UPDATE_VERSION',       1003     );
+define ( 'DB_UPDATE_VERSION',       1005     );
 
 define ( 'EOL',                    "<br />\r\n"     );
 define ( 'ATOM_TIME',              'Y-m-d\TH:i:s\Z' );
@@ -143,12 +143,13 @@ define ( 'UPDATE_FAILED',  1);
  *
  */
 
-define ( 'PAGE_NORMAL',            0 );
-define ( 'PAGE_SOAPBOX',           1 );
-define ( 'PAGE_COMMUNITY',         2 );
-define ( 'PAGE_FREELOVE',          3 );
-define ( 'PAGE_BLOG',              4 );
-define ( 'PAGE_PRVGROUP',          5 );
+define ( 'PAGE_NORMAL',            0x0000 );
+define ( 'PAGE_HIDDEN',            0x0001 );
+define ( 'PAGE_AUTOCONNECT',       0x0002 );
+
+//define ( 'PAGE_FREELOVE',          3 );
+//define ( 'PAGE_BLOG',              4 );
+//define ( 'PAGE_PRVGROUP',          5 );
 
 /**
  * Network and protocol family types
@@ -638,7 +639,7 @@ if(! class_exists('App')) {
                         $scheme = 'http';
                 }
             }
-
+			
             $this->baseurl = $scheme . "://" . $this->hostname . ((isset($this->path) && strlen($this->path)) ? '/' . $this->path : '' );
             return $this->baseurl;
 		}
@@ -647,7 +648,7 @@ if(! class_exists('App')) {
 
 			if(is_array($this->config) && array_key_exists('system',$this->config) &&
 				array_key_exists('baseurl',$this->config['system']) && strlen($this->config['system']['baseurl'])) {
-				$url = $a->config['system']['baseurl'];
+				$url = $this->config['system']['baseurl'];
 			}
 
             $parsed = @parse_url($url);
