@@ -143,12 +143,13 @@ define ( 'UPDATE_FAILED',  1);
  *
  */
 
-define ( 'PAGE_NORMAL',            0 );
-define ( 'PAGE_SOAPBOX',           1 );
-define ( 'PAGE_COMMUNITY',         2 );
-define ( 'PAGE_FREELOVE',          3 );
-define ( 'PAGE_BLOG',              4 );
-define ( 'PAGE_PRVGROUP',          5 );
+define ( 'PAGE_NORMAL',            0x0000 );
+define ( 'PAGE_HIDDEN',            0x0001 );
+define ( 'PAGE_AUTOCONNECT',       0x0002 );
+
+//define ( 'PAGE_FREELOVE',          3 );
+//define ( 'PAGE_BLOG',              4 );
+//define ( 'PAGE_PRVGROUP',          5 );
 
 /**
  * Network and protocol family types
