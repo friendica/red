@@ -19,10 +19,8 @@ function display_content(&$a) {
 	$a->page['htmlhead'] .= get_markup_template('display-head.tpl');
 
 
-
-
 	if(argc() > 1)
-		$item_hash = argv(2);
+		$item_hash = argv(1);
 
 	if(! $item_hash) {
 		$a->error = 404;
@@ -32,13 +30,27 @@ function display_content(&$a) {
 
 	$observer_is_owner = false;
 
+	// This page can be viewed by anybody so the query could be complicated
+	// First we'll see if there is a copy of the item which is owned by us - if we're logged in locally.
+	// If that fails (or we aren't logged in locally), 
+	// query an item in which the observer (if logged in remotely) has cid or gid rights
+	// and if that fails, look for a copy of the post that has no privacy restrictions.  
+	// If we find the post, but we don't find a copy that we're allowed to look at, this fact needs to be reported.
+
+// FIXME - on the short term, we'll only do the first query.
+
+	$target_item = null;
+
 	if(local_user()) {
 		$r = q("select * from item where uri = '%s' and uid = %d limit 1",
 			dbesc($item_hash),
 			intval(local_user())
 		);
-		if($r && $count($r))
+		if($r) {
+			$owner = local_user();
 			$observer_is_owner = true;		
+			$target_item = $r[0];
+		}
 	}
 
 
@@ -106,47 +118,43 @@ function display_content(&$a) {
 		return;
 	}
 	
-	if ($is_owner)
-		$celeb = ((($a->user['page-flags'] == PAGE_SOAPBOX) || ($a->user['page-flags'] == PAGE_COMMUNITY)) ? true : false);
+//	if ($is_owner)
+//		$celeb = ((($a->user['page-flags'] == PAGE_SOAPBOX) || ($a->user['page-flags'] == PAGE_COMMUNITY)) ? true : false);
 
-		$x = array(
-			'is_owner' => true,
-			'allow_location' => $a->user['allow_location'],
-			'default_location' => $a->user['default-location'],
-			'nickname' => $a->user['nickname'],
-			'lockstate' => ( (is_array($a->user)) && ((strlen($a->user['allow_cid'])) || (strlen($a->user['allow_gid'])) || (strlen($a->user['deny_cid'])) || (strlen($a->user['deny_gid']))) ? 'lock' : 'unlock'),
-			'acl' => populate_acl($a->user, $celeb),
-			'bang' => '',
-			'visitor' => 'block',
-			'profile_uid' => local_user()
-		);	
-		$o .= status_editor($a,$x,true);
-
-
-	$sql_extra = item_permissions_sql($a->profile['uid'],$remote_contact,$groups);
-
-	$r = q("SELECT `item`.*, `item`.`id` AS `item_id` FROM `item` 
-		WHERE `item`.`uid` = %d AND `item`.`visible` = 1 AND `item`.`deleted` = 0
-		and `item`.`moderated` = 0
-		AND `contact`.`blocked` = 0 AND `contact`.`pending` = 0
-		AND `item`.`parent` = ( SELECT `parent` FROM `item` WHERE ( `id` = '%s' OR `uri` = '%s' ))
-		$sql_extra
-		ORDER BY `parent` DESC, `gravity` ASC, `id` ASC ",
-		intval($a->profile['uid']),
-		dbesc($item_id),
-		dbesc($item_id)
-	);
+//		$x = array(
+//			'is_owner' => true,
+//			'allow_location' => $a->user['allow_location'],
+//			'default_location' => $a->user['default-location'],
+//			'nickname' => $a->user['nickname'],
+//			'lockstate' => ( (is_array($a->user)) && ((strlen($a->user['allow_cid'])) || (strlen($a->user['allow_gid'])) || (strlen($a->user['deny_cid'])) || (strlen($a->user['deny_gid']))) ? 'lock' : 'unlock'),
+//			'acl' => populate_acl($a->user, $celeb),
+//			'bang' => '',
+//			'visitor' => 'block',
+//			'profile_uid' => local_user()
+//		);	
+//		$o .= status_editor($a,$x,true);
 
 
-	if(count($r)) {
+// FIXME
+//	$sql_extra = item_permissions_sql($a->profile['uid']);
 
-		if((local_user()) && (local_user() == $a->profile['uid'])) {
-			q("UPDATE `item` SET `unseen` = 0 
-				WHERE `parent` = %d AND `unseen` = 1",
-				intval($r[0]['parent'])
-			);
+	if($target_item) {
+		$r = q("SELECT * from item where parent = %d",
+			intval($target_item['parent'])
+		);
+	}
+
+
+	if($r) {
+
+		if((local_user()) && (local_user() == $owner)) {
+//			q("UPDATE `item` SET `unseen` = 0 
+//				WHERE `parent` = %d AND `unseen` = 1",
+//				intval($r[0]['parent'])
+//			);
 		}
 
+		xchan_query($r);
 		$r = fetch_post_tags($r);
 
 		$o .= conversation($a,$r,'display', false);
