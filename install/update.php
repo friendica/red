@@ -103,7 +103,7 @@ PRIMARY KEY ( `site_url` )
 
 function update_r1005() {
 	q("drop table guid");
-	q("drop table `notify-threads`);
+	q("drop table `notify-threads`");
 	return UPDATE_SUCCESS;
 }
 

@@ -11,7 +11,7 @@ function editpost_content(&$a) {
 		return;
 	}
 
-	$post_id = (($a->argc > 1) ? intval($a->argv[1]) : 0);
+	$post_id = ((argc() > 1) ? intval(argv(1)) : 0);
 
 	if(! $post_id) {
 		notice( t('Item not found') . EOL);
@@ -32,12 +32,12 @@ function editpost_content(&$a) {
 	if(feature_enabled(local_user(),'richtext'))
 		$plaintext = false;
 
+	$o .= replace_macros(get_markup_template('edpost_head.tpl'), array(
+		'$title' => t('Edit post')
+	));
 
-	$o .= '<h2>' . t('Edit post') . '</h2>';
-
-	$tpl = get_markup_template('jot-header.tpl');
 	
-	$a->page['htmlhead'] .= replace_macros($tpl, array(
+	$a->page['htmlhead'] .= replace_macros(get_markup_template('jot-header.tpl'), array(
 		'$baseurl' => $a->get_baseurl(),
 		'$editselect' =>  (($plaintext) ? 'none' : '/(profile-jot-text|prvmail-text)/'),
 		'$ispublic' => '&nbsp;', // t('Visible to <strong>everybody</strong>'),
@@ -48,20 +48,14 @@ function editpost_content(&$a) {
 
 	$tpl = get_markup_template("jot.tpl");
 		
-	if(($group) || (is_array($a->user) && ((strlen($a->user['allow_cid'])) || (strlen($a->user['allow_gid'])) || (strlen($a->user['deny_cid'])) || (strlen($a->user['deny_gid'])))))
-		$lockstate = 'lock';
-	else
-		$lockstate = 'unlock';
-
-	$celeb = ((($a->user['page-flags'] == PAGE_SOAPBOX) || ($a->user['page-flags'] == PAGE_COMMUNITY)) ? true : false);
-
 	$jotplugins = '';
 	$jotnets = '';
 
 	call_hooks('jot_tool', $jotplugins);
 	call_hooks('jot_networks', $jotnets);
 
-	
+	$channel = $a->get_channel();
+
 	//$tpl = replace_macros($tpl,array('$jotplugins' => $jotplugins));	
 	
 
@@ -83,7 +77,7 @@ function editpost_content(&$a) {
 		'$content' => undo_post_tagging($itm[0]['body']),
 		'$post_id' => $post_id,
 		'$baseurl' => $a->get_baseurl(),
-		'$defloc' => $a->user['default-location'],
+		'$defloc' => $channel['channel_location'],
 		'$visitor' => 'none',
 		'$pvisit' => 'none',
 		'$public' => t('Public post'),
@@ -94,10 +88,10 @@ function editpost_content(&$a) {
 		'$placeholdercategory' => t('Categories (comma-separated list)'),
 		'$emtitle' => t('Example: bob@example.com, mary@example.com'),
 		'$lockstate' => $lockstate,
-		'$acl' => '', // populate_acl((($group) ? $group_acl : $a->user), $celeb),
-		'$bang' => (($group) ? '!' : ''),
-		'$profile_uid' => $_SESSION['uid'],
-		'$preview' => t('Preview'),
+		'$acl' => '', 
+		'$bang' => '',
+		'$profile_uid' => local_user(),
+		'$preview' => ((feature_enabled(local_user(),'preview')) ? t('Preview') : ''),
 		'$jotplugins' => $jotplugins,
 		'$sourceapp' => t($a->sourcename),
 	));
