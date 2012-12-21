@@ -5,13 +5,14 @@ require_once('include/socgraph.php');
 function allfriends_content(&$a) {
 
 	$o = '';
+
 	if(! local_user()) {
 		notice( t('Permission denied.') . EOL);
 		return;
 	}
 
-	if($a->argc > 1)
-		$cid = intval($a->argv[1]);
+	if(argc() > 1)
+		$cid = intval(argv(1));
 	if(! $cid)
 		return;
 

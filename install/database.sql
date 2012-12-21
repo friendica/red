@@ -750,7 +750,10 @@ CREATE TABLE IF NOT EXISTS `site` (
   PRIMARY KEY (`site_url`),
   KEY `site_flags` (`site_flags`),
   KEY `site_update` (`site_update`),
-  KEY `site_directory` (`site_directory`)
+  KEY `site_directory` (`site_directory`),
+  KEY `site_flags_2` (`site_flags`),
+  KEY `site_update_2` (`site_update`),
+  KEY `site_directory_2` (`site_directory`)
 ) ENGINE=MyISAM DEFAULT CHARSET=utf8;
 
 CREATE TABLE IF NOT EXISTS `spam` (
@@ -836,4 +839,34 @@ CREATE TABLE IF NOT EXISTS `xchan` (
   KEY `xchan_network` (`xchan_network`),
   KEY `xchan_url` (`xchan_url`),
   KEY `xchan_flags` (`xchan_flags`)
+) ENGINE=MyISAM DEFAULT CHARSET=utf8;
+
+CREATE TABLE IF NOT EXISTS `xprof` (
+  `xprof_hash` char(255) NOT NULL,
+  `xprof_desc` char(255) NOT NULL DEFAULT '',
+  `xprof_dob` char(12) NOT NULL DEFAULT '',
+  `xprof_gender` char(255) NOT NULL DEFAULT '',
+  `xprof_marital` char(255) NOT NULL DEFAULT '',
+  `xprof_sexual` char(255) NOT NULL DEFAULT '',
+  `xprof_locale` char(255) NOT NULL DEFAULT '',
+  `xprof_region` char(255) NOT NULL DEFAULT '',
+  `xprof_postcode` char(32) NOT NULL DEFAULT '',
+  `xprof_country` char(255) NOT NULL DEFAULT '',
+  PRIMARY KEY (`xprof_hash`),
+  KEY `xprof_desc` (`xprof_desc`),
+  KEY `xprof_dob` (`xprof_dob`),
+  KEY `xprof_gender` (`xprof_gender`),
+  KEY `xprof_marital` (`xprof_marital`),
+  KEY `xprof_sexual` (`xprof_sexual`),
+  KEY `xprof_locale` (`xprof_locale`),
+  KEY `xprof_region` (`xprof_region`),
+  KEY `xprof_postcode` (`xprof_postcode`),
+  KEY `xprof_country` (`xprof_country`)
+) ENGINE=MyISAM DEFAULT CHARSET=utf8;
+
+CREATE TABLE IF NOT EXISTS `xtag` (
+  `xtag_hash` char(255) NOT NULL,
+  `xtag_term` char(255) NOT NULL DEFAULT '',
+  PRIMARY KEY (`xtag_hash`),
+  KEY `xtag_term` (`xtag_term`)
 ) ENGINE=MyISAM DEFAULT CHARSET=utf8;
