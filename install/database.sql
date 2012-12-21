@@ -361,13 +361,6 @@ CREATE TABLE IF NOT EXISTS `group_member` (
   KEY `xchan` (`xchan`)
 ) ENGINE=MyISAM  DEFAULT CHARSET=utf8;
 
-CREATE TABLE IF NOT EXISTS `guid` (
-  `id` int(10) unsigned NOT NULL AUTO_INCREMENT,
-  `guid` char(64) NOT NULL,
-  PRIMARY KEY (`id`),
-  KEY `guid` (`guid`)
-) ENGINE=MyISAM DEFAULT CHARSET=utf8;
-
 CREATE TABLE IF NOT EXISTS `hook` (
   `id` int(11) NOT NULL AUTO_INCREMENT,
   `hook` char(255) NOT NULL,
@@ -562,17 +555,6 @@ CREATE TABLE IF NOT EXISTS `notify` (
   KEY `parent` (`parent`),
   KEY `link` (`link`),
   KEY `otype` (`otype`)
-) ENGINE=MyISAM DEFAULT CHARSET=utf8;
-
-CREATE TABLE IF NOT EXISTS `notify-threads` (
-  `id` int(11) NOT NULL AUTO_INCREMENT,
-  `notify-id` int(11) NOT NULL,
-  `master-parent-item` int(10) unsigned NOT NULL DEFAULT '0',
-  `parent-item` int(10) unsigned NOT NULL DEFAULT '0',
-  `receiver-uid` int(11) NOT NULL,
-  PRIMARY KEY (`id`),
-  KEY `master-parent-item` (`master-parent-item`),
-  KEY `receiver-uid` (`receiver-uid`)
 ) ENGINE=MyISAM DEFAULT CHARSET=utf8;
 
 CREATE TABLE IF NOT EXISTS `outq` (

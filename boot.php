@@ -17,7 +17,7 @@ define ( 'FRIENDICA_PLATFORM',     'Friendica Red');
 define ( 'FRIENDICA_VERSION',      trim(file_get_contents('version.inc')) . 'R');
 define ( 'DFRN_PROTOCOL_VERSION',  '2.23'    );
 define ( 'ZOT_REVISION',               1     ); 
-define ( 'DB_UPDATE_VERSION',       1005     );
+define ( 'DB_UPDATE_VERSION',       1006     );
 
 define ( 'EOL',                    "<br />\r\n"     );
 define ( 'ATOM_TIME',              'Y-m-d\TH:i:s\Z' );

@@ -88,13 +88,8 @@ mod/
   common.php
   community.php
   contactgroup.php
-- contacts.php
   crepair.php
   delegate.php
-- dfrn_confirm.php
-- dfrn_notify.php
-- dfrn_poll.php
-- dfrn_request.php
   directory.php
   dirfind.php
   display.php
@@ -122,7 +117,7 @@ mod/
   magic.php
 + manage.php
   match.php
-  message.php
+? message.php
 ? mood.php
   msearch.php
 ? network.php
@@ -148,7 +143,7 @@ mod/
   qsearch.php
 + randprof.php
 - redir.php
-- register.php
++ register.php
   regmod.php
   removeme.php
   rsd_xml.php (what do we need this for? What functionality/feature does it enable)
@@ -170,7 +165,6 @@ mod/
   view.php
 + viewsrc.php
 ? wall_attach.php (needs remote permissions refactor)
-- wallmessage.php
 ? wall_upload.php (needs remote permissions refactor)
   webfinger.php
 + _well_known.php
@@ -178,4 +172,4 @@ mod/
 + zchannel.php
 + zfinger.php
 ? zperms.php
-+ register.php
+

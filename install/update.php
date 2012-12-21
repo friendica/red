@@ -1,6 +1,6 @@
 <?php
 
-define( 'UPDATE_VERSION' , 1005 );
+define( 'UPDATE_VERSION' , 1006 );
 
 /**
  *
@@ -98,4 +98,11 @@ PRIMARY KEY ( `site_url` )
 	if($r && $r2)
 		return UPDATE_SUCCESS;
 	return UPDATE_FAILED;
+}
+
+
+function update_r1005() {
+	q("drop table guid");
+	q("drop table `notify-threads`);
+	return UPDATE_SUCCESS;
 }
