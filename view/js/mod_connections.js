@@ -31,6 +31,7 @@ function connectFullShare() {
 	$('#me_id_perms_post_comments').attr('checked','checked');
 	$('#me_id_perms_post_mail').attr('checked','checked');
 	$('#me_id_perms_chat').attr('checked','checked');
+	$('#me_id_perms_view_storage').attr('checked','checked');
 
 }
 

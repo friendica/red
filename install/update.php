@@ -1,6 +1,6 @@
 <?php
 
-define( 'UPDATE_VERSION' , 1007 );
+define( 'UPDATE_VERSION' , 1008 );
 
 /**
  *
@@ -138,6 +138,15 @@ function update_r1006() {
   PRIMARY KEY (`xtag_hash`),
   KEY `xtag_term` (`xtag_term`)
 ) ENGINE=MyISAM DEFAULT CHARSET=utf8");
+
+	if($r && $r2)
+		return UPDATE_SUCCESS;
+	return UPDATE_FAILED;
+}
+
+
+function update_r1007() {
+	$r = q("ALTER TABLE `channel` ADD `channel_r_storage` INT UNSIGNED NOT NULL DEFAULT '128', ADD `channel_w_storage` INT UNSIGNED NOT NULL DEFAULT '128', add index ( channel_r_storage ), add index ( channel_w_storage )");
 
 	if($r && $r2)
 		return UPDATE_SUCCESS;

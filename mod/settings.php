@@ -340,6 +340,8 @@ function settings_post(&$a) {
 	$arr['channel_w_photos']   = (($_POST['post_photos'])   ? $_POST['post_photos']   : 0);
 	$arr['channel_w_chat']     = (($_POST['chat'])          ? $_POST['chat']          : 0);
 	$arr['channel_a_delegate'] = (($_POST['delegate'])      ? $_POST['delegate']      : 0);
+	$arr['channel_r_storage'] = (($_POST['view_storage'])   ? $_POST['view_storage']  : 0);
+	$arr['channel_w_storage'] = (($_POST['write_storage'])  ? $_POST['write_storage'] : 0);
 
 
 	$notify = 0;

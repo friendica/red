@@ -14,6 +14,7 @@ function get_perms() {
 		'view_profile'  => array('channel_r_profile', intval(PERMS_R_PROFILE), true, t('Can view my "public" channel profile'), ''),
 		'view_photos'   => array('channel_r_photos',  intval(PERMS_R_PHOTOS),  true, t('Can view my "public" photo albums'), ''),
 		'view_contacts' => array('channel_r_abook',   intval(PERMS_R_ABOOK),   true, t('Can view my "public" address book'), ''),
+		'view_storage' => array('channel_r_storage',   intval(PERMS_R_STORAGE),   true, t('Can view my "public" file storage'), ''),
 
 		// Write permissions
 		'send_stream'   => array('channel_w_stream',  intval(PERMS_W_STREAM),  false, t('Can send me their channel stream and posts'), ''),
@@ -23,6 +24,8 @@ function get_perms() {
 		'post_photos'   => array('channel_w_photos',  intval(PERMS_W_PHOTOS),  false, t('Can post photos to my photo albums'), ''),
 		'tag_deliver'   => array('channel_w_tagwall', intval(PERMS_W_TAGWALL), false, t('Can forward to all my channel contacts via post tags'), t('Advanced - useful for creating group forum channels')),
 		'chat'          => array('channel_w_chat',    intval(PERMS_W_CHAT),    false, t('Can chat with me (when available)'), t('Requires compatible chat plugin')),
+		'write_storage' => array('channel_w_storage',   intval(PERMS_W_STORAGE),   false, t('Can write to my "public" file storage'), ''),
+
 		'delegate'      => array('channel_a_delegate', intval(PERMS_A_DELEGATE),    false, t('Can administer my channel resources'), t('Extremely advanced. Leave this alone unless you know what you are doing')),
 	);
 	return $global_perms;
