@@ -722,8 +722,16 @@ function zot_import($arr) {
 					process_mail_delivery($i['notify']['sender'],$arr,$deliveries);
 
 				}
-			}
+				elseif($i['message']['type'] === 'profile') {
+					$arr = get_profile_elements($i['message']);
 
+					logger('Profile received: ' . print_r($arr,true));
+					logger('Profile recipients: ' . print_r($deliveries,true));
+
+					process_profile_delivery($i['notify']['sender'],$arr,$deliveries);
+
+				}
+			}
 		}
 	}
 }
@@ -900,4 +908,66 @@ function process_mail_delivery($sender,$arr,$deliveries) {
 			$item_id = mail_store($arr);
 		}
 	}
+}
+
+function process_profile_delivery($sender,$arr,$deliveries) {
+
+	// deliveries is irrelevant
+
+	$r = q("select * from xprof where xprof_hash = '%s' limit 1",
+		dbesc($sender['hash'])
+	);
+	if(! $r) {
+		$x = q("insert into xprof ( xprof_hash, xprof_desc, xprof_dob, xprof_gender, xprof_marital, xprof_sexual,
+			xprof_locale, xprof_region, xprof_postcode, xprof_country ) values ( '%s', '%s', '%s', '%s', '%s', '%s', '%s', '%s', '%s') ",
+			dbesc($sender['hash']),
+			dbesc($arr['desc']),
+			dbesc($arr['dob']),
+			dbesc($arr['gender']),
+			dbesc($arr['marital']),
+			dbesc($arr['sexual']),
+			dbesc($arr['locale']),
+			dbesc($arr['region']),
+			dbesc($arr['postcode']),
+			dbesc($arr['country'])
+		);
+	}
+	else {
+		$x = q("update xprof set 
+			xprof_desc = '%s'
+			xprof_dob = '%s',
+			xprof_gender = '%s',
+			xprof_marital = '%s',
+			xprof_sexual = '%s',
+			xprof_locale = '%s',
+			xprof_region = '%s',
+			xprof_postcode = '%s',
+			xprof_country = '%s'
+			where xprof_hash = '%s' limit 1",
+			dbesc($arr['desc']),
+			dbesc($arr['dob']),
+			dbesc($arr['gender']),
+			dbesc($arr['marital']),
+			dbesc($arr['sexual']),
+			dbesc($arr['locale']),
+			dbesc($arr['region']),
+			dbesc($arr['postcode']),
+			dbesc($arr['country']),
+			dbesc($sender['hash'])
+		);
+	}
+
+	// optimise this, get existing tags and check which still exist and which don't!!!
+
+	$x = q("delete from xtag where xtag_hash = '%s'");
+	if($arr['keywords']) {
+		foreach($arr['keywords'] as $tag) {
+			$r = q("insert into xtag ( xtag_hash, xtag_term ) values ( '%s', '%s' )",
+				dbesc($sender['hash']),
+				dbesc($tag)
+			);
+		}
+	}
+
+
 }

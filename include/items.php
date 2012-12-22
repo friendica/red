@@ -644,6 +644,8 @@ function decode_tags($t) {
 
 }
 
+// santise a potentially complex array
+
 function activity_sanitise($arr) {
 	if($arr) {
 		$ret = array();
@@ -652,6 +654,19 @@ function activity_sanitise($arr) {
 				$ret[$k] = activity_sanitise($x);
 			else
 				$ret[$k] = htmlentities($x, ENT_COMPAT,'UTF-8');
+		}
+		return $ret;
+	}
+	return '';
+}
+
+// sanitise a simple linear array
+
+function array_sanitise($arr) {
+	if($arr) {
+		$ret = array();
+		foreach($arr as $x) {
+			$ret[] = htmlentities($x, ENT_COMPAT,'UTF-8');
 		}
 		return $ret;
 	}
@@ -720,6 +735,34 @@ function get_mail_elements($x) {
 	else
 		return array();
 
+
+	return $arr;
+
+}
+
+
+function get_profile_elements($x) {
+
+	$arr = array();
+
+	if(import_author_xchan($x['from']))
+		$arr['xprof_hash'] = base64url_encode(hash('whirlpool',$x['from']['guid'] . $x['from']['guid_sig'], true));
+	else
+		return array();
+
+	$arr['desc']         = (($x['title']) ? htmlentities($x['title'],ENT_COMPAT,'UTF-8') : '');
+
+	$arr['dob']          = datetime_convert('UTC','UTC',$x['birthday'],'Y-m-d');
+
+	$arr['gender']       = (($x['gender'])    ? htmlentities($x['gender'],    ENT_COMPAT,'UTF-8') : '');
+	$arr['marital']      = (($x['marital'])   ? htmlentities($x['marital'],   ENT_COMPAT,'UTF-8') : '');
+	$arr['sexual']       = (($x['sexual'])    ? htmlentities($x['sexual'],    ENT_COMPAT,'UTF-8') : '');
+	$arr['locale']       = (($x['locale'])    ? htmlentities($x['locale'],    ENT_COMPAT,'UTF-8') : '');
+	$arr['region']       = (($x['region'])    ? htmlentities($x['region'],    ENT_COMPAT,'UTF-8') : '');
+	$arr['postcode']     = (($x['postcode'])  ? htmlentities($x['postcode'],  ENT_COMPAT,'UTF-8') : '');
+	$arr['country']      = (($x['country'])   ? htmlentities($x['country'],   ENT_COMPAT,'UTF-8') : '');
+
+	$arr['keywords']     = (($x['keywords'] && is_array($x['keywords'])) ? array_sanitise($x['keywords']) : array()); 
 
 	return $arr;
 
