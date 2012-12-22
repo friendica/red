@@ -145,6 +145,7 @@ define ( 'UPDATE_FAILED',  1);
 define ( 'PAGE_NORMAL',            0x0000 );
 define ( 'PAGE_HIDDEN',            0x0001 );
 define ( 'PAGE_AUTOCONNECT',       0x0002 );
+define ( 'PAGE_APPLICATION',       0x0004 );
 
 //define ( 'PAGE_FREELOVE',          3 );
 //define ( 'PAGE_BLOG',              4 );
