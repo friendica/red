@@ -280,10 +280,9 @@ function group_side($every="contacts",$each="group",$edit = false, $group_id = 0
 function expand_groups($a) {
 	if(! (is_array($a) && count($a)))
 		return array();
-	$groups = implode(',', $a);
-
-	$groups = dbesc($groups);
 	stringify_array_elms($groups);
+	$groups = implode(',', $a);
+	$groups = dbesc($groups);
 	$r = q("SELECT xchan FROM `group_member` WHERE `gid` IN ( $groups )");
 	$ret = array();
 	if(count($r))
