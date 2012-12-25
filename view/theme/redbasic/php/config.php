@@ -65,7 +65,7 @@ function redbasic_form(&$a, $font_size, $line_height, $colour) {
 		'dark' => 'dark',						
 	);
 
-	$t = file_get_contents( dirname(__file__). "../tpl/theme_settings.tpl" );
+	$t = file_get_contents( dirname(__file__). "/../tpl/theme_settings.tpl" );
 	$o .= replace_macros($t, array(
 		'$submit' => t('Submit'),
 		'$baseurl' => $a->get_baseurl(),
