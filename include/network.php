@@ -72,7 +72,7 @@ function fetch_url($url,$binary = false, &$redirects = 0, $timeout = 0, $accept_
 		$base = substr($base,strlen($chunk));
 	}
 
-	if($http_code == 301 || $http_code == 302 || $http_code == 303 || $http_code == 307) {
+	if($http_code == 301 || $http_code == 302 || $http_code == 303 || $http_code == 307 || $http_code == 308) {
 		$matches = array();
 		preg_match('/(Location:|URI:)(.*?)\n/', $header, $matches);
 		$newurl = trim(array_pop($matches));
@@ -81,6 +81,7 @@ function fetch_url($url,$binary = false, &$redirects = 0, $timeout = 0, $accept_
 		$url_parsed = @parse_url($newurl);
 		if (isset($url_parsed)) {
 			$redirects++;
+			@curl_close($ch);
 			return fetch_url($newurl,$binary,$redirects,$timeout);
 		}
 	}
@@ -161,7 +162,7 @@ function post_url($url,$params, $headers = null, &$redirects = 0, $timeout = 0) 
 		$base = substr($base,strlen($chunk));
 	}
 
-	if($http_code == 301 || $http_code == 302 || $http_code == 303) {
+	if($http_code == 301 || $http_code == 302 || $http_code == 303 || $http_code == 307 || $http_code == 308) {
 		$matches = array();
 		preg_match('/(Location:|URI:)(.*?)\n/', $header, $matches);
 		$newurl = trim(array_pop($matches));
@@ -170,7 +171,8 @@ function post_url($url,$params, $headers = null, &$redirects = 0, $timeout = 0) 
 		$url_parsed = @parse_url($newurl);
 		if (isset($url_parsed)) {
 			$redirects++;
-			return fetch_url($newurl,false,$redirects,$timeout);
+			@curl_close($ch);
+			return post_url($newurl,false,$redirects,$timeout);
 		}
 	}
 	$a->set_curl_code($http_code);
@@ -247,7 +249,7 @@ function z_fetch_url($url,$binary = false, &$redirects = 0, $timeout = 0, $accep
 		$base = substr($base,strlen($chunk));
 	}
 
-	if($http_code == 301 || $http_code == 302 || $http_code == 303 || $http_code == 307) {
+	if($http_code == 301 || $http_code == 302 || $http_code == 303 || $http_code == 307 || $http_code == 308) {
 		$matches = array();
 		preg_match('/(Location:|URI:)(.*?)\n/', $header, $matches);
 		$newurl = trim(array_pop($matches));
@@ -339,7 +341,7 @@ function z_post_url($url,$params, $headers = null, &$redirects = 0, $timeout = 0
 		$base = substr($base,strlen($chunk));
 	}
 
-	if($http_code == 301 || $http_code == 302 || $http_code == 303) {
+	if($http_code == 301 || $http_code == 302 || $http_code == 303 || $http_code == 307 || $http_code == 308) {
 		$matches = array();
 		preg_match('/(Location:|URI:)(.*?)\n/', $header, $matches);
 		$newurl = trim(array_pop($matches));
