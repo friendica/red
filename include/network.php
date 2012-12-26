@@ -162,17 +162,17 @@ function post_url($url,$params, $headers = null, &$redirects = 0, $timeout = 0) 
 	}
 
 	if($http_code == 301 || $http_code == 302 || $http_code == 303) {
-        $matches = array();
-        preg_match('/(Location:|URI:)(.*?)\n/', $header, $matches);
-        $newurl = trim(array_pop($matches));
+		$matches = array();
+		preg_match('/(Location:|URI:)(.*?)\n/', $header, $matches);
+		$newurl = trim(array_pop($matches));
 		if(strpos($newurl,'/') === 0)
 			$newurl = $url . $newurl;
-        $url_parsed = @parse_url($newurl);
-        if (isset($url_parsed)) {
-            $redirects++;
-            return fetch_url($newurl,false,$redirects,$timeout);
-        }
-    }
+		$url_parsed = @parse_url($newurl);
+		if (isset($url_parsed)) {
+			$redirects++;
+			return fetch_url($newurl,false,$redirects,$timeout);
+		}
+	}
 	$a->set_curl_code($http_code);
 	$body = substr($s,strlen($header));
 
