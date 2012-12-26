@@ -23,6 +23,17 @@ function zfinger_init(&$a) {
 		}
 	}
 
+	// allow re-written domains so bob@foo.example.com can provide an address of bob@example.com
+	// The top-level domain also needs to redirect .well-known/zot-info to the sub-domain with a 301 or 308
+
+	// TODO: Make 308 work in include/network.php for zot_fetch_url and zot_post_url
+
+	if(($zaddr) && ($s = get_config('system','zotinfo_domainrewrite'))) {
+		$arr = explode('^',$s);
+		if(count($arr) == 2) 
+			$zaddr = str_replace($arr[0],$arr[1],$zaddr);
+	}
+
 	$r = null;
 
 	if(strlen($zhash)) {
