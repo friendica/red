@@ -172,7 +172,11 @@ function post_url($url,$params, $headers = null, &$redirects = 0, $timeout = 0) 
 		if (isset($url_parsed)) {
 			$redirects++;
 			@curl_close($ch);
-			return post_url($newurl,false,$redirects,$timeout);
+			if($http_code == 308) {
+				return post_url($newurl,$params,$redirects,$timeout);
+			} else {
+				return fetch_url($newurl,false,$redirects,$timeout);
+			}
 		}
 	}
 	$a->set_curl_code($http_code);
@@ -351,7 +355,11 @@ function z_post_url($url,$params, $headers = null, &$redirects = 0, $timeout = 0
 		if (isset($url_parsed)) {
 			$redirects++;
 			curl_close($ch);
-			return z_post_url($newurl,$params,$headers,$redirects,$timeout);
+			if($http_code == 308) {
+				return z_post_url($newurl,$params,$headers,$redirects,$timeout);
+			} else {
+				return z_fetch_url($newurl,false,$headers,$redirects,$timeout);
+			}
 		}
 	}
 	$rc = intval($http_code);
