@@ -654,8 +654,7 @@ CREATE TABLE IF NOT EXISTS `profile` (
   `sexual` char(255) NOT NULL,
   `politic` char(255) NOT NULL,
   `religion` char(255) NOT NULL,
-  `pub_keywords` text NOT NULL,
-  `prv_keywords` text NOT NULL,
+  `keywords` text NOT NULL,
   `likes` text NOT NULL,
   `dislikes` text NOT NULL,
   `about` text NOT NULL,
@@ -687,9 +686,7 @@ CREATE TABLE IF NOT EXISTS `profile` (
   KEY `hide_friends` (`hide_friends`),
   KEY `postal_code` (`postal_code`),
   KEY `country_name` (`country_name`),
-  KEY `profile_guid` (`profile_guid`),
-  FULLTEXT KEY `pub_keywords` (`pub_keywords`),
-  FULLTEXT KEY `prv_keywords` (`prv_keywords`)
+  KEY `profile_guid` (`profile_guid`)
 ) ENGINE=MyISAM  DEFAULT CHARSET=utf8;
 
 CREATE TABLE IF NOT EXISTS `profile_check` (

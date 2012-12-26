@@ -143,16 +143,9 @@ $sexual
 
 <div id="profile-edit-pubkeywords-wrapper" >
 <label id="profile-edit-pubkeywords-label" for="profile-edit-pubkeywords" >$lbl_pubkey </label>
-<input type="text" size="32" name="pub_keywords" id="profile-edit-pubkeywords" title="$lbl_ex2" value="$pub_keywords" />
+<input type="text" size="32" name="keywords" id="profile-edit-pubkeywords" title="$lbl_ex2" value="$keywords" />
 </div><div id="profile-edit-pubkeywords-desc">$lbl_pubdsc</div>
 <div id="profile-edit-pubkeywords-end"></div>
-
-<div id="profile-edit-prvkeywords-wrapper" >
-<label id="profile-edit-prvkeywords-label" for="profile-edit-prvkeywords" >$lbl_prvkey </label>
-<input type="text" size="32" name="prv_keywords" id="profile-edit-prvkeywords" title="$lbl_ex2" value="$prv_keywords" />
-</div><div id="profile-edit-prvkeywords-desc">$lbl_prvdsc</div>
-<div id="profile-edit-prvkeywords-end"></div>
-
 
 <div class="profile-edit-submit-wrapper" >
 <input type="submit" name="submit" class="profile-edit-submit-button" value="$submit" />

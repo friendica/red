@@ -1,6 +1,6 @@
 <?php
 
-define( 'UPDATE_VERSION' , 1008 );
+define( 'UPDATE_VERSION' , 1009 );
 
 /**
  *
@@ -149,6 +149,14 @@ function update_r1007() {
 	$r = q("ALTER TABLE `channel` ADD `channel_r_storage` INT UNSIGNED NOT NULL DEFAULT '128', ADD `channel_w_storage` INT UNSIGNED NOT NULL DEFAULT '128', add index ( channel_r_storage ), add index ( channel_w_storage )");
 
 	if($r && $r2)
+		return UPDATE_SUCCESS;
+	return UPDATE_FAILED;
+}
+
+function update_r1008() {
+	$r = q("alter table profile drop prv_keywords,  CHANGE `pub_keywords` `keywords` TEXT CHARACTER SET utf8 COLLATE utf8_general_ci NOT NULL, drop index pub_keywords");
+
+	if($r)
 		return UPDATE_SUCCESS;
 	return UPDATE_FAILED;
 }

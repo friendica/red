@@ -49,7 +49,7 @@ function advanced_profile(&$a) {
 
 		if($a->profile['hometown']) $profile['hometown'] = array( t('Hometown:'), linkify($a->profile['hometown']) );
 
-		if($a->profile['pub_keywords']) $profile['pub_keywords'] = array( t('Tags:'), $a->profile['pub_keywords']);
+		if($a->profile['keywords']) $profile['keywords'] = array( t('Tags:'), $a->profile['keywords']);
 
 		if($a->profile['politic']) $profile['politic'] = array( t('Political Views:'), $a->profile['politic']);
 

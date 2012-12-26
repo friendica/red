@@ -10,13 +10,13 @@ function msearch_post(&$a) {
 	if(! strlen($search))
 		killme();
 
-	$r = q("SELECT COUNT(*) AS `total` FROM `profile` LEFT JOIN `user` ON `user`.`uid` = `profile`.`uid` WHERE `is_default` = 1 AND `user`.`hidewall` = 0 AND MATCH `pub_keywords` AGAINST ('%s') ",
+	$r = q("SELECT COUNT(*) AS `total` FROM `profile` LEFT JOIN `user` ON `user`.`uid` = `profile`.`uid` WHERE `is_default` = 1 AND `user`.`hidewall` = 0 AND MATCH `keywords` AGAINST ('%s') ",
 		dbesc($search)
 	);
 	if(count($r))
 		$total = $r[0]['total'];
 
-	$r = q("SELECT `pub_keywords`, `username`, `nickname`, `user`.`uid` FROM `user` LEFT JOIN `profile` ON `user`.`uid` = `profile`.`uid` WHERE `is_default` = 1 AND `user`.`hidewall` = 0 AND MATCH `pub_keywords` AGAINST ('%s') LIMIT %d , %d ",
+	$r = q("SELECT `keywords`, `username`, `nickname`, `user`.`uid` FROM `user` LEFT JOIN `profile` ON `user`.`uid` = `profile`.`uid` WHERE `is_default` = 1 AND `user`.`hidewall` = 0 AND MATCH `keywords` AGAINST ('%s') LIMIT %d , %d ",
 		dbesc($search),
 		intval($startrec),
 		intval($perpage)
@@ -29,7 +29,7 @@ function msearch_post(&$a) {
 				'name' => $rr['name'], 
 				'url' => $a->get_baseurl() . '/channel/' . $rr['nickname'], 
 				'photo' => $a->get_baseurl() . '/photo/avatar/' . $rr['uid'],
-				'tags' => str_replace(array(',','  '),array(' ',' '),$rr['pub_keywords'])
+				'tags' => str_replace(array(',','  '),array(' ',' '),$rr['keywords'])
 			);
 	}
 

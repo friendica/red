@@ -16,9 +16,9 @@ require_once('include/features.php');
 define ( 'FRIENDICA_PLATFORM',     'Friendica Red');
 define ( 'FRIENDICA_VERSION',      trim(file_get_contents('version.inc')) . 'R');
 define ( 'ZOT_REVISION',               1     ); 
-define ( 'DB_UPDATE_VERSION',       1008     );
+define ( 'DB_UPDATE_VERSION',       1009     );
 
-define ( 'EOL',                    "<br />\r\n"     );
+define ( 'EOL',                    '<br />' . "\r\n"     );
 define ( 'ATOM_TIME',              'Y-m-d\TH:i:s\Z' );
 
 
@@ -1261,11 +1261,11 @@ function profile_load(&$a, $nickname, $profile = 0) {
 	// fetch user tags if this isn't the default profile
 
 	if(! $r[0]['is_default']) {
-		$x = q("select `pub_keywords` from `profile` where uid = %d and `is_default` = 1 limit 1",
+		$x = q("select `keywords` from `profile` where uid = %d and `is_default` = 1 limit 1",
 				intval($profile_uid)
 		);
 		if($x && count($x))
-			$r[0]['pub_keywords'] = $x[0]['pub_keywords'];
+			$r[0]['keywords'] = $x[0]['keywords'];
 	}
 
 	$a->profile = $r[0];

@@ -61,8 +61,7 @@ function profiles_post(&$a) {
 		$region       = notags(trim($_POST['region']));
 		$postal_code  = notags(trim($_POST['postal_code']));
 		$country_name = notags(trim($_POST['country_name']));
-		$pub_keywords = notags(trim($_POST['pub_keywords']));
-		$prv_keywords = notags(trim($_POST['prv_keywords']));
+		$keywords     = notags(trim($_POST['keywords']));
 		$marital      = notags(trim($_POST['marital']));
 		$howlong      = notags(trim($_POST['howlong']));
 		$sexual       = notags(trim($_POST['sexual']));
@@ -232,8 +231,7 @@ function profiles_post(&$a) {
 			`hometown` = '%s',
 			`politic` = '%s',
 			`religion` = '%s',
-			`pub_keywords` = '%s',
-			`prv_keywords` = '%s',
+			`keywords` = '%s',
 			`likes` = '%s',
 			`dislikes` = '%s',
 			`about` = '%s',
@@ -266,8 +264,7 @@ function profiles_post(&$a) {
 			dbesc($hometown),
 			dbesc($politic),
 			dbesc($religion),
-			dbesc($pub_keywords),
-			dbesc($prv_keywords),
+			dbesc($keywords),
 			dbesc($likes),
 			dbesc($dislikes),
 			dbesc($about),
@@ -511,13 +508,11 @@ function profiles_content(&$a) {
 			'$lbl_hometown' => t('Hometown:'),
 			'$lbl_politic'  => t('Political Views:'),
 			'$lbl_religion' => t('Religious Views:'),
-			'$lbl_pubkey'   => t('Public Keywords:'),
-			'$lbl_prvkey'   => t('Private Keywords:'),
+			'$lbl_pubkey'   => t('Keywords:'),
 			'$lbl_likes'    => t('Likes:'),
 			'$lbl_dislikes' => t('Dislikes:'),
 			'$lbl_ex2'      => t('Example: fishing photography software'),
-			'$lbl_pubdsc'   => t("\x28Used for suggesting potential friends, can be seen by others\x29"),
-			'$lbl_prvdsc'   => t("\x28Used for searching profiles, never shown to others\x29"),
+			'$lbl_pubdsc'   => t("Used in directory listings"),
 			'$lbl_about'    => t('Tell us about yourself...'),
 			'$lbl_hobbies'  => t('Hobbies/Interests'),
 			'$lbl_social'   => t('Contact information and Social Networks'),
@@ -553,8 +548,7 @@ function profiles_content(&$a) {
 			'$hometown'     => $r[0]['hometown'],
 			'$politic'      => $r[0]['politic'],
 			'$religion'     => $r[0]['religion'],
-			'$pub_keywords' => $r[0]['pub_keywords'],
-			'$prv_keywords' => $r[0]['prv_keywords'],
+			'$keywords'     => $r[0]['keywords'],
 			'$likes'        => $r[0]['likes'],
 			'$dislikes'     => $r[0]['dislikes'],
 			'$music'        => $r[0]['music'],

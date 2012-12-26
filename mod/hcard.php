@@ -31,7 +31,7 @@ function hcard_init(&$a) {
 	}
 
 	if(! $blocked) {
-		$keywords = ((x($a->profile,'pub_keywords')) ? $a->profile['pub_keywords'] : '');
+		$keywords = ((x($a->profile,'keywords')) ? $a->profile['keywords'] : '');
 		$keywords = str_replace(array(',',' ',',,'),array(' ',',',','),$keywords);
 		if(strlen($keywords))
 			$a->page['htmlhead'] .= '<meta name="keywords" content="' . $keywords . '" />' . "\r\n" ;

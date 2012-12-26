@@ -11,19 +11,19 @@ function match_content(&$a) {
 
 	$o .= '<h2>' . t('Profile Match') . '</h2>';
 
-	$r = q("SELECT `pub_keywords`, `prv_keywords` FROM `profile` WHERE `is_default` = 1 AND `uid` = %d LIMIT 1",
+	$r = q("SELECT `keywords` FROM `profile` WHERE `is_default` = 1 AND `uid` = %d LIMIT 1",
 		intval(local_user())
 	);
 	if(! count($r))
 		return; 
-	if(! $r[0]['pub_keywords'] && (! $r[0]['prv_keywords'])) {
+	if(! $r[0]['keywords']) {
 		notice( t('No keywords to match. Please add keywords to your default profile.') . EOL);
 		return;
 
 	}
 
 	$params = array();
-	$tags = trim($r[0]['pub_keywords'] . ' ' . $r[0]['prv_keywords']);
+	$tags = trim($r[0]['keywords'];
 	
 	if($tags) {
 		$params['s'] = $tags;

@@ -65,7 +65,7 @@ $localdir = true;
 	if($localdir) {
 		if($search)
 			$search = dbesc($search);
-		$sql_extra = ((strlen($search)) ? " AND MATCH (`profile`.`name`, channel.channel_address, `pdesc`, `locality`,`region`,`country_name`,`gender`,`marital`,`sexual`,`about`,`romance`,`work`,`education`,`pub_keywords`,`prv_keywords` ) AGAINST ('$search' IN BOOLEAN MODE) " : "");
+		$sql_extra = ((strlen($search)) ? " AND MATCH (`profile`.`name`, channel.channel_address, `pdesc`, `locality`,`region`,`country_name`,`gender`,`marital`,`sexual`,`about`,`romance`,`work`,`education`,`keywords` ) AGAINST ('$search' IN BOOLEAN MODE) " : "");
 
 
 		$r = q("SELECT COUNT(channel_id) AS `total` FROM channel left join profile  on channel.channel_id = profile.uid WHERE `is_default` = 1 and not ( channel_pageflags & %d ) $sql_extra ",
