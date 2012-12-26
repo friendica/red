@@ -59,7 +59,7 @@ function new_contact($uid,$url,$channel,$interactive = false) {
 		$total_channels = $r[0]['total'];
 
 	if(! service_class_allows($uid,'total_channels',$total_channels)) {
-		$result['message'] .= upgrade_message();
+		$result['message'] = upgrade_message();
 		return $result;
 	}
 
@@ -73,8 +73,6 @@ function new_contact($uid,$url,$channel,$interactive = false) {
 
 	$xchan_hash = $x['hash'];
 
-	// Do we already have an abook entry?
-	// go directly to the abook edit page.
 
 	$their_perms = 0;
 
@@ -108,7 +106,7 @@ function new_contact($uid,$url,$channel,$interactive = false) {
 			intval($uid)
 		);
 		if(! $r) {
-			$result['message'] .= t('local account not found.');
+			$result['message'] = t('local account not found.');
 			return $result;
 		}
 		$aid = $r[0]['channel_account_id'];
@@ -116,7 +114,7 @@ function new_contact($uid,$url,$channel,$interactive = false) {
 	}
 	
 	if($hash == $xchan_hash) {
-		$result['message'] .= t('Cannot connect to yourself.');
+		$result['message'] = t('Cannot connect to yourself.');
 		return $result;
 	}
 
@@ -133,8 +131,8 @@ function new_contact($uid,$url,$channel,$interactive = false) {
 	else {
 		$r = q("insert into abook ( abook_account, abook_channel, abook_xchan, abook_their_perms, abook_created, abook_updated )
 			values( %d, %d, '%s', %d, '%s', '%s' ) ",
-			intval(get_account_id()),
-			intval(local_user()),
+			intval($aid),
+			intval($uid),
 			dbesc($xchan_hash),
 			intval($their_perms),
 			dbesc(datetime_convert()),
