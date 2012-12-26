@@ -42,8 +42,6 @@ function new_contact($uid,$url,$channel,$interactive = false) {
 	}
 
 	logger('follow: ' . $url . ' ' . print_r($j,true));
-//	killme();
-
 
 	if(! ($j->success && $j->guid)) {
 		$result['message'] = t('Unable to communicate with requested channel.');
@@ -101,27 +99,54 @@ function new_contact($uid,$url,$channel,$interactive = false) {
 		}
 	}
 
+	if((local_user()) && $uid == local_user()) {
+		$aid = get_account_id();
+		$hash = $a->observer['xchan_hash'];
+	}
+	else {
+		$r = q("select * from channel where uid = %d limit 1",
+			intval($uid)
+		);
+		if(! $r) {
+			$result['message'] .= t('local account not found.');
+			return $result;
+		}
+		$aid = $r[0]['channel_account_id'];
+		$hash = $r[0]['channel_hash'];			
+	}
+	
+	if($hash == $xchan_hash) {
+		$result['message'] .= t('Cannot connect to yourself.');
+		return $result;
+	}
 
-	$r = q("insert into abook ( abook_account, abook_channel, abook_xchan, abook_their_perms, abook_created, abook_updated )
-		values( %d, %d, '%s', %d, '%s', '%s' ) ",
-		intval(get_account_id()),
-		intval(local_user()),
+	$r = q("select abook_xchan from abook_id where abook_xchan = '%s' and abook_channel = %d limit 1",
 		dbesc($xchan_hash),
-		intval($their_perms),
-		dbesc(datetime_convert()),
-		dbesc(datetime_convert())
+		intval($uid)
 	);
+	if($r) {
+		$x = q("update abook set abook_their_perms = %d where abook_id = %d limit 1",
+			intval($their_perms),
+			intval($r[0]['abook_id'])
+		);		
+	}
+	else {
+		$r = q("insert into abook ( abook_account, abook_channel, abook_xchan, abook_their_perms, abook_created, abook_updated )
+			values( %d, %d, '%s', %d, '%s', '%s' ) ",
+			intval(get_account_id()),
+			intval(local_user()),
+			dbesc($xchan_hash),
+			intval($their_perms),
+			dbesc(datetime_convert()),
+			dbesc(datetime_convert())
+		);
+	}
+
 	if(! $r)
 		logger('mod_follow: abook creation failed');
-	
-
-
-
 
 	// Then send a ping/message to the other side
 
-
-	
 
 /*
 
