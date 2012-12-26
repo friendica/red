@@ -1,5 +1,7 @@
 <?php
 
+@require_once('include/zot.php');
+
 function magic_init(&$a) {
 
 	$url = ((x($_REQUEST,'url')) ? $_REQUEST['url'] : '');
