@@ -301,6 +301,25 @@ function zot_refresh($them,$channel = null) {
 				}
 			}
 		}
+		else {
+			// Are we a directory server of some kind?
+			$dirmode = intval(get_config('system','directory_mode'));
+			if($dirmode != DIRECTORY_MODE_NORMAL) {
+				if(array_key_exists('profile',$x) && is_array($x['profile'])) {
+					import_directory_profile($x['hash'],$x['profile']);
+				}
+				else {
+					// they may have made it private
+					$r = q("delete from xprof where xprof_hash = '%s' limit 1",
+						dbesc($x['hash'])
+					);
+					$r = q("delete from xtag where xtag_hash = '%s'",
+						dbesc($x['hash'])
+					);
+				}
+			}
+
+		}
 		return true;
 	}
 	return false;
@@ -970,4 +989,103 @@ function process_profile_delivery($sender,$arr,$deliveries) {
 	}
 
 
+}
+
+function import_directory_profile($hash,$profile) {
+
+	if(! $hash)
+		return;
+
+	$arr = array();
+
+	$arr['xprof_hash']         = $hash;
+	$arr['xprof_desc']         = (($profile['description'])    ? htmlentities($profile['description'],    ENT_COMPAT,'UTF-8') : '');
+	$arr['xprof_dob']          = datetime_convert('','',$profile['birthday'],'Y-m-d'); // !!!! check this for 0000 year
+	$arr['xprof_gender']       = (($profile['gender'])    ? htmlentities($profile['gender'],    ENT_COMPAT,'UTF-8') : '');
+	$arr['xprof_marital']      = (($profile['marital'])    ? htmlentities($profile['marital'],    ENT_COMPAT,'UTF-8') : '');
+	$arr['xprof_sexual']       = (($profile['sexual'])    ? htmlentities($profile['sexual'],    ENT_COMPAT,'UTF-8') : '');
+	$arr['xprof_locale']       = (($profile['locale'])    ? htmlentities($profile['locale'],    ENT_COMPAT,'UTF-8') : '');
+	$arr['xprof_region']       = (($profile['region'])    ? htmlentities($profile['region'],    ENT_COMPAT,'UTF-8') : '');
+	$arr['xprof_postcode']     = (($profile['postcode'])    ? htmlentities($profile['postcode'],    ENT_COMPAT,'UTF-8') : '');
+	$arr['xprof_country']      = (($profile['country'])    ? htmlentities($profile['country'],    ENT_COMPAT,'UTF-8') : '');
+
+	if(array_key_exists('keywords',$profile) and is_array($profile['keywords'])) {
+		import_directory_keywords($hash,$profile['keywords']);
+	}
+
+
+	$r = q("select * from xprof where xprof_hash = '%s' limit 1",
+		dbesc($hash)
+	);
+	if($r) {
+		$x = q("update xprof set 
+			xprof_desc = '%s', 
+			xprof_dob = '%s', 
+			xprof_gender = '%s', 
+			xprof_marital = '%s', 
+			xprof_sexual = '%s', 
+			xprof_locale = '%s', 
+			xprof_region = '%s', 
+			xprof_postcode = '%s', 
+			xprof_country = '%s'
+			where xprof_hash = '%s' limit 1",
+			dbesc($arr['xprof_desc']),
+			dbesc($arr['xprof_dob']),
+			dbesc($arr['xprof_gender']),
+			dbesc($arr['xprof_marital']),
+			dbesc($arr['xprof_sexual']),
+			dbesc($arr['xprof_locale']),
+			dbesc($arr['xprof_region']),
+			dbesc($arr['xprof_postcode']),
+			dbesc($arr['xprof_country']),
+			dbesc($arr['xprof_hash'])
+		);
+	}
+	else {
+		$x = q("insert into xprof (xprof_hash, xprof_desc, xprof_dob, xprof_gender, xprof_marital, xprof_sexual, xprof_locale, xprof_region, xprof_postcode, xprof_country) values ('%s', '%s', '%s', '%s', '%s', '%s', '%s', '%s', '%s', '%s') ",
+			dbesc($arr['xprof_hash']),
+			dbesc($arr['xprof_desc']),
+			dbesc($arr['xprof_dob']),
+			dbesc($arr['xprof_gender']),
+			dbesc($arr['xprof_marital']),
+			dbesc($arr['xprof_sexual']),
+			dbesc($arr['xprof_locale']),
+			dbesc($arr['xprof_region']),
+			dbesc($arr['xprof_postcode']),
+			dbesc($arr['xprof_country'])
+		);
+	}
+	return;
+}
+
+
+function import_directory_keywords($hash,$keywords) {
+	$existing = array();
+	$r = q("select * from xtag where xtag_hash = '%s'",
+		dbesc($hash)
+	);
+	if($r) {
+		foreach($r as $rr)
+			$existing[] = $rr['xtag_term'];
+	}
+	$clean = array();
+	foreach($keywords as $kw) {
+		$kw = trim(htmlentities($kw,ENT_COMPAT,'UTF-8'));
+		$clean[] = $kw;
+	}
+	foreach($existing as $x) {
+		if(! in_array($x,$clean))
+			$r = q("delete from xtag where xtag_hash = '%s' and xtag_term = '%s' limit 1",
+				dbesc($hash),
+				dbesc($x)
+			);
+	}
+	foreach($clean as $x) {
+		if(! in_array($x,$existing))
+			$r = q("insert int xtag ( xtag_hash, xtag_term) values ( '%s' ,'%s' )",
+				dbesc($hash),
+				dbesc($x)
+			);
+	}
+		
 }
