@@ -70,18 +70,27 @@ function zfinger_init(&$a) {
 	$id = $e['channel_id'];
 
 	$searchable = (($e['channel_pageflags'] & PAGE_HIDDEN) ? false : true);
- 
 
-//  This is for birthdays and keywords, but must check access permissions
-//	$r = q("select contact.*, profile.* 
-//		from contact left join profile on contact.uid = profile.uid
-//		where contact.uid = %d && contact.self = 1 and profile.is_default = 1 limit 1",
-//		intval($id)
-//	);
-//	if($r && count($r)) {
-//		$profile = $r[0];
-//	}
+	 
 
+	//  This is for birthdays and keywords, but must check access permissions
+	$p = q("select * from profile where uid = %d and is_default = 1",
+		intval($e['channel_id'])
+	);
+
+	$profile = array();
+
+	if($p) {
+		$profile['description'] = $p[0]['pdesc'];
+		$profile['birthday']    = $p[0]['dob'];
+		$profile['gender']      = $p[0]['gender'];
+		$profile['marital']     = $p[0]['marital'];
+		$profile['sexual']      = $p[0]['sexual'];
+		$profile['locale']      = $p[0]['locality'];
+		$profile['region']      = $p[0]['region'];
+		$profile['postcode']    = $p[0]['postal_code'];
+		$profile['country']     = $p[0]['country_name'];
+	}
 
 	$ret['success'] = true;
 
@@ -112,7 +121,8 @@ function zfinger_init(&$a) {
 	$ret['permissions'] = (($ztarget) ? aes_encapsulate(json_encode($permissions),$zkey) : $permissions);
 
 
-//	$ret['profile']  = $profile;
+	if($permissions['view_profile'])
+		$ret['profile']  = $profile;
 
 	// array of (verified) hubs this channel uses
 
