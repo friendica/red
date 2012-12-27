@@ -52,11 +52,15 @@ $a->config['system']['maximagesize'] = 800000;
 
 $a->config['php_path'] = 'php';
 
-// You shouldn't need to change anything else.
-// Location of global directory submission page. 
 
-$a->config['system']['directory_submit_url'] = 'http://dir.friendica.com/submit';
-$a->config['system']['directory_search_url'] = 'http://dir.friendica.com/directory?search=';
+// Configure how we communicate with directory servers.
+// DIRECTORY_MODE_NORMAL     = directory client, we will find a directory
+// DIRECTORY_MODE_SECONDARY  = caching directory or mirror
+// DIRECTORY_MODE_PRIMARY    = main directory server
+// DIRECTORY_MODE_STANDALONE = "off the grid" or private directory services
+
+$a->config['system']['directory_mode']  = DIRECTORY_MODE_NORMAL;
+
 
 // PuSH - aka pubsubhubbub URL. This makes delivery of public posts as fast as private posts
 
@@ -64,11 +68,11 @@ $a->config['system']['huburl'] = 'http://pubsubhubbub.appspot.com';
 
 // allowed themes (change this from admin panel after installation)
 
-$a->config['system']['allowed_themes'] = 'duepuntozero';
+$a->config['system']['allowed_themes'] = 'redbasic';
 
 // default system theme
 
-$a->config['system']['theme'] = 'duepuntozero';
+$a->config['system']['theme'] = 'redbasic';
 
 
 
