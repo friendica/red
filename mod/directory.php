@@ -63,17 +63,17 @@ $localdir = true;
 	if($localdir) {
 		if($search)
 			$search = dbesc($search);
-		$sql_extra = ((strlen($search)) ? " AND MATCH ( xchan_name, xchan_addr, xprof_desc, xprof_locale, xprof_region, xprof_country, xprof_gdner, xprof_marital, tags ) AGAINST ('$search' IN BOOLEAN MODE) " : "");
+		$sql_extra = ((strlen($search)) ? " AND MATCH ( xchan_name, xchan_addr, xprof_desc, xprof_locale, xprof_region, xprof_country, xprof_gender, xprof_marital ) AGAINST ('$search' IN BOOLEAN MODE) " : "");
 
-
-		$r = q("SELECT COUNT(xchan_hash) AS `total`, group_concat(xtag_term separator ', ') as tags FROM xchan left join xprof  on xchan_hash = xprof_hash left join xtag on xtag_hash = xchan_hash $sql_extra group by xchan_hash");
+		// group_concat(xtag_term separator ', ') as tags
+		$r = q("SELECT COUNT(xchan_hash) AS `total` FROM xchan left join xprof on xchan_hash = xprof_hash $sql_extra");
 		if($r)
 			$a->set_pager_total($r[0]['total']);
 
 		$order = " ORDER BY `xchan_name` ASC "; 
 
 
-		$r = q("SELECT xchan.*, xprof.*, group_concat(xtag_term separator ', ') as tags from xchan left join xprof on xchan_hash = xprof_hash left join xtag on xtag_hash = xchan_hash $sql_extra group by xchan_hash $order LIMIT %d , %d ",
+		$r = q("SELECT xchan.*, xprof.* from xchan left join xprof on xchan_hash = xprof_hash $sql_extra $order LIMIT %d , %d ",
 			intval($a->pager['start']),
 			intval($a->pager['itemspage'])
 		);
