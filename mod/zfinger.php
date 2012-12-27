@@ -90,6 +90,16 @@ function zfinger_init(&$a) {
 		$profile['region']      = $p[0]['region'];
 		$profile['postcode']    = $p[0]['postal_code'];
 		$profile['country']     = $p[0]['country_name'];
+		if($p[0]['keywords']) {
+			$tags = array();
+			$k = explode(' ',$p[0]['keywords']);
+			if($k)
+				foreach($k as $kk)
+					if(trim($kk))
+						$tags[] = trim($kk);
+			if($tags)
+				$profile['keywords'] = $tags;
+		}
 	}
 
 	$ret['success'] = true;
