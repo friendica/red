@@ -23,7 +23,7 @@ function match_content(&$a) {
 	}
 
 	$params = array();
-	$tags = trim($r[0]['keywords'];
+	$tags = trim($r[0]['keywords']);
 	
 	if($tags) {
 		$params['s'] = $tags;
