@@ -1,6 +1,6 @@
 <?php
 
-define( 'UPDATE_VERSION' , 1009 );
+define( 'UPDATE_VERSION' , 1010 );
 
 /**
  *
@@ -160,3 +160,12 @@ function update_r1008() {
 		return UPDATE_SUCCESS;
 	return UPDATE_FAILED;
 }
+
+function update_r1009() {
+	$r = q("ALTER TABLE `xprof` ADD `xprof_keywords` TEXT NOT NULL");
+	if($r)
+		return UPDATE_SUCCESS;
+	return UPDATE_FAILED;
+}
+
+

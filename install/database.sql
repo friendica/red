@@ -853,6 +853,7 @@ CREATE TABLE IF NOT EXISTS `xprof` (
   `xprof_region` char(255) NOT NULL DEFAULT '',
   `xprof_postcode` char(32) NOT NULL DEFAULT '',
   `xprof_country` char(255) NOT NULL DEFAULT '',
+  `xprof_keywords` text NOT NULL,
   PRIMARY KEY (`xprof_hash`),
   KEY `xprof_desc` (`xprof_desc`),
   KEY `xprof_dob` (`xprof_dob`),
