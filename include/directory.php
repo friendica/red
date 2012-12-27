@@ -17,7 +17,7 @@ function directory_run($argv, $argc){
 		$dirmode = DIRECTORY_MODE_NORMAL;
 
 	if(($dirmode == DIRECTORY_MODE_PRIMARY) || ($dirmode == DIRECTORY_MODE_STANDALONE)) {
-		// syncdirs();
+		syncdirs($argv[1]);
 		return;
 	}
 

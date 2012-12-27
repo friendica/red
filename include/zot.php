@@ -1055,6 +1055,7 @@ function import_directory_profile($hash,$profile) {
 			dbesc($arr['xprof_country'])
 		);
 	}
+
 	return;
 }
 
