@@ -9,7 +9,6 @@ body {
 	font-family: helvetica,arial,freesans,clean,sans-serif;
 	font-size: 12px;
 	background-color: #ffffff;
-	background-image: url(../img/bg.png);
 	background-repeat: repeat;
 	color: #000000;
 	margin: 0px;
@@ -19,10 +18,10 @@ abbr {
 	border-bottom: none;
 }
 
-aside {box-shadow: 3px 3px 3px #ccc;
+aside {
 border: none;
 border-radius: 0px 0px 20px 0px;
-width: 210px;
+width: 160px;
 color: #d00;
 background: #fff;
 }
@@ -164,10 +163,9 @@ nav #site-location {
 }
 
 .info-message {
-	color: #204a87;
+	color: #fff;
 	font-size: 1.1em;
-	border: 1px solid #3465a4;
-	background-color: #d7e3f1;
+	background-color: #f00;
 	padding: 10px;
 }
 
@@ -290,12 +288,12 @@ nav #nav-link-wrapper .nav-link {
 }
 .tab {
     height: auto;
-    background-color: #fff;
-    color: #f00;
+    background-color: #f00;
+    color: #fff !important;
     font-weight: bold;
     -webkit-border-radius: 5px;
     -moz-border-radius: 5px;
-    border-radius: 5px;
+    border-radius: 20px;
     margin: 0;
     width: auto;
     box-shadow: 5px 5px 5px #444;
@@ -303,8 +301,8 @@ nav #nav-link-wrapper .nav-link {
     padding: 4px;
 }
 .tab:hover, .tab.active:hover {
-    background: #fff;
-    color: #f00; 
+    background: #d00;
+    color: #fff; 
  ;
 }
 .tab:active {
@@ -312,16 +310,16 @@ nav #nav-link-wrapper .nav-link {
     color: #f00;
 }
 .tab.active {
-    background: #fff;
-    color: #f00; 
+    background: #f00;
+    color: #fff; 
     box-shadow: 3px 3px 3px #333 inset;
     padding: 5px; /* another strageness of the human mind - has to be larger than inactive tabs, or it looks smaller than them */
 }
 
-.tab a {
+.tab a, .settings-widget a {
     border: 0;
     text-decoration: none;
-    color: #f00;
+    color: #fff;
 }
 
 /* footer */
@@ -346,7 +344,6 @@ footer {
 
 div.wall-item-content-wrapper.shiny {
 	opacity: 1;
-	border: none;
 }
 
 .preview {
@@ -439,9 +436,8 @@ div.wall-item-content-wrapper.shiny {
 	padding: 3px;
 	-moz-border-radius: 5px;
 	border-radius: 5px;	
-	border: 1px solid #CCCCCC;
-	background: #F8F8F8;
-	font-weight: bold;
+	font-weight: bold;	
+	color: #FFD700;
 }
 
 .fakelink:hover {
@@ -778,8 +774,8 @@ input#dfrn-url {
 }
 
 #profile-photo-wrapper img {
-	width:175px;
-	height:175px;
+	width:120px;
+	height:120px;
 	padding: 12px;
 }
 
@@ -957,8 +953,18 @@ input#dfrn-url {
 }
 
 .settings-widget li {
-	margin-left: 24px;
-	margin-bottom: 8px;
+    height: auto;
+    background-color: #f00;
+    color: #fff !important;
+    font-weight: bold;
+    -webkit-border-radius: 5px;
+    -moz-border-radius: 5px;
+    border-radius: 5px;
+    margin-bottom: 12px;
+    width: auto;
+    box-shadow: 5px 5px 5px #444;
+    margin-left: 8px;
+    padding: 4px;
 }
 
 
@@ -1049,8 +1055,8 @@ input#dfrn-url {
 .wall-item-content-wrapper {
 	position: relative;
 	background: #fff;
-	border-radius: 20px;
-	box-shadow: 12px 12px 12px #111;
+	border-radius: 10px;
+	box-shadow: 8px 8px 8px #000;
 	border: 1px solid #eec;
 	opacity: 0.8;
 }
@@ -1073,6 +1079,7 @@ input#dfrn-url {
 	background: #fff;
 	border-left: 1px solid #e0e0e0;
 	margin-left: 50px;
+	margin-top: 15px;
 	box-shadow: 5px 5px 5px #222;
 
 }
@@ -1195,10 +1202,7 @@ input#dfrn-url {
 }
 
 .wall-item-delete-wrapper {
-	/* TODO 
-	This should really go somewhere at the right, but for now, that leaves
-	it dangling at the edge of whitespace, so we'll put it with the other wall item tools for the time being */
-	float: left;
+	float: right;
 }
 
 .wall-item-delete-end {
@@ -1225,7 +1229,6 @@ input#dfrn-url {
 	height: 50px !important;
 }
 .wall-item-content {
-	float: left;
 	margin-left: 10px;
 	overflow: auto;
 }
@@ -1283,6 +1286,7 @@ width: 90%;
 /*	float: left; */
 	/*width: 450px;*/
 	margin-top: 10px;
+	margin-right: 10px;
 }
 
 .wall-item-tools {
@@ -1292,12 +1296,18 @@ width: 90%;
     background-repeat: repeat-x;
     background: #eee;
     padding: 5px 10px;
-    border-radius: 0px 0px 20px 20px;
+    border-radius: 0px 0px 10px 10px;
     border: 1px #eec solid;
 }
 
 .wall-item-like {
 margin: 15px;
+opacity: 0.6;
+}
+
+.wall-item-like:hover {
+margin: 15px;
+opacity: 1;
 }
 
 .wall-item-author {
@@ -1840,7 +1850,7 @@ tr.mceLast {
 	height: 20px;
 	color:#000;
 	border: 1px solid #cccccc;
-	padding: 8px;
+	padding: 10px;
 	width: 90%;
 	border-radius: 20px;	
 	box-shadow: 4px 4px 3px 0 #666 inset;
@@ -1917,12 +1927,6 @@ tr.mceLast {
 
 #profile-jot-submit:active {
     box-shadow: 0 0 0 0;
-}
-
-.settings-widget .selected {
-    border-radius: 5px;
-    -moz-border-radius: 5px;
-    box-shadow: 4px 4px 3px 0 #444444;
 }
 
 #sidebar-page-list .label {
@@ -2641,8 +2645,8 @@ aside input[type='text'] {
 	float: left;
 }
 .contact-block-img {
-	width:48px;
-	height:48px;
+	width:30px;
+	height:30px;
 }
 
 #tag-remove {
@@ -3656,7 +3660,7 @@ nav {
 
   background-image: linear-gradient(bottom, #f00 26%, #b00 82%);
   background-image: -o-linear-gradient(bottom, #f00 26%, #b00 82%);
-  background-image: -moz-linear-gradient(bottom, #f00 26%, #b00 82%);
+  background-image: -moz-linear-gradient(bottom, #000 26%, #2e2f2e 82%);
   background-image: -webkit-linear-gradient(bottom, #f00 26%, #b00 82%);
   background-image: -ms-linear-gradient(bottom, #f00 26%, #b00 82%);
 
@@ -3715,12 +3719,12 @@ nav .nav-menu {
   position: relative;
   height: 16px;
   padding: 5px;
-  margin: 3px 15px 0px;
+  margin: 0px 15px;
   font-size: 14px;
-  border-bottom: 3px solid #d00;
 }
 nav .nav-menu.selected {
-  border-bottom: 4px solid #CCCCCC;
+border-bottom: 3px solid #f00;
+
 }
 nav .nav-notify {
   background-color: #0d0;
@@ -3777,6 +3781,7 @@ ul.menu-popup a {
 }
 ul.menu-popup a:hover {
   background-color: #eec;
+  color: #f00;
 }
 ul.menu-popup .menu-sep {
   border-top: 1px solid #9eabb0;
