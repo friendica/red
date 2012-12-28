@@ -313,13 +313,15 @@ function zot_refresh($them,$channel = null) {
 					$r = q("delete from xprof where xprof_hash = '%s' limit 1",
 						dbesc($x['hash'])
 					);
+					$r = q("delete from xtag where xtag_hash = '%s' limit 1",
+						dbesc($x['hash'])
+					);
 				}
 			}
 		}
 		return true;
 	}
 	return false;
-
 }
 
 		
@@ -926,7 +928,9 @@ function process_mail_delivery($sender,$arr,$deliveries) {
 }
 
 function process_profile_delivery($sender,$arr,$deliveries) {
-	// deliveries is irrelevant
+
+	// deliveries is irrelevant, what to do about birthday notification....?
+
 	import_directory_profile($sender['hash'],$arr);
 }
 
@@ -950,6 +954,7 @@ function import_directory_profile($hash,$profile) {
 
 	$clean = array();
 	if(array_key_exists('keywords',$profile) and is_array($profile['keywords'])) {
+		import_directory_keywords($hash,$profile['keywords']);
 		foreach($profile['keywords'] as $kw) {
 			$kw = trim(htmlentities($kw,ENT_COMPAT,'UTF-8'));
 		}
@@ -1007,3 +1012,36 @@ function import_directory_profile($hash,$profile) {
 	return;
 }
 
+function import_directory_keywords($hash,$keywords) {
+
+	$existing = array();
+	$r = q("select * from xtag where xtag_hash = '%s'",
+		dbesc($hash)
+	);
+
+	if($r) {
+		foreach($r as $rr)
+			$existing[] = $rr['xtag_term'];
+	}
+
+	$clean = array();
+	foreach($keywords as $kw) {
+		$kw = trim(htmlentities($kw,ENT_COMPAT,'UTF-8'));
+		$clean[] = $kw;
+	}
+
+	foreach($existing as $x) {
+		if(! in_array($x,$clean))
+			$r = q("delete from xtag where xtag_hash = '%s' and xtag_term = '%s' limit 1",
+				dbesc($hash),
+				dbesc($x)
+			);
+	}
+	foreach($clean as $x) {
+		if(! in_array($x,$existing))
+			$r = q("insert int xtag ( xtag_hash, xtag_term) values ( '%s' ,'%s' )",
+				dbesc($hash),
+				dbesc($x)
+			);
+	}
+}

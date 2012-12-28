@@ -17,6 +17,7 @@ CREATE TABLE IF NOT EXISTS `abook` (
   `abook_created` datetime NOT NULL DEFAULT '0000-00-00 00:00:00',
   `abook_updated` datetime NOT NULL DEFAULT '0000-00-00 00:00:00',
   `abook_connnected` datetime NOT NULL DEFAULT '0000-00-00 00:00:00',
+  `abook_dob` datetime NOT NULL DEFAULT '0000-00-00 00:00:00',
   `abook_flags` int(11) NOT NULL DEFAULT '0',
   `abook_profile` char(64) NOT NULL DEFAULT '',
   PRIMARY KEY (`abook_id`),
@@ -30,7 +31,8 @@ CREATE TABLE IF NOT EXISTS `abook` (
   KEY `abook_updated` (`abook_updated`),
   KEY `abook_connnected` (`abook_connnected`),
   KEY `abook_flags` (`abook_flags`),
-  KEY `abook_profile` (`abook_profile`)
+  KEY `abook_profile` (`abook_profile`),
+  KEY `abook_dob` (`abook_dob`)
 ) ENGINE=MyISAM  DEFAULT CHARSET=utf8;
 
 CREATE TABLE IF NOT EXISTS `account` (
@@ -641,6 +643,7 @@ CREATE TABLE IF NOT EXISTS `profile` (
   `name` char(255) NOT NULL,
   `pdesc` char(255) NOT NULL,
   `dob` char(32) NOT NULL DEFAULT '0000-00-00',
+  `dob_tz` char(255) NOT NULL DEFAULT 'UTC',
   `address` char(255) NOT NULL,
   `locality` char(255) NOT NULL,
   `region` char(255) NOT NULL,

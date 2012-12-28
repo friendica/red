@@ -81,15 +81,17 @@ function zfinger_init(&$a) {
 	$profile = array();
 
 	if($p) {
-		$profile['description'] = $p[0]['pdesc'];
-		$profile['birthday']    = $p[0]['dob'];
-		$profile['gender']      = $p[0]['gender'];
-		$profile['marital']     = $p[0]['marital'];
-		$profile['sexual']      = $p[0]['sexual'];
-		$profile['locale']      = $p[0]['locality'];
-		$profile['region']      = $p[0]['region'];
-		$profile['postcode']    = $p[0]['postal_code'];
-		$profile['country']     = $p[0]['country_name'];
+		$profile['description']   = $p[0]['pdesc'];
+		$profile['birthday']      = $p[0]['dob'];
+		if($profile['birthday'] != '0000-00-00')
+			$profile['next_birthday'] = z_birthday($p[0]['dob'],$e['channel_timezone']);
+		$profile['gender']        = $p[0]['gender'];
+		$profile['marital']       = $p[0]['marital'];
+		$profile['sexual']        = $p[0]['sexual'];
+		$profile['locale']        = $p[0]['locality'];
+		$profile['region']        = $p[0]['region'];
+		$profile['postcode']      = $p[0]['postal_code'];
+		$profile['country']       = $p[0]['country_name'];
 		if($p[0]['keywords']) {
 			$tags = array();
 			$k = explode(' ',$p[0]['keywords']);

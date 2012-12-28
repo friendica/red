@@ -16,7 +16,7 @@ require_once('include/features.php');
 define ( 'FRIENDICA_PLATFORM',     'Friendica Red');
 define ( 'FRIENDICA_VERSION',      trim(file_get_contents('version.inc')) . 'R');
 define ( 'ZOT_REVISION',               1     ); 
-define ( 'DB_UPDATE_VERSION',       1010     );
+define ( 'DB_UPDATE_VERSION',       1011     );
 
 define ( 'EOL',                    '<br />' . "\r\n"     );
 define ( 'ATOM_TIME',              'Y-m-d\TH:i:s\Z' );
@@ -1722,6 +1722,27 @@ if(! function_exists('current_theme_url')) {
 	}
 }
 
+function z_birthday($dob,$tz,$format="Y-m-d H:i:s") {
+
+	if(! strlen($tz))
+		$tz = 'UTC';
+
+	$tmp_dob = substr($dob,5);
+	if(intval($tmp_dob)) {
+		$y = datetime_convert($tz,$tz,'now','Y');
+		$bd = $y . '-' . $tmp_dob . ' 00:00';
+		$t_dob = strtotime($bd);
+		$now = strtotime(datetime_convert($tz,$tz,'now'));
+		if($t_dob < $now)
+			$bd = $y + 1 . '-' . $tmp_dob . ' 00:00';
+		$birthday = datetime_convert($tz,'UTC',$bd,$format);
+	}
+
+	return $birthday;
+
+}
+
+
 if(! function_exists('feed_birthday')) {
 	function feed_birthday($uid,$tz) {
 
@@ -1763,7 +1784,7 @@ if(! function_exists('feed_birthday')) {
 				$now = strtotime(datetime_convert($tz,$tz,'now'));
 				if($t_dob < $now)
 					$bd = $y + 1 . '-' . $tmp_dob . ' 00:00';
-				$birthday = datetime_convert($tz,'UTC',$bd,ATOM_TIME);
+				$birthday = datetime_convert($tz,'UTC',$bd,$format);
 			}
 		}
 

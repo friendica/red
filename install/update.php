@@ -1,6 +1,6 @@
 <?php
 
-define( 'UPDATE_VERSION' , 1010 );
+define( 'UPDATE_VERSION' , 1011 );
 
 /**
  *
@@ -168,4 +168,15 @@ function update_r1009() {
 	return UPDATE_FAILED;
 }
 
+
+function update_r1010() {
+	$r = q("ALTER TABLE `abook` ADD `abook_dob` DATETIME NOT NULL DEFAULT '0000-00-00 00:00:00' AFTER `abook_connnected` ,
+ADD INDEX ( `abook_dob` )");
+
+	$r2 = q("ALTER TABLE `profile` ADD `dob_tz` CHAR( 255 ) NOT NULL DEFAULT 'UTC' AFTER `dob`");
+
+	if($r && $r2)
+		return UPDATE_SUCCESS;
+	return UPDATE_FAILED;
+}
 

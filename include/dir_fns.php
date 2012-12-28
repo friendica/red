@@ -46,6 +46,9 @@ function syncdirs($uid) {
 			$r = q("delete from xprof where xprof_hash = '%s' limit 1",
 				dbesc($hash)
 			);
+			$r = q("delete from xtag where xtag_hash = '%s' limit 1",
+				dbesc($hash)
+			);
 		}
 	}
 
