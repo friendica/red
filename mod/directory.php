@@ -36,14 +36,12 @@ function directory_content(&$a) {
 	$tpl = get_markup_template('directory_header.tpl');
 
 
-	$dirmode = get_config('system','directory_mode');
-	if($dirmode === false)
-		$dirmode = DIRECTORY_MODE_NORMAL;
+	$dirmode = intval(get_config('system','directory_mode'));
 
-	if(($dirmode == DIRECTORY_MODE_PRIMARY) || ($dirmode == DIRECTORY_MODE_STANDALONE)) {
-		$localdir = true;
-		return;
-	}
+//	if(($dirmode == DIRECTORY_MODE_PRIMARY) || ($dirmode == DIRECTORY_MODE_STANDALONE)) {
+//		$localdir = true;
+//		return;
+//	}
 
 // FIXME
 $localdir = true;
@@ -65,23 +63,22 @@ $localdir = true;
 	if($localdir) {
 		if($search)
 			$search = dbesc($search);
-		$sql_extra = ((strlen($search)) ? " AND MATCH (`profile`.`name`, channel.channel_address, `pdesc`, `locality`,`region`,`country_name`,`gender`,`marital`,`sexual`,`about`,`romance`,`work`,`education`,`keywords` ) AGAINST ('$search' IN BOOLEAN MODE) " : "");
+		$sql_extra = ((strlen($search)) ? " AND MATCH ( xchan_name, xchan_addr, xprof_desc, xprof_locale, xprof_region, xprof_country, xprof_gender, xprof_marital ) AGAINST ('$search' IN BOOLEAN MODE) " : "");
 
-
-		$r = q("SELECT COUNT(channel_id) AS `total` FROM channel left join profile  on channel.channel_id = profile.uid WHERE `is_default` = 1 and not ( channel_pageflags & %d ) $sql_extra ",
-			intval(PAGE_HIDDEN)
-		);
+		// group_concat(xtag_term separator ', ') as tags
+		$r = q("SELECT COUNT(xchan_hash) AS `total` FROM xchan left join xprof on xchan_hash = xprof_hash $sql_extra");
 		if($r)
 			$a->set_pager_total($r[0]['total']);
 
-		$order = " ORDER BY `name` ASC "; 
+		$order = " ORDER BY `xchan_name` ASC "; 
 
 
-		$r = q("SELECT `profile`.*, `profile`.`uid` AS `profile_uid`, channel_name, channel_address, channel_hash, channel_timezone, channel_pageflags FROM `profile` LEFT JOIN channel ON channel_id = `profile`.`uid` WHERE `is_default` = 1 and not ( channel_pageflags & %d ) $sql_extra $order LIMIT %d , %d ",
-			intval(PAGE_HIDDEN),
+		$r = q("SELECT xchan.*, xprof.* from xchan left join xprof on xchan_hash = xprof_hash $sql_extra $order LIMIT %d , %d ",
 			intval($a->pager['start']),
 			intval($a->pager['itemspage'])
 		);
+
+
 		if($r) {
 
 			$entries = array();
@@ -90,42 +87,41 @@ $localdir = true;
 
 			foreach($r as $rr) {
 
-				$profile_link = chanlink_hash($rr['channel_hash']);
+				$profile_link = chanlink_hash($rr['xchan_hash']);
 		
-				$pdesc = (($rr['pdesc']) ? $rr['pdesc'] . '<br />' : '');
+				$pdesc = (($rr['xprof_desc']) ? $rr['xprof_desc'] . '<br />' : '');
 
 				$details = '';
-				if(strlen($rr['locality']))
-					$details .= $rr['locality'];
-				if(strlen($rr['region'])) {
-					if(strlen($rr['locality']))
+				if(strlen($rr['xprof_locale']))
+					$details .= $rr['xprof_locale'];
+				if(strlen($rr['xprof_region'])) {
+					if(strlen($rr['xprof_locale']))
 						$details .= ', ';
-					$details .= $rr['region'];
+					$details .= $rr['xprof_region'];
 				}
-				if(strlen($rr['country_name'])) {
+				if(strlen($rr['xprof_country'])) {
 					if(strlen($details))
 						$details .= ', ';
-					$details .= $rr['country_name'];
+					$details .= $rr['xprof_country'];
 				}
-				if(strlen($rr['dob'])) {
-					if(($years = age($rr['dob'],$rr['timezone'],'')) != 0)
+				if(strlen($rr['xprof_dob'])) {
+					if(($years = age($rr['xprof_dob'],'UTC','')) != 0)
 						$details .= '<br />' . t('Age: ') . $years ; 
 				}
-				if(strlen($rr['gender']))
-					$details .= '<br />' . t('Gender: ') . $rr['gender'];
+				if(strlen($rr['xprof_gender']))
+					$details .= '<br />' . t('Gender: ') . $rr['xprof_gender'];
 
 				$page_type = '';
 
 				$profile = $rr;
 
-				if((x($profile,'address') == 1)
-					|| (x($profile,'locality') == 1)
-					|| (x($profile,'region') == 1)
-					|| (x($profile,'postal_code') == 1)
-					|| (x($profile,'country_name') == 1))
+				if ((x($profile,'xprof_locale') == 1)
+					|| (x($profile,'xprof_region') == 1)
+					|| (x($profile,'xprof_postcode') == 1)
+					|| (x($profile,'xprof_country') == 1))
 				$location = t('Location:');
 
-				$gender = ((x($profile,'gender') == 1) ? t('Gender:') : False);
+				$gender = ((x($profile,'xprof_gender') == 1) ? t('Gender:') : False);
 
 				$marital = ((x($profile,'marital') == 1) ?  t('Status:') : False);
 	
@@ -133,14 +129,14 @@ $localdir = true;
 
 				$about = ((x($profile,'about') == 1) ?  t('About:') : False);
 			
-
+				$t = 0;
 
 				$entry = array(
-					'id' => $rr['id'],
+					'id' => ++$t,
 					'profile_link' => $profile_link,
-					'photo' => $rr[$photo],
-					'alttext' => $rr['channel_name'],
-					'name' => $rr['channel_name'],
+					'photo' => $rr[xchan_photo_m],
+					'alttext' => $rr['xchan_name'],
+					'name' => $rr['xchan_name'],
 					'details' => $pdesc . $details,
 					'profile' => $profile,
 					'location' => $location,

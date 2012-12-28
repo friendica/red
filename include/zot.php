@@ -313,12 +313,8 @@ function zot_refresh($them,$channel = null) {
 					$r = q("delete from xprof where xprof_hash = '%s' limit 1",
 						dbesc($x['hash'])
 					);
-					$r = q("delete from xtag where xtag_hash = '%s'",
-						dbesc($x['hash'])
-					);
 				}
 			}
-
 		}
 		return true;
 	}
@@ -930,65 +926,8 @@ function process_mail_delivery($sender,$arr,$deliveries) {
 }
 
 function process_profile_delivery($sender,$arr,$deliveries) {
-
 	// deliveries is irrelevant
-
-	$r = q("select * from xprof where xprof_hash = '%s' limit 1",
-		dbesc($sender['hash'])
-	);
-	if(! $r) {
-		$x = q("insert into xprof ( xprof_hash, xprof_desc, xprof_dob, xprof_gender, xprof_marital, xprof_sexual,
-			xprof_locale, xprof_region, xprof_postcode, xprof_country ) values ( '%s', '%s', '%s', '%s', '%s', '%s', '%s', '%s', '%s') ",
-			dbesc($sender['hash']),
-			dbesc($arr['desc']),
-			dbesc($arr['dob']),
-			dbesc($arr['gender']),
-			dbesc($arr['marital']),
-			dbesc($arr['sexual']),
-			dbesc($arr['locale']),
-			dbesc($arr['region']),
-			dbesc($arr['postcode']),
-			dbesc($arr['country'])
-		);
-	}
-	else {
-		$x = q("update xprof set 
-			xprof_desc = '%s'
-			xprof_dob = '%s',
-			xprof_gender = '%s',
-			xprof_marital = '%s',
-			xprof_sexual = '%s',
-			xprof_locale = '%s',
-			xprof_region = '%s',
-			xprof_postcode = '%s',
-			xprof_country = '%s'
-			where xprof_hash = '%s' limit 1",
-			dbesc($arr['desc']),
-			dbesc($arr['dob']),
-			dbesc($arr['gender']),
-			dbesc($arr['marital']),
-			dbesc($arr['sexual']),
-			dbesc($arr['locale']),
-			dbesc($arr['region']),
-			dbesc($arr['postcode']),
-			dbesc($arr['country']),
-			dbesc($sender['hash'])
-		);
-	}
-
-	// optimise this, get existing tags and check which still exist and which don't!!!
-
-	$x = q("delete from xtag where xtag_hash = '%s'");
-	if($arr['keywords']) {
-		foreach($arr['keywords'] as $tag) {
-			$r = q("insert into xtag ( xtag_hash, xtag_term ) values ( '%s', '%s' )",
-				dbesc($sender['hash']),
-				dbesc($tag)
-			);
-		}
-	}
-
-
+	import_directory_profile($sender['hash'],$arr);
 }
 
 function import_directory_profile($hash,$profile) {
@@ -1009,9 +948,15 @@ function import_directory_profile($hash,$profile) {
 	$arr['xprof_postcode']     = (($profile['postcode'])    ? htmlentities($profile['postcode'],    ENT_COMPAT,'UTF-8') : '');
 	$arr['xprof_country']      = (($profile['country'])    ? htmlentities($profile['country'],    ENT_COMPAT,'UTF-8') : '');
 
+	$clean = array();
 	if(array_key_exists('keywords',$profile) and is_array($profile['keywords'])) {
-		import_directory_keywords($hash,$profile['keywords']);
+		foreach($profile['keywords'] as $kw) {
+			$kw = trim(htmlentities($kw,ENT_COMPAT,'UTF-8'));
+		}
+		$clean[] = $kw;
 	}
+
+	$arr['xprof_keywords'] = implode(' ',$clean);
 
 
 	$r = q("select * from xprof where xprof_hash = '%s' limit 1",
@@ -1027,7 +972,8 @@ function import_directory_profile($hash,$profile) {
 			xprof_locale = '%s', 
 			xprof_region = '%s', 
 			xprof_postcode = '%s', 
-			xprof_country = '%s'
+			xprof_country = '%s',
+			xprof_keywords = '%s'
 			where xprof_hash = '%s' limit 1",
 			dbesc($arr['xprof_desc']),
 			dbesc($arr['xprof_dob']),
@@ -1038,11 +984,12 @@ function import_directory_profile($hash,$profile) {
 			dbesc($arr['xprof_region']),
 			dbesc($arr['xprof_postcode']),
 			dbesc($arr['xprof_country']),
+			dbesc($arr['xprof_keywords']),
 			dbesc($arr['xprof_hash'])
 		);
 	}
 	else {
-		$x = q("insert into xprof (xprof_hash, xprof_desc, xprof_dob, xprof_gender, xprof_marital, xprof_sexual, xprof_locale, xprof_region, xprof_postcode, xprof_country) values ('%s', '%s', '%s', '%s', '%s', '%s', '%s', '%s', '%s', '%s') ",
+		$x = q("insert into xprof (xprof_hash, xprof_desc, xprof_dob, xprof_gender, xprof_marital, xprof_sexual, xprof_locale, xprof_region, xprof_postcode, xprof_country, xprof_keywords) values ('%s', '%s', '%s', '%s', '%s', '%s', '%s', '%s', '%s', '%s', '%s') ",
 			dbesc($arr['xprof_hash']),
 			dbesc($arr['xprof_desc']),
 			dbesc($arr['xprof_dob']),
@@ -1052,41 +999,11 @@ function import_directory_profile($hash,$profile) {
 			dbesc($arr['xprof_locale']),
 			dbesc($arr['xprof_region']),
 			dbesc($arr['xprof_postcode']),
-			dbesc($arr['xprof_country'])
+			dbesc($arr['xprof_country']),
+			dbesc($arr['xprof_keywords'])
 		);
 	}
 
 	return;
 }
 
-
-function import_directory_keywords($hash,$keywords) {
-	$existing = array();
-	$r = q("select * from xtag where xtag_hash = '%s'",
-		dbesc($hash)
-	);
-	if($r) {
-		foreach($r as $rr)
-			$existing[] = $rr['xtag_term'];
-	}
-	$clean = array();
-	foreach($keywords as $kw) {
-		$kw = trim(htmlentities($kw,ENT_COMPAT,'UTF-8'));
-		$clean[] = $kw;
-	}
-	foreach($existing as $x) {
-		if(! in_array($x,$clean))
-			$r = q("delete from xtag where xtag_hash = '%s' and xtag_term = '%s' limit 1",
-				dbesc($hash),
-				dbesc($x)
-			);
-	}
-	foreach($clean as $x) {
-		if(! in_array($x,$existing))
-			$r = q("insert int xtag ( xtag_hash, xtag_term) values ( '%s' ,'%s' )",
-				dbesc($hash),
-				dbesc($x)
-			);
-	}
-		
-}
