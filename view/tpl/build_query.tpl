@@ -19,7 +19,7 @@
 	var bParam_search = "$search";
 	var bParam_order = "$order";
 	var bParam_file = "$file";
-	var bParam_cats = "$category";
+	var bParam_cats = "$cats";
 	var bParam_dend = "$dend";
 	var bParam_dbegin = "$dbegin";
 

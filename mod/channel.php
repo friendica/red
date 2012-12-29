@@ -219,11 +219,10 @@ function channel_content(&$a, $update = 0, $load = false) {
 		$o .= "<script> var profile_uid = " . $a->profile['profile_uid'] 
 			. "; var netargs = '?f='; var profile_page = " . $a->pager['page'] . "; </script>\r\n";
 
-
 		$a->page['htmlhead'] .= replace_macros(get_markup_template("build_query.tpl"),array(
 			'$baseurl' => z_root(),
 			'$pgtype' => 'channel',
-			'$uid' => ((local_user()) ? local_user() : '0'),
+			'$uid' => (($a->profile['profile_uid']) ? $a->profile['profile_uid'] : '0'),
 			'$gid' => '0',
 			'$cid' => '0',
 			'$cmin' => '0',
