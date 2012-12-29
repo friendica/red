@@ -1,6 +1,6 @@
 <?php
 
-define( 'UPDATE_VERSION' , 1011 );
+define( 'UPDATE_VERSION' , 1012 );
 
 /**
  *
@@ -180,3 +180,12 @@ ADD INDEX ( `abook_dob` )");
 	return UPDATE_FAILED;
 }
 
+function update_r1011() {
+	$r = q("ALTER TABLE `item` ADD `expires` DATETIME NOT NULL DEFAULT '0000-00-00 00:00:00' AFTER `edited` ,
+ADD INDEX ( `expires` )");
+
+	if($r)
+		return UPDATE_SUCCESS;
+	return UPDATE_FAILED;
+}
+	
