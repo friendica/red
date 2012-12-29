@@ -1,6 +1,7 @@
 <?php
 
 require_once('include/Scrape.php');
+require_once('include/zot.php');
 
 function probe_content(&$a) {
 
@@ -13,11 +14,14 @@ function probe_content(&$a) {
 	$o .= '<br /><br />';
 
 	if(x($_GET,'addr')) {
-
+		$channel = $a->get_channel();
 		$addr = trim($_GET['addr']);
-		$res = probe_url($addr);
+		$res = zot_finger($addr,$channel);
 		$o .= '<pre>';
-		$o .= str_replace("\n",'<br />',print_r($res,true));
+		$j = json_decode($res['body'],true);
+		if($j && $j['permissions'] && $j['permissions']['iv'])
+			$j['permissions'] = json_decode(aes_unencapsulate($j['permissions'],$channel['channel_prvkey']),true);
+		$o .= str_replace("\n",'<br />',print_r($j,true));
 		$o .= '</pre>';
 	}
 	return $o;
