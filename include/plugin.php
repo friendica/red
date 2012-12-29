@@ -475,6 +475,8 @@ function format_js_if_exists($source) {
 
 function theme_include($file) {
 
+	global $t; // use builtin template processor
+
 	$paths = array(
 		'view/theme/$theme/$ext/$file',
 		'view/theme/$theme/$file',
@@ -492,7 +494,7 @@ function theme_include($file) {
 		$parent = 'NOPATH';
 
 	foreach($paths as $p) {
-		$f = replace_macros($p,array(
+		$f = $t->replace($p,array(
 			'$theme' => current_theme(),
 			'$ext' => substr($file,strrpos($file,'.')+1),
 			'$parent' => $parent,
