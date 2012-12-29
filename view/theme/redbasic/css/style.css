@@ -994,6 +994,7 @@ input#dfrn-url {
 	float: left;
 	width: 120px;
 	height: 120px;
+	padding: 10px;
 }
 #contacts-search-end {
 	margin-bottom: 10px;
@@ -3765,4 +3766,8 @@ ul.menu-popup {
 
 #page-spinner {
 	margin-left: 50%;
+}
+
+.tabs-end {
+	clear: both;
 }
