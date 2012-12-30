@@ -10,7 +10,6 @@ function poco_init(&$a) {
 
 	$observer = $a->get_observer();
 
-
 	if(argc() > 1) {
 		$user = notags(trim(argv(1)));
 	}
@@ -20,6 +19,7 @@ function poco_init(&$a) {
 			http_status_exit(401);
 		$system_mode = true;
 	}
+
 
 	$format = (($_REQUEST['format']) ? $_REQUEST['format'] : 'json');
 
@@ -151,7 +151,7 @@ function poco_init(&$a) {
 					$entry['displayName'] = $rr['xchan_name'];
 				if($fields_ret['urls']) {
 					$entry['urls'] = array(array('value' => $rr['xchan_url'], 'type' => 'profile'));
-					if($rr['addr'] && ($rr['network'] !== NETWORK_MAIL))
+					if($rr['xchan_addr'])
 						$entry['urls'][] = array('value' => 'acct:' . $rr['xchan_addr'], 'type' => 'zot');  
 				}
 				if($fields_ret['preferredUsername'])
