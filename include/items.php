@@ -465,6 +465,9 @@ function get_item_elements($x) {
 
 	$arr['created']      = datetime_convert('UTC','UTC',$x['created']);
 	$arr['edited']       = datetime_convert('UTC','UTC',$x['edited']);
+	$arr['expires']      = ((x($x,'expires') && $x['expires']) 
+								? datetime_convert('UTC','UTC',$x['expires']) 
+								: '0000-00-00 00:00:00');
 
 	if($arr['created'] > datetime_convert())
 		$arr['created']  = datetime_convert();
@@ -546,6 +549,7 @@ function encode_item($item) {
 	$x['message_parent'] = $item['thr_parent'];
 	$x['created']        = $item['created'];
 	$x['edited']         = $item['edited'];
+	$x['expires']        = $item['expires'];
 	$x['title']          = $item['title'];
 	$x['body']           = $item['body'];
 	$x['app']            = $item['app'];
@@ -1233,6 +1237,7 @@ function item_store($arr,$force_parent = false) {
 	$arr['owner_xchan']   = ((x($arr,'owner_xchan'))   ? notags(trim($arr['owner_xchan']))   : '');
 	$arr['created']       = ((x($arr,'created') !== false) ? datetime_convert('UTC','UTC',$arr['created']) : datetime_convert());
 	$arr['edited']        = ((x($arr,'edited')  !== false) ? datetime_convert('UTC','UTC',$arr['edited'])  : datetime_convert());
+	$arr['expires']        = ((x($arr,'expires')  !== false) ? datetime_convert('UTC','UTC',$arr['expires'])  : '0000-00-00 00:00:00');
 	$arr['commented']     = datetime_convert();
 	$arr['received']      = datetime_convert();
 	$arr['changed']       = datetime_convert();
