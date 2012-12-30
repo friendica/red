@@ -347,11 +347,11 @@ function zot_register_hub($arr) {
 
 	$result = array('success' => false);
 
-	if($arr['hub'] && $arr['hub_sig'] && $arr['guid'] && $arr['guid_sig']) {
+	if($arr['url'] && $arr['url_sig'] && $arr['guid'] && $arr['guid_sig']) {
 
 		$guid_hash = base64url_encode(hash('whirlpool',$arr['guid'] . $arr['guid_sig'], true));
 
-		$x = z_fetch_url($arr['hub'] . '/.well-known/zot-info/?f=&hash=' . $guid_hash);
+		$x = z_fetch_url($arr['url'] . '/.well-known/zot-info/?f=&hash=' . $guid_hash);
 
 		if($x['success']) {
 			$record = json_decode($x['body'],true);

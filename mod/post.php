@@ -90,8 +90,6 @@ function post_post(&$a) {
 		json_return_and_die($encrypted);
 	}
 
-
-
 	if(array_key_exists('sender',$data)) {
 		$sender = $data['sender'];
 	}	
