@@ -1,8 +1,9 @@
 <?php
 
+require_once('include/group.php');
+
 function group_aside(&$a) {
 	if(local_user()) {
-		require_once('include/group.php');
 		$a->set_widget('groups_edit',group_side('collections','group',false,(($a->argc > 1) ? intval($a->argv[1]) : 0)));
 	}
 }
@@ -62,6 +63,8 @@ function group_post(&$a) {
 
 function group_content(&$a) {
 	$change = false;
+
+	logger('mod_group: ' . $a->cmd,LOGGER_DEBUG);
 	
 	if(! local_user()) {
 		notice( t('Permission denied') . EOL);
@@ -112,6 +115,7 @@ function group_content(&$a) {
 
 
 	if((argc() > 2) && intval(argv(1)) && argv(2)) {
+
 		check_form_security_token_ForbiddenOnErr('group_member_change', 't');
 
 		$r = q("SELECT abook_xchan from abook where abook_xchan = '%s' and abook_channel = %d and not (abook_flags & %d) and not (abook_flags & %d) and not (abook_flags & %d) limit 1",

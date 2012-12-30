@@ -179,6 +179,9 @@ function zot_finger($webbie,$channel) {
 
 function zot_refresh($them,$channel = null) {
 
+	logger('zot_refresh: them: ' . print_r($them,true), LOGGER_DATA);
+	logger('zot_refresh: channel: ' . print_r($channel,true), LOGGER_DATA);
+
 	if($them['hubloc_url'])
 		$url = $them['hubloc_url'];
 	else {
@@ -189,8 +192,10 @@ function zot_refresh($them,$channel = null) {
 		if($r)
 			$url = $r[0]['hubloc_url'];
 	}
-	if(! $url)
+	if(! $url) {
+		logger('zot_refresh: no url');
 		return;
+	}
 
 	$postvars = array();
 
@@ -495,7 +500,7 @@ function import_xchan($arr) {
 	$import_photos = false;
 
 	if(! rsa_verify($arr['guid'],base64url_decode($arr['guid_sig']),$arr['key'])) {
-		logger('import_xchan_from_json: Unable to verify channel signature for ' . $arr['address']);
+		logger('import_xchan: Unable to verify channel signature for ' . $arr['address']);
 		$ret['message'] = t('Unable to verify channel signature');
 		return $ret;
 	}
@@ -556,7 +561,7 @@ function import_xchan($arr) {
 	if($arr['locations']) {
 		foreach($arr['locations'] as $location) {
 			if(! rsa_verify($location['url'],base64url_decode($location['url_sig']),$arr['key'])) {
-				logger('import_xchan_from_json: Unable to verify site signature for ' . $location['url']);
+				logger('import_xchan: Unable to verify site signature for ' . $location['url']);
 				$ret['message'] .= sprintf( t('Unable to verify site signature for %s'), $location['url']) . EOL;
 				continue;
 			}
@@ -597,6 +602,8 @@ function import_xchan($arr) {
 		$ret['success'] = true;
 		$ret['hash'] = $xchan_hash;
 	}
+
+	logger('import_xchan: result: ' . print_r($ret,true), LOGGER_DATA);
 	return $ret;
 }
 

@@ -598,10 +598,13 @@ function chanlink_cid($d) {
 if(! function_exists('micropro')) {
 function micropro($contact, $redirect = false, $class = '', $textmode = false) {
 
-	$url = chanlink_hash($contact['xchan_hash']);
+	if($contact['click'])
+		$url = '#';
+	else
+		$url = chanlink_hash($contact['xchan_hash']);
 
 	return replace_macros(get_markup_template(($textmode)?'micropro_txt.tpl':'micropro_img.tpl'),array(
-		'$click' => $click,
+		'$click' => (($contact['click']) ? $contact['click'] : ''),
 		'$class' => $class,
 		'$url' => $url,
 		'$photo' => $contact['xchan_photo_s'],
