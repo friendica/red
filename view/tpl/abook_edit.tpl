@@ -1,6 +1,7 @@
 
 <h2>$header</h2>
 
+<h3>$addr</h3>
 
 <div id="connection-flag-tabs">
 $tabs

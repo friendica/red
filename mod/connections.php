@@ -315,7 +315,8 @@ function connections_content(&$a) {
 
 		$o .= replace_macros($tpl,array(
 
-			'$header' => t('Contact Settings') . ' for ' . $contact['xchan_name'],
+			'$header' => sprintf( t('Connections: settings for %s'),$contact['xchan_name']),
+			'$addr' => $contact['xchan_addr'],
 			'$viewprof' => t('View Profile'),
 			'$lbl_slider' => t('Slide to adjust your degree of friendship'),
 			'$slide' => $slide,
