@@ -194,7 +194,7 @@ function zot_refresh($them,$channel = null) {
 	}
 	if(! $url) {
 		logger('zot_refresh: no url');
-		return;
+		return false;
 	}
 
 	$postvars = array();
