@@ -1,37 +1,14 @@
 <?php
 
-require_once("boot.php");
+require_once('boot.php');
+require_once('include/cli_startup.php');
+
 
 function onepoll_run($argv, $argc){
-	global $a, $db;
-
-	if(is_null($a)) {
-		$a = new App;
-	}
-  
-	if(is_null($db)) {
-	    @include(".htconfig.php");
-    	require_once("dba.php");
-	    $db = new dba($db_host, $db_user, $db_pass, $db_data);
-    	unset($db_host, $db_user, $db_pass, $db_data);
-  	};
 
 
-	require_once('include/session.php');
-	require_once('include/datetime.php');
-	require_once('library/simplepie/simplepie.inc');
-	require_once('include/items.php');
-	require_once('include/Contact.php');
-	require_once('include/email.php');
-	require_once('include/socgraph.php');
-	require_once('include/queue_fn.php');
-
-	load_config('config');
-	load_config('system');
-
-	$a->set_baseurl(get_config('system','baseurl'));
-
-	load_hooks();
+	cli_startup();
+	$a = get_app();
 
 	logger('onepoll: start');
 	
@@ -52,27 +29,41 @@ function onepoll_run($argv, $argc){
 
 	$d = datetime_convert();
 
-	// Only poll from those with suitable relationships,
 
-	$contacts = q("SELECT `contact`.* FROM `contact` 
-		WHERE ( `rel` = %d OR `rel` = %d ) AND `poll` != ''
-		AND `contact`.`id` = %d
-		AND `self` = 0 AND `contact`.`blocked` = 0 AND `contact`.`readonly` = 0 
-		AND `contact`.`archive` = 0 LIMIT 1",
-		intval(CONTACT_IS_SHARING),
-		intval(CONTACT_IS_FRIEND),
-		intval($contact_id)
+
+// FIXME
+return;
+
+
+
+	$contacts = q("SELECT abook.*, account.*
+		FROM abook LEFT JOIN account on abook_account = account_id 
+		AND abook_id = %d
+		AND not ( abook_flags & %d ) AND not ( abook_flags & %d ) 
+		AND not ( abook_flags & %d ) AND not ( abook_flags & %d ) 
+		AND not ( abook_flags & %d ) AND ( account_flags & %d ) $abandon_sql ORDER BY RAND()",
+		intval($contact_id),
+		intval(ABOOK_FLAG_BLOCKED),
+		intval(ABOOK_FLAG_IGNORED),
+		intval(ABOOK_FLAG_PENDING),
+		intval(ABOOK_FLAG_ARCHIVED),
+		intval(ABOOK_FLAG_SELF),
+		intval(ACCOUNT_OK)
 	);
 
-	if(! count($contacts)) {
+	if(! $contacts) {
 		return;
 	}
 
+	if(! $contacts)
+		return;
+
 	$contact = $contacts[0];
+	$t = $contact['abook_updated'];
 
-	$xml = false;
 
-	$t = $contact['last_update'];
+// end of last edits
+
 
 
 	$importer_uid = $contact['uid'];

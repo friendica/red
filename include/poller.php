@@ -1,32 +1,14 @@
 <?php
 
-require_once("boot.php");
+require_once('boot.php');
+require_once('include/cli_startup.php');
 
 
 function poller_run($argv, $argc){
-	global $a, $db;
 
-	if(is_null($a)) {
-		$a = new App;
-	}
-  
-	if(is_null($db)) {
-	    @include(".htconfig.php");
-    	require_once("dba.php");
-	    $db = new dba($db_host, $db_user, $db_pass, $db_data);
-    	unset($db_host, $db_user, $db_pass, $db_data);
-  	};
+	cli_startup();
 
-
-	require_once('include/session.php');
-	require_once('include/datetime.php');
-	require_once('library/simplepie/simplepie.inc');
-	require_once('include/items.php');
-	require_once('include/Contact.php');
-	require_once('include/socgraph.php');
-
-	load_config('config');
-	load_config('system');
+	$a = get_app();
 
 	$maxsysload = intval(get_config('system','maxloadavg'));
 	if($maxsysload < 1)
@@ -38,11 +20,6 @@ function poller_run($argv, $argc){
 			return;
 		}
 	}
-
-
-	$a->set_baseurl(get_config('system','baseurl'));
-
-	load_hooks();
 
 	logger('poller: start');
 	
@@ -66,7 +43,6 @@ function poller_run($argv, $argc){
 		$abandon_days = 0;
 
 	
-
 	// once daily run birthday_updates and then expire in background
 
 	$d1 = get_config('system','last_expire_day');
@@ -80,21 +56,6 @@ function poller_run($argv, $argc){
 		proc_run('php','include/expire.php');
 	}
 
-	// clear old cache
-	Cache::clear();
-
-	// clear item cache files if they are older than one day
-	$cache = get_config('system','itemcache');
-	if (($cache != '') and is_dir($cache)) {
-		if ($dh = opendir($cache)) {
-			while (($file = readdir($dh)) !== false) {
-				$fullpath = $cache."/".$file;
-				if ((filetype($fullpath) == "file") and filectime($fullpath) < (time() - 86400))
-					unlink($fullpath);
-			}
-			closedir($dh);
-		}
-	}
 
 	$manual_id  = 0;
 	$generation = 0;
@@ -102,18 +63,18 @@ function poller_run($argv, $argc){
 	$force      = false;
 	$restart    = false;
 
-	if(($argc > 1) && ($argv[1] == 'force'))
+	if((argc() > 1) && (argv(1) == 'force'))
 		$force = true;
 
-	if(($argc > 1) && ($argv[1] == 'restart')) {
+	if((argc() > 1) && (argv(1) == 'restart')) {
 		$restart = true;
-		$generation = intval($argv[2]);
+		$generation = intval(argv(2));
 		if(! $generation)
 			killme();		
 	}
 
-	if(($argc > 1) && intval($argv[1])) {
-		$manual_id = intval($argv[1]);
+	if((argc() > 1) && intval(argv(1))) {
+		$manual_id = intval(argv(1));
 		$force     = true;
 	}
 
@@ -121,11 +82,13 @@ function poller_run($argv, $argc){
 	if(! $interval) 
 		$interval = ((get_config('system','delivery_interval') === false) ? 3 : intval(get_config('system','delivery_interval')));
 
-	$sql_extra = (($manual_id) ? " AND `id` = $manual_id " : "");
+	$sql_extra = (($manual_id) ? " AND abook_id = $manual_id " : "");
 
 	reload_plugins();
 
 	$d = datetime_convert();
+
+//TODO check to see if there are any cronhooks before wasting a process
 
 	if(! $restart)
 		proc_run('php','include/cronhooks.php');
@@ -135,93 +98,46 @@ function poller_run($argv, $argc){
 	// we are unable to match those posts with a Diaspora GUID and prevent duplicates.
 
 	$abandon_sql = (($abandon_days) 
-		? sprintf(" AND `user`.`login_date` > UTC_TIMESTAMP() - INTERVAL %d DAY ", intval($abandon_days)) 
+		? sprintf(" AND account_lastlog > UTC_TIMESTAMP() - INTERVAL %d DAY ", intval($abandon_days)) 
 		: '' 
 	);
 
-// FIXME
-return;
-
-	$contacts = q("SELECT `contact`.`id` FROM `contact` LEFT JOIN `user` ON `user`.`uid` = `contact`.`uid` 
-		WHERE ( `rel` = %d OR `rel` = %d ) AND `poll` != ''
-		AND NOT `network` IN ( '%s', '%s' )
+	$contacts = q("SELECT abook_id, abook_updated, abook_closeness, abook_channel 
+		FROM abook LEFT JOIN account on abook_account = account_id 
 		$sql_extra 
-		AND `self` = 0 AND `contact`.`blocked` = 0 AND `contact`.`readonly` = 0 
-		AND `contact`.`archive` = 0 
-		AND `user`.`account_expired` = 0 $abandon_sql ORDER BY RAND()",
-		intval(CONTACT_IS_SHARING),
-		intval(CONTACT_IS_FRIEND),
-		dbesc(NETWORK_DIASPORA),
-		dbesc(NETWORK_FACEBOOK)
+		AND not ( abook_flags & %d ) AND not ( abook_flags & %d ) 
+		AND not ( abook_flags & %d ) AND not ( abook_flags & %d ) 
+		AND not ( abook_flags & %d ) AND ( account_flags & %d ) $abandon_sql ORDER BY RAND()",
+
+		intval(ABOOK_FLAG_BLOCKED),
+		intval(ABOOK_FLAG_IGNORED),
+		intval(ABOOK_FLAG_PENDING),
+		intval(ABOOK_FLAG_ARCHIVED),
+		intval(ABOOK_FLAG_SELF),
+		intval(ACCOUNT_OK)
+
 	);
 
-	if(! count($contacts)) {
+	if(! $contacts) {
 		return;
 	}
 
-	foreach($contacts as $c) {
+	foreach($contacts as $contact) {
 
-		$res = q("SELECT * FROM `contact` WHERE `id` = %d LIMIT 1",
-			intval($c['id'])
-		);
+		$update  = false;
 
-		if((! $res) || (! count($res)))
-			continue;
+		$t = $contact['abook_updated'];
 
-		foreach($res as $contact) {
+		if(datetime_convert('UTC','UTC', 'now') > datetime_convert('UTC','UTC', $t . " + 1 day"))
+			$update = true;
 
-			$xml = false;
+		if((! $update) && (! $force))
+				continue;
 
-			if($manual_id)
-				$contact['last_update'] = '0000-00-00 00:00:00';
+		proc_run('php','include/onepoll.php',$contact['abook_id']);
+		if($interval)
+			@time_sleep_until(microtime(true) + (float) $interval);
 
-			if($contact['network'] === NETWORK_DFRN)
-				$contact['priority'] = 2;
-
-			if(!get_config('system','ostatus_use_priority') and ($contact['network'] === NETWORK_OSTATUS))
-				$contact['priority'] = 2;
-
-			if($contact['priority']) {
-
-				$update     = false;
-
-				$t = $contact['last_update'];
-
-				/**
-				 * Based on $contact['priority'], should we poll this site now? Or later?
-				 */			
-
-				switch ($contact['priority']) {
-					case 5:
-						if(datetime_convert('UTC','UTC', 'now') > datetime_convert('UTC','UTC', $t . " + 1 month"))
-							$update = true;
-						break;					
-					case 4:
-						if(datetime_convert('UTC','UTC', 'now') > datetime_convert('UTC','UTC', $t . " + 1 week"))
-							$update = true;
-						break;
-					case 3:
-						if(datetime_convert('UTC','UTC', 'now') > datetime_convert('UTC','UTC', $t . " + 1 day"))
-							$update = true;
-						break;
-					case 2:
-						if(datetime_convert('UTC','UTC', 'now') > datetime_convert('UTC','UTC', $t . " + 12 hour"))
-							$update = true;
-						break;
-					case 1:
-					default:
-						if(datetime_convert('UTC','UTC', 'now') > datetime_convert('UTC','UTC', $t . " + 1 hour"))
-							$update = true;
-						break;
-				}
-				if((! $update) && (! $force))
-					continue;
-			}
-
-			proc_run('php','include/onepoll.php',$contact['id']);
-			if($interval)
-				@time_sleep_until(microtime(true) + (float) $interval);
-		}
 	}
 
 	return;
