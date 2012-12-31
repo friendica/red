@@ -2,7 +2,7 @@
 
 require_once('boot.php');
 require_once('include/cli_startup.php');
-
+require_once('include/zot.php');
 
 function onepoll_run($argv, $argc){
 
@@ -30,19 +30,17 @@ function onepoll_run($argv, $argc){
 	$d = datetime_convert();
 
 
+
 	$contacts = q("SELECT abook.*, xchan.*, account.*
 		FROM abook LEFT JOIN account on abook_account = account_id left join xchan on xchan_hash = abook_xchan 
 		where abook_id = %d
-		AND not ( abook_flags & %d ) AND not ( abook_flags & %d ) 
-		AND not ( abook_flags & %d ) AND not ( abook_flags & %d ) 
-		AND not ( abook_flags & %d ) AND ( account_flags & %d ) $abandon_sql ORDER BY RAND()",
+		AND (( abook_flags = %d ) OR ( abook_flags = %d )) 
+		AND (( account_flags = %d ) OR ( account_flags = %d )) ORDER BY RAND()",
 		intval($contact_id),
-		intval(ABOOK_FLAG_BLOCKED),
-		intval(ABOOK_FLAG_IGNORED),
-		intval(ABOOK_FLAG_PENDING),
-		intval(ABOOK_FLAG_ARCHIVED),
-		intval(ABOOK_FLAG_SELF),
-		intval(ACCOUNT_OK)
+		intval(ABOOK_FLAG_HIDDEN),
+		intval(0),
+		intval(ACCOUNT_OK),
+		intval(ACCOUNT_UNVERIFIED)
 	);
 
 	if(! $contacts) {
@@ -62,6 +60,7 @@ function onepoll_run($argv, $argc){
 	$r = q("SELECT * from channel left join xchan on channel_hash = xchan_hash where channel_id = %d limit 1",
 		intval($importer_uid)
 	);
+
 	if(! $r)
 		return;
 

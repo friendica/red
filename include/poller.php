@@ -103,18 +103,15 @@ function poller_run($argv, $argc){
 	);
 
 	$contacts = q("SELECT abook_id, abook_updated, abook_closeness, abook_channel 
-		FROM abook LEFT JOIN account on abook_account = account_id 
+		FROM abook LEFT JOIN account on abook_account = account_id where 1
 		$sql_extra 
-		AND not ( abook_flags & %d ) AND not ( abook_flags & %d ) 
-		AND not ( abook_flags & %d ) AND not ( abook_flags & %d ) 
-		AND not ( abook_flags & %d ) AND ( account_flags & %d ) $abandon_sql ORDER BY RAND()",
+		AND (( abook_flags = %d ) OR  ( abook_flags = %d )) 
+		AND (( account_flags = %d ) OR ( account_flags = %d )) $abandon_sql ORDER BY RAND()",
 
-		intval(ABOOK_FLAG_BLOCKED),
-		intval(ABOOK_FLAG_IGNORED),
-		intval(ABOOK_FLAG_PENDING),
-		intval(ABOOK_FLAG_ARCHIVED),
-		intval(ABOOK_FLAG_SELF),
-		intval(ACCOUNT_OK)
+		intval(ABOOK_FLAG_HIDDEN),
+		intval(0),
+		intval(ACCOUNT_OK),
+		intval(ACCOUNT_UNVERIFIED)     // FIXME
 
 	);
 
