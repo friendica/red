@@ -1,20 +1,18 @@
 <?php
 
-require_once('Scrape.php');
+
 require_once('include/follow.php');
 
 function follow_init(&$a) {
 
 	if(! local_user()) {
 		notice( t('Permission denied.') . EOL);
-		goaway($_SESSION['return_url']);
-		// NOTREACHED
+		return;
 	}
 
 	$uid = local_user();
 	$url = notags(trim($_REQUEST['url']));
 	$return_url = $_SESSION['return_url'];
-
 
 	$result = new_contact($uid,$url,$a->get_channel(),true);
 
@@ -26,9 +24,6 @@ function follow_init(&$a) {
 
 	info( t('Channel added') . EOL);
 
-	if(strstr($return_url,'channel'))
-		goaway($a->get_baseurl() . '/channel/' . $result['channel_id']);
+	goaway(z_root() . '/connection/' . $result['abook']['abook_id']);
 
-	goaway($return_url);
-	// NOTREACHED
 }

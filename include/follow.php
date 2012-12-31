@@ -118,7 +118,7 @@ function new_contact($uid,$url,$channel,$interactive = false) {
 		return $result;
 	}
 
-	$r = q("select abook_xchan from abook_id where abook_xchan = '%s' and abook_channel = %d limit 1",
+	$r = q("select abook_xchan from abook where abook_xchan = '%s' and abook_channel = %d limit 1",
 		dbesc($xchan_hash),
 		intval($uid)
 	);
@@ -142,6 +142,14 @@ function new_contact($uid,$url,$channel,$interactive = false) {
 
 	if(! $r)
 		logger('mod_follow: abook creation failed');
+
+	$r = q("select abook.*, xchan.* from abook left join xchan on abook_xchan = xchan_hash 
+		where abook_xchan = '%s' and abook_channel = %d limit 1",
+		dbesc($xchan_hash),
+		intval($uid)
+	);
+	if($r)
+		$result['abook'] = $r[0];
 
 	// Then send a ping/message to the other side
 

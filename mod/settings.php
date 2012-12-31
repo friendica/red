@@ -340,9 +340,39 @@ function settings_post(&$a) {
 	$arr['channel_w_photos']   = (($_POST['post_photos'])   ? $_POST['post_photos']   : 0);
 	$arr['channel_w_chat']     = (($_POST['chat'])          ? $_POST['chat']          : 0);
 	$arr['channel_a_delegate'] = (($_POST['delegate'])      ? $_POST['delegate']      : 0);
-	$arr['channel_r_storage'] = (($_POST['view_storage'])   ? $_POST['view_storage']  : 0);
-	$arr['channel_w_storage'] = (($_POST['write_storage'])  ? $_POST['write_storage'] : 0);
+	$arr['channel_r_storage']  = (($_POST['view_storage'])   ? $_POST['view_storage']  : 0);
+	$arr['channel_w_storage']  = (($_POST['write_storage'])  ? $_POST['write_storage'] : 0);
 
+
+	$defperms = 0;
+	if(x($_POST['def_view_stream']))
+		$defperms += $_POST['def_view_stream'];
+	if(x($_POST['def_view_profile']))
+		$defperms += $_POST['def_view_profile'];
+	if(x($_POST['def_view_photos']))
+		$defperms += $_POST['def_view_photos'];
+	if(x($_POST['def_view_contacts']))
+		$defperms += $_POST['def_view_contacts'];
+	if(x($_POST['def_send_stream']))
+		$defperms += $_POST['def_send_stream'];
+	if(x($_POST['def_post_wall']))
+		$defperms += $_POST['def_post_wall'];
+	if(x($_POST['def_tag_deliver']))
+		$defperms += $_POST['def_tag_deliver'];
+	if(x($_POST['def_post_comments']))
+		$defperms += $_POST['def_post_comments'];
+	if(x($_POST['def_post_mail']))
+		$defperms += $_POST['def_post_mail'];
+	if(x($_POST['def_post_photos']))
+		$defperms += $_POST['def_post_photos'];
+	if(x($_POST['def_chat']))
+		$defperms += $_POST['def_chat'];
+	if(x($_POST['def_delegate']))
+		$defperms += $_POST['def_delegate'];
+	if(x($_POST['def_view_storage']))
+		$defperms += $_POST['def_view_storage'];
+	if(x($_POST['def_write_storage']))
+		$defperms += $_POST['def_write_storage'];
 
 	$notify = 0;
 
@@ -398,7 +428,7 @@ function settings_post(&$a) {
 	set_pconfig(local_user(),'system','post_joingroup', $post_joingroup);
 	set_pconfig(local_user(),'system','post_profilechange', $post_profilechange);
 
-
+/*
 	if($page_flags == PAGE_PRVGROUP) {
 		$hidewall = 1;
 		if((! $str_contact_allow) && (! $str_group_allow) && (! $str_contact_deny) && (! $str_group_deny)) {
@@ -411,6 +441,8 @@ function settings_post(&$a) {
 			} 
 		}
 	}
+
+*/
 
 /*
 	$r = q("UPDATE `user` SET `username` = '%s', `email` = '%s', `openid` = '%s', `timezone` = '%s',  `allow_cid` = '%s', `allow_gid` = '%s', `deny_cid` = '%s', `deny_gid` = '%s', `notify-flags` = %d, `page-flags` = %d, `default-location` = '%s', `allow_location` = %d, `maxreq` = %d, `expire` = %d, `openidserver` = '%s', `def_gid` = %d, `blockwall` = %d, `hidewall` = %d, `blocktags` = %d, `unkmail` = %d, `cntunkmail` = %d  WHERE `uid` = %d LIMIT 1",
@@ -454,12 +486,6 @@ function settings_post(&$a) {
 		intval($arr['channel_a_delegate']),
 		intval(local_user())
 	);   
-
-
-
-
-
-
 
 	if($r)
 		info( t('Settings updated.') . EOL);
