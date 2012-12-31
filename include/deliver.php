@@ -32,7 +32,7 @@ function deliver_run($argv, $argc) {
 			else {
 				$result = zot_zot($r[0]['outq_posturl'],$r[0]['outq_notify']); 
 				if($result['success']) {
-					zot_process_response($result, $r[0]);				
+					zot_process_response($r[0]['outq_posturl'],$result, $r[0]);				
 				}
 				else {
 					$y = q("update outq set outq_updated = '%s' where outq_hash = '%s' limit 1",

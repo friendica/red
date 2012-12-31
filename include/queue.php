@@ -43,7 +43,7 @@ function queue_run($argv, $argc){
 			continue;
 		$result = zot_zot($rr['outq_posturl'],$rr['outq_notify']); 
 		if($result['success']) {
-			zot_process_response($result, $rr);				
+			zot_process_response($rr['outq_posturl'],$result, $rr);				
 		}
 		else {
 			$deadguys[] = $rr['outq_hub'];

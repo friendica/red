@@ -607,11 +607,19 @@ function import_xchan($arr) {
 	return $ret;
 }
 
-function zot_process_response($arr,$outq) {
-	if(! $arr['success'])
+function zot_process_response($hub,$arr,$outq) {
+
+	if(! $arr['success']) {
+		logger('zot_process_response: failed: ' . $hub);
 		return;
+	}
 
 	$x = json_decode($arr['body'],true);
+
+	if(! $x) {
+		logger('zot_process_response: No json from ' . $hub);
+		logger('zot_process_response: headers: ' . print_r($arr['header'],true), LOGGER_DATA);
+	}
 
 	// synchronous message types are handled immediately
 	// async messages remain in the queue until processed.
