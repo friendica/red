@@ -308,8 +308,11 @@ function connections_content(&$a) {
 		$channel = $a->get_channel();
 
 		$global_perms = get_perms();
+		$existing = get_all_perms(local_user(),$contact); 
+
+
 		foreach($global_perms as $k => $v) {
-			$perms[] = array('perms_' . $k, $v[3], (($contact['abook_their_perms'] & $v[1]) ? "1" : ""),(($contact['abook_my_perms'] & $v[1]) ? "1" : ""), $v[1], (($channel[$v[0]] == PERMS_SPECIFIC) ? '' : '1'), $v[4]);
+			$perms[] = array('perms_' . $k, $v[3], (($contact['abook_their_perms'] & $v[1]) ? "1" : ""),((($contact['abook_my_perms'] & $v[1]) || $existing[$k]) ? "1" : ""), $v[1], (($channel[$v[0]] == PERMS_SPECIFIC) ? '' : '1'), $v[4]);
 		}
 
 
