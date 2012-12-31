@@ -31,7 +31,7 @@ function onepoll_run($argv, $argc){
 
 
 	$contacts = q("SELECT abook.*, xchan.*, account.*
-		FROM abook LEFT JOIN account on abook_account = account_id left join xchan on xchan_hash = abook_hash 
+		FROM abook LEFT JOIN account on abook_account = account_id left join xchan on xchan_hash = abook_xchan 
 		where abook_id = %d
 		AND not ( abook_flags & %d ) AND not ( abook_flags & %d ) 
 		AND not ( abook_flags & %d ) AND not ( abook_flags & %d ) 

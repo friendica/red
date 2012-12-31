@@ -50,7 +50,7 @@ function poller_run($argv, $argc){
 
 	if($d2 != intval($d1)) {
 
-		update_suggestions();
+//		update_suggestions();
 
 		set_config('system','last_expire_day',$d2);
 		proc_run('php','include/expire.php');
