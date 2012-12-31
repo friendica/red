@@ -51,9 +51,8 @@ function onepoll_run($argv, $argc){
 		return;
 
 	$contact = $contacts[0];
+
 	$t = $contact['abook_updated'];
-
-
 
 	$importer_uid = $contact['abook_channel'];
 		
@@ -82,6 +81,10 @@ function onepoll_run($argv, $argc){
 
 	}
 	else {
+		q("update abook set abook_updated = '%s' where abook_id = %d limit 1",
+			dbesc(datetime_convert()),
+			intval($contact['abook_id'])
+		);
 
 		// if marked for death, reset
 
