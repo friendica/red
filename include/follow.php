@@ -6,7 +6,7 @@
 
 // Returns an array
 //  $return['success'] boolean true if successful
-//  $return['abook_id'] Address book ID if successful
+//  $return['abook'] Address book entry joined with xchan if successful
 //  $return['message'] error text if success is false.
 
 require_once('include/zot.php');

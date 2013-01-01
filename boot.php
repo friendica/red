@@ -774,6 +774,7 @@ if(! class_exists('App')) {
 			return $this->curl_headers;
 		}
 
+//FIXME or remove
 		function get_cached_avatar_image($avatar_image){
 			if($this->cached_profile_image[$avatar_image])
 				return $this->cached_profile_image[$avatar_image];
@@ -1031,19 +1032,6 @@ function check_config(&$a) {
 }
 
 
-function get_guid($size=16) {
-	$exists = true; // assume by default that we don't have a unique guid
-	do {
-		$s = random_string($size);
-		$r = q("select id from guid where guid = '%s' limit 1", dbesc($s));
-		if(! count($r))
-			$exists = false;
-	} while($exists);
-	q("insert into guid ( guid ) values ( '%s' ) ", dbesc($s));
-	return $s;
-}
-
-
 // wrapper for adding a login box. If $register == true provide a registration
 // link. This will most always depend on the value of $a->config['register_policy'].
 // returns the complete html for inserting into the page
@@ -1209,7 +1197,7 @@ function profile_load(&$a, $nickname, $profile = 0) {
 		dbesc($nickname)
 	);
 		
-	if(! ($user && count($user))) {
+	if(! $user) {
 		logger('profile error: ' . $a->query_string, LOGGER_DEBUG);
 		notice( t('Requested account is not available.') . EOL );
 		$a->error = 404;
@@ -1251,7 +1239,7 @@ function profile_load(&$a, $nickname, $profile = 0) {
 		);
 	}
 
-	if(! ($r && count($r))) {
+	if(! $r) {
 		logger('profile error: ' . $a->query_string, LOGGER_DEBUG);
 		notice( t('Requested profile is not available.') . EOL );
 		$a->error = 404;
@@ -1264,7 +1252,7 @@ function profile_load(&$a, $nickname, $profile = 0) {
 		$x = q("select `keywords` from `profile` where uid = %d and `is_default` = 1 limit 1",
 				intval($profile_uid)
 		);
-		if($x && count($x))
+		if($x)
 			$r[0]['keywords'] = $x[0]['keywords'];
 	}
 
@@ -1285,20 +1273,9 @@ function profile_load(&$a, $nickname, $profile = 0) {
 			require_once($theme_info_file);
 		}
 
-//		if(local_user() && local_user() == $a->profile['uid']) {
-//			$a->page['aside'] .= replace_macros(get_markup_template('profile_edlink.tpl'),array(
-//				'$editprofile' => t('Edit profile'),
-//				'$profid' => $a->profile['id']
-//			));
-//		}
-
 		$block = (((get_config('system','block_public')) && (! local_user()) && (! remote_user())) ? true : false);
 
 		$a->set_widget('profile',profile_sidebar($a->profile, $block));
-
-		/*if(! $block)
-		 $a->page['aside'] .= contact_block();*/
-
 		return;
 	}
 }
@@ -1342,7 +1319,6 @@ if(! function_exists('profile_sidebar')) {
 
 		call_hooks('profile_sidebar_enter', $profile);
 
-	
 		// don't show connect link to yourself
 		$connect = (($profile['uid'] != local_user()) ? t('Connect')  : False);
 
@@ -1378,30 +1354,21 @@ if(! function_exists('profile_sidebar')) {
 					local_user());
 		
 
-			if(count($r)) {
-
+			if($r) {
 				foreach($r as $rr) {
 					$profile['menu']['entries'][] = array(
-						'photo' => $rr['thumb'],
-						'id' => $rr['id'],
-						'alt' => t('Profile Image'),
-						'profile_name' => $rr['profile_name'],
-						'isdefault' => $rr['is_default'],
-						'visibile_to_everybody' =>  t('visible to everybody'),
-						'edit_visibility' => t('Edit visibility'),
-
+						'photo'                => $rr['thumb'],
+						'id'                   => $rr['id'],
+						'alt'                  => t('Profile Image'),
+						'profile_name'         => $rr['profile_name'],
+						'isdefault'            => $rr['is_default'],
+						'visible_to_everybody' => t('visible to everybody'),
+						'edit_visibility'      => t('Edit visibility'),
 					);
 				}
-
-
 			}
-
-
 		}
 
-
-
-	
 		if((x($profile,'address') == 1)
 				|| (x($profile,'locality') == 1)
 				|| (x($profile,'region') == 1)
@@ -1409,12 +1376,9 @@ if(! function_exists('profile_sidebar')) {
 				|| (x($profile,'country_name') == 1))
 			$location = t('Location:');
 
-		$gender = ((x($profile,'gender') == 1) ? t('Gender:') : False);
-
-
-		$marital = ((x($profile,'marital') == 1) ?  t('Status:') : False);
-
-		$homepage = ((x($profile,'homepage') == 1) ?  t('Homepage:') : False);
+		$gender   = ((x($profile,'gender')   == 1) ? t('Gender:')   : False);
+		$marital  = ((x($profile,'marital')  == 1) ? t('Status:')   : False);
+		$homepage = ((x($profile,'homepage') == 1) ? t('Homepage:') : False);
 
 		if(($profile['hidewall'] || $block) && (! local_user()) && (! remote_user())) {
 			$location = $pdesc = $gender = $marital = $homepage = False;
@@ -1424,31 +1388,23 @@ if(! function_exists('profile_sidebar')) {
 				? trim(substr($profile['name'],0,strpos($profile['name'],' '))) : $profile['name']);
 		$lastname = (($firstname === $profile['name']) ? '' : trim(substr($profile['name'],strlen($firstname))));
 
-logger('observer' . print_r($observer,true));
-logger('uid' . $profile['uid']);
-
 		if(is_array($observer) 
 			&& perm_is_allowed($profile['uid'],$observer['xchan_hash'],'view_contacts')) {
 			$contact_block = contact_block();
 		}
 
-
-
 		$tpl = get_markup_template('profile_vcard.tpl');
 
 		$o .= replace_macros($tpl, array(
-			'$profile' => $profile,
-			'$connect'  => $connect,
-			'$wallmessage' => $wallmessage,
-			'$location' => template_escape($location),
-			'$gender'   => $gender,
-			'$pdesc'	=> $pdesc,
-			'$marital'  => $marital,
-			'$homepage' => $homepage,
-			'$diaspora' => $diaspora,
+			'$profile'       => $profile,
+			'$connect'       => $connect,
+			'$location'      => $location,
+			'$gender'        => $gender,
+			'$pdesc'         => $pdesc,
+			'$marital'       => $marital,
+			'$homepage'      => $homepage,
 			'$contact_block' => $contact_block,
 		));
-
 
 		$arr = array('profile' => &$profile, 'entry' => &$o);
 
@@ -1458,6 +1414,7 @@ logger('uid' . $profile['uid']);
 	}
 }
 
+// FIXME
 
 if(! function_exists('get_birthdays')) {
 	function get_birthdays() {
@@ -1536,6 +1493,7 @@ if(! function_exists('get_birthdays')) {
 	}
 }
 
+// FIXME
 
 if(! function_exists('get_events')) {
 	function get_events() {
