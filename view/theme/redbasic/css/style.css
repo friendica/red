@@ -1257,7 +1257,6 @@ input#dfrn-url {
 	height: 50px !important;
 }
 .wall-item-content {
-	float: left;
 	margin-left: 10px;
 	overflow: auto;
 }
