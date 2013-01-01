@@ -678,11 +678,11 @@ function zot_fetch($arr) {
 
 function zot_import($arr) {
 
-	logger('zot_import: ' . print_r($arr,true), LOGGER_DATA);
+//	logger('zot_import: ' . print_r($arr,true), LOGGER_DATA);
 
 	$data = json_decode($arr['body'],true);
 
-	logger('zot_import: data1: ' . print_r($data,true));
+//	logger('zot_import: data1: ' . print_r($data,true));
 
 	if(array_key_exists('iv',$data)) {
 		$data = json_decode(aes_unencapsulate($data,get_config('system','prvkey')),true);
@@ -691,8 +691,12 @@ function zot_import($arr) {
 	logger('zot_import: data' . print_r($data,true), LOGGER_DATA);
 
 	$incoming = $data['pickup'];
+
+	$return = array();
+
 	if(is_array($incoming)) {
 		foreach($incoming as $i) {
+			$result = null;
 
 			if(array_key_exists('iv',$i['notify'])) {
 				$i['notify'] = json_decode(aes_unencapsulate($i['notify'],get_config('system','prvkey')),true);
@@ -715,8 +719,10 @@ function zot_import($arr) {
 				$recips = implode(',',$recip_arr);
 				logger('recips: ' . $recips);
 				$r = q("select channel_hash as hash from channel where channel_hash in ( " . $recips . " ) ");
-				if(! $r)
+				if(! $r) {
+					logger('recips: no recipients on this site');
 					continue;
+				}
 
 				$deliveries = $r;
 
@@ -730,8 +736,10 @@ function zot_import($arr) {
 				// Public post. look for any site members who are accepting posts from this sender
 				$deliveries = public_recips($i);
 			}
-			if(! $deliveries)
+			if(! $deliveries) {
+				logger('zot_import: no deliveries on this site');
 				continue;
+			}
 			
 			if($i['message']) { 
 				if($i['message']['type'] === 'activity') {
@@ -764,10 +772,12 @@ function zot_import($arr) {
 
 				}
 			}
+			if($result)
+				$return = array_merge($return,$result);
 		}
 	}
 
-	return $result;
+	return $return;
 
 }
 
@@ -830,7 +840,6 @@ function public_recips($msg) {
 
 function process_delivery($sender,$arr,$deliveries,$relay) {
 
-
 	$result = array();
 	
 	foreach($deliveries as $d) {
@@ -842,6 +851,7 @@ function process_delivery($sender,$arr,$deliveries,$relay) {
 			$result[] = array($d['hash'],'not found');
 			continue;
 		}
+
 		$channel = $r[0];
 
 		$perm = (($arr['uri'] == $arr['parent_uri']) ? 'send_stream' : 'post_comments');
@@ -882,6 +892,10 @@ function process_delivery($sender,$arr,$deliveries,$relay) {
 			$result[] = array($d['hash'],'relayed');
 		}
 	}
+
+	if(! $deliveries)
+		$result[] = array('','no recipients');
+
 	return $result;
 }
 
