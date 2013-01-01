@@ -278,6 +278,18 @@ function item_post(&$a) {
 		}
 	}
 
+	$expires = '0000-00-00 00:00:00';
+
+	if(feature_enabled($profile_uid,'expire')) {
+		// expire_quantity, e.g. '3'
+		// expire_units, e.g. days, weeks, months
+		if(x($_REQUEST,'expire_quantity') && (x($_REQUEST,'expire_units'))) {
+			$expire = datetime_convert(date_default_timezone_get(),'UTC', 'now + ' . $_REQUEST['expire_quantity'] . ' ' . $_REQUEST['expire_units']);
+			if($expires <= datetime_convert())
+				$expires = '0000-00-00 00:00:00';
+		}
+	}
+
 
 	// Work around doubled linefeeds in Tinymce 3.5b2
 	// First figure out if it's a status post that would've been
@@ -510,6 +522,7 @@ function item_post(&$a) {
 	$datarray['author_xchan']  = $observer['xchan_hash'];
 	$datarray['created']       = datetime_convert();
 	$datarray['edited']        = datetime_convert();
+	$datarray['expires']       = $expires;
 	$datarray['commented']     = datetime_convert();
 	$datarray['received']      = datetime_convert();
 	$datarray['changed']       = datetime_convert();
