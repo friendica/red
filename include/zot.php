@@ -394,10 +394,11 @@ function import_xchan_from_json($j) {
 	if($r) {
 		if($r[0]['xchan_photo_date'] != $j->photo_updated)
 			$update_photos = true;
-		if($r[0]['xchan_name_date'] != $j->name_updated) {
-			$r = q("update xchan set xchan_name = '%s', xchan_name_date = '%s' where xchan_hash = '%s' limit 1",
+		if(($r[0]['xchan_name_date'] != $j->name_updated) || ($r[0]['xchan_connurl'] != $j->connections_url)) {
+			$r = q("update xchan set xchan_name = '%s', xchan_name_date = '%s', xchan_connurl = '%s' where xchan_hash = '%s' limit 1",
 				dbesc($j->name),
 				dbesc($j->name_updated),
+				dbesc($j->connections_url),
 				dbesc($xchan_hash)
 			);
 		}
@@ -405,8 +406,8 @@ function import_xchan_from_json($j) {
 	else {
 		$import_photos = true;
 		$x = q("insert into xchan ( xchan_hash, xchan_guid, xchan_guid_sig, xchan_pubkey, xchan_photo_mimetype,
-				xchan_photo_l, xchan_addr, xchan_url, xchan_name, xchan_network, xchan_photo_date, xchan_name_date)
-				values ( '%s', '%s', '%s', '%s' , '%s', '%s', '%s', '%s', '%s', '%s', '%s', '%s') ",
+				xchan_photo_l, xchan_addr, xchan_url, xchan_connurl, xchan_name, xchan_network, xchan_photo_date, xchan_name_date)
+				values ( '%s', '%s', '%s', '%s' , '%s', '%s', '%s', '%s', '%s', '%s', '%s', '%s', '%s') ",
 			dbesc($xchan_hash),
 			dbesc($j->guid),
 			dbesc($j->guid_sig),
@@ -415,6 +416,7 @@ function import_xchan_from_json($j) {
 			dbesc($j->photo),
 			dbesc($j->address),
 			dbesc($j->url),
+			dbesc($j->connections_url),
 			dbesc($j->name),
 			dbesc('zot'),
 			dbesc($j->photo_updated),
@@ -512,10 +514,11 @@ function import_xchan($arr) {
 	if($r) {
 		if($r[0]['xchan_photo_date'] != $arr['photo_updated'])
 			$update_photos = true;
-		if($r[0]['xchan_name_date'] != $arr['name_updated']) {
-			$r = q("update xchan set xchan_name = '%s', xchan_name_date = '%s' where xchan_hash = '%s' limit 1",
+		if(($r[0]['xchan_name_date'] != $arr['name_updated']) || ($r[0]['xchan_connurl'] != $arr['connections_url'])) {
+			$r = q("update xchan set xchan_name = '%s', xchan_name_date = '%s', xchan_connurl = '%s'  where xchan_hash = '%s' limit 1",
 				dbesc($arr['name']),
 				dbesc($arr['name_updated']),
+				dbesc($arr['connections_url']),
 				dbesc($xchan_hash)
 			);
 		}
@@ -523,8 +526,8 @@ function import_xchan($arr) {
 	else {
 		$import_photos = true;
 		$x = q("insert into xchan ( xchan_hash, xchan_guid, xchan_guid_sig, xchan_pubkey, xchan_photo_mimetype,
-				xchan_photo_l, xchan_addr, xchan_url, xchan_name, xchan_network, xchan_photo_date, xchan_name_date)
-				values ( '%s', '%s', '%s', '%s' , '%s', '%s', '%s', '%s', '%s', '%s', '%s', '%s') ",
+				xchan_photo_l, xchan_addr, xchan_url, xchan_connurl, xchan_name, xchan_network, xchan_photo_date, xchan_name_date)
+				values ( '%s', '%s', '%s', '%s' , '%s', '%s', '%s', '%s', '%s', '%s', '%s', '%s', '%s') ",
 			dbesc($xchan_hash),
 			dbesc($arr['guid']),
 			dbesc($arr['guid_sig']),
@@ -533,6 +536,7 @@ function import_xchan($arr) {
 			dbesc($arr['photo']),
 			dbesc($arr['address']),
 			dbesc($arr['url']),
+			dbesc($arr['connections_url']),
 			dbesc($arr['name']),
 			dbesc('zot'),
 			dbesc($arr['photo_updated']),
