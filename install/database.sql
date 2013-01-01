@@ -756,10 +756,7 @@ CREATE TABLE IF NOT EXISTS `site` (
   PRIMARY KEY (`site_url`),
   KEY `site_flags` (`site_flags`),
   KEY `site_update` (`site_update`),
-  KEY `site_directory` (`site_directory`),
-  KEY `site_flags_2` (`site_flags`),
-  KEY `site_update_2` (`site_update`),
-  KEY `site_directory_2` (`site_directory`)
+  KEY `site_directory` (`site_directory`)
 ) ENGINE=MyISAM DEFAULT CHARSET=utf8;
 
 CREATE TABLE IF NOT EXISTS `spam` (
@@ -833,6 +830,7 @@ CREATE TABLE IF NOT EXISTS `xchan` (
   `xchan_photo_s` char(255) NOT NULL DEFAULT '',
   `xchan_addr` char(255) NOT NULL DEFAULT '',
   `xchan_url` char(255) NOT NULL DEFAULT '',
+  `xchan_connurl` char(255) NOT NULL DEFAULT '',
   `xchan_name` char(255) NOT NULL DEFAULT '',
   `xchan_network` char(255) NOT NULL DEFAULT '',
   `xchan_flags` int(10) unsigned NOT NULL DEFAULT '0',
@@ -844,7 +842,8 @@ CREATE TABLE IF NOT EXISTS `xchan` (
   KEY `xchan_name` (`xchan_name`),
   KEY `xchan_network` (`xchan_network`),
   KEY `xchan_url` (`xchan_url`),
-  KEY `xchan_flags` (`xchan_flags`)
+  KEY `xchan_flags` (`xchan_flags`),
+  KEY `xchan_connurl` (`xchan_connurl`)
 ) ENGINE=MyISAM DEFAULT CHARSET=utf8;
 
 CREATE TABLE IF NOT EXISTS `xprof` (

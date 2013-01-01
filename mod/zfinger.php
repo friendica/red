@@ -118,11 +118,14 @@ function zfinger_init(&$a) {
 	$ret['photo']          = $e['xchan_photo_l'];
 	$ret['photo_updated']  = $e['xchan_photo_date'];
 	$ret['url']            = $e['xchan_url'];
+	$ret['connections_url']= (($e['xchan_connurl']) ? $e['xchan_connurl'] : z_root() . '/poco/' . $e['channel_address']);
 	$ret['name_updated']   = $e['xchan_name_date'];
 	$ret['target']         = $ztarget;
 	$ret['target_sig']     = $zsig;
 	$ret['searchable']     = $searchable;
 
+	if(! $e['xchan_connurl'])
+		
 // FIXME encrypt permissions when targeted so that only the target can view them, requires sending the pubkey and also checking that the target_sig is signed with that pubkey and isn't a forgery. 
 
 
