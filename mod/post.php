@@ -151,13 +151,13 @@ function post_post(&$a) {
 	if($msgtype === 'notify') {
 		$async = get_config('system','queued_fetch');
 
-		
 		if($async) {
 			// add to receive queue
 			// qreceive_add($data);
 		}
 		else {
 			$x = zot_fetch($data);
+			$ret['delivery_report'] = $x;
 		}
 
 		$ret['result'] = true;

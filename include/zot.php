@@ -672,7 +672,7 @@ function zot_fetch($arr) {
 	$fetch = zot_zot($url,$datatosend);
 
 	$result = zot_import($fetch);
-
+	return $result;
 }
 
 
@@ -741,7 +741,7 @@ function zot_import($arr) {
 					logger('Activity recipients: ' . print_r($deliveries,true));
 
 					$relay = ((array_key_exists('flags',$i['message']) && in_array('relay',$i['message']['flags'])) ? true : false);
-					process_delivery($i['notify']['sender'],$arr,$deliveries,$relay);
+					$result = process_delivery($i['notify']['sender'],$arr,$deliveries,$relay);
 
 				}
 				elseif($i['message']['type'] === 'mail') {
@@ -751,7 +751,7 @@ function zot_import($arr) {
 					logger('Mail recipients: ' . print_r($deliveries,true));
 
 
-					process_mail_delivery($i['notify']['sender'],$arr,$deliveries);
+					$result = process_mail_delivery($i['notify']['sender'],$arr,$deliveries);
 
 				}
 				elseif($i['message']['type'] === 'profile') {
@@ -760,12 +760,15 @@ function zot_import($arr) {
 					logger('Profile received: ' . print_r($arr,true));
 					logger('Profile recipients: ' . print_r($deliveries,true));
 
-					process_profile_delivery($i['notify']['sender'],$arr,$deliveries);
+					$result = process_profile_delivery($i['notify']['sender'],$arr,$deliveries);
 
 				}
 			}
 		}
 	}
+
+	return $result;
+
 }
 
 
@@ -827,27 +830,32 @@ function public_recips($msg) {
 
 function process_delivery($sender,$arr,$deliveries,$relay) {
 
+
+	$result = array();
 	
 	foreach($deliveries as $d) {
 		$r = q("select * from channel where channel_hash = '%s' limit 1",
 			dbesc($d['hash'])
 		);
 
-		if(! $r)
+		if(! $r) {
+			$result[] = array($d['hash'],'not found');
 			continue;
-
+		}
 		$channel = $r[0];
 
 		$perm = (($arr['uri'] == $arr['parent_uri']) ? 'send_stream' : 'post_comments');
 
 		if(! perm_is_allowed($channel['channel_id'],$sender['hash'],$perm)) {
 			logger("permission denied for delivery {$channel['channel_id']}");
+			$result[] = array($d['hash'],'permission denied');
 			continue;
 		}
 	
 
 		if($arr['item_restrict'] & ITEM_DELETED) {
 			delete_imported_item($sender,$arr,$channel['channel_id']);
+			$result[] = array($d['hash'],'deleted');
 			continue;
 		}
 
@@ -858,19 +866,23 @@ function process_delivery($sender,$arr,$deliveries,$relay) {
 		if($r) {
 			if($arr['edited'] > $r[0]['edited'])
 				update_imported_item($sender,$arr,$channel['channel_id']);
+			$result[] = array($d['hash'],'updated');
 			$item_id = $r[0]['id'];
 		}
 		else {
 			$arr['aid'] = $channel['channel_account_id'];
 			$arr['uid'] = $channel['channel_id'];
 			$item_id = item_store($arr);
+			$result[] = array($d['hash'],'posted');
 		}
 
 		if($relay && $item_id) {
 			logger('process_delivery: invoking relay');
 			proc_run('php','include/notifier.php','relay',intval($item_id));
+			$result[] = array($d['hash'],'relayed');
 		}
 	}
+	return $result;
 }
 
 
