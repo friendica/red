@@ -20,151 +20,120 @@ require_once('include/datetime.php');
 
 
 
-function poco_load($cid, $uid = 0,$zcid = 0,$url = null) {
+function poco_load($xchan = null,$url = null) {
 	$a = get_app();
 
-	if($cid) {
-		if((! $url) || (! $uid)) {
-			$r = q("select `poco`, `uid` from `contact` where `id` = %d limit 1",
-				intval($cid)
-			);
-			if(count($r)) {
-				$url = $r[0]['poco'];
-				$uid = $r[0]['uid'];
-			}
+	if($xchan && ! $url) {
+		$r = q("select xchan_connurl from xchan where xchan_hash = %d limit 1",
+			intval($xchan)
+		);
+		if($r) {
+			$url = $r[0]['xchan_connurl'];
+			$uid = $r[0]['abook_channel'];
 		}
-		if(! $uid)
-			return;
 	}
 
 	if(! $url)
 		return;
 
-	$url = $url . (($uid) ? '/@me/@all?fields=displayName,urls,photos' : '?fields=displayName,urls,photos') ;
+
+	$url = $url . '?fields=displayName,hash,urls,photos' ;
 
 	logger('poco_load: ' . $url, LOGGER_DEBUG);
 
-	$s = fetch_url($url);
+	$s = z_fetch_url($url);
 
-	logger('poco_load: returns ' . $s, LOGGER_DATA);
+	logger('poco_load: returns ' . print_r($s,true), LOGGER_DATA);
 
-	logger('poco_load: return code: ' . $a->get_curl_code(), LOGGER_DEBUG);
-
-	if(($a->get_curl_code() > 299) || (! $s))
+	if(! $s['success'])
 		return;
 
-	$j = json_decode($s);
+	$j = json_decode($s['body'],true);
 
-	logger('poco_load: json: ' . print_r($j,true),LOGGER_DATA);
+	logger('poco_load: ' . print_r($j,true),LOGGER_DATA);
 
-	if(! isset($j->entry))
+	if(! x($j,'entry') && is_array($j['entry']))
 		return;
 
 	$total = 0;
-	foreach($j->entry as $entry) {
+	foreach($j['entry'] as $entry) {
 
 		$total ++;
 		$profile_url = '';
 		$profile_photo = '';
-		$connect_url = '';
+		$address = '';
 		$name = '';
+		$hash = '';
 
-		$name = $entry->displayName;
+		$name = $entry['displayName'];
+		$hash = $entry['hash'];
 
-		if(isset($entry->urls)) {
-			foreach($entry->urls as $url) {
-				if($url->type == 'profile') {
-					$profile_url = $url->value;
+		if(x($entry,'urls') && is_array($entry['urls'])) {
+			foreach($entry['urls'] as $url) {
+				if($url['type'] == 'profile') {
+					$profile_url = $url['value'];
 					continue;
 				}
-				if($url->type == 'webfinger') {
-					$connect_url = str_replace('acct:' , '', $url->value);
-					continue;
-				}
-			}
-		}
-		if(isset($entry->photos)) { 
-			foreach($entry->photos as $photo) {
-				if($photo->type == 'profile') {
-					$profile_photo = $photo->value;
+				if($url['type'] == 'zot') {
+					$address = str_replace('acct:' , '', $url['value']);
 					continue;
 				}
 			}
 		}
+		if(x($entry,'photos') && is_array($entry['photos'])) { 
+			foreach($entry['photos'] as $photo) {
+				if($photo['type'] == 'profile') {
+					$profile_photo = $photo['value'];
+					continue;
+				}
+			}
+		}
 
-		if((! $name) || (! $profile_url) || (! $profile_photo))
+		if((! $name) || (! $profile_url) || (! $profile_photo) || (! $hash) || (! $address))
 			continue; 
 		 
-		$x = q("select * from `gcontact` where `nurl` = '%s' limit 1",
-			dbesc(normalise_link($profile_url))
+		$x = q("select xchan_hash from xchan where xchan_hash = '%s' limit 1",
+			dbesc($hash)
 		);
 
-		if(count($x)) {
-			$gcid = $x[0]['id'];
+		// We've never seen this person before. Import them.
 
-			if($x[0]['name'] != $name || $x[0]['photo'] != $profile_photo) {
-				q("update gcontact set `name` = '%s', `photo` = '%s', `connect` = '%s', `url` = '%s' 
-					where `nurl` = '%s' limit 1",
-					dbesc($name),
-					dbesc($profile_photo),
-					dbesc($connect_url),
-					dbesc($profile_url),
-					dbesc(normalise_link($profile_url))
-				);
+		if(($x !== false) && (! count($x))) {
+			if($address) {
+				$z = zot_finger($address,null);
+				if($z['success']) {
+					$j = json_decode($z['body'],true);
+					if($j)
+						import_xchan($j);
+				}
 			}
 		}
-		else {
-			q("insert into `gcontact` (`name`,`url`,`nurl`,`photo`,`connect`)
-				values ( '%s', '%s', '%s', '%s','%s') ",
-				dbesc($name),
-				dbesc($profile_url),
-				dbesc(normalise_link($profile_url)),
-				dbesc($profile_photo),
-				dbesc($connect_url)
-			);
-			$x = q("select * from `gcontact` where `nurl` = '%s' limit 1",
-				dbesc(normalise_link($profile_url))
-			);
-			if(count($x))
-				$gcid = $x[0]['id'];
-		}
-		if(! $gcid)
-			return;
+	
 
-		$r = q("select * from glink where `cid` = %d and `uid` = %d and `gcid` = %d and `zcid` = %d limit 1",
-			intval($cid),
-			intval($uid),
-			intval($gcid),
-			intval($zcid)
+		$r = q("select * from xlink where xlink_xchan = '%s' and xlink_link = '%s' limit 1",
+			dbesc($xchan),
+			dbesc($hash)
 		);
-		if(! count($r)) {
-			q("insert into glink ( `cid`,`uid`,`gcid`,`zcid`, `updated`) values (%d,%d,%d,%d, '%s') ",
-				intval($cid),
-				intval($uid),
-				intval($gcid),
-				intval($zcid),
+		if(! $r) {
+			q("insert into xlink ( xlink_xchan, xlink_link, xlink_updated ) values ( '%s', '%s', '%s' ) ",
+				dbesc($xchan),
+				dbesc($hash),
 				dbesc(datetime_convert())
 			);
 		}
 		else {
-			q("update glink set updated = '%s' where `cid` = %d and `uid` = %d and `gcid` = %d and zcid = %d limit 1",
+			q("update xlink set xlink_updated = '%s' where xlink_id = %d limit 1",
 				dbesc(datetime_convert()),
-				intval($cid),
-				intval($uid),
-				intval($gcid),
-				intval($zcid)
+				intval($r[0]['xlink_id'])
 			);
 		}
 
 	}
 	logger("poco_load: loaded $total entries",LOGGER_DEBUG);
 
-	q("delete from glink where `cid` = %d and `uid` = %d and `zcid` = %d and `updated` < UTC_TIMESTAMP - INTERVAL 2 DAY",
-		intval($cid),
-		intval($uid),
-		intval($zcid)
+	q("delete from xlink where xlink_xchan = '%s' and xlink_updated` < UTC_TIMESTAMP - INTERVAL 2 DAY",
+		dbesc($xchan)
 	);
-
 }
 
 

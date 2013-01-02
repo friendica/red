@@ -94,19 +94,17 @@ function onepoll_run($argv, $argc){
 	// set last updated timestamp
 
 
-/*
-	if($contact['poco']) {	
-		$r = q("SELECT count(*) as total from glink 
-			where `cid` = %d and updated > UTC_TIMESTAMP() - INTERVAL 1 DAY",
-			intval($contact['id'])
+	$r = null;
+
+	if($contact['xchan_connurl']) {	
+		$r = q("SELECT xlink_id from xlink 
+			where xlink_xchan = '%s'and updated > UTC_TIMESTAMP() - INTERVAL 1 DAY",
+			intval($contact['xchan_hash'])
 		);
 	}
-	if(count($r)) {
-		if(! $r[0]['total']) {
-			poco_load($contact['id'],$importer_uid,0,$contact['poco']);
-		}
+	if($r) {
+		poco_load($contact['xchan_hash'],$contact['xchan_connurl']);
 	}
-*/
 
 	return;
 }
