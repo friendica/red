@@ -206,7 +206,7 @@ function update_r1013() {
 `xlink_updated` DATETIME NOT NULL DEFAULT '0000-00-00 00:00:00'
 ) ENGINE = MYISAM ");
 
-	$r2 = q("alter table xlink add index ( xlink_xchan ), add index ( xlink link ), add index ( xlink_updated ) ");
+	$r2 = q("alter table xlink add index ( xlink_xchan ), add index ( xlink_link ), add index ( xlink_updated ) ");
 	if($r && $r2)
 		return UPDATE_SUCCESS;
 	return UPDATE_FAILED;
