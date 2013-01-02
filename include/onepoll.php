@@ -98,7 +98,7 @@ function onepoll_run($argv, $argc){
 
 	if($contact['xchan_connurl']) {	
 		$r = q("SELECT xlink_id from xlink 
-			where xlink_xchan = '%s'and updated > UTC_TIMESTAMP() - INTERVAL 1 DAY",
+			where xlink_xchan = '%s' and xlink_updated > UTC_TIMESTAMP() - INTERVAL 1 DAY",
 			intval($contact['xchan_hash'])
 		);
 	}
