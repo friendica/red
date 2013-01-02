@@ -199,7 +199,7 @@ ADD INDEX ( `xchan_connurl` )");
 }
 
 function update_r1013() {
-	$r = q"CREATE TABLE if not exists `xlink` (
+	$r = q("CREATE TABLE if not exists `xlink` (
 `xlink_id` INT UNSIGNED NOT NULL AUTO_INCREMENT PRIMARY KEY ,
 `xlink_xchan` CHAR( 255 ) NOT NULL DEFAULT '',
 `xlink_link` CHAR( 255 ) NOT NULL DEFAULT '',
