@@ -248,9 +248,11 @@ function zot_refresh($them,$channel = null) {
 			else
 				$permissions = $j['permissions'];
 
-			foreach($permissions as $k => $v) {
-				if($v) {
-					$their_perms = $their_perms | intval($global_perms[$k][1]);
+			if($permissions && is_array($permissions)) {
+				foreach($permissions as $k => $v) {
+					if($v) {
+						$their_perms = $their_perms | intval($global_perms[$k][1]);
+					}
 				}
 			}
 

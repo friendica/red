@@ -846,6 +846,17 @@ CREATE TABLE IF NOT EXISTS `xchan` (
   KEY `xchan_connurl` (`xchan_connurl`)
 ) ENGINE=MyISAM DEFAULT CHARSET=utf8;
 
+CREATE TABLE IF NOT EXISTS `xlink` (
+  `xlink_id` int(10) unsigned NOT NULL AUTO_INCREMENT,
+  `xlink_xchan` char(255) NOT NULL DEFAULT '',
+  `xlink_link` char(255) NOT NULL DEFAULT '',
+  `xlink_updated` datetime NOT NULL DEFAULT '0000-00-00 00:00:00',
+  PRIMARY KEY (`xlink_id`),
+  KEY `xlink_xchan` ( `xlink_xchan` ),
+  KEY `xlink_link` ( `xlink_link` ),
+  KEY `xlink_updated` ( `xlink_updated` )
+) ENGINE=MyISAM DEFAULT CHARSET=utf8;
+
 CREATE TABLE IF NOT EXISTS `xprof` (
   `xprof_hash` char(255) NOT NULL,
   `xprof_desc` char(255) NOT NULL DEFAULT '',

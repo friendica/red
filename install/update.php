@@ -1,6 +1,6 @@
 <?php
 
-define( 'UPDATE_VERSION' , 1013 );
+define( 'UPDATE_VERSION' , 1014 );
 
 /**
  *
@@ -194,6 +194,20 @@ function update_r1012() {
 ADD INDEX ( `xchan_connurl` )");
 
 	if($r)
+		return UPDATE_SUCCESS;
+	return UPDATE_FAILED;
+}
+
+function update_r1013() {
+	$r = q("CREATE TABLE if not exists `xlink` (
+`xlink_id` INT UNSIGNED NOT NULL AUTO_INCREMENT PRIMARY KEY ,
+`xlink_xchan` CHAR( 255 ) NOT NULL DEFAULT '',
+`xlink_link` CHAR( 255 ) NOT NULL DEFAULT '',
+`xlink_updated` DATETIME NOT NULL DEFAULT '0000-00-00 00:00:00'
+) ENGINE = MYISAM ");
+
+	$r2 = q("alter table xlink add index ( xlink_xchan ), add index ( xlink_link ), add index ( xlink_updated ) ");
+	if($r && $r2)
 		return UPDATE_SUCCESS;
 	return UPDATE_FAILED;
 }
