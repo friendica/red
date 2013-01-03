@@ -210,7 +210,7 @@ function ping_init(&$a) {
 
 	$t5 = dba_timer();
 
-	$events = q("SELECT count(`event`.`id`) as total, type, start, adjust FROM `event`
+	$events = q("SELECT type, start, adjust FROM `event`
 		WHERE `event`.`uid` = %d AND `start` < '%s' AND `finish` > '%s' and `ignore` = 0
 		ORDER BY `start` ASC ",
 			intval(local_user()),
@@ -218,8 +218,8 @@ function ping_init(&$a) {
 			dbesc(datetime_convert('UTC','UTC','now'))
 	);
 
-	if($events && count($events)) {
-		$result['all_events'] = intval($events[0]['total']);
+	if($events) {
+		$result['all_events'] = count($events);
 
 		if($result['all_events']) {
 			$str_now = datetime_convert('UTC',$a->timezone,'now','Y-m-d');
