@@ -29,7 +29,7 @@ function profile_aside(&$a) {
 	}
 
 
-	$x = q("select uid as profile_uid from channel where address = '%s' limit 1",
+	$x = q("select channel_id as profile_uid from channel where channel_address = '%s' limit 1",
 		dbesc(argv(1))
 	);
 	if($x) {
