@@ -1,6 +1,6 @@
 <?php
 
-define( 'UPDATE_VERSION' , 1014 );
+define( 'UPDATE_VERSION' , 1015 );
 
 /**
  *
@@ -211,3 +211,11 @@ function update_r1013() {
 		return UPDATE_SUCCESS;
 	return UPDATE_FAILED;
 }
+
+function update_r1014() {
+	$r = q("ALTER TABLE `verify` CHANGE `id` `id` INT( 10 ) UNSIGNED NOT NULL AUTO_INCREMENT");
+	if($r)
+		return UPDATE_SUCCESS;
+	return UPDATE_FAILED;
+}
+

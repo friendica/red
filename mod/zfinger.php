@@ -42,7 +42,7 @@ function zfinger_init(&$a) {
 			dbesc($zhash)
 		);
 	}
-	if(strlen($zguid) && strlen($zguid_sig)) {
+	elseif(strlen($zguid) && strlen($zguid_sig)) {
 		$r = q("select channel.*, xchan.* from channel left join xchan on channel_hash = xchan_hash 
 			where channel_guid = '%s' and channel_guid_sig = '%s' limit 1",
 			dbesc($zguid),

@@ -28,11 +28,22 @@ function profile_aside(&$a) {
 		$profile = argv(1);		
 	}
 
-	profile_load($a,$which,$profile);
 
-	$a->set_widget('archive',posted_date_widget($a->get_baseurl(true) . '/channel/' . $a->profile['nickname'],$a->profile['profile_uid'],true));	
-	$a->set_widget('categories',categories_widget($a->get_baseurl(true) . '/channel/' . $a->profile['nickname'],$cat));
-
+	$x = q("select uid as profile_uid from channel where address = '%s' limit 1",
+		dbesc(argv(1))
+	);
+	if($x) {
+		$a->profile = $x[0];
+		$channel_display = get_pconfig($a->profile['profile_uid'],'system','channel_format');
+		if(! $channel_display)
+			profile_load($a,$which,$profile);
+		if($channel_display === 'full')
+			$a->page['template'] = 'full';
+		else {
+			$a->set_widget('archive',posted_date_widget($a->get_baseurl(true) . '/channel/' . $a->profile['nickname'],$a->profile['profile_uid'],true));	
+			$a->set_widget('categories',categories_widget($a->get_baseurl(true) . '/channel/' . $a->profile['nickname'],$cat));
+		}
+	}
 }
 
 

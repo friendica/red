@@ -4200,13 +4200,15 @@ function fetch_post_tags($items) {
 	$tag_finder = array();
 	if($items) {		
 		foreach($items as $item) {
-			if(array_key_exists('item_id',$item)) {
-				if(! in_array($item['item_id'],$tag_finder))
-					$tag_finder[] = $item['item_id'];
-			}
-			else {
-				if(! in_array($item['id'],$tag_finder))
-					$tag_finder[] = $item['id'];
+			if(is_array($item)) {
+				if(array_key_exists('item_id',$item)) {
+					if(! in_array($item['item_id'],$tag_finder))
+						$tag_finder[] = $item['item_id'];
+				}
+				else {
+					if(! in_array($item['id'],$tag_finder))
+						$tag_finder[] = $item['id'];
+				}
 			}
 		}
 	}
@@ -4222,7 +4224,7 @@ function fetch_post_tags($items) {
 
 
 	for($x = 0; $x < count($items); $x ++) {
-		if(count($tags)) {
+		if($tags) {
 			foreach($tags as $t) {
 				if(array_key_exists('item_id',$items[$x])) {
 					if($t['oid'] == $items[$x]['item_id']) {
