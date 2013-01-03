@@ -358,7 +358,13 @@ function zot_register_hub($arr) {
 
 		$guid_hash = base64url_encode(hash('whirlpool',$arr['guid'] . $arr['guid_sig'], true));
 
-		$x = z_fetch_url($arr['url'] . '/.well-known/zot-info/?f=&hash=' . $guid_hash);
+		$url = $arr['url'] . '/.well-known/zot-info/?f=&guid_hash=' . $guid_hash;
+
+		logger('zot_register_hub: ' . $url);
+
+		$x = z_fetch_url($url);
+
+		logger('zot_register_hub: ' . print_r($x,true));
 
 		if($x['success']) {
 			$record = json_decode($x['body'],true);
