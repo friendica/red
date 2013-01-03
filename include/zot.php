@@ -180,7 +180,8 @@ function zot_finger($webbie,$channel) {
 function zot_refresh($them,$channel = null) {
 
 	logger('zot_refresh: them: ' . print_r($them,true), LOGGER_DATA);
-	logger('zot_refresh: channel: ' . print_r($channel,true), LOGGER_DATA);
+	if($channel)
+		logger('zot_refresh: channel: ' . print_r($channel,true), LOGGER_DATA);
 
 	if($them['hubloc_url'])
 		$url = $them['hubloc_url'];
@@ -283,7 +284,7 @@ function zot_refresh($them,$channel = null) {
 				if($z)
 					$default_perms = intval($z[0]['my_perms']);		
 
-				$y = q("insert into abook ( abook_account, abook_channel, abook_xchan, abook_their_perms, abook_my_perms, abook_created, abook_updated, abook_flags ) values ( %d, %d, '%s', %d, '%s', '%s', %d )",
+				$y = q("insert into abook ( abook_account, abook_channel, abook_xchan, abook_their_perms, abook_my_perms, abook_created, abook_updated, abook_flags ) values ( %d, %d, '%s', %d, %d, '%s', '%s', %d )",
 					intval($channel['channel_account_id']),
 					intval($channel['channel_id']),
 					dbesc($x['hash']),
