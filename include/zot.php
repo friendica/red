@@ -909,6 +909,8 @@ function process_delivery($sender,$arr,$deliveries,$relay) {
 	if(! $deliveries)
 		$result[] = array('','no recipients');
 
+	logger('process_delivery: local results: ' . print_r($result,true));
+
 	return $result;
 }
 
