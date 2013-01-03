@@ -49,7 +49,7 @@ require_once('include/html2plain.php');
 
 require_once('include/cli_startup.php');
 require_once('include/zot.php');
-
+require_once('include/queue_fn.php');
 
 function notifier_run($argv, $argc){
 
@@ -261,8 +261,8 @@ function notifier_run($argv, $argc){
 	stringify_array_elms($recipients);
 	if(! $recipients)
 		return;
-	logger('notifier: recipients: ' . print_r($recipients,true));
 
+	logger('notifier: recipients: ' . print_r($recipients,true));
 
 	$env_recips = null;
 	if($private) {

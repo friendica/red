@@ -805,7 +805,7 @@ CREATE TABLE IF NOT EXISTS `tokens` (
 ) ENGINE=MyISAM DEFAULT CHARSET=utf8;
 
 CREATE TABLE IF NOT EXISTS `verify` (
-  `id` int(10) unsigned NOT NULL,
+  `id` int(10) unsigned NOT NULL AUTO_INCREMENT,
   `channel` int(10) unsigned NOT NULL DEFAULT '0',
   `type` char(32) NOT NULL DEFAULT '',
   `token` char(255) NOT NULL DEFAULT '',
