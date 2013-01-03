@@ -57,7 +57,7 @@ function item_post(&$a) {
 	// If you are unsure, it is prudent (and important) to leave it unset.   
 
 	$origin = (($api_source && array_key_exists('origin',$_REQUEST)) ? intval($_REQUEST['origin']) : 1);
-
+	$owner_hash = null;
 
 
 	$profile_uid = ((x($_REQUEST,'profile_uid')) ? intval($_REQUEST['profile_uid']) : 0);
@@ -266,6 +266,7 @@ function item_post(&$a) {
 			$str_group_allow   = $parent_item['allow_gid'];
 			$str_contact_deny  = $parent_item['deny_cid'];
 			$str_group_deny    = $parent_item['deny_gid'];
+			$owner_hash        = $parent_item['owner_xchan'];
 		}
 	
 		if(! strlen($body)) {
@@ -518,7 +519,7 @@ function item_post(&$a) {
 	$datarray['aid']           = $channel['channel_account_id'];
 	$datarray['uid']           = $profile_uid;
 
-	$datarray['owner_xchan']   = $owner_xchan['xchan_hash'];
+	$datarray['owner_xchan']   = (($owner_hash) ? $owner_hash : $owner_xchan['xchan_hash']);
 	$datarray['author_xchan']  = $observer['xchan_hash'];
 	$datarray['created']       = datetime_convert();
 	$datarray['edited']        = datetime_convert();
