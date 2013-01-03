@@ -104,7 +104,7 @@ EOT;
 		$nav['home'] = array($homelink, t('Home'), "", t('Home Page'));
 
 
-	if(($a->config['register_policy'] == REGISTER_OPEN) && (! local_user()) && (! remote_user()))
+	if(($a->config['system']['register_policy'] == REGISTER_OPEN) && (! local_user()) && (! remote_user()))
 		$nav['register'] = array('register',t('Register'), "", t('Create an account'));
 
 	$help_url = $a->get_baseurl($ssl_state) . '/help';

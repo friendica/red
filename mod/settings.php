@@ -519,7 +519,7 @@ function settings_post(&$a) {
 //	}
 
 	//$_SESSION['theme'] = $theme;
-	if($email_changed && $a->config['register_policy'] == REGISTER_VERIFY) {
+	if($email_changed && $a->config['system']['register_policy'] == REGISTER_VERIFY) {
 
 		// FIXME - set to un-verified, blocked and redirect to logout
 		// Why? Are we verifying people or email addresses?

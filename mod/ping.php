@@ -202,7 +202,7 @@ function ping_init(&$a) {
 	if($mails)
 		$result['mail'] = intval($mails[0]['total']);
 		
-	if ($a->config['register_policy'] == REGISTER_APPROVE && is_site_admin()){
+	if ($a->config['system']['register_policy'] == REGISTER_APPROVE && is_site_admin()){
 		$regs = q("SELECT `contact`.`name`, `contact`.`url`, `contact`.`micro`, `register`.`created`, COUNT(*) as `total` FROM `contact` RIGHT JOIN `register` ON `register`.`uid`=`contact`.`uid` WHERE `contact`.`self`=1");
 		if($regs)
 			$result['register'] = intval($regs[0]['total']);

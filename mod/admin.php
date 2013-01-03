@@ -300,9 +300,9 @@ function admin_page_site_post(&$a){
 	set_config('system','theme', $theme);
 	set_config('system','maximagesize', $maximagesize);
 	
-	set_config('config','register_policy', $register_policy);
+	set_config('system','register_policy', $register_policy);
 	set_config('system','account_abandon_days', $abandon_days);
-	set_config('config','register_text', $register_text);
+	set_config('system','register_text', $register_text);
 	set_config('system','allowed_sites', $allowed_sites);
 	set_config('system','allowed_email', $allowed_email);
 	set_config('system','block_public', $block_public);
@@ -403,7 +403,7 @@ function admin_page_site(&$a) {
 		'$theme' 			=> array('theme', t("System theme"), get_config('system','theme'), t("Default system theme - may be over-ridden by user profiles - <a href='#' id='cnftheme'>change theme settings</a>"), $theme_choices),
 		'$ssl_policy'       => array('ssl_policy', t("SSL link policy"), (string) intval(get_config('system','ssl_policy')), t("Determines whether generated links should be forced to use SSL"), $ssl_choices),
 		'$maximagesize'		=> array('maximagesize', t("Maximum image size"), get_config('system','maximagesize'), t("Maximum size in bytes of uploaded images. Default is 0, which means no limits.")),
-		'$register_policy'	=> array('register_policy', t("Register policy"), $a->config['register_policy'], "", $register_choices),
+		'$register_policy'	=> array('register_policy', t("Register policy"), $a->config['system']['register_policy'], "", $register_choices),
 		'$register_text'	=> array('register_text', t("Register text"), htmlentities($a->config['register_text'], ENT_QUOTES, 'UTF-8'), t("Will be displayed prominently on the registration page.")),
 		'$abandon_days'     => array('abandon_days', t('Accounts abandoned after x days'), get_config('system','account_abandon_days'), t('Will not waste system resources polling external sites for abandonded accounts. Enter 0 for no time limit.')),
 		'$allowed_sites'	=> array('allowed_sites', t("Allowed friend domains"), get_config('system','allowed_sites'), t("Comma separated list of domains which are allowed to establish friendships with this site. Wildcards are accepted. Empty to allow any domains")),

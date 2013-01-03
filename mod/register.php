@@ -42,7 +42,7 @@ function register_post(&$a) {
 		return;
 	}
 
-	$policy = get_config('config','register_policy');
+	$policy = get_config('system','register_policy');
 
 	switch($policy) {
 

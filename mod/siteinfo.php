@@ -31,7 +31,7 @@ function siteinfo_init(&$a) {
 			'version' => FRIENDICA_VERSION,
 			'url' => z_root(),
 			'plugins' => $visible_plugins,
-			'register_policy' =>  $register_policy[$a->config['register_policy']],
+			'register_policy' =>  $register_policy[$a->config['system']['register_policy']],
 			'admin' => $admin,
 			'site_name' => $a->config['sitename'],
 			'platform' => FRIENDICA_PLATFORM,

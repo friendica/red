@@ -1033,7 +1033,7 @@ function check_config(&$a) {
 
 
 // wrapper for adding a login box. If $register == true provide a registration
-// link. This will most always depend on the value of $a->config['register_policy'].
+// link. This will most always depend on the value of $a->config['system']['register_policy'].
 // returns the complete html for inserting into the page
 
 if(! function_exists('login')) {

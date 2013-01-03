@@ -1467,7 +1467,7 @@
 		$server = $a->get_hostname();
 		$logo = $a->get_baseurl() . '/images/friendica-64.png';
 		$email = $a->config['admin_email'];
-		$closed = (($a->config['register_policy'] == REGISTER_CLOSED) ? 'true' : 'false');
+		$closed = (($a->config['system']['register_policy'] == REGISTER_CLOSED) ? 'true' : 'false');
 		$private = (($a->config['system']['block_public']) ? 'true' : 'false');
 		$textlimit = (string) (($a->config['max_import_size']) ? $a->config['max_import_size'] : 200000);
 		if($a->config['api_import_size'])
