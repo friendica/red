@@ -225,7 +225,11 @@ function notifier_run($argv, $argc){
 		$encoded_item = encode_item($target_item);
 		
 		$relay_to_owner = (((! $top_level_post) && ($target_item['item_flags'] & ITEM_ORIGIN)) ? true : false);
-		if($relay_to_owner) {
+
+		// $cmd === 'relay' indicates the owner is sending it to the original recipients
+		// don't allow the item in the relay command to relay to owner under any circumstances, it will loop
+
+		if(($relay_to_owner) && (! $cmd === 'relay')) {
 			logger('notifier: followup relay', LOGGER_DEBUG);
 			$recipients = array($parent_item['owner_xchan']);
 			$private = true;
