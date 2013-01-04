@@ -220,6 +220,8 @@ function zot_refresh($them,$channel = null) {
 
 	$result = z_post_url($url . $rhs,$postvars);
 	
+	logger('zot_refresh: zot-info: ' . print_r($result,true));
+
 	if($result['success']) {
 
 		$j = json_decode($result['body'],true);
