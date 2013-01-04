@@ -214,7 +214,7 @@ header #banner #logo-text {
 
 
 
-.nav-commlink, .nav-login-link {
+.nav-commlink {
     display: block;
     height: 15px;
 	margin-top: 67px;
@@ -3618,6 +3618,7 @@ nav .nav-notify.show {
   display: block;
 }
 nav #nav-help-link,
+nav #nav-login-link,
 nav #nav-search-link,
 nav #nav-directory-link,
 nav #nav-apps-link,

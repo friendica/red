@@ -72,8 +72,9 @@ EOT;
 		
 		// user menu
 		$nav['usermenu'][] = Array('channel/' . $channel['channel_address'], t('Status'), "", t('Your posts and conversations'));
-		$nav['usermenu'][] = Array('profile/' . $channel['channel_address'], t('Profile'), "", t('Your profile page'));
-
+		$nav['usermenu'][] = Array('profile/' . $channel['channel_address'], t('View Profile'), "", t('Your profile page'));
+		if(feature_enabled(local_user(),'multi_profiles'))
+			$nav['usermenu']   = Array('profiles', t('Edit Profiles'),"", t('Manage/Edit Profiles'));
 		$nav['usermenu'][] = Array('photos/' . $channel['channel_address'], t('Photos'), "", t('Your photos'));
 //		$nav['usermenu'][] = Array('events/', t('Events'), "", t('Your events'));
 		
@@ -151,8 +152,6 @@ EOT;
 		$nav['manage'] = array('manage', t('Channel Select'), "", t('Manage Your Channels'));
 
 		$nav['settings'] = array('settings', t('Settings'),"", t('Account/Channel Settings'));
-		if(feature_enabled(local_user(),'multi_profiles'))
-			$nav['profiles'] = array('profiles', t('Profiles'),"", t('Manage/Edit Profiles'));
 
 		$nav['contacts'] = array('connections', t('Connections'),"", t('Manage/Edit Friends and Connections'));
 	}
