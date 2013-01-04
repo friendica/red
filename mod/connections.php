@@ -169,6 +169,11 @@ function connections_content(&$a) {
 
 		}
 
+		if($cmd === 'refresh') {
+			zot_refresh($orig_record[0],get_app()->get_channel());
+			goaway($a->get_baseurl(true) . '/connections/' . $contact_id);
+		}
+
 		if($cmd === 'block') {
 			if(abook_toggle_flag($orig_record[0],ABOOK_FLAG_BLOCKED))
 				info((($orig_record[0]['abook_flags'] & ABOOK_FLAG_BLOCKED) 
