@@ -80,6 +80,22 @@ background: #fff;
   padding: 1px;
 }
 
+.icon.mail {
+  background-image: url("../img/message.png");
+ min-width: 22px;
+  height: 22px; 
+  background-position: left center;
+  padding: 1px;
+}
+
+.icon.events {
+  background-image: url("../img/events.png");
+  min-width: 22px;
+  height: 22px; 
+  background-position: left center;
+  padding: 1px;
+}
+
 a, a:visited, a:link { color: #dd0000; text-decoration: none; }
 a:hover { color: #dd0000; text-decoration: underline; }
 
