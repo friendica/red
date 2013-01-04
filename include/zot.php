@@ -186,7 +186,7 @@ function zot_refresh($them,$channel = null) {
 	if($them['hubloc_url'])
 		$url = $them['hubloc_url'];
 	else {
-		$r = q("select hubloc_url from hubloc where hubloc_hash = '%s' and hubloc_flags & %d limit 1",
+		$r = q("select hubloc_url from hubloc where hubloc_hash = '%s' and ( hubloc_flags & %d ) limit 1",
 			dbesc($them['xchan_hash']),
 			intval(HUBLOC_FLAGS_PRIMARY)
 		);
