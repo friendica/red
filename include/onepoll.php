@@ -96,7 +96,7 @@ function onepoll_run($argv, $argc){
 		$x = z_fetch_url($feedurl . '?f=$mindate=' . $last_update);
 		if($x['success']) {
 			$total = 0;
-			$j = json_decode($x['body'],);
+			$j = json_decode($x['body'],true);
 			if($j['success'] && $j['messages']) {
 				foreach($j['messages'] as $message) {
 					$results = process_delivery(array('hash' => $contact['xchan_hash']),$message,
