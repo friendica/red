@@ -7,13 +7,15 @@ function zfinger_init(&$a) {
 
 	$ret = array('success' => false);
 
-	$zhash     = ((x($_REQUEST,'guid_hash'))  ? $_REQUEST['guid_hash']  : '');
-	$zguid     = ((x($_REQUEST,'guid'))       ? $_REQUEST['guid']       : '');
-	$zguid_sig = ((x($_REQUEST,'guid_sig'))   ? $_REQUEST['guid_sig']   : '');
-	$zaddr     = ((x($_REQUEST,'address'))    ? $_REQUEST['address']    : '');
-	$ztarget   = ((x($_REQUEST,'target'))     ? $_REQUEST['target']     : '');
-	$zsig      = ((x($_REQUEST,'target_sig')) ? $_REQUEST['target_sig'] : '');
-	$zkey      = ((x($_REQUEST,'key'))        ? $_REQUEST['key']        : '');
+	$zhash     = ((x($_REQUEST,'guid_hash'))  ? $_REQUEST['guid_hash']   : '');
+	$zguid     = ((x($_REQUEST,'guid'))       ? $_REQUEST['guid']        : '');
+	$zguid_sig = ((x($_REQUEST,'guid_sig'))   ? $_REQUEST['guid_sig']    : '');
+	$zaddr     = ((x($_REQUEST,'address'))    ? $_REQUEST['address']     : '');
+	$ztarget   = ((x($_REQUEST,'target'))     ? $_REQUEST['target']      : '');
+	$zsig      = ((x($_REQUEST,'target_sig')) ? $_REQUEST['target_sig']  : '');
+	$zkey      = ((x($_REQUEST,'key'))        ? $_REQUEST['key']         : '');
+	$mindate   = ((x($_REQUEST,'mindate'))    ? $_REQUEST['mindate']     : '');
+	$feed      = ((x($_REQUEST,'feed'))       ? intval($_REQUEST['feed']) : 0);
 
 	if($ztarget) {
 		if((! $zkey) || (! $zsig) || (! rsa_verify($ztarget,base64url_decode($zsig),$zkey))) {
@@ -138,6 +140,11 @@ function zfinger_init(&$a) {
 
 	if($permissions['view_profile'])
 		$ret['profile']  = $profile;
+
+//	if($feed && $permissions['view_stream'])
+//		$ret['messages']  = $zot_feed($e['channel_id'],(($ztarget && $zsig) 
+//				? base64url_encode(hash('whirlpool',$ztarget . $zsig,true)) 
+//				: '' ),$mindate);
 
 	// array of (verified) hubs this channel uses
 

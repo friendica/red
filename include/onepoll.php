@@ -90,6 +90,25 @@ function onepoll_run($argv, $argc){
 
 	}
 
+	if($contact['xchan_connurl']) {
+		$feedurl = str_replace('/poco/','/zotfeed/',$channel['xchan_connurl']);
+		
+		$x = z_fetch_url($feedurl . '?f=$mindate=' . $last_update);
+		if($x['success']) {
+			$total = 0;
+			$j = json_decode($x['body'],);
+			if($j['success'] && $j['messages']) {
+				foreach($j['messages'] as $message) {
+					$results = process_delivery(array('hash' => $contact['xchan_hash']),$message,
+						array(array('hash' => $importer['xchan_hash'])), false);
+					$total ++;
+				}
+				logger("onepoll: $total messages processed");
+			}
+		}
+	}
+			
+
 	// fetch some items
 	// set last updated timestamp
 

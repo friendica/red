@@ -4246,3 +4246,45 @@ function fetch_post_tags($items) {
 
 	return $items;
 }
+
+
+
+function zot_feed($uid,$observer,$mindate) {
+
+	$result = array();
+	$mindate = datetime_convert('UTC','UTC',$mindate);
+	if(! $mindate)
+		$mindate = '0000-00-00 00:00:00';
+
+	if(! perm_is_allowed($uid,$observer,'view_stream')) {
+		return $result;
+	}
+
+// FIXME
+//	$sql_extra = item_permissions_sql($r[0]['channel_id'],$remote_contact,$groups);
+
+	if($mindate != '0000-00-00 00:00:00')
+		$sql_extra .= " and created > '$mindate' ";
+
+	$limit = 200;
+
+	$items = q("SELECT item.* from item
+		WHERE uid = %d AND item_restrict = 0
+		AND (item_flags &  %d) 
+		$sql_extra ORDER BY created DESC limit 0, $limit",
+		intval($uid),
+		intval(ITEM_WALL)
+	);
+	if($items) {
+		xchan_query($items);
+		$items = fetch_post_tags($items);
+	} else {
+		$items = array();
+	}
+
+	foreach($items as $item)
+		$result[] = encode_item($item);
+
+	return $result;
+
+}
