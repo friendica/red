@@ -44,7 +44,7 @@ color: #d00;
 }
 .icon.notify {
   background-image: url("../img/notify_on.png");
- min-width: 22px;
+  min-width: 22px;
   height: 22px;
   margin-top: -4px; 
   background-position: left center;
@@ -52,40 +52,45 @@ color: #d00;
 }
 .icon.gear {
   background-image: url("../img/settings.png");
- min-width: 22px;
+  min-width: 22px;
   height: 22px; 
+  margin-top: -2px; 
   background-position: left center;
   padding: 1px;
 }
 
 .icon.home {
   background-image: url("../img/home.png");
- min-width: 22px;
+  min-width: 22px;
   height: 22px; 
+  margin-top: -4px; 
   background-position: left center;
   padding: 1px;
 }
 
 .icon.network {
   background-image: url("../img/network.png");
- min-width: 22px;
+  min-width: 22px;
   height: 22px; 
+  margin-top: -4px; 
   background-position: left center;
   padding: 1px;
 }
 
 .icon.introductions {
   background-image: url("../img/introductions.png");
- min-width: 22px;
+  min-width: 22px;
   height: 22px; 
+  margin-top: -4px; 
   background-position: left center;
   padding: 1px;
 }
 
 .icon.mail {
   background-image: url("../img/message.png");
- min-width: 22px;
+  min-width: 22px;
   height: 22px; 
+  margin-top: -2px; 
   background-position: left center;
   padding: 1px;
 }
@@ -94,6 +99,7 @@ color: #d00;
   background-image: url("../img/events.png");
   min-width: 22px;
   height: 22px; 
+  margin-top: -4px; 
   background-position: left center;
   padding: 1px;
 }
@@ -3597,7 +3603,7 @@ nav .nav-menu-icon {
   position: relative;
   height: 22px;
   padding: 5px;
-  margin: 0px 10px;
+  margin: 3px 10px;
   -moz-border-radius: 5px 5px 0 0;
   -webkit-border-radius: 5px 5px 0 0;
   border-radius: 5px 5px 0 0;

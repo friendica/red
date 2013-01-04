@@ -4261,7 +4261,7 @@ function zot_feed($uid,$observer,$mindate) {
 	}
 
 // FIXME
-//	$sql_extra = item_permissions_sql($r[0]['channel_id'],$remote_contact,$groups);
+	$sql_extra = item_permissions_sql($uid,$remote_contact,$groups);
 
 	if($mindate != '0000-00-00 00:00:00')
 		$sql_extra .= " and created > '$mindate' ";
