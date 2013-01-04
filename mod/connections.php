@@ -171,7 +171,8 @@ function connections_content(&$a) {
 		}
 
 		if($cmd === 'refresh') {
-			zot_refresh($orig_record[0],get_app()->get_channel());
+			if(! zot_refresh($orig_record[0],get_app()->get_channel())) 
+				notice( t('Refresh failed - channel is currently unavailable.') );
 			goaway($a->get_baseurl(true) . '/connections/' . $contact_id);
 		}
 
@@ -244,6 +245,13 @@ function connections_content(&$a) {
 			'url'   => $a->get_baseurl(true) . '/chanview/?f=&cid=' . $contact['abook_id'], 
 			'sel'   => '',
 			'title' => sprintf( t('View %s\'s profile'), $contact['xchan_name']),
+		),
+
+		array(
+			'label' => t('Refresh Permissions'),
+			'url'   => $a->get_baseurl(true) . '/connections/' . $contact['abook_id'] . '/refresh', 
+			'sel'   => '',
+			'title' => t('Fetch updated permissions'),
 		),
 
 		array(
