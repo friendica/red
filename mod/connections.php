@@ -150,7 +150,7 @@ function connections_content(&$a) {
 		$cmd = argv(2);
 
 		$orig_record = q("SELECT abook.*, xchan.* FROM abook left join xchan on abook_xchan = xchan_hash
-			WHERE abook_id = %d AND abook_channel = %d AND NOT ( abook_flags & %d ) and not abook_flags & %d) LIMIT 1",
+			WHERE abook_id = %d AND abook_channel = %d AND NOT ( abook_flags & %d ) and not ( abook_flags & %d ) LIMIT 1",
 			intval($contact_id),
 			intval(local_user()),
 			intval(ABOOK_FLAG_SELF),
