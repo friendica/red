@@ -17,6 +17,7 @@
 				<span id="net-update" class="nav-notify fakelink" onclick="notify_popup('network'); return false;" ></span>
 			</li>
 		{{ endif }}
+
 		{{ if $nav.home }}
 			<li id="nav-home-link" class="nav-menu $sel.home">
 				<a class="$nav.home.2" href="$nav.home.0" title="$nav.home.3" ><span class="icon home">$nav.home.1</span></a>
@@ -24,9 +25,16 @@
 			</li>
 		{{ endif }}
 
+		{{ if $nav.messages }}
+			<li id="nav-mail-link" class="nav-menu $sel.messages">
+				<a class="$nav.messages.2" href="$nav.messages.0" title="$nav.messages.3" ><span class="icon mail">$nav.messages.1</span></a>
+				<span id="mail-update" class="nav-notify fakelink" onclick="notify_popup('mail'); return false;" ></span>
+			</li>
+		{{ endif }}
+
 		{{ if $nav.all_events }}
 			<li id="nav-all-events-link" class="nav-menu $sel.all_events">
-				<a class="$nav.all_events.2" href="$nav.all_events.0" title="$nav.all_events.3" >$nav.all_events.1</a>
+				<a class="$nav.all_events.2" href="$nav.all_events.0" title="$nav.all_events.3" ><span class="icon events">$nav.all_events.1</span></a>
 				<span id="all-events-update" class="nav-notify fakelink" onclick="notify_popup('all_events'); return false;" ></span>
 			</li>
 		{{ endif }}

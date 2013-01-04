@@ -75,7 +75,7 @@ EOT;
 		$nav['usermenu'][] = Array('profile/' . $channel['channel_address'], t('Profile'), "", t('Your profile page'));
 
 		$nav['usermenu'][] = Array('photos/' . $channel['channel_address'], t('Photos'), "", t('Your photos'));
-		$nav['usermenu'][] = Array('events/', t('Events'), "", t('Your events'));
+//		$nav['usermenu'][] = Array('events/', t('Events'), "", t('Your events'));
 		
 	}
 	else {
@@ -144,6 +144,9 @@ EOT;
 		$nav['messages']['inbox'] = array('message', t('Inbox'), "", t('Inbox'));
 		$nav['messages']['outbox']= array('message/sent', t('Outbox'), "", t('Outbox'));
 		$nav['messages']['new'] = array('message/new', t('New Message'), "", t('New Message'));
+
+
+		$nav['all_events'] = array('events', t('Events'), "", t('Event Calendar'));
 		
 		$nav['manage'] = array('manage', t('Channel Select'), "", t('Manage Your Channels'));
 
