@@ -126,17 +126,19 @@ function zfinger_init(&$a) {
 	$ret['target_sig']     = $zsig;
 	$ret['searchable']     = $searchable;
 
-	if(! $e['xchan_connurl'])
+// wtf
+//	if(! $e['xchan_connurl'])
 		
 // FIXME encrypt permissions when targeted so that only the target can view them, requires sending the pubkey and also checking that the target_sig is signed with that pubkey and isn't a forgery. 
 
+	logger('zot-info: ' . print_r($e,true));
 
 	$permissions = get_all_perms($e['channel_id'],(($ztarget && $zsig) 
 			? base64url_encode(hash('whirlpool',$ztarget . $zsig,true)) 
 			: '' ),false);
 
-	$ret['permissions'] = (($ztarget) ? aes_encapsulate(json_encode($permissions),$zkey) : $permissions);
 
+	$ret['permissions'] = (($ztarget && $zkey) ? aes_encapsulate(json_encode($permissions),$zkey) : $permissions);
 
 	if($permissions['view_profile'])
 		$ret['profile']  = $profile;
