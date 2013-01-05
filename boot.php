@@ -1940,3 +1940,86 @@ function curPageURL() {
 	}
 	return $pageURL;
 }
+
+function construct_page(&$a) {
+
+
+	/**
+ 	 * Build the page - now that we have all the components
+ 	 */
+
+
+	if($a->module != 'install') {
+		nav($a);
+	}
+
+	require_once(theme_include('theme_init.php'));
+
+	if(($p = theme_include(current_theme() . '.js')) != '')
+		head_add_js($p);
+
+	if(($p = theme_include('mod_' . $a->module . '.php')) != '')
+		require_once($p);
+
+	require_once('include/js_strings.php');
+
+	head_add_css(((x($a->page,'template')) ? $a->page['template'] : 'default' ) . '.css');
+	head_add_css('mod_' . $a->module . '.css');
+	head_add_css('style.css');
+
+	head_add_js('mod_' . $a->module . '.js');
+
+
+	$interval = ((local_user()) ? get_pconfig(local_user(),'system','update_interval') : 40000);
+	if($interval < 10000)
+		$interval = 40000;
+
+	$a->page['title'] = $a->config['system']['sitename'];
+
+
+	$a->page['htmlhead'] = replace_macros($a->page['htmlhead'], array(
+		'$baseurl' => $a->get_baseurl(),
+		'$local_user' => local_user(),
+		'$generator' => FRIENDICA_PLATFORM . ' ' . FRIENDICA_VERSION,
+		'$update_interval' => $interval,
+		'$head_css' => head_get_css(),
+		'$head_js' => head_get_js(),
+		'$js_strings' => js_strings()
+	));
+
+	$arr = $a->get_widgets();
+	if(count($arr)) {
+		foreach($arr as $x) {
+			if(! array_key_exists($x['location'],$a->page))
+				$a->page[$x['location']] = '';
+			$a->page[$x['location']] .= $x['html']; 
+		}
+	}
+
+	if($a->is_mobile || $a->is_tablet) {
+		if(isset($_SESSION['show-mobile']) && !$_SESSION['show-mobile']) {
+			$link = $a->get_baseurl() . '/toggle_mobile?f=&address=' . curPageURL();
+		}
+		else {
+			$link = $a->get_baseurl() . '/toggle_mobile?f=&off=1&address=' . curPageURL();
+		}
+		$a->page['footer'] .= replace_macros(get_markup_template("toggle_mobile_footer.tpl"), array(
+			'$toggle_link' => $link,
+			'$toggle_text' => t('toggle mobile')
+		));
+	}
+
+	$page    = $a->page;
+	$profile = $a->profile;
+
+	header("Content-type: text/html; charset=utf-8");
+
+	require_once(theme_include(
+		((x($a->page,'template')) 
+			? $a->page['template'] 
+			: 'default' ) 
+			. '.php' )
+	); 
+
+	return;
+}

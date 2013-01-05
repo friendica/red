@@ -4,14 +4,11 @@
 // install and uninstall plugin
 if (! function_exists('uninstall_plugin')){
 function uninstall_plugin($plugin){
-	logger("Addons: uninstalling " . $plugin);
+	logger("Addons: uninstalling " . $plugin, LOGGER_DEBUG);
 	q("DELETE FROM `addon` WHERE `name` = '%s' ",
 		dbesc($plugin)
 	);
     
-	// define THISPLUGIN, make life easy to plugin devs :-)
-	define("THISPLUGIN", 'addon/' . $plugin . '/' . $plugin . '.php');
-	
 	@include_once('addon/' . $plugin . '/' . $plugin . '.php');
 	if(function_exists($plugin . '_uninstall')) {
 		$func = $plugin . '_uninstall';
@@ -23,11 +20,9 @@ if (! function_exists('install_plugin')){
 function install_plugin($plugin) {
 	// silently fail if plugin was removed
 
-	// define THISPLUGIN, make life easy to plugin devs :-)
-	define("THISPLUGIN", 'addon/' . $plugin . '/' . $plugin . '.php');
-
 	if(! file_exists('addon/' . $plugin . '/' . $plugin . '.php'))
 		return false;
+
 	logger("Addons: installing " . $plugin);
 	$t = @filemtime('addon/' . $plugin . '/' . $plugin . '.php');
 	@include_once('addon/' . $plugin . '/' . $plugin . '.php');
@@ -35,7 +30,7 @@ function install_plugin($plugin) {
 		$func = $plugin . '_install';
 		$func();
 		
-		$plugin_admin = (function_exists($plugin."_plugin_admin")?1:0);
+		$plugin_admin = (function_exists($plugin . "_plugin_admin") ? 1 : 0);
 		
 		$r = q("INSERT INTO `addon` (`name`, `installed`, `timestamp`, `plugin_admin`) VALUES ( '%s', 1, %d , %d ) ",
 			dbesc($plugin),
@@ -82,9 +77,6 @@ function reload_plugins() {
 				$pl = trim($pl);
 
 				$fname = 'addon/' . $pl . '/' . $pl . '.php';
-
-				// define THISPLUGIN, make life easy to plugin devs :-)
-				define("THISPLUGIN", $fname);
 
 				if(file_exists($fname)) {
 					$t = @filemtime($fname);
