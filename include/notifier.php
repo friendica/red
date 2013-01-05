@@ -281,13 +281,19 @@ function notifier_run($argv, $argc){
 	// Now we have collected recipients (except for external mentions, FIXME)
 	// Let's reduce this to a set of hubs.
 
+	
+	// for public posts always include our own hub
+
+	$sql_extra = (($private) ? "" : " or hubloc_url = " . z_root() . " ");
+
 	$r = q("select distinct(hubloc_callback),hubloc_host,hubloc_sitekey from hubloc 
-		where hubloc_hash in (" . implode(',',$recipients) . ") group by hubloc_callback");
+		where hubloc_hash in (" . implode(',',$recipients) . ") $sql_extra group by hubloc_callback");
 	if(! $r) {
 		logger('notifier: no hubs');
 		return;
 	}
 	$hubs = $r;
+
 			 
 	$interval = ((get_config('system','delivery_interval') !== false) 
 			? intval(get_config('system','delivery_interval')) : 2 );
