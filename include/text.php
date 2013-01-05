@@ -1823,3 +1823,70 @@ function jindent($json) {
 
     return $result;
 }
+
+
+// Tag cloud functions - need to be adpated to this database format
+
+/*
+function tagadelic($author,$count = 0) {
+
+  // Fetch tags
+
+  $r = category::category_get_tags($author,$count);
+  if(! count($r))
+    return array();
+  
+  // Find minimum and maximum log-count.
+  $tags = array();
+  $min = 1e9;
+  $max = -1e9;
+
+  $x = 0;
+  foreach($r as $rr) {
+    $tags[$x][0] = $rr['name'];
+    $tags[$x][1] = log($rr['total']);
+    $tags[$x][2] = 0;
+    $min = min($min,$tags[$x][1]);
+    $max = max($max,$tags[$x][1]);
+    $x ++;
+  }
+
+  usort($tags,'tags_sort');
+
+  $range = max(.01, $max - $min) * 1.0001;
+
+  for($x = 0; $x < count($tags); $x ++) {
+    $tags[$x][2] = 1 + floor(5 * ($tags[$x][1] - $min) / $range);
+  }
+
+  return $tags;
+}
+
+function tags_sort($a,$b) {
+   if($a[0] == $b[0])
+     return 0;
+   return((strtolower($a[0]) < strtolower($b[0])) ? -1 : 1);
+}
+
+
+function tagblock($author,$count = 0) {
+  $tab = 0;
+  $r = tagadelic($author,$count);
+  if(strlen($author)) {
+    if($author == '[news]')
+      $linkbase = 'forum/news-category';
+    else
+      $linkbase = 'weblog/'.$author;    
+  }
+  else
+    $linkbase = 'forum/category';
+
+  if(count($r)) {
+    echo '<div class="tags" align="center">';
+    foreach($r as $rr) { 
+      echo '<a href="'.$linkbase.'/'.urlencoder($rr[0]).'" class="tag'.$rr[2].'">'.$rr[0].'</a> ';
+    }
+    echo '</div>';
+  }
+}
+*/
