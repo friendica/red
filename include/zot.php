@@ -312,6 +312,9 @@ function zot_refresh($them,$channel = null) {
 			}
 		}
 		else {
+
+			logger('zot_refresh: importing profile if available');
+
 			// Are we a directory server of some kind?
 			$dirmode = intval(get_config('system','directory_mode'));
 			if($dirmode != DIRECTORY_MODE_NORMAL) {
@@ -997,6 +1000,7 @@ function process_profile_delivery($sender,$arr,$deliveries) {
 
 function import_directory_profile($hash,$profile) {
 
+	logger('import_directory_profile');
 	if(! $hash)
 		return;
 
