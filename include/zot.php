@@ -347,9 +347,12 @@ function zot_gethub($arr) {
 			dbesc($arr['url']),
 			dbesc($arr['url_sig'])
 		);
-		if($r && count($r))
+		if($r && count($r)) {
+			logger('zot_gethub: found', LOGGER_DEBUG);
 			return $r[0];
+		}
 	}
+	logger('zot_gethub: not found', LOGGER_DEBUG);
 	return null;
 }
 

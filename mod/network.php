@@ -611,29 +611,18 @@ function network_content(&$a, $update = 0, $load = false) {
 
 		$items = fetch_post_tags($items);
 	}
-	elseif($load) {
+	elseif($update) {
 
 		// Normal conversation view
-
 
 		if($order === 'post')
 				$ordering = "`created`";
 		else
 				$ordering = "`commented`";
 
-		// Fetch a page full of parent items for this page
+		if($load) {
 
-		if($update && (! $load)) {
-			$r = q("SELECT item.parent AS item_id FROM item
-				left join abook on item.author_xchan = abook.abook_xchan
-				WHERE item.uid = %d AND item.item_restrict = 0
-				and ((abook.abook_flags & %d) = 0 or abook.abook_flags is null)
-				$sql_extra3 $sql_extra $sql_nets ",
-				intval(local_user()),
-				intval(ABOOK_FLAG_BLOCKED)
-			);
-		}
-		else {
+			// Fetch a page full of parent items for this page
 
 			$r = q("SELECT item.id AS item_id FROM item 
 				left join abook on item.author_xchan = abook.abook_xchan
@@ -645,12 +634,23 @@ function network_content(&$a, $update = 0, $load = false) {
 				intval(local_user()),
 				intval(ABOOK_FLAG_BLOCKED)
 			);
-
 		}
+		else {
+			// update
+			$r = q("SELECT item.parent AS item_id FROM item
+				left join abook on item.author_xchan = abook.abook_xchan
+				WHERE item.uid = %d AND item.item_restrict = 0 $simple_update
+				and ((abook.abook_flags & %d) = 0 or abook.abook_flags is null)
+				$sql_extra3 $sql_extra $sql_nets ",
+				intval(local_user()),
+				intval(ABOOK_FLAG_BLOCKED)
+			);
+		}
+		else {
 
 		// Then fetch all the children of the parents that are on this page
 
-		if($r && count($r)) {
+		if($r) {
 
 			$parents_str = ids_to_querystr($r,'item_id');
 
@@ -662,21 +662,21 @@ function network_content(&$a, $update = 0, $load = false) {
 				dbesc($parents_str)
 			);
 
-
 			xchan_query($items);
 
 			$items = fetch_post_tags($items);
 
 			$items = conv_sort($items,$ordering);
 
-//logger('items: ' . print_r($items,true));
+			//logger('items: ' . print_r($items,true));
 
-		} else {
+		} 
+		else {
 			$items = array();
 		}
 	}
 
-// logger('items: ' . count($items));
+	// logger('items: ' . count($items));
 
 	// We aren't going to try and figure out at the item, group, and page
 	// level which items you've seen and which you haven't. If you're looking
