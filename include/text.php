@@ -1827,39 +1827,47 @@ function jindent($json) {
 
 // Tag cloud functions - need to be adpated to this database format
 
-/*
-function tagadelic($author,$count = 0) {
 
-  // Fetch tags
+function tagadelic($uid, $count = 0, $type = TERM_HASHTAG) {
 
-  $r = category::category_get_tags($author,$count);
-  if(! count($r))
-    return array();
+	// Fetch tags
+	$r = q("select term, count(term) as total from term
+		where uid = %d and type = %d 
+		and otype = %d
+		group by term order by total desc %s",
+		intval($uid),
+		intval($type),
+		intval(TERM_OBJ_POST),
+		((intval($count)) ? "limit $count" : '')
+	);
+
+	if(! $r)
+		return array();
   
-  // Find minimum and maximum log-count.
-  $tags = array();
-  $min = 1e9;
-  $max = -1e9;
+  	// Find minimum and maximum log-count.
+	$tags = array();
+	$min = 1e9;
+	$max = -1e9;
 
-  $x = 0;
-  foreach($r as $rr) {
-    $tags[$x][0] = $rr['name'];
-    $tags[$x][1] = log($rr['total']);
-    $tags[$x][2] = 0;
-    $min = min($min,$tags[$x][1]);
-    $max = max($max,$tags[$x][1]);
-    $x ++;
-  }
+	$x = 0;
+	foreach($r as $rr) {
+		$tags[$x][0] = $rr['term'];
+		$tags[$x][1] = log($rr['total']);
+		$tags[$x][2] = 0;
+		$min = min($min,$tags[$x][1]);
+		$max = max($max,$tags[$x][1]);
+		$x ++;
+	}
 
-  usort($tags,'tags_sort');
+	usort($tags,'tags_sort');
 
-  $range = max(.01, $max - $min) * 1.0001;
+	$range = max(.01, $max - $min) * 1.0001;
 
-  for($x = 0; $x < count($tags); $x ++) {
-    $tags[$x][2] = 1 + floor(5 * ($tags[$x][1] - $min) / $range);
-  }
+	for($x = 0; $x < count($tags); $x ++) {
+		$tags[$x][2] = 1 + floor(5 * ($tags[$x][1] - $min) / $range);
+	}
 
-  return $tags;
+	return $tags;
 }
 
 function tags_sort($a,$b) {
@@ -1869,24 +1877,15 @@ function tags_sort($a,$b) {
 }
 
 
-function tagblock($author,$count = 0) {
+function tagblock($link,$uid,$count = 0,$type = TERM_HASHTAG) {
   $tab = 0;
-  $r = tagadelic($author,$count);
-  if(strlen($author)) {
-    if($author == '[news]')
-      $linkbase = 'forum/news-category';
-    else
-      $linkbase = 'weblog/'.$author;    
-  }
-  else
-    $linkbase = 'forum/category';
+  $r = tagadelic($uid,$count,$type);
 
-  if(count($r)) {
+  if($r) {
     echo '<div class="tags" align="center">';
     foreach($r as $rr) { 
-      echo '<a href="'.$linkbase.'/'.urlencoder($rr[0]).'" class="tag'.$rr[2].'">'.$rr[0].'</a> ';
+      echo '<a href="'.$link .'/' . '?f=&tag=' . urlencode($rr[0]).'" class="tag'.$rr[2].'">'.$rr[0].'</a> ';
     }
     echo '</div>';
   }
 }
-*/
