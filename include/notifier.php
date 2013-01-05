@@ -228,8 +228,12 @@ function notifier_run($argv, $argc){
 
 		// $cmd === 'relay' indicates the owner is sending it to the original recipients
 		// don't allow the item in the relay command to relay to owner under any circumstances, it will loop
+		logger('notifier: relay_to_owner: ' . (($relay_to_owner) ? 'true' : 'false'));
+		logger('notifier: top_level_post: ' . (($top_level_post) ? 'true' : 'false'));
+		logger('notifier: target_item_flags: ' . $target_item['item_flags'] . ' ' . (($target_item['item_flags'] & ITEM_ORIGIN ) ? 'true' : 'false'));
 
-		if(($relay_to_owner) && (! $cmd === 'relay')) {
+
+		if(($relay_to_owner) && ($cmd !== 'relay')) {
 			logger('notifier: followup relay', LOGGER_DEBUG);
 			$recipients = array($parent_item['owner_xchan']);
 			$private = true;
@@ -284,7 +288,7 @@ function notifier_run($argv, $argc){
 	
 	// for public posts always include our own hub
 
-	$sql_extra = (($private) ? "" : " or hubloc_url = " . z_root() . " ");
+	$sql_extra = (($private) ? "" : " or hubloc_url = '" . z_root() . "' ");
 
 	$r = q("select distinct(hubloc_callback),hubloc_host,hubloc_sitekey from hubloc 
 		where hubloc_hash in (" . implode(',',$recipients) . ") $sql_extra group by hubloc_callback");
