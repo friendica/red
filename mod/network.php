@@ -646,7 +646,7 @@ function network_content(&$a, $update = 0, $load = false) {
 				intval(ABOOK_FLAG_BLOCKED)
 			);
 		}
-		else {
+
 
 		// Then fetch all the children of the parents that are on this page
 
