@@ -11,6 +11,8 @@
 		{{ if $register }}<a href="$register.link" title="$register.title" id="register-link">$register.desc</a>{{ endif }}
         <a href="lostpass" title="$lostpass" id="lost-password-link" >$lostlink</a>
 	</div>
+
+	{{ inc field_checkbox.tpl with $field=$remember }}{{ endinc }}
 	
 	<div id="login-standard-end"></div>
 

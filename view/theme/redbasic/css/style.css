@@ -512,6 +512,21 @@ div.wall-item-content-wrapper.shiny {
 	float: left;
 }
 
+#main-login #id_remember {
+	float: left;
+	padding: 0;
+	margin-top: 15px;
+	margin-bottom: 0;
+	width: 20px;
+}
+
+#main-login .field.checkbox label {
+	margin-top: 15px;
+	margin-bottom: 0;
+	float: left;
+	width: 100px;
+}
+
 #main-login .field_end {
 	clear: both;
 }
@@ -3080,7 +3095,7 @@ brain is weird like that */
  */
 .field {
 	margin-bottom: 10px;
-	padding-bottom: 10px;
+/*	padding-bottom: 10px; */
 	overflow: auto;
 	width: 100%
 }

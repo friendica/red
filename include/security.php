@@ -1,6 +1,6 @@
 <?php
 
-function authenticate_success($user_record, $login_initial = false, $interactive = false,$return = false) {
+function authenticate_success($user_record, $login_initial = false, $interactive = false,$return = false,$update_lastlog = false) {
 
 	$a = get_app();
 
@@ -15,7 +15,7 @@ function authenticate_success($user_record, $login_initial = false, $interactive
 		$_SESSION['account_id'] = $user_record['account_id'];
 		$_SESSION['authenticated'] = 1;
 		
-		if($login_initial) {
+		if($login_initial || $update_lastlog) {
 			q("update account set account_lastlog = '%s' where account_id = %d limit 1",
 				dbesc(datetime_convert()),
 				intval($_SESSION['account_id'])
