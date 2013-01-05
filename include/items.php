@@ -4266,12 +4266,20 @@ function zot_feed($uid,$observer,$mindate) {
 	if($mindate != '0000-00-00 00:00:00')
 		$sql_extra .= " and created > '$mindate' ";
 
+
+// FIXME
+	// We probably should use two queries and pick up total conversations.
+	// For now get a chunk of raw posts in ascending created order so that 
+	// hopefully the parent is imported before we see the kids. 
+	// This will fail if there are more than $limit kids and you didn't 
+	// receive the parent via direct delivery
+
 	$limit = 200;
 
 	$items = q("SELECT item.* from item
 		WHERE uid = %d AND item_restrict = 0
 		AND (item_flags &  %d) 
-		$sql_extra ORDER BY created DESC limit 0, $limit",
+		$sql_extra ORDER BY created ASC limit 0, $limit",
 		intval($uid),
 		intval(ITEM_WALL)
 	);
