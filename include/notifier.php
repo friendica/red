@@ -13,9 +13,19 @@ require_once('include/html2plain.php');
  * controlled intervals.
  * This has a much better chance of surviving random processes getting killed
  * by the hosting provider. 
- * A lot of this code is duplicated in include/deliver.php until we have time to go back
- * and re-structure the delivery procedure based on the obstacles that have been thrown at 
- * us by hosting providers. 
+ *
+ * The basic flow is:
+ *   Identify the type of message
+ *   Collect any information that needs to be sent
+ *   Convert it into a suitable generic format for sending
+ *   Figure out who the recipients are and if we need to relay 
+ *       through a conversation owner
+ *   Once we know what recipients are involved, collect a list of 
+ *       destination sites
+ *   Build and store a queue item for each unique site and invoke
+ *       a delivery process for each site or a small number of sites (1-3)
+ *       and add a slight delay between each delivery invocation if desired (usually)
+ *   
  */
 
 /*
@@ -224,6 +234,7 @@ function notifier_run($argv, $argc){
 
 		$encoded_item = encode_item($target_item);
 		
+
 		$relay_to_owner = (((! $top_level_post) && ($target_item['item_flags'] & ITEM_ORIGIN)) ? true : false);
 
 		// $cmd === 'relay' indicates the owner is sending it to the original recipients
