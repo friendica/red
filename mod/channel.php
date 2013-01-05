@@ -135,17 +135,17 @@ function channel_content(&$a, $update = 0, $load = false) {
 
 
 	if(($update) && (! $load)) {
+
 		$r = q("SELECT distinct(parent) AS `item_id` from item
 			left join abook on item.author_xchan = abook.abook_xchan
 			WHERE uid = %d AND item_restrict = 0
-			AND (item_flags &  %d) AND ( item_flags & %d ) AND ( item_flags & %d )
+			AND (item_flags &  %d) AND ( item_flags & %d ) 
 			AND ((abook.abook_flags & %d) = 0 or abook.abook_flags is null)
 			$sql_extra
 			ORDER BY created DESC",
 			intval($a->profile['profile_uid']),
 			intval(ITEM_WALL),
 			intval(ITEM_UNSEEN),
-			intval(ITEM_THREAD_TOP),
 			intval(ABOOK_FLAG_BLOCKED)
 		);
 
