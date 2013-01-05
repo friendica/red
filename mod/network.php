@@ -588,7 +588,7 @@ function network_content(&$a, $update = 0, $load = false) {
 
 	}
 
-	$simple_update = (($update) ? " and ( item.flags & " . intval(ITEM_UNSEEN) . " ) " : '');
+	$simple_update = (($update) ? " and ( item.item_flags & " . intval(ITEM_UNSEEN) . " ) " : '');
 	if($load)
 		$simple_update = '';
 
@@ -645,6 +645,7 @@ function network_content(&$a, $update = 0, $load = false) {
 				intval(local_user()),
 				intval(ABOOK_FLAG_BLOCKED)
 			);
+
 		}
 
 
