@@ -994,7 +994,7 @@ function process_mail_delivery($sender,$arr,$deliveries) {
 function process_profile_delivery($sender,$arr,$deliveries) {
 
 	// deliveries is irrelevant, what to do about birthday notification....?
-
+	logger('process_profile_delivery');
 	import_directory_profile($sender['hash'],$arr);
 }
 

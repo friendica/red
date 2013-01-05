@@ -308,4 +308,4 @@ $lbl_school
 
 </form>
 </div>
-<script type="text/javascript">Fill_Country('$country_name');Fill_States('$region');</script>
+
