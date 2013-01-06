@@ -40,10 +40,10 @@
 </dl>
 {{/if}}
 
-{{if $profile.pub_keywords}}
+{{if $profile.keywords}}
 <dl id="aprofile-tags" class="aprofile">
- <dt>{{$profile.pub_keywords.0}}</dt>
- <dd>{{$profile.pub_keywords.1}}</dd>
+ <dt>{{$profile.keywords.0}}</dt>
+ <dd>{{$profile.keywords.1}}</dd>
 </dl>
 {{/if}}
 

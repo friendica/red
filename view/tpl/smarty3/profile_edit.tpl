@@ -4,6 +4,7 @@
 
 <div id="profile-edit-links">
 <ul>
+<li><a href="profile_photo" id="profile-photo_upload-link" title="{{$profpic}}">{{$profpic}}</a></li>
 <li><a href="profile/{{$profile_id}}/view?tab=profile" id="profile-edit-view-link" title="{{$viewprof}}">{{$viewprof}}</a></li>
 <li><a href="{{$profile_clone_link}}" id="profile-edit-clone-link" title="{{$cr_prof}}">{{$cl_prof}}</a></li>
 <li></li>
@@ -142,16 +143,9 @@
 
 <div id="profile-edit-pubkeywords-wrapper" >
 <label id="profile-edit-pubkeywords-label" for="profile-edit-pubkeywords" >{{$lbl_pubkey}} </label>
-<input type="text" size="32" name="pub_keywords" id="profile-edit-pubkeywords" title="{{$lbl_ex2}}" value="{{$pub_keywords}}" />
+<input type="text" size="32" name="keywords" id="profile-edit-pubkeywords" title="{{$lbl_ex2}}" value="{{$keywords}}" />
 </div><div id="profile-edit-pubkeywords-desc">{{$lbl_pubdsc}}</div>
 <div id="profile-edit-pubkeywords-end"></div>
-
-<div id="profile-edit-prvkeywords-wrapper" >
-<label id="profile-edit-prvkeywords-label" for="profile-edit-prvkeywords" >{{$lbl_prvkey}} </label>
-<input type="text" size="32" name="prv_keywords" id="profile-edit-prvkeywords" title="{{$lbl_ex2}}" value="{{$prv_keywords}}" />
-</div><div id="profile-edit-prvkeywords-desc">{{$lbl_prvdsc}}</div>
-<div id="profile-edit-prvkeywords-end"></div>
-
 
 <div class="profile-edit-submit-wrapper" >
 <input type="submit" name="submit" class="profile-edit-submit-button" value="{{$submit}}" />
@@ -314,4 +308,4 @@
 
 </form>
 </div>
-<script type="text/javascript">Fill_Country('{{$country_name}}');Fill_States('{{$region}}');</script>
+

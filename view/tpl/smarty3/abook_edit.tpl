@@ -1,18 +1,20 @@
 
 <h2>{{$header}}</h2>
 
+<h3>{{$addr}}</h3>
 
 <div id="connection-flag-tabs">
 {{$tabs}}
 </div>
 
 <div id="contact-edit-wrapper">
-<br />
-<h3>Slide to adjust your degree of friendship</h3>
+
+{{if $slide}}
+<h3>{{$lbl_slider}}</h3>
 
 {{$slide}}
 
-
+{{/if}}
 
 <h3>Permissions</h3>
 
@@ -21,11 +23,14 @@
 <input id="contact-closeness-mirror" type="hidden" name="closeness" value="{{$close}}" />
 
 <br />
-<b>Quick Links:</b>
-<a href="" style="background-color: #CCC; padding: 3px; border-radius: 5px; margin-left: 15px;">Full Sharing</a><a href="" style="background-color: #CCC; padding: 3px; border-radius: 5px; margin-left: 15px;">Cautious Sharing</a><a href="" style="background-color: #CCC; padding: 3px; border-radius: 5px; margin-left: 15px;">Follow Only</a><br />
+<b>{{$quick}}</b>
+<ul>
+<li><a href="#" onclick="connectFullShare(); return false;">{{$full}}</a></li>
+<li><a href="#" onclick="connectCautiousShare(); return false;">{{$cautious}}</a></li>
+<li><a href="#" onclick="connectFollowOnly(); return false;">{{$follow}}</a></li>
 <br />
 
-<div id="abook-advanced" class="fakelink" onclick="openClose('abook-advanced-panel');">Advanced Permissions</div>
+<div id="abook-advanced" class="fakelink" onclick="openClose('abook-advanced-panel');">{{$advanced}}</div>
 
 <div id="abook-advanced-panel" style="display: none;">
 

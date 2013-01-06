@@ -1,5 +1,7 @@
 {{foreach $threads as $thread}}
-{{include file="{{$thread.template}}" item=$thread}}
+{{foreach $thread.items as $thread_item}} 
+{{include file="{{$thread_item.template}}" item=$thread_item}}
+{{/foreach}}
 {{/foreach}}
 
 <div id="conversation-end"></div>

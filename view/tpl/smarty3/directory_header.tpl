@@ -1,16 +1,16 @@
-<h1>{{$sitedir}}</h1>
+<h1>{{$dirlbl}}</h1>
 
-{{$globaldir}}
-{{$admin}}
+{{if $search}}
+<h4>{{$finddsc}} {{$safetxt}}</h4> 
+{{/if}}
 
-{{$finding}}
+{{foreach $entries as $entry}}
 
-<div id="directory-search-wrapper">
-<form id="directory-search-form" action="directory" method="get" >
-<span class="dirsearch-desc">{{$desc}}</span>
-<input type="text" name="search" id="directory-search" class="search-input" onfocus="this.select();" value="{{$search}}" />
-<input type="submit" name="submit" id="directory-search-submit" value="{{$submit}}" class="button" />
-</form>
-</div>
-<div id="directory-search-end"></div>
+{{include file="direntry.tpl"}}
+
+{{/foreach}}
+
+
+
+<div class="directory-end"></div>
 
