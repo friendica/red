@@ -4,39 +4,18 @@ require_once('include/acl_selectors.php');
 require_once('include/message.php');
 require_once('include/zot.php');
 
-function message_init(&$a) {
-	$tabs = array();
-	$new = array(
-		'label' => t('New Message'),
-		'url' => $a->get_baseurl(true) . '/message/new',
-		'sel'=> (argv(1) == 'new'),
-	);
-	
-	$tpl = get_markup_template('message_side.tpl');
-	$a->page['aside'] = replace_macros($tpl, array(
-		'$tabs'=>$tabs,
-		'$new'=>$new,
-	));
-	$base = $a->get_baseurl();
 
-	$a->page['htmlhead'] .= <<< EOT
+function message_aside(&$a) {
 
-<script>$(document).ready(function() { 
-	var a; 
-	a = $("#recip").autocomplete({ 
-		serviceUrl: '$base/acl',
-		minChars: 2,
-		width: 350,
-		onSelect: function(value,data) {
-			$("#recip-complete").val(data);
-		}			
-	});
+	$a->set_widget('newmessage',replace_macros(get_markup_template('message_side.tpl'), array(
+		'$tabs'=> array(),
+		'$new'=>array(
+			'label' => t('New Message'),
+			'url' => $a->get_baseurl(true) . '/message/new',
+			'sel'=> (argv(1) == 'new'),
+		)
+	)));
 
-}); 
-
-</script>
-EOT;
-	
 }
 
 function message_post(&$a) {
@@ -437,7 +416,7 @@ function message_content(&$a) {
  		}
 
 
-dbg(1);
+
 		$c = q("select * from xchan where xchan_hash in (" . implode(',',$chans) . ")");
 
 		$r = q("UPDATE `mail` SET mail_flags = (mail_flags ^ %d) where not (mail_flags & %d) and parent_uri = '%s' AND channel_id = %d",
@@ -446,7 +425,7 @@ dbg(1);
 			dbesc($r[0]['parent_uri']),
 			intval(local_user())
 		);
-dbg(0);
+
 		require_once("include/bbcode.php");
 
 		$tpl = get_markup_template('msg-header.tpl');
