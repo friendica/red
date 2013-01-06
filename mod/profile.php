@@ -65,9 +65,6 @@ function profile_content(&$a, $update = 0) {
 	$tab = 'profile';
 	$o = '';
 
-	if($a->profile['profile_uid'] == local_user()) {
-		nav_set_selected('home');
-	}
 
 	$contact = null;
 	$remote_contact = false;

@@ -75,7 +75,6 @@ function channel_content(&$a, $update = 0, $load = false) {
 	$o = '';
 
 
-	$is_owner = (((local_user()) && ($a->profile['profile_uid'] == local_user())) ? true : false);
 
 	if($update) {
 		// Ensure we've got a profile owner if updating.
@@ -86,6 +85,8 @@ function channel_content(&$a, $update = 0, $load = false) {
 			nav_set_selected('home');
 		}
 	}
+
+	$is_owner = (((local_user()) && ($a->profile['profile_uid'] == local_user())) ? true : false);
 
 	$observer = $a->get_observer();
 	$ob_hash = (($observer) ? $observer['xchan_hash'] : '');
@@ -248,6 +249,7 @@ function channel_content(&$a, $update = 0, $load = false) {
 
 
 	if($is_owner) {
+dbg(1);
 		$r = q("UPDATE item SET item_flags = (item_flags ^ %d)
 			WHERE (item_flags & %d) AND (item_flags & %d) AND uid = %d ",
 			intval(ITEM_UNSEEN),
@@ -256,7 +258,7 @@ function channel_content(&$a, $update = 0, $load = false) {
 			intval(local_user())
 		);
 	}
-
+dbg(0);
 
 	$o .= conversation($a,$items,'channel',$update,'client');
 
