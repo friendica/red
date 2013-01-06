@@ -156,14 +156,15 @@
 
 		/* popup menus */
 	function close_last_popup_menu() {
+
  		if(last_popup_menu) {
- 		last_popup_menu.hide();
- 		last_popup_button.removeClass("selected");
- 		last_popup_menu = null;
- 		last_popup_button = null;
- 		}
- 		}
-		$('a[rel^=#]').click(function(e){
+ 			last_popup_menu.hide();
+ 			last_popup_button.removeClass("selected");
+ 			last_popup_menu = null;
+ 			last_popup_button = null;
+ 		}	
+	}
+				$('a[rel^=#]').click(function(e){
 			close_last_popup_menu();
 			menu = $( $(this).attr('rel') );
 			e.preventDefault();
@@ -181,7 +182,7 @@
 			return false;
 		});
 		$('html').click(function() {
-						close_last_popup_menu();
+			close_last_popup_menu();
 		});
 		
 		// fancyboxes
@@ -547,8 +548,6 @@ function updateConvItems(mode,data) {
 		});
 
 		$("#nav-notifications-menu").show();
-
-
 	}
 
 

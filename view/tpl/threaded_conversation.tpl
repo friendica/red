@@ -1,5 +1,7 @@
-{{ for $threads as $item }}
+{{ for $threads as $xyz }}
+{{ for $xyz.items as $item }} 
 {{ inc $item.template }}{{ endinc }}
+{{ endfor }}
 {{ endfor }}
 
 <div id="conversation-end"></div>

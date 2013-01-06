@@ -472,7 +472,7 @@ function conversation(&$a, $items, $mode, $update, $page_mode = 'traditional') {
 
 	$page_template = get_markup_template("conversation.tpl");
 
-	if($items && count($items)) {
+	if($items) {
 
 		if($mode === 'network-new' || $mode === 'search' || $mode === 'community') {
 
@@ -696,6 +696,9 @@ function conversation(&$a, $items, $mode, $update, $page_mode = 'traditional') {
 		$threads = null;
 	}
 
+	if($page_mode === 'preview')
+		logger('preview: ' . print_r($threads,true));
+
     $o = replace_macros($page_template, array(
         '$baseurl' => $a->get_baseurl($ssl_state),
         '$live_update' => $live_update_div,
@@ -706,6 +709,9 @@ function conversation(&$a, $items, $mode, $update, $page_mode = 'traditional') {
 		'$wait' => t('Loading...'),
         '$dropping' => ($page_dropping?t('Delete Selected Items'):False),
     ));
+
+	if($page_mode === 'preview')
+		logger('preview: ' . $o);
 
     return $o;
 
