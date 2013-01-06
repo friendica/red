@@ -3526,6 +3526,7 @@ div.jGrowl div.info {
 }
 
 
+
 .jslider .jslider-scale ins {
     color: #333;
 	font-size: 12px;
@@ -3533,10 +3534,12 @@ div.jGrowl div.info {
 	text-align: center;
 }
 
+
 .jslider .jslider-bg,
 .jslider .jslider-pointer {
   background: url("../../../img/jslider.png") !important;
 }
+
 
 .slider {
 	margin-top: 10px;
