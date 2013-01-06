@@ -29,11 +29,11 @@ function notification($params) {
 
 	push_lang($recip['account_language']); // should probably have a channel language
 
-	$banner = t('Red Notification');
-	$product = FRIENDICA_PLATFORM;
-	$siteurl = $a->get_baseurl(true);
-	$thanks = t('Thank You,');
-	$sitename = get_config('config','sitename');
+	$banner     = t('Red Notification');
+	$product    = FRIENDICA_PLATFORM;
+	$siteurl    = $a->get_baseurl(true);
+	$thanks     = t('Thank You,');
+	$sitename   = get_config('system','sitename');
 	$site_admin = sprintf( t('%s Administrator'), $sitename);
 
 	$sender_name = $product;
@@ -280,7 +280,7 @@ function notification($params) {
 	$datarray['url']    = $sender['xchan_url'];
 	$datarray['photo']  = $sender['xchan_photo_s'];
 	$datarray['date']   = datetime_convert();
-	$datarray['uid']    = $params['uid'];
+	$datarray['uid']    = $recip['channel_id'];
 	$datarray['link']   = $itemlink;
 	$datarray['parent'] = $parent_id;
 	$datarray['type']   = $params['type'];
@@ -384,7 +384,7 @@ intval($params['uid']), LOGGER_DEBUG);
 		$datarray['source_name']  = $sender['xchan_name'];
 		$datarray['source_link']  = $sender['xchan_url'];
 		$datarray['source_photo'] = $sender['xchan_photo_s'];
-		$datarray['uid']          = $params['uid'];
+		$datarray['uid']          = $recip['channel_id'];
 		$datarray['username']     = $recip['channel_name'];
 		$datarray['hsitelink']    = $hsitelink;
 		$datarray['tsitelink']    = $tsitelink;
