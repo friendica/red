@@ -987,6 +987,7 @@ function process_mail_delivery($sender,$arr,$deliveries) {
 			$arr['account_id'] = $channel['channel_account_id'];
 			$arr['channel_id'] = $channel['channel_id'];
 			$item_id = mail_store($arr);
+
 		}
 	}
 }

@@ -6,10 +6,28 @@ function notification($params) {
 
 	$a = get_app();
 
+
+	if($params['from_xchan']) {
+		$x = q("select * from xchan where xchan_hash = '%s' limit 1",
+			dbesc($params['from_xchan'])
+		);
+	}
+	if($params['to_xchan']) {
+		$y = q("select channel.*, account.* from channel left join account on channel_account_id = account_id
+			where channel_hash = '%s' limit 1",
+			dbesc($params['to_xchan'])
+		);
+	}
+	if($x & $y) {
+		$sender = $x[0];
+		$recip = $y[0];
+	}
+	else
+		return;
+
 	// from here on everything is in the recipients language
 
-	push_lang($params['language']);
-
+	push_lang($recip['account_language']); // should probably have a channel language
 
 	$banner = t('Red Notification');
 	$product = FRIENDICA_PLATFORM;
@@ -23,7 +41,9 @@ function notification($params) {
 	if(strpos($hostname,':'))
 		$hostname = substr($hostname,0,strpos($hostname,':'));
 
-	$sender_email = t('noreply') . '@' . $hostname;
+	// Do not translate 'noreply' as it must be a legal 7-bit email address
+	$sender_email = 'noreply' . '@' . $hostname;
+
 	$additional_mail_header = "";
 
 	if(array_key_exists('item',$params)) {
@@ -41,8 +61,8 @@ function notification($params) {
 
 		$subject = 	sprintf( t('[Red:Notify] New mail received at %s'),$sitename);
 
-		$preamble = sprintf( t('%1$s sent you a new private message at %2$s.'),$params['source_name'],$sitename);
-		$epreamble = sprintf( t('%1$s sent you %2$s.'),'[url=' . $params['source_link'] . ']' . $params['source_name'] . '[/url]', '[url=$itemlink]' . t('a private message') . '[/url]');
+		$preamble = sprintf( t('%1$s sent you a new private message at %2$s.'),$sender['xchan_name'],$sitename);
+		$epreamble = sprintf( t('%1$s sent you %2$s.'),'[url=' . $sender['xchan_url'] . ']' . $sender['xchan_name'] . '[/url]', '[url=$itemlink]' . t('a private message') . '[/url]');
 		$sitelink = t('Please visit %s to view and/or reply to your private messages.');
 		$tsitelink = sprintf( $sitelink, $siteurl . '/message/' . $params['item']['id'] );
 		$hsitelink = sprintf( $sitelink, '<a href="' . $siteurl . '/message/' . $params['item']['id'] . '">' . $sitename . '</a>');
@@ -255,17 +275,17 @@ function notification($params) {
 
 
 	$datarray = array();
-	$datarray['hash']  = $hash;
-	$datarray['name']  = $params['source_name'];
-	$datarray['url']   = $params['source_link'];
-	$datarray['photo'] = $params['source_photo'];
-	$datarray['date']  = datetime_convert();
-	$datarray['uid']   = $params['uid'];
-	$datarray['link']  = $itemlink;
+	$datarray['hash']   = $hash;
+	$datarray['name']   = $sender['xchan_name'];
+	$datarray['url']    = $sender['xchan_url'];
+	$datarray['photo']  = $sender['xchan_photo_s'];
+	$datarray['date']   = datetime_convert();
+	$datarray['uid']    = $params['uid'];
+	$datarray['link']   = $itemlink;
 	$datarray['parent'] = $parent_id;
-	$datarray['type']  = $params['type'];
-	$datarray['verb']  = $params['verb'];
-	$datarray['otype'] = $params['otype'];
+	$datarray['type']   = $params['type'];
+	$datarray['verb']   = $params['verb'];
+	$datarray['otype']  = $params['otype'];
  
 	call_hooks('enotify_store', $datarray);
 
@@ -309,7 +329,7 @@ function notification($params) {
 	// send email notification if notification preferences permit
 
 	require_once('bbcode.php');
-	if((intval($params['notify_flags']) & intval($params['type'])) || $params['type'] == NOTIFY_SYSTEM) {
+	if((intval($recip['channel_notifyflags']) & intval($params['type'])) || $params['type'] == NOTIFY_SYSTEM) {
 
 		logger('notification: sending notification email');
 
@@ -354,29 +374,29 @@ intval($params['uid']), LOGGER_DEBUG);
 			"<br />\n",$body))));
 
 		$datarray = array();
-		$datarray['banner'] = $banner;
-		$datarray['product'] = $product;
-		$datarray['preamble'] = $preamble;
-		$datarray['sitename'] = $sitename;
-		$datarray['siteurl'] = $siteurl;
-		$datarray['type'] = $params['type'];
-		$datarray['parent'] = $params['parent'];
-		$datarray['source_name'] = $params['source_name'];
-		$datarray['source_link'] = $params['source_link'];
-		$datarray['source_photo'] = $params['source_photo'];
-		$datarray['uid'] = $params['uid'];
-		$datarray['username'] = $params['to_name'];
-		$datarray['hsitelink'] = $hsitelink;
-		$datarray['tsitelink'] = $tsitelink;
-		$datarray['hitemlink'] = '<a href="' . $itemlink . '">' . $itemlink . '</a>';
-		$datarray['titemlink'] = $itemlink;
-		$datarray['thanks'] = $thanks;
-		$datarray['site_admin'] = $site_admin;
-		$datarray['title'] = stripslashes($title);
-		$datarray['htmlversion'] = $htmlversion;
-		$datarray['textversion'] = $textversion;
-		$datarray['subject'] = $subject;
-		$datarray['headers'] = $additional_mail_header;
+		$datarray['banner']       = $banner;
+		$datarray['product']      = $product;
+		$datarray['preamble']     = $preamble;
+		$datarray['sitename']     = $sitename;
+		$datarray['siteurl']      = $siteurl;
+		$datarray['type']         = $params['type'];
+		$datarray['parent']       = $params['parent'];
+		$datarray['source_name']  = $sender['xchan_name'];
+		$datarray['source_link']  = $sender['xchan_url'];
+		$datarray['source_photo'] = $sender['xchan_photo_s'];
+		$datarray['uid']          = $params['uid'];
+		$datarray['username']     = $recip['channel_name'];
+		$datarray['hsitelink']    = $hsitelink;
+		$datarray['tsitelink']    = $tsitelink;
+		$datarray['hitemlink']    = '<a href="' . $itemlink . '">' . $itemlink . '</a>';
+		$datarray['titemlink']    = $itemlink;
+		$datarray['thanks']       = $thanks;
+		$datarray['site_admin']   = $site_admin;
+		$datarray['title']        = stripslashes($title);
+		$datarray['htmlversion']  = $htmlversion;
+		$datarray['textversion']  = $textversion;
+		$datarray['subject']      = $subject;
+		$datarray['headers']      = $additional_mail_header;
 
 		call_hooks('enotify_mail', $datarray);
 
@@ -425,13 +445,13 @@ intval($params['uid']), LOGGER_DEBUG);
 		// use the EmailNotification library to send the message
 
 		enotify::send(array(
-			'fromName' => $sender_name,
-			'fromEmail' => $sender_email,
-			'replyTo' => $sender_email,
-			'toEmail' => $params['to_email'],
-			'messageSubject' => $datarray['subject'],
-			'htmlVersion' => $email_html_body,
-			'textVersion' => $email_text_body,
+			'fromName'             => $sender_name,
+			'fromEmail'            => $sender_email,
+			'replyTo'              => $sender_email,
+			'toEmail'              => $recip['account_email'],
+			'messageSubject'       => $datarray['subject'],
+			'htmlVersion'          => $email_html_body,
+			'textVersion'          => $email_text_body,
 			'additionalMailHeader' => $datarray['headers'],
 		));
 	}

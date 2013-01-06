@@ -1727,6 +1727,7 @@ function mail_store($arr) {
 	if($r) {
 		$current_post = $r[0]['id'];
 		logger('mail_store: created item ' . $current_post, LOGGER_DEBUG);
+		$arr['id'] = $current_post; // for notification
 	}
 	else {
 		logger('mail_store: could not locate created item');
@@ -1739,6 +1740,20 @@ function mail_store($arr) {
 			intval($arr['channel_id']),
 			intval($current_post)
 		);
+	}
+	else {
+		require_once('include/enotify.php');
+
+		$notif_params = array(
+			'from_xchan' => $arr['from_xchan'],
+			'to_xchan'   => $arr['to_xchan'],
+			'type'       => NOTIFY_MAIL,
+			'item'       => $arr,
+			'verb'       => ACTIVITY_POST,
+		    'otype'      => 'mail'
+		);
+			
+		notification($notif_params);
 	}
 
 	call_hooks('post_mail_end',$arr);
