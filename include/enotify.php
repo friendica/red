@@ -22,8 +22,12 @@ function notification($params) {
 		$sender = $x[0];
 		$recip = $y[0];
 	}
-	else
+	else {
+		logger('notification: no sender or recipient.');
+		logger('sender: ' . $params['from_xchan']);
+		logger('recip: ' . $params['to_xchan']);
 		return;
+	}
 
 	// from here on everything is in the recipients language
 
@@ -58,7 +62,7 @@ function notification($params) {
 	$possess_desc = t('%s <!item_type!>');
 
 	if($params['type'] == NOTIFY_MAIL) {
-
+		logger('notification: mail');
 		$subject = 	sprintf( t('[Red:Notify] New mail received at %s'),$sitename);
 
 		$preamble = sprintf( t('%1$s sent you a new private message at %2$s.'),$sender['xchan_name'],$sitename);
@@ -83,7 +87,8 @@ function notification($params) {
 			dbesc($params['link']),
 			intval($params['uid'])
 		);
-		if($p and count($p)) {
+		if($p) {
+			logger('notification comment already notified');
 			pop_lang();
 			return;
 		}
@@ -308,11 +313,12 @@ function notification($params) {
 
 	$r = q("select id from notify where hash = '%s' and uid = %d limit 1",
 		dbesc($hash),
-		intval($params['uid'])
+		intval($recip['channel_id'])
 	);
 	if($r)
 		$notify_id = $r[0]['id'];
 	else {
+		logger('notification not found.');
 		pop_lang();
 		return;
 	}
@@ -517,4 +523,4 @@ class enotify {
 		logger("notification: enotify::send returns " . $res, LOGGER_DEBUG);
 	}
 }
-?>
+
