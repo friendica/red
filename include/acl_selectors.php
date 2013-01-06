@@ -25,7 +25,7 @@ function group_select($selname,$selclass,$preselected = false,$size = 4) {
 
 	call_hooks($a->module . '_pre_' . $selname, $arr);
 
-	if(count($r)) {
+	if($r) {
 		foreach($r as $rr) {
 			if((is_array($preselected)) && in_array($rr['id'], $preselected))
 				$selected = " selected=\"selected\" ";
@@ -163,17 +163,6 @@ function contact_select($selname, $selclass, $preselected = false, $size = 4, $p
 
 	$sql_extra = '';
 
-	if($privmail || $celeb) {
-		$sql_extra .= sprintf(" AND `rel` = %d ", intval(CONTACT_IS_FRIEND));
-	}
-
-	if($privmail) {
-		$sql_extra .= " AND `network` IN ( 'dfrn', 'dspr' ) ";
-	}
-	elseif($privatenet) {	
-		$sql_extra .= " AND `network` IN ( 'dfrn', 'mail', 'face', 'dspr' ) ";
-	}
-
 	$tabindex = ($tabindex > 0 ? "tabindex=\"$tabindex\"" : "");
 
 	if($privmail)
@@ -181,10 +170,11 @@ function contact_select($selname, $selclass, $preselected = false, $size = 4, $p
 	else 
 		$o .= "<select name=\"{$selname}[]\" id=\"$selclass\" class=\"$selclass\" multiple=\"multiple\" size=\"$size\" $tabindex >\r\n";
 
-	$r = q("SELECT `id`, `name`, `url`, `network` FROM `contact` 
-		WHERE `uid` = %d AND `self` = 0 AND `blocked` = 0 AND `pending` = 0 AND `archive` = 0 AND `notify` != ''
+	$r = q("SELECT abook_id, xchan_name, xchan_url, xchan_photo_s from abook left join xchan on abook_xchan = xchan_hash
+		where abook flags = 0 or not ( abook_flags & %d ) and abook_channel = %d
 		$sql_extra
-		ORDER BY `name` ASC ",
+		ORDER BY xchan_name ASC ",
+		intval(ABOOK_FLAG_SELF),
 		intval(local_user())
 	);
 
@@ -195,16 +185,16 @@ function contact_select($selname, $selclass, $preselected = false, $size = 4, $p
 
 	call_hooks($a->module . '_pre_' . $selname, $arr);
 
-	if(count($r)) {
+	if($r) {
 		foreach($r as $rr) {
 			if((is_array($preselected)) && in_array($rr['id'], $preselected))
 				$selected = " selected=\"selected\" ";
 			else
 				$selected = '';
 
-			$trimmed = mb_substr($rr['name'],0,20);
+			$trimmed = mb_substr($rr['xchan_name'],0,20);
 
-			$o .= "<option value=\"{$rr['id']}\" $selected title=\"{$rr['name']}|{$rr['url']}\" >$trimmed</option>\r\n";
+			$o .= "<option value=\"{$rr['abook_id']}\" $selected title=\"{$rr['xchan_name']}|{$rr['xchan_url']}\" >$trimmed</option>\r\n";
 		}
 	
 	}
