@@ -3526,6 +3526,7 @@ div.jGrowl div.info {
 }
 
 
+
 .jslider .jslider-scale ins {
     color: #333;
 	font-size: 12px;
@@ -3533,10 +3534,13 @@ div.jGrowl div.info {
 	text-align: center;
 }
 
+/*
+Leave this here for now just in case, but this is what's breaking the slider 
+
 .jslider .jslider-bg,
 .jslider .jslider-pointer {
   background: url("../img/slider.png") !important;
-}
+}*/
 
 .slider {
 	margin-top: 10px;
