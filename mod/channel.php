@@ -249,7 +249,7 @@ function channel_content(&$a, $update = 0, $load = false) {
 
 
 	if($is_owner) {
-dbg(1);
+
 		$r = q("UPDATE item SET item_flags = (item_flags ^ %d)
 			WHERE (item_flags & %d) AND (item_flags & %d) AND uid = %d ",
 			intval(ITEM_UNSEEN),
@@ -258,7 +258,7 @@ dbg(1);
 			intval(local_user())
 		);
 	}
-dbg(0);
+
 
 	$o .= conversation($a,$items,'channel',$update,'client');
 
