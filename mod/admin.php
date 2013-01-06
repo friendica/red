@@ -610,7 +610,7 @@ function admin_page_users(&$a){
 			t('Community/Celebrity Account'),
 			t('Automatic Friend Account')
 		);
-		$e['page-flags'] = $accounts[$e['page-flags']];
+		$e['page_flags'] = $accounts[$e['page-flags']];
 		$e['register_date'] = relative_date($e['register_date']);
 		$e['login_date'] = relative_date($e['login_date']);
 		$e['lastitem_date'] = relative_date($e['lastitem_date']);

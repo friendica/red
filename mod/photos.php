@@ -1063,6 +1063,15 @@ function photos_content(&$a) {
  		}
 
 
+		if($a->theme['template_engine'] === 'internal') {
+			$albumselect_e = template_escape($albumselect);
+			$aclselect_e = (($visitor) ? '' : template_escape(populate_acl($a->user, $celeb)));
+		}
+		else {
+			$albumselect_e = $albumselect;
+			$aclselect_e = (($visitor) ? '' : populate_acl($a->user, $celeb));
+		}
+
 		$tpl = get_markup_template('photos_upload.tpl');
 		$o .= replace_macros($tpl,array(
 			'$pagename' => t('Upload Photos'),
@@ -1072,9 +1081,9 @@ function photos_content(&$a) {
 			'$newalbum' => t('New album name: '),
 			'$existalbumtext' => t('or existing album name: '),
 			'$nosharetext' => t('Do not show a status post for this upload'),
-			'$albumselect' => template_escape($albumselect),
+			'$albumselect' => $albumselect_e,
 			'$permissions' => t('Permissions'),
-			'$aclselect' => (($visitor) ? '' : template_escape(populate_acl($a->user, $celeb))),
+			'$aclselect' => $aclselect_e,
 			'$uploader' => $ret['addon_text'],
 			'$default' => (($ret['default_upload']) ? $default_upload : ''),
 			'$uploadurl' => $ret['post_url']
@@ -1116,11 +1125,18 @@ function photos_content(&$a) {
 		if($cmd === 'edit') {		
 			if(($album !== t('Profile Photos')) && ($album !== 'Contact Photos') && ($album !== t('Contact Photos'))) {
 				if($can_post) {
+					if($a->theme['template_engine'] === 'internal') {
+						$album_e = template_escape($album);
+					}
+					else {
+						$album_e = $album;
+					}
+
 					$edit_tpl = get_markup_template('album_edit.tpl');
 					$o .= replace_macros($edit_tpl,array(
 						'$nametext' => t('New album name: '),
 						'$nickname' => $a->data['channel']['channel_address'],
-						'$album' => template_escape($album),
+						'$album' => $album_e,
 						'$hexalbum' => bin2hex($album),
 						'$submit' => t('Submit'),
 						'$dropsubmit' => t('Delete Album')
@@ -1160,6 +1176,15 @@ function photos_content(&$a) {
 				
 				$ext = $phototypes[$rr['type']];
 
+				if($a->theme['template_engine'] === 'internal') {
+					$imgalt_e = template_escape($rr['filename']);
+					$desc_e = template_escape($rr['desc']);
+				}
+				else {
+					$imgalt_e = $rr['filename'];
+					$desc_e = $rr['desc'];
+				}
+
 				$o .= replace_macros($tpl,array(
 					'$id' => $rr['id'],
 					'$twist' => ' ' . $twist . rand(2,4),
@@ -1167,8 +1192,8 @@ function photos_content(&$a) {
 						. (($_GET['order'] === 'posted') ? '?f=&order=posted' : ''),
 					'$phototitle' => t('View Photo'),
 					'$imgsrc' => $a->get_baseurl() . '/photo/' . $rr['resource_id'] . '-' . $rr['scale'] . '.' .$ext,
-					'$imgalt' => template_escape($rr['filename']),
-					'$desc'=> template_escape($rr['desc'])
+					'$imgalt' => $imgalt_e,
+					'$desc'=> $desc_e
 				));
 
 		}
@@ -1365,21 +1390,32 @@ function photos_content(&$a) {
 
 		$edit = Null;
 		if(($cmd === 'edit') && ($can_post)) {
+			if($a->theme['template_engine'] === 'internal') {
+				$album_e = template_escape($ph[0]['album']);
+				$caption_e = template_escape($ph[0]['desc']);
+				$aclselect_e = template_escape(populate_acl($ph[0]));
+			}
+			else {
+				$album_e = $ph[0]['album'];
+				$caption_e = $ph[0]['desc'];
+				$aclselect_e = populate_acl($ph[0]);
+			}
+
 			$edit_tpl = get_markup_template('photo_edit.tpl');
 			$edit = replace_macros($edit_tpl, array(
 				'$id' => $ph[0]['id'],
 				'$rotatecw' => t('Rotate CW (right)'),
 				'$rotateccw' => t('Rotate CCW (left)'),
-				'$album' => template_escape($ph[0]['album']),
+				'$album' => $album_e,
 				'$newalbum' => t('New album name'), 
 				'$nickname' => $a->data['channel']['channel_address'],
 				'$resource_id' => $ph[0]['resource_id'],
 				'$capt_label' => t('Caption'),
-				'$caption' => template_escape($ph[0]['desc']),
+				'$caption' => $caption_e,
 				'$tag_label' => t('Add a Tag'),
 				'$tags' => $link_item['tag'],
 				'$permissions' => t('Permissions'),
-				'$aclselect' => template_escape(populate_acl($ph[0])),
+				'$aclselect' => $aclselect_e,
 				'$help_tags' => t('Example: @bob, @Barbara_Jensen, @jim@example.com, #California, #camping'),
 				'$item_id' => ((count($linked_items)) ? $link_item['id'] : 0),
 				'$submit' => t('Submit'),
@@ -1516,14 +1552,25 @@ function photos_content(&$a) {
 						$drop = replace_macros(get_markup_template('photo_drop.tpl'), array('$id' => $item['id'], '$delete' => t('Delete')));
 
 
+					if($a->theme['template_engine'] === 'internal') {
+						$name_e = template_escape($profile_name);
+						$title_e = template_escape($item['title']);
+						$body_e = template_escape(bbcode($item['body']));
+					}
+					else {
+						$name_e = $profile_name;
+						$title_e = $item['title'];
+						$body_e = bbcode($item['body']);
+					}
+
 					$comments .= replace_macros($template,array(
 						'$id' => $item['item_id'],
 						'$profile_url' => $profile_link,
-						'$name' => template_escape($profile_name),
+						'$name' => $name_e,
 						'$thumb' => $profile_avatar,
 						'$sparkle' => $sparkle,
-						'$title' => template_escape($item['title']),
-						'$body' => template_escape(bbcode($item['body'])),
+						'$title' => $title_e,
+						'$body' => $body_e,
 						'$ago' => relative_date($item['created']),
 						'$indent' => (($item['parent'] != $item['item_id']) ? ' comment' : ''),
 						'$drop' => $drop,
@@ -1535,21 +1582,34 @@ function photos_content(&$a) {
 			$paginate = paginate($a);
 		}
 		
+		if($a->theme['template_engine'] === 'internal') {
+			$album_e = array($album_link,template_escape($ph[0]['album']));
+			$tags_e = template_escape($tags);
+			$like_e = template_escape($like);
+			$dislike_e = template_escape($dislike);
+		}
+		else {
+			$album_e = array($album_link,$ph[0]['album']);
+			$tags_e = $tags;
+			$like_e = $like;
+			$dislike_e = $dislike;
+		}
+
 		$photo_tpl = get_markup_template('photo_view.tpl');
 		$o .= replace_macros($photo_tpl, array(
 			'$id' => $ph[0]['id'],
-			'$album' => array($album_link,template_escape($ph[0]['album'])),
+			'$album' => $album_e,
 			'$tools' => $tools,
 			'$lock' => $lock,
 			'$photo' => $photo,
 			'$prevlink' => $prevlink,
 			'$nextlink' => $nextlink,
 			'$desc' => $ph[0]['desc'],
-			'$tags' => template_escape($tags),
+			'$tags' => $tags_e,
 			'$edit' => $edit,	
 			'$likebuttons' => $likebuttons,
-			'$like' => template_escape($like),
-			'$dislike' => template_escape($dislike),
+			'$like' => $like_e,
+			'$dislike' => $dislike_e,
 			'$comments' => $comments,
 			'$paginate' => $paginate,
 		));
@@ -1593,16 +1653,25 @@ function photos_content(&$a) {
 				$twist = 'rotright';
 			$ext = $phototypes[$rr['type']];
 			
+			if($a->theme['template_engine'] === 'internal') {
+				$alt_e = template_escape($rr['filename']);
+				$name_e = template_escape($rr['album']);
+			}
+			else {
+				$alt_e = $rr['filename'];
+				$name_e = $rr['album'];
+			}
+
 			$photos[] = array(
 				'id'       => $rr['id'],
 				'twist'    => ' ' . $twist . rand(2,4),
 				'link'  	=> $a->get_baseurl() . '/photos/' . $a->data['channel']['channel_address'] . '/image/' . $rr['resource_id'],
 				'title' 	=> t('View Photo'),
 				'src'     	=> $a->get_baseurl() . '/photo/' . $rr['resource_id'] . '-' . ((($rr['scale']) == 6) ? 4 : $rr['scale']) . '.' . $ext,
-				'alt'     	=> template_escape($rr['filename']),
+				'alt'     	=> $alt_e,
 				'album'	=> array(
 					'link'  => $a->get_baseurl() . '/photos/' . $a->data['channel']['channel_address'] . '/album/' . bin2hex($rr['album']),
-					'name'  => template_escape($rr['album']),
+					'name'  => $name_e,
 					'alt'   => t('View Album'),
 				),
 				
@@ -1611,7 +1680,7 @@ function photos_content(&$a) {
 	}
 	
 	$tpl = get_markup_template('photos_recent.tpl'); 
-	$o .= replace_macros($tpl,array(
+	$o .= replace_macros($tpl, array(
 		'$title' => t('Recent Photos'),
 		'$can_post' => $can_post,
 		'$upload' => array(t('Upload New Photos'), $a->get_baseurl().'/photos/'.$a->data['channel']['channel_address'].'/upload'),

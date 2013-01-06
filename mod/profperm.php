@@ -13,6 +13,15 @@ function profperm_init(&$a) {
 }
 
 
+function profperm_aside(&$a) {
+
+	if(! local_user())
+		return;
+
+	profile_aside($a);
+}
+
+
 function profperm_content(&$a) {
 
 	if(! local_user()) {

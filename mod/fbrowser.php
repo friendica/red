@@ -55,9 +55,17 @@ function fbrowser_content($a){
 				global $a;
 				$types = Photo::supportedTypes();
 				$ext = $types[$rr['type']];
+
+				if($a->theme['template_engine'] === 'internal') {
+					$filename_e = template_escape($rr['filename']);
+				}
+				else {
+					$filename_e = $rr['filename'];
+				}
+
 				return array( 
 					$a->get_baseurl() . '/photo/' . $rr['resource_id'] . '-' . $rr['hiq'] . '.' .$ext, 
-					template_escape($rr['filename']), 
+					$filename_e, 
 					$a->get_baseurl() . '/photo/' . $rr['resource_id'] . '-' . $rr['loq'] . '.'. $ext
 				);
 			}
@@ -70,6 +78,7 @@ function fbrowser_content($a){
 				'$path' => $path,
 				'$folders' => $albums,
 				'$files' =>$files,
+				'$cancel' => t('Cancel'),
 			));
 				
 				
@@ -83,7 +92,15 @@ function fbrowser_content($a){
 				function files2($rr){ global $a; 
 					list($m1,$m2) = explode("/",$rr['filetype']);
 					$filetype = ( (file_exists("images/icons/$m1.png"))?$m1:"zip");
-					return array( $a->get_baseurl() . '/attach/' . $rr['id'], template_escape($rr['filename']), $a->get_baseurl() . '/images/icons/16/' . $filetype . '.png'); 
+
+					if($a->theme['template_engine'] === 'internal') {
+						$filename_e = template_escape($rr['filename']);
+					}
+					else {
+						$filename_e = $rr['filename'];
+					}
+
+					return array( $a->get_baseurl() . '/attach/' . $rr['id'], $filename_e, $a->get_baseurl() . '/images/icons/16/' . $filetype . '.png'); 
 				}
 				$files = array_map("files2", $files);
 				//echo "<pre>"; var_dump($files); killme();
@@ -96,6 +113,7 @@ function fbrowser_content($a){
 					'$path' => array( array($a->get_baseurl()."/fbrowser/image/", t("Files")) ),
 					'$folders' => false,
 					'$files' =>$files,
+					'$cancel' => t('Cancel'),
 				));
 				
 			}

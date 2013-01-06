@@ -362,6 +362,19 @@ function message_content(&$a) {
 			$rr['to']   = find_xchan_in_array($rr['to_xchan'],$c);
 			$rr['seen'] = (($rr['mail_flags'] & MAIL_SEEN) ? 1 : "");
 
+			if($a->theme['template_engine'] === 'internal') {
+				$from_name_e = template_escape($rr['from']['xchan_name']);
+				$subject_e = template_escape((($rr['seen']) ? $rr['title'] : '<strong>' . $rr['title'] . '</strong>'));
+				$body_e = template_escape($rr['body']);
+				$to_name_e = template_escape($rr['to']['xchan_name']);
+			}
+			else {
+				$from_name_e = $rr['from']['xchan_name'];
+				$subject_e = (($rr['seen']) ? $rr['title'] : '<strong>' . $rr['title'] . '</strong>');
+				$body_e = $rr['body'];
+				$to_name_e = $rr['to']['xchan_name'];
+			}
+			
 			$o .= replace_macros($tpl, array(
 				'$id' => $rr['id'],
 				'$from_name' => template_escape($rr['from']['xchan_name']),
@@ -384,6 +397,10 @@ function message_content(&$a) {
 	if((argc() > 1) && (intval(argv(1)))) {
 
 		$o .= $header;
+
+		$plaintext = true;
+		if( local_user() && feature_enabled(local_user(),'richtext') )
+			$plaintext = false;
 
 		$r = q("SELECT parent_uri from mail WHERE channel_id = %d and id = %d limit 1",
 			intval(local_user()),
@@ -433,6 +450,8 @@ function message_content(&$a) {
 		$a->page['htmlhead'] .= replace_macros($tpl, array(
 			'$nickname' => $channel['channel_addr'],
 			'$baseurl' => $a->get_baseurl(true)
+			'$editselect' => (($plaintext) ? 'none' : '/(profile-jot-text|prvmail-text)/'),
+			'$linkurl' => t('Please enter a link URL:')
 		));
 
 
@@ -451,16 +470,29 @@ logger('message: ' . print_r($message,true));
 //			if($extracted['images'])
 //				$message['body'] = item_redir_and_replace_images($extracted['body'], $extracted['images'], $message['contact-id']);
 
+			if($a->theme['template_engine'] === 'internal') {
+				$from_name_e = template_escape($message['from']['xchan_name']);
+				$subject_e = template_escape($message['title']);
+				$body_e = template_escape(smilies(bbcode($message['body'])));
+				$to_name_e = template_escape($message['to']['xchan_name']);
+			}
+			else {
+				$from_name_e = $message['from']['xchan_name'];
+				$subject_e = $message['title'];
+				$body_e = smilies(bbcode($message['body']));
+				$to_name_e = $message['to']['xchan_name'];
+			}
+
 			$mails[] = array(
 				'id' => $message['id'],
-				'from_name' => template_escape($message['from']['xchan_name']),
+				'from_name' => $from_name_e,
 				'from_url' =>  z_root() . '/chanview/?f=&hash=' . $message['from_xchan'],
 				'from_photo' => $message['from']['xchan_photo_m'],
-				'to_name' => template_escape($message['to']['xchan_name']),
+				'to_name' => $to_name_e,
 				'to_url' =>  z_root() . '/chanview/?f=&hash=' . $message['to_xchan'],
 				'to_photo' => $message['to']['xchan_photo_m'],
-				'subject' => template_escape($message['title']),
-				'body' => template_escape(smilies(bbcode($message['body']))),
+				'subject' => $subject_e,
+				'body' => $body_e,
 				'delete' => t('Delete message'),
 				'date' => datetime_convert('UTC',date_default_timezone_get(),$message['created'],'D, d M Y - g:i A'),
 			);
@@ -475,6 +507,13 @@ logger('message: ' . print_r($message,true));
 
 		$select = $message[$recp]['xchan_name'] . '<input type="hidden" name="messageto" value="' . $message[$recp]['xchan_hash'] . '" />';
 		$parent = '<input type="hidden" name="replyto" value="' . $message['parent_uri'] . '" />';
+
+		if($a->theme['template_engine'] === 'internal') {
+			$subjtxt_e = template_escape($message['title']);
+		}
+		else {
+			$subjtxt_e = $message['title'];
+		}
 
 		$tpl = get_markup_template('mail_display.tpl');
 		$o = replace_macros($tpl, array(
@@ -491,7 +530,7 @@ logger('message: ' . print_r($message,true));
 			'$to' => t('To:'),
 			'$showinputs' => '',
 			'$subject' => t('Subject:'),
-			'$subjtxt' => template_escape($message['title']),
+			'$subjtxt' => $subjtxt_e,
 			'$readonly' => ' readonly="readonly" style="background: #BBBBBB;" ',
 			'$yourmessage' => t('Your message:'),
 			'$text' => '',

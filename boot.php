@@ -488,16 +488,35 @@ if(! class_exists('App')) {
 
 		// Allow themes to control internal parameters
 		// by changing App values in theme.php
-		//
-		// Possibly should make these part of the plugin
-		// system, but it seems like overkill to invoke
-		// all the plugin machinery just to change a couple
-		// of values
+
 		public	$sourcename = '';
 		public	$videowidth = 425;
 		public	$videoheight = 350;
 		public	$force_max_items = 0;
 		public	$theme_thread_allow = true;
+
+		// An array for all theme-controllable parameters
+		// Mostly unimplemented yet. Only options 'template_engine' and
+		// beyond are used.
+
+		private	$theme = array(
+			'sourcename' => '',
+			'videowidth' => 425,
+			'videoheight' => 350,
+			'force_max_items' => 0,
+			'thread_allow' => true,
+			'stylesheet' => '',
+			'template_engine' => 'internal',
+		);
+
+		private $ldelim = array(
+			'internal' => '',
+			'smarty3' => '{{'
+		);
+		private $rdelim = array(
+			'internal' => '',
+			'smarty3' => '}}'
+		);
 
 		private $scheme;
 		private $hostname;
@@ -753,9 +772,29 @@ if(! class_exists('App')) {
 
 		}
 
-		function init_pagehead() {
-			$this->page['title'] = $this->config['sitename'];
-			$this->page['htmlhead'] = get_markup_template('head.tpl');
+		function build_pagehead() {
+
+			$interval = ((local_user()) ? get_pconfig(local_user(),'system','update_interval') : 40000);
+			if($interval < 10000)
+				$interval = 40000;
+
+			$this->page['title'] = $this->config['system']['sitename'];
+
+
+			/* put the head template at the beginning of page['htmlhead']
+			 * since the code added by the modules frequently depends on it
+			 * being first
+			 */
+			$tpl = get_markup_template('head.tpl');
+			$this->page['htmlhead'] = replace_macros($tpl, array(
+				'$baseurl' => $a->get_baseurl(),
+				'$local_user' => local_user(),
+				'$generator' => FRIENDICA_PLATFORM . ' ' . FRIENDICA_VERSION,
+				'$update_interval' => $interval,
+				'$head_css' => head_get_css(),
+				'$head_js' => head_get_js(),
+				'$js_strings' => js_strings()
+			)) . $this->page['htmlhead'];
 		}
 
 		function set_curl_code($code) {
@@ -795,6 +834,32 @@ if(! class_exists('App')) {
 				}
 			}
 			return $this->cached_profile_image[$avatar_image];
+		}
+
+		function get_template_engine() {
+			return $this->theme['template_engine'];
+		}
+
+		function set_template_engine($engine = 'internal') {
+
+			$this->theme['template_engine'] = 'internal';
+
+			switch($engine) {
+				case 'smarty3':
+					if(is_writable('view/tpl/smarty3/'))
+						$this->theme['template_engine'] = 'smarty3';
+					break;
+				default:
+					break;
+			}
+		}
+
+		function get_template_ldelim($engine = 'internal') {
+			return $this->ldelim[$engine];
+		}
+
+		function get_template_rdelim($engine = 'internal') {
+			return $this->rdelim[$engine];
 		}
 
 
@@ -1264,20 +1329,26 @@ function profile_load(&$a, $nickname, $profile = 0) {
 
 	$_SESSION['theme'] = $a->profile['channel_theme'];
 
-		/**
-		 * load/reload current theme info
-		 */
+	/**
+	 * load/reload current theme info
+	 */
 
-		$theme_info_file = "view/theme/".current_theme()."/php/theme.php";
-		if (file_exists($theme_info_file)){
-			require_once($theme_info_file);
-		}
+	$a->set_template_engine(); // reset the template engine to the default in case the user's theme doesn't specify one
 
-		$block = (((get_config('system','block_public')) && (! local_user()) && (! remote_user())) ? true : false);
-
-		$a->set_widget('profile',profile_sidebar($a->profile, $block));
-		return;
+	$theme_info_file = "view/theme/".current_theme()."/php/theme.php";
+	if (file_exists($theme_info_file)){
+		require_once($theme_info_file);
 	}
+
+	return;
+}}
+
+function profile_aside(&$a) {
+
+	$block = (((get_config('system','block_public')) && (! local_user()) && (! remote_user())) ? true : false);
+
+	$a->set_widget('profile',profile_sidebar($a->profile, $block));
+	return;
 }
 
 
@@ -1969,23 +2040,7 @@ function construct_page(&$a) {
 
 	head_add_js('mod_' . $a->module . '.js');
 
-
-	$interval = ((local_user()) ? get_pconfig(local_user(),'system','update_interval') : 40000);
-	if($interval < 10000)
-		$interval = 40000;
-
-	$a->page['title'] = $a->config['system']['sitename'];
-
-
-	$a->page['htmlhead'] = replace_macros($a->page['htmlhead'], array(
-		'$baseurl' => $a->get_baseurl(),
-		'$local_user' => local_user(),
-		'$generator' => FRIENDICA_PLATFORM . ' ' . FRIENDICA_VERSION,
-		'$update_interval' => $interval,
-		'$head_css' => head_get_css(),
-		'$head_js' => head_get_js(),
-		'$js_strings' => js_strings()
-	));
+	$a->build_pagehead();
 
 	$arr = $a->get_widgets();
 	if(count($arr)) {

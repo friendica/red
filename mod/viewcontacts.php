@@ -11,6 +11,16 @@ function viewcontacts_init(&$a) {
 }
 
 
+function viewcontacts_aside(&$a) {
+
+	if((get_config('system','block_public')) && (! local_user()) && (! remote_user())) {
+		return;
+	}
+
+	profile_aside($a);
+}
+
+
 function viewcontacts_content(&$a) {
 
 	if((get_config('system','block_public')) && (! local_user()) && (! remote_user())) {

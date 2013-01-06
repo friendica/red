@@ -2,16 +2,6 @@
 
 function profile_init(&$a) {
 
-	$a->page['htmlhead'] .= '<link rel="alternate" type="application/atom+xml" href="' . $a->get_baseurl() . '/feed/' . $which .'" />' . "\r\n" ;
-
-}
-
-
-function profile_aside(&$a) {
-
-	require_once('include/contact_widgets.php');
-	require_once('include/items.php');
-
 	if(argc() > 1)
 		$which = argv(1);
 	else {
@@ -28,6 +18,7 @@ function profile_aside(&$a) {
 		$profile = argv(1);		
 	}
 
+	$a->page['htmlhead'] .= '<link rel="alternate" type="application/atom+xml" href="' . $a->get_baseurl() . '/feed/' . $which .'" />' . "\r\n" ;
 
 	$x = q("select channel_id as profile_uid from channel where channel_address = '%s' limit 1",
 		dbesc(argv(1))
@@ -37,13 +28,33 @@ function profile_aside(&$a) {
 		$channel_display = get_pconfig($a->profile['profile_uid'],'system','channel_format');
 		if(! $channel_display)
 			profile_load($a,$which,$profile);
+	}
+
+}
+
+
+function profile_aside(&$a) {
+
+	require_once('include/contact_widgets.php');
+	require_once('include/items.php');
+
+	$x = q("select channel_id as profile_uid from channel where channel_address = '%s' limit 1",
+		dbesc(argv(1))
+	);
+	if($x) {
+		$channel_display = get_pconfig($a->profile['profile_uid'],'system','channel_format');
+		if(! $channel_display)
+			profile_aside($a);
+
 		if($channel_display === 'full')
 			$a->page['template'] = 'full';
 		else {
+			$cat = ((x($_REQUEST,'cat')) ? htmlspecialchars($_REQUEST['cat']) : '');
 			$a->set_widget('archive',posted_date_widget($a->get_baseurl(true) . '/channel/' . $a->profile['nickname'],$a->profile['profile_uid'],true));	
 			$a->set_widget('categories',categories_widget($a->get_baseurl(true) . '/channel/' . $a->profile['nickname'],$cat));
 		}
 	}
+
 }
 
 

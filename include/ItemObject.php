@@ -204,13 +204,28 @@ class Item extends BaseObject {
 
 		$body = prepare_body($item,true);
 
+		if($a->theme['template_engine'] === 'internal') {
+			$body_e = template_escape($body);
+			$name_e = template_escape($profile_name);
+			$title_e = template_escape($item['title']);
+			$location_e = template_escape($location);
+			$owner_name_e = template_escape($this->get_owner_name());
+		}
+		else {
+			$body_e = $body;
+			$name_e = $profile_name;
+			$title_e = $item['title'];
+			$location_e = $location;
+			$owner_name_e = $this->get_owner_name();
+		}
+
 		$tmp_item = array(
 			'template' => $this->get_template(),
 			
 			'type' => implode("",array_slice(explode("/",$item['verb']),-1)),
 			'tags' => $tags,
-			'body' => $body,
-			'text' => strip_tags(template_escape($body)),
+			'body' => $body_e,
+			'text' => strip_tags($body_e),
 			'id' => $this->get_id(),
 			'linktitle' => sprintf( t('View %s\'s profile @ %s'), $profile_name, ((strlen($item['author-link'])) ? $item['author-link'] : $item['url'])),
 			'olinktitle' => sprintf( t('View %s\'s profile @ %s'), $this->get_owner_name(), ((strlen($item['owner-link'])) ? $item['owner-link'] : $item['url'])),
@@ -219,19 +234,19 @@ class Item extends BaseObject {
 			'vwall' => t('via Wall-To-Wall:'),
 			'profile_url' => $profile_link,
 			'item_photo_menu' => item_photo_menu($item),
-			'name' => template_escape($profile_name),
+			'name' => $name_e,
 			'thumb' => $profile_avatar,
 			'osparkle' => $osparkle,
 			'sparkle' => $sparkle,
-			'title' => template_escape($item['title']),
+			'title' => $title_e,
 			'localtime' => datetime_convert('UTC', date_default_timezone_get(), $item['created'], 'r'),
 			'ago' => (($item['app']) ? sprintf( t('%s from %s'),relative_date($item['created']),$item['app']) : relative_date($item['created'])),
 			'lock' => $lock,
-			'location' => template_escape($location),
+			'location' => $location_e,
 			'indent' => $indent,
 			'owner_url' => $this->get_owner_url(),
 			'owner_photo' => $this->get_owner_photo(),
-			'owner_name' => template_escape($this->get_owner_name()),
+			'owner_name' => $owner_name_e,
 
 // Item toolbar buttons
 			'like'      => $like,

@@ -96,13 +96,6 @@ if((x($_GET,'zid')) && (! $install)) {
 if((x($_SESSION,'authenticated')) || (x($_POST,'auth-params')) || ($a->module === 'login'))
 	require("auth.php");
 
-/*
- * Create the page head after setting the language
- * and getting any auth credentials
- */
-
-$a->init_pagehead();
-
 
 if(! x($_SESSION,'sysmsg'))
 	$_SESSION['sysmsg'] = array();
@@ -280,18 +273,28 @@ if($a->module_loaded) {
 
 
 	if(! $a->error) {
+		// If a theme has defined an _aside() function, run that first
+		//
+		// If the theme function doesn't exist, see if this theme extends another,
+		// and see if that other theme has an _aside() function--if it does, run it
+		//
+		// If $aside_default is not False after the theme _aside() function, run the
+		// module's _aside() function too
+		//
+		// This gives themes more control over how the left sidebar looks
+
 		$aside_default = true;
 		call_hooks($a->module . '_mod_aside',$placeholder);
 		if(function_exists(str_replace('-','_',current_theme()) . '_' . $a->module . '_aside')) {
 			$func = str_replace('-','_',current_theme()) . '_' . $a->module . '_aside';
 			$aside_default = $func($a);
 		}
-		elseif(x($a->theme_info,"extends") && $aside_default 
+		elseif($aside_default && x($a->theme_info,"extends") 
 			&& (function_exists(str_replace('-','_',$a->theme_info["extends"]) . '_' . $a->module . '_aside'))) {
 			$func = str_replace('-','_',$a->theme_info["extends"]) . '_' . $a->module . '_aside';
 			$aside_default = $func($a);
 		}
-		elseif(function_exists($a->module . '_aside') && $aside_default) {
+		if($aside_default && function_exists($a->module . '_aside')) {
 			$func = $a->module . '_aside';
 			$func($a);
 		}
@@ -328,7 +331,6 @@ if(stristr( implode("",$_SESSION['sysmsg']), t('Permission denied'))) {
 
 
 call_hooks('page_end', $a->page['content']);
-
 
 construct_page($a);
 
