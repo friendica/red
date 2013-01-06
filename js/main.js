@@ -493,6 +493,8 @@ function updateConvItems(mode,data) {
 			in_progress = false;
 			updateConvItems(update_mode,data);
 			$("#page-spinner").hide();
+			$("#profile-jot-text-loading").hide();
+
 		});
 
 
