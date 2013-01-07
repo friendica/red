@@ -101,8 +101,8 @@
 <div class="wall-item-outside-wrapper-end {{$item.indent}}" ></div>
 </div>
 {{if $item.toplevel}}
-{{foreach $item.children as $item}}
-	{{include file="{{$item.template}}"}}
+{{foreach $item.children as $child}}
+	{{include file="{{$child.template}}" item=$child}}
 {{/foreach}}
 {{/if}}
 

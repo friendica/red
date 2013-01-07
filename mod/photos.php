@@ -1063,7 +1063,7 @@ function photos_content(&$a) {
  		}
 
 
-		if($a->theme['template_engine'] === 'internal') {
+		if($a->get_template_engine() === 'internal') {
 			$albumselect_e = template_escape($albumselect);
 			$aclselect_e = (($visitor) ? '' : template_escape(populate_acl($a->user, $celeb)));
 		}
@@ -1125,7 +1125,7 @@ function photos_content(&$a) {
 		if($cmd === 'edit') {		
 			if(($album !== t('Profile Photos')) && ($album !== 'Contact Photos') && ($album !== t('Contact Photos'))) {
 				if($can_post) {
-					if($a->theme['template_engine'] === 'internal') {
+					if($a->get_template_engine() === 'internal') {
 						$album_e = template_escape($album);
 					}
 					else {
@@ -1176,7 +1176,7 @@ function photos_content(&$a) {
 				
 				$ext = $phototypes[$rr['type']];
 
-				if($a->theme['template_engine'] === 'internal') {
+				if($a->get_template_engine() === 'internal') {
 					$imgalt_e = template_escape($rr['filename']);
 					$desc_e = template_escape($rr['desc']);
 				}
@@ -1390,7 +1390,7 @@ function photos_content(&$a) {
 
 		$edit = Null;
 		if(($cmd === 'edit') && ($can_post)) {
-			if($a->theme['template_engine'] === 'internal') {
+			if($a->get_template_engine() === 'internal') {
 				$album_e = template_escape($ph[0]['album']);
 				$caption_e = template_escape($ph[0]['desc']);
 				$aclselect_e = template_escape(populate_acl($ph[0]));
@@ -1552,7 +1552,7 @@ function photos_content(&$a) {
 						$drop = replace_macros(get_markup_template('photo_drop.tpl'), array('$id' => $item['id'], '$delete' => t('Delete')));
 
 
-					if($a->theme['template_engine'] === 'internal') {
+					if($a->get_template_engine() === 'internal') {
 						$name_e = template_escape($profile_name);
 						$title_e = template_escape($item['title']);
 						$body_e = template_escape(bbcode($item['body']));
@@ -1582,7 +1582,7 @@ function photos_content(&$a) {
 			$paginate = paginate($a);
 		}
 		
-		if($a->theme['template_engine'] === 'internal') {
+		if($a->get_template_engine() === 'internal') {
 			$album_e = array($album_link,template_escape($ph[0]['album']));
 			$tags_e = template_escape($tags);
 			$like_e = template_escape($like);
@@ -1653,7 +1653,7 @@ function photos_content(&$a) {
 				$twist = 'rotright';
 			$ext = $phototypes[$rr['type']];
 			
-			if($a->theme['template_engine'] === 'internal') {
+			if($a->get_template_engine() === 'internal') {
 				$alt_e = template_escape($rr['filename']);
 				$name_e = template_escape($rr['album']);
 			}

@@ -56,7 +56,7 @@ function fbrowser_content($a){
 				$types = Photo::supportedTypes();
 				$ext = $types[$rr['type']];
 
-				if($a->theme['template_engine'] === 'internal') {
+				if($a->get_template_engine() === 'internal') {
 					$filename_e = template_escape($rr['filename']);
 				}
 				else {
@@ -93,7 +93,7 @@ function fbrowser_content($a){
 					list($m1,$m2) = explode("/",$rr['filetype']);
 					$filetype = ( (file_exists("images/icons/$m1.png"))?$m1:"zip");
 
-					if($a->theme['template_engine'] === 'internal') {
+					if($a->get_template_engine() === 'internal') {
 						$filename_e = template_escape($rr['filename']);
 					}
 					else {

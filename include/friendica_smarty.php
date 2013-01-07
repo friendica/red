@@ -14,15 +14,15 @@ class FriendicaSmarty extends Smarty {
 
 		// setTemplateDir can be set to an array, which Smarty will parse in order.
 		// The order is thus very important here
-		$template_dirs = array('theme' => "view/theme/$theme/smarty3/");
+		$template_dirs = array('theme' => "view/theme/$theme/tpl/smarty3/");
 		if( x($a->theme_info,"extends") )
-			$template_dirs = $template_dirs + array('extends' => "view/theme/".$a->theme_info["extends"]."/smarty3/");
-		$template_dirs = $template_dirs + array('base' => 'view/smarty3/');
+			$template_dirs = $template_dirs + array('extends' => "view/theme/".$a->theme_info["extends"]."/tpl/smarty3/");
+		$template_dirs = $template_dirs + array('base' => 'view/tpl/smarty3/');
 		$this->setTemplateDir($template_dirs);
 
-		$this->setCompileDir('view/smarty3/compiled/');
-		$this->setConfigDir('view/smarty3/config/');
-		$this->setCacheDir('view/smarty3/cache/');
+		$this->setCompileDir('view/tpl/smarty3/compiled/');
+		$this->setConfigDir('view/tpl/smarty3/config/');
+		$this->setCacheDir('view/tpl/smarty3/cache/');
 
 		$this->left_delimiter = $a->get_template_ldelim('smarty3');
 		$this->right_delimiter = $a->get_template_rdelim('smarty3');

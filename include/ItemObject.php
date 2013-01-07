@@ -204,7 +204,7 @@ class Item extends BaseObject {
 
 		$body = prepare_body($item,true);
 
-		if($a->theme['template_engine'] === 'internal') {
+		if($a->get_template_engine() === 'internal') {
 			$body_e = template_escape($body);
 			$name_e = template_escape($profile_name);
 			$title_e = template_escape($item['title']);

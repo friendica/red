@@ -1,5 +1,6 @@
 <?php
 
+require_once("include/friendica_smarty.php");
 
 // install and uninstall plugin
 if (! function_exists('uninstall_plugin')){

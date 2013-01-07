@@ -787,7 +787,7 @@ if(! class_exists('App')) {
 			 */
 			$tpl = get_markup_template('head.tpl');
 			$this->page['htmlhead'] = replace_macros($tpl, array(
-				'$baseurl' => $a->get_baseurl(),
+				'$baseurl' => $this->get_baseurl(),
 				'$local_user' => local_user(),
 				'$generator' => FRIENDICA_PLATFORM . ' ' . FRIENDICA_VERSION,
 				'$update_interval' => $interval,
