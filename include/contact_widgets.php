@@ -40,41 +40,6 @@ function findpeople_widget() {
 }
 
 
-function networks_widget($baseurl,$selected = '') {
-
-	$a = get_app();
-
-	if(! local_user())
-		return '';
-
-	
-	$r = q("select distinct(network) from contact where uid = %d and self = 0",
-		intval(local_user())
-	);
-
-	$nets = array();
-	if(count($r)) {
-		require_once('include/contact_selectors.php');
-		foreach($r as $rr) {
-				if($rr['network'])
-					$nets[] = array('ref' => $rr['network'], 'name' => network_to_name($rr['network']), 'selected' => (($selected == $rr['network']) ? 'selected' : '' ));
-		}
-	}
-
-	if(count($nets) < 2)
-		return '';
-
-	return replace_macros(get_markup_template('nets.tpl'),array(
-		'$title' => t('Networks'),
-		'$desc' => '',
-		'$sel_all' => (($selected == '') ? 'selected' : ''),
-		'$all' => t('All Networks'),
-		'$nets' => $nets,
-		'$base' => $baseurl,
-
-	));
-}
-
 function fileas_widget($baseurl,$selected = '') {
 	$a = get_app();
 
@@ -150,6 +115,7 @@ function common_friends_visitor_widget($profile_uid) {
 		}
 	}
 
+// FIXME
 	if(! $cid) {
 		if(get_my_url()) {
 			$r = q("select id from contact where nurl = '%s' and uid = %d limit 1",

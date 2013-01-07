@@ -177,10 +177,10 @@ function bbtoevent($s) {
 }
 
 
-function sort_by_date($a) {
-
-	usort($a,'ev_compare');
-	return $a;
+function sort_by_date($arr) {
+	if(is_array($arr))
+		usort($arr,'ev_compare');
+	return $arr;
 }
 
 
@@ -212,6 +212,8 @@ function event_store($arr) {
 	$arr['message_id'] = (x($arr,'message_id') ? $arr['message_id'] : get_message_id());
 	$arr['private'] = ((x($arr,'private')) ? intval($arr['private']) : 0);
 
+
+// FIXME
 	if($arr['cid'])
 		$c = q("SELECT * FROM `contact` WHERE `id` = %d AND `uid` = %d LIMIT 1",
 			intval($arr['cid']),

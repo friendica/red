@@ -238,16 +238,13 @@ function events_content(&$a) {
 
 
 		if (x($_GET,'id')){
-			$r = q("SELECT `event`.*, `item`.`id` AS `itemid`,`item`.`plink`,
-				`item`.`author-name`, `item`.`author-avatar`, `item`.`author-link` FROM `event` LEFT JOIN `item` ON `item`.`event-id` = `event`.`id` 
-				WHERE `event`.`uid` = %d AND `event`.`id` = %d",
+			$r = q("SELECT event.*, item.* from event left join item on event.id = item.resource_id where resource_type = 'event' and event.uid = %d and event.id = %d limit 1",
 				intval(local_user()),
 				intval($_GET['id'])
 			);
 		} else {
-			$r = q("SELECT `event`.*, `item`.`id` AS `itemid`,`item`.`plink`,
-				`item`.`author-name`, `item`.`author-avatar`, `item`.`author-link` FROM `event` LEFT JOIN `item` ON `item`.`event-id` = `event`.`id` 
-				WHERE `event`.`uid` = %d and ignore = %d
+			$r = q("SELECT event.*, item.* from event left join item on event.id = item.resource_id 
+				where resource_type = 'event' and event.uid = %d and event.ignore = %d 
 				AND (( `adjust` = 0 AND `finish` >= '%s' AND `start` <= '%s' ) 
 				OR  (  `adjust` = 1 AND `finish` >= '%s' AND `start` <= '%s' )) ",
 				intval(local_user()),
@@ -262,7 +259,11 @@ function events_content(&$a) {
 		$links = array();
 
 		if($r) {
+			xchan_query($r);
+			$r = fetch_post_tags($r);
+
 			$r = sort_by_date($r);
+
 			foreach($r as $rr) {
 				$j = (($rr['adjust']) ? datetime_convert('UTC',date_default_timezone_get(),$rr['start'], 'j') : datetime_convert('UTC','UTC',$rr['start'],'j'));
 				if(! x($links,$j)) 
@@ -277,9 +278,8 @@ function events_content(&$a) {
 		$fmt = t('l, F j');
 
 		if($r) {
-			$r = sort_by_date($r);
+
 			foreach($r as $rr) {
-				
 				
 				$j = (($rr['adjust']) ? datetime_convert('UTC',date_default_timezone_get(),$rr['start'], 'j') : datetime_convert('UTC','UTC',$rr['start'],'j'));
 				$d = (($rr['adjust']) ? datetime_convert('UTC',date_default_timezone_get(),$rr['start'], $fmt) : datetime_convert('UTC','UTC',$rr['start'],$fmt));
@@ -296,6 +296,7 @@ function events_content(&$a) {
 				$is_first = ($d !== $last_date);
 					
 				$last_date = $d;
+// FIXME
 				$edit = ((! $rr['cid']) ? array($a->get_baseurl().'/events/event/'.$rr['id'],t('Edit event'),'','') : null);
 				$title = strip_tags(html_entity_decode(bbcode($rr['summary']),ENT_QUOTES,'UTF-8'));
 				if(! $title) {
