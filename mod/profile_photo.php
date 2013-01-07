@@ -14,13 +14,13 @@ function profile_photo_init(&$a) {
 }
 
 
-function profile_photo_init(&$a) {
+function profile_photo_aside(&$a) {
 
 	if(! local_user()) {
 		return;
 	}
 
-	profile_aside($a);
+	profile_create_sidebar($a);
 }
 
 

@@ -32,13 +32,20 @@ function channel_aside(&$a) {
 	require_once('include/contact_widgets.php');
 	require_once('include/items.php');
 
-	profile_aside($a);
+	if(! $a->profile['profile_uid'])
+		return;
 
-	$cat = ((x($_REQUEST,'cat')) ? htmlspecialchars($_REQUEST['cat']) : '');
+	$channel_display = get_pconfig($a->profile['profile_uid'],'system','channel_format');
+	if(! $channel_display)
+		profile_create_sidebar($a);
 
-	$a->set_widget('archive',posted_date_widget($a->get_baseurl(true) . '/channel/' . $a->profile['nickname'],$a->profile['profile_uid'],true));	
-	$a->set_widget('categories',categories_widget($a->get_baseurl(true) . '/channel/' . $a->profile['nickname'],$cat));
-
+	if($channel_display === 'full')
+		$a->page['template'] = 'full';
+	else {
+		$cat = ((x($_REQUEST,'cat')) ? htmlspecialchars($_REQUEST['cat']) : '');
+		$a->set_widget('archive',posted_date_widget($a->get_baseurl(true) . '/channel/' . $a->profile['channel_address'],$a->profile['profile_uid'],true));  
+		$a->set_widget('categories',categories_widget($a->get_baseurl(true) . '/channel/' . $a->profile['channel_address'],$cat));
+	}
 }
 
 

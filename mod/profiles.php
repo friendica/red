@@ -153,7 +153,7 @@ function profiles_aside(&$a) {
 	}
 
 	if((argc() > 1) && (intval(argv(1)))) {
-		profile_aside($a);
+		profile_create_sidebar($a);
 	}
 }
 

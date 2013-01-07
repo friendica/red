@@ -17,7 +17,7 @@ function viewcontacts_aside(&$a) {
 		return;
 	}
 
-	profile_aside($a);
+	profile_create_sidebar($a);
 }
 
 

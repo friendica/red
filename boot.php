@@ -1343,7 +1343,7 @@ function profile_load(&$a, $nickname, $profile = 0) {
 	return;
 }}
 
-function profile_aside(&$a) {
+function profile_create_sidebar(&$a) {
 
 	$block = (((get_config('system','block_public')) && (! local_user()) && (! remote_user())) ? true : false);
 

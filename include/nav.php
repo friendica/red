@@ -131,10 +131,16 @@ EOT;
 	if(local_user()) {
 
 		$nav['network'] = array('network', t('Network'), "", t('Conversations from your friends'));
+		$nav['network']['all']=array('notifications/network', t('See all network notifications'), "", "");
+		$nav['network']['mark'] = array('', t('Mark all network notifications seen'), '','');
 
 		$nav['home'] = array('channel/' . $channel['channel_address'], t('Home'), "", t('Your posts and conversations'));
+		$nav['home']['all']=array('notifications/channel', t('See all channel notifications'), "", "");
+		$nav['home']['mark'] = array('', t('Mark all channel notifications seen'), '','');
+
 
 		$nav['intros'] = array('intro',	t('Introductions'), "", t('New Connections'));
+		$nav['intros']['all']=array('intro', t('See all channel introductions'), "", "");
 
 
 		$nav['notifications'] = array('notifications',	t('Notifications'), "", t('Notifications'));
@@ -142,12 +148,16 @@ EOT;
 		$nav['notifications']['mark'] = array('', t('Mark all system notifications seen'), '','');
 
 		$nav['messages'] = array('message', t('Messages'), "", t('Private mail'));
+		$nav['messages']['all']=array('message', t('See all private messages'), "", "");
+		$nav['messages']['mark'] = array('', t('Mark all private messages seen'), '','');
 		$nav['messages']['inbox'] = array('message', t('Inbox'), "", t('Inbox'));
 		$nav['messages']['outbox']= array('message/sent', t('Outbox'), "", t('Outbox'));
 		$nav['messages']['new'] = array('message/new', t('New Message'), "", t('New Message'));
 
 
 		$nav['all_events'] = array('events', t('Events'), "", t('Event Calendar'));
+		$nav['all_events']['all']=array('events', t('See all events'), "", "");
+		$nav['all_events']['mark'] = array('', t('Mark all events seen'), '','');
 		
 		$nav['manage'] = array('manage', t('Channel Select'), "", t('Manage Your Channels'));
 

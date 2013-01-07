@@ -163,14 +163,29 @@
  				last_popup_button = null;
  			}	
 		}
+
+		/* Turn elements with one of our special rel tags into popup menus */
 	
 		$('a[rel^=#]').click(function(e){
+				manage_popup_menu(this,e);
+				return false;
+		});
+
+		$('span[rel^=#]').click(function(e){
+				manage_popup_menu(this,e);
+				return false;
+		});
+
+
+		function manage_popup_menu(w,e) {
 			close_last_popup_menu();
-			menu = $( $(this).attr('rel') );
+			menu = $( $(w).attr('rel') );
 			e.preventDefault();
 			e.stopPropagation();
 			if (menu.attr('popup')=="false") return false;
-			$(this).parent().toggleClass("selected");
+			$(w).parent().toggleClass("selected");
+			/* notification menus are loaded dynamically 
+			 * - here we find a rel tag to figure out what type of notification to load */
 			var loader_source = $(menu).attr('rel');
 			if(loader_source.length) {	
 				notify_popup_loader(loader_source);
@@ -181,10 +196,10 @@
 				last_popup_button = null;
 			} else {
 				last_popup_menu = menu;
-				last_popup_button = $(this).parent();
+				last_popup_button = $(w).parent();
 			}
 			return false;
-		});
+		}
 	
 		$('html').click(function() {
 			close_last_popup_menu();
