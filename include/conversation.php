@@ -344,7 +344,6 @@ function visible_activity($item) {
 	return true;
 }
 
-
 /**
  * "Render" a conversation or list of items for HTML display.
  * There are two major forms of display:
@@ -886,7 +885,7 @@ function status_editor($a,$x,$popup=false) {
 
 	$o = '';
 
-	$geotag = (($x['allow_location']) ? get_markup_template('jot_geotag.tpl') : '');
+	$geotag = (($x['allow_location']) ? replace_macros(get_markup_template('jot_geotag.tpl'), array()) : '');
 
 	$plaintext = true;
 	if(feature_enabled(local_user(),'richtext'))

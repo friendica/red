@@ -1,6 +1,6 @@
-{{ for $threads as $xyz }}
-{{ for $xyz.items as $item }} 
-{{ inc $item.template }}{{ endinc }}
+{{ for $threads as $thread }}
+{{ for $thread.items as $thread_item }} 
+{{ inc $thread_item.template with $item=$thread_item }}{{ endinc }}
 {{ endfor }}
 {{ endfor }}
 

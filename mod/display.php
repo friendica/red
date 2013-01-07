@@ -16,7 +16,7 @@ function display_content(&$a) {
 
 	$o = '<div id="live-display"></div>' . "\r\n";
 
-	$a->page['htmlhead'] .= get_markup_template('display-head.tpl');
+	$a->page['htmlhead'] .= replace_macros(get_markup_template('display-head.tpl'), array());
 
 
 	if(argc() > 1)
@@ -60,6 +60,7 @@ function display_content(&$a) {
 
 //	$nick = (($a->argc > 1) ? $a->argv[1] : '');
 //	profile_load($a,$nick);
+//	profile_aside($a);
 
 //	$item_id = (($a->argc > 2) ? intval($a->argv[2]) : 0);
 

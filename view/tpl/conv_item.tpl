@@ -101,8 +101,8 @@
 <div class="wall-item-outside-wrapper-end $item.indent" ></div>
 </div>
 {{ if $item.toplevel }}
-{{ for $item.children as $item }}
-	{{ inc $item.template }}{{ endinc }}
+{{ for $item.children as $child }}
+	{{ inc $child.template with $item=$child }}{{ endinc }}
 {{ endfor }}
 {{ endif }}
 
