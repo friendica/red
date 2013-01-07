@@ -1122,7 +1122,7 @@ input#dfrn-url {
 /* Give the top level post bigger shadows than the comments.  This makes them appear "higher" and the comments "lower", which separates posts from each other reasonably without literally drawing a line under it */
 
 .wall-item-content-wrapper {
-	margin-top: 30px;
+	margin-top: 10px;
 	position: relative;
 	background: #fff;
 	border-radius: 5px;
@@ -1317,8 +1317,7 @@ input#dfrn-url {
 }
 
 .thread-wrapper.toplevel_item {
-/*padding: 30px; */
-width: 90%;
+	width: 90%;
 }
 
 .wall-item-body {
@@ -1329,13 +1328,13 @@ width: 90%;
 
 .wall-item-tools {
 	clear: both;
-/*	background-image: url("../img/head.jpg"); */
     background: #eee;
     padding: 5px 10px;
 }    
 
-.wall-item-like {
-margin: 15px;
+.wall-item-like, .wall-item-dislike {
+	margin-left: 0px;
+	margin-top: 3px;
 }
 
 .wall-item-author {
