@@ -189,10 +189,14 @@ for a_file in files:
 	filename = os.path.join(path,a_file)
 	ext = a_file.split('.')[-1]
 	if os.path.isfile(filename) and ext == 'tpl':
-		with open(filename, 'r') as f:
-			newfilename = os.path.join(outpath,a_file)
-			with open(newfilename, 'w') as outf:
-				print "Converting " + filename + " to " + newfilename
-				convert(f, outf, php_tpl)
+		f = open(filename, 'r')
 
+		newfilename = os.path.join(outpath,a_file)
+		outf = open(newfilename, 'w')
+
+		print "Converting " + filename + " to " + newfilename
+		convert(f, outf, php_tpl)
+
+		outf.close()
+		f.close()
 
