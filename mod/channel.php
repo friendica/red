@@ -2,16 +2,6 @@
 
 function channel_init(&$a) {
 
-	$a->page['htmlhead'] .= '<link rel="alternate" type="application/atom+xml" href="' . $a->get_baseurl() . '/feed/' . $which .'" />' . "\r\n" ;
-
-}
-
-
-function channel_aside(&$a) {
-
-	require_once('include/contact_widgets.php');
-	require_once('include/items.php');
-
 	if(argc() > 1)
 		$which = argv(1);
 	else {
@@ -28,9 +18,23 @@ function channel_aside(&$a) {
 		$profile = argv(1);		
 	}
 
-	$cat = ((x($_REQUEST,'cat')) ? htmlspecialchars($_REQUEST['cat']) : '');
+	$a->page['htmlhead'] .= '<link rel="alternate" type="application/atom+xml" href="' . $a->get_baseurl() . '/feed/' . $which .'" />' . "\r\n" ;
 
+	// Run profile_load() here to make sure the theme is set before
+	// we start loading content
 	profile_load($a,$which,$profile);
+
+}
+
+
+function channel_aside(&$a) {
+
+	require_once('include/contact_widgets.php');
+	require_once('include/items.php');
+
+	profile_aside($a);
+
+	$cat = ((x($_REQUEST,'cat')) ? htmlspecialchars($_REQUEST['cat']) : '');
 
 	$a->set_widget('archive',posted_date_widget($a->get_baseurl(true) . '/channel/' . $a->profile['nickname'],$a->profile['profile_uid'],true));	
 	$a->set_widget('categories',categories_widget($a->get_baseurl(true) . '/channel/' . $a->profile['nickname'],$cat));

@@ -29,7 +29,7 @@ function xrd_init(&$a) {
 
 	$dspr = '';
 
-	$tpl = file_get_contents('view/xrd_person.tpl');
+	$tpl = get_markup_template('view/xrd_person.tpl');
 
 	$o = replace_macros($tpl, array(
 		'$nick'        => $r[0]['nickname'],

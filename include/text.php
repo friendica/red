@@ -13,15 +13,35 @@ require_once("include/template_processor.php");
 if(! function_exists('replace_macros')) {  
 function replace_macros($s,$r) {
 	global $t;
-	
-	//$ts = microtime();
-	$r =  $t->replace($s,$r);
-	//$tt = microtime() - $ts;
-	
-	//$a = get_app();
-	//$a->page['debug'] .= "$tt <br>\n";
-	return template_unescape($r);
 
+//	$ts = microtime();
+	$a = get_app();
+
+	if($a->get_template_engine() === 'smarty3') {
+		$output = '';
+		if(gettype($s) !== 'NULL') {
+			$template = '';
+			if(gettype($s) === 'string') {
+				$template = $s;
+				$s = new FriendicaSmarty();
+			}
+			foreach($r as $key=>$value) {
+				if($key[0] === '$') {
+					$key = substr($key, 1);
+				}
+				$s->assign($key, $value);
+			}
+			$output = $s->parsed($template);
+		}
+	}
+	else {
+		$r =  $t->replace($s,$r);
+	
+		$output = template_unescape($r);
+	}
+//	$tt = microtime() - $ts;
+//	$a->page['debug'] .= "$tt <br>\n";
+	return $output;
 }}
 
 

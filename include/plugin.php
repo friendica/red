@@ -1,5 +1,6 @@
 <?php
 
+require_once("include/friendica_smarty.php");
 
 // install and uninstall plugin
 if (! function_exists('uninstall_plugin')){
@@ -465,37 +466,40 @@ function format_js_if_exists($source) {
 }
 
 
-function theme_include($file) {
+function theme_include($file, $root = '') {
 
-	global $t; // use builtin template processor
+	$a = get_app();
 
-	$paths = array(
-		'view/theme/$theme/$ext/$file',
-		'view/theme/$theme/$file',
-		'view/theme/$parent/$ext/$file',
-		'view/theme/$parent/$file',
-		'view/$ext/$file',
-		'view/$file'
-	);
+	// Make sure $root ends with a slash / if it's not blank
+	if($root !== '' && $root[strlen($root)-1] !== '/')
+		$root = $root . '/';
 
-	$theme_info = get_app()->theme_info;
+	$theme_info = $a->theme_info;
 
 	if(array_key_exists('extends',$theme_info))
 		$parent = $theme_info['extends'];
 	else
 		$parent = 'NOPATH';
 
+	$theme = current_theme();
+
+	$ext = substr($file,strrpos($file,'.')+1);
+
+	$paths = array(
+		"{$root}view/theme/$theme/$ext/$file",
+		"{$root}view/theme/$theme/$file",
+		"{$root}view/theme/$parent/$ext/$file",
+		"{$root}view/theme/$parent/$file",
+		"{$root}view/$ext/$file",
+		"{$root}view/$file"
+	);
+
 	foreach($paths as $p) {
-		$f = $t->replace($p,array(
-			'$theme' => current_theme(),
-			'$ext' => substr($file,strrpos($file,'.')+1),
-			'$parent' => $parent,
-			'$file' => $file
-		));
-		if(strstr($f,'NOPATH'))
+		// strpos() is faster than strstr when checking if one string is in another (http://php.net/manual/en/function.strstr.php)
+		if(strpos($p,'NOPATH') !== false)
 			continue;
-		if(file_exists($f))
-			return $f;
+		if(file_exists($p))
+			return $p;
 	}
 	return '';
 }
@@ -509,19 +513,38 @@ function get_intltext_template($s) {
 	if(! isset($a->language))
 		$a->language = 'en';
 
-	if(file_exists("view/{$a->language}/$s"))
-		return file_get_contents("view/{$a->language}/$s");
-	elseif(file_exists("view/en/$s"))
-		return file_get_contents("view/en/$s");
+	$engine = '';
+	if($a->get_template_engine() === 'smarty3')
+		$engine = "/smarty3";
+
+	if(file_exists("view/{$a->language}$engine/$s"))
+		return file_get_contents("view/{$a->language}$engine/$s");
+	elseif(file_exists("view/en$engine/$s"))
+		return file_get_contents("view/en$engine/$s");
 	else
-		return file_get_contents("view/$s");
+		return file_get_contents("view/tpl/$engine/$s");
 }}
 
 if(! function_exists('get_markup_template')) {
-function get_markup_template($s) {
+function get_markup_template($s, $root = '') {
 
-	$x = theme_include($s);
-	if($x)
-		return file_get_contents($x);
+	$a = get_app();
+
+	$template_eng = $a->get_template_engine();
+	if($template_eng === 'internal') {
+		$template_file = theme_include($s, $root);
+		if($template_file)
+			return file_get_contents($template_file);
+	}
+	else {
+		$template_file = theme_include("$template_eng/$s", $root);
+
+		if($template_file) {
+			$template = new FriendicaSmarty();
+			$template->filename = $template_file;
+
+			return $template;
+		}
+	}	
 }}
 
