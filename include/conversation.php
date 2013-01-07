@@ -651,7 +651,7 @@ function conversation(&$a, $items, $mode, $update, $page_mode = 'traditional') {
                 // Can we put this after the visibility check?
                 like_puller($a,$item,$alike,'like');
 
-				if(feature_enabled($profile_uid,'dislike'))
+				if(feature_enabled($profile_owner,'dislike'))
 	                like_puller($a,$item,$dlike,'dislike');
 
                 // Only add what is visible

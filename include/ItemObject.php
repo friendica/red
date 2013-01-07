@@ -154,7 +154,7 @@ class Item extends BaseObject {
 		}
 
 		$showlike    = ((x($alike,$item['uri'])) ? format_like($alike[$item['uri']],$alike[$item['uri'] . '-l'],'like',$item['uri']) : '');
-		$showdislike = ((x($dlike,$item['uri']) && feature_enabled($conv->get_profile_owner(),'dislike')) ? format_like($dlike[$item['uri']],$dlike[$item['uri'] . '-l'],'dislike',$item['uri']) : '');
+		$showdislike = ((x($dlike,$item['uri']) && feature_enabled($conv->get_profile_owner(),'dislike'))  ? format_like($dlike[$item['uri']],$dlike[$item['uri'] . '-l'],'dislike',$item['uri']) : '');
 
 		/*
 		 * We should avoid doing this all the time, but it depends on the conversation mode
