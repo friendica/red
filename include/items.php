@@ -1203,8 +1203,6 @@ function encode_rel_links($links) {
 	return xmlify($o);
 }
 
-
-
 function item_store($arr,$force_parent = false) {
 
 	if(! $arr['uid']) {
@@ -1230,6 +1228,16 @@ function item_store($arr,$force_parent = false) {
 
 	if((strpos($arr['body'],'<') !== false) || (strpos($arr['body'],'>') !== false)) 
 		$arr['body'] = escape_tags($arr['body']);
+
+	if((x($arr,'object')) && is_array($arr['object'])) {
+		activity_sanitise($arr['object']);
+		$arr['object'] = json_encode($arr['object']);
+	}
+
+	if((x($arr,'target')) && is_array($arr['target'])) {
+		activity_sanitise($arr['target']);
+		$arr['target'] = json_encode($arr['target']);
+	}
 
 	$arr['aid']           = ((x($arr,'aid'))           ? intval($arr['aid'])                 : 0);
 	$arr['uri']           = ((x($arr,'uri'))           ? notags(trim($arr['uri']))           : random_string());
