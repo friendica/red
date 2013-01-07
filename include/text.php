@@ -18,18 +18,21 @@ function replace_macros($s,$r) {
 	$a = get_app();
 
 	if($a->get_template_engine() === 'smarty3') {
-		$template = '';
-		if(gettype($s) === 'string') {
-			$template = $s;
-			$s = new FriendicaSmarty();
-		}
-		foreach($r as $key=>$value) {
-			if($key[0] === '$') {
-				$key = substr($key, 1);
+		$output = '';
+		if(gettype($s) !== 'NULL') {
+			$template = '';
+			if(gettype($s) === 'string') {
+				$template = $s;
+				$s = new FriendicaSmarty();
 			}
-			$s->assign($key, $value);
+			foreach($r as $key=>$value) {
+				if($key[0] === '$') {
+					$key = substr($key, 1);
+				}
+				$s->assign($key, $value);
+			}
+			$output = $s->parsed($template);
 		}
-		$output = $s->parsed($template);
 	}
 	else {
 		$r =  $t->replace($s,$r);
