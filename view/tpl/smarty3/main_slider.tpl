@@ -2,8 +2,8 @@
 <script>
 	$("#main-range").slider({ from: 0, to: 99, step: 1, scale: ['{{$me}}', '|', '{{$intimate}}', '|', '{{$friends}}', '|', '{{$oldfriends}}', '|', '{{$acquaintances}}', '|', '{{$world}}' ], onstatechange: function(v) { 
 	var carr = v.split(";"); 
-	network_cmin = carr[0]; 
-	network_cmax = carr[1];
+	bParam_cmin = carr[0]; 
+	bParam_cmax = carr[1];
 	networkRefresh();
  } });
 

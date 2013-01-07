@@ -49,9 +49,10 @@
 
 	{{ if $nav.notifications }}
 
-		<li id="nav-notifications-linkmenu" class="nav-menu fakelink" onclick="notify_popup('notify'); return false;" title="$nav.notifications.1"><span class="icon s22 notify">$nav.notifications.1</span></a>
+		<li id="nav-notifications-linkmenu" class="nav-menu fakelink">
+			<a  rel="#nav-notifications-menu" title="$nav.notifications.1"><span class="icon s22 notify">$nav.notifications.1</span></a>
 			<span id="notify-update" class="nav-notify"></span>
-			<ul id="nav-notifications-menu" class="menu-popup">
+			<ul id="nav-notifications-menu" class="menu-popup" rel="notify">
 				<li id="nav-notifications-see-all"><a href="$nav.notifications.all.0">$nav.notifications.all.1</a></li>
 				<li id="nav-notifications-mark-all"><a href="#" onclick="notifyMarkAll(); return false;">$nav.notifications.mark.1</a></li>
 				<li class="empty">$emptynotifications</li>

@@ -155,22 +155,26 @@
 		setupFieldRichtext();
 
 		/* popup menus */
-	function close_last_popup_menu() {
-
- 		if(last_popup_menu) {
- 			last_popup_menu.hide();
- 			last_popup_button.removeClass("selected");
- 			last_popup_menu = null;
- 			last_popup_button = null;
- 		}	
-	}
-				$('a[rel^=#]').click(function(e){
+		function close_last_popup_menu() {
+ 			if(last_popup_menu) {
+ 				last_popup_menu.hide();
+ 				last_popup_button.removeClass("selected");
+	 			last_popup_menu = null;
+ 				last_popup_button = null;
+ 			}	
+		}
+	
+		$('a[rel^=#]').click(function(e){
 			close_last_popup_menu();
 			menu = $( $(this).attr('rel') );
 			e.preventDefault();
 			e.stopPropagation();
 			if (menu.attr('popup')=="false") return false;
 			$(this).parent().toggleClass("selected");
+			var loader_source = $(menu).attr('rel');
+			if(loader_source.length) {	
+				notify_popup_loader(loader_source);
+			}
 			menu.toggle();
 			if (menu.css("display") == "none") {
 				last_popup_menu = null;
@@ -181,6 +185,7 @@
 			}
 			return false;
 		});
+	
 		$('html').click(function() {
 			close_last_popup_menu();
 		});
@@ -509,13 +514,7 @@ function updateConvItems(mode,data) {
 		$(node).removeClass("drop").addClass("drophide");
 	}
 
-	function notify_popup(notifyType) {
-
-		if($("#nav-notifications-menu").is(":visible")) {
-			$("#nav-notifications-menu").hide();
-			return;
-		}
-
+	function notify_popup_loader(notifyType) {
 
 		/* notifications template */
 		var notifications_tpl= unescape($("#nav-notifications-template[rel=template]").html());
@@ -549,7 +548,6 @@ function updateConvItems(mode,data) {
 			}
 		});
 
-		$("#nav-notifications-menu").show();
 	}
 
 
