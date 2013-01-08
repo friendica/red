@@ -31,6 +31,10 @@ function lostpass_post(&$a) {
 	if($r)
 		info( t('Password reset request issued. Check your email.') . EOL);
 
+	$engine = get_app()->get_template_engine();
+	get_app()->set_template_engine();
+
+
 	$email_tpl = get_intltext_template("lostpass_eml.tpl");
 	$email_tpl = replace_macros($email_tpl, array(
 			'$sitename' => $a->config['sitename'],
@@ -39,6 +43,9 @@ function lostpass_post(&$a) {
 			'$email' => $email,
 			'$reset_link' => $a->get_baseurl() . '/lostpass?verify=' . $new_password
 	));
+
+
+	get_app()->set_template_engine($engine);
 
 	$res = mail($email, sprintf( t('Password reset requested at %s'),$a->config['sitename']),
 			$email_tpl,
@@ -92,6 +99,8 @@ function lostpass_content(&$a) {
 			));
 				info("Your password has been reset." . EOL);
 
+			$engine = get_app()->get_template_engine();
+			get_app()->set_template_engine();
 
 
 			$email_tpl = get_intltext_template("passchanged_eml.tpl");
@@ -102,6 +111,8 @@ function lostpass_content(&$a) {
 			'$email' => $email,
 			'$new_password' => $new_password,
 			'$uid' => $newuid ));
+
+			get_app()->set_template_engine($engine);
 
 			$res = mail($email,"Your password has changed at {$a->config['sitename']}",$email_tpl,
 				'From: ' . t('Administrator') . '@' . $_SERVER['SERVER_NAME'] . "\n"

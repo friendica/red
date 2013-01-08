@@ -78,6 +78,9 @@ function setup_post(&$a) {
 			// connect to db
 			$db = new dba($dbhost, $dbuser, $dbpass, $dbdata, true);
 
+			// disable smarty for this template
+			$engine = $a->get_template_engine();
+			$a->set_template_engine();
 			$tpl = get_intltext_template('htconfig.tpl');
 			$txt = replace_macros($tpl,array(
 				'$dbhost' => $dbhost,
@@ -90,6 +93,7 @@ function setup_post(&$a) {
 				'$phpath' => $phpath,
 				'$adminmail' => $adminmail
 			));
+			$a->set_template_engine($engine);
 
 			$result = file_put_contents('.htconfig.php', $txt);
 			if(! $result) {
