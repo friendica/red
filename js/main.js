@@ -187,7 +187,8 @@
 			/* notification menus are loaded dynamically 
 			 * - here we find a rel tag to figure out what type of notification to load */
 			var loader_source = $(menu).attr('rel');
-			if(loader_source.length) {	
+		
+			if(typeof(loader_source) != 'undefined' && loader_source.length) {	
 				notify_popup_loader(loader_source);
 			}
 			menu.toggle();
