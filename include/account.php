@@ -231,7 +231,7 @@ function send_reg_approval_email($arr) {
 			push_lang('en');
 
 		$engine = get_app()->get_template_engine();
-		getapp()->set_template_engine();
+		get_app()->set_template_engine();
 
 		$email_msg = replace_macros(get_intltext_template('register_verify_email.tpl'), array(
 			'$sitename' => get_config('config','sitename'),
@@ -241,7 +241,7 @@ function send_reg_approval_email($arr) {
 			'$hash'     => $hash
 		 ));
 
-		getapp()->set_template_engine($engine);
+		get_app()->set_template_engine($engine);
 
 		$res = mail($admin['email'], sprintf( t('Registration request at %s'), get_config('config','sitename')),
 			$email_msg,
@@ -261,7 +261,7 @@ function send_reg_approval_email($arr) {
 function send_verification_email($email,$password) {
 
 	$engine = get_app()->get_template_engine();
-	getapp()->set_template_engine();
+	get_app()->set_template_engine();
 
 	$email_msg = replace_macros(get_intltext_template('register_open_eml.tpl'), array(
 		'$sitename' => get_config('config','sitename'),
@@ -271,7 +271,7 @@ function send_verification_email($email,$password) {
 	));
 
 
-	getapp()->set_template_engine($engine);
+	get_app()->set_template_engine($engine);
 
 	$res = mail($email, sprintf( t('Registration details for %s'), get_config('system','sitename')),
 		$email_msg, 
