@@ -14,7 +14,7 @@
 	{{if $nav.network}}
 		<li id="nav-network-link" class="nav-menu {{$sel.network}}">
 			<a class="{{$nav.network.2}}" href="{{$nav.network.0}}" title="{{$nav.network.3}}" ><span class="icon network">{{$nav.network.1}}</span></a>
-			<span id="net-update" class="nav-notify" rel="#nav-network-menu"></span>
+			<span id="net-update" class="nav-notify fakelink" rel="#nav-network-menu"></span>
 			<ul id="nav-network-menu" class="menu-popup notify-menus" rel="network">
 				<li id="nav-network-see-all"><a href="{{$nav.network.all.0}}">{{$nav.network.all.1}}</a></li>
 				<li id="nav-network-mark-all"><a href="#" onclick="/*fixme*/ return false;">{{$nav.network.mark.1}}</a></li>
@@ -26,7 +26,7 @@
 	{{if $nav.home}}
 		<li id="nav-home-link" class="nav-menu {{$sel.home}}">
 			<a class="{{$nav.home.2}}" href="{{$nav.home.0}}" title="{{$nav.home.3}}" ><span class="icon home">{{$nav.home.1}}</span></a>
-			<span id="home-update" class="nav-notify" rel="#nav-home-menu"></span>
+			<span id="home-update" class="nav-notify fakelink" rel="#nav-home-menu"></span>
 			<ul id="nav-home-menu" class="menu-popup notify-menus" rel="home">
 				<li id="nav-home-see-all"><a href="{{$nav.home.all.0}}">{{$nav.home.all.1}}</a></li>
 				<li id="nav-home-mark-all"><a href="#" onclick="/*fixme*/ return false;">{{$nav.home.mark.1}}</a></li>
@@ -50,7 +50,7 @@
 	{{if $nav.all_events}}
 		<li id="nav-all-events-link" class="nav-menu {{$sel.all_events}}">
 			<a class="{{$nav.all_events.2}}" href="{{$nav.all_events.0}}" title="{{$nav.all_events.3}}" ><span class="icon events">{{$nav.all_events.1}}</span></a>
-			<span id="all-events-update" class="nav-notify" rel="#nav-events-menu"></span>
+			<span id="all-events-update" class="nav-notify fakelink" rel="#nav-events-menu"></span>
 			<ul id="nav-events-menu" class="menu-popup notify-menus" rel="events">
 				<li id="nav-events-see-all"><a href="{{$nav.events.all.0}}">{{$nav.events.all.1}}</a></li>
 				<li id="nav-events-mark-all"><a href="#" onclick="/*fixme*/ return false;">{{$nav.events.mark.1}}</a></li>
@@ -62,7 +62,7 @@
 	{{if $nav.intros}}
 		<li id="nav-intros-link" class="nav-menu {{$sel.intros}}">
 			<a class="{{$nav.intros.2}}" href="{{$nav.intros.0}}" title="{{$nav.intros.3}}" ><span class="icon introductions">{{$nav.intros.1}}</span></a>
-			<span id="intro-update" class="nav-notify" rel="#nav-intros-menu"></span>
+			<span id="intro-update" class="nav-notify fakelink" rel="#nav-intros-menu"></span>
 			<ul id="nav-intros-menu" class="menu-popup notify-menus" rel="intros">
 				<li id="nav-intros-see-all"><a href="{{$nav.intros.all.0}}">{{$nav.intros.all.1}}</a></li>
 				<li id="nav-intros-mark-all"><a href="#" onclick="/*fixme*/ return false;">{{$nav.intros.mark.1}}</a></li>
@@ -74,7 +74,7 @@
 	{{if $nav.notifications}}
 		<li id="nav-notify-linkmenu" class="nav-menu fakelink">
 			<a href="{{$nav.notifications.0}}" title="{{$nav.notifications.1}}"><span class="icon s22 notify">{{$nav.notifications.1}}</span></a>
-			<span id="notify-update" class="nav-notify" rel="#nav-notify-menu"></span>
+			<span id="notify-update" class="nav-notify fakelink" rel="#nav-notify-menu"></span>
 			<ul id="nav-notify-menu" class="menu-popup notify-menus" rel="notify">
 				<li id="nav-notify-see-all"><a href="{{$nav.notifications.all.0}}">{{$nav.notifications.all.1}}</a></li>
 				<li id="nav-notify-mark-all"><a href="#" onclick="notifyMarkAll(); return false;">{{$nav.notifications.mark.1}}</a></li>
