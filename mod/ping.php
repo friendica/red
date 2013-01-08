@@ -95,7 +95,7 @@ function ping_init(&$a) {
 
 		$channel = $a->get_channel();
 		$t = q("select mail.*, xchan.* from mail left join xchan on xchan_hash = from_xchan 
-			where channel_id = %d and ( mail_flags & %d ) and not (mail_flags & %d ) 
+			where channel_id = %d and not ( mail_flags & %d ) and not (mail_flags & %d ) 
 			and from_xchan != '%s' order by created desc limit 0,50",
 			intval(local_user()),
 			intval(MAIL_SEEN),
@@ -146,7 +146,7 @@ function ping_init(&$a) {
 			}
 		}			
 		logger('ping: ' . print_r($result,true));
-		echo json_encode(array( argv(1) => $result));
+		echo json_encode(array('notify' => $result));
 		killme();
 
 	}

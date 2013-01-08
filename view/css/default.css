@@ -6,12 +6,11 @@ nav {
 
 aside {
 	display: block;
-	width: 200px;
+	width: 210px;
 	position: absolute;
 	top: 48px;
 	left: 0;
 	margin-left: 10px;
-/*	float: left; */
 }
 
 

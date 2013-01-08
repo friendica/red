@@ -143,7 +143,7 @@ EOT;
 		$nav['intros']['all']=array('intro', t('See all channel introductions'), "", "");
 
 
-		$nav['notifications'] = array('notifications',	t('Notifications'), "", t('Notifications'));
+		$nav['notifications'] = array('notifications/system',	t('Notifications'), "", t('Notifications'));
 		$nav['notifications']['all']=array('notifications/system', t('See all notifications'), "", "");
 		$nav['notifications']['mark'] = array('', t('Mark all system notifications seen'), '','');
 

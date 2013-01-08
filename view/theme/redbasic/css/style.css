@@ -9,8 +9,6 @@ body {
 	font-family: helvetica,arial,freesans,clean,sans-serif;
 	font-size: 12px;
 	background-color: #ffffff;
-/*	background-image: url(../img/head.jpg); */
-	background-repeat: repeat-x;
 	color: #000000;
 	margin: 0px;
 }
@@ -19,13 +17,8 @@ abbr {
 	border-bottom: none;
 }
 
-/*Should we be doing this here, or should we be changing default.css? */
-
 aside {
-/*box-shadow: 3px 3px 3px #ccc;*/
 border: none;
-/*border-radius: 0px 0px 20px 0px;*/
-width: 210px;
 color: #d00;
 }
 
@@ -36,9 +29,8 @@ color: #d00;
   display: block;
   overflow: hidden;
   text-indent: -9999px;
-/*  min-width: 22px;
-  height: 22px; */
 }
+
 .icon.text {
   text-indent: 0px;
 }
@@ -104,8 +96,8 @@ color: #d00;
   padding: 1px;
 }
 
-a, a:visited, a:link { color: #dd0000; text-decoration: none; }
-a:hover { color: #dd0000; text-decoration: underline; }
+a, a:visited, a:link, .fakelink, .fakelink:visited, .fakelink:link { color: #dd0000; text-decoration: none; }
+a:hover, .fakelink:hover { color: #dd0000; text-decoration: underline; }
 
 input {
 	border: 1px solid #666666;
@@ -115,8 +107,6 @@ input {
 }
 
 img { border :0px; }
-
-
 
 
 code {
@@ -137,7 +127,7 @@ blockquote {
 	padding: 0.4em;
 }
 
-.icollapse-wrapper, .ccollapse-wrapper {
+.ccollapse-wrapper {
 	border: 1px solid #CCC;
 	padding: 5px;
 }
@@ -164,11 +154,19 @@ blockquote {
 
 
 /* nav */
+
 nav {
 	display: block;
-/*	margin: 0px 10%; */
 	border-bottom: 1px solid #d00;
 }
+
+#langselector {
+	position: fixed; 
+	top: 3px; 
+	left: 5px; 
+	z-index:9999;
+}
+
 nav #site-location {
 	color: #888a85;
 	font-size: 0.8em;
@@ -204,6 +202,7 @@ nav #banner #logo-text a:hover { text-decoration: none; }
 header #site-location {
   display: none;
 }
+
 header #banner {
   overflow: hidden;
   text-align: center;
@@ -232,16 +231,12 @@ header #banner #logo-text {
   font-size: 22px;
 }
 
-
-
-
 .nav-commlink {
     display: block;
     height: 15px;
 	margin-top: 67px;
 	margin-right: 2px;
-	//padding: 6px 10px;
-       padding: 6px 3px;
+	padding: 6px 3px;
 	float: left;
 	bottom: 140px;
 	border: 1px solid #babdb6;
@@ -251,6 +246,7 @@ header #banner #logo-text {
 	-moz-border-radius: 5px 5px 0px 0px;
 	border-radius: 5px 5px 0px 0px;	
 }
+
 nav .nav-link {
 	float: right;
 	margin: 0.2em 0em;
@@ -266,6 +262,7 @@ nav .nav-link {
 	padding-top: 6px;
 	padding-bottom: 8px;
 }
+
 .nav-ajax-left {
 	font-size: 0.8em;
 	float: left;
@@ -277,50 +274,25 @@ nav #nav-link-wrapper .nav-link {
 	border-right: 1px solid #babdb6;
 }
 
-
-
-#dfrn-request-link {
-	display: block;
-	color: #FFFFFF;
-	-webkit-border-radius: 5px ;
-	-moz-border-radius: 5px;
-	border-radius: 5px;
-	padding: 5px;
-	font-weight: bold;
-	background: #3465a4 url('../img/friendika-16.png') no-repeat 95% center;
-}
-#wallmessage-link {
-	display: block;
-	color: #FFFFFF;
-	-webkit-border-radius: 5px ;
-	-moz-border-radius: 5px;
-	border-radius: 5px;
-	padding: 5px;
-	font-weight: bold;
-	background-color: #3465a4;
-}
-
 .tabs {
 	height: 22px;
-/*	background-image: url(../img/head.jpg);
-	background-repeat: repeat-x;	
-	background-position: 0px -20px; */
 	border-bottom: 1px solid #aaaaaa;
 	padding:0px;
 	margin-right: 10px;
 }
+
 .tabs li { margin: 0px; list-style: none; }
 .tab {
 	display:block;
 	float:left;
 	padding: 0.4em;
-	//margin-right: 1em;
 	margin-right: 3px ;
 }
+
 .tab.active {
-	font-weight: bold;
-	
+	font-weight: bold;	
 }
+
 ul.tabs {
 	margin-top: 0px;
 	margin-bottom: 0px;
@@ -329,6 +301,7 @@ ul.tabs {
 }
 
 /* footer */
+
 footer {
 	text-align: right;
 	padding-bottom: 1em;
@@ -354,7 +327,7 @@ div.wall-item-content-wrapper.shiny {
 }
 
 .preview {
-	background: #FFFFC8;
+	background: lightyellow;
 }
 
 #theme-preview {
@@ -392,16 +365,14 @@ div.wall-item-content-wrapper.shiny {
 	margin-bottom: 5px;
 	font-weight: bold;
 	border: solid 1px #ccc;
-/*	box-shadow: 5px 5px 5px #666 inset; */
 	border-radius: 5px;
 }
 
-#jot-title::-webkit-input-placeholder{font-weight: normal;}
-#jot-category::-webkit-input-placeholder{font-weight: normal;}
-#jot-title:-moz-placeholder{font-weight: normal;}
-#jot-category:-moz-placeholder{font-weight: normal;}
+#jot-title::-webkit-input-placeholder{font-weight: bold;}
+#jot-category::-webkit-input-placeholder{font-weight: bold;}
+#jot-title:-moz-placeholder{font-weight: bold;}
+#jot-category:-moz-placeholder{font-weight: bold;}
 		
-	
 #jot-title:hover,
 #jot-title:focus,
 #jot-category:hover,
@@ -412,11 +383,7 @@ div.wall-item-content-wrapper.shiny {
 .jothidden { display:none; }
 
 
-.fakelink, .fakelink:visited, .fakelink:link {
-	color: #335577;
-	text-decoration: none;
-	cursor: pointer;
-}
+
 .fakebutton {
 	margin-top: 15px;
 	margin-bottom: 15px;
@@ -449,56 +416,12 @@ div.wall-item-content-wrapper.shiny {
 	font-weight: bold;
 }
 
-.fakelink:hover {
-	color: #5588aa;
-	text-decoration: underline;
-	cursor: pointer;
-}
 .smalltext {
 	font-size: 0.7em;
 }
+
 #sysmsg {
-	/*width: 600px;*/
 	margin-bottom: 10px;
-}
-
-#register-fill-ext {
-	margin-bottom: 25px;
-}
-
-#label-register-name, #label-register-nickname, #label-register-openid {
-	float: left;
-	width: 350px;
-	margin-top: 10px;
-}
-
-#register-name, #register-nickname {
-	float: left;
-	margin-top: 10px;
-	width: 150px;
-}
-
-#register-openid {
-	float: left;
-	margin-top: 10px;
-	width: 130px;
-}
-
-#register-name-end, #register-email-end, #register-nickname-end, #register-submit-end, #register-openid-end {
-	clear: both;
-}
-
-#register-nickname-desc {
-	margin-top: 30px;
-	width: 650px;
-}
-#register-sitename {
-	float: left;
-	margin-top: 10px;
-}
-
-#register-submit-button {
-	margin-top: 10px;
 }
 
 #main-login {
