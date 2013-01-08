@@ -534,11 +534,11 @@ function updateConvItems(mode,data) {
 
 		/* notifications template */
 		var notifications_tpl= unescape($("#nav-notifications-template[rel=template]").html());
-		var notifications_all = unescape($('<div>').append( $("#nav-notifications-see-all").clone() ).html()); //outerHtml hack
-		var notifications_mark = unescape($('<div>').append( $("#nav-notifications-mark-all").clone() ).html()); //outerHtml hack
-		var notifications_empty = unescape($("#nav-notifications-menu").html());
+		var notifications_all = unescape($('<div>').append( $("#nav-" + notifyType + "-see-all").clone() ).html()); //outerHtml hack
+		var notifications_mark = unescape($('<div>').append( $("#nav-" + notifyType + "-mark-all").clone() ).html()); //outerHtml hack
+		var notifications_empty = unescape($("#nav-" + notifyType + "-menu").html());
 		
-		var notify_menu = $("#nav-notifications-menu");
+		var notify_menu = $("#nav-" + notifyType + "-menu");
 
 		var pingExCmd = 'ping/' + notifyType + ((localUser != 0) ? '?f=&uid=' + localUser : '');
 		$.get(pingExCmd,function(data) {
@@ -549,16 +549,16 @@ function updateConvItems(mode,data) {
 
 
 			if(data.notify.length==0){
-				$("#nav-notifications-menu").html(notifications_empty);
+				$("#nav-" + notifyType + "-menu").html(notifications_empty);
 
 			} else {
-				$("#nav-notifications-menu").html(notifications_all + notifications_mark);
+				$("#nav-" + notifyType + "-menu").html(notifications_all + notifications_mark);
 
 
 				$(data.notify).each(function() {
-					text = "<span class='contactname'>"+this.name+"</span>" + ' ' + this.message;
+					text = "<span class='contactname'>"+this.name+"</span>" + ' ' + this.message + '<br />';
 					html = notifications_tpl.format(this.notify_link,this.photo,text,this.when,this.class);
-					$("#nav-notifications-menu").append(html);
+					$("#nav-" + notifyType + "-menu").append(html);
 				});
 
 			}

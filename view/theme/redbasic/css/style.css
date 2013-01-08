@@ -3774,6 +3774,13 @@ ul.menu-popup {
 /*	top: 90px; */
 /*	left: 400px; */
 }
+
+.notify-menus {
+	width: 320px !important;
+	max-height: 400px;
+	overflow-y: scroll;overflow-style:scrollbar;
+}
+
 #nav-notifications-menu {
 	width: 320px;
 	max-height: 400px;

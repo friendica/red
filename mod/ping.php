@@ -82,6 +82,42 @@ function ping_init(&$a) {
 					'class' => (($zz['seen']) ? 'notify-seen' : 'notify-unseen'), 
 					'message' => strip_tags(bbcode($zz['msg']))
 				);
+			logger('notifs: ' . print_r($notifs,true));
+			}
+
+
+		}
+
+		echo json_encode(array('notify' => $notifs));
+		killme();
+
+	}
+
+
+	if(argc() > 1 && argv(1) === 'messages') {
+
+		$channel = $a->get_channel();
+		$t = q("select mail.*, xchan.* from mail left join xchan on xchan_hash = from_xchan 
+			where channel_id = %d and ( mail_flags & %d ) and not (mail_flags & %d ) 
+			and from_xchan != '%s' order by created desc limit 0,50",
+			intval(local_user()),
+			intval(MAIL_SEEN),
+			intval(MAIL_DELETED),
+			dbesc($channel['channel_hash'])
+		);
+
+		if($t) {
+			foreach($t as $zz) {
+//				$msg = sprintf( t('sent you a private message.'), $zz['xchan_name']);
+				$notifs[] = array(
+					'notify_link' => $a->get_baseurl() . '/message/' . $zz['id'], 
+					'name' => $zz['xchan_name'],
+					'url' => $zz['xchan_url'],
+					'photo' => $zz['xchan_photo_s'],
+					'when' => relative_date($zz['created']), 
+					'class' => (($zz['mail_flags'] & MAIL_SEEN) ? 'notify-seen' : 'notify-unseen'), 
+					'message' => t('sent you a private message'),
+				);
 			}
 		}
 
@@ -89,6 +125,9 @@ function ping_init(&$a) {
 		killme();
 
 	}
+
+
+
 
 	if(argc() > 1 && (argv(1) === 'network' || argv(1) === 'home')) {
 

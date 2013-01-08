@@ -23,6 +23,7 @@ function notify_init(&$a) {
 		goaway($a->get_baseurl(true));
 	}
 
+
 	if(argc() > 2 && argv(1) === 'mark' && argv(2) === 'all' ) {
 		$r = q("update notify set seen = 1 where uid = %d",
 			intval(local_user())

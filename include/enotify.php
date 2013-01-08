@@ -324,11 +324,11 @@ function notification($params) {
 	}
 
 	$itemlink = $a->get_baseurl() . '/notify/view/' . $notify_id;
-	$msg = replace_macros($epreamble,array('$itemlink' => $itemlink));
+	$msg = str_replace('$itemlink',$itemlink,$epreamble);
 	$r = q("update notify set msg = '%s' where id = %d and uid = %d limit 1",
 		dbesc($msg),
 		intval($notify_id),
-		intval($params['uid'])
+		intval($datarray['uid'])
 	);
 		
 
@@ -345,7 +345,7 @@ function notification($params) {
 		
 		$r = q("select `id` from `notify-threads` where `master-parent-item` = %d and `receiver-uid` = %d limit 1", 
 			intval($params['parent']),
-			intval($params['uid']) );
+			intval($datarray['uid']) );
 
 		// If so, create the record of it and use a message-id smtp header.
 

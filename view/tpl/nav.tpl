@@ -29,7 +29,7 @@
 			<li id="nav-mail-link" class="nav-menu $sel.messages">
 				<a class="$nav.messages.2" href="$nav.messages.0" title="$nav.messages.3" ><span class="icon mail">$nav.messages.1</span></a>
 				<span id="mail-update" class="nav-notify fakelink" rel="#nav-messages-menu"></span>
-				<ul id="nav-messages-menu" class="menu-popup" rel="messages">
+				<ul id="nav-messages-menu" class="menu-popup notify-menus" rel="messages">
 					<li id="nav-messages-see-all"><a href="$nav.messages.all.0">$nav.messages.all.1</a></li>
 					<li id="nav-messages-mark-all"><a href="#">$nav.messages.mark.1</a></li>
 					<li class="empty">$emptynotifications</li>
@@ -54,12 +54,12 @@
 
 	{{ if $nav.notifications }}
 
-		<li id="nav-notifications-linkmenu" class="nav-menu fakelink">
-			<a  rel="#nav-notifications-menu" title="$nav.notifications.1"><span class="icon s22 notify">$nav.notifications.1</span></a>
+		<li id="nav-notify-linkmenu" class="nav-menu fakelink">
+			<a  rel="#nav-notify-menu" title="$nav.notifications.1"><span class="icon s22 notify">$nav.notifications.1</span></a>
 			<span id="notify-update" class="nav-notify"></span>
-			<ul id="nav-notifications-menu" class="menu-popup" rel="notify">
-				<li id="nav-notifications-see-all"><a href="$nav.notifications.all.0">$nav.notifications.all.1</a></li>
-				<li id="nav-notifications-mark-all"><a href="#" onclick="notifyMarkAll(); return false;">$nav.notifications.mark.1</a></li>
+			<ul id="nav-notify-menu" class="menu-popup notify-menus" rel="notify">
+				<li id="nav-notify-see-all"><a href="$nav.notifications.all.0">$nav.notifications.all.1</a></li>
+				<li id="nav-notify-mark-all"><a href="#" onclick="notifyMarkAll(); return false;">$nav.notifications.mark.1</a></li>
 				<li class="empty">$emptynotifications</li>
 			</ul>
 		</li>
