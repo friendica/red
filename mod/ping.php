@@ -82,10 +82,7 @@ function ping_init(&$a) {
 					'class' => (($zz['seen']) ? 'notify-seen' : 'notify-unseen'), 
 					'message' => strip_tags(bbcode($zz['msg']))
 				);
-			logger('notifs: ' . print_r($notifs,true));
 			}
-
-
 		}
 
 		echo json_encode(array('notify' => $notifs));
