@@ -28,7 +28,12 @@
 		{{ if $nav.messages }}
 			<li id="nav-mail-link" class="nav-menu $sel.messages">
 				<a class="$nav.messages.2" href="$nav.messages.0" title="$nav.messages.3" ><span class="icon mail">$nav.messages.1</span></a>
-				<span id="mail-update" class="nav-notify fakelink" onclick="notify_popup('mail'); return false;" ></span>
+				<span id="mail-update" class="nav-notify fakelink" rel="#nav-messages-menu"></span>
+				<ul id="nav-messages-menu" class="menu-popup" rel="messages">
+					<li id="nav-messages-see-all"><a href="$nav.messages.all.0">$nav.messages.all.1</a></li>
+					<li id="nav-messages-mark-all"><a href="#">$nav.messages.mark.1</a></li>
+					<li class="empty">$emptynotifications</li>
+				</ul>
 			</li>
 		{{ endif }}
 
