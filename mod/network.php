@@ -244,10 +244,13 @@ function network_content(&$a, $update = 0, $load = false) {
     	return login(false);
 	}
 
+
+
 	$arr = array('query' => $a->query_string);
 
 	call_hooks('network_content_init', $arr);
 
+	$channel = $a->get_channel();
 
 	$datequery = $datequery2 = '';
 
@@ -542,15 +545,10 @@ function network_content(&$a, $update = 0, $load = false) {
 	}
 
 	if($conv) {
-		// find a substring of my profile url that can be normalised
-		$myurl = $a->get_baseurl() . '/channel/' . $a->user['nickname'];
-		$myurl = substr($myurl,strpos($myurl,'://')+3);
-		$myurl = str_replace('www.','',$myurl);
-
-		$sql_extra .= sprintf(" AND `item`.`parent` IN (SELECT distinct(`parent`) from item where ( `item`.`author-link` like '%s' or `item`.`id` in (select term.oid from term where term.type = %d and term.term = '%s' and term.uid = `item`.`uid`))) ",
-			dbesc(protect_sprintf('%' . $myurl)),
+		$sql_extra .= sprintf(" AND `item`.`parent` IN (SELECT distinct(`parent`) from item where ( author_xchan like '%s' or `item`.`id` in (select term.oid from term where term.type = %d and term.term = '%s' and term.uid = `item`.`uid`))) ",
+			dbesc(protect_sprintf($channel['channel_hash'])),
 			intval(TERM_MENTION),
-			dbesc(protect_sprintf($a->user['username']))
+			dbesc(protect_sprintf($channel['channel_address']))
 		);
 	}
 

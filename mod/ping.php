@@ -151,7 +151,7 @@ function ping_init(&$a) {
 
 	}
 
-	if(argc() > 1 && (argv(1) === 'connect')) {
+	if(argc() > 1 && (argv(1) === 'intros')) {
 
 		$result = array();
 
@@ -165,18 +165,18 @@ function ping_init(&$a) {
 		if($r) {
 			foreach($r as $rr) {
 				$result[] = array(
-					'notify_link' => $a->get_baseurl() . '/notify/view-intro/' . $rr['abook_id'],
+					'notify_link' => $a->get_baseurl() . '/intro/' . $rr['abook_id'],
 					'name' => $rr['xchan_name'],
 					'url' => $rr['xchan_url'],
 					'photo' => $rr['xchan_photo_s'],
 					'when' => relative_date($rr['abook_created']), 
 					'class' => ('notify-unseen'), 
-					'message' => strip_tags(sprintf( t("Connection request from %s"), $rr['xchan_name']))
+					'message' => t('added your channel')
 				);
 			}
 		}			
 		logger('ping: ' . print_r($result,true));
-		echo json_encode(array( argv(1) => $result));
+		echo json_encode(array('notify' => $result));
 		killme();
 
 	}

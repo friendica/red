@@ -65,7 +65,6 @@
 			<span id="intro-update" class="nav-notify fakelink" rel="#nav-intros-menu"></span>
 			<ul id="nav-intros-menu" class="menu-popup notify-menus" rel="intros">
 				<li id="nav-intros-see-all"><a href="{{$nav.intros.all.0}}">{{$nav.intros.all.1}}</a></li>
-				<li id="nav-intros-mark-all"><a href="#" onclick="/*fixme*/ return false;">{{$nav.intros.mark.1}}</a></li>
 				<li class="empty">{{$emptynotifications}}</li>
 			</ul>
 		</li>
