@@ -813,7 +813,7 @@ if(! class_exists('App')) {
 			return $this->curl_headers;
 		}
 
-//FIXME or remove
+		/* //MicMee 20120109 function no longer in use commented out
 		function get_cached_avatar_image($avatar_image){
 			if($this->cached_profile_image[$avatar_image])
 				return $this->cached_profile_image[$avatar_image];
@@ -835,6 +835,7 @@ if(! class_exists('App')) {
 			}
 			return $this->cached_profile_image[$avatar_image];
 		}
+		*/
 
 		function get_template_engine() {
 			return $this->theme['template_engine'];
