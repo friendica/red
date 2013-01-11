@@ -1,10 +1,11 @@
 #!/usr/bin/python
 #
 # Script to convert Friendica internal template files into Smarty template files
-# Copyright 2012 Zach Prezkuta
+# Copyright 2013 Zach Prezkuta
 # Licensed under GPL v3
 
 import os, re, string
+import sys, getopt
 
 ldelim = '{{'
 rdelim = '}}'
@@ -170,7 +171,37 @@ def convert(filename, tofilename, php_tpl):
 		tofilename.write(newline)
 
 
-path = raw_input('Path to template folder to convert: ')
+def help(pname):
+	print "\nUsage:"
+	print "\t" + pname + " -h\n\n\t\t\tShow this help screen\n"
+	print "\t" + pname + " -p directory\n\n\t\t\tConvert all .tpl files in directory to\n\t\t\tSmarty templates in directory/smarty3/\n"
+	print "\t" + pname + "\n\n\t\t\tInteractive mode\n"
+
+
+
+
+#
+# Main script
+#
+
+path = ''
+
+try:
+	opts, args = getopt.getopt(sys.argv[1:], "hp:")
+	for opt, arg in opts:
+		if opt == '-h':
+			help(sys.argv[0])
+			sys.exit()
+		elif opt == '-p':
+			path = arg
+except getopt.GetoptError:
+	help(sys.argv[0])
+	sys.exit(2)
+	
+
+if path == '':
+	path = raw_input('Path to template folder to convert: ')
+
 if path[-1:] != '/':
 	path = path + '/'
 
