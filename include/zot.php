@@ -1008,21 +1008,21 @@ function import_directory_profile($hash,$profile) {
 	$arr = array();
 
 	$arr['xprof_hash']         = $hash;
-	$arr['xprof_desc']         = (($profile['description'])    ? htmlentities($profile['description'],    ENT_COMPAT,'UTF-8') : '');
+	$arr['xprof_desc']         = (($profile['description'])    ? htmlentities($profile['description'],    ENT_COMPAT,'UTF-8',false) : '');
 	$arr['xprof_dob']          = datetime_convert('','',$profile['birthday'],'Y-m-d'); // !!!! check this for 0000 year
-	$arr['xprof_gender']       = (($profile['gender'])    ? htmlentities($profile['gender'],    ENT_COMPAT,'UTF-8') : '');
-	$arr['xprof_marital']      = (($profile['marital'])    ? htmlentities($profile['marital'],    ENT_COMPAT,'UTF-8') : '');
-	$arr['xprof_sexual']       = (($profile['sexual'])    ? htmlentities($profile['sexual'],    ENT_COMPAT,'UTF-8') : '');
-	$arr['xprof_locale']       = (($profile['locale'])    ? htmlentities($profile['locale'],    ENT_COMPAT,'UTF-8') : '');
-	$arr['xprof_region']       = (($profile['region'])    ? htmlentities($profile['region'],    ENT_COMPAT,'UTF-8') : '');
-	$arr['xprof_postcode']     = (($profile['postcode'])    ? htmlentities($profile['postcode'],    ENT_COMPAT,'UTF-8') : '');
-	$arr['xprof_country']      = (($profile['country'])    ? htmlentities($profile['country'],    ENT_COMPAT,'UTF-8') : '');
+	$arr['xprof_gender']       = (($profile['gender'])    ? htmlentities($profile['gender'],    ENT_COMPAT,'UTF-8',false) : '');
+	$arr['xprof_marital']      = (($profile['marital'])    ? htmlentities($profile['marital'],    ENT_COMPAT,'UTF-8',false) : '');
+	$arr['xprof_sexual']       = (($profile['sexual'])    ? htmlentities($profile['sexual'],    ENT_COMPAT,'UTF-8',false) : '');
+	$arr['xprof_locale']       = (($profile['locale'])    ? htmlentities($profile['locale'],    ENT_COMPAT,'UTF-8',false) : '');
+	$arr['xprof_region']       = (($profile['region'])    ? htmlentities($profile['region'],    ENT_COMPAT,'UTF-8',false) : '');
+	$arr['xprof_postcode']     = (($profile['postcode'])    ? htmlentities($profile['postcode'],    ENT_COMPAT,'UTF-8',false) : '');
+	$arr['xprof_country']      = (($profile['country'])    ? htmlentities($profile['country'],    ENT_COMPAT,'UTF-8',false) : '');
 
 	$clean = array();
 	if(array_key_exists('keywords',$profile) and is_array($profile['keywords'])) {
 		import_directory_keywords($hash,$profile['keywords']);
 		foreach($profile['keywords'] as $kw) {
-			$kw = trim(htmlentities($kw,ENT_COMPAT,'UTF-8'));
+			$kw = trim(htmlentities($kw,ENT_COMPAT,'UTF-8',false));
 		}
 		$clean[] = $kw;
 	}
@@ -1092,7 +1092,7 @@ function import_directory_keywords($hash,$keywords) {
 
 	$clean = array();
 	foreach($keywords as $kw) {
-		$kw = trim(htmlentities($kw,ENT_COMPAT,'UTF-8'));
+		$kw = trim(htmlentities($kw,ENT_COMPAT,'UTF-8',false));
 		$clean[] = $kw;
 	}
 

@@ -461,7 +461,7 @@ function get_item_elements($x) {
 
 	$arr = array();
 
-	$arr['body']         = (($x['body']) ? htmlentities($x['body'],ENT_COMPAT,'UTF-8') : '');
+	$arr['body']         = (($x['body']) ? htmlentities($x['body'],ENT_COMPAT,'UTF-8',false) : '');
 
 	$arr['created']      = datetime_convert('UTC','UTC',$x['created']);
 	$arr['edited']       = datetime_convert('UTC','UTC',$x['edited']);
@@ -474,18 +474,18 @@ function get_item_elements($x) {
 	if($arr['edited'] > datetime_convert())
 		$arr['edited']   = datetime_convert();
 
-	$arr['title']        = (($x['title'])    ? htmlentities($x['title'],    ENT_COMPAT,'UTF-8') : '');
-	$arr['app']          = (($x['app'])      ? htmlentities($x['app'],      ENT_COMPAT,'UTF-8') : '');
-	$arr['uri']          = (($x['message_id'])      ? htmlentities($x['message_id'],      ENT_COMPAT,'UTF-8') : '');
-	$arr['parent_uri']   = (($x['message_top']) ? htmlentities($x['message_top'], ENT_COMPAT,'UTF-8') : '');
-	$arr['thr_parent']   = (($x['message_parent']) ? htmlentities($x['message_parent'], ENT_COMPAT,'UTF-8') : '');
+	$arr['title']        = (($x['title'])    ? htmlentities($x['title'],    ENT_COMPAT,'UTF-8',false) : '');
+	$arr['app']          = (($x['app'])      ? htmlentities($x['app'],      ENT_COMPAT,'UTF-8',false) : '');
+	$arr['uri']          = (($x['message_id'])      ? htmlentities($x['message_id'],      ENT_COMPAT,'UTF-8',false) : '');
+	$arr['parent_uri']   = (($x['message_top']) ? htmlentities($x['message_top'], ENT_COMPAT,'UTF-8',false) : '');
+	$arr['thr_parent']   = (($x['message_parent']) ? htmlentities($x['message_parent'], ENT_COMPAT,'UTF-8',false) : '');
 
-	$arr['plink']        = (($x['permalink'])    ? htmlentities($x['permalink'],    ENT_COMPAT,'UTF-8') : '');
-	$arr['location']     = (($x['location']) ? htmlentities($x['location'], ENT_COMPAT,'UTF-8') : '');
-	$arr['coord']        = (($x['longlat'])    ? htmlentities($x['longlat'],    ENT_COMPAT,'UTF-8') : '');
-	$arr['verb']         = (($x['verb'])     ? htmlentities($x['verb'],     ENT_COMPAT,'UTF-8') : '');
-	$arr['obj_type']     = (($x['object_type'])  ? htmlentities($x['object_type'],  ENT_COMPAT,'UTF-8') : '');
-	$arr['tgt_type']     = (($x['target_type'])  ? htmlentities($x['target_type'],  ENT_COMPAT,'UTF-8') : '');
+	$arr['plink']        = (($x['permalink'])    ? htmlentities($x['permalink'],    ENT_COMPAT,'UTF-8',false) : '');
+	$arr['location']     = (($x['location']) ? htmlentities($x['location'], ENT_COMPAT,'UTF-8',false) : '');
+	$arr['coord']        = (($x['longlat'])    ? htmlentities($x['longlat'],    ENT_COMPAT,'UTF-8',false) : '');
+	$arr['verb']         = (($x['verb'])     ? htmlentities($x['verb'],     ENT_COMPAT,'UTF-8',false) : '');
+	$arr['obj_type']     = (($x['object_type'])  ? htmlentities($x['object_type'],  ENT_COMPAT,'UTF-8',false) : '');
+	$arr['tgt_type']     = (($x['target_type'])  ? htmlentities($x['target_type'],  ENT_COMPAT,'UTF-8',false) : '');
 
 	$arr['object']       = activity_sanitise($x['object']);
 	$arr['target']       = activity_sanitise($x['target']);
@@ -614,8 +614,8 @@ function decode_tags($t) {
 		$ret = array();
 		foreach($t as $x) {
 			$tag = array();
-			$tag['term'] = htmlentities($x['term'],  ENT_COMPAT,'UTF-8');
-			$tag['url']  = htmlentities($x['url'],  ENT_COMPAT,'UTF-8');
+			$tag['term'] = htmlentities($x['term'],  ENT_COMPAT,'UTF-8',false);
+			$tag['url']  = htmlentities($x['url'],  ENT_COMPAT,'UTF-8',false);
 			switch($x['type']) {
 				case 'hashtag':
 					$tag['type'] = TERM_HASHTAG;
@@ -657,7 +657,7 @@ function activity_sanitise($arr) {
 			if(is_array($x))
 				$ret[$k] = activity_sanitise($x);
 			else
-				$ret[$k] = htmlentities($x, ENT_COMPAT,'UTF-8');
+				$ret[$k] = htmlentities($x, ENT_COMPAT,'UTF-8',false);
 		}
 		return $ret;
 	}
@@ -670,7 +670,7 @@ function array_sanitise($arr) {
 	if($arr) {
 		$ret = array();
 		foreach($arr as $x) {
-			$ret[] = htmlentities($x, ENT_COMPAT,'UTF-8');
+			$ret[] = htmlentities($x, ENT_COMPAT,'UTF-8',false);
 		}
 		return $ret;
 	}
@@ -717,16 +717,16 @@ function get_mail_elements($x) {
 
 	$arr = array();
 
-	$arr['body']         = (($x['body']) ? htmlentities($x['body'],ENT_COMPAT,'UTF-8') : '');
+	$arr['body']         = (($x['body']) ? htmlentities($x['body'],ENT_COMPAT,'UTF-8',false) : '');
 
 	$arr['created']      = datetime_convert('UTC','UTC',$x['created']);
 
 	if($arr['created'] > datetime_convert())
 		$arr['created']  = datetime_convert();
 
-	$arr['title']        = (($x['title'])    ? htmlentities($x['title'],    ENT_COMPAT,'UTF-8') : '');
-	$arr['uri']          = (($x['message_id'])      ? htmlentities($x['message_id'],      ENT_COMPAT,'UTF-8') : '');
-	$arr['parent_uri']   = (($x['message_parent']) ? htmlentities($x['message_parent'], ENT_COMPAT,'UTF-8') : '');
+	$arr['title']        = (($x['title'])    ? htmlentities($x['title'],    ENT_COMPAT,'UTF-8',false) : '');
+	$arr['uri']          = (($x['message_id'])      ? htmlentities($x['message_id'],      ENT_COMPAT,'UTF-8',false) : '');
+	$arr['parent_uri']   = (($x['message_parent']) ? htmlentities($x['message_parent'], ENT_COMPAT,'UTF-8',false) : '');
 
 
 	if(import_author_xchan($x['from']))
@@ -754,17 +754,17 @@ function get_profile_elements($x) {
 	else
 		return array();
 
-	$arr['desc']         = (($x['title']) ? htmlentities($x['title'],ENT_COMPAT,'UTF-8') : '');
+	$arr['desc']         = (($x['title']) ? htmlentities($x['title'],ENT_COMPAT,'UTF-8',false) : '');
 
 	$arr['dob']          = datetime_convert('UTC','UTC',$x['birthday'],'Y-m-d');
 
-	$arr['gender']       = (($x['gender'])    ? htmlentities($x['gender'],    ENT_COMPAT,'UTF-8') : '');
-	$arr['marital']      = (($x['marital'])   ? htmlentities($x['marital'],   ENT_COMPAT,'UTF-8') : '');
-	$arr['sexual']       = (($x['sexual'])    ? htmlentities($x['sexual'],    ENT_COMPAT,'UTF-8') : '');
-	$arr['locale']       = (($x['locale'])    ? htmlentities($x['locale'],    ENT_COMPAT,'UTF-8') : '');
-	$arr['region']       = (($x['region'])    ? htmlentities($x['region'],    ENT_COMPAT,'UTF-8') : '');
-	$arr['postcode']     = (($x['postcode'])  ? htmlentities($x['postcode'],  ENT_COMPAT,'UTF-8') : '');
-	$arr['country']      = (($x['country'])   ? htmlentities($x['country'],   ENT_COMPAT,'UTF-8') : '');
+	$arr['gender']       = (($x['gender'])    ? htmlentities($x['gender'],    ENT_COMPAT,'UTF-8',false) : '');
+	$arr['marital']      = (($x['marital'])   ? htmlentities($x['marital'],   ENT_COMPAT,'UTF-8',false) : '');
+	$arr['sexual']       = (($x['sexual'])    ? htmlentities($x['sexual'],    ENT_COMPAT,'UTF-8',false) : '');
+	$arr['locale']       = (($x['locale'])    ? htmlentities($x['locale'],    ENT_COMPAT,'UTF-8',false) : '');
+	$arr['region']       = (($x['region'])    ? htmlentities($x['region'],    ENT_COMPAT,'UTF-8',false) : '');
+	$arr['postcode']     = (($x['postcode'])  ? htmlentities($x['postcode'],  ENT_COMPAT,'UTF-8',false) : '');
+	$arr['country']      = (($x['country'])   ? htmlentities($x['country'],   ENT_COMPAT,'UTF-8',false) : '');
 
 	$arr['keywords']     = (($x['keywords'] && is_array($x['keywords'])) ? array_sanitise($x['keywords']) : array()); 
 
