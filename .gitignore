@@ -9,6 +9,7 @@ favicon.*
 home.html
 addon
 *~
+compiled/
 
 # patch attempts
 *.orig
