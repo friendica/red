@@ -16,7 +16,7 @@ function vcard_from_xchan($xchan) {
 	return replace_macros(get_markup_template('xchan_vcard.tpl'),array(
 		'$name'    => $xchan['xchan_name'],
 		'$photo'   => $xchan['xchan_photo_l'],
-		'$url'     => $xchan['xchan_addr'],
+		'$follow'  => $xchan['xchan_addr'],
 		'$connect' => $connect
 	));
 }
