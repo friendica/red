@@ -1016,9 +1016,6 @@ function check_config(&$a) {
 							if($retval) {
 								//send the administrator an e-mail
 
-								$engine = get_app()->get_template_engine();
-								get_app()->set_template_engine();
-
 								$email_tpl = get_intltext_template("update_fail_eml.tpl");
 								$email_msg = replace_macros($email_tpl, array(
 									'$sitename' => $a->config['sitename'],
@@ -1026,8 +1023,6 @@ function check_config(&$a) {
 									'$update' => $x,
 									'$error' => sprintf( t('Update %s failed. See error logs.'), $x)
 								));
-
-								get_app()->set_template_engine($engine);
 
 								$subject=sprintf(t('Update Error at %s'), $a->get_baseurl());
 									

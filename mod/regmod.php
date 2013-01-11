@@ -39,9 +39,6 @@ function user_allow($hash) {
 
 	push_lang($register[0]['language']);
 
-	$engine = get_app()->get_template_engine();
-	get_app()->set_template_engine();
-
 	$email_tpl = get_intltext_template("register_open_eml.tpl");
 	$email_tpl = replace_macros($email_tpl, array(
 			'$sitename' => $a->config['sitename'],
@@ -51,8 +48,6 @@ function user_allow($hash) {
 			'$password' => $register[0]['password'],
 			'$uid' => $user[0]['uid']
 	));
-
-	get_app()->set_template_engine($engine);
 
 	$res = mail($user[0]['email'], sprintf(t('Registration details for %s'), $a->config['sitename']),
 		$email_tpl,
