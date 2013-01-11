@@ -15,20 +15,19 @@ function format_notification($item) {
 
 	localize_item($item);
 
-// FIXME - we may need the parent
-
-	if(! $item['localize']) {
-		$itemem_text = (($item['item_flags'] & ITEM_THREAD_TOP)
-			? sprintf( t("%s created a new post"), $item['author']['xchan_name'])
-			: sprintf( t("%s commented on %s's post"), $item['author']['xchan_name'], $item['pname']));
-	}
-	else
+	if($item_localize) {
 		$itemem_text = $item['localize'];
+	}
+	else {
+		$itemem_text = (($item['item_flags'] & ITEM_THREAD_TOP)
+			? t('created a new post')
+			: sprintf( t('commented on %s\'s post'), $item['owner']['xchan_name']));
+	}
 
 	// convert this logic into a json array just like the system notifications
 
 	return array(
-		'notify_link' => z_root() . '/display/' . $item['llink'], 
+		'notify_link' => $item['llink'], 
 		'name' => $item['author']['xchan_name'],
 		'url' => $item['author']['xchan_url'],
 		'photo' => $item['author']['xchan_photo_s'],
