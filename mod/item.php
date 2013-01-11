@@ -60,14 +60,19 @@ function item_post(&$a) {
 	$owner_hash = null;
 
 
-	$profile_uid = ((x($_REQUEST,'profile_uid')) ? intval($_REQUEST['profile_uid']) : 0);
-	$post_id     = ((x($_REQUEST,'post_id'))     ? intval($_REQUEST['post_id'])     : 0);
-	$app         = ((x($_REQUEST,'source'))      ? strip_tags($_REQUEST['source'])  : '');
+	$profile_uid = ((x($_REQUEST,'profile_uid')) ? intval($_REQUEST['profile_uid'])   : 0);
+	$post_id     = ((x($_REQUEST,'post_id'))     ? intval($_REQUEST['post_id'])       : 0);
+	$app         = ((x($_REQUEST,'source'))      ? strip_tags($_REQUEST['source'])    : '');
+	$return_path = ((x($_REQUEST,'return'))      ? $_REQUEST['return']                : '');
+	$preview     = ((x($_REQUEST,'preview'))     ? intval($_REQUEST['preview'])       : 0);
+	$categories  = ((x($_REQUEST,'category'))    ? escape_tags($_REQUEST['category']) : '');
+	$webpage     = ((x($_REQUEST,'webpage'))     ? intval($_REQUEST['webpage'])       : 0);
+	$pagetitle   = ((x($_REQUEST,'pagetitle'))   ? escape_tags($_REQUEST['pagetitle']): '');
 
-
-	$return_path = ((x($_REQUEST,'return')) ? $_REQUEST['return'] : '');
-	$preview = ((x($_REQUEST,'preview')) ? intval($_REQUEST['preview']) : 0);
-	$categories = ((x($_REQUEST['category'])) ? escape_tags($_REQUEST['category']) : '');
+	if($pagetitle) {
+		require_once('library/urlify/URLify.php');
+		$pagetitle = strtolower(URLify::transliterate($pagetitle));
+	}
 
 	/**
 	 * Is this a reply to something?
@@ -491,6 +496,9 @@ function item_post(&$a) {
 	if($moderated)
 		$item_restrict = $item_restrict | ITEM_MODERATED;
 
+	if($webpage)
+		$item_restrict = $item_restrict | ITEM_WEBPAGE;
+
 
 		
 		
@@ -734,6 +742,23 @@ function item_post(&$a) {
 		dbesc(datetime_convert()),
 		intval($parent)
 	);
+
+	if($webpage) {
+
+		// store page info as an alternate message_id so we can access it via 
+		//    https://sitename/page/$channelname/$pagetitle
+		// if no pagetitle was given or it couldn't be transliterated into a url, use the first 
+		// sixteen bytes of the uri - which makes the link portable and not quite as daunting
+		// as the entire uri. If it were the post_id the link would be less portable.
+		// We should have the ability to edit this and arrange pages into menus via the pages module 
+
+		q("insert into item_id ( iid, uid, sid, service ) values ( %d, %d, '%s','%s' )",
+			intval($post_id),
+			intval($channel['channel_id']),
+			dbesc(($pagetitle) ? $pagetitle : substr($uri,0,16)),
+			dbesc('WEBPAGE')
+		);
+	}
 
 	$datarray['id']    = $post_id;
 	$datarray['plink'] = $a->get_baseurl() . '/display/' . $channel['channel_address'] . '/' . $post_id;
