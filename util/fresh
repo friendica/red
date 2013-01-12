@@ -1,0 +1,57 @@
+#!/usr/bin/env php
+<?php
+
+// Red cli interpreter
+
+require_once('include/cli_startup.php');
+
+cli_startup();
+
+$prompt = 'fresh% ';
+
+function fresh_main($argc,$argv) {
+	global $prompt;
+
+	while(!feof(STDIN)) {
+
+
+		if(function_exists('readline'))
+			$line = readline($prompt);
+		else {
+			echo "\n" . $prompt;
+			$line = fgets(STDIN);
+		}
+
+	
+		if($line === FALSE) {
+			if(feof(STDIN)) {
+				break;
+			}
+			continue;
+		}
+
+		$line = trim($line);
+ 		if($line == 'quit' || $line == 'exit')
+			exit();
+		process_command($line);
+	}
+
+}
+
+fresh_main($argc,$argv);
+
+function process_command($line) {
+
+	// split args
+
+	if($line == 'version') {
+		echo 'Fresh version 0.1';
+		return;
+	}
+
+
+
+
+}
+
+	
