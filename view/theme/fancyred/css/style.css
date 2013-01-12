@@ -2853,14 +2853,7 @@ aside input[type='text'] {
 }
 
 .vevent {
-  background: -moz-radial-gradient(#2e2f2e, #000);
-background: -ms-radial-gradient(#2e2f2e, #000);
-background: -webkit-radial-gradient(#2e2f2e, #000);
-border-radius: 100px;
-padding: 80px;
-font-weight: bold;
-text-align: center;
-color: #fff;
+border: 1px solid #CCCCCC;
 
 }
 
