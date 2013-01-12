@@ -4,6 +4,7 @@
 // Red cli interpreter
 
 require_once('include/cli_startup.php');
+require_once('include/zot.php');
 
 cli_startup();
 
@@ -42,14 +43,38 @@ fresh_main($argc,$argv);
 
 function process_command($line) {
 
+	$a = get_app();
+
 	// split args
+
+	$a->cmd = $line;
+	$a->argv = explode(' ',$line);
+	$a->argc = count($a->argv);
+
+	$authenticated = false;
+	$channel = null;
 
 	if($line == 'version') {
 		echo 'Fresh version 0.1';
 		return;
 	}
 
+	switch(argv(0)) {
+		case 'finger':
+			if(argv(1)) {
+				$x = zot_finger(argv(1),$channel);
+				if($x['success'])
+					print_r(json_decode($x['body'],true));
+			}
+			break;
 
+
+
+
+		default:
+			break;
+
+	}	
 
 
 }

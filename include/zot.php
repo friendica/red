@@ -154,6 +154,7 @@ function zot_finger($webbie,$channel) {
 	
 	$rhs = '/.well-known/zot-info';
 
+
 	if($channel) {
 		$postvars = array(
 			'address'    => $address,
@@ -161,12 +162,13 @@ function zot_finger($webbie,$channel) {
 			'target_sig' => $channel['channel_guid_sig'],
 			'key'        => $channel['channel_pubkey']
 		);
+
 		$result = z_post_url($url . $rhs,$postvars);
 		if(! $result['success'])
 			$result = z_post_url('http://' . $host . $rhs,$postvars);
 	}		
 	else {
-		$rhs .= 'address=' . urlencode($address);
+		$rhs .= '?f=&address=' . urlencode($address);
 
 		$result =  z_fetch_url($url . $rhs);
 		if(! $result['success'])
