@@ -315,6 +315,7 @@ nav #nav-link-wrapper .nav-link {
     box-shadow: 5px 5px 5px #444;
     margin-left: 8px;
     padding: 4px;
+    text-align: center;
 }
 .tab:hover, .tab.active:hover {
     background: #d00;
@@ -1301,8 +1302,7 @@ width: 90%;
 .wall-item-body {
 /*	float: left; */
 	/*width: 450px;*/
-	margin-top: 10px;
-	margin-right: 10px;
+	margin: 10px 10px 30px;
 }
 
 .wall-item-tools {
@@ -1311,18 +1311,32 @@ width: 90%;
     background-position: 0 -20px;
     background-repeat: repeat-x;
     background: #eee;
-    padding: 5px 10px;
+    padding: 2px;
     border-radius: 0px 0px 10px 10px;
     border: 1px #eec solid;
 }
 
-.wall-item-like {
-margin: 15px;
-opacity: 0.6;
+.wall-item-like, .wall-item-dislike {
+    	font-size: 0.8em;
+	color: #878883;
+	position: relative;
+	bottom: 50px;
+	margin-left: 120px;
+	float:left;
+	opacity: 0.6;
 }
 
-.wall-item-like:hover {
-margin: 15px;
+/*
+.wall-item-dislike {
+        font-size: 0.8em;
+        color: #878883;
+        position: relative;
+        bottom: 50px;
+        margin-left: 120px;
+}
+
+*/
+.wall-item-like:hover, .wall-item-dislike:hover{
 opacity: 1;
 }
 
@@ -2834,10 +2848,13 @@ aside input[type='text'] {
 
 #event-summary {
 	width: 400px;
+	font-weight: bold;
+	font-size:2em;
 }
 
 .vevent {
-	border: 1px solid #CCCCCC;
+border: 1px solid #CCCCCC;
+
 }
 
 .vevent .event-summary {
