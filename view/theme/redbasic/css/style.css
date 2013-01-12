@@ -195,11 +195,13 @@ nav #site-location {
 }
 
 .info-message {
-	color: #204a87;
 	font-size: 1.1em;
-	border: 1px solid #3465a4;
-	background-color: #d7e3f1;
+	border: 1px solid #444;
+	background-color: #ccc;
 	padding: 10px;
+	-moz-border-radius: 5px;
+	border-radius: 5px;	
+
 }
 
 
@@ -219,7 +221,7 @@ header #site-location {
 header #banner {
   overflow: hidden;
   text-align: center;
-  width: 100%;
+  width: 100%; 
   font-size: 2.2em;
   font-family: tahoma, "Lucida Sans", sans;
   color: #eec;
