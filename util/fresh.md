@@ -11,6 +11,9 @@ of file is reached.
 
 Commands:
 
+* version
+	Report current fresh version
+
 * login email_address
 	Prompts for a password, and authenticates email_address as the current 
 user.
