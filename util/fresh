@@ -34,6 +34,7 @@ function fresh_main($argc,$argv) {
 		$line = trim($line);
  		if($line == 'quit' || $line == 'exit')
 			exit();
+		
 		process_command($line);
 	}
 
@@ -60,6 +61,11 @@ function process_command($line) {
 	}
 
 	switch(argv(0)) {
+		case '?':
+		case 'help':
+			fresh_help();
+			break;	
+
 		case 'finger':
 			if(argv(1)) {
 				$x = zot_finger(argv(1),$channel);
@@ -120,11 +126,11 @@ function process_command($line) {
 						intval(argv($x)),
 						intval(local_user())
 					);
-					if($r) echo jindent(json_encode($r[0]));	
+					if($r) echo jindent(json_encode($r[0])) . "\n";	
 				}
 			}
 			else {
-				$r = q("select * from abook left join xchan on abook_xchan = xchan_hash where abook_channel = %d",
+				$r = q("select * from abook left join xchan on abook_xchan = xchan_hash where abook_channel = %d order by abook_id",
 					intval(local_user())
 				);
 				if($r) {
@@ -143,3 +149,15 @@ function process_command($line) {
 }
 
 	
+function fresh_help() {
+
+	if(argc() == 1) {
+		echo "help - this text\n";
+		echo "login email_address - login with email_address, prompts for password\n";
+		echo "finger channel_address - lookup channel_address remotely\n";
+		echo "channel new_channel - change active channel to new_channel (nickname)\n";
+		echo "conn [id1] [id2...] - without args list connections, or report detail of connection id1 (etc.)\n";
+		echo "quit|exit - terminate fresh\n";
+
+	}
+}
