@@ -114,8 +114,8 @@ function process_command($line) {
 				echo "Permission denied.";
 				break;
 			}
-			if(argc > 1) {
-				for($x = 1; $x < argc; $x ++) { 
+			if(argc() > 1) {
+				for($x = 1; $x < argc(); $x ++) { 
 					$r = q("select * from abook left join xchan on abook_xchan = xchan_hash where abook_id = %d and abook_channel = %d",
 						intval(argv($x)),
 						intval(local_user())
