@@ -1512,7 +1512,7 @@ function tag_deliver($uid,$item_id) {
 		return;
 
 		
-		// fixme - look for permissions allowing tag delivery
+	// fixme - look for permissions allowing tag delivery
 		
 	$community_page = (($u[0]['page-flags'] == PAGE_COMMUNITY) ? true : false);
 	$prvgroup = (($u[0]['page-flags'] == PAGE_PRVGROUP) ? true : false);
@@ -1525,55 +1525,48 @@ function tag_deliver($uid,$item_id) {
 	if(! count($i))
 		return;
 
+	$i = fetch_post_tags($i);
+
 	$item = $i[0];
+
+	$terms = get_terms_oftype($item['term'],TERM_MENTION);
+
 
 	$link = normalise_link($a->get_baseurl() . '/channel/' . $u[0]['nickname']);
 
-	$body = preg_replace("/\[share\](.*?)\[\/share\]/ism", '', $item['body']);
-	
-	$cnt = preg_match_all('/[\@\!]\[url\=(.*?)\](.*?)\[\/url\]/ism',$body,$matches,PREG_SET_ORDER);
-	if($cnt) {
-		foreach($matches as $mtch) {
-			if(link_compare($link,$mtch[1])) {
+	if($terms) {
+		foreach($terms as $term) {
+			if(($term['term'] == $u[0]['channel_name']) && link_compare($term['url'],$link)) {			
 				$mention = true;
-				logger('tag_deliver: mention found: ' . $mtch[2]);
+				break;
 			}
 		}
-	}
+	}				
 
-	if(! $mention)
+	if($mention) {
+		$r = q("update item set item_flags = ( item_flags | %d ) where id = %d limit 1",
+			intval(ITEM_MENTIONSME),
+			intval($item_id)
+		);			
+	}
+	else
 		return;
 
 	// send a notification
 
-	// use a local photo if we have one
-
-	$r = q("select thumb from contact where uid = %d and nurl = '%s' limit 1",
-		intval($u[0]['uid']),
-		dbesc(normalise_link($item['author-link']))
-	);
-	$photo = (($r && count($r)) ? $r[0]['thumb'] : $item['author-avatar']);
-
-// fixme for channels
-
 	require_once('include/enotify.php');
 	notification(array(
+		'to_xchan'     => $u[0]['channel_hash'],
+		'from_xchan'   => $item['author_xchan'],
 		'type'         => NOTIFY_TAGSELF,
-		'notify_flags' => $u[0]['notify-flags'],
-		'language'     => $u[0]['language'],
-		'to_name'      => $u[0]['username'],
-		'to_email'     => $u[0]['email'],
-		'uid'          => $u[0]['uid'],
 		'item'         => $item,
-		'link'         => $a->get_baseurl() . '/display/' . $u[0]['nickname'] . '/' . $item['id'],
-		'source_name'  => $item['author-name'],
-		'source_link'  => $item['author-link'],
-		'source_photo' => $photo,
+		'link'         => $i[0]['llink'],
 		'verb'         => ACTIVITY_TAG,
 		'otype'        => 'item'
 	));
 
-	if((! $community_page) && (! $prvgroup))
+
+	if(! perm_is_allowed($uid,$item['author_xchan'],'tag_deliver'))
 		return;
 
 
@@ -1581,39 +1574,41 @@ function tag_deliver($uid,$item_id) {
 	// prevent delivery looping - only proceed
 	// if the message originated elsewhere and is a top-level post
 
-	if(($item['wall']) || ($item['origin']) || ($item['id'] != $item['parent']))
-		return;
+// FIXME
+
+//	if(($item['wall']) || ($item['origin']) || ($item['id'] != $item['parent']))
+//		return;
 
 	// now change this copy of the post to a forum head message and deliver to all the tgroup members
 
 
-	$c = q("select name, url, thumb from contact where self = 1 and uid = %d limit 1",
-		intval($u[0]['uid'])
-	);
-	if(! count($c))
-		return;
+//	$c = q("select name, url, thumb from contact where self = 1 and uid = %d limit 1",
+//		intval($u[0]['uid'])
+//	);
+//	if(! count($c))
+//		return;
 
 	// also reset all the privacy bits to the forum default permissions
 
 	$private = ($u[0]['allow_cid'] || $u[0]['allow_gid'] || $u[0]['deny_cid'] || $u[0]['deny_gid']) ? 1 : 0;
 
-	$forum_mode = (($prvgroup) ? 2 : 1);
+//	$forum_mode = (($prvgroup) ? 2 : 1);
 
-	q("update item set wall = 1, origin = 1, forum_mode = %d, `owner-name` = '%s', `owner-link` = '%s', `owner-avatar` = '%s', 
-		`private` = %d, `allow_cid` = '%s', `allow_gid` = '%s', `deny_cid` = '%s', `deny_gid` = '%s'  where id = %d limit 1",
-		intval($forum_mode),
-		dbesc($c[0]['name']),
-		dbesc($c[0]['url']),
-		dbesc($c[0]['thumb']),
-		intval($private),
-		dbesc($u[0]['allow_cid']),
-		dbesc($u[0]['allow_gid']),
-		dbesc($u[0]['deny_cid']),
-		dbesc($u[0]['deny_gid']),
-		intval($item_id)
-	);
+//	q("update item set wall = 1, origin = 1, forum_mode = %d, `owner-name` = '%s', `owner-link` = '%s', `owner-avatar` = '%s', 
+//		`private` = %d, `allow_cid` = '%s', `allow_gid` = '%s', `deny_cid` = '%s', `deny_gid` = '%s'  where id = %d limit 1",
+//		intval($forum_mode),
+//		dbesc($c[0]['name']),
+//		dbesc($c[0]['url']),
+//		dbesc($c[0]['thumb']),
+//		intval($private),
+//		dbesc($u[0]['allow_cid']),
+//		dbesc($u[0]['allow_gid']),
+//		dbesc($u[0]['deny_cid']),
+//		dbesc($u[0]['deny_gid']),
+//		intval($item_id)
+//	);
 
-	proc_run('php','include/notifier.php','tgroup',$item_id);			
+//	proc_run('php','include/notifier.php','tgroup',$item_id);			
 
 }
 

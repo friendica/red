@@ -64,7 +64,7 @@ function process_command($line) {
 			if(argv(1)) {
 				$x = zot_finger(argv(1),$channel);
 				if($x['success'])
-					print_r(json_decode($x['body'],true));
+					echo jindent($x['body']);
 			}
 			break;
 
