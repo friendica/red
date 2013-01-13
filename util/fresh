@@ -68,7 +68,30 @@ function process_command($line) {
 			}
 			break;
 
+		case 'login':
+			if(argv(1)) {
+				echo 'Password: ';
+				exec('/bin/stty -echo');
+				$x = fgets(STDIN);
+				exec('/bin/stty echo');
+				echo "\n";
+				require_once('include/auth.php');
+				$record = get_app()->account = account_verify_password(argv(1),trim($x,"\n"));
 
+				if($record) {
+					$_SESSION['account_id'] = get_app()->account['account_id'];
+					$_SESSION['last_login_date'] = datetime_convert();
+					authenticate_success($record, true, true);
+					echo 'logged in';
+					$channel = $a->get_channel();
+					if($channel)
+						echo ' as ' . $channel['channel_name'];					
+				}
+				else
+					echo 'login failed.';
+
+			}
+			break;				
 
 
 		default:
