@@ -1552,6 +1552,17 @@ function tag_deliver($uid,$item_id) {
 	else
 		return;
 
+
+	// Now let's check for a reshare so we don't spam a forum
+
+	$body = preg_replace('/\[share(.*?)\[\/share\]/','',$item['body']);
+
+	if(! preg_match('/@\[url=(.*?)\]' . $u[0]['channel_name'] . '\[\/url\]/',$matches, $body)) {
+		logger('tag_deliver: mention was in a reshare - ignoring');
+		return;
+	}
+	
+
 	// send a notification
 
 	require_once('include/enotify.php');
