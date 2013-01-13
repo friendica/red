@@ -545,10 +545,9 @@ function network_content(&$a, $update = 0, $load = false) {
 	}
 
 	if($conv) {
-		$sql_extra .= sprintf(" AND `item`.`parent` IN (SELECT distinct(`parent`) from item where ( author_xchan like '%s' or `item`.`id` in (select term.oid from term where term.type = %d and term.term = '%s' and term.uid = `item`.`uid`))) ",
+		$sql_extra .= sprintf(" AND parent IN (SELECT distinct(parent) from item where ( author_xchan like '%s' or ( item_flags & %d ))) ",
 			dbesc(protect_sprintf($channel['channel_hash'])),
-			intval(TERM_MENTION),
-			dbesc(protect_sprintf($channel['channel_address']))
+			intval(ITEM_MENTIONSME)
 		);
 	}
 
@@ -621,7 +620,7 @@ function network_content(&$a, $update = 0, $load = false) {
 		if($load) {
 
 			// Fetch a page full of parent items for this page
-
+dbg(1);
 			$r = q("SELECT item.id AS item_id FROM item 
 				left join abook on item.author_xchan = abook.abook_xchan
 				WHERE item.uid = %d AND item.item_restrict = 0
@@ -632,6 +631,7 @@ function network_content(&$a, $update = 0, $load = false) {
 				intval(local_user()),
 				intval(ABOOK_FLAG_BLOCKED)
 			);
+dbg(0);
 		}
 		else {
 			// update
