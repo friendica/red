@@ -234,8 +234,9 @@ function notifier_run($argv, $argc){
 
 		$encoded_item = encode_item($target_item);
 		
-
 		$relay_to_owner = (((! $top_level_post) && ($target_item['item_flags'] & ITEM_ORIGIN)) ? true : false);
+
+		$uplink = false;
 
 		// $cmd === 'relay' indicates the owner is sending it to the original recipients
 		// don't allow the item in the relay command to relay to owner under any circumstances, it will loop
@@ -243,10 +244,15 @@ function notifier_run($argv, $argc){
 		logger('notifier: top_level_post: ' . (($top_level_post) ? 'true' : 'false'));
 		logger('notifier: target_item_flags: ' . $target_item['item_flags'] . ' ' . (($target_item['item_flags'] & ITEM_ORIGIN ) ? 'true' : 'false'));
 
+		// tag_deliver'd post which needs to be sent back to the original author
 
-		if(($relay_to_owner) && ($cmd !== 'relay')) {
+		if(($cmd === 'uplink') && ($parent_item['item_flags'] & ITEM_UPLINK) && (! $top_level_post)) {
+			$uplink = true;			
+		} 
+
+		if(($relay_to_owner || $uplink) && ($cmd !== 'relay')) {
 			logger('notifier: followup relay', LOGGER_DEBUG);
-			$recipients = array($parent_item['owner_xchan']);
+			$recipients = array(($uplink) ? $parent_item['author_xchan'] : $parent_item['owner_xchan']);
 			$private = true;
 			if(! $encoded_item['flags'])
 				$encoded_item['flags'] = array();
@@ -256,6 +262,15 @@ function notifier_run($argv, $argc){
 			logger('notifier: normal distribution', LOGGER_DEBUG);
 			if($cmd === 'relay')
 				logger('notifier: owner relay');
+
+			// if our parent is a tag_delivery recipient, uplink to the original author causing
+			// a delivery fork. 
+
+			if(($parent_item['item_flags'] & ITEM_UPLINK) && (! $top_level_post) && ($cmd !== 'uplink')) {
+				logger('notifier: uplinking this item');
+				proc_run('php','include/notifier.php','uplink',$item_id);
+			}
+
 			$private = false;
 			$recipients = collect_recipients($parent_item,$private);
 

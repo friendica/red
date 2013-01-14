@@ -278,5 +278,15 @@ function perm_is_allowed($uid,$observer,$permission) {
 }
 
 
+// Check a simple array of observers against a permissions
+// return a simple array of those with permission
 
+function check_list_permissions($uid,$arr,$perm) {
+	$result = array();
+	if($arr)
+		foreach($arr as $x)
+			if($perm_is_allowed($uid,$x,$perm))
+				$result[] = $x;
+	return($result);
+}
 

@@ -4,7 +4,7 @@ require_once('include/bbcode.php');
 require_once('include/oembed.php');
 require_once('include/crypto.php');
 require_once('include/Photo.php');
-
+require_once('include/permissions.php');
 
 
 function collect_recipients($item,&$private) {
@@ -31,13 +31,19 @@ function collect_recipients($item,&$private) {
 		);
 		if($r) {
 			foreach($r as $rr) {
-				// FIXME check permissions of each
 				$recipients[] = $rr['abook_xchan'];
 			}
 		}
 		$private = false;
 	}
+
+	// This is a somewhat expensive operation but important.
+	// Don't send this item to anybody who isn't allowed to see it
+
+	$recipients = check_list_permissions($item['uid'],$recipients,'view_stream');
+
 	return $recipients;
+
 }
 
 
@@ -1510,14 +1516,7 @@ function tag_deliver($uid,$item_id) {
 	);
 	if(! count($u))
 		return;
-
 		
-	// fixme - look for permissions allowing tag delivery
-		
-	$community_page = (($u[0]['page-flags'] == PAGE_COMMUNITY) ? true : false);
-	$prvgroup = (($u[0]['page-flags'] == PAGE_PRVGROUP) ? true : false);
-
-
 	$i = q("select * from item where id = %d and uid = %d limit 1",
 		intval($item_id),
 		intval($uid)
@@ -1552,8 +1551,8 @@ function tag_deliver($uid,$item_id) {
 	else
 		return;
 
-
-	// Now let's check for a reshare so we don't spam a forum
+	// At this point we've determined that the person receiving this post was mentioned in it.
+	// Now let's check if this mention was inside a reshare so we don't spam a forum
 
 	$body = preg_replace('/\[share(.*?)\[\/share\]/','',$item['body']);
 
@@ -1563,7 +1562,8 @@ function tag_deliver($uid,$item_id) {
 	}
 	
 
-	// send a notification
+	// All good. 
+	// Send a notification
 
 	require_once('include/enotify.php');
 	notification(array(
@@ -1587,39 +1587,34 @@ function tag_deliver($uid,$item_id) {
 
 // FIXME
 
-//	if(($item['wall']) || ($item['origin']) || ($item['id'] != $item['parent']))
-//		return;
+	if(($item['item_flags'] & ITEM_WALL) || ($item['item_flags'] & ITEM_ORIGIN) || ($item['item_flags'] & ITEM_THREAD_TOP) || ($item['id'] != $item['parent']))
+		return;
+
+
 
 	// now change this copy of the post to a forum head message and deliver to all the tgroup members
-
-
-//	$c = q("select name, url, thumb from contact where self = 1 and uid = %d limit 1",
-//		intval($u[0]['uid'])
-//	);
-//	if(! count($c))
-//		return;
-
 	// also reset all the privacy bits to the forum default permissions
 
 	$private = ($u[0]['allow_cid'] || $u[0]['allow_gid'] || $u[0]['deny_cid'] || $u[0]['deny_gid']) ? 1 : 0;
 
-//	$forum_mode = (($prvgroup) ? 2 : 1);
+	$flag_bits = ITEM_WALL|ITEM_ORIGIN|ITEM_UPLINK;
+	if($private)
+		$flag_bits = $flag_bits | ITEM_PRIVATE;
 
-//	q("update item set wall = 1, origin = 1, forum_mode = %d, `owner-name` = '%s', `owner-link` = '%s', `owner-avatar` = '%s', 
-//		`private` = %d, `allow_cid` = '%s', `allow_gid` = '%s', `deny_cid` = '%s', `deny_gid` = '%s'  where id = %d limit 1",
-//		intval($forum_mode),
-//		dbesc($c[0]['name']),
-//		dbesc($c[0]['url']),
-//		dbesc($c[0]['thumb']),
-//		intval($private),
-//		dbesc($u[0]['allow_cid']),
-//		dbesc($u[0]['allow_gid']),
-//		dbesc($u[0]['deny_cid']),
-//		dbesc($u[0]['deny_gid']),
-//		intval($item_id)
-//	);
-
-//	proc_run('php','include/notifier.php','tgroup',$item_id);			
+	$r = q("update item set item_flags = ( $item_flags | %d ), owner_xchan = '%s', allow_cid = '%s', allow_gid = '%s', 
+		deny_cid = '%s', deny_gid = '%s'  where id = %d limit 1",
+		intval($flag_bits),
+		dbesc($u[0]['channel_hash']),
+		dbesc($u[0]['allow_cid']),
+		dbesc($u[0]['allow_gid']),
+		dbesc($u[0]['deny_cid']),
+		dbesc($u[0]['deny_gid']),
+		intval($item_id)
+	);
+	if($r)
+		proc_run('php','include/notifier.php','tgroup',$item_id);
+	else
+		logger('tag_deliver: failed to update item');			
 
 }
 
