@@ -1254,7 +1254,7 @@ function profile_load(&$a, $nickname, $profile = 0) {
 
 	// Can the observer see our profile?
 	require_once('include/permissions.php');
-	if(! perm_is_allowed($user[0]['channel_id'],$observer['xchan_hash'],'view_profile') {
+	if(! perm_is_allowed($user[0]['channel_id'],$observer['xchan_hash'],'view_profile')) {
 		// permission denied
 		//TODO: place error message
 		return;
