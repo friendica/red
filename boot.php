@@ -1264,7 +1264,7 @@ function profile_load(&$a, $nickname, $profile = 0) {
 
 	$r = null;
 
-//TODO needs avatar_date !!
+
 
 	if($profile) {
 		$profile_int = intval($profile);
