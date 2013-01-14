@@ -1249,18 +1249,22 @@ function profile_load(&$a, $nickname, $profile = 0) {
 		return;
 	}
 
-	if(remote_user() && count($_SESSION['remote'])) {
-		foreach($_SESSION['remote'] as $visitor) {
-			if($visitor['uid'] == $user[0]['channel_id']) {
-				$r = q("SELECT `profile_id` FROM `contact` WHERE `id` = %d LIMIT 1",
-					intval($visitor['cid'])
-				);
-				if(count($r))
-					$profile = $r[0]['profile_id'];
-				break;
-			}
-		}
+	// get the current observer
+	$observer = $a->get_observer();
+
+	// Can the observer see our profile?
+	require_once('include/permissions.php');
+	if(! perm_is_allowed($user[0]['channel_id'],$observer['xchan_hash'],'view_profile')) {
+		// permission denied
+		//TODO: place error message
+		return;
 	}
+
+	$r = q("SELECT abook_profile FROM abook WHERE abook_xchan = '%s' limit 1",
+		dbesc($observer['xchan_hash'])
+	);
+	if($r)
+		$profile = $r[0]['abook_profile'];
 
 	$r = null;
 
