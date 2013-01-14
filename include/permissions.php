@@ -285,7 +285,7 @@ function check_list_permissions($uid,$arr,$perm) {
 	$result = array();
 	if($arr)
 		foreach($arr as $x)
-			if($perm_is_allowed($uid,$x,$perm))
+			if(perm_is_allowed($uid,$x,$perm))
 				$result[] = $x;
 	return($result);
 }
