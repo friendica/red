@@ -45,7 +45,7 @@ function group_select($selname,$selclass,$preselected = false,$size = 4) {
 	return $o;
 }
 
-
+/* MicMee 20130114 function contact_selector no longer in use, sql table contact does no longer exist
 function contact_selector($selname, $selclass, $preselected = false, $options) {
 
 	$a = get_app();
@@ -148,7 +148,7 @@ function contact_selector($selname, $selclass, $preselected = false, $options) {
 	call_hooks($a->module . '_post_' . $selname, $o);
 
 	return $o;
-}
+}*/
 
 
 
