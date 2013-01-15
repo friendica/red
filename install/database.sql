@@ -163,6 +163,8 @@ CREATE TABLE IF NOT EXISTS `channel` (
   `channel_a_delegate` tinyint(3) unsigned NOT NULL DEFAULT '0',
   `channel_r_storage` int(10) unsigned NOT NULL DEFAULT '128',
   `channel_w_storage` int(10) unsigned NOT NULL DEFAULT '128',
+  `channel_r_pages` int(10) unsigned NOT NULL DEFAULT '128',
+  `channel_w_pages` int(10) unsigned NOT NULL DEFAULT '128',
   PRIMARY KEY (`channel_id`),
   KEY `channel_account_id` (`channel_account_id`),
   KEY `channel_primary` (`channel_primary`),
@@ -192,7 +194,9 @@ CREATE TABLE IF NOT EXISTS `channel` (
   KEY `channel_expire_days` (`channel_expire_days`),
   KEY `channel_a_delegate` (`channel_a_delegate`),
   KEY `channel_r_storage` (`channel_r_storage`),
-  KEY `channel_w_storage` (`channel_w_storage`)
+  KEY `channel_w_storage` (`channel_w_storage`),
+  KEY `channel_r_pages` (`channel_r_pages`),
+  KEY `channel_w_pages` (`channel_w_pages`)
 ) ENGINE=MyISAM  DEFAULT CHARSET=utf8;
 
 CREATE TABLE IF NOT EXISTS `clients` (
@@ -563,7 +567,7 @@ CREATE TABLE IF NOT EXISTS `notify` (
   KEY `parent` (`parent`),
   KEY `link` (`link`),
   KEY `otype` (`otype`)
-) ENGINE=MyISAM DEFAULT CHARSET=utf8;
+) ENGINE=MyISAM  DEFAULT CHARSET=utf8;
 
 CREATE TABLE IF NOT EXISTS `outq` (
   `outq_hash` char(255) NOT NULL,
@@ -852,9 +856,9 @@ CREATE TABLE IF NOT EXISTS `xlink` (
   `xlink_link` char(255) NOT NULL DEFAULT '',
   `xlink_updated` datetime NOT NULL DEFAULT '0000-00-00 00:00:00',
   PRIMARY KEY (`xlink_id`),
-  KEY `xlink_xchan` ( `xlink_xchan` ),
-  KEY `xlink_link` ( `xlink_link` ),
-  KEY `xlink_updated` ( `xlink_updated` )
+  KEY `xlink_xchan` (`xlink_xchan`),
+  KEY `xlink_link` (`xlink_link`),
+  KEY `xlink_updated` (`xlink_updated`)
 ) ENGINE=MyISAM DEFAULT CHARSET=utf8;
 
 CREATE TABLE IF NOT EXISTS `xprof` (

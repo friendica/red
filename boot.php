@@ -16,7 +16,7 @@ require_once('include/features.php');
 define ( 'FRIENDICA_PLATFORM',     'Friendica Red');
 define ( 'FRIENDICA_VERSION',      trim(file_get_contents('version.inc')) . 'R');
 define ( 'ZOT_REVISION',               1     ); 
-define ( 'DB_UPDATE_VERSION',       1015     );
+define ( 'DB_UPDATE_VERSION',       1016     );
 
 define ( 'EOL',                    '<br />' . "\r\n"     );
 define ( 'ATOM_TIME',              'Y-m-d\TH:i:s\Z' );
@@ -193,6 +193,8 @@ define ( 'PERMS_A_DELEGATE',       0x0800);
 
 define ( 'PERMS_R_STORAGE',        0x1000);
 define ( 'PERMS_W_STORAGE',        0x2000);
+define ( 'PERMS_R_PAGES',          0x4000);
+define ( 'PERMS_W_PAGES',          0x8000);
 
 
 // General channel permissions

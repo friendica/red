@@ -1,6 +1,6 @@
 <?php
 
-define( 'UPDATE_VERSION' , 1015 );
+define( 'UPDATE_VERSION' , 1016 );
 
 /**
  *
@@ -219,3 +219,13 @@ function update_r1014() {
 	return UPDATE_FAILED;
 }
 
+function update_r1015() {
+	$r = q("ALTER TABLE `channel` ADD `channel_r_pages` INT UNSIGNED NOT NULL DEFAULT '128',
+ADD `channel_w_pages` INT UNSIGNED NOT NULL DEFAULT '128'");
+
+	$r2 = q("ALTER TABLE `channel` ADD INDEX ( `channel_r_pages` ) , ADD INDEX ( `channel_w_pages` ) ");
+
+	if($r && $r2)
+		return UPDATE_SUCCESS;
+	return UPDATE_FAILED;
+}
