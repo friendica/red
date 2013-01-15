@@ -487,11 +487,8 @@ function theme_include($file, $root = '') {
 
 	$paths = array(
 		"{$root}view/theme/$theme/$ext/$file",
-		"{$root}view/theme/$theme/$file",
 		"{$root}view/theme/$parent/$ext/$file",
-		"{$root}view/theme/$parent/$file",
 		"{$root}view/$ext/$file",
-		"{$root}view/$file"
 	);
 
 	foreach($paths as $p) {
