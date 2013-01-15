@@ -49,6 +49,10 @@ class Conversation extends BaseObject {
 				$this->profile_owner = $a->profile['uid'];
 				$this->writable = perm_is_allowed($this->profile_owner,$ob_hash,'post_comments');
 				break;
+			case 'page':
+				$this->profile_owner = $a->profile['uid'];
+				$this->writable = perm_is_allowed($this->profile_owner,$ob_hash,'post_comments');
+				break;
 			default:
 				logger('[ERROR] Conversation::set_mode : Unhandled mode ('. $mode .').', LOGGER_DEBUG);
 				return false;

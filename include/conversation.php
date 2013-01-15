@@ -419,9 +419,6 @@ function conversation(&$a, $items, $mode, $update, $page_mode = 'traditional') {
             }
         }
 
-
-
-
 	}
 
 	elseif($mode === 'display') {
@@ -431,6 +428,13 @@ function conversation(&$a, $items, $mode, $update, $page_mode = 'traditional') {
 	      $live_update_div = '<div id="live-display"></div>' . "\r\n";
 
 	}
+
+	elseif($mode === 'page') {
+		$profile_owner = $a->profile['uid'];
+		$page_writeable = ($profile_owner == local_user());
+		$live_update_div = '<div id="live-page"></div>' . "\r\n";
+	}
+
 
     else if($mode === 'search') {
         $live_update_div = '<div id="live-search"></div>' . "\r\n";

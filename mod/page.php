@@ -1,9 +1,11 @@
 <?php
 
+require_once('include/items.php');
+require_once('include/conversation.php');
 
 function page_content(&$a) {
 
-	if(argc < 3) {
+	if(argc() < 3) {
 		notice( t('Invalid item.') . EOL);
 		return;
 	}
