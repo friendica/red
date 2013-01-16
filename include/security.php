@@ -6,11 +6,7 @@ function authenticate_success($user_record, $login_initial = false, $interactive
 
 	$_SESSION['addr'] = $_SERVER['REMOTE_ADDR'];
 
-//	logger('authenticate_success: ' . print_r($user_record,true));
-//	logger('authenticate_success: ' . print_r($_SESSION,true));
-
 	if(x($user_record,'account_id')) {
-//		logger('authenticate_success: Red-style');
 		$a->account = $user_record;
 		$_SESSION['account_id'] = $user_record['account_id'];
 		$_SESSION['authenticated'] = 1;
@@ -115,10 +111,12 @@ function authenticate_success($user_record, $login_initial = false, $interactive
 				intval($_SESSION['uid'])
 			);
 
-			call_hooks('logged_in', $a->user);
 
 		}
 	}
+
+	if($login_initial)
+		call_hooks('logged_in', $user_record);
 	
 
 	if($return || x($_SESSION,'workflow')) {
