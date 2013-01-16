@@ -48,12 +48,12 @@
 	{{ endif }}
 
 	{{ if $nav.all_events }}
-		<li id="nav-all-events-link" class="nav-menu $sel.all_events">
+		<li id="nav-all_events-link" class="nav-menu $sel.all_events">
 			<a class="$nav.all_events.2" href="$nav.all_events.0" title="$nav.all_events.3" ><span class="icon events">$nav.all_events.1</span></a>
-			<span id="all-events-update" class="nav-notify fakelink" rel="#nav-events-menu"></span>
-			<ul id="nav-events-menu" class="menu-popup notify-menus" rel="events">
-				<li id="nav-events-see-all"><a href="$nav.events.all.0">$nav.events.all.1</a></li>
-				<li id="nav-events-mark-all"><a href="#" onclick="/*fixme*/ return false;">$nav.events.mark.1</a></li>
+			<span id="all-all_events-update" class="nav-notify fakelink" rel="#nav-all_events-menu"></span>
+			<ul id="nav-all_events-menu" class="menu-popup notify-menus" rel="all_events">
+				<li id="nav-all_events-see-all"><a href="$nav.all_events.all.0">$nav.all_events.all.1</a></li>
+				<li id="nav-all_events-mark-all"><a href="#" onclick="/*fixme*/ return false;">$nav.all_events.mark.1</a></li>
 				<li class="empty">$emptynotifications</li>
 			</ul>
 		</li>

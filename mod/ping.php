@@ -181,6 +181,37 @@ function ping_init(&$a) {
 
 	}
 
+	if(argc() > 1 && (argv(1) === 'all_events')) {
+
+		$result = array();
+
+		$r = q("SELECT * FROM event left join xchan on event_xchan = xchan_hash
+			WHERE `event`.`uid` = %d AND start < '%s' AND start > '%s' and `ignore` = 0
+			ORDER BY `start` DESC ",
+			intval(local_user()),
+			dbesc(datetime_convert('UTC',date_default_timezone_get(),'now + 7 days')),
+			dbesc(datetime_convert('UTC',date_default_timezone_get(),'now - 1 days'))
+		);
+
+		if($r) {
+			foreach($r as $rr) {
+				$result[] = array(
+					'notify_link' => $a->get_baseurl() . '/events/' . $rr['event_hash'],
+					'name'        => $rr['xchan_name'],
+					'url'         => $rr['xchan_url'],
+					'photo'       => $rr['xchan_photo_s'],
+					'when'        => relative_date($rr['start']), 
+					'class'       => ('notify-unseen'), 
+					'message'     => t('posted an event')
+				);
+			}
+		}			
+		logger('ping: ' . print_r($result,true));
+		echo json_encode(array('notify' => $result));
+		killme();
+
+	}
+
 
 	// Normal ping - just the counts
 
