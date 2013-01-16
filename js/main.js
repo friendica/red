@@ -317,10 +317,10 @@
 				if(data.birthdays_today == 0) { data.birthdays_today = ''; $('#birthdays-today-update').removeClass('show') } else { $('#birthdays-today-update').addClass('show') }
 				$('#birthdays-today-update').html(data.birthdays_today);
 
-				if(data.all_events == 0) { data.all_events = ''; $('#all-events-update').removeClass('show') } else { $('#all-events-update').addClass('show') }
-				$('#all-events-update').html(data.all_events);
-				if(data.all_events_today == 0) { data.all_events_today = ''; $('#all-events-today-update').removeClass('show') } else { $('#all-events-today-update').addClass('show') }
-				$('#all-events-today-update').html(data.all_events_today);
+				if(data.all_events == 0) { data.all_events = ''; $('#all_events-update').removeClass('show') } else { $('#all_events-update').addClass('show') }
+				$('#all_events-update').html(data.all_events);
+				if(data.all_events_today == 0) { data.all_events_today = ''; $('#all_events-today-update').removeClass('show') } else { $('#all_events-today-update').addClass('show') }
+				$('#all_events-today-update').html(data.all_events_today);
 
 
 				$(data.notice).each(function() {
