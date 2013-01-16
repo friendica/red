@@ -236,10 +236,11 @@ function events_content(&$a) {
 				intval($_GET['id'])
 			);
 		} else {
+
 			$r = q("SELECT * from event left join item on event_hash = resource_id 
 				where resource_type = 'event' and event.uid = %d and event.ignore = %d 
-				AND (( `adjust` = 0 AND `finish` >= '%s' AND `start` <= '%s' ) 
-				OR  (  `adjust` = 1 AND `finish` >= '%s' AND `start` <= '%s' )) ",
+				AND (( `adjust` = 0 AND ( `finish` >= '%s' or nofinish ) AND `start` <= '%s' ) 
+				OR  (  `adjust` = 1 AND ( `finish` >= '%s' or nofinish ) AND `start` <= '%s' )) ",
 				intval(local_user()),
 				intval($ignored),
 				dbesc($start),
@@ -247,6 +248,7 @@ function events_content(&$a) {
 				dbesc($adjust_start),
 				dbesc($adjust_finish)
 			);
+
 		}
 
 		$links = array();

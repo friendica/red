@@ -183,6 +183,8 @@ function ping_init(&$a) {
 
 	if(argc() > 1 && (argv(1) === 'all_events')) {
 
+		$bd_format = t('g A l F d') ; // 8 AM Friday January 18
+
 		$result = array();
 
 		$r = q("SELECT * FROM event left join xchan on event_xchan = xchan_hash
@@ -195,12 +197,23 @@ function ping_init(&$a) {
 
 		if($r) {
 			foreach($r as $rr) {
+				if($rr['adjust'])
+					$md = datetime_convert('UTC',date_default_timezone_get(),$rr['start'],'Y/m');
+				else
+					$md = datetime_convert('UTC','UTC',$rr['start'],'Y/m');
+
+				$strt = datetime_convert('UTC',$rr['convert'] ? date_default_timezone_get() : 'UTC',$rr['start']);
+				$today = ((substr($strt,0,10) === datetime_convert('UTC',date_default_timezone_get(),'now','Y-m-d')) ? true : false);
+				
+				$when = day_translate(datetime_convert('UTC', $rr['adjust'] ? date_default_timezone_get() : 'UTC', $rr['start'], $bd_format)) . (($today) ?  ' ' . t('[today]') : '');
+
+
 				$result[] = array(
-					'notify_link' => $a->get_baseurl() . '/events/' . $rr['event_hash'],
+					'notify_link' => $a->get_baseurl() . '/events/event/' . $rr['event_hash'],
 					'name'        => $rr['xchan_name'],
 					'url'         => $rr['xchan_url'],
 					'photo'       => $rr['xchan_photo_s'],
-					'when'        => relative_date($rr['start']), 
+					'when'        => $when,
 					'class'       => ('notify-unseen'), 
 					'message'     => t('posted an event')
 				);

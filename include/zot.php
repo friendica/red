@@ -893,7 +893,7 @@ function process_delivery($sender,$arr,$deliveries,$relay) {
 
 		// for events, extract the event info and create and event linked to an item 
 
-		if((x($arr,'obj_type')) && (activity_compare($arr['obj_type'],ACTIVITY_OBJ_EVENT))) {
+		if((x($arr,'obj_type')) && (activity_match($arr['obj_type'],ACTIVITY_OBJ_EVENT))) {
 			require_once('include/event.php');
 			$ev = bbtoevent($arr['body']);
 			if(x($ev,'desc') && x($ev,'start')) {
@@ -905,13 +905,15 @@ function process_delivery($sender,$arr,$deliveries,$relay) {
 				// is this an edit?
 
 				$r = q("SELECT * FROM event left join item on resource_id = event_hash WHERE resource_type = 'event' and
-					`uri` = '%s' AND `uid` = %d LIMIT 1",
+					`uri` = '%s' AND event.uid = %d LIMIT 1",
 					dbesc($arr['uri']),
-					intval($importer['uid'])
+					intval($channel['channel_id'])
 				);
 				if($r)
 					$ev['event_hash'] = $r[0]['event_hash'];
+	dbg(1);
 				$xyz = event_store($ev);
+	dbg(0);
 				$result = array($d['hash'],'event processed');
 				continue;
 			}

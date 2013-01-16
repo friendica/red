@@ -271,10 +271,6 @@ function event_store($arr) {
 			intval($arr['uid'])
 		);
 
-
-
-// FIXME
-
 		if($r) {
 
 			$obj = json_encode(array(
@@ -324,14 +320,13 @@ function event_store($arr) {
 
 		$hash = random_string();
 
-		$r = q("INSERT INTO `event` ( `uid`,`aid`,`event_xchan`,`event_hash`, `message_id`,`created`,`edited`,`start`,`finish`,`summary`, `desc`,`location`,`type`,
+		$r = q("INSERT INTO `event` ( `uid`,`aid`,`event_xchan`,`event_hash`,`created`,`edited`,`start`,`finish`,`summary`, `desc`,`location`,`type`,
 			`adjust`,`nofinish`,`allow_cid`,`allow_gid`,`deny_cid`,`deny_gid`)
-			VALUES ( %d, %d, '%s', '%s', '%s', '%s', '%s', '%s', '%s', '%s', '%s', '%s', '%s', %d, %d, '%s', '%s', '%s', '%s' ) ",
+			VALUES ( %d, %d, '%s', '%s', '%s', '%s', '%s', '%s', '%s', '%s', '%s', '%s', %d, %d, '%s', '%s', '%s', '%s' ) ",
 			intval($arr['uid']),
 			intval($arr['account']),
 			dbesc($arr['event_xchan']),
 			dbesc($hash),
-			dbesc($arr['uri']),
 			dbesc($arr['created']),
 			dbesc($arr['edited']),
 			dbesc($arr['start']),
@@ -350,7 +345,7 @@ function event_store($arr) {
 		);
 
 		$r = q("SELECT * FROM `event` WHERE `event_hash` = '%s' AND `uid` = %d LIMIT 1",
-			dbesc($arr['event_hash']),
+			dbesc($hash),
 			intval($arr['uid'])
 		);
 		if(count($r))
@@ -369,6 +364,9 @@ function event_store($arr) {
 			$item_flags |= ITEM_ORIGIN;
 		}
 
+
+		$uri = item_message_id();
+
 		$private = (($arr['allow_cid'] || $arr['allow_gid'] || $arr['deny_cid'] || $arr['deny_gid']) ? 1 : 0);
 		if($private)
 			$item_flags |= ITEM_PRIVATE;
@@ -377,8 +375,9 @@ function event_store($arr) {
 
 		$item_arr['uid']           = $arr['uid'];
 		$item_arr['author_xchan']  = $arr['event_xchan'];
-		$item_arr['uri']           = $arr['message_id'];
-		$item_arr['parent_uri']    = $arr['message_id'];
+		$item_arr['uri']           = $uri;
+		$item_arr['parent_uri']    = $uri;
+
 		$item_arr['item_flags']    = $item_flags;
 
 		$item_arr['owner_xchan']   = (($wall) ? $z[0]['channel_hash'] : $arr['event_xchan']);
