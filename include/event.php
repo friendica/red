@@ -209,7 +209,7 @@ function event_store($arr) {
 	$arr['edited']  = (($arr['edited']) ? $arr['edited'] : datetime_convert());
 	$arr['type']    = (($arr['type']) ? $arr['type'] : 'event' );	
 	$arr['event_xchan'] = (($arr['event_xchan']) ? $arr['event_xchan'] : '');
-	$arr['message_id'] = (x($arr,'message_id') ? $arr['message_id'] : get_message_id());
+	$arr['message_id'] = (x($arr,'message_id') ? $arr['message_id'] : item_message_id());
 	$arr['private'] = ((x($arr,'private')) ? intval($arr['private']) : 0);
 
 
@@ -327,12 +327,12 @@ function event_store($arr) {
 
 		$hash = random_string();
 
-		$r = q("INSERT INTO `event` ( `uid`,`account`,`event_xchan`,`event_hash`, `message_id`,`created`,`edited`,`start`,`finish`,`summary`, `desc`,`location`,`type`,
+		$r = q("INSERT INTO `event` ( `uid`,`aid`,`event_xchan`,`event_hash`, `message_id`,`created`,`edited`,`start`,`finish`,`summary`, `desc`,`location`,`type`,
 			`adjust`,`nofinish`,`allow_cid`,`allow_gid`,`deny_cid`,`deny_gid`)
 			VALUES ( %d, %d, '%s', '%s', '%s', '%s', '%s', '%s', '%s', '%s', '%s', '%s', '%s', %d, %d, '%s', '%s', '%s', '%s' ) ",
-			intval($arr['account']),
 			intval($arr['uid']),
-			intval($arr['event_xchan']),
+			intval($arr['account']),
+			dbesc($arr['event_xchan']),
 			dbesc($hash),
 			dbesc($arr['uri']),
 			dbesc($arr['created']),
@@ -397,7 +397,7 @@ function event_store($arr) {
 		$item_arr['resource_id']   = $hash;
 
 		$item_arr['obj_type']   = ACTIVITY_OBJ_EVENT;
-		$item_arr['body']          = format_event_bbcode($event);
+		$item_arr['body']          = format_event_bbcode($arr);
 
 		$x = q("select * from xchan where xchan_hash = '%s' limit 1",
 				dbesc($arr['event_xchan'])
