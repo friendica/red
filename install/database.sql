@@ -223,6 +223,7 @@ CREATE TABLE IF NOT EXISTS `event` (
   `aid` int(10) unsigned NOT NULL DEFAULT '0',
   `uid` int(11) NOT NULL,
   `event_xchan` char(255) NOT NULL DEFAULT '',
+  `event_hash` char(255) NOT NULL DEFAULT '',
   `message_id` char(255) NOT NULL,
   `created` datetime NOT NULL,
   `edited` datetime NOT NULL,
@@ -249,7 +250,8 @@ CREATE TABLE IF NOT EXISTS `event` (
   KEY `adjust` (`adjust`),
   KEY `nofinish` (`nofinish`),
   KEY `ignore` (`ignore`),
-  KEY `aid` (`aid`)
+  KEY `aid` (`aid`),
+  KEY `event_hash` (`event_hash`)
 ) ENGINE=MyISAM DEFAULT CHARSET=utf8;
 
 CREATE TABLE IF NOT EXISTS `fcontact` (

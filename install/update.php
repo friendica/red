@@ -1,6 +1,6 @@
 <?php
 
-define( 'UPDATE_VERSION' , 1018 );
+define( 'UPDATE_VERSION' , 1019 );
 
 /**
  *
@@ -269,3 +269,13 @@ function update_r1017() {
 		return UPDATE_SUCCESS;
 	return UPDATE_FAILED;
 }
+
+function update_r1018() {
+	$r = q("ALTER TABLE `event` ADD `event_hash` CHAR( 255 ) NOT NULL DEFAULT '' AFTER `event_xchan` ,
+ADD INDEX ( `event_hash` )");
+	if($r)
+		return UPDATE_SUCCESS;
+	return UPDATE_FAILED;
+}
+
+

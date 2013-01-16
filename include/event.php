@@ -213,22 +213,6 @@ function event_store($arr) {
 	$arr['private'] = ((x($arr,'private')) ? intval($arr['private']) : 0);
 
 
-// FIXME
-/*
-	if($arr['cid'])
-		$c = q("SELECT * FROM `contact` WHERE `id` = %d AND `uid` = %d LIMIT 1",
-			intval($arr['cid']),
-			intval($arr['uid'])
-		);
-	else
-		$c = q("SELECT * FROM `contact` WHERE `self` = 1 AND `uid` = %d LIMIT 1",
-			intval($arr['uid'])
-		);
-
-	if(count($c))
-		$contact = $c[0];
-*/
-
 	// Existing event being modified
 
 	if($arr['id']) {
@@ -239,15 +223,15 @@ function event_store($arr) {
 			intval($arr['id']),
 			intval($arr['uid'])
 		);
-		if((! count($r)) || ($r[0]['edited'] === $arr['edited'])) {
+		if((! $r) || ($r[0]['edited'] === $arr['edited'])) {
 
 			// Nothing has changed. Grab the item id to return.
 
-			$r = q("SELECT * FROM `item` WHERE `event-id` = %d AND `uid` = %d LIMIT 1",
-				intval($arr['id']),
+			$r = q("SELECT id FROM item WHERE resource_type = 'event' and resource_id = '%s' AND uid = %d LIMIT 1",
+				intval($arr['event_hash']),
 				intval($arr['uid'])
 			);
-			return((count($r)) ? $r[0]['id'] : 0);
+			return(($r) ? $r[0]['id'] : 0);
 		}
 
 		// The event changed. Update it.
@@ -285,23 +269,37 @@ function event_store($arr) {
 			intval($arr['uid'])
 		);
 
-		$r = q("SELECT * FROM item WHERE resource_id = %d AND resource_type = 'event' and uid = %d LIMIT 1",
-			intval($arr['id']),
+		$r = q("SELECT * FROM item left join xchan on author_xchan = xchan_hash WHERE resource_id = '%s' AND resource_type = 'event' and uid = %d LIMIT 1",
+			intval($arr['event_hash']),
 			intval($arr['uid'])
 		);
 
+
+
 // FIXME
 
-		if(count($r)) {
+		if($r) {
 
-/*
-			$object = '<object><type>' . xmlify(ACTIVITY_OBJ_EVENT) . '</type><title></title><id>' . xmlify($arr['message_id']) . '</id>';
-			$object .= '<content>' . xmlify(format_event_bbcode($arr)) . '</content>';
-			$object .= '</object>' . "\n";
-*/
-/*
+			$obj = json_encode(array(
+				'type'    => ACTIVITY_OBJ_EVENT,
+				'id'      => z_root() . '/event/' . $r[0]['resource_id'],
+				'title'   => $arr['summary'],
+				'content' => format_event_bbcode($arr),
+				'author'  => array(
+					'name'     => $r[0]['xchan_name'],
+					'address'  => $r[0]['xchan_addr'],
+					'guid'     => $r[0]['xchan_guid'],
+					'guid_sig' => $r[0]['xchan_guid_sig'],
+					'link'     => array(
+						array('rel' => 'alternate', 'type' => 'text/html', 'href' => $r[0]['xchan_url']),
+						array('rel' => 'photo', 'type' => $r[0]['xchan_photo_mimetype'], 'href' => $r[0]['xchan_photo_m'])),
+					),
+			));
 
-			q("UPDATE `item` SET `body` = '%s', `object` = '%s', `allow_cid` = '%s', `allow_gid` = '%s', `deny_cid` = '%s', `deny_gid` = '%s', `edited` = '%s', `private` = %d WHERE `id` = %d AND `uid` = %d LIMIT 1",
+			$private = (($arr['allow_cid'] || $arr['allow_gid'] || $arr['deny_cid'] || $arr['deny_gid']) ? 1 : 0);
+
+			q("UPDATE item SET title = '%s', body = '%s', object = '%s', allow_cid = '%s', allow_gid = '%s', deny_cid = '%s', deny_gid = '%s', edited = '%s', item_flags = %d WHERE id = %d AND uid = %d LIMIT 1",
+				dbesc($arr['summary']),
 				dbesc(format_event_bbcode($arr)),
 				dbesc($object),
 				dbesc($arr['allow_cid']),
@@ -309,17 +307,17 @@ function event_store($arr) {
 				dbesc($arr['deny_cid']),
 				dbesc($arr['deny_gid']),
 				dbesc($arr['edited']),
-				intval($arr['private']),
+				intval(($private && ($r[0]['item_flags'] & ITEM_PRIVATE)) ? $r[0]['item_flags'] : $r[0]['item_flags'] ^ ITEM_PRIVATE),
 				intval($r[0]['id']),
 				intval($arr['uid'])
 			);
-*/
+
 			$item_id = $r[0]['id'];
 		}
 		else
 			$item_id = 0;
 
-		call_hooks("event_updated", $arr['id']);
+		call_hooks('event_updated', $arr['id']);
 
 		return $item_id;
 	}
@@ -327,12 +325,15 @@ function event_store($arr) {
 
 		// New event. Store it. 
 
-		$r = q("INSERT INTO `event` ( `uid`,`account`,`event_xchan`,`message_id`,`created`,`edited`,`start`,`finish`,`summary`, `desc`,`location`,`type`,
+		$hash = random_string();
+
+		$r = q("INSERT INTO `event` ( `uid`,`account`,`event_xchan`,`event_hash`, `message_id`,`created`,`edited`,`start`,`finish`,`summary`, `desc`,`location`,`type`,
 			`adjust`,`nofinish`,`allow_cid`,`allow_gid`,`deny_cid`,`deny_gid`)
-			VALUES ( %d, %d, '%s', '%s', '%s', '%s', '%s', '%s', '%s', '%s', '%s', '%s', %d, %d, '%s', '%s', '%s', '%s' ) ",
+			VALUES ( %d, %d, '%s', '%s', '%s', '%s', '%s', '%s', '%s', '%s', '%s', '%s', '%s', %d, %d, '%s', '%s', '%s', '%s' ) ",
 			intval($arr['account']),
 			intval($arr['uid']),
 			intval($arr['event_xchan']),
+			dbesc($hash),
 			dbesc($arr['uri']),
 			dbesc($arr['created']),
 			dbesc($arr['edited']),
@@ -351,68 +352,77 @@ function event_store($arr) {
 
 		);
 
-		$r = q("SELECT * FROM `event` WHERE `hash` = '%s' AND `uid` = %d LIMIT 1",
-			dbesc($arr['hash']),
+		$r = q("SELECT * FROM `event` WHERE `event_hash` = '%s' AND `uid` = %d LIMIT 1",
+			dbesc($arr['event_hash']),
 			intval($arr['uid'])
 		);
 		if(count($r))
 			$event = $r[0];
 
+		$z = q("select * from channel where channel_hash = '%s' and channel_id = %d limit 1",
+			dbesc($arr['event_xchan']),
+			intval($arr['uid'])
+		);
+
+		$wall = (($z) ? true : false);
+
+		$item_flags = ITEM_THREAD_TOP;
+		if($wall) {
+			$item_flags |= ITEM_WALL;
+			$item_flags |= ITEM_ORIGIN;
+		}
+
+		$private = (($arr['allow_cid'] || $arr['allow_gid'] || $arr['deny_cid'] || $arr['deny_gid']) ? 1 : 0);
+		if($private)
+			$item_flags |= ITEM_PRIVATE;
+				
 		$item_arr = array();
 
-
 		$item_arr['uid']           = $arr['uid'];
-/*		$item_arr['contact-id']    = $arr['cid']; */
+		$item_arr['author_xchan']  = $arr['event_xchan'];
 		$item_arr['uri']           = $arr['message_id'];
 		$item_arr['parent_uri']    = $arr['message_id'];
-/*		$item_arr['type']          = 'activity';
-		$item_arr['wall']          = (($arr['cid']) ? 0 : 1);
-		$item_arr['contact-id']    = $contact['id'];
-		$item_arr['owner-name']    = $contact['name'];
-		$item_arr['owner-link']    = $contact['url'];
-		$item_arr['owner-avatar']  = $contact['thumb'];
-		$item_arr['author-name']   = $contact['name'];
-		$item_arr['author-link']   = $contact['url'];
-		$item_arr['author-avatar'] = $contact['thumb'];
-*/
-		$item_arr['title']         = '';
+		$item_arr['item_flags']    = $item_flags;
+
+		$item_arr['owner_xchan']   = (($wall) ? $z[0]['channel_hash'] : $arr['event_xchan']);
+		$item_arr['author_xchan']  = $arr['event_xchan'];
+		$item_arr['title']         = $arr['summary'];
 		$item_arr['allow_cid']     = $arr['allow_cid'];
 		$item_arr['allow_gid']     = $arr['allow_gid'];
 		$item_arr['deny_cid']      = $arr['deny_cid'];
 		$item_arr['deny_gid']      = $arr['deny_gid'];
-
-/*		$item_arr['private']       = $arr['private'];
-		$item_arr['last-child']    = 1;
-		$item_arr['visible']       = 1;
-*/
 		$item_arr['verb']          = ACTIVITY_POST;
-		$item_arr['obj_type']   = ACTIVITY_OBJ_EVENT;
-/*		$item_arr['origin']        = ((intval($arr['cid']) == 0) ? 1 : 0); */
 
+		$item_arr['resource_type'] = 'event';
+		$item_arr['resource_id']   = $hash;
+
+		$item_arr['obj_type']   = ACTIVITY_OBJ_EVENT;
 		$item_arr['body']          = format_event_bbcode($event);
 
-/*
-		$item_arr['object'] = '<object><type>' . xmlify(ACTIVITY_OBJ_EVENT) . '</type><title></title><id>' . xmlify($arr['message_id']) . '</id>';
-		$item_arr['object'] .= '<content>' . xmlify(format_event_bbcode($event)) . '</content>';
-		$item_arr['object'] .= '</object>' . "\n";
-*/
-		$item_id = item_store($item_arr);
-
-		$r = q("SELECT * FROM `user` WHERE `uid` = %d LIMIT 1",
-			intval($arr['uid'])
+		$x = q("select * from xchan where xchan_hash = '%s' limit 1",
+				dbesc($arr['event_xchan'])
 		);
-		if(count($r))
-			$plink = $a->get_baseurl() . '/display/' . $r[0]['nickname'] . '/' . $item_id;
+		if($x) {
 
-
-		if($item_id) {
-			q("UPDATE `item` SET `plink` = '%s', `event-id` = %d  WHERE `uid` = %d AND `id` = %d LIMIT 1",
-				dbesc($plink),
-				intval($event['id']),
-				intval($arr['uid']),
-				intval($item_id)
-			);
+			$item_arr['object'] = json_encode(array(
+				'type'    => ACTIVITY_OBJ_EVENT,
+				'id'      => z_root() . '/event/' . $hash,
+				'title'   => $arr['summary'],
+				'content' => format_event_bbcode($arr),
+				'author'  => array(
+					'name'     => $x[0]['xchan_name'],
+					'address'  => $x[0]['xchan_addr'],
+					'guid'     => $x[0]['xchan_guid'],
+					'guid_sig' => $x[0]['xchan_guid_sig'],
+					'link'     => array(
+						array('rel' => 'alternate', 'type' => 'text/html', 'href' => $x[0]['xchan_url']),
+						array('rel' => 'photo', 'type' => $x[0]['xchan_photo_mimetype'], 'href' => $x[0]['xchan_photo_m'])),
+					),
+			));
 		}
+
+
+		$item_id = item_store($item_arr);
 
 		call_hooks("event_created", $event['id']);
 
