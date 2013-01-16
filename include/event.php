@@ -208,12 +208,13 @@ function event_store($arr) {
 	$arr['created'] = (($arr['created']) ? $arr['created'] : datetime_convert());
 	$arr['edited']  = (($arr['edited']) ? $arr['edited'] : datetime_convert());
 	$arr['type']    = (($arr['type']) ? $arr['type'] : 'event' );	
-	$arr['cid']     = ((intval($arr['cid'])) ? intval($arr['cid']) : 0);
+	$arr['event_xchan'] = (($arr['event_xchan']) ? $arr['event_xchan'] : '');
 	$arr['message_id'] = (x($arr,'message_id') ? $arr['message_id'] : get_message_id());
 	$arr['private'] = ((x($arr,'private')) ? intval($arr['private']) : 0);
 
 
 // FIXME
+/*
 	if($arr['cid'])
 		$c = q("SELECT * FROM `contact` WHERE `id` = %d AND `uid` = %d LIMIT 1",
 			intval($arr['cid']),
@@ -226,7 +227,7 @@ function event_store($arr) {
 
 	if(count($c))
 		$contact = $c[0];
-
+*/
 
 	// Existing event being modified
 
@@ -283,15 +284,22 @@ function event_store($arr) {
 			intval($arr['id']),
 			intval($arr['uid'])
 		);
-		$r = q("SELECT * FROM `item` WHERE `event-id` = %d AND `uid` = %d LIMIT 1",
+
+		$r = q("SELECT * FROM item WHERE resource_id = %d AND resource_type = 'event' and uid = %d LIMIT 1",
 			intval($arr['id']),
 			intval($arr['uid'])
 		);
+
+// FIXME
+
 		if(count($r)) {
+
+/*
 			$object = '<object><type>' . xmlify(ACTIVITY_OBJ_EVENT) . '</type><title></title><id>' . xmlify($arr['message_id']) . '</id>';
 			$object .= '<content>' . xmlify(format_event_bbcode($arr)) . '</content>';
 			$object .= '</object>' . "\n";
-
+*/
+/*
 
 			q("UPDATE `item` SET `body` = '%s', `object` = '%s', `allow_cid` = '%s', `allow_gid` = '%s', `deny_cid` = '%s', `deny_gid` = '%s', `edited` = '%s', `private` = %d WHERE `id` = %d AND `uid` = %d LIMIT 1",
 				dbesc(format_event_bbcode($arr)),
@@ -305,7 +313,7 @@ function event_store($arr) {
 				intval($r[0]['id']),
 				intval($arr['uid'])
 			);
-
+*/
 			$item_id = $r[0]['id'];
 		}
 		else
@@ -319,12 +327,12 @@ function event_store($arr) {
 
 		// New event. Store it. 
 
-		$r = q("INSERT INTO `event` ( `uid`,`account`,`cid`,`message_id`,`created`,`edited`,`start`,`finish`,`summary`, `desc`,`location`,`type`,
+		$r = q("INSERT INTO `event` ( `uid`,`account`,`event_xchan`,`message_id`,`created`,`edited`,`start`,`finish`,`summary`, `desc`,`location`,`type`,
 			`adjust`,`nofinish`,`allow_cid`,`allow_gid`,`deny_cid`,`deny_gid`)
-			VALUES ( %d, %d, %d, '%s', '%s', '%s', '%s', '%s', '%s', '%s', '%s', '%s', %d, %d, '%s', '%s', '%s', '%s' ) ",
+			VALUES ( %d, %d, '%s', '%s', '%s', '%s', '%s', '%s', '%s', '%s', '%s', '%s', %d, %d, '%s', '%s', '%s', '%s' ) ",
 			intval($arr['account']),
 			intval($arr['uid']),
-			intval($arr['cid']),
+			intval($arr['event_xchan']),
 			dbesc($arr['uri']),
 			dbesc($arr['created']),
 			dbesc($arr['edited']),
@@ -354,10 +362,10 @@ function event_store($arr) {
 
 
 		$item_arr['uid']           = $arr['uid'];
-		$item_arr['contact-id']    = $arr['cid'];
+/*		$item_arr['contact-id']    = $arr['cid']; */
 		$item_arr['uri']           = $arr['message_id'];
 		$item_arr['parent_uri']    = $arr['message_id'];
-		$item_arr['type']          = 'activity';
+/*		$item_arr['type']          = 'activity';
 		$item_arr['wall']          = (($arr['cid']) ? 0 : 1);
 		$item_arr['contact-id']    = $contact['id'];
 		$item_arr['owner-name']    = $contact['name'];
@@ -366,24 +374,28 @@ function event_store($arr) {
 		$item_arr['author-name']   = $contact['name'];
 		$item_arr['author-link']   = $contact['url'];
 		$item_arr['author-avatar'] = $contact['thumb'];
+*/
 		$item_arr['title']         = '';
 		$item_arr['allow_cid']     = $arr['allow_cid'];
 		$item_arr['allow_gid']     = $arr['allow_gid'];
 		$item_arr['deny_cid']      = $arr['deny_cid'];
 		$item_arr['deny_gid']      = $arr['deny_gid'];
-		$item_arr['private']       = $arr['private'];
+
+/*		$item_arr['private']       = $arr['private'];
 		$item_arr['last-child']    = 1;
 		$item_arr['visible']       = 1;
+*/
 		$item_arr['verb']          = ACTIVITY_POST;
 		$item_arr['obj_type']   = ACTIVITY_OBJ_EVENT;
-		$item_arr['origin']        = ((intval($arr['cid']) == 0) ? 1 : 0);
+/*		$item_arr['origin']        = ((intval($arr['cid']) == 0) ? 1 : 0); */
+
 		$item_arr['body']          = format_event_bbcode($event);
 
-
+/*
 		$item_arr['object'] = '<object><type>' . xmlify(ACTIVITY_OBJ_EVENT) . '</type><title></title><id>' . xmlify($arr['message_id']) . '</id>';
 		$item_arr['object'] .= '<content>' . xmlify(format_event_bbcode($event)) . '</content>';
 		$item_arr['object'] .= '</object>' . "\n";
-
+*/
 		$item_id = item_store($item_arr);
 
 		$r = q("SELECT * FROM `user` WHERE `uid` = %d LIMIT 1",

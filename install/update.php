@@ -1,6 +1,6 @@
 <?php
 
-define( 'UPDATE_VERSION' , 1017 );
+define( 'UPDATE_VERSION' , 1018 );
 
 /**
  *
@@ -259,6 +259,13 @@ function update_r1016() {
 
 
 	if($r && $r2)
+		return UPDATE_SUCCESS;
+	return UPDATE_FAILED;
+}
+
+function update_r1017() {
+	$r = q("ALTER TABLE `event` CHANGE `cid` `event_xchan` CHAR( 255 ) NOT NULL DEFAULT '', ADD INDEX ( `event_xchan` ), drop index cid  ");
+	if($r)
 		return UPDATE_SUCCESS;
 	return UPDATE_FAILED;
 }
