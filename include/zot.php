@@ -885,12 +885,39 @@ function process_delivery($sender,$arr,$deliveries,$relay) {
 			continue;
 		}
 	
-
 		if($arr['item_restrict'] & ITEM_DELETED) {
 			delete_imported_item($sender,$arr,$channel['channel_id']);
 			$result[] = array($d['hash'],'deleted');
 			continue;
 		}
+
+		// for events, extract the event info and create and event linked to an item 
+
+		if((x($arr,'obj_type')) && (activity_compare($arr['obj_type'],ACTIVITY_OBJ_EVENT))) {
+			require_once('include/event.php');
+			$ev = bbtoevent($arr['body']);
+			if(x($ev,'desc') && x($ev,'start')) {
+				$ev['event_xchan'] = $arr['author_xchan'];
+				$ev['uid']         = $channel['channel_id'];
+				$ev['account']     = $channel['channel_account_id'];
+				$ev['edited']      = $arr['edited'];
+
+				// is this an edit?
+
+				$r = q("SELECT * FROM event left join item on resource_id = event_hash WHERE resource_type = 'event' and
+					`uri` = '%s' AND `uid` = %d LIMIT 1",
+					dbesc($arr['uri']),
+					intval($importer['uid'])
+				);
+				if($r)
+					$ev['event_hash'] = $r[0]['event_hash'];
+				$xyz = event_store($ev);
+				$result = array($d['hash'],'event processed');
+				continue;
+			}
+		}
+
+
 
 		$r = q("select id, edited from item where uri = '%s' and uid = %d limit 1",
 			dbesc($arr['uri']),

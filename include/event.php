@@ -209,10 +209,7 @@ function event_store($arr) {
 	$arr['edited']  = (($arr['edited']) ? $arr['edited'] : datetime_convert());
 	$arr['type']    = (($arr['type']) ? $arr['type'] : 'event' );	
 	$arr['event_xchan'] = (($arr['event_xchan']) ? $arr['event_xchan'] : '');
-	$arr['message_id'] = (x($arr,'message_id') ? $arr['message_id'] : item_message_id());
-	$arr['private'] = ((x($arr,'private')) ? intval($arr['private']) : 0);
-
-
+	
 	// Existing event being modified
 
 	if($arr['id']) {

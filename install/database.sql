@@ -224,7 +224,6 @@ CREATE TABLE IF NOT EXISTS `event` (
   `uid` int(11) NOT NULL,
   `event_xchan` char(255) NOT NULL DEFAULT '',
   `event_hash` char(255) NOT NULL DEFAULT '',
-  `message_id` char(255) NOT NULL,
   `created` datetime NOT NULL,
   `edited` datetime NOT NULL,
   `start` datetime NOT NULL,
