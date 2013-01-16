@@ -237,6 +237,12 @@ function events_content(&$a) {
 			);
 		} else {
 
+			// fixed an issue with "nofinish" events not showing up in the calendar.
+			// There's still an issue if the finish date crosses the end of month.
+			// Noting this for now - it will need to be fixed here and in Friendica.
+			// Ultimately the finish date shouldn't be involved in the query. 
+
+
 			$r = q("SELECT * from event left join item on event_hash = resource_id 
 				where resource_type = 'event' and event.uid = %d and event.ignore = %d 
 				AND (( `adjust` = 0 AND ( `finish` >= '%s' or nofinish ) AND `start` <= '%s' ) 
