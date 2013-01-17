@@ -124,15 +124,19 @@
 			if (strpos($a->query_string, $p)===0){
 				$called_api= explode("/",$p);
 				//unset($_SERVER['PHP_AUTH_USER']);
-				if ($info['auth']===true && api_user()===false) {
+				if ($info['auth'] === true && api_user() === false) {
 						api_login($a);
 				}
 
 				load_contact_links(api_user());
 
-				logger('API call for ' . $a->user['username'] . ': ' . $a->query_string);
+				$channel = $a->get_channel();
+
+				logger('API call for ' . $channel['channel_name'] . ': ' . $a->query_string);
 				logger('API parameters: ' . print_r($_REQUEST,true));
+
 				$type="json";
+
 				if (strpos($a->query_string, ".xml")>0) $type="xml";
 				if (strpos($a->query_string, ".json")>0) $type="json";
 				if (strpos($a->query_string, ".rss")>0) $type="rss";
@@ -149,7 +153,7 @@
 						return '<?xml version="1.0" encoding="UTF-8"?>'."\n".$r;
 						break;
 					case "json":
-						//header ("Content-Type: application/json");
+						header ("Content-Type: application/json");
 						foreach($r as $rr)
 						    return json_encode($rr);
 						break;
@@ -286,10 +290,10 @@
 
 			// count public wall messages
 			$r = q("SELECT COUNT(`id`) as `count` FROM `item`
-					WHERE  `uid` = %d
+					WHERE `uid` = %d
 					AND ( item_flags & %d ) and item_restrict = 0 
 					AND `allow_cid`='' AND `allow_gid`='' AND `deny_cid`='' AND `deny_gid`=''",
-					intval($uinfo[0]['uid']),
+					intval($usr[0]['channel_id']),
 					intval(ITEM_WALL)
 			);
 			$countitms = $r[0]['count'];
@@ -305,54 +309,47 @@
 
 
 		// count friends
-		$r = q("SELECT COUNT(`id`) as `count` FROM `contact`
-				WHERE  `uid` = %d AND `rel` IN ( %d, %d )
-				AND `self`=0 AND `blocked`=0 AND `pending`=0 AND `hidden`=0", 
-				intval($uinfo[0]['uid']),
-				intval(CONTACT_IS_SHARING),
-				intval(CONTACT_IS_FRIEND)
-		);
-		$countfriends = $r[0]['count'];
+		if($usr) {
+			$r = q("SELECT COUNT(abook_id) as `count` FROM abook
+					WHERE abook_channel = %d AND abook_flags = 0 ",
+					intval($usr[0]['channel_id'])
+			);
+			$countfriends = $r[0]['count'];
+			$countfollowers = $r[0]['count'];
+		}
 
-		$r = q("SELECT COUNT(`id`) as `count` FROM `contact`
-				WHERE  `uid` = %d AND `rel` IN ( %d, %d )
-				AND `self`=0 AND `blocked`=0 AND `pending`=0 AND `hidden`=0", 
-				intval($uinfo[0]['uid']),
-				intval(CONTACT_IS_FOLLOWER),
-				intval(CONTACT_IS_FRIEND)
-		);
-		$countfollowers = $r[0]['count'];
-
-		$r = q("SELECT count(`id`) as `count` FROM item where starred = 1 and uid = %d and deleted = 0",
-			intval($uinfo[0]['uid'])
+		$r = q("SELECT count(`id`) as `count` FROM item where ( item_flags & %d ) and uid = %d and item_restrict = 0",
+			intval($uinfo[0]['channel_id']),
+			intval(ITEM_STARRED)
 		);
 		$starred = $r[0]['count'];
 	
 
-		if(! $uinfo[0]['self']) {
+		if(! ($uinfo[0]['abook_flags'] & ABOOK_FLAG_SELF)) {
 			$countfriends = 0;
 			$countfollowers = 0;
 			$starred = 0;
 		}
 
 		$ret = Array(
-			'id' => intval($uinfo[0]['cid']),
-			'self' => intval($uinfo[0]['self']),
-			'uid' => intval($uinfo[0]['uid']),
-			'name' => (($uinfo[0]['name']) ? $uinfo[0]['name'] : $uinfo[0]['nick']),
-			'screen_name' => (($uinfo[0]['nick']) ? $uinfo[0]['nick'] : $uinfo[0]['name']),
-			'location' => ($usr) ? $usr[0]['default-location'] : '',
-			'profile_image_url' => $uinfo[0]['micro'],
-			'url' => $uinfo[0]['url'],
-			'contact_url' => $a->get_baseurl()."/contacts/".$uinfo[0]['cid'],
+			'id' => intval($uinfo[0]['abook_id']),
+			'self' => (($uinfo[0]['abook_flags'] & ABOOK_FLAG_SELF) ? 1 : 0),
+			'uid' => intval($uinfo[0]['abook_channel']),
+			'guid' => $uinfo[0]['xchan_hash'],
+			'name' => (($uinfo[0]['xchan_name']) ? $uinfo[0]['xchan_name'] : substr($uinfo[0]['xchan_addr'],0,strpos($uinfo[0]['xchan_addr'],'@'))),
+			'screen_name' => substr($uinfo[0]['xchan_addr'],0,strpos($uinfo[0]['xchan_addr'],'@')),
+			'location' => ($usr) ? $usr[0]['channel_location'] : '',
+			'profile_image_url' => $uinfo[0]['xchan_photo_l'],
+			'url' => $uinfo[0]['xchan_url'],
+			'contact_url' => $a->get_baseurl()."/connnections/".$uinfo[0]['abook_id'],
 			'protected' => false,	
 			'friends_count' => intval($countfriends),
-			'created_at' => api_date($uinfo[0]['name_date']),
+			'created_at' => api_date($uinfo[0]['abook_created']),
 			'utc_offset' => "+00:00",
 			'time_zone' => 'UTC', //$uinfo[0]['timezone'],
 			'geo_enabled' => false,
 			'statuses_count' => intval($countitms), #XXX: fix me 
-			'lang' => 'en', #XXX: fix me
+			'lang' => get_app()->language,
 			'description' => (($profile) ? $profile[0]['pdesc'] : ''),
 			'followers_count' => intval($countfollowers),
 			'favourites_count' => intval($starred),
@@ -486,18 +483,24 @@
 
 	}
 	api_register_func('api/account/verify_credentials','api_account_verify_credentials', true);
+
+
+	function api_account_logout(&$a, $type){
+		require_once('include/auth.php');
+		nuke_session();
+		return api_apply_template("user", $type, array('$user' => null));
+
+	}
+	api_register_func('api/account/logout','api_account_logout', false);
 	 	
 
+
 	/**
-	 * get data from $_POST or $_GET
+	 * get data from $_REQUEST ( e.g. $_POST or $_GET )
 	 */
-	function requestdata($k){
-		if (isset($_POST[$k])){
-			return $_POST[$k];
-		}
-		if (isset($_GET[$k])){
-			return $_GET[$k];
-		}
+	function requestdata($k) {
+		if(array_key_exists($k,$_REQUEST))
+			return $_REQUEST[$k];
 		return null;
 	}
 
@@ -527,21 +530,21 @@
 		}
 		$txt = html2bbcode($txt);
 		
-                $a->argv[1]=$user_info['screen_name']; //should be set to username?
+        $a->argv[1] = $user_info['screen_name'];
 		
 		$_REQUEST['silent']='1'; //tell wall_upload function to return img info instead of echo
-                require_once('mod/wall_upload.php');
+		require_once('mod/wall_upload.php');
 		$bebop = wall_upload_post($a);
                 
 		//now that we have the img url in bbcode we can add it to the status and insert the wall item.
-                $_REQUEST['body']=$txt."\n\n".$bebop;
-                require_once('mod/item.php');
-                item_post($a);
+		$_REQUEST['body']=$txt."\n\n".$bebop;
+		require_once('mod/item.php');
+		item_post($a);
 
-                // this should output the last post (the one we just posted).
-                return api_status_show($a,$type);
-        }
-        api_register_func('api/statuses/mediap','api_statuses_mediap', true);
+		// this should output the last post (the one we just posted).
+		return api_status_show($a,$type);
+	}
+	api_register_func('api/statuses/mediap','api_statuses_mediap', true);
 
 
 
@@ -623,30 +626,44 @@
 
 	function api_status_show(&$a, $type){
 		$user_info = api_get_user($a);
-		// get last public wall message
-		$lastwall = q("SELECT `item`.*, `i`.`contact-id` as `reply_uid`, `i`.`nick` as `reply_author`
-				FROM `item`, `contact`,
-					(SELECT `item`.`id`, `item`.`contact-id`, `contact`.`nick` FROM `item`,`contact` WHERE `contact`.`id`=`item`.`contact-id`) as `i` 
-				WHERE `item`.`contact-id` = %d
-					AND `i`.`id` = `item`.`parent`
-					AND `contact`.`id`=`item`.`contact-id` AND `contact`.`self`=1
-					AND `type`!='activity'
-					AND `item`.`allow_cid`='' AND `item`.`allow_gid`='' AND `item`.`deny_cid`='' AND `item`.`deny_gid`=''
-				ORDER BY `created` DESC 
-				LIMIT 1",
-				intval($user_info['id'])
+
+		// get last public message
+
+		$lastwall = q("SELECT * from item where 1
+			and not ( item_flags & %d ) and item_restrict = 0
+			and author_xchan = '%s'
+			and allow_cid = '' and allow_gid = '' and deny_cid = '' and deny_gid = ''
+			and verb = '%s'
+			order by created desc limit 1",
+			intval(ITEM_PRIVATE),
+			dbesc($user_info['guid']),
+			dbesc(ACTIVITY_POST)
 		);
 
-		if (count($lastwall)>0){
+		if($lastwall){
 			$lastwall = $lastwall[0];
 			
 			$in_reply_to_status_id = '';
 			$in_reply_to_user_id = '';
 			$in_reply_to_screen_name = '';
+
+			if($lastwall['author_xchan'] != $lastwall['owner_xchan']) {
+				$w = q("select * from abook left join xchan on abook_xchan = xchan_hash where
+					xchan_hash = '%s' limit 1",
+					dbesc($lastwall['owner_xchan'])
+				);
+				if($w) {
+					$in_reply_to_user_id = $w[0]['abook_id'];
+					$in_reply_to_screen_name = substr($w[0]['xchan_addr'],0,strpos($w[0]['xchan_addr'],'@'));
+				}
+			}
+			
 			if ($lastwall['parent']!=$lastwall['id']) {
-				$in_reply_to_status_id=$lastwall['parent'];
-				$in_reply_to_user_id = $lastwall['reply_uid'];
-				$in_reply_to_screen_name = $lastwall['reply_author'];
+				$in_reply_to_status_id=$lastwall['thr_parent'];
+				if(! $in_reply_to_user_id) {
+					$in_reply_to_user_id = $user_info['id'];
+					$in_reply_to_screen_name = $user_info['screen_name'];
+				}
 			}  
 			$status_info = array(
 				'text' => html2plain(bbcode($lastwall['body']), 0),
@@ -654,7 +671,7 @@
 				'created_at' => api_date($lastwall['created']),
 				'in_reply_to_status_id' => $in_reply_to_status_id,
 				'source' => (($lastwall['app']) ? $lastwall['app'] : 'web'),
-				'id' => $lastwall['contact-id'],
+				'id' => (($w) ? $w[0]['abook_id'] : $user_info['id']),
 				'in_reply_to_user_id' => $in_reply_to_user_id,
 				'in_reply_to_screen_name' => $in_reply_to_screen_name,
 				'geo' => '',
@@ -669,57 +686,71 @@
 		
 	}
 
-
-
-
 		
 	/**
 	 * Returns extended information of a given user, specified by ID or screen name as per the required id parameter.
 	 * The author's most recent status will be returned inline.
 	 * http://developer.twitter.com/doc/get/users/show
 	 */
+
+// FIXME - this is essentially the same as api_status_show except for the template formatting at the end. Consolidate.
+ 
+
 	function api_users_show(&$a, $type){
 		$user_info = api_get_user($a);
-		// get last public wall message
-		$lastwall = q("SELECT `item`.*, `i`.`contact-id` as `reply_uid`, `i`.`nick` as `reply_author`
-				FROM `item`, `contact`,
-					(SELECT `item`.`id`, `item`.`contact-id`, `contact`.`nick` FROM `item`,`contact` WHERE `contact`.`id`=`item`.`contact-id`) as `i` 
-				WHERE `item`.`contact-id` = %d
-					AND `i`.`id` = `item`.`parent`
-					AND `contact`.`id`=`item`.`contact-id` AND `contact`.`self`=1
-					AND `type`!='activity'
-					AND `item`.`allow_cid`='' AND `item`.`allow_gid`='' AND `item`.`deny_cid`='' AND `item`.`deny_gid`=''
-				ORDER BY `created` DESC 
-				LIMIT 1",
-				intval($user_info['id'])
+
+		$lastwall = q("SELECT * from item where 1
+			and not ( item_flags & %d ) and item_restrict = 0
+			and author_xchan = '%s'
+			and allow_cid = '' and allow_gid = '' and deny_cid = '' and deny_gid = ''
+			and verb = '%s'
+			order by created desc limit 1",
+			intval(ITEM_PRIVATE),
+			dbesc($user_info['guid']),
+			dbesc(ACTIVITY_POST)
 		);
 
-		if (count($lastwall)>0){
+		if($lastwall){
 			$lastwall = $lastwall[0];
 			
 			$in_reply_to_status_id = '';
 			$in_reply_to_user_id = '';
 			$in_reply_to_screen_name = '';
+
+			if($lastwall['author_xchan'] != $lastwall['owner_xchan']) {
+				$w = q("select * from abook left join xchan on abook_xchan = xchan_hash where
+					xchan_hash = '%s' limit 1",
+					dbesc($lastwall['owner_xchan'])
+				);
+				if($w) {
+					$in_reply_to_user_id = $w[0]['abook_id'];
+					$in_reply_to_screen_name = substr($w[0]['xchan_addr'],0,strpos($w[0]['xchan_addr'],'@'));
+				}
+			}
+			
 			if ($lastwall['parent']!=$lastwall['id']) {
-				$in_reply_to_status_id=$lastwall['parent'];
-				$in_reply_to_user_id = $lastwall['reply_uid'];
-				$in_reply_to_screen_name = $lastwall['reply_author'];
+				$in_reply_to_status_id=$lastwall['thr_parent'];
+				if(! $in_reply_to_user_id) {
+					$in_reply_to_user_id = $user_info['id'];
+					$in_reply_to_screen_name = $user_info['screen_name'];
+				}
 			}  
 			$user_info['status'] = array(
-				'created_at' => api_date($lastwall['created']),
-				'id' => $lastwall['contact-id'],
 				'text' => html2plain(bbcode($lastwall['body']), 0),
-				'source' => (($lastwall['app']) ? $lastwall['app'] : 'web'),
 				'truncated' => false,
+				'created_at' => api_date($lastwall['created']),
 				'in_reply_to_status_id' => $in_reply_to_status_id,
+				'source' => (($lastwall['app']) ? $lastwall['app'] : 'web'),
+				'id' => (($w) ? $w[0]['abook_id'] : $user_info['id']),
 				'in_reply_to_user_id' => $in_reply_to_user_id,
-				'favorited' => false,
 				'in_reply_to_screen_name' => $in_reply_to_screen_name,
 				'geo' => '',
+				'favorited' => false,
 				'coordinates' => $lastwall['coord'],
 				'place' => $lastwall['location'],
-				'contributors' => ''
+				'contributors' => ''					
 			);
+
 		}
 		return  api_apply_template("user", $type, array('$user' => $user_info));
 
