@@ -4,17 +4,40 @@
 	require_once("conversation.php");
 	require_once("oauth.php");
 	require_once("html2plain.php");
+	require_once('include/security.php');
 
 	/*
-	 * Twitter-Like API
+	 *
+	 * Red API. Loosely based on and possibly compatible with a Twitter-Like API but all similarities end there. 
 	 *
 	 */
 
 	$API = Array();
 	$called_api = Null;
 
+	// All commands which require authentication accept a "channel" parameter
+	// which is the left hand side of the channel address/nickname.
+	// If provided, the desired channel is selected before caarying out the command.
+	// If not provided, the default channel associated with the account is used.   
+	// If channel selection fails, the API command requiring login will fail. 
 
 	function api_user() {
+		$aid = get_account_id();
+		$channel = get_app()->get_channel();
+		
+		if(($aid) && (x($_REQUEST,'channel'))) {
+
+			// Only change channel if it is different than the current channel
+
+			if($channel && x($channel,'channel_address') && $channel['channel_address'] != $_REQUEST['channel']) {
+				$c = q("select channel_id from channel where channel_address = '%s' and channel_account_id = %d limit 1",
+					dbesc($_REQUEST['channel']),
+					intval($aid)
+				);
+				if((! $c) || (! change_channel($c[0]['channel_id'])))
+					return false;
+			}
+		}			
 		if ($_SESSION["allow_api"])
 			return local_user();
 		return false;
@@ -194,6 +217,7 @@
 	/**
 	 * Returns user info array.
 	 */
+
 	function api_get_user(&$a, $contact_id = Null){
 		global $called_api;
 		$user = null;
@@ -202,46 +226,48 @@
 
 		if(!is_null($contact_id)){
 			$user=$contact_id;
-			$extra_query = "AND `contact`.`id` = %d ";
+			$extra_query = " AND abook_id = %d ";
 		}
 		
 		if(is_null($user) && x($_GET, 'user_id')) {
 			$user = intval($_GET['user_id']);	
-			$extra_query = "AND `contact`.`id` = %d ";
+			$extra_query = " AND abook_id = %d ";
 		}
 		if(is_null($user) && x($_GET, 'screen_name')) {
 			$user = dbesc($_GET['screen_name']);	
-			$extra_query = "AND `contact`.`nick` = '%s' ";
-			if (api_user()!==false)  $extra_query .= "AND `contact`.`uid`=".intval(api_user());
-			
+			$extra_query = " AND xchan_addr like '%s@%%' ";
+			if (api_user()!==false)
+				$extra_query .= " AND abook_channel = ".intval(api_user());
 		}
 		
-		if (is_null($user) && $a->argc > (count($called_api)-1)){
+		if (is_null($user) && argc() > (count($called_api)-1)){
 			$argid = count($called_api);
-			list($user, $null) = explode(".",$a->argv[$argid]);
+			list($user, $null) = explode(".",argv($argid));
 			if(is_numeric($user)){
 				$user = intval($user);
-				$extra_query = "AND `contact`.`id` = %d ";
+				$extra_query = " AND abook_id = %d ";
 			} else {
 				$user = dbesc($user);
-				$extra_query = "AND `contact`.`nick` = '%s' ";
-				if (api_user()!==false)  $extra_query .= "AND `contact`.`uid`=".intval(api_user());
+				$extra_query = " AND xchan_addr like '%s@%%' ";
+				if (api_user() !== false)
+					$extra_query .= " AND abook_channel = ".intval(api_user());
 			}
 		}
 		
 		if (! $user) {
-			if (api_user()===false) {
-				api_login($a); return False;
+			if (api_user() === false) {
+				api_login($a); 
+				return False;
 			} else {
-				$user = $_SESSION['uid'];
-				$extra_query = "AND `contact`.`uid` = %d AND `contact`.`self` = 1 ";
+				$user = local_user();
+				$extra_query = " AND abook_channel = %d AND (abook_flags & " . ABOOK_FLAG_SELF . " ) ";
 			}
 			
 		}
 		
 		logger('api_user: ' . $extra_query . ', user: ' . $user);
 		// user info		
-		$uinfo = q("SELECT *, `contact`.`id` as `cid` FROM `contact`
+		$uinfo = q("SELECT * from abook left join xchan on abook_xchan = xchan_hash 
 				WHERE 1
 				$extra_query",
 				$user
@@ -250,8 +276,8 @@
 			return False;
 		}
 		
-		if($uinfo[0]['self']) {
-			$usr = q("select * from user where uid = %d limit 1",
+		if($uinfo[0]['abook_flags'] & ABOOK_FLAG_SELF) {
+			$usr = q("select * from channel where channel_id = %d limit 1",
 				intval(api_user())
 			);
 			$profile = q("select * from profile where uid = %d and `is_default` = 1 limit 1",
@@ -261,20 +287,22 @@
 			// count public wall messages
 			$r = q("SELECT COUNT(`id`) as `count` FROM `item`
 					WHERE  `uid` = %d
-					AND `type`='wall' 
+					AND ( item_flags & %d ) and item_restrict = 0 
 					AND `allow_cid`='' AND `allow_gid`='' AND `deny_cid`='' AND `deny_gid`=''",
-					intval($uinfo[0]['uid'])
+					intval($uinfo[0]['uid']),
+					intval(ITEM_WALL)
 			);
 			$countitms = $r[0]['count'];
 		}
 		else {
 			$r = q("SELECT COUNT(`id`) as `count` FROM `item`
-					WHERE  `contact-id` = %d
+					WHERE author_xchan = '%s'
 					AND `allow_cid`='' AND `allow_gid`='' AND `deny_cid`='' AND `deny_gid`=''",
-					intval($uinfo[0]['id'])
+					intval($uinfo[0]['xchan_hash'])
 			);
 			$countitms = $r[0]['count'];
 		}
+
 
 		// count friends
 		$r = q("SELECT COUNT(`id`) as `count` FROM `contact`
@@ -518,10 +546,11 @@
 
 
 	function api_statuses_update(&$a, $type) {
-		if (api_user()===false) {
+		if (api_user() === false) {
 			logger('api_statuses_update: no user');
 			return false;
 		}
+
 		$user_info = api_get_user($a);
 
 		// convert $_POST array items to the form we use for web posts.
@@ -550,9 +579,9 @@
 		}
 		else
 			$_REQUEST['body'] = requestdata('status');
-			//$_REQUEST['body'] = urldecode(requestdata('status'));
 
 		$parent = requestdata('in_reply_to_status_id');
+
 		if(ctype_digit($parent))
 			$_REQUEST['parent'] = $parent;
 		else
@@ -560,6 +589,7 @@
 
 		if(requestdata('lat') && requestdata('long'))
 			$_REQUEST['coord'] = sprintf("%s %s",requestdata('lat'),requestdata('long'));
+
 		$_REQUEST['profile_uid'] = api_user();
 
 		if($parent)
