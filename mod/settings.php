@@ -63,10 +63,17 @@ function settings_init(&$a) {
 		),
 
 		array(
-			'label' => t('Export personal data'),
-			'url' => $a->get_baseurl(true) . '/uexport',
+			'label' => t('Export channel'),
+			'url' => $a->get_baseurl(true) . '/uexport/basic',
 			'selected' => ''
 		),
+
+//		array(
+//			'label' => t('Export account'),
+//			'url' => $a->get_baseurl(true) . '/uexport/complete',
+//			'selected' => ''
+//		),
+
 
 	);
 	

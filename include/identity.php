@@ -194,3 +194,50 @@ function set_default_login_identity($account_id,$channel_id,$force = true) {
 	}
 }
 
+function identity_basic_export($channel_id) {
+
+	/*
+	 * Red basic channel export
+	 */
+
+	$ret = array();
+	$r = q("select * from channel where channel_id = %d limit 1",
+		intval($channel_id)
+	);
+	if($r)
+		$ret['channel'] = $r[0];
+
+	$r = q("select * from profile where uid = %d",
+		intval($channel_id)
+	);
+	if($r)
+		$ret['profile'] = $r;
+
+	$xchans = array();
+	$r = q("select * from abook where abook_channel = %d ",
+		intval($channel_id)
+	);
+	if($r) {
+		$ret['abook'] = $r;
+
+		foreach($r as $rr)
+			$xchans[] = $rr['abook_xchan'];
+		stringify_array_elms($xchans);
+	}
+
+	if($xchans) {
+		$r = q("select * from xchan where xchan_hash in ( " . implode(',',$xchans) . " ) ");
+		if($r)
+			$ret['xchan'] = $r;
+		
+		$r = q("select * from hubloc where hubloc_hash in ( " . implode(',',$xchans) . " ) ");
+		if($r)
+			$ret['hubloc'] = $r;
+	}
+
+	return $ret;
+}
+
+
+
+
