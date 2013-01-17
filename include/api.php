@@ -505,6 +505,56 @@
 	}
 
 
+	/*
+	 * Red basic channel export
+	 */
+
+	function api_export_basic(&$a, $type) {
+		if(api_user() === false) {
+			logger('api_export_basic: no user');
+			return false;
+		}
+
+		$ret = array();
+		$r = q("select * from channel where channel_id = %d limit 1",
+			intval(local_user())
+		);
+		if($r)
+			$ret['channel'] = $r[0];
+
+		$r = q("select * from profile where uid = %d",
+			intval(local_user())
+		);
+		if($r)
+			$ret['profile'] = $r;
+
+		$xchans = array();
+		$r = q("select * from abook where abook_channel = %d ",
+			intval(local_user())
+		);
+		if($r) {
+			$ret['abook'] = $r;
+
+			foreach($r as $rr)
+				$xchans[] = $rr['abook_xchan'];
+			stringify_array_elms($xchans);
+		}
+
+		if($xchans) {
+			$r = q("select * from xchan where xchan_hash in ( " . implode(',',$xchans) . " ) ");
+			if($r)
+				$ret['xchan'] = $r;
+		
+			$r = q("select * from hubloc where hubloc_hash in ( " . implode(',',$xchans) . " ) ");
+			if($r)
+				$ret['hubloc'] = $r;
+		}
+		json_return_and_die($ret);
+	}
+	api_register_func('api/export/basic','api_export_basic', true);
+
+
+
     function api_statuses_mediap(&$a, $type) {
                 if (api_user()===false) {
                         logger('api_statuses_update: no user');
@@ -764,6 +814,7 @@
 	 * TODO: Optional parameters
 	 * TODO: Add reply info
 	 */
+
 	function api_statuses_home_timeline(&$a, $type){
 		if (api_user()===false) return false;
 
