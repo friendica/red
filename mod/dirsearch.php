@@ -36,7 +36,6 @@ function dirsearch_content(&$a) {
 	$marital = ((x($_REQUEST,'marital')) ? $_REQUEST['marital'] : '');
 	$keywords = ((x($_REQUEST,'keywords')) ? $_REQUEST['keywords'] : '');
 
-
 	$sql_extra = '';
 
 	if($name)
