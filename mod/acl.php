@@ -5,7 +5,7 @@ require_once("include/acl_selectors.php");
 
 function acl_init(&$a){
 
-	logger('mod_acl: ' . print_r($_REQUEST,true));
+//	logger('mod_acl: ' . print_r($_REQUEST,true));
 
 	$start = (x($_REQUEST,'start')?$_REQUEST['start']:0);
 	$count = (x($_REQUEST,'count')?$_REQUEST['count']:100);
@@ -25,8 +25,6 @@ function acl_init(&$a){
 	if(!(local_user()))
 		if($type != 'x')
 			killme();
-
-	logger('continue');
 
 	if ($search != "") {
 		$sql_extra = " AND `name` LIKE " . protect_sprintf( "'%" . dbesc($search) . "%'" ) . " ";
@@ -170,16 +168,7 @@ function acl_init(&$a){
 		}
 		echo json_encode($x);
 		killme();
-		
 
-
-
-//		$r = q("SELECT xchan_name as id, xchan_name as name, xchan_photo_s as micro, xchan_url as url from xchan
-//			where 1
-//			$sql_extra3
-//			ORDER BY `xchan_name` ASC ",
-//			intval(local_user())
-//		);
 	}
 	else
 		$r = array();
@@ -196,7 +185,7 @@ function acl_init(&$a){
 			foreach($r as $g) {
 				$x['photos'][]      = $g['micro'];
 				$x['links'][]       = $g['url'];
-				$x['suggestions'][] = (($type === 'x') ? '@' : '') . $g['name'];
+				$x['suggestions'][] = $g['name'];
 				$x['data'][]        = $g['id'];
 			}
 		}
@@ -235,7 +224,7 @@ function acl_init(&$a){
 
 function navbar_complete(&$a) {
 
-	logger('navbar_complete');
+//	logger('navbar_complete');
 
 	$dirmode = intval(get_config('system','directory_mode'));
 	$search = ((x($_REQUEST,'query')) ? htmlentities($_REQUEST['query'],ENT_COMPAT,'UTF-8',false) : '');

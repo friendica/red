@@ -4,7 +4,7 @@ require_once('include/dir_fns.php');
 
 
 function dirsearch_init(&$a) {
-	$a->set_pager_itemspage(60);
+	$a->set_pager_itemspage(80);
 
 }
 
@@ -36,6 +36,8 @@ function dirsearch_content(&$a) {
 	$marital = ((x($_REQUEST,'marital')) ? $_REQUEST['marital'] : '');
 	$keywords = ((x($_REQUEST,'keywords')) ? $_REQUEST['keywords'] : '');
 
+// TODO - a meta search which joins all of these things to one search string
+
 	$sql_extra = '';
 
 	if($name)
@@ -61,12 +63,16 @@ function dirsearch_content(&$a) {
     $page = (($_REQUEST['p']) ? intval($_REQUEST['p'] - 1) : 0);
     $startrec = (($page+1) * $perpage) - $perpage;
 	$limit = (($_REQUEST['limit']) ? intval($_REQUEST['limit']) : 0);
+	$return_total = ((x($_REQUEST,'return_total')) ? intval($_REQUEST['return_total']) : 0);
 
 	// ok a separate tag table won't work. 
 	// merge them into xprof
 
 	$ret['success'] = true;
 
+	// If &limit=n, return at most n entries
+	// If &return_total=1, we count matching entries and return that as 'total_items' for use in pagination.
+	// By default we return one page (default 80 items maximum) and do not count total entries
 
 	if($limit) 
 		$qlimit = " LIMIT $limit ";
@@ -80,9 +86,9 @@ function dirsearch_content(&$a) {
 
 	$order = " ORDER BY `xchan_name` ASC ";
 	$logic = ((strlen($sql_extra)) ? 0 : 1);
-dbg(1);
+
 	$r = q("SELECT xchan.*, xprof.* from xchan left join xprof on xchan_hash = xprof_hash where $logic $sql_extra $order $qlimit ");
-dbg(0);
+
 	$ret['page'] = $page + 1;
 	$ret['records'] = count($r);		
 

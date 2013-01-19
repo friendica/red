@@ -118,9 +118,9 @@ EOT;
 
 	$nav['search'] = array('search', t('Search'), "", t('Search site content'));
 
-	$gdirpath = 'directory';
 
-	$nav['directory'] = array($gdirpath, t('Directory'), "", t('People directory')); 
+	$nav['directory'] = array('directory', t('Channel Directory'), "", t('Channel Locator')); 
+
 
 	/**
 	 *
@@ -199,6 +199,7 @@ EOT;
 		'$localuser' => local_user(),
 		'$sel' => 	$a->nav_sel,
 		'$apps' => $a->get_apps(),
+		'$pleasewait' => t('Please wait...')
 	));
 
 	call_hooks('page_header', $a->page['nav']);
