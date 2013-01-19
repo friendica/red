@@ -13,6 +13,11 @@ function chanview_content(&$a) {
 			dbesc($_REQUEST['hash'])
 		);
 	}
+	if($_REQUEST['address']) {
+		$r = q("select * from xchan where xchan_addr = '%s' limit 1",
+			dbesc($_REQUEST['address'])
+		);
+	}
 	elseif(local_user() && intval($_REQUEST['cid'])) {
 		$r = q("SELECT abook.*, xchan.* 
 			FROM abook left join xchan on abook_xchan = xchan_hash
@@ -26,7 +31,7 @@ function chanview_content(&$a) {
 			dbesc($_REQUEST['url'])
 		);
 		if(! $r)
-			$xchan = array(array('xchan_url' => $_REQUEST['url']));
+			$r = array(array('xchan_url' => $_REQUEST['url']));
 	}
 	if($r) {
 		$xchan = $r[0];
