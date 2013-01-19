@@ -26,7 +26,7 @@ function chanview_content(&$a) {
 			dbesc($_REQUEST['url'])
 		);
 		if(! $r)
-			$r = array(array('xchan_url' => $_REQUEST['url']));
+			$xchan = array(array('xchan_url' => $_REQUEST['url']));
 	}
 	if($r) {
 		$xchan = $r[0];
@@ -39,10 +39,15 @@ function chanview_content(&$a) {
 		return;
 	}
 
+	$observer = get_observer();
+
+	$url = (($observer) 
+		? z_root() . '/magic?f=&dest=' . $xchan['xchan_url'] . '&addr=' . $xchan['xchan_addr'] 
+		: $xchan['xchan_url']
+	);
+
 	$o = replace_macros(get_markup_template('chanview.tpl'),array(
-		'$url' => $xchan['xchan_url']
-// FIXME when magic auth is finished replace here and check that against the chanview page when unauthenticated any place
-//		'$url' => z_root() . '/magic?f=&dest=' . $xchan['xchan_url'] . '&addr=' . $xchan['xchan_addr']
+		'$url' => $url
 	));
 
 	return $o;
