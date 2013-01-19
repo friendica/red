@@ -55,7 +55,7 @@ function directory_content(&$a) {
 	if($url) {
 		$query = $url . ' ?f=' ;
 		if($search)
-			$query .= '$name=' . urlencode($search);
+			$query .= '&name=' . urlencode($search);
 
 		}
 		if($a->pager['page'] != 1)
