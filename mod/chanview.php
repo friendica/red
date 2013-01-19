@@ -40,7 +40,9 @@ function chanview_content(&$a) {
 	}
 
 	$o = replace_macros(get_markup_template('chanview.tpl'),array(
-		'$url' => z_root() . '/magic?f=&dest=' . $xchan['xchan_url'] . '&addr=' . $xchan['xchan_addr']
+		'$url' => $xchan['xchan_url']
+// FIXME when magic auth is finished replace here and check that against the chanview page when unauthenticated any place
+//		'$url' => z_root() . '/magic?f=&dest=' . $xchan['xchan_url'] . '&addr=' . $xchan['xchan_addr']
 	));
 
 	return $o;
