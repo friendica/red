@@ -1258,7 +1258,7 @@ function profile_load(&$a, $nickname, $profile = 0) {
 	require_once('include/permissions.php');
 	if(! perm_is_allowed($user[0]['channel_id'],$observer['xchan_hash'],'view_profile')) {
 		// permission denied
-		notice( t(' Sorry, you don't have the permission to view this profile. ') . EOL);
+		notice( t(' Sorry, you don\'t have the permission to view this profile. ') . EOL);
 		return;
 	}
 
