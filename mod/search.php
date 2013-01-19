@@ -114,7 +114,7 @@ function search_content(&$a) {
 	}
 	if(strpos($search,'@') === 0) {
 		$search = substr($search,1);
-		goaway(z_root() . '/directory' . '$f=1&search=' . $search);
+		goaway(z_root() . '/directory' . '?f=1&search=' . $search);
 	}
 
 	if(! $search)
