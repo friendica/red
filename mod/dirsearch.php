@@ -72,11 +72,12 @@ function dirsearch_content(&$a) {
 	}
 
 	$order = " ORDER BY `xchan_name` ASC "; 
-
+dbg(1);
 	$r = q("SELECT xchan.*, xprof.* from xchan left join xprof on xchan_hash = xprof_hash where 1 $sql_extra $order LIMIT %d , %d ",
 		intval($startrec),
 		intval($perpage)
 	);
+dbg(0);
 
 	$ret['page'] = $page + 1;
 	$ret['records'] = count($r);		

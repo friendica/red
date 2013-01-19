@@ -53,7 +53,7 @@ function directory_content(&$a) {
 	}
 
 	if($url) {
-		$query = $url . ' ?f=' ;
+		$query = $url . '?f=' ;
 		if($search)
 			$query .= '&name=' . urlencode($search);
 
@@ -61,6 +61,7 @@ function directory_content(&$a) {
 		if($a->pager['page'] != 1)
 			$query .= '&p=' . $a->pager['page'];
 
+		logger('mod_directory: query: ' . $query);
 
 		$x = z_fetch_url($query);
 		if($x['success']) {
