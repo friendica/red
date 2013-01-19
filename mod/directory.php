@@ -163,7 +163,7 @@ function directory_content(&$a) {
 				));
 
 
-				$o .= alt_pager($a,$j['records']);
+				$o .= alt_pager($a,$j['records'], t('more'), t('back'));
 
 			}
 

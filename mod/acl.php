@@ -5,6 +5,7 @@ require_once("include/acl_selectors.php");
 
 function acl_init(&$a){
 
+	logger('mod_acl: ' . print_r($_REQUEST,true));
 
 	$start = (x($_REQUEST,'start')?$_REQUEST['start']:0);
 	$count = (x($_REQUEST,'count')?$_REQUEST['count']:100);
@@ -21,12 +22,13 @@ function acl_init(&$a){
 	}
 
 
-	if(! (local_user() || $type == 'x'))
-		return "";
+	if(!(local_user()))
+		if($type != 'x')
+			killme();
 
+	logger('continue');
 
-
-	if ($search!=""){
+	if ($search != "") {
 		$sql_extra = " AND `name` LIKE " . protect_sprintf( "'%" . dbesc($search) . "%'" ) . " ";
 		$sql_extra2 = "AND ( xchan_name LIKE " . protect_sprintf( "'%" . dbesc($search) . "%'" ) . " OR xchan_addr LIKE " . protect_sprintf( "'%" . dbesc($search) . "%'" ) . ") ";
 
@@ -150,18 +152,40 @@ function acl_init(&$a){
 		);
 	}
 	elseif($type == 'x') {
-		$r = q("SELECT xchan_name as id, xchan_name as name, xchan_photo_s as micro, xchan_url as url from xchan
-			where 1
-			$sql_extra3
-			ORDER BY `xchan_name` ASC ",
-			intval(local_user())
-		);
+
+		$r = navbar_complete($a);
+		$x = array();
+		$x['query']       = $search;
+		$x['photos']      = array();
+		$x['links']       = array();
+		$x['suggestions'] = array();
+		$x['data']        = array();
+		if($r) {
+			foreach($r as $g) {
+				$x['photos'][]      = $g['photo'];
+				$x['links'][]       = $g['url'];
+				$x['suggestions'][] = '@' .  $g['name'];
+				$x['data'][]        = $g['name'];
+			}
+		}
+		echo json_encode($x);
+		killme();
+		
+
+
+
+//		$r = q("SELECT xchan_name as id, xchan_name as name, xchan_photo_s as micro, xchan_url as url from xchan
+//			where 1
+//			$sql_extra3
+//			ORDER BY `xchan_name` ASC ",
+//			intval(local_user())
+//		);
 	}
 	else
 		$r = array();
 
 
-	if($type == 'm' || $type == 'a' || $type == 'x') {
+	if($type == 'm' || $type == 'a') {
 		$x = array();
 		$x['query']       = $search;
 		$x['photos']      = array();
@@ -209,3 +233,57 @@ function acl_init(&$a){
 }
 
 
+function navbar_complete(&$a) {
+
+	logger('navbar_complete');
+
+	$dirmode = intval(get_config('system','directory_mode'));
+	$search = ((x($_REQUEST,'query')) ? htmlentities($_REQUEST['query'],ENT_COMPAT,'UTF-8',false) : '');
+	if(! $search || mb_strlen($search) < 2)
+		return array();
+
+	$star = false;
+	$address = false;
+
+	if(substr($search,0,1) === '@')
+		$search = substr($search,1);
+
+	if(substr($search,0,1) === '*') {
+		$star = true;
+		$search = substr($search,1);
+	}
+
+	if(strpos($search,'@') !== false) {
+		$address = true;
+	}
+
+	if(($dirmode == DIRECTORY_MODE_PRIMARY) || ($dirmode == DIRECTORY_MODE_STANDALONE)) {
+		$url = z_root() . '/dirsearch';
+	}
+
+	if(! $url) {
+		$directory = find_upstream_directory($dirmode);
+
+		if($directory) {
+			$url = $directory['url'];
+		}
+		else {
+			$url = DIRECTORY_FALLBACK_MASTER . '/dirsearch';
+		}
+	}
+
+	if($url) {
+		$query = $url . '?f=' ;
+		$query .= '&name=' . urlencode($search) . '&limit=50' . (($address) ? '&address=' . urlencode($search) : '');
+
+		$x = z_fetch_url($query);
+		if($x['success']) {
+			$t = 0;
+			$j = json_decode($x['body'],true);
+			if($j && $j['results']) {
+				return $j['results'];
+			}
+		}
+	}
+	return array();
+}

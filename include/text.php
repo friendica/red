@@ -302,26 +302,33 @@ function paginate(&$a) {
 }}
 
 if(! function_exists('alt_pager')) {
-function alt_pager(&$a, $i) {
-        $o = '';
+function alt_pager(&$a, $i, $more = '', $less = '') {
+
+	$o = '';
+
+	if(! $more)
+		$more = t('older');
+	if(! $less)
+		$less = t('newer');
+
 	$stripped = preg_replace('/(&page=[0-9]*)/','',$a->query_string);
 	$stripped = str_replace('q=','',$stripped);
 	$stripped = trim($stripped,'/');
 	$pagenum = $a->pager['page'];
-        $url = $a->get_baseurl() . '/' . $stripped;
+	$url = $a->get_baseurl() . '/' . $stripped;
 
-        $o .= '<div class="pager">';
+	$o .= '<div class="pager">';
 
-	if($a->pager['page']>1)
-	  $o .= "<a href=\"$url"."&page=".($a->pager['page'] - 1).'">' . t('newer') . '</a>';
-        if($i>0) {
-          if($a->pager['page']>1)
-	          $o .= "&nbsp;-&nbsp;";
-	  $o .= "<a href=\"$url"."&page=".($a->pager['page'] + 1).'">' . t('older') . '</a>';
+	if($a->pager['page'] > 1)
+	  $o .= "<a href=\"$url"."&page=".($a->pager['page'] - 1).'">' . $less . '</a>';
+	if($i > 0 && $i == $a->pager['itemspage']) {
+		if($a->pager['page']>1)
+			$o .= " | ";
+		$o .= "<a href=\"$url"."&page=".($a->pager['page'] + 1).'">' . $more . '</a>';
 	}
 
 
-        $o .= '</div>'."\r\n";
+	$o .= '</div>'."\r\n";
 
 	return $o;
 }}

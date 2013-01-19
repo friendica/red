@@ -39,46 +39,50 @@ function dirsearch_content(&$a) {
 	$sql_extra = '';
 
 	if($name)
-		$sql_extra .= " AND xchan_name like '" . protect_sprintf( '%' . dbesc($name) . '%' ) . "' ";
-	if($addr)
-		$sql_extra .= " AND xchan_addr like '" . protect_sprintf( '%' . dbesc($addr) . '%' ) . "' ";
+		$sql_extra .= " OR xchan_name like '" . protect_sprintf( '%' . dbesc($name) . '%' ) . "' ";
+	if($address)
+		$sql_extra .= " OR xchan_addr like '" . protect_sprintf( '%' . dbesc($address) . '%' ) . "' ";
 	if($city)
-		$sql_extra .= " AND xprof_locale like '" . protect_sprintf( '%' . dbesc($city) . '%' ) . "' ";
+		$sql_extra .= " OR xprof_locale like '" . protect_sprintf( '%' . dbesc($city) . '%' ) . "' ";
 	if($region)
-		$sql_extra .= " AND xprof_region like '" . protect_sprintf( '%' . dbesc($region) . '%' ) . "' ";
+		$sql_extra .= " OR xprof_region like '" . protect_sprintf( '%' . dbesc($region) . '%' ) . "' ";
 	if($post)
-		$sql_extra .= " AND xprof_postcode like '" . protect_sprintf( '%' . dbesc($post) . '%' ) . "' ";
+		$sql_extra .= " OR xprof_postcode like '" . protect_sprintf( '%' . dbesc($post) . '%' ) . "' ";
 	if($country)
-		$sql_extra .= " AND xprof_country like '" . protect_sprintf( '%' . dbesc($country) . '%' ) . "' ";
+		$sql_extra .= " OR xprof_country like '" . protect_sprintf( '%' . dbesc($country) . '%' ) . "' ";
 	if($gender)
-		$sql_extra .= " AND xprof_gender like '" . protect_sprintf( '%' . dbesc($gender) . '%' ) . "' ";
+		$sql_extra .= " OR xprof_gender like '" . protect_sprintf( '%' . dbesc($gender) . '%' ) . "' ";
 	if($marital)
-		$sql_extra .= " AND xprof_marital like '" . protect_sprintf( '%' . dbesc($marital) . '%' ) . "' ";
+		$sql_extra .= " OR xprof_marital like '" . protect_sprintf( '%' . dbesc($marital) . '%' ) . "' ";
 	if($keywords)
-		$sql_extra .= " AND xprof_keywords like '" . protect_sprintf( '%' . dbesc($keywords) . '%' ) . "' ";
+		$sql_extra .= " OR xprof_keywords like '" . protect_sprintf( '%' . dbesc($keywords) . '%' ) . "' ";
 
     $perpage = (($_REQUEST['n']) ? $_REQUEST['n'] : 80);
     $page = (($_REQUEST['p']) ? intval($_REQUEST['p'] - 1) : 0);
     $startrec = (($page+1) * $perpage) - $perpage;
+	$limit = (($_REQUEST['limit']) ? intval($_REQUEST['limit']) : 0);
 
 	// ok a separate tag table won't work. 
 	// merge them into xprof
 
 	$ret['success'] = true;
 
-	$r = q("SELECT COUNT(xchan_hash) AS `total` FROM xchan left join xprof on xchan_hash = xprof_hash where 1 $sql_extra");
-	if($r) {
-		$ret['total_items'] = $r[0]['total'];
+
+	if($limit) 
+		$qlimit = " LIMIT $limit ";
+	else {
+		$qlimit = " LIMIT " . intval($startrec) . " , " . intval($perpage);
+		$r = q("SELECT COUNT(xchan_hash) AS `total` FROM xchan left join xprof on xchan_hash = xprof_hash where 1 $sql_extra");
+		if($r) {
+			$ret['total_items'] = $r[0]['total'];
+		}
 	}
 
-	$order = " ORDER BY `xchan_name` ASC "; 
+	$order = " ORDER BY `xchan_name` ASC ";
+	$logic = ((strlen($sql_extra)) ? 0 : 1);
 dbg(1);
-	$r = q("SELECT xchan.*, xprof.* from xchan left join xprof on xchan_hash = xprof_hash where 1 $sql_extra $order LIMIT %d , %d ",
-		intval($startrec),
-		intval($perpage)
-	);
+	$r = q("SELECT xchan.*, xprof.* from xchan left join xprof on xchan_hash = xprof_hash where $logic $sql_extra $order $qlimit ");
 dbg(0);
-
 	$ret['page'] = $page + 1;
 	$ret['records'] = count($r);		
 
