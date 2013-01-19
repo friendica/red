@@ -113,8 +113,8 @@ function search_content(&$a) {
 		$search = substr($search,1);
 	}
 	if(strpos($search,'@') === 0) {
-		require_once('mod/dirfind.php');
-		return dirfind_content($a);
+		$search = substr($search,1);
+		goaway(z_root() . '/directory' . '$f=1&search=' . $search);
 	}
 
 	if(! $search)
