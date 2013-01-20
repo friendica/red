@@ -1598,17 +1598,16 @@ function tag_deliver($uid,$item_id) {
 	$private = ($u[0]['allow_cid'] || $u[0]['allow_gid'] || $u[0]['deny_cid'] || $u[0]['deny_gid']) ? 1 : 0;
 
 	$flag_bits = ITEM_WALL|ITEM_ORIGIN|ITEM_UPLINK;
-	if($private)
-		$flag_bits = $flag_bits | ITEM_PRIVATE;
 
 	$r = q("update item set item_flags = ( $item_flags | %d ), owner_xchan = '%s', allow_cid = '%s', allow_gid = '%s', 
-		deny_cid = '%s', deny_gid = '%s'  where id = %d limit 1",
+		deny_cid = '%s', deny_gid = '%s', item_private = %d  where id = %d limit 1",
 		intval($flag_bits),
 		dbesc($u[0]['channel_hash']),
 		dbesc($u[0]['allow_cid']),
 		dbesc($u[0]['allow_gid']),
 		dbesc($u[0]['deny_cid']),
 		dbesc($u[0]['deny_gid']),
+		intval($private),
 		intval($item_id)
 	);
 	if($r)

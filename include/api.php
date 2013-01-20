@@ -381,32 +381,20 @@ require_once('include/security.php');
 		
 	}
 
-// FIXME
+
 	function api_item_get_user(&$a, $item) {
 		global $usercache;
 
 		// The author is our direct contact, in a conversation with us.
-		if(link_compare($item['url'],$item['author-link'])) {
-			return api_get_user($a,$item['cid']);
-		}
-		else {
-			// The author may be a contact of ours, but is replying to somebody else. 
-			// Figure out if we know him/her.
-			$normalised = normalise_link((strlen($item['author-link'])) ? $item['author-link'] : $item['url']);
-            if(($normalised != 'mailbox') && (x($a->contacts[$normalised])))
-				return api_get_user($a,$a->contacts[$normalised]['id']);
-		}
 
+		if($item['author']['abook_id']) {
+			return api_get_user($a,$item['author']['abook_id']);
+		}	
+		
 		// We don't know this person directly.
 		
-		list($nick, $name) = array_map("trim",explode("(",$item['author-name']));
-		$name=str_replace(")","",$name);
-
-		if ($name == '')
-			$name = $nick;
-
-		if ($nick == '')
-			$nick = $name;
+		$nick = substr($item['author']['xchan_addr'],0,strpos($item['author']['xchan_addr'],'@'));
+		$name = $item['author']['xchan_name'];
 
 		// Generating a random ID
 		if (is_null($usercache[$nick]) or !array_key_exists($nick, $usercache))
@@ -418,8 +406,8 @@ require_once('include/security.php');
 			'screen_name' => $nick,
 			'location' => '', //$uinfo[0]['default-location'],
 			'description' => '',
-			'profile_image_url' => $item['author-avatar'],
-			'url' => $item['author-link'],
+			'profile_image_url' => $item['author']['xchan_photo_m'],
+			'url' => $item['author']['xchan_url'],
 			'protected' => false,	#
 			'followers_count' => 0,
 			'friends_count' => 0,
@@ -653,12 +641,11 @@ require_once('include/security.php');
 		// get last public message
 
 		$lastwall = q("SELECT * from item where 1
-			and not ( item_flags & %d ) and item_restrict = 0
+			and item_private != 0 and item_restrict = 0
 			and author_xchan = '%s'
 			and allow_cid = '' and allow_gid = '' and deny_cid = '' and deny_gid = ''
 			and verb = '%s'
 			order by created desc limit 1",
-			intval(ITEM_PRIVATE),
 			dbesc($user_info['guid']),
 			dbesc(ACTIVITY_POST)
 		);
@@ -723,12 +710,11 @@ require_once('include/security.php');
 		$user_info = api_get_user($a);
 
 		$lastwall = q("SELECT * from item where 1
-			and not ( item_flags & %d ) and item_restrict = 0
+			and item_private != 0 and item_restrict = 0
 			and author_xchan = '%s'
 			and allow_cid = '' and allow_gid = '' and deny_cid = '' and deny_gid = ''
 			and verb = '%s'
 			order by created desc limit 1",
-			intval(ITEM_PRIVATE),
 			dbesc($user_info['guid']),
 			dbesc(ACTIVITY_POST)
 		);
@@ -826,7 +812,7 @@ require_once('include/security.php');
 			intval($count)
 		);
 
-		xchan_query($r);
+		xchan_query($r,true);
 
 		$ret = api_format_items($r,$user_info);
 
@@ -882,22 +868,22 @@ require_once('include/security.php');
 
 		if ($max_id > 0)
 			$sql_extra = 'AND `item`.`id` <= '.intval($max_id);
+		require_once('include/security.php');
 
-        $r = q("SELECT * from item where id in (select distinct(uri) from item where item_restrict = 0
+        $r = q("select * from item where item_restrict = 0
 			and allow_cid = ''  and allow_gid = ''
 			and deny_cid  = ''  and deny_gid  = ''
-            and not ( item_flags & %d ) and ( item_flags & %d )
+            and item_private = 0
+			and uid in ( " . stream_perms_api_uids() . " )
 			$sql_extra
-			AND id > %d)
-            ORDER BY received DESC LIMIT %d, %d ",
-			intval(ITEM_PRIVATE),
-			intval(ITEM_WALL),
+			AND id > %d group by uri
+            order by received desc LIMIT %d, %d ",
 			intval($since_id),
 			intval($start),
 			intval($count)
 		);
 
-		xchan_query($r);
+		xchan_query($r,true);
 
 		$ret = api_format_items($r,$user_info);
 
@@ -946,7 +932,7 @@ require_once('include/security.php');
 		$r = q("select * from item where item_restrict = 0 $sql_extra",
 			intval($id)
 		);
-		xchan_query($r);
+		xchan_query($r,true);
 
 		$ret = api_format_items($r,$user_info);
 
@@ -1346,7 +1332,8 @@ require_once('include/security.php');
 
 		foreach($r as $item) {
 			localize_item($item);
-			$status_user = (($item['cid']==$user_info['id'])?$user_info: api_item_get_user($a,$item));
+
+			$status_user = (($item['author_xchan']==$user_info['guid'])?$user_info: api_item_get_user($a,$item));
 
 			if($item['parent'] != $item['id']) {
 				$r = q("select id from item where parent= %d and id < %d order by id desc limit 1",
@@ -1358,7 +1345,7 @@ require_once('include/security.php');
 				else
 					$in_reply_to_status_id = $item['parent'];
 
-				xchan_query($r);
+				xchan_query($r,true);
 
 				$in_reply_to_screen_name = $r[0]['author']['xchan_name'];
 				$in_reply_to_user_id = $r[0]['author']['abook_id'];

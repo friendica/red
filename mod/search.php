@@ -186,11 +186,10 @@ function search_content(&$a) {
 		if($load) {
 			$r = q("SELECT distinct(uri), item.* from item
 				WHERE item_restrict = 0
-				AND (( `item`.`allow_cid` = ''  AND `item`.`allow_gid` = '' AND `item`.`deny_cid`  = '' AND `item`.`deny_gid`  = '' AND not ( item_flags & %d )) 
+				AND (( `item`.`allow_cid` = ''  AND `item`.`allow_gid` = '' AND `item`.`deny_cid`  = '' AND `item`.`deny_gid`  = '' AND item_private = 0 ) 
 				OR ( `item`.`uid` = %d ))
 				$sql_extra
 				group by uri ORDER BY created DESC $pager_sql ",
-				intval(ITEM_PRIVATE),
 				intval(local_user()),
 				intval(ABOOK_FLAG_BLOCKED)
 
