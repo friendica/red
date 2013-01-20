@@ -205,30 +205,36 @@ function event_store($arr) {
 
 	$a = get_app();
 
-	$arr['created'] = (($arr['created']) ? $arr['created'] : datetime_convert());
-	$arr['edited']  = (($arr['edited']) ? $arr['edited'] : datetime_convert());
-	$arr['type']    = (($arr['type']) ? $arr['type'] : 'event' );	
+	$arr['created']     = (($arr['created'])     ? $arr['created']     : datetime_convert());
+	$arr['edited']      = (($arr['edited'])      ? $arr['edited']      : datetime_convert());
+	$arr['type']        = (($arr['type'])        ? $arr['type']        : 'event' );	
 	$arr['event_xchan'] = (($arr['event_xchan']) ? $arr['event_xchan'] : '');
 	
 	// Existing event being modified
 
-	if($arr['id']) {
+	if($arr['id'] || $arr['event_hash']) {
 
 		// has the event actually changed?
 
-		$r = q("SELECT * FROM `event` WHERE `id` = %d AND `uid` = %d LIMIT 1",
-			intval($arr['id']),
-			intval($arr['uid'])
-		);
-		if((! $r) || ($r[0]['edited'] === $arr['edited'])) {
-
-			// Nothing has changed. Grab the item id to return.
-
-			$r = q("SELECT id FROM item WHERE resource_type = 'event' and resource_id = '%s' AND uid = %d LIMIT 1",
-				intval($arr['event_hash']),
+		if($arr['event_hash']) {
+			$r = q("SELECT * FROM event WHERE event_hash = '%s' AND uid = %d LIMIT 1",
+				dbesc($arr['event_hash']),
 				intval($arr['uid'])
 			);
-			return(($r) ? $r[0]['id'] : 0);
+		}
+		else {
+			$r = q("SELECT * FROM event WHERE id = %d AND uid = %d LIMIT 1",
+				intval($arr['id']),
+				intval($arr['uid'])
+			);
+		}
+
+		if(! $r)
+			return 0;
+
+		if($r[0]['edited'] === $arr['edited']) {
+			// Nothing has changed. Return the ID.
+			return $r[0]['id'];
 		}
 
 		// The event changed. Update it.
@@ -262,12 +268,12 @@ function event_store($arr) {
 			dbesc($arr['allow_gid']),
 			dbesc($arr['deny_cid']),
 			dbesc($arr['deny_gid']),
-			intval($arr['id']),
+			intval($r[0]['id']),
 			intval($arr['uid'])
 		);
 
 		$r = q("SELECT * FROM item left join xchan on author_xchan = xchan_hash WHERE resource_id = '%s' AND resource_type = 'event' and uid = %d LIMIT 1",
-			intval($arr['event_hash']),
+			intval($r[0]['event_hash']),
 			intval($arr['uid'])
 		);
 
@@ -290,6 +296,7 @@ function event_store($arr) {
 			));
 
 			$private = (($arr['allow_cid'] || $arr['allow_gid'] || $arr['deny_cid'] || $arr['deny_gid']) ? 1 : 0);
+
 
 			q("UPDATE item SET title = '%s', body = '%s', object = '%s', allow_cid = '%s', allow_gid = '%s', deny_cid = '%s', deny_gid = '%s', edited = '%s', item_flags = %d, item_private = %d  WHERE id = %d AND uid = %d LIMIT 1",
 				dbesc($arr['summary']),
@@ -321,8 +328,12 @@ function event_store($arr) {
 
 		$hash = random_string();
 
-		$r = q("INSERT INTO `event` ( `uid`,`aid`,`event_xchan`,`event_hash`,`created`,`edited`,`start`,`finish`,`summary`, `desc`,`location`,`type`,
-			`adjust`,`nofinish`,`allow_cid`,`allow_gid`,`deny_cid`,`deny_gid`)
+		if(! $arr['uri'])
+			$arr['uri'] = item_message_id();
+
+
+		$r = q("INSERT INTO event ( uid,aid,event_xchan,event_hash,created,edited,start,finish,summary, desc,location,type,
+			adjust,nofinish,allow_cid,allow_gid,deny_cid,deny_gid)
 			VALUES ( %d, %d, '%s', '%s', '%s', '%s', '%s', '%s', '%s', '%s', '%s', '%s', %d, %d, '%s', '%s', '%s', '%s' ) ",
 			intval($arr['uid']),
 			intval($arr['account']),
@@ -345,7 +356,7 @@ function event_store($arr) {
 
 		);
 
-		$r = q("SELECT * FROM `event` WHERE `event_hash` = '%s' AND `uid` = %d LIMIT 1",
+		$r = q("SELECT * FROM event WHERE event_hash = '%s' AND uid = %d LIMIT 1",
 			dbesc($hash),
 			intval($arr['uid'])
 		);
@@ -365,17 +376,14 @@ function event_store($arr) {
 			$item_flags |= ITEM_ORIGIN;
 		}
 
-
-		$uri = item_message_id();
-
 		$private = (($arr['allow_cid'] || $arr['allow_gid'] || $arr['deny_cid'] || $arr['deny_gid']) ? 1 : 0);
 				
 		$item_arr = array();
 
 		$item_arr['uid']           = $arr['uid'];
 		$item_arr['author_xchan']  = $arr['event_xchan'];
-		$item_arr['uri']           = $uri;
-		$item_arr['parent_uri']    = $uri;
+		$item_arr['uri']           = $arr['uri'];
+		$item_arr['parent_uri']    = $arr['uri'];
 
 		$item_arr['item_flags']    = $item_flags;
 
@@ -386,13 +394,13 @@ function event_store($arr) {
 		$item_arr['allow_gid']     = $arr['allow_gid'];
 		$item_arr['deny_cid']      = $arr['deny_cid'];
 		$item_arr['deny_gid']      = $arr['deny_gid'];
-		$item_arr['private']       = (($arr['private'] || $private) ? 1 : 0);
+		$item_arr['item_private']  = $private;
 		$item_arr['verb']          = ACTIVITY_POST;
 
 		$item_arr['resource_type'] = 'event';
 		$item_arr['resource_id']   = $hash;
 
-		$item_arr['obj_type']   = ACTIVITY_OBJ_EVENT;
+		$item_arr['obj_type']      = ACTIVITY_OBJ_EVENT;
 		$item_arr['body']          = format_event_bbcode($arr);
 
 		$x = q("select * from xchan where xchan_hash = '%s' limit 1",

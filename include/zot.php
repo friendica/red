@@ -901,16 +901,18 @@ function process_delivery($sender,$arr,$deliveries,$relay) {
 				$ev['uid']         = $channel['channel_id'];
 				$ev['account']     = $channel['channel_account_id'];
 				$ev['edited']      = $arr['edited'];
+				$ev['uri']         = $arr['uri'];
+				$ev['private']     = $arr['item_private'];
 
 				// is this an edit?
 
-				$r = q("SELECT * FROM event left join item on resource_id = event_hash WHERE resource_type = 'event' and
-					`uri` = '%s' AND event.uid = %d LIMIT 1",
+				$r = q("SELECT resource_id FROM item where uri = '%s' and uid = %d and resource_type = 'event' limit 1",
 					dbesc($arr['uri']),
 					intval($channel['channel_id'])
 				);
-				if($r)
-					$ev['event_hash'] = $r[0]['event_hash'];
+				if($r) {
+					$ev['event_hash'] = $r[0]['resource_id'];
+				}
 	dbg(1);
 				$xyz = event_store($ev);
 	dbg(0);

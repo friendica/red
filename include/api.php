@@ -802,6 +802,14 @@ require_once('include/security.php');
 		if ($exclude_replies > 0)
 			$sql_extra .= ' AND `item`.`parent` = `item`.`id`';
 
+		if (api_user() != $user_info['uid']) {
+			$observer = get_app()->get_observer();
+			require_once('include/permissions.php');
+			if(! perm_is_allowed($user_info['uid'],(($observer) ? $observer['xchan_hash'] : ''),'view_stream'))
+				return '';
+			$sql_extra .= " and item_private = 0 ";
+		}
+
 		$r = q("SELECT * from item WHERE uid = %d and item_restrict = 0
 			$sql_extra
 			AND id > %d
@@ -820,12 +828,14 @@ require_once('include/security.php');
 		// level which items you've seen and which you haven't. If you're looking
 		// at the network timeline just mark everything seen. 
 	
-		$r = q("UPDATE `item` SET item_flags = ( item_flags ^ %d )
-			WHERE item_flags & %d and uid = %d",
-			intval(ITEM_UNSEEN),
-			intval(ITEM_UNSEEN),
-			intval($user_info['uid'])
-		);
+		if (api_user() == $user_info['uid']) {
+			$r = q("UPDATE `item` SET item_flags = ( item_flags ^ %d )
+				WHERE item_flags & %d and uid = %d",
+				intval(ITEM_UNSEEN),
+				intval(ITEM_UNSEEN),
+				intval($user_info['uid'])
+			);
+		}
 
 
 		$data = array('$statuses' => $ret);
@@ -966,7 +976,7 @@ require_once('include/security.php');
 		logger('API: api_statuses_repeat: '.$id);
 
 		//$include_entities = (x($_REQUEST,'include_entities')?$_REQUEST['include_entities']:false);
-
+// FIXME
 		$r = q("SELECT `item`.*, `item`.`id` AS `item_id`, `contact`.`nick` as `reply_author`,
 			`contact`.`name`, `contact`.`photo`, `contact`.`url` as `reply_url`, `contact`.`rel`,
 			`contact`.`network`, `contact`.`thumb`, `contact`.`dfrn_id`, `contact`.`self`,
@@ -1008,7 +1018,7 @@ require_once('include/security.php');
 		$user_info = api_get_user($a);
 
 		// params
-		$id = intval($a->argv[3]);
+		$id = intval(argv(3));
 
 		logger('API: api_statuses_destroy: '.$id);
 
@@ -1029,6 +1039,8 @@ require_once('include/security.php');
 	 * http://developer.twitter.com/doc/get/statuses/mentions
 	 * 
 	 */
+
+// FIXME
 	function api_statuses_mentions(&$a, $type){
 		if (api_user()===false) return false;
 				
@@ -1106,6 +1118,7 @@ require_once('include/security.php');
 		return  api_apply_template("timeline", $type, $data);
 	}
 	api_register_func('api/statuses/mentions','api_statuses_mentions', true);
+	// FIXME?? I don't think mentions and replies are congruent in this case
 	api_register_func('api/statuses/replies','api_statuses_mentions', true);
 
 
@@ -1113,7 +1126,7 @@ require_once('include/security.php');
 		if (api_user()===false) return false;
 		
 		$user_info = api_get_user($a);
-		// get last newtork messages
+		// get last network messages
 
 
 		logger("api_statuses_user_timeline: api_user: ". api_user() .
