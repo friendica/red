@@ -640,11 +640,14 @@ require_once('include/security.php');
 
 		// get last public message
 
+		require_once('include/security.php');
+
 		$lastwall = q("SELECT * from item where 1
 			and item_private != 0 and item_restrict = 0
 			and author_xchan = '%s'
 			and allow_cid = '' and allow_gid = '' and deny_cid = '' and deny_gid = ''
 			and verb = '%s'
+			and uid in ( " . stream_perms_api_uids() . " )
 			order by created desc limit 1",
 			dbesc($user_info['guid']),
 			dbesc(ACTIVITY_POST)
@@ -709,11 +712,14 @@ require_once('include/security.php');
 	function api_users_show(&$a, $type){
 		$user_info = api_get_user($a);
 
+		require_once('include/security.php');
+
 		$lastwall = q("SELECT * from item where 1
 			and item_private != 0 and item_restrict = 0
 			and author_xchan = '%s'
 			and allow_cid = '' and allow_gid = '' and deny_cid = '' and deny_gid = ''
 			and verb = '%s'
+			and uid in ( " . stream_perms_api_uids() . " )
 			order by created desc limit 1",
 			dbesc($user_info['guid']),
 			dbesc(ACTIVITY_POST)
@@ -971,34 +977,31 @@ require_once('include/security.php');
 		$user_info = api_get_user($a);
 
 		// params
-		$id = intval($a->argv[3]);
+		$id = intval(argv(3));
 
 		logger('API: api_statuses_repeat: '.$id);
 
 		//$include_entities = (x($_REQUEST,'include_entities')?$_REQUEST['include_entities']:false);
-// FIXME
-		$r = q("SELECT `item`.*, `item`.`id` AS `item_id`, `contact`.`nick` as `reply_author`,
-			`contact`.`name`, `contact`.`photo`, `contact`.`url` as `reply_url`, `contact`.`rel`,
-			`contact`.`network`, `contact`.`thumb`, `contact`.`dfrn_id`, `contact`.`self`,
-			`contact`.`id` AS `cid`, `contact`.`uid` AS `contact-uid`
-			FROM `item`, `contact`
-			WHERE `item`.`visible` = 1 and `item`.`moderated` = 0 AND `item`.`deleted` = 0
-			AND `contact`.`id` = `item`.`contact-id`
-			AND `contact`.`blocked` = 0 AND `contact`.`pending` = 0
-			$sql_extra
-			AND `item`.`id`=%d",
+
+		$observer = get_app()->get_observer();
+
+		$r = q("SELECT * from item where item_restrict = 0 and id = %d limit 1",
 			intval($id)
 		);
 
-		if ($r[0]['body'] != "") {
-			$_REQUEST['body'] = html_entity_decode("&#x2672; ", ENT_QUOTES, 'UTF-8')."[url=".$r[0]['reply_url']."]".$r[0]['reply_author']."[/url] \n".$r[0]['body'];
-			$_REQUEST['profile_uid'] = api_user();
-			$_REQUEST['type'] = 'wall';
-			$_REQUEST['api_source'] = true;
+		if(perm_is_allowed($r[0]['uid'],$observer['xchan_hash'],'view_stream')) {
+			if ($r[0]['body'] != "") {
+				$_REQUEST['body'] = html_entity_decode("&#x2672; ", ENT_QUOTES, 'UTF-8')."[url=".$r[0]['reply_url']."]".$r[0]['reply_author']."[/url] \n".$r[0]['body'];
+				$_REQUEST['profile_uid'] = api_user();
+				$_REQUEST['type'] = 'wall';
+				$_REQUEST['api_source'] = true;
 
-			require_once('mod/item.php');
-			item_post($a);
+				require_once('mod/item.php');
+				item_post($a);
+			}
 		}
+		else
+			return false;
 
 		if ($type == 'xml')
 			$ok = "true";
@@ -1012,6 +1015,7 @@ require_once('include/security.php');
 	/**
 	 * 
 	 */
+
 	function api_statuses_destroy(&$a, $type){
 		if (api_user()===false) return false;
 
@@ -1476,12 +1480,14 @@ require_once('include/security.php');
 			return false;
 		}
 		
+		// For Red, the closest thing we can do to figure out if you're friends is if both of you are sending each other your streams.
+		// This won't work if either of you send your stream to everybody on the network
 		if($qtype == 'friends')
-			$sql_extra = sprintf(" AND ( `rel` = %d OR `rel` = %d ) ", intval(CONTACT_IS_SHARING), intval(CONTACT_IS_FRIEND));
+			$sql_extra = sprintf(" AND ( their_perms & %d ) and ( my_perms & %d ) ", intval(PERMS_W_STREAM), intval(PERMS_W_STREAM));
 		if($qtype == 'followers')
-			$sql_extra = sprintf(" AND ( `rel` = %d OR `rel` = %d ) ", intval(CONTACT_IS_FOLLOWER), intval(CONTACT_IS_FRIEND));
+			$sql_extra = sprintf(" AND ( my_perms & %d ) and not ( their_perms & %d ) ", intval(PERMS_W_STREAM), intval(PERMS_W_STREAM));
  
-		$r = q("SELECT id FROM `contact` WHERE `uid` = %d AND `self` = 0 AND `blocked` = 0 AND `pending` = 0 $sql_extra",
+		$r = q("SELECT id FROM abook where abook_flags = 0 and abook_channel = %d $sql_extra",
 			intval(api_user())
 		);
 
@@ -1588,13 +1594,16 @@ require_once('include/security.php');
 		if(! api_user())
 			return false;
 
-		if($qtype == 'friends')
-			$sql_extra = sprintf(" AND ( `rel` = %d OR `rel` = %d ) ", intval(CONTACT_IS_SHARING), intval(CONTACT_IS_FRIEND));
-		if($qtype == 'followers')
-			$sql_extra = sprintf(" AND ( `rel` = %d OR `rel` = %d ) ", intval(CONTACT_IS_FOLLOWER), intval(CONTACT_IS_FRIEND));
- 
 
-		$r = q("SELECT id FROM `contact` WHERE `uid` = %d AND `self` = 0 AND `blocked` = 0 AND `pending` = 0 $sql_extra",
+		// For Red, the closest thing we can do to figure out if you're friends is if both of you are sending each other your streams.
+		// This won't work if either of you send your stream to everybody on the network
+
+		if($qtype == 'friends')
+			$sql_extra = sprintf(" AND ( their_perms & %d ) and ( my_perms & %d ) ", intval(PERMS_W_STREAM), intval(PERMS_W_STREAM));
+		if($qtype == 'followers')
+			$sql_extra = sprintf(" AND ( my_perms & %d ) and not ( their_perms & %d ) ", intval(PERMS_W_STREAM), intval(PERMS_W_STREAM));
+ 
+		$r = q("SELECT id FROM abook where abook_flags = 0 and abook_channel = %d $sql_extra",
 			intval(api_user())
 		);
 
