@@ -336,11 +336,6 @@ footer {
 	font-weight: bold;
 }
 
-div.wall-item-content-wrapper.shiny {
-	background: #f4f4f4;
-	border: none;
-}
-
 .preview {
 	background: lightyellow;
 }
@@ -665,7 +660,6 @@ input#dfrn-url {
 
 .vcard .title {
 	margin-bottom: 5px;
-	margin-left: 12px;
 }
 
 .vcard dl {
@@ -1063,9 +1057,9 @@ input#dfrn-url {
 	margin-top: 10px;
 	position: relative;
 	background: #fff;
-	border-radius: 5px;
+/*	border-radius: 5px; */
 /*	box-shadow: 12px 12px 12px #111; */
-	border: 1px solid #eec;
+	border-left: 1px solid #eec;
 
 }
 .wall-item-content-wrapper.comment {
@@ -1266,7 +1260,6 @@ input#dfrn-url {
 
 .wall-item-tools {
 	clear: both;
-    background: #eee;
     padding: 5px 10px;
 }    
 
