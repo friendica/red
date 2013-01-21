@@ -165,6 +165,12 @@ function post_post(&$a) {
 
 	}
 
+	if($msgtype === 'auth') {
+		logger('mod_post: auth: ' . print_r($data,true)); 
+	
+
+	}
+
 }
 
 

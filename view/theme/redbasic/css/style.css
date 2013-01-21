@@ -3584,6 +3584,7 @@ nav .nav-menu {
 nav .nav-menu.selected {
   border-bottom: 4px solid #CCCCCC;
 }
+
 nav .nav-notify {
   background-color: #0d0;
   color: #fff;

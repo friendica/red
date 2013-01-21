@@ -101,6 +101,12 @@ function zot_build_packet($channel,$type = 'notify',$recipients = null, $remote_
 		'version' => ZOT_REVISION
 	);
 
+	// These fields are present when using magic auth
+
+	if(array_key_exists('token',$channel)) {
+		$data['sender']['token'] = $channel['token'];
+		$data['sender']['token_sig'] = $channel['token_sig'];
+	}
 
 	if($recipients)
 		$data['recipients'] = $recipients;
