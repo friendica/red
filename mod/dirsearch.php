@@ -78,9 +78,11 @@ function dirsearch_content(&$a) {
 		$qlimit = " LIMIT $limit ";
 	else {
 		$qlimit = " LIMIT " . intval($startrec) . " , " . intval($perpage);
-		$r = q("SELECT COUNT(xchan_hash) AS `total` FROM xchan left join xprof on xchan_hash = xprof_hash where 1 $sql_extra");
-		if($r) {
-			$ret['total_items'] = $r[0]['total'];
+		if($return_total) {
+			$r = q("SELECT COUNT(xchan_hash) AS `total` FROM xchan left join xprof on xchan_hash = xprof_hash where 1 $sql_extra");
+			if($r) {
+				$ret['total_items'] = $r[0]['total'];
+			}
 		}
 	}
 

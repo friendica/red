@@ -57,7 +57,6 @@ function directory_content(&$a) {
 		if($search)
 			$query .= '&name=' . urlencode($search);
 
-		}
 		if($a->pager['page'] != 1)
 			$query .= '&p=' . $a->pager['page'];
 
@@ -67,111 +66,113 @@ function directory_content(&$a) {
 		if($x['success']) {
 			$t = 0;
 			$j = json_decode($x['body'],true);
-			if($j && $j['results']) {
+			if($j) {
 
-				$entries = array();
+				if($j['results']) {
 
-				$photo = 'thumb';
+					$entries = array();
 
-				foreach($j['results'] as $rr) {
+					$photo = 'thumb';
 
+					foreach($j['results'] as $rr) {
 
-
-
-					$profile_link = chanlink_url($rr['url']);
+						$profile_link = chanlink_url($rr['url']);
 		
-					$pdesc = (($rr['description']) ? $rr['description'] . '<br />' : '');
+						$pdesc = (($rr['description']) ? $rr['description'] . '<br />' : '');
 	
-					$details = '';
-					if(strlen($rr['locale']))
-						$details .= $rr['locale'];
-					if(strlen($rr['region'])) {
+						$details = '';
 						if(strlen($rr['locale']))
-							$details .= ', ';
-						$details .= $rr['region'];
-					}
-					if(strlen($rr['country'])) {
-						if(strlen($details))
-							$details .= ', ';
-						$details .= $rr['country'];
-					}
-					if(strlen($rr['birthday'])) {
-						if(($years = age($rr['birthday'],'UTC','')) != 0)
-							$details .= '<br />' . t('Age: ') . $years ; 
-					}
-					if(strlen($rr['gender']))
-						$details .= '<br />' . t('Gender: ') . $rr['gender'];
+							$details .= $rr['locale'];
+						if(strlen($rr['region'])) {
+							if(strlen($rr['locale']))
+								$details .= ', ';
+							$details .= $rr['region'];
+						}
+						if(strlen($rr['country'])) {
+							if(strlen($details))
+								$details .= ', ';
+							$details .= $rr['country'];
+						}
+						if(strlen($rr['birthday'])) {
+							if(($years = age($rr['birthday'],'UTC','')) != 0)
+								$details .= '<br />' . t('Age: ') . $years ; 
+						}
+						if(strlen($rr['gender']))
+							$details .= '<br />' . t('Gender: ') . $rr['gender'];
 
-					$page_type = '';
+						$page_type = '';
 
-					$profile = $rr;
+						$profile = $rr;
 
-					if ((x($profile,'locale') == 1)
-						|| (x($profile,'region') == 1)
-						|| (x($profile,'postcode') == 1)
-						|| (x($profile,'country') == 1))
-					$location = t('Location:');
+						if ((x($profile,'locale') == 1)
+							|| (x($profile,'region') == 1)
+							|| (x($profile,'postcode') == 1)
+							|| (x($profile,'country') == 1))
+						$location = t('Location:');
 
-					$gender = ((x($profile,'gender') == 1) ? t('Gender:') : False);
+						$gender = ((x($profile,'gender') == 1) ? t('Gender:') : False);
 	
-					$marital = ((x($profile,'marital') == 1) ?  t('Status:') : False);
+						$marital = ((x($profile,'marital') == 1) ?  t('Status:') : False);
 		
-					$homepage = ((x($profile,'homepage') == 1) ?  t('Homepage:') : False);
+						$homepage = ((x($profile,'homepage') == 1) ?  t('Homepage:') : False);
 
-					$about = ((x($profile,'about') == 1) ?  t('About:') : False);
+						$about = ((x($profile,'about') == 1) ?  t('About:') : False);
 			
 
-					$entry = array(
-						'id' => ++$t,
-						'profile_link' => $profile_link,
-						'photo' => $rr['photo'],
-						'alttext' => $rr['name'] . ' ' . $rr['address'],
-						'name' => $rr['name'],
-						'details' => $pdesc . $details,
-						'profile' => $profile,
-						'location' => $location,
-						'gender'   => $gender,
-						'pdesc'	=> $pdesc,
-						'marital'  => $marital,
-						'homepage' => $homepage,
-						'about' => $about,
+						$entry = array(
+							'id' => ++$t,
+							'profile_link' => $profile_link,
+							'photo' => $rr['photo'],
+							'alttext' => $rr['name'] . ' ' . $rr['address'],
+							'name' => $rr['name'],
+							'details' => $pdesc . $details,
+							'profile' => $profile,
+							'location' => $location,
+							'gender'   => $gender,
+							'pdesc'	=> $pdesc,
+							'marital'  => $marital,
+							'homepage' => $homepage,
+							'about' => $about,
 	
-					);
+						);
 
-					$arr = array('contact' => $rr, 'entry' => $entry);
+						$arr = array('contact' => $rr, 'entry' => $entry);
 
-					call_hooks('directory_item', $arr);
+						call_hooks('directory_item', $arr);
 			
-					$entries[] = $entry;
+						$entries[] = $entry;
 
-					unset($profile);
-					unset($location);
+						unset($profile);
+						unset($location);
 
+
+					}
+
+					logger('mod_directory: entries: ' . print_r($entries,true), LOGGER_DATA);
+
+					$o .= replace_macros($tpl, array(
+						'$search' => $search,
+						'$desc' => t('Find'),
+						'$finddsc' => t('Finding:'),
+						'$safetxt' => htmlspecialchars($search,ENT_QUOTES,'UTF-8'),
+						'$entries' => $entries,
+						'$dirlbl' => t('Directory'),
+						'$submit' => t('Find')
+					));
+
+
+					$o .= alt_pager($a,$j['records'], t('more'), t('back'));
 
 				}
-
-				logger('entries: ' . print_r($entries,true));
-
-				$o .= replace_macros($tpl, array(
-					'$search' => $search,
-					'$desc' => t('Find'),
-					'$finddsc' => t('Finding:'),
-					'$safetxt' => htmlspecialchars($search,ENT_QUOTES,'UTF-8'),
-					'$entries' => $entries,
-					'$dirlbl' => t('Directory'),
-					'$submit' => t('Find')
-				));
-
-
-				$o .= alt_pager($a,$j['records'], t('more'), t('back'));
-
+				else {
+					if($a->pager['page'] == 1 && $j['records'] == 0 && strpos($search,'@')) {
+						goaway(z_root() . '/chanview/?f=&address=' . $search);
+					}
+					info( t("No entries (some entries may be hidden).") . EOL);
+				}
 			}
-
-			else
-				info( t("No entries (some entries may be hidden).") . EOL);
-
 		}
-
+	}
 	return $o;
 }
 
