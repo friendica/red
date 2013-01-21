@@ -3779,3 +3779,97 @@ ul.menu-popup {
 .tabs-end {
 	clear: both;
 }
+
+
+
+
+#acl-wrapper {
+	width: 690px;
+	float:left;
+}
+#acl-search {
+	float:right;
+	background: #ffffff url("../../../../images/search_18.png") no-repeat right center;
+	padding-right:20px;
+}
+#acl-showall {
+	float: left;
+	display: block;
+	width: auto;
+	height: 18px;
+	background-color: #cccccc;
+	background-image: url("../../../../images/show_all_off.png");
+	background-position: 7px 7px;
+	background-repeat: no-repeat;
+	padding: 7px 5px 0px 30px;
+	-webkit-border-radius: 5px ;
+	-moz-border-radius: 5px;
+	border-radius: 5px;
+	color: #999999;
+}
+#acl-showall.selected {
+	color: #000000;
+	background-color: #ff9900;
+	background-image: url("../../../../images/show_all_on.png");
+}
+
+#acl-list {
+	height: 210px;
+	border: 1px solid #cccccc;
+	clear: both;
+	margin-top: 30px;
+	overflow: auto;
+}
+#acl-list-content {
+	
+}
+.acl-list-item {
+	display: block;
+	width: 150px;
+	height: 30px;
+	border: 1px solid #cccccc;
+	margin: 5px;
+	float: left;
+}
+.acl-list-item img{
+	width:22px;
+	height: 22px;
+	float: left;
+	margin: 4px;
+}
+.acl-list-item p { height: 12px; font-size: 10px; margin: 0px; padding: 2px 0px 1px; overflow: hidden;}
+.acl-list-item a { 
+	font-size: 8px;
+	display: block;
+	width: 40px;
+	height: 10px;
+	float: left;
+	color: #999999;
+	background-color: #cccccc;
+	background-position: 3px 3px;
+	background-repeat: no-repeat;
+	margin-right: 5px;
+	-webkit-border-radius: 2px ;
+	-moz-border-radius: 2px;
+	border-radius: 2px;
+	padding-left: 15px;
+}
+#acl-wrapper a:hover {
+	text-decoration: none;
+	color:#000000;
+}
+.acl-button-show { background-image: url("../../../../images/show_off.png"); }
+.acl-button-hide { background-image: url("../../../../images/hide_off.png"); }
+
+.acl-button-show.selected {
+	color: #000000;
+	background-color: #9ade00;
+	background-image: url("../../../../images/show_on.png");
+}
+.acl-button-hide.selected {
+	color: #000000;
+	background-color: #ff4141;
+	background-image: url("../../../../images/hide_on.png");
+}
+.acl-list-item.groupshow { border-color: #9ade00; }
+.acl-list-item.grouphide { border-color: #ff4141; }
