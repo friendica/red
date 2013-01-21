@@ -55,10 +55,12 @@ function magic_init(&$a) {
 		$token = random_string();
 		$token_sig = rsa_sign($token,$channel['channel_prvkey']);
  
-		$recip = array(array('guid' => $x[0]['hubloc_guid'],'guid_sig' => $x[0]['hubloc_guid_sig']));
  		$channel = $a->get_channel();
 		$channel['token'] = $token;
 		$channel['token_sig'] = $token_sig;
+
+
+		$recip = array(array('guid' => $x[0]['hubloc_guid'],'guid_sig' => $x[0]['hubloc_guid_sig']));
 
 		$hash = random_string();
 
