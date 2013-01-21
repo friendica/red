@@ -52,10 +52,11 @@ function magic_init(&$a) {
 			goaway($desturl);
 		}
 
+ 		$channel = $a->get_channel();
+
 		$token = random_string();
 		$token_sig = rsa_sign($token,$channel['channel_prvkey']);
  
- 		$channel = $a->get_channel();
 		$channel['token'] = $token;
 		$channel['token_sig'] = $token_sig;
 
