@@ -44,7 +44,7 @@ function chanview_content(&$a) {
 		return;
 	}
 
-	$observer = get_observer();
+	$observer = $a->get_observer();
 
 	$url = (($observer) 
 		? z_root() . '/magic?f=&dest=' . $xchan['xchan_url'] . '&addr=' . $xchan['xchan_addr'] 
