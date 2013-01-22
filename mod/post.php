@@ -72,8 +72,8 @@ function post_init(&$a) {
 
 			// Auth packets MUST use ultra top-secret hush-hush mode 
 
-			$p = zot_build_packet($c[0],$type = 'auth_check',array('guid' => $x[0]['hubloc_guid'],'guid_sig' => $x[0]['hubloc_guid_sig']), $x[0]['hubloc_prvkey'], $sec);
-			$result = zot_zot($x[0]['hubloc_url'],$p);
+			$p = zot_build_packet($c[0],$type = 'auth_check',array(array('guid' => $x[0]['hubloc_guid'],'guid_sig' => $x[0]['hubloc_guid_sig'])), $x[0]['hubloc_sitekey'], $sec);
+			$result = zot_zot($x[0]['hubloc_callback'],$p);
 
 			if($result['success']) {
 				$j = json_decode($result['body'],true);
@@ -276,7 +276,7 @@ function post_post(&$a) {
 		$y = q("select xchan_pubkey from xchan where xchan_hash = '%s' limit 1",
 			dbesc($sender_hash)
 		);
-		if((! $y) || (! rsa_verify($data['secret'],$data['secret_sig'],$y[0]['xchan_pubkey']))) {
+		if((! $y) || (! rsa_verify($data['secret'],base64url_decode($data['secret_sig']),$y[0]['xchan_pubkey']))) {
 			logger('mod_zot: auth_check: sender not found or secret_sig invalid.');
 			json_return_and_die($ret);
 		}

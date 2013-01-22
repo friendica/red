@@ -116,23 +116,23 @@ function common_friends_visitor_widget($profile_uid) {
 	}
 
 // FIXME
-	if(! $cid) {
-		if(get_my_url()) {
-			$r = q("select id from contact where nurl = '%s' and uid = %d limit 1",
-				dbesc(normalise_link(get_my_url())),
-				intval($profile_uid)
-			);
-			if(count($r))
-				$cid = $r[0]['id'];
-			else {
-				$r = q("select id from gcontact where nurl = '%s' limit 1",
-					dbesc(normalise_link(get_my_url()))
-				);
-				if(count($r))
-					$zcid = $r[0]['id'];
-			}
-		}
-	}
+//	if(! $cid) {
+//		if(get_my_url()) {
+//			$r = q("select id from contact where nurl = '%s' and uid = %d limit 1",
+//				dbesc(normalise_link(get_my_url())),
+//				intval($profile_uid)
+//			);
+//			if(count($r))
+//				$cid = $r[0]['id'];
+//			else {
+//				$r = q("select id from gcontact where nurl = '%s' limit 1",
+//					dbesc(normalise_link(get_my_url()))
+//				);
+//				if(count($r))
+//					$zcid = $r[0]['id'];
+//			}
+//		}
+//	}
 
 	if($cid == 0 && $zcid == 0)
 		return; 
