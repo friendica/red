@@ -75,7 +75,6 @@ function zfinger_init(&$a) {
 	if($e['xchan_flags'] & XCHAN_FLAGS_HIDDEN)
 		$searchable = false;
 	 
-
 	//  This is for birthdays and keywords, but must check access permissions
 	$p = q("select * from profile where uid = %d and is_default = 1",
 		intval($e['channel_id'])
@@ -181,7 +180,7 @@ function zfinger_init(&$a) {
 	elseif($dirmode == DIRECTORY_MODE_STANDALONE)
 		$ret['site']['directory_mode'] = 'standalone';
 	if($dirmode != DIRECTORY_MODE_NORMAL)
-		$ret['site']['directory_url'] = z_root() . '/dir';
+		$ret['site']['directory_url'] = z_root() . '/dirsearch';
  
 	json_return_and_die($ret);
 

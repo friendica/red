@@ -117,6 +117,11 @@ function search_content(&$a) {
 		goaway(z_root() . '/directory' . '?f=1&search=' . $search);
 	}
 
+	// look for a naked webbie
+	if(strpos($search,'@') !== false) {
+		goaway(z_root() . '/directory' . '?f=1&search=' . $search);
+	}
+
 	if(! $search)
 		return $o;
 

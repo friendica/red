@@ -56,6 +56,8 @@ function directory_content(&$a) {
 		$query = $url . '?f=' ;
 		if($search)
 			$query .= '&name=' . urlencode($search);
+		if(strpos($search,'@'))
+			$query .= '&address=' . urlencode($search);
 
 		if($a->pager['page'] != 1)
 			$query .= '&p=' . $a->pager['page'];
@@ -63,6 +65,8 @@ function directory_content(&$a) {
 		logger('mod_directory: query: ' . $query);
 
 		$x = z_fetch_url($query);
+		logger('directory: return from upstream: ' . print_r($x,true));
+
 		if($x['success']) {
 			$t = 0;
 			$j = json_decode($x['body'],true);

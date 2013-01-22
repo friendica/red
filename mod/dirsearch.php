@@ -14,16 +14,12 @@ function dirsearch_content(&$a) {
 
 	// If you've got a public directory server, you probably shouldn't block public access
 
-	if((get_config('system','block_public')) && (! local_user()) && (! remote_user())) {
-		$ret['message'] = t('Public access denied.');
-		return;
-	}
 
 	$dirmode = intval(get_config('system','directory_mode'));
 
 	if($dirmode == DIRECTORY_MODE_NORMAL) {
 		$ret['message'] = t('This site is not a directory server');
-		return;
+		json_return_and_die($ret);
 	}
 
 	$name = ((x($_REQUEST,'name')) ? $_REQUEST['name'] : '');
@@ -75,7 +71,7 @@ function dirsearch_content(&$a) {
 	// By default we return one page (default 80 items maximum) and do not count total entries
 
 	$logic = ((strlen($sql_extra)) ? 0 : 1);
-
+dbg(1);
 	if($limit) 
 		$qlimit = " LIMIT $limit ";
 	else {
@@ -95,7 +91,7 @@ function dirsearch_content(&$a) {
 	$r = q("SELECT xchan.*, xprof.* from xchan left join xprof on xchan_hash = xprof_hash where $logic $sql_extra and not ( xchan_flags & %d ) $order $qlimit ",
 		intval(XCHAN_FLAGS_HIDDEN)
 	);
-
+dbg(0);
 	$ret['page'] = $page + 1;
 	$ret['records'] = count($r);		
 

@@ -536,11 +536,24 @@ function import_xchan($arr) {
 		if($r[0]['xchan_photo_date'] != $arr['photo_updated'])
 			$import_photos = true;
 
+		// if we import an entry from a site that's not ours and either or both of us is off the grid - hide the entry.
+		// TODO: check if we're the same directory realm, which would mean we are allowed to see it
+
+		$dirmode = get_config('system','directory_mode'); 
+
+		if((($arr['site']['directory_mode'] === 'standalone') || ($dirmode & DIRECTORY_MODE_STANDALONE))
+&& ($arr['site']['url'] != z_root()))
+			$arr['searchable'] = false;
+
+		
+
+		// Be careful - XCHAN_FLAGS_HIDDEN should evaluate to 1
 		if(($r[0]['xchan_flags'] & XCHAN_FLAGS_HIDDEN) != $arr['searchable'])
 			$new_flags = $r[0]['xchan_flags'] ^ XCHAN_FLAGS_HIDDEN;
 		else
 			$new_flags = $r[0]['xchan_flags'];
-
+		
+			
 		if(($r[0]['xchan_name_date'] != $arr['name_updated']) || ($r[0]['xchan_connurl'] != $arr['connections_url']) || ($r[0]['xchan_flags'] != $new_flags)) {
 			$r = q("update xchan set xchan_name = '%s', xchan_name_date = '%s', xchan_connurl = '%s', xchan_flags = %d  where xchan_hash = '%s' limit 1",
 				dbesc($arr['name']),
