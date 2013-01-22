@@ -1186,7 +1186,7 @@ if(! function_exists('local_user')) {
 if(! function_exists('remote_user')) {
 	function remote_user() {
 		if((x($_SESSION,'authenticated')) && (x($_SESSION,'visitor_id')))
-			return intval($_SESSION['visitor_id']);
+			return $_SESSION['visitor_id'];
 		return false;
 	}
 }

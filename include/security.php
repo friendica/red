@@ -349,7 +349,7 @@ if(! function_exists('init_groups_visitor')) {
 function init_groups_visitor($contact_id) {
 	$groups = array();
 	$r = q("SELECT gid FROM group_member WHERE xchan = '%s' ",
-		intval($contact_id)
+		dbesc($contact_id)
 	);
 	if(count($r)) {
 		foreach($r as $rr)

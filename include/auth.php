@@ -63,9 +63,9 @@ if((isset($_SESSION)) && (x($_SESSION,'authenticated')) && ((! (x($_POST,'auth-p
 		info( t('Logged out.') . EOL);
 		goaway(z_root());
 	}
-
+dbg(1);
 	if(x($_SESSION,'visitor_id') && (! x($_SESSION,'uid'))) {
-		$r = q("select * from hubloc left join xchan on xchan_hash = hubloc_hash where hubloc_addr = '%s' limit 1",
+		$r = q("select * from hubloc left join xchan on xchan_hash = hubloc_hash where hubloc_hash = '%s' limit 1",
 			dbesc($_SESSION['visitor_id'])
 		);
 		if($r) {
@@ -77,7 +77,7 @@ if((isset($_SESSION)) && (x($_SESSION,'authenticated')) && ((! (x($_POST,'auth-p
 		}
 		$a->set_groups(init_groups_visitor($_SESSION['visitor_id']));
 	}
-
+dbg(0);
 	if(x($_SESSION,'uid') || x($_SESSION,'account_id')) {
 
 		// already logged in user returning

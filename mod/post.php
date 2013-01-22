@@ -87,8 +87,9 @@ function post_init(&$a) {
 					$_SESSION['authenticated'] = 1;
 					$_SESSION['visitor_id'] = $x[0]['xchan_hash'];
 					$a->set_observer($x[0]);
+					require_once('include/security.php');
 					$a->set_groups(init_groups_visitor($_SESSION['visitor_id']));
-					notice(sprintf( t('Welcome %s. Remote authentication successful.'),$x[0]['xchan_name']));
+					info(sprintf( t('Welcome %s. Remote authentication successful.'),$x[0]['xchan_name']));
 				}
 			}
 
