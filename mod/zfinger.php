@@ -72,7 +72,8 @@ function zfinger_init(&$a) {
 	$id = $e['channel_id'];
 
 	$searchable = (($e['channel_pageflags'] & PAGE_HIDDEN) ? false : true);
-
+	if($e['xchan_flags'] & XCHAN_FLAGS_HIDDEN)
+		$searchable = false;
 	 
 
 	//  This is for birthdays and keywords, but must check access permissions

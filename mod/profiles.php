@@ -620,7 +620,7 @@ function profiles_content(&$a) {
 
 			foreach($r as $rr) {
 				$o .= replace_macros($tpl, array(
-					'$photo' => $a->get_cached_avatar_image($rr['thumb']),
+					'$photo' => $rr['thumb'],
 					'$id' => $rr['id'],
 					'$alt' => t('Profile Image'),
 					'$profile_name' => $rr['profile_name'],

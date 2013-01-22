@@ -531,14 +531,22 @@ function import_xchan($arr) {
 		dbesc($xchan_hash)
 	);	
 
+
 	if($r) {
 		if($r[0]['xchan_photo_date'] != $arr['photo_updated'])
-			$update_photos = true;
-		if(($r[0]['xchan_name_date'] != $arr['name_updated']) || ($r[0]['xchan_connurl'] != $arr['connections_url'])) {
-			$r = q("update xchan set xchan_name = '%s', xchan_name_date = '%s', xchan_connurl = '%s'  where xchan_hash = '%s' limit 1",
+			$import_photos = true;
+
+		if(($r[0]['xchan_flags'] & XCHAN_FLAGS_HIDDEN) != $arr['searchable'])
+			$new_flags = $r[0]['xchan_flags'] ^ XCHAN_FLAGS_HIDDEN;
+		else
+			$new_flags = $r[0]['xchan_flags'];
+
+		if(($r[0]['xchan_name_date'] != $arr['name_updated']) || ($r[0]['xchan_connurl'] != $arr['connections_url']) || ($r[0]['xchan_flags'] != $new_flags)) {
+			$r = q("update xchan set xchan_name = '%s', xchan_name_date = '%s', xchan_connurl = '%s', xchan_flags = %d  where xchan_hash = '%s' limit 1",
 				dbesc($arr['name']),
 				dbesc($arr['name_updated']),
 				dbesc($arr['connections_url']),
+				intval($new_flags),
 				dbesc($xchan_hash)
 			);
 		}

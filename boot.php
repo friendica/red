@@ -266,6 +266,8 @@ define ( 'HUBLOC_FLAGS_PRIMARY',      0x0001);
 define ( 'HUBLOC_FLAGS_UNVERIFIED',   0x0002);
 
 
+define ( 'XCHAN_FLAGS_HIDDEN',        0x0001);
+
 
 /**
  * Tag/term types
