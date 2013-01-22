@@ -64,14 +64,19 @@ if((isset($_SESSION)) && (x($_SESSION,'authenticated')) && ((! (x($_POST,'auth-p
 		goaway(z_root());
 	}
 
-//	if(x($_SESSION,'visitor_id') && (! x($_SESSION,'uid'))) {
-//		$r = q("SELECT * FROM `contact` WHERE `id` = %d LIMIT 1",
-//			intval($_SESSION['visitor_id'])
-//		);
-//		if(count($r)) {
-//			$a->contact = $r[0];
-//		}
-//	}
+	if(x($_SESSION,'visitor_id') && (! x($_SESSION,'uid'))) {
+		$r = q("select * from hubloc left join xchan on xchan_hash = hubloc_hash where hubloc_addr = '%s' limit 1",
+			dbesc($_SESSION['visitor_id'])
+		);
+		if($r) {
+			get_app()->set_observer($r[0]);
+		}
+		else {
+			unset($_SESSION['visitor_id']);
+			unset($_SESSION['authenticated']);
+		}
+		$a->set_groups(init_groups_visitor($_SESSION['visitor_id']));
+	}
 
 	if(x($_SESSION,'uid') || x($_SESSION,'account_id')) {
 

@@ -454,7 +454,7 @@ if(! class_exists('App')) {
 		private $widgets  = array();         // widgets for this page
 
 
-
+		public  $groups;
 		public  $language;
 		public  $module_loaded = false;
 		public  $query_string;
@@ -749,6 +749,13 @@ if(! class_exists('App')) {
 			$this->apps = $arr;
 		}
 
+		function set_groups($g) {
+			$this->groups = $g;
+		}
+
+		function get_groups() {
+			return $this->groups;
+		}
 
 		function set_widget($title,$html, $location = 'aside') {
 			$this->widgets[] = array('title' => $title, 'html' => $html, 'location' => $location);
