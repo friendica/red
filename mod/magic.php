@@ -4,58 +4,81 @@
 
 function magic_init(&$a) {
 
-	$url = ((x($_REQUEST,'url')) ? $_REQUEST['url'] : '');
 	$addr = ((x($_REQUEST,'addr')) ? $_REQUEST['addr'] : '');
 	$hash = ((x($_REQUEST,'hash')) ? $_REQUEST['hash'] : '');
 	$dest = ((x($_REQUEST,'dest')) ? $_REQUEST['dest'] : '');
 
+	if($hash) {
+		$x = q("select xchan.xchan_url, hubloc.* from xchan left join hubloc on xchan_hash = hubloc_hash
+			where hublock_hash = '%s' and (hubloc_flags & %d) limit 1",
+			intval(HUBLOC_FLAGS_PRIMARY)
+		);
+	}
+	elseif($addr) {
+		$x = q("select hubloc.* from xchan left join hubloc on xchan_hash = hubloc_hash 
+			where xchan_addr = '%s' and (hubloc_flags & %d) limit 1",
+			dbesc($addr),
+			intval(HUBLOC_FLAGS_PRIMARY)
+		);
+	}
 
-	if(local_user()) { 
+	if(! $x) {
 
-		if($hash) {
-			$x = q("select xchan.xchan_url, hubloc.* from xchan left join hubloc on xchan_hash = hubloc_hash
-				where hublock_hash = '%s' and (hubloc_flags & %d) limit 1",
-				intval(HUBLOC_FLAGS_PRIMARY)
-			);
-		}
-		elseif($addr) {
-			$x = q("select hubloc.* from xchan left join hubloc on xchan_hash = hubloc_hash 
-				where xchan_addr = '%s' and (hubloc_flags & %d) limit 1",
-				dbesc($addr),
-				intval(HUBLOC_FLAGS_PRIMARY)
-			);
-		}
+		// Finger them if they've never been seen here before
 
-		if(! $x) {
-			notice( t('Channel not found.') . EOL);
-			return;
-		}
-
-		if($x[0]['hubloc_url'] === z_root()) {
-			$webbie = substr($x[0]['hubloc_addr'],0,strpos('@',$x[0]['hubloc_addr']));
-			switch($dest) {
-				case 'channel':
-					$desturl = z_root() . '/channel/' . $webbie;
-					break;
-				case 'photos':
-					$desturl = z_root() . '/photos/' . $webbie;
-					break;
-				case 'profile':
-					$desturl = z_root() . '/profile/' . $webbie;
-					break;
-				default:
-					$desturl = $dest;
-					break;
+		if($addr) {
+			$ret = zot_finger($addr,null);
+			if($ret['success']) {
+				$j = json_decode($ret['body'],true);
+				if($j)
+					import_xchan($j);
+				$x = q("select hubloc.* from xchan left join hubloc on xchan_hash = hubloc_hash 
+					where xchan_addr = '%s' and (hubloc_flags & %d) limit 1",
+					dbesc($addr),
+					intval(HUBLOC_FLAGS_PRIMARY)
+				);
 			}
-			// We are already authenticated on this site and a registered observer.
-			// Just redirect.
-			goaway($desturl);
 		}
+	}
+
+	if(! $x) {
+		notice( t('Channel not found.') . EOL);
+		return;
+	}
+
+	if($x[0]['hubloc_url'] === z_root()) {
+		$webbie = substr($x[0]['hubloc_addr'],0,strpos('@',$x[0]['hubloc_addr']));
+		switch($dest) {
+			case 'channel':
+				$desturl = z_root() . '/channel/' . $webbie;
+				break;
+			case 'photos':
+				$desturl = z_root() . '/photos/' . $webbie;
+				break;
+			case 'profile':
+				$desturl = z_root() . '/profile/' . $webbie;
+				break;
+			default:
+				$desturl = $dest;
+				break;
+		}
+		// We are already authenticated on this site and a registered observer.
+		// Just redirect.
+		goaway($desturl);
+	}
+
+	if(local_user()) {
+		$channel = $a->get_channel();
 
 		$token = random_string();
+		$token_sig = base64url_encode(rsa_sign($token,$channel['channel_prvkey']));
+ 
+		$channel['token'] = $token;
+		$channel['token_sig'] = $token_sig;
+
 
 		$recip = array(array('guid' => $x[0]['hubloc_guid'],'guid_sig' => $x[0]['hubloc_guid_sig']));
- 		$channel = $a->get_channel();
+
 		$hash = random_string();
 
 		$r = q("insert into verify ( type, channel, token, meta, created) values ('%s','%d','%s','%s','%s')",
@@ -66,25 +89,12 @@ function magic_init(&$a) {
 			dbesc(datetime_convert())
 		);
 
-		$packet = zot_build_packet($channel,'auth',$recip,$x[0]['hubloc_sitekey'],$hash);
-		$result = zot_zot($x[0]['hubloc_callback'],$packet);
-		if($result['success']) {
-			$j = json_decode($result['body'],true);
-			if($j['iv']) {
-				$y = aes_unencapsulate($j,$channel['prvkey']);
-				$j = json_decode($y,true);
-			}
-			if($j['token'] && $j['ticket'] && $j['token'] === $token) {
-				$r = q("delete from verify where token = '%s' and type = '%s' and channel = %d limit 1",
-					dbesc($token),
-					dbesc('auth'),
-					intval($channel['channel_id'])
-				);				
-				goaway($x[0]['callback'] . '?f=&ticket=' . $ticket . '&dest=' . $dest);
-			}
-		}
-		goaway($dest);
+		goaway($x[0]['hubloc_callback'] . '/' . substr($x[0]['hubloc_addr'],0,strpos($x[0]['hubloc_addr'],'@'))
+			. '/?f=&auth=' . $channel['channel_address'] . '@' . $a->get_hostname()
+			. '&sec=' . $token . '&dest=' . $dest . '&version=' . ZOT_REVISION);
 	}
 
+	if(strpos($dest,'/'))
+		goaway($dest);
 	goaway(z_root());
 }

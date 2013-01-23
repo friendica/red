@@ -889,29 +889,33 @@ function handle_tag($a, &$body, &$inform, &$str_tags, $profile_uid, $tag) {
 				}
 			}
 			if($tagcid) { //if there was an id
+
 				//select contact with that id from the logged in user's contact list
-				$r = q("SELECT * FROM `contact` WHERE `id` = %d AND `uid` = %d LIMIT 1",
+				$r = q("SELECT * FROM abook left join xchan on abook_xchan = xchan_hash 
+					WHERE abook_id = %d AND abook_channel = %d LIMIT 1",
 						intval($tagcid),
 						intval($profile_uid)
 				);
+
 			}
 			else {
 				$newname = str_replace('_',' ',$name);
 
 				//select someone from this user's contacts by name
-				$r = q("SELECT * FROM `contact` WHERE `name` = '%s' AND `uid` = %d LIMIT 1",
+				$r = q("SELECT * FROM abook left join xchan on abook_xchan - xchan_hash  
+					WHERE xchan_name = '%s' AND abook_channel = %d LIMIT 1",
 						dbesc($newname),
 						intval($profile_uid)
 				);
 
 				if(! $r) {
 					//select someone by attag or nick and the name passed in
-					$r = q("SELECT * FROM `contact` WHERE `attag` = '%s' OR `nick` = '%s' AND `uid` = %d ORDER BY `attag` DESC LIMIT 1",
+/*					$r = q("SELECT * FROM `contact` WHERE `attag` = '%s' OR `nick` = '%s' AND `uid` = %d ORDER BY `attag` DESC LIMIT 1",
 							dbesc($name),
 							dbesc($name),
 							intval($profile_uid)
 					);
-				}
+*/				}
 			}
 /*			} elseif(strstr($name,'_') || strstr($name,' ')) { //no id
 				//get the real name
@@ -931,16 +935,8 @@ function handle_tag($a, &$body, &$inform, &$str_tags, $profile_uid, $tag) {
 			}*/
 			//$r is set, if someone could be selected
 			if(count($r)) {
-				$profile = $r[0]['url'];
-				//set newname to nick, find alias
-				if($r[0]['network'] === 'stat') {
-					$newname = $r[0]['nick'];
-					$stat = true;
-					if($r[0]['alias'])
-						$alias = $r[0]['alias'];
-				}
-				else
-					$newname = $r[0]['name'];
+				$profile = chanlink_url($r[0]['xchan_url']);
+				$newname = $r[0]['xchan_name'];
 				//add person's id to $inform
 				if(strlen($inform))
 					$inform .= ',';
@@ -952,7 +948,7 @@ function handle_tag($a, &$body, &$inform, &$str_tags, $profile_uid, $tag) {
 			$replaced = true;
 			//create profile link
 			$profile = str_replace(',','%2c',$profile);
-			$url = $profile;
+			$url = chanlink_url($profile);
 			$newtag = '@[url=' . $profile . ']' . $newname	. '[/url]';
 			$body = str_replace('@' . $name, $newtag, $body);
 			//append tag to str_tags

@@ -236,7 +236,7 @@ function item_permissions_sql($owner_id,$remote_verified = false,$groups = null)
 	 * default permissions - anonymous user
 	 */
 
-	$sql = " AND not (item_flags & " . ITEM_PRIVATE . ") ";  
+	$sql = " AND not item_private ";
 			
 
 	/**
@@ -349,7 +349,7 @@ if(! function_exists('init_groups_visitor')) {
 function init_groups_visitor($contact_id) {
 	$groups = array();
 	$r = q("SELECT gid FROM group_member WHERE xchan = '%s' ",
-		intval($contact_id)
+		dbesc($contact_id)
 	);
 	if(count($r)) {
 		foreach($r as $rr)
@@ -358,4 +358,37 @@ function init_groups_visitor($contact_id) {
 	return $groups;
 }}
 
+
+
+
+
+// This is used to determine which uid have posts which are visible to the logged in user (from the API) for the 
+// public_timeline, and we can use this in a community page by making $perms_min = PERMS_NETWORK unless logged in. 
+// Collect uids of everybody on this site who has opened their posts to everybody on this site (or greater visibility)
+// We always include yourself if logged in because you can always see your own posts
+// resolving granular permissions for the observer against every person and every post on the site
+// will likely be too expensive. 
+// Returns a string list of comma separated channel_ids suitable for direct inclusion in a SQL query
+
+function stream_perms_api_uids($perms_min = PERMS_SITE) {
+	$ret = array();
+	if(local_user())
+		$ret[] = local_user();
+	$r = q("select channel_id from channel where channel_r_stream <= %d",
+		intval($perms_min)
+	);
+	if($r)
+		foreach($r as $rr)
+			if(! in_array($rr['channel_id'],$ret))
+				$ret[] = $rr['channel_id']; 
+
+	$str = '';
+	if($ret)
+		foreach($ret as $rr) {
+			if($str)
+				$str .= ',';
+			$str .= intval($rr); 
+		}
+	return $str;
+}
 

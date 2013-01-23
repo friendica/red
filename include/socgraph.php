@@ -23,12 +23,11 @@ function poco_load($xchan = null,$url = null) {
 	$a = get_app();
 
 	if($xchan && ! $url) {
-		$r = q("select xchan_connurl from xchan where xchan_hash = %d limit 1",
-			intval($xchan)
+		$r = q("select xchan_connurl from xchan where xchan_hash = '%s' limit 1",
+			dbesc($xchan)
 		);
 		if($r) {
 			$url = $r[0]['xchan_connurl'];
-			$uid = $r[0]['abook_channel'];
 		}
 	}
 
@@ -109,24 +108,25 @@ function poco_load($xchan = null,$url = null) {
 		}
 	
 
-		$r = q("select * from xlink where xlink_xchan = '%s' and xlink_link = '%s' limit 1",
-			dbesc($xchan),
-			dbesc($hash)
-		);
-		if(! $r) {
-			q("insert into xlink ( xlink_xchan, xlink_link, xlink_updated ) values ( '%s', '%s', '%s' ) ",
+		if($xchan) {
+			$r = q("select * from xlink where xlink_xchan = '%s' and xlink_link = '%s' limit 1",
 				dbesc($xchan),
-				dbesc($hash),
-				dbesc(datetime_convert())
+				dbesc($hash)
 			);
+			if(! $r) {
+				q("insert into xlink ( xlink_xchan, xlink_link, xlink_updated ) values ( '%s', '%s', '%s' ) ",
+					dbesc($xchan),
+					dbesc($hash),
+					dbesc(datetime_convert())
+				);
+			}
+			else {
+				q("update xlink set xlink_updated = '%s' where xlink_id = %d limit 1",
+					dbesc(datetime_convert()),
+					intval($r[0]['xlink_id'])
+				);
+			}
 		}
-		else {
-			q("update xlink set xlink_updated = '%s' where xlink_id = %d limit 1",
-				dbesc(datetime_convert()),
-				intval($r[0]['xlink_id'])
-			);
-		}
-
 	}
 	logger("poco_load: loaded $total entries",LOGGER_DEBUG);
 
@@ -295,37 +295,38 @@ function suggestion_query($uid, $start = 0, $limit = 80) {
 
 function update_suggestions() {
 
+// FIXME
+return;
 	$a = get_app();
 
 	$done = array();
 
-	poco_load(0,0,0,$a->get_baseurl() . '/poco');
+	// fix this to get a json list from an upstream directory
+//	poco_load(0,0,0,$a->get_baseurl() . '/poco');
 
-	$done[] = $a->get_baseurl() . '/poco';
+//	$done[] = $a->get_baseurl() . '/poco';
 
-	if(strlen(get_config('system','directory_submit_url'))) {
-		$x = fetch_url('http://dir.friendica.com/pubsites');
-		if($x) {
-			$j = json_decode($x);
-			if($j->entries) {
-				foreach($j->entries as $entry) {
-					$url = $entry->url . '/poco';
-					if(! in_array($url,$done))
-						poco_load(0,0,0,$entry->url . '/poco');
-				}
-			}
-		}
-	}
+//	if(strlen(get_config('system','directory_submit_url'))) {
+//		$x = fetch_url('http://dir.friendica.com/pubsites');
+//		if($x) {
+//			$j = json_decode($x);
+//			if($j->entries) {
+//				foreach($j->entries as $entry) {
+//					$url = $entry->url . '/poco';
+//					if(! in_array($url,$done))
+//						poco_load(0,0,0,$entry->url . '/poco');
+//				}
+//			}
+//		}
+//	}
 
-	$r = q("select distinct(poco) as poco from contact where network = '%s'",
-		dbesc(NETWORK_DFRN)
-	);
+	$r = q("select distinct(xchan_connurl) as poco from xchan where xchan_network = 'zot'");
 
-	if(count($r)) {
+	if($r) {
 		foreach($r as $rr) {
 			$base = substr($rr['poco'],0,strrpos($rr['poco'],'/'));
 			if(! in_array($base,$done))
-				poco_load(0,0,0,$base);
+				poco_load('',$base);
 		}
 	}
 }

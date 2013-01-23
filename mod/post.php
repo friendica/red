@@ -6,6 +6,111 @@
 
 
 require_once('include/zot.php');
+
+
+function post_init(&$a) {
+
+	// All other access to this endpoint is via the post method.
+	// Here we will pick out the magic auth params which arrive
+	// as a get request.
+
+	if(argc() > 1) {
+
+		$webbie = argv(1);
+
+		if(array_key_exists('auth',$_REQUEST)) {
+
+			$address = $_REQUEST['auth'];
+			$dest    = $_REQUEST['dest'];
+			$sec     = $_REQUEST['sec'];
+			$version = $_REQUEST['version'];
+
+			switch($dest) {
+				case 'channel':
+					$desturl = z_root() . '/channel/' . $webbie;
+					break;
+				case 'photos':
+					$desturl = z_root() . '/photos/' . $webbie;
+					break;
+				case 'profile':
+					$desturl = z_root() . '/profile/' . $webbie;
+					break;
+				default:
+					$desturl = $dest;
+					break;
+			}
+			$c = q("select * from channel where channel_address = '%s' limit 1",
+				dbesc($webbie)
+			);
+			if(! $c) {
+				logger('mod_zot: auth: unable to find channel ' . $webbie);
+				// They'll get a notice when they hit the page, we don't need two. 
+				goaway($desturl);
+			}
+
+			// Try and find a hubloc for the person attempting to auth
+			$x = q("select * from hubloc left join xchan on xchan_hash = hubloc_hash where hubloc_addr = '%s' limit 1",
+				dbesc($address)
+			);
+
+			if(! $x) {
+				// finger them if they can't be found. 
+				$ret = zot_finger($addr,null);
+				if($ret['success']) {
+					$j = json_decode($ret['body'],true);
+					if($j)
+						import_xchan($j);
+					$x = q("select * from hubloc left join xchan on xchan_hash = hubloc_hash where hubloc_addr = '%s' limit 1",
+						dbesc($address)
+					);
+				}
+			}
+			if(! $x)
+				goaway($desturl);
+
+			// check credentials and access
+
+			// Auth packets MUST use ultra top-secret hush-hush mode 
+
+			$p = zot_build_packet($c[0],$type = 'auth_check',array(array('guid' => $x[0]['hubloc_guid'],'guid_sig' => $x[0]['hubloc_guid_sig'])), $x[0]['hubloc_sitekey'], $sec);
+			$result = zot_zot($x[0]['hubloc_callback'],$p);
+
+			if($result['success']) {
+				$j = json_decode($result['body'],true);
+				if($j['result']) {
+					// everything is good... maybe
+					if(local_user()) {
+						notice( t('Remote authentication blocked. You are logged into this site locally. Please logout and retry') . EOL);
+						goaway($desturl);
+					}
+					// log them in
+					$_SESSION['authenticated'] = 1;
+					$_SESSION['visitor_id'] = $x[0]['xchan_hash'];
+					$a->set_observer($x[0]);
+					require_once('include/security.php');
+					$a->set_groups(init_groups_visitor($_SESSION['visitor_id']));
+					info(sprintf( t('Welcome %s. Remote authentication successful.'),$x[0]['xchan_name']));
+				}
+			}
+
+
+
+
+			
+
+			goaway($desturl);
+		}
+
+		logger('mod_zot: invalid args: ' . print_r($a->argv,true));
+		killme();
+	}
+
+	return;
+}
+
+
+
+
 	
 function post_post(&$a) {
 
@@ -165,6 +270,51 @@ function post_post(&$a) {
 
 	}
 
-}
+	if($msgtype === 'auth_check') {
+		$arr = $data['sender'];
+		$sender_hash = base64url_encode(hash('whirlpool',$arr['guid'] . $arr['guid_sig'], true));
 
+		$y = q("select xchan_pubkey from xchan where xchan_hash = '%s' limit 1",
+			dbesc($sender_hash)
+		);
+		if((! $y) || (! rsa_verify($data['secret'],base64url_decode($data['secret_sig']),$y[0]['xchan_pubkey']))) {
+			logger('mod_zot: auth_check: sender not found or secret_sig invalid.');
+			json_return_and_die($ret);
+		}
+		if($data['recipients']) {
+
+			$arr = $data['recipients'][0];
+			$recip_hash = base64url_encode(hash('whirlpool',$arr['guid'] . $arr['guid_sig'], true));
+			$c = q("select channel_id from channel where channel_hash = '%s' limit 1",
+				dbesc($recip_hash)
+			);
+			if(! $c) {
+				logger('mod_zot: auth_check: recipient channel not found.');
+				json_return_and_die($ret);
+			}
+			$z = q("select id from verify where channel = %d and type = 'auth' and token = '%s' limit 1",
+				intval($c[0]['channel_id']),
+				dbesc($data['secret'])
+			);
+			if(! $z) {
+				logger('mod_zot: auth_check: verification key not found.');
+				json_return_and_die($ret);
+			}
+			$r = q("delete from verify where id = %d limit 1",
+				intval($z[0]['id'])
+			);
+
+			$ret['result'] = true;
+			json_return_and_die($ret);
+
+		}
+		json_return_and_die($ret);
+	}
+
+
+	// catchall
+	json_return_and_die($ret);
+
+
+}
 

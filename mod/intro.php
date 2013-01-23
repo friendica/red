@@ -6,9 +6,10 @@ function intro_post(&$a) {
 	if(! intval($_REQUEST['contact_id']))
 		return;
 
+	$approved = false;
 	$flags = 0;
 	if($_REQUEST['submit'] == t('Approve')) {
-		;
+		$approved = true;
 	}
 	elseif($_REQUEST['submit'] == t('Block')) {
 		$flags = ABOOK_FLAG_BLOCKED;
@@ -28,6 +29,10 @@ function intro_post(&$a) {
 		info( t('Connection updated.') . EOL);
 	else
 		notice( t('Connection update failed.') . EOL);
+
+	if($approved)
+		goaway(z_root() . '/connections/' . $_REQUEST['contact_id']);
+
 
 }
 

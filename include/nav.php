@@ -90,8 +90,12 @@ EOT;
 		);
 	}
 
-
-	$nav['lock'] = array('rmagic','',(($observer) ? 'lock' : 'unlock'), (($observer) ? $observer['xchan_addr'] : t('Click to authenticate to your home hub')));
+	if($observer)
+		$nav['lock'] = array('logout','','lock', 
+			sprintf( t('%s - click to logout'), $observer['xchan_addr']));
+	else
+		$nav['lock'] = array('rmagic','','unlock', 
+			t('Click to authenticate to your home hub'));
 
 	/**
 	 * "Home" should also take you home from an authenticated remote profile connection
@@ -118,9 +122,9 @@ EOT;
 
 	$nav['search'] = array('search', t('Search'), "", t('Search site content'));
 
-	$gdirpath = 'directory';
 
-	$nav['directory'] = array($gdirpath, t('Directory'), "", t('People directory')); 
+	$nav['directory'] = array('directory', t('Channel Directory'), "", t('Channel Locator')); 
+
 
 	/**
 	 *
@@ -199,6 +203,7 @@ EOT;
 		'$localuser' => local_user(),
 		'$sel' => 	$a->nav_sel,
 		'$apps' => $a->get_apps(),
+		'$pleasewait' => t('Please wait...')
 	));
 
 	call_hooks('page_header', $a->page['nav']);

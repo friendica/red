@@ -201,7 +201,7 @@ function group_content(&$a) {
 	$textmode = (($switchtotext && (count($members) > $switchtotext)) ? true : false);
 	foreach($members as $member) {
 		if($member['xchan_url']) {
-			$member['click'] = 'groupChangeMember(' . $group['id'] . ',\'' . $member['xchan_hash'] . '\',\'' . $sec_token . '\'); return true;';
+			$member['click'] = 'groupChangeMember(' . $group['id'] . ',\'' . $member['xchan_hash'] . '\',\'' . $sec_token . '\'); return false;';
 			$groupeditor['members'][] = micropro($member,true,'mpgroup', $textmode);
 		}
 		else
@@ -219,7 +219,7 @@ function group_content(&$a) {
 		$textmode = (($switchtotext && (count($r) > $switchtotext)) ? true : false);
 		foreach($r as $member) {
 			if(! in_array($member['xchan_hash'],$preselected)) {
-				$member['click'] = 'groupChangeMember(' . $group['id'] . ',\'' . $member['xchan_hash'] . '\',\'' . $sec_token . '\'); return true;';
+				$member['click'] = 'groupChangeMember(' . $group['id'] . ',\'' . $member['xchan_hash'] . '\',\'' . $sec_token . '\'); return false;';
 				$groupeditor['contacts'][] = micropro($member,true,'mpall', $textmode);
 			}
 		}

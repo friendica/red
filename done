@@ -15,7 +15,7 @@ include/
 + account.php
   acl_selectors.php
 + activities.php
-  api.php
+? api.php
 ? attach.php
 + auth.php
 - bb2diaspora.php (check for function dependencies before removing)
@@ -34,7 +34,7 @@ include/
 + directory.php
 - email.php
 + enotify.php
-  event.php
++ event.php
 + expire.php
   fcontact.php
 ? follow.php
@@ -47,23 +47,23 @@ include/
 ? items.php
 + js_strings.php
 + language.php
-  message.php
+? message.php
 - msgclean.php
 ? nav.php
   network.php
-  notifier.php
++ notifier.php
   oauth.php
   oembed.php
-?  onepoll.php
+? onepoll.php
 ? Photo.php
 ? plugin.php
-?  poller.php
+? poller.php
 ? profile_advanced.php
   profile_selectors.php
 ?  queue_fn.php
 ?  queue.php
 - salmon.php
-  Scrape.php
+= Scrape.php
 + security.php
 ? session.php
   socgraph.php
@@ -87,14 +87,14 @@ mod/
 - cb.php
   common.php
   community.php
-  contactgroup.php
++ contactgroup.php
   crepair.php
   delegate.php
-  directory.php
+? directory.php
   dirfind.php
   display.php
   editpost.php
-  events.php
+? events.php
   fbrowser.php
   feed.php
   filerm.php
@@ -104,17 +104,17 @@ mod/
   fsuggest.php
 + group.php
 - hcard.php -> not needed
-  help.php
+= help.php
 + home.php
   hostxrd.php -> probably not needed
 ? install.php
   invite.php
 + item.php
 + like.php
-  lockview.php
++ lockview.php
 + login.php
   lostpass.php
-  magic.php
+? magic.php
 + manage.php
   match.php
 ? message.php
@@ -157,15 +157,15 @@ mod/
   suggest.php
   tagger.php
   tagrm.php
-  uexport.php
-  update_community.php - needs converting to json
-  update_network.php - needs converting to json
-  update_profile.php - needs converting to json
+? uexport.php
+? update_community.php - needs converting to json
+? update_network.php - needs converting to json
+? update_profile.php - needs converting to json
   viewcontacts.php
   view.php
 + viewsrc.php
-? wall_attach.php (needs remote permissions refactor)
-? wall_upload.php (needs remote permissions refactor)
++ wall_attach.php (needs remote permissions refactor)
++ wall_upload.php (needs remote permissions refactor)
   webfinger.php
 + _well_known.php
   xrd.php

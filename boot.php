@@ -16,7 +16,7 @@ require_once('include/features.php');
 define ( 'FRIENDICA_PLATFORM',     'Friendica Red');
 define ( 'FRIENDICA_VERSION',      trim(file_get_contents('version.inc')) . 'R');
 define ( 'ZOT_REVISION',               1     ); 
-define ( 'DB_UPDATE_VERSION',       1020     );
+define ( 'DB_UPDATE_VERSION',       1021     );
 
 define ( 'EOL',                    '<br />' . "\r\n"     );
 define ( 'ATOM_TIME',              'Y-m-d\TH:i:s\Z' );
@@ -266,6 +266,8 @@ define ( 'HUBLOC_FLAGS_PRIMARY',      0x0001);
 define ( 'HUBLOC_FLAGS_UNVERIFIED',   0x0002);
 
 
+define ( 'XCHAN_FLAGS_HIDDEN',        0x0001);
+
 
 /**
  * Tag/term types
@@ -454,7 +456,7 @@ if(! class_exists('App')) {
 		private $widgets  = array();         // widgets for this page
 
 
-
+		public  $groups;
 		public  $language;
 		public  $module_loaded = false;
 		public  $query_string;
@@ -749,6 +751,13 @@ if(! class_exists('App')) {
 			$this->apps = $arr;
 		}
 
+		function set_groups($g) {
+			$this->groups = $g;
+		}
+
+		function get_groups() {
+			return $this->groups;
+		}
 
 		function set_widget($title,$html, $location = 'aside') {
 			$this->widgets[] = array('title' => $title, 'html' => $html, 'location' => $location);
@@ -1179,7 +1188,7 @@ if(! function_exists('local_user')) {
 if(! function_exists('remote_user')) {
 	function remote_user() {
 		if((x($_SESSION,'authenticated')) && (x($_SESSION,'visitor_id')))
-			return intval($_SESSION['visitor_id']);
+			return $_SESSION['visitor_id'];
 		return false;
 	}
 }
@@ -1258,7 +1267,7 @@ function profile_load(&$a, $nickname, $profile = 0) {
 	require_once('include/permissions.php');
 	if(! perm_is_allowed($user[0]['channel_id'],$observer['xchan_hash'],'view_profile')) {
 		// permission denied
-		notice( t(' Sorry, you don't have the permission to view this profile. ') . EOL);
+		notice( t(' Sorry, you don\'t have the permission to view this profile. ') . EOL);
 		return;
 	}
 

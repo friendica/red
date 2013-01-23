@@ -523,7 +523,7 @@ class Photo {
 
 
 
-    public function store($uid, $xchan, $rid, $filename, $album, $scale, $profile = 0, $allow_cid = '', $allow_gid = '', $deny_cid = '', $deny_gid = '') {
+    public function store($aid, $uid, $xchan, $rid, $filename, $album, $scale, $profile = 0, $allow_cid = '', $allow_gid = '', $deny_cid = '', $deny_gid = '') {
 
         $x = q("select id from photo where `resource_id` = '%s' and uid = %d and `xchan` = '%s' and `scale` = %d limit 1",
                 dbesc($rid),
@@ -533,6 +533,7 @@ class Photo {
         );
         if(count($x)) {
             $r = q("UPDATE `photo`
+				set `aid` = %d,
                 set `uid` = %d,
                 `xchan` = '%s',
                 `resource_id` = '%s',
@@ -544,6 +545,7 @@ class Photo {
                 `height` = %d,
                 `width` = %d,
                 `data` = '%s',
+				`size` = %d,
                 `scale` = %d,
                 `profile` = %d,
                 `allow_cid` = '%s',
@@ -552,6 +554,7 @@ class Photo {
                 `deny_gid` = '%s'
                 where id = %d limit 1",
 
+				intval($aid),
                 intval($uid),
                 dbesc($xchan),
                 dbesc($rid),
@@ -563,6 +566,7 @@ class Photo {
                 intval($this->getHeight()),
                 intval($this->getWidth()),
                 dbesc($this->imageString()),
+				intval(strlen($this->imageString())),
                 intval($scale),
                 intval($profile),
                 dbesc($allow_cid),
@@ -574,8 +578,9 @@ class Photo {
         }
         else {
             $r = q("INSERT INTO `photo`
-                ( `uid`, `xchan`, `resource_id`, `created`, `edited`, `filename`, type, `album`, `height`, `width`, `data`, `scale`, `profile`, `allow_cid`, `allow_gid`, `deny_cid`, `deny_gid` )
-                VALUES ( %d, '%s', '%s', '%s', '%s', '%s', '%s', '%s', %d, %d, '%s', %d, %d, '%s', '%s', '%s', '%s' )",
+                ( `aid`, `uid`, `xchan`, `resource_id`, `created`, `edited`, `filename`, type, `album`, `height`, `width`, `data`, `size`, `scale`, `profile`, `allow_cid`, `allow_gid`, `deny_cid`, `deny_gid` )
+                VALUES ( %d, %d, '%s', '%s', '%s', '%s', '%s', '%s', '%s', %d, %d, '%s', %d, %d, %d, '%s', '%s', '%s', '%s' )",
+				intval($aid),
                 intval($uid),
                 dbesc($xchan),
                 dbesc($rid),
@@ -587,6 +592,7 @@ class Photo {
                 intval($this->getHeight()),
                 intval($this->getWidth()),
                 dbesc($this->imageString()),
+				intval(strlen($this->imageString())),
                 intval($scale),
                 intval($profile),
                 dbesc($allow_cid),
@@ -669,21 +675,21 @@ function import_profile_photo($photo,$xchan) {
 
         $img->scaleImageSquare(175);
 
-        $r = $img->store(0, $xchan, $hash, $filename, 'Contact Photos', 4 );
+        $r = $img->store(0, 0, $xchan, $hash, $filename, 'Contact Photos', 4 );
 
         if($r === false)
             $photo_failure = true;
 
         $img->scaleImage(80);
 
-        $r = $img->store(0, $xchan, $hash, $filename, 'Contact Photos', 5 );
+        $r = $img->store(0, 0, $xchan, $hash, $filename, 'Contact Photos', 5 );
 
         if($r === false)
             $photo_failure = true;
 
         $img->scaleImage(48);
 
-        $r = $img->store(0, $xchan, $hash, $filename, 'Contact Photos', 6 );
+        $r = $img->store(0, 0, $xchan, $hash, $filename, 'Contact Photos', 6 );
 
         if($r === false)
             $photo_failure = true;

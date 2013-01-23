@@ -49,6 +49,7 @@ class Item extends BaseObject {
 // fixme		
 		$this->writable = ($this->get_data_value('writable') || $this->get_data_value('self'));
 // FIXME - base this on observer permissions
+
 		$this->writable = ((local_user() && $channel['channel_hash'] === $item['owner_xchan']) ? true : false);
 
 
@@ -227,8 +228,8 @@ class Item extends BaseObject {
 			'body' => $body_e,
 			'text' => strip_tags($body_e),
 			'id' => $this->get_id(),
-			'linktitle' => sprintf( t('View %s\'s profile @ %s'), $profile_name, ((strlen($item['author-link'])) ? $item['author-link'] : $item['url'])),
-			'olinktitle' => sprintf( t('View %s\'s profile @ %s'), $this->get_owner_name(), ((strlen($item['owner-link'])) ? $item['owner-link'] : $item['url'])),
+			'linktitle' => sprintf( t('View %s\'s profile - %s'), $profile_name, $item['author']['xchan_addr']),
+			'olinktitle' => sprintf( t('View %s\'s profile - %s'), $this->get_owner_name(), $item['owner']['xchan_addr']),
 			'to' => t('to'),
 			'wall' => t('Wall-to-Wall'),
 			'vwall' => t('via Wall-To-Wall:'),

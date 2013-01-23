@@ -30,7 +30,7 @@ function photos_init(&$a) {
 
 		$o .= '<div class="vcard">';
 		$o .= '<div class="fn">' . $a->data['channel']['channel_name'] . '</div>';
-		$o .= '<div id="profile-photo-wrapper"><img class="photo" style="width: 175px; height: 175px;" src="' . $a->get_cached_avatar_image($a->get_baseurl() . '/photo/profile/l/' . $a->data['channel']['channel_id']) . '" alt="' . $a->data['channel']['channel_name'] . '" /></div>';
+		$o .= '<div id="profile-photo-wrapper"><img class="photo" style="width: 175px; height: 175px;" src="' . $a->get_baseurl() . '/photo/profile/l/' . $a->data['channel']['channel_id'] . '" alt="' . $a->data['channel']['channel_name'] . '" /></div>';
 		$o .= '</div>';
 
 
@@ -790,7 +790,9 @@ function photos_post(&$a) {
 
 	$photo_hash = photo_new_resource();
 
-	$r = $ph->store($page_owner_uid, $visitor, $photo_hash, $filename, $album, 0 , 0, $str_contact_allow, $str_group_allow, $str_contact_deny, $str_group_deny);
+	$page_owner_aid = $a->data['channel']['channel_account_id'];
+
+	$r = $ph->store($page_owner_aid, $page_owner_uid, $visitor, $photo_hash, $filename, $album, 0 , 0, $str_contact_allow, $str_group_allow, $str_contact_deny, $str_group_deny);
 
 	if(! $r) {
 		logger('mod/photos.php: photos_post(): image store failed' , LOGGER_DEBUG);
@@ -800,13 +802,13 @@ function photos_post(&$a) {
 
 	if($width > 640 || $height > 640) {
 		$ph->scaleImage(640);
-		$ph->store($page_owner_uid, $visitor, $photo_hash, $filename, $album, 1, 0, $str_contact_allow, $str_group_allow, $str_contact_deny, $str_group_deny);
+		$ph->store($page_owner_aid, $page_owner_uid, $visitor, $photo_hash, $filename, $album, 1, 0, $str_contact_allow, $str_group_allow, $str_contact_deny, $str_group_deny);
 		$smallest = 1;
 	}
 
 	if($width > 320 || $height > 320) {
 		$ph->scaleImage(320);
-		$ph->store($page_owner_uid, $visitor, $photo_hash, $filename, $album, 2, 0, $str_contact_allow, $str_group_allow, $str_contact_deny, $str_group_deny);
+		$ph->store($page_owner_aid, $page_owner_uid, $visitor, $photo_hash, $filename, $album, 2, 0, $str_contact_allow, $str_group_allow, $str_contact_deny, $str_group_deny);
 		$smallest = 2;
 	}
 	
@@ -928,6 +930,7 @@ function photos_content(&$a) {
 	$contact_id     = 0;
 
 	$owner_uid = $a->data['channel']['channel_id'];
+	$owner_aid = $a->data['channel']['channel_account_id'];
 
 	$community_page = (($a->data['user']['page-flags'] == PAGE_COMMUNITY) ? true : false);
 

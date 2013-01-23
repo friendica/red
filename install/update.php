@@ -1,6 +1,6 @@
 <?php
 
-define( 'UPDATE_VERSION' , 1020 );
+define( 'UPDATE_VERSION' , 1021 );
 
 /**
  *
@@ -281,6 +281,13 @@ ADD INDEX ( `event_hash` )");
 
 function update_r1019() {
 	$r = q("ALTER TABLE `event` DROP `message_id` ");
+	if($r)
+		return UPDATE_SUCCESS;
+	return UPDATE_FAILED;
+}
+
+function update_r1020() {
+	$r = q("alter table photo drop `contact-id`, drop guid, drop index `resource-id`, add index ( `resource_id` )");
 	if($r)
 		return UPDATE_SUCCESS;
 	return UPDATE_FAILED;

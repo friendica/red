@@ -302,26 +302,33 @@ function paginate(&$a) {
 }}
 
 if(! function_exists('alt_pager')) {
-function alt_pager(&$a, $i) {
-        $o = '';
+function alt_pager(&$a, $i, $more = '', $less = '') {
+
+	$o = '';
+
+	if(! $more)
+		$more = t('older');
+	if(! $less)
+		$less = t('newer');
+
 	$stripped = preg_replace('/(&page=[0-9]*)/','',$a->query_string);
 	$stripped = str_replace('q=','',$stripped);
 	$stripped = trim($stripped,'/');
 	$pagenum = $a->pager['page'];
-        $url = $a->get_baseurl() . '/' . $stripped;
+	$url = $a->get_baseurl() . '/' . $stripped;
 
-        $o .= '<div class="pager">';
+	$o .= '<div class="pager">';
 
-	if($a->pager['page']>1)
-	  $o .= "<a href=\"$url"."&page=".($a->pager['page'] - 1).'">' . t('newer') . '</a>';
-        if($i>0) {
-          if($a->pager['page']>1)
-	          $o .= "&nbsp;-&nbsp;";
-	  $o .= "<a href=\"$url"."&page=".($a->pager['page'] + 1).'">' . t('older') . '</a>';
+	if($a->pager['page'] > 1)
+	  $o .= "<a href=\"$url"."&page=".($a->pager['page'] - 1).'">' . $less . '</a>';
+	if($i > 0 && $i == $a->pager['itemspage']) {
+		if($a->pager['page']>1)
+			$o .= " | ";
+		$o .= "<a href=\"$url"."&page=".($a->pager['page'] + 1).'">' . $more . '</a>';
 	}
 
 
-        $o .= '</div>'."\r\n";
+	$o .= '</div>'."\r\n";
 
 	return $o;
 }}
@@ -1711,7 +1718,11 @@ function ids_to_querystr($arr,$idx = 'id') {
 	return(implode(',', $t));
 }
 
-function xchan_query(&$items) {
+// Fetches xchan and hubloc data for an array of items with only an 
+// author_xchan and owner_xchan. If $abook is true also include the abook info. 
+// This is needed in the API to save extra per item lookups there.
+
+function xchan_query(&$items,$abook = false) {
 	$arr = array();
 	if($items && count($items)) {
 		foreach($items as $item) {
@@ -1722,8 +1733,14 @@ function xchan_query(&$items) {
 		}
 	}
 	if(count($arr)) {
-		$chans = q("select xchan.*,hubloc.* from xchan left join hubloc on hubloc_hash = xchan_hash
-			where xchan_hash in (" . implode(',', $arr) . ") and ( hubloc_flags & " . intval(HUBLOC_FLAGS_PRIMARY) . " )");
+		if($abook) {
+			$chans = q("select * from xchan left join hubloc on hubloc_hash = xchan_hash left join abook on abook_xchan = xchan_hash
+				where xchan_hash in (" . implode(',', $arr) . ") and ( hubloc_flags & " . intval(HUBLOC_FLAGS_PRIMARY) . " )");
+		}
+		else {
+			$chans = q("select xchan.*,hubloc.* from xchan left join hubloc on hubloc_hash = xchan_hash
+				where xchan_hash in (" . implode(',', $arr) . ") and ( hubloc_flags & " . intval(HUBLOC_FLAGS_PRIMARY) . " )");
+		}
 	}
 	if($items && count($items) && $chans && count($chans)) {
 		for($x = 0; $x < count($items); $x ++) {
@@ -1781,9 +1798,11 @@ function magic_link($s) {
 	return $s;
 }
 	
-function stringify_array_elms(&$arr) {
+// if $escape is true, dbesc() each element before adding quotes
+
+function stringify_array_elms(&$arr,$escape = false) {
 	for($x = 0; $x < count($arr); $x ++)
-		$arr[$x] = "'" . $arr[$x] . "'";
+		$arr[$x] = "'" . (($escape) ? dbesc($arr[$x]) : $arr[$x]) . "'";
 }
 
 /**

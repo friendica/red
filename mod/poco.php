@@ -7,7 +7,6 @@ function poco_init(&$a) {
 	if(intval(get_config('system','block_public')))
 		http_status_exit(401);
 
-
 	$observer = $a->get_observer();
 
 	if(argc() > 1) {
@@ -15,7 +14,7 @@ function poco_init(&$a) {
 	}
 	if(! x($user)) {
 		$c = q("select * from pconfig where cat = 'system' and k = 'suggestme' and v = 1");
-		if(! count($c))
+		if(! $c)
 			http_status_exit(401);
 		$system_mode = true;
 	}

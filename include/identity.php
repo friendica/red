@@ -201,6 +201,9 @@ function identity_basic_export($channel_id) {
 	 */
 
 	$ret = array();
+
+	$ret['compatibility'] = array('project' => FRIENDICA_PLATFORM, 'version' => FRIENDICA_VERSION, 'database' => DB_UPDATE_VERSION);
+
 	$r = q("select * from channel where channel_id = %d limit 1",
 		intval($channel_id)
 	);
@@ -240,4 +243,49 @@ function identity_basic_export($channel_id) {
 
 
 
+function identity_basic_import($arr, $seize_primary = false) {
 
+	$ret = array('result' => false );
+
+	if($arr['channel']) {
+		// import channel		
+
+		// create a new xchan (if necessary)
+
+		// create a new hubloc and seize control if applicable
+
+
+	}
+	if($arr['profile']) {
+		// FIXME - change profile assignment to a hash instead of an id we have to fix
+
+
+	}
+
+	if($arr['xchan']) {
+
+		// import any xchan and hubloc which are not yet available on this site
+		// Unset primary for all other hubloc on our own record if $seize_primary
+
+
+	}
+
+	if($arr['abook']) {
+		// import the abook entries
+
+
+	}
+
+
+	if($seize_primary) {
+
+		// send a refresh message to all our friends, telling them we've moved
+
+	}
+
+
+	$ret['result'] = true ;
+	return $ret;
+
+
+}

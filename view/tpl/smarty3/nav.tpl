@@ -86,6 +86,7 @@
 		<li id="nav-site-linkmenu" class="nav-menu-icon"><a href="#" rel="#nav-site-menu"><span class="icon s22 gear">{{$nav.settings.1}}</span></a>
 			<ul id="nav-site-menu" class="menu-popup">
 				{{if $nav.settings}}<li><a class="{{$nav.settings.2}}" href="{{$nav.settings.0}}" title="{{$nav.settings.3}}">{{$nav.settings.1}}</a></li>{{/if}}
+				{{if $nav.directory}}<li><a class="{{$nav.directory.2}}" href="{{$nav.directory.0}}" title="{{$nav.directory.3}}">{{$nav.directory.1}}</a></li>{{/if}}
 
 				{{if $nav.admin}}<li><a class="{{$nav.admin.2}}" href="{{$nav.admin.0}}" title="{{$nav.admin.3}}" >{{$nav.admin.1}}</a></li>{{/if}}
 
@@ -133,6 +134,7 @@
 				<input id="nav-search-text" type="text" value="" placeholder="{{$nav.search.1}}" name="search" title="{{$nav.search.3}}" onclick="this.submit();" />
 			</form>
 		</li>
+		<img src="images/rotator.gif" id="nav-search-spinner" style="display: none;" alt="{{$pleasewait}}" />
 
 	</ul>
 </nav>

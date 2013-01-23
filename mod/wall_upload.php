@@ -2,72 +2,58 @@
 
 require_once('Photo.php');
 
+
+
+
 function wall_upload_post(&$a) {
 
-	if(argc() > 1) {
-		if(! x($_FILES,'media')) {
+	$using_api = ((x($_FILES,'media')) ? true : false); 
+
+	if($using_api) {
+		require_once('include/api.php');
+		$user_info = api_get_user($a);
+		$nick = $user_info['screen_name'];
+	}
+	else {
+		if(argc() > 1)
 			$nick = argv(1);
-		}
-		else {
-			$user_info = api_get_user($a);
-			$nick = $user_info['screen_name'];
-		}
+	}
+
+	$channel = null;
+
+	if($nick) {		
 		$r = q("SELECT channel.* from channel where channel_address = '%s' limit 1",
 			dbesc($nick)
 		);
-		if(! ($r && count($r)))
-			return;
-		$channel = $r[0];
+		if($r)
+			$channel = $r[0];
 	}
-	else
-		return;
 
+	if(! $channel) {
+		if($using_api)
+			return;
+		else {
+			notice( t('Channel not found.') . EOL);
+			killme();
+		}
+	}
 
 	$can_post  = false;
 	$visitor   = 0;
 
+
 	$page_owner_uid   = $r[0]['channel_id'];
-//	$default_cid      = $r[0]['id'];
 
-	$page_owner_nick  = $r[0]['channel_address'];
+	$observer = $a->get_observer();
 
-//	$community_page   = (($r[0]['page-flags'] == PAGE_COMMUNITY) ? true : false);
-
-	if((local_user()) && (local_user() == $page_owner_uid))
-		$can_post = true;
-
-//	else {
-//		if($community_page && remote_user()) {
-//			$cid = 0;
-//			if(is_array($_SESSION['remote'])) {
-//				foreach($_SESSION['remote'] as $v) {
-//					if($v['uid'] == $page_owner_uid) {
-//						$cid = $v['cid'];
-//						break;
-//					}
-//				}
-//			}
-//			if($cid) {
-
-//				$r = q("SELECT `uid` FROM `contact` WHERE `blocked` = 0 AND `pending` = 0 AND `id` = %d AND `uid` = %d LIMIT 1",
-//					intval($cid),
-//					intval($page_owner_uid)
-//				);
-//				if(count($r)) {
-//					$can_post = true;
-//					$visitor = $cid;
-//				}
-//			}
-//		}
-//	}
-
-	if(! $can_post) {
-		notice( t('Permission denied.') . EOL );
-		killme();
+	if(! perm_is_allowed($page_owner_uid,$observer['xchan_hash'],'post_photos')) {
+		if($using_api)
+			return;
+		else {
+			notice( t('Permission denied.') . EOL);
+			killme();
+		}
 	}
-
-	if(! x($_FILES,'userfile') && ! x($_FILES,'media'))
-		killme();
 
 	if(x($_FILES,'userfile')) {
 		$src      = $_FILES['userfile']['tmp_name'];
@@ -81,36 +67,58 @@ function wall_upload_post(&$a) {
 		$filesize = intval($_FILES['media']['size']);
 		$filetype = $_FILES['media']['type'];
 	}
+	else {
+		if($using_api)
+			return;
+		else {
+			notice( t('Empty upload.') . EOL);
+			killme();
+		}
+	}
+
 	
-    if ($filetype=="") $filetype=guess_image_type($filename);
+    if($filetype == "") 
+		$filetype=guess_image_type($filename);
 	$maximagesize = get_config('system','maximagesize');
 
 	if(($maximagesize) && ($filesize > $maximagesize)) {
-		echo  sprintf( t('Image exceeds size limit of %d'), $maximagesize) . EOL;
 		@unlink($src);
-		killme();
+		if($using_api)
+			return;
+		else {
+			echo  sprintf( t('Image exceeds size limit of %d'), $maximagesize) . EOL;
+			killme();
+		}
 	}
 
-	$r = q("select sum(octet_length(data)) as total from photo where uid = %d and scale = 0 and album != 'Contact Photos' ",
-		intval($page_owner_uid)
-	);
 
 	$limit = service_class_fetch($page_owner_uid,'photo_upload_limit');
-
-	if(($limit !== false) && (($r[0]['total'] + strlen($imagedata)) > $limit)) {
-		echo upgrade_message(true) . EOL ;
-		@unlink($src);
-		killme();
+	if($limit !== false) {
+		$r = q("select sum(size) as total from photo where uid = %d and scale = 0 ",
+			intval($page_owner_uid)
+		);
+		if(($r) && (($r[0]['total'] + strlen($imagedata)) > $limit)) {
+			@unlink($src);
+			if($using_api)
+				return;
+			else {
+				echo upgrade_message(true) . EOL ;
+				killme();
+			}
+		}
 	}
-
 
 	$imagedata = @file_get_contents($src);
 	$ph = new Photo($imagedata, $filetype);
 
 	if(! $ph->is_valid()) {
-		echo ( t('Unable to process image.') . EOL);
 		@unlink($src);
-		killme();
+		if($using_api)
+			return;
+		else {
+			echo ( t('Unable to process image.') . EOL);
+			killme();
+		}
 	}
 
 	$ph->orient($src);
@@ -130,30 +138,35 @@ function wall_upload_post(&$a) {
 	$smallest = 0;
 
 	$defperm = '<' . $channel['channel_hash'] . '>';
+	$aid = $channel['channel_account_id'];
+	$visitor = ((remote_user()) ? remote_user() : '');
 
-	$r = $ph->store($page_owner_uid, $visitor, $hash, $filename, t('Wall Photos'), 0, 0, $defperm);
+	$r = $ph->store($aid, $page_owner_uid, $visitor, $hash, $filename, t('Wall Photos'), 0, 0, $defperm);
 
 	if(! $r) {
-		echo ( t('Image upload failed.') . EOL);
-		killme();
+		if($using_api)
+			return;
+		else {
+			echo ( t('Image upload failed.') . EOL);
+			killme();
+		}
 	}
 
 	if($width > 640 || $height > 640) {
 		$ph->scaleImage(640);
-		$r = $ph->store($page_owner_uid, $visitor, $hash, $filename, t('Wall Photos'), 1, 0, $defperm);
+		$r = $ph->store($aid, $page_owner_uid, $visitor, $hash, $filename, t('Wall Photos'), 1, 0, $defperm);
 		if($r) 
 			$smallest = 1;
 	}
 
 	if($width > 320 || $height > 320) {
 		$ph->scaleImage(320);
-		$r = $ph->store($page_owner_uid, $visitor, $hash, $filename, t('Wall Photos'), 2, 0, $defperm);
+		$r = $ph->store($aid, $page_owner_uid, $visitor, $hash, $filename, t('Wall Photos'), 2, 0, $defperm);
 		if($r)
 			$smallest = 2;
 	}
 
 	$basename = basename($filename);
-
 
 	if($_REQUEST['silent']) {
 		$m = '[url=' . $a->get_baseurl() . '/photos/' . $page_owner_nick . '/image/' . $hash . '][img]' . $a->get_baseurl() . "/photo/{$hash}-{$smallest}.".$ph->getExt()."[/img][/url]";

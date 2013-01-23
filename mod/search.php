@@ -113,8 +113,13 @@ function search_content(&$a) {
 		$search = substr($search,1);
 	}
 	if(strpos($search,'@') === 0) {
-		require_once('mod/dirfind.php');
-		return dirfind_content($a);
+		$search = substr($search,1);
+		goaway(z_root() . '/directory' . '?f=1&search=' . $search);
+	}
+
+	// look for a naked webbie
+	if(strpos($search,'@') !== false) {
+		goaway(z_root() . '/directory' . '?f=1&search=' . $search);
 	}
 
 	if(! $search)
@@ -186,11 +191,10 @@ function search_content(&$a) {
 		if($load) {
 			$r = q("SELECT distinct(uri), item.* from item
 				WHERE item_restrict = 0
-				AND (( `item`.`allow_cid` = ''  AND `item`.`allow_gid` = '' AND `item`.`deny_cid`  = '' AND `item`.`deny_gid`  = '' AND not ( item_flags & %d )) 
+				AND (( `item`.`allow_cid` = ''  AND `item`.`allow_gid` = '' AND `item`.`deny_cid`  = '' AND `item`.`deny_gid`  = '' AND item_private = 0 ) 
 				OR ( `item`.`uid` = %d ))
 				$sql_extra
 				group by uri ORDER BY created DESC $pager_sql ",
-				intval(ITEM_PRIVATE),
 				intval(local_user()),
 				intval(ABOOK_FLAG_BLOCKED)
 

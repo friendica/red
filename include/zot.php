@@ -101,12 +101,13 @@ function zot_build_packet($channel,$type = 'notify',$recipients = null, $remote_
 		'version' => ZOT_REVISION
 	);
 
-
 	if($recipients)
 		$data['recipients'] = $recipients;
 
-	if($secret)
+	if($secret) {
 		$data['secret'] = $secret; 
+		$data['secret_sig'] = base64url_encode(rsa_sign($secret,$channel['channel_prvkey']));
+	}
 
 	logger('zot_build_packet: ' . print_r($data,true));
 
@@ -530,14 +531,35 @@ function import_xchan($arr) {
 		dbesc($xchan_hash)
 	);	
 
+
 	if($r) {
 		if($r[0]['xchan_photo_date'] != $arr['photo_updated'])
-			$update_photos = true;
-		if(($r[0]['xchan_name_date'] != $arr['name_updated']) || ($r[0]['xchan_connurl'] != $arr['connections_url'])) {
-			$r = q("update xchan set xchan_name = '%s', xchan_name_date = '%s', xchan_connurl = '%s'  where xchan_hash = '%s' limit 1",
+			$import_photos = true;
+
+		// if we import an entry from a site that's not ours and either or both of us is off the grid - hide the entry.
+		// TODO: check if we're the same directory realm, which would mean we are allowed to see it
+
+		$dirmode = get_config('system','directory_mode'); 
+
+		if((($arr['site']['directory_mode'] === 'standalone') || ($dirmode & DIRECTORY_MODE_STANDALONE))
+&& ($arr['site']['url'] != z_root()))
+			$arr['searchable'] = false;
+
+		
+
+		// Be careful - XCHAN_FLAGS_HIDDEN should evaluate to 1
+		if(($r[0]['xchan_flags'] & XCHAN_FLAGS_HIDDEN) != $arr['searchable'])
+			$new_flags = $r[0]['xchan_flags'] ^ XCHAN_FLAGS_HIDDEN;
+		else
+			$new_flags = $r[0]['xchan_flags'];
+		
+			
+		if(($r[0]['xchan_name_date'] != $arr['name_updated']) || ($r[0]['xchan_connurl'] != $arr['connections_url']) || ($r[0]['xchan_flags'] != $new_flags)) {
+			$r = q("update xchan set xchan_name = '%s', xchan_name_date = '%s', xchan_connurl = '%s', xchan_flags = %d  where xchan_hash = '%s' limit 1",
 				dbesc($arr['name']),
 				dbesc($arr['name_updated']),
 				dbesc($arr['connections_url']),
+				intval($new_flags),
 				dbesc($xchan_hash)
 			);
 		}
@@ -901,16 +923,18 @@ function process_delivery($sender,$arr,$deliveries,$relay) {
 				$ev['uid']         = $channel['channel_id'];
 				$ev['account']     = $channel['channel_account_id'];
 				$ev['edited']      = $arr['edited'];
+				$ev['uri']         = $arr['uri'];
+				$ev['private']     = $arr['item_private'];
 
 				// is this an edit?
 
-				$r = q("SELECT * FROM event left join item on resource_id = event_hash WHERE resource_type = 'event' and
-					`uri` = '%s' AND event.uid = %d LIMIT 1",
+				$r = q("SELECT resource_id FROM item where uri = '%s' and uid = %d and resource_type = 'event' limit 1",
 					dbesc($arr['uri']),
 					intval($channel['channel_id'])
 				);
-				if($r)
-					$ev['event_hash'] = $r[0]['event_hash'];
+				if($r) {
+					$ev['event_hash'] = $r[0]['resource_id'];
+				}
 	dbg(1);
 				$xyz = event_store($ev);
 	dbg(0);
