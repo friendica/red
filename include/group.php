@@ -169,7 +169,7 @@ function group_add_member($uid,$name,$member,$gid = 0) {
 function group_get_members($gid) {
 	$ret = array();
 	if(intval($gid)) {
-		$r = q("SELECT abook.*,xchan.*,group_member.* FROM `group_member` 
+		$r = q("SELECT * FROM `group_member` 
 			LEFT JOIN abook ON abook_xchan = `group_member`.`xchan` left join xchan on xchan_hash = abook_xchan
 			WHERE `gid` = %d AND `group_member`.`uid` = %d and not ( abook_flags & %d ) and not ( abook_flags & %d ) and not ( abook_flags & %d ) ORDER BY xchan_name ASC ",
 			intval($gid),
@@ -226,7 +226,6 @@ function group_side($every="contacts",$each="group",$edit = false, $group_id = 0
 		'selected' => (($group_id == 0) ? 'group-selected' : ''),
 		'href' 	=> $every,
 	);
-
 
 
 	$r = q("SELECT * FROM `group` WHERE `deleted` = 0 AND `uid` = %d ORDER BY `name` ASC",

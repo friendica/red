@@ -87,14 +87,14 @@ mod/
 - cb.php
   common.php
   community.php
-  contactgroup.php
++ contactgroup.php
   crepair.php
   delegate.php
-  directory.php
+? directory.php
   dirfind.php
   display.php
   editpost.php
-  events.php
+? events.php
   fbrowser.php
   feed.php
   filerm.php
@@ -114,7 +114,7 @@ mod/
 + lockview.php
 + login.php
   lostpass.php
-  magic.php
+? magic.php
 + manage.php
   match.php
 ? message.php
@@ -164,8 +164,8 @@ mod/
   viewcontacts.php
   view.php
 + viewsrc.php
-? wall_attach.php (needs remote permissions refactor)
-? wall_upload.php (needs remote permissions refactor)
++ wall_attach.php (needs remote permissions refactor)
++ wall_upload.php (needs remote permissions refactor)
   webfinger.php
 + _well_known.php
   xrd.php
