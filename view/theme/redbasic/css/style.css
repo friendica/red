@@ -1,16 +1,21 @@
 /**
- * duepuntozero Frindika style
- * Fabio Comuni <fabrix.xm@gmail.com>
+ * Redbasic
+ *
+ * Based on duepuntozero Friendica style
+ * by Fabio Comuni <fabrix.xm@gmail.com>
  */
 
 
 /* generals */
 body {
-	font-family: helvetica,arial,freesans,clean,sans-serif;
+	font-family: arial,freesans,clean,sans-serif;
 	font-size: 12px;
 	background-color: #ffffff;
 	color: #000000;
 	margin: 0px;
+}
+.jslider {
+	font-family: arial,freesans,clean,sans-serif;
 }
 
 abbr {
@@ -19,7 +24,7 @@ abbr {
 
 aside {
 border: none;
-color: #d00;
+color: #0080FF;
 }
 
 /* icons */
@@ -96,8 +101,13 @@ color: #d00;
   padding: 1px;
 }
 
-a, a:visited, a:link, .fakelink, .fakelink:visited, .fakelink:link { color: #dd0000; text-decoration: none; }
-a:hover, .fakelink:hover { color: #dd0000; text-decoration: underline; }
+a, a:visited, a:link, .fakelink, .fakelink:visited, .fakelink:link { 
+	font-weight: bold;
+	color: #0080FF; 
+	text-decoration: none; 
+}
+
+a:hover, .fakelink:hover { color: #44AAFF; text-decoration: underline; }
 
 .fakelink {
 	cursor: pointer;
@@ -655,7 +665,7 @@ input#dfrn-url {
 	padding: 0px 0px 5px 0px;
 	font-size: 120%;
 	font-weight: bold;
-	color: #dd0000;
+	color: #0080FF;
 }
 
 .vcard .title {
@@ -1402,7 +1412,7 @@ input#dfrn-url {
 	font-size: 1.2em;
 	height: auto;
 	width: auto;
-	background-color: #dd0000;
+	background-color: #0080FF;
 	border-radius: 5px;
 	border: 2px outset;
 	box-shadow: 5px 5px 5px #666;
@@ -1869,7 +1879,7 @@ tr.mceLast {
 
 #profile-jot-submit {
     height: auto;
-    background-color: #dd0000;
+    background-color: #0080FF;
     color: #eeeeec;
     font-weight: bold;
     -webkit-border-radius: 5px;
@@ -3586,7 +3596,7 @@ nav .nav-menu.selected {
 }
 
 nav .nav-notify {
-  background-color: #0d0;
+  background-color: #0080FF;
   color: #fff;
   -moz-border-radius: 5px 5px 5px 5px;
   -webkit-border-radius: 5px 5px 5px 5px;
@@ -3623,7 +3633,7 @@ ul.menu-popup {
   position: absolute;
   display: none;
   width: 10em;
-  background: #dd0000;
+  background: #0080FF;
   color: #eec;
   padding: 0px;
   list-style: none;
@@ -3635,13 +3645,15 @@ ul.menu-popup {
 }
 ul.menu-popup a {
   display: block;
-  color: #eec;
+  color: #;
   padding: 5px 10px;
   text-decoration: none;
 }
+
+
 ul.menu-popup a:hover {
-  background-color: #eec;
-  color: #d00;
+  background-color: #888888;
+  color: #000000;
 }
 ul.menu-popup .menu-sep {
   border-top: 1px solid #9eabb0;
@@ -3867,3 +3879,7 @@ ul.menu-popup {
 }
 .acl-list-item.groupshow { border-color: #9ade00; }
 .acl-list-item.grouphide { border-color: #ff4141; }
+
+.contact-block-content {
+	margin-top: 8px;
+}
