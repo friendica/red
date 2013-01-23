@@ -81,8 +81,9 @@ function profile_photo_post(&$a) {
 			$im = new Photo($base_image['data'], $base_image['type']);
 			if($im->is_valid()) {
 				$im->cropImage(175,$srcX,$srcY,$srcW,$srcH);
+				$aid = get_account_id();
 
-				$r = $im->store(local_user(), 0, $base_image['resource_id'],$base_image['filename'], 
+				$r = $im->store($aid, local_user(), '', $base_image['resource_id'],$base_image['filename'], 
 					t('Profile Photos'), 4, $is_default_profile);
 
 				if($r === false)
@@ -90,7 +91,7 @@ function profile_photo_post(&$a) {
 
 				$im->scaleImage(80);
 
-				$r = $im->store(local_user(), 0, $base_image['resource_id'],$base_image['filename'], 
+				$r = $im->store($aid, local_user(), '', $base_image['resource_id'],$base_image['filename'], 
 					t('Profile Photos'), 5, $is_default_profile);
 			
 				if($r === false)
@@ -98,7 +99,7 @@ function profile_photo_post(&$a) {
 
 				$im->scaleImage(48);
 
-				$r = $im->store(local_user(), 0, $base_image['resource_id'],$base_image['filename'], 
+				$r = $im->store($aid, local_user(), '', $base_image['resource_id'],$base_image['filename'], 
 					t('Profile Photos'), 6, $is_default_profile);
 			
 				if($r === false)
@@ -308,7 +309,7 @@ function profile_photo_crop_ui_head(&$a, $ph){
 
 	$smallest = 0;
 
-	$r = $ph->store(local_user(), 0 , $hash, $filename, t('Profile Photos'), 0 );	
+	$r = $ph->store(get_account_id(), local_user(), '', $hash, $filename, t('Profile Photos'), 0 );	
 
 	if($r)
 		info( t('Image uploaded successfully.') . EOL );
@@ -317,7 +318,7 @@ function profile_photo_crop_ui_head(&$a, $ph){
 
 	if($width > 640 || $height > 640) {
 		$ph->scaleImage(640);
-		$r = $ph->store(local_user(), 0 , $hash, $filename, t('Profile Photos'), 1 );	
+		$r = $ph->store(get_account_id(), local_user(), '' , $hash, $filename, t('Profile Photos'), 1 );	
 		
 		if($r === false)
 			notice( sprintf(t('Image size reduction [%s] failed.'),"640") . EOL );
