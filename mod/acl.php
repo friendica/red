@@ -201,8 +201,8 @@ function acl_init(&$a){
 				"name"    => $g['name'],
 				"id"	  => $g['id'],
 				"xid"     => $g['hash'],
-				"link"    => $g['url'],
-				"nick"    => $g['nick'],
+				"link"    => $g['nick'],
+				"nick"    => substr($g['nick'],0,strpos($g['nick'],'@'))
 			);
 		}			
 	}
