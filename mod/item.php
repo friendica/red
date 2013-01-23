@@ -890,7 +890,6 @@ function handle_tag($a, &$body, &$inform, &$str_tags, $profile_uid, $tag) {
 			}
 			if($tagcid) { //if there was an id
 
-
 				//select contact with that id from the logged in user's contact list
 				$r = q("SELECT * FROM abook left join xchan on abook_xchan = xchan_hash 
 					WHERE abook_id = %d AND abook_channel = %d LIMIT 1",
@@ -936,7 +935,7 @@ function handle_tag($a, &$body, &$inform, &$str_tags, $profile_uid, $tag) {
 			}*/
 			//$r is set, if someone could be selected
 			if(count($r)) {
-				$profile = $r[0]['xchan_url'];
+				$profile = chanlink_url($r[0]['xchan_url']);
 				$newname = $r[0]['xchan_name'];
 				//add person's id to $inform
 				if(strlen($inform))
@@ -949,7 +948,7 @@ function handle_tag($a, &$body, &$inform, &$str_tags, $profile_uid, $tag) {
 			$replaced = true;
 			//create profile link
 			$profile = str_replace(',','%2c',$profile);
-			$url = $profile;
+			$url = chanlink_url($profile);
 			$newtag = '@[url=' . $profile . ']' . $newname	. '[/url]';
 			$body = str_replace('@' . $name, $newtag, $body);
 			//append tag to str_tags
