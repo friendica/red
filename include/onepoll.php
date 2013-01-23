@@ -113,16 +113,14 @@ function onepoll_run($argv, $argc){
 	// set last updated timestamp
 
 
-	$r = null;
-
 	if($contact['xchan_connurl']) {	
 		$r = q("SELECT xlink_id from xlink 
 			where xlink_xchan = '%s' and xlink_updated > UTC_TIMESTAMP() - INTERVAL 1 DAY",
 			intval($contact['xchan_hash'])
 		);
-	}
-	if($r) {
-		poco_load($contact['xchan_hash'],$contact['xchan_connurl']);
+		if($r) {
+			poco_load($contact['xchan_hash'],$contact['xchan_connurl']);
+		}
 	}
 
 	return;
