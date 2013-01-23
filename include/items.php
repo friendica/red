@@ -4057,11 +4057,17 @@ function drop_item($id,$interactive = true) {
 
 		// delete the item
 
-		$r = q("UPDATE `item` SET `deleted` = 1, `title` = '', `body` = '', `edited` = '%s', `changed` = '%s' WHERE `id` = %d LIMIT 1",
-			dbesc(datetime_convert()),
-			dbesc(datetime_convert()),
-			intval($item['id'])
+		$r = q(" UPDATE `item` SET
+            		`item_restrict` = (item_restrict|%d) ,
+          		`title` = '',
+		        `body` = '',
+		        `changed` = '%s'  WHERE `id` = %d LIMIT 1",
+		        intval(ITEM_DELETED),
+		        dbesc(datetime_convert()),
+		        intval($item['id'])
 		);
+
+
 
 		// clean up categories and tags so they don't end up as orphans
 
