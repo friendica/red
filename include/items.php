@@ -4060,8 +4060,10 @@ function drop_item($id,$interactive = true) {
             		`item_restrict` = (item_restrict|%d) ,
           		`title` = '',
 		        `body` = '',
-		        `changed` = '%s'  WHERE `id` = %d LIMIT 1",
+		        `changed` = '%s',
+			`edited` = '%s'  WHERE `id` = %d LIMIT 1",
 		        intval(ITEM_DELETED),
+		        dbesc(datetime_convert()),
 		        dbesc(datetime_convert()),
 		        intval($item['id'])
 		);
