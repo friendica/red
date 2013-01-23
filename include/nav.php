@@ -90,8 +90,12 @@ EOT;
 		);
 	}
 
-
-	$nav['lock'] = array('rmagic','',(($observer) ? 'lock' : 'unlock'), (($observer) ? $observer['xchan_addr'] : t('Click to authenticate to your home hub')));
+	if($observer)
+		$nav['lock'] = array('logout','','lock', 
+			sprintf( t('%s - click to logout'), $observer['xchan_addr']));
+	else
+		$nav['lock'] = array('rmagic','','unlock', 
+			t('Click to authenticate to your home hub'));
 
 	/**
 	 * "Home" should also take you home from an authenticated remote profile connection
