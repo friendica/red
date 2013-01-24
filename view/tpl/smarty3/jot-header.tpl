@@ -134,7 +134,7 @@ function enableOnUser(){
 
 		var uploader = new window.AjaxUpload(
 			'wall-image-upload',
-			{ action: 'wall_upload/{{$nickname}}',
+			{ action: '{{$baseurl}}/wall_upload/{{$nickname}}',
 				name: 'userfile',
 				onSubmit: function(file,ext) { $('#profile-rotator').show(); },
 				onComplete: function(file,response) {
@@ -145,7 +145,7 @@ function enableOnUser(){
 		);
 		var file_uploader = new window.AjaxUpload(
 			'wall-file-upload',
-			{ action: 'wall_attach/{{$nickname}}',
+			{ action: '{{$baseurl}}/wall_attach/{{$nickname}}',
 				name: 'userfile',
 				onSubmit: function(file,ext) { $('#profile-rotator').show(); },
 				onComplete: function(file,response) {
@@ -181,7 +181,7 @@ function enableOnUser(){
 		if(reply && reply.length) {
 			reply = bin2hex(reply);
 			$('#profile-rotator').show();
-			$.get('parse_url?binurl=' + reply, function(data) {
+			$.get('{{$baseurl}}/parse_url?binurl=' + reply, function(data) {
 				addeditortext(data);
 				$('#profile-rotator').hide();
 			});
@@ -214,7 +214,7 @@ function enableOnUser(){
 		if ($('#jot-popup').length != 0) $('#jot-popup').show();
 
 		$('#like-rotator-' + id).show();
-		$.get('share/' + id, function(data) {
+		$.get('{{$baseurl}}/share/' + id, function(data) {
 			if (!editor) $("#profile-jot-text").val("");
 			initEditor(function(){
 				addeditortext(data);
@@ -238,7 +238,7 @@ function enableOnUser(){
 		if(reply && reply.length) {
 			reply = bin2hex(reply);
 			$('#profile-rotator').show();
-			$.get('parse_url?binurl=' + reply, function(data) {
+			$.get('{{$baseurl}}/parse_url?binurl=' + reply, function(data) {
 				if (!editor) $("#profile-jot-text").val("");
 				initEditor(function(){
 					addeditortext(data);
@@ -257,7 +257,7 @@ function enableOnUser(){
 				commentBusy = true;
 				$('body').css('cursor', 'wait');
 
-				$.get('tagger/' + id + '?term=' + reply);
+				$.get('{{$baseurl}}/tagger/' + id + '?term=' + reply);
 				if(timer) clearTimeout(timer);
 				timer = setTimeout(NavUpdate,3000);
 				liking = 1;
@@ -284,7 +284,7 @@ function enableOnUser(){
 				if(reply && reply.length) {
 					commentBusy = true;
 					$('body').css('cursor', 'wait');
-					$.get('filer/' + id + '?term=' + reply, NavUpdate);
+					$.get('{{$baseurl}}/filer/' + id + '?term=' + reply, NavUpdate);
 //					if(timer) clearTimeout(timer);
 //					timer = setTimeout(NavUpdate,3000);
 					liking = 1;

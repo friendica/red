@@ -44,7 +44,7 @@ function post_init(&$a) {
 			);
 			if(! $c) {
 				logger('mod_zot: auth: unable to find channel ' . $webbie);
-				// They'll get a notice when they hit the page, we don't need two. 
+				// They'll get a notice when they hit the page, we don't need two of them. 
 				goaway($desturl);
 			}
 
@@ -70,33 +70,39 @@ function post_init(&$a) {
 
 			// check credentials and access
 
-			// Auth packets MUST use ultra top-secret hush-hush mode 
+			// If they are already authenticated and haven't changed credentials, 
+			// we can save an expensive network round trip and improve performance.
 
-			$p = zot_build_packet($c[0],$type = 'auth_check',array(array('guid' => $x[0]['hubloc_guid'],'guid_sig' => $x[0]['hubloc_guid_sig'])), $x[0]['hubloc_sitekey'], $sec);
-			$result = zot_zot($x[0]['hubloc_callback'],$p);
+			$remote = remote_user();
+			$result = null;
 
-			if($result['success']) {
+			$already_authed = ((($remote) && ($x[0]['hubloc_hash'] == $remote)) ? true : false); 
+
+			if(! $already_authed) {
+				// Auth packets MUST use ultra top-secret hush-hush mode 
+				$p = zot_build_packet($c[0],$type = 'auth_check',
+					array(array('guid' => $x[0]['hubloc_guid'],'guid_sig' => $x[0]['hubloc_guid_sig'])), 
+					$x[0]['hubloc_sitekey'], $sec);
+				$result = zot_zot($x[0]['hubloc_callback'],$p);
+				if(! $result['success'])
+					goaway($desturl);
 				$j = json_decode($result['body'],true);
-				if($j['result']) {
-					// everything is good... maybe
-					if(local_user()) {
-						notice( t('Remote authentication blocked. You are logged into this site locally. Please logout and retry') . EOL);
-						goaway($desturl);
-					}
-					// log them in
-					$_SESSION['authenticated'] = 1;
-					$_SESSION['visitor_id'] = $x[0]['xchan_hash'];
-					$a->set_observer($x[0]);
-					require_once('include/security.php');
-					$a->set_groups(init_groups_visitor($_SESSION['visitor_id']));
-					info(sprintf( t('Welcome %s. Remote authentication successful.'),$x[0]['xchan_name']));
-				}
 			}
 
-
-
-
-			
+			if($already_authed || $j['result']) {
+				// everything is good... maybe
+				if(local_user()) {
+					notice( t('Remote authentication blocked. You are logged into this site locally. Please logout and retry') . EOL);
+					goaway($desturl);
+				}
+				// log them in
+				$_SESSION['authenticated'] = 1;
+				$_SESSION['visitor_id'] = $x[0]['xchan_hash'];
+				$a->set_observer($x[0]);
+				require_once('include/security.php');
+				$a->set_groups(init_groups_visitor($_SESSION['visitor_id']));
+				info(sprintf( t('Welcome %s. Remote authentication successful.'),$x[0]['xchan_name']));
+			}
 
 			goaway($desturl);
 		}
@@ -274,13 +280,22 @@ function post_post(&$a) {
 		$arr = $data['sender'];
 		$sender_hash = base64url_encode(hash('whirlpool',$arr['guid'] . $arr['guid_sig'], true));
 
+		// garbage collect any old unused notifications
+		q("delete from verify where type = 'auth' and created < UTC_TIMESTAMP() - INTERVAL 10 MINUTE");
+
 		$y = q("select xchan_pubkey from xchan where xchan_hash = '%s' limit 1",
 			dbesc($sender_hash)
 		);
+		// We created a unique hash in mod/magic.php when we invoked remote auth, and stored it in
+		// the verify table. It is now coming back to us as 'secret' and is signed by the other site.
+		// First verify their signature.
+
 		if((! $y) || (! rsa_verify($data['secret'],base64url_decode($data['secret_sig']),$y[0]['xchan_pubkey']))) {
 			logger('mod_zot: auth_check: sender not found or secret_sig invalid.');
 			json_return_and_die($ret);
 		}
+
+		// There should be exactly one recipient
 		if($data['recipients']) {
 
 			$arr = $data['recipients'][0];
@@ -292,9 +307,14 @@ function post_post(&$a) {
 				logger('mod_zot: auth_check: recipient channel not found.');
 				json_return_and_die($ret);
 			}
-			$z = q("select id from verify where channel = %d and type = 'auth' and token = '%s' limit 1",
+
+			// This additionally checks for forged senders since we already stored the expected result in meta
+			// and we've already verified that this is them via zot_gethub() and that their key signed our token
+
+			$z = q("select id from verify where channel = %d and type = 'auth' and token = '%s' and meta = '%s' limit 1",
 				intval($c[0]['channel_id']),
-				dbesc($data['secret'])
+				dbesc($data['secret']),
+				dbesc($sender_hash)
 			);
 			if(! $z) {
 				logger('mod_zot: auth_check: verification key not found.');

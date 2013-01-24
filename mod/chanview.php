@@ -76,7 +76,7 @@ function chanview_content(&$a) {
 	}
 
 	if($xchan['xchan_hash'])
-		$a->set_widget('vcard',vcard_from_xchan($xchan));
+		$a->set_widget('vcard',vcard_from_xchan($xchan,$observer,'chanview'));
 				
 	$url = (($observer) 
 		? z_root() . '/magic?f=&dest=' . $xchan['xchan_url'] . '&addr=' . $xchan['xchan_addr'] 

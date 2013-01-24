@@ -10,6 +10,11 @@
 {{ if $connect }}
 	<li><a id="follow-link" href="follow?f=&url=$follow">$connect</a></li>
 {{ endif }}
+{{ if $newwin }}
+	<li><a id="visit-chan-link" href="$url" title="$newtit" target="_blank" >$newwin</a></li>
+{{ endif }}
 </ul>
+
+
 </div>
 

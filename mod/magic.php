@@ -85,7 +85,7 @@ function magic_init(&$a) {
 			dbesc('auth'),
 			intval($channel['channel_id']),
 			dbesc($token),
-			dbesc($hubloc['hubloc_hash']),
+			dbesc($x[0]['hubloc_hash']),
 			dbesc(datetime_convert())
 		);
 

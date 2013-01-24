@@ -1,7 +1,7 @@
 <?php
 
 
-function vcard_from_xchan($xchan) {
+function vcard_from_xchan($xchan, $observer = null, $mode = '') {
 
 	$connect = false;
 	if(local_user()) {
@@ -12,12 +12,20 @@ function vcard_from_xchan($xchan) {
 		if(! $r)
 			$connect = t('Connect');
 	}
-	
+
+	$url = (($observer) 
+		? z_root() . '/magic?f=&dest=' . $xchan['xchan_url'] . '&addr=' . $xchan['xchan_addr'] 
+		: $xchan['xchan_url']
+	);
+					
 	return replace_macros(get_markup_template('xchan_vcard.tpl'),array(
 		'$name'    => $xchan['xchan_name'],
 		'$photo'   => $xchan['xchan_photo_l'],
 		'$follow'  => $xchan['xchan_addr'],
-		'$connect' => $connect
+		'$connect' => $connect,
+		'$newwin'  => (($mode === 'chanview') ? t('New window') : ''),
+		'$newtit'  => t('Open the selected location in a different window or browser tab'),
+		'$url'     => $url,
 	));
 }
 
