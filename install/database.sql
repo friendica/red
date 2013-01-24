@@ -242,7 +242,6 @@ CREATE TABLE IF NOT EXISTS `event` (
   PRIMARY KEY (`id`),
   KEY `uid` (`uid`),
   KEY `event_xchan` (`event_xchan`),
-  KEY `uri` (`message_id`),
   KEY `type` (`type`),
   KEY `start` (`start`),
   KEY `finish` (`finish`),
@@ -655,7 +654,6 @@ CREATE TABLE IF NOT EXISTS `photo` (
   KEY `scale` (`scale`),
   KEY `profile` (`profile`),
   KEY `type` (`type`),
-  KEY `contact-id` (`contact-id`),
   KEY `aid` (`aid`),
   KEY `xchan` (`xchan`),
   KEY `size` (`size`)
