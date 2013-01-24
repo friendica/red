@@ -86,9 +86,10 @@ function get_all_perms($uid,$observer,$internal_use = true) {
 		if($observer) {
 			if(! $abook_checked) {
 				$x = q("select abook_my_perms, abook_flags from abook 
-					where abook_channel = %d and abook_xchan = '%s' limit 1",
+					where abook_channel = %d and abook_xchan = '%s' and not ( abook_flags & %d ) limit 1",
 					intval($uid),
-					dbesc($observer)
+					dbesc($observer),
+					intval(ABOOK_FLAG_SELF)
 				);
 				$abook_checked = true;
 			}
@@ -210,9 +211,10 @@ function perm_is_allowed($uid,$observer,$permission) {
 		return false;
 
 	if($observer) {
-		$x = q("select abook_my_perms, abook_flags from abook where abook_channel = %d and abook_xchan = '%s' limit 1",
+		$x = q("select abook_my_perms, abook_flags from abook where abook_channel = %d and abook_xchan = '%s' and not ( abook_flags & %d ) limit 1",
 			intval($uid),
-			dbesc($observer)
+			dbesc($observer),
+			intval(ABOOK_FLAG_SELF)
 		);
 
 		// If they're blocked - they can't read or write

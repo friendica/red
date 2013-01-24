@@ -14,14 +14,27 @@ function get_theme_config_file($theme){
 	return null;
 }
 
-function settings_init(&$a) {
+function settings_aside(&$a) {
 
 
 	// default is channel settings in the absence of other arguments
 
 	if(argc() == 1) {
+		// We are setting these values - don't use the argc(), argv() functions here
 		$a->argc = 2;
 		$a->argv[] = 'channel';
+	}
+
+	$abook_self_id = 0;
+
+	// Retrieve the 'self' address book entry for use in the auto-permissions link
+	if(local_user()) {		
+		$abk = q("select abook_id from abook where abook_channel = %d and ( abook_flags & %d ) limit 1",
+			intval(local_user()),
+			intval(ABOOK_FLAG_SELF)
+		);
+		if($abk)
+			$abook_self_id = $abk[0]['abook_id'];
 	}
 
 
@@ -73,6 +86,12 @@ function settings_init(&$a) {
 //			'url' => $a->get_baseurl(true) . '/uexport/complete',
 //			'selected' => ''
 //		),
+
+		array(
+			'label' => t('Automatic Permissions (Advanced)'),
+			'url' => $a->get_baseurl(true) . '/connections/' . $abook_self_id,
+			'selected' => ''
+		),
 
 
 	);

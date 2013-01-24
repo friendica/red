@@ -3,20 +3,28 @@
 
 <h3>$addr</h3>
 
+{{ if $notself }}
 <div id="connection-flag-tabs">
 $tabs
 </div>
+{{ endif }}
+
+{{ if $self }}
+<div id="autoperm-desc" class="descriptive-paragraph">$autolbl</div>
+{{ endif }}
 
 <div id="contact-edit-wrapper">
 
+{{ if $notself }}
 {{ if $slide }}
 <h3>$lbl_slider</h3>
 
 $slide
 
 {{ endif }}
+{{ endif }}
 
-<h3>Permissions</h3>
+<h3>$permlbl</h3>
 
 <form action="connections/$contact_id" method="post" >
 <input type="hidden" name="contact_id" value="$contact_id">
@@ -25,6 +33,9 @@ $slide
 <br />
 <b>$quick</b>
 <ul>
+{{ if $self }}
+<li><a href="#" onclick="connectForum(); return false;">$forum</a></li>
+{{ endif }}
 <li><a href="#" onclick="connectFullShare(); return false;">$full</a></li>
 <li><a href="#" onclick="connectCautiousShare(); return false;">$cautious</a></li>
 <li><a href="#" onclick="connectFollowOnly(); return false;">$follow</a></li>

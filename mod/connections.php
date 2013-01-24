@@ -107,8 +107,8 @@ function connections_post(&$a) {
 		notice( t('Failed to update connnection record.') . EOL);
 
 
-	if((x($a->data,'abook')) && $a->data['abook']['abook_my_perms'] != $abook_my_perms) {
-		// FIXME - this message type is not yet handled in the notifier
+	if((x($a->data,'abook')) && $a->data['abook']['abook_my_perms'] != $abook_my_perms 
+		&& (! ($a->data['abook']['abook_flags'] & ABOOK_FLAG_SELF))) {
 		proc_run('php', 'include/notifier.php', 'permission_update', $contact_id);
 	}
 
@@ -238,66 +238,69 @@ function connections_content(&$a) {
 		$contact = $a->data['abook'];
 
 
-	$tabs = array(
+		$tabs = array(
 
-		array(
-			'label' => t('View Profile'),
-			'url'   => $a->get_baseurl(true) . '/chanview/?f=&cid=' . $contact['abook_id'], 
-			'sel'   => '',
-			'title' => sprintf( t('View %s\'s profile'), $contact['xchan_name']),
-		),
+			array(
+				'label' => t('View Profile'),
+				'url'   => $a->get_baseurl(true) . '/chanview/?f=&cid=' . $contact['abook_id'], 
+				'sel'   => '',
+				'title' => sprintf( t('View %s\'s profile'), $contact['xchan_name']),
+			),
 
-		array(
-			'label' => t('Refresh Permissions'),
-			'url'   => $a->get_baseurl(true) . '/connections/' . $contact['abook_id'] . '/refresh', 
-			'sel'   => '',
-			'title' => t('Fetch updated permissions'),
-		),
+			array(
+				'label' => t('Refresh Permissions'),
+				'url'   => $a->get_baseurl(true) . '/connections/' . $contact['abook_id'] . '/refresh', 
+				'sel'   => '',
+				'title' => t('Fetch updated permissions'),
+			),
 
-		array(
-			'label' => (($contact['abook_flags'] & ABOOK_FLAG_BLOCKED) ? t('Unblock') : t('Block')),
-			'url'   => $a->get_baseurl(true) . '/connections/' . $contact['abook_id'] . '/block', 
-			'sel'   => (($contact['abook_flags'] & ABOOK_FLAG_BLOCKED) ? 'active' : ''),
-			'title' => t('Block or Unblock this connection'),
-		),
+			array(
+				'label' => (($contact['abook_flags'] & ABOOK_FLAG_BLOCKED) ? t('Unblock') : t('Block')),
+				'url'   => $a->get_baseurl(true) . '/connections/' . $contact['abook_id'] . '/block', 
+				'sel'   => (($contact['abook_flags'] & ABOOK_FLAG_BLOCKED) ? 'active' : ''),
+				'title' => t('Block or Unblock this connection'),
+			),
 
-		array(
-			'label' => (($contact['abook_flags'] & ABOOK_FLAG_IGNORED) ? t('Unignore') : t('Ignore')),
-			'url'   => $a->get_baseurl(true) . '/connections/' . $contact['abook_id'] . '/ignore', 
-			'sel'   => (($contact['abook_flags'] & ABOOK_FLAG_IGNORED) ? 'active' : ''),
-			'title' => t('Ignore or Unignore this connection'),
-		),
-		array(
-			'label' => (($contact['abook_flags'] & ABOOK_FLAG_ARCHIVED) ? t('Unarchive') : t('Archive')),
-			'url'   => $a->get_baseurl(true) . '/connections/' . $contact['abook_id'] . '/archive', 
-			'sel'   => (($contact['abook_flags'] & ABOOK_FLAG_ARCHIVED) ? 'active' : ''),
-			'title' => t('Archive or Unarchive this connection'),
-		),
-		array(
-			'label' => (($contact['abook_flags'] & ABOOK_FLAG_HIDDEN) ? t('Unhide') : t('Hide')),
-			'url'   => $a->get_baseurl(true) . '/connections/' . $contact['abook_id'] . '/hide', 
-			'sel'   => (($contact['abook_flags'] & ABOOK_FLAG_HIDDEN) ? 'active' : ''),
-			'title' => t('Hide or Unhide this connection'),
-		),
+			array(
+				'label' => (($contact['abook_flags'] & ABOOK_FLAG_IGNORED) ? t('Unignore') : t('Ignore')),
+				'url'   => $a->get_baseurl(true) . '/connections/' . $contact['abook_id'] . '/ignore', 
+				'sel'   => (($contact['abook_flags'] & ABOOK_FLAG_IGNORED) ? 'active' : ''),
+				'title' => t('Ignore or Unignore this connection'),
+			),
+			array(
+				'label' => (($contact['abook_flags'] & ABOOK_FLAG_ARCHIVED) ? t('Unarchive') : t('Archive')),
+				'url'   => $a->get_baseurl(true) . '/connections/' . $contact['abook_id'] . '/archive', 
+				'sel'   => (($contact['abook_flags'] & ABOOK_FLAG_ARCHIVED) ? 'active' : ''),
+				'title' => t('Archive or Unarchive this connection'),
+			),
+			array(
+				'label' => (($contact['abook_flags'] & ABOOK_FLAG_HIDDEN) ? t('Unhide') : t('Hide')),
+				'url'   => $a->get_baseurl(true) . '/connections/' . $contact['abook_id'] . '/hide', 
+				'sel'   => (($contact['abook_flags'] & ABOOK_FLAG_HIDDEN) ? 'active' : ''),
+				'title' => t('Hide or Unhide this connection'),
+			),
 
-		array(
-			'label' => t('Delete'),
-			'url'   => $a->get_baseurl(true) . '/connections/' . $contact['abook_id'] . '/drop', 
-			'sel'   => '',
-			'title' => t('Delete this connection'),
-		),
+			array(
+				'label' => t('Delete'),
+				'url'   => $a->get_baseurl(true) . '/connections/' . $contact['abook_id'] . '/drop', 
+				'sel'   => '',
+				'title' => t('Delete this connection'),
+			),
 
-	);
+		);
 
-	$tab_tpl = get_markup_template('common_tabs.tpl');
-	$t = replace_macros($tab_tpl, array('$tabs'=>$tabs));
+		$self = false;
 
-
-
+		if(! ($contact['abook_flags'] & ABOOK_FLAG_SELF)) {
+			$tab_tpl = get_markup_template('common_tabs.tpl');
+			$t = replace_macros($tab_tpl, array('$tabs'=>$tabs));
+		}
+		else
+			$self = true;
 
 		$a->page['htmlhead'] .= replace_macros(get_markup_template('contact_head.tpl'), array(
 			'$baseurl' => $a->get_baseurl(true),
-			'$editselect' => $editselect,
+			'$editselect' => $editselect
 		));
 
 		require_once('include/contact_selectors.php');
@@ -324,66 +327,70 @@ function connections_content(&$a) {
 		$global_perms = get_perms();
 		$existing = get_all_perms(local_user(),$contact); 
 
-
+		
 		foreach($global_perms as $k => $v) {
 			$perms[] = array('perms_' . $k, $v[3], (($contact['abook_their_perms'] & $v[1]) ? "1" : ""),((($contact['abook_my_perms'] & $v[1]) || $existing[$k]) ? "1" : ""), $v[1], (($channel[$v[0]] == PERMS_SPECIFIC) ? '' : '1'), $v[4]);
 		}
 
-
 		$o .= replace_macros($tpl,array(
 
-			'$header' => sprintf( t('Connections: settings for %s'),$contact['xchan_name']),
-			'$addr' => $contact['xchan_addr'],
-			'$viewprof' => t('View Profile'),
-			'$lbl_slider' => t('Slide to adjust your degree of friendship'),
-			'$slide' => $slide,
-			'$tabs' => $t,
-			'$tab_str' => $tab_str,
-			'$submit' => t('Submit'),
-			'$lbl_vis1' => t('Profile Visibility'),
-			'$lbl_vis2' => sprintf( t('Please choose the profile you would like to display to %s when viewing your profile securely.'), $contact['name']),
-			'$lbl_info1' => t('Contact Information / Notes'),
-			'$infedit' => t('Edit contact notes'),
-			'$close' => $contact['abook_closeness'],
-			'$them' => t('Their Settings'),
-			'$me' => t('My Settings'),
-			'$perms' => $perms,
-			'$full' => t('Full Sharing'),
-			'$cautious' => t('Cautious Sharing'),
-			'$follow' => t('Follow Only'),
-			'$advanced' => t('Advanced Permissions'),
-			'$quick' => t('Quick Links'),
-			'$common_link' => $a->get_baseurl(true) . '/common/loc/' . local_user() . '/' . $contact['id'],
-			'$all_friends' => $all_friends,
-			'$relation_text' => $relation_text,
-			'$visit' => sprintf( t('Visit %s\'s profile [%s]'),$contact['xchan_name'],$contact['xchan_url']),
-			'$blockunblock' => t('Block/Unblock contact'),
-			'$ignorecont' => t('Ignore contact'),
-			'$lblcrepair' => t("Repair URL settings"),
-			'$lblrecent' => t('View conversations'),
-			'$lblsuggest' => $lblsuggest,
-			'$delete' => t('Delete contact'),
-			'$poll_interval' => contact_poll_interval($contact['priority'],(! $poll_enabled)),
-			'$poll_enabled' => $poll_enabled,
-			'$lastupdtext' => t('Last update:'),
-			'$lost_contact' => $lost_contact,
-			'$updpub' => t('Update public posts'),
-			'$last_update' => $last_update,
-			'$udnow' => t('Update now'),
+			'$header'         => (($self) ? t('Automatic Permissions Settings') : sprintf( t('Connections: settings for %s'),$contact['xchan_name'])),
+			'$addr'           => $contact['xchan_addr'],
+			'$notself'        => (($self) ? '' : '1'),
+			'$self'           => (($self) ? '1' : ''),
+			'$autolbl'        => t('When receiving a channel introduction, any permissions provided here will be applied to the new connnection automatically and the introduction approved. Leave this page if you do not wish to use this feature.'),
+			'$viewprof'       => t('View Profile'),
+			'$lbl_slider'     => t('Slide to adjust your degree of friendship'),
+			'$slide'          => $slide,
+			'$tabs'           => $t,
+			'$tab_str'        => $tab_str,
+			'$submit'         => t('Submit'),
+			'$lbl_vis1'       => t('Profile Visibility'),
+			'$lbl_vis2'       => sprintf( t('Please choose the profile you would like to display to %s when viewing your profile securely.'), $contact['name']),
+			'$lbl_info1'      => t('Contact Information / Notes'),
+			'$infedit'        => t('Edit contact notes'),
+			'$close'          => $contact['abook_closeness'],
+			'$them'           => t('Their Settings'),
+			'$me'             => t('My Settings'),
+			'$perms'          => $perms,
+			'$forum'          => t('Forum Members'),
+			'$full'           => t('Full Sharing'),
+			'$cautious'       => t('Cautious Sharing'),
+			'$follow'         => t('Follow Only'),
+			'$permlbl'        => t('Permissions'),
+			'$advanced'       => t('Advanced Permissions'),
+			'$quick'          => t('Quick Links'),
+			'$common_link'    => $a->get_baseurl(true) . '/common/loc/' . local_user() . '/' . $contact['id'],
+			'$all_friends'    => $all_friends,
+			'$relation_text'  => $relation_text,
+			'$visit'          => sprintf( t('Visit %s\'s profile - %s'),$contact['xchan_name'],$contact['xchan_url']),
+			'$blockunblock'   => t('Block/Unblock contact'),
+			'$ignorecont'     => t('Ignore contact'),
+			'$lblcrepair'     => t("Repair URL settings"),
+			'$lblrecent'      => t('View conversations'),
+			'$lblsuggest'     => $lblsuggest,
+			'$delete'         => t('Delete contact'),
+			'$poll_interval'  => contact_poll_interval($contact['priority'],(! $poll_enabled)),
+			'$poll_enabled'   => $poll_enabled,
+			'$lastupdtext'    => t('Last update:'),
+			'$lost_contact'   => $lost_contact,
+			'$updpub'         => t('Update public posts'),
+			'$last_update'    => $last_update,
+			'$udnow'          => t('Update now'),
 //			'$profile_select' => contact_profile_assign($contact['profile_id'],(($contact['network'] !== NETWORK_DFRN) ? true : false)),
-			'$contact_id' => $contact['abook_id'],
-			'$block_text' => (($contact['blocked']) ? t('Unblock') : t('Block') ),
-			'$ignore_text' => (($contact['readonly']) ? t('Unignore') : t('Ignore') ),
-			'$blocked' => (($contact['blocked']) ? t('Currently blocked') : ''),
-			'$ignored' => (($contact['readonly']) ? t('Currently ignored') : ''),
-			'$archived' => (($contact['archive']) ? t('Currently archived') : ''),
-			'$hidden' => array('hidden', t('Hide this contact from others'), ($contact['hidden'] == 1), t('Replies/likes to your public posts <strong>may</strong> still be visible')),
-			'$photo' => $contact['photo'],
-			'$name' => $contact['name'],
-			'$dir_icon' => $dir_icon,
-			'$alt_text' => $alt_text,
-			'$sparkle' => $sparkle,
-			'$url' => $url
+			'$contact_id'     => $contact['abook_id'],
+			'$block_text'     => (($contact['blocked']) ? t('Unblock') : t('Block') ),
+			'$ignore_text'    => (($contact['readonly']) ? t('Unignore') : t('Ignore') ),
+			'$blocked'        => (($contact['blocked']) ? t('Currently blocked') : ''),
+			'$ignored'        => (($contact['readonly']) ? t('Currently ignored') : ''),
+			'$archived'       => (($contact['archive']) ? t('Currently archived') : ''),
+			'$hidden'         => array('hidden', t('Hide this contact from others'), ($contact['hidden'] == 1), t('Replies/likes to your public posts <strong>may</strong> still be visible')),
+			'$photo'          => $contact['photo'],
+			'$name'           => $contact['name'],
+			'$dir_icon'       => $dir_icon,
+			'$alt_text'       => $alt_text,
+			'$sparkle'        => $sparkle,
+			'$url'            => $url
 
 		));
 
@@ -395,10 +402,10 @@ function connections_content(&$a) {
 
 	}
 
-	$blocked = false;
-	$hidden = false;
-	$ignored = false;
-	$archived = false;
+	$blocked   = false;
+	$hidden    = false;
+	$ignored   = false;
+	$archived  = false;
 	$unblocked = false;
 	$all = false;
 
