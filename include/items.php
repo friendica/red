@@ -4282,14 +4282,14 @@ function fetch_post_tags($items) {
 
 
 
-function zot_feed($uid,$observer,$mindate) {
+function zot_feed($uid,$observer_xchan,$mindate) {
 
 	$result = array();
 	$mindate = datetime_convert('UTC','UTC',$mindate);
 	if(! $mindate)
 		$mindate = '0000-00-00 00:00:00';
 
-	if(! perm_is_allowed($uid,$observer,'view_stream')) {
+	if(! perm_is_allowed($uid,$observer_xchan,'view_stream')) {
 		return $result;
 	}
 

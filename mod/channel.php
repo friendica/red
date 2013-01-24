@@ -22,6 +22,7 @@ function channel_init(&$a) {
 
 	// Run profile_load() here to make sure the theme is set before
 	// we start loading content
+
 	profile_load($a,$which,$profile);
 
 }
@@ -81,11 +82,7 @@ function channel_content(&$a, $update = 0, $load = false) {
 
 	$groups = array();
 
-
-	$tab = 'posts';
 	$o = '';
-
-
 
 	if($update) {
 		// Ensure we've got a profile owner if updating.
@@ -111,7 +108,6 @@ function channel_content(&$a, $update = 0, $load = false) {
 
 
 	if(! $update) {
-
 
 		$o .= profile_tabs($a, $is_owner, $a->profile['channel_address']);
 

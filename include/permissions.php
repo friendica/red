@@ -35,15 +35,15 @@ function get_perms() {
 
 
 /**
- * get_all_perms($uid,$observer)
+ * get_all_perms($uid,$observer_xchan)
  *
  * @param $uid : The channel_id associated with the resource owner
- * @param $observer: The xchan_hash representing the observer
+ * @param $observer_xchan: The xchan_hash representing the observer
  *
  * @returns: array of all permissions, key is permission name, value is true or false
  */
 
-function get_all_perms($uid,$observer,$internal_use = true) {
+function get_all_perms($uid,$observer_xchan,$internal_use = true) {
 
 	$global_perms = get_perms();
 
@@ -83,12 +83,12 @@ function get_all_perms($uid,$observer,$internal_use = true) {
 		// Next we're going to check for blocked or ignored contacts.
 		// These take priority over all other settings.
 
-		if($observer) {
+		if($observer_xchan) {
 			if(! $abook_checked) {
 				$x = q("select abook_my_perms, abook_flags from abook 
 					where abook_channel = %d and abook_xchan = '%s' and not ( abook_flags & %d ) limit 1",
 					intval($uid),
-					dbesc($observer),
+					dbesc($observer_xchan),
 					intval(ABOOK_FLAG_SELF)
 				);
 				$abook_checked = true;
@@ -110,10 +110,10 @@ function get_all_perms($uid,$observer,$internal_use = true) {
 			}
 		}
 
-		// Check if this $uid is actually the $observer - if it's your content
+		// Check if this $uid is actually the $observer_xchan - if it's your content
 		// you always have permission to do anything
 
-		if(($observer) && ($r[0]['channel_hash'] === $observer)) {
+		if(($observer_xchan) && ($r[0]['channel_hash'] === $observer_xchan)) {
 			$ret[$perm_name] = true;
 			continue;
 		}
@@ -128,7 +128,7 @@ function get_all_perms($uid,$observer,$internal_use = true) {
 		// From here on out, we need to know who they are. If we can't figure it
 		// out, permission is denied.
 
-		if(! $observer) {
+		if(! $observer_xchan) {
 			$ret[$perm_name] = false;
 			continue;
 		}
@@ -145,7 +145,7 @@ function get_all_perms($uid,$observer,$internal_use = true) {
 		if($r[0][$channel_perm] & PERMS_SITE) {
 			if(! $onsite_checked) {
 				$c = q("select channel_hash from channel where channel_hash = '%s' limit 1",
-					dbesc($observer)
+					dbesc($observer_xchan)
 				);
 
 				$onsite_checked = true;
@@ -195,7 +195,7 @@ function get_all_perms($uid,$observer,$internal_use = true) {
 }
 
 
-function perm_is_allowed($uid,$observer,$permission) {
+function perm_is_allowed($uid,$observer_xchan,$permission) {
 
 	$global_perms = get_perms();
 
@@ -210,10 +210,10 @@ function perm_is_allowed($uid,$observer,$permission) {
 	if(! $r)
 		return false;
 
-	if($observer) {
+	if($observer_xchan) {
 		$x = q("select abook_my_perms, abook_flags from abook where abook_channel = %d and abook_xchan = '%s' and not ( abook_flags & %d ) limit 1",
 			intval($uid),
-			dbesc($observer),
+			dbesc($observer_xchan),
 			intval(ABOOK_FLAG_SELF)
 		);
 
@@ -228,9 +228,9 @@ function perm_is_allowed($uid,$observer,$permission) {
 	}
 
 
-	// Check if this $uid is actually the $observer
+	// Check if this $uid is actually the $observer_xchan
 
-	if($r[0]['channel_hash'] === $observer)
+	if($r[0]['channel_hash'] === $observer_xchan)
 		return true;
 
 	
@@ -239,7 +239,7 @@ function perm_is_allowed($uid,$observer,$permission) {
 
 	// If it's an unauthenticated observer, we only need to see if PERMS_PUBLIC is set
 
-	if(! $observer) {
+	if(! $observer_xchan) {
 		return false;
 	}
 
@@ -253,7 +253,7 @@ function perm_is_allowed($uid,$observer,$permission) {
 
 	if($r[0][$channel_perm] & PERMS_SITE) {
 		$c = q("select channel_hash from channel where channel_hash = '%s' limit 1",
-			dbesc($observer)
+			dbesc($observer_xchan)
 		);
 		if($c)
 			return true;

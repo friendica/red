@@ -16,6 +16,9 @@ function zotfeed_init(&$a) {
 		json_return_and_die($result);
 	}
 
+	$observer = $a->get_observer();
+
+
 	$channel_address = ((argc() > 1) ? argv(1) : '');
 	if($channel_address) {
 		$r = q("select channel_id from channel where channel_address = '%s' limit 1",
