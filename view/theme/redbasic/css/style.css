@@ -24,7 +24,7 @@ abbr {
 
 aside {
 border: none;
-color: #0080FF;
+color: #444444;
 }
 
 /* icons */
@@ -665,7 +665,7 @@ input#dfrn-url {
 	padding: 0px 0px 5px 0px;
 	font-size: 120%;
 	font-weight: bold;
-	color: #0080FF;
+	color: #444444;
 }
 
 .vcard .title {
