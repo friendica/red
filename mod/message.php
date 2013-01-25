@@ -365,46 +365,12 @@ function message_content(&$a) {
 		if( local_user() && feature_enabled(local_user(),'richtext') )
 			$plaintext = false;
 
-		$r = q("SELECT parent_uri from mail WHERE channel_id = %d and id = %d limit 1",
-			intval(local_user()),
-			intval(argv(1))
-		);
-
-		if(! $r) {
-			info( t('Message not found.') . EOL);
-			return $o;
-		}
-
-		$messages = q("select * from mail where parent_uri = '%s' and channel_id = %d order by created asc",
-			dbesc($r[0]['parent_uri']),
-			intval(local_user())
-		);
+		$messages = private_messages_fetch_conversation(local_user(), argv(1), true);
 
 		if(! $messages) {
 			info( t('Message not found.') . EOL);
 			return $o;
 		}
-
-		$chans = array();
-		foreach($messages as $rr) {
-			$s = "'" . dbesc(trim($rr['from_xchan'])) . "'";
-			if(! in_array($s,$chans))
-				$chans[] = $s;
-			$s = "'" . dbesc(trim($rr['to_xchan'])) . "'";
-			if(! in_array($s,$chans))
-				$chans[] = $s;
- 		}
-
-
-
-		$c = q("select * from xchan where xchan_hash in (" . implode(',',$chans) . ")");
-
-		$r = q("UPDATE `mail` SET mail_flags = (mail_flags ^ %d) where not (mail_flags & %d) and parent_uri = '%s' AND channel_id = %d",
-			intval(MAIL_SEEN),
-			intval(MAIL_SEEN),
-			dbesc($r[0]['parent_uri']),
-			intval(local_user())
-		);
 
 		require_once("include/bbcode.php");
 
@@ -423,39 +389,22 @@ function message_content(&$a) {
 		$unknown = false;
 
 		foreach($messages as $message) {
-			$message['from'] = find_xchan_in_array($message['from_xchan'],$c);
-			$message['to']   = find_xchan_in_array($message['to_xchan'],$c);
 
-
-logger('message: ' . print_r($message,true));
-
+// FIXME
 //			$extracted = item_extract_images($message['body']);
 //			if($extracted['images'])
 //				$message['body'] = item_redir_and_replace_images($extracted['body'], $extracted['images'], $message['contact-id']);
 
-			if($a->get_template_engine() === 'internal') {
-				$from_name_e = template_escape($message['from']['xchan_name']);
-				$subject_e = template_escape($message['title']);
-				$body_e = template_escape(smilies(bbcode($message['body'])));
-				$to_name_e = template_escape($message['to']['xchan_name']);
-			}
-			else {
-				$from_name_e = $message['from']['xchan_name'];
-				$subject_e = $message['title'];
-				$body_e = smilies(bbcode($message['body']));
-				$to_name_e = $message['to']['xchan_name'];
-			}
-
 			$mails[] = array(
 				'id' => $message['id'],
-				'from_name' => $from_name_e,
-				'from_url' =>  z_root() . '/chanview/?f=&hash=' . $message['from_xchan'],
+				'from_name' => $message['from']['xchan_name'],
+				'from_url' =>  chanlink_hash($message['from_xchan']),
 				'from_photo' => $message['from']['xchan_photo_m'],
-				'to_name' => $to_name_e,
-				'to_url' =>  z_root() . '/chanview/?f=&hash=' . $message['to_xchan'],
+				'to_name' => $message['to']['xchan_name'],
+				'to_url' =>  chanlink_hash($message['to_xchan']),
 				'to_photo' => $message['to']['xchan_photo_m'],
-				'subject' => $subject_e,
-				'body' => $body_e,
+				'subject' => $message['title'],
+				'body' => smilies(bbcode($message['body'])),
 				'delete' => t('Delete message'),
 				'date' => datetime_convert('UTC',date_default_timezone_get(),$message['created'],'D, d M Y - g:i A'),
 			);
@@ -464,19 +413,14 @@ logger('message: ' . print_r($message,true));
 
 		}
 
-		logger('mails: ' . print_r($mails,true));
+		logger('mails: ' . print_r($mails,true), LOGGER_DATA);
 
 		$recp = (($message['from_xchan'] === $channel['channel_hash']) ? 'to' : 'from');
 
+// FIXME - move this HTML to template
+
 		$select = $message[$recp]['xchan_name'] . '<input type="hidden" name="messageto" value="' . $message[$recp]['xchan_hash'] . '" />';
 		$parent = '<input type="hidden" name="replyto" value="' . $message['parent_uri'] . '" />';
-
-		if($a->get_template_engine() === 'internal') {
-			$subjtxt_e = template_escape($message['title']);
-		}
-		else {
-			$subjtxt_e = $message['title'];
-		}
 
 		$tpl = get_markup_template('mail_display.tpl');
 		$o = replace_macros($tpl, array(
@@ -493,7 +437,7 @@ logger('message: ' . print_r($message,true));
 			'$to' => t('To:'),
 			'$showinputs' => '',
 			'$subject' => t('Subject:'),
-			'$subjtxt' => $subjtxt_e,
+			'$subjtxt' => $message['title'],
 			'$readonly' => ' readonly="readonly" style="background: #BBBBBB;" ',
 			'$yourmessage' => t('Your message:'),
 			'$text' => '',

@@ -44,7 +44,6 @@ function send_message($uid = 0, $recipient='', $body='', $subject='', $replyto='
 	}
 
 	
-
 	$r = q("INSERT INTO `mail` (  account_id, channel_id, from_xchan, to_xchan, title, body, uri, parent_uri, created )
 		VALUES ( %d, %d, '%s', '%s', '%s', '%s', '%s', '%s', '%s' )",
 		intval($channel['channel_account_id']),
@@ -155,4 +154,99 @@ function private_messages_list($uid, $mailbox = '', $order = 'desc', $start = 0,
 		$r[$k]['seen'] = (($rr['mail_flags'] & MAIL_SEEN) ? 1 : 0);
 	}
 	return $r;
+}
+
+
+
+function private_messages_fetch_message($channel_id, $messageitem_id, $updateseen = false) {
+
+	$messages = q("select * from mail where id = %d and channel_id = %d order by created asc",
+		dbesc($messageitem_id),
+		intval($channel_id)
+	);
+
+	if(! $messages)
+		return array();
+
+	$chans = array();
+	foreach($messages as $rr) {
+		$s = "'" . dbesc(trim($rr['from_xchan'])) . "'";
+		if(! in_array($s,$chans))
+			$chans[] = $s;
+		$s = "'" . dbesc(trim($rr['to_xchan'])) . "'";
+		if(! in_array($s,$chans))
+			$chans[] = $s;
+	}
+
+	$c = q("select * from xchan where xchan_hash in (" . implode(',',$chans) . ")");
+
+	foreach($messages as $k => $message) {
+		$messages[$k]['from'] = find_xchan_in_array($message['from_xchan'],$c);
+		$messages[$k]['to']   = find_xchan_in_array($message['to_xchan'],$c);
+	}
+
+	if($updateseen) {
+		$r = q("UPDATE `mail` SET mail_flags = (mail_flags ^ %d) where not (mail_flags & %d) and id = %d AND channel_id = %d",
+			intval(MAIL_SEEN),
+			intval(MAIL_SEEN),
+			dbesc($messageitem_id),
+			intval($channel_id)
+		);
+	}
+
+	return $messages;
+
+}
+
+
+function private_messages_fetch_conversation($channel_id, $messageitem_id, $updateseen = false) {
+
+	// find the parent_uri of the message being requested
+
+	$r = q("SELECT parent_uri from mail WHERE channel_id = %d and id = %d limit 1",
+		intval($channel_id),
+		intval($messageitem_id)
+	);
+
+	if(! $r) 
+		return array();
+
+	$messages = q("select * from mail where parent_uri = '%s' and channel_id = %d order by created asc",
+		dbesc($r[0]['parent_uri']),
+		intval($channel_id)
+	);
+
+	if(! $messages)
+		return array();
+
+	$chans = array();
+	foreach($messages as $rr) {
+		$s = "'" . dbesc(trim($rr['from_xchan'])) . "'";
+		if(! in_array($s,$chans))
+			$chans[] = $s;
+		$s = "'" . dbesc(trim($rr['to_xchan'])) . "'";
+		if(! in_array($s,$chans))
+			$chans[] = $s;
+	}
+
+
+	$c = q("select * from xchan where xchan_hash in (" . implode(',',$chans) . ")");
+
+	foreach($messages as $k => $message) {
+		$messages[$k]['from'] = find_xchan_in_array($message['from_xchan'],$c);
+		$messages[$k]['to']   = find_xchan_in_array($message['to_xchan'],$c);
+	}
+
+
+	if($updateseen) {
+		$r = q("UPDATE `mail` SET mail_flags = (mail_flags ^ %d) where not (mail_flags & %d) and parent_uri = '%s' AND channel_id = %d",
+			intval(MAIL_SEEN),
+			intval(MAIL_SEEN),
+			dbesc($r[0]['parent_uri']),
+			intval($channel_id)
+		);
+	}
+	
+	return $messages;
+
 }
