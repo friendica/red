@@ -4,6 +4,8 @@ require_once('boot.php');
 require_once('include/cli_startup.php');
 require_once('include/zot.php');
 require_once('include/socgraph.php');
+require_once('include/Contact.php');
+
 
 function onepoll_run($argv, $argc){
 
@@ -68,7 +70,7 @@ function onepoll_run($argv, $argc){
 
 	logger("onepoll: poll: ({$contact['id']}) IMPORTER: {$importer['xchan_name']}, CONTACT: {$contact['xchan_name']}");
 
-	$last_update = (($contact['last_update'] === '0000-00-00 00:00:00') 
+	$last_update = (($contact['abook_updated'] === '0000-00-00 00:00:00') 
 		? datetime_convert('UTC','UTC','now - 7 days')
 		: datetime_convert('UTC','UTC',$contact['abook_updated'])
 	);
@@ -77,19 +79,26 @@ function onepoll_run($argv, $argc){
 
 	$x = zot_refresh($contact,$importer);
 
+	$responded = false;
+
 	if(! $x) {
 		// mark for death
 
 	}
 	else {
-		q("update abook set abook_updated = '%s' where abook_id = %d limit 1",
+		q("update abook set abook_updated = '%s', abook_connected = '%s' where abook_id = %d limit 1",
+			dbesc(datetime_convert()),
 			dbesc(datetime_convert()),
 			intval($contact['abook_id'])
 		);
+		$responded = true;
 
 		// if marked for death, reset
 
 	}
+
+	if(! $responded)
+		return;
 
 	if($contact['xchan_connurl']) {
 		$feedurl = str_replace('/poco/','/zotfeed/',$channel['xchan_connurl']);

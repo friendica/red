@@ -31,8 +31,10 @@ function poco_load($xchan = null,$url = null) {
 		}
 	}
 
-	if(! $url)
+	if(! $url) {
+		logger('poco_load: no url');
 		return;
+	}
 
 
 	$url = $url . '?fields=displayName,hash,urls,photos' ;
@@ -41,17 +43,20 @@ function poco_load($xchan = null,$url = null) {
 
 	$s = z_fetch_url($url);
 
-	logger('poco_load: returns ' . print_r($s,true), LOGGER_DATA);
 
-	if(! $s['success'])
+	if(! $s['success']) {
+		logger('poco_load: returns ' . print_r($s,true));
 		return;
+	}
 
 	$j = json_decode($s['body'],true);
 
 	logger('poco_load: ' . print_r($j,true),LOGGER_DATA);
 
-	if(! x($j,'entry') && is_array($j['entry']))
+	if(! ((x($j,'entry')) && (is_array($j['entry'])))) {
+		logger('poco_load: no entries');
 		return;
+	}
 
 	$total = 0;
 	foreach($j['entry'] as $entry) {
@@ -87,8 +92,10 @@ function poco_load($xchan = null,$url = null) {
 			}
 		}
 
-		if((! $name) || (! $profile_url) || (! $profile_photo) || (! $hash) || (! $address))
+		if((! $name) || (! $profile_url) || (! $profile_photo) || (! $hash) || (! $address)) {
+			logger('poco_load: missing data');
 			continue; 
+		}
 		 
 		$x = q("select xchan_hash from xchan where xchan_hash = '%s' limit 1",
 			dbesc($hash)
