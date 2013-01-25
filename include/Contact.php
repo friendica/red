@@ -1,6 +1,24 @@
 <?php
 
 
+function abook_connections($channel_id, $flags = 0) {
+	$r = q("select * from abook left join xchan on abook_xchan = xchan_hash where abook_channel = %d
+		and not ( abook_flags & %d )",
+		intval($channel_id),
+		intval(ABOOK_FLAG_SELF)
+	);
+	return(($r) ? $r : array());
+}	
+
+function abook_self($channel_id) {
+	$r = q("select * from abook left join xchan on abook_xchan = xchan_hash where abook_channel = %d
+		and ( abook_flags & %d ) limit 1",
+		intval($channel_id),
+		intval(ABOOK_FLAG_SELF)
+	);
+	return(($r) ? $r[0] : array());
+}	
+
 function vcard_from_xchan($xchan, $observer = null, $mode = '') {
 
 	$connect = false;
