@@ -109,4 +109,50 @@ function send_message($uid = 0, $recipient='', $body='', $subject='', $replyto='
 
 }
 
+function private_messages_list($uid, $mailbox = '', $order = 'desc', $start = 0, $numitems = 0) {
 
+	$where = '';
+	$limit = '';
+
+	if($numitems)
+		$limit = " LIMIT " . intval($start) . ", " . intval($numitems);
+		
+	if($mailbox !== '') {
+		$x = q("select channel_hash from channel where channel_id = %d limit 1",
+			intval($uid)
+		);
+		if(! $x)
+			return array();
+		if($mailbox === 'inbox')
+			$where = " and sender_xchan != '" . dbesc($x[0]['channel_hash']) . "' ";
+		elseif($mailbox === 'outbox')
+			$where = " and sender_xchan  = '" . dbesc($x[0]['channel_hash']) . "' ";
+	}
+
+		
+	$r = q("SELECT * from mail WHERE channel_id = %d $where order by created $order $limit",
+		intval(local_user())
+	);
+	if(! $r) {
+		return array();
+	}
+
+	$chans = array();
+	foreach($r as $rr) {
+		$s = "'" . dbesc(trim($rr['from_xchan'])) . "'";
+		if(! in_array($s,$chans))
+			$chans[] = $s;
+		$s = "'" . dbesc(trim($rr['to_xchan'])) . "'";
+		if(! in_array($s,$chans))
+			$chans[] = $s;
+ 	}
+
+	$c = q("select * from xchan where xchan_hash in (" . implode(',',$chans) . ")");
+
+	foreach($r as $k => $rr) {
+		$r[$k]['from'] = find_xchan_in_array($rr['from_xchan'],$c);
+		$r[$k]['to']   = find_xchan_in_array($rr['to_xchan'],$c);
+		$r[$k]['seen'] = (($rr['mail_flags'] & MAIL_SEEN) ? 1 : 0);
+	}
+	return $r;
+}

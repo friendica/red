@@ -326,71 +326,34 @@ function message_content(&$a) {
 
 		$o .= $header;
 
-		
-		$r = q("SELECT count(*) AS `total` FROM `mail` 
-			WHERE channel_id = %d",
-			intval(local_user())
-		);
-		if($r)
-			$a->set_pager_total($r[0]['total']);
+		// private_messages_list() can do other more complicated stuff, for now keep it simple
 
-		$r = q("SELECT * from mail WHERE channel_id = %d order by created desc limit %d, %d",
-			intval(local_user()),
-			intval($a->pager['start']),
-			intval($a->pager['itemspage'])
-		);
+		$r = private_messages_list($uid, '', 'desc', $a->pager['start'], $a->pager['itemspage']);
+
 		if(! $r) {
 			info( t('No messages.') . EOL);
 			return $o;
 		}
 
-		$chans = array();
-		foreach($r as $rr) {
-			$s = "'" . dbesc(trim($rr['from_xchan'])) . "'";
-			if(! in_array($s,$chans))
-				$chans[] = $s;
-			$s = "'" . dbesc(trim($rr['to_xchan'])) . "'";
-			if(! in_array($s,$chans))
-				$chans[] = $s;
- 		}
-
-		$c = q("select * from xchan where xchan_hash in (" . implode(',',$chans) . ")");
-		
 		$tpl = get_markup_template('mail_list.tpl');
 		foreach($r as $rr) {
-			$rr['from'] = find_xchan_in_array($rr['from_xchan'],$c);
-			$rr['to']   = find_xchan_in_array($rr['to_xchan'],$c);
-			$rr['seen'] = (($rr['mail_flags'] & MAIL_SEEN) ? 1 : "");
-
-			if($a->get_template_engine() === 'internal') {
-				$from_name_e = template_escape($rr['from']['xchan_name']);
-				$subject_e = template_escape((($rr['seen']) ? $rr['title'] : '<strong>' . $rr['title'] . '</strong>'));
-				$body_e = template_escape($rr['body']);
-				$to_name_e = template_escape($rr['to']['xchan_name']);
-			}
-			else {
-				$from_name_e = $rr['from']['xchan_name'];
-				$subject_e = (($rr['seen']) ? $rr['title'] : '<strong>' . $rr['title'] . '</strong>');
-				$body_e = $rr['body'];
-				$to_name_e = $rr['to']['xchan_name'];
-			}
 			
 			$o .= replace_macros($tpl, array(
 				'$id' => $rr['id'],
-				'$from_name' => template_escape($rr['from']['xchan_name']),
+				'$from_name' => $rr['from']['xchan_name'],
 				'$from_url' =>  z_root() . '/chanview/?f=&hash=' . $rr['from_xchan'],
 				'$from_photo' => $rr['from']['xchan_photo_s'],
-				'$to_name' => template_escape($rr['to']['xchan_name']),
+				'$to_name' => $rr['to']['xchan_name'],
 				'$to_url' =>  z_root() . '/chanview/?f=&hash=' . $rr['to_xchan'],
 				'$to_photo' => $rr['to']['xchan_photo_s'],
-				'$subject' => template_escape((($rr['seen']) ? $rr['title'] : '<strong>' . $rr['title'] . '</strong>')),
+				'$subject' => (($rr['seen']) ? $rr['title'] : '<strong>' . $rr['title'] . '</strong>'),
 				'$delete' => t('Delete message'),
-				'$body' => template_escape($rr['body']),
+				'$body' => $rr['body'],
 				'$date' => datetime_convert('UTC',date_default_timezone_get(),$rr['created'], t('D, d M Y - g:i A')),
 				'$seen' => $rr['seen']
 			));
 		}
-		$o .= paginate($a);	
+		$o .= alt_pager($a,count($r));	
 		return $o;
 	}
 
