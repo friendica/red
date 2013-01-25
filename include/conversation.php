@@ -1,8 +1,11 @@
 <?php
 
+require_once('include/items.php');
+
 // Note: the code in 'item_extract_images' and 'item_redir_and_replace_images'
 // is identical to the code in mod/message.php for 'item_extract_images' and
 // 'item_redir_and_replace_images'
+
 if(! function_exists('item_extract_images')) {
 function item_extract_images($body) {
 
@@ -51,10 +54,13 @@ function item_redir_and_replace_images($body, $images, $cid) {
 	$origbody = $body;
 	$newbody = '';
 
+	$observer = get_app()->get_observer();
+	$obhash = (($observer) ? $observer['xchan_hash'] : '');
+	$obaddr = (($observer) ? $observer['xchan_addr'] : '');
+
 	for($i = 0; $i < count($images); $i++) {
 		$search = '/\[url\=(.*?)\]\[!#saved_image' . $i . '#!\]\[\/url\]' . '/is';
-		$replace = '[url=' . z_path() . '/redir/' . $cid 
-		           . '?f=1&url=' . '$1' . '][!#saved_image' . $i . '#!][/url]' ;
+		$replace = '[url=' . magiclink_url($obhash,$obaddr,'$1') . '][!#saved_image' . $i . '#!][/url]' ;
 
 		$img_end = strpos($origbody, '[!#saved_image' . $i . '#!][/url]') + strlen('[!#saved_image' . $i . '#!][/url]');
 		$process_part = substr($origbody, 0, $img_end);
@@ -108,8 +114,8 @@ function localize_item(&$item){
 
 		if($author_link && $author_name && $item_url) {
 			
-			$author	 = '[url=' . zid($item['author']['xchan_url']) . ']' . $item['author']['xchan_name'] . '[/url]';
-			$objauthor =  '[url=' . zid($author_link) . ']' . $author_name . '[/url]';
+			$author	 = '[url=' . chanlink_url($item['author']['xchan_url']) . ']' . $item['author']['xchan_name'] . '[/url]';
+			$objauthor =  '[url=' . chanlink_url($author_link) . ']' . $author_name . '[/url]';
 		
 			switch($obj->type) {
 				case ACTIVITY_OBJ_PHOTO:
@@ -160,11 +166,11 @@ function localize_item(&$item){
 		$Bname = $obj['title'];
 
 
-		$A = '[url=' . zid($Alink) . ']' . $Aname . '[/url]';
-		$B = '[url=' . zid($Blink) . ']' . $Bname . '[/url]';
-		if ($Bphoto!="") $Bphoto = '[url=' . zid($Blink) . '][img=80x80]' . $Bphoto . '[/img][/url]';
+		$A = '[url=' . chanlink_url($Alink) . ']' . $Aname . '[/url]';
+		$B = '[url=' . chanlink_url($Blink) . ']' . $Bname . '[/url]';
+		if ($Bphoto!="") $Bphoto = '[url=' . chanlink_url($Blink) . '][img=80x80]' . $Bphoto . '[/img][/url]';
 
-		$item['body'] = $item['localize'] = sprintf( t('%1$s is now friends with %2$s'), $A, $B);
+		$item['body'] = $item['localize'] = sprintf( t('%1$s is now connected with %2$s'), $A, $B);
 		$item['body'] .= "\n\n\n" . $Bphoto;
 	}
 
@@ -188,9 +194,9 @@ function localize_item(&$item){
 		}
 		$Bname = $obj['title'];
 
-		$A = '[url=' . zid($Alink) . ']' . $Aname . '[/url]';
-		$B = '[url=' . zid($Blink) . ']' . $Bname . '[/url]';
-		if ($Bphoto!="") $Bphoto = '[url=' . zid($Blink) . '][img=80x80]' . $Bphoto . '[/img][/url]';
+		$A = '[url=' . chanlink_url($Alink) . ']' . $Aname . '[/url]';
+		$B = '[url=' . chanlink_url($Blink) . ']' . $Bname . '[/url]';
+		if ($Bphoto!="") $Bphoto = '[url=' . chanlink_url($Blink) . '][img=80x80]' . $Bphoto . '[/img][/url]';
 
 		// we can't have a translation string with three positions but no distinguishable text
 		// So here is the translate string.
@@ -215,7 +221,7 @@ function localize_item(&$item){
 		$Aname = $item['author']['xchan_name'];
 		$Alink = $item['author']['xchan_url'];
 
-		$A = '[url=' . zid($Alink) . ']' . $Aname . '[/url]';
+		$A = '[url=' . chanlink_url($Alink) . ']' . $Aname . '[/url]';
 		
 		$txt = t('%1$s is currently %2$s');
 
@@ -304,19 +310,19 @@ function localize_item(&$item){
 	// add zid's to public images
 	if(preg_match_all('/\[url=(.*?)\/photos\/(.*?)\/image\/(.*?)\]\[img(.*?)\]h(.*?)\[\/img\]\[\/url\]/is',$item['body'],$matches,PREG_SET_ORDER)) {
 		foreach($matches as $mtch) {
-				$item['body'] = str_replace($mtch[0],'[url=' . zid($mtch[1] . '/photos/' . $mtch[2] . '/image/' . $mtch[3] ,true) . '][img' . $mtch[4] . ']h' . $mtch[5]  . '[/img][/url]',$item['body']);
+				$item['body'] = str_replace($mtch[0],'[url=' . chanlink_url($mtch[1] . '/photos/' . $mtch[2] . '/image/' . $mtch[3] ,true) . '][img' . $mtch[4] . ']h' . $mtch[5]  . '[/img][/url]',$item['body']);
 		}
 	}
 
 	// add sparkle links to appropriate permalinks
 
-	$x = stristr($item['plink'],'/display/');
-	if($x) {
-		$sparkle = false;
-		$y = best_link_url($item,$sparkle,true);
-		if($sparkle)
-			$item['plink'] = $y . '?f=&url=' . $item['plink'];
-	} 
+//	$x = stristr($item['plink'],'/display/');
+//	if($x) {
+//		$sparkle = false;
+//		$y = best_link_url($item,$sparkle,true);
+	//	if($sparkle)
+//			$item['plink'] = $y . '?f=&url=' . $item['plink'];
+//	} 
 }
 
 /**

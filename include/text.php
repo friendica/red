@@ -620,6 +620,12 @@ function chanlink_cid($d) {
 	return z_root() . '/chanview?f=&cid=' . intval($d);
 }
 
+function magiclink_url($observer,$myaddr,$url) {
+	return (($observer) 
+		? z_root() . '/magic?f=&dest=' . $url . '&addr=' . $myaddr 
+		: $url
+	);
+}
 
 
 if(! function_exists('micropro')) {
