@@ -223,7 +223,7 @@ class Item extends BaseObject {
 			'indent' => $indent,
 			'owner_url' => $this->get_owner_url(),
 			'owner_photo' => $this->get_owner_photo(),
-			'owner_name' => $this->get_owner_name,
+			'owner_name' => $this->get_owner_name(),
 
 // Item toolbar buttons
 			'like'      => $like,
