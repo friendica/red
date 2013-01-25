@@ -949,13 +949,13 @@ var chanviewFullSize = false;
 function chanviewFull() {
 	if(chanviewFullSize) {
 		chanviewFullSize = false;
-		$('#chanview-iframe-border').css({ 'position' : 'relative' });
-		$('#remote-channel').css({ 'position' : 'relative' });
+		$('#chanview-iframe-border').css({ 'position' : 'relative', 'z-index' : '10' });
+		$('#remote-channel').css({ 'position' : 'relative' , 'z-index' : '10' });
 	}
 	else {
 		chanviewFullSize = true;
-		$('#chanview-iframe-border').css({ 'position' : 'fixed', 'top' : '0', 'left' : '0' });
-		$('#remote-channel').css({ 'position' : 'fixed', 'top' : '0', 'left' : '0' });
+		$('#chanview-iframe-border').css({ 'position' : 'fixed', 'top' : '0', 'left' : '0', 'z-index' : '150001' });
+		$('#remote-channel').css({ 'position' : 'fixed', 'top' : '0', 'left' : '0', 'z-index' : '150000' });
 		resize_iframe();
 	}
 }
