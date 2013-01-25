@@ -3,6 +3,7 @@
 require_once('include/acl_selectors.php');
 require_once('include/message.php');
 require_once('include/zot.php');
+require_once("include/bbcode.php");
 
 
 function message_aside(&$a) {
@@ -20,16 +21,19 @@ function message_aside(&$a) {
 
 function message_post(&$a) {
 
-	if(! local_user()) {
-		notice( t('Permission denied.') . EOL);
+	if(! local_user())
 		return;
-	}
 
 	$replyto   = ((x($_REQUEST,'replyto'))      ? notags(trim($_REQUEST['replyto']))      : '');
 	$subject   = ((x($_REQUEST,'subject'))      ? notags(trim($_REQUEST['subject']))      : '');
 	$body      = ((x($_REQUEST,'body'))         ? escape_tags(trim($_REQUEST['body']))    : '');
 	$recipient = ((x($_REQUEST,'messageto'))    ? notags(trim($_REQUEST['messageto']))    : '');
 	$rstr      = ((x($_REQUEST,'messagerecip')) ? notags(trim($_REQUEST['messagerecip'])) : '');
+
+	// If we have a raw string for a recipient which hasn't been auto-filled,
+	// it means they probably aren't in our address book, hence we don't know
+	// if we have permission to send them private messages.
+	// finger them and find out before we try and send it.
 
 	if(! $recipient) {
 		$channel = $a->get_channel();
@@ -83,39 +87,25 @@ function message_post(&$a) {
 		}
 	}
 
-
 	if(feature_enabled(local_user(),'richtext')) {
 		$body = fix_mce_lf($body);
 	}
-	
-	$ret = send_message(local_user(), $recipient, $body, $subject, $replyto);
-	$norecip = false;
 
-	switch($ret){
-		case -1:
-			notice( t('No recipient selected.') . EOL );
-			$norecip = true;
-			break;
-		case -2:
-			notice( t('Unable to locate contact information.') . EOL );
-			break;
-		case -3:
-			notice( t('Message could not be sent.') . EOL );
-			break;
-		case -4:
-			notice( t('Message collection failure.') . EOL );
-			break;
-		default:
-			info( t('Message sent.') . EOL );
-	}
-
-	// fake it to go back to the input form if no recipient listed
-
-	if($norecip) {
+	if(! $recipient) {
+		notice('No recipient found.');
 		$a->argc = 2;
 		$a->argv[1] = 'new';
+		return;
 	}
 
+	// We have a local_user, let send_message use the session channel and save a lookup
+	
+	$ret = send_message(0, $recipient, $body, $subject, $replyto);
+
+	if(! $ret['success']) {
+		notice($ret['message']);
+	}
+		
 }
 
 // Note: the code in 'item_extract_images' and 'item_redir_and_replace_images'
@@ -206,7 +196,7 @@ function message_content(&$a) {
 		return;
 	}
 
-	$myprofile = $a->get_baseurl(true) . '/channel/' . $a->user['nickname'];
+	$channel = $a->get_channel();
 
 	$tpl = get_markup_template('mail_head.tpl');
 	$header = replace_macros($tpl, array(
@@ -214,44 +204,25 @@ function message_content(&$a) {
 		'$tab_content' => $tab_content
 	));
 
-
 	if((argc() == 3) && (argv(1) === 'drop' || argv(1) === 'dropconv')) {
 		if(! intval(argv(2)))
 			return;
 		$cmd = argv(1);
 		if($cmd === 'drop') {
-			$r = q("DELETE FROM `mail` WHERE `id` = %d AND channel_id = %d LIMIT 1",
-				intval(argv(2)),
-				intval(local_user())
-			);
+			$r = private_messages_drop(local_user(), argv(2));
 			if($r) {
 				info( t('Message deleted.') . EOL );
 			}
 			goaway($a->get_baseurl(true) . '/message' );
 		}
 		else {
-			$r = q("SELECT `parent_uri` FROM `mail` WHERE `id` = %d AND channel_id = %d LIMIT 1",
-				intval(argv(2)),
-				intval(local_user())
-			);
-			if(count($r)) {
-				$parent = $r[0]['parent_uri'];
-
-
-				$r = q("DELETE FROM `mail` WHERE `parent_uri` = '%s' AND channel_id = %d ",
-					dbesc($parent),
-					intval(local_user())
-				);
-
-				if($r)
-					info( t('Conversation removed.') . EOL );
-			} 
+			$r = private_messages_drop(local_user(), argv(2), true);
+			if($r)
+				info( t('Conversation removed.') . EOL );
 			goaway($a->get_baseurl(true) . '/message' );
-		}	
-	
+		}		
 	}
 
-	$channel = $a->get_channel();
 
 	if((argc() > 1) && ($a->argv[1] === 'new')) {
 		
@@ -328,7 +299,9 @@ function message_content(&$a) {
 
 		// private_messages_list() can do other more complicated stuff, for now keep it simple
 
-		$r = private_messages_list($uid, '', 'desc', $a->pager['start'], $a->pager['itemspage']);
+		$order = 'created desc';
+
+		$r = private_messages_list(local_user(), '', $order, $a->pager['start'], $a->pager['itemspage']);
 
 		if(! $r) {
 			info( t('No messages.') . EOL);
@@ -341,14 +314,14 @@ function message_content(&$a) {
 			$o .= replace_macros($tpl, array(
 				'$id' => $rr['id'],
 				'$from_name' => $rr['from']['xchan_name'],
-				'$from_url' =>  z_root() . '/chanview/?f=&hash=' . $rr['from_xchan'],
+				'$from_url' =>  chanlink_hash($rr['from_xchan']),
 				'$from_photo' => $rr['from']['xchan_photo_s'],
 				'$to_name' => $rr['to']['xchan_name'],
-				'$to_url' =>  z_root() . '/chanview/?f=&hash=' . $rr['to_xchan'],
+				'$to_url' =>  chanlink_hash($rr['to_xchan']),
 				'$to_photo' => $rr['to']['xchan_photo_s'],
 				'$subject' => (($rr['seen']) ? $rr['title'] : '<strong>' . $rr['title'] . '</strong>'),
 				'$delete' => t('Delete message'),
-				'$body' => $rr['body'],
+				'$body' => smilies(bbcode($rr['body'])),
 				'$date' => datetime_convert('UTC',date_default_timezone_get(),$rr['created'], t('D, d M Y - g:i A')),
 				'$seen' => $rr['seen']
 			));
@@ -372,7 +345,6 @@ function message_content(&$a) {
 			return $o;
 		}
 
-		require_once("include/bbcode.php");
 
 		$tpl = get_markup_template('msg-header.tpl');
 	

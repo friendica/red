@@ -1,14 +1,21 @@
 <?php
 
+/* Private Message backend API */
+
 
 // send a private message
 	
 
 function send_message($uid = 0, $recipient='', $body='', $subject='', $replyto=''){ 
 
+	$ret = array('success' => false);
+
 	$a = get_app();
 
-	if(! $recipient) return -1;
+	if(! $recipient) {
+		$ret['message'] = t('No recipient provided.');
+		return $ret;
+	}
 	
 	if(! strlen($subject))
 		$subject = t('[no subject]');
@@ -25,6 +32,12 @@ function send_message($uid = 0, $recipient='', $body='', $subject='', $replyto='
 		$channel = get_app()->get_channel();
 	}
 
+	if(! $channel) {
+		$ret['message'] = t('Unable to determine sender.');
+		return $ret;
+	}
+
+	// generate a unique message_id
 
 	do {
 		$dups = false;
@@ -32,7 +45,7 @@ function send_message($uid = 0, $recipient='', $body='', $subject='', $replyto='
 
 		$uri = $hash . '@' . get_app()->get_hostname();
 
-		$r = q("SELECT `id` FROM mail WHERE `uri` = '%s' LIMIT 1",
+		$r = q("SELECT id FROM mail WHERE uri = '%s' LIMIT 1",
 			dbesc($uri));
 		if(count($r))
 			$dups = true;
@@ -44,10 +57,10 @@ function send_message($uid = 0, $recipient='', $body='', $subject='', $replyto='
 	}
 
 	
-	$r = q("INSERT INTO `mail` (  account_id, channel_id, from_xchan, to_xchan, title, body, uri, parent_uri, created )
+	$r = q("INSERT INTO mail ( account_id, channel_id, from_xchan, to_xchan, title, body, uri, parent_uri, created )
 		VALUES ( %d, %d, '%s', '%s', '%s', '%s', '%s', '%s', '%s' )",
 		intval($channel['channel_account_id']),
-		intval(local_user()),
+		intval($channel['channel_id']),
 		dbesc($channel['channel_hash']),
 		dbesc($recipient),
 		dbesc($subject),
@@ -57,14 +70,18 @@ function send_message($uid = 0, $recipient='', $body='', $subject='', $replyto='
 		dbesc(datetime_convert())
 	);
 
+	// verify the save
 
-	$r = q("SELECT * FROM `mail` WHERE uri = '%s' and channel_id = %d LIMIT 1",
+	$r = q("SELECT * FROM mail WHERE uri = '%s' and channel_id = %d LIMIT 1",
 		dbesc($uri),
-		intval(local_user())
+		intval($channel['channel_id'])
 	);
 	if(count($r))
 		$post_id = $r[0]['id'];
-
+	else {
+		$ret['message'] = t('Stored post could not be verified.');
+		return $ret;
+	}
 
 	/**
 	 *
@@ -88,27 +105,25 @@ function send_message($uid = 0, $recipient='', $body='', $subject='', $replyto='
 					continue;
 				$image_uri = substr($image,strrpos($image,'/') + 1);
 				$image_uri = substr($image_uri,0, strpos($image_uri,'-'));
-				$r = q("UPDATE `photo` SET `allow_cid` = '%s'
-					WHERE `resource_id` = '%s' AND `album` = '%s' AND `uid` = %d ",
+				$r = q("UPDATE photo SET allow_cid = '%s' WHERE resource_id = '%s' AND uid = %d and allow_cid = '%s'",
 					dbesc('<' . $recipient . '>'),
 					dbesc($image_uri),
-					dbesc( t('Wall Photos')),
-					intval(local_user())
+					intval($channel['channel_id']),
+					dbesc('<' . $channel['channel_hash'] . '>')
 				); 
 			}
 		}
 	}
 	
-	if($post_id) {
-		proc_run('php',"include/notifier.php","mail","$post_id");
-		return intval($post_id);
-	} else {
-		return -3;
-	}
+	proc_run('php','include/notifier.php','mail',$post_id);
+
+	$ret['success'] = true;
+	$ret['message_item'] = intval($post_id);
+	return;
 
 }
 
-function private_messages_list($uid, $mailbox = '', $order = 'desc', $start = 0, $numitems = 0) {
+function private_messages_list($uid, $mailbox = '', $order = 'created desc', $start = 0, $numitems = 0) {
 
 	$where = '';
 	$limit = '';
@@ -129,7 +144,7 @@ function private_messages_list($uid, $mailbox = '', $order = 'desc', $start = 0,
 	}
 
 		
-	$r = q("SELECT * from mail WHERE channel_id = %d $where order by created $order $limit",
+	$r = q("SELECT * from mail WHERE channel_id = %d $where order by $order $limit",
 		intval(local_user())
 	);
 	if(! $r) {
@@ -196,6 +211,35 @@ function private_messages_fetch_message($channel_id, $messageitem_id, $updatesee
 
 	return $messages;
 
+}
+
+
+function private_messages_drop($channel_id, $messageitem_id, $drop_conversation = false) {
+
+	if($drop_conversation) {
+		// find the parent_id
+		$p = q("SELECT parent_uri FROM mail WHERE id = %d AND channel_id = %d LIMIT 1",
+			intval($messageitem_id),
+			intval($channel_id)
+		);
+		if($p) {
+			$r = q("DELETE FROM mail WHERE parent_uri = '%s' AND channel_id = %d ",
+				dbesc($p[0]['parent_uri']),
+				intval($channel_id)
+			);
+			if($r)
+				return true;
+		}
+	}
+	else {
+		$r = q("DELETE FROM mail WHERE id = %d AND channel_id = %d LIMIT 1",
+			intval($messageitem_id),
+			intval($channel_id)
+		);
+		if($r)
+			return true;
+	}
+	return false;
 }
 
 
