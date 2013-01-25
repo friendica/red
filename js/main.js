@@ -944,4 +944,18 @@ $(window).scroll(function () {
 	}
 });
 
+var chanviewFullSize = false;
 
+function chanviewFull() {
+	if(chanviewFullSize) {
+		chanviewFullSize = false;
+		$('#chanview-iframe-border').css({ 'position' : 'relative' });
+		$('#remote-channel').css({ 'position' : 'relative' });
+	}
+	else {
+		chanviewFullSize = true;
+		$('#chanview-iframe-border').css({ 'position' : 'fixed', 'top' : '0', 'left' : '0' });
+		$('#remote-channel').css({ 'position' : 'fixed', 'top' : '0', 'left' : '0' });
+		resize_iframe();
+	}
+}
