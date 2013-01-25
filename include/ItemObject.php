@@ -512,29 +512,26 @@ class Item extends BaseObject {
 	 *      _ false on failure
 	 */
 	private function get_comment_box($indent) {
+
 		if(!$this->is_toplevel() && !get_config('system','thread_allow')) {
 			return '';
 		}
 		
 		$comment_box = '';
 		$conv = $this->get_conversation();
-		$template = get_markup_template($this->get_comment_box_template());
-		$ww = '';
-		if( ($conv->get_mode() === 'network') && $this->is_wall_to_wall() )
-			$ww = 'ww';
+
+		$observer = get_app()->get_observer();
+		if(! perm_is_allowed($conv->get_profile_owner(),$observer['xchan_hash'],'post_comments'))
+			return '';
 
 		if($conv->is_writable() && $this->is_writable()) {
-			$a = $this->get_app();
-			$qc = $qcomment =  null;
+			$template = get_markup_template($this->get_comment_box_template());
 
-			/*
-			 * Hmmm, code depending on the presence of a particular plugin?
-			 * This should be better if done by a hook
-			 */
-			if(in_array('qcomment',$a->plugins)) {
-				$qc = ((local_user()) ? get_pconfig(local_user(),'qcomment','words') : null);
-				$qcomment = (($qc) ? explode("\n",$qc) : null);
-			}
+			$a = $this->get_app();
+
+			$qc = ((local_user()) ? get_pconfig(local_user(),'qcomment','words') : null);
+			$qcomment = (($qc) ? explode("\n",$qc) : null);
+
 			$comment_box = replace_macros($template,array(
 				'$return_path' => '',
 				'$threaded' => $this->is_threaded(),
@@ -559,8 +556,7 @@ class Item extends BaseObject {
 				'$edvideo' => t('Video'),
 				'$preview' => ((feature_enabled($conv->get_profile_owner(),'preview')) ? t('Preview') : ''),
 				'$indent' => $indent,
-				'$sourceapp' => t($a->sourcename),
-				'$ww' => (($conv->get_mode() === 'network') ? $ww : '')
+				'$sourceapp' => get_app()->sourcename
 			));
 		}
 

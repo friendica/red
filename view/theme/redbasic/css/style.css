@@ -2244,6 +2244,7 @@ tr.mceLast {
 	margin-top: 10px;
 }
 a.mail-list-link {
+	font-weight: normal;
     display: block;
     font-size: 1.3em;
     padding: 4px 0;
