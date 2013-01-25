@@ -123,7 +123,7 @@ function send_message($uid = 0, $recipient='', $body='', $subject='', $replyto='
 
 }
 
-function private_messages_list($uid, $mailbox = '', $order = 'created desc', $start = 0, $numitems = 0) {
+function private_messages_list($uid, $mailbox = '', $start = 0, $numitems = 0) {
 
 	$where = '';
 	$limit = '';
@@ -143,8 +143,10 @@ function private_messages_list($uid, $mailbox = '', $order = 'created desc', $st
 			$where = " and sender_xchan  = '" . dbesc($x[0]['channel_hash']) . "' ";
 	}
 
+	// For different orderings, consider applying usort on the results. We thought of doing that
+	// inside this function or having some preset sorts, but don't wish to limit app developers. 
 		
-	$r = q("SELECT * from mail WHERE channel_id = %d $where order by $order $limit",
+	$r = q("SELECT * from mail WHERE channel_id = %d $where order by created desc $limit",
 		intval(local_user())
 	);
 	if(! $r) {
@@ -168,6 +170,7 @@ function private_messages_list($uid, $mailbox = '', $order = 'created desc', $st
 		$r[$k]['to']   = find_xchan_in_array($rr['to_xchan'],$c);
 		$r[$k]['seen'] = (($rr['mail_flags'] & MAIL_SEEN) ? 1 : 0);
 	}
+
 	return $r;
 }
 

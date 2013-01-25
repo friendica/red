@@ -14,6 +14,18 @@ function invite_post(&$a) {
 		return;
 	}
 
+	check_form_security_token_redirectOnErr('/', 'send_invite');
+
+	$max_invites = intval(get_config('system','max_invites'));
+	if(! $max_invites)
+		$max_invites = 50;
+
+	$current_invites = intval(get_pconfig(local_user(),'system','sent_invites'));
+	if($current_invites > $max_invites) {
+		notice( t('Total invitation limit exceeded.') . EOL);
+		return;
+	};
+
 
 	$recips  = ((x($_POST,'recipients')) ? explode("\n",$_POST['recipients']) : array());
 	$message = ((x($_POST,'message'))    ? notags(trim($_POST['message']))    : '');
@@ -64,6 +76,12 @@ function invite_post(&$a) {
 
 		if($res) {
 			$total ++;
+			$current_invites ++;
+			set_pconfig(local_user(),'system','sent_invites',$current_invites);
+			if($current_invites > $max_invites) {
+				notice( t('Invitation limit exceeded. Please contact your site administrator.') . EOL);
+				return;
+			}
 		}
 		else {
 			notice( sprintf( t('%s : Message delivery failed.'), $recip) . EOL);
@@ -108,6 +126,7 @@ function invite_content(&$a) {
 	}
 
 	$o = replace_macros($tpl, array(
+		'$form_security_token' => get_form_security_token("send_invite"),
 		'$invite' => t('Send invitations'),
 		'$addr_text' => t('Enter email addresses, one per line:'),
 		'$msg_text' => t('Your message:'),

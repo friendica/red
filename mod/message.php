@@ -4,6 +4,7 @@ require_once('include/acl_selectors.php');
 require_once('include/message.php');
 require_once('include/zot.php');
 require_once("include/bbcode.php");
+require_once('include/Contact.php');
 
 
 function message_aside(&$a) {
@@ -299,9 +300,8 @@ function message_content(&$a) {
 
 		// private_messages_list() can do other more complicated stuff, for now keep it simple
 
-		$order = 'created desc';
 
-		$r = private_messages_list(local_user(), '', $order, $a->pager['start'], $a->pager['itemspage']);
+		$r = private_messages_list(local_user(), '', $a->pager['start'], $a->pager['itemspage']);
 
 		if(! $r) {
 			info( t('No messages.') . EOL);
