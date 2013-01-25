@@ -131,41 +131,32 @@ class Item extends BaseObject {
 
 		$filer = (($conv->get_profile_owner() == local_user()) ? t("save to folder") : false);
 
-		$diff_author    = ((link_compare($item['url'],$item['author-link'])) ? false : true);
-		$profile_name   = (((strlen($item['author-name']))   && $diff_author) ? $item['author-name']   : $item['name']);
-
 		$profile_avatar = $item['author']['xchan_photo_m'];
-		$profile_link = $a->get_baseurl() . '/chanview/?f=&url=' . $item['author']['xchan_url'];
-		$profile_name = $item['author']['xchan_name'];
-
-//		if($item['author-link'] && (! $item['author-name']))
-//			$profile_name = $item['author-link'];
-
-
-		$profile_avatar = $item['author']['xchan_photo_m'];
+		$profile_link   = chanlink_url($item['author']['xchan_url']);
+		$profile_name   = $item['author']['xchan_name'];
 
 		$locate = array('location' => $item['location'], 'coord' => $item['coord'], 'html' => '');
 		call_hooks('render_location',$locate);
 		$location = ((strlen($locate['html'])) ? $locate['html'] : render_location_google($locate));
 
-		$tags=array();
+// are we still using $item['tag']? Need to check...
+		$tags = array();
 		foreach(explode(',',$item['tag']) as $tag){
 			$tag = trim($tag);
 			if ($tag!="") $tags[] = bbcode($tag);
 		}
 
 		$showlike    = ((x($alike,$item['uri'])) ? format_like($alike[$item['uri']],$alike[$item['uri'] . '-l'],'like',$item['uri']) : '');
-		$showdislike = ((x($dlike,$item['uri']) && feature_enabled($conv->get_profile_owner(),'dislike'))  ? format_like($dlike[$item['uri']],$dlike[$item['uri'] . '-l'],'dislike',$item['uri']) : '');
+		$showdislike = ((x($dlike,$item['uri']) && feature_enabled($conv->get_profile_owner(),'dislike'))  
+				? format_like($dlike[$item['uri']],$dlike[$item['uri'] . '-l'],'dislike',$item['uri']) : '');
 
 		/*
 		 * We should avoid doing this all the time, but it depends on the conversation mode
 		 * And the conv mode may change when we change the conv, or it changes its mode
 		 * Maybe we should establish a way to be notified about conversation changes
 		 */
+
 		$this->check_wall_to_wall();
-		
-		if($this->is_wall_to_wall() && ($this->get_owner_url() == $this->get_redirect_url()))
-			$osparkle = ' sparkle';
 		
 		if($this->is_toplevel()) {
 			if($conv->get_profile_owner() == local_user()) {
@@ -205,28 +196,13 @@ class Item extends BaseObject {
 
 		$body = prepare_body($item,true);
 
-		if($a->get_template_engine() === 'internal') {
-			$body_e = template_escape($body);
-			$name_e = template_escape($profile_name);
-			$title_e = template_escape($item['title']);
-			$location_e = template_escape($location);
-			$owner_name_e = template_escape($this->get_owner_name());
-		}
-		else {
-			$body_e = $body;
-			$name_e = $profile_name;
-			$title_e = $item['title'];
-			$location_e = $location;
-			$owner_name_e = $this->get_owner_name();
-		}
-
 		$tmp_item = array(
 			'template' => $this->get_template(),
 			
 			'type' => implode("",array_slice(explode("/",$item['verb']),-1)),
 			'tags' => $tags,
-			'body' => $body_e,
-			'text' => strip_tags($body_e),
+			'body' => $body,
+			'text' => strip_tags($body),
 			'id' => $this->get_id(),
 			'linktitle' => sprintf( t('View %s\'s profile - %s'), $profile_name, $item['author']['xchan_addr']),
 			'olinktitle' => sprintf( t('View %s\'s profile - %s'), $this->get_owner_name(), $item['owner']['xchan_addr']),
@@ -235,19 +211,19 @@ class Item extends BaseObject {
 			'vwall' => t('via Wall-To-Wall:'),
 			'profile_url' => $profile_link,
 			'item_photo_menu' => item_photo_menu($item),
-			'name' => $name_e,
+			'name' => $profile_name,
 			'thumb' => $profile_avatar,
 			'osparkle' => $osparkle,
 			'sparkle' => $sparkle,
-			'title' => $title_e,
+			'title' => $item['title'],
 			'localtime' => datetime_convert('UTC', date_default_timezone_get(), $item['created'], 'r'),
 			'ago' => (($item['app']) ? sprintf( t('%s from %s'),relative_date($item['created']),$item['app']) : relative_date($item['created'])),
 			'lock' => $lock,
-			'location' => $location_e,
+			'location' => $location,
 			'indent' => $indent,
 			'owner_url' => $this->get_owner_url(),
 			'owner_photo' => $this->get_owner_photo(),
-			'owner_name' => $owner_name_e,
+			'owner_name' => $this->get_owner_name,
 
 // Item toolbar buttons
 			'like'      => $like,
@@ -576,9 +552,12 @@ class Item extends BaseObject {
 		$this->owner_url = '';
 		$this->owner_photo = '';
 		$this->owner_name = '';
+
+		if($conv->get_mode() !== 'channel')
+			return;
 		
 		if($this->is_toplevel() && ($this->get_data_value('author_xchan') != $this->get_data_value('owner_xchan'))) {
-			$this->owner_url = $this->data['owner']['xchan_url'];
+			$this->owner_url = chanlink_url($this->data['owner']['xchan_url']);
 			$this->owner_photo = $this->data['owner']['xchan_photo_m'];
 			$this->owner_name = $this->data['owner']['xchan_name'];
 			$this->wall_to_wall = true;
