@@ -553,7 +553,7 @@ class Item extends BaseObject {
 		$this->owner_photo = '';
 		$this->owner_name = '';
 
-		if($conv->get_mode() !== 'channel')
+		if($conv->get_mode() === 'channel')
 			return;
 		
 		if($this->is_toplevel() && ($this->get_data_value('author_xchan') != $this->get_data_value('owner_xchan'))) {
