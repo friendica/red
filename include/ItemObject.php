@@ -571,59 +571,17 @@ class Item extends BaseObject {
 	 * Check if we are a wall to wall item and set the relevant properties
 	 */
 	protected function check_wall_to_wall() {
-		$a = $this->get_app();
 		$conv = $this->get_conversation();
 		$this->wall_to_wall = false;
+		$this->owner_url = '';
+		$this->owner_photo = '';
+		$this->owner_name = '';
 		
-		if($this->is_toplevel()) {
-			if( (! $this->get_data_value('self')) && ($conv->get_mode() !== 'channel')) {
-				if($this->get_data_value('wall')) {
-
-					// On the network page, I am the owner. On the display page it will be the profile owner.
-					// This will have been stored in $a->page_contact by our calling page.
-					// Put this person as the wall owner of the wall-to-wall notice.
-
-					$this->owner_url = zid($a->page_contact['url']);
-					$this->owner_photo = $a->page_contact['thumb'];
-					$this->owner_name = $a->page_contact['name'];
-					$this->wall_to_wall = true;
-				}
-				else if($this->get_data_value('owner-link')) {
-
-					$owner_linkmatch = (($this->get_data_value('owner-link')) && link_compare($this->get_data_value('owner-link'),$this->get_data_value('author-link')));
-					$alias_linkmatch = (($this->get_data_value('alias')) && link_compare($this->get_data_value('alias'),$this->get_data_value('author-link')));
-					$owner_namematch = (($this->get_data_value('owner-name')) && $this->get_data_value('owner-name') == $this->get_data_value('author-name'));
-					if((! $owner_linkmatch) && (! $alias_linkmatch) && (! $owner_namematch)) {
-
-						// The author url doesn't match the owner (typically the contact)
-						// and also doesn't match the contact alias. 
-						// The name match is a hack to catch several weird cases where URLs are 
-						// all over the park. It can be tricked, but this prevents you from
-						// seeing "Bob Smith to Bob Smith via Wall-to-wall" and you know darn
-						// well that it's the same Bob Smith. 
-
-						// But it could be somebody else with the same name. It just isn't highly likely. 
-						
-
-						$this->owner_photo = $this->get_data_value('owner-avatar');
-						$this->owner_name = $this->get_data_value('owner-name');
-						$this->wall_to_wall = true;
-						// If it is our contact, use a friendly redirect link
-						if((link_compare($this->get_data_value('owner-link'),$this->get_data_value('url'))) 
-							&& ($this->get_data_value('network') === NETWORK_DFRN)) {
-							$this->owner_url = $this->get_redirect_url();
-						}
-						else
-							$this->owner_url = zid($this->get_data_value('owner-link'));
-					}
-				}
-			}
-		}
-
-		if(!$this->wall_to_wall) {
-			$this->owner_url = '';
-			$this->owner_photo = '';
-			$this->owner_name = '';
+		if($this->is_toplevel() && ($this->get_data_value('author_xchan') != $this->get_data_value('owner_xchan'))) {
+			$this->owner_url = $this->data['owner']['xchan_url'];
+			$this->owner_photo = $this->data['owner']['xchan_photo_m'];
+			$this->owner_name = $this->data['owner']['xchan_name'];
+			$this->wall_to_wall = true;
 		}
 	}
 

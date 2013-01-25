@@ -770,12 +770,11 @@ function zot_import($arr) {
 
 				// We found somebody on this site that's in the recipient list. 
 
-
 			}
 			else {
 				logger('public post');
 
-				// Public post. look for any site members who are accepting posts from this sender
+				// Public post. look for any site members who are or may be accepting posts from this sender
 				$deliveries = public_recips($i);
 			}
 			if(! $deliveries) {
