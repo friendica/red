@@ -86,7 +86,8 @@ function chanview_content(&$a) {
 
 
 	$o = replace_macros(get_markup_template('chanview.tpl'),array(
-		'$url' => $url
+		'$url' => $url,
+		'$full' => t('toggle full screen mode')
 	));
 
 	return $o;
