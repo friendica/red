@@ -1,9 +1,9 @@
 <?php
 
 
-function abook_connections($channel_id, $flags = 0) {
+function abook_connections($channel_id, $sql_conditions = '') {
 	$r = q("select * from abook left join xchan on abook_xchan = xchan_hash where abook_channel = %d
-		and not ( abook_flags & %d )",
+		and not ( abook_flags & %d ) $sql_conditions",
 		intval($channel_id),
 		intval(ABOOK_FLAG_SELF)
 	);
