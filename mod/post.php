@@ -65,8 +65,12 @@ function post_init(&$a) {
 					);
 				}
 			}
-			if(! $x)
+			if(! $x) {
+				logger('mod_zot: auth: unable to finger ' . $addr);
 				goaway($desturl);
+			}
+
+			logger('mod_zot: auth request received from ' . $x[0]['xchan_addr'] . ' for ' . $webbie); 
 
 			// check credentials and access
 
@@ -84,15 +88,17 @@ function post_init(&$a) {
 					array(array('guid' => $x[0]['hubloc_guid'],'guid_sig' => $x[0]['hubloc_guid_sig'])), 
 					$x[0]['hubloc_sitekey'], $sec);
 				$result = zot_zot($x[0]['hubloc_callback'],$p);
-				if(! $result['success'])
+				if(! $result['success']) {
+					logger('mod_zot: auth_check callback failed.');
 					goaway($desturl);
+				}
 				$j = json_decode($result['body'],true);
 			}
 
 			if($already_authed || $j['result']) {
 				// everything is good... maybe
 				if(local_user()) {
-					notice( t('Remote authentication blocked. You are logged into this site locally. Please logout and retry') . EOL);
+					notice( t('Remote authentication blocked. You are logged into this site locally. Please logout and retry.') . EOL);
 					goaway($desturl);
 				}
 				// log them in
@@ -102,6 +108,8 @@ function post_init(&$a) {
 				require_once('include/security.php');
 				$a->set_groups(init_groups_visitor($_SESSION['visitor_id']));
 				info(sprintf( t('Welcome %s. Remote authentication successful.'),$x[0]['xchan_name']));
+				logger('mod_zot: auth success from ' . $x[0]['xchan_addr'] . ' for ' . $webbie); 
+
 			}
 
 			goaway($desturl);
@@ -130,7 +138,7 @@ function post_post(&$a) {
 
 	if(array_key_exists('iv',$data)) {
 		$data = aes_unencapsulate($data,get_config('system','prvkey'));
-		logger('mod_zot: decrypt1: ' . $data);
+		logger('mod_zot: decrypt1: ' . $data, LOGGER_DATA);
 		$data = json_decode($data,true);
 	}
 
@@ -143,7 +151,7 @@ function post_post(&$a) {
 
 		if((! $data['secret']) || (! $data['secret_sig'])) {
 			$ret['message'] = 'no verification signature';
-			logger('mod_zot: pickup: ' . $ret['message']);
+			logger('mod_zot: pickup: ' . $ret['message'], LOGGER_DEBUG);
 			json_return_and_die($ret);
 		}
 		$r = q("select hubloc_sitekey from hubloc where hubloc_url = '%s' and hubloc_callback = '%s' and hubloc_sitekey != '' limit 1",
@@ -324,6 +332,7 @@ function post_post(&$a) {
 				intval($z[0]['id'])
 			);
 
+			logger('mod_zot: auth_check: success', LOGGER_DEBUG);
 			$ret['result'] = true;
 			json_return_and_die($ret);
 

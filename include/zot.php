@@ -109,7 +109,7 @@ function zot_build_packet($channel,$type = 'notify',$recipients = null, $remote_
 		$data['secret_sig'] = base64url_encode(rsa_sign($secret,$channel['channel_prvkey']));
 	}
 
-	logger('zot_build_packet: ' . print_r($data,true));
+	logger('zot_build_packet: ' . print_r($data,true), LOGGER_DATA);
 
 	// Hush-hush ultra top-secret mode
 
@@ -223,7 +223,7 @@ function zot_refresh($them,$channel = null) {
 
 	$result = z_post_url($url . $rhs,$postvars);
 	
-	logger('zot_refresh: zot-info: ' . print_r($result,true));
+	logger('zot_refresh: zot-info: ' . print_r($result,true), LOGGER_DATA);
 
 	if($result['success']) {
 
@@ -372,11 +372,11 @@ function zot_register_hub($arr) {
 
 		$url = $arr['url'] . '/.well-known/zot-info/?f=&guid_hash=' . $guid_hash;
 
-		logger('zot_register_hub: ' . $url);
+		logger('zot_register_hub: ' . $url, LOGGER_DEBUG);
 
 		$x = z_fetch_url($url);
 
-		logger('zot_register_hub: ' . print_r($x,true));
+		logger('zot_register_hub: ' . print_r($x,true), LOGGER_DATA);
 
 		if($x['success']) {
 			$record = json_decode($x['body'],true);
@@ -747,7 +747,7 @@ function zot_import($arr) {
 				$i['notify'] = json_decode(aes_unencapsulate($i['notify'],get_config('system','prvkey')),true);
     		}
 
-			logger('zot_import: notify: ' . print_r($i['notify'],true));
+			logger('zot_import: notify: ' . print_r($i['notify'],true), LOGGER_DATA);
 
 			$i['notify']['sender']['hash'] = base64url_encode(hash('whirlpool',$i['notify']['sender']['guid'] . $i['notify']['sender']['guid_sig'], true));
 			$deliveries = null;
@@ -758,11 +758,8 @@ function zot_import($arr) {
 				foreach($i['notify']['recipients'] as $recip) {
 					$recip_arr[] =  base64url_encode(hash('whirlpool',$recip['guid'] . $recip['guid_sig'], true));
 				}
-				logger('recip_arr: ' . print_r($recip_arr,true));
 				stringify_array_elms($recip_arr);
-				logger('recip_arr: ' . print_r($recip_arr,true));
 				$recips = implode(',',$recip_arr);
-				logger('recips: ' . $recips);
 				$r = q("select channel_hash as hash from channel where channel_hash in ( " . $recips . " ) ");
 				if(! $r) {
 					logger('recips: no recipients on this site');
@@ -790,8 +787,8 @@ function zot_import($arr) {
 				if($i['message']['type'] === 'activity') {
 					$arr = get_item_elements($i['message']);
 
-					logger('Activity received: ' . print_r($arr,true));
-					logger('Activity recipients: ' . print_r($deliveries,true));
+					logger('Activity received: ' . print_r($arr,true), LOGGER_DATA);
+					logger('Activity recipients: ' . print_r($deliveries,true), LOGGER_DATA);
 
 					$relay = ((array_key_exists('flags',$i['message']) && in_array('relay',$i['message']['flags'])) ? true : false);
 					$result = process_delivery($i['notify']['sender'],$arr,$deliveries,$relay);
@@ -800,8 +797,8 @@ function zot_import($arr) {
 				elseif($i['message']['type'] === 'mail') {
 					$arr = get_mail_elements($i['message']);
 
-					logger('Mail received: ' . print_r($arr,true));
-					logger('Mail recipients: ' . print_r($deliveries,true));
+					logger('Mail received: ' . print_r($arr,true), LOGGER_DATA);
+					logger('Mail recipients: ' . print_r($deliveries,true), LOGGER_DATA);
 
 
 					$result = process_mail_delivery($i['notify']['sender'],$arr,$deliveries);
@@ -810,8 +807,8 @@ function zot_import($arr) {
 				elseif($i['message']['type'] === 'profile') {
 					$arr = get_profile_elements($i['message']);
 
-					logger('Profile received: ' . print_r($arr,true));
-					logger('Profile recipients: ' . print_r($deliveries,true));
+					logger('Profile received: ' . print_r($arr,true), LOGGER_DATA);
+					logger('Profile recipients: ' . print_r($deliveries,true), LOGGER_DATA);
 
 					$result = process_profile_delivery($i['notify']['sender'],$arr,$deliveries);
 
@@ -935,9 +932,9 @@ function process_delivery($sender,$arr,$deliveries,$relay) {
 				if($r) {
 					$ev['event_hash'] = $r[0]['resource_id'];
 				}
-	dbg(1);
+
 				$xyz = event_store($ev);
-	dbg(0);
+
 				$result = array($d['hash'],'event processed');
 				continue;
 			}
@@ -972,7 +969,7 @@ function process_delivery($sender,$arr,$deliveries,$relay) {
 	if(! $deliveries)
 		$result[] = array('','no recipients');
 
-	logger('process_delivery: local results: ' . print_r($result,true));
+	logger('process_delivery: local results: ' . print_r($result,true), LOGGER_DEBUG);
 
 	return $result;
 }
@@ -1039,13 +1036,14 @@ function process_mail_delivery($sender,$arr,$deliveries) {
 function process_profile_delivery($sender,$arr,$deliveries) {
 
 	// deliveries is irrelevant, what to do about birthday notification....?
-	logger('process_profile_delivery');
+
+	logger('process_profile_delivery', LOGGER_DEBUG);
 	import_directory_profile($sender['hash'],$arr);
 }
 
 function import_directory_profile($hash,$profile) {
 
-	logger('import_directory_profile');
+	logger('import_directory_profile', LOGGER_DEBUG);
 	if(! $hash)
 		return;
 
