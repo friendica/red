@@ -240,9 +240,10 @@ function notifier_run($argv, $argc){
 
 		// $cmd === 'relay' indicates the owner is sending it to the original recipients
 		// don't allow the item in the relay command to relay to owner under any circumstances, it will loop
-		logger('notifier: relay_to_owner: ' . (($relay_to_owner) ? 'true' : 'false'));
-		logger('notifier: top_level_post: ' . (($top_level_post) ? 'true' : 'false'));
-		logger('notifier: target_item_flags: ' . $target_item['item_flags'] . ' ' . (($target_item['item_flags'] & ITEM_ORIGIN ) ? 'true' : 'false'));
+
+		logger('notifier: relay_to_owner: ' . (($relay_to_owner) ? 'true' : 'false'), LOGGER_DATA);
+		logger('notifier: top_level_post: ' . (($top_level_post) ? 'true' : 'false'), LOGGER_DATA);
+		logger('notifier: target_item_flags: ' . $target_item['item_flags'] . ' ' . (($target_item['item_flags'] & ITEM_ORIGIN ) ? 'true' : 'false'), LOGGER_DATA);
 
 		// tag_deliver'd post which needs to be sent back to the original author
 

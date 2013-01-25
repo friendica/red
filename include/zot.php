@@ -998,19 +998,8 @@ function delete_imported_item($sender,$item,$uid) {
 		return;
 	}
 		
-	$r = q("update item set body = '', title = '', item_restrict = %d, edited = '%s', changed = '%s'
-		where ( thr_parent = '%s' or parent_uri = '%s' ) and uid = %d",
-		intval(ITEM_DELETED),
-		dbesc(datetime_convert()),
-		dbesc(datetime_convert()),
-		dbesc($item['uri']),
-		dbesc($item['uri']),
-		intval($uid)
-	);
-
-	if(! $r)
-		logger("delete_imported_item: db update failed. Item = {$item['uri']} uid = $uid");
-
+	require_once('include/items.php');
+	drop_item($r[0]['id'],false);
 }
 
 function process_mail_delivery($sender,$arr,$deliveries) {

@@ -4017,17 +4017,21 @@ function drop_items($items) {
 }
 
 
+// Delete item with given item $id. $interactive means we're running interactively, and must check
+// permissions to carry out this act. If it is non-interactive, we are deleting something at the
+// system's request and do not check permission. This is very important to know. 
+
 function drop_item($id,$interactive = true) {
 
 	$a = get_app();
 
 	// locate item to be deleted
 
-	$r = q("SELECT * FROM `item` WHERE `id` = %d LIMIT 1",
+	$r = q("SELECT * FROM item WHERE id = %d LIMIT 1",
 		intval($id)
 	);
 
-	if(! count($r)) {
+	if(! $r) {
 		if(! $interactive)
 			return 0;
 		notice( t('Item not found.') . EOL);
@@ -4036,126 +4040,99 @@ function drop_item($id,$interactive = true) {
 
 	$item = $r[0];
 
-	$owner = $item['uid'];
+	$ok_to_delete = false;
 
-	$cid = 0;
+	// system deletion
+	if(! $interactive)
+		$ok_to_delete = true;
 
-	// check if logged in user is either the author or owner of this item
+	// owner deletion
+	if(local_user() && local_user() == $item['uid'])
+		$ok_to_delete = true;
 
-	if(is_array($_SESSION['remote'])) {
-		foreach($_SESSION['remote'] as $visitor) {
-			if($visitor['uid'] == $item['uid'] && $visitor['cid'] == $item['contact-id']) {
-				$cid = $visitor['cid'];
-				break;
-			}
-		}
-	}
+	// author deletion
+	$observer = $a->get_observer();
+	if($observer && $observer['xchan_hash'] && ($observer['xchan_hash'] === $item['author_xchan']))
+		$ok_to_delete = true;
 
+	if($ok_to_delete) {
 
-	if((local_user() == $item['uid']) || ($cid) || (! $interactive)) {
+		$notify_id = intval($item['id']);
 
-		// delete the item
-
-		$r = q(" UPDATE `item` SET
-            		`item_restrict` = (item_restrict|%d) ,
-          		`title` = '',
-		        `body` = '',
-		        `changed` = '%s',
-			`edited` = '%s'  WHERE `id` = %d LIMIT 1",
-		        intval(ITEM_DELETED),
-		        dbesc(datetime_convert()),
-		        dbesc(datetime_convert()),
-		        intval($item['id'])
-		);
-
-
-
-		// clean up categories and tags so they don't end up as orphans
-
-		$matches = false;
-		$cnt = preg_match_all('/<(.*?)>/',$item['file'],$matches,PREG_SET_ORDER);
-		if($cnt) {
-			foreach($matches as $mtch) {
-				file_tag_unsave_file($item['uid'],$item['id'],$mtch[1],true);
-			}
-		}
-
-		$matches = false;
-
-		$cnt = preg_match_all('/\[(.*?)\]/',$item['file'],$matches,PREG_SET_ORDER);
-		if($cnt) {
-			foreach($matches as $mtch) {
-				file_tag_unsave_file($item['uid'],$item['id'],$mtch[1],false);
-			}
-		}
-
-		// If item is a link to a photo resource, nuke all the associated photos 
-		// (visitors will not have photo resources)
-		// This only applies to photos uploaded from the photos page. Photos inserted into a post do not
-		// generate a resource_id and therefore aren't intimately linked to the item. 
-
-		if(strlen($item['resource_id'])) {
-			q("DELETE FROM `photo` WHERE `resource_id` = '%s' AND `uid` = %d ",
-				dbesc($item['resource_id']),
-				intval($item['uid'])
-			);
-			// ignore the result
-		}
-
-		// If item is a link to an event, nuke the event record.
-
-		if(intval($item['event-id'])) {
-			q("DELETE FROM `event` WHERE `id` = %d AND `uid` = %d LIMIT 1",
-				intval($item['event-id']),
-				intval($item['uid'])
-			);
-			// ignore the result
-		}
-
-		// clean up item_id and sign meta-data tables
-
-		$r = q("DELETE FROM item_id where iid in (select id from item where parent = %d and uid = %d)",
+		$items = q("select * from item where parent = %d and uid = %d",
 			intval($item['id']),
 			intval($item['uid'])
 		);
-
-		$r = q("DELETE FROM sign where iid in (select id from item where parent = %d and uid = %d)",
-			intval($item['id']),
-			intval($item['uid'])
-		);
-
-		// If it's the parent of a comment thread, kill all the kids
-
-		if($item['uri'] == $item['parent_uri']) {
-			$r = q("UPDATE `item` SET `deleted` = 1, `edited` = '%s', `changed` = '%s', `body` = '' , `title` = ''
-				WHERE `parent_uri` = '%s' AND `uid` = %d ",
-				dbesc(datetime_convert()),
-				dbesc(datetime_convert()),
-				dbesc($item['parent_uri']),
-				intval($item['uid'])
-			);
-			// ignore the result
+		if($items) {
+			foreach($items as $i)
+				delete_item_lowlevel($i);
 		}
-
-		$drop_id = intval($item['id']);
-
-		// send the notification upstream/downstream as the case may be
 
 		if(! $interactive)
-			return $owner;
+			return 1;
 
-		proc_run('php',"include/notifier.php","drop","$drop_id");
+		// send the notification upstream/downstream as the case may be
+		// only send notifications to others if this is the owner's wall item. 
+
+		if($item['item_flags'] & ITEM_WALL)
+			proc_run('php','include/notifier.php','drop',$notify_id);
+
 		goaway($a->get_baseurl() . '/' . $_SESSION['return_url']);
-		//NOTREACHED
+
 	}
 	else {
 		if(! $interactive)
 			return 0;
 		notice( t('Permission denied.') . EOL);
 		goaway($a->get_baseurl() . '/' . $_SESSION['return_url']);
-		//NOTREACHED
 	}
 	
+}
+
+// This function does not check for permission and does not send notifications and does not check recursion.
+// It merely destroys all resources associated with an item. 
+// Please do not use without a suitable wrapper.
+
+function delete_item_lowlevel($item) {
+
+	$r = q("UPDATE item SET item_restrict = ( item_restrict | %d ), title = '', body = '',
+		changed = '%s', edited = '%s'  WHERE id = %d LIMIT 1",
+		intval(ITEM_DELETED),
+		dbesc(datetime_convert()),
+		dbesc(datetime_convert()),
+		intval($item['id'])
+	);
+
+	$r = q("delete from term where otype = %d and oid = %d limit 1",
+		intval(TERM_OBJ_POST),
+		intval($item['id'])
+	);
+
+	// If item is a link to a photo resource, nuke all the associated photos 
+	// This only applies to photos uploaded from the photos page. Photos inserted into a post do not
+	// generate a resource_id and therefore aren't intimately linked to the item. 
+
+	if(strlen($item['resource_id'])) {
+		if($item['resource_type'] === 'event') {
+			q("delete from event where event_hash = '%s' and uid = %d limit 1",
+				dbesc($item['resource_id']),
+				intval($item['uid'])
+			);				
+		}
+		elseif($item['resource_type'] === 'photo') {
+			q("DELETE FROM `photo` WHERE `resource_id` = '%s' AND `uid` = %d ",
+				dbesc($item['resource_id']),
+				intval($item['uid'])
+			);
+		}
+	}
+
+	q("delete from item_id where iid = %d and uid = %d limit 1",
+		intval($item['id']),
+		intval($item['uid'])
+	);
+
+	return true;
 }
 
 
