@@ -19,6 +19,13 @@ function abook_self($channel_id) {
 	return(($r) ? $r[0] : array());
 }	
 
+function channelx_by_nick($nick) {
+	return q("SELECT * FROM channel left join xchan on channel_hash = xchan_hash WHERE channel_address = '%s' LIMIT 1",
+		dbesc($nick)
+	);
+}
+
+
 function vcard_from_xchan($xchan, $observer = null, $mode = '') {
 
 	$connect = false;

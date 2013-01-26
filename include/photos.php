@@ -230,7 +230,7 @@ function photo_upload($channel, $observer, $args) {
 
 function photos_albums_list($channel,$observer) {
 
-	$channel_id = $channel['channel_id'];
+	$channel_id     = $channel['channel_id'];
 	$observer_xchan = (($observer) ? $observer['xchan_hash'] : '');
 
 	if(! perm_is_allowed($channel_id,$observer_xchan,'view_photos'))
@@ -244,7 +244,34 @@ function photos_albums_list($channel,$observer) {
 		intval($channel_id)
 	);
 
+	// add various encodings to the array so we can just loop through and pick them out in a template
+
+	if($albums) {
+		foreach($albums as $k => $album) {
+			$albums[$k]['urlencode'] = urlencode($album['album']);
+			$albums[$k]['bin2hex'] = bin2hex($album['album']);
+		}
+	}
 	return $albums;
 
 }
 
+function photos_album_widget($channelx,$observer,$albums = null) {
+
+	$o = '';
+
+	if(! $albums)
+		$albums = photos_albums_list($channelx,$observer);
+
+	if($albums) {
+		$o = replace_macros(get_markup_template('photo_albums.tpl'),array(
+			'$nick'    => $channelx['channel_address'],
+			'$title'   => t('Photo Albums'),
+			'$albums'  => $albums,
+			'$baseurl' => z_root(),
+			'$upload'  => ((perm_is_allowed($channelx['channel_id'],(($observer) ? $observer['xchan_hash'] : ''),'post_photos')) 
+				? t('Upload New Photos') : '')
+		));
+	}
+	return $o;
+}

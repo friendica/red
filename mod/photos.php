@@ -18,61 +18,31 @@ function photos_init(&$a) {
 
 	if(argc() > 1) {
 		$nick = argv(1);
-		$r = q("SELECT * FROM channel left join xchan on channel_hash = xchan_hash WHERE channel_address = '%s' LIMIT 1",
-			dbesc($nick)
-		);
+		$channelx = channelx_by_nick($nick);
 
-		if(! $r)
+		if(! $channelx)
 			return;
 
-		$a->data['channel'] = $r[0];
+		$a->data['channel'] = $channelx[0];
 
 		$observer = $a->get_observer();
 		$a->data['observer'] = $observer;
 
 		$observer_xchan = (($observer) ? $observer['xchan_hash'] : '');
 
-		$a->data['perms'] = get_all_perms($r[0]['channel_id'],$observer_xchan);
+		$a->data['perms'] = get_all_perms($channelx[0]['channel_id'],$observer_xchan);
 
-		$o .= vcard_from_xchan($a->data['channel'],$observer_xchan);
+		$a->set_widget('vcard',vcard_from_xchan($a->data['channel'],$observer));
 
-		$albums = photos_albums_list($a->data['channel'],$observer);
+		if($a->data['perms']['view_photos']) {
 
-		if($albums) {
-			$a->data['albums'] = $albums;
-// FIXME
-			$albums_visible = ((intval($a->data['user']['hidewall']) && (! local_user()) && (! remote_user())) ? false : true);	
+			$a->data['albums'] = photos_albums_list($a->data['channel'],$observer);
 
-			if($albums_visible) {
-				$o .= '<div id="side-bar-photos-albums" class="widget">';
-				$o .= '<h3>' . '<a href="' . $a->get_baseurl() . '/photos/' . $a->data['channel']['channel_address'] . '">' . t('Photo Albums') . '</a></h3>';
-					
-				$o .= '<ul>';
-				foreach($albums as $album) {
+			$a->set_widget('photo_albums',photos_album_widget($a->data['channel'],$observer,$a->data['albums']));
 
-					// don't show contact photos. We once translated this name, but then you could still access it under
-					// a different language setting. Now we store the name in English and check in English (and translated for legacy albums).
-
-					if((! strlen($album['album'])) || ($album['album'] === 'Contact Photos') || ($album['album'] === t('Contact Photos')))
-						continue;
-					$o .= '<li>' . '<a href="photos/' . $a->argv[1] . '/album/' . bin2hex($album['album']) . '" >' . $album['album'] . '</a></li>'; 
-				}
-				$o .= '</ul>';
-			}
-			if(local_user() && $a->data['channel']['channel_id'] == local_user()) {
-				$o .= '<div id="photo-albums-upload-link"><a href="' . $a->get_baseurl() . '/photos/' . $a->data['channel']['channel_address'] . '/upload" >' .t('Upload New Photos') . '</a></div>';
-			}
-
-			$o .= '</div>';
 		}
 
-		if(! x($a->page,'aside'))
-			$a->page['aside'] = '';
-		$a->page['aside'] .= $o;
-
-
 		$a->page['htmlhead'] .= "<script> var ispublic = '" . t('everybody') . "';</script>" ;
-
 
 	}
 
