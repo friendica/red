@@ -1,5 +1,6 @@
 <?php
 require_once('include/Photo.php');
+require_once('include/photos.php');
 require_once('include/items.php');
 require_once('include/acl_selectors.php');
 require_once('include/bbcode.php');
@@ -75,28 +76,7 @@ function photos_init(&$a) {
 
 		$a->page['htmlhead'] .= "<script> var ispublic = '" . t('everybody') . "';" ;
 
-		$a->page['htmlhead'] .= <<< EOT
 
-		$(document).ready(function() {
-
-			$('#contact_allow, #contact_deny, #group_allow, #group_deny').change(function() {
-				var selstr;
-				$('#contact_allow option:selected, #contact_deny option:selected, #group_allow option:selected, #group_deny option:selected').each( function() {
-					selstr = $(this).text();
-					$('#jot-perms-icon').removeClass('unlock').addClass('lock');
-					$('#jot-public').hide();
-				});
-				if(selstr == null) { 
-					$('#jot-perms-icon').removeClass('lock').addClass('unlock');
-					$('#jot-public').show();
-				}
-
-			}).trigger('change');
-
-		});
-
-		</script>
-EOT;
 	}
 
 	return;
@@ -748,7 +728,7 @@ function photos_post(&$a) {
 
 
 
-	$r = q("select sum(octet_length(data)) as total from photo where uid = %d and scale = 0 and album != 'Contact Photos' ",
+	$r = q("select sum(size) as total from photo where uid = %d and scale = 0 ",
 		intval($a->data['channel']['channel_id'])
 	);
 
@@ -832,7 +812,7 @@ function photos_post(&$a) {
 	$arr['item_flags']    = $item_flags;
 	$arr['item_restrict'] = $item_restrict;
 	$arr['resource_type'] = 'photo';
-	$arr['resource_id']   = $hoto_hash;
+	$arr['resource_id']   = $photo_hash;
 	$arr['owner_xchan']   = $a->data['channel']['channel_hash'];
 	$arr['author_xchan']  = $a->data['channel']['channel_hash']; // FIXME for AUTH guests
 	$arr['title']         = $title;
@@ -1052,7 +1032,7 @@ function photos_content(&$a) {
 		<input type="submit" name="submit" value="' . t('Submit') . '" id="photos-upload-submit" /> </div>';
 
 
-		$r = q("select sum(octet_length(data)) as total from photo where uid = %d and scale = 0 and album != 'Contact Photos' ",
+		$r = q("select sum(size) as total from photo where uid = %d and scale = 0 ",
 			intval($a->data['channel']['channel_id'])
 		);
 
