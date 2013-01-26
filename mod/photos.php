@@ -74,7 +74,7 @@ function photos_init(&$a) {
 		$a->page['aside'] .= $o;
 
 
-		$a->page['htmlhead'] .= "<script> var ispublic = '" . t('everybody') . "';" ;
+		$a->page['htmlhead'] .= "<script> var ispublic = '" . t('everybody') . "';</script>" ;
 
 
 	}
