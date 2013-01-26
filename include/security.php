@@ -166,6 +166,8 @@ function change_channel($change_channel) {
 
 }
 
+
+
 function permissions_sql($owner_id,$remote_verified = false,$groups = null) {
 
 	$local_user = local_user();

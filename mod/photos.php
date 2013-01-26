@@ -5,6 +5,7 @@ require_once('include/items.php');
 require_once('include/acl_selectors.php');
 require_once('include/bbcode.php');
 require_once('include/security.php');
+require_once('include/Contact.php');
 
 
 function photos_init(&$a) {
@@ -17,7 +18,7 @@ function photos_init(&$a) {
 
 	if(argc() > 1) {
 		$nick = argv(1);
-		$r = q("SELECT * FROM channel WHERE channel_address = '%s' LIMIT 1",
+		$r = q("SELECT * FROM channel left join xchan on channel_hash = xchan_hash WHERE channel_address = '%s' LIMIT 1",
 			dbesc($nick)
 		);
 
@@ -27,21 +28,17 @@ function photos_init(&$a) {
 		$a->data['channel'] = $r[0];
 
 		$observer = $a->get_observer();
-		$a->data['perms'] = get_all_perms($r[0]['channel_id'],(($observer) ? $observer['xchan_hash'] : ''));
+		$a->data['observer'] = $observer;
 
-		$o .= '<div class="vcard">';
-		$o .= '<div class="fn">' . $a->data['channel']['channel_name'] . '</div>';
-		$o .= '<div id="profile-photo-wrapper"><img class="photo" style="width: 175px; height: 175px;" src="' . $a->get_baseurl() . '/photo/profile/l/' . $a->data['channel']['channel_id'] . '" alt="' . $a->data['channel']['channel_name'] . '" /></div>';
-		$o .= '</div>';
+		$observer_xchan = (($observer) ? $observer['xchan_hash'] : '');
 
+		$a->data['perms'] = get_all_perms($r[0]['channel_id'],$observer_xchan);
 
-		$sql_extra = permissions_sql($a->data['channel']['channel_id']);
+		$o .= vcard_from_xchan($a->data['channel'],$observer_xchan);
 
-		$albums = q("SELECT distinct(`album`) AS `album` FROM `photo` WHERE `uid` = %d $sql_extra order by created desc",
-			intval($a->data['channel']['channel_id'])
-		);
+		$albums = photos_albums_list($a->data['channel'],$observer);
 
-		if(count($albums)) {
+		if($albums) {
 			$a->data['albums'] = $albums;
 // FIXME
 			$albums_visible = ((intval($a->data['user']['hidewall']) && (! local_user()) && (! remote_user())) ? false : true);	

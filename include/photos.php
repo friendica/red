@@ -224,3 +224,27 @@ function photo_upload($channel, $observer, $args) {
 
 	return $ret;
 }
+
+
+
+
+function photos_albums_list($channel,$observer) {
+
+	$channel_id = $channel['channel_id'];
+	$observer_xchan = (($observer) ? $observer['xchan_hash'] : '');
+
+	if(! perm_is_allowed($channel_id,$observer_xchan,'view_photos'))
+		return false;
+
+	// FIXME - create a permissions SQL which works on arbitrary observers and channels, regardless of login or web status
+
+	$sql_extra = permissions_sql($channel_id);
+
+	$albums = q("SELECT distinct album from photo where uid = %d $sql_extra order by created desc",
+		intval($channel_id)
+	);
+
+	return $albums;
+
+}
+
