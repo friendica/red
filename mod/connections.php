@@ -223,7 +223,7 @@ function connections_content(&$a) {
 // FIXME
 //			terminate_friendship($a->get_channel(),$orig_record[0]);
 
-			contact_remove($orig_record[0]['abook_id']);
+			contact_remove(local_user(), $orig_record[0]['abook_id']);
 			info( t('Contact has been removed.') . EOL );
 			if(x($_SESSION,'return_url'))
 				goaway($a->get_baseurl(true) . '/' . $_SESSION['return_url']);

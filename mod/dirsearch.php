@@ -71,7 +71,7 @@ function dirsearch_content(&$a) {
 	// By default we return one page (default 80 items maximum) and do not count total entries
 
 	$logic = ((strlen($sql_extra)) ? 0 : 1);
-dbg(1);
+
 	if($limit) 
 		$qlimit = " LIMIT $limit ";
 	else {
@@ -91,7 +91,7 @@ dbg(1);
 	$r = q("SELECT xchan.*, xprof.* from xchan left join xprof on xchan_hash = xprof_hash where $logic $sql_extra and not ( xchan_flags & %d ) $order $qlimit ",
 		intval(XCHAN_FLAGS_HIDDEN)
 	);
-dbg(0);
+
 	$ret['page'] = $page + 1;
 	$ret['records'] = count($r);		
 

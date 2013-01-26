@@ -620,7 +620,7 @@ function network_content(&$a, $update = 0, $load = false) {
 		if($load) {
 
 			// Fetch a page full of parent items for this page
-dbg(1);
+
 			$r = q("SELECT item.id AS item_id FROM item 
 				left join abook on item.author_xchan = abook.abook_xchan
 				WHERE item.uid = %d AND item.item_restrict = 0
@@ -631,7 +631,7 @@ dbg(1);
 				intval(local_user()),
 				intval(ABOOK_FLAG_BLOCKED)
 			);
-dbg(0);
+
 		}
 		else {
 			// update

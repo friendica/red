@@ -3631,7 +3631,7 @@ function lose_follower($importer,$contact,$datarray,$item) {
 		);
 	}
 	else {
-		contact_remove($contact['id']);
+//		contact_remove($contact['id']);
 	}
 }
 
@@ -3644,7 +3644,7 @@ function lose_sharer($importer,$contact,$datarray,$item) {
 		);
 	}
 	else {
-		contact_remove($contact['id']);
+//		contact_remove($contact['id']);
 	}
 }
 

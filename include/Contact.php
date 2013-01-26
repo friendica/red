@@ -126,28 +126,46 @@ function user_remove($uid) {
 }
 
 
-function contact_remove($id) {
+function contact_remove($channel_id, $abook_id) {
 
-	$r = q("select uid from contact where id = %d limit 1",
-		intval($id)
-	);
-	if((! count($r)) || (! intval($r[0]['uid'])))
-		return;
+	if((! $channel_id) || (! $abook_id))
+		return false;
 
-	$archive = get_pconfig($r[0]['uid'], 'system','archive_removed_contacts');
+	$archive = get_pconfig($channel_id, 'system','archive_removed_contacts');
 	if($archive) {
-		q("update contact set `archive` = 1, `network` = 'none', `writable` = 0 where id = %d limit 1",
-			intval($id)
+		q("update abook set abook_flags = abook_flags | %d where abook_id = %d and abook_channel = %d limit 1",
+			intval(ABOOK_FLAG_ARCHIVE),
+			intval($abook_id),
+			intval($channel_id)
 		);
-		return;
+		return true;
 	}
 
-	q("DELETE FROM `contact` WHERE `id` = %d LIMIT 1",
-		intval($id)
+	$r = q("select * from abook where abook_id = %d and abook_channel = %d limit 1",
+		intval($abook_id),
+		intval($channel_id)
 	);
-	q("DELETE FROM `item` WHERE `contact-id` = %d ",
-		intval($id)
+
+	if(! $r)
+		return false;
+
+	$abook = $r[0];
+
+	if($abook['abook_flags'] & ABOOK_FLAG_SELF)
+		return false;
+
+	q("delete from item where author_xchan = '%s' and uid = %d",
+		dbesc($abook['abook_xchan']),
+		intval($channel_id)
 	);
+	
+	q("delete from abook where abook_id = %d and channel_id = %d limit 1",
+		intval($abook['abook_id']),
+		intval($channel_id)
+	);
+
+/*
+// FIXME
 	q("DELETE FROM `photo` WHERE `contact-id` = %d ",
 		intval($id)
 	);
@@ -160,7 +178,9 @@ function contact_remove($id) {
 	q("DELETE FROM `queue` WHERE `cid` = %d ",
 		intval($id)
 	);
+*/
 
+	return true;
 }
 
 
