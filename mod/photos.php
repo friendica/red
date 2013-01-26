@@ -14,6 +14,7 @@ function photos_init(&$a) {
 	if((get_config('system','block_public')) && (! local_user()) && (! remote_user())) {
 		return;
 	}
+
 	$o = '';
 
 	if(argc() > 1) {
@@ -32,14 +33,13 @@ function photos_init(&$a) {
 
 		$a->data['perms'] = get_all_perms($channelx[0]['channel_id'],$observer_xchan);
 
+
+
 		$a->set_widget('vcard',vcard_from_xchan($a->data['channel'],$observer));
 
 		if($a->data['perms']['view_photos']) {
-
 			$a->data['albums'] = photos_albums_list($a->data['channel'],$observer);
-
 			$a->set_widget('photo_albums',photos_album_widget($a->data['channel'],$observer,$a->data['albums']));
-
 		}
 
 		$a->page['htmlhead'] .= "<script> var ispublic = '" . t('everybody') . "';</script>" ;
@@ -62,153 +62,106 @@ function photos_post(&$a) {
 	$phototypes = Photo::supportedTypes();
 
 	$can_post  = false;
-	$visitor   = 0;
 
 	$page_owner_uid = $a->data['channel']['channel_id'];
-	$community_page = (($a->data['user']['page-flags'] == PAGE_COMMUNITY) ? true : false);
 
-	if((local_user()) && (local_user() == $page_owner_uid))
+	if($a->perms['post_photos'])
 		$can_post = true;
-	else {
-		if($community_page && remote_user()) {
-			$cid = 0;
-			if(is_array($_SESSION['remote'])) {
-				foreach($_SESSION['remote'] as $v) {
-					if($v['uid'] == $page_owner_uid) {
-						$cid = $v['cid'];
-						break;
-					}
-				}
-			}
-			if($cid) {
-
-				$r = q("SELECT `uid` FROM `contact` WHERE `blocked` = 0 AND `pending` = 0 AND `id` = %d AND `uid` = %d LIMIT 1",
-					intval($cid),
-					intval($page_owner_uid)
-				);
-				if(count($r)) {
-					$can_post = true;
-					$visitor = $cid;
-				}
-			}
-		}
-	}
 
 	if(! $can_post) {
 		notice( t('Permission denied.') . EOL );
-		killme();
+		if(is_ajax())
+			killme();
+		return;
 	}
 
-	$r = q("SELECT `contact`.*, `user`.`nickname` FROM `contact` LEFT JOIN `user` ON `user`.`uid` = `contact`.`uid` 
-		WHERE `user`.`uid` = %d AND `self` = 1 LIMIT 1",
-		intval($page_owner_uid)
-	);
+	$s = abook_self($page_owner_uid);
 
-	if(! count($r)) {
-		notice( t('Contact information unavailable') . EOL);
-		logger('photos_post: unable to locate contact record for page owner. uid=' . $page_owner_uid);
-		killme();
+	if(! $s) {
+		notice( t('Page owner information could not be retrieved.') . EOL);
+		logger('mod_photos: post: unable to locate contact record for page owner. uid=' . $page_owner_uid);
+		if(is_ajax())
+			killme();
+		return;
 	}
 
-	$owner_record = $r[0];	
+	$owner_record = $s[0];	
 
 
-	if(($a->argc > 3) && ($a->argv[2] === 'album')) {
-		$album = hex2bin($a->argv[3]);
+	if((argc() > 3) && (argv(2) === 'album')) {
 
-		if($album === t('Profile Photos') || $album === 'Contact Photos' || $album === t('Contact Photos')) {
+		$album = hex2bin(argv(3));
+
+		if($album === t('Profile Photos')) {
+			// not allowed
 			goaway($a->get_baseurl() . '/' . $_SESSION['photo_return']);
-			return; // NOTREACHED
 		}
 
-		$r = q("SELECT count(*) FROM `photo` WHERE `album` = '%s' AND `uid` = %d",
-			dbesc($album),
-			intval($page_owner_uid)
-		);
-		if(! count($r)) {
+		if(! photos_album_exists($page_owner_uid,$album)) {
 			notice( t('Album not found.') . EOL);
 			goaway($a->get_baseurl() . '/' . $_SESSION['photo_return']);
-			return; // NOTREACHED
 		}
 
-		$newalbum = notags(trim($_POST['albumname']));
+
+		/*
+		 * RENAME photo album
+		 */
+
+		$newalbum = notags(trim($_REQUEST['albumname']));
 		if($newalbum != $album) {
-			q("UPDATE `photo` SET `album` = '%s' WHERE `album` = '%s' AND `uid` = %d",
-				dbesc($newalbum),
-				dbesc($album),
-				intval($page_owner_uid)
-			);
-			$newurl = str_replace(bin2hex($album),bin2hex($newalbum),$_SESSION['photo_return']);
-			goaway($a->get_baseurl() . '/' . $newurl);
-			return; // NOTREACHED
+			$x = photos_album_rename($page_owner_uid,$album,$newalbum);
+			if($x) {
+				$newurl = str_replace(bin2hex($album),bin2hex($newalbum),$_SESSION['photo_return']);
+				goaway($a->get_baseurl() . '/' . $newurl);
+			}
 		}
 
+		/*
+		 * DELETE photo album and all its photos
+		 */
 
-		if($_POST['dropalbum'] == t('Delete Album')) {
+		if($_REQUEST['dropalbum'] == t('Delete Album')) {
 
 			$res = array();
 
 			// get the list of photos we are about to delete
 
-			if($visitor) {
-				$r = q("SELECT distinct(`resource_id`) as `rid` FROM `photo` WHERE `contact-id` = %d AND `uid` = %d AND `album` = '%s'",
-					intval($visitor),
-					intval($page_owner_uid),
-					dbesc($album)
-				);
+			if(remote_user() && (! local_user())) {
+				$str = photos_album_get_db_idstr($page_owner_uid,$album,remote_user());
+			}
+			elseif(local_user()) {
+				$str = photos_album_get_db_idstr(local_user(),$album);
 			}
 			else {
-				$r = q("SELECT distinct(`resource_id`) as `rid` FROM `photo` WHERE `uid` = %d AND `album` = '%s'",
-					intval(local_user()),
-					dbesc($album)
-				);
+				$str = null;
 			}
-			if(count($r)) {
-				foreach($r as $rr) {
-					$res[] = "'" . dbesc($rr['rid']) . "'" ;
-				}
-			}
-			else {
+			if(! $str) {
 				goaway($a->get_baseurl() . '/' . $_SESSION['photo_return']);
-				return; // NOTREACHED
 			}
 
-			$str_res = implode(',', $res);
-
-			// remove the associated photos
-
-			q("DELETE FROM `photo` WHERE `resource_id` IN ( $str_res ) AND `uid` = %d",
+			$r = q("select id, item_restrict from item where resource_id in ( $str ) and resource_type = 'photo' and uid = %d",
 				intval($page_owner_uid)
 			);
-
-			// find and delete the corresponding item with all the comments and likes/dislikes
-
-			$r = q("SELECT `parent_uri` FROM `item` WHERE `resource_id` IN ( $str_res ) AND `uid` = %d",
-				intval($page_owner_uid)
-			);
-			if(count($r)) {
-				foreach($r as $rr) {
-					q("UPDATE `item` SET `deleted` = 1, `changed` = '%s' WHERE `parent_uri` = '%s' AND `uid` = %d",
-						dbesc(datetime_convert()),
-						dbesc($rr['parent_uri']),
-						intval($page_owner_uid)
-					);
-
-					$drop_id = intval($rr['id']);
-
-					// send the notification upstream/downstream as the case may be
-
-					if($rr['visible'])
-						proc_run('php',"include/notifier.php","drop","$drop_id");
+			if($r) {
+				foreach($r as $i) {
+					drop_item($i['id'],false);
+					if(! $item_restrict)
+						proc_run('php','include/notifier.php','drop',$i['id']);
 				}
 			}
+
+			// remove the associated photos in case they weren't attached to an item
+
+			q("delete from photo where resource_id in ( $str ) and uid = %d",
+				intval($page_owner_uid)
+			);
 		}
+		
 		goaway($a->get_baseurl() . '/photos/' . $a->data['channel']['channel_address']);
-		return; // NOTREACHED
 	}
 
-	if(($a->argc > 2) && (x($_POST,'delete')) && ($_POST['delete'] == t('Delete Photo'))) {
-
+	if((argc() > 2) && (x($_REQUEST,'delete')) && ($_REQUEST['delete'] === t('Delete Photo'))) {
+// FIXME
 		// same as above but remove single photo
 
 		if($visitor) {

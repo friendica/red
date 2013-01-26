@@ -275,3 +275,47 @@ function photos_album_widget($channelx,$observer,$albums = null) {
 	}
 	return $o;
 }
+
+function photos_album_exists($channel_id,$album) {
+	$r = q("SELECT id from photo where album = '%s' and uid = %d limit 1",
+		dbesc($album),
+		intval($channel_id)
+	);
+	return (($r) ? true : false);
+}
+
+function photos_album_rename($channel_id,$oldname,$newname) {
+	return q("UPDATE photo SET album = '%s' WHERE album = '%s' AND uid = %d",
+		dbesc($newname),
+		dbesc($oldname),
+		intval($channel_id)
+	);
+}
+
+
+function photos_album_get_db_idstr($channel_id,$album,$remote_xchan = '') {
+
+	if($remote_xchan) {
+		$r = q("SELECT distinct resource_id as from photo where xchan = '%s' and uid = %d and album = '%s' ",
+			dbesc($remote_xchan),
+			intval($channel_id),
+			dbesc($album)
+		);
+	}
+	else {
+		$r = q("SELECT distinct resource_id  from photo where uid = %d and album = '%s' ",
+			intval($channel_id),
+			dbesc($album)
+		);
+	}
+	if($r) {
+		$arr = array();
+		foreach($r as $rr) {
+			$arr[] = "'" . dbesc($rr['resource_id']) . "'" ;
+		}
+		$str = implode(',',$arr);
+		return $str;
+	}
+	return false;
+
+}
