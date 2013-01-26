@@ -229,10 +229,13 @@ function zot_refresh($them,$channel = null) {
 
 		$j = json_decode($result['body'],true);
 
+		if(! (($j) && ($j['success'])))
+			return false;
+
 		$x = import_xchan($j);
 
-		if(! $x['success']) 
-			return $x;
+		if(! $x['success'])
+			return false;
 
 		$xchan_hash = $x['hash'];
 
@@ -785,7 +788,10 @@ function zot_import($arr) {
 			if($i['message']) { 
 				if($i['message']['type'] === 'activity') {
 					$arr = get_item_elements($i['message']);
-
+					if(! array_key_exists('created',$arr)) {
+						logger('Activity rejected: probable failure to lookup author/owner. ' . print_r($i['message'],true));
+						continue;
+					}
 					logger('Activity received: ' . print_r($arr,true), LOGGER_DATA);
 					logger('Activity recipients: ' . print_r($deliveries,true), LOGGER_DATA);
 
