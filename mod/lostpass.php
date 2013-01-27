@@ -30,15 +30,14 @@ function lostpass_post(&$a) {
 
 	$email_tpl = get_intltext_template("lostpass_eml.tpl");
 	$message = replace_macros($email_tpl, array(
-			'$sitename' => $a->config['sitename'],
+			'$sitename' => get_config('system','sitename'),
 			'$siteurl' =>  $a->get_baseurl(),
-			'$username' => $email,
+			'$username' => sprintf( t('Site Member (%s)'), $email),
 			'$email' => $email,
 			'$reset_link' => $a->get_baseurl() . '/lostpass?verify=' . $hash
 	));
 
-	require_once('include/email.php');
-	$subject = email_header_encode(sprintf( t('Password reset requested at %s'),$a->config['sitename']), 'UTF-8');
+	$subject = email_header_encode(sprintf( t('Password reset requested at %s'),get_config('system','sitename')), 'UTF-8');
 
 	$res = mail($email, $subject ,
 			$message,
@@ -65,19 +64,21 @@ function lostpass_content(&$a) {
 			goaway(z_root());
 			return;
 		}
+
 		$aid = $r[0]['account_id'];
 		$email = $r[0]['account_email'];
 
-		$password = autoname(6) . mt_rand(100,9999);
+		$new_password = autoname(6) . mt_rand(100,9999);
 
 		$salt = random_string(32);
-		$password_encoded = hash('whirlpool', $salt . $password);
+		$password_encoded = hash('whirlpool', $salt . $new_password);
 
 		$r = q("UPDATE account SET account_salt = '%s', account_password = '%s', account_reset = '' where account_id = %d limit 1",
 			dbesc($salt),
 			dbesc($password_encoded),
 			intval($aid)
 		);
+
 		if($r) {
 			$tpl = get_markup_template('pwdreset.tpl');
 			$o .= replace_macros($tpl,array(
@@ -98,12 +99,11 @@ function lostpass_content(&$a) {
 			$message = replace_macros($email_tpl, array(
 			'$sitename' => $a->config['sitename'],
 			'$siteurl' =>  $a->get_baseurl(),
-			'$username' => $email,
+			'$username' => sprintf( t('Site Member (%s)'), $email),
 			'$email' => $email,
-			'$new_password' => $password,
+			'$new_password' => $new_password,
 			'$uid' => $newuid ));
 
-			require_once('include/email.php');
 			$subject = email_header_encode( sprintf( t('Your password has changed at %s'), get_config('system','sitename')), 'UTF-8');
 
 			$res = mail($email,$subject,$message,

@@ -1,6 +1,6 @@
 <?php
 
-define( 'UPDATE_VERSION' , 1021 );
+define( 'UPDATE_VERSION' , 1022 );
 
 /**
  *
@@ -292,3 +292,14 @@ function update_r1020() {
 		return UPDATE_SUCCESS;
 	return UPDATE_FAILED;
 }
+
+function update_r1021() {
+
+	$r = q("ALTER TABLE `abook` CHANGE `abook_connnected` `abook_connected` DATETIME NOT NULL DEFAULT '0000-00-00 00:00:00',
+		drop index `abook_connnected`, add index ( `abook_connected` ) ");
+	
+	if($r)
+		return UPDATE_SUCCESS;
+	return UPDATE_FAILED;
+}
+

@@ -112,6 +112,7 @@
 	{{ endif }}
 	
 	{{ if $nav.login }}<li id="nav-login-link" class="nav-menu $nav.login.2"><a href="$nav.login.0" title="$nav.login.3" >$nav.login.1</a><li>{{ endif }}
+	{{ if $nav.alogout }}<li id=nav-alogout-link" class="nav-menu $nav-alogout.2"><a href="$nav.alogout.0" title="$nav.alogout.3" >$nav.alogout.1</a></li>{{ endif }}
 	{{ if $nav.help }} 
 		<li id="nav-help-link" class="nav-menu $sel.help">
 			<a class="$nav.help.2" target="friendika-help" href="$nav.help.0" title="$nav.help.3" >$nav.help.1</a>

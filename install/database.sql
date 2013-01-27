@@ -16,7 +16,7 @@ CREATE TABLE IF NOT EXISTS `abook` (
   `abook_closeness` tinyint(3) unsigned NOT NULL DEFAULT '99',
   `abook_created` datetime NOT NULL DEFAULT '0000-00-00 00:00:00',
   `abook_updated` datetime NOT NULL DEFAULT '0000-00-00 00:00:00',
-  `abook_connnected` datetime NOT NULL DEFAULT '0000-00-00 00:00:00',
+  `abook_connected` datetime NOT NULL DEFAULT '0000-00-00 00:00:00',
   `abook_dob` datetime NOT NULL DEFAULT '0000-00-00 00:00:00',
   `abook_flags` int(11) NOT NULL DEFAULT '0',
   `abook_profile` char(64) NOT NULL DEFAULT '',
@@ -29,10 +29,10 @@ CREATE TABLE IF NOT EXISTS `abook` (
   KEY `abook_closeness` (`abook_closeness`),
   KEY `abook_created` (`abook_created`),
   KEY `abook_updated` (`abook_updated`),
-  KEY `abook_connnected` (`abook_connnected`),
   KEY `abook_flags` (`abook_flags`),
   KEY `abook_profile` (`abook_profile`),
-  KEY `abook_dob` (`abook_dob`)
+  KEY `abook_dob` (`abook_dob`),
+  KEY `abook_connected` (`abook_connected`)
 ) ENGINE=MyISAM  DEFAULT CHARSET=utf8;
 
 CREATE TABLE IF NOT EXISTS `account` (
@@ -241,7 +241,6 @@ CREATE TABLE IF NOT EXISTS `event` (
   `deny_gid` mediumtext NOT NULL,
   PRIMARY KEY (`id`),
   KEY `uid` (`uid`),
-  KEY `event_xchan` (`event_xchan`),
   KEY `type` (`type`),
   KEY `start` (`start`),
   KEY `finish` (`finish`),
@@ -249,8 +248,9 @@ CREATE TABLE IF NOT EXISTS `event` (
   KEY `nofinish` (`nofinish`),
   KEY `ignore` (`ignore`),
   KEY `aid` (`aid`),
-  KEY `event_hash` (`event_hash`)
-) ENGINE=MyISAM DEFAULT CHARSET=utf8;
+  KEY `event_hash` (`event_hash`),
+  KEY `event_xchan` (`event_xchan`)
+) ENGINE=MyISAM  DEFAULT CHARSET=utf8;
 
 CREATE TABLE IF NOT EXISTS `fcontact` (
   `id` int(10) unsigned NOT NULL AUTO_INCREMENT,
@@ -649,14 +649,14 @@ CREATE TABLE IF NOT EXISTS `photo` (
   `deny_gid` mediumtext NOT NULL,
   PRIMARY KEY (`id`),
   KEY `uid` (`uid`),
-  KEY `resource_id` (`resource_id`),
   KEY `album` (`album`),
   KEY `scale` (`scale`),
   KEY `profile` (`profile`),
   KEY `type` (`type`),
   KEY `aid` (`aid`),
   KEY `xchan` (`xchan`),
-  KEY `size` (`size`)
+  KEY `size` (`size`),
+  KEY `resource_id` (`resource_id`)
 ) ENGINE=MyISAM  DEFAULT CHARSET=utf8;
 
 CREATE TABLE IF NOT EXISTS `profile` (
@@ -842,7 +842,7 @@ CREATE TABLE IF NOT EXISTS `verify` (
   KEY `token` (`token`),
   KEY `meta` (`meta`),
   KEY `created` (`created`)
-) ENGINE=MyISAM DEFAULT CHARSET=utf8;
+) ENGINE=MyISAM  DEFAULT CHARSET=utf8;
 
 CREATE TABLE IF NOT EXISTS `xchan` (
   `xchan_hash` char(255) NOT NULL,

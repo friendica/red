@@ -39,9 +39,11 @@ function account_verify_password($email,$pass) {
 	foreach($r as $record) {
 		if(($record['account_flags'] == ACCOUNT_OK) || ($record['account_flags'] == ACCOUNT_UNVERIFIED)
 			&& (hash('whirlpool',$record['account_salt'] . $pass) === $record['account_password'])) {
+			logger('password verified for ' . $email);
 			return $record;
 		}
 	}
+	logger('password failed for ' . $email);
 	return null;
 }
 

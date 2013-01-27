@@ -80,7 +80,12 @@ EOT;
 		
 	}
 	else {
-		$nav['login'] = Array('login',t('Login'), ($a->module == 'login'?'selected':''), t('Sign in'));
+		if(! get_account_id()) 
+			$nav['login'] = Array('login',t('Login'), ($a->module == 'login'?'selected':''), t('Sign in'));
+		else
+			$nav['alogout'] = Array('logout',t('Logout'), "", t('End this session'));
+
+
 	}
 
 	if($observer) {

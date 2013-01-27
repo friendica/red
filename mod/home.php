@@ -11,6 +11,10 @@ function home_init(&$a) {
 	if(local_user() && $channel && $channel['xchan_url'])
 		goaway( $channel['xchan_url']);
 
+	if(get_account_id()) {
+		goaway('new_channel');
+	}
+
 }}
 
 
