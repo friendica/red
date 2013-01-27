@@ -51,6 +51,7 @@ function directory_content(&$a) {
 			$url = DIRECTORY_FALLBACK_MASTER . '/dirsearch';
 		}
 	}
+	logger('mod_directory: URL = ' . $url, LOGGER_DEBUG);
 
 	if($url) {
 		$query = $url . '?f=' ;
