@@ -546,7 +546,8 @@ function encode_item($item) {
 
 	if($item['item_restrict']  & ITEM_DELETED) {
 		$x['message_id'] = $item['uri'];
-		$x['flags'] = array('deleted');
+		$x['created']    = $item['created'];
+		$x['flags']      = array('deleted');
 		return $x;
 	}
 
