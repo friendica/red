@@ -7,42 +7,42 @@ function lostpass_post(&$a) {
 	if(! $loginame)
 		goaway(z_root());
 
-	$r = q("SELECT * FROM `user` WHERE ( `email` = '%s' OR `nickname` = '%s' ) AND `verified` = 1 AND `blocked` = 0 LIMIT 1",
-		dbesc($loginame),
+	$r = q("SELECT * FROM account WHERE account_email = '%s' LIMIT 1",
 		dbesc($loginame)
 	);
 
-	if(! count($r)) {
+	if(! $r) {
 		notice( t('No valid account found.') . EOL);
 		goaway(z_root());
 	}
 
-	$uid = $r[0]['uid'];
-	$username = $r[0]['username'];
-	$email = $r[0]['email'];
+	$aid = $r[0]['account_id'];
+	$email = $r[0]['account_email'];
 
-	$new_password = autoname(12) . mt_rand(100,9999);
-	$new_password_encoded = hash('whirlpool',$new_password);
+	$hash = random_string();
 
-	$r = q("UPDATE `user` SET `pwdreset` = '%s' WHERE `uid` = %d LIMIT 1",
-		dbesc($new_password_encoded),
-		intval($uid)
+	$r = q("UPDATE account SET account_reset = '%s' WHERE account_id = %d LIMIT 1",
+		dbesc($hash),
+		intval($aid)
 	);
 	if($r)
 		info( t('Password reset request issued. Check your email.') . EOL);
 
 	$email_tpl = get_intltext_template("lostpass_eml.tpl");
-	$email_tpl = replace_macros($email_tpl, array(
+	$message = replace_macros($email_tpl, array(
 			'$sitename' => $a->config['sitename'],
 			'$siteurl' =>  $a->get_baseurl(),
-			'$username' => $username,
+			'$username' => $email,
 			'$email' => $email,
-			'$reset_link' => $a->get_baseurl() . '/lostpass?verify=' . $new_password
+			'$reset_link' => $a->get_baseurl() . '/lostpass?verify=' . $hash
 	));
 
-	$res = mail($email, sprintf( t('Password reset requested at %s'),$a->config['sitename']),
-			$email_tpl,
-			'From: ' . t('Administrator') . '@' . $_SERVER['SERVER_NAME'] . "\n"
+	require_once('include/email.php');
+	$subject = email_header_encode(sprintf( t('Password reset requested at %s'),$a->config['sitename']), 'UTF-8');
+
+	$res = mail($email, $subject ,
+			$message,
+			'From: Administrator@' . $_SERVER['SERVER_NAME'] . "\n"
 			. 'Content-type: text/plain; charset=UTF-8' . "\n"
 			. 'Content-transfer-encoding: 8bit' );
 
@@ -56,26 +56,27 @@ function lostpass_content(&$a) {
 
 	if(x($_GET,'verify')) {
 		$verify = $_GET['verify'];
-		$hash = hash('whirlpool', $verify);
 
-		$r = q("SELECT * FROM `user` WHERE `pwdreset` = '%s' LIMIT 1",
-			dbesc($hash)
+		$r = q("SELECT * FROM account WHERE account_reset = '%s' LIMIT 1",
+			dbesc($verify)
 		);
-		if(! count($r)) {
-			notice( t("Request could not be verified. \x28You may have previously submitted it.\x29 Password reset failed.") . EOL);
+		if(! $r) {
+			notice( t("Request could not be verified. (You may have previously submitted it.) Password reset failed.") . EOL);
 			goaway(z_root());
 			return;
 		}
-		$uid = $r[0]['uid'];
-		$username = $r[0]['username'];
-		$email = $r[0]['email'];
+		$aid = $r[0]['account_id'];
+		$email = $r[0]['account_email'];
 
-		$new_password = autoname(6) . mt_rand(100,9999);
-		$new_password_encoded = hash('whirlpool',$new_password);
+		$password = autoname(6) . mt_rand(100,9999);
 
-		$r = q("UPDATE `user` SET `password` = '%s', `pwdreset` = ''  WHERE `uid` = %d LIMIT 1",
-			dbesc($new_password_encoded),
-			intval($uid)
+		$salt = random_string(32);
+		$password_encoded = hash('whirlpool', $salt . $password);
+
+		$r = q("UPDATE account SET account_salt = '%s', account_password = '%s', account_reset = '' where account_id = %d limit 1",
+			dbesc($salt),
+			dbesc($password_encoded),
+			intval($aid)
 		);
 		if($r) {
 			$tpl = get_markup_template('pwdreset.tpl');
@@ -90,21 +91,23 @@ function lostpass_content(&$a) {
 				'$baseurl' => $a->get_baseurl()
 
 			));
-				info("Your password has been reset." . EOL);
-
-
+			
+			info("Your password has been reset." . EOL);
 
 			$email_tpl = get_intltext_template("passchanged_eml.tpl");
-			$email_tpl = replace_macros($email_tpl, array(
+			$message = replace_macros($email_tpl, array(
 			'$sitename' => $a->config['sitename'],
 			'$siteurl' =>  $a->get_baseurl(),
-			'$username' => $username,
+			'$username' => $email,
 			'$email' => $email,
-			'$new_password' => $new_password,
+			'$new_password' => $password,
 			'$uid' => $newuid ));
 
-			$res = mail($email,"Your password has changed at {$a->config['sitename']}",$email_tpl,
-				'From: ' . t('Administrator') . '@' . $_SERVER['SERVER_NAME'] . "\n"
+			require_once('include/email.php');
+			$subject = email_header_encode( sprintf( t('Your password has changed at %s'), get_config('system','sitename')), 'UTF-8');
+
+			$res = mail($email,$subject,$message,
+				'From: ' . 'Administrator@' . $_SERVER['SERVER_NAME'] . "\n"
 				. 'Content-type: text/plain; charset=UTF-8' . "\n"
 				. 'Content-transfer-encoding: 8bit' );
 
@@ -118,7 +121,7 @@ function lostpass_content(&$a) {
 		$o .= replace_macros($tpl,array(
 			'$title' => t('Forgot your Password?'),
 			'$desc' => t('Enter your email address and submit to have your password reset. Then check your email for further instructions.'),
-			'$name' => t('Nickname or Email: '),
+			'$name' => t('Email Address'),
 			'$submit' => t('Reset') 
 		));
 
