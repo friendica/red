@@ -548,6 +548,8 @@ function encode_item($item) {
 		$x['message_id'] = $item['uri'];
 		$x['created']    = $item['created'];
 		$x['flags']      = array('deleted');
+		$x['owner']      = encode_item_xchan($item['owner']);
+		$x['author']     = encode_item_xchan($item['author']);
 		return $x;
 	}
 
@@ -4068,6 +4070,8 @@ function drop_item($id,$interactive = true) {
 			foreach($items as $i)
 				delete_item_lowlevel($i);
 		}
+		else
+			delete_item_lowlevel($item);
 
 		if(! $interactive)
 			return 1;
