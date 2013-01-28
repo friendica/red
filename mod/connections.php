@@ -93,11 +93,18 @@ function connections_post(&$a) {
 		}
 	}			
 
-	$r = q("UPDATE abook SET abook_profile = %d, abook_my_perms = %d , abook_closeness = %d
+	$abook_flags = $orig_record[0]['abook_flags'];
+
+	if(($_REQUEST['pending']) && ($abook_flags & ABOOK_FLAG_PENDING)) {
+		$abook_flags = ( $abook_flags ^ ABOOK_FLAG_PENDING );
+	}
+
+	$r = q("UPDATE abook SET abook_profile = %d, abook_my_perms = %d , abook_closeness = %d, abook_flags = %d
 		where abook_id = %d AND abook_channel = %d LIMIT 1",
 		intval($profile_id),
 		intval($abook_my_perms),
 		intval($closeness),
+		intval($abook_flags),
 		intval($contact_id),
 		intval(local_user())
 	);
@@ -216,6 +223,20 @@ function connections_content(&$a) {
 			goaway($a->get_baseurl(true) . '/connections/' . $contact_id);
 		}
 
+		// We'll prevent somebody from unapproving a contact.
+
+		if($cmd === 'approve') {
+			if($orig_record[0]['abook_flags'] & ABOOK_FLAG_PENDING) {
+				if(abook_toggle_flag($orig_record[0],ABOOK_FLAG_PENDING))
+					info((($orig_record[0]['abook_flags'] & ABOOK_FLAG_PENDING) 
+						? t('Channel has been approved') 
+						: t('Channel has been unapproved')) . EOL );
+				else
+					notice(t('Unable to set address book parameters.') . EOL);
+			}
+			goaway($a->get_baseurl(true) . '/connections/' . $contact_id);
+		}
+
 
 		if($cmd === 'drop') {
 
@@ -327,6 +348,7 @@ function connections_content(&$a) {
 		$global_perms = get_perms();
 		$existing = get_all_perms(local_user(),$contact); 
 
+		$unapproved = array('pending', t('Approve this connection'), '', t('Accept connection to allow communication'));
 		
 		foreach($global_perms as $k => $v) {
 			$perms[] = array('perms_' . $k, $v[3], (($contact['abook_their_perms'] & $v[1]) ? "1" : ""),((($contact['abook_my_perms'] & $v[1]) || $existing[$k]) ? "1" : ""), $v[1], (($channel[$v[0]] == PERMS_SPECIFIC) ? '' : '1'), $v[4]);
@@ -344,6 +366,10 @@ function connections_content(&$a) {
 			'$slide'          => $slide,
 			'$tabs'           => $t,
 			'$tab_str'        => $tab_str,
+			'$is_pending'     => (($contact['abook_flags'] & ABOOK_FLAG_PENDING) ? 1 : ''),
+			'$unapproved'     => $unapproved,
+			'$approve'        => t('Approve this connection'),
+			'$noperms'        => (((! $self) && (! $contact['abook_myperms'])) ? t('Connection has no permissions!') : ''),
 			'$submit'         => t('Submit'),
 			'$lbl_vis1'       => t('Profile Visibility'),
 			'$lbl_vis2'       => sprintf( t('Please choose the profile you would like to display to %s when viewing your profile securely.'), $contact['name']),
@@ -384,6 +410,7 @@ function connections_content(&$a) {
 			'$blocked'        => (($contact['blocked']) ? t('Currently blocked') : ''),
 			'$ignored'        => (($contact['readonly']) ? t('Currently ignored') : ''),
 			'$archived'       => (($contact['archive']) ? t('Currently archived') : ''),
+			'$pending'        => (($contact['archive']) ? t('Currently pending') : ''),
 			'$hidden'         => array('hidden', t('Hide this contact from others'), ($contact['hidden'] == 1), t('Replies/likes to your public posts <strong>may</strong> still be visible')),
 			'$photo'          => $contact['photo'],
 			'$name'           => $contact['name'],
@@ -407,31 +434,45 @@ function connections_content(&$a) {
 	$ignored   = false;
 	$archived  = false;
 	$unblocked = false;
+	$pending   = false;
+
 	$all = false;
 
 	$_SESSION['return_url'] = $a->query_string;
 
 	$search_flags = 0;
+	$head = '';
 
 	if(argc() == 2) {
 		switch(argv(1)) {
 			case 'blocked':
 				$search_flags = ABOOK_FLAG_BLOCKED;
+				$head = t('Blocked');
 				$blocked = true;
 				break;
 			case 'ignored':
 				$search_flags = ABOOK_FLAG_IGNORED;
+				$head = t('Ignored');
 				$ignored = true;
 				break;
 			case 'hidden':
 				$search_flags = ABOOK_FLAG_HIDDEN;
+				$head = t('Hidden');
 				$hidden = true;
 				break;
 			case 'archived':
 				$search_flags = ABOOK_FLAG_ARCHIVED;
+				$head = t('Archived');
 				$archived = true;
 				break;
+			case 'pending':
+				$search_flags = ABOOK_FLAG_PENDING;
+				$head = t('New');
+				$pending = true;
+				break;
+
 			case 'all':
+				$head = t('All');
 			default:
 				$search_flags = 0;
 				$all = true;
@@ -456,6 +497,12 @@ function connections_content(&$a) {
 			'url'   => $a->get_baseurl(true) . '/suggest', 
 			'sel'   => '',
 			'title' => t('Suggest new connections'),
+		),
+		array(
+			'label' => t('New Connections'),
+			'url'   => $a->get_baseurl(true) . '/connections/pending', 
+			'sel'   => ($pending) ? 'active' : '',
+			'title' => t('Show pending (new) connections'),
 		),
 		array(
 			'label' => t('All Connections'),
@@ -513,10 +560,9 @@ function connections_content(&$a) {
 
  	
 	$r = q("SELECT COUNT(abook.abook_id) AS total FROM abook left join xchan on abook.abook_xchan = xchan.xchan_hash 
-		where abook_channel = %d and not (abook_flags & %d) and not (abook_flags & %d) $sql_extra $sql_extra2 ",
+		where abook_channel = %d and not (abook_flags & %d) $sql_extra $sql_extra2 ",
 		intval(local_user()),
-		intval(ABOOK_FLAG_SELF),
-		intval(ABOOK_FLAG_PENDING)
+		intval(ABOOK_FLAG_SELF)
 	);
 	if(count($r)) {
 		$a->set_pager_total($r[0]['total']);
@@ -524,10 +570,9 @@ function connections_content(&$a) {
 	}
 
 	$r = q("SELECT abook.*, xchan.* FROM abook left join xchan on abook.abook_xchan = xchan.xchan_hash
-		WHERE abook_channel = %d and not (abook_flags & %d) and not (abook_flags & %d) $sql_extra $sql_extra2 ORDER BY xchan_name LIMIT %d , %d ",
+		WHERE abook_channel = %d and not (abook_flags & %d) $sql_extra $sql_extra2 ORDER BY xchan_name LIMIT %d , %d ",
 		intval(local_user()),
 		intval(ABOOK_FLAG_SELF),
-		intval(ABOOK_FLAG_PENDING),
 		intval($a->pager['start']),
 		intval($a->pager['itemspage'])
 	);
@@ -559,9 +604,10 @@ function connections_content(&$a) {
 
 	}
 	
+
 	$tpl = get_markup_template("contacts-template.tpl");
 	$o .= replace_macros($tpl,array(
-		'$header' => t('Connnections') . (($nets) ? ' - ' . network_to_name($nets) : ''),
+		'$header' => t('Connnections') . (($head) ? ' - ' . $head : ''),
 		'$tabs' => $t,
 		'$total' => $total,
 		'$search' => $search_hdr,

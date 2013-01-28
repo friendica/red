@@ -315,7 +315,8 @@ nav #nav-link-wrapper .nav-link {
 }
 
 .tab.active {
-	font-weight: bold;	
+/*	font-weight: bold;	*/
+	color: #444444;
 }
 
 ul.tabs {

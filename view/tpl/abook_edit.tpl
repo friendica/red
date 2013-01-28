@@ -13,6 +13,7 @@ $tabs
 <div id="autoperm-desc" class="descriptive-paragraph">$autolbl</div>
 {{ endif }}
 
+
 <div id="contact-edit-wrapper">
 
 {{ if $notself }}
@@ -24,11 +25,22 @@ $slide
 {{ endif }}
 {{ endif }}
 
+
+
 <h3>$permlbl</h3>
 
 <form action="connections/$contact_id" method="post" >
 <input type="hidden" name="contact_id" value="$contact_id">
 <input id="contact-closeness-mirror" type="hidden" name="closeness" value="$close" />
+
+{{ if $noperms }}
+<div id="noperm-desc" class="descriptive-paragraph">$noperms</div>
+{{ endif }}
+
+
+{{ if $is_pending }}
+{{inc field_checkbox.tpl with $field=$unapproved }}{{endinc}}
+{{ endif }}
 
 <br />
 <b>$quick</b>

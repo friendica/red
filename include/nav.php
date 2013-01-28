@@ -148,7 +148,7 @@ EOT;
 		$nav['home']['mark'] = array('', t('Mark all channel notifications seen'), '','');
 
 
-		$nav['intros'] = array('intro',	t('Introductions'), "", t('New Connections'));
+		$nav['intros'] = array('connections/pending',	t('Introductions'), "", t('New Connections'));
 		$nav['intros']['all']=array('intro', t('See all channel introductions'), "", "");
 
 

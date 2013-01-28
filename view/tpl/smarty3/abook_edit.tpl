@@ -18,6 +18,7 @@
 <div id="autoperm-desc" class="descriptive-paragraph">{{$autolbl}}</div>
 {{/if}}
 
+
 <div id="contact-edit-wrapper">
 
 {{if $notself}}
@@ -29,11 +30,22 @@
 {{/if}}
 {{/if}}
 
+
+
 <h3>{{$permlbl}}</h3>
 
 <form action="connections/{{$contact_id}}" method="post" >
 <input type="hidden" name="contact_id" value="{{$contact_id}}">
 <input id="contact-closeness-mirror" type="hidden" name="closeness" value="{{$close}}" />
+
+{{if $noperms}}
+<div id="noperm-desc" class="descriptive-paragraph">{{$noperms}}</div>
+{{/if}}
+
+
+{{if $is_pending}}
+{{include file="field_checkbox.tpl" field=$unapproved}}
+{{/if}}
 
 <br />
 <b>{{$quick}}</b>
