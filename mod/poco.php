@@ -46,7 +46,7 @@ function poco_init(&$a) {
 
 		$channel_id = $r[0]['channel_id'];
 
-		if(! perm_is_allowed($channel_id,$observer,'view_contacts'))
+		if(! perm_is_allowed($channel_id,$observer['xchan_hash'],'view_contacts'))
 			http_status_exit(404);
 
 	}
