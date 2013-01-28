@@ -369,7 +369,7 @@ function connections_content(&$a) {
 			'$is_pending'     => (($contact['abook_flags'] & ABOOK_FLAG_PENDING) ? 1 : ''),
 			'$unapproved'     => $unapproved,
 			'$approve'        => t('Approve this connection'),
-			'$noperms'        => (((! $self) && (! $contact['abook_myperms'])) ? t('Connection has no permissions!') : ''),
+			'$noperms'        => (((! $self) && (! $contact['abook_my_perms'])) ? t('Connection has no permissions!') : ''),
 			'$submit'         => t('Submit'),
 			'$lbl_vis1'       => t('Profile Visibility'),
 			'$lbl_vis2'       => sprintf( t('Please choose the profile you would like to display to %s when viewing your profile securely.'), $contact['name']),
