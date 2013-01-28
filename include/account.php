@@ -86,6 +86,13 @@ function check_account_admin($arr) {
 	return false;
 }
 
+function account_total() {
+	$r = q("select account_id from account where 1");
+	if(is_array($r))
+		return count($r);
+	return false;
+}
+
 
 function create_account($arr) {
 
@@ -110,12 +117,21 @@ function create_account($arr) {
 		return $result;
 	}
 
+	// prevent form hackery
+
 	if($roles & ACCOUNT_ROLE_ADMIN) {
 		$admin_result = check_account_admin($arr);
 		if(! $admin_result) {
 			$roles = 0;
 		}
 	}
+
+	// allow the admin_email account to be admin, but only if it's the first account.
+
+	$c = account_total();
+	if((c === 0) && (check_account_admin($arr)))
+		$roles |= ACCOUNT_ROLE_ADMIN;
+
 
 	$invite_result = check_account_invite($invite_code);
 	if($invite_result['error']) {
