@@ -730,6 +730,11 @@ function zot_import($arr) {
 
 	$data = json_decode($arr['body'],true);
 
+	if(! $data) {
+		logger('zot_import: empty body');
+		return array();
+	}
+
 //	logger('zot_import: data1: ' . print_r($data,true));
 
 	if(array_key_exists('iv',$data)) {

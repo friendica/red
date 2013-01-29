@@ -515,10 +515,15 @@ function get_item_elements($x) {
 	else
 		return array();
 
-	if(import_author_xchan($x['owner']))
-		$arr['owner_xchan']  = base64url_encode(hash('whirlpool',$x['owner']['guid'] . $x['owner']['guid_sig'], true));
-	else
-		return array();
+	// save a potentially expensive lookup if author == owner
+	if($arr['author_xchan'] === base64url_encode(hash('whirlpool',$x['owner']['guid'] . $x['owner']['guid_sig'], true)))
+		$arr['owner_xchan'] = $arr['author_xchan'];
+	else {
+		if(import_author_xchan($x['owner']))
+			$arr['owner_xchan']  = base64url_encode(hash('whirlpool',$x['owner']['guid'] . $x['owner']['guid_sig'], true));
+		else
+			return array();
+	}
 
 
 	return $arr;
@@ -527,13 +532,20 @@ function get_item_elements($x) {
 
 
 function import_author_xchan($x) {
+
 	$r = q("select hubloc_url from hubloc where hubloc_guid = '%s' and hubloc_guid_sig = '%s' and (hubloc_flags & %d) limit 1",
 		dbesc($x['guid']),
 		dbesc($x['guid_sig']),
-		intval(HUBLOG_FLAGS_PRIMARY)
+		intval(HUBLOC_FLAGS_PRIMARY)
 	);
-	if($r)
+
+	if($r) {
+		logger('import_author_xchan: in cache', LOGGER_DEBUG);
 		return true;
+	}
+
+	logger('import_author_xchan: entry not in cache - probing: ' . print_r($x,true), LOGGER_DEBUG);
+
 	$them = array('hubloc_url' => $x['url'],'xchan_guid' => $x['guid'], 'xchan_guid_sig' => $x['guid_sig']);
 	return zot_refresh($them);
 }
