@@ -910,8 +910,15 @@ function process_delivery($sender,$arr,$deliveries,$relay) {
 		}
 	
 		if($arr['item_restrict'] & ITEM_DELETED) {
-			delete_imported_item($sender,$arr,$channel['channel_id']);
+			$item_id = delete_imported_item($sender,$arr,$channel['channel_id']);
 			$result[] = array($d['hash'],'deleted');
+
+			if($relay && $item_id) {
+				logger('process_delivery: invoking relay');
+				proc_run('php','include/notifier.php','relay',intval($item_id));
+				$result[] = array($d['hash'],'relayed');
+			}
+
 			continue;
 		}
 
@@ -988,20 +995,24 @@ function update_imported_item($sender,$item,$uid) {
 
 function delete_imported_item($sender,$item,$uid) {
 
-	$r = q("select id from item where author_xchan = '%s' or owner_xchan = '%s'
+	logger('delete_imported_item invoked',LOGGER_DEBUG);
+
+	$r = q("select id from item where ( author_xchan = '%s' or owner_xchan = '%s' )
 		and uri = '%s' and uid = %d limit 1",
 		dbesc($sender['hash']),
 		dbesc($sender['hash']),
 		dbesc($item['uri']),
 		intval($uid)
 	);
+
 	if(! $r) {
 		logger('delete_imported_item: failed: ownership issue');
-		return;
+		return false;
 	}
 		
 	require_once('include/items.php');
 	drop_item($r[0]['id'],false);
+	return $r[0]['id'];
 }
 
 function process_mail_delivery($sender,$arr,$deliveries) {

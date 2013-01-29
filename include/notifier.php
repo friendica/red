@@ -204,7 +204,11 @@ function notifier_run($argv, $argc){
 		$r = fetch_post_tags($r);
 		
 		$target_item = $r[0];
-		
+
+		if($target_item['item_restrict'] & ITEM_DELETED)
+			logger('notifier: target item ITEM_DELETED', LOGGER_DEBUG);
+
+
 		$s = q("select * from channel where channel_id = %d limit 1",
 			intval($target_item['uid'])
 		);

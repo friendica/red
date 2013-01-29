@@ -41,7 +41,7 @@ function poco_init(&$a) {
  		
 	if(! $system_mode) {
 
-		$r = q("SELECT channel.channel_id from channel where channel_address = '%s' limit 1",
+		$r = q("SELECT channel_id from channel where channel_address = '%s' limit 1",
 			dbesc($user)
 		);
 		if(! $r) {
