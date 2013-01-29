@@ -4,8 +4,10 @@ function poco_init(&$a) {
 
 	$system_mode = false;
 
-	if(intval(get_config('system','block_public')))
+	if(intval(get_config('system','block_public')) && (! local_user()) && (! remote_user())) {
+		logger('mod_poco: block_public');
 		http_status_exit(401);
+	}
 
 	$observer = $a->get_observer();
 
@@ -14,8 +16,10 @@ function poco_init(&$a) {
 	}
 	if(! x($user)) {
 		$c = q("select * from pconfig where cat = 'system' and k = 'suggestme' and v = 1");
-		if(! $c)
+		if(! $c) {
+			logger('mod_poco: system mode. No candidates.', LOGGER_DEBUG);
 			http_status_exit(401);
+		}
 		$system_mode = true;
 	}
 
@@ -35,19 +39,23 @@ function poco_init(&$a) {
 	if(argc() > 4 && intval(argv(4)) && $justme == false)
 		$cid = intval(argv(4));
  		
-
 	if(! $system_mode) {
 
 		$r = q("SELECT channel.channel_id from channel where channel_address = '%s' limit 1",
 			dbesc($user)
 		);
-		if(! $r)
+		if(! $r) {
+			logger('mod_poco: user mode. Account not found. ' . $user);
 			http_status_exit(404);
+		}
 
 		$channel_id = $r[0]['channel_id'];
+		$ohash = (($observer) ? $observer['xchan_hash'] : '');
 
-		if(! perm_is_allowed($channel_id,(($observer) ? $observer['xchan_hash'] : ''),'view_contacts'))
-			http_status_exit(404);
+		if(! perm_is_allowed($channel_id,$ohash,'view_contacts')) {
+			logger('mod_poco: user mode. Permission denied for ' . $ohash . ' user: ' . $user);
+			http_status_exit(401);
+		}
 
 	}
 

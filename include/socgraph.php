@@ -37,7 +37,7 @@ function poco_load($xchan = null,$url = null) {
 	}
 
 
-	$url = $url . '?fields=displayName,hash,urls,photos' ;
+	$url = $url . '?f=&fields=displayName,hash,urls,photos' ;
 
 	logger('poco_load: ' . $url, LOGGER_DEBUG);
 
