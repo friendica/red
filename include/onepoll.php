@@ -38,7 +38,7 @@ function onepoll_run($argv, $argc){
 		FROM abook LEFT JOIN account on abook_account = account_id left join xchan on xchan_hash = abook_xchan 
 		where abook_id = %d
 		AND (( abook_flags = %d ) OR ( abook_flags = %d )) 
-		AND (( account_flags = %d ) OR ( account_flags = %d )) ORDER BY RAND()",
+		AND (( account_flags = %d ) OR ( account_flags = %d )) limit 1",
 		intval($contact_id),
 		intval(ABOOK_FLAG_HIDDEN),
 		intval(0),
@@ -47,11 +47,9 @@ function onepoll_run($argv, $argc){
 	);
 
 	if(! $contacts) {
+		logger('onepoll: abook_id not found: ' . $contact_id);
 		return;
 	}
-
-	if(! $contacts)
-		return;
 
 	$contact = $contacts[0];
 

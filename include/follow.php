@@ -37,14 +37,26 @@ function new_contact($uid,$url,$channel,$interactive = false) {
 		$ret = zot_finger($url,$channel);
 
 	if($ret['success']) {
-		$j = json_decode($ret['body']);
-
+		$j = json_decode($ret['body'],true);
+	}
+	else {
+		$result['message'] = t('Channel discovery failed. Website may be down or misconfigured.');
+		logger('mod_follow: ' . $result['message']);
+		return $result;
 	}
 
 	logger('follow: ' . $url . ' ' . print_r($j,true));
 
-	if(! ($j->success && $j->guid)) {
-		$result['message'] = t('Unable to communicate with requested channel.');
+	if(! $j) {
+		$result['message'] = t('Response from remote channel was not understood.');
+		logger('mod_follow: ' . $result['message']);
+		return $result;
+	}
+
+
+	if(! ($j['success'] && $j['guid'])) {
+		$result['message'] = t('Response from remote channel was incomplete.');
+		logger('mod_follow: ' . $result['message']);
 		return $result;
 	}
 
@@ -66,7 +78,7 @@ function new_contact($uid,$url,$channel,$interactive = false) {
 	// do we have an xchan and hubloc?
 	// If not, create them.	
 
-	$x = import_xchan_from_json($j);
+	$x = import_xchan($j);
 
 	if(! $x['success']) 
 		return $x;
@@ -78,18 +90,18 @@ function new_contact($uid,$url,$channel,$interactive = false) {
 
 	$global_perms = get_perms();
 
-	if($j->permissions->data) {
+	if( array_key_exists('permissions',$j) && array_key_exists('data',$j['permissions'])) {
 		$permissions = aes_unencapsulate(array(
-			'data' => $j->permissions->data,
-			'key'  => $j->permissions->key,
-			'iv'   => $j->permissions->iv),
+			'data' => $j['permissions']['data'],
+			'key'  => $j['permissions']['key'],
+			'iv'   => $j['permissions']['iv']),
 			$channel['channel_prvkey']);
 		if($permissions)
-			$permissions = json_decode($permissions);
+			$permissions = json_decode($permissions,true);
 		logger('decrypted permissions: ' . print_r($permissions,true), LOGGER_DATA);
 	}
 	else
-		$permissions = $j->permissions;
+		$permissions = $j['permissions'];
 
 	foreach($permissions as $k => $v) {
 		if($v) {
