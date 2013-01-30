@@ -124,9 +124,50 @@ function poller_run($argv, $argc){
 		$update  = false;
 
 		$t = $contact['abook_updated'];
+		$c = $contact['abook_connected'];
 
-		if(datetime_convert('UTC','UTC', 'now') > datetime_convert('UTC','UTC', $t . " + 1 day"))
-			$update = true;
+
+		if($c == $t) {
+			if(datetime_convert('UTC','UTC', 'now') > datetime_convert('UTC','UTC', $t . " + 1 day"))
+				$update = true;
+		}
+		else {
+			// if we've never connected with them, start the mark for death countdown from now
+
+			if($c === '0000-00-00 00:00:00') {
+				$r = q("update abook set abook_connected = '%s'  where abook_id = %d limit 1",
+					dbesc(datetime_convert()),
+					intval($abook['abook_id'])
+				);
+				$c = datetime_convert();
+				$update = true;
+			}
+
+			// He's dead, Jim
+
+			if(datetime_convert('UTC','UTC', 'now') > datetime_convert('UTC','UTC', $c . " + 30 day")) {
+				$r = q("update abook set abook_flags = (abook_flags & %d) where abook_id = %d limit 1",
+					intval(ABOOK_FLAG_ARCHIVED),
+					intval($contact['abook_id'])
+				);
+				$update = false;
+				continue;
+			}
+
+			// might be dead, so maybe don't poll quite so often
+
+			// recently deceased, so keep up the regular schedule for 3 days
+ 
+			if((datetime_convert('UTC','UTC', 'now') > datetime_convert('UTC','UTC', $c . " + 3 day"))
+			 && (datetime_convert('UTC','UTC', 'now') > datetime_convert('UTC','UTC', $t . " + 1 day")))
+				$update = true;
+
+			// After that back off and put them on a morphine drip
+
+			if(datetime_convert('UTC','UTC', 'now') > datetime_convert('UTC','UTC', $t . " + 2 day")) {
+				$update = true;
+			}
+		}
 
 		if((! $update) && (! $force))
 				continue;

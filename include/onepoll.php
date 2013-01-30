@@ -33,7 +33,6 @@ function onepoll_run($argv, $argc){
 	$d = datetime_convert();
 
 
-dbg(1);
 	$contacts = q("SELECT abook.*, xchan.*, account.*
 		FROM abook LEFT JOIN account on abook_account = account_id left join xchan on xchan_hash = abook_xchan 
 		where abook_id = %d
@@ -45,7 +44,6 @@ dbg(1);
 		intval(ACCOUNT_OK),
 		intval(ACCOUNT_UNVERIFIED)
 	);
-dbg(0);
 
 	if(! $contacts) {
 		logger('onepoll: abook_id not found: ' . $contact_id);
@@ -79,21 +77,21 @@ dbg(0);
 	$x = zot_refresh($contact,$importer);
 
 	$responded = false;
-
+	$updated = datetime_convert();
 	if(! $x) {
-		// mark for death
-
+		// mark for death by not updating abook_connected, this is caught in include/poller.php
+		q("update abook set abook_updated = '%s' where abook_id = %d limit 1",
+			dbesc($updated),
+			intval($contact['abook_id'])
+		);
 	}
 	else {
 		q("update abook set abook_updated = '%s', abook_connected = '%s' where abook_id = %d limit 1",
-			dbesc(datetime_convert()),
-			dbesc(datetime_convert()),
+			dbesc($updated),
+			dbesc($updated),
 			intval($contact['abook_id'])
 		);
 		$responded = true;
-
-		// if marked for death, reset
-
 	}
 
 	if(! $responded)

@@ -18,7 +18,7 @@ function poco_init(&$a) {
 		$c = q("select * from pconfig where cat = 'system' and k = 'suggestme' and v = 1");
 		if(! $c) {
 			logger('mod_poco: system mode. No candidates.', LOGGER_DEBUG);
-			http_status_exit(401);
+			http_status_exit(404);
 		}
 		$system_mode = true;
 	}
