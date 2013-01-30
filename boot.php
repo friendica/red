@@ -448,19 +448,19 @@ if(! class_exists('App')) {
 	class App {
 
 		
-		public  $account  = null;            // account record
-		public  $channel  = null;            // channel record
-		public  $observer = null;            // xchan record
+		public  $account    = null;            // account record
+		public  $channel    = null;            // channel record
+		public  $observer   = null;            // xchan record
 
-		private $perms    = null;            // observer permissions
-		private $widgets  = array();         // widgets for this page
-
+		private $perms      = null;            // observer permissions
+		private $widgets    = array();         // widgets for this page
+		private $widgetlist = null;            // widget ordering and inclusion directives
 
 		public  $groups;
 		public  $language;
 		public  $module_loaded = false;
 		public  $query_string;
-		public  $config;                    // config cache
+		public  $config;                       // config cache
 		public  $page;
 		public  $profile;
 		public  $user;
@@ -759,8 +759,45 @@ if(! class_exists('App')) {
 			return $this->groups;
 		}
 
+		/*
+		 * Use a theme or app specific widget ordering list to determine what widgets should be included
+		 * for each module and in what order and optionally what region of the page to place them.
+		 * For example:
+		 * view/wgl/mod_connections.wgl:
+		 * -----------------------------
+		 * vcard aside
+		 * follow aside
+		 * findpeople rightside
+		 * collections aside
+		 *
+		 * If your widgetlist does not include a widget that is destined for the page, it will not be rendered.
+		 * You can also use this to change the order of presentation, as they will be presented in the order you specify.
+		 *
+		 */
+
 		function set_widget($title,$html, $location = 'aside') {
-			$this->widgets[] = array('title' => $title, 'html' => $html, 'location' => $location);
+			$widgetlist_file = 'mod_' . $this->module . '.wgl';
+			if(! $this->widgetlist) {
+				if($this->module && (($f = theme_include($widgetlist_file)) !== '')) {
+					$s = file($f, FILE_IGNORE_NEW_LINES|FILE_SKIP_EMPTY_LINES);
+					if(is_array($s)) {
+						foreach($s as $x) {
+							$this->widgetlist[] = explode(' ', $x);
+						}
+					}
+				}
+				else {
+					$this->widgets[] = array('title' => $title, 'html' => $html, 'location' => $location);
+				}
+			}
+			if($this->widgetlist) {
+				foreach($this->widgetlist as $k => $v) {
+					if($v[0] && $v[0] === $title) {
+						$this->widgets[$k] = array('title' => $title, 'html' => $html, 'location' => (($v[1]) ? $v[1] : $location));
+					}
+				}
+			}
+			logger('widgets: ' . print_r($this->widgets,true));
 		}
 
 		function get_widgets($location = '') {
@@ -769,9 +806,14 @@ if(! class_exists('App')) {
 				foreach($widgets as $w)
 					if($w['location'] == $location)
 						$ret[] = $w;
-				return $ret;
+				$arr = array('location' => $location, 'widgets' => $ret);
+				call_hooks('get_widgets', $arr);
+				return $arr['widgets'];
 			}	
-			return $this->widgets;
+
+			$arr = array('location' => $location, 'widgets' => $this->widgets);
+			call_hooks('get_widgets', $arr);
+			return $arr['widgets'];
 		}		
 
 		function set_pager_total($n) {
@@ -2038,6 +2080,8 @@ function construct_page(&$a) {
 	$a->build_pagehead();
 
 	$arr = $a->get_widgets();
+	ksort($arr,SORT_NUMERIC);
+	logger('get_widgets: ' . print_r($arr,true));
 	if(count($arr)) {
 		foreach($arr as $x) {
 			if(! array_key_exists($x['location'],$a->page))
