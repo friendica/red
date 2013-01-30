@@ -33,7 +33,7 @@ function onepoll_run($argv, $argc){
 	$d = datetime_convert();
 
 
-
+dbg(1);
 	$contacts = q("SELECT abook.*, xchan.*, account.*
 		FROM abook LEFT JOIN account on abook_account = account_id left join xchan on xchan_hash = abook_xchan 
 		where abook_id = %d
@@ -45,6 +45,7 @@ function onepoll_run($argv, $argc){
 		intval(ACCOUNT_OK),
 		intval(ACCOUNT_UNVERIFIED)
 	);
+dbg(0);
 
 	if(! $contacts) {
 		logger('onepoll: abook_id not found: ' . $contact_id);

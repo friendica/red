@@ -115,10 +115,10 @@ function settings_post(&$a) {
 		return;
 
 
-	if(count($a->user) && x($a->user,'uid') && $a->user['uid'] != local_user()) {
-		notice( t('Permission denied.') . EOL);
-		return;
-	}
+//	if(count($a->user) && x($a->user,'uid') && $a->user['uid'] != local_user()) {
+//		notice( t('Permission denied.') . EOL);
+//		return;
+//	}
 
 	$old_page_flags = $a->user['page-flags'];
 
@@ -366,9 +366,10 @@ function settings_post(&$a) {
 	$arr['channel_w_photos']   = (($_POST['post_photos'])   ? $_POST['post_photos']   : 0);
 	$arr['channel_w_chat']     = (($_POST['chat'])          ? $_POST['chat']          : 0);
 	$arr['channel_a_delegate'] = (($_POST['delegate'])      ? $_POST['delegate']      : 0);
-	$arr['channel_r_storage']  = (($_POST['view_storage'])   ? $_POST['view_storage']  : 0);
-	$arr['channel_w_storage']  = (($_POST['write_storage'])  ? $_POST['write_storage'] : 0);
-
+	$arr['channel_r_storage']  = (($_POST['view_storage'])  ? $_POST['view_storage']  : 0);
+	$arr['channel_w_storage']  = (($_POST['write_storage']) ? $_POST['write_storage'] : 0);
+	$arr['channel_r_pages']    = (($_POST['view_pages'])    ? $_POST['view_pages']    : 0);
+	$arr['channel_w_pages']    = (($_POST['write_pages'])   ? $_POST['write_pages']    : 0);
 
 	$defperms = 0;
 	if(x($_POST['def_view_stream']))
@@ -399,6 +400,10 @@ function settings_post(&$a) {
 		$defperms += $_POST['def_view_storage'];
 	if(x($_POST['def_write_storage']))
 		$defperms += $_POST['def_write_storage'];
+	if(x($_POST['def_view_pages']))
+		$defperms += $_POST['def_view_pages'];
+	if(x($_POST['def_write_pages']))
+		$defperms += $_POST['def_write_pages'];
 
 	$notify = 0;
 
@@ -497,7 +502,7 @@ function settings_post(&$a) {
 	);
 */
 
-	$r = q("update channel set channel_r_stream = %d, channel_r_profile = %d, channel_r_photos = %d, channel_r_abook = %d, channel_w_stream = %d, channel_w_wall = %d, channel_w_tagwall = %d, channel_w_comment = %d, channel_w_mail = %d, channel_w_photos = %d, channel_w_chat = %d, channel_a_delegate = %d where channel_id = %d limit 1",
+	$r = q("update channel set channel_r_stream = %d, channel_r_profile = %d, channel_r_photos = %d, channel_r_abook = %d, channel_w_stream = %d, channel_w_wall = %d, channel_w_tagwall = %d, channel_w_comment = %d, channel_w_mail = %d, channel_w_photos = %d, channel_w_chat = %d, channel_a_delegate = %d, channel_r_storage = %d, channel_w_storage = %d, channel_r_pages = %d, channel_w_pages = %d where channel_id = %d limit 1",
 		intval($arr['channel_r_stream']),
 		intval($arr['channel_r_profile']),
 		intval($arr['channel_r_photos']),
@@ -510,6 +515,10 @@ function settings_post(&$a) {
 		intval($arr['channel_w_photos']), 
 		intval($arr['channel_w_chat']),
 		intval($arr['channel_a_delegate']),
+		intval($arr['channel_r_storage']),
+		intval($arr['channel_w_storage']),
+		intval($arr['channel_r_pages']),
+		intval($arr['channel_w_pages']),
 		intval(local_user())
 	);   
 
