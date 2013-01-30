@@ -105,7 +105,7 @@ class Item extends BaseObject {
 			: false);
 		$shareable = ((($conv->get_profile_owner() == local_user()) && ($item['private'] != 1)) ? true : false);
 
-		if(local_user() && link_compare($a->contact['url'],$item['author-link']))
+		if(local_user() && $observer['xchan_hash'] === $item['author_xchan'])
 			$edpost = array($a->get_baseurl($ssl_state)."/editpost/".$item['id'], t("Edit"));
 		else
 			$edpost = false;
