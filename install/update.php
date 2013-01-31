@@ -1,6 +1,6 @@
 <?php
 
-define( 'UPDATE_VERSION' , 1023 );
+define( 'UPDATE_VERSION' , 1024 );
 
 /**
  *
@@ -305,6 +305,13 @@ function update_r1021() {
 
 function update_r1022() {
 	$r = q("alter table attach add index ( filename ), add index ( filetype ), add index ( filesize ), add index ( created ), add index ( edited ) ");
+	if($r)
+		return UPDATE_SUCCESS;
+	return UPDATE_FAILED;
+}
+
+function update_r1023() {
+	$r = q("ALTER TABLE `item` ADD `revision` INT UNSIGNED NOT NULL DEFAULT '0' AFTER `lang` , add index ( revision ) ");
 	if($r)
 		return UPDATE_SUCCESS;
 	return UPDATE_FAILED;
