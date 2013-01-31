@@ -22,13 +22,15 @@ function photo_init(&$a) {
 			// NOTREACHED
 	}
 
+	$observer_xchan = get_observer_hash();
+
 	$default = 'images/person-175.jpg';
 
 	if(isset($type)) {
 
-
 		/**
-		 * Profile photos
+		 * Profile photos - Access controls on default profile photos are not honoured since they need to be exchanged with remote sites.
+		 * 
 		 */
 
 		if($type === 'profile') {
@@ -84,8 +86,10 @@ function photo_init(&$a) {
 			dbesc($photo),
 			intval($resolution)
 		);
-		if(count($r)) {
+		if($r) {
 			
+			$allowed = perm_is_allowed($r[0]['uid'],$observer_xchan,'view_photos');
+
 			$sql_extra = permissions_sql($r[0]['uid']);
 
 			// Now we'll see if we can access the photo
@@ -95,7 +99,7 @@ function photo_init(&$a) {
 				intval($resolution)
 			);
 
-			if(count($r)) {
+			if($r && $allowed) {
 				$data = $r[0]['data'];
 				$mimetype = $r[0]['type'];
 			}
@@ -113,7 +117,7 @@ function photo_init(&$a) {
 					dbesc($photo),
 					intval($resolution)
 				);
-				if(count($r)) {
+				if($r) {
 					$data = file_get_contents('images/nosign.jpg');
 					$mimetype = 'image/jpeg';
 					$prvcachecontrol = true;
