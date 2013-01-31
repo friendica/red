@@ -16,7 +16,7 @@ require_once('include/features.php');
 define ( 'FRIENDICA_PLATFORM',     'Friendica Red');
 define ( 'FRIENDICA_VERSION',      trim(file_get_contents('version.inc')) . 'R');
 define ( 'ZOT_REVISION',               1     ); 
-define ( 'DB_UPDATE_VERSION',       1022     );
+define ( 'DB_UPDATE_VERSION',       1023     );
 
 define ( 'EOL',                    '<br />' . "\r\n"     );
 define ( 'ATOM_TIME',              'Y-m-d\TH:i:s\Z' );
@@ -2031,6 +2031,14 @@ function argv($x) {
 function dba_timer() {
 	return microtime(true);
 }
+
+function get_observer_hash() {
+	$observer = get_app()->get_observer();
+	if(is_array($observer))
+		return $observer['xchan_hash'];
+	return '';
+}
+
 
 /**
 * Returns the complete URL of the current page, e.g.: http(s)://something.com/network

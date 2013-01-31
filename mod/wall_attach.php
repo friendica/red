@@ -29,9 +29,7 @@ function wall_attach_post(&$a) {
 
 	$page_owner_uid   = $channel['channel_id'];
 
-	$observer = $a->get_observer();
-
-	if(! perm_is_allowed($page_owner_uid,$observer['xchan_hash'],'write_storage')) {
+	if(! perm_is_allowed($page_owner_uid,get_observer_hash(),'write_storage')) {
 		notice( t('Permission denied.') . EOL);
 		killme();
 	}

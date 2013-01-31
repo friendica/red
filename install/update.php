@@ -1,6 +1,6 @@
 <?php
 
-define( 'UPDATE_VERSION' , 1022 );
+define( 'UPDATE_VERSION' , 1023 );
 
 /**
  *
@@ -303,3 +303,9 @@ function update_r1021() {
 	return UPDATE_FAILED;
 }
 
+function update_r1022() {
+	$r = q("alter table attach add index ( filename ), add index ( filetype ), add index ( filesize ), add index ( created ), add index ( edited ) ");
+	if($r)
+		return UPDATE_SUCCESS;
+	return UPDATE_FAILED;
+}

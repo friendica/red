@@ -81,3 +81,71 @@ function z_mime_content_type($filename) {
 	}
 }
 
+
+
+function attach_count_files($channel_id, $observer, $hash = '', $filename = '', $filetype = '') {
+
+	$ret = array('success' => false);
+
+	if(! perm_is_allowed($channel_id,$observer, 'read_storage')) {
+		$ret['message'] = t('Permission denied.');
+		return $ret;
+	}
+
+	require_once('include/security.php');
+	$sql_extra = permissions_sql($channel_id);
+
+	if($hash)
+		$sql_extra .= protect_sprintf(" and hash = '" . dbesc($hash) . "' ");
+
+	if($filename)
+		$sql_extra .= protect_sprintf(" and filename like '@" . dbesc($filename) . "@' ");
+
+	if($filetype)
+		$sql_extra .= protect_sprintf(" and filetype like '@" . dbesc($filetype) . "@' ");
+
+	$r = q("select id from attach where channel_id = %d $sql_extra",
+		intval($channel_id)
+	);
+
+	$ret['success'] = ((is_array($r)) ? true : false);
+	$ret['results'] = ((is_array($r)) ? count($r) : false);
+	return $ret; 
+
+}
+
+function attach_list_files($channel_id, $observer, $hash = '', $filename = '', $filetype = '', $orderby = 'created desc', $start = 0, $entries = 0) {
+
+	$ret = array('success' => false);
+
+	if(! perm_is_allowed($channel_id,$observer, 'read_storage')) {
+		$ret['message'] = t('Permission denied.');
+		return $ret;
+	}
+
+	require_once('include/security.php');
+	$sql_extra = permissions_sql($channel_id);
+
+	if($hash)
+		$sql_extra .= protect_sprintf(" and hash = '" . dbesc($hash) . "' ");
+
+	if($filename)
+		$sql_extra .= protect_sprintf(" and filename like '@" . dbesc($filename) . "@' ");
+
+	if($filetype)
+		$sql_extra .= protect_sprintf(" and filetype like '@" . dbesc($filetype) . "@' ");
+
+	if($entries)
+		$limit = " limit " . intval($start) . ", " . intval(entries) . " ";
+
+	// Retrieve all columns except 'data'
+
+	$r = q("select id, aid, uid, hash, filename, filetype, filesize, created, edited, allow_cid, allow_gid, deny_cid, deny_gid from attach where channel_id = %d $sql_extra $orderby $limit",
+		intval($channel_id)
+	);
+
+	$ret['success'] = ((is_array($r)) ? true : false);
+	$ret['results'] = ((is_array($r)) ? $r : false);
+	return $ret; 
+
+}

@@ -94,7 +94,12 @@ CREATE TABLE IF NOT EXISTS `attach` (
   PRIMARY KEY (`id`),
   KEY `aid` (`aid`),
   KEY `uid` (`uid`),
-  KEY `hash` (`hash`)
+  KEY `hash` (`hash`),
+  KEY `filename` (`filename`),
+  KEY `filetype` (`filetype`),
+  KEY `filesize` (`filesize`),
+  KEY `created` (`created`),
+  KEY `edited` (`edited`)
 ) ENGINE=MyISAM  DEFAULT CHARSET=utf8;
 
 CREATE TABLE IF NOT EXISTS `auth_codes` (
