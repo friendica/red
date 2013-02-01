@@ -181,11 +181,7 @@ function settings_post(&$a) {
 	if((argc() > 1) && (argv(1) == 'featured')) {
 		check_form_security_token_redirectOnErr('/settings/featured', 'settings_featured');
 
-
-
-
-
-		call_hooks('featured_settings_post', $_POST);
+		call_hooks('feature_settings_post', $_POST);
 		return;
 	}
 
@@ -672,7 +668,7 @@ function settings_content(&$a) {
 		if(! count($r))
 			$settings_addons = t('No feature settings configured');
 
-		call_hooks('plugin_settings', $settings_addons);
+		call_hooks('feature_settings', $settings_addons);
 		
 		
 		$tpl = get_markup_template("settings_addons.tpl");
