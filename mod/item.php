@@ -471,14 +471,19 @@ function item_post(&$a) {
 	$match = false;
 
 	if(preg_match_all('/(\[attachment\](.*?)\[\/attachment\])/',$body,$match)) {
+		$attachments = array();
 		foreach($match[2] as $mtch) {
 			$hash = substr($mtch,0,strpos($mtch,','));
 			$rev = intval(substr($mtch,strpos($mtch,',')));
 			$r = attach_by_hash_nodata($hash,$rev);
 			if($r['success']) {
-				if(strlen($attachments))
-					$attachments .= ',';
-				$attachments .= '[attach]href="' . $a->get_baseurl() . '/attach/' . $r['data']['hash'] . '" length="' . $r['data']['filesize'] . '" type="' . $r['data']['filetype'] . '" title="' . urlencode($r['data']['filename']) . '" revision="' . $r['data']['revision'] . '"[/attach]'; 
+				$attachments[] = array(
+					'href'     => $a->get_baseurl() . '/attach/' . $r['data']['hash'],
+					'length'   =>  $r['data']['filesize'],
+					'type'     => $r['data']['filetype'],
+					'title'    => urlencode($r['data']['filename']),
+					'revision' => $r['data']['revision']
+				);
 			}
 			$body = str_replace($match[1],'',$body);
 		}

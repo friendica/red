@@ -10,7 +10,8 @@ function magic_init(&$a) {
 
 	if($hash) {
 		$x = q("select xchan.xchan_url, hubloc.* from xchan left join hubloc on xchan_hash = hubloc_hash
-			where hublock_hash = '%s' and (hubloc_flags & %d) limit 1",
+			where hubloc_hash = '%s' and (hubloc_flags & %d) limit 1",
+			dbesc($hash),
 			intval(HUBLOC_FLAGS_PRIMARY)
 		);
 	}

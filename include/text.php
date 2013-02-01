@@ -947,37 +947,33 @@ function prepare_body($item,$attach = false) {
 		return $s;
 	}
 
-	$arr = explode(',',$item['attach']);
+	$arr = json_decode($item['attach'],true);
 	if(count($arr)) {
 		$s .= '<div class="body-attach">';
 		foreach($arr as $r) {
 			$matches = false;
 			$icon = '';
-			$cnt = preg_match_all('|\[attach\]href=\"(.*?)\" length=\"(.*?)\" type=\"(.*?)\" title=\"(.*?)\"\[\/attach\]|',$r,$matches, PREG_SET_ORDER);
-			if($cnt) {
-				foreach($matches as $mtch) {
-					$icontype = strtolower(substr($mtch[3],0,strpos($mtch[3],'/')));
-					switch($icontype) {
-						case 'video':
-						case 'audio':
-						case 'image':
-						case 'text':
-							$icon = '<div class="attachtype icon s22 type-' . $icontype . '"></div>';
-							break;
-						default:
-							$icon = '<div class="attachtype icon s22 type-unkn"></div>';
-							break;
-					}
-					$title = ((strlen(trim($mtch[4]))) ? escape_tags(trim($mtch[4])) : escape_tags($mtch[1]));
-					$title .= ' ' . $mtch[2] . ' ' . t('bytes');
-					if((local_user() == $item['uid']) && ($item['contact-id'] != $a->contact['id']) && ($item['network'] == NETWORK_DFRN))
-						$the_url = $a->get_baseurl() . '/redir/' . $item['contact-id'] . '?f=1&url=' . $mtch[1];
-					else
-						$the_url = $mtch[1];
+			$icontype = substr($r['type'],0,strpos($r['type'],'/'));
 
-					$s .= '<a href="' . strip_tags($the_url) . '" title="' . $title . '" class="attachlink"  >' . $icon . '</a>';
-				}
+			switch($icontype) {
+				case 'video':
+				case 'audio':
+				case 'image':
+				case 'text':
+					$icon = '<div class="attachtype icon s22 type-' . $icontype . '"></div>';
+					break;
+				default:
+					$icon = '<div class="attachtype icon s22 type-unkn"></div>';
+					break;
 			}
+
+			$title = htmlentities($r['title'], ENT_COMPAT,'UTF-8');
+			if(! $title)
+				$title = t('unknown.???');
+			$title .= ' ' . $r['length'] . ' ' . t('bytes');
+
+			$url = $a->get_baseurl() . '/magic?f=&hash=' . $item['author_xchan'] . '&dest=' . $r['href'] . '/' . $r['revision'];
+			$s .= '<a href="' . $url . '" title="' . $title . '" class="attachlink"  >' . $icon . '</a>';
 		}
 		$s .= '<div class="clear"></div></div>';
 	}

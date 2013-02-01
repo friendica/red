@@ -496,7 +496,7 @@ function get_item_elements($x) {
 	$arr['object']       = activity_sanitise($x['object']);
 	$arr['target']       = activity_sanitise($x['target']);
 
-	$arr['attach']       = implode(',',activity_sanitise($x['attach']));
+	$arr['attach']       = activity_sanitise($x['attach']);
 	$arr['term']         = decode_tags($x['tags']);
 
 	$arr['item_private'] = ((array_key_exists('flags',$x) && is_array($x['flags']) && in_array('private',$x['flags'])) ? 1 : 0);
@@ -588,7 +588,7 @@ function encode_item($item) {
 	if($item['target'])
 		$x['target']     = json_decode($item['target'],true);
 	if($item['attach'])
-		$x['attach']     = explode(',', $item['attach']);
+		$x['attach']     = json_decode($item['attach'],true);
 	if($y = encode_item_flags($item))
 		$x['flags']      = $y;
 	if($item['term'])
@@ -1258,6 +1258,11 @@ function item_store($arr,$force_parent = false) {
 	if((x($arr,'target')) && is_array($arr['target'])) {
 		activity_sanitise($arr['target']);
 		$arr['target'] = json_encode($arr['target']);
+	}
+
+	if((x($arr,'attach')) && is_array($arr['attach'])) {
+		activity_sanitise($arr['attach']);
+		$arr['attach'] = json_encode($arr['attach']);
 	}
 
 	$arr['aid']           = ((x($arr,'aid'))           ? intval($arr['aid'])                 : 0);
