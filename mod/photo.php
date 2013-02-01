@@ -88,7 +88,7 @@ function photo_init(&$a) {
 		);
 		if($r) {
 			
-			$allowed = perm_is_allowed($r[0]['uid'],$observer_xchan,'view_photos');
+			$allowed = (($r[0]['uid']) ? perm_is_allowed($r[0]['uid'],$observer_xchan,'view_photos') : true);
 
 			$sql_extra = permissions_sql($r[0]['uid']);
 
