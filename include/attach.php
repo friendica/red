@@ -1,5 +1,6 @@
 <?php
 
+require_once('include/permissions.php');
 
 function z_mime_content_type($filename) {
 
@@ -255,7 +256,7 @@ function attach_store($channel,$observer_hash,$options = '',$arr = null) {
 	$channel_id = $channel['channel_id'];
 	$sql_options = '';
 
-	if(! perm_is_allowed($channel_id,$observer_hash(),'write_storage')) {
+	if(! perm_is_allowed($channel_id,get_observer_hash(),'write_storage')) {
 		$ret['message'] = t('Permission denied.');
 		return $ret;
 	}
@@ -299,7 +300,7 @@ function attach_store($channel,$observer_hash,$options = '',$arr = null) {
 		if($options === 'update' &&  $arr && array_key_exists('revision',$arr))
 			$sql_options = " and revision = " . intval($arr['revision']) . " ";
 
-		$x =q("select id, aid, uid, hash, revision, created, edited, allow_cid, allow_gid, deny_cid, deny_gid from attach where hash = '%s' and uid = %d $sql_options limit 1",
+		$x =q("select id, aid, uid, filename, filetype, filesize, hash, revision, created, edited, allow_cid, allow_gid, deny_cid, deny_gid from attach where hash = '%s' and uid = %d $sql_options limit 1",
 			dbesc($arr['hash']),
 			intval($channel_id)
 		);
@@ -397,10 +398,10 @@ function attach_store($channel,$observer_hash,$options = '',$arr = null) {
 			dbesc(@file_get_contents($src)),
 			dbesc($created),
 			dbesc($created),
-			dbesc((array_key_exists('allow_cid',$arr)) ? $arr['allow_cid'] : '<' . $channel['channel_hash'] . '>'),
-			dbesc((array_key_exists('allow_gid',$arr)) ? $arr['allow_gid'] : ''),
-			dbesc((array_key_exists('deny_cid',$arr))  ? $arr['deny_cid']  : ''),
-			dbesc((array_key_exists('deny_gid',$arr))  ? $arr['deny_gid']  : '')
+			dbesc(($arr && array_key_exists('allow_cid',$arr)) ? $arr['allow_cid'] : '<' . $channel['channel_hash'] . '>'),
+			dbesc(($arr && array_key_exists('allow_gid',$arr)) ? $arr['allow_gid'] : ''),
+			dbesc(($arr && array_key_exists('deny_cid',$arr))  ? $arr['deny_cid']  : ''),
+			dbesc(($arr && array_key_exists('deny_gid',$arr))  ? $arr['deny_gid']  : '')
 		);
 	}		
 

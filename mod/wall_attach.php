@@ -17,10 +17,12 @@ function wall_attach_post(&$a) {
 		$channel = $r[0];
 
 	}
+
 	else
 		killme();
 
 	$r = attach_store($channel,get_observer_hash());
+
 	if(! $r['success']) {
 		notice( $r['message'] . EOL);
 		killme();

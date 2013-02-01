@@ -400,11 +400,12 @@ function network_content(&$a, $update = 0, $load = false) {
 
 		$x = array(
 			'is_owner' => true,
-			'allow_location' => $a->user['allow_location'],
-			'default_location' => $a->user['default-location'],
-			'nickname' => $a->user['nickname'],
-			'lockstate' => ((($group) || ($cid) || ($nets) || (is_array($a->user) && ((strlen($a->user['allow_cid'])) || (strlen($a->user['allow_gid'])) || (strlen($a->user['deny_cid'])) || (strlen($a->user['deny_gid']))))) ? 'lock' : 'unlock'),
-			'acl' => populate_acl((($group || $cid || $nets) ? $def_acl : $a->user), $celeb),
+			'allow_location' => $a->user['allow_location'], // FIXME
+			'default_location' => $channel['channel_location'],
+			'nickname' => $channel['channel_address'],
+			'lockstate' => (($group || $cid || $channel['channel_allow_cid'] || $channel['channel_allow_gid'] || $channel['channel_deny_cid'] || $channel['channel_deny_gid']) ? 'lock' : 'unlock'),
+// FIXME
+			'acl' => populate_acl((($group || $cid || $nets) ? $def_acl : $channel), $celeb),
 			'bang' => (($group || $cid) ? '!' : ''),
 			'visitor' => 'block',
 			'profile_uid' => local_user()

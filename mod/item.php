@@ -18,6 +18,7 @@
 require_once('include/crypto.php');
 require_once('include/enotify.php');
 require_once('include/items.php');
+require_once('include/attach.php');
 
 function item_post(&$a) {
 
@@ -477,7 +478,7 @@ function item_post(&$a) {
 			if($r['success']) {
 				if(strlen($attachments))
 					$attachments .= ',';
-				$attachments .= '[attach]href="' . $a->get_baseurl() . '/attach/' . $r['data']['hash'] . '" length="' . $r['data']['filesize'] . '" type="' . $r['data']['filetype'] . '" title="' . $r['data']['filename'] . '"[/attach]'; 
+				$attachments .= '[attach]href="' . $a->get_baseurl() . '/attach/' . $r['data']['hash'] . '" length="' . $r['data']['filesize'] . '" type="' . $r['data']['filetype'] . '" title="' . urlencode($r['data']['filename']) . '" revision="' . $r['data']['revision'] . '"[/attach]'; 
 			}
 			$body = str_replace($match[1],'',$body);
 		}
