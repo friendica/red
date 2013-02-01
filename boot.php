@@ -2089,7 +2089,6 @@ function construct_page(&$a) {
 
 	$arr = $a->get_widgets();
 	ksort($arr,SORT_NUMERIC);
-	logger('get_widgets: ' . print_r($arr,true));
 	if(count($arr)) {
 		foreach($arr as $x) {
 			if(! array_key_exists($x['location'],$a->page))

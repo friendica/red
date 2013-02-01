@@ -126,12 +126,6 @@ function zfinger_init(&$a) {
 	$ret['target_sig']     = $zsig;
 	$ret['searchable']     = $searchable;
 
-// wtf
-//	if(! $e['xchan_connurl'])
-		
-// FIXME encrypt permissions when targeted so that only the target can view them, requires sending the pubkey and also checking that the target_sig is signed with that pubkey and isn't a forgery. 
-
-	logger('zot-info: ' . print_r($e,true));
 
 	$permissions = get_all_perms($e['channel_id'],(($ztarget && $zsig) 
 			? base64url_encode(hash('whirlpool',$ztarget . $zsig,true)) 
@@ -143,10 +137,6 @@ function zfinger_init(&$a) {
 	if($permissions['view_profile'])
 		$ret['profile']  = $profile;
 
-//	if($feed && $permissions['view_stream'])
-//		$ret['messages']  = $zot_feed($e['channel_id'],(($ztarget && $zsig) 
-//				? base64url_encode(hash('whirlpool',$ztarget . $zsig,true)) 
-//				: '' ),$mindate);
 
 	// array of (verified) hubs this channel uses
 

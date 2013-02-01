@@ -9,13 +9,13 @@
 	{{foreach $items as $item}}
 	<div class="profile-match-wrapper">
 		<div class="profile-match-photo">
-			<a href="{{$item.url}}">
-				<img src="{{$item.photo}}" width="80" height="80" alt="{{$item.name}}" title="{{$item.name}}" />
+			<a href="{{$base}}/chanview?f=&url={{$item.xchan_url}}">
+				<img src="{{$item.xchan_photo_m}}" width="80" height="80" alt="{{$item.xchan_name}}" title="{{$item.xchan_name}}" />
 			</a>
 		</div>
 		<div class="profile-match-break"></div>
 		<div class="profile-match-name">
-			<a href="{{$itemurl}}" title="{{$item.name}}">{{$item.name}}</a>
+			<a href="{{$base}}/chanview?f=&url={{$item.xchan_url}}" title="{{$item.xchan_name}}">{{$item.xchan_name}}</a>
 		</div>
 		<div class="profile-match-end"></div>
 	</div>

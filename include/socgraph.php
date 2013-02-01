@@ -137,48 +137,39 @@ function poco_load($xchan = null,$url = null) {
 	}
 	logger("poco_load: loaded $total entries",LOGGER_DEBUG);
 
-	q("delete from xlink where xlink_xchan = '%s' and xlink_updated` < UTC_TIMESTAMP - INTERVAL 2 DAY",
+	q("delete from xlink where xlink_xchan = '%s' and xlink_updated` < UTC_TIMESTAMP() - INTERVAL 2 DAY",
 		dbesc($xchan)
 	);
 }
 
 
-function count_common_friends($uid,$cid) {
+function count_common_friends($uid,$xchan) {
 
-	$r = q("SELECT count(*) as `total`
-		FROM `glink` left join `gcontact` on `glink`.`gcid` = `gcontact`.`id`
-		where `glink`.`cid` = %d and `glink`.`uid` = %d
-		and `gcontact`.`nurl` in (select nurl from contact where uid = %d and self = 0 and blocked = 0 and hidden = 0 and id != %d ) ",
-		intval($cid),
-		intval($uid),
-		intval($uid),
-		intval($cid)
+	$r = q("SELECT count(xlink_id) as total from xlink where xlink_xchan = '%s' and xlink_link in
+		(select abook_chan from abook where abook_xchan != '%s' and abook_channel = %d and abook_flags = 0 )",
+		dbesc($xchan),
+		dbesc($xchan),
+		intval($uid)
 	);
 
-//	logger("count_common_friends: $uid $cid {$r[0]['total']}"); 
-	if(count($r))
+	if($r)
 		return $r[0]['total'];
 	return 0;
-
 }
 
 
-function common_friends($uid,$cid,$start = 0,$limit=9999,$shuffle = false) {
+function common_friends($uid,$xchan,$start = 0,$limit=100000000,$shuffle = false) {
 
 	if($shuffle)
 		$sql_extra = " order by rand() ";
 	else
-		$sql_extra = " order by `gcontact`.`name` asc "; 
+		$sql_extra = " order by xchan_name asc "; 
 
-	$r = q("SELECT `gcontact`.* 
-		FROM `glink` left join `gcontact` on `glink`.`gcid` = `gcontact`.`id`
-		where `glink`.`cid` = %d and `glink`.`uid` = %d
-		and `gcontact`.`nurl` in (select nurl from contact where uid = %d and self = 0 and blocked = 0 and hidden = 0 and id != %d ) 
-		$sql_extra limit %d, %d",
-		intval($cid),
+	$r = q("SELECT * from xchan left join xlink on xlink_xchan = xchan_hash where xlink_xchan = '%s' and xlink_link in
+		(select abook_chan from abook where abook_xchan != '%s' and abook_channel = %d and abook_flags = 0 ) $sql_extra limit %d, %d",
+		dbesc($xchan),
+		dbesc($xchan),
 		intval($uid),
-		intval($uid),
-		intval($cid),
 		intval($start),
 		intval($limit)
 	);

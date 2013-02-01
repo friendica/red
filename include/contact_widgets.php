@@ -104,58 +104,24 @@ function common_friends_visitor_widget($profile_uid) {
 	if(local_user() == $profile_uid)
 		return;
 
-	$cid = $zcid = 0;
+	$observer_hash = get_observer_hash();
 
-	if(is_array($_SESSION['remote'])) {
-		foreach($_SESSION['remote'] as $visitor) {
-			if($visitor['uid'] == $profile_uid) {
-				$cid = $visitor['cid'];
-				break;
-			}
-		}
-	}
-
-// FIXME
-//	if(! $cid) {
-//		if(get_my_url()) {
-//			$r = q("select id from contact where nurl = '%s' and uid = %d limit 1",
-//				dbesc(normalise_link(get_my_url())),
-//				intval($profile_uid)
-//			);
-//			if(count($r))
-//				$cid = $r[0]['id'];
-//			else {
-//				$r = q("select id from gcontact where nurl = '%s' limit 1",
-//					dbesc(normalise_link(get_my_url()))
-//				);
-//				if(count($r))
-//					$zcid = $r[0]['id'];
-//			}
-//		}
-//	}
-
-	if($cid == 0 && $zcid == 0)
-		return; 
+	if((! $observer_hash) || (! perm_is_allowed($profile_uid,$observer_hash,'view_contacts')))
+		return;
 
 	require_once('include/socgraph.php');
 
-	if($cid)
-		$t = count_common_friends($profile_uid,$cid);
-	else
-		$t = count_common_friends_zcid($profile_uid,$zcid);
+	$t = count_common_friends($profile_uid,$observer_hash);
 	if(! $t)
 		return;
 
-	if($cid)
-		$r = common_friends($profile_uid,$cid,0,5,true);
-	else
-		$r = common_friends_zcid($profile_uid,$zcid,0,5,true);
+	$r = common_friends($profile_uid,$observer_hash,0,5,true);
 
 	return replace_macros(get_markup_template('remote_friends_common.tpl'), array(
 		'$desc' =>  sprintf( tt("%d contact in common", "%d contacts in common", $t), $t),
 		'$base' => $a->get_baseurl(),
 		'$uid' => $profile_uid,
-		'$cid' => (($cid) ? $cid : '0'),
+		'$cid' => $observer,
 		'$linkmore' => (($t > 5) ? 'true' : ''),
 		'$more' => t('show more'),
 		'$items' => $r
