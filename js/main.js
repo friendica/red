@@ -352,7 +352,7 @@ function updateConvItems(mode,data) {
 					$(this).attr('src',$(this).attr('dst'));
 				});
 				$('#' + prev).after($(this));
-				$("div.wall-item-ago-time").timeago();
+				$("div.wall-item-ago").timeago();
 				// divgrow doesn't prevent itself from attaching a second (or 500th)
 				// "show more" div to a content region - it also has a few other
 				// issues related to how we're trying to use it. 
@@ -364,7 +364,7 @@ function updateConvItems(mode,data) {
 					$(this).attr('src',$(this).attr('dst'));
 				});
 				$('#' + ident).replaceWith($(this));
-				$("div.wall-item-ago-time").timeago();
+				$("div.wall-item-ago").timeago();
 				//	$("div.wall-item-body").divgrow({ initialHeight: 400 });
 
 			}
@@ -381,7 +381,7 @@ function updateConvItems(mode,data) {
 					$(this).attr('src',$(this).attr('dst'));
 				});
 				$('#threads-end').before($(this));
-				$("div.wall-item-ago-time").timeago();
+				$("div.wall-item-ago").timeago();
 				//	$("div.wall-item-body").divgrow({ initialHeight: 400 });
 
 			}
@@ -390,7 +390,7 @@ function updateConvItems(mode,data) {
 					$(this).attr('src',$(this).attr('dst'));
 				});
 				$('#' + ident).replaceWith($(this));
-				$("div.wall-item-ago-time").timeago();
+				$("div.wall-item-ago").timeago();
 				//	$("div.wall-item-body").divgrow({ initialHeight: 400 });
 			}
 		});
@@ -409,7 +409,7 @@ function updateConvItems(mode,data) {
 					$(this).attr('src',$(this).attr('dst'));
 				});
 				$('#' + prev).after($(this));
-				$("div.wall-item-ago-time").timeago();
+				$("div.wall-item-ago").timeago();
 
 				//	$("div.wall-item-body").divgrow({ initialHeight: 400 });
 			}
@@ -899,7 +899,7 @@ jQuery.timeago.settings.strings = {
 };
 
 
-$("div.wall-item-ago-time").timeago();
+$("div.wall-item-ago").timeago();
 //$("div.wall-item-body").divgrow({ initialHeight: 400 });
 
 //reCalcHeight();
