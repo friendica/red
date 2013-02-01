@@ -60,7 +60,7 @@ function settings_aside(&$a) {
 		array(
 			'label'	=> t('Feature settings'),
 			'url' 	=> $a->get_baseurl(true).'/settings/featured',
-			'selected'	=> ((argv(1) === 'addon') ? 'active' : ''),
+			'selected'	=> ((argv(1) === 'featured') ? 'active' : ''),
 		),
 
 		array(
@@ -665,20 +665,20 @@ function settings_content(&$a) {
 		return $o;
 		
 	}
-	if((argc() > 1) && (argv(1) === 'addon')) {
+	if((argc() > 1) && (argv(1) === 'featured')) {
 		$settings_addons = "";
 		
 		$r = q("SELECT * FROM `hook` WHERE `hook` = 'plugin_settings' ");
 		if(! count($r))
-			$settings_addons = t('No Plugin settings configured');
+			$settings_addons = t('No feature settings configured');
 
 		call_hooks('plugin_settings', $settings_addons);
 		
 		
 		$tpl = get_markup_template("settings_addons.tpl");
 		$o .= replace_macros($tpl, array(
-			'$form_security_token' => get_form_security_token("settings_addon"),
-			'$title'	=> t('Plugin Settings'),
+			'$form_security_token' => get_form_security_token("settings_featured"),
+			'$title'	=> t('Feature Settings'),
 			'$settings_addons' => $settings_addons
 		));
 		return $o;
