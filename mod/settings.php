@@ -502,7 +502,8 @@ function settings_post(&$a) {
 	);
 */
 
-	$r = q("update channel set channel_r_stream = %d, channel_r_profile = %d, channel_r_photos = %d, channel_r_abook = %d, channel_w_stream = %d, channel_w_wall = %d, channel_w_tagwall = %d, channel_w_comment = %d, channel_w_mail = %d, channel_w_photos = %d, channel_w_chat = %d, channel_a_delegate = %d, channel_r_storage = %d, channel_w_storage = %d, channel_r_pages = %d, channel_w_pages = %d where channel_id = %d limit 1",
+	$r = q("update channel set channel_expire_days = %d, channel_r_stream = %d, channel_r_profile = %d, channel_r_photos = %d, channel_r_abook = %d, channel_w_stream = %d, channel_w_wall = %d, channel_w_tagwall = %d, channel_w_comment = %d, channel_w_mail = %d, channel_w_photos = %d, channel_w_chat = %d, channel_a_delegate = %d, channel_r_storage = %d, channel_w_storage = %d, channel_r_pages = %d, channel_w_pages = %d where channel_id = %d limit 1",
+		intval($expire),
 		intval($arr['channel_r_stream']),
 		intval($arr['channel_r_profile']),
 		intval($arr['channel_r_photos']),
@@ -902,7 +903,7 @@ function settings_content(&$a) {
 		$defloc     = $channel['channel_location'];
 
 		$maxreq     = $channel['channel_max_friend_req'];
-		$expire     = get_pconfig(local_user(),'expire','content_expire_days');
+		$expire     = $channel['channel_expire_days'];
 
 		$blockwall  = $a->user['blockwall'];
 		$blocktags  = $a->user['blocktags'];
