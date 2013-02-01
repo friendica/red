@@ -377,7 +377,7 @@ function item_post(&$a) {
 		fix_attached_photo_permissions($profile_uid,$owner_xchan['xchan_hash'],$body,
 		$str_contact_allow,$str_group_allow,$str_contact_deny,$str_group_deny);
 
-		fix_attached_file_permissions($profile_uid,$owner_xchan['xchan_hash'],$body,
+		fix_attached_file_permissions($channel,$observer['xchan_hash'],$body,
 		$str_contact_allow,$str_group_allow,$str_contact_deny,$str_group_deny);
 
 	}
@@ -471,14 +471,13 @@ function item_post(&$a) {
 
 	if(preg_match_all('/(\[attachment\](.*?)\[\/attachment\])/',$body,$match)) {
 		foreach($match[2] as $mtch) {
-			$r = q("SELECT `hash`,`filename`,`filesize`,`filetype` FROM `attach` WHERE `uid` = %d AND `hash` = '%s' LIMIT 1",
-				intval($profile_uid),
-				dbesc($mtch)
-			);
-			if(count($r)) {
+			$hash = substr($mtch,0,strpos($mtch,','));
+			$rev = intval(substr($mtch,strpos($mtch,',')));
+			$r = attach_by_hash_nodata($hash,$rev);
+			if($r['success']) {
 				if(strlen($attachments))
 					$attachments .= ',';
-				$attachments .= '[attach]href="' . $a->get_baseurl() . '/attach/' . $r[0]['hash'] . '" length="' . $r[0]['filesize'] . '" type="' . $r[0]['filetype'] . '" title="' . (($r[0]['filename']) ? $r[0]['filename'] : '') . '"[/attach]'; 
+				$attachments .= '[attach]href="' . $a->get_baseurl() . '/attach/' . $r['data']['hash'] . '" length="' . $r['data']['filesize'] . '" type="' . $r['data']['filetype'] . '" title="' . $r['data']['filename'] . '"[/attach]'; 
 			}
 			$body = str_replace($match[1],'',$body);
 		}
@@ -1008,7 +1007,7 @@ function fix_attached_photo_permissions($uid,$xchan_hash,$body,
 }
 
 
-function fix_attached_file_permissions($uid,$xchan_hash,$body,
+function fix_attached_file_permissions($channel,$observer_hash,$body,
 		$str_contact_allow,$str_group_allow,$str_contact_deny,$str_group_deny) {
 
 	$match = false;
@@ -1017,24 +1016,16 @@ function fix_attached_file_permissions($uid,$xchan_hash,$body,
 		$attaches = $match[1];
 		if($attaches) {
 			foreach($attaches as $attach) {
-				$r = q("select * from attach where uid = %d and hash = '%s' 
-					and allow_cid = '%s' and allow_gid = '' and deny_cid = '' and deny_gid = '' limit 1",
-					intval($uid),
-					dbesc($attach),
-					dbesc('<' . $xchan_hash . '>')
-				);				
-				if($r) {
-					$r = q("UPDATE attach 
-						SET allow_cid = '%s', allow_gid = '%s', deny_cid = '%s', deny_gid = '%s'
-						WHERE uid = %d AND hash = '%s' LIMIT 1",
-						dbesc($str_contact_allow),
-						dbesc($str_group_allow),
-						dbesc($str_contact_deny),
-						dbesc($str_group_deny),
-						intval($uid),
-						dbesc($attach)
-					);
-				}
+				$hash = substr($attach,0,strpos($attach,','));
+				$rev = intval(substr($attach,strpos($attach,',')));
+				attach_store($channel,$observer_hash,$options = 'update', array(
+					'hash'      => $hash,
+					'revision'  => $rev,
+					'allow_cid' => $str_contact_allow,
+					'allow_gid'  => $str_group_allow,
+					'deny_cid'  => $str_contact_deny,
+					'deny_gid'  => $str_group_deny
+				));
 			}
 		}
 	}

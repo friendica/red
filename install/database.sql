@@ -84,6 +84,7 @@ CREATE TABLE IF NOT EXISTS `attach` (
   `filename` char(255) NOT NULL DEFAULT '',
   `filetype` char(64) NOT NULL DEFAULT '',
   `filesize` int(10) unsigned NOT NULL DEFAULT '0',
+  `revision` int(10) unsigned NOT NULL DEFAULT '0',
   `data` longblob NOT NULL,
   `created` datetime NOT NULL DEFAULT '0000-00-00 00:00:00',
   `edited` datetime NOT NULL DEFAULT '0000-00-00 00:00:00',
@@ -99,7 +100,13 @@ CREATE TABLE IF NOT EXISTS `attach` (
   KEY `filetype` (`filetype`),
   KEY `filesize` (`filesize`),
   KEY `created` (`created`),
-  KEY `edited` (`edited`)
+  KEY `edited` (`edited`),
+  KEY `filename_2` (`filename`),
+  KEY `filetype_2` (`filetype`),
+  KEY `filesize_2` (`filesize`),
+  KEY `created_2` (`created`),
+  KEY `edited_2` (`edited`),
+  KEY `revision` (`revision`)
 ) ENGINE=MyISAM  DEFAULT CHARSET=utf8;
 
 CREATE TABLE IF NOT EXISTS `auth_codes` (

@@ -1,6 +1,6 @@
 <?php
 
-define( 'UPDATE_VERSION' , 1024 );
+define( 'UPDATE_VERSION' , 1025 );
 
 /**
  *
@@ -316,3 +316,12 @@ function update_r1023() {
 		return UPDATE_SUCCESS;
 	return UPDATE_FAILED;
 }
+
+function update_r1024() {
+	$r = q("ALTER TABLE `attach` ADD `revision` INT UNSIGNED NOT NULL DEFAULT '0' AFTER `filesize` ,
+ADD INDEX ( `revision` ) ");
+	if($r)
+		return UPDATE_SUCCESS;
+	return UPDATE_FAILED;
+}
+

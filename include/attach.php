@@ -104,7 +104,7 @@ function attach_count_files($channel_id, $observer, $hash = '', $filename = '', 
 	if($filetype)
 		$sql_extra .= protect_sprintf(" and filetype like '@" . dbesc($filetype) . "@' ");
 
-	$r = q("select id from attach where channel_id = %d $sql_extra",
+	$r = q("select id from attach where uid = %d $sql_extra",
 		intval($channel_id)
 	);
 
@@ -140,7 +140,7 @@ function attach_list_files($channel_id, $observer, $hash = '', $filename = '', $
 
 	// Retrieve all columns except 'data'
 
-	$r = q("select id, aid, uid, hash, filename, filetype, filesize, created, edited, allow_cid, allow_gid, deny_cid, deny_gid from attach where channel_id = %d $sql_extra $orderby $limit",
+	$r = q("select id, aid, uid, hash, filename, filetype, filesize, revision, created, edited, allow_cid, allow_gid, deny_cid, deny_gid from attach where uid = %d $sql_extra $orderby $limit",
 		intval($channel_id)
 	);
 
@@ -148,4 +148,283 @@ function attach_list_files($channel_id, $observer, $hash = '', $filename = '', $
 	$ret['results'] = ((is_array($r)) ? $r : false);
 	return $ret; 
 
+}
+
+
+function attach_by_hash($hash,$rev = 0) {
+
+	$ret = array('success' => false);
+
+	// Check for existence, which will also provide us the owner uid
+
+	$sql_extra = '';
+	if($rev == (-1))
+		$sql_extra = " order by revision desc ";
+	elseif($rev)
+		$sql_extra = " and revision = " . intval($rev) . " ";
+
+
+	$r = q("SELECT uid FROM attach WHERE hash = '%s' $sql_extra LIMIT 1",
+		dbesc($hash)
+	);
+	if(! $r) {
+		$ret['message'] = t('Item was not found.');
+		return $ret;
+	}
+
+	if(! perm_is_allowed($r[0]['uid'],get_observer_hash(),'view_storage')) {
+		$ret['message'] = t('Permission denied.');
+		return $ret;
+	}
+
+	$sql_extra = permissions_sql($r[0]['uid']);
+
+	// Now we'll see if we can access the attachment
+
+
+	$r = q("SELECT * FROM attach WHERE hash = '%s' and uid = %d $sql_extra LIMIT 1",
+		dbesc($hash),
+		intval($r[0]['uid'])
+	);
+
+	if(! $r) {
+		$ret['message'] =  t('Permission denied.');
+		return $ret;
+	}
+
+	$ret['success'] = true;
+	$ret['data'] = $r[0];
+	return $ret;
+
+}
+
+
+
+function attach_by_hash_nodata($hash,$rev = 0) {
+
+	$ret = array('success' => false);
+
+	// Check for existence, which will also provide us the owner uid
+
+	$sql_extra = '';
+	if($rev == (-1))
+		$sql_extra = " order by revision desc ";
+	elseif($rev)
+		$sql_extra = " and revision = " . intval($rev) . " ";
+
+	$r = q("SELECT uid FROM attach WHERE hash = '%s' $sql_extra LIMIT 1",
+		dbesc($hash)
+	);
+	if(! $r) {
+		$ret['message'] = t('Item was not found.');
+		return $ret;
+	}
+
+	if(! perm_is_allowed($r[0]['uid'],get_observer_hash(),'view_storage')) {
+		$ret['message'] = t('Permission denied.');
+		return $ret;
+	}
+
+	$sql_extra = permissions_sql($r[0]['uid']);
+
+	// Now we'll see if we can access the attachment
+
+	$r = q("select id, aid, uid, hash, filename, filetype, filesize, revision, created, edited, allow_cid, allow_gid, deny_cid, deny_gid from attach where uid = %d and hash = '%s' $sql_extra limit 1",
+		intval($r[0]['uid']),
+		dbesc($hash)
+	);
+
+	if(! $r) {
+		$ret['message'] =  t('Permission denied.');
+		return $ret;
+	}
+
+	$ret['success'] = true;
+	$ret['data'] = $r[0];
+	return $ret;
+
+}
+
+
+
+
+function attach_store($channel,$observer_hash,$options = '',$arr = null) {
+
+
+	$ret = array('success' => false);
+	$channel_id = $channel['channel_id'];
+	$sql_options = '';
+
+	if(! perm_is_allowed($channel_id,$observer_hash(),'write_storage')) {
+		$ret['message'] = t('Permission denied.');
+		return $ret;
+	}
+
+	// The 'update' option sets db values without uploading a new attachment
+	// 'replace' replaces the existing uploaded data
+	// 'revision' creates a new revision with new upload data
+	// Default is to upload a new file
+
+	// revise or update must provide $arr['hash'] of the thing to revise/update
+
+	if($options !== 'update') {
+		if(! x($_FILES,'userfile')) {
+			$ret['message'] = t('No source file.');
+			return $ret;
+		}
+
+		$src      = $_FILES['userfile']['tmp_name'];
+		$filename = basename($_FILES['userfile']['name']);
+		$filesize = intval($_FILES['userfile']['size']);
+	}
+
+	$existing_size = 0;
+
+	if($options === 'replace') {
+		$x = q("select id, hash, filesize from attach where id = %d and uid = %d limit 1",	
+			intval($replace),
+			intval($channel_id)
+		);
+		if(! $x) {
+			$ret['message'] = t('Cannot locate file to replace');
+			return $ret;
+		}
+		$existing_id = $x[0]['id'];
+		$existing_size = intval($x[0]['filesize']);
+		$hash = $x[0]['hash'];
+	}
+	
+	if($options === 'revise' || $options === 'update') {
+		$sql_options = " order by revision desc ";
+		if($options === 'update' &&  $arr && array_key_exists('revision',$arr))
+			$sql_options = " and revision = " . intval($arr['revision']) . " ";
+
+		$x =q("select id, aid, uid, hash, revision, created, edited, allow_cid, allow_gid, deny_cid, deny_gid from attach where hash = '%s' and uid = %d $sql_options limit 1",
+			dbesc($arr['hash']),
+			intval($channel_id)
+		);
+		if(! $x) {
+			$ret['message'] = t('Cannot locate file to revise/update');
+			return $ret;
+		}
+		$hash = $x[0]['hash'];
+	}
+
+	// Check storage limits
+	if($options !== 'update') {
+		$maxfilesize = get_config('system','maxfilesize');
+
+		if(($maxfilesize) && ($filesize > $maxfilesize)) {
+			$ret['message'] = sprintf( t('File exceeds size limit of %d'), $maxfilesize);
+			@unlink($src);
+			return $ret;
+		}
+
+		$limit = service_class_fetch($channel_id,'attach_upload_limit');
+		if($limit !== false) {
+			$r = q("select sum(filesize) as total from attach where uid = %d ",
+				intval($channel_id)
+			);
+			if(($r) &&  (($r[0]['total'] + $filesize) > ($limit - $existing_size))) {
+				$ret['message'] = upgrade_message(true);
+				@unlink($src);
+				return $ret;
+			}
+		}
+		$mimetype = z_mime_content_type($filename);
+	}
+
+	if(! isset($hash))
+		$hash = random_string();
+	$created = datetime_convert();
+
+	if($options === 'replace') {
+		$r = q("update attach set filename = '%s', filetype = '%s', filesize = %d, data = '%s', edited = '%s' where id = %d and uid = %d limit 1",
+			dbesc($filename),
+			dbesc($mimetype),
+			intval($filesize),
+			dbesc(@file_get_contents($src)),
+			dbesc($created),
+			intval($existing_id),
+			intval($channel_id)
+		);
+	}
+	elseif($options === 'revise') {
+		$r = q("insert into attach ( aid, uid, hash, filename, filetype, filesize, revision, data, created, edited, allow_cid, allow_gid, deny_cid, deny_gid )
+			VALUES ( %d, %d, '%s', '%s', '%s', %d, %d, '%s', '%s', '%s', '%s', '%s', '%s', '%s' ) ",
+			intval($x[0]['aid']),
+			intval($channel_id),
+			dbesc($x[0]['hash']),
+			dbesc($filename),
+			dbesc($mimetype),
+			intval($filesize),
+			intval($x[0]['revision'] + 1),
+			dbesc(@file_get_contents($src)),
+			dbesc($created),
+			dbesc($created),
+			dbesc($x[0]['allow_cid']),
+			dbesc($x[0]['allow_gid']),
+			dbesc($x[0]['deny_cid']),
+			dbesc($x[0]['deny_gid'])
+		);
+	}		
+
+	elseif($options === 'update') {
+		$r = q("update attach set filename = '%s', filetype = '%s', edited = '%s', 
+			allow_cid = '%s', allow_gid = '%s', deny_cid = '%s', deny_gid  = '%s' where id = %d and uid = %d limit 1",
+			dbesc((array_key_exists('filename',$arr))  ? $arr['filename']  : $x[0]['filename']),
+			dbesc((array_key_exists('filetype',$arr))  ? $arr['filetype']  : $x[0]['filetype']),
+			dbesc($created),
+			dbesc((array_key_exists('allow_cid',$arr)) ? $arr['allow_cid'] : $x[0]['allow_cid']),
+			dbesc((array_key_exists('allow_gid',$arr)) ? $arr['allow_gid'] : $x[0]['allow_gid']),
+			dbesc((array_key_exists('deny_cid',$arr))  ? $arr['deny_cid']  : $x[0]['deny_cid']),
+			dbesc((array_key_exists('deny_gid',$arr))  ? $arr['deny_gid']  : $x[0]['deny_gid']),
+			intval($x[0]['id']),
+			intval($x[0]['uid'])
+		);
+	}		
+
+	else {
+		$r = q("INSERT INTO attach ( aid, uid, hash, filename, filetype, filesize, revision, data, created, edited, allow_cid, allow_gid,deny_cid, deny_gid )
+			VALUES ( %d, %d, '%s', '%s', '%s', %d, %d, '%s', '%s', '%s', '%s', '%s', '%s', '%s' ) ",
+			intval($channel['channel_account_id']),
+			intval($channel_id),
+			dbesc($hash),
+			dbesc($filename),
+			dbesc($mimetype),
+			intval($filesize),
+			intval(0),
+			dbesc(@file_get_contents($src)),
+			dbesc($created),
+			dbesc($created),
+			dbesc((array_key_exists('allow_cid',$arr)) ? $arr['allow_cid'] : '<' . $channel['channel_hash'] . '>'),
+			dbesc((array_key_exists('allow_gid',$arr)) ? $arr['allow_gid'] : ''),
+			dbesc((array_key_exists('deny_cid',$arr))  ? $arr['deny_cid']  : ''),
+			dbesc((array_key_exists('deny_gid',$arr))  ? $arr['deny_gid']  : '')
+		);
+	}		
+
+	if($options !== 'update')
+		@unlink($src);
+
+	if(! $r) {
+		$ret['message'] = t('File upload failed. Possible system limit or action terminated.');
+		return $ret;
+	}
+
+	// Caution: This re-uses $sql_options set further above
+
+	$r = q("select id, aid, uid, hash, filename, filetype, filesize, revision, created, edited, allow_cid, allow_gid, deny_cid, deny_gid from attach where uid = %d and hash = '%s' $sql_options limit 1",
+		intval($channel_id),
+		dbesc($hash)
+	);
+
+	if(! $r) {
+		$ret['message'] = t('Stored file could not be verified. Upload failed.');
+		return $ret;
+	}
+
+	$ret['success'] = true;
+	$ret['data'] = $r[0];
+	return $ret;
 }
