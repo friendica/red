@@ -34,7 +34,7 @@ function connections_aside(&$a) {
 		$a->set_widget('follow', follow_widget());
 	}
 
-	$a->set_widget('collections', group_side('connnections','group',false,0,((array_key_exists('abook',$a->data)) ? $a->data['abook']['abook_xchan'] : '')));
+	$a->set_widget('collections', group_side('connections','group',false,0,((array_key_exists('abook',$a->data)) ? $a->data['abook']['abook_xchan'] : '')));
 	$a->set_widget('findpeople',findpeople_widget());
 
 }
@@ -57,7 +57,7 @@ function connections_post(&$a) {
 
 	if(! $orig_record) {
 		notice( t('Could not access contact record.') . EOL);
-		goaway($a->get_baseurl(true) . '/connnections');
+		goaway($a->get_baseurl(true) . '/connections');
 		return; // NOTREACHED
 	}
 
@@ -111,7 +111,7 @@ function connections_post(&$a) {
 	if($r)
 		info( t('Connection updated.') . EOL);
 	else
-		notice( t('Failed to update connnection record.') . EOL);
+		notice( t('Failed to update connection record.') . EOL);
 
 
 	if((x($a->data,'abook')) && $a->data['abook']['abook_my_perms'] != $abook_my_perms 
@@ -360,7 +360,7 @@ function connections_content(&$a) {
 			'$addr'           => $contact['xchan_addr'],
 			'$notself'        => (($self) ? '' : '1'),
 			'$self'           => (($self) ? '1' : ''),
-			'$autolbl'        => t('When receiving a channel introduction, any permissions provided here will be applied to the new connnection automatically and the introduction approved. Leave this page if you do not wish to use this feature.'),
+			'$autolbl'        => t('When receiving a channel introduction, any permissions provided here will be applied to the new connection automatically and the introduction approved. Leave this page if you do not wish to use this feature.'),
 			'$viewprof'       => t('View Profile'),
 			'$lbl_slider'     => t('Slide to adjust your degree of friendship'),
 			'$slide'          => $slide,
@@ -607,11 +607,11 @@ function connections_content(&$a) {
 
 	$tpl = get_markup_template("contacts-template.tpl");
 	$o .= replace_macros($tpl,array(
-		'$header' => t('Connnections') . (($head) ? ' - ' . $head : ''),
+		'$header' => t('Connections') . (($head) ? ' - ' . $head : ''),
 		'$tabs' => $t,
 		'$total' => $total,
 		'$search' => $search_hdr,
-		'$desc' => t('Search your connnections'),
+		'$desc' => t('Search your connections'),
 		'$finding' => (($searching) ? t('Finding: ') . "'" . $search . "'" : ""),
 		'$submit' => t('Find'),
 		'$cmd' => $a->cmd,
