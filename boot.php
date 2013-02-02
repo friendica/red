@@ -797,7 +797,6 @@ if(! class_exists('App')) {
 					}
 				}
 			}
-			logger('widgets: ' . print_r($this->widgets,true));
 		}
 
 		function get_widgets($location = '') {

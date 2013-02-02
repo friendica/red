@@ -207,8 +207,8 @@ function photo_upload($channel, $observer, $args) {
 	$arr['deny_gid']      = $str_group_deny;
 
 
-	$arr['body']          = '[url=' . $a->get_baseurl() . '/photos/' . $channel['channel_address'] . '/image/' . $photo_hash . ']' 
-				. '[img]' . $a->get_baseurl() . "/photo/{$photo_hash}-{$smallest}.".$ph->getExt() . '[/img]' 
+	$arr['body']          = '[url=' . z_root() . '/photos/' . $channel['channel_address'] . '/image/' . $photo_hash . ']' 
+				. '[img]' . z_root() . "/photo/{$photo_hash}-{$smallest}.".$ph->getExt() . '[/img]' 
 				. '[/url]';
 		
 	$item_id = item_store($arr);
@@ -347,8 +347,8 @@ function photos_create_item($channel, $creator_hash, $photo, $visible = false) {
 	$arr['deny_cid']      = $photo['deny_cid'];
 	$arr['deny_gid']      = $photo['deny_gid'];
 			
-	$arr['body']          = '[url=' . $a->get_baseurl() . '/photos/' . $channel['channel_address'] . '/image/' . $photo['resource_id'] . ']' 
-		. '[img]' . $a->get_baseurl() . '/photo/' . $photo['resource_id'] . '-' . $photo['scale'] . '[/img]' 
+	$arr['body']          = '[url=' . z_root() . '/photos/' . $channel['channel_address'] . '/image/' . $photo['resource_id'] . ']' 
+		. '[img]' . z_root() . '/photo/' . $photo['resource_id'] . '-' . $photo['scale'] . '[/img]' 
 		. '[/url]';
 		
 	$item_id = item_store($arr);

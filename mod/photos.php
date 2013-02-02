@@ -65,7 +65,7 @@ function photos_post(&$a) {
 
 	$page_owner_uid = $a->data['channel']['channel_id'];
 
-	if($a->perms['post_photos'])
+	if(perm_is_allowed($page_owner_uid,get_observer_hash(),'post_photos'))
 		$can_post = true;
 
 	if(! $can_post) {

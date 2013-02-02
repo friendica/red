@@ -707,8 +707,8 @@ function network_content(&$a, $update = 0, $load = false) {
 	if(! $update) 
         $o .= alt_pager($a,count($items));
 
-	logger('parent dba_timer: ' . sprintf('%01.4f',$first - $start));
-	logger('child  dba_timer: ' . sprintf('%01.4f',$second - $first));
+//	logger('parent dba_timer: ' . sprintf('%01.4f',$first - $start));
+//	logger('child  dba_timer: ' . sprintf('%01.4f',$second - $first));
 
 
 	return $o;
