@@ -57,6 +57,7 @@ function connectForum() {
 	$('#me_id_perms_view_storage').attr('checked','checked');
 	$('#me_id_perms_view_pages').attr('checked','checked');
 	$('#me_id_perms_send_stream').attr('checked','checked');
+	$('#me_id_perms_post_wall').attr('checked','checked');
 	$('#me_id_perms_post_comments').attr('checked','checked');
 	$('#me_id_perms_post_mail').attr('checked','checked');
 	$('#me_id_perms_tag_deliver').attr('checked','checked');
