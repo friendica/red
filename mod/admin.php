@@ -166,18 +166,22 @@ function admin_page_summary(&$a) {
 	// list total user accounts, expirations etc.
 
 
+	$r = q("SELECT COUNT(account_id) as total FROM `account`");
+	$users = $r[0]['total'];
+	
 	$r = q("SELECT COUNT(id) as `count` FROM `register`");
 	$pending = $r[0]['count'];
-		
-	$r = q("select count(*) as total from deliverq where 1");
-	$deliverq = (($r) ? $r[0]['total'] : 0);
 
-	$r = q("select count(*) as total from queue where 1");
+//	We don't seem to do anything like this anymore.  Comment out just in case.
+//	$r = q("select count(*) as total from deliverq where 1");
+//	$deliverq = (($r) ? $r[0]['total'] : 0);
+
+	$r = q("select count(*) as total from outq");
 	$queue = (($r) ? $r[0]['total'] : 0);
 
 	// We can do better, but this is a quick queue status
-
-	$queues = array( 'label' => t('Message queues'), 'deliverq' => $deliverq, 'queue' => $queue );
+	
+	$queues = array( 'label' => t('Message queues'), 'queue' => $queue );
 
 
 	$t = get_markup_template("admin_summary.tpl");
