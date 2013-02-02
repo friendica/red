@@ -434,7 +434,7 @@ function item_post(&$a) {
 					'uid'   => $profile_uid, 
 					'type'  => $success['termtype'],
 					'otype' => TERM_OBJ_POST,
-					'term'  => substr($tag,1),
+					'term'  => $success['term'],
 					'url'   => $success['url']
 				); 				
 			}
@@ -853,7 +853,7 @@ function handle_tag($a, &$body, &$inform, &$str_tags, $profile_uid, $tag) {
 				$str_tags .= ',';
 			$str_tags .= $newtag;
 		}
-		return array('replaced' => $replaced, 'termtype' => $termtype, 'url' => $url, 'contact' => $r[0]);	
+		return array('replaced' => $replaced, 'termtype' => $termtype, 'term' => $basetag, 'url' => $url, 'contact' => $r[0]);	
 	}
 	//is it a person tag? 
 	if(strpos($tag,'@') === 0) {
@@ -965,7 +965,7 @@ function handle_tag($a, &$body, &$inform, &$str_tags, $profile_uid, $tag) {
 		}
 	}
 
-	return array('replaced' => $replaced, 'termtype' => $termtype, 'url' => $url, 'contact' => $r[0]);	
+	return array('replaced' => $replaced, 'termtype' => $termtype, 'term' => $newname, 'url' => $url, 'contact' => $r[0]);	
 }
 
 
