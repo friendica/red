@@ -3,7 +3,7 @@
 
 	<dl>
 		<dt>$queues.label</dt>
-		<dd>$queues.deliverq - $queues.queue</dd>
+		<dd>$queues.queue</dd>
 	</dl>
 	<dl>
 		<dt>$pending.0</dt>
