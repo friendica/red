@@ -229,8 +229,10 @@ function zot_refresh($them,$channel = null) {
 
 		$j = json_decode($result['body'],true);
 
-		if(! (($j) && ($j['success'])))
+		if(! (($j) && ($j['success']))) {
+			logger('zot_refresh: result not decodable');
 			return false;
+		}
 
 		$x = import_xchan($j);
 
@@ -548,10 +550,10 @@ function import_xchan($arr) {
 && ($arr['site']['url'] != z_root()))
 			$arr['searchable'] = false;
 
-		
+		$hidden = (1 - intval($arr['searchable']));
 
 		// Be careful - XCHAN_FLAGS_HIDDEN should evaluate to 1
-		if(($r[0]['xchan_flags'] & XCHAN_FLAGS_HIDDEN) != $arr['searchable'])
+		if(($r[0]['xchan_flags'] & XCHAN_FLAGS_HIDDEN) != $hidden)
 			$new_flags = $r[0]['xchan_flags'] ^ XCHAN_FLAGS_HIDDEN;
 		else
 			$new_flags = $r[0]['xchan_flags'];
