@@ -5,7 +5,6 @@ include/jquery-1.4.2.min.js
 *.log
 *.out
 *.version*
-favicon.*
 home.html
 addon
 *~
@@ -27,3 +26,6 @@ report/
 .buildpath
 .externalToolBuilders
 .settings
+
+#ignore OSX .DS_Store files 
+.DS_Store
