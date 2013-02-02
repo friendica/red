@@ -172,10 +172,6 @@ function admin_page_summary(&$a) {
 	$r = q("SELECT COUNT(id) as `count` FROM `register`");
 	$pending = $r[0]['count'];
 
-//	We don't seem to do anything like this anymore.  Comment out just in case.
-//	$r = q("select count(*) as total from deliverq where 1");
-//	$deliverq = (($r) ? $r[0]['total'] : 0);
-
 	$r = q("select count(*) as total from outq");
 	$queue = (($r) ? $r[0]['total'] : 0);
 
