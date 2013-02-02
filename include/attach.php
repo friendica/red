@@ -1,5 +1,14 @@
 <?php
 
+/*
+ * File/attach API with the potential for revision control.
+ *
+ * TODO: a filesystem storage abstraction which maintains security (and 'data' contains a system filename
+ * which is inaccessible from the web). This could get around PHP storage limits and store videos and larger
+ * items, using fread or OS methods or native code to read/write or chunk it through.
+ * Also an 'append' option to the storage function might be a useful addition. 
+ */
+
 require_once('include/permissions.php');
 
 function z_mime_content_type($filename) {
@@ -151,6 +160,8 @@ function attach_list_files($channel_id, $observer, $hash = '', $filename = '', $
 
 }
 
+// Find an attachment by hash and revision. Returns the entire attach structure including data. 
+// This could exhaust memory so most useful only when immediately sending the data.  
 
 function attach_by_hash($hash,$rev = 0) {
 

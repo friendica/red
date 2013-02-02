@@ -181,7 +181,6 @@ function photo_upload($channel, $observer, $args) {
 	$basename = basename($filename);
 	$uri = item_message_id();
 
-
 	// Create item container
 
 	$item_flags = ITEM_WALL|ITEM_ORIGIN|ITEM_THREAD_TOP;
@@ -317,5 +316,42 @@ function photos_album_get_db_idstr($channel_id,$album,$remote_xchan = '') {
 		return $str;
 	}
 	return false;
+
+}
+
+function photos_create_item($channel, $creator_hash, $photo, $visible = false) {
+
+	// Create item container
+
+	$item_flags = ITEM_WALL|ITEM_ORIGIN|ITEM_THREAD_TOP;
+	$item_restrict = (($visible) ? ITEM_HIDDEN : ITEM_VISIBLE);			
+
+	$title = '';
+	$uri = item_message_id();
+			
+	$arr = array();
+
+	$arr['aid']           = $channel['channel_account_id'];
+	$arr['uid']           = $channel['channel_id'];
+	$arr['uri']           = $uri;
+	$arr['parent_uri']    = $uri; 
+	$arr['item_flags']    = $item_flags;
+	$arr['item_restrict'] = $item_restrict;
+	$arr['resource_type'] = 'photo';
+	$arr['resource_id']   = $photo['resource_id'];
+	$arr['owner_xchan']   = $channel['channel_hash'];
+	$arr['author_xchan']  = $creator_hash;
+
+	$arr['allow_cid']     = $photo['allow_cid'];
+	$arr['allow_gid']     = $photo['allow_gid'];
+	$arr['deny_cid']      = $photo['deny_cid'];
+	$arr['deny_gid']      = $photo['deny_gid'];
+			
+	$arr['body']          = '[url=' . $a->get_baseurl() . '/photos/' . $channel['channel_address'] . '/image/' . $photo['resource_id'] . ']' 
+		. '[img]' . $a->get_baseurl() . '/photo/' . $photo['resource_id'] . '-' . $photo['scale'] . '[/img]' 
+		. '[/url]';
+		
+	$item_id = item_store($arr);
+	return $item_id;
 
 }
