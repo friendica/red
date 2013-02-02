@@ -166,18 +166,18 @@ function admin_page_summary(&$a) {
 	// list total user accounts, expirations etc.
 
 
+	$r = q("SELECT COUNT(account_id) as total FROM `account`");
+	$users = $r[0]['total'];
+	
 	$r = q("SELECT COUNT(id) as `count` FROM `register`");
 	$pending = $r[0]['count'];
-		
-	$r = q("select count(*) as total from deliverq where 1");
-	$deliverq = (($r) ? $r[0]['total'] : 0);
 
-	$r = q("select count(*) as total from queue where 1");
+	$r = q("select count(*) as total from outq");
 	$queue = (($r) ? $r[0]['total'] : 0);
 
 	// We can do better, but this is a quick queue status
-
-	$queues = array( 'label' => t('Message queues'), 'deliverq' => $deliverq, 'queue' => $queue );
+	
+	$queues = array( 'label' => t('Message queues'), 'queue' => $queue );
 
 
 	$t = get_markup_template("admin_summary.tpl");
@@ -223,11 +223,6 @@ function admin_page_site_post(&$a){
 	$block_public		=	((x($_POST,'block_public'))		? True	:	False);
 	$force_publish		=	((x($_POST,'publish_all'))		? True	:	False);
 	$global_directory	=	((x($_POST,'directory_submit_url'))	? notags(trim($_POST['directory_submit_url']))	: '');
-	$thread_allow		=	((x($_POST,'thread_allow'))		? True	:	False);
-	$no_multi_reg		=	((x($_POST,'no_multi_reg'))		? True	:	False);
-	$no_openid			=	!((x($_POST,'no_openid'))		? True	:	False);
-	$no_regfullname		=	!((x($_POST,'no_regfullname'))	? True	:	False);
-	$no_utf				=	!((x($_POST,'no_utf'))			? True	:	False);
 	$no_community_page	=	!((x($_POST,'no_community_page'))	? True	:	False);
 
 	$verifyssl			=	((x($_POST,'verifyssl'))		? True	:	False);
@@ -236,10 +231,6 @@ function admin_page_site_post(&$a){
 	$timeout			=	((x($_POST,'timeout'))			? intval(trim($_POST['timeout']))		: 60);
 	$delivery_interval	=	((x($_POST,'delivery_interval'))? intval(trim($_POST['delivery_interval']))		: 0);
 	$poll_interval	=	((x($_POST,'poll_interval'))? intval(trim($_POST['poll_interval']))		: 0);
-	$maxloadavg	        =	((x($_POST,'maxloadavg'))       ? intval(trim($_POST['maxloadavg']))		: 50);
-	$dfrn_only          =	((x($_POST,'dfrn_only'))	    ? True	:	False);
-	$ostatus_disabled   =   !((x($_POST,'ostatus_disabled')) ? True  :   False);
-	$diaspora_enabled   =   ((x($_POST,'diaspora_enabled')) ? True   :  False);
 	$ssl_policy         =   ((x($_POST,'ssl_policy')) ? intval($_POST['ssl_policy']) : 0);
 /*
 	if($ssl_policy != intval(get_config('system','ssl_policy'))) {
@@ -314,20 +305,12 @@ function admin_page_site_post(&$a){
 		set_config('system','directory_submit_url', $global_directory);
 	}
 
-	set_config('system','thread_allow', $thread_allow);
-
-	set_config('system','block_extended_register', $no_multi_reg);
-	set_config('system','no_openid', $no_openid);
-	set_config('system','no_regfullname', $no_regfullname);
 	set_config('system','no_community_page', $no_community_page);
 	set_config('system','no_utf', $no_utf);
 	set_config('system','verifyssl', $verifyssl);
 	set_config('system','proxyuser', $proxyuser);
 	set_config('system','proxy', $proxy);
 	set_config('system','curl_timeout', $timeout);
-	set_config('system','dfrn_only', $dfrn_only);
-	set_config('system','ostatus_disabled', $ostatus_disabled);
-	set_config('system','diaspora_enabled', $diaspora_enabled);
 
 	info( t('Site settings updated.') . EOL);
 	goaway($a->get_baseurl(true) . '/admin/site' );
