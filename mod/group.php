@@ -139,7 +139,7 @@ function group_content(&$a) {
 		);
 		if(! $r) {
 			notice( t('Collection not found.') . EOL );
-			goaway($a->get_baseurl() . '/connnections');
+			goaway($a->get_baseurl() . '/connections');
 		}
 		$group = $r[0];
 
