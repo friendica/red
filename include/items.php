@@ -635,7 +635,7 @@ function decode_tags($t) {
 		$ret = array();
 		foreach($t as $x) {
 			$tag = array();
-			$tag['term'] = htmlentities($x['term'],  ENT_COMPAT,'UTF-8',false);
+			$tag['term'] = htmlentities($x['tag'],  ENT_COMPAT,'UTF-8',false);
 			$tag['url']  = htmlentities($x['url'],  ENT_COMPAT,'UTF-8',false);
 			switch($x['type']) {
 				case 'hashtag':
