@@ -572,7 +572,7 @@ function contact_block() {
 		$total = intval($r[0]['total']);
 	}
 	if(! $total) {
-		$contacts = t('No connnections');
+		$contacts = t('No connections');
 		$micropro = Null;
 		
 	} else {
@@ -595,7 +595,7 @@ function contact_block() {
 	$o = replace_macros($tpl, array(
 		'$contacts' => $contacts,
 		'$nickname' => $a->profile['nickname'],
-		'$viewcontacts' => t('View Connnections'),
+		'$viewcontacts' => t('View Connections'),
 		'$micropro' => $micropro,
 	));
 
