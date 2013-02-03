@@ -42,13 +42,9 @@
 </div>
 
 
-
 {{$profile_in_dir}}
 
-{{$blocktags}}
-
 {{$suggestme}}
-
 
 {{include file="field_input.tpl" field=$maxreq}}
 
@@ -63,7 +59,6 @@
 		<div id="advanced-expire-popup" style="width:auto;height:auto;overflow:auto;">
 			<h3>{{$expire.advanced}}</h3>
 			{{include file="field_yesno.tpl" field=$expire.items}}
-			{{include file="field_yesno.tpl" field=$expire.notes}}
 			{{include file="field_yesno.tpl" field=$expire.starred}}
 			{{include file="field_yesno.tpl" field=$expire.network_only}}
 		</div>
@@ -125,15 +120,4 @@
 <div class="settings-submit-wrapper" >
 <input type="submit" name="submit" class="settings-submit" value="{{$submit}}" />
 </div>
-
-
-<h3 class="settings-heading">{{$h_advn}}</h3>
-<div id="settings-pagetype-desc">{{$h_descadvn}}</div>
-
-{{$pagetype}}
-
-<div class="settings-submit-wrapper" >
-<input type="submit" name="submit" class="settings-submit" value="{{$submit}}" />
-</div>
-
 

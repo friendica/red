@@ -449,7 +449,7 @@ function settings_post(&$a) {
 	set_pconfig(local_user(),'expire','starred', $expire_starred);
 	set_pconfig(local_user(),'expire','photos', $expire_photos);
 	set_pconfig(local_user(),'expire','network_only', $expire_network_only);
-
+	set_pconfig(local_user(),'system','use_browser_location',$allow_location);
 	set_pconfig(local_user(),'system','suggestme', $suggestme);
 	set_pconfig(local_user(),'system','post_newfriend', $post_newfriend);
 	set_pconfig(local_user(),'system','post_joingroup', $post_joingroup);
@@ -498,7 +498,10 @@ function settings_post(&$a) {
 	);
 */
 
-	$r = q("update channel set channel_expire_days = %d, channel_r_stream = %d, channel_r_profile = %d, channel_r_photos = %d, channel_r_abook = %d, channel_w_stream = %d, channel_w_wall = %d, channel_w_tagwall = %d, channel_w_comment = %d, channel_w_mail = %d, channel_w_photos = %d, channel_w_chat = %d, channel_a_delegate = %d, channel_r_storage = %d, channel_w_storage = %d, channel_r_pages = %d, channel_w_pages = %d where channel_id = %d limit 1",
+	$r = q("update channel set channel_timezone = '%s', channel_max_anon_mail = %d, channel_max_friend_req = %d, channel_expire_days = %d, channel_r_stream = %d, channel_r_profile = %d, channel_r_photos = %d, channel_r_abook = %d, channel_w_stream = %d, channel_w_wall = %d, channel_w_tagwall = %d, channel_w_comment = %d, channel_w_mail = %d, channel_w_photos = %d, channel_w_chat = %d, channel_a_delegate = %d, channel_r_storage = %d, channel_w_storage = %d, channel_r_pages = %d, channel_w_pages = %d where channel_id = %d limit 1",
+		dbesc($timezone),
+		intval($unkmail),
+		intval($maxreq),
 		intval($expire),
 		intval($arr['channel_r_stream']),
 		intval($arr['channel_r_profile']),
@@ -939,65 +942,15 @@ function settings_content(&$a) {
 
 
 
-		$pageset_tpl = get_markup_template('pagetypes.tpl');
-		$pagetype = replace_macros($pageset_tpl,array(
-			'$page_normal' 	=> array('page-flags', t('Normal Account Page'), PAGE_NORMAL, 
-										t('This account is a normal personal profile'), 
-										($a->user['page-flags'] == PAGE_NORMAL)),
-								
-			'$page_soapbox' 	=> array('page-flags', t('Soapbox Page'), PAGE_SOAPBOX, 
-										t('Automatically approve all connection/friend requests as read-only fans'), 
-										($a->user['page-flags'] == PAGE_SOAPBOX)),
-									
-			'$page_community'	=> array('page-flags', t('Community Forum/Celebrity Account'), PAGE_COMMUNITY, 
-										t('Automatically approve all connection/friend requests as read-write fans'), 
-										($a->user['page-flags'] == PAGE_COMMUNITY)),
-									
-			'$page_freelove' 	=> array('page-flags', t('Automatic Friend Page'), PAGE_FREELOVE, 
-										t('Automatically approve all connection/friend requests as friends'), 
-										($a->user['page-flags'] == PAGE_FREELOVE)),
-
-			'$page_prvgroup' 	=> array('page-flags', t('Private Forum [Experimental]'), PAGE_PRVGROUP, 
-										t('Private forum - approved members only'), 
-										($a->user['page-flags'] == PAGE_PRVGROUP)),
-
-
-		));
-
-
 		$opt_tpl = get_markup_template("field_yesno.tpl");
 		if(get_config('system','publish_all')) {
 			$profile_in_dir = '<input type="hidden" name="profile_in_directory" value="1" />';
 		}
 		else {
 			$profile_in_dir = replace_macros($opt_tpl,array(
-				'$field' 	=> array('profile_in_directory', t('Publish your default profile in your local site directory?'), $profile['publish'], '', array(t('No'),t('Yes'))),
+				'$field' 	=> array('profile_in_directory', t('Publish your default profile in the network directory'), $profile['publish'], '', array(t('No'),t('Yes'))),
 			));
 		}
-
-		$profile_in_net_dir = '';
-
-
-		$hide_friends = replace_macros($opt_tpl,array(
-				'$field' 	=> array('hide_friends', t('Hide your contact/friend list from viewers of your default profile?'), $profile['hide_friends'], '', array(t('No'),t('Yes'))),
-		));
-
-		$hide_wall = replace_macros($opt_tpl,array(
-				'$field' 	=> array('hidewall',  t('Hide your profile details from unknown viewers?'), $a->user['hidewall'], '', array(t('No'),t('Yes'))),
-
-		));
-
-		$blockwall = replace_macros($opt_tpl,array(
-				'$field' 	=> array('blockwall',  t('Allow friends to post to your profile page?'), (intval($a->user['blockwall']) ? '0' : '1'), '', array(t('No'),t('Yes'))),
-
-		));
- 
-
-		$blocktags = replace_macros($opt_tpl,array(
-				'$field' 	=> array('blocktags',  t('Allow friends to tag your posts?'), (intval($a->user['blocktags']) ? '0' : '1'), '', array(t('No'),t('Yes'))),
-
-		));
-
 
 		$suggestme = replace_macros($opt_tpl,array(
 				'$field' 	=> array('suggestme',  t('Allow us to suggest you as a potential friend to new members?'), $suggestme, '', array(t('No'),t('Yes'))),
@@ -1005,10 +958,6 @@ function settings_content(&$a) {
 		));
 
 
-		$unkmail = replace_macros($opt_tpl,array(
-				'$field' 	=> array('unkmail',  t('Permit unknown people to send you private mail?'), $unkmail, '', array(t('No'),t('Yes'))),
-
-		));
 
 		$invisible = ((! $profile['publish']) ? true : false);
 
@@ -1033,7 +982,7 @@ function settings_content(&$a) {
 			'advanced' => t('Advanced expiration settings'),
 			'label' => t('Advanced Expiration'),
 			'items' => array('expire_items',  t("Expire posts:"), $expire_items, '', array(t('No'),t('Yes'))),
-			'notes' => array('expire_notes',  t("Expire personal notes:"), $expire_notes, '', array(t('No'),t('Yes'))),
+
 			'starred' => array('expire_starred',  t("Expire starred posts:"), $expire_starred, '', array(t('No'),t('Yes'))),
 			'photos' => array('expire_photos',  t("Expire photos:"), $expire_photos, '', array(t('No'),t('Yes'))),		
 			'network_only' => array('expire_network_only',  t("Only expire posts by others:"), $expire_network_only, '', array(t('No'),t('Yes'))),		
@@ -1061,21 +1010,19 @@ function settings_content(&$a) {
 			'$email' 	=> array('email', t('Email Address:'), $email, ''),
 			'$timezone' => array('timezone_select' , t('Your Timezone:'), select_timezone($timezone), ''),
 			'$defloc'	=> array('defloc', t('Default Post Location:'), $defloc, ''),
-			'$allowloc' => array('allow_location', t('Use Browser Location:'), ($a->user['allow_location'] == 1), ''),
+			'$allowloc' => array('allow_location', t('Use Browser Location:'), (intval(get_pconfig(local_user(),'system','use_browser_location')) == 1), ''),
 		
 
 			'$h_prv' 	=> t('Security and Privacy Settings'),
 
 			'$permiss_arr' => $permiss,
 
-			'$maxreq' 	=> array('maxreq', t('Maximum Friend Requests/Day:'), $maxreq ,t("\x28to prevent spam abuse\x29")),
+			'$maxreq' 	=> array('maxreq', t('Maximum Friend Requests/Day:'), intval($channel['channel_max_friend_req']) , t('May reduce spam activity')),
 			'$permissions' => t('Default Post Permissions'),
 			'$permdesc' => t("\x28click to open/close\x29"),
 			'$visibility' => $profile['net-publish'],
 			'$aclselect' => populate_acl($a->user,$celeb),
 			'$suggestme' => $suggestme,
-			'$blockwall'=> $blockwall, // array('blockwall', t('Allow friends to post to your profile page:'), !$blockwall, ''),
-			'$blocktags'=> $blocktags, // array('blocktags', t('Allow friends to tag your posts:'), !$blocktags, ''),
 
 			'$group_select' => $group_select,
 
@@ -1083,11 +1030,10 @@ function settings_content(&$a) {
 			'$expire'	=> $expire_arr,
 
 			'$profile_in_dir' => $profile_in_dir,
-			'$profile_in_net_dir' => $profile_in_net_dir,
 			'$hide_friends' => $hide_friends,
 			'$hide_wall' => $hide_wall,
 			'$unkmail' => $unkmail,		
-			'$cntunkmail' 	=> array('cntunkmail', t('Maximum private messages per day from unknown people:'), $cntunkmail ,t("\x28to prevent spam abuse\x29")),
+			'$cntunkmail' 	=> array('cntunkmail', t('Maximum private messages per day from unknown people:'), intval($channel['channel_max_anon_mail']) ,t("Useful to reduce spamming")),
 		
 		
 			'$h_not' 	=> t('Notification Settings'),

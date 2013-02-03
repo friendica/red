@@ -37,13 +37,9 @@ $nickname_block
 </div>
 
 
-
 $profile_in_dir
 
-$blocktags
-
 $suggestme
-
 
 {{inc field_input.tpl with $field=$maxreq }}{{endinc}}
 
@@ -58,7 +54,6 @@ $suggestme
 		<div id="advanced-expire-popup" style="width:auto;height:auto;overflow:auto;">
 			<h3>$expire.advanced</h3>
 			{{ inc field_yesno.tpl with $field=$expire.items }}{{endinc}}
-			{{ inc field_yesno.tpl with $field=$expire.notes }}{{endinc}}
 			{{ inc field_yesno.tpl with $field=$expire.starred }}{{endinc}}
 			{{ inc field_yesno.tpl with $field=$expire.network_only }}{{endinc}}
 		</div>
@@ -120,15 +115,4 @@ $group_select
 <div class="settings-submit-wrapper" >
 <input type="submit" name="submit" class="settings-submit" value="$submit" />
 </div>
-
-
-<h3 class="settings-heading">$h_advn</h3>
-<div id="settings-pagetype-desc">$h_descadvn</div>
-
-$pagetype
-
-<div class="settings-submit-wrapper" >
-<input type="submit" name="submit" class="settings-submit" value="$submit" />
-</div>
-
 
