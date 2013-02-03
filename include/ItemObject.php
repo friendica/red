@@ -135,16 +135,8 @@ class Item extends BaseObject {
 		$profile_link   = chanlink_url($item['author']['xchan_url']);
 		$profile_name   = $item['author']['xchan_name'];
 
-		$locate = array('location' => $item['location'], 'coord' => $item['coord'], 'html' => '');
-		call_hooks('render_location',$locate);
-		$location = ((strlen($locate['html'])) ? $locate['html'] : render_location_google($locate));
+		$location = format_location($item);
 
-// are we still using $item['tag']? Need to check...
-		$tags = array();
-		foreach(explode(',',$item['tag']) as $tag){
-			$tag = trim($tag);
-			if ($tag!="") $tags[] = bbcode($tag);
-		}
 
 		$showlike    = ((x($alike,$item['uri'])) ? format_like($alike[$item['uri']],$alike[$item['uri'] . '-l'],'like',$item['uri']) : '');
 		$showdislike = ((x($dlike,$item['uri']) && feature_enabled($conv->get_profile_owner(),'dislike'))  
@@ -200,7 +192,7 @@ class Item extends BaseObject {
 			'template' => $this->get_template(),
 			
 			'type' => implode("",array_slice(explode("/",$item['verb']),-1)),
-			'tags' => $tags,
+			'tags' => array(),
 			'body' => $body,
 			'text' => strip_tags($body),
 			'id' => $this->get_id(),

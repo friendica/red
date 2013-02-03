@@ -548,10 +548,7 @@ function conversation(&$a, $items, $mode, $update, $page_mode = 'traditional') {
 				$profile_avatar = $item['author']['xchan_photo_m'];
 
 
-				$locate = array('location' => $item['location'], 'coord' => $item['coord'], 'html' => '');
-				call_hooks('render_location',$locate);
-
-				$location = ((strlen($locate['html'])) ? $locate['html'] : render_location_google($locate));
+				$location = format_location($item);
 
 				localize_item($item);
 				if($mode === 'network-new')
@@ -1085,9 +1082,25 @@ function find_thread_parent_index($arr,$x) {
 	return false;
 }
 
-function render_location_google($item) {
-	$location = (($item['location']) ? '<a target="map" title="' . $item['location'] . '" href="http://maps.google.com/?q=' . urlencode($item['location']) . '">' . $item['location'] . '</a>' : '');
-	$coord = (($item['coord']) ? '<a target="map" title="' . $item['coord'] . '" href="http://maps.google.com/?q=' . urlencode($item['coord']) . '">' . $item['coord'] . '</a>' : '');
+function format_location($item) {
+
+	if(strpos($item['location'],'#') === 0) {
+		$location = substr($item['location'],1);
+		$location = ((strpos($location,'[') !== false) ? bbcode($location) : $location);
+	}
+	else {
+		$locate = array('location' => $item['location'], 'coord' => $item['coord'], 'html' => '');
+		call_hooks('render_location',$locate);
+		$location = ((strlen($locate['html'])) ? $locate['html'] : render_location_default($locate));
+	}
+	return $location;
+}
+
+function render_location_default($item) {
+
+	$location = $item['location'];
+	$coord = $item['coord'];
+
 	if($coord) {
 		if($location)
 			$location .= '<br /><span class="smalltext">(' . $coord . ')</span>';
