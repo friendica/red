@@ -76,7 +76,7 @@ function send_message($uid = 0, $recipient='', $body='', $subject='', $replyto='
 		dbesc($uri),
 		intval($channel['channel_id'])
 	);
-	if(count($r))
+	if($r)
 		$post_id = $r[0]['id'];
 	else {
 		$ret['message'] = t('Stored post could not be verified.');
@@ -119,7 +119,7 @@ function send_message($uid = 0, $recipient='', $body='', $subject='', $replyto='
 
 	$ret['success'] = true;
 	$ret['message_item'] = intval($post_id);
-	return;
+	return $ret;
 
 }
 
