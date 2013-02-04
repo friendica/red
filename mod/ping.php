@@ -49,6 +49,7 @@ function ping_init(&$a) {
 	}
 
 	if(x($_REQUEST,'markRead') && local_user()) {
+
 		switch($_REQUEST['markRead']) {
 			case 'network':
 				$r = q("update item set item_flags = ( item_flags ^ %d ) where (item_flags & %d) and uid = %d", 
@@ -67,7 +68,7 @@ function ping_init(&$a) {
 				);
 				break;
 			case 'messages':
-				$r = q("update mail set mail_flags = ( item_flags ^ %d ) where uid = %d and not (item_flags & %d)",
+				$r = q("update mail set mail_flags = ( mail_flags ^ %d ) where channel_id = %d and not (mail_flags & %d)",
 					intval(MAIL_SEEN),
 					intval(local_user()),
 					intval(MAIL_SEEN)

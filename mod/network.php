@@ -680,7 +680,7 @@ function network_content(&$a, $update = 0, $load = false) {
 
 	}
 
-	// logger('items: ' . count($items));
+	logger('items: ' . count($items));
 
 	if($update_unseen)
 		$r = q("UPDATE `item` SET item_flags = ( item_flags ^ %d)

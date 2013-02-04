@@ -588,15 +588,15 @@ function conversation(&$a, $items, $mode, $update, $page_mode = 'traditional') {
 					'linktitle' => sprintf( t('View %s\'s profile @ %s'), $profile_name, $profile_url),
 					'profile_url' => $profile_link,
 					'item_photo_menu' => item_photo_menu($item),
-					'name' => template_escape($profile_name),
+					'name' => $profile_name,
 					'sparkle' => $sparkle,
 					'lock' => $lock,
 					'thumb' => $profile_avatar,
-					'title' => template_escape($item['title']),
-					'body' => template_escape($body),
-					'tags' => template_escape($tags),
-					'hashtags' => template_escape($hashtags),
-					'mentions' => template_escape($mentions),
+					'title' => $item['title'],
+					'body' => $body,
+					'tags' => $tags,
+					'hashtags' => $hashtags,
+					'mentions' => $mentions,
 					'txt_cats' => t('Categories:'),
                     'txt_folders' => t('Filed under:'),
                     'has_cats' => ((count($categories)) ? 'true' : ''),
@@ -604,14 +604,14 @@ function conversation(&$a, $items, $mode, $update, $page_mode = 'traditional') {
                     'categories' => $categories,
                     'folders' => $folders,
 
-					'text' => strip_tags(template_escape($body)),
+					'text' => strip_tags($body),
 					'ago' => relative_date($item['created']),
 					'app' => $item['app'],
 					'str_app' => sprintf( t(' from %s'), $item['app']),
 					'localtime' => datetime_convert('UTC', date_default_timezone_get(), $item['created'], 'c'),
-					'location' => template_escape($location),
+					'location' => $location,
 					'indent' => '',
-					'owner_name' => template_escape($owner_name),
+					'owner_name' => $owner_name,
 					'owner_url' => $owner_url,
 					'owner_photo' => $owner_photo,
 					'plink' => get_plink($item),
@@ -704,6 +704,10 @@ function conversation(&$a, $items, $mode, $update, $page_mode = 'traditional') {
 
 	if($page_mode === 'preview')
 		logger('preview: ' . print_r($threads,true));
+
+
+//	logger('nouveau: ' . print_r($threads,true));
+
 
     $o = replace_macros($page_template, array(
         '$baseurl' => $a->get_baseurl($ssl_state),

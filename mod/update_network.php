@@ -33,6 +33,7 @@ function update_network_content(&$a) {
         echo str_replace("\t",'       ',$text);
 	echo (($_GET['msie'] == 1) ? '</div>' : '</section>');
 	echo "</body></html>\r\n";
+//	logger('update_network: ' . $text);
 	killme();
 
 }
