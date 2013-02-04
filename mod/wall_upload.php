@@ -169,11 +169,11 @@ function wall_upload_post(&$a) {
 	$basename = basename($filename);
 
 	if($_REQUEST['silent']) {
-		$m = '[url=' . $a->get_baseurl() . '/photos/' . $page_owner_nick . '/image/' . $hash . '][img]' . $a->get_baseurl() . "/photo/{$hash}-{$smallest}.".$ph->getExt()."[/img][/url]";
+		$m = '[url=' . $a->get_baseurl() . '/photos/' . $channel['channel_address'] . '/image/' . $hash . '][img]' . $a->get_baseurl() . "/photo/{$hash}-{$smallest}.".$ph->getExt()."[/img][/url]";
 		return($m);
 	}
 	else {
-		echo  "\n\n" . '[url=' . $a->get_baseurl() . '/photos/' . $page_owner_nick . '/image/' . $hash . '][img]' . $a->get_baseurl() . "/photo/{$hash}-{$smallest}.".$ph->getExt()."[/img][/url]\n\n";
+		echo  "\n\n" . '[url=' . $a->get_baseurl() . '/photos/' . $channel['channel_address'] . '/image/' . $hash . '][img]' . $a->get_baseurl() . "/photo/{$hash}-{$smallest}.".$ph->getExt()."[/img][/url]\n\n";
 	}
 
 	killme();
