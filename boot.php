@@ -16,7 +16,7 @@ require_once('include/features.php');
 define ( 'FRIENDICA_PLATFORM',     'Friendica Red');
 define ( 'FRIENDICA_VERSION',      trim(file_get_contents('version.inc')) . 'R');
 define ( 'ZOT_REVISION',               1     ); 
-define ( 'DB_UPDATE_VERSION',       1025     );
+define ( 'DB_UPDATE_VERSION',       1026     );
 
 define ( 'EOL',                    '<br />' . "\r\n"     );
 define ( 'ATOM_TIME',              'Y-m-d\TH:i:s\Z' );
@@ -221,6 +221,11 @@ define ( 'MAIL_DELETED',       0x0001);
 define ( 'MAIL_REPLIED',       0x0002);
 define ( 'MAIL_ISREPLY',       0x0004);
 define ( 'MAIL_SEEN',          0x0008);
+
+
+define ( 'ATTACH_FLAG_DIR',    0x0001);
+define ( 'ATTACH_FLAG_OS',     0x0002);
+
 
 
 /**

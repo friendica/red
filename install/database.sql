@@ -74,7 +74,7 @@ CREATE TABLE IF NOT EXISTS `addon` (
   KEY `hidden` (`hidden`),
   KEY `name` (`name`),
   KEY `installed` (`installed`)
-) ENGINE=MyISAM DEFAULT CHARSET=utf8;
+) ENGINE=MyISAM  DEFAULT CHARSET=utf8;
 
 CREATE TABLE IF NOT EXISTS `attach` (
   `id` int(10) unsigned NOT NULL AUTO_INCREMENT,
@@ -85,6 +85,8 @@ CREATE TABLE IF NOT EXISTS `attach` (
   `filetype` char(64) NOT NULL DEFAULT '',
   `filesize` int(10) unsigned NOT NULL DEFAULT '0',
   `revision` int(10) unsigned NOT NULL DEFAULT '0',
+  `folder` char(64) NOT NULL DEFAULT '',
+  `flags` int(10) unsigned NOT NULL DEFAULT '0',
   `data` longblob NOT NULL,
   `created` datetime NOT NULL DEFAULT '0000-00-00 00:00:00',
   `edited` datetime NOT NULL DEFAULT '0000-00-00 00:00:00',
@@ -101,12 +103,9 @@ CREATE TABLE IF NOT EXISTS `attach` (
   KEY `filesize` (`filesize`),
   KEY `created` (`created`),
   KEY `edited` (`edited`),
-  KEY `filename_2` (`filename`),
-  KEY `filetype_2` (`filetype`),
-  KEY `filesize_2` (`filesize`),
-  KEY `created_2` (`created`),
-  KEY `edited_2` (`edited`),
-  KEY `revision` (`revision`)
+  KEY `revision` (`revision`),
+  KEY `folder` (`folder`),
+  KEY `flags` (`flags`)
 ) ENGINE=MyISAM  DEFAULT CHARSET=utf8;
 
 CREATE TABLE IF NOT EXISTS `auth_codes` (
@@ -391,7 +390,7 @@ CREATE TABLE IF NOT EXISTS `hook` (
   `priority` int(11) unsigned NOT NULL DEFAULT '0',
   PRIMARY KEY (`id`),
   KEY `hook` (`hook`)
-) ENGINE=MyISAM DEFAULT CHARSET=utf8;
+) ENGINE=MyISAM  DEFAULT CHARSET=utf8;
 
 CREATE TABLE IF NOT EXISTS `hubloc` (
   `hubloc_id` int(10) unsigned NOT NULL AUTO_INCREMENT,
