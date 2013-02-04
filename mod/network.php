@@ -674,26 +674,21 @@ function network_content(&$a, $update = 0, $load = false) {
 		else {
 			$items = array();
 		}
+
+		if($parents_str)
+			$update_unseen = ' AND parent IN ( ' . dbesc($parents_str) . ' )';
+
 	}
 
 	// logger('items: ' . count($items));
 
-	// We aren't going to try and figure out at the item, group, and page
-	// level which items you've seen and which you haven't. If you're looking
-	// at the top level network page just mark everything seen. 
-
-	if((! $group) && (! $cid) && (! $star)) {
+	if($update_unseen)
 		$r = q("UPDATE `item` SET item_flags = ( item_flags ^ %d)
-			WHERE (item_flags & %d) AND `uid` = %d",
+			WHERE (item_flags & %d) AND `uid` = %d $update_unseen ",
 			intval(ITEM_UNSEEN),
 			intval(ITEM_UNSEEN),
 			intval(local_user())
 		);
-	}
-
-// fixme
-	// Set this so that the conversation function can find out contact info for our wall-wall items
-	$a->page_contact = $a->contact;
 
 	$mode = (($nouveau) ? 'network-new' : 'network');
 

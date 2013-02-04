@@ -472,7 +472,6 @@ if(! class_exists('App')) {
 		public  $cid;
 		public  $contact;
 		public  $contacts;
-		public  $page_contact;
 		public  $content;
 		public  $data = array();
 		public  $error = false;

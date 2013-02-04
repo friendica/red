@@ -109,8 +109,6 @@ function display_content(&$a) {
 //	$r = q("SELECT * FROM `contact` WHERE `uid` = %d AND `self` = 1 LIMIT 1",
 //		intval($a->profile['uid'])
 //	);
-//	if(count($r))
-//		$a->page_contact = $r[0];
 
 //	$is_owner = ((local_user()) && (local_user() == $a->profile['profile_uid']) ? true : false);
 
