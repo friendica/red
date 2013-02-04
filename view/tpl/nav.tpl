@@ -17,7 +17,7 @@
 			<span id="net-update" class="nav-notify fakelink" rel="#nav-network-menu"></span>
 			<ul id="nav-network-menu" class="menu-popup notify-menus" rel="network">
 				<li id="nav-network-see-all"><a href="$nav.network.all.0">$nav.network.all.1</a></li>
-				<li id="nav-network-mark-all"><a href="#" onclick="/*fixme*/ return false;">$nav.network.mark.1</a></li>
+				<li id="nav-network-mark-all"><a href="#" onclick="markRead('network'); return false;">$nav.network.mark.1</a></li>
 				<li class="empty">$emptynotifications</li>
 			</ul>
 			</li>
@@ -29,7 +29,7 @@
 			<span id="home-update" class="nav-notify fakelink" rel="#nav-home-menu"></span>
 			<ul id="nav-home-menu" class="menu-popup notify-menus" rel="home">
 				<li id="nav-home-see-all"><a href="$nav.home.all.0">$nav.home.all.1</a></li>
-				<li id="nav-home-mark-all"><a href="#" onclick="/*fixme*/ return false;">$nav.home.mark.1</a></li>
+				<li id="nav-home-mark-all"><a href="#" onclick="markRead('home'); return false;">$nav.home.mark.1</a></li>
 				<li class="empty">$emptynotifications</li>
 			</ul>
 		</li>
@@ -41,7 +41,7 @@
 			<span id="mail-update" class="nav-notify fakelink" rel="#nav-messages-menu"></span>
 			<ul id="nav-messages-menu" class="menu-popup notify-menus" rel="messages">
 				<li id="nav-messages-see-all"><a href="$nav.messages.all.0">$nav.messages.all.1</a></li>
-				<li id="nav-messages-mark-all"><a href="#">$nav.messages.mark.1</a></li>
+				<li id="nav-messages-mark-all"><a href="#" onclick="markRead('messages'); return false;">$nav.messages.mark.1</a></li>
 				<li class="empty">$emptynotifications</li>
 			</ul>
 		</li>
@@ -53,7 +53,7 @@
 			<span id="all_events-update" class="nav-notify fakelink" rel="#nav-all_events-menu"></span>
 			<ul id="nav-all_events-menu" class="menu-popup notify-menus" rel="all_events">
 				<li id="nav-all_events-see-all"><a href="$nav.all_events.all.0">$nav.all_events.all.1</a></li>
-				<li id="nav-all_events-mark-all"><a href="#" onclick="/*fixme*/ return false;">$nav.all_events.mark.1</a></li>
+				<li id="nav-all_events-mark-all"><a href="#" onclick="markRead('all_events'); return false;">$nav.all_events.mark.1</a></li>
 				<li class="empty">$emptynotifications</li>
 			</ul>
 		</li>
@@ -76,7 +76,7 @@
 			<span id="notify-update" class="nav-notify fakelink" rel="#nav-notify-menu"></span>
 			<ul id="nav-notify-menu" class="menu-popup notify-menus" rel="notify">
 				<li id="nav-notify-see-all"><a href="$nav.notifications.all.0">$nav.notifications.all.1</a></li>
-				<li id="nav-notify-mark-all"><a href="#" onclick="notifyMarkAll(); return false;">$nav.notifications.mark.1</a></li>
+				<li id="nav-notify-mark-all"><a href="#" onclick="markRead('notify'); return false;">$nav.notifications.mark.1</a></li>
 				<li class="empty">$emptynotifications</li>
 			</ul>
 		</li>

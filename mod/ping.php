@@ -48,6 +48,49 @@ function ping_init(&$a) {
 		killme();
 	}
 
+	if(x($_REQUEST,'markRead') && local_user()) {
+		switch($_REQUEST['markRead']) {
+			case 'network':
+				$r = q("update item set item_flags = ( item_flags ^ %d ) where (item_flags & %d) and uid = %d", 
+					intval(ITEM_UNSEEN),
+					intval(ITEM_UNSEEN),
+					intval(local_user())
+				);
+				break;
+
+			case 'home':
+				$r = q("update item set item_flags = ( item_flags ^ %d ) where (item_flags & %d) and (item_flags & %d) and uid = %d", 
+					intval(ITEM_UNSEEN),
+					intval(ITEM_UNSEEN),
+					intval(ITEM_WALL),
+					intval(local_user())
+				);
+				break;
+			case 'messages':
+				$r = q("update mail set mail_flags = ( item_flags ^ %d ) where uid = %d and not (item_flags & %d)",
+					intval(MAIL_SEEN),
+					intval(local_user()),
+					intval(MAIL_SEEN)
+				);
+				break;
+			case 'all_events':
+				$r = q("update event set ignore = 1 where ignore = 0 and uid = %d", 
+					intval(local_user())
+				);
+				break;
+
+			case 'notify':
+				$r = q("update notify set seen = 1 where uid = %d",
+					intval(local_user())
+				);
+				break;
+
+			default:
+				break;
+		}
+	}
+
+
 	if(argc() > 1 && argv(1) === 'notify') {
 		$t = q("select count(*) as total from notify where uid = %d and seen = 0",
 			intval(local_user())

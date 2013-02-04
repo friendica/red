@@ -10,7 +10,7 @@ function notify_init(&$a) {
 			intval(argv(2)),
 			intval(local_user())
 		);
-		if(count($r)) {
+		if($r) {
 			q("update notify set seen = 1 where ( link = '%s' or ( parent != 0 and parent = %d and otype = '%s' )) and uid = %d",
 				dbesc($r[0]['link']),
 				intval($r[0]['parent']),
@@ -23,15 +23,6 @@ function notify_init(&$a) {
 		goaway($a->get_baseurl(true));
 	}
 
-
-	if(argc() > 2 && argv(1) === 'mark' && argv(2) === 'all' ) {
-		$r = q("update notify set seen = 1 where uid = %d",
-			intval(local_user())
-		);
-		$j = json_encode(array('result' => ($r) ? 'success' : 'fail'));
-		echo $j;
-		killme();
-	}
 
 }
 
@@ -49,7 +40,7 @@ function notify_content(&$a) {
 		intval(local_user())
 	);
 		
-	if (count($r) > 0) {
+	if($r) {
 		foreach ($r as $it) {
 			$notif_content .= replace_macros($not_tpl,array(
 				'$item_link' => $a->get_baseurl(true).'/notify/view/'. $it['id'],

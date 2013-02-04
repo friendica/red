@@ -95,7 +95,11 @@
       document.getElementById(theID).style.display = "none" 
   }
 
-
+  function markRead(notifType) {
+	$.get('ping?f=&markRead='+notifType);
+	if(timer) clearTimeout(timer);
+	timer = setTimeout(NavUpdate,2000);
+  }
 
 	var src = null;
 	var prev = null;
@@ -787,13 +791,6 @@ function checkboxhighlight(box) {
   else {
 	$(box).removeClass('checkeditem');
   }
-}
-
-function notifyMarkAll() {
-	$.get('notify/mark/all', function(data) {
-		if(timer) clearTimeout(timer);
-		timer = setTimeout(NavUpdate,1000);
-	});
 }
 
 
