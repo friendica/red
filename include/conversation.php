@@ -706,7 +706,7 @@ function conversation(&$a, $items, $mode, $update, $page_mode = 'traditional') {
 	if($page_mode === 'preview')
 		logger('preview: ' . print_r($threads,true));
 
-	logger('page_template: ' . $page_template);
+//	logger('page_template: ' . $page_template);
 
 //	logger('nouveau: ' . print_r($threads,true));
 
