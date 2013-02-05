@@ -622,7 +622,7 @@ function network_content(&$a, $update = 0, $load = false) {
 
 			// Fetch a page full of parent items for this page
 
-			$r = q("SELECT item.id AS item_id FROM item 
+			$r = q("SELECT distinct item.id AS item_id FROM item 
 				left join abook on item.author_xchan = abook.abook_xchan
 				WHERE item.uid = %d AND item.item_restrict = 0
 				AND item.parent = item.id

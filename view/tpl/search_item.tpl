@@ -1,3 +1,4 @@
+<div id="thread-wrapper-$item.id" class="thread-wrapper $item.toplevel">
 <a name="$item.id" ></a>
 <div class="wall-item-outside-wrapper $item.indent$item.previewing" id="wall-item-outside-wrapper-$item.id" >
 	<div class="wall-item-content-wrapper $item.indent" id="wall-item-content-wrapper-$item.id" >
@@ -58,5 +59,5 @@
 <div class="wall-item-outside-wrapper-end $item.indent" ></div>
 
 </div>
-
+</div>
 

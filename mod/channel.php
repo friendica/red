@@ -145,7 +145,7 @@ function channel_content(&$a, $update = 0, $load = false) {
 
 	if(($update) && (! $load)) {
 
-		$r = q("SELECT distinct(parent) AS `item_id` from item
+		$r = q("SELECT distinct parent AS `item_id` from item
 			left join abook on item.author_xchan = abook.abook_xchan
 			WHERE uid = %d AND item_restrict = 0
 			AND (item_flags &  %d) AND ( item_flags & %d ) 
@@ -178,7 +178,7 @@ function channel_content(&$a, $update = 0, $load = false) {
 		$pager_sql = sprintf(" LIMIT %d, %d ",intval($a->pager['start']), intval($a->pager['itemspage']));
 
 		if($load) {
-			$r = q("SELECT id AS item_id FROM item 
+			$r = q("SELECT distinct id AS item_id FROM item 
 				left join abook on item.author_xchan = abook.abook_xchan
 				WHERE uid = %d AND item_restrict = 0
 				AND (item_flags &  %d) and (item_flags & %d)

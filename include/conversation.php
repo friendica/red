@@ -583,6 +583,7 @@ function conversation(&$a, $items, $mode, $update, $page_mode = 'traditional') {
 				//$tmp_item = replace_macros($tpl,array(
 				$tmp_item = array(
 					'template' => $tpl,
+					'toplevel' => 'toplevel_item',
 					'tags' => $tags,
 					'id' => (($preview) ? 'P0' : $item['item_id']),
 					'linktitle' => sprintf( t('View %s\'s profile @ %s'), $profile_name, $profile_url),
@@ -632,8 +633,8 @@ function conversation(&$a, $items, $mode, $update, $page_mode = 'traditional') {
 				$arr = array('item' => $item, 'output' => $tmp_item);
 				call_hooks('display_item', $arr);
 
-				$threads[$threadsid]['id'] = $item['item_id'];
-				$threads[$threadsid]['items'] = array($arr['output']);
+//				$threads[$threadsid]['id'] = $item['item_id'];
+				$threads[] = $arr['output'];
 
 			}
 
@@ -705,6 +706,7 @@ function conversation(&$a, $items, $mode, $update, $page_mode = 'traditional') {
 	if($page_mode === 'preview')
 		logger('preview: ' . print_r($threads,true));
 
+//	logger('page_template: ' . $page_template);
 
 //	logger('nouveau: ' . print_r($threads,true));
 
@@ -720,8 +722,8 @@ function conversation(&$a, $items, $mode, $update, $page_mode = 'traditional') {
         '$dropping' => ($page_dropping?t('Delete Selected Items'):False),
     ));
 
-	if($page_mode === 'preview')
-		logger('preview: ' . $o);
+//	if($page_mode === 'preview')
+//		logger('preview: ' . $o);
 
     return $o;
 
