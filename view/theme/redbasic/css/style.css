@@ -348,7 +348,7 @@ footer {
 }
 
 .preview {
-	background: lightyellow;
+	background: url('../img/gray_and_white_diagonal_stripes_background_seamless.gif');
 }
 
 #theme-preview {
@@ -1067,14 +1067,14 @@ input#dfrn-url {
 .wall-item-content-wrapper {
 	margin-top: 10px;
 	position: relative;
-	background: #fff;
+/*	background: #fff; */
 /*	border-radius: 5px; */
 /*	box-shadow: 12px 12px 12px #111; */
 	border-left: 1px solid #eec;
 
 }
 .wall-item-content-wrapper.comment {
-	background: #fff;
+/*	background: #fff; */
 	border-left: 1px solid #e0e0e0;
 	margin-left: 50px;
 /*	box-shadow: 5px 5px 5px #222; */
