@@ -19,7 +19,10 @@ function attach_init(&$a) {
 
 	header('Content-type: ' . $r['data']['filetype']);
 	header('Content-disposition: attachment; filename=' . $r['data']['filename']);
-	echo $r['data']['data'];
+	if($r['data']['flags'] & ATTACH_FLAG_OS )
+		echo @file_get_contents($r['data']['data']);
+	else
+		echo $r['data']['data'];
 	killme();
 
 }

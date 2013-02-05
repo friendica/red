@@ -150,7 +150,7 @@ function attach_list_files($channel_id, $observer, $hash = '', $filename = '', $
 
 	// Retrieve all columns except 'data'
 
-	$r = q("select id, aid, uid, hash, filename, filetype, filesize, revision, created, edited, allow_cid, allow_gid, deny_cid, deny_gid from attach where uid = %d $sql_extra $orderby $limit",
+	$r = q("select id, aid, uid, hash, filename, filetype, filesize, revision, folder, flags, created, edited, allow_cid, allow_gid, deny_cid, deny_gid from attach where uid = %d $sql_extra $orderby $limit",
 		intval($channel_id)
 	);
 
@@ -241,7 +241,7 @@ function attach_by_hash_nodata($hash,$rev = 0) {
 
 	// Now we'll see if we can access the attachment
 
-	$r = q("select id, aid, uid, hash, filename, filetype, filesize, revision, created, edited, allow_cid, allow_gid, deny_cid, deny_gid from attach where uid = %d and hash = '%s' $sql_extra limit 1",
+	$r = q("select id, aid, uid, hash, filename, filetype, filesize, revision, folder, flags, created, edited, allow_cid, allow_gid, deny_cid, deny_gid from attach where uid = %d and hash = '%s' $sql_extra limit 1",
 		intval($r[0]['uid']),
 		dbesc($hash)
 	);
@@ -311,7 +311,7 @@ function attach_store($channel,$observer_hash,$options = '',$arr = null) {
 		if($options === 'update' &&  $arr && array_key_exists('revision',$arr))
 			$sql_options = " and revision = " . intval($arr['revision']) . " ";
 
-		$x =q("select id, aid, uid, filename, filetype, filesize, hash, revision, created, edited, allow_cid, allow_gid, deny_cid, deny_gid from attach where hash = '%s' and uid = %d $sql_options limit 1",
+		$x =q("select id, aid, uid, filename, filetype, filesize, hash, revision, folder, flags, created, edited, allow_cid, allow_gid, deny_cid, deny_gid from attach where hash = '%s' and uid = %d $sql_options limit 1",
 			dbesc($arr['hash']),
 			intval($channel_id)
 		);
@@ -426,7 +426,7 @@ function attach_store($channel,$observer_hash,$options = '',$arr = null) {
 
 	// Caution: This re-uses $sql_options set further above
 
-	$r = q("select id, aid, uid, hash, filename, filetype, filesize, revision, created, edited, allow_cid, allow_gid, deny_cid, deny_gid from attach where uid = %d and hash = '%s' $sql_options limit 1",
+	$r = q("select id, aid, uid, hash, filename, filetype, filesize, revision, folder, flags, created, edited, allow_cid, allow_gid, deny_cid, deny_gid from attach where uid = %d and hash = '%s' $sql_options limit 1",
 		intval($channel_id),
 		dbesc($hash)
 	);
