@@ -706,7 +706,7 @@ function conversation(&$a, $items, $mode, $update, $page_mode = 'traditional') {
 	if($page_mode === 'preview')
 		logger('preview: ' . print_r($threads,true));
 
-//	logger('page_template: ' . $page_template);
+	logger('page_template: ' . $page_template);
 
 //	logger('nouveau: ' . print_r($threads,true));
 
@@ -722,8 +722,8 @@ function conversation(&$a, $items, $mode, $update, $page_mode = 'traditional') {
         '$dropping' => ($page_dropping?t('Delete Selected Items'):False),
     ));
 
-//	if($page_mode === 'preview')
-//		logger('preview: ' . $o);
+	if($page_mode === 'preview')
+		logger('preview: ' . $o);
 
     return $o;
 
