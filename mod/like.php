@@ -11,7 +11,6 @@ function like_content(&$a) {
 	$observer = $a->get_observer();
 
 
-
 	$verb = notags(trim($_GET['verb']));
 
 	if(! $verb)
@@ -64,7 +63,6 @@ function like_content(&$a) {
 	else
 		killme();
 
-
 	$r = q("select * from xchan where xchan_hash = '%s' limit 1",
 		dbesc($item['author_xchan'])
 	);
@@ -75,60 +73,10 @@ function like_content(&$a) {
 
 
 
-// fixme
-//	if(! $item['wall']) {
-		// The top level post may have been written by somebody on another system
-
-//		$r = q("SELECT * FROM `contact` WHERE `id` = %d AND `uid` = %d LIMIT 1",
-//			intval($item['contact-id']),
-//			intval($item['uid'])
-//		);
-//		if(! count($r))
-//			return;
-//		if(! $r[0]['self'])
-//			$thread_owner = $r[0];
-//	}
-
-	// this represents the post owner on this system. 
-
-//	$r = q("SELECT `contact`.*, `user`.`nickname` FROM `contact` LEFT JOIN `user` ON `contact`.`uid` = `user`.`uid`
-//		WHERE `contact`.`self` = 1 AND `contact`.`uid` = %d LIMIT 1",
-//		intval($owner_uid)
-//	);
-//	if(count($r))
-//		$owner = $r[0];
-
-//	if(! $owner) {
-//		logger('like: no owner');
-//		return;
-//	}
-
-//	if(! $thread_owner)
-//		$thread_owner = $owner;
-
-
-	// This represents the person posting
-
-//	if((local_user()) && (local_user() == $owner_uid)) {
-//		$contact = $owner;
-//	}
-//	else {
-//		$r = q("SELECT * FROM `contact` WHERE `id` = %d AND `uid` = %d LIMIT 1",
-//			intval($_SESSION['visitor_id']),
-//			intval($owner_uid)
-//		);
-//		if(count($r))
-//			$contact = $r[0];
-//	}
-//	if(! $contact) {
-//		return;
-//	}
-
-
 	$r = q("SELECT * FROM item WHERE verb = '%s' AND item_restrict = 0 
-		AND owner_xchan = '%s' AND ( parent = %d OR thr_parent = '%s') LIMIT 1",
+		AND author_xchan = '%s' AND ( parent = %d OR thr_parent = '%s') LIMIT 1",
 		dbesc($activity),
-		dbesc($thread_owner['xchan_hash']),
+		dbesc($observer['xchan_hash']),
 		intval($item_id),
 		dbesc($item['uri'])
 	);
@@ -151,11 +99,11 @@ function like_content(&$a) {
 
 	$uri = item_message_id();
 
-	$post_type = (($item['resource_id'] === 'photo') ? $t('photo') : t('status'));
+	$post_type = (($item['resource_type'] === 'photo') ? $t('photo') : t('status'));
 
 	$links = array(array('rel' => 'alternate','type' => 'text/html', 
 		'href' => z_root() . '/display/' . $item['uri']));
-	$objtype = (($item['resource_id'] === 'photo') ? ACTIVITY_OBJ_PHOTO : ACTIVITY_OBJ_NOTE ); 
+	$objtype = (($item['resource_type'] === 'photo') ? ACTIVITY_OBJ_PHOTO : ACTIVITY_OBJ_NOTE ); 
 
 	$body = $item['body'];
 
