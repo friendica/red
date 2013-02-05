@@ -677,7 +677,7 @@ function updateConvItems(mode,data) {
 					if(tarea)
 						commentClose(tarea,id);
 					if(timer) clearTimeout(timer);
-					timer = setTimeout(NavUpdate,10);
+					timer = setTimeout(NavUpdate,1500);
 				}
 				if(data.reload) {
 					window.location.href=data.reload;
