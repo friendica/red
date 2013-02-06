@@ -219,6 +219,7 @@ function photo_upload($channel, $observer, $args) {
 
 	$ret['success'] = true;
 	$ret['body'] = $arr['body'];
+	$ret['resource_id'] = $photo_hash;
 	$ret['photoitem_id'] = $item_id;
 
 	call_hooks('photo_post_end',$ret);

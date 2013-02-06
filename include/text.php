@@ -177,8 +177,9 @@ if(! function_exists('xmlify')) {
 function xmlify($str) {
 	$buffer = '';
 	
-	for($x = 0; $x < mb_strlen($str); $x ++) {
-		$char = $str[$x];
+	$len = mb_strlen($str);
+	for($x = 0; $x < $len; $x ++) {
+		$char = mb_substr($str,$x,1);
         
 		switch( $char ) {
 
