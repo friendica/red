@@ -1,6 +1,7 @@
 <?php
 
 require_once('include/permissions.php');
+require_once('include/items.php');
 
 function photo_upload($channel, $observer, $args) {
 
@@ -184,7 +185,7 @@ function photo_upload($channel, $observer, $args) {
 	// Create item container
 
 	$item_flags = ITEM_WALL|ITEM_ORIGIN|ITEM_THREAD_TOP;
-	$item_restrict = (($visibility) ? ITEM_HIDDEN : ITEM_VISIBLE);			
+	$item_restrict = (($visible) ? ITEM_VISIBLE : ITEM_HIDDEN);			
 	$title = '';
 	$uri = item_message_id();
 			
@@ -217,6 +218,7 @@ function photo_upload($channel, $observer, $args) {
 		proc_run('php', "include/notifier.php", 'wall-new', $item_id);
 
 	$ret['success'] = true;
+	$ret['body'] = $arr['body'];
 	$ret['photoitem_id'] = $item_id;
 
 	call_hooks('photo_post_end',$ret);

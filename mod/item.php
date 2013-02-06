@@ -1006,6 +1006,27 @@ function fix_attached_photo_permissions($uid,$xchan_hash,$body,
 						intval($uid),
 						dbesc( t('Wall Photos'))
 					);
+
+					// also update the linked item (which is probably invisible)
+
+					$r = q("select id from item
+						WHERE allow_cid = '%s' AND allow_gid = '' AND deny_cid = '' AND deny_gid = ''
+						AND resource_id = '%s' and resource_type = 'photo' AND uid = %d LIMIT 1",
+						dbesc($srch),
+						dbesc($image_uri),
+						intval($uid)
+					);
+					if($r) {
+						$r = q("UPDATE item SET allow_cid = '%s', allow_gid = '%s', deny_cid = '%s', deny_gid = '%s'
+							WHERE id = %d AND uid = %d limit 1",
+							dbesc($str_contact_allow),
+							dbesc($str_group_allow),
+							dbesc($str_contact_deny),
+							dbesc($str_group_deny),
+							intval($r[0]['id']),
+							intval($uid)
+						);
+					}
 				}
 			}
 		}

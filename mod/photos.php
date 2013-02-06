@@ -525,6 +525,7 @@ function photos_post(&$a) {
 	 * default post action - upload a photo
 	 */
 
+	$_REQUEST['source'] = 'photos';
 
 	$r = photo_upload($a->channel,$a->get_observer(), $_REQUEST);
 	if(! $r['success']) {
