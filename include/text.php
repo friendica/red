@@ -463,6 +463,34 @@ function logger($msg,$level = 0) {
 }}
 
 
+// This is a special logging facility for developers. It allows one to target specific things to trace/debug
+// and is identical to logger() with the exception of the log filename. This allows one to isolate specific
+// calls while allowing logger() to paint a bigger picture of overall activity and capture more detail.
+// If you find dlogger() calls in checked in code, you are free to remove them - so as to provide a noise-free
+// development environment which responds to events you are targetting personally. 
+
+if(! function_exists('dlogger')) {
+function dlogger($msg,$level = 0) {
+	// turn off logger in install mode
+	global $a;
+	global $db;
+
+	if(($a->module == 'install') || (! ($db && $db->connected))) return;
+
+	$debugging = get_config('system','debugging');
+	$loglevel  = intval(get_config('system','loglevel'));
+	$logfile   = get_config('system','dlogfile');
+
+	if((! $debugging) || (! $logfile) || ($level > $loglevel))
+		return;
+	
+	@file_put_contents($logfile, datetime_convert() . ':' . session_id() . ' ' . $msg . "\n", FILE_APPEND);
+	return;
+}}
+
+
+
+
 if(! function_exists('activity_match')) {
 function activity_match($haystack,$needle) {
 	if(($haystack === $needle) || ((basename($needle) === $haystack) && strstr($needle,NAMESPACE_ACTIVITY_SCHEMA)))
