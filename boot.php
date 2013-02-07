@@ -1975,6 +1975,15 @@ function zid_init(&$a) {
 		proc_run('php','include/gprobe.php',bin2hex($tmp_str));
 		$arr = array('zid' => $tmp_str, 'url' => $a->cmd);
 		call_hooks('zid_init',$arr);
+		if((! local_user()) && (! remote_user())) {
+			$r = q("select * from hubloc where hubloc_addr = '%s' limit 1",
+				dbesc($tmp_str)
+			);
+			// try to avoid recursion - but send them home to do a proper magic auth
+			if($r && ($r[0]['hubloc_url'] != z_root()) && (! strstr(get_app()->query_string,'/magic'))) {
+				goaway($r[0]['hubloc_url'] . '/magic' . '?f=&dest=' . z_root() . get_app()->query_string);
+			}
+		}
 	}
 }
 
