@@ -56,7 +56,7 @@
 <li><a href="#" onclick="connectFullShare(); return false;">{{$full}}</a></li>
 <li><a href="#" onclick="connectCautiousShare(); return false;">{{$cautious}}</a></li>
 <li><a href="#" onclick="connectFollowOnly(); return false;">{{$follow}}</a></li>
-<br />
+</ul>
 
 <div id="abook-advanced" class="fakelink" onclick="openClose('abook-advanced-panel');">{{$advanced}}</div>
 
