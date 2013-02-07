@@ -272,8 +272,9 @@ function zot_refresh($them,$channel = null) {
 				intval($channel['channel_id']),
 				intval(ABOOK_FLAG_SELF)
 			);
+
 			if($r) {		
-				$y = q("update abook set abook_their_perms = %d 
+				$y = q("update abook set abook_their_perms = %d
 					where abook_xchan = '%s' and abook_channel = %d 
 					and not (abook_flags & %d) limit 1",
 					intval($their_perms),
@@ -291,8 +292,9 @@ function zot_refresh($them,$channel = null) {
 					intval($channel['channel_id']),
 					intval(ABOOK_FLAG_SELF)
 				);
+
 				if($z)
-					$default_perms = intval($z[0]['my_perms']);		
+					$default_perms = intval($z[0]['abook_my_perms']);		
 
 				$y = q("insert into abook ( abook_account, abook_channel, abook_xchan, abook_their_perms, abook_my_perms, abook_created, abook_updated, abook_flags ) values ( %d, %d, '%s', %d, %d, '%s', '%s', %d )",
 					intval($channel['channel_account_id']),
@@ -304,7 +306,9 @@ function zot_refresh($them,$channel = null) {
 					dbesc(datetime_convert()),
 					intval(($default_perms) ? 0 : ABOOK_FLAG_PENDING)
 				);
+
 				if($y) {
+
 					logger("New introduction received for {$channel['channel_name']}");
 					if($default_perms) {
 						// send back a permissions update for auto-friend/auto-permissions

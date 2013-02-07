@@ -113,7 +113,6 @@ function connections_post(&$a) {
 	else
 		notice( t('Failed to update connection record.') . EOL);
 
-
 	if((x($a->data,'abook')) && $a->data['abook']['abook_my_perms'] != $abook_my_perms 
 		&& (! ($a->data['abook']['abook_flags'] & ABOOK_FLAG_SELF))) {
 		proc_run('php', 'include/notifier.php', 'permission_update', $contact_id);
