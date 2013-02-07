@@ -78,14 +78,13 @@ function notification($params) {
 
 		$parent_id = $params['parent'];
 
-		// Check to see if there was already a tag notify for this post.
+		// Check to see if there was already a notify for this post.
 		// If so don't create a second notification
 		
 		$p = null;
-		$p = q("select id from notify where type = %d and link = '%s' and uid = %d limit 1",
-			intval(NOTIFY_TAGSELF),
+		$p = q("select id from notify where link = '%s' and uid = %d limit 1",
 			dbesc($params['link']),
-			intval($params['uid'])
+			intval($recip['channel_id'])
 		);
 		if($p) {
 			logger('notification comment already notified');
@@ -101,31 +100,34 @@ function notification($params) {
 		if($params['otype'] === 'item' && $parent_id) {
 			$p = q("select * from item where id = %d and uid = %d limit 1",
 				intval($parent_id),
-				intval($params['uid'])
+				intval($recip['channel_id'])
 			);
 		}
+
+		xchan_query($p);
+
 
 		$item_post_type = item_post_type($p[0]);
 		//$possess_desc = str_replace('<!item_type!>',$possess_desc);
 
 		// "a post"
 		$dest_str = sprintf(t('%1$s commented on [url=%2$s]a %3$s[/url]'),
-								'[url=' . $params['source_link'] . ']' . $params['source_name'] . '[/url]',
+								'[url=' . $sender['xchan_url'] . ']' . $sender['xchan_name'] . '[/url]',
 								$itemlink,
 								$item_post_type);
 
 		// "George Bull's post"
 		if($p)
 			$dest_str = sprintf(t('%1$s commented on [url=%2$s]%3$s\'s %4$s[/url]'),
-						'[url=' . $params['source_link'] . ']' . $params['source_name'] . '[/url]',
+						'[url=' . $sender['xchan_url'] . ']' . $sender['xchan_name'] . '[/url]',
 						$itemlink,
-						$p[0]['author-name'],
+						$p[0]['author']['xchan_name'],
 						$item_post_type);
 		
 		// "your post"
-		if($p[0]['owner-name'] == $p[0]['author-name'] && $p[0]['wall'])
+		if($p[0]['owner']['xchan_name'] == $p[0]['author']['xchan_name'] && ($p[0]['item_flags'] & ITEM_WALL))
 			$dest_str = sprintf(t('%1$s commented on [url=%2$s]your %3$s[/url]'),
-								'[url=' . $params['source_link'] . ']' . $params['source_name'] . '[/url]',
+								'[url=' . $sender['xchan_url'] . ']' . $sender['xchan_name'] . '[/url]',
 								$itemlink,
 								$item_post_type);
 
@@ -134,8 +136,8 @@ function notification($params) {
 		// Before this we have the name of the replier on the subject rendering 
 		// differents subjects for messages on the same thread.
 
-		$subject = sprintf( t('[Red:Notify] Comment to conversation #%1$d by %2$s'), $parent_id, $params['source_name']);
-		$preamble = sprintf( t('%s commented on an item/conversation you have been following.'), $params['source_name']); 
+		$subject = sprintf( t('[Red:Notify] Comment to conversation #%1$d by %2$s'), $parent_id, $sender['xchan_name']);
+		$preamble = sprintf( t('%s commented on an item/conversation you have been following.'), $sender['xchan_name']); 
 		$epreamble = $dest_str; 
 
 		$sitelink = t('Please visit %s to view and/or reply to the conversation.');
@@ -145,12 +147,12 @@ function notification($params) {
 	}
 
 	if($params['type'] == NOTIFY_WALL) {
-		$subject = sprintf( t('[Red:Notify] %s posted to your profile wall') , $params['source_name']);
+		$subject = sprintf( t('[Red:Notify] %s posted to your profile wall') , $sender['xchan_name']);
 
-		$preamble = sprintf( t('%1$s posted to your profile wall at %2$s') , $params['source_name'], $sitename);
+		$preamble = sprintf( t('%1$s posted to your profile wall at %2$s') , $sender['xchan_name'], $sitename);
 		
 		$epreamble = sprintf( t('%1$s posted to [url=%2$s]your wall[/url]') , 
-								'[url=' . $params['source_link'] . ']' . $params['source_name'] . '[/url]',
+								'[url=' . $sender['xchan_url'] . ']' . $sender['xchan_name'] . '[/url]',
 								$params['link']); 
 		
 		$sitelink = t('Please visit %s to view and/or reply to the conversation.');
@@ -160,10 +162,10 @@ function notification($params) {
 	}
 
 	if($params['type'] == NOTIFY_TAGSELF) {
-		$subject =	sprintf( t('[Red:Notify] %s tagged you') , $params['source_name']);
-		$preamble = sprintf( t('%1$s tagged you at %2$s') , $params['source_name'], $sitename);
+		$subject =	sprintf( t('[Red:Notify] %s tagged you') , $sender['xchan_name']);
+		$preamble = sprintf( t('%1$s tagged you at %2$s') , $sender['xchan_name'], $sitename);
 		$epreamble = sprintf( t('%1$s [url=%2$s]tagged you[/url].') , 
-								'[url=' . $params['source_link'] . ']' . $params['source_name'] . '[/url]',
+								'[url=' . $sender['xchan_url'] . ']' . $sender['xchan_name'] . '[/url]',
 								$params['link']); 
 
 		$sitelink = t('Please visit %s to view and/or reply to the conversation.');
@@ -174,10 +176,10 @@ function notification($params) {
 
 	if($params['type'] == NOTIFY_POKE) {
 
-		$subject =	sprintf( t('[Red:Notify] %1$s poked you') , $params['source_name']);
-		$preamble = sprintf( t('%1$s poked you at %2$s') , $params['source_name'], $sitename);
+		$subject =	sprintf( t('[Red:Notify] %1$s poked you') , $sender['xchan_name']);
+		$preamble = sprintf( t('%1$s poked you at %2$s') , $sender[xchan_name'], $sitename);
 		$epreamble = sprintf( t('%1$s [url=%2$s]poked you[/url].') , 
-								'[url=' . $params['source_link'] . ']' . $params['source_name'] . '[/url]',
+								'[url=' . $sender['xchan_url'] . ']' . $sender['xchan_name'] . '[/url]',
 								$params['link']); 
 
 		$subject = str_replace('poked', t($params['activity']), $subject);
@@ -191,10 +193,10 @@ function notification($params) {
 	}
 
 	if($params['type'] == NOTIFY_TAGSHARE) {
-		$subject =	sprintf( t('[Red:Notify] %s tagged your post') , $params['source_name']);
-		$preamble = sprintf( t('%1$s tagged your post at %2$s') , $params['source_name'], $sitename);
+		$subject =	sprintf( t('[Red:Notify] %s tagged your post') , $sender['xchan_name']);
+		$preamble = sprintf( t('%1$s tagged your post at %2$s') , $sender['xchan_name'], $sitename);
 		$epreamble = sprintf( t('%1$s tagged [url=%2$s]your post[/url]') ,
-								'[url=' . $params['source_link'] . ']' . $params['source_name'] . '[/url]',
+								'[url=' . $sender['xchan_url'] . ']' . $sender['xchan_name'] . '[/url]',
 								$itemlink); 
 
 		$sitelink = t('Please visit %s to view and/or reply to the conversation.');
@@ -205,11 +207,11 @@ function notification($params) {
 
 	if($params['type'] == NOTIFY_INTRO) {
 		$subject = sprintf( t('[Red:Notify] Introduction received'));
-		$preamble = sprintf( t('You\'ve received an introduction from \'%1$s\' at %2$s'), $params['source_name'], $sitename); 
+		$preamble = sprintf( t('You\'ve received an introduction from \'%1$s\' at %2$s'), $sender['xchan_name'], $sitename); 
 		$epreamble = sprintf( t('You\'ve received [url=%1$s]an introduction[/url] from %2$s.'),
 								$itemlink,
-								'[url=' . $params['source_link'] . ']' . $params['source_name'] . '[/url]'); 
-		$body = sprintf( t('You may visit their profile at %s'),$params['source_link']);
+								'[url=' . $sender['xchan_url'] . ']' . $sender['xchan_name'] . '[/url]'); 
+		$body = sprintf( t('You may visit their profile at %s'),$sender['xchan_url']);
 
 		$sitelink = t('Please visit %s to approve or reject the introduction.');
 		$tsitelink = sprintf( $sitelink, $siteurl );
@@ -219,11 +221,11 @@ function notification($params) {
 
 	if($params['type'] == NOTIFY_SUGGEST) {
 		$subject = sprintf( t('[Red:Notify] Friend suggestion received'));
-		$preamble = sprintf( t('You\'ve received a friend suggestion from \'%1$s\' at %2$s'), $params['source_name'], $sitename); 
+		$preamble = sprintf( t('You\'ve received a friend suggestion from \'%1$s\' at %2$s'), $sender['xchan_name'], $sitename); 
 		$epreamble = sprintf( t('You\'ve received [url=%1$s]a friend suggestion[/url] for %2$s from %3$s.'),
 									$itemlink,
 									'[url=' . $params['item']['url'] . ']' . $params['item']['name'] . '[/url]',
-									'[url=' . $params['source_link'] . ']' . $params['source_name'] . '[/url]'); 
+									'[url=' . $sender['xchan_url'] . ']' . $sender['xchan_name'] . '[/url]'); 
 									
 		$body = t('Name:') . ' ' . $params['item']['name'] . "\n";
 		$body .= t('Photo:') . ' ' . $params['item']['photo'] . "\n";
