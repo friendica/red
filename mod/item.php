@@ -662,20 +662,14 @@ function item_post(&$a) {
 				intval($parent_item['private']),
 				intval($post_id)
 			);
-//fixme
-			if($contact_record != $author) {
+
+			if($datarray['owner_xchan'] != $datarray['author_xchan']) {
 				notification(array(
 					'type'         => NOTIFY_COMMENT,
-					'notify_flags' => $channel['channel_notifyflags'],
-					'language'     => $channel['account_language'],
-					'to_name'      => $channel['channel_name'],
-					'to_email'     => $channel['account_email'],
-					'uid'          => $channel['channel_id'],
+					'from_xchan'   => $datarray['author_xchan'],
+					'to_xchan'     => $datarray['owner_xchan'],
 					'item'         => $datarray,
-					'link'		   => $a->get_baseurl() . '/display/' . $user['nickname'] . '/' . $post_id,
-					'source_name'  => $datarray['author-name'],
-					'source_link'  => $datarray['author-link'],
-					'source_photo' => $datarray['author-avatar'],
+					'link'		   => $a->get_baseurl() . '/display/' . $datarray['uri'],
 					'verb'         => ACTIVITY_POST,
 					'otype'        => 'item',
 					'parent'       => $parent,
@@ -687,20 +681,14 @@ function item_post(&$a) {
 		}
 		else {
 			$parent = $post_id;
-//fixme
-			if($contact_record != $author) {
+
+			if($datarray['owner_xchan'] != $datarray['author_xchan']) {
 				notification(array(
 					'type'         => NOTIFY_WALL,
-					'notify_flags' => $channel['channel_notifyflags'],
-					'language'     => $channel['account_language'],
-					'to_name'      => $channel['channel_name'],
-					'to_email'     => $channel['account_email'],
-					'uid'          => $channel['channel_id'],
+					'from_xchan'   => $datarray['author_xchan'],
+					'to_xchan'     => $datarray['owner_xchan'],
 					'item'         => $datarray,
-					'link'		   => $a->get_baseurl() . '/display/' . $user['nickname'] . '/' . $post_id,
-					'source_name'  => $datarray['author-name'],
-					'source_link'  => $datarray['author-link'],
-					'source_photo' => $datarray['author-avatar'],
+					'link'		   => $a->get_baseurl() . '/display/' . $datarray['uri'],
 					'verb'         => ACTIVITY_POST,
 					'otype'        => 'item'
 				));

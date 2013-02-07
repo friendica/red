@@ -1505,10 +1505,72 @@ function item_store($arr,$force_parent = false) {
 		intval($parent_id)
 	);
 
+
+	send_status_notifications($current_post,$arr);
+
 	tag_deliver($arr['uid'],$current_post);
 
 	return $current_post;
 }
+
+
+function send_status_notifications($post_id,$item) {
+
+	$notify = false;
+	$parent = 0;
+
+	$r = q("select channel_hash from channel where channel_id = %d limit 1",
+		intval($item['uid'])
+	);
+	if(! $r)
+		return;
+
+	// my own post - no notification needed
+	if($item['author_xchan'] === $r[0]['channel_hash'])
+		return;
+
+	// I'm the owner - notify me
+
+	if($item['owner_hash'] === $r[0]['channel_hash'])
+		$notify = true;
+
+	// Was I involved in this conversation?
+
+	$x = q("select * from item where parent_uri = '%s' and uid = %d",
+		dbesc($item['parent_uri']),
+		intval($item['uid'])
+	);
+	if($x) {
+		foreach($x as $xx) {
+			if($xx['author_xchan'] === $r[0]['channel_hash']) {
+				$notify = true;
+				if($xx['id'] == $xx['parent'])
+					$parent = $xx['parent'];
+			}
+		}
+	}
+
+	if(! $notify)
+		return;
+	require_once('include/enotify.php');
+	notification(array(
+		'type'         => NOTIFY_COMMENT,
+		'from_xchan'   => $item['author_xchan'],
+		'to_xchan'     => $r[0]['channel_hash'],
+		'item'         => $item,
+		'link'		   => $a->get_baseurl() . '/display/' . $item['uri'],
+		'verb'         => ACTIVITY_POST,
+		'otype'        => 'item',
+		'parent'       => $parent,
+		'parent_uri'   => $item['parent_uri']
+	));
+	return;
+}
+
+
+
+
+
 
 function get_item_contact($item,$contacts) {
 	if(! count($contacts) || (! is_array($item)))
