@@ -39,6 +39,9 @@ except getopt.GetoptError:
 if path == '':
 	path = raw_input('Path to top-level Friendica directory: ')
 
+if path == '':
+	path = '.'
+
 if path[-1:] != '/':
 	path = path + '/'
 
