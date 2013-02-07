@@ -1980,8 +1980,10 @@ function zid_init(&$a) {
 				dbesc($tmp_str)
 			);
 			// try to avoid recursion - but send them home to do a proper magic auth
-			if($r && ($r[0]['hubloc_url'] != z_root()) && (! strstr(get_app()->query_string,'/magic'))) {
-				goaway($r[0]['hubloc_url'] . '/magic' . '?f=&dest=' . z_root() . get_app()->query_string);
+			$dest = $a->query_string;
+			$dest = str_replace(array('?zid=','&zid='),array('?rzid=','&rzid='),$dest);
+			if($r && ($r[0]['hubloc_url'] != z_root()) && (! strstr($dest,'/magic'))) {
+				goaway($r[0]['hubloc_url'] . '/magic' . '?f=&dest=' . z_root() . $dest);
 			}
 		}
 	}
