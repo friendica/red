@@ -177,7 +177,7 @@ function notification($params) {
 	if($params['type'] == NOTIFY_POKE) {
 
 		$subject =	sprintf( t('[Red:Notify] %1$s poked you') , $sender['xchan_name']);
-		$preamble = sprintf( t('%1$s poked you at %2$s') , $sender[xchan_name'], $sitename);
+		$preamble = sprintf( t('%1$s poked you at %2$s') , $sender['xchan_name'], $sitename);
 		$epreamble = sprintf( t('%1$s [url=%2$s]poked you[/url].') , 
 								'[url=' . $sender['xchan_url'] . ']' . $sender['xchan_name'] . '[/url]',
 								$params['link']); 
