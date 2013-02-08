@@ -421,20 +421,22 @@ function settings_post(&$a) {
 		$notify += intval($_POST['notify8']);
 
 
+	$channel = $a->get_channel();
+
 	$err = '';
 
 	$name_change = false;
 
-	if($username != $a->user['username']) {
+	if($username != $channel['channel_name']) {
 		$name_change = true;
-		if(strlen($username) > 40)
+		if(mb_strlen($username) > 40)
 			$err .= t(' Please use a shorter name.');
-		if(strlen($username) < 3)
+		if(mb_strlen($username) < 3)
 			$err .= t(' Name too short.');
 	}
 
 
-	if($timezone != $a->user['timezone']) {
+	if($timezone != $channel['channel_timezone']) {
 		if(strlen($timezone))
 			date_default_timezone_set($timezone);
 	}
@@ -498,7 +500,8 @@ function settings_post(&$a) {
 	);
 */
 
-	$r = q("update channel set channel_timezone = '%s', channel_max_anon_mail = %d, channel_max_friend_req = %d, channel_expire_days = %d, channel_r_stream = %d, channel_r_profile = %d, channel_r_photos = %d, channel_r_abook = %d, channel_w_stream = %d, channel_w_wall = %d, channel_w_tagwall = %d, channel_w_comment = %d, channel_w_mail = %d, channel_w_photos = %d, channel_w_chat = %d, channel_a_delegate = %d, channel_r_storage = %d, channel_w_storage = %d, channel_r_pages = %d, channel_w_pages = %d where channel_id = %d limit 1",
+	$r = q("update channel set channel_name = '%s', channel_timezone = '%s', channel_max_anon_mail = %d, channel_max_friend_req = %d, channel_expire_days = %d, channel_r_stream = %d, channel_r_profile = %d, channel_r_photos = %d, channel_r_abook = %d, channel_w_stream = %d, channel_w_wall = %d, channel_w_tagwall = %d, channel_w_comment = %d, channel_w_mail = %d, channel_w_photos = %d, channel_w_chat = %d, channel_a_delegate = %d, channel_r_storage = %d, channel_w_storage = %d, channel_r_pages = %d, channel_w_pages = %d where channel_id = %d limit 1",
+		dbesc($username),
 		dbesc($timezone),
 		intval($unkmail),
 		intval($maxreq),
@@ -534,24 +537,21 @@ function settings_post(&$a) {
 		intval(local_user())
 	);
 
-
-//	if($name_change) {
-//		q("UPDATE `contact` SET `name` = '%s', `name_date` = '%s' WHERE `uid` = %d AND `self` = 1 LIMIT 1",
-//			dbesc($username),
-//			dbesc(datetime_convert()),
-//			intval(local_user())
-//		);
-//	}		
-
-//	if(($old_visibility != $net_publish) || ($page_flags != $old_page_flags)) {
-		// Update global directory in background
-		$url = $_SESSION['my_url'];
-//		if($url && strlen(get_config('system','directory_submit_url')))
-
+	if($name_change) {
+		$r = q("update xchan set xchan_name = '%s', xchan_name_date = '%s' where xchan_hash = '%s' limit 1",
+			dbesc($username),
+			dbesc(datetime_convert()),
+			dbesc($channel['channel_hash'])
+		);
+		$r = q("update profile set name = '%s' where uid = %d and is_default = 1",
+			dbesc($username),
+			intval($channel['channel_id'])
+		);
+		// we really need to send out notifications to all our friends
+	}
 
 	proc_run('php','include/directory.php',local_user());
 
-//	}
 
 	//$_SESSION['theme'] = $theme;
 	if($email_changed && $a->config['system']['register_policy'] == REGISTER_VERIFY) {
