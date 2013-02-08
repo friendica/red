@@ -325,45 +325,47 @@ class Photo {
         if( (! function_exists('exif_read_data')) || ($this->getType() !== 'image/jpeg') )
             return;
 
-        $exif = exif_read_data($filename);
-        $ort = $exif['Orientation'];
+        $exif = @exif_read_data($filename);
+		if($exif) {
+	        $ort = $exif['Orientation'];
 
-        switch($ort)
-        {
-            case 1: // nothing
-                break;
+    	    switch($ort)
+        	{
+            	case 1: // nothing
+                	break;
 
-            case 2: // horizontal flip
-                $this->flip();
-                break;
+	            case 2: // horizontal flip
+    	            $this->flip();
+        	        break;
 
-            case 3: // 180 rotate left
-                $this->rotate(180);
-                break;
+            	case 3: // 180 rotate left
+                	$this->rotate(180);
+	                break;
 
-            case 4: // vertical flip
-                $this->flip(false, true);
-                break;
+    	        case 4: // vertical flip
+        	        $this->flip(false, true);
+            	    break;
 
-            case 5: // vertical flip + 90 rotate right
-                $this->flip(false, true);
-                $this->rotate(-90);
-                break;
+	            case 5: // vertical flip + 90 rotate right
+    	            $this->flip(false, true);
+        	        $this->rotate(-90);
+            	    break;
 
-            case 6: // 90 rotate right
-                $this->rotate(-90);
-                break;
+	            case 6: // 90 rotate right
+    	            $this->rotate(-90);
+        	        break;
 
-            case 7: // horizontal flip + 90 rotate right
-                $this->flip();
-                $this->rotate(-90);
-                break;
+	            case 7: // horizontal flip + 90 rotate right
+    	            $this->flip();
+        	        $this->rotate(-90);
+            	    break;
 
-            case 8:    // 90 rotate left
-                $this->rotate(90);
-                break;
-        }
-    }
+	            case 8:    // 90 rotate left
+    	            $this->rotate(90);
+        	        break;
+        	}
+    	}
+	}
 
 
 

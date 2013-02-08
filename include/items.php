@@ -1558,7 +1558,7 @@ function send_status_notifications($post_id,$item) {
 		'from_xchan'   => $item['author_xchan'],
 		'to_xchan'     => $r[0]['channel_hash'],
 		'item'         => $item,
-		'link'		   => $a->get_baseurl() . '/display/' . $item['uri'],
+		'link'		   => get_app()->get_baseurl() . '/display/' . $item['uri'],
 		'verb'         => ACTIVITY_POST,
 		'otype'        => 'item',
 		'parent'       => $parent,
