@@ -51,11 +51,11 @@
 <b>{{$quick}}</b>
 <ul>
 {{if $self}}
-<li><a href="#" onclick="connectForum(); return false;">{{$forum}}</a></li>
+<li><a href="#" onclick="connectForum(); $('#abook-edit-form').submit();">{{$forum}}</a></li>
 {{/if}}
-<li><a href="#" onclick="connectFullShare(); return false;">{{$full}}</a></li>
-<li><a href="#" onclick="connectCautiousShare(); return false;">{{$cautious}}</a></li>
-<li><a href="#" onclick="connectFollowOnly(); return false;">{{$follow}}</a></li>
+<li><span class="fakelink" onclick="connectFullShare(); $('#abook-edit-form').submit();">{{$full}}</span></li>
+<li><a href="#" onclick="connectCautiousShare(); $('#abook-edit-form').submit();">{{$cautious}}</a></li>
+<li><a href="#" onclick="connectFollowOnly(); $('#abook-edit-form').submit();">{{$follow}}</a></li>
 </ul>
 
 <div id="abook-advanced" class="fakelink" onclick="openClose('abook-advanced-panel');">{{$advanced}}</div>
@@ -72,7 +72,7 @@
 
 </div>
 
-<input class="contact-edit-submit" type="submit" name="submit" value="{{$submit}}" />
+<input class="contact-edit-submit" type="submit" name="done" value="{{$submit}}" />
 
 </form>
 </div>

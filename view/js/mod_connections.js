@@ -34,7 +34,6 @@ function connectFullShare() {
 	$('#me_id_perms_post_mail').attr('checked','checked');
 	$('#me_id_perms_chat').attr('checked','checked');
 	$('#me_id_perms_view_storage').attr('checked','checked');
-	//	$('#abook-edit-form').submit();
 }
 
 function connectCautiousShare() {
@@ -46,8 +45,6 @@ function connectCautiousShare() {
 	$('#me_id_perms_send_stream').attr('checked','checked');
 	$('#me_id_perms_post_comments').attr('checked','checked');
 	$('#me_id_perms_post_mail').attr('checked','checked');
-	//	$('#abook-edit-form').submit();
-
 }
 
 function connectForum() {
@@ -62,14 +59,10 @@ function connectForum() {
 	$('#me_id_perms_post_comments').attr('checked','checked');
 	$('#me_id_perms_post_mail').attr('checked','checked');
 	$('#me_id_perms_tag_deliver').attr('checked','checked');
-	//	$('#abook-edit-form').submit();
-
 }
 
 
 function connectFollowOnly() {
 	$('#me_id_perms_send_stream').attr('checked','checked');
-	//	$('#abook-edit-form').submit();
-
 }
 
