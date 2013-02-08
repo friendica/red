@@ -429,10 +429,12 @@ function settings_post(&$a) {
 
 	if($username != $channel['channel_name']) {
 		$name_change = true;
-		if(mb_strlen($username) > 40)
-			$err .= t(' Please use a shorter name.');
-		if(mb_strlen($username) < 3)
-			$err .= t(' Name too short.');
+		require_once('include/identity.php');
+		$err = validate_channelname($username);
+		if($err) {
+			notice($err);
+			return;
+		}
 	}
 
 

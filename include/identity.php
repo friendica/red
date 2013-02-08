@@ -24,6 +24,25 @@ function identity_check_service_class($account_id) {
 	return $ret;
 }
 
+// Return an error message if the name is not valid. We're currently only checking
+// for an empty name or one that exceeds our storage limit (255 chars).
+// 255 chars is probably going to create a mess on some pages. 
+// Plugins can set additional policies such as full name requirements, character sets, multi-byte
+// length, etc. 
+
+function validate_channelname($name) {
+
+	if(! $name)
+		return t('Empty name');
+	if(strlen($name) > 255)
+		return t('Name too long');
+	$arr = array('name' => $name);
+	call_hooks('validate_channelname',$arr);
+	if(x($arr,'message'))
+		return $arr['message'];
+	return;
+}
+
 
 // Required: name, nickname, account_id
 
@@ -42,6 +61,12 @@ function create_identity($arr) {
 	$nick = trim($arr['nickname']);
 	$name = escape_tags($arr['name']);
 	$pageflags = ((x($arr,'pageflags')) ? intval($arr['pageflags']) : PAGE_NORMAL);
+
+	$name_error = validate_channelname($arr['name']);
+	if($name_error) {
+		$ret['message'] = $name_error;
+		return $ret;
+	}
 
 	if(check_webbie(array($nick)) !== $nick) {
 		$ret['message'] = t('Nickname has unsupported characters or is already being used on this site.');
