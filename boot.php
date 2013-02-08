@@ -1786,8 +1786,8 @@ if(! function_exists('current_theme_url')) {
 		global $a;
 		$t = current_theme();
 		if (file_exists('view/theme/' . $t . '/php/style.php'))
-			return($a->get_baseurl() . '/view/theme/' . $t . '/php/style.pcss');
-		return($a->get_baseurl() . '/view/theme/' . $t . '/css/style.css');
+			return('view/theme/' . $t . '/php/style.pcss');
+		return('view/theme/' . $t . '/css/style.css');
 	}
 }
 
@@ -2095,7 +2095,7 @@ function construct_page(&$a) {
 
 	head_add_css(((x($a->page,'template')) ? $a->page['template'] : 'default' ) . '.css');
 	head_add_css('mod_' . $a->module . '.css');
-	head_add_css('style.css');
+	head_add_css(current_theme_url());
 
 	head_add_js('mod_' . $a->module . '.js');
 

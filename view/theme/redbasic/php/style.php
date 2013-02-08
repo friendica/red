@@ -28,72 +28,19 @@
     if ($colour === false) {
 		$colour = $site_colour;
 	}
+	if($colour === false) {
 		$colour = "light";
-
+	}
     
-        if (file_exists("$THEMEPATH/css/style.css")) {
-            echo file_get_contents("$THEMEPATH/css/style.css");
-        }
-    
+	if(file_exists('view/theme/' . current_theme() . '/css/style.css')) {
+		echo file_get_contents('view/theme/' . current_theme() . '/css/style.css');
+    }
+    echo "\r\n";
 
-	if($redbasic_font_size == "16") {
-		echo ".wall-item-content {
-				font-size: 16px;
-			}";
-	}
-	if($redbasic_font_size == "15") {
-		echo ".wall-item-content {
-				font-size: 15px;
-			}";
-	}	
-	if($redbasic_font_size == "14") {
-		echo ".wall-item-content {
-				font-size: 14px;
-			}";
-	}
-	if($redbasic_font_size == "13.5") {
-		echo ".wall-item-content {
-				font-size: 13.5px;
-			}";
-	}
-	if($redbasic_font_size == "13") {
-		echo ".wall-item-content {
-				font-size: 13px;
-			}";
-	}
-	if($redbasic_font_size == "12.5") {
-		echo ".wall-item-content {
-				font-size: 12.5px;
-			}";
-	}
-	if($redbasic_font_size == "12") {
-		echo ".wall-item-content {
-				font-size: 12px;
-			}";
-	}
-	if($line_height == "1.5") {
-		echo ".wall-item-content {
-				line-height: 1.5;
-			}";
-	}	
-	if($line_height == "1.4") {
-		echo ".wall-item-content {
-				line-height: 1.4;
-			}";
-	}
-	if($line_height == "1.3") {
-		echo ".wall-item-content {
-				line-height: 1.3;
-			}";
-	}
-	if($line_height == "1.2") {
-		echo ".wall-item-content {
-				line-height: 1.2;
-			}";
-	}
-	if($line_height == "1.1") {
-		echo ".wall-item-content {
-				line-height: 1.1;
-			}";
+	if(($redbasic_font_size >= 10.0) && ($redbasic_font_size <= 16.0)) {
+		echo ".wall-item-content { font-size: $redbasic_font_size; }\r\n";
 	}
 
+	if(($line_height >= 1.0) && ($line_height <= 1.5)) {
+		echo ".wall-item-content { line-height: $line_height; }\r\n";
+	}	
