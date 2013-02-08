@@ -51,7 +51,7 @@ function register_post(&$a) {
 			break;
 
 		case REGISTER_APPROVE:
-			$flags = ACCOUNT_UNVERIFIED | ACCOUNT_BLOCKED;
+			$flags = ACCOUNT_UNVERIFIED | ACCOUNT_BLOCKED | ACCOUNT_PENDING;
 			break;
 
 		default:

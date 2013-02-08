@@ -363,6 +363,7 @@ define ( 'ACCOUNT_UNVERIFIED',   0x0001 );
 define ( 'ACCOUNT_BLOCKED',      0x0002 );
 define ( 'ACCOUNT_EXPIRED',      0x0004 );
 define ( 'ACCOUNT_REMOVED',      0x0008 );
+define ( 'ACCOUNT_PENDING',      0x0010 );
 
 /**
  * Account roles

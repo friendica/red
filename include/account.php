@@ -317,6 +317,11 @@ function user_allow($hash) {
 		intval(ACCOUNT_BLOCKED),
 		intval($register[0]['uid'])
 	);
+	$r = q("update account set account_flags = (account_flags ^ %d) where (account_flags & %d) and account_id = %d limit 1",
+		intval(ACCOUNT_PENDING),
+		intval(ACCOUNT_PENDING),
+		intval($register[0]['uid'])
+	);
 	
 	$r = q("SELECT uid FROM profile WHERE uid = %d AND is_default = 1",
 		intval($account[0]['account_id'])

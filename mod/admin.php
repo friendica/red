@@ -496,13 +496,13 @@ function admin_page_users_post(&$a){
 	}
 	
 	if (x($_POST,'page_users_approve')){
-		require_once("mod/regmod.php");
+		require_once('include/account.php');
 		foreach($pending as $hash){
 			user_allow($hash);
 		}
 	}
 	if (x($_POST,'page_users_deny')){
-		require_once("mod/regmod.php");
+		require_once('include/account.php');
 		foreach($pending as $hash){
 			user_deny($hash);
 		}
@@ -552,11 +552,9 @@ function admin_page_users(&$a){
 	}
 	
 	/* get pending */
-	$pending = q("SELECT `register`.*, `contact`.`name`, `user`.`email`
-				 FROM `register`
-				 LEFT JOIN `contact` ON `register`.`uid` = `contact`.`uid`
-				 LEFT JOIN `user` ON `register`.`uid` = `user`.`uid`;");
-	
+	$pending = q("SELECT * from account where (account_flags & %d ) ",
+		intval(ACCOUNT_PENDING)
+	);	
 	
 	/* get users */
 
