@@ -234,7 +234,7 @@ function send_reg_approval_email($arr) {
 		dbesc($hash),
 		dbesc(datetime_convert()),
 		intval($arr['account']['account_id']),
-		dbesc($arr['password']),
+		dbesc(''),
 		dbesc($arr['account']['account_language'])
 	);
 
