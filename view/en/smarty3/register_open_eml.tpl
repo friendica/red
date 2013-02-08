@@ -9,7 +9,7 @@ The login details are as follows:
 
 Site Location:	{{$siteurl}}
 Login:	{{$email}}
-Password: {{$password}}
+Password: (the password supplied during registration)
 
 If this account was created without your knowledge and is not desired, please 
 login and remove the account from the links on the Settings page, and we 

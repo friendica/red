@@ -144,7 +144,7 @@ mod/
 + randprof.php
 - redir.php
 + register.php
-  regmod.php
+? regmod.php
   removeme.php
   rsd_xml.php (what do we need this for? What functionality/feature does it enable)
   search_ac.php

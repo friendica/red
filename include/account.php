@@ -286,3 +286,102 @@ function send_verification_email($email,$password) {
 	);
 	return($res ? true : false);
 }
+
+
+function user_allow($hash) {
+
+	$a = get_app();
+
+	$ret = array('success' => false);
+
+	$register = q("SELECT * FROM `register` WHERE `hash` = '%s' LIMIT 1",
+		dbesc($hash)
+	);
+
+	if(! $register)
+		return $ret;
+
+	$account = q("SELECT * FROM account WHERE account_id = %d LIMIT 1",
+		intval($register[0]['uid'])
+	);
+	
+	if(! $account)
+		return $ret;
+
+	$r = q("DELETE FROM register WHERE hash = '%s' LIMIT 1",
+		dbesc($register[0]['hash'])
+	);
+
+	$r = q("update account set account_flags = (account_flags ^ %d) where (account_flags & %d) and account_id = %d limit 1",
+		intval(ACCOUNT_BLOCKED),
+		intval(ACCOUNT_BLOCKED),
+		intval($register[0]['uid'])
+	);
+	
+	$r = q("SELECT uid FROM profile WHERE uid = %d AND is_default = 1",
+		intval($account[0]['account_id'])
+	);
+
+	if($r && $r[0]['publish']) {
+		proc_run('php',"include/directory.php",$r[0]['uid']);
+	}
+
+	push_lang($register[0]['language']);
+
+	$email_tpl = get_intltext_template("register_open_eml.tpl");
+	$email_tpl = replace_macros($email_tpl, array(
+			'$sitename' => get_config('system','sitename'),
+			'$siteurl' =>  z_root(),
+			'$username' => $account[0]['account_email'],
+			'$email' => $account[0]['account_email'],
+			'$password' => '',
+			'$uid' => $account[0]['account_id']
+	));
+
+	$res = mail($account[0]['account_email'], sprintf( t('Registration details for %s'), get_config('system','sitename')),
+		$email_tpl,
+			'From: ' . t('Administrator') . '@' . $_SERVER['SERVER_NAME'] . "\n"
+			. 'Content-type: text/plain; charset=UTF-8' . "\n"
+			. 'Content-transfer-encoding: 8bit' );
+
+	pop_lang();
+
+	if($res) {
+		info( t('Account approved.') . EOL );
+		return true;
+	}	
+
+}
+
+
+// This does not have to go through user_remove() and save the nickname
+// permanently against re-registration, as the person was not yet
+// allowed to have friends on this system
+
+function user_deny($hash) {
+
+	$register = q("SELECT * FROM register WHERE hash = '%s' LIMIT 1",
+		dbesc($hash)
+	);
+
+	if(! count($register))
+		return false;
+
+	$user = q("SELECT account_id FROM account WHERE account_id = %d LIMIT 1",
+		intval($register[0]['uid'])
+	);
+	
+	if(! $user)
+		return false;
+
+	$r = q("DELETE FROM account WHERE account_id = %d LIMIT 1",
+		intval($register[0]['uid'])
+	);
+
+	$r = q("DELETE FROM `register` WHERE id = %d LIMIT 1",
+		dbesc($register[0]['id'])
+	);
+	notice( sprintf(t('Registration revoked for %s'), $account[0]['account_email']) . EOL);
+	return true;
+	
+}
