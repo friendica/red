@@ -3,17 +3,21 @@
 
 function rmagic_init(&$a) {
 
+	if(local_user())
+		goaway(z_root());
+
 	$me = get_my_address();
 	if($me) {
 		$r = q("select hubloc_url from hubloc where hubloc_addr = '%s' limit 1",
 			dbesc($me)
 		);		
 		if($r) {	
-			$dest = z_root() . str_replace('zid=','zid_=',$get_app()->query_string);
-			goaway($r[0]['hubloc_url'] . '/magic' . '?f=&dest=' . z_root() . $dest);
+			if($r[0]['hubloc_url'] === z_root())
+				goaway(z_root() . '/login');
+			$dest = z_root() . '/' . str_replace('zid=','zid_=',$get_app()->query_string);
+			goaway($r[0]['hubloc_url'] . '/magic' . '?f=&dest=' . $dest);
 		}
 	}
-
 }
 
 function rmagic_post(&$a) {
@@ -38,8 +42,8 @@ function rmagic_post(&$a) {
 	}	
 
 	if($url) {	
-		$dest = z_root() . str_replace('zid=','zid_=',$a->query_string);
-		goaway($url . '/magic' . '?f=&dest=' . z_root() . $dest);
+		$dest = z_root() . '/' . str_replace('zid=','zid_=',$a->query_string);
+		goaway($url . '/magic' . '?f=&dest=' . $dest);
 	}
 
 
