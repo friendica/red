@@ -31,7 +31,7 @@ function group_add($uid,$name) {
 			$dups = false;
 			$hash = random_string() . $name;
 
-			$r = q("SELECT id FROM group WHERE hash = '%s' LIMIT 1", dbesc($hash));
+			$r = q("SELECT id FROM `group` WHERE hash = '%s' LIMIT 1", dbesc($hash));
 			if($r)
 				$dups = true;
 		} while($dups == true);

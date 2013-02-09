@@ -137,7 +137,7 @@ function poco_load($xchan = null,$url = null) {
 	}
 	logger("poco_load: loaded $total entries",LOGGER_DEBUG);
 
-	q("delete from xlink where xlink_xchan = '%s' and xlink_updated` < UTC_TIMESTAMP() - INTERVAL 2 DAY",
+	q("delete from xlink where xlink_xchan = '%s' and xlink_updated < UTC_TIMESTAMP() - INTERVAL 2 DAY",
 		dbesc($xchan)
 	);
 }
@@ -146,7 +146,7 @@ function poco_load($xchan = null,$url = null) {
 function count_common_friends($uid,$xchan) {
 
 	$r = q("SELECT count(xlink_id) as total from xlink where xlink_xchan = '%s' and xlink_link in
-		(select abook_chan from abook where abook_xchan != '%s' and abook_channel = %d and abook_flags = 0 )",
+		(select abook_xchan from abook where abook_xchan != '%s' and abook_channel = %d and abook_flags = 0 )",
 		dbesc($xchan),
 		dbesc($xchan),
 		intval($uid)
@@ -166,7 +166,7 @@ function common_friends($uid,$xchan,$start = 0,$limit=100000000,$shuffle = false
 		$sql_extra = " order by xchan_name asc "; 
 
 	$r = q("SELECT * from xchan left join xlink on xlink_xchan = xchan_hash where xlink_xchan = '%s' and xlink_link in
-		(select abook_chan from abook where abook_xchan != '%s' and abook_channel = %d and abook_flags = 0 ) $sql_extra limit %d, %d",
+		(select abook_xchan from abook where abook_xchan != '%s' and abook_channel = %d and abook_flags = 0 ) $sql_extra limit %d, %d",
 		dbesc($xchan),
 		dbesc($xchan),
 		intval($uid),
