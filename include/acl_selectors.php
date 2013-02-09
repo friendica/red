@@ -171,7 +171,7 @@ function contact_select($selname, $selclass, $preselected = false, $size = 4, $p
 		$o .= "<select name=\"{$selname}[]\" id=\"$selclass\" class=\"$selclass\" multiple=\"multiple\" size=\"$size\" $tabindex >\r\n";
 
 	$r = q("SELECT abook_id, xchan_name, xchan_url, xchan_photo_s from abook left join xchan on abook_xchan = xchan_hash
-		where abook flags = 0 or not ( abook_flags & %d ) and abook_channel = %d
+		where abook_flags = 0 or not ( abook_flags & %d ) and abook_channel = %d
 		$sql_extra
 		ORDER BY xchan_name ASC ",
 		intval(ABOOK_FLAG_SELF),
