@@ -81,6 +81,9 @@ class Item extends BaseObject {
 	 */
 
 	public function get_template_data($alike, $dlike, $thread_level=1) {
+	
+		$t1 = dba_timer();
+
 		$result = array();
 
 		$a        = $this->get_app();
@@ -184,9 +187,15 @@ class Item extends BaseObject {
 		if(strcmp(datetime_convert('UTC','UTC',$item['created']),datetime_convert('UTC','UTC','now - 12 hours')) > 0)
 			$indent .= ' shiny';
 
+		$t2 = dba_timer();
+
 		localize_item($item);
 
+		$t3 = dba_timer();
+
 		$body = prepare_body($item,true);
+
+		$t4 = dba_timer();
 
 		$tmp_item = array(
 			'template' => $this->get_template(),
@@ -238,6 +247,8 @@ class Item extends BaseObject {
 			'thread_level' => $thread_level
 		);
 
+		$t5 = dba_timer();
+
 		$arr = array('item' => $item, 'output' => $tmp_item);
 		call_hooks('display_item', $arr);
 
@@ -275,6 +286,14 @@ class Item extends BaseObject {
 			$result['flatten'] = true;
 			$result['threaded'] = false;
 		}
+		$t6 = dba_timer();
+
+//		profiler($t1,$t2,'t2');
+//		profiler($t2,$t3,'t3');
+//		profiler($t3,$t4,'t4');
+//		profiler($t4,$t5,'t5');
+//		profiler($t5,$t6,'t6');
+//		profiler($t1,$t6,'item total');
 
 		return $result;
 	}
@@ -497,7 +516,7 @@ class Item extends BaseObject {
 
 			$a = $this->get_app();
 
-			$qc = ((local_user()) ? get_pconfig(local_user(),'qcomment','words') : null);
+			$qc = ((local_user()) ? get_pconfig(local_user(),'system','qcomment') : null);
 			$qcomment = (($qc) ? explode("\n",$qc) : null);
 
 			$comment_box = replace_macros($template,array(
