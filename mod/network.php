@@ -719,7 +719,7 @@ function network_content(&$a, $update = 0, $load = false) {
 		profiler($fourth,$fifth,'network sort');
 		profiler($fifth,$sixth,'network render');
 		profiler($start,$sixth,'network total');
-		profiler(1,1,'--');
+		profiler(1,1,'-- ' . count($items));
 	}
 
 	return $o;
