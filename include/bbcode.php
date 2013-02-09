@@ -105,6 +105,7 @@ function bb_replace_images($body, $images) {
 
 function bbcode($Text,$preserve_nl = false, $tryoembed = true) {
 
+
 	$a = get_app();
 
 	// Extract the private images which use data url's since preg has issues with

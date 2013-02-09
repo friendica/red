@@ -300,17 +300,21 @@ function localize_item(&$item){
 */
 
 	$matches = null;
-	if(preg_match_all('/@\[url=(.*?)\]/is',$item['body'],$matches,PREG_SET_ORDER)) {
-		foreach($matches as $mtch) {
-			if(! strpos($mtch[1],'zid='))
-				$item['body'] = str_replace($mtch[0],'@[url=' . zid($mtch[1]). ']',$item['body']);
+	if(strpos($item['body'],'[url') !== false) {
+		if(preg_match_all('/@\[url=(.*?)\]/is',$item['body'],$matches,PREG_SET_ORDER)) {
+			foreach($matches as $mtch) {
+				if(! strpos($mtch[1],'zid='))
+					$item['body'] = str_replace($mtch[0],'@[url=' . zid($mtch[1]). ']',$item['body']);
+			}
 		}
 	}
 
-	// add zid's to public images
-	if(preg_match_all('/\[url=(.*?)\/photos\/(.*?)\/image\/(.*?)\]\[img(.*?)\]h(.*?)\[\/img\]\[\/url\]/is',$item['body'],$matches,PREG_SET_ORDER)) {
-		foreach($matches as $mtch) {
+	if(strpos($item['body'],'[img') !== false) {
+		// add zid's to public images
+		if(preg_match_all('/\[url=(.*?)\/photos\/(.*?)\/image\/(.*?)\]\[img(.*?)\]h(.*?)\[\/img\]\[\/url\]/is',$item['body'],$matches,PREG_SET_ORDER)) {
+			foreach($matches as $mtch) {
 				$item['body'] = str_replace($mtch[0],'[url=' . zid( $mtch[1] . '/photos/' . $mtch[2] . '/image/' . $mtch[3]) . '][img' . $mtch[4] . ']h' . $mtch[5]  . '[/img][/url]',$item['body']);
+			}
 		}
 	}
 
@@ -378,6 +382,9 @@ function conversation(&$a, $items, $mode, $update, $page_mode = 'traditional') {
 	$previewing = (($preview) ? ' preview ' : '');
 
 	if($mode === 'network') {
+
+		$t1 = dba_timer();
+
 		$profile_owner = local_user();
 		$page_writeable = true;
 
@@ -661,33 +668,33 @@ function conversation(&$a, $items, $mode, $update, $page_mode = 'traditional') {
 				if(feature_enabled($profile_owner,'dislike'))
 	                like_puller($a,$item,$dlike,'dislike');
 
-                // Only add what is visible
-                if($item['network'] === NETWORK_MAIL && local_user() != $item['uid']) {
-                    continue;
-                }
                 if(! visible_activity($item)) {
                     continue;
                 }
 
-
-				
-
                 $item['pagedrop'] = $page_dropping;
 
-				
-
                 if($item['id'] == $item['parent']) {
+//					$tx1 = dba_timer();
                     $item_object = new Item($item);
                     $conv->add_thread($item_object);
+//					$tx2 = dba_timer();
+//					if($mode === 'network')
+//						profiler($tx1,$tx2,'add thread ' . $item['id']);
                 }
             }
-
+			$t2 = dba_timer();
             $threads = $conv->get_template_data($alike, $dlike);
             if(!$threads) {
                 logger('[ERROR] conversation : Failed to get template data.', LOGGER_DEBUG);
                 $threads = array();
             }
-
+			$t3 = dba_timer();
+			if($mode === 'network') {
+				profiler($t1,$t2,'Conversation prepare');
+				profiler($t2,$t3,'Conversation get_template');
+			}
+				
         }
     }
 
@@ -721,6 +728,11 @@ function conversation(&$a, $items, $mode, $update, $page_mode = 'traditional') {
 		'$wait' => t('Loading...'),
         '$dropping' => ($page_dropping?t('Delete Selected Items'):False),
     ));
+
+	if($mode === 'network') {
+		$t4 = dba_timer();
+		profiler($t3,$t4,'conversation template');
+	}
 
 	if($page_mode === 'preview')
 		logger('preview: ' . $o);
