@@ -560,7 +560,7 @@ function network_content(&$a, $update = 0, $load = false) {
 	}
 	else {
 		$itemspage = get_pconfig(local_user(),'system','itemspage');
-		$a->set_pager_itemspage(((intval($itemspage)) ? $itemspage : 40));
+		$a->set_pager_itemspage(((intval($itemspage)) ? $itemspage : 30));
 		$pager_sql = sprintf(" LIMIT %d, %d ",intval($a->pager['start']), intval($a->pager['itemspage']));
 	}
 
@@ -647,6 +647,7 @@ function network_content(&$a, $update = 0, $load = false) {
 
 		}
 
+		$first = dba_timer();
 
 		// Then fetch all the children of the parents that are on this page
 
@@ -662,11 +663,19 @@ function network_content(&$a, $update = 0, $load = false) {
 				dbesc($parents_str)
 			);
 
+			$second = dba_timer();
+
 			xchan_query($items);
+
+			$third = dba_timer();
 
 			$items = fetch_post_tags($items);
 
+			$fourth = dba_timer();
+
 			$items = conv_sort($items,$ordering);
+
+			
 
 			//logger('items: ' . print_r($items,true));
 
@@ -692,19 +701,26 @@ function network_content(&$a, $update = 0, $load = false) {
 
 	$mode = (($nouveau) ? 'network-new' : 'network');
 
-	$first = dba_timer();
+	$fifth = dba_timer();
 
 	$o .= conversation($a,$items,$mode,$update,'client');
 
+	$sixth = dba_timer();
 
-	$second = dba_timer();
 
 	if(! $update) 
         $o .= alt_pager($a,count($items));
 
-//	logger('parent dba_timer: ' . sprintf('%01.4f',$first - $start));
-//	logger('child  dba_timer: ' . sprintf('%01.4f',$second - $first));
-
+	if($load) {
+		profiler($start,$first,'network parents');
+		profiler($first,$second,'network children');
+		profiler($second,$third,'network authors');
+		profiler($third,$fourth,'network tags');
+		profiler($fourth,$fifth,'network sort');
+		profiler($fifth,$sixth,'network render');
+		profiler($start,$sixth,'network total');
+		profiler(1,1,'--');
+	}
 
 	return $o;
 }
