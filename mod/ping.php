@@ -326,8 +326,10 @@ function ping_init(&$a) {
 	if($mails)
 		$result['mail'] = intval($mails[0]['total']);
 		
-	if ($a->config['system']['register_policy'] == REGISTER_APPROVE && is_site_admin()){
-		$regs = q("SELECT `contact`.`name`, `contact`.`url`, `contact`.`micro`, `register`.`created`, COUNT(*) as `total` FROM `contact` RIGHT JOIN `register` ON `register`.`uid`=`contact`.`uid` WHERE `contact`.`self`=1");
+	if ($a->config['system']['register_policy'] == REGISTER_APPROVE && is_site_admin()) {
+		$regs = q("SELECT count(account_id) as total from account where (account_flags & %d)",
+			intval(ACCOUNT_PENDING)
+		);
 		if($regs)
 			$result['register'] = intval($regs[0]['total']);
 	} 

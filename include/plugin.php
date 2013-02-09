@@ -514,12 +514,22 @@ function get_intltext_template($s) {
 	if($a->get_template_engine() === 'smarty3')
 		$engine = "/smarty3";
 
+	$file = '';
 	if(file_exists("view/{$a->language}$engine/$s"))
-		return file_get_contents("view/{$a->language}$engine/$s");
+		$file = "view/{$a->language}$engine/$s";
 	elseif(file_exists("view/en$engine/$s"))
-		return file_get_contents("view/en$engine/$s");
+		$file = "view/en$engine/$s";
 	else
-		return file_get_contents("view/tpl/$engine/$s");
+		$file = "view/tpl/$engine/$s";
+	if($engine === '/smarty3') {
+		$template = new FriendicaSmarty();
+		$template->filename = $file;
+
+		return $template;
+	}
+	else
+		return file_get_contents($file);
+
 }}
 
 if(! function_exists('get_markup_template')) {

@@ -247,14 +247,14 @@ function send_reg_approval_email($arr) {
 			push_lang('en');
 
 		$email_msg = replace_macros(get_intltext_template('register_verify_email.tpl'), array(
-			'$sitename' => get_config('config','sitename'),
+			'$sitename' => get_config('system','sitename'),
 			'$siteurl'  =>  z_root(),
 			'$email'    => $arr['email'],
 			'$uid'      => $arr['account']['account_id'],
 			'$hash'     => $hash
 		 ));
 
-		$res = mail($admin['email'], sprintf( t('Registration request at %s'), get_config('config','sitename')),
+		$res = mail($admin['email'], sprintf( t('Registration request at %s'), get_config('system','sitename')),
 			$email_msg,
 			'From: ' . t('Administrator') . '@' . get_app()->get_hostname() . "\n"
 			. 'Content-type: text/plain; charset=UTF-8' . "\n"
@@ -263,6 +263,9 @@ function send_reg_approval_email($arr) {
 
 		if($res)
 			$delivered ++;
+		else
+			logger('send_reg_approval_email: failed to ' . $admin['email'] . 'account_id: ' . $arr['account']['account_id']);
+
 		pop_lang();
 	}
 
