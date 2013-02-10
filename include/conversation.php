@@ -409,6 +409,7 @@ function conversation(&$a, $items, $mode, $update, $page_mode = 'traditional') {
                 . ((x($_GET,'cmin'))   ? '&cmin='   . $_GET['cmin']   : '')
                 . ((x($_GET,'cmax'))   ? '&cmax='   . $_GET['cmax']   : '')
                 . ((x($_GET,'file'))   ? '&file='   . $_GET['file']   : '')
+                . ((x($_GET,'uri'))    ? '&uri='    . $_GET['uri']   : '')
 
                 . "'; var profile_page = " . $a->pager['page'] . "; </script>\r\n";
         }
@@ -435,8 +436,8 @@ function conversation(&$a, $items, $mode, $update, $page_mode = 'traditional') {
 	}
 
 	elseif($mode === 'display') {
-		$profile_owner = $a->profile['uid'];
-		$page_writeable = ($profile_owner == local_user());
+		$profile_owner = local_user();
+		$page_writeable = false;
 
 	      $live_update_div = '<div id="live-display"></div>' . "\r\n";
 

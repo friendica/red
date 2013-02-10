@@ -269,12 +269,8 @@
 				if($('#live-network').length)   { src = 'network'; liveUpdate(); }
 				if($('#live-channel').length)   { src = 'channel'; liveUpdate(); }
 				if($('#live-community').length) { src = 'community'; liveUpdate(); }
-				if($('#live-display').length) {
-					if(liking) {
-						liking = 0;
-						window.location.href=window.location.href 
-					}
-				}
+				if($('#live-display').length)   { src = 'display'; liveUpdate(); }
+
 				if($('#live-photos').length) { 
 					if(liking) {
 						liking = 0;

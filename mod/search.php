@@ -152,7 +152,7 @@ function search_content(&$a) {
 		// This is ugly, but we can't pass the profile_uid through the session to the ajax updater,
 		// because browser prefetching might change it on us. We have to deliver it with the page.
 
-		$o .= '<div id="live-channel"></div>' . "\r\n";
+		$o .= '<div id="live-search"></div>' . "\r\n";
 		$o .= "<script> var profile_uid = " . $a->profile['profile_uid'] 
 			. "; var netargs = '?f='; var profile_page = " . $a->pager['page'] . "; </script>\r\n";
 
@@ -175,6 +175,7 @@ function search_content(&$a) {
 			'$order' => '',
 			'$file' => '',
 			'$cats' => '',
+			'$uri' => '',
 			'$dend' => '',
 			'$dbegin' => ''
 		));

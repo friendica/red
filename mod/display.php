@@ -1,7 +1,7 @@
 <?php
 
 
-function display_content(&$a) {
+function display_content(&$a, $update = 0, $load = false) {
 
 	if(intval(get_config('system','block_public')) && (! local_user()) && (! remote_user())) {
 		notice( t('Public access denied.') . EOL);
@@ -14,13 +14,16 @@ function display_content(&$a) {
 	require_once('include/acl_selectors.php');
 	require_once('include/items.php');
 
-	$o = '<div id="live-display"></div>' . "\r\n";
+//	$o = '<div id="live-display"></div>' . "\r\n";
 
 	$a->page['htmlhead'] .= replace_macros(get_markup_template('display-head.tpl'), array());
 
 
-	if(argc() > 1)
+	if(argc() > 1 && argv(1) !== 'load')
 		$item_hash = argv(1);
+	if($_REQUEST['uri'])
+		$item_hash = $_REQUEST['uri'];
+
 
 	if(! $item_hash) {
 		$a->error = 404;
@@ -37,135 +40,128 @@ function display_content(&$a) {
 	// and if that fails, look for a copy of the post that has no privacy restrictions.  
 	// If we find the post, but we don't find a copy that we're allowed to look at, this fact needs to be reported.
 
-// FIXME - on the short term, we'll only do the first query.
+	// find a copy of the item somewhere
 
 	$target_item = null;
+dbg(1);
+	$r = q("select uri, parent_uri from item where uri = '%s' limit 1",
+		dbesc($item_hash)
+	);
+dbg(0);
+	if($r) {
+		$target_item = $r[0];
+	}
 
-	if(local_user()) {
-		$r = q("select * from item where uri = '%s' and uid = %d limit 1",
-			dbesc($item_hash),
-			intval(local_user())
-		);
-		if($r) {
-			$owner = local_user();
-			$observer_is_owner = true;		
-			$target_item = $r[0];
+	if((! $update) && (! $load)) {
+
+
+		$o .= '<div id="live-display"></div>' . "\r\n";
+		$o .= "<script> var profile_uid = " . intval(local_user())
+			. "; var netargs = '?f='; var profile_page = " . $a->pager['page'] . "; </script>\r\n";
+
+		$a->page['htmlhead'] .= replace_macros(get_markup_template("build_query.tpl"),array(
+			'$baseurl' => z_root(),
+			'$pgtype' => 'display',
+			'$uid' => '0',
+			'$gid' => '0',
+			'$cid' => '0',
+			'$cmin' => '0',
+			'$cmax' => '99',
+			'$star' => '0',
+			'$liked' => '0',
+			'$conv' => '0',
+			'$spam' => '0',
+			'$nouveau' => '0',
+			'$wall' => '0',
+			'$page' => (($a->pager['page'] != 1) ? $a->pager['page'] : 1),
+			'$search' => '',
+			'$order' => '',
+			'$file' => '',
+			'$cats' => '',
+			'$dend' => '',
+			'$dbegin' => '',
+			'$uri' => $item_hash
+		));
+
+
+	}
+
+	$sql_extra = public_permissions_sql(get_observer_hash());
+
+
+	if($load) {
+
+		$pager_sql = sprintf(" LIMIT %d, %d ",intval($a->pager['start']), intval($a->pager['itemspage']));
+
+		if($load) {
+dbg(1);
+			$r = q("SELECT * from item
+				WHERE item_restrict = 0
+				AND ( `item`.`allow_cid` = ''  AND `item`.`allow_gid` = '' AND `item`.`deny_cid`  = '' 
+				AND `item`.`deny_gid`  = '' AND item_private = 0 ) 
+				and uid in ( " . stream_perms_api_uids() . " )
+				$sql_extra
+				and uri = '%s'
+				group by uri limit 1",
+				dbesc($target_item['parent_uri'])
+			);
+dbg(0);
+		}
+		else {
+			$r = array();
 		}
 	}
 
+	if($r) {
 
-	// Checking for visitors is a bit harder, we'll look for this item from any of their friends that they've auth'd
-	// against and see if any of them are writeable.
-	// This will be messy.
+		$parents_str = ids_to_querystr($r,'id');
+		if($parents_str) {
+ dbg(1);
 
-//	$nick = (($a->argc > 1) ? $a->argv[1] : '');
-//	profile_load($a,$nick);
-//	profile_aside($a);
+			$items = q("SELECT `item`.*, `item`.`id` AS `item_id` 
+				FROM `item`
+				WHERE item_restrict = 0 and parent in ( %s ) ",
+				dbesc($parents_str)
+			);
 
-//	$item_id = (($a->argc > 2) ? intval($a->argv[2]) : 0);
+dbg(0);
+			xchan_query($items);
+			$items = fetch_post_tags($items);
+			$items = conv_sort($items,'created');
+		}
+	} else {
+		$items = array();
+	}
 
-//	if(! $item_id) {
-//		$a->error = 404;
-//		notice( t('Item not found.') . EOL);
-//		return;
-//	}
-
-//	$groups = array();
-
-//	$contact = null;
-//	$remote_contact = false;
-
-//	$contact_id = 0;
-
-//	if(is_array($_SESSION['remote'])) {
-//		foreach($_SESSION['remote'] as $v) {
-//			if($v['uid'] == $a->profile['uid']) {
-//				$contact_id = $v['cid'];
-//				break;
-//			}
-//		}
-//	}
-
-//	if($contact_id) {
-//		$groups = init_groups_visitor($contact_id);
-//		$r = q("SELECT * FROM `contact` WHERE `id` = %d AND `uid` = %d LIMIT 1",
-//			intval($contact_id),
-//			intval($a->profile['uid'])
-//		);
-//		if(count($r)) {
-//			$contact = $r[0];
-//			$remote_contact = true;
-//		}
-//	}
-
-//	if(! $remote_contact) {
-
-//		if(local_user()) {
-//			$contact_id = $_SESSION['cid'];
-//			$contact = $a->contact;
-//		}
-//	}
-
-//	$r = q("SELECT * FROM `contact` WHERE `uid` = %d AND `self` = 1 LIMIT 1",
-//		intval($a->profile['uid'])
-//	);
-
-//	$is_owner = ((local_user()) && (local_user() == $a->profile['profile_uid']) ? true : false);
 
 	if($a->profile['hidewall'] && (! $is_owner) && (! $remote_contact)) {
 		notice( t('Access to this profile has been restricted.') . EOL);
 		return;
 	}
 	
-//	if ($is_owner)
-//		$celeb = ((($a->user['page-flags'] == PAGE_SOAPBOX) || ($a->user['page-flags'] == PAGE_COMMUNITY)) ? true : false);
+	if($items) {
 
-//		$x = array(
-//			'is_owner' => true,
-//			'allow_location' => $a->user['allow_location'],
-//			'default_location' => $a->user['default-location'],
-//			'nickname' => $a->user['nickname'],
-//			'lockstate' => ( (is_array($a->user)) && ((strlen($a->user['allow_cid'])) || (strlen($a->user['allow_gid'])) || (strlen($a->user['deny_cid'])) || (strlen($a->user['deny_gid']))) ? 'lock' : 'unlock'),
-//			'acl' => populate_acl($a->user, $celeb),
-//			'bang' => '',
-//			'visitor' => 'block',
-//			'profile_uid' => local_user()
-//		);	
-//		$o .= status_editor($a,$x,true);
-
-
-// FIXME
-//	$sql_extra = item_permissions_sql($a->profile['uid']);
-
-	if($target_item) {
-		$r = q("SELECT * from item where parent = %d",
-			intval($target_item['parent'])
-		);
-	}
-
-
-	if($r) {
-
-		if((local_user()) && (local_user() == $owner)) {
+//		if((local_user()) && (local_user() == $owner)) {
 //			q("UPDATE `item` SET `unseen` = 0 
 //				WHERE `parent` = %d AND `unseen` = 1",
 //				intval($r[0]['parent'])
 //			);
-		}
+//		}
 
-		xchan_query($r);
-		$r = fetch_post_tags($r);
+//		xchan_query($items);
+//		$items = fetch_post_tags($items);
 
-		$o .= conversation($a,$r,'display', false);
+		$o .= conversation($a,$items,'display', $update, 'client');
 
 	}
+/*
 	else {
-		$r = q("SELECT `id`,`deleted` FROM `item` WHERE `id` = '%s' OR `uri` = '%s' LIMIT 1",
-			dbesc($item_id),
-			dbesc($item_id)
+		$r = q("SELECT `id`, item_flags FROM `item` WHERE `id` = '%s' OR `uri` = '%s' LIMIT 1",
+			dbesc($item_hash),
+			dbesc($item_hash)
 		);
-		if(count($r)) {
-			if($r[0]['deleted']) {
+		if($r) {
+			if($r[0]['item_flags'] & ITEM_DELETED) {
 				notice( t('Item has been removed.') . EOL );
 			}
 			else {	
@@ -177,7 +173,7 @@ function display_content(&$a) {
 		}
 
 	}
-
+*/
 	return $o;
 }
 

@@ -214,13 +214,13 @@ function permissions_sql($owner_id,$remote_verified = false,$groups = null) {
 				$gs .= '|<' . $g . '>';
 		} 
 		$sql = sprintf(
-			" AND ( NOT (deny_cid like '<%s>' OR deny_gid REGEXP '%s')
-			  AND ( allow_cid like '<%s>' OR allow_gid REGEXP '%s' OR ( allow_cid = '' AND allow_gid = '') )
+			" AND ( NOT (deny_cid like '%s' OR deny_gid REGEXP '%s')
+			  AND ( allow_cid like '%s' OR allow_gid REGEXP '%s' OR ( allow_cid = '' AND allow_gid = '') )
 			  )
 			",
-			dbesc(protect_sprintf( '%' . $remote_user . '%')),
+			dbesc(protect_sprintf( '%<' . $remote_user . '>%')),
 			dbesc($gs),
-			dbesc(protect_sprintf( '%' . $remote_user . '%')),
+			dbesc(protect_sprintf( '%<' . $remote_user . '>%')),
 			dbesc($gs)
 		);
 	}
@@ -269,19 +269,43 @@ function item_permissions_sql($owner_id,$remote_verified = false,$groups = null)
 				$gs .= '|<' . $g . '>';
 		} 
 		$sql = sprintf(
-			" AND ( NOT (deny_cid like '<%s>' OR deny_gid REGEXP '%s')
-			  AND ( allow_cid like '<%s>' OR allow_gid REGEXP '%s' OR ( allow_cid = '' AND allow_gid = '') )
+			" AND ( NOT (deny_cid like '%s' OR deny_gid REGEXP '%s')
+			  AND ( allow_cid like '%s' OR allow_gid REGEXP '%s' OR ( allow_cid = '' AND allow_gid = '') )
 			  )
 			",
-			dbesc(protect_sprintf( '%' . $remote_user . '%')),
+			dbesc(protect_sprintf( '%<' . $remote_user . '>%')),
 			dbesc($gs),
-			dbesc(protect_sprintf( '%' . $remote_user . '%')),
+			dbesc(protect_sprintf( '%<' . $remote_user . '>%')),
 			dbesc($gs)
 		);
 	}
 	return $sql;
 }
 
+function public_permissions_sql($observer_hash) {
+
+	$observer = get_app()->get_observer();
+	$groups = init_groups_visitor($observer_hash);
+
+	$gs = '<<>>'; // should be impossible to match
+
+	if(is_array($groups) && count($groups)) {
+		foreach($groups as $g)
+			$gs .= '|<' . $g . '>';
+	} 
+	$sql = sprintf(
+		" OR (( NOT (deny_cid like '%s' OR deny_gid REGEXP '%s')
+		  AND ( allow_cid like '%s' OR allow_gid REGEXP '%s' OR ( allow_cid = '' AND allow_gid = '') )
+		  ))
+		",
+		dbesc(protect_sprintf( '%<' . $observer_hash . '>%')),
+		dbesc($gs),
+		dbesc(protect_sprintf( '%<' . $observer_hash . '>%')),
+		dbesc($gs)
+	);
+
+	return $sql;
+}
 
 
 /*
