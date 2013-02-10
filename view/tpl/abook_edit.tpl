@@ -46,11 +46,12 @@ $slide
 <b>$quick</b>
 <ul>
 {{ if $self }}
-<li><a href="#" onclick="connectForum(); $('#abook-edit-form').submit();">$forum</a></li>
+<li><span class="fakelink" onclick="connectForum(); $('#abook-edit-form').submit();">$forum</span></li>
+<li><span class="fakelink" onclick="connectSoapBox(); $('#abook-edit-form').submit();">$soapbox</span></li>
 {{ endif }}
 <li><span class="fakelink" onclick="connectFullShare(); $('#abook-edit-form').submit();">$full</span></li>
-<li><a href="#" onclick="connectCautiousShare(); $('#abook-edit-form').submit();">$cautious</a></li>
-<li><a href="#" onclick="connectFollowOnly(); $('#abook-edit-form').submit();">$follow</a></li>
+<li><span class="fakelink" onclick="connectCautiousShare(); $('#abook-edit-form').submit();">$cautious</span></li>
+<li><span class="fakelink" onclick="connectFollowOnly(); $('#abook-edit-form').submit();">$follow</span></li>
 </ul>
 
 <div id="abook-advanced" class="fakelink" onclick="openClose('abook-advanced-panel');">$advanced</div>

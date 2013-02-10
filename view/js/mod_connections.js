@@ -61,6 +61,15 @@ function connectForum() {
 	$('#me_id_perms_tag_deliver').attr('checked','checked');
 }
 
+function connectSoapBox() {
+	$('#me_id_perms_view_stream').attr('checked','checked');
+	$('#me_id_perms_view_profile').attr('checked','checked');
+	$('#me_id_perms_view_photos').attr('checked','checked');
+	$('#me_id_perms_view_contacts').attr('checked','checked');
+	$('#me_id_perms_view_storage').attr('checked','checked');
+	$('#me_id_perms_view_pages').attr('checked','checked');
+}
+
 
 function connectFollowOnly() {
 	$('#me_id_perms_send_stream').attr('checked','checked');

@@ -379,6 +379,7 @@ function connections_content(&$a) {
 			'$me'             => t('My Settings'),
 			'$perms'          => $perms,
 			'$forum'          => t('Forum Members'),
+			'$soapbox'        => t('Soapbox'),
 			'$full'           => t('Full Sharing'),
 			'$cautious'       => t('Cautious Sharing'),
 			'$follow'         => t('Follow Only'),
