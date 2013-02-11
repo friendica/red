@@ -561,7 +561,7 @@ function network_content(&$a, $update = 0, $load = false) {
 	}
 	else {
 		$itemspage = get_pconfig(local_user(),'system','itemspage');
-		$a->set_pager_itemspage(((intval($itemspage)) ? $itemspage : 30));
+		$a->set_pager_itemspage(((intval($itemspage)) ? $itemspage : 20));
 		$pager_sql = sprintf(" LIMIT %d, %d ",intval($a->pager['start']), intval($a->pager['itemspage']));
 	}
 

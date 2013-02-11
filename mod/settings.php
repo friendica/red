@@ -209,7 +209,7 @@ function settings_post(&$a) {
 		if($browser_update < 10000)
 			$browser_update = 10000;
 
-		$itemspage   = ((x($_POST,'itemspage')) ? intval($_POST['itemspage']) : 40);
+		$itemspage   = ((x($_POST,'itemspage')) ? intval($_POST['itemspage']) : 20);
 		if($itemspage > 100)
 			$itemspage = 100;
 
@@ -813,7 +813,7 @@ function settings_content(&$a) {
 		$browser_update = (($browser_update == 0) ? 40 : $browser_update / 1000); // default if not set: 40 seconds
 
 		$itemspage = intval(get_pconfig(local_user(), 'system','itemspage'));
-		$itemspage = (($itemspage > 0 && $itemspage < 101) ? $itemspage : 40); // default if not set: 40 items
+		$itemspage = (($itemspage > 0 && $itemspage < 101) ? $itemspage : 20); // default if not set: 20 items
 		
 		$nosmile = get_pconfig(local_user(),'system','no_smilies');
 		$nosmile = (($nosmile===false)? '0': $nosmile); // default if not set: 0
