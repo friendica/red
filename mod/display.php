@@ -14,7 +14,6 @@ function display_content(&$a, $update = 0, $load = false) {
 	require_once('include/acl_selectors.php');
 	require_once('include/items.php');
 
-//	$o = '<div id="live-display"></div>' . "\r\n";
 
 	$a->page['htmlhead'] .= replace_macros(get_markup_template('display-head.tpl'), array());
 
@@ -43,11 +42,11 @@ function display_content(&$a, $update = 0, $load = false) {
 	// find a copy of the item somewhere
 
 	$target_item = null;
-dbg(1);
+
 	$r = q("select uri, parent_uri from item where uri = '%s' limit 1",
 		dbesc($item_hash)
 	);
-dbg(0);
+
 	if($r) {
 		$target_item = $r[0];
 	}
@@ -94,7 +93,7 @@ dbg(0);
 		$pager_sql = sprintf(" LIMIT %d, %d ",intval($a->pager['start']), intval($a->pager['itemspage']));
 
 		if($load) {
-dbg(1);
+
 			$r = q("SELECT * from item
 				WHERE item_restrict = 0
 				and uri = '%s'
@@ -105,7 +104,7 @@ dbg(1);
 				group by uri limit 1",
 				dbesc($target_item['parent_uri'])
 			);
-dbg(0);
+
 		}
 		else {
 			$r = array();
@@ -116,7 +115,6 @@ dbg(0);
 
 		$parents_str = ids_to_querystr($r,'id');
 		if($parents_str) {
- dbg(1);
 
 			$items = q("SELECT `item`.*, `item`.`id` AS `item_id` 
 				FROM `item`
@@ -124,7 +122,6 @@ dbg(0);
 				dbesc($parents_str)
 			);
 
-dbg(0);
 			xchan_query($items);
 			$items = fetch_post_tags($items);
 			$items = conv_sort($items,'created');

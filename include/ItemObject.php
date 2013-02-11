@@ -15,6 +15,7 @@ class Item extends BaseObject {
 	private $comment_box_template = 'comment_item.tpl';
 	private $toplevel = false;
 	private $writable = false;
+	private $commentable = false;
 	private $children = array();
 	private $parent = null;
 	private $conversation = null;
@@ -37,35 +38,31 @@ class Item extends BaseObject {
 
 		$this->toplevel = ($this->get_id() == $this->get_data_value('parent'));
 
-//		if(is_array($_SESSION['remote'])) {
-//			foreach($_SESSION['remote'] as $visitor) {
-//				if($visitor['cid'] == $this->get_data_value('contact-id')) {
-//					$this->visiting = true;
-//					break;
-//				}
-//			}
-//		}
 
-// fixme		
-		$this->writable = ($this->get_data_value('writable') || $this->get_data_value('self'));
-// FIXME - base this on observer permissions
+		$this->writable = (((local_user()) && ($this->channel['channel_hash'] === $this->data['owner_xchan'])) ? true : false);
+		$this->commentable = $this->writable;
 
-		$this->writable = ((local_user() && $channel['channel_hash'] === $item['owner_xchan']) ? true : false);
+		if(($this->observer) && (! $this->writable)) {
+			$this->commentable = perm_is_allowed($this->data['uid'],$this->observer['xchan_hash'],'post_comments');
+		}
 
-
-
-		if(get_config('system','thread_allow') && $a->theme_thread_allow && !$this->is_toplevel())
-			$this->threaded = true;
+//		logger('writable: ' . $this->writable);
+//		logger('commentable: ' . $this->commentable . ' uid=' . $this->data['uid'] . ' observer=' . $this->observer['xchan_hash']);
+//		if(get_config('system','thread_allow') && $a->theme_thread_allow && !$this->is_toplevel())
+//			$this->threaded = true;
 
 		// Prepare the children
 		if(count($data['children'])) {
 			foreach($data['children'] as $item) {
+
 				/*
-				 * Only add will be displayed
+				 * Only add thos that will be displayed
 				 */
+
 				if(! visible_activity($item)) {
 					continue;
 				}
+
 				$child = new Item($item);
 				$this->add_child($child);
 			}
@@ -102,11 +99,11 @@ class Item extends BaseObject {
 
 		$conv = $this->get_conversation();
 
-		$lock = ((($item['private'] == 1) || (($item['uid'] == local_user()) && (strlen($item['allow_cid']) || strlen($item['allow_gid']) 
+		$lock = ((($item['item_private'] == 1) || (($item['uid'] == local_user()) && (strlen($item['allow_cid']) || strlen($item['allow_gid']) 
 			|| strlen($item['deny_cid']) || strlen($item['deny_gid']))))
 			? t('Private Message')
 			: false);
-		$shareable = ((($conv->get_profile_owner() == local_user()) && ($item['private'] != 1)) ? true : false);
+		$shareable = ((($conv->get_profile_owner() == local_user()) && ($item['item_private'] != 1)) ? true : false);
 
 		if(local_user() && $observer['xchan_hash'] === $item['author_xchan'])
 			$edpost = array($a->get_baseurl($ssl_state)."/editpost/".$item['id'], t("Edit"));
@@ -177,7 +174,7 @@ class Item extends BaseObject {
 			$indent = 'comment';
 		}
 
-		if($conv->is_writable()) {
+		if($this->is_writable()) {
 			$like = array( t("I like this \x28toggle\x29"), t("like"));
 			$dislike = array( t("I don't like this \x28toggle\x29"), t("dislike"));
 			if ($shareable)
@@ -458,16 +455,22 @@ class Item extends BaseObject {
 	 * Check if this is writable
 	 */
 	private function is_writable() {
-		$conv = $this->get_conversation();
 
-		return true;
+		return $this->writable;
+		
+//		$conv = $this->get_conversation();
 
-		if($conv) {
+//		return true;
+
+//		if($conv) {
 			// This will allow us to comment on wall-to-wall items owned by our friends
 			// and community forums even if somebody else wrote the post.
-			return ($this->writable || ($this->is_visiting() && $conv->get_mode() == 'channel'));
-		}
-		return $this->writable;
+//			return ($this->writable || ($this->is_visiting() && $conv->get_mode() == 'channel'));
+//		}
+	}
+
+	private function is_commentable() {
+		return $this->commentable;
 	}
 
 	/**
@@ -507,11 +510,10 @@ class Item extends BaseObject {
 		$comment_box = '';
 		$conv = $this->get_conversation();
 
-		$observer = get_app()->get_observer();
-		if(! perm_is_allowed($conv->get_profile_owner(),$observer['xchan_hash'],'post_comments'))
-			return '';
+		if(! $this->is_commentable())
+			return;
 
-		if($conv->is_writable() && $this->is_writable()) {
+		if($conv->is_writable() || $this->is_writable()) {
 			$template = get_markup_template($this->get_comment_box_template());
 
 			$a = $this->get_app();
