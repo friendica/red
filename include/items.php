@@ -1644,7 +1644,9 @@ function tag_deliver($uid,$item_id) {
 
 	$body = preg_replace('/\[share(.*?)\[\/share\]/','',$item['body']);
 
-	if(! preg_match('/@\[url=(.*?)\]' . $u[0]['channel_name'] . '\[\/url\]/',$matches, $body)) {
+	$pattern = '/@\[url\=' . preg_quote($term['url'],'/') . '\]' . preg_quote($u[0]['channel_name'],'/') . '\[\/url\]/';
+
+	if(! preg_match($pattern,$body,$matches)) {
 		logger('tag_deliver: mention was in a reshare - ignoring');
 		return;
 	}
