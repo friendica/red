@@ -12,7 +12,7 @@
 <label id="profile-photo-profiles-label" class="form-label" for="profile-photo-profiles">$lbl_profiles</label>
 <select name="profile" id="profile-photo-profiles" class="form-input" >
 {{ for $profiles as $p }}
-<option value="$p.id" {{ if $p.default }}selected="selected"{{ endif }}>$p.name</option>
+<option value="$p.id" {{ if $p.pdefault }}selected="selected"{{ endif }}>$p.name</option>
 {{ endfor }}
 </select>
 <div class="clear"></div>

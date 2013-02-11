@@ -3564,6 +3564,15 @@ nav a:hover {
   text-decoration: none;
   outline: none;
 }
+
+#profiles-menu li a {
+	color: #ffffff;
+}
+
+#profiles-menu li a:hover {
+	color: #000000;
+}
+
 nav ul {
   margin: 0px;
   padding: 0px 20px;

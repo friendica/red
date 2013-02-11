@@ -257,11 +257,11 @@ function profile_photo_content(&$a) {
 		// go ahead as if we have just uploaded a new photo to crop
 		profile_photo_crop_ui_head($a, $ph);
 	}
-
-	$profiles = q("select id, profile_name as name, is_default as default from profile where uid = %d",
+dbg(1);
+	$profiles = q("select id, profile_name as name, is_default as pdefault from profile where uid = %d",
 		intval(local_user())
 	);
-
+dbg(0);
 	if(! x($a->data,'imagecrop')) {
 	
 		$tpl = get_markup_template('profile_photo.tpl');
