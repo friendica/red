@@ -8,6 +8,8 @@ require_once('include/group.php');
 function update_display_content(&$a) {
 
 	$profile_uid = intval($_GET['p']);
+	if(! $profile_uid)
+		$profile_uid = (-1);
 	$load = (((argc() > 1) && (argv(1) == 'load')) ? 1 : 0);
 	header("Content-type: text/html");
 	echo "<!DOCTYPE html><html><body>\r\n";

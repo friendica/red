@@ -714,6 +714,7 @@ function conversation(&$a, $items, $mode, $update, $page_mode = 'traditional') {
 	if($page_mode === 'preview')
 		logger('preview: ' . print_r($threads,true));
 
+//  Do not un-comment if smarty3 is in use
 //	logger('page_template: ' . $page_template);
 
 //	logger('nouveau: ' . print_r($threads,true));
