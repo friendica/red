@@ -656,7 +656,9 @@ function import_profile_photo($photo,$xchan) {
 
     $a = get_app();
 
-    $r = q("select `resource_id` from photo where xchan = '%s' and `scale` = 4 limit 1",
+	logger('import_profile_photo: updating channel photo from ' . $photo . ' for ' . $xchan, LOGGER_DEBUG);
+
+    $r = q("select resource_id from photo where xchan = '%s' and scale = 4 limit 1",
         dbesc($xchan)
     );
     if($r) {
@@ -667,6 +669,7 @@ function import_profile_photo($photo,$xchan) {
     }
 
     $photo_failure = false;
+
 
     $filename = basename($photo);
     $img_str = fetch_url($photo,true);
@@ -700,9 +703,10 @@ function import_profile_photo($photo,$xchan) {
         $thumb = $a->get_baseurl() . '/photo/' . $hash . '-5';
         $micro = $a->get_baseurl() . '/photo/' . $hash . '-6';
     }
-    else
+    else {
+		logger('import_profile_photo: invalid image from ' . $photo);	
         $photo_failure = true;
-
+	}
     if($photo_failure) {
         $photo = $a->get_baseurl() . '/images/person-175.jpg';
         $thumb = $a->get_baseurl() . '/images/person-80.jpg';
