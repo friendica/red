@@ -480,18 +480,19 @@ function get_item_elements($x) {
 	if($arr['edited'] > datetime_convert())
 		$arr['edited']   = datetime_convert();
 
-	$arr['title']        = (($x['title'])    ? htmlentities($x['title'],    ENT_COMPAT,'UTF-8',false) : '');
-	$arr['app']          = (($x['app'])      ? htmlentities($x['app'],      ENT_COMPAT,'UTF-8',false) : '');
-	$arr['uri']          = (($x['message_id'])      ? htmlentities($x['message_id'],      ENT_COMPAT,'UTF-8',false) : '');
-	$arr['parent_uri']   = (($x['message_top']) ? htmlentities($x['message_top'], ENT_COMPAT,'UTF-8',false) : '');
+	$arr['title']        = (($x['title'])          ? htmlentities($x['title'],          ENT_COMPAT,'UTF-8',false) : '');
+	$arr['app']          = (($x['app'])            ? htmlentities($x['app'],            ENT_COMPAT,'UTF-8',false) : '');
+	$arr['uri']          = (($x['message_id'])     ? htmlentities($x['message_id'],     ENT_COMPAT,'UTF-8',false) : '');
+	$arr['parent_uri']   = (($x['message_top'])    ? htmlentities($x['message_top'],    ENT_COMPAT,'UTF-8',false) : '');
 	$arr['thr_parent']   = (($x['message_parent']) ? htmlentities($x['message_parent'], ENT_COMPAT,'UTF-8',false) : '');
 
-	$arr['plink']        = (($x['permalink'])    ? htmlentities($x['permalink'],    ENT_COMPAT,'UTF-8',false) : '');
-	$arr['location']     = (($x['location']) ? htmlentities($x['location'], ENT_COMPAT,'UTF-8',false) : '');
-	$arr['coord']        = (($x['longlat'])    ? htmlentities($x['longlat'],    ENT_COMPAT,'UTF-8',false) : '');
-	$arr['verb']         = (($x['verb'])     ? htmlentities($x['verb'],     ENT_COMPAT,'UTF-8',false) : '');
-	$arr['obj_type']     = (($x['object_type'])  ? htmlentities($x['object_type'],  ENT_COMPAT,'UTF-8',false) : '');
-	$arr['tgt_type']     = (($x['target_type'])  ? htmlentities($x['target_type'],  ENT_COMPAT,'UTF-8',false) : '');
+	$arr['plink']        = (($x['permalink'])      ? htmlentities($x['permalink'],      ENT_COMPAT,'UTF-8',false) : '');
+	$arr['location']     = (($x['location'])       ? htmlentities($x['location'],       ENT_COMPAT,'UTF-8',false) : '');
+	$arr['coord']        = (($x['longlat'])        ? htmlentities($x['longlat'],        ENT_COMPAT,'UTF-8',false) : '');
+	$arr['verb']         = (($x['verb'])           ? htmlentities($x['verb'],           ENT_COMPAT,'UTF-8',false) : '');
+	$arr['mimetype']     = (($x['mimetype'])       ? htmlentities($x['mimetype'],       ENT_COMPAT,'UTF-8',false) : '');
+	$arr['obj_type']     = (($x['object_type'])    ? htmlentities($x['object_type'],    ENT_COMPAT,'UTF-8',false) : '');
+	$arr['tgt_type']     = (($x['target_type'])    ? htmlentities($x['target_type'],    ENT_COMPAT,'UTF-8',false) : '');
 
 	$arr['object']       = activity_sanitise($x['object']);
 	$arr['target']       = activity_sanitise($x['target']);
@@ -571,6 +572,7 @@ function encode_item($item) {
 	$x['created']        = $item['created'];
 	$x['edited']         = $item['edited'];
 	$x['expires']        = $item['expires'];
+	$x['mimetype']       = $item['mimetype'];
 	$x['title']          = $item['title'];
 	$x['body']           = $item['body'];
 	$x['app']            = $item['app'];
@@ -1275,6 +1277,7 @@ function item_store($arr,$force_parent = false) {
 	$arr['commented']     = datetime_convert();
 	$arr['received']      = datetime_convert();
 	$arr['changed']       = datetime_convert();
+	$arr['mimetype']      = ((x($arr,'mimetype'))      ? notags(trim($arr['mimetype']))      : 'text/bbcode');
 	$arr['title']         = ((x($arr,'title'))         ? notags(trim($arr['title']))         : '');
 	$arr['location']      = ((x($arr,'location'))      ? notags(trim($arr['location']))      : '');
 	$arr['coord']         = ((x($arr,'coord'))         ? notags(trim($arr['coord']))         : '');
