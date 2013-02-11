@@ -119,7 +119,7 @@ function ping_init(&$a) {
 			foreach($z as $zz) {
 				$notifs[] = array(
 					'notify_link' => $a->get_baseurl() . '/notify/view/' . $zz['id'], 
-					'name' => $zz['name'],
+					'name' => '', // not required here because the name is in the message
 					'url' => $zz['url'],
 					'photo' => $zz['photo'],
 					'when' => relative_date($zz['date']), 
