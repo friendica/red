@@ -36,7 +36,7 @@ function page_content(&$a) {
 	}
 
 	xchan_query($r);
-	$r = fetch_post_tags($r);
+	$r = fetch_post_tags($r,true);
 	$a->profile = array('profile_uid' => $u[0]['channel_id']);
 	$o .= prepare_page($r[0]);
 	return $o;

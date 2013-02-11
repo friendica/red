@@ -1481,14 +1481,14 @@ function item_store($arr,$force_parent = false) {
 	$arr['private']   = $private;
 	
 	// Store taxonomy
-	
+
 	if(($terms) && (is_array($terms))) {
 		foreach($terms as $t) {
 			q("insert into term (uid,oid,otype,type,term,url)
 				values(%d,%d,%d,%d,'%s','%s') ",
 				intval($arr['uid']),
 				intval($current_post),
-				intval($t['otype']),
+				intval(TERM_OBJ_POST),
 				intval($t['type']),
 				dbesc($t['term']),
 				dbesc($t['url'])
@@ -1599,7 +1599,7 @@ function tag_deliver($uid,$item_id) {
 	$u = q("select * from channel where channel_id = %d limit 1",
 		intval($uid)
 	);
-	if(! count($u))
+	if(! $u)
 		return;
 		
 	$i = q("select * from item where id = %d and uid = %d limit 1",
@@ -4295,7 +4295,7 @@ function posted_date_widget($url,$uid,$wall) {
 }
 
 
-function fetch_post_tags($items) {
+function fetch_post_tags($items,$link = false) {
 
 	$tag_finder = array();
 	if($items) {		
@@ -4326,6 +4326,8 @@ function fetch_post_tags($items) {
 	for($x = 0; $x < count($items); $x ++) {
 		if($tags) {
 			foreach($tags as $t) {
+				if(($link) && ($t['type'] == TERM_MENTION))
+					$t['url'] = chanlink_url($t['url']);
 				if(array_key_exists('item_id',$items[$x])) {
 					if($t['oid'] == $items[$x]['item_id']) {
 						if(! is_array($items[$x]['term']))

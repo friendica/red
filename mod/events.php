@@ -261,7 +261,7 @@ function events_content(&$a) {
 
 		if($r) {
 			xchan_query($r);
-			$r = fetch_post_tags($r);
+			$r = fetch_post_tags($r,true);
 
 			$r = sort_by_date($r);
 

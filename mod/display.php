@@ -123,7 +123,7 @@ function display_content(&$a, $update = 0, $load = false) {
 			);
 
 			xchan_query($items);
-			$items = fetch_post_tags($items);
+			$items = fetch_post_tags($items,true);
 			$items = conv_sort($items,'created');
 		}
 	} else {

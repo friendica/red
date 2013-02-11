@@ -608,7 +608,7 @@ function network_content(&$a, $update = 0, $load = false) {
 
 		xchan_query($items);
 
-		$items = fetch_post_tags($items);
+		$items = fetch_post_tags($items,true);
 	}
 	elseif($update) {
 
@@ -670,7 +670,7 @@ function network_content(&$a, $update = 0, $load = false) {
 
 			$third = dba_timer();
 
-			$items = fetch_post_tags($items);
+			$items = fetch_post_tags($items,true);
 
 			$fourth = dba_timer();
 

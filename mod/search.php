@@ -219,7 +219,7 @@ function search_content(&$a) {
 		);
 
 		xchan_query($items);
-		$items = fetch_post_tags($items);
+		$items = fetch_post_tags($items,true);
 		$items = conv_sort($items,'created');
 
 	} else {
@@ -249,7 +249,7 @@ function search_content(&$a) {
 	);
 
 
-//	$a = fetch_post_tags($a);
+//	$a = fetch_post_tags($a,true);
 
 	if(! count($r)) {
 		info( t('No results.') . EOL);
