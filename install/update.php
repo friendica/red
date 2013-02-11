@@ -1,6 +1,6 @@
 <?php
 
-define( 'UPDATE_VERSION' , 1026 );
+define( 'UPDATE_VERSION' , 1027 );
 
 /**
  *
@@ -332,3 +332,13 @@ ADD `flags` INT UNSIGNED NOT NULL DEFAULT '0' AFTER `folder` , add index ( folde
 		return UPDATE_SUCCESS;
 	return UPDATE_FAILED;
 }
+
+function update_r1026() {
+	$r = q("ALTER TABLE `item` ADD `mimetype` CHAR( 255 ) NOT NULL DEFAULT '' AFTER `author_xchan` ,
+ADD INDEX ( `mimetype` )");
+	if($r)
+		return UPDATE_SUCCESS;
+	return UPDATE_FAILED;
+}
+
+

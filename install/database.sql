@@ -453,6 +453,7 @@ CREATE TABLE IF NOT EXISTS `item` (
   `changed` datetime NOT NULL DEFAULT '0000-00-00 00:00:00',
   `owner_xchan` char(255) NOT NULL DEFAULT '',
   `author_xchan` char(255) NOT NULL DEFAULT '',
+  `mimetype` char(255) NOT NULL DEFAULT '',
   `title` char(255) NOT NULL DEFAULT '',
   `body` mediumtext NOT NULL,
   `app` char(255) NOT NULL DEFAULT '',
@@ -503,6 +504,7 @@ CREATE TABLE IF NOT EXISTS `item` (
   KEY `llink` (`llink`),
   KEY `expires` (`expires`),
   KEY `revision` (`revision`),
+  KEY `mimetype` (`mimetype`),
   FULLTEXT KEY `title` (`title`),
   FULLTEXT KEY `body` (`body`),
   FULLTEXT KEY `allow_cid` (`allow_cid`),
@@ -774,7 +776,7 @@ CREATE TABLE IF NOT EXISTS `register` (
   KEY `hash` (`hash`),
   KEY `created` (`created`),
   KEY `uid` (`uid`)
-) ENGINE=MyISAM DEFAULT CHARSET=utf8;
+) ENGINE=MyISAM  DEFAULT CHARSET=utf8;
 
 CREATE TABLE IF NOT EXISTS `session` (
   `id` bigint(20) unsigned NOT NULL AUTO_INCREMENT,
