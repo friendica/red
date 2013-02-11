@@ -1615,8 +1615,9 @@ function tag_deliver($uid,$item_id) {
 
 	$terms = get_terms_oftype($item['term'],TERM_MENTION);
 
+	logger('tag_deliver: post mentions: ' . print_r($terms,true), LOGGER_DATA);
 
-	$link = normalise_link($a->get_baseurl() . '/channel/' . $u[0]['nickname']);
+	$link = normalise_link($a->get_baseurl() . '/channel/' . $u[0]['channel_address']);
 
 	if($terms) {
 		foreach($terms as $term) {
@@ -1628,6 +1629,8 @@ function tag_deliver($uid,$item_id) {
 	}				
 
 	if($mention) {
+		logger('tag_deliver: mention found for ' . $u[0]['channel_name']);
+		
 		$r = q("update item set item_flags = ( item_flags | %d ) where id = %d limit 1",
 			intval(ITEM_MENTIONSME),
 			intval($item_id)
