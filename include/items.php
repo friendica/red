@@ -1675,17 +1675,15 @@ function tag_deliver($uid,$item_id) {
 	// prevent delivery looping - only proceed
 	// if the message originated elsewhere and is a top-level post
 
-// FIXME
-
-	if(($item['item_flags'] & ITEM_WALL) || ($item['item_flags'] & ITEM_ORIGIN) || ($item['item_flags'] & ITEM_THREAD_TOP) || ($item['id'] != $item['parent']))
+	if(($item['item_flags'] & ITEM_WALL) || ($item['item_flags'] & ITEM_ORIGIN) || (!($item['item_flags'] & ITEM_THREAD_TOP)) || ($item['id'] != $item['parent']))
 		return;
 
-
+	logger('tag_deliver: creating second delivery chain.');
 
 	// now change this copy of the post to a forum head message and deliver to all the tgroup members
 	// also reset all the privacy bits to the forum default permissions
 
-	$private = ($u[0]['allow_cid'] || $u[0]['allow_gid'] || $u[0]['deny_cid'] || $u[0]['deny_gid']) ? 1 : 0;
+	$private = (($u[0]['allow_cid'] || $u[0]['allow_gid'] || $u[0]['deny_cid'] || $u[0]['deny_gid']) ? 1 : 0);
 
 	$flag_bits = ITEM_WALL|ITEM_ORIGIN|ITEM_UPLINK;
 
