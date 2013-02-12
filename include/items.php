@@ -1687,7 +1687,7 @@ function tag_deliver($uid,$item_id) {
 
 	$flag_bits = ITEM_WALL|ITEM_ORIGIN|ITEM_UPLINK;
 
-	$r = q("update item set item_flags = ( $item_flags | %d ), owner_xchan = '%s', allow_cid = '%s', allow_gid = '%s', 
+	$r = q("update item set item_flags = ( item_flags | %d ), owner_xchan = '%s', allow_cid = '%s', allow_gid = '%s', 
 		deny_cid = '%s', deny_gid = '%s', item_private = %d  where id = %d limit 1",
 		intval($flag_bits),
 		dbesc($u[0]['channel_hash']),
