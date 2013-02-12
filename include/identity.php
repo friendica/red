@@ -80,7 +80,12 @@ function create_identity($arr) {
 	$sig = base64url_encode(rsa_sign($guid,$key['prvkey']));
 	$hash = base64url_encode(hash('whirlpool',$guid . $sig,true));
 
-	// Force primary until importation works, then we'll offer a choice
+	// Force a few things on the short term until we can provide a theme or app with choice
+
+	$publish = 1;
+
+	if(array_key_exists('publish', $arr))
+		$publish = intval($arr['publish']);
 
 	$primary = true;
 		
@@ -107,7 +112,7 @@ function create_identity($arr) {
 		dbesc($guid)
 	);
 
-	if(! ($r && count($r))) {
+	if(! $r) {
 		$ret['message'] = t('Unable to retrieve created identity');
 		return $ret;
 	}
@@ -167,13 +172,14 @@ function create_identity($arr) {
 	// It's ok for this to fail if it's an imported channel, and therefore the hash is a duplicate
 		
 
-	$r = q("INSERT INTO profile ( aid, uid, profile_guid, profile_name, is_default, name, photo, thumb)
-		VALUES ( %d, %d, '%s', '%s', %d, '%s', '%s', '%s') ",
+	$r = q("INSERT INTO profile ( aid, uid, profile_guid, profile_name, is_default, publish, name, photo, thumb)
+		VALUES ( %d, %d, '%s', '%s', %d, %d, '%s', '%s', '%s') ",
 		intval($ret['channel']['channel_account_id']),
 		intval($newuid),
 		dbesc(random_string()),
 		t('Default Profile'),
 		1,
+		$publish,
 		dbesc($ret['channel']['channel_name']),
 		dbesc($a->get_baseurl() . "/photo/profile/l/{$newuid}"),
 		dbesc($a->get_baseurl() . "/photo/profile/m/{$newuid}")
@@ -198,7 +204,9 @@ function create_identity($arr) {
 	group_add($newuid, t('Friends'));
 
 	call_hooks('register_account', $newuid);
- 
+
+	proc_run('php','include/directory.php', $ret['channel']['channel_id']);
+
 	$ret['success'] = true;
 	return $ret;
 

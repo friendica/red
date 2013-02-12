@@ -332,14 +332,6 @@ function user_allow($hash) {
 		intval($register[0]['uid'])
 	);
 	
-	$r = q("SELECT uid FROM profile WHERE uid = %d AND is_default = 1",
-		intval($account[0]['account_id'])
-	);
-
-	if($r && $r[0]['publish']) {
-		proc_run('php',"include/directory.php",$r[0]['uid']);
-	}
-
 	push_lang($register[0]['language']);
 
 	$email_tpl = get_intltext_template("register_open_eml.tpl");

@@ -38,7 +38,7 @@ function profile_photo_post(&$a) {
 		$is_default_profile = 1;
 
 		if($_REQUEST['profile']) {
-			$r = q("select id, `is_default` from profile where id = %d and uid = %d limit 1",
+			$r = q("select id, is_default from profile where id = %d and uid = %d limit 1",
 				intval($_REQUEST['profile']),
 				intval(local_user())
 			);
@@ -110,7 +110,7 @@ function profile_photo_post(&$a) {
 				// If setting for the default profile, unset the profile photo flag from any other photos I own
 
 				if($is_default_profile) {
-					$r = q("UPDATE `photo` SET `profile` = 0 WHERE `profile` = 1 AND `resource_id` != '%s' AND `uid` = %d",
+					$r = q("UPDATE photo SET profile = 0 WHERE profile = 1 AND resource_id != '%s' AND `uid` = %d",
 						dbesc($base_image['resource_id']),
 						intval(local_user())
 					);
@@ -137,11 +137,9 @@ function profile_photo_post(&$a) {
 				);
 
 				info( t('Shift-reload the page or clear browser cache if the new photo does not display immediately.') . EOL);
-				// Update global directory in background
-				$url = $a->get_baseurl() . '/channel/' . $a->user['nickname'];
-				if($url && strlen(get_config('system','directory_submit_url')))
-					proc_run('php',"include/directory.php","$url");
 
+				// Update directory in background
+				proc_run('php',"include/directory.php",$channel['channel_id']);
 			}
 			else
 				notice( t('Unable to process image') . EOL);
@@ -257,11 +255,11 @@ function profile_photo_content(&$a) {
 		// go ahead as if we have just uploaded a new photo to crop
 		profile_photo_crop_ui_head($a, $ph);
 	}
-dbg(1);
+
 	$profiles = q("select id, profile_name as name, is_default as pdefault from profile where uid = %d",
 		intval(local_user())
 	);
-dbg(0);
+
 	if(! x($a->data,'imagecrop')) {
 	
 		$tpl = get_markup_template('profile_photo.tpl');

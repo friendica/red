@@ -21,10 +21,6 @@ $nickname_block
 <h3 class="settings-heading">$h_prv</h3>
 
 
-<input type="hidden" name="visibility" value="$visibility" />
-
-
-
 <div id="settings-permissions-wrapper">
 {{ for $permiss_arr as $permit }}
 {{inc field_select.tpl with $field=$permit }}{{endinc}}
