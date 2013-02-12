@@ -10,10 +10,9 @@ your approval.
 
 The login details are as follows:
 
-Full Name:	{{$username}}
 Site Location:	{{$siteurl}}
 Login Name:	{{$email}}
-
+IP Address: {{$details}}
 
 To approve this request please visit the following link:
 

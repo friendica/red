@@ -238,6 +238,11 @@ function send_reg_approval_email($arr) {
 		dbesc($arr['account']['account_language'])
 	);
 
+	$ip = $_SERVER['REMOTE_ADDR'];
+
+	$details = (($ip) ? $ip . ' [' . gethostbyaddr($ip) . ']' : '[unknown or stealth IP]');
+
+
 	$delivered = 0;
 
 	foreach($admins as $admin) {
@@ -246,12 +251,13 @@ function send_reg_approval_email($arr) {
 		else
 			push_lang('en');
 
-		$email_msg = replace_macros(get_intltext_template('register_verify_email.tpl'), array(
+		$email_msg = replace_macros(get_intltext_template('register_verify_eml.tpl'), array(
 			'$sitename' => get_config('system','sitename'),
 			'$siteurl'  =>  z_root(),
 			'$email'    => $arr['email'],
 			'$uid'      => $arr['account']['account_id'],
-			'$hash'     => $hash
+			'$hash'     => $hash,
+			'$details'  => $details
 		 ));
 
 		$res = mail($admin['email'], sprintf( t('Registration request at %s'), get_config('system','sitename')),
@@ -278,7 +284,7 @@ function send_verification_email($email,$password) {
 		'$sitename' => get_config('config','sitename'),
 		'$siteurl' =>  z_root(),
 		'$email'    => $email,
-		'$password' => $password,
+		'$password' => t('your registration password'),
 	));
 
 	$res = mail($email, sprintf( t('Registration details for %s'), get_config('system','sitename')),
