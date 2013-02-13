@@ -49,10 +49,6 @@ function zot_get_hubloc($arr,$primary = false) {
 	 
 function zot_notify($channel,$url,$type = 'notify',$recipients = null, $remote_key = null) {
 
-
-// FIXME json encode all params
-// build the packet externally so that here we really are doing just a zot of the packet. 
-
 	$params = array(
 		'type' => $type,
 		'sender' => json_encode(array(

@@ -14,7 +14,7 @@ function rmagic_init(&$a) {
 		if($r) {	
 			if($r[0]['hubloc_url'] === z_root())
 				goaway(z_root() . '/login');
-			$dest = z_root() . '/' . str_replace('zid=','zid_=',$get_app()->query_string);
+			$dest = z_root() . '/' . str_replace('zid=','zid_=',get_app()->query_string);
 			goaway($r[0]['hubloc_url'] . '/magic' . '?f=&dest=' . $dest);
 		}
 	}

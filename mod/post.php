@@ -111,7 +111,8 @@ function post_init(&$a) {
 				logger('mod_zot: auth success from ' . $x[0]['xchan_addr'] . ' for ' . $webbie); 
 
 			}
-
+			if(strstr($desturl,z_root() . '/rmagic'))
+				goaway(z_root());
 			goaway($desturl);
 		}
 
