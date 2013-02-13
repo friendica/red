@@ -1974,7 +1974,7 @@ function get_my_address() {
 
 function zid_init(&$a) {
 	$tmp_str = get_my_address();
-	if($tmp_str && strpos($tmp_str,'@')) {
+	if(validate_email($tmp_str)) {
 		proc_run('php','include/gprobe.php',$tmp_str);
 		$arr = array('zid' => $tmp_str, 'url' => $a->cmd);
 		call_hooks('zid_init',$arr);
@@ -1983,9 +1983,9 @@ function zid_init(&$a) {
 				dbesc($tmp_str)
 			);
 			// try to avoid recursion - but send them home to do a proper magic auth
-			$dest = $a->query_string;
+			$dest = '/' . $a->query_string;
 			$dest = str_replace(array('?zid=','&zid='),array('?rzid=','&rzid='),$dest);
-			if($r && ($r[0]['hubloc_url'] != z_root()) && (! strstr($dest,'/magic'))) {
+			if($r && ($r[0]['hubloc_url'] != z_root()) && (! strstr($dest,'/magic')) && (! strstr($dest,'/rmagic'))) {
 				goaway($r[0]['hubloc_url'] . '/magic' . '?f=&dest=' . z_root() . $dest);
 			}
 		}
