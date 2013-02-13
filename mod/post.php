@@ -111,8 +111,14 @@ function post_init(&$a) {
 				logger('mod_zot: auth success from ' . $x[0]['xchan_addr'] . ' for ' . $webbie); 
 
 			}
+
+// FIXME - we really want to save the return_url in the session before we visit rmagic.
+// This does however prevent a recursion if you visit rmagic directly, as it would otherwise send you back here again. 
+// But z_root() probably isn't where you really want to go. 
+
 			if(strstr($desturl,z_root() . '/rmagic'))
 				goaway(z_root());
+
 			goaway($desturl);
 		}
 

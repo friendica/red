@@ -1973,9 +1973,9 @@ function get_my_address() {
 }
 
 function zid_init(&$a) {
-	$tmp_str = get_my_url();
-	if(validate_url($tmp_str)) {
-		proc_run('php','include/gprobe.php',bin2hex($tmp_str));
+	$tmp_str = get_my_address();
+	if($tmp_str && strpos($tmp_str,'@')) {
+		proc_run('php','include/gprobe.php',$tmp_str);
 		$arr = array('zid' => $tmp_str, 'url' => $a->cmd);
 		call_hooks('zid_init',$arr);
 		if((! local_user()) && (! remote_user())) {
