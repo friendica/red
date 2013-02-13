@@ -25,7 +25,7 @@ include/
   Contact.php
   contact_selectors.php
   contact_widgets.php
-  conversation.php
+? conversation.php
 + cronhooks.php
 ? crypto.php
 + datetime.php (todo: html removal)
@@ -83,7 +83,7 @@ mod/
   api.php
 + apps.php
 + attach.php
-? auth.php
+- auth.php
 - cb.php
   common.php
   community.php

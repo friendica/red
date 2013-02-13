@@ -4,7 +4,7 @@
  *
  *}}
 <div id="remote-friends-in-common" class="bigwidget">
-	<div id="rfic-desc">{{$desc}} &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;{{if $linkmore}}<a href="{{$base}}/common/rem/{{$uid}}/{{$cid}}">{{$more}}</a>{{/if}}</div>
+	<div id="rfic-desc">{{$desc}} &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;{{if $linkmore}}<a href="{{$base}}/common/{{$uid}}">{{$more}}</a>{{/if}}</div>
 	{{if $items}}
 	{{foreach $items as $item}}
 	<div class="profile-match-wrapper">

@@ -26,10 +26,6 @@
 <h3 class="settings-heading">{{$h_prv}}</h3>
 
 
-<input type="hidden" name="visibility" value="{{$visibility}}" />
-
-
-
 <div id="settings-permissions-wrapper">
 {{foreach $permiss_arr as $permit}}
 {{include file="field_select.tpl" field=$permit}}

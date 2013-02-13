@@ -12,15 +12,15 @@
 	
 	$a = new App();
 
-	echo "Directory: mod\n";
-	$files = glob('mod/*.php');
+	echo "Directory: include\n";
+	$files = glob('include/*.php');
 	foreach($files as $file) {
 		echo $file . "\n";
 		include_once($file);
 	}
 
-	echo "Directory: include\n";
-	$files = glob('include/*.php');
+	echo "Directory: mod\n";
+	$files = glob('mod/*.php');
 	foreach($files as $file) {
 		echo $file . "\n";
 		include_once($file);
