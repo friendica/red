@@ -83,6 +83,10 @@ function zfinger_init(&$a) {
 	$profile = array();
 
 	if($p) {
+
+		if(! intval($p[0]['publish']))
+			$searchable = false; 
+
 		$profile['description']   = $p[0]['pdesc'];
 		$profile['birthday']      = $p[0]['dob'];
 		if($profile['birthday'] != '0000-00-00')
