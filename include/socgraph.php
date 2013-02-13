@@ -165,7 +165,7 @@ function common_friends($uid,$xchan,$start = 0,$limit=100000000,$shuffle = false
 	else
 		$sql_extra = " order by xchan_name asc "; 
 
-	$r = q("SELECT * from xchan left join xlink on xlink_xchan = xchan_hash where xlink_xchan = '%s' and xlink_link in
+	$r = q("SELECT * from xchan left join xlink on xlink_link = xchan_hash where xlink_xchan = '%s' and xlink_link in
 		(select abook_xchan from abook where abook_xchan != '%s' and abook_channel = %d and abook_flags = 0 ) $sql_extra limit %d, %d",
 		dbesc($xchan),
 		dbesc($xchan),

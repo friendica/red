@@ -118,7 +118,7 @@ function common_friends_visitor_widget($profile_uid) {
 	$r = common_friends($profile_uid,$observer_hash,0,5,true);
 
 	return replace_macros(get_markup_template('remote_friends_common.tpl'), array(
-		'$desc' =>  sprintf( tt("%d contact in common", "%d contacts in common", $t), $t),
+		'$desc' =>  sprintf( tt("%d connection in common", "%d connections in common", $t), $t),
 		'$base' => $a->get_baseurl(),
 		'$uid' => $profile_uid,
 		'$cid' => $observer,
