@@ -1,6 +1,11 @@
 <?php
 
 
+
+function get_capath() {
+	return appdirpath() . '/library/cacert.pem';
+}
+
 // curl wrapper. If binary flag is true, return binary
 // results. 
 
@@ -14,6 +19,7 @@ function fetch_url($url,$binary = false, &$redirects = 0, $timeout = 0, $accept_
 		return false;
 
 	@curl_setopt($ch, CURLOPT_HEADER, true);
+	@curl_setopt($ch, CURLOPT_CAINFO, get_capath());
 
 	if (!is_null($accept_content)){
 		curl_setopt($ch,CURLOPT_HTTPHEADER, array (
@@ -104,6 +110,7 @@ function post_url($url,$params, $headers = null, &$redirects = 0, $timeout = 0) 
 		return false;
 
 	curl_setopt($ch, CURLOPT_HEADER, true);
+	@curl_setopt($ch, CURLOPT_CAINFO, get_capath());
 	curl_setopt($ch, CURLOPT_RETURNTRANSFER,true);
 	curl_setopt($ch, CURLOPT_POST,1);
 	curl_setopt($ch, CURLOPT_POSTFIELDS,$params);
@@ -200,6 +207,7 @@ function z_fetch_url($url,$binary = false, &$redirects = 0, $timeout = 0, $accep
 		return false;
 
 	@curl_setopt($ch, CURLOPT_HEADER, true);
+	@curl_setopt($ch, CURLOPT_CAINFO, get_capath());
 
 	if (!is_null($accept_content)){
 		curl_setopt($ch,CURLOPT_HTTPHEADER, array (
@@ -288,6 +296,7 @@ function z_post_url($url,$params, $headers = null, &$redirects = 0, $timeout = 0
 		return ret;
 
 	curl_setopt($ch, CURLOPT_HEADER, true);
+	@curl_setopt($ch, CURLOPT_CAINFO, get_capath());
 	curl_setopt($ch, CURLOPT_RETURNTRANSFER,true);
 	curl_setopt($ch, CURLOPT_POST,1);
 	curl_setopt($ch, CURLOPT_POSTFIELDS,$params);

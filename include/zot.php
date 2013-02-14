@@ -150,7 +150,9 @@ function zot_finger($webbie,$channel) {
 	}
 	
 	$rhs = '/.well-known/zot-info';
+	$https = ((strpos($url,'https://') === 0) ? true : false);
 
+	logger('zot_finger: ' . $url, LOGGER_DEBUG);
 
 	if($channel) {
 		$postvars = array(
@@ -161,17 +163,30 @@ function zot_finger($webbie,$channel) {
 		);
 
 		$result = z_post_url($url . $rhs,$postvars);
-		if(! $result['success'])
-			$result = z_post_url('http://' . $host . $rhs,$postvars);
+
+
+		if(! $result['success']) {
+			if($https) {
+				logger('zot_finger: https failed. falling back to http');
+				$result = z_post_url('http://' . $host . $rhs,$postvars);
+			}
+		}
 	}		
 	else {
 		$rhs .= '?f=&address=' . urlencode($address);
 
 		$result =  z_fetch_url($url . $rhs);
-		if(! $result['success'])
-			$result = z_fetch_url('http://' . $host . $rhs);
+		if(! $result['success']) {
+			if($https) {
+				logger('zot_finger: https failed. falling back to http');
+				$result = z_fetch_url('http://' . $host . $rhs);
+			}
+		}
 	}
 	
+	if(! $result['success'])
+		logger('zot_finger: no results');
+
 	return $result;	 
 
 }

@@ -2141,3 +2141,8 @@ function construct_page(&$a) {
 
 	return;
 }
+
+
+function appdirpath() {
+	return dirname(__FILE__);
+}
