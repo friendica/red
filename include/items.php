@@ -9,6 +9,13 @@ require_once('include/permissions.php');
 
 function collect_recipients($item,&$private) {
 
+// FIXME - this needs a revision to handle public scope (this site, this network, etc.)
+// We'll be changing this to return an array of
+// - recipients
+// - private
+// - scope if message is public ('global', 'network: red', 'site: $sitename', 'connections')
+// The receiving site will need to check the scope before creating a list of local recipients
+
 	require_once('include/group.php');
 
 	if($item['allow_cid'] || $item['allow_gid'] || $item['deny_cid'] || $item['deny_gid']) {
