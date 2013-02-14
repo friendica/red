@@ -61,13 +61,15 @@ function common_content(&$a) {
 
 		foreach($r as $rr) {
 			$o .= replace_macros($tpl,array(
-			'$url' => $rr['url'],
-			'$name' => $rr['name'],
-			'$photo' => $rr['photo'],
-			'$tags' => ''
-		));
+				'$url' => $rr['url'],
+				'$name' => $rr['name'],
+				'$photo' => $rr['photo'],
+				'$tags' => ''
+			));
+		}
+
+		$o .= cleardiv();
 	}
 
-	$o .= cleardiv();
 	return $o;
 }
