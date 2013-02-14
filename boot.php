@@ -1301,7 +1301,7 @@ function profile_load(&$a, $nickname, $profile = 0) {
 		
 	if(! $user) {
 		logger('profile error: ' . $a->query_string, LOGGER_DEBUG);
-		notice( t('Requested account is not available.') . EOL );
+		notice( t('Requested channel is not available.') . EOL );
 		$a->error = 404;
 		return;
 	}

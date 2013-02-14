@@ -14,7 +14,7 @@ function common_init(&$a) {
 
 	$x = q("select channel_address from channel where channel_id = %d limit 1",
 		intval($channel_id)
-	};
+	);
 
 	if($x)
 		profile_load($a,$x[0]['channel_address'],0);
