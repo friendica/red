@@ -48,7 +48,7 @@ function common_content(&$a) {
 
 	$t = count_common_friends($a->profile['profile_uid'],$observer_hash);
 
-	if(! $t)
+	if(! $t) {
 		notice( t('No connections in common.') . EOL);
 		return $o;
 	}
@@ -57,9 +57,9 @@ function common_content(&$a) {
 
 	if($r) {
 
-	$tpl = get_markup_template('common_friends.tpl');
+		$tpl = get_markup_template('common_friends.tpl');
 
-	foreach($r as $rr) {
+		foreach($r as $rr) {
 			$o .= replace_macros($tpl,array(
 			'$url' => $rr['url'],
 			'$name' => $rr['name'],
