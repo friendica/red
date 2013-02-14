@@ -632,7 +632,7 @@ function conversation(&$a, $items, $mode, $update, $page_mode = 'traditional') {
 					'like' => '',
 					'dislike' => '',
 					'comment' => '',
-					'conv' => (($preview) ? '' : array('href'=> $a->get_baseurl($ssl_state) . '/display/' . $nickname . '/' . $item['id'], 'title'=> t('View in context'))),
+					'conv' => (($preview) ? '' : array('href'=> z_root() . '/display/' . $item['uri'], 'title'=> t('View in context'))),
 					'previewing' => $previewing,
 					'wait' => t('Please wait'),
 					'thread_level' => 1,
