@@ -4,26 +4,20 @@ require_once('include/socgraph.php');
 
 function common_init(&$a) {
 
-	if(argc() > 1)
-		$which = argv(1);
+	if(argc() > 1 && intval(argv(1)))
+		$channel_id = intval(argv(1));
 	else {
-		notice( t('Requested profile is not available.') . EOL );
+		notice( t('No channel.') . EOL );
 		$a->error = 404;
 		return;
 	}
 
-	$profile = 0;
-	$channel = $a->get_channel();
+	$x = q("select channel_address from channel where channel_id = %d limit 1",
+		intval($channel_id)
+	};
 
-	if((local_user()) && (argc() > 2) && (argv(2) === 'view')) {
-		$which = $channel['channel_address'];
-		$profile = argv(1);		
-	}
-
-	// Run profile_load() here to make sure the theme is set before
-	// we start loading content
-
-	profile_load($a,$which,$profile);
+	if($x)
+		profile_load($a,$x[0]['channel_address'],0);
 
 }
 
