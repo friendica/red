@@ -196,7 +196,7 @@ function post_url($url,$params, $headers = null, &$redirects = 0, $timeout = 0) 
 }}
 
 if(! function_exists('z_fetch_url')) {
-function z_fetch_url($url,$binary = false, &$redirects = 0, $timeout = 0, $accept_content=Null) {
+function z_fetch_url($url, $binary = false, $redirects = 0, $opts = array()) {
 
 	$ret = array('return_code' => 0, 'success' => false, 'header' => "", 'body' => "");
 
@@ -208,26 +208,28 @@ function z_fetch_url($url,$binary = false, &$redirects = 0, $timeout = 0, $accep
 
 	@curl_setopt($ch, CURLOPT_HEADER, true);
 	@curl_setopt($ch, CURLOPT_CAINFO, get_capath());
-
-	if (!is_null($accept_content)){
-		curl_setopt($ch,CURLOPT_HTTPHEADER, array (
-			"Accept: " . $accept_content
-		));
-	}
-
+	@curl_setopt($ch, CURLOPT_SSL_VERIFYPEER, true);
 	@curl_setopt($ch, CURLOPT_RETURNTRANSFER,true);
 	@curl_setopt($ch, CURLOPT_USERAGENT, "Mozilla/5.0 (compatible; Friendica Red)");
 
+	if (x($opts,'accept_content')){
+		curl_setopt($ch,CURLOPT_HTTPHEADER, array (
+			"Accept: " . $opts['accept_content']
+		));
+	}
 
-	if(intval($timeout)) {
-		@curl_setopt($ch, CURLOPT_TIMEOUT, $timeout);
+	if(x($opts,'timeout') && intval($opts['timeout'])) {
+		@curl_setopt($ch, CURLOPT_TIMEOUT, $opts['timeout']);
 	}
 	else {
 		$curl_time = intval(get_config('system','curl_timeout'));
 		@curl_setopt($ch, CURLOPT_TIMEOUT, (($curl_time !== false) ? $curl_time : 60));
 	}
 
-	@curl_setopt($ch, CURLOPT_SSL_VERIFYPEER, true);
+	if(x($opts,'http_auth')) {
+		// "username" . ':' . "password"
+		@curl_setopt($ch, CURLOPT_USERPWD, $opts['http_auth']);
+	}
 
 	$prx = get_config('system','proxy');
 	if(strlen($prx)) {
@@ -269,9 +271,8 @@ function z_fetch_url($url,$binary = false, &$redirects = 0, $timeout = 0, $accep
 			$newurl = $url . $newurl;
 		$url_parsed = @parse_url($newurl);
 		if (isset($url_parsed)) {
-			$redirects++;
 			@curl_close($ch);
-			return z_fetch_url($newurl,$binary,$redirects,$timeout,$accpt_content);
+			return z_fetch_url($newurl,$binary,$redirects++,$opts);
 		}
 	}
 
@@ -287,7 +288,7 @@ function z_fetch_url($url,$binary = false, &$redirects = 0, $timeout = 0, $accep
 
 
 if(! function_exists('z_post_url')) {
-function z_post_url($url,$params, $headers = null, &$redirects = 0, $timeout = 0) {
+function z_post_url($url,$params, $headers = null, $redirects = 0, $timeout = 0) {
 
 	$ret = array('return_code' => 0, 'success' => false, 'header' => "", 'body' => "");
 
@@ -362,12 +363,11 @@ function z_post_url($url,$params, $headers = null, &$redirects = 0, $timeout = 0
 			$newurl = $url . $newurl;
 		$url_parsed = @parse_url($newurl);
 		if (isset($url_parsed)) {
-			$redirects++;
 			curl_close($ch);
 			if($http_code == 303) {
-				return z_fetch_url($newurl,false,$headers,$redirects,$timeout);
+				return z_fetch_url($newurl,false,$headers,$redirects++,$timeout);
 			} else {
-				return z_post_url($newurl,$params,$headers,$redirects,$timeout);
+				return z_post_url($newurl,$params,$headers,$redirects++,$timeout);
 			}
 		}
 	}

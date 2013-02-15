@@ -89,6 +89,10 @@ function create_identity($arr) {
 
 	$primary = true;
 		
+	if(array_key_exists('primary', $arr))
+		$primary = intval($arr['primary']);
+
+
 	$r = q("insert into channel ( channel_account_id, channel_primary, 
 		channel_name, channel_address, channel_guid, channel_guid_sig,
 		channel_hash, channel_prvkey, channel_pubkey, channel_pageflags )
