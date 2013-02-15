@@ -564,6 +564,18 @@ function encode_item($item) {
 
 	logger('encode_item: ' . print_r($item,true));
 
+	$r = q("select channel_r_stream from channel where channel_id = %d limit 1",
+		intval($item['uid'])
+	);
+
+	if($r)
+		$public_scope = $r[0]['channel_r_stream'];
+	else
+		$public_scope = 0;
+
+	$scope = map_scope($public_scope);
+
+
 	if($item['item_restrict']  & ITEM_DELETED) {
 		$x['message_id'] = $item['uri'];
 		$x['created']    = $item['created'];
@@ -600,12 +612,33 @@ function encode_item($item) {
 		$x['attach']     = json_decode($item['attach'],true);
 	if($y = encode_item_flags($item))
 		$x['flags']      = $y;
+
+	if(! in_array($y,'private'))
+		$x['public_scope'] = $scope;
+
 	if($item['term'])
 		$x['tags']       = encode_item_terms($item['term']);
 
 	return $x;
 
 }
+
+
+function map_scope($scope) {
+	switch($scope) {
+		case PERMS_PUBLIC:
+			return 'public';
+		case PERMS_NETWORK:
+			return 'network: red';
+		case PERMS_SITE:
+			return 'site: ' . get_app()->get_hostname();
+		case PERMS_CONTACTS:
+		default:
+			return 'contacts';
+	}
+}	
+
+
 
 function encode_item_xchan($xchan) {
 
@@ -1554,8 +1587,9 @@ function send_status_notifications($post_id,$item) {
 		foreach($x as $xx) {
 			if($xx['author_xchan'] === $r[0]['channel_hash']) {
 				$notify = true;
-				if($xx['id'] == $xx['parent'])
-					$parent = $xx['parent'];
+			}
+			if($xx['id'] == $xx['parent']) {
+				$parent = $xx['parent'];
 			}
 		}
 	}
