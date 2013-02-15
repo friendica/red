@@ -626,6 +626,8 @@ function encode_item($item) {
 
 function map_scope($scope) {
 	switch($scope) {
+		case 0:
+			return 'self';
 		case PERMS_PUBLIC:
 			return 'public';
 		case PERMS_NETWORK:

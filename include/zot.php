@@ -680,7 +680,9 @@ function zot_import($arr) {
 				logger('public post');
 
 				// Public post. look for any site members who are or may be accepting posts from this sender
-				$deliveries = public_recips($i);
+				// and who are allowed to see them based on the sender's permissions
+
+				$deliveries = allowed_public_recips($i);
 			}
 			if(! $deliveries) {
 				logger('zot_import: no deliveries on this site');
@@ -739,10 +741,7 @@ function zot_import($arr) {
 // on the site that we should deliver to.  
 
 
-
 function public_recips($msg) {
-
-	logger('public_recips: ' . print_r($msg,true));
 
 	if($msg['message']['type'] === 'activity') {
 		if(array_key_exists('flags',$msg['message']) && in_array('thread_parent', $msg['message']['flags'])) {
@@ -773,7 +772,7 @@ function public_recips($msg) {
 		$r = array();
 
 	$x = q("select channel_hash as hash from channel left join abook on abook_channel = channel_id where abook_xchan = '%s'
-		and ( " . $col . " & " . PERMS_SPECIFIC . " )  and ( abook_my_perms & " . $field . " ) ",
+		and (( " . $col . " & " . PERMS_SPECIFIC . " ) OR ( " . $col . " & " . PERMS_CONTACTS . " ))  and ( abook_my_perms & " . $field . " ) ",
 		dbesc($msg['notify']['sender']['hash'])
 	); 
 
@@ -782,8 +781,69 @@ function public_recips($msg) {
 
 	$r = array_merge($r,$x);
 
-
 	return $r;
+}
+
+// This is the second part of the above function. We'll find all the channels willing to accept public posts from us,
+// then match them against the sender privacy scope and see who in that list that the sender is allowing.
+
+function allowed_public_recips($msg) {
+
+
+	logger('allowed_public_recips: ' . print_r($msg,true));
+
+	$recips = public_recips($msg);
+
+	if(! $recips)
+		return $recips;
+
+	if($msg['message']['type'] === 'mail')
+		return $recips;
+
+	if(array_key_exists('public_scope',$msg['message']))
+		$scope = $msg['message']['public_scope'];
+
+	// we can pull out these two lines once everybody has upgraded to >= 2013-02-15.225
+
+	else
+		$scope = 'public';
+
+	$hash = base64url_encode(hash('whirlpool',$msg['notify']['sender']['guid'] . $msg['notify']['sender']['guid_sig'], true));
+
+	if($scope === 'public' || $scope === 'network: red')
+		return $recips;
+
+	if(strpos($scope,'site:') === 0) {
+		if(($scope === 'site: ' . get_app()->get_hostname()) && ($msg['notify']['sender']['url'] === z_root()))
+			return $recips;
+		else
+			return array();
+	}
+
+	if($scope === 'self') {
+		foreach($recips as $r)
+			if($r['hash'] === $hash)
+				return array('hash' => $hash);
+	}
+
+	if($scope === 'contacts') {
+		$condensed_recips = array();
+		foreach($recips as $rr)
+			$condensed_recips[] = $rr['hash'];
+
+		$results = array();
+		$r = q("select channel_hash as hash from channel left join abook on abook_channel = channel_id where abook_hash = '%s' ",
+			dbesc($hash)
+		);
+		if($r) {
+			foreach($r as $rr)
+				if(in_array($rr['hash'],$condensed_recips))
+					$results[] = array('hash' => $rr['hash']);
+		}
+		return $results;
+	}
+
+	return array();
 }
 
 
