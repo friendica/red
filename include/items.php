@@ -613,7 +613,7 @@ function encode_item($item) {
 	if($y = encode_item_flags($item))
 		$x['flags']      = $y;
 
-	if(! in_array($y,'private'))
+	if(! in_array('private',$y))
 		$x['public_scope'] = $scope;
 
 	if($item['term'])
