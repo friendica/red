@@ -138,9 +138,10 @@ function change_channel($change_channel) {
 	$ret = false;
 
 	if($change_channel) {
-		$r = q("select channel.*, xchan.* from channel left join xchan on channel.channel_hash = xchan.xchan_hash where channel_id = %d and channel_account_id = %d limit 1",
+		$r = q("select channel.*, xchan.* from channel left join xchan on channel.channel_hash = xchan.xchan_hash where channel_id = %d and channel_account_id = %d and not ( channel_pageflags & %d) limit 1",
 			intval($change_channel),
-			intval(get_account_id())
+			intval(get_account_id()),
+			intval(PAGE_REMOVED)
 		);
 		if($r) {
 			$hash = $r[0]['channel_hash'];

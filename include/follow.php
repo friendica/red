@@ -114,7 +114,7 @@ function new_contact($uid,$url,$channel,$interactive = false) {
 		$hash = $a->observer['xchan_hash'];
 	}
 	else {
-		$r = q("select * from channel where uid = %d limit 1",
+		$r = q("select * from channel where channel_id = %d limit 1",
 			intval($uid)
 		);
 		if(! $r) {

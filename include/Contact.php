@@ -20,8 +20,23 @@ function abook_self($channel_id) {
 }	
 
 function channelx_by_nick($nick) {
-	return q("SELECT * FROM channel left join xchan on channel_hash = xchan_hash WHERE channel_address = '%s' LIMIT 1",
-		dbesc($nick)
+	return q("SELECT * FROM channel left join xchan on channel_hash = xchan_hash WHERE channel_address = '%s'  and not ( channel_pageflags & %d ) LIMIT 1",
+		dbesc($nick),
+		intval(PAGE_REMOVED)
+	);
+}
+
+function channelx_by_hash($hash) {
+	return q("SELECT * FROM channel left join xchan on channel_hash = xchan_hash WHERE channel_hash = '%s'  and not ( channel_pageflags & %d ) LIMIT 1",
+		dbesc($hash),
+		intval(PAGE_REMOVED)
+	);
+}
+
+function channelx_by_n($id) {
+	return q("SELECT * FROM channel left join xchan on channel_hash = xchan_hash WHERE channel_id = %d  and not ( channel_pageflags & %d ) LIMIT 1",
+		dbesc($id),
+		intval(PAGE_REMOVED)
 	);
 }
 
@@ -89,47 +104,53 @@ function abook_toggle_flag($abook,$flag) {
 // authorisation to do this.
 
 function user_remove($uid) {
-	if(! $uid)
+
+}
+
+
+function channel_remove($channel_id) {
+
+	if(! $channel_id)
 		return;
 	$a = get_app();
-	logger('Removing user: ' . $uid);
+	logger('Removing channel: ' . $channel_id);
 
-	$r = q("select * from user where uid = %d limit 1", intval($uid));
+	$r = q("select * from channel where channel_id = %d limit 1", intval($channel_id));
 
-	call_hooks('remove_user',$r[0]);
+	call_hooks('channel_remove',$r[0]);
 
-	// save username (actually the nickname as it is guaranteed 
-	// unique), so it cannot be re-registered in the future.
+	// FIXME notify the directory
+	
+	// FIXME notify all contacts
 
-	q("insert into userd ( username ) values ( '%s' )",
-		$r[0]['nickname']
+
+	q("DELETE FROM `group` WHERE `uid` = %d", intval($channel_id));
+	q("DELETE FROM `group_member` WHERE `uid` = %d", intval($channel_id));
+	q("DELETE FROM `event` WHERE `uid` = %d", intval($channel_id));
+	q("DELETE FROM `item` WHERE `uid` = %d", intval($channel_id));
+	q("DELETE FROM `item_id` WHERE `uid` = %d", intval($channel_id));
+	q("DELETE FROM `mail` WHERE `uid` = %d", intval($channel_id));
+	q("DELETE FROM `notify` WHERE `uid` = %d", intval($channel_id));
+	q("DELETE FROM `photo` WHERE `uid` = %d", intval($channel_id));
+	q("DELETE FROM `attach` WHERE `uid` = %d", intval($channel_id));
+	q("DELETE FROM `profile` WHERE `uid` = %d", intval($channel_id));
+	q("DELETE FROM `pconfig` WHERE `uid` = %d", intval($channel_id));
+	q("DELETE FROM `spam` WHERE `uid` = %d", intval($channel_id));
+
+	// We also need a timestamp in the channel DB so we know when to remove the entry.
+
+	$r = q("update channel set channel_pageflags = (channel_pageflags | %d) where channel_id = %d limit 1",
+		intval(PAGE_REMOVED),
+		intval($channel_id)
 	);
 
-	q("DELETE FROM `contact` WHERE `uid` = %d", intval($uid));
-	q("DELETE FROM `gcign` WHERE `uid` = %d", intval($uid));
-	q("DELETE FROM `group` WHERE `uid` = %d", intval($uid));
-	q("DELETE FROM `group_member` WHERE `uid` = %d", intval($uid));
-	q("DELETE FROM `intro` WHERE `uid` = %d", intval($uid));
-	q("DELETE FROM `event` WHERE `uid` = %d", intval($uid));
-	q("DELETE FROM `item` WHERE `uid` = %d", intval($uid));
-	q("DELETE FROM `item_id` WHERE `uid` = %d", intval($uid));
-	q("DELETE FROM `mail` WHERE `uid` = %d", intval($uid));
-	q("DELETE FROM `mailacct` WHERE `uid` = %d", intval($uid));
-	q("DELETE FROM `manage` WHERE `uid` = %d", intval($uid));
-	q("DELETE FROM `notify` WHERE `uid` = %d", intval($uid));
-	q("DELETE FROM `photo` WHERE `uid` = %d", intval($uid));
-	q("DELETE FROM `attach` WHERE `uid` = %d", intval($uid));
-	q("DELETE FROM `profile` WHERE `uid` = %d", intval($uid));
-	q("DELETE FROM `profile_check` WHERE `uid` = %d", intval($uid));
-	q("DELETE FROM `pconfig` WHERE `uid` = %d", intval($uid));
-	q("DELETE FROM `search` WHERE `uid` = %d", intval($uid));
-	q("DELETE FROM `spam` WHERE `uid` = %d", intval($uid));
-	q("DELETE FROM `user` WHERE `uid` = %d", intval($uid));
-	if($uid == local_user()) {
+
+	if($channel_id == local_user()) {
 		unset($_SESSION['authenticated']);
 		unset($_SESSION['uid']);
 		goaway($a->get_baseurl());
 	}
+
 }
 
 

@@ -147,6 +147,8 @@ define ( 'PAGE_HIDDEN',            0x0001 );
 define ( 'PAGE_AUTOCONNECT',       0x0002 );
 define ( 'PAGE_APPLICATION',       0x0004 );
 
+define ( 'PAGE_REMOVED',           0x8000 );
+
 //define ( 'PAGE_FREELOVE',          3 );
 //define ( 'PAGE_BLOG',              4 );
 //define ( 'PAGE_PRVGROUP',          5 );
