@@ -1,6 +1,6 @@
 <?php
 
-define( 'UPDATE_VERSION' , 1027 );
+define( 'UPDATE_VERSION' , 1028 );
 
 /**
  *
@@ -341,4 +341,12 @@ ADD INDEX ( `mimetype` )");
 	return UPDATE_FAILED;
 }
 
+
+function update_r1027() {
+	$r = q("ALTER TABLE `abook` ADD `abook_rating` INT NOT NULL DEFAULT '0' AFTER `abook_closeness` ,
+ADD INDEX ( `abook_rating` )");
+	if($r)
+		return UPDATE_SUCCESS;
+	return UPDATE_FAILED;
+}
 

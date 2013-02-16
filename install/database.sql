@@ -14,6 +14,7 @@ CREATE TABLE IF NOT EXISTS `abook` (
   `abook_my_perms` int(11) NOT NULL DEFAULT '0',
   `abook_their_perms` int(11) NOT NULL DEFAULT '0',
   `abook_closeness` tinyint(3) unsigned NOT NULL DEFAULT '99',
+  `abook_rating` int(11) NOT NULL DEFAULT '0',
   `abook_created` datetime NOT NULL DEFAULT '0000-00-00 00:00:00',
   `abook_updated` datetime NOT NULL DEFAULT '0000-00-00 00:00:00',
   `abook_connected` datetime NOT NULL DEFAULT '0000-00-00 00:00:00',
@@ -32,7 +33,8 @@ CREATE TABLE IF NOT EXISTS `abook` (
   KEY `abook_flags` (`abook_flags`),
   KEY `abook_profile` (`abook_profile`),
   KEY `abook_dob` (`abook_dob`),
-  KEY `abook_connected` (`abook_connected`)
+  KEY `abook_connected` (`abook_connected`),
+  KEY `abook_rating` (`abook_rating`)
 ) ENGINE=MyISAM  DEFAULT CHARSET=utf8;
 
 CREATE TABLE IF NOT EXISTS `account` (
