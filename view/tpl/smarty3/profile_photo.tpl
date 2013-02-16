@@ -17,7 +17,7 @@
 <label id="profile-photo-profiles-label" class="form-label" for="profile-photo-profiles">{{$lbl_profiles}}</label>
 <select name="profile" id="profile-photo-profiles" class="form-input" >
 {{foreach $profiles as $p}}
-<option value="{{$p.id}}" {{if $p.pdefault}}selected="selected"{{/if}}>{{$p.name}}</option>
+<option value="{{$p.id}}" {{if $p.is_default}}selected="selected"{{/if}}>{{$p.name}}</option>
 {{/foreach}}
 </select>
 <div class="clear"></div>

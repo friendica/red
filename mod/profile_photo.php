@@ -256,7 +256,7 @@ function profile_photo_content(&$a) {
 		profile_photo_crop_ui_head($a, $ph);
 	}
 
-	$profiles = q("select id, profile_name as name, is_default as pdefault from profile where uid = %d",
+	$profiles = q("select id, profile_name as name, is_default from profile where uid = %d",
 		intval(local_user())
 	);
 
