@@ -37,12 +37,11 @@ function poco_load($xchan = null,$url = null) {
 	}
 
 
-	$url = $url . '?f=&fields=displayName,hash,urls,photos' ;
+	$url = $url . '?f=&fields=displayName,hash,urls,photos,rating' ;
 
 	logger('poco_load: ' . $url, LOGGER_DEBUG);
 
 	$s = z_fetch_url($url);
-
 
 	if(! $s['success']) {
 		logger('poco_load: returns ' . print_r($s,true));
@@ -67,9 +66,11 @@ function poco_load($xchan = null,$url = null) {
 		$address = '';
 		$name = '';
 		$hash = '';
+		$rating = 0;
 
-		$name = $entry['displayName'];
-		$hash = $entry['hash'];
+		$name   = $entry['displayName'];
+		$hash   = $entry['hash'];
+		$rating = ((array_key_exists('rating',$entry)) ? intval($entry['rating']) : 0);
 
 		if(x($entry,'urls') && is_array($entry['urls'])) {
 			foreach($entry['urls'] as $url) {
@@ -121,15 +122,17 @@ function poco_load($xchan = null,$url = null) {
 				dbesc($hash)
 			);
 			if(! $r) {
-				q("insert into xlink ( xlink_xchan, xlink_link, xlink_updated ) values ( '%s', '%s', '%s' ) ",
+				q("insert into xlink ( xlink_xchan, xlink_link, xlink_rating, xlink_updated ) values ( '%s', '%s', %d, '%s' ) ",
 					dbesc($xchan),
 					dbesc($hash),
+					intval($rating),
 					dbesc(datetime_convert())
 				);
 			}
 			else {
-				q("update xlink set xlink_updated = '%s' where xlink_id = %d limit 1",
+				q("update xlink set xlink_updated = '%s', rating = %d where xlink_id = %d limit 1",
 					dbesc(datetime_convert()),
+					intval($rating),
 					intval($r[0]['xlink_id'])
 				);
 			}

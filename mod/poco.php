@@ -126,10 +126,8 @@ function poco_init(&$a) {
 		'displayName' => false,
 		'urls' => false,
 		'preferredUsername' => false,
-		'photos' => false
-
-
-
+		'photos' => false,
+		'rating' => false
 	);
 
 	if((! x($_GET,'fields')) || ($_GET['fields'] === '@all'))
@@ -165,6 +163,12 @@ function poco_init(&$a) {
 					$entry['preferredUsername'] = substr($rr['xchan_addr'],0,strpos($rr['xchan_addr'],'@'));
 				if($fields_ret['photos'])
 					$entry['photos'] = array(array('value' => $rr['xchan_photo_l'], 'mimetype' => $rr['xchan_photo_mimetype'], 'type' => 'profile'));
+				if($fields_ret['rating']) {
+					$entry['rating'] = ((array_key_exists('abook_rating',$rr)) ? array(intval($rr['abook_rating'])) : 0);
+					// maybe this should be a composite calculated rating in $system_mode
+					if($system_mode)
+						$entry['rating'] = 0;
+				}
 				$ret['entry'][] = $entry;
 			}
 		}

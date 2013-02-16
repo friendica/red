@@ -892,11 +892,13 @@ CREATE TABLE IF NOT EXISTS `xlink` (
   `xlink_id` int(10) unsigned NOT NULL AUTO_INCREMENT,
   `xlink_xchan` char(255) NOT NULL DEFAULT '',
   `xlink_link` char(255) NOT NULL DEFAULT '',
+  `xlink_rating` int(11) NOT NULL DEFAULT '0',
   `xlink_updated` datetime NOT NULL DEFAULT '0000-00-00 00:00:00',
   PRIMARY KEY (`xlink_id`),
   KEY `xlink_xchan` (`xlink_xchan`),
   KEY `xlink_link` (`xlink_link`),
-  KEY `xlink_updated` (`xlink_updated`)
+  KEY `xlink_updated` (`xlink_updated`),
+  KEY `xlink_rating` (`xlink_rating`)
 ) ENGINE=MyISAM DEFAULT CHARSET=utf8;
 
 CREATE TABLE IF NOT EXISTS `xprof` (
