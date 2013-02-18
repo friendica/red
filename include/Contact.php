@@ -153,6 +153,66 @@ function channel_remove($channel_id) {
 
 }
 
+function remove_all_xchan_resources($xchan, $channel_id = 0) {
+
+	if(intval($channel_id)) {
+
+
+
+	}
+	else {
+
+		// this is somewhat destructive
+// FIXME
+		// We don't want to be quite as destructive on directories, which will need to mirror the action 
+		// and we also don't want to completely destroy an xchan that has moved to a new primary location
+
+		$r = q("delete from photo where xchan = '%s'",
+			dbesc($xchan)
+		);
+		$r = q("select resource_id, resource_type, uid, id from item where ( author_xchan = '%s' or owner_xchan = '%s' ) ",
+			dbesc($xchan),
+			dbesc($xchan)
+		);
+		if($r) {
+			foreach($r as $rr) {
+				drop_item($rr,false);
+			}
+		}
+		$r = q("delete from event where event_xchan = '%s'",
+			dbesc($xchan)
+		);
+		$r = q("delete from group_member where xchan = '%s'",
+			dbesc($xchan)
+		);
+		$r = q("delete from mail where ( from_xchan = '%s' or to_xchan = '%s' )",
+			dbesc($xchan),
+			dbesc($xchan)
+		);
+		$r = q("delete from xlink where ( xlink_xchan = '%s' or xlink_link = '%s' )",
+			dbesc($xchan),
+			dbesc($xchan)
+		);
+
+
+		$r = q("delete from xchan where xchan_hash = '%s' limit 1",
+			dbesc($xchan)
+		);
+		$r = q("delete from hubloc where hubloc_hash = '%s'",
+			dbesc($xchan)
+		);
+		$r = q("delete from abook where abook_xchan = '%s'",
+			dbesc($xchan)
+		);
+		$r = q("delete from xtag where xtag_hash = '%s'",
+			dbesc($xchan)
+		);
+
+	}
+}
+
+
+
 
 function contact_remove($channel_id, $abook_id) {
 

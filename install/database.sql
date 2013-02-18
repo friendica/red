@@ -153,6 +153,7 @@ CREATE TABLE IF NOT EXISTS `channel` (
   `channel_prvkey` text NOT NULL,
   `channel_notifyflags` int(10) unsigned NOT NULL DEFAULT '65535',
   `channel_pageflags` int(10) unsigned NOT NULL DEFAULT '0',
+  `channel_deleted` datetime NOT NULL DEFAULT '0000-00-00 00:00:00',
   `channel_max_anon_mail` int(10) unsigned NOT NULL DEFAULT '10',
   `channel_max_friend_req` int(10) unsigned NOT NULL DEFAULT '10',
   `channel_expire_days` int(11) NOT NULL DEFAULT '0',
@@ -209,7 +210,8 @@ CREATE TABLE IF NOT EXISTS `channel` (
   KEY `channel_r_storage` (`channel_r_storage`),
   KEY `channel_w_storage` (`channel_w_storage`),
   KEY `channel_r_pages` (`channel_r_pages`),
-  KEY `channel_w_pages` (`channel_w_pages`)
+  KEY `channel_w_pages` (`channel_w_pages`),
+  KEY `channel_deleted` (`channel_deleted`)
 ) ENGINE=MyISAM  DEFAULT CHARSET=utf8;
 
 CREATE TABLE IF NOT EXISTS `clients` (

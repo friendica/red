@@ -236,6 +236,31 @@ function post_post(&$a) {
 	if(array_key_exists('recipients',$data))
 		$recipients = $data['recipients'];
 
+
+	if($msgtype === 'purge') {
+		if($recipients) {
+			// basically this means "unfriend"
+			foreach($recipients as $recip) {
+
+
+
+			}
+
+
+		}
+		else {
+			// basically this means the channel has committed suicide
+			$arr = $data['sender'];
+			$sender_hash = base64url_encode(hash('whirlpool',$arr['guid'] . $arr['guid_sig'], true));
+		
+			require_once('include/Contact.php');
+			remove_all_xchan_resources($sender_hash);	
+
+			$ret['result'] = true;
+			json_return_and_die($ret);
+
+		}
+	}
 	if($msgtype === 'refresh') {
 
 		// remote channel info (such as permissions or photo or something)

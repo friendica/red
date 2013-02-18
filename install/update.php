@@ -1,6 +1,6 @@
 <?php
 
-define( 'UPDATE_VERSION' , 1029 );
+define( 'UPDATE_VERSION' , 1030 );
 
 /**
  *
@@ -353,6 +353,14 @@ ADD INDEX ( `abook_rating` )");
 function update_r1028() {
 	$r = q("ALTER TABLE `xlink` ADD `xlink_rating` INT NOT NULL DEFAULT '0' AFTER `xlink_link` ,
 ADD INDEX ( `xlink_rating` ) ");
+	if($r)
+		return UPDATE_SUCCESS;
+	return UPDATE_FAILED;
+}
+
+function update_r1029() {
+	$r = q("ALTER TABLE `channel` ADD `channel_deleted` DATETIME NOT NULL DEFAULT '0000-00-00 00:00:00' AFTER `channel_pageflags` ,
+ADD INDEX ( `channel_deleted` ) ");
 	if($r)
 		return UPDATE_SUCCESS;
 	return UPDATE_FAILED;

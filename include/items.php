@@ -4265,6 +4265,14 @@ function delete_item_lowlevel($item) {
 		intval($item['uid'])
 	);
 
+	q("delete from term where oid = %d and otype = %d",
+		intval($item['id']),
+		intval(TERM_OBJ_POST)
+	);
+
+// FIXME remove notifications for this item
+
+
 	return true;
 }
 

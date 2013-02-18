@@ -20,8 +20,8 @@ function gprobe_run($argv, $argc){
 
 	if(! $r) {
 		$x = zot_finger($url,null);
-		if($x) {
-			$j = json_decode($x,true);
+		if($x['success']) {
+			$j = json_decode($x['body'],true);
 			$y = import_xchan($j);
 		}
 	}
