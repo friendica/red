@@ -40,7 +40,7 @@ msgstr "Não foi possível atualizar o contato."
 #: ../../mod/settings.php:20 ../../mod/settings.php:251
 #: ../../mod/manage.php:75 ../../mod/network.php:6 ../../mod/notes.php:20
 #: ../../mod/attach.php:64 ../../mod/group.php:19
-#: ../../mod/viewcontacts.php:21 ../../mod/register.php:27
+#: ../../mod/viewconnections.php:21 ../../mod/register.php:27
 #: ../../mod/regmod.php:18 ../../mod/item.php:57 ../../mod/item.php:801
 #: ../../mod/profile_photo.php:19 ../../mod/profile_photo.php:133
 #: ../../mod/profile_photo.php:144 ../../mod/profile_photo.php:155
@@ -233,7 +233,7 @@ msgid "Image upload failed."
 msgstr "Não foi possível enviar a imagem."
 
 #: ../../mod/photos.php:680 ../../mod/dfrn_request.php:591
-#: ../../mod/viewcontacts.php:16 ../../mod/display.php:7
+#: ../../mod/viewconnections.php:16 ../../mod/display.php:7
 #: ../../mod/search.php:13 ../../mod/directory.php:20
 msgid "Public access denied."
 msgstr "Acesso público negado."
@@ -1166,7 +1166,7 @@ msgstr "Pesquisando: "
 msgid "Find"
 msgstr "Pesquisar"
 
-#: ../../mod/contacts.php:387 ../../mod/viewcontacts.php:52
+#: ../../mod/contacts.php:387 ../../mod/viewconnections.php:52
 msgid "Visit $username's profile"
 msgstr "Visitar o perfil de  $username"
 
@@ -1682,11 +1682,11 @@ msgstr "Visível para"
 msgid "All Contacts (with secure profile access)"
 msgstr "Todos os contatos (com acesso a perfil seguro)"
 
-#: ../../mod/viewcontacts.php:25 ../../boot.php:2059
+#: ../../mod/viewconnections.php:25 ../../boot.php:2059
 msgid "View Contacts"
 msgstr "Ver contatos"
 
-#: ../../mod/viewcontacts.php:40
+#: ../../mod/viewconnections.php:40
 msgid "No contacts."
 msgstr "Nenhum contato."
 

@@ -36,7 +36,7 @@ msgstr "Aktualizace kontaktu selhala."
 #: ../../mod/settings.php:41 ../../mod/settings.php:46
 #: ../../mod/settings.php:305 ../../mod/manage.php:75 ../../mod/network.php:6
 #: ../../mod/notes.php:20 ../../mod/attach.php:33 ../../mod/group.php:19
-#: ../../mod/viewcontacts.php:21 ../../mod/register.php:27
+#: ../../mod/viewconnections.php:21 ../../mod/register.php:27
 #: ../../mod/regmod.php:111 ../../mod/item.php:110
 #: ../../mod/profile_photo.php:19 ../../mod/profile_photo.php:133
 #: ../../mod/profile_photo.php:144 ../../mod/profile_photo.php:155
@@ -343,7 +343,7 @@ msgid "Image upload failed."
 msgstr "Nahrání obrázku selhalo."
 
 #: ../../mod/photos.php:733 ../../mod/community.php:9
-#: ../../mod/dfrn_request.php:591 ../../mod/viewcontacts.php:16
+#: ../../mod/dfrn_request.php:591 ../../mod/viewconnections.php:16
 #: ../../mod/display.php:7 ../../mod/search.php:13 ../../mod/directory.php:20
 msgid "Public access denied."
 msgstr "Veřejný přístup odepřen."
@@ -1239,7 +1239,7 @@ msgstr ""
 "být užitečné pro ostatní."
 
 #: ../../mod/contacts.php:304 ../../mod/contacts.php:421
-#: ../../mod/viewcontacts.php:61
+#: ../../mod/viewconnections.php:61
 #, php-format
 msgid "Visit %s's profile [%s]"
 msgstr "Navštivte profil uživatele %s [%s]"
@@ -1980,11 +1980,11 @@ msgstr "Viditelný pro"
 msgid "All Contacts (with secure profile access)"
 msgstr "Všechny kontakty (se zabezpečeným přístupovým profilem )"
 
-#: ../../mod/viewcontacts.php:25 ../../include/text.php:555
+#: ../../mod/viewconnections.php:25 ../../include/text.php:555
 msgid "View Contacts"
 msgstr "Zobrazit kontakty"
 
-#: ../../mod/viewcontacts.php:40
+#: ../../mod/viewconnections.php:40
 msgid "No contacts."
 msgstr "Žádné kontakty."
 

@@ -628,7 +628,7 @@ function contact_block() {
 	$o = replace_macros($tpl, array(
 		'$contacts' => $contacts,
 		'$nickname' => $a->profile['channel_address'],
-		'$viewcontacts' => t('View Connections'),
+		'$viewconnections' => t('View Connections'),
 		'$micropro' => $micropro,
 	));
 

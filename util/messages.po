@@ -44,7 +44,7 @@ msgstr ""
 #: ../../mod/notes.php:20 ../../mod/wallmessage.php:9
 #: ../../mod/wallmessage.php:33 ../../mod/wallmessage.php:79
 #: ../../mod/wallmessage.php:103 ../../mod/attach.php:33
-#: ../../mod/group.php:19 ../../mod/viewcontacts.php:22
+#: ../../mod/group.php:19 ../../mod/viewconnections.php:22
 #: ../../mod/register.php:38 ../../mod/regmod.php:116 ../../mod/item.php:124
 #: ../../mod/item.php:140 ../../mod/profile_photo.php:19
 #: ../../mod/profile_photo.php:141 ../../mod/profile_photo.php:152
@@ -448,7 +448,7 @@ msgid "Image upload failed."
 msgstr ""
 
 #: ../../mod/photos.php:849 ../../mod/community.php:16
-#: ../../mod/dfrn_request.php:759 ../../mod/viewcontacts.php:17
+#: ../../mod/dfrn_request.php:759 ../../mod/viewconnections.php:17
 #: ../../mod/display.php:7 ../../mod/search.php:71 ../../mod/directory.php:29
 msgid "Public access denied."
 msgstr ""
@@ -1729,7 +1729,7 @@ msgid "Edit contact notes"
 msgstr ""
 
 #: ../../mod/contacts.php:352 ../../mod/contacts.php:544
-#: ../../mod/viewcontacts.php:62 ../../mod/nogroup.php:40
+#: ../../mod/viewconnections.php:62 ../../mod/nogroup.php:40
 #, php-format
 msgid "Visit %s's profile [%s]"
 msgstr ""
@@ -2901,11 +2901,11 @@ msgstr ""
 msgid "All Contacts (with secure profile access)"
 msgstr ""
 
-#: ../../mod/viewcontacts.php:39
+#: ../../mod/viewconnections.php:39
 msgid "No contacts."
 msgstr ""
 
-#: ../../mod/viewcontacts.php:76 ../../include/text.php:589
+#: ../../mod/viewconnections.php:76 ../../include/text.php:589
 msgid "View Contacts"
 msgstr ""
 

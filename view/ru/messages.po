@@ -47,7 +47,7 @@ msgstr "Обновление контакта неудачное."
 #: ../../mod/notes.php:20 ../../mod/wallmessage.php:9
 #: ../../mod/wallmessage.php:33 ../../mod/wallmessage.php:79
 #: ../../mod/wallmessage.php:103 ../../mod/attach.php:33
-#: ../../mod/group.php:19 ../../mod/viewcontacts.php:22
+#: ../../mod/group.php:19 ../../mod/viewconnections.php:22
 #: ../../mod/register.php:38 ../../mod/regmod.php:116 ../../mod/item.php:126
 #: ../../mod/item.php:142 ../../mod/mood.php:114
 #: ../../mod/profile_photo.php:19 ../../mod/profile_photo.php:169
@@ -460,7 +460,7 @@ msgid "Image upload failed."
 msgstr "Загрузка фото неудачная."
 
 #: ../../mod/photos.php:842 ../../mod/community.php:18
-#: ../../mod/dfrn_request.php:760 ../../mod/viewcontacts.php:17
+#: ../../mod/dfrn_request.php:760 ../../mod/viewconnections.php:17
 #: ../../mod/display.php:7 ../../mod/search.php:73 ../../mod/directory.php:31
 msgid "Public access denied."
 msgstr "Свободный доступ закрыт."
@@ -1779,7 +1779,7 @@ msgid "Edit contact notes"
 msgstr "Редактировать заметки контакта"
 
 #: ../../mod/contacts.php:357 ../../mod/contacts.php:549
-#: ../../mod/viewcontacts.php:62 ../../mod/nogroup.php:40
+#: ../../mod/viewconnections.php:62 ../../mod/nogroup.php:40
 #, php-format
 msgid "Visit %s's profile [%s]"
 msgstr "Посетить профиль %s [%s]"
@@ -2976,11 +2976,11 @@ msgstr "Видимый для"
 msgid "All Contacts (with secure profile access)"
 msgstr "Все контакты (с безопасным доступом к профилю)"
 
-#: ../../mod/viewcontacts.php:39
+#: ../../mod/viewconnections.php:39
 msgid "No contacts."
 msgstr "Нет контактов."
 
-#: ../../mod/viewcontacts.php:76 ../../include/text.php:618
+#: ../../mod/viewconnections.php:76 ../../include/text.php:618
 msgid "View Contacts"
 msgstr "Просмотр контактов"
 

@@ -161,7 +161,7 @@ mod/
 ? update_community.php - needs converting to json
 ? update_network.php - needs converting to json
 ? update_profile.php - needs converting to json
-? viewcontacts.php
+? viewconnections.php
 ? view.php
 + viewsrc.php
 + wall_attach.php (needs remote permissions refactor)

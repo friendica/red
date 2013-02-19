@@ -49,7 +49,7 @@ msgstr "Permiso denegado"
 #: ../../mod/crepair.php:113 ../../mod/api.php:26 ../../mod/api.php:31
 #: ../../mod/notes.php:20 ../../mod/fsuggest.php:78 ../../mod/item.php:113
 #: ../../mod/message.php:9 ../../mod/message.php:42
-#: ../../mod/dfrn_confirm.php:53 ../../mod/viewcontacts.php:21
+#: ../../mod/dfrn_confirm.php:53 ../../mod/viewconnections.php:21
 #: ../../mod/group.php:19 ../../mod/attach.php:33 ../../mod/common.php:9
 #: ../../addon/facebook/facebook.php:331 ../../include/items.php:2874
 msgid "Permission denied."
@@ -1141,7 +1141,7 @@ msgstr "Eliminar término"
 
 #: ../../mod/search.php:71 ../../mod/photos.php:752 ../../mod/display.php:7
 #: ../../mod/dfrn_request.php:594 ../../mod/directory.php:31
-#: ../../mod/viewcontacts.php:16 ../../mod/community.php:16
+#: ../../mod/viewconnections.php:16 ../../mod/community.php:16
 msgid "Public access denied."
 msgstr "Acceso público denegado."
 
@@ -1795,7 +1795,7 @@ msgid "Edit contact notes"
 msgstr "Editar notas de contacto"
 
 #: ../../mod/contacts.php:315 ../../mod/contacts.php:430
-#: ../../mod/viewcontacts.php:61
+#: ../../mod/viewconnections.php:61
 #, php-format
 msgid "Visit %s's profile [%s]"
 msgstr "Ver el perfil de %s [%s]"
@@ -3630,11 +3630,11 @@ msgstr "Bienvenido de nuevo"
 msgid "%s welcomes %s"
 msgstr "%s te da la bienvenida a %s"
 
-#: ../../mod/viewcontacts.php:25 ../../include/text.php:567
+#: ../../mod/viewconnections.php:25 ../../include/text.php:567
 msgid "View Contacts"
 msgstr "Ver contactos"
 
-#: ../../mod/viewcontacts.php:40
+#: ../../mod/viewconnections.php:40
 msgid "No contacts."
 msgstr "Ningún contacto."
 
