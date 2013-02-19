@@ -598,7 +598,7 @@ function contact_block() {
 
 	if((! is_array($a->profile)) || ($a->profile['hide_friends']))
 		return $o;
-	$r = q("SELECT COUNT(*) AS total FROM abook WHERE abook_channel = %d and abook_flags = 0",
+	$r = q("SELECT COUNT(abook_id) AS total FROM abook WHERE abook_channel = %d and abook_flags = 0",
 			intval($a->profile['uid'])
 	);
 	if(count($r)) {
@@ -627,7 +627,7 @@ function contact_block() {
 	$tpl = get_markup_template('contact_block.tpl');
 	$o = replace_macros($tpl, array(
 		'$contacts' => $contacts,
-		'$nickname' => $a->profile['nickname'],
+		'$nickname' => $a->profile['channel_address'],
 		'$viewcontacts' => t('View Connections'),
 		'$micropro' => $micropro,
 	));

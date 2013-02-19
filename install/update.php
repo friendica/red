@@ -378,7 +378,7 @@ function update_r1030() {
 KEY `issue_created` (`issue_created`),
 KEY `issue_updated` (`issue_updated`),
 KEY `issue_assigned` (`issue_assigned`),
-KEY `issue_priority` ('issue_priority`),
+KEY `issue_priority` (`issue_priority`),
 KEY `issue_status` (`issue_status`),
 KEY `issue_component` (`issue_component`)
 ) ENGINE = MYISAM ");
