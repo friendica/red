@@ -30,7 +30,9 @@ function get_perms() {
 
 		'delegate'      => array('channel_a_delegate', intval(PERMS_A_DELEGATE),    false, t('Can administer my channel resources'), t('Extremely advanced. Leave this alone unless you know what you are doing')),
 	);
-	return $global_perms;
+	$ret = array('global_permissions' => $global_perms);
+	call_hooks('global_permissions',$ret);
+	return $ret['global_permissions'];
 }
 
 
@@ -190,12 +192,28 @@ function get_all_perms($uid,$observer_xchan,$internal_use = true) {
 		continue;
 
 	}
+	$arr = array(
+		'channel_id'    => $uid,
+		'observer_hash' => $observer_xchan,
+		'permissions'   => $ret);
 
-	return $ret;
+	call_hooks('get_all_perms',$arr);
+	return $arr['permissions'];
 }
 
 
 function perm_is_allowed($uid,$observer_xchan,$permission) {
+
+
+	$arr = array(
+		'channel_id'    => $uid,
+		'observer_hash' => $observer_xchan,
+		'permission'    => $permission,
+		'result'        => false);
+
+	call_hooks('perm_is_allowed',$arr);
+	if($arr['result'])
+		return true;
 
 	$global_perms = get_perms();
 
@@ -274,6 +292,9 @@ function perm_is_allowed($uid,$observer_xchan,$permission) {
 		if($x[0]['abook_my_perms'] & $global_perms[$permission][1])
 			return true;
 	}
+
+
+
 
 	// No permissions allowed.
 
