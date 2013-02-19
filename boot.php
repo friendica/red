@@ -16,7 +16,7 @@ require_once('include/features.php');
 define ( 'FRIENDICA_PLATFORM',     'Friendica Red');
 define ( 'FRIENDICA_VERSION',      trim(file_get_contents('version.inc')) . 'R');
 define ( 'ZOT_REVISION',               1     ); 
-define ( 'DB_UPDATE_VERSION',       1030     );
+define ( 'DB_UPDATE_VERSION',       1031     );
 
 define ( 'EOL',                    '<br />' . "\r\n"     );
 define ( 'ATOM_TIME',              'Y-m-d\TH:i:s\Z' );
@@ -415,6 +415,7 @@ define ( 'ITEM_MENTIONSME',      0x0400);
 function startup() {
 	error_reporting(E_ERROR | E_WARNING | E_PARSE);
 
+	// Some hosting providers block/disable this
 	@set_time_limit(0);
 
 	// This has to be quite large to deal with embedded private photos

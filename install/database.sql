@@ -440,6 +440,23 @@ CREATE TABLE IF NOT EXISTS `intro` (
   KEY `contact-id` (`contact-id`)
 ) ENGINE=MyISAM  DEFAULT CHARSET=utf8;
 
+CREATE TABLE IF NOT EXISTS `issue` (
+  `issue_id` int(10) unsigned NOT NULL AUTO_INCREMENT,
+  `issue_created` datetime NOT NULL DEFAULT '0000-00-00 00:00:00',
+  `issue_updated` datetime NOT NULL DEFAULT '0000-00-00 00:00:00',
+  `issue_assigned` char(255) NOT NULL,
+  `issue_priority` int(11) NOT NULL,
+  `issue_status` int(11) NOT NULL,
+  `issue_component` char(255) NOT NULL,
+  PRIMARY KEY (`issue_id`),
+  KEY `issue_created` (`issue_created`),
+  KEY `issue_updated` (`issue_updated`),
+  KEY `issue_assigned` (`issue_assigned`),
+  KEY `issue_priority` (`issue_priority`),
+  KEY `issue_status` (`issue_status`),
+  KEY `issue_component` (`issue_component`)
+) ENGINE=MyISAM DEFAULT CHARSET=utf8;
+
 CREATE TABLE IF NOT EXISTS `item` (
   `id` int(10) unsigned NOT NULL AUTO_INCREMENT,
   `uri` char(255) CHARACTER SET ascii NOT NULL DEFAULT '',
