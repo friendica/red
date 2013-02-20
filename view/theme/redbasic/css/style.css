@@ -256,7 +256,7 @@ header #banner #logo-text {
   font-size: 22px;
 }
 
-.nav-commlink {
+.nav-commlink, .nav-login-link  {
     display: block;
     height: 15px;
 	margin-top: 67px;
