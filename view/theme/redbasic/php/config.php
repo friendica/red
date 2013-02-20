@@ -88,7 +88,7 @@ function redbasic_form(&$a, $font_size, $line_height, $colour, $shadow, $navcolo
 		'12.5' => '12.5',
 		'12' => '12',
 	);
-	$colours = array(
+	$colour_scheme = array(
 		'redbasic' => 'light',		
 		'fancyred' => 'dark',						
 	);
