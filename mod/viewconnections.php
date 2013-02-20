@@ -70,7 +70,7 @@ function viewconnections_content(&$a) {
 			'thumb' => $rr['xchan_photo_m'], 
 			'name' => substr($rr['xchan_name'],0,20),
 			'username' => $rr['xchan_addr'],
-			'url' => $url,
+			'link' => $url,
 			'sparkle' => '',
 			'itemurl' => $rr['url'],
 			'network' => '',

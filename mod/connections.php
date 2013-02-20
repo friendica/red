@@ -594,7 +594,7 @@ function connections_content(&$a) {
 				'name' => $rr['xchan_name'],
 				'username' => $rr['xchan_name'],
 				'sparkle' => $sparkle,
-				'edit' => z_root() . '/connections/' . $rr['abook_id'],
+				'link' => z_root() . '/connections/' . $rr['abook_id'],
 				'url' => $rr['xchan_url'],
 				'network' => network_to_name($rr['network']),
 			);

@@ -48,7 +48,7 @@ function nogroup_content(&$a) {
 				'username' => $rr['name'],
 				'sparkle' => $sparkle,
 				'itemurl' => $rr['url'],
-				'url' => $url,
+				'link' => $url,
 				'network' => network_to_name($rr['network']),
 			);
 		}
