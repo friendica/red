@@ -113,10 +113,10 @@ function import_post(&$a) {
 	// reset
 	$channel = $r[0];
 
-
-// FIXME - import the default profile photo (it has now been exported as a base64 blob)
-
-
+	if($data['photo']) {
+		require_once('include/Photo.php');
+		import_channel_photo(base64url_decode($data['photo']['data']),$data['photo']['type'],get_account_id,$channel['channel_id']);
+	}
 
 	$profiles = $data['profile'];
 	if($profiles) {

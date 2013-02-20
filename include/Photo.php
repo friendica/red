@@ -717,3 +717,52 @@ function import_profile_photo($photo,$xchan) {
 	return(array($photo,$thumb,$micro,$type));
 
 }
+
+
+
+function import_channel_photo($photo,$type,$aid,$uid) {
+
+	$a = get_app();
+
+	logger('import_channel_photo: importing channel photo for ' . $uid, LOGGER_DEBUG);
+
+	$hash = photo_new_resource();
+
+	$photo_failure = false;
+
+
+	$filename = $hash;
+
+	$img = new Photo($photo, $type);
+	if($img->is_valid()) {
+
+		$img->scaleImageSquare(175);
+
+		$r = $img->store($aid,$uid,'', $hash, $filename, t('Profile Photos'), 4, true);
+
+		if($r === false)
+			$photo_failure = true;
+
+		$img->scaleImage(80);
+
+		$r = $img->store($aid,$uid,'', $hash, $filename, t('Profile Photos'), 5, true);
+
+		if($r === false)
+			$photo_failure = true;
+
+		$img->scaleImage(48);
+
+		$r = $img->store($aid,$uid,'', $hash, $filename, t('Profile Photos'), 6, true);
+
+		if($r === false)
+			$photo_failure = true;
+
+	}
+	else {
+		logger('import_channel_photo: invalid image.');
+		$photo_failure = true;
+	}
+
+	return(($photo_failure)? false : true);
+
+}
