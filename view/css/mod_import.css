@@ -1,0 +1,37 @@
+h2 {
+	margin-left: 15%;
+	margin-top: 8%;
+}
+
+#import-channel-form {
+	font-size: 1.4em;	
+	margin-left: 15%;
+	margin-top: 5%;
+	width: 50%;
+}
+
+
+
+#import-channel-form .descriptive-paragraph {
+	color: #888;
+	margin-left: 20px;
+	margin-bottom: 25px;
+}
+
+.import-label {
+	float: left;
+	width: 275px;
+}
+
+.import-input {
+	float: left;
+	width: 275px;
+	padding: 5px;
+}
+
+
+.import-field-end {
+	clear: both;
+	margin-bottom: 20px;
+}
+

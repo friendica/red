@@ -69,16 +69,17 @@ function import_post(&$a) {
 
 	$channel = $data['channel'];
 
-	$r = q("select * from channel where (channel_guid = '%s' or channel_hash = '%s') limit 1",
+	$r = q("select * from channel where (channel_guid = '%s' or channel_hash = '%s' or channel_address = '%s' ) limit 1",
 		dbesc($channel['channel_guid']),
-		dbesc($channel['channel_hash'])
+		dbesc($channel['channel_hash']),
+		dbesc($channel['channel_address'])
 	);
 
 	// We should probably also verify the hash 
 
 	if($r) {
 		logger('mod_import: duplicate channel. ', print_r($channel,true));
-		notice( t('Duplicate channel unique ID. Import failed.') . EOL);
+		notice( t('Cannot create a duplicate channel identifier on this system. Import failed.') . EOL);
 		return;
 	}
 
@@ -112,6 +113,11 @@ function import_post(&$a) {
 	// reset
 	$channel = $r[0];
 
+
+// FIXME - import the default profile photo (it has now been exported as a base64 blob)
+
+
+
 	$profiles = $data['profile'];
 	if($profiles) {
 		foreach($profiles as $profile) {
@@ -133,6 +139,7 @@ function import_post(&$a) {
 				. "')" );
 		}
 	}
+
 
 	$hublocs = $data['hubloc'];
 	if($hublocs) {
@@ -157,11 +164,36 @@ function import_post(&$a) {
 
 			}
 
-			// create new hubloc for the new channel at this site
-			// and reset the original hubloc if it is being seized but wasn't created just now
 		}
 	}
 
+	// create new hubloc for the new channel at this site
+
+	$r = q("insert into hubloc ( hubloc_guid, hubloc_guid_sig, hubloc_hash, hubloc_addr, hubloc_flags, 
+		hubloc_url, hubloc_url_sig, hubloc_host, hubloc_callback, hubloc_sitekey )
+		values ( '%s', '%s', '%s', '%s', %d, '%s', '%s', '%s', '%s', '%s' )",
+		dbesc($channel['channel_guid']),
+		dbesc($channel['channel_guid_sig']),
+		dbesc($channel['channel_hash']),
+		dbesc($channel['channel_address'] . '@' . get_app()->get_hostname()),
+		intval(($seize) ? HUBLOC_FLAGS_PRIMARY : 0),
+		dbesc(z_root()),
+		dbesc(base64url_encode(rsa_sign(z_root(),$channel['channel_prvkey']))),
+		dbesc(get_app()->get_hostname()),
+		dbesc(z_root() . '/post'),
+		dbesc(get_config('system','pubkey'))
+	);
+
+	// reset the original primary hubloc if it is being seized
+
+	if($seize)
+		$r = q("update hubloc set hubloc_flags = (hubloc_flags ^ %d) where (hubloc_flags & %d) and hubloc_hash = '%s' and hubloc_url != '%s' ",
+			intval(HUBLOC_FLAGS_PRIMARY),
+			intval(HUBLOC_FLAGS_PRIMARY),
+			dbesc($channel['channel_hash']),
+			dbesc(z_root())
+		);
+ 
 	// import xchans and contact photos
 
 
@@ -197,6 +229,8 @@ function import_post(&$a) {
 		}
 	}
 
+// FIXME - ensure we have an xchan if somebody is trying to pull a fast one
+
 	
 	// import contacts
 	$abooks = $data['abook'];
@@ -213,37 +247,38 @@ function import_post(&$a) {
 		}
 	}
 
+// FIXME - ensure we have a self entry if somebody is trying to pull a fast one
 
 	if($seize) {
 		// notify old server that it is no longer primary.
 		
 	}
 
-
 	// send out refresh requests
+
+	notice( t('Import completed.') . EOL);
 
 }
 
 
 function import_content(&$a) {
 
-/*
- * Pass in a channel name and desired channel_address
- * Check this for validity and duplication
- * The page template should have a place to change it and check again
- */
 
+	$o = replace_macros(get_markup_template('channel_import.tpl'),array(
+		'$title' => t('Import Channel'),
+		'$desc' => t('Use this form to import an existing channel from a different server/hub. You may retrieve the channel identity from the old server/hub via the network or provide an export file. Only identity and connections/relationships will be imported. Importation of content is not yet available.'),
+		'$label_filename' => t('File to Upload'),
+		'$choice' => t('Or provide the old server/hub details'),
+		'$label_old_address' => t('Your old identity address (xyz@example.com)'),
+		'$label_old_email' => t('Your old login email address'),
+		'$label_old_pass' => t('Your old login password'),
+		'$common' => t('For either option, please choose whether to make this hub your new primary address, or whether your old location should continue this role. You will be able to post from either location, but only one can be marked as the primary location for files, photos, and media.'),
+		'$label_import_primary' => t('Make this hub my primary location'),
+		'$email' => '',
+		'$pass' => '',
+		'$submit' => t('Submit')
+	));
 
-$o .= <<< EOT
+	return $o;
 
-<form action="import" method="post" >
-Old Address <input type="text" name="old_address" /><br />
-Login <input type="text" name="email" /><br />
-Password <input type="password" name="password" /><br />
-<input type="submit" name="submit" value="submit" />
-</form>
-
-EOT;
-
-return $o;
 }

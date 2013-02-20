@@ -275,6 +275,15 @@ function identity_basic_export($channel_id) {
 			$ret['hubloc'] = $r;
 	}
 
+	$r = q("select type, data from photo where scale = 4 and profile = 1 and uid = %d limit 1",
+		intval($channel_id)
+	);
+
+	if($r) {
+		$ret['photo'] = array('type' => $r[0]['type'], 'data' => base64url_encode($r[0]['data']));
+	}
+
+
 	return $ret;
 }
 

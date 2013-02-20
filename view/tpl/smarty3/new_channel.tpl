@@ -24,8 +24,8 @@
 	<div id="newchannel-nick-desc" class="descriptive-paragraph">{{$nick_desc}}</div>
 
 
-	<input type="checkbox" name="import" id="newchannel-import" value="1" />
-	<label for="newchannel-import" id="label-newchannel-import">{{$label_import}}</label>
+	<div id="newchannel-import-link" class="descriptive-paragraph" >{{$label_import}}</div>
+
 	<div id="newchannel-import-end" class="newchannel-field-end"></div>
 
 	<input type="submit" name="submit" id="newchannel-submit-button" value="{{$submit}}" />
