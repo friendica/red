@@ -19,7 +19,7 @@ function zot_new_uid($channel_nick) {
 
 /**
  *
- * Given an array of zot_uid(s), return all distinct hubs
+ * Given an array of zot hashes, return all distinct hubs
  * If primary is true, return only primary hubs
  * Result is ordered by url to assist in batching.
  * Return only the first primary hub as there should only be one.
