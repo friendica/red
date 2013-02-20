@@ -1,0 +1,184 @@
+/* There's probably some stuff in here we don't need, and maybe some missing stuff we do need.  We can clean it up incrementaly, just get the heavy lifting done for now */
+
+aside {
+border-radius: 0px 0px 20px 0px;}
+
+
+.tab {
+    height: auto;
+    background-color: #f00;
+    color: #fff !important;
+    font-weight: bold;
+    -webkit-border-radius: 5px;
+    -moz-border-radius: 5px;
+    border-radius: 20px;
+    margin: 0;
+    width: auto;
+    margin-left: 8px;
+    padding: 4px;
+    text-align: center;
+}
+.tab:hover, .tab.active:hover {
+    background: #d00;
+    color: #fff; 
+ ;
+}
+.tab:active {
+    background: #fff;
+    color: #f00;
+}
+.tab.active {
+    background: #f00;
+    color: #fff; 
+    box-shadow: 3px 3px 3px #333 inset;
+    padding: 5px; /* strageness of the human mind - has to be larger than inactive tabs, or it looks smaller than them */
+}
+
+
+
+/* Give the top level post bigger shadows than the comments.  This makes them appear "higher" and the comments "lower", which separates posts from each other reasonably without literally drawing a line under it */
+
+.wall-item-content-wrapper {
+	position: relative;
+	background: #fff;
+	border-radius: 10px;
+	box-shadow: 8px 8px 8px #000;
+	border: 1px solid #eec;
+}
+
+.thread-wrapper .thread-wrapper {
+	margin-left: 50px;
+}
+
+.thread-end-wrapper {
+    margin-left: 50px;
+}
+
+
+/* This shadow isn't quite right - not sure if it's colour or size */
+
+.wall-item-content-wrapper.comment {
+	background: #fff;
+	border-left: 1px solid #e0e0e0;
+	margin-left: 50px;
+	margin-top: 15px;
+	box-shadow: 5px 5px 5px #222;
+
+}
+
+.wall-item-info {
+	display: block;
+	float: left;
+	width:110px;
+	margin-right:10px;
+}
+.comment .wall-item-info {
+	width: 70px;
+}
+
+.wall-item-photo-wrapper {
+	margin-top: 10px;
+	margin-left: 10px;
+	margin-bottom: 10px;
+	width: 100px;
+}
+
+.wall-item-content img {
+  max-height: 95% !important;
+  max-width: 95% !important;
+  box-shadow: 8px 8px 8px #666;
+}
+
+.wall-item-content img.smiley {
+  box-shadow: none;
+}
+
+.wall-item-like:hover, .wall-item-dislike:hover{
+opacity: 1;
+}
+
+.wall-item-author {
+	margin-top: 10px;
+}
+
+.comment-edit-wrapper {
+	margin-top: 15px;
+	background: #ffffff;
+	margin-left: 50px;
+}
+
+.comment-edit-text-empty, .comment-edit-text-full {
+	float: left;
+	margin-top: 10px;
+	padding: 3px 1px 1px 3px;
+	border: 1px solid #ccc;
+	padding: 8px;
+	border-radius: 5px 5px 5px 5px;
+	box-shadow: 5px 5px 5px #666 inset;
+}
+
+.comment-edit-text-empty {
+color: gray;
+height: 1.5em;
+width: 80%; /*Too wide? */
+overflow: auto;
+margin-bottom: 10px;
+}
+
+.comment-edit-text-full {
+	color: black;
+	height: 150px;
+	width: 80%;
+	overflow: auto;
+}
+
+
+#profile-jot-text {
+	height: 20px;
+	color:#000;
+	border: 1px solid #cccccc;
+	padding: 10px;
+	width: 90%;
+	border-radius: 20px;	
+	box-shadow: 4px 4px 3px 0 #666 inset;
+}
+
+#profile-jot-submit {
+    height: auto;
+    background-color: #dd0000;
+    color: #eeeeec;
+    font-weight: bold;
+    -webkit-border-radius: 5px;
+    -moz-border-radius: 5px;
+    border-radius: 5px;
+    border: 2px outset #222420 !important;
+    margin: 0;
+    float: right;
+    text-shadow: 1px 1px #111;
+    width: auto;
+    box-shadow: 5px 5px 5px #444;
+}
+ul.menu-popup {
+  position: absolute;
+  display: none;
+  width: 10em;
+  background: #dd0000;
+  color: #eec;
+  padding: 0px;
+  list-style: none;
+  border-radius: 0px 0px 20px 20px;
+  z-index: 100000;
+  -webkit-box-shadow: 0px 5px 10px rgba(0, 0, 0, 0.7);
+  -moz-box-shadow: 0px 5px 10px rgba(0, 0, 0, 0.7);
+  box-shadow: 0px 5px 10px rgba(0, 0, 0, 0.7);
+}
+ul.menu-popup a {
+  display: block;
+  color: #eec;
+  padding: 5px 10px;
+  text-decoration: none;
+}
+ul.menu-popup a:hover {
+  background-color: #eec;
+  color: #f00;
+}
