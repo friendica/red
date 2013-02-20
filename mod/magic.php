@@ -60,6 +60,18 @@ function magic_init(&$a) {
 		return;
 	}
 
+	$arr = array(
+		'channel_id' => local_user(),
+		'xchan' => $x[0],
+		'destination' => $dest, 
+		'proceed' => true
+	);
+
+	call_hooks('magic_auth',$arr);
+	$dest = $arr['destination'];
+	if(! $arr['proceed'])
+		goaway($dest);
+
 	if($x[0]['hubloc_url'] === z_root()) {
 		$webbie = substr($x[0]['hubloc_addr'],0,strpos('@',$x[0]['hubloc_addr']));
 		switch($dest) {
