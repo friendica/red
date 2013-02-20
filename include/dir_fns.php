@@ -8,6 +8,8 @@ function find_upstream_directory($dirmode) {
 
 function syncdirs($uid) {
 
+	logger('syncdirs', LOGGER_DEBUG);
+
 	$p = q("select channel.channel_hash, profile.* from profile left join channel on channel_id = uid where uid = %d and is_default = 1",
 		intval($uid)
 	);

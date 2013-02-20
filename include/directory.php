@@ -12,6 +12,8 @@ function directory_run($argv, $argc){
 	if($argc != 2)
 		return;
 
+	logger('directory update', LOGGER_DEBUG);
+
 	$dirmode = get_config('system','directory_mode');
 	if($dirmode === false)
 		$dirmode = DIRECTORY_MODE_NORMAL;
