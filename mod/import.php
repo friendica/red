@@ -121,6 +121,7 @@ function import_post(&$a) {
 	$profiles = $data['profile'];
 	if($profiles) {
 		foreach($profiles as $profile) {
+			unset($profile['id']);
 			$profile['aid'] = get_account_id();
 			$profile['uid'] = $channel['channel_id'];
 
@@ -154,6 +155,7 @@ function import_post(&$a) {
 				$hubloc['hubloc_flags'] = ($hubloc['hubloc_flags'] ^ HUBLOC_FLAGS_PRIMARY);
 
 			if(! zot_gethub($arr)) {				
+				unset($hubloc['hubloc_id']);
 				dbesc_array($hubloc);
 		
 				$r = dbq("INSERT INTO hubloc (`" 
@@ -236,6 +238,7 @@ function import_post(&$a) {
 	$abooks = $data['abook'];
 	if($abooks) {
 		foreach($abooks as $abook) {
+			unset($abook['abook_id']);
 			$abook['abook_account'] = get_account_id();
 			$abook['abook_channel'] = $channel['channel_id'];
 			dbesc_array($abook);
