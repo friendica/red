@@ -39,6 +39,26 @@ function syncdirs($uid) {
 				$profile['keywords'] = $tags;
 		}
 
+		$hidden = (1 - intval($p[0]['publish']));
+
+		$r = q("select xchan_flags from xchan where xchan_hash = '%s' limit 1",
+			dbesc($p[0]['channel_hash'])
+		);
+
+		// Be careful - XCHAN_FLAGS_HIDDEN should evaluate to 1
+		if(($r[0]['xchan_flags'] & XCHAN_FLAGS_HIDDEN) != $hidden)
+			$new_flags = $r[0]['xchan_flags'] ^ XCHAN_FLAGS_HIDDEN;
+		else
+			$new_flags = $r[0]['xchan_flags'];
+		
+		if($new_flags != $r[0]['xchan_flags']) {			
+			$r = q("update xchan set xchan_flags = %d  where xchan_hash = '%s' limit 1",
+				intval($new_flags),
+				dbesc($xchan_hash)
+			);
+		}
+
+
 		if(perm_is_allowed($uid,'','view_profile')) {
 			import_directory_profile($hash,$profile);
 
