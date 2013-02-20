@@ -41,6 +41,8 @@ function syncdirs($uid) {
 
 		$hidden = (1 - intval($p[0]['publish']));
 
+		logger('hidden: ' . $hidden);
+
 		$r = q("select xchan_flags from xchan where xchan_hash = '%s' limit 1",
 			dbesc($p[0]['channel_hash'])
 		);
@@ -52,10 +54,12 @@ function syncdirs($uid) {
 			$new_flags = $r[0]['xchan_flags'];
 		
 		if($new_flags != $r[0]['xchan_flags']) {			
+
 			$r = q("update xchan set xchan_flags = %d  where xchan_hash = '%s' limit 1",
 				intval($new_flags),
-				dbesc($xchan_hash)
+				dbesc($p[0]['channel_hash'])
 			);
+
 		}
 
 
