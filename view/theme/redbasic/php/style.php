@@ -11,6 +11,8 @@
     $navcolour = false;
     $nav_bg_1 = "f88";
     $nav_bg_2 = "b00";
+	$nav_bg_3 = "f00";
+	$nav_bg_4 = "b00";
     $displaystyle = false;
     $linkcolour = false;
     $shiny = false;
@@ -60,6 +62,7 @@
 	  }
 
 
+
 // Enforce sane limits for expert mode - otherwise we'll end up with "experts" who think font size is a percentage.
 
 	if(($redbasic_font_size >= 8.0) && ($redbasic_font_size <= 20.0)) {
@@ -88,6 +91,14 @@
 	      background-image: -webkit-linear-gradient(bottom, #$nav_bg_1 26%, #$nav_bg_2 82%);
 	      background-image: -ms-linear-gradient(bottom, #$nav_bg_1 26%, #$nav_bg_2 82%);}";
 
+	if($navcolour === false || $navcolour === 'red') {
+		echo "nav:hover {background-image: linear-gradient(bottom, #$nav_bg_3 26%, #$nav_bg_4 82%);
+	      background-image: -o-linear-gradient(bottom, #$nav_bg_3 26%, #$nav_bg_4 82%);
+	      background-image: -moz-linear-gradient(bottom, #$nav_bg_3 26%, #$nav_bg_4 82%) !important;
+	      background-image: -webkit-linear-gradient(bottom, #$nav_bg_3 26%, #$nav_bg_4 82%);
+	      background-image: -ms-linear-gradient(bottom, #$nav_bg_3 26%, #$nav_bg_4 82%);}";
+	}
+
 // This takes quite a lot of code, so we'll keep it in a separate file, and echo the lot.  Devs still don't have to worry about - it's just overrides.
 // Theme devs can play with it without facing scary PHP.
 
@@ -106,7 +117,7 @@
 	
 // If you want a shiny that just sets a different colour, add an if $shiny != false and handle it as the linkcolour above.
 
-	if ($shiny === opaque) {
+	if ($shiny === 'opaque') {
 		    echo "div.wall-item-content-wrapper.shiny {opacity: 1;}\r\n
 			 .wall-item-content-wrapper {opacity: 0.8;}";
 	}
