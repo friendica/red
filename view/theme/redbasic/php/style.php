@@ -53,10 +53,11 @@
     }
     echo "\r\n";
 
-    //if($colour != "light" { grab the contents of file $colour which doesn't exist yet, and echo it when it does}  
-    //see the displaystyle bit to see how this works.
-    //Then, grab the "Light" PCSS from KakSte Friendica theme, flip the colours, and the job is 90% done
-    //$colour_scheme (not yet implemented) should be used for idiot mode
+// use $colour_scheme (not yet implemented) for idiot mode.
+    if($colour === "dark") {if (file_exists('view/theme/' . current_theme() . '/css/dark.css')) {
+		  $dark = (file_get_contents('view/theme/' . current_theme() . '/css/dark.css'));
+	      echo "$dark";}
+	  }
 
 
 // Enforce sane limits for expert mode - otherwise we'll end up with "experts" who think font size is a percentage.

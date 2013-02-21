@@ -40,7 +40,7 @@ border-radius: 0px 0px 20px 0px;}
 
 .wall-item-content-wrapper {
 	position: relative;
-	background: #fff;
+/*	background: #fff; */
 	border-radius: 10px;
 	box-shadow: 8px 8px 8px #000;
 	border: 1px solid #eec;
@@ -58,7 +58,7 @@ border-radius: 0px 0px 20px 0px;}
 /* This shadow isn't quite right - not sure if it's colour or size */
 
 .wall-item-content-wrapper.comment {
-	background: #fff;
+/*	background: #fff; */
 	border-left: 1px solid #e0e0e0;
 	margin-left: 50px;
 	margin-top: 15px;
@@ -103,7 +103,7 @@ opacity: 1;
 
 .comment-edit-wrapper {
 	margin-top: 15px;
-	background: #ffffff;
+/*	background: #ffffff; */
 	margin-left: 50px;
 }
 
