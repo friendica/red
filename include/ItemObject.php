@@ -174,7 +174,7 @@ class Item extends BaseObject {
 			$indent = 'comment';
 		}
 
-		if($this->is_writable()) {
+		if($this->is_commentable()) {
 			$like = array( t("I like this \x28toggle\x29"), t("like"));
 			$dislike = array( t("I don't like this \x28toggle\x29"), t("dislike"));
 			if ($shareable)
