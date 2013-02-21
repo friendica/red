@@ -33,5 +33,5 @@ Friendica Documentation and Resources
 
 **About**
 
-* [Site/Version Info](friendica)
+* [Site/Version Info](siteinfo)
 
