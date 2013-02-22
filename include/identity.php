@@ -275,6 +275,26 @@ function identity_basic_export($channel_id) {
 			$ret['hubloc'] = $r;
 	}
 
+	$r = q("select * from group where uid = %d ",
+		intval($channel_id)
+	);
+
+	if($r)
+		$ret['group'] = $r;
+
+	$r = q("select * from group_member where uid = %d ",
+		intval($channel_id)
+	);
+	if($r)
+		$ret['group_member'] = $r;
+
+	$r = q("select * from pconfig where uid = %d",
+		intval($channel_id)
+	);
+	if($r)
+		$ret['config'] = $r;
+
+
 	$r = q("select type, data from photo where scale = 4 and profile = 1 and uid = %d limit 1",
 		intval($channel_id)
 	);

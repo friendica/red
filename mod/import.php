@@ -250,6 +250,63 @@ function import_post(&$a) {
 		}
 	}
 
+
+	$configs = $data['config'];
+	if($configs) {
+		foreach($configs as $config) {
+			unset($config['id']);
+			$config['uid'] = $channel['channel_id'];
+			dbesc_array($config);
+			$r = dbq("INSERT INTO pconfig (`" 
+				. implode("`, `", array_keys($config)) 
+				. "`) VALUES ('" 
+				. implode("', '", array_values($config)) 
+				. "')" );
+		}
+	}
+
+	$groups = $data['group'];
+	if($groups) {
+		$saved = array();
+		foreach($groups as $group) {
+			$saved[$group['hash']] = array('old' => $group['id']);
+			unset($group['id']);
+			$group['uid'] = $channel['channel_id'];
+			dbesc_array($group);
+			$r = dbq("INSERT INTO group (`" 
+				. implode("`, `", array_keys($group)) 
+				. "`) VALUES ('" 
+				. implode("', '", array_values($group)) 
+				. "')" );
+		}
+		$r = q("select * from group where uid = %d",
+			intval($channel['channel_id'])
+		);
+		if($r) {
+			foreach($r as $rr) {
+				$saved[$rr['hash']]['new'] = $rr['id'];
+			}
+		} 
+	}
+
+	$group_members = $data['group_member'];
+	if($groups_members) {
+		foreach($group_members as $group_member) {
+			unset($group_member['id']);
+			$group_member['uid'] = $channel['channel_id'];
+			foreach($saved as $x) {
+				if($x['old'] == $group_member['gid'])
+					$group_member['gid'] = $x['new'];
+			}
+			dbesc_array($group_member);
+			$r = dbq("INSERT INTO group_member (`" 
+				. implode("`, `", array_keys($group_member)) 
+				. "`) VALUES ('" 
+				. implode("', '", array_values($group_member)) 
+				. "')" );
+		}
+	}
+
 // FIXME - ensure we have a self entry if somebody is trying to pull a fast one
 
 	if($seize) {
