@@ -300,7 +300,7 @@ nav #nav-link-wrapper .nav-link {
 }
 
 .tabs {
-	height: 22px;
+	height: 28px;
 	border-bottom: 1px solid #aaaaaa;
 	padding:0px;
 	margin-right: 10px;
@@ -1291,6 +1291,7 @@ input#dfrn-url {
 
 .comment-wwedit-wrapper {
 	background: #ffffff;
+	margin-top: 2px;
 }
 
 .comment-edit-photo {
