@@ -130,7 +130,7 @@ function poco_load($xchan = null,$url = null) {
 				);
 			}
 			else {
-				q("update xlink set xlink_updated = '%s', rating = %d where xlink_id = %d limit 1",
+				q("update xlink set xlink_updated = '%s', xlink_rating = %d where xlink_id = %d limit 1",
 					dbesc(datetime_convert()),
 					intval($rating),
 					intval($r[0]['xlink_id'])
