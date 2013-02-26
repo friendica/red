@@ -454,7 +454,7 @@ function startup() {
  *
  */
 
-if(! class_exists('App')) {
+
 	class App {
 
 		
@@ -903,17 +903,16 @@ if(! class_exists('App')) {
 
 
 	}
-}
+
 
 // retrieve the App structure
 // useful in functions which require it but don't get it passed to them
 
-if(! function_exists('get_app')) {
-	function get_app() {
-		global $a;
-		return $a;
-	}
-};
+function get_app() {
+	global $a;
+	return $a;
+}
+
 
 
 // Multi-purpose function to check variable state.
@@ -922,37 +921,37 @@ if(! function_exists('get_app')) {
 // if variable is set, returns 1 if has 'non-zero' value, otherwise returns 0.
 // e.g. x('') or x(0) returns 0;
 
-if(! function_exists('x')) {
-	function x($s,$k = NULL) {
-		if($k != NULL) {
-			if((is_array($s)) && (array_key_exists($k,$s))) {
-				if($s[$k])
-					return (int) 1;
-				return (int) 0;
-		}
-			return false;
-		}
-		else {
-			if(isset($s)) {
-				if($s) {
-					return (int) 1;
-				}
-				return (int) 0;
+
+function x($s,$k = NULL) {
+	if($k != NULL) {
+		if((is_array($s)) && (array_key_exists($k,$s))) {
+			if($s[$k])
+				return (int) 1;
+			return (int) 0;
+	}
+		return false;
+	}
+	else {
+		if(isset($s)) {
+			if($s) {
+				return (int) 1;
 			}
-			return false;
+			return (int) 0;
 		}
+		return false;
 	}
 }
+
 
 // called from db initialisation if db is dead.
 
-if(! function_exists('system_unavailable')) {
-	function system_unavailable() {
-		include('system_unavailable.php');
-		system_down();
-		killme();
-	}
+
+function system_unavailable() {
+	include('system_unavailable.php');
+	system_down();
+	killme();
 }
+
 
 
 
@@ -992,7 +991,7 @@ function is_ajax() {
 // $_SERVER variables, and synchronising the state of installed plugins.
 
 
-if(! function_exists('check_config')) {
+
 function check_config(&$a) {
 
 		$build = get_config('system','db_version');
@@ -1135,14 +1134,14 @@ function check_config(&$a) {
 
 		return;
 	}
-}
+
 
 
 // wrapper for adding a login box. If $register == true provide a registration
 // link. This will most always depend on the value of $a->config['system']['register_policy'].
 // returns the complete html for inserting into the page
 
-if(! function_exists('login')) {
+
 	function login($register = false, $form_id = 'main-login', $hiddens=false) {
 		$a = get_app();
 		$o = "";
@@ -1196,25 +1195,25 @@ if(! function_exists('login')) {
 
 		return $o;
 	}
-}
+
 
 // Used to end the current process, after saving session state.
 
-if(! function_exists('killme')) {
+
 	function killme() {
 		session_write_close();
 		exit;
 	}
-}
+
 
 // redirect to another URL and terminate this process.
 
-if(! function_exists('goaway')) {
+
 	function goaway($s) {
 		header("Location: $s");
 		killme();
 	}
-}
+
 
 function get_account_id() {
 	if(get_app()->account)
@@ -1225,53 +1224,53 @@ function get_account_id() {
 
 // Returns the entity id of locally logged in user or false.
 
-if(! function_exists('local_user')) {
+
 	function local_user() {
 		if((x($_SESSION,'authenticated')) && (x($_SESSION,'uid')))
 			return intval($_SESSION['uid']);
 		return false;
 	}
-}
+
 
 // Returns contact id of authenticated site visitor or false
 
-if(! function_exists('remote_user')) {
+
 	function remote_user() {
 		if((x($_SESSION,'authenticated')) && (x($_SESSION,'visitor_id')))
 			return $_SESSION['visitor_id'];
 		return false;
 	}
-}
+
 
 // contents of $s are displayed prominently on the page the next time
 // a page is loaded. Usually used for errors or alerts.
 
-if(! function_exists('notice')) {
+
 	function notice($s) {
 		$a = get_app();
 		if(! x($_SESSION,'sysmsg'))	$_SESSION['sysmsg'] = array();
 		if($a->interactive)
 			$_SESSION['sysmsg'][] = $s;
 	}
-}
-if(! function_exists('info')) {
+
+
 	function info($s) {
 		$a = get_app();
 		if(! x($_SESSION,'sysmsg_info')) $_SESSION['sysmsg_info'] = array();
 		if($a->interactive)
 			$_SESSION['sysmsg_info'][] = $s;
 	}
-}
+
 
 
 // wrapper around config to limit the text length of an incoming message
 
-if(! function_exists('get_max_import_size')) {
+
 	function get_max_import_size() {
 		global $a;
 		return ((x($a->config,'max_import_size')) ? $a->config['max_import_size'] : 0 );
 	}
-}
+
 
 
 
@@ -1296,7 +1295,7 @@ if(! function_exists('get_max_import_size')) {
  *
  */
 
-if(! function_exists('profile_load')) {
+
 function profile_load(&$a, $nickname, $profile = 0) {
 
 	$user = q("select channel_id from channel where channel_address = '%s' limit 1",
@@ -1386,7 +1385,7 @@ function profile_load(&$a, $nickname, $profile = 0) {
 	}
 
 	return;
-}}
+}
 
 function profile_create_sidebar(&$a) {
 
@@ -1413,7 +1412,7 @@ function profile_create_sidebar(&$a) {
  */
 
 
-if(! function_exists('profile_sidebar')) {
+
 	function profile_sidebar($profile, $block = 0) {
 
 		$a = get_app();
@@ -1528,11 +1527,11 @@ if(! function_exists('profile_sidebar')) {
 
 		return $o;
 	}
-}
+
 
 // FIXME
 
-if(! function_exists('get_birthdays')) {
+
 	function get_birthdays() {
 
 		$a = get_app();
@@ -1607,11 +1606,11 @@ if(! function_exists('get_birthdays')) {
 
 		));
 	}
-}
+
 
 // FIXME
 
-if(! function_exists('get_events')) {
+
 	function get_events() {
 
 		require_once('include/bbcode.php');
@@ -1678,7 +1677,7 @@ if(! function_exists('get_events')) {
 			'$events' => $r,
 		));
 	}
-}
+
 
 
 /**
@@ -1695,7 +1694,7 @@ if(! function_exists('get_events')) {
  * $cmd and string args are surrounded with ""
  */
 
-if(! function_exists('proc_run')) {
+
 	function proc_run($cmd){
 
 		$a = get_app();
@@ -1737,9 +1736,9 @@ if(! function_exists('proc_run')) {
 		else
 			proc_close(proc_open($cmdline." &",array(),$foo));
 	}
-}
 
-if(! function_exists('current_theme')) {
+
+
 	function current_theme(){
 		$app_base_themes = array('redbasic');
 	
@@ -1780,13 +1779,13 @@ if(! function_exists('current_theme')) {
 			return (str_replace('view/theme/','', substr($fallback[0],0,-10)));
 	
 	}
-}
+
 
 /*
  * Return full URL to theme which is currently in effect.
 * Provide a sane default if nothing is chosen or the specified theme does not exist.
 */
-if(! function_exists('current_theme_url')) {
+
 	function current_theme_url() {
 		global $a;
 		$t = current_theme();
@@ -1794,7 +1793,7 @@ if(! function_exists('current_theme_url')) {
 			return('view/theme/' . $t . '/php/style.pcss');
 		return('view/theme/' . $t . '/css/style.css');
 	}
-}
+
 
 function z_birthday($dob,$tz,$format="Y-m-d H:i:s") {
 
@@ -1817,7 +1816,7 @@ function z_birthday($dob,$tz,$format="Y-m-d H:i:s") {
 }
 
 
-if(! function_exists('feed_birthday')) {
+
 	function feed_birthday($uid,$tz) {
 
 		/**
@@ -1863,10 +1862,10 @@ if(! function_exists('feed_birthday')) {
 		}
 
 		return $birthday;
-	}
+
 }
 
-if(! function_exists('is_site_admin')) {
+
 function is_site_admin() {
 	$a = get_app();
 	if((intval($_SESSION['authenticated'])) 
@@ -1874,10 +1873,10 @@ function is_site_admin() {
 		&& ($a->account['account_roles'] & ACCOUNT_ROLE_ADMIN))
 		return true;
 	return false;
-}}
+}
 
 
-if(! function_exists('load_contact_links')) {
+
 	function load_contact_links($uid) {
 
 		$a = get_app();
@@ -1903,9 +1902,9 @@ if(! function_exists('load_contact_links')) {
 		$a->contacts = $ret;
 		return;
 	}
-}
 
-if(! function_exists('profile_tabs')){
+
+
 	function profile_tabs($a, $is_owner=False, $nickname=Null){
 		//echo "<pre>"; var_dump($a->user); killme();
 	
@@ -1962,7 +1961,7 @@ if(! function_exists('profile_tabs')){
 
 		return replace_macros($tpl,array('$tabs' => $arr['tabs']));
 	}
-}
+
 
 function get_my_url() {
 	if(x($_SESSION,'my_url'))
