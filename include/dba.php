@@ -13,7 +13,7 @@ require_once('include/datetime.php');
  *
  */
  
-if(! class_exists('dba')) { 
+
 class dba {
 
 	private $debug = 0;
@@ -188,33 +188,33 @@ class dba {
 			else
 				mysql_close($this->db);
 	}
-}}
+}
 
-if(! function_exists('printable')) {
+
 function printable($s) {
 	$s = preg_replace("~([\x01-\x08\x0E-\x0F\x10-\x1F\x7F-\xFF])~",".", $s);
 	$s = str_replace("\x00",'.',$s);
 	if(x($_SERVER,'SERVER_NAME'))
 		$s = escape_tags($s);
 	return $s;
-}}
+}
 
 // Procedural functions
-if(! function_exists('dbg')) { 
+
 function dbg($state) {
 	global $db;
 	if($db)
 	$db->dbg($state);
-}}
+}
 
-if(! function_exists('dbesc')) { 
+
 function dbesc($str) {
 	global $db;
 	if($db && $db->connected)
 		return($db->escape($str));
 	else
 		return(str_replace("'","\\'",$str));
-}}
+}
 
 
 
@@ -223,7 +223,7 @@ function dbesc($str) {
 // Example: $r = q("SELECT * FROM `%s` WHERE `uid` = %d",
 //                   'user', 1);
 
-if(! function_exists('q')) { 
+
 function q($sql) {
 
 	global $db;
@@ -246,7 +246,7 @@ function q($sql) {
 	logger('dba: no database: ' . print_r($args,true));
 	return false; 
 
-}}
+}
 
 /**
  *
@@ -254,7 +254,7 @@ function q($sql) {
  *
  */
 
-if(! function_exists('dbq')) { 
+
 function dbq($sql) {
 
 	global $db;
@@ -263,7 +263,7 @@ function dbq($sql) {
 	else
 		$ret = false;
 	return $ret;
-}}
+}
 
 
 // Caller is responsible for ensuring that any integer arguments to 
@@ -272,18 +272,18 @@ function dbq($sql) {
 // cast to int to avoid trouble. 
 
 
-if(! function_exists('dbesc_array_cb')) {
+
 function dbesc_array_cb(&$item, $key) {
 	if(is_string($item))
 		$item = dbesc($item);
-}}
+}
 
 
-if(! function_exists('dbesc_array')) {
+
 function dbesc_array(&$arr) {
 	if(is_array($arr) && count($arr)) {
 		array_walk($arr,'dbesc_array_cb');
 	}
-}}
+}
 
 

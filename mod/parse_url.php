@@ -56,7 +56,7 @@ function parseurl_getsiteinfo($url) {
 	$siteinfo = array();
 
 
-	$result = z_fetch_url($url);
+	$result = z_fetch_url($url,false,0,array('novalidate' => true));
 	if(! $result['success'])
 		return $siteinfo;
 

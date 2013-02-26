@@ -6,10 +6,19 @@ function get_capath() {
 	return appdirpath() . '/library/cacert.pem';
 }
 
+
+
 // curl wrapper. If binary flag is true, return binary
 // results. 
+/**
+ * fetch_url is deprecated and being replaced by the more capable z_fetch_url
+ * please use that function instead.
+ * Once all occurrences of fetch_url are removed from the codebase we will
+ * remove this function and perhaps rename z_fetch_url back to fetch_url
+ */
 
-if(! function_exists('fetch_url')) {
+
+
 function fetch_url($url,$binary = false, &$redirects = 0, $timeout = 0, $accept_content=Null) {
 
 	$a = get_app();
@@ -98,11 +107,11 @@ function fetch_url($url,$binary = false, &$redirects = 0, $timeout = 0, $accept_
 	$a->set_curl_headers($header);
 	@curl_close($ch);
 	return($body);
-}}
+}
 
 // post request to $url. $params is an array of post variables.
 
-if(! function_exists('post_url')) {
+
 function post_url($url,$params, $headers = null, &$redirects = 0, $timeout = 0) {
 	$a = get_app();
 	$ch = curl_init($url);
@@ -193,9 +202,9 @@ function post_url($url,$params, $headers = null, &$redirects = 0, $timeout = 0) 
 
 	curl_close($ch);
 	return($body);
-}}
+}
 
-if(! function_exists('z_fetch_url')) {
+
 function z_fetch_url($url, $binary = false, $redirects = 0, $opts = array()) {
 
 	$ret = array('return_code' => 0, 'success' => false, 'header' => "", 'body' => "");
@@ -230,6 +239,10 @@ function z_fetch_url($url, $binary = false, $redirects = 0, $opts = array()) {
 		// "username" . ':' . "password"
 		@curl_setopt($ch, CURLOPT_USERPWD, $opts['http_auth']);
 	}
+
+	@curl_setopt($ch, CURLOPT_SSL_VERIFYPEER, 
+		((x($opts,'novalidate') && intval($opts['novalidate'])) ? false : true));
+
 
 	$prx = get_config('system','proxy');
 	if(strlen($prx)) {
@@ -283,11 +296,11 @@ function z_fetch_url($url, $binary = false, $redirects = 0, $opts = array()) {
 	$ret['header'] = $header;
 	@curl_close($ch);
 	return($ret);
-}}
+}
 
 
 
-if(! function_exists('z_post_url')) {
+
 function z_post_url($url,$params, $headers = null, $redirects = 0, $timeout = 0) {
 
 	$ret = array('return_code' => 0, 'success' => false, 'header' => "", 'body' => "");
@@ -378,7 +391,7 @@ function z_post_url($url,$params, $headers = null, $redirects = 0, $timeout = 0)
 	$ret['header'] = $header;
 	curl_close($ch);
 	return($ret);
-}}
+}
 
 
 
@@ -394,7 +407,7 @@ function json_return_and_die($x) {
 // Outputs a basic dfrn XML status structure to STDOUT, with a <status> variable 
 // of $st and an optional text <message> of $message and terminates the current process. 
 
-if(! function_exists('xml_status')) {
+
 function xml_status($st, $message = '') {
 
 	$xml_message = ((strlen($message)) ? "\t<message>" . xmlify($message) . "</message>\r\n" : '');
@@ -406,10 +419,10 @@ function xml_status($st, $message = '') {
 	echo '<?xml version="1.0" encoding="UTF-8"?>'."\r\n";
 	echo "<result>\r\n\t<status>$st</status>\r\n$xml_message</result>\r\n";
 	killme();
-}}
+}
 
 
-if(! function_exists('http_status_exit')) {
+
 function http_status_exit($val) {
 
     $err = '';
@@ -422,13 +435,13 @@ function http_status_exit($val) {
 	header($_SERVER["SERVER_PROTOCOL"] . ' ' . $val . ' ' . $err);
 	killme();
 
-}}
+}
 
 
 // convert an XML document to a normalised, case-corrected array
 // used by webfinger
 
-if(! function_exists('convert_xml_element_to_array')) {
+
 function convert_xml_element_to_array($xml_element, &$recursion_depth=0) {
 
         // If we're getting too deep, bail out
@@ -468,7 +481,7 @@ function convert_xml_element_to_array($xml_element, &$recursion_depth=0) {
         } else {
                 return (trim(strval($xml_element)));
         }
-}}
+}
 
 // Given an email style address, perform webfinger lookup and 
 // return the resulting DFRN profile URL, or if no DFRN profile URL
@@ -482,7 +495,7 @@ function convert_xml_element_to_array($xml_element, &$recursion_depth=0) {
 // amended 7/9/2011 to return an hcard which could save potentially loading 
 // a lengthy content page to scrape dfrn attributes
 
-if(! function_exists('webfinger_dfrn')) {
+
 function webfinger_dfrn($s,&$hcard) {
 	if(! strstr($s,'@')) {
 		return $s;
@@ -502,14 +515,14 @@ function webfinger_dfrn($s,&$hcard) {
 		}
 	}
 	return $profile_link;
-}}
+}
 
 // Given an email style address, perform webfinger lookup and 
 // return the array of link attributes from the personal XRD file.
 // On error/failure return an empty array.
 
 
-if(! function_exists('webfinger')) {
+
 function webfinger($s, $debug = false) {
 	$host = '';
 	if(strstr($s,'@')) {
@@ -532,9 +545,9 @@ function webfinger($s, $debug = false) {
 		}
 	}
 	return array();
-}}
+}
 
-if(! function_exists('lrdd')) {
+
 function lrdd($uri, $debug = false) {
 
 	$a = get_app();
@@ -702,7 +715,7 @@ function lrdd($uri, $debug = false) {
 
 	return array();
 
-}}
+}
 
 
 
@@ -710,7 +723,7 @@ function lrdd($uri, $debug = false) {
 // host. Returns the LRDD template or an empty string on
 // error/failure.
 
-if(! function_exists('fetch_lrdd_template')) {
+
 function fetch_lrdd_template($host) {
 	$tpl = '';
 
@@ -732,13 +745,13 @@ function fetch_lrdd_template($host) {
 	if(! strpos($tpl,'{uri}'))
 		$tpl = '';
 	return $tpl;
-}}
+}
 
 // Given a URL, retrieve the page as an XRD document.
 // Return an array of links.
 // on error/failure return empty array.
 
-if(! function_exists('fetch_xrd_links')) {
+
 function fetch_xrd_links($url) {
 
 	$xrd_timeout = intval(get_config('system','xrd_timeout'));
@@ -783,14 +796,14 @@ function fetch_xrd_links($url) {
 
 	return $links;
 
-}}
+}
 
 
 // Take a URL from the wild, prepend http:// if necessary
 // and check DNS to see if it's real (or check if is a valid IP address)
 // return true if it's OK, false if something is wrong with it
 
-if(! function_exists('validate_url')) {
+
 function validate_url(&$url) {
 	
 	// no naked subdomains (allow localhost for tests)
@@ -804,11 +817,11 @@ function validate_url(&$url) {
 		return true;
 	}
 	return false;
-}}
+}
 
 // checks that email is an actual resolvable internet address
 
-if(! function_exists('validate_email')) {
+
 function validate_email($addr) {
 
 	if(get_config('system','disable_email_validation'))
@@ -822,14 +835,14 @@ function validate_email($addr) {
 		return true;
 	}
 	return false;
-}}
+}
 
 // Check $url against our list of allowed sites,
 // wildcards allowed. If allowed_sites is unset return true;
 // If url is allowed, return true.
 // otherwise, return false
 
-if(! function_exists('allowed_url')) {
+
 function allowed_url($url) {
 
 	$h = @parse_url($url);
@@ -864,14 +877,14 @@ function allowed_url($url) {
 		}
 	}
 	return $found;
-}}
+}
 
 // check if email address is allowed to register here.
 // Compare against our list (wildcards allowed).
 // Returns false if not allowed, true if allowed or if
 // allowed list is not configured.
 
-if(! function_exists('allowed_email')) {
+
 function allowed_email($email) {
 
 
@@ -898,10 +911,10 @@ function allowed_email($email) {
 		}
 	}
 	return $found;
-}}
+}
 
 
-if(! function_exists('avatar_img')) {
+
 function avatar_img($email) {
 
 	$a = get_app();
@@ -918,10 +931,10 @@ function avatar_img($email) {
 
 	logger('Avatar: ' . $avatar['email'] . ' ' . $avatar['url'], LOGGER_DEBUG);
 	return $avatar['url'];
-}}
+}
 
 
-if(! function_exists('parse_xml_string')) {
+
 function parse_xml_string($s,$strict = true) {
 	if($strict) {
 		if(! strstr($s,'<?xml'))
@@ -940,7 +953,7 @@ function parse_xml_string($s,$strict = true) {
 		libxml_clear_errors();
 	}
 	return $x;
-}}
+}
 
 function add_fcontact($arr,$update = false) {
 

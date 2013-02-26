@@ -1,0 +1,25 @@
+var classTemplate =
+[
+    [ "_build_nodes", "classTemplate.html#ac41c96e1f407b1a910029e5f4b7de8e4", null ],
+    [ "_get_var", "classTemplate.html#aae9c4d761ea1298e745e8052d7910194", null ],
+    [ "_pop_stack", "classTemplate.html#a35d599c9b53a02e2fe2232e5b7ed5da7", null ],
+    [ "_preg_error", "classTemplate.html#a37c15f6d1ade500943629f27a62808b7", null ],
+    [ "_push_stack", "classTemplate.html#aa6a087e0b7b887dd1c98c9e0ecbd3b29", null ],
+    [ "_replcb", "classTemplate.html#ae791766c3d055f7f1ba5a5e60d647934", null ],
+    [ "_replcb_debug", "classTemplate.html#a4b933954086d9e01a1804b0b1c6ee93e", null ],
+    [ "_replcb_for", "classTemplate.html#abf71098c80fd1f218a59452b3408309e", null ],
+    [ "_replcb_if", "classTemplate.html#ae0836e7d5bd5afceb04f50fd635f1228", null ],
+    [ "_replcb_inc", "classTemplate.html#a86e8fd27955ef10cadfd86f3fca70677", null ],
+    [ "_replcb_node", "classTemplate.html#aa6f9bd7a8f7512efcf90e8d376fe05ee", null ],
+    [ "replace", "classTemplate.html#a285b5b2007dbbf733476273df3fed4ef", null ],
+    [ "var_replace", "classTemplate.html#abbc484016ddf5d818f55b823cae6feb0", null ],
+    [ "$d", "classTemplate.html#a8469ab2988b6be2681516dc4b4e07d38", null ],
+    [ "$debug", "classTemplate.html#afc4afb6f89bebcd5480022312a56cb4a", null ],
+    [ "$done", "classTemplate.html#abda4c8d049f70553338eae7c905e9d5c", null ],
+    [ "$lang", "classTemplate.html#ace26b8a4252fbc1c385d2b5e1e93e5c8", null ],
+    [ "$nodes", "classTemplate.html#a8f4d17e49f42b876a97364c13fb572d1", null ],
+    [ "$r", "classTemplate.html#aac9a4638f11271e1b1dcc9f247242718", null ],
+    [ "$replace", "classTemplate.html#a4e86b566c3f728e95ce5db1b33665c10", null ],
+    [ "$search", "classTemplate.html#a317d535946dc065c35dd5cd38380e6c6", null ],
+    [ "$stack", "classTemplate.html#a6f0efc256688c36110180b501067ff11", null ]
+];

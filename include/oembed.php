@@ -30,7 +30,7 @@ function oembed_fetch_url($embedurl){
 			// try oembed autodiscovery
 			$redirects = 0;
 
-			$result = z_fetch_url($embedurl, false, $redirects, array('timeout' => 15, 'accept_content' => "text/*"));
+			$result = z_fetch_url($embedurl, false, $redirects, array('timeout' => 15, 'accept_content' => "text/*", 'novalidate' => true ));
 			if($result['success'])
 				$html_text = $result['body'];
 

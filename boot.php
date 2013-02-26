@@ -455,454 +455,449 @@ function startup() {
  */
 
 
-	class App {
+class App {
 
 		
-		public  $account    = null;            // account record
-		public  $channel    = null;            // channel record
-		public  $observer   = null;            // xchan record
+	public  $account    = null;            // account record
+	public  $channel    = null;            // channel record
+	public  $observer   = null;            // xchan record
 
-		private $perms      = null;            // observer permissions
-		private $widgets    = array();         // widgets for this page
-		private $widgetlist = null;            // widget ordering and inclusion directives
+	private $perms      = null;            // observer permissions
+	private $widgets    = array();         // widgets for this page
+	private $widgetlist = null;            // widget ordering and inclusion directives
 
-		public  $groups;
-		public  $language;
-		public  $module_loaded = false;
-		public  $query_string;
-		public  $config;                       // config cache
-		public  $page;
-		public  $profile;
-		public  $user;
-		public  $cid;
-		public  $contact;
-		public  $contacts;
-		public  $content;
-		public  $data = array();
-		public  $error = false;
-		public  $cmd;
-		public  $argv;
-		public  $argc;
-		public  $module;
-		public  $pager;
-		public  $strings;
-		public  $hooks;
-		public  $timezone;
-		public  $interactive = true;
-		public  $plugins;
-		private  $apps = array();
-		public  $identities;
-		public  $css_sources = array();
-		public  $js_sources = array();
-		public  $theme_info = array();
+	public  $groups;
+	public  $language;
+	public  $module_loaded = false;
+	public  $query_string;
+	public  $config;                       // config cache
+	public  $page;
+	public  $profile;
+	public  $user;
+	public  $cid;
+	public  $contact;
+	public  $contacts;
+	public  $content;
+	public  $data = array();
+	public  $error = false;
+	public  $cmd;
+	public  $argv;
+	public  $argc;
+	public  $module;
+	public  $pager;
+	public  $strings;
+	public  $hooks;
+	public  $timezone;
+	public  $interactive = true;
+	public  $plugins;
+	private  $apps = array();
+	public  $identities;
+	public  $css_sources = array();
+	public  $js_sources = array();
+	public  $theme_info = array();
 	
-		public $nav_sel;
+	public $nav_sel;
 
-		public $category;
+	public $category;
 
-		// Allow themes to control internal parameters
-		// by changing App values in theme.php
+	// Allow themes to control internal parameters
+	// by changing App values in theme.php
 
-		public	$sourcename = '';
-		public	$videowidth = 425;
-		public	$videoheight = 350;
-		public	$force_max_items = 0;
-		public	$theme_thread_allow = true;
+	public	$sourcename = '';
+	public	$videowidth = 425;
+	public	$videoheight = 350;
+	public	$force_max_items = 0;
+	public	$theme_thread_allow = true;
 
-		// An array for all theme-controllable parameters
-		// Mostly unimplemented yet. Only options 'template_engine' and
-		// beyond are used.
+	// An array for all theme-controllable parameters
+	// Mostly unimplemented yet. Only options 'template_engine' and
+	// beyond are used.
 
-		private	$theme = array(
-			'sourcename' => '',
-			'videowidth' => 425,
-			'videoheight' => 350,
-			'force_max_items' => 0,
-			'thread_allow' => true,
-			'stylesheet' => '',
-			'template_engine' => 'internal',
-		);
+	private	$theme = array(
+		'sourcename' => '',
+		'videowidth' => 425,
+		'videoheight' => 350,
+		'force_max_items' => 0,
+		'thread_allow' => true,
+		'stylesheet' => '',
+		'template_engine' => 'internal',
+	);
 
-		private $ldelim = array(
-			'internal' => '',
-			'smarty3' => '{{'
-		);
-		private $rdelim = array(
-			'internal' => '',
-			'smarty3' => '}}'
-		);
+	private $ldelim = array(
+		'internal' => '',
+		'smarty3' => '{{'
+	);
+	private $rdelim = array(
+		'internal' => '',
+		'smarty3' => '}}'
+	);
 
-		private $scheme;
-		private $hostname;
-		private $baseurl;
-		private $path;
+	private $scheme;
+	private $hostname;
+	private $baseurl;
+	private $path;
+	private $db;
 
-		private $db;
+	private $curl_code;
+	private $curl_headers;
 
-		private $curl_code;
-		private $curl_headers;
-
-		private $cached_profile_image;
-		private $cached_profile_picdate;
+	private $cached_profile_image;
+	private $cached_profile_picdate;
 							
-		function __construct() {
+	function __construct() {
 
-			global $default_timezone;
+		global $default_timezone;
+		$this->timezone = ((x($default_timezone)) ? $default_timezone : 'UTC');
 
-			$this->timezone = ((x($default_timezone)) ? $default_timezone : 'UTC');
+		date_default_timezone_set($this->timezone);
 
-			date_default_timezone_set($this->timezone);
+		$this->config = array();
+		$this->page = array();
+		$this->pager= array();
 
-			$this->config = array();
-			$this->page = array();
-			$this->pager= array();
+		$this->query_string = '';
 
-			$this->query_string = '';
-
-			startup();
-
-
-			$this->scheme = 'http';
-            if(x($_SERVER,'HTTPS') && $_SERVER['HTTPS'])
-                $this->scheme = 'https';
-            elseif(x($_SERVER,'SERVER_PORT') && (intval($_SERVER['SERVER_PORT']) == 443))
-            $this->scheme = 'https';
-
-			if(x($_SERVER,'SERVER_NAME')) {
-				$this->hostname = $_SERVER['SERVER_NAME'];
-
-				if(x($_SERVER,'SERVER_PORT') && $_SERVER['SERVER_PORT'] != 80 && $_SERVER['SERVER_PORT'] != 443)
-					$this->hostname .= ':' . $_SERVER['SERVER_PORT'];
-				/**
-				 * Figure out if we are running at the top of a domain
-				 * or in a sub-directory and adjust accordingly
-				 */
-
-				$path = trim(dirname($_SERVER['SCRIPT_NAME']),'/\\');
-				if(isset($path) && strlen($path) && ($path != $this->path))
-					$this->path = $path;
-			}
-
-			set_include_path(
-					"include/$this->hostname" . PATH_SEPARATOR
-					. 'include' . PATH_SEPARATOR
-					. 'library' . PATH_SEPARATOR
-					. 'library/phpsec' . PATH_SEPARATOR
-					. 'library/langdet' . PATH_SEPARATOR
-					. '.' );
-
-			if((x($_SERVER,'QUERY_STRING')) && substr($_SERVER['QUERY_STRING'],0,2) === "q=") {
-				$this->query_string = substr($_SERVER['QUERY_STRING'],2);
-				// removing trailing / - maybe a nginx problem
-				if (substr($this->query_string, 0, 1) == "/")
-					$this->query_string = substr($this->query_string, 1);
-			}
-			if(x($_GET,'q'))
-				$this->cmd = trim($_GET['q'],'/\\');
-
-			// unix style "homedir"
-
-			if(substr($this->cmd,0,1) === '~')
-				$this->cmd = 'channel/' . substr($this->cmd,1);
+		startup();
 
 
+		$this->scheme = 'http';
+		if(x($_SERVER,'HTTPS') && $_SERVER['HTTPS'])
+			$this->scheme = 'https';
+		elseif(x($_SERVER,'SERVER_PORT') && (intval($_SERVER['SERVER_PORT']) == 443))
+			$this->scheme = 'https';
 
+		if(x($_SERVER,'SERVER_NAME')) {
+			$this->hostname = $_SERVER['SERVER_NAME'];
+
+			if(x($_SERVER,'SERVER_PORT') && $_SERVER['SERVER_PORT'] != 80 && $_SERVER['SERVER_PORT'] != 443)
+				$this->hostname .= ':' . $_SERVER['SERVER_PORT'];
 			/**
-			 *
-			 * Break the URL path into C style argc/argv style arguments for our
-			 * modules. Given "http://example.com/module/arg1/arg2", $this->argc
-			 * will be 3 (integer) and $this->argv will contain:
-			 *   [0] => 'module'
-			 *   [1] => 'arg1'
-			 *   [2] => 'arg2'
-			 *
-			 *
-			 * There will always be one argument. If provided a naked domain
-			 * URL, $this->argv[0] is set to "home".
-			 *
+			 * Figure out if we are running at the top of a domain
+			 * or in a sub-directory and adjust accordingly
 			 */
 
-			$this->argv = explode('/',$this->cmd);
-			$this->argc = count($this->argv);
-			if((array_key_exists('0',$this->argv)) && strlen($this->argv[0])) {
-				$this->module = str_replace(".", "_", $this->argv[0]);
-				$this->module = str_replace("-", "_", $this->module);
-			}
-			else {
-				$this->argc = 1;
-				$this->argv = array('home');
-				$this->module = 'home';
-			}
-
-
-			/**
-			 * See if there is any page number information, and initialise
-			 * pagination
-			 */
-
-			$this->pager['page'] = ((x($_GET,'page') && intval($_GET['page']) > 0) ? intval($_GET['page']) : 1);
-			$this->pager['itemspage'] = 50;
-			$this->pager['start'] = ($this->pager['page'] * $this->pager['itemspage']) - $this->pager['itemspage'];
-			if($this->pager['start'] < 0)
-				$this->pager['start'] = 0;
-			$this->pager['total'] = 0;
-
-			/**
-			 * Detect mobile devices
-			 */
-
-			$mobile_detect = new Mobile_Detect();
-			$this->is_mobile = $mobile_detect->isMobile();
-			$this->is_tablet = $mobile_detect->isTablet();
-
-			BaseObject::set_app($this);
+			$path = trim(dirname($_SERVER['SCRIPT_NAME']),'/\\');
+			if(isset($path) && strlen($path) && ($path != $this->path))
+				$this->path = $path;
 		}
 
-		function get_baseurl($ssl = false) {
-           $scheme = $this->scheme;
+		set_include_path(
+			"include/$this->hostname" . PATH_SEPARATOR
+			. 'include' . PATH_SEPARATOR
+			. 'library' . PATH_SEPARATOR
+			. 'library/phpsec' . PATH_SEPARATOR
+			. 'library/langdet' . PATH_SEPARATOR
+			. '.' );
 
-            if((x($this->config,'system')) && (x($this->config['system'],'ssl_policy'))) {
-                if(intval($this->config['system']['ssl_policy']) === intval(SSL_POLICY_FULL))
-                    $scheme = 'https';
-
-                //  Basically, we have $ssl = true on any links which can only be seen by a logged in user
-                //  (and also the login link). Anything seen by an outsider will have it turned off.
-
-                if($this->config['system']['ssl_policy'] == SSL_POLICY_SELFSIGN) {
-                    if($ssl)
-                        $scheme = 'https';
-                    else
-                        $scheme = 'http';
-                }
-            }
-			
-            $this->baseurl = $scheme . "://" . $this->hostname . ((isset($this->path) && strlen($this->path)) ? '/' . $this->path : '' );
-            return $this->baseurl;
+		if((x($_SERVER,'QUERY_STRING')) && substr($_SERVER['QUERY_STRING'],0,2) === "q=") {
+			$this->query_string = substr($_SERVER['QUERY_STRING'],2);
+			// removing trailing / - maybe a nginx problem
+			if (substr($this->query_string, 0, 1) == "/")
+				$this->query_string = substr($this->query_string, 1);
 		}
+		if(x($_GET,'q'))
+			$this->cmd = trim($_GET['q'],'/\\');
 
-		function set_baseurl($url) {
+		// unix style "homedir"
 
-			if(is_array($this->config) && array_key_exists('system',$this->config) &&
-				array_key_exists('baseurl',$this->config['system']) && strlen($this->config['system']['baseurl'])) {
-				$url = $this->config['system']['baseurl'];
-			}
-
-            $parsed = @parse_url($url);
-
-            $this->baseurl = $url;
-
-            if($parsed) {
-                $this->scheme = $parsed['scheme'];
-
-                $this->hostname = $parsed['host'];
-                if(x($parsed,'port'))
-                    $this->hostname .= ':' . $parsed['port'];
-                if(x($parsed,'path'))
-                    $this->path = trim($parsed['path'],'\\/');
-            }
-
-		}
-
-		function get_hostname() {
-			return $this->hostname;
-		}
-
-		function set_hostname($h) {
-			$this->hostname = $h;
-		}
-
-		function set_path($p) {
-			$this->path = trim(trim($p),'/');
-		}
-
-		function get_path() {
-			return $this->path;
-		}
-
-		function set_account($aid) {
-			$this->account = $aid;
-		}
-
-		function get_account() {
-			return $this->account;
-		}
-
-		function set_channel($channel) {
-			$this->channel = $channel;
-		}
-
-		function get_channel() {
-			return $this->channel;
-		}
+		if(substr($this->cmd,0,1) === '~')
+			$this->cmd = 'channel/' . substr($this->cmd,1);
 
 
-		function set_observer($xchan) {
-			$this->observer = $xchan;
-		}
 
-		function get_observer() {
-			return $this->observer;
-		}
-
-		function set_perms($perms) {
-			$this->perms = $perms;
-		}
-
-		function get_perms() {
-			return $this->perms;
-		}
-
-		function get_apps() {
-			return $this->apps;
-		}
-
-		function set_apps($arr) {
-			$this->apps = $arr;
-		}
-
-		function set_groups($g) {
-			$this->groups = $g;
-		}
-
-		function get_groups() {
-			return $this->groups;
-		}
-
-		/*
-		 * Use a theme or app specific widget ordering list to determine what widgets should be included
-		 * for each module and in what order and optionally what region of the page to place them.
-		 * For example:
-		 * view/wgl/mod_connections.wgl:
-		 * -----------------------------
-		 * vcard aside
-		 * follow aside
-		 * findpeople rightside
-		 * collections aside
+		/**
 		 *
-		 * If your widgetlist does not include a widget that is destined for the page, it will not be rendered.
-		 * You can also use this to change the order of presentation, as they will be presented in the order you specify.
+		 * Break the URL path into C style argc/argv style arguments for our
+		 * modules. Given "http://example.com/module/arg1/arg2", $this->argc
+		 * will be 3 (integer) and $this->argv will contain:
+		 *   [0] => 'module'
+		 *   [1] => 'arg1'
+		 *   [2] => 'arg2'
+		 *
+		 *
+		 * There will always be one argument. If provided a naked domain
+		 * URL, $this->argv[0] is set to "home".
 		 *
 		 */
 
-		function set_widget($title,$html, $location = 'aside') {
-			$widgetlist_file = 'mod_' . $this->module . '.wgl';
-			if(! $this->widgetlist) {
-				if($this->module && (($f = theme_include($widgetlist_file)) !== '')) {
-					$s = file($f, FILE_IGNORE_NEW_LINES|FILE_SKIP_EMPTY_LINES);
-					if(is_array($s)) {
-						foreach($s as $x) {
-							$this->widgetlist[] = explode(' ', $x);
-						}
-					}
-				}
-				else {
-					$this->widgets[] = array('title' => $title, 'html' => $html, 'location' => $location);
-				}
-			}
-			if($this->widgetlist) {
-				foreach($this->widgetlist as $k => $v) {
-					if($v[0] && $v[0] === $title) {
-						$this->widgets[$k] = array('title' => $title, 'html' => $html, 'location' => (($v[1]) ? $v[1] : $location));
-					}
-				}
-			}
+		$this->argv = explode('/',$this->cmd);
+		$this->argc = count($this->argv);
+		if((array_key_exists('0',$this->argv)) && strlen($this->argv[0])) {
+			$this->module = str_replace(".", "_", $this->argv[0]);
+			$this->module = str_replace("-", "_", $this->module);
+		}
+		else {
+			$this->argc = 1;
+			$this->argv = array('home');
+			$this->module = 'home';
 		}
 
-		function get_widgets($location = '') {
-			if($location && count($this->widgets)) {
-				$ret = array();
-				foreach($widgets as $w)
-					if($w['location'] == $location)
-						$ret[] = $w;
-				$arr = array('location' => $location, 'widgets' => $ret);
-				call_hooks('get_widgets', $arr);
-				return $arr['widgets'];
-			}	
 
-			$arr = array('location' => $location, 'widgets' => $this->widgets);
-			call_hooks('get_widgets', $arr);
-			return $arr['widgets'];
-		}		
+		/**
+		 * See if there is any page number information, and initialise
+		 * pagination
+		 */
 
-		function set_pager_total($n) {
-			$this->pager['total'] = intval($n);
-		}
+		$this->pager['page'] = ((x($_GET,'page') && intval($_GET['page']) > 0) ? intval($_GET['page']) : 1);
+		$this->pager['itemspage'] = 50;
+		$this->pager['start'] = ($this->pager['page'] * $this->pager['itemspage']) - $this->pager['itemspage'];
+		if($this->pager['start'] < 0)
+			$this->pager['start'] = 0;
+		$this->pager['total'] = 0;
 
-		function set_pager_itemspage($n) {
-			$this->pager['itemspage'] = ((intval($n) > 0) ? intval($n) : 0);
-			$this->pager['start'] = ($this->pager['page'] * $this->pager['itemspage']) - $this->pager['itemspage'];
+		/**
+		 * Detect mobile devices
+		 */
 
-		}
+		$mobile_detect = new Mobile_Detect();
+		$this->is_mobile = $mobile_detect->isMobile();
+		$this->is_tablet = $mobile_detect->isTablet();
 
-		function build_pagehead() {
+		BaseObject::set_app($this);
+	}
 
-			$interval = ((local_user()) ? get_pconfig(local_user(),'system','update_interval') : 40000);
-			if($interval < 10000)
-				$interval = 40000;
+	function get_baseurl($ssl = false) {
+		$scheme = $this->scheme;
 
-			$this->page['title'] = $this->config['system']['sitename'];
+		if((x($this->config,'system')) && (x($this->config['system'],'ssl_policy'))) {
+			if(intval($this->config['system']['ssl_policy']) === intval(SSL_POLICY_FULL))
+				$scheme = 'https';
 
+			//  Basically, we have $ssl = true on any links which can only be seen by a logged in user
+			//  (and also the login link). Anything seen by an outsider will have it turned off.
 
-			/* put the head template at the beginning of page['htmlhead']
-			 * since the code added by the modules frequently depends on it
-			 * being first
-			 */
-			$tpl = get_markup_template('head.tpl');
-			$this->page['htmlhead'] = replace_macros($tpl, array(
-				'$baseurl' => $this->get_baseurl(),
-				'$local_user' => local_user(),
-				'$generator' => FRIENDICA_PLATFORM . ' ' . FRIENDICA_VERSION,
-				'$update_interval' => $interval,
-				'$head_css' => head_get_css(),
-				'$head_js' => head_get_js(),
-				'$js_strings' => js_strings()
-			)) . $this->page['htmlhead'];
-		}
-
-		function set_curl_code($code) {
-			$this->curl_code = $code;
-		}
-
-		function get_curl_code() {
-			return $this->curl_code;
-		}
-
-		function set_curl_headers($headers) {
-			$this->curl_headers = $headers;
-		}
-
-		function get_curl_headers() {
-			return $this->curl_headers;
-		}
-
-		function get_template_engine() {
-			return $this->theme['template_engine'];
-		}
-
-		function set_template_engine($engine = 'internal') {
-
-			$this->theme['template_engine'] = 'internal';
-
-			switch($engine) {
-				case 'smarty3':
-					if(is_writable('view/tpl/smarty3/'))
-						$this->theme['template_engine'] = 'smarty3';
-					break;
-				default:
-					break;
+			if($this->config['system']['ssl_policy'] == SSL_POLICY_SELFSIGN) {
+				if($ssl)
+					$scheme = 'https';
+				else
+					$scheme = 'http';
 			}
 		}
+			
+		$this->baseurl = $scheme . "://" . $this->hostname . ((isset($this->path) && strlen($this->path)) ? '/' . $this->path : '' );
+		return $this->baseurl;
+	}
 
-		function get_template_ldelim($engine = 'internal') {
-			return $this->ldelim[$engine];
+	function set_baseurl($url) {
+
+		if(is_array($this->config) && array_key_exists('system',$this->config) &&
+			array_key_exists('baseurl',$this->config['system']) && strlen($this->config['system']['baseurl'])) {
+			$url = $this->config['system']['baseurl'];
 		}
 
-		function get_template_rdelim($engine = 'internal') {
-			return $this->rdelim[$engine];
-		}
+		$parsed = @parse_url($url);
 
+		$this->baseurl = $url;
+
+		if($parsed) {
+			$this->scheme = $parsed['scheme'];
+
+			$this->hostname = $parsed['host'];
+			if(x($parsed,'port'))
+				$this->hostname .= ':' . $parsed['port'];
+			if(x($parsed,'path'))
+				$this->path = trim($parsed['path'],'\\/');
+		}
 
 	}
+
+	function get_hostname() {
+		return $this->hostname;
+	}
+
+	function set_hostname($h) {
+		$this->hostname = $h;
+	}
+
+	function set_path($p) {
+		$this->path = trim(trim($p),'/');
+	}
+
+	function get_path() {
+		return $this->path;
+	}
+
+	function set_account($aid) {
+		$this->account = $aid;
+	}
+
+	function get_account() {
+		return $this->account;
+	}
+
+	function set_channel($channel) {
+		$this->channel = $channel;
+	}
+
+	function get_channel() {
+		return $this->channel;
+	}
+
+
+	function set_observer($xchan) {
+		$this->observer = $xchan;
+	}
+
+	function get_observer() {
+		return $this->observer;
+	}
+
+	function set_perms($perms) {
+		$this->perms = $perms;
+	}
+
+	function get_perms() {
+		return $this->perms;
+	}
+
+	function get_apps() {
+		return $this->apps;
+	}
+
+	function set_apps($arr) {
+		$this->apps = $arr;
+	}
+
+	function set_groups($g) {
+		$this->groups = $g;
+	}
+
+	function get_groups() {
+		return $this->groups;
+	}
+
+	/*
+	 * Use a theme or app specific widget ordering list to determine what widgets should be included
+	 * for each module and in what order and optionally what region of the page to place them.
+	 * For example:
+	 * view/wgl/mod_connections.wgl:
+	 * -----------------------------
+	 * vcard aside
+	 * follow aside
+	 * findpeople rightside
+	 * collections aside
+	 *
+	 * If your widgetlist does not include a widget that is destined for the page, it will not be rendered.
+	 * You can also use this to change the order of presentation, as they will be presented in the order you specify.
+	 *
+	 */
+
+	function set_widget($title,$html, $location = 'aside') {
+		$widgetlist_file = 'mod_' . $this->module . '.wgl';
+		if(! $this->widgetlist) {
+			if($this->module && (($f = theme_include($widgetlist_file)) !== '')) {
+				$s = file($f, FILE_IGNORE_NEW_LINES|FILE_SKIP_EMPTY_LINES);
+				if(is_array($s)) {
+					foreach($s as $x) {
+						$this->widgetlist[] = explode(' ', $x);
+					}
+				}
+			}
+			else {
+				$this->widgets[] = array('title' => $title, 'html' => $html, 'location' => $location);
+			}
+		}
+		if($this->widgetlist) {
+			foreach($this->widgetlist as $k => $v) {
+				if($v[0] && $v[0] === $title) {
+					$this->widgets[$k] = array('title' => $title, 'html' => $html, 'location' => (($v[1]) ?$v[1] : $location));
+				}
+			}
+		}
+	}
+
+	function get_widgets($location = '') {
+		if($location && count($this->widgets)) {
+			$ret = array();
+			foreach($widgets as $w)
+				if($w['location'] == $location)
+					$ret[] = $w;
+			$arr = array('location' => $location, 'widgets' => $ret);
+			call_hooks('get_widgets', $arr);
+			return $arr['widgets'];
+		}	
+		$arr = array('location' => $location, 'widgets' => $this->widgets);
+		call_hooks('get_widgets', $arr);
+		return $arr['widgets'];
+	}		
+
+	function set_pager_total($n) {
+		$this->pager['total'] = intval($n);
+	}
+
+	function set_pager_itemspage($n) {
+		$this->pager['itemspage'] = ((intval($n) > 0) ? intval($n) : 0);
+		$this->pager['start'] = ($this->pager['page'] * $this->pager['itemspage']) - $this->pager['itemspage'];
+	}
+
+	function build_pagehead() {
+
+		$interval = ((local_user()) ? get_pconfig(local_user(),'system','update_interval') : 40000);
+		if($interval < 10000)
+			$interval = 40000;
+
+		$this->page['title'] = $this->config['system']['sitename'];
+
+
+		/* put the head template at the beginning of page['htmlhead']
+		 * since the code added by the modules frequently depends on it
+		 * being first
+		 */
+		$tpl = get_markup_template('head.tpl');
+		$this->page['htmlhead'] = replace_macros($tpl, array(
+			'$baseurl' => $this->get_baseurl(),
+			'$local_user' => local_user(),
+			'$generator' => FRIENDICA_PLATFORM . ' ' . FRIENDICA_VERSION,
+			'$update_interval' => $interval,
+			'$head_css' => head_get_css(),
+			'$head_js' => head_get_js(),
+			'$js_strings' => js_strings()
+		)) . $this->page['htmlhead'];
+	}
+
+	function set_curl_code($code) {
+		$this->curl_code = $code;
+	}
+
+	function get_curl_code() {
+		return $this->curl_code;
+	}
+
+	function set_curl_headers($headers) {
+		$this->curl_headers = $headers;
+	}
+
+	function get_curl_headers() {
+		return $this->curl_headers;
+	}
+
+	function get_template_engine() {
+		return $this->theme['template_engine'];
+	}
+
+	function set_template_engine($engine = 'internal') {
+
+		$this->theme['template_engine'] = 'internal';
+
+		switch($engine) {
+			case 'smarty3':
+				if(is_writable('view/tpl/smarty3/'))
+					$this->theme['template_engine'] = 'smarty3';
+				break;
+			default:
+				break;
+		}
+	}
+	function get_template_ldelim($engine = 'internal') {
+		return $this->ldelim[$engine];
+	}
+
+	function get_template_rdelim($engine = 'internal') {
+		return $this->rdelim[$engine];
+	}
+
+
+}
 
 
 // retrieve the App structure
@@ -953,8 +948,6 @@ function system_unavailable() {
 }
 
 
-
-
 function clean_urls() {
 	global $a;
 	//	if($a->config['system']['clean_urls'])
@@ -994,17 +987,17 @@ function is_ajax() {
 
 function check_config(&$a) {
 
-		$build = get_config('system','db_version');
-		if(! x($build))
-			$build = set_config('system','db_version',DB_UPDATE_VERSION);
+	$build = get_config('system','db_version');
+	if(! x($build))
+		$build = set_config('system','db_version',DB_UPDATE_VERSION);
 
 //		$url = get_config('system','baseurl');
 
-		// if the url isn't set or the stored url is radically different
-		// than the currently visited url, store the current value accordingly.
-		// "Radically different" ignores common variations such as http vs https
-		// and www.example.com vs example.com.
-		// We will only change the url to an ip address if there is no existing setting
+	// if the url isn't set or the stored url is radically different
+	// than the currently visited url, store the current value accordingly.
+	// "Radically different" ignores common variations such as http vs https
+	// and www.example.com vs example.com.
+	// We will only change the url to an ip address if there is no existing setting
 
 //		if(! x($url))
 //			$url = set_config('system','baseurl',$a->get_baseurl());
@@ -1013,127 +1006,126 @@ function check_config(&$a) {
 
 
 
-		if($build != DB_UPDATE_VERSION) {
-			$stored = intval($build);
-			$current = intval(DB_UPDATE_VERSION);
-			if(($stored < $current) && file_exists('install/update.php')) {
+	if($build != DB_UPDATE_VERSION) {
+		$stored = intval($build);
+		$current = intval(DB_UPDATE_VERSION);
+		if(($stored < $current) && file_exists('install/update.php')) {
 
-				load_config('database');
+			load_config('database');
 
-				// We're reporting a different version than what is currently installed.
-				// Run any existing update scripts to bring the database up to current.
+			// We're reporting a different version than what is currently installed.
+			// Run any existing update scripts to bring the database up to current.
 
-				require_once('install/update.php');
+			require_once('install/update.php');
 
-				// make sure that boot.php and update.php are the same release, we might be
-				// updating right this very second and the correct version of the update.php
-				// file may not be here yet. This can happen on a very busy site.
+			// make sure that boot.php and update.php are the same release, we might be
+			// updating right this very second and the correct version of the update.php
+			// file may not be here yet. This can happen on a very busy site.
 
-				if(DB_UPDATE_VERSION == UPDATE_VERSION) {
+			if(DB_UPDATE_VERSION == UPDATE_VERSION) {
 
-					for($x = $stored; $x < $current; $x ++) {
-						if(function_exists('update_r' . $x)) {
+				for($x = $stored; $x < $current; $x ++) {
+					if(function_exists('update_r' . $x)) {
 
-							// There could be a lot of processes running or about to run.
-							// We want exactly one process to run the update command.
-							// So store the fact that we're taking responsibility
-							// after first checking to see if somebody else already has.
+						// There could be a lot of processes running or about to run.
+						// We want exactly one process to run the update command.
+						// So store the fact that we're taking responsibility
+						// after first checking to see if somebody else already has.
 
-							// If the update fails or times-out completely you may need to
-							// delete the config entry to try again.
+						// If the update fails or times-out completely you may need to
+						// delete the config entry to try again.
 
-							if(get_config('database','update_r' . $x))
-								break;
-							set_config('database','update_r' . $x, '1');
+						if(get_config('database','update_r' . $x))
+							break;
+						set_config('database','update_r' . $x, '1');
 
-							// call the specific update
+						// call the specific update
 
-							$func = 'update_r' . $x;
-							$retval = $func();
-							if($retval) {
-								//send the administrator an e-mail
+						$func = 'update_r' . $x;
+						$retval = $func();
+						if($retval) {
+							//send the administrator an e-mail
 
-								$email_tpl = get_intltext_template("update_fail_eml.tpl");
-								$email_msg = replace_macros($email_tpl, array(
-									'$sitename' => $a->config['sitename'],
-									'$siteurl' =>  $a->get_baseurl(),
-									'$update' => $x,
-									'$error' => sprintf( t('Update %s failed. See error logs.'), $x)
-								));
+							$email_tpl = get_intltext_template("update_fail_eml.tpl");
+							$email_msg = replace_macros($email_tpl, array(
+								'$sitename' => $a->config['sitename'],
+								'$siteurl' =>  $a->get_baseurl(),
+								'$update' => $x,
+								'$error' => sprintf( t('Update %s failed. See error logs.'), $x)
+							));
 
-								$subject=sprintf(t('Update Error at %s'), $a->get_baseurl());
+							$subject=sprintf(t('Update Error at %s'), $a->get_baseurl());
 									
-								mail($a->config['admin_email'], $subject, $email_msg,
-									'From: ' . t('Administrator') . '@' . $_SERVER['SERVER_NAME'] . "\n"
-									. 'Content-type: text/plain; charset=UTF-8' . "\n"
-									. 'Content-transfer-encoding: 8bit' );
-								//try the logger
-								logger('CRITICAL: Update Failed: '. $x);
-							}
-							else
-								set_config('database','update_r' . $x, 'success');
-								
+							mail($a->config['admin_email'], $subject, $email_msg,
+								'From: ' . t('Administrator') . '@' . $_SERVER['SERVER_NAME'] . "\n"
+								. 'Content-type: text/plain; charset=UTF-8' . "\n"
+								. 'Content-transfer-encoding: 8bit' );
+							//try the logger
+							logger('CRITICAL: Update Failed: '. $x);
 						}
+						else
+							set_config('database','update_r' . $x, 'success');
+								
 					}
-					set_config('system','db_version', DB_UPDATE_VERSION);
 				}
+				set_config('system','db_version', DB_UPDATE_VERSION);
 			}
 		}
-
-		/**
-		 *
-		 * Synchronise plugins:
-		 *
-		 * $a->config['system']['addon'] contains a comma-separated list of names
-		 * of plugins/addons which are used on this system.
-		 * Go through the database list of already installed addons, and if we have
-		 * an entry, but it isn't in the config list, call the uninstall procedure
-		 * and mark it uninstalled in the database (for now we'll remove it).
-		 * Then go through the config list and if we have a plugin that isn't installed,
-		 * call the install procedure and add it to the database.
-		 *
-		 */
-
-		$r = q("SELECT * FROM `addon` WHERE `installed` = 1");
-		if(count($r))
-			$installed = $r;
-		else
-			$installed = array();
-
-		$plugins = get_config('system','addon');
-		$plugins_arr = array();
-
-		if($plugins)
-			$plugins_arr = explode(',',str_replace(' ', '',$plugins));
-
-		$a->plugins = $plugins_arr;
-
-		$installed_arr = array();
-
-		if(count($installed)) {
-			foreach($installed as $i) {
-				if(! in_array($i['name'],$plugins_arr)) {
-					uninstall_plugin($i['name']);
-				}
-				else {
-					$installed_arr[] = $i['name'];
-				}
-			}
-		}
-
-		if(count($plugins_arr)) {
-			foreach($plugins_arr as $p) {
-				if(! in_array($p,$installed_arr)) {
-					install_plugin($p);
-				}
-			}
-		}
-
-
-		load_hooks();
-
-		return;
 	}
+
+	/**
+	 *
+	 * Synchronise plugins:
+	 *
+	 * $a->config['system']['addon'] contains a comma-separated list of names
+	 * of plugins/addons which are used on this system.
+	 * Go through the database list of already installed addons, and if we have
+	 * an entry, but it isn't in the config list, call the uninstall procedure
+	 * and mark it uninstalled in the database (for now we'll remove it).
+	 * Then go through the config list and if we have a plugin that isn't installed,
+	 * call the install procedure and add it to the database.
+	 *
+	 */
+
+	$r = q("SELECT * FROM `addon` WHERE `installed` = 1");
+	if(count($r))
+		$installed = $r;
+	else
+		$installed = array();
+
+	$plugins = get_config('system','addon');
+	$plugins_arr = array();
+
+	if($plugins)
+		$plugins_arr = explode(',',str_replace(' ', '',$plugins));
+
+	$a->plugins = $plugins_arr;
+
+	$installed_arr = array();
+
+	if(count($installed)) {
+		foreach($installed as $i) {
+			if(! in_array($i['name'],$plugins_arr)) {
+				uninstall_plugin($i['name']);
+			}
+			else {
+				$installed_arr[] = $i['name'];
+			}
+		}
+	}
+
+	if(count($plugins_arr)) {
+		foreach($plugins_arr as $p) {
+			if(! in_array($p,$installed_arr)) {
+				install_plugin($p);
+			}
+		}
+	}
+
+
+	load_hooks();
+	return;
+}
 
 
 
@@ -1142,77 +1134,77 @@ function check_config(&$a) {
 // returns the complete html for inserting into the page
 
 
-	function login($register = false, $form_id = 'main-login', $hiddens=false) {
-		$a = get_app();
-		$o = "";
-		$reg = false;
-		$reglink = get_config('system','register_link');
-		if(! strlen($reglink))
-			$reglink = 'register';
+function login($register = false, $form_id = 'main-login', $hiddens=false) {
+	$a = get_app();
+	$o = "";
+	$reg = false;
+	$reglink = get_config('system','register_link');
+	if(! strlen($reglink))
+		$reglink = 'register';
 
-		if ($register) {
-			$reg = array(
-				'title' => t('Create a New Account'),
-				'desc' => t('Register'),
-				'link' => $reglink
-			);
-		}
+	if ($register) {
+		$reg = array(
+			'title' => t('Create a New Account'),
+			'desc' => t('Register'),
+			'link' => $reglink
+		);
+	}
 
-		$dest_url = $a->get_baseurl(true) . '/' . $a->query_string;
+	$dest_url = $a->get_baseurl(true) . '/' . $a->query_string;
 
-		if(local_user()) {
-			$tpl = get_markup_template("logout.tpl");
-		}
-		else {
-			$a->page['htmlhead'] .= replace_macros(get_markup_template("login_head.tpl"),array(
-				'$baseurl'		=> $a->get_baseurl(true)
-			));
-
-			$tpl = get_markup_template("login.tpl");
-			if(strlen($a->query_string))
-					$_SESSION['login_return_url'] = $a->query_string;
-		}
-
-
-		$o .= replace_macros($tpl,array(
-
-			'$dest_url'     => $dest_url,
-			'$logout'       => t('Logout'),
-			'$login'        => t('Login'),
-			'$form_id'      => $form_id,
-			'$lname'	 	=> array('username', t('Email') , '', ''),
-			'$lpassword' 	=> array('password', t('Password'), '', ''),
-			'$remember'     => array('remember', t('Remember me'), '', ''),
-			'$hiddens'      => $hiddens,
-	
-			'$register'     => $reg,
-	
-			'$lostpass'     => t('Forgot your password?'),
-			'$lostlink'     => t('Password Reset'),
+	if(local_user()) {
+		$tpl = get_markup_template("logout.tpl");
+	}
+	else {
+		$a->page['htmlhead'] .= replace_macros(get_markup_template("login_head.tpl"),array(
+			'$baseurl'		=> $a->get_baseurl(true)
 		));
 
-		call_hooks('login_hook',$o);
-
-		return $o;
+		$tpl = get_markup_template("login.tpl");
+		if(strlen($a->query_string))
+				$_SESSION['login_return_url'] = $a->query_string;
 	}
+
+
+	$o .= replace_macros($tpl,array(
+
+		'$dest_url'     => $dest_url,
+		'$logout'       => t('Logout'),
+		'$login'        => t('Login'),
+		'$form_id'      => $form_id,
+		'$lname'	 	=> array('username', t('Email') , '', ''),
+		'$lpassword' 	=> array('password', t('Password'), '', ''),
+		'$remember'     => array('remember', t('Remember me'), '', ''),
+		'$hiddens'      => $hiddens,
+
+		'$register'     => $reg,
+	
+		'$lostpass'     => t('Forgot your password?'),
+		'$lostlink'     => t('Password Reset'),
+	));
+
+	call_hooks('login_hook',$o);
+
+	return $o;
+}
 
 
 // Used to end the current process, after saving session state.
 
 
-	function killme() {
-		session_write_close();
-		exit;
-	}
+function killme() {
+	session_write_close();
+	exit;
+}
 
 
 // redirect to another URL and terminate this process.
 
 
-	function goaway($s) {
-		header("Location: $s");
-		killme();
-	}
+function goaway($s) {
+	header("Location: $s");
+	killme();
+}
 
 
 function get_account_id() {
@@ -1225,51 +1217,51 @@ function get_account_id() {
 // Returns the entity id of locally logged in user or false.
 
 
-	function local_user() {
-		if((x($_SESSION,'authenticated')) && (x($_SESSION,'uid')))
-			return intval($_SESSION['uid']);
-		return false;
-	}
+function local_user() {
+	if((x($_SESSION,'authenticated')) && (x($_SESSION,'uid')))
+		return intval($_SESSION['uid']);
+	return false;
+}
 
 
 // Returns contact id of authenticated site visitor or false
 
 
-	function remote_user() {
-		if((x($_SESSION,'authenticated')) && (x($_SESSION,'visitor_id')))
-			return $_SESSION['visitor_id'];
-		return false;
-	}
+function remote_user() {
+	if((x($_SESSION,'authenticated')) && (x($_SESSION,'visitor_id')))
+		return $_SESSION['visitor_id'];
+	return false;
+}
 
 
 // contents of $s are displayed prominently on the page the next time
 // a page is loaded. Usually used for errors or alerts.
 
 
-	function notice($s) {
-		$a = get_app();
-		if(! x($_SESSION,'sysmsg'))	$_SESSION['sysmsg'] = array();
-		if($a->interactive)
-			$_SESSION['sysmsg'][] = $s;
-	}
+function notice($s) {
+	$a = get_app();
+	if(! x($_SESSION,'sysmsg'))	$_SESSION['sysmsg'] = array();
+	if($a->interactive)
+		$_SESSION['sysmsg'][] = $s;
+}
 
 
-	function info($s) {
-		$a = get_app();
-		if(! x($_SESSION,'sysmsg_info')) $_SESSION['sysmsg_info'] = array();
-		if($a->interactive)
-			$_SESSION['sysmsg_info'][] = $s;
-	}
+function info($s) {
+	$a = get_app();
+	if(! x($_SESSION,'sysmsg_info')) $_SESSION['sysmsg_info'] = array();
+	if($a->interactive)
+		$_SESSION['sysmsg_info'][] = $s;
+}
 
 
 
 // wrapper around config to limit the text length of an incoming message
 
 
-	function get_max_import_size() {
-		global $a;
-		return ((x($a->config,'max_import_size')) ? $a->config['max_import_size'] : 0 );
-	}
+function get_max_import_size() {
+	global $a;
+	return ((x($a->config,'max_import_size')) ? $a->config['max_import_size'] : 0 );
+}
 
 
 
@@ -1413,123 +1405,123 @@ function profile_create_sidebar(&$a) {
 
 
 
-	function profile_sidebar($profile, $block = 0) {
+function profile_sidebar($profile, $block = 0) {
 
-		$a = get_app();
+	$a = get_app();
 
-		$observer = $a->get_observer();
+	$observer = $a->get_observer();
 
-		$o = '';
-		$location = false;
-		$address = false;
-		$pdesc = true;
+	$o = '';
+	$location = false;
+	$address = false;
+	$pdesc = true;
 
-		if((! is_array($profile)) && (! count($profile)))
-			return $o;
-
-
-		$is_owner = (($profile['uid'] == local_user()) ? true : false);
-
-		$profile['picdate'] = urlencode($profile['picdate']);
-
-		call_hooks('profile_sidebar_enter', $profile);
-
-		// don't show connect link to yourself
-		$connect = (($profile['uid'] != local_user()) ? t('Connect')  : False);
-
-		// don't show connect link to authenticated visitors either
-
-		if(remote_user() && count($_SESSION['remote'])) {
-			foreach($_SESSION['remote'] as $visitor) {
-				if($visitor['uid'] == $profile['uid']) {
-					$connect = false;
-					break;
-				}
-			}
-		}
-
-
-		// show edit profile to yourself
-		if($is_owner) {
-
-			$profile['menu'] = array(
-				'chg_photo' => t('Change profile photo'),
-				'entries' => array(),
-			);
-
-
-			if(feature_enabled(local_user(),'multi_profiles')) {
-				$profile['edit'] = array($a->get_baseurl(). '/profiles', t('Profiles'),"", t('Manage/edit profiles'));
-				$profile['menu']['cr_new'] = t('Create New Profile');
-			}
-			else
-				$profile['edit'] = array($a->get_baseurl() . '/profiles/' . $profile['id'], t('Edit Profile'),'',t('Edit Profile'));
-						
-			$r = q("SELECT * FROM `profile` WHERE `uid` = %d",
-					local_user());
-		
-
-			if($r) {
-				foreach($r as $rr) {
-					$profile['menu']['entries'][] = array(
-						'photo'                => $rr['thumb'],
-						'id'                   => $rr['id'],
-						'alt'                  => t('Profile Image'),
-						'profile_name'         => $rr['profile_name'],
-						'isdefault'            => $rr['is_default'],
-						'visible_to_everybody' => t('visible to everybody'),
-						'edit_visibility'      => t('Edit visibility'),
-					);
-				}
-			}
-		}
-
-		if((x($profile,'address') == 1)
-				|| (x($profile,'locality') == 1)
-				|| (x($profile,'region') == 1)
-				|| (x($profile,'postal_code') == 1)
-				|| (x($profile,'country_name') == 1))
-			$location = t('Location:');
-
-		$gender   = ((x($profile,'gender')   == 1) ? t('Gender:')   : False);
-		$marital  = ((x($profile,'marital')  == 1) ? t('Status:')   : False);
-		$homepage = ((x($profile,'homepage') == 1) ? t('Homepage:') : False);
-
-		if(($profile['hidewall'] || $block) && (! local_user()) && (! remote_user())) {
-			$location = $pdesc = $gender = $marital = $homepage = False;
-		}
-
-		$firstname = ((strpos($profile['name'],' '))
-				? trim(substr($profile['name'],0,strpos($profile['name'],' '))) : $profile['name']);
-		$lastname = (($firstname === $profile['name']) ? '' : trim(substr($profile['name'],strlen($firstname))));
-
-		if(is_array($observer) 
-			&& perm_is_allowed($profile['uid'],$observer['xchan_hash'],'view_contacts')) {
-			$contact_block = contact_block();
-		}
-
-		$tpl = get_markup_template('profile_vcard.tpl');
-
-		$o .= replace_macros($tpl, array(
-			'$profile'       => $profile,
-			'$connect'       => $connect,
-			'$location'      => $location,
-			'$gender'        => $gender,
-			'$pdesc'         => $pdesc,
-			'$marital'       => $marital,
-			'$homepage'      => $homepage,
-			'$contact_block' => $contact_block,
-		));
-
-		$arr = array('profile' => &$profile, 'entry' => &$o);
-
-		call_hooks('profile_sidebar', $arr);
-
+	if((! is_array($profile)) && (! count($profile)))
 		return $o;
+
+
+	$is_owner = (($profile['uid'] == local_user()) ? true : false);
+
+	$profile['picdate'] = urlencode($profile['picdate']);
+
+	call_hooks('profile_sidebar_enter', $profile);
+
+	// don't show connect link to yourself
+	$connect = (($profile['uid'] != local_user()) ? t('Connect')  : False);
+
+	// don't show connect link to authenticated visitors either
+
+	if(remote_user() && count($_SESSION['remote'])) {
+		foreach($_SESSION['remote'] as $visitor) {
+			if($visitor['uid'] == $profile['uid']) {
+				$connect = false;
+				break;
+			}
+		}
 	}
 
 
-// FIXME
+	// show edit profile to yourself
+	if($is_owner) {
+
+		$profile['menu'] = array(
+			'chg_photo' => t('Change profile photo'),
+			'entries' => array(),
+		);
+
+
+		if(feature_enabled(local_user(),'multi_profiles')) {
+			$profile['edit'] = array($a->get_baseurl(). '/profiles', t('Profiles'),"", t('Manage/edit profiles'));
+			$profile['menu']['cr_new'] = t('Create New Profile');
+		}
+		else
+			$profile['edit'] = array($a->get_baseurl() . '/profiles/' . $profile['id'], t('Edit Profile'),'',t('Edit Profile'));
+						
+		$r = q("SELECT * FROM `profile` WHERE `uid` = %d",
+				local_user());
+		
+
+		if($r) {
+			foreach($r as $rr) {
+				$profile['menu']['entries'][] = array(
+					'photo'                => $rr['thumb'],
+					'id'                   => $rr['id'],
+					'alt'                  => t('Profile Image'),
+					'profile_name'         => $rr['profile_name'],
+					'isdefault'            => $rr['is_default'],
+					'visible_to_everybody' => t('visible to everybody'),
+					'edit_visibility'      => t('Edit visibility'),
+				);
+			}
+		}
+	}
+
+	if((x($profile,'address') == 1)
+		|| (x($profile,'locality') == 1)
+		|| (x($profile,'region') == 1)
+		|| (x($profile,'postal_code') == 1)
+		|| (x($profile,'country_name') == 1))
+		$location = t('Location:');
+
+	$gender   = ((x($profile,'gender')   == 1) ? t('Gender:')   : False);
+	$marital  = ((x($profile,'marital')  == 1) ? t('Status:')   : False);
+	$homepage = ((x($profile,'homepage') == 1) ? t('Homepage:') : False);
+
+	if(($profile['hidewall'] || $block) && (! local_user()) && (! remote_user())) {
+		$location = $pdesc = $gender = $marital = $homepage = False;
+	}
+
+	$firstname = ((strpos($profile['name'],' '))
+		? trim(substr($profile['name'],0,strpos($profile['name'],' '))) : $profile['name']);
+	$lastname = (($firstname === $profile['name']) ? '' : trim(substr($profile['name'],strlen($firstname))));
+
+	if(is_array($observer) 
+		&& perm_is_allowed($profile['uid'],$observer['xchan_hash'],'view_contacts')) {
+		$contact_block = contact_block();
+	}
+
+	$tpl = get_markup_template('profile_vcard.tpl');
+
+	$o .= replace_macros($tpl, array(
+		'$profile'       => $profile,
+		'$connect'       => $connect,
+		'$location'      => $location,
+		'$gender'        => $gender,
+		'$pdesc'         => $pdesc,
+		'$marital'       => $marital,
+		'$homepage'      => $homepage,
+		'$contact_block' => $contact_block,
+	));
+
+	$arr = array('profile' => &$profile, 'entry' => &$o);
+
+	call_hooks('profile_sidebar', $arr);
+
+	return $o;
+}
+
+
+// FIXME or remove
 
 
 	function get_birthdays() {
@@ -1695,104 +1687,104 @@ function profile_create_sidebar(&$a) {
  */
 
 
-	function proc_run($cmd){
+function proc_run($cmd){
 
-		$a = get_app();
+	$a = get_app();
 
-		$args = func_get_args();
+	$args = func_get_args();
 
-		$newargs = array();
-		if(! count($args))
-			return;
+	$newargs = array();
+	if(! count($args))
+		return;
 
-		// expand any arrays
+	// expand any arrays
 
-		foreach($args as $arg) {
-			if(is_array($arg)) {
-				foreach($arg as $n) {
-					$newargs[] = $n;
-				}
+	foreach($args as $arg) {
+		if(is_array($arg)) {
+			foreach($arg as $n) {
+				$newargs[] = $n;
 			}
-			else
-				$newargs[] = $arg;
 		}
-
-		$args = $newargs;
-		
-		$arr = array('args' => $args, 'run_cmd' => true);
-
-		call_hooks("proc_run", $arr);
-		if(! $arr['run_cmd'])
-			return;
-
-		if(count($args) && $args[0] === 'php')
-			$args[0] = ((x($a->config,'system')) && (x($a->config['system'],'php_path')) && (strlen($a->config['system']['php_path'])) ? $a->config['system']['php_path'] : 'php');
-		for($x = 0; $x < count($args); $x ++)
-			$args[$x] = escapeshellarg($args[$x]);
-
-		$cmdline = implode($args," ");
-		if(get_config('system','proc_windows'))
-			proc_close(proc_open('cmd /c start /b ' . $cmdline,array(),$foo));
 		else
-			proc_close(proc_open($cmdline." &",array(),$foo));
+			$newargs[] = $arg;
 	}
 
+	$args = $newargs;
+		
+	$arr = array('args' => $args, 'run_cmd' => true);
+
+	call_hooks("proc_run", $arr);
+	if(! $arr['run_cmd'])
+		return;
+
+	if(count($args) && $args[0] === 'php')
+		$args[0] = ((x($a->config,'system')) && (x($a->config['system'],'php_path')) && (strlen($a->config['system']['php_path'])) ? $a->config['system']['php_path'] : 'php');
+	for($x = 0; $x < count($args); $x ++)
+		$args[$x] = escapeshellarg($args[$x]);
+
+	$cmdline = implode($args," ");
+	if(get_config('system','proc_windows'))
+		proc_close(proc_open('cmd /c start /b ' . $cmdline,array(),$foo));
+	else
+		proc_close(proc_open($cmdline." &",array(),$foo));
+}
 
 
-	function current_theme(){
-		$app_base_themes = array('redbasic');
+
+function current_theme(){
+	$app_base_themes = array('redbasic');
 	
-		$a = get_app();
+	$a = get_app();
 	
 //		$mobile_detect = new Mobile_Detect();
 //		$is_mobile = $mobile_detect->isMobile() || $mobile_detect->isTablet();
-		$is_mobile = $a->is_mobile || $a->is_tablet;
+	$is_mobile = $a->is_mobile || $a->is_tablet;
 	
-		if($is_mobile) {
-			$system_theme = ((isset($a->config['system']['mobile-theme'])) ? $a->config['system']['mobile-theme'] : '');
-			$theme_name = ((isset($_SESSION) && x($_SESSION,'mobile-theme')) ? $_SESSION['mobile-theme'] : $system_theme);
+	if($is_mobile) {
+		$system_theme = ((isset($a->config['system']['mobile-theme'])) ? $a->config['system']['mobile-theme'] : '');
+		$theme_name = ((isset($_SESSION) && x($_SESSION,'mobile-theme')) ? $_SESSION['mobile-theme'] : $system_theme);
 
-			if($theme_name === '---') {
-				// user has selected to have the mobile theme be the same as the normal one
-				$system_theme = '';
-				$theme_name = '';
-			}
+		if($theme_name === '---') {
+			// user has selected to have the mobile theme be the same as the normal one
+			$system_theme = '';
+			$theme_name = '';
 		}
-		else {
-			$system_theme = ((isset($a->config['system']['theme'])) ? $a->config['system']['theme'] : '');
-			$theme_name = ((isset($_SESSION) && x($_SESSION,'theme')) ? $_SESSION['theme'] : $system_theme);
-		}
-	
-		if($theme_name &&
-				(file_exists('view/theme/' . $theme_name . '/css/style.css') ||
-						file_exists('view/theme/' . $theme_name . '/php/style.php')))
-			return($theme_name);
-	
-		foreach($app_base_themes as $t) {
-			if(file_exists('view/theme/' . $t . '/css/style.css')||
-					file_exists('view/theme/' . $t . '/php/style.php'))
-				return($t);
-		}
-	
-		$fallback = array_merge(glob('view/theme/*/css/style.css'),glob('view/theme/*/php/style.php'));
-		if(count($fallback))
-			return (str_replace('view/theme/','', substr($fallback[0],0,-10)));
-	
 	}
+	else {
+		$system_theme = ((isset($a->config['system']['theme'])) ? $a->config['system']['theme'] : '');
+		$theme_name = ((isset($_SESSION) && x($_SESSION,'theme')) ? $_SESSION['theme'] : $system_theme);
+	}
+	
+	if($theme_name &&
+			(file_exists('view/theme/' . $theme_name . '/css/style.css') ||
+					file_exists('view/theme/' . $theme_name . '/php/style.php')))
+		return($theme_name);
+	
+	foreach($app_base_themes as $t) {
+		if(file_exists('view/theme/' . $t . '/css/style.css')||
+			file_exists('view/theme/' . $t . '/php/style.php'))
+			return($t);
+	}
+	
+	$fallback = array_merge(glob('view/theme/*/css/style.css'),glob('view/theme/*/php/style.php'));
+	if(count($fallback))
+		return (str_replace('view/theme/','', substr($fallback[0],0,-10)));
+	
+}
 
 
-/*
+/**
  * Return full URL to theme which is currently in effect.
-* Provide a sane default if nothing is chosen or the specified theme does not exist.
-*/
+ * Provide a sane default if nothing is chosen or the specified theme does not exist.
+ */
 
-	function current_theme_url() {
-		global $a;
-		$t = current_theme();
-		if (file_exists('view/theme/' . $t . '/php/style.php'))
-			return('view/theme/' . $t . '/php/style.pcss');
-		return('view/theme/' . $t . '/css/style.css');
-	}
+function current_theme_url() {
+	global $a;
+	$t = current_theme();
+	if (file_exists('view/theme/' . $t . '/php/style.php'))
+		return('view/theme/' . $t . '/php/style.pcss');
+	return('view/theme/' . $t . '/css/style.css');
+}
 
 
 function z_birthday($dob,$tz,$format="Y-m-d H:i:s") {
@@ -1815,57 +1807,6 @@ function z_birthday($dob,$tz,$format="Y-m-d H:i:s") {
 
 }
 
-
-
-	function feed_birthday($uid,$tz) {
-
-		/**
-		 *
-		 * Determine the next birthday, but only if the birthday is published
-		 * in the default profile. We _could_ also look for a private profile that the
-		 * recipient can see, but somebody could get mad at us if they start getting
-		 * public birthday greetings when they haven't made this info public.
-		 *
-		 * Assuming we are able to publish this info, we are then going to convert
-		 * the start time from the owner's timezone to UTC.
-		 *
-		 * This will potentially solve the problem found with some social networks
-		 * where birthdays are converted to the viewer's timezone and salutations from
-		 * elsewhere in the world show up on the wrong day. We will convert it to the
-		 * viewer's timezone also, but first we are going to convert it from the birthday
-		 * person's timezone to GMT - so the viewer may find the birthday starting at
-		 * 6:00PM the day before, but that will correspond to midnight to the birthday person.
-		 *
-		 */
-
-	
-		$birthday = '';
-
-		if(! strlen($tz))
-			$tz = 'UTC';
-
-		$p = q("SELECT `dob` FROM `profile` WHERE `is_default` = 1 AND `uid` = %d LIMIT 1",
-				intval($uid)
-		);
-
-		if($p && count($p)) {
-			$tmp_dob = substr($p[0]['dob'],5);
-			if(intval($tmp_dob)) {
-				$y = datetime_convert($tz,$tz,'now','Y');
-				$bd = $y . '-' . $tmp_dob . ' 00:00';
-				$t_dob = strtotime($bd);
-				$now = strtotime(datetime_convert($tz,$tz,'now'));
-				if($t_dob < $now)
-					$bd = $y + 1 . '-' . $tmp_dob . ' 00:00';
-				$birthday = datetime_convert($tz,'UTC',$bd,$format);
-			}
-		}
-
-		return $birthday;
-
-}
-
-
 function is_site_admin() {
 	$a = get_app();
 	if((intval($_SESSION['authenticated'])) 
@@ -1877,90 +1818,90 @@ function is_site_admin() {
 
 
 
-	function load_contact_links($uid) {
+function load_contact_links($uid) {
 
-		$a = get_app();
+	$a = get_app();
 
-		$ret = array();
+	$ret = array();
 
-		if(! $uid || x($a->contacts,'empty'))
-			return;
-
-		logger('load_contact_links');
-
-		$r = q("SELECT abook_id, abook_flags, abook_my_perms, abook_their_perms, xchan_hash, xchan_photo_m, xchan_name, xchan_url from abook left join xchan on abook_xchan = xchan_hash where abook_channel = %d and not (abook_flags & %d) ",
-			intval($uid),
-			intval(ABOOK_FLAG_SELF)
-		);
-		if($r) {
-			foreach($r as $rr){
-				$ret[$rr['xchan_hash']] = $rr;
-			}
-		}
-		else
-			$ret['empty'] = true;
-		$a->contacts = $ret;
+	if(! $uid || x($a->contacts,'empty'))
 		return;
-	}
 
+	logger('load_contact_links');
 
-
-	function profile_tabs($a, $is_owner=False, $nickname=Null){
-		//echo "<pre>"; var_dump($a->user); killme();
-	
-		$channel = $a->get_channel();
-
-		if (is_null($nickname))
-			$nickname  = $channel['channel_address'];
-		
-		if(x($_GET,'tab'))
-			$tab = notags(trim($_GET['tab']));
-	
-		$url = $a->get_baseurl() . '/channel/' . $nickname;
-		$pr  = $a->get_baseurl() . '/profile/' . $nickname;
-
-		$tabs = array(
-			array(
-				'label'=>t('Status'),
-				'url' => $url,
-				'sel' => ((argv(0)=='channel')?'active':''),
-				'title' => t('Status Messages and Posts'),
-				'id' => 'status-tab',
-			),
-			array(
-				'label' => t('Profile'),
-				'url' 	=> $pr,
-				'sel'	=> ((argv(0)=='profile')?'active':''),
-				'title' => t('Profile Details'),
-				'id' => 'profile-tab',
-			),
-			array(
-				'label' => t('Photos'),
-				'url'	=> $a->get_baseurl() . '/photos/' . $nickname,
-				'sel'	=> ((argv(0)=='photos')?'active':''),
-				'title' => t('Photo Albums'),
-				'id' => 'photo-tab',
-			),
-		);
-	
-		if ($is_owner){
-			$tabs[] = array(
-				'label' => t('Events'),
-				'url'	=> $a->get_baseurl() . '/events',
-				'sel' 	=>((argv(0)=='events')?'active':''),
-				'title' => t('Events and Calendar'),
-				'id' => 'events-tab',
-			);
+	$r = q("SELECT abook_id, abook_flags, abook_my_perms, abook_their_perms, xchan_hash, xchan_photo_m, xchan_name, xchan_url from abook left join xchan on abook_xchan = xchan_hash where abook_channel = %d and not (abook_flags & %d) ",
+		intval($uid),
+		intval(ABOOK_FLAG_SELF)
+	);
+	if($r) {
+		foreach($r as $rr){
+			$ret[$rr['xchan_hash']] = $rr;
 		}
-
-
-		$arr = array('is_owner' => $is_owner, 'nickname' => $nickname, 'tab' => (($tab) ? $tab : false), 'tabs' => $tabs);
-		call_hooks('profile_tabs', $arr);
-	
-		$tpl = get_markup_template('common_tabs.tpl');
-
-		return replace_macros($tpl,array('$tabs' => $arr['tabs']));
 	}
+	else
+		$ret['empty'] = true;
+	$a->contacts = $ret;
+	return;
+}
+
+
+
+function profile_tabs($a, $is_owner=False, $nickname=Null){
+	//echo "<pre>"; var_dump($a->user); killme();
+	
+	$channel = $a->get_channel();
+
+	if (is_null($nickname))
+		$nickname  = $channel['channel_address'];
+		
+	if(x($_GET,'tab'))
+		$tab = notags(trim($_GET['tab']));
+	
+	$url = $a->get_baseurl() . '/channel/' . $nickname;
+	$pr  = $a->get_baseurl() . '/profile/' . $nickname;
+
+	$tabs = array(
+		array(
+			'label'=>t('Status'),
+			'url' => $url,
+			'sel' => ((argv(0)=='channel')?'active':''),
+			'title' => t('Status Messages and Posts'),
+			'id' => 'status-tab',
+		),
+		array(
+			'label' => t('Profile'),
+			'url' 	=> $pr,
+			'sel'	=> ((argv(0)=='profile')?'active':''),
+			'title' => t('Profile Details'),
+			'id' => 'profile-tab',
+		),
+		array(
+			'label' => t('Photos'),
+			'url'	=> $a->get_baseurl() . '/photos/' . $nickname,
+			'sel'	=> ((argv(0)=='photos')?'active':''),
+			'title' => t('Photo Albums'),
+			'id' => 'photo-tab',
+		),
+	);
+
+	if ($is_owner){
+		$tabs[] = array(
+			'label' => t('Events'),
+			'url'	=> $a->get_baseurl() . '/events',
+			'sel' 	=>((argv(0)=='events')?'active':''),
+			'title' => t('Events and Calendar'),
+			'id' => 'events-tab',
+		);
+	}
+
+
+	$arr = array('is_owner' => $is_owner, 'nickname' => $nickname, 'tab' => (($tab) ? $tab : false), 'tabs' => $tabs);
+	call_hooks('profile_tabs', $arr);
+	
+	$tpl = get_markup_template('common_tabs.tpl');
+
+	return replace_macros($tpl,array('$tabs' => $arr['tabs']));
+}
 
 
 function get_my_url() {
@@ -2011,11 +1952,12 @@ function zid($s,$force = false) {
 }
 
 /**
-* returns querystring as string from a mapped array
-*
-* @param params Array 
-* @return string
-*/
+ * returns querystring as string from a mapped array
+ *
+ * @param params Array 
+ * @return string
+ */
+
 function build_querystring($params, $name=null) { 
     $ret = ""; 
     foreach($params as $key=>$val) {

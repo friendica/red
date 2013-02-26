@@ -15,7 +15,6 @@
 
 // retrieve a "family" of config variables from database to cached storage
 
-if(! function_exists('load_config')) {
 function load_config($family) {
 	global $a;
 	$r = q("SELECT * FROM `config` WHERE `cat` = '%s'", dbesc($family));
@@ -32,7 +31,7 @@ function load_config($family) {
 		// Negative caching
 		$a->config[$family] = "!<unset>!";
 	}
-}}
+}
 
 // get a particular config variable given the family name
 // and key. Returns false if not set.
@@ -42,7 +41,7 @@ function load_config($family) {
 // local config cache, pull it into the cache so we don't have
 // to hit the DB again for this item.
 
-if(! function_exists('get_config')) {
+
 function get_config($family, $key, $instore = false) {
 
 	global $a;
@@ -76,13 +75,13 @@ function get_config($family, $key, $instore = false) {
 		$a->config[$family][$key] = '!<unset>!';
 	}
 	return false;
-}}
+}
 
 // Store a config value ($value) in the category ($family)
 // under the key ($key)
 // Return the value, or false if the database update failed
 
-if(! function_exists('set_config')) {
+
 function set_config($family,$key,$value) {
 	global $a;
 	// manage array value
@@ -111,10 +110,10 @@ function set_config($family,$key,$value) {
 	if($ret)
 		return $value;
 	return $ret;
-}}
+}
 
 
-if(! function_exists('load_pconfig')) {
+
 function load_pconfig($uid,$family) {
 	global $a;
 	$r = q("SELECT * FROM `pconfig` WHERE `cat` = '%s' AND `uid` = %d",
@@ -130,11 +129,11 @@ function load_pconfig($uid,$family) {
 		// Negative caching
 		$a->config[$uid][$family] = "!<unset>!";
 	}
-}}
+}
 
 
 
-if(! function_exists('get_pconfig')) {
+
 function get_pconfig($uid,$family, $key, $instore = false) {
 
 	global $a;
@@ -170,9 +169,9 @@ function get_pconfig($uid,$family, $key, $instore = false) {
 		$a->config[$uid][$family][$key] = '!<unset>!';
 	}
 	return false;
-}}
+}
 
-if(! function_exists('del_config')) {
+
 function del_config($family,$key) {
 
 	global $a;
@@ -183,14 +182,14 @@ function del_config($family,$key) {
 		dbesc($key)
 	);
 	return $ret;
-}}
+}
 
 
 
 // Same as above functions except these are for personal config storage and take an
 // additional $uid argument.
 
-if(! function_exists('set_pconfig')) {
+
 function set_pconfig($uid,$family,$key,$value) {
 
 	global $a;
@@ -222,9 +221,9 @@ function set_pconfig($uid,$family,$key,$value) {
 	if($ret)
 		return $value;
 	return $ret;
-}}
+}
 
-if(! function_exists('del_pconfig')) {
+
 function del_pconfig($uid,$family,$key) {
 
 	global $a;
@@ -236,4 +235,4 @@ function del_pconfig($uid,$family,$key) {
 		dbesc($key)
 	);
 	return $ret;
-}}
+}
