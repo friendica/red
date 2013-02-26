@@ -1,4 +1,4 @@
-<?php
+<?php /** @file */
 
 function js_strings() {
 	return replace_macros(get_markup_template('js_strings.tpl'), array(

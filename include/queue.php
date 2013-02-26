@@ -1,4 +1,4 @@
-<?php
+<?php /** @file */
 require_once("boot.php");
 require_once('include/cli_startup.php');
 require_once('include/queue_fn.php');

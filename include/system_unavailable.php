@@ -1,4 +1,4 @@
-<?php
+<?php /** @file */
 
 function system_down() {
 echo <<< EOT

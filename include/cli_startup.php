@@ -1,4 +1,4 @@
-<?php
+<?php /** @file */
 
 require_once('boot.php');
 

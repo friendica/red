@@ -1,4 +1,4 @@
-<?php
+<?php /** @file */
 
 require_once('include/bbcode.php');
 require_once('include/oembed.php');

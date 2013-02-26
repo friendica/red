@@ -1,4 +1,4 @@
-<?php
+<?php /** @file */
 
 require_once("bbcode.php");
 require_once("datetime.php");

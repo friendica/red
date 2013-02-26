@@ -1,4 +1,4 @@
-<?php
+<?php /** @file */
 
 /*
  * File/attach API with the potential for revision control.

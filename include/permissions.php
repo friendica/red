@@ -1,4 +1,4 @@
-<?php
+<?php /** @file */
 
 
 function get_perms() {

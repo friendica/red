@@ -1,4 +1,4 @@
-<?php
+<?php /** @file */
 /*
 html2bbcode.php
 Converter for HTML to BBCode

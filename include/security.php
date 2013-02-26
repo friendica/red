@@ -1,4 +1,4 @@
-<?php
+<?php /** @file */
 
 function authenticate_success($user_record, $login_initial = false, $interactive = false,$return = false,$update_lastlog = false) {
 

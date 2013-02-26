@@ -1,4 +1,4 @@
-<?php
+<?php /** @file */
 
 
 function format_notification($item) {

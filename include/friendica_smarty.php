@@ -1,4 +1,4 @@
-<?php
+<?php /** @file */
 
 require_once("library/Smarty/libs/Smarty.class.php");
 

@@ -1,4 +1,4 @@
-<?php
+<?php /** @file */
 
 function advanced_profile(&$a) {
 

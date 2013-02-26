@@ -1,4 +1,4 @@
-<?php
+<?php /** @file */
 
 /* Private Message backend API */
 

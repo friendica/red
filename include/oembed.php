@@ -1,4 +1,4 @@
-<?php
+<?php /** @file */
 function oembed_replacecb($matches){
 //	logger('oembedcb');
 	$embedurl=$matches[1];

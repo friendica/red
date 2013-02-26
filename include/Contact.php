@@ -1,4 +1,4 @@
-<?php
+<?php /** @file */
 
 
 function abook_connections($channel_id, $sql_conditions = '') {

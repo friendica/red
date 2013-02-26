@@ -1,4 +1,4 @@
-<?php
+<?php /** @file */
 
 require_once('library/HTML5/Parser.php');
 require_once('include/crypto.php');

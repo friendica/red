@@ -1,4 +1,4 @@
-<?php
+<?php /** @file */
 
 
 function contact_profile_assign($current,$foreign_net) {

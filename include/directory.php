@@ -1,4 +1,5 @@
-g<?php
+<?php /** @file */
+
 require_once('boot.php');
 require_once('include/zot.php');
 require_once('include/cli_startup.php');

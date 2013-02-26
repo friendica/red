@@ -1,4 +1,4 @@
-<?php
+<?php /** @file */
 /** 
  * OAuth server
  * Based on oauth2-php <http://code.google.com/p/oauth2-php/>

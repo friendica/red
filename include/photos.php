@@ -1,4 +1,4 @@
-<?php
+<?php /** @file */
 
 require_once('include/permissions.php');
 require_once('include/items.php');

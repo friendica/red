@@ -1,4 +1,4 @@
-<?php
+<?php /** @file */
 
 // Session management functions. These provide database storage of PHP
 // session info.

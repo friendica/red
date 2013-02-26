@@ -1,4 +1,4 @@
-<?php
+<?php /** @file */
 
 require_once('include/config.php');
 require_once('include/network.php');

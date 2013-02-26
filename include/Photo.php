@@ -1,6 +1,6 @@
-<?php
+<?php /** @file */
 
-if(! class_exists("Photo")) {
+
 class Photo {
 
 	private $image;
@@ -605,7 +605,7 @@ class Photo {
 		}
 		return $r;
 	}
-}}
+}
 
 
 /**

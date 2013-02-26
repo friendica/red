@@ -1,4 +1,4 @@
-<?php
+<?php /** @file */
 
 // This is our template processor.
 // $s is the string requiring macro substitution.

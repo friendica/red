@@ -1,4 +1,4 @@
-<?php
+<?php /** @file */
 
 
 function group_add($uid,$name) {

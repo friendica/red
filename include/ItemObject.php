@@ -1,4 +1,5 @@
-<?php
+<?php /** @file */
+
 if(class_exists('Item'))
 	return;
 

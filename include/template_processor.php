@@ -1,4 +1,4 @@
-<?php
+<?php /** @file */
 	define ("KEY_NOT_EXISTS", '^R_key_not_Exists^');
 
 	class Template {

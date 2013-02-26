@@ -1,4 +1,4 @@
-<?php
+<?php /** @file */
 
 require_once("include/friendica_smarty.php");
 

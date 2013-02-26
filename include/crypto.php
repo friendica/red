@@ -1,4 +1,4 @@
-<?php
+<?php /** @file */
 
 require_once('library/ASNValue.class.php');
 require_once('library/asn1.php');

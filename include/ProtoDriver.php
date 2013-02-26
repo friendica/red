@@ -1,4 +1,4 @@
-<?php
+<?php /** @file */
 
 /*
  * Abstraction class for dealing with alternate networks (which of course do not exist, hence the abstraction)

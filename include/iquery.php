@@ -1,4 +1,4 @@
-<?php
+<?php /** @file */
 
 
 function network_query($a,$arr) {

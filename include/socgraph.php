@@ -1,4 +1,4 @@
-<?php
+<?php /** @file */
 
 require_once('include/zot.php');
 

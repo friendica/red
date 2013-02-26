@@ -1,4 +1,4 @@
-<?php
+<?php /** @file */
 require_once "html2bbcode.php";
 
 function breaklines($line, $level, $wraplength = 75)

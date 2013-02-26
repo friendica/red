@@ -1,4 +1,4 @@
-<?php
+<?php /** @file */
 
 function profile_activity($changed, $value) {
 	$a = get_app();
