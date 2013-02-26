@@ -672,9 +672,12 @@ function import_profile_photo($photo,$xchan) {
 
 
 	$filename = basename($photo);
-	$img_str = fetch_url($photo,true);
-
 	$type = guess_image_type($photo,true);
+	$result = z_fetch_url($photo,true);
+
+	if($result['success'])
+		$img_str = $result['body'];
+
 	$img = new Photo($img_str, $type);
 	if($img->is_valid()) {
 

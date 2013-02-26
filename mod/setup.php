@@ -467,8 +467,8 @@ function check_htaccess(&$checks) {
 	$status = true;
 	$help = "";
 	if (function_exists('curl_init')){
-        $test = fetch_url($a->get_baseurl()."/setup/testrewrite");
-        if ($test!="ok") {
+        $test = z_fetch_url($a->get_baseurl()."/setup/testrewrite");
+        if ((! $test['success']) || ($test['body'] != "ok")) {
             $status = false;
             $help = t('Url rewrite in .htaccess is not working. Check your server configuration.');
         }

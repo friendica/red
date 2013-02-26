@@ -55,34 +55,18 @@ function completeurl($url, $scheme) {
 function parseurl_getsiteinfo($url) {
 	$siteinfo = array();
 
-	$ch = curl_init();
-	curl_setopt($ch, CURLOPT_URL, $url);
-	curl_setopt($ch, CURLOPT_HEADER, 1);
-	curl_setopt($ch, CURLOPT_NOBODY, 0);
-	curl_setopt($ch, CURLOPT_TIMEOUT, 3);
-	curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
-	curl_setopt($ch,CURLOPT_USERAGENT,'Opera/9.64(Windows NT 5.1; U; de) Presto/2.1.1');
 
-	$header = curl_exec($ch);
-	curl_close($ch);
+	$result = z_fetch_url($url);
+	if(! $result['success'])
+		return $siteinfo;
 
-	// Fetch the first mentioned charset. Can be in body or header
-	if (preg_match('/charset=(.*?)['."'".'"\s\n]/', $header, $matches))
-		$charset = trim(array_pop($matches));
-	else
-		$charset = "utf-8";
+	$header = $result['header'];
+	$body   = $result['body'];
 
-	$pos = strpos($header, "\r\n\r\n");
+	$body   = mb_convert_encoding($body, "UTF-8", $charset);
+	$body   = mb_convert_encoding($body, 'HTML-ENTITIES', "UTF-8");
 
-	if ($pos)
-		$body = trim(substr($header, $pos));
-	else
-		$body = $header;
-
-	$body = mb_convert_encoding($body, "UTF-8", $charset);
-	$body = mb_convert_encoding($body, 'HTML-ENTITIES', "UTF-8");
-
-	$doc = new DOMDocument();
+	$doc    = new DOMDocument();
 	@$doc->loadHTML($body);
 
 	deletenode($doc, 'style');
