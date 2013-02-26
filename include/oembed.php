@@ -29,7 +29,11 @@ function oembed_fetch_url($embedurl){
 		if (!in_array($ext, $noexts)){
 			// try oembed autodiscovery
 			$redirects = 0;
-			$html_text = fetch_url($embedurl, false, $redirects, 15, "text/*");
+
+			$result = z_fetch_url($embedurl, false, $redirects, array('timeout' => 15, 'accept_content' => "text/*"));
+			if($result['success'])
+				$html_text = $result['body'];
+
 			if($html_text){
 				$dom = @DOMDocument::loadHTML($html_text);
 				if ($dom){
@@ -50,7 +54,9 @@ function oembed_fetch_url($embedurl){
 		if ($txt==false || $txt==""){
 			// try oohembed service
 			$ourl = "http://oohembed.com/oohembed/?url=".urlencode($embedurl).'&maxwidth=' . $a->videowidth;  
-			$txt = fetch_url($ourl);
+			$result = z_fetch_url($ourl);
+			if($result['success'])
+				$txt = $result['body'];
 		}
 		
 		$txt=trim($txt);
