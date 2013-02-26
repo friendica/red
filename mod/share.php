@@ -17,15 +17,22 @@ function share_init(&$a) {
 
 	xchan_query($r);
 
-	$o = '[share]' . "\n";
-
-	$o .= "\xE2\x99\xb2" . ' [url=' . $r[0]['author']['xchan_url'] . ']' . $r[0]['author']['xchan_name'] . '[/url]' . "\n";
-	if($r[0]['title'])
-		$o .= '[b]' . $r[0]['title'] . '[/b]' . "\n";
-	$o .= $r[0]['body'] . "\n" ;
-
-	$o .= (($r[0]['plink']) ? '[url=' . $r[0]['plink'] . ']' . t('link') . '[/url]' . "\n" : '') . '[/share]';
+	if (strpos($r[0]['body'], "[/share]") !== false) {
+		$pos = strpos($r[0]['body'], "[share");
+		$o = substr($r[0]['body'], $pos);
+	} else {
+		$o = "[share author='".str_replace("'", "&#039;",$r[0]['author']['xchan_name']).
+			"' profile='".$r[0]['author']['xchan_url'] .
+			"' avatar='".$r[0]['author']['xchan_photo_s'].
+			"' link='".$r[0]['plink'].
+			"' posted='".$r[0]['created']."']\n";
+		if($r[0]['title'])
+			$o .= '[b]'.$r[0]['title'].'[/b]'."\n";
+		$o .= $r[0]['body'];
+		$o.= "[/share]";
+	}
 
 	echo $o;
-	killme();  
+	killme();
+
 }

@@ -99,6 +99,96 @@ function bb_replace_images($body, $images) {
 }}
 
 
+function bb_ShareAttributes($match) {
+
+        $attributes = $match[1];
+
+        $author = "";
+        preg_match("/author='(.*?)'/ism", $attributes, $matches);
+        if ($matches[1] != "")
+                $author = html_entity_decode($matches[1],ENT_QUOTES,'UTF-8');
+
+        preg_match('/author="(.*?)"/ism', $attributes, $matches);
+        if ($matches[1] != "")
+                $author = $matches[1];
+
+        $link = "";
+        preg_match("/link='(.*?)'/ism", $attributes, $matches);
+        if ($matches[1] != "")
+                $link = $matches[1];
+
+        preg_match('/link="(.*?)"/ism', $attributes, $matches);
+        if ($matches[1] != "")
+                $link = $matches[1];
+
+        $avatar = "";
+        preg_match("/avatar='(.*?)'/ism", $attributes, $matches);
+        if ($matches[1] != "")
+                $avatar = $matches[1];
+
+        preg_match('/avatar="(.*?)"/ism', $attributes, $matches);
+        if ($matches[1] != "")
+                $avatar = $matches[1];
+
+        $profile = "";
+        preg_match("/profile='(.*?)'/ism", $attributes, $matches);
+        if ($matches[1] != "")
+                $profile = $matches[1];
+
+        preg_match('/profile="(.*?)"/ism', $attributes, $matches);
+        if ($matches[1] != "")
+                $profile = $matches[1];
+
+        $posted = "";
+        preg_match("/posted='(.*?)'/ism", $attributes, $matches);
+        if ($matches[1] != "")
+                $posted = $matches[1];
+
+        preg_match('/posted="(.*?)"/ism', $attributes, $matches);
+        if ($matches[1] != "")
+                $posted = $matches[1];
+		$reldate = (($posted) ? " " . relative_date($posted) : ''); 
+
+        $headline = '<div class="shared_header">';
+
+	if ($avatar != "")
+		$headline .= '<img src="'.$avatar.'" height="32" width="32" >';
+
+	$headline .= sprintf(t('<span><a href="%s" target="external-link">%s</a> wrote the following <a href="%s" target="external-link">post</a>'.$reldate.':</span>'), $profile, $author, $link);
+
+        $headline .= "</div>";
+
+        $text = $headline.'<blockquote class="shared_content">'.trim($match[2])."</blockquote>";
+
+        return($text);
+}
+
+function bb_ShareAttributesSimple($match) {
+
+        $attributes = $match[1];
+
+        $author = "";
+        preg_match("/author='(.*?)'/ism", $attributes, $matches);
+        if ($matches[1] != "")
+                $author = html_entity_decode($matches[1],ENT_QUOTES,'UTF-8');
+
+        preg_match('/author="(.*?)"/ism', $attributes, $matches);
+        if ($matches[1] != "")
+                $author = $matches[1];
+
+        $profile = "";
+        preg_match("/profile='(.*?)'/ism", $attributes, $matches);
+        if ($matches[1] != "")
+                $profile = $matches[1];
+
+        preg_match('/profile="(.*?)"/ism', $attributes, $matches);
+        if ($matches[1] != "")
+                $profile = $matches[1];
+
+        $text = "<br />".html_entity_decode("&#x2672; ", ENT_QUOTES, 'UTF-8').' <a href="'.$profile.'">'.$author."</a>: <br />»".$match[2]."«";
+
+        return($text);
+}
 
 	// BBcode 2 HTML was written by WAY2WEB.net
 	// extended to work with Mistpark/Friendica - Mike Macgirvin
@@ -312,6 +402,7 @@ function bbcode($Text,$preserve_nl = false, $tryoembed = true) {
 	// [img]pathtoimage[/img]
 	$Text = preg_replace("/\[img\](.*?)\[\/img\]/ism", '<img src="$1" alt="' . t('Image/photo') . '" />', $Text);
 
+	$Text = preg_replace_callback("/\[share(.*?)\](.*?)\[\/share\]/ism","bb_ShareAttributes",$Text);
 
 	$Text = preg_replace("/\[crypt\](.*?)\[\/crypt\]/ism",'<br/><img src="' .$a->get_baseurl() . '/images/lock_icon.gif" alt="' . t('Encrypted content') . '" title="' . t('Encrypted content') . '" /><br />', $Text);
 	$Text = preg_replace("/\[crypt=(.*?)\](.*?)\[\/crypt\]/ism",'<br/><img src="' .$a->get_baseurl() . '/images/lock_icon.gif" alt="' . t('Encrypted content') . '" title="' . '$1' . ' ' . t('Encrypted content') . '" /><br />', $Text);
