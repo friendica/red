@@ -502,22 +502,22 @@ function bbcode($Text,$preserve_nl = false, $tryoembed = true) {
 
 	// Clean up the HTML by loading and saving the HTML with the DOM
 	// Only do it when it has to be done - for performance reasons
-	if (!$tryoembed) {
-		$doc = new DOMDocument();
-		$doc->preserveWhiteSpace = false;
+//	if (!$tryoembed) {//
+//		$doc = new DOMDocument();
+//		$doc->preserveWhiteSpace = false;
 
-		$Text = mb_convert_encoding($Text, 'HTML-ENTITIES', "UTF-8");
+//		$Text = mb_convert_encoding($Text, 'HTML-ENTITIES', "UTF-8");
 
-		$doctype = '<!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.0 Transitional//EN" "http://www.w3.org/TR/REC-html40/loose.dtd">';
-		@$doc->loadHTML($doctype."<html><body>".$Text."</body></html>");
+//		$doctype = '<!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.0 Transitional//EN" "http://www.w3.org/TR/REC-html40/loose.dtd">';
+//		@$doc->loadHTML($doctype."<html><body>".$Text."</body></html>");
 
-		$Text = $doc->saveHTML();
-		$Text = str_replace(array("<html><body>", "</body></html>", $doctype), array("", "", ""), $Text);
+//		$Text = $doc->saveHTML();
+//		$Text = str_replace(array("<html><body>", "</body></html>", $doctype), array("", "", ""), $Text);
 
-		$Text = str_replace('<br></li>','</li>', $Text);
+//		$Text = str_replace('<br></li>','</li>', $Text);
 
-		$Text = mb_convert_encoding($Text, "UTF-8", 'HTML-ENTITIES');
-	}
+//		$Text = mb_convert_encoding($Text, "UTF-8", 'HTML-ENTITIES');
+//	}
 
 	call_hooks('bbcode',$Text);
 

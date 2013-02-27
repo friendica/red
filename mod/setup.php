@@ -397,6 +397,12 @@ function check_funcs(&$checks) {
 			check_add($ck_funcs, t('Apache mod_rewrite module'), true, true, "");
 		}
 	}
+	if((! function_exists('proc_open')) || strstr(ini_get('disable_functions'),'proc_open')) {
+		check_add($ck_funcs, t('proc_open'), false, true, t('Error: proc_open is required but is either not installed or has been disabled in php.ini'));
+	}
+	else {
+		check_add($ck_funcs, t('proc_open'), true, true, "");
+	}
 
 	if(! function_exists('curl_init')){
 		$ck_funcs[0]['status']= false;
