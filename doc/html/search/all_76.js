@@ -1,5 +1,6 @@
 var searchData=
 [
+  ['valid_5femail',['valid_email',['../text_8php.html#a6a3d80a6c6fb234fd0bac44203b828eb',1,'text.php']]],
   ['validate_5fchannelname',['validate_channelname',['../identity_8php.html#af2802bc13a00a17b867bba7978ba8f58',1,'identity.php']]],
   ['validate_5femail',['validate_email',['../include_2network_8php.html#a897e7112d86eb95526cbd0bff9375f02',1,'network.php']]],
   ['validate_5furl',['validate_url',['../include_2network_8php.html#a5caa264fab6d2b2344e6bd5b298b08f2',1,'network.php']]],

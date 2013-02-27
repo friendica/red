@@ -40,7 +40,7 @@ var NAVTREEINDEX =
 "friendica-to-smarty-tpl_8py.html#a38503e37fe68ac27c88cce91a9ac9efa",
 "include_2network_8php.html#a8d5a3afb51cc932032b5dcc159efaae0",
 "poco_8php.html",
-"viewconnections_8php.html"
+"text_8php.html#afdc69fe3f6c09e35e46304dcea63ae28"
 ];
 
 var SYNCONMSG = 'click to disable panel synchronisation';

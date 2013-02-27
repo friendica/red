@@ -10,6 +10,7 @@ var searchData=
   ['head_5fget_5fjs',['head_get_js',['../plugin_8php.html#a65ab52cb1a7030d5190e247211bef2a1',1,'plugin.php']]],
   ['help',['help',['../namespacefriendica-to-smarty-tpl.html#af6b2c793958aae2aadc294577431f749',1,'friendica-to-smarty-tpl.help()'],['../namespaceupdatetpl.html#ac9d11279fed403a329a719298feafc4f',1,'updatetpl.help()']]],
   ['help_5fcontent',['help_content',['../help_8php.html#af055e15f600ffa6fbca9386fdf715224',1,'help.php']]],
+  ['hex2bin',['hex2bin',['../text_8php.html#ab4271a418a865c14514bc52e8d194ea0',1,'text.php']]],
   ['hostxrd_5finit',['hostxrd_init',['../hostxrd_8php.html#aa37ffc8e7900bc76c4828bd25916db92',1,'hostxrd.php']]],
   ['html2bb_5fvideo',['html2bb_video',['../text_8php.html#a138a3a611fa7f4f3630674145fc826bf',1,'text.php']]],
   ['html2bbcode',['html2bbcode',['../html2bbcode_8php.html#a5ad726995ac4070213abdb3bd09f4837',1,'html2bbcode.php']]],

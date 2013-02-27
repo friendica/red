@@ -8,6 +8,7 @@ var searchData=
   ['account_5fverify_5fpassword',['account_verify_password',['../auth_8php.html#a07bae0e623e2daa9ee2cd5a8aa294dee',1,'auth.php']]],
   ['acknowledge_5fpermissions',['acknowledge_permissions',['../classProtoDriver.html#a1593f3abae050edbd9304f4f8bc4894a',1,'ProtoDriver\acknowledge_permissions()'],['../classZotDriver.html#a3cfdf443da4e5326e205855d7c0054f2',1,'ZotDriver\acknowledge_permissions()']]],
   ['acl_5finit',['acl_init',['../acl_8php.html#ac6776dba871806ecdb5d1659bc2eb07a',1,'acl.php']]],
+  ['activity_5fmatch',['activity_match',['../text_8php.html#af8a3e3a66a7b862d4510f145d2e13186',1,'text.php']]],
   ['activity_5fsanitise',['activity_sanitise',['../items_8php.html#a36e656667193c83aa2cc03a024fc131b',1,'items.php']]],
   ['add_5fchild',['add_child',['../classItem.html#a80dcd9d0f548c3ad550abe7e6981fb51',1,'Item']]],
   ['add_5fchildren_5fto_5flist',['add_children_to_list',['../conversation_8php.html#ad3e1d4b15e7d6d026ee182edd58f692b',1,'conversation.php']]],
@@ -36,6 +37,7 @@ var searchData=
   ['allowed_5femail',['allowed_email',['../include_2network_8php.html#aba38458a2ff2d92d3536488dbb119694',1,'network.php']]],
   ['allowed_5fpublic_5frecips',['allowed_public_recips',['../zot_8php.html#a703f528ade8382cf374e4119bd6f7859',1,'zot.php']]],
   ['allowed_5furl',['allowed_url',['../include_2network_8php.html#aee35d9ad6b3f872bfb39ba3598936aa7',1,'network.php']]],
+  ['alt_5fpager',['alt_pager',['../text_8php.html#a75c243e06341ec16bd5a44b9b1cacd85',1,'text.php']]],
   ['api_5faccount_5flogout',['api_account_logout',['../include_2api_8php.html#a2e94eab9d6c164bfef7a1b2ab87b339b',1,'api.php']]],
   ['api_5faccount_5frate_5flimit_5fstatus',['api_account_rate_limit_status',['../include_2api_8php.html#ae8f5863e18d69421005c71441c9d99a5',1,'api.php']]],
   ['api_5faccount_5fverify_5fcredentials',['api_account_verify_credentials',['../include_2api_8php.html#a864191bb876a515ed71b17e260ef35ad',1,'api.php']]],
@@ -99,6 +101,8 @@ var searchData=
   ['attach_5finit',['attach_init',['../mod_2attach_8php.html#aa88eb5ad87aa1036a30e70339cc6c1b1',1,'attach.php']]],
   ['attach_5flist_5ffiles',['attach_list_files',['../include_2attach_8php.html#a3634af95f11a023dd8e882c3c7a3600d',1,'attach.php']]],
   ['attach_5fstore',['attach_store',['../include_2attach_8php.html#a84a8a64c4805e1525b42d4add464833f',1,'attach.php']]],
+  ['attribute_5fcontains',['attribute_contains',['../text_8php.html#a95fd2f8f23a1948414a03ebc963bac57',1,'text.php']]],
   ['authenticate_5fsuccess',['authenticate_success',['../security_8php.html#adc7bf51e3b8d67bd80e9348f9ab03733',1,'security.php']]],
+  ['autoname',['autoname',['../text_8php.html#a27cd2c1b3bcb49a0cfb7249e851725ca',1,'text.php']]],
   ['avatar_5fimg',['avatar_img',['../include_2network_8php.html#ab07ce9d75eae559865ed90aad2154bd7',1,'network.php']]]
 ];

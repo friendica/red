@@ -12,6 +12,7 @@ var searchData=
   ['help',['help',['../namespacefriendica-to-smarty-tpl.html#af6b2c793958aae2aadc294577431f749',1,'friendica-to-smarty-tpl.help()'],['../namespaceupdatetpl.html#ac9d11279fed403a329a719298feafc4f',1,'updatetpl.help()']]],
   ['help_2ephp',['help.php',['../help_8php.html',1,'']]],
   ['help_5fcontent',['help_content',['../help_8php.html#af055e15f600ffa6fbca9386fdf715224',1,'help.php']]],
+  ['hex2bin',['hex2bin',['../text_8php.html#ab4271a418a865c14514bc52e8d194ea0',1,'text.php']]],
   ['home_2ephp',['home.php',['../home_8php.html',1,'']]],
   ['hostxrd_2ephp',['hostxrd.php',['../hostxrd_8php.html',1,'']]],
   ['hostxrd_5finit',['hostxrd_init',['../hostxrd_8php.html#aa37ffc8e7900bc76c4828bd25916db92',1,'hostxrd.php']]],

@@ -1,7 +1,8 @@
 var searchData=
 [
   ['random_5fprofile',['random_profile',['../Contact_8php.html#a91281b5d4bbbb2ed468e27ec82ca083c',1,'Contact.php']]],
-  ['random_5fstring_5fhex',['RANDOM_STRING_HEX',['../text_8php.html#a5bb69d560e9d8a9acc8778eba6cf2f4e',1,'text.php']]],
+  ['random_5fstring',['random_string',['../text_8php.html#a9d6a5ee1290de7a8b483fe78585daade',1,'text.php']]],
+  ['random_5fstring_5fhex',['RANDOM_STRING_HEX',['../text_8php.html#aad557c054cf2ed915633701018fc7e3f',1,'text.php']]],
   ['random_5fstring_5ftext',['RANDOM_STRING_TEXT',['../text_8php.html#a2ffd79c60cc87cec24ef76447b905187',1,'text.php']]],
   ['randprof_2ephp',['randprof.php',['../randprof_8php.html',1,'']]],
   ['randprof_5finit',['randprof_init',['../randprof_8php.html#abf5dba3c608b9304cbf68327cd31b090',1,'randprof.php']]],
@@ -33,8 +34,10 @@ var searchData=
   ['removeme_5fpost',['removeme_post',['../removeme_8php.html#a7be08738beca44bb98a79e01cdb2ee88',1,'removeme.php']]],
   ['render_5flocation_5fdefault',['render_location_default',['../conversation_8php.html#a40b9b5e7825bc73932a32e667f05e6f2',1,'conversation.php']]],
   ['replace',['replace',['../classTemplate.html#a285b5b2007dbbf733476273df3fed4ef',1,'Template']]],
+  ['replace_5fmacros',['replace_macros',['../text_8php.html#a9c6ce4e12a4ac883c5e3f36fed6e1e09',1,'text.php']]],
   ['request_5ftoken_5fduration',['REQUEST_TOKEN_DURATION',['../oauth_8php.html#a7a32a5990f113ac9465b03b29175cf16',1,'oauth.php']]],
   ['requestdata',['requestdata',['../include_2api_8php.html#a43c47de8565cc00c3369cb35c19cc75e',1,'api.php']]],
+  ['return_5fbytes',['return_bytes',['../text_8php.html#ae2126da85966da0e79c6bcbac63b0bda',1,'text.php']]],
   ['rmagic_2ephp',['rmagic.php',['../rmagic_8php.html',1,'']]],
   ['rmagic_5fcontent',['rmagic_content',['../rmagic_8php.html#a3e28db1e5cfa7e5c2617f90222c1caef',1,'rmagic.php']]],
   ['rmagic_5finit',['rmagic_init',['../rmagic_8php.html#a95455edd43f1bff39446a57388cdde16',1,'rmagic.php']]],

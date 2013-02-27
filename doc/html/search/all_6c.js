@@ -1,5 +1,6 @@
 var searchData=
 [
+  ['lang_5fselector',['lang_selector',['../text_8php.html#a71f6952243d3fe1c5a8154f78027e29c',1,'text.php']]],
   ['language_2ephp',['language.php',['../language_8php.html',1,'']]],
   ['language_5fdetect_5fmin_5fconfidence',['LANGUAGE_DETECT_MIN_CONFIDENCE',['../boot_8php.html#a68d1d5bc9c7ccb663dc671b48c66df11',1,'boot.php']]],
   ['language_5fdetect_5fmin_5flength',['LANGUAGE_DETECT_MIN_LENGTH',['../boot_8php.html#a17cf72338b040891781a4bcbdd9a8595',1,'boot.php']]],
@@ -7,6 +8,8 @@ var searchData=
   ['legal_5fwebbie',['legal_webbie',['../text_8php.html#a2690ad67bb6fb97ef69de3e8d23f2728',1,'text.php']]],
   ['like_2ephp',['like.php',['../like_8php.html',1,'']]],
   ['like_5fcontent',['like_content',['../like_8php.html#a9d7dd268f21c21e9d29dd2aca2dd9538',1,'like.php']]],
+  ['link_5fcompare',['link_compare',['../text_8php.html#a47c1e4a5f3f53027daacd8a9db24f285',1,'text.php']]],
+  ['linkify',['linkify',['../text_8php.html#a11255c8c4e5245b6c24f97684826aa54',1,'text.php']]],
   ['load_5fconfig',['load_config',['../include_2config_8php.html#a27559f388c9b9af81c94e48d6889d1d1',1,'config.php']]],
   ['load_5fcontact_5flinks',['load_contact_links',['../boot_8php.html#a719c7f3972d5f9268f37a41c76cd4ef6',1,'boot.php']]],
   ['load_5fdatabase',['load_database',['../setup_8php.html#ad2e0375a9ab87ebe6e78124ee125054a',1,'setup.php']]],
@@ -17,6 +20,7 @@ var searchData=
   ['localize_5fitem',['localize_item',['../conversation_8php.html#afea815dd1768e8417d2b30be53e9e0b4',1,'conversation.php']]],
   ['lockview_2ephp',['lockview.php',['../lockview_8php.html',1,'']]],
   ['lockview_5fcontent',['lockview_content',['../lockview_8php.html#a851e26ab9a1008df5c5ebebea31e9b44',1,'lockview.php']]],
+  ['logger',['logger',['../text_8php.html#a030fa5ecc64168af0c4f44897a9bce63',1,'text.php']]],
   ['logger_5fall',['LOGGER_ALL',['../boot_8php.html#afe63ae69ba55299f813766e54df06ede',1,'boot.php']]],
   ['logger_5fdata',['LOGGER_DATA',['../boot_8php.html#a6969947145a139ec374ce098224d8e81',1,'boot.php']]],
   ['logger_5fdebug',['LOGGER_DEBUG',['../boot_8php.html#a93823d15ae07548a4c49de88d325cd26',1,'boot.php']]],

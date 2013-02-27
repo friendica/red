@@ -2,8 +2,10 @@ var searchData=
 [
   ['uexport_2ephp',['uexport.php',['../uexport_8php.html',1,'']]],
   ['uexport_5finit',['uexport_init',['../uexport_8php.html#a118920137dedebe0581623a2e57e7b0d',1,'uexport.php']]],
+  ['unamp',['unamp',['../text_8php.html#a29d6b804e368d3ef359ee295e96ed4c7',1,'text.php']]],
   ['undo_5fpost_5ftagging',['undo_post_tagging',['../text_8php.html#a740ad03e00459039a2c0992246c4e727',1,'text.php']]],
   ['unescape_5funderscores_5fin_5flinks',['unescape_underscores_in_links',['../bb2diaspora_8php.html#a599428bceb6f6d82a6a78cb66811f747',1,'bb2diaspora.php']]],
+  ['unxmlify',['unxmlify',['../text_8php.html#a1360fed7f918d859daaca1c9f384f9af',1,'text.php']]],
   ['update_5fchannel_2ephp',['update_channel.php',['../update__channel_8php.html',1,'']]],
   ['update_5fchannel_5fcontent',['update_channel_content',['../update__channel_8php.html#aca52a9da500f0db2f0a8666af5bc06ba',1,'update_channel.php']]],
   ['update_5fcommunity_2ephp',['update_community.php',['../update__community_8php.html',1,'']]],

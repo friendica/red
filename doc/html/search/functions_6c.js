@@ -1,7 +1,10 @@
 var searchData=
 [
+  ['lang_5fselector',['lang_selector',['../text_8php.html#a71f6952243d3fe1c5a8154f78027e29c',1,'text.php']]],
   ['legal_5fwebbie',['legal_webbie',['../text_8php.html#a2690ad67bb6fb97ef69de3e8d23f2728',1,'text.php']]],
   ['like_5fcontent',['like_content',['../like_8php.html#a9d7dd268f21c21e9d29dd2aca2dd9538',1,'like.php']]],
+  ['link_5fcompare',['link_compare',['../text_8php.html#a47c1e4a5f3f53027daacd8a9db24f285',1,'text.php']]],
+  ['linkify',['linkify',['../text_8php.html#a11255c8c4e5245b6c24f97684826aa54',1,'text.php']]],
   ['load_5fconfig',['load_config',['../include_2config_8php.html#a27559f388c9b9af81c94e48d6889d1d1',1,'config.php']]],
   ['load_5fcontact_5flinks',['load_contact_links',['../boot_8php.html#a719c7f3972d5f9268f37a41c76cd4ef6',1,'boot.php']]],
   ['load_5fdatabase',['load_database',['../setup_8php.html#ad2e0375a9ab87ebe6e78124ee125054a',1,'setup.php']]],
@@ -11,6 +14,7 @@ var searchData=
   ['local_5fuser',['local_user',['../boot_8php.html#ad4c9dc2c8a82e8f52b7404c1655eab44',1,'boot.php']]],
   ['localize_5fitem',['localize_item',['../conversation_8php.html#afea815dd1768e8417d2b30be53e9e0b4',1,'conversation.php']]],
   ['lockview_5fcontent',['lockview_content',['../lockview_8php.html#a851e26ab9a1008df5c5ebebea31e9b44',1,'lockview.php']]],
+  ['logger',['logger',['../text_8php.html#a030fa5ecc64168af0c4f44897a9bce63',1,'text.php']]],
   ['login',['login',['../boot_8php.html#aefecf8599036df7f1b95d6820e0e2fa4',1,'boot.php']]],
   ['login_5fcontent',['login_content',['../login_8php.html#a1d69ca88eb9005a7026e128b9a645904',1,'login.php']]],
   ['loginuser',['loginUser',['../classFKOAuth1.html#a2b1dac2ed31fc6ef84668afdda8b263f',1,'FKOAuth1']]],

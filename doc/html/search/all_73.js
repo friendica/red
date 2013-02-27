@@ -1,6 +1,7 @@
 var searchData=
 [
   ['salmon_5fkey',['salmon_key',['../crypto_8php.html#a9191447cc46f0b4eaba3273e313994d5',1,'crypto.php']]],
+  ['sanitise_5facl',['sanitise_acl',['../text_8php.html#a9fbeae13c9abd6e27cb4d8d1817f969c',1,'text.php']]],
   ['saved_5fsearches',['saved_searches',['../mod_2network_8php.html#a36e03af6f2efe62ecaa247509365bfad',1,'network.php']]],
   ['saveimage',['saveImage',['../classPhoto.html#af522871c8ab451155b9745fa7f057943',1,'Photo']]],
   ['scale_5fexternal_5fimages',['scale_external_images',['../include_2network_8php.html#ae8d9c41a11000fb8667039fc71b4f73f',1,'network.php']]],
@@ -8,6 +9,7 @@ var searchData=
   ['scaleimagesquare',['scaleImageSquare',['../classPhoto.html#a080a5219eb09c2621dabeae153ce6a03',1,'Photo']]],
   ['scaleimageup',['scaleImageUp',['../classPhoto.html#a735eb657277e7a46cebe7f6fde0af80a',1,'Photo']]],
   ['scrape_2ephp',['Scrape.php',['../Scrape_8php.html',1,'']]],
+  ['search',['search',['../text_8php.html#a876e94892867019935b348b573299352',1,'text.php']]],
   ['search_2ephp',['search.php',['../search_8php.html',1,'']]],
   ['search_5fac_2ephp',['search_ac.php',['../search__ac_8php.html',1,'']]],
   ['search_5fac_5finit',['search_ac_init',['../search__ac_8php.html#a14f90c83a3f2be095e9e2992a8d66138',1,'search_ac.php']]],
@@ -63,7 +65,8 @@ var searchData=
   ['siteinfo_5fcontent',['siteinfo_content',['../siteinfo_8php.html#a70c09bfb6dd1c86a125a35f62ed53656',1,'siteinfo.php']]],
   ['siteinfo_5finit',['siteinfo_init',['../siteinfo_8php.html#a3efbd0bd6564af19ec0a9ce0294e59d0',1,'siteinfo.php']]],
   ['smile_5fdecode',['smile_decode',['../text_8php.html#aca0f589be74fab1a460c57e88dad9779',1,'text.php']]],
-  ['smile_5fencode',['smile_encode',['../text_8php.html#a6232a23958366a80955a5782f4ba9073',1,'text.php']]],
+  ['smile_5fencode',['smile_encode',['../text_8php.html#a44d460fcdee6247c67b9bef3ea15f3e6',1,'text.php']]],
+  ['smilies',['smilies',['../text_8php.html#a3d225b253bb9e0f2498c11647d927b0b',1,'text.php']]],
   ['smilies_2ephp',['smilies.php',['../smilies_8php.html',1,'']]],
   ['smilies_5fcontent',['smilies_content',['../smilies_8php.html#ab43b1e9f33a700a830aff14c7b3a617f',1,'smilies.php']]],
   ['socgraph_2ephp',['socgraph.php',['../socgraph_8php.html',1,'']]],
@@ -81,6 +84,7 @@ var searchData=
   ['status_5feditor',['status_editor',['../conversation_8php.html#aedf008b9eac87f693d7dcc1a01404d85',1,'conversation.php']]],
   ['store',['store',['../classPhoto.html#a15e21237805d5f1019b4e40322389194',1,'Photo']]],
   ['store_5fitem_5ftag',['store_item_tag',['../text_8php.html#a4ba1339b2a7054971178ce194e4440fd',1,'text.php']]],
+  ['str_5fgetcsv',['str_getcsv',['../text_8php.html#a480af6bb75133a3e6fbe9d5a23a074ca',1,'text.php']]],
   ['stream_5fperms_5fapi_5fuids',['stream_perms_api_uids',['../security_8php.html#ae92c5c1a1cbbc49ddbb8b3265d2db809',1,'security.php']]],
   ['stringify_5farray_5felms',['stringify_array_elms',['../text_8php.html#a8796f6a9ca592ecdce7b3afc3462aa13',1,'text.php']]],
   ['stripdcode_5fbr_5fcb',['stripdcode_br_cb',['../bb2diaspora_8php.html#a180b0e3a7d702998be19e3c3b44b0e93',1,'bb2diaspora.php']]],

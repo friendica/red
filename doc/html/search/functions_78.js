@@ -6,5 +6,6 @@ var searchData=
   ['xchan_5fquery',['xchan_query',['../text_8php.html#a24b2b69b9162da789ab6514e0e09a37c',1,'text.php']]],
   ['xml2array',['xml2array',['../include_2network_8php.html#a99353baabbc3e0584b85eb79ee802cff',1,'network.php']]],
   ['xml_5fstatus',['xml_status',['../include_2network_8php.html#a9e9da2aafb806c98ecdc318604e60dc6',1,'network.php']]],
+  ['xmlify',['xmlify',['../text_8php.html#aaed4413ed8918838b517e3b2fafaea0d',1,'text.php']]],
   ['xrd_5finit',['xrd_init',['../xrd_8php.html#aee3cf087968e4a0ff3a87de16eb23270',1,'xrd.php']]]
 ];

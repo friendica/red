@@ -3,6 +3,7 @@ var searchData=
   ['datesel',['datesel',['../datetime_8php.html#ac265b86f384ee094ed5479aae02aa5c8',1,'datetime.php']]],
   ['datesel_5fformat',['datesel_format',['../datetime_8php.html#a5f29553799005b1fd4e9ce9d98ce05aa',1,'datetime.php']]],
   ['datetime_5fconvert',['datetime_convert',['../datetime_8php.html#ad6301e74b0f9267d52f8d432b5beb226',1,'datetime.php']]],
+  ['day_5ftranslate',['day_translate',['../text_8php.html#a63fb21c0bed2fc72eef2c1471ac42b63',1,'text.php']]],
   ['dba_5ftimer',['dba_timer',['../boot_8php.html#a3e0930933fb2c0bf8211cc7ab4e1c3b4',1,'boot.php']]],
   ['dbesc',['dbesc',['../dba_8php.html#ab222aa1dbf9ea93b320f82028739127e',1,'dba.php']]],
   ['dbesc_5farray',['dbesc_array',['../dba_8php.html#a65b83462bd26968106aebd43f16540e4',1,'dba.php']]],
@@ -36,6 +37,7 @@ var searchData=
   ['dirsearch_5finit',['dirsearch_init',['../dirsearch_8php.html#a3e51964ae3f5ff147403407b65324752',1,'dirsearch.php']]],
   ['discover',['discover',['../classProtoDriver.html#a64a3868cffe27d601d55f69a2ecc4337',1,'ProtoDriver\discover()'],['../classZotDriver.html#a40d328ff9f6b0a238afe286dddee1514',1,'ZotDriver\discover()']]],
   ['display_5fcontent',['display_content',['../display_8php.html#a37137c98d47bf3306f4c2bb9f5b60de0',1,'display.php']]],
+  ['dlogger',['dlogger',['../text_8php.html#a0a1f7c0e97f9ecbebf3e5834582b014c',1,'text.php']]],
   ['dob',['dob',['../datetime_8php.html#a3f2897db32e745fe2f3e70a6b46578f8',1,'datetime.php']]],
   ['drop_5fitem',['drop_item',['../items_8php.html#afa1db13c2a8b73b5b17b97f17e5a19d1',1,'items.php']]],
   ['drop_5fitems',['drop_items',['../items_8php.html#a668ece2c37f05cc3abe538eb0dabfe55',1,'items.php']]]
