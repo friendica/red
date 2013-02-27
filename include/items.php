@@ -125,8 +125,8 @@ function get_feed_for(&$a, $dfrn_id, $owner_nick, $last_update, $direction = 0) 
 	$owner = $r[0];
 	$owner_id = $owner['user_uid'];
 	$owner_nick = $owner['nickname'];
-
-	$birthday = feed_birthday($owner_id,$owner['timezone']);
+// feed_birthday no longer exists
+//	$birthday = feed_birthday($owner_id,$owner['timezone']);
 
 	if(! $public_feed) {
 
