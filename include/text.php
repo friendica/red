@@ -223,6 +223,7 @@ function unxmlify($s) {
 // convenience wrapper, reverse the operation "bin2hex"
 
 
+if(! function_exists('hex2bin')) {
 function hex2bin($s) {
 	if(! (is_string($s) && strlen($s)))
 		return '';
@@ -232,7 +233,8 @@ function hex2bin($s) {
 	}
 
 	return(pack("H*",$s));
-}
+}}
+
 
 // Automatic pagination.
 // To use, get the count of total items.
