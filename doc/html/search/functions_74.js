@@ -12,8 +12,6 @@ var searchData=
   ['term_5fquery',['term_query',['../text_8php.html#a7a913d19c77610da689be48fbbf6734c',1,'text.php']]],
   ['terminate_5ffriendship',['terminate_friendship',['../Contact_8php.html#a38daa1c210b78385307123450ca9a1fc',1,'Contact.php']]],
   ['termtype',['termtype',['../items_8php.html#ad34827ed330898456783fb14c7b46154',1,'items.php']]],
-  ['test_5fcontent',['test_content',['../test_8php.html#aaff133c1f566a332b5a3ae41b70941f8',1,'test.php']]],
-  ['test_5finit',['test_init',['../test_2php_2theme_8php.html#ad4235a22a5389b2291cdee55677e3cc5',1,'theme.php']]],
   ['tgroup_5fcheck',['tgroup_check',['../items_8php.html#a88c6cf7649ac836fbbed82a7a0315110',1,'items.php']]],
   ['theme_5fcontent',['theme_content',['../view_2theme_2redbasic_2php_2config_8php.html#aa7d5739b72efef9822535b2b32d5364d',1,'config.php']]],
   ['theme_5finclude',['theme_include',['../plugin_8php.html#a65fedcffbe03562ef844cabee37d34e2',1,'plugin.php']]],

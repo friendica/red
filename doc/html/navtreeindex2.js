@@ -180,8 +180,6 @@ var NAVTREEINDEX2 =
 "dir_55dbaf9b7b53c4fc605c9011743a7353.html":[4,0,3,1,0],
 "dir_817f6d302394b98e59575acdb59998bc.html":[4,0,3,0],
 "dir_8543001e5d25368a6edede3e63efb554.html":[4,0,3,1],
-"dir_8e4ceba158be32034f698ffd6810bb05.html":[4,0,3,1,1],
-"dir_955ae6074e6c84afe72925e364242b14.html":[4,0,3,1,1,0],
 "dir__fns_8php.html":[4,0,0,22],
 "dir__fns_8php.html#a6cae22cfdd6edda5ddf09e07abb3242a":[4,0,0,22,1],
 "dir__fns_8php.html#a8c15aa69da12f2d3476b9e93b82b337d":[4,0,0,22,0],
@@ -249,5 +247,7 @@ var NAVTREEINDEX2 =
 "fpostit_8php.html#a3f3ae3ae61578b5671673914fd894443":[4,0,2,0,0,0],
 "fpostit_8php.html#a501b5ca82f287509fc691c88524064c1":[4,0,2,0,0,1],
 "friendica-to-smarty-tpl_8py.html":[4,0,2,4],
-"friendica-to-smarty-tpl_8py.html#a005c1b7a69cac31fad72a941974ba7bb":[4,0,2,4,11]
+"friendica-to-smarty-tpl_8py.html#a005c1b7a69cac31fad72a941974ba7bb":[4,0,2,4,11],
+"friendica-to-smarty-tpl_8py.html#a0b4cf73d1a8d201a28d269eeb62a5d5c":[4,0,2,4,8],
+"friendica-to-smarty-tpl_8py.html#a3719dd46e286a57d315e6adae1845854":[4,0,2,4,1]
 };

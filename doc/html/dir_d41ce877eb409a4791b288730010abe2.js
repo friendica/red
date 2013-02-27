@@ -88,7 +88,6 @@ var dir_d41ce877eb409a4791b288730010abe2 =
     [ "suggest.php", "suggest_8php.html", "suggest_8php" ],
     [ "tagger.php", "tagger_8php.html", "tagger_8php" ],
     [ "tagrm.php", "tagrm_8php.html", "tagrm_8php" ],
-    [ "test.php", "test_8php.html", "test_8php" ],
     [ "toggle_mobile.php", "toggle__mobile_8php.html", "toggle__mobile_8php" ],
     [ "uexport.php", "uexport_8php.html", "uexport_8php" ],
     [ "update_channel.php", "update__channel_8php.html", "update__channel_8php" ],

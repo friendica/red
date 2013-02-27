@@ -8,7 +8,7 @@ var searchData=
   ['rdelim',['rdelim',['../namespacefriendica-to-smarty-tpl.html#a8540514fb7c4aa18ad2dffa2a975036b',1,'friendica-to-smarty-tpl']]],
   ['rebuild_5ftheme_5ftable',['rebuild_theme_table',['../admin_8php.html#ae46311a3fefc21abc838a26e91789de6',1,'admin.php']]],
   ['redbasic_5fform',['redbasic_form',['../view_2theme_2redbasic_2php_2config_8php.html#af58e97b437c1e98a5e434886494cc70e',1,'config.php']]],
-  ['redbasic_5finit',['redbasic_init',['../redbasic_2php_2theme_8php.html#af6eb813e9fc7e2d76ac1b82bc5c0ed9b',1,'theme.php']]],
+  ['redbasic_5finit',['redbasic_init',['../theme_8php.html#af6eb813e9fc7e2d76ac1b82bc5c0ed9b',1,'theme.php']]],
   ['redir_2ephp',['redir.php',['../redir_8php.html',1,'']]],
   ['redir_5finit',['redir_init',['../redir_8php.html#a9ac266c3f5cf0d94ef63e6d0f2edf1f5',1,'redir.php']]],
   ['reduce',['reduce',['../docblox__errorchecker_8php.html#ae9562cf60aa693114603d27b55d2185f',1,'docblox_errorchecker.php']]],

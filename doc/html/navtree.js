@@ -37,10 +37,10 @@ var NAVTREEINDEX =
 "BaseObject_8php.html",
 "boot_8php.html#ab54b24cc302e1a42a67a49d788b6b764",
 "classPhoto.html#a4ff11117ada771637a61a668d2af6636",
-"friendica-to-smarty-tpl_8py.html#a0b4cf73d1a8d201a28d269eeb62a5d5c",
-"include_2network_8php.html#a850ed5307c6a18076f4b80addc99602d",
-"po2php_8php.html",
-"updatetpl_8py.html#ae694f5e1f25f8a92a945eb90c432dfe6"
+"friendica-to-smarty-tpl_8py.html#a38503e37fe68ac27c88cce91a9ac9efa",
+"include_2network_8php.html#a8d5a3afb51cc932032b5dcc159efaae0",
+"poco_8php.html",
+"viewconnections_8php.html"
 ];
 
 var SYNCONMSG = 'click to disable panel synchronisation';

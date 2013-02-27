@@ -9,6 +9,5 @@ var searchData=
   ['term_5fpcategory',['TERM_PCATEGORY',['../boot_8php.html#a45b12aefab9675baffc7a07a09486db8',1,'boot.php']]],
   ['term_5fsavedsearch',['TERM_SAVEDSEARCH',['../boot_8php.html#abd7bb40da9cc073297e49736b338ca07',1,'boot.php']]],
   ['term_5funknown',['TERM_UNKNOWN',['../boot_8php.html#a0c59dde058efebbc66520d136cbd1631',1,'boot.php']]],
-  ['theme_5finfo',['theme_info',['../test_2php_2theme_8php.html#ae74b5c3ec259b616b5137f6cfc591fb5',1,'theme.php']]],
   ['tplpaths',['tplpaths',['../namespaceupdatetpl.html#a52a85ffa6b6d63d840b185a133478c12',1,'updatetpl']]]
 ];
