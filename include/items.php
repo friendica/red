@@ -773,6 +773,12 @@ function encode_mail($item) {
 	$x['from']           = encode_item_xchan($item['from']);
 	$x['to']             = encode_item_xchan($item['to']);
 
+	if($item['mail_flags'] & MAIL_RECALLED) {
+		$x['flags'] = 'recalled';
+		$x['title'] = '';
+		$x['body']  = '';
+	}
+
 	return $x;
 }
 
@@ -785,6 +791,15 @@ function get_mail_elements($x) {
 	$arr['body']         = (($x['body']) ? htmlentities($x['body'],ENT_COMPAT,'UTF-8',false) : '');
 
 	$arr['created']      = datetime_convert('UTC','UTC',$x['created']);
+
+	$arr['mail_flags'] = 0;
+
+	if($x['flags'] && is_array($x['flags'])) {
+		if(in_array('recalled',$x['flags'])) {
+			$arr['mail_flags'] &= MAIL_RECALLED;
+		}
+	}
+
 
 	if($arr['created'] > datetime_convert())
 		$arr['created']  = datetime_convert();

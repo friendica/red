@@ -999,7 +999,16 @@ function process_mail_delivery($sender,$arr,$deliveries) {
 			intval($channel['channel_id'])
 		);
 		if($r) {
-			logger('duplicate mail received');
+			if($arr['mail_flags'] & MAIL_RECALLED) {
+				$x = q("delete from mail where id = %d and channel_id = %d limit 1",
+					intval($r[0]['id']),
+					intval($channel['channel_id'])
+				);
+				logger('mail_recalled');
+			}
+			else {				
+				logger('duplicate mail received');
+			}
 			continue;
 		}
 		else {

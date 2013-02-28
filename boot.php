@@ -224,6 +224,7 @@ define ( 'MAIL_DELETED',       0x0001);
 define ( 'MAIL_REPLIED',       0x0002);
 define ( 'MAIL_ISREPLY',       0x0004);
 define ( 'MAIL_SEEN',          0x0008);
+define ( 'MAIL_RECALLED',      0x0010);
 
 
 define ( 'ATTACH_FLAG_DIR',    0x0001);
