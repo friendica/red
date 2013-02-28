@@ -13,10 +13,14 @@
 		<input type="hidden" name="location" id="jot-location" value="$defloc" />
 		<input type="hidden" name="coord" id="jot-coord" value="" />
 		<input type="hidden" name="post_id" value="$post_id" />
+		<input type="hidden" name="webpage" value="$webpage" />
 		<input type="hidden" name="preview" id="jot-preview" value="0" />
 		<div id="jot-title-wrap"><input name="title" id="jot-title" type="text" placeholder="$placeholdertitle" value="$title" class="jothidden" style="display:none"></div>
 		{{ if $catsenabled }}
 		<div id="jot-category-wrap"><input name="category" id="jot-category" type="text" placeholder="$placeholdercategory" value="$category" class="jothidden" style="display:none" /></div>
+		{{ endif }}
+		{{ if $webpage }}
+		<div id="jot-pagetitle-wrap"><input name="pagetitle" id="jot-pagetitle" type="text" placeholder="$placeholdpagetitle" value="$pagetitle" class="jothidden" style="display:none" /></div>
 		{{ endif }}
 		<div id="jot-text-wrap">
 		<img id="profile-jot-text-loading" src="images/rotator.gif" alt="$wait" title="$wait" style="display: none;" />
