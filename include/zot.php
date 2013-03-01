@@ -921,8 +921,10 @@ function process_delivery($sender,$arr,$deliveries,$relay) {
 			intval($channel['channel_id'])
 		);
 		if($r) {
-			if($arr['edited'] > $r[0]['edited'])
+			if($arr['edited'] > $r[0]['edited']) {
+				$arr['id'] = $r[0]['id'];
 				update_imported_item($sender,$arr,$channel['channel_id']);
+			}	
 			$result[] = array($d['hash'],'updated');
 			$item_id = $r[0]['id'];
 		}
@@ -950,7 +952,8 @@ function process_delivery($sender,$arr,$deliveries,$relay) {
 
 
 function update_imported_item($sender,$item,$uid) {
-// FIXME
+
+	item_store_update($arr);
 	logger('update_imported_item');
 
 }

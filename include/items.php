@@ -1574,6 +1574,172 @@ function item_store($arr,$force_parent = false) {
 }
 
 
+
+function item_store_update($arr,$force_parent = false) {
+
+	if(! intval($arr['uid'])) {
+		logger('item_store_update: no uid');
+		return 0;
+	}
+	if(! intval($arr['id'])) {
+		logger('item_store_update: no id');
+		return 0;
+	}
+
+	$orig_post_id = $arr['id'];
+	unset($arr['id']);
+	$uid = $arr['uid'];
+	unset($arr['uid']);
+	
+
+	$arr['lang'] = detect_language($arr['body']);
+
+	$allowed_languages = get_pconfig($arr['uid'],'system','allowed_languages');
+	
+	if((is_array($allowed_languages)) && ($arr['lang']) && (! array_key_exists($arr['lang'],$allowed_languages))) {
+		$translate = array('item' => $arr, 'from' => $arr['lang'], 'to' => $allowed_languages, 'translated' => false);
+		call_hooks('item_translate', $translate);
+		if((! $translate['translated']) && (intval(get_pconfig($arr['uid'],'system','reject_disallowed_languages')))) {
+			logger('item_store: language ' . $arr['lang'] . ' not accepted for uid ' . $arr['uid']);
+			return;
+		}
+		$arr = $translate['item'];
+	}
+
+	// Shouldn't happen but we want to make absolutely sure it doesn't leak from a plugin.
+
+	if((strpos($arr['body'],'<') !== false) || (strpos($arr['body'],'>') !== false)) 
+		$arr['body'] = escape_tags($arr['body']);
+
+	if((x($arr,'object')) && is_array($arr['object'])) {
+		activity_sanitise($arr['object']);
+		$arr['object'] = json_encode($arr['object']);
+	}
+
+	if((x($arr,'target')) && is_array($arr['target'])) {
+		activity_sanitise($arr['target']);
+		$arr['target'] = json_encode($arr['target']);
+	}
+
+	if((x($arr,'attach')) && is_array($arr['attach'])) {
+		activity_sanitise($arr['attach']);
+		$arr['attach'] = json_encode($arr['attach']);
+	}
+
+	$orig = q("select * from item where id = %d and uid = %d limit 1",
+		intval($orig_post_id),
+		intval($uid)
+	);
+	if(! $orig) {
+		logger('item_store_update: original post not found: ' . $orig_post_id);
+		return 0;
+	}		
+
+	unset($arr['aid']);
+	unset($arr['uri']);
+	unset($arr['parent']);
+	unset($arr['parent_uri']);
+	unset($arr['created']);
+	unset($arr['author_xchan']);
+	unset($arr['owner_xchan']);
+	unset($arr['thr_parent']);
+	unset($arr['llink']);
+
+	$arr['edited']        = ((x($arr,'edited')  !== false) ? datetime_convert('UTC','UTC',$arr['edited'])  : datetime_convert());
+	$arr['expires']        = ((x($arr,'expires')  !== false) ? datetime_convert('UTC','UTC',$arr['expires'])  : $orig[0]['expires']);
+	$arr['commented']     = datetime_convert();
+	$arr['received']      = datetime_convert();
+	$arr['changed']       = datetime_convert();
+	$arr['mimetype']      = ((x($arr,'mimetype'))      ? notags(trim($arr['mimetype']))      : 'text/bbcode');
+	$arr['title']         = ((x($arr,'title'))         ? notags(trim($arr['title']))         : '');
+	$arr['location']      = ((x($arr,'location'))      ? notags(trim($arr['location']))      : '');
+	$arr['coord']         = ((x($arr,'coord'))         ? notags(trim($arr['coord']))         : '');
+	$arr['verb']          = ((x($arr,'verb'))          ? notags(trim($arr['verb']))          : '');
+	$arr['obj_type']      = ((x($arr,'obj_type'))      ? notags(trim($arr['obj_type']))      : '');
+	$arr['object']        = ((x($arr,'object'))        ? trim($arr['object'])                : '');
+	$arr['tgt_type']      = ((x($arr,'tgt_type'))      ? notags(trim($arr['tgt_type']))      : '');
+	$arr['target']        = ((x($arr,'target'))        ? trim($arr['target'])                : '');
+	$arr['plink']         = ((x($arr,'plink'))         ? notags(trim($arr['plink']))         : $orig[0]['plink']);
+	$arr['allow_cid']     = ((x($arr,'allow_cid'))     ? trim($arr['allow_cid'])             : $orig[0]['allow_cid']);
+	$arr['allow_gid']     = ((x($arr,'allow_gid'))     ? trim($arr['allow_gid'])             : $orig[0]['allow_gid']);
+	$arr['deny_cid']      = ((x($arr,'deny_cid'))      ? trim($arr['deny_cid'])              : $orig[0]['deny_cid']);
+	$arr['deny_gid']      = ((x($arr,'deny_gid'))      ? trim($arr['deny_gid'])              : $orig[0]['deny_gid']);
+	$arr['item_private']  = ((x($arr,'item_private'))  ? intval($arr['item_private'])        : $orig[0]['item_private']);
+	$arr['body']          = ((x($arr,'body'))          ? trim($arr['body'])                  : '');
+	$arr['attach']        = ((x($arr,'attach'))        ? notags(trim($arr['attach']))        : '');
+	$arr['app']           = ((x($arr,'app'))           ? notags(trim($arr['app']))           : '');
+	$arr['item_restrict'] = ((x($arr,'item_restrict')) ? intval($arr['item_restrict'])       : $orig[0]['item_restrict'] );
+	$arr['item_flags']    = ((x($arr,'item_flags'))    ? intval($arr['item_flags'])          : $orig[0]['item_flags'] );
+	
+
+	call_hooks('post_remote_update',$arr);
+
+	if(x($arr,'cancel')) {
+		logger('item_store_update: post cancelled by plugin.');
+		return 0;
+	}
+
+	// pull out all the taxonomy stuff for separate storage
+
+	$terms = null;
+	if(array_key_exists('term',$arr)) {
+		$terms = $arr['term'];
+		unset($arr['term']);
+	}
+
+	dbesc_array($arr);
+
+	logger('item_store_update: ' . print_r($arr,true), LOGGER_DATA);
+
+	$str = '';
+		foreach($arr as $k => $v) {
+			if($str)
+				$str .= ",";
+			$str .= " `" . $k . "` = '" . $v . "' ";
+		} 
+
+	$r = dbq("update `item` set " . $str . " where id = " . $orig_post_id . " limit 1");
+
+	if($r)
+		logger('item_store_update: updated item ' . $orig_post_id, LOGGER_DEBUG);
+	else {
+		logger('item_store_update: could not update item');
+		return 0;
+	}
+
+	$r = q("delete from term where oid = %d and otype = %d",
+		intval($orig_post_id),
+		intval(TERM_OBJ_POST)
+	);
+
+	if(($terms) && (is_array($terms))) {
+		foreach($terms as $t) {
+			q("insert into term (uid,oid,otype,type,term,url)
+				values(%d,%d,%d,%d,'%s','%s') ",
+				intval($uid),
+				intval($orig_post_id),
+				intval(TERM_OBJ_POST),
+				intval($t['type']),
+				dbesc($t['term']),
+				dbesc($t['url'])
+			);
+		}
+
+		$arr['term'] = $terms;
+	}	
+
+	call_hooks('post_remote_update_end',$arr);
+
+	send_status_notifications($orig_post_id,$arr);
+
+	tag_deliver($uid,$orig_post_id);
+
+	return $orig_post_id;
+}
+
+
+
+
 function send_status_notifications($post_id,$item) {
 
 	$notify = false;

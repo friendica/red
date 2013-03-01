@@ -10,6 +10,7 @@
  */
 
 require_once('include/permissions.php');
+require_once('include/security.php');
 
 function z_mime_content_type($filename) {
 
@@ -438,5 +439,65 @@ function attach_store($channel,$observer_hash,$options = '',$arr = null) {
 
 	$ret['success'] = true;
 	$ret['data'] = $r[0];
+	return $ret;
+}
+
+
+/**
+ * Read a virtual directory and return contents, checking permissions of all parent components.
+ * @function z_readdir
+ * @param integer $channel_id
+ * @param string $observer_hash
+ * @param string $pathname
+ * @param string $parent_hash (optional)
+ *
+ * @returns array $ret
+ * $ret['success'] = boolean true or false
+ * $ret['message'] = error message if success is false
+ * $ret['data'] = array of attach DB entries without data component
+ */
+
+function z_readdir($channel_id,$observer_hash,$pathname, $parent_hash = '') {
+
+	$ret = array('success' => false);
+	if(! perm_is_allowed($r[0]['uid'],get_observer_hash(),'view_storage')) {
+		$ret['message'] = t('Permission denied.');
+		return $ret;
+	}
+
+
+	if(strpos($pathname,'/')) {
+		$paths = explode('/',$pathname);
+		if(count($paths) > 1) {
+			$curpath = array_shift($paths);
+
+			$r = q("select hash, id from attach where uid = %d and filename = '%s' and (flags & %d ) " . permissions_sql($channel_id) . " limit 1",
+				intval($channel_id),
+				dbesc($curpath),
+				intval(ATTACH_FLAG_DIR)
+			);
+			if(! $r) {
+				$ret['message'] = t('Path not available.');		
+				return $ret;
+			}
+
+			return z_readdir($channel_id,$observer_hash,implode('/',$paths),$r[0]['hash']);
+		}
+	}
+	else
+		$paths = array($pathname);
+	
+	$r = q("select id, aid, uid, hash, filename, filetype, filesize, revision, folder, flags, created, edited, allow_cid, allow_gid, deny_cid, deny_gid from attach where id = %d and folder = '%s' and filename = '%s' and (flags & %d ) " . permissions_sql($channel_id),
+		intval($channel_id),
+		dbesc($parent_hash),
+		dbesc($paths[0]),
+		intval(ATTACH_FLAG_DIR)
+	);
+	if(! $r) {
+		$ret['message'] = t('Path not available.');
+		return $ret;
+	}
+	$ret['success'] = true;
+	$ret['data'] = $r;
 	return $ret;
 }
