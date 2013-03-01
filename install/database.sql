@@ -44,6 +44,7 @@ CREATE TABLE IF NOT EXISTS `account` (
   `account_salt` char(32) NOT NULL DEFAULT '',
   `account_password` char(255) NOT NULL DEFAULT '',
   `account_email` char(255) NOT NULL DEFAULT '',
+  `account_external` char(255) NOT NULL DEFAULT '',
   `account_language` char(16) NOT NULL DEFAULT 'en',
   `account_created` datetime NOT NULL DEFAULT '0000-00-00 00:00:00',
   `account_lastlog` datetime NOT NULL DEFAULT '0000-00-00 00:00:00',
@@ -61,7 +62,8 @@ CREATE TABLE IF NOT EXISTS `account` (
   KEY `account_roles` (`account_roles`),
   KEY `account_lastlog` (`account_lastlog`),
   KEY `account_expires` (`account_expires`),
-  KEY `account_default_channel` (`account_default_channel`)
+  KEY `account_default_channel` (`account_default_channel`),
+  KEY `account_external` (`account_external`)
 ) ENGINE=MyISAM  DEFAULT CHARSET=utf8;
 
 CREATE TABLE IF NOT EXISTS `addon` (
