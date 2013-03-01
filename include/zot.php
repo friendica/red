@@ -923,6 +923,7 @@ function process_delivery($sender,$arr,$deliveries,$relay) {
 		if($r) {
 			if($arr['edited'] > $r[0]['edited']) {
 				$arr['id'] = $r[0]['id'];
+				$arr['uid'] = $channel['channel_id'];
 				update_imported_item($sender,$arr,$channel['channel_id']);
 			}	
 			$result[] = array($d['hash'],'updated');
@@ -953,7 +954,7 @@ function process_delivery($sender,$arr,$deliveries,$relay) {
 
 function update_imported_item($sender,$item,$uid) {
 
-	item_store_update($arr);
+	item_store_update($item);
 	logger('update_imported_item');
 
 }
