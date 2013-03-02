@@ -93,17 +93,29 @@ function display_content(&$a, $update = 0, $load = false) {
 		$pager_sql = sprintf(" LIMIT %d, %d ",intval($a->pager['start']), intval($a->pager['itemspage']));
 
 		if($load) {
-
-			$r = q("SELECT * from item
-				WHERE item_restrict = 0
-				and uri = '%s'
-				AND ((( `item`.`allow_cid` = ''  AND `item`.`allow_gid` = '' AND `item`.`deny_cid`  = '' 
-				AND `item`.`deny_gid`  = '' AND item_private = 0 ) 
-				and uid in ( " . stream_perms_api_uids() . " ))
-				$sql_extra )
-				group by uri limit 1",
-				dbesc($target_item['parent_uri'])
-			);
+			$r = null;
+			if(local_user()) {
+				$r = q("SELECT * from item
+					WHERE item_restrict = 0
+					and uid = %d
+					and uri = '%s'
+					limit 1",
+					intval(local_user()),
+					dbesc($target_item['parent_uri'])
+				);
+			}
+			if($r === null) {
+				$r = q("SELECT * from item
+					WHERE item_restrict = 0
+					and uri = '%s'
+					AND ((( `item`.`allow_cid` = ''  AND `item`.`allow_gid` = '' AND `item`.`deny_cid`  = '' 
+					AND `item`.`deny_gid`  = '' AND item_private = 0 ) 
+					and uid in ( " . stream_perms_api_uids() . " ))
+					$sql_extra )
+					group by uri limit 1",
+					dbesc($target_item['parent_uri'])
+				);
+			}
 
 		}
 		else {
