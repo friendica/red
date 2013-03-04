@@ -38,6 +38,7 @@ var items_8php =
     [ "item_getfeedattach", "items_8php.html#a09d425596b9f8663472cf7474ad36d96", null ],
     [ "item_getfeedtags", "items_8php.html#a649dc3e53ed794d0ead4b5d037f8d8d7", null ],
     [ "item_store", "items_8php.html#a8ef003b2bc2dc4816bdcf5800aec1049", null ],
+    [ "item_store_update", "items_8php.html#a2dc4fb9347f6fb804da4f32c107afb53", null ],
     [ "local_delivery", "items_8php.html#ae1c27d1a6379231ac7c0435c8a791d45", null ],
     [ "lose_follower", "items_8php.html#ade53043e7bc5ab9cc9ef1e4fed6569d4", null ],
     [ "lose_sharer", "items_8php.html#a3a218d5e8ffbe261f773225ecded86a2", null ],

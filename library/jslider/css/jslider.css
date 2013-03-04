@@ -12,9 +12,9 @@
 
   .jslider .jslider-bg { position: relative; }
   .jslider .jslider-bg i { height: 5px; position: absolute; font-size: 0; top: 0; }
-  .jslider .jslider-bg .l { width: 50%; background-position: 0 0; left: 0; }
-  .jslider .jslider-bg .r { width: 50%; left: 50%; background-position: right 0; }
-  .jslider .jslider-bg .v { position: absolute; width: 60%; left: 20%; top: 0; height: 5px; background-position: 0 -20px; }
+  .jslider .jslider-bg .l { width: 50%; background-position: 0 0; left: 0; background: #888; }
+  .jslider .jslider-bg .r { width: 50%; left: 50%; background-position: right 0; background: #888;}
+  .jslider .jslider-bg .v { position: absolute; background: url(../img/jslider.png) repeat-x 0 0; width: 60%; left: 20%; top: 0; height: 5px; background-position: 0 -20px; }
 
   .jslider .jslider-pointer { width: 13px; height: 15px; background-position: 0 -40px; position: absolute; left: 20%; top: -4px; margin-left: -6px; cursor: pointer; cursor: hand; }
   .jslider .jslider-pointer-hover { background-position: -20px -40px; }

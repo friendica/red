@@ -1010,6 +1010,8 @@ function prepare_body($item,$attach = false) {
 		$s .= '<div class="clear"></div></div>';
 	}
 
+	$writeable = ((get_observer_hash() == $item['owner_xchan']) ? true : false); 
+
 	$x = '';
 	$terms = get_terms_oftype($item['term'],TERM_CATEGORY);
 	if($terms) {
@@ -1017,7 +1019,7 @@ function prepare_body($item,$attach = false) {
 			if(strlen($x))
 				$x .= ',';
 			$x .= htmlspecialchars($t['term'],ENT_COMPAT,'UTF-8') 
-				. ((local_user() == $item['uid']) ? ' <a href="' . $a->get_baseurl() . '/filerm/' . $item['id'] . '?f=&cat=' . urlencode($t['term']) . '" title="' . t('remove') . '" >' . t('[remove]') . '</a>' : '');
+				. (($writeable) ? ' <a href="' . $a->get_baseurl() . '/filerm/' . $item['id'] . '?f=&cat=' . urlencode($t['term']) . '" title="' . t('remove') . '" >' . t('[remove]') . '</a>' : '');
 		}
 		if(strlen($x))
 			$s .= '<div class="categorytags"><span>' . t('Categories:') . ' </span>' . $x . '</div>'; 

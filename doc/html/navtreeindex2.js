@@ -1,5 +1,6 @@
 var NAVTREEINDEX2 =
 {
+"classPhoto.html#a4ace266825f6b2bbc3c7f990f5d92500":[3,0,15,2],
 "classPhoto.html#a4ff11117ada771637a61a668d2af6636":[3,0,15,16],
 "classPhoto.html#a50e0b85ea8a3f724dd74366756669e61":[3,0,15,25],
 "classPhoto.html#a66705cd7db1f8dce59ceac57dbf14476":[3,0,15,12],
@@ -248,6 +249,5 @@ var NAVTREEINDEX2 =
 "fpostit_8php.html#a501b5ca82f287509fc691c88524064c1":[4,0,2,0,0,1],
 "friendica-to-smarty-tpl_8py.html":[4,0,2,4],
 "friendica-to-smarty-tpl_8py.html#a005c1b7a69cac31fad72a941974ba7bb":[4,0,2,4,11],
-"friendica-to-smarty-tpl_8py.html#a0b4cf73d1a8d201a28d269eeb62a5d5c":[4,0,2,4,8],
-"friendica-to-smarty-tpl_8py.html#a3719dd46e286a57d315e6adae1845854":[4,0,2,4,1]
+"friendica-to-smarty-tpl_8py.html#a0b4cf73d1a8d201a28d269eeb62a5d5c":[4,0,2,4,8]
 };

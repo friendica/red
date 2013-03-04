@@ -36,10 +36,10 @@ var NAVTREEINDEX =
 [
 "BaseObject_8php.html",
 "boot_8php.html#ab54b24cc302e1a42a67a49d788b6b764",
-"classPhoto.html#a4ff11117ada771637a61a668d2af6636",
-"friendica-to-smarty-tpl_8py.html#a38503e37fe68ac27c88cce91a9ac9efa",
-"include_2network_8php.html#a8d5a3afb51cc932032b5dcc159efaae0",
-"poco_8php.html",
+"classPhoto.html#a4ace266825f6b2bbc3c7f990f5d92500",
+"friendica-to-smarty-tpl_8py.html#a3719dd46e286a57d315e6adae1845854",
+"include_2network_8php.html#a850ed5307c6a18076f4b80addc99602d",
+"plugin_8php.html#af92789f559b89a380e49d303218aeeca",
 "text_8php.html#afdc69fe3f6c09e35e46304dcea63ae28"
 ];
 

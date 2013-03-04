@@ -133,6 +133,7 @@ var boot_8php =
     [ "LOGGER_TRACE", "boot_8php.html#a022cea669f9f13ef7c6268b63884c57f", null ],
     [ "MAIL_DELETED", "boot_8php.html#ad0876e837cf3fad8a26417e315f6e2c8", null ],
     [ "MAIL_ISREPLY", "boot_8php.html#aa544a6c078130d0967a1f4ed8ce0a2d2", null ],
+    [ "MAIL_RECALLED", "boot_8php.html#ae4861de36017fe399c1839f778bad9f5", null ],
     [ "MAIL_REPLIED", "boot_8php.html#aa3679df31c8dad1b71816b0322d5baff", null ],
     [ "MAIL_SEEN", "boot_8php.html#a1fbb93cf030f07391f22cc2948744869", null ],
     [ "MAX_IMAGE_LENGTH", "boot_8php.html#a525ca93ff35d3535d1a2b8ba57876afa", null ],

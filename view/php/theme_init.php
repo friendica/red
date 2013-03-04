@@ -7,7 +7,7 @@ require_once('include/plugin.php');
 head_add_css('library/fancybox/jquery.fancybox-1.3.4.css');
 head_add_css('library/tiptip/tipTip.css');
 head_add_css('library/jgrowl/jquery.jgrowl.css');
-head_add_css('library/jslider/bin/jquery.slider.min.css');
+head_add_css('library/jslider/css/jslider.css');
 
 head_add_js('js/jquery.js');
 head_add_js('js/jquery.textinputs.js');

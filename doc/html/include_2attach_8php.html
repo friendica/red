@@ -124,6 +124,8 @@ Functions</h2></td></tr>
 <tr class="separator:ad991208ce939387e2f93a3bce7d09932"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a84a8a64c4805e1525b42d4add464833f"><td class="memItemLeft" align="right" valign="top">&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="include_2attach_8php.html#a84a8a64c4805e1525b42d4add464833f">attach_store</a> ($channel, $observer_hash, $options= '', $arr=null)</td></tr>
 <tr class="separator:a84a8a64c4805e1525b42d4add464833f"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:aeb07968990e66a88c95483ca09a7f909"><td class="memItemLeft" align="right" valign="top">&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="include_2attach_8php.html#aeb07968990e66a88c95483ca09a7f909">z_readdir</a> ($channel_id, $observer_hash, $pathname, $parent_hash= '')</td></tr>
+<tr class="separator:aeb07968990e66a88c95483ca09a7f909"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table>
 <h2 class="groupheader">Function Documentation</h2>
 <a class="anchor" id="a0d07c5b83d3d54e186f752e571847b36"></a>
@@ -343,6 +345,55 @@ Functions</h2></td></tr>
 </div><div class="memdoc">
 
 <p>Referenced by <a class="el" href="include_2attach_8php.html#a84a8a64c4805e1525b42d4add464833f">attach_store()</a>.</p>
+
+</div>
+</div>
+<a class="anchor" id="aeb07968990e66a88c95483ca09a7f909"></a>
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">z_readdir </td>
+          <td>(</td>
+          <td class="paramtype">&#160;</td>
+          <td class="paramname"><em>$channel_id</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">&#160;</td>
+          <td class="paramname"><em>$observer_hash</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">&#160;</td>
+          <td class="paramname"><em>$pathname</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">&#160;</td>
+          <td class="paramname"><em>$parent_hash</em> = <code>''</code>&#160;</td>
+        </tr>
+        <tr>
+          <td></td>
+          <td>)</td>
+          <td></td><td></td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+<p>Read a virtual directory and return contents, checking permissions of all parent components.  z_readdir </p>
+<dl class="params"><dt>Parameters</dt><dd>
+  <table class="params">
+    <tr><td class="paramtype">integer</td><td class="paramname">$channel_id</td><td></td></tr>
+    <tr><td class="paramtype">string</td><td class="paramname">$observer_hash</td><td></td></tr>
+    <tr><td class="paramtype">string</td><td class="paramname">$pathname</td><td></td></tr>
+    <tr><td class="paramtype">string</td><td class="paramname">$parent_hash</td><td>(optional)</td></tr>
+  </table>
+  </dd>
+</dl>
+<dl class="section return"><dt>Returns</dt><dd>array $ret $ret['success'] = boolean true or false $ret['message'] = error message if success is false $ret['data'] = array of attach DB entries without data component </dd></dl>
 
 </div>
 </div>

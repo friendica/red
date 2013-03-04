@@ -6,6 +6,7 @@ var searchData=
   ['magiclink_5furl',['magiclink_url',['../text_8php.html#a24d441d30df4b8e6bf6780bf62a5e2c6',1,'text.php']]],
   ['mail_5fdeleted',['MAIL_DELETED',['../boot_8php.html#ad0876e837cf3fad8a26417e315f6e2c8',1,'boot.php']]],
   ['mail_5fisreply',['MAIL_ISREPLY',['../boot_8php.html#aa544a6c078130d0967a1f4ed8ce0a2d2',1,'boot.php']]],
+  ['mail_5frecalled',['MAIL_RECALLED',['../boot_8php.html#ae4861de36017fe399c1839f778bad9f5',1,'boot.php']]],
   ['mail_5freplied',['MAIL_REPLIED',['../boot_8php.html#aa3679df31c8dad1b71816b0322d5baff',1,'boot.php']]],
   ['mail_5fseen',['MAIL_SEEN',['../boot_8php.html#a1fbb93cf030f07391f22cc2948744869',1,'boot.php']]],
   ['mail_5fstore',['mail_store',['../items_8php.html#a77da7ce9a117601d49ac4a67c71b514f',1,'items.php']]],
