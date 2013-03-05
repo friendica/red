@@ -90,6 +90,11 @@ class Conversation extends BaseObject {
 		return $this->profile_owner;
 	}
 
+	public function set_profile_owner($uid) {
+		$this->profile_owner = $uid;
+	}
+
+
 	/**
 	 * Add a thread to the conversation
 	 *

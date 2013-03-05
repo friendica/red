@@ -10,7 +10,7 @@
 body {
 	font-family: arial,freesans,clean,sans-serif;
 	font-size: 12px;
-	background-color: #ffffff;
+	background-color: #FFFFFF;
 	color: #000000;
 	margin: 0px;
 }
@@ -229,10 +229,11 @@ header #site-location {
 }
 
 header #banner {
+
   overflow: hidden;
   text-align: center;
   width: 100%; 
-  font-size: 2.2em;
+  font-size: 1.4em;
   font-family: tahoma, "Lucida Sans", sans;
   color: #eec;
   font-weight: bold;
@@ -303,15 +304,16 @@ nav #nav-link-wrapper .nav-link {
 	height: 28px;
 	border-bottom: 1px solid #aaaaaa;
 	padding:0px;
-	margin-right: 10px;
+	width: 90%;
+/*	margin-right: 10px; */
 }
 
 .tabs li { margin: 0px; list-style: none; }
 .tab {
 	display:block;
 	float:left;
-	padding: 0.4em;
-	margin-right: 3px ;
+/*	padding: 0.4em; */
+	margin-right: 15px ;
 }
 
 .tab.active {
@@ -324,6 +326,7 @@ ul.tabs {
 	margin-bottom: 0px;
 	list-style-type: none;
 	padding: 0px;
+	padding-right: 8px;
 }
 
 /* footer */
@@ -385,7 +388,7 @@ footer {
 	width: 530px;
 	margin-bottom: 5px;
 	font-weight: bold;
-	border: solid 1px #ccc;
+	border: solid 1px #ffffff;
 	border-radius: 5px;
 }
 
@@ -2430,6 +2433,8 @@ aside input[type='text'] {
 }
 
 #nav-search-text {
+	margin-top: -2px;
+	font-size: 0.9em;
 	border-radius: 14px;
 	background-color: #AAAAAA;
 	color: #eec; 
@@ -2444,6 +2449,7 @@ aside input[type='text'] {
 
 #nav-user-linkmenu img {
 	border-radius: 5px;
+	margin-top: -4px;
 }
 
 .location-label, .gender-label, .marital-label, .homepage-label {
@@ -3329,14 +3335,15 @@ div.jGrowl div.info {
 
 .slider {
 	margin-top: 10px;
-	margin-bottom: 30px;
+	margin-bottom: 45px;
 }
 
 
 #main-slider {
 	position: relative; 
-	left: 5%; 
+	left: 5px; 
 	width: 90%;
+
 }
 
 
@@ -3349,7 +3356,7 @@ div.jGrowl div.info {
 /* nav */
 nav {
   width: 100%;
-  height: 32px;
+  height: 24px;
   position: fixed;
 //	opacity: 0.6;
 //	filter:alpha(opacity=60);
@@ -3401,12 +3408,16 @@ color-stop(0.82, #b00)
 nav a,
 nav a:active,
 nav a:visited,
-nav a:link,
-nav a:hover {
+nav a:link {
   color: #ffffff;
   text-decoration: none;
   outline: none;
 }
+
+nav a:hover {
+	color: #0000FF;
+}
+nav .fakelink:hover { text-decoration: none; }
 
 #profiles-menu li a {
 	color: #ffffff;
@@ -3431,11 +3442,16 @@ nav ul li .menu-popup {
   right: auto;
   top: 33px;
 }
+
+#nav-user-linkmenu {
+	margin-left: 5px;
+}
+
 nav .nav-menu-icon {
   position: relative;
   height: 22px;
   padding: 5px;
-  margin: 3px 10px;
+/*  margin: 3px 10px; */
   -moz-border-radius: 5px 5px 0 0;
   -webkit-border-radius: 5px 5px 0 0;
   border-radius: 5px 5px 0 0;
@@ -3454,17 +3470,17 @@ nav .nav-menu {
   position: relative;
   height: 16px;
   padding: 5px;
-  margin: 3px 15px 0px;
-  font-size: 14px;
-  border-bottom: 3px solid #f88;
+  margin: 3px 5px 0px;
+  font-size: 1.0em;
+/*  border-bottom: 3px solid #f88; */
 }
 
 nav:hover .nav-menu {
-  border-bottom: 3px solid #f00;
+/*  border-bottom: 3px solid #f00; */
 }
 
 nav .nav-menu.selected {
-  border-bottom: 4px solid #CCCCCC;
+	color: #0000FF;
 }
 
 nav .nav-notify {
@@ -3473,6 +3489,9 @@ nav .nav-notify {
   -moz-border-radius: 5px 5px 5px 5px;
   -webkit-border-radius: 5px 5px 5px 5px;
   border-radius: 5px 5px 5px 5px;
+  opacity: 0.6;
+  filter:alpha(opacity=60);
+
 }
 nav .nav-notify.show {
   display: block;
@@ -3481,9 +3500,7 @@ nav #nav-help-link,
 nav #nav-login-link,
 nav #nav-search-link,
 nav #nav-directory-link,
-nav #nav-apps-link,
-nav #nav-user-linkmenu,
-nav #nav-site-linkmenu {
+nav #nav-apps-link {
   float: right;
 }
 nav #nav-help-link .menu-popup,

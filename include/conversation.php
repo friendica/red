@@ -658,6 +658,12 @@ function conversation(&$a, $items, $mode, $update, $page_mode = 'traditional') {
 
             $conv = new Conversation($mode, $preview);
 
+			// In the display mode we don't have a profile owner. 
+
+			if($mode === 'display' && $items)
+				$conv->set_profile_owner($items[0]['uid']);
+
+
             // get all the topmost parents
             // this shouldn't be needed, as we should have only them in our array
             // But for now, this array respects the old style, just in case

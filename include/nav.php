@@ -71,7 +71,7 @@ EOT;
 		$nav['logout'] = Array('logout',t('Logout'), "", t('End this session'));
 		
 		// user menu
-		$nav['usermenu'][] = Array('channel/' . $channel['channel_address'], t('Status'), "", t('Your posts and conversations'));
+		$nav['usermenu'][] = Array('channel/' . $channel['channel_address'], t('Home'), "", t('Your posts and conversations'));
 		$nav['usermenu'][] = Array('profile/' . $channel['channel_address'], t('View Profile'), "", t('Your profile page'));
 		if(feature_enabled(local_user(),'multi_profiles'))
 			$nav['usermenu'][]   = Array('profiles', t('Edit Profiles'),"", t('Manage/Edit Profiles'));
@@ -128,7 +128,7 @@ EOT;
 	$nav['search'] = array('search', t('Search'), "", t('Search site content'));
 
 
-	$nav['directory'] = array('directory', t('Channel Directory'), "", t('Channel Locator')); 
+	$nav['directory'] = array('directory', t('Directory'), "", t('Channel Locator')); 
 
 
 	/**
@@ -139,24 +139,24 @@ EOT;
 
 	if(local_user()) {
 
-		$nav['network'] = array('network', t('Network'), "", t('Conversations from your friends'));
-		$nav['network']['all']=array('notifications/network', t('See all network notifications'), "", "");
-		$nav['network']['mark'] = array('', t('Mark all network notifications seen'), '','');
+		$nav['network'] = array('network', t('Matrix'), "", t('Conversations from your grid'));
+		$nav['network']['all']=array('notifications/network', t('See all matrix notifications'), "", "");
+		$nav['network']['mark'] = array('', t('Mark all matrix notifications seen'), '','');
 
 		$nav['home'] = array('channel/' . $channel['channel_address'], t('Home'), "", t('Your posts and conversations'));
 		$nav['home']['all']=array('notifications/channel', t('See all channel notifications'), "", "");
 		$nav['home']['mark'] = array('', t('Mark all channel notifications seen'), '','');
 
 
-		$nav['intros'] = array('connections/pending',	t('Introductions'), "", t('New Connections'));
+		$nav['intros'] = array('connections/pending',	t('Intros'), "", t('New Connections'));
 		$nav['intros']['all']=array('intro', t('See all channel introductions'), "", "");
 
 
-		$nav['notifications'] = array('notifications/system',	t('Notifications'), "", t('Notifications'));
+		$nav['notifications'] = array('notifications/system',	t('Notices'), "", t('Notifications'));
 		$nav['notifications']['all']=array('notifications/system', t('See all notifications'), "", "");
 		$nav['notifications']['mark'] = array('', t('Mark all system notifications seen'), '','');
 
-		$nav['messages'] = array('message', t('Messages'), "", t('Private mail'));
+		$nav['messages'] = array('message', t('Mail'), "", t('Private mail'));
 		$nav['messages']['all']=array('message', t('See all private messages'), "", "");
 		$nav['messages']['mark'] = array('', t('Mark all private messages seen'), '','');
 		$nav['messages']['inbox'] = array('message', t('Inbox'), "", t('Inbox'));
