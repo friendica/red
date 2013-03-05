@@ -419,22 +419,8 @@ footer {
 	margin-bottom: 10px;
 }
 
-.group-selected, .nets-selected, .fileas-selected, .categories-selected {
-	padding: 3px;
-	-moz-border-radius: 5px;
-	border-radius: 5px;	
-	border: 1px solid #CCCCCC;
-	background: #F8F8F8;
-	font-weight: bold;
-}
-
-.settings-widget .selected {
-	padding: 3px;
-	-moz-border-radius: 5px;
-	border-radius: 5px;	
-	border: 1px solid #CCCCCC;
-	background: #F8F8F8;
-	font-weight: bold;
+.group-selected, .nets-selected, .fileas-selected, .categories-selected, .settings-widget .selected {
+	color: #444444 !important;
 }
 
 .smalltext {
@@ -513,62 +499,6 @@ footer {
 }
 
 
-/* TODO - we don't use DFRN anymore.  These probably have different names now.  Check and clean up later */
-
-input#dfrn-url {
-	float: left;
-	background: url(../img/friendika-16.png) no-repeat;
-	background-position: 2px center;
-	font-size: 17px;
-	padding-left: 21px;
-	height: 21px;
-	background-color: #FFFFFF;
-	color: #000000;
-	margin-bottom: 20px;
-}
-
-#dfrn-url-label {
-	float: left;
-	width: 250px;
-}
-
-#dfrn-request-url-end {
-	clear: both;
-}
-
-#knowyouyes, #knowyouno {
-	float: left;
-}
-
-#dfrn-request-knowyou-yes-wrapper, #dfrn-request-knowyou-no-wrapper {
-
-	float: none;
-}
-#dfrn-request-knowyou-yes-label, #dfrn-request-knowyou-no-label {
-	float: left;
-	width: 75px;
-	margin-left: 50px;
-	margin-bottom: 7px;
-}
-#dfrn-request-knowyou-break, #dfrn-request-knowyou-end {
-	clear: both;
-
-}
-
-#dfrn-request-message-wrapper {
-	margin-bottom: 50px;
-}
-#dfrn-request-submit-wrapper {
-	clear: both;
-	margin-left: 50px;
-}
-
-#dfrn-request-info-wrapper {
-	margin-left: 50px;
-}
-
-
-
 #cropimage-wrapper, #cropimage-preview-wrapper {
 	float: left;
 	padding: 30px;
@@ -579,67 +509,7 @@ input#dfrn-url {
 	clear: both;
 }
 
-.intro-wrapper {
-	margin-top: 20px;
-}
 
-.intro-fullname {
-	font-size: 1.1em;
-	font-weight: bold;
-
-}
-.intro-desc {
-	margin-bottom: 20px;
-	font-weight: bold;
-}
-
-.intro-note {
-	padding: 10px;
-}
-
-.intro-end {
-	padding: 30px;
-}
-
-.intro-form {
-	float: left;
-}
-.intro-approve-form {
-	clear: both;
-}
-.intro-approve-as-friend-end {
-	clear: both;
-}
-.intro-submit-approve, .intro-submit-ignore {
-	margin-right: 20px;
-}
-.intro-submit-approve {
-	margin-top: 15px;
-}
-
-.intro-approve-as-friend-label, .intro-approve-as-fan-label {
-	float: left;
-	width: 100px;
-	margin-left: 20px;
-}
-.intro-approve-as-friend, .intro-approve-as-fan {
-	float: left;
-}
-.intro-form-end {
-	clear: both;
-}
-.intro-approve-as-friend-desc {
-	margin-top: 15px;
-}
-.intro-approve-as-end {
-	clear: both;
-	margin-bottom: 10px;
-}
-
-.intro-end {
-	clear: both;
-	margin-bottom: 30px;
-}
 .aprofile dt {
 	font-weight: bold;
 }
@@ -675,29 +545,6 @@ input#dfrn-url {
 
 .vcard dl {
 	clear: both;
-}
-
-#birthday-title {
-	float: left;
-	font-weight: bold;	
-}
-
-#birthday-adjust {
-	float: left;
-	font-size: 75%;
-	margin-left: 10px;
-}
-
-#birthday-title-end {
-	clear: both;
-}
-
-.birthday-list {
-	margin-left: 15px;
-}
-
-#birthday-wrapper {
-	margin-bottom: 20px;
 }
 
 #profile-extra-links {
@@ -1497,12 +1344,7 @@ input#dfrn-url {
 	width: 200px;
 
 }
-.fortune {
-	margin-top: 50px;
-	color: #4444FF;
-	font-weight: bold;
-	margin-bottom: 20px;
-}
+
 
 .directory-end {
 	clear: both;
@@ -1873,7 +1715,7 @@ tr.mceLast {
 	list-style: none;
 }
 
-.contact-entry-photo img, .profile-match-photo img, #photo-photo img, .directory-photo-img, .photo-album-photo, .photo-top-photo, .group-selected, .nets-selected, .fileas-selected, .categories-selected {
+.contact-entry-photo img, .profile-match-photo img, #photo-photo img, .directory-photo-img, .photo-album-photo, .photo-top-photo {
     border-radius: 5px;
     -moz-border-radius: 5px;
     box-shadow: 4px 4px 3px 0 #444444;

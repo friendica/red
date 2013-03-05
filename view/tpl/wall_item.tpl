@@ -24,7 +24,7 @@
 		</div>
 		<div class="wall-item-author">
 				<a href="$item.profile_url"  title="$item.linktitle" class="wall-item-name-link"><span class="wall-item-name$item.sparkle" id="wall-item-name-$item.id" >$item.name</span></a>
-				<div id="wall-item-ago-$item.id" class="wall-item-ago"><abbr class="wall-item-ago-time" title="$item.localtime">$item.ago</abbr>{{ if $item.app }}<span class="item.app">$item.str_app</span>{{ endif }}</div>
+				<div id="wall-item-ago-$item.id" class="wall-item-ago"><abbr class="wall-item-ago-time" title="$item.isotime">$item.localtime</abbr>{{ if $item.app }}<span class="item.app">$item.str_app</span>{{ endif }}</div>
 				
 		</div>	
 		<div class="wall-item-content" id="wall-item-content-$item.id" >

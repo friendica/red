@@ -215,6 +215,7 @@ class Item extends BaseObject {
 			'osparkle' => $osparkle,
 			'sparkle' => $sparkle,
 			'title' => $item['title'],
+			'isotime' => datetime_convert('UTC', date_default_timezone_get(), $item['created'], 'c'),
 			'localtime' => datetime_convert('UTC', date_default_timezone_get(), $item['created'], 'r'),
 			'ago' => (($item['app']) ? sprintf( t('%s from %s'),relative_date($item['created']),$item['app']) : relative_date($item['created'])),
 			'lock' => $lock,

@@ -221,7 +221,7 @@ function group_side($every="contacts",$each="group",$edit = false, $group_id = 0
 	$groups = array();
 	
 	$groups[] = array(
-		'text' 	=> t('All Connections'),
+		'text' 	=> t('All Channels'),
 		'id' => 0,
 		'selected' => (($group_id == 0) ? 'group-selected' : ''),
 		'href' 	=> $every,

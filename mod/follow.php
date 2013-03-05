@@ -6,7 +6,6 @@ require_once('include/follow.php');
 function follow_init(&$a) {
 
 	if(! local_user()) {
-		notice( t('Permission denied.') . EOL);
 		return;
 	}
 
@@ -26,4 +25,11 @@ function follow_init(&$a) {
 
 	goaway(z_root() . '/connections/' . $result['abook']['abook_id']);
 
+}
+
+functon follow_content(&$a) {
+
+	if(! local_user()) {
+		return login();
+	}
 }

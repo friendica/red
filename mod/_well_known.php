@@ -17,6 +17,14 @@ function _well_known_init(&$a){
 				zfinger_init($a);
 				break;
 
+			case 'webfinger':
+				$a->argc -= 1;
+				array_shift($a->argv);
+				$a->argv[0] = 'wfinger';
+				require_once('mod/wfinger.php');
+				wfinger_init($a);
+				break;
+
 		}
 	}
 
