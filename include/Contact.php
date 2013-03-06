@@ -397,8 +397,8 @@ function contact_photo_menu($contact) {
 
 
 function random_profile() {
-	$r = q("select xchan_url from xchan where xchan_network = 'zot' order by rand() limit 1");
-	if($r && count($r))
+	$r = q("select xchan_url from xchan where 1 order by rand() limit 1");
+	if($r)
 		return $r[0]['xchan_url'];
 	return '';
 }

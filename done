@@ -66,10 +66,10 @@ include/
 = Scrape.php
 + security.php
 ? session.php
-  socgraph.php
+? socgraph.php
 = system_unavailable.php
 = template_processor.php
-  text.php
+? text.php
 - user.php
 + zot.php
 
@@ -154,7 +154,7 @@ mod/
 + smilies.php
 + starred.php
   subthread.php
-  suggest.php
++ suggest.php
   tagger.php
   tagrm.php
 ? uexport.php
