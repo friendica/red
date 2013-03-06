@@ -51,7 +51,7 @@ function suggest_content(&$a) {
 		$connlnk = $a->get_baseurl() . '/follow/?url=' . $rr['xchan_addr'];
 
 		$o .= replace_macros($tpl,array(
-			'$url' => zid($rr['xchan_url']),
+			'$url' => chanlink_url($rr['xchan_url']),
 			'$name' => $rr['xchan_name'],
 			'$photo' => $rr['xchan_photo_m'],
 			'$ignlnk' => $a->get_baseurl() . '/suggest?ignore=' . $rr['xchan_hash'],
