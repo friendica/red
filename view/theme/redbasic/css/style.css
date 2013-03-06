@@ -171,7 +171,7 @@ blockquote {
 
 nav {
 	display: block;
-	border-bottom: 1px solid #d00;
+
 }
 
 #langselector {
@@ -237,7 +237,7 @@ header #banner {
   font-family: tahoma, "Lucida Sans", sans;
   color: #eec;
   font-weight: bold;
-
+  margin-top: 1px;
 }
 header #banner a,
 header #banner a:active,
@@ -1674,7 +1674,7 @@ tr.mceLast {
 	color: #000000;
 }
 
-.wall-item-photo, .photo, .contact-block-img, .my-comment-photo {
+.wall-item-photo, .photo, .contact-block-img, .my-comment-photo, .contact-photo {
     border-radius: 5px;
     -moz-border-radius: 5px;
     box-shadow: 4px 4px 3px 0 #444444;
@@ -2417,7 +2417,7 @@ aside input[type='text'] {
 
 #nav-searchbar {
 	float: right;
-	margin-top: 4px;
+	margin-top: 3px;
 }
 
 #nav-search-spinner {
@@ -2434,9 +2434,9 @@ aside input[type='text'] {
 
 #nav-search-text {
 	margin-top: -2px;
-	font-size: 0.9em;
+	font-size: 0.8em;
 	border-radius: 14px;
-	background-color: #AAAAAA;
+	background-color: #FFDDDD;
 	color: #eec; 
 }
 
@@ -3367,9 +3367,9 @@ nav {
   background-color: #d00;
   color: #eec;
   z-index: 100;
-  -webkit-box-shadow: 0px 0px 10px rgba(0, 0, 0, 0.7);
+/*  -webkit-box-shadow: 0px 0px 10px rgba(0, 0, 0, 0.7);
   -moz-box-shadow: 0px 0px 10px rgba(0, 0, 0, 0.7);
-  box-shadow: 0px 0px 10px rgba(0, 0, 0, 0.7);
+  box-shadow: 0px 0px 10px rgba(0, 0, 0, 0.7); */
 
 /* TODO find a better way to do this without different code for every single browser.  */
 
@@ -3470,7 +3470,7 @@ nav .nav-menu {
   position: relative;
   height: 16px;
   padding: 5px;
-  margin: 3px 5px 0px;
+  margin: 0px 5px 0px;
   font-size: 1.0em;
 /*  border-bottom: 3px solid #f88; */
 }

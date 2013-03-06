@@ -12,7 +12,7 @@ $js_strings
 
 $head_js
 
-<link rel="shortcut icon" href="$baseurl/images/red.png" />
+<link rel="shortcut icon" href="$baseurl/images/r!.png" />
 <link rel="search"
          href="$baseurl/opensearch" 
          type="application/opensearchdescription+xml" 
