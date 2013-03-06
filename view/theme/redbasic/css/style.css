@@ -232,7 +232,6 @@ header #banner {
 
   overflow: hidden;
   text-align: center;
-  width: 100%; 
   font-size: 1.4em;
   font-family: tahoma, "Lucida Sans", sans;
   color: #eec;
@@ -304,8 +303,8 @@ nav #nav-link-wrapper .nav-link {
 	height: 28px;
 	border-bottom: 1px solid #aaaaaa;
 	padding:0px;
-	width: 90%;
-/*	margin-right: 10px; */
+	width: 90%; 
+/*	margin-right: 5px; */
 }
 
 .tabs li { margin: 0px; list-style: none; }
@@ -1110,7 +1109,8 @@ footer {
 }
 
 .thread-wrapper.toplevel_item {
-	width: 90%;
+
+	width: 92%; 
 }
 
 .wall-item-body {
@@ -1135,12 +1135,10 @@ footer {
 
 .comment-edit-wrapper {
 	margin-top: 15px;
-	background: #ffffff;
 	margin-left: 50px;
 }
 
 .comment-wwedit-wrapper {
-	background: #ffffff;
 	margin-top: 2px;
 }
 
@@ -1171,7 +1169,7 @@ footer {
 .comment-edit-text-empty {
 	color: gray;
 	height: 1.5em;
-	width: 80%;  /*Too wide? */
+	width: 40%;  /*Too wide? */
 	overflow: auto;
 	margin-bottom: 10px;
 }
@@ -1665,7 +1663,8 @@ tr.mceLast {
 	color:#000;
 	border: 1px solid #cccccc;
 	padding: 8px;
-	width: 90%;
+	margin-right: 0px;
+	width: 90%; 
 	-moz-border-radius: 5px;
 	border-radius: 5px;	
 /*	box-shadow: 4px 4px 3px 0 #666 inset; */
@@ -2436,6 +2435,7 @@ aside input[type='text'] {
 	margin-top: -2px;
 	font-size: 0.8em;
 	border-radius: 14px;
+	border: none;
 	background-color: #FFDDDD;
 	color: #eec; 
 }
