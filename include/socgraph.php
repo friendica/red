@@ -264,10 +264,12 @@ function suggestion_query($uid, $myxchan, $start = 0, $limit = 80) {
 		where not xchan_hash in ( select abook_xchan from abook where abook_channel = %d )
 		and not xchan_hash in ( select xchan from xign where uid = %d )
 		and xchan_hash != '%s'
+		and not ( xchan_flags & %d )
 		group by xchan_hash order by total desc limit %d, %d ",
 		intval($uid),
 		intval($uid),
 		dbesc($myxchan),
+		intval(XCHAN_FLAGS_HIDDEN),
 		intval($start),
 		intval($limit)
 	);
