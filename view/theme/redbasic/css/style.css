@@ -1991,7 +1991,7 @@ tr.mceLast {
 }
 
 #in-this-photo-text {
-	color: #0000FF;
+	color: #0080FF;
 	margin-left: 30px;
 }
 
@@ -2432,7 +2432,7 @@ aside input[type='text'] {
 }
 
 #nav-search-text {
-	margin-top: -2px;
+	margin-top: -1px;
 	font-size: 0.8em;
 	border-radius: 14px;
 	border: none;
@@ -3415,7 +3415,7 @@ nav a:link {
 }
 
 nav a:hover {
-	color: #0000FF;
+	color: #0080FF;
 }
 nav .fakelink:hover { text-decoration: none; }
 
@@ -3480,7 +3480,11 @@ nav:hover .nav-menu {
 }
 
 nav .nav-menu.selected span {
-	color: #0000FF;
+	color: #444444;
+}
+
+nav .nav-menu.selected a {
+	color: #444444;
 }
 
 nav .nav-notify {
