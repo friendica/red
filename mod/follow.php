@@ -27,7 +27,7 @@ function follow_init(&$a) {
 
 }
 
-functon follow_content(&$a) {
+function follow_content(&$a) {
 
 	if(! local_user()) {
 		return login();
