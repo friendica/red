@@ -51,7 +51,16 @@
 			      $nav_bg_2 = "2e2f2e";}
 
 	if(file_exists('view/theme/' . current_theme() . '/css/style.css')) {
-		echo file_get_contents('view/theme/' . current_theme() . '/css/style.css');
+		$x = file_get_contents('view/theme/' . current_theme() . '/css/style.css');
+		if(get_config('system','pcss_compress')) {
+			// this shaves off about 10%, probably not enough to worry about right now.
+			logger('pcss compress: original size: ' . strlen($x), LOGGER_DEBUG);
+			$x = str_replace(array("\r","\t","  "),array("",' ',' '),$x);
+			$x = preg_replace('/(\n[ ]+?)/s',"\n",$x);
+			$x = str_replace("\n","",$x);
+			logger('pcss compress: final size: ' . strlen($x), LOGGER_DEBUG);
+		}
+		echo $x;
     }
     echo "\r\n";
 

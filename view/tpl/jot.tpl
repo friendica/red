@@ -53,9 +53,11 @@
 		<a id="profile-nolocation" class="icon noglobe" title="$noloc" onclick="jotClearLocation();return false;"></a>
 	</div> 
 
+	{{ if $showacl }}
 	<div id="profile-jot-perms" class="profile-jot-perms" style="display: $pvisit;" >
 		<a href="#profile-jot-acl-wrapper" id="jot-perms-icon" class="icon $lockstate"  title="$permset" ></a>$bang
 	</div>
+	{{ endif }}
 
 	{{ if $preview }}<span onclick="preview_post();" id="jot-preview-link" class="fakelink">$preview</span>{{ endif }}
 

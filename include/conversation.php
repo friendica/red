@@ -993,6 +993,7 @@ function status_editor($a,$x,$popup=false) {
 		'$emtitle' => t('Example: bob@example.com, mary@example.com'),
 		'$lockstate' => $x['lockstate'],
 		'$acl' => $x['acl'],
+		'$showacl' => ((array_key_exists('showacl',$x)) ? $x['showacl'] : 'yes'),
 		'$bang' => $x['bang'],
 		'$profile_uid' => $x['profile_uid'],
 		'$preview' => ((feature_enabled($x['profile_uid'],'preview')) ? t('Preview') : ''),

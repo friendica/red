@@ -309,7 +309,6 @@ CREATE TABLE IF NOT EXISTS `fserver` (
   `key` text NOT NULL,
   PRIMARY KEY (`id`),
   KEY `server` (`server`),
-  KEY `server_2` (`server`),
   KEY `posturl` (`posturl`)
 ) ENGINE=MyISAM DEFAULT CHARSET=utf8;
 
@@ -325,43 +324,6 @@ CREATE TABLE IF NOT EXISTS `fsuggest` (
   `created` datetime NOT NULL,
   PRIMARY KEY (`id`)
 ) ENGINE=MyISAM DEFAULT CHARSET=utf8;
-
-CREATE TABLE IF NOT EXISTS `gcign` (
-  `id` int(11) NOT NULL AUTO_INCREMENT,
-  `uid` int(11) NOT NULL,
-  `gcid` int(11) NOT NULL,
-  PRIMARY KEY (`id`),
-  KEY `uid` (`uid`),
-  KEY `gcid` (`gcid`)
-) ENGINE=MyISAM DEFAULT CHARSET=utf8;
-
-CREATE TABLE IF NOT EXISTS `gcontact` (
-  `id` int(10) unsigned NOT NULL AUTO_INCREMENT,
-  `name` char(255) NOT NULL,
-  `url` char(255) NOT NULL,
-  `nurl` char(255) NOT NULL,
-  `photo` char(255) NOT NULL,
-  `connect` char(255) NOT NULL,
-  PRIMARY KEY (`id`),
-  KEY `nurl` (`nurl`),
-  KEY `name` (`name`),
-  KEY `url` (`url`)
-) ENGINE=MyISAM  DEFAULT CHARSET=utf8;
-
-CREATE TABLE IF NOT EXISTS `glink` (
-  `id` int(10) unsigned NOT NULL AUTO_INCREMENT,
-  `cid` int(11) NOT NULL,
-  `uid` int(11) NOT NULL,
-  `gcid` int(11) NOT NULL,
-  `zcid` int(11) NOT NULL,
-  `updated` datetime NOT NULL,
-  PRIMARY KEY (`id`),
-  KEY `cid` (`cid`),
-  KEY `uid` (`uid`),
-  KEY `gcid` (`gcid`),
-  KEY `zcid` (`zcid`),
-  KEY `updated` (`updated`)
-) ENGINE=MyISAM  DEFAULT CHARSET=utf8;
 
 CREATE TABLE IF NOT EXISTS `group` (
   `id` int(10) unsigned NOT NULL AUTO_INCREMENT,
@@ -810,6 +772,17 @@ CREATE TABLE IF NOT EXISTS `session` (
   KEY `sid` (`sid`),
   KEY `expire` (`expire`)
 ) ENGINE=MyISAM  DEFAULT CHARSET=utf8;
+
+CREATE TABLE IF NOT EXISTS `shares` (
+  `share_id` int(10) unsigned NOT NULL AUTO_INCREMENT,
+  `share_type` int(11) NOT NULL DEFAULT '0',
+  `share_target` int(10) unsigned NOT NULL DEFAULT '0',
+  `share_xchan` char(255) NOT NULL DEFAULT '',
+  PRIMARY KEY (`share_id`),
+  KEY `share_type` (`share_type`),
+  KEY `share_target` (`share_target`),
+  KEY `share_xchan` (`share_xchan`)
+) ENGINE=MyISAM DEFAULT CHARSET=utf8;
 
 CREATE TABLE IF NOT EXISTS `site` (
   `site_url` char(255) NOT NULL,

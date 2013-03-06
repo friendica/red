@@ -124,6 +124,7 @@ function channel_content(&$a, $update = 0, $load = false) {
     	        'nickname' => $a->profile['channel_address'],
         	    'lockstate' => (((strlen($a->profile['channel_allow_cid'])) || (strlen($a->profile['channel_allow_gid'])) || (strlen($a->profile['channel_deny_cid'])) || (strlen($a->profile['channel_deny_gid']))) ? 'lock' : 'unlock'),
             	'acl' => (($is_owner) ? populate_acl($channel, false) : ''),
+				'showacl' => (($is_owner) ? 'yes' : ''),
 	            'bang' => '',
     	        'visitor' => (($is_owner || $observer) ? 'block' : 'none'),
         	    'profile_uid' => $a->profile['profile_uid']

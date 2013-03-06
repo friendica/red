@@ -1,5 +1,5 @@
 <div class="profile-match-wrapper">
-	<a href="$ignlnk" title="$ignore" class="icon drophide profile-match-ignore" onmouseout="imgdull(this);" onmouseover="imgbright(this);" onclick="return confirmDelete();" ></a>
+	<a href="$ignlnk" title="$ignore" class="icon drophide smalldrop profile-match-ignore" onmouseout="imgdull(this);" onmouseover="imgbright(this);" onclick="return confirmDelete();" ></a>
 	<div class="profile-match-photo">
 		<a href="$url">
 			<img src="$photo" alt="$name" width="80" height="80" title="$name [$url]" />
