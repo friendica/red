@@ -3479,7 +3479,7 @@ nav:hover .nav-menu {
 /*  border-bottom: 3px solid #f00; */
 }
 
-nav .nav-menu.selected {
+nav .nav-menu.selected span {
 	color: #0000FF;
 }
 
