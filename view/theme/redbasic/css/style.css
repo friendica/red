@@ -1673,7 +1673,7 @@ tr.mceLast {
 	color: #000000;
 }
 
-.wall-item-photo, .photo, .contact-block-img, .my-comment-photo, .contact-photo {
+.wall-item-photo, .photo, .contact-block-img, .my-comment-photo {
     border-radius: 5px;
     -moz-border-radius: 5px;
     box-shadow: 4px 4px 3px 0 #444444;
