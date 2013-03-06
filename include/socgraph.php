@@ -254,12 +254,26 @@ function all_friends($uid,$cid,$start = 0, $limit = 80) {
 
 
 
-function suggestion_query($uid, $start = 0, $limit = 80) {
+function suggestion_query($uid, $myxchan, $start = 0, $limit = 80) {
 
-	if(! $uid)
+	if((! $uid) || (! $myxchan))
 		return array();
 
-	$r = q("SELECT count(glink.gcid) as `total`, gcontact.* from gcontact 
+	$r = q("SELECT count(xlink_xchan) as `total`, xchan.* from xchan
+		left join xlink on xlink_link = xchan_hash
+		where not xchan_hash in ( select abook_xchan from abook where abook_channel = %d )
+		and not xchan_hash in ( select xchan from xign where uid = %d )
+		and xchan_hash != '%s'
+		group by xchan_hash order by total desc limit %d, %d ",
+		intval($uid),
+		intval($uid),
+		dbesc($myxchan),
+		intval($start),
+		intval($limit)
+	);
+
+/*
+	$r = q("SELECT count(xlink.xchan) as `total`, gcontact.* from gcontact 
 		left join glink on glink.gcid = gcontact.id 
 		where uid = %d and not gcontact.nurl in ( select nurl from contact where uid = %d )
 		and not gcontact.name in ( select name from contact where uid = %d )
@@ -272,7 +286,12 @@ function suggestion_query($uid, $start = 0, $limit = 80) {
 		intval($start),
 		intval($limit)
 	);
+*/
 
+	if($r)
+		return $r;
+
+/*
 	if(count($r) && count($r) >= ($limit -1))
 		return $r;
 
@@ -291,7 +310,7 @@ function suggestion_query($uid, $start = 0, $limit = 80) {
 
 
 	return array_merge($r,$r2);
-
+*/
 }
 
 function update_suggestions() {

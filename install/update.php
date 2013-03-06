@@ -1,6 +1,6 @@
 <?php
 
-define( 'UPDATE_VERSION' , 1032 );
+define( 'UPDATE_VERSION' , 1033 );
 
 /**
  *
@@ -52,7 +52,7 @@ function update_r1001() {
 		`meta` CHAR( 255 ) NOT NULL DEFAULT '',
 		`created` DATETIME NOT NULL DEFAULT '0000-00-00 00:00:00',
 		PRIMARY KEY ( `id` )
-		) ENGINE = MYISAM ");
+		) ENGINE = MYISAM DEFAULT CHARSET=utf8");
 
 	$r2 = q("alter table `verify` add index (`channel`), add index (`type`), add index (`token`),
 		add index (`meta`), add index (`created`)");
@@ -91,7 +91,7 @@ function update_r1004() {
 `site_update` DATETIME NOT NULL DEFAULT '0000-00-00 00:00:00',
 `site_directory` CHAR( 255 ) NOT NULL DEFAULT '',
 PRIMARY KEY ( `site_url` )
-) ENGINE = MYISAM ");
+) ENGINE = MYISAM DEFAULT CHARSET=utf8");
 
 	$r2 = q("alter table site add index (site_flags), add index (site_update), add index (site_directory) ");
 
@@ -204,7 +204,7 @@ function update_r1013() {
 `xlink_xchan` CHAR( 255 ) NOT NULL DEFAULT '',
 `xlink_link` CHAR( 255 ) NOT NULL DEFAULT '',
 `xlink_updated` DATETIME NOT NULL DEFAULT '0000-00-00 00:00:00'
-) ENGINE = MYISAM ");
+) ENGINE = MYISAM DEFAULT CHARSET=utf8");
 
 	$r2 = q("alter table xlink add index ( xlink_xchan ), add index ( xlink_link ), add index ( xlink_updated ) ");
 	if($r && $r2)
@@ -367,7 +367,7 @@ ADD INDEX ( `channel_deleted` ) ");
 }
 
 function update_r1030() {
-	$r = q("CREATE TABLE IF NOT EXISTS`issue` (
+	$r = q("CREATE TABLE IF NOT EXISTS `issue` (
 `issue_id` INT UNSIGNED NOT NULL AUTO_INCREMENT PRIMARY KEY ,
 `issue_created` DATETIME NOT NULL DEFAULT '0000-00-00 00:00:00',
 `issue_updated` DATETIME NOT NULL DEFAULT '0000-00-00 00:00:00',
@@ -381,7 +381,7 @@ KEY `issue_assigned` (`issue_assigned`),
 KEY `issue_priority` (`issue_priority`),
 KEY `issue_status` (`issue_status`),
 KEY `issue_component` (`issue_component`)
-) ENGINE = MYISAM ");
+) ENGINE = MYISAM DEFAULT CHARSET=utf8");
 
 	if($r)
 		return UPDATE_SUCCESS;
@@ -397,3 +397,16 @@ ADD INDEX ( `account_external` )");
 }
 
 
+function update_r1032() {
+	$r = q("CREATE TABLE if not exists `xign` (
+`id` INT UNSIGNED NOT NULL AUTO_INCREMENT PRIMARY KEY ,
+`uid` INT NOT NULL DEFAULT '0',
+`xchan` CHAR( 255 ) NOT NULL DEFAULT '',
+KEY `uid` (`uid`),
+KEY `xchan` (`xchan`)
+) ENGINE = MYISAM DEFAULT CHARSET = utf8");
+
+	if($r)
+		return UPDATE_SUCCESS;
+	return UPDATE_FAILED;
+}

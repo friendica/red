@@ -8,10 +8,10 @@ function suggest_init(&$a) {
 	if(! local_user())
 		return;
 
-	if(x($_GET,'ignore') && intval($_GET['ignore'])) {
-		q("insert into gcign ( uid, gcid ) values ( %d, %d ) ",
+	if(x($_GET,'ignore')) {
+		q("insert into xign ( uid, xchan ) values ( %d, '%s' ) ",
 			intval(local_user()),
-			intval($_GET['ignore'])
+			dbesc($_GET['ignore'])
 		);
 	}
 
@@ -37,10 +37,9 @@ function suggest_content(&$a) {
 
 	$o .= '<h2>' . t('Friend Suggestions') . '</h2>';
 
+	$r = suggestion_query(local_user(),get_observer_hash());
 
-	$r = suggestion_query(local_user());
-
-	if(! count($r)) {
+	if(! $r) {
 		$o .= t('No suggestions available. If this is a new site, please try again in 24 hours.');
 		return $o;
 	}
@@ -49,13 +48,13 @@ function suggest_content(&$a) {
 
 	foreach($r as $rr) {
 
-		$connlnk = $a->get_baseurl() . '/follow/?url=' . (($rr['connect']) ? $rr['connect'] : $rr['url']);			
+		$connlnk = $a->get_baseurl() . '/follow/?url=' . $rr['xchan_addr'];
 
 		$o .= replace_macros($tpl,array(
-			'$url' => zid($rr['url']),
-			'$name' => $rr['name'],
-			'$photo' => $rr['photo'],
-			'$ignlnk' => $a->get_baseurl() . '/suggest?ignore=' . $rr['id'],
+			'$url' => zid($rr['xchan_url']),
+			'$name' => $rr['xchan_name'],
+			'$photo' => $rr['xchan_photo_m'],
+			'$ignlnk' => $a->get_baseurl() . '/suggest?ignore=' . $rr['xchan_hash'],
 			'$conntxt' => t('Connect'),
 			'$connlnk' => $connlnk,
 			'$ignore' => t('Ignore/Hide')

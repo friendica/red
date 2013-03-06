@@ -909,6 +909,15 @@ CREATE TABLE IF NOT EXISTS `xchan` (
   KEY `xchan_connurl` (`xchan_connurl`)
 ) ENGINE=MyISAM DEFAULT CHARSET=utf8;
 
+CREATE TABLE IF NOT EXISTS `xign` (
+  `id` int(10) unsigned NOT NULL AUTO_INCREMENT,
+  `uid` int(11) NOT NULL DEFAULT '0',
+  `xchan` char(255) NOT NULL DEFAULT '',
+  PRIMARY KEY (`id`),
+  KEY `uid` (`uid`),
+  KEY `xchan` (`xchan`)
+) ENGINE=MyISAM DEFAULT CHARSET=utf8;
+
 CREATE TABLE IF NOT EXISTS `xlink` (
   `xlink_id` int(10) unsigned NOT NULL AUTO_INCREMENT,
   `xlink_xchan` char(255) NOT NULL DEFAULT '',
