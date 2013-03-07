@@ -229,9 +229,9 @@ function events_content(&$a) {
 		$adjust_start = datetime_convert('UTC', date_default_timezone_get(), $start);
 		$adjust_finish = datetime_convert('UTC', date_default_timezone_get(), $finish);
 
-
 		if (x($_GET,'id')){
-			$r = q("SELECT * from event left join item on resource_id = event_hash where resource_type = 'event' and event.uid = %d and event.id = %d limit 1",
+		  	$r = q("SELECT event.*, item.plink, item.item_flags, item.author_xchan, item.owner_xchan
+                                from event left join item on resource_id = event_hash where resource_type = 'event' and event.uid = %d and event.id = %d limit 1",
 				intval(local_user()),
 				intval($_GET['id'])
 			);
@@ -242,8 +242,8 @@ function events_content(&$a) {
 			// Noting this for now - it will need to be fixed here and in Friendica.
 			// Ultimately the finish date shouldn't be involved in the query. 
 
-
-			$r = q("SELECT * from event left join item on event_hash = resource_id 
+			$r = q("SELECT event.*, item.plink, item.item_flags, item.author_xchan, item.owner_xchan
+                              from event left join item on event_hash = resource_id 
 				where resource_type = 'event' and event.uid = %d and event.ignore = %d 
 				AND (( `adjust` = 0 AND ( `finish` >= '%s' or nofinish ) AND `start` <= '%s' ) 
 				OR  (  `adjust` = 1 AND ( `finish` >= '%s' or nofinish ) AND `start` <= '%s' )) ",
@@ -339,6 +339,7 @@ function events_content(&$a) {
 		else {
 			$tpl = get_markup_template("events-js.tpl");
 		}
+
 		$o = replace_macros($tpl, array(
 			'$baseurl'	=> $a->get_baseurl(),
 			'$tabs'		=> $tabs,
