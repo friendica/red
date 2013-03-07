@@ -3479,10 +3479,6 @@ nav:hover .nav-menu {
 /*  border-bottom: 3px solid #f00; */
 }
 
-nav .nav-menu.selected span {
-	color: #444444;
-}
-
 nav .nav-menu.selected a {
 	color: #444444;
 }
@@ -3497,6 +3493,10 @@ nav .nav-notify {
   filter:alpha(opacity=60);
 
 }
+.nav-notify:hover, nav .nav-notify.selected span {
+	color: #ffffff;
+}
+
 nav .nav-notify.show {
   display: block;
 }
@@ -3538,7 +3538,7 @@ ul.menu-popup {
 }
 ul.menu-popup a {
   display: block;
-  color: #;
+  color: #FFFFFF;
   padding: 5px 10px;
   text-decoration: none;
 }
@@ -3546,7 +3546,7 @@ ul.menu-popup a {
 
 ul.menu-popup a:hover {
   background-color: #888888;
-  color: #000000;
+  color: #FFFFFF;
 }
 ul.menu-popup .menu-sep {
   border-top: 1px solid #9eabb0;

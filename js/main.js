@@ -162,7 +162,7 @@
 		function close_last_popup_menu() {
  			if(last_popup_menu) {
  				last_popup_menu.hide();
- 				last_popup_button.removeClass("selected");
+/* 				last_popup_button.removeClass("selected"); */
 	 			last_popup_menu = null;
  				last_popup_button = null;
  			}	
@@ -187,7 +187,7 @@
 			e.preventDefault();
 			e.stopPropagation();
 			if (menu.attr('popup')=="false") return false;
-			$(w).parent().toggleClass("selected");
+/*			$(w).parent().toggleClass("selected"); */
 			/* notification menus are loaded dynamically 
 			 * - here we find a rel tag to figure out what type of notification to load */
 			var loader_source = $(menu).attr('rel');
