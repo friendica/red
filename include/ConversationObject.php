@@ -47,7 +47,10 @@ class Conversation extends BaseObject {
 				$this->writable = perm_is_allowed($this->profile_owner,$ob_hash,'post_comments');
 				break;
 			case 'display':
-				$this->profile_owner = $a->profile['uid'];
+				// in this mode we set profile_owner after initialisation (from conversation()) and then 
+				// pull some trickery which allows us to re-invoke this function afterward
+				// it's an ugly hack so FIXME
+//				$this->profile_owner = $a->profile['uid'];
 				$this->writable = perm_is_allowed($this->profile_owner,$ob_hash,'post_comments');
 				break;
 			case 'page':
@@ -60,6 +63,7 @@ class Conversation extends BaseObject {
 				break;
 		}
 		$this->mode = $mode;
+
 	}
 
 	/**
@@ -92,6 +96,9 @@ class Conversation extends BaseObject {
 
 	public function set_profile_owner($uid) {
 		$this->profile_owner = $uid;
+		$mode = $this->get_mode();
+		$this->mode = null;
+		$this->set_mode($mode);
 	}
 
 

@@ -832,7 +832,7 @@ function allowed_public_recips($msg) {
 			$condensed_recips[] = $rr['hash'];
 
 		$results = array();
-		$r = q("select channel_hash as hash from channel left join abook on abook_channel = channel_id where abook_hash = '%s' ",
+		$r = q("select channel_hash as hash from channel left join abook on abook_channel = channel_id where abook_xchan = '%s' ",
 			dbesc($hash)
 		);
 		if($r) {
