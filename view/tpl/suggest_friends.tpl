@@ -1,16 +1,16 @@
 <div class="profile-match-wrapper">
-	<a href="$ignlnk" title="$ignore" class="icon drophide smalldrop profile-match-ignore" onmouseout="imgdull(this);" onmouseover="imgbright(this);" onclick="return confirmDelete();" ></a>
+	<a href="$entry.ignlnk" title="$entry.ignore" class="icon drophide smalldrop profile-match-ignore" onmouseout="imgdull(this);" onmouseover="imgbright(this);" onclick="return confirmDelete();" ></a>
 	<div class="profile-match-photo">
-		<a href="$url">
-			<img src="$photo" alt="$name" width="80" height="80" title="$name [$url]" />
+		<a href="$entry.url">
+			<img src="$entry.photo" alt="$entry.name" width="80" height="80" title="$entry.name [$entry.url]" />
 		</a>
 	</div>
 	<div class="profile-match-break"></div>
 	<div class="profile-match-name">
-		<a href="$url" title="$name">$name</a>
+		<a href="$entry.url" title="$entry.name">$entry.name</a>
 	</div>
 	<div class="profile-match-end"></div>
-	{{ if $connlnk }}
-	<div class="profile-match-connect"><a href="$connlnk" title="$conntxt">$conntxt</a></div>
+	{{ if $entry.connlnk }}
+	<div class="profile-match-connect"><a href="$entry.connlnk" title="$entry.conntxt">$entry.conntxt</a></div>
 	{{ endif }}
 </div>
