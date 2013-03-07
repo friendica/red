@@ -75,7 +75,7 @@
 // Enforce sane limits for expert mode - otherwise we'll end up with "experts" who think font size is a percentage.
 
 	if(($redbasic_font_size >= 8.0) && ($redbasic_font_size <= 20.0)) {
-		echo ".wall-item-content { font-size: $redbasic_font_size\px;}\r\n";
+		echo ".wall-item-content { font-size: ${redbasic_font_size}px;}\r\n";
 	}
 
 	if(($line_height >= 1.0) && ($line_height <= 2.0)) {
