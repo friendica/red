@@ -6,8 +6,6 @@
 function theme_content(&$a) {
 	// Doesn't yet work for anyone other than the channel owner, and stupid mode isn't finished, so return both for now.
 	if(!local_user()) { return;	}
-	if(! feature_enabled(local_user(),'expert')) {return;}
-	
 	$font_size = get_pconfig(local_user(),'redbasic', 'font_size' );
 	$line_height = get_pconfig(local_user(), 'redbasic', 'line_height' );
 	$colour = get_pconfig(local_user(), 'redbasic', 'colour' );
@@ -141,7 +139,18 @@ function redbasic_form(&$a, $font_size, $line_height, $colour, $shadow, $navcolo
 		'$iconset' => array('redbasic_iconset', t('Icons'), $iconset, '', $iconsets),
 		'$shiny' => array('redbasic_shiny', t('Shiny style'), $shiny, '', $shinys),
 	  ));}
-
+	 
+	 if(! feature_enabled(local_user(),'expert')) {
+	    $t = get_markup_template('basic_theme_settings.tpl');
+	    $o .= replace_macros($t, array(
+		'$submit' => t('Submit'),
+		'$baseurl' => $a->get_baseurl(),
+		'$title' => t("Theme settings"),
+		'$font_size' => array('redbasic_font_size', t('Set font-size for posts and comments'), $font_size, '', $font_sizes),
+		'$line_height' => array('redbasic_line_height', t('Set line-height for posts and comments'), $line_height, '', $line_heights),
+		'$colour_scheme' => array('redbasic_colour_scheme', t('Set colour scheme'), $colour_scheme, '', $colour_schemes),	
+	 ));}
+	 
 	return $o;
 }
 
