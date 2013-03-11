@@ -34,8 +34,14 @@
         $displaystyle = get_pconfig(local_user(), "redbasic", "displaystyle");
         $linkcolour = get_pconfig(local_user(), "redbasic", "linkcolour");
         $shiny = get_pconfig(local_user(), "redbasic", "shiny");
+        if (! feature_enabled(local_user(),'expert')) {$colour_scheme = get_pconfig(local_user(), "redbasic", "colour_scheme");}
     }
 
+    // In non-expert mode, we just let them choose font size, line height, and a colour scheme.  A colour scheme is just a pre-defined set of the above variables.
+    // But only apply these settings in non-expert mode to prevent confusion when turning expert mode on and off.
+    if(! feature_enabled(local_user(),'expert')) {
+	    if ($colour_scheme === 'fancyred') {$shadows = true; $navcolour = 'black'; $shadows = true; $displaystyle = 'fancy'; $linkcolour = 'f00'; $shiny = "opaque";}
+}
 
 // This is probably the easiest place to apply global settings.  Don't bother with site line height and such.  Instead, check pconfig for global user settings.  
 // eg, if ($redbasic_font_size === false) {$redbasic_font_size = get_pconfig(local_user(), "global", "font_size");  If it's not set, we'll just use the CSS with no changes.
@@ -64,7 +70,7 @@
     }
     echo "\r\n";
 
-// use $colour_scheme (not yet implemented) for idiot mode.
+// use $colour_scheme for idiot mode.
     if($colour === "dark") {if (file_exists('view/theme/' . current_theme() . '/css/dark.css')) {
 		  $dark = (file_get_contents('view/theme/' . current_theme() . '/css/dark.css'));
 	      echo "$dark";}
