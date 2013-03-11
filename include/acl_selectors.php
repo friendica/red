@@ -229,41 +229,6 @@ function populate_acl($user = null,$celeb = false) {
 		array_walk($deny_cid,'fixacl');
 		array_walk($deny_gid,'fixacl');
 	}
-
-	/*$o = '';
-	$o .= '<div id="acl-wrapper">';
-	$o .= '<div id="acl-permit-outer-wrapper">';
-	$o .= '<div id="acl-permit-text">' . t('Visible To:') . '</div><div id="jot-public">' . t('everybody') . '</div>';
-	$o .= '<div id="acl-permit-text-end"></div>';
-	$o .= '<div id="acl-permit-wrapper">';
-	$o .= '<div id="group_allow_wrapper">';
-	$o .= '<label id="acl-allow-group-label" for="group_allow" >' . t('Groups') . '</label>';
-	$o .= group_select('group_allow','group_allow',$allow_gid);
-	$o .= '</div>';
-	$o .= '<div id="contact_allow_wrapper">';
-	$o .= '<label id="acl-allow-contact-label" for="contact_allow" >' . t('Contacts') . '</label>';
-	$o .= contact_select('contact_allow','contact_allow',$allow_cid,4,false,$celeb,true);
-	$o .= '</div>';
-	$o .= '</div>' . "\r\n";
-	$o .= '<div id="acl-allow-end"></div>' . "\r\n";
-	$o .= '</div>';
-	$o .= '<div id="acl-deny-outer-wrapper">';
-	$o .= '<div id="acl-deny-text">' . t('Except For:') . '</div>';
-	$o .= '<div id="acl-deny-text-end"></div>';
-	$o .= '<div id="acl-deny-wrapper">';
-	$o .= '<div id="group_deny_wrapper" >';
-	$o .= '<label id="acl-deny-group-label" for="group_deny" >' . t('Groups') . '</label>';
-	$o .= group_select('group_deny','group_deny', $deny_gid);
-	$o .= '</div>';
-	$o .= '<div id="contact_deny_wrapper" >';
-	$o .= '<label id="acl-deny-contact-label" for="contact_deny" >' . t('Contacts') . '</label>';
-	$o .= contact_select('contact_deny','contact_deny', $deny_cid,4,false, $celeb,true);
-	$o .= '</div>';
-	$o .= '</div>' . "\r\n";
-	$o .= '<div id="acl-deny-end"></div>' . "\r\n";
-	$o .= '</div>';
-	$o .= '</div>' . "\r\n";
-	$o .= '<div id="acl-wrapper-end"></div>' . "\r\n";*/
 	
 	$tpl = get_markup_template("acl_selector.tpl");
 	$o = replace_macros($tpl, array(
