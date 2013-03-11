@@ -2258,35 +2258,9 @@ aside input[type='text'] {
 
 }
 
-
-#profile-jot-desc {
-	/*float: left;*/
-	width: 480px;
-	color: #FF0000;
-	margin-top: 10px;
-	margin-bottom: 10px;
+#profile-jot-wrapper {
+	margin-top: 25px;
 }
-
-#character-counter {
-	float: right;
-	font-size: 120%;
-}
-
-#character-counter.grey {
-	color: #888888;
-}
-
-#character-counter.orange {
-	color: orange;
-}
-#character-counter.red {
-	color: red;
-}
-
-#profile-jot-banner-end {
-	/* clear: both; */ 
-}
-
 
 
 #settings-default-perms-menu {

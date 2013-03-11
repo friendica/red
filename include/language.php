@@ -15,8 +15,6 @@
  *
  */
 
-
-if(! function_exists('get_browser_language')) {
 function get_browser_language() {
 
 	$langs = array();
@@ -43,7 +41,7 @@ function get_browser_language() {
 		$langs['en'] = 1;
 
 	return $langs;
-}}
+}
 
 
 function get_best_language() {
@@ -101,15 +99,23 @@ function pop_lang() {
 
 // load string translation table for alternate language
 
-if(! function_exists('load_translation_table')) {
 function load_translation_table($lang) {
 	global $a;
 
+	$a->strings = array();
 	if(file_exists("view/$lang/strings.php")) {
 		include("view/$lang/strings.php");
 	}
-	else
-		$a->strings = array();
+
+    $plugins = q("SELECT name FROM addon WHERE installed=1;");
+    if ($plugins!==false) {
+        foreach($plugins as $p) {
+            $name = $p['name'];
+            if(file_exists("addon/$name/lang/$lang/strings.php")) {
+                include("addon/$name/lang/$lang/strings.php");
+            }
+        }
+    }
 
 	// Allow individual strings to be over-ridden on this site
 	// Either for the default language or for all languages
@@ -118,11 +124,10 @@ function load_translation_table($lang) {
 		include("view/local-$lang/strings.php");
 	}
 
-}}
+}
 
 // translate string if translation exists
 
-if(! function_exists('t')) {
 function t($s) {
 
 	global $a;
@@ -132,9 +137,9 @@ function t($s) {
 		return is_array($t)?$t[0]:$t;
 	}
 	return $s;
-}}
+}
 
-if(! function_exists('tt')){
+
 function tt($singular, $plural, $count){
 	$a = get_app();
 
@@ -152,15 +157,14 @@ function tt($singular, $plural, $count){
 	} else {
 		return $singular;
 	}
-}}
+}
 
 // provide a fallback which will not collide with 
 // a function defined in any language file 
 
-if(! function_exists('string_plural_select_default')) {
 function string_plural_select_default($n) {
 	return ($n != 1);
-}}
+}
 
 
 

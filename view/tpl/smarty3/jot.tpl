@@ -5,11 +5,6 @@
  *}}
 
 <div id="profile-jot-wrapper" >
-	<div id="profile-jot-banner-wrapper">
-		<div id="profile-jot-desc" >&nbsp;</div>
-		<div id="character-counter" class="grey"></div>
-	</div>
-	<div id="profile-jot-banner-end"></div>
 
 	<form id="profile-jot-form" action="{{$action}}" method="post" >
 		<input type="hidden" name="type" value="{{$ptyp}}" />

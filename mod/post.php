@@ -261,6 +261,7 @@ function post_post(&$a) {
 
 		}
 	}
+
 	if($msgtype === 'refresh') {
 
 		// remote channel info (such as permissions or photo or something)

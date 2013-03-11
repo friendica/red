@@ -145,6 +145,12 @@ function zfinger_init(&$a) {
 	// array of (verified) hubs this channel uses
 
 	$ret['locations'] = array();
+
+	
+
+
+
+
 	$x = zot_get_hubloc(array($e['channel_hash']));
 	if($x && count($x)) {
 		foreach($x as $hub) {

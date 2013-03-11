@@ -38,8 +38,8 @@
 		}
 	}
 
-	if(x($a->config,'php_path'))
-		$phpath = $a->config['php_path'];
+	if(x($a->config,'system') && x($a->config['system'],'php_path'))
+		$phpath = $a->config['system']['php_path'];
 	else
 		$phpath = 'php';
 

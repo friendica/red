@@ -1,0 +1,6 @@
+- send refresh posts to everybody that needs to see it, e.g. when site url changes
+
+- implement xchan refresh on remote sites when site url changes, currently hublocs are fixed but xchans aren't. 
+
+- when you clear one type of notification or view the target item, clear the corresponding system notification. Issue: what to do about matrix/network posts where you might not have actually seen it. 
+

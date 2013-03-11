@@ -107,10 +107,10 @@ You can generally find the location of PHP by executing "which php". If you
 have troubles with this section please contact your hosting provider for 
 assistance. Friendica will not work correctly if you cannot perform this step.
 
-You should also be sure that $a->config['php_path'] is set correctly, it should
+You should also be sure that $a->config['system']['php_path'] is set correctly, it should
 look like (changing it to the correct PHP location)
 
-$a->config['php_path'] = '/usr/local/php53/bin/php'
+$a->config['system']['php_path'] = '/usr/local/php53/bin/php';
   
 Alternative: You may be able to use the 'poormancron' plugin to perform this
 step if you are using a recent Friendica release. 'poormancron' may result in
@@ -260,7 +260,7 @@ are NOT called with -d suhosin.executor.func.blacklist=none.
 
 So the simple solution is to put the correct parameters into .htconfig.php:
  // Location of PHP command line processor
- $a->config['php_path'] = '/usr/bin/php -d suhosin.executor.func.blacklist=none
+ $a->config['system']['php_path'] = '/usr/bin/php -d suhosin.executor.func.blacklist=none
 -d suhosin.executor.eval.blacklist=none';
 
 
