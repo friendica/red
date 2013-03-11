@@ -149,11 +149,11 @@ function like_content(&$a) {
 	$arr['author_xchan'] = $observer['xchan_hash'];
 
 	
-	$ulink = '[url=' . $item_owner['xchan_url'] . ']' . $item_owner['xchan_name'] . '[/url]';
+	$ulink = '[url=' . $thread_owner['xchan_url'] . ']' . $thread_owner['xchan_name'] . '[/url]';
 	$alink = '[url=' . $observer['xchan_url'] . ']' . $observer['xchan_name'] . '[/url]';
 	$plink = '[url=' . $a->get_baseurl() . '/display/' . $item['uri'] . ']' . $post_type . '[/url]';
 	
-	$arr['body']          =  sprintf( $bodyverb, $ulink, $alink, $plink );
+	$arr['body']          =  sprintf( $bodyverb, $alink, $ulink, $plink );
 
 	$arr['verb']          = $activity;
 	$arr['obj_type']      = $objtype;
