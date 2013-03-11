@@ -151,15 +151,15 @@ function bb_ShareAttributes($match) {
 
         $headline = '<div class="shared_header">';
 
-	if ($avatar != "")
-		$headline .= '<img src="'.$avatar.'" height="32" width="32" >';
+		if ($avatar != "")
+			$headline .= '<img src="'.$avatar.'" height="32" width="32" />';
 
-	$headline .= sprintf(t('<span><a href="%s" target="external-link">%s</a> wrote the following <a href="%s" target="external-link">post</a>'.$reldate.':</span>'), $profile, $author, $link);
+		$headline .= sprintf(t('<span><a href="%s">%s</a> wrote the following <a href="%s">post</a>'.$reldate.':</span>'), $profile, $author, $link);
 
         $headline .= "</div>";
 
-        $text = $headline.'<blockquote class="shared_content">'.trim($match[2])."</blockquote>";
-
+        $text = $headline . '<div style="reshared-content">' . trim($match[2]) . '</div>';
+		logger('bbshare: ' . $text);
         return($text);
 }
 
@@ -232,9 +232,6 @@ function bbcode($Text,$preserve_nl = false, $tryoembed = true) {
 	$Text = str_replace("<", "&lt;", $Text);
 	$Text = str_replace(">", "&gt;", $Text);
 
-	// This only matters when looking for tags - otherwise has no meaning
-	
-	$Text = str_replace(array('[share]','[/share]'), array('',''), $Text);
 	
 	// Convert new line chars to html <br /> tags
 
@@ -259,12 +256,14 @@ function bbcode($Text,$preserve_nl = false, $tryoembed = true) {
 
 	// Perform URL Search
 
-	$Text = preg_replace("/([^\]\=]|^)(https?\:\/\/[a-zA-Z0-9\:\/\-\?\&\;\.\=\_\~\#\%\$\!\+\,]+)/ism", '$1<a href="$2" >$2</a>', $Text);
+	$Text = preg_replace("/([^\]\='".'"'."]|^)(https?\:\/\/[a-zA-Z0-9\:\/\-\?\&\;\.\=\_\~\#\%\$\!\+\,]+)/ism", '$1<a href="$2" >$2</a>', $Text);
 
 	if ($tryoembed)
 		$Text = preg_replace_callback("/\[bookmark\=([^\]]*)\].*?\[\/bookmark\]/ism",'tryoembed',$Text);
 
 	$Text = preg_replace("/\[bookmark\=([^\]]*)\](.*?)\[\/bookmark\]/ism",'[url=$1]$2[/url]',$Text);
+
+	$Text = preg_replace_callback("/\[share(.*?)\](.*?)\[\/share\]/ism","bb_ShareAttributes",$Text);	
 
 	if ($tryoembed)
 		$Text = preg_replace_callback("/\[url\]([$URLSearchString]*)\[\/url\]/ism",'tryoembed',$Text);
@@ -402,7 +401,7 @@ function bbcode($Text,$preserve_nl = false, $tryoembed = true) {
 	// [img]pathtoimage[/img]
 	$Text = preg_replace("/\[img\](.*?)\[\/img\]/ism", '<img src="$1" alt="' . t('Image/photo') . '" />', $Text);
 
-	$Text = preg_replace_callback("/\[share(.*?)\](.*?)\[\/share\]/ism","bb_ShareAttributes",$Text);
+
 
 	$Text = preg_replace("/\[crypt\](.*?)\[\/crypt\]/ism",'<br/><img src="' .$a->get_baseurl() . '/images/lock_icon.gif" alt="' . t('Encrypted content') . '" title="' . t('Encrypted content') . '" /><br />', $Text);
 	$Text = preg_replace("/\[crypt=(.*?)\](.*?)\[\/crypt\]/ism",'<br/><img src="' .$a->get_baseurl() . '/images/lock_icon.gif" alt="' . t('Encrypted content') . '" title="' . '$1' . ' ' . t('Encrypted content') . '" /><br />', $Text);

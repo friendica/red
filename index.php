@@ -29,7 +29,6 @@ $install = ((file_exists('.htconfig.php') && filesize('.htconfig.php')) ? false 
 
 $a->language = get_best_language();
 	
-load_translation_table($a->language);
 
 /**
  *
@@ -53,7 +52,15 @@ if(! $install) {
 	require_once("session.php");
 	load_hooks();
 	call_hooks('init_1');
+	
+	load_translation_table($a->language);
 }
+else {
+	// load translations but do not check plugins as we have no database
+	load_translation_table($a->language,true);
+}
+
+
 
 
 /**

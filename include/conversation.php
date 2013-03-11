@@ -652,6 +652,7 @@ function conversation(&$a, $items, $mode, $update, $page_mode = 'traditional') {
 		else
 		{
 			// Normal View
+//			logger('conv: items: ' . print_r($items,true));
 
             require_once('include/ConversationObject.php');
             require_once('include/ItemObject.php');

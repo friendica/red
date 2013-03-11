@@ -520,7 +520,7 @@ function import_xchan($arr) {
 			}
 
 			for($x = 0; $x < count($xisting); $x ++) {
-				if($xisiting[$x]['hubloc_url'] == $location['url']) {
+				if($xisting[$x]['hubloc_url'] == $location['url']) {
 					$xisting[$x]['updated'] = true;
 				}
 			}
@@ -567,10 +567,10 @@ function import_xchan($arr) {
 		}
 
 		// get rid of any hubs we have for this channel which weren't reported.
-
 		if($xisting) {
 			foreach($xisting as $x) {
 				if(! array_key_exists('updated',$x)) {
+					logger('import_xchan: removing unreferenced hub location ' . $x['hubloc_url');
 					$r = q("delete from hubloc where hubloc_id = %d limit 1",
 						intval($x['hubloc_id'])
 					);
