@@ -158,7 +158,7 @@ function bb_ShareAttributes($match) {
 
         $headline .= "</div>";
 
-        $text = $headline . '<div style="reshared-content">' . trim($match[2]) . '</div>';
+        $text = $headline . '<div class="reshared-content">' . trim($match[2]) . '</div>';
 		logger('bbshare: ' . $text);
         return($text);
 }
