@@ -15,7 +15,8 @@ function theme_content(&$a) {
 	$linkcolour = get_pconfig(local_user(), 'redbasic', 'linkcolour');
 	$iconset = get_pconfig(local_user(), 'redbasic', 'iconset');
 	$shiny = get_pconfig(local_user(), 'redbasic', 'shiny');
-	return redbasic_form($a, $font_size, $line_height, $colour, $shadow, $navcolour, $opaquenav, $displaystyle, $linkcolour, $iconset, $shiny);
+	$colour_scheme = get_pconfig(local_user(), 'redbasic', 'colour_scheme');
+	return redbasic_form($a, $font_size, $line_height, $colour, $shadow, $navcolour, $opaquenav, $displaystyle, $linkcolour, $iconset, $shiny, $colour_scheme);
 }
 
 function theme_post(&$a) {
@@ -31,6 +32,7 @@ function theme_post(&$a) {
 		set_pconfig(local_user(), 'redbasic', 'linkcolour', $_POST['redbasic_linkcolour']);
 		set_pconfig(local_user(), 'redbasic', 'iconset', $_POST['redbasic_iconset']);
 		set_pconfig(local_user(), 'redbasic', 'shiny', $_POST['redbasic_shiny']);
+		set_pconfig(local_user(), 'redbasic', 'colour_scheme', $_POST['redbasic_colour_scheme']);
 	}
 }
 
@@ -65,7 +67,7 @@ function theme_post(&$a) {
 //}
 
 // These aren't all used yet, but they're not bloat - we'll use drop down menus in idiot mode.
-function redbasic_form(&$a, $font_size, $line_height, $colour, $shadow, $navcolour, $opaquenav, $displaystyle, $linkcolour, $iconset, $shiny) {
+function redbasic_form(&$a, $font_size, $line_height, $colour, $shadow, $navcolour, $opaquenav, $displaystyle, $linkcolour, $iconset, $shiny, $colour_scheme) {
 	$line_heights = array(
 		"1.3" => "1.3",
 		"---" => "---",
