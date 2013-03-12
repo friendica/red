@@ -570,7 +570,7 @@ function import_xchan($arr) {
 		if($xisting) {
 			foreach($xisting as $x) {
 				if(! array_key_exists('updated',$x)) {
-					logger('import_xchan: removing unreferenced hub location ' . $x['hubloc_url');
+					logger('import_xchan: removing unreferenced hub location ' . $x['hubloc_url']);
 					$r = q("delete from hubloc where hubloc_id = %d limit 1",
 						intval($x['hubloc_id'])
 					);

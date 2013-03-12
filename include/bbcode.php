@@ -159,7 +159,7 @@ function bb_ShareAttributes($match) {
         $headline .= "</div>";
 
         $text = $headline . '<div class="reshared-content">' . trim($match[2]) . '</div>';
-		logger('bbshare: ' . $text);
+
         return($text);
 }
 
@@ -185,7 +185,7 @@ function bb_ShareAttributesSimple($match) {
         if ($matches[1] != "")
                 $profile = $matches[1];
 
-        $text = "<br />".html_entity_decode("&#x2672; ", ENT_QUOTES, 'UTF-8').' <a href="'.$profile.'">'.$author."</a>: <br />»".$match[2]."«";
+        $text = "<br />".html_entity_decode("&#x2672; ", ENT_QUOTES, 'UTF-8').' <a href="'.$profile.'">'.$author."</a>: div class=\"reshared-content\">" .$match[2]."</div>";
 
         return($text);
 }
