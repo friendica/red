@@ -203,7 +203,6 @@ function bb_ShareAttributesSimple($match) {
 
 function bbcode($Text,$preserve_nl = false, $tryoembed = true) {
 
-
 	$a = get_app();
 
 	// Extract the private images which use data url's since preg has issues with
