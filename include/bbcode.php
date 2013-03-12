@@ -159,8 +159,8 @@ function bb_ShareAttributes($match) {
 	// Bob Smith wrote the following post 2 hours ago
 
 	$fmt = sprintf( t('%1$s wrote the following %2$s %3$s'),
-		'<a href="' . zid($profile) . '" >' . $author,
-		'<a href="' . zid($link) . '" >' . t('post'),
+		'<a href="' . zid($profile) . '" >' . $author . '</a>',
+		'<a href="' . zid($link) . '" >' . t('post') . '</a>',
 		$reldate
 	);
 
