@@ -566,20 +566,9 @@ function admin_page_users(&$a){
 	
 // FIXME this is borked since there is no more user table
 	
-	$users = q("SELECT `user` . * , `contact`.`name` , `contact`.`url` , `contact`.`micro`, `lastitem`.`lastitem_date`
-				FROM
-					(SELECT MAX(`item`.`changed`) as `lastitem_date`, `item`.`uid`
-					FROM `item`
-					WHERE `item`.`type` = 'wall'
-					GROUP BY `item`.`uid`) AS `lastitem`
-						 RIGHT OUTER JOIN `user` ON `user`.`uid` = `lastitem`.`uid`,
-					   `contact`
-				WHERE
-					   `user`.`uid` = `contact`.`uid`
-						AND `user`.`verified` =1
-					AND `contact`.`self` =1
-				ORDER BY `contact`.`name` LIMIT %d, %d
-				",
+//	$users = q("SELECT `account_email` FROM `account`
+//				",
+	$users =q("SELECT `account_id` , `account_email`, `account_lastlog`, `account_created`, `account_service_class` FROM `account`",
 				intval($a->pager['start']),
 				intval($a->pager['itemspage'])
 				);
@@ -591,6 +580,7 @@ function admin_page_users(&$a){
 			t('Community/Celebrity Account'),
 			t('Automatic Friend Account')
 		);
+
 		$e['page_flags'] = $accounts[$e['page-flags']];
 		$e['register_date'] = relative_date($e['register_date']);
 		$e['login_date'] = relative_date($e['login_date']);
@@ -617,7 +607,7 @@ function admin_page_users(&$a){
 		'$unblock' => t('Unblock'),
 		
 		'$h_users' => t('Users'),
-		'$th_users' => array( t('Name'), t('Email'), t('Register date'), t('Last login'), t('Last item'),  t('Account') ),
+		'$th_users' => array( t('Name'), t('Email'), t('Register date'), t('Last login'), t('Last item'),  t('Account'), t('Service Class')),
 
 		'$confirm_delete_multi' => t('Selected users will be deleted!\n\nEverything these users had posted on this site will be permanently deleted!\n\nAre you sure?'),
 		'$confirm_delete' => t('The user {0} will be deleted!\n\nEverything this user has posted on this site will be permanently deleted!\n\nAre you sure?'),
