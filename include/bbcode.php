@@ -101,93 +101,101 @@ function bb_replace_images($body, $images) {
 
 function bb_ShareAttributes($match) {
 
-        $attributes = $match[1];
+	$attributes = $match[1];
 
-        $author = "";
-        preg_match("/author='(.*?)'/ism", $attributes, $matches);
-        if ($matches[1] != "")
-                $author = html_entity_decode($matches[1],ENT_QUOTES,'UTF-8');
+	$author = "";
+	preg_match("/author='(.*?)'/ism", $attributes, $matches);
+	if ($matches[1] != "")
+		$author = html_entity_decode($matches[1],ENT_QUOTES,'UTF-8');
 
-        preg_match('/author="(.*?)"/ism', $attributes, $matches);
-        if ($matches[1] != "")
-                $author = $matches[1];
+	preg_match('/author="(.*?)"/ism', $attributes, $matches);
+	if ($matches[1] != "")
+		$author = $matches[1];
 
-        $link = "";
-        preg_match("/link='(.*?)'/ism", $attributes, $matches);
-        if ($matches[1] != "")
-                $link = $matches[1];
+	$link = "";
+	preg_match("/link='(.*?)'/ism", $attributes, $matches);
+	if ($matches[1] != "")
+		$link = $matches[1];
 
-        preg_match('/link="(.*?)"/ism', $attributes, $matches);
-        if ($matches[1] != "")
-                $link = $matches[1];
+	preg_match('/link="(.*?)"/ism', $attributes, $matches);
+	if ($matches[1] != "")
+		$link = $matches[1];
 
-        $avatar = "";
-        preg_match("/avatar='(.*?)'/ism", $attributes, $matches);
-        if ($matches[1] != "")
-                $avatar = $matches[1];
+	$avatar = "";
+	preg_match("/avatar='(.*?)'/ism", $attributes, $matches);
+	if ($matches[1] != "")
+		$avatar = $matches[1];
 
-        preg_match('/avatar="(.*?)"/ism', $attributes, $matches);
-        if ($matches[1] != "")
-                $avatar = $matches[1];
+	preg_match('/avatar="(.*?)"/ism', $attributes, $matches);
+	if ($matches[1] != "")
+		$avatar = $matches[1];
 
-        $profile = "";
-        preg_match("/profile='(.*?)'/ism", $attributes, $matches);
-        if ($matches[1] != "")
-                $profile = $matches[1];
+	$profile = "";
+	preg_match("/profile='(.*?)'/ism", $attributes, $matches);
+	if ($matches[1] != "")
+		$profile = $matches[1];
 
-        preg_match('/profile="(.*?)"/ism', $attributes, $matches);
-        if ($matches[1] != "")
-                $profile = $matches[1];
+	preg_match('/profile="(.*?)"/ism', $attributes, $matches);
+	if ($matches[1] != "")
+		$profile = $matches[1];
 
-        $posted = "";
-        preg_match("/posted='(.*?)'/ism", $attributes, $matches);
-        if ($matches[1] != "")
-                $posted = $matches[1];
+	$posted = "";
+	preg_match("/posted='(.*?)'/ism", $attributes, $matches);
+	if ($matches[1] != "")
+		$posted = $matches[1];
 
-        preg_match('/posted="(.*?)"/ism', $attributes, $matches);
-        if ($matches[1] != "")
-                $posted = $matches[1];
-		$reldate = (($posted) ? " " . relative_date($posted) : ''); 
+	preg_match('/posted="(.*?)"/ism', $attributes, $matches);
+	if ($matches[1] != "")
+		$posted = $matches[1];
 
-        $headline = '<div class="shared_header">';
+	// FIXME - this should really be a wall-item-ago so it will get updated on the client
+	$reldate = (($posted) ? relative_date($posted) : ''); 
 
-		if ($avatar != "")
-			$headline .= '<img src="'.$avatar.'" height="32" width="32" />';
+	$headline = '<div class="shared_header">';
 
-		$headline .= sprintf(t('<span><a href="%s">%s</a> wrote the following <a href="%s">post</a>'.$reldate.':</span>'), $profile, $author, $link);
+	if ($avatar != "")
+		$headline .= '<img src="' . $avatar . '" alt="' . $author . '" height="32" width="32" />';
 
-        $headline .= "</div>";
+	// Bob Smith wrote the following post 2 hours ago
 
-        $text = $headline . '<div class="reshared-content">' . trim($match[2]) . '</div>';
+	$fmt = sprintf( t('%1$s wrote the following %2$s %3$s'),
+		'<a href="' . zid($profile) . '" >' . $author,
+		'<a href="' . zid($link) . '" >' . t('post'),
+		$reldate
+	);
 
-        return($text);
+	$headline .= '<span>' . $fmt . '</span></div>';
+
+	$text = $headline . '<div class="reshared-content">' . trim($match[2]) . '</div>';
+
+	return($text);
 }
 
 function bb_ShareAttributesSimple($match) {
 
-        $attributes = $match[1];
+	$attributes = $match[1];
 
-        $author = "";
-        preg_match("/author='(.*?)'/ism", $attributes, $matches);
-        if ($matches[1] != "")
-                $author = html_entity_decode($matches[1],ENT_QUOTES,'UTF-8');
+	$author = "";
+	preg_match("/author='(.*?)'/ism", $attributes, $matches);
+	if ($matches[1] != "")
+		$author = html_entity_decode($matches[1],ENT_QUOTES,'UTF-8');
 
-        preg_match('/author="(.*?)"/ism', $attributes, $matches);
-        if ($matches[1] != "")
-                $author = $matches[1];
+	preg_match('/author="(.*?)"/ism', $attributes, $matches);
+	if ($matches[1] != "")
+		$author = $matches[1];
 
-        $profile = "";
-        preg_match("/profile='(.*?)'/ism", $attributes, $matches);
-        if ($matches[1] != "")
-                $profile = $matches[1];
+	$profile = "";
+	preg_match("/profile='(.*?)'/ism", $attributes, $matches);
+	if ($matches[1] != "")
+		$profile = $matches[1];
 
-        preg_match('/profile="(.*?)"/ism', $attributes, $matches);
-        if ($matches[1] != "")
-                $profile = $matches[1];
+	preg_match('/profile="(.*?)"/ism', $attributes, $matches);
+	if ($matches[1] != "")
+		$profile = $matches[1];
 
-        $text = "<br />".html_entity_decode("&#x2672; ", ENT_QUOTES, 'UTF-8').' <a href="'.$profile.'">'.$author."</a>: div class=\"reshared-content\">" .$match[2]."</div>";
+	$text = "<br />".html_entity_decode("&#x2672; ", ENT_QUOTES, 'UTF-8').' <a href="'.$profile.'">'.$author."</a>: div class=\"reshared-content\">" .$match[2]."</div>";
 
-        return($text);
+	return($text);
 }
 
 	// BBcode 2 HTML was written by WAY2WEB.net
@@ -295,7 +303,7 @@ function bbcode($Text,$preserve_nl = false, $tryoembed = true) {
 	$Text = preg_replace("(\[color=(.*?)\](.*?)\[\/color\])ism","<span style=\"color: $1;\">$2</span>",$Text);
 
 	// Check for sized text
-        // [size=50] --> font-size: 50px (with the unit).
+		// [size=50] --> font-size: 50px (with the unit).
 	$Text = preg_replace("(\[size=(\d*?)\](.*?)\[\/size\])ism","<span style=\"font-size: $1px;\">$2</span>",$Text);
 	$Text = preg_replace("(\[size=(.*?)\](.*?)\[\/size\])ism","<span style=\"font-size: $1;\">$2</span>",$Text);
 
@@ -315,9 +323,9 @@ function bbcode($Text,$preserve_nl = false, $tryoembed = true) {
 	$endlessloop = 0;
 
 	while ((((strpos($Text, "[/list]") !== false) && (strpos($Text, "[list") !== false)) ||
-	       ((strpos($Text, "[/ol]") !== false) && (strpos($Text, "[ol]") !== false)) || 
-	       ((strpos($Text, "[/ul]") !== false) && (strpos($Text, "[ul]") !== false)) || 
-	       ((strpos($Text, "[/li]") !== false) && (strpos($Text, "[li]") !== false))) && (++$endlessloop < 20)) {
+		   ((strpos($Text, "[/ol]") !== false) && (strpos($Text, "[ol]") !== false)) || 
+		   ((strpos($Text, "[/ul]") !== false) && (strpos($Text, "[ul]") !== false)) || 
+		   ((strpos($Text, "[/li]") !== false) && (strpos($Text, "[li]") !== false))) && (++$endlessloop < 20)) {
 		$Text = preg_replace("/\[list\](.*?)\[\/list\]/ism", '<ul class="listbullet" style="list-style-type: circle;">$1</ul>' ,$Text);
 		$Text = preg_replace("/\[list=\](.*?)\[\/list\]/ism", '<ul class="listnone" style="list-style-type: none;">$1</ul>' ,$Text);
 		$Text = preg_replace("/\[list=1\](.*?)\[\/list\]/ism", '<ul class="listdecimal" style="list-style-type: decimal;">$1</ul>' ,$Text);
@@ -370,8 +378,8 @@ function bbcode($Text,$preserve_nl = false, $tryoembed = true) {
 	$endlessloop = 0;
 	while ((strpos($Text, "[/spoiler]")!== false)  and (strpos($Text, "[spoiler=") !== false) and (++$endlessloop < 20))
 		$Text = preg_replace("/\[spoiler=[\"\']*(.*?)[\"\']*\](.*?)\[\/spoiler\]/ism",
-        	                     "<br /><strong class=".'"spoiler"'.">" . $t_wrote . "</strong><blockquote class=".'"spoiler"'.">$2</blockquote>",
-                	             $Text);
+			"<br /><strong class=".'"spoiler"'.">" . $t_wrote . "</strong><blockquote class=".'"spoiler"'.">$2</blockquote>",
+			$Text);
 
 	// Declare the format for [quote] layout
 	$QuoteLayout = '<blockquote>$1</blockquote>';
@@ -390,8 +398,8 @@ function bbcode($Text,$preserve_nl = false, $tryoembed = true) {
 	$endlessloop = 0;
 	while ((strpos($Text, "[/quote]")!== false)  and (strpos($Text, "[quote=") !== false) and (++$endlessloop < 20))
 		$Text = preg_replace("/\[quote=[\"\']*(.*?)[\"\']*\](.*?)\[\/quote\]/ism",
-        	                     "<br /><strong class=".'"author"'.">" . $t_wrote . "</strong><blockquote>$2</blockquote>",
-                	             $Text);
+			"<br /><strong class=".'"author"'.">" . $t_wrote . "</strong><blockquote>$2</blockquote>",
+			$Text);
 
 	// [img=widthxheight]image source[/img]
 	//$Text = preg_replace("/\[img\=([0-9]*)x([0-9]*)\](.*?)\[\/img\]/ism", '<img src="$3" style="height: $2px; width: $1px;" >', $Text);
@@ -428,8 +436,8 @@ function bbcode($Text,$preserve_nl = false, $tryoembed = true) {
 
 	// Youtube extensions
 	if ($tryoembed) {
-		$Text = preg_replace_callback("/\[youtube\](https?:\/\/www.youtube.com\/watch\?v\=.*?)\[\/youtube\]/ism", 'tryoembed', $Text);        
-		$Text = preg_replace_callback("/\[youtube\](www.youtube.com\/watch\?v\=.*?)\[\/youtube\]/ism", 'tryoembed', $Text);        
+		$Text = preg_replace_callback("/\[youtube\](https?:\/\/www.youtube.com\/watch\?v\=.*?)\[\/youtube\]/ism", 'tryoembed', $Text);		
+		$Text = preg_replace_callback("/\[youtube\](www.youtube.com\/watch\?v\=.*?)\[\/youtube\]/ism", 'tryoembed', $Text);		
 		$Text = preg_replace_callback("/\[youtube\](https?:\/\/youtu.be\/.*?)\[\/youtube\]/ism",'tryoembed',$Text); 
 	}
 
