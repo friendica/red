@@ -40,14 +40,14 @@ function queue_run($argv, $argc){
 		return;
 
 	foreach($r as $rr) {
-		if(in_array($rr['outq_hub'],$deadguys))
+		if(in_array($rr['outq_posturl'],$deadguys))
 			continue;
 		$result = zot_zot($rr['outq_posturl'],$rr['outq_notify']); 
 		if($result['success']) {
 			zot_process_response($rr['outq_posturl'],$result, $rr);				
 		}
 		else {
-			$deadguys[] = $rr['outq_hub'];
+			$deadguys[] = $rr['outq_posturl'];
 			$y = q("update outq set outq_updated = '%s' where outq_hash = '%s' limit 1",
 				dbesc(datetime_convert()),
 				dbesc($rr['outq_hash'])
