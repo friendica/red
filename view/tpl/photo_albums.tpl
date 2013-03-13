@@ -3,7 +3,7 @@
 {{ if $albums }}
 <ul>
 {{ for $albums as $al }}
-<li><a href="$baseurl/photos/$nick/$al.bin2hex">$al.album</a></li>
+<li><a href="$baseurl/photos/$nick/album/$al.bin2hex">$al.album</a></li>
 {{ endfor }}
 </ul>
 {{ endif }}
