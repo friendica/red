@@ -1,6 +1,6 @@
 <?php
 
-define( 'UPDATE_VERSION' , 1034 );
+define( 'UPDATE_VERSION' , 1035 );
 
 /**
  *
@@ -433,3 +433,15 @@ KEY `share_xchan` (`share_xchan`)
 	return UPDATE_FAILED;
 }
 
+function update_r1034() {
+	$r = q("CREATE TABLE if not exists `updates` (
+`ud_hash` CHAR( 128 ) NOT NULL ,
+`ud_date` DATETIME NOT NULL DEFAULT '0000-00-00 00:00:00',
+PRIMARY KEY ( `ud_hash` ),
+KEY `ud_date` ( `ud_date` )
+) ENGINE = MYISAM DEFAULT CHARSET = utf8");
+
+	if($r)
+		return UPDATE_SUCCESS;
+	return UPDATE_FAILED;
+}
