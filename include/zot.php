@@ -454,12 +454,19 @@ function import_xchan($arr) {
 			$new_flags = $r[0]['xchan_flags'];
 		
 			
-		if(($r[0]['xchan_name_date'] != $arr['name_updated']) || ($r[0]['xchan_connurl'] != $arr['connections_url']) || ($r[0]['xchan_flags'] != $new_flags)) {
-			$r = q("update xchan set xchan_name = '%s', xchan_name_date = '%s', xchan_connurl = '%s', xchan_flags = %d  where xchan_hash = '%s' limit 1",
+		if(($r[0]['xchan_name_date'] != $arr['name_updated']) 
+			|| ($r[0]['xchan_connurl'] != $arr['connections_url']) 
+			|| ($r[0]['xchan_flags'] != $new_flags)
+			|| ($r[0]['xchan_addr'] != $arr['address'])
+			|| ($r[0]['xchan_url'] != $arr['url'])) {
+			$r = q("update xchan set xchan_name = '%s', xchan_name_date = '%s', xchan_connurl = '%s', xchan_flags = %d,
+				xchan_addr = '%s', xchan_url = '%s' where xchan_hash = '%s' limit 1",
 				dbesc($arr['name']),
 				dbesc($arr['name_updated']),
 				dbesc($arr['connections_url']),
 				intval($new_flags),
+				dbesc($arr['address']),
+				dbesc($arr['url']),
 				dbesc($xchan_hash)
 			);
 		}
