@@ -454,12 +454,19 @@ function import_xchan($arr) {
 			$new_flags = $r[0]['xchan_flags'];
 		
 			
-		if(($r[0]['xchan_name_date'] != $arr['name_updated']) || ($r[0]['xchan_connurl'] != $arr['connections_url']) || ($r[0]['xchan_flags'] != $new_flags)) {
-			$r = q("update xchan set xchan_name = '%s', xchan_name_date = '%s', xchan_connurl = '%s', xchan_flags = %d  where xchan_hash = '%s' limit 1",
+		if(($r[0]['xchan_name_date'] != $arr['name_updated']) 
+			|| ($r[0]['xchan_connurl'] != $arr['connections_url']) 
+			|| ($r[0]['xchan_flags'] != $new_flags)
+			|| ($r[0]['xchan_addr'] != $arr['address'])
+			|| ($r[0]['xchan_url'] != $arr['url'])) {
+			$r = q("update xchan set xchan_name = '%s', xchan_name_date = '%s', xchan_connurl = '%s', xchan_flags = %d,
+				xchan_addr = '%s', xchan_url = '%s' where xchan_hash = '%s' limit 1",
 				dbesc($arr['name']),
 				dbesc($arr['name_updated']),
 				dbesc($arr['connections_url']),
 				intval($new_flags),
+				dbesc($arr['address']),
+				dbesc($arr['url']),
 				dbesc($xchan_hash)
 			);
 		}
@@ -503,7 +510,15 @@ function import_xchan($arr) {
 		);
 	}
 
+	// what we are missing for true hub independence is for any changes in the primary hub to 
+	// get reflected not only in the hublocs, but also to update the URLs and addr in the appropriate xchan
+
 	if($arr['locations']) {
+
+		$xisting = q("select hubloc_id, hubloc_url from hubloc where hubloc_hash = '%s'",
+			dbesc($xchan_hash)
+		);
+
 		foreach($arr['locations'] as $location) {
 			if(! rsa_verify($location['url'],base64url_decode($location['url_sig']),$arr['key'])) {
 				logger('import_xchan: Unable to verify site signature for ' . $location['url']);
@@ -511,18 +526,35 @@ function import_xchan($arr) {
 				continue;
 			}
 
+			for($x = 0; $x < count($xisting); $x ++) {
+				if($xisting[$x]['hubloc_url'] == $location['url']) {
+					$xisting[$x]['updated'] = true;
+				}
+			}
+
 			$r = q("select * from hubloc where hubloc_hash = '%s' and hubloc_url = '%s' limit 1",
 				dbesc($xchan_hash),
 				dbesc($location['url'])
 			);
 			if($r) {
-				if(($r[0]['hubloc_flags'] & HUBLOC_FLAGS_PRIMARY) && (! $location['primary'])) {
+				if((($r[0]['hubloc_flags'] & HUBLOC_FLAGS_PRIMARY) && (! $location['primary']))
+					|| ((! ($r[0]['hubloc_flags'] & HUBLOC_FLAGS_PRIMARY)) && ($location['primary']))) {
 					$r = q("update hubloc set hubloc_flags = (hubloc_flags ^ %d) where hubloc_id = %d limit 1",
 						intval(HUBLOC_FLAGS_PRIMARY),
 						intval($r[0]['hubloc_id'])
 					);
 				}
 				continue;
+			}
+
+			// new hub claiming to be primary. Make it so.
+
+			if(intval($location['primary'])) {
+				$r = q("update hubloc set hubloc_flags = (hubloc_flags ^ %d) where hubloc_hash = '%s' and (hubloc_flags & %d )",
+					intval(HUBLOC_FLAGS_PRIMARY),
+					dbesc($xchan_hash),
+					intval(HUBLOC_FLAGS_PRIMARY)
+				);
 			}
 
 			$r = q("insert into hubloc ( hubloc_guid, hubloc_guid_sig, hubloc_hash, hubloc_addr, hubloc_flags, hubloc_url, hubloc_url_sig, hubloc_host, hubloc_callback, hubloc_sitekey)
@@ -539,6 +571,18 @@ function import_xchan($arr) {
 				dbesc($location['sitekey'])
 			);
 
+		}
+
+		// get rid of any hubs we have for this channel which weren't reported.
+		if($xisting) {
+			foreach($xisting as $x) {
+				if(! array_key_exists('updated',$x)) {
+					logger('import_xchan: removing unreferenced hub location ' . $x['hubloc_url']);
+					$r = q("delete from hubloc where hubloc_id = %d limit 1",
+						intval($x['hubloc_id'])
+					);
+				}
+			}
 		}
 
 	}

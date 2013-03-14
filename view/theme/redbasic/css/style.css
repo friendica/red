@@ -1090,7 +1090,8 @@ footer {
 }
 
 .wall-item-content img {
-	max-width: 95% !important;
+  max-height: 95% !important;
+  max-width: 95% !important;
 /*  box-shadow: 8px 8px 8px #666; can't really have this because of smileys */
 }
 
@@ -2257,35 +2258,9 @@ aside input[type='text'] {
 
 }
 
-
-#profile-jot-desc {
-	/*float: left;*/
-	width: 480px;
-	color: #FF0000;
-	margin-top: 10px;
-	margin-bottom: 10px;
+#profile-jot-wrapper {
+	margin-top: 25px;
 }
-
-#character-counter {
-	float: right;
-	font-size: 120%;
-}
-
-#character-counter.grey {
-	color: #888888;
-}
-
-#character-counter.orange {
-	color: orange;
-}
-#character-counter.red {
-	color: red;
-}
-
-#profile-jot-banner-end {
-	/* clear: both; */ 
-}
-
 
 
 #settings-default-perms-menu {
@@ -3777,3 +3752,6 @@ ul.menu-popup {
 }
 
 .profile-match-connect { margin-top: 5px; }
+
+.reshared-content { margin-left: 30px; }
+.shared_header img { margin-right: 10px; }

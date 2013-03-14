@@ -1,6 +1,5 @@
 <?php
 
-require_once('include/Scrape.php');
 require_once('include/zot.php');
 
 function probe_content(&$a) {

@@ -840,6 +840,13 @@ CREATE TABLE IF NOT EXISTS `tokens` (
   KEY `uid` (`uid`)
 ) ENGINE=MyISAM DEFAULT CHARSET=utf8;
 
+CREATE TABLE IF NOT EXISTS `updates` (
+  `ud_hash` char(128) NOT NULL,
+  `ud_date` datetime NOT NULL DEFAULT '0000-00-00 00:00:00',
+  PRIMARY KEY (`ud_hash`),
+  KEY `ud_date` (`ud_date`)
+) ENGINE=MyISAM DEFAULT CHARSET=utf8;
+
 CREATE TABLE IF NOT EXISTS `verify` (
   `id` int(10) unsigned NOT NULL AUTO_INCREMENT,
   `channel` int(10) unsigned NOT NULL DEFAULT '0',

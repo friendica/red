@@ -17,7 +17,7 @@ require_once('include/features.php');
 define ( 'FRIENDICA_PLATFORM',     'Friendica Red');
 define ( 'FRIENDICA_VERSION',      trim(file_get_contents('version.inc')) . 'R');
 define ( 'ZOT_REVISION',               1     ); 
-define ( 'DB_UPDATE_VERSION',       1034     );
+define ( 'DB_UPDATE_VERSION',       1035     );
 
 define ( 'EOL',                    '<br />' . "\r\n"     );
 define ( 'ATOM_TIME',              'Y-m-d\TH:i:s\Z' );
@@ -992,6 +992,18 @@ function check_config(&$a) {
 	if(! x($build))
 		$build = set_config('system','db_version',DB_UPDATE_VERSION);
 
+		$saved = get_config('system','urlverify');
+		if(! $saved)
+			set_config('system','urlverify',bin2hex(z_root()));
+		if(($saved) && ($saved != bin2hex(z_root()))) {
+			// our URL changed. Do something.
+			$oldurl = hex2bin($saved);
+			fix_system_urls($oldurl,z_root());
+			set_config('system','urlverify',bin2hex(z_root()));
+
+		}
+
+
 //		$url = get_config('system','baseurl');
 
 	// if the url isn't set or the stored url is radically different
@@ -1127,6 +1139,53 @@ function check_config(&$a) {
 	load_hooks();
 	return;
 }
+
+
+
+function fix_system_urls($oldurl,$newurl) {
+
+	require_once('include/crypto.php');
+
+	// Basically a site rename, but this can happen if you change from http to https for instance - even if the site name didn't change
+	// This should fix URL changes on our site, but other sites will end up with orphan hublocs which they will try to contact and will
+	// cause wasted communications.
+	// What we need to do after fixing this up is to send a revocation of the old URL to every other site that we communicate with so
+	// that they can clean up their hubloc tables (this includes directories).
+	// It's a very expensive operation so you don't want to have to do it often or after your site gets to be large.
+
+	$r = q("select xchan_hash, channel_prvkey from xchan left join channel on channel_hash = xchan_hash where xchan_url = '%s'",
+		dbesc($oldurl)
+	);
+	if($r) {
+		foreach($r as $rr) {
+			$channel = substr($rr['xchan_addr'],0,strpos($rr['xchan_addr'],'@'));
+			$parsed = @parse_url($rr['xchan_url']);
+			if(! $parsed)
+				continue;
+			$newhost = $parsed['host'];
+			$rhs = $newhost . (($parsed['port']) ? ':' . $parsed['port'] : '') . (($parsed['path']) ? $parsed['path'] : '');
+
+			$x = q("update xchan set xchan_addr = '%s', xchan_url = '%s', xchan_connurl = '%s' where xchan_hash = '%s' limit 1",
+				dbesc($channel . '@' . $rhs),
+				dbesc($newurl),
+				dbesc($newurl . '/poco/' . $channel),
+				dbesc($rr['xchan_hash'])
+			);
+
+
+			$y = q("update hubloc set hubloc_addr = '%s', hubloc_url = '%s', hubloc_url_sig = '%s', hubloc_host = '%s', hubloc_callback = '%s' where hubloc_hash = '%s' and hubloc_url = '%s' limit 1",
+				dbesc($channel . '@' . $rhs),
+				dbesc($newurl),
+				dbesc(base64url_encode(rsa_sign($newurl,$rr['channel_prvkey']))),
+				dbesc($newhost),
+				dbesc($newurl . '/post'),
+				dbesc($rr['xchan_hash']),
+				dbesc($oldurl)
+			);		
+		}
+	}
+}
+
 
 
 

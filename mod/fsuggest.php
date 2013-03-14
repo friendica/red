@@ -100,8 +100,9 @@ function fsuggest_content(&$a) {
 
 	$o .= '<form id="fsuggest-form" action="fsuggest/' . $contact_id . '" method="post" >';
 
-	$o .= contact_selector('suggest','suggest-select', false, 
-		array('size' => 4, 'exclude' => $contact_id, 'networks' => 'DFRN_ONLY', 'single' => true));
+// FIXME contact_selector deprecated, removed
+//	$o .= contact_selector('suggest','suggest-select', false, 
+//		array('size' => 4, 'exclude' => $contact_id, 'networks' => 'DFRN_ONLY', 'single' => true));
 
 
 	$o .= '<div id="fsuggest-submit-wrapper"><input id="fsuggest-submit" type="submit" name="submit" value="' . t('Submit') . '" /></div>';

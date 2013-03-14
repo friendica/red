@@ -18,13 +18,14 @@ function editpost_content(&$a) {
 		return;
 	}
 
-	$itm = q("SELECT * FROM `item` WHERE `id` = %d AND `uid` = %d LIMIT 1",
+	$itm = q("SELECT * FROM `item` WHERE `id` = %d AND `uid` = %d and author_xchan = '%s' LIMIT 1",
 		intval($post_id),
-		intval(local_user())
+		intval(local_user()),
+		dbesc(get_observer_hash())
 	);
 
 	if(! count($itm)) {
-		notice( t('Item not found') . EOL);
+		notice( t('Item is not editable') . EOL);
 		return;
 	}
 

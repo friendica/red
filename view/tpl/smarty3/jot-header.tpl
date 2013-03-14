@@ -79,24 +79,6 @@ function initEditor(cb){
 						$('#profile-jot-desc').html('&nbsp;');
 					}	 
 
-				 //Character count
-
-					if(textlen <= 140) {
-						$('#character-counter').removeClass('red');
-						$('#character-counter').removeClass('orange');
-						$('#character-counter').addClass('grey');
-					}
-					if((textlen > 140) && (textlen <= 420)) {
-						$('#character-counter').removeClass('grey');
-						$('#character-counter').removeClass('red');
-						$('#character-counter').addClass('orange');
-					}
-					if(textlen > 420) {
-						$('#character-counter').removeClass('grey');
-						$('#character-counter').removeClass('orange');
-						$('#character-counter').addClass('red');
-					}
-					$('#character-counter').text(textlen);
 				});
 
 				ed.onInit.add(function(ed) {
