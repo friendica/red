@@ -469,6 +469,7 @@ function import_xchan($arr) {
 				dbesc($arr['url']),
 				dbesc($xchan_hash)
 			);
+			update_modtime($xchan_hash);
 		}
 	}
 	else {
@@ -490,6 +491,7 @@ function import_xchan($arr) {
 			dbesc($arr['photo_updated']),
 			dbesc($arr['name_updated'])
 		);
+		update_modtime($xchan_hash);
 
 	}				
 
@@ -544,6 +546,7 @@ function import_xchan($arr) {
 						intval($r[0]['hubloc_id'])
 					);
 				}
+				update_modtime($xchan_hash);
 				continue;
 			}
 
@@ -570,7 +573,7 @@ function import_xchan($arr) {
 				dbesc($location['callback']),
 				dbesc($location['sitekey'])
 			);
-
+			update_modtime($xchan_hash);
 		}
 
 		// get rid of any hubs we have for this channel which weren't reported.
@@ -581,6 +584,7 @@ function import_xchan($arr) {
 					$r = q("delete from hubloc where hubloc_id = %d limit 1",
 						intval($x['hubloc_id'])
 					);
+					update_modtime($xchan_hash);
 				}
 			}
 		}
@@ -1152,6 +1156,7 @@ function import_directory_profile($hash,$profile) {
 		);
 	}
 
+	update_modtime($arr['xprof_hash']);
 	return;
 }
 
@@ -1187,4 +1192,21 @@ function import_directory_keywords($hash,$keywords) {
 				dbesc($x)
 			);
 	}
+}
+
+
+function update_modtime($hash) {
+	$r = q("select * from updates where ud_hash = '%s' limit 1",
+		dbesc($hash)
+	);
+	if($r)
+		q("update updates set ud_date = '%s' where ud_hash = '%s' limit 1",
+			dbesc(datetime_convert()),
+			dbesc($hash)
+		);
+	else
+		q("insert into updates (ud_hash, ud_date) values ( '%s', '%s' )",
+			dbesc($hash),
+			dbesc(datetime_convert())
+		);
 }
