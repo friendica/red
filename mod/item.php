@@ -242,10 +242,10 @@ function item_post(&$a) {
 			$str_contact_deny  = perms2str($_REQUEST['contact_deny']);
 		}
 
-		$title             = escape_tags(trim($_REQUEST['title']));
 		$location          = notags(trim($_REQUEST['location']));
 		$coord             = notags(trim($_REQUEST['coord']));
 		$verb              = notags(trim($_REQUEST['verb']));
+		$title             = escape_tags(trim($_REQUEST['title']));
 		$body              = escape_tags(trim($_REQUEST['body']));
 
 		$private = ( 
@@ -291,12 +291,24 @@ function item_post(&$a) {
 		// expire_quantity, e.g. '3'
 		// expire_units, e.g. days, weeks, months
 		if(x($_REQUEST,'expire_quantity') && (x($_REQUEST,'expire_units'))) {
-			$expire = datetime_convert(date_default_timezone_get(),'UTC', 'now + ' . $_REQUEST['expire_quantity'] . ' ' . $_REQUEST['expire_units']);
+			$expire = datetime_convert('UTC','UTC', 'now + ' . $_REQUEST['expire_quantity'] . ' ' . $_REQUEST['expire_units']);
 			if($expires <= datetime_convert())
 				$expires = '0000-00-00 00:00:00';
 		}
 	}
 
+
+
+	$post_type = notags(trim($_REQUEST['type']));
+
+	$content_type = notags(trim($_REQUEST['content_type']));
+	if(! $content_type)
+		$content_type = 'text/bbcode';
+
+
+// BBCODE alert: the following functions assume bbcode input
+// and will require alternatives for alternative content-types (text/html, text/markdown, text/plain, etc.)
+// we may need virtual or template classes to implement the possible alternatives
 
 	// Work around doubled linefeeds in Tinymce 3.5b2
 	// First figure out if it's a status post that would've been
@@ -306,60 +318,6 @@ function item_post(&$a) {
 	if((! $parent) && (! $api_source) && (! $plaintext)) {
 		$body = fix_mce_lf($body);
 	}
-
-
-	// get contact info for poster
-
-
-/*
-	$author = null;
-	$self   = false;
-	$contact_id = 0;
-
-	if((local_user()) && (local_user() == $profile_uid)) {
-		$self = true;
-		$r = q("SELECT * FROM `contact` WHERE `uid` = %d AND `self` = 1 LIMIT 1",
-			intval($_SESSION['uid'])
-		);
-	}
-	elseif(remote_user()) {
-		if(is_array($_SESSION['remote'])) {
-			foreach($_SESSION['remote'] as $v) {
-				if($v['uid'] == $profile_uid) {
-					$contact_id = $v['cid'];
-					break;
-				}
-			}
-		}				
-		if($contact_id) {
-			$r = q("SELECT * FROM `contact` WHERE `id` = %d LIMIT 1",
-				intval($contact_id)
-			);
-		}
-	}
-
-	if(count($r)) {
-	// FIXME
-	$author = $r[0];
-		$contact_id = $author['id'];
-	}
-
-	// get contact info for owner
-	
-	if($profile_uid == local_user()) {
-		$contact_record = $author;
-	}
-	else {
-		$r = q("SELECT * FROM `contact` WHERE `uid` = %d AND `self` = 1 LIMIT 1",
-			intval($profile_uid)
-		);
-		if(count($r))
-			$contact_record = $r[0];
-	}
-
-*/
-
-	$post_type = notags(trim($_REQUEST['type']));
 
 
 	/**
@@ -445,18 +403,6 @@ function item_post(&$a) {
 		}
 	}
 
-	if(strlen($categories)) {
-		$cats = explode(',',$categories);
-		foreach($cats as $cat) {
-			$post_tags[] = array(
-				'uid'   => $profile_uid, 
-				'type'  => TERM_CATEGORY,
-				'otype' => TERM_OBJ_POST,
-				'term'  => trim($cat),
-				'url'   => ''
-			); 				
-		}
-	}
 
 //	logger('post_tags: ' . print_r($post_tags,true));
 
@@ -489,6 +435,23 @@ function item_post(&$a) {
 		}
 	}
 
+// BBCODE end alert
+
+
+	if(strlen($categories)) {
+		$cats = explode(',',$categories);
+		foreach($cats as $cat) {
+			$post_tags[] = array(
+				'uid'   => $profile_uid, 
+				'type'  => TERM_CATEGORY,
+				'otype' => TERM_OBJ_POST,
+				'term'  => trim($cat),
+				'url'   => ''
+			); 				
+		}
+	}
+
+
 	$item_flags = ITEM_UNSEEN;
 	$item_restrict = ITEM_VISIBLE;
 	
@@ -503,7 +466,6 @@ function item_post(&$a) {
 
 	if($webpage)
 		$item_restrict = $item_restrict | ITEM_WEBPAGE;
-
 
 		
 		
@@ -542,6 +504,7 @@ function item_post(&$a) {
 	$datarray['changed']       = datetime_convert();
 	$datarray['uri']           = $uri;
 	$datarray['parent_uri']    = $parent_uri;
+	$datarray['mimetype']      = $content_type;
 	$datarray['title']         = $title;
 	$datarray['body']          = $body;
 	$datarray['app']           = $app;
