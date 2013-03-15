@@ -1,0 +1,5 @@
+body, button, input, select, textarea {color: #fff !important; background: #000080;}
+.wall-item-outside-wrapper.shiny, .wall-item-content-wrapper.shiny, .shiny  {background: #000080;}
+.wall-item-outside-wrapper, .wall-item-content-wrapper.comment {background: #000080;}
+#profile-jot-text, #photo-edit-perms-select, #photos-upload-permissions-wrapper, #profile-jot-acl-wrapper, #jot #jot-title, #jot-category, .tab {background: #000080; color: #fff;}
+
