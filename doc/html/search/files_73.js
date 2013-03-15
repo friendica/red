@@ -1,6 +1,5 @@
 var searchData=
 [
-  ['scrape_2ephp',['Scrape.php',['../Scrape_8php.html',1,'']]],
   ['search_2ephp',['search.php',['../search_8php.html',1,'']]],
   ['search_5fac_2ephp',['search_ac.php',['../search__ac_8php.html',1,'']]],
   ['security_2ephp',['security.php',['../security_8php.html',1,'']]],

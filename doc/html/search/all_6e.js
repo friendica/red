@@ -37,7 +37,6 @@ var searchData=
   ['network_5fmyspace',['NETWORK_MYSPACE',['../boot_8php.html#ae94f7c7c0909629a75aed1c41f10bc95',1,'boot.php']]],
   ['network_5fostatus',['NETWORK_OSTATUS',['../boot_8php.html#aef4b6c558c68c88c10f13c5a00c20e3d',1,'boot.php']]],
   ['network_5fphantom',['NETWORK_PHANTOM',['../boot_8php.html#ab21fb0f3e6b962419955c6fc7f26734f',1,'boot.php']]],
-  ['network_5fquery',['network_query',['../iquery_8php.html#aa41c07bf856eb8b386430cc53d80d4ac',1,'iquery.php']]],
   ['network_5fquery_5fget_5fsel_5ftab',['network_query_get_sel_tab',['../mod_2network_8php.html#aeaa518c1a317516a3da337b88d358666',1,'network.php']]],
   ['network_5fto_5fname',['network_to_name',['../contact__selectors_8php.html#ad472e4716426dd1a9dd77b62962454be',1,'contact_selectors.php']]],
   ['network_5fxmpp',['NETWORK_XMPP',['../boot_8php.html#a43296b1b4398aacbf92a4b2d56bab91e',1,'boot.php']]],

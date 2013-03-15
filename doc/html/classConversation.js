@@ -9,6 +9,7 @@ var classConversation =
     [ "is_preview", "classConversation.html#adf25ce023b69a166c63c6e84e02c136a", null ],
     [ "is_writable", "classConversation.html#a5879199008b96bee7550b576d614e1c1", null ],
     [ "set_mode", "classConversation.html#a66f121ca4026246f86a732e5faa0682c", null ],
+    [ "set_profile_owner", "classConversation.html#a8898bddc1e8990e81dab9a13a532cc93", null ],
     [ "$mode", "classConversation.html#afb03d1648dbfafe62caa1e30f32f2b1a", null ],
     [ "$preview", "classConversation.html#ae9937f9e0f3d927acc2bed46cc72e9ae", null ],
     [ "$profile_owner", "classConversation.html#a2f12724ef0244e9049fe1bb9641b516d", null ],

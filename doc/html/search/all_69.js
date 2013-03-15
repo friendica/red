@@ -24,7 +24,6 @@ var searchData=
   ['invite_2ephp',['invite.php',['../invite_8php.html',1,'']]],
   ['invite_5fcontent',['invite_content',['../invite_8php.html#a244385b28cfd021d308715f01158bfd9',1,'invite.php']]],
   ['invite_5fpost',['invite_post',['../invite_8php.html#aeb0881c0f93c8e8552e5ed756ce6e5a5',1,'invite.php']]],
-  ['iquery_2ephp',['iquery.php',['../iquery_8php.html',1,'']]],
   ['is_5fa_5fdate_5farg',['is_a_date_arg',['../text_8php.html#a1557112a774ec00fa06ed6b6f6495506',1,'text.php']]],
   ['is_5fajax',['is_ajax',['../boot_8php.html#ac17fc8a416ea79e9d5cb4dc9a8ff8c5c',1,'boot.php']]],
   ['is_5fcommentable',['is_commentable',['../classItem.html#ac04525a8be24c12b0a2ae4ca1ba4b967',1,'Item']]],

@@ -889,6 +889,18 @@ CREATE TABLE IF NOT EXISTS `xchan` (
   KEY `xchan_connurl` (`xchan_connurl`)
 ) ENGINE=MyISAM DEFAULT CHARSET=utf8;
 
+CREATE TABLE IF NOT EXISTS `xconfig` (
+  `id` int(10) unsigned NOT NULL AUTO_INCREMENT,
+  `xchan` char(255) NOT NULL,
+  `cat` char(255) NOT NULL,
+  `k` char(255) NOT NULL,
+  `v` mediumtext NOT NULL,
+  PRIMARY KEY (`id`),
+  KEY `xchan` (`xchan`),
+  KEY `cat` (`cat`),
+  KEY `k` (`k`)
+) ENGINE=MyISAM DEFAULT CHARSET=utf8;
+
 CREATE TABLE IF NOT EXISTS `xign` (
   `id` int(10) unsigned NOT NULL AUTO_INCREMENT,
   `uid` int(11) NOT NULL DEFAULT '0',

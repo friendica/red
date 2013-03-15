@@ -100,6 +100,7 @@ var dir_d41ce877eb409a4791b288730010abe2 =
     [ "wall_attach.php", "wall__attach_8php.html", "wall__attach_8php" ],
     [ "wall_upload.php", "wall__upload_8php.html", "wall__upload_8php" ],
     [ "webfinger.php", "webfinger_8php.html", "webfinger_8php" ],
+    [ "wfinger.php", "wfinger_8php.html", "wfinger_8php" ],
     [ "xchan.php", "xchan_8php.html", "xchan_8php" ],
     [ "xrd.php", "xrd_8php.html", "xrd_8php" ],
     [ "zfinger.php", "zfinger_8php.html", "zfinger_8php" ],
