@@ -65,12 +65,9 @@
 				{{ for $users as $u }}
 					<tr>
 						<td><img src="$u.micro" alt="$u.nickname" title="$u.nickname"></td>
-						<td class='name'><a href="$u.url" title="$u.nickname" >$u.name</a></td>
 						<td class='email'>$u.account_email</td>
 						<td class='register_date'>$u.account_created</td>
 						<td class='login_date'>$u.account_lastlog</td>
-						<td class='lastitem_date'>$u.lastitem_date</td>
-						<td class='login_date'>$u.page_flags</td>
 						<td class='service_class'>$u.account_service_class</td>
 						<td class="checkbox"><input type="checkbox" class="users_ckbx" id="id_user_$u.uid" name="user[]" value="$u.uid"/></td>
 						<td class="tools">
