@@ -114,6 +114,19 @@ function set_config($family,$key,$value) {
 
 
 
+function del_config($family,$key) {
+
+	global $a;
+	if(x($a->config[$family],$key))
+		unset($a->config[$family][$key]);
+	$ret = q("DELETE FROM `config` WHERE `cat` = '%s' AND `k` = '%s' LIMIT 1",
+		dbesc($family),
+		dbesc($key)
+	);
+	return $ret;
+}
+
+
 function load_pconfig($uid,$family) {
 	global $a;
 	$r = q("SELECT * FROM `pconfig` WHERE `cat` = '%s' AND `uid` = %d",
@@ -172,17 +185,6 @@ function get_pconfig($uid,$family, $key, $instore = false) {
 }
 
 
-function del_config($family,$key) {
-
-	global $a;
-	if(x($a->config[$family],$key))
-		unset($a->config[$family][$key]);
-	$ret = q("DELETE FROM `config` WHERE `cat` = '%s' AND `k` = '%s' LIMIT 1",
-		dbesc($family),
-		dbesc($key)
-	);
-	return $ret;
-}
 
 
 
@@ -236,3 +238,113 @@ function del_pconfig($uid,$family,$key) {
 	);
 	return $ret;
 }
+
+
+
+function load_xconfig($xchan,$family) {
+	global $a;
+	$r = q("SELECT * FROM `xconfig` WHERE `cat` = '%s' AND `xchan` = '%s'",
+		dbesc($family),
+		dbesc($xchan)
+	);
+	if(count($r)) {
+		foreach($r as $rr) {
+			$k = $rr['k'];
+			$a->config[$xchan][$family][$k] = $rr['v'];
+		}
+	} else if ($family != 'config') {
+		// Negative caching
+		$a->config[$xchan][$family] = "!<unset>!";
+	}
+}
+
+
+
+
+function get_xconfig($xchan,$family, $key, $instore = false) {
+
+	global $a;
+
+	if(! $instore) {
+		// Looking if the whole family isn't set
+		if(isset($a->config[$xchan][$family])) {
+			if($a->config[$xchan][$family] === '!<unset>!') {
+				return false;
+			}
+		}
+
+		if(isset($a->config[$xchan][$family][$key])) {
+			if($a->config[$xchan][$family][$key] === '!<unset>!') {
+				return false;
+			}
+			return $a->config[$xchan][$family][$key];
+		}
+	}
+
+	$ret = q("SELECT `v` FROM `xconfig` WHERE `xchan` = '%s' AND `cat` = '%s' AND `k` = '%s' LIMIT 1",
+		dbesc($xchan),
+		dbesc($family),
+		dbesc($key)
+	);
+
+	if(count($ret)) {
+		$val = (preg_match("|^a:[0-9]+:{.*}$|s", $ret[0]['v'])?unserialize( $ret[0]['v']):$ret[0]['v']);
+		$a->config[$xchan][$family][$key] = $val;
+		return $val;
+	}
+	else {
+		$a->config[$xchan][$family][$key] = '!<unset>!';
+	}
+	return false;
+}
+
+
+function set_xconfig($xchan,$family,$key,$value) {
+
+	global $a;
+
+	// manage array value
+	$dbvalue = (is_array($value)?serialize($value):$value);
+
+	if(get_xconfig($xchan,$family,$key,true) === false) {
+		$a->config[$xchan][$family][$key] = $value;
+		$ret = q("INSERT INTO `xconfig` ( `xchan`, `cat`, `k`, `v` ) VALUES ( '%s', '%s', '%s', '%s' ) ",
+			dbesc($xchan),
+			dbesc($family),
+			dbesc($key),
+			dbesc($dbvalue)
+		);
+		if($ret) 
+			return $value;
+		return $ret;
+	}
+	$ret = q("UPDATE `xconfig` SET `v` = '%s' WHERE `xchan` = '%s' AND `cat` = '%s' AND `k` = '%s' LIMIT 1",
+		dbesc($dbvalue),
+		dbesc($xchan),
+		dbesc($family),
+		dbesc($key)
+	);
+
+	$a->config[$xchan][$family][$key] = $value;
+
+	if($ret)
+		return $value;
+	return $ret;
+}
+
+
+function del_xconfig($xchan,$family,$key) {
+
+	global $a;
+	if(x($a->config[$xchan][$family],$key))
+		unset($a->config[$xchan][$family][$key]);
+	$ret = q("DELETE FROM `xconfig` WHERE `xchan` = '%s' AND `cat` = '%s' AND `k` = '%s' LIMIT 1",
+		dbesc($xchan),
+		dbesc($family),
+		dbesc($key)
+	);
+	return $ret;
+}
+
+
+

@@ -29,6 +29,5 @@ var searchData=
   ['perms_5fw_5ftagwall',['PERMS_W_TAGWALL',['../boot_8php.html#a99a4a17cb644e7e6826ea07ecaf09777',1,'boot.php']]],
   ['perms_5fw_5fwall',['PERMS_W_WALL',['../boot_8php.html#a6b14a31a8aa9f3452a13383f413bffa2',1,'boot.php']]],
   ['php_5ftpl',['php_tpl',['../namespacefriendica-to-smarty-tpl.html#a5dfc21ab8282dda8e3a7dff43cd0e283',1,'friendica-to-smarty-tpl']]],
-  ['png_5fquality',['PNG_QUALITY',['../boot_8php.html#a8df201788c9dd0ca91384e3a14c08bce',1,'boot.php']]],
-  ['probe_5fnormal',['PROBE_NORMAL',['../Scrape_8php.html#aa6b0bdcf6e8f9d44e699fd94d2207c98',1,'Scrape.php']]]
+  ['png_5fquality',['PNG_QUALITY',['../boot_8php.html#a8df201788c9dd0ca91384e3a14c08bce',1,'boot.php']]]
 ];

@@ -99,8 +99,6 @@ var searchData=
   ['private_5fmessages_5flist',['private_messages_list',['../include_2message_8php.html#a652973ce47a262f2d238c2fd6233d97e',1,'message.php']]],
   ['probe_2ephp',['probe.php',['../probe_8php.html',1,'']]],
   ['probe_5fcontent',['probe_content',['../probe_8php.html#a1f1db3fa6038e451e737964c94bf5e99',1,'probe.php']]],
-  ['probe_5fnormal',['PROBE_NORMAL',['../Scrape_8php.html#aa6b0bdcf6e8f9d44e699fd94d2207c98',1,'Scrape.php']]],
-  ['probe_5furl',['probe_url',['../Scrape_8php.html#a32883beb7dbf311fc9bfa99200a7402c',1,'Scrape.php']]],
   ['proc_5frun',['proc_run',['../boot_8php.html#ab346a2ece14993861f3e4206befa94f0',1,'boot.php']]],
   ['process_5fdelivery',['process_delivery',['../zot_8php.html#a37ec13b18057634eadb071f05297f5e1',1,'zot.php']]],
   ['process_5fmail_5fdelivery',['process_mail_delivery',['../zot_8php.html#aa6ae96db8cbbdbb10e6876d206bbf7cc',1,'zot.php']]],

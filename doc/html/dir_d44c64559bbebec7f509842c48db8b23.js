@@ -33,7 +33,6 @@ var dir_d44c64559bbebec7f509842c48db8b23 =
     [ "enotify.php", "enotify_8php.html", "enotify_8php" ],
     [ "event.php", "event_8php.html", "event_8php" ],
     [ "expire.php", "expire_8php.html", "expire_8php" ],
-    [ "fcontact.php", "fcontact_8php.html", "fcontact_8php" ],
     [ "features.php", "features_8php.html", "features_8php" ],
     [ "follow.php", "include_2follow_8php.html", "include_2follow_8php" ],
     [ "friendica_smarty.php", "friendica__smarty_8php.html", [
@@ -44,7 +43,6 @@ var dir_d44c64559bbebec7f509842c48db8b23 =
     [ "html2bbcode.php", "html2bbcode_8php.html", "html2bbcode_8php" ],
     [ "html2plain.php", "html2plain_8php.html", "html2plain_8php" ],
     [ "identity.php", "identity_8php.html", "identity_8php" ],
-    [ "iquery.php", "iquery_8php.html", "iquery_8php" ],
     [ "ItemObject.php", "ItemObject_8php.html", [
       [ "Item", "classItem.html", "classItem" ]
     ] ],
@@ -71,7 +69,6 @@ var dir_d44c64559bbebec7f509842c48db8b23 =
     ] ],
     [ "queue.php", "queue_8php.html", "queue_8php" ],
     [ "queue_fn.php", "queue__fn_8php.html", "queue__fn_8php" ],
-    [ "Scrape.php", "Scrape_8php.html", "Scrape_8php" ],
     [ "security.php", "security_8php.html", "security_8php" ],
     [ "session.php", "session_8php.html", "session_8php" ],
     [ "socgraph.php", "socgraph_8php.html", "socgraph_8php" ],

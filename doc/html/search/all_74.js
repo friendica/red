@@ -1,5 +1,6 @@
 var searchData=
 [
+  ['t',['t',['../language_8php.html#aae0c3638fb476ae1e31f8d242f5dac04',1,'language.php']]],
   ['tag_5fdeliver',['tag_deliver',['../items_8php.html#ab1bce4261bcf75ad62753b498a144d17',1,'items.php']]],
   ['tagadelic',['tagadelic',['../text_8php.html#afe44c30f1d0f8cb3ca097d4e189d852d',1,'text.php']]],
   ['tagblock',['tagblock',['../text_8php.html#a4f3605ee8de717a401ea9df2401b59f6',1,'text.php']]],
@@ -41,6 +42,7 @@ var searchData=
   ['toggle_5ftheme',['toggle_theme',['../admin_8php.html#af81f081851791cd15e49e8ff6722dc27',1,'admin.php']]],
   ['tplpaths',['tplpaths',['../namespaceupdatetpl.html#a52a85ffa6b6d63d840b185a133478c12',1,'updatetpl']]],
   ['tryoembed',['tryoembed',['../bbcode_8php.html#a55b0cb6973f1ec731de0e726bcc0efa7',1,'bbcode.php']]],
+  ['tt',['tt',['../language_8php.html#ae310fb3880484ee1cc4faefe0c63c06d',1,'language.php']]],
   ['typo_2ephp',['typo.php',['../typo_8php.html',1,'']]],
   ['typohelper_2ephp',['typohelper.php',['../typohelper_8php.html',1,'']]]
 ];

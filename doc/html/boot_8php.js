@@ -13,6 +13,7 @@ var boot_8php =
     [ "current_theme", "boot_8php.html#ad206598b909e8eb67eb0e0bb5ef69c13", null ],
     [ "current_theme_url", "boot_8php.html#ab2878f40a7f3978476fcfb4c95b96806", null ],
     [ "dba_timer", "boot_8php.html#a3e0930933fb2c0bf8211cc7ab4e1c3b4", null ],
+    [ "fix_system_urls", "boot_8php.html#aca5e42678e178c6b9034610d66666fd7", null ],
     [ "get_account_id", "boot_8php.html#afe88b920aa285982edb817a0dd44eb37", null ],
     [ "get_app", "boot_8php.html#a0e6db7e365f2b041a828b93786f694bc", null ],
     [ "get_birthdays", "boot_8php.html#ad2c97627a313d53df1a1c7b4215ddb51", null ],
