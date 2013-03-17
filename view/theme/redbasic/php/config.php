@@ -90,12 +90,14 @@ function redbasic_form(&$a, $font_size, $line_height, $colour, $shadow, $navcolo
 	);
 	$colours = array(
 		'light' => 'light',		
-		'dark' => 'dark',						
+		'dark' => 'dark',		
+		'highcontrast' => 'High Contrast',
 	);
 
 	$colour_schemes = array(
 		'redbasic' => 'redbasic',		
-		'fancyred' => 'fancyred',						
+		'fancyred' => 'fancyred',	
+		'highcontrastscheme' => 'highcontrast', 
 	);
 	$shadows = array(
 		  'true' => 'Yes',
