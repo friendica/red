@@ -49,6 +49,8 @@
 	{{include file="field_textarea.tpl" field=$banner}}
 	{{include file="field_select.tpl" field=$language}}
 	{{include file="field_select.tpl" field=$theme}}
+        {{include file="field_select.tpl" field=$theme_mobile}}
+        {{include file="field_select.tpl" field=$theme_accessibility}}
 	{{include file="field_select.tpl" field=$ssl_policy}}
 	
 	<div class="submit"><input type="submit" name="page_site" value="{{$submit}}" /></div>

@@ -210,6 +210,8 @@ function admin_page_site_post(&$a){
 	$banner				=	((x($_POST,'banner'))      		? trim($_POST['banner'])					: false);
 	$language			=	((x($_POST,'language'))			? notags(trim($_POST['language']))			: '');
 	$theme				=	((x($_POST,'theme'))			? notags(trim($_POST['theme']))				: '');
+	$theme_mobile		=	((x($_POST,'theme-mobile'))	? notags(trim($_POST['theme-mobile']))				: '');
+	$theme_accessibility		=	((x($_POST,'theme-accessibility'))	? notags(trim($_POST['theme-accessibility']))				: '');
 	$maximagesize		=	((x($_POST,'maximagesize'))		? intval(trim($_POST['maximagesize']))		:  0);
 	
 	
@@ -289,6 +291,16 @@ function admin_page_site_post(&$a){
 
 	set_config('system','language', $language);
 	set_config('system','theme', $theme);
+	if ( $theme_mobile === '---' ) {
+		del_config('system','mobile-theme');
+	} else {
+		set_config('system','mobile-theme', $theme_mobile);
+        }
+        if ( $theme_accessibility === '---' ) {
+		del_config('system','accessibility-theme');
+	} else {
+		set_config('system','accessibility-theme', $theme_accessibility);
+        }
 	set_config('system','maximagesize', $maximagesize);
 	
 	set_config('system','register_policy', $register_policy);
@@ -340,11 +352,21 @@ function admin_page_site(&$a) {
 	
 	/* Installed themes */
 	$theme_choices = array();
+	$theme_choices_mobile = array();
+	$theme_choices_mobile["---"] = t("No special theme for mobile devices");
+	$theme_choices_accessibility = array();
+	$theme_choices_accessibility["---"] =t("No special theme for accessibility");
 	$files = glob('view/theme/*');
 	if($files) {
 		foreach($files as $file) {
 			$f = basename($file);
 			$theme_name = ((file_exists($file . '/.experimental')) ?  sprintf("%s - Experimental", $f) : $f);
+		if (file_exists($file . '/.mobile')) {
+			$theme_choices_mobile[$f] = $theme_name;
+            }
+		if (file_exists($file . '/.accessibility')) {
+                $theme_choices_accessibility[$f] = $theme_name;
+            }
 			$theme_choices[$f] = $theme_name;
 		}
 	}
@@ -384,6 +406,8 @@ function admin_page_site(&$a) {
 		'$banner'			=> array('banner', t("Banner/Logo"), $banner, ""),
 		'$language' 		=> array('language', t("System language"), get_config('system','language'), "", $lang_choices),
 		'$theme' 			=> array('theme', t("System theme"), get_config('system','theme'), t("Default system theme - may be over-ridden by user profiles - <a href='#' id='cnftheme'>change theme settings</a>"), $theme_choices),
+		'$theme_mobile' 	=> array('theme-mobile', t("Mobile system theme"), get_config('system','mobile-theme'), t("Theme for mobile devices"), $theme_choices_mobile),
+		'$theme_accessibility' 	=> array('theme-accessibility', t("Accessibility system theme"), get_config('system','accessibility-theme'), t("Accessibility theme"), $theme_choices_accessibility),
 		'$ssl_policy'       => array('ssl_policy', t("SSL link policy"), (string) intval(get_config('system','ssl_policy')), t("Determines whether generated links should be forced to use SSL"), $ssl_choices),
 		'$maximagesize'		=> array('maximagesize', t("Maximum image size"), get_config('system','maximagesize'), t("Maximum size in bytes of uploaded images. Default is 0, which means no limits.")),
 		'$register_policy'	=> array('register_policy', t("Register policy"), $a->config['system']['register_policy'], "", $register_choices),
