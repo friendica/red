@@ -44,6 +44,8 @@
 	{{ inc field_textarea.tpl with $field=$banner }}{{ endinc }}
 	{{ inc field_select.tpl with $field=$language }}{{ endinc }}
 	{{ inc field_select.tpl with $field=$theme }}{{ endinc }}
+        {{ inc field_select.tpl with $field=$theme_mobile }}{{ endinc }}
+        {{ inc field_select.tpl with $field=$theme_accessibility }}{{ endinc }}
 	{{ inc field_select.tpl with $field=$ssl_policy }}{{ endinc }}
 	
 	<div class="submit"><input type="submit" name="page_site" value="$submit" /></div>
