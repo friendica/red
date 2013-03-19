@@ -44,6 +44,21 @@ function validate_channelname($name) {
 }
 
 
+// Create the system channel for directory synchronisation - this has no account attached
+
+
+function create_dir_account() {
+	create_account(array(
+		'account_id' => 'xxx',  // This will create an identity with an (integer) account_id of 0, but account_id is required
+		'nickname' => 'dir',
+		'name' => 'Directory',
+		'pageflags' => PAGE_DIRECTORY_CHANNEL|PAGE_HIDDEN,
+		'publish' => 0
+	));
+}
+
+
+
 // Required: name, nickname, account_id
 
 // optional: pageflags
@@ -107,7 +122,7 @@ function create_identity($arr) {
 		dbesc($hash),
 		dbesc($key['prvkey']),
 		dbesc($key['pubkey']),
-		intval(PAGE_NORMAL)
+		intval($pageflags)
 	);
 			
 	$r = q("select * from channel where channel_account_id = %d 
@@ -123,7 +138,8 @@ function create_identity($arr) {
 	
 	$ret['channel'] = $r[0];
 
-	set_default_login_identity($arr['account_id'],$ret['channel']['channel_id'],false);
+	if(intval($arr['account_id']))
+		set_default_login_identity($arr['account_id'],$ret['channel']['channel_id'],false);
 
 	// Ensure that there is a host keypair.
 
@@ -200,16 +216,18 @@ function create_identity($arr) {
 		intval(ABOOK_FLAG_SELF)
 	);
 
+	if(intval($ret['channel']['channel_account_id'])) {
 
-	// Create a group with no members. This allows somebody to use it 
-	// right away as a default group for new contacts. 
+		// Create a group with no members. This allows somebody to use it 
+		// right away as a default group for new contacts. 
 
-	require_once('include/group.php');
-	group_add($newuid, t('Friends'));
+		require_once('include/group.php');
+		group_add($newuid, t('Friends'));
 
-	call_hooks('register_account', $newuid);
-
-	proc_run('php','include/directory.php', $ret['channel']['channel_id']);
+		call_hooks('register_account', $newuid);
+	
+		proc_run('php','include/directory.php', $ret['channel']['channel_id']);
+	}
 
 	$ret['success'] = true;
 	return $ret;
