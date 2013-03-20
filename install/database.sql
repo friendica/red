@@ -698,6 +698,7 @@ CREATE TABLE IF NOT EXISTS `profile` (
   `work` text NOT NULL,
   `education` text NOT NULL,
   `contact` text NOT NULL,
+  `channels` text NOT NULL,
   `homepage` char(255) NOT NULL,
   `photo` char(255) NOT NULL,
   `thumb` char(255) NOT NULL,
