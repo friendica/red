@@ -1,6 +1,6 @@
 <?php
 
-define( 'UPDATE_VERSION' , 1036 );
+define( 'UPDATE_VERSION' , 1037 );
 
 /**
  *
@@ -461,4 +461,8 @@ KEY `k` ( `k` )
 	if($r)
 		return UPDATE_SUCCESS;
 	return UPDATE_FAILED;
+}
+
+function update_r1036() {
+	q("ALTER TABLE `profile` ADD `channels` TEXT NOT NULL AFTER `contact` ");
 }

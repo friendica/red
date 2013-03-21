@@ -211,6 +211,15 @@
 </div>
 <div id="contact-jot-end"></div>
 
+<div id="channels-jot-wrapper" >
+<p id="channels-jot-desc" >
+{{$lbl_channels}}
+</p>
+
+<textarea rows="10" cols="72" id="channels-jot-text" name="channels" >{{$channels}}</textarea>
+
+</div>
+<div id="channels-jot-end"></div>
 
 <div class="profile-edit-submit-wrapper" >
 <input type="submit" name="submit" class="profile-edit-submit-button" value="{{$submit}}" />

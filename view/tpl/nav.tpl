@@ -58,6 +58,9 @@
 		</li>
 	{{ endif }}
 
+   {{ if $nav.register }}<li id="nav-register-link" class="nav-menu $nav.register.2"><a href="$nav.register.0" title="$nav.register.3" >$nav.register.1</a><li>{{ endif }}
+
+
 	{{ if $nav.messages }}
 		<li id="nav-mail-link" class="nav-menu $sel.messages">
 			<a class="$nav.messages.2" href="$nav.messages.0" title="$nav.messages.3" >$nav.messages.1</a>
