@@ -63,7 +63,7 @@
 		</li>
 	{{/if}}
 
-   {{if $nav.register}}<li id="nav-register-link" class="nav-menu {{$nav.login.2}}"><a href="{{$nav.register.0}}" title="{{$nav.register.3}}" >{{$nav.register.1}}</a><li>{{/if}}
+   {{if $nav.register}}<li id="nav-register-link" class="nav-menu {{$nav.register.2}}"><a href="{{$nav.register.0}}" title="{{$nav.register.3}}" >{{$nav.register.1}}</a><li>{{/if}}
 
 
 	{{if $nav.messages}}
