@@ -59,7 +59,7 @@ function profiles_init(&$a) {
 			intval(local_user()));
 		
 		$r2 = q("INSERT INTO `profile` (`aid`, `uid` , `profile_guid`, `profile_name` , `name`, `photo`, `thumb`)
-			VALUES ( %d, '%s', '%s', '%s', '%s' )",
+			VALUES ( %d, '%s', '%s', '%s', '%s', '%s', '%s' )",
 			intval(get_account_id()),
 			intval(local_user()),
 			dbesc(random_string()),
