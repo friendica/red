@@ -1923,36 +1923,44 @@ function profile_tabs($a, $is_owner=False, $nickname=Null){
 
 	$tabs = array(
 		array(
-			'label'=>t('Status'),
-			'url' => $url,
-			'sel' => ((argv(0)=='channel')?'active':''),
+			'label' => t('Channel'),
+			'url'   => $url,
+			'sel'   => ((argv(0) == 'channel') ? 'active' : ''),
 			'title' => t('Status Messages and Posts'),
-			'id' => 'status-tab',
+			'id'    => 'status-tab',
 		),
 		array(
-			'label' => t('Profile'),
+			'label' => t('About'),
 			'url' 	=> $pr,
-			'sel'	=> ((argv(0)=='profile')?'active':''),
+			'sel'	=> ((argv(0) == 'profile') ? 'active' : ''),
 			'title' => t('Profile Details'),
-			'id' => 'profile-tab',
+			'id'    => 'profile-tab',
 		),
 		array(
 			'label' => t('Photos'),
 			'url'	=> $a->get_baseurl() . '/photos/' . $nickname,
-			'sel'	=> ((argv(0)=='photos')?'active':''),
+			'sel'	=> ((argv(0) == 'photos') ? 'active' : ''),
 			'title' => t('Photo Albums'),
-			'id' => 'photo-tab',
+			'id'    => 'photo-tab',
 		),
 	);
+
 
 	if ($is_owner){
 		$tabs[] = array(
 			'label' => t('Events'),
 			'url'	=> $a->get_baseurl() . '/events',
-			'sel' 	=>((argv(0)=='events')?'active':''),
+			'sel' 	=> ((argv(0) == 'events') ? 'active' : ''),
 			'title' => t('Events and Calendar'),
-			'id' => 'events-tab',
+			'id'    => 'events-tab',
 		);
+	}
+	else {
+		// FIXME
+		// we probably need a listing of events that were created by 
+		// this channel and are visible to the observer
+
+
 	}
 
 

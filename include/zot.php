@@ -417,6 +417,7 @@ function zot_register_hub($arr) {
 function import_xchan($arr) {
 
 	$ret = array('success' => false);
+	$changed = false;
 
 	$xchan_hash = base64url_encode(hash('whirlpool',$arr['guid'] . $arr['guid_sig'], true));
 	$import_photos = false;
@@ -470,6 +471,7 @@ function import_xchan($arr) {
 				dbesc($xchan_hash)
 			);
 			update_modtime($xchan_hash);
+			$changed = true;
 		}
 	}
 	else {
@@ -492,6 +494,7 @@ function import_xchan($arr) {
 			dbesc($arr['name_updated'])
 		);
 		update_modtime($xchan_hash);
+		$changed = true;
 
 	}				
 
@@ -510,6 +513,9 @@ function import_xchan($arr) {
 				dbesc($photos[3]),
 				dbesc($xchan_hash)
 		);
+
+		update_modtime($xchan_hash);
+		$changed = true;
 	}
 
 	// what we are missing for true hub independence is for any changes in the primary hub to 
@@ -547,6 +553,7 @@ function import_xchan($arr) {
 					);
 				}
 				update_modtime($xchan_hash);
+				$changed = true;
 				continue;
 			}
 
@@ -574,6 +581,7 @@ function import_xchan($arr) {
 				dbesc($location['sitekey'])
 			);
 			update_modtime($xchan_hash);
+			$changed = true;
 		}
 
 		// get rid of any hubs we have for this channel which weren't reported.
@@ -585,9 +593,16 @@ function import_xchan($arr) {
 						intval($x['hubloc_id'])
 					);
 					update_modtime($xchan_hash);
+					$changed = true;
 				}
 			}
 		}
+
+	}
+
+	if($changed) {
+		// send out a directory mirror update packet if we're a directory server or some kind
+
 
 	}
 
