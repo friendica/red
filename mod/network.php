@@ -369,7 +369,7 @@ function network_content(&$a, $update = 0, $load = false) {
 
 		if(feature_enabled(local_user(),'affinity')) {
 			$tpl = get_markup_template('main_slider.tpl');
-			$o .= replace_macros($tpl,array(
+			$x = replace_macros($tpl,array(
 				'$val' => intval($cmin) . ';' . intval($cmax),
 				'$refresh' => t('Refresh'),
 				'$me' => t('Me'),
@@ -380,6 +380,9 @@ function network_content(&$a, $update = 0, $load = false) {
 				'$acquaintances' => t('Acquaintances'),
 				'$world' => t('Everybody')
 			));
+			$arr = array('html' => $x);
+			call_hooks('main_slider',$arr);
+			$o .= $arr['html']; 
 		}
  	
 		$arr = array('tabs' => $tabs);
