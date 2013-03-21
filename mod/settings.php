@@ -500,9 +500,10 @@ function settings_post(&$a) {
 	);
 */
 
-	$r = q("update channel set channel_name = '%s', channel_timezone = '%s', channel_max_anon_mail = %d, channel_max_friend_req = %d, channel_expire_days = %d, channel_r_stream = %d, channel_r_profile = %d, channel_r_photos = %d, channel_r_abook = %d, channel_w_stream = %d, channel_w_wall = %d, channel_w_tagwall = %d, channel_w_comment = %d, channel_w_mail = %d, channel_w_photos = %d, channel_w_chat = %d, channel_a_delegate = %d, channel_r_storage = %d, channel_w_storage = %d, channel_r_pages = %d, channel_w_pages = %d where channel_id = %d limit 1",
+	$r = q("update channel set channel_name = '%s', channel_timezone = '%s', channel_notifyflags = %d, channel_max_anon_mail = %d, channel_max_friend_req = %d, channel_expire_days = %d, channel_r_stream = %d, channel_r_profile = %d, channel_r_photos = %d, channel_r_abook = %d, channel_w_stream = %d, channel_w_wall = %d, channel_w_tagwall = %d, channel_w_comment = %d, channel_w_mail = %d, channel_w_photos = %d, channel_w_chat = %d, channel_a_delegate = %d, channel_r_storage = %d, channel_w_storage = %d, channel_r_pages = %d, channel_w_pages = %d where channel_id = %d limit 1",
 		dbesc($username),
 		dbesc($timezone),
+		intval($notify),
 		intval($unkmail),
 		intval($maxreq),
 		intval($expire),
