@@ -969,7 +969,7 @@ function prepare_body($item,$attach = false) {
 	$a = get_app();
 	call_hooks('prepare_body_init', $item); 
 
-	$s = prepare_text($item['body']);
+	$s = prepare_text($item['body'],$item['mimetype']);
 
 	$prep_arr = array('item' => $item, 'html' => $s);
 	call_hooks('prepare_body', $prep_arr);
@@ -1080,14 +1080,35 @@ function prepare_body($item,$attach = false) {
 // Given a text string, convert from bbcode to html and add smilie icons.
 
 
-function prepare_text($text) {
+function prepare_text($text,$content_type = 'text/bbcode') {
 
-	require_once('include/bbcode.php');
 
-	if(stristr($text,'[nosmile]'))
-		$s = bbcode($text);
-	else
-		$s = smilies(bbcode($text));
+	switch($content_type) {
+
+		case 'text/plain':
+			$s = escape_tags($text);
+			break;
+
+		case 'text/html':
+			$s = $text;
+			break;
+
+		case 'text/markdown':
+			require_once('library/markdown.php');
+			$s = Markdown($text);
+			break;
+
+		case 'text/bbcode':
+		case '':
+		default:
+			require_once('include/bbcode.php');
+
+			if(stristr($text,'[nosmile]'))
+				$s = bbcode($text);
+			else
+				$s = smilies(bbcode($text));
+			break;
+	}
 
 	return $s;
 }
