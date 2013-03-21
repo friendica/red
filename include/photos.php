@@ -122,7 +122,7 @@ function photo_upload($channel, $observer, $args) {
 		$ret['message'] = t('Unable to process image');
 		logger('photo_upload: unable to process image');
 		@unlink($src);
-		call_hooks('photo_post_end',$ret);
+		call_hooks('photo_upload_end',$ret);
 		return $ret;
 	}
 
@@ -175,7 +175,7 @@ function photo_upload($channel, $observer, $args) {
 		);
 		$ret['message'] = t('Photo storage failed.');
 		logger('photo_upload: photo store failed.');
-		call_hooks('photo_post_end',$ret);
+		call_hooks('photo_upload_end',$ret);
 		return $ret;
 	}
 
@@ -222,7 +222,7 @@ function photo_upload($channel, $observer, $args) {
 	$ret['resource_id'] = $photo_hash;
 	$ret['photoitem_id'] = $item_id;
 
-	call_hooks('photo_post_end',$ret);
+	call_hooks('photo_upload_end',$ret);
 
 	return $ret;
 }
