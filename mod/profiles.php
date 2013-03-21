@@ -232,6 +232,7 @@ function profiles_post(&$a) {
 		$about        = fix_mce_lf(escape_tags(trim($_POST['about'])));
 		$interest     = fix_mce_lf(escape_tags(trim($_POST['interest'])));
 		$contact      = fix_mce_lf(escape_tags(trim($_POST['contact'])));
+		$channels     = fix_mce_lf(escape_tags(trim($_POST['channels'])));
 		$music        = fix_mce_lf(escape_tags(trim($_POST['music'])));
 		$book         = fix_mce_lf(escape_tags(trim($_POST['book'])));
 		$tv           = fix_mce_lf(escape_tags(trim($_POST['tv'])));
@@ -393,6 +394,7 @@ function profiles_post(&$a) {
 			`about` = '%s',
 			`interest` = '%s',
 			`contact` = '%s',
+			`channels` = '%s',
 			`music` = '%s',
 			`book` = '%s',
 			`tv` = '%s',
@@ -426,6 +428,7 @@ function profiles_post(&$a) {
 			dbesc($about),
 			dbesc($interest),
 			dbesc($contact),
+			dbesc($channels),
 			dbesc($music),
 			dbesc($book),
 			dbesc($tv),
@@ -550,6 +553,7 @@ function profiles_content(&$a) {
 			'$lbl_about'    => t('Tell us about yourself...'),
 			'$lbl_hobbies'  => t('Hobbies/Interests'),
 			'$lbl_social'   => t('Contact information and Social Networks'),
+			'$lbl_channels' => t('My other channels'),
 			'$lbl_music'    => t('Musical interests'),
 			'$lbl_book'     => t('Books, literature'),
 			'$lbl_tv'       => t('Television'),
@@ -593,7 +597,8 @@ function profiles_content(&$a) {
 			'$romance'      => $r[0]['romance'],
 			'$work'         => $r[0]['work'],
 			'$education'    => $r[0]['education'],
-			'$contact'      => $r[0]['contact']
+			'$contact'      => $r[0]['contact'],
+			'$channels'     => $r[0]['channels'],
 		));
 
 		$arr = array('profile' => $r[0], 'entry' => $o);

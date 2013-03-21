@@ -2,7 +2,8 @@
   // This needs changing now, if we're going for global settings.  Admin settings have been removed in preparation, You *should* just be able to remove all 
   // the get_config bits, though this is untested.  
   // We also need to eventually.  Use the page owners settings for everybody - get_pconfig(page_owner()) or whatever that would look like.
-  
+    load_pconfig(local_user(),'redbasic');
+
     $line_height = false;
     $redbasic_font_size = false;
     $resolution = false;
