@@ -27,21 +27,21 @@
 			
 			eventRender: function(event, element, view) {
 				//console.log(view.name);
-				if (event.item['author-name']==null) return;
+				if (event.item['author']['xchan_name']==null) return;
 				switch(view.name){
 					case "month":
 					element.find(".fc-event-title").html(
 						"<img src='{0}' style='height:10px;width:10px'>{1} : {2}".format(
-							event.item['author-avatar'],
-							event.item['author-name'],
+							event.item['author']['xchan_photo_s'],
+							event.item['author']['xchan_name'],
 							event.title
 					));
 					break;
 					case "agendaWeek":
 					element.find(".fc-event-title").html(
 						"<img src='{0}' style='height:12px; width:12px'>{1}<p>{2}</p><p>{3}</p>".format(
-							event.item['author-avatar'],
-							event.item['author-name'],
+							event.item['author']['xchan_photo_s'],
+							event.item['author']['xchan_name'],
 							event.item.desc,
 							event.item.location
 					));
@@ -49,8 +49,8 @@
 					case "agendaDay":
 					element.find(".fc-event-title").html(
 						"<img src='{0}' style='height:24px;width:24px'>{1}<p>{2}</p><p>{3}</p>".format(
-							event.item['author-avatar'],
-							event.item['author-name'],
+							event.item['author']['xchan_photo_s'],
+							event.item['author']['xchan_name'],
 							event.item.desc,
 							event.item.location
 					));
