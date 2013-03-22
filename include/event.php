@@ -169,6 +169,8 @@ function event_store($arr) {
 			return $r[0]['id'];
 		}
 
+		$event_hash = $r[0]['event_hash'];
+		
 		// The event changed. Update it.
 
 		$r = q("UPDATE `event` SET
@@ -205,7 +207,7 @@ function event_store($arr) {
 		);
 
 		$r = q("SELECT * FROM item left join xchan on author_xchan = xchan_hash WHERE resource_id = '%s' AND resource_type = 'event' and uid = %d LIMIT 1",
-			intval($r[0]['event_hash']),
+		        dbesc($event_hash),
 			intval($arr['uid'])
 		);
 
