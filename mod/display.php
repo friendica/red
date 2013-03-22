@@ -20,8 +20,8 @@ function display_content(&$a, $update = 0, $load = false) {
 
 	if(argc() > 1 && argv(1) !== 'load')
 		$item_hash = argv(1);
-	if($_REQUEST['uri'])
-		$item_hash = $_REQUEST['uri'];
+	if($_REQUEST['mid'])
+		$item_hash = $_REQUEST['mid'];
 
 
 	if(! $item_hash) {
@@ -43,7 +43,7 @@ function display_content(&$a, $update = 0, $load = false) {
 
 	$target_item = null;
 
-	$r = q("select uri, parent_uri from item where uri = '%s' limit 1",
+	$r = q("select mid, parent_mid from item where mid = '%s' limit 1",
 		dbesc($item_hash)
 	);
 
@@ -98,22 +98,22 @@ function display_content(&$a, $update = 0, $load = false) {
 				$r = q("SELECT * from item
 					WHERE item_restrict = 0
 					and uid = %d
-					and uri = '%s'
+					and mid = '%s'
 					limit 1",
 					intval(local_user()),
-					dbesc($target_item['parent_uri'])
+					dbesc($target_item['parent_mid'])
 				);
 			}
 			if($r === null) {
 				$r = q("SELECT * from item
 					WHERE item_restrict = 0
-					and uri = '%s'
+					and mid = '%s'
 					AND ((( `item`.`allow_cid` = ''  AND `item`.`allow_gid` = '' AND `item`.`deny_cid`  = '' 
 					AND `item`.`deny_gid`  = '' AND item_private = 0 ) 
 					and uid in ( " . stream_perms_api_uids() . " ))
 					$sql_extra )
-					group by uri limit 1",
-					dbesc($target_item['parent_uri'])
+					group by mid limit 1",
+					dbesc($target_item['parent_mid'])
 				);
 			}
 
@@ -150,7 +150,7 @@ function display_content(&$a, $update = 0, $load = false) {
 /*
 	elseif((! $update) && (!  {
 		
-		$r = q("SELECT `id`, item_flags FROM `item` WHERE `id` = '%s' OR `uri` = '%s' LIMIT 1",
+		$r = q("SELECT `id`, item_flags FROM `item` WHERE `id` = '%s' OR `mid` = '%s' LIMIT 1",
 			dbesc($item_hash),
 			dbesc($item_hash)
 		);

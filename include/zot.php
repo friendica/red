@@ -926,7 +926,7 @@ function process_delivery($sender,$arr,$deliveries,$relay) {
 
 		$channel = $r[0];
 
-		$perm = (($arr['uri'] == $arr['parent_uri']) ? 'send_stream' : 'post_comments');
+		$perm = (($arr['mid'] == $arr['parent_mid']) ? 'send_stream' : 'post_comments');
 
 		if(! perm_is_allowed($channel['channel_id'],$sender['hash'],$perm)) {
 			logger("permission denied for delivery {$channel['channel_id']}");
@@ -957,13 +957,13 @@ function process_delivery($sender,$arr,$deliveries,$relay) {
 				$ev['uid']         = $channel['channel_id'];
 				$ev['account']     = $channel['channel_account_id'];
 				$ev['edited']      = $arr['edited'];
-				$ev['uri']         = $arr['uri'];
+				$ev['mid']         = $arr['mid'];
 				$ev['private']     = $arr['item_private'];
 
 				// is this an edit?
 
-				$r = q("SELECT resource_id FROM item where uri = '%s' and uid = %d and resource_type = 'event' limit 1",
-					dbesc($arr['uri']),
+				$r = q("SELECT resource_id FROM item where mid = '%s' and uid = %d and resource_type = 'event' limit 1",
+					dbesc($arr['mid']),
 					intval($channel['channel_id'])
 				);
 				if($r) {
@@ -979,8 +979,8 @@ function process_delivery($sender,$arr,$deliveries,$relay) {
 
 
 
-		$r = q("select id, edited from item where uri = '%s' and uid = %d limit 1",
-			dbesc($arr['uri']),
+		$r = q("select id, edited from item where mid = '%s' and uid = %d limit 1",
+			dbesc($arr['mid']),
 			intval($channel['channel_id'])
 		);
 		if($r) {
@@ -1027,10 +1027,10 @@ function delete_imported_item($sender,$item,$uid) {
 	logger('delete_imported_item invoked',LOGGER_DEBUG);
 
 	$r = q("select id from item where ( author_xchan = '%s' or owner_xchan = '%s' )
-		and uri = '%s' and uid = %d limit 1",
+		and mid = '%s' and uid = %d limit 1",
 		dbesc($sender['hash']),
 		dbesc($sender['hash']),
-		dbesc($item['uri']),
+		dbesc($item['mid']),
 		intval($uid)
 	);
 
@@ -1061,8 +1061,8 @@ function process_mail_delivery($sender,$arr,$deliveries) {
 			continue;
 		}
 	
-		$r = q("select id from mail where uri = '%s' and channel_id = %d limit 1",
-			dbesc($arr['uri']),
+		$r = q("select id from mail where mid = '%s' and channel_id = %d limit 1",
+			dbesc($arr['mid']),
 			intval($channel['channel_id'])
 		);
 		if($r) {

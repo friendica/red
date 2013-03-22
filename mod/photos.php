@@ -187,10 +187,10 @@ function photos_post(&$a) {
 				intval($page_owner_uid)
 			);
 			if(count($i)) {
-				q("UPDATE `item` SET `deleted` = 1, `edited` = '%s', `changed` = '%s' WHERE `parent_uri` = '%s' AND `uid` = %d",
+				q("UPDATE `item` SET `deleted` = 1, `edited` = '%s', `changed` = '%s' WHERE `parent_mid` = '%s' AND `uid` = %d",
 					dbesc(datetime_convert()),
 					dbesc(datetime_convert()),
-					dbesc($i[0]['uri']),
+					dbesc($i[0]['mid']),
 					intval($page_owner_uid)
 				);
 
@@ -459,13 +459,13 @@ function photos_post(&$a) {
 			if(count($taginfo)) {
 				foreach($taginfo as $tagged) {
 		
-					$uri = item_message_id();
+					$mid = item_message_id();
 
 					$arr = array();
 
 					$arr['uid']           = $page_owner_uid;
-					$arr['uri']           = $uri;
-					$arr['parent_uri']    = $uri;
+					$arr['mid']           = $mid;
+					$arr['parent_mid']    = $mid;
 					$arr['type']          = 'activity';
 					$arr['wall']          = 1;
 					$arr['contact-id']    = $owner_record['id'];
@@ -1000,12 +1000,12 @@ function photos_content(&$a) {
 			$link_item = $linked_items[0];
 			$r = q("SELECT COUNT(*) AS `total`
 				FROM `item` LEFT JOIN `contact` ON `contact`.`id` = `item`.`contact-id`
-				WHERE `parent_uri` = '%s' AND `uri` != '%s' AND `item`.`deleted` = 0 and `item`.`moderated` = 0
+				WHERE `parent_mid` = '%s' AND `mid` != '%s' AND `item`.`deleted` = 0 and `item`.`moderated` = 0
 				AND `contact`.`blocked` = 0 AND `contact`.`pending` = 0
 				AND `item`.`uid` = %d 
 				$sql_extra ",
-				dbesc($link_item['uri']),
-				dbesc($link_item['uri']),
+				dbesc($link_item['mid']),
+				dbesc($link_item['mid']),
 				intval($link_item['uid'])
 
 			);
@@ -1019,13 +1019,13 @@ function photos_content(&$a) {
 				`contact`.`rel`, `contact`.`thumb`, `contact`.`self`, 
 				`contact`.`id` AS `cid`, `contact`.`uid` AS `contact-uid`
 				FROM `item` LEFT JOIN `contact` ON `contact`.`id` = `item`.`contact-id`
-				WHERE `parent_uri` = '%s' AND `uri` != '%s' AND `item`.`deleted` = 0 and `item`.`moderated` = 0
+				WHERE `parent_mid` = '%s' AND `mid` != '%s' AND `item`.`deleted` = 0 and `item`.`moderated` = 0
 				AND `contact`.`blocked` = 0 AND `contact`.`pending` = 0
 				AND `item`.`uid` = %d
 				$sql_extra
 				ORDER BY `parent` DESC, `id` ASC LIMIT %d ,%d ",
-				dbesc($link_item['uri']),
-				dbesc($link_item['uri']),
+				dbesc($link_item['mid']),
+				dbesc($link_item['mid']),
 				intval($link_item['uid']),
 				intval($a->pager['start']),
 				intval($a->pager['itemspage'])

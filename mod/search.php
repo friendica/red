@@ -190,12 +190,12 @@ function search_content(&$a) {
 		$pager_sql = sprintf(" LIMIT %d, %d ",intval($a->pager['start']), intval($a->pager['itemspage']));
 
 		if($load) {
-			$r = q("SELECT distinct(uri), item.* from item
+			$r = q("SELECT distinct(mid), item.* from item
 				WHERE item_restrict = 0
 				AND (( `item`.`allow_cid` = ''  AND `item`.`allow_gid` = '' AND `item`.`deny_cid`  = '' AND `item`.`deny_gid`  = '' AND item_private = 0 ) 
 				OR ( `item`.`uid` = %d ))
 				$sql_extra
-				group by uri ORDER BY created DESC $pager_sql ",
+				group by mid ORDER BY created DESC $pager_sql ",
 				intval(local_user()),
 				intval(ABOOK_FLAG_BLOCKED)
 
@@ -228,7 +228,7 @@ function search_content(&$a) {
 
 
 
-	$r = q("SELECT distinct(`item`.`uri`), `item`.*, `item`.`id` AS `item_id`, 
+	$r = q("SELECT distinct(`item`.`mid`), `item`.*, `item`.`id` AS `item_id`, 
 		`contact`.`name`, `contact`.`photo`, `contact`.`url`, `contact`.`alias`, `contact`.`rel`,
 		`contact`.`network`, `contact`.`thumb`, `contact`.`self`, `contact`.`writable`, 
 		`contact`.`id` AS `cid`, `contact`.`uid` AS `contact-uid`,
@@ -240,7 +240,7 @@ function search_content(&$a) {
 			OR `item`.`uid` = %d )
 		AND `contact`.`blocked` = 0 AND `contact`.`pending` = 0
 		$sql_extra
-		group by `item`.`uri`	
+		group by `item`.`mid`	
 		ORDER BY `received` DESC LIMIT %d , %d ",
 		intval(local_user()),
 		intval($a->pager['start']),

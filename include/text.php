@@ -394,14 +394,14 @@ function item_message_id() {
 		$dups = false;
 		$hash = random_string();
 
-		$uri = $hash . '@' . get_app()->get_hostname();
+		$mid = $hash . '@' . get_app()->get_hostname();
 
-		$r = q("SELECT `id` FROM `item` WHERE `uri` = '%s' LIMIT 1",
-			dbesc($uri));
+		$r = q("SELECT `id` FROM `item` WHERE `mid` = '%s' LIMIT 1",
+			dbesc($mid));
 		if(count($r))
 			$dups = true;
 	} while($dups == true);
-	return $uri;
+	return $mid;
 }
 
 // Generate a guaranteed unique photo ID.

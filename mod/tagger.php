@@ -57,7 +57,7 @@ function tagger_content(&$a) {
 		return;
 	}
 
-	$uri = item_message_id();
+	$mid = item_message_id();
 	$xterm = xmlify($term);
 	$post_type = (($item['resource_id']) ? t('photo') : t('status'));
 	$targettype = (($item['resource_id']) ? ACTIVITY_OBJ_PHOTO : ACTIVITY_OBJ_NOTE ); 
@@ -71,7 +71,7 @@ function tagger_content(&$a) {
 	<target>
 		<type>$targettype</type>
 		<local>1</local>
-		<id>{$item['uri']}</id>
+		<id>{$item['mid']}</id>
 		<link>$link</link>
 		<title></title>
 		<content>$body</content>
@@ -101,14 +101,14 @@ EOT;
 
 	$arr = array();
 
-	$arr['uri'] = $uri;
+	$arr['mid'] = $mid;
 	$arr['uid'] = $owner_uid;
 	$arr['contact-id'] = $contact['id'];
 	$arr['type'] = 'activity';
 	$arr['wall'] = $item['wall'];
 	$arr['gravity'] = GRAVITY_COMMENT;
 	$arr['parent'] = $item['id'];
-	$arr['parent_uri'] = $item['uri'];
+	$arr['parent_mid'] = $item['mid'];
 	$arr['owner-name'] = $item['author-name'];
 	$arr['owner-link'] = $item['author-link'];
 	$arr['owner-avatar'] = $item['author-avatar'];
@@ -159,8 +159,8 @@ EOT;
 
 	// if the original post is on this site, update it.
 
-	$r = q("select `tag`,`id`,`uid` from item where `origin` = 1 AND `uri` = '%s' LIMIT 1",
-		dbesc($item['uri'])
+	$r = q("select `tag`,`id`,`uid` from item where `origin` = 1 AND `mid` = '%s' LIMIT 1",
+		dbesc($item['mid'])
 	);
 	if(count($r)) {
 		$x = q("SELECT `blocktags` FROM `user` WHERE `uid` = %d limit 1",

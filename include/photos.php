@@ -180,21 +180,21 @@ function photo_upload($channel, $observer, $args) {
 	}
 
 	$basename = basename($filename);
-	$uri = item_message_id();
+	$mid = item_message_id();
 
 	// Create item container
 
 	$item_flags = ITEM_WALL|ITEM_ORIGIN|ITEM_THREAD_TOP;
 	$item_restrict = (($visible) ? ITEM_VISIBLE : ITEM_HIDDEN);			
 	$title = '';
-	$uri = item_message_id();
+	$mid = item_message_id();
 			
 	$arr = array();
 
 	$arr['aid']           = $account_id;
 	$arr['uid']           = $channel_id;
-	$arr['uri']           = $uri;
-	$arr['parent_uri']    = $uri; 
+	$arr['mid']           = $mid;
+	$arr['parent_mid']    = $mid; 
 	$arr['item_flags']    = $item_flags;
 	$arr['item_restrict'] = $item_restrict;
 	$arr['resource_type'] = 'photo';
@@ -330,14 +330,14 @@ function photos_create_item($channel, $creator_hash, $photo, $visible = false) {
 	$item_restrict = (($visible) ? ITEM_HIDDEN : ITEM_VISIBLE);			
 
 	$title = '';
-	$uri = item_message_id();
+	$mid = item_message_id();
 			
 	$arr = array();
 
 	$arr['aid']           = $channel['channel_account_id'];
 	$arr['uid']           = $channel['channel_id'];
-	$arr['uri']           = $uri;
-	$arr['parent_uri']    = $uri; 
+	$arr['mid']           = $mid;
+	$arr['parent_mid']    = $mid; 
 	$arr['item_flags']    = $item_flags;
 	$arr['item_restrict'] = $item_restrict;
 	$arr['resource_type'] = 'photo';

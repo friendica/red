@@ -80,7 +80,7 @@ function item_post(&$a) {
 	 */
 
 	$parent = ((x($_REQUEST,'parent')) ? intval($_REQUEST['parent']) : 0);
-	$parent_uri = ((x($_REQUEST,'parent_uri')) ? trim($_REQUEST['parent_uri']) : '');
+	$parent_mid = ((x($_REQUEST,'parent_mid')) ? trim($_REQUEST['parent_mid']) : '');
 
 	$parent_item = null;
 	$parent_contact = null;
@@ -88,7 +88,7 @@ function item_post(&$a) {
 	$parid = 0;
 	$r = false;
 
-	if($parent || $parent_uri) {
+	if($parent || $parent_mid) {
 
 		if(! x($_REQUEST,'type'))
 			$_REQUEST['type'] = 'net-comment';
@@ -98,17 +98,17 @@ function item_post(&$a) {
 				intval($parent)
 			);
 		}
-		elseif($parent_uri && local_user()) {
+		elseif($parent_mid && local_user()) {
 			// This is coming from an API source, and we are logged in
-			$r = q("SELECT * FROM `item` WHERE `uri` = '%s' AND `uid` = %d LIMIT 1",
-				dbesc($parent_uri),
+			$r = q("SELECT * FROM `item` WHERE `mid` = '%s' AND `uid` = %d LIMIT 1",
+				dbesc($parent_mid),
 				intval(local_user())
 			);
 		}
 		// if this isn't the real parent of the conversation, find it
 		if($r !== false && count($r)) {
 			$parid = $r[0]['parent'];
-			$parent_uri = $r[0]['uri'];
+			$parent_mid = $r[0]['mid'];
 			if($r[0]['id'] != $r[0]['parent']) {
 				$r = q("SELECT * FROM `item` WHERE `id` = `parent` AND `parent` = %d LIMIT 1",
 					intval($parid)
@@ -127,7 +127,7 @@ function item_post(&$a) {
 
 		// multi-level threading - preserve the info but re-parent to our single level threading
 		//if(($parid) && ($parid != $parent))
-			$thr_parent = $parent_uri;
+			$thr_parent = $parent_mid;
 
 		if($parent_item['contact-id'] && $uid) {
 			$r = q("SELECT * FROM `contact` WHERE `id` = %d AND `uid` = %d LIMIT 1",
@@ -474,20 +474,20 @@ function item_post(&$a) {
 
 	$notify_type = (($parent) ? 'comment-new' : 'wall-new' );
 
-	$uri = item_message_id();
-	$parent_uri = $uri;
+	$mid = item_message_id();
+	$parent_mid = $mid;
 	if($parent_item)
-		$parent_uri = $parent_item['uri'];
+		$parent_mid = $parent_item['mid'];
 
 	// Fallback so that we alway have a thr_parent
 
 	if(!$thr_parent)
-		$thr_parent = $uri;
+		$thr_parent = $mid;
 
 	$datarray = array();
 
 	if(! $parent) {
-		$datarray['parent_uri'] = $uri;
+		$datarray['parent_mid'] = $mid;
 		$item_flags = $item_flags | ITEM_THREAD_TOP;
 	}
 	
@@ -502,8 +502,8 @@ function item_post(&$a) {
 	$datarray['commented']     = datetime_convert();
 	$datarray['received']      = datetime_convert();
 	$datarray['changed']       = datetime_convert();
-	$datarray['uri']           = $uri;
-	$datarray['parent_uri']    = $parent_uri;
+	$datarray['mid']           = $mid;
+	$datarray['parent_mid']    = $parent_mid;
 	$datarray['mimetype']      = $content_type;
 	$datarray['title']         = $title;
 	$datarray['body']          = $body;
@@ -632,11 +632,11 @@ function item_post(&$a) {
 					'from_xchan'   => $datarray['author_xchan'],
 					'to_xchan'     => $datarray['owner_xchan'],
 					'item'         => $datarray,
-					'link'		   => $a->get_baseurl() . '/display/' . $datarray['uri'],
+					'link'		   => $a->get_baseurl() . '/display/' . $datarray['mid'],
 					'verb'         => ACTIVITY_POST,
 					'otype'        => 'item',
 					'parent'       => $parent,
-					'parent_uri'   => $parent_item['uri']
+					'parent_mid'   => $parent_item['mid']
 				));
 			
 			}
@@ -651,7 +651,7 @@ function item_post(&$a) {
 					'from_xchan'   => $datarray['author_xchan'],
 					'to_xchan'     => $datarray['owner_xchan'],
 					'item'         => $datarray,
-					'link'		   => $a->get_baseurl() . '/display/' . $datarray['uri'],
+					'link'		   => $a->get_baseurl() . '/display/' . $datarray['mid'],
 					'verb'         => ACTIVITY_POST,
 					'otype'        => 'item'
 				));
@@ -663,10 +663,10 @@ function item_post(&$a) {
 		if(! $parent)
 			$parent = $post_id;
 
-		$r = q("UPDATE `item` SET `parent` = %d, `parent_uri` = '%s', `changed` = '%s'
+		$r = q("UPDATE `item` SET `parent` = %d, `parent_mid` = '%s', `changed` = '%s'
 			WHERE `id` = %d LIMIT 1",
 			intval($parent),
-			dbesc(($parent == $post_id) ? $uri : $parent_item['uri']),
+			dbesc(($parent == $post_id) ? $mid : $parent_item['mid']),
 			dbesc(datetime_convert()),
 			intval($post_id)
 		);
@@ -704,14 +704,14 @@ function item_post(&$a) {
 		// store page info as an alternate message_id so we can access it via 
 		//    https://sitename/page/$channelname/$pagetitle
 		// if no pagetitle was given or it couldn't be transliterated into a url, use the first 
-		// sixteen bytes of the uri - which makes the link portable and not quite as daunting
-		// as the entire uri. If it were the post_id the link would be less portable.
+		// sixteen bytes of the mid - which makes the link portable and not quite as daunting
+		// as the entire mid. If it were the post_id the link would be less portable.
 		// We should have the ability to edit this and arrange pages into menus via the pages module 
 
 		q("insert into item_id ( iid, uid, sid, service ) values ( %d, %d, '%s','%s' )",
 			intval($post_id),
 			intval($channel['channel_id']),
-			dbesc(($pagetitle) ? $pagetitle : substr($uri,0,16)),
+			dbesc(($pagetitle) ? $pagetitle : substr($mid,0,16)),
 			dbesc('WEBPAGE')
 		);
 	}

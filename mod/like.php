@@ -78,7 +78,7 @@ function like_content(&$a) {
 		dbesc($activity),
 		dbesc($observer['xchan_hash']),
 		intval($item_id),
-		dbesc($item['uri'])
+		dbesc($item['mid'])
 	);
 	if($r) {
 		$like_item = $r[0];
@@ -97,19 +97,19 @@ function like_content(&$a) {
 
 
 
-	$uri = item_message_id();
+	$mid = item_message_id();
 
 	$post_type = (($item['resource_type'] === 'photo') ? $t('photo') : t('status'));
 
 	$links = array(array('rel' => 'alternate','type' => 'text/html', 
-		'href' => z_root() . '/display/' . $item['uri']));
+		'href' => z_root() . '/display/' . $item['mid']));
 	$objtype = (($item['resource_type'] === 'photo') ? ACTIVITY_OBJ_PHOTO : ACTIVITY_OBJ_NOTE ); 
 
 	$body = $item['body'];
 
 	$obj = json_encode(array(
 		'type'    => $objtype,
-		'id'      => $item['uri'],
+		'id'      => $item['mid'],
 		'link'    => $links,
 		'title'   => $item['title'],
 		'content' => $item['body'],
@@ -139,19 +139,19 @@ function like_content(&$a) {
 
 	$arr = array();
 
-	$arr['uri']          = $uri;
+	$arr['mid']          = $mid;
 	$arr['uid']          = $owner_uid;
 	$arr['item_flags']   = $item_flags;
 	$arr['parent']       = $item['id'];
-	$arr['parent_uri']   = $item['uri'];
-	$arr['thr_parent']   = $item['uri'];
+	$arr['parent_mid']   = $item['mid'];
+	$arr['thr_parent']   = $item['mid'];
 	$arr['owner_xchan']  = $thread_owner['xchan_hash'];
 	$arr['author_xchan'] = $observer['xchan_hash'];
 
 	
 	$ulink = '[url=' . $thread_owner['xchan_url'] . ']' . $thread_owner['xchan_name'] . '[/url]';
 	$alink = '[url=' . $observer['xchan_url'] . ']' . $observer['xchan_name'] . '[/url]';
-	$plink = '[url=' . $a->get_baseurl() . '/display/' . $item['uri'] . ']' . $post_type . '[/url]';
+	$plink = '[url=' . $a->get_baseurl() . '/display/' . $item['mid'] . ']' . $post_type . '[/url]';
 	
 	$arr['body']          =  sprintf( $bodyverb, $alink, $ulink, $plink );
 

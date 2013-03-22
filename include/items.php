@@ -489,8 +489,8 @@ function get_item_elements($x) {
 
 	$arr['title']        = (($x['title'])          ? htmlentities($x['title'],          ENT_COMPAT,'UTF-8',false) : '');
 	$arr['app']          = (($x['app'])            ? htmlentities($x['app'],            ENT_COMPAT,'UTF-8',false) : '');
-	$arr['uri']          = (($x['message_id'])     ? htmlentities($x['message_id'],     ENT_COMPAT,'UTF-8',false) : '');
-	$arr['parent_uri']   = (($x['message_top'])    ? htmlentities($x['message_top'],    ENT_COMPAT,'UTF-8',false) : '');
+	$arr['mid']          = (($x['message_id'])     ? htmlentities($x['message_id'],     ENT_COMPAT,'UTF-8',false) : '');
+	$arr['parent_mid']   = (($x['message_top'])    ? htmlentities($x['message_top'],    ENT_COMPAT,'UTF-8',false) : '');
 	$arr['thr_parent']   = (($x['message_parent']) ? htmlentities($x['message_parent'], ENT_COMPAT,'UTF-8',false) : '');
 
 	$arr['plink']        = (($x['permalink'])      ? htmlentities($x['permalink'],      ENT_COMPAT,'UTF-8',false) : '');
@@ -577,7 +577,7 @@ function encode_item($item) {
 
 
 	if($item['item_restrict']  & ITEM_DELETED) {
-		$x['message_id'] = $item['uri'];
+		$x['message_id'] = $item['mid'];
 		$x['created']    = $item['created'];
 		$x['flags']      = array('deleted');
 		$x['owner']      = encode_item_xchan($item['owner']);
@@ -585,8 +585,8 @@ function encode_item($item) {
 		return $x;
 	}
 
-	$x['message_id']     = $item['uri'];
-	$x['message_top']    = $item['parent_uri'];
+	$x['message_id']     = $item['mid'];
+	$x['message_top']    = $item['parent_mid'];
 	$x['message_parent'] = $item['thr_parent'];
 	$x['created']        = $item['created'];
 	$x['edited']         = $item['edited'];
@@ -765,8 +765,8 @@ function encode_mail($item) {
 
 	logger('encode_mail: ' . print_r($item,true));
 
-	$x['message_id']     = $item['uri'];
-	$x['message_parent'] = $item['parent_uri'];
+	$x['message_id']     = $item['mid'];
+	$x['message_parent'] = $item['parent_mid'];
 	$x['created']        = $item['created'];
 	$x['title']          = $item['title'];
 	$x['body']           = $item['body'];
@@ -805,8 +805,8 @@ function get_mail_elements($x) {
 		$arr['created']  = datetime_convert();
 
 	$arr['title']        = (($x['title'])    ? htmlentities($x['title'],    ENT_COMPAT,'UTF-8',false) : '');
-	$arr['uri']          = (($x['message_id'])      ? htmlentities($x['message_id'],      ENT_COMPAT,'UTF-8',false) : '');
-	$arr['parent_uri']   = (($x['message_parent']) ? htmlentities($x['message_parent'], ENT_COMPAT,'UTF-8',false) : '');
+	$arr['mid']          = (($x['message_id'])      ? htmlentities($x['message_id'],      ENT_COMPAT,'UTF-8',false) : '');
+	$arr['parent_mid']   = (($x['message_parent']) ? htmlentities($x['message_parent'], ENT_COMPAT,'UTF-8',false) : '');
 
 
 	if(import_author_xchan($x['from']))
@@ -872,7 +872,7 @@ function get_atom_elements($feed,$item) {
 		$res['author-name'] = unxmlify($feed->get_title());
 		$res['author-link'] = unxmlify($feed->get_permalink());
 	}
-	$res['uri'] = unxmlify($item->get_id());
+	$res['mid'] = unxmlify($item->get_id());
 	$res['title'] = unxmlify($item->get_title());
 	$res['body'] = unxmlify($item->get_content());
 	$res['plink'] = unxmlify($item->get_link(0));
@@ -1325,7 +1325,7 @@ function item_store($arr,$force_parent = false) {
 	}
 
 	$arr['aid']           = ((x($arr,'aid'))           ? intval($arr['aid'])                 : 0);
-	$arr['uri']           = ((x($arr,'uri'))           ? notags(trim($arr['uri']))           : random_string());
+	$arr['mid']           = ((x($arr,'mid'))           ? notags(trim($arr['mid']))           : random_string());
 	$arr['author_xchan']  = ((x($arr,'author_xchan'))  ? notags(trim($arr['author_xchan']))  : '');
 	$arr['owner_xchan']   = ((x($arr,'owner_xchan'))   ? notags(trim($arr['owner_xchan']))   : '');
 	$arr['created']       = ((x($arr,'created') !== false) ? datetime_convert('UTC','UTC',$arr['created']) : datetime_convert());
@@ -1338,7 +1338,7 @@ function item_store($arr,$force_parent = false) {
 	$arr['title']         = ((x($arr,'title'))         ? notags(trim($arr['title']))         : '');
 	$arr['location']      = ((x($arr,'location'))      ? notags(trim($arr['location']))      : '');
 	$arr['coord']         = ((x($arr,'coord'))         ? notags(trim($arr['coord']))         : '');
-	$arr['parent_uri']    = ((x($arr,'parent_uri'))    ? notags(trim($arr['parent_uri']))    : '');
+	$arr['parent_mid']    = ((x($arr,'parent_mid'))    ? notags(trim($arr['parent_mid']))    : '');
 	$arr['verb']          = ((x($arr,'verb'))          ? notags(trim($arr['verb']))          : '');
 	$arr['obj_type']      = ((x($arr,'obj_type'))      ? notags(trim($arr['obj_type']))      : '');
 	$arr['object']        = ((x($arr,'object'))        ? trim($arr['object'])                : '');
@@ -1358,14 +1358,14 @@ function item_store($arr,$force_parent = false) {
 	
 	$arr['item_flags'] = $arr['item_flags'] | ITEM_UNSEEN;
 	
-	$arr['thr_parent'] = $arr['parent_uri'];
+	$arr['thr_parent'] = $arr['parent_mid'];
 
-	$arr['llink'] = z_root() . '/display/' . $arr['uri'];
+	$arr['llink'] = z_root() . '/display/' . $arr['mid'];
 
 	if(! $arr['plink'])
 		$arr['plink'] = $arr['llink'];
 
-	if($arr['parent_uri'] === $arr['uri']) {
+	if($arr['parent_mid'] === $arr['mid']) {
 		$parent_id = 0;
 		$parent_deleted = 0;
 		$allow_cid = $arr['allow_cid'];
@@ -1379,8 +1379,8 @@ function item_store($arr,$force_parent = false) {
 		// find the parent and snarf the item id and ACL's
 		// and anything else we need to inherit
 
-		$r = q("SELECT * FROM `item` WHERE `uri` = '%s' AND `uid` = %d ORDER BY `id` ASC LIMIT 1",
-			dbesc($arr['parent_uri']),
+		$r = q("SELECT * FROM `item` WHERE `mid` = '%s' AND `uid` = %d ORDER BY `id` ASC LIMIT 1",
+			dbesc($arr['parent_mid']),
 			intval($arr['uid'])
 		);
 
@@ -1390,12 +1390,12 @@ function item_store($arr,$force_parent = false) {
 			// even though we don't support it now, preserve the info
 			// and re-attach to the conversation parent.
 
-			if($r[0]['uri'] != $r[0]['parent_uri']) {
-				$arr['parent_uri'] = $r[0]['parent_uri'];
-				$z = q("SELECT * FROM `item` WHERE `uri` = '%s' AND `parent_uri` = '%s' AND `uid` = %d 
+			if($r[0]['mid'] != $r[0]['parent_mid']) {
+				$arr['parent_mid'] = $r[0]['parent_mid'];
+				$z = q("SELECT * FROM `item` WHERE `mid` = '%s' AND `parent_mid` = '%s' AND `uid` = %d 
 					ORDER BY `id` ASC LIMIT 1",
-					dbesc($r[0]['parent_uri']),
-					dbesc($r[0]['parent_uri']),
+					dbesc($r[0]['parent_mid']),
+					dbesc($r[0]['parent_mid']),
 					intval($arr['uid'])
 				);
 				if($z && count($z))
@@ -1434,7 +1434,7 @@ function item_store($arr,$force_parent = false) {
 			if($force_parent) {
 				logger('item_store: $force_parent=true, reply converted to top-level post.');
 				$parent_id = 0;
-				$arr['parent_uri'] = $arr['uri'];
+				$arr['parent_mid'] = $arr['mid'];
 				$arr['flags'] = $arr['flags'] | ITEM_THREAD_TOP;
 			}
 			else {
@@ -1450,8 +1450,8 @@ function item_store($arr,$force_parent = false) {
 		$arr['item_restrict'] = $arr['item_restrict'] | ITEM_DELETED;
 	
 	
-	$r = q("SELECT `id` FROM `item` WHERE `uri` = '%s' AND `uid` = %d LIMIT 1",
-		dbesc($arr['uri']),
+	$r = q("SELECT `id` FROM `item` WHERE `mid` = '%s' AND `uid` = %d LIMIT 1",
+		dbesc($arr['mid']),
 		intval($arr['uid'])
 	);
 	if($r) {
@@ -1486,8 +1486,8 @@ function item_store($arr,$force_parent = false) {
 
 	// find the item we just created
 
-	$r = q("SELECT `id` FROM `item` WHERE `uri` = '%s' AND `uid` = %d ORDER BY `id` ASC ",
-		$arr['uri'],           // already dbesc'd
+	$r = q("SELECT `id` FROM `item` WHERE `mid` = '%s' AND `uid` = %d ORDER BY `id` ASC ",
+		$arr['mid'],           // already dbesc'd
 		intval($arr['uid'])
 	);
 
@@ -1501,14 +1501,14 @@ function item_store($arr,$force_parent = false) {
 	}
 	if(count($r) > 1) {
 		logger('item_store: duplicated post occurred. Removing duplicates.');
-		q("DELETE FROM `item` WHERE `uri` = '%s' AND `uid` = %d AND `id` != %d ",
-			$arr['uri'],
+		q("DELETE FROM `item` WHERE `mid` = '%s' AND `uid` = %d AND `id` != %d ",
+			$arr['mid'],
 			intval($arr['uid']),
 			intval($current_post)
 		);
 	}
 
-	if((! $parent_id) || ($arr['parent_uri'] === $arr['uri']))	
+	if((! $parent_id) || ($arr['parent_mid'] === $arr['mid']))	
 		$parent_id = $current_post;
 
  	if(strlen($allow_cid) || strlen($allow_gid) || strlen($deny_cid) || strlen($deny_gid))
@@ -1636,9 +1636,9 @@ function item_store_update($arr,$force_parent = false) {
 	}		
 
 	unset($arr['aid']);
-	unset($arr['uri']);
+	unset($arr['mid']);
 	unset($arr['parent']);
-	unset($arr['parent_uri']);
+	unset($arr['parent_mid']);
 	unset($arr['created']);
 	unset($arr['author_xchan']);
 	unset($arr['owner_xchan']);
@@ -1762,8 +1762,8 @@ function send_status_notifications($post_id,$item) {
 
 	// Was I involved in this conversation?
 
-	$x = q("select * from item where parent_uri = '%s' and uid = %d",
-		dbesc($item['parent_uri']),
+	$x = q("select * from item where parent_mid = '%s' and uid = %d",
+		dbesc($item['parent_mid']),
 		intval($item['uid'])
 	);
 	if($x) {
@@ -1785,11 +1785,11 @@ function send_status_notifications($post_id,$item) {
 		'from_xchan'   => $item['author_xchan'],
 		'to_xchan'     => $r[0]['channel_hash'],
 		'item'         => $item,
-		'link'		   => get_app()->get_baseurl() . '/display/' . $item['uri'],
+		'link'		   => get_app()->get_baseurl() . '/display/' . $item['mid'],
 		'verb'         => ACTIVITY_POST,
 		'otype'        => 'item',
 		'parent'       => $parent,
-		'parent_uri'   => $item['parent_uri']
+		'parent_mid'   => $item['parent_mid']
 	));
 	return;
 }
@@ -1939,7 +1939,7 @@ function tgroup_check($uid,$item) {
 
 	// check that the message originated elsewhere and is a top-level post
 
-	if(($item['wall']) || ($item['origin']) || ($item['uri'] != $item['parent-uri']))
+	if(($item['wall']) || ($item['origin']) || ($item['mid'] != $item['parent-mid']))
 		return false;
 
 
@@ -1996,23 +1996,23 @@ function mail_store($arr) {
 		$arr['body'] = escape_tags($arr['body']);
 
 	$arr['account_id']    = ((x($arr,'account_id'))           ? intval($arr['account_id'])                 : 0);
-	$arr['uri']           = ((x($arr,'uri'))           ? notags(trim($arr['uri']))           : random_string());
+	$arr['mid']           = ((x($arr,'mid'))           ? notags(trim($arr['mid']))           : random_string());
 	$arr['from_xchan']    = ((x($arr,'from_xchan'))  ? notags(trim($arr['from_xchan']))  : '');
 	$arr['to_xchan']   = ((x($arr,'to_xchan'))   ? notags(trim($arr['to_xchan']))   : '');
 	$arr['created']       = ((x($arr,'created') !== false) ? datetime_convert('UTC','UTC',$arr['created']) : datetime_convert());
 	$arr['title']         = ((x($arr,'title'))         ? notags(trim($arr['title']))         : '');
-	$arr['parent_uri']    = ((x($arr,'parent_uri'))    ? notags(trim($arr['parent_uri']))    : '');
+	$arr['parent_mid']    = ((x($arr,'parent_mid'))    ? notags(trim($arr['parent_mid']))    : '');
 	$arr['body']          = ((x($arr,'body'))          ? trim($arr['body'])                  : '');
 	$arr['mail_flags']    = ((x($arr,'mail_flags'))    ? intval($arr['mail_flags'])          : 0 );
 	
 
-	if(! $arr['parent_uri']) {
+	if(! $arr['parent_mid']) {
 		logger('mail_store: missing parent');
-		$arr['parent_uri'] = $arr['uri'];
+		$arr['parent_mid'] = $arr['mid'];
 	}
 
-	$r = q("SELECT `id` FROM mail WHERE `uri` = '%s' AND channel_id = %d LIMIT 1",
-		dbesc($arr['uri']),
+	$r = q("SELECT `id` FROM mail WHERE `mid` = '%s' AND channel_id = %d LIMIT 1",
+		dbesc($arr['mid']),
 		intval($arr['channel_id'])
 	);
 	if($r) {
@@ -2039,8 +2039,8 @@ function mail_store($arr) {
 
 	// find the item we just created
 
-	$r = q("SELECT `id` FROM mail WHERE `uri` = '%s' AND `channel_id` = %d ORDER BY `id` ASC ",
-		$arr['uri'],           // already dbesc'd
+	$r = q("SELECT `id` FROM mail WHERE `mid` = '%s' AND `channel_id` = %d ORDER BY `id` ASC ",
+		$arr['mid'],           // already dbesc'd
 		intval($arr['channel_id'])
 	);
 
@@ -2055,8 +2055,8 @@ function mail_store($arr) {
 	}
 	if(count($r) > 1) {
 		logger('mail_store: duplicated post occurred. Removing duplicates.');
-		q("DELETE FROM mail WHERE `uri` = '%s' AND `channel_id` = %d AND `id` != %d ",
-			$arr['uri'],
+		q("DELETE FROM mail WHERE `mid` = '%s' AND `channel_id` = %d AND `id` != %d ",
+			$arr['mid'],
 			intval($arr['channel_id']),
 			intval($current_post)
 		);
@@ -2509,7 +2509,7 @@ function consume_feed($xml,$importer,&$contact, &$hub, $datedir = 0, $pass = 0) 
 		foreach($del_entries as $dentry) {
 			$deleted = false;
 			if(isset($dentry['attribs']['']['ref'])) {
-				$uri = $dentry['attribs']['']['ref'];
+				$mid = $dentry['attribs']['']['ref'];
 				$deleted = true;
 				if(isset($dentry['attribs']['']['when'])) {
 					$when = $dentry['attribs']['']['when'];
@@ -2520,8 +2520,8 @@ function consume_feed($xml,$importer,&$contact, &$hub, $datedir = 0, $pass = 0) 
 			}
 			if($deleted && is_array($contact)) {
 				$r = q("SELECT `item`.*, `contact`.`self` FROM `item` left join `contact` on `item`.`contact-id` = `contact`.`id` 
-					WHERE `uri` = '%s' AND `item`.`uid` = %d AND `contact-id` = %d AND NOT `item`.`file` LIKE '%%[%%' LIMIT 1",
-					dbesc($uri),
+					WHERE `mid` = '%s' AND `item`.`uid` = %d AND `contact-id` = %d AND NOT `item`.`file` LIKE '%%[%%' LIMIT 1",
+					dbesc($mid),
 					intval($importer['uid']),
 					intval($contact['id'])
 				);
@@ -2529,13 +2529,13 @@ function consume_feed($xml,$importer,&$contact, &$hub, $datedir = 0, $pass = 0) 
 					$item = $r[0];
 
 					if(! $item['deleted'])
-						logger('consume_feed: deleting item ' . $item['id'] . ' uri=' . $item['uri'], LOGGER_DEBUG);
+						logger('consume_feed: deleting item ' . $item['id'] . ' mid=' . $item['mid'], LOGGER_DEBUG);
 
 					if(($item['verb'] === ACTIVITY_TAG) && ($item['obj_type'] === ACTIVITY_OBJ_TAGTERM)) {
 						$xo = parse_xml_string($item['object'],false);
 						$xt = parse_xml_string($item['target'],false);
 						if($xt->type === ACTIVITY_OBJ_NOTE) {
-							$i = q("select * from `item` where uri = '%s' and uid = %d limit 1",
+							$i = q("select * from `item` where mid = '%s' and uid = %d limit 1",
 								dbesc($xt->id),
 								intval($importer['importer_uid'])
 							);
@@ -2566,23 +2566,23 @@ function consume_feed($xml,$importer,&$contact, &$hub, $datedir = 0, $pass = 0) 
 						}
 					}
 
-					if($item['uri'] == $item['parent_uri']) {
+					if($item['mid'] == $item['parent_mid']) {
 						$r = q("UPDATE `item` SET `deleted` = 1, `edited` = '%s', `changed` = '%s',
 							`body` = '', `title` = ''
-							WHERE `parent_uri` = '%s' AND `uid` = %d",
+							WHERE `parent_mid` = '%s' AND `uid` = %d",
 							dbesc($when),
 							dbesc(datetime_convert()),
-							dbesc($item['uri']),
+							dbesc($item['mid']),
 							intval($importer['uid'])
 						);
 					}
 					else {
 						$r = q("UPDATE `item` SET `deleted` = 1, `edited` = '%s', `changed` = '%s',
 							`body` = '', `title` = '' 
-							WHERE `uri` = '%s' AND `uid` = %d LIMIT 1",
+							WHERE `mid` = '%s' AND `uid` = %d LIMIT 1",
 							dbesc($when),
 							dbesc(datetime_convert()),
-							dbesc($uri),
+							dbesc($mid),
 							intval($importer['uid'])
 						);
 					}
@@ -2611,7 +2611,7 @@ function consume_feed($xml,$importer,&$contact, &$hub, $datedir = 0, $pass = 0) 
 			$rawthread = $item->get_item_tags( NAMESPACE_THREAD,'in-reply-to');
 			if(isset($rawthread[0]['attribs']['']['ref'])) {
 				$is_reply = true;
-				$parent_uri = $rawthread[0]['attribs']['']['ref'];
+				$parent_mid = $rawthread[0]['attribs']['']['ref'];
 			}
 
 			if(($is_reply) && is_array($contact)) {
@@ -2643,7 +2643,7 @@ function consume_feed($xml,$importer,&$contact, &$hub, $datedir = 0, $pass = 0) 
 				}
 
 
-				$r = q("SELECT `uid`, `edited`, `body` FROM `item` WHERE `uri` = '%s' AND `uid` = %d LIMIT 1",
+				$r = q("SELECT `uid`, `edited`, `body` FROM `item` WHERE `mid` = '%s' AND `uid` = %d LIMIT 1",
 					dbesc($item_id),
 					intval($importer['uid'])
 				);
@@ -2657,7 +2657,7 @@ function consume_feed($xml,$importer,&$contact, &$hub, $datedir = 0, $pass = 0) 
 						if(datetime_convert('UTC','UTC',$datarray['edited']) < $r[0]['edited'])
 							continue;
 
-						$r = q("UPDATE `item` SET `title` = '%s', `body` = '%s', `edited` = '%s' WHERE `uri` = '%s' AND `uid` = %d LIMIT 1",
+						$r = q("UPDATE `item` SET `title` = '%s', `body` = '%s', `edited` = '%s' WHERE `mid` = '%s' AND `uid` = %d LIMIT 1",
 							dbesc($datarray['title']),
 							dbesc($datarray['body']),
 							dbesc(datetime_convert('UTC','UTC',$datarray['edited'])),
@@ -2670,19 +2670,19 @@ function consume_feed($xml,$importer,&$contact, &$hub, $datedir = 0, $pass = 0) 
 				}
 
 
-				$datarray['parent_uri'] = $parent_uri;
+				$datarray['parent_mid'] = $parent_mid;
 				$datarray['uid'] = $importer['uid'];
 				$datarray['contact-id'] = $contact['id'];
 				if((activity_match($datarray['verb'],ACTIVITY_LIKE)) || (activity_match($datarray['verb'],ACTIVITY_DISLIKE))) {
 					$datarray['type'] = 'activity';
 					$datarray['gravity'] = GRAVITY_LIKE;
 					// only one like or dislike per person
-					$r = q("select id from item where uid = %d and `contact-id` = %d and verb ='%s' and deleted = 0 and (`parent_uri` = '%s' OR `thr_parent` = '%s') limit 1",
+					$r = q("select id from item where uid = %d and `contact-id` = %d and verb ='%s' and deleted = 0 and (`parent_mid` = '%s' OR `thr_parent` = '%s') limit 1",
 						intval($datarray['uid']),
 						intval($datarray['contact-id']),
 						dbesc($datarray['verb']),
-						dbesc($parent_uri),
-						dbesc($parent_uri)
+						dbesc($parent_mid),
+						dbesc($parent_mid)
 					);
 					if($r && count($r))
 						continue; 
@@ -2693,7 +2693,7 @@ function consume_feed($xml,$importer,&$contact, &$hub, $datedir = 0, $pass = 0) 
 					$xt = parse_xml_string($datarray['target'],false);
 
 					if($xt->type == ACTIVITY_OBJ_NOTE) {
-						$r = q("select * from item where `uri` = '%s' AND `uid` = %d limit 1",
+						$r = q("select * from item where `mid` = '%s' AND `uid` = %d limit 1",
 							dbesc($xt->id),
 							intval($importer['importer_uid'])
 						);
@@ -2745,13 +2745,13 @@ function consume_feed($xml,$importer,&$contact, &$hub, $datedir = 0, $pass = 0) 
 					$ev = bbtoevent($datarray['body']);
 					if(x($ev,'desc') && x($ev,'start')) {
 						$ev['uid'] = $importer['uid'];
-						$ev['uri'] = $item_id;
+						$ev['mid'] = $item_id;
 						$ev['edited'] = $datarray['edited'];
 						$ev['private'] = $datarray['private'];
 
 						if(is_array($contact))
 							$ev['cid'] = $contact['id'];
-						$r = q("SELECT * FROM `event` WHERE `uri` = '%s' AND `uid` = %d LIMIT 1",
+						$r = q("SELECT * FROM `event` WHERE `mid` = '%s' AND `uid` = %d LIMIT 1",
 							dbesc($item_id),
 							intval($importer['uid'])
 						);
@@ -2762,7 +2762,7 @@ function consume_feed($xml,$importer,&$contact, &$hub, $datedir = 0, $pass = 0) 
 					}
 				}
 
-				$r = q("SELECT `uid`, `edited`, `body` FROM `item` WHERE `uri` = '%s' AND `uid` = %d LIMIT 1",
+				$r = q("SELECT `uid`, `edited`, `body` FROM `item` WHERE `mid` = '%s' AND `uid` = %d LIMIT 1",
 					dbesc($item_id),
 					intval($importer['uid'])
 				);
@@ -2776,7 +2776,7 @@ function consume_feed($xml,$importer,&$contact, &$hub, $datedir = 0, $pass = 0) 
 						if(datetime_convert('UTC','UTC',$datarray['edited']) < $r[0]['edited'])
 							continue;
 
-						$r = q("UPDATE `item` SET `title` = '%s', `body` = '%s', `edited` = '%s' WHERE `uri` = '%s' AND `uid` = %d LIMIT 1",
+						$r = q("UPDATE `item` SET `title` = '%s', `body` = '%s', `edited` = '%s' WHERE `mid` = '%s' AND `uid` = %d LIMIT 1",
 							dbesc($datarray['title']),
 							dbesc($datarray['body']),
 							dbesc(datetime_convert('UTC','UTC',$datarray['edited'])),
@@ -2820,7 +2820,7 @@ function consume_feed($xml,$importer,&$contact, &$hub, $datedir = 0, $pass = 0) 
 					$datarray['wall'] = 1;
 				}
 
-				$datarray['parent_uri'] = $item_id;
+				$datarray['parent_mid'] = $item_id;
 				$datarray['uid'] = $importer['uid'];
 				$datarray['contact-id'] = $contact['id'];
 
@@ -3129,8 +3129,8 @@ function local_delivery($importer,$data) {
 		$msg['body'] = escape_tags(unxmlify($base['content'][0]['data']));
 		$msg['seen'] = 0;
 		$msg['replied'] = 0;
-		$msg['uri'] = notags(unxmlify($base['id'][0]['data']));
-		$msg['parent_uri'] = notags(unxmlify($base['in-reply-to'][0]['data']));
+		$msg['mid'] = notags(unxmlify($base['id'][0]['data']));
+		$msg['parent_mid'] = notags(unxmlify($base['in-reply-to'][0]['data']));
 		$msg['created'] = datetime_convert(notags(unxmlify('UTC','UTC',$base['sentdate'][0]['data'])));
 		
 		dbesc_array($msg);
@@ -3185,7 +3185,7 @@ function local_delivery($importer,$data) {
 		foreach($del_entries as $dentry) {
 			$deleted = false;
 			if(isset($dentry['attribs']['']['ref'])) {
-				$uri = $dentry['attribs']['']['ref'];
+				$mid = $dentry['attribs']['']['ref'];
 				$deleted = true;
 				if(isset($dentry['attribs']['']['when'])) {
 					$when = $dentry['attribs']['']['when'];
@@ -3199,12 +3199,12 @@ function local_delivery($importer,$data) {
 				// check for relayed deletes to our conversation
 
 				$is_reply = false;		
-				$r = q("select * from item where uri = '%s' and uid = %d limit 1",
-					dbesc($uri),
+				$r = q("select * from item where mid = '%s' and uid = %d limit 1",
+					dbesc($mid),
 					intval($importer['importer_uid'])
 				);
 				if(count($r)) {
-					$parent_uri = $r[0]['parent_uri'];
+					$parent_mid = $r[0]['parent_mid'];
 					if($r[0]['id'] != $r[0]['parent'])
 						$is_reply = true;
 				}				
@@ -3225,16 +3225,16 @@ function local_delivery($importer,$data) {
 
 					$is_a_remote_delete = false;
 
-					$r = q("select `item`.`id`, `item`.`uri`, `item`.`forum_mode`,`item`.`origin`,`item`.`wall`, 
+					$r = q("select `item`.`id`, `item`.`mid`, `item`.`forum_mode`,`item`.`origin`,`item`.`wall`, 
 						`contact`.`name`, `contact`.`url`, `contact`.`thumb` from `item` 
 						LEFT JOIN `contact` ON `contact`.`id` = `item`.`contact-id` 
-						WHERE `item`.`uri` = '%s' AND (`item`.`parent_uri` = '%s' or `item`.`thr_parent` = '%s')
+						WHERE `item`.`mid` = '%s' AND (`item`.`parent_mid` = '%s' or `item`.`thr_parent` = '%s')
 						AND `item`.`uid` = %d 
 						$sql_extra
 						LIMIT 1",
-						dbesc($parent_uri),
-						dbesc($parent_uri),
-						dbesc($parent_uri),
+						dbesc($parent_mid),
+						dbesc($parent_mid),
+						dbesc($parent_mid),
 						intval($importer['importer_uid'])
 					);
 					if($r && count($r))
@@ -3258,8 +3258,8 @@ function local_delivery($importer,$data) {
 				}
 
 				$r = q("SELECT `item`.*, `contact`.`self` FROM `item` left join contact on `item`.`contact-id` = `contact`.`id`
-					WHERE `uri` = '%s' AND `item`.`uid` = %d AND `contact-id` = %d AND NOT `item`.`file` LIKE '%%[%%' LIMIT 1",
-					dbesc($uri),
+					WHERE `mid` = '%s' AND `item`.`uid` = %d AND `contact-id` = %d AND NOT `item`.`file` LIKE '%%[%%' LIMIT 1",
+					dbesc($mid),
 					intval($importer['importer_uid']),
 					intval($importer['id'])
 				);
@@ -3270,14 +3270,14 @@ function local_delivery($importer,$data) {
 					if($item['deleted'])
 						continue;
 
-					logger('local_delivery: deleting item ' . $item['id'] . ' uri=' . $item['uri'], LOGGER_DEBUG);
+					logger('local_delivery: deleting item ' . $item['id'] . ' mid=' . $item['mid'], LOGGER_DEBUG);
 
 					if(($item['verb'] === ACTIVITY_TAG) && ($item['obj_type'] === ACTIVITY_OBJ_TAGTERM)) {
 						$xo = parse_xml_string($item['object'],false);
 						$xt = parse_xml_string($item['target'],false);
 
 						if($xt->type === ACTIVITY_OBJ_NOTE) {
-							$i = q("select * from `item` where uri = '%s' and uid = %d limit 1",
+							$i = q("select * from `item` where mid = '%s' and uid = %d limit 1",
 								dbesc($xt->id),
 								intval($importer['importer_uid'])
 							);
@@ -3309,23 +3309,23 @@ function local_delivery($importer,$data) {
 						}
 					}
 
-					if($item['uri'] == $item['parent_uri']) {
+					if($item['mid'] == $item['parent_mid']) {
 						$r = q("UPDATE `item` SET `deleted` = 1, `edited` = '%s', `changed` = '%s',
 							`body` = '', `title` = ''
-							WHERE `parent_uri` = '%s' AND `uid` = %d",
+							WHERE `parent_mid` = '%s' AND `uid` = %d",
 							dbesc($when),
 							dbesc(datetime_convert()),
-							dbesc($item['uri']),
+							dbesc($item['mid']),
 							intval($importer['importer_uid'])
 						);
 					}
 					else {
 						$r = q("UPDATE `item` SET `deleted` = 1, `edited` = '%s', `changed` = '%s',
 							`body` = '', `title` = ''
-							WHERE `uri` = '%s' AND `uid` = %d LIMIT 1",
+							WHERE `mid` = '%s' AND `uid` = %d LIMIT 1",
 							dbesc($when),
 							dbesc(datetime_convert()),
-							dbesc($uri),
+							dbesc($mid),
 							intval($importer['importer_uid'])
 						);
 
@@ -3347,7 +3347,7 @@ function local_delivery($importer,$data) {
 		$rawthread = $item->get_item_tags( NAMESPACE_THREAD, 'in-reply-to');
 		if(isset($rawthread[0]['attribs']['']['ref'])) {
 			$is_reply = true;
-			$parent_uri = $rawthread[0]['attribs']['']['ref'];
+			$parent_mid = $rawthread[0]['attribs']['']['ref'];
 		}
 
 		if($is_reply) {
@@ -3367,16 +3367,16 @@ function local_delivery($importer,$data) {
 			$is_a_remote_comment = false;
 
 			// POSSIBLE CLEANUP --> Why select so many fields when only forum_mode and wall are used?
-			$r = q("select `item`.`id`, `item`.`uri`, `item`.`forum_mode`,`item`.`origin`,`item`.`wall`, 
+			$r = q("select `item`.`id`, `item`.`mid`, `item`.`forum_mode`,`item`.`origin`,`item`.`wall`, 
 				`contact`.`name`, `contact`.`url`, `contact`.`thumb` from `item` 
 				LEFT JOIN `contact` ON `contact`.`id` = `item`.`contact-id` 
-				WHERE `item`.`uri` = '%s' AND (`item`.`parent_uri` = '%s' or `item`.`thr_parent` = '%s')
+				WHERE `item`.`mid` = '%s' AND (`item`.`parent_mid` = '%s' or `item`.`thr_parent` = '%s')
 				AND `item`.`uid` = %d 
 				$sql_extra
 				LIMIT 1",
-				dbesc($parent_uri),
-				dbesc($parent_uri),
-				dbesc($parent_uri),
+				dbesc($parent_mid),
+				dbesc($parent_mid),
+				dbesc($parent_mid),
 				intval($importer['importer_uid'])
 			);
 			if($r && count($r))
@@ -3401,7 +3401,7 @@ function local_delivery($importer,$data) {
 
 				$datarray = get_atom_elements($feed,$item);
 
-				$r = q("SELECT `id`, `uid`, `edited`, `body`  FROM `item` WHERE `uri` = '%s' AND `uid` = %d LIMIT 1",
+				$r = q("SELECT `id`, `uid`, `edited`, `body`  FROM `item` WHERE `mid` = '%s' AND `uid` = %d LIMIT 1",
 					dbesc($item_id),
 					intval($importer['importer_uid'])
 				);
@@ -3417,7 +3417,7 @@ function local_delivery($importer,$data) {
 							continue;
   
 						logger('received updated comment' , LOGGER_DEBUG);
-						$r = q("UPDATE `item` SET `title` = '%s', `body` = '%s', `edited` = '%s' WHERE `uri` = '%s' AND `uid` = %d LIMIT 1",
+						$r = q("UPDATE `item` SET `title` = '%s', `body` = '%s', `edited` = '%s' WHERE `mid` = '%s' AND `uid` = %d LIMIT 1",
 							dbesc($datarray['title']),
 							dbesc($datarray['body']),
 							dbesc(datetime_convert('UTC','UTC',$datarray['edited'])),
@@ -3441,7 +3441,7 @@ function local_delivery($importer,$data) {
 
 				$datarray['type'] = 'remote-comment';
 				$datarray['wall'] = 1;
-				$datarray['parent_uri'] = $parent_uri;
+				$datarray['parent_mid'] = $parent_mid;
 				$datarray['uid'] = $importer['importer_uid'];
 				$datarray['owner-name'] = $own[0]['name'];
 				$datarray['owner-link'] = $own[0]['url'];
@@ -3454,12 +3454,12 @@ function local_delivery($importer,$data) {
 					$datarray['gravity'] = GRAVITY_LIKE;
 
 					// only one like or dislike per person
-					$r = q("select id from item where uid = %d and `contact-id` = %d and verb = '%s' and (`thr_parent` = '%s' or `parent_uri` = '%s') and deleted = 0 limit 1",
+					$r = q("select id from item where uid = %d and `contact-id` = %d and verb = '%s' and (`thr_parent` = '%s' or `parent_mid` = '%s') and deleted = 0 limit 1",
 						intval($datarray['uid']),
 						intval($datarray['contact-id']),
 						dbesc($datarray['verb']),
-						dbesc($datarray['parent_uri']),
-						dbesc($datarray['parent_uri'])
+						dbesc($datarray['parent_mid']),
+						dbesc($datarray['parent_mid'])
 		
 					);
 					if($r && count($r))
@@ -3475,7 +3475,7 @@ function local_delivery($importer,$data) {
 
 						// fetch the parent item
 
-						$tagp = q("select * from item where uri = '%s' and uid = %d limit 1",
+						$tagp = q("select * from item where mid = '%s' and uid = %d limit 1",
 							dbesc($xt->id),
 							intval($importer['importer_uid'])
 						);
@@ -3507,13 +3507,13 @@ function local_delivery($importer,$data) {
 				$parent = 0;
 
 				if($posted_id) {
-					$r = q("SELECT `parent`, `parent_uri` FROM `item` WHERE `id` = %d AND `uid` = %d LIMIT 1",
+					$r = q("SELECT `parent`, `parent_mid` FROM `item` WHERE `id` = %d AND `uid` = %d LIMIT 1",
 						intval($posted_id),
 						intval($importer['importer_uid'])
 					);
 					if(count($r)) {
 						$parent = $r[0]['parent'];
-						$parent_uri = $r[0]['parent_uri'];
+						$parent_mid = $r[0]['parent_mid'];
 					}
 			
 					if(! $is_like) {
@@ -3554,7 +3554,7 @@ function local_delivery($importer,$data) {
 								'verb'         => ACTIVITY_POST,
 								'otype'        => 'item',
 								'parent'       => $parent,
-								'parent_uri'   => $parent_uri,
+								'parent_mid'   => $parent_mid,
 							));
 
 						}
@@ -3575,7 +3575,7 @@ function local_delivery($importer,$data) {
  					continue;
  
 
-				$r = q("SELECT `uid`, `edited`, `body` FROM `item` WHERE `uri` = '%s' AND `uid` = %d LIMIT 1",
+				$r = q("SELECT `uid`, `edited`, `body` FROM `item` WHERE `mid` = '%s' AND `uid` = %d LIMIT 1",
 					dbesc($item_id),
 					intval($importer['importer_uid'])
 				);
@@ -3589,7 +3589,7 @@ function local_delivery($importer,$data) {
 						if(datetime_convert('UTC','UTC',$datarray['edited']) < $r[0]['edited'])
 							continue;
 
-						$r = q("UPDATE `item` SET `title` = '%s', `body` = '%s', `edited` = '%s' WHERE `uri` = '%s' AND `uid` = %d LIMIT 1",
+						$r = q("UPDATE `item` SET `title` = '%s', `body` = '%s', `edited` = '%s' WHERE `mid` = '%s' AND `uid` = %d LIMIT 1",
 							dbesc($datarray['title']),
 							dbesc($datarray['body']),
 							dbesc(datetime_convert('UTC','UTC',$datarray['edited'])),
@@ -3601,19 +3601,19 @@ function local_delivery($importer,$data) {
 					continue;
 				}
 
-				$datarray['parent_uri'] = $parent_uri;
+				$datarray['parent_mid'] = $parent_mid;
 				$datarray['uid'] = $importer['importer_uid'];
 				$datarray['contact-id'] = $importer['id'];
 				if(($datarray['verb'] == ACTIVITY_LIKE) || ($datarray['verb'] == ACTIVITY_DISLIKE)) {
 					$datarray['type'] = 'activity';
 					$datarray['gravity'] = GRAVITY_LIKE;
 					// only one like or dislike per person
-					$r = q("select id from item where uid = %d and `contact-id` = %d and verb ='%s' and deleted = 0 and (`parent_uri` = '%s' OR `thr_parent` = '%s') limit 1",
+					$r = q("select id from item where uid = %d and `contact-id` = %d and verb ='%s' and deleted = 0 and (`parent_mid` = '%s' OR `thr_parent` = '%s') limit 1",
 						intval($datarray['uid']),
 						intval($datarray['contact-id']),
 						dbesc($datarray['verb']),
-						dbesc($parent_uri),
-						dbesc($parent_uri)
+						dbesc($parent_mid),
+						dbesc($parent_mid)
 					);
 					if($r && count($r))
 						continue; 
@@ -3626,7 +3626,7 @@ function local_delivery($importer,$data) {
 					$xt = parse_xml_string($datarray['target'],false);
 
 					if($xt->type == ACTIVITY_OBJ_NOTE) {
-						$r = q("select * from item where `uri` = '%s' AND `uid` = %d limit 1",
+						$r = q("select * from item where `mid` = '%s' AND `uid` = %d limit 1",
 							dbesc($xt->id),
 							intval($importer['importer_uid'])
 						);
@@ -3651,8 +3651,8 @@ function local_delivery($importer,$data) {
 			
 				if(!x($datarray['type']) || $datarray['type'] != 'activity') {
 
-					$myconv = q("SELECT `author-link`, `author-avatar`, `parent` FROM `item` WHERE `parent_uri` = '%s' AND `uid` = %d AND `parent` != 0 AND `deleted` = 0",
-						dbesc($parent_uri),
+					$myconv = q("SELECT `author-link`, `author-avatar`, `parent` FROM `item` WHERE `parent_mid` = '%s' AND `uid` = %d AND `parent` != 0 AND `deleted` = 0",
+						dbesc($parent_mid),
 						intval($importer['importer_uid'])
 					);
 
@@ -3690,7 +3690,7 @@ function local_delivery($importer,$data) {
 									'verb'         => ACTIVITY_POST,
 									'otype'        => 'item',
 									'parent'       => $conv_parent,
-									'parent_uri'   => $parent_uri
+									'parent_mid'   => $parent_mid
 
 								));
 
@@ -3717,11 +3717,11 @@ function local_delivery($importer,$data) {
 				if(x($ev,'desc') && x($ev,'start')) {
 					$ev['cid'] = $importer['id'];
 					$ev['uid'] = $importer['uid'];
-					$ev['uri'] = $item_id;
+					$ev['mid'] = $item_id;
 					$ev['edited'] = $datarray['edited'];
 					$ev['private'] = $datarray['private'];
 
-					$r = q("SELECT * FROM `event` WHERE `uri` = '%s' AND `uid` = %d LIMIT 1",
+					$r = q("SELECT * FROM `event` WHERE `mid` = '%s' AND `uid` = %d LIMIT 1",
 						dbesc($item_id),
 						intval($importer['uid'])
 					);
@@ -3732,7 +3732,7 @@ function local_delivery($importer,$data) {
 				}
 			}
 
-			$r = q("SELECT `uid`, `edited`, `body` FROM `item` WHERE `uri` = '%s' AND `uid` = %d LIMIT 1",
+			$r = q("SELECT `uid`, `edited`, `body` FROM `item` WHERE `mid` = '%s' AND `uid` = %d LIMIT 1",
 				dbesc($item_id),
 				intval($importer['importer_uid'])
 			);
@@ -3746,7 +3746,7 @@ function local_delivery($importer,$data) {
 					if(datetime_convert('UTC','UTC',$datarray['edited']) < $r[0]['edited'])
 						continue;
 
-					$r = q("UPDATE `item` SET `title` = '%s', `body` = '%s', `edited` = '%s' WHERE `uri` = '%s' AND `uid` = %d LIMIT 1",
+					$r = q("UPDATE `item` SET `title` = '%s', `body` = '%s', `edited` = '%s' WHERE `mid` = '%s' AND `uid` = %d LIMIT 1",
 						dbesc($datarray['title']),
 						dbesc($datarray['body']),
 						dbesc(datetime_convert('UTC','UTC',$datarray['edited'])),
@@ -3764,7 +3764,7 @@ function local_delivery($importer,$data) {
 			if($importer['remote_self'])
 				$datarray['wall'] = 1;
 
-			$datarray['parent_uri'] = $item_id;
+			$datarray['parent_mid'] = $item_id;
 			$datarray['uid'] = $importer['importer_uid'];
 			$datarray['contact-id'] = $importer['id'];
 
@@ -3992,7 +3992,7 @@ function atom_entry($item,$type,$author,$owner,$comment = false,$cid = 0) {
 		return;
 
 	if($item['deleted'])
-		return '<at:deleted-entry ref="' . xmlify($item['uri']) . '" when="' . xmlify(datetime_convert('UTC','UTC',$item['edited'] . '+00:00',ATOM_TIME)) . '" />' . "\r\n";
+		return '<at:deleted-entry ref="' . xmlify($item['mid']) . '" when="' . xmlify(datetime_convert('UTC','UTC',$item['edited'] . '+00:00',ATOM_TIME)) . '" />' . "\r\n";
 
 
 	if($item['allow_cid'] || $item['allow_gid'] || $item['deny_cid'] || $item['deny_gid'])
@@ -4010,12 +4010,12 @@ function atom_entry($item,$type,$author,$owner,$comment = false,$cid = 0) {
 	if(strlen($item['owner-name']))
 		$o .= atom_author('dfrn:owner',$item['owner-name'],$item['owner-link'],80,80,$item['owner-avatar']);
 
-	if(($item['parent'] != $item['id']) || ($item['parent_uri'] !== $item['uri']) || (($item['thr_parent'] !== '') && ($item['thr_parent'] !== $item['uri']))) {
-		$parent_item = (($item['thr_parent']) ? $item['thr_parent'] : $item['parent_uri']);
+	if(($item['parent'] != $item['id']) || ($item['parent_mid'] !== $item['mid']) || (($item['thr_parent'] !== '') && ($item['thr_parent'] !== $item['mid']))) {
+		$parent_item = (($item['thr_parent']) ? $item['thr_parent'] : $item['parent_mid']);
 		$o .= '<thr:in-reply-to ref="' . xmlify($parent_item) . '" type="text/html" href="' .  xmlify($a->get_baseurl() . '/display/' . $owner['nickname'] . '/' . $item['parent']) . '" />' . "\r\n";
 	}
 
-	$o .= '<id>' . xmlify($item['uri']) . '</id>' . "\r\n";
+	$o .= '<id>' . xmlify($item['mid']) . '</id>' . "\r\n";
 	$o .= '<title>' . xmlify($item['title']) . '</title>' . "\r\n";
 	$o .= '<published>' . xmlify(datetime_convert('UTC','UTC',$item['created'] . '+00:00',ATOM_TIME)) . '</published>' . "\r\n";
 	$o .= '<updated>' . xmlify(datetime_convert('UTC','UTC',$item['edited'] . '+00:00',ATOM_TIME)) . '</updated>' . "\r\n";

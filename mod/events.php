@@ -380,7 +380,7 @@ function events_content(&$a) {
 		$l_orig = ((x($orig_event)) ? $orig_event['location'] : '');
 		$eid = ((x($orig_event)) ? $orig_event['id'] : 0);
 		$event_xchan = ((x($orig_event)) ? $orig_event['event_xchan'] : $channel['channel_hash']);
-		$uri = ((x($orig_event)) ? $orig_event['uri'] : '');
+		$mid = ((x($orig_event)) ? $orig_event['mid'] : '');
 
 		if(! x($orig_event))
 			$sh_checked = '';
@@ -428,7 +428,7 @@ function events_content(&$a) {
 			'$post' => $a->get_baseurl() . '/events',
 			'$eid' => $eid, 
 			'$xchan' => $event_xchan,
-			'$uri' => $uri,
+			'$mid' => $mid,
 	
 			'$title' => t('Event details'),
 			'$desc' => sprintf( t('Format is %s %s. Starting date and Title are required.'),$dateformat,$timeformat),

@@ -260,8 +260,8 @@ function event_store($arr) {
 
 		$hash = random_string();
 
-		if(! $arr['uri'])
-			$arr['uri'] = item_message_id();
+		if(! $arr['mid'])
+			$arr['mid'] = item_message_id();
 
 
 		$r = q("INSERT INTO event ( uid,aid,event_xchan,event_hash,created,edited,start,finish,summary, `desc`,location,type,
@@ -314,8 +314,8 @@ function event_store($arr) {
 
 		$item_arr['uid']           = $arr['uid'];
 		$item_arr['author_xchan']  = $arr['event_xchan'];
-		$item_arr['uri']           = $arr['uri'];
-		$item_arr['parent_uri']    = $arr['uri'];
+		$item_arr['mid']           = $arr['mid'];
+		$item_arr['parent_mid']    = $arr['mid'];
 
 		$item_arr['item_flags']    = $item_flags;
 

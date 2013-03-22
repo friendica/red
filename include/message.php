@@ -43,21 +43,21 @@ function send_message($uid = 0, $recipient='', $body='', $subject='', $replyto='
 		$dups = false;
 		$hash = random_string();
 
-		$uri = $hash . '@' . get_app()->get_hostname();
+		$mid = $hash . '@' . get_app()->get_hostname();
 
-		$r = q("SELECT id FROM mail WHERE uri = '%s' LIMIT 1",
-			dbesc($uri));
+		$r = q("SELECT id FROM mail WHERE mid = '%s' LIMIT 1",
+			dbesc($mid));
 		if(count($r))
 			$dups = true;
 	} while($dups == true);
 
 
 	if(! strlen($replyto)) {
-		$replyto = $uri;
+		$replyto = $mid;
 	}
 
 	
-	$r = q("INSERT INTO mail ( account_id, channel_id, from_xchan, to_xchan, title, body, uri, parent_uri, created )
+	$r = q("INSERT INTO mail ( account_id, channel_id, from_xchan, to_xchan, title, body, mid, parent_mid, created )
 		VALUES ( %d, %d, '%s', '%s', '%s', '%s', '%s', '%s', '%s' )",
 		intval($channel['channel_account_id']),
 		intval($channel['channel_id']),
@@ -65,15 +65,15 @@ function send_message($uid = 0, $recipient='', $body='', $subject='', $replyto='
 		dbesc($recipient),
 		dbesc($subject),
 		dbesc($body),
-		dbesc($uri),
+		dbesc($mid),
 		dbesc($replyto),
 		dbesc(datetime_convert())
 	);
 
 	// verify the save
 
-	$r = q("SELECT * FROM mail WHERE uri = '%s' and channel_id = %d LIMIT 1",
-		dbesc($uri),
+	$r = q("SELECT * FROM mail WHERE mid = '%s' and channel_id = %d LIMIT 1",
+		dbesc($mid),
 		intval($channel['channel_id'])
 	);
 	if($r)
@@ -221,13 +221,13 @@ function private_messages_drop($channel_id, $messageitem_id, $drop_conversation 
 
 	if($drop_conversation) {
 		// find the parent_id
-		$p = q("SELECT parent_uri FROM mail WHERE id = %d AND channel_id = %d LIMIT 1",
+		$p = q("SELECT parent_mid FROM mail WHERE id = %d AND channel_id = %d LIMIT 1",
 			intval($messageitem_id),
 			intval($channel_id)
 		);
 		if($p) {
-			$r = q("DELETE FROM mail WHERE parent_uri = '%s' AND channel_id = %d ",
-				dbesc($p[0]['parent_uri']),
+			$r = q("DELETE FROM mail WHERE parent_mid = '%s' AND channel_id = %d ",
+				dbesc($p[0]['parent_mid']),
 				intval($channel_id)
 			);
 			if($r)
@@ -248,9 +248,9 @@ function private_messages_drop($channel_id, $messageitem_id, $drop_conversation 
 
 function private_messages_fetch_conversation($channel_id, $messageitem_id, $updateseen = false) {
 
-	// find the parent_uri of the message being requested
+	// find the parent_mid of the message being requested
 
-	$r = q("SELECT parent_uri from mail WHERE channel_id = %d and id = %d limit 1",
+	$r = q("SELECT parent_mid from mail WHERE channel_id = %d and id = %d limit 1",
 		intval($channel_id),
 		intval($messageitem_id)
 	);
@@ -258,8 +258,8 @@ function private_messages_fetch_conversation($channel_id, $messageitem_id, $upda
 	if(! $r) 
 		return array();
 
-	$messages = q("select * from mail where parent_uri = '%s' and channel_id = %d order by created asc",
-		dbesc($r[0]['parent_uri']),
+	$messages = q("select * from mail where parent_mid = '%s' and channel_id = %d order by created asc",
+		dbesc($r[0]['parent_mid']),
 		intval($channel_id)
 	);
 
@@ -286,10 +286,10 @@ function private_messages_fetch_conversation($channel_id, $messageitem_id, $upda
 
 
 	if($updateseen) {
-		$r = q("UPDATE `mail` SET mail_flags = (mail_flags ^ %d) where not (mail_flags & %d) and parent_uri = '%s' AND channel_id = %d",
+		$r = q("UPDATE `mail` SET mail_flags = (mail_flags ^ %d) where not (mail_flags & %d) and parent_mid = '%s' AND channel_id = %d",
 			intval(MAIL_SEEN),
 			intval(MAIL_SEEN),
-			dbesc($r[0]['parent_uri']),
+			dbesc($r[0]['parent_mid']),
 			intval($channel_id)
 		);
 	}

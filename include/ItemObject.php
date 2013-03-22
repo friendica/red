@@ -139,9 +139,9 @@ class Item extends BaseObject {
 		$location = format_location($item);
 
 
-		$showlike    = ((x($alike,$item['uri'])) ? format_like($alike[$item['uri']],$alike[$item['uri'] . '-l'],'like',$item['uri']) : '');
-		$showdislike = ((x($dlike,$item['uri']) && feature_enabled($conv->get_profile_owner(),'dislike'))  
-				? format_like($dlike[$item['uri']],$dlike[$item['uri'] . '-l'],'dislike',$item['uri']) : '');
+		$showlike    = ((x($alike,$item['mid'])) ? format_like($alike[$item['mid']],$alike[$item['mid'] . '-l'],'like',$item['mid']) : '');
+		$showdislike = ((x($dlike,$item['mid']) && feature_enabled($conv->get_profile_owner(),'dislike'))  
+				? format_like($dlike[$item['mid']],$dlike[$item['mid'] . '-l'],'dislike',$item['mid']) : '');
 
 		/*
 		 * We should avoid doing this all the time, but it depends on the conversation mode

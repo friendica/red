@@ -234,8 +234,8 @@ function localize_item(&$item){
 
  	if (activity_match($item['verb'],ACTIVITY_TAG)) {
 		$r = q("SELECT * from `item`,`contact` WHERE 
-		`item`.`contact-id`=`contact`.`id` AND `item`.`uri`='%s';",
-		 dbesc($item['parent_uri']));
+		`item`.`contact-id`=`contact`.`id` AND `item`.`mid`='%s';",
+		 dbesc($item['parent_mid']));
 		if(count($r)==0) return;
 		$obj=$r[0];
 		
@@ -282,7 +282,7 @@ function localize_item(&$item){
 
 		$obj = parse_xml_string($xmlhead.$item['object']);
 		if(strlen($obj->id)) {
-			$r = q("select * from item where uri = '%s' and uid = %d limit 1",
+			$r = q("select * from item where mid = '%s' and uid = %d limit 1",
 					dbesc($obj->id),
 					intval($item['uid'])
 			);
@@ -634,7 +634,7 @@ function conversation(&$a, $items, $mode, $update, $page_mode = 'traditional') {
 					'like' => '',
 					'dislike' => '',
 					'comment' => '',
-					'conv' => (($preview) ? '' : array('href'=> z_root() . '/display/' . $item['uri'], 'title'=> t('View in context'))),
+					'conv' => (($preview) ? '' : array('href'=> z_root() . '/display/' . $item['mid'], 'title'=> t('View in context'))),
 					'previewing' => $previewing,
 					'wait' => t('Please wait'),
 					'thread_level' => 1,
@@ -870,7 +870,7 @@ function like_puller($a,$item,&$arr,$mode) {
 			$url = zid($url);
 
 		if(! $item['thr_parent'])
-			$item['thr_parent'] = $item['parent_uri'];
+			$item['thr_parent'] = $item['parent_mid'];
 
 		if(! ((isset($arr[$item['thr_parent'] . '-l'])) && (is_array($arr[$item['thr_parent'] . '-l']))))
 			$arr[$item['thr_parent'] . '-l'] = array();
@@ -1017,12 +1017,12 @@ function get_item_children($arr, $parent) {
 	foreach($arr as $item) {
 		if($item['id'] != $item['parent']) {
 			if(get_config('system','thread_allow')) {
-				// Fallback to parent_uri if thr_parent is not set
+				// Fallback to parent_mid if thr_parent is not set
 				$thr_parent = $item['thr_parent'];
 				if($thr_parent == '')
-					$thr_parent = $item['parent_uri'];
+					$thr_parent = $item['parent_mid'];
 				
-				if($thr_parent == $parent['uri']) {
+				if($thr_parent == $parent['mid']) {
 					$item['children'] = get_item_children($arr, $item);
 					$children[] = $item;
 				}

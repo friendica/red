@@ -599,7 +599,7 @@ require_once('include/security.php');
 		if(ctype_digit($parent))
 			$_REQUEST['parent'] = $parent;
 		else
-			$_REQUEST['parent_uri'] = $parent;
+			$_REQUEST['parent_mid'] = $parent;
 
 		if(requestdata('lat') && requestdata('long'))
 			$_REQUEST['coord'] = sprintf("%s %s",requestdata('lat'),requestdata('long'));
@@ -892,7 +892,7 @@ require_once('include/security.php');
             and item_private = 0
 			and uid in ( " . stream_perms_api_uids() . " )
 			$sql_extra
-			AND id > %d group by uri
+			AND id > %d group by mid
             order by received desc LIMIT %d, %d ",
 			intval($since_id),
 			intval($start),
@@ -1404,7 +1404,7 @@ require_once('include/security.php');
 				$status2 = array(
 					'updated'      => api_date($item['edited']),
 					'published'    => api_date($item['created']),
-					'message_id'   => $item['uri'],
+					'message_id'   => $item['mid'],
 					'url'		   => $item['plink'],
 					'coordinates'  => $item['coord'],
 					'place'        => $item['location'],
@@ -1653,10 +1653,10 @@ require_once('include/security.php');
 		$replyto = '';
 		$sub     = '';
 		if (x($_REQUEST,'replyto')) {
-			$r = q('SELECT `parent_uri`, `title` FROM `mail` WHERE `uid`=%d AND `id`=%d',
+			$r = q('SELECT `parent_mid`, `title` FROM `mail` WHERE `uid`=%d AND `id`=%d',
 					intval(api_user()),
 					intval($_REQUEST['replyto']));
-			$replyto = $r[0]['parent_uri'];
+			$replyto = $r[0]['parent_mid'];
 			$sub     = $r[0]['title'];
 		}
 		else {
@@ -1708,7 +1708,7 @@ require_once('include/security.php');
 			$sql_extra = "`from-url`='".dbesc( $profile_url )."'";
 		}
 		elseif ($box=="conversation") {
-			$sql_extra = "`parent_uri`='".dbesc( $_GET["uri"] )  ."'";
+			$sql_extra = "`parent_mid`='".dbesc( $_GET["uri"] )  ."'";
 		}
 		elseif ($box=="all") {
 			$sql_extra = "true";

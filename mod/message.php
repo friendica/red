@@ -392,7 +392,7 @@ function message_content(&$a) {
 // FIXME - move this HTML to template
 
 		$select = $message[$recp]['xchan_name'] . '<input type="hidden" name="messageto" value="' . $message[$recp]['xchan_hash'] . '" />';
-		$parent = '<input type="hidden" name="replyto" value="' . $message['parent_uri'] . '" />';
+		$parent = '<input type="hidden" name="replyto" value="' . $message['parent_mid'] . '" />';
 
 		$tpl = get_markup_template('mail_display.tpl');
 		$o = replace_macros($tpl, array(

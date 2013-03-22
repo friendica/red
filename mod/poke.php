@@ -46,14 +46,14 @@ function poke_init(&$a) {
 	$target = $r[0];
 
 	if($parent) {
-		$r = q("select uri, private, allow_cid, allow_gid, deny_cid, deny_gid 
+		$r = q("select mid, private, allow_cid, allow_gid, deny_cid, deny_gid 
 			from item where id = %d and parent = %d and uid = %d limit 1",
 			intval($parent),
 			intval($parent),
 			intval($uid)
 		);
 		if(count($r)) {
-			$parent_uri = $r[0]['uri'];
+			$parent_mid = $r[0]['mid'];
 			$private    = $r[0]['private'];
 			$allow_cid  = $r[0]['allow_cid'];
 			$allow_gid  = $r[0]['allow_gid'];
@@ -76,13 +76,13 @@ function poke_init(&$a) {
 
 	$poster = $a->contact;
 
-	$uri = item_message_id();
+	$mid = item_message_id();
 
 	$arr = array();
 
 	$arr['uid']           = $uid;
-	$arr['uri']           = $uri;
-	$arr['parent_uri']    = (($parent_uri) ? $parent_uri : $uri);
+	$arr['mid']           = $mid;
+	$arr['parent_mid']    = (($parent_mid) ? $parent_mid : $mid);
 	$arr['type']          = 'activity';
 	$arr['wall']          = 1;
 	$arr['contact-id']    = $poster['id'];

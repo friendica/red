@@ -15,7 +15,7 @@ function subthread_content(&$a) {
 
 	$item_id = (($a->argc > 1) ? notags(trim($a->argv[1])) : 0);
 
-	$r = q("SELECT * FROM `item` WHERE `parent` = '%s' OR `parent-uri` = '%s' and parent = id LIMIT 1",
+	$r = q("SELECT * FROM `item` WHERE `parent` = '%s' OR `parent-mid` = '%s' and parent = id LIMIT 1",
 		dbesc($item_id),
 		dbesc($item_id)
 	);
@@ -84,7 +84,7 @@ function subthread_content(&$a) {
 		return;
 	}
 
-	$uri = item_message_id();
+	$mid = item_message_id();
 
 	$post_type = (($item['resource_id']) ? t('photo') : t('status'));
 	$objtype = (($item['resource_id']) ? ACTIVITY_OBJ_PHOTO : ACTIVITY_OBJ_NOTE ); 
@@ -96,7 +96,7 @@ function subthread_content(&$a) {
 	<object>
 		<type>$objtype</type>
 		<local>1</local>
-		<id>{$item['uri']}</id>
+		<id>{$item['mid']}</id>
 		<link>$link</link>
 		<title></title>
 		<content>$body</content>
@@ -109,7 +109,7 @@ EOT;
 
 	$arr = array();
 
-	$arr['uri'] = $uri;
+	$arr['mid'] = $mid;
 	$arr['uid'] = $owner_uid;
 	$arr['contact-id'] = $contact['id'];
 	$arr['type'] = 'activity';
@@ -117,8 +117,8 @@ EOT;
 	$arr['origin'] = 1;
 	$arr['gravity'] = GRAVITY_LIKE;
 	$arr['parent'] = $item['id'];
-	$arr['parent-uri'] = $item['uri'];
-	$arr['thr_parent'] = $item['uri'];
+	$arr['parent-mid'] = $item['mid'];
+	$arr['thr_parent'] = $item['mid'];
 	$arr['owner-name'] = $remote_owner['name'];
 	$arr['owner-link'] = $remote_owner['url'];
 	$arr['owner-avatar'] = $remote_owner['thumb'];

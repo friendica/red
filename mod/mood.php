@@ -30,14 +30,14 @@ function mood_init(&$a) {
 
 
 	if($parent) {
-		$r = q("select uri, owner_xchan, private, allow_cid, allow_gid, deny_cid, deny_gid 
+		$r = q("select mid, owner_xchan, private, allow_cid, allow_gid, deny_cid, deny_gid 
 			from item where id = %d and parent = %d and uid = %d limit 1",
 			intval($parent),
 			intval($parent),
 			intval($uid)
 		);
 		if(count($r)) {
-			$parent_uri = $r[0]['uri'];
+			$parent_mid = $r[0]['mid'];
 			$private    = $r[0]['private'];
 			$allow_cid  = $r[0]['allow_cid'];
 			$allow_gid  = $r[0]['allow_gid'];
@@ -58,11 +58,11 @@ function mood_init(&$a) {
 
 	$poster = $a->get_observer();
 
-	$uri = item_message_id();
+	$mid = item_message_id();
 
 	$action = sprintf( t('%1$s is currently %2$s'), '[url=' . $poster['xchan_url'] . ']' . $poster['xchan_name'] . '[/url]' , $verbs[$verb]); 
 	$item_flags = ITEM_WALL|ITEM_ORIGIN|ITEM_UNSEEN;
-	if(! $parent_uri)
+	if(! $parent_mid)
 		$item_flags |= ITEM_THREAD_TOP;
 
 
@@ -70,11 +70,11 @@ function mood_init(&$a) {
 
 	$arr['aid']           = get_account_id();
 	$arr['uid']           = $uid;
-	$arr['uri']           = $uri;
-	$arr['parent_uri']    = (($parent_uri) ? $parent_uri : $uri);
+	$arr['mid']           = $mid;
+	$arr['parent_mid']    = (($parent_mid) ? $parent_mid : $mid);
 	$arr['item_flags']    = $item_flags;
 	$arr['author_xchan']  = $poster['xchan_hash'];
-	$arr['owner_xchan']   = (($parent_uri) ? $r[0]['owner_xchan'] : $poster['xchan_hash']);
+	$arr['owner_xchan']   = (($parent_mid) ? $r[0]['owner_xchan'] : $poster['xchan_hash']);
 	$arr['title']         = '';
 	$arr['allow_cid']     = $allow_cid;
 	$arr['allow_gid']     = $allow_gid;
