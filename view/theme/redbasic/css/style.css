@@ -1090,8 +1090,7 @@ footer {
 }
 
 .wall-item-content img {
-  max-height: 95% !important;
-  max-width: 95% !important;
+    max-width: 95% !important;
 /*  box-shadow: 8px 8px 8px #666; can't really have this because of smileys */
 }
 
