@@ -1,6 +1,29 @@
 <?php
 /** @file */
 
+/**
+ * Red.
+ * 
+ * Red is an open source decentralised communications platform wrapped in
+ * an extensible content management framework, providing website designers
+ * the ability to embed fully decentralised communications and social tools 
+ * into many traditional website designs (blogs, forums, small business 
+ * websites, charitable organisations, etc.). Red also provides DNS mobility 
+ * and internet scale privacy/access control.
+ *  
+ * This allows any individual website to participate in a matrix of linked
+ * sites and people and media sharing which is far greater than the reach 
+ * of an individual site.
+ * 
+ * If you are reading the source code and come across a function 
+ * or code block which is not documented, but you have a good idea what it 
+ * does, please add some descriptive comments and push it to the main project.
+ * Even if your description isn't perfect, it gives us a base which we
+ * can build on and correct - so that eventually everything is fully 
+ * documented.
+ */
+
+
 require_once('include/config.php');
 require_once('include/network.php');
 require_once('include/plugin.php');
