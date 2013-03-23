@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: \n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2013-03-15 00:00-0700\n"
+"POT-Creation-Date: 2013-03-22 00:00-0700\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -18,21 +18,8 @@ msgstr ""
 "Content-Transfer-Encoding: 8bit\n"
 #"Plural-Forms: nplurals=INTEGER; plural=EXPRESSION;\n"
 
-#: ../../include/event.php:11 ../../include/bb2diaspora.php:433
-msgid "l F d, Y \\@ g:i A"
-msgstr ""
-
-#: ../../include/event.php:20 ../../include/bb2diaspora.php:439
-msgid "Starts:"
-msgstr ""
-
-#: ../../include/event.php:30 ../../include/bb2diaspora.php:447
-msgid "Finishes:"
-msgstr ""
-
-#: ../../include/event.php:40 ../../include/bb2diaspora.php:455
-#: ../../mod/directory.php:116 ../../mod/events.php:448 ../../boot.php:1544
-msgid "Location:"
+#: ../../include/api.php:915
+msgid "Public Timeline"
 msgstr ""
 
 #: ../../include/plugin.php:400 ../../include/plugin.php:402
@@ -47,183 +34,335 @@ msgstr ""
 msgid "This action is not available under your subscription plan."
 msgstr ""
 
-#: ../../include/ItemObject.php:105 ../../mod/photos.php:964
-msgid "Private Message"
+#: ../../include/text.php:265
+msgid "prev"
 msgstr ""
 
-#: ../../include/ItemObject.php:110 ../../mod/settings.php:657
-#: ../../mod/editpost.php:66
-msgid "Edit"
+#: ../../include/text.php:267
+msgid "first"
 msgstr ""
 
-#: ../../include/ItemObject.php:123 ../../include/conversation.php:573
-#: ../../mod/admin.php:615 ../../mod/connections.php:304
-#: ../../mod/settings.php:658 ../../mod/group.php:175
-#: ../../mod/photos.php:1223
-msgid "Delete"
+#: ../../include/text.php:296
+msgid "last"
 msgstr ""
 
-#: ../../include/ItemObject.php:129 ../../include/conversation.php:572
-msgid "Select"
+#: ../../include/text.php:299
+msgid "next"
 msgstr ""
 
-#: ../../include/ItemObject.php:133
-msgid "save to folder"
+#: ../../include/text.php:311
+msgid "older"
 msgstr ""
 
-#: ../../include/ItemObject.php:160
-msgid "add star"
+#: ../../include/text.php:313
+msgid "newer"
 msgstr ""
 
-#: ../../include/ItemObject.php:161
-msgid "remove star"
+#: ../../include/text.php:607
+msgid "No connections"
 msgstr ""
 
-#: ../../include/ItemObject.php:162
-msgid "toggle star status"
-msgstr ""
-
-#: ../../include/ItemObject.php:166
-msgid "starred"
-msgstr ""
-
-#: ../../include/ItemObject.php:170
-msgid "add tag"
-msgstr ""
-
-#: ../../include/ItemObject.php:179 ../../mod/photos.php:1110
-msgid "I like this (toggle)"
-msgstr ""
-
-#: ../../include/ItemObject.php:179
-msgid "like"
-msgstr ""
-
-#: ../../include/ItemObject.php:180 ../../mod/photos.php:1111
-msgid "I don't like this (toggle)"
-msgstr ""
-
-#: ../../include/ItemObject.php:180
-msgid "dislike"
-msgstr ""
-
-#: ../../include/ItemObject.php:182
-msgid "Share this"
-msgstr ""
-
-#: ../../include/ItemObject.php:182
-msgid "share"
-msgstr ""
-
-#: ../../include/ItemObject.php:206 ../../include/ItemObject.php:207
+#: ../../include/text.php:618
 #, php-format
-msgid "View %s's profile - %s"
-msgstr ""
-
-#: ../../include/ItemObject.php:208
-msgid "to"
-msgstr ""
-
-#: ../../include/ItemObject.php:209
-msgid "Wall-to-Wall"
-msgstr ""
-
-#: ../../include/ItemObject.php:210
-msgid "via Wall-To-Wall:"
-msgstr ""
-
-#: ../../include/ItemObject.php:220
-#, php-format
-msgid "%s from %s"
-msgstr ""
-
-#: ../../include/ItemObject.php:245 ../../include/conversation.php:639
-#: ../../include/conversation.php:982 ../../mod/editpost.php:75
-#: ../../mod/message.php:288 ../../mod/message.php:421
-#: ../../mod/photos.php:1113
-msgid "Please wait"
-msgstr ""
-
-#: ../../include/ItemObject.php:266
-#, php-format
-msgid "%d comment"
-msgid_plural "%d comments"
+msgid "%d Connection"
+msgid_plural "%d Connections"
 msgstr[0] ""
 msgstr[1] ""
 
-#: ../../include/ItemObject.php:267 ../../include/contact_widgets.php:126
-#: ../../include/js_strings.php:7
-msgid "show more"
+#: ../../include/text.php:630
+msgid "View Connections"
 msgstr ""
 
-#: ../../include/ItemObject.php:536 ../../mod/photos.php:1128
-#: ../../mod/photos.php:1166 ../../mod/photos.php:1193
-msgid "This is you"
+#: ../../include/text.php:688 ../../include/text.php:689
+#: ../../include/nav.php:128 ../../mod/search.php:96
+msgid "Search"
 msgstr ""
 
-#: ../../include/ItemObject.php:538 ../../include/js_strings.php:6
-#: ../../mod/photos.php:1130 ../../mod/photos.php:1168
-#: ../../mod/photos.php:1195
-msgid "Comment"
+#: ../../include/text.php:691 ../../mod/filer.php:36
+msgid "Save"
 msgstr ""
 
-#: ../../include/ItemObject.php:539 ../../mod/profiles.php:520
-#: ../../mod/admin.php:375 ../../mod/admin.php:608 ../../mod/admin.php:744
-#: ../../mod/admin.php:943 ../../mod/admin.php:1030 ../../mod/poke.php:200
-#: ../../mod/setup.php:257 ../../mod/setup.php:298
-#: ../../mod/connections.php:372 ../../mod/settings.php:595
-#: ../../mod/settings.php:707 ../../mod/settings.php:736
-#: ../../mod/settings.php:759 ../../mod/settings.php:830
-#: ../../mod/settings.php:996 ../../mod/crepair.php:166
-#: ../../mod/events.php:456 ../../mod/fsuggest.php:108 ../../mod/group.php:83
-#: ../../mod/import.php:339 ../../mod/invite.php:138 ../../mod/message.php:289
-#: ../../mod/message.php:420 ../../mod/mood.php:134 ../../mod/photos.php:720
-#: ../../mod/photos.php:812 ../../mod/photos.php:1092
-#: ../../mod/photos.php:1131 ../../mod/photos.php:1169
-#: ../../mod/photos.php:1196 ../../view/theme/redbasic/php/config.php:131
-#: ../../view/theme/redbasic/php/config.php:148
-msgid "Submit"
+#: ../../include/text.php:729
+msgid "poke"
 msgstr ""
 
-#: ../../include/ItemObject.php:540
-msgid "Bold"
+#: ../../include/text.php:729 ../../include/conversation.php:209
+msgid "poked"
 msgstr ""
 
-#: ../../include/ItemObject.php:541
-msgid "Italic"
+#: ../../include/text.php:730
+msgid "ping"
 msgstr ""
 
-#: ../../include/ItemObject.php:542
-msgid "Underline"
+#: ../../include/text.php:730
+msgid "pinged"
 msgstr ""
 
-#: ../../include/ItemObject.php:543
-msgid "Quote"
+#: ../../include/text.php:731
+msgid "prod"
 msgstr ""
 
-#: ../../include/ItemObject.php:544
-msgid "Code"
+#: ../../include/text.php:731
+msgid "prodded"
 msgstr ""
 
-#: ../../include/ItemObject.php:545
-msgid "Image"
+#: ../../include/text.php:732
+msgid "slap"
 msgstr ""
 
-#: ../../include/ItemObject.php:546
-msgid "Link"
+#: ../../include/text.php:732
+msgid "slapped"
 msgstr ""
 
-#: ../../include/ItemObject.php:547
-msgid "Video"
+#: ../../include/text.php:733
+msgid "finger"
 msgstr ""
 
-#: ../../include/ItemObject.php:548 ../../include/conversation.php:1000
-#: ../../mod/editpost.php:95 ../../mod/photos.php:1132
-msgid "Preview"
+#: ../../include/text.php:733
+msgid "fingered"
+msgstr ""
+
+#: ../../include/text.php:734
+msgid "rebuff"
+msgstr ""
+
+#: ../../include/text.php:734
+msgid "rebuffed"
+msgstr ""
+
+#: ../../include/text.php:746
+msgid "happy"
+msgstr ""
+
+#: ../../include/text.php:747
+msgid "sad"
+msgstr ""
+
+#: ../../include/text.php:748
+msgid "mellow"
+msgstr ""
+
+#: ../../include/text.php:749
+msgid "tired"
+msgstr ""
+
+#: ../../include/text.php:750
+msgid "perky"
+msgstr ""
+
+#: ../../include/text.php:751
+msgid "angry"
+msgstr ""
+
+#: ../../include/text.php:752
+msgid "stupified"
+msgstr ""
+
+#: ../../include/text.php:753
+msgid "puzzled"
+msgstr ""
+
+#: ../../include/text.php:754
+msgid "interested"
+msgstr ""
+
+#: ../../include/text.php:755
+msgid "bitter"
+msgstr ""
+
+#: ../../include/text.php:756
+msgid "cheerful"
+msgstr ""
+
+#: ../../include/text.php:757
+msgid "alive"
+msgstr ""
+
+#: ../../include/text.php:758
+msgid "annoyed"
+msgstr ""
+
+#: ../../include/text.php:759
+msgid "anxious"
+msgstr ""
+
+#: ../../include/text.php:760
+msgid "cranky"
+msgstr ""
+
+#: ../../include/text.php:761
+msgid "disturbed"
+msgstr ""
+
+#: ../../include/text.php:762
+msgid "frustrated"
+msgstr ""
+
+#: ../../include/text.php:763
+msgid "motivated"
+msgstr ""
+
+#: ../../include/text.php:764
+msgid "relaxed"
+msgstr ""
+
+#: ../../include/text.php:765
+msgid "surprised"
+msgstr ""
+
+#: ../../include/text.php:927
+msgid "Monday"
+msgstr ""
+
+#: ../../include/text.php:927
+msgid "Tuesday"
+msgstr ""
+
+#: ../../include/text.php:927
+msgid "Wednesday"
+msgstr ""
+
+#: ../../include/text.php:927
+msgid "Thursday"
+msgstr ""
+
+#: ../../include/text.php:927
+msgid "Friday"
+msgstr ""
+
+#: ../../include/text.php:927
+msgid "Saturday"
+msgstr ""
+
+#: ../../include/text.php:927
+msgid "Sunday"
+msgstr ""
+
+#: ../../include/text.php:931
+msgid "January"
+msgstr ""
+
+#: ../../include/text.php:931
+msgid "February"
+msgstr ""
+
+#: ../../include/text.php:931
+msgid "March"
+msgstr ""
+
+#: ../../include/text.php:931
+msgid "April"
+msgstr ""
+
+#: ../../include/text.php:931
+msgid "May"
+msgstr ""
+
+#: ../../include/text.php:931
+msgid "June"
+msgstr ""
+
+#: ../../include/text.php:931
+msgid "July"
+msgstr ""
+
+#: ../../include/text.php:931
+msgid "August"
+msgstr ""
+
+#: ../../include/text.php:931
+msgid "September"
+msgstr ""
+
+#: ../../include/text.php:931
+msgid "October"
+msgstr ""
+
+#: ../../include/text.php:931
+msgid "November"
+msgstr ""
+
+#: ../../include/text.php:931
+msgid "December"
+msgstr ""
+
+#: ../../include/text.php:1004
+msgid "unknown.???"
+msgstr ""
+
+#: ../../include/text.php:1005
+msgid "bytes"
+msgstr ""
+
+#: ../../include/text.php:1022 ../../include/text.php:1037
+#: ../../include/conversation.php:735
+msgid "remove"
+msgstr ""
+
+#: ../../include/text.php:1022 ../../include/text.php:1037
+msgid "[remove]"
+msgstr ""
+
+#: ../../include/text.php:1025 ../../include/conversation.php:610
+msgid "Categories:"
+msgstr ""
+
+#: ../../include/text.php:1040 ../../include/conversation.php:611
+msgid "Filed under:"
+msgstr ""
+
+#: ../../include/text.php:1056 ../../include/text.php:1068
+msgid "Click to open/close"
+msgstr ""
+
+#: ../../include/text.php:1163 ../../mod/events.php:324
+msgid "link to source"
+msgstr ""
+
+#: ../../include/text.php:1195
+msgid "default"
+msgstr ""
+
+#: ../../include/text.php:1207
+msgid "Select an alternate language"
+msgstr ""
+
+#: ../../include/text.php:1356 ../../include/conversation.php:125
+msgid "event"
+msgstr ""
+
+#: ../../include/text.php:1358 ../../include/conversation.php:122
+#: ../../mod/like.php:102 ../../mod/tagger.php:62 ../../mod/subthread.php:89
+msgid "photo"
+msgstr ""
+
+#: ../../include/text.php:1360
+msgid "activity"
+msgstr ""
+
+#: ../../include/text.php:1362
+msgid "comment"
+msgstr ""
+
+#: ../../include/text.php:1363 ../../include/bbcode.php:163
+msgid "post"
+msgstr ""
+
+#: ../../include/text.php:1587
+msgid "Item filed"
+msgstr ""
+
+#: ../../include/zot.php:427
+msgid "Unable to verify channel signature"
+msgstr ""
+
+#: ../../include/zot.php:533
+#, php-format
+msgid "Unable to verify site signature for %s"
 msgstr ""
 
 #: ../../include/Contact.php:53 ../../include/contact_widgets.php:9
-#: ../../mod/suggest.php:56 ../../mod/match.php:58 ../../boot.php:1490
+#: ../../mod/suggest.php:56 ../../mod/match.php:58 ../../boot.php:1491
 msgid "Connect"
 msgstr ""
 
@@ -265,77 +404,17 @@ msgstr ""
 msgid "Send PM"
 msgstr ""
 
-#: ../../include/photos.php:13 ../../include/attach.php:102
-#: ../../include/attach.php:133 ../../include/attach.php:189
-#: ../../include/attach.php:204 ../../include/attach.php:237
-#: ../../include/attach.php:251 ../../include/attach.php:272
-#: ../../include/attach.php:464 ../../include/items.php:4400
-#: ../../mod/profile_photo.php:185 ../../mod/profile_photo.php:198
-#: ../../mod/profiles.php:163 ../../mod/profiles.php:468
-#: ../../mod/poke.php:138 ../../mod/allfriends.php:10 ../../mod/setup.php:157
-#: ../../mod/api.php:26 ../../mod/api.php:31 ../../mod/viewconnections.php:33
-#: ../../mod/viewconnections.php:38 ../../mod/channel.php:105
-#: ../../mod/suggest.php:32 ../../mod/common.php:43
-#: ../../mod/connections.php:146 ../../mod/settings.php:577
-#: ../../mod/crepair.php:115 ../../mod/delegate.php:6
-#: ../../mod/editpost.php:10 ../../mod/events.php:134 ../../mod/viewsrc.php:12
-#: ../../mod/fsuggest.php:78 ../../mod/group.php:15 ../../mod/intro.php:50
-#: ../../mod/invite.php:13 ../../mod/invite.php:99 ../../mod/item.php:147
-#: ../../mod/manage.php:6 ../../mod/message.php:196 ../../mod/mood.php:111
-#: ../../mod/network.php:7 ../../mod/new_channel.php:66
-#: ../../mod/new_channel.php:97 ../../mod/nogroup.php:25
-#: ../../mod/notifications.php:66 ../../mod/photos.php:72
-#: ../../mod/photos.php:685 ../../mod/register.php:60 ../../mod/regmod.php:18
-#: ../../index.php:174 ../../index.php:336
-msgid "Permission denied."
-msgstr ""
-
-#: ../../include/photos.php:49 ../../include/Photo.php:744
-#: ../../include/Photo.php:751 ../../include/Photo.php:758
-#: ../../mod/profile_photo.php:88 ../../mod/profile_photo.php:93
-#: ../../mod/profile_photo.php:98 ../../mod/profile_photo.php:223
-#: ../../mod/profile_photo.php:323 ../../mod/profile_photo.php:332
-#: ../../mod/photos.php:95 ../../mod/photos.php:797 ../../mod/photos.php:819
-msgid "Profile Photos"
-msgstr ""
-
-#: ../../include/photos.php:86
-#, php-format
-msgid "Image exceeds website size limit of %lu bytes"
-msgstr ""
-
-#: ../../include/photos.php:93
-msgid "Image file is empty."
-msgstr ""
-
-#: ../../include/photos.php:122 ../../mod/profile_photo.php:145
-msgid "Unable to process image"
-msgstr ""
-
-#: ../../include/photos.php:176
-msgid "Photo storage failed."
-msgstr ""
-
-#: ../../include/photos.php:271 ../../boot.php:1942
-msgid "Photo Albums"
-msgstr ""
-
-#: ../../include/photos.php:275 ../../mod/photos.php:835
-#: ../../mod/photos.php:1357
-msgid "Upload New Photos"
-msgstr ""
-
 #: ../../include/profile_advanced.php:7 ../../include/profile_advanced.php:84
-#: ../../mod/profperm.php:112 ../../boot.php:1932
+#: ../../mod/profperm.php:112
 msgid "Profile"
 msgstr ""
 
-#: ../../include/profile_advanced.php:15 ../../mod/settings.php:1004
+#: ../../include/profile_advanced.php:15 ../../mod/settings.php:1005
 msgid "Full Name:"
 msgstr ""
 
 #: ../../include/profile_advanced.php:17 ../../mod/directory.php:118
-#: ../../boot.php:1546
+#: ../../boot.php:1547
 msgid "Gender:"
 msgstr ""
 
@@ -356,7 +435,7 @@ msgid "Age:"
 msgstr ""
 
 #: ../../include/profile_advanced.php:37 ../../mod/directory.php:120
-#: ../../boot.php:1547
+#: ../../boot.php:1548
 msgid "Status:"
 msgstr ""
 
@@ -365,16 +444,16 @@ msgstr ""
 msgid "for %1$d %2$s"
 msgstr ""
 
-#: ../../include/profile_advanced.php:46 ../../mod/profiles.php:540
+#: ../../include/profile_advanced.php:46 ../../mod/profiles.php:543
 msgid "Sexual Preference:"
 msgstr ""
 
 #: ../../include/profile_advanced.php:48 ../../mod/directory.php:122
-#: ../../boot.php:1548
+#: ../../boot.php:1549
 msgid "Homepage:"
 msgstr ""
 
-#: ../../include/profile_advanced.php:50 ../../mod/profiles.php:542
+#: ../../include/profile_advanced.php:50 ../../mod/profiles.php:545
 msgid "Hometown:"
 msgstr ""
 
@@ -382,7 +461,7 @@ msgstr ""
 msgid "Tags:"
 msgstr ""
 
-#: ../../include/profile_advanced.php:54 ../../mod/profiles.php:543
+#: ../../include/profile_advanced.php:54 ../../mod/profiles.php:546
 msgid "Political Views:"
 msgstr ""
 
@@ -398,11 +477,11 @@ msgstr ""
 msgid "Hobbies/Interests:"
 msgstr ""
 
-#: ../../include/profile_advanced.php:62 ../../mod/profiles.php:546
+#: ../../include/profile_advanced.php:62 ../../mod/profiles.php:549
 msgid "Likes:"
 msgstr ""
 
-#: ../../include/profile_advanced.php:64 ../../mod/profiles.php:547
+#: ../../include/profile_advanced.php:64 ../../mod/profiles.php:550
 msgid "Dislikes:"
 msgstr ""
 
@@ -436,6 +515,31 @@ msgstr ""
 
 #: ../../include/profile_advanced.php:81
 msgid "School/education:"
+msgstr ""
+
+#: ../../include/Photo.php:744 ../../include/Photo.php:751
+#: ../../include/Photo.php:758 ../../include/photos.php:49
+#: ../../mod/profile_photo.php:88 ../../mod/profile_photo.php:93
+#: ../../mod/profile_photo.php:98 ../../mod/profile_photo.php:223
+#: ../../mod/profile_photo.php:323 ../../mod/profile_photo.php:332
+#: ../../mod/photos.php:95 ../../mod/photos.php:797 ../../mod/photos.php:819
+msgid "Profile Photos"
+msgstr ""
+
+#: ../../include/message.php:16
+msgid "No recipient provided."
+msgstr ""
+
+#: ../../include/message.php:21
+msgid "[no subject]"
+msgstr ""
+
+#: ../../include/message.php:36
+msgid "Unable to determine sender."
+msgstr ""
+
+#: ../../include/message.php:82
+msgid "Stored post could not be verified."
 msgstr ""
 
 #: ../../include/account.php:22
@@ -473,7 +577,7 @@ msgstr ""
 
 #: ../../include/account.php:265 ../../include/account.php:292
 #: ../../include/account.php:349 ../../include/items.php:3928
-#: ../../boot.php:1073
+#: ../../boot.php:1074
 msgid "Administrator"
 msgstr ""
 
@@ -639,7 +743,7 @@ msgstr ""
 msgid "Sex Addict"
 msgstr ""
 
-#: ../../include/profile_selectors.php:42 ../../include/identity.php:208
+#: ../../include/profile_selectors.php:42 ../../include/identity.php:225
 #: ../../mod/connections.php:337 ../../mod/network.php:377
 msgid "Friends"
 msgstr ""
@@ -740,274 +844,8 @@ msgstr ""
 msgid "don't show"
 msgstr ""
 
-#: ../../include/activities.php:37
-msgid " and "
-msgstr ""
-
-#: ../../include/activities.php:45
-msgid "public profile"
-msgstr ""
-
-#: ../../include/activities.php:48
-#, php-format
-msgid "%1$s changed %2$s to &ldquo;%3$s&rdquo;"
-msgstr ""
-
-#: ../../include/activities.php:49
-#, php-format
-msgid "Visit %1$s's %2$s"
-msgstr ""
-
-#: ../../include/activities.php:52
-#, php-format
-msgid "%1$s has an updated %2$s, changing %3$s."
-msgstr ""
-
-#: ../../include/api.php:915
-msgid "Public Timeline"
-msgstr ""
-
-#: ../../include/attach.php:184 ../../include/attach.php:232
-msgid "Item was not found."
-msgstr ""
-
-#: ../../include/attach.php:285
-msgid "No source file."
-msgstr ""
-
-#: ../../include/attach.php:302
-msgid "Cannot locate file to replace"
-msgstr ""
-
-#: ../../include/attach.php:320
-msgid "Cannot locate file to revise/update"
-msgstr ""
-
-#: ../../include/attach.php:331
-#, php-format
-msgid "File exceeds size limit of %d"
-msgstr ""
-
-#: ../../include/attach.php:424
-msgid "File upload failed. Possible system limit or action terminated."
-msgstr ""
-
-#: ../../include/attach.php:436
-msgid "Stored file could not be verified. Upload failed."
-msgstr ""
-
-#: ../../include/attach.php:480 ../../include/attach.php:497
-msgid "Path not available."
-msgstr ""
-
-#: ../../include/auth.php:65
-msgid "Logged out."
-msgstr ""
-
-#: ../../include/auth.php:162
-msgid "Failed authentication"
-msgstr ""
-
-#: ../../include/auth.php:171
-msgid "Login failed."
-msgstr ""
-
-#: ../../include/bbcode.php:94 ../../include/bbcode.php:409
-msgid "Image/photo"
-msgstr ""
-
-#: ../../include/bbcode.php:161
-#, php-format
-msgid "%1$s wrote the following %2$s %3$s"
-msgstr ""
-
-#: ../../include/bbcode.php:163 ../../include/text.php:1342
-msgid "post"
-msgstr ""
-
-#: ../../include/bbcode.php:374 ../../include/bbcode.php:394
-msgid "$1 wrote:"
-msgstr ""
-
-#: ../../include/bbcode.php:413 ../../include/bbcode.php:414
-msgid "Encrypted content"
-msgstr ""
-
-#: ../../include/contact_selectors.php:32
-msgid "Unknown | Not categorised"
-msgstr ""
-
-#: ../../include/contact_selectors.php:33
-msgid "Block immediately"
-msgstr ""
-
-#: ../../include/contact_selectors.php:34
-msgid "Shady, spammer, self-marketer"
-msgstr ""
-
-#: ../../include/contact_selectors.php:35
-msgid "Known to me, but no opinion"
-msgstr ""
-
-#: ../../include/contact_selectors.php:36
-msgid "OK, probably harmless"
-msgstr ""
-
-#: ../../include/contact_selectors.php:37
-msgid "Reputable, has my trust"
-msgstr ""
-
-#: ../../include/contact_selectors.php:56
-msgid "Frequently"
-msgstr ""
-
-#: ../../include/contact_selectors.php:57
-msgid "Hourly"
-msgstr ""
-
-#: ../../include/contact_selectors.php:58
-msgid "Twice daily"
-msgstr ""
-
-#: ../../include/contact_selectors.php:59
-msgid "Daily"
-msgstr ""
-
-#: ../../include/contact_selectors.php:60
-msgid "Weekly"
-msgstr ""
-
-#: ../../include/contact_selectors.php:61
-msgid "Monthly"
-msgstr ""
-
-#: ../../include/contact_selectors.php:76
-msgid "Friendica"
-msgstr ""
-
-#: ../../include/contact_selectors.php:77
-msgid "OStatus"
-msgstr ""
-
-#: ../../include/contact_selectors.php:78
-msgid "RSS/Atom"
-msgstr ""
-
-#: ../../include/contact_selectors.php:79 ../../mod/admin.php:611
-#: ../../mod/admin.php:620 ../../boot.php:1235
-msgid "Email"
-msgstr ""
-
-#: ../../include/contact_selectors.php:80
-msgid "Diaspora"
-msgstr ""
-
-#: ../../include/contact_selectors.php:81
-msgid "Facebook"
-msgstr ""
-
-#: ../../include/contact_selectors.php:82
-msgid "Zot!"
-msgstr ""
-
-#: ../../include/contact_selectors.php:83
-msgid "LinkedIn"
-msgstr ""
-
-#: ../../include/contact_selectors.php:84
-msgid "XMPP/IM"
-msgstr ""
-
-#: ../../include/contact_selectors.php:85
-msgid "MySpace"
-msgstr ""
-
-#: ../../include/contact_widgets.php:6
-msgid "Add New Connection"
-msgstr ""
-
-#: ../../include/contact_widgets.php:7
-msgid "Enter the channel address"
-msgstr ""
-
-#: ../../include/contact_widgets.php:8
-msgid "Example: bob@example.com, http://example.com/barbara"
-msgstr ""
-
-#: ../../include/contact_widgets.php:23
-#, php-format
-msgid "%d invitation available"
-msgid_plural "%d invitations available"
-msgstr[0] ""
-msgstr[1] ""
-
-#: ../../include/contact_widgets.php:29
-msgid "Find Channels"
-msgstr ""
-
-#: ../../include/contact_widgets.php:30
-msgid "Enter name or interest"
-msgstr ""
-
-#: ../../include/contact_widgets.php:31
-msgid "Connect/Follow"
-msgstr ""
-
-#: ../../include/contact_widgets.php:32
-msgid "Examples: Robert Morgenstein, Fishing"
-msgstr ""
-
-#: ../../include/contact_widgets.php:33 ../../mod/connections.php:616
-#: ../../mod/directory.php:160 ../../mod/directory.php:165
-msgid "Find"
-msgstr ""
-
-#: ../../include/contact_widgets.php:34 ../../mod/suggest.php:64
-msgid "Channel Suggestions"
-msgstr ""
-
-#: ../../include/contact_widgets.php:35
-msgid "Similar Interests"
-msgstr ""
-
-#: ../../include/contact_widgets.php:36
-msgid "Random Profile"
-msgstr ""
-
-#: ../../include/contact_widgets.php:37
-msgid "Invite Friends"
-msgstr ""
-
-#: ../../include/contact_widgets.php:61 ../../include/features.php:55
-msgid "Saved Folders"
-msgstr ""
-
-#: ../../include/contact_widgets.php:64 ../../include/contact_widgets.php:91
-msgid "Everything"
-msgstr ""
-
-#: ../../include/contact_widgets.php:88
-msgid "Categories"
-msgstr ""
-
-#: ../../include/contact_widgets.php:121
-#, php-format
-msgid "%d connection in common"
-msgid_plural "%d connections in common"
-msgstr[0] ""
-msgstr[1] ""
-
-#: ../../include/conversation.php:122 ../../include/text.php:1337
-#: ../../mod/subthread.php:89 ../../mod/tagger.php:62 ../../mod/like.php:102
-msgid "photo"
-msgstr ""
-
-#: ../../include/conversation.php:125 ../../include/text.php:1335
-msgid "event"
-msgstr ""
-
-#: ../../include/conversation.php:133 ../../mod/subthread.php:89
-#: ../../mod/tagger.php:62 ../../mod/like.php:102
+#: ../../include/conversation.php:133 ../../mod/like.php:102
+#: ../../mod/tagger.php:62 ../../mod/subthread.php:89
 msgid "status"
 msgstr ""
 
@@ -1031,26 +869,25 @@ msgstr ""
 msgid "%1$s poked %2$s"
 msgstr ""
 
-#: ../../include/conversation.php:209 ../../include/text.php:729
-msgid "poked"
-msgstr ""
-
 #: ../../include/conversation.php:227 ../../mod/mood.php:63
 #, php-format
 msgid "%1$s is currently %2$s"
 msgstr ""
 
+#: ../../include/conversation.php:572 ../../include/ItemObject.php:129
+msgid "Select"
+msgstr ""
+
+#: ../../include/conversation.php:573 ../../include/ItemObject.php:123
+#: ../../mod/admin.php:628 ../../mod/connections.php:304
+#: ../../mod/settings.php:659 ../../mod/group.php:175
+#: ../../mod/photos.php:1223
+msgid "Delete"
+msgstr ""
+
 #: ../../include/conversation.php:598
 #, php-format
 msgid "View %s's profile @ %s"
-msgstr ""
-
-#: ../../include/conversation.php:610 ../../include/text.php:1025
-msgid "Categories:"
-msgstr ""
-
-#: ../../include/conversation.php:611 ../../include/text.php:1040
-msgid "Filed under:"
 msgstr ""
 
 #: ../../include/conversation.php:620
@@ -1062,9 +899,11 @@ msgstr ""
 msgid "View in context"
 msgstr ""
 
-#: ../../include/conversation.php:735 ../../include/text.php:1022
-#: ../../include/text.php:1037
-msgid "remove"
+#: ../../include/conversation.php:639 ../../include/conversation.php:982
+#: ../../include/ItemObject.php:245 ../../mod/editpost.php:75
+#: ../../mod/message.php:288 ../../mod/message.php:421
+#: ../../mod/photos.php:1113
+msgid "Please wait"
 msgstr ""
 
 #: ../../include/conversation.php:739
@@ -1235,6 +1074,316 @@ msgstr ""
 
 #: ../../include/conversation.php:994 ../../mod/editpost.php:90
 msgid "Example: bob@example.com, mary@example.com"
+msgstr ""
+
+#: ../../include/conversation.php:1000 ../../include/ItemObject.php:548
+#: ../../mod/editpost.php:95 ../../mod/photos.php:1132
+msgid "Preview"
+msgstr ""
+
+#: ../../include/attach.php:102 ../../include/attach.php:133
+#: ../../include/attach.php:189 ../../include/attach.php:204
+#: ../../include/attach.php:237 ../../include/attach.php:251
+#: ../../include/attach.php:272 ../../include/attach.php:464
+#: ../../include/items.php:4400 ../../include/photos.php:13
+#: ../../mod/profile_photo.php:185 ../../mod/profile_photo.php:198
+#: ../../mod/allfriends.php:10 ../../mod/setup.php:157 ../../mod/api.php:26
+#: ../../mod/api.php:31 ../../mod/viewconnections.php:33
+#: ../../mod/viewconnections.php:38 ../../mod/channel.php:105
+#: ../../mod/suggest.php:32 ../../mod/common.php:43 ../../mod/item.php:147
+#: ../../mod/connections.php:146 ../../mod/settings.php:578
+#: ../../mod/crepair.php:115 ../../mod/delegate.php:6
+#: ../../mod/editpost.php:10 ../../mod/viewsrc.php:12
+#: ../../mod/fsuggest.php:78 ../../mod/group.php:15 ../../mod/profiles.php:163
+#: ../../mod/profiles.php:471 ../../mod/intro.php:50 ../../mod/invite.php:13
+#: ../../mod/invite.php:99 ../../mod/message.php:196 ../../mod/mood.php:111
+#: ../../mod/photos.php:72 ../../mod/photos.php:685 ../../mod/manage.php:6
+#: ../../mod/poke.php:138 ../../mod/network.php:7 ../../mod/new_channel.php:66
+#: ../../mod/new_channel.php:97 ../../mod/nogroup.php:25
+#: ../../mod/notifications.php:66 ../../mod/register.php:60
+#: ../../mod/regmod.php:18 ../../mod/events.php:134 ../../index.php:174
+#: ../../index.php:336
+msgid "Permission denied."
+msgstr ""
+
+#: ../../include/attach.php:184 ../../include/attach.php:232
+msgid "Item was not found."
+msgstr ""
+
+#: ../../include/attach.php:285
+msgid "No source file."
+msgstr ""
+
+#: ../../include/attach.php:302
+msgid "Cannot locate file to replace"
+msgstr ""
+
+#: ../../include/attach.php:320
+msgid "Cannot locate file to revise/update"
+msgstr ""
+
+#: ../../include/attach.php:331
+#, php-format
+msgid "File exceeds size limit of %d"
+msgstr ""
+
+#: ../../include/attach.php:424
+msgid "File upload failed. Possible system limit or action terminated."
+msgstr ""
+
+#: ../../include/attach.php:436
+msgid "Stored file could not be verified. Upload failed."
+msgstr ""
+
+#: ../../include/attach.php:480 ../../include/attach.php:497
+msgid "Path not available."
+msgstr ""
+
+#: ../../include/auth.php:65
+msgid "Logged out."
+msgstr ""
+
+#: ../../include/auth.php:162
+msgid "Failed authentication"
+msgstr ""
+
+#: ../../include/auth.php:171
+msgid "Login failed."
+msgstr ""
+
+#: ../../include/bb2diaspora.php:433 ../../include/event.php:11
+msgid "l F d, Y \\@ g:i A"
+msgstr ""
+
+#: ../../include/bb2diaspora.php:439 ../../include/event.php:20
+msgid "Starts:"
+msgstr ""
+
+#: ../../include/bb2diaspora.php:447 ../../include/event.php:30
+msgid "Finishes:"
+msgstr ""
+
+#: ../../include/bb2diaspora.php:455 ../../include/event.php:40
+#: ../../mod/directory.php:116 ../../mod/events.php:448 ../../boot.php:1545
+msgid "Location:"
+msgstr ""
+
+#: ../../include/bbcode.php:94 ../../include/bbcode.php:409
+msgid "Image/photo"
+msgstr ""
+
+#: ../../include/bbcode.php:161
+#, php-format
+msgid "%1$s wrote the following %2$s %3$s"
+msgstr ""
+
+#: ../../include/bbcode.php:374 ../../include/bbcode.php:394
+msgid "$1 wrote:"
+msgstr ""
+
+#: ../../include/bbcode.php:413 ../../include/bbcode.php:414
+msgid "Encrypted content"
+msgstr ""
+
+#: ../../include/contact_selectors.php:32
+msgid "Unknown | Not categorised"
+msgstr ""
+
+#: ../../include/contact_selectors.php:33
+msgid "Block immediately"
+msgstr ""
+
+#: ../../include/contact_selectors.php:34
+msgid "Shady, spammer, self-marketer"
+msgstr ""
+
+#: ../../include/contact_selectors.php:35
+msgid "Known to me, but no opinion"
+msgstr ""
+
+#: ../../include/contact_selectors.php:36
+msgid "OK, probably harmless"
+msgstr ""
+
+#: ../../include/contact_selectors.php:37
+msgid "Reputable, has my trust"
+msgstr ""
+
+#: ../../include/contact_selectors.php:56
+msgid "Frequently"
+msgstr ""
+
+#: ../../include/contact_selectors.php:57
+msgid "Hourly"
+msgstr ""
+
+#: ../../include/contact_selectors.php:58
+msgid "Twice daily"
+msgstr ""
+
+#: ../../include/contact_selectors.php:59
+msgid "Daily"
+msgstr ""
+
+#: ../../include/contact_selectors.php:60
+msgid "Weekly"
+msgstr ""
+
+#: ../../include/contact_selectors.php:61
+msgid "Monthly"
+msgstr ""
+
+#: ../../include/contact_selectors.php:76
+msgid "Friendica"
+msgstr ""
+
+#: ../../include/contact_selectors.php:77
+msgid "OStatus"
+msgstr ""
+
+#: ../../include/contact_selectors.php:78
+msgid "RSS/Atom"
+msgstr ""
+
+#: ../../include/contact_selectors.php:79 ../../mod/admin.php:624
+#: ../../mod/admin.php:633 ../../boot.php:1236
+msgid "Email"
+msgstr ""
+
+#: ../../include/contact_selectors.php:80
+msgid "Diaspora"
+msgstr ""
+
+#: ../../include/contact_selectors.php:81
+msgid "Facebook"
+msgstr ""
+
+#: ../../include/contact_selectors.php:82
+msgid "Zot!"
+msgstr ""
+
+#: ../../include/contact_selectors.php:83
+msgid "LinkedIn"
+msgstr ""
+
+#: ../../include/contact_selectors.php:84
+msgid "XMPP/IM"
+msgstr ""
+
+#: ../../include/contact_selectors.php:85
+msgid "MySpace"
+msgstr ""
+
+#: ../../include/contact_widgets.php:6
+msgid "Add New Connection"
+msgstr ""
+
+#: ../../include/contact_widgets.php:7
+msgid "Enter the channel address"
+msgstr ""
+
+#: ../../include/contact_widgets.php:8
+msgid "Example: bob@example.com, http://example.com/barbara"
+msgstr ""
+
+#: ../../include/contact_widgets.php:23
+#, php-format
+msgid "%d invitation available"
+msgid_plural "%d invitations available"
+msgstr[0] ""
+msgstr[1] ""
+
+#: ../../include/contact_widgets.php:29
+msgid "Find Channels"
+msgstr ""
+
+#: ../../include/contact_widgets.php:30
+msgid "Enter name or interest"
+msgstr ""
+
+#: ../../include/contact_widgets.php:31
+msgid "Connect/Follow"
+msgstr ""
+
+#: ../../include/contact_widgets.php:32
+msgid "Examples: Robert Morgenstein, Fishing"
+msgstr ""
+
+#: ../../include/contact_widgets.php:33 ../../mod/connections.php:616
+#: ../../mod/directory.php:160 ../../mod/directory.php:165
+msgid "Find"
+msgstr ""
+
+#: ../../include/contact_widgets.php:34 ../../mod/suggest.php:64
+msgid "Channel Suggestions"
+msgstr ""
+
+#: ../../include/contact_widgets.php:35
+msgid "Similar Interests"
+msgstr ""
+
+#: ../../include/contact_widgets.php:36
+msgid "Random Profile"
+msgstr ""
+
+#: ../../include/contact_widgets.php:37
+msgid "Invite Friends"
+msgstr ""
+
+#: ../../include/contact_widgets.php:61 ../../include/features.php:55
+msgid "Saved Folders"
+msgstr ""
+
+#: ../../include/contact_widgets.php:64 ../../include/contact_widgets.php:91
+msgid "Everything"
+msgstr ""
+
+#: ../../include/contact_widgets.php:88
+msgid "Categories"
+msgstr ""
+
+#: ../../include/contact_widgets.php:121
+#, php-format
+msgid "%d connection in common"
+msgid_plural "%d connections in common"
+msgstr[0] ""
+msgstr[1] ""
+
+#: ../../include/contact_widgets.php:126 ../../include/js_strings.php:7
+#: ../../include/ItemObject.php:267
+msgid "show more"
+msgstr ""
+
+#: ../../include/items.php:2456
+#, php-format
+msgid "%s's birthday"
+msgstr ""
+
+#: ../../include/items.php:2457
+#, php-format
+msgid "Happy Birthday %s"
+msgstr ""
+
+#: ../../include/items.php:3918
+msgid "[Name Withheld]"
+msgstr ""
+
+#: ../../include/items.php:3926
+msgid "A new person is sharing with you at "
+msgstr ""
+
+#: ../../include/items.php:3926
+msgid "You have a new follower at "
+msgstr ""
+
+#: ../../include/items.php:4349 ../../mod/admin.php:142
+#: ../../mod/admin.php:665 ../../mod/admin.php:864 ../../mod/viewsrc.php:18
+#: ../../mod/page.php:34 ../../mod/display.php:29
+msgid "Item not found."
+msgstr ""
+
+#: ../../include/items.php:4521
+msgid "Archives"
 msgstr ""
 
 #: ../../include/datetime.php:43 ../../include/datetime.php:45
@@ -1576,8 +1725,8 @@ msgstr ""
 msgid "Enable widget to display Network posts only from selected collections"
 msgstr ""
 
-#: ../../include/features.php:42 ../../mod/network.php:163
-#: ../../mod/search.php:17
+#: ../../include/features.php:42 ../../mod/search.php:17
+#: ../../mod/network.php:163
 msgid "Saved Searches"
 msgstr ""
 
@@ -1744,57 +1893,57 @@ msgstr ""
 msgid "Name too long"
 msgstr ""
 
-#: ../../include/identity.php:57
+#: ../../include/identity.php:72
 msgid "No account identifier"
 msgstr ""
 
-#: ../../include/identity.php:72
+#: ../../include/identity.php:87
 msgid ""
 "Nickname has unsupported characters or is already being used on this site."
 msgstr ""
 
-#: ../../include/identity.php:120
+#: ../../include/identity.php:135
 msgid "Unable to retrieve created identity"
 msgstr ""
 
-#: ../../include/identity.php:184
+#: ../../include/identity.php:200
 msgid "Default Profile"
 msgstr ""
 
-#: ../../include/items.php:2456
+#: ../../include/photos.php:86
 #, php-format
-msgid "%s's birthday"
+msgid "Image exceeds website size limit of %lu bytes"
 msgstr ""
 
-#: ../../include/items.php:2457
-#, php-format
-msgid "Happy Birthday %s"
+#: ../../include/photos.php:93
+msgid "Image file is empty."
 msgstr ""
 
-#: ../../include/items.php:3918
-msgid "[Name Withheld]"
+#: ../../include/photos.php:122 ../../mod/profile_photo.php:145
+msgid "Unable to process image"
 msgstr ""
 
-#: ../../include/items.php:3926
-msgid "A new person is sharing with you at "
+#: ../../include/photos.php:176
+msgid "Photo storage failed."
 msgstr ""
 
-#: ../../include/items.php:3926
-msgid "You have a new follower at "
+#: ../../include/photos.php:271 ../../boot.php:1943
+msgid "Photo Albums"
 msgstr ""
 
-#: ../../include/items.php:4349 ../../mod/admin.php:142
-#: ../../mod/admin.php:652 ../../mod/admin.php:851 ../../mod/display.php:29
-#: ../../mod/viewsrc.php:18 ../../mod/page.php:34
-msgid "Item not found."
-msgstr ""
-
-#: ../../include/items.php:4521
-msgid "Archives"
+#: ../../include/photos.php:275 ../../mod/photos.php:835
+#: ../../mod/photos.php:1357
+msgid "Upload New Photos"
 msgstr ""
 
 #: ../../include/js_strings.php:5
 msgid "Delete this item?"
+msgstr ""
+
+#: ../../include/js_strings.php:6 ../../include/ItemObject.php:538
+#: ../../mod/photos.php:1130 ../../mod/photos.php:1168
+#: ../../mod/photos.php:1195
+msgid "Comment"
 msgstr ""
 
 #: ../../include/js_strings.php:8
@@ -1886,23 +2035,7 @@ msgstr ""
 msgid "timeago.numbers"
 msgstr ""
 
-#: ../../include/message.php:16
-msgid "No recipient provided."
-msgstr ""
-
-#: ../../include/message.php:21
-msgid "[no subject]"
-msgstr ""
-
-#: ../../include/message.php:36
-msgid "Unable to determine sender."
-msgstr ""
-
-#: ../../include/message.php:82
-msgid "Stored post could not be verified."
-msgstr ""
-
-#: ../../include/nav.php:71 ../../include/nav.php:86 ../../boot.php:1232
+#: ../../include/nav.php:71 ../../include/nav.php:86 ../../boot.php:1233
 msgid "Logout"
 msgstr ""
 
@@ -1931,7 +2064,7 @@ msgstr ""
 msgid "Manage/Edit Profiles"
 msgstr ""
 
-#: ../../include/nav.php:78 ../../mod/fbrowser.php:25 ../../boot.php:1939
+#: ../../include/nav.php:78 ../../mod/fbrowser.php:25 ../../boot.php:1940
 msgid "Photos"
 msgstr ""
 
@@ -1939,7 +2072,7 @@ msgstr ""
 msgid "Your photos"
 msgstr ""
 
-#: ../../include/nav.php:84 ../../boot.php:1233
+#: ../../include/nav.php:84 ../../boot.php:1234
 msgid "Login"
 msgstr ""
 
@@ -1960,7 +2093,7 @@ msgstr ""
 msgid "Home Page"
 msgstr ""
 
-#: ../../include/nav.php:118 ../../mod/register.php:181 ../../boot.php:1208
+#: ../../include/nav.php:118 ../../mod/register.php:181 ../../boot.php:1209
 msgid "Register"
 msgstr ""
 
@@ -1982,11 +2115,6 @@ msgstr ""
 
 #: ../../include/nav.php:126
 msgid "Addon applications, utilities, games"
-msgstr ""
-
-#: ../../include/nav.php:128 ../../include/text.php:688
-#: ../../include/text.php:689 ../../mod/search.php:96
-msgid "Search"
 msgstr ""
 
 #: ../../include/nav.php:128
@@ -2081,7 +2209,7 @@ msgstr ""
 msgid "New Message"
 msgstr ""
 
-#: ../../include/nav.php:167 ../../mod/events.php:346 ../../boot.php:1949
+#: ../../include/nav.php:167 ../../mod/events.php:346 ../../boot.php:1951
 msgid "Events"
 msgstr ""
 
@@ -2105,7 +2233,7 @@ msgstr ""
 msgid "Manage Your Channels"
 msgstr ""
 
-#: ../../include/nav.php:173 ../../mod/admin.php:703 ../../mod/admin.php:908
+#: ../../include/nav.php:173 ../../mod/admin.php:716 ../../mod/admin.php:921
 #: ../../mod/settings.php:101
 msgid "Settings"
 msgstr ""
@@ -2253,296 +2381,169 @@ msgid ""
 "form has been opened for too long (>3 hours) before submitting it."
 msgstr ""
 
-#: ../../include/text.php:265
-msgid "prev"
+#: ../../include/ItemObject.php:105 ../../mod/photos.php:964
+msgid "Private Message"
 msgstr ""
 
-#: ../../include/text.php:267
-msgid "first"
+#: ../../include/ItemObject.php:110 ../../mod/settings.php:658
+#: ../../mod/editpost.php:66
+msgid "Edit"
 msgstr ""
 
-#: ../../include/text.php:296
-msgid "last"
+#: ../../include/ItemObject.php:133
+msgid "save to folder"
 msgstr ""
 
-#: ../../include/text.php:299
-msgid "next"
+#: ../../include/ItemObject.php:160
+msgid "add star"
 msgstr ""
 
-#: ../../include/text.php:311
-msgid "older"
+#: ../../include/ItemObject.php:161
+msgid "remove star"
 msgstr ""
 
-#: ../../include/text.php:313
-msgid "newer"
+#: ../../include/ItemObject.php:162
+msgid "toggle star status"
 msgstr ""
 
-#: ../../include/text.php:607
-msgid "No connections"
+#: ../../include/ItemObject.php:166
+msgid "starred"
 msgstr ""
 
-#: ../../include/text.php:618
+#: ../../include/ItemObject.php:170
+msgid "add tag"
+msgstr ""
+
+#: ../../include/ItemObject.php:179 ../../mod/photos.php:1110
+msgid "I like this (toggle)"
+msgstr ""
+
+#: ../../include/ItemObject.php:179
+msgid "like"
+msgstr ""
+
+#: ../../include/ItemObject.php:180 ../../mod/photos.php:1111
+msgid "I don't like this (toggle)"
+msgstr ""
+
+#: ../../include/ItemObject.php:180
+msgid "dislike"
+msgstr ""
+
+#: ../../include/ItemObject.php:182
+msgid "Share this"
+msgstr ""
+
+#: ../../include/ItemObject.php:182
+msgid "share"
+msgstr ""
+
+#: ../../include/ItemObject.php:206 ../../include/ItemObject.php:207
 #, php-format
-msgid "%d Connection"
-msgid_plural "%d Connections"
+msgid "View %s's profile - %s"
+msgstr ""
+
+#: ../../include/ItemObject.php:208
+msgid "to"
+msgstr ""
+
+#: ../../include/ItemObject.php:209
+msgid "Wall-to-Wall"
+msgstr ""
+
+#: ../../include/ItemObject.php:210
+msgid "via Wall-To-Wall:"
+msgstr ""
+
+#: ../../include/ItemObject.php:220
+#, php-format
+msgid "%s from %s"
+msgstr ""
+
+#: ../../include/ItemObject.php:266
+#, php-format
+msgid "%d comment"
+msgid_plural "%d comments"
 msgstr[0] ""
 msgstr[1] ""
 
-#: ../../include/text.php:630
-msgid "View Connections"
+#: ../../include/ItemObject.php:536 ../../mod/photos.php:1128
+#: ../../mod/photos.php:1166 ../../mod/photos.php:1193
+msgid "This is you"
 msgstr ""
 
-#: ../../include/text.php:691 ../../mod/filer.php:36
-msgid "Save"
+#: ../../include/ItemObject.php:539 ../../mod/admin.php:397
+#: ../../mod/admin.php:621 ../../mod/admin.php:757 ../../mod/admin.php:956
+#: ../../mod/admin.php:1043 ../../mod/setup.php:257 ../../mod/setup.php:298
+#: ../../mod/connections.php:372 ../../mod/settings.php:596
+#: ../../mod/settings.php:708 ../../mod/settings.php:737
+#: ../../mod/settings.php:760 ../../mod/settings.php:831
+#: ../../mod/settings.php:997 ../../mod/crepair.php:166
+#: ../../mod/fsuggest.php:108 ../../mod/group.php:83
+#: ../../mod/profiles.php:523 ../../mod/import.php:339
+#: ../../mod/invite.php:138 ../../mod/message.php:289
+#: ../../mod/message.php:420 ../../mod/mood.php:134 ../../mod/photos.php:720
+#: ../../mod/photos.php:812 ../../mod/photos.php:1092
+#: ../../mod/photos.php:1131 ../../mod/photos.php:1169
+#: ../../mod/photos.php:1196 ../../mod/poke.php:200 ../../mod/events.php:456
+#: ../../view/theme/redbasic/php/config.php:131
+#: ../../view/theme/redbasic/php/config.php:148
+msgid "Submit"
 msgstr ""
 
-#: ../../include/text.php:729
-msgid "poke"
+#: ../../include/ItemObject.php:540
+msgid "Bold"
 msgstr ""
 
-#: ../../include/text.php:730
-msgid "ping"
+#: ../../include/ItemObject.php:541
+msgid "Italic"
 msgstr ""
 
-#: ../../include/text.php:730
-msgid "pinged"
+#: ../../include/ItemObject.php:542
+msgid "Underline"
 msgstr ""
 
-#: ../../include/text.php:731
-msgid "prod"
+#: ../../include/ItemObject.php:543
+msgid "Quote"
 msgstr ""
 
-#: ../../include/text.php:731
-msgid "prodded"
+#: ../../include/ItemObject.php:544
+msgid "Code"
 msgstr ""
 
-#: ../../include/text.php:732
-msgid "slap"
+#: ../../include/ItemObject.php:545
+msgid "Image"
 msgstr ""
 
-#: ../../include/text.php:732
-msgid "slapped"
+#: ../../include/ItemObject.php:546
+msgid "Link"
 msgstr ""
 
-#: ../../include/text.php:733
-msgid "finger"
+#: ../../include/ItemObject.php:547
+msgid "Video"
 msgstr ""
 
-#: ../../include/text.php:733
-msgid "fingered"
+#: ../../include/activities.php:37
+msgid " and "
 msgstr ""
 
-#: ../../include/text.php:734
-msgid "rebuff"
+#: ../../include/activities.php:45
+msgid "public profile"
 msgstr ""
 
-#: ../../include/text.php:734
-msgid "rebuffed"
-msgstr ""
-
-#: ../../include/text.php:746
-msgid "happy"
-msgstr ""
-
-#: ../../include/text.php:747
-msgid "sad"
-msgstr ""
-
-#: ../../include/text.php:748
-msgid "mellow"
-msgstr ""
-
-#: ../../include/text.php:749
-msgid "tired"
-msgstr ""
-
-#: ../../include/text.php:750
-msgid "perky"
-msgstr ""
-
-#: ../../include/text.php:751
-msgid "angry"
-msgstr ""
-
-#: ../../include/text.php:752
-msgid "stupified"
-msgstr ""
-
-#: ../../include/text.php:753
-msgid "puzzled"
-msgstr ""
-
-#: ../../include/text.php:754
-msgid "interested"
-msgstr ""
-
-#: ../../include/text.php:755
-msgid "bitter"
-msgstr ""
-
-#: ../../include/text.php:756
-msgid "cheerful"
-msgstr ""
-
-#: ../../include/text.php:757
-msgid "alive"
-msgstr ""
-
-#: ../../include/text.php:758
-msgid "annoyed"
-msgstr ""
-
-#: ../../include/text.php:759
-msgid "anxious"
-msgstr ""
-
-#: ../../include/text.php:760
-msgid "cranky"
-msgstr ""
-
-#: ../../include/text.php:761
-msgid "disturbed"
-msgstr ""
-
-#: ../../include/text.php:762
-msgid "frustrated"
-msgstr ""
-
-#: ../../include/text.php:763
-msgid "motivated"
-msgstr ""
-
-#: ../../include/text.php:764
-msgid "relaxed"
-msgstr ""
-
-#: ../../include/text.php:765
-msgid "surprised"
-msgstr ""
-
-#: ../../include/text.php:927
-msgid "Monday"
-msgstr ""
-
-#: ../../include/text.php:927
-msgid "Tuesday"
-msgstr ""
-
-#: ../../include/text.php:927
-msgid "Wednesday"
-msgstr ""
-
-#: ../../include/text.php:927
-msgid "Thursday"
-msgstr ""
-
-#: ../../include/text.php:927
-msgid "Friday"
-msgstr ""
-
-#: ../../include/text.php:927
-msgid "Saturday"
-msgstr ""
-
-#: ../../include/text.php:927
-msgid "Sunday"
-msgstr ""
-
-#: ../../include/text.php:931
-msgid "January"
-msgstr ""
-
-#: ../../include/text.php:931
-msgid "February"
-msgstr ""
-
-#: ../../include/text.php:931
-msgid "March"
-msgstr ""
-
-#: ../../include/text.php:931
-msgid "April"
-msgstr ""
-
-#: ../../include/text.php:931
-msgid "May"
-msgstr ""
-
-#: ../../include/text.php:931
-msgid "June"
-msgstr ""
-
-#: ../../include/text.php:931
-msgid "July"
-msgstr ""
-
-#: ../../include/text.php:931
-msgid "August"
-msgstr ""
-
-#: ../../include/text.php:931
-msgid "September"
-msgstr ""
-
-#: ../../include/text.php:931
-msgid "October"
-msgstr ""
-
-#: ../../include/text.php:931
-msgid "November"
-msgstr ""
-
-#: ../../include/text.php:931
-msgid "December"
-msgstr ""
-
-#: ../../include/text.php:1004
-msgid "unknown.???"
-msgstr ""
-
-#: ../../include/text.php:1005
-msgid "bytes"
-msgstr ""
-
-#: ../../include/text.php:1022 ../../include/text.php:1037
-msgid "[remove]"
-msgstr ""
-
-#: ../../include/text.php:1056 ../../include/text.php:1068
-msgid "Click to open/close"
-msgstr ""
-
-#: ../../include/text.php:1142 ../../mod/events.php:324
-msgid "link to source"
-msgstr ""
-
-#: ../../include/text.php:1174
-msgid "default"
-msgstr ""
-
-#: ../../include/text.php:1186
-msgid "Select an alternate language"
-msgstr ""
-
-#: ../../include/text.php:1339
-msgid "activity"
-msgstr ""
-
-#: ../../include/text.php:1341
-msgid "comment"
-msgstr ""
-
-#: ../../include/text.php:1566
-msgid "Item filed"
-msgstr ""
-
-#: ../../include/zot.php:426
-msgid "Unable to verify channel signature"
-msgstr ""
-
-#: ../../include/zot.php:527
+#: ../../include/activities.php:48
 #, php-format
-msgid "Unable to verify site signature for %s"
+msgid "%1$s changed %2$s to &ldquo;%3$s&rdquo;"
+msgstr ""
+
+#: ../../include/activities.php:49
+#, php-format
+msgid "Visit %1$s's %2$s"
+msgstr ""
+
+#: ../../include/activities.php:52
+#, php-format
+msgid "%1$s has an updated %2$s, changing %3$s."
 msgstr ""
 
 #: ../../mod/profile_photo.php:54
@@ -2588,7 +2589,7 @@ msgstr ""
 msgid "Upload"
 msgstr ""
 
-#: ../../mod/profile_photo.php:276 ../../mod/settings.php:960
+#: ../../mod/profile_photo.php:276 ../../mod/settings.php:961
 msgid "or"
 msgstr ""
 
@@ -2625,297 +2626,23 @@ msgstr ""
 msgid "Image size reduction [%s] failed."
 msgstr ""
 
-#: ../../mod/profiles.php:18 ../../mod/profiles.php:138
-#: ../../mod/profiles.php:179 ../../mod/profiles.php:478
-msgid "Profile not found."
-msgstr ""
-
-#: ../../mod/profiles.php:38
-msgid "Profile deleted."
-msgstr ""
-
-#: ../../mod/profiles.php:56 ../../mod/profiles.php:92
-msgid "Profile-"
-msgstr ""
-
-#: ../../mod/profiles.php:77 ../../mod/profiles.php:120
-msgid "New profile created."
-msgstr ""
-
-#: ../../mod/profiles.php:98
-msgid "Profile unavailable to clone."
-msgstr ""
-
-#: ../../mod/profiles.php:189
-msgid "Profile Name is required."
-msgstr ""
-
-#: ../../mod/profiles.php:311
-msgid "Marital Status"
-msgstr ""
-
-#: ../../mod/profiles.php:315
-msgid "Romantic Partner"
-msgstr ""
-
-#: ../../mod/profiles.php:319
-msgid "Likes"
-msgstr ""
-
-#: ../../mod/profiles.php:323
-msgid "Dislikes"
-msgstr ""
-
-#: ../../mod/profiles.php:327
-msgid "Work/Employment"
-msgstr ""
-
-#: ../../mod/profiles.php:330
-msgid "Religion"
-msgstr ""
-
-#: ../../mod/profiles.php:334
-msgid "Political Views"
-msgstr ""
-
-#: ../../mod/profiles.php:338
-msgid "Gender"
-msgstr ""
-
-#: ../../mod/profiles.php:342
-msgid "Sexual Preference"
-msgstr ""
-
-#: ../../mod/profiles.php:346
-msgid "Homepage"
-msgstr ""
-
-#: ../../mod/profiles.php:350
-msgid "Interests"
-msgstr ""
-
-#: ../../mod/profiles.php:354
-msgid "Address"
-msgstr ""
-
-#: ../../mod/profiles.php:361
-msgid "Location"
-msgstr ""
-
-#: ../../mod/profiles.php:442
-msgid "Profile updated."
-msgstr ""
-
-#: ../../mod/profiles.php:497
-msgid "Hide your contact/friend list from viewers of this profile?"
-msgstr ""
-
-#: ../../mod/profiles.php:498 ../../mod/api.php:105 ../../mod/settings.php:951
-#: ../../mod/settings.php:956 ../../mod/settings.php:979
-#: ../../mod/settings.php:981 ../../mod/settings.php:982
-#: ../../mod/settings.php:983
-msgid "Yes"
-msgstr ""
-
-#: ../../mod/profiles.php:499 ../../mod/api.php:106 ../../mod/settings.php:951
-#: ../../mod/settings.php:956 ../../mod/settings.php:979
-#: ../../mod/settings.php:981 ../../mod/settings.php:982
-#: ../../mod/settings.php:983
-msgid "No"
-msgstr ""
-
-#: ../../mod/profiles.php:519
-msgid "Edit Profile Details"
-msgstr ""
-
-#: ../../mod/profiles.php:521
-msgid "View this profile"
-msgstr ""
-
-#: ../../mod/profiles.php:522
-msgid "Change Profile Photo"
-msgstr ""
-
-#: ../../mod/profiles.php:523
-msgid "Create a new profile using these settings"
-msgstr ""
-
-#: ../../mod/profiles.php:524
-msgid "Clone this profile"
-msgstr ""
-
-#: ../../mod/profiles.php:525
-msgid "Delete this profile"
-msgstr ""
-
-#: ../../mod/profiles.php:526
-msgid "Profile Name:"
-msgstr ""
-
-#: ../../mod/profiles.php:527
-msgid "Your Full Name:"
-msgstr ""
-
-#: ../../mod/profiles.php:528
-msgid "Title/Description:"
-msgstr ""
-
-#: ../../mod/profiles.php:529
-msgid "Your Gender:"
-msgstr ""
-
-#: ../../mod/profiles.php:530
-#, php-format
-msgid "Birthday (%s):"
-msgstr ""
-
-#: ../../mod/profiles.php:531
-msgid "Street Address:"
-msgstr ""
-
-#: ../../mod/profiles.php:532
-msgid "Locality/City:"
-msgstr ""
-
-#: ../../mod/profiles.php:533
-msgid "Postal/Zip Code:"
-msgstr ""
-
-#: ../../mod/profiles.php:534
-msgid "Country:"
-msgstr ""
-
-#: ../../mod/profiles.php:535
-msgid "Region/State:"
-msgstr ""
-
-#: ../../mod/profiles.php:536
-msgid "<span class=\"heart\">&hearts;</span> Marital Status:"
-msgstr ""
-
-#: ../../mod/profiles.php:537
-msgid "Who: (if applicable)"
-msgstr ""
-
-#: ../../mod/profiles.php:538
-msgid "Examples: cathy123, Cathy Williams, cathy@example.com"
-msgstr ""
-
-#: ../../mod/profiles.php:539
-msgid "Since [date]:"
-msgstr ""
-
-#: ../../mod/profiles.php:541
-msgid "Homepage URL:"
-msgstr ""
-
-#: ../../mod/profiles.php:544
-msgid "Religious Views:"
-msgstr ""
-
-#: ../../mod/profiles.php:545
-msgid "Keywords:"
-msgstr ""
-
-#: ../../mod/profiles.php:548
-msgid "Example: fishing photography software"
-msgstr ""
-
-#: ../../mod/profiles.php:549
-msgid "Used in directory listings"
-msgstr ""
-
-#: ../../mod/profiles.php:550
-msgid "Tell us about yourself..."
-msgstr ""
-
-#: ../../mod/profiles.php:551
-msgid "Hobbies/Interests"
-msgstr ""
-
-#: ../../mod/profiles.php:552
-msgid "Contact information and Social Networks"
-msgstr ""
-
-#: ../../mod/profiles.php:553
-msgid "Musical interests"
-msgstr ""
-
-#: ../../mod/profiles.php:554
-msgid "Books, literature"
-msgstr ""
-
-#: ../../mod/profiles.php:555
-msgid "Television"
-msgstr ""
-
-#: ../../mod/profiles.php:556
-msgid "Film/dance/culture/entertainment"
-msgstr ""
-
-#: ../../mod/profiles.php:557
-msgid "Love/romance"
-msgstr ""
-
-#: ../../mod/profiles.php:558
-msgid "Work/employment"
-msgstr ""
-
-#: ../../mod/profiles.php:559
-msgid "School/education"
-msgstr ""
-
-#: ../../mod/profiles.php:564
-msgid ""
-"This is your <strong>public</strong> profile.<br />It <strong>may</strong> "
-"be visible to anybody using the internet."
-msgstr ""
-
-#: ../../mod/profiles.php:574 ../../mod/directory.php:103
-msgid "Age: "
-msgstr ""
-
-#: ../../mod/profiles.php:612
-msgid "Edit/Manage Profiles"
-msgstr ""
-
-#: ../../mod/profiles.php:613 ../../boot.php:1508
-msgid "Change profile photo"
-msgstr ""
-
-#: ../../mod/profiles.php:614 ../../boot.php:1515
-msgid "Create New Profile"
-msgstr ""
-
-#: ../../mod/profiles.php:625 ../../boot.php:1529
-msgid "Profile Image"
-msgstr ""
-
-#: ../../mod/profiles.php:628 ../../boot.php:1532
-msgid "visible to everybody"
-msgstr ""
-
-#: ../../mod/profiles.php:629 ../../boot.php:1533
-msgid "Edit visibility"
-msgstr ""
-
 #: ../../mod/admin.php:48
 msgid "Theme settings updated."
 msgstr ""
 
-#: ../../mod/admin.php:83 ../../mod/admin.php:374
+#: ../../mod/admin.php:83 ../../mod/admin.php:396
 msgid "Site"
 msgstr ""
 
-#: ../../mod/admin.php:84 ../../mod/admin.php:607 ../../mod/admin.php:619
+#: ../../mod/admin.php:84 ../../mod/admin.php:620 ../../mod/admin.php:632
 msgid "Users"
 msgstr ""
 
-#: ../../mod/admin.php:85 ../../mod/admin.php:701 ../../mod/admin.php:743
+#: ../../mod/admin.php:85 ../../mod/admin.php:714 ../../mod/admin.php:756
 msgid "Plugins"
 msgstr ""
 
-#: ../../mod/admin.php:86 ../../mod/admin.php:906 ../../mod/admin.php:942
+#: ../../mod/admin.php:86 ../../mod/admin.php:919 ../../mod/admin.php:955
 msgid "Themes"
 msgstr ""
 
@@ -2923,7 +2650,7 @@ msgstr ""
 msgid "DB updates"
 msgstr ""
 
-#: ../../mod/admin.php:101 ../../mod/admin.php:108 ../../mod/admin.php:1029
+#: ../../mod/admin.php:101 ../../mod/admin.php:108 ../../mod/admin.php:1042
 msgid "Logs"
 msgstr ""
 
@@ -2939,9 +2666,9 @@ msgstr ""
 msgid "Message queues"
 msgstr ""
 
-#: ../../mod/admin.php:185 ../../mod/admin.php:373 ../../mod/admin.php:606
-#: ../../mod/admin.php:700 ../../mod/admin.php:742 ../../mod/admin.php:905
-#: ../../mod/admin.php:941 ../../mod/admin.php:1028
+#: ../../mod/admin.php:185 ../../mod/admin.php:395 ../../mod/admin.php:619
+#: ../../mod/admin.php:713 ../../mod/admin.php:755 ../../mod/admin.php:918
+#: ../../mod/admin.php:954 ../../mod/admin.php:1041
 msgid "Administration"
 msgstr ""
 
@@ -2965,461 +2692,466 @@ msgstr ""
 msgid "Active plugins"
 msgstr ""
 
-#: ../../mod/admin.php:315
+#: ../../mod/admin.php:327
 msgid "Site settings updated."
 msgstr ""
 
-#: ../../mod/admin.php:361
-msgid "Closed"
+#: ../../mod/admin.php:356 ../../mod/settings.php:789
+msgid "No special theme for mobile devices"
 msgstr ""
 
-#: ../../mod/admin.php:362
-msgid "Requires approval"
-msgstr ""
-
-#: ../../mod/admin.php:363
-msgid "Open"
-msgstr ""
-
-#: ../../mod/admin.php:367
-msgid "No SSL policy, links will track page SSL state"
-msgstr ""
-
-#: ../../mod/admin.php:368
-msgid "Force all links to use SSL"
-msgstr ""
-
-#: ../../mod/admin.php:376 ../../mod/register.php:166
-msgid "Registration"
-msgstr ""
-
-#: ../../mod/admin.php:377
-msgid "File upload"
-msgstr ""
-
-#: ../../mod/admin.php:378
-msgid "Policies"
-msgstr ""
-
-#: ../../mod/admin.php:379
-msgid "Advanced"
+#: ../../mod/admin.php:358
+msgid "No special theme for accessibility"
 msgstr ""
 
 #: ../../mod/admin.php:383
-msgid "Site name"
+msgid "Closed"
 msgstr ""
 
 #: ../../mod/admin.php:384
-msgid "Banner/Logo"
+msgid "Requires approval"
 msgstr ""
 
 #: ../../mod/admin.php:385
+msgid "Open"
+msgstr ""
+
+#: ../../mod/admin.php:389
+msgid "No SSL policy, links will track page SSL state"
+msgstr ""
+
+#: ../../mod/admin.php:390
+msgid "Force all links to use SSL"
+msgstr ""
+
+#: ../../mod/admin.php:398 ../../mod/register.php:166
+msgid "Registration"
+msgstr ""
+
+#: ../../mod/admin.php:399
+msgid "File upload"
+msgstr ""
+
+#: ../../mod/admin.php:400
+msgid "Policies"
+msgstr ""
+
+#: ../../mod/admin.php:401
+msgid "Advanced"
+msgstr ""
+
+#: ../../mod/admin.php:405
+msgid "Site name"
+msgstr ""
+
+#: ../../mod/admin.php:406
+msgid "Banner/Logo"
+msgstr ""
+
+#: ../../mod/admin.php:407
 msgid "System language"
 msgstr ""
 
-#: ../../mod/admin.php:386
+#: ../../mod/admin.php:408
 msgid "System theme"
 msgstr ""
 
-#: ../../mod/admin.php:386
+#: ../../mod/admin.php:408
 msgid ""
 "Default system theme - may be over-ridden by user profiles - <a href='#' "
 "id='cnftheme'>change theme settings</a>"
 msgstr ""
 
-#: ../../mod/admin.php:387
+#: ../../mod/admin.php:409
+msgid "Mobile system theme"
+msgstr ""
+
+#: ../../mod/admin.php:409
+msgid "Theme for mobile devices"
+msgstr ""
+
+#: ../../mod/admin.php:410
+msgid "Accessibility system theme"
+msgstr ""
+
+#: ../../mod/admin.php:410
+msgid "Accessibility theme"
+msgstr ""
+
+#: ../../mod/admin.php:411
 msgid "SSL link policy"
 msgstr ""
 
-#: ../../mod/admin.php:387
+#: ../../mod/admin.php:411
 msgid "Determines whether generated links should be forced to use SSL"
 msgstr ""
 
-#: ../../mod/admin.php:388
+#: ../../mod/admin.php:412
 msgid "Maximum image size"
 msgstr ""
 
-#: ../../mod/admin.php:388
+#: ../../mod/admin.php:412
 msgid ""
 "Maximum size in bytes of uploaded images. Default is 0, which means no "
 "limits."
 msgstr ""
 
-#: ../../mod/admin.php:389
+#: ../../mod/admin.php:413
 msgid "Register policy"
 msgstr ""
 
-#: ../../mod/admin.php:390
+#: ../../mod/admin.php:414
 msgid "Register text"
 msgstr ""
 
-#: ../../mod/admin.php:390
+#: ../../mod/admin.php:414
 msgid "Will be displayed prominently on the registration page."
 msgstr ""
 
-#: ../../mod/admin.php:391
+#: ../../mod/admin.php:415
 msgid "Accounts abandoned after x days"
 msgstr ""
 
-#: ../../mod/admin.php:391
+#: ../../mod/admin.php:415
 msgid ""
 "Will not waste system resources polling external sites for abandonded "
 "accounts. Enter 0 for no time limit."
 msgstr ""
 
-#: ../../mod/admin.php:392
+#: ../../mod/admin.php:416
 msgid "Allowed friend domains"
 msgstr ""
 
-#: ../../mod/admin.php:392
+#: ../../mod/admin.php:416
 msgid ""
 "Comma separated list of domains which are allowed to establish friendships "
 "with this site. Wildcards are accepted. Empty to allow any domains"
 msgstr ""
 
-#: ../../mod/admin.php:393
+#: ../../mod/admin.php:417
 msgid "Allowed email domains"
 msgstr ""
 
-#: ../../mod/admin.php:393
+#: ../../mod/admin.php:417
 msgid ""
 "Comma separated list of domains which are allowed in email addresses for "
 "registrations to this site. Wildcards are accepted. Empty to allow any "
 "domains"
 msgstr ""
 
-#: ../../mod/admin.php:394
+#: ../../mod/admin.php:418
 msgid "Block public"
 msgstr ""
 
-#: ../../mod/admin.php:394
+#: ../../mod/admin.php:418
 msgid ""
 "Check to block public access to all otherwise public personal pages on this "
 "site unless you are currently logged in."
 msgstr ""
 
-#: ../../mod/admin.php:395
+#: ../../mod/admin.php:419
 msgid "Force publish"
 msgstr ""
 
-#: ../../mod/admin.php:395
+#: ../../mod/admin.php:419
 msgid ""
 "Check to force all profiles on this site to be listed in the site directory."
 msgstr ""
 
-#: ../../mod/admin.php:396
+#: ../../mod/admin.php:420
 msgid "Global directory update URL"
 msgstr ""
 
-#: ../../mod/admin.php:396
+#: ../../mod/admin.php:420
 msgid ""
 "URL to update the global directory. If this is not set, the global directory "
 "is completely unavailable to the application."
 msgstr ""
 
-#: ../../mod/admin.php:398
+#: ../../mod/admin.php:422
 msgid "Show Community Page"
 msgstr ""
 
-#: ../../mod/admin.php:398
+#: ../../mod/admin.php:422
 msgid ""
 "Display a Community page showing all recent public postings on this site."
 msgstr ""
 
-#: ../../mod/admin.php:399
+#: ../../mod/admin.php:423
 msgid "Proxy user"
 msgstr ""
 
-#: ../../mod/admin.php:400
+#: ../../mod/admin.php:424
 msgid "Proxy URL"
 msgstr ""
 
-#: ../../mod/admin.php:401
+#: ../../mod/admin.php:425
 msgid "Network timeout"
 msgstr ""
 
-#: ../../mod/admin.php:401
+#: ../../mod/admin.php:425
 msgid "Value is in seconds. Set to 0 for unlimited (not recommended)."
 msgstr ""
 
-#: ../../mod/admin.php:402
+#: ../../mod/admin.php:426
 msgid "Delivery interval"
 msgstr ""
 
-#: ../../mod/admin.php:402
+#: ../../mod/admin.php:426
 msgid ""
 "Delay background delivery processes by this many seconds to reduce system "
 "load. Recommend: 4-5 for shared hosts, 2-3 for virtual private servers. 0-1 "
 "for large dedicated servers."
 msgstr ""
 
-#: ../../mod/admin.php:403
+#: ../../mod/admin.php:427
 msgid "Poll interval"
 msgstr ""
 
-#: ../../mod/admin.php:403
+#: ../../mod/admin.php:427
 msgid ""
 "Delay background polling processes by this many seconds to reduce system "
 "load. If 0, use delivery interval."
 msgstr ""
 
-#: ../../mod/admin.php:404
+#: ../../mod/admin.php:428
 msgid "Maximum Load Average"
 msgstr ""
 
-#: ../../mod/admin.php:404
+#: ../../mod/admin.php:428
 msgid ""
 "Maximum system load before delivery and poll processes are deferred - "
 "default 50."
 msgstr ""
 
-#: ../../mod/admin.php:420
+#: ../../mod/admin.php:444
 msgid "Update has been marked successful"
 msgstr ""
 
-#: ../../mod/admin.php:430
+#: ../../mod/admin.php:454
 #, php-format
 msgid "Executing %s failed. Check system logs."
 msgstr ""
 
-#: ../../mod/admin.php:433
+#: ../../mod/admin.php:457
 #, php-format
 msgid "Update %s was successfully applied."
 msgstr ""
 
-#: ../../mod/admin.php:437
+#: ../../mod/admin.php:461
 #, php-format
 msgid "Update %s did not return a status. Unknown if it succeeded."
 msgstr ""
 
-#: ../../mod/admin.php:440
+#: ../../mod/admin.php:464
 #, php-format
 msgid "Update function %s could not be found."
 msgstr ""
 
-#: ../../mod/admin.php:455
+#: ../../mod/admin.php:479
 msgid "No failed updates."
 msgstr ""
 
-#: ../../mod/admin.php:459
+#: ../../mod/admin.php:483
 msgid "Failed Updates"
 msgstr ""
 
-#: ../../mod/admin.php:461
+#: ../../mod/admin.php:485
 msgid "Mark success (if update was manually applied)"
 msgstr ""
 
-#: ../../mod/admin.php:462
+#: ../../mod/admin.php:486
 msgid "Attempt to execute this update step automatically"
 msgstr ""
 
-#: ../../mod/admin.php:488
+#: ../../mod/admin.php:512
 #, php-format
 msgid "%s user blocked/unblocked"
 msgid_plural "%s users blocked/unblocked"
 msgstr[0] ""
 msgstr[1] ""
 
-#: ../../mod/admin.php:495
+#: ../../mod/admin.php:519
 #, php-format
 msgid "%s user deleted"
 msgid_plural "%s users deleted"
 msgstr[0] ""
 msgstr[1] ""
 
-#: ../../mod/admin.php:526
+#: ../../mod/admin.php:550
 msgid "Account not found"
 msgstr ""
 
-#: ../../mod/admin.php:537
+#: ../../mod/admin.php:561
 #, php-format
 msgid "User '%s' deleted"
 msgstr ""
 
-#: ../../mod/admin.php:546
+#: ../../mod/admin.php:570
 #, php-format
 msgid "User '%s' unblocked"
 msgstr ""
 
-#: ../../mod/admin.php:546
+#: ../../mod/admin.php:570
 #, php-format
 msgid "User '%s' blocked"
 msgstr ""
 
-#: ../../mod/admin.php:589
+#: ../../mod/admin.php:601
 msgid "Normal Account"
 msgstr ""
 
-#: ../../mod/admin.php:590
+#: ../../mod/admin.php:602
 msgid "Soapbox Account"
 msgstr ""
 
-#: ../../mod/admin.php:591
+#: ../../mod/admin.php:603
 msgid "Community/Celebrity Account"
 msgstr ""
 
-#: ../../mod/admin.php:592
+#: ../../mod/admin.php:604
 msgid "Automatic Friend Account"
 msgstr ""
 
-#: ../../mod/admin.php:609
+#: ../../mod/admin.php:622
 msgid "select all"
 msgstr ""
 
-#: ../../mod/admin.php:610
+#: ../../mod/admin.php:623
 msgid "User registrations waiting for confirm"
 msgstr ""
 
-#: ../../mod/admin.php:611
+#: ../../mod/admin.php:624
 msgid "Request date"
 msgstr ""
 
-#: ../../mod/admin.php:611 ../../mod/admin.php:620 ../../mod/settings.php:597
-#: ../../mod/settings.php:623 ../../mod/crepair.php:148
+#: ../../mod/admin.php:624 ../../mod/settings.php:598
+#: ../../mod/settings.php:624 ../../mod/crepair.php:148
 msgid "Name"
 msgstr ""
 
-#: ../../mod/admin.php:612
+#: ../../mod/admin.php:625
 msgid "No registrations."
 msgstr ""
 
-#: ../../mod/admin.php:613 ../../mod/intro.php:11 ../../mod/intro.php:98
+#: ../../mod/admin.php:626 ../../mod/intro.php:11 ../../mod/intro.php:98
 #: ../../mod/notifications.php:157 ../../mod/notifications.php:204
 msgid "Approve"
 msgstr ""
 
-#: ../../mod/admin.php:614
+#: ../../mod/admin.php:627
 msgid "Deny"
 msgstr ""
 
-#: ../../mod/admin.php:616 ../../mod/connections.php:278
+#: ../../mod/admin.php:629 ../../mod/connections.php:278
 #: ../../mod/connections.php:408 ../../mod/intro.php:14 ../../mod/intro.php:99
 msgid "Block"
 msgstr ""
 
-#: ../../mod/admin.php:617 ../../mod/connections.php:278
+#: ../../mod/admin.php:630 ../../mod/connections.php:278
 #: ../../mod/connections.php:408
 msgid "Unblock"
 msgstr ""
 
-#: ../../mod/admin.php:620
+#: ../../mod/admin.php:633
 msgid "Register date"
 msgstr ""
 
-#: ../../mod/admin.php:620
+#: ../../mod/admin.php:633
 msgid "Last login"
 msgstr ""
 
-#: ../../mod/admin.php:620
-msgid "Last item"
+#: ../../mod/admin.php:633
+msgid "Service Class"
 msgstr ""
 
-#: ../../mod/admin.php:620
-msgid "Account"
-msgstr ""
-
-#: ../../mod/admin.php:622
+#: ../../mod/admin.php:635
 msgid ""
 "Selected users will be deleted!\\n\\nEverything these users had posted on "
 "this site will be permanently deleted!\\n\\nAre you sure?"
 msgstr ""
 
-#: ../../mod/admin.php:623
+#: ../../mod/admin.php:636
 msgid ""
 "The user {0} will be deleted!\\n\\nEverything this user has posted on this "
 "site will be permanently deleted!\\n\\nAre you sure?"
 msgstr ""
 
-#: ../../mod/admin.php:664
+#: ../../mod/admin.php:677
 #, php-format
 msgid "Plugin %s disabled."
 msgstr ""
 
-#: ../../mod/admin.php:668
+#: ../../mod/admin.php:681
 #, php-format
 msgid "Plugin %s enabled."
 msgstr ""
 
-#: ../../mod/admin.php:678 ../../mod/admin.php:876
+#: ../../mod/admin.php:691 ../../mod/admin.php:889
 msgid "Disable"
 msgstr ""
 
-#: ../../mod/admin.php:680 ../../mod/admin.php:878
+#: ../../mod/admin.php:693 ../../mod/admin.php:891
 msgid "Enable"
 msgstr ""
 
-#: ../../mod/admin.php:702 ../../mod/admin.php:907
+#: ../../mod/admin.php:715 ../../mod/admin.php:920
 msgid "Toggle"
 msgstr ""
 
-#: ../../mod/admin.php:710 ../../mod/admin.php:917
+#: ../../mod/admin.php:723 ../../mod/admin.php:930
 msgid "Author: "
 msgstr ""
 
-#: ../../mod/admin.php:711 ../../mod/admin.php:918
+#: ../../mod/admin.php:724 ../../mod/admin.php:931
 msgid "Maintainer: "
 msgstr ""
 
-#: ../../mod/admin.php:840
+#: ../../mod/admin.php:853
 msgid "No themes found."
 msgstr ""
 
-#: ../../mod/admin.php:899
+#: ../../mod/admin.php:912
 msgid "Screenshot"
 msgstr ""
 
-#: ../../mod/admin.php:947
+#: ../../mod/admin.php:960
 msgid "[Experimental]"
 msgstr ""
 
-#: ../../mod/admin.php:948
+#: ../../mod/admin.php:961
 msgid "[Unsupported]"
 msgstr ""
 
-#: ../../mod/admin.php:975
+#: ../../mod/admin.php:988
 msgid "Log settings updated."
 msgstr ""
 
-#: ../../mod/admin.php:1031
+#: ../../mod/admin.php:1044
 msgid "Clear"
 msgstr ""
 
-#: ../../mod/admin.php:1037
+#: ../../mod/admin.php:1050
 msgid "Debugging"
 msgstr ""
 
-#: ../../mod/admin.php:1038
+#: ../../mod/admin.php:1051
 msgid "Log file"
 msgstr ""
 
-#: ../../mod/admin.php:1038
+#: ../../mod/admin.php:1051
 msgid ""
 "Must be writable by web server. Relative to your Friendica top-level "
 "directory."
 msgstr ""
 
-#: ../../mod/admin.php:1039
+#: ../../mod/admin.php:1052
 msgid "Log level"
 msgstr ""
 
-#: ../../mod/poke.php:193
-msgid "Poke/Prod"
-msgstr ""
-
-#: ../../mod/poke.php:194
-msgid "poke, prod or do other things to somebody"
-msgstr ""
-
-#: ../../mod/poke.php:195
-msgid "Recipient"
-msgstr ""
-
-#: ../../mod/poke.php:196
-msgid "Choose what you wish to do to recipient"
-msgstr ""
-
-#: ../../mod/poke.php:199
-msgid "Make this post private"
+#: ../../mod/like.php:54 ../../mod/group.php:70 ../../mod/profperm.php:28
+#: ../../index.php:335
+msgid "Permission denied"
 msgstr ""
 
 #: ../../mod/allfriends.php:35
@@ -3760,6 +3492,20 @@ msgid ""
 "and/or create new posts for you?"
 msgstr ""
 
+#: ../../mod/api.php:105 ../../mod/settings.php:952 ../../mod/settings.php:957
+#: ../../mod/settings.php:980 ../../mod/settings.php:982
+#: ../../mod/settings.php:983 ../../mod/settings.php:984
+#: ../../mod/profiles.php:501
+msgid "Yes"
+msgstr ""
+
+#: ../../mod/api.php:106 ../../mod/settings.php:952 ../../mod/settings.php:957
+#: ../../mod/settings.php:980 ../../mod/settings.php:982
+#: ../../mod/settings.php:983 ../../mod/settings.php:984
+#: ../../mod/profiles.php:502
+msgid "No"
+msgstr ""
+
 #: ../../mod/apps.php:8
 msgid "No installed applications."
 msgstr ""
@@ -3772,9 +3518,9 @@ msgstr ""
 msgid "Item not available."
 msgstr ""
 
-#: ../../mod/viewconnections.php:28 ../../mod/community.php:18
-#: ../../mod/directory.php:23 ../../mod/display.php:7 ../../mod/photos.php:554
-#: ../../mod/search.php:80
+#: ../../mod/viewconnections.php:28 ../../mod/directory.php:23
+#: ../../mod/photos.php:554 ../../mod/community.php:18 ../../mod/search.php:80
+#: ../../mod/display.php:7
 msgid "Public access denied."
 msgstr ""
 
@@ -3791,13 +3537,8 @@ msgstr ""
 msgid "View Connnections"
 msgstr ""
 
-#: ../../mod/channel.php:8 ../../mod/profile.php:8 ../../boot.php:1405
+#: ../../mod/channel.php:8 ../../mod/profile.php:8 ../../boot.php:1406
 msgid "Requested profile is not available."
-msgstr ""
-
-#: ../../mod/subthread.php:105
-#, php-format
-msgid "%1$s is following %2$s's %3$s"
 msgstr ""
 
 #: ../../mod/chanview.php:74 ../../mod/wall_upload.php:35
@@ -3831,22 +3572,20 @@ msgstr ""
 msgid "No connections in common."
 msgstr ""
 
-#: ../../mod/tagger.php:95
-#, php-format
-msgid "%1$s tagged %2$s's %3$s with %4$s"
+#: ../../mod/item.php:120
+msgid "Unable to locate original post."
 msgstr ""
 
-#: ../../mod/community.php:23
-msgid "Not available."
+#: ../../mod/item.php:281
+msgid "Empty post discarded."
 msgstr ""
 
-#: ../../mod/community.php:32
-msgid "Community"
+#: ../../mod/item.php:689
+msgid "System error. Post not saved."
 msgstr ""
 
-#: ../../mod/community.php:63 ../../mod/community.php:88
-#: ../../mod/search.php:255
-msgid "No results."
+#: ../../mod/item.php:958 ../../mod/wall_upload.php:41
+msgid "Wall Photos"
 msgstr ""
 
 #: ../../mod/post.php:101
@@ -4290,7 +4029,7 @@ msgstr ""
 msgid "Missing some important data!"
 msgstr ""
 
-#: ../../mod/settings.php:149 ../../mod/settings.php:621
+#: ../../mod/settings.php:149 ../../mod/settings.php:622
 msgid "Update"
 msgstr ""
 
@@ -4322,326 +4061,322 @@ msgstr ""
 msgid "System failure storing new email. Please try again."
 msgstr ""
 
-#: ../../mod/settings.php:529
+#: ../../mod/settings.php:530
 msgid "Settings updated."
 msgstr ""
 
-#: ../../mod/settings.php:594 ../../mod/settings.php:620
-#: ../../mod/settings.php:656
+#: ../../mod/settings.php:595 ../../mod/settings.php:621
+#: ../../mod/settings.php:657
 msgid "Add application"
 msgstr ""
 
-#: ../../mod/settings.php:596 ../../mod/settings.php:622
+#: ../../mod/settings.php:597 ../../mod/settings.php:623
 #: ../../mod/tagrm.php:11 ../../mod/tagrm.php:94 ../../mod/fbrowser.php:81
 #: ../../mod/fbrowser.php:116
 msgid "Cancel"
 msgstr ""
 
-#: ../../mod/settings.php:598 ../../mod/settings.php:624
+#: ../../mod/settings.php:599 ../../mod/settings.php:625
 msgid "Consumer Key"
 msgstr ""
 
-#: ../../mod/settings.php:599 ../../mod/settings.php:625
+#: ../../mod/settings.php:600 ../../mod/settings.php:626
 msgid "Consumer Secret"
 msgstr ""
 
-#: ../../mod/settings.php:600 ../../mod/settings.php:626
+#: ../../mod/settings.php:601 ../../mod/settings.php:627
 msgid "Redirect"
 msgstr ""
 
-#: ../../mod/settings.php:601 ../../mod/settings.php:627
+#: ../../mod/settings.php:602 ../../mod/settings.php:628
 msgid "Icon url"
 msgstr ""
 
-#: ../../mod/settings.php:612
+#: ../../mod/settings.php:613
 msgid "You can't edit this application."
 msgstr ""
 
-#: ../../mod/settings.php:655
+#: ../../mod/settings.php:656
 msgid "Connected Apps"
 msgstr ""
 
-#: ../../mod/settings.php:659
+#: ../../mod/settings.php:660
 msgid "Client key starts with"
 msgstr ""
 
-#: ../../mod/settings.php:660
+#: ../../mod/settings.php:661
 msgid "No name"
 msgstr ""
 
-#: ../../mod/settings.php:661
+#: ../../mod/settings.php:662
 msgid "Remove authorization"
 msgstr ""
 
-#: ../../mod/settings.php:672
+#: ../../mod/settings.php:673
 msgid "No feature settings configured"
 msgstr ""
 
-#: ../../mod/settings.php:680
+#: ../../mod/settings.php:681
 msgid "Feature Settings"
 msgstr ""
 
-#: ../../mod/settings.php:703
+#: ../../mod/settings.php:704
 msgid "Account Settings"
 msgstr ""
 
-#: ../../mod/settings.php:704
+#: ../../mod/settings.php:705
 msgid "Password Settings"
 msgstr ""
 
-#: ../../mod/settings.php:705
+#: ../../mod/settings.php:706
 msgid "New Password:"
 msgstr ""
 
-#: ../../mod/settings.php:706
+#: ../../mod/settings.php:707
 msgid "Confirm:"
 msgstr ""
 
-#: ../../mod/settings.php:706
+#: ../../mod/settings.php:707
 msgid "Leave password fields blank unless changing"
 msgstr ""
 
-#: ../../mod/settings.php:708 ../../mod/settings.php:1005
+#: ../../mod/settings.php:709 ../../mod/settings.php:1006
 msgid "Email Address:"
 msgstr ""
 
-#: ../../mod/settings.php:709
+#: ../../mod/settings.php:710
 msgid "Remove Account"
 msgstr ""
 
-#: ../../mod/settings.php:710
+#: ../../mod/settings.php:711
 msgid "Warning: This action is permanent and cannot be reversed."
 msgstr ""
 
-#: ../../mod/settings.php:727
+#: ../../mod/settings.php:728
 msgid "Off"
 msgstr ""
 
-#: ../../mod/settings.php:727
+#: ../../mod/settings.php:728
 msgid "On"
 msgstr ""
 
-#: ../../mod/settings.php:734
+#: ../../mod/settings.php:735
 msgid "Additional Features"
 msgstr ""
 
-#: ../../mod/settings.php:758
+#: ../../mod/settings.php:759
 msgid "Connector Settings"
 msgstr ""
 
-#: ../../mod/settings.php:788
-msgid "No special theme for mobile devices"
-msgstr ""
-
-#: ../../mod/settings.php:828
+#: ../../mod/settings.php:829
 msgid "Display Settings"
 msgstr ""
 
-#: ../../mod/settings.php:834
+#: ../../mod/settings.php:835
 msgid "Display Theme:"
 msgstr ""
 
-#: ../../mod/settings.php:835
+#: ../../mod/settings.php:836
 msgid "Mobile Theme:"
 msgstr ""
 
-#: ../../mod/settings.php:836
+#: ../../mod/settings.php:837
 msgid "Update browser every xx seconds"
 msgstr ""
 
-#: ../../mod/settings.php:836
+#: ../../mod/settings.php:837
 msgid "Minimum of 10 seconds, no maximum"
 msgstr ""
 
-#: ../../mod/settings.php:837
+#: ../../mod/settings.php:838
 msgid "Maximum number of conversations to load at any time:"
 msgstr ""
 
-#: ../../mod/settings.php:837
+#: ../../mod/settings.php:838
 msgid "Maximum of 100 items"
 msgstr ""
 
-#: ../../mod/settings.php:838
+#: ../../mod/settings.php:839
 msgid "Don't show emoticons"
 msgstr ""
 
-#: ../../mod/settings.php:874
+#: ../../mod/settings.php:875
 msgid "Nobody except yourself"
 msgstr ""
 
-#: ../../mod/settings.php:875
+#: ../../mod/settings.php:876
 msgid "Only those you specifically allow"
 msgstr ""
 
-#: ../../mod/settings.php:876
+#: ../../mod/settings.php:877
 msgid "Anybody in your address book"
 msgstr ""
 
-#: ../../mod/settings.php:877
+#: ../../mod/settings.php:878
 msgid "Anybody on this website"
 msgstr ""
 
-#: ../../mod/settings.php:878
+#: ../../mod/settings.php:879
 msgid "Anybody in this network"
 msgstr ""
 
-#: ../../mod/settings.php:879
+#: ../../mod/settings.php:880
 msgid "Anybody on the internet"
 msgstr ""
 
-#: ../../mod/settings.php:951
+#: ../../mod/settings.php:952
 msgid "Publish your default profile in the network directory"
 msgstr ""
 
-#: ../../mod/settings.php:956
+#: ../../mod/settings.php:957
 msgid "Allow us to suggest you as a potential friend to new members?"
 msgstr ""
 
-#: ../../mod/settings.php:965
+#: ../../mod/settings.php:966
 msgid "Your channel address is"
 msgstr ""
 
-#: ../../mod/settings.php:976
+#: ../../mod/settings.php:977
 msgid "Automatically expire posts after this many days:"
 msgstr ""
 
-#: ../../mod/settings.php:976
+#: ../../mod/settings.php:977
 msgid "If empty, posts will not expire. Expired posts will be deleted"
 msgstr ""
 
-#: ../../mod/settings.php:977
+#: ../../mod/settings.php:978
 msgid "Advanced expiration settings"
 msgstr ""
 
-#: ../../mod/settings.php:978
+#: ../../mod/settings.php:979
 msgid "Advanced Expiration"
 msgstr ""
 
-#: ../../mod/settings.php:979
+#: ../../mod/settings.php:980
 msgid "Expire posts:"
 msgstr ""
 
-#: ../../mod/settings.php:981
+#: ../../mod/settings.php:982
 msgid "Expire starred posts:"
 msgstr ""
 
-#: ../../mod/settings.php:982
+#: ../../mod/settings.php:983
 msgid "Expire photos:"
 msgstr ""
 
-#: ../../mod/settings.php:983
+#: ../../mod/settings.php:984
 msgid "Only expire posts by others:"
 msgstr ""
 
-#: ../../mod/settings.php:994
+#: ../../mod/settings.php:995
 msgid "Channel Settings"
 msgstr ""
 
-#: ../../mod/settings.php:1003
+#: ../../mod/settings.php:1004
 msgid "Basic Settings"
 msgstr ""
 
-#: ../../mod/settings.php:1006
+#: ../../mod/settings.php:1007
 msgid "Your Timezone:"
 msgstr ""
 
-#: ../../mod/settings.php:1007
+#: ../../mod/settings.php:1008
 msgid "Default Post Location:"
 msgstr ""
 
-#: ../../mod/settings.php:1008
+#: ../../mod/settings.php:1009
 msgid "Use Browser Location:"
 msgstr ""
 
-#: ../../mod/settings.php:1011
+#: ../../mod/settings.php:1012
 msgid "Security and Privacy Settings"
 msgstr ""
 
-#: ../../mod/settings.php:1015
+#: ../../mod/settings.php:1016
 msgid "Maximum Friend Requests/Day:"
 msgstr ""
 
-#: ../../mod/settings.php:1015
+#: ../../mod/settings.php:1016
 msgid "May reduce spam activity"
 msgstr ""
 
-#: ../../mod/settings.php:1016
+#: ../../mod/settings.php:1017
 msgid "Default Post Permissions"
 msgstr ""
 
-#: ../../mod/settings.php:1017
+#: ../../mod/settings.php:1018
 msgid "(click to open/close)"
 msgstr ""
 
-#: ../../mod/settings.php:1030
+#: ../../mod/settings.php:1031
 msgid "Maximum private messages per day from unknown people:"
 msgstr ""
 
-#: ../../mod/settings.php:1030
+#: ../../mod/settings.php:1031
 msgid "Useful to reduce spamming"
 msgstr ""
 
-#: ../../mod/settings.php:1033
+#: ../../mod/settings.php:1034
 msgid "Notification Settings"
 msgstr ""
 
-#: ../../mod/settings.php:1034
+#: ../../mod/settings.php:1035
 msgid "By default post a status message when:"
 msgstr ""
 
-#: ../../mod/settings.php:1035
+#: ../../mod/settings.php:1036
 msgid "accepting a friend request"
 msgstr ""
 
-#: ../../mod/settings.php:1036
+#: ../../mod/settings.php:1037
 msgid "joining a forum/community"
 msgstr ""
 
-#: ../../mod/settings.php:1037
+#: ../../mod/settings.php:1038
 msgid "making an <em>interesting</em> profile change"
 msgstr ""
 
-#: ../../mod/settings.php:1038
+#: ../../mod/settings.php:1039
 msgid "Send a notification email when:"
 msgstr ""
 
-#: ../../mod/settings.php:1039
+#: ../../mod/settings.php:1040
 msgid "You receive an introduction"
 msgstr ""
 
-#: ../../mod/settings.php:1040
+#: ../../mod/settings.php:1041
 msgid "Your introductions are confirmed"
 msgstr ""
 
-#: ../../mod/settings.php:1041
+#: ../../mod/settings.php:1042
 msgid "Someone writes on your profile wall"
 msgstr ""
 
-#: ../../mod/settings.php:1042
+#: ../../mod/settings.php:1043
 msgid "Someone writes a followup comment"
 msgstr ""
 
-#: ../../mod/settings.php:1043
+#: ../../mod/settings.php:1044
 msgid "You receive a private message"
 msgstr ""
 
-#: ../../mod/settings.php:1044
+#: ../../mod/settings.php:1045
 msgid "You receive a friend suggestion"
 msgstr ""
 
-#: ../../mod/settings.php:1045
+#: ../../mod/settings.php:1046
 msgid "You are tagged in a post"
 msgstr ""
 
-#: ../../mod/settings.php:1046
+#: ../../mod/settings.php:1047
 msgid "You are poked/prodded/etc. in a post"
 msgstr ""
 
-#: ../../mod/settings.php:1049
+#: ../../mod/settings.php:1050
 msgid "Advanced Account/Page Type Settings"
 msgstr ""
 
-#: ../../mod/settings.php:1050
+#: ../../mod/settings.php:1051
 msgid "Change the behaviour of this account for special situations"
 msgstr ""
 
@@ -4761,6 +4496,10 @@ msgstr ""
 msgid "No entries."
 msgstr ""
 
+#: ../../mod/directory.php:103 ../../mod/profiles.php:578
+msgid "Age: "
+msgstr ""
+
 #: ../../mod/directory.php:106
 msgid "Gender: "
 msgstr ""
@@ -4822,71 +4561,6 @@ msgstr ""
 msgid "Insert Vorbis [.ogg] audio"
 msgstr ""
 
-#: ../../mod/events.php:66
-msgid "Event title and start time are required."
-msgstr ""
-
-#: ../../mod/events.php:279
-msgid "l, F j"
-msgstr ""
-
-#: ../../mod/events.php:301
-msgid "Edit event"
-msgstr ""
-
-#: ../../mod/events.php:347
-msgid "Create New Event"
-msgstr ""
-
-#: ../../mod/events.php:348
-msgid "Previous"
-msgstr ""
-
-#: ../../mod/events.php:423
-msgid "hour:minute"
-msgstr ""
-
-#: ../../mod/events.php:433
-msgid "Event details"
-msgstr ""
-
-#: ../../mod/events.php:434
-#, php-format
-msgid "Format is %s %s. Starting date and Title are required."
-msgstr ""
-
-#: ../../mod/events.php:436
-msgid "Event Starts:"
-msgstr ""
-
-#: ../../mod/events.php:436 ../../mod/events.php:450
-msgid "Required"
-msgstr ""
-
-#: ../../mod/events.php:439
-msgid "Finish date/time is not known or not relevant"
-msgstr ""
-
-#: ../../mod/events.php:441
-msgid "Event Finishes:"
-msgstr ""
-
-#: ../../mod/events.php:444
-msgid "Adjust for viewer timezone"
-msgstr ""
-
-#: ../../mod/events.php:446
-msgid "Description:"
-msgstr ""
-
-#: ../../mod/events.php:450
-msgid "Title:"
-msgstr ""
-
-#: ../../mod/events.php:452
-msgid "Share this event"
-msgstr ""
-
 #: ../../mod/siteinfo.php:51
 #, php-format
 msgid "Version %s"
@@ -4938,10 +4612,6 @@ msgstr ""
 msgid "- select -"
 msgstr ""
 
-#: ../../mod/wall_upload.php:41 ../../mod/item.php:958
-msgid "Wall Photos"
-msgstr ""
-
 #: ../../mod/follow.php:24
 msgid "Channel added"
 msgstr ""
@@ -4977,11 +4647,6 @@ msgstr ""
 
 #: ../../mod/group.php:56
 msgid "Collection name changed."
-msgstr ""
-
-#: ../../mod/group.php:70 ../../mod/like.php:54 ../../mod/profperm.php:28
-#: ../../index.php:335
-msgid "Permission denied"
 msgstr ""
 
 #: ../../mod/group.php:88
@@ -5030,6 +4695,266 @@ msgstr ""
 
 #: ../../mod/help.php:41 ../../index.php:225
 msgid "Page not found."
+msgstr ""
+
+#: ../../mod/profiles.php:18 ../../mod/profiles.php:138
+#: ../../mod/profiles.php:179 ../../mod/profiles.php:481
+msgid "Profile not found."
+msgstr ""
+
+#: ../../mod/profiles.php:38
+msgid "Profile deleted."
+msgstr ""
+
+#: ../../mod/profiles.php:56 ../../mod/profiles.php:92
+msgid "Profile-"
+msgstr ""
+
+#: ../../mod/profiles.php:77 ../../mod/profiles.php:120
+msgid "New profile created."
+msgstr ""
+
+#: ../../mod/profiles.php:98
+msgid "Profile unavailable to clone."
+msgstr ""
+
+#: ../../mod/profiles.php:189
+msgid "Profile Name is required."
+msgstr ""
+
+#: ../../mod/profiles.php:312
+msgid "Marital Status"
+msgstr ""
+
+#: ../../mod/profiles.php:316
+msgid "Romantic Partner"
+msgstr ""
+
+#: ../../mod/profiles.php:320
+msgid "Likes"
+msgstr ""
+
+#: ../../mod/profiles.php:324
+msgid "Dislikes"
+msgstr ""
+
+#: ../../mod/profiles.php:328
+msgid "Work/Employment"
+msgstr ""
+
+#: ../../mod/profiles.php:331
+msgid "Religion"
+msgstr ""
+
+#: ../../mod/profiles.php:335
+msgid "Political Views"
+msgstr ""
+
+#: ../../mod/profiles.php:339
+msgid "Gender"
+msgstr ""
+
+#: ../../mod/profiles.php:343
+msgid "Sexual Preference"
+msgstr ""
+
+#: ../../mod/profiles.php:347
+msgid "Homepage"
+msgstr ""
+
+#: ../../mod/profiles.php:351
+msgid "Interests"
+msgstr ""
+
+#: ../../mod/profiles.php:355
+msgid "Address"
+msgstr ""
+
+#: ../../mod/profiles.php:362
+msgid "Location"
+msgstr ""
+
+#: ../../mod/profiles.php:445
+msgid "Profile updated."
+msgstr ""
+
+#: ../../mod/profiles.php:500
+msgid "Hide your contact/friend list from viewers of this profile?"
+msgstr ""
+
+#: ../../mod/profiles.php:522
+msgid "Edit Profile Details"
+msgstr ""
+
+#: ../../mod/profiles.php:524
+msgid "View this profile"
+msgstr ""
+
+#: ../../mod/profiles.php:525
+msgid "Change Profile Photo"
+msgstr ""
+
+#: ../../mod/profiles.php:526
+msgid "Create a new profile using these settings"
+msgstr ""
+
+#: ../../mod/profiles.php:527
+msgid "Clone this profile"
+msgstr ""
+
+#: ../../mod/profiles.php:528
+msgid "Delete this profile"
+msgstr ""
+
+#: ../../mod/profiles.php:529
+msgid "Profile Name:"
+msgstr ""
+
+#: ../../mod/profiles.php:530
+msgid "Your Full Name:"
+msgstr ""
+
+#: ../../mod/profiles.php:531
+msgid "Title/Description:"
+msgstr ""
+
+#: ../../mod/profiles.php:532
+msgid "Your Gender:"
+msgstr ""
+
+#: ../../mod/profiles.php:533
+#, php-format
+msgid "Birthday (%s):"
+msgstr ""
+
+#: ../../mod/profiles.php:534
+msgid "Street Address:"
+msgstr ""
+
+#: ../../mod/profiles.php:535
+msgid "Locality/City:"
+msgstr ""
+
+#: ../../mod/profiles.php:536
+msgid "Postal/Zip Code:"
+msgstr ""
+
+#: ../../mod/profiles.php:537
+msgid "Country:"
+msgstr ""
+
+#: ../../mod/profiles.php:538
+msgid "Region/State:"
+msgstr ""
+
+#: ../../mod/profiles.php:539
+msgid "<span class=\"heart\">&hearts;</span> Marital Status:"
+msgstr ""
+
+#: ../../mod/profiles.php:540
+msgid "Who: (if applicable)"
+msgstr ""
+
+#: ../../mod/profiles.php:541
+msgid "Examples: cathy123, Cathy Williams, cathy@example.com"
+msgstr ""
+
+#: ../../mod/profiles.php:542
+msgid "Since [date]:"
+msgstr ""
+
+#: ../../mod/profiles.php:544
+msgid "Homepage URL:"
+msgstr ""
+
+#: ../../mod/profiles.php:547
+msgid "Religious Views:"
+msgstr ""
+
+#: ../../mod/profiles.php:548
+msgid "Keywords:"
+msgstr ""
+
+#: ../../mod/profiles.php:551
+msgid "Example: fishing photography software"
+msgstr ""
+
+#: ../../mod/profiles.php:552
+msgid "Used in directory listings"
+msgstr ""
+
+#: ../../mod/profiles.php:553
+msgid "Tell us about yourself..."
+msgstr ""
+
+#: ../../mod/profiles.php:554
+msgid "Hobbies/Interests"
+msgstr ""
+
+#: ../../mod/profiles.php:555
+msgid "Contact information and Social Networks"
+msgstr ""
+
+#: ../../mod/profiles.php:556
+msgid "My other channels"
+msgstr ""
+
+#: ../../mod/profiles.php:557
+msgid "Musical interests"
+msgstr ""
+
+#: ../../mod/profiles.php:558
+msgid "Books, literature"
+msgstr ""
+
+#: ../../mod/profiles.php:559
+msgid "Television"
+msgstr ""
+
+#: ../../mod/profiles.php:560
+msgid "Film/dance/culture/entertainment"
+msgstr ""
+
+#: ../../mod/profiles.php:561
+msgid "Love/romance"
+msgstr ""
+
+#: ../../mod/profiles.php:562
+msgid "Work/employment"
+msgstr ""
+
+#: ../../mod/profiles.php:563
+msgid "School/education"
+msgstr ""
+
+#: ../../mod/profiles.php:568
+msgid ""
+"This is your <strong>public</strong> profile.<br />It <strong>may</strong> "
+"be visible to anybody using the internet."
+msgstr ""
+
+#: ../../mod/profiles.php:617
+msgid "Edit/Manage Profiles"
+msgstr ""
+
+#: ../../mod/profiles.php:618 ../../boot.php:1509
+msgid "Change profile photo"
+msgstr ""
+
+#: ../../mod/profiles.php:619 ../../boot.php:1516
+msgid "Create New Profile"
+msgstr ""
+
+#: ../../mod/profiles.php:630 ../../boot.php:1530
+msgid "Profile Image"
+msgstr ""
+
+#: ../../mod/profiles.php:633 ../../boot.php:1533
+msgid "visible to everybody"
+msgstr ""
+
+#: ../../mod/profiles.php:634 ../../boot.php:1534
+msgid "Edit visibility"
 msgstr ""
 
 #: ../../mod/home.php:31
@@ -5254,16 +5179,231 @@ msgid ""
 "important, please visit http://friendica.com"
 msgstr ""
 
-#: ../../mod/item.php:120
-msgid "Unable to locate original post."
+#: ../../mod/message.php:45
+msgid "Unable to lookup recipient."
 msgstr ""
 
-#: ../../mod/item.php:281
-msgid "Empty post discarded."
+#: ../../mod/message.php:53
+msgid "Unable to communicate with requested channel."
 msgstr ""
 
-#: ../../mod/item.php:689
-msgid "System error. Post not saved."
+#: ../../mod/message.php:60
+msgid "Cannot verify requested channel."
+msgstr ""
+
+#: ../../mod/message.php:86
+msgid "Selected channel has private message restrictions. Send failed."
+msgstr ""
+
+#: ../../mod/message.php:204 ../../mod/notifications.php:100
+msgid "Messages"
+msgstr ""
+
+#: ../../mod/message.php:215
+msgid "Message deleted."
+msgstr ""
+
+#: ../../mod/message.php:222
+msgid "Conversation removed."
+msgstr ""
+
+#: ../../mod/message.php:273
+msgid "Send Private Message"
+msgstr ""
+
+#: ../../mod/message.php:274 ../../mod/message.php:409
+msgid "To:"
+msgstr ""
+
+#: ../../mod/message.php:279 ../../mod/message.php:411
+msgid "Subject:"
+msgstr ""
+
+#: ../../mod/message.php:307
+msgid "No messages."
+msgstr ""
+
+#: ../../mod/message.php:323 ../../mod/message.php:380
+msgid "Delete message"
+msgstr ""
+
+#: ../../mod/message.php:325
+msgid "D, d M Y - g:i A"
+msgstr ""
+
+#: ../../mod/message.php:344
+msgid "Message not found."
+msgstr ""
+
+#: ../../mod/message.php:402
+msgid "Delete conversation"
+msgstr ""
+
+#: ../../mod/message.php:404
+msgid ""
+"No secure communications available. You <strong>may</strong> be able to "
+"respond from the sender's profile page."
+msgstr ""
+
+#: ../../mod/message.php:408
+msgid "Send Reply"
+msgstr ""
+
+#: ../../mod/mood.php:130
+msgid "Mood"
+msgstr ""
+
+#: ../../mod/mood.php:131
+msgid "Set your current mood and tell your friends"
+msgstr ""
+
+#: ../../mod/tagger.php:95
+#, php-format
+msgid "%1$s tagged %2$s's %3$s with %4$s"
+msgstr ""
+
+#: ../../mod/photos.php:81
+msgid "Page owner information could not be retrieved."
+msgstr ""
+
+#: ../../mod/photos.php:101
+msgid "Album not found."
+msgstr ""
+
+#: ../../mod/photos.php:123 ../../mod/photos.php:813
+msgid "Delete Album"
+msgstr ""
+
+#: ../../mod/photos.php:163 ../../mod/photos.php:1093
+msgid "Delete Photo"
+msgstr ""
+
+#: ../../mod/photos.php:490
+#, php-format
+msgid "%1$s was tagged in %2$s by %3$s"
+msgstr ""
+
+#: ../../mod/photos.php:490
+msgid "a photo"
+msgstr ""
+
+#: ../../mod/photos.php:564
+msgid "No photos selected"
+msgstr ""
+
+#: ../../mod/photos.php:666
+msgid "Access to this item is restricted."
+msgstr ""
+
+#: ../../mod/photos.php:699 ../../mod/photos.php:797 ../../mod/photos.php:819
+#: ../../mod/photos.php:1298 ../../mod/photos.php:1310
+msgid "Contact Photos"
+msgstr ""
+
+#: ../../mod/photos.php:730
+#, php-format
+msgid "You have used %1$.2f Mbytes of %2$.2f Mbytes photo storage."
+msgstr ""
+
+#: ../../mod/photos.php:733
+#, php-format
+msgid "You have used %1$.2f Mbytes of photo storage."
+msgstr ""
+
+#: ../../mod/photos.php:748
+msgid "Upload Photos"
+msgstr ""
+
+#: ../../mod/photos.php:752 ../../mod/photos.php:808
+msgid "New album name: "
+msgstr ""
+
+#: ../../mod/photos.php:753
+msgid "or existing album name: "
+msgstr ""
+
+#: ../../mod/photos.php:754
+msgid "Do not show a status post for this upload"
+msgstr ""
+
+#: ../../mod/photos.php:823
+msgid "Edit Album"
+msgstr ""
+
+#: ../../mod/photos.php:829
+msgid "Show Newest First"
+msgstr ""
+
+#: ../../mod/photos.php:831
+msgid "Show Oldest First"
+msgstr ""
+
+#: ../../mod/photos.php:864 ../../mod/photos.php:1340
+msgid "View Photo"
+msgstr ""
+
+#: ../../mod/photos.php:899
+msgid "Permission denied. Access to this item may be restricted."
+msgstr ""
+
+#: ../../mod/photos.php:901
+msgid "Photo not available"
+msgstr ""
+
+#: ../../mod/photos.php:957
+msgid "View photo"
+msgstr ""
+
+#: ../../mod/photos.php:957
+msgid "Edit photo"
+msgstr ""
+
+#: ../../mod/photos.php:958
+msgid "Use as profile photo"
+msgstr ""
+
+#: ../../mod/photos.php:986
+msgid "View Full Size"
+msgstr ""
+
+#: ../../mod/photos.php:1054
+msgid "Tags: "
+msgstr ""
+
+#: ../../mod/photos.php:1057
+msgid "[Remove any tag]"
+msgstr ""
+
+#: ../../mod/photos.php:1078
+msgid "Rotate CW (right)"
+msgstr ""
+
+#: ../../mod/photos.php:1079
+msgid "Rotate CCW (left)"
+msgstr ""
+
+#: ../../mod/photos.php:1081
+msgid "New album name"
+msgstr ""
+
+#: ../../mod/photos.php:1084
+msgid "Caption"
+msgstr ""
+
+#: ../../mod/photos.php:1086
+msgid "Add a Tag"
+msgstr ""
+
+#: ../../mod/photos.php:1090
+msgid "Example: @bob, @Barbara_Jensen, @jim@example.com, #California, #camping"
+msgstr ""
+
+#: ../../mod/photos.php:1346
+msgid "View Album"
+msgstr ""
+
+#: ../../mod/photos.php:1355
+msgid "Recent Photos"
 msgstr ""
 
 #: ../../mod/lockview.php:34
@@ -5298,7 +5438,7 @@ msgid ""
 "Password reset failed."
 msgstr ""
 
-#: ../../mod/lostpass.php:85 ../../boot.php:1243
+#: ../../mod/lostpass.php:85 ../../boot.php:1244
 msgid "Password Reset"
 msgstr ""
 
@@ -5383,85 +5523,45 @@ msgstr ""
 msgid "is interested in:"
 msgstr ""
 
-#: ../../mod/message.php:45
-msgid "Unable to lookup recipient."
+#: ../../mod/poke.php:193
+msgid "Poke/Prod"
 msgstr ""
 
-#: ../../mod/message.php:53
-msgid "Unable to communicate with requested channel."
+#: ../../mod/poke.php:194
+msgid "poke, prod or do other things to somebody"
 msgstr ""
 
-#: ../../mod/message.php:60
-msgid "Cannot verify requested channel."
+#: ../../mod/poke.php:195
+msgid "Recipient"
 msgstr ""
 
-#: ../../mod/message.php:86
-msgid "Selected channel has private message restrictions. Send failed."
+#: ../../mod/poke.php:196
+msgid "Choose what you wish to do to recipient"
 msgstr ""
 
-#: ../../mod/message.php:204 ../../mod/notifications.php:100
-msgid "Messages"
+#: ../../mod/poke.php:199
+msgid "Make this post private"
 msgstr ""
 
-#: ../../mod/message.php:215
-msgid "Message deleted."
+#: ../../mod/subthread.php:105
+#, php-format
+msgid "%1$s is following %2$s's %3$s"
 msgstr ""
 
-#: ../../mod/message.php:222
-msgid "Conversation removed."
+#: ../../mod/community.php:23
+msgid "Not available."
 msgstr ""
 
-#: ../../mod/message.php:273
-msgid "Send Private Message"
+#: ../../mod/community.php:32
+msgid "Community"
 msgstr ""
 
-#: ../../mod/message.php:274 ../../mod/message.php:409
-msgid "To:"
+#: ../../mod/community.php:63 ../../mod/community.php:88
+#: ../../mod/search.php:255
+msgid "No results."
 msgstr ""
 
-#: ../../mod/message.php:279 ../../mod/message.php:411
-msgid "Subject:"
-msgstr ""
-
-#: ../../mod/message.php:307
-msgid "No messages."
-msgstr ""
-
-#: ../../mod/message.php:323 ../../mod/message.php:380
-msgid "Delete message"
-msgstr ""
-
-#: ../../mod/message.php:325
-msgid "D, d M Y - g:i A"
-msgstr ""
-
-#: ../../mod/message.php:344
-msgid "Message not found."
-msgstr ""
-
-#: ../../mod/message.php:402
-msgid "Delete conversation"
-msgstr ""
-
-#: ../../mod/message.php:404
-msgid ""
-"No secure communications available. You <strong>may</strong> be able to "
-"respond from the sender's profile page."
-msgstr ""
-
-#: ../../mod/message.php:408
-msgid "Send Reply"
-msgstr ""
-
-#: ../../mod/mood.php:130
-msgid "Mood"
-msgstr ""
-
-#: ../../mod/mood.php:131
-msgid "Set your current mood and tell your friends"
-msgstr ""
-
-#: ../../mod/network.php:154 ../../mod/search.php:20
+#: ../../mod/search.php:20 ../../mod/network.php:154
 msgid "Remove term"
 msgstr ""
 
@@ -5521,27 +5621,27 @@ msgstr ""
 msgid "Everybody"
 msgstr ""
 
-#: ../../mod/network.php:395
+#: ../../mod/network.php:398
 msgid "Search Results For:"
 msgstr ""
 
-#: ../../mod/network.php:440
+#: ../../mod/network.php:443
 msgid "No such group"
 msgstr ""
 
-#: ../../mod/network.php:451
+#: ../../mod/network.php:454
 msgid "Group is empty"
 msgstr ""
 
-#: ../../mod/network.php:455
+#: ../../mod/network.php:458
 msgid "Group: "
 msgstr ""
 
-#: ../../mod/network.php:465
+#: ../../mod/network.php:468
 msgid "Contact: "
 msgstr ""
 
-#: ../../mod/network.php:468
+#: ../../mod/network.php:471
 msgid "Invalid contact."
 msgstr ""
 
@@ -5740,150 +5840,6 @@ msgstr ""
 msgid "Invalid item."
 msgstr ""
 
-#: ../../mod/photos.php:81
-msgid "Page owner information could not be retrieved."
-msgstr ""
-
-#: ../../mod/photos.php:101
-msgid "Album not found."
-msgstr ""
-
-#: ../../mod/photos.php:123 ../../mod/photos.php:813
-msgid "Delete Album"
-msgstr ""
-
-#: ../../mod/photos.php:163 ../../mod/photos.php:1093
-msgid "Delete Photo"
-msgstr ""
-
-#: ../../mod/photos.php:490
-#, php-format
-msgid "%1$s was tagged in %2$s by %3$s"
-msgstr ""
-
-#: ../../mod/photos.php:490
-msgid "a photo"
-msgstr ""
-
-#: ../../mod/photos.php:564
-msgid "No photos selected"
-msgstr ""
-
-#: ../../mod/photos.php:666
-msgid "Access to this item is restricted."
-msgstr ""
-
-#: ../../mod/photos.php:699 ../../mod/photos.php:797 ../../mod/photos.php:819
-#: ../../mod/photos.php:1298 ../../mod/photos.php:1310
-msgid "Contact Photos"
-msgstr ""
-
-#: ../../mod/photos.php:730
-#, php-format
-msgid "You have used %1$.2f Mbytes of %2$.2f Mbytes photo storage."
-msgstr ""
-
-#: ../../mod/photos.php:733
-#, php-format
-msgid "You have used %1$.2f Mbytes of photo storage."
-msgstr ""
-
-#: ../../mod/photos.php:748
-msgid "Upload Photos"
-msgstr ""
-
-#: ../../mod/photos.php:752 ../../mod/photos.php:808
-msgid "New album name: "
-msgstr ""
-
-#: ../../mod/photos.php:753
-msgid "or existing album name: "
-msgstr ""
-
-#: ../../mod/photos.php:754
-msgid "Do not show a status post for this upload"
-msgstr ""
-
-#: ../../mod/photos.php:823
-msgid "Edit Album"
-msgstr ""
-
-#: ../../mod/photos.php:829
-msgid "Show Newest First"
-msgstr ""
-
-#: ../../mod/photos.php:831
-msgid "Show Oldest First"
-msgstr ""
-
-#: ../../mod/photos.php:864 ../../mod/photos.php:1340
-msgid "View Photo"
-msgstr ""
-
-#: ../../mod/photos.php:899
-msgid "Permission denied. Access to this item may be restricted."
-msgstr ""
-
-#: ../../mod/photos.php:901
-msgid "Photo not available"
-msgstr ""
-
-#: ../../mod/photos.php:957
-msgid "View photo"
-msgstr ""
-
-#: ../../mod/photos.php:957
-msgid "Edit photo"
-msgstr ""
-
-#: ../../mod/photos.php:958
-msgid "Use as profile photo"
-msgstr ""
-
-#: ../../mod/photos.php:986
-msgid "View Full Size"
-msgstr ""
-
-#: ../../mod/photos.php:1054
-msgid "Tags: "
-msgstr ""
-
-#: ../../mod/photos.php:1057
-msgid "[Remove any tag]"
-msgstr ""
-
-#: ../../mod/photos.php:1078
-msgid "Rotate CW (right)"
-msgstr ""
-
-#: ../../mod/photos.php:1079
-msgid "Rotate CCW (left)"
-msgstr ""
-
-#: ../../mod/photos.php:1081
-msgid "New album name"
-msgstr ""
-
-#: ../../mod/photos.php:1084
-msgid "Caption"
-msgstr ""
-
-#: ../../mod/photos.php:1086
-msgid "Add a Tag"
-msgstr ""
-
-#: ../../mod/photos.php:1090
-msgid "Example: @bob, @Barbara_Jensen, @jim@example.com, #California, #camping"
-msgstr ""
-
-#: ../../mod/photos.php:1346
-msgid "View Album"
-msgstr ""
-
-#: ../../mod/photos.php:1355
-msgid "Recent Photos"
-msgstr ""
-
 #: ../../mod/ping.php:160
 msgid "sent you a private message"
 msgstr ""
@@ -5892,11 +5848,11 @@ msgstr ""
 msgid "added your channel"
 msgstr ""
 
-#: ../../mod/ping.php:230 ../../boot.php:1595 ../../boot.php:1675
+#: ../../mod/ping.php:230 ../../boot.php:1596 ../../boot.php:1676
 msgid "g A l F d"
 msgstr ""
 
-#: ../../mod/ping.php:252 ../../boot.php:1641 ../../boot.php:1716
+#: ../../mod/ping.php:252 ../../boot.php:1642 ../../boot.php:1717
 msgid "[today]"
 msgstr ""
 
@@ -6004,6 +5960,71 @@ msgstr ""
 msgid "Please enter your password for verification:"
 msgstr ""
 
+#: ../../mod/events.php:66
+msgid "Event title and start time are required."
+msgstr ""
+
+#: ../../mod/events.php:279
+msgid "l, F j"
+msgstr ""
+
+#: ../../mod/events.php:301
+msgid "Edit event"
+msgstr ""
+
+#: ../../mod/events.php:347
+msgid "Create New Event"
+msgstr ""
+
+#: ../../mod/events.php:348
+msgid "Previous"
+msgstr ""
+
+#: ../../mod/events.php:423
+msgid "hour:minute"
+msgstr ""
+
+#: ../../mod/events.php:433
+msgid "Event details"
+msgstr ""
+
+#: ../../mod/events.php:434
+#, php-format
+msgid "Format is %s %s. Starting date and Title are required."
+msgstr ""
+
+#: ../../mod/events.php:436
+msgid "Event Starts:"
+msgstr ""
+
+#: ../../mod/events.php:436 ../../mod/events.php:450
+msgid "Required"
+msgstr ""
+
+#: ../../mod/events.php:439
+msgid "Finish date/time is not known or not relevant"
+msgstr ""
+
+#: ../../mod/events.php:441
+msgid "Event Finishes:"
+msgstr ""
+
+#: ../../mod/events.php:444
+msgid "Adjust for viewer timezone"
+msgstr ""
+
+#: ../../mod/events.php:446
+msgid "Description:"
+msgstr ""
+
+#: ../../mod/events.php:450
+msgid "Title:"
+msgstr ""
+
+#: ../../mod/events.php:452
+msgid "Share this event"
+msgstr ""
+
 #: ../../view/theme/redbasic/php/config.php:133
 #: ../../view/theme/redbasic/php/config.php:150
 msgid "Theme settings"
@@ -6048,92 +6069,96 @@ msgstr ""
 msgid "Shiny style"
 msgstr ""
 
-#: ../../boot.php:1067
+#: ../../boot.php:1068
 #, php-format
 msgid "Update %s failed. See error logs."
 msgstr ""
 
-#: ../../boot.php:1070
+#: ../../boot.php:1071
 #, php-format
 msgid "Update Error at %s"
 msgstr ""
 
-#: ../../boot.php:1207
+#: ../../boot.php:1208
 msgid "Create a New Account"
 msgstr ""
 
-#: ../../boot.php:1236
+#: ../../boot.php:1237
 msgid "Password"
 msgstr ""
 
-#: ../../boot.php:1237
+#: ../../boot.php:1238
 msgid "Remember me"
 msgstr ""
 
-#: ../../boot.php:1242
+#: ../../boot.php:1243
 msgid "Forgot your password?"
 msgstr ""
 
-#: ../../boot.php:1359
+#: ../../boot.php:1360
 msgid "Requested channel is not available."
 msgstr ""
 
-#: ../../boot.php:1371
+#: ../../boot.php:1372
 msgid " Sorry, you don't have the permission to view this profile. "
 msgstr ""
 
-#: ../../boot.php:1514
+#: ../../boot.php:1515
 msgid "Profiles"
 msgstr ""
 
-#: ../../boot.php:1514
+#: ../../boot.php:1515
 msgid "Manage/edit profiles"
 msgstr ""
 
-#: ../../boot.php:1518
+#: ../../boot.php:1519
 msgid "Edit Profile"
 msgstr ""
 
-#: ../../boot.php:1596 ../../boot.php:1676
+#: ../../boot.php:1597 ../../boot.php:1677
 msgid "F d"
 msgstr ""
 
-#: ../../boot.php:1653
+#: ../../boot.php:1654
 msgid "Birthday Reminders"
 msgstr ""
 
-#: ../../boot.php:1654
+#: ../../boot.php:1655
 msgid "Birthdays this week:"
 msgstr ""
 
-#: ../../boot.php:1709
+#: ../../boot.php:1710
 msgid "[No description]"
 msgstr ""
 
-#: ../../boot.php:1727
+#: ../../boot.php:1728
 msgid "Event Reminders"
 msgstr ""
 
-#: ../../boot.php:1728
+#: ../../boot.php:1729
 msgid "Events this week:"
 msgstr ""
 
-#: ../../boot.php:1925
-msgid "Status"
+#: ../../boot.php:1926
+msgid "Channel"
 msgstr ""
 
-#: ../../boot.php:1928
+#: ../../boot.php:1929
 msgid "Status Messages and Posts"
 msgstr ""
 
-#: ../../boot.php:1935
+#: ../../boot.php:1933
+msgid "About"
+msgstr ""
+
+#: ../../boot.php:1936
 msgid "Profile Details"
 msgstr ""
 
-#: ../../boot.php:1952
+#: ../../boot.php:1954
 msgid "Events and Calendar"
 msgstr ""
 
-#: ../../boot.php:2131
+#: ../../boot.php:2140
 msgid "toggle mobile"
 msgstr ""

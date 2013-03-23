@@ -7,15 +7,15 @@ require_once('include/items.php');
 
 function subthread_content(&$a) {
 
-	if(! local_user() && ! remote_user()) {
+	if((! local_user()) && (! remote_user())) {
 		return;
 	}
 
 	$activity = ACTIVITY_FOLLOW;
 
-	$item_id = (($a->argc > 1) ? notags(trim($a->argv[1])) : 0);
+	$item_id = ((argc() > 1) ? notags(trim(argv(1))) : 0);
 
-	$r = q("SELECT * FROM `item` WHERE `parent` = '%s' OR `parent-mid` = '%s' and parent = id LIMIT 1",
+	$r = q("SELECT * FROM `item` WHERE `parent` = '%s' OR `parent_mid` = '%s' and parent = id LIMIT 1",
 		dbesc($item_id),
 		dbesc($item_id)
 	);
