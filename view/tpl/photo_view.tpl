@@ -1,3 +1,9 @@
+<script type="text/javascript" charset="utf-8">
+  $(document).ready(function(){
+    $("a[rel^='prettyPhoto']").prettyPhoto();
+  });
+</script>
+
 <div id="live-display"></div>
 <h3><a href="$album.0">$album.1</a></h3>
 
@@ -11,7 +17,7 @@
 </div>
 
 {{ if $prevlink }}<div id="photo-prev-link"><a href="$prevlink.0">$prevlink.1</a></div>{{ endif }}
-<div id="photo-photo"><a href="$photo.href" title="$photo.title"><img src="$photo.src" /></a></div>
+<div id="photo-photo"><a href="$photo.href" title="$photo.title" rel="prettyPhoto"><img src="$photo.src" /></a></div>
 {{ if $nextlink }}<div id="photo-next-link"><a href="$nextlink.0">$nextlink.1</a></div>{{ endif }}
 <div id="photo-photo-end"></div>
 <div id="photo-caption">$desc</div>
