@@ -518,7 +518,7 @@ function network_content(&$a, $update = 0, $load = false) {
 			'$file' => $file,
 			'$cats' => '',
 			'$dend' => $datequery,
-			'$uri' => '',
+			'$mid' => '',
 			'$dbegin' => $datequery2
 		));
 	}
