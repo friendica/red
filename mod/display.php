@@ -23,11 +23,9 @@ function display_content(&$a, $update = 0, $load = false) {
 	if(argc() > 1 && argv(1) !== 'load')
 		$item_hash = argv(1);
 
-	// This should actually be mid, but it needs to be changed in build_query.tpl and in all the
-	// pages which call it
 
-	if($_REQUEST['uri'])
-		$item_hash = $_REQUEST['uri'];
+	if($_REQUEST['mid'])
+		$item_hash = $_REQUEST['mid'];
 
 
 	if(! $item_hash) {
@@ -85,7 +83,7 @@ function display_content(&$a, $update = 0, $load = false) {
 			'$cats' => '',
 			'$dend' => '',
 			'$dbegin' => '',
-			'$uri' => $item_hash
+			'$mid' => $item_hash
 		));
 
 

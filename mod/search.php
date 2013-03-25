@@ -175,7 +175,7 @@ function search_content(&$a) {
 			'$order' => '',
 			'$file' => '',
 			'$cats' => '',
-			'$uri' => '',
+			'$mid' => '',
 			'$dend' => '',
 			'$dbegin' => ''
 		));
