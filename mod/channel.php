@@ -248,7 +248,7 @@ function channel_content(&$a, $update = 0, $load = false) {
 			'$order' => '',
 			'$file' => '',
 			'$cats' => (($category) ? $category : ''),
-			'$uri' => '',
+			'$mid' => '',
 			'$dend' => $datequery,
 			'$dbegin' => $datequery2
 		));
