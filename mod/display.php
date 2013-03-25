@@ -3,6 +3,8 @@
 
 function display_content(&$a, $update = 0, $load = false) {
 
+	logger("mod-display: update = $update load = $load");
+
 	if(intval(get_config('system','block_public')) && (! local_user()) && (! remote_user())) {
 		notice( t('Public access denied.') . EOL);
 		return;
@@ -20,8 +22,12 @@ function display_content(&$a, $update = 0, $load = false) {
 
 	if(argc() > 1 && argv(1) !== 'load')
 		$item_hash = argv(1);
-	if($_REQUEST['mid'])
-		$item_hash = $_REQUEST['mid'];
+
+	// This should actually be mid, but it needs to be changed in build_query.tpl and in all the
+	// pages which call it
+
+	if($_REQUEST['uri'])
+		$item_hash = $_REQUEST['uri'];
 
 
 	if(! $item_hash) {
@@ -141,6 +147,7 @@ function display_content(&$a, $update = 0, $load = false) {
 	} else {
 		$items = array();
 	}
+
 
 
 	$o .= conversation($a,$items,'display', $update, 'client');
