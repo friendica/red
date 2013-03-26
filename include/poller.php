@@ -30,8 +30,8 @@ function poller_run($argv, $argc){
 	// expire any expired accounts
 
 	q("UPDATE account 
-		SET account_flags = account_flags | %d 
-		where not account_flags & %d 
+		SET account_flags = (account_flags | %d) 
+		where not (account_flags & %d) 
 		and account_expires != '0000-00-00 00:00:00' 
 		and account_expires < UTC_TIMESTAMP() ",
 		intval(ACCOUNT_EXPIRED),
@@ -56,6 +56,10 @@ function poller_run($argv, $argc){
 		proc_run('php','include/expire.php');
 	}
 
+	// If this is a directory server, request a sync with an upstream
+	// directory at least once a day, up to once every poll interval. 
+	// Pull remote changes and push local changes.
+	// potential issue: how do we keep from creating an endless update loop? 
 
 	$manual_id  = 0;
 	$generation = 0;

@@ -47,6 +47,9 @@ function zot_get_hubloc($arr,$primary = false) {
 
 }
 	 
+/**
+ * obsolete
+
 function zot_notify($channel,$url,$type = 'notify',$recipients = null, $remote_key = null) {
 
 	$params = array(
@@ -74,6 +77,9 @@ function zot_notify($channel,$url,$type = 'notify',$recipients = null, $remote_k
 	$x = z_post_url($url,$params);
 	return($x);
 }
+*/
+
+
 
 /*
  *
@@ -117,9 +123,32 @@ function zot_build_packet($channel,$type = 'notify',$recipients = null, $remote_
 }
 
 
+/**
+ * @function: zot_zot
+ * @param: string $url
+ * @param: array $data
+ *
+ * @returns: array => see z_post_url for returned data format
+ */
+ 
+
+
 function zot_zot($url,$data) {
 	return z_post_url($url,array('data' => $data));
 }
+
+/**
+ * @function: zot_finger
+ *
+ * Look up information about channel
+ * @param: string $webbie
+ *   does not have to be host qualified e.g. 'foo' is treated as 'foo@thishub'
+ * @param: array $channel
+ *   (optional), if supplied permissions will be enumerated specifically for $channel
+ *
+ * @returns: array => see z_post_url and mod/zfinger.php
+ */
+
 
 function zot_finger($webbie,$channel) {
 
@@ -190,6 +219,15 @@ function zot_finger($webbie,$channel) {
 	return $result;	 
 
 }
+
+/**
+ * @function: zot_refresh
+ *
+ * zot_refresh is typically invoked when somebody has changed permissions of a channel and they are notified
+ * to fetch new permissions via a finger operation. This may result in a new connection (abook entry) being added to a local channel
+ * and it may result in auto-permissions being granted. 
+ *
+ */
 
 function zot_refresh($them,$channel = null) {
 
@@ -359,6 +397,15 @@ function zot_refresh($them,$channel = null) {
 	}
 	return false;
 }
+
+/**
+ * @function: zot_gethub
+ *
+ * A guid and a url, both signed by the sender, distinguish a known sender at a known location
+ * This function looks these up to see if the channel is known. If not, we will need to verify it.
+ * @returns: array => hubloc record
+ */
+
 
 		
 function zot_gethub($arr) {
@@ -649,6 +696,18 @@ function zot_process_response($hub,$arr,$outq) {
 	logger('zot_process_response: ' . print_r($x,true), LOGGER_DATA);
 }
 
+/**
+ * @function: zot_fetch
+ *
+ * We received a notification packet (in mod/post.php) that a message is waiting for us, and we've verified the sender.
+ * Now send back a pickup message, using our message tracking ID ($arr['secret']), which we will sign.
+ * The entire pickup message is encrypted with the remote site's public key. 
+ * If everything checks out on the remote end, we will receive back a packet containing one or more messages,
+ * which will be processed before returning.
+ * 
+ */
+ 
+
 function zot_fetch($arr) {
 
 	logger('zot_fetch: ' . print_r($arr,true), LOGGER_DATA);
@@ -657,7 +716,7 @@ function zot_fetch($arr) {
 
 	$ret_hub = zot_gethub($arr['sender']);
 	if(! $ret_hub) {
-		logger('zot_fetch: not ret_hub');
+		logger('zot_fetch: no hub: ' . print_r($arr['sender'],true));
 		return;
 	}
 	

@@ -137,7 +137,7 @@ function post_post(&$a) {
 
 	logger('mod_zot: ' . print_r($_REQUEST,true), LOGGER_DEBUG);
 
-	$ret = array('result' => false);
+	$ret = array('success' => false);
 
 	$data = json_decode($_REQUEST['data'],true);
 
@@ -156,6 +156,14 @@ function post_post(&$a) {
 
 	if($msgtype === 'pickup') {
 
+		/**
+		 * The 'pickup' message arrives with a tracking ID which is associated with a particular outq_hash
+		 * First verify that that the returned signatures verify, then check that we have an outbound queue item
+		 * with the correct hash.
+		 * If everything verifies, find any/all outbound messages in the queue for this hubloc and send them back
+		 *
+		 */
+
 		if((! $data['secret']) || (! $data['secret_sig'])) {
 			$ret['message'] = 'no verification signature';
 			logger('mod_zot: pickup: ' . $ret['message'], LOGGER_DEBUG);
@@ -172,7 +180,7 @@ function post_post(&$a) {
 		}
 		// verify the url_sig
 		$sitekey = $r[0]['hubloc_sitekey'];
-		logger('sitekey: ' . $sitekey);
+//		logger('sitekey: ' . $sitekey);
 
 		if(! rsa_verify($data['callback'],base64url_decode($data['callback_sig']),$sitekey)) {
 			$ret['message'] = 'possible site forgery';
@@ -186,7 +194,11 @@ function post_post(&$a) {
 			json_return_and_die($ret);
 		}
 
-		// If we made it to here, we've got a valid pickup. Grab everything for this host and send it.
+		/**
+		 * If we made it to here, the signatures verify, but we still don't know if the tracking ID is valid.
+		 * It wouldn't be an error if the tracking ID isn't found, because we may have sent this particular
+		 * queue item with another pickup (after the tracking ID for the other pickup  was verified). 
+		 */
 
 		$r = q("select outq_posturl from outq where outq_hash = '%s' and outq_posturl = '%s' limit 1",
 			dbesc($data['secret']),
@@ -197,6 +209,11 @@ function post_post(&$a) {
 			logger('mod_zot: pickup: ' . $ret['message']);
 			json_return_and_die($ret);
 		}
+
+		/**
+		 * Everything is good if we made it here, so find all messages that are going to this location
+		 * and send them all.
+		 */
 
 		$r = q("select * from outq where outq_posturl = '%s'",
 			dbesc($data['callback'])
@@ -214,16 +231,31 @@ function post_post(&$a) {
 		}
 		$encrypted = aes_encapsulate(json_encode($ret),$sitekey);
 		json_return_and_die($encrypted);
+
+		/** pickup: end */
 	}
+
+
+	/**
+	 * All other message types require us to verify the sender. This is a generic check, so we 
+	 * will do it once here and bail if anything goes wrong.
+	 */
 
 	if(array_key_exists('sender',$data)) {
 		$sender = $data['sender'];
 	}	
 
+	/** Check if the sender is already verified here */
+
 	$hub = zot_gethub($sender);
+
 	if(! $hub) {
+
+		/** Have never seen this guid or this guid coming from this location. Check it and register it. */
+
 		// (!!) this will validate the sender
 		$result = zot_register_hub($sender);
+
 		if((! $result['success']) || (! zot_gethub($sender))) {
 			$ret['message'] = 'Hub not available.';
 			logger('mod_zot: no hub');
@@ -249,14 +281,14 @@ function post_post(&$a) {
 
 		}
 		else {
-			// basically this means the channel has committed suicide
+			// Unfriend everybody - basically this means the channel has committed suicide
 			$arr = $data['sender'];
 			$sender_hash = base64url_encode(hash('whirlpool',$arr['guid'] . $arr['guid_sig'], true));
 		
 			require_once('include/Contact.php');
 			remove_all_xchan_resources($sender_hash);	
 
-			$ret['result'] = true;
+			$ret['success'] = true;
 			json_return_and_die($ret);
 
 		}
@@ -296,7 +328,7 @@ function post_post(&$a) {
 				'hubloc_url'     => $sender['url']
 			),null);
 		}
-		$ret['result'] = true;
+		$ret['success'] = true;
 		json_return_and_die($ret);
 	}
 
@@ -312,7 +344,7 @@ function post_post(&$a) {
 			$ret['delivery_report'] = $x;
 		}
 
-		$ret['result'] = true;
+		$ret['success'] = true;
 		json_return_and_die($ret);
 
 	}
@@ -366,7 +398,7 @@ function post_post(&$a) {
 			);
 
 			logger('mod_zot: auth_check: success', LOGGER_DEBUG);
-			$ret['result'] = true;
+			$ret['success'] = true;
 			json_return_and_die($ret);
 
 		}
