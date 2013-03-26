@@ -19,7 +19,7 @@ function post_init(&$a) {
 		$webbie = argv(1);
 
 		if(array_key_exists('auth',$_REQUEST)) {
-
+			logger('mod_zot: auth request received.');
 			$address = $_REQUEST['auth'];
 			$dest    = $_REQUEST['dest'];
 			$sec     = $_REQUEST['sec'];
@@ -95,10 +95,17 @@ function post_init(&$a) {
 				$j = json_decode($result['body'],true);
 			}
 
-			if($already_authed || $j['result']) {
+			if($already_authed || $j['success']) {
 				// everything is good... maybe
 				if(local_user()) {
-					notice( t('Remote authentication blocked. You are logged into this site locally. Please logout and retry.') . EOL);
+
+					// tell them to logout if they're logged in locally as anything but the target remote account
+					// in which case just shut up because they don't need to be doing this at all.
+
+					if($a->channel['channel_hash'] != $x[0]['xchan_hash']) {
+						logger('mod_zot: auth: already authenticated locally as somebody else.');
+						notice( t('Remote authentication blocked. You are logged into this site locally. Please logout and retry.') . EOL);
+					}
 					goaway($desturl);
 				}
 				// log them in
@@ -350,6 +357,7 @@ function post_post(&$a) {
 	}
 
 	if($msgtype === 'auth_check') {
+		logger('mod_zot: auth_check');
 		$arr = $data['sender'];
 		$sender_hash = base64url_encode(hash('whirlpool',$arr['guid'] . $arr['guid_sig'], true));
 
