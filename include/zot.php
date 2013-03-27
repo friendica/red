@@ -537,9 +537,6 @@ function import_xchan($arr) {
 		else
 			$new_flags = 0;
 		
-
-
-
 		$x = q("insert into xchan ( xchan_hash, xchan_guid, xchan_guid_sig, xchan_pubkey, xchan_photo_mimetype,
 				xchan_photo_l, xchan_addr, xchan_url, xchan_connurl, xchan_name, xchan_network, xchan_photo_date, xchan_name_date, xchan_flags)
 				values ( '%s', '%s', '%s', '%s' , '%s', '%s', '%s', '%s', '%s', '%s', '%s', '%s', '%s', %d) ",
@@ -760,6 +757,14 @@ function zot_fetch($arr) {
 	return $result;
 }
 
+/**
+ * @function zot_import
+ * 
+ * Process an incoming array of messages which were obtained via pickup, and 
+ * import, update, delete as directed.
+ * 
+ * The message types handled here are 'activity' (e.g. posts), 'mail' and 'profile'
+ */
 
 function zot_import($arr) {
 
@@ -771,8 +776,6 @@ function zot_import($arr) {
 		logger('zot_import: empty body');
 		return array();
 	}
-
-//	logger('zot_import: data1: ' . print_r($data,true));
 
 	if(array_key_exists('iv',$data)) {
 		$data = json_decode(aes_unencapsulate($data,get_config('system','prvkey')),true);
