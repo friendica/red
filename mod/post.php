@@ -10,9 +10,9 @@ require_once('include/zot.php');
 
 function post_init(&$a) {
 
-	// All other access to this endpoint is via the post method.
+	// Most access to this endpoint is via the post method.
 	// Here we will pick out the magic auth params which arrive
-	// as a get request.
+	// as a get request, and the only communications to arrive this way.
 
 	if(argc() > 1) {
 
@@ -149,6 +149,11 @@ function post_post(&$a) {
 	$data = json_decode($_REQUEST['data'],true);
 
 	logger('mod_zot: data: ' . print_r($data,true), LOGGER_DATA);
+
+	/**
+	 * Many message packets will arrive encrypted. The existence of an 'iv' element 
+	 * tells us we need to unencapsulate the AES-256-CBC content using the site private key
+	 */
 
 	if(array_key_exists('iv',$data)) {
 		$data = aes_unencapsulate($data,get_config('system','prvkey'));

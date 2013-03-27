@@ -523,9 +523,26 @@ function import_xchan($arr) {
 	}
 	else {
 		$import_photos = true;
+
+		$dirmode = get_config('system','directory_mode'); 
+
+		if((($arr['site']['directory_mode'] === 'standalone') || ($dirmode & DIRECTORY_MODE_STANDALONE))
+&& ($arr['site']['url'] != z_root()))
+			$arr['searchable'] = false;
+
+		$hidden = (1 - intval($arr['searchable']));
+
+		if($hidden)
+			$new_flags = XCHAN_FLAGS_HIDDEN;
+		else
+			$new_flags = 0;
+		
+
+
+
 		$x = q("insert into xchan ( xchan_hash, xchan_guid, xchan_guid_sig, xchan_pubkey, xchan_photo_mimetype,
-				xchan_photo_l, xchan_addr, xchan_url, xchan_connurl, xchan_name, xchan_network, xchan_photo_date, xchan_name_date)
-				values ( '%s', '%s', '%s', '%s' , '%s', '%s', '%s', '%s', '%s', '%s', '%s', '%s', '%s') ",
+				xchan_photo_l, xchan_addr, xchan_url, xchan_connurl, xchan_name, xchan_network, xchan_photo_date, xchan_name_date, xchan_flags)
+				values ( '%s', '%s', '%s', '%s' , '%s', '%s', '%s', '%s', '%s', '%s', '%s', '%s', '%s', %d) ",
 			dbesc($xchan_hash),
 			dbesc($arr['guid']),
 			dbesc($arr['guid_sig']),
@@ -538,7 +555,8 @@ function import_xchan($arr) {
 			dbesc($arr['name']),
 			dbesc('zot'),
 			dbesc($arr['photo_updated']),
-			dbesc($arr['name_updated'])
+			dbesc($arr['name_updated']),
+			intval($new_flags)
 		);
 		update_modtime($xchan_hash);
 		$changed = true;

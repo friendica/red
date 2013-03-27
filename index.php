@@ -288,7 +288,7 @@ if($a->module_loaded) {
 		// If $aside_default is not False after the theme _aside() function, run the
 		// module's _aside() function too
 		//
-		// This gives themes more control over how the left sidebar looks
+		// This gives themes more control over how the sidebar looks
 
 		$aside_default = true;
 		call_hooks($a->module . '_mod_aside',$placeholder);
