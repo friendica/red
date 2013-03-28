@@ -1,5 +1,6 @@
 var NAVTREEINDEX3 =
 {
+"friendica-to-smarty-tpl_8py.html#a5f9bf7a67d955c0d6be70a82097611c5":[4,0,2,4,6],
 "friendica-to-smarty-tpl_8py.html#a68d15934660cd1f4301ce251b1646f09":[4,0,2,4,12],
 "friendica-to-smarty-tpl_8py.html#a8540514fb7c4aa18ad2dffa2a975036b":[4,0,2,4,14],
 "friendica-to-smarty-tpl_8py.html#a87182a9bab47640428bd0b2b9946bef9":[4,0,2,4,10],
@@ -64,8 +65,8 @@ var NAVTREEINDEX3 =
 "globals_0x77.html":[4,1,0,24],
 "globals_0x78.html":[4,1,0,25],
 "globals_0x7a.html":[4,1,0,26],
-"globals_func.html":[4,1,1,0],
 "globals_func.html":[4,1,1],
+"globals_func.html":[4,1,1,0],
 "globals_func_0x61.html":[4,1,1,1],
 "globals_func_0x62.html":[4,1,1,2],
 "globals_func_0x63.html":[4,1,1,3],
@@ -136,12 +137,13 @@ var NAVTREEINDEX3 =
 "html2plain_8php.html#ab3e121fa9f3feb16f9f942e705bc6c04":[4,0,0,33,2],
 "html2plain_8php.html#ae1c203d0f089d5678d73a6c64a395201":[4,0,0,33,1],
 "identity_8php.html":[4,0,0,34],
-"identity_8php.html#a345f4c943d84de502ec6e72d2c813945":[4,0,0,34,0],
-"identity_8php.html#a3570a4eb77332b292d394c4132cb8f03":[4,0,0,34,1],
-"identity_8php.html#a77ee7d66eb0758f7e7882f70ad0f9485":[4,0,0,34,2],
-"identity_8php.html#a78151baf4407a8482d2681a91a9c486b":[4,0,0,34,4],
-"identity_8php.html#ac9fcd5c4c371998790b5c55c3d0f4633":[4,0,0,34,3],
-"identity_8php.html#af2802bc13a00a17b867bba7978ba8f58":[4,0,0,34,5],
+"identity_8php.html#a345f4c943d84de502ec6e72d2c813945":[4,0,0,34,1],
+"identity_8php.html#a3570a4eb77332b292d394c4132cb8f03":[4,0,0,34,2],
+"identity_8php.html#a77ee7d66eb0758f7e7882f70ad0f9485":[4,0,0,34,3],
+"identity_8php.html#a78151baf4407a8482d2681a91a9c486b":[4,0,0,34,5],
+"identity_8php.html#abf6a9c6ed92d594f1d4513c4e22a7abd":[4,0,0,34,0],
+"identity_8php.html#ac9fcd5c4c371998790b5c55c3d0f4633":[4,0,0,34,4],
+"identity_8php.html#af2802bc13a00a17b867bba7978ba8f58":[4,0,0,34,6],
 "import_8php.html":[4,0,1,32],
 "import_8php.html#af17fef0410518f7eac205d0ea416eaa2":[4,0,1,32,1],
 "import_8php.html#afdf25ed70096d5dbf4f6d0ca79fea184":[4,0,1,32,0],
@@ -247,7 +249,5 @@ var NAVTREEINDEX3 =
 "include_2network_8php.html#a4c5d50079e089168d9248427018fffd4":[4,0,0,40,13],
 "include_2network_8php.html#a540420ff3675a72cb781ef9a7e8c2cd9":[4,0,0,40,5],
 "include_2network_8php.html#a5caa264fab6d2b2344e6bd5b298b08f2":[4,0,0,40,19],
-"include_2network_8php.html#a6259181fec4d36722d1e91ac6210e876":[4,0,0,40,25],
-"include_2network_8php.html#a78e89557b2fbd344ad790846d761b0c7":[4,0,0,40,11],
-"include_2network_8php.html#a8122356933bcd6b0a8567e8e15ae5cc5":[4,0,0,40,20]
+"include_2network_8php.html#a6259181fec4d36722d1e91ac6210e876":[4,0,0,40,25]
 };

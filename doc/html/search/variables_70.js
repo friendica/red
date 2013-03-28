@@ -3,6 +3,7 @@ var searchData=
   ['page',['page',['../mod__import_8php.html#a8db1899eeeb44dabd0904065b63627bb',1,'page():&#160;mod_import.php'],['../mod__new__channel_8php.html#a8db1899eeeb44dabd0904065b63627bb',1,'page():&#160;mod_new_channel.php'],['../mod__register_8php.html#a8db1899eeeb44dabd0904065b63627bb',1,'page():&#160;mod_register.php']]],
   ['page_5fapplication',['PAGE_APPLICATION',['../boot_8php.html#a8231d115060d41a9c2a677f2c86f10ed',1,'boot.php']]],
   ['page_5fautoconnect',['PAGE_AUTOCONNECT',['../boot_8php.html#aa275653b9c87abc7391bb8040c1c2de9',1,'boot.php']]],
+  ['page_5fdirectory_5fchannel',['PAGE_DIRECTORY_CHANNEL',['../boot_8php.html#a5b8484922918946d041e5e0515dbe718',1,'boot.php']]],
   ['page_5fhidden',['PAGE_HIDDEN',['../boot_8php.html#a5e322a2a2d0f51924c0b2e874988e640',1,'boot.php']]],
   ['page_5fnormal',['PAGE_NORMAL',['../boot_8php.html#a09532c3f750ae8c4527e63b2b790cbf3',1,'boot.php']]],
   ['page_5fremoved',['PAGE_REMOVED',['../boot_8php.html#a4edce16cb7f21cdafa1e85bf63d713e6',1,'boot.php']]],

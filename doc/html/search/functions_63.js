@@ -77,6 +77,7 @@ var searchData=
   ['count_5fcommon_5ffriends_5fzcid',['count_common_friends_zcid',['../socgraph_8php.html#af175807406d94407a5e11742a3287746',1,'socgraph.php']]],
   ['count_5fdescendants',['count_descendants',['../classItem.html#aca1e66988ed00cd627b2a359b72cd0ae',1,'Item\count_descendants()'],['../conversation_8php.html#ab2383dff4f823e580399ff469d90ab19',1,'count_descendants():&#160;conversation.php']]],
   ['create_5faccount',['create_account',['../account_8php.html#a141fe579c351c78209d425473f978eb5',1,'account.php']]],
+  ['create_5fdir_5faccount',['create_dir_account',['../identity_8php.html#abf6a9c6ed92d594f1d4513c4e22a7abd',1,'identity.php']]],
   ['create_5fidentity',['create_identity',['../identity_8php.html#a345f4c943d84de502ec6e72d2c813945',1,'identity.php']]],
   ['crepair_5fcontent',['crepair_content',['../crepair_8php.html#a29464c01838e209c8059cfcd2d195caa',1,'crepair.php']]],
   ['crepair_5finit',['crepair_init',['../crepair_8php.html#ab089978e50df156bbfabf9f8f5ccd198',1,'crepair.php']]],

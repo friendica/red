@@ -104,6 +104,5 @@ var dir_d41ce877eb409a4791b288730010abe2 =
     [ "xchan.php", "xchan_8php.html", "xchan_8php" ],
     [ "xrd.php", "xrd_8php.html", "xrd_8php" ],
     [ "zfinger.php", "zfinger_8php.html", "zfinger_8php" ],
-    [ "zotfeed.php", "zotfeed_8php.html", "zotfeed_8php" ],
-    [ "zperms.php", "zperms_8php.html", "zperms_8php" ]
+    [ "zotfeed.php", "zotfeed_8php.html", "zotfeed_8php" ]
 ];

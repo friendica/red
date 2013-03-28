@@ -44,7 +44,7 @@ var searchData=
   ['preg_5fheart',['preg_heart',['../text_8php.html#ac19d2b33a58372a357a43d51eed19162',1,'text.php']]],
   ['prepare_5fbody',['prepare_body',['../text_8php.html#af3a7139d40ea758f315c2acf2ccc1b1c',1,'text.php']]],
   ['prepare_5fpage',['prepare_page',['../conversation_8php.html#a4b0888b0f26e1c284a4341fe5fd04f0c',1,'conversation.php']]],
-  ['prepare_5ftext',['prepare_text',['../text_8php.html#a70c59f9fde874ef711390d48b407d7ef',1,'text.php']]],
+  ['prepare_5ftext',['prepare_text',['../text_8php.html#afe54312607d92f7ce9593f5760831f80',1,'text.php']]],
   ['pretheme_5finit',['pretheme_init',['../pretheme_8php.html#af5660943ee99db5fd75182316522eafe',1,'pretheme.php']]],
   ['printable',['printable',['../dba_8php.html#a55bf30d8176967e682656b5be4ad9249',1,'dba.php']]],
   ['private_5fmessages_5fdrop',['private_messages_drop',['../include_2message_8php.html#aed272d77c06a309e2836ac79e75613f1',1,'message.php']]],

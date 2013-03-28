@@ -1427,22 +1427,8 @@ function item_store($arr,$force_parent = false) {
 				$arr['item_private'] = 0;
 		}
 		else {
-
-			// Allow one to see reply tweets from status.net even when
-			// we don't have or can't see the original post.
-
-			if($force_parent) {
-				logger('item_store: $force_parent=true, reply converted to top-level post.');
-				$parent_id = 0;
-				$arr['parent_mid'] = $arr['mid'];
-				$arr['flags'] = $arr['flags'] | ITEM_THREAD_TOP;
-			}
-			else {
-				logger('item_store: item parent was not found - ignoring item');
-				return 0;
-			}
-			
-			$parent_deleted = 0;
+			logger('item_store: item parent was not found - ignoring item');
+			return 0;
 		}
 	}
 

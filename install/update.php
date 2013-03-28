@@ -1,6 +1,6 @@
 <?php
 
-define( 'UPDATE_VERSION' , 1038 );
+define( 'UPDATE_VERSION' , 1039 );
 
 /**
  *
@@ -495,5 +495,13 @@ ADD INDEX `parent_mid` ( `parent_mid` ) ");
 }
 
 
+function update_r1038() {
+	$r = q("ALTER TABLE `manage` CHANGE `mid` `xchan` CHAR( 255 ) NOT NULL DEFAULT '', drop index `mid`,  ADD INDEX ( `xchan` )");
 
+	if($r)
+		return UPDATE_SUCCESS;
+	return UPDATE_FAILED;
+
+}
+ 
 

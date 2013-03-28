@@ -4,8 +4,9 @@
 /**
  * Red.
  * 
- * Red is an open source decentralised communications platform wrapped in
- * an extensible content management framework, providing website designers
+ * Red is an open source decentralised communications platform combined with
+ * a decentralised identity/authentication framework wrapped in
+ * an extensible content management system, providing website designers
  * the ability to embed fully decentralised communications and social tools 
  * into many traditional website designs (blogs, forums, small business 
  * websites, charitable organisations, etc.). Red also provides DNS mobility 
@@ -40,7 +41,7 @@ require_once('include/features.php');
 define ( 'FRIENDICA_PLATFORM',     'Friendica Red');
 define ( 'FRIENDICA_VERSION',      trim(file_get_contents('version.inc')) . 'R');
 define ( 'ZOT_REVISION',               1     ); 
-define ( 'DB_UPDATE_VERSION',       1038     );
+define ( 'DB_UPDATE_VERSION',       1039     );
 
 define ( 'EOL',                    '<br />' . "\r\n"     );
 define ( 'ATOM_TIME',              'Y-m-d\TH:i:s\Z' );

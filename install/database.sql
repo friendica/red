@@ -537,10 +537,10 @@ CREATE TABLE IF NOT EXISTS `mail` (
 CREATE TABLE IF NOT EXISTS `manage` (
   `id` int(11) NOT NULL AUTO_INCREMENT,
   `uid` int(11) NOT NULL,
-  `mid` int(11) NOT NULL,
+  `xchan` char(255) NOT NULL DEFAULT '',
   PRIMARY KEY (`id`),
   KEY `uid` (`uid`),
-  KEY `mid` (`mid`)
+  KEY `xchan` (`xchan`)
 ) ENGINE=MyISAM DEFAULT CHARSET=utf8;
 
 CREATE TABLE IF NOT EXISTS `menu` (

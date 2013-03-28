@@ -222,6 +222,7 @@ function unxmlify($s) {
 
 // convenience wrapper, reverse the operation "bin2hex"
 
+// This is a built-in function in php >= 5.4
 
 if(! function_exists('hex2bin')) {
 function hex2bin($s) {

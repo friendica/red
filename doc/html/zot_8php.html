@@ -116,8 +116,6 @@ Functions</h2></td></tr>
 <tr class="separator:ab22d67660702056bf3f4696dcebf5ce7"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:acdea9362d78a63dce948fdf0ea73ef0e"><td class="memItemLeft" align="right" valign="top">&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="zot_8php.html#acdea9362d78a63dce948fdf0ea73ef0e">zot_get_hubloc</a> ($arr, $primary=false)</td></tr>
 <tr class="separator:acdea9362d78a63dce948fdf0ea73ef0e"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:af22a8732e60d30055617a95f77493446"><td class="memItemLeft" align="right" valign="top">&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="zot_8php.html#af22a8732e60d30055617a95f77493446">zot_notify</a> ($channel, $url, $type= 'notify', $recipients=null, $remote_key=null)</td></tr>
-<tr class="separator:af22a8732e60d30055617a95f77493446"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a3862b3161b2c8557dc1a95020179bd81"><td class="memItemLeft" align="right" valign="top">&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="zot_8php.html#a3862b3161b2c8557dc1a95020179bd81">zot_build_packet</a> ($channel, $type= 'notify', $recipients=null, $remote_key=null, $secret=null)</td></tr>
 <tr class="separator:a3862b3161b2c8557dc1a95020179bd81"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:ab3e9b99ddb11353f37f265a05bb42142"><td class="memItemLeft" align="right" valign="top">&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="zot_8php.html#ab3e9b99ddb11353f37f265a05bb42142">zot_zot</a> ($url, $data)</td></tr>
@@ -505,7 +503,30 @@ Functions</h2></td></tr>
         </tr>
       </table>
 </div><div class="memdoc">
+<p>obsolete</p>
+<p>function zot_notify($channel,$url,$type = 'notify',$recipients = null, $remote_key = null) { </p>
+<pre class="fragment">$params = array(
+    'type' =&gt; $type,
+    'sender' =&gt; json_encode(array(
+        'guid' =&gt; $channel['channel_guid'],
+        'guid_sig' =&gt; base64url_encode(rsa_sign($channel['channel_guid'],$channel['channel_prvkey'])),
+        'url' =&gt; z_root(),
+        'url_sig' =&gt; base64url_encode(rsa_sign(z_root(),$channel['channel_prvkey']))
+    )), 
+    'callback' =&gt; '/post',
+    'version' =&gt; ZOT_REVISION
+);
 
+if($recipients)
+    $params['recipients'] = json_encode($recipients);
+</pre><p>Hush-hush ultra top-secret mode </p>
+<pre class="fragment">if($remote_key) {
+    $params = aes_encapsulate($params,$remote_key);
+}
+
+$x = z_post_url($url,$params);
+return($x);
+</pre> 
 <p>Referenced by <a class="el" href="include_2directory_8php.html#aa75d3b0697ca1456aaabdb37a74aa0f0">directory_run()</a>, <a class="el" href="notifier_8php.html#a568c502f626cff95e344c0748938b85d">notifier_run()</a>, and <a class="el" href="post_8php.html#af4b48181ce773ef0cdfc972441445c34">post_init()</a>.</p>
 
 </div>
@@ -523,6 +544,8 @@ Functions</h2></td></tr>
         </tr>
       </table>
 </div><div class="memdoc">
+<p>: zot_fetch</p>
+<p>We received a notification packet (in <a class="el" href="post_8php.html">mod/post.php</a>) that a message is waiting for us, and we've verified the sender. Now send back a pickup message, using our message tracking ID ($arr['secret']), which we will sign. The entire pickup message is encrypted with the remote site's public key. If everything checks out on the remote end, we will receive back a packet containing one or more messages, which will be processed before returning. </p>
 
 <p>Referenced by <a class="el" href="post_8php.html#af59e6a1dc22d19d9257b01cd7ccedb75">post_post()</a>.</p>
 
@@ -551,6 +574,16 @@ Functions</h2></td></tr>
         </tr>
       </table>
 </div><div class="memdoc">
+<p>: zot_finger</p>
+<p>Look up information about channel </p>
+<dl class="params"><dt>Parameters</dt><dd>
+  <table class="params">
+    <tr><td class="paramname"></td><td>string $webbie does not have to be host qualified e.g. 'foo' is treated as 'foo' </td></tr>
+    <tr><td class="paramname"></td><td>array $channel (optional), if supplied permissions will be enumerated specifically for $channel</td></tr>
+  </table>
+  </dd>
+</dl>
+<dl class="section return"><dt>Returns</dt><dd>: array =&gt; see z_post_url and <a class="el" href="zfinger_8php.html">mod/zfinger.php</a> </dd></dl>
 
 <p>Referenced by <a class="el" href="chanview_8php.html#a4192c6da888c8c1165851acf9ad4cb8b">chanview_content()</a>, <a class="el" href="gprobe_8php.html#adf72cb0a70b5b9d99fdec1cc60e18ed1">gprobe_run()</a>, <a class="el" href="magic_8php.html#acea2cc792849ca2d71d4b689f66518bf">magic_init()</a>, <a class="el" href="mod_2message_8php.html#a0db7030362a7e9ed9549b341d7b35718">message_post()</a>, <a class="el" href="include_2follow_8php.html#a6553a7650fae55f95660510d90983144">new_contact()</a>, <a class="el" href="socgraph_8php.html#aad9ee2421fd1ca405b241e8ed72d9aca">poco_load()</a>, <a class="el" href="post_8php.html#af4b48181ce773ef0cdfc972441445c34">post_init()</a>, and <a class="el" href="probe_8php.html#a1f1db3fa6038e451e737964c94bf5e99">probe_content()</a>.</p>
 
@@ -581,7 +614,7 @@ Functions</h2></td></tr>
 </div><div class="memdoc">
 <p>Given an array of zot hashes, return all distinct hubs If primary is true, return only primary hubs Result is ordered by url to assist in batching. Return only the first primary hub as there should only be one. </p>
 
-<p>Referenced by <a class="el" href="zfinger_8php.html#a8139b83a22ef98869adc10aa224027a0">zfinger_init()</a>, and <a class="el" href="zperms_8php.html#a2f698dcd51150bda3146425f038da628">zperms_init()</a>.</p>
+<p>Referenced by <a class="el" href="zfinger_8php.html#a8139b83a22ef98869adc10aa224027a0">zfinger_init()</a>.</p>
 
 </div>
 </div>
@@ -598,6 +631,9 @@ Functions</h2></td></tr>
         </tr>
       </table>
 </div><div class="memdoc">
+<p>: zot_gethub</p>
+<p>A guid and a url, both signed by the sender, distinguish a known sender at a known location This function looks these up to see if the channel is known. If not, we will need to verify it. </p>
+<dl class="section return"><dt>Returns</dt><dd>: array =&gt; hubloc record </dd></dl>
 
 <p>Referenced by <a class="el" href="import_8php.html#af17fef0410518f7eac205d0ea416eaa2">import_post()</a>, <a class="el" href="post_8php.html#af59e6a1dc22d19d9257b01cd7ccedb75">post_post()</a>, and <a class="el" href="zot_8php.html#a61cdc1ec843663c423ed2d8160ae5aea">zot_fetch()</a>.</p>
 
@@ -616,6 +652,9 @@ Functions</h2></td></tr>
         </tr>
       </table>
 </div><div class="memdoc">
+<p>zot_import</p>
+<p>Process an incoming array of messages which were obtained via pickup, and import, update, delete as directed.</p>
+<p>The message types handled here are 'activity' (e.g. posts), 'mail' and 'profile' </p>
 
 <p>Referenced by <a class="el" href="deliver_8php.html#a397afcb9afecf0c1816b0951189dd346">deliver_run()</a>, and <a class="el" href="zot_8php.html#a61cdc1ec843663c423ed2d8160ae5aea">zot_fetch()</a>.</p>
 
@@ -638,50 +677,6 @@ Functions</h2></td></tr>
 <dl class="section return"><dt>Returns</dt><dd>string </dd></dl>
 
 <p>Referenced by <a class="el" href="identity_8php.html#a345f4c943d84de502ec6e72d2c813945">create_identity()</a>.</p>
-
-</div>
-</div>
-<a class="anchor" id="af22a8732e60d30055617a95f77493446"></a>
-<div class="memitem">
-<div class="memproto">
-      <table class="memname">
-        <tr>
-          <td class="memname">zot_notify </td>
-          <td>(</td>
-          <td class="paramtype">&#160;</td>
-          <td class="paramname"><em>$channel</em>, </td>
-        </tr>
-        <tr>
-          <td class="paramkey"></td>
-          <td></td>
-          <td class="paramtype">&#160;</td>
-          <td class="paramname"><em>$url</em>, </td>
-        </tr>
-        <tr>
-          <td class="paramkey"></td>
-          <td></td>
-          <td class="paramtype">&#160;</td>
-          <td class="paramname"><em>$type</em> = <code>'notify'</code>, </td>
-        </tr>
-        <tr>
-          <td class="paramkey"></td>
-          <td></td>
-          <td class="paramtype">&#160;</td>
-          <td class="paramname"><em>$recipients</em> = <code>null</code>, </td>
-        </tr>
-        <tr>
-          <td class="paramkey"></td>
-          <td></td>
-          <td class="paramtype">&#160;</td>
-          <td class="paramname"><em>$remote_key</em> = <code>null</code>&#160;</td>
-        </tr>
-        <tr>
-          <td></td>
-          <td>)</td>
-          <td></td><td></td>
-        </tr>
-      </table>
-</div><div class="memdoc">
 
 </div>
 </div>
@@ -742,6 +737,8 @@ Functions</h2></td></tr>
         </tr>
       </table>
 </div><div class="memdoc">
+<p>: zot_refresh</p>
+<p>zot_refresh is typically invoked when somebody has changed permissions of a channel and they are notified to fetch new permissions via a finger operation. This may result in a new connection (abook entry) being added to a local channel and it may result in auto-permissions being granted. </p>
 
 <p>Referenced by <a class="el" href="connections_8php.html#aec2e457420fce3e3bf6a9f48e36df25c">connections_content()</a>, <a class="el" href="items_8php.html#ae73794179b62d39bb597ff670ab1c1e5">import_author_xchan()</a>, <a class="el" href="onepoll_8php.html#a72753b2fdec79b37c7f432035c91fb6d">onepoll_run()</a>, and <a class="el" href="post_8php.html#af59e6a1dc22d19d9257b01cd7ccedb75">post_post()</a>.</p>
 
@@ -788,6 +785,15 @@ Functions</h2></td></tr>
         </tr>
       </table>
 </div><div class="memdoc">
+<p>: zot_zot </p>
+<dl class="params"><dt>Parameters</dt><dd>
+  <table class="params">
+    <tr><td class="paramname"></td><td>string $url </td></tr>
+    <tr><td class="paramname"></td><td>array $data</td></tr>
+  </table>
+  </dd>
+</dl>
+<dl class="section return"><dt>Returns</dt><dd>: array =&gt; see z_post_url for returned data format </dd></dl>
 
 <p>Referenced by <a class="el" href="deliver_8php.html#a397afcb9afecf0c1816b0951189dd346">deliver_run()</a>, <a class="el" href="include_2directory_8php.html#aa75d3b0697ca1456aaabdb37a74aa0f0">directory_run()</a>, <a class="el" href="notifier_8php.html#a568c502f626cff95e344c0748938b85d">notifier_run()</a>, <a class="el" href="post_8php.html#af4b48181ce773ef0cdfc972441445c34">post_init()</a>, <a class="el" href="queue_8php.html#af8c93de86d866c3200174c8450a0f341">queue_run()</a>, and <a class="el" href="zot_8php.html#a61cdc1ec843663c423ed2d8160ae5aea">zot_fetch()</a>.</p>
 
