@@ -18,11 +18,9 @@ var searchData=
   ['zot_5fgethub',['zot_gethub',['../zot_8php.html#a55056e863a7860bc0cf922e78fcce073',1,'zot.php']]],
   ['zot_5fimport',['zot_import',['../zot_8php.html#a22e3f9b97b7969ddbe43ccf0db93a19c',1,'zot.php']]],
   ['zot_5fnew_5fuid',['zot_new_uid',['../zot_8php.html#ab22d67660702056bf3f4696dcebf5ce7',1,'zot.php']]],
-  ['zot_5fnotify',['zot_notify',['../zot_8php.html#af22a8732e60d30055617a95f77493446',1,'zot.php']]],
   ['zot_5fprocess_5fresponse',['zot_process_response',['../zot_8php.html#a928f5643ca66ae9635d85aeb2be62e03',1,'zot.php']]],
   ['zot_5frefresh',['zot_refresh',['../zot_8php.html#a7b23bfb31d4491231e1e73bdc077240d',1,'zot.php']]],
   ['zot_5fregister_5fhub',['zot_register_hub',['../zot_8php.html#a5bcdfef419b16075a0eca990956223dc',1,'zot.php']]],
   ['zot_5fzot',['zot_zot',['../zot_8php.html#ab3e9b99ddb11353f37f265a05bb42142',1,'zot.php']]],
-  ['zotfeed_5finit',['zotfeed_init',['../zotfeed_8php.html#a24dfc23d366e7f840cf2847d0c1c8eac',1,'zotfeed.php']]],
-  ['zperms_5finit',['zperms_init',['../zperms_8php.html#a2f698dcd51150bda3146425f038da628',1,'zperms.php']]]
+  ['zotfeed_5finit',['zotfeed_init',['../zotfeed_8php.html#a24dfc23d366e7f840cf2847d0c1c8eac',1,'zotfeed.php']]]
 ];

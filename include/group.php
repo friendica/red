@@ -52,40 +52,43 @@ function group_add($uid,$name) {
 function group_rmv($uid,$name) {
 	$ret = false;
 	if(x($uid) && x($name)) {
-		$r = q("SELECT id FROM `group` WHERE `uid` = %d AND `name` = '%s' LIMIT 1",
+		$r = q("SELECT id, hash FROM `group` WHERE `uid` = %d AND `name` = '%s' LIMIT 1",
 			intval($uid),
 			dbesc($name)
 		);
-		if(count($r))
+		if($r) {
 			$group_id = $r[0]['id'];
+			$group_hash = $r[0]['hash'];
+		}
+
 		if(! $group_id)
 			return false;
 
 		// remove group from default posting lists
-		$r = q("SELECT channel_default_gid, channel_allow_gid, channel_deny_gid FROM channel WHERE channel_id = %d LIMIT 1",
+		$r = q("SELECT channel_default_group, channel_allow_gid, channel_deny_gid FROM channel WHERE channel_id = %d LIMIT 1",
 		       intval($uid)
 		);
 		if($r) {
 			$user_info = $r[0];
 			$change = false;
 
-			if($user_info['channel_default_gid'] == $group_id) {
-				$user_info['channel_default_gid'] = 0;
+			if($user_info['channel_default_group'] == $group_hash) {
+				$user_info['channel_default_group'] = '';
 				$change = true;
 			}
 			if(strpos($user_info['channel_allow_gid'], '<' . $group_id . '>') !== false) {
-				$user_info['channel_allow_gid'] = str_replace('<' . $group_id . '>', '', $user_info['channel_allow_gid']);
+				$user_info['channel_allow_gid'] = str_replace('<' . $group_hash . '>', '', $user_info['channel_allow_gid']);
 				$change = true;
 			}
 			if(strpos($user_info['channel_deny_gid'], '<' . $group_id . '>') !== false) {
-				$user_info['channel_deny_gid'] = str_replace('<' . $group_id . '>', '', $user_info['channel_deny_gid']);
+				$user_info['channel_deny_gid'] = str_replace('<' . $group_hash . '>', '', $user_info['channel_deny_gid']);
 				$change = true;
 			}
 
 			if($change) {
-				q("UPDATE channel SET channel_default_gid = %d, channel_allow_gid = '%s', channel_deny_gid = '%s' 
+				q("UPDATE channel SET channel_default_group = '%s', channel_allow_gid = '%s', channel_deny_gid = '%s' 
 				WHERE channel_id = %d",
-				  intval($user_info['channel_default_gid']),
+				  intval($user_info['channel_default_group']),
 				  dbesc($user_info['channel_allow_gid']),
 				  dbesc($user_info['channel_deny_gid']),
 				  intval($uid)
@@ -121,6 +124,19 @@ function group_byname($uid,$name) {
 	);
 	if(count($r))
 		return $r[0]['id'];
+	return false;
+}
+
+
+function group_rec_byhash($uid,$hash) {
+	if((! $uid) || (! strlen($hash)))
+		return false;
+	$r = q("SELECT * FROM `group` WHERE `uid` = %d AND `hash` = '%s' LIMIT 1",
+		intval($uid),
+		dbesc($hash)
+	);
+	if($r)
+		return $r[0];
 	return false;
 }
 

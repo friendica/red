@@ -111,7 +111,10 @@ function new_contact($uid,$url,$channel,$interactive = false) {
 
 	if((local_user()) && $uid == local_user()) {
 		$aid = get_account_id();
-		$hash = $a->observer['xchan_hash'];
+		$hash = get_observer_hash();
+		$ch = $a->get_channel();
+		$default_group = $ch['channel_default_group'];
+
 	}
 	else {
 		$r = q("select * from channel where channel_id = %d limit 1",
@@ -123,6 +126,7 @@ function new_contact($uid,$url,$channel,$interactive = false) {
 		}
 		$aid = $r[0]['channel_account_id'];
 		$hash = $r[0]['channel_hash'];			
+		$default_group = $r[0]['channel_default_group'];
 	}
 	
 	if($hash == $xchan_hash) {
@@ -163,59 +167,16 @@ function new_contact($uid,$url,$channel,$interactive = false) {
 	if($r)
 		$result['abook'] = $r[0];
 
-	// Then send a ping/message to the other side
+	/** If there is a default group for this channel, add this member to it */
 
-
-/*
-
-	$r = q("INSERT INTO `contact` ( `uid`, `created`, `url`, `nurl`, `addr`, `alias`, `batch`, `notify`, `poll`, `poco`, `name`, `nick`, `photo`, `network`, `pubkey`, `rel`, `priority`,
-			`writable`, `hidden`, `blocked`, `readonly`, `pending` )
-			VALUES ( %d, '%s', '%s', '%s', '%s', '%s', '%s', '%s', '%s', '%s', '%s', '%s', '%s', '%s', '%s', %d, %d, %d, %d, 0, 0, 0) ",
-			intval($uid),
-			dbesc(datetime_convert()),
-			dbesc($ret['url']),
-			dbesc(normalise_link($ret['url'])),
-			dbesc($ret['addr']),
-			dbesc($ret['alias']),
-			dbesc($ret['batch']),
-			dbesc($ret['notify']),
-			dbesc($ret['poll']),
-			dbesc($ret['poco']),
-			dbesc($ret['name']),
-			dbesc($ret['nick']),
-			dbesc($ret['photo']),
-			dbesc($ret['network']),
-			dbesc($ret['pubkey']),
-			intval($new_relation),
-			intval($ret['priority']),
-			intval($writeable),
-			intval($hidden)
-		);
-	}
-
-	$r = q("SELECT * FROM `contact` WHERE `url` = '%s' AND `uid` = %d LIMIT 1",
-		dbesc($ret['url']),
-		intval($uid)
-	);
-
-	if(! count($r)) {
-		$result['message'] .=  t('Unable to retrieve contact information.') . EOL;
-		return $result;
-	}
-
-	$contact = $r[0];
-	$contact_id  = $r[0]['id'];
-
-
-	$g = q("select def_gid from user where uid = %d limit 1",
-		intval($uid)
-	);
-	if($g && intval($g[0]['def_gid'])) {
+	if($default_group) {
 		require_once('include/group.php');
-		group_add_member($uid,'',$contact_id,$g[0]['def_gid']);
+		$g = group_rec_byhash($uid,$default_group);
+		if($g)
+			group_add_member($uid,'',$xchan_hash,$g['id']);
 	}
 
-*/
+	// Then send a ping/message to the other side
 
 
 	$result['success'] = true;

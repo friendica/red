@@ -10,6 +10,7 @@ function get_capath() {
 
 // curl wrapper. If binary flag is true, return binary
 // results. 
+
 /**
  * fetch_url is deprecated and being replaced by the more capable z_fetch_url
  * please use that function instead.
@@ -204,6 +205,26 @@ function post_url($url,$params, $headers = null, &$redirects = 0, $timeout = 0) 
 	return($body);
 }
 
+/**
+ * @function z_fetch_url
+ * @param string $url
+ *    URL to fetch
+ * @param boolean $binary = false
+ *    TRUE if asked to return binary results (file download)
+ * @param int $redirects = 0
+ *    internal use, recursion counter
+ * @param array $opts (optional parameters)
+ *    'accept_content' => supply Accept: header with 'accept_content' as the value
+ *    'timeout' => int seconds, default system config value or 60 seconds
+ *    'http_auth' => username:password
+ *    'novalidate' => do not validate SSL certs, default is to validate using our CA list
+ *    
+ * @returns array
+ *    'return_code' => HTTP return code or 0 if timeout or failure
+ *    'success' => boolean true (if HTTP 2xx result) or false
+ *    'header' => HTTP headers
+ *    'body' => fetched content
+ */
 
 function z_fetch_url($url, $binary = false, $redirects = 0, $opts = array()) {
 
@@ -421,7 +442,15 @@ function xml_status($st, $message = '') {
 	killme();
 }
 
-
+/**
+ * @function http_status_exit
+ * 
+ * Send HTTP status header and exit
+ * @param int $val
+ *    integer HTTP status result value
+ *
+ * @returns (does not return, process is terminated)
+ */
 
 function http_status_exit($val) {
 

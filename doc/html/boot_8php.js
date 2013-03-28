@@ -180,6 +180,7 @@ var boot_8php =
     [ "NOTIFY_WALL", "boot_8php.html#a505410c7edc5f5bb5fa227b98359793e", null ],
     [ "PAGE_APPLICATION", "boot_8php.html#a8231d115060d41a9c2a677f2c86f10ed", null ],
     [ "PAGE_AUTOCONNECT", "boot_8php.html#aa275653b9c87abc7391bb8040c1c2de9", null ],
+    [ "PAGE_DIRECTORY_CHANNEL", "boot_8php.html#a5b8484922918946d041e5e0515dbe718", null ],
     [ "PAGE_HIDDEN", "boot_8php.html#a5e322a2a2d0f51924c0b2e874988e640", null ],
     [ "PAGE_NORMAL", "boot_8php.html#a09532c3f750ae8c4527e63b2b790cbf3", null ],
     [ "PAGE_REMOVED", "boot_8php.html#a4edce16cb7f21cdafa1e85bf63d713e6", null ],

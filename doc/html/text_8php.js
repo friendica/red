@@ -61,7 +61,7 @@ var text_8php =
     [ "photo_new_resource", "text_8php.html#aa5528f41533927e1bd2da3618a74a6d7", null ],
     [ "preg_heart", "text_8php.html#ac19d2b33a58372a357a43d51eed19162", null ],
     [ "prepare_body", "text_8php.html#af3a7139d40ea758f315c2acf2ccc1b1c", null ],
-    [ "prepare_text", "text_8php.html#a70c59f9fde874ef711390d48b407d7ef", null ],
+    [ "prepare_text", "text_8php.html#afe54312607d92f7ce9593f5760831f80", null ],
     [ "profiler", "text_8php.html#a8b0a799341b1fc4cba2c3ede3e3fc9b6", null ],
     [ "protect_sprintf", "text_8php.html#a4e7698aca48982512594b274543c3b9b", null ],
     [ "qp", "text_8php.html#afc998d2796a6b2a08e96f7cc061e7221", null ],

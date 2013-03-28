@@ -35,12 +35,12 @@ var NAVTREE =
 var NAVTREEINDEX =
 [
 "BaseObject_8php.html",
-"boot_8php.html#ab5ddbe69d3d03acd06e1fb281488cb78",
-"classPhoto.html#a4ff11117ada771637a61a668d2af6636",
-"friendica-to-smarty-tpl_8py.html#a68d15934660cd1f4301ce251b1646f09",
-"include_2network_8php.html#a850ed5307c6a18076f4b80addc99602d",
-"plugin_8php.html#a901657dd078e070516cf97285e0bada7",
-"text_8php.html#ae4282a39492caa23ccbc2ce98e54f110"
+"boot_8php.html#ab55e545b72ec8c097e052ea7d373491f",
+"classPhoto.html#a4ace266825f6b2bbc3c7f990f5d92500",
+"friendica-to-smarty-tpl_8py.html#a5f9bf7a67d955c0d6be70a82097611c5",
+"include_2network_8php.html#a78e89557b2fbd344ad790846d761b0c7",
+"plugin_8php.html#a754d7f53b3abc557b753c057dc4e021d",
+"text_8php.html#ae2126da85966da0e79c6bcbac63b0bda"
 ];
 
 var SYNCONMSG = 'click to disable panel synchronisation';

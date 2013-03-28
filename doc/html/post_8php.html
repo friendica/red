@@ -148,6 +148,14 @@ Functions</h2></td></tr>
         </tr>
       </table>
 </div><div class="memdoc">
+<p>Many message packets will arrive encrypted. The existence of an 'iv' element tells us we need to unencapsulate the AES-256-CBC content using the site private key</p>
+<p>The 'pickup' message arrives with a tracking ID which is associated with a particular outq_hash First verify that that the returned signatures verify, then check that we have an outbound queue item with the correct hash. If everything verifies, find any/all outbound messages in the queue for this hubloc and send them back</p>
+<p>If we made it to here, the signatures verify, but we still don't know if the tracking ID is valid. It wouldn't be an error if the tracking ID isn't found, because we may have sent this particular queue item with another pickup (after the tracking ID for the other pickup was verified).</p>
+<p>Everything is good if we made it here, so find all messages that are going to this location and send them all.</p>
+<p>pickup: end</p>
+<p>All other message types require us to verify the sender. This is a generic check, so we will do it once here and bail if anything goes wrong.</p>
+<p>Check if the sender is already verified here</p>
+<p>Have never seen this guid or this guid coming from this location. Check it and register it. </p>
 
 </div>
 </div>

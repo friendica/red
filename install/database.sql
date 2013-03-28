@@ -160,7 +160,7 @@ CREATE TABLE IF NOT EXISTS `channel` (
   `channel_max_friend_req` int(10) unsigned NOT NULL DEFAULT '10',
   `channel_expire_days` int(11) NOT NULL DEFAULT '0',
   `channel_passwd_reset` char(255) NOT NULL DEFAULT '',
-  `channel_default_gid` int(10) unsigned NOT NULL DEFAULT '0',
+  `channel_default_group` char(255) NOT NULL DEFAULT '',
   `channel_allow_cid` mediumtext NOT NULL,
   `channel_allow_gid` mediumtext NOT NULL,
   `channel_deny_cid` mediumtext NOT NULL,
@@ -537,10 +537,10 @@ CREATE TABLE IF NOT EXISTS `mail` (
 CREATE TABLE IF NOT EXISTS `manage` (
   `id` int(11) NOT NULL AUTO_INCREMENT,
   `uid` int(11) NOT NULL,
-  `mid` int(11) NOT NULL,
+  `xchan` char(255) NOT NULL DEFAULT '',
   PRIMARY KEY (`id`),
   KEY `uid` (`uid`),
-  KEY `mid` (`mid`)
+  KEY `xchan` (`xchan`)
 ) ENGINE=MyISAM DEFAULT CHARSET=utf8;
 
 CREATE TABLE IF NOT EXISTS `menu` (

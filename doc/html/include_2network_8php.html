@@ -477,6 +477,15 @@ Functions</h2></td></tr>
         </tr>
       </table>
 </div><div class="memdoc">
+<p>http_status_exit</p>
+<p>Send HTTP status header and exit </p>
+<dl class="params"><dt>Parameters</dt><dd>
+  <table class="params">
+    <tr><td class="paramtype">int</td><td class="paramname">$val</td><td>integer HTTP status result value</td></tr>
+  </table>
+  </dd>
+</dl>
+<dl class="section return"><dt>Returns</dt><dd>(does not return, process is terminated) </dd></dl>
 
 <p>Referenced by <a class="el" href="__well__known_8php.html#a6ebfa937a2024f0b5dab53f0ac90fed0">_well_known_init()</a>, and <a class="el" href="poco_8php.html#a53def16f75e3d41f1d2bb7cfa4905498">poco_init()</a>.</p>
 
@@ -496,7 +505,7 @@ Functions</h2></td></tr>
       </table>
 </div><div class="memdoc">
 
-<p>Referenced by <a class="el" href="include_2api_8php.html#adfc035ee6303c1d8ba5336a4ead2bd53">api_export_basic()</a>, <a class="el" href="dirsearch_8php.html#aa1fb04e1de4f25b63349ac78f94ceb4c">dirsearch_content()</a>, <a class="el" href="new__channel_8php.html#a1ad7f99e4366a32942c6b954aba3a164">new_channel_init()</a>, <a class="el" href="post_8php.html#af59e6a1dc22d19d9257b01cd7ccedb75">post_post()</a>, <a class="el" href="register_8php.html#ae20c0cd40f738d6295de58b9202c83d5">register_init()</a>, <a class="el" href="zfinger_8php.html#a8139b83a22ef98869adc10aa224027a0">zfinger_init()</a>, <a class="el" href="zotfeed_8php.html#a24dfc23d366e7f840cf2847d0c1c8eac">zotfeed_init()</a>, and <a class="el" href="zperms_8php.html#a2f698dcd51150bda3146425f038da628">zperms_init()</a>.</p>
+<p>Referenced by <a class="el" href="include_2api_8php.html#adfc035ee6303c1d8ba5336a4ead2bd53">api_export_basic()</a>, <a class="el" href="dirsearch_8php.html#aa1fb04e1de4f25b63349ac78f94ceb4c">dirsearch_content()</a>, <a class="el" href="new__channel_8php.html#a1ad7f99e4366a32942c6b954aba3a164">new_channel_init()</a>, <a class="el" href="post_8php.html#af59e6a1dc22d19d9257b01cd7ccedb75">post_post()</a>, <a class="el" href="register_8php.html#ae20c0cd40f738d6295de58b9202c83d5">register_init()</a>, <a class="el" href="zfinger_8php.html#a8139b83a22ef98869adc10aa224027a0">zfinger_init()</a>, and <a class="el" href="zotfeed_8php.html#a24dfc23d366e7f840cf2847d0c1c8eac">zotfeed_init()</a>.</p>
 
 </div>
 </div>
@@ -826,6 +835,17 @@ Functions</h2></td></tr>
         </tr>
       </table>
 </div><div class="memdoc">
+<p>z_fetch_url </p>
+<dl class="params"><dt>Parameters</dt><dd>
+  <table class="params">
+    <tr><td class="paramtype">string</td><td class="paramname">$url</td><td>URL to fetch </td></tr>
+    <tr><td class="paramtype">boolean</td><td class="paramname">$binary</td><td>= false TRUE if asked to return binary results (file download) </td></tr>
+    <tr><td class="paramtype">int</td><td class="paramname">$redirects</td><td>= 0 internal use, recursion counter </td></tr>
+    <tr><td class="paramtype">array</td><td class="paramname">$opts</td><td>(optional parameters) 'accept_content' =&gt; supply Accept: header with 'accept_content' as the value 'timeout' =&gt; int seconds, default system config value or 60 seconds 'http_auth' =&gt; username:password 'novalidate' =&gt; do not validate SSL certs, default is to validate using our CA list</td></tr>
+  </table>
+  </dd>
+</dl>
+<dl class="section return"><dt>Returns</dt><dd>array 'return_code' =&gt; HTTP return code or 0 if timeout or failure 'success' =&gt; boolean true (if HTTP 2xx result) or false 'header' =&gt; HTTP headers 'body' =&gt; fetched content </dd></dl>
 
 <p>Referenced by <a class="el" href="setup_8php.html#a0c3f3b671381f6dccd924b8ecdfc56c4">check_htaccess()</a>, <a class="el" href="mod_2directory_8php.html#aac79396570d759da2efac24fcedf5b44">directory_content()</a>, <a class="el" href="import_8php.html#af17fef0410518f7eac205d0ea416eaa2">import_post()</a>, <a class="el" href="Photo_8php.html#a102f3f26f67e0e38f4322a771951c1ca">import_profile_photo()</a>, <a class="el" href="acl_8php.html#a57dceff370d4a0e7ae673d50fbfda61f">navbar_complete()</a>, <a class="el" href="include_2oembed_8php.html#a98549b9af8140eda3eceaeedcaabc2c2">oembed_fetch_url()</a>, <a class="el" href="onepoll_8php.html#a72753b2fdec79b37c7f432035c91fb6d">onepoll_run()</a>, <a class="el" href="parse__url_8php.html#a25635549f2c22955d72465f4d2e58993">parseurl_getsiteinfo()</a>, <a class="el" href="socgraph_8php.html#aad9ee2421fd1ca405b241e8ed72d9aca">poco_load()</a>, <a class="el" href="include_2network_8php.html#a6259181fec4d36722d1e91ac6210e876">z_post_url()</a>, <a class="el" href="zot_8php.html#a77720d6b59894e9b609af89c310c8a4d">zot_finger()</a>, and <a class="el" href="zot_8php.html#a5bcdfef419b16075a0eca990956223dc">zot_register_hub()</a>.</p>
 
@@ -873,7 +893,7 @@ Functions</h2></td></tr>
       </table>
 </div><div class="memdoc">
 
-<p>Referenced by <a class="el" href="zot_8php.html#a77720d6b59894e9b609af89c310c8a4d">zot_finger()</a>, <a class="el" href="zot_8php.html#af22a8732e60d30055617a95f77493446">zot_notify()</a>, <a class="el" href="zot_8php.html#a7b23bfb31d4491231e1e73bdc077240d">zot_refresh()</a>, and <a class="el" href="zot_8php.html#ab3e9b99ddb11353f37f265a05bb42142">zot_zot()</a>.</p>
+<p>Referenced by <a class="el" href="zot_8php.html#a77720d6b59894e9b609af89c310c8a4d">zot_finger()</a>, <a class="el" href="zot_8php.html#a7b23bfb31d4491231e1e73bdc077240d">zot_refresh()</a>, and <a class="el" href="zot_8php.html#ab3e9b99ddb11353f37f265a05bb42142">zot_zot()</a>.</p>
 
 </div>
 </div>

@@ -1,5 +1,6 @@
 var identity_8php =
 [
+    [ "create_dir_account", "identity_8php.html#abf6a9c6ed92d594f1d4513c4e22a7abd", null ],
     [ "create_identity", "identity_8php.html#a345f4c943d84de502ec6e72d2c813945", null ],
     [ "identity_basic_export", "identity_8php.html#a3570a4eb77332b292d394c4132cb8f03", null ],
     [ "identity_basic_import", "identity_8php.html#a77ee7d66eb0758f7e7882f70ad0f9485", null ],

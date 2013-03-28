@@ -1,11 +1,8 @@
-Friendica RED Interaction Engine
-================================
+Friendica RED
+=============
 
-Red is a new concept in electronic communications which is based on our earlier work with Friendica and our pioneering developments in decentralised, federated social networking. 
+Red is essentially a "personal CMS" linked to a decentralised permissions and communication platform. This creates a grid of small servers which link together to form a much larger system (much like the internet itself).  This allows one to create services with social contexts and extensible permission controls which are all integrated together as if they were offered by a single large data provider - but without the inherent privacy problems and costs associated with centralisation. Privacy and access controls are instead maintained at the local level where they can be enforced by those who own the data being shared. Additionally, identities in Red are not tied to DNS endpoints and have some degree of mobility between providers.
 
-Red is prototype code and has limited functionality at the present time. This message will be changed when it approaches stability.
-
-At its heart, Red is a decentralised collection of location agnostic info streams (e.g. "channels") which are attached to permission controlled web resources, and which have the ability to discover each other and interact. You could call it a type of social network, but that would be degrading. This is a different concept in online communications, starting where social networks leave off and extending those somewhat primitive types of interactions in new ways - particularly when it comes to privacy.  
-  
-
-Social networking emulation is one form that these streams can take, but they can take many other forms - limited only by your imagination. 
+For example, let's say "Iggy Normak" is a colleague of mine. I can create a web service called "Mike Macgirvin" which acts as a blog or social networking hub, and share files and data with Iggy. These are stored on my website, which is served by a small hosting provider (or perhaps running on an old PC in my garage). Iggy can access my private photos from anywhere on the web, while logged into any Red website (for instance, from Iggy's own business website) - without encountering any additional authentication dialogues. Nobody else is able to access these files and photos without my permission, even if they "guess the URL". This kind of decentralised access control is somewhat unique and opens up new possibilities for creating very large scale web services from smaller operators, providers, and website designers.  
+ 
+Red has somewhat limited functionality at the present time, and is being provided as a "developer preview". The communication layers, authentication and permission systems are all basically functional. Much development work remains. Red is free and open source distributed under the MIT license.
