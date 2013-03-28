@@ -160,7 +160,7 @@ CREATE TABLE IF NOT EXISTS `channel` (
   `channel_max_friend_req` int(10) unsigned NOT NULL DEFAULT '10',
   `channel_expire_days` int(11) NOT NULL DEFAULT '0',
   `channel_passwd_reset` char(255) NOT NULL DEFAULT '',
-  `channel_default_gid` int(10) unsigned NOT NULL DEFAULT '0',
+  `channel_default_group` char(255) NOT NULL DEFAULT '',
   `channel_allow_cid` mediumtext NOT NULL,
   `channel_allow_gid` mediumtext NOT NULL,
   `channel_deny_cid` mediumtext NOT NULL,
