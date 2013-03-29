@@ -8,5 +8,5 @@
 
 	<div class="page-author"><a class=="page-author-link" href="{{$auth_url}}">{{$author}}</a></div>
 	<div class="page-date">{{$date}}</div>
-	<div class="page-body">{{$body}}</div>
+	<div class="page-body">body</div>
 </div>

@@ -1,5 +1,11 @@
+<script type="text/javascript" charset="utf-8">
+  $(document).ready(function(){
+    $("a[rel^='prettyPhoto']").prettyPhoto();
+  });
+</script>
+
 <div class="photo-album-image-wrapper" id="photo-album-image-wrapper-$id">
-	<a href="$photolink" class="photo-album-photo-link" id="photo-album-photo-link-$id" title="$phototitle">
+	<a href="$photolink" class="photo-album-photo-link" id="photo-album-photo-link-$id" title="$phototitle" rel="$rel">
 		<img src="$imgsrc" alt="$imgalt" title="$phototitle" class="photo-album-photo lframe resize$twist" id="photo-album-photo-$id" />
 		<p class='caption'>$desc</p>		
 	</a>
