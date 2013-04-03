@@ -193,7 +193,7 @@ CREATE TABLE IF NOT EXISTS `channel` (
   KEY `channel_pageflags` (`channel_pageflags`),
   KEY `channel_max_anon_mail` (`channel_max_anon_mail`),
   KEY `channel_max_friend_req` (`channel_max_friend_req`),
-  KEY `channel_default_gid` (`channel_default_gid`),
+  KEY `channel_default_group` (`channel_default_group`),
   KEY `channel_r_stream` (`channel_r_stream`),
   KEY `channel_r_profile` (`channel_r_profile`),
   KEY `channel_r_photos` (`channel_r_photos`),
