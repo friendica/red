@@ -835,7 +835,6 @@ function photos_content(&$a) {
 			$o .= '<div class="photos-upload-link" ><a href="' . $a->get_baseurl() . '/photos/' . $a->data['channel']['channel_address'] . '/upload/' . bin2hex($album) . '" >' . t('Upload New Photos') . '</a></div>';
 		}
 
-
 		$tpl = get_markup_template('photo_album.tpl');
 		if(count($r))
 			$twist = 'rotright';
@@ -856,15 +855,26 @@ function photos_content(&$a) {
 					$desc_e = $rr['desc'];
 				}
 
+        
+				if(feature_enabled($a->data['channel']['channel_id'],'prettyphoto')){
+				      $imagelink = ($a->get_baseurl() . '/photo/' . $rr['resource_id'] . '.' . $ext );
+				      $rel=("prettyPhoto[pp_gal]");
+				}
+				else {
+				      $imagelink = ($a->get_baseurl() . '/photos/' . $a->data['channel']['channel_address'] . '/image/' . $rr['resource_id']
+				      . (($_GET['order'] === 'posted') ? '?f=&order=posted' : ''));
+				      $rel=("photo");
+				}
+      
 				$o .= replace_macros($tpl,array(
 					'$id' => $rr['id'],
 					'$twist' => ' ' . $twist . rand(2,4),
-					'$photolink' => $a->get_baseurl() . '/photos/' . $a->data['channel']['channel_address'] . '/image/' . $rr['resource_id']
-						. (($_GET['order'] === 'posted') ? '?f=&order=posted' : ''),
+					'$photolink' => $imagelink,
+					'$rel' => $rel,
 					'$phototitle' => t('View Photo'),
 					'$imgsrc' => $a->get_baseurl() . '/photo/' . $rr['resource_id'] . '-' . $rr['scale'] . '.' .$ext,
 					'$imgalt' => $imgalt_e,
-					'$desc'=> $desc_e
+					'$desc'=> $desc_e,
 				));
 
 		}
