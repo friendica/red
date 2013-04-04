@@ -365,7 +365,7 @@ function construct_activity_target($item) {
  *		The purpose of this function is to apply system message length limits to
  *		imported messages without including any embedded photos in the length
  */
-if(! function_exists('limit_body_size')) {
+
 function limit_body_size($body) {
 
 	$maxlen = get_max_import_size();
@@ -443,7 +443,7 @@ function limit_body_size($body) {
 	}
 	else
 		return $body;
-}}
+}
 
 function title_is_body($title, $body) {
 
@@ -1339,6 +1339,7 @@ function item_store($arr,$force_parent = false) {
 	$arr['location']      = ((x($arr,'location'))      ? notags(trim($arr['location']))      : '');
 	$arr['coord']         = ((x($arr,'coord'))         ? notags(trim($arr['coord']))         : '');
 	$arr['parent_mid']    = ((x($arr,'parent_mid'))    ? notags(trim($arr['parent_mid']))    : '');
+	$arr['thr_parent']    = ((x($arr,'thr_parent'))    ? notags(trim($arr['thr_parent']))    : $arr['parent_mid']);
 	$arr['verb']          = ((x($arr,'verb'))          ? notags(trim($arr['verb']))          : '');
 	$arr['obj_type']      = ((x($arr,'obj_type'))      ? notags(trim($arr['obj_type']))      : '');
 	$arr['object']        = ((x($arr,'object'))        ? trim($arr['object'])                : '');
@@ -1357,8 +1358,6 @@ function item_store($arr,$force_parent = false) {
 	$arr['item_flags']    = ((x($arr,'item_flags'))    ? intval($arr['item_flags'])          : 0 );
 	
 	$arr['item_flags'] = $arr['item_flags'] | ITEM_UNSEEN;
-	
-	$arr['thr_parent'] = $arr['parent_mid'];
 
 	$arr['llink'] = z_root() . '/display/' . $arr['mid'];
 

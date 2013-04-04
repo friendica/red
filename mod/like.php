@@ -49,6 +49,7 @@ function like_content(&$a) {
 	$item = $r[0];
 
 	$owner_uid = $item['uid'];
+	$owner_aid = $item['aid'];
 
 	if(! perm_is_allowed($owner_uid,$observer['xchan_hash'],'post_comments')) {
 		notice( t('Permission denied') . EOL);
@@ -140,6 +141,7 @@ function like_content(&$a) {
 	$arr = array();
 
 	$arr['mid']          = $mid;
+	$arr['aid']          = $owner_aid;
 	$arr['uid']          = $owner_uid;
 	$arr['item_flags']   = $item_flags;
 	$arr['parent']       = $item['id'];
