@@ -53,6 +53,71 @@ function collect_recipients($item,&$private) {
 
 }
 
+/**
+ * @function post_activity_item($arr)
+ *
+ *     post an activity
+ * 
+ * @param array $arr
+ *
+ * In its simplest form one needs only to set $arr['body'] to post a note to the logged in channel's wall.
+ * Much more complex activities can be created. Permissions are checked. No filtering, tag expansion 
+ * or other processing is performed.
+ *
+ * @returns array 
+ *      'success' => true or false 
+ *      'activity' => the resulting activity if successful
+ */
+
+function post_activity_item($arr) {
+
+	$ret = array('success' => false);
+
+	if(! x($arr,'item_flags')) {
+		$arr['item_flags'] = ITEM_ORIGIN | ITEM_WALL | ITEM_THREAD_TOP;
+	}	
+
+	$channel  = get_app()->get_channel();
+	$observer = get_app()->get_observer();
+
+	$arr['aid']          = 	((x($arr,'aid')) ? $arr['aid'] : $channel['channel_account_id']);
+	$arr['uid']          = 	((x($arr,'uid')) ? $arr['uid'] : $channel['channel_id']);
+
+	if(! perm_is_allowed($arr['uid'],$observer['xchan_hash'],(($arr['parent']) ? 'post_comment' : 'post_wall'))) {
+		$ret['message'] = t('Permission denied');
+		return $ret;
+	}
+
+	$arr['mid']          = 	((x($arr,'mid')) ? $arr['mid'] : item_message_id());
+	$arr['parent_mid']   =  ((x($arr,'parent_mid')) ? $arr['parent_mid'] : $arr['mid']);
+	$arr['thr_parent']   =  ((x($arr,'thr_parent')) ? $arr['thr_parent'] : $arr['mid']);
+
+	$arr['owner_xchan']  = 	((x($arr,'owner_xchan')) ? $arr['owner_xchan'] : $channel['channel_hash']);
+	$arr['author_xchan'] = 	((x($arr,'author_xchan')) ? $arr['author_xchan'] : $observer['xchan_hash']);
+
+	$arr['verb']         = 	((x($arr,'verb')) ? $arr['verb'] : ACTIVITY_POST);
+	$arr['obj_type']     =  ((x($arr,'obj_type')) ? $arr['obj_type'] : ACTIVITY_OBJ_NOTE);
+
+	$arr['allow_cid']    = ((x($arr,'allow_cid')) ? $arr['allow_cid'] : $channel['channel_allow_cid']);
+	$arr['allow_gid']    = ((x($arr,'allow_gid')) ? $arr['allow_gid'] : $channel['channel_allow_gid']);
+	$arr['deny_cid']     = ((x($arr,'deny_cid')) ? $arr['deny_cid'] : $channel['channel_deny_cid']);
+	$arr['deny_gid']     = ((x($arr,'deny_gid')) ? $arr['deny_gid'] : $channel['channel_deny_gid']);
+
+	$post_id = item_store($arr);	
+
+	if($post_id) {
+		$arr['id'] = $post_id;
+		call_hooks('post_local_end', $arr);
+		proc_run('php','include/notifier.php','activity',$post_id);
+		$ret['success'] = true;
+		$ret['activity'] = $ret;
+	}
+
+	return $ret;
+
+}
+
+
 
 function get_public_feed($channel,$params) {
 

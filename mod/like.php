@@ -114,6 +114,8 @@ function like_content(&$a) {
 		'link'    => $links,
 		'title'   => $item['title'],
 		'content' => $item['body'],
+		'created' => $item['created'],
+		'edited'  => $item['edited'],
 		'author'  => array(
 			'name'     => $item_author['xchan_name'],
 			'address'  => $item_author['xchan_addr'],
