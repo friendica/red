@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: \n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2013-03-29 00:01-0700\n"
+"POT-Creation-Date: 2013-04-05 00:01-0700\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -332,7 +332,7 @@ msgid "event"
 msgstr ""
 
 #: ../../include/text.php:1359 ../../include/conversation.php:122
-#: ../../mod/like.php:102 ../../mod/tagger.php:62 ../../mod/subthread.php:89
+#: ../../mod/like.php:103 ../../mod/tagger.php:62 ../../mod/subthread.php:89
 msgid "photo"
 msgstr ""
 
@@ -576,7 +576,7 @@ msgid "Registration request at %s"
 msgstr ""
 
 #: ../../include/account.php:265 ../../include/account.php:292
-#: ../../include/account.php:349 ../../include/items.php:3914
+#: ../../include/account.php:349 ../../include/items.php:3978
 #: ../../boot.php:1098
 msgid "Administrator"
 msgstr ""
@@ -844,17 +844,17 @@ msgstr ""
 msgid "don't show"
 msgstr ""
 
-#: ../../include/conversation.php:133 ../../mod/like.php:102
+#: ../../include/conversation.php:133 ../../mod/like.php:103
 #: ../../mod/tagger.php:62 ../../mod/subthread.php:89
 msgid "status"
 msgstr ""
 
-#: ../../include/conversation.php:140 ../../mod/like.php:128
+#: ../../include/conversation.php:140 ../../mod/like.php:131
 #, php-format
 msgid "%1$s likes %2$s's %3$s"
 msgstr ""
 
-#: ../../include/conversation.php:143 ../../mod/like.php:130
+#: ../../include/conversation.php:143 ../../mod/like.php:133
 #, php-format
 msgid "%1$s doesn't like %2$s's %3$s"
 msgstr ""
@@ -881,7 +881,7 @@ msgstr ""
 #: ../../include/conversation.php:573 ../../include/ItemObject.php:123
 #: ../../mod/admin.php:628 ../../mod/connections.php:304
 #: ../../mod/settings.php:659 ../../mod/group.php:175
-#: ../../mod/photos.php:1223
+#: ../../mod/photos.php:1233
 msgid "Delete"
 msgstr ""
 
@@ -902,7 +902,7 @@ msgstr ""
 #: ../../include/conversation.php:639 ../../include/conversation.php:982
 #: ../../include/ItemObject.php:245 ../../mod/editpost.php:75
 #: ../../mod/message.php:288 ../../mod/message.php:421
-#: ../../mod/photos.php:1113
+#: ../../mod/photos.php:1123
 msgid "Please wait"
 msgstr ""
 
@@ -986,7 +986,7 @@ msgstr ""
 msgid "Where are you right now?"
 msgstr ""
 
-#: ../../include/conversation.php:959 ../../mod/photos.php:1112
+#: ../../include/conversation.php:959 ../../mod/photos.php:1122
 msgid "Share"
 msgstr ""
 
@@ -1077,7 +1077,7 @@ msgid "Example: bob@example.com, mary@example.com"
 msgstr ""
 
 #: ../../include/conversation.php:1000 ../../include/ItemObject.php:548
-#: ../../mod/editpost.php:95 ../../mod/photos.php:1132
+#: ../../mod/editpost.php:95 ../../mod/photos.php:1142
 msgid "Preview"
 msgstr ""
 
@@ -1085,7 +1085,7 @@ msgstr ""
 #: ../../include/attach.php:189 ../../include/attach.php:204
 #: ../../include/attach.php:237 ../../include/attach.php:251
 #: ../../include/attach.php:272 ../../include/attach.php:464
-#: ../../include/items.php:4386 ../../include/photos.php:13
+#: ../../include/items.php:4450 ../../include/photos.php:13
 #: ../../mod/profile_photo.php:185 ../../mod/profile_photo.php:198
 #: ../../mod/allfriends.php:10 ../../mod/setup.php:157 ../../mod/api.php:26
 #: ../../mod/api.php:31 ../../mod/viewconnections.php:33
@@ -1330,7 +1330,7 @@ msgstr ""
 msgid "Invite Friends"
 msgstr ""
 
-#: ../../include/contact_widgets.php:61 ../../include/features.php:55
+#: ../../include/contact_widgets.php:61 ../../include/features.php:56
 msgid "Saved Folders"
 msgstr ""
 
@@ -1354,35 +1354,40 @@ msgstr[1] ""
 msgid "show more"
 msgstr ""
 
-#: ../../include/items.php:2442
+#: ../../include/items.php:87 ../../mod/like.php:55 ../../mod/group.php:70
+#: ../../mod/profperm.php:28 ../../index.php:335
+msgid "Permission denied"
+msgstr ""
+
+#: ../../include/items.php:2506
 #, php-format
 msgid "%s's birthday"
 msgstr ""
 
-#: ../../include/items.php:2443
+#: ../../include/items.php:2507
 #, php-format
 msgid "Happy Birthday %s"
 msgstr ""
 
-#: ../../include/items.php:3904
+#: ../../include/items.php:3968
 msgid "[Name Withheld]"
 msgstr ""
 
-#: ../../include/items.php:3912
+#: ../../include/items.php:3976
 msgid "A new person is sharing with you at "
 msgstr ""
 
-#: ../../include/items.php:3912
+#: ../../include/items.php:3976
 msgid "You have a new follower at "
 msgstr ""
 
-#: ../../include/items.php:4335 ../../mod/admin.php:142
+#: ../../include/items.php:4399 ../../mod/admin.php:142
 #: ../../mod/admin.php:665 ../../mod/admin.php:864 ../../mod/display.php:33
 #: ../../mod/viewsrc.php:18 ../../mod/page.php:34
 msgid "Item not found."
 msgstr ""
 
-#: ../../include/items.php:4507
+#: ../../include/items.php:4571
 msgid "Archives"
 msgstr ""
 
@@ -1678,139 +1683,147 @@ msgid "Provide managed web pages on your channel"
 msgstr ""
 
 #: ../../include/features.php:25
-msgid "Expert Mode"
+msgid "Enhanced Photo Albums"
 msgstr ""
 
 #: ../../include/features.php:25
+msgid "Enable photo album with enhanced features"
+msgstr ""
+
+#: ../../include/features.php:26
+msgid "Expert Mode"
+msgstr ""
+
+#: ../../include/features.php:26
 msgid "Enable Expert Mode to provide advanced configuration options"
 msgstr ""
 
-#: ../../include/features.php:32
+#: ../../include/features.php:33
 msgid "Post Composition Features"
 msgstr ""
 
-#: ../../include/features.php:33
+#: ../../include/features.php:34
 msgid "Richtext Editor"
 msgstr ""
 
-#: ../../include/features.php:33
+#: ../../include/features.php:34
 msgid "Enable richtext editor"
 msgstr ""
 
-#: ../../include/features.php:34
+#: ../../include/features.php:35
 msgid "Post Preview"
 msgstr ""
 
-#: ../../include/features.php:34
+#: ../../include/features.php:35
 msgid "Allow previewing posts and comments before publishing them"
 msgstr ""
 
-#: ../../include/features.php:39
+#: ../../include/features.php:40
 msgid "Network and Stream Filtering"
 msgstr ""
 
-#: ../../include/features.php:40
+#: ../../include/features.php:41
 msgid "Search by Date"
 msgstr ""
 
-#: ../../include/features.php:40
+#: ../../include/features.php:41
 msgid "Ability to select posts by date ranges"
 msgstr ""
 
-#: ../../include/features.php:41
+#: ../../include/features.php:42
 msgid "Collections Filter"
 msgstr ""
 
-#: ../../include/features.php:41
+#: ../../include/features.php:42
 msgid "Enable widget to display Network posts only from selected collections"
 msgstr ""
 
-#: ../../include/features.php:42 ../../mod/search.php:17
+#: ../../include/features.php:43 ../../mod/search.php:17
 #: ../../mod/network.php:163
 msgid "Saved Searches"
 msgstr ""
 
-#: ../../include/features.php:42
+#: ../../include/features.php:43
 msgid "Save search terms for re-use"
 msgstr ""
 
-#: ../../include/features.php:43
+#: ../../include/features.php:44
 msgid "Network Personal Tab"
 msgstr ""
 
-#: ../../include/features.php:43
+#: ../../include/features.php:44
 msgid "Enable tab to display only Network posts that you've interacted on"
 msgstr ""
 
-#: ../../include/features.php:44
+#: ../../include/features.php:45
 msgid "Network New Tab"
 msgstr ""
 
-#: ../../include/features.php:44
+#: ../../include/features.php:45
 msgid "Enable tab to display all new Network activity"
 msgstr ""
 
-#: ../../include/features.php:45
+#: ../../include/features.php:46
 msgid "Affinity Tool"
 msgstr ""
 
-#: ../../include/features.php:45
+#: ../../include/features.php:46
 msgid "Filter stream activity by depth of relationships"
 msgstr ""
 
-#: ../../include/features.php:50
+#: ../../include/features.php:51
 msgid "Post/Comment Tools"
 msgstr ""
 
-#: ../../include/features.php:51
+#: ../../include/features.php:52
 msgid "Multiple Deletion"
 msgstr ""
 
-#: ../../include/features.php:51
+#: ../../include/features.php:52
 msgid "Select and delete multiple posts/comments at once"
 msgstr ""
 
-#: ../../include/features.php:52
+#: ../../include/features.php:53
 msgid "Edit Sent Posts"
 msgstr ""
 
-#: ../../include/features.php:52
+#: ../../include/features.php:53
 msgid "Edit and correct posts and comments after sending"
 msgstr ""
 
-#: ../../include/features.php:53
+#: ../../include/features.php:54
 msgid "Tagging"
 msgstr ""
 
-#: ../../include/features.php:53
+#: ../../include/features.php:54
 msgid "Ability to tag existing posts"
 msgstr ""
 
-#: ../../include/features.php:54
+#: ../../include/features.php:55
 msgid "Post Categories"
 msgstr ""
 
-#: ../../include/features.php:54
+#: ../../include/features.php:55
 msgid "Add categories to your posts"
 msgstr ""
 
-#: ../../include/features.php:55
+#: ../../include/features.php:56
 msgid "Ability to file posts under folders"
 msgstr ""
 
-#: ../../include/features.php:56
+#: ../../include/features.php:57
 msgid "Dislike Posts"
 msgstr ""
 
-#: ../../include/features.php:56
+#: ../../include/features.php:57
 msgid "Ability to dislike posts/comments"
 msgstr ""
 
-#: ../../include/features.php:57
+#: ../../include/features.php:58
 msgid "Star Posts"
 msgstr ""
 
-#: ../../include/features.php:57
+#: ../../include/features.php:58
 msgid "Ability to mark special posts with a star indicator"
 msgstr ""
 
@@ -1932,7 +1945,7 @@ msgid "Photo Albums"
 msgstr ""
 
 #: ../../include/photos.php:275 ../../mod/photos.php:835
-#: ../../mod/photos.php:1357
+#: ../../mod/photos.php:1367
 msgid "Upload New Photos"
 msgstr ""
 
@@ -1941,8 +1954,8 @@ msgid "Delete this item?"
 msgstr ""
 
 #: ../../include/js_strings.php:6 ../../include/ItemObject.php:538
-#: ../../mod/photos.php:1130 ../../mod/photos.php:1168
-#: ../../mod/photos.php:1195
+#: ../../mod/photos.php:1140 ../../mod/photos.php:1178
+#: ../../mod/photos.php:1205
 msgid "Comment"
 msgstr ""
 
@@ -2381,7 +2394,7 @@ msgid ""
 "form has been opened for too long (>3 hours) before submitting it."
 msgstr ""
 
-#: ../../include/ItemObject.php:105 ../../mod/photos.php:964
+#: ../../include/ItemObject.php:105 ../../mod/photos.php:974
 msgid "Private Message"
 msgstr ""
 
@@ -2414,7 +2427,7 @@ msgstr ""
 msgid "add tag"
 msgstr ""
 
-#: ../../include/ItemObject.php:179 ../../mod/photos.php:1110
+#: ../../include/ItemObject.php:179 ../../mod/photos.php:1120
 msgid "I like this (toggle)"
 msgstr ""
 
@@ -2422,7 +2435,7 @@ msgstr ""
 msgid "like"
 msgstr ""
 
-#: ../../include/ItemObject.php:180 ../../mod/photos.php:1111
+#: ../../include/ItemObject.php:180 ../../mod/photos.php:1121
 msgid "I don't like this (toggle)"
 msgstr ""
 
@@ -2467,8 +2480,8 @@ msgid_plural "%d comments"
 msgstr[0] ""
 msgstr[1] ""
 
-#: ../../include/ItemObject.php:536 ../../mod/photos.php:1128
-#: ../../mod/photos.php:1166 ../../mod/photos.php:1193
+#: ../../include/ItemObject.php:536 ../../mod/photos.php:1138
+#: ../../mod/photos.php:1176 ../../mod/photos.php:1203
 msgid "This is you"
 msgstr ""
 
@@ -2483,9 +2496,9 @@ msgstr ""
 #: ../../mod/profiles.php:523 ../../mod/import.php:339
 #: ../../mod/invite.php:138 ../../mod/message.php:289
 #: ../../mod/message.php:420 ../../mod/mood.php:134 ../../mod/photos.php:720
-#: ../../mod/photos.php:812 ../../mod/photos.php:1092
-#: ../../mod/photos.php:1131 ../../mod/photos.php:1169
-#: ../../mod/photos.php:1196 ../../mod/poke.php:200 ../../mod/events.php:456
+#: ../../mod/photos.php:812 ../../mod/photos.php:1102
+#: ../../mod/photos.php:1141 ../../mod/photos.php:1179
+#: ../../mod/photos.php:1206 ../../mod/poke.php:200 ../../mod/events.php:456
 #: ../../view/theme/redbasic/php/config.php:131
 #: ../../view/theme/redbasic/php/config.php:148
 msgid "Submit"
@@ -3147,11 +3160,6 @@ msgstr ""
 
 #: ../../mod/admin.php:1052
 msgid "Log level"
-msgstr ""
-
-#: ../../mod/like.php:54 ../../mod/group.php:70 ../../mod/profperm.php:28
-#: ../../index.php:335
-msgid "Permission denied"
 msgstr ""
 
 #: ../../mod/allfriends.php:35
@@ -3829,7 +3837,7 @@ msgid "Follow Only"
 msgstr ""
 
 #: ../../mod/connections.php:386 ../../mod/photos.php:756
-#: ../../mod/photos.php:1088
+#: ../../mod/photos.php:1098
 msgid "Permissions"
 msgstr ""
 
@@ -5270,7 +5278,7 @@ msgstr ""
 msgid "Delete Album"
 msgstr ""
 
-#: ../../mod/photos.php:163 ../../mod/photos.php:1093
+#: ../../mod/photos.php:163 ../../mod/photos.php:1103
 msgid "Delete Photo"
 msgstr ""
 
@@ -5292,7 +5300,7 @@ msgid "Access to this item is restricted."
 msgstr ""
 
 #: ../../mod/photos.php:699 ../../mod/photos.php:797 ../../mod/photos.php:819
-#: ../../mod/photos.php:1298 ../../mod/photos.php:1310
+#: ../../mod/photos.php:1308 ../../mod/photos.php:1320
 msgid "Contact Photos"
 msgstr ""
 
@@ -5334,71 +5342,71 @@ msgstr ""
 msgid "Show Oldest First"
 msgstr ""
 
-#: ../../mod/photos.php:864 ../../mod/photos.php:1340
+#: ../../mod/photos.php:874 ../../mod/photos.php:1350
 msgid "View Photo"
 msgstr ""
 
-#: ../../mod/photos.php:899
+#: ../../mod/photos.php:909
 msgid "Permission denied. Access to this item may be restricted."
 msgstr ""
 
-#: ../../mod/photos.php:901
+#: ../../mod/photos.php:911
 msgid "Photo not available"
 msgstr ""
 
-#: ../../mod/photos.php:957
+#: ../../mod/photos.php:967
 msgid "View photo"
 msgstr ""
 
-#: ../../mod/photos.php:957
+#: ../../mod/photos.php:967
 msgid "Edit photo"
 msgstr ""
 
-#: ../../mod/photos.php:958
+#: ../../mod/photos.php:968
 msgid "Use as profile photo"
 msgstr ""
 
-#: ../../mod/photos.php:986
+#: ../../mod/photos.php:996
 msgid "View Full Size"
 msgstr ""
 
-#: ../../mod/photos.php:1054
+#: ../../mod/photos.php:1064
 msgid "Tags: "
 msgstr ""
 
-#: ../../mod/photos.php:1057
+#: ../../mod/photos.php:1067
 msgid "[Remove any tag]"
 msgstr ""
 
-#: ../../mod/photos.php:1078
+#: ../../mod/photos.php:1088
 msgid "Rotate CW (right)"
 msgstr ""
 
-#: ../../mod/photos.php:1079
+#: ../../mod/photos.php:1089
 msgid "Rotate CCW (left)"
 msgstr ""
 
-#: ../../mod/photos.php:1081
+#: ../../mod/photos.php:1091
 msgid "New album name"
 msgstr ""
 
-#: ../../mod/photos.php:1084
+#: ../../mod/photos.php:1094
 msgid "Caption"
 msgstr ""
 
-#: ../../mod/photos.php:1086
+#: ../../mod/photos.php:1096
 msgid "Add a Tag"
 msgstr ""
 
-#: ../../mod/photos.php:1090
+#: ../../mod/photos.php:1100
 msgid "Example: @bob, @Barbara_Jensen, @jim@example.com, #California, #camping"
 msgstr ""
 
-#: ../../mod/photos.php:1346
+#: ../../mod/photos.php:1356
 msgid "View Album"
 msgstr ""
 
-#: ../../mod/photos.php:1355
+#: ../../mod/photos.php:1365
 msgid "Recent Photos"
 msgstr ""
 
