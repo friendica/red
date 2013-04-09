@@ -604,57 +604,8 @@ function photos_content(&$a) {
 
 	if((local_user()) && (local_user() == $owner_uid))
 		$can_post = true;
-	else {
-		if($community_page && remote_user()) {
-			if(is_array($_SESSION['remote'])) {
-				foreach($_SESSION['remote'] as $v) {
-					if($v['uid'] == $owner_uid) {
-						$contact_id = $v['cid'];
-						break;
-					}
-				}
-			}
-			if($contact_id) {
 
-				$r = q("SELECT `uid` FROM `contact` WHERE `blocked` = 0 AND `pending` = 0 AND `id` = %d AND `uid` = %d LIMIT 1",
-					intval($contact_id),
-					intval($owner_uid)
-				);
-				if(count($r)) {
-					$can_post = true;
-					$contact = $r[0];
-					$remote_contact = true;
-					$visitor = $cid;
-				}
-			}
-		}
-	}
-
-	// perhaps they're visiting - but not a community page, so they wouldn't have write access
-
-	if(remote_user() && (! $visitor)) {
-		$contact_id = 0;
-		if(is_array($_SESSION['remote'])) {
-			foreach($_SESSION['remote'] as $v) {
-				if($v['uid'] == $owner_uid) {
-					$contact_id = $v['cid'];
-					break;
-				}
-			}
-		}
-		if($contact_id) {
-			$groups = init_groups_visitor($contact_id);
-			$r = q("SELECT * FROM `contact` WHERE `blocked` = 0 AND `pending` = 0 AND `id` = %d AND `uid` = %d LIMIT 1",
-				intval($contact_id),
-				intval($owner_uid)
-			);
-			if(count($r)) {
-				$contact = $r[0];
-				$remote_contact = true;
-			}
-		}
-	}
-
+// FIXME
 	if(! $remote_contact) {
 		if(local_user()) {
 			$contact_id = $_SESSION['cid'];
@@ -775,7 +726,7 @@ function photos_content(&$a) {
 		);
 		if(count($r)) {
 			$a->set_pager_total(count($r));
-			$a->set_pager_itemspage(20);
+			$a->set_pager_itemspage(40);
 		}
 
 		if($_GET['order'] === 'posted')
@@ -1003,68 +954,35 @@ function photos_content(&$a) {
 
 		// Do we have an item for this photo?
 
-		$linked_items = q("SELECT * FROM `item` WHERE `resource_id` = '%s' $sql_extra LIMIT 1",
+		$linked_items = q("SELECT * FROM item WHERE resource_id = '%s' and resource_type = 'photo' 
+			$sql_extra LIMIT 1",
 			dbesc($datum)
 		);
-		if(count($linked_items)) {
+		if($linked_items) {
+
 			$link_item = $linked_items[0];
-			$r = q("SELECT COUNT(*) AS `total`
-				FROM `item` LEFT JOIN `contact` ON `contact`.`id` = `item`.`contact-id`
-				WHERE `parent_mid` = '%s' AND `mid` != '%s' AND `item`.`deleted` = 0 and `item`.`moderated` = 0
-				AND `contact`.`blocked` = 0 AND `contact`.`pending` = 0
-				AND `item`.`uid` = %d 
-				$sql_extra ",
+
+			$r = q("select * from item where parent_mid = '%s' and mid != '%s' 
+				and item_restrict = 0 and uid = %d $sql_extra ",
 				dbesc($link_item['mid']),
 				dbesc($link_item['mid']),
 				intval($link_item['uid'])
 
 			);
 
-			if(count($r))
-				$a->set_pager_total($r[0]['total']);
-
-
-			$r = q("SELECT `item`.*, `item`.`id` AS `item_id`, 
-				`contact`.`name`, `contact`.`photo`, `contact`.`url`, `contact`.`network`, 
-				`contact`.`rel`, `contact`.`thumb`, `contact`.`self`, 
-				`contact`.`id` AS `cid`, `contact`.`uid` AS `contact-uid`
-				FROM `item` LEFT JOIN `contact` ON `contact`.`id` = `item`.`contact-id`
-				WHERE `parent_mid` = '%s' AND `mid` != '%s' AND `item`.`deleted` = 0 and `item`.`moderated` = 0
-				AND `contact`.`blocked` = 0 AND `contact`.`pending` = 0
-				AND `item`.`uid` = %d
-				$sql_extra
-				ORDER BY `parent` DESC, `id` ASC LIMIT %d ,%d ",
-				dbesc($link_item['mid']),
-				dbesc($link_item['mid']),
-				intval($link_item['uid']),
-				intval($a->pager['start']),
-				intval($a->pager['itemspage'])
-
-			);
-		
-			if((local_user()) && (local_user() == $link_item['uid'])) {
-				q("UPDATE `item` SET `unseen` = 0 WHERE `parent` = %d and `uid` = %d",
-					intval($link_item['parent']),
-					intval(local_user())
-				);
+			if($r) {
+				xchan_query($r);
+				$r = fetch_post_tags($r,true);
+				$r = conv_sort($r,'commented');
 			}
-		}
 
-		$tags=Null;
-
-		if(count($linked_items) && strlen($link_item['tag'])) {
-			$arr = explode(',',$link_item['tag']);
-			// parse tags and add links
-			$tag_str = '';
-			foreach($arr as $t) {
-				if(strlen($tag_str))
-					$tag_str .= ', ';
-				$tag_str .= bbcode($t);
-			} 
-			$tags = array(t('Tags: '), $tag_str);
-			if($cmd === 'edit') {
-				$tags[] = $a->get_baseurl() . '/tagrm/' . $link_item['id'];
-				$tags[] = t('[Remove any tag]');
+			if((local_user()) && (local_user() == $link_item['uid'])) {
+				q("UPDATE `item` SET item_flags = (item_flags ^ %d) WHERE parent = %d and uid = %d and (item_flags & %d)",
+					intval(ITEM_UNSEEN),
+					intval($link_item['parent']),
+					intval(local_user()),
+					intval(ITEM_UNSEEN)
+				);
 			}
 		}
 
