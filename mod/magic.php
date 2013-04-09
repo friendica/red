@@ -35,7 +35,6 @@ function magic_init(&$a) {
 
 	}
 
-
 	if(! $x) {
 
 		// Finger them if they've never been seen here before
@@ -59,6 +58,9 @@ function magic_init(&$a) {
 		notice( t('Channel not found.') . EOL);
 		return;
 	}
+
+	// This is ready-made for a plugin that provides a blacklist or "ask me" before blindly authenticating. 
+	// By default, we'll proceed without asking.
 
 	$arr = array(
 		'channel_id' => local_user(),
