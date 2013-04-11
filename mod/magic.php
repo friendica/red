@@ -119,7 +119,7 @@ function magic_init(&$a) {
 
 		goaway($x[0]['hubloc_callback'] . '/' . substr($x[0]['hubloc_addr'],0,strpos($x[0]['hubloc_addr'],'@'))
 			. '/?f=&auth=' . $channel['channel_address'] . '@' . $a->get_hostname()
-			. '&sec=' . $token . '&dest=' . $dest . '&version=' . ZOT_REVISION);
+			. '&sec=' . $token . '&dest=' . urlencode($dest) . '&version=' . ZOT_REVISION);
 	}
 
 	if(strpos($dest,'/'))

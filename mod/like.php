@@ -135,7 +135,7 @@ function like_content(&$a) {
 	if(! isset($bodyverb))
 			return; 
 
-	$item_flags = ITEM_ORIGIN;
+	$item_flags = ITEM_ORIGIN | ITEM_NOTSHOWN;
 	if($item['item_flags'] & ITEM_WALL)
 		$item_flags |= ITEM_WALL;
 	
