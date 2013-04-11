@@ -11,6 +11,7 @@ head_add_css('library/jslider/css/jslider.css');
 head_add_css('library/prettyphoto/css/prettyPhoto.css');
 
 head_add_js('js/jquery.js');
+head_add_js('js/jquery-migrate-1.1.1.js');
 head_add_js('js/jquery.textinputs.js');
 head_add_js('js/fk.autocomplete.js');
 head_add_js('library/fancybox/jquery.fancybox-1.3.4.pack.js');
