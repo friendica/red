@@ -153,9 +153,9 @@ function like_content(&$a) {
 	$arr['author_xchan'] = $observer['xchan_hash'];
 
 	
-	$ulink = '[url=' . $thread_owner['xchan_url'] . ']' . $thread_owner['xchan_name'] . '[/url]';
-	$alink = '[url=' . $observer['xchan_url'] . ']' . $observer['xchan_name'] . '[/url]';
-	$plink = '[url=' . $a->get_baseurl() . '/display/' . $item['mid'] . ']' . $post_type . '[/url]';
+	$ulink = '[zrl=' . $thread_owner['xchan_url'] . ']' . $thread_owner['xchan_name'] . '[/zrl]';
+	$alink = '[zrl=' . $observer['xchan_url'] . ']' . $observer['xchan_name'] . '[/zrl]';
+	$plink = '[zrl=' . $a->get_baseurl() . '/display/' . $item['mid'] . ']' . $post_type . '[/zrl]';
 	
 	$arr['body']          =  sprintf( $bodyverb, $alink, $ulink, $plink );
 

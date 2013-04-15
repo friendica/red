@@ -1918,7 +1918,7 @@ function tag_deliver($uid,$item_id) {
 
 	$body = preg_replace('/\[share(.*?)\[\/share\]/','',$item['body']);
 
-	$pattern = '/@\[url\=' . preg_quote($term['url'],'/') . '\]' . preg_quote($u[0]['channel_name'],'/') . '\[\/url\]/';
+	$pattern = '/@\[zrl\=' . preg_quote($term['url'],'/') . '\]' . preg_quote($u[0]['channel_name'],'/') . '\[\/zrl\]/';
 
 	if(! preg_match($pattern,$body,$matches)) {
 		logger('tag_deliver: mention was in a reshare - ignoring');
@@ -2012,7 +2012,7 @@ function tgroup_check($uid,$item) {
 
 	$body = preg_replace("/\[share\](.*?)\[\/share\]/ism", '', $item['body']);
 	
-	$cnt = preg_match_all('/[\@\!]\[url\=(.*?)\](.*?)\[\/url\]/ism',$body,$matches,PREG_SET_ORDER);
+	$cnt = preg_match_all('/[\@\!]\[zrl\=(.*?)\](.*?)\[\/zrl\]/ism',$body,$matches,PREG_SET_ORDER);
 	if($cnt) {
 		foreach($matches as $mtch) {
 			if(link_compare($link,$mtch[1]) || link_compare($dlink,$mtch[1])) {
@@ -2504,7 +2504,7 @@ function consume_feed($xml,$importer,&$contact, &$hub, $datedir = 0, $pass = 0) 
 			 */
 			 
 			$bdtext = sprintf( t('%s\'s birthday'), $contact['name']);
-			$bdtext2 = sprintf( t('Happy Birthday %s'), ' [url=' . $contact['url'] . ']' . $contact['name'] . '[/url]' ) ;
+			$bdtext2 = sprintf( t('Happy Birthday %s'), ' [zrl=' . $contact['url'] . ']' . $contact['name'] . '[/zrl]' ) ;
 
 
 			$r = q("INSERT INTO `event` (`uid`,`cid`,`created`,`edited`,`start`,`finish`,`summary`,`desc`,`type`)
@@ -2752,7 +2752,7 @@ function consume_feed($xml,$importer,&$contact, &$hub, $datedir = 0, $pass = 0) 
 
 						// extract tag, if not duplicate, add to parent item
 						if($xo->id && $xo->content) {
-							$newtag = '#[url=' . $xo->id . ']'. $xo->content . '[/url]';
+							$newtag = '#[zrl=' . $xo->id . ']'. $xo->content . '[/zrl]';
 							if(! (stristr($r[0]['tag'],$newtag))) {
 								q("UPDATE item SET tag = '%s' WHERE id = %d LIMIT 1",
 									dbesc($r[0]['tag'] . (strlen($r[0]['tag']) ? ',' : '') . $newtag),
@@ -3535,7 +3535,7 @@ function local_delivery($importer,$data) {
 						// extract tag, if not duplicate, and this user allows tags, add to parent item						
 //FIXME
 						if($xo->id && $xo->content) {
-							$newtag = '#[url=' . $xo->id . ']'. $xo->content . '[/url]';
+							$newtag = '#[zrl=' . $xo->id . ']'. $xo->content . '[/zrl]';
 							if(! (stristr($tagp[0]['tag'],$newtag))) {
 								$i = q("SELECT `blocktags` FROM `user` where `uid` = %d LIMIT 1",
 									intval($importer['importer_uid'])
@@ -3687,7 +3687,7 @@ function local_delivery($importer,$data) {
 						if($xo->content) {
 							if(! (stristr($r[0]['tag'],trim($xo->content)))) {
 								q("UPDATE item SET tag = '%s' WHERE id = %d LIMIT 1",
-									dbesc($r[0]['tag'] . (strlen($r[0]['tag']) ? ',' : '') . '#[url=' . $xo->id . ']'. $xo->content . '[/url]'),
+									dbesc($r[0]['tag'] . (strlen($r[0]['tag']) ? ',' : '') . '#[zrl=' . $xo->id . ']'. $xo->content . '[/zrl]'),
 									intval($r[0]['id'])
 								);
 							}

@@ -991,7 +991,7 @@ require_once('include/security.php');
 
 		if(perm_is_allowed($r[0]['uid'],$observer['xchan_hash'],'view_stream')) {
 			if ($r[0]['body'] != "") {
-				$_REQUEST['body'] = html_entity_decode("&#x2672; ", ENT_QUOTES, 'UTF-8')."[url=".$r[0]['reply_url']."]".$r[0]['reply_author']."[/url] \n".$r[0]['body'];
+				$_REQUEST['body'] = html_entity_decode("&#x2672; ", ENT_QUOTES, 'UTF-8')."[zrl=".$r[0]['reply_url']."]".$r[0]['reply_author']."[/zrl] \n".$r[0]['body'];
 				$_REQUEST['profile_uid'] = api_user();
 				$_REQUEST['type'] = 'wall';
 				$_REQUEST['api_source'] = true;

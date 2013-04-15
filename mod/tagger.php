@@ -97,7 +97,7 @@ EOT;
 	if(! isset($bodyverb))
 			return; 
 
-	$termlink = html_entity_decode('&#x2317;') . '[url=' . $a->get_baseurl() . '/search?tag=' . urlencode($term) . ']'. $term . '[/url]';
+	$termlink = html_entity_decode('&#x2317;') . '[zrl=' . $a->get_baseurl() . '/search?tag=' . urlencode($term) . ']'. $term . '[/zrl]';
 
 	$arr = array();
 
@@ -116,9 +116,9 @@ EOT;
 	$arr['author-link'] = $contact['url'];
 	$arr['author-avatar'] = $contact['thumb'];
 	
-	$ulink = '[url=' . $contact['url'] . ']' . $contact['name'] . '[/url]';
-	$alink = '[url=' . $item['author-link'] . ']' . $item['author-name'] . '[/url]';
-	$plink = '[url=' . $item['plink'] . ']' . $post_type . '[/url]';
+	$ulink = '[zrl=' . $contact['url'] . ']' . $contact['name'] . '[/zrl]';
+	$alink = '[zrl=' . $item['author-link'] . ']' . $item['author-name'] . '[/zrl]';
+	$plink = '[zrl=' . $item['plink'] . ']' . $post_type . '[/zrl]';
 	$arr['body'] =  sprintf( $bodyverb, $ulink, $alink, $plink, $termlink );
 
 	$arr['verb'] = ACTIVITY_TAG;
@@ -152,7 +152,7 @@ EOT;
 
 	if((! $blocktags) && (! stristr($item['tag'], ']' . $term . '[' ))) {
 		q("update item set tag = '%s' where id = %d limit 1",
-			dbesc($item['tag'] . (strlen($item['tag']) ? ',' : '') . '#[url=' . $a->get_baseurl() . '/search?tag=' . $term . ']'. $term . '[/url]'),
+			dbesc($item['tag'] . (strlen($item['tag']) ? ',' : '') . '#[zrl=' . $a->get_baseurl() . '/search?tag=' . $term . ']'. $term . '[/zrl]'),
 			intval($item['id'])
 		);
 	}
@@ -168,7 +168,7 @@ EOT;
 		);
 		if(count($x) && !$x[0]['blocktags'] && (! stristr($r[0]['tag'], ']' . $term . '['))) {
 			q("update item set tag = '%s' where id = %d limit 1",
-				dbesc($r[0]['tag'] . (strlen($r[0]['tag']) ? ',' : '') . '#[url=' . $a->get_baseurl() . '/search?tag=' . $term . ']'. $term . '[/url]'),
+				dbesc($r[0]['tag'] . (strlen($r[0]['tag']) ? ',' : '') . '#[zrl=' . $a->get_baseurl() . '/search?tag=' . $term . ']'. $term . '[/zrl]'),
 				intval($r[0]['id'])
 			);
 		}

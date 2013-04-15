@@ -785,14 +785,14 @@ function handle_tag($a, &$body, &$inform, &$str_tags, $profile_uid, $tag) {
 	//is it a hash tag? 
 	if(strpos($tag,'#') === 0) {
 		//if the tag is replaced...
-		if(strpos($tag,'[url='))
+		if(strpos($tag,'[zrl='))
 			//...do nothing
 			return $replaced;
 		//base tag has the tags name only
 		$basetag = str_replace('_',' ',substr($tag,1));
 		//create text for link
 		$url = $a->get_baseurl() . '/search?tag=' . rawurlencode($basetag);
-		$newtag = '#[url=' . $a->get_baseurl() . '/search?tag=' . rawurlencode($basetag) . ']' . $basetag . '[/url]';
+		$newtag = '#[zrl=' . $a->get_baseurl() . '/search?tag=' . rawurlencode($basetag) . ']' . $basetag . '[/zrl]';
 		//replace tag by the link
 		$body = str_replace($tag, $newtag, $body);
 		$replaced = true;
@@ -809,7 +809,7 @@ function handle_tag($a, &$body, &$inform, &$str_tags, $profile_uid, $tag) {
 	//is it a person tag? 
 	if(strpos($tag,'@') === 0) {
 		//is it already replaced? 
-		if(strpos($tag,'[url='))
+		if(strpos($tag,'[zrl='))
 			return $replaced;
 		$stat = false;
 		//get the person's name
@@ -905,7 +905,7 @@ function handle_tag($a, &$body, &$inform, &$str_tags, $profile_uid, $tag) {
 			//create profile link
 			$profile = str_replace(',','%2c',$profile);
 			$url = $profile;
-			$newtag = '@[url=' . $profile . ']' . $newname	. '[/url]';
+			$newtag = '@[zrl=' . $profile . ']' . $newname	. '[/zrl]';
 			$body = str_replace('@' . $name, $newtag, $body);
 			//append tag to str_tags
 			if(! stristr($str_tags,$newtag)) {

@@ -1093,7 +1093,7 @@ function scale_external_images($s, $include_link = true, $scale_replace = false)
 						logger('scale_external_images: ' . $orig_width . '->' . $new_width . 'w ' . $orig_height . '->' . $new_height . 'h' . ' match: ' . $mtch[0], LOGGER_DEBUG);
 						$s = str_replace($mtch[0],'[img=' . $new_width . 'x' . $new_height. ']' . $scaled . '[/img]'
 							. "\n" . (($include_link) 
-								? '[url=' . $mtch[1] . ']' . t('view full size') . '[/url]' . "\n"
+								? '[zrl=' . $mtch[1] . ']' . t('view full size') . '[/zrl]' . "\n"
 								: ''),$s);
 						logger('scale_external_images: new string: ' . $s, LOGGER_DEBUG);
 					}

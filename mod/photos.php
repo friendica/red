@@ -413,13 +413,13 @@ function photos_post(&$a) {
 						}
 						if($profile) {
 							if(substr($notify,0,4) === 'cid:')
-								$taginfo[] = array($newname,$profile,$notify,$r[0],'@[url=' . str_replace(',','%2c',$profile) . ']' . $newname	. '[/url]');
+								$taginfo[] = array($newname,$profile,$notify,$r[0],'@[zrl=' . str_replace(',','%2c',$profile) . ']' . $newname	. '[/zrl]');
 							else
 								$taginfo[] = array($newname,$profile,$notify,null,$str_tags .= '@[url=' . $profile . ']' . $newname	. '[/url]');
 							if(strlen($str_tags))
 								$str_tags .= ',';
 							$profile = str_replace(',','%2c',$profile);
-							$str_tags .= '@[url=' . $profile . ']' . $newname	. '[/url]';
+							$str_tags .= '@[zrl=' . $profile . ']' . $newname	. '[/zrl]';
 						}
 					}
 				}
@@ -487,9 +487,9 @@ function photos_post(&$a) {
 					$arr['tag']           = $tagged[4];
 					$arr['inform']        = $tagged[2];
 					$arr['origin']        = 1;
-					$arr['body']          = sprintf( t('%1$s was tagged in %2$s by %3$s'), '[url=' . $tagged[1] . ']' . $tagged[0] . '[/url]', '[url=' . $a->get_baseurl() . '/photos/' . $owner_record['nickname'] . '/image/' . $p[0]['resource-id'] . ']' . t('a photo') . '[/url]', '[url=' . $owner_record['url'] . ']' . $owner_record['name'] . '[/url]') ;
+					$arr['body']          = sprintf( t('%1$s was tagged in %2$s by %3$s'), '[zrl=' . $tagged[1] . ']' . $tagged[0] . '[/zrl]', '[zrl=' . $a->get_baseurl() . '/photos/' . $owner_record['nickname'] . '/image/' . $p[0]['resource-id'] . ']' . t('a photo') . '[/zrl]', '[zrl=' . $owner_record['url'] . ']' . $owner_record['name'] . '[/zrl]') ;
 
-					$arr['body'] .= "\n\n" . '[url=' . $a->get_baseurl() . '/photos/' . $owner_record['nickname'] . '/image/' . $p[0]['resource_id'] . ']' . '[img]' . $a->get_baseurl() . "/photo/" . $p[0]['resource_id'] . '-' . $best . '.' . $ext . '[/img][/url]' . "\n" ;
+					$arr['body'] .= "\n\n" . '[zrl=' . $a->get_baseurl() . '/photos/' . $owner_record['nickname'] . '/image/' . $p[0]['resource_id'] . ']' . '[img]' . $a->get_baseurl() . "/photo/" . $p[0]['resource_id'] . '-' . $best . '.' . $ext . '[/img][/zrl]' . "\n" ;
 
 					$arr['object'] = '<object><type>' . ACTIVITY_OBJ_PERSON . '</type><title>' . $tagged[0] . '</title><id>' . $tagged[1] . '/' . $tagged[0] . '</id>';
 					$arr['object'] .= '<link>' . xmlify('<link rel="alternate" type="text/html" href="' . $tagged[1] . '" />' . "\n");

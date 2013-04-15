@@ -126,9 +126,9 @@ EOT;
 	$arr['author-link'] = $contact['url'];
 	$arr['author-avatar'] = $contact['thumb'];
 	
-	$ulink = '[url=' . $contact['url'] . ']' . $contact['name'] . '[/url]';
-	$alink = '[url=' . $item['author-link'] . ']' . $item['author-name'] . '[/url]';
-	$plink = '[url=' . $a->get_baseurl() . '/display/' . $owner['nickname'] . '/' . $item['id'] . ']' . $post_type . '[/url]';
+	$ulink = '[zrl=' . $contact['url'] . ']' . $contact['name'] . '[/zrl]';
+	$alink = '[zrl=' . $item['author-link'] . ']' . $item['author-name'] . '[/zrl]';
+	$plink = '[zrl=' . $a->get_baseurl() . '/display/' . $owner['nickname'] . '/' . $item['id'] . ']' . $post_type . '[/zrl]';
 	$arr['body'] =  sprintf( $bodyverb, $ulink, $alink, $plink );
 
 	$arr['verb'] = $activity;

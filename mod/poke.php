@@ -104,7 +104,7 @@ function poke_init(&$a) {
 	$arr['obj_type']   = ACTIVITY_OBJ_PERSON;
 
 	$arr['origin']        = 1;
-	$arr['body']          = '[url=' . $poster['url'] . ']' . $poster['name'] . '[/url]' . ' ' . t($verbs[$verb][0]) . ' ' . '[url=' . $target['url'] . ']' . $target['name'] . '[/url]';
+	$arr['body']          = '[zrl=' . $poster['url'] . ']' . $poster['name'] . '[/zrl]' . ' ' . t($verbs[$verb][0]) . ' ' . '[zrl=' . $target['url'] . ']' . $target['name'] . '[/zrl]';
 
 	$arr['object'] = '<object><type>' . ACTIVITY_OBJ_PERSON . '</type><title>' . $target['name'] . '</title><id>' . $a->get_baseurl() . '/contact/' . $target['id'] . '</id>';
 	$arr['object'] .= '<link>' . xmlify('<link rel="alternate" type="text/html" href="' . $target['url'] . '" />' . "\n");
