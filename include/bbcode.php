@@ -199,7 +199,7 @@ function bb_ShareAttributesSimple($match) {
 }
 
 	// BBcode 2 HTML was written by WAY2WEB.net
-	// extended to work with Mistpark/Friendica - Mike Macgirvin
+	// extended to work with Mistpark/Friendica/Red - Mike Macgirvin
 
 function bbcode($Text,$preserve_nl = false, $tryoembed = true) {
 

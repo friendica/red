@@ -1,7 +1,7 @@
 <?php
 
  /**
-  * Friendica admin
+  * Red admin
   */
 
 
@@ -1048,7 +1048,7 @@ readable.");
 		
 									// name, label, value, help string, extra data...
 		'$debugging' 		=> array('debugging', t("Debugging"),get_config('system','debugging'), ""),
-		'$logfile'			=> array('logfile', t("Log file"), get_config('system','logfile'), t("Must be writable by web server. Relative to your Friendica top-level directory.")),
+		'$logfile'			=> array('logfile', t("Log file"), get_config('system','logfile'), t("Must be writable by web server. Relative to your Red top-level directory.")),
 		'$loglevel' 		=> array('loglevel', t("Log level"), get_config('system','loglevel'), "", $log_choices),
 
         '$form_security_token' => get_form_security_token("admin_logs"),
