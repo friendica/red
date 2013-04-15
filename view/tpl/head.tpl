@@ -16,7 +16,7 @@ $head_js
 <link rel="search"
          href="$baseurl/opensearch" 
          type="application/opensearchdescription+xml" 
-         title="Search in Friendica" />
+         title="Search in Red" />
 
 
 <script>

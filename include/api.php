@@ -1541,8 +1541,8 @@ require_once('include/security.php');
 			'private' => $private, 'textlimit' => $textlimit, 'sslserver' => $sslserver, 'ssl' => $ssl,
 			'shorturllength' => '30',
         	'friendica' => array(
-				'FRIENDICA_PLATFORM' => FRIENDICA_PLATFORM,
-				'FRIENDICA_VERSION' => FRIENDICA_VERSION,
+				'RED_PLATFORM' => RED_PLATFORM,
+				'RED_VERSION' => RED_VERSION,
 				'ZOT_REVISION' => ZOT_REVISION,
 				'DB_UPDATE_VERSION' => DB_UPDATE_VERSION
 			)
@@ -1577,12 +1577,12 @@ require_once('include/security.php');
 
 		if($type === 'xml') {
 			header("Content-type: application/xml");
-			echo '<?xml version="1.0" encoding="UTF-8"?>' . "\r\n" . '<version>' . FRIENDICA_VERSION . '</version>' . "\r\n";
+			echo '<?xml version="1.0" encoding="UTF-8"?>' . "\r\n" . '<version>' . RED_VERSION . '</version>' . "\r\n";
 			killme();
 		}
 		elseif($type === 'json') {
 			header("Content-type: application/json");
-			echo '"' . FRIENDICA_VERSION . '"';
+			echo '"' . RED_VERSION . '"';
 			killme();
 		}
 	}

@@ -188,7 +188,7 @@ function admin_page_summary(&$a) {
 		'$users' => Array( t('Registered users'), $users),
 		'$accounts' => $accounts,
 		'$pending' => Array( t('Pending registrations'), $pending),
-		'$version' => Array( t('Version'), FRIENDICA_VERSION),
+		'$version' => Array( t('Version'), RED_VERSION),
 		'$build' =>  get_config('system','db_version'),
 		'$plugins' => Array( t('Active plugins'), $a->plugins )
 	));

@@ -299,7 +299,7 @@ function get_feed_for(&$a, $dfrn_id, $owner_nick, $last_update, $direction = 0) 
 	$salmon = feed_salmonlinks($owner_nick);
 
 	$atom .= replace_macros($feed_template, array(
-		'$version'      => xmlify(FRIENDICA_VERSION),
+		'$version'      => xmlify(RED_VERSION),
 		'$feed_id'      => xmlify($a->get_baseurl() . '/channel/' . $owner_nick),
 		'$feed_title'   => xmlify($owner['name']),
 		'$feed_updated' => xmlify(datetime_convert('UTC', 'UTC', 'now' , ATOM_TIME)) ,

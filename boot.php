@@ -38,8 +38,8 @@ require_once('library/Mobile_Detect/Mobile_Detect.php');
 require_once('include/BaseObject.php');
 require_once('include/features.php');
 
-define ( 'FRIENDICA_PLATFORM',     'Friendica Red');
-define ( 'FRIENDICA_VERSION',      trim(file_get_contents('version.inc')) . 'R');
+define ( 'RED_PLATFORM',     'Red');
+define ( 'RED_VERSION',      trim(file_get_contents('version.inc')) . 'R');
 define ( 'ZOT_REVISION',               1     ); 
 define ( 'DB_UPDATE_VERSION',       1040     );
 
@@ -873,7 +873,7 @@ class App {
 		$this->page['htmlhead'] = replace_macros($tpl, array(
 			'$baseurl' => $this->get_baseurl(),
 			'$local_user' => local_user(),
-			'$generator' => FRIENDICA_PLATFORM . ' ' . FRIENDICA_VERSION,
+			'$generator' => RED_PLATFORM . ' ' . RED_VERSION,
 			'$update_interval' => $interval,
 			'$head_css' => head_get_css(),
 			'$head_js' => head_get_js(),

@@ -28,7 +28,7 @@ else
 fi
 
 
-F9KVERSION=$(sed -n "s/.*'FRIENDICA_VERSION'.*'\([0-9.]*\)'.*/\1/p" ../../boot.php);
+F9KVERSION=$(sed -n "s/.*'RED_VERSION'.*'\([0-9.]*\)'.*/\1/p" ../../boot.php);
 
 echo "Friendica version $F9KVERSION"
 

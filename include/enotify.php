@@ -34,7 +34,7 @@ function notification($params) {
 	push_lang($recip['account_language']); // should probably have a channel language
 
 	$banner     = t('Red Notification');
-	$product    = FRIENDICA_PLATFORM;
+	$product    = RED_PLATFORM;
 	$siteurl    = $a->get_baseurl(true);
 	$thanks     = t('Thank You,');
 	$sitename   = get_config('system','sitename');
