@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: \n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2013-04-05 00:01-0700\n"
+"POT-Creation-Date: 2013-04-12 00:00-0700\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -3546,7 +3546,7 @@ msgid "View Connnections"
 msgstr ""
 
 #: ../../mod/chanview.php:74 ../../mod/wall_upload.php:35
-#: ../../mod/magic.php:59 ../../mod/page.php:21
+#: ../../mod/magic.php:58 ../../mod/page.php:21
 msgid "Channel not found."
 msgstr ""
 
@@ -3592,13 +3592,13 @@ msgstr ""
 msgid "Wall Photos"
 msgstr ""
 
-#: ../../mod/post.php:107
+#: ../../mod/post.php:114
 msgid ""
 "Remote authentication blocked. You are logged into this site locally. Please "
 "logout and retry."
 msgstr ""
 
-#: ../../mod/post.php:117
+#: ../../mod/post.php:124
 #, php-format
 msgid "Welcome %s. Remote authentication successful."
 msgstr ""

@@ -96,6 +96,13 @@ function post_init(&$a) {
 			}
 
 			if($already_authed || $j['success']) {
+				if($j['success']) {
+					// legit response, but we do need to check that this wasn't answered by a man-in-middle
+					if(! rsa_verify($sec . $x[0]['xchan_hash'],base64url_decode($j['confirm']),$x[0]['xchan_pubkey'])) {
+						logger('mod_zot: auth: final confirmation failed.');
+						goaway($desturl);
+					}
+				}
 				// everything is good... maybe
 				if(local_user()) {
 
@@ -386,13 +393,15 @@ function post_post(&$a) {
 
 			$arr = $data['recipients'][0];
 			$recip_hash = base64url_encode(hash('whirlpool',$arr['guid'] . $arr['guid_sig'], true));
-			$c = q("select channel_id from channel where channel_hash = '%s' limit 1",
+			$c = q("select channel_id, channel_prvkey from channel where channel_hash = '%s' limit 1",
 				dbesc($recip_hash)
 			);
 			if(! $c) {
 				logger('mod_zot: auth_check: recipient channel not found.');
 				json_return_and_die($ret);
 			}
+
+			$confirm = base64url_encode(rsa_sign($data['secret'] . $recip_hash,$c[0]['channel_prvkey']));
 
 			// This additionally checks for forged senders since we already stored the expected result in meta
 			// and we've already verified that this is them via zot_gethub() and that their key signed our token
@@ -412,6 +421,7 @@ function post_post(&$a) {
 
 			logger('mod_zot: auth_check: success', LOGGER_DEBUG);
 			$ret['success'] = true;
+			$ret['confirm'] = $confirm;
 			json_return_and_die($ret);
 
 		}
