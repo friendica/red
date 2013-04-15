@@ -1524,7 +1524,7 @@ require_once('include/security.php');
 
 		$name   = get_config('system','sitename');
 		$server = $a->get_hostname();
-		$logo   = $a->get_baseurl() . '/images/fred-64.png';
+		$logo   = $a->get_baseurl() . '/images/r!.png';
 		$email  = get_config('system','admin_email');
 		$closed = ((get_config('system','register_policy') == REGISTER_CLOSED) ? 'true' : 'false');
 		$private = ((get_config('system','block_public')) ? 'true' : 'false');
