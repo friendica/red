@@ -2009,6 +2009,17 @@ function get_my_address() {
 	return false;
 }
 
+/**
+ * @function zid_init(&$a)
+ *   If somebody arrives at our site using a zid, add their xchan to our DB if we don't have it already.
+ *   And if they aren't already authenticated here, attempt reverse magic auth.
+ *
+ * @hooks 'zid_init'
+ *      string 'zid' - their zid
+ *      string 'url' - the destination url
+ *
+ */
+
 function zid_init(&$a) {
 	$tmp_str = get_my_address();
 	if(validate_email($tmp_str)) {
@@ -2038,6 +2049,10 @@ function zid_init(&$a) {
  *   Currently unused
  * @return string
  *
+ * @hooks 'zid'
+ *      string url - url to accept zid
+ *      string zid - urlencoded zid
+ *      string result - the return string we calculated, change it if you want to return something else
  */
 
 
@@ -2053,8 +2068,11 @@ function zid($s,$force = false) {
 	$mine = get_my_url();
 	$myaddr = get_my_address();
 	if($mine and ! link_compare($mine,$s))
-		return $s . (($num_slashes >= 3) ? '' : '/') . $achar . 'zid=' . urlencode($myaddr);
-	return $s;
+		$zurl = $s . (($num_slashes >= 3) ? '' : '/') . $achar . 'zid=' . urlencode($myaddr);
+
+	$arr = array('url' => $s, 'zid' => urlencode($myaddr), 'result' => $zurl);
+	call_hooks('zid', $arr);
+	return $arr['result'];
 }
 
 /**
