@@ -1459,7 +1459,8 @@ Variables</h2></td></tr>
   </table>
   </dd>
 </dl>
-<dl class="section return"><dt>Returns</dt><dd>string </dd></dl>
+<dl class="section return"><dt>Returns</dt><dd>string</dd></dl>
+<p>'zid' string url - url to accept zid string zid - urlencoded zid string result - the return string we calculated, change it if you want to return something else </p>
 
 <p>Referenced by <a class="el" href="bbcode_8php.html#a52c45273fbb7ce5ec27094f7936856e1">bb_ShareAttributes()</a>, <a class="el" href="dirfind_8php.html#af22b0283f928c4c32e62248a5ae67cee">dirfind_content()</a>, <a class="el" href="intro_8php.html#a3e2a523697633ddb4517b9266a515f5b">intro_content()</a>, <a class="el" href="conversation_8php.html#afea815dd1768e8417d2b30be53e9e0b4">localize_item()</a>, <a class="el" href="match_8php.html#a1dd853e959b9e70c1911bb2fb5f5130d">match_content()</a>, <a class="el" href="notifications_8php.html#aadd0b5525bd8c283a5d8a37982bbfe62">notifications_content()</a>, and <a class="el" href="viewconnections_8php.html#ab6c4d983e97b3a8a879567ff76507776">viewconnections_content()</a>.</p>
 
@@ -1478,6 +1479,8 @@ Variables</h2></td></tr>
         </tr>
       </table>
 </div><div class="memdoc">
+<p>zid_init(&amp;$a) If somebody arrives at our site using a zid, add their xchan to our DB if we don't have it already. And if they aren't already authenticated here, attempt reverse magic auth.</p>
+<p>'zid_init' string 'zid' - their zid string 'url' - the destination url </p>
 
 </div>
 </div>
