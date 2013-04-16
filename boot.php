@@ -862,8 +862,8 @@ class App {
 		if($interval < 10000)
 			$interval = 40000;
 
-		$this->page['title'] = $this->config['system']['sitename'];
-
+		if(! x($this->page,'title'))
+			$this->page['title'] = $this->config['system']['sitename'];
 
 		/* put the head template at the beginning of page['htmlhead']
 		 * since the code added by the modules frequently depends on it
@@ -1445,7 +1445,7 @@ function profile_load(&$a, $nickname, $profile = 0) {
 	$a->profile = $r[0];
 
 
-	$a->page['title'] = $a->profile['channel_name'] . " @ " . $a->config['sitename'];
+	$a->page['title'] = $a->profile['channel_name'] . " - " . $a->profile['channel_address'] . "@" . $a->get_hostname();
 
 
 	$_SESSION['theme'] = $a->profile['channel_theme'];
