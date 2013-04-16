@@ -18,7 +18,7 @@ function initEditor(cb){
 			$("#profile-jot-text").css({ 'height': 200, 'color': '#000' });
 			$("#profile-jot-text").contact_autocomplete(baseurl+"/acl");
 			editor = true;
-			$("a#jot-perms-icon").fancybox({
+			$("a#jot-perms-icon").prettyPhoto({
 				'transitionIn' : 'elastic',
 				'transitionOut' : 'elastic'
 			});
@@ -93,7 +93,7 @@ function initEditor(cb){
 
 		editor = true;
 		// setup acl popup
-		$("a#jot-perms-icon").fancybox({
+		$("a#jot-perms-icon").prettyPhoyo({
 			'transitionIn' : 'elastic',
 			'transitionOut' : 'elastic'
 		}); 
@@ -257,7 +257,7 @@ function enableOnUser(){
 		var bordercolor = $("input").css("border-color");
 		
 		$.get('filer/', function(data){
-			$.fancybox(data);
+			$.prettyPhoto(data);
 			$("#id_term").keypress(function(){
 				$(this).css("border-color",bordercolor);
 			})
@@ -275,7 +275,7 @@ function enableOnUser(){
 //					if(timer) clearTimeout(timer);
 //					timer = setTimeout(NavUpdate,3000);
 					liking = 1;
-					$.fancybox.close();
+					$.prettyPhoto.close();
 				} else {
 					$("#id_term").css("border-color","#FF0000");
 				}
