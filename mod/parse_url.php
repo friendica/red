@@ -63,7 +63,7 @@ function parseurl_getsiteinfo($url) {
 	$header = $result['header'];
 	$body   = $result['body'];
 
-	$body   = mb_convert_encoding($body, "UTF-8", $charset);
+	$body   = mb_convert_encoding($body, 'UTF-8', 'UTF-8');
 	$body   = mb_convert_encoding($body, 'HTML-ENTITIES', "UTF-8");
 
 	$doc    = new DOMDocument();
@@ -99,6 +99,9 @@ function parseurl_getsiteinfo($url) {
 		$attr["content"] = html_entity_decode($attr["content"], ENT_QUOTES, "UTF-8");
 
 		switch (strtolower($attr["name"])) {
+			case 'generator':
+				$siteinfo['generator'] = $attr['content'];
+				break;
 			case "fulltitle":
 				$siteinfo["title"] = $attr["content"];
 				break;
@@ -273,6 +276,11 @@ function parse_url_content(&$a) {
 	}
 
 	$siteinfo = parseurl_getsiteinfo($url);
+
+	// If this is a Red site, use zrl rather than url so they get zids sent to them by default
+
+	if( x($siteinfo,'generator') && strpos($siteinfo['generator'],RED_PLATFORM . ' '))
+		$template = str_replace('url','zrl',$template);
 
 	if($siteinfo["title"] == "") {
 		echo sprintf($template,$url,$url,'') . $str_tags;
