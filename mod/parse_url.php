@@ -279,7 +279,7 @@ function parse_url_content(&$a) {
 
 	// If this is a Red site, use zrl rather than url so they get zids sent to them by default
 
-	if( x($siteinfo,'generator') && strpos($siteinfo['generator'],RED_PLATFORM . ' '))
+	if( x($siteinfo,'generator') && (strpos($siteinfo['generator'],RED_PLATFORM . ' ') == 0))
 		$template = str_replace('url','zrl',$template);
 
 	if($siteinfo["title"] == "") {
