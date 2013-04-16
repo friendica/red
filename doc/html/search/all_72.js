@@ -8,6 +8,8 @@ var searchData=
   ['randprof_5finit',['randprof_init',['../randprof_8php.html#abf5dba3c608b9304cbf68327cd31b090',1,'randprof.php']]],
   ['rdelim',['rdelim',['../namespacefriendica-to-smarty-tpl.html#a8540514fb7c4aa18ad2dffa2a975036b',1,'friendica-to-smarty-tpl']]],
   ['rebuild_5ftheme_5ftable',['rebuild_theme_table',['../admin_8php.html#ae46311a3fefc21abc838a26e91789de6',1,'admin.php']]],
+  ['red_5fplatform',['RED_PLATFORM',['../boot_8php.html#a96ad56755a21e1361dbd7bf93c9e7ff4',1,'boot.php']]],
+  ['red_5fversion',['RED_VERSION',['../boot_8php.html#a21cc29e0025943e7c28ff58cb4856ac3',1,'boot.php']]],
   ['redbasic_5fform',['redbasic_form',['../view_2theme_2redbasic_2php_2config_8php.html#ab5073653dfb9eb2216f8580098a87071',1,'config.php']]],
   ['redbasic_5finit',['redbasic_init',['../theme_8php.html#af6eb813e9fc7e2d76ac1b82bc5c0ed9b',1,'theme.php']]],
   ['redir_2ephp',['redir.php',['../redir_8php.html',1,'']]],

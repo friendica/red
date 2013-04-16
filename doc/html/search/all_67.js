@@ -97,6 +97,7 @@ var searchData=
   ['group_5fcontent',['group_content',['../mod_2group_8php.html#a07a64f6c65b0080d8190b3d9728a7a83',1,'group.php']]],
   ['group_5fget_5fmembers',['group_get_members',['../include_2group_8php.html#a5bd191d9692e6c34d48c0ede10810f09',1,'group.php']]],
   ['group_5fpost',['group_post',['../mod_2group_8php.html#aed1f009b1221348021bb34761160ef35',1,'group.php']]],
+  ['group_5frec_5fbyhash',['group_rec_byhash',['../include_2group_8php.html#a90e157b3e1b99c981809cb5a2abd3245',1,'group.php']]],
   ['group_5frmv',['group_rmv',['../include_2group_8php.html#a4118f498bbd1530c1d0136d016d197a5',1,'group.php']]],
   ['group_5frmv_5fmember',['group_rmv_member',['../include_2group_8php.html#a540e3ef36f47d47532646be4241f6518',1,'group.php']]],
   ['group_5fselect',['group_select',['../acl__selectors_8php.html#aa1e3bc344ca2b29f97eb9860216d21a0',1,'acl_selectors.php']]],
