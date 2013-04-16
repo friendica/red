@@ -2029,10 +2029,23 @@ function zid_init(&$a) {
 	}
 }
 
+/**
+ * @function zid($s,$force = false)
+ *   Adds a zid parameter to a url
+ * @param string $s
+ *   The url to accept the zid
+ * @param boolean $force
+ *   Currently unused
+ * @return string
+ *
+ */
+
+
 function zid($s,$force = false) {
-	if(! strlen($s))
+	if(! strlen($s) || strpos('zid=',$s))
 		return $s;
 	$has_params = ((strpos($s,'?')) ? true : false);
+	$num_slashes = substr_count($s,'/');
 	if(! $has_params)
 		$has_params = ((strpos($s,'&')) ? true : false);
 	$achar = strpos($s,'?') ? '&' : '?';
@@ -2040,7 +2053,7 @@ function zid($s,$force = false) {
 	$mine = get_my_url();
 	$myaddr = get_my_address();
 	if($mine and ! link_compare($mine,$s))
-		return $s . (($has_params) ? '' : '/') . $achar . 'zid=' . urlencode($myaddr);
+		return $s . (($num_slashes >= 3) ? '' : '/') . $achar . 'zid=' . urlencode($myaddr);
 	return $s;
 }
 
