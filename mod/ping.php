@@ -75,7 +75,7 @@ function ping_init(&$a) {
 				);
 				break;
 			case 'all_events':
-				$r = q("update event set ignore = 1 where ignore = 0 and uid = %d", 
+				$r = q("update event set `ignore` = 1 where `ignore` = 0 and uid = %d", 
 					intval(local_user())
 				);
 				break;
