@@ -28,13 +28,13 @@ function siteinfo_init(&$a) {
 		}
 
 		$data = Array(
-			'version' => FRIENDICA_VERSION,
+			'version' => RED_VERSION,
 			'url' => z_root(),
 			'plugins' => $visible_plugins,
 			'register_policy' =>  $register_policy[$a->config['system']['register_policy']],
 			'admin' => $admin,
 			'site_name' => $a->config['sitename'],
-			'platform' => FRIENDICA_PLATFORM,
+			'platform' => RED_PLATFORM,
 			'info' => ((x($a->config,'info')) ? $a->config['info'] : '')			
 		);
 
@@ -48,7 +48,7 @@ function siteinfo_init(&$a) {
 function siteinfo_content(&$a) {
 
 	if(! get_config('system','hidden_version_siteinfo'))
-		$version = sprintf( t('Version %s'), FRIENDICA_VERSION );
+		$version = sprintf( t('Version %s'), RED_VERSION );
 	else
 	        $version = "";
 

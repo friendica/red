@@ -68,7 +68,7 @@ function invite_post(&$a) {
 		else
 			$nmessage = $message;
 
-		$res = mail($recip, sprintf( t('Please join us on Friendica'), $a->config['sitename']), 
+		$res = mail($recip, sprintf( t('Please join us on Red'), $a->config['sitename']), 
 			$nmessage, 
 			"From: " . $a->user['email'] . "\n"
 			. 'Content-type: text/plain; charset=UTF-8' . "\n"

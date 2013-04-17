@@ -991,7 +991,7 @@ require_once('include/security.php');
 
 		if(perm_is_allowed($r[0]['uid'],$observer['xchan_hash'],'view_stream')) {
 			if ($r[0]['body'] != "") {
-				$_REQUEST['body'] = html_entity_decode("&#x2672; ", ENT_QUOTES, 'UTF-8')."[url=".$r[0]['reply_url']."]".$r[0]['reply_author']."[/url] \n".$r[0]['body'];
+				$_REQUEST['body'] = html_entity_decode("&#x2672; ", ENT_QUOTES, 'UTF-8')."[zrl=".$r[0]['reply_url']."]".$r[0]['reply_author']."[/zrl] \n".$r[0]['body'];
 				$_REQUEST['profile_uid'] = api_user();
 				$_REQUEST['type'] = 'wall';
 				$_REQUEST['api_source'] = true;
@@ -1524,7 +1524,7 @@ require_once('include/security.php');
 
 		$name   = get_config('system','sitename');
 		$server = $a->get_hostname();
-		$logo   = $a->get_baseurl() . '/images/fred-64.png';
+		$logo   = $a->get_baseurl() . '/images/r!.png';
 		$email  = get_config('system','admin_email');
 		$closed = ((get_config('system','register_policy') == REGISTER_CLOSED) ? 'true' : 'false');
 		$private = ((get_config('system','block_public')) ? 'true' : 'false');
@@ -1541,8 +1541,8 @@ require_once('include/security.php');
 			'private' => $private, 'textlimit' => $textlimit, 'sslserver' => $sslserver, 'ssl' => $ssl,
 			'shorturllength' => '30',
         	'friendica' => array(
-				'FRIENDICA_PLATFORM' => FRIENDICA_PLATFORM,
-				'FRIENDICA_VERSION' => FRIENDICA_VERSION,
+				'RED_PLATFORM' => RED_PLATFORM,
+				'RED_VERSION' => RED_VERSION,
 				'ZOT_REVISION' => ZOT_REVISION,
 				'DB_UPDATE_VERSION' => DB_UPDATE_VERSION
 			)
@@ -1577,12 +1577,12 @@ require_once('include/security.php');
 
 		if($type === 'xml') {
 			header("Content-type: application/xml");
-			echo '<?xml version="1.0" encoding="UTF-8"?>' . "\r\n" . '<version>' . FRIENDICA_VERSION . '</version>' . "\r\n";
+			echo '<?xml version="1.0" encoding="UTF-8"?>' . "\r\n" . '<version>' . RED_VERSION . '</version>' . "\r\n";
 			killme();
 		}
 		elseif($type === 'json') {
 			header("Content-type: application/json");
-			echo '"' . FRIENDICA_VERSION . '"';
+			echo '"' . RED_VERSION . '"';
 			killme();
 		}
 	}

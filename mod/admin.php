@@ -1,7 +1,7 @@
 <?php
 
  /**
-  * Friendica admin
+  * Red admin
   */
 
 
@@ -188,7 +188,7 @@ function admin_page_summary(&$a) {
 		'$users' => Array( t('Registered users'), $users),
 		'$accounts' => $accounts,
 		'$pending' => Array( t('Pending registrations'), $pending),
-		'$version' => Array( t('Version'), FRIENDICA_VERSION),
+		'$version' => Array( t('Version'), RED_VERSION),
 		'$build' =>  get_config('system','db_version'),
 		'$plugins' => Array( t('Active plugins'), $a->plugins )
 	));
@@ -1048,7 +1048,7 @@ readable.");
 		
 									// name, label, value, help string, extra data...
 		'$debugging' 		=> array('debugging', t("Debugging"),get_config('system','debugging'), ""),
-		'$logfile'			=> array('logfile', t("Log file"), get_config('system','logfile'), t("Must be writable by web server. Relative to your Friendica top-level directory.")),
+		'$logfile'			=> array('logfile', t("Log file"), get_config('system','logfile'), t("Must be writable by web server. Relative to your Red top-level directory.")),
 		'$loglevel' 		=> array('loglevel', t("Log level"), get_config('system','loglevel'), "", $log_choices),
 
         '$form_security_token' => get_form_security_token("admin_logs"),

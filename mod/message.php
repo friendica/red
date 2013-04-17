@@ -160,9 +160,10 @@ function item_redir_and_replace_images($body, $images, $cid) {
 	$newbody = '';
 
 	for($i = 0; $i < count($images); $i++) {
-		$search = '/\[url\=(.*?)\]\[!#saved_image' . $i . '#!\]\[\/url\]' . '/is';
-		$replace = '[url=' . z_path() . '/redir/' . $cid 
-		           . '?f=1&url=' . '$1' . '][!#saved_image' . $i . '#!][/url]' ;
+		$search = '/\[zrl\=(.*?)\]\[!#saved_image' . $i . '#!\]\[\/zrl\]' . '/is';
+//FIXME
+		$replace = '[zrl=' . z_path() . '/redir/' . $cid 
+		           . '?f=1&url=' . '$1' . '][!#saved_image' . $i . '#!][/zrl]' ;
 
 		$img_end = strpos($origbody, '[!#saved_image' . $i . '#!][/url]') + strlen('[!#saved_image' . $i . '#!][/url]');
 		$process_part = substr($origbody, 0, $img_end);

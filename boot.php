@@ -38,8 +38,8 @@ require_once('library/Mobile_Detect/Mobile_Detect.php');
 require_once('include/BaseObject.php');
 require_once('include/features.php');
 
-define ( 'FRIENDICA_PLATFORM',     'Friendica Red');
-define ( 'FRIENDICA_VERSION',      trim(file_get_contents('version.inc')) . 'R');
+define ( 'RED_PLATFORM',     'Red');
+define ( 'RED_VERSION',      trim(file_get_contents('version.inc')) . 'R');
 define ( 'ZOT_REVISION',               1     ); 
 define ( 'DB_UPDATE_VERSION',       1040     );
 
@@ -862,8 +862,8 @@ class App {
 		if($interval < 10000)
 			$interval = 40000;
 
-		$this->page['title'] = $this->config['system']['sitename'];
-
+		if(! x($this->page,'title'))
+			$this->page['title'] = $this->config['system']['sitename'];
 
 		/* put the head template at the beginning of page['htmlhead']
 		 * since the code added by the modules frequently depends on it
@@ -873,7 +873,7 @@ class App {
 		$this->page['htmlhead'] = replace_macros($tpl, array(
 			'$baseurl' => $this->get_baseurl(),
 			'$local_user' => local_user(),
-			'$generator' => FRIENDICA_PLATFORM . ' ' . FRIENDICA_VERSION,
+			'$generator' => RED_PLATFORM . ' ' . RED_VERSION,
 			'$update_interval' => $interval,
 			'$head_css' => head_get_css(),
 			'$head_js' => head_get_js(),
@@ -1445,7 +1445,7 @@ function profile_load(&$a, $nickname, $profile = 0) {
 	$a->profile = $r[0];
 
 
-	$a->page['title'] = $a->profile['channel_name'] . " @ " . $a->config['sitename'];
+	$a->page['title'] = $a->profile['channel_name'] . " - " . $a->profile['channel_address'] . "@" . $a->get_hostname();
 
 
 	$_SESSION['theme'] = $a->profile['channel_theme'];
@@ -2009,6 +2009,17 @@ function get_my_address() {
 	return false;
 }
 
+/**
+ * @function zid_init(&$a)
+ *   If somebody arrives at our site using a zid, add their xchan to our DB if we don't have it already.
+ *   And if they aren't already authenticated here, attempt reverse magic auth.
+ *
+ * @hooks 'zid_init'
+ *      string 'zid' - their zid
+ *      string 'url' - the destination url
+ *
+ */
+
 function zid_init(&$a) {
 	$tmp_str = get_my_address();
 	if(validate_email($tmp_str)) {
@@ -2029,10 +2040,27 @@ function zid_init(&$a) {
 	}
 }
 
+/**
+ * @function zid($s,$force = false)
+ *   Adds a zid parameter to a url
+ * @param string $s
+ *   The url to accept the zid
+ * @param boolean $force
+ *   Currently unused
+ * @return string
+ *
+ * @hooks 'zid'
+ *      string url - url to accept zid
+ *      string zid - urlencoded zid
+ *      string result - the return string we calculated, change it if you want to return something else
+ */
+
+
 function zid($s,$force = false) {
-	if(! strlen($s))
+	if(! strlen($s) || strpos('zid=',$s))
 		return $s;
 	$has_params = ((strpos($s,'?')) ? true : false);
+	$num_slashes = substr_count($s,'/');
 	if(! $has_params)
 		$has_params = ((strpos($s,'&')) ? true : false);
 	$achar = strpos($s,'?') ? '&' : '?';
@@ -2040,8 +2068,11 @@ function zid($s,$force = false) {
 	$mine = get_my_url();
 	$myaddr = get_my_address();
 	if($mine and ! link_compare($mine,$s))
-		return $s . (($has_params) ? '' : '/') . $achar . 'zid=' . urlencode($myaddr);
-	return $s;
+		$zurl = $s . (($num_slashes >= 3) ? '' : '/') . $achar . 'zid=' . urlencode($myaddr);
+
+	$arr = array('url' => $s, 'zid' => urlencode($myaddr), 'result' => $zurl);
+	call_hooks('zid', $arr);
+	return $arr['result'];
 }
 
 /**

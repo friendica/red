@@ -257,7 +257,7 @@ function identity_basic_export($channel_id) {
 
 	$ret = array();
 
-	$ret['compatibility'] = array('project' => FRIENDICA_PLATFORM, 'version' => FRIENDICA_VERSION, 'database' => DB_UPDATE_VERSION);
+	$ret['compatibility'] = array('project' => RED_PLATFORM, 'version' => RED_VERSION, 'database' => DB_UPDATE_VERSION);
 
 	$r = q("select * from channel where channel_id = %d limit 1",
 		intval($channel_id)

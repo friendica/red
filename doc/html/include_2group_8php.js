@@ -5,6 +5,7 @@ var include_2group_8php =
     [ "group_add_member", "include_2group_8php.html#a0122ef312df2c5546b1a46b3e6c7b31b", null ],
     [ "group_byname", "include_2group_8php.html#abd66a5ea34a07a3422dc2dde6c7b3ecb", null ],
     [ "group_get_members", "include_2group_8php.html#a5bd191d9692e6c34d48c0ede10810f09", null ],
+    [ "group_rec_byhash", "include_2group_8php.html#a90e157b3e1b99c981809cb5a2abd3245", null ],
     [ "group_rmv", "include_2group_8php.html#a4118f498bbd1530c1d0136d016d197a5", null ],
     [ "group_rmv_member", "include_2group_8php.html#a540e3ef36f47d47532646be4241f6518", null ],
     [ "group_side", "include_2group_8php.html#a1042d74055bafe54a6a30103d87a7f17", null ],

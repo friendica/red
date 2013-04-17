@@ -3659,6 +3659,15 @@ ul.menu-popup {
 	width: 690px;
 	float:left;
 }
+
+div.pp_pic_holder {
+width: 800px !important;
+}
+
+.pp_content {
+width: 100% !important;
+}
+
 #acl-search {
 	float:right;
 	background: #ffffff url("../../../../images/search_18.png") no-repeat right center;

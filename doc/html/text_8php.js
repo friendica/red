@@ -87,6 +87,8 @@ var text_8php =
     [ "xchan_mail_query", "text_8php.html#a543447c5ed766535221e2d9636b379ee", null ],
     [ "xchan_query", "text_8php.html#a24b2b69b9162da789ab6514e0e09a37c", null ],
     [ "xmlify", "text_8php.html#aaed4413ed8918838b517e3b2fafaea0d", null ],
+    [ "zidify_callback", "text_8php.html#a405afe814a23f3bd94d826101aa168ab", null ],
+    [ "zidify_links", "text_8php.html#a29988052f3944111def3b6aaf2c7a8f6", null ],
     [ "RANDOM_STRING_HEX", "text_8php.html#aad557c054cf2ed915633701018fc7e3f", null ],
     [ "RANDOM_STRING_TEXT", "text_8php.html#a2ffd79c60cc87cec24ef76447b905187", null ]
 ];

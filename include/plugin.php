@@ -397,7 +397,7 @@ function upgrade_link($bbcode = false) {
 	if(! $l)
 		return '';
 	if($bbcode)
-		$t = sprintf('[url=%s]' . t('Click here to upgrade.') . '[/url]', $l);
+		$t = sprintf('[zrl=%s]' . t('Click here to upgrade.') . '[/zrl]', $l);
 	else
 		$t = sprintf('<a href="%s">' . t('Click here to upgrade.') . '</div>', $l);
 	return $t;

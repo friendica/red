@@ -35,7 +35,6 @@ function magic_init(&$a) {
 
 	}
 
-
 	if(! $x) {
 
 		// Finger them if they've never been seen here before
@@ -59,6 +58,9 @@ function magic_init(&$a) {
 		notice( t('Channel not found.') . EOL);
 		return;
 	}
+
+	// This is ready-made for a plugin that provides a blacklist or "ask me" before blindly authenticating. 
+	// By default, we'll proceed without asking.
 
 	$arr = array(
 		'channel_id' => local_user(),
@@ -117,7 +119,7 @@ function magic_init(&$a) {
 
 		goaway($x[0]['hubloc_callback'] . '/' . substr($x[0]['hubloc_addr'],0,strpos($x[0]['hubloc_addr'],'@'))
 			. '/?f=&auth=' . $channel['channel_address'] . '@' . $a->get_hostname()
-			. '&sec=' . $token . '&dest=' . $dest . '&version=' . ZOT_REVISION);
+			. '&sec=' . $token . '&dest=' . urlencode($dest) . '&version=' . ZOT_REVISION);
 	}
 
 	if(strpos($dest,'/'))
