@@ -95,8 +95,7 @@ function poke_init(&$a) {
 	$arr['verb']          = $activity;
 	$arr['item_private']  = $item_private;
 	$arr['obj_type']      = ACTIVITY_OBJ_PERSON;
-
-	$arr['body']          = '[zrl=' . $poster['xchan_url'] . ']' . $poster['xchan_name'] . '[/zrl]' . ' ' . t($verbs[$verb][0]) . ' ' . '[zrl=' . $target['xchan_url'] . ']' . $target['xchan_name'] . '[/zrl]';
+	$arr['body']          = '[zrl=' . $channel['xchan_url'] . ']' . $channel['xchan_name'] . '[/zrl]' . ' ' . t($verbs[$verb][0]) . ' ' . '[zrl=' . $target['xchan_url'] . ']' . $target['xchan_name'] . '[/zrl]';
 
 	$obj = array(
 		'type' => ACTIVITY_OBJ_PERSON,
