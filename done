@@ -128,7 +128,7 @@ mod/
   photos.php
 + ping.php (needs more work)
 + poco.php
-  poke.php
++ poke.php
 ? post.php
 + pretheme.php
 + probe.php

@@ -1,9 +1,20 @@
-<?php
+<?php /** @file */
 
-require_once('include/security.php');
-require_once('include/bbcode.php');
+/**
+ *
+ * Poke, prod, finger, or otherwise do unspeakable things to somebody - who must be a connection in your address book
+ * This function can be invoked with the required arguments (verb and cid and private and possibly parent) silently via ajax or
+ * other web request. You must be logged in and connected to a channel. 
+ * If the required arguments aren't present, we'll display a simple form to choose a recipient and a verb.
+ * parent is a special argument which let's you attach this activity as a comment to an existing conversation, which
+ * may have started with somebody else poking (etc.) somebody, but this isn't necessary. This can be used in the adult
+ * plugin version to have entire conversations where Alice poked Bob, Bob fingered Alice, Alice hugged Bob, etc.  
+ *
+ * private creates a private conversation with the recipient. Otherwise your channel's default post privacy is used.
+ *
+ */
+
 require_once('include/items.php');
-
 
 function poke_init(&$a) {
 
@@ -13,8 +24,7 @@ function poke_init(&$a) {
 	$uid = local_user();
 	$channel = $a->get_channel();
 
-
-	$verb = notags(trim($_GET['verb']));
+	$verb = notags(trim($_REQUEST['verb']));
 	
 	if(! $verb) 
 		return;
@@ -26,12 +36,11 @@ function poke_init(&$a) {
 
 	$activity = ACTIVITY_POKE . '#' . urlencode($verbs[$verb][0]);
 
-	$contact_id = intval($_GET['cid']);
+	$contact_id = intval($_REQUEST['cid']);
 	if(! $contact_id)
 		return;
 
-	$parent = ((x($_GET,'parent')) ? intval($_GET['parent']) : 0);
-
+	$parent = ((x($_REQUEST,'parent')) ? intval($_REQUEST['parent']) : 0);
 
 	logger('poke: verb ' . $verb . ' contact ' . $contact_id, LOGGER_DEBUG);
 
@@ -75,9 +84,6 @@ function poke_init(&$a) {
 		$deny_cid      = (($item_private) ? '' : $channel['channel_deny_cid']);
 		$deny_gid      = (($item_private) ? '' : $channel['channel_deny_gid']);
 	}
-
-
-
 
 
 	$arr = array();
@@ -126,10 +132,10 @@ function poke_content(&$a) {
 	$name = '';
 	$id = '';
 
-	if(intval($_GET['c'])) {
+	if(intval($_REQUEST['c'])) {
 		$r = q("select abook_id, xchan_name from abook left join xchan on abook_xchan = xchan_hash 
 			where abook_id = %d and abook_channel = %d limit 1",
-			intval($_GET['c']),
+			intval($_REQUEST['c']),
 			intval(local_user())
 		);
 		if($r) {
@@ -138,32 +144,7 @@ function poke_content(&$a) {
 		}
 	}
 
-
-	$base = $a->get_baseurl();
-
-	$a->page['htmlhead'] .= <<< EOT
-
-<script>$(document).ready(function() { 
-	var a; 
-	a = $("#poke-recip").autocomplete({ 
-		serviceUrl: '$base/acl',
-		minChars: 2,
-		width: 350,
-		onSelect: function(value,data) {
-			$("#poke-recip-complete").val(data);
-		}			
-	});
-	a.setOptions({ params: { type: 'a' }});
-
-
-}); 
-
-</script>
-EOT;
-
-	$parent = ((x($_GET,'parent')) ? intval($_GET['parent']) : '0');
-
-
+	$parent = ((x($_REQUEST,'parent')) ? intval($_REQUEST['parent']) : '0');
 
 	$verbs = get_poke_verbs();
 
