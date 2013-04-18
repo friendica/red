@@ -11,6 +11,9 @@ function poke_init(&$a) {
 		return;
 
 	$uid = local_user();
+	$channel = $a->get_channel();
+
+
 	$verb = notags(trim($_GET['verb']));
 	
 	if(! $verb) 
@@ -33,99 +36,81 @@ function poke_init(&$a) {
 	logger('poke: verb ' . $verb . ' contact ' . $contact_id, LOGGER_DEBUG);
 
 
-	$r = q("SELECT * FROM `contact` WHERE `id` = %d and  `uid` = %d LIMIT 1",
+	$r = q("SELECT * FROM abook left join xchan on xchan_hash = abook_xchan where abook_id = %d and abook_channel = %d LIMIT 1",
 		intval($contact_id),
 		intval($uid)
 	);
 
-	if(! count($r)) {
-		logger('poke: no contact ' . $contact_id);
+	if(! $r) {
+		logger('poke: no target ' . $contact_id);
 		return;
 	}
 
 	$target = $r[0];
+	$parent_item = null;
 
 	if($parent) {
-		$r = q("select mid, private, allow_cid, allow_gid, deny_cid, deny_gid 
+		$r = q("select mid, item_private, owner_xchan, allow_cid, allow_gid, deny_cid, deny_gid 
 			from item where id = %d and parent = %d and uid = %d limit 1",
 			intval($parent),
 			intval($parent),
 			intval($uid)
 		);
-		if(count($r)) {
-			$parent_mid = $r[0]['mid'];
-			$private    = $r[0]['private'];
-			$allow_cid  = $r[0]['allow_cid'];
-			$allow_gid  = $r[0]['allow_gid'];
-			$deny_cid   = $r[0]['deny_cid'];
-			$deny_gid   = $r[0]['deny_gid'];
+		if($r) {
+			$parent_item  = $r[0];
+			$parent_mid   = $r[0]['mid'];
+			$item_private = $r[0]['item_private'];
+			$allow_cid    = $r[0]['allow_cid'];
+			$allow_gid    = $r[0]['allow_gid'];
+			$deny_cid     = $r[0]['deny_cid'];
+			$deny_gid     = $r[0]['deny_gid'];
 		}
 	}
 	else {
 
-		$private = ((x($_GET,'private')) ? intval($_GET['private']) : 0);
+		$item_private = ((x($_GET,'private')) ? intval($_GET['private']) : 0);
 
-		$allow_cid     = (($private) ? '<' . $target['id']. '>' : $a->user['allow_cid']);
-		$allow_gid     = (($private) ? '' : $a->user['allow_gid']);
-		$deny_cid      = (($private) ? '' : $a->user['deny_cid']);
-		$deny_gid      = (($private) ? '' : $a->user['deny_gid']);
+		$allow_cid     = (($item_private) ? '<' . $target['abook_hash']. '>' : $channel['channel_allow_cid']);
+		$allow_gid     = (($item_private) ? '' : $channel['channel_allow_gid']);
+		$deny_cid      = (($item_private) ? '' : $channel['channel_deny_cid']);
+		$deny_gid      = (($item_private) ? '' : $channel['channel_deny_gid']);
 	}
 
 
 
 
-	$poster = $a->contact;
-
-	$mid = item_message_id();
 
 	$arr = array();
+	$arr['item_flags']    = ITEM_WALL | ITEM_ORIGIN;
+	if($parent_item)
+		$arr['item_flags'] |= ITEM_THREAD_TOP;
 
-	$arr['uid']           = $uid;
-	$arr['mid']           = $mid;
+	$arr['owner_xchan']   = (($parent_item) ? $parent_item['owner_xchan'] : $channel['channel_hash']);
 	$arr['parent_mid']    = (($parent_mid) ? $parent_mid : $mid);
-	$arr['type']          = 'activity';
-	$arr['wall']          = 1;
-	$arr['contact-id']    = $poster['id'];
-	$arr['owner-name']    = $poster['name'];
-	$arr['owner-link']    = $poster['url'];
-	$arr['owner-avatar']  = $poster['thumb'];
-	$arr['author-name']   = $poster['name'];
-	$arr['author-link']   = $poster['url'];
-	$arr['author-avatar'] = $poster['thumb'];
 	$arr['title']         = '';
 	$arr['allow_cid']     = $allow_cid;
 	$arr['allow_gid']     = $allow_gid;
 	$arr['deny_cid']      = $deny_cid;
 	$arr['deny_gid']      = $deny_gid;
-	$arr['last-child']    = 1;
-	$arr['visible']       = 1;
 	$arr['verb']          = $activity;
-	$arr['private']       = $private;
-	$arr['obj_type']   = ACTIVITY_OBJ_PERSON;
+	$arr['item_private']  = $item_private;
+	$arr['obj_type']      = ACTIVITY_OBJ_PERSON;
 
-	$arr['origin']        = 1;
-	$arr['body']          = '[zrl=' . $poster['url'] . ']' . $poster['name'] . '[/zrl]' . ' ' . t($verbs[$verb][0]) . ' ' . '[zrl=' . $target['url'] . ']' . $target['name'] . '[/zrl]';
+	$arr['body']          = '[zrl=' . $poster['xchan_url'] . ']' . $poster['xchan_name'] . '[/zrl]' . ' ' . t($verbs[$verb][0]) . ' ' . '[zrl=' . $target['xchan_url'] . ']' . $target['xchan_name'] . '[/zrl]';
 
-	$arr['object'] = '<object><type>' . ACTIVITY_OBJ_PERSON . '</type><title>' . $target['name'] . '</title><id>' . $a->get_baseurl() . '/contact/' . $target['id'] . '</id>';
-	$arr['object'] .= '<link>' . xmlify('<link rel="alternate" type="text/html" href="' . $target['url'] . '" />' . "\n");
+	$obj = array(
+		'type' => ACTIVITY_OBJ_PERSON,
+		'title' => $target['xchan_name'],
+		'id' => $target['xchan_hash'],
+		'link' => array(
+			array('rel' => 'alternate', 'type' => 'text/html', 'href' => $target['xchan_url']),
+			array('rel' => 'photo', 'type' => $target['xchan_photo_mimetype'], 'href' => $target['xchan_photo_l'])
+		),
+	);
 
-	$arr['object'] .= xmlify('<link rel="photo" type="image/jpeg" href="' . $target['photo'] . '" />' . "\n");
-	$arr['object'] .= '</link></object>' . "\n";
+	$arr['object'] = json_encode($obj);
 
-	$item_id = item_store($arr);
-	if($item_id) {
-		q("UPDATE `item` SET `plink` = '%s' WHERE `uid` = %d AND `id` = %d LIMIT 1",
-			dbesc($a->get_baseurl() . '/display/' . $poster['nickname'] . '/' . $item_id),
-			intval($uid),
-			intval($item_id)
-		);
-		proc_run('php',"include/notifier.php","tag","$item_id");
-	}
-
-
-	call_hooks('post_local_end', $arr);
-
-	proc_run('php',"include/notifier.php","like","$post_id");
+	post_activity_item($arr);
 
 	return;
 }
@@ -143,13 +128,14 @@ function poke_content(&$a) {
 	$id = '';
 
 	if(intval($_GET['c'])) {
-		$r = q("select id,name from contact where id = %d and uid = %d limit 1",
+		$r = q("select abook_id, xchan_name from abook left join xchan on abook_xchan = xchan_hash 
+			where abook_id = %d and abook_channel = %d limit 1",
 			intval($_GET['c']),
 			intval(local_user())
 		);
-		if(count($r)) {
-			$name = $r[0]['name'];
-			$id = $r[0]['id'];
+		if($r) {
+			$name = $r[0]['xchan_name'];
+			$id = $r[0]['abook_id'];
 		}
 	}
 
