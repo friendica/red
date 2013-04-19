@@ -247,7 +247,7 @@ function contact_remove($channel_id, $abook_id) {
 		intval($channel_id)
 	);
 	
-	q("delete from abook where abook_id = %d and channel_id = %d limit 1",
+	q("delete from abook where abook_id = %d and abook_channel = %d limit 1",
 		intval($abook['abook_id']),
 		intval($channel_id)
 	);
