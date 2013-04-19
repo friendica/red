@@ -2067,8 +2067,11 @@ function zid($s,$force = false) {
 
 	$mine = get_my_url();
 	$myaddr = get_my_address();
+
 	if($mine and ! link_compare($mine,$s))
 		$zurl = $s . (($num_slashes >= 3) ? '' : '/') . $achar . 'zid=' . urlencode($myaddr);
+	else
+		$zurl = $s;
 
 	$arr = array('url' => $s, 'zid' => urlencode($myaddr), 'result' => $zurl);
 	call_hooks('zid', $arr);
