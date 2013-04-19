@@ -54,6 +54,31 @@ function collect_recipients($item,&$private) {
 }
 
 /**
+ * @function red_zrl_callback
+ *   preg_match function when fixing 'naked' links in mod item.php
+ *   Check if we've got a hubloc for the site and use a zrl if we do, a url if we don't. 
+ * 
+ */
+
+
+function red_zrl_callback($matches) {
+	$m = @parse_url($matches[2]);
+	$zrl = false;
+	if($m['host']) {
+		$r = q("select hubloc_url from hubloc where hubloc_host = '%s' limit 1",
+			dbesc($m['host'])
+		);
+		if($r)
+			$zrl = true;
+	}
+	if($zrl)
+		return $matches[1] . '[zrl=' . $matches[2] . ']' . $matches[2] . '[/zrl]';
+	return $matches[0];
+}
+
+
+
+/**
  * @function post_activity_item($arr)
  *
  *     post an activity

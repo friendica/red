@@ -321,6 +321,13 @@ function item_post(&$a) {
 
 
 	/**
+	 * fix naked links by passing through a callback to see if this is a red site
+	 * (already known to us) which will get a zrl, otherwise link with url
+	 */
+
+	$body = preg_replace_callback("/([^\]\='".'"'."]|^)(https?\:\/\/[a-zA-Z0-9\:\/\-\?\&\;\.\=\@\_\~\#\%\$\!\+\,]+)/ism", 'red_zrl_callback', $body);
+
+	/**
 	 *
 	 * When a photo was uploaded into the message using the (profile wall) ajax 
 	 * uploader, The permissions are initially set to disallow anybody but the

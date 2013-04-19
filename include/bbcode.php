@@ -268,7 +268,6 @@ function bbcode($Text,$preserve_nl = false, $tryoembed = true) {
 
 	$Text = preg_replace("/([^\]\='".'"'."]|^)(https?\:\/\/$urlchars+)/ism", '$1<a href="$2" >$2</a>', $Text);
 
-//	$Text = preg_replace("/([^\]\='".'"'."]|^)(https?\:\/\/$urlchars+)\{zid\}($urlchars*)/ism", '$1<a class="zrl" href="$2$3" >$2$3</a>', $Text);
 
 	$Text = preg_replace_callback("/\[share(.*?)\](.*?)\[\/share\]/ism","bb_ShareAttributes",$Text);	
 
