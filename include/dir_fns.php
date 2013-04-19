@@ -6,6 +6,49 @@ function find_upstream_directory($dirmode) {
 	return '';
 }
 
+
+function sync_directories($dirmode) {
+
+	if($dirmode == DIRECTORY_MODE_STANDALONE || $dirmode == DIRECTORY_MODE_NORMAL)
+		return;
+
+	$r = q("select * from site where (site_flags & %d) and site_url != '%s'",
+		intval(DIRECTORY_MODE_PRIMARY),
+		dbesc(z_root())
+	);
+
+	// If there are no directory servers, setup the fallback master
+
+	if((! $r) && (z_root() != DIRECTORY_FALLBACK_MASTER)) {
+		$r = array(
+			'site_url' => DIRECTORY_FALLBACK_MASTER,
+			'site_flags' => DIRECTORY_MODE_PRIMARY,
+			'site_update' => '0000-00-00 00:00:00', 
+			'site_directory' => DIRECTORY_FALLBACK_MASTER . '/dirsearch'
+		);
+		$x = q("insert into site ( site_url, site_flags, site_update, site_directory )
+			values ( '%s', %d', '%s', '%s' ) ",
+			dbesc($r[0]['site_url']),
+			intval($r[0]['site_flags']),
+			dbesc($r[0]['site_update']),
+			dbesc($r[0]['site_directory'])
+		);
+
+	} 
+
+
+
+
+
+
+}
+
+
+
+
+
+
+
 function syncdirs($uid) {
 
 	logger('syncdirs', LOGGER_DEBUG);

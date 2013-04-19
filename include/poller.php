@@ -50,16 +50,23 @@ function poller_run($argv, $argc){
 
 	if($d2 != intval($d1)) {
 
+		// If this is a directory server, request a sync with an upstream
+		// directory at least once a day, up to once every poll interval. 
+		// Pull remote changes and push local changes.
+		// potential issue: how do we keep from creating an endless update loop? 
+
+		$dirmode = get_config('system','directory_mode');
+		if($dirmode == DIRECTORY_MODE_SECONDARY || $dirmode == DIRECTORY_MODE_PRIMARY) {
+			require_once('include/dir_fns.php');
+			sync_directories($dirmode);
+		}
+
 //		update_suggestions();
 
 		set_config('system','last_expire_day',$d2);
 		proc_run('php','include/expire.php');
 	}
 
-	// If this is a directory server, request a sync with an upstream
-	// directory at least once a day, up to once every poll interval. 
-	// Pull remote changes and push local changes.
-	// potential issue: how do we keep from creating an endless update loop? 
 
 	$manual_id  = 0;
 	$generation = 0;
