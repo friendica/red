@@ -81,6 +81,7 @@ var searchData=
   ['suggest_5finit',['suggest_init',['../suggest_8php.html#a696acf1dd8070e479adcc80c63c6718c',1,'suggest.php']]],
   ['suggestion_5fquery',['suggestion_query',['../socgraph_8php.html#a76e6fca3d2bc842dcd9e710bb87c8329',1,'socgraph.php']]],
   ['supportedtypes',['supportedTypes',['../classPhoto.html#af46fdc365916728deb59adf5c99f528d',1,'Photo']]],
+  ['sync_5fdirectories',['sync_directories',['../dir__fns_8php.html#aa666e7df6ca8c332f4081c9b66b4bdf6',1,'dir_fns.php']]],
   ['syncdirs',['syncdirs',['../dir__fns_8php.html#a6cae22cfdd6edda5ddf09e07abb3242a',1,'dir_fns.php']]],
   ['system_5fdown',['system_down',['../system__unavailable_8php.html#a73751a6bcc17ad3ca503496e2fb020fa',1,'system_unavailable.php']]],
   ['system_5funavailable',['system_unavailable',['../boot_8php.html#ac608a34f3bc180e7724192e0fd31f9b0',1,'boot.php']]]

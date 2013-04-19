@@ -28,7 +28,7 @@
 <table cellspacing="0" cellpadding="0">
  <tbody>
  <tr style="height: 56px;">
-  <td id="projectlogo"><img alt="Logo" src="fred-48.png"/></td>
+  <td id="projectlogo"><img alt="Logo" src="r!-64.png"/></td>
   <td style="padding-left: 0.5em;">
    <div id="projectname">The Red Project
    </div>
@@ -335,6 +335,7 @@ Functions</h2></td></tr>
 </div><div class="memdoc">
 <p>This is the POST destination for most all locally posted text stuff. This function handles status, wall-to-wall status, local comments, and remote coments that are posted on this site (as opposed to being delivered in a feed). Also processed here are posts and comments coming through the statusnet/twitter API. All of these become an "item" which is our basic unit of information. Posts that originate externally or do not fall into the above posting categories go through <a class="el" href="items_8php.html#a8ef003b2bc2dc4816bdcf5800aec1049">item_store()</a> instead of this function. </p>
 <p>Is this a reply to something?</p>
+<p>fix naked links by passing through a callback to see if this is a red site (already known to us) which will get a zrl, otherwise link with url</p>
 <p>When a photo was uploaded into the message using the (profile wall) ajax uploader, The permissions are initially set to disallow anybody but the owner from seeing it. This is because the permissions may not yet have been set for the post. If it's private, the photo permissions should be set appropriately. But we didn't know the final permissions on the post until now. So now we'll look for links of uploaded messages that are in the post and set them to the same permissions as the post itself.</p>
 <p>Fold multi-line [code] sequences</p>
 <p>Look for any tags and linkify them</p>
