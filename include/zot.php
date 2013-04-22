@@ -865,6 +865,8 @@ function zot_import($arr) {
 					$result = process_profile_delivery($i['notify']['sender'],$arr,$deliveries);
 
 				}
+
+
 			}
 			if($result)
 				$return = array_merge($return,$result);
