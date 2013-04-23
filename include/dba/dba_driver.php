@@ -11,7 +11,6 @@ function dba_factory($server,$user,$pass,$db,$install = false) {
 		require_once('include/dba/dba_mysql.php');
 		$dba = new dba_mysql($server,$user,$pass,$db,$install);
 	}
-	$dba->connect($server,$user,$pass,$db);
 
 	return $dba;
 }
@@ -20,7 +19,6 @@ function dba_factory($server,$user,$pass,$db,$install = false) {
 abstract class dba_driver {
 
 	protected $debug = 0;
-	protected $driver;
 	protected $db;
 	public  $connected = false;
 	public  $error = false;
@@ -31,22 +29,18 @@ abstract class dba_driver {
 	abstract function close();
 
 	function __construct($server,$user,$pass,$db,$install = false) {
-		if($install)
-			$this->install($server,$user,$pass,$db);
+		if(($install) && (! $this->install($server,$user,$pass,$db))) {
+			return;
+		}
 		$this->connect($server,$user,$pass,$db);
 	}
 
 
 	function install($server,$user,$pass,$db) {
-		$server = trim($server);
-		$user = trim($user);
-		$pass = trim($pass);
-		$db = trim($db);
-
 		if (!(strlen($server) && strlen($user))){
 			$this->connected = false;
 			$this->db = null;
-			return;
+			return false;
 		}
 
 		if(strlen($server) && ($server !== 'localhost') && ($server !== '127.0.0.1')) {
@@ -54,15 +48,15 @@ abstract class dba_driver {
 				$this->error = sprintf( t('Cannot locate DNS info for database server \'%s\''), $server);
 				$this->connected = false;
 				$this->db = null;
-				return;
+				return false;
 			}
 		}
 	}
 
 
-    function dbg($dbg) {
-        $this->debug = $dbg;
-    }
+	function dbg($dbg) {
+		$this->debug = $dbg;
+	}
 
 	function __destruct() {
 		if($this->db && $this->connected) {
