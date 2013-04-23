@@ -1,24 +1,14 @@
 <?php
+
+
 /**
 * @package util
 */
 
-/* 
-* require boot.php
-*/
-require_once("boot.php");
+require_once('boot.php');
+require_once('include/cli_startup.php');
 
-$a = new App;
-@include(".htconfig.php");
-
-$lang = get_best_language();
-load_translation_table($lang);
-
-require_once("dba.php");
-$db = new dba($db_host, $db_user, $db_pass, $db_data, false);
-        unset($db_host, $db_user, $db_pass, $db_data);
-
-$build = get_config('system','build');
+cli_startup();
 
 echo "Old DB VERSION: " . $build . "\n";
 echo "New DB VERSION: " . DB_UPDATE_VERSION . "\n";

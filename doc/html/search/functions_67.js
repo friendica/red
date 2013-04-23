@@ -76,7 +76,6 @@ var searchData=
   ['get_5fthread',['get_thread',['../classConversation.html#a4cff75d8c46b517e7133e4d0da6fc1c8',1,'Conversation']]],
   ['get_5fwidgets',['get_widgets',['../classApp.html#a871898becd0697d778f36d9336253ae8',1,'App']]],
   ['get_5fxconfig',['get_xconfig',['../include_2config_8php.html#ae4269ab151d08b5dcb1581b2920a934b',1,'config.php']]],
-  ['getdb',['getdb',['../classdba.html#a066ce6eab1282c9220ac4652ac2dbd27',1,'dba']]],
   ['getext',['getExt',['../classPhoto.html#ade61db6eb69c065e4df66feaa1942d29',1,'Photo']]],
   ['getheight',['getHeight',['../classPhoto.html#ab83e29500828ead47ac0a8cb9439082c',1,'Photo']]],
   ['getimage',['getImage',['../classPhoto.html#a29213571e2688f17240cd2b3892d7a62',1,'Photo']]],

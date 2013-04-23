@@ -13,7 +13,7 @@ require_once('include/datetime.php');
  *
  */
  
-
+/*
 class dba {
 
 	private $debug = 0;
@@ -130,13 +130,13 @@ class dba {
 
 			logger('dba: ' . $str );
 		}
-
+*/
 		/**
 		 * If dbfail.out exists, we will write any failed calls directly to it,
 		 * regardless of any logging that may or may nor be in effect.
 		 * These usually indicate SQL syntax errors that need to be resolved.
 		 */
-
+/*
 		if($result === false) {
 			logger('dba: ' . printable($sql) . ' returned false.' . "\n" . $this->error);
 			if(file_exists('dbfail.out'))
@@ -190,100 +190,4 @@ class dba {
 	}
 }
 
-
-function printable($s) {
-	$s = preg_replace("~([\x01-\x08\x0E-\x0F\x10-\x1F\x7F-\xFF])~",".", $s);
-	$s = str_replace("\x00",'.',$s);
-	if(x($_SERVER,'SERVER_NAME'))
-		$s = escape_tags($s);
-	return $s;
-}
-
-// Procedural functions
-
-function dbg($state) {
-	global $db;
-	if($db)
-	$db->dbg($state);
-}
-
-
-function dbesc($str) {
-	global $db;
-	if($db && $db->connected)
-		return($db->escape($str));
-	else
-		return(str_replace("'","\\'",$str));
-}
-
-
-
-// Function: q($sql,$args);
-// Description: execute SQL query with printf style args.
-// Example: $r = q("SELECT * FROM `%s` WHERE `uid` = %d",
-//                   'user', 1);
-
-
-function q($sql) {
-
-	global $db;
-	$args = func_get_args();
-	unset($args[0]);
-
-	if($db && $db->connected) {
-		$stmt = vsprintf($sql,$args);
-		if($stmt === false)
-			logger('dba: vsprintf error: ' . print_r(debug_backtrace(),true));
-		return $db->q($stmt);
-	}
-
-	/**
-	 *
-	 * This will happen occasionally trying to store the 
-	 * session data after abnormal program termination 
-	 *
-	 */
-	logger('dba: no database: ' . print_r($args,true));
-	return false; 
-
-}
-
-/**
- *
- * Raw db query, no arguments
- *
- */
-
-
-function dbq($sql) {
-
-	global $db;
-	if($db && $db->connected)
-		$ret = $db->q($sql);
-	else
-		$ret = false;
-	return $ret;
-}
-
-
-// Caller is responsible for ensuring that any integer arguments to 
-// dbesc_array are actually integers and not malformed strings containing
-// SQL injection vectors. All integer array elements should be specifically 
-// cast to int to avoid trouble. 
-
-
-
-function dbesc_array_cb(&$item, $key) {
-	if(is_string($item))
-		$item = dbesc($item);
-}
-
-
-
-function dbesc_array(&$arr) {
-	if(is_array($arr) && count($arr)) {
-		array_walk($arr,'dbesc_array_cb');
-	}
-}
-
-
+*/

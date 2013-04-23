@@ -16,7 +16,7 @@ var searchData=
   ['enumerate_5fpermissions',['enumerate_permissions',['../items_8php.html#afbcf26dfcf8a83fff952aa858c1b7b67',1,'items.php']]],
   ['eol',['EOL',['../boot_8php.html#a0603d6ece8c5d37b4b7db697db053a4b',1,'boot.php']]],
   ['eot',['EOT',['../typohelper_8php.html#ab6fd357fb5b2a3ba8aab9e8b98c6a805',1,'typohelper.php']]],
-  ['escape',['escape',['../classdba__driver.html#afc95ffa103a3290581b537670cde5311',1,'dba_driver\escape()'],['../classdba__mysql.html#a99a7691ea6cb1300031fb6549379066e',1,'dba_mysql\escape()'],['../classdba__mysqli.html#a27d6a748af7f80028801306e7ea33f64',1,'dba_mysqli\escape()'],['../classdba.html#a522329687ff042074c1cbc8bd3226d2f',1,'dba\escape()']]],
+  ['escape',['escape',['../classdba__driver.html#afc95ffa103a3290581b537670cde5311',1,'dba_driver\escape()'],['../classdba__mysql.html#a99a7691ea6cb1300031fb6549379066e',1,'dba_mysql\escape()'],['../classdba__mysqli.html#a27d6a748af7f80028801306e7ea33f64',1,'dba_mysqli\escape()']]],
   ['escape_5ftags',['escape_tags',['../text_8php.html#aa5148a0dfea2a1ca64c3d52f10aa2d64',1,'text.php']]],
   ['ev_5fcompare',['ev_compare',['../event_8php.html#a32ba1b9ddf7a744a9a1512b052e5f850',1,'event.php']]],
   ['event_2ephp',['event.php',['../event_8php.html',1,'']]],

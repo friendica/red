@@ -27,7 +27,7 @@ var dir_d44c64559bbebec7f509842c48db8b23 =
     [ "cronhooks.php", "cronhooks_8php.html", "cronhooks_8php" ],
     [ "crypto.php", "crypto_8php.html", "crypto_8php" ],
     [ "datetime.php", "datetime_8php.html", "datetime_8php" ],
-    [ "dba.php", "dba_8php.html", "dba_8php" ],
+    [ "dba.php", "dba_8php.html", null ],
     [ "deliver.php", "deliver_8php.html", "deliver_8php" ],
     [ "dir_fns.php", "dir__fns_8php.html", "dir__fns_8php" ],
     [ "directory.php", "include_2directory_8php.html", "include_2directory_8php" ],

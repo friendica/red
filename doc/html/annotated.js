@@ -9,7 +9,6 @@ var annotated =
     [ "BaseObject", "classBaseObject.html", "classBaseObject" ],
     [ "Cache", "classCache.html", null ],
     [ "Conversation", "classConversation.html", "classConversation" ],
-    [ "dba", "classdba.html", "classdba" ],
     [ "dba_driver", "classdba__driver.html", "classdba__driver" ],
     [ "dba_mysql", "classdba__mysql.html", "classdba__mysql" ],
     [ "dba_mysqli", "classdba__mysqli.html", "classdba__mysqli" ],

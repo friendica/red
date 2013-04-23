@@ -36,10 +36,10 @@ $a->language = get_best_language();
  *
  */
 
-require_once("dba.php");
+require_once("include/dba/dba_driver.php");
 
 if(! $install) {
-	$db = new dba($db_host, $db_user, $db_pass, $db_data, $install);
+	$db = dba_factory($db_host, $db_user, $db_pass, $db_data, $install);
     	    unset($db_host, $db_user, $db_pass, $db_data);
 
 	/**

@@ -4,6 +4,7 @@ var classdba__driver =
     [ "close", "classdba__driver.html#a5afa54172f3c837df61643f8f5b2c975", null ],
     [ "connect", "classdba__driver.html#aebf2911afa540fed40f97fc8f34b6e60", null ],
     [ "escape", "classdba__driver.html#afc95ffa103a3290581b537670cde5311", null ],
+    [ "install", "classdba__driver.html#a4ccb27243e62a8ca30dd8e1b8cc67746", null ],
     [ "q", "classdba__driver.html#a558e738b88ae893cc5d79ffa3793d555", null ],
     [ "$connected", "classdba__driver.html#a205f6535e399700b6fca2492f96f2229", null ],
     [ "$db", "classdba__driver.html#a3033b5f1c2716b52202faeaae2592fe6", null ],

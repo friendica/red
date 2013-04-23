@@ -47,7 +47,7 @@ var searchData=
   ['prepare_5fpage',['prepare_page',['../conversation_8php.html#a4b0888b0f26e1c284a4341fe5fd04f0c',1,'conversation.php']]],
   ['prepare_5ftext',['prepare_text',['../text_8php.html#afe54312607d92f7ce9593f5760831f80',1,'text.php']]],
   ['pretheme_5finit',['pretheme_init',['../pretheme_8php.html#af5660943ee99db5fd75182316522eafe',1,'pretheme.php']]],
-  ['printable',['printable',['../dba_8php.html#a55bf30d8176967e682656b5be4ad9249',1,'dba.php']]],
+  ['printable',['printable',['../dba__driver_8php.html#a55bf30d8176967e682656b5be4ad9249',1,'dba_driver.php']]],
   ['private_5fmessages_5fdrop',['private_messages_drop',['../include_2message_8php.html#aed272d77c06a309e2836ac79e75613f1',1,'message.php']]],
   ['private_5fmessages_5ffetch_5fconversation',['private_messages_fetch_conversation',['../include_2message_8php.html#a5f8de9847e203329e317ac38dc646898',1,'message.php']]],
   ['private_5fmessages_5ffetch_5fmessage',['private_messages_fetch_message',['../include_2message_8php.html#a254a756031e4d5e94f85e2939bdb5091',1,'message.php']]],

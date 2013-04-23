@@ -6,7 +6,6 @@ var hierarchy =
       [ "Item", "classItem.html", null ]
     ] ],
     [ "Cache", "classCache.html", null ],
-    [ "dba", "classdba.html", null ],
     [ "dba_driver", "classdba__driver.html", [
       [ "dba_mysql", "classdba__mysql.html", null ],
       [ "dba_mysqli", "classdba__mysqli.html", null ]

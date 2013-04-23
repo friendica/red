@@ -34,12 +34,12 @@ function setup_post(&$a) {
 			$adminmail = notags(trim($_POST['adminmail']));
 			$siteurl = notags(trim($_POST['siteurl']));
 
-			require_once("dba.php");
+			require_once('include/dba/dba_driver.php');
 			unset($db);
-			$db = new dba($dbhost, $dbuser, $dbpass, $dbdata, true);
+			$db = dba_factory($dbhost, $dbuser, $dbpass, $dbdata, true);
 			/*if(get_db_errno()) {
 				unset($db);
-				$db = new dba($dbhost, $dbuser, $dbpass, '', true);
+				$db = dba_factory($dbhost, $dbuser, $dbpass, '', true);
 
 				if(! get_db_errno()) {
 					$r = q("CREATE DATABASE '%s'",
@@ -76,7 +76,7 @@ function setup_post(&$a) {
 
 
 			// connect to db
-			$db = new dba($dbhost, $dbuser, $dbpass, $dbdata, true);
+			$db = dba_factory($dbhost, $dbuser, $dbpass, $dbdata, true);
 
 			$tpl = get_intltext_template('htconfig.tpl');
 			$txt = replace_macros($tpl,array(
@@ -120,7 +120,7 @@ function setup_content(&$a) {
 	global $install_wizard_pass, $db;
 	$o = '';
 	$wizard_status = "";
-	$install_title = t('Friendica Red Communications Server - Setup');
+	$install_title = t('Red Identity/Communications Server - Setup');
 	
 
 	
@@ -136,7 +136,7 @@ function setup_content(&$a) {
 	$db_return_text="";
 	if(x($a->data,'db_installed')) {
 		$txt = '<p style="font-size: 130%;">';
-		$txt .= t('Your Friendica site database has been installed.') . EOL;
+		$txt .= t('Your site database has been installed.') . EOL;
 		$db_return_text .= $txt;
 	}
 
@@ -233,7 +233,7 @@ function setup_content(&$a) {
 			$o .= replace_macros($tpl, array(
 				'$title' => $install_title,
 				'$pass' => t('Database connection'),
-				'$info_01' => t('In order to install Friendica we need to know how to connect to your database.'),
+				'$info_01' => t('In order to install Red we need to know how to connect to your database.'),
 				'$info_02' => t('Please contact your hosting provider or site administrator if you have questions about these settings.'),
 				'$info_03' => t('The database you specify below should already exist. If it does not, please create it before continuing.'),
 
@@ -330,7 +330,7 @@ function check_php(&$phpath, &$checks) {
 	$help = "";
 	if(!$passed) {
 		$help .= t('Could not find a command line version of PHP in the web server PATH.'). EOL;
-		$help .= t("If you don't have a command line version of PHP installed on server, you will not be able to run background polling via cron. See <a href='http://friendica.com/node/27'>'Activating scheduled tasks'</a>") . EOL ;
+		$help .= t("If you don't have a command line version of PHP installed on server, you will not be able to run background polling via cron.") . EOL;
 		$help .= EOL . EOL ;
 		$tpl = get_markup_template('field_input.tpl');
 		$help .= replace_macros($tpl, array(
@@ -444,7 +444,7 @@ function check_htconfig(&$checks) {
 		$status=false;
 		$help = t('The web installer needs to be able to create a file called ".htconfig.php" in the top folder of your web server and it is unable to do so.') .EOL;
 		$help .= t('This is most often a permission setting, as the web server may not be able to write files in your folder - even if you can.').EOL;
-		$help .= t('At the end of this procedure, we will give you a text to save in a file named .htconfig.php in your Friendica top folder.').EOL;
+		$help .= t('At the end of this procedure, we will give you a text to save in a file named .htconfig.php in your Red top folder.').EOL;
 		$help .= t('You can alternatively skip this procedure and perform a manual installation. Please see the file "install/INSTALL.txt" for instructions.').EOL; 
 	}
     
@@ -458,8 +458,8 @@ function check_smarty3(&$checks) {
 	if(	!is_writable('view/tpl/smarty3') ) {
 	
 		$status=false;
-		$help = t('Friendica uses the Smarty3 template engine to render its web views. Smarty3 compiles templates to PHP to speed up rendering.') .EOL;
-		$help .= t('In order to store these compiled templates, the web server needs to have write access to the directory view/tpl/smarty3/ under the Friendica top level folder.').EOL;
+		$help = t('Red uses the Smarty3 template engine to render its web views. Smarty3 compiles templates to PHP to speed up rendering.') .EOL;
+		$help .= t('In order to store these compiled templates, the web server needs to have write access to the directory view/tpl/smarty3/ under the Red top level folder.').EOL;
 		$help .= t('Please ensure that the user that your web server runs as (e.g. www-data) has write access to this folder.').EOL;
 		$help .= t('Note: as a security measure, you should give the web server write access to view/tpl/smarty3/ only--not the template files (.tpl) that it contains.').EOL; 
 	}
@@ -527,7 +527,7 @@ function what_next() {
 		."<p>".t('IMPORTANT: You will need to [manually] setup a scheduled task for the poller.')
 		.t('Please see the file "install/INSTALL.txt".')			
 		."</p><p>"
-		.t("Go to your new Friendica node <a href='$baseurl/register'>registration page</a> and register as new user. Remember to use the same email you have entered as administrator email. This will allow you to enter the site admin panel.")
+		.t("Go to your new Red node <a href='$baseurl/register'>registration page</a> and register as new user. Remember to use the same email you have entered as administrator email. This will allow you to enter the site admin panel.")
 		."</p>";
 }
 

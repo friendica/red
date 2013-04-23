@@ -14,6 +14,7 @@ var searchData=
   ['import_5fprofile_5fphoto',['import_profile_photo',['../Photo_8php.html#a102f3f26f67e0e38f4322a771951c1ca',1,'Photo.php']]],
   ['import_5fxchan',['import_xchan',['../zot_8php.html#ab0227978011d8601494a7651fa26acf0',1,'zot.php']]],
   ['info',['info',['../boot_8php.html#adfb2fc7be5a4226c0a8e24131da9d498',1,'boot.php']]],
+  ['install',['install',['../classdba__driver.html#a4ccb27243e62a8ca30dd8e1b8cc67746',1,'dba_driver']]],
   ['intro_5faside',['intro_aside',['../intro_8php.html#abc3abf25da64f98f215126eb08c7936b',1,'intro.php']]],
   ['intro_5fcontent',['intro_content',['../intro_8php.html#a3e2a523697633ddb4517b9266a515f5b',1,'intro.php']]],
   ['intro_5fpost',['intro_post',['../intro_8php.html#af3681062183ccbdf065ae2647b07d6f1',1,'intro.php']]],
