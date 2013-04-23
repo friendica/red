@@ -60,6 +60,16 @@ abstract class dba_driver {
 	}
 
 
+    function dbg($dbg) {
+        $this->debug = $dbg;
+    }
+
+	function __destruct() {
+		if($this->db && $this->connected) {
+			$this->close();
+		}
+	}
+
 }
 
 
