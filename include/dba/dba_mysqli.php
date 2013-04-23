@@ -25,14 +25,24 @@ class dba_mysqli extends dba_driver {
 		if($this->db->errno)
 			$this->error = $this->db->error;
 
-		if($result === false || $this->error) {
-			logger('dba_mysqli: ' . printable($sql) . ' returned false.' . "\n" . $this->error);
-			if(file_exists('dbfail.out'))
-				file_put_contents('dbfail.out', datetime_convert() . "\n" . printable($sql) . ' returned false' . "\n" . $this->error . "\n", FILE_APPEND);
+
+		if($this->error) {
+			logger('dba_mysqli: ERROR: ' . printable($sql) . "\n" . $this->error);
+			if(file_exists('dbfail.out')) {
+				file_put_contents('dbfail.out', datetime_convert() . "\n" . printable($sql) . "\n" . $this->error . "\n", FILE_APPEND);
+			}
 		}
 
-		if(($result === true) || ($result === false))
+		if(($result === true) || ($result === false)) {
+			if($this->debug) {
+				logger('dba_mysqli: DEBUG: returns ' . (($result) ? 'true' : 'false'));
+			}
 			return $result;
+		}
+
+		if($this->debug) {
+			logger('dba_mysqli: DEBUG: ' . printable($sql) . ' returned ' . $result->num_rows . ' results.'); 
+		}
 
 		$r = array();
 		if($result->num_rows) {
@@ -40,7 +50,6 @@ class dba_mysqli extends dba_driver {
 				$r[] = $x;
 			$result->free_result();
 			if($this->debug) {
-				logger('dba_mysqli: query: ' . printable($sql) . ' returned ' . $result->num_rows . ' results.'); 
 				logger('dba_mysqli: ' . printable(print_r($r,true)));
 			}
 		}
