@@ -94,6 +94,8 @@ function display_content(&$a, $update = 0, $load = false) {
 
 	if($update && $load) {
 
+		$updateable = false;
+
 		$pager_sql = sprintf(" LIMIT %d, %d ",intval($a->pager['start']), intval($a->pager['itemspage']));
 
 		if($load) {
@@ -107,6 +109,8 @@ function display_content(&$a, $update = 0, $load = false) {
 					intval(local_user()),
 					dbesc($target_item['parent_mid'])
 				);
+				if($r)
+					$updateable = true;
 			}
 			if($r === null) {
 				$r = q("SELECT * from item
@@ -149,6 +153,17 @@ function display_content(&$a, $update = 0, $load = false) {
 
 
 	$o .= conversation($a,$items,'display', $update, 'client');
+
+	if($updateable) {
+		$x = q("UPDATE item SET item_flags = ( item_flags ^ %d )
+			WHERE (item_flags & %d) AND uid = %d and parent = %d ",
+			intval(ITEM_UNSEEN),
+			intval(ITEM_UNSEEN),
+			intval(local_user()),
+			intval($r[0]['parent'])
+		);
+	}
+
 	return $o;
 
 

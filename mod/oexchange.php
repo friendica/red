@@ -32,18 +32,19 @@ function oexchange_content(&$a) {
 	$tags = (((x($_REQUEST,'tags')) && strlen($_REQUEST['tags'])) 
 		? '&tags=' . urlencode(notags(trim($_REQUEST['tags']))) : '');
 
-	$s = fetch_url($a->get_baseurl() . '/parse_url?f=&url=' . $url . $title . $description . $tags);
+	$ret = z_fetch_url($a->get_baseurl() . '/parse_url?f=&url=' . $url . $title . $description . $tags);
+
+	if($ret['success'])
+		$s = $ret['body'];
 
 	if(! strlen($s))
 		return;
-
-	require_once('include/html2bbcode.php');
 
 	$post = array();
 
 	$post['profile_uid'] = local_user();
 	$post['return'] = '/oexchange/done' ;
-	$post['body'] = html2bbcode($s);
+	$post['body'] = $s;
 	$post['type'] = 'wall';
 
 	$_REQUEST = $post;

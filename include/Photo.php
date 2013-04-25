@@ -1,6 +1,111 @@
 <?php /** @file */
 
 
+abstract class photo_driver {
+
+	private $image;
+	private $width;
+	private $height;
+	private $valid;
+	private $type;
+	private $types;
+
+
+	abstract function supportedTypes();
+	abstract function load();
+	abstract function destroy();
+	abstract function getWidth();
+	abstract function getHeight();
+
+	abstract function getImage();
+
+	abstract function getType();
+
+	abstract function getExt();
+
+	abstract function scaleImage($max);
+
+	abstract function rotate($degrees);
+
+	abstract function flip($horiz = true, $vert = false);
+
+	abstract function scaleImageUp($min);
+
+	abstract function scaleImageSquare($dim);
+
+	abstract function cropImage($max,$x,$y,$w,$h);
+
+	abstract function imageString();
+
+	public function saveImage($path) {
+		if(!$this->is_valid())
+			return FALSE;
+		file_put_contents($path, $this->imageString());
+	}
+
+	public function orient($filename) {
+
+		/**
+		 * This function is a bit unusual, because it is operating on a file, but you must
+		 * first create an image from that file to initialise the type and check validity
+		 * of the image.
+		 */
+
+		if(! $this->is_valid())
+			return FALSE;
+
+		if((! function_exists('exif_read_data')) || ($this->getType() !== 'image/jpeg'))
+			return;
+
+		$exif = @exif_read_data($filename);
+		if($exif) {
+			$ort = $exif['Orientation'];
+
+			switch($ort)
+			{
+				case 1: // nothing
+					break;
+
+				case 2: // horizontal flip
+					$this->flip();
+					break;
+
+				case 3: // 180 rotate left
+					$this->rotate(180);
+					break;
+
+				case 4: // vertical flip
+					$this->flip(false, true);
+					break;
+
+				case 5: // vertical flip + 90 rotate right
+					$this->flip(false, true);
+					$this->rotate(-90);
+					break;
+
+				case 6: // 90 rotate right
+					$this->rotate(-90);
+					break;
+
+				case 7: // horizontal flip + 90 rotate right
+					$this->flip();
+					$this->rotate(-90);
+					break;
+
+				case 8:	// 90 rotate left
+					$this->rotate(90);
+					break;
+			}
+		}
+	}
+}
+
+
+
+
+
+
+
 class Photo {
 
 	private $image;
@@ -512,10 +617,12 @@ class Photo {
 				imagepng($this->image,NULL, $quality);
 				break;
 			case "image/jpeg":
+			default:
 				$quality = get_config('system','jpeg_quality');
 				if((! $quality) || ($quality > 100))
 					$quality = JPEG_QUALITY;
 				imagejpeg($this->image,NULL,$quality);
+				break;
 		}
 		$string = ob_get_contents();
 		ob_end_clean();

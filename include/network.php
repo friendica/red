@@ -321,7 +321,7 @@ function z_fetch_url($url, $binary = false, $redirects = 0, $opts = array()) {
 
 
 
-function z_post_url($url,$params, $headers = null, $redirects = 0, $timeout = 0) {
+function z_post_url($url,$params, $redirects = 0, $opts = array()) {
 
 	$ret = array('return_code' => 0, 'success' => false, 'header' => "", 'body' => "");
 
@@ -336,28 +336,28 @@ function z_post_url($url,$params, $headers = null, $redirects = 0, $timeout = 0)
 	curl_setopt($ch, CURLOPT_POSTFIELDS,$params);
 	curl_setopt($ch, CURLOPT_USERAGENT, "Red");
 
-	if(intval($timeout)) {
-		curl_setopt($ch, CURLOPT_TIMEOUT, $timeout);
+
+	if (x($opts,'accept_content')){
+		curl_setopt($ch,CURLOPT_HTTPHEADER, array (
+			"Accept: " . $opts['accept_content']
+		));
+	}
+
+	if(x($opts,'timeout') && intval($opts['timeout'])) {
+		@curl_setopt($ch, CURLOPT_TIMEOUT, $opts['timeout']);
 	}
 	else {
 		$curl_time = intval(get_config('system','curl_timeout'));
-		curl_setopt($ch, CURLOPT_TIMEOUT, (($curl_time !== false) ? $curl_time : 60));
+		@curl_setopt($ch, CURLOPT_TIMEOUT, (($curl_time !== false) ? $curl_time : 60));
 	}
 
-	if(defined('LIGHTTPD')) {
-		if(!is_array($headers)) {
-			$headers = array('Expect:');
-		} else {
-			if(!in_array('Expect:', $headers)) {
-				array_push($headers, 'Expect:');
-			}
-		}
+	if(x($opts,'http_auth')) {
+		// "username" . ':' . "password"
+		@curl_setopt($ch, CURLOPT_USERPWD, $opts['http_auth']);
 	}
-	if($headers)
-		curl_setopt($ch, CURLOPT_HTTPHEADER, $headers);
 
-
-	curl_setopt($ch, CURLOPT_SSL_VERIFYPEER, true);
+	@curl_setopt($ch, CURLOPT_SSL_VERIFYPEER, 
+		((x($opts,'novalidate') && intval($opts['novalidate'])) ? false : true));
 
 	$prx = get_config('system','proxy');
 	if(strlen($prx)) {
@@ -398,9 +398,9 @@ function z_post_url($url,$params, $headers = null, $redirects = 0, $timeout = 0)
 		if (isset($url_parsed)) {
 			curl_close($ch);
 			if($http_code == 303) {
-				return z_fetch_url($newurl,false,$headers,$redirects++,$timeout);
+				return z_fetch_url($newurl,false,$redirects++,$opts);
 			} else {
-				return z_post_url($newurl,$params,$headers,$redirects++,$timeout);
+				return z_post_url($newurl,$params,$redirects++,$opts);
 			}
 		}
 	}
@@ -447,22 +447,22 @@ function xml_status($st, $message = '') {
  * Send HTTP status header and exit
  * @param int $val
  *    integer HTTP status result value
- *
+ * @param string $msg
+ *    optional message
  * @returns (does not return, process is terminated)
  */
 
-function http_status_exit($val) {
+function http_status_exit($val,$msg = '') {
 
     $err = '';
 	if($val >= 400)
-		$err = 'Error';
+		$msg = (($msg) ? $msg : 'Error');
 	if($val >= 200 && $val < 300)
-		$err = 'OK';
+		$msg = (($msg) ? $msg : 'OK');
 
-	logger('http_status_exit ' . $val);	
-	header($_SERVER["SERVER_PROTOCOL"] . ' ' . $val . ' ' . $err);
+	logger('http_status_exit ' . $val . ' ' . $msg);	
+	header($_SERVER['SERVER_PROTOCOL'] . ' ' . $val . ' ' . $msg);
 	killme();
-
 }
 
 

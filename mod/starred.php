@@ -19,13 +19,7 @@ function starred_init(&$a) {
 	if(! count($r))
 		killme();
 
-	$item_flags = $r[0]['item_flags'];
-
-	if($item_flags & ITEM_STARRED)
-	    $item_flags -= ITEM_STARRED;
-	else
-		$item_flags += ITEM_STARRED;
-
+	$item_flags = ( $r[0]['item_flags'] ^ ITEM_STARRED );
 
 	$r = q("UPDATE item SET item_flags = %d WHERE uid = %d and id = %d LIMIT 1",
 		intval($item_flags),
