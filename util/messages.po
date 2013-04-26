@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: \n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2013-04-19 00:00-0700\n"
+"POT-Creation-Date: 2013-04-26 00:00-0700\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -206,15 +206,6 @@ msgstr ""
 
 #: ../../include/profile_advanced.php:81
 msgid "School/education:"
-msgstr ""
-
-#: ../../include/Photo.php:744 ../../include/Photo.php:751
-#: ../../include/Photo.php:758 ../../include/photos.php:49
-#: ../../mod/profile_photo.php:88 ../../mod/profile_photo.php:93
-#: ../../mod/profile_photo.php:98 ../../mod/profile_photo.php:223
-#: ../../mod/profile_photo.php:323 ../../mod/profile_photo.php:332
-#: ../../mod/photos.php:95 ../../mod/photos.php:797 ../../mod/photos.php:819
-msgid "Profile Photos"
 msgstr ""
 
 #: ../../include/message.php:16
@@ -584,7 +575,7 @@ msgstr ""
 
 #: ../../include/conversation.php:573 ../../include/ItemObject.php:123
 #: ../../mod/connections.php:304 ../../mod/settings.php:659
-#: ../../mod/group.php:175 ../../mod/admin.php:628 ../../mod/photos.php:1233
+#: ../../mod/group.php:175 ../../mod/admin.php:628 ../../mod/photos.php:1236
 msgid "Delete"
 msgstr ""
 
@@ -612,7 +603,7 @@ msgstr ""
 
 #: ../../include/conversation.php:639 ../../include/conversation.php:982
 #: ../../include/ItemObject.php:245 ../../mod/editpost.php:75
-#: ../../mod/photos.php:1123 ../../mod/message.php:289
+#: ../../mod/photos.php:1126 ../../mod/message.php:289
 #: ../../mod/message.php:422
 msgid "Please wait"
 msgstr ""
@@ -702,7 +693,7 @@ msgstr ""
 msgid "Where are you right now?"
 msgstr ""
 
-#: ../../include/conversation.php:959 ../../mod/photos.php:1122
+#: ../../include/conversation.php:959 ../../mod/photos.php:1125
 msgid "Share"
 msgstr ""
 
@@ -793,7 +784,7 @@ msgid "Example: bob@example.com, mary@example.com"
 msgstr ""
 
 #: ../../include/conversation.php:1000 ../../include/ItemObject.php:548
-#: ../../mod/editpost.php:95 ../../mod/photos.php:1142
+#: ../../mod/editpost.php:95 ../../mod/photos.php:1145
 msgid "Preview"
 msgstr ""
 
@@ -986,7 +977,7 @@ msgstr ""
 #: ../../include/attach.php:189 ../../include/attach.php:204
 #: ../../include/attach.php:237 ../../include/attach.php:251
 #: ../../include/attach.php:272 ../../include/attach.php:464
-#: ../../include/items.php:4475 ../../include/photos.php:13
+#: ../../include/items.php:4475 ../../include/photos.php:15
 #: ../../mod/profile_photo.php:185 ../../mod/profile_photo.php:198
 #: ../../mod/invite.php:13 ../../mod/invite.php:99 ../../mod/allfriends.php:10
 #: ../../mod/setup.php:157 ../../mod/api.php:26 ../../mod/api.php:31
@@ -996,8 +987,8 @@ msgstr ""
 #: ../../mod/crepair.php:115 ../../mod/delegate.php:6
 #: ../../mod/editpost.php:10 ../../mod/viewsrc.php:12
 #: ../../mod/fsuggest.php:78 ../../mod/group.php:15 ../../mod/profiles.php:163
-#: ../../mod/profiles.php:471 ../../mod/intro.php:50 ../../mod/photos.php:72
-#: ../../mod/photos.php:685 ../../mod/message.php:197 ../../mod/mood.php:111
+#: ../../mod/profiles.php:471 ../../mod/intro.php:50 ../../mod/photos.php:74
+#: ../../mod/photos.php:688 ../../mod/message.php:197 ../../mod/mood.php:111
 #: ../../mod/manage.php:6 ../../mod/network.php:7 ../../mod/new_channel.php:66
 #: ../../mod/new_channel.php:97 ../../mod/nogroup.php:25
 #: ../../mod/notifications.php:66 ../../mod/poke.php:128
@@ -1489,11 +1480,6 @@ msgstr ""
 #: ../../include/datetime.php:299
 #, php-format
 msgid "%1$d %2$s ago"
-msgstr ""
-
-#: ../../include/dba.php:41 ../../include/dba/dba_driver.php:33
-#, php-format
-msgid "Cannot locate DNS info for database server '%s'"
 msgstr ""
 
 #: ../../include/identity.php:14
@@ -2081,8 +2067,13 @@ msgstr ""
 msgid "Archives"
 msgstr ""
 
-#: ../../include/network.php:1096
+#: ../../include/network.php:1097
 msgid "view full size"
+msgstr ""
+
+#: ../../include/dba/dba_driver.php:48
+#, php-format
+msgid "Cannot locate DNS info for database server '%s'"
 msgstr ""
 
 #: ../../include/follow.php:21
@@ -2152,29 +2143,39 @@ msgstr ""
 msgid "add"
 msgstr ""
 
-#: ../../include/photos.php:86
+#: ../../include/photos.php:51 ../../include/photo/photo_driver.php:493
+#: ../../include/photo/photo_driver.php:500
+#: ../../include/photo/photo_driver.php:507 ../../mod/profile_photo.php:88
+#: ../../mod/profile_photo.php:93 ../../mod/profile_photo.php:98
+#: ../../mod/profile_photo.php:223 ../../mod/profile_photo.php:323
+#: ../../mod/profile_photo.php:332 ../../mod/photos.php:97
+#: ../../mod/photos.php:800 ../../mod/photos.php:822
+msgid "Profile Photos"
+msgstr ""
+
+#: ../../include/photos.php:88
 #, php-format
 msgid "Image exceeds website size limit of %lu bytes"
 msgstr ""
 
-#: ../../include/photos.php:93
+#: ../../include/photos.php:95
 msgid "Image file is empty."
 msgstr ""
 
-#: ../../include/photos.php:122 ../../mod/profile_photo.php:145
+#: ../../include/photos.php:124 ../../mod/profile_photo.php:145
 msgid "Unable to process image"
 msgstr ""
 
-#: ../../include/photos.php:176
+#: ../../include/photos.php:178
 msgid "Photo storage failed."
 msgstr ""
 
-#: ../../include/photos.php:271 ../../boot.php:1967
+#: ../../include/photos.php:273 ../../boot.php:1967
 msgid "Photo Albums"
 msgstr ""
 
-#: ../../include/photos.php:275 ../../mod/photos.php:835
-#: ../../mod/photos.php:1367
+#: ../../include/photos.php:277 ../../mod/photos.php:838
+#: ../../mod/photos.php:1370
 msgid "Upload New Photos"
 msgstr ""
 
@@ -2183,8 +2184,8 @@ msgid "Delete this item?"
 msgstr ""
 
 #: ../../include/js_strings.php:6 ../../include/ItemObject.php:538
-#: ../../mod/photos.php:1140 ../../mod/photos.php:1178
-#: ../../mod/photos.php:1205
+#: ../../mod/photos.php:1143 ../../mod/photos.php:1181
+#: ../../mod/photos.php:1208
 msgid "Comment"
 msgstr ""
 
@@ -2396,7 +2397,7 @@ msgid ""
 "form has been opened for too long (>3 hours) before submitting it."
 msgstr ""
 
-#: ../../include/ItemObject.php:105 ../../mod/photos.php:974
+#: ../../include/ItemObject.php:105 ../../mod/photos.php:977
 msgid "Private Message"
 msgstr ""
 
@@ -2429,7 +2430,7 @@ msgstr ""
 msgid "add tag"
 msgstr ""
 
-#: ../../include/ItemObject.php:179 ../../mod/photos.php:1120
+#: ../../include/ItemObject.php:179 ../../mod/photos.php:1123
 msgid "I like this (toggle)"
 msgstr ""
 
@@ -2437,7 +2438,7 @@ msgstr ""
 msgid "like"
 msgstr ""
 
-#: ../../include/ItemObject.php:180 ../../mod/photos.php:1121
+#: ../../include/ItemObject.php:180 ../../mod/photos.php:1124
 msgid "I don't like this (toggle)"
 msgstr ""
 
@@ -2482,8 +2483,8 @@ msgid_plural "%d comments"
 msgstr[0] ""
 msgstr[1] ""
 
-#: ../../include/ItemObject.php:536 ../../mod/photos.php:1138
-#: ../../mod/photos.php:1176 ../../mod/photos.php:1203
+#: ../../include/ItemObject.php:536 ../../mod/photos.php:1141
+#: ../../mod/photos.php:1179 ../../mod/photos.php:1206
 msgid "This is you"
 msgstr ""
 
@@ -2496,9 +2497,9 @@ msgstr ""
 #: ../../mod/fsuggest.php:108 ../../mod/group.php:83
 #: ../../mod/profiles.php:523 ../../mod/import.php:339 ../../mod/admin.php:397
 #: ../../mod/admin.php:621 ../../mod/admin.php:757 ../../mod/admin.php:956
-#: ../../mod/admin.php:1043 ../../mod/photos.php:720 ../../mod/photos.php:812
-#: ../../mod/photos.php:1102 ../../mod/photos.php:1141
-#: ../../mod/photos.php:1179 ../../mod/photos.php:1206
+#: ../../mod/admin.php:1043 ../../mod/photos.php:723 ../../mod/photos.php:815
+#: ../../mod/photos.php:1105 ../../mod/photos.php:1144
+#: ../../mod/photos.php:1182 ../../mod/photos.php:1209
 #: ../../mod/message.php:290 ../../mod/message.php:421 ../../mod/mood.php:134
 #: ../../mod/poke.php:166 ../../mod/events.php:456
 #: ../../view/theme/redbasic/php/config.php:131
@@ -2748,7 +2749,7 @@ msgid "No friends to display."
 msgstr ""
 
 #: ../../mod/setup.php:123
-msgid "Friendica Red Communications Server - Setup"
+msgid "Red Identity/Communications Server - Setup"
 msgstr ""
 
 #: ../../mod/setup.php:129
@@ -2760,7 +2761,7 @@ msgid "Could not create table."
 msgstr ""
 
 #: ../../mod/setup.php:139
-msgid "Your Friendica site database has been installed."
+msgid "Your site database has been installed."
 msgstr ""
 
 #: ../../mod/setup.php:144
@@ -2791,8 +2792,7 @@ msgstr ""
 
 #: ../../mod/setup.php:236
 msgid ""
-"In order to install Friendica we need to know how to connect to your "
-"database."
+"In order to install Red we need to know how to connect to your database."
 msgstr ""
 
 #: ../../mod/setup.php:237
@@ -2856,8 +2856,7 @@ msgstr ""
 #: ../../mod/setup.php:333
 msgid ""
 "If you don't have a command line version of PHP installed on server, you "
-"will not be able to run background polling via cron. See <a href='http://"
-"friendica.com/node/27'>'Activating scheduled tasks'</a>"
+"will not be able to run background polling via cron."
 msgstr ""
 
 #: ../../mod/setup.php:337
@@ -2987,7 +2986,7 @@ msgstr ""
 #: ../../mod/setup.php:447
 msgid ""
 "At the end of this procedure, we will give you a text to save in a file "
-"named .htconfig.php in your Friendica top folder."
+"named .htconfig.php in your Red top folder."
 msgstr ""
 
 #: ../../mod/setup.php:448
@@ -3002,15 +3001,15 @@ msgstr ""
 
 #: ../../mod/setup.php:461
 msgid ""
-"Friendica uses the Smarty3 template engine to render its web views. Smarty3 "
+"Red uses the Smarty3 template engine to render its web views. Smarty3 "
 "compiles templates to PHP to speed up rendering."
 msgstr ""
 
 #: ../../mod/setup.php:462
 msgid ""
 "In order to store these compiled templates, the web server needs to have "
-"write access to the directory view/tpl/smarty3/ under the Friendica top "
-"level folder."
+"write access to the directory view/tpl/smarty3/ under the Red top level "
+"folder."
 msgstr ""
 
 #: ../../mod/setup.php:463
@@ -3103,7 +3102,7 @@ msgid "Item not available."
 msgstr ""
 
 #: ../../mod/viewconnections.php:28 ../../mod/display.php:9
-#: ../../mod/directory.php:23 ../../mod/photos.php:554
+#: ../../mod/directory.php:23 ../../mod/photos.php:556
 #: ../../mod/community.php:18 ../../mod/search.php:80
 msgid "Public access denied."
 msgstr ""
@@ -3416,8 +3415,8 @@ msgstr ""
 msgid "Follow Only"
 msgstr ""
 
-#: ../../mod/connections.php:386 ../../mod/photos.php:756
-#: ../../mod/photos.php:1098
+#: ../../mod/connections.php:386 ../../mod/photos.php:759
+#: ../../mod/photos.php:1101
 msgid "Permissions"
 msgstr ""
 
@@ -5178,147 +5177,147 @@ msgstr ""
 msgid "Log level"
 msgstr ""
 
-#: ../../mod/photos.php:81
+#: ../../mod/photos.php:83
 msgid "Page owner information could not be retrieved."
 msgstr ""
 
-#: ../../mod/photos.php:101
+#: ../../mod/photos.php:103
 msgid "Album not found."
 msgstr ""
 
-#: ../../mod/photos.php:123 ../../mod/photos.php:813
+#: ../../mod/photos.php:125 ../../mod/photos.php:816
 msgid "Delete Album"
 msgstr ""
 
-#: ../../mod/photos.php:163 ../../mod/photos.php:1103
+#: ../../mod/photos.php:165 ../../mod/photos.php:1106
 msgid "Delete Photo"
 msgstr ""
 
-#: ../../mod/photos.php:490
+#: ../../mod/photos.php:492
 #, php-format
 msgid "%1$s was tagged in %2$s by %3$s"
 msgstr ""
 
-#: ../../mod/photos.php:490
+#: ../../mod/photos.php:492
 msgid "a photo"
 msgstr ""
 
-#: ../../mod/photos.php:564
+#: ../../mod/photos.php:566
 msgid "No photos selected"
 msgstr ""
 
-#: ../../mod/photos.php:666
+#: ../../mod/photos.php:669
 msgid "Access to this item is restricted."
 msgstr ""
 
-#: ../../mod/photos.php:699 ../../mod/photos.php:797 ../../mod/photos.php:819
-#: ../../mod/photos.php:1308 ../../mod/photos.php:1320
+#: ../../mod/photos.php:702 ../../mod/photos.php:800 ../../mod/photos.php:822
+#: ../../mod/photos.php:1311 ../../mod/photos.php:1323
 msgid "Contact Photos"
-msgstr ""
-
-#: ../../mod/photos.php:730
-#, php-format
-msgid "You have used %1$.2f Mbytes of %2$.2f Mbytes photo storage."
 msgstr ""
 
 #: ../../mod/photos.php:733
 #, php-format
+msgid "You have used %1$.2f Mbytes of %2$.2f Mbytes photo storage."
+msgstr ""
+
+#: ../../mod/photos.php:736
+#, php-format
 msgid "You have used %1$.2f Mbytes of photo storage."
 msgstr ""
 
-#: ../../mod/photos.php:748
+#: ../../mod/photos.php:751
 msgid "Upload Photos"
 msgstr ""
 
-#: ../../mod/photos.php:752 ../../mod/photos.php:808
+#: ../../mod/photos.php:755 ../../mod/photos.php:811
 msgid "New album name: "
 msgstr ""
 
-#: ../../mod/photos.php:753
+#: ../../mod/photos.php:756
 msgid "or existing album name: "
 msgstr ""
 
-#: ../../mod/photos.php:754
+#: ../../mod/photos.php:757
 msgid "Do not show a status post for this upload"
 msgstr ""
 
-#: ../../mod/photos.php:823
+#: ../../mod/photos.php:826
 msgid "Edit Album"
 msgstr ""
 
-#: ../../mod/photos.php:829
+#: ../../mod/photos.php:832
 msgid "Show Newest First"
 msgstr ""
 
-#: ../../mod/photos.php:831
+#: ../../mod/photos.php:834
 msgid "Show Oldest First"
 msgstr ""
 
-#: ../../mod/photos.php:874 ../../mod/photos.php:1350
+#: ../../mod/photos.php:877 ../../mod/photos.php:1353
 msgid "View Photo"
 msgstr ""
 
-#: ../../mod/photos.php:909
+#: ../../mod/photos.php:912
 msgid "Permission denied. Access to this item may be restricted."
 msgstr ""
 
-#: ../../mod/photos.php:911
+#: ../../mod/photos.php:914
 msgid "Photo not available"
 msgstr ""
 
-#: ../../mod/photos.php:967
+#: ../../mod/photos.php:970
 msgid "View photo"
 msgstr ""
 
-#: ../../mod/photos.php:967
+#: ../../mod/photos.php:970
 msgid "Edit photo"
 msgstr ""
 
-#: ../../mod/photos.php:968
+#: ../../mod/photos.php:971
 msgid "Use as profile photo"
 msgstr ""
 
-#: ../../mod/photos.php:996
+#: ../../mod/photos.php:999
 msgid "View Full Size"
 msgstr ""
 
-#: ../../mod/photos.php:1064
+#: ../../mod/photos.php:1067
 msgid "Tags: "
 msgstr ""
 
-#: ../../mod/photos.php:1067
+#: ../../mod/photos.php:1070
 msgid "[Remove any tag]"
 msgstr ""
 
-#: ../../mod/photos.php:1088
+#: ../../mod/photos.php:1091
 msgid "Rotate CW (right)"
 msgstr ""
 
-#: ../../mod/photos.php:1089
+#: ../../mod/photos.php:1092
 msgid "Rotate CCW (left)"
 msgstr ""
 
-#: ../../mod/photos.php:1091
+#: ../../mod/photos.php:1094
 msgid "New album name"
 msgstr ""
 
-#: ../../mod/photos.php:1094
+#: ../../mod/photos.php:1097
 msgid "Caption"
 msgstr ""
 
-#: ../../mod/photos.php:1096
+#: ../../mod/photos.php:1099
 msgid "Add a Tag"
 msgstr ""
 
-#: ../../mod/photos.php:1100
+#: ../../mod/photos.php:1103
 msgid "Example: @bob, @Barbara_Jensen, @jim@example.com, #California, #camping"
 msgstr ""
 
-#: ../../mod/photos.php:1356
+#: ../../mod/photos.php:1359
 msgid "View Album"
 msgstr ""
 
-#: ../../mod/photos.php:1365
+#: ../../mod/photos.php:1368
 msgid "Recent Photos"
 msgstr ""
 
