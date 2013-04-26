@@ -6,7 +6,7 @@
 <script>
 	$(function(){
 		
-		$("#cnftheme").prettyPhoto({
+		$("#cnftheme").fancybox({
 			width: 800,
 			autoDimensions: false,
 			onStart: function(){
@@ -14,7 +14,7 @@
 				$("#cnftheme").attr('href',"{{$baseurl}}/admin/themes/"+theme);
 			}, 
 			onComplete: function(){
-				$("div#prettyPhoto-content form").submit(function(e){
+				$("div#fancybox-content form").submit(function(e){
 					var url = $(this).attr('action');
 					// can't get .serialize() to work...
 					var data={};
@@ -29,7 +29,7 @@
 					$.post(url, data, function(data) {
 						if(timer) clearTimeout(timer);
 						NavUpdate();
-						$.prettyPhoto.close();
+						$.fancybox.close();
 					})
 					
 					return false;
