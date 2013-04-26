@@ -1,7 +1,7 @@
 <?php
 
 require_once('include/security.php');
-require_once('include/Photo.php');
+require_once('include/photo/photo_driver.php');
 
 function photo_init(&$a) {
 
@@ -151,7 +151,7 @@ function photo_init(&$a) {
 	}
 
 	if(isset($res) && intval($res) && $res < 500) {
-		$ph = new Photo($data, $mimetype);
+		$ph = photo_factory($data, $mimetype);
 		if($ph->is_valid()) {
 			$ph->scaleImageSquare($res);
 			$data = $ph->imageString();

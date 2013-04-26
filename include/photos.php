@@ -2,6 +2,8 @@
 
 require_once('include/permissions.php');
 require_once('include/items.php');
+require_once('include/photo/photo_driver.php');
+
 
 function photo_upload($channel, $observer, $args) {
 
@@ -116,7 +118,7 @@ function photo_upload($channel, $observer, $args) {
 	}
 		
 
-	$ph = new Photo($imagedata, $type);
+	$ph = photo_factory($imagedata, $type);
 
 	if(! $ph->is_valid()) {
 		$ret['message'] = t('Unable to process image');

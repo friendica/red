@@ -1,5 +1,5 @@
 <?php
-require_once('include/Photo.php');
+require_once('include/photo/photo_driver.php');
 require_once('include/photos.php');
 require_once('include/items.php');
 require_once('include/acl_selectors.php');
@@ -59,7 +59,9 @@ function photos_post(&$a) {
 	logger('mod_photos: REQUEST ' . print_r($_REQUEST,true), LOGGER_DATA);
 	logger('mod_photos: FILES '   . print_r($_FILES,true), LOGGER_DATA);
 
-	$phototypes = Photo::supportedTypes();
+	$ph = photo_factory('');
+
+	$phototypes = $ph->supportedTypes();
 
 	$can_post  = false;
 
@@ -233,7 +235,7 @@ function photos_post(&$a) {
 				intval($page_owner_uid)
 			);
 			if(count($r)) {
-				$ph = new Photo($r[0]['data'], $r[0]['type']);
+				$ph = photo_factory($r[0]['data'], $r[0]['type']);
 				if($ph->is_valid()) {
 					$rotate_deg = ( (intval($_POST['rotate']) == 1) ? 270 : 90 );
 					$ph->rotate($rotate_deg);
@@ -565,7 +567,8 @@ function photos_content(&$a) {
 		return;
 	}
 
-	$phototypes = Photo::supportedTypes();
+	$ph = photo_factory('');
+	$phototypes = $ph->supportedTypes();
 
 	$_SESSION['photo_return'] = $a->cmd;
 
@@ -1152,7 +1155,7 @@ function photos_content(&$a) {
 			$dislike = '';
 
 			// display comments
-			if(count($r)) {
+			if($r) {
 
 				foreach($r as $item) {
 					like_puller($a,$item,$alike,'like');

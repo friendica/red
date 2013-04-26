@@ -26,6 +26,13 @@
 		include_once($file);
 	}
 
+	echo "Directory: include/photo\n";
+	$files = glob('include/photo/*.php');
+	foreach($files as $file) {
+		echo $file . "\n";
+		include_once($file);
+	}
+
 	echo "Directory: mod\n";
 	$files = glob('mod/*.php');
 	foreach($files as $file) {

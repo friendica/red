@@ -5,7 +5,7 @@
  * @author		Fabio Comuni <fabrixxm@kirgroup.com>
  */
 
-require_once('include/Photo.php');
+require_once('include/photo/photo_driver.php');
 
 /**
  * @param App $a

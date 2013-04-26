@@ -1,6 +1,6 @@
 <?php
 
-require_once('Photo.php');
+require_once('include/photo/photo_driver.php');
 require_once('include/photos.php');
 
 

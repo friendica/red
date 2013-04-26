@@ -563,7 +563,7 @@ function import_xchan($arr) {
 
 	if($import_photos) {
 
-		require_once("Photo.php");
+		require_once('include/photo/photo_driver.php');
 
 		$photos = import_profile_photo($arr['photo'],$xchan_hash);
 		$r = q("update xchan set xchan_photo_date = '%s', xchan_photo_l = '%s', xchan_photo_m = '%s', xchan_photo_s = '%s', xchan_photo_mimetype = '%s'

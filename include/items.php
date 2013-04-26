@@ -3,7 +3,7 @@
 require_once('include/bbcode.php');
 require_once('include/oembed.php');
 require_once('include/crypto.php');
-require_once('include/Photo.php');
+require_once('include/photo/photo_driver.php');
 require_once('include/permissions.php');
 
 
@@ -2433,7 +2433,7 @@ function consume_feed($xml,$importer,&$contact, &$hub, $datedir = 0, $pass = 0) 
 
 	if((is_array($contact)) && ($photo_timestamp) && (strlen($photo_url)) && ($photo_timestamp > $contact['avatar_date'])) {
 		logger('consume_feed: Updating photo for ' . $contact['name']);
-		require_once("Photo.php");
+
 		$photo_failure = false;
 		$have_photo = false;
 
@@ -2454,7 +2454,7 @@ function consume_feed($xml,$importer,&$contact, &$hub, $datedir = 0, $pass = 0) 
 		$type = guess_image_type($photo_url,true);
 		
 		
-		$img = new Photo($img_str, $type);
+		$img = photo_factory($img_str, $type);
 		if($img->is_valid()) {
 			if($have_photo) {
 				q("DELETE FROM `photo` WHERE `resource_id` = '%s' AND `contact-id` = %d AND `uid` = %d",
@@ -2979,7 +2979,7 @@ function local_delivery($importer,$data) {
 
 	if(($photo_timestamp) && (strlen($photo_url)) && ($photo_timestamp > $importer['avatar_date'])) {
 		logger('local_delivery: Updating photo for ' . $importer['name']);
-		require_once("Photo.php");
+
 		$photo_failure = false;
 		$have_photo = false;
 
@@ -3000,7 +3000,7 @@ function local_delivery($importer,$data) {
 		$type = guess_image_type($photo_url,true);
 		
 		
-		$img = new Photo($img_str, $type);
+		$img = photo_factory($img_str, $type);
 		if($img->is_valid()) {
 			if($have_photo) {
 				q("DELETE FROM `photo` WHERE `resource_id` = '%s' AND `contact-id` = %d AND `uid` = %d",
@@ -4210,7 +4210,7 @@ function fix_private_photos($s, $uid, $item = null, $cid = 0) {
 							$width = intval($match[1]);
 							$height = intval($match[2]);
 
-							$ph = new Photo($data, $type);
+							$ph = photo_factory($data, $type);
 							if($ph->is_valid()) {
 								$ph->scaleImage(max($width, $height));
 								$data = $ph->imageString();

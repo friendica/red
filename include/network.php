@@ -1051,7 +1051,8 @@ function scale_external_images($s, $include_link = true, $scale_replace = false)
 	$matches = null;
 	$c = preg_match_all('/\[img.*?\](.*?)\[\/img\]/ism',$s,$matches,PREG_SET_ORDER);
 	if($c) {
-		require_once('include/Photo.php');
+		require_once('include/photo/photo_driver.php');
+
 		foreach($matches as $mtch) {
 			logger('scale_external_image: ' . $mtch[1]);
 
@@ -1080,7 +1081,7 @@ function scale_external_images($s, $include_link = true, $scale_replace = false)
 			$type = guess_image_type($mtch[1],true);
 			
 			if($i) {
-				$ph = new Photo($i, $type);
+				$ph = photo_factory($i, $type);
 				if($ph->is_valid()) {
 					$orig_width = $ph->getWidth();
 					$orig_height = $ph->getHeight();

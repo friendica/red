@@ -1,6 +1,6 @@
 <?php
 
-require_once("Photo.php");
+require_once('include/photo/photo_driver.php');
 
 function profile_photo_init(&$a) {
 
@@ -77,7 +77,7 @@ function profile_photo_post(&$a) {
 
 			$base_image = $r[0];
 		
-			$im = new Photo($base_image['data'], $base_image['type']);
+			$im = photo_factory($base_image['data'], $base_image['type']);
 			if($im->is_valid()) {
 
 				$im->cropImage(175,$srcX,$srcY,$srcW,$srcH);
@@ -164,7 +164,7 @@ function profile_photo_post(&$a) {
 	}
 
 	$imagedata = @file_get_contents($src);
-	$ph = new Photo($imagedata, $filetype);
+	$ph = photo_factory($imagedata, $filetype);
 
 	if(! $ph->is_valid()) {
 		notice( t('Unable to process image.') . EOL );
@@ -251,7 +251,7 @@ function profile_photo_content(&$a) {
 			return;
 		}
 
-		$ph = new Photo($r[0]['data'], $r[0]['type']);
+		$ph = photo_factory($r[0]['data'], $r[0]['type']);
 		// go ahead as if we have just uploaded a new photo to crop
 		profile_photo_crop_ui_head($a, $ph);
 	}

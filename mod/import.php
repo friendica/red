@@ -114,7 +114,7 @@ function import_post(&$a) {
 	$channel = $r[0];
 
 	if($data['photo']) {
-		require_once('include/Photo.php');
+		require_once('include/photo/photo_driver.php');
 		import_channel_photo(base64url_decode($data['photo']['data']),$data['photo']['type'],get_account_id,$channel['channel_id']);
 	}
 
@@ -217,7 +217,7 @@ function import_post(&$a) {
 				. "')" );
 
 	
-			require_once("Photo.php");
+			require_once('include/photo/photo_driver.php');
 			$photos = import_profile_photo($xchan['xchan_photo_l'],$xchan['xchan_hash']);
 			$r = q("update xchan set xchan_photo_l = '%s', xchan_photo_m = '%s', xchan_photo_s = '%s', xchan_photo_mimetype = '%s'
 				where xchan_hash = '%s' limit 1",
