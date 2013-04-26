@@ -34,7 +34,7 @@ var searchData=
   ['fix_5fprivate_5fphotos',['fix_private_photos',['../items_8php.html#aba98fcbbcd7044a7e9ea34edabc14c87',1,'items.php']]],
   ['fix_5fsystem_5furls',['fix_system_urls',['../boot_8php.html#aca5e42678e178c6b9034610d66666fd7',1,'boot.php']]],
   ['fixacl',['fixacl',['../acl__selectors_8php.html#ad6664fb8330308e23f2645cd6624727e',1,'acl_selectors.php']]],
-  ['flip',['flip',['../classPhoto.html#a7acd95a0380f95999dd069fbb5629ea5',1,'Photo']]],
+  ['flip',['flip',['../classphoto__driver.html#a2b2a99021fc63ed6465d703ddddcb832',1,'photo_driver\flip()'],['../classphoto__gd.html#a44cedef376044018702d9355ddc813ce',1,'photo_gd\flip()'],['../classphoto__imagick.html#aff6bcdbab18593a3fc5a480db8509393',1,'photo_imagick\flip()']]],
   ['follow_5fcontent',['follow_content',['../mod_2follow_8php.html#a4c540ea4e9f5c581c1a53516ac585592',1,'follow.php']]],
   ['follow_5finit',['follow_init',['../mod_2follow_8php.html#a171f5b19f50d7738adc3b2e96ec6018a',1,'follow.php']]],
   ['follow_5fwidget',['follow_widget',['../contact__widgets_8php.html#af24e693532a045954caab515942cfc6f',1,'contact_widgets.php']]],

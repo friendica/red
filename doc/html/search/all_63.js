@@ -108,7 +108,7 @@ var searchData=
   ['crepair_5fpost',['crepair_post',['../crepair_8php.html#acc4493e1ffd1462a605dd9b870034513',1,'crepair.php']]],
   ['cronhooks_2ephp',['cronhooks.php',['../cronhooks_8php.html',1,'']]],
   ['cronhooks_5frun',['cronhooks_run',['../cronhooks_8php.html#a4c4c1bbec4ecc9a0efa00dd6afd2c0ca',1,'cronhooks.php']]],
-  ['cropimage',['cropImage',['../classPhoto.html#a4ace266825f6b2bbc3c7f990f5d92500',1,'Photo']]],
+  ['cropimage',['cropImage',['../classphoto__driver.html#a2e6e61f1e356a90bc978f4404a77137e',1,'photo_driver\cropImage()'],['../classphoto__gd.html#ab2232d775c8bacf66773a03308105f0c',1,'photo_gd\cropImage()'],['../classphoto__imagick.html#a2f33a03a89497a2b2768e29736d4a8a4',1,'photo_imagick\cropImage()']]],
   ['crypto_2ephp',['crypto.php',['../crypto_8php.html',1,'']]],
   ['curpageurl',['curPageURL',['../boot_8php.html#aa4221641e5c21db69fa52c426b9017f5',1,'boot.php']]],
   ['current_5ftheme',['current_theme',['../boot_8php.html#ad206598b909e8eb67eb0e0bb5ef69c13',1,'boot.php']]],

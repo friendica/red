@@ -11,6 +11,7 @@ var searchData=
   ['perm_5fis_5fallowed',['perm_is_allowed',['../permissions_8php.html#a67ada9ed51e77885b6b0f6a28cee1835',1,'permissions.php']]],
   ['permissions_5fsql',['permissions_sql',['../security_8php.html#afa683bc025a1d2fe9065e2f6cd71a22f',1,'security.php']]],
   ['perms2str',['perms2str',['../text_8php.html#a98fd99dee3da8cf4c148dc04efe782ee',1,'text.php']]],
+  ['photo_5ffactory',['photo_factory',['../photo__driver_8php.html#a32e2817faa25d7f11f60a8abff565035',1,'photo_driver.php']]],
   ['photo_5finit',['photo_init',['../photo_8php.html#a582779d24882b0d31ee909a91d70a448',1,'photo.php']]],
   ['photo_5fnew_5fresource',['photo_new_resource',['../text_8php.html#aa5528f41533927e1bd2da3618a74a6d7',1,'text.php']]],
   ['photo_5fupload',['photo_upload',['../include_2photos_8php.html#a6c40ef58aefef705a5adc84a40e97109',1,'photos.php']]],

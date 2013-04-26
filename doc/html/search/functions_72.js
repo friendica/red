@@ -30,7 +30,7 @@ var searchData=
   ['rmagic_5fcontent',['rmagic_content',['../rmagic_8php.html#a3e28db1e5cfa7e5c2617f90222c1caef',1,'rmagic.php']]],
   ['rmagic_5finit',['rmagic_init',['../rmagic_8php.html#a95455edd43f1bff39446a57388cdde16',1,'rmagic.php']]],
   ['rmagic_5fpost',['rmagic_post',['../rmagic_8php.html#a869de069d081b3c4e98b957d06bbf08f',1,'rmagic.php']]],
-  ['rotate',['rotate',['../classPhoto.html#a8b2b0a7f949a566c21e0160fbf047666',1,'Photo']]],
+  ['rotate',['rotate',['../classphoto__driver.html#a2f2b6337cf9aa0688d10b422123f0eec',1,'photo_driver\rotate()'],['../classphoto__gd.html#a77f87730b11093b76980c541159df37d',1,'photo_gd\rotate()'],['../classphoto__imagick.html#a9df5738a4a18e76dd304c440e96f045f',1,'photo_imagick\rotate()']]],
   ['rsa_5fsign',['rsa_sign',['../crypto_8php.html#a920e5f222d0020f47556033d8b2b6552',1,'crypto.php']]],
   ['rsa_5fverify',['rsa_verify',['../crypto_8php.html#ab4f21d8f6b8ece0915e7c8bb73379f96',1,'crypto.php']]],
   ['rsatopem',['rsatopem',['../crypto_8php.html#a7f7e650aaeaa3832580a73eb00966b26',1,'crypto.php']]],

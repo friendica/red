@@ -120,14 +120,14 @@ Functions</h2></td></tr>
 <tr class="separator:aa44d9e33a579d930e9e79c4ebb3d6b5e"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:aafd06c0a75402aefb06cfb9f9740fa37"><td class="memItemLeft" align="right" valign="top">&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="include_2network_8php.html#aafd06c0a75402aefb06cfb9f9740fa37">z_fetch_url</a> ($url, $binary=false, $redirects=0, $opts=array())</td></tr>
 <tr class="separator:aafd06c0a75402aefb06cfb9f9740fa37"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a6259181fec4d36722d1e91ac6210e876"><td class="memItemLeft" align="right" valign="top">&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="include_2network_8php.html#a6259181fec4d36722d1e91ac6210e876">z_post_url</a> ($url, $params, $headers=null, $redirects=0, $timeout=0)</td></tr>
-<tr class="separator:a6259181fec4d36722d1e91ac6210e876"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a9129fd55e7fc175b4ea9a195cccc16bc"><td class="memItemLeft" align="right" valign="top">&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="include_2network_8php.html#a9129fd55e7fc175b4ea9a195cccc16bc">z_post_url</a> ($url, $params, $redirects=0, $opts=array())</td></tr>
+<tr class="separator:a9129fd55e7fc175b4ea9a195cccc16bc"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a4c5d50079e089168d9248427018fffd4"><td class="memItemLeft" align="right" valign="top">&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="include_2network_8php.html#a4c5d50079e089168d9248427018fffd4">json_return_and_die</a> ($<a class="el" href="boot_8php.html#a01353c9abebc3544ea080ac161729632">x</a>)</td></tr>
 <tr class="separator:a4c5d50079e089168d9248427018fffd4"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a9e9da2aafb806c98ecdc318604e60dc6"><td class="memItemLeft" align="right" valign="top">&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="include_2network_8php.html#a9e9da2aafb806c98ecdc318604e60dc6">xml_status</a> ($st, $message= '')</td></tr>
 <tr class="separator:a9e9da2aafb806c98ecdc318604e60dc6"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:abed1d466435a12b6a4dd7aa4a05e5ba9"><td class="memItemLeft" align="right" valign="top">&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="include_2network_8php.html#abed1d466435a12b6a4dd7aa4a05e5ba9">http_status_exit</a> ($val)</td></tr>
-<tr class="separator:abed1d466435a12b6a4dd7aa4a05e5ba9"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a4cfb2c05a1c295317283d762440ce0b2"><td class="memItemLeft" align="right" valign="top">&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="include_2network_8php.html#a4cfb2c05a1c295317283d762440ce0b2">http_status_exit</a> ($val, $msg= '')</td></tr>
+<tr class="separator:a4cfb2c05a1c295317283d762440ce0b2"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:ad4056d3ce69988f5c1a997a79f503246"><td class="memItemLeft" align="right" valign="top">&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="include_2network_8php.html#ad4056d3ce69988f5c1a997a79f503246">convert_xml_element_to_array</a> ($xml_element, &amp;$recursion_depth=0)</td></tr>
 <tr class="separator:ad4056d3ce69988f5c1a997a79f503246"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:adf6008b38c555e98e7ed10da9ede2335"><td class="memItemLeft" align="right" valign="top">&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="include_2network_8php.html#adf6008b38c555e98e7ed10da9ede2335">webfinger_dfrn</a> ($s, &amp;$hcard)</td></tr>
@@ -399,7 +399,7 @@ Functions</h2></td></tr>
 </div><div class="memdoc">
 <p>fetch_url is deprecated and being replaced by the more capable z_fetch_url please use that function instead. Once all occurrences of fetch_url are removed from the codebase we will remove this function and perhaps rename z_fetch_url back to fetch_url </p>
 
-<p>Referenced by <a class="el" href="items_8php.html#a8794863cdf8ce1333040933d3a3f66bd">consume_feed()</a>, <a class="el" href="items_8php.html#a8395d189a36abfa0dfff81a2b0e70669">dfrn_deliver()</a>, <a class="el" href="dirfind_8php.html#af22b0283f928c4c32e62248a5ae67cee">dirfind_content()</a>, <a class="el" href="include_2network_8php.html#a850ed5307c6a18076f4b80addc99602d">fetch_xrd_links()</a>, <a class="el" href="items_8php.html#ae1c27d1a6379231ac7c0435c8a791d45">local_delivery()</a>, <a class="el" href="include_2network_8php.html#adbc7fe45cc7fd9cd78f6b2f425ee9041">lrdd()</a>, <a class="el" href="include_2oembed_8php.html#a98549b9af8140eda3eceaeedcaabc2c2">oembed_fetch_url()</a>, <a class="el" href="oexchange_8php.html#a2d8b785cd7d041a4e6274f5af370cf26">oexchange_content()</a>, <a class="el" href="include_2network_8php.html#aa44d9e33a579d930e9e79c4ebb3d6b5e">post_url()</a>, and <a class="el" href="include_2network_8php.html#ae8d9c41a11000fb8667039fc71b4f73f">scale_external_images()</a>.</p>
+<p>Referenced by <a class="el" href="items_8php.html#a8794863cdf8ce1333040933d3a3f66bd">consume_feed()</a>, <a class="el" href="items_8php.html#a8395d189a36abfa0dfff81a2b0e70669">dfrn_deliver()</a>, <a class="el" href="dirfind_8php.html#af22b0283f928c4c32e62248a5ae67cee">dirfind_content()</a>, <a class="el" href="include_2network_8php.html#a850ed5307c6a18076f4b80addc99602d">fetch_xrd_links()</a>, <a class="el" href="items_8php.html#ae1c27d1a6379231ac7c0435c8a791d45">local_delivery()</a>, <a class="el" href="include_2network_8php.html#adbc7fe45cc7fd9cd78f6b2f425ee9041">lrdd()</a>, <a class="el" href="include_2oembed_8php.html#a98549b9af8140eda3eceaeedcaabc2c2">oembed_fetch_url()</a>, <a class="el" href="include_2network_8php.html#aa44d9e33a579d930e9e79c4ebb3d6b5e">post_url()</a>, and <a class="el" href="include_2network_8php.html#ae8d9c41a11000fb8667039fc71b4f73f">scale_external_images()</a>.</p>
 
 </div>
 </div>
@@ -460,11 +460,11 @@ Functions</h2></td></tr>
       </table>
 </div><div class="memdoc">
 
-<p>Referenced by <a class="el" href="include_2network_8php.html#a37ddeb88a3fd1dee9e8339723f9edf9a">fetch_url()</a>, <a class="el" href="include_2network_8php.html#aa44d9e33a579d930e9e79c4ebb3d6b5e">post_url()</a>, <a class="el" href="include_2network_8php.html#aafd06c0a75402aefb06cfb9f9740fa37">z_fetch_url()</a>, and <a class="el" href="include_2network_8php.html#a6259181fec4d36722d1e91ac6210e876">z_post_url()</a>.</p>
+<p>Referenced by <a class="el" href="include_2network_8php.html#a37ddeb88a3fd1dee9e8339723f9edf9a">fetch_url()</a>, <a class="el" href="include_2network_8php.html#aa44d9e33a579d930e9e79c4ebb3d6b5e">post_url()</a>, <a class="el" href="include_2network_8php.html#aafd06c0a75402aefb06cfb9f9740fa37">z_fetch_url()</a>, and <a class="el" href="include_2network_8php.html#a9129fd55e7fc175b4ea9a195cccc16bc">z_post_url()</a>.</p>
 
 </div>
 </div>
-<a class="anchor" id="abed1d466435a12b6a4dd7aa4a05e5ba9"></a>
+<a class="anchor" id="a4cfb2c05a1c295317283d762440ce0b2"></a>
 <div class="memitem">
 <div class="memproto">
       <table class="memname">
@@ -472,8 +472,18 @@ Functions</h2></td></tr>
           <td class="memname">http_status_exit </td>
           <td>(</td>
           <td class="paramtype">&#160;</td>
-          <td class="paramname"><em>$val</em></td><td>)</td>
+          <td class="paramname"><em>$val</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
           <td></td>
+          <td class="paramtype">&#160;</td>
+          <td class="paramname"><em>$msg</em> = <code>''</code>&#160;</td>
+        </tr>
+        <tr>
+          <td></td>
+          <td>)</td>
+          <td></td><td></td>
         </tr>
       </table>
 </div><div class="memdoc">
@@ -481,7 +491,8 @@ Functions</h2></td></tr>
 <p>Send HTTP status header and exit </p>
 <dl class="params"><dt>Parameters</dt><dd>
   <table class="params">
-    <tr><td class="paramtype">int</td><td class="paramname">$val</td><td>integer HTTP status result value</td></tr>
+    <tr><td class="paramtype">int</td><td class="paramname">$val</td><td>integer HTTP status result value </td></tr>
+    <tr><td class="paramtype">string</td><td class="paramname">$msg</td><td>optional message </td></tr>
   </table>
   </dd>
 </dl>
@@ -847,11 +858,11 @@ Functions</h2></td></tr>
 </dl>
 <dl class="section return"><dt>Returns</dt><dd>array 'return_code' =&gt; HTTP return code or 0 if timeout or failure 'success' =&gt; boolean true (if HTTP 2xx result) or false 'header' =&gt; HTTP headers 'body' =&gt; fetched content </dd></dl>
 
-<p>Referenced by <a class="el" href="setup_8php.html#a0c3f3b671381f6dccd924b8ecdfc56c4">check_htaccess()</a>, <a class="el" href="mod_2directory_8php.html#aac79396570d759da2efac24fcedf5b44">directory_content()</a>, <a class="el" href="import_8php.html#af17fef0410518f7eac205d0ea416eaa2">import_post()</a>, <a class="el" href="Photo_8php.html#a102f3f26f67e0e38f4322a771951c1ca">import_profile_photo()</a>, <a class="el" href="acl_8php.html#a57dceff370d4a0e7ae673d50fbfda61f">navbar_complete()</a>, <a class="el" href="include_2oembed_8php.html#a98549b9af8140eda3eceaeedcaabc2c2">oembed_fetch_url()</a>, <a class="el" href="onepoll_8php.html#a72753b2fdec79b37c7f432035c91fb6d">onepoll_run()</a>, <a class="el" href="parse__url_8php.html#a25635549f2c22955d72465f4d2e58993">parseurl_getsiteinfo()</a>, <a class="el" href="socgraph_8php.html#aad9ee2421fd1ca405b241e8ed72d9aca">poco_load()</a>, <a class="el" href="include_2network_8php.html#a6259181fec4d36722d1e91ac6210e876">z_post_url()</a>, <a class="el" href="zot_8php.html#a77720d6b59894e9b609af89c310c8a4d">zot_finger()</a>, and <a class="el" href="zot_8php.html#a5bcdfef419b16075a0eca990956223dc">zot_register_hub()</a>.</p>
+<p>Referenced by <a class="el" href="setup_8php.html#a0c3f3b671381f6dccd924b8ecdfc56c4">check_htaccess()</a>, <a class="el" href="mod_2directory_8php.html#aac79396570d759da2efac24fcedf5b44">directory_content()</a>, <a class="el" href="import_8php.html#af17fef0410518f7eac205d0ea416eaa2">import_post()</a>, <a class="el" href="photo__driver_8php.html#a102f3f26f67e0e38f4322a771951c1ca">import_profile_photo()</a>, <a class="el" href="acl_8php.html#a57dceff370d4a0e7ae673d50fbfda61f">navbar_complete()</a>, <a class="el" href="include_2oembed_8php.html#a98549b9af8140eda3eceaeedcaabc2c2">oembed_fetch_url()</a>, <a class="el" href="oexchange_8php.html#a2d8b785cd7d041a4e6274f5af370cf26">oexchange_content()</a>, <a class="el" href="onepoll_8php.html#a72753b2fdec79b37c7f432035c91fb6d">onepoll_run()</a>, <a class="el" href="parse__url_8php.html#a25635549f2c22955d72465f4d2e58993">parseurl_getsiteinfo()</a>, <a class="el" href="socgraph_8php.html#aad9ee2421fd1ca405b241e8ed72d9aca">poco_load()</a>, <a class="el" href="include_2network_8php.html#a9129fd55e7fc175b4ea9a195cccc16bc">z_post_url()</a>, <a class="el" href="zot_8php.html#a77720d6b59894e9b609af89c310c8a4d">zot_finger()</a>, and <a class="el" href="zot_8php.html#a5bcdfef419b16075a0eca990956223dc">zot_register_hub()</a>.</p>
 
 </div>
 </div>
-<a class="anchor" id="a6259181fec4d36722d1e91ac6210e876"></a>
+<a class="anchor" id="a9129fd55e7fc175b4ea9a195cccc16bc"></a>
 <div class="memitem">
 <div class="memproto">
       <table class="memname">
@@ -871,19 +882,13 @@ Functions</h2></td></tr>
           <td class="paramkey"></td>
           <td></td>
           <td class="paramtype">&#160;</td>
-          <td class="paramname"><em>$headers</em> = <code>null</code>, </td>
-        </tr>
-        <tr>
-          <td class="paramkey"></td>
-          <td></td>
-          <td class="paramtype">&#160;</td>
           <td class="paramname"><em>$redirects</em> = <code>0</code>, </td>
         </tr>
         <tr>
           <td class="paramkey"></td>
           <td></td>
           <td class="paramtype">&#160;</td>
-          <td class="paramname"><em>$timeout</em> = <code>0</code>&#160;</td>
+          <td class="paramname"><em>$opts</em> = <code>array()</code>&#160;</td>
         </tr>
         <tr>
           <td></td>

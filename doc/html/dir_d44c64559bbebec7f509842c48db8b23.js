@@ -1,6 +1,7 @@
 var dir_d44c64559bbebec7f509842c48db8b23 =
 [
     [ "dba", "dir_21bc5169ff11430004758be31dcfc6c4.html", "dir_21bc5169ff11430004758be31dcfc6c4" ],
+    [ "photo", "dir_aae29906d7bfc07d076125f669c8352e.html", "dir_aae29906d7bfc07d076125f669c8352e" ],
     [ "account.php", "account_8php.html", "account_8php" ],
     [ "acl_selectors.php", "acl__selectors_8php.html", "acl__selectors_8php" ],
     [ "activities.php", "activities_8php.html", "activities_8php" ],
@@ -27,7 +28,6 @@ var dir_d44c64559bbebec7f509842c48db8b23 =
     [ "cronhooks.php", "cronhooks_8php.html", "cronhooks_8php" ],
     [ "crypto.php", "crypto_8php.html", "crypto_8php" ],
     [ "datetime.php", "datetime_8php.html", "datetime_8php" ],
-    [ "dba.php", "dba_8php.html", null ],
     [ "deliver.php", "deliver_8php.html", "deliver_8php" ],
     [ "dir_fns.php", "dir__fns_8php.html", "dir__fns_8php" ],
     [ "directory.php", "include_2directory_8php.html", "include_2directory_8php" ],
@@ -58,7 +58,6 @@ var dir_d44c64559bbebec7f509842c48db8b23 =
     [ "oembed.php", "include_2oembed_8php.html", "include_2oembed_8php" ],
     [ "onepoll.php", "onepoll_8php.html", "onepoll_8php" ],
     [ "permissions.php", "permissions_8php.html", "permissions_8php" ],
-    [ "Photo.php", "Photo_8php.html", "Photo_8php" ],
     [ "photos.php", "include_2photos_8php.html", "include_2photos_8php" ],
     [ "plugin.php", "plugin_8php.html", "plugin_8php" ],
     [ "poller.php", "poller_8php.html", "poller_8php" ],

@@ -17,7 +17,10 @@ var hierarchy =
     [ "OAuthServer", null, [
       [ "FKOAuth1", "classFKOAuth1.html", null ]
     ] ],
-    [ "Photo", "classPhoto.html", null ],
+    [ "photo_driver", "classphoto__driver.html", [
+      [ "photo_gd", "classphoto__gd.html", null ],
+      [ "photo_imagick", "classphoto__imagick.html", null ]
+    ] ],
     [ "ProtoDriver", "classProtoDriver.html", [
       [ "ZotDriver", "classZotDriver.html", null ]
     ] ],

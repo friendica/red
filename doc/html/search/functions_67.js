@@ -34,7 +34,7 @@ var searchData=
   ['get_5ffeed_5ffor',['get_feed_for',['../items_8php.html#a59abb61d7581dc6592257ef022cbfada',1,'items.php']]],
   ['get_5ffirst_5fdim',['get_first_dim',['../datetime_8php.html#aba971b67f17fecf050813f1eba72367f',1,'datetime.php']]],
   ['get_5fform_5fsecurity_5ftoken',['get_form_security_token',['../security_8php.html#acd06ef411116115c2f0a92633700db8a',1,'security.php']]],
-  ['get_5fformatsmap',['get_FormatsMap',['../classPhoto.html#a1f00f0e1b6d90c5d83d8d3febb703075',1,'Photo']]],
+  ['get_5fformatsmap',['get_FormatsMap',['../classphoto__imagick.html#aef020d929f66f4370e33fc158c8eebd4',1,'photo_imagick']]],
   ['get_5fgroups',['get_groups',['../classApp.html#a4659785d13e4bac0bed50dbb1b0d4299',1,'App']]],
   ['get_5fhostname',['get_hostname',['../classApp.html#a622eace13f8fc9f4b5672a68e2bc4396',1,'App']]],
   ['get_5fid',['get_id',['../classItem.html#ac0f27e58532612f6e7a54c8a621b9b92',1,'Item']]],
@@ -76,11 +76,11 @@ var searchData=
   ['get_5fthread',['get_thread',['../classConversation.html#a4cff75d8c46b517e7133e4d0da6fc1c8',1,'Conversation']]],
   ['get_5fwidgets',['get_widgets',['../classApp.html#a871898becd0697d778f36d9336253ae8',1,'App']]],
   ['get_5fxconfig',['get_xconfig',['../include_2config_8php.html#ae4269ab151d08b5dcb1581b2920a934b',1,'config.php']]],
-  ['getext',['getExt',['../classPhoto.html#ade61db6eb69c065e4df66feaa1942d29',1,'Photo']]],
-  ['getheight',['getHeight',['../classPhoto.html#ab83e29500828ead47ac0a8cb9439082c',1,'Photo']]],
-  ['getimage',['getImage',['../classPhoto.html#a29213571e2688f17240cd2b3892d7a62',1,'Photo']]],
-  ['gettype',['getType',['../classPhoto.html#ad17537abe440ac133c3b2d951f92677b',1,'Photo']]],
-  ['getwidth',['getWidth',['../classPhoto.html#a74a04f56215cee00533b85b24daecfb1',1,'Photo']]],
+  ['getext',['getExt',['../classphoto__driver.html#aa2efb5b2a6af3fd67e3f1c2b9852a5ba',1,'photo_driver']]],
+  ['getheight',['getHeight',['../classphoto__driver.html#af769e9abb144e57002c59aa2aa8f3468',1,'photo_driver']]],
+  ['getimage',['getImage',['../classphoto__driver.html#ab98da263bd7341fc132c4fb6fc76e8d5',1,'photo_driver\getImage()'],['../classphoto__gd.html#a86757ba021fd80d1a5cf8c2f766a8484',1,'photo_gd\getImage()'],['../classphoto__imagick.html#ad07288e0eb3922cb08cc9d33a163decc',1,'photo_imagick\getImage()']]],
+  ['gettype',['getType',['../classphoto__driver.html#a6c6c16dbc4f517ce799f9143ed61f0e3',1,'photo_driver']]],
+  ['getwidth',['getWidth',['../classphoto__driver.html#acc30486acee9e89e32701f44a1738117',1,'photo_driver']]],
   ['goaway',['goaway',['../boot_8php.html#a5ab6181607a090bcdbaa13b15b85aba1',1,'boot.php']]],
   ['gprobe_5frun',['gprobe_run',['../gprobe_8php.html#adf72cb0a70b5b9d99fdec1cc60e18ed1',1,'gprobe.php']]],
   ['group_5fadd',['group_add',['../include_2group_8php.html#a0a515d42ec78aa0066aac4c278ead5b0',1,'group.php']]],
@@ -96,5 +96,5 @@ var searchData=
   ['group_5fselect',['group_select',['../acl__selectors_8php.html#aa1e3bc344ca2b29f97eb9860216d21a0',1,'acl_selectors.php']]],
   ['group_5fside',['group_side',['../include_2group_8php.html#a1042d74055bafe54a6a30103d87a7f17',1,'group.php']]],
   ['groups_5fcontaining',['groups_containing',['../include_2group_8php.html#afb802ae2ce73aae4bc36d157f7b6a92f',1,'group.php']]],
-  ['guess_5fimage_5ftype',['guess_image_type',['../Photo_8php.html#a7273b82b017fd96d29b2c57bab03aea6',1,'Photo.php']]]
+  ['guess_5fimage_5ftype',['guess_image_type',['../photo__driver_8php.html#a7273b82b017fd96d29b2c57bab03aea6',1,'photo_driver.php']]]
 ];

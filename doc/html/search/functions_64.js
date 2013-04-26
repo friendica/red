@@ -9,7 +9,7 @@ var searchData=
   ['dbesc',['dbesc',['../dba__driver_8php.html#ab222aa1dbf9ea93b320f82028739127e',1,'dba_driver.php']]],
   ['dbesc_5farray',['dbesc_array',['../dba__driver_8php.html#a65b83462bd26968106aebd43f16540e4',1,'dba_driver.php']]],
   ['dbesc_5farray_5fcb',['dbesc_array_cb',['../dba__driver_8php.html#af531546fac5f0836a8557a4f6dfee930',1,'dba_driver.php']]],
-  ['dbg',['dbg',['../dba__driver_8php.html#aa6607893d8f60ade9122bcfbd1a53ffb',1,'dba_driver.php']]],
+  ['dbg',['dbg',['../classdba__driver.html#adcc1f8955120fec0708bce39202d0422',1,'dba_driver\dbg()'],['../dba__driver_8php.html#aa6607893d8f60ade9122bcfbd1a53ffb',1,'dbg():&#160;dba_driver.php']]],
   ['dbq',['dbq',['../dba__driver_8php.html#aa377074e70981e8c4e82ca0accd068ee',1,'dba_driver.php']]],
   ['decode_5ftags',['decode_tags',['../items_8php.html#a56b2a4abcadfac71175cd50555528cc3',1,'items.php']]],
   ['del_5fconfig',['del_config',['../include_2config_8php.html#a549910227348003efc3c05c9105c42da',1,'config.php']]],
@@ -24,6 +24,7 @@ var searchData=
   ['deliver_5frun',['deliver_run',['../deliver_8php.html#a397afcb9afecf0c1816b0951189dd346',1,'deliver.php']]],
   ['dertopem',['DerToPem',['../crypto_8php.html#a630e1574554f34e7c38511585d9e71a2',1,'crypto.php']]],
   ['dertorsa',['DerToRsa',['../crypto_8php.html#ae5af17db1cb5d7c91d486e1264079839',1,'crypto.php']]],
+  ['destroy',['destroy',['../classphoto__driver.html#ae1a9edaf846983780dc65ea77d99e813',1,'photo_driver\destroy()'],['../classphoto__gd.html#a724703ecf71b1f1d04a80e86c76db6b1',1,'photo_gd\destroy()'],['../classphoto__imagick.html#afd49d64751ee3a298eac0c0ce0ba0207',1,'photo_imagick\destroy()']]],
   ['detect_5flanguage',['detect_language',['../language_8php.html#a632da17c7ac0d2dc1a00a4706870194b',1,'language.php']]],
   ['dfrn_5fdeliver',['dfrn_deliver',['../items_8php.html#a8395d189a36abfa0dfff81a2b0e70669',1,'items.php']]],
   ['diaspora2bb',['diaspora2bb',['../bb2diaspora_8php.html#a26c09c218413610e62e60754c579f6c6',1,'bb2diaspora.php']]],
@@ -41,6 +42,7 @@ var searchData=
   ['display_5fcontent',['display_content',['../display_8php.html#a37137c98d47bf3306f4c2bb9f5b60de0',1,'display.php']]],
   ['dlogger',['dlogger',['../text_8php.html#a0a1f7c0e97f9ecbebf3e5834582b014c',1,'text.php']]],
   ['dob',['dob',['../datetime_8php.html#a3f2897db32e745fe2f3e70a6b46578f8',1,'datetime.php']]],
+  ['doscaleimage',['doScaleImage',['../classphoto__driver.html#ae18716018afcf362c7c24586b53e9e2f',1,'photo_driver\doScaleImage()'],['../classphoto__gd.html#a2f2e5900e6d8b1667892ac631b1d4754',1,'photo_gd\doScaleImage()'],['../classphoto__imagick.html#a3047c68bb4de7f66c2893fe451db2b66',1,'photo_imagick\doScaleImage()']]],
   ['drop_5fitem',['drop_item',['../items_8php.html#afa1db13c2a8b73b5b17b97f17e5a19d1',1,'items.php']]],
   ['drop_5fitems',['drop_items',['../items_8php.html#a668ece2c37f05cc3abe538eb0dabfe55',1,'items.php']]]
 ];

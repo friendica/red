@@ -44,7 +44,7 @@ var searchData=
   ['fixacl',['fixacl',['../acl__selectors_8php.html#ad6664fb8330308e23f2645cd6624727e',1,'acl_selectors.php']]],
   ['fkoauth1',['FKOAuth1',['../classFKOAuth1.html',1,'']]],
   ['fkoauthdatastore',['FKOAuthDataStore',['../classFKOAuthDataStore.html',1,'']]],
-  ['flip',['flip',['../classPhoto.html#a7acd95a0380f95999dd069fbb5629ea5',1,'Photo']]],
+  ['flip',['flip',['../classphoto__driver.html#a2b2a99021fc63ed6465d703ddddcb832',1,'photo_driver\flip()'],['../classphoto__gd.html#a44cedef376044018702d9355ddc813ce',1,'photo_gd\flip()'],['../classphoto__imagick.html#aff6bcdbab18593a3fc5a480db8509393',1,'photo_imagick\flip()']]],
   ['fnull',['fnull',['../namespaceupdatetpl.html#a79c20eb62d568c999b56eb08530355d3',1,'updatetpl']]],
   ['follow_2ephp',['follow.php',['../include_2follow_8php.html',1,'']]],
   ['follow_2ephp',['follow.php',['../mod_2follow_8php.html',1,'']]],

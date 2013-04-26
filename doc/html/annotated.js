@@ -17,7 +17,9 @@ var annotated =
     [ "FKOAuthDataStore", "classFKOAuthDataStore.html", "classFKOAuthDataStore" ],
     [ "FriendicaSmarty", "classFriendicaSmarty.html", "classFriendicaSmarty" ],
     [ "Item", "classItem.html", "classItem" ],
-    [ "Photo", "classPhoto.html", "classPhoto" ],
+    [ "photo_driver", "classphoto__driver.html", "classphoto__driver" ],
+    [ "photo_gd", "classphoto__gd.html", "classphoto__gd" ],
+    [ "photo_imagick", "classphoto__imagick.html", "classphoto__imagick" ],
     [ "ProtoDriver", "classProtoDriver.html", "classProtoDriver" ],
     [ "Template", "classTemplate.html", "classTemplate" ],
     [ "ZotDriver", "classZotDriver.html", "classZotDriver" ]

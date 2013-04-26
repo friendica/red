@@ -20,7 +20,7 @@ var searchData=
   ['onepoll_5frun',['onepoll_run',['../onepoll_8php.html#a72753b2fdec79b37c7f432035c91fb6d',1,'onepoll.php']]],
   ['opensearch_2ephp',['opensearch.php',['../opensearch_8php.html',1,'']]],
   ['opensearch_5finit',['opensearch_init',['../opensearch_8php.html#ad13034877a496565ac7d99e9fc6f55e9',1,'opensearch.php']]],
-  ['orient',['orient',['../classPhoto.html#a32ff09cd464a48bc8e510a1403410753',1,'Photo']]],
+  ['orient',['orient',['../classphoto__driver.html#a4de5bac8daea8f291a33c80788019d0d',1,'photo_driver']]],
   ['outf',['outf',['../namespacefriendica-to-smarty-tpl.html#a87182a9bab47640428bd0b2b9946bef9',1,'friendica-to-smarty-tpl']]],
   ['outpath',['outpath',['../namespacefriendica-to-smarty-tpl.html#a005c1b7a69cac31fad72a941974ba7bb',1,'friendica-to-smarty-tpl']]]
 ];

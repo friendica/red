@@ -12,7 +12,7 @@ var include_2network_8php =
     [ "fetch_xrd_links", "include_2network_8php.html#a850ed5307c6a18076f4b80addc99602d", null ],
     [ "fix_contact_ssl_policy", "include_2network_8php.html#a2729d012410e470c527a62a3f777ded8", null ],
     [ "get_capath", "include_2network_8php.html#a78e89557b2fbd344ad790846d761b0c7", null ],
-    [ "http_status_exit", "include_2network_8php.html#abed1d466435a12b6a4dd7aa4a05e5ba9", null ],
+    [ "http_status_exit", "include_2network_8php.html#a4cfb2c05a1c295317283d762440ce0b2", null ],
     [ "json_return_and_die", "include_2network_8php.html#a4c5d50079e089168d9248427018fffd4", null ],
     [ "lrdd", "include_2network_8php.html#adbc7fe45cc7fd9cd78f6b2f425ee9041", null ],
     [ "parse_xml_string", "include_2network_8php.html#a27a951b59d8d622c0b3e7b0673ba74c6", null ],
@@ -25,5 +25,5 @@ var include_2network_8php =
     [ "xml2array", "include_2network_8php.html#a99353baabbc3e0584b85eb79ee802cff", null ],
     [ "xml_status", "include_2network_8php.html#a9e9da2aafb806c98ecdc318604e60dc6", null ],
     [ "z_fetch_url", "include_2network_8php.html#aafd06c0a75402aefb06cfb9f9740fa37", null ],
-    [ "z_post_url", "include_2network_8php.html#a6259181fec4d36722d1e91ac6210e876", null ]
+    [ "z_post_url", "include_2network_8php.html#a9129fd55e7fc175b4ea9a195cccc16bc", null ]
 ];
