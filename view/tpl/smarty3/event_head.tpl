@@ -12,7 +12,7 @@
 		$.get(
 			'{{$baseurl}}/events/?id='+eventid,
 			function(data){
-				$.fancybox(data);
+				$.prettyPhoto(data);
 			}
 		);			
 	}

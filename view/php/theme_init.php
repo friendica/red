@@ -8,7 +8,7 @@ head_add_css('library/fancybox/jquery.fancybox-1.3.4.css');
 head_add_css('library/tiptip/tipTip.css');
 head_add_css('library/jgrowl/jquery.jgrowl.css');
 head_add_css('library/jslider/css/jslider.css');
-head_add_css('library/prettyphoto/css/prettyPhoto.css');
+head_add_css('library/colorbox/colorbox.css');
 
 head_add_js('js/jquery.js');
 head_add_js('js/jquery-migrate-1.1.1.js');
@@ -26,4 +26,4 @@ head_add_js('js/webtoolkit.base64.js');
 head_add_js('js/main.js');
 head_add_js('library/jslider/bin/jquery.slider.min.js');
 head_add_js('docready.js');
-head_add_js('library/prettyphoto/js/jquery.prettyPhoto.js');
+head_add_js('library/colorbox/jquery.colorbox-min.js');
