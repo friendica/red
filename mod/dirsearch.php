@@ -22,14 +22,14 @@ function dirsearch_content(&$a) {
 		json_return_and_die($ret);
 	}
 
-	$name = ((x($_REQUEST,'name')) ? $_REQUEST['name'] : '');
-	$address = ((x($_REQUEST,'address')) ? $_REQUEST['address'] : '');
-	$locale = ((x($_REQUEST,'locale')) ? $_REQUEST['locale'] : '');
-	$region = ((x($_REQUEST,'region')) ? $_REQUEST['region'] : '');
+	$name     = ((x($_REQUEST,'name'))     ? $_REQUEST['name']     : '');
+	$address  = ((x($_REQUEST,'address'))  ? $_REQUEST['address']  : '');
+	$locale   = ((x($_REQUEST,'locale'))   ? $_REQUEST['locale']   : '');
+	$region   = ((x($_REQUEST,'region'))   ? $_REQUEST['region']   : '');
 	$postcode = ((x($_REQUEST,'postcode')) ? $_REQUEST['postcode'] : '');
-	$country = ((x($_REQUEST,'country')) ? $_REQUEST['country'] : '');
-	$gender = ((x($_REQUEST,'gender')) ? $_REQUEST['gender'] : '');
-	$marital = ((x($_REQUEST,'marital')) ? $_REQUEST['marital'] : '');
+	$country  = ((x($_REQUEST,'country'))  ? $_REQUEST['country']  : '');
+	$gender   = ((x($_REQUEST,'gender'))   ? $_REQUEST['gender']   : '');
+	$marital  = ((x($_REQUEST,'marital'))  ? $_REQUEST['marital']  : '');
 	$keywords = ((x($_REQUEST,'keywords')) ? $_REQUEST['keywords'] : '');
 
 // TODO - a meta search which joins all of these things to one search string
@@ -55,11 +55,14 @@ function dirsearch_content(&$a) {
 	if($keywords)
 		$sql_extra .= " OR xprof_keywords like '" . protect_sprintf( '%' . dbesc($keywords) . '%' ) . "' ";
 
-    $perpage = (($_REQUEST['n']) ? $_REQUEST['n'] : 80);
-    $page = (($_REQUEST['p']) ? intval($_REQUEST['p'] - 1) : 0);
-    $startrec = (($page+1) * $perpage) - $perpage;
-	$limit = (($_REQUEST['limit']) ? intval($_REQUEST['limit']) : 0);
+    $perpage      = (($_REQUEST['n'])              ? $_REQUEST['n']                    : 80);
+    $page         = (($_REQUEST['p'])              ? intval($_REQUEST['p'] - 1)        : 0);
+    $startrec     = (($page+1) * $perpage) - $perpage;
+	$limit        = (($_REQUEST['limit'])          ? intval($_REQUEST['limit'])        : 0);
 	$return_total = ((x($_REQUEST,'return_total')) ? intval($_REQUEST['return_total']) : 0);
+
+
+	$mtime        = ((x($_REQUEST,'mtime'))        ? datetime_convert('UTC','UTC',$_REQUEST['mtime']) : '');
 
 	// ok a separate tag table won't work. 
 	// merge them into xprof
@@ -86,7 +89,13 @@ function dirsearch_content(&$a) {
 		}
 	}
 
+	if($mtime) {
+		$qlimit = '';
+		$sql_extra .= " and xchan_hash in ( select ud_hash from updates where ud_date > '" . dbesc($mtime) . "' ) ";
+	}
+
 	$order = " ORDER BY `xchan_name` ASC ";
+
 
 	$r = q("SELECT xchan.*, xprof.* from xchan left join xprof on xchan_hash = xprof_hash where $logic $sql_extra and not ( xchan_flags & %d ) $order $qlimit ",
 		intval(XCHAN_FLAGS_HIDDEN)
