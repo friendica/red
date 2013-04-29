@@ -3652,20 +3652,9 @@ ul.menu-popup {
 	clear: both;
 }
 
-
-
-
 #acl-wrapper {
 	width: 690px;
 	float:left;
-}
-
-div.pp_pic_holder {
-width: 800px !important;
-}
-
-.pp_content {
-width: 100% !important;
 }
 
 #acl-search {
