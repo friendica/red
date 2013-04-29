@@ -375,6 +375,20 @@ function conversation(&$a, $items, $mode, $update, $page_mode = 'traditional') {
 
 	$ssl_state = ((local_user()) ? true : false);
 
+
+	$arr_blocked = null;
+
+	if(local_user()) {
+		$str_blocked = get_pconfig(local_user(),'system','blocked');
+		if($str_blocked) {
+			$arr_blocked = explode(',',$str_blocked);
+			for($x = 0; $x < count($arr_blocked); $x ++)
+				$arr_blocked[$x] = trim($arr_blocked[$x]);
+		}
+
+	}
+
+
 	$profile_owner = 0;
 	$page_writeable      = false;
 	$live_update_div = '';
@@ -497,10 +511,27 @@ function conversation(&$a, $items, $mode, $update, $page_mode = 'traditional') {
 			// "New Item View" on network page or search page results
 			// - just loop through the items and format them minimally for display
 
+
+
+
+
 			//$tpl = get_markup_template('search_item.tpl');
 			$tpl = 'search_item.tpl';
 
 			foreach($items as $item) {
+
+				if($arr_blocked) {
+					$blocked = false;
+					foreach($arr_blocked as $b) {
+						if(($b) && ($item['author_xchan'] == $b)) {
+							$blocked = true;
+							break;
+						}
+					}
+					if($blocked)
+						continue;
+				}
+
 				$threadsid++;
 
 				$comment     = '';
@@ -672,6 +703,18 @@ function conversation(&$a, $items, $mode, $update, $page_mode = 'traditional') {
             $threads = array();
             foreach($items as $item) {
 
+				if($arr_blocked) {
+					$blocked = false;
+					foreach($arr_blocked as $b) {
+						if(($b) && ($item['author_xchan'] == $b)) {
+							$blocked = true;
+							break;
+						}
+					}
+					if($blocked)
+						continue;
+				}
+							
                 // Can we put this after the visibility check?
                 like_puller($a,$item,$alike,'like');
 
