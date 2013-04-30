@@ -375,14 +375,16 @@ function zot_refresh($them,$channel = null) {
 		else {
 
 			logger('zot_refresh: importing profile if available');
+			logger('zot_refresh: import profile: ' . print_r($x,true), LOGGER_DATA);
 
 			// Are we a directory server of some kind?
 			$dirmode = intval(get_config('system','directory_mode'));
 			if($dirmode != DIRECTORY_MODE_NORMAL) {
-				if(array_key_exists('profile',$x) && is_array($x['profile'])) {
-					import_directory_profile($x['hash'],$x['profile']);
+				if(array_key_exists('profile',$j) && is_array($j['profile'])) {
+					import_directory_profile($x['hash'],$j['profile']);
 				}
 				else {
+					logger('zot_refresh: profile not available - hiding');
 					// they may have made it private
 					$r = q("delete from xprof where xprof_hash = '%s' limit 1",
 						dbesc($x['hash'])
