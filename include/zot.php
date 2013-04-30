@@ -475,6 +475,9 @@ function import_xchan($arr) {
 		return $ret;
 	}
 
+
+	logger('import_xchan: ' . $xchan_hash, LOGGER_DEBUG);
+
 	$r = q("select * from xchan where xchan_hash = '%s' limit 1",
 		dbesc($xchan_hash)
 	);	
@@ -517,6 +520,10 @@ function import_xchan($arr) {
 				dbesc($arr['url']),
 				dbesc($xchan_hash)
 			);
+
+			logger('import_xchan: existing: ' . print_r($r[0],true), LOGGER_DATA);
+			logger('import_xchan: new: ' . print_r($arr,true), LOGGER_DATA);
+
 			update_modtime($xchan_hash);
 			$changed = true;
 		}
