@@ -27,6 +27,10 @@ class photo_imagick extends photo_driver {
 	function load($data, $type) {
 		$this->valid = false;
 		$this->image = new Imagick();
+
+		if(! $data)
+			return;
+
 		$this->image->readImageBlob($data);
 
 
@@ -71,9 +75,9 @@ class photo_imagick extends photo_driver {
 					if((! $quality) || ($quality > 100))
 						$quality = JPEG_QUALITY;
 					$this->image->setCompressionQuality($quality);
-
 				default:
 					break;
+
 			}
 		}
 	}

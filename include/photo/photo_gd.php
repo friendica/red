@@ -17,6 +17,9 @@ class photo_gd extends photo_driver {
 
 	function load($data, $type) {
 		$this->valid = false;
+		if(! $data)
+			return;
+
 		$this->image = @imagecreatefromstring($data);
 		if($this->image !== FALSE) {
 			$this->valid  = true;
