@@ -372,29 +372,6 @@ function zot_refresh($them,$channel = null) {
 				}
 			}
 		}
-		else {
-
-			logger('zot_refresh: importing profile if available');
-			logger('zot_refresh: import profile: ' . print_r($x,true), LOGGER_DATA);
-
-			// Are we a directory server of some kind?
-			$dirmode = intval(get_config('system','directory_mode'));
-			if($dirmode != DIRECTORY_MODE_NORMAL) {
-				if(array_key_exists('profile',$j) && is_array($j['profile'])) {
-					import_directory_profile($x['hash'],$j['profile']);
-				}
-				else {
-					logger('zot_refresh: profile not available - hiding');
-					// they may have made it private
-					$r = q("delete from xprof where xprof_hash = '%s' limit 1",
-						dbesc($x['hash'])
-					);
-					$r = q("delete from xtag where xtag_hash = '%s' limit 1",
-						dbesc($x['hash'])
-					);
-				}
-			}
-		}
 		return true;
 	}
 	return false;
@@ -670,6 +647,29 @@ function import_xchan($arr) {
 		}
 
 	}
+
+	// Are we a directory server of some kind?
+	$dirmode = intval(get_config('system','directory_mode'));
+	if($dirmode != DIRECTORY_MODE_NORMAL) {
+		if(array_key_exists('profile',$arr) && is_array($arr['profile'])) {
+			$profile_changed = import_directory_profile($xchan_hash,$arr['profile']);
+			if($profile_changed) {
+				update_modtime($xchan_hash);
+				$changed = true;
+			}
+		}
+		else {
+			logger('import_xchan: profile not available - hiding');
+			// they may have made it private
+			$r = q("delete from xprof where xprof_hash = '%s' limit 1",
+				dbesc($xchan_hash)
+			);
+			$r = q("delete from xtag where xtag_hash = '%s' limit 1",
+				dbesc($xchan_hash)
+			);
+		}
+	}
+
 
 	if($changed) {
 		// send out a directory mirror update packet if we're a directory server or some kind
@@ -1186,11 +1186,19 @@ function process_profile_delivery($sender,$arr,$deliveries) {
 	import_directory_profile($sender['hash'],$arr);
 }
 
+
+/*
+ * @function import_directory_profile
+ * 
+ * @returns boolean $updated if something changed
+ *
+ */
+
 function import_directory_profile($hash,$profile) {
 
 	logger('import_directory_profile', LOGGER_DEBUG);
 	if(! $hash)
-		return;
+		return false;
 
 	$arr = array();
 
@@ -1221,32 +1229,42 @@ function import_directory_profile($hash,$profile) {
 		dbesc($hash)
 	);
 	if($r) {
-		$x = q("update xprof set 
-			xprof_desc = '%s', 
-			xprof_dob = '%s', 
-			xprof_gender = '%s', 
-			xprof_marital = '%s', 
-			xprof_sexual = '%s', 
-			xprof_locale = '%s', 
-			xprof_region = '%s', 
-			xprof_postcode = '%s', 
-			xprof_country = '%s',
-			xprof_keywords = '%s'
-			where xprof_hash = '%s' limit 1",
-			dbesc($arr['xprof_desc']),
-			dbesc($arr['xprof_dob']),
-			dbesc($arr['xprof_gender']),
-			dbesc($arr['xprof_marital']),
-			dbesc($arr['xprof_sexual']),
-			dbesc($arr['xprof_locale']),
-			dbesc($arr['xprof_region']),
-			dbesc($arr['xprof_postcode']),
-			dbesc($arr['xprof_country']),
-			dbesc($arr['xprof_keywords']),
-			dbesc($arr['xprof_hash'])
-		);
+		$update = false;
+		foreach($r[0] as $k => $v) {
+			if((array_key_exists($k,$arr)) && ($arr[$k] != $v)) {
+				$update = true;
+				break;
+			}
+		}
+		if($update) {
+			$x = q("update xprof set 
+				xprof_desc = '%s', 
+				xprof_dob = '%s', 
+				xprof_gender = '%s', 
+				xprof_marital = '%s', 
+				xprof_sexual = '%s', 
+				xprof_locale = '%s', 
+				xprof_region = '%s', 
+				xprof_postcode = '%s', 
+				xprof_country = '%s',
+				xprof_keywords = '%s'
+				where xprof_hash = '%s' limit 1",
+				dbesc($arr['xprof_desc']),
+				dbesc($arr['xprof_dob']),
+				dbesc($arr['xprof_gender']),
+				dbesc($arr['xprof_marital']),
+				dbesc($arr['xprof_sexual']),
+				dbesc($arr['xprof_locale']),
+				dbesc($arr['xprof_region']),
+				dbesc($arr['xprof_postcode']),
+				dbesc($arr['xprof_country']),
+				dbesc($arr['xprof_keywords']),
+				dbesc($arr['xprof_hash'])
+			);
+		}
 	}
 	else {
+		$update = true;
 		$x = q("insert into xprof (xprof_hash, xprof_desc, xprof_dob, xprof_gender, xprof_marital, xprof_sexual, xprof_locale, xprof_region, xprof_postcode, xprof_country, xprof_keywords) values ('%s', '%s', '%s', '%s', '%s', '%s', '%s', '%s', '%s', '%s', '%s') ",
 			dbesc($arr['xprof_hash']),
 			dbesc($arr['xprof_desc']),
@@ -1262,8 +1280,9 @@ function import_directory_profile($hash,$profile) {
 		);
 	}
 
-	update_modtime($arr['xprof_hash']);
-	return;
+	if($update)
+		update_modtime($arr['xprof_hash']);
+	return $update;
 }
 
 function import_directory_keywords($hash,$keywords) {
