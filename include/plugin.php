@@ -3,24 +3,41 @@
 require_once("include/friendica_smarty.php");
 
 // install and uninstall plugin
-if (! function_exists('uninstall_plugin')){
-function uninstall_plugin($plugin){
-	logger("Addons: uninstalling " . $plugin, LOGGER_DEBUG);
-	q("DELETE FROM `addon` WHERE `name` = '%s' ",
-		dbesc($plugin)
-	);
+
+function unload_plugin($plugin){
+	logger("Addons: unloading " . $plugin, LOGGER_DEBUG);
     
+	@include_once('addon/' . $plugin . '/' . $plugin . '.php');
+	if(function_exists($plugin . '_unload')) {
+		$func = $plugin . '_unload';
+		$func();
+	}
+}
+
+
+
+function uninstall_plugin($plugin) {
+
+	unload_plugin($plugin);
+
+	if(! file_exists('addon/' . $plugin . '/' . $plugin . '.php'))
+		return false;
+
+	logger("Addons: uninstalling " . $plugin);
+	$t = @filemtime('addon/' . $plugin . '/' . $plugin . '.php');
 	@include_once('addon/' . $plugin . '/' . $plugin . '.php');
 	if(function_exists($plugin . '_uninstall')) {
 		$func = $plugin . '_uninstall';
 		$func();
 	}
-}}
 
-if (! function_exists('install_plugin')){
+	q("DELETE FROM `addon` WHERE `name` = '%s' ",
+		dbesc($plugin)
+	);
+
+}
+
 function install_plugin($plugin) {
-	// silently fail if plugin was removed
-
 	if(! file_exists('addon/' . $plugin . '/' . $plugin . '.php'))
 		return false;
 
@@ -30,14 +47,34 @@ function install_plugin($plugin) {
 	if(function_exists($plugin . '_install')) {
 		$func = $plugin . '_install';
 		$func();
+	}
+
+	$plugin_admin = (function_exists($plugin . "_plugin_admin") ? 1 : 0);
 		
-		$plugin_admin = (function_exists($plugin . "_plugin_admin") ? 1 : 0);
+	$r = q("INSERT INTO `addon` (`name`, `installed`, `timestamp`, `plugin_admin`) VALUES ( '%s', 1, %d , %d ) ",
+		dbesc($plugin),
+		intval($t),
+		$plugin_admin
+	);
+
+	load_plugin($plugin);
+			
+}
+
+
+function load_plugin($plugin) {
+	// silently fail if plugin was removed
+
+	if(! file_exists('addon/' . $plugin . '/' . $plugin . '.php'))
+		return false;
+
+	logger("Addons: loading " . $plugin);
+	$t = @filemtime('addon/' . $plugin . '/' . $plugin . '.php');
+	@include_once('addon/' . $plugin . '/' . $plugin . '.php');
+	if(function_exists($plugin . '_load')) {
+		$func = $plugin . '_load';
+		$func();
 		
-		$r = q("INSERT INTO `addon` (`name`, `installed`, `timestamp`, `plugin_admin`) VALUES ( '%s', 1, %d , %d ) ",
-			dbesc($plugin),
-			intval($t),
-			$plugin_admin
-		);
 
 		// we can add the following with the previous SQL
 		// once most site tables have been updated.
@@ -51,15 +88,14 @@ function install_plugin($plugin) {
 		return true;
 	}
 	else {
-		logger("Addons: FAILED installing " . $plugin);
+		logger("Addons: FAILED loading " . $plugin);
 		return false;
 	}
 
-}}
+}
 
 // reload all updated plugins
 
-if(! function_exists('reload_plugins')) {
 function reload_plugins() {
 	$plugins = get_config('system','addon');
 	if(strlen($plugins)) {
@@ -86,12 +122,12 @@ function reload_plugins() {
 							logger('Reloading plugin: ' . $i['name']);
 							@include_once($fname);
 
-							if(function_exists($pl . '_uninstall')) {
-								$func = $pl . '_uninstall';
+							if(function_exists($pl . '_unload')) {
+								$func = $pl . '_unload';
 								$func();
 							}
-							if(function_exists($pl . '_install')) {
-								$func = $pl . '_install';
+							if(function_exists($pl . '_load')) {
+								$func = $pl . '_load';
 								$func();
 							}
 							q("UPDATE `addon` SET `timestamp` = %d WHERE `id` = %d LIMIT 1",
@@ -104,14 +140,13 @@ function reload_plugins() {
 			}
 		}
 	}
-
-}}
+}
 				
 
 
 
 
-if(! function_exists('register_hook')) {
+
 function register_hook($hook,$file,$function,$priority=0) {
 
 	$r = q("SELECT * FROM `hook` WHERE `hook` = '%s' AND `file` = '%s' AND `function` = '%s' LIMIT 1",
@@ -129,9 +164,9 @@ function register_hook($hook,$file,$function,$priority=0) {
 		dbesc($priority)
 	);
 	return $r;
-}}
+}
 
-if(! function_exists('unregister_hook')) {
+
 function unregister_hook($hook,$file,$function) {
 
 	$r = q("DELETE FROM `hook` WHERE `hook` = '%s' AND `file` = '%s' AND `function` = '%s' LIMIT 1",
@@ -140,7 +175,7 @@ function unregister_hook($hook,$file,$function) {
 		dbesc($function)
 	);
 	return $r;
-}}
+}
 
 
 //
@@ -148,7 +183,7 @@ function unregister_hook($hook,$file,$function) {
 // array in their theme_init() and use this to customise the app behaviour.  
 //
 
-if(! function_exists('load_hooks')) {
+
 function load_hooks() {
 	$a = get_app();
 	$a->hooks = array();
@@ -160,10 +195,10 @@ function load_hooks() {
 			$a->hooks[$rr['hook']][] = array($rr['file'],$rr['function']);
 		}
 	}
-}}
+}
 
 
-if(! function_exists('call_hooks')) {
+
 function call_hooks($name, &$data = null) {
 	$a = get_app();
 
@@ -185,7 +220,7 @@ function call_hooks($name, &$data = null) {
 		}
 	}
 
-}}
+}
 
 
 /*
@@ -201,7 +236,7 @@ function call_hooks($name, &$data = null) {
  *   *
  */
 
-if (! function_exists('get_plugin_info')){
+
 function get_plugin_info($plugin){
 	$info=Array(
 		'name' => $plugin,
@@ -241,7 +276,7 @@ function get_plugin_info($plugin){
 		
 	}
 	return $info;
-}}
+}
 
 
 /*
@@ -257,7 +292,7 @@ function get_plugin_info($plugin){
  *   *
  */
 
-if (! function_exists('get_theme_info')){
+
 function get_theme_info($theme){
 	$info=Array(
 		'name' => $theme,
@@ -316,7 +351,7 @@ function get_theme_info($theme){
 		
 	}
 	return $info;
-}}
+}
 
 
 function get_theme_screenshot($theme) {
@@ -503,7 +538,7 @@ function theme_include($file, $root = '') {
 
 
 
-if(! function_exists('get_intltext_template')) {
+
 function get_intltext_template($s) {
 	global $a;
 
@@ -530,9 +565,9 @@ function get_intltext_template($s) {
 	else
 		return file_get_contents($file);
 
-}}
+}
 
-if(! function_exists('get_markup_template')) {
+
 function get_markup_template($s, $root = '') {
 
 	$a = get_app();
@@ -553,5 +588,5 @@ function get_markup_template($s, $root = '') {
 			return $template;
 		}
 	}	
-}}
+}
 

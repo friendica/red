@@ -1118,7 +1118,7 @@ function check_config(&$a) {
 	 * $a->config['system']['addon'] contains a comma-separated list of names
 	 * of plugins/addons which are used on this system.
 	 * Go through the database list of already installed addons, and if we have
-	 * an entry, but it isn't in the config list, call the uninstall procedure
+	 * an entry, but it isn't in the config list, call the unload procedure
 	 * and mark it uninstalled in the database (for now we'll remove it).
 	 * Then go through the config list and if we have a plugin that isn't installed,
 	 * call the install procedure and add it to the database.
@@ -1144,7 +1144,7 @@ function check_config(&$a) {
 	if(count($installed)) {
 		foreach($installed as $i) {
 			if(! in_array($i['name'],$plugins_arr)) {
-				uninstall_plugin($i['name']);
+				unload_plugin($i['name']);
 			}
 			else {
 				$installed_arr[] = $i['name'];
@@ -1155,7 +1155,7 @@ function check_config(&$a) {
 	if(count($plugins_arr)) {
 		foreach($plugins_arr as $p) {
 			if(! in_array($p,$installed_arr)) {
-				install_plugin($p);
+				load_plugin($p);
 			}
 		}
 	}
