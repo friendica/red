@@ -8,6 +8,7 @@
 <div id="photos-usage-message">{{$usage}}</div>
 
 <form action="photos/{{$nickname}}" enctype="multipart/form-data" method="post" name="photos-upload-form" id="photos-upload-form" >
+	<input type="hidden" id-"photos-upload-source" name="source" value="photos" />
 	<div id="photos-upload-new-wrapper" >
 		<div id="photos-upload-newalbum-div">
 			<label id="photos-upload-newalbum-text" for="photos-upload-newalbum" >{{$newalbum}}</label>

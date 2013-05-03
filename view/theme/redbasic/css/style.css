@@ -1365,7 +1365,8 @@ footer {
 	float: left;
 	width: 225px;
 	height: 260px;
-	overflow: auto;
+	overflow: hidden;
+	margin: 2px;
 }
 
 #directory-search-wrapper {
