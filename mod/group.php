@@ -143,12 +143,14 @@ function group_content(&$a) {
 		}
 		$group = $r[0];
 
+
 		$members = group_get_members($group['id']);
 
 		$preselected = array();
 		if(count($members))	{
 			foreach($members as $member)
-				$preselected[] = $member['xchan_hash'];
+				if(! in_array($member['xchan_hash'],$preselected))
+					$preselected[] = $member['xchan_hash'];
 		}
 
 		if($change) {

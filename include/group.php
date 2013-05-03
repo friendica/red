@@ -187,8 +187,9 @@ function group_get_members($gid) {
 	if(intval($gid)) {
 		$r = q("SELECT * FROM `group_member` 
 			LEFT JOIN abook ON abook_xchan = `group_member`.`xchan` left join xchan on xchan_hash = abook_xchan
-			WHERE `gid` = %d AND `group_member`.`uid` = %d and not ( abook_flags & %d ) and not ( abook_flags & %d ) and not ( abook_flags & %d ) ORDER BY xchan_name ASC ",
+			WHERE `gid` = %d AND abook_channel = %d and `group_member`.`uid` = %d and not ( abook_flags & %d ) and not ( abook_flags & %d ) and not ( abook_flags & %d ) ORDER BY xchan_name ASC ",
 			intval($gid),
+			intval(local_user()),
 			intval(local_user()),
 			intval(ABOOK_FLAG_SELF),
 			intval(ABOOK_FLAG_BLOCKED),
