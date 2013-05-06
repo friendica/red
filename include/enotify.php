@@ -108,6 +108,8 @@ function notification($params) {
 
 
 		$item_post_type = item_post_type($p[0]);
+		$private = $p[0]['item_private'];
+
 		//$possess_desc = str_replace('<!item_type!>',$possess_desc);
 
 		// "a post"
@@ -154,6 +156,8 @@ function notification($params) {
 		$epreamble = sprintf( t('%1$s posted to [zrl=%2$s]your wall[/zrl]') , 
 								'[zrl=' . $sender['xchan_url'] . ']' . $sender['xchan_name'] . '[/zrl]',
 								$params['link']); 
+		// FIXME - check the item privacy
+		$private = false;
 		
 		$sitelink = t('Please visit %s to view and/or reply to the conversation.');
 		$tsitelink = sprintf( $sitelink, $siteurl );
@@ -346,6 +350,7 @@ function notification($params) {
 		$htmlversion = html_entity_decode(bbcode(stripslashes(str_replace(array("\\r\\n", "\\r","\\n\\n" ,"\\n"), 
 			"<br />\n",$body))));
 
+
 		$datarray = array();
 		$datarray['banner']       = $banner;
 		$datarray['product']      = $product;
@@ -370,8 +375,27 @@ function notification($params) {
 		$datarray['textversion']  = $textversion;
 		$datarray['subject']      = $subject;
 		$datarray['headers']      = $additional_mail_header;
+		$datarray['email_secure'] = false;
 
 		call_hooks('enotify_mail', $datarray);
+
+		// Default to private - don't disclose message contents over insecure channels (such as email)
+		// Might be interesting to use GPG,PGP,S/MIME encryption instead
+		// but we'll save that for a clever plugin developer to implement
+
+		if(! $datarray['email_secure']) {
+			switch($params['type']) {
+				case NOTIFY_WALL:
+				case NOTIFY_COMMENT:
+					if(! $private)
+						break;
+				case NOTIFY_MAIL:
+					$datarray['textversion'] = $datarray['htmlversion'] = '';
+					break;
+				default:
+					break;
+			}
+		}
 
 		// load the template for private message notifications
 		$tpl = get_markup_template('email_notify_html.tpl');
