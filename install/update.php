@@ -515,11 +515,10 @@ function update_r1039() {
 }
 
 function update_r1040() {
-	$r = q("ALTER TABLE `session` CHANGE `expire` `expire` BIGINT UNSIGNED NOT NULL,
-		ALTER TABLE `tokens` CHANGE `expires` `expires` BIGINT UNSIGNED NOT NULL  ");
+	$r1 = q("ALTER TABLE `session` CHANGE `expire` `expire` BIGINT UNSIGNED NOT NULL ");
+	$r2 = q("ALTER TABLE `tokens` CHANGE `expires` `expires` BIGINT UNSIGNED NOT NULL ");
 
-	if($r)
+	if($r1 && $r2)
 		return UPDATE_SUCCESS;
 	return UPDATE_FAILED;
-
 }

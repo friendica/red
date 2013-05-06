@@ -59,8 +59,8 @@ function ref_session_destroy ($id) {
 
 
 function ref_session_gc($expire) {
-  q("DELETE FROM `session` WHERE `expire` < %d", dbesc(time()));
-  q("OPTIMIZE TABLE `sess_data`");
+  q("DELETE FROM session WHERE expire < %d", dbesc(time()));
+  q("OPTIMIZE TABLE session");
   return true;
 }
 
