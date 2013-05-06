@@ -80,14 +80,14 @@ function check_account_invite($invite_code) {
 function check_account_admin($arr) {
 	if(is_site_admin())
 		return true;
-	$admin_mail = trim(get_config('system','admin_email'));
+	$admin_email = trim(get_config('system','admin_email'));
 	if(strlen($admin_email) && $admin_email === trim($arr['email']))
 		return true;
 	return false;
 }
 
 function account_total() {
-	$r = q("select account_id from account where 1");
+	$r = q("select account_id from account where true");
 	if(is_array($r))
 		return count($r);
 	return false;
