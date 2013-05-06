@@ -26,7 +26,7 @@ function check_account_email($email) {
 		$r = q("select account_email from account where account_email = '%s' limit 1",
 			dbesc($email)
 		);
-		if(count($r)) {
+		if($r) {
 			$result['message'] .= t('Your email address is already registered at this site.');
 		}
 	}

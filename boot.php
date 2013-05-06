@@ -1099,7 +1099,7 @@ function check_config(&$a) {
 								. 'Content-type: text/plain; charset=UTF-8' . "\n"
 								. 'Content-transfer-encoding: 8bit' );
 							//try the logger
-							logger('CRITICAL: Update Failed: '. $x);
+							logger('CRITICAL: Update Failed: ' . $x);
 						}
 						else
 							set_config('database','update_r' . $x, 'success');

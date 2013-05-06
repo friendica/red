@@ -378,6 +378,7 @@ function guess_image_type($filename, $fromcurl=false) {
 			$type = $headers['Content-Type'];
 	}
 	if (is_null($type)){
+// FIXME!!!!
 		// Guessing from extension? Isn't that... dangerous?
 		if(class_exists('Imagick') && file_exists($filename) && is_readable($filename)) {
 			/**
@@ -389,7 +390,8 @@ function guess_image_type($filename, $fromcurl=false) {
 			$type = $image->getImageMimeType();
 		} else {
 			$ext = pathinfo($filename, PATHINFO_EXTENSION);
-			$types = Photo::supportedTypes();
+			$ph = photo_factory('');
+			$types = $ph->supportedTypes();
 			$type = "image/jpeg";
 			foreach ($types as $m=>$e){
 				if ($ext==$e) $type = $m;
@@ -427,7 +429,7 @@ function import_profile_photo($photo,$xchan) {
 	if($result['success'])
 		$img_str = $result['body'];
 
-	$img = new Photo($img_str, $type);
+	$img = photo_factory($img_str, $type);
 	if($img->is_valid()) {
 
 		$img->scaleImageSquare(175);
@@ -485,7 +487,7 @@ function import_channel_photo($photo,$type,$aid,$uid) {
 
 	$filename = $hash;
 
-	$img = new Photo($photo, $type);
+	$img = photo_factory($photo, $type);
 	if($img->is_valid()) {
 
 		$img->scaleImageSquare(175);
