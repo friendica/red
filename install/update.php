@@ -1,6 +1,6 @@
 <?php
 
-define( 'UPDATE_VERSION' , 1041 );
+define( 'UPDATE_VERSION' , 1042 );
 
 /**
  *
@@ -522,3 +522,12 @@ function update_r1040() {
 		return UPDATE_SUCCESS;
 	return UPDATE_FAILED;
 }
+
+function update_r1041() {
+	$r = q("ALTER TABLE `outq` ADD `outq_driver` CHAR( 32 ) NOT NULL DEFAULT '' AFTER `outq_channel` ");
+
+	if($r)
+		return UPDATE_SUCCESS;
+	return UPDATE_FAILED;
+}
+

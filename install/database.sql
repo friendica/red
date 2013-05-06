@@ -597,6 +597,7 @@ CREATE TABLE IF NOT EXISTS `outq` (
   `outq_hash` char(255) NOT NULL,
   `outq_account` int(10) unsigned NOT NULL DEFAULT '0',
   `outq_channel` int(10) unsigned NOT NULL DEFAULT '0',
+  `outq_driver` char(32) NOT NULL DEFAULT '',
   `outq_posturl` char(255) NOT NULL DEFAULT '',
   `outq_async` tinyint(1) NOT NULL DEFAULT '0',
   `outq_delivered` tinyint(1) NOT NULL DEFAULT '0',
