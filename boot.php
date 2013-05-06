@@ -38,10 +38,10 @@ require_once('library/Mobile_Detect/Mobile_Detect.php');
 require_once('include/BaseObject.php');
 require_once('include/features.php');
 
-define ( 'RED_PLATFORM',     'Red');
-define ( 'RED_VERSION',      trim(file_get_contents('version.inc')) . 'R');
-define ( 'ZOT_REVISION',               1     ); 
-define ( 'DB_UPDATE_VERSION',       1040     );
+define ( 'RED_PLATFORM',            'Red' );
+define ( 'RED_VERSION',             trim(file_get_contents('version.inc')) . 'R');
+define ( 'ZOT_REVISION',            1     ); 
+define ( 'DB_UPDATE_VERSION',       1041  );
 
 define ( 'EOL',                    '<br />' . "\r\n"     );
 define ( 'ATOM_TIME',              'Y-m-d\TH:i:s\Z' );

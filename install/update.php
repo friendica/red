@@ -1,6 +1,6 @@
 <?php
 
-define( 'UPDATE_VERSION' , 1040 );
+define( 'UPDATE_VERSION' , 1041 );
 
 /**
  *
@@ -507,6 +507,16 @@ function update_r1038() {
 
 function update_r1039() {
 	$r = q("ALTER TABLE `channel` CHANGE `channel_default_gid` `channel_default_group` CHAR( 255 ) NOT NULL DEFAULT ''");
+
+	if($r)
+		return UPDATE_SUCCESS;
+	return UPDATE_FAILED;
+
+}
+
+function update_r1040() {
+	$r = q("ALTER TABLE `session` CHANGE `expire` `expire` BIGINT UNSIGNED NOT NULL,
+		ALTER TABLE `tokens` CHANGE `expires` `expires` BIGINT UNSIGNED NOT NULL  ");
 
 	if($r)
 		return UPDATE_SUCCESS;

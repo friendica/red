@@ -107,7 +107,8 @@ function create_account($arr) {
 	$parent      = ((x($arr,'parent'))        ? intval($arr['parent'])             : 0 );
 	$flags       = ((x($arr,'account_flags')) ? intval($arr['account_flags'])      : ACCOUNT_OK);
 	$roles       = ((x($arr,'account_roles')) ? intval($arr['account_roles'])      : 0 );
-
+	$expires     = ((x($arr,'expires'))       ? intval($arr['expires'])            : '0000-00-00 00:00:00');
+	
 	$default_service_class = get_config('system','default_service_class');
 	if($default_service_class === false)
 		$default_service_class = '';

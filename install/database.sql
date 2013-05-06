@@ -768,7 +768,7 @@ CREATE TABLE IF NOT EXISTS `session` (
   `id` bigint(20) unsigned NOT NULL AUTO_INCREMENT,
   `sid` char(255) NOT NULL,
   `data` text NOT NULL,
-  `expire` int(10) unsigned NOT NULL,
+  `expire` bigint(20) unsigned NOT NULL,
   PRIMARY KEY (`id`),
   KEY `sid` (`sid`),
   KEY `expire` (`expire`)
@@ -832,7 +832,7 @@ CREATE TABLE IF NOT EXISTS `tokens` (
   `id` varchar(40) NOT NULL,
   `secret` text NOT NULL,
   `client_id` varchar(20) NOT NULL,
-  `expires` int(11) NOT NULL,
+  `expires` bigint(20) unsigned NOT NULL,
   `scope` varchar(200) NOT NULL,
   `uid` int(11) NOT NULL,
   PRIMARY KEY (`id`),
