@@ -27,5 +27,5 @@ head_add_js('js/webtoolkit.base64.js');
 head_add_js('js/main.js');
 head_add_js('library/jslider/bin/jquery.slider.min.js');
 head_add_js('docready.js');
-head_add_js('library/colorbox/js/jquery.prettyPhoto.js');
+head_add_js('library/prettyphoto/js/jquery.prettyPhoto.js');
 head_add_js('library/colorbox/jquery.colorbox-min.js');
