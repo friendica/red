@@ -1,7 +1,11 @@
-<?php /** @file */
+<?php
+	require_once 'include/ITemplateEngine.php';
+
 	define ("KEY_NOT_EXISTS", '^R_key_not_Exists^');
 
-	class Template {
+	class Template implements ITemplateEngine {
+		static $name ="internal";
+	
 		var $r;
 		var $search;
 		var $replace;
@@ -245,8 +249,8 @@
 			return $s;
 		}
 	
-		public function replace($s, $r) {
-			$t1 = dba_timer();
+		// TemplateEngine interface
+		public function replace_macros($s, $r) {
 			$this->r = $r;
 			
 			$s = $this->_build_nodes($s);
@@ -265,14 +269,19 @@
 				$os=$s; $count++;
 				$s = $this->var_replace($s);
 			}
-			$t3 = dba_timer();
-//			logger('macro timer: ' . sprintf('%01.4f %01.4f',$t3 - $t2, $t2  - $t1));
-
 			return $s;
 		}
+
+		public function get_markup_template($file, $root='') {
+			$template_file = theme_include($file, $root);
+			$template_file = "";
+			if ($template_file) {
+				$content = file_get_contents($template_file);
+			}
+			return $content;		
+		}			
 	}
 	
-	$t = new Template;
 
 
 

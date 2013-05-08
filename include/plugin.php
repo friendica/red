@@ -569,24 +569,9 @@ function get_intltext_template($s) {
 
 
 function get_markup_template($s, $root = '') {
-
 	$a = get_app();
-
-	$template_eng = $a->get_template_engine();
-	if($template_eng === 'internal') {
-		$template_file = theme_include($s, $root);
-		if($template_file)
-			return file_get_contents($template_file);
-	}
-	else {
-		$template_file = theme_include("$template_eng/$s", $root);
-
-		if($template_file) {
-			$template = new FriendicaSmarty();
-			$template->filename = $template_file;
-
-			return $template;
-		}
-	}	
+	$t = $a->template_engine();
+	$template = $t->get_markup_template($s, $root);
+	return $template;
 }
 
