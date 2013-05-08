@@ -1,4 +1,4 @@
-the Red Matrix
+The Red Matrix
 ==============
 
 
