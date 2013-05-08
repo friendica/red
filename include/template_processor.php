@@ -248,7 +248,11 @@
 			
 			return $s;
 		}
-	
+		
+		private function replace($s,$r) {
+			$this->replace_macros($s, $r);
+		}
+		
 		// TemplateEngine interface
 		public function replace_macros($s, $r) {
 			$this->r = $r;
@@ -274,7 +278,6 @@
 
 		public function get_markup_template($file, $root='') {
 			$template_file = theme_include($file, $root);
-			$template_file = "";
 			if ($template_file) {
 				$content = file_get_contents($template_file);
 			}
