@@ -15,10 +15,10 @@ class FriendicaSmarty extends Smarty {
 
 		// setTemplateDir can be set to an array, which Smarty will parse in order.
 		// The order is thus very important here
-		$template_dirs = array('theme' => "view/theme/$theme/tpl/smarty3/");
+		$template_dirs = array('theme' => "view/theme/$theme/tpl/");
 		if( x($a->theme_info,"extends") )
-			$template_dirs = $template_dirs + array('extends' => "view/theme/".$a->theme_info["extends"]."/tpl/smarty3/");
-		$template_dirs = $template_dirs + array('base' => 'view/tpl/smarty3/');
+			$template_dirs = $template_dirs + array('extends' => "view/theme/".$a->theme_info["extends"]."/tpl/");
+		$template_dirs = $template_dirs + array('base' => 'view/tpl/');
 		$this->setTemplateDir($template_dirs);
 
 		$this->setCompileDir('view/tpl/smarty3/compiled/');
@@ -68,7 +68,7 @@ class FriendicaSmartyEngine implements ITemplateEngine {
 	}
 	
 	public function get_markup_template($file, $root=''){
-		$template_file = theme_include('smarty3/'.$file, $root);
+		$template_file = theme_include($file, $root);
 		if($template_file) {
 			$template = new FriendicaSmarty();
 			$template->filename = $template_file;
