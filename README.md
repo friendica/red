@@ -18,17 +18,15 @@ These missing pieces are (in no particular order):
 
 
 
-The Red Matrix (sometimes referred to as just "Red") is a collection of web servers and services which provides these missing pieces, but within a decentralised framework. It operates as an independant network within the larger internet where all the nodes or servers (we call them "hubs") are able to fully interact with each other in ways that are simply not possible using legacy service providers. Additionally the owners of each network hub have the ability to set their own rules with regard to communications and privacy and data ownership, because each operates with complete independance.
+The Red Matrix (sometimes referred to as just "Red") is a collection of web servers and services which provides these missing pieces, but within a decentralised framework. It operates as an independent network within the larger internet where all the nodes or servers (we call them "hubs") are able to fully interact with each other in ways that are simply not possible using other services. Additionally the owners of each network hub have the ability to set their own rules with regard to communications and privacy and data ownership, because each operates with complete independence.
 
-![The Red Matrix model](images/red_antiprism.png)
+<center>![The Red Matrix model](images/red_antiprism.png)</center>
 
 
-Several projects exist today which attempt to provide one or more of these missing pieces, such as decentralised communications or single-signon. We're trying to look at the bigger picture and provide them all. 
-
-One of the weaknesses of many/most existing decentralised network models is the binding of network identity with the physical server where it resides. We see this as a problem. Many of these projects are somewhat experimental in nature and run by enthusiasts (we call it the "Indie web") - and the technology is changing quite rapidly. Often the burden or cost of maintaining these services becomes a burden (or hardware fails) and people or social communities are left stranded when their server goes offline. They may have to "start over" building their social circle from scratch when this happens; because their online identity is tied to that physical server. The complexity of this task often overwhelms them and they leave the network completely.
+A weakness of existing decentralised network models is the binding of network identity with the physical server where it resides; for example if you are "eric@example.website", your identity is often tied permanently to "example.website". We see this as a problem. Many hubs on the Indie Web are run by enthusiasts with varying skill levels and financial resources - and the technology is changing quite rapidly. Often the cost or workload involved in maintaining these services becomes a burden (or hardware fails) and people or entire social communities are left stranded when their server goes offline. They may have to "start over" building their social circle from scratch when this happens. In some cases communities are unable to recover from this kind of disruption and the entire community dissolves. 
 
 We've been working on decentralisation for several years and have seen this happen time and time again. 
-Within the Red Matrix, identity is nomadic. You can take your identity, and all your friends and associates with you - to any other hub in the network, at any time. If your hub goes offline for any reason, you have the ability to relocate to any other hub and carry on as if nothing happened. Your friends and associates are still there.
+Within the Red Matrix, identity is nomadic. You can take your identity, and all your friends and associates with you - to any other hub in the network, at any time. If your hub goes offline for any reason, you have the ability to relocate to any other hub and carry on as if nothing happened. You still have all your friends and associations.
 
  
 The Red Matrix is free and open source distributed under the MIT license.
