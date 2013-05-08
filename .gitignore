@@ -29,3 +29,6 @@ report/
 
 #ignore OSX .DS_Store files 
 .DS_Store
+
+#netbeans project folder
+nbproject
