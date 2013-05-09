@@ -546,9 +546,14 @@ class App {
 		'force_max_items' => 0,
 		'thread_allow' => true,
 		'stylesheet' => '',
-		'template_engine' => 'internal',
+		'template_engine' => 'smarty3',
 	);
 
+	// array of registered template engines ('name'=>'class name')
+	public $template_engines = array();
+	// array of instanced template engines ('name'=>'instance')
+	public $template_engine_instance = array();
+	
 	private $ldelim = array(
 		'internal' => '',
 		'smarty3' => '{{'
@@ -680,6 +685,16 @@ class App {
 		$this->is_tablet = $mobile_detect->isTablet();
 
 		BaseObject::set_app($this);
+		
+		/**
+		 * register template engines
+		 */
+		$dc = get_declared_classes();
+		foreach ($dc as $k) {
+			if (in_array("ITemplateEngine", class_implements($k))){
+				$this->register_template_engine($k);
+			}
+		}		
 	}
 
 	function get_baseurl($ssl = false) {
@@ -897,28 +912,79 @@ class App {
 		return $this->curl_headers;
 	}
 
+	
+	/**
+	* register template engine class
+	* if $name is "", is used class static property $class::$name
+	* @param string $class
+	* @param string $name
+	*/
+	function register_template_engine($class, $name = '') {
+	   if ($name===""){
+		   $v = get_class_vars( $class );
+		   if(x($v,"name")) $name = $v['name'];
+	   }
+	   if ($name===""){
+		   echo "template engine <tt>$class</tt> cannot be registered without a name.\n";
+		   killme(); 
+	   }
+	   $this->template_engines[$name] = $class;
+	}
+
+	/**
+	* return template engine instance. If $name is not defined,
+	* return engine defined by theme, or default
+	* 
+	* @param strin $name Template engine name
+	* @return object Template Engine instance
+	*/
+	function template_engine($name = ''){
+	   if ($name!=="") {
+		   $template_engine = $name;
+	   } else {
+		   $template_engine = 'smarty3';
+		   if (x($this->theme, 'template_engine')) {
+			   $template_engine = $this->theme['template_engine'];
+		   }
+	   }
+
+	   if (isset($this->template_engines[$template_engine])){
+		   if(isset($this->template_engine_instance[$template_engine])){
+			   return $this->template_engine_instance[$template_engine];
+		   } else {
+			   $class = $this->template_engines[$template_engine];
+			   $obj = new $class;
+			   $this->template_engine_instance[$template_engine] = $obj;
+			   return $obj;
+		   }
+	   }
+
+	   echo "template engine <tt>$template_engine</tt> is not registered!\n"; killme();
+	}	
+	
 	function get_template_engine() {
 		return $this->theme['template_engine'];
 	}
 
-	function set_template_engine($engine = 'internal') {
+	function set_template_engine($engine = 'smarty3') {
 
-		$this->theme['template_engine'] = 'internal';
+		$this->theme['template_engine'] = $engine;
 
-		switch($engine) {
+		/*if ($engine) {
 			case 'smarty3':
-				if(is_writable('view/tpl/smarty3/'))
-					$this->theme['template_engine'] = 'smarty3';
+				if(!is_writable('view/tpl/smarty3/'))
+					echo "<b>ERROR</b> folder <tt>view/tpl/smarty3/</tt> must be writable by webserver."; killme();
+					
 				break;
 			default:
 				break;
-		}
+		}*/
 	}
-	function get_template_ldelim($engine = 'internal') {
+	function get_template_ldelim($engine = 'smarty3') {
 		return $this->ldelim[$engine];
 	}
 
-	function get_template_rdelim($engine = 'internal') {
+	function get_template_rdelim($engine = 'smarty3') {
 		return $this->rdelim[$engine];
 	}
 

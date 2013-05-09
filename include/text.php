@@ -1,44 +1,23 @@
 <?php /** @file */
 
-// This is our template processor.
-// $s is the string requiring macro substitution.
-// $r is an array of key value pairs (search => replace)
-// returns substituted string.
-
 
 require_once("include/template_processor.php");
+require_once("include/friendica_smarty.php");
 
-
+/**
+ * This is our template processor
+ * 
+ * @param string|FriendicaSmarty $s the string requiring macro substitution, 
+ *									or an instance of FriendicaSmarty
+ * @param array $r key value pairs (search => replace)
+ * @return string substituted string
+ */
 function replace_macros($s,$r) {
-	global $t;
-
-//	$ts = microtime();
 	$a = get_app();
 
-	if($a->get_template_engine() === 'smarty3') {
-		$output = '';
-		if(gettype($s) !== 'NULL') {
-			$template = '';
-			if(gettype($s) === 'string') {
-				$template = $s;
-				$s = new FriendicaSmarty();
-			}
-			foreach($r as $key=>$value) {
-				if($key[0] === '$') {
-					$key = substr($key, 1);
-				}
-				$s->assign($key, $value);
-			}
-			$output = $s->parsed($template);
-		}
-	}
-	else {
-		$r =  $t->replace($s,$r);
+	$t = $a->template_engine();
+	$output = $t->replace_macros($s,$r);
 	
-		$output = template_unescape($r);
-	}
-//	$tt = microtime() - $ts;
-//	$a->page['debug'] .= "$tt <br>\n";
 	return $output;
 }
 
@@ -71,6 +50,8 @@ function random_string($size = 64,$type = RANDOM_STRING_HEX) {
  * They will be replaced with safer brackets. This may be filtered further
  * if these are not allowed either.   
  *
+ * @param string $string Input string
+ * @return string Filtered string
  */
 
 
@@ -86,6 +67,13 @@ function notags($string) {
 // and allow them to be safely displayed.
 
 
+
+/**
+ * use this on "body" or "content" input where angle chars shouldn't be removed,
+ * and allow them to be safely displayed.
+ * @param string $string
+ * @return string
+ */
 function escape_tags($string) {
 
 	return(htmlspecialchars($string, ENT_COMPAT, 'UTF-8', false));
@@ -97,6 +85,12 @@ function escape_tags($string) {
 // used to generate initial passwords
 
 
+/**
+ * generate a string that's random, but usually pronounceable. 
+ * used to generate initial passwords
+ * @param int $len
+ * @return string
+ */
 function autoname($len) {
 
 	if($len <= 0)
@@ -172,6 +166,11 @@ function autoname($len) {
 // returns escaped text.
 
 
+/**
+ * escape text ($str) for XML transport
+ * @param string $str
+ * @return string Escaped text.
+ */
 function xmlify($str) {
 	$buffer = '';
 	
