@@ -17,8 +17,8 @@
 
 function load_config($family) {
 	global $a;
-	$r = q("SELECT * FROM `config` WHERE `cat` = '%s'", dbesc($family));
-	if(count($r)) {
+	$r = q("SELECT * FROM config WHERE cat = '%s'", dbesc($family));
+	if($r) {
 		foreach($r as $rr) {
 			$k = $rr['k'];
 			if ($family === 'config') {

@@ -1218,6 +1218,7 @@ function import_directory_profile($hash,$profile) {
 		import_directory_keywords($hash,$profile['keywords']);
 		foreach($profile['keywords'] as $kw) {
 			$kw = trim(htmlentities($kw,ENT_COMPAT,'UTF-8',false));
+			$kw = trim($kw,',');
 		}
 		$clean[] = $kw;
 	}
@@ -1312,7 +1313,7 @@ function import_directory_keywords($hash,$keywords) {
 	}
 	foreach($clean as $x) {
 		if(! in_array($x,$existing))
-			$r = q("insert int xtag ( xtag_hash, xtag_term) values ( '%s' ,'%s' )",
+			$r = q("insert into xtag ( xtag_hash, xtag_term) values ( '%s' ,'%s' )",
 				dbesc($hash),
 				dbesc($x)
 			);

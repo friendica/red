@@ -169,7 +169,7 @@ function register_hook($hook,$file,$function,$priority=0) {
 
 function unregister_hook($hook,$file,$function) {
 
-	$r = q("DELETE FROM `hook` WHERE `hook` = '%s' AND `file` = '%s' AND `function` = '%s' LIMIT 1",
+	$r = q("DELETE FROM hook WHERE hook = '%s' AND `file` = '%s' AND `function` = '%s' LIMIT 1",
 		dbesc($hook),
 		dbesc($file),
 		dbesc($function)
@@ -187,8 +187,8 @@ function unregister_hook($hook,$file,$function) {
 function load_hooks() {
 	$a = get_app();
 	$a->hooks = array();
-	$r = q("SELECT * FROM `hook` WHERE 1 ORDER BY `priority` DESC");
-	if(count($r)) {
+	$r = q("SELECT * FROM hook WHERE true ORDER BY priority DESC");
+	if($r) {
 		foreach($r as $rr) {
 			if(! array_key_exists($rr['hook'],$a->hooks))
 				$a->hooks[$rr['hook']] = array();

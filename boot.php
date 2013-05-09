@@ -1126,7 +1126,7 @@ function check_config(&$a) {
 	 */
 
 	$r = q("SELECT * FROM `addon` WHERE `installed` = 1");
-	if(count($r))
+	if($r)
 		$installed = $r;
 	else
 		$installed = array();

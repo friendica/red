@@ -186,7 +186,6 @@ function search_content(&$a) {
 
 
 	if(($update) && ($load)) {
-
 		$pager_sql = sprintf(" LIMIT %d, %d ",intval($a->pager['start']), intval($a->pager['itemspage']));
 
 		if($load) {
