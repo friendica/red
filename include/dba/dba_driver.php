@@ -1,15 +1,17 @@
 <?php /** @file */
 
-function dba_factory($server,$user,$pass,$db,$install = false) {
+function dba_factory($server, $port,$user,$pass,$db,$install = false) {
 	$dba = null;
 
 	if(class_exists('mysqli')) {
+        if (is_null($port)) $port = ini_get("mysqli.default_port");
 		require_once('include/dba/dba_mysqli.php');
-		$dba = new dba_mysqli($server,$user,$pass,$db,$install);
+		$dba = new dba_mysqli($server, $port,$user,$pass,$db,$install);
 	}
 	else {
+        if (is_null($port)) $port = "3306";
 		require_once('include/dba/dba_mysql.php');
-		$dba = new dba_mysql($server,$user,$pass,$db,$install);
+		$dba = new dba_mysql($server, $port,$user,$pass,$db,$install);
 	}
 
 	return $dba;
@@ -23,16 +25,16 @@ abstract class dba_driver {
 	public  $connected = false;
 	public  $error = false;
 
-	abstract function connect($server,$user,$pass,$db);
+	abstract function connect($server, $port, $user,$pass,$db);
 	abstract function q($sql);
 	abstract function escape($str);
 	abstract function close();
 
-	function __construct($server,$user,$pass,$db,$install = false) {
-		if(($install) && (! $this->install($server,$user,$pass,$db))) {
+	function __construct($server, $port, $user,$pass,$db,$install = false) {
+		if(($install) && (! $this->install($server, $port, $user,$pass,$db))) {
 			return;
 		}
-		$this->connect($server,$user,$pass,$db);
+		$this->connect($server, $port, $user,$pass,$db);
 	}
 
 
