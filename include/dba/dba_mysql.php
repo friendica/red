@@ -5,8 +5,8 @@ require_once('include/dba/dba_driver.php');
 
 class dba_mysql extends dba_driver {
 
-	function connect($server,$user,$pass,$db) {
-		$this->db = mysql_connect($server,$user,$pass);
+	function connect($server, $port, $user,$pass,$db) {
+		$this->db = mysql_connect($server.":".$port,$user,$pass);
 		if($this->db && mysql_select_db($db,$this->db)) {
 			$this->connected = true;
 		}

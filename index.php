@@ -39,8 +39,8 @@ $a->language = get_best_language();
 require_once("include/dba/dba_driver.php");
 
 if(! $install) {
-	$db = dba_factory($db_host, $db_user, $db_pass, $db_data, $install);
-    	    unset($db_host, $db_user, $db_pass, $db_data);
+	$db = dba_factory($db_host, $db_port, $db_user, $db_pass, $db_data, $install);
+    	    unset($db_host, $db_port, $db_user, $db_pass, $db_data);
 
 	/**
 	 * Load configs from db. Overwrite configs from .htconfig.php
