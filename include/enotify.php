@@ -397,7 +397,7 @@ function notification($params) {
 					if(! $private)
 						break;
 				case NOTIFY_MAIL:
-					$datarray['textversion'] = $datarray['htmlversion'] = '';
+					$datarray['textversion'] = $datarray['htmlversion'] = $datarray['title'] = '';
 					break;
 				default:
 					break;
