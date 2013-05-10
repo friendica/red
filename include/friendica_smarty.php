@@ -21,9 +21,11 @@ class FriendicaSmarty extends Smarty {
 		$template_dirs = $template_dirs + array('base' => 'view/tpl/');
 		$this->setTemplateDir($template_dirs);
 
-		$this->setCompileDir('view/tpl/smarty3/compiled/');
-		$this->setConfigDir('view/tpl/smarty3/config/');
-		$this->setCacheDir('view/tpl/smarty3/cache/');
+        $basecompiledir = $a->config['system']['smarty3_folder'];
+        
+		$this->setCompileDir($basecompiledir.'/compiled/');
+		$this->setConfigDir($basecompiledir.'/config/');
+		$this->setCacheDir($basecompiledir.'/cache/');
 
 		$this->left_delimiter = $a->get_template_ldelim('smarty3');
 		$this->right_delimiter = $a->get_template_rdelim('smarty3');
@@ -46,9 +48,16 @@ class FriendicaSmartyEngine implements ITemplateEngine {
 	static $name ="smarty3";
 	
 	public function __construct(){
-		if(!is_writable('view/tpl/smarty3/')){
-			echo "<b>ERROR:</b> folder <tt>view/tpl/smarty3/</tt> must be writable by webserver."; killme();
+        $a = get_app();
+        $basecompiledir = $a->config['system']['smarty3_folder'];
+        if (!$basecompiledir) $basecompiledir = dirname(__dir__)."/view/tpl/smarty3";
+        if (!is_dir($basecompiledir)) {
+            echo "<b>ERROR:</b> folder <tt>$basecompiledir</tt>does not exixst."; killme();
+        }
+		if(!is_writable($basecompiledir)){
+			echo "<b>ERROR:</b> folder <tt>$basecompiledir</tt> must be writable by webserver."; killme();
 		}
+         $a->config['system']['smarty3_folder'] = $basecompiledir;
 	}
 	
 	// ITemplateEngine interface

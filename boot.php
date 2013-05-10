@@ -582,7 +582,7 @@ class App {
 
 		date_default_timezone_set($this->timezone);
 
-		$this->config = array();
+		$this->config = array('system'=>array());
 		$this->page = array();
 		$this->pager= array();
 
