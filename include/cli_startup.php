@@ -15,8 +15,8 @@ function cli_startup() {
 	if(is_null($db)) {
 	    @include(".htconfig.php");
     	require_once('include/dba/dba_driver.php');
-	    $db = dba_factory($db_host, $db_user, $db_pass, $db_data);
-    	unset($db_host, $db_user, $db_pass, $db_data);
+	    $db = dba_factory($db_host, $db_port, $db_user, $db_pass, $db_data);
+    	unset($db_host, $db_port, $db_user, $db_pass, $db_data);
   	};
 
 	require_once('include/session.php');

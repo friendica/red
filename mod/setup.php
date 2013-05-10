@@ -36,10 +36,10 @@ function setup_post(&$a) {
 
 			require_once('include/dba/dba_driver.php');
 			unset($db);
-			$db = dba_factory($dbhost, $dbuser, $dbpass, $dbdata, true);
+			$db = dba_factory($dbhost, $dbport, $dbuser, $dbpass, $dbdata, true);
 			/*if(get_db_errno()) {
 				unset($db);
-				$db = dba_factory($dbhost, $dbuser, $dbpass, '', true);
+				$db = dba_factory($dbhost, $dbport, $dbuser, $dbpass, '', true);
 
 				if(! get_db_errno()) {
 					$r = q("CREATE DATABASE '%s'",
@@ -76,7 +76,7 @@ function setup_post(&$a) {
 
 
 			// connect to db
-			$db = dba_factory($dbhost, $dbuser, $dbpass, $dbdata, true);
+			$db = dba_factory($dbhost, $dbport, $dbuser, $dbpass, $dbdata, true);
 
 			$tpl = get_intltext_template('htconfig.tpl');
 			$txt = replace_macros($tpl,array(
