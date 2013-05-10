@@ -1,6 +1,7 @@
 var searchData=
 [
   ['cal',['cal',['../datetime_8php.html#aea356409ba69f9de412298c998595dd2',1,'datetime.php']]],
+  ['call_5fhooks',['call_hooks',['../plugin_8php.html#a7f05de16c0a32602853b09b99dd85e7c',1,'plugin.php']]],
   ['categories_5fwidget',['categories_widget',['../contact__widgets_8php.html#a165eb021e61c4dcab2a552f28628d353',1,'contact_widgets.php']]],
   ['change_5fchannel',['change_channel',['../security_8php.html#a8d23d2597aae380a3341872fe9513380',1,'security.php']]],
   ['change_5fpermissions',['change_permissions',['../classProtoDriver.html#a34b97ca5ef2165f2e16eb2fe59ff6c67',1,'ProtoDriver\change_permissions()'],['../classZotDriver.html#a6776935156accb0f170e2e24577133db',1,'ZotDriver\change_permissions()']]],
@@ -53,7 +54,7 @@ var searchData=
   ['community_5finit',['community_init',['../community_8php.html#a56c94ec978a38633c5628fa6f8e386d9',1,'community.php']]],
   ['compare_5fpermissions',['compare_permissions',['../items_8php.html#a0790a4550b829e85504af548623002ca',1,'items.php']]],
   ['completeurl',['completeurl',['../parse__url_8php.html#a496f4e3836154f6f32b8e805a7160d3a',1,'parse_url.php']]],
-  ['connect',['connect',['../classdba__driver.html#aebf2911afa540fed40f97fc8f34b6e60',1,'dba_driver\connect()'],['../classdba__mysql.html#aef3d2f5c765193224d35f1597190bad9',1,'dba_mysql\connect()'],['../classdba__mysqli.html#ae422fffa0e3c94dc465142ee64e36e24',1,'dba_mysqli\connect()']]],
+  ['connect',['connect',['../classdba__driver.html#ae533e62a240a793f17aef5ab4ef10edc',1,'dba_driver\connect()'],['../classdba__mysql.html#a1887338627ce0e28786839363014bd0b',1,'dba_mysql\connect()'],['../classdba__mysqli.html#add062bd93961e5f0194d94820e9a51b1',1,'dba_mysqli\connect()']]],
   ['connections_5faside',['connections_aside',['../connections_8php.html#af48f7ad20914760ba9874c090384e35a',1,'connections.php']]],
   ['connections_5fcontent',['connections_content',['../connections_8php.html#aec2e457420fce3e3bf6a9f48e36df25c',1,'connections.php']]],
   ['connections_5finit',['connections_init',['../connections_8php.html#a1f23623f802af7bd35e95b0e94e5d558',1,'connections.php']]],

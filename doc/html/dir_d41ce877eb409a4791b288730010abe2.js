@@ -94,6 +94,7 @@ var dir_d41ce877eb409a4791b288730010abe2 =
     [ "update_community.php", "update__community_8php.html", "update__community_8php" ],
     [ "update_display.php", "update__display_8php.html", "update__display_8php" ],
     [ "update_network.php", "update__network_8php.html", "update__network_8php" ],
+    [ "update_search.php", "update__search_8php.html", "update__search_8php" ],
     [ "view.php", "view_8php.html", "view_8php" ],
     [ "viewconnections.php", "viewconnections_8php.html", "viewconnections_8php" ],
     [ "viewsrc.php", "viewsrc_8php.html", "viewsrc_8php" ],

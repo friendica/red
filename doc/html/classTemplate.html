@@ -108,17 +108,29 @@ $(document).ready(function(){initNavTree('classTemplate.html','');});
   <div class="summary">
 <a href="#pub-methods">Public Member Functions</a> &#124;
 <a href="#pub-attribs">Public Attributes</a> &#124;
+<a href="#pub-static-attribs">Static Public Attributes</a> &#124;
 <a href="#pri-methods">Private Member Functions</a> &#124;
 <a href="classTemplate-members.html">List of all members</a>  </div>
   <div class="headertitle">
 <div class="title">Template Class Reference</div>  </div>
 </div><!--header-->
 <div class="contents">
+<div class="dynheader">
+Inheritance diagram for Template:</div>
+<div class="dyncontent">
+ <div class="center">
+  <img src="classTemplate.png" usemap="#Template_map" alt=""/>
+  <map id="Template_map" name="Template_map">
+<area href="interfaceITemplateEngine.html" alt="ITemplateEngine" shape="rect" coords="0,0,104,24"/>
+</map>
+ </div></div>
 <table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a name="pub-methods"></a>
 Public Member Functions</h2></td></tr>
-<tr class="memitem:a285b5b2007dbbf733476273df3fed4ef"><td class="memItemLeft" align="right" valign="top">&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classTemplate.html#a285b5b2007dbbf733476273df3fed4ef">replace</a> ($s, $r)</td></tr>
-<tr class="separator:a285b5b2007dbbf733476273df3fed4ef"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a07737733f6949bdedea1e3d301b2ab7b"><td class="memItemLeft" align="right" valign="top">&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classTemplate.html#a07737733f6949bdedea1e3d301b2ab7b">replace_macros</a> ($s, $r)</td></tr>
+<tr class="separator:a07737733f6949bdedea1e3d301b2ab7b"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:afd97b4b1e7754a550e67c0ea79159059"><td class="memItemLeft" align="right" valign="top">&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classTemplate.html#afd97b4b1e7754a550e67c0ea79159059">get_markup_template</a> ($file, $root='')</td></tr>
+<tr class="separator:afd97b4b1e7754a550e67c0ea79159059"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table><table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a name="pub-attribs"></a>
 Public Attributes</h2></td></tr>
@@ -140,6 +152,11 @@ Public Attributes</h2></td></tr>
 <tr class="separator:ace26b8a4252fbc1c385d2b5e1e93e5c8"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:afc4afb6f89bebcd5480022312a56cb4a"><td class="memItemLeft" align="right" valign="top">&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classTemplate.html#afc4afb6f89bebcd5480022312a56cb4a">$debug</a> =false</td></tr>
 <tr class="separator:afc4afb6f89bebcd5480022312a56cb4a"><td class="memSeparator" colspan="2">&#160;</td></tr>
+</table><table class="memberdecls">
+<tr class="heading"><td colspan="2"><h2 class="groupheader"><a name="pub-static-attribs"></a>
+Static Public Attributes</h2></td></tr>
+<tr class="memitem:a6eb301a51cc94d8b94f4548fbad85eae"><td class="memItemLeft" align="right" valign="top">static&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classTemplate.html#a6eb301a51cc94d8b94f4548fbad85eae">$name</a> =&quot;internal&quot;</td></tr>
+<tr class="separator:a6eb301a51cc94d8b94f4548fbad85eae"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table><table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a name="pri-methods"></a>
 Private Member Functions</h2></td></tr>
@@ -167,6 +184,8 @@ Private Member Functions</h2></td></tr>
 <tr class="separator:ac41c96e1f407b1a910029e5f4b7de8e4"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:abbc484016ddf5d818f55b823cae6feb0"><td class="memItemLeft" align="right" valign="top">&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classTemplate.html#abbc484016ddf5d818f55b823cae6feb0">var_replace</a> ($s)</td></tr>
 <tr class="separator:abbc484016ddf5d818f55b823cae6feb0"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a285b5b2007dbbf733476273df3fed4ef"><td class="memItemLeft" align="right" valign="top">&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classTemplate.html#a285b5b2007dbbf733476273df3fed4ef">replace</a> ($s, $r)</td></tr>
+<tr class="separator:a285b5b2007dbbf733476273df3fed4ef"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table>
 <h2 class="groupheader">Member Function Documentation</h2>
 <a class="anchor" id="ac41c96e1f407b1a910029e5f4b7de8e4"></a>
@@ -191,7 +210,7 @@ Private Member Functions</h2></td></tr>
 </table>
 </div><div class="memdoc">
 
-<p>Referenced by <a class="el" href="classTemplate.html#a285b5b2007dbbf733476273df3fed4ef">replace()</a>.</p>
+<p>Referenced by <a class="el" href="classTemplate.html#a07737733f6949bdedea1e3d301b2ab7b">replace_macros()</a>.</p>
 
 </div>
 </div>
@@ -277,7 +296,7 @@ Private Member Functions</h2></td></tr>
 </table>
 </div><div class="memdoc">
 
-<p>Referenced by <a class="el" href="classTemplate.html#ac41c96e1f407b1a910029e5f4b7de8e4">_build_nodes()</a>, and <a class="el" href="classTemplate.html#a285b5b2007dbbf733476273df3fed4ef">replace()</a>.</p>
+<p>Referenced by <a class="el" href="classTemplate.html#ac41c96e1f407b1a910029e5f4b7de8e4">_build_nodes()</a>, and <a class="el" href="classTemplate.html#a07737733f6949bdedea1e3d301b2ab7b">replace_macros()</a>.</p>
 
 </div>
 </div>
@@ -459,9 +478,42 @@ Private Member Functions</h2></td></tr>
 
 </div>
 </div>
+<a class="anchor" id="afd97b4b1e7754a550e67c0ea79159059"></a>
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">Template::get_markup_template </td>
+          <td>(</td>
+          <td class="paramtype">&#160;</td>
+          <td class="paramname"><em>$file</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">&#160;</td>
+          <td class="paramname"><em>$root</em> = <code>''</code>&#160;</td>
+        </tr>
+        <tr>
+          <td></td>
+          <td>)</td>
+          <td></td><td></td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+<p>Implements <a class="el" href="interfaceITemplateEngine.html#aaf2698adbf46c073c24b162fe1b1c442">ITemplateEngine</a>.</p>
+
+<p>Referenced by <a class="el" href="classTemplate.html#a86e8fd27955ef10cadfd86f3fca70677">_replcb_inc()</a>.</p>
+
+</div>
+</div>
 <a class="anchor" id="a285b5b2007dbbf733476273df3fed4ef"></a>
 <div class="memitem">
 <div class="memproto">
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
       <table class="memname">
         <tr>
           <td class="memname">Template::replace </td>
@@ -481,9 +533,44 @@ Private Member Functions</h2></td></tr>
           <td></td><td></td>
         </tr>
       </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel">private</span></span>  </td>
+  </tr>
+</table>
 </div><div class="memdoc">
 
 <p>Referenced by <a class="el" href="classTemplate.html#abf71098c80fd1f218a59452b3408309e">_replcb_for()</a>, and <a class="el" href="classTemplate.html#a86e8fd27955ef10cadfd86f3fca70677">_replcb_inc()</a>.</p>
+
+</div>
+</div>
+<a class="anchor" id="a07737733f6949bdedea1e3d301b2ab7b"></a>
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">Template::replace_macros </td>
+          <td>(</td>
+          <td class="paramtype">&#160;</td>
+          <td class="paramname"><em>$s</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">&#160;</td>
+          <td class="paramname"><em>$r</em>&#160;</td>
+        </tr>
+        <tr>
+          <td></td>
+          <td>)</td>
+          <td></td><td></td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+<p>Implements <a class="el" href="interfaceITemplateEngine.html#aaa7381c8becc3d1c1790b53988a0f243">ITemplateEngine</a>.</p>
+
+<p>Referenced by <a class="el" href="classTemplate.html#a285b5b2007dbbf733476273df3fed4ef">replace()</a>.</p>
 
 </div>
 </div>
@@ -510,7 +597,7 @@ Private Member Functions</h2></td></tr>
 </div><div class="memdoc">
 <p>regexp: $ literal $ ([)? optional open square bracket ([a-zA-Z0-9-_]+.?)+ var name, followed by optional dot, repeated at least 1 time (?(1)]) if there was opened square bracket (subgrup 1), match close bracket</p>
 
-<p>Referenced by <a class="el" href="classTemplate.html#a285b5b2007dbbf733476273df3fed4ef">replace()</a>.</p>
+<p>Referenced by <a class="el" href="classTemplate.html#a07737733f6949bdedea1e3d301b2ab7b">replace_macros()</a>.</p>
 
 </div>
 </div>
@@ -563,6 +650,28 @@ Private Member Functions</h2></td></tr>
 
 </div>
 </div>
+<a class="anchor" id="a6eb301a51cc94d8b94f4548fbad85eae"></a>
+<div class="memitem">
+<div class="memproto">
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname">Template::$name =&quot;internal&quot;</td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel">static</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+
+<p>Referenced by <a class="el" href="classTemplate.html#aae9c4d761ea1298e745e8052d7910194">_get_var()</a>.</p>
+
+</div>
+</div>
 <a class="anchor" id="a8f4d17e49f42b876a97364c13fb572d1"></a>
 <div class="memitem">
 <div class="memproto">
@@ -585,7 +694,7 @@ Private Member Functions</h2></td></tr>
       </table>
 </div><div class="memdoc">
 
-<p>Referenced by <a class="el" href="classTemplate.html#aae9c4d761ea1298e745e8052d7910194">_get_var()</a>, <a class="el" href="classTemplate.html#abf71098c80fd1f218a59452b3408309e">_replcb_for()</a>, <a class="el" href="classTemplate.html#a86e8fd27955ef10cadfd86f3fca70677">_replcb_inc()</a>, and <a class="el" href="classTemplate.html#a285b5b2007dbbf733476273df3fed4ef">replace()</a>.</p>
+<p>Referenced by <a class="el" href="classTemplate.html#aae9c4d761ea1298e745e8052d7910194">_get_var()</a>, <a class="el" href="classTemplate.html#abf71098c80fd1f218a59452b3408309e">_replcb_for()</a>, <a class="el" href="classTemplate.html#a86e8fd27955ef10cadfd86f3fca70677">_replcb_inc()</a>, <a class="el" href="classTemplate.html#a285b5b2007dbbf733476273df3fed4ef">replace()</a>, and <a class="el" href="classTemplate.html#a07737733f6949bdedea1e3d301b2ab7b">replace_macros()</a>.</p>
 
 </div>
 </div>

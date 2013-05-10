@@ -3,6 +3,7 @@ var NAVTREE =
   [ "The Red Project", "index.html", [
     [ "CLI config utility", "md_config.html", null ],
     [ "Fresh - The Friendica REd Shell", "md_fresh.html", null ],
+    [ "Redstrap theme", "md_README.html", null ],
     [ "Namespaces", null, [
       [ "Namespace List", "namespaces.html", "namespaces" ],
       [ "Namespace Members", "namespacemembers.html", [
@@ -35,12 +36,12 @@ var NAVTREE =
 var NAVTREEINDEX =
 [
 "BaseObject_8php.html",
-"boot_8php.html#ab7d65a7e7417825a4db62906bb600729",
-"classTemplate.html#a4e86b566c3f728e95ce5db1b33665c10",
-"event_8php.html#a32ba1b9ddf7a744a9a1512b052e5f850",
-"include_2config_8php.html#ae4269ab151d08b5dcb1581b2920a934b",
-"oexchange_8php.html#ac8e2e469ddc3db984b0c1b44558aca59",
-"text_8php.html#a47c1e4a5f3f53027daacd8a9db24f285"
+"boot_8php.html#ab79b8b4555cae20d03f8200666d89d63",
+"classProtoDriver.html#a85e9063f6d0c304410cd246f7900ea1b",
+"docblox__errorchecker_8php.html#ae9562cf60aa693114603d27b55d2185f",
+"include_2attach_8php.html#aeb07968990e66a88c95483ca09a7f909",
+"new__channel_8php.html#a180b0646957db8290482f02454ad7f23",
+"socgraph_8php.html#a7d34cd58025bcd9e575282f44db75918"
 ];
 
 var SYNCONMSG = 'click to disable panel synchronisation';

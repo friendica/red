@@ -100,6 +100,7 @@ var searchBox = new SearchBox("searchBox", "search",false,'Search');
       <li><a href="#index_q"><span>q</span></a></li>
       <li><a href="#index_r"><span>r</span></a></li>
       <li><a href="#index_s"><span>s</span></a></li>
+      <li><a href="#index_t"><span>t</span></a></li>
       <li><a href="#index_v"><span>v</span></a></li>
     </ul>
   </div>
@@ -140,10 +141,11 @@ $(document).ready(function(){initNavTree('functions_func.html','');});
 : <a class="el" href="classApp.html#af6d39f63fb7116bbeb04e51696f99474">App</a>
 , <a class="el" href="classConversation.html#a6b064d00c56a6b7dec359d4348711c84">Conversation</a>
 , <a class="el" href="classFriendicaSmarty.html#af12091b920b95eeef1218cbc48066ca6">FriendicaSmarty</a>
-, <a class="el" href="classItem.html#a248f45871ecfe82a08d1d4c0769b2eb2">Item</a>
-, <a class="el" href="classdba__driver.html#a13a6f64384616c808803a10fe7b83c70">dba_driver</a>
-, <a class="el" href="classFKOAuth1.html#a2f1276872329a6f0b704ccda1a4b9fa6">FKOAuth1</a>
 , <a class="el" href="classphoto__driver.html#ac6e85f8e507cab4e755ed7acdec401ae">photo_driver</a>
+, <a class="el" href="classFriendicaSmartyEngine.html#ab7c305bd8c386c2944e4dc9136cea5b6">FriendicaSmartyEngine</a>
+, <a class="el" href="classdba__driver.html#af3541d13ccb7a3eddfc03e253c746186">dba_driver</a>
+, <a class="el" href="classItem.html#a248f45871ecfe82a08d1d4c0769b2eb2">Item</a>
+, <a class="el" href="classFKOAuth1.html#a2f1276872329a6f0b704ccda1a4b9fa6">FKOAuth1</a>
 </li>
 <li>__destruct()
 : <a class="el" href="classdba__driver.html#a1a8bc9dc839a6320a0e07d8047a6b721">dba_driver</a>
@@ -231,9 +233,9 @@ $(document).ready(function(){initNavTree('functions_func.html','');});
 , <a class="el" href="classProtoDriver.html#af66171aa7dab9b62cee915cb4f1abe1b">ProtoDriver</a>
 </li>
 <li>connect()
-: <a class="el" href="classdba__mysql.html#aef3d2f5c765193224d35f1597190bad9">dba_mysql</a>
-, <a class="el" href="classdba__mysqli.html#ae422fffa0e3c94dc465142ee64e36e24">dba_mysqli</a>
-, <a class="el" href="classdba__driver.html#aebf2911afa540fed40f97fc8f34b6e60">dba_driver</a>
+: <a class="el" href="classdba__mysql.html#a1887338627ce0e28786839363014bd0b">dba_mysql</a>
+, <a class="el" href="classdba__mysqli.html#add062bd93961e5f0194d94820e9a51b1">dba_mysqli</a>
+, <a class="el" href="classdba__driver.html#ae533e62a240a793f17aef5ab4ef10edc">dba_driver</a>
 </li>
 <li>count_descendants()
 : <a class="el" href="classItem.html#aca1e66988ed00cd627b2a359b72cd0ae">Item</a>
@@ -354,6 +356,11 @@ $(document).ready(function(){initNavTree('functions_func.html','');});
 <li>get_id()
 : <a class="el" href="classItem.html#ac0f27e58532612f6e7a54c8a621b9b92">Item</a>
 </li>
+<li>get_markup_template()
+: <a class="el" href="classFriendicaSmartyEngine.html#aab5994077fc3a64222e41b28e2bd8d88">FriendicaSmartyEngine</a>
+, <a class="el" href="interfaceITemplateEngine.html#aaf2698adbf46c073c24b162fe1b1c442">ITemplateEngine</a>
+, <a class="el" href="classTemplate.html#afd97b4b1e7754a550e67c0ea79159059">Template</a>
+</li>
 <li>get_mode()
 : <a class="el" href="classConversation.html#a87a0d704d5f2b1a008cc2e9ce06a1bcd">Conversation</a>
 </li>
@@ -388,17 +395,17 @@ $(document).ready(function(){initNavTree('functions_func.html','');});
 : <a class="el" href="classItem.html#aba23a0a9d89e316d2b343cc46d695d91">Item</a>
 </li>
 <li>get_template_data()
-: <a class="el" href="classConversation.html#a2a96b7a6573ae53db861624659e831cb">Conversation</a>
-, <a class="el" href="classItem.html#ad5dcbe0b94cb2d5719bc5b6bd8ad60c8">Item</a>
+: <a class="el" href="classItem.html#ad5dcbe0b94cb2d5719bc5b6bd8ad60c8">Item</a>
+, <a class="el" href="classConversation.html#a2a96b7a6573ae53db861624659e831cb">Conversation</a>
 </li>
 <li>get_template_engine()
 : <a class="el" href="classApp.html#acb27e607fe4c82603444676e25c36b70">App</a>
 </li>
 <li>get_template_ldelim()
-: <a class="el" href="classApp.html#ad2eff1f9335d607846e39e8c63b88b51">App</a>
+: <a class="el" href="classApp.html#a2eb832a8577dee7d40b93abdf6d1d35a">App</a>
 </li>
 <li>get_template_rdelim()
-: <a class="el" href="classApp.html#a9e1856f714ac5755798fd7a2fa035e42">App</a>
+: <a class="el" href="classApp.html#aab23c59172310fd30f2d60dc039d3eea">App</a>
 </li>
 <li>get_thread()
 : <a class="el" href="classConversation.html#a4cff75d8c46b517e7133e4d0da6fc1c8">Conversation</a>
@@ -518,6 +525,9 @@ $(document).ready(function(){initNavTree('functions_func.html','');});
 
 
 <h3><a class="anchor" id="index_r"></a>- r -</h3><ul>
+<li>register_template_engine()
+: <a class="el" href="classApp.html#abf46a653d8499e7c253cc1be894a6d83">App</a>
+</li>
 <li>remove_child()
 : <a class="el" href="classItem.html#a2ce70ef63f9f4d86a09c351678806925">Item</a>
 </li>
@@ -527,10 +537,15 @@ $(document).ready(function(){initNavTree('functions_func.html','');});
 <li>replace()
 : <a class="el" href="classTemplate.html#a285b5b2007dbbf733476273df3fed4ef">Template</a>
 </li>
+<li>replace_macros()
+: <a class="el" href="classTemplate.html#a07737733f6949bdedea1e3d301b2ab7b">Template</a>
+, <a class="el" href="classFriendicaSmartyEngine.html#ad62f1181d2f02b54b46731ad2bd46db2">FriendicaSmartyEngine</a>
+, <a class="el" href="interfaceITemplateEngine.html#aaa7381c8becc3d1c1790b53988a0f243">ITemplateEngine</a>
+</li>
 <li>rotate()
-: <a class="el" href="classphoto__driver.html#a2f2b6337cf9aa0688d10b422123f0eec">photo_driver</a>
+: <a class="el" href="classphoto__imagick.html#a9df5738a4a18e76dd304c440e96f045f">photo_imagick</a>
+, <a class="el" href="classphoto__driver.html#a2f2b6337cf9aa0688d10b422123f0eec">photo_driver</a>
 , <a class="el" href="classphoto__gd.html#a77f87730b11093b76980c541159df37d">photo_gd</a>
-, <a class="el" href="classphoto__imagick.html#a9df5738a4a18e76dd304c440e96f045f">photo_imagick</a>
 </li>
 </ul>
 
@@ -609,7 +624,7 @@ $(document).ready(function(){initNavTree('functions_func.html','');});
 : <a class="el" href="classConversation.html#a8898bddc1e8990e81dab9a13a532cc93">Conversation</a>
 </li>
 <li>set_template_engine()
-: <a class="el" href="classApp.html#a325f05bdc15d1b341044b389b21cd195">App</a>
+: <a class="el" href="classApp.html#a20d1890cc16b22ba79eeb0cbf2f719f7">App</a>
 </li>
 <li>set_widget()
 : <a class="el" href="classApp.html#a123b903dfe5d3488cc68db3471d36fd2">App</a>
@@ -626,6 +641,13 @@ $(document).ready(function(){initNavTree('functions_func.html','');});
 : <a class="el" href="classphoto__imagick.html#a27596faca6108d9d563674d1b654a0b7">photo_imagick</a>
 , <a class="el" href="classphoto__driver.html#a6eee8e36eaf9339f4faf80ddd43162da">photo_driver</a>
 , <a class="el" href="classphoto__gd.html#a16f3dd7d3559f715aa2fe3f7880836dd">photo_gd</a>
+</li>
+</ul>
+
+
+<h3><a class="anchor" id="index_t"></a>- t -</h3><ul>
+<li>template_engine()
+: <a class="el" href="classApp.html#a94a1ed2dc493c58612d17035b74ae736">App</a>
 </li>
 </ul>
 

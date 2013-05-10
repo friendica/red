@@ -4,7 +4,7 @@ var searchData=
   ['datesel_5fformat',['datesel_format',['../datetime_8php.html#a5f29553799005b1fd4e9ce9d98ce05aa',1,'datetime.php']]],
   ['datetime_5fconvert',['datetime_convert',['../datetime_8php.html#ad6301e74b0f9267d52f8d432b5beb226',1,'datetime.php']]],
   ['day_5ftranslate',['day_translate',['../text_8php.html#a63fb21c0bed2fc72eef2c1471ac42b63',1,'text.php']]],
-  ['dba_5ffactory',['dba_factory',['../dba__driver_8php.html#a69b94daf62f983f7e1338e4e79ddae1e',1,'dba_driver.php']]],
+  ['dba_5ffactory',['dba_factory',['../dba__driver_8php.html#ac10e60f6e5b95bcf67bd82cb88f37947',1,'dba_driver.php']]],
   ['dba_5ftimer',['dba_timer',['../boot_8php.html#a3e0930933fb2c0bf8211cc7ab4e1c3b4',1,'boot.php']]],
   ['dbesc',['dbesc',['../dba__driver_8php.html#ab222aa1dbf9ea93b320f82028739127e',1,'dba_driver.php']]],
   ['dbesc_5farray',['dbesc_array',['../dba__driver_8php.html#a65b83462bd26968106aebd43f16540e4',1,'dba_driver.php']]],

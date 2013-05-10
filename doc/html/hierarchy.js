@@ -11,6 +11,10 @@ var hierarchy =
       [ "dba_mysqli", "classdba__mysqli.html", null ]
     ] ],
     [ "enotify", "classenotify.html", null ],
+    [ "ITemplateEngine", "interfaceITemplateEngine.html", [
+      [ "FriendicaSmartyEngine", "classFriendicaSmartyEngine.html", null ],
+      [ "Template", "classTemplate.html", null ]
+    ] ],
     [ "OAuthDataStore", null, [
       [ "FKOAuthDataStore", "classFKOAuthDataStore.html", null ]
     ] ],
@@ -26,6 +30,5 @@ var hierarchy =
     ] ],
     [ "Smarty", null, [
       [ "FriendicaSmarty", "classFriendicaSmarty.html", null ]
-    ] ],
-    [ "Template", "classTemplate.html", null ]
+    ] ]
 ];

@@ -37,7 +37,8 @@ var dir_d44c64559bbebec7f509842c48db8b23 =
     [ "features.php", "features_8php.html", "features_8php" ],
     [ "follow.php", "include_2follow_8php.html", "include_2follow_8php" ],
     [ "friendica_smarty.php", "friendica__smarty_8php.html", [
-      [ "FriendicaSmarty", "classFriendicaSmarty.html", "classFriendicaSmarty" ]
+      [ "FriendicaSmarty", "classFriendicaSmarty.html", "classFriendicaSmarty" ],
+      [ "FriendicaSmartyEngine", "classFriendicaSmartyEngine.html", "classFriendicaSmartyEngine" ]
     ] ],
     [ "gprobe.php", "gprobe_8php.html", "gprobe_8php" ],
     [ "group.php", "include_2group_8php.html", "include_2group_8php" ],
@@ -46,6 +47,9 @@ var dir_d44c64559bbebec7f509842c48db8b23 =
     [ "identity.php", "identity_8php.html", "identity_8php" ],
     [ "ItemObject.php", "ItemObject_8php.html", [
       [ "Item", "classItem.html", "classItem" ]
+    ] ],
+    [ "ITemplateEngine.php", "ITemplateEngine_8php.html", [
+      [ "ITemplateEngine", "interfaceITemplateEngine.html", "interfaceITemplateEngine" ]
     ] ],
     [ "items.php", "items_8php.html", "items_8php" ],
     [ "language.php", "language_8php.html", "language_8php" ],

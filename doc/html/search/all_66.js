@@ -67,6 +67,7 @@ var searchData=
   ['friendica_2dto_2dsmarty_2dtpl_2epy',['friendica-to-smarty-tpl.py',['../friendica-to-smarty-tpl_8py.html',1,'']]],
   ['friendica_5fsmarty_2ephp',['friendica_smarty.php',['../friendica__smarty_8php.html',1,'']]],
   ['friendicasmarty',['FriendicaSmarty',['../classFriendicaSmarty.html',1,'']]],
+  ['friendicasmartyengine',['FriendicaSmartyEngine',['../classFriendicaSmartyEngine.html',1,'']]],
   ['fsuggest_2ephp',['fsuggest.php',['../fsuggest_8php.html',1,'']]],
   ['fsuggest_5fcontent',['fsuggest_content',['../fsuggest_8php.html#aa6c49ed4b50a387f1845f36844dd7998',1,'fsuggest.php']]],
   ['fsuggest_5fpost',['fsuggest_post',['../fsuggest_8php.html#a61ecfe10ce937ed526614f8fd3de3c7d',1,'fsuggest.php']]],

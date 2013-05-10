@@ -1,9 +1,9 @@
 var classdba__driver =
 [
-    [ "__construct", "classdba__driver.html#a13a6f64384616c808803a10fe7b83c70", null ],
+    [ "__construct", "classdba__driver.html#af3541d13ccb7a3eddfc03e253c746186", null ],
     [ "__destruct", "classdba__driver.html#a1a8bc9dc839a6320a0e07d8047a6b721", null ],
     [ "close", "classdba__driver.html#a5afa54172f3c837df61643f8f5b2c975", null ],
-    [ "connect", "classdba__driver.html#aebf2911afa540fed40f97fc8f34b6e60", null ],
+    [ "connect", "classdba__driver.html#ae533e62a240a793f17aef5ab4ef10edc", null ],
     [ "dbg", "classdba__driver.html#adcc1f8955120fec0708bce39202d0422", null ],
     [ "escape", "classdba__driver.html#afc95ffa103a3290581b537670cde5311", null ],
     [ "install", "classdba__driver.html#a4ccb27243e62a8ca30dd8e1b8cc67746", null ],

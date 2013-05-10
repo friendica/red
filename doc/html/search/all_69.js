@@ -5,7 +5,7 @@ var searchData=
   ['identity_5fbasic_5fimport',['identity_basic_import',['../identity_8php.html#a77ee7d66eb0758f7e7882f70ad0f9485',1,'identity.php']]],
   ['identity_5fcheck_5fservice_5fclass',['identity_check_service_class',['../identity_8php.html#ac9fcd5c4c371998790b5c55c3d0f4633',1,'identity.php']]],
   ['ids_5fto_5fquerystr',['ids_to_querystr',['../text_8php.html#a436a8de00c942364c2d0fcfc7e1f4b5a',1,'text.php']]],
-  ['if',['if',['../php2po_8php.html#a45b05625748f412ec97afcd61cf7980b',1,'if():&#160;php2po.php'],['../default_8php.html#a23bc1996b18e69c1a3ab44536613a762',1,'if():&#160;default.php'],['../full_8php.html#a6fac1b4b8cdfde06ea1b7713479e92db',1,'if():&#160;full.php'],['../style_8php.html#a0a473a25349f07563d6c56d14031f02a',1,'if():&#160;style.php']]],
+  ['if',['if',['../php2po_8php.html#a45b05625748f412ec97afcd61cf7980b',1,'if():&#160;php2po.php'],['../php_2default_8php.html#a23bc1996b18e69c1a3ab44536613a762',1,'if():&#160;default.php'],['../full_8php.html#a6fac1b4b8cdfde06ea1b7713479e92db',1,'if():&#160;full.php'],['../redbasic_2php_2style_8php.html#a0a473a25349f07563d6c56d14031f02a',1,'if():&#160;style.php'],['../theme_2redstrap_2php_2default_8php.html#a23bc1996b18e69c1a3ab44536613a762',1,'if():&#160;default.php'],['../redstrap_2php_2style_8php.html#a0c4684da834439885ae2285649d1aaea',1,'if():&#160;style.php']]],
   ['imagestring',['imageString',['../classphoto__driver.html#abc9f73ad90923772d52b9fcc4eb117dd',1,'photo_driver\imageString()'],['../classphoto__gd.html#a0795fc029be382557ae3f6e285f40e00',1,'photo_gd\imageString()'],['../classphoto__imagick.html#a70adbef31128c0ac8cbc5dcf34cdb019',1,'photo_imagick\imageString()']]],
   ['import_2ephp',['import.php',['../import_8php.html',1,'']]],
   ['import_5fauthor_5fxchan',['import_author_xchan',['../items_8php.html#ae73794179b62d39bb597ff670ab1c1e5',1,'items.php']]],
@@ -18,6 +18,7 @@ var searchData=
   ['import_5fxchan',['import_xchan',['../zot_8php.html#ab0227978011d8601494a7651fa26acf0',1,'zot.php']]],
   ['info',['info',['../boot_8php.html#adfb2fc7be5a4226c0a8e24131da9d498',1,'boot.php']]],
   ['install',['install',['../classdba__driver.html#a4ccb27243e62a8ca30dd8e1b8cc67746',1,'dba_driver']]],
+  ['install_5fplugin',['install_plugin',['../plugin_8php.html#a482131013272a1d5d5c1b1469c6c55d5',1,'plugin.php']]],
   ['intro_2ephp',['intro.php',['../intro_8php.html',1,'']]],
   ['intro_5faside',['intro_aside',['../intro_8php.html#abc3abf25da64f98f215126eb08c7936b',1,'intro.php']]],
   ['intro_5fcontent',['intro_content',['../intro_8php.html#a3e2a523697633ddb4517b9266a515f5b',1,'intro.php']]],
@@ -68,5 +69,7 @@ var searchData=
   ['item_5fwall',['ITEM_WALL',['../boot_8php.html#a6788e99021ec8ffb0fa94d651f22a322',1,'boot.php']]],
   ['item_5fwebpage',['ITEM_WEBPAGE',['../boot_8php.html#af489d0c3166551b93e63a79ff2c9be35',1,'boot.php']]],
   ['itemobject_2ephp',['ItemObject.php',['../ItemObject_8php.html',1,'']]],
+  ['itemplateengine',['ITemplateEngine',['../interfaceITemplateEngine.html',1,'']]],
+  ['itemplateengine_2ephp',['ITemplateEngine.php',['../ITemplateEngine_8php.html',1,'']]],
   ['items_2ephp',['items.php',['../items_8php.html',1,'']]]
 ];

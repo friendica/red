@@ -8,6 +8,7 @@ var searchData=
   ['community_2ephp',['community.php',['../community_8php.html',1,'']]],
   ['config_2emd',['config.md',['../config_8md.html',1,'']]],
   ['config_2ephp',['config.php',['../view_2theme_2redbasic_2php_2config_8php.html',1,'']]],
+  ['config_2ephp',['config.php',['../view_2theme_2redstrap_2php_2config_8php.html',1,'']]],
   ['config_2ephp',['config.php',['../include_2config_8php.html',1,'']]],
   ['connections_2ephp',['connections.php',['../connections_8php.html',1,'']]],
   ['contact_2ephp',['Contact.php',['../Contact_8php.html',1,'']]],
