@@ -122,7 +122,7 @@
 	$(function() {
 		$.ajaxSetup({cache: false});
 
-		msie = $.browser.msie ;
+		msie = false; // $.browser.msie ;
 		
 		/* setup tooltips *//*
 		$("a,.tt").each(function(){
