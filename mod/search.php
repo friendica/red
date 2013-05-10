@@ -74,7 +74,7 @@ function search_post(&$a) {
 }
 
 
-function search_content(&$a) {
+function search_content(&$a,$update = 0, $load = false) {
 
 	if((get_config('system','block_public')) && (! local_user()) && (! remote_user())) {
 		notice( t('Public access denied.') . EOL);
@@ -153,7 +153,7 @@ function search_content(&$a) {
 		// because browser prefetching might change it on us. We have to deliver it with the page.
 
 		$o .= '<div id="live-search"></div>' . "\r\n";
-		$o .= "<script> var profile_uid = " . $a->profile['profile_uid'] 
+		$o .= "<script> var profile_uid = " . intval(local_user())
 			. "; var netargs = '?f='; var profile_page = " . $a->pager['page'] . "; </script>\r\n";
 
 		$a->page['htmlhead'] .= replace_macros(get_markup_template("build_query.tpl"),array(
@@ -187,7 +187,7 @@ function search_content(&$a) {
 
 	if(($update) && ($load)) {
 		$pager_sql = sprintf(" LIMIT %d, %d ",intval($a->pager['start']), intval($a->pager['itemspage']));
-
+dbg(1);
 		if($load) {
 			$r = q("SELECT distinct(mid), item.* from item
 				WHERE item_restrict = 0
@@ -199,6 +199,7 @@ function search_content(&$a) {
 				intval(ABOOK_FLAG_BLOCKED)
 
 			);
+dbg(0);
 		}
 		else {
 			$r = array();
@@ -211,7 +212,7 @@ function search_content(&$a) {
  
 		$items = q("SELECT `item`.*, `item`.`id` AS `item_id` 
 			FROM `item`
-			WHERE item_restrict = 0 and 
+			WHERE item_restrict = 0 
 			$sql_extra ",
 			intval($a->profile['profile_uid']),
 			dbesc($parents_str)
@@ -227,33 +228,33 @@ function search_content(&$a) {
 
 
 
-	$r = q("SELECT distinct(`item`.`mid`), `item`.*, `item`.`id` AS `item_id`, 
-		`contact`.`name`, `contact`.`photo`, `contact`.`url`, `contact`.`alias`, `contact`.`rel`,
-		`contact`.`network`, `contact`.`thumb`, `contact`.`self`, `contact`.`writable`, 
-		`contact`.`id` AS `cid`, `contact`.`uid` AS `contact-uid`,
-		`user`.`nickname`
-		FROM `item` LEFT JOIN `contact` ON `contact`.`id` = `item`.`contact-id`
-		LEFT JOIN `user` ON `user`.`uid` = `item`.`uid`
-		WHERE `item`.`visible` = 1 AND `item`.`deleted` = 0 and `item`.`moderated` = 0
-		AND (( `item`.`allow_cid` = ''  AND `item`.`allow_gid` = '' AND `item`.`deny_cid`  = '' AND `item`.`deny_gid`  = '' AND `item`.`private` = 0 AND `user`.`hidewall` = 0 ) 
-			OR `item`.`uid` = %d )
-		AND `contact`.`blocked` = 0 AND `contact`.`pending` = 0
-		$sql_extra
-		group by `item`.`mid`	
-		ORDER BY `received` DESC LIMIT %d , %d ",
-		intval(local_user()),
-		intval($a->pager['start']),
-		intval($a->pager['itemspage'])
+//	$r = q("SELECT distinct(`item`.`mid`), `item`.*, `item`.`id` AS `item_id`, 
+//		`contact`.`name`, `contact`.`photo`, `contact`.`url`, `contact`.`alias`, `contact`.`rel`,
+//		`contact`.`network`, `contact`.`thumb`, `contact`.`self`, `contact`.`writable`, 
+//		`contact`.`id` AS `cid`, `contact`.`uid` AS `contact-uid`,
+//		`user`.`nickname`
+//		FROM `item` LEFT JOIN `contact` ON `contact`.`id` = `item`.`contact-id`
+//		LEFT JOIN `user` ON `user`.`uid` = `item`.`uid`
+//		WHERE `item`.`visible` = 1 AND `item`.`deleted` = 0 and `item`.`moderated` = 0
+//		AND (( `item`.`allow_cid` = ''  AND `item`.`allow_gid` = '' AND `item`.`deny_cid`  = '' AND `item`.`deny_gid`  = '' AND `item`.`private` = 0 AND `user`.`hidewall` = 0 ) 
+//			OR `item`.`uid` = %d )
+//		AND `contact`.`blocked` = 0 AND `contact`.`pending` = 0
+//		$sql_extra
+//		group by `item`.`mid`	
+//		ORDER BY `received` DESC LIMIT %d , %d ",
+//		intval(local_user()),
+//		intval($a->pager['start']),
+//		intval($a->pager['itemspage'])
 
-	);
+//	);
 
 
 //	$a = fetch_post_tags($a,true);
 
-	if(! count($r)) {
-		info( t('No results.') . EOL);
-		return $o;
-	}
+//	if(! $items) {//
+//		info( t('No results.') . EOL);
+//		return $o;
+//	}
 
 
 	if($tag) 
@@ -261,9 +262,9 @@ function search_content(&$a) {
 	else
 		$o .= '<h2>Search results for: ' . htmlspecialchars($search) . '</h2>';
 
-	$o .= conversation($a,$r,'search',false);
+	$o .= conversation($a,$items,'search',$update,'client');
 
-	$o .= alt_pager($a,count($r));
+//	$o .= alt_pager($a,count($r));
 
 	return $o;
 }

@@ -512,9 +512,6 @@ function conversation(&$a, $items, $mode, $update, $page_mode = 'traditional') {
 			// - just loop through the items and format them minimally for display
 
 
-
-
-
 			//$tpl = get_markup_template('search_item.tpl');
 			$tpl = 'search_item.tpl';
 

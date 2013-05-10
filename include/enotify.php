@@ -297,8 +297,15 @@ function notification($params) {
 	$datarray['type']   = $params['type'];
 	$datarray['verb']   = $params['verb'];
 	$datarray['otype']  = $params['otype'];
+ 	$datarray['abort']  = false;
  
 	call_hooks('enotify_store', $datarray);
+
+	if($datarray['abort']) {
+		pop_lang();
+		return;
+	}
+
 
 	// create notification entry in DB
 

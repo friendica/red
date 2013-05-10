@@ -60,6 +60,7 @@ function item_post(&$a) {
 	$origin = (($api_source && array_key_exists('origin',$_REQUEST)) ? intval($_REQUEST['origin']) : 1);
 	$owner_hash = null;
 
+	$message_id     = ((x($_REQUEST,'message_id') && $api_source)  ? strip_tags($_REQUEST['message_id'])       : '');
 
 	$profile_uid = ((x($_REQUEST,'profile_uid')) ? intval($_REQUEST['profile_uid'])   : 0);
 	$post_id     = ((x($_REQUEST,'post_id'))     ? intval($_REQUEST['post_id'])       : 0);
@@ -481,7 +482,8 @@ function item_post(&$a) {
 
 	$notify_type = (($parent) ? 'comment-new' : 'wall-new' );
 
-	$mid = item_message_id();
+	$mid = (($message_id) ? $message_id : item_message_id());
+
 	$parent_mid = $mid;
 	if($parent_item)
 		$parent_mid = $parent_item['mid'];

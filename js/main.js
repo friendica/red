@@ -270,6 +270,7 @@
 				if($('#live-channel').length)   { src = 'channel'; liveUpdate(); }
 				if($('#live-community').length) { src = 'community'; liveUpdate(); }
 				if($('#live-display').length)   { src = 'display'; liveUpdate(); }
+				if($('#live-search').length)    { src = 'search'; liveUpdate(); }
 
 				if($('#live-photos').length) { 
 					if(liking) {
