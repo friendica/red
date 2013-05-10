@@ -13,9 +13,13 @@
 // Then set the following for your MySQL installation
 
 $db_host = 'your.mysqlhost.com';
+$db_port = null; #leave null for default or set your port
 $db_user = 'mysqlusername';
 $db_pass = 'mysqlpassword';
 $db_data = 'mysqldatabasename';
+
+// smarty3 compile dir. make sure is writable by webserver
+$a->config['system']['smarty3_folder'] = "view/tpl/smart3";
 
 // Choose a legal default timezone. If you are unsure, use "America/Los_Angeles".
 // It can be changed later and only applies to timestamps for anonymous viewers.
