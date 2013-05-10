@@ -1,6 +1,5 @@
-Fresh - The Friendica REd Shell
+Fresh - The Freaking REd Shell
 ===============================
-
 
 This will only work on Unix/Linux. If the readline module is installed, we will
 use that for input, otherwise we will just read from stdin and write to stdout.

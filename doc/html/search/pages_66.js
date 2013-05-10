@@ -1,4 +1,4 @@
 var searchData=
 [
-  ['fresh_20_2d_20the_20friendica_20red_20shell',['Fresh - The Friendica REd Shell',['../md_fresh.html',1,'']]]
+  ['fresh_20_2d_20the_20freaking_20red_20shell',['Fresh - The Freaking REd Shell',['../md_fresh.html',1,'']]]
 ];

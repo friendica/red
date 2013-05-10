@@ -1,8 +1,8 @@
 var NAVTREE =
 [
-  [ "The Red Project", "index.html", [
+  [ "The Red Matrix", "index.html", [
     [ "CLI config utility", "md_config.html", null ],
-    [ "Fresh - The Friendica REd Shell", "md_fresh.html", null ],
+    [ "Fresh - The Freaking REd Shell", "md_fresh.html", null ],
     [ "Redstrap theme", "md_README.html", null ],
     [ "Namespaces", null, [
       [ "Namespace List", "namespaces.html", "namespaces" ],
