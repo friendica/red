@@ -1,7 +1,7 @@
 INPUT = boot.php mod include setup util view
 RECURSIVE = YES
 PROJECT_NAME = "The Red Matrix"
-PROJECT_LOGO = images/r!-64.png
+PROJECT_LOGO = images/rhash-64.png
 EXCLUDE = .htconfig.php library doc .git
 EXCLUDE_PATTERNS = *smarty3* *strings.php *.out *test*
 OUTPUT_DIRECTORY = doc
