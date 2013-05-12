@@ -293,7 +293,7 @@ function identity_basic_export($channel_id) {
 			$ret['hubloc'] = $r;
 	}
 
-	$r = q("select * from group where uid = %d ",
+	$r = q("select * from `group` where uid = %d ",
 		intval($channel_id)
 	);
 

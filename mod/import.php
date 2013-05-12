@@ -279,7 +279,7 @@ function import_post(&$a) {
 				. implode("', '", array_values($group)) 
 				. "')" );
 		}
-		$r = q("select * from group where uid = %d",
+		$r = q("select * from `group` where uid = %d",
 			intval($channel['channel_id'])
 		);
 		if($r) {
