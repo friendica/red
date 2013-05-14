@@ -3,7 +3,7 @@ Red Installation
 
 Red should run on commodity hosting platforms - such as those used to host Wordpress blogs and Drupal websites. But be aware that Red is more than a simple web application.  The kind of functionality offered by Red requires a bit more of the host system than the typical blog. Not every PHP/MySQL hosting provider will be able to support Red. Many will. But **please** review the requirements and confirm these with your hosting provider prior to installation.
 
-Also if you encounter installation issues, please let us know via the Friendica forum at https://myfriendica.net/profile/friendicared. Please be as clear as you can about your operating environment and provide as much detail as possible about any error messages you may see, so that we can prevent it from happening in the future. Due to the large variety of operating systems and PHP platforms in existence we may have only limited ability to debug your PHP installation or acquire any missing modules - but we will do our best to solve any general code issues.   
+Also if you encounter installation issues, please let us know via the Github issue tracker (https://github.com/friendica/red/issues). Please be as clear as you can about your operating environment and provide as much detail as possible about any error messages you may see, so that we can prevent it from happening in the future. Due to the large variety of operating systems and PHP platforms in existence we may have only limited ability to debug your PHP installation or acquire any missing modules - but we will do our best to solve any general code issues.   
 
 Before you begin: Choose a domain name or subdomain name for your server. 
 
