@@ -1,17 +1,17 @@
-Friendica Installation
+Red Installation
+===============
 
-We've tried very hard to ensure that Friendica will run on commodity hosting platforms - such as those used to host Wordpress blogs and Drupal websites. But be aware that Friendica is more than a simple web application. It is a complex communications system which more closely resembles an email server than a web server. For reliability and performance, messages are delivered in the background and are queued for later delivery when sites are down. This kind of functionality requires a bit more of the host system than the typical blog. Not every PHP/MySQL hosting provider will be able to support Friendica. Many will. But **please** review the requirements and confirm these with your hosting provider prior to installation.
+Red should run on commodity hosting platforms - such as those used to host Wordpress blogs and Drupal websites. But be aware that Red is more than a simple web application.  The kind of functionality offered by Red requires a bit more of the host system than the typical blog. Not every PHP/MySQL hosting provider will be able to support Red. Many will. But **please** review the requirements and confirm these with your hosting provider prior to installation.
 
-Also if you encounter installation issues, please let us know via the forums at http://groups.google.com/group/friendica or file an issue at http://bugs.friendica.com . Please be as clear as you can about your operating environment and provide as much detail as possible about any error messages you may see, so that we can prevent it from happening in the future. Due to the large variety of operating systems and PHP platforms in existence we may have only limited ability to debug your PHP installation or acquire any missing modules - but we will do our best to solve any general code issues.   
+Also if you encounter installation issues, please let us know via the Friendica forum at https://myfriendica.net/profile/friendicared. Please be as clear as you can about your operating environment and provide as much detail as possible about any error messages you may see, so that we can prevent it from happening in the future. Due to the large variety of operating systems and PHP platforms in existence we may have only limited ability to debug your PHP installation or acquire any missing modules - but we will do our best to solve any general code issues.   
 
-Before you begin: Choose a domain name or subdomain name for your server. Put some thought into this - because changing it after installation is currently not-supported. Things will break, and some of your friends may have difficulty communicating with you. We plan to address this limitation in a future release.
-
+Before you begin: Choose a domain name or subdomain name for your server. 
 
 1. Requirements
     - Apache with mod-rewrite enabled and "Options All" so you can use a
 local .htaccess file
 
-    - PHP  5.2+. The later the better. You'll need 5.3 for encryption of key exchange conversations. On a Windows environment, 5.2+ might not work as the function dns_get_record() is only available with version 5.3.
+    - PHP  5.3
         - PHP *command line* access with register_argc_argv set to true in the
 php.ini file
         - curl, gd, mysql, and openssl extensions
@@ -36,11 +36,17 @@ you might have trouble getting everything to work.]
 
     - If you are able to do so, we recommend using git to clone the source repository rather than to use a packaged tar or zip file. This makes the software much easier to update. The Linux command to clone the repository into a directory "mywebsite" would be 
 
-        `git clone https://github.com/friendica/friendica.git mywebsite`
+        `git clone https://github.com/friendica/red.git mywebsite`
 
     - and then you can pick up the latest changes at any time with
 
         `git pull`
+        
+    - make sure folder *view/smarty3* exists and is writable by webserver
+        
+        `mkdir view/smarty3`
+        
+        `chown 777 view/smarty3`
     
     - For installing addons
     
@@ -50,7 +56,7 @@ you might have trouble getting everything to work.]
             
         - Then you should clone the addon repository (separtely)
         
-            `git clone https://github.com/friendica/friendica-addons.git addon`
+            `git clone https://github.com/friendica/red-addons.git addon`
             
         - For keeping the addon tree updated, you should be on you addon tree and issue a git pull
         
@@ -81,7 +87,7 @@ database was not installed correctly. You might wish to move/rename
 .htconfig.php to another name and empty (called 'dropping') the database
 tables, so that you can start fresh.
 
-7. Set up a cron job or scheduled task to run the poller once every 5-10
+7. Set up a cron job or scheduled task to run the poller once every 15
 minutes in order to perform background processing. Example:
 
     `cd /base/directory; /path/to/php include/poller.php`
@@ -91,7 +97,7 @@ Change "/base/directory", and "/path/to/php" as appropriate for your situation.
 If you are using a Linux server, run "crontab -e" and add a line like the
 one shown, substituting for your unique paths and settings:
 
-`*/10 * * * * cd /home/myname/mywebsite; /usr/bin/php include/poller.php`
+`*/15 * * * * cd /home/myname/mywebsite; /usr/bin/php include/poller.php`
 
 You can generally find the location of PHP by executing "which php". If you
 have troubles with this section please contact your hosting provider for
