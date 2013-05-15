@@ -32,12 +32,6 @@ function directory_run($argv, $argc){
 
 	$channel = $x[0];
 
-	// is channel profile visible to the public?
-	// FIXME - remove dir entry if permission is revoked
-
-	if(! perm_is_allowed($channel['channel_id'],null,'view_profile'))
-		return;
-
 	$directory = find_upstream_directory($dirmode);
 
 	if($directory) {
