@@ -148,7 +148,7 @@ function setup_content(&$a) {
 	}
 	
 	if($db && $db->connected) {
-		$r = q("SELECT COUNT(*) as `total` FROM `user`");
+		$r = q("SELECT COUNT(*) as `total` FROM `account`");
 		if($r && count($r) && $r[0]['total']) {
 			$tpl = get_markup_template('install.tpl');
 			return replace_macros($tpl, array(

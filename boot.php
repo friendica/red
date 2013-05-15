@@ -1929,10 +1929,10 @@ function current_theme(){
  * Provide a sane default if nothing is chosen or the specified theme does not exist.
  */
 
-function current_theme_url() {
+function current_theme_url($installing = false) {
 	global $a;
 	$t = current_theme();
-	if (file_exists('view/theme/' . $t . '/php/style.php'))
+	if((file_exists('view/theme/' . $t . '/php/style.php')) && (! $installing))
 		return('view/theme/' . $t . '/php/style.pcss');
 	return('view/theme/' . $t . '/css/style.css');
 }
@@ -2219,10 +2219,12 @@ function construct_page(&$a) {
  	 * Build the page - now that we have all the components
  	 */
 
+	$installing = false;
 
-	if($a->module != 'install') {
+	if($a->module == 'install')
+		$installing = true;
+	else
 		nav($a);
-	}
 
 	require_once(theme_include('theme_init.php'));
 
@@ -2236,7 +2238,7 @@ function construct_page(&$a) {
 
 	head_add_css(((x($a->page,'template')) ? $a->page['template'] : 'default' ) . '.css');
 	head_add_css('mod_' . $a->module . '.css');
-	head_add_css(current_theme_url());
+	head_add_css(current_theme_url($installing));
 
 	head_add_js('mod_' . $a->module . '.js');
 

@@ -1,2 +1,2 @@
 #!/bin/sh
-doxygen util/Doxyfile
+/home/macgirvin/bin/doxygen util/Doxyfile
