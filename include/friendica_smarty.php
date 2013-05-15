@@ -52,7 +52,7 @@ class FriendicaSmartyEngine implements ITemplateEngine {
         $basecompiledir = $a->config['system']['smarty3_folder'];
         if (!$basecompiledir) $basecompiledir = dirname(__dir__)."/view/tpl/smarty3";
         if (!is_dir($basecompiledir)) {
-            echo "<b>ERROR:</b> folder <tt>$basecompiledir</tt>does not exixst."; killme();
+            echo "<b>ERROR:</b> folder <tt>$basecompiledir</tt>does not exist."; killme();
         }
 		if(!is_writable($basecompiledir)){
 			echo "<b>ERROR:</b> folder <tt>$basecompiledir</tt> must be writable by webserver."; killme();

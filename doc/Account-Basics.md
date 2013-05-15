@@ -6,67 +6,38 @@ Account Basics
 
 **Registration**
 
-Not all Friendica sites allow open registration. If registration is allowed, you will see a "Register" link immediately below the login prompts on the site home page. Following this link will take you to the site registration page.  The strength of our network is that lots of different sites are all completely compatible with each other.  If the site you're visting doesn't allow registration, or you think you might prefer another one, you can find a <a href="http://dir.friendica.com/siteinfo">list of public servers here</a>, and find one that meets your needs.  
+Not all Red sites allow open registration. If registration is allowed, you will see a "Register" link immediately below the login prompts on the site home page. Following this link will take you to the site Registration page.
 
-If you'd like to have your own server, you can do that too.  Visit <a href="http://friendica.com/download">the Friendica website</a> to download the code with setup instructions.  It's a very simple install process that anybody experienced in hosting websites, or with basic Linux experience can handle easily.
+*Your Email Address*
 
+Please provide a valid email address. Your email address is **never** published.  This address will be used to (optionally) send email notifications for incoming messages or items, and used to recover lost passwords.
 
-*OpenID*
+*Password*
 
-The first field on the Registration page is for an OpenID address. If you do not have an OpenID address or do not wish to use OpenID, leave this field blank. If you have an OpenID account elsewhere and wish to use it, enter the address into this field and click 'Register'. Friendica will attempt to extract as much information as possible from your OpenID provider and return to this page with those items already filled in.
+Enter a password of your choice, and repeat it in the second box.  As Red offers a decentralised identity, your account can log you in to many other websites.  Because of this, you should use a strong password, even if you initially think of your account as being in the same category as forums.
 
+*Terms Of Servive*
 
-*Your Full Name*
-
-Please provide your full name **as you would like it to be displayed on this system**.  Most people use their real name for this, but you're under no obligation to do so yourself.
-
-
-*Email Address*
-
-Please provide a valid email address. Your email address is **never** published. We need this to send you account information and your login details. You may also occasionally receive notifications of incoming messages or items requiring your attention, but you have the ability to completely disable these from your Settings page once you have logged in.  This doesn't have to be your primary email address, but it does need to be a real email address.  You can't get your initial password, or reset a lost password later without it.  This is the only bit of personal information that has to be accurate.
-
-
-*Nickname*
-
-A nickname is used to generate web addresses for many of your personal pages, and is also treated like an email address when establishing communications with others. Due to the way that the nickname is used, it has some limitations. It must contain only US-ASCII text characters and numbers, and must also start with a text character. It also must be unique on this system. This is used in many places to identify your account, and once set - cannot be changed.
-
-
-*Directory Publishing*
-
-The Registration form also allows you to choose whether or not to list your account in the online directory. This is like a "phone book" and you may choose to be unlisted. We recommend that you select 'Yes' so that other people (friends, family, etc.) will be able to find you. If you choose 'No', you will essentially be invisible and have few opportunities for interaction. Whichever you choose, this can be changed any time from your Settings page after you login. 
-
+Click the link to read the site's terms of service.  This will open in a new tab.  Once you've read them, tick the box to confirm.
 
 *Register*
 
-Once you have provided the necessary details, click the 'Register' button. An email will be sent to you providing your account login details. Please watch your email (including spam folders) for your registration details and initial password. 
+Once you have provided the necessary details, click the 'Register' button. An email will be sent to you providing your account login details. Some sites may require administrator approval before the registration is processed, and you will be alerted if this is the case. Please watch your email (including spam folders) for your registration approval. 
 
+*Create a Channel*
 
-**Login Page**
+Next, you will be presented with the "Add a channel" screen.  Normally, your first channel will be one that represents you - so using your own name (or psuedonym) as the channel name is a good idea.  The channel name should be thought of as a title, or breif description of your channel.  The "choose a short nickname" box is similar to a "username" field.  We will use whatever you enter here to create a channel address, which other people will use to connect to you, and you will use to log in to other sites.  This looks like an email address, and takes the form nickname@siteyouregisteredat.xyz
 
-On the 'Login' page, please enter your login information that was provided during registration. You may use either your nickname or email address as a Login Name. 
-
-If you use your account to manage multiple '[Pages](help/Pages)' and these all have the same email address, please enter the nickname for the account you wish to manage.  
-
-*If* your account has been OpenID enabled, you may use your OpenID address as a login name and leave the password blank. You will be redirected to your OpenID provider to complete your authorisation. 
-
-Otherwise, enter your password. This will have been initially provided in your registration email message. Your password is case-sensitive, so please check your 'Caps Lock' key if you are having difficulty logging in. 
-
-
-**Changing Your Password**
-
-After your first login, please visit the 'Settings' page from the top menu bar and change your password to something that you will remember.
-
-
-**Retrieving Personal Data**
-
-You can export a copy of your personal data in XML format from the "Export personal data" link at the top of your settings  page.
-
+When your channel is created you will be taken straight to your settings page where you can define permissions, enable features, etc.  All these things are covered in the appropriate section of the helpfiles.
 
 **See Also**
 
-* [Profiles](help/Profiles)
+* [Tips for New Members](newmember) - this link will show up on your home page for two weeks to provide some important Getting Started information.
 
-* [Groups and Privacy](help/Groups-and-Privacy)
+* [Permissions](help/Permissions)
+
+* [Profiles](help/Profiles)
 
 * [Remove Account](help/Remove-Account)
 
+ 
