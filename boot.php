@@ -2,11 +2,11 @@
 /** @file */
 
 /**
- * Red.
+ * Red Matrix.
  * 
- * Red is an open source decentralised communications platform combined with
- * a decentralised identity/authentication framework wrapped in
- * an extensible content management system, providing website designers
+ * The Red Matrix (aka "Red") is an open source decentralised communications 
+ * platform combined with a decentralised identity/authentication framework 
+ * wrapped in an extensible content management system, providing website designers
  * the ability to embed fully decentralised communications and social tools 
  * into many traditional website designs (blogs, forums, small business 
  * websites, charitable organisations, etc.). Red also provides DNS mobility 
@@ -38,7 +38,7 @@ require_once('library/Mobile_Detect/Mobile_Detect.php');
 require_once('include/BaseObject.php');
 require_once('include/features.php');
 
-define ( 'RED_PLATFORM',            'Red' );
+define ( 'RED_PLATFORM',            'Red Matrix' );
 define ( 'RED_VERSION',             trim(file_get_contents('version.inc')) . 'R');
 define ( 'ZOT_REVISION',            1     ); 
 define ( 'DB_UPDATE_VERSION',       1042  );

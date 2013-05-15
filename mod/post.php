@@ -118,6 +118,9 @@ function post_init(&$a) {
 				// log them in
 				$_SESSION['authenticated'] = 1;
 				$_SESSION['visitor_id'] = $x[0]['xchan_hash'];
+				$_SESSION['my_address'] = $address;
+				$arr = array('xchan' => $x[0], 'url' => $desturl);
+				call_hooks('magic_auth_success',$arr);
 				$a->set_observer($x[0]);
 				require_once('include/security.php');
 				$a->set_groups(init_groups_visitor($_SESSION['visitor_id']));
