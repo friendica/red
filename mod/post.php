@@ -119,7 +119,7 @@ function post_init(&$a) {
 				$_SESSION['authenticated'] = 1;
 				$_SESSION['visitor_id'] = $x[0]['xchan_hash'];
 				$_SESSION['my_address'] = $address;
-				$arr = array('xchan' => $x[0], 'url' => $desturl);
+				$arr = array('xchan' => $x[0], 'url' => $desturl, 'channel_address' => $webbie);
 				call_hooks('magic_auth_success',$arr);
 				$a->set_observer($x[0]);
 				require_once('include/security.php');
