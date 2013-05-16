@@ -474,6 +474,15 @@ function check_htaccess(&$checks) {
 	$help = "";
 	if (function_exists('curl_init')){
         $test = z_fetch_url($a->get_baseurl()."/setup/testrewrite");
+		if(! $test['success']) {
+			if(strstr($a->get_baseurl(),'https://')) {
+				$test = z_fetch_url($a->get_baseurl() . "/setup/testrewrite",false,0,array('novalidate' => true));
+				if($test['success']) {
+					check_add($checks, t('SSL certificate validation'),false,true, t('SSL certificate cannot be validated. Fix certificate or disable https access to this site.'));
+				}
+			}
+		}		
+
         if ((! $test['success']) || ($test['body'] != "ok")) {
             $status = false;
             $help = t('Url rewrite in .htaccess is not working. Check your server configuration.');
