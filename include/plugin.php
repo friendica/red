@@ -540,30 +540,11 @@ function theme_include($file, $root = '') {
 
 
 function get_intltext_template($s) {
-	global $a;
+	$a = get_app();
+	$t = $a->template_engine();
 
-	if(! isset($a->language))
-		$a->language = 'en';
-
-	$engine = '';
-	if($a->get_template_engine() === 'smarty3')
-		$engine = "/smarty3";
-
-	$file = '';
-	if(file_exists("view/{$a->language}$engine/$s"))
-		$file = "view/{$a->language}$engine/$s";
-	elseif(file_exists("view/en$engine/$s"))
-		$file = "view/en$engine/$s";
-	else
-		$file = "view/tpl/$engine/$s";
-	if($engine === '/smarty3') {
-		$template = new FriendicaSmarty();
-		$template->filename = $file;
-
-		return $template;
-	}
-	else
-		return file_get_contents($file);
+	$template = $t->get_intltext_template($s, $root);
+	return $template;
 
 }
 

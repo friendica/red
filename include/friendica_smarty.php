@@ -86,4 +86,25 @@ class FriendicaSmartyEngine implements ITemplateEngine {
 		}		
 		return "";
 	}
+
+	public function get_intltext_template($file, $root='') {
+		$a = get_app();
+    
+		if(file_exists("view/{$a->language}/$s"))
+        	$template_file = "view/{$a->language}/$s";
+	    elseif(file_exists("view/en/$s"))
+        	$template_file = "view/en/$s";
+    	else
+        	$template_file = theme_include($file,$root);
+		if($template_file) {
+			$template = new FriendicaSmarty();
+			$template->filename = $template_file;
+
+			return $template;
+		}		
+		return "";
+	}
+
+
+
 }
