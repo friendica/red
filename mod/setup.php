@@ -237,14 +237,14 @@ function setup_content(&$a) {
 			$o .= replace_macros($tpl, array(
 				'$title' => $install_title,
 				'$pass' => t('Database connection'),
-				'$info_01' => t('In order to install Red we need to know how to connect to your database.'),
+				'$info_01' => t('In order to install Red Matrix we need to know how to connect to your database.'),
 				'$info_02' => t('Please contact your hosting provider or site administrator if you have questions about these settings.'),
 				'$info_03' => t('The database you specify below should already exist. If it does not, please create it before continuing.'),
 
 				'$status' => $wizard_status,
 				
-				'$dbhost' => array('dbhost', t('Database Server Name'), $dbhost, ''),
-				'$dbport' => array('dbport', t('Database Port'), $dbport, t('Communication port number or leave blank to use default')),
+				'$dbhost' => array('dbhost', t('Database Server Name'), $dbhost, t('Default is localhost'),
+				'$dbport' => array('dbport', t('Database Port'), $dbport, t('Communication port number - use 0 for default')),
 				'$dbuser' => array('dbuser', t('Database Login Name'), $dbuser, ''),
 				'$dbpass' => array('dbpass', t('Database Login Password'), $dbpass, ''),
 				'$dbdata' => array('dbdata', t('Database Name'), $dbdata, ''),
