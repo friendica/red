@@ -4,6 +4,7 @@
 // Copy or rename this file to .htconfig.php
 
 $db_host = '$dbhost';
+$db_port = '$dbport';
 $db_user = '$dbuser';
 $db_pass = '$dbpass';
 $db_data = '$dbdata';

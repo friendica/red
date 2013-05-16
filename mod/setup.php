@@ -27,6 +27,7 @@ function setup_post(&$a) {
 		case 3:
 			$urlpath = $a->get_path();
 			$dbhost = notags(trim($_POST['dbhost']));
+			$dbport = intval(notags(trim($_POST['dbport'])));
 			$dbuser = notags(trim($_POST['dbuser']));
 			$dbpass = notags(trim($_POST['dbpass']));
 			$dbdata = notags(trim($_POST['dbdata']));
@@ -47,7 +48,7 @@ function setup_post(&$a) {
 					);
 					if($r) {
 						unset($db);
-						$db = new dba($dbhost, $dbuser, $dbpass, $dbdata, true);
+						$db = new dba($dbhost, $dbport, $dbuser, $dbpass, $dbdata, true);
 					} else {
 						$a->data['db_create_failed']=true;
 					}
@@ -65,6 +66,7 @@ function setup_post(&$a) {
 		case 4:
 			$urlpath = $a->get_path();
 			$dbhost = notags(trim($_POST['dbhost']));
+			$dbport = intval(notags(trim($_POST['dbport'])));
 			$dbuser = notags(trim($_POST['dbuser']));
 			$dbpass = notags(trim($_POST['dbpass']));
 			$dbdata = notags(trim($_POST['dbdata']));
@@ -81,6 +83,7 @@ function setup_post(&$a) {
 			$tpl = get_intltext_template('htconfig.tpl');
 			$txt = replace_macros($tpl,array(
 				'$dbhost' => $dbhost,
+				'$dbport' => $dbport,
 				'$dbuser' => $dbuser,
 				'$dbpass' => $dbpass,
 				'$dbdata' => $dbdata,
@@ -120,7 +123,7 @@ function setup_content(&$a) {
 	global $install_wizard_pass, $db;
 	$o = '';
 	$wizard_status = "";
-	$install_title = t('Red Identity/Communications Server - Setup');
+	$install_title = t('Red Matrix Server - Setup');
 	
 
 	
@@ -222,6 +225,7 @@ function setup_content(&$a) {
 
 			$dbhost = ((x($_POST,'dbhost')) ? notags(trim($_POST['dbhost'])) : 'localhost');
 			$dbuser = notags(trim($_POST['dbuser']));
+			$dbport = intval(notags(trim($_POST['dbport'])));
 			$dbpass = notags(trim($_POST['dbpass']));
 			$dbdata = notags(trim($_POST['dbdata']));
 			$phpath = notags(trim($_POST['phpath']));
@@ -240,6 +244,7 @@ function setup_content(&$a) {
 				'$status' => $wizard_status,
 				
 				'$dbhost' => array('dbhost', t('Database Server Name'), $dbhost, ''),
+				'$dbport' => array('dbport', t('Database Port'), $dbport, t('Communication port number or leave blank to use default'),
 				'$dbuser' => array('dbuser', t('Database Login Name'), $dbuser, ''),
 				'$dbpass' => array('dbpass', t('Database Login Password'), $dbpass, ''),
 				'$dbdata' => array('dbdata', t('Database Name'), $dbdata, ''),
@@ -262,6 +267,7 @@ function setup_content(&$a) {
 		case 3: { // Site settings
 			require_once('datetime.php');
 			$dbhost = ((x($_POST,'dbhost')) ? notags(trim($_POST['dbhost'])) : 'localhost');
+			$dbport = intval(notags(trim($_POST['dbuser'])));
 			$dbuser = notags(trim($_POST['dbuser']));
 			$dbpass = notags(trim($_POST['dbpass']));
 			$dbdata = notags(trim($_POST['dbdata']));
@@ -279,6 +285,7 @@ function setup_content(&$a) {
 				'$status' => $wizard_status,
 				
 				'$dbhost' => $dbhost, 
+				'$dbport' => $dbport, 
 				'$dbuser' => $dbuser,
 				'$dbpass' => $dbpass,
 				'$dbdata' => $dbdata,

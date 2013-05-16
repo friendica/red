@@ -24,6 +24,7 @@
 <input type="hidden" name="pass" value="3" />
 
 {{include file="field_input.tpl" field=$dbhost}}
+{{include file="field_input.tpl" field=$dbport}}
 {{include file="field_input.tpl" field=$dbuser}}
 {{include file="field_password.tpl" field=$dbpass}}
 {{include file="field_input.tpl" field=$dbdata}}

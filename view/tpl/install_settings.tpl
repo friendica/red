@@ -16,6 +16,7 @@
 
 <input type="hidden" name="phpath" value="{{$phpath}}" />
 <input type="hidden" name="dbhost" value="{{$dbhost}}" />
+<input type="hidden" name="dbport" value="{{$dbport}}" />
 <input type="hidden" name="dbuser" value="{{$dbuser}}" />
 <input type="hidden" name="dbpass" value="{{$dbpass}}" />
 <input type="hidden" name="dbdata" value="{{$dbdata}}" />
