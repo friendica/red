@@ -12,14 +12,25 @@
 
 // Then set the following for your MySQL installation
 
-$db_host = 'your.mysqlhost.com';
-$db_port = null; #leave null for default or set your port
+$db_host = 'your.mysqlhost.com'; // Use 'localhost' if you aren't using a remote server
+$db_port = 0;                    // leave 0 for default or set your port
 $db_user = 'mysqlusername';
 $db_pass = 'mysqlpassword';
 $db_data = 'mysqldatabasename';
 
-// smarty3 compile dir. make sure is writable by webserver
-$a->config['system']['smarty3_folder'] = "view/tpl/smarty3";
+
+/*
+ * Notice: Many of the following settings will be available in the admin panel 
+ * after a successful site install. Once they are set in the admin panel, they
+ * are stored in the DB - and the DB setting will over-ride any corresponding
+ * setting in this file
+ *
+ * The command-line tool util/config is able to query and set the DB items 
+ * directly if for some reason the admin panel is not available and a system
+ * setting requires modification. 
+ *
+ */ 
+
 
 // Choose a legal default timezone. If you are unsure, use "America/Los_Angeles".
 // It can be changed later and only applies to timestamps for anonymous viewers.
@@ -28,7 +39,10 @@ $default_timezone = 'America/Los_Angeles';
 
 // What is your site name?
 
-$a->config['sitename'] = "Friendica Social Network";
+$a->config['system']['baseurl'] = 'https://myredsite.example';
+$a->config['system']['sitename'] = "Red Matrix";
+$a->config['system']['location_hash'] = 'if the auto install failed, put a unique random string here';
+
 
 // Your choices are REGISTER_OPEN, REGISTER_APPROVE, or REGISTER_CLOSED.
 // Be certain to create your own personal account before setting 
@@ -41,20 +55,12 @@ $a->config['sitename'] = "Friendica Social Network";
 // must precisely match the email address of the person logged in.
 
 $a->config['system']['register_policy'] = REGISTER_OPEN;
-$a->config['register_text'] = '';
+$a->config['system']['register_text'] = '';
 $a->config['system']['admin_email'] = '';
-
-// Maximum size of an imported message, 0 is unlimited
-
-$a->config['max_import_size'] = 200000;
-
-// maximum size of uploaded photos
-
-$a->config['system']['maximagesize'] = 800000;
 
 // Location of PHP command line processor
 
-$a->config['php_path'] = 'php';
+$a->config['system']['php_path'] = 'php';
 
 
 // Configure how we communicate with directory servers.
@@ -64,19 +70,4 @@ $a->config['php_path'] = 'php';
 // DIRECTORY_MODE_STANDALONE = "off the grid" or private directory services
 
 $a->config['system']['directory_mode']  = DIRECTORY_MODE_NORMAL;
-
-
-// PuSH - aka pubsubhubbub URL. This makes delivery of public posts as fast as private posts
-
-$a->config['system']['huburl'] = 'http://pubsubhubbub.appspot.com';
-
-// allowed themes (change this from admin panel after installation)
-
-$a->config['system']['allowed_themes'] = 'redbasic';
-
-// default system theme
-
-$a->config['system']['theme'] = 'redbasic';
-
-
 
