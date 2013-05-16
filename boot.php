@@ -2221,7 +2221,7 @@ function construct_page(&$a) {
 
 	$installing = false;
 
-	if($a->module == 'install')
+	if($a->module == 'setup')
 		$installing = true;
 	else
 		nav($a);
