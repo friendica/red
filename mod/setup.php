@@ -244,7 +244,7 @@ function setup_content(&$a) {
 				'$status' => $wizard_status,
 				
 				'$dbhost' => array('dbhost', t('Database Server Name'), $dbhost, ''),
-				'$dbport' => array('dbport', t('Database Port'), $dbport, t('Communication port number or leave blank to use default'),
+				'$dbport' => array('dbport', t('Database Port'), $dbport, t('Communication port number or leave blank to use default')),
 				'$dbuser' => array('dbuser', t('Database Login Name'), $dbuser, ''),
 				'$dbpass' => array('dbpass', t('Database Login Password'), $dbpass, ''),
 				'$dbdata' => array('dbdata', t('Database Name'), $dbdata, ''),
