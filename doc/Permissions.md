@@ -40,4 +40,4 @@ If you have set any of these permissions to "only those I specifically allow", y
 
 The contact edit screen offers a slider to select a degree of friendship with the contact.  Think of this as a measure of how much you dislike them.  1 is for people you like, whose posts you want to see all the time.  99 is for people you can't stand, whose posts you never want to see.  Once you've assigned a value here, you can use the affinity tool (assuming you have it enabled) on the network page to filter content based on this number.  
 
-The slider has both a minimum and maximum value.  Posts will only be shown from people who fall between this range.
+The slider has both a minimum and maximum value.  Posts will only be shown from people who fall between this range.  Affinity has no relation to permissions, and is only useful in conjunction with the affinity tool feature.
