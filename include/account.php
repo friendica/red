@@ -130,7 +130,7 @@ function create_account($arr) {
 	// allow the admin_email account to be admin, but only if it's the first account.
 
 	$c = account_total();
-	if((c === 0) && (check_account_admin($arr)))
+	if(($c === 0) && (check_account_admin($arr)))
 		$roles |= ACCOUNT_ROLE_ADMIN;
 
 
