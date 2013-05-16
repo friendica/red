@@ -243,7 +243,7 @@ function setup_content(&$a) {
 
 				'$status' => $wizard_status,
 				
-				'$dbhost' => array('dbhost', t('Database Server Name'), $dbhost, t('Default is localhost'),
+				'$dbhost' => array('dbhost', t('Database Server Name'), $dbhost, t('Default is localhost')),
 				'$dbport' => array('dbport', t('Database Port'), $dbport, t('Communication port number - use 0 for default')),
 				'$dbuser' => array('dbuser', t('Database Login Name'), $dbuser, ''),
 				'$dbpass' => array('dbpass', t('Database Login Password'), $dbpass, ''),
