@@ -539,7 +539,7 @@ function theme_include($file, $root = '') {
 
 
 
-function get_intltext_template($s) {
+function get_intltext_template($s, $root = '') {
 	$a = get_app();
 	$t = $a->template_engine();
 

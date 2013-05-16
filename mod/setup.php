@@ -38,6 +38,10 @@ function setup_post(&$a) {
 			require_once('include/dba/dba_driver.php');
 			unset($db);
 			$db = dba_factory($dbhost, $dbport, $dbuser, $dbpass, $dbdata, true);
+			if(! $db->connected) {
+				echo "Database Connect failed: " . $db->error;
+				killme();
+			}
 			/*if(get_db_errno()) {
 				unset($db);
 				$db = dba_factory($dbhost, $dbport, $dbuser, $dbpass, '', true);
@@ -79,6 +83,11 @@ function setup_post(&$a) {
 
 			// connect to db
 			$db = dba_factory($dbhost, $dbport, $dbuser, $dbpass, $dbdata, true);
+
+			if(! $db->connected) {
+				echo 'CRITICAL: DB not connected.';
+				killme();
+			}
 
 			$tpl = get_intltext_template('htconfig.tpl');
 			$txt = replace_macros($tpl,array(

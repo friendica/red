@@ -5,13 +5,18 @@ require_once('include/dba/dba_driver.php');
 class dba_mysqli extends dba_driver {
 
 	function connect($server, $port, $user,$pass,$db) {
-		$this->db = new mysqli($server,$user,$pass,$db, $port);
+		if($port)
+			$this->db = new mysqli($server,$user,$pass,$db, $port);
+		else
+			$this->db = new mysqli($server,$user,$pass,$db);
+
 		if(! mysqli_connect_errno()) {
 			$this->connected = true;
 		}
 		if($this->connected) {
 			return true;
 		}
+		$this->error = $this->db->connect_error;
 		return false;
 	}
 

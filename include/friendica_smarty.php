@@ -90,10 +90,10 @@ class FriendicaSmartyEngine implements ITemplateEngine {
 	public function get_intltext_template($file, $root='') {
 		$a = get_app();
     
-		if(file_exists("view/{$a->language}/$s"))
-        	$template_file = "view/{$a->language}/$s";
-	    elseif(file_exists("view/en/$s"))
-        	$template_file = "view/en/$s";
+		if(file_exists("view/{$a->language}/$file"))
+        	$template_file = "view/{$a->language}/$file";
+	    elseif(file_exists("view/en/$file"))
+        	$template_file = "view/en/$file";
     	else
         	$template_file = theme_include($file,$root);
 		if($template_file) {

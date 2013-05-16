@@ -53,6 +53,7 @@ abstract class dba_driver {
 				return false;
 			}
 		}
+		return true;
 	}
 
 
