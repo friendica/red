@@ -80,6 +80,13 @@ function setup_post(&$a) {
 			$siteurl = notags(trim($_POST['siteurl']));
 			
 
+			if($siteurl != z_root()) {
+		        $test = z_fetch_url($siteurl."/setup/testrewrite");
+				if((! $test['success']) || ($test['body'] != 'ok'))  {
+					$a->data['url_fail'] = true;
+					return;
+				}
+			}
 
 			// connect to db
 			$db = dba_factory($dbhost, $dbport, $dbuser, $dbpass, $dbdata, true);
@@ -140,6 +147,11 @@ function setup_content(&$a) {
 		$install_wizard_pass = 2;
 		$wizard_status =  t('Could not connect to database.');
 	}
+	if(x($a->data,'url_fail')) {
+		$install_wizard_pass = 3;
+		$wizard_status =  t('Could not connect to specified site URL. Possible SSL certificate or DNS issue.');
+	}
+
 	if(x($a->data,'db_create_failed')) {
 		$install_wizard_pass = 2;
 		$wizard_status =  t('Could not create table.');
