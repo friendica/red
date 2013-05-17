@@ -1136,19 +1136,25 @@ function delete_imported_item($sender,$item,$uid) {
 }
 
 function process_mail_delivery($sender,$arr,$deliveries) {
+
+
+	$result = array();
 	
 	foreach($deliveries as $d) {
 		$r = q("select * from channel where channel_hash = '%s' limit 1",
 			dbesc($d['hash'])
 		);
 
-		if(! $r)
+		if(! $r) {
+			$result[] = array($d['hash'],'not found');
 			continue;
+		}
 
 		$channel = $r[0];
 
 		if(! perm_is_allowed($channel['channel_id'],$sender['hash'],'post_mail')) {
 			logger("permission denied for mail delivery {$channel['channel_id']}");
+			$result[] = array($d['hash'],'permission denied');
 			continue;
 		}
 	
@@ -1162,9 +1168,11 @@ function process_mail_delivery($sender,$arr,$deliveries) {
 					intval($r[0]['id']),
 					intval($channel['channel_id'])
 				);
+				$result[] = array($d['hash'],'mail recalled');
 				logger('mail_recalled');
 			}
 			else {				
+				$result[] = array($d['hash'],'duplicate mail received');
 				logger('duplicate mail received');
 			}
 			continue;
@@ -1173,9 +1181,11 @@ function process_mail_delivery($sender,$arr,$deliveries) {
 			$arr['account_id'] = $channel['channel_account_id'];
 			$arr['channel_id'] = $channel['channel_id'];
 			$item_id = mail_store($arr);
+			$result[] = array($d['hash'],'mail delivered');
 
 		}
 	}
+	return $result;
 }
 
 function process_profile_delivery($sender,$arr,$deliveries) {
