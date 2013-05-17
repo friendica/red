@@ -545,6 +545,8 @@ function item_post(&$a) {
 		echo json_encode(array('preview' => $o));
 		killme();
 	}
+	if($orig_post)
+		$datarray['edit'] = true;
 
 	call_hooks('post_local',$datarray);
 

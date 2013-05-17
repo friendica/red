@@ -200,17 +200,36 @@ function post_post(&$a) {
 			logger('mod_zot: pickup: ' . $ret['message']);
 			json_return_and_die($ret);
 		}
-		// verify the url_sig
-		$sitekey = $r[0]['hubloc_sitekey'];
-//		logger('sitekey: ' . $sitekey);
 
-		if(! rsa_verify($data['callback'],base64url_decode($data['callback_sig']),$sitekey)) {
+		foreach ($r as $hubsite) {
+
+			// verify the url_sig
+			// If the server was re-installed at some point, there could be multiple hubs with the same url and callback.
+			// Only one will have a valid key.
+
+			$forgery = true;
+			$secret_fail = true;
+
+			$sitekey = $hubsite['hubloc_sitekey'];
+
+			//		logger('sitekey: ' . $sitekey);
+
+			if(rsa_verify($data['callback'],base64url_decode($data['callback_sig']),$sitekey)) {
+				$forgery = false;
+			}
+			if(rsa_verify($data['secret'],base64url_decode($data['secret_sig']),$sitekey)) {
+				$secret_fail = false;
+			}
+			if((! $forgery) && (! $secret_fail))
+				break;
+		}
+		if($forgery) {
 			$ret['message'] = 'possible site forgery';
 			logger('mod_zot: pickup: ' . $ret['message']);
 			json_return_and_die($ret);
 		}
 
-		if(! rsa_verify($data['secret'],base64url_decode($data['secret_sig']),$sitekey)) {
+		if($secret_fail) {
 			$ret['message'] = 'secret validation failed';
 			logger('mod_zot: pickup: ' . $ret['message']);
 			json_return_and_die($ret);

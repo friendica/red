@@ -321,8 +321,8 @@ function notifier_run($argv, $argc){
 
 	$sql_extra = (($private) ? "" : " or hubloc_url = '" . z_root() . "' ");
 
-	$r = q("select distinct(hubloc_callback),hubloc_host,hubloc_sitekey from hubloc 
-		where hubloc_hash in (" . implode(',',$recipients) . ") $sql_extra group by hubloc_callback");
+	$r = q("select distinct hubloc_sitekey, hubloc_callback, hubloc_host from hubloc 
+		where hubloc_hash in (" . implode(',',$recipients) . ") $sql_extra group by hubloc_sitekey");
 	if(! $r) {
 		logger('notifier: no hubs');
 		return;
