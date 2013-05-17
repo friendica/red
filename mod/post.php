@@ -191,7 +191,7 @@ function post_post(&$a) {
 			logger('mod_zot: pickup: ' . $ret['message'], LOGGER_DEBUG);
 			json_return_and_die($ret);
 		}
-		$r = q("select hubloc_sitekey from hubloc where hubloc_url = '%s' and hubloc_callback = '%s' and hubloc_sitekey != '' limit 1",
+		$r = q("select hubloc_sitekey from hubloc where hubloc_url = '%s' and hubloc_callback = '%s' and hubloc_sitekey != '' ",
 			dbesc($data['url']),
 			dbesc($data['callback'])
 		);
@@ -212,7 +212,7 @@ function post_post(&$a) {
 
 			$sitekey = $hubsite['hubloc_sitekey'];
 
-			//		logger('sitekey: ' . $sitekey);
+			logger('mod_zot: Checking sitekey: ' . $sitekey);
 
 			if(rsa_verify($data['callback'],base64url_decode($data['callback_sig']),$sitekey)) {
 				$forgery = false;
