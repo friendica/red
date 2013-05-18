@@ -11,7 +11,7 @@ Before you begin: Choose a domain name or subdomain name for your server.
     - Apache with mod-rewrite enabled and "Options All" so you can use a
 local .htaccess file
 
-    - PHP  5.3
+    - PHP  5.3 or later
         - PHP *command line* access with register_argc_argv set to true in the
 php.ini file
         - curl, gd, mysql, and openssl extensions
