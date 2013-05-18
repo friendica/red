@@ -12,6 +12,7 @@ function home_init(&$a) {
 		$dest = get_pconfig(local_user(),'system','startpage');
 		if(! $dest)
 			$dest = z_root() . '/network';
+
 		goaway($dest);
 	}
 
