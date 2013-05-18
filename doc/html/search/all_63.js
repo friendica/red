@@ -114,6 +114,6 @@ var searchData=
   ['crypto_2ephp',['crypto.php',['../crypto_8php.html',1,'']]],
   ['curpageurl',['curPageURL',['../boot_8php.html#aa4221641e5c21db69fa52c426b9017f5',1,'boot.php']]],
   ['current_5ftheme',['current_theme',['../boot_8php.html#ad206598b909e8eb67eb0e0bb5ef69c13',1,'boot.php']]],
-  ['current_5ftheme_5furl',['current_theme_url',['../boot_8php.html#ab2878f40a7f3978476fcfb4c95b96806',1,'boot.php']]],
+  ['current_5ftheme_5furl',['current_theme_url',['../boot_8php.html#a926cad0b3d8b9d9ee5da1898fc063ba3',1,'boot.php']]],
   ['cli_20config_20utility',['CLI config utility',['../md_config.html',1,'']]]
 ];

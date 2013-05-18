@@ -11,7 +11,7 @@ var boot_8php =
     [ "construct_page", "boot_8php.html#acc4e0c910af066148b810e5fde55fff1", null ],
     [ "curPageURL", "boot_8php.html#aa4221641e5c21db69fa52c426b9017f5", null ],
     [ "current_theme", "boot_8php.html#ad206598b909e8eb67eb0e0bb5ef69c13", null ],
-    [ "current_theme_url", "boot_8php.html#ab2878f40a7f3978476fcfb4c95b96806", null ],
+    [ "current_theme_url", "boot_8php.html#a926cad0b3d8b9d9ee5da1898fc063ba3", null ],
     [ "dba_timer", "boot_8php.html#a3e0930933fb2c0bf8211cc7ab4e1c3b4", null ],
     [ "fix_system_urls", "boot_8php.html#aca5e42678e178c6b9034610d66666fd7", null ],
     [ "get_account_id", "boot_8php.html#afe88b920aa285982edb817a0dd44eb37", null ],

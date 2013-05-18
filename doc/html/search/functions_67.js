@@ -38,7 +38,7 @@ var searchData=
   ['get_5fgroups',['get_groups',['../classApp.html#a4659785d13e4bac0bed50dbb1b0d4299',1,'App']]],
   ['get_5fhostname',['get_hostname',['../classApp.html#a622eace13f8fc9f4b5672a68e2bc4396',1,'App']]],
   ['get_5fid',['get_id',['../classItem.html#ac0f27e58532612f6e7a54c8a621b9b92',1,'Item']]],
-  ['get_5fintltext_5ftemplate',['get_intltext_template',['../plugin_8php.html#a917f10208bec9090f062a8cec92e110f',1,'plugin.php']]],
+  ['get_5fintltext_5ftemplate',['get_intltext_template',['../classFriendicaSmartyEngine.html#a35ec0ee828c36640ea25296bcb84a118',1,'FriendicaSmartyEngine\get_intltext_template()'],['../plugin_8php.html#acb63c27d07f6d7dffe95f98a6cef1295',1,'get_intltext_template():&#160;plugin.php']]],
   ['get_5fitem_5fchildren',['get_item_children',['../conversation_8php.html#a7f6ef0dfa554bacf620e84c18d386e67',1,'conversation.php']]],
   ['get_5fitem_5fcontact',['get_item_contact',['../items_8php.html#aab9c6bae4c40799867596bdaae9829fd',1,'items.php']]],
   ['get_5fitem_5felements',['get_item_elements',['../items_8php.html#a536d0313b6ffe33b9d2490c4e25c5361',1,'items.php']]],

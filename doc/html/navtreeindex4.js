@@ -1,5 +1,6 @@
 var NAVTREEINDEX4 =
 {
+"include_2attach_8php.html#ad991208ce939387e2f93a3bce7d09932":[5,0,0,6,1],
 "include_2attach_8php.html#aeb07968990e66a88c95483ca09a7f909":[5,0,0,6,6],
 "include_2config_8php.html":[5,0,0,13],
 "include_2config_8php.html#a27559f388c9b9af81c94e48d6889d1d1":[5,0,0,13,6],
@@ -234,8 +235,8 @@ var NAVTREEINDEX4 =
 "msearch_8php.html#ac80d2a6c0a92e79eec7efbbccd74d9a8":[5,0,1,45,0],
 "namespaceFriendica.html":[3,0,1],
 "namespaceFriendica.html":[4,0,1],
-"namespaceacl__selectors.html":[4,0,0],
 "namespaceacl__selectors.html":[3,0,0],
+"namespaceacl__selectors.html":[4,0,0],
 "namespacefriendica-to-smarty-tpl.html":[4,0,2],
 "namespacefriendica-to-smarty-tpl.html":[3,0,2],
 "namespacemembers.html":[3,1,0],
@@ -244,10 +245,9 @@ var NAVTREEINDEX4 =
 "namespaces.html":[3,0],
 "namespaceupdatetpl.html":[4,0,3],
 "namespaceupdatetpl.html":[3,0,3],
-"namespaceutil.html":[4,0,4],
 "namespaceutil.html":[3,0,4],
+"namespaceutil.html":[4,0,4],
 "nav_8php.html":[5,0,0,41],
 "nav_8php.html#a43be0df73b90647ea70947ce004e231e":[5,0,0,41,0],
-"nav_8php.html#ac3c920ce3ea5b0d9e0678ee37155f06a":[5,0,0,41,1],
-"new__channel_8php.html":[5,0,1,47]
+"nav_8php.html#ac3c920ce3ea5b0d9e0678ee37155f06a":[5,0,0,41,1]
 };

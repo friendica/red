@@ -3,7 +3,7 @@ var plugin_8php =
     [ "call_hooks", "plugin_8php.html#a7f05de16c0a32602853b09b99dd85e7c", null ],
     [ "format_css_if_exists", "plugin_8php.html#a9039e15aae27676af7777dcbee5a11d6", null ],
     [ "format_js_if_exists", "plugin_8php.html#ad9ff8ba554576383c5911a4bce068c1f", null ],
-    [ "get_intltext_template", "plugin_8php.html#a917f10208bec9090f062a8cec92e110f", null ],
+    [ "get_intltext_template", "plugin_8php.html#acb63c27d07f6d7dffe95f98a6cef1295", null ],
     [ "get_markup_template", "plugin_8php.html#a75f7dfed291fd7add7fc85b5c022a1f4", null ],
     [ "get_plugin_info", "plugin_8php.html#aff0178bd8d0b34a94d5efddc883edd35", null ],
     [ "get_theme_info", "plugin_8php.html#ad48de9c0fb7f19413a2aa49250d00405", null ],

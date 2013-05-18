@@ -164,10 +164,13 @@ function get_all_perms($uid,$observer_xchan,$internal_use = true) {
 		// If PERMS_CONTACTS or PERMS_SPECIFIC, they need to be in your address book
 		// $x is a valid address book entry
 
+
+
 		if(! $x) {
 			$ret[$perm_name] = false;
 			continue;
 		}
+		
 
 		if(($r) && ($r[0][$channel_perm] & PERMS_CONTACTS)) {
 
@@ -192,6 +195,8 @@ function get_all_perms($uid,$observer_xchan,$internal_use = true) {
 		continue;
 
 	}
+
+
 	$arr = array(
 		'channel_id'    => $uid,
 		'observer_hash' => $observer_xchan,

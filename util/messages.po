@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: \n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2013-05-10 00:01-0700\n"
+"POT-Creation-Date: 2013-05-17 00:00-0700\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -732,7 +732,7 @@ msgstr ""
 #: ../../mod/common.php:43 ../../mod/profile_photo.php:185
 #: ../../mod/profile_photo.php:198 ../../mod/connections.php:146
 #: ../../mod/settings.php:578 ../../mod/delegate.php:6
-#: ../../mod/editpost.php:10 ../../mod/setup.php:157 ../../mod/photos.php:74
+#: ../../mod/editpost.php:10 ../../mod/setup.php:181 ../../mod/photos.php:74
 #: ../../mod/photos.php:639 ../../mod/viewsrc.php:12 ../../mod/fsuggest.php:78
 #: ../../mod/group.php:15 ../../mod/profiles.php:163
 #: ../../mod/profiles.php:471 ../../mod/intro.php:50 ../../mod/crepair.php:115
@@ -1228,35 +1228,6 @@ msgstr ""
 #: ../../include/datetime.php:299
 #, php-format
 msgid "%1$d %2$s ago"
-msgstr ""
-
-#: ../../include/identity.php:14
-msgid "Unable to obtain identity information from database"
-msgstr ""
-
-#: ../../include/identity.php:36
-msgid "Empty name"
-msgstr ""
-
-#: ../../include/identity.php:38
-msgid "Name too long"
-msgstr ""
-
-#: ../../include/identity.php:72
-msgid "No account identifier"
-msgstr ""
-
-#: ../../include/identity.php:87
-msgid ""
-"Nickname has unsupported characters or is already being used on this site."
-msgstr ""
-
-#: ../../include/identity.php:135
-msgid "Unable to retrieve created identity"
-msgstr ""
-
-#: ../../include/identity.php:200
-msgid "Default Profile"
 msgstr ""
 
 #: ../../include/nav.php:71 ../../include/nav.php:86 ../../boot.php:1323
@@ -1757,7 +1728,7 @@ msgstr ""
 msgid "Preview"
 msgstr ""
 
-#: ../../include/dba/dba_driver.php:48
+#: ../../include/dba/dba_driver.php:50
 #, php-format
 msgid "Cannot locate DNS info for database server '%s'"
 msgstr ""
@@ -2001,6 +1972,35 @@ msgstr ""
 
 #: ../../include/plugin.php:448
 msgid "This action is not available under your subscription plan."
+msgstr ""
+
+#: ../../include/identity.php:14
+msgid "Unable to obtain identity information from database"
+msgstr ""
+
+#: ../../include/identity.php:36
+msgid "Empty name"
+msgstr ""
+
+#: ../../include/identity.php:38
+msgid "Name too long"
+msgstr ""
+
+#: ../../include/identity.php:72
+msgid "No account identifier"
+msgstr ""
+
+#: ../../include/identity.php:87
+msgid ""
+"Nickname has unsupported characters or is already being used on this site."
+msgstr ""
+
+#: ../../include/identity.php:135
+msgid "Unable to retrieve created identity"
+msgstr ""
+
+#: ../../include/identity.php:200
+msgid "Default Profile"
 msgstr ""
 
 #: ../../include/notify.php:23
@@ -2489,19 +2489,19 @@ msgid "This is you"
 msgstr ""
 
 #: ../../include/ItemObject.php:539 ../../mod/invite.php:138
-#: ../../mod/import.php:339 ../../mod/connections.php:372
-#: ../../mod/settings.php:596 ../../mod/settings.php:708
-#: ../../mod/settings.php:737 ../../mod/settings.php:760
-#: ../../mod/settings.php:831 ../../mod/settings.php:997
-#: ../../mod/setup.php:257 ../../mod/setup.php:298 ../../mod/photos.php:674
-#: ../../mod/photos.php:766 ../../mod/photos.php:1023
+#: ../../mod/connections.php:372 ../../mod/settings.php:596
+#: ../../mod/settings.php:708 ../../mod/settings.php:737
+#: ../../mod/settings.php:760 ../../mod/settings.php:831
+#: ../../mod/settings.php:997 ../../mod/setup.php:283 ../../mod/setup.php:326
+#: ../../mod/photos.php:674 ../../mod/photos.php:766 ../../mod/photos.php:1023
 #: ../../mod/photos.php:1062 ../../mod/photos.php:1100
 #: ../../mod/photos.php:1127 ../../mod/fsuggest.php:108 ../../mod/group.php:83
 #: ../../mod/profiles.php:523 ../../mod/crepair.php:166
 #: ../../mod/admin.php:397 ../../mod/admin.php:621 ../../mod/admin.php:757
 #: ../../mod/admin.php:956 ../../mod/admin.php:1043 ../../mod/poke.php:166
-#: ../../mod/message.php:290 ../../mod/message.php:421 ../../mod/mood.php:134
-#: ../../mod/events.php:456 ../../view/theme/redbasic/php/config.php:131
+#: ../../mod/import.php:339 ../../mod/message.php:290
+#: ../../mod/message.php:421 ../../mod/mood.php:134 ../../mod/events.php:456
+#: ../../view/theme/redbasic/php/config.php:131
 #: ../../view/theme/redbasic/php/config.php:148
 #: ../../view/theme/redstrap/php/config.php:131
 msgid "Submit"
@@ -2731,86 +2731,13 @@ msgstr ""
 msgid "View Connnections"
 msgstr ""
 
-#: ../../mod/import.php:31
-msgid "Nothing to import."
-msgstr ""
-
-#: ../../mod/import.php:53
-msgid "Unable to download data from old server"
-msgstr ""
-
-#: ../../mod/import.php:59
-msgid "Imported file is empty."
-msgstr ""
-
-#: ../../mod/import.php:82
-msgid ""
-"Cannot create a duplicate channel identifier on this system. Import failed."
-msgstr ""
-
-#: ../../mod/import.php:100
-msgid "Channel clone failed. Import failed."
-msgstr ""
-
-#: ../../mod/import.php:110
-msgid "Cloned channel not found. Import failed."
-msgstr ""
-
-#: ../../mod/import.php:319
-msgid "Import completed."
-msgstr ""
-
-#: ../../mod/import.php:328
-msgid "Import Channel"
-msgstr ""
-
-#: ../../mod/import.php:329
-msgid ""
-"Use this form to import an existing channel from a different server/hub. You "
-"may retrieve the channel identity from the old server/hub via the network or "
-"provide an export file. Only identity and connections/relationships will be "
-"imported. Importation of content is not yet available."
-msgstr ""
-
-#: ../../mod/import.php:330
-msgid "File to Upload"
-msgstr ""
-
-#: ../../mod/import.php:331
-msgid "Or provide the old server/hub details"
-msgstr ""
-
-#: ../../mod/import.php:332
-msgid "Your old identity address (xyz@example.com)"
-msgstr ""
-
-#: ../../mod/import.php:333
-msgid "Your old login email address"
-msgstr ""
-
-#: ../../mod/import.php:334
-msgid "Your old login password"
-msgstr ""
-
-#: ../../mod/import.php:335
-msgid ""
-"For either option, please choose whether to make this hub your new primary "
-"address, or whether your old location should continue this role. You will be "
-"able to post from either location, but only one can be marked as the primary "
-"location for files, photos, and media."
-msgstr ""
-
-#: ../../mod/import.php:336
-msgid "Make this hub my primary location"
-msgstr ""
-
 #: ../../mod/post.php:114
 msgid ""
 "Remote authentication blocked. You are logged into this site locally. Please "
 "logout and retry."
 msgstr ""
 
-#: ../../mod/post.php:124
+#: ../../mod/post.php:127
 #, php-format
 msgid "Welcome %s. Remote authentication successful."
 msgstr ""
@@ -3887,311 +3814,340 @@ msgid ""
 "dot com"
 msgstr ""
 
-#: ../../mod/setup.php:123
-msgid "Red Identity/Communications Server - Setup"
+#: ../../mod/setup.php:142
+msgid "Red Matrix Server - Setup"
 msgstr ""
 
-#: ../../mod/setup.php:129
+#: ../../mod/setup.php:148
 msgid "Could not connect to database."
 msgstr ""
 
-#: ../../mod/setup.php:133
+#: ../../mod/setup.php:152
+msgid ""
+"Could not connect to specified site URL. Possible SSL certificate or DNS "
+"issue."
+msgstr ""
+
+#: ../../mod/setup.php:157
 msgid "Could not create table."
 msgstr ""
 
-#: ../../mod/setup.php:139
+#: ../../mod/setup.php:163
 msgid "Your site database has been installed."
 msgstr ""
 
-#: ../../mod/setup.php:144
+#: ../../mod/setup.php:168
 msgid ""
 "You may need to import the file \"install/database.sql\" manually using "
 "phpmyadmin or mysql."
 msgstr ""
 
-#: ../../mod/setup.php:145 ../../mod/setup.php:212 ../../mod/setup.php:528
+#: ../../mod/setup.php:169 ../../mod/setup.php:236 ../../mod/setup.php:565
 msgid "Please see the file \"install/INSTALL.txt\"."
 msgstr ""
 
-#: ../../mod/setup.php:209
+#: ../../mod/setup.php:233
 msgid "System check"
 msgstr ""
 
-#: ../../mod/setup.php:213 ../../mod/events.php:349
+#: ../../mod/setup.php:237 ../../mod/events.php:349
 msgid "Next"
 msgstr ""
 
-#: ../../mod/setup.php:214
+#: ../../mod/setup.php:238
 msgid "Check again"
 msgstr ""
 
-#: ../../mod/setup.php:235
+#: ../../mod/setup.php:260
 msgid "Database connection"
 msgstr ""
 
-#: ../../mod/setup.php:236
+#: ../../mod/setup.php:261
 msgid ""
-"In order to install Red we need to know how to connect to your database."
+"In order to install Red Matrix we need to know how to connect to your "
+"database."
 msgstr ""
 
-#: ../../mod/setup.php:237
+#: ../../mod/setup.php:262
 msgid ""
 "Please contact your hosting provider or site administrator if you have "
 "questions about these settings."
 msgstr ""
 
-#: ../../mod/setup.php:238
+#: ../../mod/setup.php:263
 msgid ""
 "The database you specify below should already exist. If it does not, please "
 "create it before continuing."
 msgstr ""
 
-#: ../../mod/setup.php:242
+#: ../../mod/setup.php:267
 msgid "Database Server Name"
 msgstr ""
 
-#: ../../mod/setup.php:243
+#: ../../mod/setup.php:267
+msgid "Default is localhost"
+msgstr ""
+
+#: ../../mod/setup.php:268
+msgid "Database Port"
+msgstr ""
+
+#: ../../mod/setup.php:268
+msgid "Communication port number - use 0 for default"
+msgstr ""
+
+#: ../../mod/setup.php:269
 msgid "Database Login Name"
 msgstr ""
 
-#: ../../mod/setup.php:244
+#: ../../mod/setup.php:270
 msgid "Database Login Password"
 msgstr ""
 
-#: ../../mod/setup.php:245
+#: ../../mod/setup.php:271
 msgid "Database Name"
 msgstr ""
 
-#: ../../mod/setup.php:247 ../../mod/setup.php:287
+#: ../../mod/setup.php:273 ../../mod/setup.php:315
 msgid "Site administrator email address"
 msgstr ""
 
-#: ../../mod/setup.php:247 ../../mod/setup.php:287
+#: ../../mod/setup.php:273 ../../mod/setup.php:315
 msgid ""
 "Your account email address must match this in order to use the web admin "
 "panel."
 msgstr ""
 
-#: ../../mod/setup.php:248 ../../mod/setup.php:289
+#: ../../mod/setup.php:274 ../../mod/setup.php:317
 msgid "Website URL"
 msgstr ""
 
-#: ../../mod/setup.php:248 ../../mod/setup.php:289
+#: ../../mod/setup.php:274 ../../mod/setup.php:317
 msgid "Please use SSL (https) URL if available."
 msgstr ""
 
-#: ../../mod/setup.php:251 ../../mod/setup.php:292
+#: ../../mod/setup.php:277 ../../mod/setup.php:320
 msgid "Please select a default timezone for your website"
 msgstr ""
 
-#: ../../mod/setup.php:277
+#: ../../mod/setup.php:304
 msgid "Site settings"
 msgstr ""
 
-#: ../../mod/setup.php:332
+#: ../../mod/setup.php:360
 msgid "Could not find a command line version of PHP in the web server PATH."
 msgstr ""
 
-#: ../../mod/setup.php:333
+#: ../../mod/setup.php:361
 msgid ""
 "If you don't have a command line version of PHP installed on server, you "
 "will not be able to run background polling via cron."
 msgstr ""
 
-#: ../../mod/setup.php:337
+#: ../../mod/setup.php:365
 msgid "PHP executable path"
 msgstr ""
 
-#: ../../mod/setup.php:337
+#: ../../mod/setup.php:365
 msgid ""
 "Enter full path to php executable. You can leave this blank to continue the "
 "installation."
 msgstr ""
 
-#: ../../mod/setup.php:342
+#: ../../mod/setup.php:370
 msgid "Command line PHP"
 msgstr ""
 
-#: ../../mod/setup.php:351
+#: ../../mod/setup.php:379
 msgid ""
 "The command line version of PHP on your system does not have "
 "\"register_argc_argv\" enabled."
 msgstr ""
 
-#: ../../mod/setup.php:352
+#: ../../mod/setup.php:380
 msgid "This is required for message delivery to work."
 msgstr ""
 
-#: ../../mod/setup.php:354
+#: ../../mod/setup.php:382
 msgid "PHP register_argc_argv"
 msgstr ""
 
-#: ../../mod/setup.php:375
+#: ../../mod/setup.php:403
 msgid ""
 "Error: the \"openssl_pkey_new\" function on this system is not able to "
 "generate encryption keys"
 msgstr ""
 
-#: ../../mod/setup.php:376
+#: ../../mod/setup.php:404
 msgid ""
 "If running under Windows, please see \"http://www.php.net/manual/en/openssl."
 "installation.php\"."
 msgstr ""
 
-#: ../../mod/setup.php:378
+#: ../../mod/setup.php:406
 msgid "Generate encryption keys"
 msgstr ""
 
-#: ../../mod/setup.php:385
+#: ../../mod/setup.php:413
 msgid "libCurl PHP module"
 msgstr ""
 
-#: ../../mod/setup.php:386
+#: ../../mod/setup.php:414
 msgid "GD graphics PHP module"
 msgstr ""
 
-#: ../../mod/setup.php:387
+#: ../../mod/setup.php:415
 msgid "OpenSSL PHP module"
 msgstr ""
 
-#: ../../mod/setup.php:388
+#: ../../mod/setup.php:416
 msgid "mysqli PHP module"
 msgstr ""
 
-#: ../../mod/setup.php:389
+#: ../../mod/setup.php:417
 msgid "mb_string PHP module"
 msgstr ""
 
-#: ../../mod/setup.php:390
+#: ../../mod/setup.php:418
 msgid "mcrypt PHP module"
 msgstr ""
 
-#: ../../mod/setup.php:395 ../../mod/setup.php:397
+#: ../../mod/setup.php:423 ../../mod/setup.php:425
 msgid "Apache mod_rewrite module"
 msgstr ""
 
-#: ../../mod/setup.php:395
+#: ../../mod/setup.php:423
 msgid ""
 "Error: Apache webserver mod-rewrite module is required but not installed."
 msgstr ""
 
-#: ../../mod/setup.php:401 ../../mod/setup.php:404
+#: ../../mod/setup.php:429 ../../mod/setup.php:432
 msgid "proc_open"
 msgstr ""
 
-#: ../../mod/setup.php:401
+#: ../../mod/setup.php:429
 msgid ""
 "Error: proc_open is required but is either not installed or has been "
 "disabled in php.ini"
 msgstr ""
 
-#: ../../mod/setup.php:409
+#: ../../mod/setup.php:437
 msgid "Error: libCURL PHP module required but not installed."
 msgstr ""
 
-#: ../../mod/setup.php:413
+#: ../../mod/setup.php:441
 msgid ""
 "Error: GD graphics PHP module with JPEG support required but not installed."
 msgstr ""
 
-#: ../../mod/setup.php:417
+#: ../../mod/setup.php:445
 msgid "Error: openssl PHP module required but not installed."
 msgstr ""
 
-#: ../../mod/setup.php:421
+#: ../../mod/setup.php:449
 msgid "Error: mysqli PHP module required but not installed."
 msgstr ""
 
-#: ../../mod/setup.php:425
+#: ../../mod/setup.php:453
 msgid "Error: mb_string PHP module required but not installed."
 msgstr ""
 
-#: ../../mod/setup.php:429
+#: ../../mod/setup.php:457
 msgid "Error: mcrypt PHP module required but not installed."
 msgstr ""
 
-#: ../../mod/setup.php:445
+#: ../../mod/setup.php:473
 msgid ""
 "The web installer needs to be able to create a file called \".htconfig.php\" "
 "in the top folder of your web server and it is unable to do so."
 msgstr ""
 
-#: ../../mod/setup.php:446
+#: ../../mod/setup.php:474
 msgid ""
 "This is most often a permission setting, as the web server may not be able "
 "to write files in your folder - even if you can."
 msgstr ""
 
-#: ../../mod/setup.php:447
+#: ../../mod/setup.php:475
 msgid ""
 "At the end of this procedure, we will give you a text to save in a file "
 "named .htconfig.php in your Red top folder."
 msgstr ""
 
-#: ../../mod/setup.php:448
+#: ../../mod/setup.php:476
 msgid ""
 "You can alternatively skip this procedure and perform a manual installation. "
 "Please see the file \"install/INSTALL.txt\" for instructions."
 msgstr ""
 
-#: ../../mod/setup.php:451
+#: ../../mod/setup.php:479
 msgid ".htconfig.php is writable"
 msgstr ""
 
-#: ../../mod/setup.php:461
+#: ../../mod/setup.php:489
 msgid ""
 "Red uses the Smarty3 template engine to render its web views. Smarty3 "
 "compiles templates to PHP to speed up rendering."
 msgstr ""
 
-#: ../../mod/setup.php:462
+#: ../../mod/setup.php:490
 msgid ""
 "In order to store these compiled templates, the web server needs to have "
 "write access to the directory view/tpl/smarty3/ under the Red top level "
 "folder."
 msgstr ""
 
-#: ../../mod/setup.php:463
+#: ../../mod/setup.php:491
 msgid ""
 "Please ensure that the user that your web server runs as (e.g. www-data) has "
 "write access to this folder."
 msgstr ""
 
-#: ../../mod/setup.php:464
+#: ../../mod/setup.php:492
 msgid ""
 "Note: as a security measure, you should give the web server write access to "
 "view/tpl/smarty3/ only--not the template files (.tpl) that it contains."
 msgstr ""
 
-#: ../../mod/setup.php:467
+#: ../../mod/setup.php:495
 msgid "view/tpl/smarty3 is writable"
 msgstr ""
 
-#: ../../mod/setup.php:479
+#: ../../mod/setup.php:509
+msgid "SSL certificate validation"
+msgstr ""
+
+#: ../../mod/setup.php:509
+msgid ""
+"SSL certificate cannot be validated. Fix certificate or disable https access "
+"to this site."
+msgstr ""
+
+#: ../../mod/setup.php:516
 msgid ""
 "Url rewrite in .htaccess is not working. Check your server configuration."
 msgstr ""
 
-#: ../../mod/setup.php:481
+#: ../../mod/setup.php:518
 msgid "Url rewrite is working"
 msgstr ""
 
-#: ../../mod/setup.php:491
+#: ../../mod/setup.php:528
 msgid ""
 "The database configuration file \".htconfig.php\" could not be written. "
 "Please use the enclosed text to create a configuration file in your web "
 "server root."
 msgstr ""
 
-#: ../../mod/setup.php:515
+#: ../../mod/setup.php:552
 msgid "Errors encountered creating database tables."
 msgstr ""
 
-#: ../../mod/setup.php:526
+#: ../../mod/setup.php:563
 msgid "<h1>What next</h1>"
 msgstr ""
 
-#: ../../mod/setup.php:527
+#: ../../mod/setup.php:564
 msgid ""
 "IMPORTANT: You will need to [manually] setup a scheduled task for the poller."
 msgstr ""
@@ -5321,6 +5277,79 @@ msgstr ""
 msgid "Make this post private"
 msgstr ""
 
+#: ../../mod/import.php:31
+msgid "Nothing to import."
+msgstr ""
+
+#: ../../mod/import.php:53
+msgid "Unable to download data from old server"
+msgstr ""
+
+#: ../../mod/import.php:59
+msgid "Imported file is empty."
+msgstr ""
+
+#: ../../mod/import.php:82
+msgid ""
+"Cannot create a duplicate channel identifier on this system. Import failed."
+msgstr ""
+
+#: ../../mod/import.php:100
+msgid "Channel clone failed. Import failed."
+msgstr ""
+
+#: ../../mod/import.php:110
+msgid "Cloned channel not found. Import failed."
+msgstr ""
+
+#: ../../mod/import.php:319
+msgid "Import completed."
+msgstr ""
+
+#: ../../mod/import.php:328
+msgid "Import Channel"
+msgstr ""
+
+#: ../../mod/import.php:329
+msgid ""
+"Use this form to import an existing channel from a different server/hub. You "
+"may retrieve the channel identity from the old server/hub via the network or "
+"provide an export file. Only identity and connections/relationships will be "
+"imported. Importation of content is not yet available."
+msgstr ""
+
+#: ../../mod/import.php:330
+msgid "File to Upload"
+msgstr ""
+
+#: ../../mod/import.php:331
+msgid "Or provide the old server/hub details"
+msgstr ""
+
+#: ../../mod/import.php:332
+msgid "Your old identity address (xyz@example.com)"
+msgstr ""
+
+#: ../../mod/import.php:333
+msgid "Your old login email address"
+msgstr ""
+
+#: ../../mod/import.php:334
+msgid "Your old login password"
+msgstr ""
+
+#: ../../mod/import.php:335
+msgid ""
+"For either option, please choose whether to make this hub your new primary "
+"address, or whether your old location should continue this role. You will be "
+"able to post from either location, but only one can be marked as the primary "
+"location for files, photos, and media."
+msgstr ""
+
+#: ../../mod/import.php:336
+msgid "Make this hub my primary location"
+msgstr ""
+
 #: ../../mod/lockview.php:34
 msgid "Remote privacy information not available."
 msgstr ""
@@ -5840,7 +5869,7 @@ msgstr ""
 msgid "posted an event"
 msgstr ""
 
-#: ../../mod/wall_upload.php:41 ../../mod/item.php:967
+#: ../../mod/wall_upload.php:41 ../../mod/item.php:969
 msgid "Wall Photos"
 msgstr ""
 
@@ -6021,7 +6050,7 @@ msgstr ""
 msgid "Empty post discarded."
 msgstr ""
 
-#: ../../mod/item.php:698
+#: ../../mod/item.php:700
 msgid "System error. Post not saved."
 msgstr ""
 
@@ -6169,6 +6198,6 @@ msgstr ""
 msgid "Events and Calendar"
 msgstr ""
 
-#: ../../boot.php:2264
+#: ../../boot.php:2266
 msgid "toggle mobile"
 msgstr ""

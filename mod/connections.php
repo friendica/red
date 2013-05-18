@@ -345,7 +345,7 @@ function connections_content(&$a) {
 		$channel = $a->get_channel();
 
 		$global_perms = get_perms();
-		$existing = get_all_perms(local_user(),$contact); 
+		$existing = get_all_perms(local_user(),$contact['abook_xchan']); 
 
 		$unapproved = array('pending', t('Approve this connection'), '', t('Accept connection to allow communication'));
 		
