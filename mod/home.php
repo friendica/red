@@ -8,8 +8,12 @@ function home_init(&$a) {
 
 	$channel = $a->get_channel();
 
-	if(local_user() && $channel && $channel['xchan_url'])
-		goaway( $channel['xchan_url']);
+	if(local_user() && $channel && $channel['xchan_url']) {
+		$dest = get_pconfig(local_user(),'system','startpage');
+		if(! $dest)
+			$dest = z_root() . '/network';
+		goaway($dest);
+	}
 
 	if(get_account_id()) {
 		goaway('new_channel');
