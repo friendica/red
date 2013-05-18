@@ -447,7 +447,7 @@ function profiles_post(&$a) {
 		$channel = $a->get_channel();
 
 		if($namechanged && $is_default) {
-			$r = q("UPDATE xchan SET xchan_name = '%s', xchan_name_date` = '%s' WHERE xchan_hash = '%s' limit 1",
+			$r = q("UPDATE xchan SET xchan_name = '%s', xchan_name_date = '%s' WHERE xchan_hash = '%s' limit 1",
 				dbesc($name),
 				dbesc(datetime_convert()),
 				dbesc($channel['xchan_hash'])
