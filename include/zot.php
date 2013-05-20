@@ -367,7 +367,7 @@ function zot_refresh($them,$channel = null) {
 							intval(ABOOK_FLAG_SELF)
 						);
 						if($z)
-							proc_run('php','include/notifier.php','permissions_update',$z[0]['abook_id']);
+							proc_run('php','include/notifier.php','permission_update',$z[0]['abook_id']);
 					}
 				}
 			}

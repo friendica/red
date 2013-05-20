@@ -721,8 +721,11 @@ class App {
 
 	function set_baseurl($url) {
 
-		if(is_array($this->config) && array_key_exists('system',$this->config) &&
-			array_key_exists('baseurl',$this->config['system']) && strlen($this->config['system']['baseurl'])) {
+		if(is_array($this->config) 
+			&& array_key_exists('system',$this->config) 
+			&& is_array($this->config['system']) 
+			&& array_key_exists('baseurl',$this->config['system']) 
+			&& strlen($this->config['system']['baseurl'])) {
 			$url = $this->config['system']['baseurl'];
 		}
 
