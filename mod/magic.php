@@ -10,14 +10,14 @@ function magic_init(&$a) {
 
 	if($hash) {
 		$x = q("select xchan.xchan_url, hubloc.* from xchan left join hubloc on xchan_hash = hubloc_hash
-			where hubloc_hash = '%s' and (hubloc_flags & %d) limit 1",
+			where hubloc_hash = '%s' and (hubloc_flags & %d) order by hubloc_id desc limit 1",
 			dbesc($hash),
 			intval(HUBLOC_FLAGS_PRIMARY)
 		);
 	}
 	elseif($addr) {
 		$x = q("select hubloc.* from xchan left join hubloc on xchan_hash = hubloc_hash 
-			where xchan_addr = '%s' and (hubloc_flags & %d) limit 1",
+			where xchan_addr = '%s' and (hubloc_flags & %d) order by hubloc_id desc limit 1",
 			dbesc($addr),
 			intval(HUBLOC_FLAGS_PRIMARY)
 		);
@@ -29,7 +29,7 @@ function magic_init(&$a) {
 		$u = $b[0] . '//' . $b[2];
 
 		$x = q("select xchan.xchan_url, hubloc.* from xchan left join hubloc on xchan_hash = hubloc_hash
-			where hubloc_url = '%s' limit 1",
+			where hubloc_url = '%s' order by hubloc_id desc limit 1",
 			dbesc($u)
 		);
 
@@ -46,7 +46,7 @@ function magic_init(&$a) {
 				if($j)
 					import_xchan($j);
 				$x = q("select hubloc.* from xchan left join hubloc on xchan_hash = hubloc_hash 
-					where xchan_addr = '%s' and (hubloc_flags & %d) limit 1",
+					where xchan_addr = '%s' and (hubloc_flags & %d) order by hubloc_id desc limit 1",
 					dbesc($addr),
 					intval(HUBLOC_FLAGS_PRIMARY)
 				);
