@@ -349,6 +349,13 @@ footer {
 	font-weight: bold;
 }
 
+.warning-text {
+	width: auto;
+	font-size: 1.2em;
+	font-weight: bold;
+	color: #ff0000;
+}
+
 .preview {
 	background: url('../img/gray_and_white_diagonal_stripes_background_seamless.gif');
 }

@@ -21,7 +21,7 @@ function follow_init(&$a) {
 		goaway($return_url);
 	}
 
-	info( t('Channel added') . EOL);
+	info( t('Channel added.') . EOL);
 
 	goaway(z_root() . '/connections/' . $result['abook']['abook_id']);
 

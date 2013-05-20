@@ -39,7 +39,7 @@
 <input id="contact-closeness-mirror" type="hidden" name="closeness" value="{{$close}}" />
 
 {{if $noperms}}
-<div id="noperm-desc" class="descriptive-paragraph">{{$noperms}}</div>
+<div id="noperm-desc" class="warning-text">{{$noperms}}</div>
 {{/if}}
 
 
