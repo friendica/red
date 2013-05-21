@@ -1011,6 +1011,11 @@ function settings_content(&$a) {
 
 			'$h_prv' 	=> t('Security and Privacy Settings'),
 
+			'$lbl_pmacro' => t('Quick Privacy Settings:'),
+			'$pmacro3'    => t('Very Public - extremely permissive'),
+			'$pmacro2'    => t('Typical - default public, privacy when desired'),
+			'$pmacro1'    => t('Private - default private, rarely open or public'),
+			'$pmacro0'    => t('Blocked - default blocked to/from everybody'),
 			'$permiss_arr' => $permiss,
 
 			'$maxreq' 	=> array('maxreq', t('Maximum Friend Requests/Day:'), intval($channel['channel_max_friend_req']) , t('May reduce spam activity')),

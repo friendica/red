@@ -25,6 +25,15 @@
 
 <h3 class="settings-heading">{{$h_prv}}</h3>
 
+<div id="settings-privacy-macros">{{$lbl_pmacro}}</div>
+<ul>
+<li><a href="#" onclick="channel_privacy_macro(3); return false" id="settings_pmacro3">{{$pmacro3}}</a></li>
+<li><a href="#" onclick="channel_privacy_macro(2); return false" id="settings_pmacro2">{{$pmacro2}}</a></li>
+<li><a href="#" onclick="channel_privacy_macro(1); return false" id="settings_pmacro1">{{$pmacro1}}</a></li>
+<li><a href="#" onclick="channel_privacy_macro(0); return false" id="settings_pmacro0">{{$pmacro0}}</a></li>
+</ul>
+
+
 
 <div id="settings-permissions-wrapper">
 {{foreach $permiss_arr as $permit}}
