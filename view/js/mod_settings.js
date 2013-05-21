@@ -73,11 +73,11 @@ function channel_privacy_macro(n) {
         $('#id_post_wall option').eq(1).attr('selected','selected');
         $('#id_post_comments option').eq(1).attr('selected','selected');
         $('#id_post_mail option').eq(1).attr('selected','selected');
-        $('#id_post_photos option').eq(1).attr('selected','selected');
+        $('#id_post_photos option').eq(0).attr('selected','selected');
         $('#id_tag_deliver option').eq(1).attr('selected','selected');
         $('#id_chat option').eq(1).attr('selected','selected');
-        $('#id_write_storage option').eq(1).attr('selected','selected');
-        $('#id_write_pages option').eq(1).attr('selected','selected');
+        $('#id_write_storage option').eq(0).attr('selected','selected');
+        $('#id_write_pages option').eq(0).attr('selected','selected');
         $('#id_delegate option').eq(0).attr('selected','selected');
 		$('#id_profile_in_directory_onoff .on').removeClass('hidden');
 		$('#id_profile_in_directory_onoff .off').addClass('hidden');
