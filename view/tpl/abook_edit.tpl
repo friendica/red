@@ -33,13 +33,15 @@
 
 
 <h3>{{$permlbl}}</h3>
+<div id="perm-desc" class="descriptive-text">{{$permnote}}</div>
 
 <form id="abook-edit-form" action="connections/{{$contact_id}}" method="post" >
 <input type="hidden" name="contact_id" value="{{$contact_id}}">
 <input id="contact-closeness-mirror" type="hidden" name="closeness" value="{{$close}}" />
 
 {{if $noperms}}
-<div id="noperm-desc" class="warning-text">{{$noperms}}</div>
+<div id="noperm-msg" class="warning-text">{{$noperms}}</div>
+<div id="noperm-text" class="descriptive-text">{{$noperm_desc}}</div>
 {{/if}}
 
 

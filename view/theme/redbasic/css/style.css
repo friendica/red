@@ -350,10 +350,13 @@ footer {
 }
 
 .warning-text {
-	width: auto;
 	font-size: 1.2em;
 	font-weight: bold;
 	color: #ff0000;
+}
+
+#noperm-msg {
+	margin-top: 15px;
 }
 
 .preview {
@@ -2460,6 +2463,9 @@ aside input[type='text'] {
 	font-size: 70%;
 }
 
+.descriptive-text {
+	color: #888;
+}
 
 #plugin-settings-link, #account-settings-link {
 	margin-bottom: 10px;
