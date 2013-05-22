@@ -128,6 +128,19 @@ function post_activity_item($arr) {
 	$arr['deny_cid']     = ((x($arr,'deny_cid')) ? $arr['deny_cid'] : $channel['channel_deny_cid']);
 	$arr['deny_gid']     = ((x($arr,'deny_gid')) ? $arr['deny_gid'] : $channel['channel_deny_gid']);
 
+
+	// for the benefit of plugins, we will behave as if this is an API call rather than a normal online post
+
+	$_REQUEST['api_source'] = 1;
+
+	call_hooks('post_local'$arr);
+
+	if(x($arr,'cancel')) {
+		logger('post_activity_item: post cancelled by plugin.');
+		return $ret;
+	}
+
+
 	$post_id = item_store($arr);	
 
 	if($post_id) {
