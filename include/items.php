@@ -135,7 +135,11 @@ function post_activity_item($arr) {
 		call_hooks('post_local_end', $arr);
 		proc_run('php','include/notifier.php','activity',$post_id);
 		$ret['success'] = true;
-		$ret['activity'] = $ret;
+		$r = q("select * from item where id = %d limit 1",
+			intval($post_id)
+		);
+		if($r)
+			$ret['activity'] = $r[0];
 	}
 
 	return $ret;
