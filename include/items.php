@@ -133,7 +133,7 @@ function post_activity_item($arr) {
 
 	$_REQUEST['api_source'] = 1;
 
-	call_hooks('post_local'$arr);
+	call_hooks('post_local',$arr);
 
 	if(x($arr,'cancel')) {
 		logger('post_activity_item: post cancelled by plugin.');
