@@ -590,6 +590,13 @@ class App {
 
 		startup();
 
+		set_include_path(
+			'include' . PATH_SEPARATOR
+			. 'library' . PATH_SEPARATOR
+			. 'library/phpsec' . PATH_SEPARATOR
+			. 'library/langdet' . PATH_SEPARATOR
+			. '.' );
+
 
 		$this->scheme = 'http';
 		if(x($_SERVER,'HTTPS') && $_SERVER['HTTPS'])
@@ -612,13 +619,7 @@ class App {
 				$this->path = $path;
 		}
 
-		set_include_path(
-			"include/$this->hostname" . PATH_SEPARATOR
-			. 'include' . PATH_SEPARATOR
-			. 'library' . PATH_SEPARATOR
-			. 'library/phpsec' . PATH_SEPARATOR
-			. 'library/langdet' . PATH_SEPARATOR
-			. '.' );
+		set_include_path("include/$this->hostname" . PATH_SEPARATOR . get_include_path());
 
 		if((x($_SERVER,'QUERY_STRING')) && substr($_SERVER['QUERY_STRING'],0,2) === "q=") {
 			$this->query_string = substr($_SERVER['QUERY_STRING'],2);

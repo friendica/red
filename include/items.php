@@ -113,6 +113,12 @@ function post_activity_item($arr) {
 		return $ret;
 	}
 
+	if(array_key_exists('content_type',$arr) && $arr['content_type'] == 'text/html')
+		$arr['body'] = purify_html($arr['body']);
+	else
+		$arr['body'] = escape_tags($arr['body']);
+
+
 	$arr['mid']          = 	((x($arr,'mid')) ? $arr['mid'] : item_message_id());
 	$arr['parent_mid']   =  ((x($arr,'parent_mid')) ? $arr['parent_mid'] : $arr['mid']);
 	$arr['thr_parent']   =  ((x($arr,'thr_parent')) ? $arr['thr_parent'] : $arr['mid']);
@@ -160,6 +166,20 @@ function post_activity_item($arr) {
 }
 
 
+function purify_html($s) {
+	require_once('library/HTMLPurifier.auto.php');
+	require_once('include/html2bbcode.php');
+
+// FIXME this function has html output, not bbcode - so safely purify these
+//	$s = html2bb_video($s);
+//	$s = oembed_html2bbcode($s);
+
+	$config = HTMLPurifier_Config::createDefault();
+	$config->set('Cache.DefinitionImpl', null);
+
+	$purifier = new HTMLPurifier($config);
+	return $purifier->purify($s);
+}
 
 function get_public_feed($channel,$params) {
 
