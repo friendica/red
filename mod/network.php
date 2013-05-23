@@ -433,11 +433,11 @@ function network_content(&$a, $update = 0, $load = false) {
 	$sql_extra = " AND `item`.`parent` IN ( SELECT `parent` FROM `item` WHERE (item_flags & " . intval(ITEM_THREAD_TOP) . ") $sql_options ) ";
 
 	if($group) {
-		$r = q("SELECT `name`, `id` FROM `group` WHERE `id` = %d AND `uid` = %d LIMIT 1",
-			intval($group),
-			intval($_SESSION['uid'])
-		);
-		if(! count($r)) {
+        $r = q("SELECT * FROM `group` WHERE id = %d AND uid = %d LIMIT 1",
+            intval($group),
+            intval(local_user())
+        );
+        if(! $r) {
 			if($update)
 				killme();
 			notice( t('No such group') . EOL );
@@ -445,33 +445,33 @@ function network_content(&$a, $update = 0, $load = false) {
 			// NOTREACHED
 		}
 
-		$contacts = expand_groups(array($group));
-		if((is_array($contacts)) && count($contacts)) {
-			$contact_str = implode(',',$contacts);
-		}
-		else {
-				$contact_str = ' 0 ';
-				info( t('Group is empty'));
-		}
+        $contacts = expand_groups(array($arr['group']));
+        if((is_array($contacts)) && count($contacts)) {
+            $contact_str = implode(',',$contacts);
+        }
+        else {
+			$contact_str = ' 0 ';	
+			info( t('Group is empty'));
+        }
 
-		$sql_extra = " AND `item`.`parent` IN ( SELECT DISTINCT(`parent`) FROM `item` WHERE 1 $sql_options AND ( `contact-id` IN ( $contact_str ) OR `allow_gid` like '" . protect_sprintf('%<' . intval($group) . '>%') . "' ) and deleted = 0 ) ";
-		$o = '<h2>' . t('Group: ') . $r[0]['name'] . '</h2>' . $o;
-	}
+        $sql_extra = " AND item.parent IN ( SELECT DISTINCT parent FROM item WHERE true $sql_options AND ( author_xchan IN ( $contact_str ) OR owner_xchan in ( $contact_str) or allow_gid like '" . protect_sprintf('%<' . dbesc($r[0]['hash']) . '>%') . "' ) and item_restrict = 0 ) ";
+
+    }
+
 	elseif($cid) {
 
-		$r = q("SELECT `id`,`name`,`network`,`writable`,`nurl` FROM `contact` WHERE `id` = %d 
-				AND `blocked` = 0 AND `pending` = 0 LIMIT 1",
-			intval($cid)
-		);
-		if(count($r)) {
-			$sql_extra = " AND `item`.`parent` IN ( SELECT DISTINCT(`parent`) FROM `item` WHERE 1 $sql_options AND `contact-id` = " . intval($cid) . " and deleted = 0 ) ";
+        $r = q("SELECT * from abook where abook_id = %d and abook_channel = %d and not ( abook_flags & " . intval(ABOOK_FLAG_BLOCKED) . ") limit 1",
+			intval($cid),
+			intval(local_user())
+        );
+        if($r) {
+            $sql_extra = " AND item.parent IN ( SELECT DISTINCT parent FROM item WHERE true $sql_options AND uid = " . intval(local_user()) . " AND ( author_xchan = " . dbesc($r[0]['abook_xchan']) . " or owner_xchan = " . dbesc($r[0]['abook_xchan']) . " ) and item_restrict = 0 ) ";
 			$o = '<h2>' . t('Contact: ') . $r[0]['name'] . '</h2>' . $o;
-		}
-		else {
+        }
+        else {
 			notice( t('Invalid contact.') . EOL);
 			goaway($a->get_baseurl(true) . '/network');
-			// NOTREACHED
-		}
+        }
 	}
 
 
