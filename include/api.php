@@ -526,6 +526,7 @@ require_once('include/security.php');
 
 		if($_SERVER['REQUEST_METHOD'] == 'POST') {
 			json_return_and_die(post_activity_item($_POST));
+		}
 	}
 	api_register_func('api/red/channel/stream','api_channel_stream', true);
 
