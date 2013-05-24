@@ -38,6 +38,16 @@ function poller_run($argv, $argc){
 		intval(ACCOUNT_EXPIRED)
 	);
   
+	// publish any applicable items that were set to be published in the future
+	// (time travel posts)
+
+	q("update item set item_restrict = ( item_restrict ^ %d ) 
+		where ( item_restrict & %d ) and created <= UTC_TIMESTAMP() ",
+		intval(ITEM_DELAYED_PUBLISH),
+		intval(ITEM_DELAYED_PUBLISH)
+	);
+
+
 	$abandon_days = intval(get_config('system','account_abandon_days'));
 	if($abandon_days < 1)
 		$abandon_days = 0;
