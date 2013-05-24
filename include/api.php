@@ -96,6 +96,16 @@ require_once('include/security.php');
 			}
 		}
 
+		if(x($_SERVER,'HTTP_AUTHORIZATION')) {
+		 	$userpass = base64_decode(substr($_SERVER["HTTP_AUTHORIZATION"],6)) ;
+			if(strlen($userpass)) {
+			 	list($name, $password) = explode(':', $userpass);
+				$_SERVER['PHP_AUTH_USER'] = $name;
+				$_SERVER['PHP_AUTH_PW'] = $password;
+			}
+		}
+
+
 		if (!isset($_SERVER['PHP_AUTH_USER'])) {
 		   logger('API_login: ' . print_r($_SERVER,true), LOGGER_DEBUG);
 		    header('WWW-Authenticate: Basic realm="Red"');
