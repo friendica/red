@@ -4754,7 +4754,7 @@ function zot_feed($uid,$observer_xchan,$mindate) {
 
 
 
-function items_search($arr) {
+function items_fetch($arr,$channel = null,$client_mode = CLIENT_MODE_NORMAL,$module = 'network') {
 
 	$result = array('success' => false);
 
@@ -4763,16 +4763,23 @@ function items_search($arr) {
 	$sql_options = '';
 	$sql_extra2 = '';
     $sql_extra3 = '';
+	$item_uids = ' true ';
 
+	if($channel) {
+		$uid = $channel['channel_id'];
+		$uidhash = $channel['channel_hash'];
+		$item_uids = " item.uid = " . intval($uid) . " ";
+	}
+	
 	if($arr['star'])
 		$sql_options .= " and (item_flags & " . intval(ITEM_STARRED) . ")";
 
 	$sql_extra = " AND item.parent IN ( SELECT parent FROM item WHERE (item_flags & " . intval(ITEM_THREAD_TOP) . ") $sql_options ) ";
 
-    if($arr['group'] && $arr['uid']) {
+    if($arr['group'] && $uid) {
         $r = q("SELECT * FROM `group` WHERE id = %d AND uid = %d LIMIT 1",
             intval($arr['group']),
-            intval($arr['uid'])
+            intval($uid)
         );
         if(! $r) {
 			$result['message']  = t('Collection not found.');
@@ -4791,11 +4798,11 @@ function items_search($arr) {
         $sql_extra = " AND item.parent IN ( SELECT DISTINCT parent FROM item WHERE true $sql_options AND ( author_xchan IN ( $contact_str ) OR owner_xchan in ( $contact_str) or allow_gid like '" . protect_sprintf('%<' . dbesc($r[0]['hash']) . '>%') . "' ) and item_restrict = 0 ) ";
 
     }
-    elseif($arr['cid']) {
+    elseif($arr['cid'] && $uid) {
 
         $r = q("SELECT * from abook where abook_id = %d and abook_channel = %d and not ( abook_flags & " . intval(ABOOK_FLAG_BLOCKED) . ") limit 1",
 			intval($arr['cid']),
-			intval($arr['uid'])
+			intval($uid)
         );
         if($r) {
             $sql_extra = " AND item.parent IN ( SELECT DISTINCT parent FROM item WHERE true $sql_options AND uid = " . intval($arr['uid']) . " AND ( author_xchan = " . dbesc($r[0]['abook_xchan']) . " or owner_xchan = " . dbesc($r[0]['abook_xchan']) . " ) and item_restrict = 0 ) ";
@@ -4831,27 +4838,27 @@ function items_search($arr) {
         $sql_extra .= term_query('item',$arr['files'],TERM_FILE);
     }
 
-    if($arr['conv']) {
+    if($arr['conv'] && $channel) {
         $sql_extra .= sprintf(" AND parent IN (SELECT distinct parent from item where ( author_xchan like '%s' or ( item_flags & %d ))) ",
-            dbesc(protect_sprintf($arr['channel_hash'])),
+            dbesc(protect_sprintf($uidhash)),
             intval(ITEM_MENTIONSME)
         );
     }
 
-    if($update && ! $load) {
+    if(($client_mode & CLIENT_MODE_UPDATE) && (! ($client_mode & CLIENT_MODE_LOAD))) {
 
         // only setup pagination on initial page view
         $pager_sql = '';
 
     }
     else {
-        $itemspage = get_pconfig(local_user(),'system','itemspage');
+        $itemspage = (($channel) ? get_pconfig($uid,'system','itemspage') : 20);
         $a->set_pager_itemspage(((intval($itemspage)) ? $itemspage : 20));
-        $pager_sql = sprintf(" LIMIT %d, %d ",intval($a->pager['start']), intval($a->pager['itemspage']));
+        $pager_sql = sprintf(" LIMIT %d, %d ",intval(get_app()->pager['start']), intval(get_app()->pager['itemspage']));
     }
 
 
-    if(($cmin != 0) || ($cmax != 99)) {
+    if(($arr['cmin'] != 0) || ($arr['cmax'] != 99)) {
 
         // Not everybody who shows up in the network stream will be in your address book.
         // By default those that aren't are assumed to have closeness = 99; but this isn't
@@ -4860,32 +4867,29 @@ function items_search($arr) {
 
         $sql_nets .= " AND ";
 
-        if($cmax == 99)
+        if($arr['cmax'] == 99)
             $sql_nets .= " ( ";
 
-        $sql_nets .= "( abook.abook_closeness >= " . intval($cmin) . " ";
-        $sql_nets .= " AND abook.abook_closeness <= " . intval($cmax) . " ) ";
-       if($cmax == 99)
+        $sql_nets .= "( abook.abook_closeness >= " . intval($arr['cmin']) . " ";
+        $sql_nets .= " AND abook.abook_closeness <= " . intval($arr['cmax']) . " ) ";
+		if($cmax == 99)
             $sql_nets .= " OR abook.abook_closeness IS NULL ) ";
-
-
     }
 
-    $simple_update = (($update) ? " and ( item.item_flags & " . intval(ITEM_UNSEEN) . " ) " : '');
-    if($load)
+    $simple_update = (($client_mode & CLIENT_MODE_UPDATE) ? " and ( item.item_flags & " . intval(ITEM_UNSEEN) . " ) " : '');
+    if($client_mode & CLIENT_MODE_LOAD)
         $simple_update = '';
 
     $start = dba_timer();
 
-    if($nouveau && $load) {
+    if($arr['nouveau'] && ($client_mode & CLIENT_MODELOAD) && $channel) {
         // "New Item View" - show all items unthreaded in reverse created date order
 
-        $items = q("SELECT `item`.*, `item`.`id` AS `item_id` FROM `item`
-            WHERE `item`.`uid` = %d AND item_restrict = 0
+        $items = q("SELECT item.*, item.id AS item_id FROM item
+            WHERE $item_uids AND item_restrict = 0
             $simple_update
             $sql_extra $sql_nets
-            ORDER BY `item`.`received` DESC $pager_sql ",
-            intval($_SESSION['uid'])
+            ORDER BY item.received DESC $pager_sql "
         );
 
         require_once('include/items.php');
@@ -4894,27 +4898,26 @@ function items_search($arr) {
 
         $items = fetch_post_tags($items,true);
     }
-    elseif($update) {
+    elseif($client_mode & CLIENT_MODE_UPDATE) {
 
         // Normal conversation view
 
-        if($order === 'post')
-                $ordering = "`created`";
+        if($arr['order'] === 'post')
+			$ordering = "created";
         else
-                $ordering = "`commented`";
+			$ordering = "commented";
 
-        if($load) {
+        if($client_mode & CLIENT_MODE_LOAD) {
 
             // Fetch a page full of parent items for this page
 
             $r = q("SELECT distinct item.id AS item_id FROM item
                 left join abook on item.author_xchan = abook.abook_xchan
-                WHERE item.uid = %d AND item.item_restrict = 0
+                WHERE $item_uids AND item.item_restrict = 0
                 AND item.parent = item.id
                 and ((abook.abook_flags & %d) = 0 or abook.abook_flags is null)
                 $sql_extra3 $sql_extra $sql_nets
                 ORDER BY item.$ordering DESC $pager_sql ",
-                intval(local_user()),
                 intval(ABOOK_FLAG_BLOCKED)
             );
 
@@ -4923,10 +4926,9 @@ function items_search($arr) {
             // update
             $r = q("SELECT item.parent AS item_id FROM item
                 left join abook on item.author_xchan = abook.abook_xchan
-                WHERE item.uid = %d AND item.item_restrict = 0 $simple_update
+                WHERE $item_uids AND item.item_restrict = 0 $simple_update
                 and ((abook.abook_flags & %d) = 0 or abook.abook_flags is null)
                 $sql_extra3 $sql_extra $sql_nets ",
-                intval(local_user()),
                 intval(ABOOK_FLAG_BLOCKED)
             );
         }
@@ -4939,9 +4941,9 @@ function items_search($arr) {
 
             $parents_str = ids_to_querystr($r,'item_id');
 
-            $items = q("SELECT `item`.*, `item`.`id` AS `item_id` FROM `item`
-                WHERE `item`.`uid` = %d AND `item`.`item_restrict` = 0
-                AND `item`.`parent` IN ( %s )
+            $items = q("SELECT item.*, item.id AS item_id FROM item
+                WHERE $item_uids AND item.item_restrict = 0
+                AND item.parent IN ( %s )
                 $sql_extra ",
                 intval(local_user()),
                 dbesc($parents_str)

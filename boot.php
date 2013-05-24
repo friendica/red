@@ -155,6 +155,12 @@ define ( 'UPDATE_SUCCESS', 0);
 define ( 'UPDATE_FAILED',  1);
 
 
+
+define ( 'CLIENT_MODE_NORMAL', 0x0000);
+define ( 'CLIENT_MODE_LOAD',   0x0001);
+define ( 'CLIENT_MODE_UPDATE', 0x0002);
+
+
 /**
  *
  * page/profile types
