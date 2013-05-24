@@ -41,5 +41,6 @@ var searchData=
   ['item_5fpost',['item_post',['../item_8php.html#a693cd09805755ab85bbb5ecae69a48c3',1,'item.php']]],
   ['item_5fpost_5ftype',['item_post_type',['../text_8php.html#ac1dbf2e37e8069bea2c0f557fdbf203e',1,'text.php']]],
   ['item_5fstore',['item_store',['../items_8php.html#a8ef003b2bc2dc4816bdcf5800aec1049',1,'items.php']]],
-  ['item_5fstore_5fupdate',['item_store_update',['../items_8php.html#a2dc4fb9347f6fb804da4f32c107afb53',1,'items.php']]]
+  ['item_5fstore_5fupdate',['item_store_update',['../items_8php.html#a2dc4fb9347f6fb804da4f32c107afb53',1,'items.php']]],
+  ['items_5ffetch',['items_fetch',['../items_8php.html#ade43f7ae289e124d5af4985272981e1b',1,'items.php']]]
 ];

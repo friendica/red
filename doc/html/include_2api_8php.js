@@ -5,6 +5,7 @@ var include_2api_8php =
     [ "api_account_verify_credentials", "include_2api_8php.html#a864191bb876a515ed71b17e260ef35ad", null ],
     [ "api_apply_template", "include_2api_8php.html#a5990101034e7abf6404feba3cd273629", null ],
     [ "api_call", "include_2api_8php.html#a176c448d79c211ad41c2bbe3124658f5", null ],
+    [ "api_channel_stream", "include_2api_8php.html#a72bfecac1970bc29b853073e816388ff", null ],
     [ "api_date", "include_2api_8php.html#aea2dda92a155f2843a0ca188d8dfdf25", null ],
     [ "api_direct_messages_all", "include_2api_8php.html#a970b02c06dea8b229aa3d5fff9cf4705", null ],
     [ "api_direct_messages_box", "include_2api_8php.html#a7759ccddc8dff012ad168e511ffe5af5", null ],

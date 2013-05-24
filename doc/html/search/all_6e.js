@@ -47,7 +47,7 @@ var searchData=
   ['new_5fchannel_5finit',['new_channel_init',['../new__channel_8php.html#a1ad7f99e4366a32942c6b954aba3a164',1,'new_channel.php']]],
   ['new_5fchannel_5fpost',['new_channel_post',['../new__channel_8php.html#a180b0646957db8290482f02454ad7f23',1,'new_channel.php']]],
   ['new_5fcontact',['new_contact',['../include_2follow_8php.html#a6553a7650fae55f95660510d90983144',1,'follow.php']]],
-  ['new_5fcookie',['new_cookie',['../auth_8php.html#af8cde2fbf14abc2dd7ffa310400a59e3',1,'auth.php']]],
+  ['new_5fcookie',['new_cookie',['../session_8php.html#a4c0ead624f95483e386bc80abf570a8f',1,'session.php']]],
   ['new_5ffollower',['new_follower',['../items_8php.html#a53eb3d27e1c55083be93a32f392d54e7',1,'items.php']]],
   ['new_5fkeypair',['new_keypair',['../crypto_8php.html#aae0ab70d6a199b29555b1ac3cf250d6a',1,'crypto.php']]],
   ['new_5frequest_5ftoken',['new_request_token',['../classFKOAuthDataStore.html#a431b44d70e3da6a8256ab38f710e3050',1,'FKOAuthDataStore']]],

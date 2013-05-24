@@ -118,6 +118,8 @@ Functions</h2></td></tr>
 <tr class="separator:a4e6d7639431e0dd8e9f4dba8e1ac408b"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a410f9c743877c125ca06312373346903"><td class="memItemLeft" align="right" valign="top">&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="items_8php.html#a410f9c743877c125ca06312373346903">post_activity_item</a> ($arr)</td></tr>
 <tr class="separator:a410f9c743877c125ca06312373346903"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a4841df5beabdd1bdd1ed56781a915d61"><td class="memItemLeft" align="right" valign="top">&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="items_8php.html#a4841df5beabdd1bdd1ed56781a915d61">purify_html</a> ($s)</td></tr>
+<tr class="separator:a4841df5beabdd1bdd1ed56781a915d61"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a079e099e15d88d47aeb6ca6d60da7107"><td class="memItemLeft" align="right" valign="top">&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="items_8php.html#a079e099e15d88d47aeb6ca6d60da7107">get_public_feed</a> ($channel, $params)</td></tr>
 <tr class="separator:a079e099e15d88d47aeb6ca6d60da7107"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a59abb61d7581dc6592257ef022cbfada"><td class="memItemLeft" align="right" valign="top">&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="items_8php.html#a59abb61d7581dc6592257ef022cbfada">get_feed_for</a> (&amp;$a, $dfrn_id, $owner_nick, $last_update, $direction=0)</td></tr>
@@ -224,6 +226,8 @@ Functions</h2></td></tr>
 <tr class="separator:adf980098b6de9c3993bc3ff26a8dd6f9"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a004e89d86b0f29b2c4da20108ecc4091"><td class="memItemLeft" align="right" valign="top">&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="items_8php.html#a004e89d86b0f29b2c4da20108ecc4091">zot_feed</a> ($uid, $observer_xchan, $mindate)</td></tr>
 <tr class="separator:a004e89d86b0f29b2c4da20108ecc4091"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:ade43f7ae289e124d5af4985272981e1b"><td class="memItemLeft" align="right" valign="top">&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="items_8php.html#ade43f7ae289e124d5af4985272981e1b">items_fetch</a> ($arr, $channel=null, $client_mode=<a class="el" href="boot_8php.html#a43c6c7d84d880e9500bd4f8f8ecc5731">CLIENT_MODE_NORMAL</a>, $module= 'network')</td></tr>
+<tr class="separator:ade43f7ae289e124d5af4985272981e1b"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table>
 <h2 class="groupheader">Function Documentation</h2>
 <a class="anchor" id="a36e656667193c83aa2cc03a024fc131b"></a>
@@ -804,7 +808,7 @@ Functions</h2></td></tr>
       </table>
 </div><div class="memdoc">
 
-<p>Referenced by <a class="el" href="channel_8php.html#a9c6a6179e0e626398ebecc6151905ef1">channel_content()</a>, <a class="el" href="display_8php.html#a37137c98d47bf3306f4c2bb9f5b60de0">display_content()</a>, <a class="el" href="events_8php.html#a1d293fb217ae6bc9e3858c4b32e363ec">events_content()</a>, <a class="el" href="items_8php.html#a59abb61d7581dc6592257ef022cbfada">get_feed_for()</a>, <a class="el" href="mod_2network_8php.html#a43f2f29b90c5e29072c561934bc8f8b4">network_content()</a>, <a class="el" href="notifier_8php.html#a568c502f626cff95e344c0748938b85d">notifier_run()</a>, <a class="el" href="page_8php.html#a91a5f649f68406149108bded1dc90b22">page_content()</a>, <a class="el" href="search_8php.html#ab2568591359edde5b483a6cd9a24b2cc">search_content()</a>, <a class="el" href="items_8php.html#ab1bce4261bcf75ad62753b498a144d17">tag_deliver()</a>, and <a class="el" href="items_8php.html#a004e89d86b0f29b2c4da20108ecc4091">zot_feed()</a>.</p>
+<p>Referenced by <a class="el" href="channel_8php.html#a9c6a6179e0e626398ebecc6151905ef1">channel_content()</a>, <a class="el" href="display_8php.html#a37137c98d47bf3306f4c2bb9f5b60de0">display_content()</a>, <a class="el" href="events_8php.html#a1d293fb217ae6bc9e3858c4b32e363ec">events_content()</a>, <a class="el" href="items_8php.html#a59abb61d7581dc6592257ef022cbfada">get_feed_for()</a>, <a class="el" href="items_8php.html#ade43f7ae289e124d5af4985272981e1b">items_fetch()</a>, <a class="el" href="mod_2network_8php.html#a43f2f29b90c5e29072c561934bc8f8b4">network_content()</a>, <a class="el" href="notifier_8php.html#a568c502f626cff95e344c0748938b85d">notifier_run()</a>, <a class="el" href="page_8php.html#a91a5f649f68406149108bded1dc90b22">page_content()</a>, <a class="el" href="search_8php.html#ab2568591359edde5b483a6cd9a24b2cc">search_content()</a>, <a class="el" href="items_8php.html#ab1bce4261bcf75ad62753b498a144d17">tag_deliver()</a>, and <a class="el" href="items_8php.html#a004e89d86b0f29b2c4da20108ecc4091">zot_feed()</a>.</p>
 
 </div>
 </div>
@@ -1213,6 +1217,44 @@ Functions</h2></td></tr>
 
 </div>
 </div>
+<a class="anchor" id="ade43f7ae289e124d5af4985272981e1b"></a>
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">items_fetch </td>
+          <td>(</td>
+          <td class="paramtype">&#160;</td>
+          <td class="paramname"><em>$arr</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">&#160;</td>
+          <td class="paramname"><em>$channel</em> = <code>null</code>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">&#160;</td>
+          <td class="paramname"><em>$client_mode</em> = <code><a class="el" href="boot_8php.html#a43c6c7d84d880e9500bd4f8f8ecc5731">CLIENT_MODE_NORMAL</a></code>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">&#160;</td>
+          <td class="paramname"><em>$module</em> = <code>'network'</code>&#160;</td>
+        </tr>
+        <tr>
+          <td></td>
+          <td>)</td>
+          <td></td><td></td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+</div>
+</div>
 <a class="anchor" id="af94c281016c6c912d06e064113336c5c"></a>
 <div class="memitem">
 <div class="memproto">
@@ -1442,7 +1484,7 @@ Functions</h2></td></tr>
 </dl>
 <dl class="section return"><dt>Returns</dt><dd>array 'success' =&gt; true or false 'activity' =&gt; the resulting activity if successful </dd></dl>
 
-<p>Referenced by <a class="el" href="poke_8php.html#a9725aab97b3983e6a98bd81c4efe7d3b">poke_init()</a>.</p>
+<p>Referenced by <a class="el" href="include_2api_8php.html#a72bfecac1970bc29b853073e816388ff">api_channel_stream()</a>, and <a class="el" href="poke_8php.html#a9725aab97b3983e6a98bd81c4efe7d3b">poke_init()</a>.</p>
 
 </div>
 </div>
@@ -1505,6 +1547,24 @@ Functions</h2></td></tr>
 </div><div class="memdoc">
 
 <p>Referenced by <a class="el" href="items_8php.html#abe695dd89e1e10ed042c26b80114f0ed">posted_date_widget()</a>.</p>
+
+</div>
+</div>
+<a class="anchor" id="a4841df5beabdd1bdd1ed56781a915d61"></a>
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">purify_html </td>
+          <td>(</td>
+          <td class="paramtype">&#160;</td>
+          <td class="paramname"><em>$s</em></td><td>)</td>
+          <td></td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+<p>Referenced by <a class="el" href="items_8php.html#a410f9c743877c125ca06312373346903">post_activity_item()</a>.</p>
 
 </div>
 </div>

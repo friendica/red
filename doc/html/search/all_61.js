@@ -91,6 +91,7 @@ var searchData=
   ['api_5faccount_5fverify_5fcredentials',['api_account_verify_credentials',['../include_2api_8php.html#a864191bb876a515ed71b17e260ef35ad',1,'api.php']]],
   ['api_5fapply_5ftemplate',['api_apply_template',['../include_2api_8php.html#a5990101034e7abf6404feba3cd273629',1,'api.php']]],
   ['api_5fcall',['api_call',['../include_2api_8php.html#a176c448d79c211ad41c2bbe3124658f5',1,'api.php']]],
+  ['api_5fchannel_5fstream',['api_channel_stream',['../include_2api_8php.html#a72bfecac1970bc29b853073e816388ff',1,'api.php']]],
   ['api_5fcontent',['api_content',['../mod_2api_8php.html#a33315b5bbf5418f6850b2038107b526d',1,'api.php']]],
   ['api_5fdate',['api_date',['../include_2api_8php.html#aea2dda92a155f2843a0ca188d8dfdf25',1,'api.php']]],
   ['api_5fdirect_5fmessages_5fall',['api_direct_messages_all',['../include_2api_8php.html#a970b02c06dea8b229aa3d5fff9cf4705',1,'api.php']]],

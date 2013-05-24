@@ -1,5 +1,6 @@
 var session_8php =
 [
+    [ "new_cookie", "session_8php.html#a4c0ead624f95483e386bc80abf570a8f", null ],
     [ "ref_session_close", "session_8php.html#a5e1c616e02b863d5450317d101366bb7", null ],
     [ "ref_session_destroy", "session_8php.html#af230b86bfff7db66c3bdd7e0bbc24052", null ],
     [ "ref_session_gc", "session_8php.html#ac95373f4966862a028033dd2f94d4da1", null ],

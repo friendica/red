@@ -142,5 +142,6 @@ var searchData=
   ['public_5fpermissions_5fsql',['public_permissions_sql',['../security_8php.html#ab3bdd30dc60d9ee72370b866aa4a2d01',1,'security.php']]],
   ['public_5frecips',['public_recips',['../zot_8php.html#a083aec6c900d244e1bfc1406f9461465',1,'zot.php']]],
   ['pubrsatome',['pubrsatome',['../crypto_8php.html#a2a3fae7caca27f86d158eeaf69b6f287',1,'crypto.php']]],
+  ['purify_5fhtml',['purify_html',['../items_8php.html#a4841df5beabdd1bdd1ed56781a915d61',1,'items.php']]],
   ['push_5flang',['push_lang',['../language_8php.html#ac9142ef1d01a235c760deb0f16643f5a',1,'language.php']]]
 ];
