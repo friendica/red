@@ -198,13 +198,3 @@ else {
 		authenticate_success($record, true, true);
 	}
 }
-
-
-function new_cookie($time) {
-    $old_sid = session_id();
-    session_set_cookie_params("$time");
-    session_regenerate_id(false);
-
-    q("UPDATE session SET sid = '%s' WHERE sid = '%s'", dbesc(session_id()), dbesc($old_sid));
-}
-
