@@ -1128,6 +1128,10 @@ footer {
 	margin-top: 10px;
 }
 
+.wall-item-body.divmore {
+        padding-bottom: 15px;
+}
+
 .wall-item-tools {
 	clear: both;
     padding: 5px 10px;
