@@ -41,12 +41,20 @@ function poller_run($argv, $argc){
 	// publish any applicable items that were set to be published in the future
 	// (time travel posts)
 
-	q("update item set item_restrict = ( item_restrict ^ %d ) 
-		where ( item_restrict & %d ) and created <= UTC_TIMESTAMP() ",
-		intval(ITEM_DELAYED_PUBLISH),
+	$r = q("select id from item where ( item_restrict & %d ) and created <= UTC_TIMESTAMP() ",
 		intval(ITEM_DELAYED_PUBLISH)
 	);
-
+	if($r) {
+		foreach($r as $rr) {
+			$x = q("update item set item_restrict = ( item_restrict ^ %d ) where id = %d limit 1",
+				intval(ITEM_DELAYED_PUBLISH),
+				intval($rr['id'])
+			);
+			if($x) {
+				proc_run('php','include/notifer.php','wall-new',$rr['id']);
+			}
+		}
+	}
 
 	$abandon_days = intval(get_config('system','account_abandon_days'));
 	if($abandon_days < 1)

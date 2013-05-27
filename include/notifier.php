@@ -208,6 +208,10 @@ function notifier_run($argv, $argc){
 		if($target_item['item_restrict'] & ITEM_DELETED)
 			logger('notifier: target item ITEM_DELETED', LOGGER_DEBUG);
 
+		if($target_item['item_restrict'] & ITEM_DELAYED_PUBLISH) {
+			logger('notifier: target item ITEM_DELAYED_PUBLISH', LOGGER_DEBUG);
+			return;
+		}
 
 		$s = q("select * from channel where channel_id = %d limit 1",
 			intval($target_item['uid'])

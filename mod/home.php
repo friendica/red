@@ -17,7 +17,7 @@ function home_init(&$a) {
 	}
 
 	if(get_account_id()) {
-		goaway('new_channel');
+		goaway(z_root() . '/new_channel');
 	}
 
 }}

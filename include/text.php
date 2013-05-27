@@ -1138,11 +1138,29 @@ function zidify_callback($match) {
 	return $x;
 }
 
+function zidify_img_callback($match) {
+  if (feature_enabled(local_user(),'sendzid')) {
+	$replace = '<img' . $match[1] . ' src="' . zid($match[2]) . '"';
+	}
+	else {
+	  $replace = '<img' . $match[1] . ' src="' . zid($match[3]) . '"';
+	}
+    
+	$x = str_replace($match[0],$replace,$match[0]);
+	return $x;
+}
+
+
 function zidify_links($s) {
-    if (feature_enabled(local_user(),'sendzid')) {
-	  $s = preg_replace_callback('/\<a(.*?)href\=\"(.*?)\"/ism','zidify_callback',$s);}
+	if(feature_enabled(local_user(),'sendzid')) {
+		$s = preg_replace_callback('/\<a(.*?)href\=\"(.*?)\"/ism','zidify_callback',$s);
+		$s = preg_replace_callback('/\<img(.*?)src\=\"(.*?)\"/ism','zidify_img_callback',$s);
+	}
     else {
-      $s = preg_replace_callback('/\<a(.*?)class\=\"zrl\"(.*?)href\=\"(.*?)\"/ism','zidify_callback',$s);}
+		$s = preg_replace_callback('/\<a(.*?)class\=\"zrl\"(.*?)href\=\"(.*?)\"/ism','zidify_callback',$s);
+		// FIXME zidify only img links from known Red servers. 
+		$s = preg_replace_callback('/\<img(.*?)src\=\"(.*?)\"/ism','zidify_img_callback',$s);
+	}
 
 	return $s;
 }
