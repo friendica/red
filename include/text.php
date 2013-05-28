@@ -81,6 +81,22 @@ function escape_tags($string) {
 }
 
 
+function purify_html($s) {
+	require_once('library/HTMLPurifier.auto.php');
+	require_once('include/html2bbcode.php');
+
+// FIXME this function has html output, not bbcode - so safely purify these
+//	$s = html2bb_video($s);
+//	$s = oembed_html2bbcode($s);
+
+	$config = HTMLPurifier_Config::createDefault();
+	$config->set('Cache.DefinitionImpl', null);
+
+	$purifier = new HTMLPurifier($config);
+	return $purifier->purify($s);
+}
+
+
 // generate a string that's random, but usually pronounceable. 
 // used to generate initial passwords
 

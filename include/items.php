@@ -166,21 +166,6 @@ function post_activity_item($arr) {
 }
 
 
-function purify_html($s) {
-	require_once('library/HTMLPurifier.auto.php');
-	require_once('include/html2bbcode.php');
-
-// FIXME this function has html output, not bbcode - so safely purify these
-//	$s = html2bb_video($s);
-//	$s = oembed_html2bbcode($s);
-
-	$config = HTMLPurifier_Config::createDefault();
-	$config->set('Cache.DefinitionImpl', null);
-
-	$purifier = new HTMLPurifier($config);
-	return $purifier->purify($s);
-}
-
 function get_public_feed($channel,$params) {
 
 	$type      = 'xml';
@@ -983,8 +968,6 @@ function get_profile_elements($x) {
 
 function get_atom_elements($feed,$item) {
 
-	require_once('library/HTMLPurifier.auto.php');
-	require_once('include/html2bbcode.php');
 
 	$best_photo = array();
 
@@ -1006,6 +989,7 @@ function get_atom_elements($feed,$item) {
 
 	// removing the content of the title if its identically to the body
 	// This helps with auto generated titles e.g. from tumblr
+
 	if (title_is_body($res["title"], $res["body"]))
 		$res['title'] = "";
 
@@ -1120,14 +1104,7 @@ function get_atom_elements($feed,$item) {
 
 		$res['body'] = oembed_html2bbcode($res['body']);
 
-		$config = HTMLPurifier_Config::createDefault();
-		$config->set('Cache.DefinitionImpl', null);
-
-		// we shouldn't need a whitelist, because the bbcode converter
-		// will strip out any unsupported tags.
-
-		$purifier = new HTMLPurifier($config);
-		$res['body'] = $purifier->purify($res['body']);
+		$res['body'] = purify_html($res['body']);
 
 		$res['body'] = @html2bbcode($res['body']);
 
@@ -1354,6 +1331,7 @@ function get_atom_elements($feed,$item) {
 	// This is some experimental stuff. By now retweets are shown with "RT:"
 	// But: There is data so that the message could be shown similar to native retweets
 	// There is some better way to parse this array - but it didn't worked for me.
+
 	$child = $item->feed->data["child"][SIMPLEPIE_NAMESPACE_ATOM_10]["feed"][0]["child"][SIMPLEPIE_NAMESPACE_ATOM_10]["entry"][0]["child"]["http://activitystrea.ms/spec/1.0/"][object][0]["child"];
 	if (is_array($child)) {
 		$message = $child["http://activitystrea.ms/spec/1.0/"]["object"][0]["child"][SIMPLEPIE_NAMESPACE_ATOM_10]["content"][0]["data"];
@@ -1379,12 +1357,6 @@ function get_atom_elements($feed,$item) {
 	$arr = array('feed' => $feed, 'item' => $item, 'result' => $res);
 
 	call_hooks('parse_atom', $arr);
-
-	//if (($res["title"] != "") or (strpos($res["body"], "RT @") > 0)) {
-	//if (strpos($res["body"], "RT @") !== false) {
-	//	$debugfile = tempnam("/home/ike/log", "item-res2-");
-	//	file_put_contents($debugfile, serialize($arr));
-	//}
 
 	return $res;
 }
@@ -1639,8 +1611,8 @@ function item_store($arr,$force_parent = false) {
 
 	// Set parent id - and also make sure to inherit the parent's ACL's.
 
-	$r = q("UPDATE `item` SET `parent` = %d, `allow_cid` = '%s', `allow_gid` = '%s',
-		`deny_cid` = '%s', `deny_gid` = '%s', `item_private` = %d WHERE `id` = %d LIMIT 1",
+	$r = q("UPDATE item SET parent = %d, allow_cid = '%s', allow_gid = '%s',
+		deny_cid = '%s', deny_gid = '%s', item_private = %d WHERE id = %d LIMIT 1",
 		intval($parent_id),
 		dbesc($allow_cid),
 		dbesc($allow_gid),
@@ -1680,7 +1652,7 @@ function item_store($arr,$force_parent = false) {
 
 	// update the commented timestamp on the parent
 
-	q("UPDATE `item` set `commented` = '%s', `changed` = '%s' WHERE `id` = %d LIMIT 1",
+	q("UPDATE item set commented = '%s', changed = '%s' WHERE id = %d LIMIT 1",
 		dbesc(datetime_convert()),
 		dbesc(datetime_convert()),
 		intval($parent_id)

@@ -127,6 +127,9 @@ function like_content(&$a) {
 			),
 	));
 
+	if(! ($item['item_flags'] & ITEM_THREAD_TOP))
+		$post_type = 'comment';		
+
 	if($verb === 'like')
 		$bodyverb = t('%1$s likes %2$s\'s %3$s');
 	if($verb === 'dislike')
@@ -153,7 +156,7 @@ function like_content(&$a) {
 	$arr['author_xchan'] = $observer['xchan_hash'];
 
 	
-	$ulink = '[zrl=' . $thread_owner['xchan_url'] . ']' . $thread_owner['xchan_name'] . '[/zrl]';
+	$ulink = '[zrl=' . $item_author['xchan_url'] . ']' . $item_author['xchan_name'] . '[/zrl]';
 	$alink = '[zrl=' . $observer['xchan_url'] . ']' . $observer['xchan_name'] . '[/zrl]';
 	$plink = '[zrl=' . $a->get_baseurl() . '/display/' . $item['mid'] . ']' . $post_type . '[/zrl]';
 	
