@@ -1,0 +1,28 @@
+section {
+left: 0px;
+width: 800px;
+margin-left: auto;
+margin-right: auto;
+}
+
+.page-content-wrapper {background: #f00;
+		color: #fff;
+		border-radius: 20px;
+		box-shadow: 5px 5px 5px #111;
+}
+
+h3.page-title {
+padding-top: 30px;
+		color: #033}
+.page-body {padding: 40px;}
+
+.page-body strong {color: #033;}
+
+.nav-links {margin-top: 5px;}
+
+div#zot-follow {color: #fff;
+		margin-top: 10px;
+		font-weight: 1.5em;}
+front-page-title {color: #033;}
+
+div#dont-got-zot {color: #fff;}
