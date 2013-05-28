@@ -4,9 +4,10 @@ width: 800px;
 margin-left: auto;
 margin-right: auto;
 }
+body {background-color: #d00 !important;}
 
-.page-content-wrapper {background: #f00;
-		color: #fff;
+.page-content-wrapper {background: #fff;
+		color: #000;
 		border-radius: 20px;
 		box-shadow: 5px 5px 5px #111;
 }
