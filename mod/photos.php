@@ -491,7 +491,7 @@ function photos_post(&$a) {
 					$arr['origin']        = 1;
 					$arr['body']          = sprintf( t('%1$s was tagged in %2$s by %3$s'), '[zrl=' . $tagged[1] . ']' . $tagged[0] . '[/zrl]', '[zrl=' . $a->get_baseurl() . '/photos/' . $owner_record['nickname'] . '/image/' . $p[0]['resource-id'] . ']' . t('a photo') . '[/zrl]', '[zrl=' . $owner_record['url'] . ']' . $owner_record['name'] . '[/zrl]') ;
 
-					$arr['body'] .= "\n\n" . '[zrl=' . $a->get_baseurl() . '/photos/' . $owner_record['nickname'] . '/image/' . $p[0]['resource_id'] . ']' . '[img]' . $a->get_baseurl() . "/photo/" . $p[0]['resource_id'] . '-' . $best . '.' . $ext . '[/img][/zrl]' . "\n" ;
+					$arr['body'] .= "\n\n" . '[zrl=' . $a->get_baseurl() . '/photos/' . $owner_record['nickname'] . '/image/' . $p[0]['resource_id'] . ']' . '[zmg]' . $a->get_baseurl() . "/photo/" . $p[0]['resource_id'] . '-' . $best . '.' . $ext . '[/zmg][/zrl]' . "\n" ;
 
 					$arr['object'] = '<object><type>' . ACTIVITY_OBJ_PERSON . '</type><title>' . $tagged[0] . '</title><id>' . $tagged[1] . '/' . $tagged[0] . '</id>';
 					$arr['object'] .= '<link>' . xmlify('<link rel="alternate" type="text/html" href="' . $tagged[1] . '" />' . "\n");

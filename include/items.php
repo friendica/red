@@ -4170,9 +4170,9 @@ function fix_private_photos($s, $uid, $item = null, $cid = 0) {
 	$orig_body = $s;
 	$new_body = '';
 
-	$img_start = strpos($orig_body, '[img');
+	$img_start = strpos($orig_body, '[zmg');
 	$img_st_close = ($img_start !== false ? strpos(substr($orig_body, $img_start), ']') : false);
-	$img_len = ($img_start !== false ? strpos(substr($orig_body, $img_start + $img_st_close + 1), '[/img]') : false);
+	$img_len = ($img_start !== false ? strpos(substr($orig_body, $img_start + $img_st_close + 1), '[/zmg]') : false);
 	while( ($img_st_close !== false) && ($img_len !== false) ) {
 
 		$img_st_close++; // make it point to AFTER the closing bracket
@@ -4222,7 +4222,7 @@ function fix_private_photos($s, $uid, $item = null, $cid = 0) {
 						$type = $r[0]['type'];
 
 						// If a custom width and height were specified, apply before embedding
-						if(preg_match("/\[img\=([0-9]*)x([0-9]*)\]/is", substr($orig_body, $img_start, $img_st_close), $match)) {
+						if(preg_match("/\[zmg\=([0-9]*)x([0-9]*)\]/is", substr($orig_body, $img_start, $img_st_close), $match)) {
 							logger('fix_private_photos: scaling photo', LOGGER_DEBUG);
 
 							$width = intval($match[1]);
@@ -4244,14 +4244,14 @@ function fix_private_photos($s, $uid, $item = null, $cid = 0) {
 			}
 		}	
 
-		$new_body = $new_body . substr($orig_body, 0, $img_start + $img_st_close) . $image . '[/img]';
-		$orig_body = substr($orig_body, $img_start + $img_st_close + $img_len + strlen('[/img]'));
+		$new_body = $new_body . substr($orig_body, 0, $img_start + $img_st_close) . $image . '[/zmg]';
+		$orig_body = substr($orig_body, $img_start + $img_st_close + $img_len + strlen('[/zmg]'));
 		if($orig_body === false)
 			$orig_body = '';
 
-		$img_start = strpos($orig_body, '[img');
+		$img_start = strpos($orig_body, '[zmg');
 		$img_st_close = ($img_start !== false ? strpos(substr($orig_body, $img_start), ']') : false);
-		$img_len = ($img_start !== false ? strpos(substr($orig_body, $img_start + $img_st_close + 1), '[/img]') : false);
+		$img_len = ($img_start !== false ? strpos(substr($orig_body, $img_start + $img_st_close + 1), '[/zmg]') : false);
 	}
 
 	$new_body = $new_body . $orig_body;

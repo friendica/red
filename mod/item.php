@@ -936,8 +936,8 @@ function fix_attached_photo_permissions($uid,$xchan_hash,$body,
 		$str_contact_allow,$str_group_allow,$str_contact_deny,$str_group_deny) {
 
 	$match = null;
-
-	if(preg_match_all("/\[img\](.*?)\[\/img\]/",$body,$match)) {
+	// match img and zmg image links
+	if(preg_match_all("/\[[zi]mg\](.*?)\[\/[zi]mg\]/",$body,$match)) {
 		$images = $match[1];
 		if($images) {
 			foreach($images as $image) {

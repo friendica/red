@@ -1144,12 +1144,13 @@ function prepare_text($text,$content_type = 'text/bbcode') {
 
 
 function zidify_callback($match) {
-  if (feature_enabled(local_user(),'sendzid')) {
-	$replace = '<a' . $match[1] . ' href="' . zid($match[2]) . '"';}
+	if (feature_enabled(local_user(),'sendzid')) {
+		$replace = '<a' . $match[1] . ' href="' . zid($match[2]) . '"';
+	}
+	else {
+		$replace = '<a' . $match[1] . 'class="zrl"' . $match[2] . ' href="' . zid($match[3]) . '"';
+	}
 
-      else {
-	  $replace = '<a' . $match[1] . 'class="zrl"' . $match[2] . ' href="' . zid($match[3]) . '"';}
-    
 	$x = str_replace($match[0],$replace,$match[0]);
 	return $x;
 }
@@ -1174,7 +1175,8 @@ function zidify_links($s) {
 	}
     else {
 		$s = preg_replace_callback('/\<a(.*?)class\=\"zrl\"(.*?)href\=\"(.*?)\"/ism','zidify_callback',$s);
-		// FIXME zidify only img links from known Red servers. 
+		$s = preg_replace_callback('/\<img class\=\"zrl\"(.*?)src\=\"(.*?)\"/ism','zidify_img_callback',$s);
+// FIXME - remove the following line and redo the regex for the prev line once all Red images are converted to zmg
 		$s = preg_replace_callback('/\<img(.*?)src\=\"(.*?)\"/ism','zidify_img_callback',$s);
 	}
 

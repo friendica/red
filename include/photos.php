@@ -211,7 +211,7 @@ function photo_upload($channel, $observer, $args) {
 
 
 	$arr['body']          = '[zrl=' . z_root() . '/photos/' . $channel['channel_address'] . '/image/' . $photo_hash . ']' 
-				. '[img]' . z_root() . "/photo/{$photo_hash}-{$smallest}.".$ph->getExt() . '[/img]' 
+				. '[zmg]' . z_root() . "/photo/{$photo_hash}-{$smallest}.".$ph->getExt() . '[/zmg]' 
 				. '[/zrl]';
 		
 	$item_id = item_store($arr);
@@ -353,7 +353,7 @@ function photos_create_item($channel, $creator_hash, $photo, $visible = false) {
 	$arr['deny_gid']      = $photo['deny_gid'];
 			
 	$arr['body']          = '[zrl=' . z_root() . '/photos/' . $channel['channel_address'] . '/image/' . $photo['resource_id'] . ']' 
-		. '[img]' . z_root() . '/photo/' . $photo['resource_id'] . '-' . $photo['scale'] . '[/img]' 
+		. '[zmg]' . z_root() . '/photo/' . $photo['resource_id'] . '-' . $photo['scale'] . '[/zmg]' 
 		. '[/zrl]';
 		
 	$item_id = item_store($arr);
