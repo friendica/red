@@ -126,11 +126,9 @@ function localize_item(&$item){
 					break;
 				case ACTIVITY_OBJ_NOTE:
 				default:
-// wrong item_flags, this won't work
-//					if(! ($item_flags & ITEM_THREAD_TOP))
-//						$post_type = t('comment');
-//					else
-						$post_type = t('status');
+					$post_type = t('status');
+					if($obj->id != $item['mid'])
+						$post_type = t('comment');
 					break;
 			}
 
