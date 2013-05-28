@@ -91,7 +91,7 @@ function bb_replace_images($body, $images) {
 		// We're depending on the property of 'foreach' (specified on the PHP website) that
 		// it loops over the array starting from the first element and going sequentially
 		// to the last element
-		$newbody = str_replace('[$#saved_image' . $cnt . '#$]', '<img src="' . $image .'" alt="' . t('Image/photo') . '" />', $newbody);
+		$newbody = str_replace('[$#saved_image' . $cnt . '#$]', '<img class="zrl" src="' . $image .'" alt="' . t('Image/photo') . '" />', $newbody);
 		$cnt++;
 	}
 
@@ -405,10 +405,12 @@ function bbcode($Text,$preserve_nl = false, $tryoembed = true) {
 	// [img=widthxheight]image source[/img]
 	//$Text = preg_replace("/\[img\=([0-9]*)x([0-9]*)\](.*?)\[\/img\]/ism", '<img src="$3" style="height: $2px; width: $1px;" >', $Text);
 	$Text = preg_replace("/\[img\=([0-9]*)x([0-9]*)\](.*?)\[\/img\]/ism", '<img src="$3" style="width: $1px;" >', $Text);
+	$Text = preg_replace("/\[zmg\=([0-9]*)x([0-9]*)\](.*?)\[\/zmg\]/ism", '<img class="zrl" src="$3" style="width: $1px;" >', $Text);
 
 	// Images
 	// [img]pathtoimage[/img]
 	$Text = preg_replace("/\[img\](.*?)\[\/img\]/ism", '<img src="$1" alt="' . t('Image/photo') . '" />', $Text);
+	$Text = preg_replace("/\[zmg\](.*?)\[\/zmg\]/ism", '<img class="zrl" src="$1" alt="' . t('Image/photo') . '" />', $Text);
 
 
 
