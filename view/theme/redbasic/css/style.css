@@ -929,12 +929,12 @@ footer {
 /*	background: #fff; */
 /*	border-radius: 5px; */
 /*	box-shadow: 12px 12px 12px #111; */
-	border-left: 1px solid #eec;
+/*	border-left: 1px solid #eec; */
 
 }
 .wall-item-content-wrapper.comment {
 /*	background: #fff; */
-	border-left: 1px solid #e0e0e0;
+/*	border-left: 1px solid #e0e0e0; */
 	margin-left: 50px;
 /*	box-shadow: 5px 5px 5px #222; */
 }
@@ -945,9 +945,9 @@ footer {
 
 
 .wall-item-content-wrapper.comment {
-	background: #ffffff;
+/*	background: #ffffff;
 	border-left: 1px solid #e0e0e0;
-
+*/
 }
 
 .wall-item-like.comment, .wall-item-dislike.comment {
