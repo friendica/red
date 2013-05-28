@@ -296,12 +296,14 @@ function group_side($every="contacts",$each="group",$edit = false, $group_id = 0
 function expand_groups($a) {
 	if(! (is_array($a) && count($a)))
 		return array();
-	stringify_array_elms($groups);
-	$groups = implode(',', $a);
+	$x = $a;
+	stringify_array_elms($x);
+	$groups = implode(',', $x);
 	$groups = dbesc($groups);
-	$r = q("SELECT xchan FROM `group_member` WHERE `gid` IN ( $groups )");
+	if($groups)
+		$r = q("SELECT xchan FROM group_member WHERE gid IN ( $groups )");
 	$ret = array();
-	if(count($r))
+	if($r)
 		foreach($r as $rr)
 			$ret[] = $rr['xchan'];
 	return $ret;
