@@ -41,7 +41,9 @@
     // In non-expert mode, we just let them choose font size, line height, and a colour scheme.  A colour scheme is just a pre-defined set of the above variables.
     // But only apply these settings in non-expert mode to prevent confusion when turning expert mode on and off.
     if(! feature_enabled(local_user(),'expert')) {
-	    if ($colour_scheme === 'fancyred') {$shadows = true; $navcolour = 'black'; $shadows = true; $displaystyle = 'fancy'; $linkcolour = 'f00'; $shiny = "opaque";}
+	    if ($colour_scheme === 'fancyred') {$shadows = true; $navcolour = 'black'; $displaystyle = 'fancy'; $linkcolour = 'f00'; $shiny = "opaque";}
+	    // Dark themes are very different - we need to do some of these from scratch, so don't bother setting vars for anything else
+	    if ($colour_scheme === 'dark') {$colour = 'dark'; $navcolour = 'black';}
 }
 
 // This is probably the easiest place to apply global settings.  Don't bother with site line height and such.  Instead, check pconfig for global user settings.  
