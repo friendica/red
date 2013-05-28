@@ -1143,7 +1143,7 @@ function zidify_img_callback($match) {
 	$replace = '<img' . $match[1] . ' src="' . zid($match[2]) . '"';
 	}
 	else {
-	  $replace = '<img' . $match[1] . ' src="' . zid($match[3]) . '"';
+	  $replace = '<img' . $match[1] . ' src="' . zid($match[2]) . '"';
 	}
     
 	$x = str_replace($match[0],$replace,$match[0]);
