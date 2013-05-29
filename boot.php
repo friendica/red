@@ -2113,7 +2113,7 @@ function zid_init(&$a) {
 
 
 function zid($s,$force = false) {
-	if(! strlen($s) || strpos('zid=',$s))
+	if(! strlen($s) || strpos($s,'zid='))
 		return $s;
 	$has_params = ((strpos($s,'?')) ? true : false);
 	$num_slashes = substr_count($s,'/');
