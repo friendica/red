@@ -118,9 +118,8 @@ function channel_content(&$a, $update = 0, $load = false) {
 
 			$x = array(
 				'is_owner' => $is_owner,
-// FIXME
-            	'allow_location' => ((($is_owner || $observer) && $a->profile['allow_location']) ? true : false),
-	            'default_location' => (($is_owner) ? $a->profile['default_location'] : ''),
+            	'allow_location' => ((($is_owner || $observer) && (intval(get_pconfig($a->profile['profile_uid'],'system','use_browser_location')))) ? true : false),
+	            'default_location' => (($is_owner) ? $a->profile['channel_location'] : ''),
     	        'nickname' => $a->profile['channel_address'],
         	    'lockstate' => (((strlen($a->profile['channel_allow_cid'])) || (strlen($a->profile['channel_allow_gid'])) || (strlen($a->profile['channel_deny_cid'])) || (strlen($a->profile['channel_deny_gid']))) ? 'lock' : 'unlock'),
             	'acl' => (($is_owner) ? populate_acl($channel, false) : ''),

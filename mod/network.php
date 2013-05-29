@@ -403,7 +403,7 @@ function network_content(&$a, $update = 0, $load = false) {
 
 		$x = array(
 			'is_owner' => true,
-			'allow_location' => $a->user['allow_location'], // FIXME
+			'allow_location' => ((intval(get_pconfig($channel['channel_id'],'system','use_browser_location'))) ? '1' : ''),
 			'default_location' => $channel['channel_location'],
 			'nickname' => $channel['channel_address'],
 			'lockstate' => (($group || $cid || $channel['channel_allow_cid'] || $channel['channel_allow_gid'] || $channel['channel_deny_cid'] || $channel['channel_deny_gid']) ? 'lock' : 'unlock'),
