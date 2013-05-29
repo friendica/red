@@ -55,6 +55,7 @@ function magic_init(&$a) {
 	}
 
 	if(! $x) {
+		logger('mod_magic: channel not found.' . print_r($_REQUEST,true));
 		notice( t('Channel not found.') . EOL);
 		return;
 	}
