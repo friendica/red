@@ -853,6 +853,7 @@ function smilies($s, $sample = false) {
 		':facepalm',
 		':like',
 		':dislike',
+		'red#',
 		'~friendika', 
 		'~friendica'
 
