@@ -7,6 +7,7 @@ function magic_init(&$a) {
 	$addr = ((x($_REQUEST,'addr')) ? $_REQUEST['addr'] : '');
 	$hash = ((x($_REQUEST,'hash')) ? $_REQUEST['hash'] : '');
 	$dest = ((x($_REQUEST,'dest')) ? $_REQUEST['dest'] : '');
+	$rev  = ((x($_REQUEST,'rev'))  ? intval($_REQUEST['rev']) : 0);
 
 	if($hash) {
 		$x = q("select xchan.xchan_url, hubloc.* from xchan left join hubloc on xchan_hash = hubloc_hash
@@ -25,18 +26,14 @@ function magic_init(&$a) {
 	else {
 		// See if we know anybody at the dest site that will unlock the door for us
 		$b = explode('/',$dest);
-		$u = '';
-		if(count($b) >= 2)
+
+		if(count($b) >= 2) {
 			$u = $b[0] . '//' . $b[2];
-		logger('mod_magic: fallback: ' . $b . ' -> ' . $u);
-	
-		if($u) {
 			$x = q("select xchan.xchan_url, hubloc.* from xchan left join hubloc on xchan_hash = hubloc_hash
 				where hubloc_url = '%s' order by hubloc_id desc limit 1",
 				dbesc($u)
 			);
 		}
-
 	}
 
 	if(! $x) {
@@ -59,9 +56,13 @@ function magic_init(&$a) {
 	}
 
 	if(! $x) {
-		logger('mod_magic: channel not found.' . print_r($_REQUEST,true));
-		notice( t('Channel not found.') . EOL);
-		return;
+		if($rev)
+			goaway($dest);
+		else {
+			logger('mod_magic: channel not found.' . print_r($_REQUEST,true));
+			notice( t('Channel not found.') . EOL);
+			return;
+		}
 	}
 
 	// This is ready-made for a plugin that provides a blacklist or "ask me" before blindly authenticating. 

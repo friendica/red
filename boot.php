@@ -709,17 +709,8 @@ class App {
 		$scheme = $this->scheme;
 
 		if((x($this->config,'system')) && (x($this->config['system'],'ssl_policy'))) {
-			if(intval($this->config['system']['ssl_policy']) === intval(SSL_POLICY_FULL))
+			if(intval($this->config['system']['ssl_policy']) === intval(SSL_POLICY_FULL)) {
 				$scheme = 'https';
-
-			//  Basically, we have $ssl = true on any links which can only be seen by a logged in user
-			//  (and also the login link). Anything seen by an outsider will have it turned off.
-
-			if($this->config['system']['ssl_policy'] == SSL_POLICY_SELFSIGN) {
-				if($ssl)
-					$scheme = 'https';
-				else
-					$scheme = 'http';
 			}
 		}
 			
@@ -1094,32 +1085,20 @@ function check_config(&$a) {
 	if(! x($build))
 		$build = set_config('system','db_version',DB_UPDATE_VERSION);
 
-		$saved = get_config('system','urlverify');
-		if(! $saved)
-			set_config('system','urlverify',bin2hex(z_root()));
-		if(($saved) && ($saved != bin2hex(z_root()))) {
-			// our URL changed. Do something.
-			$oldurl = hex2bin($saved);
-			fix_system_urls($oldurl,z_root());
-			set_config('system','urlverify',bin2hex(z_root()));
+	$saved = get_config('system','urlverify');
+	if(! $saved)
+		set_config('system','urlverify',bin2hex(z_root()));
+	if(($saved) && ($saved != bin2hex(z_root()))) {
+		// our URL changed. Do something.
+		$oldurl = hex2bin($saved);
+		fix_system_urls($oldurl,z_root());
+		set_config('system','urlverify',bin2hex(z_root()));
+	}
 
-		}
+	// This will actually set the url to the one stored in .htconfig, and ignore what 
+	// we're passing - unless we are installing and it has never been set. 
 
-
-//		$url = get_config('system','baseurl');
-
-	// if the url isn't set or the stored url is radically different
-	// than the currently visited url, store the current value accordingly.
-	// "Radically different" ignores common variations such as http vs https
-	// and www.example.com vs example.com.
-	// We will only change the url to an ip address if there is no existing setting
-
-//		if(! x($url))
-//			$url = set_config('system','baseurl',$a->get_baseurl());
-//		if((! link_compare($url,$a->get_baseurl())) && (! preg_match("/^(\d{1,3})\.(\d{1,3})\.(\d{1,3})\.(\d{1,3})$/",$a->get_hostname)))
-//			$url = set_config('system','baseurl',$a->get_baseurl());
-
-
+	$a->set_baseurl($a->get_baseurl());
 
 	if($build != DB_UPDATE_VERSION) {
 		$stored = intval($build);
@@ -2111,7 +2090,7 @@ function zid_init(&$a) {
 			$dest = '/' . $a->query_string;
 			$dest = str_replace(array('?zid=','&zid='),array('?rzid=','&rzid='),$dest);
 			if($r && ($r[0]['hubloc_url'] != z_root()) && (! strstr($dest,'/magic')) && (! strstr($dest,'/rmagic'))) {
-				goaway($r[0]['hubloc_url'] . '/magic' . '?f=&dest=' . z_root() . $dest);
+				goaway($r[0]['hubloc_url'] . '/magic' . '?f=&rev=1&dest=' . z_root() . $dest);
 			}
 		}
 	}
