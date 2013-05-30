@@ -49,7 +49,7 @@ function post_init(&$a) {
 			}
 
 			// Try and find a hubloc for the person attempting to auth
-			$x = q("select * from hubloc left join xchan on xchan_hash = hubloc_hash where hubloc_addr = '%s' limit 1",
+			$x = q("select * from hubloc left join xchan on xchan_hash = hubloc_hash where hubloc_addr = '%s' order by hubloc_id desc limit 1",
 				dbesc($address)
 			);
 
@@ -60,7 +60,7 @@ function post_init(&$a) {
 					$j = json_decode($ret['body'],true);
 					if($j)
 						import_xchan($j);
-					$x = q("select * from hubloc left join xchan on xchan_hash = hubloc_hash where hubloc_addr = '%s' limit 1",
+					$x = q("select * from hubloc left join xchan on xchan_hash = hubloc_hash where hubloc_addr = '%s' order by hubloc_id desc limit 1",
 						dbesc($address)
 					);
 				}
