@@ -250,13 +250,16 @@ function photos_albums_list($channel,$observer) {
 
 	// add various encodings to the array so we can just loop through and pick them out in a template
 
+	$ret = array('success' => false);
+
 	if($albums) {
+		$ret['success'] = true;
 		foreach($albums as $k => $album) {
-			$albums[$k]['urlencode'] = urlencode($album['album']);
-			$albums[$k]['bin2hex'] = bin2hex($album['album']);
+			$entry = array('text' => $album['album'], 'urlencode' => urlencode($album['album']),'bin2hex' => bin2hex($album['album']));
+			$ret[] = $entry;
 		}
 	}
-	return $albums;
+	return $ret;
 
 }
 
@@ -279,6 +282,36 @@ function photos_album_widget($channelx,$observer,$albums = null) {
 	}
 	return $o;
 }
+
+
+function photos_list_photos($channel,$observer,$album = '') {
+
+	$channel_id     = $channel['channel_id'];
+	$observer_xchan = (($observer) ? $observer['xchan_hash'] : '');
+
+	if(! perm_is_allowed($channel_id,$observer_xchan,'view_photos'))
+		return false;
+
+	$sql_extra = permissions_sql($channel_id);
+
+	if($album)
+		$sql_extra .= " and album = '" . protect_sprintf(dbesc($album)) . "' "; 
+
+	$ret = array('success' => false);
+
+	$r = q("select resource_id, created, edited, title, `desc`, album, filename, `type`, height, width, `size`, `scale`, profile, allow_cid, allow_gid, deny_cid, deny_gid from photo where uid = %d $sql_extra ",
+		intval($channel_id)
+	);
+
+	if($r) {
+		$ret['success'] = true;
+		$ret['photos'] = $r;
+	}
+
+	return $ret;
+}
+
+
 
 function photos_album_exists($channel_id,$album) {
 	$r = q("SELECT id from photo where album = '%s' and uid = %d limit 1",

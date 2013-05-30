@@ -6,6 +6,7 @@ require_once("conversation.php");
 require_once("oauth.php");
 require_once("html2plain.php");
 require_once('include/security.php');
+require_once('include/photos.php');
 
 	/*
 	 *
@@ -543,6 +544,23 @@ require_once('include/security.php');
 		}
 	}
 	api_register_func('api/red/channel/stream','api_channel_stream', true);
+
+
+	function api_albums(&$a,$type) {
+		json_return_and_die(photos_albums_list($a->get_channel(),$a->get_observer()));
+	}
+	api_register_func('api/red/albums','api_albums', true);
+
+	function api_photos(&$a,$type) {
+		$album = $_REQUEST['album'];
+		json_return_and_die(photos_list_photos($a->get_channel(),$a->get_observer()),$album);
+	}
+	api_register_func('api/red/photos','api_photos', true);
+
+
+
+
+
 
 
     function api_statuses_mediap(&$a, $type) {
