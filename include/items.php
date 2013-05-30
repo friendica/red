@@ -1462,8 +1462,8 @@ function item_store($arr,$force_parent = false) {
 	// handle time travelers
 	// Allow a bit of fudge in case somebody just has a slightly slow/fast clock
 
-	$d1 = new DateTime('now +10 minutes');
-	$d2 = new DateTime($arr['created']);
+	$d1 = new DateTime('now +10 minutes', new DateTimeZone('UTC'));
+	$d2 = new DateTime($arr['created'] . '+00:00');
 	if($d2 > $d1)
 		$arr['item_restrict'] = $arr['item_restrict'] | ITEM_DELAYED_PUBLISH;
 
