@@ -33,12 +33,13 @@ function home_content(&$a) {
 	if(x($_SESSION,'mobile-theme'))
 		unset($_SESSION['mobile-theme']);
 
+$channel_address = get_config("system", "site-channel" );
+    if ($channel_address){
 
 require_once('include/items.php');
 require_once('include/conversation.php');
 
-	$channel_address = get_config("system", "site-channel" );
-    if ($channel_address){
+
 //We can do better, but until we figure out auto-linkification, let's keep things simple
 	$page_id = 'home';
 
