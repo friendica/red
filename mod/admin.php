@@ -212,6 +212,7 @@ function admin_page_site_post(&$a){
 	$theme				=	((x($_POST,'theme'))			? notags(trim($_POST['theme']))				: '');
 	$theme_mobile		=	((x($_POST,'theme-mobile'))	? notags(trim($_POST['theme-mobile']))				: '');
 	$theme_accessibility		=	((x($_POST,'theme-accessibility'))	? notags(trim($_POST['theme-accessibility']))				: '');
+	$site_channel		=	((x($_POST,'site-channel'))	? notags(trim($_POST['site-channel']))				: '');
 	$maximagesize		=	((x($_POST,'maximagesize'))		? intval(trim($_POST['maximagesize']))		:  0);
 	
 	
@@ -301,6 +302,8 @@ function admin_page_site_post(&$a){
 	} else {
 		set_config('system','accessibility-theme', $theme_accessibility);
         }
+      
+	set_config('system','site-channel', $site_channel);
 	set_config('system','maximagesize', $maximagesize);
 	
 	set_config('system','register_policy', $register_policy);
@@ -349,7 +352,7 @@ function admin_page_site(&$a) {
 			$lang_choices[$t[1]] = $t[1];
 		}
 	}
-	
+
 	/* Installed themes */
 	$theme_choices = array();
 	$theme_choices_mobile = array();
@@ -408,6 +411,7 @@ function admin_page_site(&$a) {
 		'$theme' 			=> array('theme', t("System theme"), get_config('system','theme'), t("Default system theme - may be over-ridden by user profiles - <a href='#' id='cnftheme'>change theme settings</a>"), $theme_choices),
 		'$theme_mobile' 	=> array('theme-mobile', t("Mobile system theme"), get_config('system','mobile-theme'), t("Theme for mobile devices"), $theme_choices_mobile),
 		'$theme_accessibility' 	=> array('theme-accessibility', t("Accessibility system theme"), get_config('system','accessibility-theme'), t("Accessibility theme"), $theme_choices_accessibility),
+		'$site_channel' 	=> array('site-channel', t("Channel to use for this website's static pages"), get_config('system','site-channel'), t("Site Channel")),
 		'$ssl_policy'       => array('ssl_policy', t("SSL link policy"), (string) intval(get_config('system','ssl_policy')), t("Determines whether generated links should be forced to use SSL"), $ssl_choices),
 		'$maximagesize'		=> array('maximagesize', t("Maximum image size"), get_config('system','maximagesize'), t("Maximum size in bytes of uploaded images. Default is 0, which means no limits.")),
 		'$register_policy'	=> array('register_policy', t("Register policy"), $a->config['system']['register_policy'], "", $register_choices),
