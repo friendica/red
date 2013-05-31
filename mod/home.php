@@ -25,7 +25,7 @@ function home_init(&$a) {
 
 if(! function_exists('home_content')) {
 function home_content(&$a) {
-/*
+
 	$o = '';
 
 	if(x($_SESSION,'theme'))
@@ -33,25 +33,14 @@ function home_content(&$a) {
 	if(x($_SESSION,'mobile-theme'))
 		unset($_SESSION['mobile-theme']);
 
-	$o .= '<h1>' . ((x($a->config,'sitename')) ? sprintf( t("Welcome to %s") ,$a->config['sitename']) : "" ) . '</h1>';
-	if(file_exists('home.html'))
- 		$o .= file_get_contents('home.html');
-
-	$o .= login(($a->config['system']['register_policy'] == REGISTER_CLOSED) ? 0 : 1);
-	
-	call_hooks("home_content",$o);
-	
-	return $o;
-*/
-
 
 require_once('include/items.php');
 require_once('include/conversation.php');
 
-	$channel_address = get_config("system", "site_channel" );
-;
+	$channel_address = get_config("system", "site-channel" );
+    if ($channel_address){
 //We can do better, but until we figure out auto-linkification, let's keep things simple
-	$page_id = 'test';
+	$page_id = 'home';
 
 	$u = q("select channel_id from channel where channel_address = '%s' limit 1",
 		dbesc($channel_address)
@@ -79,8 +68,19 @@ require_once('include/conversation.php');
 	$r = fetch_post_tags($r,true);
 	$a->profile = array('profile_uid' => $u[0]['channel_id']);
 	$o .= prepare_page($r[0]);
-	return $o;
 
+}
+
+// If there's no site channel specified, fallback to the old behaviour
+	else {	$o .= '<h1>' . ((x($a->config,'sitename')) ? sprintf( t("Welcome to %s") ,$a->config['sitename']) : "" ) . '</h1>';
+	if(file_exists('home.html'))
+ 		$o .= file_get_contents('home.html');
+}
+
+		$o .= login(($a->config['system']['register_policy'] == REGISTER_CLOSED) ? 0 : 1);
+	
+	call_hooks("home_content",$o);
+	return $o;
 }
 	
 }
