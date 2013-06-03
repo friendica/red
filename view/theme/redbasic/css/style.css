@@ -1663,7 +1663,6 @@ border: 1px #111;
 
 iframe#profile-jot-text_ifr {
 width: 100% !important;
-height: 100% !important;
 box-shadow: 5px 5px 5px #000 inset !important;}
 
 tr.mceLast {
@@ -3770,3 +3769,41 @@ ul.menu-popup {
 
 .reshared-content { margin-left: 30px; }
 .shared_header img { margin-right: 10px; }
+
+
+.mail-list-wrapper {
+
+border-bottom: 1px solid #ccc;
+padding: 20px;
+}
+
+span.mail-delete {
+float: left;
+width: 30px;
+}
+
+a.mail-list-sender-url {
+float: left;
+width: 35px;
+}
+	
+img.mail-list-sender-photo {
+height: 16px;
+width: 16px;
+}
+
+
+span.mail-from {
+float: left;
+width: 200px;
+}
+
+span.mail-subject.unseen{ 
+float: left;
+width: 200px;
+}
+
+span.mail-date {
+float:left;
+width: 200px;
+}
