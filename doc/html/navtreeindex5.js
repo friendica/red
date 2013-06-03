@@ -1,6 +1,8 @@
 var NAVTREEINDEX5 =
 {
+"namespaces.html":[3,0],
 "namespaceupdatetpl.html":[3,0,3],
+"namespaceupdatetpl.html":[4,0,3],
 "namespaceutil.html":[4,0,4],
 "namespaceutil.html":[3,0,4],
 "nav_8php.html":[5,0,0,41],
@@ -60,7 +62,7 @@ var NAVTREEINDEX5 =
 "php2po_8php.html#abbb0e5fd8fbc1f13a9bf68f86eb3d2a4":[5,0,2,5,4],
 "php2po_8php.html#ad6726cfaa85d4b8299d2b0f034cbf178":[5,0,2,5,2],
 "php_2default_8php.html":[5,0,3,0,0],
-"php_2default_8php.html#a23bc1996b18e69c1a3ab44536613a762":[5,0,3,0,0,0],
+"php_2default_8php.html#a2a9b3d213aeeef28c4393ba8f7b408a4":[5,0,3,0,0,0],
 "php_2theme__init_8php.html":[5,0,3,0,6],
 "ping_8php.html":[5,0,1,58],
 "ping_8php.html#a77217b1b190b4c5d8770867b45f0c0a1":[5,0,1,58,0],
@@ -247,7 +249,5 @@ var NAVTREEINDEX5 =
 "setup_8php.html#ae8e4d9279a61de74d5f39962cb7b6ca1":[5,0,1,79,0],
 "setup_8php.html#aea1ebdda58ec938f4e7b31aa5c5f6b58":[5,0,1,79,14],
 "setup_8php.html#afd8b0b3ade1507c45325caf377bf459d":[5,0,1,79,6],
-"share_8php.html":[5,0,1,80],
-"share_8php.html#afeb26046bdd02567ecd29ab5f188b249":[5,0,1,80,0],
-"siteinfo_8php.html":[5,0,1,81]
+"share_8php.html":[5,0,1,80]
 };

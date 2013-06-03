@@ -64,6 +64,7 @@ var text_8php =
     [ "prepare_text", "text_8php.html#afe54312607d92f7ce9593f5760831f80", null ],
     [ "profiler", "text_8php.html#a8b0a799341b1fc4cba2c3ede3e3fc9b6", null ],
     [ "protect_sprintf", "text_8php.html#a4e7698aca48982512594b274543c3b9b", null ],
+    [ "purify_html", "text_8php.html#a4841df5beabdd1bdd1ed56781a915d61", null ],
     [ "qp", "text_8php.html#afc998d2796a6b2a08e96f7cc061e7221", null ],
     [ "random_string", "text_8php.html#a9d6a5ee1290de7a8b483fe78585daade", null ],
     [ "reltoabs", "text_8php.html#ad855a32bee22c3f3b9734e3a334b96f2", null ],
@@ -88,6 +89,7 @@ var text_8php =
     [ "xchan_query", "text_8php.html#a24b2b69b9162da789ab6514e0e09a37c", null ],
     [ "xmlify", "text_8php.html#aaed4413ed8918838b517e3b2fafaea0d", null ],
     [ "zidify_callback", "text_8php.html#a405afe814a23f3bd94d826101aa168ab", null ],
+    [ "zidify_img_callback", "text_8php.html#ab4a4c3d4700bc219bb84f33b499314f4", null ],
     [ "zidify_links", "text_8php.html#a29988052f3944111def3b6aaf2c7a8f6", null ],
     [ "RANDOM_STRING_HEX", "text_8php.html#aad557c054cf2ed915633701018fc7e3f", null ],
     [ "RANDOM_STRING_TEXT", "text_8php.html#a2ffd79c60cc87cec24ef76447b905187", null ]

@@ -39,9 +39,9 @@ var NAVTREEINDEX =
 "boot_8php.html#ab724491497ab2618b23a01d5da60aec0",
 "classProtoDriver.html#a1593f3abae050edbd9304f4f8bc4894a",
 "docblox__errorchecker_8php.html#a721c6ff80a6d3e4ad4ffa52a04c60085",
-"include_2attach_8php.html#a3634af95f11a023dd8e882c3c7a3600d",
-"namespaceupdatetpl.html",
-"siteinfo_8php.html#a3efbd0bd6564af19ec0a9ce0294e59d0"
+"include_2attach_8php.html",
+"namespaces.html",
+"share_8php.html#afeb26046bdd02567ecd29ab5f188b249"
 ];
 
 var SYNCONMSG = 'click to disable panel synchronisation';
