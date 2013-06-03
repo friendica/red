@@ -51,12 +51,17 @@ function oembed_fetch_url($embedurl){
 			}
 		}
 		
-		if ($txt==false || $txt==""){
+		if ($txt==false || $txt=="") {
+			$x = array('url' => $embedurl,'videowidth' => $a->videowidth);
+			call_hooks('oembed_probe',$x);
+			if(array_key_exists('embed',$x))
+				$txt = $x['embed'];
+
 			// try oohembed service
-			$ourl = "http://oohembed.com/oohembed/?url=".urlencode($embedurl).'&maxwidth=' . $a->videowidth;  
-			$result = z_fetch_url($ourl);
-			if($result['success'])
-				$txt = $result['body'];
+//			$ourl = "http://oohembed.com/oohembed/?url=".urlencode($embedurl).'&maxwidth=' . $a->videowidth;  
+//			$result = z_fetch_url($ourl);
+//			if($result['success'])
+//				$txt = $result['body'];
 		}
 		
 		$txt=trim($txt);
