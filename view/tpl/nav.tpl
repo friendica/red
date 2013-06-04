@@ -11,7 +11,7 @@
 	<ul>
 
 	{{if $userinfo}}
-	      <li id="nav-user-linkmenu" class="nav-menu-icon"><a href="#" rel="#nav-user-menu" title="{{$userinfo.name}}"><img src="{{$userinfo.icon}}" alt="{{$userinfo.name}}">&nabla;</a>
+	      <li id="nav-user-linkmenu" class="nav-menu-icon"><a href="#" rel="#nav-user-menu" title="{{$userinfo.name}}"><img src="{{$userinfo.icon}}" alt="{{$userinfo.name}}"><span class="nav-dropdown-indicator">&nabla;</span></a>
 		{{if $localuser}}
 			<ul id="nav-user-menu" class="menu-popup">
 				{{foreach $nav.usermenu as $usermenu}}
