@@ -2,7 +2,7 @@
 
 /**
  *
- * Friendica Red
+ * Red Matrix
  *
  */
 

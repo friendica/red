@@ -166,7 +166,7 @@ function directory_content(&$a) {
 					));
 
 
-					$o .= alt_pager($a,$j['records'], t('more'), t('back'));
+					$o .= alt_pager($a,$j['records'], t('next page'), t('previous page'));
 
 				}
 				else {

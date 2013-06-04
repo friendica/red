@@ -334,20 +334,16 @@ function alt_pager(&$a, $i, $more = '', $less = '') {
 	$pagenum = $a->pager['page'];
 	$url = $a->get_baseurl() . '/' . $stripped;
 
-	$o .= '<div class="pager">';
+	return replace_macros(get_markup_template('alt_pager.tpl'),array(
+		'$has_less' => (($a->pager['page'] > 1) ? true : false),
+		'$has_more' => (($i > 0 && $i == $a->pager['itemspage']) ? true : false),
+		'$less' => $less,
+		'$more' => $more,
+		'$url' => $url,
+		'$prevpage' => $a->pager['page'] - 1,
+		'$nextpage' => $a->pager['page'] + 1,
+	));
 
-	if($a->pager['page'] > 1)
-	  $o .= "<a href=\"$url"."&page=".($a->pager['page'] - 1).'">' . $less . '</a>';
-	if($i > 0 && $i == $a->pager['itemspage']) {
-		if($a->pager['page']>1)
-			$o .= " | ";
-		$o .= "<a href=\"$url"."&page=".($a->pager['page'] + 1).'">' . $more . '</a>';
-	}
-
-
-	$o .= '</div>'."\r\n";
-
-	return $o;
 }
 
 // Turn user/group ACLs stored as angle bracketed text into arrays
