@@ -98,9 +98,17 @@ function post_activity_item($arr) {
 
 	$ret = array('success' => false);
 
+	$is_comment = false;
+	if((($arr['parent']) && $arr['parent'] != $arr['id']) || (($arr['parent_mid']) && $arr['parent_mid'] != $arr['mid']))
+		$is_comment = true;
+
 	if(! x($arr,'item_flags')) {
-		$arr['item_flags'] = ITEM_ORIGIN | ITEM_WALL | ITEM_THREAD_TOP;
+		if($is_comment)
+			$arr['item_flags'] = ITEM_ORIGIN;
+		else
+			$arr['item_flags'] = ITEM_ORIGIN | ITEM_WALL | ITEM_THREAD_TOP;
 	}	
+
 
 	$channel  = get_app()->get_channel();
 	$observer = get_app()->get_observer();
@@ -108,7 +116,7 @@ function post_activity_item($arr) {
 	$arr['aid']          = 	((x($arr,'aid')) ? $arr['aid'] : $channel['channel_account_id']);
 	$arr['uid']          = 	((x($arr,'uid')) ? $arr['uid'] : $channel['channel_id']);
 
-	if(! perm_is_allowed($arr['uid'],$observer['xchan_hash'],(($arr['parent']) ? 'post_comment' : 'post_wall'))) {
+	if(! perm_is_allowed($arr['uid'],$observer['xchan_hash'],(($is_comment) ? 'post_comments' : 'post_wall'))) {
 		$ret['message'] = t('Permission denied');
 		return $ret;
 	}
