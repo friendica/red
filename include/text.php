@@ -1594,7 +1594,7 @@ function store_item_tag($uid,$iid,$otype,$type,$term,$url = '') {
 		dbesc($term),
 		dbesc($url)
 	);
-	if(count($r))
+	if($r)
 		return false;
 	$r = q("insert into term (uid, oid, otype, type, term, url)
 		values( %d, %d, %d, %d, '%s', '%s') ",
@@ -1646,7 +1646,7 @@ function file_tag_save_file($uid,$item,$file) {
 		intval($item),
 		intval($uid)
 	);
-	if(count($r)) {
+	if($r) {
 		if(! stristr($r[0]['file'],'[' . file_tag_encode($file) . ']'))
 			q("update item set file = '%s' where id = %d and uid = %d limit 1",
 				dbesc($r[0]['file'] . '[' . file_tag_encode($file) . ']'),
@@ -1676,7 +1676,7 @@ function file_tag_unsave_file($uid,$item,$file,$cat = false) {
 		intval($item),
 		intval($uid)
 	);
-	if(! count($r))
+	if(! $r)
 		return false;
 
 	q("update item set file = '%s' where id = %d and uid = %d limit 1",
@@ -1689,7 +1689,7 @@ function file_tag_unsave_file($uid,$item,$file,$cat = false) {
 		intval($uid)
 	);
 
-	if(! count($r)) {
+	if(! $r) {
 		$saved = get_pconfig($uid,'system','filetags');
 		set_pconfig($uid,'system','filetags',str_replace($pattern,'',$saved));
 

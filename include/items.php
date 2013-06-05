@@ -1915,7 +1915,9 @@ function get_item_contact($item,$contacts) {
 
 function tag_deliver($uid,$item_id) {
 
-	// look for mention tags and setup a second delivery chain for forum/community posts if appropriate
+	// Called when we deliver things that might be tagged in ways that require delivery processing.
+	// Handles community tagging of posts and also look for mention tags 
+	// and sets up a second delivery chain if appropriate
 
 	$a = get_app();
 
@@ -1931,12 +1933,40 @@ function tag_deliver($uid,$item_id) {
 		intval($item_id),
 		intval($uid)
 	);
-	if(! count($i))
+	if(! $i)
 		return;
 
 	$i = fetch_post_tags($i);
 
 	$item = $i[0];
+
+
+	if($item['obj_type'] === ACTIVITY_OBJ_TAGTERM) {
+
+		// We received a community tag activity for a post.
+		// See if we are the owner of the parent item and have given permission to tag our posts.
+		// If so tag the parent post.
+ 
+		// FIXME --- If the item is deleted, remove the tag from the parent.
+		// (First ensure that deleted items use this function, or else do that part separately.)
+
+		if(($item['owner_xchan'] === $u[0]['channel_hash']) && (! get_pconfig($u[0]['channel_id'],'system','blocktags'))) {
+			$j_tgt = json_decode($item['target'],true);
+			if($j_tgt && $j_tgt['mid']) {
+				$p = q("select * from item where mid = '%s' and uid = %d limit 1",
+					dbesc($j_tgt['mid']),
+					intval($u[0]['channel_id'])
+				);
+				if($p) {
+					$j_obj = json_decode($item['object'],true);
+					if($j_obj && $j_obj['id'] && $j_obj['title']) {
+						store_item_tag($u[0]['channel_id'],$p[0]['id'],TERM_OBJ_POST,TERM_HASHTAG,$j_obj['title'],$j['obj']['id']);
+						proc_run('php','include/notifier.php','edit_post',$p[0]['id']);
+					}
+				}
+			}
+		}
+	}
 
 	$terms = get_terms_oftype($item['term'],TERM_MENTION);
 
