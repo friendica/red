@@ -650,10 +650,10 @@ function photos_content(&$a) {
 		$albumselect .= '<option value="" ' . ((! $selname) ? ' selected="selected" ' : '') . '>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</option>';
 		if(count($a->data['albums'])) {
 			foreach($a->data['albums'] as $album) {
-				if(($album['album'] === '') || ($album['album'] === 'Contact Photos') || ($album['album'] === t('Contact Photos')))
+				if($album['text'] === '') 
 					continue;
-				$selected = (($selname === $album['album']) ? ' selected="selected" ' : '');
-				$albumselect .= '<option value="' . $album['album'] . '"' . $selected . '>' . $album['album'] . '</option>';
+				$selected = (($selname === $album['text']) ? ' selected="selected" ' : '');
+				$albumselect .= '<option value="' . $album['text'] . '"' . $selected . '>' . $album['text'] . '</option>';
 			}
 		}
 
