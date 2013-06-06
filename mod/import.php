@@ -114,6 +114,8 @@ function import_post(&$a) {
 	// reset
 	$channel = $r[0];
 
+	set_default_login_identity($a->get_account(),$channel['channel_id'],false);
+
 	if($data['photo']) {
 		require_once('include/photo/photo_driver.php');
 		import_channel_photo(base64url_decode($data['photo']['data']),$data['photo']['type'],get_account_id,$channel['channel_id']);
