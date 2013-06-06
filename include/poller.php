@@ -89,7 +89,7 @@ function poller_run($argv, $argc){
 	// This should be rare
 
 	$r = q("select xchan_photo_l, xchan_hash from xchan where xchan_photo_l != '' and xchan_photo_m = '' 
-		and xchan_photo_date < GMT_TIMESTAMP() - INTERVAL 1 DAY");
+		and xchan_photo_date < UTC_TIMESTAMP() - INTERVAL 1 DAY");
 	if($r) {
 		require_once('include/photo/photo_driver.php');
 		foreach($r as $rr) {
