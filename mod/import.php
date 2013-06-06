@@ -60,6 +60,7 @@ function import_post(&$a) {
 		return;
 	}
 
+	$data = json_decode($data,true);
 
 //	logger('import: data: ' . print_r($data,true));
 
