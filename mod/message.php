@@ -9,13 +9,20 @@ require_once('include/Contact.php');
 
 function message_aside(&$a) {
 
-	$a->set_widget('newmessage',replace_macros(get_markup_template('message_side.tpl'), array(
+	$a->set_widget('msgaside',replace_macros(get_markup_template('message_side.tpl'), array(
 		'$tabs'=> array(),
+
+		'$check'=>array(
+			'label' => t('Check Mail'),
+			'url' => $a->get_baseurl(true) . '/message',
+			'sel' => (argv(1) == ''),
+		),
 		'$new'=>array(
 			'label' => t('New Message'),
 			'url' => $a->get_baseurl(true) . '/message/new',
 			'sel'=> (argv(1) == 'new'),
 		)
+
 	)));
 
 }
