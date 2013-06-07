@@ -4,7 +4,7 @@ require_once('include/dir_fns.php');
 
 
 function directory_init(&$a) {
-	$a->set_pager_itemspage(60);
+	$a->set_pager_itemspage(80);
 
 }
 
@@ -66,7 +66,7 @@ function directory_content(&$a) {
 		logger('mod_directory: query: ' . $query);
 
 		$x = z_fetch_url($query);
-		logger('directory: return from upstream: ' . print_r($x,true));
+		logger('directory: return from upstream: ' . print_r($x,true), LOGGER_DATA);
 
 		if($x['success']) {
 			$t = 0;
@@ -166,7 +166,7 @@ function directory_content(&$a) {
 					));
 
 
-					$o .= alt_pager($a,$j['records'], t('more'), t('back'));
+					$o .= alt_pager($a,$j['records'], t('next page'), t('previous page'));
 
 				}
 				else {

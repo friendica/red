@@ -23,11 +23,12 @@ function tagger_content(&$a) {
 	logger('tagger: tag ' . $term . ' item ' . $item_id);
 
 
-	$r = q("SELECT * FROM `item` WHERE `id` = '%s' LIMIT 1",
-		dbesc($item_id)
+	$r = q("SELECT * FROM item left join xchan on xchan_hash = author_xchan WHERE id = '%s' and uid = %d LIMIT 1",
+		dbesc($item_id),
+		intval(local_user())
 	);
 
-	if(! $item_id || (! count($r))) {
+	if((! $item_id) || (! $r)) {
 		logger('tagger: no item ' . $item_id);
 		return;
 	}
@@ -36,89 +37,82 @@ function tagger_content(&$a) {
 
 	$owner_uid = $item['uid'];
 
-	$r = q("select `nickname`,`blocktags` from user where uid = %d limit 1",
-		intval($owner_uid)
-	);
-	if(count($r)) {
-		$owner_nick = $r[0]['nickname'];
-		$blocktags = $r[0]['blocktags'];
+	switch($item['resource_type']) {
+		case 'photo':
+			$targettype = ACTIVITY_OBJ_PHOTO;
+			$post_type = t('photo');
+			break;
+		case 'event':
+			$targgettype = ACTIVITY_OBJ_EVENT;
+			$post_type = t('event');
+			break;
+		default:
+			$targettype = ACTIVITY_OBJ_NOTE;
+			$post_type = t('status');
+			if($item['mid'] != $item['parent_mid'])
+				$post_type = t('comment');
+			break;
 	}
 
-	if(local_user() != $owner_uid)
-		return;
 
-	$r = q("select * from contact where self = 1 and uid = %d limit 1",
-		intval(local_user())
-	);
-	if(count($r))
-			$contact = $r[0];
-	else {
-		logger('tagger: no contact_id');
-		return;
-	}
+	$links = array(array('rel' => 'alternate','type' => 'text/html', 
+		'href' => z_root() . '/display/' . $item['mid']));
 
-	$mid = item_message_id();
-	$xterm = xmlify($term);
-	$post_type = (($item['resource_id']) ? t('photo') : t('status'));
-	$targettype = (($item['resource_id']) ? ACTIVITY_OBJ_PHOTO : ACTIVITY_OBJ_NOTE ); 
+	$target = json_encode(array(
+		'type'    => $targettype,
+		'id'      => $item['mid'],
+		'link'    => $links,
+		'title'   => $item['title'],
+		'content' => $item['body'],
+		'created' => $item['created'],
+		'edited'  => $item['edited'],
+		'author'  => array(
+			'name'     => $item['xchan_name'],
+			'address'  => $item['xchan_addr'],
+			'guid'     => $item['xchan_guid'],
+			'guid_sig' => $item['xchan_guid_sig'],
+			'link'     => array(
+				array('rel' => 'alternate', 'type' => 'text/html', 'href' => $item['xchan_url']),
+				array('rel' => 'photo', 'type' => $item['xchan_photo_mimetype'], 'href' => $item['xchan_photo_m'])),
+			),
+	));
+
+
 
 	$link = xmlify('<link rel="alternate" type="text/html" href="' 
 		. $a->get_baseurl() . '/display/' . $owner['nickname'] . '/' . $item['id'] . '" />' . "\n") ;
 
-	$body = xmlify($item['body']);
-
-	$target = <<< EOT
-	<target>
-		<type>$targettype</type>
-		<local>1</local>
-		<id>{$item['mid']}</id>
-		<link>$link</link>
-		<title></title>
-		<content>$body</content>
-	</target>
-EOT;
-
 	$tagid = $a->get_baseurl() . '/search?tag=' . $term;
 	$objtype = ACTIVITY_OBJ_TAGTERM;
 
-	$obj = <<< EOT
-	<object>
-		<type>$objtype</type>
-		<local>1</local>
-		<id>$tagid</id>
-		<link>$tagid</link>
-		<title>$xterm</title>
-		<content>$xterm</content>
-	</object>
-EOT;
+	$obj = json_encode(array(
+		'type'    => $objtype,
+		'id'      => $tagid,
+		'link'    => array(array('rel' => 'alternate','type' => 'text/html', 'href' => $tagid)),
+		'title'   => $term,
+		'content' => $term
+	));
 
 	$bodyverb = t('%1$s tagged %2$s\'s %3$s with %4$s');
 
-	if(! isset($bodyverb))
-			return; 
-
 	$termlink = html_entity_decode('&#x2317;') . '[zrl=' . $a->get_baseurl() . '/search?tag=' . urlencode($term) . ']'. $term . '[/zrl]';
+
+	$channel = $a->get_channel();
 
 	$arr = array();
 
-	$arr['mid'] = $mid;
-	$arr['uid'] = $owner_uid;
-	$arr['contact-id'] = $contact['id'];
-	$arr['type'] = 'activity';
-	$arr['wall'] = $item['wall'];
-	$arr['gravity'] = GRAVITY_COMMENT;
-	$arr['parent'] = $item['id'];
-	$arr['parent_mid'] = $item['mid'];
-	$arr['owner-name'] = $item['author-name'];
-	$arr['owner-link'] = $item['author-link'];
-	$arr['owner-avatar'] = $item['author-avatar'];
-	$arr['author-name'] = $contact['name'];
-	$arr['author-link'] = $contact['url'];
-	$arr['author-avatar'] = $contact['thumb'];
+	$arr['owner_xchan'] = $item['owner_xchan'];
+	$arr['author_xchan'] = $channel['channel_hash'];
+
+
+	$arr['item_flags'] = ITEM_ORIGIN;
+	if($item['item_flags'] & ITEM_WALL)
+		$arr['item_flags'] |= ITEM_WALL;
 	
-	$ulink = '[zrl=' . $contact['url'] . ']' . $contact['name'] . '[/zrl]';
-	$alink = '[zrl=' . $item['author-link'] . ']' . $item['author-name'] . '[/zrl]';
+	$ulink = '[zrl=' . $channel['xchan_url'] . ']' . $channel['channel_name'] . '[/zrl]';
+	$alink = '[zrl=' . $item['xchan_url'] . ']' . $item['xchan_name'] . '[/zrl]';
 	$plink = '[zrl=' . $item['plink'] . ']' . $post_type . '[/zrl]';
+
 	$arr['body'] =  sprintf( $bodyverb, $ulink, $alink, $plink, $termlink );
 
 	$arr['verb'] = ACTIVITY_TAG;
@@ -126,65 +120,13 @@ EOT;
 	$arr['target'] = $target;
 	$arr['obj_type'] = $objtype;
 	$arr['object'] = $obj;
-	$arr['private'] = $item['private'];
-	$arr['allow_cid'] = $item['allow_cid'];
-	$arr['allow_gid'] = $item['allow_gid'];
-	$arr['deny_cid'] = $item['deny_cid'];
-	$arr['deny_gid'] = $item['deny_gid'];
-	$arr['visible'] = 1;
-	$arr['unseen'] = 1;
-	$arr['origin'] = 1;
+	$arr['parent_mid'] = $item['mid'];
 
-	$post_id = item_store($arr);	
+	$ret = post_activity_item($arr);
 
-	q("UPDATE `item` set plink = '%s' where id = %d limit 1",
-		dbesc($a->get_baseurl() . '/display/' . $owner_nick . '/' . $post_id),
-		intval($post_id)
-	);
-		
-
-	if(! $item['visible']) {
-		$r = q("UPDATE `item` SET `visible` = 1 WHERE `id` = %d AND `uid` = %d LIMIT 1",
-			intval($item['id']),
-			intval($owner_uid)
-		);
-	}			
-
-	if((! $blocktags) && (! stristr($item['tag'], ']' . $term . '[' ))) {
-		q("update item set tag = '%s' where id = %d limit 1",
-			dbesc($item['tag'] . (strlen($item['tag']) ? ',' : '') . '#[zrl=' . $a->get_baseurl() . '/search?tag=' . $term . ']'. $term . '[/zrl]'),
-			intval($item['id'])
-		);
-	}
-
-	// if the original post is on this site, update it.
-
-	$r = q("select `tag`,`id`,`uid` from item where `origin` = 1 AND `mid` = '%s' LIMIT 1",
-		dbesc($item['mid'])
-	);
-	if(count($r)) {
-		$x = q("SELECT `blocktags` FROM `user` WHERE `uid` = %d limit 1",
-			intval($r[0]['uid'])
-		);
-		if(count($x) && !$x[0]['blocktags'] && (! stristr($r[0]['tag'], ']' . $term . '['))) {
-			q("update item set tag = '%s' where id = %d limit 1",
-				dbesc($r[0]['tag'] . (strlen($r[0]['tag']) ? ',' : '') . '#[zrl=' . $a->get_baseurl() . '/search?tag=' . $term . ']'. $term . '[/zrl]'),
-				intval($r[0]['id'])
-			);
-		}
-
-	}
-		
-
-	$arr['id'] = $post_id;
-
-	call_hooks('post_local_end', $arr);
-
-	proc_run('php',"include/notifier.php","tag","$post_id");
+	if($ret['success'])
+		proc_run('php','include/notifier.php','tag',$ret['activity']['id']);
 
 	killme();
-
-	return; // NOTREACHED
-
 
 }

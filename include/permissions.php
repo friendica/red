@@ -98,7 +98,7 @@ function get_all_perms($uid,$observer_xchan,$internal_use = true) {
 
 			// If they're blocked - they can't read or write
  
-			if(($x) && ($x[0]['abook_flags'] & ABOOK_FLAG_BLOCKED)) {
+			if(($x) && (($x[0]['abook_flags'] & ABOOK_FLAG_BLOCKED) || ($x[0]['abook_flags'] & ABOOK_FLAG_PENDING))) {
 				$ret[$perm_name] = false;
 				continue;
 			}
@@ -242,7 +242,7 @@ function perm_is_allowed($uid,$observer_xchan,$permission) {
 
 		// If they're blocked - they can't read or write
  
-		if(($x) && ($x[0]['abook_flags'] & ABOOK_FLAG_BLOCKED))
+		if(($x) && (($x[0]['abook_flags'] & ABOOK_FLAG_BLOCKED) || ($x[0]['abook_flags'] & ABOOK_FLAG_PENDING)))
 			return false;
 		
 		if(($x) && (! $global_perms[$permission][2]) && ($x[0]['abook_flags'] & ABOOK_FLAG_IGNORED))

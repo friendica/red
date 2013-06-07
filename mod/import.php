@@ -4,7 +4,7 @@
 // connection to original server. 
 
 require_once('include/Contact.php');
-
+require_once('include/zot.php');
 
 function import_post(&$a) {
 
@@ -39,7 +39,7 @@ function import_post(&$a) {
 		$servername  = substr($old_address,strpos($old_address,'@')+1);
 
 		$scheme = 'https://';
-		$api_path = '/api/export/basic?f=&channel=' . $channelname;
+		$api_path = '/api/red/channel/export/basic?f=&channel=' . $channelname;
 		$binary = false;
 		$redirects = 0;
 		$opts = array('http_auth' => $email . ':' . $password);
@@ -60,6 +60,7 @@ function import_post(&$a) {
 		return;
 	}
 
+	$data = json_decode($data,true);
 
 //	logger('import: data: ' . print_r($data,true));
 
@@ -112,6 +113,8 @@ function import_post(&$a) {
 	}
 	// reset
 	$channel = $r[0];
+
+	set_default_login_identity($a->get_account(),$channel['channel_id'],false);
 
 	if($data['photo']) {
 		require_once('include/photo/photo_driver.php');

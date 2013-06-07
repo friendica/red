@@ -193,7 +193,7 @@ CREATE TABLE IF NOT EXISTS `channel` (
   KEY `channel_pageflags` (`channel_pageflags`),
   KEY `channel_max_anon_mail` (`channel_max_anon_mail`),
   KEY `channel_max_friend_req` (`channel_max_friend_req`),
-  KEY `channel_default_group` (`channel_default_group`),
+  KEY `channel_default_gid` (`channel_default_group`),
   KEY `channel_r_stream` (`channel_r_stream`),
   KEY `channel_r_profile` (`channel_r_profile`),
   KEY `channel_r_photos` (`channel_r_photos`),
@@ -373,13 +373,17 @@ CREATE TABLE IF NOT EXISTS `hubloc` (
   `hubloc_callback` char(255) NOT NULL DEFAULT '',
   `hubloc_connect` char(255) NOT NULL DEFAULT '',
   `hubloc_sitekey` text NOT NULL,
+  `hubloc_updated` datetime NOT NULL DEFAULT '0000-00-00 00:00:00',
+  `hubloc_connected` datetime NOT NULL DEFAULT '0000-00-00 00:00:00',
   PRIMARY KEY (`hubloc_id`),
   KEY `hubloc_url` (`hubloc_url`),
   KEY `hubloc_guid` (`hubloc_guid`),
   KEY `hubloc_flags` (`hubloc_flags`),
   KEY `hubloc_connect` (`hubloc_connect`),
   KEY `hubloc_host` (`hubloc_host`),
-  KEY `hubloc_addr` (`hubloc_addr`)
+  KEY `hubloc_addr` (`hubloc_addr`),
+  KEY `hubloc_updated` (`hubloc_updated`),
+  KEY `hubloc_connected` (`hubloc_connected`)
 ) ENGINE=MyISAM  DEFAULT CHARSET=utf8;
 
 CREATE TABLE IF NOT EXISTS `intro` (

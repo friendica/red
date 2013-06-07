@@ -64,6 +64,7 @@ var searchData=
   ['photos_5fcontent',['photos_content',['../mod_2photos_8php.html#aa87382611a66ec5effdb2d78f13f5812',1,'photos.php']]],
   ['photos_5fcreate_5fitem',['photos_create_item',['../include_2photos_8php.html#ad648c0c5544fe9263409b6f6e57c6274',1,'photos.php']]],
   ['photos_5finit',['photos_init',['../mod_2photos_8php.html#ab950295cd77626f5fe65331a87693014',1,'photos.php']]],
+  ['photos_5flist_5fphotos',['photos_list_photos',['../include_2photos_8php.html#aa27b9e435dcc34e1009f56dc02c7ca51',1,'photos.php']]],
   ['photos_5fpost',['photos_post',['../mod_2photos_8php.html#a062bed4d04d14fee8a53f4c9be673080',1,'photos.php']]],
   ['php2po_2ephp',['php2po.php',['../php2po_8php.html',1,'']]],
   ['php_5ftpl',['php_tpl',['../namespacefriendica-to-smarty-tpl.html#a5dfc21ab8282dda8e3a7dff43cd0e283',1,'friendica-to-smarty-tpl']]],
@@ -100,6 +101,7 @@ var searchData=
   ['prepare_5ftext',['prepare_text',['../text_8php.html#afe54312607d92f7ce9593f5760831f80',1,'text.php']]],
   ['pretheme_2ephp',['pretheme.php',['../pretheme_8php.html',1,'']]],
   ['pretheme_5finit',['pretheme_init',['../pretheme_8php.html#af5660943ee99db5fd75182316522eafe',1,'pretheme.php']]],
+  ['print_5ftemplate',['print_template',['../tpldebug_8php.html#a44778457a6c02554812fbfad19d32ba3',1,'tpldebug.php']]],
   ['printable',['printable',['../dba__driver_8php.html#a55bf30d8176967e682656b5be4ad9249',1,'dba_driver.php']]],
   ['private_5fmessages_5fdrop',['private_messages_drop',['../include_2message_8php.html#aed272d77c06a309e2836ac79e75613f1',1,'message.php']]],
   ['private_5fmessages_5ffetch_5fconversation',['private_messages_fetch_conversation',['../include_2message_8php.html#a5f8de9847e203329e317ac38dc646898',1,'message.php']]],
@@ -142,6 +144,6 @@ var searchData=
   ['public_5fpermissions_5fsql',['public_permissions_sql',['../security_8php.html#ab3bdd30dc60d9ee72370b866aa4a2d01',1,'security.php']]],
   ['public_5frecips',['public_recips',['../zot_8php.html#a083aec6c900d244e1bfc1406f9461465',1,'zot.php']]],
   ['pubrsatome',['pubrsatome',['../crypto_8php.html#a2a3fae7caca27f86d158eeaf69b6f287',1,'crypto.php']]],
-  ['purify_5fhtml',['purify_html',['../items_8php.html#a4841df5beabdd1bdd1ed56781a915d61',1,'items.php']]],
+  ['purify_5fhtml',['purify_html',['../text_8php.html#a4841df5beabdd1bdd1ed56781a915d61',1,'text.php']]],
   ['push_5flang',['push_lang',['../language_8php.html#ac9142ef1d01a235c760deb0f16643f5a',1,'language.php']]]
 ];

@@ -334,20 +334,16 @@ function alt_pager(&$a, $i, $more = '', $less = '') {
 	$pagenum = $a->pager['page'];
 	$url = $a->get_baseurl() . '/' . $stripped;
 
-	$o .= '<div class="pager">';
+	return replace_macros(get_markup_template('alt_pager.tpl'),array(
+		'$has_less' => (($a->pager['page'] > 1) ? true : false),
+		'$has_more' => (($i > 0 && $i == $a->pager['itemspage']) ? true : false),
+		'$less' => $less,
+		'$more' => $more,
+		'$url' => $url,
+		'$prevpage' => $a->pager['page'] - 1,
+		'$nextpage' => $a->pager['page'] + 1,
+	));
 
-	if($a->pager['page'] > 1)
-	  $o .= "<a href=\"$url"."&page=".($a->pager['page'] - 1).'">' . $less . '</a>';
-	if($i > 0 && $i == $a->pager['itemspage']) {
-		if($a->pager['page']>1)
-			$o .= " | ";
-		$o .= "<a href=\"$url"."&page=".($a->pager['page'] + 1).'">' . $more . '</a>';
-	}
-
-
-	$o .= '</div>'."\r\n";
-
-	return $o;
 }
 
 // Turn user/group ACLs stored as angle bracketed text into arrays
@@ -1598,7 +1594,7 @@ function store_item_tag($uid,$iid,$otype,$type,$term,$url = '') {
 		dbesc($term),
 		dbesc($url)
 	);
-	if(count($r))
+	if($r)
 		return false;
 	$r = q("insert into term (uid, oid, otype, type, term, url)
 		values( %d, %d, %d, %d, '%s', '%s') ",
@@ -1650,7 +1646,7 @@ function file_tag_save_file($uid,$item,$file) {
 		intval($item),
 		intval($uid)
 	);
-	if(count($r)) {
+	if($r) {
 		if(! stristr($r[0]['file'],'[' . file_tag_encode($file) . ']'))
 			q("update item set file = '%s' where id = %d and uid = %d limit 1",
 				dbesc($r[0]['file'] . '[' . file_tag_encode($file) . ']'),
@@ -1680,7 +1676,7 @@ function file_tag_unsave_file($uid,$item,$file,$cat = false) {
 		intval($item),
 		intval($uid)
 	);
-	if(! count($r))
+	if(! $r)
 		return false;
 
 	q("update item set file = '%s' where id = %d and uid = %d limit 1",
@@ -1693,7 +1689,7 @@ function file_tag_unsave_file($uid,$item,$file,$cat = false) {
 		intval($uid)
 	);
 
-	if(! count($r)) {
+	if(! $r) {
 		$saved = get_pconfig($uid,'system','filetags');
 		set_pconfig($uid,'system','filetags',str_replace($pattern,'',$saved));
 

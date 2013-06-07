@@ -85,6 +85,26 @@ function poller_run($argv, $argc){
 		proc_run('php','include/expire.php');
 	}
 
+	// update any photos which didn't get imported properly
+	// This should be rare
+
+	$r = q("select xchan_photo_l, xchan_hash from xchan where xchan_photo_l != '' and xchan_photo_m = '' 
+		and xchan_photo_date < UTC_TIMESTAMP() - INTERVAL 1 DAY");
+	if($r) {
+		require_once('include/photo/photo_driver.php');
+		foreach($r as $rr) {
+			$photos = import_profile_photo($rr['xchan_photo_l'],$rr['xchan_hash']);
+			$x = q("update xchan set xchan_photo_l = '%s', xchan_photo_m = '%s', xchan_photo_s = '%s', xchan_photo_mimetype = '%s'
+				where xchan_hash = '%s' limit 1",
+				dbesc($photos[0]),
+				dbesc($photos[1]),
+				dbesc($photos[2]),
+				dbesc($photos[3]),
+				dbesc($rr['xchan_hash'])
+			);
+		}
+	}
+
 
 	$manual_id  = 0;
 	$generation = 0;

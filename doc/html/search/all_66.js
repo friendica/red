@@ -51,7 +51,7 @@ var searchData=
   ['follow_5fcontent',['follow_content',['../mod_2follow_8php.html#a4c540ea4e9f5c581c1a53516ac585592',1,'follow.php']]],
   ['follow_5finit',['follow_init',['../mod_2follow_8php.html#a171f5b19f50d7738adc3b2e96ec6018a',1,'follow.php']]],
   ['follow_5fwidget',['follow_widget',['../contact__widgets_8php.html#af24e693532a045954caab515942cfc6f',1,'contact_widgets.php']]],
-  ['foreach',['foreach',['../typo_8php.html#a3bb638ebb8472e4ee7c85afe721f4fe3',1,'typo.php']]],
+  ['foreach',['foreach',['../typo_8php.html#a329c9c12217d2c8660c47bbc7c8df4c5',1,'typo.php']]],
   ['format_5fcss_5fif_5fexists',['format_css_if_exists',['../plugin_8php.html#a9039e15aae27676af7777dcbee5a11d6',1,'plugin.php']]],
   ['format_5fevent_5fbbcode',['format_event_bbcode',['../event_8php.html#abb74206cf42d694307c3d7abb7af9869',1,'event.php']]],
   ['format_5fevent_5fdiaspora',['format_event_diaspora',['../bb2diaspora_8php.html#a29a2ad41f5826f3975fa9a49934ff863',1,'bb2diaspora.php']]],

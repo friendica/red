@@ -1,6 +1,6 @@
 <?php
 
-define( 'UPDATE_VERSION' , 1042 );
+define( 'UPDATE_VERSION' , 1043 );
 
 /**
  *
@@ -530,4 +530,14 @@ function update_r1041() {
 		return UPDATE_SUCCESS;
 	return UPDATE_FAILED;
 }
+
+
+function update_r1042() {
+	$r = q("ALTER TABLE `hubloc` ADD `hubloc_updated` DATETIME NOT NULL DEFAULT '0000-00-00 00:00:00',
+ADD `hubloc_connected` DATETIME NOT NULL DEFAULT '0000-00-00 00:00:00',  ADD INDEX ( `hubloc_updated` ),  ADD INDEX ( `hubloc_connected` )");
+	if($r)
+		return UPDATE_SUCCESS;
+	return UPDATE_FAILED;
+}
+
 

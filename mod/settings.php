@@ -456,6 +456,7 @@ function settings_post(&$a) {
 	set_pconfig(local_user(),'system','post_newfriend', $post_newfriend);
 	set_pconfig(local_user(),'system','post_joingroup', $post_joingroup);
 	set_pconfig(local_user(),'system','post_profilechange', $post_profilechange);
+	set_pconfig(local_user(),'system','blocktags',$blocktags);
 
 /*
 	if($page_flags == PAGE_PRVGROUP) {
@@ -907,7 +908,6 @@ function settings_content(&$a) {
 		$expire     = $channel['channel_expire_days'];
 
 		$blockwall  = $a->user['blockwall'];
-		$blocktags  = $a->user['blocktags'];
 		$unkmail    = $a->user['unkmail'];
 		$cntunkmail = $a->user['cntunkmail'];
 
@@ -939,6 +939,8 @@ function settings_content(&$a) {
 		$post_profilechange = get_pconfig(local_user(), 'system','post_profilechange');
 		$post_profilechange = (($post_profilechange===false)? '0': $post_profilechange); // default if not set: 0
 
+		$blocktags  = get_pconfig(local_user(),'system','blocktags');
+		$blocktags = (($blocktags===false) ? '0' : $blocktags);
 	
 		$timezone = date_default_timezone_get();
 

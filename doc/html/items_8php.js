@@ -50,7 +50,6 @@ var items_8php =
     [ "post_activity_item", "items_8php.html#a410f9c743877c125ca06312373346903", null ],
     [ "posted_date_widget", "items_8php.html#abe695dd89e1e10ed042c26b80114f0ed", null ],
     [ "posted_dates", "items_8php.html#ad2abb4644ff1f20fefbc80326fe01cf0", null ],
-    [ "purify_html", "items_8php.html#a4841df5beabdd1bdd1ed56781a915d61", null ],
     [ "red_zrl_callback", "items_8php.html#a4e6d7639431e0dd8e9f4dba8e1ac408b", null ],
     [ "send_status_notifications", "items_8php.html#aab9e0c58247427126de0699c729c3b6c", null ],
     [ "tag_deliver", "items_8php.html#ab1bce4261bcf75ad62753b498a144d17", null ],

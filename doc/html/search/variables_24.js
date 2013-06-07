@@ -41,7 +41,7 @@ var searchData=
   ['_24error',['$error',['../classApp.html#ac1a8b2cd40609b231a560201a08852ba',1,'App\$error()'],['../classdba__driver.html#a84675d28c7bd9b7290dd37e66dbd216c',1,'dba_driver\$error()']]],
   ['_24filelist',['$filelist',['../docblox__errorchecker_8php.html#a648a570b0f9f6e0e51b7267647c4b09b',1,'docblox_errorchecker.php']]],
   ['_24filename',['$filename',['../classFriendicaSmarty.html#a33fabbd4d6eef869df496adf357ae690',1,'FriendicaSmarty']]],
-  ['_24files',['$files',['../extract_8php.html#a9590b15215a21e9b42eb546aeef79704',1,'$files():&#160;extract.php'],['../typo_8php.html#a9590b15215a21e9b42eb546aeef79704',1,'$files():&#160;typo.php']]],
+  ['_24files',['$files',['../extract_8php.html#a9590b15215a21e9b42eb546aeef79704',1,'$files():&#160;extract.php'],['../tpldebug_8php.html#a5358407d65f2ca826f96356a6642d149',1,'$files():&#160;tpldebug.php'],['../typo_8php.html#a9590b15215a21e9b42eb546aeef79704',1,'$files():&#160;typo.php']]],
   ['_24force_5fmax_5fitems',['$force_max_items',['../classApp.html#ae3f47830543d0d902f66913def8db66b',1,'App']]],
   ['_24gc_5fprobability',['$gc_probability',['../session_8php.html#a96b09cc763572f45280786a7b33feb7e',1,'session.php']]],
   ['_24groups',['$groups',['../classApp.html#ac6e6b1c7d6df408580ff79977fcfa656',1,'App']]],
