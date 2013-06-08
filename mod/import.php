@@ -5,6 +5,7 @@
 
 require_once('include/Contact.php');
 require_once('include/zot.php');
+require_once('include/identity.php');
 
 function import_post(&$a) {
 
