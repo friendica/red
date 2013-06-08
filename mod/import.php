@@ -22,6 +22,7 @@ function import_post(&$a) {
 		if($filesize) {
 			$data = @file_get_contents($src);
 		}
+		unlink($src);
 	}
 
 	if(! $src) {
