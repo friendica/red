@@ -9,6 +9,9 @@ require_once('include/identity.php');
 
 function import_post(&$a) {
 
+	if(! $a->get_account()) {
+		return;
+	}
 
 	$data     = null;
 	$seize    = ((x($_REQUEST,'make_primary')) ? intval($_REQUEST['make_primary']) : 0);
@@ -328,6 +331,10 @@ function import_post(&$a) {
 
 function import_content(&$a) {
 
+	if(! $a->get_account()) {
+		notice( t('You must be logged in to use this feature.'));
+		return '';
+	}
 
 	$o = replace_macros(get_markup_template('channel_import.tpl'),array(
 		'$title' => t('Import Channel'),
