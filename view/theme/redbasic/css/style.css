@@ -3389,6 +3389,8 @@ color-stop(0.82, #b00)
 );
 }
 
+/*
+
 nav:hover {
 
   background-image: linear-gradient(bottom, #f00 26%, #b00 82%);
@@ -3405,6 +3407,8 @@ color-stop(0.26, #f00),
 color-stop(0.82, #b00)
 );
 }
+
+*/
 
 nav a,
 nav a:active,
