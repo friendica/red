@@ -251,6 +251,7 @@ function navbar_complete(&$a) {
 	}
 
 	if(! $url) {
+		require_once("include/dir_fns.php");
 		$directory = find_upstream_directory($dirmode);
 
 		if($directory) {
