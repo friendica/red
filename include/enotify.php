@@ -114,7 +114,7 @@ function notification($params) {
 
 		// "a post"
 		$dest_str = sprintf(t('%1$s commented on [zrl=%2$s]a %3$s[/zrl]'),
-								'[url=' . $sender['xchan_url'] . ']' . $sender['xchan_name'] . '[/url]',
+								'[zrl=' . $sender['xchan_url'] . ']' . $sender['xchan_name'] . '[/zrl]',
 								$itemlink,
 								$item_post_type);
 
