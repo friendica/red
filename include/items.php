@@ -183,16 +183,17 @@ function get_public_feed($channel,$params) {
 	$records   = 40;
 	$direction = 'desc';
 
-	if(is_array($params)) {
-		$type      = ((x($params,'type'))      ? $params['type']      : $type);
-		$begin     = ((x($params,'begin'))     ? $params['begin']     : $begin);
-		$end       = ((x($params,'end'))       ? $params['end']       : $end);
-		$start     = ((x($params,'start'))     ? $params['start']     : $start);
-		$records   = ((x($params,'records'))   ? $params['records']   : $records);
-		$direction = ((x($params,'direction')) ? $params['direction'] : $direction);
-	}
+	if(! $params)
+		$params = array();
+
+	$params['type']      = ((x($params,'type'))      ? $params['type']      : 'xml');
+	$params['begin']     = ((x($params,'begin'))     ? $params['begin']     : '0000-00-00 00:00:00');
+	$params['end']       = ((x($params,'end'))       ? $params['end']       : datetime_convert('UTC','UTC','now'));
+	$params['start']     = ((x($params,'start'))     ? $params['start']     : 0);
+	$params['records']   = ((x($params,'records'))   ? $params['records']   : 40);
+	$params['direction'] = ((x($params,'direction')) ? $params['direction'] : 'desc');
 		
-	switch($type) {
+	switch($params['type']) {
 		case 'json':
 			header("Content-type: application/atom+json");
 			break;
@@ -202,150 +203,32 @@ function get_public_feed($channel,$params) {
 			break;
 	}
 
-
-
-
+	
+	echo get_feed_for($channel,get_observer_hash(),$params);
+	killme();
 
 }
 
-function get_feed_for(&$a, $dfrn_id, $owner_nick, $last_update, $direction = 0) {
+function get_feed_for($channel, $observer_hash, $params) {
+
+	if(! channel)
+		http_status_exit(401);
+
+	if(! perm_is_allowed($channel['channel_id'],$observer_hash,'view_stream'))
+		http_status_exit(403);
+
+	$items = items_fetch(array(
+		'wall' => '1',
+		'datequery' => $params['begin'],
+		'datequery2' => $params['end'],
+		'start' => $params['start'],          // FIXME
+	 	'records' => $params['records'],      // FIXME
+		'direction' => $params['direction'],  // FIXME
+		'order' => 'post'
+		), $channel, $observer_hash, CLIENT_MODE_NORMAL, get_app()->module);
 
 
-	$sitefeed    = ((strlen($owner_nick)) ? false : true); // not yet implemented, need to rewrite huge chunks of following logic
-	$public_feed = (($dfrn_id) ? false : true);
-	$starred     = false;   // not yet implemented, possible security issues
-	$converse    = false;
-
-	if($public_feed && $a->argc > 2) {
-		for($x = 2; $x < $a->argc; $x++) {
-			if($a->argv[$x] == 'converse')
-				$converse = true;
-			if($a->argv[$x] == 'starred')
-				$starred = true;
-			if($a->argv[$x] === 'category' && $a->argc > ($x + 1) && strlen($a->argv[$x+1]))
-				$category = $a->argv[$x+1];
-		}
-	}
-
-	
-
-	// default permissions - anonymous user
-
-	$sql_extra = " AND `allow_cid` = '' AND `allow_gid` = '' AND `deny_cid`  = '' AND `deny_gid`  = '' ";
-
-	$r = q("SELECT `contact`.*, `user`.`uid` AS `user_uid`, `user`.`nickname`, `user`.`timezone`, `user`.`page-flags`
-		FROM `contact` LEFT JOIN `user` ON `user`.`uid` = `contact`.`uid`
-		WHERE `contact`.`self` = 1 AND `user`.`nickname` = '%s' LIMIT 1",
-		dbesc($owner_nick)
-	);
-
-	if(! count($r))
-		killme();
-
-	$owner = $r[0];
-	$owner_id = $owner['user_uid'];
-	$owner_nick = $owner['nickname'];
-// feed_birthday no longer exists
-//	$birthday = feed_birthday($owner_id,$owner['timezone']);
-
-	if(! $public_feed) {
-
-		$sql_extra = '';
-		switch($direction) {
-			case (-1):
-				$sql_extra = sprintf(" AND `issued_id` = '%s' ", dbesc($dfrn_id));
-				$my_id = $dfrn_id;
-				break;
-			case 0:
-				$sql_extra = sprintf(" AND `issued_id` = '%s' AND `duplex` = 1 ", dbesc($dfrn_id));
-				$my_id = '1:' . $dfrn_id;
-				break;
-			case 1:
-				$sql_extra = sprintf(" AND `dfrn_id` = '%s' AND `duplex` = 1 ", dbesc($dfrn_id));
-				$my_id = '0:' . $dfrn_id;
-				break;
-			default:
-				return false;
-				break; // NOTREACHED
-		}
-
-		$r = q("SELECT * FROM `contact` WHERE `blocked` = 0 AND `pending` = 0 AND `contact`.`uid` = %d $sql_extra LIMIT 1",
-			intval($owner_id)
-		);
-
-		if(! count($r))
-			killme();
-
-		$contact = $r[0];
-		require_once('include/security.php');
-		$groups = init_groups_visitor($contact['id']);
-
-		if(count($groups)) {
-			for($x = 0; $x < count($groups); $x ++) 
-				$groups[$x] = '<' . intval($groups[$x]) . '>' ;
-			$gs = implode('|', $groups);
-		}
-		else
-			$gs = '<<>>' ; // Impossible to match 
-
-		$sql_extra = sprintf(" 
-			AND ( `allow_cid` = '' OR     `allow_cid` REGEXP '<%d>' ) 
-			AND ( `deny_cid`  = '' OR NOT `deny_cid`  REGEXP '<%d>' ) 
-			AND ( `allow_gid` = '' OR     `allow_gid` REGEXP '%s' )
-			AND ( `deny_gid`  = '' OR NOT `deny_gid`  REGEXP '%s') 
-		",
-			intval($contact['id']),
-			intval($contact['id']),
-			dbesc($gs),
-			dbesc($gs)
-		);
-	}
-
-	if($public_feed)
-		$sort = 'DESC';
-	else
-		$sort = 'ASC';
-
-	if(! strlen($last_update))
-		$last_update = 'now -30 days';
-
-	if(isset($category)) {
-		$sql_extra .= file_tag_file_query('item',$category,'category');
-	}
-
-	if($public_feed) {
-		if(! $converse)
-			$sql_extra .= " AND `contact`.`self` = 1 ";
-	}
-
-	$check_date = datetime_convert('UTC','UTC',$last_update,'Y-m-d H:i:s');
-
-	$r = q("SELECT `item`.*, `item`.`id` AS `item_id`, 
-		`contact`.`name`, `contact`.`network`, `contact`.`photo`, `contact`.`url`, 
-		`contact`.`name_date`, `contact`.`uri_date`, `contact`.`avatar_date`,
-		`contact`.`thumb`, `contact`.`dfrn_id`, `contact`.`self`, 
-		`contact`.`id` AS `contact-id`, `contact`.`uid` AS `contact-uid`,
-		`sign`.`signed_text`, `sign`.`signature`, `sign`.`signer`
-		FROM `item` LEFT JOIN `contact` ON `contact`.`id` = `item`.`contact-id`
-		LEFT JOIN `sign` ON `sign`.`iid` = `item`.`id`
-		WHERE `item`.`uid` = %d AND `item`.`visible` = 1 and `item`.`moderated` = 0 AND `item`.`parent` != 0 
-		AND `item`.`wall` = 1 AND `contact`.`blocked` = 0 AND `contact`.`pending` = 0
-		AND ( `item`.`edited` > '%s' OR `item`.`changed` > '%s' )
-		$sql_extra
-		ORDER BY `parent` %s, `created` ASC LIMIT 0, 300",
-		intval($owner_id),
-		dbesc($check_date),
-		dbesc($check_date),
-		dbesc($sort)
-	);
-
-	// Will check further below if this actually returned results.
-	// We will provide an empty feed if that is the case.
-
-	$items = $r;
-	$items = fetch_post_tags($items);
-
-	$feed_template = get_markup_template(($dfrn_id) ? 'atom_feed_dfrn.tpl' : 'atom_feed.tpl');
+	$feed_template = get_markup_template('atom_feed.tpl');
 
 	$atom = '';
 
@@ -355,51 +238,33 @@ function get_feed_for(&$a, $dfrn_id, $owner_nick, $last_update, $direction = 0) 
 
 	$atom .= replace_macros($feed_template, array(
 		'$version'      => xmlify(RED_VERSION),
-		'$feed_id'      => xmlify($a->get_baseurl() . '/channel/' . $owner_nick),
-		'$feed_title'   => xmlify($owner['name']),
+		'$feed_id'      => xmlify($channel['channel_url']),
+		'$feed_title'   => xmlify($channel['channel_name']),
 		'$feed_updated' => xmlify(datetime_convert('UTC', 'UTC', 'now' , ATOM_TIME)) ,
-		'$hub'          => $hubxml,
-		'$salmon'       => $salmon,
-		'$name'         => xmlify($owner['name']),
-		'$profile_page' => xmlify($owner['url']),
-		'$photo'        => xmlify($owner['photo']),
-		'$thumb'        => xmlify($owner['thumb']),
-		'$picdate'      => xmlify(datetime_convert('UTC','UTC',$owner['avatar_date'] . '+00:00' , ATOM_TIME)) ,
-		'$uridate'      => xmlify(datetime_convert('UTC','UTC',$owner['uri_date']    . '+00:00' , ATOM_TIME)) ,
-		'$namdate'      => xmlify(datetime_convert('UTC','UTC',$owner['name_date']   . '+00:00' , ATOM_TIME)) , 
-		'$birthday'     => ((strlen($birthday)) ? '<dfrn:birthday>' . xmlify($birthday) . '</dfrn:birthday>' : ''),
-		'$community'    => (($owner['page-flags'] == PAGE_COMMUNITY) ? '<dfrn:community>1</dfrn:community>' : '')
+		'$hub'          => feed_hublinks(),
+		'$salmon'       => feed_salmonlinks($channel['channel_address']),
+		'$name'         => xmlify($channel['channel_name']),
+		'$profile_page' => xmlify($channel['channel_url']),
+		'$mimephoto'    => xmlify($channel['channel_photo_mimetype']),
+		'$photo'        => xmlify($channel['channel_photo_l']),
+		'$thumb'        => xmlify($channel['channel_photo_m']),
+		'$picdate'      => '',
+		'$uridate'      => '',
+		'$namdate'      => '',
+		'$birthday'     => '',
+		'$community'    => '',
 	));
 
 	call_hooks('atom_feed', $atom);
 
-	if(! count($items)) {
-
-		call_hooks('atom_feed_end', $atom);
-
-		$atom .= '</feed>' . "\r\n";
-		return $atom;
-	}
-
-	foreach($items as $item) {
-
-		// prevent private email from leaking.
-		if($item['network'] === NETWORK_MAIL)
-			continue;
-
-		// public feeds get html, our own nodes use bbcode
-
-		if($public_feed) {
-			$type = 'html';
-			// catch any email that's in a public conversation and make sure it doesn't leak
-			if($item['private'])
+	if($items) {
+		$type = 'html';
+		foreach($items as $item) {
+			if($item['item_private'])
 				continue;
-		}
-		else {
-			$type = 'text';
-		}
 
-		$atom .= atom_entry($item,$type,null,$owner,true);
+			$atom .= atom_entry($item,$type,null,$owner,true);
+		}
 	}
 
 	call_hooks('atom_feed_end', $atom);
@@ -4764,9 +4629,11 @@ function zot_feed($uid,$observer_xchan,$mindate) {
 
 
 
-function items_fetch($arr,$channel = null,$client_mode = CLIENT_MODE_NORMAL,$module = 'network') {
+function items_fetch($arr,$channel = null,$observer_hash = null,$client_mode = CLIENT_MODE_NORMAL,$module = 'network') {
 
 	$result = array('success' => false);
+
+	$a = get_app();
 
 	$sql_extra = '';
 	$sql_nets = '';
@@ -4782,7 +4649,10 @@ function items_fetch($arr,$channel = null,$client_mode = CLIENT_MODE_NORMAL,$mod
 	}
 	
 	if($arr['star'])
-		$sql_options .= " and (item_flags & " . intval(ITEM_STARRED) . ")";
+		$sql_options .= " and (item_flags & " . intval(ITEM_STARRED) . ") ";
+
+	if($arr['wall'])
+		$sql_options .= " and (item_flags & " . intval(ITEM_WALL) . ") ";
 
 	$sql_extra = " AND item.parent IN ( SELECT parent FROM item WHERE (item_flags & " . intval(ITEM_THREAD_TOP) . ") $sql_options ) ";
 
@@ -4892,6 +4762,8 @@ function items_fetch($arr,$channel = null,$client_mode = CLIENT_MODE_NORMAL,$mod
 
     $start = dba_timer();
 
+	$sql_extra .= item_permissions_sql($channel['channel_id']);
+
     if($arr['nouveau'] && ($client_mode & CLIENT_MODELOAD) && $channel) {
         // "New Item View" - show all items unthreaded in reverse created date order
 
@@ -4908,7 +4780,7 @@ function items_fetch($arr,$channel = null,$client_mode = CLIENT_MODE_NORMAL,$mod
 
         $items = fetch_post_tags($items,true);
     }
-    elseif($client_mode & CLIENT_MODE_UPDATE) {
+    else {
 
         // Normal conversation view
 
@@ -4917,7 +4789,7 @@ function items_fetch($arr,$channel = null,$client_mode = CLIENT_MODE_NORMAL,$mod
         else
 			$ordering = "commented";
 
-        if($client_mode & CLIENT_MODE_LOAD) {
+        if(($client_mode & CLIENT_MODE_LOAD) || ($client_mode & CLIENT_MODE_NORMAL)) {
 
             // Fetch a page full of parent items for this page
 
@@ -4955,7 +4827,6 @@ function items_fetch($arr,$channel = null,$client_mode = CLIENT_MODE_NORMAL,$mod
                 WHERE $item_uids AND item.item_restrict = 0
                 AND item.parent IN ( %s )
                 $sql_extra ",
-                intval(local_user()),
                 dbesc($parents_str)
             );
 
@@ -4969,9 +4840,8 @@ function items_fetch($arr,$channel = null,$client_mode = CLIENT_MODE_NORMAL,$mod
 
             $fourth = dba_timer();
 
+			require_once('include/conversation.php');
             $items = conv_sort($items,$ordering);
-
-
 
             //logger('items: ' . print_r($items,true));
 
@@ -4980,8 +4850,10 @@ function items_fetch($arr,$channel = null,$client_mode = CLIENT_MODE_NORMAL,$mod
             $items = array();
         }
 
-        if($parents_str)
+        if($parents_str && $arr['mark_seen'])
             $update_unseen = ' AND parent IN ( ' . dbesc($parents_str) . ' )';
-
+			// FIXME finish mark unseen sql
     }
+
+	return $items;
 }
