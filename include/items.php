@@ -204,9 +204,7 @@ function get_public_feed($channel,$params) {
 	}
 
 	
-	echo get_feed_for($channel,get_observer_hash(),$params);
-	killme();
-
+	return get_feed_for($channel,get_observer_hash(),$params);
 }
 
 function get_feed_for($channel, $observer_hash, $params) {
@@ -232,22 +230,19 @@ function get_feed_for($channel, $observer_hash, $params) {
 
 	$atom = '';
 
-	$hubxml = feed_hublinks();
-
-	$salmon = feed_salmonlinks($owner_nick);
-
 	$atom .= replace_macros($feed_template, array(
 		'$version'      => xmlify(RED_VERSION),
+		'$red'          => xmlify(RED_PLATFORM),
 		'$feed_id'      => xmlify($channel['channel_url']),
 		'$feed_title'   => xmlify($channel['channel_name']),
 		'$feed_updated' => xmlify(datetime_convert('UTC', 'UTC', 'now' , ATOM_TIME)) ,
-		'$hub'          => feed_hublinks(),
-		'$salmon'       => feed_salmonlinks($channel['channel_address']),
+		'$hub'          => '', // feed_hublinks(),
+		'$salmon'       => '', // feed_salmonlinks($channel['channel_address']),
 		'$name'         => xmlify($channel['channel_name']),
 		'$profile_page' => xmlify($channel['channel_url']),
-		'$mimephoto'    => xmlify($channel['channel_photo_mimetype']),
-		'$photo'        => xmlify($channel['channel_photo_l']),
-		'$thumb'        => xmlify($channel['channel_photo_m']),
+		'$mimephoto'    => xmlify($channel['xchan_photo_mimetype']),
+		'$photo'        => xmlify($channel['xchan_photo_l']),
+		'$thumb'        => xmlify($channel['xchan_photo_m']),
 		'$picdate'      => '',
 		'$uridate'      => '',
 		'$namdate'      => '',
@@ -285,8 +280,7 @@ function construct_activity_object($item) {
 
 	if($item['object']) {
 		$o = '<as:object>' . "\r\n";
-		$r = parse_xml_string($item['object'],false);
-
+		$r = json_decode($item['object'],false);
 
 		if(! $r)
 			return '';
@@ -296,7 +290,8 @@ function construct_activity_object($item) {
 			$o .= '<id>' . xmlify($r->id) . '</id>' . "\r\n";
 		if($r->title)
 			$o .= '<title>' . xmlify($r->title) . '</title>' . "\r\n";
-		if($r->link) {
+		if($r->links) {
+			// FIXME!!
 			if(substr($r->link,0,1) === '<') {
 				$r->link = preg_replace('/\<link(.*?)\"\>/','<link$1"/>',$r->link);
 				$o .= $r->link;
@@ -317,7 +312,7 @@ function construct_activity_target($item) {
 
 	if($item['target']) {
 		$o = '<as:target>' . "\r\n";
-		$r = parse_xml_string($item['target'],false);
+		$r = json_decode($item['target'],false);
 		if(! $r)
 			return '';
 		if($r->type)
@@ -326,7 +321,8 @@ function construct_activity_target($item) {
 			$o .= '<id>' . xmlify($r->id) . '</id>' . "\r\n";
 		if($r->title)
 			$o .= '<title>' . xmlify($r->title) . '</title>' . "\r\n";
-		if($r->link) {
+		if($r->links) {
+			// FIXME !!!
 			if(substr($r->link,0,1) === '<') {
 				if(strstr($r->link,'&') && (! strstr($r->link,'&amp;')))
 					$r->link = str_replace('&','&amp;', $r->link);
@@ -3957,7 +3953,7 @@ function lose_sharer($importer,$contact,$datarray,$item) {
 }
 
 
-function atom_author($tag,$name,$uri,$h,$w,$photo) {
+function atom_author($tag,$name,$uri,$h,$w,$type,$photo) {
 	$o = '';
 	if(! $tag)
 		return $o;
@@ -3971,8 +3967,8 @@ function atom_author($tag,$name,$uri,$h,$w,$photo) {
 	$o .= "<$tag>\r\n";
 	$o .= "<name>$name</name>\r\n";
 	$o .= "<uri>$uri</uri>\r\n";
-	$o .= '<link rel="photo"  type="image/jpeg" media:width="' . $w . '" media:height="' . $h . '" href="' . $photo . '" />' . "\r\n";
-	$o .= '<link rel="avatar" type="image/jpeg" media:width="' . $w . '" media:height="' . $h . '" href="' . $photo . '" />' . "\r\n";
+	$o .= '<link rel="photo"  type="' . $type . '" media:width="' . $w . '" media:height="' . $h . '" href="' . $photo . '" />' . "\r\n";
+	$o .= '<link rel="avatar" type="' . $type . '" media:width="' . $w . '" media:height="' . $h . '" href="' . $photo . '" />' . "\r\n";
 
 	call_hooks('atom_author', $o);
 
@@ -4000,35 +3996,36 @@ function atom_entry($item,$type,$author,$owner,$comment = false,$cid = 0) {
 	$o = "\r\n\r\n<entry>\r\n";
 
 	if(is_array($author))
-		$o .= atom_author('author',$author['name'],$author['url'],80,80,$author['thumb']);
+		$o .= atom_author('author',$author['xchan_name'],$author['xchan_url'],80,80,$author['xchan_photo_mimetype'],$author['xchan_photo_m']);
 	else
-		$o .= atom_author('author',(($item['author-name']) ? $item['author-name'] : $item['name']),(($item['author-link']) ? $item['author-link'] : $item['url']),80,80,(($item['author-avatar']) ? $item['author-avatar'] : $item['thumb']));
-	if(strlen($item['owner-name']))
-		$o .= atom_author('dfrn:owner',$item['owner-name'],$item['owner-link'],80,80,$item['owner-avatar']);
+		$o .= atom_author('author',$item['author']['xchan_name'],$item['author']['xchan_url'],80,80,$item['author']['xchan_photo_mimetype'], $item['author']['xchan_photo_m']);
+
+	$o .= atom_author('zot:owner',$item['owner']['xchan_name'],$item['owner']['xchan_url'],80,80,$item['owner']['xchan_photo_mimetype'],$item['owner']['xchan_photo_m']);
 
 	if(($item['parent'] != $item['id']) || ($item['parent_mid'] !== $item['mid']) || (($item['thr_parent'] !== '') && ($item['thr_parent'] !== $item['mid']))) {
 		$parent_item = (($item['thr_parent']) ? $item['thr_parent'] : $item['parent_mid']);
-		$o .= '<thr:in-reply-to ref="' . xmlify($parent_item) . '" type="text/html" href="' .  xmlify($a->get_baseurl() . '/display/' . $owner['nickname'] . '/' . $item['parent']) . '" />' . "\r\n";
+		$o .= '<thr:in-reply-to ref="' . xmlify($parent_item) . '" type="text/html" href="' .  xmlify($item['plink']) . '" />' . "\r\n";
 	}
 
 	$o .= '<id>' . xmlify($item['mid']) . '</id>' . "\r\n";
 	$o .= '<title>' . xmlify($item['title']) . '</title>' . "\r\n";
 	$o .= '<published>' . xmlify(datetime_convert('UTC','UTC',$item['created'] . '+00:00',ATOM_TIME)) . '</published>' . "\r\n";
 	$o .= '<updated>' . xmlify(datetime_convert('UTC','UTC',$item['edited'] . '+00:00',ATOM_TIME)) . '</updated>' . "\r\n";
-	$o .= '<dfrn:env>' . base64url_encode($body, true) . '</dfrn:env>' . "\r\n";
+	$o .= '<zot:env>' . base64url_encode($body, true) . '</zot:env>' . "\r\n";
+	// FIXME for other content types
 	$o .= '<content type="' . $type . '" >' . xmlify((($type === 'html') ? bbcode($body) : $body)) . '</content>' . "\r\n";
-	$o .= '<link rel="alternate" type="text/html" href="' . xmlify($a->get_baseurl() . '/display/' . $owner['nickname'] . '/' . $item['id']) . '" />' . "\r\n";
+	$o .= '<link rel="alternate" type="text/html" href="' . xmlify($item['plink']) . '" />' . "\r\n";
 
 	if($item['location']) {
-		$o .= '<dfrn:location>' . xmlify($item['location']) . '</dfrn:location>' . "\r\n";
+		$o .= '<zot:location>' . xmlify($item['location']) . '</zot:location>' . "\r\n";
 		$o .= '<poco:address><poco:formatted>' . xmlify($item['location']) . '</poco:formatted></poco:address>' . "\r\n";
 	}
 
 	if($item['coord'])
 		$o .= '<georss:point>' . xmlify($item['coord']) . '</georss:point>' . "\r\n";
 
-	if(($item['private']) || strlen($item['allow_cid']) || strlen($item['allow_gid']) || strlen($item['deny_cid']) || strlen($item['deny_gid']))
-		$o .= '<dfrn:private>' . (($item['private']) ? $item['private'] : 1) . '</dfrn:private>' . "\r\n";
+	if(($item['item_private']) || strlen($item['allow_cid']) || strlen($item['allow_gid']) || strlen($item['deny_cid']) || strlen($item['deny_gid']))
+		$o .= '<zot:private>' . (($item['item_private']) ? $item['item_private'] : 1) . '</zot:private>' . "\r\n";
 
 
 	if($item['app'])
@@ -4044,18 +4041,20 @@ function atom_entry($item,$type,$author,$owner,$comment = false,$cid = 0) {
 	if(strlen($actarg))
 		$o .= $actarg;
 
-	$tags = item_getfeedtags($item);
-	if(count($tags)) {
-		foreach($tags as $t) {
-			$o .= '<category scheme="X-DFRN:' . xmlify($t[0]) . ':' . xmlify($t[1]) . '" term="' . xmlify($t[2]) . '" />' . "\r\n";
-		}
-	}
+	// FIXME
+//	$tags = item_getfeedtags($item);
+//	if(count($tags)) {
+//		foreach($tags as $t) {
+//			$o .= '<category scheme="X-DFRN:' . xmlify($t[0]) . ':' . xmlify($t[1]) . '" term="' . xmlify($t[2]) . '" />' . "\r\n";
+//		}
+//	}
 
-	$o .= item_getfeedattach($item);
+// FIXME
+//	$o .= item_getfeedattach($item);
 
-	$mentioned = get_mentions($item,$tags);
-	if($mentioned)
-		$o .= $mentioned;
+//	$mentioned = get_mentions($item,$tags);
+//	if($mentioned)
+//		$o .= $mentioned;
 	
 	call_hooks('atom_entry', $o);
 
