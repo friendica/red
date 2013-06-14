@@ -365,7 +365,7 @@ function visible_activity($item) {
  *
  */
 
-if(!function_exists('conversation')) {
+
 function conversation(&$a, $items, $mode, $update, $page_mode = 'traditional') {
 
 	$tstart = dba_timer();
@@ -374,6 +374,8 @@ function conversation(&$a, $items, $mode, $update, $page_mode = 'traditional') {
 
 	$ssl_state = ((local_user()) ? true : false);
 
+	if(local_user())
+		load_pconfig(local_user(),'');
 
 	$arr_blocked = null;
 
@@ -678,6 +680,7 @@ function conversation(&$a, $items, $mode, $update, $page_mode = 'traditional') {
 		}
 		else
 		{
+
 			// Normal View
 //			logger('conv: items: ' . print_r($items,true));
 
@@ -790,7 +793,7 @@ function conversation(&$a, $items, $mode, $update, $page_mode = 'traditional') {
     return $o;
 
 
-}}
+}
 
 
 function best_link_url($item) {

@@ -23,11 +23,14 @@ function deliver_run($argv, $argc) {
 			if($r[0]['outq_posturl'] === z_root() . '/post') {
 				// local delivery
 				// we should probably batch these and save a few delivery processes
-				$msg = array('body' => json_encode(array('pickup' => array(array('notify' => json_decode($r[0]['outq_notify'],true),'message' => json_decode($r[0]['outq_msg'],true))))));
-				zot_import($msg);
-				$r = q("delete from outq where outq_hash = '%s' limit 1",
-					dbesc($argv[$x])
-				);
+				// If there is no outq_msg, this is a refresh_all message which does not require local handling
+				if($r[0]['outq_msg']) {
+					$msg = array('body' => json_encode(array('pickup' => array(array('notify' => json_decode($r[0]['outq_notify'],true),'message' => json_decode($r[0]['outq_msg'],true))))));
+					zot_import($msg);
+					$r = q("delete from outq where outq_hash = '%s' limit 1",
+						dbesc($argv[$x])
+					);
+				}
 			}
 			else {
 				$result = zot_zot($r[0]['outq_posturl'],$r[0]['outq_notify']); 
