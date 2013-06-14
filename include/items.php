@@ -4761,6 +4761,7 @@ function items_fetch($arr,$channel = null,$observer_hash = null,$client_mode = C
 
     $start = dba_timer();
 
+	require_once('include/security.php');
 	$sql_extra .= item_permissions_sql($channel['channel_id']);
 
     if($arr['nouveau'] && ($client_mode & CLIENT_MODELOAD) && $channel) {
