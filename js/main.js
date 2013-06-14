@@ -118,6 +118,7 @@
 	var scroll_next = false;
 	var next_page = 1;
 	var page_load = true;
+	var loadingPage = false;
 
 	$(function() {
 		$.ajaxSetup({cache: false});
@@ -395,6 +396,10 @@ function updateConvItems(mode,data) {
 				//	$("div.wall-item-body").divgrow({ initialHeight: 400 });
 			}
 		});
+
+		if(loadingPage) {
+			loadingPage = false;
+		}
 	}
 	if(mode === 'replace') {
 		// clear existing content
@@ -916,6 +921,7 @@ $(".autotime").timeago();
 	}
 
 
+
 $(window).scroll(function () {                 
 	if(typeof buildCmd == 'function') {
 		$('#more').hide();                 
@@ -927,12 +933,15 @@ $(window).scroll(function () {
 		}
 	
 		if($(window).scrollTop() + $(window).height() == $(document).height()) {
-			$('#more').hide();
-			$('#no-more').hide();
-			//			alert('scroll');
-			next_page++;
-			scroll_next = true;
-			liveUpdate();
+			if(! loadingPage) {
+				$('#more').hide();
+				$('#no-more').hide();
+				//			alert('scroll');
+				next_page++;
+				scroll_next = true;
+				loadingPage = true;
+				liveUpdate();
+			}
 
 		}
 	}
