@@ -130,7 +130,7 @@ function del_config($family,$key) {
 function load_pconfig($uid,$family) {
 	global $a;
 
-	if(! array_key_exists($uid,$a->config))
+	if(($uid) && (! array_key_exists($uid,$a->config)))
 		$a->config[$uid] = array();
 
 	if($family) {
