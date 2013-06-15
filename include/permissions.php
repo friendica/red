@@ -98,7 +98,7 @@ function get_all_perms($uid,$observer_xchan,$internal_use = true) {
 
 			// If they're blocked - they can't read or write
  
-			if(($x) && (($x[0]['abook_flags'] & ABOOK_FLAG_BLOCKED) || ($x[0]['abook_flags'] & ABOOK_FLAG_PENDING))) {
+			if(($x) && ($x[0]['abook_flags'] & ABOOK_FLAG_BLOCKED)) {
 				$ret[$perm_name] = false;
 				continue;
 			}
@@ -164,13 +164,17 @@ function get_all_perms($uid,$observer_xchan,$internal_use = true) {
 		// If PERMS_CONTACTS or PERMS_SPECIFIC, they need to be in your address book
 		// $x is a valid address book entry
 
-
-
 		if(! $x) {
 			$ret[$perm_name] = false;
 			continue;
 		}
 		
+		// They are in your address book, but haven't been approved
+
+		if($x[0]['abook_flags'] & ABOOK_FLAG_PENDING) {
+			$ret[$perm_name] = false;
+			continue;
+		}
 
 		if(($r) && ($r[0][$channel_perm] & PERMS_CONTACTS)) {
 
@@ -242,7 +246,7 @@ function perm_is_allowed($uid,$observer_xchan,$permission) {
 
 		// If they're blocked - they can't read or write
  
-		if(($x) && (($x[0]['abook_flags'] & ABOOK_FLAG_BLOCKED) || ($x[0]['abook_flags'] & ABOOK_FLAG_PENDING)))
+		if(($x) && ($x[0]['abook_flags'] & ABOOK_FLAG_BLOCKED))
 			return false;
 		
 		if(($x) && (! $global_perms[$permission][2]) && ($x[0]['abook_flags'] & ABOOK_FLAG_IGNORED))
@@ -284,6 +288,10 @@ function perm_is_allowed($uid,$observer_xchan,$permission) {
 	}	
 
 	if(! $x) {
+		return false;
+	}
+
+	if($x[0]['abook_flags'] & ABOOK_FLAG_PENDING) {
 		return false;
 	}
 
