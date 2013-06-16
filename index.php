@@ -48,6 +48,7 @@ if(! $install) {
 
 	load_config('config');
 	load_config('system');
+	load_config('feature');
 
 	require_once("session.php");
 	load_hooks();

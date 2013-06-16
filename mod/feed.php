@@ -13,18 +13,13 @@ function feed_init(&$a) {
 
 	$channel = '';
 	if(argc() > 1) {
-		$r = q("select * from channel where channel_address = '%s' limit 1",
+		$r = q("select * from channel left join xchan on channel_hash = xchan_hash where channel_address = '%s' limit 1",
 			dbesc(argv(1))
 		);
 		if(!($r && count($r)))
 			killme();
 
 		$channel = $r[0];
-
-		// check site and channel permissions
-
-		if(!($channel['channel_r_stream'] & PERMS_PUBLIC))
-			killme();
 
 		if((intval(get_config('system','block_public'))) && (! get_account_id()))
 			killme();

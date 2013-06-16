@@ -114,8 +114,8 @@ function localize_item(&$item){
 
 		if($author_link && $author_name && $item_url) {
 			
-			$author	 = '[url=' . chanlink_url($item['author']['xchan_url']) . ']' . $item['author']['xchan_name'] . '[/url]';
-			$objauthor =  '[url=' . chanlink_url($author_link) . ']' . $author_name . '[/url]';
+			$author	 = '[zrl=' . chanlink_url($item['author']['xchan_url']) . ']' . $item['author']['xchan_name'] . '[/zrl]';
+			$objauthor =  '[zrl=' . chanlink_url($author_link) . ']' . $author_name . '[/zrl]';
 		
 			switch($obj->type) {
 				case ACTIVITY_OBJ_PHOTO:
@@ -132,7 +132,7 @@ function localize_item(&$item){
 					break;
 			}
 
-			$plink = '[url=' . zid($item_url) . ']' . $post_type . '[/url]';
+			$plink = '[zrl=' . zid($item_url) . ']' . $post_type . '[/zrl]';
 
 			if(activity_match($item['verb'],ACTIVITY_LIKE)) {
 				$bodyverb = t('%1$s likes %2$s\'s %3$s');
@@ -165,9 +165,9 @@ function localize_item(&$item){
 		$Bname = $obj['title'];
 
 
-		$A = '[url=' . chanlink_url($Alink) . ']' . $Aname . '[/url]';
-		$B = '[url=' . chanlink_url($Blink) . ']' . $Bname . '[/url]';
-		if ($Bphoto!="") $Bphoto = '[url=' . chanlink_url($Blink) . '][img=80x80]' . $Bphoto . '[/img][/url]';
+		$A = '[zrl=' . chanlink_url($Alink) . ']' . $Aname . '[/zrl]';
+		$B = '[zrl=' . chanlink_url($Blink) . ']' . $Bname . '[/zrl]';
+		if ($Bphoto!="") $Bphoto = '[zrl=' . chanlink_url($Blink) . '][zmg=80x80]' . $Bphoto . '[/zmg][/zrl]';
 
 		$item['body'] = $item['localize'] = sprintf( t('%1$s is now connected with %2$s'), $A, $B);
 		$item['body'] .= "\n\n\n" . $Bphoto;
@@ -193,9 +193,9 @@ function localize_item(&$item){
 		}
 		$Bname = $obj['title'];
 
-		$A = '[url=' . chanlink_url($Alink) . ']' . $Aname . '[/url]';
-		$B = '[url=' . chanlink_url($Blink) . ']' . $Bname . '[/url]';
-		if ($Bphoto!="") $Bphoto = '[url=' . chanlink_url($Blink) . '][img=80x80]' . $Bphoto . '[/img][/url]';
+		$A = '[zrl=' . chanlink_url($Alink) . ']' . $Aname . '[/zrl]';
+		$B = '[zrl=' . chanlink_url($Blink) . ']' . $Bname . '[/zrl]';
+		if ($Bphoto!="") $Bphoto = '[zrl=' . chanlink_url($Blink) . '][zmg=80x80]' . $Bphoto . '[/zmg][/zrl]';
 
 		// we can't have a translation string with three positions but no distinguishable text
 		// So here is the translate string.
@@ -220,7 +220,7 @@ function localize_item(&$item){
 		$Aname = $item['author']['xchan_name'];
 		$Alink = $item['author']['xchan_url'];
 
-		$A = '[url=' . chanlink_url($Alink) . ']' . $Aname . '[/url]';
+		$A = '[zrl=' . chanlink_url($Alink) . ']' . $Aname . '[/zrl]';
 		
 		$txt = t('%1$s is currently %2$s');
 
@@ -237,8 +237,8 @@ function localize_item(&$item){
 		if(count($r)==0) return;
 		$obj=$r[0];
 		
-		$author	 = '[url=' . zid($item['author-link']) . ']' . $item['author-name'] . '[/url]';
-		$objauthor =  '[url=' . zid($obj['author-link']) . ']' . $obj['author-name'] . '[/url]';
+		$author	 = '[zrl=' . zid($item['author-link']) . ']' . $item['author-name'] . '[/zrl]';
+		$objauthor =  '[zrl=' . zid($obj['author-link']) . ']' . $obj['author-name'] . '[/zrl]';
 		
 		switch($obj['verb']){
 			case ACTIVITY_POST:
@@ -253,17 +253,17 @@ function localize_item(&$item){
 			default:
 				if($obj['resource_id']){
 					$post_type = t('photo');
-					$m=array(); preg_match("/\[url=([^]]*)\]/", $obj['body'], $m);
+					$m=array(); preg_match("/\[[zu]rl=([^]]*)\]/", $obj['body'], $m);
 					$rr['plink'] = $m[1];
 				} else {
 					$post_type = t('status');
 				}
 		}
-		$plink = '[url=' . $obj['plink'] . ']' . $post_type . '[/url]';
+		$plink = '[zrl=' . $obj['plink'] . ']' . $post_type . '[/zrl]';
 
 		$parsedobj = parse_xml_string($xmlhead.$item['object']);
 
-		$tag = sprintf('#[url=%s]%s[/url]', $parsedobj->id, $parsedobj->content);
+		$tag = sprintf('#[zrl=%s]%s[/zrl]', $parsedobj->id, $parsedobj->content);
 		$item['body'] = sprintf( t('%1$s tagged %2$s\'s %3$s with %4$s'), $author, $objauthor, $plink, $tag );
 
 	}
@@ -288,9 +288,9 @@ function localize_item(&$item){
 				$target = $r[0];
 				$Bname = $target['author-name'];
 				$Blink = $target['author-link'];
-				$A = '[url=' . zid($Alink) . ']' . $Aname . '[/url]';
-				$B = '[url=' . zid($Blink) . ']' . $Bname . '[/url]';
-				$P = '[url=' . $target['plink'] . ']' . t('post/item') . '[/url]';
+				$A = '[zrl=' . zid($Alink) . ']' . $Aname . '[/zrl]';
+				$B = '[zrl=' . zid($Blink) . ']' . $Bname . '[/zrl]';
+				$P = '[zrl=' . $target['plink'] . ']' . t('post/item') . '[/zrl]';
 				$item['body'] = sprintf( t('%1$s marked %2$s\'s %3$s as favorite'), $A, $B, $P)."\n";
 
 			}
@@ -298,25 +298,26 @@ function localize_item(&$item){
 	}
 */
 
+/*
 	$matches = null;
-	if(strpos($item['body'],'[url') !== false) {
-		if(preg_match_all('/@\[url=(.*?)\]/is',$item['body'],$matches,PREG_SET_ORDER)) {
+	if(strpos($item['body'],'[zrl') !== false) {
+		if(preg_match_all('/@\[zrl=(.*?)\]/is',$item['body'],$matches,PREG_SET_ORDER)) {
 			foreach($matches as $mtch) {
 				if(! strpos($mtch[1],'zid='))
-					$item['body'] = str_replace($mtch[0],'@[url=' . zid($mtch[1]). ']',$item['body']);
+					$item['body'] = str_replace($mtch[0],'@[zrl=' . zid($mtch[1]). ']',$item['body']);
 			}
 		}
 	}
 
-	if(strpos($item['body'],'[img') !== false) {
+	if(strpos($item['body'],'[zmg') !== false) {
 		// add zid's to public images
-		if(preg_match_all('/\[url=(.*?)\/photos\/(.*?)\/image\/(.*?)\]\[img(.*?)\]h(.*?)\[\/img\]\[\/url\]/is',$item['body'],$matches,PREG_SET_ORDER)) {
+		if(preg_match_all('/\[zrl=(.*?)\/photos\/(.*?)\/image\/(.*?)\]\[zmg(.*?)\]h(.*?)\[\/zmg\]\[\/zrl\]/is',$item['body'],$matches,PREG_SET_ORDER)) {
 			foreach($matches as $mtch) {
-				$item['body'] = str_replace($mtch[0],'[url=' . zid( $mtch[1] . '/photos/' . $mtch[2] . '/image/' . $mtch[3]) . '][img' . $mtch[4] . ']h' . $mtch[5]  . '[/img][/url]',$item['body']);
+				$item['body'] = str_replace($mtch[0],'[zrl=' . zid( $mtch[1] . '/photos/' . $mtch[2] . '/image/' . $mtch[3]) . '][zmg' . $mtch[4] . ']h' . $mtch[5]  . '[/zmg][/zrl]',$item['body']);
 			}
 		}
 	}
-
+*/
 	// add sparkle links to appropriate permalinks
 
 //	$x = stristr($item['plink'],'/display/');
@@ -364,7 +365,7 @@ function visible_activity($item) {
  *
  */
 
-if(!function_exists('conversation')) {
+
 function conversation(&$a, $items, $mode, $update, $page_mode = 'traditional') {
 
 	$tstart = dba_timer();
@@ -373,6 +374,8 @@ function conversation(&$a, $items, $mode, $update, $page_mode = 'traditional') {
 
 	$ssl_state = ((local_user()) ? true : false);
 
+	if(local_user())
+		load_pconfig(local_user(),'');
 
 	$arr_blocked = null;
 
@@ -677,6 +680,7 @@ function conversation(&$a, $items, $mode, $update, $page_mode = 'traditional') {
 		}
 		else
 		{
+
 			// Normal View
 //			logger('conv: items: ' . print_r($items,true));
 
@@ -789,7 +793,7 @@ function conversation(&$a, $items, $mode, $update, $page_mode = 'traditional') {
     return $o;
 
 
-}}
+}
 
 
 function best_link_url($item) {

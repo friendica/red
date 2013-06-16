@@ -73,5 +73,5 @@ var searchData=
   ['itemplateengine',['ITemplateEngine',['../interfaceITemplateEngine.html',1,'']]],
   ['itemplateengine_2ephp',['ITemplateEngine.php',['../ITemplateEngine_8php.html',1,'']]],
   ['items_2ephp',['items.php',['../items_8php.html',1,'']]],
-  ['items_5ffetch',['items_fetch',['../items_8php.html#ade43f7ae289e124d5af4985272981e1b',1,'items.php']]]
+  ['items_5ffetch',['items_fetch',['../items_8php.html#a756738301f2ed96be50232500677d58a',1,'items.php']]]
 ];

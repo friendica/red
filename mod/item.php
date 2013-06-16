@@ -799,15 +799,23 @@ function handle_tag($a, &$body, &$inform, &$str_tags, $profile_uid, $tag) {
 		if(strpos($tag,'[zrl='))
 			//...do nothing
 			return $replaced;
-		//base tag has the tags name only
-		$basetag = str_replace('_',' ',substr($tag,1));
-		//create text for link
-		$url = $a->get_baseurl() . '/search?tag=' . rawurlencode($basetag);
-		$newtag = '#[zrl=' . $a->get_baseurl() . '/search?tag=' . rawurlencode($basetag) . ']' . $basetag . '[/zrl]';
-		//replace tag by the link
-		$body = str_replace($tag, $newtag, $body);
-		$replaced = true;
-
+		if($tag == '#getzot') {
+			$basetag = 'getzot';
+			$url = 'http://getzot.com';
+			$newtag = '#[zrl=' . $url . ']' . $basetag . '[/zrl]';
+			$body = str_replace($tag,$newtag,$body);
+			$replace = true;
+		}
+		else {
+			//base tag has the tags name only
+			$basetag = str_replace('_',' ',substr($tag,1));
+			//create text for link
+			$url = $a->get_baseurl() . '/search?tag=' . rawurlencode($basetag);
+			$newtag = '#[zrl=' . $a->get_baseurl() . '/search?tag=' . rawurlencode($basetag) . ']' . $basetag . '[/zrl]';
+			//replace tag by the link
+			$body = str_replace($tag, $newtag, $body);
+			$replaced = true;
+		}
 		//is the link already in str_tags?
 		if(! stristr($str_tags,$newtag)) {
 			//append or set str_tags

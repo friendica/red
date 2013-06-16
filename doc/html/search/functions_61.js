@@ -96,7 +96,7 @@ var searchData=
   ['arr_5fadd_5fhashes',['arr_add_hashes',['../parse__url_8php.html#aa7dd8f961bea042d62726ed909e4a868',1,'parse_url.php']]],
   ['array_5fsanitise',['array_sanitise',['../items_8php.html#abf7a1b73eb352d79acd36309b0dababd',1,'items.php']]],
   ['array_5fxmlify',['array_xmlify',['../text_8php.html#acedb584f65114a33f389efb796172a91',1,'text.php']]],
-  ['atom_5fauthor',['atom_author',['../items_8php.html#adc8bda87ba08626f2a8cde7748d1bdae',1,'items.php']]],
+  ['atom_5fauthor',['atom_author',['../items_8php.html#a016dd86c827d08db89061ea81d15c6cb',1,'items.php']]],
   ['atom_5fentry',['atom_entry',['../items_8php.html#a275108c050f7eb18bcbb5018e6b81cf6',1,'items.php']]],
   ['attach_5fby_5fhash',['attach_by_hash',['../include_2attach_8php.html#a0d07c5b83d3d54e186f752e571847b36',1,'attach.php']]],
   ['attach_5fby_5fhash_5fnodata',['attach_by_hash_nodata',['../include_2attach_8php.html#ad991208ce939387e2f93a3bce7d09932',1,'attach.php']]],

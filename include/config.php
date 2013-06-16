@@ -129,19 +129,35 @@ function del_config($family,$key) {
 
 function load_pconfig($uid,$family) {
 	global $a;
-	$r = q("SELECT * FROM `pconfig` WHERE `cat` = '%s' AND `uid` = %d",
-		dbesc($family),
-		intval($uid)
-	);
-	if(count($r)) {
+
+	if(($uid) && (! array_key_exists($uid,$a->config)))
+		$a->config[$uid] = array();
+
+	if($family) {
+		$r = q("SELECT * FROM `pconfig` WHERE `cat` = '%s' AND `uid` = %d",
+			dbesc($family),
+			intval($uid)
+		);
+	}
+	else {
+		$r = q("SELECT * FROM `pconfig` WHERE `uid` = %d",
+			intval($uid)
+		);
+	}
+
+	if($r) {
 		foreach($r as $rr) {
 			$k = $rr['k'];
-			$a->config[$uid][$family][$k] = $rr['v'];
+			$c = $rr['cat'];
+			if(! array_key_exists($c,$a->config[$uid]))
+				$a->config[$uid][$c] = array();
+			$a->config[$uid][$c][$k] = $rr['v'];
 		}
-	} else if ($family != 'config') {
+	} 
+//	else if ($family != 'config') {
 		// Negative caching
-		$a->config[$uid][$family] = "!<unset>!";
-	}
+//		$a->config[$uid][$family] = "!<unset>!";
+//	}
 }
 
 

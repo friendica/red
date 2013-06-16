@@ -183,16 +183,17 @@ function get_public_feed($channel,$params) {
 	$records   = 40;
 	$direction = 'desc';
 
-	if(is_array($params)) {
-		$type      = ((x($params,'type'))      ? $params['type']      : $type);
-		$begin     = ((x($params,'begin'))     ? $params['begin']     : $begin);
-		$end       = ((x($params,'end'))       ? $params['end']       : $end);
-		$start     = ((x($params,'start'))     ? $params['start']     : $start);
-		$records   = ((x($params,'records'))   ? $params['records']   : $records);
-		$direction = ((x($params,'direction')) ? $params['direction'] : $direction);
-	}
+	if(! $params)
+		$params = array();
+
+	$params['type']      = ((x($params,'type'))      ? $params['type']      : 'xml');
+	$params['begin']     = ((x($params,'begin'))     ? $params['begin']     : '0000-00-00 00:00:00');
+	$params['end']       = ((x($params,'end'))       ? $params['end']       : datetime_convert('UTC','UTC','now'));
+	$params['start']     = ((x($params,'start'))     ? $params['start']     : 0);
+	$params['records']   = ((x($params,'records'))   ? $params['records']   : 40);
+	$params['direction'] = ((x($params,'direction')) ? $params['direction'] : 'desc');
 		
-	switch($type) {
+	switch($params['type']) {
 		case 'json':
 			header("Content-type: application/atom+json");
 			break;
@@ -202,204 +203,63 @@ function get_public_feed($channel,$params) {
 			break;
 	}
 
-
-
-
-
+	
+	return get_feed_for($channel,get_observer_hash(),$params);
 }
 
-function get_feed_for(&$a, $dfrn_id, $owner_nick, $last_update, $direction = 0) {
+function get_feed_for($channel, $observer_hash, $params) {
+
+	if(! channel)
+		http_status_exit(401);
+
+	if(! perm_is_allowed($channel['channel_id'],$observer_hash,'view_stream'))
+		http_status_exit(403);
+
+	$items = items_fetch(array(
+		'wall' => '1',
+		'datequery' => $params['begin'],
+		'datequery2' => $params['end'],
+		'start' => $params['start'],          // FIXME
+	 	'records' => $params['records'],      // FIXME
+		'direction' => $params['direction'],  // FIXME
+		'order' => 'post'
+		), $channel, $observer_hash, CLIENT_MODE_NORMAL, get_app()->module);
 
 
-	$sitefeed    = ((strlen($owner_nick)) ? false : true); // not yet implemented, need to rewrite huge chunks of following logic
-	$public_feed = (($dfrn_id) ? false : true);
-	$starred     = false;   // not yet implemented, possible security issues
-	$converse    = false;
-
-	if($public_feed && $a->argc > 2) {
-		for($x = 2; $x < $a->argc; $x++) {
-			if($a->argv[$x] == 'converse')
-				$converse = true;
-			if($a->argv[$x] == 'starred')
-				$starred = true;
-			if($a->argv[$x] === 'category' && $a->argc > ($x + 1) && strlen($a->argv[$x+1]))
-				$category = $a->argv[$x+1];
-		}
-	}
-
-	
-
-	// default permissions - anonymous user
-
-	$sql_extra = " AND `allow_cid` = '' AND `allow_gid` = '' AND `deny_cid`  = '' AND `deny_gid`  = '' ";
-
-	$r = q("SELECT `contact`.*, `user`.`uid` AS `user_uid`, `user`.`nickname`, `user`.`timezone`, `user`.`page-flags`
-		FROM `contact` LEFT JOIN `user` ON `user`.`uid` = `contact`.`uid`
-		WHERE `contact`.`self` = 1 AND `user`.`nickname` = '%s' LIMIT 1",
-		dbesc($owner_nick)
-	);
-
-	if(! count($r))
-		killme();
-
-	$owner = $r[0];
-	$owner_id = $owner['user_uid'];
-	$owner_nick = $owner['nickname'];
-// feed_birthday no longer exists
-//	$birthday = feed_birthday($owner_id,$owner['timezone']);
-
-	if(! $public_feed) {
-
-		$sql_extra = '';
-		switch($direction) {
-			case (-1):
-				$sql_extra = sprintf(" AND `issued_id` = '%s' ", dbesc($dfrn_id));
-				$my_id = $dfrn_id;
-				break;
-			case 0:
-				$sql_extra = sprintf(" AND `issued_id` = '%s' AND `duplex` = 1 ", dbesc($dfrn_id));
-				$my_id = '1:' . $dfrn_id;
-				break;
-			case 1:
-				$sql_extra = sprintf(" AND `dfrn_id` = '%s' AND `duplex` = 1 ", dbesc($dfrn_id));
-				$my_id = '0:' . $dfrn_id;
-				break;
-			default:
-				return false;
-				break; // NOTREACHED
-		}
-
-		$r = q("SELECT * FROM `contact` WHERE `blocked` = 0 AND `pending` = 0 AND `contact`.`uid` = %d $sql_extra LIMIT 1",
-			intval($owner_id)
-		);
-
-		if(! count($r))
-			killme();
-
-		$contact = $r[0];
-		require_once('include/security.php');
-		$groups = init_groups_visitor($contact['id']);
-
-		if(count($groups)) {
-			for($x = 0; $x < count($groups); $x ++) 
-				$groups[$x] = '<' . intval($groups[$x]) . '>' ;
-			$gs = implode('|', $groups);
-		}
-		else
-			$gs = '<<>>' ; // Impossible to match 
-
-		$sql_extra = sprintf(" 
-			AND ( `allow_cid` = '' OR     `allow_cid` REGEXP '<%d>' ) 
-			AND ( `deny_cid`  = '' OR NOT `deny_cid`  REGEXP '<%d>' ) 
-			AND ( `allow_gid` = '' OR     `allow_gid` REGEXP '%s' )
-			AND ( `deny_gid`  = '' OR NOT `deny_gid`  REGEXP '%s') 
-		",
-			intval($contact['id']),
-			intval($contact['id']),
-			dbesc($gs),
-			dbesc($gs)
-		);
-	}
-
-	if($public_feed)
-		$sort = 'DESC';
-	else
-		$sort = 'ASC';
-
-	if(! strlen($last_update))
-		$last_update = 'now -30 days';
-
-	if(isset($category)) {
-		$sql_extra .= file_tag_file_query('item',$category,'category');
-	}
-
-	if($public_feed) {
-		if(! $converse)
-			$sql_extra .= " AND `contact`.`self` = 1 ";
-	}
-
-	$check_date = datetime_convert('UTC','UTC',$last_update,'Y-m-d H:i:s');
-
-	$r = q("SELECT `item`.*, `item`.`id` AS `item_id`, 
-		`contact`.`name`, `contact`.`network`, `contact`.`photo`, `contact`.`url`, 
-		`contact`.`name_date`, `contact`.`uri_date`, `contact`.`avatar_date`,
-		`contact`.`thumb`, `contact`.`dfrn_id`, `contact`.`self`, 
-		`contact`.`id` AS `contact-id`, `contact`.`uid` AS `contact-uid`,
-		`sign`.`signed_text`, `sign`.`signature`, `sign`.`signer`
-		FROM `item` LEFT JOIN `contact` ON `contact`.`id` = `item`.`contact-id`
-		LEFT JOIN `sign` ON `sign`.`iid` = `item`.`id`
-		WHERE `item`.`uid` = %d AND `item`.`visible` = 1 and `item`.`moderated` = 0 AND `item`.`parent` != 0 
-		AND `item`.`wall` = 1 AND `contact`.`blocked` = 0 AND `contact`.`pending` = 0
-		AND ( `item`.`edited` > '%s' OR `item`.`changed` > '%s' )
-		$sql_extra
-		ORDER BY `parent` %s, `created` ASC LIMIT 0, 300",
-		intval($owner_id),
-		dbesc($check_date),
-		dbesc($check_date),
-		dbesc($sort)
-	);
-
-	// Will check further below if this actually returned results.
-	// We will provide an empty feed if that is the case.
-
-	$items = $r;
-	$items = fetch_post_tags($items);
-
-	$feed_template = get_markup_template(($dfrn_id) ? 'atom_feed_dfrn.tpl' : 'atom_feed.tpl');
+	$feed_template = get_markup_template('atom_feed.tpl');
 
 	$atom = '';
 
-	$hubxml = feed_hublinks();
-
-	$salmon = feed_salmonlinks($owner_nick);
-
 	$atom .= replace_macros($feed_template, array(
 		'$version'      => xmlify(RED_VERSION),
-		'$feed_id'      => xmlify($a->get_baseurl() . '/channel/' . $owner_nick),
-		'$feed_title'   => xmlify($owner['name']),
+		'$red'          => xmlify(RED_PLATFORM),
+		'$feed_id'      => xmlify($channel['channel_url']),
+		'$feed_title'   => xmlify($channel['channel_name']),
 		'$feed_updated' => xmlify(datetime_convert('UTC', 'UTC', 'now' , ATOM_TIME)) ,
-		'$hub'          => $hubxml,
-		'$salmon'       => $salmon,
-		'$name'         => xmlify($owner['name']),
-		'$profile_page' => xmlify($owner['url']),
-		'$photo'        => xmlify($owner['photo']),
-		'$thumb'        => xmlify($owner['thumb']),
-		'$picdate'      => xmlify(datetime_convert('UTC','UTC',$owner['avatar_date'] . '+00:00' , ATOM_TIME)) ,
-		'$uridate'      => xmlify(datetime_convert('UTC','UTC',$owner['uri_date']    . '+00:00' , ATOM_TIME)) ,
-		'$namdate'      => xmlify(datetime_convert('UTC','UTC',$owner['name_date']   . '+00:00' , ATOM_TIME)) , 
-		'$birthday'     => ((strlen($birthday)) ? '<dfrn:birthday>' . xmlify($birthday) . '</dfrn:birthday>' : ''),
-		'$community'    => (($owner['page-flags'] == PAGE_COMMUNITY) ? '<dfrn:community>1</dfrn:community>' : '')
+		'$hub'          => '', // feed_hublinks(),
+		'$salmon'       => '', // feed_salmonlinks($channel['channel_address']),
+		'$name'         => xmlify($channel['channel_name']),
+		'$profile_page' => xmlify($channel['channel_url']),
+		'$mimephoto'    => xmlify($channel['xchan_photo_mimetype']),
+		'$photo'        => xmlify($channel['xchan_photo_l']),
+		'$thumb'        => xmlify($channel['xchan_photo_m']),
+		'$picdate'      => '',
+		'$uridate'      => '',
+		'$namdate'      => '',
+		'$birthday'     => '',
+		'$community'    => '',
 	));
 
 	call_hooks('atom_feed', $atom);
 
-	if(! count($items)) {
-
-		call_hooks('atom_feed_end', $atom);
-
-		$atom .= '</feed>' . "\r\n";
-		return $atom;
-	}
-
-	foreach($items as $item) {
-
-		// prevent private email from leaking.
-		if($item['network'] === NETWORK_MAIL)
-			continue;
-
-		// public feeds get html, our own nodes use bbcode
-
-		if($public_feed) {
-			$type = 'html';
-			// catch any email that's in a public conversation and make sure it doesn't leak
-			if($item['private'])
+	if($items) {
+		$type = 'html';
+		foreach($items as $item) {
+			if($item['item_private'])
 				continue;
-		}
-		else {
-			$type = 'text';
-		}
 
-		$atom .= atom_entry($item,$type,null,$owner,true);
+			$atom .= atom_entry($item,$type,null,$owner,true);
+		}
 	}
 
 	call_hooks('atom_feed_end', $atom);
@@ -420,8 +280,7 @@ function construct_activity_object($item) {
 
 	if($item['object']) {
 		$o = '<as:object>' . "\r\n";
-		$r = parse_xml_string($item['object'],false);
-
+		$r = json_decode($item['object'],false);
 
 		if(! $r)
 			return '';
@@ -431,7 +290,8 @@ function construct_activity_object($item) {
 			$o .= '<id>' . xmlify($r->id) . '</id>' . "\r\n";
 		if($r->title)
 			$o .= '<title>' . xmlify($r->title) . '</title>' . "\r\n";
-		if($r->link) {
+		if($r->links) {
+			// FIXME!!
 			if(substr($r->link,0,1) === '<') {
 				$r->link = preg_replace('/\<link(.*?)\"\>/','<link$1"/>',$r->link);
 				$o .= $r->link;
@@ -452,7 +312,7 @@ function construct_activity_target($item) {
 
 	if($item['target']) {
 		$o = '<as:target>' . "\r\n";
-		$r = parse_xml_string($item['target'],false);
+		$r = json_decode($item['target'],false);
 		if(! $r)
 			return '';
 		if($r->type)
@@ -461,7 +321,8 @@ function construct_activity_target($item) {
 			$o .= '<id>' . xmlify($r->id) . '</id>' . "\r\n";
 		if($r->title)
 			$o .= '<title>' . xmlify($r->title) . '</title>' . "\r\n";
-		if($r->link) {
+		if($r->links) {
+			// FIXME !!!
 			if(substr($r->link,0,1) === '<') {
 				if(strstr($r->link,'&') && (! strstr($r->link,'&amp;')))
 					$r->link = str_replace('&','&amp;', $r->link);
@@ -2070,45 +1931,51 @@ function tgroup_check($uid,$item) {
 
 	// check that the message originated elsewhere and is a top-level post
 
-	if(($item['wall']) || ($item['origin']) || ($item['mid'] != $item['parent-mid']))
+	if($arr['mid'] != $arr['parent_mid'])
 		return false;
 
+	if(! perm_is_allowed($uid,$item['author_xchan'],'tag_deliver'))
+		return false;
 
-	$u = q("select * from user where uid = %d limit 1",
+	$u = q("select * from channel where channel_id = %d limit 1",
 		intval($uid)
 	);
-	if(! count($u))
+
+	if(! $u)
 		return false;
 
-	$community_page = (($u[0]['page-flags'] == PAGE_COMMUNITY) ? true : false);
-	$prvgroup = (($u[0]['page-flags'] == PAGE_PRVGROUP) ? true : false);
+	$terms = get_terms_oftype($item['term'],TERM_MENTION);
 
+	logger('tgroup_check: post mentions: ' . print_r($terms,true), LOGGER_DATA);
 
-	$link = normalise_link($a->get_baseurl() . '/channel/' . $u[0]['nickname']);
+	$link = normalise_link($a->get_baseurl() . '/channel/' . $u[0]['channel_address']);
 
-	// Diaspora uses their own hardwired link URL in @-tags
-	// instead of the one we supply with webfinger
-
-	$dlink = normalise_link($a->get_baseurl() . '/u/' . $u[0]['nickname']);
-
-	$body = preg_replace("/\[share\](.*?)\[\/share\]/ism", '', $item['body']);
-	
-	$cnt = preg_match_all('/[\@\!]\[zrl\=(.*?)\](.*?)\[\/zrl\]/ism',$body,$matches,PREG_SET_ORDER);
-	if($cnt) {
-		foreach($matches as $mtch) {
-			if(link_compare($link,$mtch[1]) || link_compare($dlink,$mtch[1])) {
+	if($terms) {
+		foreach($terms as $term) {
+			if(($term['term'] == $u[0]['channel_name']) && link_compare($term['url'],$link)) {			
 				$mention = true;
-				logger('tgroup_check: mention found: ' . $mtch[2]);
+				break;
 			}
 		}
+	}				
+
+	if($mention) {
+		logger('tgroup_check: mention found for ' . $u[0]['channel_name']);
 	}
-
-	if(! $mention)
+	else
 		return false;
 
-	if((! $community_page) && (! $prvgroup))
-		return false;
+	// At this point we've determined that the person receiving this post was mentioned in it.
+	// Now let's check if this mention was inside a reshare so we don't spam a forum
 
+	$body = preg_replace('/\[share(.*?)\[\/share\]/','',$item['body']);
+
+	$pattern = '/@\[zrl\=' . preg_quote($term['url'],'/') . '\]' . preg_quote($u[0]['channel_name'],'/') . '\[\/zrl\]/';
+
+	if(! preg_match($pattern,$body,$matches)) {
+		logger('tgroup_check: mention was in a reshare - ignoring');
+		return false;
+	}
 
 
 	return true;
@@ -4092,7 +3959,7 @@ function lose_sharer($importer,$contact,$datarray,$item) {
 }
 
 
-function atom_author($tag,$name,$uri,$h,$w,$photo) {
+function atom_author($tag,$name,$uri,$h,$w,$type,$photo) {
 	$o = '';
 	if(! $tag)
 		return $o;
@@ -4106,8 +3973,8 @@ function atom_author($tag,$name,$uri,$h,$w,$photo) {
 	$o .= "<$tag>\r\n";
 	$o .= "<name>$name</name>\r\n";
 	$o .= "<uri>$uri</uri>\r\n";
-	$o .= '<link rel="photo"  type="image/jpeg" media:width="' . $w . '" media:height="' . $h . '" href="' . $photo . '" />' . "\r\n";
-	$o .= '<link rel="avatar" type="image/jpeg" media:width="' . $w . '" media:height="' . $h . '" href="' . $photo . '" />' . "\r\n";
+	$o .= '<link rel="photo"  type="' . $type . '" media:width="' . $w . '" media:height="' . $h . '" href="' . $photo . '" />' . "\r\n";
+	$o .= '<link rel="avatar" type="' . $type . '" media:width="' . $w . '" media:height="' . $h . '" href="' . $photo . '" />' . "\r\n";
 
 	call_hooks('atom_author', $o);
 
@@ -4135,35 +4002,36 @@ function atom_entry($item,$type,$author,$owner,$comment = false,$cid = 0) {
 	$o = "\r\n\r\n<entry>\r\n";
 
 	if(is_array($author))
-		$o .= atom_author('author',$author['name'],$author['url'],80,80,$author['thumb']);
+		$o .= atom_author('author',$author['xchan_name'],$author['xchan_url'],80,80,$author['xchan_photo_mimetype'],$author['xchan_photo_m']);
 	else
-		$o .= atom_author('author',(($item['author-name']) ? $item['author-name'] : $item['name']),(($item['author-link']) ? $item['author-link'] : $item['url']),80,80,(($item['author-avatar']) ? $item['author-avatar'] : $item['thumb']));
-	if(strlen($item['owner-name']))
-		$o .= atom_author('dfrn:owner',$item['owner-name'],$item['owner-link'],80,80,$item['owner-avatar']);
+		$o .= atom_author('author',$item['author']['xchan_name'],$item['author']['xchan_url'],80,80,$item['author']['xchan_photo_mimetype'], $item['author']['xchan_photo_m']);
+
+	$o .= atom_author('zot:owner',$item['owner']['xchan_name'],$item['owner']['xchan_url'],80,80,$item['owner']['xchan_photo_mimetype'],$item['owner']['xchan_photo_m']);
 
 	if(($item['parent'] != $item['id']) || ($item['parent_mid'] !== $item['mid']) || (($item['thr_parent'] !== '') && ($item['thr_parent'] !== $item['mid']))) {
 		$parent_item = (($item['thr_parent']) ? $item['thr_parent'] : $item['parent_mid']);
-		$o .= '<thr:in-reply-to ref="' . xmlify($parent_item) . '" type="text/html" href="' .  xmlify($a->get_baseurl() . '/display/' . $owner['nickname'] . '/' . $item['parent']) . '" />' . "\r\n";
+		$o .= '<thr:in-reply-to ref="' . xmlify($parent_item) . '" type="text/html" href="' .  xmlify($item['plink']) . '" />' . "\r\n";
 	}
 
 	$o .= '<id>' . xmlify($item['mid']) . '</id>' . "\r\n";
 	$o .= '<title>' . xmlify($item['title']) . '</title>' . "\r\n";
 	$o .= '<published>' . xmlify(datetime_convert('UTC','UTC',$item['created'] . '+00:00',ATOM_TIME)) . '</published>' . "\r\n";
 	$o .= '<updated>' . xmlify(datetime_convert('UTC','UTC',$item['edited'] . '+00:00',ATOM_TIME)) . '</updated>' . "\r\n";
-	$o .= '<dfrn:env>' . base64url_encode($body, true) . '</dfrn:env>' . "\r\n";
+	$o .= '<zot:env>' . base64url_encode($body, true) . '</zot:env>' . "\r\n";
+	// FIXME for other content types
 	$o .= '<content type="' . $type . '" >' . xmlify((($type === 'html') ? bbcode($body) : $body)) . '</content>' . "\r\n";
-	$o .= '<link rel="alternate" type="text/html" href="' . xmlify($a->get_baseurl() . '/display/' . $owner['nickname'] . '/' . $item['id']) . '" />' . "\r\n";
+	$o .= '<link rel="alternate" type="text/html" href="' . xmlify($item['plink']) . '" />' . "\r\n";
 
 	if($item['location']) {
-		$o .= '<dfrn:location>' . xmlify($item['location']) . '</dfrn:location>' . "\r\n";
+		$o .= '<zot:location>' . xmlify($item['location']) . '</zot:location>' . "\r\n";
 		$o .= '<poco:address><poco:formatted>' . xmlify($item['location']) . '</poco:formatted></poco:address>' . "\r\n";
 	}
 
 	if($item['coord'])
 		$o .= '<georss:point>' . xmlify($item['coord']) . '</georss:point>' . "\r\n";
 
-	if(($item['private']) || strlen($item['allow_cid']) || strlen($item['allow_gid']) || strlen($item['deny_cid']) || strlen($item['deny_gid']))
-		$o .= '<dfrn:private>' . (($item['private']) ? $item['private'] : 1) . '</dfrn:private>' . "\r\n";
+	if(($item['item_private']) || strlen($item['allow_cid']) || strlen($item['allow_gid']) || strlen($item['deny_cid']) || strlen($item['deny_gid']))
+		$o .= '<zot:private>' . (($item['item_private']) ? $item['item_private'] : 1) . '</zot:private>' . "\r\n";
 
 
 	if($item['app'])
@@ -4179,18 +4047,20 @@ function atom_entry($item,$type,$author,$owner,$comment = false,$cid = 0) {
 	if(strlen($actarg))
 		$o .= $actarg;
 
-	$tags = item_getfeedtags($item);
-	if(count($tags)) {
-		foreach($tags as $t) {
-			$o .= '<category scheme="X-DFRN:' . xmlify($t[0]) . ':' . xmlify($t[1]) . '" term="' . xmlify($t[2]) . '" />' . "\r\n";
-		}
-	}
+	// FIXME
+//	$tags = item_getfeedtags($item);
+//	if(count($tags)) {
+//		foreach($tags as $t) {
+//			$o .= '<category scheme="X-DFRN:' . xmlify($t[0]) . ':' . xmlify($t[1]) . '" term="' . xmlify($t[2]) . '" />' . "\r\n";
+//		}
+//	}
 
-	$o .= item_getfeedattach($item);
+// FIXME
+//	$o .= item_getfeedattach($item);
 
-	$mentioned = get_mentions($item,$tags);
-	if($mentioned)
-		$o .= $mentioned;
+//	$mentioned = get_mentions($item,$tags);
+//	if($mentioned)
+//		$o .= $mentioned;
 	
 	call_hooks('atom_entry', $o);
 
@@ -4764,9 +4634,11 @@ function zot_feed($uid,$observer_xchan,$mindate) {
 
 
 
-function items_fetch($arr,$channel = null,$client_mode = CLIENT_MODE_NORMAL,$module = 'network') {
+function items_fetch($arr,$channel = null,$observer_hash = null,$client_mode = CLIENT_MODE_NORMAL,$module = 'network') {
 
 	$result = array('success' => false);
+
+	$a = get_app();
 
 	$sql_extra = '';
 	$sql_nets = '';
@@ -4782,7 +4654,10 @@ function items_fetch($arr,$channel = null,$client_mode = CLIENT_MODE_NORMAL,$mod
 	}
 	
 	if($arr['star'])
-		$sql_options .= " and (item_flags & " . intval(ITEM_STARRED) . ")";
+		$sql_options .= " and (item_flags & " . intval(ITEM_STARRED) . ") ";
+
+	if($arr['wall'])
+		$sql_options .= " and (item_flags & " . intval(ITEM_WALL) . ") ";
 
 	$sql_extra = " AND item.parent IN ( SELECT parent FROM item WHERE (item_flags & " . intval(ITEM_THREAD_TOP) . ") $sql_options ) ";
 
@@ -4892,6 +4767,9 @@ function items_fetch($arr,$channel = null,$client_mode = CLIENT_MODE_NORMAL,$mod
 
     $start = dba_timer();
 
+	require_once('include/security.php');
+	$sql_extra .= item_permissions_sql($channel['channel_id']);
+
     if($arr['nouveau'] && ($client_mode & CLIENT_MODELOAD) && $channel) {
         // "New Item View" - show all items unthreaded in reverse created date order
 
@@ -4908,7 +4786,7 @@ function items_fetch($arr,$channel = null,$client_mode = CLIENT_MODE_NORMAL,$mod
 
         $items = fetch_post_tags($items,true);
     }
-    elseif($client_mode & CLIENT_MODE_UPDATE) {
+    else {
 
         // Normal conversation view
 
@@ -4917,7 +4795,7 @@ function items_fetch($arr,$channel = null,$client_mode = CLIENT_MODE_NORMAL,$mod
         else
 			$ordering = "commented";
 
-        if($client_mode & CLIENT_MODE_LOAD) {
+        if(($client_mode & CLIENT_MODE_LOAD) || ($client_mode & CLIENT_MODE_NORMAL)) {
 
             // Fetch a page full of parent items for this page
 
@@ -4955,7 +4833,6 @@ function items_fetch($arr,$channel = null,$client_mode = CLIENT_MODE_NORMAL,$mod
                 WHERE $item_uids AND item.item_restrict = 0
                 AND item.parent IN ( %s )
                 $sql_extra ",
-                intval(local_user()),
                 dbesc($parents_str)
             );
 
@@ -4969,9 +4846,8 @@ function items_fetch($arr,$channel = null,$client_mode = CLIENT_MODE_NORMAL,$mod
 
             $fourth = dba_timer();
 
+			require_once('include/conversation.php');
             $items = conv_sort($items,$ordering);
-
-
 
             //logger('items: ' . print_r($items,true));
 
@@ -4980,8 +4856,10 @@ function items_fetch($arr,$channel = null,$client_mode = CLIENT_MODE_NORMAL,$mod
             $items = array();
         }
 
-        if($parents_str)
+        if($parents_str && $arr['mark_seen'])
             $update_unseen = ' AND parent IN ( ' . dbesc($parents_str) . ' )';
-
+			// FIXME finish mark unseen sql
     }
+
+	return $items;
 }

@@ -41,10 +41,15 @@ function directory_run($argv, $argc){
 		$url = DIRECTORY_FALLBACK_MASTER . '/post';
 	}
 
+	// ensure the upstream directory is updated
+
 	$packet = zot_build_packet($channel,'refresh');
 	$z = zot_zot($url,$packet);
-
 	// re-queue if unsuccessful
+
+	// Now update all the connections
+
+	proc_run('php','notifier','refresh_all',$channel['channel_id']);
 
 }
 

@@ -1017,9 +1017,11 @@ function process_delivery($sender,$arr,$deliveries,$relay) {
 
 		$channel = $r[0];
 
+		$tag_delivery = tgroup_check($channel['channel_id'],$arr);
+
 		$perm = (($arr['mid'] == $arr['parent_mid']) ? 'send_stream' : 'post_comments');
 
-		if(! perm_is_allowed($channel['channel_id'],$sender['hash'],$perm)) {
+		if((! perm_is_allowed($channel['channel_id'],$sender['hash'],$perm)) && (! $tag_delivery)) {
 			logger("permission denied for delivery {$channel['channel_id']}");
 			$result[] = array($d['hash'],'permission denied');
 			continue;
