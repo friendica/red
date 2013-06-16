@@ -23,6 +23,7 @@ function dirsearch_content(&$a) {
 	}
 
 	$name     = ((x($_REQUEST,'name'))     ? $_REQUEST['name']     : '');
+	$hub      = ((x($_REQUEST,'hub'))      ? $_REQUEST['hub']     : '');
 	$address  = ((x($_REQUEST,'address'))  ? $_REQUEST['address']  : '');
 	$locale   = ((x($_REQUEST,'locale'))   ? $_REQUEST['locale']   : '');
 	$region   = ((x($_REQUEST,'region'))   ? $_REQUEST['region']   : '');
@@ -38,6 +39,8 @@ function dirsearch_content(&$a) {
 
 	if($name)
 		$sql_extra .= " OR xchan_name like '" . protect_sprintf( '%' . dbesc($name) . '%' ) . "' ";
+	if($hub)
+		$sql_extra .= " OR xchan_hash in (select hubloc_hash from hubloc where hubloc_host =  '" . protect_sprintf(dbesc($hub)) . "') ";
 	if($address)
 		$sql_extra .= " OR xchan_addr like '" . protect_sprintf( '%' . dbesc($address) . '%' ) . "' ";
 	if($city)
@@ -95,7 +98,6 @@ function dirsearch_content(&$a) {
 	}
 
 	$order = " ORDER BY `xchan_name` ASC ";
-
 
 	$r = q("SELECT xchan.*, xprof.* from xchan left join xprof on xchan_hash = xprof_hash where $logic $sql_extra and not ( xchan_flags & %d ) $order $qlimit ",
 		intval(XCHAN_FLAGS_HIDDEN)
