@@ -3256,6 +3256,9 @@ brain is weird like that */
 	background-color:#ffffff; padding: 4px;
 	clear:left;
 }
+.acpopupitem.taggable {
+	background-color: #ddddff;
+}
 .acpopupitem img {
 	float: left;
 	margin-right: 4px;
@@ -3740,7 +3743,7 @@ ul.menu-popup {
 	margin: 4px;
 }
 .acl-list-item.taggable {
-	background-color: #ccccff;
+	background-color: #ddddff;
 }
 
 .acl-list-item p { height: 12px; font-size: 10px; margin: 0px; padding: 2px 0px 1px; overflow: hidden;}
