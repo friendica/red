@@ -1,11 +1,13 @@
-Saluton! 
-Mi estas $sitename.   
-La programistoj de Frienda eldonis ĝisdatigon $update antaŭ ne longe, 
-sed kiam mi provis instali ĝin, io terure malsukcesis.  
-Tio tuj bezonas riparon kaj mi ne povas fari ĝin sole. Bonvolu kontakti 
-Friendica programistion se vi ne povas helpi vin mem. Mia datumbazo eble ne plu validas. 
+Hey, 
+I'm the web server at {{$sitename}};
+   
+The Red Matrix developers released update {{$update}} recently, 
+but when I tried to install it, something went terribly wrong.  
+This needs to be fixed soon and it requires human intervention. 
+Please contact a Red developer if you can not figure out how to 
+fix it on your own. My database might be invalid. 
 
-La erarmesaĝo estas '$error'.   
+The error message is '{{$error}}'.   
 
-Mi bedaŭras, 
-via Friendica servilo ĉe $siteurl
+Apologies for the inconvenience, 
+	your web server at {{$siteurl}}

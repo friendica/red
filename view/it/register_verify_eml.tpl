@@ -1,25 +1,25 @@
 
-Su $[sitename] è stata ricevuta una nuova richiesta di registrazione da parte di un utente che richiede 
-la tua approvazione. 
+A new user registration request was received at {{$sitename}} which requires 
+your approval. 
 
 
-I tuoi dati di accesso sono i seguenti:
+The login details are as follows:
 
-Nome completo:»$[username]
-Sito:»$[siteurl]
-Nome utente:»$[email]
+Site Location:	{{$siteurl}}
+Login Name:	{{$email}}
+IP Address: {{$details}}
 
-
-Per approvare questa richiesta clicca su:
-
-
-$[siteurl]/regmod/allow/$[hash] 
+To approve this request please visit the following link:
 
 
-Per negare la richiesta e rimuove il profilo, clicca su:
+{{$siteurl}}/regmod/allow/{{$hash}} 
 
 
-$[siteurl]/regmod/deny/$[hash]
+To deny the request and remove the account, please visit:
 
 
-Grazie.
+{{$siteurl}}/regmod/deny/{{$hash}}
+
+
+Thank you.
+

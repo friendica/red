@@ -1,14 +1,14 @@
 
-Kara $[myname],
+Dear {{$myname}},
 
-Vi havas novan abonanton ĉe $[sitename] -  '$[requestor]'.
+You have a new follower at {{$sitename}} -  '{{$requestor}}'.
 
-Vi povas viziti ilian profilon ĉe $[url].
+You may visit their profile at {{$url}}.
 
-Bonvolu ensaluti en vian retejon por aprobi au malaprobi/nuligi la peton.
+Please login to your site to approve or ignore/cancel the request.
 
-$[siteurl]
+{{$siteurl}}
 
-Salutoj,
+Regards,
 
-	[$sitename] administranto
+	{{$sitename}} administrator

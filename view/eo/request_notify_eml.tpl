@@ -1,17 +1,17 @@
 
-Kara $[myname],
+Dear {{$myname}},
 
-Vi ĵus ricevis kontaktpeton ĉe $[sitename] 
+You have just received a connection request at {{$sitename}} 
 
-de '$[requestor]'.
+from '{{$requestor}}'.
 
-Vi eblas viziti la profilon de la petanto ĉe $[url].
+You may visit their profile at {{$url}}.
 
-Bonvolu ensaluti en la retejo por vidi la plenan prezenton 
-kaj aprobi aŭ ignori/nuligi la peton.
+Please login to your site to view the complete introduction 
+and approve or ignore/cancel the request.
 
-$[siteurl]
+{{$siteurl}}
 
-Salutoj,
+Regards,
 
-	$[sitename] administranto
+	{{$sitename}} administrator

@@ -1,17 +1,25 @@
-En registreringsförfrågan som kräver svar har mottagits 
-på $sitename 
+
+A new user registration request was received at {{$sitename}} which requires 
+your approval. 
 
 
-Här är inloggningsuppgifterna:
+The login details are as follows:
 
-Fullständigt namn:	$username
-Webbplats:		$siteurl
-Användarnamn:		$email
+Site Location:	{{$siteurl}}
+Login Name:	{{$email}}
+IP Address: {{$details}}
+
+To approve this request please visit the following link:
 
 
-Gå till denna adress om du vill godkänna:
-$siteurl/regmod/allow/$hash 
+{{$siteurl}}/regmod/allow/{{$hash}} 
 
-Gå till denna adress om du vill avslå förfrågan och ta bort kontot:
-$siteurl/regmod/deny/$hash
+
+To deny the request and remove the account, please visit:
+
+
+{{$siteurl}}/regmod/deny/{{$hash}}
+
+
+Thank you.
 

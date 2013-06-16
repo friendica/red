@@ -1,18 +1,20 @@
 
-$username,
+Dear {{$username}},
+	Your password has been changed as requested. Please retain this 
+information for your records (or change your password immediately to 
+something that you will remember).
 
-Lösenordet har ändrats enligt din begäran. Behåll den här 
-informationen om den skulle behövas i framtiden. (eller ändra lösenord 
-på en gång till något som du kommer ihåg).
+
+Your login details are as follows:
+
+Site Location:	{{$siteurl}}
+Login Name:	{{$email}}
+Password:	{{$new_password}}
+
+You may change that password from your account settings page after logging in.
 
 
-Här är dina inloggningsuppgifter:
+Sincerely,
+	{{$sitename}} Administrator
 
-Webbplats:	$siteurl
-Användarnamn:	$email
-Lösenord:	$new_password
-
-När du loggat in kan du byta lösenord bland inställningarna.
-
-Hälsningar,
-$sitename admin
+ 

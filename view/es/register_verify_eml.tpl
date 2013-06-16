@@ -1,22 +1,25 @@
 
-Se ha recibido la solicitud de registro de un nuevo usuario en
-$sitename que requiere tu aprobación.
-
-Los datos de acceso son los siguientes:
-
-Nombre Completo:	$username
-Sitio:	$siteurl
-Nombre:	$email
+A new user registration request was received at {{$sitename}} which requires 
+your approval. 
 
 
-Para aprobar esta solicitud, visita el siguiente enlace:
+The login details are as follows:
 
-$siteurl/regmod/allow/$hash 
+Site Location:	{{$siteurl}}
+Login Name:	{{$email}}
+IP Address: {{$details}}
 
-Para denegar la solicitud y eliminar la cuenta, por favor visita:
-
-$siteurl/regmod/deny/$hash
+To approve this request please visit the following link:
 
 
-Gracias.
+{{$siteurl}}/regmod/allow/{{$hash}} 
+
+
+To deny the request and remove the account, please visit:
+
+
+{{$siteurl}}/regmod/deny/{{$hash}}
+
+
+Thank you.
 

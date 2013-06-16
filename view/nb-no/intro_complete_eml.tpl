@@ -1,22 +1,22 @@
 
-Kjære $[username],
+Dear {{$username}},
 
-	'$[fn]' ved '$[dfrn_url]' har godtatt 
-din forespørsel om kobling ved $[sitename]'.
+	'{{$fn}}' at '{{$dfrn_url}}' has accepted 
+your connection request at '{{$sitename}}'.
 
-	'$[fn]' har valgt å godta deg som "fan", som begrenser 
-noen typer kommunikasjon - slik som private meldinger og noen profilhandlinger.
-Hvis dette er en kjendis- eller forumside, så ble disse innstillingene
-angitt automatisk.
+	'{{$fn}}' has chosen to accept you a "fan", which restricts 
+some forms of communication - such as private messaging and some profile
+interactions. If this is a celebrity or community page, these settings were
+applied automatically.
 
-	'$[fn]' kan velge å utvide dette til en to-veis eller mer åpen 
-forbindelse i fremtiden. 
+	'{{$fn}}' may choose to extend this into a two-way or more permissive 
+relationship in the future. 
 
-	Du vil nå motta offentlige statusoppdateringer fra '$[fn]', 
-som vil vises på din "Nettverk"-side ved  
+	You will start receiving public status updates from '{{$fn}}', 
+which will appear on your 'Matrix' page at  
 
-$[siteurl]
+{{$siteurl}}
 
-Med vennlig hilsen,
+Sincerely,
 
-	$[sitename] administrator
+	{{$sitename}} Administrator

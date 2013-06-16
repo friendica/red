@@ -1,20 +1,20 @@
 
-Kjære $[username],
-	Ditt passord har blitt endret som forespurt. Vennligst ta vare på denne 
-meldingen for sikkerhets skyld (eller bytt passordet ditt umiddelbart til 
-noe du husker).
+Dear {{$username}},
+	Your password has been changed as requested. Please retain this 
+information for your records (or change your password immediately to 
+something that you will remember).
 
 
-Dine logg inn-detaljer er som følger:
+Your login details are as follows:
 
-Nettsted:»$[siteurl]
-Brukernavn:»$[email]
-Passord:»$[new_password]
+Site Location:	{{$siteurl}}
+Login Name:	{{$email}}
+Password:	{{$new_password}}
 
-Du kan endre dette passordet på din side for kontoinnstillinger etter innlogging.
+You may change that password from your account settings page after logging in.
 
 
-Med vennlig hilsen,
-	$[sitename] administrator
+Sincerely,
+	{{$sitename}} Administrator
 
  
