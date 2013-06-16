@@ -1931,45 +1931,51 @@ function tgroup_check($uid,$item) {
 
 	// check that the message originated elsewhere and is a top-level post
 
-	if(($item['wall']) || ($item['origin']) || ($item['mid'] != $item['parent-mid']))
+	if($arr['mid'] != $arr['parent_mid'])
 		return false;
 
+	if(! perm_is_allowed($uid,$item['author_xchan'],'tag_deliver'))
+		return false;
 
-	$u = q("select * from user where uid = %d limit 1",
+	$u = q("select * from channel where channel_id = %d limit 1",
 		intval($uid)
 	);
-	if(! count($u))
+
+	if(! $u)
 		return false;
 
-	$community_page = (($u[0]['page-flags'] == PAGE_COMMUNITY) ? true : false);
-	$prvgroup = (($u[0]['page-flags'] == PAGE_PRVGROUP) ? true : false);
+	$terms = get_terms_oftype($item['term'],TERM_MENTION);
 
+	logger('tgroup_check: post mentions: ' . print_r($terms,true), LOGGER_DATA);
 
-	$link = normalise_link($a->get_baseurl() . '/channel/' . $u[0]['nickname']);
+	$link = normalise_link($a->get_baseurl() . '/channel/' . $u[0]['channel_address']);
 
-	// Diaspora uses their own hardwired link URL in @-tags
-	// instead of the one we supply with webfinger
-
-	$dlink = normalise_link($a->get_baseurl() . '/u/' . $u[0]['nickname']);
-
-	$body = preg_replace("/\[share\](.*?)\[\/share\]/ism", '', $item['body']);
-	
-	$cnt = preg_match_all('/[\@\!]\[zrl\=(.*?)\](.*?)\[\/zrl\]/ism',$body,$matches,PREG_SET_ORDER);
-	if($cnt) {
-		foreach($matches as $mtch) {
-			if(link_compare($link,$mtch[1]) || link_compare($dlink,$mtch[1])) {
+	if($terms) {
+		foreach($terms as $term) {
+			if(($term['term'] == $u[0]['channel_name']) && link_compare($term['url'],$link)) {			
 				$mention = true;
-				logger('tgroup_check: mention found: ' . $mtch[2]);
+				break;
 			}
 		}
+	}				
+
+	if($mention) {
+		logger('tgroup_check: mention found for ' . $u[0]['channel_name']);
 	}
-
-	if(! $mention)
+	else
 		return false;
 
-	if((! $community_page) && (! $prvgroup))
-		return false;
+	// At this point we've determined that the person receiving this post was mentioned in it.
+	// Now let's check if this mention was inside a reshare so we don't spam a forum
 
+	$body = preg_replace('/\[share(.*?)\[\/share\]/','',$item['body']);
+
+	$pattern = '/@\[zrl\=' . preg_quote($term['url'],'/') . '\]' . preg_quote($u[0]['channel_name'],'/') . '\[\/zrl\]/';
+
+	if(! preg_match($pattern,$body,$matches)) {
+		logger('tgroup_check: mention was in a reshare - ignoring');
+		return false;
+	}
 
 
 	return true;
