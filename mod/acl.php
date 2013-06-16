@@ -123,7 +123,7 @@ function acl_init(&$a){
 	}
 	
 	if ($type=='' || $type=='c') {
-		$r = q("SELECT abook_id as id, xchan_hash as hash, xchan_name as name, xchan_photo_s as micro, xchan_url as url, xchan_addr as nick 
+		$r = q("SELECT abook_id as id, xchan_hash as hash, xchan_name as name, xchan_photo_s as micro, xchan_url as url, xchan_addr as nick, abook_their_perms 
 				FROM abook left join xchan on abook_xchan = xchan_hash 
 				WHERE abook_channel = %d AND not ( abook_flags & %d ) $sql_extra2 order by xchan_name asc" ,
 			intval(local_user()),
@@ -142,7 +142,7 @@ function acl_init(&$a){
 		);
 	}
 	elseif($type == 'a') {
-		$r = q("SELECT abook_id as id, xchan_name as name, xchan_addr as nick, xchan_photo_s as micro, xchan_network as network, xchan_url as url, xchan_addr as attag FROM abook left join xchan on abook_xchan = xchan_hash
+		$r = q("SELECT abook_id as id, xchan_name as name, xchan_hash as hash, xchan_addr as nick, xchan_photo_s as micro, xchan_network as network, xchan_url as url, xchan_addr as attag , abook_their_perms FROM abook left join xchan on abook_xchan = xchan_hash
 			WHERE abook_channel = %d
 			$sql_extra3
 			ORDER BY xchan_name ASC ",
@@ -196,13 +196,15 @@ function acl_init(&$a){
 	if(count($r)) {
 		foreach($r as $g){
 			$contacts[] = array(
-				"type"    => "c",
-				"photo"   => $g['micro'],
-				"name"    => $g['name'],
-				"id"	  => $g['id'],
-				"xid"     => $g['hash'],
-				"link"    => $g['nick'],
-				"nick"    => substr($g['nick'],0,strpos($g['nick'],'@'))
+				"type"     => "c",
+				"photo"    => $g['micro'],
+				"name"     => $g['name'],
+				"id"	   => $g['id'],
+				"xid"      => $g['hash'],
+				"link"     => $g['nick'],
+				"nick"     => substr($g['nick'],0,strpos($g['nick'],'@')),
+				"network"  => '',
+				"taggable" => (($g['abook_their_perms'] & PERMS_W_TAGWALL) ? 'taggable' : '')
 			);
 		}			
 	}
