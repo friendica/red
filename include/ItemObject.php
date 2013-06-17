@@ -45,6 +45,10 @@ class Item extends BaseObject {
 
 		if(($this->observer) && (! $this->writable)) {
 			$this->commentable = can_comment_on_post($this->observer['xchan_hash'],$data);
+			if(! $this->commentable) {
+				logger('commentable: ' . $data['comment_policy']);
+				$this->commentable = true;
+			}
 		}
 
 //		logger('writable: ' . $this->writable);
