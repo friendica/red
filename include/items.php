@@ -75,9 +75,9 @@ function can_comment_on_post($observer_xchan,$item) {
 		default:
 			break;
 	}
-	if(strstr('network:',$item['comment_policy']) && strstr('red',$item['comment_policy']))
+	if(strstr($item['comment_policy'],'network:') && strstr($item['comment_policy'],'red'))
 		return true;
-	if(strstr('site:', $item['comment_policy']) && strstr(get_app()->get_hostname(),$item['comment_policy']))
+	if(strstr($item['comment_policy'],'site:') && strstr($item['comment_policy'],get_app()->get_hostname()))
 		return true;
 	
 	return false;
