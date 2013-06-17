@@ -173,7 +173,7 @@ function post_activity_item($arr) {
 	$arr['deny_cid']     = ((x($arr,'deny_cid')) ? $arr['deny_cid'] : $channel['channel_deny_cid']);
 	$arr['deny_gid']     = ((x($arr,'deny_gid')) ? $arr['deny_gid'] : $channel['channel_deny_gid']);
 
-	$arr['comment_policy'] = map_policy($channel['channel_w_comment']); 
+	$arr['comment_policy'] = map_scope($channel['channel_w_comment']); 
 
 	// for the benefit of plugins, we will behave as if this is an API call rather than a normal online post
 
