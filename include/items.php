@@ -578,7 +578,7 @@ function encode_item($item) {
 
 	logger('encode_item: ' . print_r($item,true));
 
-	$r = q("select channel_r_stream from channel where channel_id = %d limit 1",
+	$r = q("select channel_r_stream, channel_w_comment from channel where channel_id = %d limit 1",
 		intval($item['uid'])
 	);
 
