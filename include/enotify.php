@@ -354,8 +354,22 @@ function notification($params) {
 
 		$textversion = strip_tags(html_entity_decode(bbcode(stripslashes(str_replace(array("\\r\\n", "\\r", "\\n"), "\n",
 			$body))),ENT_QUOTES,'UTF-8'));
+
 		$htmlversion = html_entity_decode(bbcode(stripslashes(str_replace(array("\\r\\n", "\\r","\\n\\n" ,"\\n"), 
-			"<br />\n",$body))));
+			"<br />\n",$body))), ENT_QOUTES,'UTF-8');
+
+
+		// use $_SESSION['zid_override'] to force zid() to use 
+		// the recipient address instead of the current observer
+
+		$_SESSION['zid_override'] = $recip['channel_address'] . '@' . $get_app()->get_hostname();
+
+		$textversion = zidify_links($textversion);
+		$htmlversion = zidify_links($htmlversion);
+
+		// unset when done to revert to normal behaviour
+
+		unset($_SESSION['zid_override']);
 
 
 		$datarray = array();

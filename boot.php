@@ -2061,6 +2061,8 @@ function get_my_url() {
 }
 
 function get_my_address() {
+	if(x($_SESSION,'zid_override'))
+		return $_SESSION['zid_override'];
 	if(x($_SESSION,'my_address'))
 		return $_SESSION['my_address'];
 	return false;
@@ -2098,12 +2100,12 @@ function zid_init(&$a) {
 }
 
 /**
- * @function zid($s,$force = false)
+ * @function zid($s,$address = '')
  *   Adds a zid parameter to a url
  * @param string $s
  *   The url to accept the zid
- * @param boolean $force
- *   Currently unused
+ * @param boolean $address
+ *   $address to use instead of session environment
  * @return string
  *
  * @hooks 'zid'
@@ -2113,7 +2115,7 @@ function zid_init(&$a) {
  */
 
 
-function zid($s,$force = false) {
+function zid($s,$address = '') {
 	if(! strlen($s) || strpos($s,'zid='))
 		return $s;
 	$has_params = ((strpos($s,'?')) ? true : false);
@@ -2123,9 +2125,9 @@ function zid($s,$force = false) {
 	$achar = strpos($s,'?') ? '&' : '?';
 
 	$mine = get_my_url();
-	$myaddr = get_my_address();
+	$myaddr = (($address) ? $address : get_my_address());
 
-	if($mine and ! link_compare($mine,$s))
+	if($mine && $myaddr && (! link_compare($mine,$s)))
 		$zurl = $s . (($num_slashes >= 3) ? '' : '/') . $achar . 'zid=' . urlencode($myaddr);
 	else
 		$zurl = $s;
