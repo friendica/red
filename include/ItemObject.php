@@ -44,7 +44,7 @@ class Item extends BaseObject {
 		$this->commentable = $this->writable;
 
 		if(($this->observer) && (! $this->writable)) {
-			$this->commentable = perm_is_allowed($this->data['uid'],$this->observer['xchan_hash'],'post_comments');
+			$this->commentable = can_comment_on_post($this->observer['xchan_hash'],$data);
 		}
 
 //		logger('writable: ' . $this->writable);

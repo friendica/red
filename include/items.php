@@ -53,6 +53,37 @@ function collect_recipients($item,&$private) {
 
 }
 
+
+function can_comment_on_post($observer_xchan,$item) {
+	if(! $observer_xchan)
+		return false;
+	if($item['comment_policy'] === 'none')
+		return false;
+	switch($item['comment_policy']) {
+		case 'self':
+			if($observer_xchan === $item['author_xchan'] || $observer_xchan === $item['owner_xchan'])
+				return true;
+			break;
+		case 'public':
+			return false;
+			break;
+		case 'contacts':
+		case '':
+			if(($item['owner']['abook_xchan']) && ($item['owner']['abook_their_perms'] & PERMS_W_COMMENT))
+				return true;
+			break;
+		default:
+			break;
+	}
+	if(strstr('network:',$item['comment_policy']) && strstr('red',$item['comment_policy']))
+		return true;
+	if(strstr('site:', $item['comment_policy']) && strstr(get_app()->get_hostname(),$item['comment_policy']))
+		return true;
+	
+	return false;
+}
+
+
 /**
  * @function red_zrl_callback
  *   preg_match function when fixing 'naked' links in mod item.php
@@ -142,6 +173,7 @@ function post_activity_item($arr) {
 	$arr['deny_cid']     = ((x($arr,'deny_cid')) ? $arr['deny_cid'] : $channel['channel_deny_cid']);
 	$arr['deny_gid']     = ((x($arr,'deny_gid')) ? $arr['deny_gid'] : $channel['channel_deny_gid']);
 
+	$arr['comment_policy'] = map_policy($channel['channel_w_comment']); 
 
 	// for the benefit of plugins, we will behave as if this is an API call rather than a normal online post
 
@@ -481,7 +513,8 @@ function get_item_elements($x) {
 	$arr['mimetype']     = (($x['mimetype'])       ? htmlentities($x['mimetype'],       ENT_COMPAT,'UTF-8',false) : '');
 	$arr['obj_type']     = (($x['object_type'])    ? htmlentities($x['object_type'],    ENT_COMPAT,'UTF-8',false) : '');
 	$arr['tgt_type']     = (($x['target_type'])    ? htmlentities($x['target_type'],    ENT_COMPAT,'UTF-8',false) : '');
-
+	$arr['comment_policy'] = (($x['comment_scope']) ? htmlentities($x['comment_scope'],  ENT_COMPAT,'UTF-8',false) : 'contacts');
+	
 	$arr['object']       = activity_sanitise($x['object']);
 	$arr['target']       = activity_sanitise($x['target']);
 
@@ -1332,9 +1365,16 @@ function item_store($arr,$force_parent = false) {
 	$arr['attach']        = ((x($arr,'attach'))        ? notags(trim($arr['attach']))        : '');
 	$arr['app']           = ((x($arr,'app'))           ? notags(trim($arr['app']))           : '');
 	$arr['item_restrict'] = ((x($arr,'item_restrict')) ? intval($arr['item_restrict'])       : 0 );
+
+	$arr['comment_policy'] = ((x($arr,'comment_policy')) ? notags(trim($arr['comment_policy']))  : 'contacts' );
+
 	$arr['item_flags']    = ((x($arr,'item_flags'))    ? intval($arr['item_flags'])          : 0 );
 	
 	$arr['item_flags'] = $arr['item_flags'] | ITEM_UNSEEN;
+
+	if($arr['comment_policy'] == 'none')
+		$arr['item_flags'] = $arr['item_flags'] | ITEM_NOCOMMENT;
+
 
 
 	// handle time travelers

@@ -1794,7 +1794,7 @@ function ids_to_querystr($arr,$idx = 'id') {
 // author_xchan and owner_xchan. If $abook is true also include the abook info. 
 // This is needed in the API to save extra per item lookups there.
 
-function xchan_query(&$items,$abook = false) {
+function xchan_query(&$items,$abook = true) {
 	$arr = array();
 	if($items && count($items)) {
 		foreach($items as $item) {
