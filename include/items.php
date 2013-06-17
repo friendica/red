@@ -549,13 +549,17 @@ function encode_item($item) {
 		intval($item['uid'])
 	);
 
-	if($r)
+	if($r) {
 		$public_scope = $r[0]['channel_r_stream'];
-	else
+		$comment_scope = $r[0]['channel_w_comment'];
+	}
+	else {
 		$public_scope = 0;
+		$comment_scope = 0;
+	}
 
 	$scope = map_scope($public_scope);
-
+	$c_scope = map_scope($comment_scope);
 
 	if($item['item_restrict']  & ITEM_DELETED) {
 		$x['message_id'] = $item['mid'];
@@ -596,6 +600,11 @@ function encode_item($item) {
 
 	if(! in_array('private',$y))
 		$x['public_scope'] = $scope;
+
+	if($item['item_flags'] & ITEM_NOCOMMENT)
+		$x['comment_scope'] = 'none';
+	else
+		$x['comment_scope'] = $c_scope;
 
 	if($item['term'])
 		$x['tags']       = encode_item_terms($item['term']);

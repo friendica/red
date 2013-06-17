@@ -41,7 +41,7 @@ require_once('include/features.php');
 define ( 'RED_PLATFORM',            'Red Matrix' );
 define ( 'RED_VERSION',             trim(file_get_contents('version.inc')) . 'R');
 define ( 'ZOT_REVISION',            1     ); 
-define ( 'DB_UPDATE_VERSION',       1043  );
+define ( 'DB_UPDATE_VERSION',       1044  );
 
 define ( 'EOL',                    '<br />' . "\r\n"     );
 define ( 'ATOM_TIME',              'Y-m-d\TH:i:s\Z' );
@@ -436,6 +436,7 @@ define ( 'ITEM_NOTSHOWN',        0x0080);  // technically visible but not normal
 define ( 'ITEM_NSFW',            0x0100);
 define ( 'ITEM_RELAY',           0x0200);  // used only in the communication layers, not stored
 define ( 'ITEM_MENTIONSME',      0x0400);
+define ( 'ITEM_NOCOMMENT',       0x0800);  // commenting/followups are disabled
 
 
 /**
