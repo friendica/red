@@ -719,7 +719,6 @@ function settings_content(&$a) {
 
 
 	if((argc() > 1) && (argv(1) === 'features')) {
-		
 		$arr = array();
 		$features = get_features();
 
@@ -739,6 +738,7 @@ function settings_content(&$a) {
 			'$submit'   => t('Submit'),
 			'$field_yesno'  => 'field_yesno.tpl',
 		));
+
 		return $o;
 	}
 

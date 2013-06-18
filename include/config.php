@@ -17,20 +17,22 @@
 
 function load_config($family) {
 	global $a;
-	$r = q("SELECT * FROM config WHERE cat = '%s'", dbesc($family));
-	if($r) {
-		foreach($r as $rr) {
-			$k = $rr['k'];
-			if ($family === 'config') {
-				$a->config[$k] = $rr['v'];
-			} else {
-				$a->config[$family][$k] = $rr['v'];
+
+	if(! array_key_exists($family,$a->config))
+		$a->config[$family] = array();
+
+	if(! array_key_exists('config_loaded',$a->config[$family])) {
+		$r = q("SELECT * FROM config WHERE cat = '%s'", dbesc($family));
+		if($r !== false) {
+			if($r) {
+				foreach($r as $rr) {
+					$k = $rr['k'];
+					$a->config[$family][$k] = $rr['v'];
+				}
 			}
+			$a->config[$family]['config_loaded'] = true;
 		}
-	} else if ($family != 'config') {
-		// Negative caching
-		$a->config[$family] = "!<unset>!";
-	}
+	} 
 }
 
 // get a particular config variable given the family name
@@ -42,37 +44,21 @@ function load_config($family) {
 // to hit the DB again for this item.
 
 
-function get_config($family, $key, $instore = false) {
+function get_config($family, $key) {
 
 	global $a;
 
-	if(! $instore) {
-		// Looking if the whole family isn't set
-		if(isset($a->config[$family])) {
-			if($a->config[$family] === '!<unset>!') {
-				return false;
-			}
-		}
+	if(! array_key_exists($family,$a->config))
+		load_config($family);
 
-		if(isset($a->config[$family][$key])) {
-			if($a->config[$family][$key] === '!<unset>!') {
-				return false;
-			}
-			return $a->config[$family][$key];
+	if(array_key_exists('config_loaded',$a->config[$family])) {
+		if(! array_key_exists($key,$a->config[$family])) {
+			return false;		
 		}
-	}
-	$ret = q("SELECT `v` FROM `config` WHERE `cat` = '%s' AND `k` = '%s' LIMIT 1",
-		dbesc($family),
-		dbesc($key)
-	);
-	if(count($ret)) {
-		// manage array value
-		$val = (preg_match("|^a:[0-9]+:{.*}$|s", $ret[0]['v'])?unserialize( $ret[0]['v']):$ret[0]['v']);
-		$a->config[$family][$key] = $val;
-		return $val;
-	}
-	else {
-		$a->config[$family][$key] = '!<unset>!';
+		return ((preg_match('|^a:[0-9]+:{.*}$|s', $a->config[$family][$key])) 
+			? unserialize($a->config[$family][$key])
+			: $a->config[$family][$key]
+		);
 	}
 	return false;
 }
@@ -85,11 +71,12 @@ function get_config($family, $key, $instore = false) {
 function set_config($family,$key,$value) {
 	global $a;
 	// manage array value
-	$dbvalue = (is_array($value)?serialize($value):$value);
-	$dbvalue = (is_bool($dbvalue) ? intval($dbvalue) : $dbvalue);
-	if(get_config($family,$key,true) === false) {
+	$dbvalue = ((is_array($value))  ? serialize($value) : $value);
+	$dbvalue = ((is_bool($dbvalue)) ? intval($dbvalue)  : $dbvalue);
+
+	if(get_config($family,$key) === false) {
 		$a->config[$family][$key] = $value;
-		$ret = q("INSERT INTO `config` ( `cat`, `k`, `v` ) VALUES ( '%s', '%s', '%s' ) ",
+		$ret = q("INSERT INTO config ( cat, k, v ) VALUES ( '%s', '%s', '%s' ) ",
 			dbesc($family),
 			dbesc($key),
 			dbesc($dbvalue)
@@ -99,7 +86,7 @@ function set_config($family,$key,$value) {
 		return $ret;
 	}
 
-	$ret = q("UPDATE `config` SET `v` = '%s' WHERE `cat` = '%s' AND `k` = '%s' LIMIT 1",
+	$ret = q("UPDATE config SET v = '%s' WHERE cat = '%s' AND k = '%s' LIMIT 1",
 		dbesc($dbvalue),
 		dbesc($family),
 		dbesc($key)
@@ -112,14 +99,11 @@ function set_config($family,$key,$value) {
 	return $ret;
 }
 
-
-
 function del_config($family,$key) {
-
 	global $a;
-	if(x($a->config[$family],$key))
+	if(array_key_exists($family,$a->config) && array_key_exists($key,$a->config[$family]))
 		unset($a->config[$family][$key]);
-	$ret = q("DELETE FROM `config` WHERE `cat` = '%s' AND `k` = '%s' LIMIT 1",
+	$ret = q("DELETE FROM config WHERE cat = '%s' AND k = '%s' LIMIT 1",
 		dbesc($family),
 		dbesc($key)
 	);
@@ -127,11 +111,13 @@ function del_config($family,$key) {
 }
 
 
-function load_pconfig($uid,$family) {
+function load_pconfig($uid,$family = '') {
 	global $a;
 
-	if(($uid) && (! array_key_exists($uid,$a->config)))
+	if(! array_key_exists($uid,$a->config))
 		$a->config[$uid] = array();
+	if(($family) && (! array_key_exists($family,$a->config[$uid])))
+		$a->config[$uid][$family] = array();
 
 	if($family) {
 		$r = q("SELECT * FROM `pconfig` WHERE `cat` = '%s' AND `uid` = %d",
@@ -149,15 +135,13 @@ function load_pconfig($uid,$family) {
 		foreach($r as $rr) {
 			$k = $rr['k'];
 			$c = $rr['cat'];
-			if(! array_key_exists($c,$a->config[$uid]))
+			if(! array_key_exists($c,$a->config[$uid])) {
 				$a->config[$uid][$c] = array();
+				$a->config[$uid][$c]['config_loaded'] = true;
+			}
 			$a->config[$uid][$c][$k] = $rr['v'];
 		}
 	} 
-//	else if ($family != 'config') {
-		// Negative caching
-//		$a->config[$uid][$family] = "!<unset>!";
-//	}
 }
 
 
@@ -167,67 +151,46 @@ function get_pconfig($uid,$family, $key, $instore = false) {
 
 	global $a;
 
-	if(! $instore) {
-		// Looking if the whole family isn't set
-		if(isset($a->config[$uid][$family])) {
-			if($a->config[$uid][$family] === '!<unset>!') {
-				return false;
-			}
-		}
+	if(! array_key_exists($uid,$a->config))
+		load_pconfig($uid);
 
-		if(isset($a->config[$uid][$family][$key])) {
-			if($a->config[$uid][$family][$key] === '!<unset>!') {
-				return false;
-			}
-			return $a->config[$uid][$family][$key];
-		}
-	}
+	if((! array_key_exists($family,$a->config[$uid])) || (! array_key_exists($key,$a->config[$uid][$family])))
+		return false;
 
-	$ret = q("SELECT `v` FROM `pconfig` WHERE `uid` = %d AND `cat` = '%s' AND `k` = '%s' LIMIT 1",
-		intval($uid),
-		dbesc($family),
-		dbesc($key)
+	return ((preg_match('|^a:[0-9]+:{.*}$|s', $a->config[$uid][$family][$key])) 
+		? unserialize($a->config[$uid][$family][$key])
+		: $a->config[$uid][$family][$key]
 	);
-
-	if(count($ret)) {
-		$val = (preg_match("|^a:[0-9]+:{.*}$|s", $ret[0]['v'])?unserialize( $ret[0]['v']):$ret[0]['v']);
-		$a->config[$uid][$family][$key] = $val;
-		return $val;
-	}
-	else {
-		$a->config[$uid][$family][$key] = '!<unset>!';
-	}
-	return false;
 }
-
-
-
-
-
-// Same as above functions except these are for personal config storage and take an
-// additional $uid argument.
-
 
 function set_pconfig($uid,$family,$key,$value) {
 
 	global $a;
 
-	// manage array value
-	$dbvalue = (is_array($value)?serialize($value):$value);
 
-	if(get_pconfig($uid,$family,$key,true) === false) {
+	// manage array value
+	$dbvalue = ((is_array($value))  ? serialize($value) : $value);
+	$dbvalue = ((is_bool($dbvalue)) ? intval($dbvalue)  : $dbvalue);
+
+	if(get_pconfig($uid,$family,$key) === false) {
+		if(! array_key_exists($uid,$a->config))
+			$a->config[$uid] = array();
+		if(! array_key_exists($family,$a->config[$uid]))
+			$a->config[$uid][$family] = array();
+
 		$a->config[$uid][$family][$key] = $value;
-		$ret = q("INSERT INTO `pconfig` ( `uid`, `cat`, `k`, `v` ) VALUES ( %d, '%s', '%s', '%s' ) ",
+		$ret = q("INSERT INTO pconfig ( uid, cat, k, v ) VALUES ( %d, '%s', '%s', '%s' ) ",
 			intval($uid),
 			dbesc($family),
 			dbesc($key),
 			dbesc($dbvalue)
 		);
-		if($ret) 
+		if($ret)
 			return $value;
 		return $ret;
 	}
-	$ret = q("UPDATE `pconfig` SET `v` = '%s' WHERE `uid` = %d AND `cat` = '%s' AND `k` = '%s' LIMIT 1",
+
+	$ret = q("UPDATE pconfig SET v = '%s' WHERE uid = %d and cat = '%s' AND k = '%s' LIMIT 1",
 		dbesc($dbvalue),
 		intval($uid),
 		dbesc($family),
@@ -247,7 +210,7 @@ function del_pconfig($uid,$family,$key) {
 	global $a;
 	if(x($a->config[$uid][$family],$key))
 		unset($a->config[$uid][$family][$key]);
-	$ret = q("DELETE FROM `pconfig` WHERE `uid` = %d AND `cat` = '%s' AND `k` = '%s' LIMIT 1",
+	$ret = q("DELETE FROM pconfig WHERE uid = %d AND cat = '%s' AND k = '%s' LIMIT 1",
 		intval($uid),
 		dbesc($family),
 		dbesc($key)
