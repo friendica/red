@@ -189,6 +189,7 @@ function notifier_run($argv, $argc){
 		$item = $suggest[0];
 	}
 	elseif($cmd === 'refresh_all') {
+		logger('notifier: refresh_all: ' . $item_id);
 		$s = q("select * from channel where channel_id = %d limit 1",
 			intval($item_id)
 		);
@@ -196,10 +197,9 @@ function notifier_run($argv, $argc){
 			$channel = $s[0];
 		$uid = $item_id;
 		$recipients = array();
-		$r = q("select * from abook where abook_channel = %d and not (abook_flags & %d) and not (abook_flags & %d)",
+		$r = q("select * from abook where abook_channel = %d and not (abook_flags & %d)",
 			intval($item_id),
-			intval(ABOOK_FLAG_SELF),
-			intval(ABOOK_FLAG_PENDING)
+			intval(ABOOK_FLAG_SELF)
 		);
 		if($r) {
 			foreach($r as $rr) {

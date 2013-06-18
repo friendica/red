@@ -19,11 +19,6 @@ function directory_run($argv, $argc){
 	if($dirmode === false)
 		$dirmode = DIRECTORY_MODE_NORMAL;
 
-	if(($dirmode == DIRECTORY_MODE_PRIMARY) || ($dirmode == DIRECTORY_MODE_STANDALONE)) {
-		syncdirs($argv[1]);
-		return;
-	}
-
 	$x = q("select * from channel where channel_id = %d limit 1",
 		intval($argv[1])
 	);
@@ -31,6 +26,15 @@ function directory_run($argv, $argc){
 		return;
 
 	$channel = $x[0];
+
+
+	if(($dirmode == DIRECTORY_MODE_PRIMARY) || ($dirmode == DIRECTORY_MODE_STANDALONE)) {
+		syncdirs($argv[1]);
+
+		// Now update all the connections
+		proc_run('php','include/notifier.php','refresh_all',$channel['channel_id']);
+		return;
+	}
 
 	$directory = find_upstream_directory($dirmode);
 
@@ -49,7 +53,7 @@ function directory_run($argv, $argc){
 
 	// Now update all the connections
 
-	proc_run('php','notifier','refresh_all',$channel['channel_id']);
+	proc_run('php','include/notifier.php','refresh_all',$channel['channel_id']);
 
 }
 
