@@ -114,6 +114,9 @@ function del_config($family,$key) {
 function load_pconfig($uid,$family = '') {
 	global $a;
 
+	if($uid === false)
+		return false;
+
 	if(! array_key_exists($uid,$a->config))
 		$a->config[$uid] = array();
 	if(($family) && (! array_key_exists($family,$a->config[$uid])))
@@ -150,6 +153,9 @@ function load_pconfig($uid,$family = '') {
 function get_pconfig($uid,$family, $key, $instore = false) {
 
 	global $a;
+
+	if($uid === false)
+		return false;
 
 	if(! array_key_exists($uid,$a->config))
 		load_pconfig($uid);

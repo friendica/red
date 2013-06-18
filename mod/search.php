@@ -153,7 +153,7 @@ function search_content(&$a,$update = 0, $load = false) {
 		// because browser prefetching might change it on us. We have to deliver it with the page.
 
 		$o .= '<div id="live-search"></div>' . "\r\n";
-		$o .= "<script> var profile_uid = " . intval(local_user())
+		$o .= "<script> var profile_uid = " . ((intval(local_user())) ? local_user() : (-1))
 			. "; var netargs = '?f='; var profile_page = " . $a->pager['page'] . "; </script>\r\n";
 
 		$a->page['htmlhead'] .= replace_macros(get_markup_template("build_query.tpl"),array(
