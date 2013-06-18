@@ -363,13 +363,15 @@ function notification($params) {
 		// the recipient address instead of the current observer
 
 		$_SESSION['zid_override'] = $recip['channel_address'] . '@' . get_app()->get_hostname();
-
+		$_SESSION['zrl_override'] = z_root() . '/channel/' . $recip['channel_address'];
+		
 		$textversion = zidify_links($textversion);
 		$htmlversion = zidify_links($htmlversion);
 
 		// unset when done to revert to normal behaviour
 
 		unset($_SESSION['zid_override']);
+		unset($_SESSION['zrl_override']);
 
 
 		$datarray = array();

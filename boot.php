@@ -2055,6 +2055,8 @@ function profile_tabs($a, $is_owner=False, $nickname=Null){
 
 
 function get_my_url() {
+	if(x($_SESSION,'zrl_override'))
+		return $_SESSION['zrl_override'];
 	if(x($_SESSION,'my_url'))
 		return $_SESSION['my_url'];
 	return false;
