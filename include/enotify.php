@@ -356,13 +356,13 @@ function notification($params) {
 			$body))),ENT_QUOTES,'UTF-8'));
 
 		$htmlversion = html_entity_decode(bbcode(stripslashes(str_replace(array("\\r\\n", "\\r","\\n\\n" ,"\\n"), 
-			"<br />\n",$body))), ENT_QOUTES,'UTF-8');
+			"<br />\n",$body))), ENT_QUOTES,'UTF-8');
 
 
 		// use $_SESSION['zid_override'] to force zid() to use 
 		// the recipient address instead of the current observer
 
-		$_SESSION['zid_override'] = $recip['channel_address'] . '@' . $get_app()->get_hostname();
+		$_SESSION['zid_override'] = $recip['channel_address'] . '@' . get_app()->get_hostname();
 
 		$textversion = zidify_links($textversion);
 		$htmlversion = zidify_links($htmlversion);
