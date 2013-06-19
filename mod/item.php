@@ -532,6 +532,7 @@ function item_post(&$a) {
 	$datarray['item_restrict'] = $item_restrict;
 	$datarray['item_flags']    = $item_flags;
 
+	$datarray['comment_policy'] = map_scope($channel['channel_w_comment']); 
 
 	// preview mode - prepare the body for display and send it via json
 
