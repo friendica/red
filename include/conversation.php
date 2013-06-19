@@ -125,6 +125,19 @@ function localize_item(&$item){
 					$Bphoto = get_rel_link($obj['link'],'photo');
 				}
 				break;
+			case ACTIVITY_OBJ_THING:
+				$post_type = $obj['title'];
+				$author_name = (($obj['owner'] && $obj['owner']['name']) ? $obj['owner']['name'] : '');
+				if($obj['owner'] && $obj['owner']['link'])
+					$author_link = get_rel_link($obj['owner']['link'],'alternate');
+				else
+					$author_link = '';
+
+				if($obj['link']) {
+					$Bphoto = get_rel_link($obj['link'],'photo');
+				}
+				break;
+
 			case ACTIVITY_OBJ_NOTE:
 			default:
 				$post_type = t('status');
