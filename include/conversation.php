@@ -6,7 +6,7 @@ require_once('include/items.php');
 // is identical to the code in mod/message.php for 'item_extract_images' and
 // 'item_redir_and_replace_images'
 
-if(! function_exists('item_extract_images')) {
+
 function item_extract_images($body) {
 
 	$saved_image = array();
@@ -46,9 +46,9 @@ function item_extract_images($body) {
 	$new_body = $new_body . $orig_body;
 
 	return array('body' => $new_body, 'images' => $saved_image);
-}}
+}
 
-if(! function_exists('item_redir_and_replace_images')) {
+
 function item_redir_and_replace_images($body, $images, $cid) {
 
 	$origbody = $body;
@@ -81,7 +81,7 @@ function item_redir_and_replace_images($body, $images, $cid) {
 	}
 
 	return $newbody;
-}}
+}
 
 
 
@@ -826,7 +826,7 @@ function best_link_url($item) {
 }
 
 
-if(! function_exists('item_photo_menu')){
+
 function item_photo_menu($item){
 	$a = get_app();
 	$contact = null;
@@ -893,9 +893,9 @@ function item_photo_menu($item){
 		elseif ($v!="") $o .= "<li><a href=\"$v\">$k</a></li>\n";
 	}
 	return $o;
-}}
+}
 
-if(! function_exists('like_puller')) {
+
 function like_puller($a,$item,&$arr,$mode) {
 
 	$url = '';
@@ -923,7 +923,7 @@ function like_puller($a,$item,&$arr,$mode) {
 		$arr[$item['thr_parent'] . '-l'][] = '<a href="'. $url . '"'. $sparkle .'>' . $item['author']['xchan_name'] . '</a>';
 	}
 	return;
-}}
+}
 
 // Format the like/dislike text for a profile item
 // $cnt = number of people who like/dislike the item
@@ -932,7 +932,7 @@ function like_puller($a,$item,&$arr,$mode) {
 // $id  = item id
 // returns formatted text
 
-if(! function_exists('format_like')) {
+
 function format_like($cnt,$arr,$type,$id) {
 	$o = '';
 	if($cnt == 1)
@@ -956,7 +956,7 @@ function format_like($cnt,$arr,$type,$id) {
 		$o .= "\t" . '<div id="' . $type . 'list-' . $id . '" style="display: none;" >' . $str . '</div>';
 	}
 	return $o;
-}}
+}
 
 
 function status_editor($a,$x,$popup=false) {
