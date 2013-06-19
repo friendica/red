@@ -108,6 +108,31 @@ function localize_item(&$item){
 
 		$item_url = get_rel_link($obj['link'],'alternate');
 
+		$Bphoto = '';
+
+		switch($obj->type) {
+			case ACTIVITY_OBJ_PHOTO:
+				$post_type = t('photo');
+				break;
+			case ACTIVITY_OBJ_EVENT:
+				$post_type = t('event');
+				break;
+			case ACTIVITY_OBJ_PERSON:
+				$post_type = t('channel');
+				$author_name = $obj['title'];
+				if($obj['link']) {
+					$author_link  = get_rel_link($obj['link'],'alternate');
+					$Bphoto = get_rel_link($obj['link'],'photo');
+				}
+				break;
+			case ACTIVITY_OBJ_NOTE:
+			default:
+				$post_type = t('status');
+				if($obj->id != $item['mid'])
+					$post_type = t('comment');
+				break;
+		}
+
 
 		// If we couldn't parse something useful, don't bother translating.
 		// We need something better than zid here, probably magic_link(), but it needs writing
@@ -117,21 +142,6 @@ function localize_item(&$item){
 			$author	 = '[zrl=' . chanlink_url($item['author']['xchan_url']) . ']' . $item['author']['xchan_name'] . '[/zrl]';
 			$objauthor =  '[zrl=' . chanlink_url($author_link) . ']' . $author_name . '[/zrl]';
 		
-			switch($obj->type) {
-				case ACTIVITY_OBJ_PHOTO:
-					$post_type = t('photo');
-					break;
-				case ACTIVITY_OBJ_EVENT:
-					$post_type = t('event');
-					break;
-				case ACTIVITY_OBJ_NOTE:
-				default:
-					$post_type = t('status');
-					if($obj->id != $item['mid'])
-						$post_type = t('comment');
-					break;
-			}
-
 			$plink = '[zrl=' . zid($item_url) . ']' . $post_type . '[/zrl]';
 
 			if(activity_match($item['verb'],ACTIVITY_LIKE)) {
@@ -141,6 +151,8 @@ function localize_item(&$item){
 				$bodyverb = t('%1$s doesn\'t like %2$s\'s %3$s');
 			}
 			$item['body'] = $item['localize'] = sprintf($bodyverb, $author, $objauthor, $plink);
+			if($Bphoto != "") 
+				$item['body'] .= "\n\n\n" . '[zrl=' . chanlink_url($author_link) . '][zmg=80x80]' . $Bphoto . '[/zmg][/zrl]';
 
 		}
 
@@ -148,7 +160,8 @@ function localize_item(&$item){
 
 	if (activity_match($item['verb'],ACTIVITY_FRIEND)) {
 
-		if ($item['obj_type']=="" || $item['obj_type']!== ACTIVITY_OBJ_PERSON) return;
+
+//		if ($item['obj_type']=="" || $item['obj_type']!== ACTIVITY_OBJ_PERSON) return;
 
 		$Aname = $item['author']['xchan_name'];
 		$Alink = $item['author']['xchan_url'];
@@ -349,7 +362,9 @@ function count_descendants($item) {
 
 function visible_activity($item) {
 
-	if(activity_match($item['verb'],ACTIVITY_LIKE) || activity_match($item['verb'],ACTIVITY_DISLIKE))
+	// likes can apply to other things besides posts. Check if they are post children, in which case we handle them specially
+
+	if((activity_match($item['verb'],ACTIVITY_LIKE) || activity_match($item['verb'],ACTIVITY_DISLIKE)) && ($item['mid'] != $item['parent_mid']))
 		return false;
 	return true;
 }
