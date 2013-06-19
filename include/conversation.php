@@ -127,12 +127,12 @@ function localize_item(&$item){
 				break;
 			case ACTIVITY_OBJ_THING:
 				$post_type = $obj['title'];
-				$author_name = (($obj['owner'] && $obj['owner']['name']) ? $obj['owner']['name'] : '');
-				if($obj['owner'] && $obj['owner']['link'])
-					$author_link = get_rel_link($obj['owner']['link'],'alternate');
-				else
-					$author_link = '';
-
+				if($obj['owner']) {
+					if(array_key_exists('name',$obj['owner']))
+						$obj['owner']['name'];
+					if(array_key_exists('link',$obj['owner']))
+						$author_link = get_rel_link($obj['owner']['link'],'alternate');
+				}
 				if($obj['link']) {
 					$Bphoto = get_rel_link($obj['link'],'photo');
 				}
