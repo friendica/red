@@ -37,6 +37,8 @@ require_once('include/permissions.php');
 require_once('library/Mobile_Detect/Mobile_Detect.php');
 require_once('include/BaseObject.php');
 require_once('include/features.php');
+require_once('include/taxonomy.php');
+
 
 define ( 'RED_PLATFORM',            'Red Matrix' );
 define ( 'RED_VERSION',             trim(file_get_contents('version.inc')) . 'R');
