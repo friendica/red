@@ -1440,7 +1440,7 @@ function item_post_type($item) {
             break;
     }
 
-	if(strlen($item['verb']) && (! activity_compare($item['verb'],ACTIVITY_POST)))
+	if(strlen($item['verb']) && (! activity_match($item['verb'],ACTIVITY_POST)))
 		$post_type = t('activity');
 
 	return $post_type;
@@ -1556,8 +1556,8 @@ function xchan_query(&$items,$abook = true) {
 	}
 	if(count($arr)) {
 		if($abook) {
-			$chans = q("select * from xchan left join hubloc on hubloc_hash = xchan_hash left join abook on abook_xchan = xchan_hash
-				where abook_channel = %d and xchan_hash in (" . implode(',', $arr) . ") and ( hubloc_flags & " . intval(HUBLOC_FLAGS_PRIMARY) . " )",
+			$chans = q("select * from xchan left join hubloc on hubloc_hash = xchan_hash left join abook on abook_xchan = xchan_hash and abook_channel = %d
+				where xchan_hash in (" . implode(',', $arr) . ") and ( hubloc_flags & " . intval(HUBLOC_FLAGS_PRIMARY) . " )",
 				intval($item['uid'])
 			);
 		}
