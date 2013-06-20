@@ -41,7 +41,7 @@ require_once('include/features.php');
 define ( 'RED_PLATFORM',            'Red Matrix' );
 define ( 'RED_VERSION',             trim(file_get_contents('version.inc')) . 'R');
 define ( 'ZOT_REVISION',            1     ); 
-define ( 'DB_UPDATE_VERSION',       1044  );
+define ( 'DB_UPDATE_VERSION',       1045  );
 
 define ( 'EOL',                    '<br />' . "\r\n"     );
 define ( 'ATOM_TIME',              'Y-m-d\TH:i:s\Z' );
@@ -117,7 +117,7 @@ define ( 'DEFAULT_DB_ENGINE',  'MyISAM'  );
 
 define ( 'SSL_POLICY_NONE',         0 );
 define ( 'SSL_POLICY_FULL',         1 );
-define ( 'SSL_POLICY_SELFSIGN',     2 );
+define ( 'SSL_POLICY_SELFSIGN',     2 ); // NOT supported in Red
 
 
 /**
@@ -313,18 +313,24 @@ define ( 'XCHAN_FLAGS_HIDDEN',        0x0001);
  * Tag/term types
  */
 
-define ( 'TERM_UNKNOWN',     0 );
-define ( 'TERM_HASHTAG',     1 );
-define ( 'TERM_MENTION',     2 );   
-define ( 'TERM_CATEGORY',    3 );
-define ( 'TERM_PCATEGORY',   4 );
-define ( 'TERM_FILE',        5 );
-define ( 'TERM_SAVEDSEARCH', 6 );
+define ( 'TERM_UNKNOWN',      0 );
+define ( 'TERM_HASHTAG',      1 );
+define ( 'TERM_MENTION',      2 );   
+define ( 'TERM_CATEGORY',     3 );
+define ( 'TERM_PCATEGORY',    4 );
+define ( 'TERM_FILE',         5 );
+define ( 'TERM_SAVEDSEARCH',  6 );
+define ( 'TERM_HAVETHING',    7 );
+define ( 'TERM_WANTTHING',    8 );
+define ( 'TERM_LIKETHING',    9 );
+define ( 'TERM_NOLIKETHING', 10 );
 
-
-define ( 'TERM_OBJ_POST',  1 );
-define ( 'TERM_OBJ_PHOTO', 2 );
-
+define ( 'TERM_OBJ_POST',    1 );
+define ( 'TERM_OBJ_PHOTO',   2 );
+define ( 'TERM_OBJ_PROFILE', 3 );
+define ( 'TERM_OBJ_CHANNEL', 4 );
+define ( 'TERM_OBJ_OBJECT',  5 );
+define ( 'TERM_OBJ_THING',   6 );
 
 
 /**

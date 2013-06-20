@@ -1,6 +1,6 @@
 <?php
 
-define( 'UPDATE_VERSION' , 1044 );
+define( 'UPDATE_VERSION' , 1045 );
 
 /**
  *
@@ -544,6 +544,14 @@ ADD `hubloc_connected` DATETIME NOT NULL DEFAULT '0000-00-00 00:00:00',  ADD IND
 function update_r1043() {
 	$r = q("ALTER TABLE `item` ADD `comment_policy` CHAR( 255 ) NOT NULL DEFAULT '' AFTER `coord` ,
 ADD INDEX ( `comment_policy` ) ");
+	if($r)
+		return UPDATE_SUCCESS;
+	return UPDATE_FAILED;
+}
+
+function update_r1044() {
+	$r = q("ALTER TABLE `term` ADD `imgurl` CHAR( 255 ) NOT NULL ,
+ADD INDEX ( `imgurl` ) ");
 	if($r)
 		return UPDATE_SUCCESS;
 	return UPDATE_FAILED;

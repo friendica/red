@@ -826,13 +826,15 @@ CREATE TABLE IF NOT EXISTS `term` (
   `type` tinyint(3) unsigned NOT NULL,
   `term` char(255) NOT NULL,
   `url` char(255) NOT NULL,
+  `imgurl` char(255) NOT NULL,
   PRIMARY KEY (`tid`),
   KEY `oid` (`oid`),
   KEY `otype` (`otype`),
   KEY `type` (`type`),
   KEY `term` (`term`),
   KEY `uid` (`uid`),
-  KEY `aid` (`aid`)
+  KEY `aid` (`aid`),
+  KEY `imgurl` (`imgurl`)
 ) ENGINE=MyISAM  DEFAULT CHARSET=utf8;
 
 CREATE TABLE IF NOT EXISTS `tokens` (
