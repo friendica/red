@@ -12,7 +12,7 @@ var searchData=
   ['bbcode',['bbcode',['../bbcode_8php.html#a009f61aaf78771737ed0765c8463911b',1,'bbcode.php']]],
   ['bbtoevent',['bbtoevent',['../event_8php.html#a180cccd63c2a2f00ff432b03113531f3',1,'event.php']]],
   ['bbtovcal',['bbtovcal',['../event_8php.html#a184d6b9690e5b6dee35a0aa9edd47279',1,'event.php']]],
-  ['best_5flink_5furl',['best_link_url',['../conversation_8php.html#a32e7750ae6adbfdd1f227f6e89221ce3',1,'conversation.php']]],
+  ['best_5flink_5furl',['best_link_url',['../conversation_8php.html#ad470fc7766f0db66d138fa1916c7a8b7',1,'conversation.php']]],
   ['breaklines',['breaklines',['../html2plain_8php.html#a3214912e3d00cf0a948072daccf16740',1,'html2plain.php']]],
   ['build_5fpagehead',['build_pagehead',['../classApp.html#a08f0537964d98958d218066364cff785',1,'App']]],
   ['build_5fquerystring',['build_querystring',['../boot_8php.html#a9cbab4ee728e9a8b4ce952bae643044e',1,'boot.php']]]

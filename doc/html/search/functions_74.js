@@ -11,7 +11,7 @@ var searchData=
   ['template_5fengine',['template_engine',['../classApp.html#a94a1ed2dc493c58612d17035b74ae736',1,'App']]],
   ['template_5fescape',['template_escape',['../template__processor_8php.html#ab2bcd8738f20f293636a6ae8e1099db5',1,'template_processor.php']]],
   ['template_5funescape',['template_unescape',['../template__processor_8php.html#ac635bb19a5f6eadd6b0cddefdd537c1e',1,'template_processor.php']]],
-  ['term_5fquery',['term_query',['../text_8php.html#a7a913d19c77610da689be48fbbf6734c',1,'text.php']]],
+  ['term_5fquery',['term_query',['../taxonomy_8php.html#a7a913d19c77610da689be48fbbf6734c',1,'taxonomy.php']]],
   ['terminate_5ffriendship',['terminate_friendship',['../Contact_8php.html#a38daa1c210b78385307123450ca9a1fc',1,'Contact.php']]],
   ['termtype',['termtype',['../items_8php.html#ad34827ed330898456783fb14c7b46154',1,'items.php']]],
   ['tgroup_5fcheck',['tgroup_check',['../items_8php.html#a88c6cf7649ac836fbbed82a7a0315110',1,'items.php']]],

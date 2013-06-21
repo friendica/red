@@ -32,6 +32,7 @@ var searchData=
   ['activity_5fobj_5fphoto',['ACTIVITY_OBJ_PHOTO',['../boot_8php.html#a774f0f792ebfec1e774c5a17bb9d5966',1,'boot.php']]],
   ['activity_5fobj_5fprofile',['ACTIVITY_OBJ_PROFILE',['../boot_8php.html#a62c832a95e38b1fa23e6cef39521b7d5',1,'boot.php']]],
   ['activity_5fobj_5ftagterm',['ACTIVITY_OBJ_TAGTERM',['../boot_8php.html#a1da180f961f49a11573cac4ff6c62c05',1,'boot.php']]],
+  ['activity_5fobj_5fthing',['ACTIVITY_OBJ_THING',['../boot_8php.html#a0fb63e51c2a9814941842ae8f2f4dff8',1,'boot.php']]],
   ['activity_5fpoke',['ACTIVITY_POKE',['../boot_8php.html#a14ba8f9e162f2559831ee3bf98e0c3bd',1,'boot.php']]],
   ['activity_5fpost',['ACTIVITY_POST',['../boot_8php.html#a5c3747e0f505f0d5271dc4c54e3feaf4',1,'boot.php']]],
   ['activity_5freq_5ffriend',['ACTIVITY_REQ_FRIEND',['../boot_8php.html#afe084c30a1810c10442edb4fbcbc0086',1,'boot.php']]],
