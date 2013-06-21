@@ -1,6 +1,6 @@
 <?php
 
-define( 'UPDATE_VERSION' , 1045 );
+define( 'UPDATE_VERSION' , 1046 );
 
 /**
  *
@@ -556,3 +556,12 @@ ADD INDEX ( `imgurl` ) ");
 		return UPDATE_SUCCESS;
 	return UPDATE_FAILED;
 }
+
+function update_r1045() {
+	$r = q("ALTER TABLE `site` ADD `site_register` INT NOT NULL DEFAULT '0',
+ADD INDEX ( `site_register` ) ");
+	if($r)
+		return UPDATE_SUCCESS;
+	return UPDATE_FAILED;
+}
+	

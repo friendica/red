@@ -181,7 +181,14 @@ function zfinger_init(&$a) {
 		$ret['site']['directory_mode'] = 'standalone';
 	if($dirmode != DIRECTORY_MODE_NORMAL)
 		$ret['site']['directory_url'] = z_root() . '/dirsearch';
- 
+	$register_policy = intval(get_config('system','register_policy'));
+	if($register_policy == REGISTER_CLOSED)
+		$ret['site']['register_policy'] = 'closed';
+	if($register_policy == REGISTER_APPROVE)
+		$ret['site']['register_policy'] = 'approve';
+	if($register_policy == REGISTER_OPEN)
+		$ret['site']['register_policy'] = 'open';
+
 	json_return_and_die($ret);
 
 }
