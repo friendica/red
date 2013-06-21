@@ -83,9 +83,13 @@ function format_term_for_display($term) {
 		$s .= '#';
 	elseif($term['type'] == TERM_MENTION)
 		$s .= '@';
+	else
+		return $s;
 
-	if($term['url']) $s .= '<a target="extlink" href="' . $term['url'] . '">' . htmlspecialchars($term['term']) . '</a>';
-	else $s .= htmlspecialchars($term['term']);
+	if($term['url']) 
+		$s .= '<a href="' . $term['url'] . '">' . htmlspecialchars($term['term']) . '</a>';
+	else 
+		$s .= htmlspecialchars($term['term']);
 	return $s;
 }
 

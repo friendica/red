@@ -2814,14 +2814,18 @@ aside input[type='text'] {
 	margin-top: 10px;
 }
 
-.body-tag, .filesavetags, .categorytags {
+.posttags a, .body-tag, .filesavetags, .categorytags {
 	opacity: 0.5;
 	filter:alpha(opacity=50);
 }
 
-.body-tag:hover, .filesavetags:hover, .categorytags:hover {
+.posttags a:hover, .body-tag:hover, .filesavetags:hover, .categorytags:hover {
 	opacity: 1.0 !important;
 	filter:alpha(opacity=100) !important;
+}
+
+.posttags {
+	margin-top: 15px;
 }
 
 .item-select {

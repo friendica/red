@@ -1025,6 +1025,20 @@ function prepare_body($item,$attach = false) {
 		$s .= '<div class="clear"></div></div>';
 	}
 
+	if(is_array($item['term']) && count($item['term'])) {
+		$tstr = '';
+		foreach($item['term'] as $t) {
+			$t1 = format_term_for_display($t);
+			if($t1) {
+				if($tstr)
+					$tstr .= ' ';
+				$tstr .= $t1;
+			}
+		}
+		if($tstr)
+			$s .=  '<br /><div class="posttags">' . $tstr . '</div>';
+	}
+
 	$writeable = ((get_observer_hash() == $item['owner_xchan']) ? true : false); 
 
 	$x = '';
