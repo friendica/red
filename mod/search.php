@@ -171,7 +171,7 @@ function search_content(&$a,$update = 0, $load = false) {
 			'$nouveau' => '0',
 			'$wall' => '0',
 			'$page' => (($a->pager['page'] != 1) ? $a->pager['page'] : 1),
-			'$search' => (($tag) ? '#' : '') . $search,
+			'$search' => (($tag) ? urlencode('#') : '') . $search,
 			'$order' => '',
 			'$file' => '',
 			'$cats' => '',
