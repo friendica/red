@@ -1860,15 +1860,18 @@ function tag_deliver($uid,$item_id) {
 		// FIXME --- If the item is deleted, remove the tag from the parent.
 		// (First ensure that deleted items use this function, or else do that part separately.)
 
+		logger('tag_deliver: community tag activity received');
+
 		if(($item['owner_xchan'] === $u[0]['channel_hash']) && (! get_pconfig($u[0]['channel_id'],'system','blocktags'))) {
 			$j_tgt = json_decode($item['target'],true);
-			if($j_tgt && $j_tgt['mid']) {
+			if($j_tgt && $j_tgt['id']) {
 				$p = q("select * from item where mid = '%s' and uid = %d limit 1",
-					dbesc($j_tgt['mid']),
+					dbesc($j_tgt['id']),
 					intval($u[0]['channel_id'])
 				);
 				if($p) {
 					$j_obj = json_decode($item['object'],true);
+					logger('tag_deliver: tag object: ' . print_r($j_obj,true), LOGGER_DATA);
 					if($j_obj && $j_obj['id'] && $j_obj['title']) {
 						store_item_tag($u[0]['channel_id'],$p[0]['id'],TERM_OBJ_POST,TERM_HASHTAG,$j_obj['title'],$j['obj']['id']);
 						proc_run('php','include/notifier.php','edit_post',$p[0]['id']);
@@ -1876,6 +1879,8 @@ function tag_deliver($uid,$item_id) {
 				}
 			}
 		}
+		else
+			logger('tag_deliver: tag permission denied for ' . $u[0]['channel_address']);
 	}
 
 	$terms = get_terms_oftype($item['term'],TERM_MENTION);
