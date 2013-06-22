@@ -424,10 +424,13 @@ function bbcode($Text,$preserve_nl = false, $tryoembed = true) {
 
 		$Text = preg_replace_callback("/\[video\](.*?)\[\/video\]/ism", 'tryoembed', $Text);
 		$Text = preg_replace_callback("/\[audio\](.*?)\[\/audio\]/ism", 'tryoembed', $Text);
-	} else {
-		$Text = preg_replace("/\[video\](.*?)\[\/video\]/", '$1', $Text);
-		$Text = preg_replace("/\[audio\](.*?)\[\/audio\]/", '$1', $Text);
 	}
+
+	// if video couldn't be embedded, link to it instead.
+
+	$Text = preg_replace("/\[video\](.*?)\[\/video\]/", '$1', $Text);
+	$Text = preg_replace("/\[audio\](.*?)\[\/audio\]/", '$1', $Text);
+
 
 	// html5 video and audio
 
