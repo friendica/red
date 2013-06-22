@@ -22,6 +22,7 @@ function load_config($family) {
 		$a->config[$family] = array();
 
 	if(! array_key_exists('config_loaded',$a->config[$family])) {
+
 		$r = q("SELECT * FROM config WHERE cat = '%s'", dbesc($family));
 		if($r !== false) {
 			if($r) {
@@ -48,7 +49,7 @@ function get_config($family, $key) {
 
 	global $a;
 
-	if(! array_key_exists($family,$a->config))
+	if((! array_key_exists($family,$a->config)) || (! array_key_exists('config_loaded',$a->config[$family])))
 		load_config($family);
 
 	if(array_key_exists('config_loaded',$a->config[$family])) {
@@ -63,10 +64,19 @@ function get_config($family, $key) {
 	return false;
 }
 
+function get_config_from_storage($family,$key) {
+	$ret = q("select * from config where cat = '%s' and k = '%s' limit 1",
+		dbesc($family),
+		dbesc($key)
+	);
+	return $ret;
+}
+
+
+
 // Store a config value ($value) in the category ($family)
 // under the key ($key)
 // Return the value, or false if the database update failed
-
 
 function set_config($family,$key,$value) {
 	global $a;
@@ -74,8 +84,9 @@ function set_config($family,$key,$value) {
 	$dbvalue = ((is_array($value))  ? serialize($value) : $value);
 	$dbvalue = ((is_bool($dbvalue)) ? intval($dbvalue)  : $dbvalue);
 
-	if(get_config($family,$key) === false) {
+	if(get_config($family,$key) === false || (! get_config_from_storage($family,$key))) {
 		$a->config[$family][$key] = $value;
+
 		$ret = q("INSERT INTO config ( cat, k, v ) VALUES ( '%s', '%s', '%s' ) ",
 			dbesc($family),
 			dbesc($key),
@@ -226,61 +237,64 @@ function del_pconfig($uid,$family,$key) {
 
 
 
-function load_xconfig($xchan,$family) {
+function load_xconfig($xchan,$family = '') {
 	global $a;
-	$r = q("SELECT * FROM `xconfig` WHERE `cat` = '%s' AND `xchan` = '%s'",
-		dbesc($family),
-		dbesc($xchan)
-	);
-	if(count($r)) {
+
+	if(! $xchan)
+		return false;
+
+	if(! array_key_exists($xchan,$a->config))
+		$a->config[$xchan] = array();
+	if(($family) && (! array_key_exists($family,$a->config[$xchan])))
+		$a->config[$xchan][$family] = array();
+
+	if($family) {
+		$r = q("SELECT * FROM `xconfig` WHERE `cat` = '%s' AND `xchan` = '%s'",
+			dbesc($family),
+			dbesc($xchan)
+		);
+	}
+	else {
+		$r = q("SELECT * FROM `xconfig` WHERE `xchan` = '%s'",
+			dbesc($xchan)
+		);
+	}
+
+	if($r) {
 		foreach($r as $rr) {
 			$k = $rr['k'];
-			$a->config[$xchan][$family][$k] = $rr['v'];
+			$c = $rr['cat'];
+			if(! array_key_exists($c,$a->config[$xchan])) {
+				$a->config[$xchan][$c] = array();
+				$a->config[$xchan][$c]['config_loaded'] = true;
+			}
+			$a->config[$xchan][$c][$k] = $rr['v'];
 		}
-	} else if ($family != 'config') {
-		// Negative caching
-		$a->config[$xchan][$family] = "!<unset>!";
-	}
+	} 
+
 }
 
 
 
 
-function get_xconfig($xchan,$family, $key, $instore = false) {
+function get_xconfig($xchan,$family, $key) {
 
 	global $a;
 
-	if(! $instore) {
-		// Looking if the whole family isn't set
-		if(isset($a->config[$xchan][$family])) {
-			if($a->config[$xchan][$family] === '!<unset>!') {
-				return false;
-			}
-		}
+	if(! $xchan)
+		return false;
 
-		if(isset($a->config[$xchan][$family][$key])) {
-			if($a->config[$xchan][$family][$key] === '!<unset>!') {
-				return false;
-			}
-			return $a->config[$xchan][$family][$key];
-		}
-	}
+	if(! array_key_exists($xchan,$a->config))
+		load_xconfig($xchan);
 
-	$ret = q("SELECT `v` FROM `xconfig` WHERE `xchan` = '%s' AND `cat` = '%s' AND `k` = '%s' LIMIT 1",
-		dbesc($xchan),
-		dbesc($family),
-		dbesc($key)
+	if((! array_key_exists($family,$a->config[$xchan])) || (! array_key_exists($key,$a->config[$xchan][$family])))
+		return false;
+
+	return ((preg_match('|^a:[0-9]+:{.*}$|s', $a->config[$xchan][$family][$key])) 
+		? unserialize($a->config[$xchan][$family][$key])
+		: $a->config[$xchan][$family][$key]
 	);
 
-	if(count($ret)) {
-		$val = (preg_match("|^a:[0-9]+:{.*}$|s", $ret[0]['v'])?unserialize( $ret[0]['v']):$ret[0]['v']);
-		$a->config[$xchan][$family][$key] = $val;
-		return $val;
-	}
-	else {
-		$a->config[$xchan][$family][$key] = '!<unset>!';
-	}
-	return false;
 }
 
 
@@ -289,21 +303,28 @@ function set_xconfig($xchan,$family,$key,$value) {
 	global $a;
 
 	// manage array value
-	$dbvalue = (is_array($value)?serialize($value):$value);
+	$dbvalue = ((is_array($value))  ? serialize($value) : $value);
+	$dbvalue = ((is_bool($dbvalue)) ? intval($dbvalue)  : $dbvalue);
 
-	if(get_xconfig($xchan,$family,$key,true) === false) {
+	if(get_xconfig($xchan,$family,$key) === false) {
+		if(! array_key_exists($xchan,$a->config))
+			$a->config[$xchan] = array();
+		if(! array_key_exists($family,$a->config[$xchan]))
+			$a->config[$xchan][$family] = array();
+
 		$a->config[$xchan][$family][$key] = $value;
-		$ret = q("INSERT INTO `xconfig` ( `xchan`, `cat`, `k`, `v` ) VALUES ( '%s', '%s', '%s', '%s' ) ",
+		$ret = q("INSERT INTO xconfig ( xchan, cat, k, v ) VALUES ( '%s', '%s', '%s', '%s' ) ",
 			dbesc($xchan),
 			dbesc($family),
 			dbesc($key),
 			dbesc($dbvalue)
 		);
-		if($ret) 
+		if($ret)
 			return $value;
 		return $ret;
 	}
-	$ret = q("UPDATE `xconfig` SET `v` = '%s' WHERE `xchan` = '%s' AND `cat` = '%s' AND `k` = '%s' LIMIT 1",
+
+	$ret = q("UPDATE xconfig SET v = '%s' WHERE xchan = '%s' and cat = '%s' AND k = '%s' LIMIT 1",
 		dbesc($dbvalue),
 		dbesc($xchan),
 		dbesc($family),
@@ -315,6 +336,7 @@ function set_xconfig($xchan,$family,$key,$value) {
 	if($ret)
 		return $value;
 	return $ret;
+
 }
 
 
