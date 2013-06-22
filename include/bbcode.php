@@ -428,8 +428,8 @@ function bbcode($Text,$preserve_nl = false, $tryoembed = true) {
 
 	// if video couldn't be embedded, link to it instead.
 
-	$Text = preg_replace("/\[video\](.*?)\[\/video\]/", '$1', $Text);
-	$Text = preg_replace("/\[audio\](.*?)\[\/audio\]/", '$1', $Text);
+	$Text = preg_replace("/\[video\](.*?)\[\/video\]/", '<a href="$1">$1</a>', $Text);
+	$Text = preg_replace("/\[audio\](.*?)\[\/audio\]/", '<a href="$1">$1</a>', $Text);
 
 
 	// html5 video and audio
