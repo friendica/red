@@ -189,7 +189,7 @@ function search_content(&$a,$update = 0, $load = false) {
 		$pager_sql = sprintf(" LIMIT %d, %d ",intval($a->pager['start']), intval($a->pager['itemspage']));
 dbg(1);
 		if($load) {
-			$r = q("SELECT distinct(mid), item.* from item
+			$r = q("SELECT distinct mid, id as item_id from item
 				WHERE item_restrict = 0
 				AND (( `item`.`allow_cid` = ''  AND `item`.`allow_gid` = '' AND `item`.`deny_cid`  = '' AND `item`.`deny_gid`  = '' AND item_private = 0 ) 
 				OR ( `item`.`uid` = %d ))
@@ -209,15 +209,15 @@ dbg(0);
 	if($r) {
 
 		$parents_str = ids_to_querystr($r,'item_id');
- 
+dbg(1); 
 		$items = q("SELECT `item`.*, `item`.`id` AS `item_id` 
 			FROM `item`
 			WHERE item_restrict = 0 
-			$sql_extra ",
-			intval($a->profile['profile_uid']),
-			dbesc($parents_str)
+			$sql_extra and parent in ( $parents_str ) "
+//			intval($a->profile['profile_uid']),
+//			dbesc($parents_str)
 		);
-
+dbg(0);
 		xchan_query($items);
 		$items = fetch_post_tags($items,true);
 		$items = conv_sort($items,'created');
