@@ -1040,7 +1040,7 @@ function process_delivery($sender,$arr,$deliveries,$relay) {
 			continue;
 		}
 
-		// for events, extract the event info and create and event linked to an item 
+		// for events, extract the event info and create an event linked to an item 
 
 		if((x($arr,'obj_type')) && (activity_match($arr['obj_type'],ACTIVITY_OBJ_EVENT))) {
 			require_once('include/event.php');

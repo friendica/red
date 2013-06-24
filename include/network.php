@@ -1049,15 +1049,21 @@ function scale_external_images($s, $include_link = true, $scale_replace = false)
 	$s = htmlspecialchars_decode($s);
 
 	$matches = null;
-	$c = preg_match_all('/\[img.*?\](.*?)\[\/img\]/ism',$s,$matches,PREG_SET_ORDER);
+	$c = preg_match_all('/\[img(.*?)\](.*?)\[\/img\]/ism',$s,$matches,PREG_SET_ORDER);
 	if($c) {
 		require_once('include/photo/photo_driver.php');
 
 		foreach($matches as $mtch) {
-			logger('scale_external_image: ' . $mtch[1]);
+			logger('scale_external_image: ' . $mtch[1] . ' ' . $mtch[2]);
+			
+			if(substr($mtch[1],0,1) == '=') {
+				$owidth = intval(substr($mtch[1],1));
+				if(intval($owidth) > 0 && intval($owidth) < 640)
+					continue;
+			}
 
 			$hostname = str_replace('www.','',substr($a->get_baseurl(),strpos($a->get_baseurl(),'://')+3));
-			if(stristr($mtch[1],$hostname))
+			if(stristr($mtch[2],$hostname))
 				continue;
 
 			// $scale_replace, if passed, is an array of two elements. The
@@ -1066,9 +1072,9 @@ function scale_external_images($s, $include_link = true, $scale_replace = false)
 			// This allows Friendica to display the smaller remote image if
 			// one exists, while still linking to the full-size image
 			if($scale_replace)
-				$scaled = str_replace($scale_replace[0], $scale_replace[1], $mtch[1]);
+				$scaled = str_replace($scale_replace[0], $scale_replace[1], $mtch[2]);
 			else
-				$scaled = $mtch[1];
+				$scaled = $mtch[2];
 			$i = fetch_url($scaled);
 
 			$cache = get_config('system','itemcache');
@@ -1078,7 +1084,7 @@ function scale_external_images($s, $include_link = true, $scale_replace = false)
 			}
 
 			// guess mimetype from headers or filename
-			$type = guess_image_type($mtch[1],true);
+			$type = guess_image_type($mtch[2],true);
 			
 			if($i) {
 				$ph = photo_factory($i, $type);
@@ -1094,7 +1100,7 @@ function scale_external_images($s, $include_link = true, $scale_replace = false)
 						logger('scale_external_images: ' . $orig_width . '->' . $new_width . 'w ' . $orig_height . '->' . $new_height . 'h' . ' match: ' . $mtch[0], LOGGER_DEBUG);
 						$s = str_replace($mtch[0],'[img=' . $new_width . 'x' . $new_height. ']' . $scaled . '[/img]'
 							. "\n" . (($include_link) 
-								? '[zrl=' . $mtch[1] . ']' . t('view full size') . '[/zrl]' . "\n"
+								? '[zrl=' . $mtch[2] . ']' . t('view full size') . '[/zrl]' . "\n"
 								: ''),$s);
 						logger('scale_external_images: new string: ' . $s, LOGGER_DEBUG);
 					}
