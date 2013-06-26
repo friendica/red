@@ -195,7 +195,18 @@ function set_pconfig($uid,$family,$key,$value) {
 		if(! array_key_exists($family,$a->config[$uid]))
 			$a->config[$uid][$family] = array();
 
+		// keep a separate copy for all variables which were
+		// set in the life of this page. We need this to
+		// synchronise channel clones.
+
+		if(! array_key_exists('transient',$a->config[$uid]))
+			$a->config[$uid]['transient'] = array();
+		if(! array_key_exists($family,$a->config[$uid]['transient']))
+			$a->config[$uid]['transient'][$family] = array();
+
 		$a->config[$uid][$family][$key] = $value;
+		$a->config[$uid]['transient'][$family][$key] = $value;
+
 		$ret = q("INSERT INTO pconfig ( uid, cat, k, v ) VALUES ( %d, '%s', '%s', '%s' ) ",
 			intval($uid),
 			dbesc($family),
@@ -214,7 +225,17 @@ function set_pconfig($uid,$family,$key,$value) {
 		dbesc($key)
 	);
 
+	// keep a separate copy for all variables which were
+	// set in the life of this page. We need this to
+	// synchronise channel clones.
+
+	if(! array_key_exists('transient',$a->config[$uid]))
+		$a->config[$uid]['transient'] = array();
+	if(! array_key_exists($family,$a->config[$uid]['transient']))
+		$a->config[$uid]['transient'][$family] = array();
+
 	$a->config[$uid][$family][$key] = $value;
+	$a->config[$uid]['transient'][$family][$key] = $value;
 
 	if($ret)
 		return $value;

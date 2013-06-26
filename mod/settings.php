@@ -1,5 +1,7 @@
 <?php
 
+require_once('include/settings.php');
+
 
 function get_theme_config_file($theme){
 
@@ -114,13 +116,6 @@ function settings_post(&$a) {
 	if(x($_SESSION,'submanage') && intval($_SESSION['submanage']))
 		return;
 
-
-//	if(count($a->user) && x($a->user,'uid') && $a->user['uid'] != local_user()) {
-//		notice( t('Permission denied.') . EOL);
-//		return;
-//	}
-
-	$old_page_flags = $a->user['page-flags'];
 
 	if((argc() > 1) && (argv(1) === 'oauth') && x($_POST,'remove')){
 		check_form_security_token_redirectOnErr('/settings/oauth', 'settings_oauth');
@@ -292,7 +287,7 @@ function settings_post(&$a) {
 				$errs[] = t('Not valid email.');
 			$adm = trim(get_config('system','admin_email'));
 			if(($adm) && (strcasecmp($email,$adm) == 0)) {
-				$errs[] = t('Protected email. Cannot change to that email.');
+				$errs[] = t('Protected email address. Cannot change to that email.');
 				$email = $a->user['email'];
 			}
 			if(! $errs) {
