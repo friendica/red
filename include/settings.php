@@ -65,7 +65,7 @@ function build_sync_packet($packet = null) {
 			dbesc(datetime_convert()),
 			dbesc(datetime_convert()),
 			dbesc($n),
-			dbesc($info)
+			dbesc(json_encode($info))
 		);
 
 		proc_run('php','include/deliver.php',$hash);
