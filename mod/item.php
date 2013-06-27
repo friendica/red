@@ -320,6 +320,18 @@ function item_post(&$a) {
 		$body = fix_mce_lf($body);
 	}
 
+	// If we're sending a private message with a single @-taggable channel as a recipient, @-tag it. 
+
+	if(substr_count($str_contact_allow,'<') == 1 && $str_group_allow == '' && str_contact_deny == '' && $str_group_deny == '') {
+		$x = q("select abook_id, abook_their_perms from abook where abook_xchan = '%s' and abook_channel = %d limit 1",
+			dbesc(str_replace(array('<','>'),array('',''),$str_contact_allow)),
+			intval($profile_uid)
+		);
+		if($x && ($x[0]['abook_their_perms'] & PERMS_W_TAGWALL))
+			$body .= "\n\n@group+" . $x[0]['abook_id'] . "\n";
+	}
+
+
 
 	/**
 	 * fix naked links by passing through a callback to see if this is a red site
