@@ -177,6 +177,7 @@ function settings_post(&$a) {
 		check_form_security_token_redirectOnErr('/settings/featured', 'settings_featured');
 
 		call_hooks('feature_settings_post', $_POST);
+		build_sync_packet();
 		return;
 	}
 
@@ -189,6 +190,7 @@ function settings_post(&$a) {
 				set_pconfig(local_user(),'feature',substr($k,8),((intval($v)) ? 1 : 0));
 			}
 		}
+		build_sync_packet();
 		return;
 	}
 
@@ -232,6 +234,7 @@ function settings_post(&$a) {
 		);
 	
 		call_hooks('display_settings_post', $_POST);
+		build_sync_packet();
 		goaway($a->get_baseurl(true) . '/settings/display' );
 		return; // NOTREACHED
 	}
@@ -545,10 +548,11 @@ function settings_post(&$a) {
 			dbesc($username),
 			intval($channel['channel_id'])
 		);
-		// we really need to send out notifications to all our friends
 	}
 
 	proc_run('php','include/directory.php',local_user());
+
+	build_sync_packet();
 
 
 	//$_SESSION['theme'] = $theme;

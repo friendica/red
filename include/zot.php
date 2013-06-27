@@ -874,8 +874,16 @@ function zot_import($arr) {
 					$result = process_profile_delivery($i['notify']['sender'],$arr,$deliveries);
 
 				}
+				elseif($i['message']['type'] === 'channel_sync') {
+//					$arr = get_channelsync_elements($i['message']);
 
+					$arr = $i['message'];
 
+					logger('Channel sync received: ' . print_r($arr,true), LOGGER_DATA);
+					logger('Channel sync recipients: ' . print_r($deliveries,true), LOGGER_DATA);
+					
+//					$result = process_channelsync_delivery($i['notify']['sender'],$arr,$deliveries);
+				}
 			}
 			if($result)
 				$return = array_merge($return,$result);

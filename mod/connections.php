@@ -145,7 +145,7 @@ function connections_clone(&$a) {
 		unset($clone['abook_account']);
 		unset($clone['abook_channel']);
 		require_once('include/settings.php');
-		build_sync_packet(array('abook' => array($clone)));
+		build_sync_packet(0 /* use the current local_user */, array('abook' => array($clone)));
 }
 
 
