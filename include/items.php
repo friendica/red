@@ -4744,7 +4744,7 @@ function items_fetch($arr,$channel = null,$observer_hash = null,$client_mode = C
 			intval($uid)
         );
         if($r) {
-            $sql_extra = " AND item.parent IN ( SELECT DISTINCT parent FROM item WHERE true $sql_options AND uid = " . intval($arr['uid']) . " AND ( author_xchan = " . dbesc($r[0]['abook_xchan']) . " or owner_xchan = " . dbesc($r[0]['abook_xchan']) . " ) and item_restrict = 0 ) ";
+            $sql_extra = " AND item.parent IN ( SELECT DISTINCT parent FROM item WHERE true $sql_options AND uid = " . intval($arr['uid']) . " AND ( author_xchan = '" . dbesc($r[0]['abook_xchan']) . "' or owner_xchan = '" . dbesc($r[0]['abook_xchan']) . "' ) and item_restrict = 0 ) ";
         }
         else {
 			$result['message'] = t('Connection not found.');

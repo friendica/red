@@ -465,7 +465,7 @@ function network_content(&$a, $update = 0, $load = false) {
 			intval(local_user())
         );
         if($r) {
-            $sql_extra = " AND item.parent IN ( SELECT DISTINCT parent FROM item WHERE true $sql_options AND uid = " . intval(local_user()) . " AND ( author_xchan = " . dbesc($r[0]['abook_xchan']) . " or owner_xchan = " . dbesc($r[0]['abook_xchan']) . " ) and item_restrict = 0 ) ";
+            $sql_extra = " AND item.parent IN ( SELECT DISTINCT parent FROM item WHERE true $sql_options AND uid = " . intval(local_user()) . " AND ( author_xchan = '" . dbesc($r[0]['abook_xchan']) . "' or owner_xchan = '" . dbesc($r[0]['abook_xchan']) . "' ) and item_restrict = 0 ) ";
 			$o = '<h2>' . t('Contact: ') . $r[0]['name'] . '</h2>' . $o;
         }
         else {
