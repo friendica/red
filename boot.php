@@ -43,7 +43,7 @@ require_once('include/taxonomy.php');
 define ( 'RED_PLATFORM',            'Red Matrix' );
 define ( 'RED_VERSION',             trim(file_get_contents('version.inc')) . 'R');
 define ( 'ZOT_REVISION',            1     ); 
-define ( 'DB_UPDATE_VERSION',       1046  );
+define ( 'DB_UPDATE_VERSION',       1047  );
 
 define ( 'EOL',                    '<br />' . "\r\n"     );
 define ( 'ATOM_TIME',              'Y-m-d\TH:i:s\Z' );
@@ -322,10 +322,7 @@ define ( 'TERM_CATEGORY',     3 );
 define ( 'TERM_PCATEGORY',    4 );
 define ( 'TERM_FILE',         5 );
 define ( 'TERM_SAVEDSEARCH',  6 );
-define ( 'TERM_HAVETHING',    7 );
-define ( 'TERM_WANTTHING',    8 );
-define ( 'TERM_LIKETHING',    9 );
-define ( 'TERM_NOLIKETHING', 10 );
+define ( 'TERM_THING',        7 );
 
 define ( 'TERM_OBJ_POST',    1 );
 define ( 'TERM_OBJ_PHOTO',   2 );

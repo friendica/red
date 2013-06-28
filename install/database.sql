@@ -829,6 +829,7 @@ CREATE TABLE IF NOT EXISTS `term` (
   `term` char(255) NOT NULL,
   `url` char(255) NOT NULL,
   `imgurl` char(255) NOT NULL,
+  `term_hash` char(255) NOT NULL DEFAULT '',
   PRIMARY KEY (`tid`),
   KEY `oid` (`oid`),
   KEY `otype` (`otype`),
@@ -836,7 +837,8 @@ CREATE TABLE IF NOT EXISTS `term` (
   KEY `term` (`term`),
   KEY `uid` (`uid`),
   KEY `aid` (`aid`),
-  KEY `imgurl` (`imgurl`)
+  KEY `imgurl` (`imgurl`),
+  KEY `term_hash` (`term_hash`)
 ) ENGINE=MyISAM  DEFAULT CHARSET=utf8;
 
 CREATE TABLE IF NOT EXISTS `tokens` (
@@ -933,7 +935,7 @@ CREATE TABLE IF NOT EXISTS `xlink` (
   KEY `xlink_link` (`xlink_link`),
   KEY `xlink_updated` (`xlink_updated`),
   KEY `xlink_rating` (`xlink_rating`)
-) ENGINE=MyISAM DEFAULT CHARSET=utf8;
+) ENGINE=MyISAM  DEFAULT CHARSET=utf8;
 
 CREATE TABLE IF NOT EXISTS `xprof` (
   `xprof_hash` char(255) NOT NULL,

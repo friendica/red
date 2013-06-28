@@ -1,6 +1,6 @@
 <?php
 
-define( 'UPDATE_VERSION' , 1046 );
+define( 'UPDATE_VERSION' , 1047 );
 
 /**
  *
@@ -565,3 +565,10 @@ ADD INDEX ( `site_register` ) ");
 	return UPDATE_FAILED;
 }
 	
+function update_r1046() {
+	$r = q("ALTER TABLE `term` ADD `term_hash` CHAR( 255 ) NOT NULL DEFAULT '',
+ADD INDEX ( `term_hash` ) ");
+	if($r)
+		return UPDATE_SUCCESS;
+	return UPDATE_FAILED;
+}
