@@ -5,6 +5,7 @@
  * such things as personal settings, channel permissions, address book updates, etc.
  */
 
+require_once('include/zot.php');
 
 function build_sync_packet($uid = 0, $packet = null) {
 	$a = get_app();
