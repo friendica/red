@@ -45,16 +45,7 @@ class Item extends BaseObject {
 
 		if(($this->observer) && (! $this->writable)) {
 			$this->commentable = can_comment_on_post($this->observer['xchan_hash'],$data);
-//			if(! $this->commentable) {
-//				logger('commentable: ' . $data['comment_policy']);
-//				$this->commentable = true;
-//			}
 		}
-
-//		logger('writable: ' . $this->writable);
-//		logger('commentable: ' . $this->commentable . ' uid=' . $this->data['uid'] . ' observer=' . $this->observer['xchan_hash']);
-//		if(get_config('system','thread_allow') && $a->theme_thread_allow && !$this->is_toplevel())
-//			$this->threaded = true;
 
 		// Prepare the children
 		if(count($data['children'])) {

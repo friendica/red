@@ -75,6 +75,7 @@ var dir_d44c64559bbebec7f509842c48db8b23 =
     [ "queue_fn.php", "queue__fn_8php.html", "queue__fn_8php" ],
     [ "security.php", "security_8php.html", "security_8php" ],
     [ "session.php", "session_8php.html", "session_8php" ],
+    [ "settings.php", "include_2settings_8php.html", "include_2settings_8php" ],
     [ "socgraph.php", "socgraph_8php.html", "socgraph_8php" ],
     [ "system_unavailable.php", "system__unavailable_8php.html", "system__unavailable_8php" ],
     [ "taxonomy.php", "taxonomy_8php.html", "taxonomy_8php" ],

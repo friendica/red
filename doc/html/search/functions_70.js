@@ -25,6 +25,7 @@ var searchData=
   ['photos_5finit',['photos_init',['../mod_2photos_8php.html#ab950295cd77626f5fe65331a87693014',1,'photos.php']]],
   ['photos_5flist_5fphotos',['photos_list_photos',['../include_2photos_8php.html#aa27b9e435dcc34e1009f56dc02c7ca51',1,'photos.php']]],
   ['photos_5fpost',['photos_post',['../mod_2photos_8php.html#a062bed4d04d14fee8a53f4c9be673080',1,'photos.php']]],
+  ['php_5finit',['php_init',['../php_8php.html#adb7164dfed9a4ecbe2e168e1e78f12f6',1,'php.php']]],
   ['ping_5finit',['ping_init',['../ping_8php.html#a77217b1b190b4c5d8770867b45f0c0a1',1,'ping.php']]],
   ['pkcs1_5fencode',['pkcs1_encode',['../crypto_8php.html#a890b443f80f0968fb9eabd93fc99dbb5',1,'crypto.php']]],
   ['pkcs5_5fpad',['pkcs5_pad',['../crypto_8php.html#a3398666e184faf8e516c8e5d91de86eb',1,'crypto.php']]],

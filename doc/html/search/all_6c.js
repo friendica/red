@@ -21,7 +21,7 @@ var searchData=
   ['load_5fpconfig',['load_pconfig',['../include_2config_8php.html#ac543813a980b3841cc5a277fcd4a24a6',1,'config.php']]],
   ['load_5fplugin',['load_plugin',['../plugin_8php.html#a9ca9632b7309a65b05c03a3e2f473a3d',1,'plugin.php']]],
   ['load_5ftranslation_5ftable',['load_translation_table',['../language_8php.html#a7e9904c730bb24ddcb0ff50fc96f6b05',1,'language.php']]],
-  ['load_5fxconfig',['load_xconfig',['../include_2config_8php.html#a913d4e1a6ee7acc1598c69b902c06fd2',1,'config.php']]],
+  ['load_5fxconfig',['load_xconfig',['../include_2config_8php.html#a55bbed9a014c9109c767486834f3ca33',1,'config.php']]],
   ['local_5fdelivery',['local_delivery',['../items_8php.html#ae1c27d1a6379231ac7c0435c8a791d45',1,'items.php']]],
   ['local_5fuser',['local_user',['../boot_8php.html#ad4c9dc2c8a82e8f52b7404c1655eab44',1,'boot.php']]],
   ['localize_5fitem',['localize_item',['../conversation_8php.html#a9bd7f9fb6678736c581bcba3b17f471c',1,'conversation.php']]],

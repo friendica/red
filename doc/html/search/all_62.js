@@ -20,5 +20,6 @@ var searchData=
   ['boot_2ephp',['boot.php',['../boot_8php.html',1,'']]],
   ['breaklines',['breaklines',['../html2plain_8php.html#a3214912e3d00cf0a948072daccf16740',1,'html2plain.php']]],
   ['build_5fpagehead',['build_pagehead',['../classApp.html#a08f0537964d98958d218066364cff785',1,'App']]],
-  ['build_5fquerystring',['build_querystring',['../boot_8php.html#a9cbab4ee728e9a8b4ce952bae643044e',1,'boot.php']]]
+  ['build_5fquerystring',['build_querystring',['../boot_8php.html#a9cbab4ee728e9a8b4ce952bae643044e',1,'boot.php']]],
+  ['build_5fsync_5fpacket',['build_sync_packet',['../include_2settings_8php.html#ac34e479d27f32b82dd6b33542f81a6a7',1,'settings.php']]]
 ];

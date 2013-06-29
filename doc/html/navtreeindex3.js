@@ -1,7 +1,5 @@
 var NAVTREEINDEX3 =
 {
-"dir_d44c64559bbebec7f509842c48db8b23.html":[5,0,0],
-"dir_d795dfe8933002397556cc7aa16eca15.html":[5,0,3,1,1],
 "dirfind_8php.html":[5,0,1,16],
 "dirfind_8php.html#ac689a812c84f161b3a0d42349f83981c":[5,0,1,16,1],
 "dirfind_8php.html#af22b0283f928c4c32e62248a5ae67cee":[5,0,1,16,0],
@@ -103,8 +101,8 @@ var NAVTREEINDEX3 =
 "functions_0x76.html":[4,3,0,18],
 "functions_func.html":[4,3,1],
 "functions_vars.html":[4,3,2],
-"globals.html":[5,1,0],
 "globals.html":[5,1,0,0],
+"globals.html":[5,1,0],
 "globals_0x5f.html":[5,1,0,1],
 "globals_0x61.html":[5,1,0,2],
 "globals_0x62.html":[5,1,0,3],
@@ -131,8 +129,8 @@ var NAVTREEINDEX3 =
 "globals_0x77.html":[5,1,0,24],
 "globals_0x78.html":[5,1,0,25],
 "globals_0x7a.html":[5,1,0,26],
-"globals_func.html":[5,1,1],
 "globals_func.html":[5,1,1,0],
+"globals_func.html":[5,1,1],
 "globals_func_0x61.html":[5,1,1,1],
 "globals_func_0x62.html":[5,1,1,2],
 "globals_func_0x63.html":[5,1,1,3],
@@ -249,5 +247,7 @@ var NAVTREEINDEX3 =
 "include_2api_8php.html#ab1ecb58954f722444bfe03233345cb1b":[5,0,0,5,17],
 "include_2api_8php.html#abe8e929e93f7ab134b1cb1fb30f19a76":[5,0,0,5,48],
 "include_2api_8php.html#ac2c2b18c426d697d11a830bca146be8a":[5,0,0,5,30],
-"include_2api_8php.html#ac5a64cc81d70ff3cf866093ea9721d23":[5,0,0,5,24]
+"include_2api_8php.html#ac5a64cc81d70ff3cf866093ea9721d23":[5,0,0,5,24],
+"include_2api_8php.html#acafd2899309a005fcb725289173dc7fe":[5,0,0,5,22],
+"include_2api_8php.html#ad24ce1bf20867add4c9211a8eaf93f22":[5,0,0,5,40]
 };

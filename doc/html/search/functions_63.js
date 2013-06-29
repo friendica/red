@@ -57,6 +57,7 @@ var searchData=
   ['completeurl',['completeurl',['../parse__url_8php.html#a496f4e3836154f6f32b8e805a7160d3a',1,'parse_url.php']]],
   ['connect',['connect',['../classdba__driver.html#ae533e62a240a793f17aef5ab4ef10edc',1,'dba_driver\connect()'],['../classdba__mysql.html#a1887338627ce0e28786839363014bd0b',1,'dba_mysql\connect()'],['../classdba__mysqli.html#add062bd93961e5f0194d94820e9a51b1',1,'dba_mysqli\connect()']]],
   ['connections_5faside',['connections_aside',['../connections_8php.html#af48f7ad20914760ba9874c090384e35a',1,'connections.php']]],
+  ['connections_5fclone',['connections_clone',['../connections_8php.html#a15af118efee9c948b6f8294e54a73bb2',1,'connections.php']]],
   ['connections_5fcontent',['connections_content',['../connections_8php.html#aec2e457420fce3e3bf6a9f48e36df25c',1,'connections.php']]],
   ['connections_5finit',['connections_init',['../connections_8php.html#a1f23623f802af7bd35e95b0e94e5d558',1,'connections.php']]],
   ['connections_5fpost',['connections_post',['../connections_8php.html#a1224058db8e3fb56463eb312f98e561d',1,'connections.php']]],

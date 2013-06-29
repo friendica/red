@@ -1883,9 +1883,48 @@ function tag_deliver($uid,$item_id) {
 			logger('tag_deliver: tag permission denied for ' . $u[0]['channel_address']);
 	}
 
+	// This might be a followup by the original post author to a tagged forum
+	// If so setup a second delivery chain
+
+	$r = null;
+
+	if( ! ($item['item_flags'] & ITEM_THREAD_TOP)) {
+		$x = q("select * from item where id = parent and parent = %d and uid = %d limit 1",
+			intval($item['parent']),
+			intval($uid)
+		);
+		if(($x) && ($x[0]['item_flags'] & ITEM_UPLINK) && ($x[0]['author_xchan'] == $item['author_xchan'])) {
+			logger('tag_deliver: creating second delivery chain for owner comment.');
+
+			// now change this copy of the post to a forum head message and deliver to all the tgroup members
+			// also reset all the privacy bits to the forum default permissions
+
+			$private = (($u[0]['allow_cid'] || $u[0]['allow_gid'] || $u[0]['deny_cid'] || $u[0]['deny_gid']) ? 1 : 0);
+
+			$flag_bits = ITEM_WALL|ITEM_ORIGIN;
+
+			$r = q("update item set item_flags = ( item_flags | %d ), owner_xchan = '%s', allow_cid = '%s', allow_gid = '%s', 
+				deny_cid = '%s', deny_gid = '%s', item_private = %d  where id = %d limit 1",
+				intval($flag_bits),
+				dbesc($u[0]['channel_hash']),
+				dbesc($u[0]['allow_cid']),
+				dbesc($u[0]['allow_gid']),
+				dbesc($u[0]['deny_cid']),
+				dbesc($u[0]['deny_gid']),
+				intval($private),
+				intval($item_id)
+			);
+			if($r)
+				proc_run('php','include/notifier.php','tgroup',$item_id);
+			else
+				logger('tag_deliver: failed to update item');			
+		}
+	}
+
 	$terms = get_terms_oftype($item['term'],TERM_MENTION);
 
-	logger('tag_deliver: post mentions: ' . print_r($terms,true), LOGGER_DATA);
+	if($terms)
+		logger('tag_deliver: post mentions: ' . print_r($terms,true), LOGGER_DATA);
 
 	$link = normalise_link($a->get_baseurl() . '/channel/' . $u[0]['channel_address']);
 
