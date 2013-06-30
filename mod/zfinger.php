@@ -91,6 +91,9 @@ function zfinger_init(&$a) {
 		$profile['birthday']      = $p[0]['dob'];
 		if($profile['birthday'] != '0000-00-00')
 			$profile['next_birthday'] = z_birthday($p[0]['dob'],$e['channel_timezone']);
+
+		if($age = age($p[0]['dob'],$e['channel_timezone'],''))  
+			$profile['age'] = $age;
 		$profile['gender']        = $p[0]['gender'];
 		$profile['marital']       = $p[0]['marital'];
 		$profile['sexual']        = $p[0]['sexual'];

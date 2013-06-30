@@ -1,6 +1,6 @@
 <?php
 
-define( 'UPDATE_VERSION' , 1047 );
+define( 'UPDATE_VERSION' , 1048 );
 
 /**
  *
@@ -572,3 +572,12 @@ ADD INDEX ( `term_hash` ) ");
 		return UPDATE_SUCCESS;
 	return UPDATE_FAILED;
 }
+
+function update_r1047() {
+	$r = q("ALTER TABLE `xprof` ADD `xprof_age` TINYINT( 3 ) UNSIGNED NOT NULL DEFAULT '0' AFTER `xprof_hash` ,
+ADD INDEX ( `xprof_age` ) ");
+	if($r)
+		return UPDATE_SUCCESS;
+	return UPDATE_FAILED;
+}
+

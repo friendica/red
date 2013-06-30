@@ -860,6 +860,7 @@ function get_profile_elements($x) {
 	$arr['desc']         = (($x['title']) ? htmlentities($x['title'],ENT_COMPAT,'UTF-8',false) : '');
 
 	$arr['dob']          = datetime_convert('UTC','UTC',$x['birthday'],'Y-m-d');
+	$arr['age']          = (($x['age']) ? intval($x['age']) : 0);
 
 	$arr['gender']       = (($x['gender'])    ? htmlentities($x['gender'],    ENT_COMPAT,'UTF-8',false) : '');
 	$arr['marital']      = (($x['marital'])   ? htmlentities($x['marital'],   ENT_COMPAT,'UTF-8',false) : '');

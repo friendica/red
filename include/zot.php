@@ -1225,6 +1225,7 @@ function import_directory_profile($hash,$profile) {
 	$arr['xprof_hash']         = $hash;
 	$arr['xprof_desc']         = (($profile['description'])    ? htmlentities($profile['description'],    ENT_COMPAT,'UTF-8',false) : '');
 	$arr['xprof_dob']          = datetime_convert('','',$profile['birthday'],'Y-m-d'); // !!!! check this for 0000 year
+	$arr['xprof_age']          = (($profile['age']) ? intval($profile['age']) : 0);
 	$arr['xprof_gender']       = (($profile['gender'])    ? htmlentities($profile['gender'],    ENT_COMPAT,'UTF-8',false) : '');
 	$arr['xprof_marital']      = (($profile['marital'])    ? htmlentities($profile['marital'],    ENT_COMPAT,'UTF-8',false) : '');
 	$arr['xprof_sexual']       = (($profile['sexual'])    ? htmlentities($profile['sexual'],    ENT_COMPAT,'UTF-8',false) : '');
