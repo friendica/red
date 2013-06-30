@@ -134,6 +134,7 @@ function dirsearch_content(&$a) {
 			$entry['postcode']    = $rr['xprof_postcode'];
 			$entry['country']     = $rr['xprof_country'];
 			$entry['birthday']    = $rr['xprof_dob'];
+			$entry['age']         = $rr['xprof_age'];
 			$entry['gender']      = $rr['xprof_gender'];
 			$entry['marital']     = $rr['xprof_marital'];
 			$entry['keywords']    = $rr['xprof_keywords'];
