@@ -147,6 +147,7 @@ class Item extends BaseObject {
 		$this->check_wall_to_wall();
 		
 		if($this->is_toplevel()) {
+			// FIXME check this permission
 			if($conv->get_profile_owner() == local_user()) {
 
 // FIXME we don't need all this stuff, some can be done in the template
@@ -161,13 +162,17 @@ class Item extends BaseObject {
 					'starred' =>  t('starred'),
 				);
 
-				$tagger = array(
-					'tagit' => t("add tag"),
-					'classtagger' => "",
-				);
 			}
 		} else {
 			$indent = 'comment';
+		}
+
+		// FIXME - check this permission
+		if($conv->get_profile_owner() == local_user()) {
+			$tagger = array(
+				'tagit' => t("add tag"),
+				'classtagger' => "",
+			);
 		}
 
 		if($this->is_commentable()) {

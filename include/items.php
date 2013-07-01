@@ -1874,7 +1874,9 @@ function tag_deliver($uid,$item_id) {
 					$j_obj = json_decode($item['object'],true);
 					logger('tag_deliver: tag object: ' . print_r($j_obj,true), LOGGER_DATA);
 					if($j_obj && $j_obj['id'] && $j_obj['title']) {
-						store_item_tag($u[0]['channel_id'],$p[0]['id'],TERM_OBJ_POST,TERM_HASHTAG,$j_obj['title'],$j['obj']['id']);
+						if(is_array($j_obj['link']))
+							$taglink = get_rel_link($j_obj['link'],'alternate');
+						store_item_tag($u[0]['channel_id'],$p[0]['id'],TERM_OBJ_POST,TERM_HASHTAG,$j_obj['title'],$j_obj['id']);
 						proc_run('php','include/notifier.php','edit_post',$p[0]['id']);
 					}
 				}
