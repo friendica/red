@@ -1858,9 +1858,6 @@ function tag_deliver($uid,$item_id) {
 		// See if we are the owner of the parent item and have given permission to tag our posts.
 		// If so tag the parent post.
  
-		// FIXME --- If the item is deleted, remove the tag from the parent.
-		// (First ensure that deleted items use this function, or else do that part separately.)
-
 		logger('tag_deliver: community tag activity received');
 
 		if(($item['owner_xchan'] === $u[0]['channel_hash']) && (! get_pconfig($u[0]['channel_id'],'system','blocktags'))) {

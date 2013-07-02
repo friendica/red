@@ -14,8 +14,6 @@
 
 <div id="photo-edit-link-wrap">
 {{if $tools}}
-<a id="photo-edit-link" href="{{$tools.edit.0}}">{{$tools.edit.1}}</a>
-|
 <a id="photo-toprofile-link" href="{{$tools.profile.0}}">{{$tools.profile.1}}</a>
 {{/if}}
 {{if $lock}} | <img src="images/lock_icon.gif" class="lockview" alt="{{$lock}}" onclick="lockview(event,'photo/{{$id}}');" /> {{/if}}
@@ -32,7 +30,58 @@
 {{/if}}
 {{if $tags.2}}<div id="tag-remove"><a href="{{$tags.2}}">{{$tags.3}}</a></div>{{/if}}
 
-{{if $edit}}{{$edit}}{{/if}}
+{{if $edit}}
+<div id="photo-edit-edit-wrapper" class="fakelink" onclick="openClose('photo-edit-edit');">{{$edit.edit}}</div>
+<div id="photo-edit-edit" style="display: none;">
+<form action="photos/{{$edit.nickname}}/{{$edit.resource_id}}" method="post" id="photo_edit_form" >
+
+	<input type="hidden" name="item_id" value="{{$item_id}}" />
+
+	<label id="photo-edit-albumname-label" for="photo-edit-albumname">{{$edit.newalbum}}</label>
+	<input id="photo-edit-albumname" type="text" size="32" name="albname" value="{{$edit.album}}" />
+
+	<div id="photo-edit-albumname-end"></div>
+
+	<label id="photo-edit-caption-label" for="photo-edit-caption">{{$edit.capt_label}}</label>
+	<input id="photo-edit-caption" type="text" size="84" name="desc" value="{{$edit.caption}}" />
+
+	<div id="photo-edit-caption-end"></div>
+
+	<label id="photo-edit-tags-label" for="photo-edit-newtag" >{{$edit.tag_label}}</label>
+	<input name="newtag" id="photo-edit-newtag" size="84" title="{{$edit.help_tags}}" type="text" />
+
+	<div id="photo-edit-tags-end"></div>
+	<div id="photo-edit-rotate-wrapper">
+		<div id="photo-edit-rotate-label">
+			{{$edit.rotatecw}}<br>
+			{{$edit.rotateccw}}
+		</div>
+		<input type="radio" name="rotate" value="1" /><br>
+		<input type="radio" name="rotate" value="2" />
+	</div>
+	<div id="photo-edit-rotate-end"></div>
+
+	<div id="photo-edit-perms" class="photo-edit-perms" >
+		<a href="#photo-edit-perms-select" id="photo-edit-perms-menu" class="button popupbox" title="{{$edit.permissions}}"/>
+			<span id="jot-perms-icon" class="icon {{$edit.lockstate}}" ></span>{{$edit.permissions}}
+		</a>
+		<div id="photo-edit-perms-menu-end"></div>
+		
+		<div style="display: none;">
+			<div id="photo-edit-perms-select" >
+				{{$edit.aclselect}}
+			</div>
+		</div>
+	</div>
+	<div id="photo-edit-perms-end"></div>
+
+	<input id="photo-edit-submit-button" type="submit" name="submit" value="{{$edit.submit}}" />
+	<input id="photo-edit-delete-button" type="submit" name="delete" value="{{$edit.delete}}" onclick="return confirmDelete()"; />
+
+	<div id="photo-edit-end"></div>
+</form>
+</div>
+{{/if}}
 
 {{if $likebuttons}}
 <div id="photo-like-div">
