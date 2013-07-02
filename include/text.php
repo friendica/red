@@ -850,7 +850,6 @@ function smilies($s, $sample = false) {
 		':like',
 		':dislike',
 		'red#',
-		'~friendika', 
 		'~friendica'
 
 	);
@@ -889,7 +888,6 @@ function smilies($s, $sample = false) {
 		'<img class="smiley" src="' . $a->get_baseurl() . '/images/like.gif" alt=":like" />',
 		'<img class="smiley" src="' . $a->get_baseurl() . '/images/dislike.gif" alt=":dislike" />',
 		'<img class="smiley" src="' . $a->get_baseurl() . '/images/rhash-16.png" alt="red#" /></a>',
-		'<a href="http://project.friendika.com">~friendika <img class="smiley" src="' . $a->get_baseurl() . '/images/friendika-16.png" alt="~friendika" /></a>',
 		'<a href="http://friendica.com">~friendica <img class="smiley" src="' . $a->get_baseurl() . '/images/friendica-16.png" alt="~friendica" /></a>'
 	);
 
