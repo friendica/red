@@ -1,6 +1,6 @@
 <?php
 
-define( 'UPDATE_VERSION' , 1043 );
+define( 'UPDATE_VERSION' , 1048 );
 
 /**
  *
@@ -540,4 +540,44 @@ ADD `hubloc_connected` DATETIME NOT NULL DEFAULT '0000-00-00 00:00:00',  ADD IND
 	return UPDATE_FAILED;
 }
 
+
+function update_r1043() {
+	$r = q("ALTER TABLE `item` ADD `comment_policy` CHAR( 255 ) NOT NULL DEFAULT '' AFTER `coord` ,
+ADD INDEX ( `comment_policy` ) ");
+	if($r)
+		return UPDATE_SUCCESS;
+	return UPDATE_FAILED;
+}
+
+function update_r1044() {
+	$r = q("ALTER TABLE `term` ADD `imgurl` CHAR( 255 ) NOT NULL ,
+ADD INDEX ( `imgurl` ) ");
+	if($r)
+		return UPDATE_SUCCESS;
+	return UPDATE_FAILED;
+}
+
+function update_r1045() {
+	$r = q("ALTER TABLE `site` ADD `site_register` INT NOT NULL DEFAULT '0',
+ADD INDEX ( `site_register` ) ");
+	if($r)
+		return UPDATE_SUCCESS;
+	return UPDATE_FAILED;
+}
+	
+function update_r1046() {
+	$r = q("ALTER TABLE `term` ADD `term_hash` CHAR( 255 ) NOT NULL DEFAULT '',
+ADD INDEX ( `term_hash` ) ");
+	if($r)
+		return UPDATE_SUCCESS;
+	return UPDATE_FAILED;
+}
+
+function update_r1047() {
+	$r = q("ALTER TABLE `xprof` ADD `xprof_age` TINYINT( 3 ) UNSIGNED NOT NULL DEFAULT '0' AFTER `xprof_hash` ,
+ADD INDEX ( `xprof_age` ) ");
+	if($r)
+		return UPDATE_SUCCESS;
+	return UPDATE_FAILED;
+}
 

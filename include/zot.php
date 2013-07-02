@@ -874,8 +874,16 @@ function zot_import($arr) {
 					$result = process_profile_delivery($i['notify']['sender'],$arr,$deliveries);
 
 				}
+				elseif($i['message']['type'] === 'channel_sync') {
+//					$arr = get_channelsync_elements($i['message']);
 
+					$arr = $i['message'];
 
+					logger('Channel sync received: ' . print_r($arr,true), LOGGER_DATA);
+					logger('Channel sync recipients: ' . print_r($deliveries,true), LOGGER_DATA);
+					
+//					$result = process_channelsync_delivery($i['notify']['sender'],$arr,$deliveries);
+				}
 			}
 			if($result)
 				$return = array_merge($return,$result);
@@ -1028,6 +1036,10 @@ function process_delivery($sender,$arr,$deliveries,$relay) {
 		}
 	
 		if($arr['item_restrict'] & ITEM_DELETED) {
+
+			// remove_community_tag is a no-op if this isn't a community tag activity
+			remove_community_tag($sender,$arr,$channel['channel_id']);
+
 			$item_id = delete_imported_item($sender,$arr,$channel['channel_id']);
 			$result[] = array($d['hash'],'deleted');
 
@@ -1040,7 +1052,7 @@ function process_delivery($sender,$arr,$deliveries,$relay) {
 			continue;
 		}
 
-		// for events, extract the event info and create and event linked to an item 
+		// for events, extract the event info and create an event linked to an item 
 
 		if((x($arr,'obj_type')) && (activity_match($arr['obj_type'],ACTIVITY_OBJ_EVENT))) {
 			require_once('include/event.php');
@@ -1107,6 +1119,68 @@ function process_delivery($sender,$arr,$deliveries,$relay) {
 	return $result;
 }
 
+
+function remove_community_tag($sender,$arr,$uid) {
+
+	if(! (activity_match($arr['verb'],ACTIVITY_TAG) && ($arr['obj_type'] == ACTIVITY_OBJ_TAGTERM)))
+		return;
+
+	logger('remove_community_tag: invoked');
+ 
+
+	if(! get_pconfig($uid,'system','blocktags')) {
+		logger('remove_community tag: permission denied.');
+		return;
+	}
+
+	$r = q("select * from item where mid = '%s' and uid = %d limit 1",
+		dbesc($arr['mid']),
+		intval($uid)
+	);
+	if(! $r) {
+		logger('remove_community_tag: no item');
+		return;
+	}
+
+	if(($sender['hash'] != $r[0]['owner_xchan']) && ($sender['hash'] != $r[0]['author_xchan'])) {
+		logger('remove_community_tag: sender not authorised.');
+		return;
+	}
+
+	$i = $r[0];
+
+	if($i['target'])
+		$i['target'] = json_decode($i['target'],true);
+	if($i['object'])
+		$i['object'] = json_decode($i['object'],true);
+
+	if(! ($i['target'] && $i['object'])) {
+		logger('remove_community_tag: no target/object');
+		return;
+	}
+
+	$message_id = $i['target']['id'];
+
+	$r = q("select id from item where mid = '%s' and uid = %d limit 1",
+		dbesc($message_id),
+		intval($uid)
+	);
+	if(! $r) {
+		logger('remove_community_tag: no parent message');
+		return;
+	}
+	
+	$x = q("delete from term where uid = %d and oid = %d and otype = %d and type = %d and term = '%s' and url = '%s' limit 1",
+		intval($uid),
+		intval($r[0]['id']),
+		intval(TERM_OBJ_POST),
+		intval(TERM_HASHTAG),
+		dbesc($i['object']['title']),
+		dbesc(get_rel_link($i['object']['link'],'alternate'))
+	);
+
+	return;
+}
 
 function update_imported_item($sender,$item,$uid) {
 
@@ -1217,6 +1291,7 @@ function import_directory_profile($hash,$profile) {
 	$arr['xprof_hash']         = $hash;
 	$arr['xprof_desc']         = (($profile['description'])    ? htmlentities($profile['description'],    ENT_COMPAT,'UTF-8',false) : '');
 	$arr['xprof_dob']          = datetime_convert('','',$profile['birthday'],'Y-m-d'); // !!!! check this for 0000 year
+	$arr['xprof_age']          = (($profile['age']) ? intval($profile['age']) : 0);
 	$arr['xprof_gender']       = (($profile['gender'])    ? htmlentities($profile['gender'],    ENT_COMPAT,'UTF-8',false) : '');
 	$arr['xprof_marital']      = (($profile['marital'])    ? htmlentities($profile['marital'],    ENT_COMPAT,'UTF-8',false) : '');
 	$arr['xprof_sexual']       = (($profile['sexual'])    ? htmlentities($profile['sexual'],    ENT_COMPAT,'UTF-8',false) : '');

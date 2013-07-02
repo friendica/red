@@ -1,5 +1,7 @@
 <?php
 
+require_once('include/settings.php');
+
 
 function get_theme_config_file($theme){
 
@@ -115,13 +117,6 @@ function settings_post(&$a) {
 		return;
 
 
-//	if(count($a->user) && x($a->user,'uid') && $a->user['uid'] != local_user()) {
-//		notice( t('Permission denied.') . EOL);
-//		return;
-//	}
-
-	$old_page_flags = $a->user['page-flags'];
-
 	if((argc() > 1) && (argv(1) === 'oauth') && x($_POST,'remove')){
 		check_form_security_token_redirectOnErr('/settings/oauth', 'settings_oauth');
 		
@@ -182,6 +177,7 @@ function settings_post(&$a) {
 		check_form_security_token_redirectOnErr('/settings/featured', 'settings_featured');
 
 		call_hooks('feature_settings_post', $_POST);
+		build_sync_packet();
 		return;
 	}
 
@@ -194,6 +190,7 @@ function settings_post(&$a) {
 				set_pconfig(local_user(),'feature',substr($k,8),((intval($v)) ? 1 : 0));
 			}
 		}
+		build_sync_packet();
 		return;
 	}
 
@@ -237,6 +234,7 @@ function settings_post(&$a) {
 		);
 	
 		call_hooks('display_settings_post', $_POST);
+		build_sync_packet();
 		goaway($a->get_baseurl(true) . '/settings/display' );
 		return; // NOTREACHED
 	}
@@ -292,7 +290,7 @@ function settings_post(&$a) {
 				$errs[] = t('Not valid email.');
 			$adm = trim(get_config('system','admin_email'));
 			if(($adm) && (strcasecmp($email,$adm) == 0)) {
-				$errs[] = t('Protected email. Cannot change to that email.');
+				$errs[] = t('Protected email address. Cannot change to that email.');
 				$email = $a->user['email'];
 			}
 			if(! $errs) {
@@ -550,10 +548,11 @@ function settings_post(&$a) {
 			dbesc($username),
 			intval($channel['channel_id'])
 		);
-		// we really need to send out notifications to all our friends
 	}
 
 	proc_run('php','include/directory.php',local_user());
+
+	build_sync_packet();
 
 
 	//$_SESSION['theme'] = $theme;
@@ -719,7 +718,6 @@ function settings_content(&$a) {
 
 
 	if((argc() > 1) && (argv(1) === 'features')) {
-		
 		$arr = array();
 		$features = get_features();
 
@@ -739,6 +737,7 @@ function settings_content(&$a) {
 			'$submit'   => t('Submit'),
 			'$field_yesno'  => 'field_yesno.tpl',
 		));
+
 		return $o;
 	}
 

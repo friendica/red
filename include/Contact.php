@@ -76,6 +76,9 @@ function abook_toggle_flag($abook,$flag) {
 		intval($abook['abook_id']),
 		intval($abook['abook_channel'])
 	);
+	$a = get_app();
+	if($a->data['abook'])
+		$a->data['abook']['abook_flags'] = $a->data['abook']['abook_flags'] ^ $flag;
 	return $r;
 
 }

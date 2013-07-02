@@ -1,32 +1,32 @@
 
-Kjære $[username],
-	En forespørsel ble nylig mottatt hos $[sitename] om å tilbakestille din kontos 
-passord. For å godkjenne denne forespørselen, vennligst velg bekreftelseslenken
-nedenfor eller lim den inn på adresselinjen i nettleseren din. 
+Dear {{$username}},
+	A request was recently received at {{$sitename}} to reset your account 
+password. In order to confirm this request, please select the verification link
+below or paste it into your web browser address bar. 
 
-Hvis du IKKE har spurt om denne endringen, vennligst IKKE følg lenken
-som er oppgitt og ignorer og/eller slett denne e-posten. 
+If you did NOT request this change, please DO NOT follow the link
+provided and ignore and/or delete this email. 
 
-Passordet ditt vil ikke bli endret med mindre vi kan forsikre oss om at du
-sendte denne forespørselen. 
+Your password will not be changed unless we can verify that you
+issued this request. 
 
-Følg denne lenken for å bekrefte din identitet:
+Follow this link to verify your identity:
 
-$[reset_link]
+{{$reset_link}}
 
-Du vil da motta en oppfølgings melding med det nye passordet.
+You will then receive a follow-up message containing the new password.
 
-Du kan endre passordet på siden for dine kontoinnstillinger etter innlogging.
+You may change that password from your account settings page after logging in.
 
-Innloggingsdetaljene er som følger:
+The login details are as follows:
 
-Nettstedsadresse:»$[siteurl]
-Brukernavn:»$[email]
-
-
+Site Location:	{{$siteurl}}
+Login Name:	{{$email}}
 
 
-Beste hilsen,
-	$[sitename] administrator
+
+
+Sincerely,
+	{{$sitename}} Administrator
 
  

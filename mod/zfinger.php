@@ -91,6 +91,9 @@ function zfinger_init(&$a) {
 		$profile['birthday']      = $p[0]['dob'];
 		if($profile['birthday'] != '0000-00-00')
 			$profile['next_birthday'] = z_birthday($p[0]['dob'],$e['channel_timezone']);
+
+		if($age = age($p[0]['dob'],$e['channel_timezone'],''))  
+			$profile['age'] = $age;
 		$profile['gender']        = $p[0]['gender'];
 		$profile['marital']       = $p[0]['marital'];
 		$profile['sexual']        = $p[0]['sexual'];
@@ -181,7 +184,14 @@ function zfinger_init(&$a) {
 		$ret['site']['directory_mode'] = 'standalone';
 	if($dirmode != DIRECTORY_MODE_NORMAL)
 		$ret['site']['directory_url'] = z_root() . '/dirsearch';
- 
+	$register_policy = intval(get_config('system','register_policy'));
+	if($register_policy == REGISTER_CLOSED)
+		$ret['site']['register_policy'] = 'closed';
+	if($register_policy == REGISTER_APPROVE)
+		$ret['site']['register_policy'] = 'approve';
+	if($register_policy == REGISTER_OPEN)
+		$ret['site']['register_policy'] = 'open';
+
 	json_return_and_die($ret);
 
 }

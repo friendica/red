@@ -44,13 +44,8 @@ class Item extends BaseObject {
 		$this->commentable = $this->writable;
 
 		if(($this->observer) && (! $this->writable)) {
-			$this->commentable = perm_is_allowed($this->data['uid'],$this->observer['xchan_hash'],'post_comments');
+			$this->commentable = can_comment_on_post($this->observer['xchan_hash'],$data);
 		}
-
-//		logger('writable: ' . $this->writable);
-//		logger('commentable: ' . $this->commentable . ' uid=' . $this->data['uid'] . ' observer=' . $this->observer['xchan_hash']);
-//		if(get_config('system','thread_allow') && $a->theme_thread_allow && !$this->is_toplevel())
-//			$this->threaded = true;
 
 		// Prepare the children
 		if(count($data['children'])) {
@@ -152,6 +147,7 @@ class Item extends BaseObject {
 		$this->check_wall_to_wall();
 		
 		if($this->is_toplevel()) {
+			// FIXME check this permission
 			if($conv->get_profile_owner() == local_user()) {
 
 // FIXME we don't need all this stuff, some can be done in the template
@@ -166,13 +162,17 @@ class Item extends BaseObject {
 					'starred' =>  t('starred'),
 				);
 
-				$tagger = array(
-					'tagit' => t("add tag"),
-					'classtagger' => "",
-				);
 			}
 		} else {
 			$indent = 'comment';
+		}
+
+		// FIXME - check this permission
+		if($conv->get_profile_owner() == local_user()) {
+			$tagger = array(
+				'tagit' => t("add tag"),
+				'classtagger' => "",
+			);
 		}
 
 		if($this->is_commentable()) {

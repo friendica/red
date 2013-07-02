@@ -343,6 +343,8 @@
 
 function updateConvItems(mode,data) {
 
+	var expanded_comments = false;
+
 	if(mode === 'update') {
 		prev = 'threads-begin';
 
@@ -353,7 +355,14 @@ function updateConvItems(mode,data) {
 				$('img',this).each(function() {
 					$(this).attr('src',$(this).attr('dst'));
 				});
+//				expanded_comments = false;
+//				$('.collapsed-comments',this).each(function() {
+//					if($(this).is(':visible'))
+//						expanded_comments = this;
+//				});
 				$('#' + prev).after($(this));
+//				if(expanded_comments)
+//					$(expanded_comments).show();
 				$(".autotime").timeago();
 				// divgrow doesn't prevent itself from attaching a second (or 500th)
 				// "show more" div to a content region - it also has a few other
@@ -365,7 +374,14 @@ function updateConvItems(mode,data) {
 				$('img',this).each(function() {
 					$(this).attr('src',$(this).attr('dst'));
 				});
+//				expanded_comments = false;
+//				$('.collapsed-comments',this).each(function() {
+//					if($(this).is(':visible'))
+//						expanded_comments = this;
+//				});
 				$('#' + ident).replaceWith($(this));
+//				if(expanded_comments)
+//					$(expanded_comments).show();
 				$(".autotime").timeago();
 				//	$("div.wall-item-body").divgrow({ initialHeight: 400 });
 

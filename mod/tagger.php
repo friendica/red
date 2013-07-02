@@ -11,6 +11,8 @@ function tagger_content(&$a) {
 		return;
 	}
 
+	$observer_hash = get_observer_hash();
+
 	$term = notags(trim($_GET['term']));
 	// no commas allowed
 	$term = str_replace(array(',',' '),array('','_'),$term);
@@ -121,7 +123,8 @@ function tagger_content(&$a) {
 	$arr['obj_type'] = $objtype;
 	$arr['object'] = $obj;
 	$arr['parent_mid'] = $item['mid'];
-
+	
+	store_item_tag($item['uid'],$item['id'],TERM_OBJ_POST,TERM_HASHTAG,$term,$tagid);
 	$ret = post_activity_item($arr);
 
 	if($ret['success'])

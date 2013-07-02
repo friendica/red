@@ -850,7 +850,6 @@ function smilies($s, $sample = false) {
 		':like',
 		':dislike',
 		'red#',
-		'~friendika', 
 		'~friendica'
 
 	);
@@ -889,7 +888,6 @@ function smilies($s, $sample = false) {
 		'<img class="smiley" src="' . $a->get_baseurl() . '/images/like.gif" alt=":like" />',
 		'<img class="smiley" src="' . $a->get_baseurl() . '/images/dislike.gif" alt=":dislike" />',
 		'<img class="smiley" src="' . $a->get_baseurl() . '/images/rhash-16.png" alt="red#" /></a>',
-		'<a href="http://project.friendika.com">~friendika <img class="smiley" src="' . $a->get_baseurl() . '/images/friendika-16.png" alt="~friendika" /></a>',
 		'<a href="http://friendica.com">~friendica <img class="smiley" src="' . $a->get_baseurl() . '/images/friendica-16.png" alt="~friendica" /></a>'
 	);
 
@@ -1023,6 +1021,20 @@ function prepare_body($item,$attach = false) {
 			$s .= '<a href="' . $url . '" title="' . $title . '" class="attachlink"  >' . $icon . '</a>';
 		}
 		$s .= '<div class="clear"></div></div>';
+	}
+
+	if(is_array($item['term']) && count($item['term'])) {
+		$tstr = '';
+		foreach($item['term'] as $t) {
+			$t1 = format_term_for_display($t);
+			if($t1) {
+				if($tstr)
+					$tstr .= ' ';
+				$tstr .= $t1;
+			}
+		}
+		if($tstr)
+			$s .=  '<br /><div class="posttags">' . $tstr . '</div>';
 	}
 
 	$writeable = ((get_observer_hash() == $item['owner_xchan']) ? true : false); 
@@ -1424,278 +1436,28 @@ function reltoabs($text, $base)
 }
 
 function item_post_type($item) {
-	if(intval($item['event-id']))
-		return t('event');
-	if(strlen($item['resource_id']))
-		return t('photo');
-	if(strlen($item['verb']) && $item['verb'] !== ACTIVITY_POST)
-		return t('activity');
-	if($item['id'] != $item['parent'])
-		return t('comment');
-	return t('post');
+
+
+    switch($item['resource_type']) {
+        case 'photo':
+            $post_type = t('photo');
+            break;
+        case 'event':
+            $post_type = t('event');
+            break;
+        default:
+            $post_type = t('status');
+            if($item['mid'] != $item['parent_mid'])
+                $post_type = t('comment');
+            break;
+    }
+
+	if(strlen($item['verb']) && (! activity_match($item['verb'],ACTIVITY_POST)))
+		$post_type = t('activity');
+
+	return $post_type;
 }
 
-// post categories and "save to file" use the same item.file table for storage.
-// We will differentiate the different uses by wrapping categories in angle brackets
-// and save to file categories in square brackets.
-// To do this we need to escape these characters if they appear in our tag. 
-
-function file_tag_encode($s) {
-	return str_replace(array('<','>','[',']'),array('%3c','%3e','%5b','%5d'),$s);
-}
-
-function file_tag_decode($s) {
-	return str_replace(array('%3c','%3e','%5b','%5d'),array('<','>','[',']'),$s);
-}
-
-function file_tag_file_query($table,$s,$type = 'file') {
-
-	if($type == 'file')
-		$termtype = TERM_FILE;
-	else
-		$termtype = TERM_CATEGORY;
-
-	return sprintf(" AND " . (($table) ? dbesc($table) . '.' : '') . "id in (select term.oid from term where term.type = %d and term.term = '%s' and term.uid = " . (($table) ? dbesc($table) . '.' : '') . "uid ) ",
-		intval($termtype),
-		protect_sprintf(dbesc($s))
-	);
-}
-
-function term_query($table,$s,$type = TERM_UNKNOWN) {
-
-	return sprintf(" AND " . (($table) ? dbesc($table) . '.' : '') . "id in (select term.oid from term where term.type = %d and term.term = '%s' and term.uid = " . (($table) ? dbesc($table) . '.' : '') . "uid ) ",
-		intval($type),
-		protect_sprintf(dbesc($s))
-	);
-}
-
-// ex. given music,video return <music><video> or [music][video]
-function file_tag_list_to_file($list,$type = 'file') {
-		$tag_list = '';
-		if(strlen($list)) {
-				$list_array = explode(",",$list);
-				if($type == 'file') {
-					$lbracket = '[';
-					$rbracket = ']';
-			}
-				else {
-					$lbracket = '<';
-					$rbracket = '>';
-			}
-
-				foreach($list_array as $item) {
-		  if(strlen($item)) {
-						$tag_list .= $lbracket . file_tag_encode(trim($item))  . $rbracket;
-			}
-				}
-	}
-		return $tag_list;
-}
-
-// ex. given <music><video>[friends], return music,video or friends
-function file_tag_file_to_list($file,$type = 'file') {
-		$matches = false;
-		$list = '';
-		if($type == 'file') {
-				$cnt = preg_match_all('/\[(.*?)\]/',$file,$matches,PREG_SET_ORDER);
-	}
-		else {
-				$cnt = preg_match_all('/<(.*?)>/',$file,$matches,PREG_SET_ORDER);
-	}
-	if($cnt) {
-		foreach($matches as $mtch) {
-			if(strlen($list))
-				$list .= ',';
-			$list .= file_tag_decode($mtch[1]);
-		}
-	}
-
-		return $list;
-}
-
-function file_tag_update_pconfig($uid,$file_old,$file_new,$type = 'file') {
-		// $file_old - categories previously associated with an item
-		// $file_new - new list of categories for an item
-
-	if(! intval($uid))
-		return false;
-
-		if($file_old == $file_new)
-			return true;
-
-	$saved = get_pconfig($uid,'system','filetags');
-		if(strlen($saved)) {
-				if($type == 'file') {
-					$lbracket = '[';
-					$rbracket = ']';
-			}
-				else {
-					$lbracket = '<';
-					$rbracket = '>';
-			}
-
-				$filetags_updated = $saved;
-
-		// check for new tags to be added as filetags in pconfig
-				$new_tags = array();
-				$check_new_tags = explode(",",file_tag_file_to_list($file_new,$type));
-
-			foreach($check_new_tags as $tag) {
-				if(! stristr($saved,$lbracket . file_tag_encode($tag) . $rbracket))
-					$new_tags[] = $tag;
-			}
-
-		$filetags_updated .= file_tag_list_to_file(implode(",",$new_tags),$type);
-
-		// check for deleted tags to be removed from filetags in pconfig
-				$deleted_tags = array();
-				$check_deleted_tags = explode(",",file_tag_file_to_list($file_old,$type));
-
-			foreach($check_deleted_tags as $tag) {
-				if(! stristr($file_new,$lbracket . file_tag_encode($tag) . $rbracket))
-						$deleted_tags[] = $tag;
-			}
-
-				foreach($deleted_tags as $key => $tag) {
-				$r = q("select file from item where uid = %d " . file_tag_file_query('item',$tag,$type),
-						intval($uid)
-					);
-
-					if(count($r)) {
-					unset($deleted_tags[$key]);
-					}
-			else {
-					$filetags_updated = str_replace($lbracket . file_tag_encode($tag) . $rbracket,'',$filetags_updated);
-			}
-		}
-
-				if($saved != $filetags_updated) {
-				set_pconfig($uid,'system','filetags', $filetags_updated);
-				}
-		return true;
-	}
-		else
-				if(strlen($file_new)) {
-				set_pconfig($uid,'system','filetags', $file_new);
-				}
-		return true;
-}
-
-function store_item_tag($uid,$iid,$otype,$type,$term,$url = '') {
-	if(! $term) 
-		return false;
-	$r = q("select * from term 
-		where uid = %d and oid = %d and otype = %d and type = %d 
-		and term = '%s' and url = '%s' ",
-		intval($uid),
-		intval($iid),
-		intval($otype),
-		intval($type),
-		dbesc($term),
-		dbesc($url)
-	);
-	if($r)
-		return false;
-	$r = q("insert into term (uid, oid, otype, type, term, url)
-		values( %d, %d, %d, %d, '%s', '%s') ",
-		intval($uid),
-		intval($iid),
-		intval($otype),
-		intval($type),
-		dbesc($term),
-		dbesc($url)
-	);
-	return $r;
-}
-		
-function get_terms_oftype($arr,$type) {
-	$ret = array();
-	if(! (is_array($arr) && count($arr)))
-		return $ret;
-
-	if(! is_array($type))
-		$type = array($type);
-
-	foreach($type as $t)
-		foreach($arr as $x)
-			if($x['type'] == $t)
-				$ret[] = $x;
-	return $ret;
-}
-
-function format_term_for_display($term) {
-	$s = '';
-	if($term['type'] == TERM_HASHTAG)
-		$s .= '#';
-	elseif($term['type'] == TERM_MENTION)
-		$s .= '@';
-
-	if($term['url']) $s .= '<a target="extlink" href="' . $term['url'] . '">' . htmlspecialchars($term['term']) . '</a>';
-	else $s .= htmlspecialchars($term['term']);
-	return $s;
-}
-
-
-
-function file_tag_save_file($uid,$item,$file) {
-	$result = false;
-	if(! intval($uid))
-		return false;
-
-	$r = q("select file from item where id = %d and uid = %d limit 1",
-		intval($item),
-		intval($uid)
-	);
-	if($r) {
-		if(! stristr($r[0]['file'],'[' . file_tag_encode($file) . ']'))
-			q("update item set file = '%s' where id = %d and uid = %d limit 1",
-				dbesc($r[0]['file'] . '[' . file_tag_encode($file) . ']'),
-				intval($item),
-				intval($uid)
-			);
-		$saved = get_pconfig($uid,'system','filetags');
-		if((! strlen($saved)) || (! stristr($saved,'[' . file_tag_encode($file) . ']')))
-			set_pconfig($uid,'system','filetags',$saved . '[' . file_tag_encode($file) . ']');
-		info( t('Item filed') );
-	}
-	return true;
-}
-
-function file_tag_unsave_file($uid,$item,$file,$cat = false) {
-	$result = false;
-	if(! intval($uid))
-		return false;
-
-	if($cat == true)
-		$pattern = '<' . file_tag_encode($file) . '>' ;
-	else
-		$pattern = '[' . file_tag_encode($file) . ']' ;
-
-
-	$r = q("select file from item where id = %d and uid = %d limit 1",
-		intval($item),
-		intval($uid)
-	);
-	if(! $r)
-		return false;
-
-	q("update item set file = '%s' where id = %d and uid = %d limit 1",
-		dbesc(str_replace($pattern,'',$r[0]['file'])),
-		intval($item),
-		intval($uid)
-	);
-
-	$r = q("select file from item where uid = %d and deleted = 0 " . file_tag_file_query('item',$file,(($cat) ? 'category' : 'file')),
-		intval($uid)
-	);
-
-	if(! $r) {
-		$saved = get_pconfig($uid,'system','filetags');
-		set_pconfig($uid,'system','filetags',str_replace($pattern,'',$saved));
-
-	}
-	return true;
-}
 
 function normalise_openid($s) {
 	return trim(str_replace(array('http://','https://'),array('',''),$s),'/');
@@ -1794,7 +1556,7 @@ function ids_to_querystr($arr,$idx = 'id') {
 // author_xchan and owner_xchan. If $abook is true also include the abook info. 
 // This is needed in the API to save extra per item lookups there.
 
-function xchan_query(&$items,$abook = false) {
+function xchan_query(&$items,$abook = true) {
 	$arr = array();
 	if($items && count($items)) {
 		foreach($items as $item) {
@@ -1806,8 +1568,10 @@ function xchan_query(&$items,$abook = false) {
 	}
 	if(count($arr)) {
 		if($abook) {
-			$chans = q("select * from xchan left join hubloc on hubloc_hash = xchan_hash left join abook on abook_xchan = xchan_hash
-				where xchan_hash in (" . implode(',', $arr) . ") and ( hubloc_flags & " . intval(HUBLOC_FLAGS_PRIMARY) . " )");
+			$chans = q("select * from xchan left join hubloc on hubloc_hash = xchan_hash left join abook on abook_xchan = xchan_hash and abook_channel = %d
+				where xchan_hash in (" . implode(',', $arr) . ") and ( hubloc_flags & " . intval(HUBLOC_FLAGS_PRIMARY) . " )",
+				intval($item['uid'])
+			);
 		}
 		else {
 			$chans = q("select xchan.*,hubloc.* from xchan left join hubloc on hubloc_hash = xchan_hash
@@ -1936,67 +1700,3 @@ function jindent($json) {
 }
 
 
-// Tag cloud functions - need to be adpated to this database format
-
-
-function tagadelic($uid, $count = 0, $type = TERM_HASHTAG) {
-
-	// Fetch tags
-	$r = q("select term, count(term) as total from term
-		where uid = %d and type = %d 
-		and otype = %d
-		group by term order by total desc %s",
-		intval($uid),
-		intval($type),
-		intval(TERM_OBJ_POST),
-		((intval($count)) ? "limit $count" : '')
-	);
-
-	if(! $r)
-		return array();
-  
-  	// Find minimum and maximum log-count.
-	$tags = array();
-	$min = 1e9;
-	$max = -1e9;
-
-	$x = 0;
-	foreach($r as $rr) {
-		$tags[$x][0] = $rr['term'];
-		$tags[$x][1] = log($rr['total']);
-		$tags[$x][2] = 0;
-		$min = min($min,$tags[$x][1]);
-		$max = max($max,$tags[$x][1]);
-		$x ++;
-	}
-
-	usort($tags,'tags_sort');
-
-	$range = max(.01, $max - $min) * 1.0001;
-
-	for($x = 0; $x < count($tags); $x ++) {
-		$tags[$x][2] = 1 + floor(5 * ($tags[$x][1] - $min) / $range);
-	}
-
-	return $tags;
-}
-
-function tags_sort($a,$b) {
-   if($a[0] == $b[0])
-	 return 0;
-   return((strtolower($a[0]) < strtolower($b[0])) ? -1 : 1);
-}
-
-
-function tagblock($link,$uid,$count = 0,$type = TERM_HASHTAG) {
-  $tab = 0;
-  $r = tagadelic($uid,$count,$type);
-
-  if($r) {
-	echo '<div class="tags" align="center">';
-	foreach($r as $rr) { 
-	  echo '<a href="'.$link .'/' . '?f=&tag=' . urlencode($rr[0]).'" class="tag'.$rr[2].'">'.$rr[0].'</a> ';
-	}
-	echo '</div>';
-  }
-}

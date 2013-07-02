@@ -59,7 +59,7 @@ function display_content(&$a, $update = 0, $load = false) {
 
 
 		$o .= '<div id="live-display"></div>' . "\r\n";
-		$o .= "<script> var profile_uid = " . intval(local_user())
+		$o .= "<script> var profile_uid = " . ((intval(local_user())) ? local_user() : (-1))
 			. "; var netargs = '?f='; var profile_page = " . $a->pager['page'] . "; </script>\r\n";
 
 		$a->page['htmlhead'] .= replace_macros(get_markup_template("build_query.tpl"),array(
@@ -152,7 +152,7 @@ function display_content(&$a, $update = 0, $load = false) {
 
 
 
-	$o .= conversation($a,$items,'display', $update, 'client');
+	$o .= conversation($a, $items, 'display', $update, 'client');
 
 	if($updateable) {
 		$x = q("UPDATE item SET item_flags = ( item_flags ^ %d )

@@ -1,22 +1,22 @@
 
-Ciao $[username],
+Dear {{$username}},
 
-	'$[fn]' di '$[dfrn_url]' ha accettato 
-la tua richiesta di connessione a '$[sitename]'.
+	'{{$fn}}' at '{{$dfrn_url}}' has accepted 
+your connection request at '{{$sitename}}'.
 
-	'$[fn]' ha deciso di accettarti come "fan", il che restringe 
-alcune forme di comunicazione - come i messaggi privati e alcune
-interazioni. Se è la pagina di una persona famosa o di una comunità, queste impostazioni saranno
-applicate automaticamente.
+	'{{$fn}}' has chosen to accept you a "fan", which restricts 
+some forms of communication - such as private messaging and some profile
+interactions. If this is a celebrity or community page, these settings were
+applied automatically.
 
-	'$[fn]' potrebbe decidere di estendere questa relazione in una comunicazione bidirezionale o ancora più permissiva 
-. 
+	'{{$fn}}' may choose to extend this into a two-way or more permissive 
+relationship in the future. 
 
-	Inizierai a ricevere gli aggiornamenti di stato pubblici da '$[fn]', 
-che apparirà nella tua pagina 'Rete'  
+	You will start receiving public status updates from '{{$fn}}', 
+which will appear on your 'Matrix' page at  
 
-$[siteurl]
+{{$siteurl}}
 
-Saluti,
+Sincerely,
 
-	l'amministratore di $[sitename]
+	{{$sitename}} Administrator

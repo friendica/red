@@ -126,13 +126,27 @@ function connections_post(&$a) {
 		intval(local_user()),
 		intval($contact_id)
 	);
-	if($r)
+	if($r) {
 		$a->data['abook'] = $r[0];
+	}
+
 
 	return;
 
 }
 
+function connections_clone(&$a) {
+
+		if(! array_key_exists('abook',$a->data))
+			return;
+		$clone = $a->data['abook'];
+
+		unset($clone['abook_id']);
+		unset($clone['abook_account']);
+		unset($clone['abook_channel']);
+		require_once('include/settings.php');
+		build_sync_packet(0 /* use the current local_user */, array('abook' => array($clone)));
+}
 
 
 function connections_content(&$a) {
@@ -183,40 +197,48 @@ function connections_content(&$a) {
 		}
 
 		if($cmd === 'block') {
-			if(abook_toggle_flag($orig_record[0],ABOOK_FLAG_BLOCKED))
+			if(abook_toggle_flag($orig_record[0],ABOOK_FLAG_BLOCKED)) {
 				info((($orig_record[0]['abook_flags'] & ABOOK_FLAG_BLOCKED) 
 					? t('Channel has been unblocked') 
 					: t('Channel has been blocked')) . EOL );
+				connections_clone($a);
+			}
 			else
 				notice(t('Unable to set address book parameters.') . EOL);
 			goaway($a->get_baseurl(true) . '/connections/' . $contact_id);
 		}
 
 		if($cmd === 'ignore') {
-			if(abook_toggle_flag($orig_record[0],ABOOK_FLAG_IGNORED))
+			if(abook_toggle_flag($orig_record[0],ABOOK_FLAG_IGNORED)) {
 				info((($orig_record[0]['abook_flags'] & ABOOK_FLAG_IGNORED) 
 					? t('Channel has been unignored') 
 					: t('Channel has been ignored')) . EOL );
+				connections_clone($a);
+			}
 			else
 				notice(t('Unable to set address book parameters.') . EOL);
 			goaway($a->get_baseurl(true) . '/connections/' . $contact_id);
 		}
 
 		if($cmd === 'archive') {
-			if(abook_toggle_flag($orig_record[0],ABOOK_FLAG_ARCHIVED))
+			if(abook_toggle_flag($orig_record[0],ABOOK_FLAG_ARCHIVED)) {
 				info((($orig_record[0]['abook_flags'] & ABOOK_FLAG_ARCHIVED) 
 					? t('Channel has been unarchived') 
 					: t('Channel has been archived')) . EOL );
+				connections_clone($a);
+			}
 			else
 				notice(t('Unable to set address book parameters.') . EOL);
 			goaway($a->get_baseurl(true) . '/connections/' . $contact_id);
 		}
 
 		if($cmd === 'hide') {
-			if(abook_toggle_flag($orig_record[0],ABOOK_FLAG_HIDDEN))
+			if(abook_toggle_flag($orig_record[0],ABOOK_FLAG_HIDDEN)) {
 				info((($orig_record[0]['abook_flags'] & ABOOK_FLAG_HIDDEN) 
 					? t('Channel has been unhidden') 
 					: t('Channel has been hidden')) . EOL );
+				connections_clone($a);
+			}
 			else
 				notice(t('Unable to set address book parameters.') . EOL);
 			goaway($a->get_baseurl(true) . '/connections/' . $contact_id);
@@ -226,10 +248,12 @@ function connections_content(&$a) {
 
 		if($cmd === 'approve') {
 			if($orig_record[0]['abook_flags'] & ABOOK_FLAG_PENDING) {
-				if(abook_toggle_flag($orig_record[0],ABOOK_FLAG_PENDING))
+				if(abook_toggle_flag($orig_record[0],ABOOK_FLAG_PENDING)) {
 					info((($orig_record[0]['abook_flags'] & ABOOK_FLAG_PENDING) 
 						? t('Channel has been approved') 
 						: t('Channel has been unapproved')) . EOL );
+					connections_clone($a);
+				}
 				else
 					notice(t('Unable to set address book parameters.') . EOL);
 			}
@@ -244,6 +268,7 @@ function connections_content(&$a) {
 //			terminate_friendship($a->get_channel(),$orig_record[0]);
 
 			contact_remove(local_user(), $orig_record[0]['abook_id']);
+// FIXME - send to clones
 			info( t('Contact has been removed.') . EOL );
 			if(x($_SESSION,'return_url'))
 				goaway($a->get_baseurl(true) . '/' . $_SESSION['return_url']);

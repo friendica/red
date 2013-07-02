@@ -140,7 +140,9 @@ function item_post(&$a) {
 		}
 	}
 
-	if($parent) logger('mod_item: item_post parent=' . $parent);
+	if($parent) {
+		logger('mod_item: item_post parent=' . $parent);
+	}
 
 	$observer = $a->get_observer();
 
@@ -319,6 +321,18 @@ function item_post(&$a) {
 	if((! $parent) && (! $api_source) && (! $plaintext)) {
 		$body = fix_mce_lf($body);
 	}
+
+	// If we're sending a private top-level message with a single @-taggable channel as a recipient, @-tag it. 
+
+	if((! $parent) && (substr_count($str_contact_allow,'<') == 1) && ($str_group_allow == '') && ($str_contact_deny == '') && ($str_group_deny == '')) {
+		$x = q("select abook_id, abook_their_perms from abook where abook_xchan = '%s' and abook_channel = %d limit 1",
+			dbesc(str_replace(array('<','>'),array('',''),$str_contact_allow)),
+			intval($profile_uid)
+		);
+		if($x && ($x[0]['abook_their_perms'] & PERMS_W_TAGWALL))
+			$body .= "\n\n@group+" . $x[0]['abook_id'] . "\n";
+	}
+
 
 
 	/**
@@ -532,6 +546,7 @@ function item_post(&$a) {
 	$datarray['item_restrict'] = $item_restrict;
 	$datarray['item_flags']    = $item_flags;
 
+	$datarray['comment_policy'] = map_scope($channel['channel_w_comment']); 
 
 	// preview mode - prepare the body for display and send it via json
 

@@ -1,20 +1,20 @@
 
-Kara $[username],
-	Via pasvorto estas ŝanĝita laŭ via peto. Bonvolu konservi ĉi tiun 
-informon (aŭ tuj ŝanĝu vian pasvorton al 
-iu kiun vi povas memori).
+Dear {{$username}},
+	Your password has been changed as requested. Please retain this 
+information for your records (or change your password immediately to 
+something that you will remember).
 
 
-Jen viaj legitimaĵoj:
+Your login details are as follows:
 
-Retejo:»$[siteurl]
-Salutnomo:»$[email]
-Pasvorto:»$[new_password]
+Site Location:	{{$siteurl}}
+Login Name:	{{$email}}
+Password:	{{$new_password}}
 
-Vi eblas ŝanĝi la pasvorton ĉe la paĝo Agordoj -> Konto kiam vi estas ensalutita.
+You may change that password from your account settings page after logging in.
 
 
-Salutoj,
-	$[sitename] administranto
+Sincerely,
+	{{$sitename}} Administrator
 
  

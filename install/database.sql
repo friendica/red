@@ -462,6 +462,7 @@ CREATE TABLE IF NOT EXISTS `item` (
   `inform` mediumtext NOT NULL,
   `location` char(255) NOT NULL DEFAULT '',
   `coord` char(255) NOT NULL DEFAULT '',
+  `comment_policy` char(255) NOT NULL DEFAULT '',
   `allow_cid` mediumtext NOT NULL,
   `allow_gid` mediumtext NOT NULL,
   `deny_cid` mediumtext NOT NULL,
@@ -494,6 +495,7 @@ CREATE TABLE IF NOT EXISTS `item` (
   KEY `mid` (`mid`),
   KEY `parent_mid` (`parent_mid`),
   KEY `uid_mid` (`mid`,`uid`),
+  KEY `comment_policy` (`comment_policy`),
   FULLTEXT KEY `title` (`title`),
   FULLTEXT KEY `body` (`body`),
   FULLTEXT KEY `allow_cid` (`allow_cid`),
@@ -795,10 +797,12 @@ CREATE TABLE IF NOT EXISTS `site` (
   `site_flags` int(11) NOT NULL DEFAULT '0',
   `site_update` datetime NOT NULL DEFAULT '0000-00-00 00:00:00',
   `site_directory` char(255) NOT NULL DEFAULT '',
+  `site_register` int(11) NOT NULL DEFAULT '0',
   PRIMARY KEY (`site_url`),
   KEY `site_flags` (`site_flags`),
   KEY `site_update` (`site_update`),
-  KEY `site_directory` (`site_directory`)
+  KEY `site_directory` (`site_directory`),
+  KEY `site_register` (`site_register`)
 ) ENGINE=MyISAM DEFAULT CHARSET=utf8;
 
 CREATE TABLE IF NOT EXISTS `spam` (
@@ -824,13 +828,17 @@ CREATE TABLE IF NOT EXISTS `term` (
   `type` tinyint(3) unsigned NOT NULL,
   `term` char(255) NOT NULL,
   `url` char(255) NOT NULL,
+  `imgurl` char(255) NOT NULL,
+  `term_hash` char(255) NOT NULL DEFAULT '',
   PRIMARY KEY (`tid`),
   KEY `oid` (`oid`),
   KEY `otype` (`otype`),
   KEY `type` (`type`),
   KEY `term` (`term`),
   KEY `uid` (`uid`),
-  KEY `aid` (`aid`)
+  KEY `aid` (`aid`),
+  KEY `imgurl` (`imgurl`),
+  KEY `term_hash` (`term_hash`)
 ) ENGINE=MyISAM  DEFAULT CHARSET=utf8;
 
 CREATE TABLE IF NOT EXISTS `tokens` (
@@ -927,12 +935,13 @@ CREATE TABLE IF NOT EXISTS `xlink` (
   KEY `xlink_link` (`xlink_link`),
   KEY `xlink_updated` (`xlink_updated`),
   KEY `xlink_rating` (`xlink_rating`)
-) ENGINE=MyISAM DEFAULT CHARSET=utf8;
+) ENGINE=MyISAM  DEFAULT CHARSET=utf8;
 
 CREATE TABLE IF NOT EXISTS `xprof` (
   `xprof_hash` char(255) NOT NULL,
   `xprof_desc` char(255) NOT NULL DEFAULT '',
   `xprof_dob` char(12) NOT NULL DEFAULT '',
+  `xprof_age` tinyint(3) NOT NULL DEFAULT '0',
   `xprof_gender` char(255) NOT NULL DEFAULT '',
   `xprof_marital` char(255) NOT NULL DEFAULT '',
   `xprof_sexual` char(255) NOT NULL DEFAULT '',
@@ -944,6 +953,7 @@ CREATE TABLE IF NOT EXISTS `xprof` (
   PRIMARY KEY (`xprof_hash`),
   KEY `xprof_desc` (`xprof_desc`),
   KEY `xprof_dob` (`xprof_dob`),
+  KEY `xprof_age` (`xprof_age`),
   KEY `xprof_gender` (`xprof_gender`),
   KEY `xprof_marital` (`xprof_marital`),
   KEY `xprof_sexual` (`xprof_sexual`),

@@ -1,32 +1,32 @@
 
-Kara $[username],
-	$[sitename] ricevis peton por rekomencigi vian pasvorton. 
-Por konfirmi la peton, bonvolu klaki la sekvantan konfirmligilon 
-aŭ alglui ĝin en la adreskampo de via retumilo. 
+Dear {{$username}},
+	A request was recently received at {{$sitename}} to reset your account 
+password. In order to confirm this request, please select the verification link
+below or paste it into your web browser address bar. 
 
-Se vi NE petis tiun ŝanĝon, bonvolu NE KLAKU la 
-sekvantan ligilon kaj ignoru aŭ forvisu ĉi-mesaĝon. 
+If you did NOT request this change, please DO NOT follow the link
+provided and ignore and/or delete this email. 
 
-Ni ne ŝanĝu vian pasvorton se ni ne povas kontroli ĉu estas vi
-kiu petis la ŝanĝon. 
+Your password will not be changed unless we can verify that you
+issued this request. 
 
-Sekvu ĉi tion ligilon por konfirmi vian identecon:
+Follow this link to verify your identity:
 
-$[reset_link]
+{{$reset_link}}
 
-Poste, vi ricevos mesaĝon enhavonte la novan pasvorton.
+You will then receive a follow-up message containing the new password.
 
-Vi eblas ŝangi la pasvorton ĉe viaj kontdoagordoj paĝo post ensaluti.
+You may change that password from your account settings page after logging in.
 
-La akreditaĵoj estas:
+The login details are as follows:
 
-Retejo:»$[siteurl]
-Salutnomo:»$[email]
-
-
+Site Location:	{{$siteurl}}
+Login Name:	{{$email}}
 
 
-Salutoj,
-	$[sitename] administranto
+
+
+Sincerely,
+	{{$sitename}} Administrator
 
  

@@ -9,6 +9,7 @@ var searchData=
   ['photo_5fimagick_2ephp',['photo_imagick.php',['../photo__imagick_8php.html',1,'']]],
   ['photos_2ephp',['photos.php',['../mod_2photos_8php.html',1,'']]],
   ['photos_2ephp',['photos.php',['../include_2photos_8php.html',1,'']]],
+  ['php_2ephp',['php.php',['../php_8php.html',1,'']]],
   ['php2po_2ephp',['php2po.php',['../php2po_8php.html',1,'']]],
   ['ping_2ephp',['ping.php',['../ping_8php.html',1,'']]],
   ['plugin_2ephp',['plugin.php',['../plugin_8php.html',1,'']]],

@@ -2814,14 +2814,18 @@ aside input[type='text'] {
 	margin-top: 10px;
 }
 
-.body-tag, .filesavetags, .categorytags {
+.posttags a, .body-tag, .filesavetags, .categorytags {
 	opacity: 0.5;
 	filter:alpha(opacity=50);
 }
 
-.body-tag:hover, .filesavetags:hover, .categorytags:hover {
+.posttags a:hover, .body-tag:hover, .filesavetags:hover, .categorytags:hover {
 	opacity: 1.0 !important;
 	filter:alpha(opacity=100) !important;
+}
+
+.posttags {
+	margin-top: 15px;
 }
 
 .item-select {
@@ -3255,6 +3259,9 @@ brain is weird like that */
 .acpopupitem {
 	background-color:#ffffff; padding: 4px;
 	clear:left;
+}
+.acpopupitem.taggable {
+	background-color: #ddddff;
 }
 .acpopupitem img {
 	float: left;
@@ -3740,7 +3747,7 @@ ul.menu-popup {
 	margin: 4px;
 }
 .acl-list-item.taggable {
-	background-color: #ccccff;
+	background-color: #ddddff;
 }
 
 .acl-list-item p { height: 12px; font-size: 10px; margin: 0px; padding: 2px 0px 1px; overflow: hidden;}

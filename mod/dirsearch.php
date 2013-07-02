@@ -32,6 +32,8 @@ function dirsearch_content(&$a) {
 	$gender   = ((x($_REQUEST,'gender'))   ? $_REQUEST['gender']   : '');
 	$marital  = ((x($_REQUEST,'marital'))  ? $_REQUEST['marital']  : '');
 	$keywords = ((x($_REQUEST,'keywords')) ? $_REQUEST['keywords'] : '');
+	$agege    = ((x($_REQUEST,'agege'))    ? intval($_REQUEST['agege']) : 0 );
+	$agele    = ((x($_REQUEST,'agele'))    ? intval($_REQUEST['agele']) : 0 );
 
 // TODO - a meta search which joins all of these things to one search string
 
@@ -57,6 +59,14 @@ function dirsearch_content(&$a) {
 		$sql_extra .= " OR xprof_marital like '" . protect_sprintf( '%' . dbesc($marital) . '%' ) . "' ";
 	if($keywords)
 		$sql_extra .= " OR xprof_keywords like '" . protect_sprintf( '%' . dbesc($keywords) . '%' ) . "' ";
+
+	// we only support an age range currently. You must set both agege 
+	// (greater than or equal) and agele (less than or equal) 
+
+	if($agele && $agege) {
+		$sql_extra .= " OR ( xprof_age <= " . intval($agele) . " ";
+		$sql_extra .= " AND  xprof_age >= " . intval($agege) . ") ";
+	}
 
     $perpage      = (($_REQUEST['n'])              ? $_REQUEST['n']                    : 80);
     $page         = (($_REQUEST['p'])              ? intval($_REQUEST['p'] - 1)        : 0);
@@ -124,6 +134,7 @@ function dirsearch_content(&$a) {
 			$entry['postcode']    = $rr['xprof_postcode'];
 			$entry['country']     = $rr['xprof_country'];
 			$entry['birthday']    = $rr['xprof_dob'];
+			$entry['age']         = $rr['xprof_age'];
 			$entry['gender']      = $rr['xprof_gender'];
 			$entry['marital']     = $rr['xprof_marital'];
 			$entry['keywords']    = $rr['xprof_keywords'];

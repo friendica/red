@@ -1,25 +1,25 @@
 
-Eine Neuanmeldung auf $[sitename] benötigt 
-deine Aufmerksamkeit. 
+A new user registration request was received at {{$sitename}} which requires 
+your approval. 
 
 
-Die Login-Einzelheiten sind die folgenden:
+The login details are as follows:
 
-Kompletter Name:	$[username]
-Adresse der Seite:	$[siteurl]
-Login Name:	$[email]
+Site Location:	{{$siteurl}}
+Login Name:	{{$email}}
+IP Address: {{$details}}
 
-
-Um die Anfrage zu bestätigen besuche bitte:
-
-
-$[siteurl]/regmod/allow/$[hash] 
+To approve this request please visit the following link:
 
 
-Um die Anfrage abzulehnen und den Account zu löschen besuche bitte:
+{{$siteurl}}/regmod/allow/{{$hash}} 
 
 
-$[siteurl]/regmod/deny/$[hash]
+To deny the request and remove the account, please visit:
 
 
-Danke!
+{{$siteurl}}/regmod/deny/{{$hash}}
+
+
+Thank you.
+

@@ -1,21 +1,19 @@
 
-Estimado/a $username,
+An account has been created at {{$sitename}} for this email address. 
+The login details are as follows:
 
-    Gracias por registrarte en $sitename. Tu cuenta ha sido creada.
+Site Location:	{{$siteurl}}
+Login:	{{$email}}
+Password: (the password which was provided during registration)
 
+If this account was created without your knowledge and is not desired, you may 
+visit this site and reset the password. This will allow you to remove the 
+account from the links on the Settings page, and we 
+apologise for any inconvenience. 
 
-Los datos de acceso son los siguientes:
+Thank you and welcome to {{$sitename}}.
 
-Sitio:	$siteurl
-Nombre:	$email
-Contraseña:	$password
-
-
-Después de acceder puedes cambiar tu contraseña en la página de "Configuración".
-
-Toma un momento para revisar las otras configuraciones de la cuenta en esa página.
-
-
-Gracias y bienvenido/a $sitename.
+Sincerely,
+	{{$sitename}} Administrator
 
  

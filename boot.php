@@ -37,11 +37,13 @@ require_once('include/permissions.php');
 require_once('library/Mobile_Detect/Mobile_Detect.php');
 require_once('include/BaseObject.php');
 require_once('include/features.php');
+require_once('include/taxonomy.php');
+
 
 define ( 'RED_PLATFORM',            'Red Matrix' );
 define ( 'RED_VERSION',             trim(file_get_contents('version.inc')) . 'R');
 define ( 'ZOT_REVISION',            1     ); 
-define ( 'DB_UPDATE_VERSION',       1043  );
+define ( 'DB_UPDATE_VERSION',       1048  );
 
 define ( 'EOL',                    '<br />' . "\r\n"     );
 define ( 'ATOM_TIME',              'Y-m-d\TH:i:s\Z' );
@@ -117,7 +119,7 @@ define ( 'DEFAULT_DB_ENGINE',  'MyISAM'  );
 
 define ( 'SSL_POLICY_NONE',         0 );
 define ( 'SSL_POLICY_FULL',         1 );
-define ( 'SSL_POLICY_SELFSIGN',     2 );
+define ( 'SSL_POLICY_SELFSIGN',     2 ); // NOT supported in Red
 
 
 /**
@@ -313,18 +315,21 @@ define ( 'XCHAN_FLAGS_HIDDEN',        0x0001);
  * Tag/term types
  */
 
-define ( 'TERM_UNKNOWN',     0 );
-define ( 'TERM_HASHTAG',     1 );
-define ( 'TERM_MENTION',     2 );   
-define ( 'TERM_CATEGORY',    3 );
-define ( 'TERM_PCATEGORY',   4 );
-define ( 'TERM_FILE',        5 );
-define ( 'TERM_SAVEDSEARCH', 6 );
+define ( 'TERM_UNKNOWN',      0 );
+define ( 'TERM_HASHTAG',      1 );
+define ( 'TERM_MENTION',      2 );   
+define ( 'TERM_CATEGORY',     3 );
+define ( 'TERM_PCATEGORY',    4 );
+define ( 'TERM_FILE',         5 );
+define ( 'TERM_SAVEDSEARCH',  6 );
+define ( 'TERM_THING',        7 );
 
-
-define ( 'TERM_OBJ_POST',  1 );
-define ( 'TERM_OBJ_PHOTO', 2 );
-
+define ( 'TERM_OBJ_POST',    1 );
+define ( 'TERM_OBJ_PHOTO',   2 );
+define ( 'TERM_OBJ_PROFILE', 3 );
+define ( 'TERM_OBJ_CHANNEL', 4 );
+define ( 'TERM_OBJ_OBJECT',  5 );
+define ( 'TERM_OBJ_THING',   6 );
 
 
 /**
@@ -379,6 +384,7 @@ define ( 'ACTIVITY_OBJ_EVENT',   NAMESPACE_ACTIVITY_SCHEMA . 'event' );
 define ( 'ACTIVITY_OBJ_GROUP',   NAMESPACE_ACTIVITY_SCHEMA . 'group' );
 define ( 'ACTIVITY_OBJ_TAGTERM', NAMESPACE_ZOT  . '/activity/tagterm' );
 define ( 'ACTIVITY_OBJ_PROFILE', NAMESPACE_ZOT  . '/activity/profile' );
+define ( 'ACTIVITY_OBJ_THING',   NAMESPACE_ZOT  . '/activity/thing' );
 
 /**
  * item weight for query ordering
@@ -436,6 +442,7 @@ define ( 'ITEM_NOTSHOWN',        0x0080);  // technically visible but not normal
 define ( 'ITEM_NSFW',            0x0100);
 define ( 'ITEM_RELAY',           0x0200);  // used only in the communication layers, not stored
 define ( 'ITEM_MENTIONSME',      0x0400);
+define ( 'ITEM_NOCOMMENT',       0x0800);  // commenting/followups are disabled
 
 
 /**
@@ -2061,12 +2068,16 @@ function profile_tabs($a, $is_owner=False, $nickname=Null){
 
 
 function get_my_url() {
+	if(x($_SESSION,'zrl_override'))
+		return $_SESSION['zrl_override'];
 	if(x($_SESSION,'my_url'))
 		return $_SESSION['my_url'];
 	return false;
 }
 
 function get_my_address() {
+	if(x($_SESSION,'zid_override'))
+		return $_SESSION['zid_override'];
 	if(x($_SESSION,'my_address'))
 		return $_SESSION['my_address'];
 	return false;
@@ -2104,12 +2115,12 @@ function zid_init(&$a) {
 }
 
 /**
- * @function zid($s,$force = false)
+ * @function zid($s,$address = '')
  *   Adds a zid parameter to a url
  * @param string $s
  *   The url to accept the zid
- * @param boolean $force
- *   Currently unused
+ * @param boolean $address
+ *   $address to use instead of session environment
  * @return string
  *
  * @hooks 'zid'
@@ -2119,7 +2130,7 @@ function zid_init(&$a) {
  */
 
 
-function zid($s,$force = false) {
+function zid($s,$address = '') {
 	if(! strlen($s) || strpos($s,'zid='))
 		return $s;
 	$has_params = ((strpos($s,'?')) ? true : false);
@@ -2129,9 +2140,9 @@ function zid($s,$force = false) {
 	$achar = strpos($s,'?') ? '&' : '?';
 
 	$mine = get_my_url();
-	$myaddr = get_my_address();
+	$myaddr = (($address) ? $address : get_my_address());
 
-	if($mine and ! link_compare($mine,$s))
+	if($mine && $myaddr && (! link_compare($mine,$s)))
 		$zurl = $s . (($num_slashes >= 3) ? '' : '/') . $achar . 'zid=' . urlencode($myaddr);
 	else
 		$zurl = $s;

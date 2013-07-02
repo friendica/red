@@ -1,34 +1,19 @@
 
-Ciao $[username],
-	Grazie per aver effettuato la registrazione a $[sitename]. Il tuo account è stato creato. 
-I dettagli di accesso sono i seguenti
+An account has been created at {{$sitename}} for this email address. 
+The login details are as follows:
 
+Site Location:	{{$siteurl}}
+Login:	{{$email}}
+Password: (the password which was provided during registration)
 
-Sito:»$[siteurl]
-Nome utente:»$[email]
-Password:»$[password]
+If this account was created without your knowledge and is not desired, you may 
+visit this site and reset the password. This will allow you to remove the 
+account from the links on the Settings page, and we 
+apologise for any inconvenience. 
 
-Puoi cambiare la tua password dalla pagina "Impostazioni" del tuo profilo dopo aver effettuato l'accesso 
-.
+Thank you and welcome to {{$sitename}}.
 
-Prenditi un momento per dare un'occhiata alle altre impostazioni del tuo profilo nella stessa pagina.
-
-Potrest voler aggiungere alcune informazioni di base a quelle predefinite del profilo 
-(nella pagina "Profilo") per rendere agli altri più facile trovarti.
-
-Noi raccomandiamo di impostare il tuo nome completo, di aggiungere una foto,
-di aggiungere alcune "parole chiavi" (molto utili per farsi nuovi amici) - e 
-magari il paese dove vivi; se non vuoi essere più dettagliato
-di così.
-
-Noi rispettiamo il tuo diritto alla privacy e nessuna di queste informazioni è indispensabile. 
-Se  ancora non conosci nessuno qui, potrebbe esserti di aiuto
-per farti nuovi e interessanti amici.  
-
-
-Grazie. Siamo contenti di darti il benvenuto su $[sitename]
-
-Saluti,
-	l'amministratore di $[sitename]
+Sincerely,
+	{{$sitename}} Administrator
 
  

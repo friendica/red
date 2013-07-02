@@ -2,6 +2,7 @@ var searchData=
 [
   ['cal',['cal',['../datetime_8php.html#aea356409ba69f9de412298c998595dd2',1,'datetime.php']]],
   ['call_5fhooks',['call_hooks',['../plugin_8php.html#a7f05de16c0a32602853b09b99dd85e7c',1,'plugin.php']]],
+  ['can_5fcomment_5fon_5fpost',['can_comment_on_post',['../items_8php.html#a1e75047cf175aaee8dd16aa761913ff9',1,'items.php']]],
   ['categories_5fwidget',['categories_widget',['../contact__widgets_8php.html#a165eb021e61c4dcab2a552f28628d353',1,'contact_widgets.php']]],
   ['change_5fchannel',['change_channel',['../security_8php.html#a8d23d2597aae380a3341872fe9513380',1,'security.php']]],
   ['change_5fpermissions',['change_permissions',['../classProtoDriver.html#a34b97ca5ef2165f2e16eb2fe59ff6c67',1,'ProtoDriver\change_permissions()'],['../classZotDriver.html#a6776935156accb0f170e2e24577133db',1,'ZotDriver\change_permissions()']]],
@@ -56,6 +57,7 @@ var searchData=
   ['completeurl',['completeurl',['../parse__url_8php.html#a496f4e3836154f6f32b8e805a7160d3a',1,'parse_url.php']]],
   ['connect',['connect',['../classdba__driver.html#ae533e62a240a793f17aef5ab4ef10edc',1,'dba_driver\connect()'],['../classdba__mysql.html#a1887338627ce0e28786839363014bd0b',1,'dba_mysql\connect()'],['../classdba__mysqli.html#add062bd93961e5f0194d94820e9a51b1',1,'dba_mysqli\connect()']]],
   ['connections_5faside',['connections_aside',['../connections_8php.html#af48f7ad20914760ba9874c090384e35a',1,'connections.php']]],
+  ['connections_5fclone',['connections_clone',['../connections_8php.html#a15af118efee9c948b6f8294e54a73bb2',1,'connections.php']]],
   ['connections_5fcontent',['connections_content',['../connections_8php.html#aec2e457420fce3e3bf6a9f48e36df25c',1,'connections.php']]],
   ['connections_5finit',['connections_init',['../connections_8php.html#a1f23623f802af7bd35e95b0e94e5d558',1,'connections.php']]],
   ['connections_5fpost',['connections_post',['../connections_8php.html#a1224058db8e3fb56463eb312f98e561d',1,'connections.php']]],
@@ -73,6 +75,7 @@ var searchData=
   ['contactgroup_5fcontent',['contactgroup_content',['../contactgroup_8php.html#a18c7391b1b25debaf98c9dba639caab3',1,'contactgroup.php']]],
   ['contacts_5fnot_5fgrouped',['contacts_not_grouped',['../Contact_8php.html#a228fc01f90ae9bfdde4c2ad0772bd7dc',1,'Contact.php']]],
   ['conv_5fsort',['conv_sort',['../conversation_8php.html#abed85a41f1160598de880b84021c9cf7',1,'conversation.php']]],
+  ['conversation',['conversation',['../conversation_8php.html#a1e97305a441dc143edbe09e17d1ceda1',1,'conversation.php']]],
   ['convert',['convert',['../namespacefriendica-to-smarty-tpl.html#a38503e37fe68ac27c88cce91a9ac9efa',1,'friendica-to-smarty-tpl']]],
   ['convert_5fxml_5felement_5fto_5farray',['convert_xml_element_to_array',['../include_2network_8php.html#ad4056d3ce69988f5c1a997a79f503246',1,'network.php']]],
   ['count_5fall_5ffriends',['count_all_friends',['../socgraph_8php.html#af29d056beec10b4e38e5209c92452894',1,'socgraph.php']]],

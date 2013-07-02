@@ -1,25 +1,25 @@
 
-En ny forespørsel om brukerregistering ble mottatt hos $[sitename] og krever  
-din godkjenning. 
+A new user registration request was received at {{$sitename}} which requires 
+your approval. 
 
 
-Innloggingsdetaljene er som følger:
+The login details are as follows:
 
-Fullt navn:»$[username]
-Nettstedsadresse:»$[siteurl]
-Brukernavn:»$[email]
+Site Location:	{{$siteurl}}
+Login Name:	{{$email}}
+IP Address: {{$details}}
 
-
-For å godkjenne denne forespørselen, vennligst besøk følgende lenke:
-
-
-$[siteurl]/regmod/allow/$[hash] 
+To approve this request please visit the following link:
 
 
-For å avslå denne forespørselen og fjerne kontoen, vennligst besøk:
+{{$siteurl}}/regmod/allow/{{$hash}} 
 
 
-$[siteurl]/regmod/deny/$[hash]
+To deny the request and remove the account, please visit:
 
 
-Mange takk.
+{{$siteurl}}/regmod/deny/{{$hash}}
+
+
+Thank you.
+

@@ -85,7 +85,7 @@ function editpost_content(&$a) {
 		'$jotnets' => $jotnets,
 		'$title' => htmlspecialchars($itm[0]['title']),
 		'$placeholdertitle' => t('Set title'),
-		'$category' => file_tag_file_to_list($itm[0]['file'], 'category'),
+		'$category' => '', // FIXME
 		'$placeholdercategory' => t('Categories (comma-separated list)'),
 		'$emtitle' => t('Example: bob@example.com, mary@example.com'),
 		'$lockstate' => $lockstate,

@@ -1,17 +1,19 @@
-$username,
-Tack för att du registrerat dig på $sitename. Kontot har skapats. 
-Här är dina inloggningsuppgifter:
 
-Webbplats:	$siteurl
-Användarnamn:	$email
-Lösenord:	$password
+An account has been created at {{$sitename}} for this email address. 
+The login details are as follows:
 
-Lösenordet kan ändras på sidan Inställningar efter att du loggat in.
+Site Location:	{{$siteurl}}
+Login:	{{$email}}
+Password: (the password which was provided during registration)
 
-Ägna en liten stund åt att gå igenom alla kontoinställningar där. 
+If this account was created without your knowledge and is not desired, you may 
+visit this site and reset the password. This will allow you to remove the 
+account from the links on the Settings page, and we 
+apologise for any inconvenience. 
 
-Välkommen till $sitename.
+Thank you and welcome to {{$sitename}}.
 
-Hälsningar,
-$sitename admin
+Sincerely,
+	{{$sitename}} Administrator
 
+ 

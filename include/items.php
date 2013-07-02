@@ -53,6 +53,37 @@ function collect_recipients($item,&$private) {
 
 }
 
+
+function can_comment_on_post($observer_xchan,$item) {
+	if(! $observer_xchan)
+		return false;
+	if($item['comment_policy'] === 'none')
+		return false;
+	switch($item['comment_policy']) {
+		case 'self':
+			if($observer_xchan === $item['author_xchan'] || $observer_xchan === $item['owner_xchan'])
+				return true;
+			break;
+		case 'public':
+			return false;
+			break;
+		case 'contacts':
+		case '':
+			if(($item['owner']['abook_xchan']) && ($item['owner']['abook_their_perms'] & PERMS_W_COMMENT))
+				return true;
+			break;
+		default:
+			break;
+	}
+	if(strstr($item['comment_policy'],'network:') && strstr($item['comment_policy'],'red'))
+		return true;
+	if(strstr($item['comment_policy'],'site:') && strstr($item['comment_policy'],get_app()->get_hostname()))
+		return true;
+	
+	return false;
+}
+
+
 /**
  * @function red_zrl_callback
  *   preg_match function when fixing 'naked' links in mod item.php
@@ -142,6 +173,7 @@ function post_activity_item($arr) {
 	$arr['deny_cid']     = ((x($arr,'deny_cid')) ? $arr['deny_cid'] : $channel['channel_deny_cid']);
 	$arr['deny_gid']     = ((x($arr,'deny_gid')) ? $arr['deny_gid'] : $channel['channel_deny_gid']);
 
+	$arr['comment_policy'] = map_scope($channel['channel_w_comment']); 
 
 	// for the benefit of plugins, we will behave as if this is an API call rather than a normal online post
 
@@ -481,7 +513,8 @@ function get_item_elements($x) {
 	$arr['mimetype']     = (($x['mimetype'])       ? htmlentities($x['mimetype'],       ENT_COMPAT,'UTF-8',false) : '');
 	$arr['obj_type']     = (($x['object_type'])    ? htmlentities($x['object_type'],    ENT_COMPAT,'UTF-8',false) : '');
 	$arr['tgt_type']     = (($x['target_type'])    ? htmlentities($x['target_type'],    ENT_COMPAT,'UTF-8',false) : '');
-
+	$arr['comment_policy'] = (($x['comment_scope']) ? htmlentities($x['comment_scope'],  ENT_COMPAT,'UTF-8',false) : 'contacts');
+	
 	$arr['object']       = activity_sanitise($x['object']);
 	$arr['target']       = activity_sanitise($x['target']);
 
@@ -545,17 +578,21 @@ function encode_item($item) {
 
 	logger('encode_item: ' . print_r($item,true));
 
-	$r = q("select channel_r_stream from channel where channel_id = %d limit 1",
+	$r = q("select channel_r_stream, channel_w_comment from channel where channel_id = %d limit 1",
 		intval($item['uid'])
 	);
 
-	if($r)
+	if($r) {
 		$public_scope = $r[0]['channel_r_stream'];
-	else
+		$comment_scope = $r[0]['channel_w_comment'];
+	}
+	else {
 		$public_scope = 0;
+		$comment_scope = 0;
+	}
 
 	$scope = map_scope($public_scope);
-
+	$c_scope = map_scope($comment_scope);
 
 	if($item['item_restrict']  & ITEM_DELETED) {
 		$x['message_id'] = $item['mid'];
@@ -596,6 +633,11 @@ function encode_item($item) {
 
 	if(! in_array('private',$y))
 		$x['public_scope'] = $scope;
+
+	if($item['item_flags'] & ITEM_NOCOMMENT)
+		$x['comment_scope'] = 'none';
+	else
+		$x['comment_scope'] = $c_scope;
 
 	if($item['term'])
 		$x['tags']       = encode_item_terms($item['term']);
@@ -818,6 +860,7 @@ function get_profile_elements($x) {
 	$arr['desc']         = (($x['title']) ? htmlentities($x['title'],ENT_COMPAT,'UTF-8',false) : '');
 
 	$arr['dob']          = datetime_convert('UTC','UTC',$x['birthday'],'Y-m-d');
+	$arr['age']          = (($x['age']) ? intval($x['age']) : 0);
 
 	$arr['gender']       = (($x['gender'])    ? htmlentities($x['gender'],    ENT_COMPAT,'UTF-8',false) : '');
 	$arr['marital']      = (($x['marital'])   ? htmlentities($x['marital'],   ENT_COMPAT,'UTF-8',false) : '');
@@ -1323,9 +1366,16 @@ function item_store($arr,$force_parent = false) {
 	$arr['attach']        = ((x($arr,'attach'))        ? notags(trim($arr['attach']))        : '');
 	$arr['app']           = ((x($arr,'app'))           ? notags(trim($arr['app']))           : '');
 	$arr['item_restrict'] = ((x($arr,'item_restrict')) ? intval($arr['item_restrict'])       : 0 );
+
+	$arr['comment_policy'] = ((x($arr,'comment_policy')) ? notags(trim($arr['comment_policy']))  : 'contacts' );
+
 	$arr['item_flags']    = ((x($arr,'item_flags'))    ? intval($arr['item_flags'])          : 0 );
 	
 	$arr['item_flags'] = $arr['item_flags'] | ITEM_UNSEEN;
+
+	if($arr['comment_policy'] == 'none')
+		$arr['item_flags'] = $arr['item_flags'] | ITEM_NOCOMMENT;
+
 
 
 	// handle time travelers
@@ -1811,27 +1861,73 @@ function tag_deliver($uid,$item_id) {
 		// FIXME --- If the item is deleted, remove the tag from the parent.
 		// (First ensure that deleted items use this function, or else do that part separately.)
 
+		logger('tag_deliver: community tag activity received');
+
 		if(($item['owner_xchan'] === $u[0]['channel_hash']) && (! get_pconfig($u[0]['channel_id'],'system','blocktags'))) {
 			$j_tgt = json_decode($item['target'],true);
-			if($j_tgt && $j_tgt['mid']) {
+			if($j_tgt && $j_tgt['id']) {
 				$p = q("select * from item where mid = '%s' and uid = %d limit 1",
-					dbesc($j_tgt['mid']),
+					dbesc($j_tgt['id']),
 					intval($u[0]['channel_id'])
 				);
 				if($p) {
 					$j_obj = json_decode($item['object'],true);
+					logger('tag_deliver: tag object: ' . print_r($j_obj,true), LOGGER_DATA);
 					if($j_obj && $j_obj['id'] && $j_obj['title']) {
-						store_item_tag($u[0]['channel_id'],$p[0]['id'],TERM_OBJ_POST,TERM_HASHTAG,$j_obj['title'],$j['obj']['id']);
+						if(is_array($j_obj['link']))
+							$taglink = get_rel_link($j_obj['link'],'alternate');
+						store_item_tag($u[0]['channel_id'],$p[0]['id'],TERM_OBJ_POST,TERM_HASHTAG,$j_obj['title'],$j_obj['id']);
 						proc_run('php','include/notifier.php','edit_post',$p[0]['id']);
 					}
 				}
 			}
 		}
+		else
+			logger('tag_deliver: tag permission denied for ' . $u[0]['channel_address']);
+	}
+
+	// This might be a followup by the original post author to a tagged forum
+	// If so setup a second delivery chain
+
+	$r = null;
+
+	if( ! ($item['item_flags'] & ITEM_THREAD_TOP)) {
+		$x = q("select * from item where id = parent and parent = %d and uid = %d limit 1",
+			intval($item['parent']),
+			intval($uid)
+		);
+		if(($x) && ($x[0]['item_flags'] & ITEM_UPLINK) && ($x[0]['author_xchan'] == $item['author_xchan'])) {
+			logger('tag_deliver: creating second delivery chain for owner comment.');
+
+			// now change this copy of the post to a forum head message and deliver to all the tgroup members
+			// also reset all the privacy bits to the forum default permissions
+
+			$private = (($u[0]['allow_cid'] || $u[0]['allow_gid'] || $u[0]['deny_cid'] || $u[0]['deny_gid']) ? 1 : 0);
+
+			$flag_bits = ITEM_WALL|ITEM_ORIGIN;
+
+			$r = q("update item set item_flags = ( item_flags | %d ), owner_xchan = '%s', allow_cid = '%s', allow_gid = '%s', 
+				deny_cid = '%s', deny_gid = '%s', item_private = %d  where id = %d limit 1",
+				intval($flag_bits),
+				dbesc($u[0]['channel_hash']),
+				dbesc($u[0]['allow_cid']),
+				dbesc($u[0]['allow_gid']),
+				dbesc($u[0]['deny_cid']),
+				dbesc($u[0]['deny_gid']),
+				intval($private),
+				intval($item_id)
+			);
+			if($r)
+				proc_run('php','include/notifier.php','tgroup',$item_id);
+			else
+				logger('tag_deliver: failed to update item');			
+		}
 	}
 
 	$terms = get_terms_oftype($item['term'],TERM_MENTION);
 
-	logger('tag_deliver: post mentions: ' . print_r($terms,true), LOGGER_DATA);
+	if($terms)
+		logger('tag_deliver: post mentions: ' . print_r($terms,true), LOGGER_DATA);
 
 	$link = normalise_link($a->get_baseurl() . '/channel/' . $u[0]['channel_address']);
 
@@ -4690,7 +4786,7 @@ function items_fetch($arr,$channel = null,$observer_hash = null,$client_mode = C
 			intval($uid)
         );
         if($r) {
-            $sql_extra = " AND item.parent IN ( SELECT DISTINCT parent FROM item WHERE true $sql_options AND uid = " . intval($arr['uid']) . " AND ( author_xchan = " . dbesc($r[0]['abook_xchan']) . " or owner_xchan = " . dbesc($r[0]['abook_xchan']) . " ) and item_restrict = 0 ) ";
+            $sql_extra = " AND item.parent IN ( SELECT DISTINCT parent FROM item WHERE true $sql_options AND uid = " . intval($arr['uid']) . " AND ( author_xchan = '" . dbesc($r[0]['abook_xchan']) . "' or owner_xchan = '" . dbesc($r[0]['abook_xchan']) . "' ) and item_restrict = 0 ) ";
         }
         else {
 			$result['message'] = t('Connection not found.');

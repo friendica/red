@@ -1,21 +1,22 @@
 
-Estimado/a $username,
+Dear {{$username}},
 
-	'$fn' en '$dfrn_url' ha aceptado tu petición
-conexión a '$sitename'.
+	'{{$fn}}' at '{{$dfrn_url}}' has accepted 
+your connection request at '{{$sitename}}'.
 
-	'$fn' ha optado por aceptarte come "fan", que restringe ciertas 
-formas de comunicación, como mensajes privados y algunas interacciones 
-con el perfil. Si eres una "celebridad" o una página de comunidad, 
-estos ajustes se aplican automáticamente 
+	'{{$fn}}' has chosen to accept you a "fan", which restricts 
+some forms of communication - such as private messaging and some profile
+interactions. If this is a celebrity or community page, these settings were
+applied automatically.
 
-	'$fn' puede optar por extender esto en una relación más permisiva
-en el futuro.
+	'{{$fn}}' may choose to extend this into a two-way or more permissive 
+relationship in the future. 
 
-	Empezarás a recibir las actualizaciones públicas de estado de '$fn', 
-que aparecerán en tu página "Red" en
+	You will start receiving public status updates from '{{$fn}}', 
+which will appear on your 'Matrix' page at  
 
-$siteurl
+{{$siteurl}}
 
+Sincerely,
 
-	$sitename
+	{{$sitename}} Administrator

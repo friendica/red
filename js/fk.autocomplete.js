@@ -80,7 +80,7 @@ ACPopup.prototype._search = function(){
 				that.cont.show();
 				$(data.items).each(function(){
 					html = "<img src='{0}' height='16px' width='16px'>{1} ({2})".format(this.photo, this.name, this.nick)
-						that.add(html, this.nick.replace(' ','') + '+' + this.id + ' - ' + this.link);
+					that.add(this.taggable, html, this.nick.replace(' ','') + '+' + this.id + ' - ' + this.link);
 				});			
 			} else {
 				that.cont.hide();
@@ -89,9 +89,9 @@ ACPopup.prototype._search = function(){
 	});
 	
 }
-	ACPopup.prototype.add = function(label, value){
+ACPopup.prototype.add = function(taggable, label, value){
 	var that=this;
-	var elm = $("<div class='acpopupitem' title='"+value+"'>"+label+"</div>");
+	var elm = $("<div class='acpopupitem " + taggable +"' title='"+value+"'>"+label+"</div>");
 	elm.click(function(e){
 		t = $(this).attr('title').replace(new RegExp(' \- .*'),'');
 		if(typeof(that.element.container) === "undefined") {

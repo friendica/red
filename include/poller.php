@@ -63,6 +63,9 @@ function poller_run($argv, $argc){
 	
 	// once daily run birthday_updates and then expire in background
 
+	// FIXME: add birthday updates, both locally and for xprof for use
+	// by directory servers
+
 	$d1 = get_config('system','last_expire_day');
 	$d2 = intval(datetime_convert('UTC','UTC','now','d'));
 

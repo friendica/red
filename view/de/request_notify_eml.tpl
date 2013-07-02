@@ -1,17 +1,17 @@
 
-Hallo $[myname],
+Dear {{$myname}},
 
-du hast eine Kontaktanfrage von '$[requestor]' auf $[sitename] 
+You have just received a connection request at {{$sitename}} 
 
-erhalten.
+from '{{$requestor}}'.
 
-Du kannst sein/ihr Profil unter $[url] finden.
+You may visit their profile at {{$url}}.
 
-Bitte melde dich an um die komplette Vorstellung einzusehen 
-und die Anfrage zu bestätigen oder zu ignorieren oder abzulehnen.
+Please login to your site to view the complete introduction 
+and approve or ignore/cancel the request.
 
-$[siteurl]
+{{$siteurl}}
 
-Beste Grüße,
+Regards,
 
-	$[sitename] Administrator
+	{{$sitename}} administrator

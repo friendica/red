@@ -50,6 +50,8 @@ function notification($params) {
 
 	$additional_mail_header = "";
 
+	// We really should pass this through localize_item - but only if we have a complete item. We may only have a couple of elements.
+
 	if(array_key_exists('item',$params)) {
 		$title = $params['item']['title'];
 		$body = $params['item']['body'];
@@ -352,10 +354,27 @@ function notification($params) {
 
 		logger('notification: sending notification email');
 
+
 		$textversion = strip_tags(html_entity_decode(bbcode(stripslashes(str_replace(array("\\r\\n", "\\r", "\\n"), "\n",
 			$body))),ENT_QUOTES,'UTF-8'));
+
 		$htmlversion = html_entity_decode(bbcode(stripslashes(str_replace(array("\\r\\n", "\\r","\\n\\n" ,"\\n"), 
-			"<br />\n",$body))));
+			"<br />\n",$body))), ENT_QUOTES,'UTF-8');
+
+
+		// use $_SESSION['zid_override'] to force zid() to use 
+		// the recipient address instead of the current observer
+
+		$_SESSION['zid_override'] = $recip['channel_address'] . '@' . get_app()->get_hostname();
+		$_SESSION['zrl_override'] = z_root() . '/channel/' . $recip['channel_address'];
+		
+		$textversion = zidify_links($textversion);
+		$htmlversion = zidify_links($htmlversion);
+
+		// unset when done to revert to normal behaviour
+
+		unset($_SESSION['zid_override']);
+		unset($_SESSION['zrl_override']);
 
 
 		$datarray = array();
