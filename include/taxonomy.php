@@ -97,13 +97,13 @@ function format_term_for_display($term) {
 
 
 function tagadelic($uid, $count = 0, $flags = 0, $type = TERM_HASHTAG) {
-dbg(1);
+
 	if($flags)
 		$sql_options = " and (item_flags & " . intval($flags) . ") ";
 	// Fetch tags
 	$r = q("select term, count(term) as total from term left join item on term.oid = item.id
 		where term.uid = %d and term.type = %d 
-		and otype = %d
+		and otype = %d and item_restrict = 0
 		$sql_options
 		group by term order by total desc %s",
 		intval($uid),
@@ -111,7 +111,7 @@ dbg(1);
 		intval(TERM_OBJ_POST),
 		((intval($count)) ? "limit $count" : '')
 	);
-dbg(0);
+
 	if(! $r)
 		return array();
   
