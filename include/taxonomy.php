@@ -99,7 +99,7 @@ function format_term_for_display($term) {
 function tagadelic($uid, $count = 0, $flags = 0, $type = TERM_HASHTAG) {
 
 	if($flags)
-		$sql_options = " and (item_flags & " . intval($flags) . ") ";
+		$sql_options = " and ((item_flags & " . intval($flags) . ") = " . intval($flags) . ") ";
 	// Fetch tags
 	$r = q("select term, count(term) as total from term left join item on term.oid = item.id
 		where term.uid = %d and term.type = %d 
