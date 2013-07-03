@@ -146,14 +146,16 @@ function tags_sort($a,$b) {
 
 
 function tagblock($link,$uid,$count = 0,$type = TERM_HASHTAG) {
+  $o = '';
   $tab = 0;
   $r = tagadelic($uid,$count,$type);
 
   if($r) {
-	echo '<div class="tags" align="center">';
+	$o = '<div class="tagblock widget"><h3>' . t('Tags') . '</h3><div class="tags" align="center">';
 	foreach($r as $rr) { 
-	  echo '<a href="'.$link .'/' . '?f=&tag=' . urlencode($rr[0]).'" class="tag'.$rr[2].'">'.$rr[0].'</a> ';
+	  $o .= '<a href="'.$link .'/' . '?f=&tag=' . urlencode($rr[0]).'" class="tag'.$rr[2].'">'.$rr[0].'</a> ' . "\r\n";
 	}
-	echo '</div>';
+	$o .= '</div></div>';
   }
+	return $o;
 }
