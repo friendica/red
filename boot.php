@@ -1463,8 +1463,9 @@ function profile_load(&$a, $nickname, $profile = '') {
 	}
 
 	if(! $profile) {
-		$r = q("SELECT abook_profile FROM abook WHERE abook_xchan = '%s' limit 1",
-			dbesc($observer['xchan_hash'])
+		$r = q("SELECT abook_profile FROM abook WHERE abook_xchan = '%s' and abook_channel = '%d' limit 1",
+			dbesc($observer['xchan_hash']),
+			intval($user[0]['channel_id'])
 		);
 		if($r)
 			$profile = $r[0]['abook_profile'];
