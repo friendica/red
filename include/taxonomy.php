@@ -96,19 +96,22 @@ function format_term_for_display($term) {
 // Tag cloud functions - need to be adpated to this database format
 
 
-function tagadelic($uid, $count = 0, $type = TERM_HASHTAG) {
-
+function tagadelic($uid, $count = 0, $flags = 0, $type = TERM_HASHTAG) {
+dbg(1);
+	if($flags)
+		$sql_options = " and (item_flags & " . intval($flags) . ") ";
 	// Fetch tags
-	$r = q("select term, count(term) as total from term
-		where uid = %d and type = %d 
+	$r = q("select term, count(term) as total from term left join item on term.oid = item.id
+		where term.uid = %d and term.type = %d 
 		and otype = %d
+		$sql_options
 		group by term order by total desc %s",
 		intval($uid),
 		intval($type),
 		intval(TERM_OBJ_POST),
 		((intval($count)) ? "limit $count" : '')
 	);
-
+dbg(0);
 	if(! $r)
 		return array();
   
@@ -145,10 +148,10 @@ function tags_sort($a,$b) {
 }
 
 
-function tagblock($link,$uid,$count = 0,$type = TERM_HASHTAG) {
+function tagblock($link,$uid,$count = 0,$flags = 0,$type = TERM_HASHTAG) {
   $o = '';
   $tab = 0;
-  $r = tagadelic($uid,$count,$type);
+  $r = tagadelic($uid,$count,$flags,$type);
 
   if($r) {
 	$o = '<div class="tagblock widget"><h3>' . t('Tags') . '</h3><div class="tags" align="center">';
