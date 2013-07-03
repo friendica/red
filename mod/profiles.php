@@ -47,7 +47,7 @@ function profiles_init(&$a) {
 
 	if((argc() > 1) && (argv(1) === 'new')) {
 		
-		check_form_security_token_redirectOnErr('/profiles', 'profile_new', 't');
+//		check_form_security_token_redirectOnErr('/profiles', 'profile_new', 't');
 
 		$r0 = q("SELECT `id` FROM `profile` WHERE `uid` = %d",
 			intval(local_user()));
@@ -519,6 +519,7 @@ function profiles_content(&$a) {
 			'$profile_drop_link'   => 'profiles/drop/' . $r[0]['id'] . '?t=' 
 				. get_form_security_token("profile_drop"),
 
+			'$guid'         => $r[0]['profile_guid'],
 			'$banner'       => t('Edit Profile Details'),
 			'$submit'       => t('Submit'),
 			'$viewprof'     => t('View this profile'),

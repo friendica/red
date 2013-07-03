@@ -1438,6 +1438,8 @@ function get_max_import_size() {
 
 function profile_load(&$a, $nickname, $profile = '') {
 
+	logger('profile_load: ' . $profile);
+
 	$user = q("select channel_id from channel where channel_address = '%s' limit 1",
 		dbesc($nickname)
 	);
@@ -1460,12 +1462,13 @@ function profile_load(&$a, $nickname, $profile = '') {
 		return;
 	}
 
-	$r = q("SELECT abook_profile FROM abook WHERE abook_xchan = '%s' limit 1",
-		dbesc($observer['xchan_hash'])
-	);
-	if($r)
-		$profile = $r[0]['abook_profile'];
-
+	if(! $profile) {
+		$r = q("SELECT abook_profile FROM abook WHERE abook_xchan = '%s' limit 1",
+			dbesc($observer['xchan_hash'])
+		);
+		if($r)
+			$profile = $r[0]['abook_profile'];
+	}
 	$r = null;
 
 	if($profile) {
