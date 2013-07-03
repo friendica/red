@@ -1419,7 +1419,7 @@ function get_max_import_size() {
  * Function : profile_load
  * @parameter App    $a
  * @parameter string $nickname
- * @parameter int    $profile
+ * @parameter string $profile
  *
  * Summary: Loads a profile into the page sidebar.
  * The function requires a writeable copy of the main App structure, and the nickname
@@ -1436,7 +1436,7 @@ function get_max_import_size() {
  */
 
 
-function profile_load(&$a, $nickname, $profile = 0) {
+function profile_load(&$a, $nickname, $profile = '') {
 
 	$user = q("select channel_id from channel where channel_address = '%s' limit 1",
 		dbesc($nickname)
@@ -1468,22 +1468,19 @@ function profile_load(&$a, $nickname, $profile = 0) {
 
 	$r = null;
 
-
-
 	if($profile) {
-		$profile_int = intval($profile);
-		$r = q("SELECT `profile`.`uid` AS `profile_uid`, `profile`.* , channel.* FROM `profile`
-				LEFT JOIN channel ON `profile`.`uid` = channel.channel_id
-				WHERE channel.channel_address = '%s' AND `profile`.`id` = %d LIMIT 1",
+		$r = q("SELECT profile.uid AS profile_uid, profile.*, channel.* FROM profile
+				LEFT JOIN channel ON profile.uid = channel.channel_id
+				WHERE channel.channel_address = '%s' AND profile.profile_guid = '%s' LIMIT 1",
 				dbesc($nickname),
-				intval($profile_int)
+				dbesc($profile)
 		);
 	}
 
-	if(! ($r && count($r))) {
-		$r = q("SELECT `profile`.`uid` AS `profile_uid`, `profile`.* , `channel`.* FROM `profile`
-			LEFT JOIN `channel` ON `profile`.`uid` = channel.channel_id
-			WHERE channel.channel_address = '%s' AND `profile`.`is_default` = 1 LIMIT 1",
+	if(! $r) {
+		$r = q("SELECT profile.uid AS profile_uid, profile.*, channel.* FROM profile
+			LEFT JOIN channel ON profile.uid = channel.channel_id
+			WHERE channel.channel_address = '%s' AND profile.is_default = 1 LIMIT 1",
 			dbesc($nickname)
 		);
 	}
