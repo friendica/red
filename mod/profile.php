@@ -12,7 +12,7 @@ function profile_init(&$a) {
 
 	$profile = '';
 	$channel = $a->get_channel();
-dbg(1);
+
 	if((local_user()) && (argc() > 2) && (argv(2) === 'view')) {
 		$which = $channel['channel_address'];
 		$profile = argv(1);		
@@ -38,7 +38,7 @@ dbg(1);
 //		$channel_display = get_pconfig($a->profile['profile_uid'],'system','channel_format');
 //		if(! $channel_display)
 	profile_load($a,$which,$profile);
-dbg(0);	
+
 
 }
 
