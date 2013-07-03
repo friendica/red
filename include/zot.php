@@ -1312,7 +1312,6 @@ function import_directory_profile($hash,$profile) {
 
 	$arr['xprof_keywords'] = implode(' ',$clean);
 
-
 	$r = q("select * from xprof where xprof_hash = '%s' limit 1",
 		dbesc($hash)
 	);
