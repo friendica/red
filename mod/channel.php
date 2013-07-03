@@ -48,7 +48,7 @@ function channel_aside(&$a) {
 		$a->set_widget('categories',categories_widget($a->get_baseurl(true) . '/channel/' . $a->profile['channel_address'],$cat));
 	}
 	if(feature_enabled($a->profile['profile_uid'],'tagadelic'))
-		$a->set_widget('tagcloud',tagblock('search',$a->profile['profile_uid'],50,ITEM_WALL));
+		$a->set_widget('tagcloud',tagblock('search',$a->profile['profile_uid'],50,ITEM_WALL|ITEM_THREAD_TOP));
 
 }
 
