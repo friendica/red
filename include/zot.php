@@ -1328,7 +1328,7 @@ function import_directory_profile($hash,$profile) {
 			$x = q("update xprof set 
 				xprof_desc = '%s', 
 				xprof_dob = '%s', 
-				xprof_age = %d
+				xprof_age = %d,
 				xprof_gender = '%s', 
 				xprof_marital = '%s', 
 				xprof_sexual = '%s', 
