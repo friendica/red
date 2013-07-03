@@ -633,6 +633,9 @@ function photos_content(&$a) {
 	// dispatch request
 	//
 
+	/**
+	 * Display upload form
+	 */
 
 	if($datatype === 'upload') {
 		if(! ($can_post)) {
@@ -640,12 +643,8 @@ function photos_content(&$a) {
 			return;
 		}
 
-
 		$selname = (($datum) ? hex2bin($datum) : '');
-
-
 		$albumselect = '<select id="photos-upload-album-select" name="album" size="4">';
-
 		
 		$albumselect .= '<option value="" ' . ((! $selname) ? ' selected="selected" ' : '') . '>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</option>';
 		if(count($a->data['albums'])) {
@@ -673,6 +672,7 @@ function photos_content(&$a) {
 		$default_upload = '<input id="photos-upload-choose" type="file" name="userfile" /> 	<div class="photos-upload-submit-wrapper" >
 		<input type="submit" name="submit" value="' . t('Submit') . '" id="photos-upload-submit" /> </div>';
 
+		/* Show space usage */
 
 		$r = q("select sum(size) as total from photo where uid = %d and scale = 0 ",
 			intval($a->data['channel']['channel_id'])
@@ -687,15 +687,8 @@ function photos_content(&$a) {
 			$usage_message = sprintf( t('You have used %1$.2f Mbytes of photo storage.'), $r[0]['total'] / 1024000 );
  		}
 
-
-		if($a->get_template_engine() === 'internal') {
-			$albumselect_e = template_escape($albumselect);
-			$aclselect_e = (($visitor) ? '' : template_escape(populate_acl($a->user, $celeb)));
-		}
-		else {
-			$albumselect_e = $albumselect;
-			$aclselect_e = (($visitor) ? '' : populate_acl($a->user, $celeb));
-		}
+		$albumselect_e = $albumselect;
+		$aclselect_e = (($visitor) ? '' : populate_acl($a->user, $celeb));
 
 		$tpl = get_markup_template('photos_upload.tpl');
 		$o .= replace_macros($tpl,array(
@@ -717,6 +710,10 @@ function photos_content(&$a) {
 
 		return $o; 
 	}
+
+	/*
+	 * Display a single photo album
+	 */
 
 	if($datatype === 'album') {
 
@@ -793,6 +790,7 @@ function photos_content(&$a) {
 		if(count($r))
 			$twist = 'rotright';
 			foreach($r as $rr) {
+
 				if($twist == 'rotright')
 					$twist = 'rotleft';
 				else
@@ -839,12 +837,12 @@ function photos_content(&$a) {
 
 	}	
 
+	/** 
+	 * Display one photo
+	 */
 
 	if($datatype === 'image') {
 
-
-
-		//$o = '';
 		// fetch image, item containing image, then comments
 
 		$ph = q("SELECT * FROM `photo` WHERE `uid` = %d AND `resource_id` = '%s' 
@@ -853,13 +851,16 @@ function photos_content(&$a) {
 			dbesc($datum)
 		);
 
-		if(! count($ph)) {
+		if(! $ph) {
+
+			/* Check again - this time without specifying permissions */
+
 			$ph = q("SELECT `id` FROM `photo` WHERE `uid` = %d AND `resource_id` = '%s' 
 				LIMIT 1",
 				intval($owner_uid),
 				dbesc($datum)
 			);
-			if(count($ph)) 
+			if($ph) 
 				notice( t('Permission denied. Access to this item may be restricted.'));
 			else
 				notice( t('Photo not available') . EOL );
@@ -893,9 +894,9 @@ function photos_content(&$a) {
 					break;
 				}
 			}
-			$edit_suffix = ((($cmd === 'edit') && ($can_post)) ? '/edit' : '');
-			$prevlink = $a->get_baseurl() . '/photos/' . $a->data['channel']['channel_address'] . '/image/' . $prvnxt[$prv]['resource_id'] . $edit_suffix . (($_GET['order'] === 'posted') ? '?f=&order=posted' : '');
-			$nextlink = $a->get_baseurl() . '/photos/' . $a->data['channel']['channel_address'] . '/image/' . $prvnxt[$nxt]['resource_id'] . $edit_suffix . (($_GET['order'] === 'posted') ? '?f=&order=posted' : '');
+
+			$prevlink = $a->get_baseurl() . '/photos/' . $a->data['channel']['channel_address'] . '/image/' . $prvnxt[$prv]['resource_id'] . (($_GET['order'] === 'posted') ? '?f=&order=posted' : '');
+			$nextlink = $a->get_baseurl() . '/photos/' . $a->data['channel']['channel_address'] . '/image/' . $prvnxt[$nxt]['resource_id'] . (($_GET['order'] === 'posted') ? '?f=&order=posted' : '');
  		}
 
 
@@ -918,7 +919,6 @@ function photos_content(&$a) {
  
 		if($can_post && ($ph[0]['uid'] == $owner_uid)) {
 			$tools = array(
-				'edit'	=> array($a->get_baseurl() . '/photos/' . $a->data['channel']['channel_address'] . '/image/' . $datum . (($cmd === 'edit') ? '' : '/edit'), (($cmd === 'edit') ? t('View photo') : t('Edit photo'))),
 				'profile'=>array($a->get_baseurl() . '/profile_photo/use/'.$ph[0]['resource_id'], t('Use as profile photo')),
 			);
 
@@ -931,7 +931,7 @@ function photos_content(&$a) {
 			
 		}
 
-		if(! $cmd !== 'edit') {
+		if(! $can_post) {
 			$a->page['htmlhead'] .= '<script>
 				$(document).keydown(function(event) {' . "\n";
 
@@ -990,39 +990,33 @@ function photos_content(&$a) {
 		}
 
 
-		$edit = Null;
-		if(($cmd === 'edit') && ($can_post)) {
-			if($a->get_template_engine() === 'internal') {
-				$album_e = template_escape($ph[0]['album']);
-				$caption_e = template_escape($ph[0]['desc']);
-				$aclselect_e = template_escape(populate_acl($ph[0]));
-			}
-			else {
-				$album_e = $ph[0]['album'];
-				$caption_e = $ph[0]['desc'];
-				$aclselect_e = populate_acl($ph[0]);
-			}
+		$edit = null;
+		if($can_post) {
 
-			$edit_tpl = get_markup_template('photo_edit.tpl');
-			$edit = replace_macros($edit_tpl, array(
-				'$id' => $ph[0]['id'],
-				'$rotatecw' => t('Rotate CW (right)'),
-				'$rotateccw' => t('Rotate CCW (left)'),
-				'$album' => $album_e,
-				'$newalbum' => t('New album name'), 
-				'$nickname' => $a->data['channel']['channel_address'],
-				'$resource_id' => $ph[0]['resource_id'],
-				'$capt_label' => t('Caption'),
-				'$caption' => $caption_e,
-				'$tag_label' => t('Add a Tag'),
-				'$tags' => $link_item['tag'],
-				'$permissions' => t('Permissions'),
-				'$aclselect' => $aclselect_e,
-				'$help_tags' => t('Example: @bob, @Barbara_Jensen, @jim@example.com, #California, #camping'),
-				'$item_id' => ((count($linked_items)) ? $link_item['id'] : 0),
-				'$submit' => t('Submit'),
-				'$delete' => t('Delete Photo')
-			));
+			$album_e = $ph[0]['album'];
+			$caption_e = $ph[0]['desc'];
+			$aclselect_e = populate_acl($ph[0]);
+
+			$edit = array(
+				'edit' => t('Edit photo'),
+				'id' => $ph[0]['id'],
+				'rotatecw' => t('Rotate CW (right)'),
+				'rotateccw' => t('Rotate CCW (left)'),
+				'album' => $album_e,
+				'newalbum' => t('New album name'), 
+				'nickname' => $a->data['channel']['channel_address'],
+				'resource_id' => $ph[0]['resource_id'],
+				'capt_label' => t('Caption'),
+				'caption' => $caption_e,
+				'tag_label' => t('Add a Tag'),
+				'tags' => $link_item['tag'],
+				'permissions' => t('Permissions'),
+				'aclselect' => $aclselect_e,
+				'help_tags' => t('Example: @bob, @Barbara_Jensen, @jim@example.com, #California, #camping'),
+				'item_id' => ((count($linked_items)) ? $link_item['id'] : 0),
+				'submit' => t('Submit'),
+				'delete' => t('Delete Photo')
+			);
 		}
 
 		if(count($linked_items)) {
@@ -1154,16 +1148,10 @@ function photos_content(&$a) {
 						$drop = replace_macros(get_markup_template('photo_drop.tpl'), array('$id' => $item['id'], '$delete' => t('Delete')));
 
 
-					if($a->get_template_engine() === 'internal') {
-						$name_e = template_escape($profile_name);
-						$title_e = template_escape($item['title']);
-						$body_e = template_escape(bbcode($item['body']));
-					}
-					else {
-						$name_e = $profile_name;
-						$title_e = $item['title'];
-						$body_e = bbcode($item['body']);
-					}
+					$name_e = $profile_name;
+					$title_e = $item['title'];
+					$body_e = bbcode($item['body']);
+
 
 					$comments .= replace_macros($template,array(
 						'$id' => $item['item_id'],
@@ -1184,18 +1172,10 @@ function photos_content(&$a) {
 			$paginate = paginate($a);
 		}
 		
-		if($a->get_template_engine() === 'internal') {
-			$album_e = array($album_link,template_escape($ph[0]['album']));
-			$tags_e = template_escape($tags);
-			$like_e = template_escape($like);
-			$dislike_e = template_escape($dislike);
-		}
-		else {
-			$album_e = array($album_link,$ph[0]['album']);
-			$tags_e = $tags;
-			$like_e = $like;
-			$dislike_e = $dislike;
-		}
+		$album_e = array($album_link,$ph[0]['album']);
+		$tags_e = $tags;
+		$like_e = $like;
+		$dislike_e = $dislike;
 
 		$photo_tpl = get_markup_template('photo_view.tpl');
 		$o .= replace_macros($photo_tpl, array(

@@ -1,21 +1,19 @@
 <?php /** @file */
 
 
-function contact_profile_assign($current,$foreign_net) {
+function contact_profile_assign($current) {
 
 	$o = '';
 
-	$disabled = (($foreign_net) ? ' disabled="true" ' : '');
+	$o .= "<select id=\"contact-profile-selector\" name=\"profile-assign\" />\r\n";
 
-	$o .= "<select id=\"contact-profile-selector\" $disabled name=\"profile-assign\" />\r\n";
+	$r = q("SELECT profile_guid, profile_name FROM `profile` WHERE `uid` = %d",
+		intval($_SESSION['uid']));
 
-	$r = q("SELECT `id`, `profile_name` FROM `profile` WHERE `uid` = %d",
-                        intval($_SESSION['uid']));
-
-	if(count($r)) {
+	if($r) {
 		foreach($r as $rr) {
-			$selected = (($rr['id'] == $current) ? " selected=\"selected\" " : "");
-			$o .= "<option value=\"{$rr['id']}\" $selected >{$rr['profile_name']}</option>\r\n";
+			$selected = (($rr['profile_guid'] == $current) ? " selected=\"selected\" " : "");
+			$o .= "<option value=\"{$rr['profile_guid']}\" $selected >{$rr['profile_name']}</option>\r\n";
 		}
 	}
 	$o .= "</select>\r\n";

@@ -343,26 +343,26 @@
 
 function updateConvItems(mode,data) {
 
-	var expanded_comments = false;
-
 	if(mode === 'update') {
 		prev = 'threads-begin';
 
+
 		$('.thread-wrapper.toplevel_item',data).each(function() {
+
 			var ident = $(this).attr('id');
+			var commentWrap = $('#'+ident+' .collapsed-comments').attr('id');
+			var itmId = commentWrap.replace('collapsed-comments-','');
+			var isVisible = false;
 
 			if($('#' + ident).length == 0 && profile_page == 1) {
 				$('img',this).each(function() {
 					$(this).attr('src',$(this).attr('dst'));
 				});
-//				expanded_comments = false;
-//				$('.collapsed-comments',this).each(function() {
-//					if($(this).is(':visible'))
-//						expanded_comments = this;
-//				});
+				if($('#collapsed-comments-'+itmId).is(':visible'))
+					isVisible = true;
 				$('#' + prev).after($(this));
-//				if(expanded_comments)
-//					$(expanded_comments).show();
+				if(isVisible)
+					showHideComments(itmId);
 				$(".autotime").timeago();
 				// divgrow doesn't prevent itself from attaching a second (or 500th)
 				// "show more" div to a content region - it also has a few other
@@ -374,14 +374,12 @@ function updateConvItems(mode,data) {
 				$('img',this).each(function() {
 					$(this).attr('src',$(this).attr('dst'));
 				});
-//				expanded_comments = false;
-//				$('.collapsed-comments',this).each(function() {
-//					if($(this).is(':visible'))
-//						expanded_comments = this;
-//				});
+				// more FIXME related to expanded comments
+				if($('#collapsed-comments-'+itmId).is(':visible'))
+					isVisible = true;
 				$('#' + ident).replaceWith($(this));
-//				if(expanded_comments)
-//					$(expanded_comments).show();
+				if(isVisible)
+					showHideComments(itmId);
 				$(".autotime").timeago();
 				//	$("div.wall-item-body").divgrow({ initialHeight: 400 });
 

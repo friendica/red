@@ -63,10 +63,10 @@ function connections_post(&$a) {
 
 	call_hooks('contact_edit_post', $_POST);
 
-	$profile_id = intval($_POST['profile-assign']);
+	$profile_id = $_POST['profile-assign'];
 	if($profile_id) {
-		$r = q("SELECT `id` FROM `profile` WHERE `id` = %d AND `uid` = %d LIMIT 1",
-			intval($profile_id),
+		$r = q("SELECT profile_guid FROM profile WHERE profile_guid = '%s' AND `uid` = %d LIMIT 1",
+			dbesc($profile_id),
 			intval(local_user())
 		);
 		if(! count($r)) {
@@ -99,9 +99,9 @@ function connections_post(&$a) {
 		$abook_flags = ( $abook_flags ^ ABOOK_FLAG_PENDING );
 	}
 
-	$r = q("UPDATE abook SET abook_profile = %d, abook_my_perms = %d , abook_closeness = %d, abook_flags = %d
+	$r = q("UPDATE abook SET abook_profile = '%s', abook_my_perms = %d , abook_closeness = %d, abook_flags = %d
 		where abook_id = %d AND abook_channel = %d LIMIT 1",
-		intval($profile_id),
+		dbesc($profile_id),
 		intval($abook_my_perms),
 		intval($closeness),
 		intval($abook_flags),
@@ -405,7 +405,7 @@ function connections_content(&$a) {
 			'$noperm_desc'    => (((! $self) && (! $contact['abook_my_perms'])) ? t('This may be appropriate based on your <a href="settings">privacy settings</a>, though you may wish to review the "Advanced Permissions"') : ''),
 			'$submit'         => t('Submit'),
 			'$lbl_vis1'       => t('Profile Visibility'),
-			'$lbl_vis2'       => sprintf( t('Please choose the profile you would like to display to %s when viewing your profile securely.'), $contact['name']),
+			'$lbl_vis2'       => sprintf( t('Please choose the profile you would like to display to %s when viewing your profile securely.'), $contact['xchan_name']),
 			'$lbl_info1'      => t('Contact Information / Notes'),
 			'$infedit'        => t('Edit contact notes'),
 			'$close'          => $contact['abook_closeness'],
@@ -438,7 +438,8 @@ function connections_content(&$a) {
 			'$updpub'         => t('Update public posts'),
 			'$last_update'    => $last_update,
 			'$udnow'          => t('Update now'),
-//			'$profile_select' => contact_profile_assign($contact['profile_id'],(($contact['network'] !== NETWORK_DFRN) ? true : false)),
+			'$profile_select' => contact_profile_assign($contact['abook_profile']),
+			'$multiprofs'     => feature_enabled(local_user(),'multi_profiles'),
 			'$contact_id'     => $contact['abook_id'],
 			'$block_text'     => (($contact['blocked']) ? t('Unblock') : t('Block') ),
 			'$ignore_text'    => (($contact['readonly']) ? t('Unignore') : t('Ignore') ),

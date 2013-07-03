@@ -1312,7 +1312,6 @@ function import_directory_profile($hash,$profile) {
 
 	$arr['xprof_keywords'] = implode(' ',$clean);
 
-
 	$r = q("select * from xprof where xprof_hash = '%s' limit 1",
 		dbesc($hash)
 	);
@@ -1328,6 +1327,7 @@ function import_directory_profile($hash,$profile) {
 			$x = q("update xprof set 
 				xprof_desc = '%s', 
 				xprof_dob = '%s', 
+				xprof_age = %d,
 				xprof_gender = '%s', 
 				xprof_marital = '%s', 
 				xprof_sexual = '%s', 
@@ -1339,6 +1339,7 @@ function import_directory_profile($hash,$profile) {
 				where xprof_hash = '%s' limit 1",
 				dbesc($arr['xprof_desc']),
 				dbesc($arr['xprof_dob']),
+				intval($arr['xprof_age']),
 				dbesc($arr['xprof_gender']),
 				dbesc($arr['xprof_marital']),
 				dbesc($arr['xprof_sexual']),
@@ -1353,10 +1354,11 @@ function import_directory_profile($hash,$profile) {
 	}
 	else {
 		$update = true;
-		$x = q("insert into xprof (xprof_hash, xprof_desc, xprof_dob, xprof_gender, xprof_marital, xprof_sexual, xprof_locale, xprof_region, xprof_postcode, xprof_country, xprof_keywords) values ('%s', '%s', '%s', '%s', '%s', '%s', '%s', '%s', '%s', '%s', '%s') ",
+		$x = q("insert into xprof (xprof_hash, xprof_desc, xprof_dob, xprof_age, xprof_gender, xprof_marital, xprof_sexual, xprof_locale, xprof_region, xprof_postcode, xprof_country, xprof_keywords) values ('%s', '%s', '%s', '%s', '%s', '%s', '%s', '%s', '%s', '%s', '%s') ",
 			dbesc($arr['xprof_hash']),
 			dbesc($arr['xprof_desc']),
 			dbesc($arr['xprof_dob']),
+			intval($arr['xprof_age']),
 			dbesc($arr['xprof_gender']),
 			dbesc($arr['xprof_marital']),
 			dbesc($arr['xprof_sexual']),

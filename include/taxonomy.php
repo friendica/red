@@ -96,12 +96,15 @@ function format_term_for_display($term) {
 // Tag cloud functions - need to be adpated to this database format
 
 
-function tagadelic($uid, $count = 0, $type = TERM_HASHTAG) {
+function tagadelic($uid, $count = 0, $flags = 0, $type = TERM_HASHTAG) {
 
+	if($flags)
+		$sql_options = " and ((item_flags & " . intval($flags) . ") = " . intval($flags) . ") ";
 	// Fetch tags
-	$r = q("select term, count(term) as total from term
-		where uid = %d and type = %d 
-		and otype = %d
+	$r = q("select term, count(term) as total from term left join item on term.oid = item.id
+		where term.uid = %d and term.type = %d 
+		and otype = %d and item_restrict = 0
+		$sql_options
 		group by term order by total desc %s",
 		intval($uid),
 		intval($type),
@@ -145,15 +148,17 @@ function tags_sort($a,$b) {
 }
 
 
-function tagblock($link,$uid,$count = 0,$type = TERM_HASHTAG) {
+function tagblock($link,$uid,$count = 0,$flags = 0,$type = TERM_HASHTAG) {
+  $o = '';
   $tab = 0;
-  $r = tagadelic($uid,$count,$type);
+  $r = tagadelic($uid,$count,$flags,$type);
 
   if($r) {
-	echo '<div class="tags" align="center">';
+	$o = '<div class="tagblock widget"><h3>' . t('Tags') . '</h3><div class="tags" align="center">';
 	foreach($r as $rr) { 
-	  echo '<a href="'.$link .'/' . '?f=&tag=' . urlencode($rr[0]).'" class="tag'.$rr[2].'">'.$rr[0].'</a> ';
+	  $o .= '<a href="'.$link .'/' . '?f=&tag=' . urlencode($rr[0]).'" class="tag'.$rr[2].'">'.$rr[0].'</a> ' . "\r\n";
 	}
-	echo '</div>';
+	$o .= '</div></div>';
   }
+	return $o;
 }

@@ -75,6 +75,15 @@
 
 </div>
 
+{{if $multiprofs }}
+<div>
+<h3>{{$lbl_vis1}}</h3>
+<div>{{$lbl_vis2}}</div>
+
+{{$profile_select}}
+</div>
+{{/if}}
+
 <input class="contact-edit-submit" type="submit" name="done" value="{{$submit}}" />
 
 </form>

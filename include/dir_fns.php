@@ -53,7 +53,7 @@ function syncdirs($uid) {
 
 	logger('syncdirs', LOGGER_DEBUG);
 
-	$p = q("select channel.channel_hash, profile.* from profile left join channel on channel_id = uid where uid = %d and is_default = 1",
+	$p = q("select channel.channel_hash, channel_timezone, profile.* from profile left join channel on channel_id = uid where uid = %d and is_default = 1",
 		intval($uid)
 	);
 
@@ -64,6 +64,9 @@ function syncdirs($uid) {
 
 		$profile['description'] = $p[0]['pdesc'];
 		$profile['birthday']    = $p[0]['dob'];
+		if($age = age($p[0]['dob'],$p[0]['channel_timezone'],''))  
+			$profile['age'] = $age;
+
 		$profile['gender']      = $p[0]['gender'];
 		$profile['marital']     = $p[0]['marital'];
 		$profile['sexual']      = $p[0]['sexual'];
