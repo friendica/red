@@ -99,11 +99,12 @@ function thing_init(&$a) {
 	}
 	$term = $r[0];
 
-	$r = q("insert into obj ( obj_page, obj_verb, obj_type, obj_channel) values ('%s','%s', %d,%d) ",
+	$r = q("insert into obj ( obj_page, obj_verb, obj_type, obj_channel, obj_obj) values ('%s','%s', %d, %d, '%s') ",
 		dbesc($profile),
 		dbesc($verb),
 		intval(TERM_OBJ_THING),
-		intval(local_user())
+		intval(local_user()),
+		dbesc($term['term_hash'])
 	);
 
 	if(! $r) {

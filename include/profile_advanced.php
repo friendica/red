@@ -80,9 +80,30 @@ function advanced_profile(&$a) {
 
 		if($txt = prepare_text($a->profile['education'])) $profile['education'] = array( t('School/education:'), $txt );
 
+		$r = q("select * from obj left join term on obj_obj = term_hash where term_hash != '' and obj_page = '%s' and uid = %d and obj_type = %d 
+			order by obj_verb, term",
+				dbesc($a->profile['profile_guid']),
+				intval($a->profile['profile_uid']),
+				intval(TERM_OBJ_THING)
+		);
+
+		$things = null;
+
+		if($r) {
+			$things = array();
+			foreach($r as $rr) {
+				if(! $things[$rr['obj_verb']])
+					$things[$rr['obj_verb']] = array();
+				$things[$rr['obj_verb']][] = array('term' => $rr['term'],'url' => $rr['url'],'img' => $rr['imgurl']);
+			} 
+		}
+
+		logger('mod_profile: things: ' . print_r($things,true), LOGGER_DATA); 
+
         return replace_macros($tpl, array(
             '$title' => t('Profile'),
             '$profile' => $profile,
+			'$things' => $things
         ));
     }
 
