@@ -171,3 +171,18 @@ function tagblock($link,$uid,$count = 0,$authors = '',$flags = 0,$type = TERM_HA
   }
 	return $o;
 }
+
+
+function obj_verbs() {
+	$verbs = array(
+		'has' => array( t('have'), t('has')),
+		'wants' => array( t('want'), t('wants')),
+		'likes' => array( t('like'), t('likes')),
+		'dislikes' => array( t('dislike'), t('dislikes')),
+	);
+
+	$arr = array('verbs' => $verbs);
+	call_hooks('obj_verbs', $arr);
+	return	$arr['verbs'];
+}
+
