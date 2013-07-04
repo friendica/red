@@ -3881,3 +3881,13 @@ width: 200px;
 .tag10 {
     font-size : 2.8em !important;
   }
+
+.profile-thing-list {
+	list-style-type: none;
+}
+/*
+.profile-thing-list li {
+	float: left;
+	margin-right: 25px;
+}
+*/

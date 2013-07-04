@@ -91,19 +91,33 @@ function advanced_profile(&$a) {
 
 		if($r) {
 			$things = array();
+
+			// Use the system obj_verbs array as a sort key, since we don't really
+			// want an alphabetic sort. To change the order, use a plugin to
+			// alter the obj_verbs() array or alter it in code. Unknown verbs come
+			// after the known ones - in no particular order. 
+
+			$v = obj_verbs();
+			foreach($v as $k => $foo)
+				$things[$k] = null;
 			foreach($r as $rr) {
 				if(! $things[$rr['obj_verb']])
 					$things[$rr['obj_verb']] = array();
 				$things[$rr['obj_verb']][] = array('term' => $rr['term'],'url' => $rr['url'],'img' => $rr['imgurl']);
 			} 
+			$sorted_things = array();
+			if($things)
+				foreach($things as $k => $v)
+					if(is_array($things[$k]))
+						$sorted_things[$k] = $v;
 		}
 
-		logger('mod_profile: things: ' . print_r($things,true), LOGGER_DATA); 
+		logger('mod_profile: things: ' . print_r($sorted_things,true), LOGGER_DATA); 
 
         return replace_macros($tpl, array(
             '$title' => t('Profile'),
             '$profile' => $profile,
-			'$things' => $things
+			'$things' => $sorted_things
         ));
     }
 

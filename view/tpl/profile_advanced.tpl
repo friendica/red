@@ -180,6 +180,7 @@
 </li>
 {{/foreach}}
 </ul>
+<div class="clear"></div>
 {{/foreach}}
 {{/if}}
 
