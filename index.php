@@ -118,8 +118,11 @@ if(! x($_SESSION,'sysmsg_info'))
  */
 
 
-if($install)
-	$a->module = 'setup';
+if($install) {
+	/* Allow an exception for the view module so that pcss will be interpreted during installation */
+	if($a->module != 'view')
+		$a->module = 'setup';
+}
 else
 	check_config($a);
 

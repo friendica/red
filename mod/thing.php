@@ -31,6 +31,20 @@ function thing_init(&$a) {
 	 */
 
 	$translated_verb = $verbs[$verb][1];
+
+	/** 
+	 * The site administrator can do things that normals cannot.
+	 * This is restricted because it will likely cause
+	 * an activitystreams protocol violation and the activity might
+	 * choke in some other network and result in unnecessary 
+	 * support requests. It isn't because we're trying to be heavy-handed
+	 * about what you can and can't do. 
+	 */
+
+	if(! $translated_verb) {
+		if(is_site_admin())
+			$translated_verb = $verb;
+	} 
 	
 	/**
 	 * Things, objects: We do not provide definite (a, an) or indefinite (the) articles or singular/plural designators

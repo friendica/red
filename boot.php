@@ -1930,7 +1930,7 @@ function current_theme(){
 function current_theme_url($installing = false) {
 	global $a;
 	$t = current_theme();
-	if((file_exists('view/theme/' . $t . '/php/style.php')) && (! $installing))
+	if(file_exists('view/theme/' . $t . '/php/style.php'))
 		return('view/theme/' . $t . '/php/style.pcss');
 	return('view/theme/' . $t . '/css/style.css');
 }

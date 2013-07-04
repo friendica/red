@@ -173,6 +173,15 @@ function tagblock($link,$uid,$count = 0,$authors = '',$flags = 0,$type = TERM_HA
 }
 
 
+	/** 
+	 * verbs: [0] = first person singular, e.g. "I want", [1] = 3rd person singular, e.g. "Bill wants" 
+	 * We use the first person form when creating an activity, but the third person for use in activities
+	 * FIXME: There is no accounting for verb gender for languages where this is significant. We may eventually
+	 * require obj_verbs() to provide full conjugations and specify which form to use in the $_REQUEST params to this module.
+	 */
+
+
+
 function obj_verbs() {
 	$verbs = array(
 		'has' => array( t('have'), t('has')),
@@ -185,4 +194,5 @@ function obj_verbs() {
 	call_hooks('obj_verbs', $arr);
 	return	$arr['verbs'];
 }
+
 
