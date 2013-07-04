@@ -96,14 +96,23 @@ function format_term_for_display($term) {
 // Tag cloud functions - need to be adpated to this database format
 
 
-function tagadelic($uid, $count = 0, $flags = 0, $type = TERM_HASHTAG) {
+function tagadelic($uid, $count = 0, $authors = '', $flags = 0, $type = TERM_HASHTAG) {
+
+	$sql_options = '';
 
 	if($flags)
-		$sql_options = " and ((item_flags & " . intval($flags) . ") = " . intval($flags) . ") ";
+		$sql_options .= " and ((item_flags & " . intval($flags) . ") = " . intval($flags) . ") ";
+	if($authors) {
+		if(! is_array($authors))
+			$authors = array($authors);
+		stringify_array_elms($authors,true);
+		$sql_options .= " and author_xchan in (" . implode(',',$authors) . ") "; 
+	}
+
 	// Fetch tags
 	$r = q("select term, count(term) as total from term left join item on term.oid = item.id
 		where term.uid = %d and term.type = %d 
-		and otype = %d and item_restrict = 0
+		and otype = %d and item_restrict = 0 and item_private = 0
 		$sql_options
 		group by term order by total desc %s",
 		intval($uid),
@@ -148,10 +157,10 @@ function tags_sort($a,$b) {
 }
 
 
-function tagblock($link,$uid,$count = 0,$flags = 0,$type = TERM_HASHTAG) {
+function tagblock($link,$uid,$count = 0,$authors = '',$flags = 0,$type = TERM_HASHTAG) {
   $o = '';
   $tab = 0;
-  $r = tagadelic($uid,$count,$flags,$type);
+  $r = tagadelic($uid,$count,$authors,$flags,$type);
 
   if($r) {
 	$o = '<div class="tagblock widget"><h3>' . t('Tags') . '</h3><div class="tags" align="center">';
