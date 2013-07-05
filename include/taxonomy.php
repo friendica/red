@@ -196,3 +196,13 @@ function obj_verbs() {
 }
 
 
+function obj_verb_selector() {
+	$verbs = obj_verbs();
+	$o .= '<select class="obj-verb-selector" name="verb" >';
+	foreach($verbs as $k => $v) {
+		$o .= '<option value="' . urlencode($k) . '">' . $v[0] . '</option>';
+	}
+	$o .= '</select>';
+	return $o;
+
+}

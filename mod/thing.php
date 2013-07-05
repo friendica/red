@@ -14,7 +14,7 @@ function thing_init(&$a) {
 
 	$name = escape_tags($_REQUEST['term']);
 	$verb = escape_tags($_REQUEST['verb']);
-	$profile = escape_tags($_REQUEST['profile']);
+	$profile_guid = escape_tags($_REQUEST['profile']);
 	$url = $_REQUEST['link'];
 	$photo = $_REQUEST['photo'];
 
@@ -59,15 +59,13 @@ function thing_init(&$a) {
 	if((! $name) || (! $translated_verb))
 		return;
 
-	if(! $profile) {
-		$r = q("select profile_guid from profile where is_default = 1 and uid = %d limit 1",
-			intval(local_user())
-		);
-		if($r)
-			$profile = $r[0]['profile_guid'];
-	}
-
-	if(! $profile)
+	$sql = (($profile_guid) ? " and profile_guid = '" . dbesc($profile_guid) . "' " : " and is_default = 1 ");
+	$p = q("select profile_guid, is_default from profile where uid = %d $sql limit 1",
+		intval(local_user())
+	);
+	if($p)
+		$profile = $p[0];
+	else
 		return;
 
 
@@ -100,7 +98,7 @@ function thing_init(&$a) {
 	$term = $r[0];
 
 	$r = q("insert into obj ( obj_page, obj_verb, obj_type, obj_channel, obj_obj) values ('%s','%s', %d, %d, '%s') ",
-		dbesc($profile),
+		dbesc($profile['profile_guid']),
 		dbesc($verb),
 		intval(TERM_OBJ_THING),
 		intval(local_user()),
@@ -108,10 +106,11 @@ function thing_init(&$a) {
 	);
 
 	if(! $r) {
-		notice('Object store: failed');
+		notice( t('Object store: failed'));
 		return;
 	}
 
+	info( t('thing/stuff added'));
 
 	$arr = array();
 	$links = array(array('rel' => 'alternate','type' => 'text/html', 
@@ -143,6 +142,22 @@ function thing_init(&$a) {
 	$arr['verb'] = $verb;
 	$arr['obj_type'] = $objtype;
 	$arr['object'] = $obj;
+
+	if(! $profile['is_default']) {
+		$arr['item_private'] = true;
+		$str = '';
+		$r = q("select abook_hash from abook where abook_channel = %d and abook_profile = '%s'",
+			intval(local_user()),
+			dbesc($profile_guid)
+		);
+		if($r) {
+			$arr['allow_cid'] = '';
+			foreach($r as $rr)
+				$arr['allow_cid'] .= '<' . $rr['abook_hash'] . '>';
+		}
+		else
+			$arr['allow_cid'] = '<' . get_observer_hash() . '>';
+	}
 	
 	$ret = post_activity_item($arr);
 
@@ -160,7 +175,22 @@ function thing_content(&$a) {
 		return t('not yet implemented.');
 	}
 
-	goaway(z_root() . '/network');
+	require_once('include/contact_selectors.php');
+
+	$o .= replace_macros(get_markup_template('thing_input.tpl'),array(
+		'$thing_hdr' => t('Add Stuff to your Profile'),
+		'$multiprof' => feature_enabled(local_user(),'multi_profiles'),
+		'$profile_lbl' => t('Select a profile'),
+		'$profile_select' => contact_profile_assign(''),
+		'$verb_lbl' => t('Select a category of stuff. e.g. I ______ something'),
+		'$verb_select' => obj_verb_selector(),
+		'$thing_lbl' => t('Name of thing or stuff e.g. something'),
+		'$url_lbl' => t('URL of thing or stuff (optional)'),
+		'$img_lbl' => t('URL for photo of thing or stuff (optional)'),
+		'$submit' => t('Submit')
+	));
+
+	return $o;
 
 
 }
