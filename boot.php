@@ -699,6 +699,8 @@ class App {
 		$this->is_mobile = $mobile_detect->isMobile();
 		$this->is_tablet = $mobile_detect->isTablet();
 
+		$this->head_set_icon('/images/rhash-32.png');
+
 		BaseObject::set_app($this);
 		
 		/**
@@ -899,6 +901,7 @@ class App {
 			'$local_user' => local_user(),
 			'$generator' => RED_PLATFORM . ' ' . RED_VERSION,
 			'$update_interval' => $interval,
+			'$icon' => head_get_icon(),
 			'$head_css' => head_get_css(),
 			'$head_js' => head_get_js(),
 			'$js_strings' => js_strings()
@@ -997,6 +1000,17 @@ class App {
 		return $this->rdelim[$engine];
 	}
 
+	function head_set_icon($icon) {
+		$this->data['pageicon'] = $icon;
+
+	}
+
+	function head_get_icon() {
+		$icon = $this->data['pageicon'];
+		if(! strpos($icon,'://'))
+			$icon = z_root() . $icon;
+		return $icon;
+	}
 
 }
 
@@ -1568,6 +1582,8 @@ function profile_sidebar($profile, $block = 0) {
 	if((! is_array($profile)) && (! count($profile)))
 		return $o;
 
+
+	head_set_icon($profile['thumb']);
 
 	$is_owner = (($profile['uid'] == local_user()) ? true : false);
 
@@ -2287,4 +2303,19 @@ function construct_page(&$a) {
 
 function appdirpath() {
 	return dirname(__FILE__);
+}
+
+
+function head_set_icon($icon) {
+	global $a;
+	$a->data['pageicon'] = $icon;
+	logger('head_set_icon: ' . $icon);
+}
+
+function head_get_icon() {
+	global $a;
+	$icon = $a->data['pageicon'];
+	if(! strpos($icon,'://'))
+		$icon = z_root() . $icon;
+	return $icon;
 }

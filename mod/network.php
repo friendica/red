@@ -7,6 +7,9 @@ function network_init(&$a) {
 		notice( t('Permission denied.') . EOL);
 		return;
 	}
+
+	$channel = $a->get_channel();
+	head_set_icon($channel['xchan_photo_s']);
 	
 	$is_a_date_query = false;
 

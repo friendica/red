@@ -2,8 +2,8 @@ var searchData=
 [
   ['t',['t',['../language_8php.html#aae0c3638fb476ae1e31f8d242f5dac04',1,'language.php']]],
   ['tag_5fdeliver',['tag_deliver',['../items_8php.html#ab1bce4261bcf75ad62753b498a144d17',1,'items.php']]],
-  ['tagadelic',['tagadelic',['../taxonomy_8php.html#afe44c30f1d0f8cb3ca097d4e189d852d',1,'taxonomy.php']]],
-  ['tagblock',['tagblock',['../taxonomy_8php.html#a4f3605ee8de717a401ea9df2401b59f6',1,'taxonomy.php']]],
+  ['tagadelic',['tagadelic',['../taxonomy_8php.html#a061b3db9426d4b074395f5824062cad4',1,'taxonomy.php']]],
+  ['tagblock',['tagblock',['../taxonomy_8php.html#abdb698bc6921429df6d697f6c5dec96f',1,'taxonomy.php']]],
   ['tagger_5fcontent',['tagger_content',['../tagger_8php.html#a0e4a3eb177d1684553c547503d67161c',1,'tagger.php']]],
   ['tagrm_5fcontent',['tagrm_content',['../tagrm_8php.html#adfd4ea5b4d7fc6d9c9e042af5cd7d49a',1,'tagrm.php']]],
   ['tagrm_5fpost',['tagrm_post',['../tagrm_8php.html#a1702f40aa53a2fa93deade1f609abe78',1,'tagrm.php']]],

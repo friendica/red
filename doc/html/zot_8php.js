@@ -9,6 +9,7 @@ var zot_8php =
     [ "process_mail_delivery", "zot_8php.html#aa6ae96db8cbbdbb10e6876d206bbf7cc", null ],
     [ "process_profile_delivery", "zot_8php.html#a9a57b40669351c9791126b925cb7ef3b", null ],
     [ "public_recips", "zot_8php.html#a083aec6c900d244e1bfc1406f9461465", null ],
+    [ "remove_community_tag", "zot_8php.html#aad25a3fe0e1566121d6fb8222979bc10", null ],
     [ "update_imported_item", "zot_8php.html#a31aad56acf8ff8f2353e6ff8595544df", null ],
     [ "update_modtime", "zot_8php.html#a666d3efcac00ec1b4a4537a60655f2ab", null ],
     [ "zot_build_packet", "zot_8php.html#a3862b3161b2c8557dc1a95020179bd81", null ],

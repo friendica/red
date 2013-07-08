@@ -28,6 +28,7 @@ var searchData=
   ['remote_5fuser',['remote_user',['../boot_8php.html#a5542c5c2806ab8bca04bad53d47b5209',1,'boot.php']]],
   ['remove_5fall_5fxchan_5fresources',['remove_all_xchan_resources',['../Contact_8php.html#acc12cda999c88c4d6185cca967c15125',1,'Contact.php']]],
   ['remove_5fchild',['remove_child',['../classItem.html#a2ce70ef63f9f4d86a09c351678806925',1,'Item']]],
+  ['remove_5fcommunity_5ftag',['remove_community_tag',['../zot_8php.html#aad25a3fe0e1566121d6fb8222979bc10',1,'zot.php']]],
   ['remove_5fparent',['remove_parent',['../classItem.html#aa452b5bcd8dea12119b09212c615cb41',1,'Item']]],
   ['remove_5fqueue_5fitem',['remove_queue_item',['../queue__fn_8php.html#a8fe71e981399bbf5d000a6ca42f57b24',1,'queue_fn.php']]],
   ['removeme_5fcontent',['removeme_content',['../removeme_8php.html#a065a589caa2aa84c60f7073a28f0ad9c',1,'removeme.php']]],
