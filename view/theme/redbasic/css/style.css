@@ -926,6 +926,9 @@ footer {
 .wall-item-content-wrapper {
 	margin-top: 10px;
 	position: relative;
+	border-radius: $radiuspx;
+	border: 1px solid #eec;
+
 /*	background: #fff; */
 /*	border-radius: 5px; */
 /*	box-shadow: 12px 12px 12px #111; */

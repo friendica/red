@@ -11,12 +11,14 @@ require_once('include/text.php');
 /**
  * A list of threads
  *
- * We should think about making this a SPL Iterator
  */
+
 class Conversation extends BaseObject {
 	private $threads = array();
 	private $mode = null;
+	private $observer = null;
 	private $writable = false;
+	private $commentable = false;
 	private $profile_owner = 0;
 	private $preview = false;
 
@@ -34,8 +36,8 @@ class Conversation extends BaseObject {
 
 		$a = $this->get_app();
 
-		$observer = $a->get_observer();
-		$ob_hash = (($observer) ? $observer['xchan_hash'] : '');
+		$this->observer = $a->get_observer();
+		$ob_hash = (($this->observer) ? $this->observer['xchan_hash'] : '');
 
 		switch($mode) {
 			case 'network':
@@ -63,7 +65,6 @@ class Conversation extends BaseObject {
 				break;
 		}
 		$this->mode = $mode;
-
 	}
 
 	/**
@@ -78,6 +79,10 @@ class Conversation extends BaseObject {
 	 */
 	public function is_writable() {
 		return $this->writable;
+	}
+
+	public function is_commentable() {
+		return $this->commentable;
 	}
 
 	/**
@@ -101,6 +106,10 @@ class Conversation extends BaseObject {
 		$this->set_mode($mode);
 	}
 
+	public function get_observer() {
+		return $this->observer;
+	}
+
 
 	/**
 	 * Add a thread to the conversation
@@ -121,12 +130,21 @@ class Conversation extends BaseObject {
 		}
 
 		/*
-		 * Only add will be displayed
+		 * Only add things that will be displayed
 		 */
 
-		if(activity_match($item->get_data_value('verb'),ACTIVITY_LIKE) || activity_match($item->get_data_value('verb'),ACTIVITY_DISLIKE)) {
+		
+		if(($item->get_data_value('id') != $item->get_data_value('parent')) && (activity_match($item->get_data_value('verb'),ACTIVITY_LIKE) || activity_match($item->get_data_value('verb'),ACTIVITY_DISLIKE))) {
 			return false;
 		}
+
+		if(local_user() && $item->get_data_value('uid') == local_user())
+			$this->commentable = true;
+
+		if(($this->observer) && (! $this->writable)) {
+			$this->commentable = can_comment_on_post($this->observer['xchan_hash'],$item['data']);
+		}
+
 		$item->set_conversation($this);
 		$this->threads[] = $item;
 		return end($this->threads);

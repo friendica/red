@@ -54,6 +54,7 @@
 	    // Dark themes are very different - we need to do some of these from scratch, so don't bother setting vars for anything else
 	    if ($colour_scheme === 'dark') {$colour = 'dark'; $navcolour = 'black';}
 	    if ($colour_scheme === 'redbasic'){$navcolour = 'red';}
+		$shadows = false;
 }
 
 // This is probably the easiest place to apply global settings.  Don't bother with site line height and such.  Instead, check pconfig for global user settings.  
@@ -133,7 +134,8 @@
 	if ($displaystyle === "fancy") 
 	      {if (file_exists('view/theme/' . current_theme() . '/css/fancy.css')) {
 		  $fancy = (file_get_contents('view/theme/' . current_theme() . '/css/fancy.css'));
-	      echo "$fancy";}
+			echo str_replace(array('$radius'),array($radius),$fancy);
+	      }
 	  }
     
 // Put the # here to force hex colours - if we don't, somebody is going to do something odd, using RGB and we're all going to be confused on the support forums
