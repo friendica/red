@@ -138,11 +138,14 @@ class Conversation extends BaseObject {
 			return false;
 		}
 
-		if(local_user() && $item->get_data_value('uid') == local_user())
+		if(local_user() && $item->get_data_value('uid') == local_user()) 
+			$this->commentable = true;
+
+		if($this->writable)
 			$this->commentable = true;
 
 		if(($this->observer) && (! $this->writable)) {
-			$this->commentable = can_comment_on_post($this->observer['xchan_hash'],$item['data']);
+			$this->commentable = can_comment_on_post($this->observer['xchan_hash'],$item->data);
 		}
 
 		$item->set_conversation($this);
