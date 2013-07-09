@@ -17,6 +17,7 @@
     $displaystyle = false;
     $linkcolour = false;
     $shiny = false;
+	$radius = 5;
     $site_line_height = get_config("redbasic","line_height");
     $site_redbasic_font_size = get_config("redbasic", "font_size" );
     $site_colour = get_config("redbasic", "colour" );
@@ -25,6 +26,10 @@
     $displaystyle = get_config("redbasic", "displaystyle" );
     $linkcolour = get_config("redbasic", "linkcolour" );
     $shiny = get_config("redbasic", "shiny" );
+
+	$x = get_config('redbasic','radius');
+	if($x !== false)
+		$radius = $x;
     
     if (local_user()) {
         $line_height = get_pconfig(local_user(), "redbasic","line_height");
@@ -35,6 +40,10 @@
         $displaystyle = get_pconfig(local_user(), "redbasic", "displaystyle");
         $linkcolour = get_pconfig(local_user(), "redbasic", "linkcolour");
         $shiny = get_pconfig(local_user(), "redbasic", "shiny");
+		$x = get_pconfig(local_user(),'redbasic','radius');
+		if($x !== false)
+			$radius = $x;
+
         if (! feature_enabled(local_user(),'expert')) {$colour_scheme = get_pconfig(local_user(), "redbasic", "colour_scheme");}
     }
 
@@ -70,7 +79,7 @@
 			$x = str_replace("\n","",$x);
 			logger('pcss compress: final size: ' . strlen($x), LOGGER_DEBUG);
 		}
-		echo $x;
+		echo str_replace(array('$radius'),array($radius),$x);
     }
     echo "\r\n";
 

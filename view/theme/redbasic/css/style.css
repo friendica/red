@@ -115,8 +115,8 @@ a:hover, .fakelink:hover { color: #44AAFF; text-decoration: underline; }
 
 input {
 	border: 1px solid #666666;
-	-moz-border-radius: 5px;
-	border-radius: 5px;	
+	-moz-border-radius: $radiuspx;
+	border-radius: $radiuspx;	
 	padding: 3px;
 }
 
@@ -209,8 +209,8 @@ nav #site-location {
 	border: 1px solid #444;
 	background-color: #ccc;
 	padding: 10px;
-	-moz-border-radius: 5px;
-	border-radius: 5px;	
+	-moz-border-radius: $radiuspx;
+	border-radius: $radiuspx;	
 
 }
 
@@ -268,8 +268,8 @@ header #banner #logo-text {
 	border-bottom: 0px;
 	background-color: #aec0d3;
 	color: #565854;		
-	-moz-border-radius: 5px 5px 0px 0px;
-	border-radius: 5px 5px 0px 0px;	
+	-moz-border-radius: $radiuspx;
+	border-radius: $radiuspx;;	
 }
 
 nav .nav-link {
@@ -398,7 +398,7 @@ footer {
 	margin-bottom: 5px;
 	font-weight: bold;
 	border: solid 1px #ffffff;
-	border-radius: 5px;
+	border-radius: $radiuspx;
 }
 
 #jot-title::-webkit-input-placeholder{font-weight: bold;}
@@ -1175,7 +1175,7 @@ footer {
 	padding: 3px 1px 1px 3px;
 	border: 1px solid #ccc;
 	padding: 8px;
-	border-radius: 5px 5px 5px 5px;
+	border-radius: $radiuspx;
 /*	box-shadow: 5px 5px 5px #666 inset; */
 }
 
@@ -1276,7 +1276,7 @@ footer {
 	height: auto;
 	width: auto;
 	background-color: #0080FF;
-	border-radius: 5px;
+	border-radius: $radiuspx;
 	border: 2px outset;
 	box-shadow: 5px 5px 5px #666;
 	margin-right: 8px;
@@ -1654,8 +1654,8 @@ border: 1px #111;
 
 /*
 #profile-jot-text_parent, .mceLayout {
-    border-radius: 5px;
-    -moz-border-radius: 5px;
+    border-radius: $radiuspx;
+    -moz-border-radius: $radiuspx;
     box-shadow: 4px 4px 3px 0 #444444;
 }
 */
@@ -1678,8 +1678,8 @@ tr.mceLast {
 	padding: 8px;
 	margin-right: 0px;
 	width: 90%; 
-	-moz-border-radius: 5px;
-	border-radius: 5px;	
+	-moz-border-radius: $radiuspx;
+	border-radius: $radiuspx;	
 /*	box-shadow: 4px 4px 3px 0 #666 inset; */
 }
 #profile-jot-text:hover {
@@ -1687,16 +1687,16 @@ tr.mceLast {
 }
 
 .wall-item-photo, .photo, .contact-block-img, .my-comment-photo {
-    border-radius: 5px;
-    -moz-border-radius: 5px;
+    border-radius: $radiuspx;
+    -moz-border-radius: $radiuspx;
     box-shadow: 4px 4px 3px 0 #444444;
 }
 
 
 #datebrowse-sidebar select {
     margin-left: 25px;
-    border-radius: 5px;
-    -moz-border-radius: 5px;
+    border-radius: $radiuspx;
+    -moz-border-radius: $radiuspx;
     opacity: 0.3;
     filter:alpha(opacity=30);
 }
@@ -1731,8 +1731,8 @@ tr.mceLast {
 }
 
 .contact-entry-photo img, .profile-match-photo img, #photo-photo img, .directory-photo-img, .photo-album-photo, .photo-top-photo {
-    border-radius: 5px;
-    -moz-border-radius: 5px;
+    border-radius: $radiuspx;
+    -moz-border-radius: $radiuspx;
     box-shadow: 4px 4px 3px 0 #444444;
 }
 
@@ -1741,9 +1741,9 @@ tr.mceLast {
     background-color: #0080FF;
     color: #eeeeec;
     font-weight: bold;
-    -webkit-border-radius: 5px;
-    -moz-border-radius: 5px;
-    border-radius: 5px;
+    -webkit-border-radius: $radiuspx;
+    -moz-border-radius: $radiuspx;
+    border-radius: $radiuspx;
     border: 2px outset #222420 !important;
     margin: 0;
     float: right;
@@ -1757,8 +1757,8 @@ tr.mceLast {
 }
 
 .settings-widget .selected {
-    border-radius: 5px;
-    -moz-border-radius: 5px;
+    border-radius: $radiuspx;
+    -moz-border-radius: $radiuspx;
     box-shadow: 4px 4px 3px 0 #444444;
 }
 
@@ -2265,9 +2265,9 @@ aside input[type='text'] {
 	border-bottom: 1px solid #eec;
 	padding: 8px;
 	margin-top: 5px;
-	-moz-border-radius:5px;
-	-webkit-border-radius:5px;
-	border-radius:5px;
+	-moz-border-radius: $radiuspx;
+	-webkit-border-radius: $radiuspx;
+	border-radius: $radiuspx;
 
 }
 
@@ -2435,7 +2435,7 @@ aside input[type='text'] {
 }
 
 #nav-user-linkmenu img {
-	border-radius: 5px;
+	border-radius: $radiuspx;
 	margin-top: -4px;
 }
 
@@ -3464,9 +3464,9 @@ nav .nav-menu-icon {
   height: 22px;
   padding: 5px;
 /*  margin: 3px 10px; */
-  -moz-border-radius: 5px 5px 0 0;
-  -webkit-border-radius: 5px 5px 0 0;
-  border-radius: 5px 5px 0 0;
+  -moz-border-radius: $radiuspx;
+  -webkit-border-radius: $radiuspx;
+  border-radius: $radiuspx;
 }
 nav .nav-menu-icon.selected {
   background-color: #FF0000;
@@ -3498,9 +3498,9 @@ nav .nav-menu.selected a {
 nav .nav-notify {
   background-color: #0080FF;
   color: #fff;
-  -moz-border-radius: 5px 5px 5px 5px;
-  -webkit-border-radius: 5px 5px 5px 5px;
-  border-radius: 5px 5px 5px 5px;
+  -moz-border-radius: $radiuspx;
+  -webkit-border-radius: $radiuspx;
+  border-radius: $radiuspx;
   opacity: 0.6;
   filter:alpha(opacity=60);
 
@@ -3643,9 +3643,9 @@ ul.menu-popup {
 	max-height: 400px;
 	overflow-y: scroll;overflow-style:scrollbar;
 	background-color:#FFFFFF;
-	-moz-border-radius: 5px;
-	-webkit-border-radius: 5px;
-	border-radius:5px;
+	-moz-border-radius: $radiuspx;
+	-webkit-border-radius: $radiuspx;
+	border-radius: $radiuspx;
 	border: 1px solid #888;
 }
 #nav-notifications-menu .contactname { font-weight: bold; font-size: 0.9em; }
@@ -3711,9 +3711,9 @@ ul.menu-popup {
 	background-position: 7px 7px;
 	background-repeat: no-repeat;
 	padding: 7px 5px 0px 30px;
-	-webkit-border-radius: 5px ;
-	-moz-border-radius: 5px;
-	border-radius: 5px;
+	-webkit-border-radius: $radiuspx;
+	-moz-border-radius: $radiuspx;
+	border-radius: $radiuspx;
 	color: #999999;
 }
 #acl-showall.selected {
