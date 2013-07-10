@@ -2058,6 +2058,13 @@ function profile_tabs($a, $is_owner=False, $nickname=Null){
 			'title' => t('Events and Calendar'),
 			'id'    => 'events-tab',
 		);
+		$tabs[] = array(
+			'label' => t('Wepages'),
+			'url'	=> $a->get_baseurl() . '/webpages/' . $nickname,
+			'sel' 	=> ((argv(0) == 'webpages') ? 'active' : ''),
+			'title' => t('Manage Webpages'),
+			'id'    => 'webpages-tab',
+		);
 	}
 	else {
 		// FIXME

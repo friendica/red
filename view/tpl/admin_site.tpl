@@ -51,6 +51,7 @@
 	{{include file="field_select.tpl" field=$theme}}
         {{include file="field_select.tpl" field=$theme_mobile}}
         {{include file="field_select.tpl" field=$theme_accessibility}}
+        {{include file="field_input.tpl" field=$site_channel}}
 	{{include file="field_select.tpl" field=$ssl_policy}}
 	
 	<div class="submit"><input type="submit" name="page_site" value="{{$submit}}" /></div>
