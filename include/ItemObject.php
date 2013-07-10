@@ -25,7 +25,6 @@ class Item extends BaseObject {
 	private $wall_to_wall = false;
 	private $threaded = false;
 	private $visiting = false;
-	private $observer = null;
 	private $channel = null;
 
 	public function __construct($data) {
@@ -68,7 +67,6 @@ class Item extends BaseObject {
 		$result = array();
 
 		$a        = $this->get_app();
-		$observer = $this->observer;
 		$item     = $this->get_data();
 
 		$commentww = '';
@@ -82,6 +80,7 @@ class Item extends BaseObject {
 		$total_children = $this->count_descendants();
 
 		$conv = $this->get_conversation();
+		$observer = $conv->get_observer();
 
 		$lock = ((($item['item_private'] == 1) || (($item['uid'] == local_user()) && (strlen($item['allow_cid']) || strlen($item['allow_gid']) 
 			|| strlen($item['deny_cid']) || strlen($item['deny_gid']))))
@@ -94,8 +93,8 @@ class Item extends BaseObject {
 		else
 			$edpost = false;
 
-		if($this->observer['xchan_hash'] == $this->get_data_value('author_xchan') 
-			|| $this->observer['xchan_hash'] == $this->get_data_value('owner_xchan') 
+		if($observer['xchan_hash'] == $this->get_data_value('author_xchan') 
+			|| $observer['xchan_hash'] == $this->get_data_value('owner_xchan') 
 			|| $this->get_data_value('uid') == local_user())
 			$dropping = true;
 
@@ -105,7 +104,7 @@ class Item extends BaseObject {
 				'delete' => t('Delete'),
 			);
 		}		
-
+// FIXME
 		if($observer_is_pageowner) {		
 			$multidrop = array(
 				'select' => t('Select'), 
