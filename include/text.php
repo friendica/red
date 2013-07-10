@@ -1023,19 +1023,24 @@ function prepare_body($item,$attach = false) {
 		$s .= '<div class="clear"></div></div>';
 	}
 
-	if(is_array($item['term']) && count($item['term'])) {
-		$tstr = '';
-		foreach($item['term'] as $t) {
-			$t1 = format_term_for_display($t);
-			if($t1) {
-				if($tstr)
-					$tstr .= ' ';
-				$tstr .= $t1;
-			}
-		}
-		if($tstr)
-			$s .=  '<br /><div class="posttags">' . $tstr . '</div>';
-	}
+// At some point in time, posttags were removed from the threaded conversation templates, but remained in the search_item template.
+// Code to put them back was added into include/conversation.php and/or include/ItemObject.php but under new class names
+// Then it was discovered that the following bits remained of the old code.
+// Commented out, but we may decide to use this instead of the other version and put all the tag rendering in one place. In the other
+// location it is more theme-able. 
+//	if(is_array($item['term']) && count($item['term'])) {
+//		$tstr = '';
+//		foreach($item['term'] as $t) {
+//			$t1 = format_term_for_display($t);
+//			if($t1) {
+//				if($tstr)
+//					$tstr .= ' ';
+//				$tstr .= $t1;
+//			}
+//		}
+//		if($tstr)
+//			$s .=  '<br /><div class="posttags">' . $tstr . '</div>';
+//	}
 
 	$writeable = ((get_observer_hash() == $item['owner_xchan']) ? true : false); 
 

@@ -584,17 +584,6 @@ function conversation(&$a, $items, $mode, $update, $page_mode = 'traditional') {
 				$tags=array();
 				$hashtags = array();
 				$mentions = array();
-				foreach(explode(',',$item['tag']) as $tag){
-					$tag = trim($tag);
-					if ($tag!="") {
-						$t = bbcode($tag);
-						$tags[] = $t;
-						if($t[0] == '#')
-							$hashtags[] = $t;
-						elseif($t[0] == '@')
-							$mentions[] = $t;
-					}
-				}
 
 				$sp = false;
 				$profile_link = best_link_url($item,$sp);
@@ -650,7 +639,6 @@ function conversation(&$a, $items, $mode, $update, $page_mode = 'traditional') {
 				$tmp_item = array(
 					'template' => $tpl,
 					'toplevel' => 'toplevel_item',
-					'tags' => $tags,
 					'id' => (($preview) ? 'P0' : $item['item_id']),
 					'linktitle' => sprintf( t('View %s\'s profile @ %s'), $profile_name, $profile_url),
 					'profile_url' => $profile_link,

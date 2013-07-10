@@ -2827,7 +2827,7 @@ aside input[type='text'] {
 	filter:alpha(opacity=100) !important;
 }
 
-.posttags {
+.posttags, .body-tag {
 	margin-top: 15px;
 }
 

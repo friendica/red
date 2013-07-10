@@ -55,6 +55,7 @@
 	    if ($colour_scheme === 'dark') {$colour = 'dark'; $navcolour = 'black';}
 	    if ($colour_scheme === 'redbasic'){$navcolour = 'red';}
 		$shadows = false;
+		$radius = 5;
 }
 
 // This is probably the easiest place to apply global settings.  Don't bother with site line height and such.  Instead, check pconfig for global user settings.  
