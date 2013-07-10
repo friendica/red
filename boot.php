@@ -2060,7 +2060,7 @@ function profile_tabs($a, $is_owner=False, $nickname=Null){
 		);
 		$tabs[] = array(
 			'label' => t('Wepages'),
-			'url'	=> $a->get_baseurl() . '/webpage/' . $nickname,
+			'url'	=> $a->get_baseurl() . '/webpages/' . $nickname,
 			'sel' 	=> ((argv(0) == 'webpages') ? 'active' : ''),
 			'title' => t('Manage Webpages'),
 			'id'    => 'webpages-tab',
