@@ -206,6 +206,7 @@ function message_content(&$a) {
 	}
 
 	$channel = $a->get_channel();
+	head_set_icon($channel['xchan_photo_s']);
 
 	$tpl = get_markup_template('mail_head.tpl');
 	$header = replace_macros($tpl, array(

@@ -16,7 +16,9 @@ function theme_content(&$a) {
 	$iconset = get_pconfig(local_user(), 'redbasic', 'iconset');
 	$shiny = get_pconfig(local_user(), 'redbasic', 'shiny');
 	$colour_scheme = get_pconfig(local_user(), 'redbasic', 'colour_scheme');
-	return redbasic_form($a, $font_size, $line_height, $colour, $shadow, $navcolour, $opaquenav, $displaystyle, $linkcolour, $iconset, $shiny, $colour_scheme);
+	$radius = get_pconfig(local_user(),'redbasic','radius');
+
+	return redbasic_form($a, $font_size, $line_height, $colour, $shadow, $navcolour, $opaquenav, $displaystyle, $linkcolour, $iconset, $shiny, $colour_scheme,$radius);
 }
 
 function theme_post(&$a) {
@@ -33,6 +35,7 @@ function theme_post(&$a) {
 		set_pconfig(local_user(), 'redbasic', 'iconset', $_POST['redbasic_iconset']);
 		set_pconfig(local_user(), 'redbasic', 'shiny', $_POST['redbasic_shiny']);
 		set_pconfig(local_user(), 'redbasic', 'colour_scheme', $_POST['redbasic_colour_scheme']);
+		set_pconfig(local_user(), 'redbasic', 'radius', $_POST['redbasic_radius']);
 	}
 }
 
@@ -67,7 +70,7 @@ function theme_post(&$a) {
 //}
 
 // These aren't all used yet, but they're not bloat - we'll use drop down menus in idiot mode.
-function redbasic_form(&$a, $font_size, $line_height, $colour, $shadow, $navcolour, $opaquenav, $displaystyle, $linkcolour, $iconset, $shiny, $colour_scheme) {
+function redbasic_form(&$a, $font_size, $line_height, $colour, $shadow, $navcolour, $opaquenav, $displaystyle, $linkcolour, $iconset, $shiny, $colour_scheme,$radius) {
 	$line_heights = array(
 		"1.3" => "1.3",
 		"---" => "---",
@@ -141,6 +144,7 @@ function redbasic_form(&$a, $font_size, $line_height, $colour, $shadow, $navcolo
 		'$linkcolour' => array('redbasic_linkcolour', t('Display colour of links - hex value, do not include the #'), $linkcolour, '', $linkcolours),
 		'$iconset' => array('redbasic_iconset', t('Icons'), $iconset, '', $iconsets),
 		'$shiny' => array('redbasic_shiny', t('Shiny style'), $shiny, '', $shinys),
+		'$radius' => array('redbasic_radius', t('Corner radius'), $radius, t('0-99 default: 5')),
 	  ));}
 	 
 	 if(! feature_enabled(local_user(),'expert')) {

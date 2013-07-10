@@ -23,6 +23,11 @@ function connections_init(&$a) {
 			$a->data['abook'] = $r[0];
 		}
 	}
+
+	$channel = $a->get_channel();
+	if($channel)
+		head_set_icon($channel['xchan_photo_s']);
+
 }
 
 function connections_aside(&$a) {

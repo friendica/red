@@ -1,7 +1,7 @@
 /* There's probably some stuff in here we don't need, and maybe some missing stuff we do need.  We can clean it up incrementaly, just get the heavy lifting done for now */
 
 aside {
-border-radius: 0px 0px 20px 0px;}
+border-radius: $radiuspx;}
 
 
 .tab {
@@ -9,9 +9,9 @@ border-radius: 0px 0px 20px 0px;}
     background-color: #f00;
     color: #fff !important;
     font-weight: bold;
-    -webkit-border-radius: 5px;
-    -moz-border-radius: 5px;
-    border-radius: 20px;
+    -webkit-border-radius: $radiuspx;
+    -moz-border-radius: $radiuspx;
+    border-radius: $radiuspx;
     margin: 0;
     width: auto;
     margin-left: 8px;
@@ -38,7 +38,7 @@ border-radius: 0px 0px 20px 0px;}
 
 .wall-item-content-wrapper {
 	position: relative;
-	border-radius: 10px;
+	border-radius: $radiuspx;
 	box-shadow: 8px 8px 8px #000;
 	border: 1px solid #eec;
 }
@@ -68,7 +68,7 @@ opacity: 1;
 ul.menu-popup {
   background: #dd0000;
   color: #eec;
-  border-radius: 0px 0px 20px 20px;
+  border-radius: $radiuspx;
   z-index: 100000;
   -webkit-box-shadow: 0px 5px 10px rgba(0, 0, 0, 0.7);
   -moz-box-shadow: 0px 5px 10px rgba(0, 0, 0, 0.7);

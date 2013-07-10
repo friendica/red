@@ -33,7 +33,7 @@ var boot_8php =
     [ "notice", "boot_8php.html#a9255af5ae9c887520091ea04763c1a88", null ],
     [ "proc_run", "boot_8php.html#ab346a2ece14993861f3e4206befa94f0", null ],
     [ "profile_create_sidebar", "boot_8php.html#a5b45d647da3743a7fc8c6223350b4d67", null ],
-    [ "profile_load", "boot_8php.html#aebc5ed38c73ade57f360471da712ded2", null ],
+    [ "profile_load", "boot_8php.html#a4751b522ea913d0e7ed43e03d22e9e68", null ],
     [ "profile_sidebar", "boot_8php.html#a646123ebbb10eb6f5b6ff26f4288da9b", null ],
     [ "profile_tabs", "boot_8php.html#a1dfcb5146e9d1eca4528bc580ad5d273", null ],
     [ "remote_user", "boot_8php.html#a5542c5c2806ab8bca04bad53d47b5209", null ],

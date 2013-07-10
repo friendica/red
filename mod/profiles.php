@@ -200,6 +200,11 @@ function profiles_post(&$a) {
 		$day = intval($_POST['day']);
 			if(($day > $mtab[$month]) || ($day < 0))
 				$day = 0;
+
+		if($year && (! ($month && $day))) {
+			$month = 1; $day = 1;
+		}
+
 		$dob = '0000-00-00';
 		$dob = sprintf('%04d-%02d-%02d',$year,$month,$day);
 

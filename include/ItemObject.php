@@ -11,12 +11,10 @@ require_once('boot.php');
  * An item
  */
 class Item extends BaseObject {
-	private $data = array();
+	public  $data = array();
 	private $template = 'conv_item.tpl';
 	private $comment_box_template = 'comment_item.tpl';
 	private $toplevel = false;
-	private $writable = false;
-	private $commentable = false;
 	private $children = array();
 	private $parent = null;
 	private $conversation = null;
@@ -27,25 +25,14 @@ class Item extends BaseObject {
 	private $wall_to_wall = false;
 	private $threaded = false;
 	private $visiting = false;
-	private $observer = null;
 	private $channel = null;
 
 	public function __construct($data) {
 		$a = $this->get_app();
 				
 		$this->data = $data;
-		$this->channel = $a->get_channel();
-		$this->observer = $a->get_observer();
-
 		$this->toplevel = ($this->get_id() == $this->get_data_value('parent'));
 
-
-		$this->writable = (((local_user()) && ($this->channel['channel_hash'] === $this->data['owner_xchan'])) ? true : false);
-		$this->commentable = $this->writable;
-
-		if(($this->observer) && (! $this->writable)) {
-			$this->commentable = can_comment_on_post($this->observer['xchan_hash'],$data);
-		}
 
 		// Prepare the children
 		if(count($data['children'])) {
@@ -80,7 +67,6 @@ class Item extends BaseObject {
 		$result = array();
 
 		$a        = $this->get_app();
-		$observer = $this->observer;
 		$item     = $this->get_data();
 
 		$commentww = '';
@@ -94,6 +80,7 @@ class Item extends BaseObject {
 		$total_children = $this->count_descendants();
 
 		$conv = $this->get_conversation();
+		$observer = $conv->get_observer();
 
 		$lock = ((($item['item_private'] == 1) || (($item['uid'] == local_user()) && (strlen($item['allow_cid']) || strlen($item['allow_gid']) 
 			|| strlen($item['deny_cid']) || strlen($item['deny_gid']))))
@@ -106,10 +93,9 @@ class Item extends BaseObject {
 		else
 			$edpost = false;
 
-// FIXME - this is wrong.
-//		if(($this->get_data_value('uid') == local_user()) || $this->is_visiting())
-
-		if($this->get_data_value('uid') == local_user())
+		if($observer['xchan_hash'] == $this->get_data_value('author_xchan') 
+			|| $observer['xchan_hash'] == $this->get_data_value('owner_xchan') 
+			|| $this->get_data_value('uid') == local_user())
 			$dropping = true;
 
 		if($dropping) {
@@ -118,7 +104,7 @@ class Item extends BaseObject {
 				'delete' => t('Delete'),
 			);
 		}		
-
+// FIXME
 		if($observer_is_pageowner) {		
 			$multidrop = array(
 				'select' => t('Select'), 
@@ -175,7 +161,7 @@ class Item extends BaseObject {
 			);
 		}
 
-		if($this->is_commentable()) {
+		if($conv->is_commentable()) {
 			$like = array( t("I like this \x28toggle\x29"), t("like"));
 			$dislike = array( t("I don't like this \x28toggle\x29"), t("dislike"));
 			if ($shareable)
@@ -456,28 +442,6 @@ class Item extends BaseObject {
 	}
 
 	/**
-	 * Check if this is writable
-	 */
-	private function is_writable() {
-
-		return $this->writable;
-		
-//		$conv = $this->get_conversation();
-
-//		return true;
-
-//		if($conv) {
-			// This will allow us to comment on wall-to-wall items owned by our friends
-			// and community forums even if somebody else wrote the post.
-//			return ($this->writable || ($this->is_visiting() && $conv->get_mode() == 'channel'));
-//		}
-	}
-
-	private function is_commentable() {
-		return $this->commentable;
-	}
-
-	/**
 	 * Count the total of our descendants
 	 */
 	private function count_descendants() {
@@ -514,44 +478,43 @@ class Item extends BaseObject {
 		$comment_box = '';
 		$conv = $this->get_conversation();
 
-		if(! $this->is_commentable())
+		if(! $conv->is_commentable())
 			return;
 
-		if($conv->is_writable() || $this->is_writable()) {
-			$template = get_markup_template($this->get_comment_box_template());
+		$template = get_markup_template($this->get_comment_box_template());
 
-			$a = $this->get_app();
+		$a = $this->get_app();
+		$observer = $conv->get_observer();
 
-			$qc = ((local_user()) ? get_pconfig(local_user(),'system','qcomment') : null);
-			$qcomment = (($qc) ? explode("\n",$qc) : null);
+		$qc = ((local_user()) ? get_pconfig(local_user(),'system','qcomment') : null);
+		$qcomment = (($qc) ? explode("\n",$qc) : null);
 
-			$comment_box = replace_macros($template,array(
-				'$return_path' => '',
-				'$threaded' => $this->is_threaded(),
-				'$jsreload' => (($conv->get_mode() === 'display') ? $_SESSION['return_url'] : ''),
-				'$type' => (($conv->get_mode() === 'channel') ? 'wall-comment' : 'net-comment'),
-				'$id' => $this->get_id(),
-				'$parent' => $this->get_id(),
-				'$qcomment' => $qcomment,
-				'$profile_uid' =>  $conv->get_profile_owner(),
-				'$mylink' => $this->observer['xchan_url'],
-				'$mytitle' => t('This is you'),
-				'$myphoto' => $this->observer['xchan_photo_s'],
-				'$comment' => t('Comment'),
-				'$submit' => t('Submit'),
-				'$edbold' => t('Bold'),
-				'$editalic' => t('Italic'),
-				'$eduline' => t('Underline'),
-				'$edquote' => t('Quote'),
-				'$edcode' => t('Code'),
-				'$edimg' => t('Image'),
-				'$edurl' => t('Link'),
-				'$edvideo' => t('Video'),
-				'$preview' => ((feature_enabled($conv->get_profile_owner(),'preview')) ? t('Preview') : ''),
-				'$indent' => $indent,
-				'$sourceapp' => get_app()->sourcename
-			));
-		}
+		$comment_box = replace_macros($template,array(
+			'$return_path' => '',
+			'$threaded' => $this->is_threaded(),
+			'$jsreload' => (($conv->get_mode() === 'display') ? $_SESSION['return_url'] : ''),
+			'$type' => (($conv->get_mode() === 'channel') ? 'wall-comment' : 'net-comment'),
+			'$id' => $this->get_id(),
+			'$parent' => $this->get_id(),
+			'$qcomment' => $qcomment,
+			'$profile_uid' =>  $conv->get_profile_owner(),
+			'$mylink' => $observer['xchan_url'],
+			'$mytitle' => t('This is you'),
+			'$myphoto' => $observer['xchan_photo_s'],
+			'$comment' => t('Comment'),
+			'$submit' => t('Submit'),
+			'$edbold' => t('Bold'),
+			'$editalic' => t('Italic'),
+			'$eduline' => t('Underline'),
+			'$edquote' => t('Quote'),
+			'$edcode' => t('Code'),
+			'$edimg' => t('Image'),
+			'$edurl' => t('Link'),
+			'$edvideo' => t('Video'),
+			'$preview' => ((feature_enabled($conv->get_profile_owner(),'preview')) ? t('Preview') : ''),
+			'$indent' => $indent,
+			'$sourceapp' => get_app()->sourcename
+		));
 
 		return $comment_box;
 	}

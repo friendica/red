@@ -580,6 +580,11 @@ function settings_content(&$a) {
 		return;
 	}
 
+
+	$channel = $a->get_channel();
+	if($channel)
+		head_set_icon($channel['xchan_photo_s']);
+
 //	if(x($_SESSION,'submanage') && intval($_SESSION['submanage'])) {
 //		notice( t('Permission denied.') . EOL );
 //		return;

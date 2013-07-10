@@ -80,9 +80,44 @@ function advanced_profile(&$a) {
 
 		if($txt = prepare_text($a->profile['education'])) $profile['education'] = array( t('School/education:'), $txt );
 
+		$r = q("select * from obj left join term on obj_obj = term_hash where term_hash != '' and obj_page = '%s' and uid = %d and obj_type = %d 
+			order by obj_verb, term",
+				dbesc($a->profile['profile_guid']),
+				intval($a->profile['profile_uid']),
+				intval(TERM_OBJ_THING)
+		);
+
+		$things = null;
+
+		if($r) {
+			$things = array();
+
+			// Use the system obj_verbs array as a sort key, since we don't really
+			// want an alphabetic sort. To change the order, use a plugin to
+			// alter the obj_verbs() array or alter it in code. Unknown verbs come
+			// after the known ones - in no particular order. 
+
+			$v = obj_verbs();
+			foreach($v as $k => $foo)
+				$things[$k] = null;
+			foreach($r as $rr) {
+				if(! $things[$rr['obj_verb']])
+					$things[$rr['obj_verb']] = array();
+				$things[$rr['obj_verb']][] = array('term' => $rr['term'],'url' => $rr['url'],'img' => $rr['imgurl']);
+			} 
+			$sorted_things = array();
+			if($things)
+				foreach($things as $k => $v)
+					if(is_array($things[$k]))
+						$sorted_things[$k] = $v;
+		}
+
+		logger('mod_profile: things: ' . print_r($sorted_things,true), LOGGER_DATA); 
+
         return replace_macros($tpl, array(
             '$title' => t('Profile'),
             '$profile' => $profile,
+			'$things' => $sorted_things
         ));
     }
 

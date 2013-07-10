@@ -351,9 +351,12 @@ function updateConvItems(mode,data) {
 
 			var ident = $(this).attr('id');
 			var commentWrap = $('#'+ident+' .collapsed-comments').attr('id');
-			var itmId = commentWrap.replace('collapsed-comments-','');
+			var itmId = 0;
 			var isVisible = false;
 
+			if(typeof commentWrap !== 'undefined')
+				itmId = commentWrap.replace('collapsed-comments-','');
+				
 			if($('#' + ident).length == 0 && profile_page == 1) {
 				$('img',this).each(function() {
 					$(this).attr('src',$(this).attr('dst'));

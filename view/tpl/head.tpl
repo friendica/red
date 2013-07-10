@@ -17,7 +17,7 @@
 
 {{$head_js}}
 
-<link rel="shortcut icon" href="{{$baseurl}}/images/rhash-32.png" />
+<link rel="shortcut icon" href="{{$icon}}" />
 <link rel="search"
          href="{{$baseurl}}/opensearch" 
          type="application/opensearchdescription+xml" 

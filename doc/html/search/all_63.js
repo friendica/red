@@ -87,7 +87,7 @@ var searchData=
   ['contact_5fis_5ffriend',['CONTACT_IS_FRIEND',['../boot_8php.html#a27299ecfb9e9a99826f17a1c14c6995f',1,'boot.php']]],
   ['contact_5fis_5fsharing',['CONTACT_IS_SHARING',['../boot_8php.html#a6c5e9e293c8242dcb9bc2c3ea2fee2c9',1,'boot.php']]],
   ['contact_5fpoll_5finterval',['contact_poll_interval',['../contact__selectors_8php.html#a9839e8fdaac7ffb37bf1420493f5c28f',1,'contact_selectors.php']]],
-  ['contact_5fprofile_5fassign',['contact_profile_assign',['../contact__selectors_8php.html#aba7a4db18efa41d78bed1076b2d59886',1,'contact_selectors.php']]],
+  ['contact_5fprofile_5fassign',['contact_profile_assign',['../contact__selectors_8php.html#a2c743d2eb526eb758d943a1490162d75',1,'contact_selectors.php']]],
   ['contact_5fremove',['contact_remove',['../Contact_8php.html#a28e062c884331dbb5dfa713228c25ad6',1,'Contact.php']]],
   ['contact_5freputation',['contact_reputation',['../contact__selectors_8php.html#ae499960d6467bd30c78607b1018baf53',1,'contact_selectors.php']]],
   ['contact_5fselect',['contact_select',['../acl__selectors_8php.html#a9476997d2968a5794f3723878ed89c91',1,'acl_selectors.php']]],

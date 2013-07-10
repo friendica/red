@@ -147,6 +147,10 @@ Functions</h2></td></tr>
         </tr>
       </table>
 </div><div class="memdoc">
+<p>verbs: [0] = first person singular, e.g. "I want", [1] = 3rd person singular, e.g. "Bill wants" We use the first person form when creating an activity, but the third person for use in activities FIXME: There is no accounting for verb gender for languages where this is significant. We may eventually require <a class="el" href="taxonomy_8php.html#a03f55ee46c5f496e42f3d29db8d09cce">obj_verbs()</a> to provide full conjugations and specify which form to use in the $_REQUEST params to this module.</p>
+<p>The site administrator can do things that normals cannot. This is restricted because it will likely cause an activitystreams protocol violation and the activity might choke in some other network and result in unnecessary support requests. It isn't because we're trying to be heavy-handed about what you can and can't do.</p>
+<p>Things, objects: We do not provide definite (a, an) or indefinite (the) articles or singular/plural designators That needs to be specified in your thing. e.g. Mike has "a carrot", Greg wants "balls", Bob likes "the Boston Red Sox".</p>
+<p>Future work on this module might produce more complex activities with targets, e.g. Phillip likes Karen's moustache and to describe other non-thing objects like channels, such as Karl wants Susan - where Susan represents a channel profile.</p>
 
 </div>
 </div>
