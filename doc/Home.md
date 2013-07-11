@@ -10,6 +10,7 @@ Red Documentation and Resources
 * [Connecting to Channels](help/Connecting-to-Channels)
 * [Permissions](help/Permissions)
 * [Tags and Mentions](help/Tags-and-Mentions)
+* [Web Pages](help/Webpages)
 * [Remove Account](help/Remove-Account)
 
 **Technical Documentation**
