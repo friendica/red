@@ -3894,3 +3894,15 @@ width: 200px;
 	margin-right: 25px;
 }
 */
+
+
+div#pagelist-content-wrapper {
+width: 80%;
+background: #fff;
+margin-left: auto;
+margin-right: auto;
+}
+
+div.page-list-item {
+margin: 20px;
+}

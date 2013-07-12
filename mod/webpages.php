@@ -65,8 +65,11 @@ $r = q("select * from item_id where uid = %d and service = 'WEBPAGE'",
 
 // This isn't pretty, but it works.  Until I figure out what to do with the UI, it's Good Enough(TM).
        return $o . replace_macros(get_markup_template("webpagelist.tpl"), array(
-		    '$editlink' => t('Edit'),
-           	    '$pages' => $pages,
+		'$editlink' => t('Edit'),
+		'$pages' => $pages,
+		'$channel' => $a->profile['channel_address'],
+		'$view' => t('View'),
+	
         ));
     
 
