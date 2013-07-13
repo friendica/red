@@ -15,5 +15,4 @@
 <div id="item-delete-selected-end"></div>
 {{/if}}
 
-<img id="page-spinner" src="images/rotator.gif" alt="{{$wait}}" title="{{$wait}}" style="display: none;" />
-
+<div id="page-spinner"></div>
