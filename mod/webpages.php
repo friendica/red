@@ -34,7 +34,7 @@ require_once ('include/conversation.php');
 		$x = array(
 			'webpage' => 1,
 			'is_owner' => true,
-			'nickname' => $channel['channel_address'],
+			'nickname' => $a->profile['channel_address'],
 			'lockstate' => (($group || $cid || $channel['channel_allow_cid'] || $channel['channel_allow_gid'] || $channel['channel_deny_cid'] || $channel['channel_deny_gid']) ? 'lock' : 'unlock'),
 			'bang' => (($group || $cid) ? '!' : ''),
 			'visitor' => 'block',
