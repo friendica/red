@@ -200,12 +200,12 @@ function enableOnUser(){
 	function jotShare(id) {
 		if ($('#jot-popup').length != 0) $('#jot-popup').show();
 
-		$('#like-rotator-' + id).show();
+		$('#like-rotator-' + id).spin('tiny);
 		$.get('{{$baseurl}}/share/' + id, function(data) {
 			if (!editor) $("#profile-jot-text").val("");
 			initEditor(function(){
 				addeditortext(data);
-				$('#like-rotator-' + id).hide();
+				$('#like-rotator-' + id).spin(false);
 				$(window).scrollTop(0);
 			});
 
