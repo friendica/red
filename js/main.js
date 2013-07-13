@@ -1,4 +1,3 @@
-
 	function confirmDelete() { return confirm(aStr['delitem']); }
 	function commentOpen(obj,id) {
 		if(obj.value == aStr['comment']) {
@@ -509,7 +508,7 @@ function updateConvItems(mode,data) {
 		}
 
 		if(page_load)
-			$("#page-spinner").show();
+			$("#page-spinner").spin('small');
 
 		$.get(update_url,function(data) {
 			var update_mode = ((page_load) ? 'replace' : 'update');
@@ -519,7 +518,7 @@ function updateConvItems(mode,data) {
 			scroll_next = false;
 			in_progress = false;
 			updateConvItems(update_mode,data);
-			$("#page-spinner").hide();
+			$("#page-spinner").spin(false);
 			$("#profile-jot-text-loading").hide();
 
 		});
