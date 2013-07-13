@@ -1064,7 +1064,9 @@ footer {
 }
 
 .like-rotator {
-	margin-left: 5px;
+	float: left;
+	margin: 8px;
+	color: #777;
 }
 
 .wall-item-delete-wrapper {
