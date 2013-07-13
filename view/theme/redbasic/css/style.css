@@ -1688,6 +1688,12 @@ tr.mceLast {
 	color: #000000;
 }
 
+#profile-jot-text-loading {
+	float: left;
+	margin: 14px 0px 0px 12px;
+	color: #777;
+}
+
 .wall-item-photo, .photo, .contact-block-img, .my-comment-photo {
     border-radius: 5px;
     -moz-border-radius: 5px;
