@@ -1,4 +1,5 @@
-	function confirmDelete() { return confirm(aStr['delitem']); }
+
+function confirmDelete() { return confirm(aStr['delitem']); }
 	function commentOpen(obj,id) {
 		if(obj.value == aStr['comment']) {
 			obj.value = '';
