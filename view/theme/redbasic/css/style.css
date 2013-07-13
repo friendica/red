@@ -3675,7 +3675,8 @@ ul.menu-popup {
 }
 
 #page-spinner {
-	margin-left: 50%;
+	color: #777;
+	margin: 24px;
 }
 
 .tabs-end {
