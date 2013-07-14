@@ -1067,7 +1067,9 @@ footer {
 }
 
 .like-rotator {
-	margin-left: 5px;
+	float: left;
+	margin: 8px;
+	color: #777;
 }
 
 .wall-item-delete-wrapper {
@@ -1687,6 +1689,12 @@ tr.mceLast {
 }
 #profile-jot-text:hover {
 	color: #000000;
+}
+
+#profile-jot-text-loading {
+	float: left;
+	margin: 14px 0px 0px 12px;
+	color: #777;
 }
 
 .wall-item-photo, .photo, .contact-block-img, .my-comment-photo {
@@ -2411,9 +2419,7 @@ aside input[type='text'] {
 
 #nav-search-spinner {
 	float: right;
-	margin-top: 8px;
-	margin-left: 5px;
-	margin-right: 5px;
+	margin: 12px 12px 0px 0px;
 }
 
 #nav-search-text:hover {
@@ -3687,7 +3693,8 @@ ul.menu-popup {
 }
 
 #page-spinner {
-	margin-left: 50%;
+	color: #777;
+	margin: 24px;
 }
 
 .tabs-end {

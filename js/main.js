@@ -252,7 +252,7 @@
 	function NavUpdate() {
 
 		if(liking)
-			$('.like-rotator').hide();
+			$('.like-rotator').spin(false);
 
 		if(! stopped) {
 
@@ -440,7 +440,7 @@ function updateConvItems(mode,data) {
 		});
 	}
 
-	$('.like-rotator').hide();
+	$('.like-rotator').spin(false);
 
 	if(commentBusy) {
 		commentBusy = false;
@@ -492,7 +492,7 @@ function updateConvItems(mode,data) {
 
 
 	function liveUpdate() {
-		if((src == null) || (stopped) || (! profile_uid)) { $('.like-rotator').hide(); return; }
+		if((src == null) || (stopped) || (! profile_uid)) { $('.like-rotator').spin(false); return; }
 		if(($('.comment-edit-text-full').length) || (in_progress)) {
 			if(livetime) {
 				clearTimeout(livetime);
@@ -526,7 +526,7 @@ function updateConvItems(mode,data) {
 		}
 
 		if(page_load)
-			$("#page-spinner").show();
+			$("#page-spinner").spin('small');
 
 		$.get(update_url,function(data) {
 			var update_mode = ((page_load) ? 'replace' : 'update');
@@ -536,8 +536,8 @@ function updateConvItems(mode,data) {
 			scroll_next = false;
 			in_progress = false;
 			updateConvItems(update_mode,data);
-			$("#page-spinner").hide();
-			$("#profile-jot-text-loading").hide();
+			$("#page-spinner").spin(false);
+			$("#profile-jot-text-loading").spin(false);
 
 		});
 
@@ -603,14 +603,14 @@ function updateConvItems(mode,data) {
 
 	function dolike(ident,verb) {
 		unpause();
-		$('#like-rotator-' + ident.toString()).show();
+		$('#like-rotator-' + ident.toString()).spin('tiny');
 		$.get('like/' + ident.toString() + '?verb=' + verb, NavUpdate );
 		liking = 1;
 	}
 
 	function dosubthread(ident) {
 		unpause();
-		$('#like-rotator-' + ident.toString()).show();
+		$('#like-rotator-' + ident.toString()).spin('tiny');
 		$.get('subthread/' + ident.toString(), NavUpdate );
 		liking = 1;
 	}
@@ -618,7 +618,7 @@ function updateConvItems(mode,data) {
 
 	function dostar(ident) {
 		ident = ident.toString();
-		$('#like-rotator-' + ident).show();
+		$('#like-rotator-' + ident).spin('tiny');
 		$.get('starred/' + ident, function(data) {
 			if(data.result == 1) {
 				$('#starred-' + ident).addClass('starred');
@@ -632,7 +632,7 @@ function updateConvItems(mode,data) {
 				$('#star-' + ident).removeClass('hidden');
 				$('#unstar-' + ident).addClass('hidden');
 			}
-			$('#like-rotator-' + ident).hide();	
+			$('#like-rotator-' + ident).spin(false);	
 		});
 	}
 
