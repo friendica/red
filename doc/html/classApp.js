@@ -17,6 +17,8 @@ var classApp =
     [ "get_template_ldelim", "classApp.html#a2eb832a8577dee7d40b93abdf6d1d35a", null ],
     [ "get_template_rdelim", "classApp.html#aab23c59172310fd30f2d60dc039d3eea", null ],
     [ "get_widgets", "classApp.html#a871898becd0697d778f36d9336253ae8", null ],
+    [ "head_get_icon", "classApp.html#af17df107f2216ddf5ad2a7e0f2ba2166", null ],
+    [ "head_set_icon", "classApp.html#a8863703a0305eaa45eb970dbd2046291", null ],
     [ "register_template_engine", "classApp.html#abf46a653d8499e7c253cc1be894a6d83", null ],
     [ "set_account", "classApp.html#a5c83c957ada53e170901e3c025080862", null ],
     [ "set_apps", "classApp.html#abea5a4f77dcd53c928dc4eed86616637", null ],

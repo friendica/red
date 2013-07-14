@@ -49,6 +49,11 @@ function collect_recipients($item,&$private) {
 
 	$recipients = check_list_permissions($item['uid'],$recipients,'view_stream');
 
+	// add ourself just in case we have nomadic clones that need to get a copy.
+ 
+	$recipients[] = $item['author_xchan'];
+	if($item['owner_xchan'] != $item['author_xchan'])
+		$recipients[] = $item['owner_xchan'];
 	return $recipients;
 
 }

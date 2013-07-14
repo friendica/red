@@ -2,6 +2,8 @@ var searchData=
 [
   ['editpost_2ephp',['editpost.php',['../editpost_8php.html',1,'']]],
   ['editpost_5fcontent',['editpost_content',['../editpost_8php.html#a34011690864d122680c802e9e748ccfb',1,'editpost.php']]],
+  ['editwebpage_2ephp',['editwebpage.php',['../editwebpage_8php.html',1,'']]],
+  ['editwebpage_5fcontent',['editwebpage_content',['../editwebpage_8php.html#a375e945255fad79a71036528f7480650',1,'editwebpage.php']]],
   ['else',['else',['../auth_8php.html#a0950af7c2888ca1d4743fe5d0bff9ae5',1,'else():&#160;auth.php'],['../fpostit_8php.html#a501b5ca82f287509fc691c88524064c1',1,'else():&#160;fpostit.php'],['../tpldebug_8php.html#afbc7aadb3f7ff1edf0aaaa326a42179c',1,'else():&#160;tpldebug.php']]],
   ['email_5fheader_5fencode',['email_header_encode',['../include_2network_8php.html#a540420ff3675a72cb781ef9a7e8c2cd9',1,'network.php']]],
   ['email_5fsend',['email_send',['../include_2network_8php.html#a1ff07d9fad93b713b93da0ab77aab7f0',1,'network.php']]],

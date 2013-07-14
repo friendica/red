@@ -847,6 +847,7 @@ CREATE TABLE IF NOT EXISTS `term` (
   `url` char(255) NOT NULL,
   `imgurl` char(255) NOT NULL,
   `term_hash` char(255) NOT NULL DEFAULT '',
+  `parent_hash` char(255) NOT NULL DEFAULT '',
   PRIMARY KEY (`tid`),
   KEY `oid` (`oid`),
   KEY `otype` (`otype`),
@@ -855,7 +856,8 @@ CREATE TABLE IF NOT EXISTS `term` (
   KEY `uid` (`uid`),
   KEY `aid` (`aid`),
   KEY `imgurl` (`imgurl`),
-  KEY `term_hash` (`term_hash`)
+  KEY `term_hash` (`term_hash`),
+  KEY `parent_hash` (`parent_hash`)
 ) ENGINE=MyISAM  DEFAULT CHARSET=utf8;
 
 CREATE TABLE IF NOT EXISTS `tokens` (

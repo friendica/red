@@ -19,12 +19,10 @@ var classItem =
     [ "get_redirect_url", "classItem.html#a428f448f89a8629055ea3294eb942aea", null ],
     [ "get_template", "classItem.html#aba23a0a9d89e316d2b343cc46d695d91", null ],
     [ "get_template_data", "classItem.html#ad5dcbe0b94cb2d5719bc5b6bd8ad60c8", null ],
-    [ "is_commentable", "classItem.html#ac04525a8be24c12b0a2ae4ca1ba4b967", null ],
     [ "is_threaded", "classItem.html#a5b2fafdca55aefeaa08993a5a60529f0", null ],
     [ "is_toplevel", "classItem.html#aa49e40f961dff66da32c5ae110e32993", null ],
     [ "is_visiting", "classItem.html#a97c7feeea7f26a73176cb19faa455e12", null ],
     [ "is_wall_to_wall", "classItem.html#aabf87ded59c25b5fe2b2296678e70509", null ],
-    [ "is_writable", "classItem.html#a99253fb1ca6f430a0b181689ef206861", null ],
     [ "remove_child", "classItem.html#a2ce70ef63f9f4d86a09c351678806925", null ],
     [ "remove_parent", "classItem.html#aa452b5bcd8dea12119b09212c615cb41", null ],
     [ "set_conversation", "classItem.html#aa8b1bbc4236890694635295e46d7fd72", null ],
@@ -32,10 +30,8 @@ var classItem =
     [ "$channel", "classItem.html#acc32426c0f465391be8a99ad810c7b8e", null ],
     [ "$children", "classItem.html#a80dcd0fb7673776c0967839d429c2a0f", null ],
     [ "$comment_box_template", "classItem.html#a90743c8348b13213275c223bb9333aa0", null ],
-    [ "$commentable", "classItem.html#aa2c221231ad0fc3720ccc1f00f0c6304", null ],
     [ "$conversation", "classItem.html#a007424e3e3171dcfb4312a02161da6cd", null ],
     [ "$data", "classItem.html#aec24e233f9098f902b1e57e60dcb2019", null ],
-    [ "$observer", "classItem.html#a379c8a156da092ad0be90a0d2fec3c0f", null ],
     [ "$owner_name", "classItem.html#a9594df6014b0b6f45364ea7a34510130", null ],
     [ "$owner_photo", "classItem.html#a078f95b4134ce3a1df344cf8d386f986", null ],
     [ "$owner_url", "classItem.html#afa54851df82962c7c42dea3cc9f5c92c", null ],
@@ -45,6 +41,5 @@ var classItem =
     [ "$threaded", "classItem.html#a1cb6aa8abdf7ea7daca647e40c8ea3a2", null ],
     [ "$toplevel", "classItem.html#a5cfa6cf964f433a917a81cab079ff9d8", null ],
     [ "$visiting", "classItem.html#a4a123ae98987c1e30ecb15c4edf5a3b8", null ],
-    [ "$wall_to_wall", "classItem.html#a5d29ddecc073151a65a8e2ea2f6e4189", null ],
-    [ "$writable", "classItem.html#af514e893765deda92125ce84024d3ad5", null ]
+    [ "$wall_to_wall", "classItem.html#a5d29ddecc073151a65a8e2ea2f6e4189", null ]
 ];

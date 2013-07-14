@@ -51,7 +51,7 @@ var searchData=
   ['get_5fmood_5fverbs',['get_mood_verbs',['../text_8php.html#a736db13a966b8abaf8c9198faa35911a',1,'text.php']]],
   ['get_5fmy_5faddress',['get_my_address',['../boot_8php.html#a490972c02fdb638c52ec0e012a30bfd2',1,'boot.php']]],
   ['get_5fmy_5furl',['get_my_url',['../boot_8php.html#aa46321e1cd6a3b8dfde8bf9510112fec',1,'boot.php']]],
-  ['get_5fobserver',['get_observer',['../classApp.html#a1ad3bb1b68439b3b7cbe630918e618d2',1,'App']]],
+  ['get_5fobserver',['get_observer',['../classApp.html#a1ad3bb1b68439b3b7cbe630918e618d2',1,'App\get_observer()'],['../classConversation.html#ae3d4190142e12b57051f11f2911f77a0',1,'Conversation\get_observer()']]],
   ['get_5fobserver_5fhash',['get_observer_hash',['../boot_8php.html#a623e49c79943f3e7bdb770d021683cf7',1,'boot.php']]],
   ['get_5fowner_5fname',['get_owner_name',['../classItem.html#a67892aa23d19f4431bb2e5f43c74000e',1,'Item']]],
   ['get_5fowner_5fphoto',['get_owner_photo',['../classItem.html#aa541bc4290e51bfd688d6921bebabc73',1,'Item']]],

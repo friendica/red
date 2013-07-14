@@ -23,6 +23,8 @@ var boot_8php =
     [ "get_my_url", "boot_8php.html#aa46321e1cd6a3b8dfde8bf9510112fec", null ],
     [ "get_observer_hash", "boot_8php.html#a623e49c79943f3e7bdb770d021683cf7", null ],
     [ "goaway", "boot_8php.html#a5ab6181607a090bcdbaa13b15b85aba1", null ],
+    [ "head_get_icon", "boot_8php.html#a24a7a70afedd5d85fe0eadc85afa9f77", null ],
+    [ "head_set_icon", "boot_8php.html#a0e4701c9742c3ef88f02ac450a042a84", null ],
     [ "info", "boot_8php.html#adfb2fc7be5a4226c0a8e24131da9d498", null ],
     [ "is_ajax", "boot_8php.html#ac17fc8a416ea79e9d5cb4dc9a8ff8c5c", null ],
     [ "is_site_admin", "boot_8php.html#aa1e828bbbcba170265eb2668d8daf42e", null ],

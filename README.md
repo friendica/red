@@ -18,7 +18,7 @@ These missing pieces are (in no particular order):
 
 
 
-The Red Matrix (sometimes referred to as just "Red") is a collection of web servers and services which provides these missing pieces, but within a decentralised framework. It operates as an independent network within the larger internet where all the nodes or servers (we call them "hubs") are able to fully interact with each other in ways that are simply not possible using other services. Additionally the owners of each network hub have the ability to set their own rules with regard to communications and privacy and data ownership, because each operates with complete independence. These hubs require only slightly more resources than a blog or content management system, and the software is being designed with the ability to natively incorporate both kinds of functionality, as well as cloud storage. 
+The Red Matrix (sometimes referred to as just "Red") is a collection of web servers and services which provides these missing pieces, but within a decentralised identity and messaging framework (known as "Zot"). Red operates as an independent network within the larger internet where all the nodes or servers (we call them "hubs") are able to fully interact with each other in ways that are simply not possible using other services. Additionally the owners of each network hub have the ability to set their own rules with regard to communications and privacy and data ownership, because each operates with complete independence. These hubs require only slightly more resources than a blog or content management system, and the software is being designed with the ability to natively incorporate both kinds of functionality, as well as cloud storage. 
 
 ![The Red Matrix model](images/red_antiprism.png)
 

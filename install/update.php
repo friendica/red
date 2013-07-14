@@ -1,6 +1,6 @@
 <?php
 
-define( 'UPDATE_VERSION' , 1049 );
+define( 'UPDATE_VERSION' , 105- );
 
 /**
  *
@@ -596,6 +596,15 @@ function update_r1048() {
   KEY `obj_channel` (`obj_channel`),
   KEY `obj_obj` (`obj_obj`)
 ) ENGINE=MyISAM DEFAULT CHARSET=utf8 ");
+
+	if($r)
+		return UPDATE_SUCCESS;
+	return UPDATE_FAILED;
+}
+
+
+function update_r1049() {
+	$r = q("ALTER TABLE `term` ADD `parent_hash` CHAR( 255 ) NOT NULL DEFAULT '' AFTER `term_hash` , ADD INDEX ( `parent_hash` ) ");
 
 	if($r)
 		return UPDATE_SUCCESS;
