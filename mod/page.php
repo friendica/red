@@ -2,6 +2,23 @@
 
 require_once('include/items.php');
 require_once('include/conversation.php');
+function page_init(&$a) {
+	// We need this to make sure the channel theme is always loaded.
+        $which = argv(1);
+        $profile = 0;
+        $channel = $a->get_channel();
+
+        if((local_user()) && (argc() > 2) && (argv(2) === 'view')) {
+                $which = $channel['channel_address'];
+                $profile = argv(1);
+        }
+
+        profile_load($a,$which,$profile);
+
+}
+
+
+
 
 function page_content(&$a) {
 
