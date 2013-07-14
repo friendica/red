@@ -200,7 +200,7 @@ function enableOnUser(){
 	function jotShare(id) {
 		if ($('#jot-popup').length != 0) $('#jot-popup').show();
 
-		$('#like-rotator-' + id).spin('tiny);
+		$('#like-rotator-' + id).spin('tiny');
 		$.get('{{$baseurl}}/share/' + id, function(data) {
 			if (!editor) $("#profile-jot-text").val("");
 			initEditor(function(){
