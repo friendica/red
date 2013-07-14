@@ -144,7 +144,7 @@
 				<input id="nav-search-text" type="text" value="" placeholder="{{$nav.search.1}}" name="search" title="{{$nav.search.3}}" onclick="this.submit();" />
 			</form>
 		</li>
-		<img src="images/rotator.gif" id="nav-search-spinner" style="display: none;" alt="{{$pleasewait}}" />
+		<div id="nav-search-spinner"></div>
 
 	</ul>
 </nav>

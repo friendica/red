@@ -242,7 +242,7 @@
       } else if (!this.isBadQuery(q)) {
         me = this;
         me.options.params.query = q;
-		$('#nav-search-spinner').show();
+		$('#nav-search-spinner').spin('tiny');
         $.get(this.serviceUrl, me.options.params, function(txt) { me.processResponse(txt); }, 'text');
       }
     },
@@ -305,7 +305,7 @@
         this.data = response.data;
         this.suggest(); 
       }
-	  $('#nav-search-spinner').hide();
+	  $('#nav-search-spinner').spin(false);
     },
 
     activate: function(index) {
