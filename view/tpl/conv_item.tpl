@@ -90,7 +90,7 @@
 			{{if $item.filer}}
 			<a href="#" id="filer-{{$item.id}}" onclick="itemFiler({{$item.id}}); return false;" class="filer-item filer-icon item-tool" title="{{$item.filer}}"></a>
 			{{/if}}			
-			<img id="like-rotator-{{$item.id}}" class="like-rotator" src="images/rotator.gif" alt="{{$item.wait}}" title="{{$item.wait}}" style="display: none;" />
+			<div id="like-rotator-{{$item.id}}" class="like-rotator"></div>
 
 			<div class="wall-item-delete-wrapper" id="wall-item-delete-wrapper-{{$item.id}}" >
 				{{if $item.drop.dropping}}<a href="item/drop/{{$item.id}}" onclick="return confirmDelete();" class="icon drophide" title="{{$item.drop.delete}}" onmouseover="imgbright(this);" onmouseout="imgdull(this);" ></a>{{/if}}

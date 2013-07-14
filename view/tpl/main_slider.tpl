@@ -26,7 +26,7 @@
 			return;
 		if((bParam_cmin == old_cmin) && (bParam_cmax == old_cmax))
 			return;
-		setTimeout(function() { $("#profile-jot-text-loading").show(); }, 1000 );
+		setTimeout(function() { $("#profile-jot-text-loading").spin('small'); }, 1000 );
 		slideTimer = setTimeout(networkTimerRefresh,2000);
 	}
 
