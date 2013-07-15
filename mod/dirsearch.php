@@ -35,6 +35,8 @@ function dirsearch_content(&$a) {
 	$agege    = ((x($_REQUEST,'agege'))    ? intval($_REQUEST['agege']) : 0 );
 	$agele    = ((x($_REQUEST,'agele'))    ? intval($_REQUEST['agele']) : 0 );
 
+	$sort_order  = ((x($_REQUEST,'order')) ? $_REQUEST['order'] : '');
+
 // TODO - a meta search which joins all of these things to one search string
 
 	$sql_extra = '';
@@ -107,9 +109,16 @@ function dirsearch_content(&$a) {
 		$sql_extra .= " and xchan_hash in ( select ud_hash from updates where ud_date > '" . dbesc($mtime) . "' ) ";
 	}
 
-	$order = " ORDER BY `xchan_name` ASC ";
+	if($sort_order == 'date')
+		$order = " order by ud_date desc ";
+	elseif($sort_order == 'reverse')
+		$order = " order by xchan_name desc ";
+	else	
+		$order = " order by xchan_name asc ";
 
-	$r = q("SELECT xchan.*, xprof.* from xchan left join xprof on xchan_hash = xprof_hash where $logic $sql_extra and not ( xchan_flags & %d ) $order $qlimit ",
+
+
+	$r = q("SELECT xchan.*, xprof.*, updates.* from xchan left join xprof on xchan_hash = xprof_hash left join updates on xchan_hash = ud_hash where $logic $sql_extra and not ( xchan_flags & %d ) $order $qlimit ",
 		intval(XCHAN_FLAGS_HIDDEN)
 	);
 
@@ -125,6 +134,7 @@ function dirsearch_content(&$a) {
 			$entry = array();
 
 			$entry['name']        = $rr['xchan_name'];
+			$entry['updated']     = (($rr['ud_date']) ? $rr['ud_date'] : '0000-00-00 00:00:00');
 			$entry['url']         = $rr['xchan_url'];
 			$entry['photo']       = $rr['xchan_photo_m'];
 			$entry['address']     = $rr['xchan_addr'];

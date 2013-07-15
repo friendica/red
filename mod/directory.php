@@ -59,6 +59,10 @@ function directory_content(&$a) {
 			$query .= '&name=' . urlencode($search);
 		if(strpos($search,'@'))
 			$query .= '&address=' . urlencode($search);
+		
+		$sort_order  = ((x($_REQUEST,'order')) ? $_REQUEST['order'] : '');
+		if($sort_order)
+			$query .= '&order=' . urlencode($sort_order);
 
 		if($a->pager['page'] != 1)
 			$query .= '&p=' . $a->pager['page'];
