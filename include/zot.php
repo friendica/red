@@ -593,6 +593,7 @@ function import_xchan($arr) {
 				dbesc($location['url'])
 			);
 			if($r) {
+				logger('import_xchan: hub exists: ' . $location['url']);
 				if((($r[0]['hubloc_flags'] & HUBLOC_FLAGS_PRIMARY) && (! $location['primary']))
 					|| ((! ($r[0]['hubloc_flags'] & HUBLOC_FLAGS_PRIMARY)) && ($location['primary']))) {
 					$r = q("update hubloc set hubloc_flags = (hubloc_flags ^ %d) where hubloc_id = %d limit 1",
@@ -614,7 +615,7 @@ function import_xchan($arr) {
 					intval(HUBLOC_FLAGS_PRIMARY)
 				);
 			}
-
+			logger('import_xchan: new hub: ' . $location['url']);
 			$r = q("insert into hubloc ( hubloc_guid, hubloc_guid_sig, hubloc_hash, hubloc_addr, hubloc_flags, hubloc_url, hubloc_url_sig, hubloc_host, hubloc_callback, hubloc_sitekey)
 					values ( '%s','%s','%s','%s', %d ,'%s','%s','%s','%s','%s')",
 				dbesc($arr['guid']),
