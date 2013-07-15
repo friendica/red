@@ -123,10 +123,10 @@ function enableOnUser(){
 			'wall-image-upload',
 			{ action: '{{$baseurl}}/wall_upload/{{$nickname}}',
 				name: 'userfile',
-				onSubmit: function(file,ext) { $('#profile-rotator').show(); },
+				onSubmit: function(file,ext) { $('#profile-rotator').spin('tiny'); },
 				onComplete: function(file,response) {
 					addeditortext(response);
-					$('#profile-rotator').hide();
+					$('#profile-rotator').spin(false);
 				}				 
 			}
 		);
@@ -134,10 +134,10 @@ function enableOnUser(){
 			'wall-file-upload',
 			{ action: '{{$baseurl}}/wall_attach/{{$nickname}}',
 				name: 'userfile',
-				onSubmit: function(file,ext) { $('#profile-rotator').show(); },
+				onSubmit: function(file,ext) { $('#profile-rotator').spin('tiny'); },
 				onComplete: function(file,response) {
 					addeditortext(response);
-					$('#profile-rotator').hide();
+					$('#profile-rotator').spin(false);
 				}				 
 			}
 		);
@@ -167,10 +167,10 @@ function enableOnUser(){
 		reply = prompt("{{$linkurl}}");
 		if(reply && reply.length) {
 			reply = bin2hex(reply);
-			$('#profile-rotator').show();
+			$('#profile-rotator').spin('tiny');
 			$.get('{{$baseurl}}/parse_url?binurl=' + reply, function(data) {
 				addeditortext(data);
-				$('#profile-rotator').hide();
+				$('#profile-rotator').spin(false);
 			});
 		}
 	}
@@ -224,12 +224,12 @@ function enableOnUser(){
 		event.preventDefault();
 		if(reply && reply.length) {
 			reply = bin2hex(reply);
-			$('#profile-rotator').show();
+			$('#profile-rotator').spin('tiny');
 			$.get('{{$baseurl}}/parse_url?binurl=' + reply, function(data) {
 				if (!editor) $("#profile-jot-text").val("");
 				initEditor(function(){
 					addeditortext(data);
-					$('#profile-rotator').hide();
+					$('#profile-rotator').spin(false);
 				});
 			});
 		}
