@@ -404,7 +404,7 @@ function zot_gethub($arr) {
 			return $r[0];
 		}
 	}
-	logger('zot_gethub: not found', LOGGER_DEBUG);
+	logger('zot_gethub: not found: ' . print_r($arr,true), LOGGER_DEBUG);
 	return null;
 }
 
@@ -588,9 +588,13 @@ function import_xchan($arr) {
 				}
 			}
 
-			$r = q("select * from hubloc where hubloc_hash = '%s' and hubloc_url = '%s' limit 1",
+			$r = q("select * from hubloc where hubloc_hash = '%s' and hubloc_guid = '%s' and hubloc_guid_sig = '%s' 
+				and hubloc_url = '%s' and hubloc_url_sig = '%s' limit 1",
 				dbesc($xchan_hash),
-				dbesc($location['url'])
+				dbesc($arr['guid']),
+				dbesc($arr['guid_sig']),
+				dbesc($location['url']),
+				dbesc($location['url_sig'])
 			);
 			if($r) {
 				logger('import_xchan: hub exists: ' . $location['url']);
