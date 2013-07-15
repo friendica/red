@@ -144,9 +144,15 @@ class Conversation extends BaseObject {
 		if($this->writable)
 			$this->commentable = true;
 
-		if(($this->observer) && (! $this->writable)) {
+		if($item->get_data_value('item_flags') & ITEM_NOCOMMENT) {
+			$this->commentable = false;
+		}
+		elseif(($this->observer) && (! $this->writable)) {
 			$this->commentable = can_comment_on_post($this->observer['xchan_hash'],$item->data);
 		}
+
+
+
 
 		$item->set_conversation($this);
 		$this->threads[] = $item;
