@@ -59,8 +59,6 @@ $r = q("select * from item_id where uid = %d and service = 'WEBPAGE'",
 			} 
 		}
 
-	//Something is bound to go wrong, so we'll log it - if nothing has blown up in a few days, this should be nuked.
-		logger('mod_webpages: pages: ' . print_r($pages,true), LOGGER_DATA); 
 
 
 // This isn't pretty, but it works.  Until I figure out what to do with the UI, it's Good Enough(TM).
