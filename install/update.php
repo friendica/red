@@ -1,6 +1,6 @@
 <?php
 
-define( 'UPDATE_VERSION' , 1050 );
+define( 'UPDATE_VERSION' , 1051 );
 
 /**
  *
@@ -605,6 +605,14 @@ function update_r1048() {
 
 function update_r1049() {
 	$r = q("ALTER TABLE `term` ADD `parent_hash` CHAR( 255 ) NOT NULL DEFAULT '' AFTER `term_hash` , ADD INDEX ( `parent_hash` ) ");
+
+	if($r)
+		return UPDATE_SUCCESS;
+	return UPDATE_FAILED;
+}
+
+function update_r1050() {
+	$r = q("ALTER TABLE `xtag` DROP PRIMARY KEY , ADD `xtag_id` INT UNSIGNED NOT NULL AUTO_INCREMENT PRIMARY KEY FIRST , ADD INDEX ( `xtag_hash` ) ");
 
 	if($r)
 		return UPDATE_SUCCESS;

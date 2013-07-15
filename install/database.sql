@@ -612,9 +612,7 @@ CREATE TABLE IF NOT EXISTS `obj` (
   KEY `obj_type` (`obj_type`),
   KEY `obj_channel` (`obj_channel`),
   KEY `obj_obj` (`obj_obj`)
-) ENGINE=MyISAM DEFAULT CHARSET=utf8;
-
-
+) ENGINE=MyISAM  DEFAULT CHARSET=utf8;
 
 CREATE TABLE IF NOT EXISTS `outq` (
   `outq_hash` char(255) NOT NULL,
@@ -958,9 +956,9 @@ CREATE TABLE IF NOT EXISTS `xlink` (
 
 CREATE TABLE IF NOT EXISTS `xprof` (
   `xprof_hash` char(255) NOT NULL,
+  `xprof_age` tinyint(3) unsigned NOT NULL DEFAULT '0',
   `xprof_desc` char(255) NOT NULL DEFAULT '',
   `xprof_dob` char(12) NOT NULL DEFAULT '',
-  `xprof_age` tinyint(3) NOT NULL DEFAULT '0',
   `xprof_gender` char(255) NOT NULL DEFAULT '',
   `xprof_marital` char(255) NOT NULL DEFAULT '',
   `xprof_sexual` char(255) NOT NULL DEFAULT '',
@@ -972,19 +970,21 @@ CREATE TABLE IF NOT EXISTS `xprof` (
   PRIMARY KEY (`xprof_hash`),
   KEY `xprof_desc` (`xprof_desc`),
   KEY `xprof_dob` (`xprof_dob`),
-  KEY `xprof_age` (`xprof_age`),
   KEY `xprof_gender` (`xprof_gender`),
   KEY `xprof_marital` (`xprof_marital`),
   KEY `xprof_sexual` (`xprof_sexual`),
   KEY `xprof_locale` (`xprof_locale`),
   KEY `xprof_region` (`xprof_region`),
   KEY `xprof_postcode` (`xprof_postcode`),
-  KEY `xprof_country` (`xprof_country`)
+  KEY `xprof_country` (`xprof_country`),
+  KEY `xprof_age` (`xprof_age`)
 ) ENGINE=MyISAM DEFAULT CHARSET=utf8;
 
 CREATE TABLE IF NOT EXISTS `xtag` (
+  `xtag_id` int(10) unsigned NOT NULL AUTO_INCREMENT,
   `xtag_hash` char(255) NOT NULL,
   `xtag_term` char(255) NOT NULL DEFAULT '',
-  PRIMARY KEY (`xtag_hash`),
-  KEY `xtag_term` (`xtag_term`)
+  PRIMARY KEY (`xtag_id`),
+  KEY `xtag_term` (`xtag_term`),
+  KEY `xtag_hash` (`xtag_hash`)
 ) ENGINE=MyISAM DEFAULT CHARSET=utf8;
