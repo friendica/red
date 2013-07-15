@@ -947,7 +947,7 @@ function public_recips($msg) {
 		$x = array();
 
 	$r = array_merge($r,$x);
-
+	logger('public_recips: ' . print_r($r,true), LOGGER_DATA);
 	return $r;
 }
 
@@ -1106,7 +1106,7 @@ function process_delivery($sender,$arr,$deliveries,$relay) {
 			$arr['aid'] = $channel['channel_account_id'];
 			$arr['uid'] = $channel['channel_id'];
 			$item_id = item_store($arr);
-			$result[] = array($d['hash'],'posted');
+			$result[] = array($d['hash'],(($item_id) ? 'posted' : 'storage failed'));
 		}
 
 		if($relay && $item_id) {
