@@ -1,6 +1,6 @@
 <?php
 
-define( 'UPDATE_VERSION' , 1051 );
+define( 'UPDATE_VERSION' , 1052 );
 
 /**
  *
@@ -613,6 +613,14 @@ function update_r1049() {
 
 function update_r1050() {
 	$r = q("ALTER TABLE `xtag` DROP PRIMARY KEY , ADD `xtag_id` INT UNSIGNED NOT NULL AUTO_INCREMENT PRIMARY KEY FIRST , ADD INDEX ( `xtag_hash` ) ");
+
+	if($r)
+		return UPDATE_SUCCESS;
+	return UPDATE_FAILED;
+}
+
+function update_r1051() {
+	$r = q("ALTER TABLE `photo` ADD `photo_flags` INT UNSIGNED NOT NULL DEFAULT '0' AFTER `profile` , ADD INDEX ( `photo_flags` ) ");
 
 	if($r)
 		return UPDATE_SUCCESS;
