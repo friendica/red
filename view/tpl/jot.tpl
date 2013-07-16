@@ -51,7 +51,10 @@
 	</div> 
 	<div id="profile-nolocation-wrapper" style="display: none;" >
 		<a id="profile-nolocation" class="icon noglobe" title="{{$noloc}}" onclick="jotClearLocation();return false;"></a>
-	</div> 
+	</div>
+	<div id="profile-rotator-wrapper" style="display: {{$visitor}};" >
+		<div id="profile-rotator"></div>
+	</div>  
 
 	{{if $showacl}}
 	<div id="profile-jot-perms" class="profile-jot-perms" style="display: {{$pvisit}};" >
@@ -69,10 +72,6 @@
 	{{$jotplugins}}
 	</div>
 
-	<div id="profile-rotator-wrapper" style="display: {{$visitor}};" >
-		<img id="profile-rotator" src="images/rotator.gif" alt="{{$wait}}" title="{{$wait}}" style="display: none;" />
-	</div> 
-	
 	<div id="jot-preview-content" style="display:none;"></div>
 
 	<div style="display: none;">
