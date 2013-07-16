@@ -60,16 +60,17 @@ function acl_init(&$a){
 
 		// autocomplete for Private Messages
 
-		$r = q("SELECT COUNT(`id`) AS c FROM `contact` 
-				WHERE `uid` = %d AND `self` = 0 
-				AND `blocked` = 0 AND `pending` = 0 AND `archive` = 0 
-				AND `network` IN ('%s','%s','%s') $sql_extra2" ,
+
+		$r = q("SELECT count xchan_hash as c
+			FROM abook left join xchan on abook_xchan = xchan_hash
+			WHERE abook_channel = %d and ( (abook_their_perms = null) or (abook_their_perms & %d ))
+			$sql_extra2 ",
 			intval(local_user()),
-			dbesc(NETWORK_DFRN),
-			dbesc(NETWORK_ZOT),
-			dbesc(NETWORK_DIASPORA)
+			intval(PERMS_W_MAIL)
 		);
-		$contact_count = (int)$r[0]['c'];
+
+		if($r)
+			$contact_count = (int)$r[0]['c'];
 
 	}
 	elseif ($type == 'a') {

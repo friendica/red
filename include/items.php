@@ -1306,6 +1306,13 @@ function item_store($arr,$force_parent = false) {
 		return 0;
 	}
 
+	// Don't let anybody set these, either intentionally or accidentally
+
+	if(array_key_exists('id',$arr))
+		unset($arr['id']);
+	if(array_key_exists('parent',$arr))
+		unset($arr['parent']);
+
 	$arr['lang'] = detect_language($arr['body']);
 
 	$allowed_languages = get_pconfig($arr['uid'],'system','allowed_languages');
