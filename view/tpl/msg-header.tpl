@@ -58,10 +58,10 @@ else
 			'prvmail-upload',
 			{ action: 'wall_upload/{{$nickname}}',
 				name: 'userfile',
-				onSubmit: function(file,ext) { $('#profile-rotator').show(); },
+				onSubmit: function(file,ext) { $('#profile-rotator').spin('tiny'); },
 				onComplete: function(file,response) {
 					tinyMCE.execCommand('mceInsertRawHTML',false,response);
-					$('#profile-rotator').hide();
+					$('#profile-rotator').spin(false);
 				}				 
 			}
 		);
@@ -71,10 +71,10 @@ else
 	function jotGetLink() {
 		reply = prompt("{{$linkurl}}");
 		if(reply && reply.length) {
-			$('#profile-rotator').show();
+			$('#profile-rotator').spin('tiny');
 			$.get('parse_url?url=' + reply, function(data) {
 				tinyMCE.execCommand('mceInsertRawHTML',false,data);
-				$('#profile-rotator').hide();
+				$('#profile-rotator').spin(false);
 			});
 		}
 	}
@@ -90,10 +90,10 @@ else
 		event.target.textContent = reply;
 		event.preventDefault();
 		if(reply && reply.length) {
-			$('#profile-rotator').show();
+			$('#profile-rotator').spin('tiny');
 			$.get('parse_url?url=' + reply, function(data) {
 				tinyMCE.execCommand('mceInsertRawHTML',false,data);
-				$('#profile-rotator').hide();
+				$('#profile-rotator').spin(false);
 			});
 		}
 	}
