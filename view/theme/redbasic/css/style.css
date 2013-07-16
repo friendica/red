@@ -389,7 +389,7 @@ footer {
 	float: left;
 }
 
-#jot-title, #jot-category {
+#jot-title, #jot-category, #jot-pagetitle {
 	border: 0px;
 	margin: 0px;
 	padding: 8px;
@@ -405,9 +405,13 @@ footer {
 #jot-category::-webkit-input-placeholder{font-weight: bold;}
 #jot-title:-moz-placeholder{font-weight: bold;}
 #jot-category:-moz-placeholder{font-weight: bold;}
+#jot-pagetitle::-webkit-input-placeholder{font-weight: bold;}
+#jot-pagetitle:-moz-placeholder{font-weight: bold;}
 		
 #jot-title:hover,
 #jot-title:focus,
+#jot-pagetitle:hover,
+#jot-pagetitle:focus,
 #jot-category:hover,
 #jot-category:focus {
 	border: 1px solid #cccccc; 

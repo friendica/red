@@ -13,5 +13,8 @@
 	<div class="profile-match-name">
 		<a href="{{$url}}" title="{{$name}}[{{$tags}}]">{{$name}}</a>
 	</div>
+	{{ if $note }}
+	<div class="profile-match-note">{{$note}}</div>
+	{{/if}	
 	<div class="profile-match-end"></div>
 </div>
