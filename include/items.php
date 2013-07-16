@@ -2051,7 +2051,8 @@ function tgroup_check($uid,$item) {
 
 	$terms = get_terms_oftype($item['term'],TERM_MENTION);
 
-	logger('tgroup_check: post mentions: ' . print_r($terms,true), LOGGER_DATA);
+	if($terms)
+		logger('tgroup_check: post mentions: ' . print_r($terms,true), LOGGER_DATA);
 
 	$link = normalise_link($a->get_baseurl() . '/channel/' . $u[0]['channel_address']);
 
