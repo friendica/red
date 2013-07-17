@@ -1029,7 +1029,7 @@ footer {
     position: absolute;
     left: 75px;
     top: 70px;
-    z-index: 100;
+    z-index: 99;
 }
 .wall-item-wrapper {
 	/*float: left;
