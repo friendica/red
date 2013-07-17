@@ -22,6 +22,17 @@ function page_init(&$a) {
 
 function page_content(&$a) {
 
+	$observer = $a->get_observer();
+	$ob_hash = (($observer) ? $observer['xchan_hash'] : '');
+
+	$perms = get_all_perms($a->profile['profile_uid'],$ob_hash);
+
+	if(! $perms['view_pages']) {
+		notice( t('Permission denied.') . EOL);
+		return;
+	}
+
+
 	if(argc() < 3) {
 		notice( t('Invalid item.') . EOL);
 		return;
