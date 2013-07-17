@@ -3,9 +3,11 @@
   // the get_config bits, though this is untested.  
   // We also need to eventually.  Use the page owners settings for everybody - get_pconfig(page_owner()) or whatever that would look like.
 
-	$uid = get_controlling_channel_id();
 
-    load_pconfig($uid,'redbasic');
+	$uid = get_theme_uid();
+
+	if($uid)
+	    load_pconfig($uid,'redbasic');
 
     $line_height = false;
     $redbasic_font_size = false;

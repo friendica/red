@@ -1915,6 +1915,27 @@ function current_theme(){
 	$app_base_themes = array('redbasic');
 	
 	$a = get_app();
+	$page_theme = null;
+
+	// Find the theme that belongs to the channel whose stuff we are looking at
+
+	if($a->profile_uid && $a->profile_uid != local_user()) {
+		$r = q("select channel_theme from channel where channel_id = %d limit 1",
+			intval($a->profile_uid)
+		);
+		if($r)
+			$page_theme = $r[0]['channel_theme'];
+	}
+
+	// Allow folks to over-rule channel themes and always use their own on their own site.
+	// The default is for channel themes to take precedence over your own on pages belonging 
+	// to that channel. 
+
+	if($page_theme && local_user() && local_user() != $a->profile_url) {
+		if(get_pconfig(local_user(),'system','always_my_theme'))
+			$page_theme = null;
+	}
+
 	
 //		$mobile_detect = new Mobile_Detect();
 //		$is_mobile = $mobile_detect->isMobile() || $mobile_detect->isTablet();
@@ -1933,6 +1954,9 @@ function current_theme(){
 	else {
 		$system_theme = ((isset($a->config['system']['theme'])) ? $a->config['system']['theme'] : '');
 		$theme_name = ((isset($_SESSION) && x($_SESSION,'theme')) ? $_SESSION['theme'] : $system_theme);
+
+		if($page_theme)
+			$theme_name = $page_theme;
 	}
 	
 	if($theme_name &&
@@ -1961,8 +1985,10 @@ function current_theme(){
 function current_theme_url($installing = false) {
 	global $a;
 	$t = current_theme();
+	$uid = '';
+	$uid = (($a->profile_uid) ? '?f=&puid=' . $a->profile_uid : '');
 	if(file_exists('view/theme/' . $t . '/php/style.php'))
-		return('view/theme/' . $t . '/php/style.pcss');
+		return('view/theme/' . $t . '/php/style.pcss' . $uid);
 	return('view/theme/' . $t . '/css/style.css');
 }
 
@@ -2343,6 +2369,19 @@ function head_get_icon() {
 	return $icon;
 }
 
-function get_controlling_channel_id() {
-	return get_app()->profile_uid;
+// Used from within PCSS themes to set theme parameters. If there's a
+// puid request variable, that is the "page owner" and normally their theme
+// settings take precedence; unless a local user sets the "always_my_theme" 
+// system pconfig, which means they don't want to see anybody else's theme 
+// settings except their own while on this site.
+
+function get_theme_uid() {
+	$uid = (($_REQUEST['puid']) ? intval($_REQUEST['puid']) : 0);
+	if(local_user()) {
+		if((get_pconfig(local_user(),'system','always_my_theme')) || (! $uid))
+			return local_user();
+		if(! $uid)
+			return local_user();
+	}
+	return $uid;
 }

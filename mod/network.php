@@ -9,6 +9,7 @@ function network_init(&$a) {
 	}
 
 	$channel = $a->get_channel();
+	$a->profile_uid = local_user();
 	head_set_icon($channel['xchan_photo_s']);
 	
 	$is_a_date_query = false;

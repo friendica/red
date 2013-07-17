@@ -23,7 +23,7 @@ function theme_content(&$a) {
 
 function theme_post(&$a) {
 	if(!local_user()) { return; }
-	
+
 	if (isset($_POST['redbasic-settings-submit'])) {
 		set_pconfig(local_user(), 'redbasic', 'font_size', $_POST['redbasic_font_size']);
 		set_pconfig(local_user(), 'redbasic', 'line_height', $_POST['redbasic_line_height']);
@@ -37,6 +37,7 @@ function theme_post(&$a) {
 		set_pconfig(local_user(), 'redbasic', 'colour_scheme', $_POST['redbasic_colour_scheme']);
 		set_pconfig(local_user(), 'redbasic', 'radius', $_POST['redbasic_radius']);
 	}
+
 }
 
 // We probably don't want these if we're having global settings, but we'll comment out for now, just in case
