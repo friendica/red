@@ -43,6 +43,8 @@ function channelx_by_n($id) {
 
 function vcard_from_xchan($xchan, $observer = null, $mode = '') {
 
+	$a = get_app();
+
 	$connect = false;
 	if(local_user()) {
 		$r = q("select * from abook where abook_xchan = '%s' and abook_channel = %d limit 1",
@@ -52,6 +54,9 @@ function vcard_from_xchan($xchan, $observer = null, $mode = '') {
 		if(! $r)
 			$connect = t('Connect');
 	}
+
+	if(array_key_exists('channel_id',$xchan))
+		$a->profile_uid = $xchan['channel_id'];
 
 	$url = (($observer) 
 		? z_root() . '/magic?f=&dest=' . $xchan['xchan_url'] . '&addr=' . $xchan['xchan_addr'] 

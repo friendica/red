@@ -3,6 +3,7 @@
 require_once('include/settings.php');
 
 
+
 function get_theme_config_file($theme){
 
 	$base_theme = get_app()->theme_info['extends'];
@@ -15,6 +16,11 @@ function get_theme_config_file($theme){
 	}
 	return null;
 }
+
+function settings_init(&$a) {
+	$a->profile_uid = local_user();
+}
+
 
 function settings_aside(&$a) {
 

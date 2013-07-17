@@ -513,6 +513,9 @@ class App {
 	public  $account    = null;            // account record
 	public  $channel    = null;            // channel record
 	public  $observer   = null;            // xchan record
+	public  $profile_uid = 0;              // If applicable, the uid of the person whose stuff this is. 
+                                           
+
 
 	private $perms      = null;            // observer permissions
 	private $widgets    = array();         // widgets for this page
@@ -1533,7 +1536,7 @@ function profile_load(&$a, $nickname, $profile = '') {
 	}
 
 	$a->profile = $r[0];
-
+	$a->profile_uid = $r[0]['profile_uid'];
 
 	$a->page['title'] = $a->profile['channel_name'] . " - " . $a->profile['channel_address'] . "@" . $a->get_hostname();
 
@@ -2338,4 +2341,8 @@ function head_get_icon() {
 	if(! strpos($icon,'://'))
 		$icon = z_root() . $icon;
 	return $icon;
+}
+
+function get_controlling_channel_id() {
+	return get_app()->profile_uid;
 }

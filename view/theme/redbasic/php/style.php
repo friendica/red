@@ -2,7 +2,10 @@
   // This needs changing now, if we're going for global settings.  Admin settings have been removed in preparation, You *should* just be able to remove all 
   // the get_config bits, though this is untested.  
   // We also need to eventually.  Use the page owners settings for everybody - get_pconfig(page_owner()) or whatever that would look like.
-    load_pconfig(local_user(),'redbasic');
+
+	$uid = get_controlling_channel_id();
+
+    load_pconfig($uid,'redbasic');
 
     $line_height = false;
     $redbasic_font_size = false;
@@ -31,25 +34,25 @@
 	if($x !== false)
 		$radius = $x;
     
-    if (local_user()) {
-        $line_height = get_pconfig(local_user(), "redbasic","line_height");
-        $redbasic_font_size = get_pconfig(local_user(), "redbasic", "font_size");
-        $colour = get_pconfig(local_user(), "redbasic", "colour");
-        $shadows = get_pconfig(local_user(), "redbasic", "shadow");
-        $navcolour = get_pconfig(local_user(), "redbasic", "navcolour");
-        $displaystyle = get_pconfig(local_user(), "redbasic", "displaystyle");
-        $linkcolour = get_pconfig(local_user(), "redbasic", "linkcolour");
-        $shiny = get_pconfig(local_user(), "redbasic", "shiny");
-		$x = get_pconfig(local_user(),'redbasic','radius');
+    if ($uid) {
+        $line_height = get_pconfig($uid, "redbasic","line_height");
+        $redbasic_font_size = get_pconfig($uid, "redbasic", "font_size");
+        $colour = get_pconfig($uid, "redbasic", "colour");
+        $shadows = get_pconfig($uid, "redbasic", "shadow");
+        $navcolour = get_pconfig($uid, "redbasic", "navcolour");
+        $displaystyle = get_pconfig($uid, "redbasic", "displaystyle");
+        $linkcolour = get_pconfig($uid, "redbasic", "linkcolour");
+        $shiny = get_pconfig($uid, "redbasic", "shiny");
+		$x = get_pconfig($uid,'redbasic','radius');
 		if($x !== false)
 			$radius = $x;
 
-        if (! feature_enabled(local_user(),'expert')) {$colour_scheme = get_pconfig(local_user(), "redbasic", "colour_scheme");}
+        if (! feature_enabled($uid,'expert')) {$colour_scheme = get_pconfig($uid, "redbasic", "colour_scheme");}
     }
 
     // In non-expert mode, we just let them choose font size, line height, and a colour scheme.  A colour scheme is just a pre-defined set of the above variables.
     // But only apply these settings in non-expert mode to prevent confusion when turning expert mode on and off.
-    if(! feature_enabled(local_user(),'expert')) {
+    if(! feature_enabled($uid,'expert')) {
 	    if ($colour_scheme === 'fancyred') {$shadows = true; $navcolour = 'black'; $displaystyle = 'fancy'; $linkcolour = 'f00'; $shiny = "opaque";}
 	    // Dark themes are very different - we need to do some of these from scratch, so don't bother setting vars for anything else
 	    if ($colour_scheme === 'dark') {$colour = 'dark'; $navcolour = 'black';}
@@ -59,7 +62,7 @@
 }
 
 // This is probably the easiest place to apply global settings.  Don't bother with site line height and such.  Instead, check pconfig for global user settings.  
-// eg, if ($redbasic_font_size === false) {$redbasic_font_size = get_pconfig(local_user(), "global", "font_size");  If it's not set, we'll just use the CSS with no changes.
+// eg, if ($redbasic_font_size === false) {$redbasic_font_size = get_pconfig($uid, "global", "font_size");  If it's not set, we'll just use the CSS with no changes.
 // Then all you need to do is add a "Global Settings" tab to settings/display, and make an equivalent of theme_settings.tpl and config.php to be loaded there.  Easy.
 
     if ($line_height === false) {$line_height = $site_line_height;}
