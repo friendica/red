@@ -187,6 +187,18 @@ define ( 'PAGE_REMOVED',           0x8000 );
 //define ( 'PAGE_BLOG',              4 );
 //define ( 'PAGE_PRVGROUP',          5 );
 
+
+/**
+ * Photo types
+ */
+
+define ( 'PHOTO_NORMAL',           0x0000 );
+define ( 'PHOTO_PROFILE',          0x0001 );
+define ( 'PHOTO_XCHAN',            0x0002 );
+define ( 'PHOTO_THING',            0x0004 );
+
+ 
+
 /**
  * Network and protocol family types
  */
