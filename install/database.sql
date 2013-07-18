@@ -186,7 +186,6 @@ CREATE TABLE IF NOT EXISTS `channel` (
   KEY `channel_account_id` (`channel_account_id`),
   KEY `channel_primary` (`channel_primary`),
   KEY `channel_name` (`channel_name`),
-  KEY `channel_address` (`channel_address`),
   KEY `channel_timezone` (`channel_timezone`),
   KEY `channel_location` (`channel_location`),
   KEY `channel_theme` (`channel_theme`),

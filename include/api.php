@@ -1644,11 +1644,11 @@ require_once('include/photos.php');
 		// This won't work if either of you send your stream to everybody on the network
 
 		if($qtype == 'friends')
-			$sql_extra = sprintf(" AND ( their_perms & %d ) and ( my_perms & %d ) ", intval(PERMS_W_STREAM), intval(PERMS_W_STREAM));
+			$sql_extra = sprintf(" AND ( abook_their_perms & %d ) and ( abook_my_perms & %d ) ", intval(PERMS_W_STREAM), intval(PERMS_W_STREAM));
 		if($qtype == 'followers')
-			$sql_extra = sprintf(" AND ( my_perms & %d ) and not ( their_perms & %d ) ", intval(PERMS_W_STREAM), intval(PERMS_W_STREAM));
+			$sql_extra = sprintf(" AND ( abook_my_perms & %d ) and not ( abook_their_perms & %d ) ", intval(PERMS_W_STREAM), intval(PERMS_W_STREAM));
  
-		$r = q("SELECT id FROM abook where abook_flags = 0 and abook_channel = %d $sql_extra",
+		$r = q("SELECT abook_xchan FROM abook where abook_flags = 0 and abook_channel = %d $sql_extra",
 			intval(api_user())
 		);
 
@@ -1657,14 +1657,14 @@ require_once('include/photos.php');
 				header("Content-type: application/xml");
 				echo '<?xml version="1.0" encoding="UTF-8"?>' . "\r\n" . '<ids>' . "\r\n";
 				foreach($r as $rr)
-					echo '<id>' . $rr['id'] . '</id>' . "\r\n";
+					echo '<id>' . $rr['abook_xchan'] . '</id>' . "\r\n";
 				echo '</ids>' . "\r\n";
 				killme();
 			}
 			elseif($type === 'json') {
 				$ret = array();
 				header("Content-type: application/json");
-				foreach($r as $rr) $ret[] = $rr['id'];
+				foreach($r as $rr) $ret[] = $rr['abook_xchan'];
 				echo json_encode($ret);
 				killme();
 			}
