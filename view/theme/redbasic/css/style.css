@@ -2666,6 +2666,10 @@ aside input[type='text'] {
 	overflow: hidden;
 }
 
+.profile-match-note {
+	text-align: center;
+}
+
 .profile-match-break,
 .profile-match-end {
 	clear: both;
