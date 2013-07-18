@@ -1,6 +1,6 @@
 <?php
 
-define( 'UPDATE_VERSION' , 1052 );
+define( 'UPDATE_VERSION' , 1053 );
 
 /**
  *
@@ -626,3 +626,12 @@ function update_r1051() {
 		return UPDATE_SUCCESS;
 	return UPDATE_FAILED;
 }
+
+
+function update_r1052() {
+	$r = q("ALTER TABLE `channel` ADD UNIQUE (`channel_address`) ");
+	if($r)
+		return UPDATE_SUCCESS;
+	return UPDATE_FAILED;
+}
+
