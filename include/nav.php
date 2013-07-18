@@ -107,8 +107,10 @@ EOT;
 	 */
 
 	$homelink = get_my_url();
-	if(! $homelink)
-		$homelink = ((x($_SESSION,'visitor_home')) ? $_SESSION['visitor_home'] : '');
+	if(! $homelink) {
+		$observer = $a->get_observer();
+		$homelink = (($observer) ? $observer['xchan_url'] : '');
+	}
 
 	if(($a->module != 'home') && (! (local_user()))) 
 		$nav['home'] = array($homelink, t('Home'), "", t('Home Page'));
