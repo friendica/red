@@ -10,6 +10,6 @@
 	</div>
 	{{if $note}}
 	<div class="profile-match-note">{{$note}}</div>
-	{{/if}	
+	{{/if}}	
 	<div class="profile-match-end"></div>
 </div>
