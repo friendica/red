@@ -47,17 +47,17 @@
 <b>{{$quick}}</b>
 <ul>
 {{if $self}}
-<li><span class="fakelink" onclick="connectForum(); $('#abook-edit-form').submit();">{{$forum}}</span></li>
-<li><span class="fakelink" onclick="connectSoapBox(); $('#abook-edit-form').submit();">{{$soapbox}}</span></li>
+<li><span class="fakelink" onclick="connectForum(); // $('#abook-edit-form').submit();">{{$forum}}</span></li>
+<li><span class="fakelink" onclick="connectSoapBox(); // $('#abook-edit-form').submit();">{{$soapbox}}</span></li>
 {{/if}}
-<li><span class="fakelink" onclick="connectFullShare(); $('#abook-edit-form').submit();">{{$full}}</span></li>
-<li><span class="fakelink" onclick="connectCautiousShare(); $('#abook-edit-form').submit();">{{$cautious}}</span></li>
-<li><span class="fakelink" onclick="connectFollowOnly(); $('#abook-edit-form').submit();">{{$follow}}</span></li>
+<li><span class="fakelink" onclick="connectFullShare(); // $('#abook-edit-form').submit();">{{$full}}</span></li>
+<li><span class="fakelink" onclick="connectCautiousShare(); // $('#abook-edit-form').submit();">{{$cautious}}</span></li>
+<li><span class="fakelink" onclick="connectFollowOnly(); // $('#abook-edit-form').submit();">{{$follow}}</span></li>
 </ul>
 
 <div id="abook-advanced" class="fakelink" onclick="openClose('abook-advanced-panel');">{{$advanced}}</div>
 
-<div id="abook-advanced-panel" style="display: none;">
+<div id="abook-advanced-panel" style="display: block;">
 
 <span class="abook-them">{{$them}}</span><span class="abook-me">{{$me}}</span>
 <br />

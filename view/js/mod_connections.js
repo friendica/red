@@ -22,6 +22,10 @@ $(".autocomplete-w1 .selected").keyup(function(event){
 
 
 function connectFullShare() {
+	$('.abook-edit-me').each(function() {
+		if(! $(this).is(':disabled'))
+			$(this).removeAttr('checked');
+	});
 	$('#me_id_perms_view_stream').attr('checked','checked');
 	$('#me_id_perms_view_profile').attr('checked','checked');
 	$('#me_id_perms_view_photos').attr('checked','checked');
@@ -37,6 +41,11 @@ function connectFullShare() {
 }
 
 function connectCautiousShare() {
+	$('.abook-edit-me').each(function() {
+		if(! $(this).is(':disabled'))
+			$(this).removeAttr('checked');
+	});
+
 	$('#me_id_perms_view_stream').attr('checked','checked');
 	$('#me_id_perms_view_profile').attr('checked','checked');
 	$('#me_id_perms_view_photos').attr('checked','checked');
@@ -48,6 +57,11 @@ function connectCautiousShare() {
 }
 
 function connectForum() {
+	$('.abook-edit-me').each(function() {
+		if(! $(this).is(':disabled'))
+			$(this).removeAttr('checked');
+	});
+
 	$('#me_id_perms_view_stream').attr('checked','checked');
 	$('#me_id_perms_view_profile').attr('checked','checked');
 	$('#me_id_perms_view_photos').attr('checked','checked');
@@ -62,6 +76,11 @@ function connectForum() {
 }
 
 function connectSoapBox() {
+	$('.abook-edit-me').each(function() {
+		if(! $(this).is(':disabled'))
+			$(this).removeAttr('checked');
+	});
+
 	$('#me_id_perms_view_stream').attr('checked','checked');
 	$('#me_id_perms_view_profile').attr('checked','checked');
 	$('#me_id_perms_view_photos').attr('checked','checked');
@@ -72,6 +91,11 @@ function connectSoapBox() {
 
 
 function connectFollowOnly() {
+	$('.abook-edit-me').each(function() {
+		if(! $(this).is(':disabled'))
+			$(this).removeAttr('checked');
+	});
+
 	$('#me_id_perms_send_stream').attr('checked','checked');
 }
 
