@@ -78,6 +78,7 @@ var searchData=
   ['get_5ftheme_5fconfig_5ffile',['get_theme_config_file',['../mod_2settings_8php.html#a39abc76ff5459c57e3b957664f273f18',1,'settings.php']]],
   ['get_5ftheme_5finfo',['get_theme_info',['../plugin_8php.html#ad48de9c0fb7f19413a2aa49250d00405',1,'plugin.php']]],
   ['get_5ftheme_5fscreenshot',['get_theme_screenshot',['../plugin_8php.html#a48047edfbef770125a5508dcc2f9282f',1,'plugin.php']]],
+  ['get_5ftheme_5fuid',['get_theme_uid',['../boot_8php.html#aaeb666872995e3ab8da8f7bc5f3b2bd3',1,'boot.php']]],
   ['get_5fthread',['get_thread',['../classConversation.html#a4cff75d8c46b517e7133e4d0da6fc1c8',1,'Conversation']]],
   ['get_5fwidgets',['get_widgets',['../classApp.html#a871898becd0697d778f36d9336253ae8',1,'App']]],
   ['get_5fxconfig',['get_xconfig',['../include_2config_8php.html#aa3dc1d3de2d091ac702e675acd3a085e',1,'config.php']]],

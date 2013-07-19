@@ -17,6 +17,7 @@ var redbasic_2php_2style_8php =
     [ "$site_colour", "redbasic_2php_2style_8php.html#a02d39b683a42fffbb27823d3860283bd", null ],
     [ "$site_line_height", "redbasic_2php_2style_8php.html#a8749837e08dfb3372662af9c33fa2a2e", null ],
     [ "$site_redbasic_font_size", "redbasic_2php_2style_8php.html#a45e6fafa363bc4586fa91dce1786be4f", null ],
+    [ "$uid", "redbasic_2php_2style_8php.html#a109bbd7f4add27541707b191b73ef84a", null ],
     [ "$x", "redbasic_2php_2style_8php.html#af3a16c5f0dd7a74cf9acf6a49fff73a7", null ],
-    [ "if", "redbasic_2php_2style_8php.html#a0a473a25349f07563d6c56d14031f02a", null ]
+    [ "if", "redbasic_2php_2style_8php.html#ac4c6bc3cd9cc92204f04cf6cb34b47dd", null ]
 ];

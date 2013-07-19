@@ -76,6 +76,7 @@ var classApp =
     [ "$perms", "classApp.html#ab47de68fa39806d1fb0976407e188b77", null ],
     [ "$plugins", "classApp.html#ae9f96338f32187d308b67b980eea0008", null ],
     [ "$profile", "classApp.html#a57d041fcc003d08c127dfa99a02bc192", null ],
+    [ "$profile_uid", "classApp.html#a08c24d6a6fc52fcc784b0f765f13b820", null ],
     [ "$query_string", "classApp.html#a2e82da4aecfc2017a8d1d332ca501f9f", null ],
     [ "$rdelim", "classApp.html#a244b2d53b21be269aad2269d23192f95", null ],
     [ "$scheme", "classApp.html#ad082d63acc078e5bf23825a03bdd6a76", null ],

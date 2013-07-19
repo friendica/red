@@ -79,7 +79,7 @@ function poke_init(&$a) {
 
 		$item_private = ((x($_GET,'private')) ? intval($_GET['private']) : 0);
 
-		$allow_cid     = (($item_private) ? '<' . $target['abook_hash']. '>' : $channel['channel_allow_cid']);
+		$allow_cid     = (($item_private) ? '<' . $target['abook_xchan']. '>' : $channel['channel_allow_cid']);
 		$allow_gid     = (($item_private) ? '' : $channel['channel_allow_gid']);
 		$deny_cid      = (($item_private) ? '' : $channel['channel_deny_cid']);
 		$deny_gid      = (($item_private) ? '' : $channel['channel_deny_gid']);
