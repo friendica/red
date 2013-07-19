@@ -282,7 +282,7 @@ function send_reg_approval_email($arr) {
 function send_verification_email($email,$password) {
 
 	$email_msg = replace_macros(get_intltext_template('register_open_eml.tpl'), array(
-		'$sitename' => get_config('config','sitename'),
+		'$sitename' => get_config('system','sitename'),
 		'$siteurl' =>  z_root(),
 		'$email'    => $email,
 		'$password' => t('your registration password'),
