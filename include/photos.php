@@ -244,8 +244,11 @@ function photos_albums_list($channel,$observer) {
 
 	$sql_extra = permissions_sql($channel_id);
 
-	$albums = q("SELECT distinct album from photo where uid = %d $sql_extra order by created desc",
-		intval($channel_id)
+	$albums = q("SELECT distinct album from photo where uid = %d and ( photo_flags = %d or photo_flags = %d ) $sql_extra order by created desc",
+		intval($channel_id),
+		intval(PHOTO_NORMAL),
+		intval(PHOTO_PROFILE)
+
 	);
 
 	// add various encodings to the array so we can just loop through and pick them out in a template
@@ -299,8 +302,10 @@ function photos_list_photos($channel,$observer,$album = '') {
 
 	$ret = array('success' => false);
 
-	$r = q("select resource_id, created, edited, title, `desc`, album, filename, `type`, height, width, `size`, `scale`, profile, allow_cid, allow_gid, deny_cid, deny_gid from photo where uid = %d $sql_extra ",
-		intval($channel_id)
+	$r = q("select resource_id, created, edited, title, `desc`, album, filename, `type`, height, width, `size`, `scale`, profile, allow_cid, allow_gid, deny_cid, deny_gid from photo where uid = %d and ( photo_flags = %d or photo_flags = %d ) $sql_extra ",
+		intval($channel_id),
+		intval(PHOTO_NORMAL),
+		intval(PHOTO_PROFILE)
 	);
 
 	if($r) {

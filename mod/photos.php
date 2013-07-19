@@ -282,9 +282,11 @@ function photos_post(&$a) {
 			}
 		}
 
-		$p = q("SELECT * FROM `photo` WHERE `resource_id` = '%s' AND `uid` = %d ORDER BY `scale` DESC",
+		$p = q("SELECT * FROM `photo` WHERE `resource_id` = '%s' AND `uid` = %d and ( photo_flags = %d or photo_flags = %d ) ORDER BY `scale` DESC",
 			dbesc($resource_id),
-			intval($page_owner_uid)
+			intval($page_owner_uid),
+			intval(PHOTO_NORMAL),
+			intval(PHOTO_PROFILE)
 		);
 		if(count($p)) {
 			$ext = $phototypes[$p[0]['type']];
@@ -720,9 +722,11 @@ function photos_content(&$a) {
 		$album = hex2bin($datum);
 
 		$r = q("SELECT `resource_id`, max(`scale`) AS `scale` FROM `photo` WHERE `uid` = %d AND `album` = '%s' 
-			AND `scale` <= 4 $sql_extra GROUP BY `resource_id`",
+			AND `scale` <= 4 and (photo_flags = %d or photo_flags = %d ) $sql_extra GROUP BY `resource_id`",
 			intval($owner_uid),
-			dbesc($album)
+			dbesc($album),
+			intval(PHOTO_NORMAL),
+			intval(PHOTO_PROFILE)
 		);
 		if(count($r)) {
 			$a->set_pager_total(count($r));
@@ -735,9 +739,11 @@ function photos_content(&$a) {
 			$order = 'DESC';
 
 		$r = q("SELECT `resource_id`, `id`, `filename`, type, max(`scale`) AS `scale`, `desc` FROM `photo` WHERE `uid` = %d AND `album` = '%s' 
-			AND `scale` <= 4 $sql_extra GROUP BY `resource_id` ORDER BY `created` $order LIMIT %d , %d",
+			AND `scale` <= 4 and (photo_flags = %d or photo_flags = %d ) $sql_extra GROUP BY `resource_id` ORDER BY `created` $order LIMIT %d , %d",
 			intval($owner_uid),
 			dbesc($album),
+			intvaL(PHOTO_NORMAL),
+			intval(PHOTO_PROFILE),
 			intval($a->pager['start']),
 			intval($a->pager['itemspage'])
 		);
@@ -846,9 +852,12 @@ function photos_content(&$a) {
 		// fetch image, item containing image, then comments
 
 		$ph = q("SELECT * FROM `photo` WHERE `uid` = %d AND `resource_id` = '%s' 
-			$sql_extra ORDER BY `scale` ASC ",
+			and (photo_flags = %d or photo_flags = %d ) $sql_extra ORDER BY `scale` ASC ",
 			intval($owner_uid),
-			dbesc($datum)
+			dbesc($datum),
+			intval(PHOTO_NORMAL),
+			intval(PHOTO_PROFILE)
+
 		);
 
 		if(! $ph) {
@@ -856,9 +865,12 @@ function photos_content(&$a) {
 			/* Check again - this time without specifying permissions */
 
 			$ph = q("SELECT `id` FROM `photo` WHERE `uid` = %d AND `resource_id` = '%s' 
+				and ( photo_flags = %d or photo_flags = %d )
 				LIMIT 1",
 				intval($owner_uid),
-				dbesc($datum)
+				dbesc($datum),
+				intval(PHOTO_NORMAL),
+				intval(PHOTO_PROFILE)
 			);
 			if($ph) 
 				notice( t('Permission denied. Access to this item may be restricted.'));
@@ -877,9 +889,11 @@ function photos_content(&$a) {
 
 
 		$prvnxt = q("SELECT `resource_id` FROM `photo` WHERE `album` = '%s' AND `uid` = %d AND `scale` = 0 
-			$sql_extra ORDER BY `created` $order ",
+			and ( photo_flags = %d or photo_flags = %d ) $sql_extra ORDER BY `created` $order ",
 			dbesc($ph[0]['album']),
-			intval($owner_uid)
+			intval($owner_uid),
+			intval(PHOTO_NORMAL),
+			intval(PHOTO_PROFILE)
 		); 
 
 		if(count($prvnxt)) {
@@ -1203,10 +1217,12 @@ function photos_content(&$a) {
 	//$o = '';
 
 	$r = q("SELECT `resource_id`, max(`scale`) AS `scale` FROM `photo` WHERE `uid` = %d AND `album` != '%s' AND `album` != '%s' 
-		$sql_extra GROUP BY `resource_id`",
+		and ( photo_flags = %d or photo_flags = %d ) $sql_extra GROUP BY `resource_id`",
 		intval($a->data['channel']['channel_id']),
 		dbesc('Contact Photos'),
-		dbesc( t('Contact Photos'))
+		dbesc( t('Contact Photos')),
+		intval(PHOTO_NORMAL),
+		intval(PHOTO_PROFILE)		
 	);
 	if(count($r)) {
 		$a->set_pager_total(count($r));
@@ -1214,11 +1230,14 @@ function photos_content(&$a) {
 	}
 
 	$r = q("SELECT `resource_id`, `id`, `filename`, type, `album`, max(`scale`) AS `scale` FROM `photo`
-		WHERE `uid` = %d AND `album` != '%s' AND `album` != '%s'  
+		WHERE `uid` = %d AND `album` != '%s' AND `album` != '%s'
+		and ( photo_flags = %d or photo_flags = %d )  
 		$sql_extra GROUP BY `resource_id` ORDER BY `created` DESC LIMIT %d , %d",
 		intval($a->data['channel']['channel_id']),
 		dbesc('Contact Photos'),
 		dbesc( t('Contact Photos')),
+		intval(PHOTO_NORMAL),
+		intval(PHOTO_PROFILE),
 		intval($a->pager['start']),
 		intval($a->pager['itemspage'])
 	);
