@@ -47,7 +47,7 @@ function lockview_content(&$a) {
 	stringify_array_elms($allowed_users,true);
 	stringify_array_elms($deny_groups,true);
 	stringify_array_elms($deny_users,true);
-dbg(1);
+
 	if(count($allowed_groups)) {
 		$r = q("SELECT name FROM `group` WHERE hash IN ( " . implode(', ', $allowed_groups) . " )");
 		if($r)
@@ -72,7 +72,7 @@ dbg(1);
 			foreach($r as $rr) 
 				$l[] = '<strike>' . $rr['xchan_name'] . '</strike>';
 	}
-dbg(0);
+
 	echo $o . implode(', ', $l);
 	killme();
 
