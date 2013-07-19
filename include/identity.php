@@ -241,11 +241,13 @@ function set_default_login_identity($account_id,$channel_id,$force = true) {
 	$r = q("select account_default_channel from account where account_id = %d limit 1",
 		intval($account_id)
 	);
-	if(($r) && (count($r)) && ((! intval($r[0]['account_default_channel'])) || $force)) {
-		$r = q("update account set account_default_channel = %d where account_id = %d limit 1",
-			intval($channel_id),
-			intval($account_id)
-		);
+	if($r) {
+		if((intval($r[0]['account_default_channel']) == 0) || ($force)) {
+			$r = q("update account set account_default_channel = %d where account_id = %d limit 1",
+				intval($channel_id),
+				intval($account_id)
+			);
+		}
 	}
 }
 

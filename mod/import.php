@@ -9,7 +9,7 @@ require_once('include/identity.php');
 
 function import_post(&$a) {
 
-	if(! $a->get_account()) {
+	if(! get_account_id()) {
 		return;
 	}
 
@@ -119,11 +119,11 @@ function import_post(&$a) {
 	// reset
 	$channel = $r[0];
 
-	set_default_login_identity($a->get_account(),$channel['channel_id'],false);
+	set_default_login_identity(get_account_id(),$channel['channel_id'],false);
 
 	if($data['photo']) {
 		require_once('include/photo/photo_driver.php');
-		import_channel_photo(base64url_decode($data['photo']['data']),$data['photo']['type'],get_account_id,$channel['channel_id']);
+		import_channel_photo(base64url_decode($data['photo']['data']),$data['photo']['type'],get_account_id(),$channel['channel_id']);
 	}
 
 	$profiles = $data['profile'];
@@ -326,12 +326,17 @@ function import_post(&$a) {
 
 	notice( t('Import completed.') . EOL);
 
+	change_channel($channel['channel_id']);
+
+	goaway(z_root() . '/network' );
+
+
 }
 
 
 function import_content(&$a) {
 
-	if(! $a->get_account()) {
+	if(! get_account_id()) {
 		notice( t('You must be logged in to use this feature.'));
 		return '';
 	}
