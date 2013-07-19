@@ -46,6 +46,7 @@ function build_sync_packet($uid = 0, $packet = null) {
 	$env_recips[] = array('guid' => $r[0]['xchan_guid'],'guid_sig' => $r[0]['xchan_guid_sig']);
 
 	$info = (($packet) ? $packet : array());
+	$info['type'] = 'channel_sync';
 
 	if(array_key_exists($uid,$a->config) && array_key_exists('transient',$a->config[$uid])) {
 		$settings = $a->config[$uid]['transient'];
@@ -77,7 +78,7 @@ function build_sync_packet($uid = 0, $packet = null) {
 
 	foreach($synchubs as $hub) {
 		$hash = random_string();
-		$n = zot_build_packet($channel,'channel_sync',$env_recips,$hub['hubloc_sitekey'],null,$hash);
+		$n = zot_build_packet($channel,'notify',$env_recips,$hub['hubloc_sitekey'],null,$hash);
 		q("insert into outq ( outq_hash, outq_account, outq_channel, outq_posturl, outq_async, outq_created, outq_updated, outq_notify, outq_msg ) values ( '%s', %d, %d, '%s', %d, '%s', '%s', '%s', '%s' )",
 			dbesc($hash),
 			intval($channel['channel_account']),
