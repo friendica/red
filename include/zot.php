@@ -445,6 +445,13 @@ function import_xchan($arr) {
 	$ret = array('success' => false);
 	$changed = false;
 
+	if(! (is_array($arr) && array_key_exists('success',$arr) && $arr['success'])) {
+		logger('import_xchan: invalid data packet: ' . print_r($arr,true));
+		$ret['message'] = t('Invalid data packet');
+		return $ret;
+	}
+
+
 	$xchan_hash = base64url_encode(hash('whirlpool',$arr['guid'] . $arr['guid_sig'], true));
 	$import_photos = false;
 
