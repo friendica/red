@@ -270,6 +270,7 @@ define ( 'MAIL_REPLIED',       0x0002);
 define ( 'MAIL_ISREPLY',       0x0004);
 define ( 'MAIL_SEEN',          0x0008);
 define ( 'MAIL_RECALLED',      0x0010);
+define ( 'MAIL_OBSCURED',      0x0020);
 
 
 define ( 'ATTACH_FLAG_DIR',    0x0001);

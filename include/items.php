@@ -801,8 +801,13 @@ function encode_mail($item) {
 	$x['from']           = encode_item_xchan($item['from']);
 	$x['to']             = encode_item_xchan($item['to']);
 
+	$x['flags'] = array();
+
+	if($item['mail_flags'] & MAIL_OBSCURED)
+		$x['flags'][] = 'obscured';
+		
 	if($item['mail_flags'] & MAIL_RECALLED) {
-		$x['flags'] = 'recalled';
+		$x['flags'][] = 'recalled';
 		$x['title'] = '';
 		$x['body']  = '';
 	}
@@ -816,7 +821,8 @@ function get_mail_elements($x) {
 
 	$arr = array();
 
-	$arr['body']         = (($x['body']) ? htmlentities($x['body'],ENT_COMPAT,'UTF-8',false) : '');
+	$arr['body']         = (($x['body']) ? htmlentities($x['body'], ENT_COMPAT,'UTF-8',false) : '');
+	$arr['title']        = (($x['title'])? htmlentities($x['title'],ENT_COMPAT,'UTF-8',false) : '');
 
 	$arr['created']      = datetime_convert('UTC','UTC',$x['created']);
 
@@ -824,7 +830,17 @@ function get_mail_elements($x) {
 
 	if($x['flags'] && is_array($x['flags'])) {
 		if(in_array('recalled',$x['flags'])) {
-			$arr['mail_flags'] &= MAIL_RECALLED;
+			$arr['mail_flags'] |= MAIL_RECALLED;
+		}
+		if(in_array('obscured',$x['flags'])) {
+
+			$arr['mail_flags'] |= MAIL_OBSCURED;
+			$arr['body'] = base64url_decode($arr['body']);
+			$arr['body'] = htmlentities($arr['body'],ENT_COMPAT,'UTF-8',false);
+			$arr['body'] = base64url_encode($arr['body']);
+			$arr['title'] = base64url_decode($arr['title']);
+			$arr['title'] = htmlentities($arr['title'],ENT_COMPAT,'UTF-8',false);
+			$arr['title'] = base64url_encode($arr['title']);
 		}
 	}
 
@@ -832,8 +848,7 @@ function get_mail_elements($x) {
 	if($arr['created'] > datetime_convert())
 		$arr['created']  = datetime_convert();
 
-	$arr['title']        = (($x['title'])    ? htmlentities($x['title'],    ENT_COMPAT,'UTF-8',false) : '');
-	$arr['mid']          = (($x['message_id'])      ? htmlentities($x['message_id'],      ENT_COMPAT,'UTF-8',false) : '');
+	$arr['mid']          = (($x['message_id'])     ? htmlentities($x['message_id'],     ENT_COMPAT,'UTF-8',false) : '');
 	$arr['parent_mid']   = (($x['message_parent']) ? htmlentities($x['message_parent'], ENT_COMPAT,'UTF-8',false) : '');
 
 

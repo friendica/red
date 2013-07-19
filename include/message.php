@@ -57,14 +57,15 @@ function send_message($uid = 0, $recipient='', $body='', $subject='', $replyto='
 	}
 
 	
-	$r = q("INSERT INTO mail ( account_id, channel_id, from_xchan, to_xchan, title, body, mid, parent_mid, created )
-		VALUES ( %d, %d, '%s', '%s', '%s', '%s', '%s', '%s', '%s' )",
+	$r = q("INSERT INTO mail ( account_id, mail_flags, channel_id, from_xchan, to_xchan, title, body, mid, parent_mid, created )
+		VALUES ( %d, %d, %d, '%s', '%s', '%s', '%s', '%s', '%s', '%s' )",
 		intval($channel['channel_account_id']),
+		intval(MAIL_OBSCURED),
 		intval($channel['channel_id']),
 		dbesc($channel['channel_hash']),
 		dbesc($recipient),
-		dbesc($subject),
-		dbesc($body),
+		dbesc(base64url_encode($subject)),
+		dbesc(base64url_encode($body)),
 		dbesc($mid),
 		dbesc($replyto),
 		dbesc(datetime_convert())
@@ -169,6 +170,12 @@ function private_messages_list($uid, $mailbox = '', $start = 0, $numitems = 0) {
 		$r[$k]['from'] = find_xchan_in_array($rr['from_xchan'],$c);
 		$r[$k]['to']   = find_xchan_in_array($rr['to_xchan'],$c);
 		$r[$k]['seen'] = (($rr['mail_flags'] & MAIL_SEEN) ? 1 : 0);
+		if($r[$k]['mail_flags'] & MAIL_OBSCURED) {
+			$r[$k]['title'] = base64url_decode($r[$k]['title']);
+			$r[$k]['body'] = base64url_decode($r[$k]['body']);
+		}
+
+
 	}
 
 	return $r;
@@ -201,6 +208,10 @@ function private_messages_fetch_message($channel_id, $messageitem_id, $updatesee
 	foreach($messages as $k => $message) {
 		$messages[$k]['from'] = find_xchan_in_array($message['from_xchan'],$c);
 		$messages[$k]['to']   = find_xchan_in_array($message['to_xchan'],$c);
+		if($messages[$k]['mail_flags'] & MAIL_OBSCURED) {
+			$messages[$k]['title'] = base64url_decode($messages[$k]['title']);
+			$messages[$k]['body'] = base64url_decode($messages[$k]['body']);
+		}
 	}
 
 	if($updateseen) {
@@ -282,6 +293,11 @@ function private_messages_fetch_conversation($channel_id, $messageitem_id, $upda
 	foreach($messages as $k => $message) {
 		$messages[$k]['from'] = find_xchan_in_array($message['from_xchan'],$c);
 		$messages[$k]['to']   = find_xchan_in_array($message['to_xchan'],$c);
+		if($messages[$k]['mail_flags'] & MAIL_OBSCURED) {
+			$messages[$k]['title'] = base64url_decode($messages[$k]['title']);
+			$messages[$k]['body'] = base64url_decode($messages[$k]['body']);
+		}
+
 	}
 
 
