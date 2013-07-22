@@ -90,7 +90,7 @@ $(document).ready(function(){
 	var doctitle = document.title;
 	function checkNotify() {
 		var notifyUpdateElem = document.getElementById('notify-update');
-		if(typeof(notifyUpdateElem) != 'undefined') { 
+		if(notifyUpdateElem !== null) { 
 	        if(notifyUpdateElem.innerHTML != "")
     		    document.title = "("+notifyUpdateElem.innerHTML+") " + doctitle;
 	        else
