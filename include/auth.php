@@ -67,6 +67,21 @@ if((isset($_SESSION)) && (x($_SESSION,'authenticated')) && ((! (x($_POST,'auth-p
 	}
 
 	if(x($_SESSION,'visitor_id') && (! x($_SESSION,'uid'))) {
+		// if our authenticated guest is allowed to take control of the admin channel, make it so.
+		$admins = get_config('system','remote_admin');
+		if($admins && is_array($admins) && in_array($_SESSION['visitor_id'],$admins)) {
+			$x = q("select * from account where account_email = '%s' and account_email != '' and ( account_flags & %d ) limit 1",
+				dbesc(get_config('system','admin_email')),
+				intval(ACCOUNT_ROLE_ADMIN)
+			);
+			if($x) {
+				new_cookie(60*60*24); // one day
+				$_SESSION['last_login_date'] = datetime_convert();
+				unset($_SESSION['visitor_id']); // no longer a visitor
+				authenticate_success($x[0], true, true);
+			}
+		}
+
 		$r = q("select * from hubloc left join xchan on xchan_hash = hubloc_hash where hubloc_hash = '%s' limit 1",
 			dbesc($_SESSION['visitor_id'])
 		);
