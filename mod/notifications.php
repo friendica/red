@@ -70,30 +70,31 @@ function notifications_content(&$a) {
 	nav_set_selected('notifications');		
 
 	$o = '';
+
 	$tabs = array(
 		array(
 			'label' => t('System'),
 			'url'=>$a->get_baseurl(true) . '/notifications/system',
 			'sel'=> (($a->argv[1] == 'system') ? 'active' : ''),
 		),
-		array(
-			'label' => t('Network'),
-			'url'=>$a->get_baseurl(true) . '/notifications/network',
-			'sel'=> (($a->argv[1] == 'network') ? 'active' : ''),
-		),
+//		array(
+//			'label' => t('Network'),
+//			'url'=>$a->get_baseurl(true) . '/notifications/network',
+//			'sel'=> (($a->argv[1] == 'network') ? 'active' : ''),
+//		),
 		array(
 			'label' => t('Personal'),
 			'url'=>$a->get_baseurl(true) . '/notifications/personal',
 			'sel'=> (($a->argv[1] == 'personal') ? 'active' : ''),
 		),
-		array(
-			'label' => t('Home'),
-			'url' => $a->get_baseurl(true) . '/notifications/home',
-			'sel'=> (($a->argv[1] == 'home') ? 'active' : ''),
-		),
+//		array(
+//			'label' => t('Home'),
+//			'url' => $a->get_baseurl(true) . '/notifications/home',
+//			'sel'=> (($a->argv[1] == 'home') ? 'active' : ''),
+//		),
 		array(
 			'label' => t('Introductions'),
-			'url' => $a->get_baseurl(true) . '/notifications/intros',
+			'url' => $a->get_baseurl(true) . '/connections/pending',
 			'sel'=> (($a->argv[1] == 'intros') ? 'active' : ''),
 		),
 		array(
@@ -105,6 +106,7 @@ function notifications_content(&$a) {
 	
 	$o = "";
 
+//Disabled
 	
 	if( (($a->argc > 1) && ($a->argv[1] == 'intros')) || (($a->argc == 1))) {
 		nav_set_selected('introductions');
@@ -221,7 +223,9 @@ function notifications_content(&$a) {
 		$o .= paginate($a);
 		return $o;
 				
-	} else if (($a->argc > 1) && ($a->argv[1] == 'network')) {
+	}
+	
+	elseif (($a->argc > 1) && ($a->argv[1] == 'network')) {
 		
 		$notif_tpl = get_markup_template('notifications.tpl');
 		
@@ -428,11 +432,7 @@ function notifications_content(&$a) {
 			'$tabs' => $tabs,
 			'$notif_content' => $notif_content,
 		));
-		
-
-
-
-
+	
 
 	} else if (($a->argc > 1) && ($a->argv[1] == 'home')) {
 		
