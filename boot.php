@@ -2161,6 +2161,7 @@ function zid_init(&$a) {
 		$arr = array('zid' => $tmp_str, 'url' => $a->cmd);
 		call_hooks('zid_init',$arr);
 		if((! local_user()) && (! remote_user())) {
+			logger('zid_init: not authenticated. Invoking reverse magic-auth');
 			$r = q("select * from hubloc where hubloc_addr = '%s' limit 1",
 				dbesc($tmp_str)
 			);
