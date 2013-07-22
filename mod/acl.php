@@ -61,7 +61,7 @@ function acl_init(&$a){
 		// autocomplete for Private Messages
 
 
-		$r = q("SELECT count xchan_hash as c
+		$r = q("SELECT count(xchan_hash) as c
 			FROM abook left join xchan on abook_xchan = xchan_hash
 			WHERE abook_channel = %d and ( (abook_their_perms = null) or (abook_their_perms & %d ))
 			$sql_extra2 ",

@@ -48,7 +48,7 @@ function message_post(&$a) {
 
 		$ret = zot_finger($rstr,$channel);
 
-		if(! $ret) {
+		if(! $ret['success']) {
 			notice( t('Unable to lookup recipient.') . EOL);
 			return;
 		} 
