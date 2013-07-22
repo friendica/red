@@ -181,7 +181,7 @@ function zot_finger($webbie,$channel) {
 	$rhs = '/.well-known/zot-info';
 	$https = ((strpos($url,'https://') === 0) ? true : false);
 
-	logger('zot_finger: ' . $url, LOGGER_DEBUG);
+	logger('zot_finger: ' . $address . ' at ' . $url, LOGGER_DEBUG);
 
 	if($channel) {
 		$postvars = array(
