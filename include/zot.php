@@ -1031,7 +1031,7 @@ function process_delivery($sender,$arr,$deliveries,$relay) {
 		);
 
 		if(! $r) {
-			$result[] = array($d['hash'],'not found');
+			$result[] = array($d['hash'],'recipients not found');
 			continue;
 		}
 
@@ -1043,7 +1043,7 @@ function process_delivery($sender,$arr,$deliveries,$relay) {
 
 		if((! perm_is_allowed($channel['channel_id'],$sender['hash'],$perm)) && (! $tag_delivery)) {
 			logger("permission denied for delivery {$channel['channel_id']}");
-			$result[] = array($d['hash'],'permission denied',$channel['channel_name']);
+			$result[] = array($d['hash'],'permission denied',$channel['channel_name'] . ' <' . $channel['channel_address'] . '@' . get_app()->get_hostname() . '>');
 			continue;
 		}
 	
@@ -1053,12 +1053,12 @@ function process_delivery($sender,$arr,$deliveries,$relay) {
 			remove_community_tag($sender,$arr,$channel['channel_id']);
 
 			$item_id = delete_imported_item($sender,$arr,$channel['channel_id']);
-			$result[] = array($d['hash'],'deleted');
+			$result[] = array($d['hash'],'deleted',$channel['channel_name'] . ' <' . $channel['channel_address'] . '@' . get_app()->get_hostname() . '>');
 
 			if($relay && $item_id) {
 				logger('process_delivery: invoking relay');
 				proc_run('php','include/notifier.php','relay',intval($item_id));
-				$result[] = array($d['hash'],'relayed',$channel['channel_name']);
+				$result[] = array($d['hash'],'relayed',$channel['channel_name'] . ' <' . $channel['channel_address'] . '@' . get_app()->get_hostname() . '>');
 			}
 
 			continue;
@@ -1089,7 +1089,7 @@ function process_delivery($sender,$arr,$deliveries,$relay) {
 
 				$xyz = event_store($ev);
 
-				$result = array($d['hash'],'event processed',$channel['channel_name']);
+				$result = array($d['hash'],'event processed',$channel['channel_name'] . ' <' . $channel['channel_address'] . '@' . get_app()->get_hostname() . '>');
 				continue;
 			}
 		}
@@ -1106,20 +1106,20 @@ function process_delivery($sender,$arr,$deliveries,$relay) {
 				$arr['uid'] = $channel['channel_id'];
 				update_imported_item($sender,$arr,$channel['channel_id']);
 			}	
-			$result[] = array($d['hash'],'updated',$channel['channel_name']);
+			$result[] = array($d['hash'],'updated',$channel['channel_name'] . ' <' . $channel['channel_address'] . '@' . get_app()->get_hostname() . '>');
 			$item_id = $r[0]['id'];
 		}
 		else {
 			$arr['aid'] = $channel['channel_account_id'];
 			$arr['uid'] = $channel['channel_id'];
 			$item_id = item_store($arr);
-			$result[] = array($d['hash'],(($item_id) ? 'posted' : 'storage failed'),$channel['channel_name']);
+			$result[] = array($d['hash'],(($item_id) ? 'posted' : 'storage failed'),$channel['channel_name'] . ' <' . $channel['channel_address'] . '@' . get_app()->get_hostname() . '>');
 		}
 
 		if($relay && $item_id) {
 			logger('process_delivery: invoking relay');
 			proc_run('php','include/notifier.php','relay',intval($item_id));
-			$result[] = array($d['hash'],'relayed',$channel['channel_name']);
+			$result[] = array($d['hash'],'relayed',$channel['channel_name'] . ' <' . $channel['channel_address'] . '@' . get_app()->get_hostname() . '>');
 		}
 	}
 

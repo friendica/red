@@ -334,17 +334,25 @@ function notifier_run($argv, $argc){
 	if(! $recipients)
 		return;
 
-	logger('notifier: recipients: ' . print_r($recipients,true));
+//	logger('notifier: recipients: ' . print_r($recipients,true));
 
-	$env_recips = null;
-	if($private) {
-		$r = q("select xchan_guid, xchan_guid_sig from xchan where xchan_hash in (" . implode(',',$recipients) . ")");
-		if($r) {
-			$env_recips = array();
-			foreach($r as $rr)
-				$env_recips[] = array('guid' => $rr['xchan_guid'],'guid_sig' => $rr['xchan_guid_sig']);
+	$env_recips = (($private) ? array() : null);
+
+	$details = q("select xchan_hash, xchan_addr, xchan_guid, xchan_guid_sig from xchan where xchan_hash in (" . implode(',',$recipients) . ")");
+
+	$recip_list = array();
+
+	if($details) {
+		foreach($details as $d) {
+			$recip_list[] = $d['xchan_addr'] . ' (' . $d['xchan_hash'] . ')'; 
+			if($private)
+				$env_recips[] = array('guid' => $d['xchan_guid'],'guid_sig' => $d['xchan_guid_sig']);
 		}
 	}
+
+	
+	logger('notifier: recipients (may be delivered to more if public): ' . print_r($recip_list,true), LOGGER_DEBUG);
+	
 
 	// Now we have collected recipients (except for external mentions, FIXME)
 	// Let's reduce this to a set of hubs.
@@ -362,6 +370,11 @@ function notifier_run($argv, $argc){
 	}
 	$hubs = $r;
 
+	$hublist = array();
+	foreach($hubs as $hub)
+		$hublist[] = $hub['hubloc_host'];
+
+	logger('notifier: will notify/deliver to these hubs: ' . print_r($hublist,true), LOGGER_DEBUG);
 			 
 	$interval = ((get_config('system','delivery_interval') !== false) 
 			? intval(get_config('system','delivery_interval')) : 2 );
@@ -418,12 +431,16 @@ function notifier_run($argv, $argc){
 	if(count($deliver)) {
 		proc_run('php','include/deliver.php',$deliver);
 	}
+
+	logger('notifier: basic loop complete.', LOGGER_DEBUG);
 	
 	if($normal_mode)
 		call_hooks('notifier_normal',$target_item);
 
+
 	call_hooks('notifier_end',$target_item);
 
+	logger('notifer: complete.');
 	return;
 
 }
