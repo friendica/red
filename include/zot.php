@@ -164,6 +164,11 @@ function zot_finger($webbie,$channel) {
 
 	$xchan_addr = $address . '@' . $host;
 
+	if((! $address) || (! $xchan_addr)) {
+		logger('zot_finger: no address :' . $webbie);
+		return array('success' => false);
+	}		
+
 	$r = q("select xchan.*, hubloc.* from xchan 
 			left join hubloc on xchan_hash = hubloc_hash
 			where xchan_addr = '%s' and (hubloc_flags & %d) limit 1",

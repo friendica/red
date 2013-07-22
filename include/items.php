@@ -1437,7 +1437,7 @@ function item_store($arr,$force_parent = false) {
 			intval($arr['uid'])
 		);
 
-		if(count($r)) {
+		if($r) {
 
 			// is the new message multi-level threaded?
 			// even though we don't support it now, preserve the info
