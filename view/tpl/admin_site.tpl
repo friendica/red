@@ -65,8 +65,6 @@
 	{{include file="field_input.tpl" field=$allowed_email}}
 	{{include file="field_checkbox.tpl" field=$block_public}}
 	{{include file="field_checkbox.tpl" field=$force_publish}}
-	{{include file="field_checkbox.tpl" field=$no_community_page}}
-	{{include file="field_input.tpl" field=$global_directory}}
 	
 	<div class="submit"><input type="submit" name="page_site" value="{{$submit}}" /></div>
 	

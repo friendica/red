@@ -421,9 +421,7 @@ function admin_page_site(&$a) {
 		'$allowed_email'	=> array('allowed_email', t("Allowed email domains"), get_config('system','allowed_email'), t("Comma separated list of domains which are allowed in email addresses for registrations to this site. Wildcards are accepted. Empty to allow any domains")),
 		'$block_public'		=> array('block_public', t("Block public"), get_config('system','block_public'), t("Check to block public access to all otherwise public personal pages on this site unless you are currently logged in.")),
 		'$force_publish'	=> array('publish_all', t("Force publish"), get_config('system','publish_all'), t("Check to force all profiles on this site to be listed in the site directory.")),
-		'$global_directory'	=> array('directory_submit_url', t("Global directory update URL"), get_config('system','directory_submit_url'), t("URL to update the global directory. If this is not set, the global directory is completely unavailable to the application.")),
 			
-		'$no_community_page' => array('no_community_page', t("Show Community Page"), !get_config('system','no_community_page'), t("Display a Community page showing all recent public postings on this site.")),
 		'$proxyuser'		=> array('proxyuser', t("Proxy user"), get_config('system','proxyuser'), ""),
 		'$proxy'			=> array('proxy', t("Proxy URL"), get_config('system','proxy'), ""),
 		'$timeout'			=> array('timeout', t("Network timeout"), (x(get_config('system','curl_timeout'))?get_config('system','curl_timeout'):60), t("Value is in seconds. Set to 0 for unlimited (not recommended).")),
