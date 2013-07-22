@@ -118,7 +118,7 @@ function photo_init(&$a) {
 					intval($resolution)
 				);
 				if($r) {
-					$data = file_get_contents('images/nosign.jpg');
+					$data = file_get_contents('images/nosign.png');
 					$mimetype = 'image/jpeg';
 					$prvcachecontrol = true;
 				}
