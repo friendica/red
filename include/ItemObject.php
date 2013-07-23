@@ -3,7 +3,7 @@
 if(class_exists('Item'))
 	return;
 
-require_once('object/BaseObject.php');
+require_once('include/BaseObject.php');
 require_once('include/text.php');
 require_once('boot.php');
 
