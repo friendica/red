@@ -720,6 +720,8 @@ function network_content(&$a, $update = 0, $load = false) {
         $o .= alt_pager($a,count($items));
 
 	if($load) {
+		logger('mod_network: load: ' . count($items) . ' items', LOGGER_DATA);
+
 		profiler($start,$first,'network parents');
 		profiler($first,$second,'network children');
 		profiler($second,$third,'network authors');
