@@ -217,7 +217,8 @@ function aes_encapsulate($data,$pubkey) {
 	$iv  = random_string(16,RANDOM_STRING_TEXT);
 	$result['data'] = base64url_encode(AES256CBC_encrypt($data,$key,$iv),true);
 	if(! openssl_public_encrypt($key,$k,$pubkey)) {
-		logger('aes_encapsulate: RSA failed. ' . print_r(debug_backtrace(),true));
+		$x = debug_backtrace();
+		logger('aes_encapsulate: RSA failed. ' . print_r($x[0],true));
 	}
  	$result['key'] = base64url_encode($k,true);
 	openssl_public_encrypt($iv,$i,$pubkey);
