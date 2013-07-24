@@ -173,6 +173,8 @@ function zfinger_init(&$a) {
 
 	$ret['site'] = array();
 	$ret['site']['url'] = z_root();
+	$ret['site']['url_sig'] = base64url_encode(rsa_sign(z_root(),$e['channel_prvkey']));
+
 	$dirmode = get_config('system','directory_mode');
 	if(($dirmode === false) || ($dirmode == DIRECTORY_MODE_NORMAL))
 		$ret['site']['directory_mode'] = 'normal';
@@ -191,6 +193,10 @@ function zfinger_init(&$a) {
 		$ret['site']['register_policy'] = 'approve';
 	if($register_policy == REGISTER_OPEN)
 		$ret['site']['register_policy'] = 'open';
+
+	require_once('include/account.php');
+	$ret['site']['accounts'] = account_total();
+	$ret['site']['admin'] = get_config('system','admin_email');
 
 	json_return_and_die($ret);
 

@@ -448,6 +448,8 @@ function zot_register_hub($arr) {
 function import_xchan($arr) {
 
 	$ret = array('success' => false);
+	$dirmode = intval(get_config('system','directory_mode')); 
+
 	$changed = false;
 
 	if(! (is_array($arr) && array_key_exists('success',$arr) && $arr['success'])) {
@@ -522,7 +524,6 @@ function import_xchan($arr) {
 	else {
 		$import_photos = true;
 
-		$dirmode = get_config('system','directory_mode'); 
 
 		if((($arr['site']['directory_mode'] === 'standalone') || ($dirmode & DIRECTORY_MODE_STANDALONE))
 && ($arr['site']['url'] != z_root()))
@@ -666,7 +667,7 @@ function import_xchan($arr) {
 	}
 
 	// Are we a directory server of some kind?
-	$dirmode = intval(get_config('system','directory_mode'));
+
 	if($dirmode != DIRECTORY_MODE_NORMAL) {
 		if(array_key_exists('profile',$arr) && is_array($arr['profile'])) {
 			$profile_changed = import_directory_profile($xchan_hash,$arr['profile']);
@@ -686,6 +687,15 @@ function import_xchan($arr) {
 			);
 		}
 	}
+
+	if(array_key_exists('site',$arr) && is_array($arr['site'])) {
+		$profile_changed = import_site($arr['site'],$arr['key']);
+		if($profile_changed) {
+			update_modtime($xchan_hash);
+			$changed = true;
+		}
+	}
+	
 
 
 	if($changed) {
@@ -1387,9 +1397,12 @@ function import_directory_profile($hash,$profile) {
 		);
 	}
 
-	if($update)
+	$d = array('xprof' => $arr, 'profile' => $profile, 'update' => $update);
+	call_hooks('import_directory_profile', $d);
+
+	if($d['update'])
 		update_modtime($arr['xprof_hash']);
-	return $update;
+	return $d['update'];
 }
 
 function import_directory_keywords($hash,$keywords) {
@@ -1442,3 +1455,74 @@ function update_modtime($hash) {
 			dbesc(datetime_convert())
 		);
 }
+
+
+function import_site($arr,$pubkey) {
+	if( (! is_array($arr)) || (! $arr['url']) || (! $arr['url_sig']))
+		return false;
+
+	if(! rsa_verify($arr['url'],base64url_decode($arr['url_sig']),$pubkey)) {
+		logger('import_site: bad url_sig');
+		return false;
+	}
+
+	$update = false;
+
+	$r = q("select * from site where site_url = '%s' limit 1",
+		dbesc($arr['url'])
+	);
+	if($r)
+		$update = true;
+
+	$site_directory = 0;
+	if($arr['directory_mode'] == 'normal')
+		$site_directory = DIRECTORY_MODE_NORMAL;
+
+	if($arr['directory_mode'] == 'primary')
+		$site_directory = DIRECTORY_MODE_PRIMARY;
+	if($arr['directory_mode'] == 'secondary')
+		$site_directory = DIRECTORY_MODE_SECONDARY;
+	if($arr['directory_mode'] == 'standalone')
+		$site_directory = DIRECTORY_MODE_STANDALONE;
+
+	$register_policy = 0;
+	if($arr['register_policy'] == 'closed')
+		$register_policy = REGISTER_CLOSED;
+	if($arr['register_policy'] == 'open')
+		$register_policy = REGISTER_OPEN;
+	if($arr['register_policy'] == 'approve')
+		$register_policy = REGISTER_APPROVE;
+
+	if($update) {
+		$r = q("update site set site_flags = %d, site_directory = '%s', site_register = %d, site_update = '%s'
+			where site_url = '%s' limit 1",
+			intval($site_directory),
+			dbesc(htmlentities($arr['directory_url'],ENT_COMPAT,'UTF-8',false)),
+			intval($register_policy),
+			dbesc(datetime_convert()),
+			dbesc(htmlentities($arr['url'],ENT_COMPAT,'UTF-8',false))
+		);
+		if(! $r) {
+			logger('import_site: update failed. ' . print_r($arr,true));
+		}
+	}
+	else {
+		$r = q("insert into site ( site_url, site_flags, site_update, site_directory, site_register )
+			values ( '%s', %d, '%s', '%s', %d )",
+			dbesc(htmlentities($arr['url'],ENT_COMPAT,'UTF-8',false)),
+			intval($site_directory),
+			dbesc(datetime_convert()),
+			dbesc(htmlentities($arr['directory_url'],ENT_COMPAT,'UTF-8',false)),
+			intval($register_policy)
+		);
+		if(! $r) {
+			logger('import_site: record create failed. ' . print_r($arr,true));
+		}
+	}
+
+	return $r;
+
+}
+
+
+
