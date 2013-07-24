@@ -28,7 +28,7 @@ function build_sync_packet($uid = 0, $packet = null) {
 	$synchubs = array();
 
 	foreach($h as $x) {
-		if($x['host'] == $a->get_hostname())
+		if($x['hubloc_host'] == $a->get_hostname())
 			continue;
 		$synchubs[] = $x;
 	}
