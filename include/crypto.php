@@ -211,11 +211,15 @@ function AES256CBC_decrypt($data,$key,$iv) {
 }
 
 function aes_encapsulate($data,$pubkey) {
+	if(! $pubkey)
+		logger('aes_encapsulate: no key. data: ' . $data);
 	$key = random_string(32,RANDOM_STRING_TEXT);
 	$iv  = random_string(16,RANDOM_STRING_TEXT);
 	$result['data'] = base64url_encode(AES256CBC_encrypt($data,$key,$iv),true);
-	openssl_public_encrypt($key,$k,$pubkey);
-	$result['key'] = base64url_encode($k,true);
+	if(! openssl_public_encrypt($key,$k,$pubkey)) {
+		logger('aes_encapsulate: RSA failed. ' . print_r(debug_backtrace(),true));
+	}
+ 	$result['key'] = base64url_encode($k,true);
 	openssl_public_encrypt($iv,$i,$pubkey);
 	$result['iv'] = base64url_encode($i,true);
 	return $result;
