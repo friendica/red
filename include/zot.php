@@ -47,40 +47,6 @@ function zot_get_hubloc($arr,$primary = false) {
 
 }
 	 
-/**
- * obsolete
-
-function zot_notify($channel,$url,$type = 'notify',$recipients = null, $remote_key = null) {
-
-	$params = array(
-		'type' => $type,
-		'sender' => json_encode(array(
-			'guid' => $channel['channel_guid'],
-			'guid_sig' => base64url_encode(rsa_sign($channel['channel_guid'],$channel['channel_prvkey'])),
-			'url' => z_root(),
-			'url_sig' => base64url_encode(rsa_sign(z_root(),$channel['channel_prvkey']))
-		)), 
-		'callback' => '/post',
-		'version' => ZOT_REVISION
-	);
-
-
-	if($recipients)
-		$params['recipients'] = json_encode($recipients);
-
-	// Hush-hush ultra top-secret mode
-
-	if($remote_key) {
-		$params = aes_encapsulate($params,$remote_key);
-	}
-
-	$x = z_post_url($url,$params);
-	return($x);
-}
-*/
-
-
-
 /*
  *
  * zot_build_packet builds a notification packet that you can either

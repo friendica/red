@@ -610,6 +610,15 @@ require_once('include/photos.php');
 			return false;
 		}
 
+		logger('api_statuses_update: REQUEST ' . print_r($_REQUEST,true));
+		logger('api_statuses_update: FILES ' . print_r($_FILES,true));
+
+
+		// set this so that the item_post() function is quiet and doesn't redirect or emit json
+
+		$_REQUEST['api_source'] = true;
+
+
 		$user_info = api_get_user($a);
 
 		// convert $_POST array items to the form we use for web posts.
@@ -655,7 +664,9 @@ require_once('include/photos.php');
 			$_REQUEST['type'] = 'net-comment';
 		else {
 			$_REQUEST['type'] = 'wall';
+		
 			if(x($_FILES,'media')) {
+				$_FILES['userfile'] = $_FILES['media'];
 				// upload the image if we have one
 				$_REQUEST['silent']='1'; //tell wall_upload function to return img info instead of echo
 				require_once('mod/wall_upload.php');
@@ -665,9 +676,6 @@ require_once('include/photos.php');
 			}
 		}
 
-		// set this so that the item_post() function is quiet and doesn't redirect or emit json
-
-		$_REQUEST['api_source'] = true;
 
 		// call out normal post function
 
