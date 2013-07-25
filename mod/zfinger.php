@@ -196,6 +196,11 @@ function zfinger_init(&$a) {
 
 	require_once('include/account.php');
 	$ret['site']['accounts'] = account_total();
+
+	require_once('include/identity.php');
+	$ret['site']['channels'] = channel_total();
+
+
 	$ret['site']['admin'] = get_config('system','admin_email');
 
 	json_return_and_die($ret);

@@ -58,6 +58,14 @@ function create_dir_account() {
 }
 
 
+function channel_total() {
+	$r = q("select channel_id from channel where true");
+	if(is_array($r))
+		return count($r);
+	return false;
+}
+
+
 
 // Required: name, nickname, account_id
 
