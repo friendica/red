@@ -201,7 +201,21 @@ function zfinger_init(&$a) {
 	$ret['site']['channels'] = channel_total();
 
 
+	$ret['site']['version'] = RED_PLATFORM . ' ' . RED_VERSION . '[' . DB_UPDATE_VERSION . ']';
+
 	$ret['site']['admin'] = get_config('system','admin_email');
+
+	$visible_plugins = array();
+	if(is_array($a->plugins) && count($a->plugins)) {
+		$r = q("select * from addon where hidden = 0");
+		if($r)
+			foreach($r as $rr)
+				$visible_plugins[] = $rr['name'];
+	}
+
+	$ret['site']['plugins'] = $visible_plugins;
+	$ret['site']['sitehash'] = get_config('system','location_hash');
+	$ret['site']['sitename'] = get_config('system','sitename');
 
 	json_return_and_die($ret);
 

@@ -17,8 +17,6 @@ function rsa_verify($data,$sig,$key,$alg = 'sha256') {
 	return $verify;
 }
 
-
-
 function pkcs5_pad ($text, $blocksize)
 {
     $pad = $blocksize - (strlen($text) % $blocksize);
