@@ -1,7 +1,4 @@
-<?php
-
-require_once('include/settings.php');
-
+<?php /** @file */
 
 
 function get_theme_config_file($theme){
