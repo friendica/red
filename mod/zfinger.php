@@ -186,37 +186,46 @@ function zfinger_init(&$a) {
 		$ret['site']['directory_mode'] = 'standalone';
 	if($dirmode != DIRECTORY_MODE_NORMAL)
 		$ret['site']['directory_url'] = z_root() . '/dirsearch';
-	$register_policy = intval(get_config('system','register_policy'));
-	if($register_policy == REGISTER_CLOSED)
-		$ret['site']['register_policy'] = 'closed';
-	if($register_policy == REGISTER_APPROVE)
-		$ret['site']['register_policy'] = 'approve';
-	if($register_policy == REGISTER_OPEN)
-		$ret['site']['register_policy'] = 'open';
-
-	require_once('include/account.php');
-	$ret['site']['accounts'] = account_total();
-
-	require_once('include/identity.php');
-	$ret['site']['channels'] = channel_total();
 
 
-	$ret['site']['version'] = RED_PLATFORM . ' ' . RED_VERSION . '[' . DB_UPDATE_VERSION . ']';
+	// hide detailed site information if you're off the grid
 
-	$ret['site']['admin'] = get_config('system','admin_email');
+	if($dirmode != DIRECTORY_MODE_STANDALONE) {
 
-	$visible_plugins = array();
-	if(is_array($a->plugins) && count($a->plugins)) {
-		$r = q("select * from addon where hidden = 0");
-		if($r)
-			foreach($r as $rr)
-				$visible_plugins[] = $rr['name'];
+		$register_policy = intval(get_config('system','register_policy'));
+
+
+		if($register_policy == REGISTER_CLOSED)
+			$ret['site']['register_policy'] = 'closed';
+		if($register_policy == REGISTER_APPROVE)
+			$ret['site']['register_policy'] = 'approve';
+		if($register_policy == REGISTER_OPEN)
+			$ret['site']['register_policy'] = 'open';
+
+		require_once('include/account.php');
+		$ret['site']['accounts'] = account_total();
+	
+		require_once('include/identity.php');
+		$ret['site']['channels'] = channel_total();
+
+
+		$ret['site']['version'] = RED_PLATFORM . ' ' . RED_VERSION . '[' . DB_UPDATE_VERSION . ']';
+
+		$ret['site']['admin'] = get_config('system','admin_email');
+
+		$visible_plugins = array();
+		if(is_array($a->plugins) && count($a->plugins)) {
+			$r = q("select * from addon where hidden = 0");
+			if($r)
+				foreach($r as $rr)
+					$visible_plugins[] = $rr['name'];
+		}
+
+		$ret['site']['plugins'] = $visible_plugins;
+		$ret['site']['sitehash'] = get_config('system','location_hash');
+		$ret['site']['sitename'] = get_config('system','sitename');
+
 	}
-
-	$ret['site']['plugins'] = $visible_plugins;
-	$ret['site']['sitehash'] = get_config('system','location_hash');
-	$ret['site']['sitename'] = get_config('system','sitename');
-
 	json_return_and_die($ret);
 
 }
