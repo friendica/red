@@ -693,6 +693,7 @@ CREATE TABLE IF NOT EXISTS `profile` (
   `hide_friends` tinyint(1) NOT NULL DEFAULT '0',
   `name` char(255) NOT NULL,
   `pdesc` char(255) NOT NULL,
+  `chandesc` text NOT NULL DEFAULT '',
   `dob` char(32) NOT NULL DEFAULT '0000-00-00',
   `dob_tz` char(255) NOT NULL DEFAULT 'UTC',
   `address` char(255) NOT NULL,

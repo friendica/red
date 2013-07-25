@@ -1,6 +1,6 @@
 <?php
 
-define( 'UPDATE_VERSION' , 1053 );
+define( 'UPDATE_VERSION' , 1054 );
 
 /**
  *
@@ -635,3 +635,9 @@ function update_r1052() {
 	return UPDATE_FAILED;
 }
 
+function update_r1053() {
+	$r = q("ALTER TABLE `profile` ADD `chandesc` TEXT NOT NULL DEFAULT '' AFTER `pdesc` ");
+	if($r)
+		return UPDATE_SUCCESS;
+	return UPDATE_FAILED;
+}
