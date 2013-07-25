@@ -2157,7 +2157,7 @@ function get_my_address() {
 function zid_init(&$a) {
 	$tmp_str = get_my_address();
 	if(validate_email($tmp_str)) {
-		proc_run('php','include/gprobe.php',$tmp_str);
+		proc_run('php','include/gprobe.php',bin2hex($tmp_str));
 		$arr = array('zid' => $tmp_str, 'url' => $a->cmd);
 		call_hooks('zid_init',$arr);
 		if((! local_user()) && (! remote_user())) {
