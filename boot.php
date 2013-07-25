@@ -456,7 +456,7 @@ define ( 'ITEM_NSFW',            0x0100);
 define ( 'ITEM_RELAY',           0x0200);  // used only in the communication layers, not stored
 define ( 'ITEM_MENTIONSME',      0x0400);
 define ( 'ITEM_NOCOMMENT',       0x0800);  // commenting/followups are disabled
-
+define ( 'ITEM_OBSCURED',        0x1000);  // bit-mangled to protect from casual browsing by site admin
 
 /**
  *
