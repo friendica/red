@@ -1,5 +1,6 @@
 <?php /** @file */
 
+require_once('include/zot.php');
 
 function get_theme_config_file($theme){
 

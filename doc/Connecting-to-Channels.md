@@ -5,7 +5,7 @@ Connections in Red can take on a great many different meanings. But let's keep i
 
 First, you need to find some channels to connect to.  There are two primary ways of doing this.  Firstly, setting the "Can send me their channel stream and posts" permission to "Anybody in this network" will bring posts from complete strangers to your matrix.  This will give you a lot of public content and should hopefully help you find interesting, entertaing people, forums, and channels.
 
-The next thing you can do is look at the Directory.  The directory is mirrored on every Red website which means searching from your own site will bring in results from the entire network.  You can search by name, interest, location and keyword.  This is incomplete, so we'll improve this paragraph later.
+The next thing you can do is look at the Directory.  The directory is available on every Red website which means searching from your own site will bring in results from the entire network.  You can search by name, interest, location and keyword.  This is incomplete, so we'll improve this paragraph later.
 
 To connect with other Red users:
 
