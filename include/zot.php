@@ -1502,13 +1502,20 @@ function build_sync_packet($uid = 0, $packet = null) {
 	$a = get_app();
 
 	logger('build_sync_packet');
+
 	if(! $uid)
 		$uid = local_user();
 
 	if(! $uid)
 		return;
 
-	$channel = $a->get_channel();
+    $r = q("select * from channel where channel_id = %d limit 1",
+		intval($uid)
+	);
+	if(! $r)
+		return;
+ 
+	$channel = $r[0];
 
 	$h = q("select * from hubloc where hubloc_hash = '%s'",
 		dbesc($channel['channel_hash'])
