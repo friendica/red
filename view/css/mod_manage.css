@@ -1,8 +1,8 @@
 #channels-selected {
 	color: #666666;
 	font-size: 1.2em;
-	margin-top: 20px;
-	margin-bottom: 10px;
+	width: 120px;
+	margin: 20px auto 10px auto;
 }
 
 #channels-desc {
@@ -12,12 +12,23 @@
 	margin-bottom: 20px;
 }
 
+#selected-channel {
+	width: 200px;
+	margin: 0px auto 0px auto;
+}
+
+#selected-channel .channel-selection {
+	clear: both;
+	width: 120px;
+	margin: 0px auto 0px auto;
+}
+
 .channel-selection-default {
 	font-size: 0.8em;
 	margin-bottom: 10px;
 }
 
-.channel-selection {
+#all-channels .channel-selection {
 	width: 120px;
 	float: left;
 }
