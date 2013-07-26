@@ -36,8 +36,6 @@ var searchData=
   ['deliver_2ephp',['deliver.php',['../deliver_8php.html',1,'']]],
   ['deliver_5fprivate',['deliver_private',['../classProtoDriver.html#ae5b44739f84c10d00a9b65adf3785181',1,'ProtoDriver\deliver_private()'],['../classZotDriver.html#afaaf9941169fc966e43e25b25e6daea6',1,'ZotDriver\deliver_private()']]],
   ['deliver_5frun',['deliver_run',['../deliver_8php.html#a397afcb9afecf0c1816b0951189dd346',1,'deliver.php']]],
-  ['dertopem',['DerToPem',['../crypto_8php.html#a630e1574554f34e7c38511585d9e71a2',1,'crypto.php']]],
-  ['dertorsa',['DerToRsa',['../crypto_8php.html#ae5af17db1cb5d7c91d486e1264079839',1,'crypto.php']]],
   ['destroy',['destroy',['../classphoto__driver.html#ae1a9edaf846983780dc65ea77d99e813',1,'photo_driver\destroy()'],['../classphoto__gd.html#a724703ecf71b1f1d04a80e86c76db6b1',1,'photo_gd\destroy()'],['../classphoto__imagick.html#afd49d64751ee3a298eac0c0ce0ba0207',1,'photo_imagick\destroy()']]],
   ['detect_5flanguage',['detect_language',['../language_8php.html#a632da17c7ac0d2dc1a00a4706870194b',1,'language.php']]],
   ['dfrn_5fdeliver',['dfrn_deliver',['../items_8php.html#a8395d189a36abfa0dfff81a2b0e70669',1,'items.php']]],

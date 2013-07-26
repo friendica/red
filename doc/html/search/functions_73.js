@@ -1,6 +1,5 @@
 var searchData=
 [
-  ['salmon_5fkey',['salmon_key',['../crypto_8php.html#a9191447cc46f0b4eaba3273e313994d5',1,'crypto.php']]],
   ['sanitise_5facl',['sanitise_acl',['../text_8php.html#a9fbeae13c9abd6e27cb4d8d1817f969c',1,'text.php']]],
   ['saved_5fsearches',['saved_searches',['../mod_2network_8php.html#a36e03af6f2efe62ecaa247509365bfad',1,'network.php']]],
   ['saveimage',['saveImage',['../classphoto__driver.html#a22ecb8c696de65a5a10bd185be9d90c3',1,'photo_driver']]],
@@ -48,9 +47,9 @@ var searchData=
   ['set_5fwidget',['set_widget',['../classApp.html#a123b903dfe5d3488cc68db3471d36fd2',1,'App']]],
   ['set_5fxconfig',['set_xconfig',['../include_2config_8php.html#afe117b70f1bba2f6348d9300b601f86e',1,'config.php']]],
   ['setdimensions',['setDimensions',['../classphoto__driver.html#ae663867d2c4eaa2fae50d60670920143',1,'photo_driver\setDimensions()'],['../classphoto__gd.html#a1c75304bd15f3b9986f0b315fb59271e',1,'photo_gd\setDimensions()'],['../classphoto__imagick.html#af92901d252c1e6ab5b54eebedbed23bb',1,'photo_imagick\setDimensions()']]],
-  ['settings_5faside',['settings_aside',['../mod_2settings_8php.html#ae5aebccb006bee1300078576baaf5582',1,'settings.php']]],
-  ['settings_5finit',['settings_init',['../mod_2settings_8php.html#a3a4cde287482fced008583f54ba2a722',1,'settings.php']]],
-  ['settings_5fpost',['settings_post',['../mod_2settings_8php.html#aa7ee94d88ac088edb04ccf3a26de3586',1,'settings.php']]],
+  ['settings_5faside',['settings_aside',['../settings_8php.html#ae5aebccb006bee1300078576baaf5582',1,'settings.php']]],
+  ['settings_5finit',['settings_init',['../settings_8php.html#a3a4cde287482fced008583f54ba2a722',1,'settings.php']]],
+  ['settings_5fpost',['settings_post',['../settings_8php.html#aa7ee94d88ac088edb04ccf3a26de3586',1,'settings.php']]],
   ['setup_5fcontent',['setup_content',['../setup_8php.html#a88247384a96e14516f474d7af6a465c1',1,'setup.php']]],
   ['setup_5finit',['setup_init',['../setup_8php.html#a267555abd17290e659b4bf44b885e4e0',1,'setup.php']]],
   ['setup_5fpost',['setup_post',['../setup_8php.html#a13cf286774149a0a7bd8adb8179cec75',1,'setup.php']]],

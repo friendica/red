@@ -75,7 +75,7 @@ var searchData=
   ['get_5ftemplate_5fldelim',['get_template_ldelim',['../classApp.html#a2eb832a8577dee7d40b93abdf6d1d35a',1,'App']]],
   ['get_5ftemplate_5frdelim',['get_template_rdelim',['../classApp.html#aab23c59172310fd30f2d60dc039d3eea',1,'App']]],
   ['get_5fterms_5foftype',['get_terms_oftype',['../taxonomy_8php.html#a0fb8cf0ac7bcbc8b27d856fe9bf69cd1',1,'taxonomy.php']]],
-  ['get_5ftheme_5fconfig_5ffile',['get_theme_config_file',['../mod_2settings_8php.html#a39abc76ff5459c57e3b957664f273f18',1,'settings.php']]],
+  ['get_5ftheme_5fconfig_5ffile',['get_theme_config_file',['../settings_8php.html#a39abc76ff5459c57e3b957664f273f18',1,'settings.php']]],
   ['get_5ftheme_5finfo',['get_theme_info',['../plugin_8php.html#ad48de9c0fb7f19413a2aa49250d00405',1,'plugin.php']]],
   ['get_5ftheme_5fscreenshot',['get_theme_screenshot',['../plugin_8php.html#a48047edfbef770125a5508dcc2f9282f',1,'plugin.php']]],
   ['get_5ftheme_5fuid',['get_theme_uid',['../boot_8php.html#aaeb666872995e3ab8da8f7bc5f3b2bd3',1,'boot.php']]],

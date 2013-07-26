@@ -1605,7 +1605,8 @@ function build_sync_packet($uid = 0, $packet = null) {
 
 function process_channel_sync_delivery($sender,$arr,$deliveries) {
 
-// FIXME - this will sync red structures. Eventually we need to make this application agnostic.
+// FIXME - this will sync red structures (channel, pconfig and abook). Eventually we need to make this application agnostic.
+// TODO: missing group membership changes
 
 	$result = array();
 	
