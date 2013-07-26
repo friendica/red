@@ -1571,6 +1571,8 @@ function build_sync_packet($uid = 0, $packet = null) {
 			? intval(get_config('system','delivery_interval')) : 2 );
 
 
+	logger('build_sync_packet: packet: ' . print_r($info,true), LOGGER_DATA);
+
 	foreach($synchubs as $hub) {
 		$hash = random_string();
 		$n = zot_build_packet($channel,'notify',$env_recips,$hub['hubloc_sitekey'],$hash);
