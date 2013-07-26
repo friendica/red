@@ -135,6 +135,7 @@ function connections_post(&$a) {
 		$a->data['abook'] = $r[0];
 	}
 
+	connections_clone($a);
 
 	return;
 

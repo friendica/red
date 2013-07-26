@@ -875,7 +875,7 @@ function zot_import($arr) {
 					logger('Channel sync received: ' . print_r($arr,true), LOGGER_DATA);
 					logger('Channel sync recipients: ' . print_r($deliveries,true), LOGGER_DATA);
 					
-//					$result = process_channelsync_delivery($i['notify']['sender'],$arr,$deliveries);
+					$result = process_channel_sync_delivery($i['notify']['sender'],$arr,$deliveries);
 				}
 			}
 			if($result)
@@ -1601,4 +1601,85 @@ function build_sync_packet($uid = 0, $packet = null) {
 	}
 
 
+}
+
+function process_channel_sync_delivery($sender,$arr,$deliveries) {
+
+// FIXME - this will sync red structures. Eventually we need to make this application agnostic.
+
+	$result = array();
+	
+	foreach($deliveries as $d) {
+		$r = q("select * from channel where channel_hash = '%s' limit 1",
+			dbesc($d['hash'])
+		);
+
+		if(! $r) {
+			$result[] = array($d['hash'],'not found');
+			continue;
+		}
+
+		$channel = $r[0];
+
+		if($channel['channel_hash'] != $sender['hash']) {
+			logger('process_channel_sync_delivery: possible forgery. Sender ' . $sender['hash'] . ' is not ' . $channel['channel_hash']);
+			$result[] = array($d['hash'],'channel mismatch',$channel['channel_name']);
+			continue;
+		}
+
+		if(array_key_exists('config',$arr) && is_array($arr['config']) && count($arr['config'])) {
+			foreach($arr['config'] as $cat => $k) {
+				foreach($arr['config'][$cat] as $k => $v)
+					set_pconfig($channel['channel_id'],$cat,$k,$v);
+			}
+		}
+
+		if(array_key_exists('channel',$arr) && is_array($arr['channel']) && count($arr['channel'])) {
+			$disallowed = array('channel_id','channel_account_id','channel_primary','channel_prvkey');
+
+			$clean = array();
+			foreach($arr['channel'] as $k => $v) {
+				if(in_array($k,$disallowed))
+					continue;
+				$clean[$k] = $v;
+			}
+			if(count($clean)) {
+				foreach($clean as $k => $v) {
+					$r = dbq("UPDATE channel set " . dbesc($k) . " = '" . dbesc($v) 
+						. "' where channel_id = " . intval($channel['channel_id']) . " limit 1");
+				}
+			}
+		}
+
+
+		if(array_key_exists('abook',$arr) && is_array($arr['abook']) && count($arr['abook'])) {
+
+			$disallowed = array('abook_id','abook_account','abook_channel');
+
+			$clean = array();
+			foreach($arr['abook'] as $abook) {
+				foreach($abook as $k => $v) {
+					if(in_array($k,$disallowed))
+						continue;
+					$clean[$k] = $v;
+				}
+
+				if(! array_key_exists('abook_xchan',$clean))
+					continue;
+
+				if(count($clean)) {
+					foreach($clean as $k => $v) {
+						$r = dbq("UPDATE abook set " . dbesc($k) . " = '" . dbesc($v) 
+						. "' where abook_xchan = '" . dbesc($clean['abook_xchan']) . "' and abook_channel = " . intval($channel['channel_id']) 
+						. " limit 1");
+					}
+				}
+			}
+		}
+		
+		$result[] = array($d['hash'],'channel sync updated',$channel['channel_name']);
+
+
+	}
+	return $result;
 }
