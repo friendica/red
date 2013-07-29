@@ -887,7 +887,7 @@ function smilies($s, $sample = false) {
 		'<img class="smiley" src="' . $a->get_baseurl() . '/images/smiley-facepalm.gif" alt=":facepalm" />',
 		'<img class="smiley" src="' . $a->get_baseurl() . '/images/like.gif" alt=":like" />',
 		'<img class="smiley" src="' . $a->get_baseurl() . '/images/dislike.gif" alt=":dislike" />',
-		'<img class="smiley" src="' . $a->get_baseurl() . '/images/rhash-16.png" alt="red#" /></a>',
+		'<a href="http://getzot.com"><img class="smiley" src="' . $a->get_baseurl() . '/images/rhash-16.png" alt="red#" /> the Red Matrix</a>',
 		'<a href="http://friendica.com">~friendica <img class="smiley" src="' . $a->get_baseurl() . '/images/friendica-16.png" alt="~friendica" /></a>'
 	);
 
