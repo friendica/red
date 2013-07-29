@@ -980,7 +980,18 @@ function link_compare($a,$b) {
 function prepare_body($item,$attach = false) {
 
 	$a = get_app();
+
+
+
 	call_hooks('prepare_body_init', $item); 
+
+	if(array_key_exists('item_flags',$item) && ($item['item_flags'] & ITEM_OBSCURED)) {
+		$key = get_config('system','prvkey');
+		if($item['title'])
+			$item['title'] = aes_unencapsulate(json_decode($item['title'],true),$key);
+		if($item['body'])
+			$item['body'] = aes_unencapsulate(json_decode($item['body'],true),$key);
+	}
 
 	$s = prepare_text($item['body'],$item['mimetype']);
 
@@ -991,6 +1002,7 @@ function prepare_body($item,$attach = false) {
 	if(! $attach) {
 		return $s;
 	}
+
 
 	$arr = json_decode($item['attach'],true);
 	if(count($arr)) {

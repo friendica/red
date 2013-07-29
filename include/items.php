@@ -599,6 +599,14 @@ function encode_item($item) {
 	$scope = map_scope($public_scope);
 	$c_scope = map_scope($comment_scope);
 
+	if(array_key_exists('item_flags',$item) && ($item['item_flags'] & ITEM_OBSCURED)) {
+		$key = get_config('system','prvkey');
+		if($item['title'])
+			$item['title'] = aes_unencapsulate(json_decode($item['title'],true),$key);
+		if($item['body'])
+			$item['body'] = aes_unencapsulate(json_decode($item['body'],true),$key);
+	}
+
 	if($item['item_restrict']  & ITEM_DELETED) {
 		$x['message_id'] = $item['mid'];
 		$x['created']    = $item['created'];
@@ -1553,7 +1561,7 @@ function item_store($arr,$force_parent = false) {
  	if(strlen($allow_cid) || strlen($allow_gid) || strlen($deny_cid) || strlen($deny_gid))
 		$private = 1;
 	else
-		$private = $arr['private']; 
+		$private = $arr['item_private']; 
 
 	// Set parent id - and also make sure to inherit the parent's ACL's.
 
@@ -1574,7 +1582,7 @@ function item_store($arr,$force_parent = false) {
 	$arr['allow_gid'] = $allow_gid;
 	$arr['deny_cid']  = $deny_cid;
 	$arr['deny_gid']  = $deny_gid;
-	$arr['private']   = $private;
+	$arr['item_private']   = $private;
 	
 	// Store taxonomy
 

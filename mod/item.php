@@ -580,6 +580,19 @@ function item_post(&$a) {
 	}
 
 
+	if(array_key_exists('item_private',$datarray) && $datarray['item_private']) {
+		logger('Encrypting local storage');
+		$key = get_config('system','pubkey');
+		$datarray['item_flags'] = $datarray['item_flags'] | ITEM_OBSCURED;
+		if($datarray['title'])
+			$datarray['title'] = json_encode(aes_encapsulate($datarray['title'],$key));
+		if($datarray['body'])
+			$datarray['body']  = json_encode(aes_encapsulate($datarray['body'],$key));
+	}
+
+
+
+
 	if($orig_post) {
 		$r = q("UPDATE `item` SET `title` = '%s', `body` = '%s', `attach` = '%s', `edited` = '%s' WHERE `id` = %d AND `uid` = %d LIMIT 1",
 			dbesc($datarray['title']),
@@ -600,6 +613,23 @@ function item_post(&$a) {
 			intval(TERM_MENTION),
 			intval(TERM_CATEGORY)
 		);
+
+
+		if(count($post_tags)) {
+			foreach($post_tags as $tag) {
+				if(strlen(trim($tag['term']))) {
+					q("insert into term (uid,oid,otype,type,term,url) values (%d,%d,%d,%d,'%s','%s')",
+						intval($tag['uid']),
+						intval($post_id),
+						intval($tag['otype']),
+						intval($tag['type']),
+						dbesc(trim($tag['term'])),
+						dbesc(trim($tag['url']))
+					);
+				}
+			}
+		}
+
 
 
 		proc_run('php', "include/notifier.php", 'edit_post', $post_id);

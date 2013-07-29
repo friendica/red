@@ -770,8 +770,6 @@ function zot_fetch($arr) {
 
 function zot_import($arr) {
 
-//	logger('zot_import: ' . print_r($arr,true), LOGGER_DATA);
-
 	$data = json_decode($arr['body'],true);
 
 	if(! $data) {
@@ -782,8 +780,6 @@ function zot_import($arr) {
 	if(array_key_exists('iv',$data)) {
 		$data = json_decode(aes_unencapsulate($data,get_config('system','prvkey')),true);
     }
-
-	logger('zot_import: data' . print_r($data,true), LOGGER_DATA);
 
 	$incoming = $data['pickup'];
 
@@ -837,6 +833,21 @@ function zot_import($arr) {
 			if($i['message']) { 
 				if($i['message']['type'] === 'activity') {
 					$arr = get_item_elements($i['message']);
+
+					// if it's a private post, encrypt it in the DB.
+					// We have to do that here because we need to cleanse the input and prevent bad stuff from getting in,
+					// and we need plaintext to do that. 
+
+					if(array_key_exists('item_private',$arr) && intval($arr['item_private'])) {
+						logger('Encrypting local storage');
+						$arr['item_flags'] = $arr['item_flags'] | ITEM_OBSCURED;
+						$key = get_config('system','pubkey');
+						if($arr['title'])
+							$arr['title'] = json_encode(aes_encapsulate($arr['title'],$key));
+						if($arr['body'])
+							$arr['body']  = json_encode(aes_encapsulate($arr['body'],$key));
+					}
+
 					if(! array_key_exists('created',$arr)) {
 						logger('Activity rejected: probable failure to lookup author/owner. ' . print_r($i['message'],true));
 						continue;
@@ -1565,7 +1576,7 @@ function build_sync_packet($uid = 0, $packet = null) {
 
 			// don't pass these elements, they should not be synchronised
 
-			$disallowed = array('channel_id','channel_account_id','channel_primary','channel_prvkey');
+			$disallowed = array('channel_id','channel_account_id','channel_primary','channel_prvkey','channel_address');
 
 			if(in_array($k,$disallowed))
 				continue;
@@ -1636,7 +1647,7 @@ function process_channel_sync_delivery($sender,$arr,$deliveries) {
 		}
 
 		if(array_key_exists('channel',$arr) && is_array($arr['channel']) && count($arr['channel'])) {
-			$disallowed = array('channel_id','channel_account_id','channel_primary','channel_prvkey');
+			$disallowed = array('channel_id','channel_account_id','channel_primary','channel_prvkey', 'channel_address');
 
 			$clean = array();
 			foreach($arr['channel'] as $k => $v) {
