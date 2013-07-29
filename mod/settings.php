@@ -1017,7 +1017,7 @@ function settings_content(&$a) {
 			'$email' 	=> array('email', t('Email Address:'), $email, ''),
 			'$timezone' => array('timezone_select' , t('Your Timezone:'), select_timezone($timezone), ''),
 			'$defloc'	=> array('defloc', t('Default Post Location:'), $defloc, ''),
-			'$allowloc' => array('allow_location', t('Use Browser Location:'), (intval(get_pconfig(local_user(),'system','use_browser_location')) == 1), ''),
+			'$allowloc' => array('allow_location', t('Use Browser Location:'), intval(get_pconfig(local_user(),'system','use_browser_location')), ''),
 		
 
 			'$h_prv' 	=> t('Security and Privacy Settings'),
