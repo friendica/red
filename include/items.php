@@ -4743,28 +4743,37 @@ function zot_feed($uid,$observer_xchan,$mindate) {
 		$sql_extra .= " and created > '$mindate' ";
 
 
-// FIXME
-	// We probably should use two queries and pick up total conversations.
-	// For now get a chunk of raw posts in ascending created order so that 
-	// hopefully the parent is imported before we see the kids. 
-	// This will fail if there are more than $limit kids and you didn't 
-	// receive the parent via direct delivery
+	$limit = 50;
+	$items = array();
 
-	$limit = 200;
-
-	$items = q("SELECT item.* from item
-		WHERE uid = %d AND item_restrict = 0
+	$r = q("SELECT item.*, item.id as item_id from item
+		WHERE uid = %d AND item_restrict = 0 and id = parent
 		AND (item_flags &  %d) 
 		$sql_extra ORDER BY created ASC limit 0, $limit",
 		intval($uid),
 		intval(ITEM_WALL)
 	);
+	if($r) {
+
+		$parents_str = ids_to_querystr($r,'id');
+
+		$items = q("SELECT `item`.*, `item`.`id` AS `item_id` FROM `item` 
+			WHERE `item`.`uid` = %d AND `item`.`item_restrict` = 0
+			AND `item`.`parent` IN ( %s ) ",
+			intval($uid),
+			dbesc($parents_str)
+		);
+
+	}
+
 	if($items) {
 		xchan_query($items);
 		$items = fetch_post_tags($items);
-	} else {
-		$items = array();
+		$items = conv_sort($items,'ascending');
+
 	}
+	else
+		$items = array();
 
 	foreach($items as $item)
 		$result[] = encode_item($item);
