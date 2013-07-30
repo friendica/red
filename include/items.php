@@ -4732,24 +4732,27 @@ function zot_feed($uid,$observer_xchan,$mindate) {
 	if(! $mindate)
 		$mindate = '0000-00-00 00:00:00';
 
+	$mindate = dbesc($mindate);
+
 	if(! perm_is_allowed($uid,$observer_xchan,'view_stream')) {
 		return $result;
 	}
 
-// FIXME
-	$sql_extra = item_permissions_sql($uid,$remote_contact,$groups);
+	$sql_extra = item_permissions_sql($uid);
 
-	if($mindate != '0000-00-00 00:00:00')
+	if($mindate != '0000-00-00 00:00:00') {
 		$sql_extra .= " and created > '$mindate' ";
+		$limit = "";
+	}
+	else
+		$limit = " limit 0, 50 ";
 
-
-	$limit = 50;
 	$items = array();
 
 	$r = q("SELECT item.*, item.id as item_id from item
 		WHERE uid = %d AND item_restrict = 0 and id = parent
 		AND (item_flags &  %d) 
-		$sql_extra ORDER BY created ASC limit 0, $limit",
+		$sql_extra ORDER BY created ASC $limit",
 		intval($uid),
 		intval(ITEM_WALL)
 	);
