@@ -506,6 +506,11 @@ function get_item_elements($x) {
 		$arr['edited']   = datetime_convert();
 
 	$arr['title']        = (($x['title'])          ? htmlentities($x['title'],          ENT_COMPAT,'UTF-8',false) : '');
+
+	if(mb_strlen($arr['title']) > 255)
+		$arr['title'] = mb_substr($arr['title'],0,255);
+
+
 	$arr['app']          = (($x['app'])            ? htmlentities($x['app'],            ENT_COMPAT,'UTF-8',false) : '');
 	$arr['mid']          = (($x['message_id'])     ? htmlentities($x['message_id'],     ENT_COMPAT,'UTF-8',false) : '');
 	$arr['parent_mid']   = (($x['message_top'])    ? htmlentities($x['message_top'],    ENT_COMPAT,'UTF-8',false) : '');

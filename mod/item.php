@@ -580,6 +580,9 @@ function item_post(&$a) {
 	}
 
 
+	if(mb_strlen($datarray['title']) > 255)
+		$datarray['title'] = mb_substr($datarray['title'],0,255);
+
 	if(array_key_exists('item_private',$datarray) && $datarray['item_private']) {
 		logger('Encrypting local storage');
 		$key = get_config('system','pubkey');

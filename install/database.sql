@@ -443,7 +443,7 @@ CREATE TABLE IF NOT EXISTS `item` (
   `owner_xchan` char(255) NOT NULL DEFAULT '',
   `author_xchan` char(255) NOT NULL DEFAULT '',
   `mimetype` char(255) NOT NULL DEFAULT '',
-  `title` char(255) NOT NULL DEFAULT '',
+  `title` text NOT NULL DEFAULT '',
   `body` mediumtext NOT NULL,
   `app` char(255) NOT NULL DEFAULT '',
   `lang` char(64) NOT NULL DEFAULT '',

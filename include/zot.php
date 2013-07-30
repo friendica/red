@@ -1033,6 +1033,18 @@ function process_delivery($sender,$arr,$deliveries,$relay) {
 
 		$perm = (($arr['mid'] == $arr['parent_mid']) ? 'send_stream' : 'post_comments');
 
+		// This is our own post, possibly coming from a channel clone
+
+		if($arr['owner_xchan'] == $d['hash']) {
+			$arr['item_flags'] = $arr['item_flags'] | ITEM_WALL;
+		}
+		else {
+			// clear the wall flag if it is set
+			if($arr['item_flags'] & ITEM_WALL) {
+				$arr['item_flags'] = ($arr['item_flags'] ^ ITEM_WALL);
+			}
+		}
+
 		if((! perm_is_allowed($channel['channel_id'],$sender['hash'],$perm)) && (! $tag_delivery)) {
 			logger("permission denied for delivery {$channel['channel_id']}");
 			$result[] = array($d['hash'],'permission denied',$channel['channel_name'] . ' <' . $channel['channel_address'] . '@' . get_app()->get_hostname() . '>');
