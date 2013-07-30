@@ -4769,6 +4769,7 @@ function zot_feed($uid,$observer_xchan,$mindate) {
 	if($items) {
 		xchan_query($items);
 		$items = fetch_post_tags($items);
+		require_once('include/conversation.php');
 		$items = conv_sort($items,'ascending');
 
 	}
