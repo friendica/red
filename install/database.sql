@@ -524,7 +524,7 @@ CREATE TABLE IF NOT EXISTS `mail` (
   `to_xchan` char(255) NOT NULL DEFAULT '',
   `account_id` int(10) unsigned NOT NULL DEFAULT '0',
   `channel_id` int(10) unsigned NOT NULL,
-  `title` char(255) NOT NULL,
+  `title` text NOT NULL,
   `body` mediumtext NOT NULL,
   `mid` char(255) NOT NULL,
   `parent_mid` char(255) NOT NULL,

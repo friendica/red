@@ -2,6 +2,7 @@
 
 /* Private Message backend API */
 
+require_once('include/crypto.php');
 
 // send a private message
 	
@@ -56,6 +57,28 @@ function send_message($uid = 0, $recipient='', $body='', $subject='', $replyto='
 		$replyto = $mid;
 	}
 
+	/**
+	 *
+	 * When a photo was uploaded into the message using the (profile wall) ajax 
+	 * uploader, The permissions are initially set to disallow anybody but the
+	 * owner from seeing it. This is because the permissions may not yet have been
+	 * set for the post. If it's private, the photo permissions should be set
+	 * appropriately. But we didn't know the final permissions on the post until
+	 * now. So now we'll look for links of uploaded messages that are in the
+	 * post and set them to the same permissions as the post itself.
+	 *
+	 */
+
+	$match = null;
+	$images = null;
+	if(preg_match_all("/\[img\](.*?)\[\/img\]/",$body,$match))
+		$images = $match[1];
+
+	$key = get_config('system','pubkey');
+	if($subject)
+		$subject = json_encode(aes_encapsulate($subject,$key));
+	if($body)
+		$body  = json_encode(aes_encapsulate($body,$key));
 	
 	$r = q("INSERT INTO mail ( account_id, mail_flags, channel_id, from_xchan, to_xchan, title, body, mid, parent_mid, created )
 		VALUES ( %d, %d, %d, '%s', '%s', '%s', '%s', '%s', '%s', '%s' )",
@@ -64,8 +87,8 @@ function send_message($uid = 0, $recipient='', $body='', $subject='', $replyto='
 		intval($channel['channel_id']),
 		dbesc($channel['channel_hash']),
 		dbesc($recipient),
-		dbesc(base64url_encode($subject)),
-		dbesc(base64url_encode($body)),
+		dbesc($subject),
+		dbesc($body),
 		dbesc($mid),
 		dbesc($replyto),
 		dbesc(datetime_convert())
@@ -84,35 +107,18 @@ function send_message($uid = 0, $recipient='', $body='', $subject='', $replyto='
 		return $ret;
 	}
 
-	/**
-	 *
-	 * When a photo was uploaded into the message using the (profile wall) ajax 
-	 * uploader, The permissions are initially set to disallow anybody but the
-	 * owner from seeing it. This is because the permissions may not yet have been
-	 * set for the post. If it's private, the photo permissions should be set
-	 * appropriately. But we didn't know the final permissions on the post until
-	 * now. So now we'll look for links of uploaded messages that are in the
-	 * post and set them to the same permissions as the post itself.
-	 *
-	 */
-
-	$match = null;
-
-	if(preg_match_all("/\[img\](.*?)\[\/img\]/",$body,$match)) {
-		$images = $match[1];
-		if(count($images)) {
-			foreach($images as $image) {
-				if(! stristr($image,$a->get_baseurl() . '/photo/'))
-					continue;
-				$image_uri = substr($image,strrpos($image,'/') + 1);
-				$image_uri = substr($image_uri,0, strpos($image_uri,'-'));
-				$r = q("UPDATE photo SET allow_cid = '%s' WHERE resource_id = '%s' AND uid = %d and allow_cid = '%s'",
-					dbesc('<' . $recipient . '>'),
-					dbesc($image_uri),
-					intval($channel['channel_id']),
-					dbesc('<' . $channel['channel_hash'] . '>')
-				); 
-			}
+	if(count($images)) {
+		foreach($images as $image) {
+			if(! stristr($image,$a->get_baseurl() . '/photo/'))
+				continue;
+			$image_uri = substr($image,strrpos($image,'/') + 1);
+			$image_uri = substr($image_uri,0, strpos($image_uri,'-'));
+			$r = q("UPDATE photo SET allow_cid = '%s' WHERE resource_id = '%s' AND uid = %d and allow_cid = '%s'",
+				dbesc('<' . $recipient . '>'),
+				dbesc($image_uri),
+				intval($channel['channel_id']),
+				dbesc('<' . $channel['channel_hash'] . '>')
+			); 
 		}
 	}
 	
@@ -171,11 +177,14 @@ function private_messages_list($uid, $mailbox = '', $start = 0, $numitems = 0) {
 		$r[$k]['to']   = find_xchan_in_array($rr['to_xchan'],$c);
 		$r[$k]['seen'] = (($rr['mail_flags'] & MAIL_SEEN) ? 1 : 0);
 		if($r[$k]['mail_flags'] & MAIL_OBSCURED) {
-			$r[$k]['title'] = base64url_decode($r[$k]['title']);
-			$r[$k]['body'] = base64url_decode($r[$k]['body']);
+			logger('unencrypting');
+			$key = get_config('system','prvkey');
+
+			if($r[$k]['title'])
+				$r[$k]['title'] = aes_unencapsulate(json_decode($r[$k]['title'],true),$key);
+			if($r[$k]['body'])
+				$r[$k]['body'] = aes_unencapsulate(json_decode($r[$k]['body'],true),$key);
 		}
-
-
 	}
 
 	return $r;
@@ -209,8 +218,11 @@ function private_messages_fetch_message($channel_id, $messageitem_id, $updatesee
 		$messages[$k]['from'] = find_xchan_in_array($message['from_xchan'],$c);
 		$messages[$k]['to']   = find_xchan_in_array($message['to_xchan'],$c);
 		if($messages[$k]['mail_flags'] & MAIL_OBSCURED) {
-			$messages[$k]['title'] = base64url_decode($messages[$k]['title']);
-			$messages[$k]['body'] = base64url_decode($messages[$k]['body']);
+			$key = get_config('system','prvkey');
+			if($messages[$k]['title'])
+				$messages[$k]['title'] = aes_unencapsulate(json_decode($messages[$k]['title'],true),$key);
+			if($messages[$k]['body'])
+				$messages[$k]['body'] = aes_unencapsulate(json_decode($messages[$k]['body'],true),$key);
 		}
 	}
 
@@ -294,10 +306,12 @@ function private_messages_fetch_conversation($channel_id, $messageitem_id, $upda
 		$messages[$k]['from'] = find_xchan_in_array($message['from_xchan'],$c);
 		$messages[$k]['to']   = find_xchan_in_array($message['to_xchan'],$c);
 		if($messages[$k]['mail_flags'] & MAIL_OBSCURED) {
-			$messages[$k]['title'] = base64url_decode($messages[$k]['title']);
-			$messages[$k]['body'] = base64url_decode($messages[$k]['body']);
+			$key = get_config('system','prvkey');
+			if($messages[$k]['title'])
+				$messages[$k]['title'] = aes_unencapsulate(json_decode($messages[$k]['title'],true),$key);
+			if($messages[$k]['body'])
+				$messages[$k]['body'] = aes_unencapsulate(json_decode($messages[$k]['body'],true),$key);
 		}
-
 	}
 
 

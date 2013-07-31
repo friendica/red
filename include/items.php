@@ -491,7 +491,6 @@ function title_is_body($title, $body) {
 function get_item_elements($x) {
 
 	$arr = array();
-
 	$arr['body']         = (($x['body']) ? htmlentities($x['body'],ENT_COMPAT,'UTF-8',false) : '');
 
 	$arr['created']      = datetime_convert('UTC','UTC',$x['created']);
@@ -804,7 +803,13 @@ function encode_mail($item) {
 	$x = array();
 	$x['type'] = 'mail';
 
-	logger('encode_mail: ' . print_r($item,true));
+	if(array_key_exists('mail_flags',$item) && ($item['mail_flags'] & MAIL_OBSCURED)) {
+		$key = get_config('system','prvkey');
+		if($item['title'])
+			$item['title'] = aes_unencapsulate(json_decode($item['title'],true),$key);
+		if($item['body'])
+			$item['body'] = aes_unencapsulate(json_decode($item['body'],true),$key);
+	}
 
 	$x['message_id']     = $item['mid'];
 	$x['message_parent'] = $item['parent_mid'];
@@ -816,9 +821,6 @@ function encode_mail($item) {
 
 	$x['flags'] = array();
 
-	if($item['mail_flags'] & MAIL_OBSCURED)
-		$x['flags'][] = 'obscured';
-		
 	if($item['mail_flags'] & MAIL_RECALLED) {
 		$x['flags'][] = 'recalled';
 		$x['title'] = '';
@@ -845,18 +847,16 @@ function get_mail_elements($x) {
 		if(in_array('recalled',$x['flags'])) {
 			$arr['mail_flags'] |= MAIL_RECALLED;
 		}
-		if(in_array('obscured',$x['flags'])) {
-
-			$arr['mail_flags'] |= MAIL_OBSCURED;
-			$arr['body'] = base64url_decode($arr['body']);
-			$arr['body'] = htmlentities($arr['body'],ENT_COMPAT,'UTF-8',false);
-			$arr['body'] = base64url_encode($arr['body']);
-			$arr['title'] = base64url_decode($arr['title']);
-			$arr['title'] = htmlentities($arr['title'],ENT_COMPAT,'UTF-8',false);
-			$arr['title'] = base64url_encode($arr['title']);
-		}
 	}
 
+	$key = get_config('system','pubkey');
+	$arr['mail_flags'] |= MAIL_OBSCURED;
+	$arr['body'] = htmlentities($arr['body'],ENT_COMPAT,'UTF-8',false);
+	if($arr['body'])
+		$arr['body']  = json_encode(aes_encapsulate($arr['body'],$key));
+	$arr['title'] = htmlentities($arr['title'],ENT_COMPAT,'UTF-8',false);
+	if($arr['title'])
+		$arr['title'] = json_encode(aes_encapsulate($arr['title'],$key));
 
 	if($arr['created'] > datetime_convert())
 		$arr['created']  = datetime_convert();
