@@ -1,6 +1,7 @@
 <?php
 
 require_once('acl_selectors.php');
+require_once('include/crypto.php');
 
 function editpost_content(&$a) {
 
