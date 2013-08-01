@@ -838,6 +838,7 @@ function zot_import($arr) {
 						logger('Activity rejected: probable failure to lookup author/owner. ' . print_r($i['message'],true));
 						continue;
 					}
+
 					logger('Activity received: ' . print_r($arr,true), LOGGER_DATA);
 					logger('Activity recipients: ' . print_r($deliveries,true), LOGGER_DATA);
 

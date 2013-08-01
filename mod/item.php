@@ -684,7 +684,7 @@ function item_post(&$a) {
 				dbesc($parent_item['allow_gid']),
 				dbesc($parent_item['deny_cid']),
 				dbesc($parent_item['deny_gid']),
-				intval($parent_item['private']),
+				intval($parent_item['item_private']),
 				intval($post_id)
 			);
 
