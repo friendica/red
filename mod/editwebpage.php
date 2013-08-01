@@ -7,7 +7,6 @@ function editwebpage_content(&$a) {
 
 // We first need to figure out who owns the webpage, grab it from an argument
         $which = argv(1);
-        logger('which: ' . print_r ($which,true));
 
 // $a->get_channel() and stuff don't work here, so we've got to find the owner for ourselves.
 	$owner = q("select channel_id from channel where channel_address = '%s'",
