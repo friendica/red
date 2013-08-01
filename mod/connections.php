@@ -159,7 +159,7 @@ function connections_content(&$a) {
 
 	$sort_type = 0;
 	$o = '';
-	nav_set_selected('connections');
+	nav_set_selected('intros');
 
 
 	if(! local_user()) {
