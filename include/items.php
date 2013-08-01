@@ -532,6 +532,21 @@ function get_item_elements($x) {
 
 	$arr['item_private'] = ((array_key_exists('flags',$x) && is_array($x['flags']) && in_array('private',$x['flags'])) ? 1 : 0);
 
+	$arr['item_flags'] = 0;
+
+	// if it's a private post, encrypt it in the DB.
+	// We have to do that here because we need to cleanse the input and prevent bad stuff from getting in,
+	// and we need plaintext to do that. 
+
+	if(intval($arr['item_private'])) {
+		$arr['item_flags'] = $arr['item_flags'] | ITEM_OBSCURED;
+		$key = get_config('system','pubkey');
+		if($arr['title'])
+			$arr['title'] = json_encode(aes_encapsulate($arr['title'],$key));
+		if($arr['body'])
+			$arr['body']  = json_encode(aes_encapsulate($arr['body'],$key));
+	}
+
 	if(array_key_exists('flags',$x) && in_array('deleted',$x['flags']))
 		$arr['item_restrict'] = ITEM_DELETED; 
 
