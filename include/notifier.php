@@ -328,7 +328,7 @@ function notifier_run($argv, $argc){
 	// Generic delivery section, we have an encoded item and recipients
 	// Now start the delivery process
 
-	logger('notifier: encoded item: ' . print_r($encoded_item,true));
+//	logger('notifier: encoded item: ' . print_r($encoded_item,true));
 
 	stringify_array_elms($recipients);
 	if(! $recipients)
