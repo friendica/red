@@ -910,6 +910,7 @@ CREATE TABLE IF NOT EXISTS `xchan` (
   `xchan_connurl` char(255) NOT NULL DEFAULT '',
   `xchan_name` char(255) NOT NULL DEFAULT '',
   `xchan_network` char(255) NOT NULL DEFAULT '',
+  `xchan_instance_url` char(255) NOT NULL DEFAULT '',
   `xchan_flags` int(10) unsigned NOT NULL DEFAULT '0',
   `xchan_photo_date` datetime NOT NULL DEFAULT '0000-00-00 00:00:00',
   `xchan_name_date` datetime NOT NULL DEFAULT '0000-00-00 00:00:00',
@@ -918,6 +919,7 @@ CREATE TABLE IF NOT EXISTS `xchan` (
   KEY `xchan_addr` (`xchan_addr`),
   KEY `xchan_name` (`xchan_name`),
   KEY `xchan_network` (`xchan_network`),
+  KEY `xchan_instance_url` (`xchan_instance_url`),
   KEY `xchan_url` (`xchan_url`),
   KEY `xchan_flags` (`xchan_flags`),
   KEY `xchan_connurl` (`xchan_connurl`)
