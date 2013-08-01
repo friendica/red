@@ -97,7 +97,7 @@
 	{{/if}}
 		
 	{{if $nav.notifications}}
-		<li id="nav-notify-linkmenu" class="nav-menu fakelink">
+		<li id="nav-notify-linkmenu" class="nav-menu fakelink {{$sel.notifications}}">
 			<a href="{{$nav.notifications.0}}" title="{{$nav.notifications.1}}">{{$nav.notifications.1}}</a>
 			<span id="notify-update" class="nav-notify fakelink" rel="#nav-notify-menu"></span>
 			<ul id="nav-notify-menu" class="menu-popup notify-menus" rel="notify">
