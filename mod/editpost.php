@@ -1,6 +1,7 @@
 <?php
 
 require_once('acl_selectors.php');
+require_once('include/crypto.php');
 
 function editpost_content(&$a) {
 
@@ -46,6 +47,15 @@ function editpost_content(&$a) {
 		'$nickname' => $a->user['nickname']
 	));
 
+
+
+	if($itm[0]['item_flags'] & ITEM_OBSCURED) {
+		$key = get_config('system','prvkey');
+		if($itm[0]['title'])
+			$itm[0]['title'] = aes_unencapsulate(json_decode($itm[0]['title'],true),$key);
+		if($itm[0]['body'])
+			$itm[0]['body'] = aes_unencapsulate(json_decode($itm[0]['body'],true),$key);
+	}
 
 	$tpl = get_markup_template("jot.tpl");
 		

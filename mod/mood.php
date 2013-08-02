@@ -38,7 +38,7 @@ function mood_init(&$a) {
 		);
 		if(count($r)) {
 			$parent_mid = $r[0]['mid'];
-			$private    = $r[0]['private'];
+			$private    = $r[0]['item_private'];
 			$allow_cid  = $r[0]['allow_cid'];
 			$allow_gid  = $r[0]['allow_gid'];
 			$deny_cid   = $r[0]['deny_cid'];
@@ -80,6 +80,7 @@ function mood_init(&$a) {
 	$arr['allow_gid']     = $allow_gid;
 	$arr['deny_cid']      = $deny_cid;
 	$arr['deny_gid']      = $deny_gid;
+	$arr['item_private']  = $private;
 	$arr['verb']          = $activity;
 	$arr['body']          = $action;
 

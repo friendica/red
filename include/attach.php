@@ -193,13 +193,13 @@ function attach_by_hash($hash,$rev = 0) {
 	$sql_extra = permissions_sql($r[0]['uid']);
 
 	// Now we'll see if we can access the attachment
-
+dbg(1);
 
 	$r = q("SELECT * FROM attach WHERE hash = '%s' and uid = %d $sql_extra LIMIT 1",
 		dbesc($hash),
 		intval($r[0]['uid'])
 	);
-
+dbg(0);
 	if(! $r) {
 		$ret['message'] =  t('Permission denied.');
 		return $ret;

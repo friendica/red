@@ -770,8 +770,6 @@ function zot_fetch($arr) {
 
 function zot_import($arr) {
 
-//	logger('zot_import: ' . print_r($arr,true), LOGGER_DATA);
-
 	$data = json_decode($arr['body'],true);
 
 	if(! $data) {
@@ -782,8 +780,6 @@ function zot_import($arr) {
 	if(array_key_exists('iv',$data)) {
 		$data = json_decode(aes_unencapsulate($data,get_config('system','prvkey')),true);
     }
-
-	logger('zot_import: data' . print_r($data,true), LOGGER_DATA);
 
 	$incoming = $data['pickup'];
 
@@ -837,10 +833,12 @@ function zot_import($arr) {
 			if($i['message']) { 
 				if($i['message']['type'] === 'activity') {
 					$arr = get_item_elements($i['message']);
+
 					if(! array_key_exists('created',$arr)) {
 						logger('Activity rejected: probable failure to lookup author/owner. ' . print_r($i['message'],true));
 						continue;
 					}
+
 					logger('Activity received: ' . print_r($arr,true), LOGGER_DATA);
 					logger('Activity recipients: ' . print_r($deliveries,true), LOGGER_DATA);
 
@@ -1021,6 +1019,18 @@ function process_delivery($sender,$arr,$deliveries,$relay) {
 		$tag_delivery = tgroup_check($channel['channel_id'],$arr);
 
 		$perm = (($arr['mid'] == $arr['parent_mid']) ? 'send_stream' : 'post_comments');
+
+		// This is our own post, possibly coming from a channel clone
+
+		if($arr['owner_xchan'] == $d['hash']) {
+			$arr['item_flags'] = $arr['item_flags'] | ITEM_WALL;
+		}
+		else {
+			// clear the wall flag if it is set
+			if($arr['item_flags'] & ITEM_WALL) {
+				$arr['item_flags'] = ($arr['item_flags'] ^ ITEM_WALL);
+			}
+		}
 
 		if((! perm_is_allowed($channel['channel_id'],$sender['hash'],$perm)) && (! $tag_delivery)) {
 			logger("permission denied for delivery {$channel['channel_id']}");
@@ -1565,7 +1575,7 @@ function build_sync_packet($uid = 0, $packet = null) {
 
 			// don't pass these elements, they should not be synchronised
 
-			$disallowed = array('channel_id','channel_account_id','channel_primary','channel_prvkey');
+			$disallowed = array('channel_id','channel_account_id','channel_primary','channel_prvkey','channel_address');
 
 			if(in_array($k,$disallowed))
 				continue;
@@ -1605,7 +1615,8 @@ function build_sync_packet($uid = 0, $packet = null) {
 
 function process_channel_sync_delivery($sender,$arr,$deliveries) {
 
-// FIXME - this will sync red structures. Eventually we need to make this application agnostic.
+// FIXME - this will sync red structures (channel, pconfig and abook). Eventually we need to make this application agnostic.
+// TODO: missing group membership changes
 
 	$result = array();
 	
@@ -1635,7 +1646,7 @@ function process_channel_sync_delivery($sender,$arr,$deliveries) {
 		}
 
 		if(array_key_exists('channel',$arr) && is_array($arr['channel']) && count($arr['channel'])) {
-			$disallowed = array('channel_id','channel_account_id','channel_primary','channel_prvkey');
+			$disallowed = array('channel_id','channel_account_id','channel_primary','channel_prvkey', 'channel_address');
 
 			$clean = array();
 			foreach($arr['channel'] as $k => $v) {
