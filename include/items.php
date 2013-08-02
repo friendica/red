@@ -1356,6 +1356,25 @@ function item_store($arr,$force_parent = false) {
 	if(array_key_exists('parent',$arr))
 		unset($arr['parent']);
 
+	$arr['mimetype']      = ((x($arr,'mimetype'))      ? notags(trim($arr['mimetype']))      : 'text/bbcode');
+	$arr['title']         = ((x($arr,'title'))         ? notags(trim($arr['title']))         : '');
+	$arr['body']          = ((x($arr,'body'))          ? trim($arr['body'])                  : '');
+
+	$arr['allow_cid']     = ((x($arr,'allow_cid'))     ? trim($arr['allow_cid'])             : '');
+	$arr['allow_gid']     = ((x($arr,'allow_gid'))     ? trim($arr['allow_gid'])             : '');
+	$arr['deny_cid']      = ((x($arr,'deny_cid'))      ? trim($arr['deny_cid'])              : '');
+	$arr['deny_gid']      = ((x($arr,'deny_gid'))      ? trim($arr['deny_gid'])              : '');
+	$arr['item_private']  = ((x($arr,'item_private'))  ? intval($arr['item_private'])        : 0 );
+	$arr['item_flags']    = ((x($arr,'item_flags'))    ? intval($arr['item_flags'])          : 0 );
+	
+	// this is a bit messy - we really need an input filter chain that temporarily undoes obscuring
+
+	if($arr['mimetype'] != 'text/html') {
+		if((strpos($arr['body'],'<') !== false) || (strpos($arr['body'],'>') !== false)) 
+			$arr['body'] = escape_tags($arr['body']);
+		if((strpos($arr['title'],'<') !== false) || (strpos($arr['title'],'>') !== false)) 
+			$arr['title'] = escape_tags($arr['title']);
+	}
 
 	// only detect language if we have text content, and if the post is private but not yet
 	// obscured, make it so.
@@ -1385,10 +1404,8 @@ function item_store($arr,$force_parent = false) {
 
 	}
 
-	// Shouldn't happen but we want to make absolutely sure it doesn't leak from a plugin.
 
-	if((strpos($arr['body'],'<') !== false) || (strpos($arr['body'],'>') !== false)) 
-		$arr['body'] = escape_tags($arr['body']);
+
 
 	if((x($arr,'object')) && is_array($arr['object'])) {
 		activity_sanitise($arr['object']);
@@ -1415,8 +1432,6 @@ function item_store($arr,$force_parent = false) {
 	$arr['commented']     = datetime_convert();
 	$arr['received']      = datetime_convert();
 	$arr['changed']       = datetime_convert();
-	$arr['mimetype']      = ((x($arr,'mimetype'))      ? notags(trim($arr['mimetype']))      : 'text/bbcode');
-	$arr['title']         = ((x($arr,'title'))         ? notags(trim($arr['title']))         : '');
 	$arr['location']      = ((x($arr,'location'))      ? notags(trim($arr['location']))      : '');
 	$arr['coord']         = ((x($arr,'coord'))         ? notags(trim($arr['coord']))         : '');
 	$arr['parent_mid']    = ((x($arr,'parent_mid'))    ? notags(trim($arr['parent_mid']))    : '');
@@ -1427,19 +1442,12 @@ function item_store($arr,$force_parent = false) {
 	$arr['tgt_type']      = ((x($arr,'tgt_type'))      ? notags(trim($arr['tgt_type']))      : '');
 	$arr['target']        = ((x($arr,'target'))        ? trim($arr['target'])                : '');
 	$arr['plink']         = ((x($arr,'plink'))         ? notags(trim($arr['plink']))         : '');
-	$arr['allow_cid']     = ((x($arr,'allow_cid'))     ? trim($arr['allow_cid'])             : '');
-	$arr['allow_gid']     = ((x($arr,'allow_gid'))     ? trim($arr['allow_gid'])             : '');
-	$arr['deny_cid']      = ((x($arr,'deny_cid'))      ? trim($arr['deny_cid'])              : '');
-	$arr['deny_gid']      = ((x($arr,'deny_gid'))      ? trim($arr['deny_gid'])              : '');
-	$arr['item_private']  = ((x($arr,'item_private'))  ? intval($arr['item_private'])        : 0 );
-	$arr['body']          = ((x($arr,'body'))          ? trim($arr['body'])                  : '');
 	$arr['attach']        = ((x($arr,'attach'))        ? notags(trim($arr['attach']))        : '');
 	$arr['app']           = ((x($arr,'app'))           ? notags(trim($arr['app']))           : '');
 	$arr['item_restrict'] = ((x($arr,'item_restrict')) ? intval($arr['item_restrict'])       : 0 );
 
 	$arr['comment_policy'] = ((x($arr,'comment_policy')) ? notags(trim($arr['comment_policy']))  : 'contacts' );
 
-	$arr['item_flags']    = ((x($arr,'item_flags'))    ? intval($arr['item_flags'])          : 0 );
 	
 	$arr['item_flags'] = $arr['item_flags'] | ITEM_UNSEEN;
 

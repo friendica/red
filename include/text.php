@@ -977,7 +977,7 @@ function link_compare($a,$b) {
 
 
 
-function prepare_body($item,$attach = false) {
+function prepare_body(&$item,$attach = false) {
 
 	$a = get_app();
 
