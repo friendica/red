@@ -785,8 +785,8 @@ class App {
 		return $this->path;
 	}
 
-	function set_account($aid) {
-		$this->account = $aid;
+	function set_account($acct) {
+		$this->account = $acct;
 	}
 
 	function get_account() {
