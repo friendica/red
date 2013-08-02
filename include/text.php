@@ -1258,7 +1258,7 @@ function feed_salmonlinks($nick) {
 
 function get_plink($item) {
 	$a = get_app();	
-	if (x($item,'plink') && ($item['private'] != 1)) {
+	if (x($item,'plink') && ($item['item_private'] != 1)) {
 		return array(
 			'href' => $item['plink'],
 			'title' => t('link to source'),

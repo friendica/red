@@ -1356,18 +1356,33 @@ function item_store($arr,$force_parent = false) {
 	if(array_key_exists('parent',$arr))
 		unset($arr['parent']);
 
-	$arr['lang'] = detect_language($arr['body']);
 
-	$allowed_languages = get_pconfig($arr['uid'],'system','allowed_languages');
+	// only detect language if we have text content, and if the post is private but not yet
+	// obscured, make it so.
+
+	if(! ($arr['item_flags'] & ITEM_OBSCURED)) {
+		$arr['lang'] = detect_language($arr['body']);
+
+		$allowed_languages = get_pconfig($arr['uid'],'system','allowed_languages');
 	
-	if((is_array($allowed_languages)) && ($arr['lang']) && (! array_key_exists($arr['lang'],$allowed_languages))) {
-		$translate = array('item' => $arr, 'from' => $arr['lang'], 'to' => $allowed_languages, 'translated' => false);
-		call_hooks('item_translate', $translate);
-		if((! $translate['translated']) && (intval(get_pconfig($arr['uid'],'system','reject_disallowed_languages')))) {
-			logger('item_store: language ' . $arr['lang'] . ' not accepted for uid ' . $arr['uid']);
-			return;
+		if((is_array($allowed_languages)) && ($arr['lang']) && (! array_key_exists($arr['lang'],$allowed_languages))) {
+			$translate = array('item' => $arr, 'from' => $arr['lang'], 'to' => $allowed_languages, 'translated' => false);
+			call_hooks('item_translate', $translate);
+			if((! $translate['translated']) && (intval(get_pconfig($arr['uid'],'system','reject_disallowed_languages')))) {
+				logger('item_store: language ' . $arr['lang'] . ' not accepted for uid ' . $arr['uid']);
+				return;
+			}
+			$arr = $translate['item'];
 		}
-		$arr = $translate['item'];
+		if($arr['item_private']) {
+			$key = get_config('system','pubkey');
+			$arr['item_flags'] = $arr['item_flags'] | ITEM_OBSCURED;
+			if($arr['title'])
+				$arr['title'] = json_encode(aes_encapsulate($arr['title'],$key));
+			if($arr['body'])
+				$arr['body']  = json_encode(aes_encapsulate($arr['body'],$key));
+		}
+
 	}
 
 	// Shouldn't happen but we want to make absolutely sure it doesn't leak from a plugin.

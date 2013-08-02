@@ -262,7 +262,7 @@ class Item extends BaseObject {
 			}
 		}
 		
-		$result['private'] = $item['private'];
+		$result['private'] = $item['item_private'];
 		$result['toplevel'] = ($this->is_toplevel() ? 'toplevel_item' : '');
 
 		if($this->is_threaded()) {
