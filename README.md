@@ -1,6 +1,7 @@
 The Red Matrix
 ==============
 
+Got Zot? 
 
 The modern web is "missing" a few important pieces which would make it much more useful. Many corporations have stepped in with products to supply these missing pieces, but with a loss of freedom and privacy and increased **centralisation**. 
 
