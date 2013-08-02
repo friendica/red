@@ -2103,9 +2103,9 @@ function tgroup_check($uid,$item) {
 	// check that the message originated elsewhere and is a top-level post
 	// or is a followup and we have already accepted the top level post
 
-	if($arr['mid'] != $arr['parent_mid']) {
+	if($item['mid'] != $item['parent_mid']) {
 		$r = q("select id from item where mid = '%s' and uid = %d limit 1",
-			dbesc($arr['parent_mid']),
+			dbesc($item['parent_mid']),
 			intval($uid)
 		);
 		if($r)
