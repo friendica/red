@@ -1,13 +1,5 @@
 var NAVTREEINDEX4 =
 {
-"include_2api_8php.html#aa1bddb580510e70cc1a7b7381667f1a3":[5,0,0,5,28],
-"include_2api_8php.html#aa40bae797bcd9ccacffdce5a3b5a1afa":[5,0,0,5,23],
-"include_2api_8php.html#aa49741342ad8ba285737eea1209a37e1":[5,0,0,5,25],
-"include_2api_8php.html#aa62b15a6bbb280e86b98132eb214013d":[5,0,0,5,51],
-"include_2api_8php.html#aa6fc3bc8c0fad1d081db0dcc456dd77f":[5,0,0,5,29],
-"include_2api_8php.html#aa9dc5350b26d6c7727d6c4b641ecba18":[5,0,0,5,3],
-"include_2api_8php.html#ab1ecb58954f722444bfe03233345cb1b":[5,0,0,5,17],
-"include_2api_8php.html#abe8e929e93f7ab134b1cb1fb30f19a76":[5,0,0,5,48],
 "include_2api_8php.html#ac2c2b18c426d697d11a830bca146be8a":[5,0,0,5,30],
 "include_2api_8php.html#ac5a64cc81d70ff3cf866093ea9721d23":[5,0,0,5,24],
 "include_2api_8php.html#acafd2899309a005fcb725289173dc7fe":[5,0,0,5,22],
@@ -118,8 +110,6 @@ var NAVTREEINDEX4 =
 "include_2photos_8php.html#ad648c0c5544fe9263409b6f6e57c6274":[5,0,0,49,6],
 "include_2photos_8php.html#aedccaf18282b26899d9549c29bd9d1b9":[5,0,0,49,5],
 "include_2photos_8php.html#af24c6aeed28ecc31ec39e7d9a1804979":[5,0,0,49,4],
-"include_2settings_8php.html":[5,0,0,59],
-"include_2settings_8php.html#ac34e479d27f32b82dd6b33542f81a6a7":[5,0,0,59,0],
 "index.html":[],
 "interfaceITemplateEngine.html":[4,0,18],
 "interfaceITemplateEngine.html#aaa7381c8becc3d1c1790b53988a0f243":[4,0,18,1],
@@ -249,5 +239,15 @@ var NAVTREEINDEX4 =
 "mod_2network_8php.html":[5,0,1,47],
 "mod_2network_8php.html#a180fce90ad11d7e0e45be094da7149ec":[5,0,1,47,1],
 "mod_2network_8php.html#a36e03af6f2efe62ecaa247509365bfad":[5,0,1,47,3],
-"mod_2network_8php.html#a43f2f29b90c5e29072c561934bc8f8b4":[5,0,1,47,0]
+"mod_2network_8php.html#a43f2f29b90c5e29072c561934bc8f8b4":[5,0,1,47,0],
+"mod_2network_8php.html#aeaa518c1a317516a3da337b88d358666":[5,0,1,47,2],
+"mod_2notify_8php.html":[5,0,1,51],
+"mod_2notify_8php.html#a94f9a6a9d4b5fd704baafff0c34f41ae":[5,0,1,51,1],
+"mod_2notify_8php.html#acdf3851688ebd6d6a575eb84ef9febe3":[5,0,1,51,0],
+"mod_2oembed_8php.html":[5,0,1,52],
+"mod_2oembed_8php.html#a9145025aaf057fb5d3f9f7011e5e1014":[5,0,1,52,0],
+"mod_2photos_8php.html":[5,0,1,58],
+"mod_2photos_8php.html#a062bed4d04d14fee8a53f4c9be673080":[5,0,1,58,2],
+"mod_2photos_8php.html#aa87382611a66ec5effdb2d78f13f5812":[5,0,1,58,0],
+"mod_2photos_8php.html#ab950295cd77626f5fe65331a87693014":[5,0,1,58,1]
 };

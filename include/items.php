@@ -491,7 +491,6 @@ function title_is_body($title, $body) {
 function get_item_elements($x) {
 
 	$arr = array();
-
 	$arr['body']         = (($x['body']) ? htmlentities($x['body'],ENT_COMPAT,'UTF-8',false) : '');
 
 	$arr['created']      = datetime_convert('UTC','UTC',$x['created']);
@@ -506,6 +505,11 @@ function get_item_elements($x) {
 		$arr['edited']   = datetime_convert();
 
 	$arr['title']        = (($x['title'])          ? htmlentities($x['title'],          ENT_COMPAT,'UTF-8',false) : '');
+
+	if(mb_strlen($arr['title']) > 255)
+		$arr['title'] = mb_substr($arr['title'],0,255);
+
+
 	$arr['app']          = (($x['app'])            ? htmlentities($x['app'],            ENT_COMPAT,'UTF-8',false) : '');
 	$arr['mid']          = (($x['message_id'])     ? htmlentities($x['message_id'],     ENT_COMPAT,'UTF-8',false) : '');
 	$arr['parent_mid']   = (($x['message_top'])    ? htmlentities($x['message_top'],    ENT_COMPAT,'UTF-8',false) : '');
@@ -527,6 +531,21 @@ function get_item_elements($x) {
 	$arr['term']         = decode_tags($x['tags']);
 
 	$arr['item_private'] = ((array_key_exists('flags',$x) && is_array($x['flags']) && in_array('private',$x['flags'])) ? 1 : 0);
+
+	$arr['item_flags'] = 0;
+
+	// if it's a private post, encrypt it in the DB.
+	// We have to do that here because we need to cleanse the input and prevent bad stuff from getting in,
+	// and we need plaintext to do that. 
+
+	if(intval($arr['item_private'])) {
+		$arr['item_flags'] = $arr['item_flags'] | ITEM_OBSCURED;
+		$key = get_config('system','pubkey');
+		if($arr['title'])
+			$arr['title'] = json_encode(aes_encapsulate($arr['title'],$key));
+		if($arr['body'])
+			$arr['body']  = json_encode(aes_encapsulate($arr['body'],$key));
+	}
 
 	if(array_key_exists('flags',$x) && in_array('deleted',$x['flags']))
 		$arr['item_restrict'] = ITEM_DELETED; 
@@ -598,6 +617,14 @@ function encode_item($item) {
 
 	$scope = map_scope($public_scope);
 	$c_scope = map_scope($comment_scope);
+
+	if(array_key_exists('item_flags',$item) && ($item['item_flags'] & ITEM_OBSCURED)) {
+		$key = get_config('system','prvkey');
+		if($item['title'])
+			$item['title'] = aes_unencapsulate(json_decode($item['title'],true),$key);
+		if($item['body'])
+			$item['body'] = aes_unencapsulate(json_decode($item['body'],true),$key);
+	}
 
 	if($item['item_restrict']  & ITEM_DELETED) {
 		$x['message_id'] = $item['mid'];
@@ -791,7 +818,13 @@ function encode_mail($item) {
 	$x = array();
 	$x['type'] = 'mail';
 
-	logger('encode_mail: ' . print_r($item,true));
+	if(array_key_exists('mail_flags',$item) && ($item['mail_flags'] & MAIL_OBSCURED)) {
+		$key = get_config('system','prvkey');
+		if($item['title'])
+			$item['title'] = aes_unencapsulate(json_decode($item['title'],true),$key);
+		if($item['body'])
+			$item['body'] = aes_unencapsulate(json_decode($item['body'],true),$key);
+	}
 
 	$x['message_id']     = $item['mid'];
 	$x['message_parent'] = $item['parent_mid'];
@@ -803,9 +836,6 @@ function encode_mail($item) {
 
 	$x['flags'] = array();
 
-	if($item['mail_flags'] & MAIL_OBSCURED)
-		$x['flags'][] = 'obscured';
-		
 	if($item['mail_flags'] & MAIL_RECALLED) {
 		$x['flags'][] = 'recalled';
 		$x['title'] = '';
@@ -832,18 +862,16 @@ function get_mail_elements($x) {
 		if(in_array('recalled',$x['flags'])) {
 			$arr['mail_flags'] |= MAIL_RECALLED;
 		}
-		if(in_array('obscured',$x['flags'])) {
-
-			$arr['mail_flags'] |= MAIL_OBSCURED;
-			$arr['body'] = base64url_decode($arr['body']);
-			$arr['body'] = htmlentities($arr['body'],ENT_COMPAT,'UTF-8',false);
-			$arr['body'] = base64url_encode($arr['body']);
-			$arr['title'] = base64url_decode($arr['title']);
-			$arr['title'] = htmlentities($arr['title'],ENT_COMPAT,'UTF-8',false);
-			$arr['title'] = base64url_encode($arr['title']);
-		}
 	}
 
+	$key = get_config('system','pubkey');
+	$arr['mail_flags'] |= MAIL_OBSCURED;
+	$arr['body'] = htmlentities($arr['body'],ENT_COMPAT,'UTF-8',false);
+	if($arr['body'])
+		$arr['body']  = json_encode(aes_encapsulate($arr['body'],$key));
+	$arr['title'] = htmlentities($arr['title'],ENT_COMPAT,'UTF-8',false);
+	if($arr['title'])
+		$arr['title'] = json_encode(aes_encapsulate($arr['title'],$key));
 
 	if($arr['created'] > datetime_convert())
 		$arr['created']  = datetime_convert();
@@ -1328,24 +1356,56 @@ function item_store($arr,$force_parent = false) {
 	if(array_key_exists('parent',$arr))
 		unset($arr['parent']);
 
-	$arr['lang'] = detect_language($arr['body']);
+	$arr['mimetype']      = ((x($arr,'mimetype'))      ? notags(trim($arr['mimetype']))      : 'text/bbcode');
+	$arr['title']         = ((x($arr,'title'))         ? notags(trim($arr['title']))         : '');
+	$arr['body']          = ((x($arr,'body'))          ? trim($arr['body'])                  : '');
 
-	$allowed_languages = get_pconfig($arr['uid'],'system','allowed_languages');
+	$arr['allow_cid']     = ((x($arr,'allow_cid'))     ? trim($arr['allow_cid'])             : '');
+	$arr['allow_gid']     = ((x($arr,'allow_gid'))     ? trim($arr['allow_gid'])             : '');
+	$arr['deny_cid']      = ((x($arr,'deny_cid'))      ? trim($arr['deny_cid'])              : '');
+	$arr['deny_gid']      = ((x($arr,'deny_gid'))      ? trim($arr['deny_gid'])              : '');
+	$arr['item_private']  = ((x($arr,'item_private'))  ? intval($arr['item_private'])        : 0 );
+	$arr['item_flags']    = ((x($arr,'item_flags'))    ? intval($arr['item_flags'])          : 0 );
 	
-	if((is_array($allowed_languages)) && ($arr['lang']) && (! array_key_exists($arr['lang'],$allowed_languages))) {
-		$translate = array('item' => $arr, 'from' => $arr['lang'], 'to' => $allowed_languages, 'translated' => false);
-		call_hooks('item_translate', $translate);
-		if((! $translate['translated']) && (intval(get_pconfig($arr['uid'],'system','reject_disallowed_languages')))) {
-			logger('item_store: language ' . $arr['lang'] . ' not accepted for uid ' . $arr['uid']);
-			return;
-		}
-		$arr = $translate['item'];
+	// this is a bit messy - we really need an input filter chain that temporarily undoes obscuring
+
+	if($arr['mimetype'] != 'text/html') {
+		if((strpos($arr['body'],'<') !== false) || (strpos($arr['body'],'>') !== false)) 
+			$arr['body'] = escape_tags($arr['body']);
+		if((strpos($arr['title'],'<') !== false) || (strpos($arr['title'],'>') !== false)) 
+			$arr['title'] = escape_tags($arr['title']);
 	}
 
-	// Shouldn't happen but we want to make absolutely sure it doesn't leak from a plugin.
+	// only detect language if we have text content, and if the post is private but not yet
+	// obscured, make it so.
 
-	if((strpos($arr['body'],'<') !== false) || (strpos($arr['body'],'>') !== false)) 
-		$arr['body'] = escape_tags($arr['body']);
+	if(! ($arr['item_flags'] & ITEM_OBSCURED)) {
+		$arr['lang'] = detect_language($arr['body']);
+
+		$allowed_languages = get_pconfig($arr['uid'],'system','allowed_languages');
+	
+		if((is_array($allowed_languages)) && ($arr['lang']) && (! array_key_exists($arr['lang'],$allowed_languages))) {
+			$translate = array('item' => $arr, 'from' => $arr['lang'], 'to' => $allowed_languages, 'translated' => false);
+			call_hooks('item_translate', $translate);
+			if((! $translate['translated']) && (intval(get_pconfig($arr['uid'],'system','reject_disallowed_languages')))) {
+				logger('item_store: language ' . $arr['lang'] . ' not accepted for uid ' . $arr['uid']);
+				return;
+			}
+			$arr = $translate['item'];
+		}
+		if($arr['item_private']) {
+			$key = get_config('system','pubkey');
+			$arr['item_flags'] = $arr['item_flags'] | ITEM_OBSCURED;
+			if($arr['title'])
+				$arr['title'] = json_encode(aes_encapsulate($arr['title'],$key));
+			if($arr['body'])
+				$arr['body']  = json_encode(aes_encapsulate($arr['body'],$key));
+		}
+
+	}
+
+
+
 
 	if((x($arr,'object')) && is_array($arr['object'])) {
 		activity_sanitise($arr['object']);
@@ -1372,8 +1432,6 @@ function item_store($arr,$force_parent = false) {
 	$arr['commented']     = datetime_convert();
 	$arr['received']      = datetime_convert();
 	$arr['changed']       = datetime_convert();
-	$arr['mimetype']      = ((x($arr,'mimetype'))      ? notags(trim($arr['mimetype']))      : 'text/bbcode');
-	$arr['title']         = ((x($arr,'title'))         ? notags(trim($arr['title']))         : '');
 	$arr['location']      = ((x($arr,'location'))      ? notags(trim($arr['location']))      : '');
 	$arr['coord']         = ((x($arr,'coord'))         ? notags(trim($arr['coord']))         : '');
 	$arr['parent_mid']    = ((x($arr,'parent_mid'))    ? notags(trim($arr['parent_mid']))    : '');
@@ -1384,19 +1442,12 @@ function item_store($arr,$force_parent = false) {
 	$arr['tgt_type']      = ((x($arr,'tgt_type'))      ? notags(trim($arr['tgt_type']))      : '');
 	$arr['target']        = ((x($arr,'target'))        ? trim($arr['target'])                : '');
 	$arr['plink']         = ((x($arr,'plink'))         ? notags(trim($arr['plink']))         : '');
-	$arr['allow_cid']     = ((x($arr,'allow_cid'))     ? trim($arr['allow_cid'])             : '');
-	$arr['allow_gid']     = ((x($arr,'allow_gid'))     ? trim($arr['allow_gid'])             : '');
-	$arr['deny_cid']      = ((x($arr,'deny_cid'))      ? trim($arr['deny_cid'])              : '');
-	$arr['deny_gid']      = ((x($arr,'deny_gid'))      ? trim($arr['deny_gid'])              : '');
-	$arr['item_private']  = ((x($arr,'item_private'))  ? intval($arr['item_private'])        : 0 );
-	$arr['body']          = ((x($arr,'body'))          ? trim($arr['body'])                  : '');
 	$arr['attach']        = ((x($arr,'attach'))        ? notags(trim($arr['attach']))        : '');
 	$arr['app']           = ((x($arr,'app'))           ? notags(trim($arr['app']))           : '');
 	$arr['item_restrict'] = ((x($arr,'item_restrict')) ? intval($arr['item_restrict'])       : 0 );
 
 	$arr['comment_policy'] = ((x($arr,'comment_policy')) ? notags(trim($arr['comment_policy']))  : 'contacts' );
 
-	$arr['item_flags']    = ((x($arr,'item_flags'))    ? intval($arr['item_flags'])          : 0 );
 	
 	$arr['item_flags'] = $arr['item_flags'] | ITEM_UNSEEN;
 
@@ -1553,7 +1604,7 @@ function item_store($arr,$force_parent = false) {
  	if(strlen($allow_cid) || strlen($allow_gid) || strlen($deny_cid) || strlen($deny_gid))
 		$private = 1;
 	else
-		$private = $arr['private']; 
+		$private = $arr['item_private']; 
 
 	// Set parent id - and also make sure to inherit the parent's ACL's.
 
@@ -1574,7 +1625,7 @@ function item_store($arr,$force_parent = false) {
 	$arr['allow_gid'] = $allow_gid;
 	$arr['deny_cid']  = $deny_cid;
 	$arr['deny_gid']  = $deny_gid;
-	$arr['private']   = $private;
+	$arr['item_private']   = $private;
 	
 	// Store taxonomy
 
@@ -2050,10 +2101,17 @@ function tgroup_check($uid,$item) {
 	$mention = false;
 
 	// check that the message originated elsewhere and is a top-level post
+	// or is a followup and we have already accepted the top level post
 
-	if($arr['mid'] != $arr['parent_mid'])
+	if($item['mid'] != $item['parent_mid']) {
+		$r = q("select id from item where mid = '%s' and uid = %d limit 1",
+			dbesc($item['parent_mid']),
+			intval($uid)
+		);
+		if($r)
+			return true;
 		return false;
-
+	}
 	if(! perm_is_allowed($uid,$item['author_xchan'],'tag_deliver'))
 		return false;
 
@@ -4712,39 +4770,52 @@ function zot_feed($uid,$observer_xchan,$mindate) {
 	if(! $mindate)
 		$mindate = '0000-00-00 00:00:00';
 
+	$mindate = dbesc($mindate);
+
 	if(! perm_is_allowed($uid,$observer_xchan,'view_stream')) {
 		return $result;
 	}
 
-// FIXME
-	$sql_extra = item_permissions_sql($uid,$remote_contact,$groups);
+	$sql_extra = item_permissions_sql($uid);
 
-	if($mindate != '0000-00-00 00:00:00')
+	if($mindate != '0000-00-00 00:00:00') {
 		$sql_extra .= " and created > '$mindate' ";
+		$limit = "";
+	}
+	else
+		$limit = " limit 0, 50 ";
 
+	$items = array();
 
-// FIXME
-	// We probably should use two queries and pick up total conversations.
-	// For now get a chunk of raw posts in ascending created order so that 
-	// hopefully the parent is imported before we see the kids. 
-	// This will fail if there are more than $limit kids and you didn't 
-	// receive the parent via direct delivery
-
-	$limit = 200;
-
-	$items = q("SELECT item.* from item
-		WHERE uid = %d AND item_restrict = 0
+	$r = q("SELECT item.*, item.id as item_id from item
+		WHERE uid = %d AND item_restrict = 0 and id = parent
 		AND (item_flags &  %d) 
-		$sql_extra ORDER BY created ASC limit 0, $limit",
+		$sql_extra ORDER BY created ASC $limit",
 		intval($uid),
 		intval(ITEM_WALL)
 	);
+	if($r) {
+
+		$parents_str = ids_to_querystr($r,'id');
+
+		$items = q("SELECT `item`.*, `item`.`id` AS `item_id` FROM `item` 
+			WHERE `item`.`uid` = %d AND `item`.`item_restrict` = 0
+			AND `item`.`parent` IN ( %s ) ",
+			intval($uid),
+			dbesc($parents_str)
+		);
+
+	}
+
 	if($items) {
 		xchan_query($items);
 		$items = fetch_post_tags($items);
-	} else {
-		$items = array();
+		require_once('include/conversation.php');
+		$items = conv_sort($items,'ascending');
+
 	}
+	else
+		$items = array();
 
 	foreach($items as $item)
 		$result[] = encode_item($item);
