@@ -2,8 +2,7 @@ Options -Indexes
 AddType application/x-java-archive .jar
 AddType audio/ogg .oga
 
-# don't allow any web access to logfiles, even after rotation/compression
-<FilesMatch "\.(out|log|gz)$">
+<FilesMatch "\.(out|log)$">
 Deny from all
 </FilesMatch>
 

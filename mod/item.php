@@ -44,7 +44,7 @@ function item_post(&$a) {
 
 	call_hooks('post_local_start', $_REQUEST);
 
-//	logger('postvars ' . print_r($_REQUEST,true), LOGGER_DATA);
+	logger('postvars ' . print_r($_REQUEST,true), LOGGER_DATA);
 
 	$api_source = ((x($_REQUEST,'api_source') && $_REQUEST['api_source']) ? true : false);
 
@@ -130,15 +130,14 @@ function item_post(&$a) {
 		//if(($parid) && ($parid != $parent))
 			$thr_parent = $parent_mid;
 
-//		if($parent_item['contact-id'] && $uid) {
-//			$r = q("SELECT * FROM `contact` WHERE `id` = %d AND `uid` = %d LIMIT 1",
-//				intval($parent_item['contact-id']),
-//				intval($uid)
-//			);
-//			if(count($r))
-//				$parent_contact = $r[0];
-//		}
-
+		if($parent_item['contact-id'] && $uid) {
+			$r = q("SELECT * FROM `contact` WHERE `id` = %d AND `uid` = %d LIMIT 1",
+				intval($parent_item['contact-id']),
+				intval($uid)
+			);
+			if(count($r))
+				$parent_contact = $r[0];
+		}
 	}
 
 	if($parent) {
@@ -203,10 +202,6 @@ function item_post(&$a) {
 		if(x($_REQUEST,'return')) 
 			goaway($a->get_baseurl() . "/" . $return_path );
 		killme();
-	}
-
-	if($observer) {
-		logger('mod_item: post accepted from ' . $observer['xchan_name'] . ' for ' . $owner_xchan['xchan_name'], LOGGER_DEBUG);
 	}
 		
 
@@ -337,6 +332,8 @@ function item_post(&$a) {
 		if($x && ($x[0]['abook_their_perms'] & PERMS_W_TAGWALL))
 			$body .= "\n\n@group+" . $x[0]['abook_id'] . "\n";
 	}
+
+
 
 	/**
 	 * fix naked links by passing through a callback to see if this is a red site
@@ -583,22 +580,6 @@ function item_post(&$a) {
 	}
 
 
-	if(mb_strlen($datarray['title']) > 255)
-		$datarray['title'] = mb_substr($datarray['title'],0,255);
-
-	if(array_key_exists('item_private',$datarray) && $datarray['item_private']) {
-		logger('Encrypting local storage');
-		$key = get_config('system','pubkey');
-		$datarray['item_flags'] = $datarray['item_flags'] | ITEM_OBSCURED;
-		if($datarray['title'])
-			$datarray['title'] = json_encode(aes_encapsulate($datarray['title'],$key));
-		if($datarray['body'])
-			$datarray['body']  = json_encode(aes_encapsulate($datarray['body'],$key));
-	}
-
-
-
-
 	if($orig_post) {
 		$r = q("UPDATE `item` SET `title` = '%s', `body` = '%s', `attach` = '%s', `edited` = '%s' WHERE `id` = %d AND `uid` = %d LIMIT 1",
 			dbesc($datarray['title']),
@@ -619,23 +600,6 @@ function item_post(&$a) {
 			intval(TERM_MENTION),
 			intval(TERM_CATEGORY)
 		);
-
-
-		if(count($post_tags)) {
-			foreach($post_tags as $tag) {
-				if(strlen(trim($tag['term']))) {
-					q("insert into term (uid,oid,otype,type,term,url) values (%d,%d,%d,%d,'%s','%s')",
-						intval($tag['uid']),
-						intval($post_id),
-						intval($tag['otype']),
-						intval($tag['type']),
-						dbesc(trim($tag['term'])),
-						dbesc(trim($tag['url']))
-					);
-				}
-			}
-		}
-
 
 
 		proc_run('php', "include/notifier.php", 'edit_post', $post_id);
@@ -684,7 +648,7 @@ function item_post(&$a) {
 				dbesc($parent_item['allow_gid']),
 				dbesc($parent_item['deny_cid']),
 				dbesc($parent_item['deny_gid']),
-				intval($parent_item['item_private']),
+				intval($parent_item['private']),
 				intval($post_id)
 			);
 

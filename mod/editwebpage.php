@@ -5,50 +5,26 @@ require_once('acl_selectors.php');
 
 function editwebpage_content(&$a) {
 
-// We first need to figure out who owns the webpage, grab it from an argument
-        $which = argv(1);
-
-// $a->get_channel() and stuff don't work here, so we've got to find the owner for ourselves.
-	$owner = q("select channel_id from channel where channel_address = '%s'",
-		dbesc($which)
-		);
-
-
-        if((local_user()) && (argc() > 2) && (argv(2) === 'view')) {
-                $which = $channel['channel_address'];
-        }
-
-
 	$o = '';
 
+	// We can do better, but for now, editing only works for your own pages, so...
+	if(! local_user()) {
+		notice( t('Permission denied.') . EOL);
+		return;
+	}
 
-// Figure out which post we're editing
-	$post_id = ((argc() > 2) ? intval(argv(2)) : 0);
-
+	$post_id = ((argc() > 1) ? intval(argv(1)) : 0);
 
 	if(! $post_id) {
 		notice( t('Item not found') . EOL);
 		return;
 	}
 
-// Now we've got a post and an owner, let's find out if we're allowed to edit it
-
-        $observer = $a->get_observer();
-        $ob_hash = (($observer) ? $observer['xchan_hash'] : '');
-
-        $perms = get_all_perms($owner,$ob_hash);
-
-        if(! $perms['write_pages']) {
-                notice( t('Permission denied.') . EOL);
-                return;
-        }
-
-
-
-// We've already figured out which item we want and whose copy we need, so we don't need anything fancy here
-        $itm = q("SELECT * FROM `item` WHERE `id` = %d and uid = %s LIMIT 1",
+	// uid and author_xchan alone should be enough - but it doesn't seem to be any more expensive to use both, so keep it in case of edge cases
+        $itm = q("SELECT * FROM `item` WHERE `id` = %d and uid = %s and author_xchan = '%s' LIMIT 1",
                 intval($post_id),
-                intval($owner)
+                intval(local_user()),
+                dbesc(get_observer_hash())
         );
 
 
@@ -85,14 +61,9 @@ function editwebpage_content(&$a) {
 
 	//$tpl = replace_macros($tpl,array('$jotplugins' => $jotplugins));	
 	
-//FIXME A return path with $_SESSION doesn't work for observer (at least, not here it doesn't).  It'll WSoD instead of loading a sensible page.  So, send folk 
-//back to the channel address until somebody figures out how to fix it - we can't send them back to webpages, because that could leak private pages they can't see
-//when ACL is done.
-
-	$rp = 'channel' . '/' . $which;
 
 	$o .= replace_macros($tpl,array(
-		'$return_path' => $rp,
+		'$return_path' => $_SESSION['return_url'],
 		'$action' => 'item',
 		'$share' => t('Edit'),
 		'$upload' => t('Upload photo'),
@@ -122,7 +93,7 @@ function editwebpage_content(&$a) {
 		'$lockstate' => $lockstate,
 		'$acl' => '', 
 		'$bang' => '',
-		'$profile_uid' => (intval($owner)),
+		'$profile_uid' => local_user(),
 		'$preview' => ((feature_enabled(local_user(),'preview')) ? t('Preview') : ''),
 		'$jotplugins' => $jotplugins,
 		'$sourceapp' => t($a->sourcename),

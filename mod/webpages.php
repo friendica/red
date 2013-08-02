@@ -60,12 +60,10 @@ $r = q("select * from item_id where uid = %d and service = 'WEBPAGE'",
 		}
 
 
-//Build the base URL for edit links
-		$url = z_root() . "/editwebpage/" . $a->profile['channel_address']; 
+
 // This isn't pretty, but it works.  Until I figure out what to do with the UI, it's Good Enough(TM).
        return $o . replace_macros(get_markup_template("webpagelist.tpl"), array(
-		'$baseurl' => $url,
-		'$edit' => t('Edit'),
+		'$editlink' => t('Edit'),
 		'$pages' => $pages,
 		'$channel' => $a->profile['channel_address'],
 		'$view' => t('View'),

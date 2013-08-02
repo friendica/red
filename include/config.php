@@ -130,12 +130,20 @@ function load_pconfig($uid,$family = '') {
 
 	if(! array_key_exists($uid,$a->config))
 		$a->config[$uid] = array();
+	if(($family) && (! array_key_exists($family,$a->config[$uid])))
+		$a->config[$uid][$family] = array();
 
-	// family is no longer used - load entire user config
-
-	$r = q("SELECT * FROM `pconfig` WHERE `uid` = %d",
-		intval($uid)
-	);
+	if($family) {
+		$r = q("SELECT * FROM `pconfig` WHERE `cat` = '%s' AND `uid` = %d",
+			dbesc($family),
+			intval($uid)
+		);
+	}
+	else {
+		$r = q("SELECT * FROM `pconfig` WHERE `uid` = %d",
+			intval($uid)
+		);
+	}
 
 	if($r) {
 		foreach($r as $rr) {
@@ -258,12 +266,20 @@ function load_xconfig($xchan,$family = '') {
 
 	if(! array_key_exists($xchan,$a->config))
 		$a->config[$xchan] = array();
+	if(($family) && (! array_key_exists($family,$a->config[$xchan])))
+		$a->config[$xchan][$family] = array();
 
-	// family is no longer used. Entire config is loaded
-
-	$r = q("SELECT * FROM `xconfig` WHERE `xchan` = '%s'",
-		dbesc($xchan)
-	);
+	if($family) {
+		$r = q("SELECT * FROM `xconfig` WHERE `cat` = '%s' AND `xchan` = '%s'",
+			dbesc($family),
+			dbesc($xchan)
+		);
+	}
+	else {
+		$r = q("SELECT * FROM `xconfig` WHERE `xchan` = '%s'",
+			dbesc($xchan)
+		);
+	}
 
 	if($r) {
 		foreach($r as $rr) {

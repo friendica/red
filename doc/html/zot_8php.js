@@ -1,13 +1,10 @@
 var zot_8php =
 [
     [ "allowed_public_recips", "zot_8php.html#a703f528ade8382cf374e4119bd6f7859", null ],
-    [ "build_sync_packet", "zot_8php.html#ac34e479d27f32b82dd6b33542f81a6a7", null ],
     [ "delete_imported_item", "zot_8php.html#adfeb9400ae6b726beec89f8f1e8fde72", null ],
     [ "import_directory_keywords", "zot_8php.html#a3bf11286c2619b4ca28e49d5b5ab374a", null ],
     [ "import_directory_profile", "zot_8php.html#a3c9e0b243ba29a7b0c050bd0b86eee32", null ],
-    [ "import_site", "zot_8php.html#a2657e141d62d5f67ad3c87651b585299", null ],
     [ "import_xchan", "zot_8php.html#ab0227978011d8601494a7651fa26acf0", null ],
-    [ "process_channel_sync_delivery", "zot_8php.html#ac301c67864917c35922257950ae0f95c", null ],
     [ "process_delivery", "zot_8php.html#a37ec13b18057634eadb071f05297f5e1", null ],
     [ "process_mail_delivery", "zot_8php.html#aa6ae96db8cbbdbb10e6876d206bbf7cc", null ],
     [ "process_profile_delivery", "zot_8php.html#a9a57b40669351c9791126b925cb7ef3b", null ],

@@ -33,7 +33,7 @@ function notification($params) {
 
 	push_lang($recip['account_language']); // should probably have a channel language
 
-	$banner     = t('Red Matrix Notification');
+	$banner     = t('Red Notification');
 	$product    = RED_PLATFORM;
 	$siteurl    = $a->get_baseurl(true);
 	$thanks     = t('Thank You,');
@@ -89,7 +89,7 @@ function notification($params) {
 			intval($recip['channel_id'])
 		);
 		if($p) {
-			logger('notification: comment already notified');
+			logger('notification comment already notified');
 			pop_lang();
 			return;
 		}
@@ -168,19 +168,6 @@ function notification($params) {
 	}
 
 	if($params['type'] == NOTIFY_TAGSELF) {
-
-		$p = null;
-		$p = q("select id from notify where link = '%s' and uid = %d limit 1",
-			dbesc($params['link']),
-			intval($recip['channel_id'])
-		);
-		if($p) {
-			logger('enotify: tag: already notified about this post');
-			pop_lang();
-			return;
-		}
-	
-
 		$subject =	sprintf( t('[Red:Notify] %s tagged you') , $sender['xchan_name']);
 		$preamble = sprintf( t('%1$s tagged you at %2$s') , $sender['xchan_name'], $sitename);
 		$epreamble = sprintf( t('%1$s [zrl=%2$s]tagged you[/zrl].') , 

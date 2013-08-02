@@ -80,7 +80,7 @@ var dir_d41ce877eb409a4791b288730010abe2 =
     [ "rsd_xml.php", "rsd__xml_8php.html", "rsd__xml_8php" ],
     [ "search.php", "search_8php.html", "search_8php" ],
     [ "search_ac.php", "search__ac_8php.html", "search__ac_8php" ],
-    [ "settings.php", "settings_8php.html", "settings_8php" ],
+    [ "settings.php", "mod_2settings_8php.html", "mod_2settings_8php" ],
     [ "setup.php", "setup_8php.html", "setup_8php" ],
     [ "share.php", "share_8php.html", "share_8php" ],
     [ "siteinfo.php", "siteinfo_8php.html", "siteinfo_8php" ],

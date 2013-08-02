@@ -1128,8 +1128,6 @@ function conv_sort($arr,$order) {
 		usort($parents,'sort_thr_created');
 	elseif(stristr($order,'commented'))
 		usort($parents,'sort_thr_commented');
-	elseif(stristr($order,'ascending'))
-		usort($parents,'sort_thr_created_rev');
 
 	if(count($parents))
 		foreach($parents as $i=>$_x)

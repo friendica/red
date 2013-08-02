@@ -9,7 +9,7 @@ function zotfeed_init(&$a) {
 
 	$mindate = (($_REQUEST['mindate']) ? datetime_convert('UTC','UTC',$_REQUEST['mindate']) : '');
 	if(! $mindate)
-		$mindate = datetime_convert('UTC','UTC', 'now - 1 month');
+		$mindate = '0000-00-00 00:00:00';
 
 	if(get_config('system','block_public') && (! get_account_id()) && (! remote_user())) {
 		$result['message'] = 'Public access denied';

@@ -205,29 +205,26 @@ function permissions_sql($owner_id,$remote_verified = false,$groups = null) {
 
 
 	else {
-		$observer = get_observer_hash();
-		if($observer) {
-			$groups = init_groups_visitor($observer);
+		$observer = get_app()->get_observer();
+		$groups = init_groups_visitor($remote_user);
 
-			$gs = '<<>>'; // should be impossible to match
+		$gs = '<<>>'; // should be impossible to match
 
-			if(is_array($groups) && count($groups)) {
-				foreach($groups as $g)
-					$gs .= '|<' . $g . '>';
-			} 
-			$sql = sprintf(
-				" AND ( NOT (deny_cid like '%s' OR deny_gid REGEXP '%s')
-				  AND ( allow_cid like '%s' OR allow_gid REGEXP '%s' OR ( allow_cid = '' AND allow_gid = '') )
-				  )
-				",
-				dbesc(protect_sprintf( '%<' . $observer . '>%')),
-				dbesc($gs),
-				dbesc(protect_sprintf( '%<' . $observer . '>%')),
-				dbesc($gs)
-			);
-		}
+		if(is_array($groups) && count($groups)) {
+			foreach($groups as $g)
+				$gs .= '|<' . $g . '>';
+		} 
+		$sql = sprintf(
+			" AND ( NOT (deny_cid like '%s' OR deny_gid REGEXP '%s')
+			  AND ( allow_cid like '%s' OR allow_gid REGEXP '%s' OR ( allow_cid = '' AND allow_gid = '') )
+			  )
+			",
+			dbesc(protect_sprintf( '%<' . $remote_user . '>%')),
+			dbesc($gs),
+			dbesc(protect_sprintf( '%<' . $remote_user . '>%')),
+			dbesc($gs)
+		);
 	}
-
 	return $sql;
 }
 
@@ -263,28 +260,25 @@ function item_permissions_sql($owner_id,$remote_verified = false,$groups = null)
 
 
 	else {
-		$observer = get_observer_hash();
+		$observer = get_app()->get_observer();
+		$groups = init_groups_visitor($remote_user);
 
-		if($observer) {
-			$groups = init_groups_visitor($observer);
+		$gs = '<<>>'; // should be impossible to match
 
-			$gs = '<<>>'; // should be impossible to match
-
-			if(is_array($groups) && count($groups)) {
-				foreach($groups as $g)
-					$gs .= '|<' . $g . '>';
-			} 
-			$sql = sprintf(
-				" AND ( NOT (deny_cid like '%s' OR deny_gid REGEXP '%s')
-				  AND ( allow_cid like '%s' OR allow_gid REGEXP '%s' OR ( allow_cid = '' AND allow_gid = '') )
-				  )
-				",
-				dbesc(protect_sprintf( '%<' . $observer . '>%')),
-				dbesc($gs),
-				dbesc(protect_sprintf( '%<' . $observer . '>%')),
-				dbesc($gs)
-			);
-		}
+		if(is_array($groups) && count($groups)) {
+			foreach($groups as $g)
+				$gs .= '|<' . $g . '>';
+		} 
+		$sql = sprintf(
+			" AND ( NOT (deny_cid like '%s' OR deny_gid REGEXP '%s')
+			  AND ( allow_cid like '%s' OR allow_gid REGEXP '%s' OR ( allow_cid = '' AND allow_gid = '') )
+			  )
+			",
+			dbesc(protect_sprintf( '%<' . $remote_user . '>%')),
+			dbesc($gs),
+			dbesc(protect_sprintf( '%<' . $remote_user . '>%')),
+			dbesc($gs)
+		);
 	}
 	return $sql;
 }

@@ -336,7 +336,6 @@ function settings_post(&$a) {
 	$expire_network_only    = ((x($_POST,'expire_network_only'))? intval($_POST['expire_network_only'])	 : 0);
 
 	$allow_location   = (((x($_POST,'allow_location')) && (intval($_POST['allow_location']) == 1)) ? 1: 0);
-
 	$publish          = (((x($_POST,'profile_in_directory')) && (intval($_POST['profile_in_directory']) == 1)) ? 1: 0);
 	$page_flags       = (((x($_POST,'page-flags')) && (intval($_POST['page-flags']))) ? intval($_POST['page-flags']) : 0);
 	$blockwall        = (((x($_POST,'blockwall')) && (intval($_POST['blockwall']) == 1)) ? 0: 1); // this setting is inverted!
@@ -460,7 +459,6 @@ function settings_post(&$a) {
 	set_pconfig(local_user(),'system','post_joingroup', $post_joingroup);
 	set_pconfig(local_user(),'system','post_profilechange', $post_profilechange);
 	set_pconfig(local_user(),'system','blocktags',$blocktags);
-
 
 /*
 	if($page_flags == PAGE_PRVGROUP) {
@@ -1019,7 +1017,7 @@ function settings_content(&$a) {
 			'$email' 	=> array('email', t('Email Address:'), $email, ''),
 			'$timezone' => array('timezone_select' , t('Your Timezone:'), select_timezone($timezone), ''),
 			'$defloc'	=> array('defloc', t('Default Post Location:'), $defloc, ''),
-			'$allowloc' => array('allow_location', t('Use Browser Location:'), ((get_pconfig(local_user(),'system','use_browser_location')) ? 1 : ''), ''),
+			'$allowloc' => array('allow_location', t('Use Browser Location:'), (intval(get_pconfig(local_user(),'system','use_browser_location')) == 1), ''),
 		
 
 			'$h_prv' 	=> t('Security and Privacy Settings'),

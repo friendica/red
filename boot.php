@@ -43,7 +43,7 @@ require_once('include/taxonomy.php');
 define ( 'RED_PLATFORM',            'Red Matrix' );
 define ( 'RED_VERSION',             trim(file_get_contents('version.inc')) . 'R');
 define ( 'ZOT_REVISION',            1     ); 
-define ( 'DB_UPDATE_VERSION',       1057  );
+define ( 'DB_UPDATE_VERSION',       1054  );
 
 define ( 'EOL',                    '<br />' . "\r\n"     );
 define ( 'ATOM_TIME',              'Y-m-d\TH:i:s\Z' );
@@ -785,8 +785,8 @@ class App {
 		return $this->path;
 	}
 
-	function set_account($acct) {
-		$this->account = $acct;
+	function set_account($aid) {
+		$this->account = $aid;
 	}
 
 	function get_account() {

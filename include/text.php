@@ -887,7 +887,7 @@ function smilies($s, $sample = false) {
 		'<img class="smiley" src="' . $a->get_baseurl() . '/images/smiley-facepalm.gif" alt=":facepalm" />',
 		'<img class="smiley" src="' . $a->get_baseurl() . '/images/like.gif" alt=":like" />',
 		'<img class="smiley" src="' . $a->get_baseurl() . '/images/dislike.gif" alt=":dislike" />',
-		'<a href="http://getzot.com"><img class="smiley" src="' . $a->get_baseurl() . '/images/rhash-16.png" alt="red#" /> the Red Matrix</a>',
+		'<img class="smiley" src="' . $a->get_baseurl() . '/images/rhash-16.png" alt="red#" /></a>',
 		'<a href="http://friendica.com">~friendica <img class="smiley" src="' . $a->get_baseurl() . '/images/friendica-16.png" alt="~friendica" /></a>'
 	);
 
@@ -977,21 +977,10 @@ function link_compare($a,$b) {
 
 
 
-function prepare_body(&$item,$attach = false) {
+function prepare_body($item,$attach = false) {
 
 	$a = get_app();
-
-
-
 	call_hooks('prepare_body_init', $item); 
-
-	if(array_key_exists('item_flags',$item) && ($item['item_flags'] & ITEM_OBSCURED)) {
-		$key = get_config('system','prvkey');
-		if($item['title'])
-			$item['title'] = aes_unencapsulate(json_decode($item['title'],true),$key);
-		if($item['body'])
-			$item['body'] = aes_unencapsulate(json_decode($item['body'],true),$key);
-	}
 
 	$s = prepare_text($item['body'],$item['mimetype']);
 
@@ -1002,7 +991,6 @@ function prepare_body(&$item,$attach = false) {
 	if(! $attach) {
 		return $s;
 	}
-
 
 	$arr = json_decode($item['attach'],true);
 	if(count($arr)) {
@@ -1258,7 +1246,7 @@ function feed_salmonlinks($nick) {
 
 function get_plink($item) {
 	$a = get_app();	
-	if (x($item,'plink') && ($item['item_private'] != 1)) {
+	if (x($item,'plink') && ($item['private'] != 1)) {
 		return array(
 			'href' => $item['plink'],
 			'title' => t('link to source'),

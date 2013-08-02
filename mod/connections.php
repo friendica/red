@@ -159,6 +159,7 @@ function connections_content(&$a) {
 
 	$sort_type = 0;
 	$o = '';
+	nav_set_selected('connections');
 
 
 	if(! local_user()) {
@@ -510,7 +511,6 @@ function connections_content(&$a) {
 				$search_flags = ABOOK_FLAG_PENDING;
 				$head = t('New');
 				$pending = true;
-				nav_set_selected('intros');
 				break;
 
 			case 'all':

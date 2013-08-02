@@ -135,8 +135,6 @@ function events_content(&$a) {
 		return;
 	}
 
-	nav_set_selected('all_events');
-
 	if((argc() > 2) && (argv(1) === 'ignore') && intval(argv(2))) {
 		$r = q("update event set ignore = 1 where id = %d and uid = %d limit 1",
 			intval(argv(2)),

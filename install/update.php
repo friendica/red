@@ -1,6 +1,6 @@
 <?php
 
-define( 'UPDATE_VERSION' , 1057 );
+define( 'UPDATE_VERSION' , 1054 );
 
 /**
  *
@@ -637,28 +637,6 @@ function update_r1052() {
 
 function update_r1053() {
 	$r = q("ALTER TABLE `profile` ADD `chandesc` TEXT NOT NULL DEFAULT '' AFTER `pdesc` ");
-	if($r)
-		return UPDATE_SUCCESS;
-	return UPDATE_FAILED;
-}
-
-function update_r1054() {
-	$r = q("ALTER TABLE `item` CHANGE `title` `title` TEXT CHARACTER SET utf8 COLLATE utf8_general_ci NOT NULL DEFAULT '' ");
-	if($r)
-		return UPDATE_SUCCESS;
-	return UPDATE_FAILED;
-}
-
-function update_r1055() {
-	$r = q("ALTER TABLE `mail` CHANGE `title` `title` TEXT CHARACTER SET utf8 COLLATE utf8_general_ci NOT NULL DEFAULT '' ");
-	if($r)
-		return UPDATE_SUCCESS;
-	return UPDATE_FAILED;
-}
-
-function update_r1056() {
-	$r = q("ALTER TABLE `xchan` ADD `xchan_instance_url` CHAR( 255 ) NOT NULL DEFAULT '' AFTER `xchan_network` ,
-ADD INDEX ( `xchan_instance_url` ) ");
 	if($r)
 		return UPDATE_SUCCESS;
 	return UPDATE_FAILED;
