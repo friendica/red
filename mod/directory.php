@@ -53,6 +53,20 @@ function directory_content(&$a) {
 	}
 	logger('mod_directory: URL = ' . $url, LOGGER_DEBUG);
 
+	$contacts = array();
+
+	if(local_user()) {
+		$x = q("select abook_xchan from abook where abook_channel = %d",
+			intval(local_user())
+		);
+		if($x) {
+			foreach($x as $xx)
+				$contacts[] = $xx['abook_xchan'];
+		}
+	}
+
+
+
 	if($url) {
 		$query = $url . '?f=' ;
 		if($search)
@@ -88,7 +102,11 @@ function directory_content(&$a) {
 						$profile_link = chanlink_url($rr['url']);
 		
 						$pdesc = (($rr['description']) ? $rr['description'] . '<br />' : '');
-	
+						$connect_link = ((local_user()) ? z_root() . '/follow?f=&url=' . urlencode($rr['address']) : ''); 		
+
+						if(in_array($rr['hash'],$contacts))
+							$connect_link = '';
+
 						$details = '';
 						if(strlen($rr['locale']))
 							$details .= $rr['locale'];
@@ -142,7 +160,8 @@ function directory_content(&$a) {
 							'marital'  => $marital,
 							'homepage' => $homepage,
 							'about' => $about,
-	
+							'conn_label' => t('Connect'),
+							'connect' => $connect_link,
 						);
 
 						$arr = array('contact' => $rr, 'entry' => $entry);
@@ -150,14 +169,13 @@ function directory_content(&$a) {
 						call_hooks('directory_item', $arr);
 			
 						$entries[] = $entry;
-
 						unset($profile);
 						unset($location);
 
 
 					}
 
-					logger('mod_directory: entries: ' . print_r($entries,true), LOGGER_DATA);
+//					logger('mod_directory: entries: ' . print_r($entries,true), LOGGER_DATA);
 
 					$o .= replace_macros($tpl, array(
 						'$search' => $search,
