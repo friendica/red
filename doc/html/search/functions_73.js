@@ -22,7 +22,7 @@ var searchData=
   ['service_5fclass_5fallows',['service_class_allows',['../plugin_8php.html#a030cec6793b909c439c0336ba39b1571',1,'plugin.php']]],
   ['service_5fclass_5ffetch',['service_class_fetch',['../plugin_8php.html#a905b54e10704b283ac64680a8abc0971',1,'plugin.php']]],
   ['set',['set',['../classCache.html#ae622b82adc1c2fb1f3e2cc4fd9688fce',1,'Cache']]],
-  ['set_5faccount',['set_account',['../classApp.html#a5c83c957ada53e170901e3c025080862',1,'App']]],
+  ['set_5faccount',['set_account',['../classApp.html#aeb1fe1c8ad9aa639909bd183ce578536',1,'App']]],
   ['set_5fapp',['set_app',['../classBaseObject.html#a0a9acda12d751692834cf6999f889223',1,'BaseObject']]],
   ['set_5fapps',['set_apps',['../classApp.html#abea5a4f77dcd53c928dc4eed86616637',1,'App']]],
   ['set_5fbaseurl',['set_baseurl',['../classApp.html#a78788f6e9d8b713b138f81e457c5cd08',1,'App']]],

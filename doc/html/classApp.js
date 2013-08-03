@@ -20,7 +20,7 @@ var classApp =
     [ "head_get_icon", "classApp.html#af17df107f2216ddf5ad2a7e0f2ba2166", null ],
     [ "head_set_icon", "classApp.html#a8863703a0305eaa45eb970dbd2046291", null ],
     [ "register_template_engine", "classApp.html#abf46a653d8499e7c253cc1be894a6d83", null ],
-    [ "set_account", "classApp.html#a5c83c957ada53e170901e3c025080862", null ],
+    [ "set_account", "classApp.html#aeb1fe1c8ad9aa639909bd183ce578536", null ],
     [ "set_apps", "classApp.html#abea5a4f77dcd53c928dc4eed86616637", null ],
     [ "set_baseurl", "classApp.html#a78788f6e9d8b713b138f81e457c5cd08", null ],
     [ "set_channel", "classApp.html#a89e9feb2bfb5253883a9720beaffe876", null ],
