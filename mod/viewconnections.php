@@ -63,18 +63,19 @@ function viewconnections_content(&$a) {
 	foreach($r as $rr) {
 
 	    $url = zid($rr['xchan_url']);
-
-		$contacts[] = array(
-			'id' => $rr['abook_id'],
-			'img_hover' => sprintf( t('Visit %s\'s profile [%s]'), $rr['xchan_name'], $rr['xchan_url']),
-			'thumb' => $rr['xchan_photo_m'], 
-			'name' => substr($rr['xchan_name'],0,20),
-			'username' => $rr['xchan_addr'],
-			'link' => $url,
-			'sparkle' => '',
-			'itemurl' => $rr['url'],
-			'network' => '',
-		);
+		if($url) {
+			$contacts[] = array(
+				'id' => $rr['abook_id'],
+				'img_hover' => sprintf( t('Visit %s\'s profile [%s]'), $rr['xchan_name'], $rr['xchan_url']),
+				'thumb' => $rr['xchan_photo_m'], 
+				'name' => substr($rr['xchan_name'],0,20),
+				'username' => $rr['xchan_addr'],
+				'link' => $url,
+				'sparkle' => '',
+				'itemurl' => $rr['url'],
+				'network' => '',
+			);
+		}
 	}
 
 

@@ -624,26 +624,24 @@ function connections_content(&$a) {
 	if(count($r)) {
 
 		foreach($r as $rr) {
-
-			$contacts[] = array(
-				'img_hover' => sprintf( t('%1$s [%2$s]'),$rr['xchan_name'],$rr['xchan_url']),
-				'edit_hover' => t('Edit contact'),
-				'photo_menu' => contact_photo_menu($rr),
-				'id' => $rr['abook_id'],
-				'alt_text' => $alt_text,
-				'dir_icon' => $dir_icon,
-				'thumb' => $rr['xchan_photo_m'], 
-				'name' => $rr['xchan_name'],
-				'username' => $rr['xchan_name'],
-				'sparkle' => $sparkle,
-				'link' => z_root() . '/connections/' . $rr['abook_id'],
-				'url' => $rr['xchan_url'],
-				'network' => network_to_name($rr['network']),
-			);
+			if($rr['xchan_url']) {
+				$contacts[] = array(
+					'img_hover' => sprintf( t('%1$s [%2$s]'),$rr['xchan_name'],$rr['xchan_url']),
+					'edit_hover' => t('Edit contact'),
+					'photo_menu' => contact_photo_menu($rr),
+					'id' => $rr['abook_id'],
+					'alt_text' => $alt_text,
+					'dir_icon' => $dir_icon,
+					'thumb' => $rr['xchan_photo_m'], 
+					'name' => $rr['xchan_name'],
+					'username' => $rr['xchan_name'],
+					'sparkle' => $sparkle,
+					'link' => z_root() . '/connections/' . $rr['abook_id'],
+					'url' => $rr['xchan_url'],
+					'network' => network_to_name($rr['network']),
+				);
+			}
 		}
-
-		
-
 	}
 	
 
