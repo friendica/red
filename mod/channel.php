@@ -2,11 +2,18 @@
 
 function channel_init(&$a) {
 
+	$which = null;
 	if(argc() > 1)
 		$which = argv(1);
-	else {
-		notice( t('Requested profile is not available.') . EOL );
-		$a->error = 404;
+	if(! $which) {
+		if(local_user()) {
+			$channel = $a->get_channel();
+			if($channel && $channel['channel_address'])
+			$which = $channel['channel_address'];
+		}
+	}
+	if(! $which) {
+		notice( t('You must be logged in to see this page.') . EOL );
 		return;
 	}
 
