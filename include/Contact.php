@@ -317,7 +317,7 @@ function contact_remove($channel_id, $abook_id) {
 		intval($channel_id)
 	);
 
-	$r = q("delete from mail where ( from_xchan = '%s' or to_xchan = '%s' ) and uid = %d ",
+	$r = q("delete from mail where ( from_xchan = '%s' or to_xchan = '%s' ) and channel_id = %d ",
 		dbesc($abook['abook_xchan']),
 		dbesc($abook['abook_xchan']),
 		intval($channel_id)
