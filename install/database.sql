@@ -386,28 +386,6 @@ CREATE TABLE IF NOT EXISTS `hubloc` (
   KEY `hubloc_connected` (`hubloc_connected`)
 ) ENGINE=MyISAM  DEFAULT CHARSET=utf8;
 
-CREATE TABLE IF NOT EXISTS `intro` (
-  `id` int(10) unsigned NOT NULL AUTO_INCREMENT,
-  `uid` int(10) unsigned NOT NULL,
-  `fid` int(11) NOT NULL DEFAULT '0',
-  `contact-id` int(11) NOT NULL,
-  `knowyou` tinyint(1) NOT NULL,
-  `duplex` tinyint(1) NOT NULL DEFAULT '0',
-  `note` text NOT NULL,
-  `hash` char(255) NOT NULL,
-  `datetime` datetime NOT NULL,
-  `blocked` tinyint(1) NOT NULL DEFAULT '1',
-  `ignore` tinyint(1) NOT NULL DEFAULT '0',
-  PRIMARY KEY (`id`),
-  KEY `uid` (`uid`),
-  KEY `fid` (`fid`),
-  KEY `hash` (`hash`),
-  KEY `datetime` (`datetime`),
-  KEY `blocked` (`blocked`),
-  KEY `ignore` (`ignore`),
-  KEY `contact-id` (`contact-id`)
-) ENGINE=MyISAM  DEFAULT CHARSET=utf8;
-
 CREATE TABLE IF NOT EXISTS `issue` (
   `issue_id` int(10) unsigned NOT NULL AUTO_INCREMENT,
   `issue_created` datetime NOT NULL DEFAULT '0000-00-00 00:00:00',

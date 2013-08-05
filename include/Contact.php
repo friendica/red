@@ -115,6 +115,49 @@ function user_remove($uid) {
 
 }
 
+function account_remove($account_id) {
+
+	if(! intval($account_id)) {
+		logger('account_remove: no account.');
+		return false;
+	}
+
+	// Don't let anybody nuke the only admin account.
+
+	$r = q("select account_id from account where (account_roles & %d)",
+		intval(ACCOUNT_ROLE_ADMIN)
+	);
+
+	if($r !== false && count($r) == 1 && $r[0]['account_id'] == $account_id) {
+		logger("Unable to remove the only remaining admin account");
+		return false;
+	}
+
+	$r = q("select * from account where account_id = %d limit 1",
+		intval($account_id)
+	);
+
+	if(! $r) {
+		logger('account_remove: No account with id: ' . $account_id);
+		return false;
+	}
+
+	$x = q("select channel_id from channel where channel_account_id = %d",
+		intval($account_id)
+	);
+	if($x) {
+		foreach($x as $xx) {
+			channel_remove($xx['channel_id']);
+		}
+	}
+
+	$r = q("delete from account where account_id = %d limit 1",
+		intval($account_id)
+	);
+
+	return $r;
+
+}
 
 function channel_remove($channel_id) {
 
