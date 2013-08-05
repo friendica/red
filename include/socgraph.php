@@ -274,6 +274,7 @@ function suggestion_query($uid, $myxchan, $start = 0, $limit = 80) {
 		intval($limit)
 	);
 
+
 /*
 	$r = q("SELECT count(xlink.xchan) as `total`, gcontact.* from gcontact 
 		left join glink on glink.gcid = gcontact.id 
