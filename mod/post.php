@@ -309,17 +309,26 @@ function post_post(&$a) {
 	if(array_key_exists('recipients',$data))
 		$recipients = $data['recipients'];
 
-
 	if($msgtype === 'purge') {
 		if($recipients) {
 			// basically this means "unfriend"
 			foreach($recipients as $recip) {
-
-
-
+				$r = q("select channel.*,xchan.* from channel 
+					left join xchan on channel_hash = xchan_hash
+					where channel_guid = '%s' and channel_guid_sig = '%s' limit 1",
+					dbesc($recip['guid']),
+					dbesc($recip['guid_sig'])
+				);
+				if($r) {
+					$r = q("select abook_id from abook where uid = %d and abook_xchan = '%s' limit 1",
+						intval($r[0]['channel_id']),
+						dbesc(base64url_encode(hash('whirlpool',$sender['guid'] . $sender['guid_sig'], true)))
+					);
+					if($r) {
+						contact_remove($r[0]['channel_id'],$r[0]['abook_id']);
+					}
+				}
 			}
-
-
 		}
 		else {
 			// Unfriend everybody - basically this means the channel has committed suicide

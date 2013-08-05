@@ -263,8 +263,6 @@ function remove_all_xchan_resources($xchan, $channel_id = 0) {
 }
 
 
-
-
 function contact_remove($channel_id, $abook_id) {
 
 	if((! $channel_id) || (! $abook_id))
@@ -293,31 +291,37 @@ function contact_remove($channel_id, $abook_id) {
 	if($abook['abook_flags'] & ABOOK_FLAG_SELF)
 		return false;
 
-	q("delete from item where author_xchan = '%s' and uid = %d",
+
+	$r = q("select * from item where author_xchan = '%s' and uid = %d",
 		dbesc($abook['abook_xchan']),
 		intval($channel_id)
 	);
+	if($r) {
+		foreach($r as $rr) {
+			drop_item($rr,false);
+		}
+	}
 	
 	q("delete from abook where abook_id = %d and abook_channel = %d limit 1",
 		intval($abook['abook_id']),
 		intval($channel_id)
 	);
 
-/*
-// FIXME
-	q("DELETE FROM `photo` WHERE `contact-id` = %d ",
-		intval($id)
+	$r = q("delete from event where event_xchan = '%s' and uid = %d",
+		dbesc($abook['abook_xchan']),
+		intval($channel_id)
 	);
-	q("DELETE FROM `mail` WHERE `contact-id` = %d ",
-		intval($id)
+
+	$r = q("delete from group_member where xchan = '%s' and uid = %d",
+		dbesc($abook['abook_xchan']),
+		intval($channel_id)
 	);
-	q("DELETE FROM `event` WHERE `cid` = %d ",
-		intval($id)
+
+	$r = q("delete from mail where ( from_xchan = '%s' or to_xchan = '%s' ) and uid = %d ",
+		dbesc($abook['abook_xchan']),
+		dbesc($abook['abook_xchan']),
+		intval($channel_id)
 	);
-	q("DELETE FROM `queue` WHERE `cid` = %d ",
-		intval($id)
-	);
-*/
 
 	return true;
 }
