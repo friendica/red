@@ -118,7 +118,15 @@ function poco_load($xchan = '',$url = null) {
 					if($j)
 						import_xchan($j);
 				}
+				$x = q("select xchan_hash from xchan where xchan_hash = '%s' limit 1",
+					dbesc($hash)
+				);
+				if(! $x)
+					continue;
+
 			}
+			else
+				continue;
 		}
 	
 		$r = q("select * from xlink where xlink_xchan = '%s' and xlink_link = '%s' limit 1",
