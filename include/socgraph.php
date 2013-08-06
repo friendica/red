@@ -342,7 +342,7 @@ function update_suggestions() {
 		$j = json_decode($ret['body'],true);
 		if($j && $j['success']) {
 			foreach($j['entries'] as $host) {
-				poco_load('',$host . '/poco');
+				poco_load('',$host['url'] . '/poco');
 			}
 		}
 	}
