@@ -92,8 +92,8 @@ function item_redir_and_replace_images($body, $images, $cid) {
 function localize_item(&$item){
 
 	if (activity_match($item['verb'],ACTIVITY_LIKE) || activity_match($item['verb'],ACTIVITY_DISLIKE)){
-
-		$obj= json_decode($item['object'],true);
+		
+		$obj = json_decode_plus($item['object']);
 		
 		if($obj['author'] && $obj['author']['link'])
 			$author_link = get_rel_link($obj['author']['link'],'alternate');
@@ -106,7 +106,7 @@ function localize_item(&$item){
 
 		$Bphoto = '';
 
-		switch($obj->type) {
+		switch($obj['type']) {
 			case ACTIVITY_OBJ_PHOTO:
 				$post_type = t('photo');
 				break;
@@ -142,12 +142,10 @@ function localize_item(&$item){
 				break;
 		}
 
-
 		// If we couldn't parse something useful, don't bother translating.
 		// We need something better than zid here, probably magic_link(), but it needs writing
 
 		if($author_link && $author_name && $item_url) {
-			
 			$author	 = '[zrl=' . chanlink_url($item['author']['xchan_url']) . ']' . $item['author']['xchan_name'] . '[/zrl]';
 			$objauthor =  '[zrl=' . chanlink_url($author_link) . ']' . $author_name . '[/zrl]';
 		

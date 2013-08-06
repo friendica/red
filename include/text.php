@@ -1717,3 +1717,11 @@ function jindent($json) {
 }
 
 
+function json_decode_plus($s) {
+
+	$x = json_decode($s,true);
+	if(! $x)
+		$x = json_decode(str_replace(array('\\"','\\\\'),array('"','\\'),$s),true);
+	return $x;	
+
+}

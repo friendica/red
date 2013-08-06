@@ -50,13 +50,13 @@ function notification($params) {
 
 	$additional_mail_header = "";
 
-
 	if(array_key_exists('item',$params)) {
 		// if it's a normal item...
 		if(array_key_exists('verb',$params['item'])) {
 			require_once('include/conversation.php');
 			// localize_item() alters the original item so make a copy first
 			$i = $params['item'];
+			logger('calling localize');
 			localize_item($i);
 			$title = $i['title'];
 			$body = $i['body'];
@@ -69,6 +69,7 @@ function notification($params) {
 	else {
 		$title = $body = '';
 	}
+
 
 	// e.g. "your post", "David's photo", etc.
 	$possess_desc = t('%s <!item_type!>');
