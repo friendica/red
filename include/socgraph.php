@@ -66,7 +66,6 @@ function poco_load($xchan = '',$url = null) {
 	$total = 0;
 	foreach($j['entry'] as $entry) {
 
-		$total ++;
 		$profile_url = '';
 		$profile_photo = '';
 		$address = '';
@@ -121,14 +120,18 @@ function poco_load($xchan = '',$url = null) {
 				$x = q("select xchan_hash from xchan where xchan_hash = '%s' limit 1",
 					dbesc($hash)
 				);
-				if(! $x)
+				if(! $x) {
 					continue;
-
+				}
 			}
-			else
+			else {
 				continue;
+			}
 		}
 	
+		$total ++;
+
+
 		$r = q("select * from xlink where xlink_xchan = '%s' and xlink_link = '%s' limit 1",
 			dbesc($xchan),
 			dbesc($hash)
