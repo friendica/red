@@ -2054,16 +2054,20 @@ function tag_deliver($uid,$item_id) {
 	));
 
 
-	if(! perm_is_allowed($uid,$item['author_xchan'],'tag_deliver'))
+	if(! perm_is_allowed($uid,$item['author_xchan'],'tag_deliver')) {
+		logger('tag_delivery denied for uid ' . $uid . ' and xchan ' . $item['author_xchan']);
 		return;
+	}
 
 
 	// tgroup delivery - setup a second delivery chain
 	// prevent delivery looping - only proceed
 	// if the message originated elsewhere and is a top-level post
 
-	if(($item['item_flags'] & ITEM_WALL) || ($item['item_flags'] & ITEM_ORIGIN) || (!($item['item_flags'] & ITEM_THREAD_TOP)) || ($item['id'] != $item['parent']))
+	if(($item['item_flags'] & ITEM_WALL) || ($item['item_flags'] & ITEM_ORIGIN) || (!($item['item_flags'] & ITEM_THREAD_TOP)) || ($item['id'] != $item['parent'])) {
+		logger('tag_deliver: item was local or a comment. rejected.');
 		return;
+	}
 
 	logger('tag_deliver: creating second delivery chain.');
 
