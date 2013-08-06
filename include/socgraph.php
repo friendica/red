@@ -50,7 +50,12 @@ function poco_load($xchan = '',$url = null) {
 	$s = z_fetch_url($url);
 
 	if(! $s['success']) {
-		logger('poco_load: returns ' . print_r($s,true));
+		if($s['return_code'] == 401)
+			logger('poco_load: protected');
+		elseif($s['return_code'] == 404)
+			logger('poco_load: nothing found');
+		else
+			logger('poco_load: returns ' . print_r($s,true));
 		return;
 	}
 
