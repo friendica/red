@@ -91,10 +91,6 @@ function item_redir_and_replace_images($body, $images, $cid) {
 
 function localize_item(&$item){
 
-	$extracted = item_extract_images($item['body']);
-	if($extracted['images'])
-		$item['body'] = item_redir_and_replace_images($extracted['body'], $extracted['images'], $item['contact-id']);
-
 	if (activity_match($item['verb'],ACTIVITY_LIKE) || activity_match($item['verb'],ACTIVITY_DISLIKE)){
 
 		$obj= json_decode($item['object'],true);

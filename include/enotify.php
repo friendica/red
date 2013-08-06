@@ -50,11 +50,21 @@ function notification($params) {
 
 	$additional_mail_header = "";
 
-	// We really should pass this through localize_item - but only if we have a complete item. We may only have a couple of elements.
 
 	if(array_key_exists('item',$params)) {
-		$title = $params['item']['title'];
-		$body = $params['item']['body'];
+		// if it's a normal item...
+		if(array_key_exists('verb',$params['item'])) {
+			require_once('include/conversation.php');
+			// localize_item() alters the original item so make a copy first
+			$i = $params['item'];
+			localize_item($i);
+			$title = $i['title'];
+			$body = $i['body'];
+		}
+		else {
+			$title = $params['item']['title'];
+			$body = $params['item']['body'];
+		}
 	}
 	else {
 		$title = $body = '';
