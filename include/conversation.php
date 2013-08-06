@@ -174,7 +174,7 @@ function localize_item(&$item){
 		$Alink = $item['author']['xchan_url'];
 
 
-		$obj= json_decode($item['object'],true);
+		$obj= json_decode_plus($item['object']);
 		
 		$Blink = $Bphoto = '';
 
@@ -203,7 +203,7 @@ function localize_item(&$item){
 		$Alink = $item['author']['xchan_url'];
 
 
-		$obj= json_decode($item['object'],true);
+		$obj= json_decode_plus($item['object']);
 		
 		$Blink = $Bphoto = '';
 

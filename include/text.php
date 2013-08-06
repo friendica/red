@@ -988,9 +988,9 @@ function prepare_body(&$item,$attach = false) {
 	if(array_key_exists('item_flags',$item) && ($item['item_flags'] & ITEM_OBSCURED)) {
 		$key = get_config('system','prvkey');
 		if($item['title'])
-			$item['title'] = aes_unencapsulate(json_decode($item['title'],true),$key);
+			$item['title'] = aes_unencapsulate(json_decode_plus($item['title']),$key);
 		if($item['body'])
-			$item['body'] = aes_unencapsulate(json_decode($item['body'],true),$key);
+			$item['body'] = aes_unencapsulate(json_decode_plus($item['body']),$key);
 	}
 
 	$s = prepare_text($item['body'],$item['mimetype']);
@@ -1004,7 +1004,7 @@ function prepare_body(&$item,$attach = false) {
 	}
 
 
-	$arr = json_decode($item['attach'],true);
+	$arr = json_decode_plus($item['attach']);
 	if(count($arr)) {
 		$s .= '<div class="body-attach">';
 		foreach($arr as $r) {

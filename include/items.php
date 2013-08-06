@@ -621,9 +621,9 @@ function encode_item($item) {
 	if(array_key_exists('item_flags',$item) && ($item['item_flags'] & ITEM_OBSCURED)) {
 		$key = get_config('system','prvkey');
 		if($item['title'])
-			$item['title'] = aes_unencapsulate(json_decode($item['title'],true),$key);
+			$item['title'] = aes_unencapsulate(json_decode_plus($item['title']),$key);
 		if($item['body'])
-			$item['body'] = aes_unencapsulate(json_decode($item['body'],true),$key);
+			$item['body'] = aes_unencapsulate(json_decode_plus($item['body']),$key);
 	}
 
 	if($item['item_restrict']  & ITEM_DELETED) {
@@ -655,11 +655,11 @@ function encode_item($item) {
 	$x['owner']          = encode_item_xchan($item['owner']);
 	$x['author']         = encode_item_xchan($item['author']);
 	if($item['object'])
-		$x['object']     = json_decode($item['object'],true);
+		$x['object']     = json_decode_plus($item['object']);
 	if($item['target'])
-		$x['target']     = json_decode($item['target'],true);
+		$x['target']     = json_decode_plus($item['target']);
 	if($item['attach'])
-		$x['attach']     = json_decode($item['attach'],true);
+		$x['attach']     = json_decode_plus($item['attach']);
 	if($y = encode_item_flags($item))
 		$x['flags']      = $y;
 
@@ -821,9 +821,9 @@ function encode_mail($item) {
 	if(array_key_exists('mail_flags',$item) && ($item['mail_flags'] & MAIL_OBSCURED)) {
 		$key = get_config('system','prvkey');
 		if($item['title'])
-			$item['title'] = aes_unencapsulate(json_decode($item['title'],true),$key);
+			$item['title'] = aes_unencapsulate(json_decode_plus($item['title']),$key);
 		if($item['body'])
-			$item['body'] = aes_unencapsulate(json_decode($item['body'],true),$key);
+			$item['body'] = aes_unencapsulate(json_decode_plus($item['body']),$key);
 	}
 
 	$x['message_id']     = $item['mid'];
@@ -1939,14 +1939,14 @@ function tag_deliver($uid,$item_id) {
 		logger('tag_deliver: community tag activity received');
 
 		if(($item['owner_xchan'] === $u[0]['channel_hash']) && (! get_pconfig($u[0]['channel_id'],'system','blocktags'))) {
-			$j_tgt = json_decode($item['target'],true);
+			$j_tgt = json_decode_plus($item['target']);
 			if($j_tgt && $j_tgt['id']) {
 				$p = q("select * from item where mid = '%s' and uid = %d limit 1",
 					dbesc($j_tgt['id']),
 					intval($u[0]['channel_id'])
 				);
 				if($p) {
-					$j_obj = json_decode($item['object'],true);
+					$j_obj = json_decode_plus($item['object']);
 					logger('tag_deliver: tag object: ' . print_r($j_obj,true), LOGGER_DATA);
 					if($j_obj && $j_obj['id'] && $j_obj['title']) {
 						if(is_array($j_obj['link']))

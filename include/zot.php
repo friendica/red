@@ -1153,9 +1153,9 @@ function remove_community_tag($sender,$arr,$uid) {
 	$i = $r[0];
 
 	if($i['target'])
-		$i['target'] = json_decode($i['target'],true);
+		$i['target'] = json_decode_plus($i['target']);
 	if($i['object'])
-		$i['object'] = json_decode($i['object'],true);
+		$i['object'] = json_decode_plus($i['object']);
 
 	if(! ($i['target'] && $i['object'])) {
 		logger('remove_community_tag: no target/object');

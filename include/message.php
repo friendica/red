@@ -181,9 +181,9 @@ function private_messages_list($uid, $mailbox = '', $start = 0, $numitems = 0) {
 			$key = get_config('system','prvkey');
 
 			if($r[$k]['title'])
-				$r[$k]['title'] = aes_unencapsulate(json_decode($r[$k]['title'],true),$key);
+				$r[$k]['title'] = aes_unencapsulate(json_decode_plus($r[$k]['title']),$key);
 			if($r[$k]['body'])
-				$r[$k]['body'] = aes_unencapsulate(json_decode($r[$k]['body'],true),$key);
+				$r[$k]['body'] = aes_unencapsulate(json_decode_plus($r[$k]['body']),$key);
 		}
 	}
 
@@ -220,9 +220,9 @@ function private_messages_fetch_message($channel_id, $messageitem_id, $updatesee
 		if($messages[$k]['mail_flags'] & MAIL_OBSCURED) {
 			$key = get_config('system','prvkey');
 			if($messages[$k]['title'])
-				$messages[$k]['title'] = aes_unencapsulate(json_decode($messages[$k]['title'],true),$key);
+				$messages[$k]['title'] = aes_unencapsulate(json_decode_plus($messages[$k]['title']),$key);
 			if($messages[$k]['body'])
-				$messages[$k]['body'] = aes_unencapsulate(json_decode($messages[$k]['body'],true),$key);
+				$messages[$k]['body'] = aes_unencapsulate(json_decode_plus($messages[$k]['body']),$key);
 		}
 	}
 
@@ -308,9 +308,9 @@ function private_messages_fetch_conversation($channel_id, $messageitem_id, $upda
 		if($messages[$k]['mail_flags'] & MAIL_OBSCURED) {
 			$key = get_config('system','prvkey');
 			if($messages[$k]['title'])
-				$messages[$k]['title'] = aes_unencapsulate(json_decode($messages[$k]['title'],true),$key);
+				$messages[$k]['title'] = aes_unencapsulate(json_decode_plus($messages[$k]['title']),$key);
 			if($messages[$k]['body'])
-				$messages[$k]['body'] = aes_unencapsulate(json_decode($messages[$k]['body'],true),$key);
+				$messages[$k]['body'] = aes_unencapsulate(json_decode_plus($messages[$k]['body']),$key);
 		}
 	}
 
