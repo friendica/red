@@ -9,7 +9,7 @@ msgstr ""
 "Project-Id-Version: Red Matrix\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2013-08-02 00:01-0700\n"
-"PO-Revision-Date: 2013-08-06 11:20+0000\n"
+"PO-Revision-Date: 2013-08-06 12:33+0000\n"
 "Last-Translator: alexej <info@pixelbits.de>\n"
 "Language-Team: Russian (http://www.transifex.com/projects/p/red-matrix/language/ru/)\n"
 "MIME-Version: 1.0\n"
@@ -1239,19 +1239,19 @@ msgstr "Новое сообщение"
 
 #: ../../include/nav.php:169 ../../mod/events.php:348 ../../boot.php:2097
 msgid "Events"
-msgstr "События"
+msgstr "Мероприятия"
 
 #: ../../include/nav.php:169
 msgid "Event Calendar"
-msgstr "Календарь событий"
+msgstr "Календарь мероприятий"
 
 #: ../../include/nav.php:170
 msgid "See all events"
-msgstr "Показать все события"
+msgstr "Показать все мероприятия"
 
 #: ../../include/nav.php:171
 msgid "Mark all events seen"
-msgstr "Отметить все события как видел"
+msgstr "Отметить все мероприятия как видел"
 
 #: ../../include/nav.php:173
 msgid "Channel Select"
@@ -2004,7 +2004,7 @@ msgstr "фото"
 #: ../../include/text.php:1463 ../../include/conversation.php:118
 #: ../../mod/tagger.php:49
 msgid "event"
-msgstr "событие"
+msgstr "мероприятие"
 
 #: ../../include/text.php:1466 ../../include/conversation.php:143
 #: ../../mod/like.php:103 ../../mod/subthread.php:89 ../../mod/tagger.php:53
@@ -2656,11 +2656,11 @@ msgstr ""
 
 #: ../../mod/events.php:303
 msgid "Edit event"
-msgstr "Редактировать событие"
+msgstr "Редактировать мероприятие"
 
 #: ../../mod/events.php:349
 msgid "Create New Event"
-msgstr "Создать новое событие"
+msgstr "Создать новое мероприятие"
 
 #: ../../mod/events.php:350
 msgid "Previous"
@@ -2676,7 +2676,7 @@ msgstr "часы:минуты"
 
 #: ../../mod/events.php:435
 msgid "Event details"
-msgstr "Детали события"
+msgstr "Детали мероприятия"
 
 #: ../../mod/events.php:436
 #, php-format
@@ -2713,7 +2713,7 @@ msgstr "Название:"
 
 #: ../../mod/events.php:454
 msgid "Share this event"
-msgstr "Поделиться этим событием"
+msgstr "Поделиться этим мероприятием"
 
 #: ../../mod/thing.php:109
 msgid "Object store: failed"
