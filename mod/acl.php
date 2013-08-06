@@ -258,7 +258,7 @@ function navbar_complete(&$a) {
 		$directory = find_upstream_directory($dirmode);
 
 		if($directory) {
-			$url = $directory['url'];
+			$url = $directory['url'] . '/dirsearch';
 		}
 		else {
 			$url = DIRECTORY_FALLBACK_MASTER . '/dirsearch';

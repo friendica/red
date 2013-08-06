@@ -82,10 +82,12 @@ function poller_run($argv, $argc){
 			sync_directories($dirmode);
 		}
 
-//		update_suggestions();
 
 		set_config('system','last_expire_day',$d2);
 		proc_run('php','include/expire.php');
+
+		proc_run('php','include/cli_suggest.php');
+
 	}
 
 	// update any photos which didn't get imported properly
