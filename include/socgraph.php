@@ -326,9 +326,19 @@ function update_suggestions() {
 	if(! $url)
 		return;
 
+
+
 	$ret = z_fetch_url($url);
 
 	if($ret['success']) {
+
+		// We will grab fresh data once a day via the poller. Remove anything over a week old because
+		// the targets may have changed their preferences and don't want to be suggested - and they 
+		// may have simply gone away. 
+
+		$r = q("delete from xlink where xlink_xchan = '' and xlink_updated < UTC_TIMESTAMP() - INTERVAL 7 DAY");
+
+
 		$j = json_decode($ret['body'],true);
 		if($j && $j['success']) {
 			foreach($j['entries'] as $host) {
