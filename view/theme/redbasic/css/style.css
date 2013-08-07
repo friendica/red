@@ -712,12 +712,8 @@ footer {
 	float: left;
 	margin-bottom: 20px;
 }
-#settings-normal,
-#settings-soapbox,
-#settings-freelove,
-#settings-community {
-	float: left;
-}
+
+
 #settings-notifications label {
 	margin-left: 20px;
 }
@@ -725,10 +721,7 @@ footer {
 	font-weight: bold;
 	margin-bottom: 15px;
 }
-#settings-pagetype-desc {
-	color: #666666;
-	margin-bottom: 15px;
-}
+
 
 #profile-in-dir-yes-label,
 #profile-in-dir-no-label,
@@ -779,24 +772,6 @@ footer {
 	float: left;
 	margin-bottom: 35px;
 }
-#settings-normal-label,
-#settings-soapbox-label,
-#settings-community-label,
-#settings-freelove-label {
-	float: left;
-	width: 200px;
-}
-#settings-normal-desc,
-#settings-soapbox-desc,
-#settings-community-desc,
-#settings-freelove-desc {
-	/*float: left;
-	margin-left: 75px;*/
-    clear: left;
-    color: #666666;
-    display: block;
-    margin-bottom: 20px	
-}
 
 #profile-edit-profile-name-end,
 #profile-edit-name-end,
@@ -823,11 +798,7 @@ footer {
 #hide-wall-break,
 #hide-wall-end,
 #hide-friends-break,
-#hide-friends-end,
-#settings-normal-break,
-#settings-soapbox-break,
-#settings-community-break,
-#settings-freelove-break {
+#hide-friends-end {
 	clear: both;
 }
 
@@ -921,6 +892,7 @@ footer {
 #network-bmark-link {
 	margin-top: 10px;
 }
+
 .thread-wrapper .wall-item-comment-wrapper {
 	margin-left: 50px;
 }
@@ -1438,113 +1410,6 @@ footer {
 }
 
 
-#advanced-profile-name-wrapper,
-#advanced-profile-gender-wrapper,
-#advanced-profile-dob-wrapper,
-#advanced-profile-age-wrapper,
-#advanced-profile-marital-wrapper,
-#advanced-profile-sexual-wrapper,
-#advanced-profile-homepage-wrapper,
-#advanced-profile-politic-wrapper,
-#advanced-profile-religion-wrapper,
-#advanced-profile-about-wrapper,
-#advanced-profile-interest-wrapper,
-#advanced-profile-contact-wrapper,
-#advanced-profile-music-wrapper,
-#advanced-profile-book-wrapper,
-#advanced-profile-tv-wrapper,
-#advanced-profile-film-wrapper,
-#advanced-profile-romance-wrapper,
-#advanced-profile-work-wrapper,
-#advanced-profile-education-wrapper {
-	margin-top: 20px;
-}
-
-#advanced-profile-name-text,
-#advanced-profile-gender-text,
-#advanced-profile-dob-text,
-#advanced-profile-age-text,
-#advanced-profile-marital-text,
-#advanced-profile-sexual-text,
-#advanced-profile-homepage-text,
-#advanced-profile-politic-text,
-#advanced-profile-religion-text,
-#advanced-profile-about-text,
-#advanced-profile-interest-text,
-#advanced-profile-contact-text,
-#advanced-profile-music-text,
-#advanced-profile-book-text,
-#advanced-profile-tv-text,
-#advanced-profile-film-text,
-#advanced-profile-romance-text,
-#advanced-profile-work-text,
-#advanced-profile-education-text {
-	width: 300px;
-	float: left;
-}
-
-#advanced-profile-name-end,
-#advanced-profile-gender-end,
-#advanced-profile-dob-end,
-#advanced-profile-age-end,
-#advanced-profile-marital-end,
-#advanced-profile-sexual-end,
-#advanced-profile-homepage-end,
-#advanced-profile-politic-end,
-#advanced-profile-religion-end {
-	height: 10px;
-}
-
-#advanced-profile-about-end,
-#advanced-profile-interest-end,
-#advanced-profile-contact-end,
-#advanced-profile-music-end,
-#advanced-profile-book-end,
-#advanced-profile-tv-end,
-#advanced-profile-film-end,
-#advanced-profile-romance-end,
-#advanced-profile-work-end,
-#advanced-profile-education-end {
-
-
-}
-
-#advanced-profile-name,
-#advanced-profile-gender,
-#advanced-profile-dob,
-#advanced-profile-age,
-#advanced-profile-marital,
-#advanced-profile-sexual,
-#advanced-profile-homepage,
-#advanced-profile-politic,
-#advanced-profile-religion {
-	float: left;
-
-}
-
-
-#advanced-profile-about,
-#advanced-profile-interest,
-#advanced-profile-contact,
-#advanced-profile-music,
-#advanced-profile-book,
-#advanced-profile-tv,
-#advanced-profile-film,
-#advanced-profile-romance,
-#advanced-profile-work,
-#advanced-profile-education {
-	margin-top: 10px;
-	margin-left: 50px;
-	margin-right: 20px;
-	padding: 10px;
-	border: 1px solid #CCCCCC;
-}
-
-#advanced-profile-with {
-	float: left;
-	margin-left: 15px;
-}
-
 #contact-edit-wrapper {
 	margin-top: 10px;
 }
@@ -1608,34 +1473,6 @@ footer {
 .contact-edit-submit {
 	margin-top: 20px;
 }
-
-
-.contact-photo-menu-button {
-	position: absolute;
-	background-image: url("../img/photo-menu.jpg");
-	background-position: top left; 
-	background-repeat: no-repeat;
-	margin: 0px; padding: 0px;
-	width: 16px;
-	height: 16px;
-	top: 64px; left:0px;
-	overflow: hidden;
-	text-indent: 40px;
-	display: none;
-	
-}
-.contact-photo-menu {
-	width: auto;
-	border: 2px solid #444444;
-	background: #FFFFFF;
-	position: absolute;
-	left: 0px; top: 90px;
-	display: none;
-	z-index: 10000;
-}
-.contact-photo-menu ul { margin:0px; padding: 0px; list-style: none }
-.contact-photo-menu li a { display: block; padding: 2px; }
-.contact-photo-menu li a:hover { color: #FFFFFF; background: #3465A4; text-decoration: none; }
 
 
 #block-message, #ignore-message, #archive-message, #lost-contact-message {
@@ -1851,11 +1688,6 @@ tr.mceLast {
 }
 
 
-
-/*.photos {
-	height: auto;
-	overflow: auto;
-}*/
 
 .photos-end {
 	clear: both;
@@ -2302,40 +2134,6 @@ aside input[type='text'] {
 	margin-right: 50px;
 }
 
-#install-dbhost-label,
-#install-dbuser-label,
-#install-dbpass-label,
-#install-dbdata-label,
-#install-tz-desc {
-       float: left;
-       width: 250px;
-       margin-top: 10px;
-       margin-bottom: 10px;
-
-}
-
-#install-dbhost,
-#install-dbuser,
-#install-dbpass,
-#install-dbdata {
-       float: left;
-       width: 200px;
-       margin-left: 20px;
-}
-
-#install-dbhost-end,
-#install-dbuser-end,
-#install-dbpass-end,
-#install-dbdata-end,
-#install-tz-end {
-       clear: both;
-}
-
-#install-form select#timezone_select {
-       float: left;
-       margin-top: 18px;
-       margin-left: 20px;
-}
 
 #dfrn-request-networks {
 	margin-bottom: 30px;
@@ -2767,33 +2565,6 @@ aside input[type='text'] {
 	margin-top: 15px;
 }
 
-#crepair-name-label,
-#crepair-nick-label,
-#crepair-attag-label,
-#crepair-url-label,
-#crepair-request-label,
-#crepair-confirm-label,
-#crepair-notify-label,
-#crepair-photo-label,
-#crepair-poll-label {
-	float: left;
-	width: 200px;
-	margin-bottom: 15px;
-}
-
-#crepair-name,
-#crepair-nick,
-#crepair-attag,
-#crepair-url,
-#crepair-request,
-#crepair-confirm,
-#crepair-notify,
-#crepair-photo,
-#crepair-poll {
-	float: left;
-	width: 300px;
-}
-
 
 #netsearch-box {
 	margin-top: 20px;	
@@ -2998,69 +2769,6 @@ brain is weird like that */
 
 .field.radio .field_help { margin-left: 0px; }
 
-
- 
-
-/**
- * ADMIN
- */
-#pending-update {
-	float:right;
-	color: #ffffff;
-	font-weight: bold;
-	background-color: #FF0000;
-	padding: 0em 0.3em;
-	
-}
-#adminpage dl {
-	clear: left;
-	margin-bottom: 2px;
-	padding-bottom: 2px;
-	border-bottom: 1px solid black;
-}
-#adminpage dt {
-	width: 200px;
-	float: left;
-	font-weight: bold;
-}
-#adminpage dd {
-	margin-left: 200px;
-}
-
-#adminpage h3 {
-	border-bottom: 1px solid #cccccc;
-}
-#adminpage .field label {
-	font-weight: bold;
-}
-#adminpage .submit {
-	clear:left;
-	text-align: right;
-}
-
-#adminpage #pluginslist {
-	margin: 0px; padding: 0px;
-}
-#adminpage .plugin {
-	list-style: none;
-	display: block;
-	border: 1px solid #888888;
-	padding: 1em;
-	margin-bottom: 5px;
-	clear: left;
-}
-#adminpage .plugin .desc { margin-left: 2.5em;}
-#adminpage .toggleplugin {
-	float:left;
-	margin-right: 1em;
-}
-
-#adminpage table {width:100%; border-bottom: 1px solid #000000; margin: 5px 0px;}
-#adminpage table th { text-align: left;}
-#adminpage td .icon { float: left;}
-#adminpage table#users img { width: 16px; height: 16px; }
-#adminpage table tr:hover { background-color: #bbc7d7; }
-#adminpage .selectall { text-align: right; }
 
 
 /*
