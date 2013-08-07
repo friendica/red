@@ -84,18 +84,23 @@ function profile_photo_post(&$a) {
 
 				$aid = get_account_id();
 
-				$r1 = $im->store($aid, local_user(), '', $base_image['resource_id'],$base_image['filename'], 
-					t('Profile Photos'), 4, $is_default_profile);
+				$p = array('aid' => $aid, 'uid' => local_user(), 'resource_id' => $base_image['resource_id'],
+					'filename' => $base_image['filename'], 'album' => t('Profile Photos'));
+
+				$p['scale'] = 4;
+				$p['photo_flags'] = (($is_default_profile) ? PHOTO_PROFILE : PHOTO_NORMAL);
+
+				$r1 = $im->save($p);
 
 				$im->scaleImage(80);
+				$p['scale'] = 5;
 
-				$r2 = $im->store($aid, local_user(), '', $base_image['resource_id'],$base_image['filename'], 
-					t('Profile Photos'), 5, $is_default_profile);
+				$r2 = $im->save($p);
 			
 				$im->scaleImage(48);
+				$p['scale'] = 6;
 
-				$r3 = $im->store($aid, local_user(), '', $base_image['resource_id'],$base_image['filename'], 
-					t('Profile Photos'), 6, $is_default_profile);
+				$r3 = $im->save($p);
 			
 				if($r1 === false || $r2 === false || $r3 === false) {
 					// if one failed, delete them all so we can start over.
@@ -111,6 +116,13 @@ function profile_photo_post(&$a) {
 
 				if($is_default_profile) {
 					$r = q("UPDATE photo SET profile = 0 WHERE profile = 1 AND resource_id != '%s' AND `uid` = %d",
+						dbesc($base_image['resource_id']),
+						intval(local_user())
+					);
+					$r = q("UPDATE photo SET ( photo_flags ^ %d ) WHERE (photo_flags & %d ) 
+						AND resource_id != '%s' AND `uid` = %d",
+						intval(PHOTO_PROFILE),
+						intval(PHOTO_PROFILE),
 						dbesc($base_image['resource_id']),
 						intval(local_user())
 					);
@@ -224,9 +236,19 @@ function profile_photo_content(&$a) {
 			// unset any existing profile photos
 			$r = q("UPDATE photo SET profile = 0 WHERE profile = 1 AND uid = %d",
 				intval(local_user()));
+			$r = q("UPDATE photo SET (photo_flags ^ %d ) WHERE (photo_flags & %d ) AND uid = %d",
+				intval(PHOTO_PROFILE),
+				intval(PHOTO_PROFILE),
+				intval(local_user()));
 			
 			// set all sizes of this one as profile photos
 			$r = q("UPDATE photo SET profile = 1 WHERE uid = %d AND resource_id = '%s'",
+				intval(local_user()),
+				dbesc($resource_id)
+				);
+
+			$r = q("UPDATE photo SET photo_flags = ( photo_flags | %d ) WHERE uid = %d AND resource_id = '%s'",
+				intval(PHOTO_PROFILE),
 				intval(local_user()),
 				dbesc($resource_id)
 				);
@@ -241,7 +263,7 @@ function profile_photo_content(&$a) {
 			goaway($a->get_baseurl() . '/profiles');
 		}
 
-		$r = q("SELECT data, type FROM photo WHERE id = %d and uid = %d limit 1",
+		$r = q("SELECT `data`, `type` FROM photo WHERE id = %d and uid = %d limit 1",
 			intval($r[0]['id']),
 			intval(local_user())
 
@@ -320,7 +342,9 @@ function profile_photo_crop_ui_head(&$a, $ph){
 	$hash = photo_new_resource();
 	$smallest = 0;
 
-	$r = $ph->store(get_account_id(), local_user(), '', $hash, $filename, t('Profile Photos'), 0 );	
+	$p = array('aid' => get_account_id(), 'uid' => local_user(), 'resource_id' => $hash,
+		'filename' => $filename, 'album' => t('Profile Photos'), 'scale' => 0);
+	$r = $ph->save($p);
 
 	if($r)
 		info( t('Image uploaded successfully.') . EOL );
@@ -329,7 +353,9 @@ function profile_photo_crop_ui_head(&$a, $ph){
 
 	if($width > 640 || $height > 640) {
 		$ph->scaleImage(640);
-		$r = $ph->store(get_account_id(), local_user(), '' , $hash, $filename, t('Profile Photos'), 1 );	
+		$p['scale'] = 1;
+
+		$r = $ph->save($p);
 		
 		if($r === false)
 			notice( sprintf(t('Image size reduction [%s] failed.'),"640") . EOL );

@@ -271,6 +271,111 @@ abstract class photo_driver {
 	}
 
 
+	public function save($arr) {
+
+		$p = array();
+
+		$p['aid'] = ((intval($arr['aid'])) ? intval($arr['aid']) : 0);
+		$p['uid'] = ((intval($arr['uid'])) ? intval($arr['uid']) : 0);
+		$p['xchan'] = (($arr['xchan']) ? $arr['xchan'] : '');
+		$p['resource_id'] = (($arr['resource_id']) ? $arr['resource_id'] : '');
+		$p['filename'] = (($arr['filename']) ? $arr['filename'] : '');
+		$p['album'] = (($arr['album']) ? $arr['album'] : '');
+		$p['scale'] = ((intval($arr['scale'])) ? intval($arr['scale']) : 0);
+		$p['photo_flags'] = ((intval($arr['photo_flags'])) ? intval($arr['photo_flags']) : 0);
+		$p['allow_cid'] = (($arr['allow_cid']) ? $arr['allow_cid'] : '');
+		$p['allow_gid'] = (($arr['allow_gid']) ? $arr['allow_gid'] : '');
+		$p['deny_cid'] = (($arr['deny_cid']) ? $arr['deny_cid'] : '');
+		$p['deny_gid'] = (($arr['deny_gid']) ? $arr['deny_gid'] : '');
+
+		// temporary until we get rid of photo['profile'] and just use photo['photo_flags']
+		// but this will require updating all existing photos in the DB.
+
+		$p['profile'] = (($p['photo_flags'] & PHOTO_PROFILE) ? 1 : 0);
+			
+
+		$x = q("select id from photo where resource_id = '%s' and uid = %d and xchan = '%s' and `scale` = %d limit 1",
+				dbesc($p['resource_id']),
+				intval($p['uid']),
+				dbesc($p['xchan']),
+				intval($p['scale'])
+		);
+		if($x) {
+			$r = q("UPDATE `photo` set
+				`aid` = %d,
+				`uid` = %d,
+				`xchan` = '%s',
+				`resource_id` = '%s',
+				`created` = '%s',
+				`edited` = '%s',
+				`filename` = '%s',
+				`type` = '%s',
+				`album` = '%s',
+				`height` = %d,
+				`width` = %d,
+				`data` = '%s',
+				`size` = %d,
+				`scale` = %d,
+				`profile` = %d,
+				`photo_flags` = %d,
+				`allow_cid` = '%s',
+				`allow_gid` = '%s',
+				`deny_cid` = '%s',
+				`deny_gid` = '%s'
+				where id = %d limit 1",
+
+				intval($p['aid']),
+				intval($p['uid']),
+				dbesc($p['xchan']),
+				dbesc($p['resource_id']),
+				dbesc(datetime_convert()),
+				dbesc(datetime_convert()),
+				dbesc(basename($p['filename'])),
+				dbesc($this->getType()),
+				dbesc($p['album']),
+				intval($this->getHeight()),
+				intval($this->getWidth()),
+				dbesc($this->imageString()),
+				intval(strlen($this->imageString())),
+				intval($p['scale']),
+				intval($p['profile']),
+				intval($p['photo_flags']),
+				dbesc($p['allow_cid']),
+				dbesc($p['allow_gid']),
+				dbesc($p['deny_cid']),
+				dbesc($p['deny_gid']),
+				intval($x[0]['id'])
+			);
+		}
+		else {
+			$r = q("INSERT INTO `photo`
+				( `aid`, `uid`, `xchan`, `resource_id`, `created`, `edited`, `filename`, type, `album`, `height`, `width`, `data`, `size`, `scale`, `profile`, `photo_flags`, `allow_cid`, `allow_gid`, `deny_cid`, `deny_gid` )
+				VALUES ( %d, %d, '%s', '%s', '%s', '%s', '%s', '%s', '%s', %d, %d, '%s', %d, %d, %d, %d, '%s', '%s', '%s', '%s' )",
+				intval($p['aid']),
+				intval($p['uid']),
+				dbesc($p['xchan']),
+				dbesc($p['resource_id']),
+				dbesc(datetime_convert()),
+				dbesc(datetime_convert()),
+				dbesc(basename($filename)),
+				dbesc($this->getType()),
+				dbesc($p['album']),
+				intval($this->getHeight()),
+				intval($this->getWidth()),
+				dbesc($this->imageString()),
+				intval(strlen($this->imageString())),
+				intval($p['scale']),
+				intval($p['profile']),
+				intval($p['photo_flags']),
+				dbesc($p['allow_cid']),
+				dbesc($p['allow_gid']),
+				dbesc($p['deny_cid']),
+				dbesc($p['deny_gid'])
+			);
+		}
+		return $r;
+	}
+
 	public function store($aid, $uid, $xchan, $rid, $filename, $album, $scale, $profile = 0, $allow_cid = '', $allow_gid = '', $deny_cid = '', $deny_gid = '') {
 
 		$x = q("select id from photo where `resource_id` = '%s' and uid = %d and `xchan` = '%s' and `scale` = %d limit 1",
@@ -356,6 +461,11 @@ abstract class photo_driver {
 
 
 
+
+
+
+
+
 /**
  * Guess image mimetype from filename or from Content-Type header
  *
@@ -434,21 +544,25 @@ function import_profile_photo($photo,$xchan) {
 
 		$img->scaleImageSquare(175);
 
-		$r = $img->store(0, 0, $xchan, $hash, $filename, 'Contact Photos', 4 );
+		$p = array('xchan' => $xchan,'resource_id' => $hash, 'filename' => 'Contact Photos', 'photo_flags' => PHOTO_XCHAN, 'scale' => 4);
+
+		$r = $img->save($p);
 
 		if($r === false)
 			$photo_failure = true;
 
 		$img->scaleImage(80);
+		$p['scale'] = 5;
 
-		$r = $img->store(0, 0, $xchan, $hash, $filename, 'Contact Photos', 5 );
+		$r = $img->save($p);
 
 		if($r === false)
 			$photo_failure = true;
 
 		$img->scaleImage(48);
+		$p['scale'] = 6;
 
-		$r = $img->store(0, 0, $xchan, $hash, $filename, 'Contact Photos', 6 );
+		$r = $img->save($p);
 
 		if($r === false)
 			$photo_failure = true;
@@ -492,21 +606,25 @@ function import_channel_photo($photo,$type,$aid,$uid) {
 
 		$img->scaleImageSquare(175);
 
-		$r = $img->store($aid,$uid,'', $hash, $filename, t('Profile Photos'), 4, true);
+		$p = array('aid' => $aid, 'uid' => $uid, 'resource_id' => $hash, 'filename' => $filename, 'album' => t('Profile Photos'), 'photo_flags' => PHOTO_PROFILE, 'scale' => 4);
+
+		$r = $img->save($p);
 
 		if($r === false)
 			$photo_failure = true;
 
 		$img->scaleImage(80);
+		$p['scale'] = 5;
 
-		$r = $img->store($aid,$uid,'', $hash, $filename, t('Profile Photos'), 5, true);
+		$r = $img->save($p);
 
 		if($r === false)
 			$photo_failure = true;
 
 		$img->scaleImage(48);
+		$p['scale'] = 6;
 
-		$r = $img->store($aid,$uid,'', $hash, $filename, t('Profile Photos'), 6, true);
+		$r = $img->save($p);
 
 		if($r === false)
 			$photo_failure = true;

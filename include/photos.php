@@ -150,13 +150,20 @@ function photo_upload($channel, $observer, $args) {
 
 	$errors = false;
 
-	$r1 = $ph->store($account_id, $channel_id, $visitor, $photo_hash, $filename, $album, 0 , 0, $str_contact_allow, $str_group_allow, $str_contact_deny, $str_group_deny);
+	$p = array('aid' => $account_id, 'uid' => $channel_id, 'xchan' => $visitor, 'resource_id' => $photo_hash,
+		'filename' => $filename, 'album' => $album, 'scale' => 0, 'photo_flags' => PHOTO_NORMAL, 
+		'allow_cid' => $str_contact_allow, 'allow_gid' => $str_group_allow,
+		'deny_cid' => $str_contact_deny, 'deny_gid' => $str_group_deny
+	);
+
+	$r1 = $ph->save($p);
 	if(! $r1)
 		$errors = true;
 		
 	if(($width > 640 || $height > 640) && (! $errors)) {
 		$ph->scaleImage(640);
-		$r2 = $ph->store($account_id, $channel_id, $visitor, $photo_hash, $filename, $album, 1, 0, $str_contact_allow, $str_group_allow, $str_contact_deny, $str_group_deny);
+		$p['scale'] = 1;
+		$r2 = $ph->save($p);
 		$smallest = 1;
 		if(! $r2)
 			$errors = true;
@@ -164,7 +171,8 @@ function photo_upload($channel, $observer, $args) {
 
 	if(($width > 320 || $height > 320) && (! $errors)) {
 		$ph->scaleImage(320);
-		$r3 = $ph->store($account_id, $channel_id, $visitor, $photo_hash, $filename, $album, 2, 0, $str_contact_allow, $str_group_allow, $str_contact_deny, $str_group_deny);
+		$p['scale'] = 2;
+		$r3 = $ph->save($p);
 		$smallest = 2;
 		if(! $r3)
 			$errors = true;
@@ -302,7 +310,7 @@ function photos_list_photos($channel,$observer,$album = '') {
 
 	$ret = array('success' => false);
 
-	$r = q("select resource_id, created, edited, title, `desc`, album, filename, `type`, height, width, `size`, `scale`, profile, allow_cid, allow_gid, deny_cid, deny_gid from photo where uid = %d and ( photo_flags = %d or photo_flags = %d ) $sql_extra ",
+	$r = q("select resource_id, created, edited, title, `desc`, album, filename, `type`, height, width, `size`, `scale`, profile, photo_flags, allow_cid, allow_gid, deny_cid, deny_gid from photo where uid = %d and ( photo_flags = %d or photo_flags = %d ) $sql_extra ",
 		intval($channel_id),
 		intval(PHOTO_NORMAL),
 		intval(PHOTO_PROFILE)
