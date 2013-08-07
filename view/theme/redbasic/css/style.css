@@ -2251,8 +2251,8 @@ aside input[type='text'] {
 }
 
 .nav-dropdown-indicator {
-    opacity: 0.5;
-    filter:alpha(opacity=50);
+    opacity: 0.8;
+    filter:alpha(opacity=80);
 }
 
 .nav-dropdown-indicator:hover {
