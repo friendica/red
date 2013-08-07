@@ -1172,7 +1172,7 @@ $a->strings["Connections: settings for %s"] = "";
 $a->strings["When receiving a channel introduction, any permissions provided here will be applied to the new connection automatically and the introduction approved. Leave this page if you do not wish to use this feature."] = "";
 $a->strings["Slide to adjust your degree of friendship"] = "";
 $a->strings["Connection has no individual permissions!"] = "";
-$a->strings["This may be appropriate based on your <a href=\"settings\">privacy settings</a>, though you may wish to review the \"Advanced Permissions\"] = "";
+$a->strings["This may be appropriate based on your <a href=\"settings\">privacy settings</a>, though you may wish to review the \"Advanced Permissions\""] = "";
 $a->strings["Profile Visibility"] = "";
 $a->strings["Please choose the profile you would like to display to %s when viewing your profile securely."] = "";
 $a->strings["Contact Information / Notes"] = "";

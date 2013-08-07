@@ -95,8 +95,9 @@ function dirsearch_content(&$a) {
 	else {
 		$qlimit = " LIMIT " . intval($startrec) . " , " . intval($perpage);
 		if($return_total) {
-			$r = q("SELECT COUNT(xchan_hash) AS `total` FROM xchan left join xprof on xchan_hash = xprof_hash where $logic $sql_extra and not ( xchan_flags & %d) ",
-				intval(XCHAN_FLAGS_HIDDEN)
+			$r = q("SELECT COUNT(xchan_hash) AS `total` FROM xchan left join xprof on xchan_hash = xprof_hash where $logic $sql_extra and not ( xchan_flags & %d) and not ( xchan_flags & %d ) ",
+				intval(XCHAN_FLAGS_HIDDEN),
+				intval(XCHAN_FLAGS_ORPHAN)
 			);
 			if($r) {
 				$ret['total_items'] = $r[0]['total'];
@@ -118,8 +119,9 @@ function dirsearch_content(&$a) {
 
 
 
-	$r = q("SELECT xchan.*, xprof.*, updates.* from xchan left join xprof on xchan_hash = xprof_hash left join updates on xchan_hash = ud_hash where $logic $sql_extra and not ( xchan_flags & %d ) $order $qlimit ",
-		intval(XCHAN_FLAGS_HIDDEN)
+	$r = q("SELECT xchan.*, xprof.*, updates.* from xchan left join xprof on xchan_hash = xprof_hash left join updates on xchan_hash = ud_hash where $logic $sql_extra and not ( xchan_flags & %d ) and not ( xchan_flags & %d ) $order $qlimit ",
+		intval(XCHAN_FLAGS_HIDDEN),
+		intval(XCHAN_FLAGS_ORPHAN)
 	);
 
 	$ret['page'] = $page + 1;

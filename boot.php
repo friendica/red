@@ -140,6 +140,16 @@ define ( 'REGISTER_CLOSED',        0 );
 define ( 'REGISTER_APPROVE',       1 );
 define ( 'REGISTER_OPEN',          2 );
 
+
+/**
+ * site access policy
+ */
+
+define ( 'ACCESS_PRIVATE',         0 );
+define ( 'ACCESS_PAID',            1 );
+define ( 'ACCESS_FREE',            2 );
+
+
 /**
  * relationship types
  */
@@ -322,6 +332,7 @@ define ( 'HUBLOC_FLAGS_UNVERIFIED',   0x0002);
 
 
 define ( 'XCHAN_FLAGS_HIDDEN',        0x0001);
+define ( 'XCHAN_FLAGS_ORPHAN',        0x0002);
 
 
 /**

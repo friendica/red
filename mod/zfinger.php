@@ -202,6 +202,16 @@ function zfinger_init(&$a) {
 		if($register_policy == REGISTER_OPEN)
 			$ret['site']['register_policy'] = 'open';
 
+
+		$access_policy = intval(get_config('system','access_policy'));
+
+		if($access_policy == ACCESS_PRIVATE)
+			$ret['site']['access_policy'] = 'private';
+		if($access_policy == ACCESS_PAID)
+			$ret['site']['access_policy'] = 'paid';
+		if($access_policy == ACCESS_FREE)
+			$ret['site']['access_policy'] = 'free';
+
 		require_once('include/account.php');
 		$ret['site']['accounts'] = account_total();
 	

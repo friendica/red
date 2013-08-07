@@ -33,6 +33,7 @@ $a->config['system']['baseurl'] = '{{$siteurl}}';
 $a->config['system']['sitename'] = "Red Matrix";
 $a->config['system']['location_hash'] = '{{$site_id}}';
 
+
 // Your choices are REGISTER_OPEN, REGISTER_APPROVE, or REGISTER_CLOSED.
 // Be certain to create your own personal account before setting 
 // REGISTER_CLOSED. 'register_text' (if set) will be displayed prominently on 
@@ -43,6 +44,19 @@ $a->config['system']['location_hash'] = '{{$site_id}}';
 $a->config['system']['register_policy'] = REGISTER_OPEN;
 $a->config['system']['register_text'] = '';
 $a->config['system']['admin_email'] = '{{$adminmail}}';
+
+
+// Site access restrictions. By default we will create private sites.
+// Your choices are ACCESS_PRIVATE, ACCESS_PAID, and ACCESS_FREE.
+// If you leave REGISTER_OPEN above, anybody may register on your
+// site, however your site will not be listed anywhere as an open
+// registration  hub. We will use the system access policy (below) 
+// to determine whether or not to list your site in the directory 
+// as an open hub where anybody may create accounts. Your choice of 
+// paid or free determines how these listings will be presented.  
+
+$a->config['system']['access_policy'] = ACCESS_PRIVATE;
+
 
 // Maximum size of an imported message, 0 is unlimited
 
