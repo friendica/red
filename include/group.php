@@ -1,7 +1,7 @@
 <?php /** @file */
 
 
-function group_add($uid,$name) {
+function group_add($uid,$name,$public = 0) {
 
 	$ret = false;
 	if(x($uid) && x($name)) {
@@ -37,10 +37,11 @@ function group_add($uid,$name) {
 		} while($dups == true);
 
 
-		$r = q("INSERT INTO `group` ( hash, uid, name )
-			VALUES( '%s', %d, '%s' ) ",
+		$r = q("INSERT INTO `group` ( hash, uid, visible, name )
+			VALUES( '%s', %d, %d, '%s' ) ",
 			dbesc($hash),
 			intval($uid),
+			intval($public),
 			dbesc($name)
 		);
 		$ret = $r;

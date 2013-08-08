@@ -20,7 +20,8 @@ function group_post(&$a) {
 		check_form_security_token_redirectOnErr('/group/new', 'group_edit');
 		
 		$name = notags(trim($_POST['groupname']));
-		$r = group_add(local_user(),$name);
+		$public = intval($_POST['public']);
+		$r = group_add(local_user(),$name,$public);
 		if($r) {
 			info( t('Collection created.') . EOL );
 			$r = group_byname(local_user(),$name);
@@ -46,9 +47,12 @@ function group_post(&$a) {
 		}
 		$group = $r[0];
 		$groupname = notags(trim($_POST['groupname']));
+		$public = intval($_POST['public']);
+
 		if((strlen($groupname))  && ($groupname != $group['name'])) {
-			$r = q("UPDATE `group` SET `name` = '%s' WHERE `uid` = %d AND `id` = %d LIMIT 1",
+			$r = q("UPDATE `group` SET `name` = '%s', visible = %d  WHERE `uid` = %d AND `id` = %d LIMIT 1",
 				dbesc($groupname),
+				intval($public),
 				intval(local_user()),
 				intval($group['id'])
 			);
@@ -85,9 +89,10 @@ function group_content(&$a) {
 	if((argc() == 2) && (argv(1) === 'new')) {
 		
 		return replace_macros($tpl, $context + array(
-			'$title' => t('Create a collection of connections.'),
+			'$title' => t('Create a collection of channels.'),
 			'$gname' => array('groupname',t('Collection Name: '), '', ''),
 			'$gid' => 'new',
+			'$public' => array('public',t('Members are visible to other channels'), false, ''),
 			'$form_security_token' => get_form_security_token("group_edit"),
 		));
 
@@ -184,6 +189,7 @@ function group_content(&$a) {
 			'$gname' => array('groupname',t('Collection Name: '),$group['name'], ''),
 			'$gid' => $group['id'],
 			'$drop' => $drop_txt,
+			'$public' => array('public',t('Members are visible to other channels'), $group['visible'], ''),
 			'$form_security_token' => get_form_security_token('group_edit'),
 		);
 
