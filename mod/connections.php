@@ -407,7 +407,7 @@ function connections_content(&$a) {
 			'$unapproved'     => $unapproved,
 			'$approve'        => t('Approve this connection'),
 			'$noperms'        => (((! $self) && (! $contact['abook_my_perms'])) ? t('Connection has no individual permissions!') : ''),
-			'$noperm_desc'    => (((! $self) && (! $contact['abook_my_perms'])) ? t('This may be appropriate based on your <a href="settings">privacy settings</a>, though you may wish to review the "Advanced Permissions"') : ''),
+			'$noperm_desc'    => (((! $self) && (! $contact['abook_my_perms'])) ? t('This may be appropriate based on your <a href="settings">privacy settings</a>, though you may wish to review the "Advanced Permissions".') : ''),
 			'$submit'         => t('Submit'),
 			'$lbl_vis1'       => t('Profile Visibility'),
 			'$lbl_vis2'       => sprintf( t('Please choose the profile you would like to display to %s when viewing your profile securely.'), $contact['xchan_name']),

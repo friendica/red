@@ -28,9 +28,9 @@ else
 fi
 
 
-F9KVERSION=$(sed -n "s/.*'RED_VERSION'.*'\([0-9.]*\)'.*/\1/p" ../../boot.php);
+F9KVERSION=$(cat ../../version.inc);
 
-echo "Friendica version $F9KVERSION"
+echo "Red version $F9KVERSION"
 
 OPTS=
 
@@ -65,12 +65,12 @@ then
     sed -i "s/YEAR THE PACKAGE'S COPYRIGHT HOLDER//g" "$OUTFILE"
     sed -i "s/FIRST AUTHOR <EMAIL@ADDRESS>, YEAR.//g" "$OUTFILE"
     sed -i "s/PACKAGE VERSION//g" "$OUTFILE"
-    sed -i "s/PACKAGE/Friendica $ADDONNAME addon/g" "$OUTFILE"
+    sed -i "s/PACKAGE/RedMatrix $ADDONNAME addon/g" "$OUTFILE"
     sed -i "s/CHARSET/UTF-8/g" "$OUTFILE"
     sed -i "s/^\"Plural-Forms/#\"Plural-Forms/g" "$OUTFILE"
 else
     sed -i "s/SOME DESCRIPTIVE TITLE./Red Communications Project/g" "$OUTFILE"
-    sed -i "s/YEAR THE PACKAGE'S COPYRIGHT HOLDER/2013 the Friendica Project/g" "$OUTFILE"
+    sed -i "s/YEAR THE PACKAGE'S COPYRIGHT HOLDER/2013 the Red Matrix Project/g" "$OUTFILE"
     sed -i "s/FIRST AUTHOR <EMAIL@ADDRESS>, YEAR./Mike Macgirvin, 2013/g" "$OUTFILE"
     sed -i "s/PACKAGE VERSION/$F9KVERSION/g" "$OUTFILE"
     sed -i "s/PACKAGE/Red/g" "$OUTFILE"
