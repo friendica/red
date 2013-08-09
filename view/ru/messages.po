@@ -4904,7 +4904,7 @@ msgstr ""
 #: ../../mod/connections.php:410
 msgid ""
 "This may be appropriate based on your <a href=\"settings\">privacy "
-"settings</a>, though you may wish to review the \"Advanced Permissions\""
+"settings</a>, though you may wish to review the \"Advanced Permissions\"."
 msgstr ""
 
 #: ../../mod/connections.php:412
