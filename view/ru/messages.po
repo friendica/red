@@ -8,8 +8,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Red Matrix\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2013-08-02 00:01-0700\n"
-"PO-Revision-Date: 2013-08-08 09:52+0000\n"
+"POT-Creation-Date: 2013-08-09 00:02-0700\n"
+"PO-Revision-Date: 2013-08-09 10:01+0000\n"
 "Last-Translator: alexej <info@pixelbits.de>\n"
 "Language-Team: Russian (http://www.transifex.com/projects/p/red-matrix/language/ru/)\n"
 "MIME-Version: 1.0\n"
@@ -55,11 +55,11 @@ msgstr ""
 
 #: ../../include/api.php:968
 msgid "Public Timeline"
-msgstr "Публичная шкала временни"
+msgstr "Публичная шкала времени"
 
 #: ../../include/enotify.php:36
 msgid "Red Matrix Notification"
-msgstr "Уведомления Red матрицы"
+msgstr "Оповещения Red матрицы"
 
 #: ../../include/enotify.php:39
 msgid "Thank You,"
@@ -70,181 +70,182 @@ msgstr "Спасибо,"
 msgid "%s Administrator"
 msgstr "%s администратор"
 
-#: ../../include/enotify.php:64
+#: ../../include/enotify.php:75
 #, php-format
 msgid "%s <!item_type!>"
 msgstr "%s <!item_type!>"
 
-#: ../../include/enotify.php:68
+#: ../../include/enotify.php:79
 #, php-format
 msgid "[Red:Notify] New mail received at %s"
-msgstr ""
+msgstr "[Red:Уведомление] Получено новое сообщение в %s"
 
-#: ../../include/enotify.php:70
+#: ../../include/enotify.php:81
 #, php-format
 msgid "%1$s sent you a new private message at %2$s."
-msgstr ""
+msgstr "%1$s отправил вам новое личное сообщение в %2$s."
 
-#: ../../include/enotify.php:71
+#: ../../include/enotify.php:82
 #, php-format
 msgid "%1$s sent you %2$s."
 msgstr "%1$s послал вам %2$s."
 
-#: ../../include/enotify.php:71
+#: ../../include/enotify.php:82
 msgid "a private message"
 msgstr "личное сообщение"
 
-#: ../../include/enotify.php:72
+#: ../../include/enotify.php:83
 #, php-format
 msgid "Please visit %s to view and/or reply to your private messages."
-msgstr ""
+msgstr "Пожалуйста, посетите %s для просмотра и/или ответа на ваши личные сообщения."
 
-#: ../../include/enotify.php:118
+#: ../../include/enotify.php:129
 #, php-format
 msgid "%1$s commented on [zrl=%2$s]a %3$s[/zrl]"
-msgstr ""
+msgstr "%1$s прокомментировал на [zrl=%2$s]a %3$s[/zrl]"
 
-#: ../../include/enotify.php:125
+#: ../../include/enotify.php:136
 #, php-format
 msgid "%1$s commented on [zrl=%2$s]%3$s's %4$s[/zrl]"
-msgstr ""
-
-#: ../../include/enotify.php:133
-#, php-format
-msgid "%1$s commented on [zrl=%2$s]your %3$s[/zrl]"
-msgstr ""
-
-#: ../../include/enotify.php:143
-#, php-format
-msgid "[Red:Notify] Comment to conversation #%1$d by %2$s"
-msgstr ""
+msgstr "%1$s прокомментировал на [zrl=%2$s]%3$s's %4$s[/zrl]"
 
 #: ../../include/enotify.php:144
+#, php-format
+msgid "%1$s commented on [zrl=%2$s]your %3$s[/zrl]"
+msgstr "%1$s прокомментировал на [zrl=%2$s]your %3$s[/zrl]"
+
+#: ../../include/enotify.php:154
+#, php-format
+msgid "[Red:Notify] Comment to conversation #%1$d by %2$s"
+msgstr "[Red:Уведомление] Комментарий к разговору #%1$d по %2$s"
+
+#: ../../include/enotify.php:155
 #, php-format
 msgid "%s commented on an item/conversation you have been following."
 msgstr ""
 
-#: ../../include/enotify.php:147 ../../include/enotify.php:164
-#: ../../include/enotify.php:190 ../../include/enotify.php:208
-#: ../../include/enotify.php:221
+#: ../../include/enotify.php:158 ../../include/enotify.php:175
+#: ../../include/enotify.php:201 ../../include/enotify.php:219
+#: ../../include/enotify.php:232
 #, php-format
 msgid "Please visit %s to view and/or reply to the conversation."
 msgstr ""
 
-#: ../../include/enotify.php:154
+#: ../../include/enotify.php:165
 #, php-format
 msgid "[Red:Notify] %s posted to your profile wall"
 msgstr ""
 
-#: ../../include/enotify.php:156
+#: ../../include/enotify.php:167
 #, php-format
 msgid "%1$s posted to your profile wall at %2$s"
 msgstr ""
 
-#: ../../include/enotify.php:158
+#: ../../include/enotify.php:169
 #, php-format
 msgid "%1$s posted to [zrl=%2$s]your wall[/zrl]"
 msgstr ""
 
-#: ../../include/enotify.php:184
+#: ../../include/enotify.php:195
 #, php-format
 msgid "[Red:Notify] %s tagged you"
 msgstr ""
 
-#: ../../include/enotify.php:185
+#: ../../include/enotify.php:196
 #, php-format
 msgid "%1$s tagged you at %2$s"
 msgstr ""
 
-#: ../../include/enotify.php:186
+#: ../../include/enotify.php:197
 #, php-format
 msgid "%1$s [zrl=%2$s]tagged you[/zrl]."
 msgstr ""
 
-#: ../../include/enotify.php:198
+#: ../../include/enotify.php:209
 #, php-format
 msgid "[Red:Notify] %1$s poked you"
 msgstr ""
 
-#: ../../include/enotify.php:199
+#: ../../include/enotify.php:210
 #, php-format
 msgid "%1$s poked you at %2$s"
 msgstr ""
 
-#: ../../include/enotify.php:200
+#: ../../include/enotify.php:211
 #, php-format
 msgid "%1$s [zrl=%2$s]poked you[/zrl]."
 msgstr ""
 
-#: ../../include/enotify.php:215
+#: ../../include/enotify.php:226
 #, php-format
 msgid "[Red:Notify] %s tagged your post"
 msgstr ""
 
-#: ../../include/enotify.php:216
+#: ../../include/enotify.php:227
 #, php-format
 msgid "%1$s tagged your post at %2$s"
 msgstr ""
 
-#: ../../include/enotify.php:217
+#: ../../include/enotify.php:228
 #, php-format
 msgid "%1$s tagged [zrl=%2$s]your post[/zrl]"
 msgstr ""
 
-#: ../../include/enotify.php:228
+#: ../../include/enotify.php:239
 msgid "[Red:Notify] Introduction received"
 msgstr ""
 
-#: ../../include/enotify.php:229
+#: ../../include/enotify.php:240
 #, php-format
 msgid "You've received an introduction from '%1$s' at %2$s"
 msgstr ""
 
-#: ../../include/enotify.php:230
+#: ../../include/enotify.php:241
 #, php-format
 msgid "You've received [zrl=%1$s]an introduction[/zrl] from %2$s."
 msgstr ""
 
-#: ../../include/enotify.php:233 ../../include/enotify.php:251
+#: ../../include/enotify.php:244 ../../include/enotify.php:262
 #, php-format
 msgid "You may visit their profile at %s"
 msgstr ""
 
-#: ../../include/enotify.php:235
+#: ../../include/enotify.php:246
 #, php-format
 msgid "Please visit %s to approve or reject the introduction."
 msgstr ""
 
-#: ../../include/enotify.php:242
+#: ../../include/enotify.php:253
 msgid "[Red:Notify] Friend suggestion received"
 msgstr ""
 
-#: ../../include/enotify.php:243
+#: ../../include/enotify.php:254
 #, php-format
 msgid "You've received a friend suggestion from '%1$s' at %2$s"
 msgstr ""
 
-#: ../../include/enotify.php:244
+#: ../../include/enotify.php:255
 #, php-format
 msgid ""
 "You've received [zrl=%1$s]a friend suggestion[/zrl] for %2$s from %3$s."
 msgstr ""
 
-#: ../../include/enotify.php:249
+#: ../../include/enotify.php:260
 msgid "Name:"
 msgstr "Имя:"
 
-#: ../../include/enotify.php:250
+#: ../../include/enotify.php:261
 msgid "Photo:"
 msgstr "Фото:"
 
-#: ../../include/enotify.php:253
+#: ../../include/enotify.php:264
 #, php-format
 msgid "Please visit %s to approve or reject the suggestion."
 msgstr ""
 
 #: ../../include/Contact.php:55 ../../include/contact_widgets.php:9
-#: ../../mod/match.php:58 ../../mod/suggest.php:56 ../../boot.php:1611
+#: ../../mod/directory.php:163 ../../mod/match.php:58 ../../mod/suggest.php:56
+#: ../../boot.php:1622
 msgid "Connect"
 msgstr "Добавить"
 
@@ -256,33 +257,33 @@ msgstr "Новое окно"
 msgid "Open the selected location in a different window or browser tab"
 msgstr ""
 
-#: ../../include/Contact.php:383 ../../include/conversation.php:893
+#: ../../include/Contact.php:430 ../../include/conversation.php:887
 msgid "Poke"
 msgstr ""
 
-#: ../../include/Contact.php:384 ../../include/conversation.php:887
+#: ../../include/Contact.php:431 ../../include/conversation.php:881
 msgid "View Status"
 msgstr "Просмотр состояния"
 
-#: ../../include/Contact.php:385 ../../include/nav.php:75
-#: ../../include/conversation.php:888 ../../mod/connections.php:294
+#: ../../include/Contact.php:432 ../../include/nav.php:75
+#: ../../include/conversation.php:882 ../../mod/connections.php:294
 #: ../../mod/connections.php:401
 msgid "View Profile"
 msgstr "Просмотр профиля"
 
-#: ../../include/Contact.php:386 ../../include/conversation.php:889
+#: ../../include/Contact.php:433 ../../include/conversation.php:883
 msgid "View Photos"
 msgstr "Просмотр фотографий"
 
-#: ../../include/Contact.php:387 ../../include/conversation.php:890
+#: ../../include/Contact.php:434 ../../include/conversation.php:884
 msgid "Network Posts"
 msgstr "Сообщения сети"
 
-#: ../../include/Contact.php:388 ../../include/conversation.php:891
+#: ../../include/Contact.php:435 ../../include/conversation.php:885
 msgid "Edit Contact"
 msgstr "Редактировать контакт"
 
-#: ../../include/Contact.php:389 ../../include/conversation.php:892
+#: ../../include/Contact.php:436 ../../include/conversation.php:886
 msgid "Send PM"
 msgstr "Отправить PM"
 
@@ -347,7 +348,7 @@ msgid "RSS/Atom"
 msgstr "RSS/Atom"
 
 #: ../../include/contact_selectors.php:77 ../../mod/admin.php:626
-#: ../../mod/admin.php:635 ../../boot.php:1353
+#: ../../mod/admin.php:635 ../../boot.php:1364
 msgid "Email"
 msgstr "E-mail"
 
@@ -411,8 +412,8 @@ msgstr "Добавить/следовать"
 msgid "Examples: Robert Morgenstein, Fishing"
 msgstr "Примеры: Владимир Ильич, Революционер"
 
-#: ../../include/contact_widgets.php:33 ../../mod/directory.php:164
-#: ../../mod/directory.php:169 ../../mod/connections.php:658
+#: ../../include/contact_widgets.php:33 ../../mod/directory.php:182
+#: ../../mod/directory.php:187 ../../mod/connections.php:656
 msgid "Find"
 msgstr "Поиск"
 
@@ -455,7 +456,7 @@ msgstr[2] "%d совместные контакты"
 #: ../../include/contact_widgets.php:126 ../../include/js_strings.php:7
 #: ../../include/ItemObject.php:255
 msgid "show more"
-msgstr "показать больше"
+msgstr "показать все"
 
 #: ../../include/datetime.php:43 ../../include/datetime.php:45
 msgid "Miscellaneous"
@@ -507,7 +508,7 @@ msgstr "час"
 
 #: ../../include/datetime.php:288
 msgid "hours"
-msgstr "час."
+msgstr "часов"
 
 #: ../../include/datetime.php:289
 msgid "minute"
@@ -548,7 +549,7 @@ msgid "Finishes:"
 msgstr "\t\nКонец:"
 
 #: ../../include/event.php:40 ../../include/bb2diaspora.php:455
-#: ../../mod/events.php:450 ../../mod/directory.php:120 ../../boot.php:1665
+#: ../../mod/events.php:450 ../../mod/directory.php:138 ../../boot.php:1676
 msgid "Location:"
 msgstr "Откуда:"
 
@@ -748,35 +749,35 @@ msgid ""
 "not what you intended, please create another group with a different name."
 msgstr ""
 
-#: ../../include/group.php:222
+#: ../../include/group.php:223
 msgid "Default privacy group for new contacts"
 msgstr ""
 
-#: ../../include/group.php:241
+#: ../../include/group.php:242
 msgid "All Channels"
 msgstr "Все каналы"
 
-#: ../../include/group.php:263
+#: ../../include/group.php:264
 msgid "edit"
 msgstr "редактировать"
 
-#: ../../include/group.php:284
+#: ../../include/group.php:285
 msgid "Collections"
 msgstr "Коллекции"
 
-#: ../../include/group.php:285
+#: ../../include/group.php:286
 msgid "Edit collection"
 msgstr "Редактировать коллекцию"
 
-#: ../../include/group.php:286
+#: ../../include/group.php:287
 msgid "Create a new collection"
 msgstr "Создать новую коллекцию"
 
-#: ../../include/group.php:287
+#: ../../include/group.php:288
 msgid "Channels not in any collection"
 msgstr "Каналы не в какой коллекции"
 
-#: ../../include/group.php:289 ../../mod/network.php:168
+#: ../../include/group.php:290 ../../mod/network.php:168
 msgid "add"
 msgstr "добавить"
 
@@ -895,13 +896,10 @@ msgstr ""
 msgid "view full size"
 msgstr "посмотреть в полный размер"
 
-#: ../../include/photo/photo_driver.php:495
-#: ../../include/photo/photo_driver.php:502
-#: ../../include/photo/photo_driver.php:509 ../../include/photos.php:51
+#: ../../include/photo/photo_driver.php:609 ../../include/photos.php:51
 #: ../../mod/photos.php:97 ../../mod/photos.php:754 ../../mod/photos.php:776
-#: ../../mod/profile_photo.php:88 ../../mod/profile_photo.php:93
-#: ../../mod/profile_photo.php:98 ../../mod/profile_photo.php:223
-#: ../../mod/profile_photo.php:323 ../../mod/profile_photo.php:332
+#: ../../mod/profile_photo.php:88 ../../mod/profile_photo.php:235
+#: ../../mod/profile_photo.php:346
 msgid "Profile Photos"
 msgstr "Фотографии профиля"
 
@@ -914,8 +912,8 @@ msgstr "Профиль"
 msgid "Full Name:"
 msgstr "Полное имя:"
 
-#: ../../include/profile_advanced.php:17 ../../mod/directory.php:122
-#: ../../boot.php:1667
+#: ../../include/profile_advanced.php:17 ../../mod/directory.php:140
+#: ../../boot.php:1678
 msgid "Gender:"
 msgstr "Пол:"
 
@@ -935,8 +933,8 @@ msgstr "День Рождения:"
 msgid "Age:"
 msgstr "Возраст:"
 
-#: ../../include/profile_advanced.php:37 ../../mod/directory.php:124
-#: ../../boot.php:1668
+#: ../../include/profile_advanced.php:37 ../../mod/directory.php:142
+#: ../../boot.php:1679
 msgid "Status:"
 msgstr "Статус:"
 
@@ -949,8 +947,8 @@ msgstr "для %1$d %2$s"
 msgid "Sexual Preference:"
 msgstr "Сексуальная ориентация:"
 
-#: ../../include/profile_advanced.php:48 ../../mod/directory.php:126
-#: ../../boot.php:1669
+#: ../../include/profile_advanced.php:48 ../../mod/directory.php:144
+#: ../../boot.php:1680
 msgid "Homepage:"
 msgstr "Домашняя страница:"
 
@@ -970,7 +968,7 @@ msgstr "Политические взгляды:"
 msgid "Religion:"
 msgstr "Религия:"
 
-#: ../../include/profile_advanced.php:58 ../../mod/directory.php:128
+#: ../../include/profile_advanced.php:58 ../../mod/directory.php:146
 msgid "About:"
 msgstr "О себе:"
 
@@ -1036,29 +1034,7 @@ msgid ""
 "form has been opened for too long (>3 hours) before submitting it."
 msgstr ""
 
-#: ../../include/bbcode.php:94 ../../include/bbcode.php:412
-#: ../../include/bbcode.php:413
-msgid "Image/photo"
-msgstr "Изображение / фото"
-
-#: ../../include/bbcode.php:161
-#, php-format
-msgid "%1$s wrote the following %2$s %3$s"
-msgstr ""
-
-#: ../../include/bbcode.php:163
-msgid "post"
-msgstr "сообщение"
-
-#: ../../include/bbcode.php:376 ../../include/bbcode.php:396
-msgid "$1 wrote:"
-msgstr "$1 писал:"
-
-#: ../../include/bbcode.php:417 ../../include/bbcode.php:418
-msgid "Encrypted content"
-msgstr "Зашифрованное содержание"
-
-#: ../../include/nav.php:71 ../../include/nav.php:86 ../../boot.php:1350
+#: ../../include/nav.php:71 ../../include/nav.php:86 ../../boot.php:1361
 msgid "Logout"
 msgstr "Выход"
 
@@ -1073,7 +1049,7 @@ msgstr "Моя страница"
 
 #: ../../include/nav.php:74 ../../include/nav.php:148
 msgid "Your posts and conversations"
-msgstr "Ваши сообщения и беседы"
+msgstr "Ваши сообщения и разговоры"
 
 #: ../../include/nav.php:75
 msgid "Your profile page"
@@ -1087,7 +1063,7 @@ msgstr "Редактирование профилей"
 msgid "Manage/Edit Profiles"
 msgstr "Управление / Редактирование профилей"
 
-#: ../../include/nav.php:78 ../../mod/fbrowser.php:25 ../../boot.php:2086
+#: ../../include/nav.php:78 ../../mod/fbrowser.php:25 ../../boot.php:2097
 msgid "Photos"
 msgstr "Фотографии"
 
@@ -1095,7 +1071,7 @@ msgstr "Фотографии"
 msgid "Your photos"
 msgstr "Ваши фотографии"
 
-#: ../../include/nav.php:84 ../../boot.php:1351
+#: ../../include/nav.php:84 ../../boot.php:1362
 msgid "Login"
 msgstr "Войти"
 
@@ -1116,7 +1092,7 @@ msgstr ""
 msgid "Home Page"
 msgstr "Моя страница"
 
-#: ../../include/nav.php:120 ../../mod/register.php:181 ../../boot.php:1326
+#: ../../include/nav.php:120 ../../mod/register.php:181 ../../boot.php:1337
 msgid "Register"
 msgstr "Регистрация"
 
@@ -1147,9 +1123,9 @@ msgstr "Поиск"
 
 #: ../../include/nav.php:130
 msgid "Search site content"
-msgstr "Поиск содержания по сайту"
+msgstr "Поиск по содержанию сайту"
 
-#: ../../include/nav.php:133 ../../mod/directory.php:168
+#: ../../include/nav.php:133 ../../mod/directory.php:186
 msgid "Directory"
 msgstr "Каталог"
 
@@ -1171,7 +1147,7 @@ msgstr "Просмотреть все оповещения матрицы"
 
 #: ../../include/nav.php:146
 msgid "Mark all matrix notifications seen"
-msgstr "Пометить все оповещения матрицы как видел"
+msgstr "Пометить все оповещения матрицы как прочитанное"
 
 #: ../../include/nav.php:149
 msgid "See all channel notifications"
@@ -1179,7 +1155,7 @@ msgstr "Просмотреть все оповещения канала"
 
 #: ../../include/nav.php:150
 msgid "Mark all channel notifications seen"
-msgstr "Пометить все оповещения канала как видел"
+msgstr "Пометить все оповещения канала как прочитанное"
 
 #: ../../include/nav.php:153
 msgid "Intros"
@@ -1207,15 +1183,15 @@ msgstr "Просмотреть все оповещения"
 
 #: ../../include/nav.php:159
 msgid "Mark all system notifications seen"
-msgstr "Пометить все оповещения как видел"
+msgstr "Пометить все оповещения как прочитанное"
 
 #: ../../include/nav.php:161
 msgid "Mail"
-msgstr "Эл. почта"
+msgstr "Сообщения"
 
 #: ../../include/nav.php:161
 msgid "Private mail"
-msgstr "Личная эл. почта"
+msgstr "Ваши личные сообщения"
 
 #: ../../include/nav.php:162
 msgid "See all private messages"
@@ -1223,7 +1199,7 @@ msgstr "Просмотреть все личные сообщения"
 
 #: ../../include/nav.php:163
 msgid "Mark all private messages seen"
-msgstr "Отметить все личные сообщения как видел"
+msgstr "Пометить все личные сообщения как прочитанное"
 
 #: ../../include/nav.php:164
 msgid "Inbox"
@@ -1235,9 +1211,9 @@ msgstr "Исходящие"
 
 #: ../../include/nav.php:166 ../../mod/message.php:21
 msgid "New Message"
-msgstr "Новая переписка"
+msgstr "Новое сообщение"
 
-#: ../../include/nav.php:169 ../../mod/events.php:348 ../../boot.php:2097
+#: ../../include/nav.php:169 ../../mod/events.php:348 ../../boot.php:2108
 msgid "Events"
 msgstr "Мероприятия"
 
@@ -1251,7 +1227,7 @@ msgstr "Показать все мероприятия"
 
 #: ../../include/nav.php:171
 msgid "Mark all events seen"
-msgstr "Отметить все мероприятия как видел"
+msgstr "Пометить все мероприятия как прочитанное"
 
 #: ../../include/nav.php:173
 msgid "Channel Select"
@@ -1270,7 +1246,7 @@ msgstr "Настройки"
 msgid "Account/Channel Settings"
 msgstr "Настройки аккаунта/канала"
 
-#: ../../include/nav.php:177 ../../mod/connections.php:652
+#: ../../include/nav.php:177 ../../mod/connections.php:650
 msgid "Connections"
 msgstr "Контакты"
 
@@ -1280,11 +1256,11 @@ msgstr ""
 
 #: ../../include/nav.php:184 ../../mod/admin.php:106
 msgid "Admin"
-msgstr "Администрация Сайта"
+msgstr "Администрация"
 
 #: ../../include/nav.php:184
 msgid "Site Setup and Configuration"
-msgstr "Установка и конфигурации сайта"
+msgstr "Установка и конфигурация сайта"
 
 #: ../../include/nav.php:207
 msgid "Nothing new here"
@@ -1315,22 +1291,22 @@ msgstr ""
 #: ../../include/attach.php:133 ../../include/attach.php:189
 #: ../../include/attach.php:204 ../../include/attach.php:237
 #: ../../include/attach.php:251 ../../include/attach.php:272
-#: ../../include/attach.php:464 ../../include/items.php:4580
+#: ../../include/attach.php:464 ../../include/items.php:3274
 #: ../../mod/common.php:43 ../../mod/events.php:134 ../../mod/invite.php:13
-#: ../../mod/invite.php:99 ../../mod/allfriends.php:10 ../../mod/api.php:26
-#: ../../mod/api.php:31 ../../mod/page.php:31 ../../mod/setup.php:181
-#: ../../mod/settings.php:585 ../../mod/viewconnections.php:33
-#: ../../mod/viewconnections.php:38 ../../mod/delegate.php:6
-#: ../../mod/group.php:15 ../../mod/photos.php:74 ../../mod/photos.php:644
-#: ../../mod/viewsrc.php:12 ../../mod/message.php:204 ../../mod/item.php:151
-#: ../../mod/network.php:7 ../../mod/intro.php:50
+#: ../../mod/invite.php:102 ../../mod/allfriends.php:10 ../../mod/api.php:26
+#: ../../mod/api.php:31 ../../mod/lastpost.php:93 ../../mod/page.php:31
+#: ../../mod/setup.php:181 ../../mod/settings.php:585
+#: ../../mod/viewconnections.php:33 ../../mod/viewconnections.php:38
+#: ../../mod/delegate.php:6 ../../mod/group.php:15 ../../mod/photos.php:74
+#: ../../mod/photos.php:644 ../../mod/viewsrc.php:12 ../../mod/message.php:204
+#: ../../mod/item.php:151 ../../mod/network.php:7 ../../mod/intro.php:50
 #: ../../mod/connections.php:165 ../../mod/profiles.php:163
 #: ../../mod/profiles.php:476 ../../mod/new_channel.php:66
 #: ../../mod/new_channel.php:97 ../../mod/manage.php:6
 #: ../../mod/crepair.php:115 ../../mod/nogroup.php:25
-#: ../../mod/profile_photo.php:185 ../../mod/profile_photo.php:198
+#: ../../mod/profile_photo.php:197 ../../mod/profile_photo.php:210
 #: ../../mod/editwebpage.php:42 ../../mod/notifications.php:66
-#: ../../mod/editpost.php:11 ../../mod/poke.php:128 ../../mod/channel.php:108
+#: ../../mod/editpost.php:11 ../../mod/poke.php:128 ../../mod/channel.php:115
 #: ../../mod/fsuggest.php:78 ../../mod/suggest.php:32
 #: ../../mod/register.php:60 ../../mod/regmod.php:18 ../../mod/mood.php:112
 #: ../../index.php:178 ../../index.php:340
@@ -1346,19 +1322,19 @@ msgstr ""
 msgid "Image file is empty."
 msgstr "файл пуст."
 
-#: ../../include/photos.php:124 ../../mod/profile_photo.php:145
+#: ../../include/photos.php:124 ../../mod/profile_photo.php:157
 msgid "Unable to process image"
 msgstr ""
 
-#: ../../include/photos.php:178
+#: ../../include/photos.php:186
 msgid "Photo storage failed."
 msgstr ""
 
-#: ../../include/photos.php:279 ../../boot.php:2089
+#: ../../include/photos.php:287 ../../boot.php:2100
 msgid "Photo Albums"
 msgstr "Фотоальбомы"
 
-#: ../../include/photos.php:283 ../../mod/photos.php:792
+#: ../../include/photos.php:291 ../../mod/photos.php:792
 #: ../../mod/photos.php:1287
 msgid "Upload New Photos"
 msgstr "Загрузить новые фотографии"
@@ -1630,8 +1606,7 @@ msgid "Registration request at %s"
 msgstr "Требуется регистрация на %s"
 
 #: ../../include/account.php:266 ../../include/account.php:293
-#: ../../include/account.php:350 ../../include/items.php:4105
-#: ../../boot.php:1191
+#: ../../include/account.php:350 ../../boot.php:1202
 msgid "Administrator"
 msgstr "Администратор"
 
@@ -1755,7 +1730,7 @@ msgstr "Запомнить"
 msgid "poke"
 msgstr ""
 
-#: ../../include/text.php:742 ../../include/conversation.php:233
+#: ../../include/text.php:742 ../../include/conversation.php:227
 msgid "poked"
 msgstr ""
 
@@ -1964,7 +1939,7 @@ msgid "bytes"
 msgstr "байт"
 
 #: ../../include/text.php:1066 ../../include/text.php:1081
-#: ../../include/conversation.php:793
+#: ../../include/conversation.php:787
 msgid "remove"
 msgstr "удалить"
 
@@ -1972,17 +1947,17 @@ msgstr "удалить"
 msgid "[remove]"
 msgstr "[удалить]"
 
-#: ../../include/text.php:1069 ../../include/conversation.php:655
+#: ../../include/text.php:1069 ../../include/conversation.php:649
 msgid "Categories:"
 msgstr "Категории:"
 
-#: ../../include/text.php:1084 ../../include/conversation.php:656
+#: ../../include/text.php:1084 ../../include/conversation.php:650
 msgid "Filed under:"
 msgstr "Хранить под:"
 
 #: ../../include/text.php:1100 ../../include/text.php:1112
 msgid "Click to open/close"
-msgstr "Нажмите, чтобы открыть / закрыть"
+msgstr "Нажмите, чтобы открыть/закрыть"
 
 #: ../../include/text.php:1264 ../../mod/events.php:326
 msgid "link to source"
@@ -1996,22 +1971,22 @@ msgstr "по умолчанию"
 msgid "Select an alternate language"
 msgstr "Выбор альтернативного языка"
 
-#: ../../include/text.php:1460 ../../include/conversation.php:115
+#: ../../include/text.php:1460 ../../include/conversation.php:111
 #: ../../mod/like.php:103 ../../mod/subthread.php:89 ../../mod/tagger.php:45
 msgid "photo"
 msgstr "фото"
 
-#: ../../include/text.php:1463 ../../include/conversation.php:118
+#: ../../include/text.php:1463 ../../include/conversation.php:114
 #: ../../mod/tagger.php:49
 msgid "event"
 msgstr "мероприятие"
 
-#: ../../include/text.php:1466 ../../include/conversation.php:143
+#: ../../include/text.php:1466 ../../include/conversation.php:139
 #: ../../mod/like.php:103 ../../mod/subthread.php:89 ../../mod/tagger.php:53
 msgid "status"
 msgstr "статус"
 
-#: ../../include/text.php:1468 ../../include/conversation.php:145
+#: ../../include/text.php:1468 ../../include/conversation.php:141
 #: ../../mod/tagger.php:55
 msgid "comment"
 msgstr "комментарий"
@@ -2062,47 +2037,47 @@ msgstr "Нельзя подключиться к самому себе."
 
 #: ../../include/permissions.php:13
 msgid "Can view my \"public\" stream and posts"
-msgstr ""
+msgstr "Может просматривать мои \"публичные\" поток и сообщения"
 
 #: ../../include/permissions.php:14
 msgid "Can view my \"public\" channel profile"
-msgstr ""
+msgstr "Может просматривать мой \"публичный\" профиль канала"
 
 #: ../../include/permissions.php:15
 msgid "Can view my \"public\" photo albums"
-msgstr ""
+msgstr "Может просматривать мои \"публичные\" фотоальбомы"
 
 #: ../../include/permissions.php:16
 msgid "Can view my \"public\" address book"
-msgstr ""
+msgstr "Может просматривать мою \"публичную\" адресную книгу"
 
 #: ../../include/permissions.php:17
 msgid "Can view my \"public\" file storage"
-msgstr ""
+msgstr "Может просматривать мои \"публичные\" файлы"
 
 #: ../../include/permissions.php:18
 msgid "Can view my \"public\" pages"
-msgstr ""
+msgstr "Может просматривать мои \"публичные\" страницы"
 
 #: ../../include/permissions.php:21
 msgid "Can send me their channel stream and posts"
-msgstr ""
+msgstr "Может прислать мне свои потоки и сообщения"
 
 #: ../../include/permissions.php:22
 msgid "Can post on my channel page (\"wall\")"
-msgstr ""
+msgstr "Может публиковать на моей странице канала (\"стена\")"
 
 #: ../../include/permissions.php:23
 msgid "Can comment on my posts"
-msgstr ""
+msgstr "Может комментировать мои сообщения"
 
 #: ../../include/permissions.php:24
 msgid "Can send me private mail messages"
-msgstr ""
+msgstr "Может отправлять мне личные сообщения по эл. почте"
 
 #: ../../include/permissions.php:25
 msgid "Can post photos to my photo albums"
-msgstr ""
+msgstr "Может публиковать фотографии в мои фотоальбомы"
 
 #: ../../include/permissions.php:26
 msgid "Can forward to all my channel contacts via post @mentions"
@@ -2126,11 +2101,11 @@ msgstr ""
 
 #: ../../include/permissions.php:29
 msgid "Can edit my \"public\" pages"
-msgstr ""
+msgstr "Может редактировать мои \"публичные\" страницы"
 
 #: ../../include/permissions.php:31
 msgid "Can administer my channel resources"
-msgstr ""
+msgstr "Может администрировать мои ресурсы канала"
 
 #: ../../include/permissions.php:31
 msgid ""
@@ -2183,11 +2158,11 @@ msgstr "Нет исходного файла."
 
 #: ../../include/attach.php:302
 msgid "Cannot locate file to replace"
-msgstr ""
+msgstr "Не удается найти файл, чтобы заменить"
 
 #: ../../include/attach.php:320
 msgid "Cannot locate file to revise/update"
-msgstr ""
+msgstr "Не удается найти файл для пересмотра / обновления"
 
 #: ../../include/attach.php:331
 #, php-format
@@ -2216,14 +2191,14 @@ msgstr "Личное сообщение"
 msgid "Edit"
 msgstr "Редактировать"
 
-#: ../../include/ItemObject.php:104 ../../include/conversation.php:619
-#: ../../mod/settings.php:671 ../../mod/group.php:177
+#: ../../include/ItemObject.php:104 ../../include/conversation.php:613
+#: ../../mod/settings.php:671 ../../mod/group.php:182
 #: ../../mod/photos.php:1162 ../../mod/admin.php:630
 #: ../../mod/connections.php:334
 msgid "Delete"
 msgstr "Удалить"
 
-#: ../../include/ItemObject.php:110 ../../include/conversation.php:618
+#: ../../include/ItemObject.php:110 ../../include/conversation.php:612
 msgid "Select"
 msgstr "Выбрать"
 
@@ -2284,13 +2259,13 @@ msgstr "Стена-к-Стене"
 msgid "via Wall-To-Wall:"
 msgstr "через Стена-к-Стене:"
 
-#: ../../include/ItemObject.php:206 ../../include/conversation.php:665
+#: ../../include/ItemObject.php:206 ../../include/conversation.php:659
 #, php-format
 msgid " from %s"
 msgstr " от %s"
 
-#: ../../include/ItemObject.php:233 ../../include/conversation.php:684
-#: ../../include/conversation.php:1040 ../../mod/photos.php:1052
+#: ../../include/ItemObject.php:233 ../../include/conversation.php:678
+#: ../../include/conversation.php:1034 ../../mod/photos.php:1052
 #: ../../mod/message.php:297 ../../mod/message.php:430
 #: ../../mod/editwebpage.php:106 ../../mod/editpost.php:85
 msgid "Please wait"
@@ -2302,7 +2277,7 @@ msgid "%d comment"
 msgid_plural "%d comments"
 msgstr[0] "%d комментарий"
 msgstr[1] "%d комментариев"
-msgstr[2] "%d комментариев"
+msgstr[2] "%d комментария"
 
 #: ../../include/ItemObject.php:502 ../../mod/photos.php:1067
 #: ../../mod/photos.php:1105 ../../mod/photos.php:1132
@@ -2310,11 +2285,11 @@ msgid "This is you"
 msgstr "Это вы"
 
 #: ../../include/ItemObject.php:505 ../../mod/events.php:458
-#: ../../mod/thing.php:190 ../../mod/invite.php:138 ../../mod/setup.php:283
+#: ../../mod/thing.php:190 ../../mod/invite.php:153 ../../mod/setup.php:283
 #: ../../mod/setup.php:326 ../../mod/settings.php:608
 #: ../../mod/settings.php:720 ../../mod/settings.php:748
 #: ../../mod/settings.php:772 ../../mod/settings.php:843
-#: ../../mod/settings.php:1010 ../../mod/group.php:83 ../../mod/photos.php:675
+#: ../../mod/settings.php:1010 ../../mod/group.php:87 ../../mod/photos.php:675
 #: ../../mod/photos.php:769 ../../mod/photos.php:1031
 #: ../../mod/photos.php:1070 ../../mod/photos.php:1108
 #: ../../mod/photos.php:1135 ../../mod/message.php:298
@@ -2361,278 +2336,278 @@ msgstr "Ссылка"
 msgid "Video"
 msgstr "Видео"
 
-#: ../../include/ItemObject.php:514 ../../include/conversation.php:1058
+#: ../../include/ItemObject.php:514 ../../include/conversation.php:1052
 #: ../../mod/photos.php:1071 ../../mod/editwebpage.php:126
 #: ../../mod/editpost.php:105
 msgid "Preview"
 msgstr "Предварительный просмотр"
 
-#: ../../include/conversation.php:121
+#: ../../include/conversation.php:117
 msgid "channel"
 msgstr "канал"
 
-#: ../../include/conversation.php:161 ../../mod/like.php:133
+#: ../../include/conversation.php:155 ../../mod/like.php:133
 #, php-format
 msgid "%1$s likes %2$s's %3$s"
 msgstr ""
 
-#: ../../include/conversation.php:164 ../../mod/like.php:135
+#: ../../include/conversation.php:158 ../../mod/like.php:135
 #, php-format
 msgid "%1$s doesn't like %2$s's %3$s"
 msgstr ""
 
-#: ../../include/conversation.php:198
+#: ../../include/conversation.php:192
 #, php-format
 msgid "%1$s is now connected with %2$s"
 msgstr ""
 
-#: ../../include/conversation.php:229
+#: ../../include/conversation.php:223
 #, php-format
 msgid "%1$s poked %2$s"
 msgstr ""
 
-#: ../../include/conversation.php:251 ../../mod/mood.php:63
+#: ../../include/conversation.php:245 ../../mod/mood.php:63
 #, php-format
 msgid "%1$s is currently %2$s"
 msgstr ""
 
-#: ../../include/conversation.php:643
+#: ../../include/conversation.php:637
 #, php-format
 msgid "View %s's profile @ %s"
 msgstr ""
 
-#: ../../include/conversation.php:682
+#: ../../include/conversation.php:676
 msgid "View in context"
 msgstr "Показать в контексте"
 
-#: ../../include/conversation.php:797
+#: ../../include/conversation.php:791
 msgid "Loading..."
 msgstr "Загрузка..."
 
-#: ../../include/conversation.php:798
+#: ../../include/conversation.php:792
 msgid "Delete Selected Items"
 msgstr "Удалить выбранные элементы"
 
-#: ../../include/conversation.php:886
+#: ../../include/conversation.php:880
 msgid "Follow Thread"
 msgstr "Следобать теме"
 
-#: ../../include/conversation.php:955
+#: ../../include/conversation.php:949
 #, php-format
 msgid "%s likes this."
 msgstr "%s нравится это."
 
-#: ../../include/conversation.php:955
+#: ../../include/conversation.php:949
 #, php-format
 msgid "%s doesn't like this."
 msgstr "%s не нравится это."
 
-#: ../../include/conversation.php:959
+#: ../../include/conversation.php:953
 #, php-format
 msgid "<span  %1$s>%2$d people</span> like this."
-msgstr ""
+msgstr "<span  %1$s>%2$d чел.</span> нравится это."
 
-#: ../../include/conversation.php:961
+#: ../../include/conversation.php:955
 #, php-format
 msgid "<span  %1$s>%2$d people</span> don't like this."
-msgstr ""
+msgstr "<span  %1$s>%2$d чел.</span> не нравится это."
 
-#: ../../include/conversation.php:967
+#: ../../include/conversation.php:961
 msgid "and"
 msgstr "и"
 
-#: ../../include/conversation.php:970
+#: ../../include/conversation.php:964
 #, php-format
 msgid ", and %d other people"
 msgstr ""
 
-#: ../../include/conversation.php:971
+#: ../../include/conversation.php:965
 #, php-format
 msgid "%s like this."
 msgstr "%s нравится это."
 
-#: ../../include/conversation.php:971
+#: ../../include/conversation.php:965
 #, php-format
 msgid "%s don't like this."
 msgstr "%s не нравится это."
 
-#: ../../include/conversation.php:996
+#: ../../include/conversation.php:990
 msgid "Visible to <strong>everybody</strong>"
 msgstr "Видно для <strong>всех</strong>"
 
-#: ../../include/conversation.php:997 ../../mod/message.php:253
+#: ../../include/conversation.php:991 ../../mod/message.php:253
 #: ../../mod/message.php:364
 msgid "Please enter a link URL:"
 msgstr "Пожалуйста, введите URL ссылки:"
 
-#: ../../include/conversation.php:998
+#: ../../include/conversation.php:992
 msgid "Please enter a video link/URL:"
 msgstr "Пожалуйста, введите URL видео-ссылки:"
 
-#: ../../include/conversation.php:999
+#: ../../include/conversation.php:993
 msgid "Please enter an audio link/URL:"
 msgstr "Пожалуйста, введите URL аудио-ссылки:"
 
-#: ../../include/conversation.php:1000
+#: ../../include/conversation.php:994
 msgid "Tag term:"
 msgstr "Теги:"
 
-#: ../../include/conversation.php:1001 ../../mod/filer.php:35
+#: ../../include/conversation.php:995 ../../mod/filer.php:35
 msgid "Save to Folder:"
 msgstr "Сохранить в папку:"
 
-#: ../../include/conversation.php:1002
+#: ../../include/conversation.php:996
 msgid "Where are you right now?"
 msgstr "Где вы сейчас?"
 
-#: ../../include/conversation.php:1017 ../../mod/photos.php:1051
+#: ../../include/conversation.php:1011 ../../mod/photos.php:1051
 msgid "Share"
 msgstr "Поделиться"
 
-#: ../../include/conversation.php:1019
+#: ../../include/conversation.php:1013
 msgid "Page link title"
 msgstr "Ссылка заголовока страницы"
 
-#: ../../include/conversation.php:1021 ../../mod/message.php:295
+#: ../../include/conversation.php:1015 ../../mod/message.php:295
 #: ../../mod/message.php:427 ../../mod/editwebpage.php:98
 #: ../../mod/editpost.php:77
 msgid "Upload photo"
 msgstr "Загрузить фотографию"
 
-#: ../../include/conversation.php:1022
+#: ../../include/conversation.php:1016
 msgid "upload photo"
 msgstr "загрузить фотографию"
 
-#: ../../include/conversation.php:1023 ../../mod/editwebpage.php:99
+#: ../../include/conversation.php:1017 ../../mod/editwebpage.php:99
 #: ../../mod/editpost.php:78
 msgid "Attach file"
 msgstr "Прикрепить файл"
 
-#: ../../include/conversation.php:1024
+#: ../../include/conversation.php:1018
 msgid "attach file"
 msgstr "прикрепить файл"
 
-#: ../../include/conversation.php:1025 ../../mod/message.php:296
+#: ../../include/conversation.php:1019 ../../mod/message.php:296
 #: ../../mod/message.php:428 ../../mod/editwebpage.php:100
 #: ../../mod/editpost.php:79
 msgid "Insert web link"
 msgstr "Вставить веб-ссылку"
 
-#: ../../include/conversation.php:1026
+#: ../../include/conversation.php:1020
 msgid "web link"
 msgstr "веб-ссылка"
 
-#: ../../include/conversation.php:1027
+#: ../../include/conversation.php:1021
 msgid "Insert video link"
 msgstr "Вставить видео-ссылку"
 
-#: ../../include/conversation.php:1028
+#: ../../include/conversation.php:1022
 msgid "video link"
 msgstr "видео-ссылка"
 
-#: ../../include/conversation.php:1029
+#: ../../include/conversation.php:1023
 msgid "Insert audio link"
 msgstr "Вставить аудио-ссылку"
 
-#: ../../include/conversation.php:1030
+#: ../../include/conversation.php:1024
 msgid "audio link"
 msgstr "аудио-ссылка"
 
-#: ../../include/conversation.php:1031 ../../mod/editwebpage.php:104
+#: ../../include/conversation.php:1025 ../../mod/editwebpage.php:104
 #: ../../mod/editpost.php:83
 msgid "Set your location"
 msgstr "Указание своего расположения"
 
-#: ../../include/conversation.php:1032
+#: ../../include/conversation.php:1026
 msgid "set location"
 msgstr "указание расположения"
 
-#: ../../include/conversation.php:1033 ../../mod/editwebpage.php:105
+#: ../../include/conversation.php:1027 ../../mod/editwebpage.php:105
 #: ../../mod/editpost.php:84
 msgid "Clear browser location"
 msgstr "Стереть указание расположения"
 
-#: ../../include/conversation.php:1034
+#: ../../include/conversation.php:1028
 msgid "clear location"
-msgstr "указание расположения"
+msgstr "стереть указание расположения"
 
-#: ../../include/conversation.php:1036 ../../mod/editwebpage.php:118
+#: ../../include/conversation.php:1030 ../../mod/editwebpage.php:118
 #: ../../mod/editpost.php:97
 msgid "Set title"
-msgstr "Задать название"
+msgstr "Заголовок"
 
-#: ../../include/conversation.php:1039 ../../mod/editwebpage.php:120
+#: ../../include/conversation.php:1033 ../../mod/editwebpage.php:120
 #: ../../mod/editpost.php:99
 msgid "Categories (comma-separated list)"
 msgstr "Категории (список через запятую)"
 
-#: ../../include/conversation.php:1041 ../../mod/editwebpage.php:107
+#: ../../include/conversation.php:1035 ../../mod/editwebpage.php:107
 #: ../../mod/editpost.php:86
 msgid "Permission settings"
 msgstr "Настройки разрешений"
 
-#: ../../include/conversation.php:1042
+#: ../../include/conversation.php:1036
 msgid "permissions"
 msgstr "разрешения"
 
-#: ../../include/conversation.php:1050 ../../mod/editwebpage.php:115
+#: ../../include/conversation.php:1044 ../../mod/editwebpage.php:115
 #: ../../mod/editpost.php:94
 msgid "Public post"
 msgstr "Публичное сообщение"
 
-#: ../../include/conversation.php:1052 ../../mod/editwebpage.php:121
+#: ../../include/conversation.php:1046 ../../mod/editwebpage.php:121
 #: ../../mod/editpost.php:100
 msgid "Example: bob@example.com, mary@example.com"
 msgstr "Пример: bob@example.com, mary@example.com"
 
-#: ../../include/items.php:156 ../../mod/like.php:55 ../../mod/group.php:70
+#: ../../include/items.php:156 ../../mod/like.php:55 ../../mod/group.php:74
 #: ../../mod/profperm.php:28 ../../index.php:339
 msgid "Permission denied"
 msgstr "Доступ запрещен"
 
-#: ../../include/items.php:2633
-#, php-format
-msgid "%s's birthday"
-msgstr "%s's День Рождения"
-
-#: ../../include/items.php:2634
-#, php-format
-msgid "Happy Birthday %s"
-msgstr "С Днем Рождения %s"
-
-#: ../../include/items.php:4095
-msgid "[Name Withheld]"
-msgstr ""
-
-#: ../../include/items.php:4103
-msgid "A new person is sharing with you at "
-msgstr ""
-
-#: ../../include/items.php:4103
-msgid "You have a new follower at "
-msgstr "У вас есть новый последователь в"
-
-#: ../../include/items.php:4529 ../../mod/page.php:62 ../../mod/viewsrc.php:18
+#: ../../include/items.php:3223 ../../mod/page.php:62 ../../mod/viewsrc.php:18
 #: ../../mod/home.php:64 ../../mod/admin.php:142 ../../mod/admin.php:667
 #: ../../mod/admin.php:866 ../../mod/display.php:33
 msgid "Item not found."
 msgstr "Элемент не найден."
 
-#: ../../include/items.php:4701
+#: ../../include/items.php:3395
 msgid "Archives"
 msgstr "Архивы"
 
-#: ../../include/items.php:4862 ../../mod/group.php:43 ../../mod/group.php:141
+#: ../../include/items.php:3556 ../../mod/group.php:44 ../../mod/group.php:146
 msgid "Collection not found."
 msgstr "Коллекция не найдена."
 
-#: ../../include/items.php:4872
+#: ../../include/items.php:3566
 msgid "Collection has no members."
 msgstr ""
 
-#: ../../include/items.php:4888
+#: ../../include/items.php:3582
 msgid "Connection not found."
 msgstr "Контакт не найден."
+
+#: ../../include/bbcode.php:94 ../../include/bbcode.php:442
+#: ../../include/bbcode.php:445
+msgid "Image/photo"
+msgstr "Изображение / фото"
+
+#: ../../include/bbcode.php:161
+#, php-format
+msgid "%1$s wrote the following %2$s %3$s"
+msgstr ""
+
+#: ../../include/bbcode.php:163
+msgid "post"
+msgstr "сообщение"
+
+#: ../../include/bbcode.php:402 ../../include/bbcode.php:422
+msgid "$1 wrote:"
+msgstr "$1 писал:"
+
+#: ../../include/bbcode.php:449 ../../include/bbcode.php:450
+msgid "Encrypted content"
+msgstr "Зашифрованное содержание"
 
 #: ../../mod/common.php:10
 msgid "No channel."
@@ -2709,7 +2684,7 @@ msgstr "Описание:"
 
 #: ../../mod/events.php:452
 msgid "Title:"
-msgstr "Название:"
+msgstr "Заголовок:"
 
 #: ../../mod/events.php:454
 msgid "Share this event"
@@ -2765,20 +2740,20 @@ msgstr ""
 msgid "%s : Not a valid email address."
 msgstr "%s : Не действительный адрес электронной почты."
 
-#: ../../mod/invite.php:71
+#: ../../mod/invite.php:74
 msgid "Please join us on Red"
 msgstr "Пожалуйста, присоединяйтесь к нам в Red"
 
-#: ../../mod/invite.php:82
+#: ../../mod/invite.php:85
 msgid "Invitation limit exceeded. Please contact your site administrator."
 msgstr ""
 
-#: ../../mod/invite.php:87
+#: ../../mod/invite.php:90
 #, php-format
 msgid "%s : Message delivery failed."
 msgstr ""
 
-#: ../../mod/invite.php:91
+#: ../../mod/invite.php:94
 #, php-format
 msgid "%d message sent."
 msgid_plural "%d messages sent."
@@ -2786,72 +2761,47 @@ msgstr[0] ""
 msgstr[1] ""
 msgstr[2] ""
 
-#: ../../mod/invite.php:110
+#: ../../mod/invite.php:113
 msgid "You have no more invitations available"
 msgstr ""
 
-#: ../../mod/invite.php:118
-#, php-format
-msgid ""
-"Visit %s for a list of public sites that you can join. Friendica members on "
-"other sites can all connect with each other, as well as with members of many"
-" other social networks."
-msgstr ""
-
-#: ../../mod/invite.php:120
-#, php-format
-msgid ""
-"To accept this invitation, please visit and register at %s or any other "
-"public Friendica website."
-msgstr ""
-
-#: ../../mod/invite.php:121
-#, php-format
-msgid ""
-"Friendica sites all inter-connect to create a huge privacy-enhanced social "
-"web that is owned and controlled by its members. They can also connect with "
-"many traditional social networks. See %s for a list of alternate Friendica "
-"sites you can join."
-msgstr ""
-
-#: ../../mod/invite.php:124
-msgid ""
-"Our apologies. This system is not currently configured to connect with other"
-" public sites or invite members."
-msgstr ""
-
-#: ../../mod/invite.php:130
+#: ../../mod/invite.php:139
 msgid "Send invitations"
 msgstr "Послать приглашения"
 
-#: ../../mod/invite.php:131
+#: ../../mod/invite.php:140
 msgid "Enter email addresses, one per line:"
 msgstr "Введите адреса электронной почты, по одному на строку:"
 
-#: ../../mod/invite.php:132 ../../mod/message.php:292
+#: ../../mod/invite.php:141 ../../mod/message.php:292
 #: ../../mod/message.php:423
 msgid "Your message:"
-msgstr "Ваше письмо:"
+msgstr "Ваше сообщение:"
 
-#: ../../mod/invite.php:133
+#: ../../mod/invite.php:142
 msgid ""
-"You are cordially invited to join me and other close friends on Friendica - "
-"and help us to create a better social web."
+"You are cordially invited to join me and some other close friends on the Red"
+" Matrix - a revolutionary new decentralised social and information tool."
 msgstr ""
 
-#: ../../mod/invite.php:135
+#: ../../mod/invite.php:144
 msgid "You will need to supply this invitation code: $invite_code"
 msgstr ""
 
-#: ../../mod/invite.php:135
-msgid ""
-"Once you have registered, please connect with me via my profile page at:"
+#: ../../mod/invite.php:146
+msgid "Please visit my channel at"
 msgstr ""
 
-#: ../../mod/invite.php:137
+#: ../../mod/invite.php:150
 msgid ""
-"For more information about the Friendica project and why we feel it is "
-"important, please visit http://friendica.com"
+"Once you have registered, please connect with my Red Matrix channel address:"
+msgstr ""
+
+#: ../../mod/invite.php:152
+msgid ""
+"For more information about the Red Matrix Project and why it has the "
+"potential to change the internet as we know it, please visit "
+"http://getzot.com"
 msgstr ""
 
 #: ../../mod/allfriends.php:35
@@ -2863,8 +2813,7 @@ msgstr "Друзья %s"
 msgid "No friends to display."
 msgstr "Нет друзей для показа."
 
-#: ../../mod/webpages.php:8 ../../mod/profile.php:8 ../../mod/channel.php:8
-#: ../../boot.php:1524
+#: ../../mod/webpages.php:8 ../../mod/profile.php:8 ../../boot.php:1535
 msgid "Requested profile is not available."
 msgstr "Запрашиваемый профиль не доступен."
 
@@ -2903,6 +2852,10 @@ msgstr "Да"
 #: ../../mod/profiles.php:507
 msgid "No"
 msgstr "Нет"
+
+#: ../../mod/lastpost.php:16 ../../mod/channel.php:16
+msgid "You must be logged in to see this page."
+msgstr ""
 
 #: ../../mod/apps.php:8
 msgid "No installed applications."
@@ -3430,7 +3383,7 @@ msgstr "Подтверждение:"
 
 #: ../../mod/settings.php:719
 msgid "Leave password fields blank unless changing"
-msgstr ""
+msgstr "Оставьте поля пустыми, если не меняется"
 
 #: ../../mod/settings.php:721 ../../mod/settings.php:1019
 msgid "Email Address:"
@@ -3528,13 +3481,13 @@ msgstr ""
 msgid "Allow us to suggest you as a potential friend to new members?"
 msgstr ""
 
-#: ../../mod/settings.php:974 ../../mod/profile_photo.php:276
+#: ../../mod/settings.php:974 ../../mod/profile_photo.php:298
 msgid "or"
 msgstr "или"
 
 #: ../../mod/settings.php:979
 msgid "Your channel address is"
-msgstr "Ваш адрес канала"
+msgstr "Адрес вашего канала:"
 
 #: ../../mod/settings.php:990
 msgid "Automatically expire posts after this many days:"
@@ -3578,7 +3531,7 @@ msgstr "Основные настройки"
 
 #: ../../mod/settings.php:1020
 msgid "Your Timezone:"
-msgstr ""
+msgstr "Ваш часовой пояс:"
 
 #: ../../mod/settings.php:1021
 msgid "Default Post Location:"
@@ -3586,7 +3539,7 @@ msgstr "Откуда по умолчанию:"
 
 #: ../../mod/settings.php:1022
 msgid "Use Browser Location:"
-msgstr ""
+msgstr "Используйте указание браузерa:"
 
 #: ../../mod/settings.php:1025
 msgid "Security and Privacy Settings"
@@ -3598,19 +3551,19 @@ msgstr "Быстрые параметры безопасности и конфи
 
 #: ../../mod/settings.php:1028
 msgid "Very Public - extremely permissive"
-msgstr ""
+msgstr "Очень публично - чрезвычайно разрешающе"
 
 #: ../../mod/settings.php:1029
 msgid "Typical - default public, privacy when desired"
-msgstr ""
+msgstr "Типично - по умолчанию публично, конфиденциальность, только если настроена"
 
 #: ../../mod/settings.php:1030
 msgid "Private - default private, rarely open or public"
-msgstr ""
+msgstr "Частно  - по умолчанию частно, редко открыто или публично"
 
 #: ../../mod/settings.php:1031
 msgid "Blocked - default blocked to/from everybody"
-msgstr ""
+msgstr "Заблокированно - по умолчанию заблокировано для/от всех"
 
 #: ../../mod/settings.php:1034
 msgid "Maximum Friend Requests/Day:"
@@ -3658,11 +3611,11 @@ msgstr ""
 
 #: ../../mod/settings.php:1057
 msgid "Send a notification email when:"
-msgstr ""
+msgstr "Отправить уведомление по электронной почте, если:"
 
 #: ../../mod/settings.php:1058
 msgid "You receive an introduction"
-msgstr ""
+msgstr "Вы получили введение"
 
 #: ../../mod/settings.php:1059
 msgid "Your introductions are confirmed"
@@ -3715,7 +3668,7 @@ msgstr "Никаких контактов."
 msgid "Visit %s's profile [%s]"
 msgstr ""
 
-#: ../../mod/viewconnections.php:83
+#: ../../mod/viewconnections.php:84
 msgid "View Connnections"
 msgstr "Просмотр контактов"
 
@@ -3770,27 +3723,27 @@ msgstr "Добавить"
 msgid "No entries."
 msgstr "Нет записей."
 
-#: ../../mod/directory.php:107 ../../mod/profiles.php:584
+#: ../../mod/directory.php:125 ../../mod/profiles.php:584
 msgid "Age: "
 msgstr "Возраст:"
 
-#: ../../mod/directory.php:110
+#: ../../mod/directory.php:128
 msgid "Gender: "
 msgstr "Пол:"
 
-#: ../../mod/directory.php:165
+#: ../../mod/directory.php:183
 msgid "Finding:"
 msgstr "Поиск:"
 
-#: ../../mod/directory.php:173
+#: ../../mod/directory.php:191
 msgid "next page"
 msgstr "следующая страница"
 
-#: ../../mod/directory.php:173
+#: ../../mod/directory.php:191
 msgid "previous page"
 msgstr "предыдущая страница"
 
-#: ../../mod/directory.php:180
+#: ../../mod/directory.php:198
 msgid "No entries (some entries may be hidden)."
 msgstr ""
 
@@ -3802,47 +3755,51 @@ msgstr "Поиск людей"
 msgid "No matches"
 msgstr "Нет соответствий"
 
-#: ../../mod/group.php:25
+#: ../../mod/group.php:26
 msgid "Collection created."
 msgstr "Коллекция создана."
 
-#: ../../mod/group.php:31
+#: ../../mod/group.php:32
 msgid "Could not create collection."
 msgstr "Не удалось создать коллекцию."
 
-#: ../../mod/group.php:56
+#: ../../mod/group.php:60
 msgid "Collection name changed."
 msgstr "Имя коллекции изменено."
 
-#: ../../mod/group.php:88
-msgid "Create a collection of connections."
-msgstr "Создать новую коллекцию контактов."
+#: ../../mod/group.php:92
+msgid "Create a collection of channels."
+msgstr ""
 
-#: ../../mod/group.php:89 ../../mod/group.php:184
+#: ../../mod/group.php:93 ../../mod/group.php:189
 msgid "Collection Name: "
 msgstr "Название коллекции:"
 
-#: ../../mod/group.php:108
+#: ../../mod/group.php:95 ../../mod/group.php:192
+msgid "Members are visible to other channels"
+msgstr ""
+
+#: ../../mod/group.php:113
 msgid "Collection removed."
 msgstr "Коллекция удалена."
 
-#: ../../mod/group.php:110
+#: ../../mod/group.php:115
 msgid "Unable to remove collection."
 msgstr ""
 
-#: ../../mod/group.php:183
+#: ../../mod/group.php:188
 msgid "Collection Editor"
 msgstr "Редактор коллекций"
 
-#: ../../mod/group.php:196
+#: ../../mod/group.php:202
 msgid "Members"
 msgstr "Участники"
 
-#: ../../mod/group.php:198
+#: ../../mod/group.php:204
 msgid "All Connected Channels"
 msgstr "Все подключенные каналы"
 
-#: ../../mod/group.php:231
+#: ../../mod/group.php:237
 msgid "Click on a channel to add or remove."
 msgstr ""
 
@@ -3991,11 +3948,11 @@ msgstr "отправил вам личное сообщение"
 msgid "added your channel"
 msgstr "добавил ваш канал"
 
-#: ../../mod/ping.php:230 ../../boot.php:1716 ../../boot.php:1796
+#: ../../mod/ping.php:230 ../../boot.php:1727 ../../boot.php:1807
 msgid "g A l F d"
 msgstr "g A l F d"
 
-#: ../../mod/ping.php:252 ../../boot.php:1762 ../../boot.php:1837
+#: ../../mod/ping.php:252 ../../boot.php:1773 ../../boot.php:1848
 msgid "[today]"
 msgstr "[сегодня]"
 
@@ -4018,7 +3975,7 @@ msgstr "Добро пожаловать в %s"
 
 #: ../../mod/message.php:16
 msgid "Check Mail"
-msgstr "Проверить Е-мail"
+msgstr "Проверить снова"
 
 #: ../../mod/message.php:52
 msgid "Unable to lookup recipient."
@@ -4038,11 +3995,11 @@ msgstr ""
 
 #: ../../mod/message.php:213 ../../mod/notifications.php:101
 msgid "Messages"
-msgstr "Переписка"
+msgstr "Сообщения"
 
 #: ../../mod/message.php:224
 msgid "Message deleted."
-msgstr "Переписка удалена."
+msgstr "Сообщение удалено."
 
 #: ../../mod/message.php:231
 msgid "Conversation removed."
@@ -4050,7 +4007,7 @@ msgstr "Разговор удален."
 
 #: ../../mod/message.php:282
 msgid "Send Private Message"
-msgstr "Отправить личное письмо"
+msgstr "Отправить личное сообщение"
 
 #: ../../mod/message.php:283 ../../mod/message.php:418
 msgid "To:"
@@ -4112,7 +4069,7 @@ msgstr "Удаленная аутентификация"
 
 #: ../../mod/rmagic.php:57
 msgid "Enter your channel address (e.g. channel@example.com)"
-msgstr "Введите адрес вашего канала (например channel@example.com)"
+msgstr "Введите адрес вашего канала (например: channel@example.com)"
 
 #: ../../mod/rmagic.php:58
 msgid "Authenticate"
@@ -4268,11 +4225,11 @@ msgstr "Функции плагинов"
 
 #: ../../mod/admin.php:109
 msgid "User registrations waiting for confirmation"
-msgstr "Регистрации пользователей ждут подтверждения"
+msgstr "Регистрации пользователей, которые ждут подтверждения"
 
 #: ../../mod/admin.php:180
 msgid "Message queues"
-msgstr "Очереди сообщений"
+msgstr "Очередь непрочитанный сообщений"
 
 #: ../../mod/admin.php:185 ../../mod/admin.php:398 ../../mod/admin.php:621
 #: ../../mod/admin.php:715 ../../mod/admin.php:757 ../../mod/admin.php:920
@@ -4290,7 +4247,7 @@ msgstr "Зарегистрированных пользователeй"
 
 #: ../../mod/admin.php:190
 msgid "Pending registrations"
-msgstr "В ожидании утверждения регистрации"
+msgstr "Утверждения регистрации ждут"
 
 #: ../../mod/admin.php:191
 msgid "Version"
@@ -4302,7 +4259,7 @@ msgstr "Активные плагины"
 
 #: ../../mod/admin.php:330
 msgid "Site settings updated."
-msgstr "Настройки сайта обновленны."
+msgstr "Настройки сайта обновлены."
 
 #: ../../mod/admin.php:361
 msgid "No special theme for accessibility"
@@ -4310,15 +4267,15 @@ msgstr ""
 
 #: ../../mod/admin.php:386
 msgid "Closed"
-msgstr "Закрыто"
+msgstr "Регистрация закрыта"
 
 #: ../../mod/admin.php:387
 msgid "Requires approval"
-msgstr "Требует подтверждения"
+msgstr "Регистрация требует подтверждения"
 
 #: ../../mod/admin.php:388
 msgid "Open"
-msgstr "Открыто"
+msgstr "Регистрация открыта"
 
 #: ../../mod/admin.php:392
 msgid "No SSL policy, links will track page SSL state"
@@ -4400,7 +4357,7 @@ msgstr ""
 
 #: ../../mod/admin.php:416
 msgid "Maximum image size"
-msgstr "Максимальный размер изображения"
+msgstr "Максимальный размер"
 
 #: ../../mod/admin.php:416
 msgid ""
@@ -4410,7 +4367,7 @@ msgstr ""
 
 #: ../../mod/admin.php:417
 msgid "Register policy"
-msgstr "Правила регистрации"
+msgstr "Статус регистрации"
 
 #: ../../mod/admin.php:418
 msgid "Register text"
@@ -4569,9 +4526,9 @@ msgstr[2] ""
 #, php-format
 msgid "%s user deleted"
 msgid_plural "%s users deleted"
-msgstr[0] "%s пользователь удален"
-msgstr[1] "%s пользователи удалены"
-msgstr[2] "%s пользователи удалены"
+msgstr[0] "%s контакт удален"
+msgstr[1] "%s контакта удалены"
+msgstr[2] "%s контакты удалены"
 
 #: ../../mod/admin.php:552
 msgid "Account not found"
@@ -4580,17 +4537,17 @@ msgstr "Аккаунт не найден"
 #: ../../mod/admin.php:563
 #, php-format
 msgid "User '%s' deleted"
-msgstr "Пользователь '%s' удален"
+msgstr "Контакт '%s' удален"
 
 #: ../../mod/admin.php:572
 #, php-format
 msgid "User '%s' unblocked"
-msgstr "Kontakt '%s' разрешен"
+msgstr "Контакт '%s' разрешен"
 
 #: ../../mod/admin.php:572
 #, php-format
 msgid "User '%s' blocked"
-msgstr "Пользователь '%s' заблокирован"
+msgstr "Контакт '%s' заблокирован"
 
 #: ../../mod/admin.php:603
 msgid "Normal Account"
@@ -4723,7 +4680,7 @@ msgstr "Очистить"
 
 #: ../../mod/admin.php:1052
 msgid "Debugging"
-msgstr "Отладка"
+msgstr "Включить/Выключить"
 
 #: ../../mod/admin.php:1053
 msgid "Log file"
@@ -4732,7 +4689,7 @@ msgstr "Файл журнала"
 #: ../../mod/admin.php:1053
 msgid ""
 "Must be writable by web server. Relative to your Red top-level directory."
-msgstr ""
+msgstr "Должна быть доступна для записи веб-сервером. Относительно верхнего уровня веб-сайта."
 
 #: ../../mod/admin.php:1054
 msgid "Log level"
@@ -4759,7 +4716,7 @@ msgstr ""
 
 #: ../../mod/intro.php:67
 msgid "No pending introductions."
-msgstr ""
+msgstr "Введений в ожидании нет."
 
 #: ../../mod/intro.php:72
 msgid "System error. Please try again later."
@@ -5096,7 +5053,7 @@ msgstr "Все"
 
 #: ../../mod/connections.php:538
 msgid "Suggestions"
-msgstr "Предложения"
+msgstr "Рекомендации"
 
 #: ../../mod/connections.php:541
 msgid "Suggest new connections"
@@ -5147,11 +5104,11 @@ msgstr "%1$s [%2$s]"
 msgid "Edit contact"
 msgstr "Редактировать контакт"
 
-#: ../../mod/connections.php:656
+#: ../../mod/connections.php:654
 msgid "Search your connections"
 msgstr "Поиск контактов"
 
-#: ../../mod/connections.php:657
+#: ../../mod/connections.php:655
 msgid "Finding: "
 msgstr "Поиск:"
 
@@ -5418,23 +5375,23 @@ msgstr ""
 msgid "Edit/Manage Profiles"
 msgstr "Редактирование  / Управление профилей"
 
-#: ../../mod/profiles.php:624 ../../boot.php:1629
+#: ../../mod/profiles.php:624 ../../boot.php:1640
 msgid "Change profile photo"
 msgstr "Изменить фотографию профиля"
 
-#: ../../mod/profiles.php:625 ../../boot.php:1636
+#: ../../mod/profiles.php:625 ../../boot.php:1647
 msgid "Create New Profile"
 msgstr "Создать новый профиль"
 
-#: ../../mod/profiles.php:636 ../../boot.php:1650
+#: ../../mod/profiles.php:636 ../../boot.php:1661
 msgid "Profile Image"
 msgstr "Изображение профиля"
 
-#: ../../mod/profiles.php:639 ../../boot.php:1653
+#: ../../mod/profiles.php:639 ../../boot.php:1664
 msgid "visible to everybody"
 msgstr "видно всем"
 
-#: ../../mod/profiles.php:640 ../../boot.php:1654
+#: ../../mod/profiles.php:640 ../../boot.php:1665
 msgid "Edit visibility"
 msgstr "Редактировать видимость"
 
@@ -5500,9 +5457,9 @@ msgid ""
 "Password reset failed."
 msgstr ""
 
-#: ../../mod/lostpass.php:85 ../../boot.php:1361
+#: ../../mod/lostpass.php:85 ../../boot.php:1372
 msgid "Password Reset"
-msgstr "Вбросить пароль"
+msgstr "Сбросить пароль"
 
 #: ../../mod/lostpass.php:86
 msgid "Your password has been reset as requested."
@@ -5743,74 +5700,74 @@ msgstr ""
 msgid "Image uploaded but image cropping failed."
 msgstr ""
 
-#: ../../mod/profile_photo.php:102
+#: ../../mod/profile_photo.php:107
 msgid "Image resize failed."
 msgstr "Изменение размера изображения не удалось."
 
-#: ../../mod/profile_photo.php:139
+#: ../../mod/profile_photo.php:151
 msgid ""
 "Shift-reload the page or clear browser cache if the new photo does not "
 "display immediately."
 msgstr ""
 
-#: ../../mod/profile_photo.php:161
+#: ../../mod/profile_photo.php:173
 #, php-format
 msgid "Image exceeds size limit of %d"
 msgstr ""
 
-#: ../../mod/profile_photo.php:170
+#: ../../mod/profile_photo.php:182
 msgid "Unable to process image."
 msgstr ""
 
-#: ../../mod/profile_photo.php:212 ../../mod/profile_photo.php:250
+#: ../../mod/profile_photo.php:224 ../../mod/profile_photo.php:272
 msgid "Photo not available."
 msgstr "Фотография не доступна."
 
-#: ../../mod/profile_photo.php:269
+#: ../../mod/profile_photo.php:291
 msgid "Upload File:"
 msgstr "Загрузить файл:"
 
-#: ../../mod/profile_photo.php:270
+#: ../../mod/profile_photo.php:292
 msgid "Select a profile:"
 msgstr "Выберите профиль:"
 
-#: ../../mod/profile_photo.php:271
+#: ../../mod/profile_photo.php:293
 msgid "Upload Profile Photo"
 msgstr "Загрузить фотографию профиля"
 
-#: ../../mod/profile_photo.php:272
+#: ../../mod/profile_photo.php:294
 msgid "Upload"
 msgstr "Загрузка"
 
-#: ../../mod/profile_photo.php:276
+#: ../../mod/profile_photo.php:298
 msgid "skip this step"
 msgstr "пропустить этот шаг"
 
-#: ../../mod/profile_photo.php:276
+#: ../../mod/profile_photo.php:298
 msgid "select a photo from your photo albums"
 msgstr ""
 
-#: ../../mod/profile_photo.php:290
+#: ../../mod/profile_photo.php:312
 msgid "Crop Image"
 msgstr "Обрезать изображение"
 
-#: ../../mod/profile_photo.php:291
+#: ../../mod/profile_photo.php:313
 msgid "Please adjust the image cropping for optimum viewing."
 msgstr ""
 
-#: ../../mod/profile_photo.php:293
+#: ../../mod/profile_photo.php:315
 msgid "Done Editing"
 msgstr "Закончить редактирование"
 
-#: ../../mod/profile_photo.php:326
+#: ../../mod/profile_photo.php:350
 msgid "Image uploaded successfully."
 msgstr "Загрузка изображениея прошла успешно."
 
-#: ../../mod/profile_photo.php:328
+#: ../../mod/profile_photo.php:352
 msgid "Image upload failed."
 msgstr "Загрузка изображениея прошла безуспешно."
 
-#: ../../mod/profile_photo.php:335
+#: ../../mod/profile_photo.php:361
 #, php-format
 msgid "Image size reduction [%s] failed."
 msgstr ""
@@ -5857,7 +5814,7 @@ msgstr "Скрыть проигнорированные запросы"
 
 #: ../../mod/notifications.php:147 ../../mod/notifications.php:193
 msgid "Notification type: "
-msgstr "Тип уведомления:"
+msgstr "Тип оповещения:"
 
 #: ../../mod/notifications.php:148
 msgid "Friend Suggestion"
@@ -5939,15 +5896,15 @@ msgstr "%s прокомментировал %s's сообщение"
 
 #: ../../mod/notifications.php:302
 msgid "No more network notifications."
-msgstr "Больше никаких уведомлений сети."
+msgstr "Новых оповещений сети пока нет."
 
 #: ../../mod/notifications.php:306
 msgid "Network Notifications"
-msgstr "Уведомления сети"
+msgstr "Оповещения сети"
 
 #: ../../mod/notifications.php:332 ../../mod/notify.php:54
 msgid "No more system notifications."
-msgstr "Больше никаких уведомлений системы."
+msgstr "Новых оповещений системы пока нет."
 
 #: ../../mod/notifications.php:336 ../../mod/notify.php:58
 msgid "System Notifications"
@@ -5955,7 +5912,7 @@ msgstr "Системные оповещения "
 
 #: ../../mod/notifications.php:427
 msgid "No more personal notifications."
-msgstr "Больше никаких личных уведомлений."
+msgstr "Новых личных оповещений пока нет."
 
 #: ../../mod/notifications.php:431
 msgid "Personal Notifications"
@@ -5963,11 +5920,11 @@ msgstr "Личные оповещения "
 
 #: ../../mod/notifications.php:504
 msgid "No more home notifications."
-msgstr "Больше никаких домашних уведомлений."
+msgstr "Новых домашних оповещений пока нет."
 
 #: ../../mod/notifications.php:508
 msgid "Home Notifications"
-msgstr "Домашние уведомления"
+msgstr "Домашние оповещения"
 
 #: ../../mod/oexchange.php:22
 msgid "Post successful."
@@ -6254,104 +6211,104 @@ msgstr ""
 msgid "0-99 default: 5"
 msgstr "0-99 по умолчанию: 5"
 
-#: ../../boot.php:1185
+#: ../../boot.php:1196
 #, php-format
 msgid "Update %s failed. See error logs."
 msgstr ""
 
-#: ../../boot.php:1188
+#: ../../boot.php:1199
 #, php-format
 msgid "Update Error at %s"
 msgstr ""
 
-#: ../../boot.php:1325
+#: ../../boot.php:1336
 msgid "Create a New Account"
 msgstr "Создать новый аккаунт"
 
-#: ../../boot.php:1354
+#: ../../boot.php:1365
 msgid "Password"
 msgstr "Пароль"
 
-#: ../../boot.php:1355
+#: ../../boot.php:1366
 msgid "Remember me"
 msgstr "Запомнить"
 
-#: ../../boot.php:1360
+#: ../../boot.php:1371
 msgid "Forgot your password?"
 msgstr "Забыли пароль или логин?"
 
-#: ../../boot.php:1479
+#: ../../boot.php:1490
 msgid "Requested channel is not available."
 msgstr "Запрашиваемый канал не доступен."
 
-#: ../../boot.php:1491
+#: ../../boot.php:1502
 msgid " Sorry, you don't have the permission to view this profile. "
 msgstr ""
 
-#: ../../boot.php:1635
+#: ../../boot.php:1646
 msgid "Profiles"
 msgstr "Профили"
 
-#: ../../boot.php:1635
+#: ../../boot.php:1646
 msgid "Manage/edit profiles"
 msgstr "Управление / Редактирование профилей"
 
-#: ../../boot.php:1639
+#: ../../boot.php:1650
 msgid "Edit Profile"
 msgstr "Редактировать профиль"
 
-#: ../../boot.php:1717 ../../boot.php:1797
+#: ../../boot.php:1728 ../../boot.php:1808
 msgid "F d"
 msgstr "F d"
 
-#: ../../boot.php:1774
+#: ../../boot.php:1785
 msgid "Birthday Reminders"
 msgstr "Напоминания о Днях Рождения"
 
-#: ../../boot.php:1775
+#: ../../boot.php:1786
 msgid "Birthdays this week:"
 msgstr "Дни Рождения на этой неделе:"
 
-#: ../../boot.php:1830
+#: ../../boot.php:1841
 msgid "[No description]"
 msgstr "[без описания]"
 
-#: ../../boot.php:1848
+#: ../../boot.php:1859
 msgid "Event Reminders"
 msgstr "Напоминания мероприятий"
 
-#: ../../boot.php:1849
+#: ../../boot.php:1860
 msgid "Events this week:"
 msgstr "Мероприятия на этой неделе:"
 
-#: ../../boot.php:2072
+#: ../../boot.php:2083
 msgid "Channel"
 msgstr "Канал"
 
-#: ../../boot.php:2075
+#: ../../boot.php:2086
 msgid "Status Messages and Posts"
 msgstr ""
 
-#: ../../boot.php:2079
+#: ../../boot.php:2090
 msgid "About"
 msgstr "О себе"
 
-#: ../../boot.php:2082
+#: ../../boot.php:2093
 msgid "Profile Details"
 msgstr "Сведения о профиле"
 
-#: ../../boot.php:2100
+#: ../../boot.php:2111
 msgid "Events and Calendar"
 msgstr "Мероприятия и календарь"
 
-#: ../../boot.php:2105
+#: ../../boot.php:2116
 msgid "Webpages"
-msgstr "Личные нотиции"
+msgstr "Веб-страницы"
 
-#: ../../boot.php:2108
+#: ../../boot.php:2119
 msgid "Manage Webpages"
 msgstr ""
 
-#: ../../boot.php:2335
+#: ../../boot.php:2346
 msgid "toggle mobile"
 msgstr ""
