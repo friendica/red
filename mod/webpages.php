@@ -56,7 +56,7 @@ require_once ('include/conversation.php');
 //Get a list of webpages.  We can't display all them because endless scroll makes that unusable, so just list titles and an edit link.
 // FIXME - we should sort these results, but it's not obvious what order yet.  Alphabetical?  Created order?
 
-$r = q("select * from item_id where uid = %d and service = 'WEBPAGE'",
+$r = q("select * from item_id where uid = %d and service = 'WEBPAGE' order by sid asc",
 	intval($owner)
 );
 
