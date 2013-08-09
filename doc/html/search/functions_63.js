@@ -41,6 +41,7 @@ var searchData=
   ['clear',['clear',['../classCache.html#ab14d0f4bdf7116a94d545c574b38f568',1,'Cache']]],
   ['cleardiv',['cleardiv',['../text_8php.html#afe18627c4983ee5f7c940a0992818cd5',1,'text.php']]],
   ['cli_5fstartup',['cli_startup',['../cli__startup_8php.html#adfdde63686e33ccd4851fa5edc4fc70b',1,'cli_startup.php']]],
+  ['cli_5fsuggest_5frun',['cli_suggest_run',['../cli__suggest_8php.html#a8f3a60fc96f4bec7d3837c4efc7725f2',1,'cli_suggest.php']]],
   ['close',['close',['../classdba__driver.html#a5afa54172f3c837df61643f8f5b2c975',1,'dba_driver\close()'],['../classdba__mysql.html#a850586714ef897bd25f643c89b4ef76e',1,'dba_mysql\close()'],['../classdba__mysqli.html#acb38f2c851187ad632ecfab30fdfab55',1,'dba_mysqli\close()']]],
   ['collect',['collect',['../classProtoDriver.html#a2ba1758f0f9e3564580b6ff85292804d',1,'ProtoDriver\collect()'],['../classZotDriver.html#af65febb26031eb7f39871b9e2a539797',1,'ZotDriver\collect()']]],
   ['collect_5fprivate',['collect_private',['../classProtoDriver.html#af66171aa7dab9b62cee915cb4f1abe1b',1,'ProtoDriver\collect_private()'],['../classZotDriver.html#a2e15ff09772f0608203dad1c98299394',1,'ZotDriver\collect_private()']]],

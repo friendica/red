@@ -16,6 +16,7 @@ var classphoto__driver =
     [ "load", "classphoto__driver.html#a19e1af2b6af4c63aa6230abe69f83712", null ],
     [ "orient", "classphoto__driver.html#a4de5bac8daea8f291a33c80788019d0d", null ],
     [ "rotate", "classphoto__driver.html#a2f2b6337cf9aa0688d10b422123f0eec", null ],
+    [ "save", "classphoto__driver.html#a5864fae7d8389372955a8e78cec527ac", null ],
     [ "saveImage", "classphoto__driver.html#a22ecb8c696de65a5a10bd185be9d90c3", null ],
     [ "scaleImage", "classphoto__driver.html#af0f7ec48a31ae9b557b6e3f8bd5b4af0", null ],
     [ "scaleImageSquare", "classphoto__driver.html#a56634842b071b96502716e9843ea5361", null ],

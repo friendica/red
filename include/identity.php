@@ -149,15 +149,6 @@ function create_identity($arr) {
 	if(intval($arr['account_id']))
 		set_default_login_identity($arr['account_id'],$ret['channel']['channel_id'],false);
 
-	// Ensure that there is a host keypair.
-
-	if((! get_config('system','pubkey')) && (! get_config('system','prvkey'))) {
-		$hostkey = new_keypair(4096);
-		set_config('system','pubkey',$hostkey['pubkey']);
-		set_config('system','prvkey',$hostkey['prvkey']);
-	}
-	
-
 	// Create a verified hub location pointing to this site.
 
 	$r = q("insert into hubloc ( hubloc_guid, hubloc_guid_sig, hubloc_hash, hubloc_addr, hubloc_flags, 

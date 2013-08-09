@@ -4,6 +4,7 @@ var searchData=
   ['abook_5fself',['abook_self',['../Contact_8php.html#ad5b02c2a962ee55b1b7ca6c159d6e4c5',1,'Contact.php']]],
   ['abook_5ftoggle_5fflag',['abook_toggle_flag',['../Contact_8php.html#a024919623a830e8703ac4f23496dd66c',1,'Contact.php']]],
   ['absurl',['absurl',['../boot_8php.html#a081307d681d7d04f17b9ced2076e7c85',1,'boot.php']]],
+  ['account_5fremove',['account_remove',['../Contact_8php.html#a3eef54a5523e568a28257c1f9b1644d8',1,'Contact.php']]],
   ['account_5ftotal',['account_total',['../account_8php.html#a43e3042b2723d76915a030bac3c668b6',1,'account.php']]],
   ['account_5fverify_5fpassword',['account_verify_password',['../auth_8php.html#a07bae0e623e2daa9ee2cd5a8aa294dee',1,'auth.php']]],
   ['acknowledge_5fpermissions',['acknowledge_permissions',['../classProtoDriver.html#a1593f3abae050edbd9304f4f8bc4894a',1,'ProtoDriver\acknowledge_permissions()'],['../classZotDriver.html#a3cfdf443da4e5326e205855d7c0054f2',1,'ZotDriver\acknowledge_permissions()']]],

@@ -89,7 +89,7 @@ var searchData=
   ['getwidth',['getWidth',['../classphoto__driver.html#acc30486acee9e89e32701f44a1738117',1,'photo_driver']]],
   ['goaway',['goaway',['../boot_8php.html#a5ab6181607a090bcdbaa13b15b85aba1',1,'boot.php']]],
   ['gprobe_5frun',['gprobe_run',['../gprobe_8php.html#adf72cb0a70b5b9d99fdec1cc60e18ed1',1,'gprobe.php']]],
-  ['group_5fadd',['group_add',['../include_2group_8php.html#a0a515d42ec78aa0066aac4c278ead5b0',1,'group.php']]],
+  ['group_5fadd',['group_add',['../include_2group_8php.html#a06ec565d2b64e79044e7c1bf91a2a4ce',1,'group.php']]],
   ['group_5fadd_5fmember',['group_add_member',['../include_2group_8php.html#a0122ef312df2c5546b1a46b3e6c7b31b',1,'group.php']]],
   ['group_5faside',['group_aside',['../mod_2group_8php.html#aeb0784dd928e53e6d8693513bec8928c',1,'group.php']]],
   ['group_5fbyname',['group_byname',['../include_2group_8php.html#abd66a5ea34a07a3422dc2dde6c7b3ecb',1,'group.php']]],

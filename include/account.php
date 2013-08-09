@@ -133,6 +133,13 @@ function create_account($arr) {
 	if(($c === 0) && (check_account_admin($arr)))
 		$roles |= ACCOUNT_ROLE_ADMIN;
 
+    // Ensure that there is a host keypair.
+
+    if((! get_config('system','pubkey')) && (! get_config('system','prvkey'))) {
+        $hostkey = new_keypair(4096);
+        set_config('system','pubkey',$hostkey['pubkey']);
+        set_config('system','prvkey',$hostkey['prvkey']);
+    }
 
 	$invite_result = check_account_invite($invite_code);
 	if($invite_result['error']) {

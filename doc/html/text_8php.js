@@ -35,6 +35,7 @@ var text_8php =
     [ "item_message_id", "text_8php.html#aa6b0aa8afbeab50d1a3058ad21acb74e", null ],
     [ "item_post_type", "text_8php.html#ac1dbf2e37e8069bea2c0f557fdbf203e", null ],
     [ "jindent", "text_8php.html#ae17b39d5e321debd3ad16dcbbde842b8", null ],
+    [ "json_decode_plus", "text_8php.html#a0271381208acfa2d4cff36da281e3e23", null ],
     [ "lang_selector", "text_8php.html#a71f6952243d3fe1c5a8154f78027e29c", null ],
     [ "legal_webbie", "text_8php.html#a2690ad67bb6fb97ef69de3e8d23f2728", null ],
     [ "link_compare", "text_8php.html#a47c1e4a5f3f53027daacd8a9db24f285", null ],

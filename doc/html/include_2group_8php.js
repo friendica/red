@@ -1,7 +1,7 @@
 var include_2group_8php =
 [
     [ "expand_groups", "include_2group_8php.html#a22a81875259c7d3d64d4848afea6b345", null ],
-    [ "group_add", "include_2group_8php.html#a0a515d42ec78aa0066aac4c278ead5b0", null ],
+    [ "group_add", "include_2group_8php.html#a06ec565d2b64e79044e7c1bf91a2a4ce", null ],
     [ "group_add_member", "include_2group_8php.html#a0122ef312df2c5546b1a46b3e6c7b31b", null ],
     [ "group_byname", "include_2group_8php.html#abd66a5ea34a07a3422dc2dde6c7b3ecb", null ],
     [ "group_get_members", "include_2group_8php.html#a5bd191d9692e6c34d48c0ede10810f09", null ],

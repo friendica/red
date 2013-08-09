@@ -3,6 +3,7 @@ var Contact_8php =
     [ "abook_connections", "Contact_8php.html#ae8803c330352cbf1e828eb7490edf47e", null ],
     [ "abook_self", "Contact_8php.html#ad5b02c2a962ee55b1b7ca6c159d6e4c5", null ],
     [ "abook_toggle_flag", "Contact_8php.html#a024919623a830e8703ac4f23496dd66c", null ],
+    [ "account_remove", "Contact_8php.html#a3eef54a5523e568a28257c1f9b1644d8", null ],
     [ "channel_remove", "Contact_8php.html#ad46ff6764f12b6d3ab45c49b797f98aa", null ],
     [ "channelx_by_hash", "Contact_8php.html#a483cda56f9e37c3a4a8773dcdfeb0258", null ],
     [ "channelx_by_n", "Contact_8php.html#a3a0844dac1e86d523de5d2f432cfeebc", null ],

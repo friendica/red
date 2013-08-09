@@ -54,6 +54,9 @@ var boot_8php =
     [ "ABOOK_FLAG_IGNORED", "boot_8php.html#aa3425e2de85b08f7041656d3a8502cb6", null ],
     [ "ABOOK_FLAG_PENDING", "boot_8php.html#a68eebe493e6f729ffd1aeda7a4b11155", null ],
     [ "ABOOK_FLAG_SELF", "boot_8php.html#a0450389f24c632906fbc24347700a543", null ],
+    [ "ACCESS_FREE", "boot_8php.html#afbb1fe1b2c8c730ec8e08da93b6512c4", null ],
+    [ "ACCESS_PAID", "boot_8php.html#a9c80420e5a063a4a87ce4831f086134d", null ],
+    [ "ACCESS_PRIVATE", "boot_8php.html#a7f3474fec541e261fc8dff47313c4017", null ],
     [ "ACCOUNT_BLOCKED", "boot_8php.html#af3bdfc20979c16f15bb9c60446a480f9", null ],
     [ "ACCOUNT_EXPIRED", "boot_8php.html#a400519fa181591cd6fdbb8f25fbcba0a", null ],
     [ "ACCOUNT_OK", "boot_8php.html#a84057c5bfa1bca5fba8497fe005ee4d8", null ],
@@ -244,6 +247,7 @@ var boot_8php =
     [ "UPDATE_FAILED", "boot_8php.html#a75fc600186b13c3b25e661afefb5eac8", null ],
     [ "UPDATE_SUCCESS", "boot_8php.html#ac86615ddc0763a00f5311c90e991730c", null ],
     [ "XCHAN_FLAGS_HIDDEN", "boot_8php.html#a1af3ed96de14aa0d7891b39cc75b60f2", null ],
+    [ "XCHAN_FLAGS_ORPHAN", "boot_8php.html#a1c923b99bf77e4203ae94e5684b6ad0f", null ],
     [ "ZCURL_TIMEOUT", "boot_8php.html#a3cd42a70c6b3999590e4fd7a1a9096af", null ],
     [ "ZOT_REVISION", "boot_8php.html#a36b31575f992a10b5927b76efba9362e", null ]
 ];
