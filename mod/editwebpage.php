@@ -9,11 +9,17 @@ function editwebpage_content(&$a) {
         $which = argv(1);
 
 // $a->get_channel() and stuff don't work here, so we've got to find the owner for ourselves.
-	$owner = q("select channel_id from channel where channel_address = '%s'",
+	$r = q("select channel_id from channel where channel_address = '%s'",
 		dbesc($which)
 		);
+               if($r) {
+                $owner = intval($r[0]['channel_id']);
+       //logger('owner: ' . print_r($owner,true));
+        }
 
 
+		
+		
         if((local_user()) && (argc() > 2) && (argv(2) === 'view')) {
                 $which = $channel['channel_address'];
         }
