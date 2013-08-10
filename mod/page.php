@@ -2,6 +2,8 @@
 
 require_once('include/items.php');
 require_once('include/conversation.php');
+require_once('include/page_widgets.php');
+
 function page_init(&$a) {
 	// We need this to make sure the channel theme is always loaded.
         $which = argv(1);
@@ -32,7 +34,6 @@ function page_content(&$a) {
 		return;
 	}
 
-
 	if(argc() < 3) {
 		notice( t('Invalid item.') . EOL);
 		return;
@@ -57,11 +58,23 @@ function page_content(&$a) {
 		dbesc($page_id),
 		intval(ITEM_WEBPAGE)
 	);
+	logger('r: ' . print_r($r,true));
 
 	if(! $r) {
 		notice( t('Item not found.') . EOL);
 		return;
 	}
+
+// Use of widgets should be determined by Comanchie, but we don't have it yet, so...
+
+
+	if ($perms['write_pages']) {
+		$who = $channel_address;
+		$which = $r[0]['id'];
+		$o .= writepages_widget($who,$which);
+	}
+
+
 
 	xchan_query($r);
 	$r = fetch_post_tags($r,true);
