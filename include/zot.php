@@ -583,9 +583,14 @@ function import_xchan($arr) {
 						intval(HUBLOC_FLAGS_PRIMARY),
 						intval($r[0]['hubloc_id'])
 					);
+					update_modtime($xchan_hash);
+					$changed = true;
 				}
-				update_modtime($xchan_hash);
-				$changed = true;
+				continue;
+			}
+
+			if(! $location['sitekey']) {
+				logger('import_xchan: empty hubloc sitekey. ' . print_r($location,true));
 				continue;
 			}
 
