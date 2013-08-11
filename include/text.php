@@ -1142,6 +1142,22 @@ function prepare_text($text,$content_type = 'text/bbcode') {
 			$s = Markdown($text);
 			break;
 
+		// No security checking is done here at display time - so we need to verify 
+		// that the author is allowed to use PHP before storing. We also cannot allow 
+		// importation of PHP text bodies from other sites. Therefore this content 
+		// type is only valid for web pages (and profile details).
+
+		// It may be possible to provide a PHP message body which is evaluated on the 
+		// sender's site before sending it elsewhere. In that case we will have a 
+		// different content-type here.  
+
+		case 'application/x-php':
+			ob_start();
+			eval($text);
+			$s = ob_get_contents();
+			ob_end_clean();
+			break;
+
 		case 'text/bbcode':
 		case '':
 		default:

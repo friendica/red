@@ -1342,7 +1342,7 @@ function encode_rel_links($links) {
 	return xmlify($o);
 }
 
-function item_store($arr,$force_parent = false) {
+function item_store($arr,$allow_exec = false) {
 
 	if(! $arr['uid']) {
 		logger('item_store: no uid');
@@ -1357,6 +1357,13 @@ function item_store($arr,$force_parent = false) {
 		unset($arr['parent']);
 
 	$arr['mimetype']      = ((x($arr,'mimetype'))      ? notags(trim($arr['mimetype']))      : 'text/bbcode');
+
+	if(($arr['mimetype'] == 'application/x-php') && (! $allow_exec)) {
+		logger('item_store: php mimetype but allow_exec is denied.');
+		return 0;
+	}
+
+
 	$arr['title']         = ((x($arr,'title'))         ? notags(trim($arr['title']))         : '');
 	$arr['body']          = ((x($arr,'body'))          ? trim($arr['body'])                  : '');
 
@@ -1369,7 +1376,7 @@ function item_store($arr,$force_parent = false) {
 	
 	// this is a bit messy - we really need an input filter chain that temporarily undoes obscuring
 
-	if($arr['mimetype'] != 'text/html') {
+	if($arr['mimetype'] != 'text/html' && $arr['mimetype'] != 'application/x-php') {
 		if((strpos($arr['body'],'<') !== false) || (strpos($arr['body'],'>') !== false)) 
 			$arr['body'] = escape_tags($arr['body']);
 		if((strpos($arr['title'],'<') !== false) || (strpos($arr['title'],'>') !== false)) 
@@ -1665,7 +1672,7 @@ function item_store($arr,$force_parent = false) {
 
 
 
-function item_store_update($arr,$force_parent = false) {
+function item_store_update($arr,$allow_exec = false) {
 
 	if(! intval($arr['uid'])) {
 		logger('item_store_update: no uid');
@@ -1696,24 +1703,35 @@ function item_store_update($arr,$force_parent = false) {
 		$arr = $translate['item'];
 	}
 
+	$arr['mimetype']      = ((x($arr,'mimetype'))      ? notags(trim($arr['mimetype']))      : 'text/bbcode');
+
+	if(($arr['mimetype'] == 'application/x-php') && (! $allow_exec)) {
+		logger('item_store: php mimetype but allow_exec is denied.');
+		return 0;
+	}
+
+
 	// Shouldn't happen but we want to make absolutely sure it doesn't leak from a plugin.
 
-	if((strpos($arr['body'],'<') !== false) || (strpos($arr['body'],'>') !== false)) 
-		$arr['body'] = escape_tags($arr['body']);
+	if($arr['mimetype'] != 'text/html' && $arr['mimetype'] != 'application/x-php') {
 
-	if((x($arr,'object')) && is_array($arr['object'])) {
-		activity_sanitise($arr['object']);
-		$arr['object'] = json_encode($arr['object']);
-	}
+		if((strpos($arr['body'],'<') !== false) || (strpos($arr['body'],'>') !== false)) 
+			$arr['body'] = escape_tags($arr['body']);
 
-	if((x($arr,'target')) && is_array($arr['target'])) {
-		activity_sanitise($arr['target']);
-		$arr['target'] = json_encode($arr['target']);
-	}
+		if((x($arr,'object')) && is_array($arr['object'])) {
+			activity_sanitise($arr['object']);
+			$arr['object'] = json_encode($arr['object']);
+		}
 
-	if((x($arr,'attach')) && is_array($arr['attach'])) {
-		activity_sanitise($arr['attach']);
-		$arr['attach'] = json_encode($arr['attach']);
+		if((x($arr,'target')) && is_array($arr['target'])) {
+			activity_sanitise($arr['target']);
+			$arr['target'] = json_encode($arr['target']);
+		}
+
+		if((x($arr,'attach')) && is_array($arr['attach'])) {
+			activity_sanitise($arr['attach']);
+			$arr['attach'] = json_encode($arr['attach']);
+		}
 	}
 
 	$orig = q("select * from item where id = %d and uid = %d limit 1",
@@ -1740,7 +1758,6 @@ function item_store_update($arr,$force_parent = false) {
 	$arr['commented']     = datetime_convert();
 	$arr['received']      = datetime_convert();
 	$arr['changed']       = datetime_convert();
-	$arr['mimetype']      = ((x($arr,'mimetype'))      ? notags(trim($arr['mimetype']))      : 'text/bbcode');
 	$arr['title']         = ((x($arr,'title'))         ? notags(trim($arr['title']))         : '');
 	$arr['location']      = ((x($arr,'location'))      ? notags(trim($arr['location']))      : '');
 	$arr['coord']         = ((x($arr,'coord'))         ? notags(trim($arr['coord']))         : '');
@@ -2692,7 +2709,7 @@ function consume_feed($xml,$importer,&$contact, &$hub, $datedir = 0, $pass = 0) 
 					}
 				}
 
-				$r = item_store($datarray,$force_parent);
+				$r = item_store($datarray);
 				continue;
 			}
 
