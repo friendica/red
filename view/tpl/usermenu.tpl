@@ -1,5 +1,7 @@
 <div class="pmenu">
-  <div class="pmenu-title">{{$menu.menu_desc}}</div>
+{{if $menu.menu_desc}}
+  <h3 class="pmenu-title">{{$menu.menu_desc}}</h3>
+{{/if}}
 {{if $items }}
 <ul class="pmenu-body">
 {{foreach $items as $mitem }}

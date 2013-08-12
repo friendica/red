@@ -2065,7 +2065,7 @@ aside input[type='text'] {
  width: 174px;
 }
 
-.widget {
+.widget, .pmenu {
 	border-bottom: 1px solid #eec;
 	padding: 8px;
 	margin-top: 5px;
@@ -3585,4 +3585,12 @@ margin-right: auto;
 
 div.page-list-item {
 margin: 20px;
+}
+
+.pmenu ul {
+	list-style-type: none;
+}
+
+.pmenu li {
+	margin-left: -20px;
 }
