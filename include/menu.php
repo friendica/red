@@ -4,7 +4,7 @@ require_once('include/security.php');
 
 function menu_fetch($name,$uid,$observer_xchan) {
 
-	$sql_options = permission_sql($uid);
+	$sql_options = permissions_sql($uid);
 
 	$r = q("select * from menu where menu_channel_id = %d and menu_name = '%s' limit 1",
 		intval($uid),
@@ -14,14 +14,12 @@ function menu_fetch($name,$uid,$observer_xchan) {
 		$x = q("select * from menu_item where mitem_menu_id = %d and mitem_channel_id = %d
 			$sql_options 
 			order by mitem_order asc, mitem_desc asc",
-			intval($x[0]['menu_id']),
+			intval($r[0]['menu_id']),
 			intval($uid)
 		);
-		
-		$result = array('menu' => $r[0], 'items' => $x );
-
-
+		return array('menu' => $r[0], 'items' => $x );
 	}
+
 	return null;
 }
 	
