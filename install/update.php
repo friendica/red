@@ -1,6 +1,6 @@
 <?php
 
-define( 'UPDATE_VERSION' , 1058 );
+define( 'UPDATE_VERSION' , 1059 );
 
 /**
  *
@@ -667,6 +667,18 @@ ADD INDEX ( `xchan_instance_url` ) ");
 function update_r1057() {
 	$r = q("drop table intro");
 	if($r)
+		return UPDATE_SUCCESS;
+	return UPDATE_FAILED;
+}
+
+function update_r1058() {
+	$r1 = q("ALTER TABLE `menu` ADD `menu_name` CHAR( 255 ) NOT NULL DEFAULT '' AFTER `menu_channel_id` ,
+ADD INDEX ( `menu_name` ) ");
+
+	$r2 = q("ALTER TABLE `menu_item` ADD `mitem_flags` INT NOT NULL DEFAULT '0' AFTER `mitem_desc` ,
+ADD INDEX ( `mitem_flags` ) ");
+
+	if($r1 && $r2)
 		return UPDATE_SUCCESS;
 	return UPDATE_FAILED;
 }

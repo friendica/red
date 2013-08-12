@@ -530,15 +530,18 @@ CREATE TABLE IF NOT EXISTS `manage` (
 CREATE TABLE IF NOT EXISTS `menu` (
   `menu_id` int(10) unsigned NOT NULL AUTO_INCREMENT,
   `menu_channel_id` int(10) unsigned NOT NULL DEFAULT '0',
+  `menu_name` char(255) NOT NULL DEFAULT '',
   `menu_desc` char(255) NOT NULL DEFAULT '',
   PRIMARY KEY (`menu_id`),
-  KEY `menu_channel_id` (`menu_channel_id`)
+  KEY `menu_channel_id` (`menu_channel_id`),
+  KEY `menu_name` (`menu_name`)
 ) ENGINE=MyISAM DEFAULT CHARSET=utf8;
 
 CREATE TABLE IF NOT EXISTS `menu_item` (
   `mitem_id` int(10) unsigned NOT NULL AUTO_INCREMENT,
   `mitem_link` char(255) NOT NULL DEFAULT '',
   `mitem_desc` char(255) NOT NULL DEFAULT '',
+  `mitem_flags` int(11) NOT NULL DEFAULT '0',
   `allow_cid` mediumtext NOT NULL,
   `allow_gid` mediumtext NOT NULL,
   `deny_cid` mediumtext NOT NULL,
@@ -547,6 +550,7 @@ CREATE TABLE IF NOT EXISTS `menu_item` (
   `mitem_menu_id` int(10) unsigned NOT NULL DEFAULT '0',
   `mitem_order` int(11) NOT NULL DEFAULT '0',
   PRIMARY KEY (`mitem_id`),
+  KEY `mitem_flags` (`mitem_flags`),
   KEY `mitem_channel_id` (`mitem_channel_id`),
   KEY `mitem_menu_id` (`mitem_menu_id`)
 ) ENGINE=MyISAM DEFAULT CHARSET=utf8;

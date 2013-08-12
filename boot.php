@@ -43,7 +43,7 @@ require_once('include/taxonomy.php');
 define ( 'RED_PLATFORM',            'Red Matrix' );
 define ( 'RED_VERSION',             trim(file_get_contents('version.inc')) . 'R');
 define ( 'ZOT_REVISION',            1     ); 
-define ( 'DB_UPDATE_VERSION',       1058  );
+define ( 'DB_UPDATE_VERSION',       1059  );
 
 define ( 'EOL',                    '<br />' . "\r\n"     );
 define ( 'ATOM_TIME',              'Y-m-d\TH:i:s\Z' );
@@ -285,6 +285,10 @@ define ( 'MAIL_OBSCURED',      0x0020);
 
 define ( 'ATTACH_FLAG_DIR',    0x0001);
 define ( 'ATTACH_FLAG_OS',     0x0002);
+
+
+
+define ( 'MENU_ITEM_ZID',      0x0001);
 
 
 
