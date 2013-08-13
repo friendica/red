@@ -70,6 +70,7 @@ function item_post(&$a) {
 	$categories  = ((x($_REQUEST,'category'))    ? escape_tags($_REQUEST['category']) : '');
 	$webpage     = ((x($_REQUEST,'webpage'))     ? intval($_REQUEST['webpage'])       : 0);
 	$pagetitle   = ((x($_REQUEST,'pagetitle'))   ? escape_tags($_REQUEST['pagetitle']): '');
+	$buildblock  = ((x($_REQUEST,'buildblock'))  ? intval($_REQUEST['buildblock'])    : 0);
 
 	if($pagetitle) {
 		require_once('library/urlify/URLify.php');
@@ -492,6 +493,8 @@ function item_post(&$a) {
 	if($webpage)
 		$item_restrict = $item_restrict | ITEM_WEBPAGE;
 
+	if($buildblock)
+		$item_restrict = $item_restrict | ITEM_BUILDBLOCK;
 		
 		
 	if(! strlen($verb))
