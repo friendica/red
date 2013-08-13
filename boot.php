@@ -1623,20 +1623,13 @@ function profile_sidebar($profile, $block = 0) {
 
 	call_hooks('profile_sidebar_enter', $profile);
 
-	// don't show connect link to yourself
-	$connect = (($profile['uid'] != local_user()) ? t('Connect')  : False);
+	require_once('include/Contact.php');
 
-	// don't show connect link to authenticated visitors either
+	$connect_url = rconnect_url($profile['uid'],get_observer_xchan());
+	$connect = (($connect_url) ? t('Connect') : '');
 
-	if(remote_user() && count($_SESSION['remote'])) {
-		foreach($_SESSION['remote'] as $visitor) {
-			if($visitor['uid'] == $profile['uid']) {
-				$connect = false;
-				break;
-			}
-		}
-	}
-
+	if($connect_url) 
+		$connect_url = $connect_url . '/follow?f=1&url=' . $profile['channel_address'] . '@' . $a->get_hostname();
 
 	// show edit profile to yourself
 	if($is_owner) {
@@ -1702,6 +1695,7 @@ function profile_sidebar($profile, $block = 0) {
 	$o .= replace_macros($tpl, array(
 		'$profile'       => $profile,
 		'$connect'       => $connect,
+		'$connect_url'   => $connect_url,
 		'$location'      => $location,
 		'$gender'        => $gender,
 		'$pdesc'         => $pdesc,

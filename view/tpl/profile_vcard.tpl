@@ -44,6 +44,10 @@
 
 	{{if $homepage}}<dl class="homepage"><dt class="homepage-label">{{$homepage}}</dt><dd class="homepage-url"><a href="{{$profile.homepage}}" >{{$profile.homepage}}</a></dd></dl>{{/if}}
 
+
+{{if $connect}}
+<a href="{{$connect_url}}" class="rconnect">$connect</a>
+{{/if}}
 	
 </div>
 <div id="vcard-end"></div>
