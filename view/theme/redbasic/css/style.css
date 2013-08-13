@@ -2091,6 +2091,18 @@ aside input[type='text'] {
 	margin-right: 50px;
 }
 
+.rconnect {
+	display: block;
+	color: #FFFFFF;
+	margin-top: 15px;
+	background-color: #FF6666;
+	-webkit-border-radius: $radiuspx ;
+	-moz-border-radius: $radiuspx;
+	border-radius: $radiuspx;
+	padding: 5px;
+	font-weight: bold;
+}
+
 
 #dfrn-request-networks {
 	margin-bottom: 30px;

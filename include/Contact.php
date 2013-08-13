@@ -3,20 +3,27 @@
 
 
 function rconnect_url($channel_id,$xchan) {
+
 	if(! $xchan)
 		return '';
-	$r = q("select abook_id from abook where abook_channel_id = %d and abook_xchan = '%s' limit 1",
+
+	$r = q("select abook_id from abook where abook_channel = %d and abook_xchan = '%s' limit 1",
 		intval($channel_id),
 		dbesc($xchan)
 	);
+
 	if($r)
 		return '';
-	$r = q("select hubloc_url from hubloc where hubloc_hash = '%s' and (hubloc_flags & HUBLOC_FLAGS_PRIMARY) limit 1",
-		dbesc($xchan)
+
+	$r = q("select hubloc_url from hubloc where hubloc_hash = '%s' and ( hubloc_flags & %d ) limit 1",
+		dbesc($xchan),
+		intval(HUBLOC_FLAGS_PRIMARY)
 	);
+
 	if($r)
 		return $r[0]['hubloc_url'];
 	return '';
+
 }
 
 function abook_connections($channel_id, $sql_conditions = '') {

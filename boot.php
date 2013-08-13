@@ -1625,7 +1625,7 @@ function profile_sidebar($profile, $block = 0) {
 
 	require_once('include/Contact.php');
 
-	$connect_url = rconnect_url($profile['uid'],get_observer_xchan());
+	$connect_url = rconnect_url($profile['uid'],get_observer_hash());
 	$connect = (($connect_url) ? t('Connect') : '');
 
 	if($connect_url) 
