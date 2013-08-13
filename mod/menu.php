@@ -27,6 +27,24 @@ function menu_content(&$a) {
 
 	if(argc() == 1) {
 		// list menus
+		$x = menu_list(local_user());
+		if($x) {
+			$o = replace_macros(get_markup_template('menulist.tpl'),array(
+				'$title' => t('Manage Menus'),
+				'$menus' => $x,
+				'$edit' => t('Edit'),
+				'$drop' => t('Drop'),
+				'$new' => t('New'),
+				'$hintnew' => t('Create a new menu'),
+				'$hintdrop' => t('Delete this menu'),
+				'$hintedit' => t('Edit this menu')
+				));
+		}
+		return $o;
+
+
+
+
 
 	}
 

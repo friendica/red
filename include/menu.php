@@ -80,6 +80,14 @@ function menu_create($arr) {
 
 }
 
+function menu_list($channel_id) {
+	$r = q("select * from menu where menu_channel_id = %d order by menu_name",
+		intval($channel_id)
+	);
+	return $r;
+}
+
+
 
 function menu_edit($arr) {
 
