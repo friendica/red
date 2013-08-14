@@ -3192,7 +3192,7 @@ function item_expire($uid,$days) {
 
 		// Only expire posts, not photos and photo comments
 
-		if($expire_photos==0 && $item['resource_type'] === 'photo'))
+		if($expire_photos==0 && ($item['resource_type'] === 'photo'))
 			continue;
 		if($expire_starred==0 && ($item['item_flags'] & ITEM_STARRED))
 			continue;
