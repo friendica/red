@@ -5,7 +5,7 @@
 {{if $items }}
 <ul class="pmenu-body">
 {{foreach $items as $mitem }}
-<li class="pmenu-item"><a href="{{$mitem.mitem_link}}">{{$mitem.mitem_desc}}</a></li>
+<li class="pmenu-item"><a href="{{$mitem.mitem_link}}" {{if $mitem.newwin}}target="_blank"{{/if}}>{{$mitem.mitem_desc}}</a></li>
 {{/foreach }}
 </ul>
 {{/if}}

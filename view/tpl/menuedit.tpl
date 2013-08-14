@@ -2,7 +2,7 @@
 <h2>{{$header}}</h2>
 
 {{if $menu_id}}
-<a href="medit/{{$menu_id}}" title="{{$hintedit}}">{{$editcontents}}</a>
+<a href="mitem/{{$menu_id}}" title="{{$hintedit}}">{{$editcontents}}</a>
 {{/if}}
 
 <form id="menuedit" action="menu{{if $menu_id}}/{{$menu_id}}{{/if}}" method="post" >

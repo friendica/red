@@ -289,7 +289,7 @@ define ( 'ATTACH_FLAG_OS',     0x0002);
 
 
 define ( 'MENU_ITEM_ZID',      0x0001);
-
+define ( 'MENU_ITEM_NEWWIN',   0x0002);
 
 
 /**

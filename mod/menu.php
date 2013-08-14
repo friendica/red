@@ -22,7 +22,7 @@ function menu_post(&$a) {
 	}
 	else {
 		$r = menu_create($_REQUEST);
-		if($r) {
+			if($r) {
 			info( t('Menu created.') . EOL);
 			goaway(z_root() . '/mitem/' . $r); 
 		}

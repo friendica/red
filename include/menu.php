@@ -29,7 +29,9 @@ function menu_render($menu) {
 		return '';
 	for($x = 0; $x < count($menu['items']); $x ++)
 		if($menu['items']['mitem_flags'] & MENU_ITEM_ZID)
-			$menu['items']['link'] = zid($menu['items']['link']);
+			$menu['items']['mitem_link'] = zid($menu['items']['mitem_link']);
+		if($menu['items']['mitem_flags'] & MENU_ITEM_NEWWIN)
+			$menu['items']['newwin'] = '1';
 
 	return replace_macros(get_markup_template('usermenu.tpl'),array(
 		'$menu' => $menu['menu'],
