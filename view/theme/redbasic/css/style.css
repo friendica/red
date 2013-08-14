@@ -2065,7 +2065,7 @@ aside input[type='text'] {
  width: 174px;
 }
 
-.widget {
+.widget, .pmenu {
 	border-bottom: 1px solid #eec;
 	padding: 8px;
 	margin-top: 5px;
@@ -2089,6 +2089,18 @@ aside input[type='text'] {
 .group-delete-wrapper {
 	float: right;
 	margin-right: 50px;
+}
+
+.rconnect {
+	display: block;
+	color: #FFFFFF;
+	margin-top: 15px;
+	background-color: #FF6666;
+	-webkit-border-radius: $radiuspx ;
+	-moz-border-radius: $radiuspx;
+	border-radius: $radiuspx;
+	padding: 5px;
+	font-weight: bold;
 }
 
 
@@ -3585,4 +3597,12 @@ margin-right: auto;
 
 div.page-list-item {
 margin: 20px;
+}
+
+.pmenu ul {
+	list-style-type: none;
+}
+
+.pmenu li {
+	margin-left: -20px;
 }

@@ -241,6 +241,11 @@ function notifier_run($argv, $argc){
 			return;
 		}
 
+		if($target_item['item_restrict'] & ITEM_BUILDBLOCK) {
+			logger('notifier: target item ITEM_BUILDBLOCK', LOGGER_DEBUG);
+			return;
+		}
+
 
 		$s = q("select * from channel where channel_id = %d limit 1",
 			intval($target_item['uid'])

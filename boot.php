@@ -43,7 +43,7 @@ require_once('include/taxonomy.php');
 define ( 'RED_PLATFORM',            'Red Matrix' );
 define ( 'RED_VERSION',             trim(file_get_contents('version.inc')) . 'R');
 define ( 'ZOT_REVISION',            1     ); 
-define ( 'DB_UPDATE_VERSION',       1058  );
+define ( 'DB_UPDATE_VERSION',       1059  );
 
 define ( 'EOL',                    '<br />' . "\r\n"     );
 define ( 'ATOM_TIME',              'Y-m-d\TH:i:s\Z' );
@@ -288,6 +288,10 @@ define ( 'ATTACH_FLAG_OS',     0x0002);
 
 
 
+define ( 'MENU_ITEM_ZID',      0x0001);
+define ( 'MENU_ITEM_NEWWIN',   0x0002);
+
+
 /**
  * Maximum number of "people who like (or don't like) this"  that we will list by name
  */
@@ -434,8 +438,8 @@ define ( 'ACCOUNT_PENDING',      0x0010 );
  * Account roles
  */
 
-define ( 'ACCOUNT_ROLE_ADMIN',    0x1000 );
-
+define ( 'ACCOUNT_ROLE_ADMIN',     0x1000 );
+define ( 'ACCOUNT_ROLE_ALLOWCODE', 0x0001 );    
 
 /**
  * Item visibility
@@ -450,6 +454,7 @@ define ( 'ITEM_DELETED',         0x0010);
 define ( 'ITEM_UNPUBLISHED',     0x0020);
 define ( 'ITEM_WEBPAGE',         0x0040);  // is a static web page, not a conversational item
 define ( 'ITEM_DELAYED_PUBLISH', 0x0080); 
+define ( 'ITEM_BUILDBLOCK',      0x0100);  // Named thusly to make sure nobody confuses this with ITEM_BLOCKED
 
 /**
  * Item Flags
@@ -1618,20 +1623,13 @@ function profile_sidebar($profile, $block = 0) {
 
 	call_hooks('profile_sidebar_enter', $profile);
 
-	// don't show connect link to yourself
-	$connect = (($profile['uid'] != local_user()) ? t('Connect')  : False);
+	require_once('include/Contact.php');
 
-	// don't show connect link to authenticated visitors either
+	$connect_url = rconnect_url($profile['uid'],get_observer_hash());
+	$connect = (($connect_url) ? t('Connect') : '');
 
-	if(remote_user() && count($_SESSION['remote'])) {
-		foreach($_SESSION['remote'] as $visitor) {
-			if($visitor['uid'] == $profile['uid']) {
-				$connect = false;
-				break;
-			}
-		}
-	}
-
+	if($connect_url) 
+		$connect_url = $connect_url . '/follow?f=1&url=' . $profile['channel_address'] . '@' . $a->get_hostname();
 
 	// show edit profile to yourself
 	if($is_owner) {
@@ -1692,16 +1690,27 @@ function profile_sidebar($profile, $block = 0) {
 		$contact_block = contact_block();
 	}
 
+	$channel_menu = false;
+	$menu = get_pconfig($profile['uid'],'system','channel_menu');
+	if($menu) {
+		require_once('include/menu.php');
+		$m = menu_fetch($menu,$profile['uid'],$observer['xchan_hash']);
+		if($m)
+			$channel_menu = menu_render($m);
+	}
+
 	$tpl = get_markup_template('profile_vcard.tpl');
 
 	$o .= replace_macros($tpl, array(
 		'$profile'       => $profile,
 		'$connect'       => $connect,
+		'$connect_url'   => $connect_url,
 		'$location'      => $location,
 		'$gender'        => $gender,
 		'$pdesc'         => $pdesc,
 		'$marital'       => $marital,
 		'$homepage'      => $homepage,
+		'$chanmenu'      => $channel_menu,
 		'$contact_block' => $contact_block,
 	));
 
