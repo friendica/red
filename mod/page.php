@@ -58,7 +58,6 @@ function page_content(&$a) {
 		dbesc($page_id),
 		intval(ITEM_WEBPAGE)
 	);
-	logger('r: ' . print_r($r,true));
 
 	if(! $r) {
 		notice( t('Item not found.') . EOL);
@@ -66,15 +65,12 @@ function page_content(&$a) {
 	}
 
 // Use of widgets should be determined by Comanchie, but we don't have it yet, so...
-
-
 	if ($perms['write_pages']) {
+		$chan = $a->channel['channel_id'];
 		$who = $channel_address;
 		$which = $r[0]['id'];
 		$o .= writepages_widget($who,$which);
 	}
-
-
 
 	xchan_query($r);
 	$r = fetch_post_tags($r,true);

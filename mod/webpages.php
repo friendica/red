@@ -21,13 +21,15 @@ function webpages_content(&$a) {
 	profile_load($a,$which,$profile);
 
 
+// Figure out who the page owner is.
         $r = q("select channel_id from channel where channel_address = '%s'",
                 dbesc($which)
                 );
                if($r) {
                 $owner = intval($r[0]['channel_id']);
 	}
-// We can do better, but since editing only works for local users and all posts are webpages, return anyone else for now.
+
+// Get the observer, check their permissions
 
         $observer = $a->get_observer();
         $ob_hash = (($observer) ? $observer['xchan_hash'] : '');
@@ -40,6 +42,7 @@ function webpages_content(&$a) {
         }
 
 // Create a status editor (for now - we'll need a WYSIWYG eventually) to create pages
+// Nickname is set to the observers xchan, and profile_uid to the owners.  This lets you post pages at other people's channels.
 require_once ('include/conversation.php');
 		$x = array(
 			'webpage' => 1,
@@ -54,7 +57,7 @@ require_once ('include/conversation.php');
 		$o .= status_editor($a,$x);
 
 //Get a list of webpages.  We can't display all them because endless scroll makes that unusable, so just list titles and an edit link.
-// FIXME - we should sort these results, but it's not obvious what order yet.  Alphabetical?  Created order?
+//TODO - this should be replaced with pagelist_widget
 
 $r = q("select * from item_id where uid = %d and service = 'WEBPAGE' order by sid asc",
 	intval($owner)
@@ -79,6 +82,7 @@ $r = q("select * from item_id where uid = %d and service = 'WEBPAGE' order by si
 		'$pages' => $pages,
 		'$channel' => $which,
 		'$view' => t('View'),
+		'$preview' => '1',
 	
         ));
     
