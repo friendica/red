@@ -1690,6 +1690,15 @@ function profile_sidebar($profile, $block = 0) {
 		$contact_block = contact_block();
 	}
 
+	$channel_menu = false;
+	$menu = get_pconfig($profile['uid'],'system','channel_menu');
+	if($menu) {
+		require_once('include/menu.php');
+		$m = menu_fetch($menu,$profile['uid'],$observer['xchan_hash']);
+		if($m)
+			$channel_menu = menu_render($m);
+	}
+
 	$tpl = get_markup_template('profile_vcard.tpl');
 
 	$o .= replace_macros($tpl, array(
@@ -1701,6 +1710,7 @@ function profile_sidebar($profile, $block = 0) {
 		'$pdesc'         => $pdesc,
 		'$marital'       => $marital,
 		'$homepage'      => $homepage,
+		'$chanmenu'      => $channel_menu,
 		'$contact_block' => $contact_block,
 	));
 

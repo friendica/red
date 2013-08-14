@@ -51,6 +51,9 @@
 	
 </div>
 <div id="vcard-end"></div>
+
+{{$chanmenu}}
+
 {{$contact_block}}
 
 
