@@ -3144,20 +3144,27 @@ function item_expire($uid,$days) {
 	// and just expire conversations started by others
 
 	$expire_network_only = get_pconfig($uid,'expire','network_only');
-	$sql_extra = ((intval($expire_network_only)) ? " AND wall = 0 " : "");
+	$sql_extra = ((intval($expire_network_only)) ? " AND not (item_flags & " . intval(ITEM_WALL) . ") " : "");
 
 	$r = q("SELECT * FROM `item` 
 		WHERE `uid` = %d 
 		AND `created` < UTC_TIMESTAMP() - INTERVAL %d DAY 
 		AND `id` = `parent` 
 		$sql_extra
-		AND `deleted` = 0",
+		AND NOT (item_restrict & %d )
+		AND NOT (item_restrict & %d )
+		AND NOT (item_restrict & %d ) ",
 		intval($uid),
-		intval($days)
+		intval($days),
+		intval(ITEM_DELETED),
+		intval(ITEM_WEBPAGE),
+		intval(ITEM_BUILDBLOCK)
 	);
 
-	if(! count($r))
+	if(! $r)
 		return;
+
+	$r = fetch_post_tags($r,true);
 
 	$expire_items = get_pconfig($uid, 'expire','items');
 	$expire_items = (($expire_items===false)?1:intval($expire_items)); // default if not set: 1
@@ -3175,20 +3182,19 @@ function item_expire($uid,$days) {
 
 	foreach($r as $item) {
 
+
+
 		// don't expire filed items
 
-		if(strpos($item['file'],'[') !== false)
+		$terms = get_terms_oftype($item['term'],TERM_FILE);
+		if($terms)
 			continue;
 
 		// Only expire posts, not photos and photo comments
 
-		if($expire_photos==0 && strlen($item['resource_id']))
+		if($expire_photos==0 && $item['resource_type'] === 'photo'))
 			continue;
-		if($expire_starred==0 && intval($item['starred']))
-			continue;
-		if($expire_notes==0 && $item['type']=='note')
-			continue;
-		if($expire_items==0 && $item['type']!='note')
+		if($expire_starred==0 && ($item['item_flags'] & ITEM_STARRED))
 			continue;
 
 		drop_item($item['id'],false);
