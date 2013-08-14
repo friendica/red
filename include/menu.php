@@ -38,6 +38,18 @@ function menu_render($menu) {
 }
 
 
+function menu_fetch_id($menu_id,$channel_id) {
+
+	$r = q("select * from menu where menu_id = %d and menu_channel_id = %d limit 1",
+		intval($menu_id),
+		intval($channel_id)
+	);
+
+	return (($r) ? $r[0] : false);
+}
+
+
+
 function menu_create($arr) {
 
 
@@ -101,6 +113,17 @@ function menu_edit($arr) {
 
 	if(! $menu_name)
 		return false;
+
+
+	$r = q("select menu_id from menu where menu_name = '%s' and menu_channel_id = %d limit 1",
+		dbesc($menu_name),
+		intval($menu_channel_id)
+	);
+	if(($r) && ($r[0]['menu_id'] != $menu_id)) {
+		logger('menu_edit: duplicate menu name for channel ' . $menu_channel_id);
+		return false;
+	}
+
 
 
 	$menu_channel_id = intval($arr['menu_channel_id']);
