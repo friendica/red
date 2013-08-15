@@ -84,7 +84,8 @@ function poller_run($argv, $argc){
 
 
 		set_config('system','last_expire_day',$d2);
-		proc_run('php','include/expire.php');
+// Uncomment when expire protocol component is working
+//		proc_run('php','include/expire.php');
 
 		proc_run('php','include/cli_suggest.php');
 

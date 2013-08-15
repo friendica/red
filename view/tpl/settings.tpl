@@ -50,6 +50,9 @@
 
 {{include file="field_input.tpl" field=$cntunkmail}}
 
+
+{{if $expireisfixed}}
+{{* Remove above line when expire is working *}}
 {{include file="field_input.tpl" field=$expire.days}}
 
 
@@ -65,6 +68,7 @@
 	</div>
 
 </div>
+{{/if}}
 
 <div id="settings-default-perms" class="settings-default-perms" >
 	<a href="#profile-jot-acl-wrapper" id="settings-default-perms-menu" class='popupbox'>{{$permissions}} {{$permdesc}}</a>

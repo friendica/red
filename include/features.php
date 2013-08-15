@@ -19,7 +19,8 @@ function get_features() {
 		// General
 		'general' => array(
 			t('General Features'),
-			array('expire',         t('Content Expiration'),		t('Remove old posts/comments after a period of time')),
+// uncomment when expire is fixed
+//			array('expire',         t('Content Expiration'),		t('Remove old posts/comments after a period of time')),
 			array('multi_profiles', t('Multiple Profiles'),			t('Ability to create multiple profiles')),
 			array('webpages',       t('Web Pages'),                 t('Provide managed web pages on your channel')),
 			array('prettyphoto',       t('Enhanced Photo Albums'),                 t('Enable photo album with enhanced features')),
