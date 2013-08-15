@@ -328,7 +328,7 @@ if($a->module_loaded) {
 if(x($_SESSION,'visitor_home'))
 	$homebase = $_SESSION['visitor_home'];
 elseif(local_user())
-	$homebase = $a->get_baseurl() . '/channel/' . $a->user['nickname'];
+	$homebase = $a->get_baseurl() . '/channel/' . $a->channel['channel_address'];
 
 if(isset($homebase))
 	$a->page['content'] .= '<script>var homebase="' . $homebase . '" ; </script>';
