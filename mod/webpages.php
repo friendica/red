@@ -1,6 +1,6 @@
 <?php
 
-function webpages_init(&$a) {
+function webpages_content(&$a) {
 
 	if(argc() > 1)
 		$which = argv(1);
@@ -20,16 +20,29 @@ function webpages_init(&$a) {
 
 	profile_load($a,$which,$profile);
 
-}
 
-function webpages_content(&$a) {
+// Figure out who the page owner is.
+        $r = q("select channel_id from channel where channel_address = '%s'",
+                dbesc($which)
+                );
+               if($r) {
+                $owner = intval($r[0]['channel_id']);
+	}
 
-// We can do better, but since editing only works for local users and all posts are webpages, return anyone else for now.
+// Get the observer, check their permissions
 
-if (!local_user()) return;
+        $observer = $a->get_observer();
+        $ob_hash = (($observer) ? $observer['xchan_hash'] : '');
 
+        $perms = get_all_perms($owner,$ob_hash);
+
+        if(! $perms['write_pages']) {
+                notice( t('Permission denied.') . EOL);
+                return;
+        }
 
 // Create a status editor (for now - we'll need a WYSIWYG eventually) to create pages
+// Nickname is set to the observers xchan, and profile_uid to the owners.  This lets you post pages at other people's channels.
 require_once ('include/conversation.php');
 		$x = array(
 			'webpage' => 1,
@@ -38,16 +51,16 @@ require_once ('include/conversation.php');
 			'lockstate' => (($group || $cid || $channel['channel_allow_cid'] || $channel['channel_allow_gid'] || $channel['channel_deny_cid'] || $channel['channel_deny_gid']) ? 'lock' : 'unlock'),
 			'bang' => (($group || $cid) ? '!' : ''),
 			'visitor' => 'block',
-			'profile_uid' => local_user()
+			'profile_uid' => intval($owner),
 		);
 
 		$o .= status_editor($a,$x);
 
 //Get a list of webpages.  We can't display all them because endless scroll makes that unusable, so just list titles and an edit link.
-// FIXME - we should sort these results, but it's not obvious what order yet.  Alphabetical?  Created order?
+//TODO - this should be replaced with pagelist_widget
 
-$r = q("select * from item_id where uid = %d and service = 'WEBPAGE'",
-	intval(local_user())
+$r = q("select * from item_id where uid = %d and service = 'WEBPAGE' order by sid asc",
+	intval($owner)
 );
 
 		$pages = null;
@@ -61,14 +74,15 @@ $r = q("select * from item_id where uid = %d and service = 'WEBPAGE'",
 
 
 //Build the base URL for edit links
-		$url = z_root() . "/editwebpage/" . $a->profile['channel_address']; 
+		$url = z_root() . "/editwebpage/" . $which; 
 // This isn't pretty, but it works.  Until I figure out what to do with the UI, it's Good Enough(TM).
        return $o . replace_macros(get_markup_template("webpagelist.tpl"), array(
 		'$baseurl' => $url,
 		'$edit' => t('Edit'),
 		'$pages' => $pages,
-		'$channel' => $a->profile['channel_address'],
+		'$channel' => $which,
 		'$view' => t('View'),
+		'$preview' => '1',
 	
         ));
     

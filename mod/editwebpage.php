@@ -1,7 +1,8 @@
  
 <?php
 
-require_once('acl_selectors.php');
+// What is this here for?  I think it's cruft, but comment out for now in case it's here for a reason
+// require_once('acl_selectors.php');
 
 function editwebpage_content(&$a) {
 
@@ -59,9 +60,8 @@ function editwebpage_content(&$a) {
 
 
 
-	// All of the following is straight from editpost - but we'll need richer editing options for webpages eventually, so we may as well have it's own mod now.
-
 	$plaintext = true;
+// You may or may not be a local user.  This won't work,
 	if(feature_enabled(local_user(),'richtext'))
 		$plaintext = false;
 
@@ -91,11 +91,9 @@ function editwebpage_content(&$a) {
 
 	//$tpl = replace_macros($tpl,array('$jotplugins' => $jotplugins));	
 	
-//FIXME A return path with $_SESSION doesn't work for observer (at least, not here it doesn't).  It'll WSoD instead of loading a sensible page.  So, send folk 
-//back to the channel address until somebody figures out how to fix it - we can't send them back to webpages, because that could leak private pages they can't see
-//when ACL is done.
+//FIXME A return path with $_SESSION doesn't always work for observer - it may WSoD instead of loading a sensible page.  So, send folk to the webpage list.
 
-	$rp = 'channel' . '/' . $which;
+	$rp = '/webpages/' . $which;
 
 	$o .= replace_macros($tpl,array(
 		'$return_path' => $rp,
