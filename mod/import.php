@@ -16,10 +16,10 @@ function import_post(&$a) {
 	$data     = null;
 	$seize    = ((x($_REQUEST,'make_primary')) ? intval($_REQUEST['make_primary']) : 0);
 
-	$src      = $_FILES['userfile']['tmp_name'];
-	$filename = basename($_FILES['userfile']['name']);
-	$filesize = intval($_FILES['userfile']['size']);
-	$filetype = $_FILES['userfile']['type'];
+	$src      = $_FILES['filename']['tmp_name'];
+	$filename = basename($_FILES['filename']['name']);
+	$filesize = intval($_FILES['filename']['size']);
+	$filetype = $_FILES['filename']['type'];
 
 
 	if($src) {
