@@ -1557,8 +1557,9 @@ function profile_load(&$a, $nickname, $profile = '') {
 
 	$a->page['title'] = $a->profile['channel_name'] . " - " . $a->profile['channel_address'] . "@" . $a->get_hostname();
 
-
+	$a->profile['channel_mobile_theme'] = get_pconfig(local_user(),'system', 'mobile_theme');
 	$_SESSION['theme'] = $a->profile['channel_theme'];
+	$_SESSION['mobile-theme'] = get_pconfig(local_user(),'system', 'mobile_theme');
 
 	/**
 	 * load/reload current theme info
