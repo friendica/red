@@ -30,10 +30,10 @@ function home_content(&$a) {
 
 	if(x($_SESSION,'theme'))
 		unset($_SESSION['theme']);
-	if(x($_SESSION,'mobile-theme'))
-		unset($_SESSION['mobile-theme']);
+	if(x($_SESSION,'mobile_theme'))
+		unset($_SESSION['mobile_theme']);
 
-$channel_address = get_config("system", "site-channel" );
+$channel_address = get_config("system", "site_channel" );
     if ($channel_address){
 
 require_once('include/items.php');

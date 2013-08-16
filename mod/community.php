@@ -3,7 +3,7 @@
 function community_init(&$a) {
 	if(! local_user()) {
 		unset($_SESSION['theme']);
-		unset($_SESSION['mobile-theme']);
+		unset($_SESSION['mobile_theme']);
 	}
 
 

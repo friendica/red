@@ -783,7 +783,7 @@ function settings_content(&$a) {
 		$default_theme = get_config('system','theme');
 		if(! $default_theme)
 			$default_theme = 'default';
-		$default_mobile_theme = get_config('system','mobile-theme');
+		$default_mobile_theme = get_config('system','mobile_theme');
 		if(! $mobile_default_theme)
 			$mobile_default_theme = 'none';
 
@@ -817,7 +817,7 @@ function settings_content(&$a) {
 			}
 		}
 		$theme_selected = (!x($_SESSION,'theme')? $default_theme : $_SESSION['theme']);
-		$mobile_theme_selected = (!x($_SESSION,'mobile-theme')? $default_mobile_theme : $_SESSION['mobile-theme']);
+		$mobile_theme_selected = (!x($_SESSION,'mobile_theme')? $default_mobile_theme : $_SESSION['mobile_theme']);
 		
 		$browser_update = intval(get_pconfig(local_user(), 'system','update_interval'));
 		$browser_update = (($browser_update == 0) ? 40 : $browser_update / 1000); // default if not set: 40 seconds

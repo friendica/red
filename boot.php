@@ -1559,7 +1559,7 @@ function profile_load(&$a, $nickname, $profile = '') {
 
 	$a->profile['channel_mobile_theme'] = get_pconfig(local_user(),'system', 'mobile_theme');
 	$_SESSION['theme'] = $a->profile['channel_theme'];
-	$_SESSION['mobile-theme'] = $a->profile['channel_mobile_theme'];
+	$_SESSION['mobile_theme'] = $a->profile['channel_mobile_theme'];
 
 	/**
 	 * load/reload current theme info
@@ -1964,8 +1964,8 @@ function current_theme(){
 	$is_mobile = $a->is_mobile || $a->is_tablet;
 	
 	if($is_mobile) {
-		$system_theme = ((isset($a->config['system']['mobile-theme'])) ? $a->config['system']['mobile-theme'] : '');
-		$theme_name = ((isset($_SESSION) && x($_SESSION,'mobile-theme')) ? $_SESSION['mobile-theme'] : $system_theme);
+		$system_theme = ((isset($a->config['system']['mobile_theme'])) ? $a->config['system']['mobile_theme'] : '');
+		$theme_name = ((isset($_SESSION) && x($_SESSION,'mobile_theme')) ? $_SESSION['mobile_theme'] : $system_theme);
 
 		if($theme_name === '---') {
 			// user has selected to have the mobile theme be the same as the normal one
