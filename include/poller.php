@@ -118,18 +118,18 @@ function poller_run($argv, $argc){
 	$force      = false;
 	$restart    = false;
 
-	if((argc() > 1) && (argv(1) == 'force'))
+	if(($argc > 1) && ($argv[1] == 'force'))
 		$force = true;
 
-	if((argc() > 1) && (argv(1) == 'restart')) {
+	if(($argc > 1) && ($argv[1] == 'restart')) {
 		$restart = true;
-		$generation = intval(argv(2));
+		$generation = intval($argv[2]);
 		if(! $generation)
 			killme();		
 	}
 
-	if((argc() > 1) && intval(argv(1))) {
-		$manual_id = intval(argv(1));
+	if(($argc > 1) && intval($argv[1])) {
+		$manual_id = intval($argv[1]);
 		$force     = true;
 	}
 
@@ -157,7 +157,8 @@ function poller_run($argv, $argc){
 		: '' 
 	);
 
-	$contacts = q("SELECT abook_id, abook_updated, abook_closeness, abook_channel 
+
+	$contacts = q("SELECT abook_id, abook_updated, abook_connected, abook_closeness, abook_channel
 		FROM abook LEFT JOIN account on abook_account = account_id where 1
 		$sql_extra 
 		AND (( abook_flags = %d ) OR  ( abook_flags = %d )) 
@@ -189,10 +190,10 @@ function poller_run($argv, $argc){
 		else {
 			// if we've never connected with them, start the mark for death countdown from now
 
-			if($c === '0000-00-00 00:00:00') {
+			if($c == '0000-00-00 00:00:00') {
 				$r = q("update abook set abook_connected = '%s'  where abook_id = %d limit 1",
 					dbesc(datetime_convert()),
-					intval($abook['abook_id'])
+					intval($contact['abook_id'])
 				);
 				$c = datetime_convert();
 				$update = true;
@@ -200,8 +201,8 @@ function poller_run($argv, $argc){
 
 			// He's dead, Jim
 
-			if(datetime_convert('UTC','UTC', 'now') > datetime_convert('UTC','UTC', $c . " + 30 day")) {
-				$r = q("update abook set abook_flags = (abook_flags & %d) where abook_id = %d limit 1",
+			if(strcmp(datetime_convert('UTC','UTC', 'now'),datetime_convert('UTC','UTC', $c . " + 30 day")) > 0) {
+				$r = q("update abook set abook_flags = (abook_flags | %d) where abook_id = %d limit 1",
 					intval(ABOOK_FLAG_ARCHIVED),
 					intval($contact['abook_id'])
 				);
@@ -213,17 +214,17 @@ function poller_run($argv, $argc){
 
 			// recently deceased, so keep up the regular schedule for 3 days
  
-			if((datetime_convert('UTC','UTC', 'now') > datetime_convert('UTC','UTC', $c . " + 3 day"))
-			 && (datetime_convert('UTC','UTC', 'now') > datetime_convert('UTC','UTC', $t . " + 1 day")))
+			if((strcmp(datetime_convert('UTC','UTC', 'now'),datetime_convert('UTC','UTC', $c . " + 3 day")) > 0)
+			 && (strcmp(datetime_convert('UTC','UTC', 'now'),datetime_convert('UTC','UTC', $t . " + 1 day")) > 0))
 				$update = true;
 
 			// After that back off and put them on a morphine drip
 
-			if(datetime_convert('UTC','UTC', 'now') > datetime_convert('UTC','UTC', $t . " + 2 day")) {
+			if(strcmp(datetime_convert('UTC','UTC', 'now'),datetime_convert('UTC','UTC', $t . " + 2 day")) > 0) {
 				$update = true;
 			}
 		}
-
+dbg(0);
 		if((! $update) && (! $force))
 				continue;
 
