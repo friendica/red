@@ -34,6 +34,7 @@ function authenticate_success($user_record, $login_initial = false, $interactive
 	else {
 		$_SESSION['uid'] = $user_record['uid'];
 		$_SESSION['theme'] = $user_record['theme'];
+		$_SESSION['mobile-theme'] = get_pconfig($user_record['uid'], 'system', 'mobile_theme');
 		$_SESSION['authenticated'] = 1;
 		$_SESSION['page_flags'] = $user_record['page-flags'];
 		$_SESSION['my_url'] = $a->get_baseurl() . '/channel/' . $user_record['nickname'];
@@ -148,6 +149,7 @@ function change_channel($change_channel) {
 			$_SESSION['uid'] = intval($r[0]['channel_id']);
 			get_app()->set_channel($r[0]);
 			$_SESSION['theme'] = $r[0]['channel_theme'];
+			$_SESSION['mobile-theme'] = get_pconfig(local_user(),'system', 'mobile_theme');
 			date_default_timezone_set($r[0]['channel_timezone']);
 			$ret = $r[0];
 		}
