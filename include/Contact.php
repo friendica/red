@@ -295,8 +295,8 @@ function contact_remove($channel_id, $abook_id) {
 
 	$archive = get_pconfig($channel_id, 'system','archive_removed_contacts');
 	if($archive) {
-		q("update abook set abook_flags = abook_flags | %d where abook_id = %d and abook_channel = %d limit 1",
-			intval(ABOOK_FLAG_ARCHIVE),
+		q("update abook set abook_flags = ( abook_flags | %d ) where abook_id = %d and abook_channel = %d limit 1",
+			intval(ABOOK_FLAG_ARCHIVED),
 			intval($abook_id),
 			intval($channel_id)
 		);

@@ -31,10 +31,11 @@ function collect_recipients($item,&$private) {
 	}
 	else {
 		$recipients = array();
-		$r = q("select * from abook where abook_channel = %d and not (abook_flags & %d) and not (abook_flags & %d)",
+		$r = q("select * from abook where abook_channel = %d and not (abook_flags & %d) and not (abook_flags & %d) and not (abook_flags & %d)",
 			intval($item['uid']),
 			intval(ABOOK_FLAG_SELF),
-			intval(ABOOK_FLAG_PENDING)
+			intval(ABOOK_FLAG_PENDING),
+			intval(ABOOK_FLAG_ARCHIVED)
 		);
 		if($r) {
 			foreach($r as $rr) {
