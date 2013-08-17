@@ -1,6 +1,7 @@
 var searchData=
 [
   ['page_2ephp',['page.php',['../page_8php.html',1,'']]],
+  ['page_5fwidgets_2ephp',['page_widgets.php',['../page__widgets_8php.html',1,'']]],
   ['parse_5furl_2ephp',['parse_url.php',['../parse__url_8php.html',1,'']]],
   ['permissions_2ephp',['permissions.php',['../permissions_8php.html',1,'']]],
   ['photo_2ephp',['photo.php',['../photo_8php.html',1,'']]],

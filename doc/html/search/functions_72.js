@@ -3,6 +3,7 @@ var searchData=
   ['random_5fprofile',['random_profile',['../Contact_8php.html#a91281b5d4bbbb2ed468e27ec82ca083c',1,'Contact.php']]],
   ['random_5fstring',['random_string',['../text_8php.html#a9d6a5ee1290de7a8b483fe78585daade',1,'text.php']]],
   ['randprof_5finit',['randprof_init',['../randprof_8php.html#abf5dba3c608b9304cbf68327cd31b090',1,'randprof.php']]],
+  ['rconnect_5furl',['rconnect_url',['../Contact_8php.html#a2f4f495d53f2a334ab75292af79d3c91',1,'Contact.php']]],
   ['rebuild_5ftheme_5ftable',['rebuild_theme_table',['../admin_8php.html#ae46311a3fefc21abc838a26e91789de6',1,'admin.php']]],
   ['red_5fzrl_5fcallback',['red_zrl_callback',['../items_8php.html#a4e6d7639431e0dd8e9f4dba8e1ac408b',1,'items.php']]],
   ['redbasic_5fform',['redbasic_form',['../view_2theme_2redbasic_2php_2config_8php.html#a29a6e1ef07465d1617d836b859b3b2b2',1,'redbasic_form(&amp;$a, $font_size, $line_height, $colour, $shadow, $navcolour, $opaquenav, $displaystyle, $linkcolour, $iconset, $shiny, $colour_scheme, $radius):&#160;config.php'],['../view_2theme_2redstrap_2php_2config_8php.html#af58e97b437c1e98a5e434886494cc70e',1,'redbasic_form(&amp;$a, $font_size, $line_height, $colour, $shadow, $navcolour, $opaquenav, $displaystyle, $linkcolour, $iconset, $shiny):&#160;config.php']]],

@@ -11,6 +11,7 @@ var Contact_8php =
     [ "contact_remove", "Contact_8php.html#a28e062c884331dbb5dfa713228c25ad6", null ],
     [ "contacts_not_grouped", "Contact_8php.html#a228fc01f90ae9bfdde4c2ad0772bd7dc", null ],
     [ "random_profile", "Contact_8php.html#a91281b5d4bbbb2ed468e27ec82ca083c", null ],
+    [ "rconnect_url", "Contact_8php.html#a2f4f495d53f2a334ab75292af79d3c91", null ],
     [ "remove_all_xchan_resources", "Contact_8php.html#acc12cda999c88c4d6185cca967c15125", null ],
     [ "terminate_friendship", "Contact_8php.html#a38daa1c210b78385307123450ca9a1fc", null ],
     [ "user_remove", "Contact_8php.html#a2fc191067dd571a79603c66b04b1ca15", null ],
