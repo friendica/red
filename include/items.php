@@ -773,14 +773,19 @@ function decode_tags($t) {
 
 function activity_sanitise($arr) {
 	if($arr) {
-		$ret = array();
-		foreach($arr as $k => $x) {
-			if(is_array($x))
-				$ret[$k] = activity_sanitise($x);
-			else
-				$ret[$k] = htmlentities($x, ENT_COMPAT,'UTF-8',false);
+		if(is_array($arr)) {
+			$ret = array();
+			foreach($arr as $k => $x) {
+				if(is_array($x))
+					$ret[$k] = activity_sanitise($x);
+				else
+					$ret[$k] = htmlentities($x, ENT_COMPAT,'UTF-8',false);
+			}
+			return $ret;
 		}
-		return $ret;
+		else {
+			return htmlentities($arr, ENT_COMPAT,'UTF-8', false);
+		}
 	}
 	return '';
 }
@@ -1572,9 +1577,9 @@ function item_store($arr,$allow_exec = false) {
 		unset($arr['term']);
 	}
 
-	dbesc_array($arr);
-
 	logger('item_store: ' . print_r($arr,true), LOGGER_DATA);
+
+	dbesc_array($arr);
 
 	$r = dbq("INSERT INTO `item` (`" 
 			. implode("`, `", array_keys($arr)) 
