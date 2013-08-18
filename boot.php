@@ -1964,13 +1964,19 @@ function current_theme(){
 	$is_mobile = $a->is_mobile || $a->is_tablet;
 	
 	if($is_mobile) {
-		$system_theme = ((isset($a->config['system']['mobile_theme'])) ? $a->config['system']['mobile_theme'] : '');
-		$theme_name = ((isset($_SESSION) && x($_SESSION,'mobile_theme')) ? $_SESSION['mobile_theme'] : $system_theme);
+		if(isset($_SESSION['show_mobile']) && !$_SESSION['show_mobile']) {
+				$system_theme = '';
+				$theme_name = '';
+		}
+		else {	
+			$system_theme = ((isset($a->config['system']['mobile_theme'])) ? $a->config['system']['mobile_theme'] : '');
+			$theme_name = ((isset($_SESSION) && x($_SESSION,'mobile_theme')) ? $_SESSION['mobile_theme'] : $system_theme);
 
-		if($theme_name === '---') {
-			// user has selected to have the mobile theme be the same as the normal one
-			$system_theme = '';
-			$theme_name = '';
+			if($theme_name === '---') {
+				// user has selected to have the mobile theme be the same as the normal one
+				$system_theme = '';
+				$theme_name = '';
+			}
 		}
 	}
 	else {
@@ -2345,7 +2351,7 @@ function construct_page(&$a) {
 	}
 
 	if($a->is_mobile || $a->is_tablet) {
-		if(isset($_SESSION['show-mobile']) && !$_SESSION['show-mobile']) {
+		if(isset($_SESSION['show_mobile']) && !$_SESSION['show_mobile']) {
 			$link = $a->get_baseurl() . '/toggle_mobile?f=&address=' . curPageURL();
 		}
 		else {
