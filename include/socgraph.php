@@ -1,5 +1,6 @@
 <?php /** @file */
 
+require_once('include/dir_fns.php');
 require_once('include/zot.php');
 
 /*
