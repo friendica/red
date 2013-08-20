@@ -3,6 +3,7 @@
 /* Private Message backend API */
 
 require_once('include/crypto.php');
+require_once('include/attach.php');
 
 // send a private message
 	
@@ -74,14 +75,44 @@ function send_message($uid = 0, $recipient='', $body='', $subject='', $replyto='
 	if(preg_match_all("/\[img\](.*?)\[\/img\]/",$body,$match))
 		$images = $match[1];
 
+	$match = false;
+
+	if(preg_match_all("/\[attachment\](.*?)\[\/attachment\]/",$body,$match))
+		$attaches = $match[1];
+
+	$attachments = '';
+
+	if(preg_match_all('/(\[attachment\](.*?)\[\/attachment\])/',$body,$match)) {
+		$attachments = array();
+		foreach($match[2] as $mtch) {
+			$hash = substr($mtch,0,strpos($mtch,','));
+			$rev = intval(substr($mtch,strpos($mtch,',')));
+			$r = attach_by_hash_nodata($hash,$rev);
+			if($r['success']) {
+				$attachments[] = array(
+					'href'     => $a->get_baseurl() . '/attach/' . $r['data']['hash'],
+					'length'   =>  $r['data']['filesize'],
+					'type'     => $r['data']['filetype'],
+					'title'    => urlencode($r['data']['filename']),
+					'revision' => $r['data']['revision']
+				);
+			}
+			$body = str_replace($match[1],'',$body);
+		}
+	}
+
+	$jattach = (($attachments) ? json_encode($attachments) : '');
+
 	$key = get_config('system','pubkey');
 	if($subject)
 		$subject = json_encode(aes_encapsulate($subject,$key));
 	if($body)
 		$body  = json_encode(aes_encapsulate($body,$key));
 	
-	$r = q("INSERT INTO mail ( account_id, mail_flags, channel_id, from_xchan, to_xchan, title, body, mid, parent_mid, created )
-		VALUES ( %d, %d, %d, '%s', '%s', '%s', '%s', '%s', '%s', '%s' )",
+
+
+	$r = q("INSERT INTO mail ( account_id, mail_flags, channel_id, from_xchan, to_xchan, title, body, attach, mid, parent_mid, created )
+		VALUES ( %d, %d, %d, '%s', '%s', '%s', '%s', '%s', '%s', '%s', '%s' )",
 		intval($channel['channel_account_id']),
 		intval(MAIL_OBSCURED),
 		intval($channel['channel_id']),
@@ -89,6 +120,7 @@ function send_message($uid = 0, $recipient='', $body='', $subject='', $replyto='
 		dbesc($recipient),
 		dbesc($subject),
 		dbesc($body),
+		dbesc($jattach),
 		dbesc($mid),
 		dbesc($replyto),
 		dbesc(datetime_convert())
@@ -122,6 +154,19 @@ function send_message($uid = 0, $recipient='', $body='', $subject='', $replyto='
 		}
 	}
 	
+	if($attaches) {
+		foreach($attaches as $attach) {
+			$hash = substr($attach,0,strpos($attach,','));
+			$rev = intval(substr($attach,strpos($attach,',')));
+			attach_store($channel,$observer_hash,$options = 'update', array(
+				'hash'      => $hash,
+				'revision'  => $rev,
+				'allow_cid' => '<' . $recipient . '>',
+
+			));
+		}
+	}
+
 	proc_run('php','include/notifier.php','mail',$post_id);
 
 	$ret['success'] = true;

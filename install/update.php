@@ -1,6 +1,6 @@
 <?php
 
-define( 'UPDATE_VERSION' , 1059 );
+define( 'UPDATE_VERSION' , 1060 );
 
 /**
  *
@@ -679,6 +679,13 @@ ADD INDEX ( `menu_name` ) ");
 ADD INDEX ( `mitem_flags` ) ");
 
 	if($r1 && $r2)
+		return UPDATE_SUCCESS;
+	return UPDATE_FAILED;
+}
+
+function update_r1059() {
+	$r = q("ALTER TABLE `mail` ADD `attach` MEDIUMTEXT NOT NULL DEFAULT '' AFTER `body` ");
+	if($r)
 		return UPDATE_SUCCESS;
 	return UPDATE_FAILED;
 }
