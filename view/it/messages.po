@@ -14,7 +14,7 @@ msgstr ""
 "Project-Id-Version: Red Matrix\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2013-08-16 00:01-0700\n"
-"PO-Revision-Date: 2013-08-19 11:56+0000\n"
+"PO-Revision-Date: 2013-08-20 06:55+0000\n"
 "Last-Translator: tuscanhobbit Pa <pynolo@tarine.net>\n"
 "Language-Team: Italian (http://www.transifex.com/projects/p/red-matrix/language/it/)\n"
 "MIME-Version: 1.0\n"
@@ -4359,11 +4359,11 @@ msgstr "Cerca risultati con:"
 
 #: ../../mod/network.php:430
 msgid "No such group"
-msgstr ""
+msgstr "Impossibile trovare il gruppo"
 
 #: ../../mod/network.php:441
 msgid "Group is empty"
-msgstr ""
+msgstr "Il gruppo è vuoto"
 
 #: ../../mod/network.php:456
 msgid "Contact: "
