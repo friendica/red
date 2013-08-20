@@ -54,7 +54,19 @@ else
 				name: 'userfile',
 				onSubmit: function(file,ext) { $('#profile-rotator').spin('tiny'); },
 				onComplete: function(file,response) {
-					tinyMCE.execCommand('mceInsertRawHTML',false,response);
+					addeditortext(response);
+					$('#profile-rotator').spin(false);
+				}				 
+			}
+		);
+
+		var file_uploader = new window.AjaxUpload(
+			'prvmail-attach',
+			{ action: 'wall_attach/{{$nickname}}',
+				name: 'userfile',
+				onSubmit: function(file,ext) { $('#profile-rotator').spin('tiny'); },
+				onComplete: function(file,response) {
+					addeditortext(response);
 					$('#profile-rotator').spin(false);
 				}				 
 			}
@@ -67,7 +79,7 @@ else
 		if(reply && reply.length) {
 			$('#profile-rotator').spin('tiny');
 			$.get('parse_url?url=' + reply, function(data) {
-				tinyMCE.execCommand('mceInsertRawHTML',false,data);
+				addeditortext(response);
 				$('#profile-rotator').spin(false);
 			});
 		}
@@ -86,11 +98,22 @@ else
 		if(reply && reply.length) {
 			$('#profile-rotator').spin('tiny');
 			$.get('parse_url?url=' + reply, function(data) {
-				tinyMCE.execCommand('mceInsertRawHTML',false,data);
+				addeditortext(response);
 				$('#profile-rotator').spin(false);
 			});
 		}
 	}
+
+	function addeditortext(data) {
+		if(plaintext == 'none') {
+			var currentText = $("#prvmail-text").val();
+			$("#prvmail-text").val(currentText + data);
+		}
+		else
+			tinyMCE.execCommand('mceInsertRawHTML',false,data);
+	}	
+
+
 
 </script>
 

@@ -504,6 +504,7 @@ CREATE TABLE IF NOT EXISTS `mail` (
   `channel_id` int(10) unsigned NOT NULL,
   `title` text NOT NULL,
   `body` mediumtext NOT NULL,
+  `attach` mediumtext NOT NULL DEFAULT '',
   `mid` char(255) NOT NULL,
   `parent_mid` char(255) NOT NULL,
   `created` datetime NOT NULL DEFAULT '0000-00-00 00:00:00',
