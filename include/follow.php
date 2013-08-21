@@ -145,12 +145,13 @@ function new_contact($uid,$url,$channel,$interactive = false) {
 		);		
 	}
 	else {
-		$r = q("insert into abook ( abook_account, abook_channel, abook_xchan, abook_their_perms, abook_created, abook_updated )
-			values( %d, %d, '%s', %d, '%s', '%s' ) ",
+		$r = q("insert into abook ( abook_account, abook_channel, abook_xchan, abook_their_perms, abook_my_perms, abook_created, abook_updated )
+			values( %d, %d, '%s', %d, %d, '%s', '%s' ) ",
 			intval($aid),
 			intval($uid),
 			dbesc($xchan_hash),
 			intval($their_perms),
+			intval(PERMS_W_STREAM|PERMS_W_MAIL),
 			dbesc(datetime_convert()),
 			dbesc(datetime_convert())
 		);

@@ -110,6 +110,7 @@ function like_content(&$a) {
 	$obj = json_encode(array(
 		'type'    => $objtype,
 		'id'      => $item['mid'],
+		'parent'  => (($item['thr_parent']) ? $item['thr_parent'] : $item['parent_mid']),
 		'link'    => $links,
 		'title'   => $item['title'],
 		'content' => $item['body'],
