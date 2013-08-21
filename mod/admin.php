@@ -365,11 +365,11 @@ function admin_page_site(&$a) {
 	if($files) {
 		foreach($files as $file) {
 			$f = basename($file);
-			$theme_name = ((file_exists($file . '/.experimental')) ?  sprintf("%s - Experimental", $f) : $f);
-		if (file_exists($file . '/.mobile')) {
+			$theme_name = ((file_exists($file . '/experimental')) ?  sprintf("%s - Experimental", $f) : $f);
+		if (file_exists($file . '/mobile')) {
 			$theme_choices_mobile[$f] = $theme_name;
             }
-		if (file_exists($file . '/.accessibility')) {
+		if (file_exists($file . '/accessibility')) {
                 $theme_choices_accessibility[$f] = $theme_name;
             }
 			$theme_choices[$f] = $theme_name;
