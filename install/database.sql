@@ -666,6 +666,29 @@ CREATE TABLE IF NOT EXISTS `photo` (
   KEY `resource_id` (`resource_id`)
 ) ENGINE=MyISAM  DEFAULT CHARSET=utf8;
 
+CREATE TABLE IF NOT EXISTS `poll` (
+  `poll_id` int(10) unsigned NOT NULL AUTO_INCREMENT,
+  `poll_channel` int(10) unsigned NOT NULL DEFAULT '0',
+  `poll_desc` text NOT NULL,
+  `poll_flags` int(11) NOT NULL DEFAULT '0',
+  `poll_votes` int(11) NOT NULL DEFAULT '0',
+  PRIMARY KEY (`poll_id`),
+  KEY `poll_channel` (`poll_channel`),
+  KEY `poll_flags` (`poll_flags`),
+  KEY `poll_votes` (`poll_votes`)
+) ENGINE=MyISAM DEFAULT CHARSET=utf8;
+
+CREATE TABLE IF NOT EXISTS `poll_elm` (
+  `pelm_id` int(10) unsigned NOT NULL AUTO_INCREMENT,
+  `pelm_poll` int(10) unsigned NOT NULL DEFAULT '0',
+  `pelm_desc` text NOT NULL,
+  `pelm_flags` int(11) NOT NULL DEFAULT '0',
+  `pelm_result` float NOT NULL DEFAULT '0',
+  PRIMARY KEY (`pelm_id`),
+  KEY `pelm_poll` (`pelm_poll`),
+  KEY `pelm_result` (`pelm_result`)
+) ENGINE=MyISAM DEFAULT CHARSET=utf8;
+
 CREATE TABLE IF NOT EXISTS `profile` (
   `id` int(11) NOT NULL AUTO_INCREMENT,
   `profile_guid` char(64) NOT NULL DEFAULT '',
@@ -886,7 +909,9 @@ CREATE TABLE IF NOT EXISTS `vote` (
   `vote_result` text NOT NULL,
   `vote_xchan` char(255) NOT NULL DEFAULT '',
   PRIMARY KEY (`vote_id`),
-  UNIQUE KEY `vote_vote` (`vote_poll`,`vote_element`,`vote_xchan`)
+  UNIQUE KEY `vote_vote` (`vote_poll`,`vote_element`,`vote_xchan`),
+  KEY `vote_poll` (`vote_poll`),
+  KEY `vote_element` (`vote_element`)
 ) ENGINE=MyISAM DEFAULT CHARSET=utf8;
 
 CREATE TABLE IF NOT EXISTS `xchan` (
