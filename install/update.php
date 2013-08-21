@@ -1,6 +1,6 @@
 <?php
 
-define( 'UPDATE_VERSION' , 1060 );
+define( 'UPDATE_VERSION' , 1061 );
 
 /**
  *
@@ -685,6 +685,23 @@ ADD INDEX ( `mitem_flags` ) ");
 
 function update_r1059() {
 	$r = q("ALTER TABLE `mail` ADD `attach` MEDIUMTEXT NOT NULL DEFAULT '' AFTER `body` ");
+	if($r)
+		return UPDATE_SUCCESS;
+	return UPDATE_FAILED;
+}
+
+function update_r1060() {
+
+	$r = q("CREATE TABLE IF NOT EXISTS `vote` (
+  `vote_id` int(10) unsigned NOT NULL AUTO_INCREMENT,
+  `vote_poll` int(11) NOT NULL DEFAULT '0',
+  `vote_element` int(11) NOT NULL DEFAULT '0',
+  `vote_result` text NOT NULL,
+  `vote_xchan` char(255) NOT NULL DEFAULT '',
+  PRIMARY KEY (`vote_id`),
+  UNIQUE KEY `vote_vote` (`vote_poll`,`vote_element`,`vote_xchan`)
+) ENGINE=MyISAM DEFAULT CHARSET=utf8 ");
+
 	if($r)
 		return UPDATE_SUCCESS;
 	return UPDATE_FAILED;
