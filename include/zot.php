@@ -838,6 +838,7 @@ function zot_import($arr) {
 				// and who are allowed to see them based on the sender's permissions
 
 				$deliveries = allowed_public_recips($i);
+
 			}
 			if(! $deliveries) {
 				logger('zot_import: no deliveries on this site');
@@ -910,10 +911,12 @@ function zot_import($arr) {
 
 function public_recips($msg) {
 
+	$check_mentions = false;
 	if($msg['message']['type'] === 'activity') {
 		if(array_key_exists('flags',$msg['message']) && in_array('thread_parent', $msg['message']['flags'])) {
 			$col = 'channel_w_stream';
 			$field = PERMS_W_STREAM;
+			$check_mentions = true;
 		}
 		else {
 			$col = 'channel_w_comment';
@@ -928,8 +931,7 @@ function public_recips($msg) {
 	if(! $col)
 		return NULL;
 
-	logger('__public_recips');
-dbg(1);
+	
 	if($msg['notify']['sender']['url'] === z_root())
 		$sql = " where (( " . $col . " & " . PERMS_NETWORK . " )  or ( " . $col . " & " . PERMS_SITE . " )) ";				
 	else
@@ -947,9 +949,29 @@ dbg(1);
 
 	if(! $x)
 		$x = array();
-dbg(0);
 
 	$r = array_merge($r,$x);
+
+	// look for any public mentions on this site
+	// They will get filtered by tgroup_check() so we don't need to check permissions now
+
+	if($check_mentions && $msg['message']['tags']) {
+		if(is_array($msg['message']['tags']) && $msg['message']['tags']) {
+			foreach($msg['message']['tags'] as $tag) {
+				if(($tag['type'] === 'mention') && (strpos($tag['url'],z_root()) !== false)) {
+					$address = basename($tag['url']);
+					if($address) {
+						$z = q("select channel_hash as hash from channel where channel_address = '%s' limit 1",
+							dbesc($address)
+						);
+						if($z)
+							$r = array_merge($r,$z);
+					}
+				}
+			}
+		}
+	}
+
 	logger('public_recips: ' . print_r($r,true), LOGGER_DATA);
 	return $r;
 }
