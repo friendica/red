@@ -441,6 +441,9 @@ function import_xchan($arr) {
 		dbesc($xchan_hash)
 	);	
 
+	if(! array_key_exists('connect_url', $arr))
+		$arr['connect_url'] = '';		
+			
 
 	if($r) {
 		if($r[0]['xchan_photo_date'] != $arr['photo_updated'])
@@ -462,18 +465,22 @@ function import_xchan($arr) {
 			$new_flags = $r[0]['xchan_flags'] ^ XCHAN_FLAGS_HIDDEN;
 		else
 			$new_flags = $r[0]['xchan_flags'];
-		
-			
+
 		if(($r[0]['xchan_name_date'] != $arr['name_updated']) 
 			|| ($r[0]['xchan_connurl'] != $arr['connections_url']) 
 			|| ($r[0]['xchan_flags'] != $new_flags)
 			|| ($r[0]['xchan_addr'] != $arr['address'])
+			|| ($r[0]['xchan_follow'] != $arr['follow_url'])
+			|| ($r[0]['xchan_connpage'] != $arr['connect_url']) 
 			|| ($r[0]['xchan_url'] != $arr['url'])) {
-			$r = q("update xchan set xchan_name = '%s', xchan_name_date = '%s', xchan_connurl = '%s', xchan_flags = %d,
+			$r = q("update xchan set xchan_name = '%s', xchan_name_date = '%s', xchan_connurl = '%s', xchan_follow = '%s', 
+				xchan_connpage = '%s', xchan_flags = %d,
 				xchan_addr = '%s', xchan_url = '%s' where xchan_hash = '%s' limit 1",
 				dbesc($arr['name']),
 				dbesc($arr['name_updated']),
 				dbesc($arr['connections_url']),
+				dbesc($arr['follow_url']),
+				dbesc($arr['connect_url']),
 				intval($new_flags),
 				dbesc($arr['address']),
 				dbesc($arr['url']),
@@ -503,8 +510,8 @@ function import_xchan($arr) {
 			$new_flags = 0;
 		
 		$x = q("insert into xchan ( xchan_hash, xchan_guid, xchan_guid_sig, xchan_pubkey, xchan_photo_mimetype,
-				xchan_photo_l, xchan_addr, xchan_url, xchan_connurl, xchan_name, xchan_network, xchan_photo_date, xchan_name_date, xchan_flags)
-				values ( '%s', '%s', '%s', '%s' , '%s', '%s', '%s', '%s', '%s', '%s', '%s', '%s', '%s', %d) ",
+				xchan_photo_l, xchan_addr, xchan_url, xchan_connurl, xchan_follow, xchan_connpage, xchan_name, xchan_network, xchan_photo_date, xchan_name_date, xchan_flags)
+				values ( '%s', '%s', '%s', '%s' , '%s', '%s', '%s', '%s', '%s', '%s', '%s', '%s', '%s', '%s', '%s', %d) ",
 			dbesc($xchan_hash),
 			dbesc($arr['guid']),
 			dbesc($arr['guid_sig']),
@@ -514,6 +521,8 @@ function import_xchan($arr) {
 			dbesc($arr['address']),
 			dbesc($arr['url']),
 			dbesc($arr['connections_url']),
+			dbesc($arr['follow_url']),
+			dbesc($arr['connect_url']),
 			dbesc($arr['name']),
 			dbesc('zot'),
 			dbesc($arr['photo_updated']),
