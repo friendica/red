@@ -1572,11 +1572,11 @@ function profile_load(&$a, $nickname, $profile = '') {
 	return;
 }
 
-function profile_create_sidebar(&$a) {
+function profile_create_sidebar(&$a,$connect = true) {
 
 	$block = (((get_config('system','block_public')) && (! local_user()) && (! remote_user())) ? true : false);
 
-	$a->set_widget('profile',profile_sidebar($a->profile, $block));
+	$a->set_widget('profile',profile_sidebar($a->profile, $block, $connect));
 	return;
 }
 
@@ -1598,7 +1598,7 @@ function profile_create_sidebar(&$a) {
 
 
 
-function profile_sidebar($profile, $block = 0) {
+function profile_sidebar($profile, $block = 0, $show_connect = true) {
 
 	$a = get_app();
 
@@ -1623,11 +1623,13 @@ function profile_sidebar($profile, $block = 0) {
 
 	require_once('include/Contact.php');
 
-	$connect_url = rconnect_url($profile['uid'],get_observer_hash());
+
+	$connect_url = (($show_connect) ? rconnect_url($profile['uid'],get_observer_hash()) : '');
+	
 	$connect = (($connect_url) ? t('Connect') : '');
 
 	if($connect_url) 
-		$connect_url = $connect_url . '/follow?f=1&url=' . $profile['channel_address'] . '@' . $a->get_hostname();
+		$connect_url = $connect_url . '/follow?f=1&url=' . urlencode($profile['channel_address'] . '@' . $a->get_hostname());
 
 	// show edit profile to yourself
 	if($is_owner) {
