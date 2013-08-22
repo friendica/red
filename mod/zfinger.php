@@ -140,7 +140,7 @@ function zfinger_init(&$a) {
 	// This is a template - %s will be replaced with the follow_url we discover for the return channel.
 
 	if($special_channel) 
-		$ret['connect_url'] = z_root() . '/connect/' . $e['channel_address'] . '?f=&follow=%s';
+		$ret['connect_url'] = z_root() . '/connect/' . $e['channel_address'];
 
 	// This is a template for our follow url, %s will be replaced with a webbie
 

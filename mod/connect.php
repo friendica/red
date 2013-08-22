@@ -31,12 +31,13 @@ function connect_post(&$a) {
 		
 		$channel = $a->get_channel();
 		if(($channel['channel_pageflags'] & PAGE_PREMIUM) != $premium)
-			$r = q("update channel set channel_flags = channel_flags ^ %d where channel_id = %d limit 1",
+			$r = q("update channel set channel_pageflags = channel_pageflags ^ %d where channel_id = %d limit 1",
 				intval(PAGE_PREMIUM),
 				intval(local_user()) 
 			);
 		set_pconfig($a->profile['profile_uid'],'system','selltext',$text);
-		return;
+		goaway(z_root() . '/' . $a->query_string);
+
 	}
 
 	$url = '';
@@ -53,7 +54,7 @@ function connect_post(&$a) {
 		}
 	}
 	if($url)
-		goaway($url);
+		goaway($url . '&confirm=1');
 	else
 		notice('Unable to connect to your home hub location.');
 
@@ -68,20 +69,34 @@ function connect_content(&$a) {
 	$text = get_pconfig($a->profile['profile_uid'],'system','selltext');
 
 	if($edit) {
+		$channel = $a->get_channel();
+
 		$o = replace_macros(get_markup_template('sellpage_edit.tpl'),array(
+			'$header' => t('Premium Channel Setup'),
+			'$address' => $a->profile['channel_address'],
+			'$premium' => array('premium', t('Enable premium channel connection restrictions'),(($channel['channel_pageflags'] & PAGE_PREMIUM) ? '1' : ''),''),
+			'$lbl_about' => t('Please enter your restrictions or conditions, such as paypal receipt, usage guidelines, etc.'),
+ 			'$text' => $text,
+			'$desc' => t('This channel may require additional steps or acknowledgement of the following conditions prior to connecting:'),
+			'$lbl2' => t('Potential connections will then see the following text before proceeding:'),
+			'$desc2' => t('By continuing, I certify that I have complied with any instructions provided on this page.'),
+			'$submit' => t('Submit'),
 
 
 		));
 		return $o;
 	}
 	else {
+		if(! $text)
+			$text = t('(No specific instructions have been provided by the channel owner.)');
+
 		$submit = replace_macros(get_markup_template('sellpage_submit.tpl'), array(
 			'$continue' => t('Continue'),			
 			'$address' => $a->profile['channel_address']
 		));
 
 		$o = replace_macros(get_markup_template('sellpage_view.tpl'),array(
-			'$header' => t('Restricted Channel'),
+			'$header' => t('Restricted or Premium Channel'),
 			'$desc' => t('This channel may require additional steps or acknowledgement of the following conditions prior to connecting:'),
 			'$text' => prepare_text($text), 
 
@@ -90,8 +105,9 @@ function connect_content(&$a) {
 
 		));
 
-
-
+		$arr = array('profile' => $a->profile,'observer' => $a->get_observer(), 'sellpage' => $o, 'submit' => $submit);
+		call_hooks('connect_premium', $arr);
+		$o = $arr['sellpage'];
 
 	}
 

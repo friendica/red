@@ -1623,13 +1623,20 @@ function profile_sidebar($profile, $block = 0, $show_connect = true) {
 
 	require_once('include/Contact.php');
 
+	if($show_connect) {
 
-	$connect_url = (($show_connect) ? rconnect_url($profile['uid'],get_observer_hash()) : '');
-	
-	$connect = (($connect_url) ? t('Connect') : '');
+		// This will return an empty string if we're already connected.
 
-	if($connect_url) 
-		$connect_url = $connect_url . '/follow?f=1&url=' . urlencode($profile['channel_address'] . '@' . $a->get_hostname());
+		$connect_url = rconnect_url($profile['uid'],get_observer_hash());
+		$connect = (($connect_url) ? t('Connect') : '');
+		if($connect_url) 
+			$connect_url = sprintf($connect_url,urlencode($profile['channel_address'] . '@' . $a->get_hostname()));
+
+		// premium channel - over-ride
+
+		if($profile['channel_pageflags'] & PAGE_PREMIUM)
+			$connect_url = z_root() . '/connect/' . $profile['channel_address'];
+	}
 
 	// show edit profile to yourself
 	if($is_owner) {
