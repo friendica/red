@@ -928,6 +928,8 @@ function public_recips($msg) {
 	if(! $col)
 		return NULL;
 
+	logger('__public_recips');
+dbg(1);
 	if($msg['notify']['sender']['url'] === z_root())
 		$sql = " where (( " . $col . " & " . PERMS_NETWORK . " )  or ( " . $col . " & " . PERMS_SITE . " )) ";				
 	else
@@ -945,6 +947,7 @@ function public_recips($msg) {
 
 	if(! $x)
 		$x = array();
+dbg(0);
 
 	$r = array_merge($r,$x);
 	logger('public_recips: ' . print_r($r,true), LOGGER_DATA);
