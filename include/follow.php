@@ -63,7 +63,7 @@ function new_contact($uid,$url,$channel,$interactive = false, $confirm = false) 
 	// Premium channel, set confirm before callback to avoid recursion
 
 	if(array_key_exists('connect_url',$j) && (! $confirm))
-		goaway($j['connect_url']);
+		goaway(zid($j['connect_url']));
 
 
 	// check service class limits
