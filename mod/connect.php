@@ -38,12 +38,14 @@ function connect_post(&$a) {
 		$text = escape_tags($_POST['text']);
 		
 		$channel = $a->get_channel();
-		if(($channel['channel_pageflags'] & PAGE_PREMIUM) != $premium)
+		if(($channel['channel_pageflags'] & PAGE_PREMIUM) != $premium) {
 			$r = q("update channel set channel_pageflags = channel_pageflags ^ %d where channel_id = %d limit 1",
 				intval(PAGE_PREMIUM),
 				intval(local_user()) 
 			);
-		set_pconfig($a->profile['profile_uid'],'system','selltext',$text);
+			proc_exec('php','include/notifier.php','refresh_all',$channel['channel_id']);
+		}
+		set_pconfig($channel['channel_id'],'system','selltext',$text);
 		goaway(z_root() . '/' . $a->query_string);
 
 	}
