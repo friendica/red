@@ -27,8 +27,7 @@ function get_features() {
 			//FIXME - needs a description, but how the hell do we explain this to normals?
 			array('sendzid',		t('Extended Identity Sharing'),	t(' ')),
 			array('expert',       t('Expert Mode'),                 t('Enable Expert Mode to provide advanced configuration options')),
-
-
+			array('premium_channel', t('Premium Channel'), t('Allows you to set restrictions and terms on those that connect with your channel')),
 		),
 
 		// Post composition

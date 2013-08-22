@@ -31,6 +31,8 @@ function settings_aside(&$a) {
 		$a->argv[] = 'channel';
 	}
 
+	$channel = $a->get_channel();
+
 	$abook_self_id = 0;
 
 	// Retrieve the 'self' address book entry for use in the auto-permissions link
@@ -101,6 +103,17 @@ function settings_aside(&$a) {
 
 
 	);
+
+	if(feature_enabled(local_user(),'premium_channel')) {
+		$tabs[] = array(
+			'label' => t('Premium Channel Settings'),
+			'url' => $a->get_baseurl(true) . '/connect/' . $channel['channel_address'],
+			'selected' => ''
+		);
+
+	}
+
+
 	
 	$tabtpl = get_markup_template("generic_links_widget.tpl");
 	$a->page['aside'] = replace_macros($tabtpl, array(
