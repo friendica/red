@@ -43,7 +43,7 @@ function connect_post(&$a) {
 				intval(PAGE_PREMIUM),
 				intval(local_user()) 
 			);
-			proc_exec('php','include/notifier.php','refresh_all',$channel['channel_id']);
+			proc_run('php','include/notifier.php','refresh_all',$channel['channel_id']);
 		}
 		set_pconfig($channel['channel_id'],'system','selltext',$text);
 		goaway(z_root() . '/' . $a->query_string);
