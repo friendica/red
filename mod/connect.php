@@ -15,7 +15,15 @@ function connect_init(&$a) {
 		return;
 	}
 
+	$r = q("select * from channel where channel_address = '%s' limit 1",
+		dbesc($which)
+	);
+
+	if($r)
+		$a->data['channel'] = $r[0];
+
 	profile_load($a,$which,'');
+
     profile_create_sidebar($a,false);
 
 
@@ -44,13 +52,13 @@ function connect_post(&$a) {
 	$observer = $a->get_observer();
 	if(($observer) && ($_POST['submit'] === t('Continue'))) {
 		if($observer['xchan_follow'])
-			$url = sprintf($observer['xchan_follow'],urlencode($a->profile['channel_address'] . '@' . $a->get_hostname())); 
+			$url = sprintf($observer['xchan_follow'],urlencode($a->data['channel']['channel_address'] . '@' . $a->get_hostname())); 
 		if(! $url) {
 			$r = q("select * from hubloc where hubloc_hash = '%s' order by hubloc_id desc limit 1",
 				dbesc($observer['xchan_hash'])
 			);
 			if($r)
-				$url = $r[0]['hubloc_url'] . '/follow?f=&url=' . urlencode($a->profile['channel_address'] . '@' . $a->get_hostname()); 
+				$url = $r[0]['hubloc_url'] . '/follow?f=&url=' . urlencode($a->data['channel']['channel_address'] . '@' . $a->get_hostname()); 
 		}
 	}
 	if($url)
@@ -64,17 +72,16 @@ function connect_post(&$a) {
 
 function connect_content(&$a) {
 
-	$edit = ((local_user() && (local_user() == $a->profile['profile_uid'])) ? true : false);
+	$edit = ((local_user() && (local_user() == $a->data['channel']['channel_id'])) ? true : false);
 
-	$text = get_pconfig($a->profile['profile_uid'],'system','selltext');
+	$text = get_pconfig($a->data['channel']['channel_id'],'system','selltext');
 
 	if($edit) {
-		$channel = $a->get_channel();
 
 		$o = replace_macros(get_markup_template('sellpage_edit.tpl'),array(
 			'$header' => t('Premium Channel Setup'),
-			'$address' => $a->profile['channel_address'],
-			'$premium' => array('premium', t('Enable premium channel connection restrictions'),(($channel['channel_pageflags'] & PAGE_PREMIUM) ? '1' : ''),''),
+			'$address' => $a->data['channel']['channel_address'],
+			'$premium' => array('premium', t('Enable premium channel connection restrictions'),(($a->data['channel']['channel_pageflags'] & PAGE_PREMIUM) ? '1' : ''),''),
 			'$lbl_about' => t('Please enter your restrictions or conditions, such as paypal receipt, usage guidelines, etc.'),
  			'$text' => $text,
 			'$desc' => t('This channel may require additional steps or acknowledgement of the following conditions prior to connecting:'),
@@ -92,7 +99,7 @@ function connect_content(&$a) {
 
 		$submit = replace_macros(get_markup_template('sellpage_submit.tpl'), array(
 			'$continue' => t('Continue'),			
-			'$address' => $a->profile['channel_address']
+			'$address' => $a->data['channel']['channel_address']
 		));
 
 		$o = replace_macros(get_markup_template('sellpage_view.tpl'),array(
@@ -105,7 +112,7 @@ function connect_content(&$a) {
 
 		));
 
-		$arr = array('profile' => $a->profile,'observer' => $a->get_observer(), 'sellpage' => $o, 'submit' => $submit);
+		$arr = array('channel' => $a->data['channel'],'observer' => $a->get_observer(), 'sellpage' => $o, 'submit' => $submit);
 		call_hooks('connect_premium', $arr);
 		$o = $arr['sellpage'];
 
