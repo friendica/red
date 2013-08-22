@@ -162,6 +162,9 @@ function localize_item(&$item){
 				$item['body'] .= "\n\n\n" . '[zrl=' . chanlink_url($author_link) . '][zmg=80x80]' . $Bphoto . '[/zmg][/zrl]';
 
 		}
+		else {
+			logger('localize_item like failed: link ' . $author_link . ' name ' . $author_name . ' url ' . $item_url);
+		}
 
 	}
 
