@@ -31,21 +31,25 @@ function connect_init(&$a) {
 
 function connect_post(&$a) {
 
-	$edit = ((local_user() && (local_user() == $a->profile['profile_uid'])) ? true : false);
+	if(! array_key_exists('channel', $a->data))
+		return;
+
+	$edit = ((local_user() && (local_user() == $a->data['channel']['channel_id'])) ? true : false);
 
 	if($edit) {
+		$has_premium = (($a->data['channel']['channel_pageflags'] & PAGE_PREMIUM) ? 1 : 0);
 		$premium = (($_POST['premium']) ? intval($_POST['premium']) : 0);
 		$text = escape_tags($_POST['text']);
 		
-		$channel = $a->get_channel();
-		if(($channel['channel_pageflags'] & PAGE_PREMIUM) != $premium) {
-			$r = q("update channel set channel_pageflags = channel_pageflags ^ %d where channel_id = %d limit 1",
+		if($has_premium != $premium) {
+			$r = q("update channel set channel_pageflags = ( channel_pageflags ^ %d ) where channel_id = %d limit 1",
 				intval(PAGE_PREMIUM),
 				intval(local_user()) 
 			);
-			proc_run('php','include/notifier.php','refresh_all',$channel['channel_id']);
+			proc_run('php','include/notifier.php','refresh_all',$a->data['channel']['channel_id']);
 		}
-		set_pconfig($channel['channel_id'],'system','selltext',$text);
+		set_pconfig($a->data['channel']['channel_id'],'system','selltext',$text);
+		// reload the page completely to get fresh data
 		goaway(z_root() . '/' . $a->query_string);
 
 	}
