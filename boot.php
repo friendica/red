@@ -1962,8 +1962,8 @@ function current_theme(){
 	
 	if($is_mobile) {
 		if(isset($_SESSION['show_mobile']) && !$_SESSION['show_mobile']) {
-				$system_theme = '';
-				$theme_name = '';
+			$system_theme = ((isset($a->config['system']['theme'])) ? $a->config['system']['theme'] : '');
+			$theme_name = ((isset($_SESSION) && x($_SESSION,'theme')) ? $_SESSION['theme'] : $system_theme);
 		}
 		else {	
 			$system_theme = ((isset($a->config['system']['mobile_theme'])) ? $a->config['system']['mobile_theme'] : '');
