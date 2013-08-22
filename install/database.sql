@@ -926,6 +926,8 @@ CREATE TABLE IF NOT EXISTS `xchan` (
   `xchan_addr` char(255) NOT NULL DEFAULT '',
   `xchan_url` char(255) NOT NULL DEFAULT '',
   `xchan_connurl` char(255) NOT NULL DEFAULT '',
+  `xchan_follow` char(255) NOT NULL DEFAULT '',
+  `xchan_connpage` char(255) NOT NULL DEFAULT '',
   `xchan_name` char(255) NOT NULL DEFAULT '',
   `xchan_network` char(255) NOT NULL DEFAULT '',
   `xchan_instance_url` char(255) NOT NULL DEFAULT '',
@@ -940,6 +942,8 @@ CREATE TABLE IF NOT EXISTS `xchan` (
   KEY `xchan_url` (`xchan_url`),
   KEY `xchan_flags` (`xchan_flags`),
   KEY `xchan_connurl` (`xchan_connurl`),
+  KEY `xchan_follow` (`xchan_follow`),
+  KEY `xchan_connpage` (`xchan_connpage`),
   KEY `xchan_instance_url` (`xchan_instance_url`)
 ) ENGINE=MyISAM DEFAULT CHARSET=utf8;
 

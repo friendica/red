@@ -43,7 +43,7 @@ require_once('include/taxonomy.php');
 define ( 'RED_PLATFORM',            'Red Matrix' );
 define ( 'RED_VERSION',             trim(file_get_contents('version.inc')) . 'R');
 define ( 'ZOT_REVISION',            1     ); 
-define ( 'DB_UPDATE_VERSION',       1063  );
+define ( 'DB_UPDATE_VERSION',       1064  );
 
 define ( 'EOL',                    '<br />' . "\r\n"     );
 define ( 'ATOM_TIME',              'Y-m-d\TH:i:s\Z' );
@@ -190,12 +190,9 @@ define ( 'PAGE_HIDDEN',            0x0001 );
 define ( 'PAGE_AUTOCONNECT',       0x0002 );
 define ( 'PAGE_APPLICATION',       0x0004 );
 define ( 'PAGE_DIRECTORY_CHANNEL', 0x0008 ); // system channel used for directory synchronisation
+define ( 'PAGE_PREMIUM',           0x0010 );
 
 define ( 'PAGE_REMOVED',           0x8000 );
-
-//define ( 'PAGE_FREELOVE',          3 );
-//define ( 'PAGE_BLOG',              4 );
-//define ( 'PAGE_PRVGROUP',          5 );
 
 
 /**
