@@ -6,6 +6,7 @@ var searchData=
   ['page_5fdirectory_5fchannel',['PAGE_DIRECTORY_CHANNEL',['../boot_8php.html#a5b8484922918946d041e5e0515dbe718',1,'boot.php']]],
   ['page_5fhidden',['PAGE_HIDDEN',['../boot_8php.html#a5e322a2a2d0f51924c0b2e874988e640',1,'boot.php']]],
   ['page_5fnormal',['PAGE_NORMAL',['../boot_8php.html#a09532c3f750ae8c4527e63b2b790cbf3',1,'boot.php']]],
+  ['page_5fpremium',['PAGE_PREMIUM',['../boot_8php.html#ab3920c2f3cd64802c0b7ff625c3b2ea8',1,'boot.php']]],
   ['page_5fremoved',['PAGE_REMOVED',['../boot_8php.html#a4edce16cb7f21cdafa1e85bf63d713e6',1,'boot.php']]],
   ['path',['path',['../namespacefriendica-to-smarty-tpl.html#a68d15934660cd1f4301ce251b1646f09',1,'friendica-to-smarty-tpl.path()'],['../namespaceupdatetpl.html#ae694f5e1f25f8a92a945eb90c432dfe6',1,'updatetpl.path()']]],
   ['perms_5fa_5fdelegate',['PERMS_A_DELEGATE',['../boot_8php.html#a423505ab8dbd8e39d04ae3fe1374102b',1,'boot.php']]],

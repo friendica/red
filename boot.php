@@ -1284,7 +1284,7 @@ function fix_system_urls($oldurl,$newurl) {
 	// that they can clean up their hubloc tables (this includes directories).
 	// It's a very expensive operation so you don't want to have to do it often or after your site gets to be large.
 
-	$r = q("select xchan_hash, channel_prvkey from xchan left join channel on channel_hash = xchan_hash where xchan_url = '%s'",
+	$r = q("select * from xchan left join channel on channel_hash = xchan_hash where xchan_url = '%s'",
 		dbesc($oldurl)
 	);
 	if($r) {
@@ -1296,10 +1296,15 @@ function fix_system_urls($oldurl,$newurl) {
 			$newhost = $parsed['host'];
 			$rhs = $newhost . (($parsed['port']) ? ':' . $parsed['port'] : '') . (($parsed['path']) ? $parsed['path'] : '');
 
-			$x = q("update xchan set xchan_addr = '%s', xchan_url = '%s', xchan_connurl = '%s' where xchan_hash = '%s' limit 1",
+			$x = q("update xchan set xchan_addr = '%s', xchan_url = '%s', xchan_connurl = '%s', xchan_follow = '%s', xchan_connpage = '%s', xchan_photo_l = '%s', xchan_photo_m = '%s', xchan_photo_s = '%s' where xchan_hash = '%s' limit 1",
 				dbesc($channel . '@' . $rhs),
-				dbesc($newurl),
-				dbesc($newurl . '/poco/' . $channel),
+				dbesc(str_replace($oldurl,$newurl,$rr['xchan_url'])),
+				dbesc(str_replace($oldurl,$newurl,$rr['xchan_connurl'])),
+				dbesc(str_replace($oldurl,$newurl,$rr['xchan_follow'])),
+				dbesc(str_replace($oldurl,$newurl,$rr['xchan_connpage'])),
+				dbesc(str_replace($oldurl,$newurl,$rr['xchan_photo_l'])),
+				dbesc(str_replace($oldurl,$newurl,$rr['xchan_photo_m'])),
+				dbesc(str_replace($oldurl,$newurl,$rr['xchan_photo_s'])),
 				dbesc($rr['xchan_hash'])
 			);
 
@@ -2235,6 +2240,10 @@ function zid($s,$address = '') {
 
 	$mine = get_my_url();
 	$myaddr = (($address) ? $address : get_my_address());
+
+	// FIXME checking against our own channel url is no longer reliable. We may have a lot
+	// of urls attached to out channel. Should probably match against our site, since we
+	// will not need to remote authenticate on our own site anyway.
 
 	if($mine && $myaddr && (! link_compare($mine,$s)))
 		$zurl = $s . (($num_slashes >= 3) ? '' : '/') . $achar . 'zid=' . urlencode($myaddr);

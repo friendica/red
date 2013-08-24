@@ -11,6 +11,7 @@ var dir_d41ce877eb409a4791b288730010abe2 =
     [ "chanview.php", "chanview_8php.html", "chanview_8php" ],
     [ "common.php", "common_8php.html", "common_8php" ],
     [ "community.php", "community_8php.html", "community_8php" ],
+    [ "connect.php", "connect_8php.html", "connect_8php" ],
     [ "connections.php", "connections_8php.html", "connections_8php" ],
     [ "contactgroup.php", "contactgroup_8php.html", "contactgroup_8php" ],
     [ "crepair.php", "crepair_8php.html", "crepair_8php" ],
