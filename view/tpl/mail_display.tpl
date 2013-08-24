@@ -1,3 +1,4 @@
+<div class="generic-content-wrapper">
 {{foreach $mails as $mail}}
 	{{include file="mail_conv.tpl"}}
 {{/foreach}}
@@ -7,3 +8,4 @@
 {{else}}
 {{$unknown_text}}
 {{/if}}
+</div>
