@@ -2,7 +2,7 @@
 
 {{if $pages}}
 
-	   <div id="pagelist-content-wrapper">
+	   <div id="pagelist-content-wrapper" class="generic-content-wrapper">
 		{{foreach $pages as $key => $items}} 
 				{{foreach $items as $item}}
 					<div class="page-list-item">
