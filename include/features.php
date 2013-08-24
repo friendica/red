@@ -19,15 +19,15 @@ function get_features() {
 		// General
 		'general' => array(
 			t('General Features'),
-			array('expire',         t('Content Expiration'),		t('Remove old posts/comments after a period of time')),
+// uncomment when expire is fixed
+//			array('expire',         t('Content Expiration'),		t('Remove old posts/comments after a period of time')),
 			array('multi_profiles', t('Multiple Profiles'),			t('Ability to create multiple profiles')),
 			array('webpages',       t('Web Pages'),                 t('Provide managed web pages on your channel')),
 			array('prettyphoto',       t('Enhanced Photo Albums'),                 t('Enable photo album with enhanced features')),
 			//FIXME - needs a description, but how the hell do we explain this to normals?
 			array('sendzid',		t('Extended Identity Sharing'),	t(' ')),
 			array('expert',       t('Expert Mode'),                 t('Enable Expert Mode to provide advanced configuration options')),
-
-
+			array('premium_channel', t('Premium Channel'), t('Allows you to set restrictions and terms on those that connect with your channel')),
 		),
 
 		// Post composition

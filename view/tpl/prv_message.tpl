@@ -26,6 +26,12 @@
 	<div id="prvmail-upload-wrapper" >
 		<div id="prvmail-upload" class="icon border camera" title="{{$upload}}" ></div>
 	</div> 
+
+	<div id="prvmail-attach-wrapper" >
+		<div id="prvmail-attach" class="icon attach" title="{{$attach}}" ></div>
+	</div> 
+
+
 	<div id="prvmail-link-wrapper" >
 		<div id="prvmail-link" class="icon border link" title="{{$insert}}" onclick="jotGetLink();" ></div>
 	</div> 

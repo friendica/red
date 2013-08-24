@@ -115,11 +115,19 @@ function create_identity($arr) {
 	if(array_key_exists('primary', $arr))
 		$primary = intval($arr['primary']);
 
+	$perms_sql = '';
+
+	$defperms = site_default_perms();
+	$global_perms = get_perms();
+	foreach($defperms as $p => $v) {
+		$perms_keys .= ', ' . $global_perms[$p][0];
+		$perms_vals .= ', ' . intval($v);
+	}
 
 	$r = q("insert into channel ( channel_account_id, channel_primary, 
 		channel_name, channel_address, channel_guid, channel_guid_sig,
-		channel_hash, channel_prvkey, channel_pubkey, channel_pageflags )
-		values ( %d, %d, '%s', '%s', '%s', '%s', '%s', '%s', '%s', %d ) ",
+		channel_hash, channel_prvkey, channel_pubkey, channel_pageflags $perms_keys )
+		values ( %d, %d, '%s', '%s', '%s', '%s', '%s', '%s', '%s', %d $perms_vals ) ",
 
 		intval($arr['account_id']),
 		intval($primary),
@@ -133,6 +141,9 @@ function create_identity($arr) {
 		intval($pageflags)
 	);
 			
+
+
+
 	$r = q("select * from channel where channel_account_id = %d 
 		and channel_guid = '%s' limit 1",
 		intval($arr['account_id']),
@@ -171,7 +182,7 @@ function create_identity($arr) {
 
 	$newuid = $ret['channel']['channel_id'];
 
-	$r = q("insert into xchan ( xchan_hash, xchan_guid, xchan_guid_sig, xchan_pubkey, xchan_photo_l, xchan_photo_m, xchan_photo_s, xchan_addr, xchan_url, xchan_name, xchan_network, xchan_photo_date, xchan_name_date ) values ('%s', '%s', '%s', '%s', '%s', '%s', '%s', '%s', '%s', '%s', '%s', '%s', '%s')",
+	$r = q("insert into xchan ( xchan_hash, xchan_guid, xchan_guid_sig, xchan_pubkey, xchan_photo_l, xchan_photo_m, xchan_photo_s, xchan_addr, xchan_url, xchan_follow, xchan_name, xchan_network, xchan_photo_date, xchan_name_date ) values ('%s', '%s', '%s', '%s', '%s', '%s', '%s', '%s', '%s', '%s', '%s', '%s', '%s', '%s')",
 		dbesc($hash),
 		dbesc($guid),
 		dbesc($sig),
@@ -181,6 +192,7 @@ function create_identity($arr) {
 		dbesc($a->get_baseurl() . "/photo/profile/s/{$newuid}"),
 		dbesc($ret['channel']['channel_address'] . '@' . get_app()->get_hostname()),
 		dbesc(z_root() . '/channel/' . $ret['channel']['channel_address']),
+		dbesc(z_root() . '/follow?f=&url=%s'),
 		dbesc($ret['channel']['channel_name']),
 		dbesc('zot'),
 		dbesc(datetime_convert()),

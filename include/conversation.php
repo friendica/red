@@ -137,7 +137,7 @@ function localize_item(&$item){
 			case ACTIVITY_OBJ_NOTE:
 			default:
 				$post_type = t('status');
-				if($obj['id'] != $item['mid'])
+				if($obj['mid'] != $obj['parent_mid'])
 					$post_type = t('comment');
 				break;
 		}
@@ -161,6 +161,9 @@ function localize_item(&$item){
 			if($Bphoto != "") 
 				$item['body'] .= "\n\n\n" . '[zrl=' . chanlink_url($author_link) . '][zmg=80x80]' . $Bphoto . '[/zmg][/zrl]';
 
+		}
+		else {
+			logger('localize_item like failed: link ' . $author_link . ' name ' . $author_name . ' url ' . $item_url);
 		}
 
 	}
@@ -712,6 +715,8 @@ function conversation(&$a, $items, $mode, $update, $page_mode = 'traditional') {
             $threads = array();
             foreach($items as $item) {
 
+				// Check for any blocked authors
+
 				if($arr_blocked) {
 					$blocked = false;
 					foreach($arr_blocked as $b) {
@@ -724,6 +729,18 @@ function conversation(&$a, $items, $mode, $update, $page_mode = 'traditional') {
 						continue;
 				}
 							
+				// Check all the kids too
+
+				if($arr_blocked && $item['children']) {
+					for($d = 0; $d < count($item['children']); $d ++) {
+						foreach($arr_blocked as $b) {
+							if(($b) && ($item['children'][$d]['author_xchan'] == $b))
+								$item['children'][$d]['author_blocked'] = true;
+						}
+					}
+				}
+
+
                 // Can we put this after the visibility check?
                 like_puller($a,$item,$alike,'like');
 

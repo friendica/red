@@ -31,10 +31,11 @@ function collect_recipients($item,&$private) {
 	}
 	else {
 		$recipients = array();
-		$r = q("select * from abook where abook_channel = %d and not (abook_flags & %d) and not (abook_flags & %d)",
+		$r = q("select * from abook where abook_channel = %d and not (abook_flags & %d) and not (abook_flags & %d) and not (abook_flags & %d)",
 			intval($item['uid']),
 			intval(ABOOK_FLAG_SELF),
-			intval(ABOOK_FLAG_PENDING)
+			intval(ABOOK_FLAG_PENDING),
+			intval(ABOOK_FLAG_ARCHIVED)
 		);
 		if($r) {
 			foreach($r as $rr) {
@@ -772,14 +773,19 @@ function decode_tags($t) {
 
 function activity_sanitise($arr) {
 	if($arr) {
-		$ret = array();
-		foreach($arr as $k => $x) {
-			if(is_array($x))
-				$ret[$k] = activity_sanitise($x);
-			else
-				$ret[$k] = htmlentities($x, ENT_COMPAT,'UTF-8',false);
+		if(is_array($arr)) {
+			$ret = array();
+			foreach($arr as $k => $x) {
+				if(is_array($x))
+					$ret[$k] = activity_sanitise($x);
+				else
+					$ret[$k] = htmlentities($x, ENT_COMPAT,'UTF-8',false);
+			}
+			return $ret;
 		}
-		return $ret;
+		else {
+			return htmlentities($arr, ENT_COMPAT,'UTF-8', false);
+		}
 	}
 	return '';
 }
@@ -834,6 +840,9 @@ function encode_mail($item) {
 	$x['from']           = encode_item_xchan($item['from']);
 	$x['to']             = encode_item_xchan($item['to']);
 
+	if($item['attach'])
+		$x['attach']     = json_decode_plus($item['attach']);
+
 	$x['flags'] = array();
 
 	if($item['mail_flags'] & MAIL_RECALLED) {
@@ -878,6 +887,9 @@ function get_mail_elements($x) {
 
 	$arr['mid']          = (($x['message_id'])     ? htmlentities($x['message_id'],     ENT_COMPAT,'UTF-8',false) : '');
 	$arr['parent_mid']   = (($x['message_parent']) ? htmlentities($x['message_parent'], ENT_COMPAT,'UTF-8',false) : '');
+
+	if($x['attach'])
+		$arr['attach'] = activity_sanitise($x['attach']);
 
 
 	if(import_author_xchan($x['from']))
@@ -1411,12 +1423,15 @@ function item_store($arr,$allow_exec = false) {
 
 	}
 
-
+	if($arr['object'])
+		logger('item_store: input object: ' . print_r($arr['object'],true), LOGGER_DATA);
 
 
 	if((x($arr,'object')) && is_array($arr['object'])) {
 		activity_sanitise($arr['object']);
+		logger('item_store: sanitised object: ' . print_r($arr['object'],true), LOGGER_DATA);
 		$arr['object'] = json_encode($arr['object']);
+		logger('item_store: encoded object: ' . print_r($arr['object'],true), LOGGER_DATA);
 	}
 
 	if((x($arr,'target')) && is_array($arr['target'])) {
@@ -1571,9 +1586,9 @@ function item_store($arr,$allow_exec = false) {
 		unset($arr['term']);
 	}
 
-	dbesc_array($arr);
-
 	logger('item_store: ' . print_r($arr,true), LOGGER_DATA);
+
+	dbesc_array($arr);
 
 	$r = dbq("INSERT INTO `item` (`" 
 			. implode("`, `", array_keys($arr)) 
@@ -2193,6 +2208,9 @@ function mail_store($arr) {
 	if((strpos($arr['body'],'<') !== false) || (strpos($arr['body'],'>') !== false)) 
 		$arr['body'] = escape_tags($arr['body']);
 
+	if(array_key_exists('attach',$arr) && is_array($arr['attach']))
+		$arr['attach'] = json_encode($arr['attach']);
+
 	$arr['account_id']    = ((x($arr,'account_id'))           ? intval($arr['account_id'])                 : 0);
 	$arr['mid']           = ((x($arr,'mid'))           ? notags(trim($arr['mid']))           : random_string());
 	$arr['from_xchan']    = ((x($arr,'from_xchan'))  ? notags(trim($arr['from_xchan']))  : '');
@@ -2201,6 +2219,7 @@ function mail_store($arr) {
 	$arr['title']         = ((x($arr,'title'))         ? notags(trim($arr['title']))         : '');
 	$arr['parent_mid']    = ((x($arr,'parent_mid'))    ? notags(trim($arr['parent_mid']))    : '');
 	$arr['body']          = ((x($arr,'body'))          ? trim($arr['body'])                  : '');
+
 	$arr['mail_flags']    = ((x($arr,'mail_flags'))    ? intval($arr['mail_flags'])          : 0 );
 	
 

@@ -10,9 +10,9 @@ var searchData=
   ['webfinger_5fdfrn',['webfinger_dfrn',['../include_2network_8php.html#adf6008b38c555e98e7ed10da9ede2335',1,'network.php']]],
   ['webpages_2ephp',['webpages.php',['../webpages_8php.html',1,'']]],
   ['webpages_5fcontent',['webpages_content',['../webpages_8php.html#af3b7397d4abc153e3d2147740ee1a41d',1,'webpages.php']]],
-  ['webpages_5finit',['webpages_init',['../webpages_8php.html#af9ad0b65eba79acead3fa32b43d888b7',1,'webpages.php']]],
   ['wfinger_2ephp',['wfinger.php',['../wfinger_8php.html',1,'']]],
   ['wfinger_5finit',['wfinger_init',['../wfinger_8php.html#ae21e50c8d0a5f3c9be9f43a4e519acd3',1,'wfinger.php']]],
   ['what_5fnext',['what_next',['../setup_8php.html#aea1ebdda58ec938f4e7b31aa5c5f6b58',1,'setup.php']]],
-  ['while',['while',['../docblox__errorchecker_8php.html#af4ca738a05beffe9c8c23e1f7aea3c2d',1,'docblox_errorchecker.php']]]
+  ['while',['while',['../docblox__errorchecker_8php.html#af4ca738a05beffe9c8c23e1f7aea3c2d',1,'docblox_errorchecker.php']]],
+  ['writepages_5fwidget',['writepages_widget',['../page__widgets_8php.html#a1a1e729da27f252cab6678288a17958f',1,'page_widgets.php']]]
 ];

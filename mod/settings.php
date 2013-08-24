@@ -31,6 +31,8 @@ function settings_aside(&$a) {
 		$a->argv[] = 'channel';
 	}
 
+	$channel = $a->get_channel();
+
 	$abook_self_id = 0;
 
 	// Retrieve the 'self' address book entry for use in the auto-permissions link
@@ -101,6 +103,17 @@ function settings_aside(&$a) {
 
 
 	);
+
+	if(feature_enabled(local_user(),'premium_channel')) {
+		$tabs[] = array(
+			'label' => t('Premium Channel Settings'),
+			'url' => $a->get_baseurl(true) . '/connect/' . $channel['channel_address'],
+			'selected' => ''
+		);
+
+	}
+
+
 	
 	$tabtpl = get_markup_template("generic_links_widget.tpl");
 	$a->page['aside'] = replace_macros($tabtpl, array(
@@ -349,22 +362,23 @@ function settings_post(&$a) {
 	$post_joingroup   = (($_POST['post_joingroup'] == 1) ? 1: 0);
 	$post_profilechange   = (($_POST['post_profilechange'] == 1) ? 1: 0);
 
+
 	$arr = array();
-	$arr['channel_r_stream']   = (($_POST['view_stream'])   ? $_POST['view_stream']   : 0);
-	$arr['channel_r_profile']  = (($_POST['view_profile'])  ? $_POST['view_profile']  : 0);
-	$arr['channel_r_photos']   = (($_POST['view_photos'])   ? $_POST['view_photos']   : 0);
-	$arr['channel_r_abook']    = (($_POST['view_contacts']) ? $_POST['view_contacts'] : 0);
-	$arr['channel_w_stream']   = (($_POST['send_stream'])   ? $_POST['send_stream']   : 0);
-	$arr['channel_w_wall']     = (($_POST['post_wall'])     ? $_POST['post_wall']     : 0);
-	$arr['channel_w_tagwall']  = (($_POST['tag_deliver'])   ? $_POST['tag_deliver']   : 0);
-	$arr['channel_w_comment']  = (($_POST['post_comments']) ? $_POST['post_comments'] : 0);
-	$arr['channel_w_mail']     = (($_POST['post_mail'])     ? $_POST['post_mail']     : 0);
-	$arr['channel_w_photos']   = (($_POST['post_photos'])   ? $_POST['post_photos']   : 0);
-	$arr['channel_w_chat']     = (($_POST['chat'])          ? $_POST['chat']          : 0);
-	$arr['channel_a_delegate'] = (($_POST['delegate'])      ? $_POST['delegate']      : 0);
-	$arr['channel_r_storage']  = (($_POST['view_storage'])  ? $_POST['view_storage']  : 0);
-	$arr['channel_w_storage']  = (($_POST['write_storage']) ? $_POST['write_storage'] : 0);
-	$arr['channel_r_pages']    = (($_POST['view_pages'])    ? $_POST['view_pages']    : 0);
+	$arr['channel_r_stream']   = (($_POST['view_stream'])   ? $_POST['view_stream']    : 0);
+	$arr['channel_r_profile']  = (($_POST['view_profile'])  ? $_POST['view_profile']   : 0);
+	$arr['channel_r_photos']   = (($_POST['view_photos'])   ? $_POST['view_photos']    : 0);
+	$arr['channel_r_abook']    = (($_POST['view_contacts']) ? $_POST['view_contacts']  : 0);
+	$arr['channel_w_stream']   = (($_POST['send_stream'])   ? $_POST['send_stream']    : 0);
+	$arr['channel_w_wall']     = (($_POST['post_wall'])     ? $_POST['post_wall']      : 0);
+	$arr['channel_w_tagwall']  = (($_POST['tag_deliver'])   ? $_POST['tag_deliver']    : 0);
+	$arr['channel_w_comment']  = (($_POST['post_comments']) ? $_POST['post_comments']  : 0);
+	$arr['channel_w_mail']     = (($_POST['post_mail'])     ? $_POST['post_mail']      : 0);
+	$arr['channel_w_photos']   = (($_POST['post_photos'])   ? $_POST['post_photos']    : 0);
+	$arr['channel_w_chat']     = (($_POST['chat'])          ? $_POST['chat']           : 0);
+	$arr['channel_a_delegate'] = (($_POST['delegate'])      ? $_POST['delegate']       : 0);
+	$arr['channel_r_storage']  = (($_POST['view_storage'])  ? $_POST['view_storage']   : 0);
+	$arr['channel_w_storage']  = (($_POST['write_storage']) ? $_POST['write_storage']  : 0);
+	$arr['channel_r_pages']    = (($_POST['view_pages'])    ? $_POST['view_pages']     : 0);
 	$arr['channel_w_pages']    = (($_POST['write_pages'])   ? $_POST['write_pages']    : 0);
 
 	$defperms = 0;
@@ -783,7 +797,7 @@ function settings_content(&$a) {
 		$default_theme = get_config('system','theme');
 		if(! $default_theme)
 			$default_theme = 'default';
-		$default_mobile_theme = get_config('system','mobile-theme');
+		$default_mobile_theme = get_config('system','mobile_theme');
 		if(! $mobile_default_theme)
 			$mobile_default_theme = 'none';
 
@@ -817,7 +831,7 @@ function settings_content(&$a) {
 			}
 		}
 		$theme_selected = (!x($_SESSION,'theme')? $default_theme : $_SESSION['theme']);
-		$mobile_theme_selected = (!x($_SESSION,'mobile-theme')? $default_mobile_theme : $_SESSION['mobile-theme']);
+		$mobile_theme_selected = (!x($_SESSION,'mobile_theme')? $default_mobile_theme : $_SESSION['mobile_theme']);
 		
 		$browser_update = intval(get_pconfig(local_user(), 'system','update_interval'));
 		$browser_update = (($browser_update == 0) ? 40 : $browser_update / 1000); // default if not set: 40 seconds

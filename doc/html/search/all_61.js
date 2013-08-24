@@ -22,6 +22,7 @@ var searchData=
   ['account_5fremove',['account_remove',['../Contact_8php.html#a3eef54a5523e568a28257c1f9b1644d8',1,'Contact.php']]],
   ['account_5fremoved',['ACCOUNT_REMOVED',['../boot_8php.html#ab5ddbe69d3d03acd06e1fb281488cb78',1,'boot.php']]],
   ['account_5frole_5fadmin',['ACCOUNT_ROLE_ADMIN',['../boot_8php.html#ac8400313df2c831653f9036f71ebd86d',1,'boot.php']]],
+  ['account_5frole_5fallowcode',['ACCOUNT_ROLE_ALLOWCODE',['../boot_8php.html#a84f48897059bbd4a8738d7ee4cec6688',1,'boot.php']]],
   ['account_5ftotal',['account_total',['../account_8php.html#a43e3042b2723d76915a030bac3c668b6',1,'account.php']]],
   ['account_5funverified',['ACCOUNT_UNVERIFIED',['../boot_8php.html#af3a4271630aabd8be592213f925d6a36',1,'boot.php']]],
   ['account_5fverify_5fpassword',['account_verify_password',['../auth_8php.html#a07bae0e623e2daa9ee2cd5a8aa294dee',1,'auth.php']]],

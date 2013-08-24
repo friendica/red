@@ -54,6 +54,7 @@ require_once('include/html2plain.php');
  * ZOT 
  *       permission_update      abook_id
  *       refresh_all            channel_id
+ *       expire                 channel_id
  *       relay					item_id (item was relayed to owner, we will deliver it as owner)
  *
  */
@@ -166,14 +167,24 @@ function notifier_run($argv, $argc){
 	elseif($cmd === 'expire') {
 		$normal_mode = false;
 		$expire = true;
-		$items = q("SELECT * FROM `item` WHERE `uid` = %d AND `wall` = 1 
-			AND `deleted` = 1 AND `changed` > UTC_TIMESTAMP() - INTERVAL 10 MINUTE",
-			intval($item_id)
+		$items = q("SELECT * FROM item WHERE uid = %d AND ( item_flags & %d )
+			AND ( item_restrict & %d ) AND `changed` > UTC_TIMESTAMP() - INTERVAL 10 MINUTE",
+			intval($item_id),
+			intval(ITEM_WALL),
+			intval(ITEM_DELETED)
 		);
 		$uid = $item_id;
 		$item_id = 0;
-		if(! count($items))
+		if(! $items)
 			return;
+
+// FIXME
+// This will require a special zot packet containing a list of item message_id's to be expired. 
+// This packet will be public, since we cannot selectively deliver here. 
+// We need the handling on this end to create the array, and the handling on the remote end
+// to verify permissions (for each item) and process it. Until this is complete, the expire feature will be disabled.
+ 
+		return;
 	}
 	elseif($cmd === 'suggest') {
 		$normal_mode = false;

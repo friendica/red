@@ -39,10 +39,10 @@ class Item extends BaseObject {
 			foreach($data['children'] as $item) {
 
 				/*
-				 * Only add thos that will be displayed
+				 * Only add those that will be displayed
 				 */
 
-				if(! visible_activity($item)) {
+				if((! visible_activity($item)) || array_key_exists('author_blocked',$item)) {
 					continue;
 				}
 

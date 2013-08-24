@@ -343,6 +343,8 @@
 
 function updateConvItems(mode,data) {
 
+
+
 	if(mode === 'update') {
 		prev = 'threads-begin';
 
@@ -391,15 +393,31 @@ function updateConvItems(mode,data) {
 		});
 	}
 	if(mode === 'append') {
+
 		next = 'threads-end';
+
+
+
 		$('.thread-wrapper.toplevel_item',data).each(function() {
+
+
 			var ident = $(this).attr('id');
+			var commentWrap = $('#'+ident+' .collapsed-comments').attr('id');
+			var itmId = 0;
+			var isVisible = false;
+
+			if(typeof commentWrap !== 'undefined')
+				itmId = commentWrap.replace('collapsed-comments-','');
 
 			if($('#' + ident).length == 0) {
 				$('img',this).each(function() {
 					$(this).attr('src',$(this).attr('dst'));
 				});
+				if($('#collapsed-comments-'+itmId).is(':visible'))
+					isVisible = true;
 				$('#threads-end').before($(this));
+				if(isVisible)
+					showHideComments(itmId);
 				$(".autotime").timeago();
 				//	$("div.wall-item-body").divgrow({ initialHeight: 400 });
 
@@ -408,7 +426,11 @@ function updateConvItems(mode,data) {
 				$('img',this).each(function() {
 					$(this).attr('src',$(this).attr('dst'));
 				});
+				if($('#collapsed-comments-'+itmId).is(':visible'))
+					isVisible = true;
 				$('#' + ident).replaceWith($(this));
+				if(isVisible)
+					showHideComments(itmId);
 				$(".autotime").timeago();
 				//	$("div.wall-item-body").divgrow({ initialHeight: 400 });
 			}
@@ -425,13 +447,25 @@ function updateConvItems(mode,data) {
 		prev = 'threads-begin';
 
 		$('.thread-wrapper.toplevel_item',data).each(function() {
+
 			var ident = $(this).attr('id');
+			var commentWrap = $('#'+ident+' .collapsed-comments').attr('id');
+			var itmId = 0;
+			var isVisible = false;
+
+			if(typeof commentWrap !== 'undefined')
+				itmId = commentWrap.replace('collapsed-comments-','');
 
 			if($('#' + ident).length == 0 && profile_page == 1) {
 				$('img',this).each(function() {
 					$(this).attr('src',$(this).attr('dst'));
 				});
+
+				if($('#collapsed-comments-'+itmId).is(':visible'))
+					isVisible = true;
 				$('#' + prev).after($(this));
+				if(isVisible)
+					showHideComments(itmId);
 				$(".autotime").timeago();
 
 				//	$("div.wall-item-body").divgrow({ initialHeight: 400 });

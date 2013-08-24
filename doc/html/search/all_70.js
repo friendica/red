@@ -10,6 +10,8 @@ var searchData=
   ['page_5finit',['page_init',['../page_8php.html#a4d89800c0366a239191b1692c09635cf',1,'page.php']]],
   ['page_5fnormal',['PAGE_NORMAL',['../boot_8php.html#a09532c3f750ae8c4527e63b2b790cbf3',1,'boot.php']]],
   ['page_5fremoved',['PAGE_REMOVED',['../boot_8php.html#a4edce16cb7f21cdafa1e85bf63d713e6',1,'boot.php']]],
+  ['page_5fwidgets_2ephp',['page_widgets.php',['../page__widgets_8php.html',1,'']]],
+  ['pagelist_5fwidget',['pagelist_widget',['../page__widgets_8php.html#ad82011c1ed90d9de8b9f34c12af5c6f0',1,'page_widgets.php']]],
   ['paginate',['paginate',['../text_8php.html#afe9f178d264d44a94dc1292aaf0fd585',1,'text.php']]],
   ['parse_5furl_2ephp',['parse_url.php',['../parse__url_8php.html',1,'']]],
   ['parse_5furl_5fcontent',['parse_url_content',['../parse__url_8php.html#a05a9e8944380ba3cf6bbf5893dd4b74b',1,'parse_url.php']]],

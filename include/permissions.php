@@ -328,3 +328,38 @@ function check_list_permissions($uid,$arr,$perm) {
 	return($result);
 }
 
+
+
+function site_default_perms() {
+
+	$typical = array(
+		'view_stream'   => PERMS_PUBLIC,
+		'view_profile'  => PERMS_PUBLIC,
+		'view_photos'   => PERMS_PUBLIC,
+		'view_contacts' => PERMS_PUBLIC,
+		'view_storage'  => PERMS_PUBLIC,
+		'view_pages'    => PERMS_PUBLIC,
+		'send_stream'   => PERMS_SPECIFIC,
+		'post_wall'     => PERMS_SPECIFIC,
+		'post_comments' => PERMS_SPECIFIC,
+		'post_mail'     => PERMS_SPECIFIC,
+		'post_photos'   => 0,
+		'tag_deliver'   => PERMS_SPECIFIC,
+		'chat'          => PERMS_SPECIFIC,
+		'write_storage' => 0,
+		'write_pages'   => 0,
+		'delegate'      => 0,
+	);
+
+
+	$global_perms = get_perms();
+	$ret = array();
+
+	foreach($global_perms as $perm => $v) {
+		$x = get_config('default_perms',$perm);
+		if($x === false)
+			$x = $typical[$perm];
+		$ret[$perm] = $x;
+	}
+	return $ret;
+}

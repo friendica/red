@@ -136,7 +136,7 @@ CREATE TABLE IF NOT EXISTS `challenge` (
   `type` char(255) NOT NULL,
   `last_update` char(255) NOT NULL,
   PRIMARY KEY (`id`)
-) ENGINE=MyISAM  DEFAULT CHARSET=utf8;
+) ENGINE=MyISAM DEFAULT CHARSET=utf8;
 
 CREATE TABLE IF NOT EXISTS `channel` (
   `channel_id` int(10) unsigned NOT NULL AUTO_INCREMENT,
@@ -267,7 +267,7 @@ CREATE TABLE IF NOT EXISTS `event` (
   KEY `aid` (`aid`),
   KEY `event_hash` (`event_hash`),
   KEY `event_xchan` (`event_xchan`)
-) ENGINE=MyISAM  DEFAULT CHARSET=utf8;
+) ENGINE=MyISAM DEFAULT CHARSET=utf8;
 
 CREATE TABLE IF NOT EXISTS `fcontact` (
   `id` int(10) unsigned NOT NULL AUTO_INCREMENT,
@@ -348,7 +348,7 @@ CREATE TABLE IF NOT EXISTS `group_member` (
   KEY `uid` (`uid`),
   KEY `gid` (`gid`),
   KEY `xchan` (`xchan`)
-) ENGINE=MyISAM  DEFAULT CHARSET=utf8;
+) ENGINE=MyISAM DEFAULT CHARSET=utf8;
 
 CREATE TABLE IF NOT EXISTS `hook` (
   `id` int(11) NOT NULL AUTO_INCREMENT,
@@ -421,7 +421,7 @@ CREATE TABLE IF NOT EXISTS `item` (
   `owner_xchan` char(255) NOT NULL DEFAULT '',
   `author_xchan` char(255) NOT NULL DEFAULT '',
   `mimetype` char(255) NOT NULL DEFAULT '',
-  `title` text NOT NULL DEFAULT '',
+  `title` text NOT NULL,
   `body` mediumtext NOT NULL,
   `app` char(255) NOT NULL DEFAULT '',
   `lang` char(64) NOT NULL DEFAULT '',
@@ -493,7 +493,7 @@ CREATE TABLE IF NOT EXISTS `item_id` (
   KEY `sid` (`sid`),
   KEY `service` (`service`),
   KEY `iid` (`iid`)
-) ENGINE=MyISAM  DEFAULT CHARSET=utf8;
+) ENGINE=MyISAM DEFAULT CHARSET=utf8;
 
 CREATE TABLE IF NOT EXISTS `mail` (
   `id` int(10) unsigned NOT NULL AUTO_INCREMENT,
@@ -504,6 +504,7 @@ CREATE TABLE IF NOT EXISTS `mail` (
   `channel_id` int(10) unsigned NOT NULL,
   `title` text NOT NULL,
   `body` mediumtext NOT NULL,
+  `attach` mediumtext NOT NULL,
   `mid` char(255) NOT NULL,
   `parent_mid` char(255) NOT NULL,
   `created` datetime NOT NULL DEFAULT '0000-00-00 00:00:00',
@@ -535,7 +536,7 @@ CREATE TABLE IF NOT EXISTS `menu` (
   PRIMARY KEY (`menu_id`),
   KEY `menu_channel_id` (`menu_channel_id`),
   KEY `menu_name` (`menu_name`)
-) ENGINE=MyISAM DEFAULT CHARSET=utf8;
+) ENGINE=MyISAM  DEFAULT CHARSET=utf8;
 
 CREATE TABLE IF NOT EXISTS `menu_item` (
   `mitem_id` int(10) unsigned NOT NULL AUTO_INCREMENT,
@@ -550,10 +551,10 @@ CREATE TABLE IF NOT EXISTS `menu_item` (
   `mitem_menu_id` int(10) unsigned NOT NULL DEFAULT '0',
   `mitem_order` int(11) NOT NULL DEFAULT '0',
   PRIMARY KEY (`mitem_id`),
-  KEY `mitem_flags` (`mitem_flags`),
   KEY `mitem_channel_id` (`mitem_channel_id`),
-  KEY `mitem_menu_id` (`mitem_menu_id`)
-) ENGINE=MyISAM DEFAULT CHARSET=utf8;
+  KEY `mitem_menu_id` (`mitem_menu_id`),
+  KEY `mitem_flags` (`mitem_flags`)
+) ENGINE=MyISAM  DEFAULT CHARSET=utf8;
 
 CREATE TABLE IF NOT EXISTS `notify` (
   `id` int(11) NOT NULL AUTO_INCREMENT,
@@ -594,7 +595,7 @@ CREATE TABLE IF NOT EXISTS `obj` (
   KEY `obj_type` (`obj_type`),
   KEY `obj_channel` (`obj_channel`),
   KEY `obj_obj` (`obj_obj`)
-) ENGINE=MyISAM  DEFAULT CHARSET=utf8;
+) ENGINE=MyISAM DEFAULT CHARSET=utf8;
 
 CREATE TABLE IF NOT EXISTS `outq` (
   `outq_hash` char(255) NOT NULL,
@@ -657,13 +658,36 @@ CREATE TABLE IF NOT EXISTS `photo` (
   KEY `album` (`album`),
   KEY `scale` (`scale`),
   KEY `profile` (`profile`),
-  KEY `photo_flags` (`photo_flags`), 
+  KEY `photo_flags` (`photo_flags`),
   KEY `type` (`type`),
   KEY `aid` (`aid`),
   KEY `xchan` (`xchan`),
   KEY `size` (`size`),
   KEY `resource_id` (`resource_id`)
 ) ENGINE=MyISAM  DEFAULT CHARSET=utf8;
+
+CREATE TABLE IF NOT EXISTS `poll` (
+  `poll_id` int(10) unsigned NOT NULL AUTO_INCREMENT,
+  `poll_channel` int(10) unsigned NOT NULL DEFAULT '0',
+  `poll_desc` text NOT NULL,
+  `poll_flags` int(11) NOT NULL DEFAULT '0',
+  `poll_votes` int(11) NOT NULL DEFAULT '0',
+  PRIMARY KEY (`poll_id`),
+  KEY `poll_channel` (`poll_channel`),
+  KEY `poll_flags` (`poll_flags`),
+  KEY `poll_votes` (`poll_votes`)
+) ENGINE=MyISAM DEFAULT CHARSET=utf8;
+
+CREATE TABLE IF NOT EXISTS `poll_elm` (
+  `pelm_id` int(10) unsigned NOT NULL AUTO_INCREMENT,
+  `pelm_poll` int(10) unsigned NOT NULL DEFAULT '0',
+  `pelm_desc` text NOT NULL,
+  `pelm_flags` int(11) NOT NULL DEFAULT '0',
+  `pelm_result` float NOT NULL DEFAULT '0',
+  PRIMARY KEY (`pelm_id`),
+  KEY `pelm_poll` (`pelm_poll`),
+  KEY `pelm_result` (`pelm_result`)
+) ENGINE=MyISAM DEFAULT CHARSET=utf8;
 
 CREATE TABLE IF NOT EXISTS `profile` (
   `id` int(11) NOT NULL AUTO_INCREMENT,
@@ -675,7 +699,7 @@ CREATE TABLE IF NOT EXISTS `profile` (
   `hide_friends` tinyint(1) NOT NULL DEFAULT '0',
   `name` char(255) NOT NULL,
   `pdesc` char(255) NOT NULL,
-  `chandesc` text NOT NULL DEFAULT '',
+  `chandesc` text NOT NULL,
   `dob` char(32) NOT NULL DEFAULT '0000-00-00',
   `dob_tz` char(255) NOT NULL DEFAULT 'UTC',
   `address` char(255) NOT NULL,
@@ -769,7 +793,7 @@ CREATE TABLE IF NOT EXISTS `register` (
   KEY `hash` (`hash`),
   KEY `created` (`created`),
   KEY `uid` (`uid`)
-) ENGINE=MyISAM  DEFAULT CHARSET=utf8;
+) ENGINE=MyISAM DEFAULT CHARSET=utf8;
 
 CREATE TABLE IF NOT EXISTS `session` (
   `id` bigint(20) unsigned NOT NULL AUTO_INCREMENT,
@@ -841,7 +865,7 @@ CREATE TABLE IF NOT EXISTS `term` (
   KEY `imgurl` (`imgurl`),
   KEY `term_hash` (`term_hash`),
   KEY `parent_hash` (`parent_hash`)
-) ENGINE=MyISAM  DEFAULT CHARSET=utf8;
+) ENGINE=MyISAM DEFAULT CHARSET=utf8;
 
 CREATE TABLE IF NOT EXISTS `tokens` (
   `id` varchar(40) NOT NULL,
@@ -876,7 +900,19 @@ CREATE TABLE IF NOT EXISTS `verify` (
   KEY `token` (`token`),
   KEY `meta` (`meta`),
   KEY `created` (`created`)
-) ENGINE=MyISAM  DEFAULT CHARSET=utf8;
+) ENGINE=MyISAM DEFAULT CHARSET=utf8;
+
+CREATE TABLE IF NOT EXISTS `vote` (
+  `vote_id` int(10) unsigned NOT NULL AUTO_INCREMENT,
+  `vote_poll` int(11) NOT NULL DEFAULT '0',
+  `vote_element` int(11) NOT NULL DEFAULT '0',
+  `vote_result` text NOT NULL,
+  `vote_xchan` char(255) NOT NULL DEFAULT '',
+  PRIMARY KEY (`vote_id`),
+  UNIQUE KEY `vote_vote` (`vote_poll`,`vote_element`,`vote_xchan`),
+  KEY `vote_poll` (`vote_poll`),
+  KEY `vote_element` (`vote_element`)
+) ENGINE=MyISAM DEFAULT CHARSET=utf8;
 
 CREATE TABLE IF NOT EXISTS `xchan` (
   `xchan_hash` char(255) NOT NULL,
@@ -890,6 +926,8 @@ CREATE TABLE IF NOT EXISTS `xchan` (
   `xchan_addr` char(255) NOT NULL DEFAULT '',
   `xchan_url` char(255) NOT NULL DEFAULT '',
   `xchan_connurl` char(255) NOT NULL DEFAULT '',
+  `xchan_follow` char(255) NOT NULL DEFAULT '',
+  `xchan_connpage` char(255) NOT NULL DEFAULT '',
   `xchan_name` char(255) NOT NULL DEFAULT '',
   `xchan_network` char(255) NOT NULL DEFAULT '',
   `xchan_instance_url` char(255) NOT NULL DEFAULT '',
@@ -901,10 +939,12 @@ CREATE TABLE IF NOT EXISTS `xchan` (
   KEY `xchan_addr` (`xchan_addr`),
   KEY `xchan_name` (`xchan_name`),
   KEY `xchan_network` (`xchan_network`),
-  KEY `xchan_instance_url` (`xchan_instance_url`),
   KEY `xchan_url` (`xchan_url`),
   KEY `xchan_flags` (`xchan_flags`),
-  KEY `xchan_connurl` (`xchan_connurl`)
+  KEY `xchan_connurl` (`xchan_connurl`),
+  KEY `xchan_follow` (`xchan_follow`),
+  KEY `xchan_connpage` (`xchan_connpage`),
+  KEY `xchan_instance_url` (`xchan_instance_url`)
 ) ENGINE=MyISAM DEFAULT CHARSET=utf8;
 
 CREATE TABLE IF NOT EXISTS `xconfig` (

@@ -43,7 +43,7 @@ require_once('include/taxonomy.php');
 define ( 'RED_PLATFORM',            'Red Matrix' );
 define ( 'RED_VERSION',             trim(file_get_contents('version.inc')) . 'R');
 define ( 'ZOT_REVISION',            1     ); 
-define ( 'DB_UPDATE_VERSION',       1059  );
+define ( 'DB_UPDATE_VERSION',       1064  );
 
 define ( 'EOL',                    '<br />' . "\r\n"     );
 define ( 'ATOM_TIME',              'Y-m-d\TH:i:s\Z' );
@@ -190,12 +190,9 @@ define ( 'PAGE_HIDDEN',            0x0001 );
 define ( 'PAGE_AUTOCONNECT',       0x0002 );
 define ( 'PAGE_APPLICATION',       0x0004 );
 define ( 'PAGE_DIRECTORY_CHANNEL', 0x0008 ); // system channel used for directory synchronisation
+define ( 'PAGE_PREMIUM',           0x0010 );
 
 define ( 'PAGE_REMOVED',           0x8000 );
-
-//define ( 'PAGE_FREELOVE',          3 );
-//define ( 'PAGE_BLOG',              4 );
-//define ( 'PAGE_PRVGROUP',          5 );
 
 
 /**
@@ -1557,8 +1554,9 @@ function profile_load(&$a, $nickname, $profile = '') {
 
 	$a->page['title'] = $a->profile['channel_name'] . " - " . $a->profile['channel_address'] . "@" . $a->get_hostname();
 
-
+	$a->profile['channel_mobile_theme'] = get_pconfig(local_user(),'system', 'mobile_theme');
 	$_SESSION['theme'] = $a->profile['channel_theme'];
+	$_SESSION['mobile_theme'] = $a->profile['channel_mobile_theme'];
 
 	/**
 	 * load/reload current theme info
@@ -1574,11 +1572,11 @@ function profile_load(&$a, $nickname, $profile = '') {
 	return;
 }
 
-function profile_create_sidebar(&$a) {
+function profile_create_sidebar(&$a,$connect = true) {
 
 	$block = (((get_config('system','block_public')) && (! local_user()) && (! remote_user())) ? true : false);
 
-	$a->set_widget('profile',profile_sidebar($a->profile, $block));
+	$a->set_widget('profile',profile_sidebar($a->profile, $block, $connect));
 	return;
 }
 
@@ -1600,7 +1598,7 @@ function profile_create_sidebar(&$a) {
 
 
 
-function profile_sidebar($profile, $block = 0) {
+function profile_sidebar($profile, $block = 0, $show_connect = true) {
 
 	$a = get_app();
 
@@ -1625,11 +1623,20 @@ function profile_sidebar($profile, $block = 0) {
 
 	require_once('include/Contact.php');
 
-	$connect_url = rconnect_url($profile['uid'],get_observer_hash());
-	$connect = (($connect_url) ? t('Connect') : '');
+	if($show_connect) {
 
-	if($connect_url) 
-		$connect_url = $connect_url . '/follow?f=1&url=' . $profile['channel_address'] . '@' . $a->get_hostname();
+		// This will return an empty string if we're already connected.
+
+		$connect_url = rconnect_url($profile['uid'],get_observer_hash());
+		$connect = (($connect_url) ? t('Connect') : '');
+		if($connect_url) 
+			$connect_url = sprintf($connect_url,urlencode($profile['channel_address'] . '@' . $a->get_hostname()));
+
+		// premium channel - over-ride
+
+		if($profile['channel_pageflags'] & PAGE_PREMIUM)
+			$connect_url = z_root() . '/connect/' . $profile['channel_address'];
+	}
 
 	// show edit profile to yourself
 	if($is_owner) {
@@ -1963,13 +1970,19 @@ function current_theme(){
 	$is_mobile = $a->is_mobile || $a->is_tablet;
 	
 	if($is_mobile) {
-		$system_theme = ((isset($a->config['system']['mobile-theme'])) ? $a->config['system']['mobile-theme'] : '');
-		$theme_name = ((isset($_SESSION) && x($_SESSION,'mobile-theme')) ? $_SESSION['mobile-theme'] : $system_theme);
+		if(isset($_SESSION['show_mobile']) && !$_SESSION['show_mobile']) {
+			$system_theme = ((isset($a->config['system']['theme'])) ? $a->config['system']['theme'] : '');
+			$theme_name = ((isset($_SESSION) && x($_SESSION,'theme')) ? $_SESSION['theme'] : $system_theme);
+		}
+		else {	
+			$system_theme = ((isset($a->config['system']['mobile_theme'])) ? $a->config['system']['mobile_theme'] : '');
+			$theme_name = ((isset($_SESSION) && x($_SESSION,'mobile_theme')) ? $_SESSION['mobile_theme'] : $system_theme);
 
-		if($theme_name === '---') {
-			// user has selected to have the mobile theme be the same as the normal one
-			$system_theme = '';
-			$theme_name = '';
+			if($theme_name === '---') {
+				// user has selected to have the mobile theme be the same as the normal one
+				$system_theme = '';
+				$theme_name = '';
+			}
 		}
 	}
 	else {
@@ -2344,7 +2357,7 @@ function construct_page(&$a) {
 	}
 
 	if($a->is_mobile || $a->is_tablet) {
-		if(isset($_SESSION['show-mobile']) && !$_SESSION['show-mobile']) {
+		if(isset($_SESSION['show_mobile']) && !$_SESSION['show_mobile']) {
 			$link = $a->get_baseurl() . '/toggle_mobile?f=&address=' . curPageURL();
 		}
 		else {

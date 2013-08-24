@@ -331,6 +331,8 @@ ul.tabs {
 /* footer */
 
 footer {
+	position:fixed;
+	bottom:1px;
 	text-align: right;
 	padding-bottom: 1em;
 	padding-right: 3em; 
@@ -1882,6 +1884,7 @@ tr.mceLast {
 	margin-right: 30px;
 }
 #prvmail-upload-wrapper,
+#prvmail-attach-wrapper,
 #prvmail-link-wrapper,
 #prvmail-rotator-wrapper {
 	float: left;

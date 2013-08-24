@@ -2,6 +2,7 @@ var searchData=
 [
   ['page_5fcontent',['page_content',['../page_8php.html#a91a5f649f68406149108bded1dc90b22',1,'page.php']]],
   ['page_5finit',['page_init',['../page_8php.html#a4d89800c0366a239191b1692c09635cf',1,'page.php']]],
+  ['pagelist_5fwidget',['pagelist_widget',['../page__widgets_8php.html#ad82011c1ed90d9de8b9f34c12af5c6f0',1,'page_widgets.php']]],
   ['paginate',['paginate',['../text_8php.html#afe9f178d264d44a94dc1292aaf0fd585',1,'text.php']]],
   ['parse_5furl_5fcontent',['parse_url_content',['../parse__url_8php.html#a05a9e8944380ba3cf6bbf5893dd4b74b',1,'parse_url.php']]],
   ['parse_5fxml_5fstring',['parse_xml_string',['../include_2network_8php.html#a27a951b59d8d622c0b3e7b0673ba74c6',1,'network.php']]],

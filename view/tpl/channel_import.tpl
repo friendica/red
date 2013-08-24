@@ -1,6 +1,6 @@
 <h2>{{$title}}</h2>
 
-<form action="import" method="post" id="import-channel-form">
+<form action="import" method="post" enctype="multipart/form-data" id="import-channel-form">
 
 	<div id="import-desc" class="descriptive-paragraph">{{$desc}}</div>
 

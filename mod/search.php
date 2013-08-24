@@ -59,7 +59,7 @@ function search_init(&$a) {
 	}
 	else {
 		unset($_SESSION['theme']);
-		unset($_SESSION['mobile-theme']);
+		unset($_SESSION['mobile_theme']);
 	}
 
 

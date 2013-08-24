@@ -1,6 +1,6 @@
 <?php
 
-define( 'UPDATE_VERSION' , 1059 );
+define( 'UPDATE_VERSION' , 1064 );
 
 /**
  *
@@ -679,6 +679,74 @@ ADD INDEX ( `menu_name` ) ");
 ADD INDEX ( `mitem_flags` ) ");
 
 	if($r1 && $r2)
+		return UPDATE_SUCCESS;
+	return UPDATE_FAILED;
+}
+
+function update_r1059() {
+	$r = q("ALTER TABLE `mail` ADD `attach` MEDIUMTEXT NOT NULL DEFAULT '' AFTER `body` ");
+	if($r)
+		return UPDATE_SUCCESS;
+	return UPDATE_FAILED;
+}
+
+function update_r1060() {
+
+	$r = q("CREATE TABLE IF NOT EXISTS `vote` (
+  `vote_id` int(10) unsigned NOT NULL AUTO_INCREMENT,
+  `vote_poll` int(11) NOT NULL DEFAULT '0',
+  `vote_element` int(11) NOT NULL DEFAULT '0',
+  `vote_result` text NOT NULL,
+  `vote_xchan` char(255) NOT NULL DEFAULT '',
+  PRIMARY KEY (`vote_id`),
+  UNIQUE KEY `vote_vote` (`vote_poll`,`vote_element`,`vote_xchan`)
+) ENGINE=MyISAM DEFAULT CHARSET=utf8 ");
+
+	if($r)
+		return UPDATE_SUCCESS;
+	return UPDATE_FAILED;
+}
+
+function update_r1061() {
+	$r = q("ALTER TABLE `vote` ADD INDEX ( `vote_poll` ),  ADD INDEX ( `vote_element` ) ");
+
+	if($r)
+		return UPDATE_SUCCESS;
+	return UPDATE_FAILED;
+}
+
+function update_r1062() {
+	$r1 = q("CREATE TABLE IF NOT EXISTS `poll` (
+`poll_id` INT UNSIGNED NOT NULL AUTO_INCREMENT PRIMARY KEY ,
+`poll_channel` INT UNSIGNED NOT NULL DEFAULT '0',
+`poll_desc` TEXT NOT NULL DEFAULT '',
+`poll_flags` INT NOT NULL DEFAULT '0',
+`poll_votes` INT NOT NULL DEFAULT '0',
+KEY `poll_channel` (`poll_channel`),
+KEY `poll_flags` (`poll_flags`),
+KEY `poll_votes` (`poll_votes`)
+) ENGINE=MyISAM DEFAULT CHARSET=utf8 ");
+
+	$r2 = q("CREATE TABLE IF NOT EXISTS `poll_elm` (
+`pelm_id` INT UNSIGNED NOT NULL AUTO_INCREMENT PRIMARY KEY ,
+`pelm_poll` INT UNSIGNED NOT NULL DEFAULT '0',
+`pelm_desc` TEXT NOT NULL DEFAULT '',
+`pelm_flags` INT NOT NULL DEFAULT '0',
+`pelm_result` FLOAT NOT NULL DEFAULT '0',
+KEY `pelm_poll` (`pelm_poll`),
+KEY `pelm_result` (`pelm_result`)
+) ENGINE=MyISAM DEFAULT CHARSET=utf8 ");
+
+	if($r1 && $r2)
+		return UPDATE_SUCCESS;
+	return UPDATE_FAILED;
+}
+
+function update_r1063() {
+	$r = q("ALTER TABLE `xchan` ADD `xchan_follow` CHAR( 255 ) NOT NULL DEFAULT '' AFTER `xchan_connurl` ,
+ADD `xchan_connpage` CHAR( 255 ) NOT NULL DEFAULT '' AFTER `xchan_follow` ,
+ADD INDEX ( `xchan_follow` ), ADD INDEX ( `xchan_connpage`) ");
+	if($r)
 		return UPDATE_SUCCESS;
 	return UPDATE_FAILED;
 }

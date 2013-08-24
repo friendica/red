@@ -71,6 +71,8 @@ function zfinger_init(&$a) {
 
 	$id = $e['channel_id'];
 
+	$special_channel = (($e['channel_pageflags'] & PAGE_PREMIUM) ? true : false);
+
 	$searchable = (($e['channel_pageflags'] & PAGE_HIDDEN) ? false : true);
 	if($e['xchan_flags'] & XCHAN_FLAGS_HIDDEN)
 		$searchable = false;
@@ -133,6 +135,16 @@ function zfinger_init(&$a) {
 	$ret['target_sig']     = $zsig;
 	$ret['searchable']     = $searchable;
 
+
+	// premium or other channel desiring some contact with potential followers before connecting.
+	// This is a template - %s will be replaced with the follow_url we discover for the return channel.
+
+	if($special_channel) 
+		$ret['connect_url'] = z_root() . '/connect/' . $e['channel_address'];
+
+	// This is a template for our follow url, %s will be replaced with a webbie
+
+	$ret['follow_url'] = z_root() . '/follow?f=&url=%s';
 
 	$permissions = get_all_perms($e['channel_id'],(($ztarget && $zsig) 
 			? base64url_encode(hash('whirlpool',$ztarget . $zsig,true)) 

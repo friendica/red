@@ -45,7 +45,7 @@ function menu_content(&$a) {
 	if(argc() == 1) {
 		// list menus
 		$x = menu_list(local_user());
-		if($x) {
+
 			$o = replace_macros(get_markup_template('menulist.tpl'),array(
 				'$title' => t('Manage Menus'),
 				'$menus' => $x,
@@ -57,7 +57,7 @@ function menu_content(&$a) {
 				'$hintcontent' => t('Edit menu contents'),
 				'$hintedit' => t('Edit this menu')
 				));
-		}
+
 		return $o;
 
 

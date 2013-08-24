@@ -249,7 +249,7 @@ function message_content(&$a) {
 		$a->page['htmlhead'] .= replace_macros($tpl, array(
 			'$baseurl' => $a->get_baseurl(true),
 			'$editselect' => (($plaintext) ? 'none' : '/(profile-jot-text|prvmail-text)/'),
-			'$nickname' => $channel['channel_addr'],
+			'$nickname' => $channel['channel_address'],
 			'$linkurl' => t('Please enter a link URL:')
 		));
 	
@@ -293,6 +293,7 @@ function message_content(&$a) {
 			'$select' => $select,
 			'$parent' => '',
 			'$upload' => t('Upload photo'),
+			'$attach' => t('Attach file'),
 			'$insert' => t('Insert web link'),
 			'$wait' => t('Please wait'),
 			'$submit' => t('Submit')
@@ -371,10 +372,39 @@ function message_content(&$a) {
 
 		foreach($messages as $message) {
 
-// FIXME
-//			$extracted = item_extract_images($message['body']);
-//			if($extracted['images'])
-//				$message['body'] = item_redir_and_replace_images($extracted['body'], $extracted['images'], $message['contact-id']);
+			$s = $arr = '';
+
+			if($message['attach'])
+				$arr = json_decode_plus($message['attach']);
+			if($arr) {
+				$s .= '<div class="body-attach">';
+				foreach($arr as $r) {
+					$matches = false;
+					$icon = '';
+					$icontype = substr($r['type'],0,strpos($r['type'],'/'));
+
+					switch($icontype) {
+						case 'video':
+						case 'audio':
+						case 'image':
+						case 'text':
+							$icon = '<div class="attachtype icon s22 type-' . $icontype . '"></div>';
+							break;
+						default:
+							$icon = '<div class="attachtype icon s22 type-unkn"></div>';
+							break;
+					}
+
+					$title = htmlentities($r['title'], ENT_COMPAT,'UTF-8');
+					if(! $title)
+						$title = t('unknown.???');
+					$title .= ' ' . $r['length'] . ' ' . t('bytes');
+
+					$url = $a->get_baseurl() . '/magic?f=&hash=' . $message['from_xchan'] . '&dest=' . $r['href'] . '/' . $r['revision'];
+					$s .= '<a href="' . $url . '" title="' . $title . '" class="attachlink"  >' . $icon . '</a>';
+				}
+				$s .= '<div class="clear"></div></div>';
+			}
 
 			$mails[] = array(
 				'id' => $message['id'],
@@ -385,7 +415,7 @@ function message_content(&$a) {
 				'to_url' =>  chanlink_hash($message['to_xchan']),
 				'to_photo' => $message['to']['xchan_photo_m'],
 				'subject' => $message['title'],
-				'body' => smilies(bbcode($message['body'])),
+				'body' => smilies(bbcode($message['body']) . $s),
 				'delete' => t('Delete message'),
 				'date' => datetime_convert('UTC',date_default_timezone_get(),$message['created'],'D, d M Y - g:i A'),
 			);
@@ -425,6 +455,7 @@ function message_content(&$a) {
 			'$select' => $select,
 			'$parent' => $parent,
 			'$upload' => t('Upload photo'),
+			'$attach' => t('Attach file'),
 			'$insert' => t('Insert web link'),
 			'$submit' => t('Submit'),
 			'$wait' => t('Please wait')

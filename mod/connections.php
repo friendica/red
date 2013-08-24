@@ -179,7 +179,8 @@ function connections_content(&$a) {
 			intval($contact_id),
 			intval(local_user()),
 			intval(ABOOK_FLAG_SELF),
-			intval(ABOOK_FLAG_PENDING)
+			// allow drop even if pending, just duplicate the self query
+			intval(($cmd === 'drop') ? ABOOK_FLAG_SELF : ABOOK_FLAG_PENDING)
 		);
 
 		if(! count($orig_record)) {

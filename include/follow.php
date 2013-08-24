@@ -11,7 +11,7 @@
 
 require_once('include/zot.php');
 
-function new_contact($uid,$url,$channel,$interactive = false) {
+function new_contact($uid,$url,$channel,$interactive = false, $confirm = false) {
 
 	$result = array('success' => false,'message' => '');
 
@@ -59,6 +59,11 @@ function new_contact($uid,$url,$channel,$interactive = false) {
 		logger('mod_follow: ' . $result['message']);
 		return $result;
 	}
+
+	// Premium channel, set confirm before callback to avoid recursion
+
+	if(array_key_exists('connect_url',$j) && (! $confirm))
+		goaway(zid($j['connect_url']));
 
 
 	// check service class limits
@@ -145,12 +150,13 @@ function new_contact($uid,$url,$channel,$interactive = false) {
 		);		
 	}
 	else {
-		$r = q("insert into abook ( abook_account, abook_channel, abook_xchan, abook_their_perms, abook_created, abook_updated )
-			values( %d, %d, '%s', %d, '%s', '%s' ) ",
+		$r = q("insert into abook ( abook_account, abook_channel, abook_xchan, abook_their_perms, abook_my_perms, abook_created, abook_updated )
+			values( %d, %d, '%s', %d, %d, '%s', '%s' ) ",
 			intval($aid),
 			intval($uid),
 			dbesc($xchan_hash),
 			intval($their_perms),
+			intval(PERMS_W_STREAM|PERMS_W_MAIL),
 			dbesc(datetime_convert()),
 			dbesc(datetime_convert())
 		);
