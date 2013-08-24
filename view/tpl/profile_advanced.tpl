@@ -1,3 +1,4 @@
+<div id="profile-content-wrapper" class="generic-content-wrapper">
 <h2>{{$title}}</h2>
 
 <dl id="aprofile-fullname" class="aprofile">
@@ -179,4 +180,4 @@
 {{/foreach}}
 {{/if}}
 
-
+</div>
