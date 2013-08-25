@@ -1284,7 +1284,7 @@ function fix_system_urls($oldurl,$newurl) {
 	// that they can clean up their hubloc tables (this includes directories).
 	// It's a very expensive operation so you don't want to have to do it often or after your site gets to be large.
 
-	$r = q("select * from xchan left join channel on channel_hash = xchan_hash where xchan_url like '%s'",
+	$r = q("select xchan.*, channel.* from xchan left join channel on channel_hash = xchan_hash where xchan_url like '%s'",
 		dbesc($oldurl . '%')
 	);
 	if($r) {
@@ -1317,7 +1317,10 @@ function fix_system_urls($oldurl,$newurl) {
 				dbesc($newurl . '/post'),
 				dbesc($rr['xchan_hash']),
 				dbesc($oldurl)
-			);		
+			);
+		
+			proc_run('php', 'include/notifier.php', 'refresh_all', $rr['channel_id']);
+
 		}
 	}
 }

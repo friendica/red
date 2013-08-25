@@ -297,12 +297,22 @@ function post_post(&$a) {
 		// (!!) this will validate the sender
 		$result = zot_register_hub($sender);
 
-		if((! $result['success']) || (! zot_gethub($sender))) {
+		if((! $result['success']) || (! ($hub = zot_gethub($sender)))) {
 			$ret['message'] = 'Hub not available.';
 			logger('mod_zot: no hub');
 			json_return_and_die($ret);
 		}
 	}
+
+
+	// Update our DB to show when we last communicated successfully with this hub
+	// This will allow us to prune dead hubs from using up resources
+
+	$r = q("update hubloc set hubloc_connected = '%s' where hubloc_id = %d limit 1",
+		dbesc(datetime_convert()),
+		intval($hub['hubloc_id'])
+	);
+
 
 	// TODO: check which hub is primary and take action if mismatched
 
