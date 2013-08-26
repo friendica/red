@@ -138,7 +138,7 @@ function zot_finger($webbie,$channel) {
 	$r = q("select xchan.*, hubloc.* from xchan 
 			left join hubloc on xchan_hash = hubloc_hash
 			where xchan_addr = '%s' and (hubloc_flags & %d) limit 1",
-		dbesc($xchan_address),
+		dbesc($xchan_addr),
 		intval(HUBLOC_FLAGS_PRIMARY)
 	);
 
