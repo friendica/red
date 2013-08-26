@@ -444,6 +444,8 @@ function import_xchan($arr) {
 	if(! array_key_exists('connect_url', $arr))
 		$arr['connect_url'] = '';		
 			
+	if(strpos($arr['address'],'/') !== false)
+		$arr['address'] = substr($arr['address'],0,strpos($arr['address'],'/'));
 
 	if($r) {
 		if($r[0]['xchan_photo_date'] != $arr['photo_updated'])
@@ -465,6 +467,7 @@ function import_xchan($arr) {
 			$new_flags = $r[0]['xchan_flags'] ^ XCHAN_FLAGS_HIDDEN;
 		else
 			$new_flags = $r[0]['xchan_flags'];
+
 
 		if(($r[0]['xchan_name_date'] != $arr['name_updated']) 
 			|| ($r[0]['xchan_connurl'] != $arr['connections_url']) 
