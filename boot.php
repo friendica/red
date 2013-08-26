@@ -290,6 +290,14 @@ define ( 'MENU_ITEM_NEWWIN',   0x0002);
 
 
 /**
+ * Poll/Survey types
+ */
+
+define ( 'POLL_SIMPLE_RATING',   0x0001);
+define ( 'POLL_MULTIPLE_CHOICE', 0x0002);
+
+
+/**
  * Maximum number of "people who like (or don't like) this"  that we will list by name
  */
 
@@ -744,6 +752,18 @@ class App {
 	}
 
 	function get_baseurl($ssl = false) {
+
+
+		if(is_array($this->config) 
+			&& array_key_exists('system',$this->config) 
+			&& is_array($this->config['system']) 
+			&& array_key_exists('baseurl',$this->config['system']) 
+			&& strlen($this->config['system']['baseurl'])) {
+			$url = $this->config['system']['baseurl'];
+			return $url;
+		}
+
+
 		$scheme = $this->scheme;
 
 		if((x($this->config,'system')) && (x($this->config['system'],'ssl_policy'))) {
@@ -1276,6 +1296,8 @@ function check_config(&$a) {
 function fix_system_urls($oldurl,$newurl) {
 
 	require_once('include/crypto.php');
+
+	logger('fix_system_urls: renaming ' . $oldurl . '  to ' . $newurl);
 
 	// Basically a site rename, but this can happen if you change from http to https for instance - even if the site name didn't change
 	// This should fix URL changes on our site, but other sites will end up with orphan hublocs which they will try to contact and will
