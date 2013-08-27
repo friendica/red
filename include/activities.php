@@ -45,6 +45,8 @@ function profile_activity($changed, $value) {
 	$prof = '[url=' . z_root() . '/profile/' . $self['channel_address'] . ']' . t('public profile') . '[/url]';	
 
 	if($t == 1 && strlen($value)) {
+		// if it's a url, the HTML quotes will mess it up, so link it and don't try and zidify it because we don't know what it points to.
+		$value = linkify($value); 
 		$message = sprintf( t('%1$s changed %2$s to &ldquo;%3$s&rdquo;'), $A, $changes, $value);
 		$message .= "\n\n" . sprintf( t('Visit %1$s\'s %2$s'), $A, $prof);
 	}
