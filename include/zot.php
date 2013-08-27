@@ -606,6 +606,9 @@ function import_xchan($arr) {
 				continue;
 			}
 
+			if(strpos($location['address'],'/') !== false)
+				$location['address'] = substr($location['address'],0,strpos($location['address'],'/'));
+
 			// new hub claiming to be primary. Make it so.
 
 			if(intval($location['primary'])) {
