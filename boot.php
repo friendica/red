@@ -768,11 +768,11 @@ class App {
 
 		$scheme = $this->scheme;
 
-		if((x($this->config,'system')) && (x($this->config['system'],'ssl_policy'))) {
-			if(intval($this->config['system']['ssl_policy']) === intval(SSL_POLICY_FULL)) {
-				$scheme = 'https';
-			}
-		}
+//		if((x($this->config,'system')) && (x($this->config['system'],'ssl_policy'))) {
+//			if(intval($this->config['system']['ssl_policy']) === intval(SSL_POLICY_FULL)) {
+//				$scheme = 'https';
+//			}
+//		}
 			
 		$this->baseurl = $scheme . "://" . $this->hostname . ((isset($this->path) && strlen($this->path)) ? '/' . $this->path : '' );
 		return $this->baseurl;

@@ -235,7 +235,7 @@ function admin_page_site_post(&$a){
 	$timeout			=	((x($_POST,'timeout'))			? intval(trim($_POST['timeout']))		: 60);
 	$delivery_interval	=	((x($_POST,'delivery_interval'))? intval(trim($_POST['delivery_interval']))		: 0);
 	$poll_interval	=	((x($_POST,'poll_interval'))? intval(trim($_POST['poll_interval']))		: 0);
-	$ssl_policy         =   ((x($_POST,'ssl_policy')) ? intval($_POST['ssl_policy']) : 0);
+//	$ssl_policy         =   ((x($_POST,'ssl_policy')) ? intval($_POST['ssl_policy']) : 0);
 /*
 	if($ssl_policy != intval(get_config('system','ssl_policy'))) {
 		if($ssl_policy == SSL_POLICY_FULL) {
@@ -278,7 +278,7 @@ function admin_page_site_post(&$a){
 		}
 	}
 */
-	set_config('system','ssl_policy',$ssl_policy);
+//	set_config('system','ssl_policy',$ssl_policy);
 	set_config('system','delivery_interval',$delivery_interval);
 	set_config('system','poll_interval',$poll_interval);
 	set_config('system','maxloadavg',$maxloadavg);
@@ -397,10 +397,10 @@ function admin_page_site(&$a) {
 		ACCESS_FREE => t("Free Access")
 	);
 	
-	$ssl_choices = array(
-		SSL_POLICY_NONE     => t("No SSL policy, links will track page SSL state"),
-		SSL_POLICY_FULL     => t("Force all links to use SSL")
-	);
+//	$ssl_choices = array(
+//		SSL_POLICY_NONE     => t("No SSL policy, links will track page SSL state"),
+//		SSL_POLICY_FULL     => t("Force all links to use SSL")
+//	);
 
 	$t = get_markup_template("admin_site.tpl");
 	return replace_macros($t, array(
@@ -421,7 +421,7 @@ function admin_page_site(&$a) {
 		'$theme_mobile' 	=> array('theme_mobile', t("Mobile system theme"), get_config('system','mobile_theme'), t("Theme for mobile devices"), $theme_choices_mobile),
 		'$theme_accessibility' 	=> array('theme_accessibility', t("Accessibility system theme"), get_config('system','accessibility_theme'), t("Accessibility theme"), $theme_choices_accessibility),
 		'$site_channel' 	=> array('site_channel', t("Channel to use for this website's static pages"), get_config('system','site_channel'), t("Site Channel")),
-		'$ssl_policy'       => array('ssl_policy', t("SSL link policy"), (string) intval(get_config('system','ssl_policy')), t("Determines whether generated links should be forced to use SSL"), $ssl_choices),
+//		'$ssl_policy'       => array('ssl_policy', t("SSL link policy"), (string) intval(get_config('system','ssl_policy')), t("Determines whether generated links should be forced to use SSL"), $ssl_choices),
 		'$maximagesize'		=> array('maximagesize', t("Maximum image size"), get_config('system','maximagesize'), t("Maximum size in bytes of uploaded images. Default is 0, which means no limits.")),
 		'$register_policy'	=> array('register_policy', t("Register policy"), get_config('system','register_policy'), "", $register_choices),
 		'$access_policy'	=> array('access_policy', t("Access policy"), get_config('system','access_policy'), "", $access_choices),
