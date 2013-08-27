@@ -259,6 +259,7 @@ function bbcode($Text,$preserve_nl = false, $tryoembed = true) {
 		$Text = str_replace(array("\n","\r"), array('',''),$Text);
 
 
+	$Text = str_replace(array("\t","  "),array("&nbsp;&nbsp;&nbsp;&nbsp;","&nbsp;&nbsp;"),$Text);
 
 	// Set up the parameters for a URL search string
 	$URLSearchString = "^\[\]";
