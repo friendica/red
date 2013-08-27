@@ -293,8 +293,9 @@ define ( 'MENU_ITEM_NEWWIN',   0x0002);
  * Poll/Survey types
  */
 
-define ( 'POLL_SIMPLE_RATING',   0x0001);
-define ( 'POLL_MULTIPLE_CHOICE', 0x0002);
+define ( 'POLL_SIMPLE_RATING',   0x0001);  // 1-5
+define ( 'POLL_TENSCALE',        0x0002);  // 1-10
+define ( 'POLL_MULTIPLE_CHOICE', 0x0004);
 define ( 'POLL_OVERWRITE',       0x8000);  // If you vote twice remove the prior entry
 
 

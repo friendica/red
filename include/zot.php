@@ -1715,7 +1715,7 @@ function process_channel_sync_delivery($sender,$arr,$deliveries) {
 			$clean = array();
 			foreach($arr['abook'] as $abook) {
 				foreach($abook as $k => $v) {
-					if(in_array($k,$disallowed))
+					if(in_array($k,$disallowed) || (strpos($k,'abook') !== 0))
 						continue;
 					$clean[$k] = $v;
 				}
