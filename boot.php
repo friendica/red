@@ -1317,12 +1317,16 @@ function fix_system_urls($oldurl,$newurl) {
 			if(! $parsed)
 				continue;
 			$newhost = $parsed['host'];
+
 			// sometimes parse_url returns unexpected results.
 
 			if(strpos($newhost,'/') !== false)
 				$newhost = substr($newhost,0,strpos($newhost,'/'));
 
-			$rhs = $newhost . (($parsed['port']) ? ':' . $parsed['port'] : '') . (($parsed['path']) ? $parsed['path'] : '');
+			$rhs = $newhost . (($parsed['port']) ? ':' . $parsed['port'] : '');
+
+			// paths aren't going to work. You have to be at the (sub)domain root
+			// . (($parsed['path']) ? $parsed['path'] : '');
 
 			$x = q("update xchan set xchan_addr = '%s', xchan_url = '%s', xchan_connurl = '%s', xchan_follow = '%s', xchan_connpage = '%s', xchan_photo_l = '%s', xchan_photo_m = '%s', xchan_photo_s = '%s' where xchan_hash = '%s' limit 1",
 				dbesc($channel . '@' . $rhs),
