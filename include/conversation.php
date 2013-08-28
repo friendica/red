@@ -93,10 +93,7 @@ function localize_item(&$item){
 
 	if (activity_match($item['verb'],ACTIVITY_LIKE) || activity_match($item['verb'],ACTIVITY_DISLIKE)){
 		
-		if(is_array($item['object']))
-			$obj = $item['object'];
-		else
-			$obj = json_decode_plus($item['object']);
+		$obj = json_decode_plus($item['object']);
 		
 		if($obj['author'] && $obj['author']['link'])
 			$author_link = get_rel_link($obj['author']['link'],'alternate');
@@ -397,6 +394,7 @@ function visible_activity($item) {
 function conversation(&$a, $items, $mode, $update, $page_mode = 'traditional') {
 
 	$tstart = dba_timer();
+	$content_html = '';
 
 	require_once('bbcode.php');
 
@@ -494,10 +492,16 @@ function conversation(&$a, $items, $mode, $update, $page_mode = 'traditional') {
 	}
 
 
-    else if($mode === 'search') {
+    elseif($mode === 'search') {
         $live_update_div = '<div id="live-search"></div>' . "\r\n";
     }
-
+	elseif($mode === 'photos') {
+		$profile_onwer = $a->profile['profile_uid'];
+		$page_writeable = ($profile_owner == local_user());
+		$live_update_div = '<div id="live-photos"></div>' . "\r\n";
+		// for photos we've already formatted the top-level item (the photo)
+		$content_html = $a->data['photo_html'];
+	}
 
 	$page_dropping = ((local_user() && local_user() == $profile_owner) ? true : false);
 
@@ -801,8 +805,9 @@ function conversation(&$a, $items, $mode, $update, $page_mode = 'traditional') {
 //	logger('nouveau: ' . print_r($threads,true));
 
 
-    $o = replace_macros($page_template, array(
+    $o .= replace_macros($page_template, array(
         '$baseurl' => $a->get_baseurl($ssl_state),
+		'$photo_item' => $content_html,
         '$live_update' => $live_update_div,
         '$remove' => t('remove'),
         '$mode' => $mode,

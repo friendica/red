@@ -852,7 +852,7 @@ function photos_content(&$a) {
 
 		// fetch image, item containing image, then comments
 
-		$ph = q("SELECT * FROM `photo` WHERE `uid` = %d AND `resource_id` = '%s' 
+		$ph = q("SELECT aid,uid,xchan,resource_id,created,edited,title,desc,album,filename,type,height,width,size,scale,profile,photo_flags,allow_cid,allow_gid,deny_cid,deny_gid FROM `photo` WHERE `uid` = %d AND `resource_id` = '%s' 
 			and (photo_flags = %d or photo_flags = %d ) $sql_extra ORDER BY `scale` ASC ",
 			intval($owner_uid),
 			dbesc($datum),
@@ -874,7 +874,7 @@ function photos_content(&$a) {
 				intval(PHOTO_PROFILE)
 			);
 			if($ph) 
-				notice( t('Permission denied. Access to this item may be restricted.'));
+				notice( t('Permission denied. Access to this item may be restricted.') . EOL);
 			else
 				notice( t('Photo not available') . EOL );
 			return;
@@ -1140,15 +1140,9 @@ function photos_content(&$a) {
 					}
 
 
-					if(local_user() && ($item['contact-uid'] == local_user()) 
-						&& ($item['network'] == 'dfrn') && (! $item['self'] )) {
-						$profile_url = $redirect_url;
-						$sparkle = ' sparkle';
-					}
-					else {
-						$profile_url = $item['url'];
-						$sparkle = '';
-					}
+					$profile_url = $item['url'];
+					$sparkle = '';
+
  
 					$diff_author = (($item['url'] !== $item['author-link']) ? true : false);
 
@@ -1210,6 +1204,8 @@ function photos_content(&$a) {
 			'$comments' => $comments,
 			'$paginate' => $paginate,
 		));
+
+		$a->data['photo_html'] = $o;
 		
 		return $o;
 	}

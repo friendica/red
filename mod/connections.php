@@ -99,9 +99,11 @@ function connections_post(&$a) {
 	}			
 
 	$abook_flags = $orig_record[0]['abook_flags'];
+	$new_friend = false;
 
 	if(($_REQUEST['pending']) && ($abook_flags & ABOOK_FLAG_PENDING)) {
 		$abook_flags = ( $abook_flags ^ ABOOK_FLAG_PENDING );
+		$new_friend = true;
 	}
 
 	$r = q("UPDATE abook SET abook_profile = '%s', abook_my_perms = %d , abook_closeness = %d, abook_flags = %d
@@ -121,6 +123,13 @@ function connections_post(&$a) {
 	if((x($a->data,'abook')) && $a->data['abook']['abook_my_perms'] != $abook_my_perms 
 		&& (! ($a->data['abook']['abook_flags'] & ABOOK_FLAG_SELF))) {
 		proc_run('php', 'include/notifier.php', 'permission_update', $contact_id);
+	}
+
+	if($new_friend) {
+		// Check if settings permit ("post new friend activity" is allowed, and 
+		// friends in general or this friend in particular aren't hidden) 
+		// and send out a new friend activity
+		// TODO
 	}
 
 	// Refresh the structure in memory with the new data
