@@ -93,7 +93,10 @@ function localize_item(&$item){
 
 	if (activity_match($item['verb'],ACTIVITY_LIKE) || activity_match($item['verb'],ACTIVITY_DISLIKE)){
 		
-		$obj = json_decode_plus($item['object']);
+		if(is_array($item['object']))
+			$obj = $item['object'];
+		else
+			$obj = json_decode_plus($item['object']);
 		
 		if($obj['author'] && $obj['author']['link'])
 			$author_link = get_rel_link($obj['author']['link'],'alternate');

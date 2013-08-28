@@ -77,9 +77,8 @@ function acl_init(&$a){
 
 		// autocomplete for Contacts
 
-		$r = q("SELECT COUNT(`id`) AS c FROM `contact` 
-				WHERE `uid` = %d AND `self` = 0 
-				AND `pending` = 0 $sql_extra2" ,
+		$r = q("SELECT COUNT(abook_id) AS c FROM abook left join xchan on abook_xchan = xchan_hash 
+				WHERE abook_channel = %d $sql_extra2" ,
 			intval(local_user())
 		);
 		$contact_count = (int)$r[0]['c'];

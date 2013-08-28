@@ -184,12 +184,13 @@ function photos_post(&$a) {
 				intval($page_owner_uid),
 				dbesc($r[0]['resource_id'])
 			);
-			$i = q("SELECT * FROM `item` WHERE `resource_id` = '%s' AND `uid` = %d LIMIT 1",
+			$i = q("SELECT * FROM `item` WHERE `resource_id` = '%s' AND resource_type = 'photo' and `uid` = %d LIMIT 1",
 				dbesc($r[0]['resource_id']),
 				intval($page_owner_uid)
 			);
 			if(count($i)) {
-				q("UPDATE `item` SET `deleted` = 1, `edited` = '%s', `changed` = '%s' WHERE `parent_mid` = '%s' AND `uid` = %d",
+				q("UPDATE `item` SET item_restrict = (item_restrict & %d), `edited` = '%s', `changed` = '%s' WHERE `parent_mid` = '%s' AND `uid` = %d",
+					intval(ITEM_DELETED),
 					dbesc(datetime_convert()),
 					dbesc(datetime_convert()),
 					dbesc($i[0]['mid']),
