@@ -462,7 +462,7 @@ define ( 'ITEM_UNPUBLISHED',     0x0020);
 define ( 'ITEM_WEBPAGE',         0x0040);  // is a static web page, not a conversational item
 define ( 'ITEM_DELAYED_PUBLISH', 0x0080); 
 define ( 'ITEM_BUILDBLOCK',      0x0100);  // Named thusly to make sure nobody confuses this with ITEM_BLOCKED
-
+define ( 'ITEM_PDL',             0x0200);  // Page Description Language - e.g. Comanche
 /**
  * Item Flags
  */
