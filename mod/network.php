@@ -386,7 +386,7 @@ function network_content(&$a, $update = 0, $load = false) {
 
 		nav_set_selected('network');
 
-		$celeb = ((($a->user['page-flags'] == PAGE_SOAPBOX) || ($a->user['page-flags'] == PAGE_COMMUNITY)) ? true : false);
+		$celeb = false;
 
 		$x = array(
 			'is_owner' => true,

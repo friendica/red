@@ -2327,7 +2327,9 @@ function argc() {
 }
 
 function argv($x) {
-	return get_app()->argv[$x];
+	if(array_key_exists($x,get_app()->argv))
+		return get_app()->argv[$x];
+	return '';
 }
 
 function dba_timer() {

@@ -3495,7 +3495,7 @@ ul.menu-popup {
 .shared_header img { margin-right: 10px; }
 
 
-.mail-list-wrapper {
+#mail-list-wrapper {
 
 border-bottom: 1px solid #ccc;
 padding: 20px;
