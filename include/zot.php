@@ -589,10 +589,16 @@ function import_xchan($arr) {
 			);
 			if($r) {
 				logger('import_xchan: hub exists: ' . $location['url']);
+				// update connection timestamp
+				q("update hubloc set hubloc_connected = '%s' where hubloc_id = %d limit 1",
+					dbesc(datetime_convert()),
+					intval($r[0]['hubloc_id'])
+				);
 				if((($r[0]['hubloc_flags'] & HUBLOC_FLAGS_PRIMARY) && (! $location['primary']))
 					|| ((! ($r[0]['hubloc_flags'] & HUBLOC_FLAGS_PRIMARY)) && ($location['primary']))) {
-					$r = q("update hubloc set hubloc_flags = (hubloc_flags ^ %d) where hubloc_id = %d limit 1",
+					$r = q("update hubloc set hubloc_flags = (hubloc_flags ^ %d), hubloc_updated = '%s' where hubloc_id = %d limit 1",
 						intval(HUBLOC_FLAGS_PRIMARY),
+						dbesc(datetime_convert()),
 						intval($r[0]['hubloc_id'])
 					);
 					update_modtime($xchan_hash);
@@ -612,15 +618,16 @@ function import_xchan($arr) {
 			// new hub claiming to be primary. Make it so.
 
 			if(intval($location['primary'])) {
-				$r = q("update hubloc set hubloc_flags = (hubloc_flags ^ %d) where hubloc_hash = '%s' and (hubloc_flags & %d )",
+				$r = q("update hubloc set hubloc_flags = (hubloc_flags ^ %d), hubloc_updated = '%s' where hubloc_hash = '%s' and (hubloc_flags & %d )",
 					intval(HUBLOC_FLAGS_PRIMARY),
+					dbesc(datetime_convert()),
 					dbesc($xchan_hash),
 					intval(HUBLOC_FLAGS_PRIMARY)
 				);
 			}
 			logger('import_xchan: new hub: ' . $location['url']);
-			$r = q("insert into hubloc ( hubloc_guid, hubloc_guid_sig, hubloc_hash, hubloc_addr, hubloc_flags, hubloc_url, hubloc_url_sig, hubloc_host, hubloc_callback, hubloc_sitekey)
-					values ( '%s','%s','%s','%s', %d ,'%s','%s','%s','%s','%s')",
+			$r = q("insert into hubloc ( hubloc_guid, hubloc_guid_sig, hubloc_hash, hubloc_addr, hubloc_flags, hubloc_url, hubloc_url_sig, hubloc_host, hubloc_callback, hubloc_sitekey, hubloc_updated, hubloc_connected)
+					values ( '%s','%s','%s','%s', %d ,'%s','%s','%s','%s','%s','%s','%s')",
 				dbesc($arr['guid']),
 				dbesc($arr['guid_sig']),
 				dbesc($xchan_hash),
@@ -630,7 +637,9 @@ function import_xchan($arr) {
 				dbesc($location['url_sig']),
 				dbesc($location['host']),
 				dbesc($location['callback']),
-				dbesc($location['sitekey'])
+				dbesc($location['sitekey']),
+				dbesc(datetime_convert()),
+				dbesc(datetime_convert())
 			);
 			update_modtime($xchan_hash);
 			$changed = true;
