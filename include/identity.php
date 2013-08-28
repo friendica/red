@@ -81,7 +81,7 @@ function create_identity($arr) {
 		return $ret;
 	}
 
-	$nick = trim($arr['nickname']);
+	$nick = mb_strtolower(trim($arr['nickname']));
 	$name = escape_tags($arr['name']);
 	$pageflags = ((x($arr,'pageflags')) ? intval($arr['pageflags']) : PAGE_NORMAL);
 
