@@ -1164,9 +1164,21 @@ function check_config(&$a) {
 		set_config('system','urlverify',bin2hex(z_root()));
 	if(($saved) && ($saved != bin2hex(z_root()))) {
 		// our URL changed. Do something.
+
 		$oldurl = hex2bin($saved);
-		fix_system_urls($oldurl,z_root());
-		set_config('system','urlverify',bin2hex(z_root()));
+		
+		$oldhost = substr($oldurl,strpos($oldurl,'//')+2);
+		$host = substr(z_root(),strpos(z_root(),'//')+2);
+
+		$is_ip_addr = ((preg_match("/^(\d{1,3})\.(\d{1,3})\.(\d{1,3})\.(\d{1,3})$/",$host)) ? true : false);
+		$was_ip_addr = ((preg_match("/^(\d{1,3})\.(\d{1,3})\.(\d{1,3})\.(\d{1,3})$/",$oldhost)) ? true : false);
+		// only change the url to an ip address if it was already an ip and not a dns name
+		if((! $is_ip_addr) || ($is_ip_addr && $was_ip_addr)) {
+			fix_system_urls($oldurl,z_root());
+			set_config('system','urlverify',bin2hex(z_root()));
+		}
+		else
+			logger('Attempt to change baseurl from a DNS name to an IP address was refused.');  
 	}
 
 	// This will actually set the url to the one stored in .htconfig, and ignore what 

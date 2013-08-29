@@ -997,7 +997,7 @@ function settings_content(&$a) {
 
 		$stpl = get_markup_template('settings.tpl');
 
-		$celeb = ((($a->user['page-flags'] == PAGE_SOAPBOX) || ($a->user['page-flags'] == PAGE_COMMUNITY)) ? true : false);
+		$celeb = false;
 
 		$expire_arr = array(
 			'days' => array('expire',  t("Automatically expire posts after this many days:"), $expire, t('If empty, posts will not expire. Expired posts will be deleted')),

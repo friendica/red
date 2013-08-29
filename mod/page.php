@@ -6,16 +6,17 @@ require_once('include/page_widgets.php');
 
 function page_init(&$a) {
 	// We need this to make sure the channel theme is always loaded.
-        $which = argv(1);
-        $profile = 0;
-        $channel = $a->get_channel();
 
-        if((local_user()) && (argc() > 2) && (argv(2) === 'view')) {
-                $which = $channel['channel_address'];
-                $profile = argv(1);
-        }
+	$which = argv(1);
+	$profile = 0;
+	$channel = $a->get_channel();
 
-        profile_load($a,$which,$profile);
+	if((local_user()) && (argc() > 2) && (argv(2) === 'view')) {
+		$which = $channel['channel_address'];
+		$profile = argv(1);
+	}
+
+	profile_load($a,$which,$profile);
 
 }
 
