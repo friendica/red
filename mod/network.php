@@ -325,9 +325,9 @@ function network_content(&$a, $update = 0, $load = false) {
 
 	
 	// save selected tab, but only if not in search or file mode
-	if(!x($_GET,'search') && !x($_GET,'file')) {
-		set_pconfig( local_user(), 'network.view','tab.selected',array($all_active, $postord_active, $conv_active, $new_active, $starred_active, $bookmarked_active, $spam_active) );
-	}
+//	if(!x($_GET,'search') && !x($_GET,'file')) {
+//		set_pconfig( local_user(), 'network.view','tab.selected',array($all_active, $postord_active, $conv_active, $new_active, $starred_active, $bookmarked_active, $spam_active) );
+//	}
 
 
 	$contact_id = $a->cid;
@@ -500,7 +500,7 @@ function network_content(&$a, $update = 0, $load = false) {
 			'$nouveau' => (($nouveau) ? $nouveau : '0'),
 			'$wall' => '0',
 			'$page' => (($a->pager['page'] != 1) ? $a->pager['page'] : 1),
-			'$search' => $search,
+			'$search' => (($search) ? $search : ''),
 			'$order' => $order,
 			'$file' => $file,
 			'$cats' => '',
@@ -641,6 +641,8 @@ function network_content(&$a, $update = 0, $load = false) {
 		$first = dba_timer();
 
 		// Then fetch all the children of the parents that are on this page
+		$parents_str = '';
+		$update_unseen = '';
 
 		if($r) {
 
@@ -699,7 +701,7 @@ function network_content(&$a, $update = 0, $load = false) {
 	$sixth = dba_timer();
 
 
-	if(! $update) 
+	if(($items) && (! $update)) 
         $o .= alt_pager($a,count($items));
 
 	if($load) {

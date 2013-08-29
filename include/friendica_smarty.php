@@ -49,7 +49,7 @@ class FriendicaSmartyEngine implements ITemplateEngine {
 	
 	public function __construct(){
         $a = get_app();
-        $basecompiledir = $a->config['system']['smarty3_folder'];
+        $basecompiledir = ((array_key_exists('smarty3_folder',$a->config['system'])) ? $a->config['system']['smarty3_folder'] : '');
         if (!$basecompiledir) $basecompiledir = dirname(__dir__)."/view/tpl/smarty3";
         if (!is_dir($basecompiledir)) {
             echo "<b>ERROR:</b> folder <tt>$basecompiledir</tt> does not exist."; killme();

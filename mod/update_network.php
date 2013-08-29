@@ -11,7 +11,7 @@ function update_network_content(&$a) {
 	$load = (((argc() > 1) && (argv(1) == 'load')) ? 1 : 0);
 	header("Content-type: text/html");
 	echo "<!DOCTYPE html><html><body>\r\n";
-	echo (($_GET['msie'] == 1) ? '<div>' : '<section>');
+	echo ((array_key_exists('msie',$_GET) && $_GET['msie'] == 1) ? '<div>' : '<section>');
 
 
         $text = network_content($a,$profile_uid, $load);
@@ -32,7 +32,7 @@ function update_network_content(&$a) {
 		}
 
         echo str_replace("\t",'       ',$text);
-	echo (($_GET['msie'] == 1) ? '</div>' : '</section>');
+	echo ((array_key_exists('msie',$_GET) && $_GET['msie'] == 1) ? '</div>' : '</section>');
 	echo "</body></html>\r\n";
 //	logger('update_network: ' . $text);
 	killme();

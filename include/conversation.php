@@ -394,7 +394,9 @@ function visible_activity($item) {
 function conversation(&$a, $items, $mode, $update, $page_mode = 'traditional') {
 
 	$tstart = dba_timer();
+	$t0 = $t1 = $t2 = $t3 = $t4 = $t5 = $t6 = null;
 	$content_html = '';
+	$o = '';
 
 	require_once('bbcode.php');
 
