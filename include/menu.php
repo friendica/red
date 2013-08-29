@@ -40,6 +40,7 @@ function menu_render($menu) {
 }
 
 
+
 function menu_fetch_id($menu_id,$channel_id) {
 
 	$r = q("select * from menu where menu_id = %d and menu_channel_id = %d limit 1",
