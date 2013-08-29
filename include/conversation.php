@@ -1150,6 +1150,7 @@ function conv_sort($arr,$order) {
 	elseif(stristr($order,'ascending'))
 		usort($parents,'sort_thr_created_rev');
 
+
 	if(count($parents))
 		foreach($parents as $i=>$_x)
 			$parents[$i]['children'] = get_item_children($arr, $_x);

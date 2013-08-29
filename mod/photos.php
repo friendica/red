@@ -976,13 +976,13 @@ function photos_content(&$a) {
 			$sql_extra LIMIT 1",
 			dbesc($datum)
 		);
+
 		if($linked_items) {
 
 			$link_item = $linked_items[0];
 
-			$r = q("select * from item where parent_mid = '%s' and mid != '%s' 
+			$r = q("select * from item where parent_mid = '%s' 
 				and item_restrict = 0 and uid = %d $sql_extra ",
-				dbesc($link_item['mid']),
 				dbesc($link_item['mid']),
 				intval($link_item['uid'])
 
@@ -1004,6 +1004,9 @@ function photos_content(&$a) {
 			}
 		}
 
+		// FIXME - remove this when we move to conversation module 
+
+		$r = $r[0]['children'];
 
 		$edit = null;
 		if($can_post) {
@@ -1094,6 +1097,52 @@ function photos_content(&$a) {
 
 
 
+				foreach($r as $item) {
+					$comment = '';
+					$template = $tpl;
+					$sparkle = '';
+
+					if(((activity_match($item['verb'],ACTIVITY_LIKE)) || (activity_match($item['verb'],ACTIVITY_DISLIKE))) && ($item['id'] != $item['parent']))
+						continue;
+
+					$redirect_url = $a->get_baseurl() . '/redir/' . $item['cid'] ;
+			
+
+					$profile_url = zid($item['author']['xchan_url']);
+					$sparkle = '';
+
+
+					$profile_name   = $item['author']['xchan_name'];
+					$profile_avatar = $item['author']['xchan_photo_m'];
+
+					$profile_link = $profile_url;
+
+					$drop = '';
+
+					if(($item['contact-id'] == $contact_id) || ($item['uid'] == local_user()))
+						$drop = replace_macros(get_markup_template('photo_drop.tpl'), array('$id' => $item['id'], '$delete' => t('Delete')));
+
+
+					$name_e = $profile_name;
+					$title_e = $item['title'];
+					$body_e = bbcode($item['body']);
+
+					$comments .= replace_macros($template,array(
+						'$id' => $item['item_id'],
+						'$profile_url' => $profile_link,
+						'$name' => $name_e,
+						'$thumb' => $profile_avatar,
+						'$sparkle' => $sparkle,
+						'$title' => $title_e,
+						'$body' => $body_e,
+						'$ago' => relative_date($item['created']),
+						'$indent' => (($item['parent'] != $item['item_id']) ? ' comment' : ''),
+						'$drop' => $drop,
+						'$comment' => $comment
+					));
+
+				}
+			
 				if($can_post || $a->data['perms']['post_comments']) {
 					$comments .= replace_macros($cmnt_tpl,array(
 						'$return_path' => '',
@@ -1111,73 +1160,7 @@ function photos_content(&$a) {
 					));
 				}
 
-				foreach($r as $item) {
-					$comment = '';
-					$template = $tpl;
-					$sparkle = '';
-
-					if(((activity_match($item['verb'],ACTIVITY_LIKE)) || (activity_match($item['verb'],ACTIVITY_DISLIKE))) && ($item['id'] != $item['parent']))
-						continue;
-
-					$redirect_url = $a->get_baseurl() . '/redir/' . $item['cid'] ;
-			
-					if($can_post || $a->data['perms']['post_comments']) {
-						$comments .= replace_macros($cmnt_tpl,array(
-							'$return_path' => '',
-							'$jsreload' => $return_url,
-							'$type' => 'wall-comment',
-							'$id' => $item['item_id'],
-							'$parent' => $item['parent'],
-							'$profile_uid' =>  $owner_uid,
-							'$mylink' => $contact['url'],
-							'$mytitle' => t('This is you'),
-							'$myphoto' => $contact['thumb'],
-							'$comment' => t('Comment'),
-							'$submit' => t('Submit'),
-							'$sourceapp' => t($a->sourcename),
-							'$ww' => ''
-						));
-					}
-
-
-					$profile_url = $item['url'];
-					$sparkle = '';
-
- 
-					$diff_author = (($item['url'] !== $item['author-link']) ? true : false);
-
-					$profile_name   = (((strlen($item['author-name']))   && $diff_author) ? $item['author-name']   : $item['name']);
-					$profile_avatar = (((strlen($item['author-avatar'])) && $diff_author) ? $item['author-avatar'] : $item['thumb']);
-
-					$profile_link = $profile_url;
-
-					$drop = '';
-
-					if(($item['contact-id'] == $contact_id) || ($item['uid'] == local_user()))
-						$drop = replace_macros(get_markup_template('photo_drop.tpl'), array('$id' => $item['id'], '$delete' => t('Delete')));
-
-
-					$name_e = $profile_name;
-					$title_e = $item['title'];
-					$body_e = bbcode($item['body']);
-
-
-					$comments .= replace_macros($template,array(
-						'$id' => $item['item_id'],
-						'$profile_url' => $profile_link,
-						'$name' => $name_e,
-						'$thumb' => $profile_avatar,
-						'$sparkle' => $sparkle,
-						'$title' => $title_e,
-						'$body' => $body_e,
-						'$ago' => relative_date($item['created']),
-						'$indent' => (($item['parent'] != $item['item_id']) ? ' comment' : ''),
-						'$drop' => $drop,
-						'$comment' => $comment
-					));
-				}
 			}
-
 			$paginate = paginate($a);
 		}
 		
