@@ -538,7 +538,7 @@ class App {
 	public  $channel    = null;            // channel record
 	public  $observer   = null;            // xchan record
 	public  $profile_uid = 0;              // If applicable, the uid of the person whose stuff this is. 
-                                           
+	public  $layout     = array();         // Comanche parsed template                                           
 
 
 	private $perms      = null;            // observer permissions
@@ -627,6 +627,8 @@ class App {
 
 	private $cached_profile_image;
 	private $cached_profile_picdate;
+
+
 							
 	function __construct() {
 
@@ -1996,6 +1998,9 @@ function current_theme(){
 			$page_theme = $r[0]['channel_theme'];
 	}
 
+	if(array_key_exists('theme', $a->layout) && $a->layout['theme'])
+		$page_theme = $a->layout['theme'];
+
 	// Allow folks to over-rule channel themes and always use their own on their own site.
 	// The default is for channel themes to take precedence over your own on pages belonging 
 	// to that channel. 
@@ -2006,8 +2011,6 @@ function current_theme(){
 	}
 
 	
-//		$mobile_detect = new Mobile_Detect();
-//		$is_mobile = $mobile_detect->isMobile() || $mobile_detect->isTablet();
 	$is_mobile = $a->is_mobile || $a->is_tablet;
 	
 	if($is_mobile) {
@@ -2033,6 +2036,7 @@ function current_theme(){
 		if($page_theme)
 			$theme_name = $page_theme;
 	}
+
 	
 	if($theme_name &&
 			(file_exists('view/theme/' . $theme_name . '/css/style.css') ||
@@ -2361,9 +2365,18 @@ function curPageURL() {
 	return $pageURL;
 }
 
+function get_custom_nav(&$a,$navname) {
+	if(! $navname)
+		return $a->page['nav'];
+	// load custom nav menu by name here
+	
+}
+
 function construct_page(&$a) {
 
-
+	
+	$comanche = ((count($a->layout)) ? true : false);
+		
 	/**
  	 * Build the page - now that we have all the components
  	 */
@@ -2372,8 +2385,15 @@ function construct_page(&$a) {
 
 	if($a->module == 'setup')
 		$installing = true;
-	else
+	else {
 		nav($a);
+	} 
+
+	if($comanche) {
+		if($a->layout['nav']) {
+			$a->page['nav'] = get_custom_nav($a->layout['nav']);
+		}
+	}
 
 	require_once(theme_include('theme_init.php'));
 
@@ -2402,6 +2422,13 @@ function construct_page(&$a) {
 			$a->page[$x['location']] .= $x['html']; 
 		}
 	}
+	if($comanche) {
+		foreach($a->layout as $k => $v) {
+			if(strpos($k,'region_') === 0) {
+				$a->data[substr($k,0,7)] = $v;
+			}
+		}
+	}	
 
 	if($a->is_mobile || $a->is_tablet) {
 		if(isset($_SESSION['show_mobile']) && !$_SESSION['show_mobile']) {
