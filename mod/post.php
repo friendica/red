@@ -175,6 +175,19 @@ function post_post(&$a) {
 
 	$msgtype = ((array_key_exists('type',$data)) ? $data['type'] : '');
 
+	if($msgtype === 'ping') {
+
+		// Useful to get a health check on a remote site.
+		// This will let us know if any important communication details
+		// that we may have stored are no longer valid, regardless of xchan details.
+ 
+		$ret['success'] = true;
+		$ret['site'] = array();
+		$ret['site']['url'] = z_root();
+		$ret['site']['url_sig'] = base64url_encode(rsa_sign(z_root(),get_config('system','prvkey')));
+		$ret['site']['sitekey'] = get_config('system','pubkey');
+		json_return_and_die($ret);
+	}
 
 	if($msgtype === 'pickup') {
 
