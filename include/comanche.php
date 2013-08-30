@@ -75,11 +75,21 @@ function comanche_menu($name) {
 	return render_menu($m);
 }
 
-function comanche_widget($name) {
+function comanche_replace_region($match) {
 	$a = get_app();
-	// placeholder for now
-	$m = menu_fetch($name,$a->profile['profile_uid'],get_observer_hash());
-	return render_menu($m);
+	if(array_key_exists($match[1],$a->page))
+		return $a->page[$match[1]];
+}
+
+// Widgets will have to get any operational arguments from the session,
+// the global app environment, or config storage until we implement argument passing
+
+
+function comanche_widget($name,$args = null) {
+	$a = get_app();
+	$func = 'widget_' . trim($name);
+	if(function_exists($func))
+		return $func($args);
 }
 
 
@@ -103,4 +113,11 @@ function comanche_region(&$a,$s) {
 	}
 
 	return $s;
+}
+
+
+function widget_profile($args) {
+	$a = get_app();
+	$block = (((get_config('system','block_public')) && (! local_user()) && (! remote_user())) ? true : false);
+	return profile_sidebar($a->profile, $block, true);
 }

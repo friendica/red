@@ -9,14 +9,10 @@ function page_init(&$a) {
 
 	$which = argv(1);
 	$profile = 0;
-	$channel = $a->get_channel();
-
-	if((local_user()) && (argc() > 2) && (argv(2) === 'view')) {
-		$which = $channel['channel_address'];
-		$profile = argv(1);
-	}
-
 	profile_load($a,$which,$profile);
+
+	if($a->profile['profile_uid'])
+		head_set_icon($a->profile['thumb']);
 
 }
 
@@ -65,7 +61,8 @@ function page_content(&$a) {
 		return;
 	}
 
-// Use of widgets should be determined by Comanchie, but we don't have it yet, so...
+	// Use of widgets should be determined by Comanche, but we don't have it yet, so...
+
 	if ($perms['write_pages']) {
 		$chan = $a->channel['channel_id'];
 		$who = $channel_address;
@@ -75,7 +72,7 @@ function page_content(&$a) {
 
 	xchan_query($r);
 	$r = fetch_post_tags($r,true);
-	$a->profile = array('profile_uid' => $u[0]['channel_id']);
+
 	$o .= prepare_page($r[0]);
 	return $o;
 

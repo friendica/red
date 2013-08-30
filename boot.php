@@ -2386,6 +2386,7 @@ function get_custom_nav(&$a,$navname) {
 
 function construct_page(&$a) {
 
+	require_once('include/comanche.php');
 	
 	$comanche = ((count($a->layout)) ? true : false);
 		
@@ -2434,9 +2435,23 @@ function construct_page(&$a) {
 			$a->page[$x['location']] .= $x['html']; 
 		}
 	}
+
+	// Let's say we have a comanche declaration '[region_nav][/region_nav][region_content]$region_nav $region_section[/region_content]'.
+	// The text 'region_' identifies a section of the layout by that name (without the 'region_' text). 
+	// So what we want to do here is leave $a->page['nav'] empty and put the default content from $a->page['nav'] and $a->page['section'] 
+	// into a new region called $a->data['content']. It is presumed that the chosen layout file for this comanche page
+	// has a '<content>' element instead of a '<section>'. 
+	
+	// This way the Comanche layout can include any existing content, alter the layout by adding stuff around it or changing the 
+	// layout completely with a new layout definition, or replace/remove existing content. 
+
 	if($comanche) {
 		foreach($a->layout as $k => $v) {
-			if(strpos($k,'region_') === 0) {
+			if((strpos($k,'region_') === 0) && strlen($v)) {
+				if(strpos($v,'$region_') !== false) {
+					$v = preg_replace_callback('/\$region_([a-zA-Z0-9]*?)/ism','comanche_replace_region',$v);
+
+				}
 				$a->data[substr($k,0,7)] = $v;
 			}
 		}
