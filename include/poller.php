@@ -224,7 +224,7 @@ function poller_run($argv, $argc){
 				$update = true;
 			}
 		}
-dbg(0);
+
 		if((! $update) && (! $force))
 				continue;
 

@@ -69,7 +69,7 @@ function onepoll_run($argv, $argc){
 
 	$last_update = (($contact['abook_updated'] === '0000-00-00 00:00:00') 
 		? datetime_convert('UTC','UTC','now - 7 days')
-		: datetime_convert('UTC','UTC',$contact['abook_updated'])
+		: datetime_convert('UTC','UTC',$contact['abook_updated'] . ' - 2 days')
 	);
 
 	// update permissions
@@ -98,11 +98,12 @@ function onepoll_run($argv, $argc){
 		return;
 
 	if($contact['xchan_connurl']) {
-		$feedurl = str_replace('/poco/','/zotfeed/',$channel['xchan_connurl']);
-		
-		$x = z_fetch_url($feedurl . '?f=$mindate=' . $last_update);
+		$feedurl = str_replace('/poco/','/zotfeed/',$channel['xchan_connurl']);		
+		$x = z_fetch_url($feedurl . '?f=&mindate=' . $last_update);
 		if($x['success']) {
 			$total = 0;
+			logger('onepoll: feed update ' . $contact['xchan_name']);
+
 			$j = json_decode($x['body'],true);
 			if($j['success'] && $j['messages']) {
 				foreach($j['messages'] as $message) {
