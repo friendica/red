@@ -15,6 +15,7 @@ function nuke_session() {
 	unset($_SESSION['cid']);
 	unset($_SESSION['theme']);
 	unset($_SESSION['mobile_theme']);
+	unset($_SESSION['show_mobile']);
 	unset($_SESSION['page_flags']);
 	unset($_SESSION['submanage']);
 	unset($_SESSION['my_url']);

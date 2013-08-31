@@ -2025,25 +2025,28 @@ function current_theme(){
 	
 	$is_mobile = $a->is_mobile || $a->is_tablet;
 	
+    $standard_system_theme = ((isset($a->config['system']['theme'])) ? $a->config['system']['theme'] : '');
+    $standard_theme_name = ((isset($_SESSION) && x($_SESSION,'theme')) ? $_SESSION['theme'] : $standard_system_theme);
+    	
 	if($is_mobile) {
 		if(isset($_SESSION['show_mobile']) && !$_SESSION['show_mobile']) {
-			$system_theme = ((isset($a->config['system']['theme'])) ? $a->config['system']['theme'] : '');
-			$theme_name = ((isset($_SESSION) && x($_SESSION,'theme')) ? $_SESSION['theme'] : $system_theme);
+			$system_theme = $standard_system_theme;
+			$theme_name = $standard_theme_name;
 		}
 		else {	
 			$system_theme = ((isset($a->config['system']['mobile_theme'])) ? $a->config['system']['mobile_theme'] : '');
 			$theme_name = ((isset($_SESSION) && x($_SESSION,'mobile_theme')) ? $_SESSION['mobile_theme'] : $system_theme);
 
-			if($theme_name === '---') {
+			if($theme_name === '' || $theme_name === '---'  ) {
 				// user has selected to have the mobile theme be the same as the normal one
-				$system_theme = '';
-				$theme_name = '';
+				$system_theme = $standard_system_theme;
+				$theme_name = $standard_theme_name;				
 			}
 		}
 	}
 	else {
-		$system_theme = ((isset($a->config['system']['theme'])) ? $a->config['system']['theme'] : '');
-		$theme_name = ((isset($_SESSION) && x($_SESSION,'theme')) ? $_SESSION['theme'] : $system_theme);
+			$system_theme = $standard_system_theme;
+			$theme_name = $standard_theme_name;
 
 		if($page_theme)
 			$theme_name = $page_theme;
@@ -2464,10 +2467,13 @@ function construct_page(&$a) {
 		else {
 			$link = $a->get_baseurl() . '/toggle_mobile?f=&off=1&address=' . curPageURL();
 		}
-		$a->page['footer'] .= replace_macros(get_markup_template("toggle_mobile_footer.tpl"), array(
-			'$toggle_link' => $link,
-			'$toggle_text' => t('toggle mobile')
-		));
+		if ((isset($_SESSION) && $_SESSION['mobile_theme'] !='' && $_SESSION['mobile_theme'] !='---' ) || 
+		    (isset($a->config['system']['mobile_theme']) && !isset($_SESSION['mobile_theme']))) {
+			$a->page['footer'] .= replace_macros(get_markup_template("toggle_mobile_footer.tpl"), array(
+				'$toggle_link' => $link,
+				'$toggle_text' => t('toggle mobile')
+			));
+		}
 	}
 
 	$page    = $a->page;
