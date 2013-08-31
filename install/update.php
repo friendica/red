@@ -1,6 +1,6 @@
 <?php
 
-define( 'UPDATE_VERSION' , 1064 );
+define( 'UPDATE_VERSION' , 1065 );
 
 /**
  *
@@ -750,3 +750,12 @@ ADD INDEX ( `xchan_follow` ), ADD INDEX ( `xchan_connpage`) ");
 		return UPDATE_SUCCESS;
 	return UPDATE_FAILED;
 }
+
+function update_r1064() {
+	$r = q("ALTER TABLE `updates` ADD `ud_guid` CHAR( 255 ) NOT NULL DEFAULT '' AFTER `ud_hash` ,
+ADD INDEX ( `ud_guid` )");
+	if($r)
+		return UPDATE_SUCCESS;
+	return UPDATE_FAILED;
+}
+
