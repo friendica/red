@@ -35,5 +35,9 @@ var searchData=
   ['photo_5fthing',['PHOTO_THING',['../boot_8php.html#a78849a1bf8ce8d9804b4cbb502e8f383',1,'boot.php']]],
   ['photo_5fxchan',['PHOTO_XCHAN',['../boot_8php.html#ac43182e0d8bae7576a30b603774974f8',1,'boot.php']]],
   ['php_5ftpl',['php_tpl',['../namespacefriendica-to-smarty-tpl.html#a5dfc21ab8282dda8e3a7dff43cd0e283',1,'friendica-to-smarty-tpl']]],
-  ['png_5fquality',['PNG_QUALITY',['../boot_8php.html#a8df201788c9dd0ca91384e3a14c08bce',1,'boot.php']]]
+  ['png_5fquality',['PNG_QUALITY',['../boot_8php.html#a8df201788c9dd0ca91384e3a14c08bce',1,'boot.php']]],
+  ['poll_5fmultiple_5fchoice',['POLL_MULTIPLE_CHOICE',['../boot_8php.html#abbf5ac24eb8aeedb862f618ee0d21e86',1,'boot.php']]],
+  ['poll_5foverwrite',['POLL_OVERWRITE',['../boot_8php.html#a2b525996e4426bdddbcec277778bde08',1,'boot.php']]],
+  ['poll_5fsimple_5frating',['POLL_SIMPLE_RATING',['../boot_8php.html#ad88a70ec62e08d590123d3697dfe64d5',1,'boot.php']]],
+  ['poll_5ftenscale',['POLL_TENSCALE',['../boot_8php.html#a1ba00027b718db732f30fc0e2c3e0abc',1,'boot.php']]]
 ];

@@ -106,6 +106,7 @@ var dir_d41ce877eb409a4791b288730010abe2 =
     [ "view.php", "view_8php.html", "view_8php" ],
     [ "viewconnections.php", "viewconnections_8php.html", "viewconnections_8php" ],
     [ "viewsrc.php", "viewsrc_8php.html", "viewsrc_8php" ],
+    [ "vote.php", "vote_8php.html", "vote_8php" ],
     [ "wall_attach.php", "wall__attach_8php.html", "wall__attach_8php" ],
     [ "wall_upload.php", "wall__upload_8php.html", "wall__upload_8php" ],
     [ "webfinger.php", "webfinger_8php.html", "webfinger_8php" ],

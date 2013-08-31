@@ -59,6 +59,7 @@ var searchData=
   ['_24k',['$k',['../php2po_8php.html#ad6726cfaa85d4b8299d2b0f034cbf178',1,'php2po.php']]],
   ['_24lang',['$lang',['../classTemplate.html#ace26b8a4252fbc1c385d2b5e1e93e5c8',1,'Template']]],
   ['_24language',['$language',['../classApp.html#a1a297e70b3667b83f4460aa7ed9f5d6f',1,'App']]],
+  ['_24layout',['$layout',['../classApp.html#a58ac598544892ff7c32890291b72635e',1,'App']]],
   ['_24ldelim',['$ldelim',['../classApp.html#a59dd4b665c70e7dbd80682c014ff7145',1,'App']]],
   ['_24line_5fheight',['$line_height',['../redbasic_2php_2style_8php.html#a4131d1765ee4deb28e83fc4527943ee0',1,'$line_height():&#160;style.php'],['../redstrap_2php_2style_8php.html#a4131d1765ee4deb28e83fc4527943ee0',1,'$line_height():&#160;style.php']]],
   ['_24linkcolour',['$linkcolour',['../redbasic_2php_2style_8php.html#a6628a80911a6b37b464ef110ac8f6e42',1,'$linkcolour():&#160;style.php'],['../redstrap_2php_2style_8php.html#a6628a80911a6b37b464ef110ac8f6e42',1,'$linkcolour():&#160;style.php']]],

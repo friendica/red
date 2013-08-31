@@ -18,6 +18,7 @@ var dir_d44c64559bbebec7f509842c48db8b23 =
     ] ],
     [ "cli_startup.php", "cli__startup_8php.html", "cli__startup_8php" ],
     [ "cli_suggest.php", "cli__suggest_8php.html", "cli__suggest_8php" ],
+    [ "comanche.php", "comanche_8php.html", "comanche_8php" ],
     [ "config.php", "include_2config_8php.html", "include_2config_8php" ],
     [ "Contact.php", "Contact_8php.html", "Contact_8php" ],
     [ "contact_selectors.php", "contact__selectors_8php.html", "contact__selectors_8php" ],

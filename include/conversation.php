@@ -92,8 +92,14 @@ function item_redir_and_replace_images($body, $images, $cid) {
 function localize_item(&$item){
 
 	if (activity_match($item['verb'],ACTIVITY_LIKE) || activity_match($item['verb'],ACTIVITY_DISLIKE)){
-		
+	
+		if(! $item['object'])
+			return;
+	
 		$obj = json_decode_plus($item['object']);
+		if((! $obj) && ($item['object'])) {
+			logger('localize_item: failed to decode object: ' . print_r($item['object'],true));
+		}
 		
 		if($obj['author'] && $obj['author']['link'])
 			$author_link = get_rel_link($obj['author']['link'],'alternate');

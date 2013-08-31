@@ -26,6 +26,7 @@ var searchData=
   ['get_5fconversation',['get_conversation',['../classItem.html#a0c301aaed2b7d682728d18db3a22afa3',1,'Item']]],
   ['get_5fcurl_5fcode',['get_curl_code',['../classApp.html#ab410451f132910773d0a02e35d0dced9',1,'App']]],
   ['get_5fcurl_5fheaders',['get_curl_headers',['../classApp.html#abaf2173711e861ae4aebf43a7f70157e',1,'App']]],
+  ['get_5fcustom_5fnav',['get_custom_nav',['../boot_8php.html#a899d24fd074594ceebbf72e1feff335f',1,'boot.php']]],
   ['get_5fdata',['get_data',['../classItem.html#ad3638f93065693c1f69eb349feb1b7aa',1,'Item']]],
   ['get_5fdata_5fvalue',['get_data_value',['../classItem.html#ac6f1c96cc82a0dfb7e881fc70309ea3c',1,'Item']]],
   ['get_5fdb_5ferrno',['get_db_errno',['../setup_8php.html#a8652788e8589778c5f81634a9d5b9429',1,'setup.php']]],

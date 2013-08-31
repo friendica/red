@@ -14,5 +14,9 @@ var searchData=
   ['viewconnections_5finit',['viewconnections_init',['../viewconnections_8php.html#a00163d50b17568f7b0e48b1ca9ab7330',1,'viewconnections.php']]],
   ['viewsrc_2ephp',['viewsrc.php',['../viewsrc_8php.html',1,'']]],
   ['viewsrc_5fcontent',['viewsrc_content',['../viewsrc_8php.html#a6eff3d0c1d7d14b335c4edb785cd60a4',1,'viewsrc.php']]],
-  ['visible_5factivity',['visible_activity',['../conversation_8php.html#a7eeaaf44506815576f3bd80053ef52c3',1,'conversation.php']]]
+  ['visible_5factivity',['visible_activity',['../conversation_8php.html#a7eeaaf44506815576f3bd80053ef52c3',1,'conversation.php']]],
+  ['vote_2ephp',['vote.php',['../vote_8php.html',1,'']]],
+  ['vote_5fcontent',['vote_content',['../vote_8php.html#a6aa67489bf458ca5e3206e46dac68596',1,'vote.php']]],
+  ['vote_5finit',['vote_init',['../vote_8php.html#ae0c6610f40afbbc1f4fe6494c51fbab2',1,'vote.php']]],
+  ['vote_5fpost',['vote_post',['../vote_8php.html#a57a9516ee1b923b224e66dcc47377fb2',1,'vote.php']]]
 ];

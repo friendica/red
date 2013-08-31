@@ -14,5 +14,6 @@ var searchData=
   ['wfinger_5finit',['wfinger_init',['../wfinger_8php.html#ae21e50c8d0a5f3c9be9f43a4e519acd3',1,'wfinger.php']]],
   ['what_5fnext',['what_next',['../setup_8php.html#aea1ebdda58ec938f4e7b31aa5c5f6b58',1,'setup.php']]],
   ['while',['while',['../docblox__errorchecker_8php.html#af4ca738a05beffe9c8c23e1f7aea3c2d',1,'docblox_errorchecker.php']]],
+  ['widget_5fprofile',['widget_profile',['../comanche_8php.html#abd2e508a2a0b911c4a838e3cb7599923',1,'comanche.php']]],
   ['writepages_5fwidget',['writepages_widget',['../page__widgets_8php.html#a1a1e729da27f252cab6678288a17958f',1,'page_widgets.php']]]
 ];
