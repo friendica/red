@@ -70,7 +70,6 @@ function item_post(&$a) {
 	$categories  = ((x($_REQUEST,'category'))    ? escape_tags($_REQUEST['category']) : '');
 	$webpage     = ((x($_REQUEST,'webpage'))     ? intval($_REQUEST['webpage'])       : 0);
 	$pagetitle   = ((x($_REQUEST,'pagetitle'))   ? escape_tags($_REQUEST['pagetitle']): '');
-	$buildblock  = ((x($_REQUEST,'buildblock'))  ? intval($_REQUEST['buildblock'])    : 0);
 
 	if($pagetitle) {
 		require_once('library/urlify/URLify.php');
@@ -491,13 +490,7 @@ function item_post(&$a) {
 		$item_restrict = $item_restrict | ITEM_MODERATED;
 
 	if($webpage)
-		$item_restrict = $item_restrict | ITEM_WEBPAGE;
-
-	if($buildblock)
-		$item_restrict = $item_restrict | ITEM_BUILDBLOCK;
-
-	if($pdl)
-		$item_restrict = $item_restrict | ITEM_PDL;
+		$item_restrict = $item_restrict | $webpage;
 		
 		
 	if(! strlen($verb))
@@ -769,11 +762,11 @@ function item_post(&$a) {
 
 	$page_type = '';
 
-	if($webpage)
+	if($webpage & ITEM_WEBPAGE)
 		$page_type = 'WEBPAGE';
-	elseif($buildblock)
+	elseif($webpage & ITEM_BUILDBLOCK)
 		$page_type = 'BUILDBLOCK';
-	elseif($ptemplate)
+	elseif($webpage & ITEM_PDL)
 		$page_type = 'PDL';
 
 	if($page_type) {	
@@ -783,8 +776,6 @@ function item_post(&$a) {
 		// if no pagetitle was given or it couldn't be transliterated into a url, use the first 
 		// sixteen bytes of the mid - which makes the link portable and not quite as daunting
 		// as the entire mid. If it were the post_id the link would be less portable.
-		// We should have the ability to edit this and arrange pages into menus via the pages module 
-
 
 		q("insert into item_id ( iid, uid, sid, service ) values ( %d, %d, '%s','%s' )",
 			intval($post_id),

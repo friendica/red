@@ -1,6 +1,6 @@
 <?php
 
-function webpages_content(&$a) {
+function layouts_content(&$a) {
 
 	if(argc() > 1)
 		$which = argv(1);
@@ -37,7 +37,7 @@ function webpages_content(&$a) {
 // Nickname is set to the observers xchan, and profile_uid to the owners.  This lets you post pages at other people's channels.
 require_once ('include/conversation.php');
 		$x = array(
-			'webpage' => ITEM_BUILDBLOCK,
+			'webpage' => ITEM_PDL,
 			'is_owner' => true,
 			'nickname' => $a->profile['channel_address'],
 			'lockstate' => (($group || $cid || $channel['channel_allow_cid'] || $channel['channel_allow_gid'] || $channel['channel_deny_cid'] || $channel['channel_deny_gid']) ? 'lock' : 'unlock'),
@@ -51,7 +51,7 @@ require_once ('include/conversation.php');
 	//Get a list of blocks.  We can't display all them because endless scroll makes that unusable, so just list titles and an edit link.
 //TODO - this should be replaced with pagelist_widget
 
-$r = q("select * from item_id where uid = %d and service = 'BUILDBLOCK' order by sid asc",
+$r = q("select * from item_id where uid = %d and service = 'PDL' order by sid asc",
 	intval($owner)
 );
 
@@ -66,7 +66,7 @@ $r = q("select * from item_id where uid = %d and service = 'BUILDBLOCK' order by
 
 
 //Build the base URL for edit links
-		$url = z_root() . "/editblock/" . $which; 
+		$url = z_root() . "/editlayout/" . $which; 
 // This isn't pretty, but it works.  Until I figure out what to do with the UI, it's Good Enough(TM).
        return $o . replace_macros(get_markup_template("webpagelist.tpl"), array(
 		'$baseurl' => $url,
