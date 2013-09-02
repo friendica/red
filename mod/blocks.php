@@ -1,6 +1,6 @@
 <?php
 
-function webpages_content(&$a) {
+function blocks_content(&$a) {
 
 	if(argc() > 1)
 		$which = argv(1);

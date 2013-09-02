@@ -1009,8 +1009,15 @@ function status_editor($a,$x,$popup=false) {
 	$geotag = (($x['allow_location']) ? replace_macros(get_markup_template('jot_geotag.tpl'), array()) : '');
 
 	$plaintext = true;
+
 	if(feature_enabled(local_user(),'richtext'))
 		$plaintext = false;
+
+	if(intval($x['plaintext']))
+		$plaintext = true;
+
+	if(intval($x['mimeselect']))
+		$mimeselect = mimetype_select($x['profile_uid']);
 
 	$tpl = get_markup_template('jot-header.tpl');
 	
@@ -1079,6 +1086,7 @@ function status_editor($a,$x,$popup=false) {
 		'$emtitle' => t('Example: bob@example.com, mary@example.com'),
 		'$lockstate' => $x['lockstate'],
 		'$acl' => $x['acl'],
+		'$mimeselect' => $mimeselect,
 		'$showacl' => ((array_key_exists('showacl',$x)) ? $x['showacl'] : 'yes'),
 		'$bang' => $x['bang'],
 		'$profile_uid' => $x['profile_uid'],

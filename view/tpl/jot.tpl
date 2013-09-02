@@ -9,6 +9,9 @@
 		<input type="hidden" name="post_id" value="{{$post_id}}" />
 		<input type="hidden" name="webpage" value="{{$webpage}}" />
 		<input type="hidden" name="preview" id="jot-preview" value="0" />
+
+		{{$mimeselect}}
+
 		<div id="jot-title-wrap"><input name="title" id="jot-title" type="text" placeholder="{{$placeholdertitle}}" value="{{$title}}" class="jothidden" style="display:none"></div>
 		{{if $catsenabled}}
 		<div id="jot-category-wrap"><input name="category" id="jot-category" type="text" placeholder="{{$placeholdercategory}}" value="{{$category}}" class="jothidden" style="display:none" /></div>

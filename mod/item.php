@@ -44,7 +44,7 @@ function item_post(&$a) {
 
 	call_hooks('post_local_start', $_REQUEST);
 
-//	logger('postvars ' . print_r($_REQUEST,true), LOGGER_DATA);
+	logger('postvars ' . print_r($_REQUEST,true), LOGGER_DATA);
 
 	$api_source = ((x($_REQUEST,'api_source') && $_REQUEST['api_source']) ? true : false);
 
@@ -221,7 +221,7 @@ function item_post(&$a) {
 		$verb              = $orig_post['verb'];
 		$app			   = $orig_post['app'];
 		$title             = escape_tags(trim($_REQUEST['title']));
-		$body              = escape_tags(trim($_REQUEST['body']));
+		$body              = $_REQUEST['body'];
 		$private           = $orig_post['item_private'];
 
 	}
@@ -255,7 +255,7 @@ function item_post(&$a) {
 		$coord             = notags(trim($_REQUEST['coord']));
 		$verb              = notags(trim($_REQUEST['verb']));
 		$title             = escape_tags(trim($_REQUEST['title']));
-		$body              = escape_tags(trim($_REQUEST['body']));
+		$body              = $_REQUEST['body'];
 
 		$private = ( 
 				(  strlen($str_group_allow) 
@@ -310,154 +310,164 @@ function item_post(&$a) {
 
 	$post_type = notags(trim($_REQUEST['type']));
 
-	$content_type = notags(trim($_REQUEST['content_type']));
-	if(! $content_type)
-		$content_type = 'text/bbcode';
+	$mimetype = notags(trim($_REQUEST['mimetype']));
+	if(! $mimetype)
+		$mimetype = 'text/bbcode';
 
+	// Verify ability to use html or php!!!
 
-// BBCODE alert: the following functions assume bbcode input
-// and will require alternatives for alternative content-types (text/html, text/markdown, text/plain, etc.)
-// we may need virtual or template classes to implement the possible alternatives
-
-	// Work around doubled linefeeds in Tinymce 3.5b2
-	// First figure out if it's a status post that would've been
-	// created using tinymce. Otherwise leave it alone. 
-
-	$plaintext = ((feature_enabled($profile_uid,'richtext')) ? false : true);
-	if((! $parent) && (! $api_source) && (! $plaintext)) {
-		$body = fix_mce_lf($body);
+	if($preview) {
+		$body = z_input_filter($profile_uid,$body,$mimetype);
 	}
 
-	// If we're sending a private top-level message with a single @-taggable channel as a recipient, @-tag it. 
+logger('body: ' . $body);
 
-	if((! $parent) && (substr_count($str_contact_allow,'<') == 1) && ($str_group_allow == '') && ($str_contact_deny == '') && ($str_group_deny == '')) {
-		$x = q("select abook_id, abook_their_perms from abook where abook_xchan = '%s' and abook_channel = %d limit 1",
-			dbesc(str_replace(array('<','>'),array('',''),$str_contact_allow)),
-			intval($profile_uid)
-		);
-		if($x && ($x[0]['abook_their_perms'] & PERMS_W_TAGWALL))
-			$body .= "\n\n@group+" . $x[0]['abook_id'] . "\n";
-	}
+	if($mimetype === 'text/bbcode') {
 
-	/**
-	 * fix naked links by passing through a callback to see if this is a red site
-	 * (already known to us) which will get a zrl, otherwise link with url
-	 */
+		// BBCODE alert: the following functions assume bbcode input
+		// and will require alternatives for alternative content-types (text/html, text/markdown, text/plain, etc.)
+		// we may need virtual or template classes to implement the possible alternatives
 
-	$body = preg_replace_callback("/([^\]\='".'"'."]|^)(https?\:\/\/[a-zA-Z0-9\:\/\-\?\&\;\.\=\@\_\~\#\%\$\!\+\,]+)/ism", 'red_zrl_callback', $body);
+		// Work around doubled linefeeds in Tinymce 3.5b2
+		// First figure out if it's a status post that would've been
+		// created using tinymce. Otherwise leave it alone. 
 
-	/**
-	 *
-	 * When a photo was uploaded into the message using the (profile wall) ajax 
-	 * uploader, The permissions are initially set to disallow anybody but the
-	 * owner from seeing it. This is because the permissions may not yet have been
-	 * set for the post. If it's private, the photo permissions should be set
-	 * appropriately. But we didn't know the final permissions on the post until
-	 * now. So now we'll look for links of uploaded messages that are in the
-	 * post and set them to the same permissions as the post itself.
-	 *
-	 */
+		$plaintext = ((feature_enabled($profile_uid,'richtext')) ? false : true);
+		if((! $parent) && (! $api_source) && (! $plaintext)) {
+			$body = fix_mce_lf($body);
+		}
 
-	if(! $preview) {
-		fix_attached_photo_permissions($profile_uid,$owner_xchan['xchan_hash'],$body,
-		$str_contact_allow,$str_group_allow,$str_contact_deny,$str_group_deny);
+		// If we're sending a private top-level message with a single @-taggable channel as a recipient, @-tag it. 
 
-		fix_attached_file_permissions($channel,$observer['xchan_hash'],$body,
-		$str_contact_allow,$str_group_allow,$str_contact_deny,$str_group_deny);
+		if((! $parent) && (substr_count($str_contact_allow,'<') == 1) && ($str_group_allow == '') && ($str_contact_deny == '') && ($str_group_deny == '')) {
+			$x = q("select abook_id, abook_their_perms from abook where abook_xchan = '%s' and abook_channel = %d limit 1",
+				dbesc(str_replace(array('<','>'),array('',''),$str_contact_allow)),
+				intval($profile_uid)
+			);
+			if($x && ($x[0]['abook_their_perms'] & PERMS_W_TAGWALL))
+				$body .= "\n\n@group+" . $x[0]['abook_id'] . "\n";
+		}
 
-	}
+		/**
+		 * fix naked links by passing through a callback to see if this is a red site
+		 * (already known to us) which will get a zrl, otherwise link with url
+		 */
+
+		$body = preg_replace_callback("/([^\]\='".'"'."]|^)(https?\:\/\/[a-zA-Z0-9\:\/\-\?\&\;\.\=\@\_\~\#\%\$\!\+\,]+)/ism", 'red_zrl_callback', $body);
+
+		/**
+		 *
+		 * When a photo was uploaded into the message using the (profile wall) ajax 
+		 * uploader, The permissions are initially set to disallow anybody but the
+		 * owner from seeing it. This is because the permissions may not yet have been
+		 * set for the post. If it's private, the photo permissions should be set
+		 * appropriately. But we didn't know the final permissions on the post until
+		 * now. So now we'll look for links of uploaded messages that are in the
+		 * post and set them to the same permissions as the post itself.
+		 *
+		 */
+
+		if(! $preview) {
+			fix_attached_photo_permissions($profile_uid,$owner_xchan['xchan_hash'],$body,
+			$str_contact_allow,$str_group_allow,$str_contact_deny,$str_group_deny);
+
+			fix_attached_file_permissions($channel,$observer['xchan_hash'],$body,
+			$str_contact_allow,$str_group_allow,$str_contact_deny,$str_group_deny);
+
+		}
 
 
 
-	$body = bb_translate_video($body);
+		$body = bb_translate_video($body);
 
-	/**
-	 * Fold multi-line [code] sequences
-	 */
+		/**
+		 * Fold multi-line [code] sequences
+		 */
 
-	$body = preg_replace('/\[\/code\]\s*\[code\]/ism',"\n",$body); 
+		$body = preg_replace('/\[\/code\]\s*\[code\]/ism',"\n",$body); 
 
-	$body = scale_external_images($body,false);
+		$body = scale_external_images($body,false);
 
-	/**
-	 * Look for any tags and linkify them
-	 */
+		/**
+		 * Look for any tags and linkify them
+		 */
 
-	$str_tags = '';
-	$inform   = '';
-	$post_tags = array();
+		$str_tags = '';
+		$inform   = '';
+		$post_tags = array();
 
-	$tags = get_tags($body);
+		$tags = get_tags($body);
 
-	$tagged = array();
+		$tagged = array();
 
-	$private_forum = false;
+		$private_forum = false;
 
-	if(count($tags)) {
-		foreach($tags as $tag) {
+		if(count($tags)) {
+			foreach($tags as $tag) {
 
-			// If we already tagged 'Robert Johnson', don't try and tag 'Robert'.
-			// Robert Johnson should be first in the $tags array
+				// If we already tagged 'Robert Johnson', don't try and tag 'Robert'.
+				// Robert Johnson should be first in the $tags array
 
-			$fullnametagged = false;
-			for($x = 0; $x < count($tagged); $x ++) {
-				if(stristr($tagged[$x],$tag . ' ')) {
-					$fullnametagged = true;
-					break;
+				$fullnametagged = false;
+				for($x = 0; $x < count($tagged); $x ++) {
+					if(stristr($tagged[$x],$tag . ' ')) {
+						$fullnametagged = true;
+						break;
+					}
+				}
+				if($fullnametagged)
+					continue;
+
+				$success = handle_tag($a, $body, $inform, $str_tags, (local_user()) ? local_user() : $profile_uid , $tag); 
+				logger('handle_tag: ' . print_r($success,tue));
+
+				if($success['replaced']) {
+					$tagged[] = $tag;
+					$post_tags[] = array(
+						'uid'   => $profile_uid, 
+						'type'  => $success['termtype'],
+						'otype' => TERM_OBJ_POST,
+						'term'  => $success['term'],
+						'url'   => $success['url']
+					); 				
+				}
+				if(is_array($success['contact']) && intval($success['contact']['prv'])) {
+					$private_forum = true;
+					$private_id = $success['contact']['id'];
 				}
 			}
-			if($fullnametagged)
-				continue;
-
-			$success = handle_tag($a, $body, $inform, $str_tags, (local_user()) ? local_user() : $profile_uid , $tag); 
-			logger('handle_tag: ' . print_r($success,tue));
-
-			if($success['replaced']) {
-				$tagged[] = $tag;
-				$post_tags[] = array(
-					'uid'   => $profile_uid, 
-					'type'  => $success['termtype'],
-					'otype' => TERM_OBJ_POST,
-					'term'  => $success['term'],
-					'url'   => $success['url']
-				); 				
-			}
-			if(is_array($success['contact']) && intval($success['contact']['prv'])) {
-				$private_forum = true;
-				$private_id = $success['contact']['id'];
-			}
 		}
-	}
 
 
 //	logger('post_tags: ' . print_r($post_tags,true));
 
-	if(($private_forum) && (! $parent) && (! $private)) {
-		// we tagged a private forum in a top level post and the message was public.
-		// Restrict it.
-		$private = 1;
-		$str_contact_allow = '<' . $private_id . '>'; 
-	}
+		if(($private_forum) && (! $parent) && (! $private)) {
+			// we tagged a private forum in a top level post and the message was public.
+			// Restrict it.
+			$private = 1;
+			$str_contact_allow = '<' . $private_id . '>'; 
+		}
 
-	$attachments = '';
-	$match = false;
+		$attachments = '';
+		$match = false;
 
-	if(preg_match_all('/(\[attachment\](.*?)\[\/attachment\])/',$body,$match)) {
-		$attachments = array();
-		foreach($match[2] as $mtch) {
-			$hash = substr($mtch,0,strpos($mtch,','));
-			$rev = intval(substr($mtch,strpos($mtch,',')));
-			$r = attach_by_hash_nodata($hash,$rev);
-			if($r['success']) {
-				$attachments[] = array(
-					'href'     => $a->get_baseurl() . '/attach/' . $r['data']['hash'],
-					'length'   =>  $r['data']['filesize'],
-					'type'     => $r['data']['filetype'],
-					'title'    => urlencode($r['data']['filename']),
-					'revision' => $r['data']['revision']
-				);
+		if(preg_match_all('/(\[attachment\](.*?)\[\/attachment\])/',$body,$match)) {
+			$attachments = array();
+			foreach($match[2] as $mtch) {
+				$hash = substr($mtch,0,strpos($mtch,','));
+				$rev = intval(substr($mtch,strpos($mtch,',')));
+				$r = attach_by_hash_nodata($hash,$rev);
+				if($r['success']) {
+					$attachments[] = array(
+						'href'     => $a->get_baseurl() . '/attach/' . $r['data']['hash'],
+						'length'   =>  $r['data']['filesize'],
+						'type'     => $r['data']['filetype'],
+						'title'    => urlencode($r['data']['filename']),
+						'revision' => $r['data']['revision']
+					);
+				}
+				$body = str_replace($match[1],'',$body);
 			}
-			$body = str_replace($match[1],'',$body);
 		}
 	}
 
@@ -530,7 +540,7 @@ function item_post(&$a) {
 	$datarray['changed']        = datetime_convert();
 	$datarray['mid']            = $mid;
 	$datarray['parent_mid']     = $parent_mid;
-	$datarray['mimetype']       = $content_type;
+	$datarray['mimetype']       = $mimetype;
 	$datarray['title']          = $title;
 	$datarray['body']           = $body;
 	$datarray['app']            = $app;

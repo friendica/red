@@ -81,6 +81,34 @@ function escape_tags($string) {
 }
 
 
+function z_input_filter($channel_id,$s,$type = 'text/bbcode') {
+
+	if($type === 'text/bbcode')
+		return escape_tags($s);
+	if($type === 'text/markdown')
+		return escape_tags($s);
+	if($type == 'text/plain')
+		return escape_tags($s);
+	$r = q("select account_id, account_roles from account left join channel on channel_account_id = account_id where channel_id = %d limit 1",
+		intval($channel_id)
+	);
+	if($r && ($r[0]['account_roles'] & ACCOUNT_ROLE_ALLOWEXEC)) {
+		if(local_user() && (get_account_id() == $r[0]['account_id'])) {
+			return $s;
+		}
+	}
+
+	if($type === 'text/html')
+		return purify_html($s);
+
+	return escape_tags($s);
+	
+}
+
+
+
+
+
 function purify_html($s) {
 	require_once('library/HTMLPurifier.auto.php');
 	require_once('include/html2bbcode.php');
@@ -1127,6 +1155,7 @@ function prepare_body(&$item,$attach = false) {
 function prepare_text($text,$content_type = 'text/bbcode') {
 
 
+
 	switch($content_type) {
 
 		case 'text/plain':
@@ -1291,6 +1320,37 @@ function unamp($s) {
 }
 
 
+function mimetype_select($channel_id, $current = 'text/bbcode') {
+
+	$x = array(
+		'text/bbcode',
+		'text/html',
+		'text/markdown',
+		'text/plain'
+	);
+
+	$r = q("select account_flags from account left join channel on account_id = channel_account_id where
+		channel_id = %d limit 1",
+		intval($channel_id)
+	);
+
+	if($r) {
+		if($r[0]['account_roles'] & ACCOUNT_ROLE_ALLOWCODE) {
+			$x[] = 'application/x-php';
+		}
+	}
+
+	$o = t('Page content type: ');
+	$o .= '<select name="mimetype" id="mimetype-select">';
+	foreach($x as $y) {
+		$select = (($y == $current)	? ' selected="selected" ' : '');
+		$o .= '<option name="' . $y . '"' . $select . '>' . $y . '</option>';
+	}
+	$o .= '</select>';
+
+	return $o;
+
+}
 
 
 

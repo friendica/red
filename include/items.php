@@ -1397,14 +1397,10 @@ function item_store($arr,$allow_exec = false) {
 	$arr['item_private']  = ((x($arr,'item_private'))  ? intval($arr['item_private'])        : 0 );
 	$arr['item_flags']    = ((x($arr,'item_flags'))    ? intval($arr['item_flags'])          : 0 );
 	
-	// this is a bit messy - we really need an input filter chain that temporarily undoes obscuring
 
-	if($arr['mimetype'] != 'text/html' && $arr['mimetype'] != 'application/x-php') {
-		if((strpos($arr['body'],'<') !== false) || (strpos($arr['body'],'>') !== false)) 
-			$arr['body'] = escape_tags($arr['body']);
-		if((strpos($arr['title'],'<') !== false) || (strpos($arr['title'],'>') !== false)) 
-			$arr['title'] = escape_tags($arr['title']);
-	}
+	$arr['body'] = z_input_filter($arr['uid'],$arr['body'],$arr['mimetype']);
+	$arr['title'] = escape_tags($arr['title']);
+
 
 	// only detect language if we have text content, and if the post is private but not yet
 	// obscured, make it so.

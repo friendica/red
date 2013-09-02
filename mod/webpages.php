@@ -52,9 +52,12 @@ require_once ('include/conversation.php');
 			'bang' => (($group || $cid) ? '!' : ''),
 			'visitor' => 'block',
 			'profile_uid' => intval($owner),
+			'plaintext' => 1,
+			'mimeselect' => 1,
 		);
 
 		$o .= status_editor($a,$x);
+
 
 //Get a list of webpages.  We can't display all them because endless scroll makes that unusable, so just list titles and an edit link.
 //TODO - this should be replaced with pagelist_widget
