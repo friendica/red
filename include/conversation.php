@@ -1016,8 +1016,14 @@ function status_editor($a,$x,$popup=false) {
 	if(intval($x['plaintext']))
 		$plaintext = true;
 
-	if(intval($x['mimeselect']))
-		$mimeselect = mimetype_select($x['profile_uid']);
+	$mimeselct = '';
+	if(array_key_exists('mimetype',$x) && $x['mimetype']) {
+ 		if($x['mimetype'] === 'choose')
+			$mimeselect = mimetype_select($x['profile_uid']);
+		else
+			$mimeselect = '<input name="mimetype" value="' . $x['mimetype'] . '" />'; 
+	}
+
 
 	$tpl = get_markup_template('jot-header.tpl');
 	

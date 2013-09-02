@@ -1329,14 +1329,15 @@ function mimetype_select($channel_id, $current = 'text/bbcode') {
 		'text/plain'
 	);
 
-	$r = q("select account_flags from account left join channel on account_id = channel_account_id where
+	$r = q("select account_id, account_roles from account left join channel on account_id = channel_account_id where
 		channel_id = %d limit 1",
 		intval($channel_id)
 	);
 
 	if($r) {
 		if($r[0]['account_roles'] & ACCOUNT_ROLE_ALLOWCODE) {
-			$x[] = 'application/x-php';
+			if(local_user() && get_account_id() == $r[0]['account_id'])
+				$x[] = 'application/x-php';
 		}
 	}
 
