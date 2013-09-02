@@ -1199,6 +1199,7 @@ function prepare_text($text,$content_type = 'text/bbcode') {
 			$s = zidify_links($s);
 			break;
 	}
+//logger('prepare: ' . $s);
 
 	return $s;
 }
