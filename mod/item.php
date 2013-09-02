@@ -62,14 +62,15 @@ function item_post(&$a) {
 
 	$message_id     = ((x($_REQUEST,'message_id') && $api_source)  ? strip_tags($_REQUEST['message_id'])       : '');
 
-	$profile_uid = ((x($_REQUEST,'profile_uid')) ? intval($_REQUEST['profile_uid'])   : 0);
-	$post_id     = ((x($_REQUEST,'post_id'))     ? intval($_REQUEST['post_id'])       : 0);
-	$app         = ((x($_REQUEST,'source'))      ? strip_tags($_REQUEST['source'])    : '');
-	$return_path = ((x($_REQUEST,'return'))      ? $_REQUEST['return']                : '');
-	$preview     = ((x($_REQUEST,'preview'))     ? intval($_REQUEST['preview'])       : 0);
-	$categories  = ((x($_REQUEST,'category'))    ? escape_tags($_REQUEST['category']) : '');
-	$webpage     = ((x($_REQUEST,'webpage'))     ? intval($_REQUEST['webpage'])       : 0);
-	$pagetitle   = ((x($_REQUEST,'pagetitle'))   ? escape_tags($_REQUEST['pagetitle']): '');
+	$profile_uid = ((x($_REQUEST,'profile_uid')) ? intval($_REQUEST['profile_uid'])    : 0);
+	$post_id     = ((x($_REQUEST,'post_id'))     ? intval($_REQUEST['post_id'])        : 0);
+	$app         = ((x($_REQUEST,'source'))      ? strip_tags($_REQUEST['source'])     : '');
+	$return_path = ((x($_REQUEST,'return'))      ? $_REQUEST['return']                 : '');
+	$preview     = ((x($_REQUEST,'preview'))     ? intval($_REQUEST['preview'])        : 0);
+	$categories  = ((x($_REQUEST,'category'))    ? escape_tags($_REQUEST['category'])  : '');
+	$webpage     = ((x($_REQUEST,'webpage'))     ? intval($_REQUEST['webpage'])        : 0);
+	$pagetitle   = ((x($_REQUEST,'pagetitle'))   ? escape_tags($_REQUEST['pagetitle']) : '');
+	$layout_mid  = ((x($_REQUEST,'layout_mid'))  ? escape_tags($_REQUEST['layout_mid']): '');
 
 	if($pagetitle) {
 		require_once('library/urlify/URLify.php');
@@ -516,38 +517,38 @@ function item_post(&$a) {
 		$item_flags = $item_flags | ITEM_THREAD_TOP;
 	}
 	
-	$datarray['aid']           = $channel['channel_account_id'];
-	$datarray['uid']           = $profile_uid;
+	$datarray['aid']            = $channel['channel_account_id'];
+	$datarray['uid']            = $profile_uid;
 
-	$datarray['owner_xchan']   = (($owner_hash) ? $owner_hash : $owner_xchan['xchan_hash']);
-	$datarray['author_xchan']  = $observer['xchan_hash'];
-	$datarray['created']       = datetime_convert();
-	$datarray['edited']        = datetime_convert();
-	$datarray['expires']       = $expires;
-	$datarray['commented']     = datetime_convert();
-	$datarray['received']      = datetime_convert();
-	$datarray['changed']       = datetime_convert();
-	$datarray['mid']           = $mid;
-	$datarray['parent_mid']    = $parent_mid;
-	$datarray['mimetype']      = $content_type;
-	$datarray['title']         = $title;
-	$datarray['body']          = $body;
-	$datarray['app']           = $app;
-	$datarray['location']      = $location;
-	$datarray['coord']         = $coord;
-	$datarray['inform']        = $inform;
-	$datarray['verb']          = $verb;
-	$datarray['allow_cid']     = $str_contact_allow;
-	$datarray['allow_gid']     = $str_group_allow;
-	$datarray['deny_cid']      = $str_contact_deny;
-	$datarray['deny_gid']      = $str_group_deny;
-	$datarray['item_private']  = $private;
-	$datarray['attach']        = $attachments;
-	$datarray['thr_parent']    = $thr_parent;
-	$datarray['postopts']      = '';
-	$datarray['item_restrict'] = $item_restrict;
-	$datarray['item_flags']    = $item_flags;
-
+	$datarray['owner_xchan']    = (($owner_hash) ? $owner_hash : $owner_xchan['xchan_hash']);
+	$datarray['author_xchan']   = $observer['xchan_hash'];
+	$datarray['created']        = datetime_convert();
+	$datarray['edited']         = datetime_convert();
+	$datarray['expires']        = $expires;
+	$datarray['commented']      = datetime_convert();
+	$datarray['received']       = datetime_convert();
+	$datarray['changed']        = datetime_convert();
+	$datarray['mid']            = $mid;
+	$datarray['parent_mid']     = $parent_mid;
+	$datarray['mimetype']       = $content_type;
+	$datarray['title']          = $title;
+	$datarray['body']           = $body;
+	$datarray['app']            = $app;
+	$datarray['location']       = $location;
+	$datarray['coord']          = $coord;
+	$datarray['inform']         = $inform;
+	$datarray['verb']           = $verb;
+	$datarray['allow_cid']      = $str_contact_allow;
+	$datarray['allow_gid']      = $str_group_allow;
+	$datarray['deny_cid']       = $str_contact_deny;
+	$datarray['deny_gid']       = $str_group_deny;
+	$datarray['item_private']   = $private;
+	$datarray['attach']         = $attachments;
+	$datarray['thr_parent']     = $thr_parent;
+	$datarray['postopts']       = '';
+	$datarray['item_restrict']  = $item_restrict;
+	$datarray['item_flags']     = $item_flags;
+	$datarray['layout_mid']     = $layout_mid;
 	$datarray['comment_policy'] = map_scope($channel['channel_w_comment']); 
 
 	// preview mode - prepare the body for display and send it via json

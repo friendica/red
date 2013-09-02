@@ -1361,6 +1361,17 @@ function item_store($arr,$allow_exec = false) {
 		return 0;
 	}
 
+	// If a page layout is provided, ensure it exists and belongs to us. 
+
+	if(array_key_exists('layout_mid',$arr) && $arr['layout_mid']) {
+		$l = q("select item_restrict from item where mid = '%s' and uid = %d limit 1",
+			dbesc($arr['layout_mid']),
+			intval($arr['uid'])
+		);
+		if((! $l) || (! ($l[0]['item_restrict'] & ITEM_PDL)))
+			unset($arr['layout_mid']);
+	}
+
 	// Don't let anybody set these, either intentionally or accidentally
 
 	if(array_key_exists('id',$arr))

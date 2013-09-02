@@ -32,6 +32,12 @@ function ACPopup(elm,backend_url){
 		}
 	}
 
+	if(! w)
+		w = 530;
+
+	if(! h)
+		h = 130;
+
 	style.top=style.top+h;
 	style.width = w;
 	style.position = 'absolute';
