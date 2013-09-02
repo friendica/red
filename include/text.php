@@ -92,7 +92,7 @@ function z_input_filter($channel_id,$s,$type = 'text/bbcode') {
 	$r = q("select account_id, account_roles from account left join channel on channel_account_id = account_id where channel_id = %d limit 1",
 		intval($channel_id)
 	);
-	if($r && ($r[0]['account_roles'] & ACCOUNT_ROLE_ALLOWEXEC)) {
+	if($r && ($r[0]['account_roles'] & ACCOUNT_ROLE_ALLOWCODE)) {
 		if(local_user() && (get_account_id() == $r[0]['account_id'])) {
 			return $s;
 		}

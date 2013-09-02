@@ -44,7 +44,7 @@ function item_post(&$a) {
 
 	call_hooks('post_local_start', $_REQUEST);
 
-	logger('postvars ' . print_r($_REQUEST,true), LOGGER_DATA);
+//	logger('postvars ' . print_r($_REQUEST,true), LOGGER_DATA);
 
 	$api_source = ((x($_REQUEST,'api_source') && $_REQUEST['api_source']) ? true : false);
 
@@ -320,7 +320,6 @@ function item_post(&$a) {
 		$body = z_input_filter($profile_uid,$body,$mimetype);
 	}
 
-logger('body: ' . $body);
 
 	if($mimetype === 'text/bbcode') {
 
@@ -368,11 +367,9 @@ logger('body: ' . $body);
 		 */
 
 		if(! $preview) {
-			fix_attached_photo_permissions($profile_uid,$owner_xchan['xchan_hash'],$body,
-			$str_contact_allow,$str_group_allow,$str_contact_deny,$str_group_deny);
+			fix_attached_photo_permissions($profile_uid,$owner_xchan['xchan_hash'],$body,$str_contact_allow,$str_group_allow,$str_contact_deny,$str_group_deny);
 
-			fix_attached_file_permissions($channel,$observer['xchan_hash'],$body,
-			$str_contact_allow,$str_group_allow,$str_contact_deny,$str_group_deny);
+			fix_attached_file_permissions($channel,$observer['xchan_hash'],$body,$str_contact_allow,$str_group_allow,$str_contact_deny,$str_group_deny);
 
 		}
 
@@ -486,7 +483,6 @@ logger('body: ' . $body);
 			); 				
 		}
 	}
-
 
 	$item_flags = ITEM_UNSEEN;
 	$item_restrict = ITEM_VISIBLE;
