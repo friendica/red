@@ -17,16 +17,10 @@ function pdl_selector($uid,$current="") {
 
 	$o = '';
 
-	// You can use anybody's Comanche layouts on this site that haven't been protected in some way
-
 	$sql_extra = item_permissions_sql($uid);
 
-	// By default order by title (therefore at this time pdl's need a unique title across this system), 
-	// though future work may allow categorisation
-	// based on taxonomy terms
-
-	$r = q("select title, mid from item where (item_restrict & %d) $sql_extra order by title",
-		intval(ITEM_PDL)
+	$r = q("select item_id.*, mid from item_id left join item on iid = item.id where item_id.uid = %d and item_id.uid = item.uid and service = 'PDL' order by sid asc",
+		intval($owner)
 	);
 
 	$arr = array('channel_id' => $uid, 'current' => $current, 'entries' => $r);
@@ -39,7 +33,7 @@ function pdl_selector($uid,$current="") {
 	$entries[] = array('title' => t('Default'), 'mid' => '');
 	foreach($entries as $selection) {
 		$selected = (($selection == $current) ? ' selected="selected" ' : '');
-		$o .= "<option value=\"{$selection['mid']}\" $selected >{$selection['title']}</option>";
+		$o .= "<option value=\"{$selection['mid']}\" $selected >{$selection['sid']}</option>";
 	}
 
 	$o .= '</select>';

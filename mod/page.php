@@ -61,6 +61,19 @@ function page_content(&$a) {
 		return;
 	}
 
+	if($r[0]['layout_mid']) {
+		$l = q("select body from item where mid = '%s' and uid = %d limit 1",
+			dbesc($r[0]['layout_mid']),
+			intval($u[0]['channel_id'])
+		);
+
+		if($l) {
+			require_once('include/comanche.php');
+			comanche_parser(get_app(),$l[0]['body']);
+		}
+	}
+
+
 	// Use of widgets should be determined by Comanche, but we don't have it yet, so...
 
 	if ($perms['write_pages']) {
