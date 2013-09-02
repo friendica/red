@@ -495,6 +495,9 @@ function item_post(&$a) {
 
 	if($buildblock)
 		$item_restrict = $item_restrict | ITEM_BUILDBLOCK;
+
+	if($pdl)
+		$item_restrict = $item_restrict | ITEM_PDL;
 		
 		
 	if(! strlen($verb))
@@ -764,7 +767,16 @@ function item_post(&$a) {
 		intval($parent)
 	);
 
-	if($webpage) {
+	$page_type = '';
+
+	if($webpage)
+		$page_type = 'WEBPAGE';
+	elseif($buildblock)
+		$page_type = 'BUILDBLOCK';
+	elseif($ptemplate)
+		$page_type = 'PDL';
+
+	if($page_type) {	
 
 		// store page info as an alternate message_id so we can access it via 
 		//    https://sitename/page/$channelname/$pagetitle
@@ -773,11 +785,12 @@ function item_post(&$a) {
 		// as the entire mid. If it were the post_id the link would be less portable.
 		// We should have the ability to edit this and arrange pages into menus via the pages module 
 
+
 		q("insert into item_id ( iid, uid, sid, service ) values ( %d, %d, '%s','%s' )",
 			intval($post_id),
 			intval($channel['channel_id']),
 			dbesc(($pagetitle) ? $pagetitle : substr($mid,0,16)),
-			dbesc('WEBPAGE')
+			dbesc($page_type)
 		);
 	}
 
