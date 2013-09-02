@@ -257,6 +257,10 @@ function notifier_run($argv, $argc){
 			return;
 		}
 
+		if($target_item['item_restrict'] & ITEM_PDL) {
+			logger('notifier: target item ITEM_PDL', LOGGER_DEBUG);
+			return;
+		}
 
 		$s = q("select * from channel where channel_id = %d limit 1",
 			intval($target_item['uid'])
