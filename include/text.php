@@ -1321,6 +1321,29 @@ function unamp($s) {
 	return str_replace('&amp;', '&', $s);
 }
 
+function layout_select($channel_id, $current = '') {
+	$r = q("select mid,sid from item left join item_id on iid = item.id where service = 'PDL' and item.uid = item_id.uid and item_id.uid = %d and (item_restrict & %d)",
+		intval($channel_id),
+		intval(ITEM_PDL)
+	);
+	if($r) {
+		$o = t('Select a page layout: ');
+		$o .= '<select name="layout_mid" id="select-layout_mid" >';
+		$empty_selected = (($current === '') ? ' selected="selected" ' : '');
+		$o .= '<option value="" ' . $empty_selected . '>' . t('default') . '</option>';
+		foreach($r as $rr) {
+			$selected = (($rr['mid'] == $current) ? ' selected="selected" ' : '');
+			$o .= '<option value="' . $rr['mid'] . '"' . $selected . '>' . $rr['sid'] . '</option>';
+		}
+		$o .= '</select>';
+	}
+
+	return $o;
+}
+
+
+
+
 
 function mimetype_select($channel_id, $current = 'text/bbcode') {
 

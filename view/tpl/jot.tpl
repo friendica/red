@@ -11,6 +11,7 @@
 		<input type="hidden" name="preview" id="jot-preview" value="0" />
 
 		{{$mimeselect}}
+		{{$layoutselect}}
 
 		<div id="jot-title-wrap"><input name="title" id="jot-title" type="text" placeholder="{{$placeholdertitle}}" value="{{$title}}" class="jothidden" style="display:none"></div>
 		{{if $catsenabled}}

@@ -45,6 +45,11 @@ function webpages_content(&$a) {
 		if(! $mimetype)
 			$mimetype = 'choose';
 
+		$layout = get_config('system','page_layout');
+		if(! $layout)
+			$layout = 'choose';
+
+
 // Create a status editor (for now - we'll need a WYSIWYG eventually) to create pages
 // Nickname is set to the observers xchan, and profile_uid to the owners.  This lets you post pages at other people's channels.
 require_once ('include/conversation.php');
@@ -57,6 +62,7 @@ require_once ('include/conversation.php');
 			'visitor' => 'block',
 			'profile_uid' => intval($owner),
 			'mimetype' => $mimetype,			
+			'layout' => $layout,
 		);
 
 		$o .= status_editor($a,$x);

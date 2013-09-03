@@ -1023,7 +1023,18 @@ function status_editor($a,$x,$popup=false) {
 		else
 			$mimeselect = '<input type="hidden" name="mimetype" value="' . $x['mimetype'] . '" />'; 			
 	}
+
+	$layoutselect = '';
+	if(array_key_exists('layout',$x) && $x['layout']) {
+ 		if($x['layout'] === 'choose') {
+			$layoutselect = layout_select($x['profile_uid']);
+		}
+		else
+			$layoutselect = '<input type="hidden" name="layout_mid" value="' . $x['layout'] . '" />'; 			
+	}
 	
+
+
 	$webpage = ((x($x,'webpage')) ? $x['webpage'] : '');
 
 	$tpl = get_markup_template('jot-header.tpl');
@@ -1094,6 +1105,7 @@ function status_editor($a,$x,$popup=false) {
 		'$lockstate' => $x['lockstate'],
 		'$acl' => $x['acl'],
 		'$mimeselect' => $mimeselect,
+		'$layoutselect' => $layoutselect,
 		'$showacl' => ((array_key_exists('showacl',$x)) ? $x['showacl'] : 'yes'),
 		'$bang' => $x['bang'],
 		'$profile_uid' => $x['profile_uid'],
