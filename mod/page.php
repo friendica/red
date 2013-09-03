@@ -60,7 +60,7 @@ function page_content(&$a) {
 		notice( t('Item not found.') . EOL);
 		return;
 	}
-
+dbg(1);
 	if($r[0]['layout_mid']) {
 		$l = q("select body from item where mid = '%s' and uid = %d limit 1",
 			dbesc($r[0]['layout_mid']),
@@ -72,6 +72,9 @@ function page_content(&$a) {
 			comanche_parser(get_app(),$l[0]['body']);
 		}
 	}
+dbg(0);
+
+logger('layout: ' . print_r($a->layout,true));
 
 
 	// Use of widgets should be determined by Comanche, but we don't have it yet, so...

@@ -2452,10 +2452,9 @@ function construct_page(&$a) {
 		foreach($a->layout as $k => $v) {
 			if((strpos($k,'region_') === 0) && strlen($v)) {
 				if(strpos($v,'$region_') !== false) {
-					$v = preg_replace_callback('/\$region_([a-zA-Z0-9]*?)/ism','comanche_replace_region',$v);
-
+					$v = preg_replace_callback('/\$region_([a-zA-Z0-9]+)/ism','comanche_replace_region',$v);
 				}
-				$a->data[substr($k,0,7)] = $v;
+				$a->page[substr($k,7)] = $v;
 			}
 		}
 	}	

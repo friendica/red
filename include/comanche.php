@@ -45,15 +45,15 @@ function pdl_selector($uid,$current="") {
 function comanche_parser(&$a,$s) {
 
 
-	$cnt = preg_match("/\[layout\](.*?)\[\/layout\]/ism", $matches, $s);
+	$cnt = preg_match("/\[layout\](.*?)\[\/layout\]/ism", $s, $matches);
 	if($cnt)
 		$a->page['template'] = trim($matches[1]);
 
-	$cnt = preg_match("/\[theme\](.*?)\[\/theme\]/ism", $matches, $s);
+	$cnt = preg_match("/\[theme\](.*?)\[\/theme\]/ism", $s, $matches);
 	if($cnt)
 		$a->layout['theme'] = trim($matches[1]);
 
-	$cnt = preg_match_all("/\[region=(.*?)\](.*?)\[\/region\]/ism", $matches, $s, PREG_SET_ORDER);
+	$cnt = preg_match_all("/\[region=(.*?)\](.*?)\[\/region\]/ism", $s, $matches, PREG_SET_ORDER);
 	if($cnt) {
 		foreach($matches as $mtch) {
 			$a->layout['region_' . $mtch[1]] = comanche_region($a,$mtch[2]);
@@ -71,8 +71,9 @@ function comanche_menu($name) {
 
 function comanche_replace_region($match) {
 	$a = get_app();
-	if(array_key_exists($match[1],$a->page))
+	if(array_key_exists($match[1],$a->page)) {
 		return $a->page[$match[1]];
+	}
 }
 
 // Widgets will have to get any operational arguments from the session,
@@ -90,7 +91,7 @@ function comanche_widget($name,$args = null) {
 function comanche_region(&$a,$s) {
 
 
-	$cnt = preg_match_all("/\[menu\](.*?)\[\/menu\]/ism", $matches, $s, PREG_SET_ORDER);
+	$cnt = preg_match_all("/\[menu\](.*?)\[\/menu\]/ism", $s, $matches, PREG_SET_ORDER);
 	if($cnt) {
 		foreach($matches as $mtch) {
 			$s = str_replace($mtch[0],comanche_menu(trim($mtch[1])),$s);
@@ -99,7 +100,7 @@ function comanche_region(&$a,$s) {
 
 	// need to modify this to accept parameters
 
-	$cnt = preg_match_all("/\[widget\](.*?)\[\/widget\]/ism", $matches, $s, PREG_SET_ORDER);
+	$cnt = preg_match_all("/\[widget\](.*?)\[\/widget\]/ism", $s, $matches, PREG_SET_ORDER);
 	if($cnt) {
 		foreach($matches as $mtch) {
 			$s = str_replace($mtch[0],comanche_widget(trim($mtch[1])),$s);
