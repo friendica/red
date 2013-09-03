@@ -27,18 +27,19 @@ function search_ac_init(&$a){
 	// Priority to people searches
 
 	if ($search) {
-		$people_sql_extra = protect_sprintf(" AND `name` LIKE '%". dbesc($search) . "%' ");
+		$people_sql_extra = protect_sprintf(" AND `xchan_name` LIKE '%". dbesc($search) . "%' ");
 		$tag_sql_extra = protect_sprintf(" AND term LIKE '%". dbesc($search) . "%' ");
 	}
 
-	$r = q("SELECT `id`, `name`, `micro`, `url` FROM `contact` 
-		WHERE `uid` = %d AND `pending` = 0
-		$people_sql_extra
-		ORDER BY `name` ASC ",
-		intval(local_user())
+
+    $r = q("SELECT abook_id as id, xchan_hash as hash, xchan_name as name, xchan_photo_s as micro, xchan_url as url, xchan_addr as nick, abook_their_perms
+		FROM abook left join xchan on abook_xchan = xchan_hash
+		WHERE abook_channel = %d AND not ( abook_flags & %d ) $people_sql_extra order by xchan_name asc" ,
+		intval(local_user()),
+		intval(ABOOK_FLAG_SELF|ABOOK_FLAG_BLOCKED|ABOOK_FLAG_PENDING|ABOOK_FLAG_ARCHIVED)
 	);
 
-	if(count($r)) {
+	if($r) {
 		foreach($r as $g) {
 			$x['photos'][] = $g['micro'];
 			$x['links'][] = $g['url'];

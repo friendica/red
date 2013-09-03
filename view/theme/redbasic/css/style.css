@@ -2098,7 +2098,7 @@ aside input[type='text'] {
 	display: block;
 	color: #FFFFFF;
 	margin-top: 15px;
-	background-color: #FF6666;
+	background-color: #F80000;
 	-webkit-border-radius: $radiuspx ;
 	-moz-border-radius: $radiuspx;
 	border-radius: $radiuspx;
