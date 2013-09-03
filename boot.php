@@ -2439,9 +2439,9 @@ function construct_page(&$a) {
 		}
 	}
 
-	// Let's say we have a comanche declaration '[region_nav][/region_nav][region_content]$region_nav $region_section[/region_content]'.
-	// The text 'region_' identifies a section of the layout by that name (without the 'region_' text). 
-	// So what we want to do here is leave $a->page['nav'] empty and put the default content from $a->page['nav'] and $a->page['section'] 
+	// Let's say we have a comanche declaration '[region=nav][/region][region=content]$nav $content[/region]'.
+	// The text 'region=' identifies a section of the layout by that name. So what we want to do here is leave 
+	// $a->page['nav'] empty and put the default content from $a->page['nav'] and $a->page['section'] 
 	// into a new region called $a->data['content']. It is presumed that the chosen layout file for this comanche page
 	// has a '<content>' element instead of a '<section>'. 
 	
@@ -2454,6 +2454,16 @@ function construct_page(&$a) {
 				if(strpos($v,'$region_') !== false) {
 					$v = preg_replace_callback('/\$region_([a-zA-Z0-9]+)/ism','comanche_replace_region',$v);
 				}
+
+				// And a couple of convenience macros
+
+				if(strpos($v,'$nav') !== false) {
+					$v = str_replace('$nav',$a->page['nav'],$v);
+				}
+				if(strpos($v,'$content') !== false) {
+					$v = str_replace('$content',$a->page['section'],$v);
+				}
+
 				$a->page[substr($k,7)] = $v;
 			}
 		}

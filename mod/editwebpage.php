@@ -1,35 +1,29 @@
  
 <?php
 
-// What is this here for?  I think it's cruft, but comment out for now in case it's here for a reason
-// require_once('acl_selectors.php');
+// Required for setting permissions. (FIXME)
+
+require_once('acl_selectors.php');
 
 function editwebpage_content(&$a) {
 
-// We first need to figure out who owns the webpage, grab it from an argument
-        $which = argv(1);
+	// We first need to figure out who owns the webpage, grab it from an argument
 
-// $a->get_channel() and stuff don't work here, so we've got to find the owner for ourselves.
+	$which = argv(1);
+
+	// $a->get_channel() and stuff don't work here, so we've got to find the owner for ourselves.
+	
 	$r = q("select channel_id from channel where channel_address = '%s'",
 		dbesc($which)
-		);
-               if($r) {
-                $owner = intval($r[0]['channel_id']);
-       //logger('owner: ' . print_r($owner,true));
-        }
-
-
-		
-		
-        if((local_user()) && (argc() > 2) && (argv(2) === 'view')) {
-                $which = $channel['channel_address'];
-        }
-
-
+	);
+	if($r) {
+		$owner = intval($r[0]['channel_id']);
+		//logger('owner: ' . print_r($owner,true));
+	}
+			
 	$o = '';
 
-
-// Figure out which post we're editing
+	// Figure out which post we're editing
 	$post_id = ((argc() > 2) ? intval(argv(2)) : 0);
 
 
@@ -38,43 +32,54 @@ function editwebpage_content(&$a) {
 		return;
 	}
 
-// Now we've got a post and an owner, let's find out if we're allowed to edit it
+	// Now we've got a post and an owner, let's find out if we're allowed to edit it
 
-        $observer = $a->get_observer();
-        $ob_hash = (($observer) ? $observer['xchan_hash'] : '');
+	$observer = $a->get_observer();
+	$ob_hash = (($observer) ? $observer['xchan_hash'] : '');
 
-        $perms = get_all_perms($owner,$ob_hash);
+	$perms = get_all_perms($owner,$ob_hash);
 
-        if(! $perms['write_pages']) {
-                notice( t('Permission denied.') . EOL);
-                return;
-        }
+	if(! $perms['write_pages']) {
+		notice( t('Permission denied.') . EOL);
+		return;
+	}
 
 
 
-// We've already figured out which item we want and whose copy we need, so we don't need anything fancy here
-        $itm = q("SELECT * FROM `item` WHERE `id` = %d and uid = %s LIMIT 1",
-                intval($post_id),
-                intval($owner)
-        );
-
+	// We've already figured out which item we want and whose copy we need, so we don't need anything fancy here
+	$itm = q("SELECT * FROM `item` WHERE `id` = %d and uid = %s LIMIT 1",
+		intval($post_id),
+		intval($owner)
+   );
 
 
 	$plaintext = true;
-// You may or may not be a local user.  This won't work,
-	if(feature_enabled(local_user(),'richtext'))
+
+	if(feature_enabled($itm[0]['uid'],'richtext'))
 		$plaintext = false;
-
-
 
 	$mimetype = $itm[0]['mimetype'];
 
+	if($mimetype === 'application/x-php') {
+		if((! local_user()) || (local_user() != $itm[0]['uid'])) {
+			notice( t('Permission denied.') . EOL);
+			return;
+		}
+	}
+	
 	$mimeselect = '';
 
 	if($mimetype != 'text/bbcode')
 		$plaintext = true;
     $mimeselect = '<input type="hidden" name="mimetype" value="' . $mimetype . '" />';
 	
+
+	$layout = get_config('system','page_layout');
+	if($layout)
+		$layoutselect = '<input type="hidden" name="layout_mid" value="' . $layout . '" />'; 			
+	else
+		$layoutselect = layout_select($x['profile_uid']);
+
 
 	$o .= replace_macros(get_markup_template('edpost_head.tpl'), array(
 		'$title' => t('Edit post')
@@ -130,6 +135,7 @@ function editwebpage_content(&$a) {
 		'$public' => t('Public post'),
 		'$jotnets' => $jotnets,
 		'$mimeselect' => $mimeselect,
+		'$layoutselect' => $layoutselect,
 		'$title' => htmlspecialchars($itm[0]['title']),
 		'$placeholdertitle' => t('Set title'),
 		'$category' => '',
