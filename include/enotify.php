@@ -379,11 +379,9 @@ function notification($params) {
 		logger('notification: sending notification email');
 
 
-		$textversion = strip_tags(html_entity_decode(bbcode(stripslashes(str_replace(array("\\r\\n", "\\r", "\\n"), "\n",
-			$body))),ENT_QUOTES,'UTF-8'));
+		$textversion = strip_tags(html_entity_decode(bbcode(stripslashes(str_replace(array("\\r", "\\n"), array( "", "\n"), $body))),ENT_QUOTES,'UTF-8'));
 
-		$htmlversion = html_entity_decode(bbcode(stripslashes(str_replace(array("\\r\\n", "\\r","\\n\\n" ,"\\n"), 
-			"<br />\n",$body))), ENT_QUOTES,'UTF-8');
+		$htmlversion = html_entity_decode(bbcode(stripslashes(str_replace(array("\\r","\\n"), array("","<br />\n"),$body))), ENT_QUOTES,'UTF-8');
 
 
 		// use $_SESSION['zid_override'] to force zid() to use 
