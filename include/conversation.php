@@ -1013,7 +1013,7 @@ function status_editor($a,$x,$popup=false) {
 	if(feature_enabled(local_user(),'richtext'))
 		$plaintext = false;
 
-	$mimeselct = '';
+	$mimeselect = '';
 	if(array_key_exists('mimetype',$x) && $x['mimetype']) {
 		if($x['mimetype'] != 'text/bbcode')
 			$plaintext = true;
@@ -1021,9 +1021,10 @@ function status_editor($a,$x,$popup=false) {
 			$mimeselect = mimetype_select($x['profile_uid']);
 		}
 		else
-			$mimeselect = '<input name="mimetype" value="' . $x['mimetype'] . '" />'; 			
+			$mimeselect = '<input type="hidden" name="mimetype" value="' . $x['mimetype'] . '" />'; 			
 	}
 	
+	$webpage = ((x($x,'webpage')) ? $x['webpage'] : '');
 
 	$tpl = get_markup_template('jot-header.tpl');
 	
@@ -1055,7 +1056,7 @@ function status_editor($a,$x,$popup=false) {
 		'$return_path' => $a->query_string,
 		'$action' =>  $a->get_baseurl(true) . '/item',
 		'$share' => (x($x,'button') ? $x['button'] : t('Share')),
-		'$webpage' => (x($x,'webpage') ? $x['webpage'] : ''),
+		'$webpage' => $webpage,
 		'$placeholdpagetitle' => t('Page link title'),
 		'$pagetitle' => (x($x,'pagetitle') ? $x['pagetitle'] : ''),		
 		'$upload' => t('Upload photo'),
@@ -1074,7 +1075,7 @@ function status_editor($a,$x,$popup=false) {
 		'$shortnoloc' => t('clear location'),
 		'$title' => "",
 		'$placeholdertitle' => t('Set title'),
-		'$catsenabled' => ((feature_enabled($x['profile_uid'],'categories')) ? 'categories' : ''),
+		'$catsenabled' => ((feature_enabled($x['profile_uid'],'categories') && (! $webpage)) ? 'categories' : ''),
 		'$category' => "",
 		'$placeholdercategory' => t('Categories (comma-separated list)'),
 		'$wait' => t('Please wait'),

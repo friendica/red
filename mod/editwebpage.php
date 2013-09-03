@@ -65,6 +65,17 @@ function editwebpage_content(&$a) {
 	if(feature_enabled(local_user(),'richtext'))
 		$plaintext = false;
 
+
+
+	$mimetype = $itm[0]['mimetype'];
+
+	$mimeselect = '';
+
+	if($mimetype != 'text/bbcode')
+		$plaintext = true;
+    $mimeselect = '<input type="hidden" name="mimetype" value="' . $mimetype . '" />';
+	
+
 	$o .= replace_macros(get_markup_template('edpost_head.tpl'), array(
 		'$title' => t('Edit post')
 	));
@@ -78,7 +89,7 @@ function editwebpage_content(&$a) {
 		'$nickname' => $a->user['nickname']
 	));
 
-
+	
 	$tpl = get_markup_template("jot.tpl");
 		
 	$jotplugins = '';
@@ -118,6 +129,7 @@ function editwebpage_content(&$a) {
 		'$pvisit' => 'none',
 		'$public' => t('Public post'),
 		'$jotnets' => $jotnets,
+		'$mimeselect' => $mimeselect,
 		'$title' => htmlspecialchars($itm[0]['title']),
 		'$placeholdertitle' => t('Set title'),
 		'$category' => '',
