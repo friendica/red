@@ -90,6 +90,8 @@ function channel_content(&$a, $update = 0, $load = false) {
 	require_once('include/permissions.php');
 
 
+	$category = ((x($_REQUEST,'cat')) ? $_REQUEST['cat'] : '');
+
 	$groups = array();
 
 	$o = '';
@@ -171,8 +173,9 @@ function channel_content(&$a, $update = 0, $load = false) {
 	}
 	else {
 
+
 		if(x($category)) {
-			$sql_extra .= protect_sprintf(file_tag_file_query('item',$category,'category'));
+		        $sql_extra .= protect_sprintf(term_query('item', $category, TERM_CATEGORY));
 		}
 
 		if($datequery) {
