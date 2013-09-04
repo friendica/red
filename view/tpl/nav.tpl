@@ -148,5 +148,5 @@
 	<li class="{4}"><a href="{0}"><img src="{1}">{2} <span class="notif-when">{3}</span></a></li>
 </ul>
 
-<div id="langselector" >{{$langselector}}</div>
+{{if $langselector}}<div id="langselector" >{{$langselector}}</div>{{/if}}
 <div id="panel" style="display: none;"></div>

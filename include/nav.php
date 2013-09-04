@@ -200,7 +200,7 @@ EOT;
 
 	$a->page['nav'] .= replace_macros($tpl, array(
         '$baseurl' => $a->get_baseurl(),
-		'$langselector' => lang_selector(),
+		'$langselector' => ((get_config('system','select_language')) ? lang_selector() : ''),
 		'$sitelocation' => $sitelocation,
 		'$nav' => $nav,
 		'$banner' =>  $banner,
