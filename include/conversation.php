@@ -1262,10 +1262,12 @@ function render_location_default($item) {
 
 function prepare_page($item) {
 
+	$naked = ((pconfig($item['uid'],'system','nakedpage')) ? 1 : 0);
+
 	return replace_macros(get_markup_template('page_display.tpl'),array(
-		'$author' => $item['author']['xchan_name'],
-		'$auth_url' => $item['author']['xchan_url'],
-		'$date' => datetime_convert('UTC',date_default_timezone_get(),$item['created'],'Y-m-d H:i'),
+		'$author' => (($naked) ? '' : $item['author']['xchan_name']),
+		'$auth_url' => (($naked) ? '' : $item['author']['xchan_url'],
+		'$date' => (($naked) ? '' : datetime_convert('UTC',date_default_timezone_get(),$item['created'],'Y-m-d H:i')),
 		'$title' => smilies(bbcode($item['title'])),
 		'$body' => prepare_text($item['body'],$item['mimetype'])
 	));
