@@ -1266,7 +1266,7 @@ function prepare_page($item) {
 
 	return replace_macros(get_markup_template('page_display.tpl'),array(
 		'$author' => (($naked) ? '' : $item['author']['xchan_name']),
-		'$auth_url' => (($naked) ? '' : $item['author']['xchan_url'],
+		'$auth_url' => (($naked) ? '' : $item['author']['xchan_url']),
 		'$date' => (($naked) ? '' : datetime_convert('UTC',date_default_timezone_get(),$item['created'],'Y-m-d H:i')),
 		'$title' => smilies(bbcode($item['title'])),
 		'$body' => prepare_text($item['body'],$item['mimetype'])
