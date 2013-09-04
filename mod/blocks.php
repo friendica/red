@@ -2,6 +2,8 @@
 
 function blocks_content(&$a) {
 
+
+
 	if(argc() > 1)
 		$which = argv(1);
 	else {
@@ -21,6 +23,16 @@ function blocks_content(&$a) {
 		$owner = intval($r[0]['channel_id']);
 	}
 
+	// Block design features from visitors 
+
+	if((! local_user()) || (local_user() != $owner)) {
+		notice( t('Permission denied.') . EOL);
+		return;
+	}
+
+
+
+
 // Get the observer, check their permissions
 
         $observer = $a->get_observer();
@@ -33,6 +45,12 @@ function blocks_content(&$a) {
                 return;
         }
 
+        if(local_user() && local_user() == $owner) {
+            $a->set_widget('design',design_tools());
+        }
+
+
+
 // Create a status editor (for now - we'll need a WYSIWYG eventually) to create pages
 // Nickname is set to the observers xchan, and profile_uid to the owners.  This lets you post pages at other people's channels.
 require_once ('include/conversation.php');
@@ -43,6 +61,7 @@ require_once ('include/conversation.php');
 			'lockstate' => (($group || $cid || $channel['channel_allow_cid'] || $channel['channel_allow_gid'] || $channel['channel_deny_cid'] || $channel['channel_deny_gid']) ? 'lock' : 'unlock'),
 			'bang' => (($group || $cid) ? '!' : ''),
 			'visitor' => 'block',
+			'mimetype' => 'choose',
 			'profile_uid' => intval($owner),
 		);
 

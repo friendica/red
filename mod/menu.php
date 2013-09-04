@@ -42,6 +42,9 @@ function menu_content(&$a) {
 	}
 
 
+	$a->set_widget('design',design_tools());
+
+
 	if(argc() == 1) {
 		// list menus
 		$x = menu_list(local_user());

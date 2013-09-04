@@ -1827,3 +1827,19 @@ function json_decode_plus($s) {
 	return $x;	
 
 }
+
+
+function design_tools() {
+// FIXME - this should be a template
+
+	$o = '<div class="widget design-tools">';
+	$o .= '<h3>' . t('Design') . '</h3>';
+	$o .= '<a href="blocks">' . t('Blocks') . '</a>' . EOL;
+	$o .= '<a href="menu">' . t('Menus') . '</a>' . EOL;
+	$o .= '<a href="layout">' . t('Layouts') . '</a>' . EOL;
+	$o .= '<a href="webpages">' . t('Pages') . '</a>' . EOL;
+	$o .= '</div>';
+	return $o;
+
+}
+
