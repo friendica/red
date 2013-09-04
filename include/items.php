@@ -1398,15 +1398,15 @@ function item_store($arr,$allow_exec = false) {
 	$arr['item_flags']    = ((x($arr,'item_flags'))    ? intval($arr['item_flags'])          : 0 );
 	
 
-	$arr['body'] = z_input_filter($arr['uid'],$arr['body'],$arr['mimetype']);
 	$arr['title'] = escape_tags($arr['title']);
-
 
 	// only detect language if we have text content, and if the post is private but not yet
 	// obscured, make it so.
 
 	if(! ($arr['item_flags'] & ITEM_OBSCURED)) {
 		$arr['lang'] = detect_language($arr['body']);
+		// apply the input filter here - if it is obscured it has been filtered already
+		$arr['body'] = z_input_filter($arr['uid'],$arr['body'],$arr['mimetype']);
 
 		$allowed_languages = get_pconfig($arr['uid'],'system','allowed_languages');
 	

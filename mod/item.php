@@ -611,6 +611,9 @@ function item_post(&$a) {
 		$datarray['title'] = mb_substr($datarray['title'],0,255);
 
 	if(array_key_exists('item_private',$datarray) && $datarray['item_private']) {
+
+		$datarray['body'] = z_input_filter($datarray['uid'],$datarray['body'],$datarray['mimetype']);
+
 		logger('Encrypting local storage');
 		$key = get_config('system','pubkey');
 		$datarray['item_flags'] = $datarray['item_flags'] | ITEM_OBSCURED;
