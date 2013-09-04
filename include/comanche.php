@@ -76,6 +76,23 @@ function comanche_replace_region($match) {
 	}
 }
 
+function comanche_block($name) {
+	$o = '';
+	$r = q("select * from item left join item_id on iid = item_id and item_id.uid = item.uid and service = 'BUILDBLOCK' and sid = '%s' limit 1",
+		dbesc($name)
+	);
+	if($r) {
+		$o = '<div class="widget bblock">';
+		if($r[0]['title'])
+			$o .= '<h3>' . $r[0]['title'] . '</h3>';
+		$o .= prepare_text($r[0]['body'],$r[0]['mimetype']);
+		$o .= '</div>';
+
+	}
+	return $o;
+}
+
+
 // Widgets will have to get any operational arguments from the session,
 // the global app environment, or config storage until we implement argument passing
 
@@ -95,6 +112,12 @@ function comanche_region(&$a,$s) {
 	if($cnt) {
 		foreach($matches as $mtch) {
 			$s = str_replace($mtch[0],comanche_menu(trim($mtch[1])),$s);
+		}
+	}
+	$cnt = preg_match_all("/\[block\](.*?)\[\/block\]/ism", $s, $matches, PREG_SET_ORDER);
+	if($cnt) {
+		foreach($matches as $mtch) {
+			$s = str_replace($mtch[0],comanche_block(trim($mtch[1])),$s);
 		}
 	}
 
