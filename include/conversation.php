@@ -1262,7 +1262,7 @@ function render_location_default($item) {
 
 function prepare_page($item) {
 
-	$naked = ((pconfig($item['uid'],'system','nakedpage')) ? 1 : 0);
+	$naked = ((get_pconfig($item['uid'],'system','nakedpage')) ? 1 : 0);
 
 	return replace_macros(get_markup_template('page_display.tpl'),array(
 		'$author' => (($naked) ? '' : $item['author']['xchan_name']),
