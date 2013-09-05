@@ -2,7 +2,7 @@
 
 if(! function_exists('load_doc_file')) {
 function load_doc_file($s) {
-	global $lang;
+	$lang = get_app()->language;
 	if(! isset($lang))
 		$lang = 'en';
 	$b = basename($s);
