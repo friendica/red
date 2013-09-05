@@ -379,7 +379,7 @@ function network_content(&$a, $update = 0, $load = false) {
 
 		// --- end item filter tabs
 
-
+		$search = (($_GET['search']) ? $_GET['search'] : '');
 		// search terms header
 		if($search)
 			$o .= '<h2>' . t('Search Results For:') . ' '  . htmlspecialchars($search) . '</h2>';
@@ -484,6 +484,7 @@ function network_content(&$a, $update = 0, $load = false) {
 
 			. "'; var profile_page = " . $a->pager['page'] . ";</script>";
 
+logger('Search: ' . $search);
 
 		$a->page['htmlhead'] .= replace_macros(get_markup_template("build_query.tpl"),array(
 			'$baseurl' => z_root(),
