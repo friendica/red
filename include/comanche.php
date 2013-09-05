@@ -60,6 +60,14 @@ function comanche_parser(&$a,$s) {
 		}
 	}
 
+	$cnt = preg_match_all("/\[webpage\](.*?)\[\/webpage\]/ism", $s, $matches, PREG_SET_ORDER);
+	if($cnt) {
+		// only the last webpage definition is used if there is more than one
+		foreach($matches as $mtch) {
+			$a->layout['webpage'] = comanche_webpage($a,$mtch[1]);
+		}
+	}
+
 }
 
 
@@ -90,6 +98,25 @@ function comanche_block($name) {
 
 	}
 	return $o;
+}
+
+// This doesn't really belong in Comanche, but it could also be argued that it is the perfect place.
+// We need to be able to select what kind of template and decoration to use for the webpage at the heart of our content.
+// For now we'll allow an '[authored]' element which defaults to name and date, or 'none' to remove these, and perhaps
+// 'full' to provide a social network style profile photo.
+// But leave it open to have richer templating options and perhaps ultimately discard this one, once we have a better idea
+// of what template and webpage options we might desire. 
+
+function comanche_webpage(&$a,$s) {
+
+	$ret = array();
+	$cnt = preg_match_all("/\[authored\](.*?)\[\/authored\]/ism", $s, $matches, PREG_SET_ORDER);
+	if($cnt) {
+		foreach($matches as $mtch) {
+			$ret['authored'] = $mtch[1];
+		}
+	}
+	return $ret;
 }
 
 

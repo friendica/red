@@ -1262,7 +1262,13 @@ function render_location_default($item) {
 
 function prepare_page($item) {
 
+	$a = get_app();
 	$naked = ((get_pconfig($item['uid'],'system','nakedpage')) ? 1 : 0);
+	if(array_key_exists('webpage',$a->layout) && array_key_exists('authored',$a->layout['webpage'])) {
+		if($a->layout['webpage']['authored'] === 'none')
+			$naked = 1;
+		// ... other possible options
+	}
 
 	return replace_macros(get_markup_template('page_display.tpl'),array(
 		'$author' => (($naked) ? '' : $item['author']['xchan_name']),
