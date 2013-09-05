@@ -1343,7 +1343,7 @@ function fix_system_urls($oldurl,$newurl) {
 			// paths aren't going to work. You have to be at the (sub)domain root
 			// . (($parsed['path']) ? $parsed['path'] : '');
 
-			$x = q("update xchan set xchan_addr = '%s', xchan_url = '%s', xchan_connurl = '%s', xchan_follow = '%s', xchan_connpage = '%s', xchan_photo_l = '%s', xchan_photo_m = '%s', xchan_photo_s = '%s' where xchan_hash = '%s' limit 1",
+			$x = q("update xchan set xchan_addr = '%s', xchan_url = '%s', xchan_connurl = '%s', xchan_follow = '%s', xchan_connpage = '%s', xchan_photo_l = '%s', xchan_photo_m = '%s', xchan_photo_s = '%s', xchan_photo_date = '%s' where xchan_hash = '%s' limit 1",
 				dbesc($channel . '@' . $rhs),
 				dbesc(str_replace($oldurl,$newurl,$rr['xchan_url'])),
 				dbesc(str_replace($oldurl,$newurl,$rr['xchan_connurl'])),
@@ -1352,6 +1352,7 @@ function fix_system_urls($oldurl,$newurl) {
 				dbesc(str_replace($oldurl,$newurl,$rr['xchan_photo_l'])),
 				dbesc(str_replace($oldurl,$newurl,$rr['xchan_photo_m'])),
 				dbesc(str_replace($oldurl,$newurl,$rr['xchan_photo_s'])),
+				dbesc(datetime_convert()),
 				dbesc($rr['xchan_hash'])
 			);
 
