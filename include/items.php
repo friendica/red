@@ -2010,8 +2010,13 @@ function tag_deliver($uid,$item_id) {
 			intval($item['parent']),
 			intval($uid)
 		);
-		if(($x) && ($x[0]['item_flags'] & ITEM_UPLINK) && ($x[0]['author_xchan'] == $item['author_xchan'])) {
-			logger('tag_deliver: creating second delivery chain for owner comment.');
+
+// issue #59
+// FIXME - check security on post and allowed senders, right now we just allow it. The author *may* be foreign and the original owner is lost on our copy of the post. So this could be very hard to verify. For instance what happens if the top-level post was a wall-to-wall?  
+//		if(($x) && ($x[0]['item_flags'] & ITEM_UPLINK) && ($x[0]['author_xchan'] == $item['author_xchan'])) {
+		if(($x) && ($x[0]['item_flags'] & ITEM_UPLINK)) {
+//			logger('tag_deliver: creating second delivery chain for owner comment.');
+			logger('tag_deliver: creating second delivery chain for comment to tagged post.');
 
 			// now change this copy of the post to a forum head message and deliver to all the tgroup members
 			// also reset all the privacy bits to the forum default permissions
