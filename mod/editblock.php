@@ -65,6 +65,20 @@ function editblock_content(&$a) {
 	if(feature_enabled(local_user(),'richtext'))
 		$plaintext = false;
 
+	$mimeselect = '';
+
+	if($mimetype != 'text/bbcode')
+		$plaintext = true;
+
+	if(get_config('system','page_mimetype'))
+	    $mimeselect = '<input type="hidden" name="mimetype" value="' . $mimetype . '" />';
+	else
+		$mimeselect = mimetype_select($item[0]['uid'],$mimetype); 
+
+
+
+
+
 	$o .= replace_macros(get_markup_template('edpost_head.tpl'), array(
 		'$title' => t('Edit block')
 	));
@@ -110,6 +124,7 @@ function editblock_content(&$a) {
 		'$wait' => t('Please wait'),
 		'$permset' => t('Permission settings'),
 		'$ptyp' => $itm[0]['type'],
+		'$mimeselect' => $mimeselect,
 		'$content' => undo_post_tagging($itm[0]['body']),
 		'$post_id' => $post_id,
 		'$baseurl' => $a->get_baseurl(),

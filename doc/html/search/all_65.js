@@ -1,5 +1,9 @@
 var searchData=
 [
+  ['editblock_2ephp',['editblock.php',['../editblock_8php.html',1,'']]],
+  ['editblock_5fcontent',['editblock_content',['../editblock_8php.html#abbe8f55de06967bc8d79d620509a49e6',1,'editblock.php']]],
+  ['editlayout_2ephp',['editlayout.php',['../editlayout_8php.html',1,'']]],
+  ['editlayout_5fcontent',['editlayout_content',['../editlayout_8php.html#aa877e4157a26b099de904164181dd386',1,'editlayout.php']]],
   ['editpost_2ephp',['editpost.php',['../editpost_8php.html',1,'']]],
   ['editpost_5fcontent',['editpost_content',['../editpost_8php.html#a34011690864d122680c802e9e748ccfb',1,'editpost.php']]],
   ['editwebpage_2ephp',['editwebpage.php',['../editwebpage_8php.html',1,'']]],

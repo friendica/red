@@ -87,6 +87,8 @@ var NAVTREEINDEX0 =
 "bbcode_8php.html#a52c45273fbb7ce5ec27094f7936856e1":[5,0,0,10,0],
 "bbcode_8php.html#a55b0cb6973f1ec731de0e726bcc0efa7":[5,0,0,10,5],
 "bbcode_8php.html#a8911e027907820df3db03b4f76724b50":[5,0,0,10,2],
+"blocks_8php.html":[5,0,1,7],
+"blocks_8php.html#a2531a8fd51db3cecb2eb20c002c66e12":[5,0,1,7,0],
 "boot_8php.html":[5,0,4],
 "boot_8php.html#a009e6a0637cb65804ea8094ecc4450b0":[5,0,4,133],
 "boot_8php.html#a01353c9abebc3544ea080ac161729632":[5,0,4,43],
@@ -247,7 +249,5 @@ var NAVTREEINDEX0 =
 "boot_8php.html#a9c80420e5a063a4a87ce4831f086134d":[5,0,4,56],
 "boot_8php.html#a9cbab4ee728e9a8b4ce952bae643044e":[5,0,4,5],
 "boot_8php.html#a9cc986b4f9dd6558cbb2e25aadbfd964":[5,0,4,214],
-"boot_8php.html#a9d01ef178b72b145016cca1393415bc4":[5,0,4,191],
-"boot_8php.html#a9eeb8989272d5ff804a616898bb13659":[5,0,4,248],
-"boot_8php.html#a9ff652e5cb83cd11cbb0350844e7b28f":[5,0,4,213]
+"boot_8php.html#a9d01ef178b72b145016cca1393415bc4":[5,0,4,191]
 };

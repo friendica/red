@@ -7,6 +7,7 @@ var dir_d41ce877eb409a4791b288730010abe2 =
     [ "api.php", "mod_2api_8php.html", "mod_2api_8php" ],
     [ "apps.php", "apps_8php.html", "apps_8php" ],
     [ "attach.php", "mod_2attach_8php.html", "mod_2attach_8php" ],
+    [ "blocks.php", "blocks_8php.html", "blocks_8php" ],
     [ "channel.php", "channel_8php.html", "channel_8php" ],
     [ "chanview.php", "chanview_8php.html", "chanview_8php" ],
     [ "common.php", "common_8php.html", "common_8php" ],
@@ -20,6 +21,8 @@ var dir_d41ce877eb409a4791b288730010abe2 =
     [ "dirfind.php", "dirfind_8php.html", "dirfind_8php" ],
     [ "dirsearch.php", "dirsearch_8php.html", "dirsearch_8php" ],
     [ "display.php", "display_8php.html", "display_8php" ],
+    [ "editblock.php", "editblock_8php.html", "editblock_8php" ],
+    [ "editlayout.php", "editlayout_8php.html", "editlayout_8php" ],
     [ "editpost.php", "editpost_8php.html", "editpost_8php" ],
     [ "editwebpage.php", "editwebpage_8php.html", "editwebpage_8php" ],
     [ "events.php", "events_8php.html", "events_8php" ],
@@ -39,6 +42,7 @@ var dir_d41ce877eb409a4791b288730010abe2 =
     [ "invite.php", "invite_8php.html", "invite_8php" ],
     [ "item.php", "item_8php.html", "item_8php" ],
     [ "lastpost.php", "lastpost_8php.html", "lastpost_8php" ],
+    [ "layouts.php", "layouts_8php.html", "layouts_8php" ],
     [ "like.php", "like_8php.html", "like_8php" ],
     [ "lockview.php", "lockview_8php.html", "lockview_8php" ],
     [ "login.php", "login_8php.html", "login_8php" ],
@@ -74,6 +78,7 @@ var dir_d41ce877eb409a4791b288730010abe2 =
     [ "profile_photo.php", "profile__photo_8php.html", "profile__photo_8php" ],
     [ "profiles.php", "profiles_8php.html", "profiles_8php" ],
     [ "profperm.php", "profperm_8php.html", "profperm_8php" ],
+    [ "pubsites.php", "pubsites_8php.html", "pubsites_8php" ],
     [ "qsearch.php", "qsearch_8php.html", "qsearch_8php" ],
     [ "randprof.php", "randprof_8php.html", "randprof_8php" ],
     [ "redir.php", "redir_8php.html", "redir_8php" ],
@@ -115,5 +120,6 @@ var dir_d41ce877eb409a4791b288730010abe2 =
     [ "xchan.php", "xchan_8php.html", "xchan_8php" ],
     [ "xrd.php", "xrd_8php.html", "xrd_8php" ],
     [ "zfinger.php", "zfinger_8php.html", "zfinger_8php" ],
-    [ "zotfeed.php", "zotfeed_8php.html", "zotfeed_8php" ]
+    [ "zotfeed.php", "zotfeed_8php.html", "zotfeed_8php" ],
+    [ "zping.php", "zping_8php.html", "zping_8php" ]
 ];

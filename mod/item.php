@@ -627,9 +627,10 @@ function item_post(&$a) {
 
 
 	if($orig_post) {
-		$r = q("UPDATE `item` SET `title` = '%s', `body` = '%s', `attach` = '%s', `edited` = '%s', layout_mid = '%s' WHERE `id` = %d AND `uid` = %d LIMIT 1",
+		$r = q("UPDATE `item` SET `title` = '%s', `body` = '%s', `mimetype` = '%s', `attach` = '%s', `edited` = '%s', layout_mid = '%s' WHERE `id` = %d AND `uid` = %d LIMIT 1",
 			dbesc($datarray['title']),
 			dbesc($datarray['body']),
+			dbesc($datarray['mimetype']),
 			dbesc($datarray['attach']),
 			dbesc(datetime_convert()),
 			dbesc($layout_mid),
