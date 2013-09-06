@@ -73,7 +73,7 @@ function editblock_content(&$a) {
 	if(get_config('system','page_mimetype'))
 	    $mimeselect = '<input type="hidden" name="mimetype" value="' . $mimetype . '" />';
 	else
-		$mimeselect = mimetype_select($item[0]['uid'],$mimetype); 
+		$mimeselect = mimetype_select($itm[0]['uid'],$mimetype); 
 
 
 
