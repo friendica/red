@@ -1,7 +1,10 @@
 
 nav {
-	height: 94px;
+	height: 24px;
 	display: block;
+	position: fixed;
+	width: 100%;
+	z-index: 100;
 }
 
 aside {
