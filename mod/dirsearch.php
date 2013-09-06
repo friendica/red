@@ -22,7 +22,7 @@ function dirsearch_content(&$a) {
 		json_return_and_die($ret);
 	}
 
-	if(argc > 1 && argv(1) === 'sites') {
+	if(argc() > 1 && argv(1) === 'sites') {
 		$ret = list_public_sites();
 		json_return_and_die($ret);
 	}
