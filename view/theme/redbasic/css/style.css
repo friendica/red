@@ -22,11 +22,6 @@ abbr {
 	border-bottom: none;
 }
 
-aside {
-border: none;
-color: #444444;
-}
-
 /* icons */
 .icon {
   background-color: transparent ;
@@ -38,67 +33,6 @@ color: #444444;
 
 .icon.text {
   text-indent: 0px;
-}
-.icon.notify {
-  background-image: url("../img/notify_on.png");
-  min-width: 22px;
-  height: 22px;
-  margin-top: -4px; 
-  background-position: left center;
-  padding: 1px;
-}
-.icon.gear {
-  background-image: url("../img/settings.png");
-  min-width: 22px;
-  height: 22px; 
-  margin-top: -2px; 
-  background-position: left center;
-  padding: 1px;
-}
-
-.icon.home {
-  background-image: url("../img/home.png");
-  min-width: 22px;
-  height: 22px; 
-  margin-top: -4px; 
-  background-position: left center;
-  padding: 1px;
-}
-
-.icon.network {
-  background-image: url("../img/network.png");
-  min-width: 22px;
-  height: 22px; 
-  margin-top: -3px; 
-  background-position: left center;
-  padding: 1px;
-}
-
-.icon.introductions {
-  background-image: url("../img/introductions.png");
-  min-width: 22px;
-  height: 22px; 
-  margin-top: -4px; 
-  background-position: left center;
-  padding: 1px;
-}
-
-.icon.mail {
-  background-image: url("../img/message.png");
-  min-width: 22px;
-  height: 22px; 
-  margin-top: -2px; 
-  background-position: left center;
-  padding: 1px;
-}
-
-.icon.events {
-  background-image: url("../img/events.png");
-  min-width: 22px;
-  height: 22px; 
-  margin-top: -4px; 
-  background-position: left center;
-  padding: 1px;
 }
 
 a, a:visited, a:link, .fakelink, .fakelink:visited, .fakelink:link { 
@@ -119,8 +53,6 @@ input {
 	border-radius: $radiuspx;	
 	padding: 3px;
 }
-
-img { border :0px; }
 
 
 code {
@@ -297,19 +229,16 @@ nav #nav-link-wrapper .nav-link {
 	border-bottom: 1px solid #aaaaaa;
 	padding:0px;
 	width: 90%; 
-/*	margin-right: 5px; */
 }
 
 .tabs li { margin: 0px; list-style: none; }
 .tab {
 	display:block;
 	float:left;
-/*	padding: 0.4em; */
 	margin-right: 15px ;
 }
 
 .tab.active {
-/*	font-weight: bold;	*/
 	color: #444444;
 }
 
@@ -329,15 +258,6 @@ footer {
 	text-align: right;
 	padding-bottom: 1em;
 	padding-right: 3em; 
-}
-
-#powered-by {
-	position: fixed;
-	bottom: 1px;
-	left: 15px;
-	opacity: 0.3;
-	filter:alpha(opacity=30);
-
 }
 
 .birthday-today, .event-today {
@@ -506,7 +426,6 @@ footer {
 
 	margin-left: 100px;
 	margin-top: 10px;
-/*	margin-left: 200px; */
 }
 
 
@@ -877,52 +796,22 @@ footer {
 	margin-bottom: 15px;
 }
 
-#network-star-link{
-	margin-top: 10px;
-}
-.network-star {
-	float: left;
-	margin-right: 5px;
-}
-#network-bmark-link {
-	margin-top: 10px;
-}
 
-.thread-wrapper .wall-item-comment-wrapper {
+.thread-wrapper .wall-item-comment-wrapper, .wall-item-content-wrapper.comment {
 	margin-left: 50px;
 }
-
-/* Give the top level post bigger shadows than the comments.  This makes them appear "higher" and the comments "lower", which separates posts from each other reasonably without literally drawing a line under it */
 
 .wall-item-content-wrapper {
 	margin-top: 10px;
 	position: relative;
 	border-radius: $radiuspx;
 	border: 1px solid #eec;
-
-/*	background: #fff; */
-/*	border-radius: 5px; */
-/*	box-shadow: 12px 12px 12px #111; */
-/*	border-left: 1px solid #eec; */
-
-}
-.wall-item-content-wrapper.comment {
-/*	background: #fff; */
-/*	border-left: 1px solid #e0e0e0; */
-	margin-left: 50px;
-/*	box-shadow: 5px 5px 5px #222; */
 }
 
 .thread-end-wrapper {
     margin-left: 50px;
 }
 
-
-.wall-item-content-wrapper.comment {
-/*	background: #ffffff;
-	border-left: 1px solid #e0e0e0;
-*/
-}
 
 .wall-item-like.comment, .wall-item-dislike.comment {
 	margin-left: 50px;
@@ -999,14 +888,9 @@ footer {
     z-index: 99;
 }
 .wall-item-wrapper {
-	/*float: left;
-    margin-right: 5px;
-    width: 250px;*/
     margin-left:10px;
 }
 .wall-item-lock {
-	/*height: 20px;*/
-	/*margin-top: 10px;*/
     left: 105px;
     position: absolute;
     top: 1px;	
@@ -1058,11 +942,7 @@ footer {
 .wall-item-wrapper-end {
 	clear: both;
 }
-.wall-item-name-link {
-	font-weight: bold;
-	text-decoration: none;
-	color: #3172BD;
-}
+
 .wall-item-photo {
 	border: none;
 }
@@ -1077,16 +957,11 @@ footer {
 
 .wall-item-content img {
     max-width: 95% !important;
-/*  box-shadow: 8px 8px 8px #666; can't really have this because of smileys */
 }
 
-.wall-item-content img.smiley {
-    box-shadow: none;
-}
 .wall-item-title {
 	float: left;
 	font-weight: bold;
-	/*width: 450px;*/
 }
 
 .wall-item-title-end {
@@ -1094,13 +969,10 @@ footer {
 }
 
 .thread-wrapper.toplevel_item {
-
 	width: 92%; 
 }
 
 .wall-item-body {
-/*	float: left; */
-	/*width: 450px;*/
 	margin-top: 10px;
 }
 
@@ -1114,21 +986,11 @@ footer {
 }    
 
 .wall-item-like, .wall-item-dislike {
-	margin-left: 0px;
-	margin-top: 3px;
+	margin-top: 5px;
 }
 
 .wall-item-author {
 	margin-top: 10px;
-}
-
-.comment-edit-wrapper {
-	margin-top: 15px;
-	margin-left: 50px;
-}
-
-.comment-wwedit-wrapper {
-	margin-top: 2px;
 }
 
 .comment-edit-photo {
@@ -1152,7 +1014,6 @@ footer {
 	border: 1px solid #ccc;
 	padding: 8px;
 	border-radius: $radiuspx;
-/*	box-shadow: 5px 5px 5px #666 inset; */
 }
 
 .comment-edit-text-empty {
@@ -1193,9 +1054,6 @@ footer {
 	width:90%;
 }
 
-#profile-jot-submit {
-	float: left;
-}
 #profile-upload-wrapper {
 	float: left;
 	margin-left: 15px;
@@ -1264,7 +1122,6 @@ footer {
 }
 
 #profile-jot-perms-end {
-	/*clear: left;*/
 	height: 30px;
 }
 
@@ -1283,7 +1140,6 @@ footer {
 }
 
 #profile-jot-end {
-	/*clear: both;*/
 	margin-bottom: 30px;
 }
 #about-jot-submit-wrapper {
@@ -1490,16 +1346,7 @@ footer {
 DIV#profile-jot-text_toolbargroup{
 background: #FFF;
 border: 1px #111;
-/*box-shadow: 5px 5px 5px #000 inset;*/
 }
-
-/*
-#profile-jot-text_parent, .mceLayout {
-    border-radius: $radiuspx;
-    -moz-border-radius: $radiuspx;
-    box-shadow: 4px 4px 3px 0 #444444;
-}
-*/
 
 
 iframe#profile-jot-text_ifr {
@@ -1521,7 +1368,6 @@ tr.mceLast {
 	width: 90%; 
 	-moz-border-radius: $radiuspx;
 	border-radius: $radiuspx;	
-/*	box-shadow: 4px 4px 3px 0 #666 inset; */
 }
 #profile-jot-text:hover {
 	color: #000000;
@@ -1694,14 +1540,10 @@ tr.mceLast {
 	margin-top: 15px;
 	margin-right: 15px;
 	margin-left: 15px;
-/*	width: 200px; height: 200px; 
-	overflow: hidden; 
-	position: relative; */
 }
 .photo-album-image-wrapper .caption {
 	display: none; 
  	width: 100%;
-/* 	position: absolute; */
  	bottom: 0px; 
  	padding: 0.5em 0.5em 0px 0.5em;
  	background-color: rgba(245, 245, 255, 0.8);
@@ -1718,19 +1560,15 @@ tr.mceLast {
 }
 
 .photo-top-image-wrapper {
-/*	position: relative; */
 	float: left;
 	margin-top: 15px;
 	margin-right: 15px;
 	margin-left: 15px;
 	margin-bottom: 15px;
-/*	width: 200px; height: 200px; 
-	overflow: hidden; */
 }
 .photo-top-album-name {
  	width: 100%;
  	min-height: 2em;
-/* 	position: absolute;  */
  	bottom: 0px; 
  	padding: 0px 3px;
  	padding-top: 0.5em;
@@ -1910,13 +1748,6 @@ a.mail-list-link {
 }
 
 
-
-/*
-*a.mail-list-link:hover {
-*	background-color: #15607B;
-*	color: #F5F6FB;
-*}
-*/
 
 .mail-list-outside-wrapper-end {
 	clear: both;
@@ -2100,19 +1931,10 @@ aside input[type='text'] {
 }
 
 
-#dfrn-request-networks {
-	margin-bottom: 30px;
-}
-
 #pause {
   position: fixed;
   bottom: 5px;
   right: 5px;
-}
-
-.sparkle {
-	cursor: url('../img/lock.cur'), pointer;
-/*	cursor: pointer !important; */
 }
 
 #vcard-end {
