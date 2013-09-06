@@ -220,16 +220,18 @@ function get_public_feed($channel,$params) {
 	$start     = 0;
 	$records   = 40;
 	$direction = 'desc';
+	$pages     = 0;
 
 	if(! $params)
 		$params = array();
 
-	$params['type']      = ((x($params,'type'))      ? $params['type']      : 'xml');
-	$params['begin']     = ((x($params,'begin'))     ? $params['begin']     : '0000-00-00 00:00:00');
-	$params['end']       = ((x($params,'end'))       ? $params['end']       : datetime_convert('UTC','UTC','now'));
-	$params['start']     = ((x($params,'start'))     ? $params['start']     : 0);
-	$params['records']   = ((x($params,'records'))   ? $params['records']   : 40);
-	$params['direction'] = ((x($params,'direction')) ? $params['direction'] : 'desc');
+	$params['type']      = ((x($params,'type'))      ? $params['type']          : 'xml');
+	$params['begin']     = ((x($params,'begin'))     ? $params['begin']         : '0000-00-00 00:00:00');
+	$params['end']       = ((x($params,'end'))       ? $params['end']           : datetime_convert('UTC','UTC','now'));
+	$params['start']     = ((x($params,'start'))     ? $params['start']         : 0);
+	$params['records']   = ((x($params,'records'))   ? $params['records']       : 40);
+	$params['direction'] = ((x($params,'direction')) ? $params['direction']     : 'desc');
+	$params['pages']     = ((x($params,'pages'))     ? intval($params['pages']) : 0);
 		
 	switch($params['type']) {
 		case 'json':
@@ -250,9 +252,15 @@ function get_feed_for($channel, $observer_hash, $params) {
 	if(! channel)
 		http_status_exit(401);
 
-	if(! perm_is_allowed($channel['channel_id'],$observer_hash,'view_stream'))
-		http_status_exit(403);
 
+	if($params['pages']) {
+		if(! perm_is_allowed($channel['channel_id'],$observer_hash,'view_pages'))
+			http_status_exit(403);
+	}
+	else {
+		if(! perm_is_allowed($channel['channel_id'],$observer_hash,'view_stream'))
+			http_status_exit(403);
+	}
 	$items = items_fetch(array(
 		'wall' => '1',
 		'datequery' => $params['begin'],
@@ -260,6 +268,7 @@ function get_feed_for($channel, $observer_hash, $params) {
 		'start' => $params['start'],          // FIXME
 	 	'records' => $params['records'],      // FIXME
 		'direction' => $params['direction'],  // FIXME
+		'pages' => $params['pages'],
 		'order' => 'post'
 		), $channel, $observer_hash, CLIENT_MODE_NORMAL, get_app()->module);
 
@@ -2938,9 +2947,8 @@ function atom_entry($item,$type,$author,$owner,$comment = false,$cid = 0) {
 	$o .= '<title>' . xmlify($item['title']) . '</title>' . "\r\n";
 	$o .= '<published>' . xmlify(datetime_convert('UTC','UTC',$item['created'] . '+00:00',ATOM_TIME)) . '</published>' . "\r\n";
 	$o .= '<updated>' . xmlify(datetime_convert('UTC','UTC',$item['edited'] . '+00:00',ATOM_TIME)) . '</updated>' . "\r\n";
-	$o .= '<zot:env>' . base64url_encode($body, true) . '</zot:env>' . "\r\n";
-	// FIXME for other content types
-	$o .= '<content type="' . $type . '" >' . xmlify((($type === 'html') ? bbcode($body) : $body)) . '</content>' . "\r\n";
+
+	$o .= '<content type="' . $type . '" >' . xmlify(prepare_text($body,$item['mimetype'])) . '</content>' . "\r\n";
 	$o .= '<link rel="alternate" type="text/html" href="' . xmlify($item['plink']) . '" />' . "\r\n";
 
 	if($item['location']) {
@@ -3710,11 +3718,17 @@ function items_fetch($arr,$channel = null,$observer_hash = null,$client_mode = C
 	require_once('include/security.php');
 	$sql_extra .= item_permissions_sql($channel['channel_id']);
 
+	if($arr['pages'])
+		$item_restrict = " AND (item_restrict & " . ITEM_WEBPAGE . ") ";
+	else
+		$item_restrict = " AND item_restrict = 0 ";
+
+
     if($arr['nouveau'] && ($client_mode & CLIENT_MODELOAD) && $channel) {
         // "New Item View" - show all items unthreaded in reverse created date order
 
         $items = q("SELECT item.*, item.id AS item_id FROM item
-            WHERE $item_uids AND item_restrict = 0
+            WHERE $item_uids $item_restrict
             $simple_update
             $sql_extra $sql_nets
             ORDER BY item.received DESC $pager_sql "
@@ -3741,7 +3755,7 @@ function items_fetch($arr,$channel = null,$observer_hash = null,$client_mode = C
 
             $r = q("SELECT distinct item.id AS item_id FROM item
                 left join abook on item.author_xchan = abook.abook_xchan
-                WHERE $item_uids AND item.item_restrict = 0
+                WHERE $item_uids $item_restrict
                 AND item.parent = item.id
                 and ((abook.abook_flags & %d) = 0 or abook.abook_flags is null)
                 $sql_extra3 $sql_extra $sql_nets
@@ -3754,7 +3768,7 @@ function items_fetch($arr,$channel = null,$observer_hash = null,$client_mode = C
             // update
             $r = q("SELECT item.parent AS item_id FROM item
                 left join abook on item.author_xchan = abook.abook_xchan
-                WHERE $item_uids AND item.item_restrict = 0 $simple_update
+                WHERE $item_uids $item_restrict $simple_update
                 and ((abook.abook_flags & %d) = 0 or abook.abook_flags is null)
                 $sql_extra3 $sql_extra $sql_nets ",
                 intval(ABOOK_FLAG_BLOCKED)
@@ -3770,7 +3784,7 @@ function items_fetch($arr,$channel = null,$observer_hash = null,$client_mode = C
             $parents_str = ids_to_querystr($r,'item_id');
 
             $items = q("SELECT item.*, item.id AS item_id FROM item
-                WHERE $item_uids AND item.item_restrict = 0
+                WHERE $item_uids $item_restrict
                 AND item.parent IN ( %s )
                 $sql_extra ",
                 dbesc($parents_str)
