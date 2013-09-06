@@ -27,7 +27,7 @@ function pubsites_content(&$a) {
 		if($j) {
 			$o .= '<table border="1"><tr><td>' . t('Site URL') . '</td><td>' . t('Access Type') . '</td><td>' . t('Registration Policy') . '</td></tr>';
 			foreach($j['sites'] as $jj) {
-				$o .= '<tr><td>' . $jj['url'] . '</td><td>' . $jj['access'] . '</td><td>' . $jj['register'] . '</td></tr>';
+				$o .= '<tr><td>' . '<a href="'. $jj['url'] . '" >' . $jj['url'] . '</a>' . '</td><td>' . $jj['access'] . '</td><td>' . $jj['register'] . '</td></tr>';
 			}
 	
 			$o .= '</table>';
