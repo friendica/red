@@ -21,7 +21,7 @@ function share_init(&$a) {
 		$pos = strpos($r[0]['body'], "[share");
 		$o = substr($r[0]['body'], $pos);
 	} else {
-		$o = "[share author='".str_replace("'", "&#039;",$r[0]['author']['xchan_name']).
+		$o = "[share author='".urlencode($r[0]['author']['xchan_name']).
 			"' profile='".$r[0]['author']['xchan_url'] .
 			"' avatar='".$r[0]['author']['xchan_photo_s'].
 			"' link='".$r[0]['plink'].

@@ -19,7 +19,6 @@ function display_content(&$a, $update = 0, $load = false) {
 
 	$a->page['htmlhead'] .= replace_macros(get_markup_template('display-head.tpl'), array());
 
-
 	if(argc() > 1 && argv(1) !== 'load')
 		$item_hash = argv(1);
 
@@ -91,7 +90,6 @@ function display_content(&$a, $update = 0, $load = false) {
 
 	$sql_extra = public_permissions_sql(get_observer_hash());
 
-
 	if($update && $load) {
 
 		$updateable = false;
@@ -109,8 +107,10 @@ function display_content(&$a, $update = 0, $load = false) {
 					intval(local_user()),
 					dbesc($target_item['parent_mid'])
 				);
-				if($r)
+				if($r) {
 					$updateable = true;
+
+				}
 			}
 			if($r === null) {
 				$r = q("SELECT * from item
