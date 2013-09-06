@@ -3261,37 +3261,20 @@ border-bottom: 1px solid #ccc;
 padding: 20px;
 }
 
+span.mail-list {
+float: left;
+width: 20%;
+}
+
 span.mail-delete {
 float: left;
 width: 30px;
 }
 
-a.mail-list-sender-url {
-float: left;
-width: 35px;
-}
-	
 img.mail-list-sender-photo {
-height: 16px;
-width: 16px;
+height: 24px;
+width: 24px;
 }
-
-
-span.mail-from {
-float: left;
-width: 200px;
-}
-
-span.mail-subject.unseen{ 
-float: left;
-width: 200px;
-}
-
-span.mail-date {
-float:left;
-width: 200px;
-}
-
 
 .tag1 {
     font-size : 1.0em !important;
