@@ -1523,10 +1523,22 @@ function import_site($arr,$pubkey) {
 	if($arr['register_policy'] == 'approve')
 		$register_policy = REGISTER_APPROVE;
 
+	$access_policy = 0;
+	if(array_key_exists('access_policy',$arr)) {
+		if($arr['access_policy'] === 'private')
+			$access_policy = ACCESS_PRIVATE;
+		if($arr['access_policy'] === 'paid')
+			$access_policy = ACCESS_PAID;
+		if($arr['access_policy'] === 'free')
+			$access_policy = ACCESS_FREE;
+	}
+
+
 	if($update) {
-		$r = q("update site set site_flags = %d, site_directory = '%s', site_register = %d, site_update = '%s'
+		$r = q("update site set site_flags = %d, site_access = %d, site_directory = '%s', site_register = %d, site_update = '%s'
 			where site_url = '%s' limit 1",
 			intval($site_directory),
+			intval($access_policy),
 			dbesc(htmlentities($arr['directory_url'],ENT_COMPAT,'UTF-8',false)),
 			intval($register_policy),
 			dbesc(datetime_convert()),
@@ -1537,10 +1549,11 @@ function import_site($arr,$pubkey) {
 		}
 	}
 	else {
-		$r = q("insert into site ( site_url, site_flags, site_update, site_directory, site_register )
-			values ( '%s', %d, '%s', '%s', %d )",
+		$r = q("insert into site ( site_url, site_acccess, site_flags, site_update, site_directory, site_register )
+			values ( '%s', %d, %d, '%s', '%s', %d )",
 			dbesc(htmlentities($arr['url'],ENT_COMPAT,'UTF-8',false)),
 			intval($site_directory),
+			intval($access_policy),
 			dbesc(datetime_convert()),
 			dbesc(htmlentities($arr['directory_url'],ENT_COMPAT,'UTF-8',false)),
 			intval($register_policy)

@@ -22,6 +22,12 @@ function dirsearch_content(&$a) {
 		json_return_and_die($ret);
 	}
 
+	if(argc > 1 && argv(1) === 'sites') {
+		$ret = list_public_sites();
+		json_return_and_die($ret);
+	}
+
+
 	$name     = ((x($_REQUEST,'name'))     ? $_REQUEST['name']     : '');
 	$hub      = ((x($_REQUEST,'hub'))      ? $_REQUEST['hub']     : '');
 	$address  = ((x($_REQUEST,'address'))  ? $_REQUEST['address']  : '');
@@ -163,3 +169,33 @@ function dirsearch_content(&$a) {
 	json_return_and_die($ret);
 
 }
+
+
+function list_public_sites() {
+	$r = q("select * from site where site_access != 0 order by rand()");
+	$ret = array('success' => false);
+
+	if($r) {
+		$ret['success'] = true;
+		$ret['sites'] = array();
+		foreach($r as $rr) {
+			
+			if($rr['site_access'] == ACCESS_FREE)
+				$access = 'free';
+			elseif($rr['site_access'] == ACCESS_PAID)
+				$access = 'paid';
+			else
+				$access = 'private';
+
+			if($rr['site_register'] == REGISTER_OPEN)
+				$register = 'open';
+			elseif($rr['site_register'] == REGISTER_APPROVE)
+				$register = 'approve';
+			else
+				$register = 'closed';
+
+			$ret['sites'][] = array('url' => $rr['site_url'], 'access' => $access, 'register' => $register);
+		}
+	}
+	return $ret;
+}		
