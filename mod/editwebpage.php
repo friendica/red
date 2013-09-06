@@ -85,7 +85,7 @@ function editwebpage_content(&$a) {
 
 
 	$o .= replace_macros(get_markup_template('edpost_head.tpl'), array(
-		'$title' => t('Edit post')
+		'$title' => t('Edit Webpage')
 	));
 
 	
@@ -152,6 +152,11 @@ function editwebpage_content(&$a) {
 		'$jotplugins' => $jotplugins,
 		'$sourceapp' => t($a->sourcename),
 	));
+
+	$ob = get_observer_hash();
+
+	if(($itm[0]['author_xchan'] === $ob) || ($itm[0]['owner_xchan'] === $ob))
+		$o .= '<br /><br /><a href="item/drop/' . $itm[0]['id'] . '" >' . t('Delete Webpage') . '</a><br />';
 
 	return $o;
 

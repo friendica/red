@@ -66,7 +66,7 @@ function editlayout_content(&$a) {
 		$plaintext = false;
 
 	$o .= replace_macros(get_markup_template('edpost_head.tpl'), array(
-		'$title' => t('Edit block')
+		'$title' => t('Edit Layout')
 	));
 
 	
@@ -131,6 +131,11 @@ function editlayout_content(&$a) {
 		'$jotplugins' => $jotplugins,
 		'$sourceapp' => t($a->sourcename),
 	));
+
+	$ob = get_observer_hash();
+
+	if(($itm[0]['author_xchan'] === $ob) || ($itm[0]['owner_xchan'] === $ob))
+		$o .= '<br /><br /><a href="item/drop/' . $itm[0]['id'] . '" >' . t('Delete Layout') . '</a><br />';
 
 	return $o;
 
