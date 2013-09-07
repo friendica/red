@@ -111,24 +111,23 @@ function mitem_content(&$a) {
 			local_user()
 		);
 
-		if($r) {
-			$o = replace_macros(get_markup_template('mitemlist.tpl'),array(
-				'$title' => t('Manage Menu Elements'),
-				'$menuname' => $a->data['menu']['menu_name'],
-				'$menudesc' => $a->data['menu']['menu_desc'],
-				'$edmenu' => t('Edit menu'),
-				'$menu_id' => $a->data['menu']['menu_id'],
-				'$mlist' => $r,
-				'$edit' => t('Edit element'),
-				'$drop' => t('Drop element'),
-				'$new' => t('New element'),
-				'$hintmenu' => t('Edit this menu container'),
-				'$hintnew' => t('Add menu element'),
-				'$hintdrop' => t('Delete this menu item'),
-				'$hintedit' => t('Edit this menu item')
-				));
 
-		}
+		$o .= replace_macros(get_markup_template('mitemlist.tpl'),array(
+			'$title' => t('Manage Menu Elements'),
+			'$menuname' => $a->data['menu']['menu_name'],
+			'$menudesc' => $a->data['menu']['menu_desc'],
+			'$edmenu' => t('Edit menu'),
+			'$menu_id' => $a->data['menu']['menu_id'],
+			'$mlist' => $r,
+			'$edit' => t('Edit element'),
+			'$drop' => t('Drop element'),
+			'$new' => t('New element'),
+			'$hintmenu' => t('Edit this menu container'),
+			'$hintnew' => t('Add menu element'),
+			'$hintdrop' => t('Delete this menu item'),
+			'$hintedit' => t('Edit this menu item')
+			));
+
 			
 		return $o;
 
