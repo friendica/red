@@ -41,7 +41,7 @@
 		if(bParam_search != "") bCmd = bCmd + "&search=" + bParam_search;
 		if(bParam_order != "") bCmd = bCmd + "&order=" + bParam_order;
 		if(bParam_file != "") bCmd = bCmd + "&file=" + bParam_file;
-		if(bParam_cats != "") bCmd = bCmd + "&cats=" + bParam_cats;
+		if(bParam_cats != "") bCmd = bCmd + "&cat=" + bParam_cats;
 		if(bParam_dend != "") bCmd = bCmd + "&dend=" + bParam_dend;
 		if(bParam_dbegin != "") bCmd = bCmd + "&dbegin=" + bParam_dbegin;
 		if(bParam_mid != "") bCmd = bCmd + "&mid=" + bParam_mid;
