@@ -48,9 +48,15 @@ function page_content(&$a) {
 		return;
 	}
 
+	if($_REQUEST['rev'])
+		$revision = " and revision = " . intval($_REQUEST['rev']) . " ";
+	else
+		$revision = " order by revision desc ";
+
+
 	$r = q("select item.* from item left join item_id on item.id = item_id.iid
 		where item.uid = %d and sid = '%s' and service = 'WEBPAGE' and 
-		item_restrict = %d limit 1",
+		item_restrict = %d $revision limit 1",
 		intval($u[0]['channel_id']),
 		dbesc($page_id),
 		intval(ITEM_WEBPAGE)
