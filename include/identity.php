@@ -7,7 +7,7 @@ require_once('include/crypto.php');
 function identity_check_service_class($account_id) {
 	$ret = array('success' => false, $message => '');
 	
-	$r = q("select count(channel_id) as total from channel were channel_account_id = %d ",
+	$r = q("select count(channel_id) as total from channel where channel_account_id = %d ",
 		intval($account_id)
 	);
 	if(! ($r && count($r))) {
@@ -80,7 +80,10 @@ function create_identity($arr) {
 		$ret['message'] = t('No account identifier');
 		return $ret;
 	}
-
+	$ret=identity_check_service_class($arr['account_id']);
+	if (!$ret['success']) { 
+		return $ret;
+	}
 	$nick = mb_strtolower(trim($arr['nickname']));
 	$name = escape_tags($arr['name']);
 	$pageflags = ((x($arr,'pageflags')) ? intval($arr['pageflags']) : PAGE_NORMAL);

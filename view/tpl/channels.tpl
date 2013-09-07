@@ -7,6 +7,11 @@
 {{/foreach}}
 {{/if}} 
 
+{{if $channel_usage_message}}
+<div id="channel-usage-message" class="usage-message">
+{{$channel_usage_message}}
+</div>
+{{/if}}
 {{if $selected}}
 <div id="selected-channel">
 <div id="channels-selected">{{$msg_selected}}</div>
