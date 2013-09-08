@@ -339,7 +339,7 @@ function attach_store($channel,$observer_hash,$options = '',$arr = null) {
 				intval($channel_id)
 			);
 			if(($r) &&  (($r[0]['total'] + $filesize) > ($limit - $existing_size))) {
-				$ret['message'] = upgrade_message(true);
+				$ret['message'] = upgrade_message(true).sprintf(t("You have reached your limit of %1$.0f Mbytes attachment storage."),$limit / 1024000);
 				@unlink($src);
 				return $ret;
 			}
