@@ -76,9 +76,16 @@ function categories_widget($baseurl,$selected = '') {
 		return '';
 
 	$terms = array();
-	$r = q("select distinct(term) from term where uid = %d and type = %d order by term asc",
+	$r = q("select distinct(term.term)
+                from term join item on term.oid = item.id
+                where item.uid = %d
+                and term.uid = item.uid
+                and term.type = %d
+                and item.author_xchan = '%s'
+                order by term.term asc",
 		intval($a->profile['profile_uid']),
-		intval(TERM_CATEGORY)
+	        intval(TERM_CATEGORY),
+                $a->profile['channel_hash']
 	);
 	if($r && count($r)) {
 		foreach($r as $rr)
