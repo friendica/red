@@ -1,3 +1,4 @@
+<div class="generic-content-wrapper">
 <h1>{{$ptitle}}</h1>
 
 {{$nickname_block}}
@@ -125,3 +126,4 @@
 <input type="submit" name="submit" class="settings-submit" value="{{$submit}}" />
 </div>
 
+</div>

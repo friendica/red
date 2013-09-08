@@ -1,3 +1,4 @@
+<div class="generic-content-wrapper">
 <h1>{{$title}}</h1>
 
 
@@ -29,3 +30,4 @@
 	{{/foreach}}
 
 </form>
+</div>
