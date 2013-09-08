@@ -71,7 +71,17 @@ function item_post(&$a) {
 	$webpage     = ((x($_REQUEST,'webpage'))     ? intval($_REQUEST['webpage'])        : 0);
 	$pagetitle   = ((x($_REQUEST,'pagetitle'))   ? escape_tags($_REQUEST['pagetitle']) : '');
 	$layout_mid  = ((x($_REQUEST,'layout_mid'))  ? escape_tags($_REQUEST['layout_mid']): '');
-
+	/*
+	Check service class limits
+	*/
+	if (local_user() && !(x($_REQUEST,'parent')) && !(x($_REQUEST,'post_id'))) {
+	$ret=item_check_service_class(local_user(),x($_REQUEST,'webpage'));
+	if (!$ret['success']) { 
+      notice( t($ret['message']) . EOL) ;
+				goaway($a->get_baseurl() . "/" . $return_path );
+			killme();
+	}
+	}
 	if($pagetitle) {
 		require_once('library/urlify/URLify.php');
 		$pagetitle = strtolower(URLify::transliterate($pagetitle));
@@ -1114,4 +1124,41 @@ function fix_attached_file_permissions($channel,$observer_hash,$body,
 			}
 		}
 	}
+}
+function item_check_service_class($channel_id,$iswebpage) {
+	$ret = array('success' => false, $message => '');
+	if ($iswebpage) {
+		$r = q("select count(i.id)  as total from item i 
+			right join channel c on (i.author_xchan=c.channel_hash and i.uid=c.channel_id )  
+			and i.parent=i.id and (i.item_restrict & %d) and i.uid= %d ",
+			intval(ITEM_WEBPAGE),
+		intval($channel_id)
+	);
+	}
+	else {
+		$r = q("select count(i.id)  as total from item i 
+			right join channel c on (i.author_xchan=c.channel_hash and i.uid=c.channel_id )  
+			and i.parent=i.id and (i.item_restrict=0) and i.uid= %d ",
+		intval($channel_id)
+	);
+	}
+	if(! ($r && count($r))) {
+		$ret['message'] = t('Unable to obtain identity information from database');
+		return $ret;
+	} 
+	if (!$iswebpage) {
+	if(! service_class_allows($channel_id,'total_items',$r[0]['total'])) {
+		$result['message'] .= upgrade_message().sprintf(t("You have reached your limit of %1$.0f top level posts."),$r[0]['total']);
+		return $result;
+	}
+	}
+	else {
+	if(! service_class_allows($channel_id,'total_pages',$r[0]['total'])) {
+		$result['message'] .= upgrade_message().sprintf(t("You have reached your limit of %1$.0f webpages."),$r[0]['total']);
+		return $result;
+	}	
+	}
+
+	$ret['success'] = true;
+	return $ret;
 }

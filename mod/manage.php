@@ -53,6 +53,17 @@ function manage_content(&$a) {
 				$channels[$x]['default_links'] = '1';
 			}
 		}
+		
+	    $r = q("select count(channel_id) as total from channel where channel_account_id = %d ",
+		intval($account)
+		);
+		$limit = service_class_fetch(local_user(),'total_identities');
+		if($limit !== false) {
+			$channel_usage_message = sprintf( t("You have created %1$.0f of %2$.0f allowed channels."), $r[0]['total'], $limit);
+		}
+		else {
+			$channel_usage_message = '';
+ 		}
 	}
 
 	$links = array(
@@ -69,6 +80,7 @@ function manage_content(&$a) {
 		'$msg_make_default' => t('Make Default'),
 		'$links'            => $links,
 		'$all_channels'     => $channels,
+		'$channel_usage_message' => $channel_usage_message,
 	));
 
 

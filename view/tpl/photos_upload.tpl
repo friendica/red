@@ -1,6 +1,6 @@
 <h3>{{$pagename}}</h3>
 
-<div id="photos-usage-message">{{$usage}}</div>
+<div id="photos-usage-message" class="usage-message">{{$usage}}</div>
 
 <form action="photos/{{$nickname}}" enctype="multipart/form-data" method="post" name="photos-upload-form" id="photos-upload-form" >
 	<input type="hidden" id="photos-upload-source" name="source" value="photos" />
