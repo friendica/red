@@ -77,7 +77,7 @@ function item_post(&$a) {
 	if (local_user() && !(x($_REQUEST,'parent')) && !(x($_REQUEST,'post_id'))) {
 	$ret=item_check_service_class(local_user(),x($_REQUEST,'webpage'));
 	if (!$ret['success']) { 
-      notice( t($ret['message']) . EOL) ;
+          notice( t($ret['message']) . EOL) ;
       	  if(x($_REQUEST,'return')) 
 				goaway($a->get_baseurl() . "/" . $return_path );
 			killme();
