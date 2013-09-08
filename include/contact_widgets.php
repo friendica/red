@@ -85,7 +85,7 @@ function categories_widget($baseurl,$selected = '') {
                 order by term.term asc",
 		intval($a->profile['profile_uid']),
 	        intval(TERM_CATEGORY),
-                $a->profile['channel_hash']
+	        dbesc($a->profile['channel_hash'])
 	);
 	if($r && count($r)) {
 		foreach($r as $rr)
