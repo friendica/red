@@ -208,9 +208,8 @@ function notifier_run($argv, $argc){
 			$channel = $s[0];
 		$uid = $item_id;
 		$recipients = array();
-		$r = q("select * from abook where abook_channel = %d and not (abook_flags & %d)",
-			intval($item_id),
-			intval(ABOOK_FLAG_SELF)
+		$r = q("select abook_xchan from abook where abook_channel = %d",
+			intval($item_id)
 		);
 		if($r) {
 			foreach($r as $rr) {
