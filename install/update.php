@@ -1,6 +1,6 @@
 <?php
 
-define( 'UPDATE_VERSION' , 1067 );
+define( 'UPDATE_VERSION' , 1068 );
 
 /**
  *
@@ -770,6 +770,13 @@ ADD INDEX ( `layout_mid` ) ");
 function update_r1066() {
 	$r = q("ALTER TABLE `site` ADD `site_access` INT NOT NULL DEFAULT '0' AFTER `site_url` ,
 ADD INDEX ( `site_access` )");
+	if($r)
+		return UPDATE_SUCCESS;
+	return UPDATE_FAILED;
+}
+
+function update_r1067() {
+	$r = q("ALTER TABLE `updates` DROP PRIMARY KEY , ADD `ud_id` INT UNSIGNED NOT NULL AUTO_INCREMENT PRIMARY KEY FIRST,  ADD INDEX ( `ud_hash` ) ");
 	if($r)
 		return UPDATE_SUCCESS;
 	return UPDATE_FAILED;
