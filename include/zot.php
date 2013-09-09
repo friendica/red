@@ -1538,7 +1538,7 @@ function import_site($arr,$pubkey) {
 		}
 	}
 	else {
-		$r = q("insert into site ( site_url, site_acccess, site_flags, site_update, site_directory, site_register )
+		$r = q("insert into site ( site_url, site_access, site_flags, site_update, site_directory, site_register )
 			values ( '%s', %d, %d, '%s', '%s', %d )",
 			dbesc(htmlentities($arr['url'],ENT_COMPAT,'UTF-8',false)),
 			intval($site_directory),
