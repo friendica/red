@@ -48,13 +48,10 @@ $r = q("select * from attach where uid = %d order by filename asc",
 
 
 	$limit = service_class_fetch ($owner,'attach_upload_limit'); 
-//	if($limit !== false) {
 		$r = q("select sum(filesize) as total from attach where uid = %d ",
 		intval($owner)
 	);
 	$used = $r[0]['total'];
-//}
-	  logger('limit: ' . print_r($limit,true));
 
 		$url = z_root() . "/filestorage/" . $which; 
        return $o . replace_macros(get_markup_template("filestorage.tpl"), array(
