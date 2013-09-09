@@ -782,7 +782,7 @@ function update_r1067() {
 }
 
 function update_r1068(){
-	$r = q("ALTER TABLE `hubloc` ADD `hubloc_status` INT NOT NULL DEFAULT '0' AFTER `hubloc_flags` , ADD INDEX ( `hubloc_status` )");
+	$r = q("ALTER TABLE `hubloc` ADD `hubloc_status` INT UNSIGNED NOT NULL DEFAULT '0' AFTER `hubloc_flags` , ADD INDEX ( `hubloc_status` )");
 	if($r)
 		return UPDATE_SUCCESS;
 	return UPDATE_FAILED
