@@ -346,6 +346,17 @@ define ( 'XCHAN_FLAGS_HIDDEN',        0x0001);
 define ( 'XCHAN_FLAGS_ORPHAN',        0x0002);
 
 
+/*
+ * Traficlights for Administration of HubLoc
+ * to detect problems in inter server communication
+ */
+define ('HUBLOC_NOTUSED',	0x0000);
+define ('HUBLOC_SEND_ERROR',	0x0001);
+define ('HUBLOC_RECEIVE_ERROR',	0x0002);
+define ('HUBLOC_WORKS',		0x0004);
+define ('HUBLOC_OFFLINE',	0x0008);
+
+
 /**
  * Tag/term types
  */
