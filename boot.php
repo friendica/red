@@ -1228,7 +1228,7 @@ function check_config(&$a) {
 
 							$email_tpl = get_intltext_template("update_fail_eml.tpl");
 							$email_msg = replace_macros($email_tpl, array(
-								'$sitename' => $a->config['sitename'],
+								'$sitename' => $a->config['system']['sitename'],
 								'$siteurl' =>  $a->get_baseurl(),
 								'$update' => $x,
 								'$error' => sprintf( t('Update %s failed. See error logs.'), $x)
