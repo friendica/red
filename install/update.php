@@ -1,6 +1,6 @@
 <?php
 
-define( 'UPDATE_VERSION' , 1067 );
+define( 'UPDATE_VERSION' , 1068 );
 
 /**
  *
@@ -775,3 +775,6 @@ ADD INDEX ( `site_access` )");
 	return UPDATE_FAILED;
 }
 
+function update_r1067(){
+	$r = q("ALTER TABLE `hubloc` ADD `hubloc_status` INT NOT NULL DEFAULT '0' AFTER `hubloc_flags` , ADD INDEX ( `hubloc_status` )");
+}
