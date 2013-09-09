@@ -1745,6 +1745,20 @@ function process_channel_sync_delivery($sender,$arr,$deliveries) {
 				if(! array_key_exists('abook_xchan',$clean))
 					continue;
 
+				$r = q("select * from abook where abook_xchan = '%s' and abook_channel = %d limit 1",
+					dbesc($clean['abook_xchan']),
+					intval($channel['channel_id'])
+				);
+
+				// make sure we have an abook entry for this xchan on this system
+
+				if(! $r) {
+					q("insert into abook ( abook_xchan, abook_channel ) values ('%s', %d ) ",
+						dbesc($clean['abook_xchan']),
+						intval($channel['channel_id'])
+					);
+				} 
+
 				if(count($clean)) {
 					foreach($clean as $k => $v) {
 						$r = dbq("UPDATE abook set " . dbesc($k) . " = '" . dbesc($v) 
