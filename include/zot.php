@@ -493,7 +493,6 @@ function import_xchan($arr) {
 			logger('import_xchan: existing: ' . print_r($r[0],true), LOGGER_DATA);
 			logger('import_xchan: new: ' . print_r($arr,true), LOGGER_DATA);
 
-			update_modtime($xchan_hash);
 			$changed = true;
 		}
 	}
@@ -532,7 +531,7 @@ function import_xchan($arr) {
 			dbesc($arr['name_updated']),
 			intval($new_flags)
 		);
-		update_modtime($xchan_hash);
+
 		$changed = true;
 
 	}				
@@ -553,7 +552,7 @@ function import_xchan($arr) {
 				dbesc($xchan_hash)
 		);
 
-		update_modtime($xchan_hash);
+
 		$changed = true;
 	}
 
@@ -601,7 +600,7 @@ function import_xchan($arr) {
 						dbesc(datetime_convert()),
 						intval($r[0]['hubloc_id'])
 					);
-					update_modtime($xchan_hash);
+
 					$changed = true;
 				}
 				continue;
@@ -641,7 +640,7 @@ function import_xchan($arr) {
 				dbesc(datetime_convert()),
 				dbesc(datetime_convert())
 			);
-			update_modtime($xchan_hash);
+
 			$changed = true;
 		}
 
@@ -653,7 +652,7 @@ function import_xchan($arr) {
 					$r = q("delete from hubloc where hubloc_id = %d limit 1",
 						intval($x['hubloc_id'])
 					);
-					update_modtime($xchan_hash);
+
 					$changed = true;
 				}
 			}
@@ -667,7 +666,7 @@ function import_xchan($arr) {
 		if(array_key_exists('profile',$arr) && is_array($arr['profile'])) {
 			$profile_changed = import_directory_profile($xchan_hash,$arr['profile']);
 			if($profile_changed) {
-				update_modtime($xchan_hash);
+
 				$changed = true;
 			}
 		}
@@ -686,7 +685,6 @@ function import_xchan($arr) {
 	if(array_key_exists('site',$arr) && is_array($arr['site'])) {
 		$profile_changed = import_site($arr['site'],$arr['key']);
 		if($profile_changed) {
-			update_modtime($xchan_hash);
 			$changed = true;
 		}
 	}
@@ -694,9 +692,8 @@ function import_xchan($arr) {
 
 
 	if($changed) {
-		// send out a directory mirror update packet if we're a directory server or some kind
-
-
+		$guid = random_string() . '@' . get_app()->get_hostname();		
+		update_modtime($xchan_hash,$guid);
 	}
 
 	if(! x($ret,'message')) {
@@ -1431,7 +1428,7 @@ function import_directory_profile($hash,$profile) {
 	call_hooks('import_directory_profile', $d);
 
 	if($d['update'])
-		update_modtime($arr['xprof_hash']);
+		update_modtime($arr['xprof_hash'],random_string() . '@' . get_app()->get_hostname());
 	return $d['update'];
 }
 
@@ -1470,20 +1467,12 @@ function import_directory_keywords($hash,$keywords) {
 }
 
 
-function update_modtime($hash) {
-	$r = q("select * from updates where ud_hash = '%s' limit 1",
-		dbesc($hash)
+function update_modtime($hash,$guid) {
+	q("insert into updates (ud_hash, ud_guid, ud_date) values ( '%s', '%s', '%s' )",
+		dbesc($hash),
+		dbesc($guid),
+		dbesc(datetime_convert())
 	);
-	if($r)
-		q("update updates set ud_date = '%s' where ud_hash = '%s' limit 1",
-			dbesc(datetime_convert()),
-			dbesc($hash)
-		);
-	else
-		q("insert into updates (ud_hash, ud_date) values ( '%s', '%s' )",
-			dbesc($hash),
-			dbesc(datetime_convert())
-		);
 }
 
 
