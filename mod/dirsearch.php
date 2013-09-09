@@ -113,11 +113,11 @@ function dirsearch_content(&$a) {
 
 	if($mtime) {
 		$qlimit = '';
-		$sql_extra .= " and xchan_hash in ( select ud_hash from updates where ud_date > '" . dbesc($mtime) . "' ) ";
+//		$sql_extra .= " and xchan_hash in ( select ud_hash from updates where ud_date > '" . dbesc($mtime) . "' ) ";
 	}
 
 	if($sort_order == 'date')
-		$order = " order by ud_date desc ";
+		$order = ""; // " order by ud_date desc ";
 	elseif($sort_order == 'reverse')
 		$order = " order by xchan_name desc ";
 	else	
@@ -125,7 +125,7 @@ function dirsearch_content(&$a) {
 
 
 
-	$r = q("SELECT xchan.*, xprof.*, updates.* from xchan left join xprof on xchan_hash = xprof_hash left join updates on xchan_hash = ud_hash where $logic $sql_extra and not ( xchan_flags & %d ) and not ( xchan_flags & %d ) $order $qlimit ",
+	$r = q("SELECT xchan.*, xprof.* from xchan left join xprof on xchan_hash = xprof_hash where $logic $sql_extra and not ( xchan_flags & %d ) and not ( xchan_flags & %d ) $order $qlimit ",
 		intval(XCHAN_FLAGS_HIDDEN),
 		intval(XCHAN_FLAGS_ORPHAN)
 	);
