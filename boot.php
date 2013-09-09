@@ -1234,10 +1234,10 @@ function check_config(&$a) {
 								'$error' => sprintf( t('Update %s failed. See error logs.'), $x)
 							));
 
-							$subject=sprintf(t('Update Error at %s'), $a->get_baseurl());
+							$subject = email_header_encode(sprintf(t('Update Error at %s'), $a->get_baseurl()));
 									
-							mail($a->config['admin_email'], $subject, $email_msg,
-								'From: ' . t('Administrator') . '@' . $_SERVER['SERVER_NAME'] . "\n"
+							mail($a->config['system']['admin_email'], $subject, $email_msg,
+								'From: Administrator' . '@' . $_SERVER['SERVER_NAME'] . "\n"
 								. 'Content-type: text/plain; charset=UTF-8' . "\n"
 								. 'Content-transfer-encoding: 8bit' );
 							//try the logger
