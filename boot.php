@@ -1339,7 +1339,8 @@ function fix_system_urls($oldurl,$newurl) {
 	if($r) {
 		foreach($r as $rr) {
 			$channel = substr($rr['xchan_addr'],0,strpos($rr['xchan_addr'],'@'));
-			$parsed = @parse_url($rr['xchan_url']);
+
+			$parsed = @parse_url($newurl);
 			if(! $parsed)
 				continue;
 			$newhost = $parsed['host'];
