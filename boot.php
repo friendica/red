@@ -43,7 +43,7 @@ require_once('include/taxonomy.php');
 define ( 'RED_PLATFORM',            'Red Matrix' );
 define ( 'RED_VERSION',             trim(file_get_contents('version.inc')) . 'R');
 define ( 'ZOT_REVISION',            1     ); 
-define ( 'DB_UPDATE_VERSION',       1068  );
+define ( 'DB_UPDATE_VERSION',       1069  );
 
 define ( 'EOL',                    '<br />' . "\r\n"     );
 define ( 'ATOM_TIME',              'Y-m-d\TH:i:s\Z' );
@@ -1206,7 +1206,6 @@ function check_config(&$a) {
 
 			// We're reporting a different version than what is currently installed.
 			// Run any existing update scripts to bring the database up to current.
-
 			require_once('install/update.php');
 
 			// make sure that boot.php and update.php are the same release, we might be
@@ -1214,10 +1213,8 @@ function check_config(&$a) {
 			// file may not be here yet. This can happen on a very busy site.
 
 			if(DB_UPDATE_VERSION == UPDATE_VERSION) {
-
 				for($x = $stored; $x < $current; $x ++) {
 					if(function_exists('update_r' . $x)) {
-
 						// There could be a lot of processes running or about to run.
 						// We want exactly one process to run the update command.
 						// So store the fact that we're taking responsibility
@@ -1229,7 +1226,6 @@ function check_config(&$a) {
 						if(get_config('database','update_r' . $x))
 							break;
 						set_config('database','update_r' . $x, '1');
-
 						// call the specific update
 
 						$func = 'update_r' . $x;
