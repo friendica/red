@@ -142,7 +142,8 @@ EOT;
 	$arr['unseen'] = 1;
 	$arr['last-child'] = 0;
 
-	$post_id = item_store($arr);	
+	$post = item_store($arr);	
+	$post_id = $post['item_id'];
 
 	if(! $item['visible']) {
 		$r = q("UPDATE `item` SET `visible` = 1 WHERE `id` = %d AND `uid` = %d LIMIT 1",

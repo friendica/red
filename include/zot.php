@@ -1154,8 +1154,9 @@ function process_delivery($sender,$arr,$deliveries,$relay) {
 		else {
 			$arr['aid'] = $channel['channel_account_id'];
 			$arr['uid'] = $channel['channel_id'];
-			$item_id = item_store($arr);
-			$result[] = array($d['hash'],(($item_id) ? 'posted' : 'storage failed'),$channel['channel_name'] . ' <' . $channel['channel_address'] . '@' . get_app()->get_hostname() . '>');
+			$item_result = item_store($arr);
+			$item_id = $item_result['item_id'];
+			$result[] = array($d['hash'],(($item_id) ? 'posted' : 'storage failed:' . $item_result['message']),$channel['channel_name'] . ' <' . $channel['channel_address'] . '@' . get_app()->get_hostname() . '>');
 		}
 
 		if($relay && $item_id) {
@@ -1238,8 +1239,11 @@ function remove_community_tag($sender,$arr,$uid) {
 
 function update_imported_item($sender,$item,$uid) {
 
-	item_store_update($item);
-	logger('update_imported_item');
+	$x = item_store_update($item);
+	if(! $x['item_id'])
+		logger('update_imported_item: failed: ' . $x['message']);
+	else
+		logger('update_imported_item');
 
 }
 

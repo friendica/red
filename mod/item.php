@@ -689,7 +689,8 @@ function item_post(&$a) {
 		$post_id = 0;
 
 
-	$post_id = item_store($datarray,$execflag);
+	$post = item_store($datarray,$execflag);
+	$post_id = $post['item_id'];
 
 	if($post_id) {
 		logger('mod_item: saved item ' . $post_id);

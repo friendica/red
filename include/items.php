@@ -193,7 +193,9 @@ function post_activity_item($arr) {
 	}
 
 
-	$post_id = item_store($arr);	
+	$post = item_store($arr);	
+	if($post['result'])
+		$post_id = $post['item_id'];
 
 	if($post_id) {
 		$arr['id'] = $post_id;
@@ -1365,9 +1367,12 @@ function encode_rel_links($links) {
 
 function item_store($arr,$allow_exec = false) {
 
+	$ret = array('result' => false, 'item_id' => 0);
+
 	if(! $arr['uid']) {
 		logger('item_store: no uid');
-		return 0;
+		$ret['message'] = 'No uid.';
+		return ret;
 	}
 
 	// If a page layout is provided, ensure it exists and belongs to us. 
@@ -1392,7 +1397,8 @@ function item_store($arr,$allow_exec = false) {
 
 	if(($arr['mimetype'] == 'application/x-php') && (! $allow_exec)) {
 		logger('item_store: php mimetype but allow_exec is denied.');
-		return 0;
+		$ret['message'] = 'exec denied.';
+		return $ret;
 	}
 
 
@@ -1424,7 +1430,8 @@ function item_store($arr,$allow_exec = false) {
 			call_hooks('item_translate', $translate);
 			if((! $translate['translated']) && (intval(get_pconfig($arr['uid'],'system','reject_disallowed_languages')))) {
 				logger('item_store: language ' . $arr['lang'] . ' not accepted for uid ' . $arr['uid']);
-				return;
+				$ret['message'] = 'language not accepted';
+				return $ret;
 			}
 			$arr = $translate['item'];
 		}
@@ -1570,7 +1577,8 @@ function item_store($arr,$allow_exec = false) {
 		}
 		else {
 			logger('item_store: item parent was not found - ignoring item');
-			return 0;
+			$ret['message'] = 'parent not found.';
+			return $ret;
 		}
 	}
 
@@ -1584,14 +1592,16 @@ function item_store($arr,$allow_exec = false) {
 	);
 	if($r) {
 		logger('item-store: duplicate item ignored. ' . print_r($arr,true));
-		return 0;
+		$ret['message'] = 'duplicate post.';
+		return $ret;
 	}
 
 	call_hooks('post_remote',$arr);
 
 	if(x($arr,'cancel')) {
 		logger('item_store: post cancelled by plugin.');
-		return 0;
+		$ret['message'] = 'cancelled.';
+		return $ret;
 	}
 
 	// pull out all the taxonomy stuff for separate storage
@@ -1625,7 +1635,8 @@ function item_store($arr,$allow_exec = false) {
 	}
 	else {
 		logger('item_store: could not locate created item');
-		return 0;
+		$ret['message'] = 'unable to retrieve.';
+		return $ret;
 	}
 	if(count($r) > 1) {
 		logger('item_store: duplicated post occurred. Removing duplicates.');
@@ -1697,21 +1708,26 @@ function item_store($arr,$allow_exec = false) {
 	send_status_notifications($current_post,$arr);
 
 	tag_deliver($arr['uid'],$current_post);
+	$ret['success'] = true;
+	$ret['item_id'] = $current_post;
 
-	return $current_post;
+	return $ret;
 }
 
 
 
 function item_store_update($arr,$allow_exec = false) {
 
+	$ret = array('result' => false, 'item_id' => 0);
 	if(! intval($arr['uid'])) {
 		logger('item_store_update: no uid');
-		return 0;
+		$ret['message'] = 'no uid.';
+		return $ret;
 	}
 	if(! intval($arr['id'])) {
 		logger('item_store_update: no id');
-		return 0;
+		$ret['message'] = 'no id.';
+		return $ret;
 	}
 
 	$orig_post_id = $arr['id'];
@@ -1729,7 +1745,8 @@ function item_store_update($arr,$allow_exec = false) {
 		call_hooks('item_translate', $translate);
 		if((! $translate['translated']) && (intval(get_pconfig($arr['uid'],'system','reject_disallowed_languages')))) {
 			logger('item_store: language ' . $arr['lang'] . ' not accepted for uid ' . $arr['uid']);
-			return;
+			$ret['message'] = 'language not accepted';
+			return $ret;
 		}
 		$arr = $translate['item'];
 	}
@@ -1738,7 +1755,8 @@ function item_store_update($arr,$allow_exec = false) {
 
 	if(($arr['mimetype'] == 'application/x-php') && (! $allow_exec)) {
 		logger('item_store: php mimetype but allow_exec is denied.');
-		return 0;
+		$ret['message'] = 'exec denied.';
+		return $ret;
 	}
 
 
@@ -1771,7 +1789,8 @@ function item_store_update($arr,$allow_exec = false) {
 	);
 	if(! $orig) {
 		logger('item_store_update: original post not found: ' . $orig_post_id);
-		return 0;
+		$ret['message'] = 'no original';
+		return $ret;
 	}		
 
 	unset($arr['aid']);
@@ -1814,7 +1833,8 @@ function item_store_update($arr,$allow_exec = false) {
 
 	if(x($arr,'cancel')) {
 		logger('item_store_update: post cancelled by plugin.');
-		return 0;
+		$ret['message'] = 'cancelled.';
+		return $ret;
 	}
 
 	// pull out all the taxonomy stuff for separate storage
@@ -1842,7 +1862,8 @@ function item_store_update($arr,$allow_exec = false) {
 		logger('item_store_update: updated item ' . $orig_post_id, LOGGER_DEBUG);
 	else {
 		logger('item_store_update: could not update item');
-		return 0;
+		$ret['message'] = 'DB update failed.';
+		return $ret;
 	}
 
 	$r = q("delete from term where oid = %d and otype = %d",
@@ -1871,8 +1892,10 @@ function item_store_update($arr,$allow_exec = false) {
 	send_status_notifications($orig_post_id,$arr);
 
 	tag_deliver($uid,$orig_post_id);
+	$ret['success'] = true;
+	$ret['item_id'] = $orig_post_id;
 
-	return $orig_post_id;
+	return $ret;
 }
 
 
@@ -2749,7 +2772,8 @@ function consume_feed($xml,$importer,&$contact, &$hub, $datedir = 0, $pass = 0) 
 					}
 				}
 
-				$r = item_store($datarray);
+				$xx = item_store($datarray);
+				$r = $xx['item_id'];
 				continue;
 			}
 
@@ -2879,7 +2903,8 @@ function consume_feed($xml,$importer,&$contact, &$hub, $datedir = 0, $pass = 0) 
 					continue;
 
 
-				$r = item_store($datarray);
+				$xx = item_store($datarray);
+				$r = $xx['item_id'];
 				continue;
 
 			}

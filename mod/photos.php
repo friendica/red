@@ -506,7 +506,9 @@ function photos_post(&$a) {
 						. $a->get_baseurl() . '/photos/' . $owner_record['nickname'] . '/image/' . $p[0]['resource_id'] . '</id>';
 					$arr['target'] .= '<link>' . xmlify('<link rel="alternate" type="text/html" href="' . $a->get_baseurl() . '/photos/' . $owner_record['nickname'] . '/image/' . $p[0]['resource_id'] . '" />' . "\n" . '<link rel="preview" type="'.$p[0]['type'].'" href="' . $a->get_baseurl() . "/photo/" . $p[0]['resource_id'] . '-' . $best . '.' . $ext . '" />') . '</link></target>';
 
-					$item_id = item_store($arr);
+					$post = item_store($arr);
+					$item_id = $post['item_id'];
+
 					if($item_id) {
 						q("UPDATE `item` SET `plink` = '%s' WHERE `uid` = %d AND `id` = %d LIMIT 1",
 							dbesc($a->get_baseurl() . '/display/' . $owner_record['nickname'] . '/' . $item_id),
