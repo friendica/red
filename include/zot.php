@@ -904,7 +904,6 @@ function zot_import($arr) {
 				}
 			}
 			if($result){
-				logger('delivery result: ' .  print_r($result,tue) );
 				$return = array_merge($return,$result);
 			}
 		}
