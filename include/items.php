@@ -1624,10 +1624,11 @@ function item_store($arr,$allow_exec = false) {
 
 	// find the item we just created
 
-	$r = q("SELECT `id` FROM `item` WHERE `mid` = '%s' AND `uid` = %d ORDER BY `id` ASC ",
+	$r = q("SELECT * FROM `item` WHERE `mid` = '%s' AND `uid` = %d ORDER BY `id` ASC ",
 		$arr['mid'],           // already dbesc'd
 		intval($arr['uid'])
 	);
+
 
 	if($r && count($r)) {
 		$current_post = $r[0]['id'];
