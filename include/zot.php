@@ -955,7 +955,7 @@ function public_recips($msg) {
 		$r = array();
 
 	$x = q("select channel_hash as hash from channel left join abook on abook_channel = channel_id where abook_xchan = '%s'
-		and (( " . $col . " & " . PERMS_SPECIFIC . " ) OR ( " . $col . " & " . PERMS_CONTACTS . " ))  and ( abook_my_perms & " . $field . " ) ",
+		and (( " . $col . " & " . PERMS_SPECIFIC . " )  and ( abook_my_perms & " . $field . " )) OR ( " . $col . " & " . PERMS_CONTACTS . " ) ",
 		dbesc($msg['notify']['sender']['hash'])
 	); 
 
