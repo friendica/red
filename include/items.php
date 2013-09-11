@@ -1479,7 +1479,7 @@ function item_store($arr,$allow_exec = false) {
 	$arr['changed']       = datetime_convert();
 	$arr['location']      = ((x($arr,'location'))      ? notags(trim($arr['location']))      : '');
 	$arr['coord']         = ((x($arr,'coord'))         ? notags(trim($arr['coord']))         : '');
-	$arr['parent_mid']    = ((x($arr,'parent_mid'))    ? notags(trim($arr['parent_mid']))    : '');
+	$arr['parent_mid']    = ((x($arr,'parent_mid'))    ? notags(trim($arr['parent_mid']))    : $arr['mid']);
 	$arr['thr_parent']    = ((x($arr,'thr_parent'))    ? notags(trim($arr['thr_parent']))    : $arr['parent_mid']);
 	$arr['verb']          = ((x($arr,'verb'))          ? notags(trim($arr['verb']))          : '');
 	$arr['obj_type']      = ((x($arr,'obj_type'))      ? notags(trim($arr['obj_type']))      : '');
@@ -1591,7 +1591,7 @@ function item_store($arr,$allow_exec = false) {
 		intval($arr['uid'])
 	);
 	if($r) {
-		logger('item-store: duplicate item ignored. ' . print_r($arr,true));
+		logger('item_store: duplicate item ignored. ' . print_r($arr,true));
 		$ret['message'] = 'duplicate post.';
 		return $ret;
 	}
@@ -1631,6 +1631,7 @@ function item_store($arr,$allow_exec = false) {
 
 	if($r && count($r)) {
 		$current_post = $r[0]['id'];
+		$arr = $r[0];  // This will gives us a fresh copy of what's now in the DB and undo the db escaping, which really messes up the notifications
 		logger('item_store: created item ' . $current_post, LOGGER_DEBUG);
 	}
 	else {
@@ -1668,6 +1669,7 @@ function item_store($arr,$allow_exec = false) {
 		intval($current_post)
 	);
 
+	// These are probably redundant now that we've queried the just stored post
 	$arr['id']        = $current_post;
 	$arr['parent']    = $parent_id;
 	$arr['allow_cid'] = $allow_cid;
