@@ -1634,7 +1634,7 @@ function item_store($arr,$allow_exec = false) {
 		logger('item_store: created item ' . $current_post, LOGGER_DEBUG);
 	}
 	else {
-		logger('item_store: could not locate created item');
+		logger('item_store: could not locate stored item');
 		$ret['message'] = 'unable to retrieve.';
 		return $ret;
 	}
