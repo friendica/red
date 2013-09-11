@@ -903,8 +903,10 @@ function zot_import($arr) {
 					$result = process_channel_sync_delivery($i['notify']['sender'],$arr,$deliveries);
 				}
 			}
-			if($result)
+			if($result){
+				logger('delivery result: ' .  print_r($result,tue) );
 				$return = array_merge($return,$result);
+			}
 		}
 	}
 

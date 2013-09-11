@@ -127,6 +127,12 @@ function post_init(&$a) {
 				info(sprintf( t('Welcome %s. Remote authentication successful.'),$x[0]['xchan_name']));
 				logger('mod_zot: auth success from ' . $x[0]['xchan_addr'] . ' for ' . $webbie); 
 
+			} else {
+				logger('mod_zot: still not authenticated: ' . $x[0]['xchan_addr']);
+				q("update hubloc set hubloc_status =  ( hubloc_status ^ %d) where hubloc_addr = '%s'",
+				intval(HUBLOC_RECEIVE_ERROR),
+				$x[0][xchan_addr]
+				);
 			}
 
 // FIXME - we really want to save the return_url in the session before we visit rmagic.
