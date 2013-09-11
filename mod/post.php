@@ -129,7 +129,7 @@ function post_init(&$a) {
 
 			} else {
 				logger('mod_zot: still not authenticated: ' . $x[0]['xchan_addr']);
-				q("update hubloc set hubloc_status =  ( hubloc_status ^ %d) where hubloc_addr = '%s'",
+				q("update hubloc set hubloc_status =  (hubloc_status | %d ) where hubloc_addr = '%s'",
 				intval(HUBLOC_RECEIVE_ERROR),
 				$x[0][xchan_addr]
 				);
