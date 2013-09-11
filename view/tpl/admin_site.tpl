@@ -34,7 +34,7 @@
 		});
 	});
 </script>
-<div id='adminpage'>
+<div id="adminpage" class="generic-content-wrapper">
 	<h1>{{$title}} - {{$page}}</h1>
 	
 	<form action="{{$baseurl}}/admin/site" method="post">

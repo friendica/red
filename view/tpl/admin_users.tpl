@@ -10,7 +10,7 @@
 		return false;
 	}
 </script>
-<div id='adminpage'>
+<div class = "generic-content-wrapper" id='adminpage'>
 	<h1>{{$title}} - {{$page}}</h1>
 	
 	<form action="{{$baseurl}}/admin/users" method="post">
