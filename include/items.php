@@ -1446,15 +1446,10 @@ function item_store($arr,$allow_exec = false) {
 
 	}
 
-	if($arr['object'])
-		logger('item_store: input object: ' . print_r($arr['object'],true), LOGGER_DATA);
-
 
 	if((x($arr,'object')) && is_array($arr['object'])) {
 		activity_sanitise($arr['object']);
-		logger('item_store: sanitised object: ' . print_r($arr['object'],true), LOGGER_DATA);
 		$arr['object'] = json_encode($arr['object']);
-		logger('item_store: encoded object: ' . print_r($arr['object'],true), LOGGER_DATA);
 	}
 
 	if((x($arr,'target')) && is_array($arr['target'])) {
