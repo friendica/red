@@ -885,7 +885,7 @@ CREATE TABLE IF NOT EXISTS `tokens` (
 ) ENGINE=MyISAM DEFAULT CHARSET=utf8;
 
 CREATE TABLE IF NOT EXISTS `updates` (
-  `ud_id` int(10) unsigned NOT NULL AUTO INCREMENT,
+  `ud_id` int(10) unsigned NOT NULL AUTO_INCREMENT,
   `ud_hash` char(128) NOT NULL,
   `ud_guid` char(255) NOT NULL DEFAULT '',
   `ud_date` datetime NOT NULL DEFAULT '0000-00-00 00:00:00',
