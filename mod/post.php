@@ -174,7 +174,18 @@ function post_post(&$a) {
 	if(array_key_exists('iv',$data)) {
 		$data = aes_unencapsulate($data,get_config('system','prvkey'));
 		logger('mod_zot: decrypt1: ' . $data, LOGGER_DATA);
+		if(! $data) {
+			$ret['message'] = 'Decryption failed.';
+			json_return_and_die($ret);
+		}
+
 		$data = json_decode($data,true);
+
+	}
+
+	if(! $data) {
+		$ret['message'] = 'No data received.';
+		json_return_and_die($ret);
 	}
 
 	logger('mod_zot: decoded data: ' . print_r($data,true), LOGGER_DATA);
