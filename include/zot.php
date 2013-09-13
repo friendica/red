@@ -844,6 +844,12 @@ function zot_import($arr) {
 
 			}
 			else {
+				if((array_key_exists('flags',$i['message'])) && (in_array('private',$i['message']['flags']))) {
+					// This should not happen but until we can stop it...
+					logger('private message was delivered with no recipients.');
+					continue;
+				}
+
 				logger('public post');
 
 				// Public post. look for any site members who are or may be accepting posts from this sender
