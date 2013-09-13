@@ -926,14 +926,22 @@ function public_recips($msg) {
 
 	$check_mentions = false;
 	if($msg['message']['type'] === 'activity') {
+		$col = 'channel_w_stream';
+		$field = PERMS_W_STREAM;
 		if(array_key_exists('flags',$msg['message']) && in_array('thread_parent', $msg['message']['flags'])) {
-			$col = 'channel_w_stream';
-			$field = PERMS_W_STREAM;
+			// check mention recipient permissions on top level posts only
 			$check_mentions = true;
 		}
 		else {
-			$col = 'channel_w_comment';
-			$field = PERMS_W_COMMENT;
+			// if this is a comment and it wasn't sent by the post owner, check to see who is allowing them to comment.
+			// We should have one specific recipient and this step shouldn't be needed unless somebody stuffed up their software.
+			// We may need this step to protect us from bad guys intentionally stuffing up their software.  
+			// If it is sent by the post owner, we don't need to do this. We only need to see who is receiving the 
+			// owner's stream (which was already set above) - as they control the comment permissions
+			if($msg['notify']['sender']['guid_sig'] != $msg['message']['owner']['guid_sig']) {
+				$col = 'channel_w_comment';
+				$field = PERMS_W_COMMENT;
+			}
 		}
 	}
 	elseif($msg['message']['type'] === 'mail') {
