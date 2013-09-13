@@ -372,6 +372,10 @@ function notifier_run($argv, $argc){
 		}
 	}
 
+	if(($private) && (! $env_recips)) {
+		// shouldn't happen
+		logger('notifier: private message with no envelope recipients.' . print_r($argv,true));
+	}
 	
 	logger('notifier: recipients (may be delivered to more if public): ' . print_r($recip_list,true), LOGGER_DEBUG);
 	

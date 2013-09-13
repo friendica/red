@@ -1,6 +1,7 @@
 var searchData=
 [
   ['cache_2ephp',['cache.php',['../cache_8php.html',1,'']]],
+  ['chanman_2ephp',['chanman.php',['../chanman_8php.html',1,'']]],
   ['channel_2ephp',['channel.php',['../channel_8php.html',1,'']]],
   ['chanview_2ephp',['chanview.php',['../chanview_8php.html',1,'']]],
   ['cli_5fstartup_2ephp',['cli_startup.php',['../cli__startup_8php.html',1,'']]],

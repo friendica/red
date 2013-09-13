@@ -18,6 +18,9 @@ function collect_recipients($item,&$private) {
 
 	require_once('include/group.php');
 
+	if($item['item_private'])
+		$private = true;
+
 	if($item['allow_cid'] || $item['allow_gid'] || $item['deny_cid'] || $item['deny_gid']) {
 		$allow_people = expand_acl($item['allow_cid']);
 		$allow_groups = expand_groups(expand_acl($item['allow_gid']));
