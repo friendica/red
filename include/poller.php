@@ -158,7 +158,7 @@ function poller_run($argv, $argc){
 	);
 
 
-	$contacts = q("SELECT abook_id, abook_updated, abook_connected, abook_closeness, abook_channel
+	$contacts = q("SELECT abook_id, abook_flags, abook_updated, abook_connected, abook_closeness, abook_channel
 		FROM abook LEFT JOIN account on abook_account = account_id where 1
 		$sql_extra 
 		AND (( abook_flags = %d ) OR  ( abook_flags = %d )) 
@@ -210,6 +210,11 @@ function poller_run($argv, $argc){
 				continue;
 			}
 
+			if($contact['abook_flags'] & ABOOK_FLAG_ARCHIVED) {
+				$update = false;
+				continue;
+			}
+
 			// might be dead, so maybe don't poll quite so often
 
 			// recently deceased, so keep up the regular schedule for 3 days
@@ -223,6 +228,8 @@ function poller_run($argv, $argc){
 			if(strcmp(datetime_convert('UTC','UTC', 'now'),datetime_convert('UTC','UTC', $t . " + 2 day")) > 0) {
 				$update = true;
 			}
+
+
 		}
 
 		if((! $update) && (! $force))
