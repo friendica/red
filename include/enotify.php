@@ -152,7 +152,14 @@ function notification($params) {
 		// differents subjects for messages on the same thread.
 
 		$subject = sprintf( t('[Red:Notify] Comment to conversation #%1$d by %2$s'), $parent_id, $sender['xchan_name']);
-		$preamble = sprintf( t('%s commented on an item/conversation you have been following.'), $sender['xchan_name']); 
+		// Let's try to tell if it is a comment or a like/dislike
+		// of course this is stupid, we should know if the like/dislike has been given to the post
+		// or to a comment to the post...
+		if (activity_match($item['verb'],ACTIVITY_LIKE) || activity_match($item['verb'],ACTIVITY_DISLIKE)) {
+                 $preamble = sprintf( t('%s gave a like/dislike to the converation you have been following.' $dender['xchan_name']);
+                } else {
+		$preamble = sprintf( t('%s commented on an item/conversation you have been following.'), $sender['xchan_name']);
+                }
 		$epreamble = $dest_str; 
 
 		$sitelink = t('Please visit %s to view and/or reply to the conversation.');
@@ -265,7 +272,90 @@ function notification($params) {
 		$tsitelink = sprintf( $sitelink, $siteurl );
 		$hsitelink = sprintf( $sitelink, '<a href="' . $siteurl . '">' . $sitename . '</a>');
 		$itemlink =  $params['link'];
-	}
+	}263
+264
+265
+266
+267
+268
+269
+270
+271
+272
+273
+274
+275
+276
+277
+278
+279
+280
+281
+282
+283
+284
+285
+286
+287
+288
+289
+290
+291
+292
+293
+294
+295
+296
+297
+298
+299
+300
+301
+302
+303
+304
+305
+306
+307
+                $sitelink = t('Please visit %s to approve or reject the suggestion.');
+                $tsitelink = sprintf( $sitelink, $siteurl );
+                $hsitelink = sprintf( $sitelink, '<a href="' . $siteurl . '">' . $sitename . '</a>');
+                $itemlink =  $params['link'];
+        }
+        if($params['type'] == NOTIFY_CONFIRM) {
+        }
+        if($params['type'] == NOTIFY_SYSTEM) {
+                
+        }
+        $h = array(
+                'params'    => $params, 
+                'subject'   => $subject,
+                'preamble'  => $preamble, 
+                'epreamble' => $epreamble, 
+                'body'      => $body, 
+                'sitelink'  => $sitelink,
+                'tsitelink' => $tsitelink,
+                'hsitelink' => $hsitelink,
+                'itemlink'  => $itemlink
+        );
+                
+        call_hooks('enotify',$h);
+        $subject   = $h['subject'];
+        $preamble  = $h['preamble'];
+        $epreamble = $h['epreamble'];
+        $body      = $h['body'];
+        $sitelink  = $h['sitelink'];
+        $tsitelink = $h['tsitelink'];
+        $hsitelink = $h['hsitelink'];
+        $itemlink  = $h['itemlink']; 
+        require_once('include/html2bbcode.php');        
+        do {
+                $dups = false;
+                $hash = random_string();
+        $r = q("SELECT `id` FROM `notify` WHERE `hash` = '%s' LIMIT 1",
+Commit summary: Extended description: (optional)
+mrjive mrjive@mrjive.it
+
 
 	if($params['type'] == NOTIFY_CONFIRM) {
 
