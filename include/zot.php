@@ -578,13 +578,18 @@ function import_xchan($arr) {
 				}
 			}
 
-			$r = q("select * from hubloc where hubloc_hash = '%s' and hubloc_guid = '%s' and hubloc_guid_sig = '%s' 
-				and hubloc_url = '%s' and hubloc_url_sig = '%s' limit 1",
+			// match as many fields as possible in case anything at all changed. 
+
+			$r = q("select * from hubloc where hubloc_hash = '%s' and hubloc_guid = '%s' and hubloc_guid_sig = '%s' and hubloc_url = '%s' and hubloc_url_sig = '%s' and hubloc_host = '%s' and hubloc_addr = '%s' and hubloc_callback = '%s' and hubloc_sitekey = '%s' limit 1",
 				dbesc($xchan_hash),
 				dbesc($arr['guid']),
 				dbesc($arr['guid_sig']),
 				dbesc($location['url']),
-				dbesc($location['url_sig'])
+				dbesc($location['url_sig']),
+				dbesc($location['host']),
+				dbesc($location['address']),
+				dbesc($location['callback']),
+				dbesc($location['sitekey'])
 			);
 			if($r) {
 				logger('import_xchan: hub exists: ' . $location['url']);
@@ -600,7 +605,6 @@ function import_xchan($arr) {
 						dbesc(datetime_convert()),
 						intval($r[0]['hubloc_id'])
 					);
-
 					$changed = true;
 				}
 				continue;
