@@ -118,6 +118,8 @@ function menu_edit($arr) {
 		return false;
 
 
+	$menu_channel_id = intval($arr['menu_channel_id']);
+
 	$r = q("select menu_id from menu where menu_name = '%s' and menu_channel_id = %d limit 1",
 		dbesc($menu_name),
 		intval($menu_channel_id)
@@ -127,9 +129,6 @@ function menu_edit($arr) {
 		return false;
 	}
 
-
-
-	$menu_channel_id = intval($arr['menu_channel_id']);
 
 	$r = q("select * from menu where menu_id = %d and menu_channel_id = %d limit 1",
 		intval($menu_id),
