@@ -141,13 +141,15 @@ function menu_edit($arr) {
 	}
 
 
-	$r = q("select * from menu where menu_name = '%s' and menu_channel_id = %d limit 1",
+	$r = q("select * from menu where menu_name = '%s' and menu_channel_id = %d and menu_desc = '%s' limit 1",
 		dbesc($menu_name),
-		intval($menu_channel_id)
+	        intval($menu_channel_id),
+	        dbesc($menu_desc)
 	);
 
 	if($r)
 		return false;
+
 
 	return q("update menu set menu_name = '%s', menu_desc = '%s' 
 		where menu_id = %d and menu_channel_id = %d limit 1", 
