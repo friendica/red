@@ -53,7 +53,8 @@ function fbrowser_content($a){
 			
 			function files1($rr){ 
 				global $a;
-				$types = Photo::supportedTypes();
+				$ph = photo_factory('');
+				$types = $ph->supportedTypes();
 				$ext = $types[$rr['type']];
 
 				if($a->get_template_engine() === 'internal') {
