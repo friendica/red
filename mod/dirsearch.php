@@ -41,6 +41,7 @@ function dirsearch_content(&$a) {
 	$agege    = ((x($_REQUEST,'agege'))    ? intval($_REQUEST['agege']) : 0 );
 	$agele    = ((x($_REQUEST,'agele'))    ? intval($_REQUEST['agele']) : 0 );
 
+	$sync     = ((x($_REQUEST,'sync'))     ? datetime_convert('UTC','UTC',$_REQUEST['sync']) : '');
 	$sort_order  = ((x($_REQUEST,'order')) ? $_REQUEST['order'] : '');
 
 // TODO - a meta search which joins all of these things to one search string
@@ -82,6 +83,7 @@ function dirsearch_content(&$a) {
 	$limit        = (($_REQUEST['limit'])          ? intval($_REQUEST['limit'])        : 0);
 	$return_total = ((x($_REQUEST,'return_total')) ? intval($_REQUEST['return_total']) : 0);
 
+	// mtime is not currently working
 
 	$mtime        = ((x($_REQUEST,'mtime'))        ? datetime_convert('UTC','UTC',$_REQUEST['mtime']) : '');
 
@@ -124,11 +126,19 @@ function dirsearch_content(&$a) {
 		$order = " order by xchan_name asc ";
 
 
+	if($sync) {
 
-	$r = q("SELECT xchan.*, xprof.* from xchan left join xprof on xchan_hash = xprof_hash where $logic $sql_extra and not ( xchan_flags & %d ) and not ( xchan_flags & %d ) $order $qlimit ",
-		intval(XCHAN_FLAGS_HIDDEN),
-		intval(XCHAN_FLAGS_ORPHAN)
-	);
+		$r = q("select xchan.*, updates.* from xchan left join updates on ud_hash = xchan_hash where ud_date >= '%s' and ud_guid != '' order by ud_date desc",
+			dbesc($sync)
+		);
+
+	}
+	else {
+		$r = q("SELECT xchan.*, xprof.* from xchan left join xprof on xchan_hash = xprof_hash where $logic $sql_extra and not ( xchan_flags & %d ) and not ( xchan_flags & %d ) $order $qlimit ",
+			intval(XCHAN_FLAGS_HIDDEN),
+			intval(XCHAN_FLAGS_ORPHAN)
+		);
+	}
 
 	$ret['page'] = $page + 1;
 	$ret['records'] = count($r);		
@@ -145,6 +155,7 @@ function dirsearch_content(&$a) {
 			$entry['hash']        = $rr['xchan_hash'];
 
 			$entry['updated']     = (($rr['ud_date']) ? $rr['ud_date'] : '0000-00-00 00:00:00');
+			$entry['update_guid'] = (($rr['ud_guid']) ? $rr['ud_guid'] : ''); 
 			$entry['url']         = $rr['xchan_url'];
 			$entry['photo']       = $rr['xchan_photo_m'];
 			$entry['address']     = $rr['xchan_addr'];

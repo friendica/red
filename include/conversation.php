@@ -876,6 +876,12 @@ function item_photo_menu($item){
 
 	$ssl_state = false;
 
+	$sub_link="";
+	$poke_link="";
+	$contact_url="";
+	$pm_url="";
+	$vsrc_link = "";
+
 	if(local_user()) {
 		$ssl_state = true;
 		if(! count($a->contacts))
@@ -884,14 +890,11 @@ function item_photo_menu($item){
 		$channel_hash = (($channel) ? $channel['channel_hash'] : '');
 	}
 
-	$sub_link="";
-	$poke_link="";
-	$contact_url="";
-	$pm_url="";
-
-	if((local_user()) && local_user() == $item['uid'] && $item['parent'] == $item['id'] 
-		&& $channel && ($channel_hash != $item['author_xchan'])) {
-		$sub_link = 'javascript:dosubthread(' . $item['id'] . '); return false;';
+	if((local_user()) && local_user() == $item['uid']) {
+		$vsrc_link = $a->get_baseurl() . '/viewsrc/' . $item['id'];
+		if($item['parent'] == $item['id'] && $channel && ($channel_hash != $item['author_xchan'])) {
+			$sub_link = 'javascript:dosubthread(' . $item['id'] . '); return false;';
+		}
 	}
 
     $profile_link = z_root() . "/chanview/?f=&hash=" . $item['author_xchan'];
@@ -910,6 +913,7 @@ function item_photo_menu($item){
 	}
 
 	$menu = Array(
+		t("View Source") => $vsrc_link,
 		t("Follow Thread") => $sub_link,
 		t("View Status") => $status_link,
 		t("View Profile") => $profile_link,

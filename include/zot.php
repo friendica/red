@@ -417,6 +417,7 @@ function import_xchan($arr) {
 	$dirmode = intval(get_config('system','directory_mode')); 
 
 	$changed = false;
+	$what = '';
 
 	if(! (is_array($arr) && array_key_exists('success',$arr) && $arr['success'])) {
 		logger('import_xchan: invalid data packet: ' . print_r($arr,true));
@@ -492,7 +493,7 @@ function import_xchan($arr) {
 
 			logger('import_xchan: existing: ' . print_r($r[0],true), LOGGER_DATA);
 			logger('import_xchan: new: ' . print_r($arr,true), LOGGER_DATA);
-
+			$what .= 'xchan ';
 			$changed = true;
 		}
 	}
@@ -532,6 +533,7 @@ function import_xchan($arr) {
 			intval($new_flags)
 		);
 
+		$what .= 'new_xchan';
 		$changed = true;
 
 	}				
@@ -552,7 +554,7 @@ function import_xchan($arr) {
 				dbesc($xchan_hash)
 		);
 
-
+		$what .= 'photo ';
 		$changed = true;
 	}
 
@@ -605,6 +607,7 @@ function import_xchan($arr) {
 						dbesc(datetime_convert()),
 						intval($r[0]['hubloc_id'])
 					);
+					$what = 'primary_hub ';
 					$changed = true;
 				}
 				continue;
@@ -644,7 +647,7 @@ function import_xchan($arr) {
 				dbesc(datetime_convert()),
 				dbesc(datetime_convert())
 			);
-
+			$what .= 'newhub ';
 			$changed = true;
 		}
 
@@ -656,7 +659,7 @@ function import_xchan($arr) {
 					$r = q("delete from hubloc where hubloc_id = %d limit 1",
 						intval($x['hubloc_id'])
 					);
-
+					$what .= 'removed_hub';
 					$changed = true;
 				}
 			}
@@ -670,7 +673,7 @@ function import_xchan($arr) {
 		if(array_key_exists('profile',$arr) && is_array($arr['profile'])) {
 			$profile_changed = import_directory_profile($xchan_hash,$arr['profile']);
 			if($profile_changed) {
-
+				$what .= 'profile ';
 				$changed = true;
 			}
 		}
@@ -689,6 +692,7 @@ function import_xchan($arr) {
 	if(array_key_exists('site',$arr) && is_array($arr['site'])) {
 		$profile_changed = import_site($arr['site'],$arr['key']);
 		if($profile_changed) {
+			$what .= 'site ';
 			$changed = true;
 		}
 	}
@@ -698,6 +702,7 @@ function import_xchan($arr) {
 	if($changed) {
 		$guid = random_string() . '@' . get_app()->get_hostname();		
 		update_modtime($xchan_hash,$guid);
+		logger('import_xchan: changed: ' . $what,LOGGER_DEBUG);
 	}
 
 	if(! x($ret,'message')) {
@@ -1396,6 +1401,7 @@ function import_directory_profile($hash,$profile) {
 		$update = false;
 		foreach($r[0] as $k => $v) {
 			if((array_key_exists($k,$arr)) && ($arr[$k] != $v)) {
+				logger('import_directory_profile: update' . $k . ' => ' . $arr[$k]);
 				$update = true;
 				break;
 			}
@@ -1431,6 +1437,7 @@ function import_directory_profile($hash,$profile) {
 	}
 	else {
 		$update = true;
+		logger('import_directory_profile: new profile');
 		$x = q("insert into xprof (xprof_hash, xprof_desc, xprof_dob, xprof_age, xprof_gender, xprof_marital, xprof_sexual, xprof_locale, xprof_region, xprof_postcode, xprof_country, xprof_keywords) values ('%s', '%s', '%s', %d, '%s', '%s', '%s', '%s', '%s', '%s', '%s', '%s') ",
 			dbesc($arr['xprof_hash']),
 			dbesc($arr['xprof_desc']),
