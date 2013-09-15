@@ -64,17 +64,18 @@ function channel_content(&$a, $update = 0, $load = false) {
 
 	$category = $datequery = $datequery2 = '';
 
-	if(argc() > 2) {
-		for($x = 2; $x < argc(); $x ++) {
-			if(is_a_date_arg(argv($x))) {
-				if($datequery)
-					$datequery2 = escape_tags(argv($x));
-				else
-					$datequery = escape_tags(argv($x));
-			}
-		}
-	}
-
+	// if(argc() > 2) {
+	//	for($x = 2; $x < argc(); $x ++) {
+	//		if(is_a_date_arg(argv($x))) {
+	//			if($datequery)
+	//				$datequery2 = escape_tags(argv($x));
+	//			else
+	//				$datequery = escape_tags(argv($x));
+	//		}
+	//	}
+	// }
+	$datequery = ((x($_GET,'dend') && is_a_date_arg($_GET['dend'])) ? notags($_GET['dend']) : '');
+	$datequery2 = ((x($_GET,'dbegin') && is_a_date_arg($_GET['dbegin'])) ? notags($_GET['dbegin']) : '');
 
 	if(get_config('system','block_public') && (! get_account_id()) && (! remote_user())) {
 			return login();
