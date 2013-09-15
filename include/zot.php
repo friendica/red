@@ -1383,8 +1383,8 @@ function import_directory_profile($hash,$profile) {
 		foreach($profile['keywords'] as $kw) {
 			$kw = trim(htmlentities($kw,ENT_COMPAT,'UTF-8',false));
 			$kw = trim($kw,',');
+			$clean[] = $kw;
 		}
-		$clean[] = $kw;
 	}
 
 	$arr['xprof_keywords'] = implode(' ',$clean);
