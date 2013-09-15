@@ -70,7 +70,7 @@ function directory_content(&$a) {
 	if($url) {
 		$query = $url . '?f=' ;
 		if($search)
-			$query .= '&name=' . urlencode($search);
+			$query .= '&name=' . urlencode($search) . '&keywords=' . urlencode($search);
 		if(strpos($search,'@'))
 			$query .= '&address=' . urlencode($search);
 		

@@ -75,7 +75,8 @@ function profile_activity($changed, $value) {
 	$arr['deny_cid']  = $self['channel_deny_cid'];
 	$arr['deny_gid']  = $self['channel_deny_gid'];
 
-	$i = item_store($arr);
+	$res = item_store($arr);
+	$i = $res['item_id'];
 
 	if($i) {
 		// FIXME - limit delivery in notifier.php to those specificed in the perms argument

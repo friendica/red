@@ -1,6 +1,6 @@
 <?php
 
-define( 'UPDATE_VERSION' , 1067 );
+define( 'UPDATE_VERSION' , 1069 );
 
 /**
  *
@@ -773,5 +773,19 @@ ADD INDEX ( `site_access` )");
 	if($r)
 		return UPDATE_SUCCESS;
 	return UPDATE_FAILED;
+}
+
+function update_r1067() {
+	$r = q("ALTER TABLE `updates` DROP PRIMARY KEY , ADD `ud_id` INT UNSIGNED NOT NULL AUTO_INCREMENT PRIMARY KEY FIRST,  ADD INDEX ( `ud_hash` ) ");
+	if($r)
+		return UPDATE_SUCCESS;
+	return UPDATE_FAILED;
+}
+
+function update_r1068(){
+        $r = q("ALTER TABLE `hubloc` ADD `hubloc_status` INT UNSIGNED NOT NULL DEFAULT '0' AFTER `hubloc_flags` , ADD INDEX ( `hubloc_status` )");
+        if($r)
+                return UPDATE_SUCCESS;
+        return UPDATE_FAILED;
 }
 

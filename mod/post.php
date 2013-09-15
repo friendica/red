@@ -127,6 +127,12 @@ function post_init(&$a) {
 				info(sprintf( t('Welcome %s. Remote authentication successful.'),$x[0]['xchan_name']));
 				logger('mod_zot: auth success from ' . $x[0]['xchan_addr'] . ' for ' . $webbie); 
 
+			} else {
+				logger('mod_zot: still not authenticated: ' . $x[0]['xchan_addr']);
+				q("update hubloc set hubloc_status =  (hubloc_status | %d ) where hubloc_addr = '%s'",
+				intval(HUBLOC_RECEIVE_ERROR),
+				$x[0][xchan_addr]
+				);
 			}
 
 // FIXME - we really want to save the return_url in the session before we visit rmagic.
@@ -168,7 +174,18 @@ function post_post(&$a) {
 	if(array_key_exists('iv',$data)) {
 		$data = aes_unencapsulate($data,get_config('system','prvkey'));
 		logger('mod_zot: decrypt1: ' . $data, LOGGER_DATA);
+		if(! $data) {
+			$ret['message'] = 'Decryption failed.';
+			json_return_and_die($ret);
+		}
+
 		$data = json_decode($data,true);
+
+	}
+
+	if(! $data) {
+		$ret['message'] = 'No data received.';
+		json_return_and_die($ret);
 	}
 
 	logger('mod_zot: decoded data: ' . print_r($data,true), LOGGER_DATA);

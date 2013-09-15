@@ -1,6 +1,7 @@
 <?php
 /** @file */
 
+
 /**
  * Red Matrix.
  * 
@@ -43,7 +44,7 @@ require_once('include/taxonomy.php');
 define ( 'RED_PLATFORM',            'Red Matrix' );
 define ( 'RED_VERSION',             trim(file_get_contents('version.inc')) . 'R');
 define ( 'ZOT_REVISION',            1     ); 
-define ( 'DB_UPDATE_VERSION',       1067  );
+define ( 'DB_UPDATE_VERSION',       1069  );
 
 define ( 'EOL',                    '<br />' . "\r\n"     );
 define ( 'ATOM_TIME',              'Y-m-d\TH:i:s\Z' );
@@ -344,6 +345,17 @@ define ( 'HUBLOC_FLAGS_UNVERIFIED',   0x0002);
 
 define ( 'XCHAN_FLAGS_HIDDEN',        0x0001);
 define ( 'XCHAN_FLAGS_ORPHAN',        0x0002);
+
+
+/*
+ * Traficlights for Administration of HubLoc
+ * to detect problems in inter server communication
+ */
+define ('HUBLOC_NOTUSED',	0x0000);
+define ('HUBLOC_SEND_ERROR',	0x0001);
+define ('HUBLOC_RECEIVE_ERROR',	0x0002);
+define ('HUBLOC_WORKS',		0x0004);
+define ('HUBLOC_OFFLINE',	0x0008);
 
 
 /**
@@ -1195,7 +1207,6 @@ function check_config(&$a) {
 
 			// We're reporting a different version than what is currently installed.
 			// Run any existing update scripts to bring the database up to current.
-
 			require_once('install/update.php');
 
 			// make sure that boot.php and update.php are the same release, we might be
@@ -1203,10 +1214,8 @@ function check_config(&$a) {
 			// file may not be here yet. This can happen on a very busy site.
 
 			if(DB_UPDATE_VERSION == UPDATE_VERSION) {
-
 				for($x = $stored; $x < $current; $x ++) {
 					if(function_exists('update_r' . $x)) {
-
 						// There could be a lot of processes running or about to run.
 						// We want exactly one process to run the update command.
 						// So store the fact that we're taking responsibility
@@ -1218,7 +1227,6 @@ function check_config(&$a) {
 						if(get_config('database','update_r' . $x))
 							break;
 						set_config('database','update_r' . $x, '1');
-
 						// call the specific update
 
 						$func = 'update_r' . $x;
@@ -1228,16 +1236,16 @@ function check_config(&$a) {
 
 							$email_tpl = get_intltext_template("update_fail_eml.tpl");
 							$email_msg = replace_macros($email_tpl, array(
-								'$sitename' => $a->config['sitename'],
+								'$sitename' => $a->config['system']['sitename'],
 								'$siteurl' =>  $a->get_baseurl(),
 								'$update' => $x,
 								'$error' => sprintf( t('Update %s failed. See error logs.'), $x)
 							));
 
-							$subject=sprintf(t('Update Error at %s'), $a->get_baseurl());
+							$subject = email_header_encode(sprintf(t('Update Error at %s'), $a->get_baseurl()));
 									
-							mail($a->config['admin_email'], $subject, $email_msg,
-								'From: ' . t('Administrator') . '@' . $_SERVER['SERVER_NAME'] . "\n"
+							mail($a->config['system']['admin_email'], $subject, $email_msg,
+								'From: Administrator' . '@' . $_SERVER['SERVER_NAME'] . "\n"
 								. 'Content-type: text/plain; charset=UTF-8' . "\n"
 								. 'Content-transfer-encoding: 8bit' );
 							//try the logger
@@ -1328,7 +1336,8 @@ function fix_system_urls($oldurl,$newurl) {
 	if($r) {
 		foreach($r as $rr) {
 			$channel = substr($rr['xchan_addr'],0,strpos($rr['xchan_addr'],'@'));
-			$parsed = @parse_url($rr['xchan_url']);
+
+			$parsed = @parse_url($newurl);
 			if(! $parsed)
 				continue;
 			$newhost = $parsed['host'];

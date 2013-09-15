@@ -360,7 +360,8 @@ function event_store($arr) {
 		}
 
 
-		$item_id = item_store($item_arr);
+		$res = item_store($item_arr);
+		$item_id = $res['item_id'];
 
 		call_hooks("event_created", $event['id']);
 

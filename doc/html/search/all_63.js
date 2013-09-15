@@ -11,6 +11,7 @@ var searchData=
   ['chanlink_5fcid',['chanlink_cid',['../text_8php.html#a85e3a4851c16674834010d8419a5d7ca',1,'text.php']]],
   ['chanlink_5fhash',['chanlink_hash',['../text_8php.html#a55ab893be57feda59c2a7ba1e58ff2d0',1,'text.php']]],
   ['chanlink_5furl',['chanlink_url',['../text_8php.html#a2e8d6c402603be3a1256a16605e09c2a',1,'text.php']]],
+  ['chanman_2ephp',['chanman.php',['../chanman_8php.html',1,'']]],
   ['channel_2ephp',['channel.php',['../channel_8php.html',1,'']]],
   ['channel_5faside',['channel_aside',['../channel_8php.html#aea8e189f2fbabfda779349dd94082e8e',1,'channel.php']]],
   ['channel_5fcontent',['channel_content',['../channel_8php.html#a9c6a6179e0e626398ebecc6151905ef1',1,'channel.php']]],

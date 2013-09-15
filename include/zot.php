@@ -493,7 +493,6 @@ function import_xchan($arr) {
 			logger('import_xchan: existing: ' . print_r($r[0],true), LOGGER_DATA);
 			logger('import_xchan: new: ' . print_r($arr,true), LOGGER_DATA);
 
-			update_modtime($xchan_hash);
 			$changed = true;
 		}
 	}
@@ -532,7 +531,7 @@ function import_xchan($arr) {
 			dbesc($arr['name_updated']),
 			intval($new_flags)
 		);
-		update_modtime($xchan_hash);
+
 		$changed = true;
 
 	}				
@@ -553,7 +552,7 @@ function import_xchan($arr) {
 				dbesc($xchan_hash)
 		);
 
-		update_modtime($xchan_hash);
+
 		$changed = true;
 	}
 
@@ -579,13 +578,18 @@ function import_xchan($arr) {
 				}
 			}
 
-			$r = q("select * from hubloc where hubloc_hash = '%s' and hubloc_guid = '%s' and hubloc_guid_sig = '%s' 
-				and hubloc_url = '%s' and hubloc_url_sig = '%s' limit 1",
+			// match as many fields as possible in case anything at all changed. 
+
+			$r = q("select * from hubloc where hubloc_hash = '%s' and hubloc_guid = '%s' and hubloc_guid_sig = '%s' and hubloc_url = '%s' and hubloc_url_sig = '%s' and hubloc_host = '%s' and hubloc_addr = '%s' and hubloc_callback = '%s' and hubloc_sitekey = '%s' limit 1",
 				dbesc($xchan_hash),
 				dbesc($arr['guid']),
 				dbesc($arr['guid_sig']),
 				dbesc($location['url']),
-				dbesc($location['url_sig'])
+				dbesc($location['url_sig']),
+				dbesc($location['host']),
+				dbesc($location['address']),
+				dbesc($location['callback']),
+				dbesc($location['sitekey'])
 			);
 			if($r) {
 				logger('import_xchan: hub exists: ' . $location['url']);
@@ -601,7 +605,6 @@ function import_xchan($arr) {
 						dbesc(datetime_convert()),
 						intval($r[0]['hubloc_id'])
 					);
-					update_modtime($xchan_hash);
 					$changed = true;
 				}
 				continue;
@@ -641,7 +644,7 @@ function import_xchan($arr) {
 				dbesc(datetime_convert()),
 				dbesc(datetime_convert())
 			);
-			update_modtime($xchan_hash);
+
 			$changed = true;
 		}
 
@@ -653,7 +656,7 @@ function import_xchan($arr) {
 					$r = q("delete from hubloc where hubloc_id = %d limit 1",
 						intval($x['hubloc_id'])
 					);
-					update_modtime($xchan_hash);
+
 					$changed = true;
 				}
 			}
@@ -667,7 +670,7 @@ function import_xchan($arr) {
 		if(array_key_exists('profile',$arr) && is_array($arr['profile'])) {
 			$profile_changed = import_directory_profile($xchan_hash,$arr['profile']);
 			if($profile_changed) {
-				update_modtime($xchan_hash);
+
 				$changed = true;
 			}
 		}
@@ -686,7 +689,6 @@ function import_xchan($arr) {
 	if(array_key_exists('site',$arr) && is_array($arr['site'])) {
 		$profile_changed = import_site($arr['site'],$arr['key']);
 		if($profile_changed) {
-			update_modtime($xchan_hash);
 			$changed = true;
 		}
 	}
@@ -694,9 +696,8 @@ function import_xchan($arr) {
 
 
 	if($changed) {
-		// send out a directory mirror update packet if we're a directory server or some kind
-
-
+		$guid = random_string() . '@' . get_app()->get_hostname();		
+		update_modtime($xchan_hash,$guid);
 	}
 
 	if(! x($ret,'message')) {
@@ -847,6 +848,12 @@ function zot_import($arr) {
 
 			}
 			else {
+				if((array_key_exists('flags',$i['message'])) && (in_array('private',$i['message']['flags']))) {
+					// This should not happen but until we can stop it...
+					logger('private message was delivered with no recipients.');
+					continue;
+				}
+
 				logger('public post');
 
 				// Public post. look for any site members who are or may be accepting posts from this sender
@@ -906,8 +913,9 @@ function zot_import($arr) {
 					$result = process_channel_sync_delivery($i['notify']['sender'],$arr,$deliveries);
 				}
 			}
-			if($result)
+			if($result){
 				$return = array_merge($return,$result);
+			}
 		}
 	}
 
@@ -928,14 +936,22 @@ function public_recips($msg) {
 
 	$check_mentions = false;
 	if($msg['message']['type'] === 'activity') {
+		$col = 'channel_w_stream';
+		$field = PERMS_W_STREAM;
 		if(array_key_exists('flags',$msg['message']) && in_array('thread_parent', $msg['message']['flags'])) {
-			$col = 'channel_w_stream';
-			$field = PERMS_W_STREAM;
+			// check mention recipient permissions on top level posts only
 			$check_mentions = true;
 		}
 		else {
-			$col = 'channel_w_comment';
-			$field = PERMS_W_COMMENT;
+			// if this is a comment and it wasn't sent by the post owner, check to see who is allowing them to comment.
+			// We should have one specific recipient and this step shouldn't be needed unless somebody stuffed up their software.
+			// We may need this step to protect us from bad guys intentionally stuffing up their software.  
+			// If it is sent by the post owner, we don't need to do this. We only need to see who is receiving the 
+			// owner's stream (which was already set above) - as they control the comment permissions
+			if($msg['notify']['sender']['guid_sig'] != $msg['message']['owner']['guid_sig']) {
+				$col = 'channel_w_comment';
+				$field = PERMS_W_COMMENT;
+			}
 		}
 	}
 	elseif($msg['message']['type'] === 'mail') {
@@ -948,9 +964,9 @@ function public_recips($msg) {
 
 	
 	if($msg['notify']['sender']['url'] === z_root())
-		$sql = " where (( " . $col . " & " . PERMS_NETWORK . " )  or ( " . $col . " & " . PERMS_SITE . " )) ";				
+		$sql = " where (( " . $col . " & " . PERMS_NETWORK . " )  or ( " . $col . " & " . PERMS_SITE . " ) or ( " . $col . " & " . PERMS_PUBLIC . ")) ";				
 	else
-		$sql = " where ( " . $col . " & " . PERMS_NETWORK . " ) " ;
+		$sql = " where (( " . $col . " & " . PERMS_NETWORK . " )  or ( "  . $col . " & " . PERMS_PUBLIC . ")) ";
 
 	$r = q("select channel_hash as hash from channel " . $sql );
 
@@ -958,7 +974,7 @@ function public_recips($msg) {
 		$r = array();
 
 	$x = q("select channel_hash as hash from channel left join abook on abook_channel = channel_id where abook_xchan = '%s'
-		and (( " . $col . " & " . PERMS_SPECIFIC . " ) OR ( " . $col . " & " . PERMS_CONTACTS . " ))  and ( abook_my_perms & " . $field . " ) ",
+		and (( " . $col . " & " . PERMS_SPECIFIC . " )  and ( abook_my_perms & " . $field . " )) OR ( " . $col . " & " . PERMS_CONTACTS . " ) ",
 		dbesc($msg['notify']['sender']['hash'])
 	); 
 
@@ -1157,8 +1173,9 @@ function process_delivery($sender,$arr,$deliveries,$relay) {
 		else {
 			$arr['aid'] = $channel['channel_account_id'];
 			$arr['uid'] = $channel['channel_id'];
-			$item_id = item_store($arr);
-			$result[] = array($d['hash'],(($item_id) ? 'posted' : 'storage failed'),$channel['channel_name'] . ' <' . $channel['channel_address'] . '@' . get_app()->get_hostname() . '>');
+			$item_result = item_store($arr);
+			$item_id = $item_result['item_id'];
+			$result[] = array($d['hash'],(($item_id) ? 'posted' : 'storage failed:' . $item_result['message']),$channel['channel_name'] . ' <' . $channel['channel_address'] . '@' . get_app()->get_hostname() . '>');
 		}
 
 		if($relay && $item_id) {
@@ -1241,8 +1258,11 @@ function remove_community_tag($sender,$arr,$uid) {
 
 function update_imported_item($sender,$item,$uid) {
 
-	item_store_update($item);
-	logger('update_imported_item');
+	$x = item_store_update($item);
+	if(! $x['item_id'])
+		logger('update_imported_item: failed: ' . $x['message']);
+	else
+		logger('update_imported_item');
 
 }
 
@@ -1363,8 +1383,8 @@ function import_directory_profile($hash,$profile) {
 		foreach($profile['keywords'] as $kw) {
 			$kw = trim(htmlentities($kw,ENT_COMPAT,'UTF-8',false));
 			$kw = trim($kw,',');
+			$clean[] = $kw;
 		}
-		$clean[] = $kw;
 	}
 
 	$arr['xprof_keywords'] = implode(' ',$clean);
@@ -1431,7 +1451,7 @@ function import_directory_profile($hash,$profile) {
 	call_hooks('import_directory_profile', $d);
 
 	if($d['update'])
-		update_modtime($arr['xprof_hash']);
+		update_modtime($arr['xprof_hash'],random_string() . '@' . get_app()->get_hostname());
 	return $d['update'];
 }
 
@@ -1470,20 +1490,12 @@ function import_directory_keywords($hash,$keywords) {
 }
 
 
-function update_modtime($hash) {
-	$r = q("select * from updates where ud_hash = '%s' limit 1",
-		dbesc($hash)
+function update_modtime($hash,$guid) {
+	q("insert into updates (ud_hash, ud_guid, ud_date) values ( '%s', '%s', '%s' )",
+		dbesc($hash),
+		dbesc($guid),
+		dbesc(datetime_convert())
 	);
-	if($r)
-		q("update updates set ud_date = '%s' where ud_hash = '%s' limit 1",
-			dbesc(datetime_convert()),
-			dbesc($hash)
-		);
-	else
-		q("insert into updates (ud_hash, ud_date) values ( '%s', '%s' )",
-			dbesc($hash),
-			dbesc(datetime_convert())
-		);
 }
 
 
@@ -1549,7 +1561,7 @@ function import_site($arr,$pubkey) {
 		}
 	}
 	else {
-		$r = q("insert into site ( site_url, site_acccess, site_flags, site_update, site_directory, site_register )
+		$r = q("insert into site ( site_url, site_access, site_flags, site_update, site_directory, site_register )
 			values ( '%s', %d, %d, '%s', '%s', %d )",
 			dbesc(htmlentities($arr['url'],ENT_COMPAT,'UTF-8',false)),
 			intval($site_directory),
@@ -1744,6 +1756,20 @@ function process_channel_sync_delivery($sender,$arr,$deliveries) {
 
 				if(! array_key_exists('abook_xchan',$clean))
 					continue;
+
+				$r = q("select * from abook where abook_xchan = '%s' and abook_channel = %d limit 1",
+					dbesc($clean['abook_xchan']),
+					intval($channel['channel_id'])
+				);
+
+				// make sure we have an abook entry for this xchan on this system
+
+				if(! $r) {
+					q("insert into abook ( abook_xchan, abook_channel ) values ('%s', %d ) ",
+						dbesc($clean['abook_xchan']),
+						intval($channel['channel_id'])
+					);
+				} 
 
 				if(count($clean)) {
 					foreach($clean as $k => $v) {

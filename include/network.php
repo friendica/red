@@ -312,8 +312,13 @@ function z_fetch_url($url, $binary = false, $redirects = 0, $opts = array()) {
 	$rc = intval($http_code);
 	$ret['return_code'] = $rc;
 	$ret['success'] = (($rc >= 200 && $rc <= 299) ? true : false);
+	if(! $ret['success']) {
+		$ret['debug'] = $curl_info;
+		logger('z_fetch_url: debug:' . print_r($curl_info,true), LOGGER_DATA);
+	}
 	$ret['body'] = substr($s,strlen($header));
 	$ret['header'] = $header;
+	
 	@curl_close($ch);
 	return($ret);
 }
@@ -407,6 +412,11 @@ function z_post_url($url,$params, $redirects = 0, $opts = array()) {
 	$rc = intval($http_code);
 	$ret['return_code'] = $rc;
 	$ret['success'] = (($rc >= 200 && $rc <= 299) ? true : false);
+	if(! $ret['success']) {
+		$ret['debug'] = $curl_info;
+		logger('z_fetch_url: debug:' . print_r($curl_info,true), LOGGER_DATA);
+	}
+
 	$ret['body'] = substr($s,strlen($header));
 	$ret['header'] = $header;
 	curl_close($ch);

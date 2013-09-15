@@ -24,5 +24,10 @@ var searchData=
   ['html2plain_2ephp',['html2plain.php',['../html2plain_8php.html',1,'']]],
   ['http_5fstatus_5fexit',['http_status_exit',['../include_2network_8php.html#a4cfb2c05a1c295317283d762440ce0b2',1,'network.php']]],
   ['hubloc_5fflags_5fprimary',['HUBLOC_FLAGS_PRIMARY',['../boot_8php.html#a3ad9cc5d4354be741fa1de12b96e9955',1,'boot.php']]],
-  ['hubloc_5fflags_5funverified',['HUBLOC_FLAGS_UNVERIFIED',['../boot_8php.html#ab54b24cc302e1a42a67a49d788b6b764',1,'boot.php']]]
+  ['hubloc_5fflags_5funverified',['HUBLOC_FLAGS_UNVERIFIED',['../boot_8php.html#ab54b24cc302e1a42a67a49d788b6b764',1,'boot.php']]],
+  ['hubloc_5fnotused',['HUBLOC_NOTUSED',['../boot_8php.html#aa589421267f0c2f0d643f727792cce35',1,'boot.php']]],
+  ['hubloc_5foffline',['HUBLOC_OFFLINE',['../boot_8php.html#a845891f82bf6edd7fa2d578b66703112',1,'boot.php']]],
+  ['hubloc_5freceive_5ferror',['HUBLOC_RECEIVE_ERROR',['../boot_8php.html#abeb4d86e17cefa8584f1244e2183b0e1',1,'boot.php']]],
+  ['hubloc_5fsend_5ferror',['HUBLOC_SEND_ERROR',['../boot_8php.html#a3b56bfc6a0dd159070e316ddac3b7456',1,'boot.php']]],
+  ['hubloc_5fworks',['HUBLOC_WORKS',['../boot_8php.html#a7a8ba64d089cc0412c59a2eefc6d655c',1,'boot.php']]]
 ];

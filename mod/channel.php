@@ -186,9 +186,8 @@ function channel_content(&$a, $update = 0, $load = false) {
 			$sql_extra2 .= protect_sprintf(sprintf(" AND item.created >= '%s' ", dbesc(datetime_convert(date_default_timezone_get(),'',$datequery2))));
 		}
 
-
-		$a->set_pager_itemspage(40);
-
+		$itemspage = get_pconfig(local_user(),'system','itemspage');
+		$a->set_pager_itemspage(((intval($itemspage)) ? $itemspage : 20));
 		$pager_sql = sprintf(" LIMIT %d, %d ",intval($a->pager['start']), intval($a->pager['itemspage']));
 
 		if($load) {
