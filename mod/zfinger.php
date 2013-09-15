@@ -106,12 +106,13 @@ function zfinger_init(&$a) {
 		if($p[0]['keywords']) {
 			$tags = array();
 			$k = explode(' ',$p[0]['keywords']);
-			if($k)
-				foreach($k as $kk)
+			if($k) {
+				foreach($k as $kk) {
 					if(trim($kk)) {
 						$tags[] = trim($kk," \t\n\r\0\x0B,");
 					}
 				}
+			}
 			if($tags)
 				$profile['keywords'] = $tags;
 		}
