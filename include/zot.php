@@ -1516,12 +1516,15 @@ function import_site($arr,$pubkey) {
 	}
 
 	$update = false;
+	$exists = false;
 
 	$r = q("select * from site where site_url = '%s' limit 1",
 		dbesc($arr['url'])
 	);
-	if($r)
-		$update = true;
+	if($r) {
+		$exists = true;
+		$siterecord = $r[0];
+	}
 
 	$site_directory = 0;
 	if($arr['directory_mode'] == 'normal')
@@ -1552,29 +1555,39 @@ function import_site($arr,$pubkey) {
 			$access_policy = ACCESS_FREE;
 	}
 
+	$directory_url = htmlentities($arr['directory_url'],ENT_COMPAT,'UTF-8',false);
+	$url = htmlentities($arr['url'],ENT_COMPAT,'UTF-8',false);
 
-	if($update) {
-		$r = q("update site set site_flags = %d, site_access = %d, site_directory = '%s', site_register = %d, site_update = '%s'
-			where site_url = '%s' limit 1",
-			intval($site_directory),
-			intval($access_policy),
-			dbesc(htmlentities($arr['directory_url'],ENT_COMPAT,'UTF-8',false)),
-			intval($register_policy),
-			dbesc(datetime_convert()),
-			dbesc(htmlentities($arr['url'],ENT_COMPAT,'UTF-8',false))
-		);
-		if(! $r) {
-			logger('import_site: update failed. ' . print_r($arr,true));
+	if($exists) {
+		if(($siterecord['site_flags'] != $site_directory)
+			|| ($siterecord['site_access'] != $access_policy)
+			|| ($siterecord['site_directory'] != $directory_url)
+			|| ($siterecord['site_register'] != $register_policy)) {
+			$update = true;
+
+			$r = q("update site set site_flags = %d, site_access = %d, site_directory = '%s', site_register = %d, site_update = '%s'
+				where site_url = '%s' limit 1",
+				intval($site_directory),
+				intval($access_policy),
+				dbesc($directory_url),
+				intval($register_policy),
+				dbesc(datetime_convert()),
+				dbesc($url)
+			);
+			if(! $r) {
+				logger('import_site: update failed. ' . print_r($arr,true));
+			}
 		}
 	}
 	else {
+		$update = true;
 		$r = q("insert into site ( site_url, site_access, site_flags, site_update, site_directory, site_register )
 			values ( '%s', %d, %d, '%s', '%s', %d )",
-			dbesc(htmlentities($arr['url'],ENT_COMPAT,'UTF-8',false)),
+			dbesc($url),
 			intval($site_directory),
 			intval($access_policy),
 			dbesc(datetime_convert()),
-			dbesc(htmlentities($arr['directory_url'],ENT_COMPAT,'UTF-8',false)),
+			dbesc($directory_url),
 			intval($register_policy)
 		);
 		if(! $r) {
