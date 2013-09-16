@@ -1565,6 +1565,9 @@ function import_site($arr,$pubkey) {
 			|| ($siterecord['site_register'] != $register_policy)) {
 			$update = true;
 
+			logger('import_site: input: ' . print_r($arr,true));
+			logger('import_site: stored: ' . print_r($siterecord,true));
+
 			$r = q("update site set site_flags = %d, site_access = %d, site_directory = '%s', site_register = %d, site_update = '%s'
 				where site_url = '%s' limit 1",
 				intval($site_directory),
