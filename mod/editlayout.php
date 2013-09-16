@@ -1,4 +1,3 @@
- 
 <?php
 
 // What is this here for?  I think it's cruft, but comment out for now in case it's here for a reason

@@ -1,4 +1,3 @@
- 
 <?php
 
 // Required for setting permissions. (FIXME)
