@@ -20,6 +20,7 @@ function post_init(&$a) {
 
 		if(array_key_exists('auth',$_REQUEST)) {
 			logger('mod_zot: auth request received.');
+			logger('mod_post: $_REQUEST contains: ' . print_r($_REQUEST,true) . ' for ' . $webbie);
 			$address = $_REQUEST['auth'];
 			$dest    = $_REQUEST['dest'];
 			$sec     = $_REQUEST['sec'];

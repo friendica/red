@@ -54,6 +54,9 @@ function admin_post(&$a){
 			case 'logs':
 				admin_page_logs_post($a);
 				break;
+			case 'hubloc':
+				admin_page_hubloc_post($a);
+				break;
 			case 'dbsync':
 				admin_page_dbsync_post($a);
 				break;
@@ -84,6 +87,7 @@ function admin_content(&$a) {
 		'users'	 =>	Array($a->get_baseurl(true)."/admin/users/", t("Users") , "users"),
 		'plugins'=>	Array($a->get_baseurl(true)."/admin/plugins/", t("Plugins") , "plugins"),
 		'themes' =>	Array($a->get_baseurl(true)."/admin/themes/", t("Themes") , "themes"),
+		'hubloc' =>	Array($a->get_baseurl(true)."/admin/hubloc/", t("Server") , "server"),
 		'dbsync' => Array($a->get_baseurl(true)."/admin/dbsync/", t('DB updates'), "dbsync")
 	);
 	
@@ -131,6 +135,9 @@ function admin_content(&$a) {
 				break;
 			case 'themes':
 				$o = admin_page_themes($a);
+				break;
+			case 'hubloc':
+				$o = admin_page_hubloc($a);
 				break;
 			case 'logs':
 				$o = admin_page_logs($a);
@@ -442,6 +449,15 @@ function admin_page_site(&$a) {
 			
 	));
 
+}
+function admin_page_hubloc_post(&$a){
+	 check_form_security_token_redirectOnErr('/admin/hubloc', 'hubloc');
+	return;
+}
+
+function admin_page_hubloc(&$a) {
+	$o = '';
+	return $o;
 }
 
 
