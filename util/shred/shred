@@ -43,6 +43,8 @@ OPTIONS:
   -h      Show this message
 
   -c      Command
+
+  -C      Config-Filename
     
 	Valid Commands:
       statuses_update
@@ -141,7 +143,6 @@ load_config () {
 	}
 
 main () {
-	load_config
 	
 	fcli_command=
 	fcli_status=
@@ -152,6 +153,7 @@ main () {
 	do
 		case $name in
 		c)	fcli_command="$OPTARG";;
+		C)  FCLI_RC="$OPTARG";;
 		s)	fcli_status="$OPTARG";;
 		r)	fcli_in_reply_to_status_id="$OPTARG";;
 		f)	fcli_file="$OPTARG";;
@@ -160,6 +162,7 @@ main () {
 			exit 2;;
 		esac
 	done
+	load_config
 
 	if [[ "$fcli_help_flag" == "1" ]]; then case $fcli_command in
 	statuses_update)
