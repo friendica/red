@@ -1004,6 +1004,17 @@ function link_compare($a,$b) {
 // If attach is true, also add icons for item attachments
 
 
+function unobscure(&$item) {
+	if(array_key_exists('item_flags',$item) && ($item['item_flags'] & ITEM_OBSCURED)) {
+		$key = get_config('system','prvkey');
+		if($item['title'])
+			$item['title'] = aes_unencapsulate(json_decode_plus($item['title']),$key);
+		if($item['body'])
+			$item['body'] = aes_unencapsulate(json_decode_plus($item['body']),$key);
+	}
+
+}
+
 
 function prepare_body(&$item,$attach = false) {
 
@@ -1013,13 +1024,7 @@ function prepare_body(&$item,$attach = false) {
 
 	call_hooks('prepare_body_init', $item); 
 
-	if(array_key_exists('item_flags',$item) && ($item['item_flags'] & ITEM_OBSCURED)) {
-		$key = get_config('system','prvkey');
-		if($item['title'])
-			$item['title'] = aes_unencapsulate(json_decode_plus($item['title']),$key);
-		if($item['body'])
-			$item['body'] = aes_unencapsulate(json_decode_plus($item['body']),$key);
-	}
+	unobscure($item);
 
 	$s = prepare_text($item['body'],$item['mimetype']);
 

@@ -730,7 +730,8 @@ require_once('include/photos.php');
 					$in_reply_to_user_id = $user_info['id'];
 					$in_reply_to_screen_name = $user_info['screen_name'];
 				}
-			}  
+			}
+			unobscure($lastwall);  
 			$status_info = array(
 				'text' => html2plain(prepare_text($lastwall['body'],$lastwall['mimetype']), 0),
 				'truncated' => false,
@@ -803,6 +804,7 @@ require_once('include/photos.php');
 					$in_reply_to_screen_name = $user_info['screen_name'];
 				}
 			}  
+			unobscure($lastwall);
 			$user_info['status'] = array(
 				'text' => html2plain(prepare_text($lastwall['body'],$lastwall['mimetype']), 0),
 				'truncated' => false,
@@ -1369,7 +1371,7 @@ require_once('include/photos.php');
 				'recipient_screen_name' => $recipient['screen_name'],
 				'recipient'             => $recipient,
 		);
-
+		unobscure($item);
 		//don't send title to regular StatusNET requests to avoid confusing these apps
 		if (x($_GET, 'getText')) {
 			$ret['title'] = $item['title'] ;
@@ -1425,7 +1427,7 @@ require_once('include/photos.php');
 				$in_reply_to_user_id = 0;
 				$in_reply_to_status_id = 0;
 			}
-
+			unobscure($item);
 			// Workaround for ostatus messages where the title is identically to the body
 			$statusbody = trim(html2plain(prepare_text($item['body'],$item['mimetype']), 0));
 			$statustitle = trim($item['title']);
