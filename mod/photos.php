@@ -1128,7 +1128,8 @@ function photos_content(&$a) {
 
 					$name_e = $profile_name;
 					$title_e = $item['title'];
-					$body_e = bbcode($item['body']);
+					unobscure($item);
+					$body_e = prepare_text($item['body'],$item['mimetype']);
 
 					$comments .= replace_macros($template,array(
 						'$id' => $item['item_id'],
