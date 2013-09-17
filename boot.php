@@ -1615,7 +1615,7 @@ function profile_load(&$a, $nickname, $profile = '') {
 	}
 
 	if($r[0]['keywords']) {
-		$keywords = str_replace(array('#',',',' ',',,'),array('',' ',',',','),$R[0]['keywords']);
+		$keywords = str_replace(array('#',',',' ',',,'),array('',' ',',',','),$r[0]['keywords']);
 		if(strlen($keywords))
 			$a->page['htmlhead'] .= '<meta name="keywords" content="' . htmlentities($keywords,ENT_COMPAT,'UTF-8') . '" />' . "\r\n" ;
 
