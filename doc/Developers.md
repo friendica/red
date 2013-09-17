@@ -22,4 +22,4 @@ Please pull in any changes from the project repository and merge them with your 
 
 Also - **test your changes**. Don't assume that a simple fix won't break something else. If possible get an experienced Red developer to review the code. 
 
-Further documentation can be found at the Github wiki pages at: https://github.com/friendica/red/wiki
+Further documentation can be found at the Github wiki pages at: [https://github.com/friendica/red/wiki](https://github.com/friendica/red/wiki).
