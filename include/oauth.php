@@ -18,11 +18,12 @@ class FKOAuthDataStore extends OAuthDataStore {
 	
   function lookup_consumer($consumer_key) {
 		logger(__function__.":".$consumer_key);
-      //echo "<pre>"; var_dump($consumer_key); killme();
-	  
+//      echo "<pre>"; var_dump($consumer_key); killme();
+
 		$r = q("SELECT client_id, pw, redirect_uri FROM clients WHERE client_id='%s'",
 			dbesc($consumer_key)
 		);
+
 		if (count($r))
 			return new OAuthConsumer($r[0]['client_id'],$r[0]['pw'],$r[0]['redirect_uri']);
 		return null;
@@ -30,11 +31,13 @@ class FKOAuthDataStore extends OAuthDataStore {
 
   function lookup_token($consumer, $token_type, $token) {
 		logger(__function__.":".$consumer.", ". $token_type.", ".$token);
+
 		$r = q("SELECT id, secret,scope, expires, uid  FROM tokens WHERE client_id='%s' AND scope='%s' AND id='%s'",
 			dbesc($consumer->key),
 			dbesc($token_type),
 			dbesc($token)
 		);
+
 		if (count($r)){
 			$ot=new OAuthToken($r[0]['id'],$r[0]['secret']);
 			$ot->scope=$r[0]['scope'];
@@ -46,12 +49,14 @@ class FKOAuthDataStore extends OAuthDataStore {
   }
 
   function lookup_nonce($consumer, $token, $nonce, $timestamp) {
-		//echo __file__.":".__line__."<pre>"; var_dump($consumer,$key); killme();
+//		echo __file__.":".__line__."<pre>"; var_dump($consumer,$key); killme();
+
 		$r = q("SELECT id, secret  FROM tokens WHERE client_id='%s' AND id='%s' AND expires=%d",
 			dbesc($consumer->key),
 			dbesc($nonce),
 			intval($timestamp)
 		);
+
 		if (count($r))
 			return new OAuthToken($r[0]['id'],$r[0]['secret']);
 		return null;
@@ -67,13 +72,14 @@ class FKOAuthDataStore extends OAuthDataStore {
 		} else {
 			$k = $consumer;
 		}
-		
+
 		$r = q("INSERT INTO tokens (id, secret, client_id, scope, expires) VALUES ('%s','%s','%s','%s', UNIX_TIMESTAMP()+%d)",
 				dbesc($key),
 				dbesc($sec),
 				dbesc($k),
 				'request',
 				intval(REQUEST_TOKEN_DURATION));
+
 		if (!$r) return null;
 		return new OAuthToken($key,$sec);
   }
@@ -95,6 +101,7 @@ class FKOAuthDataStore extends OAuthDataStore {
 		
 		$key = $this->gen_token();
 		$sec = $this->gen_token();
+
 		$r = q("INSERT INTO tokens (id, secret, client_id, scope, expires, uid) VALUES ('%s','%s','%s','%s', UNIX_TIMESTAMP()+%d, %d)",
 				dbesc($key),
 				dbesc($sec),
@@ -102,6 +109,7 @@ class FKOAuthDataStore extends OAuthDataStore {
 				'access',
 				intval(ACCESS_TOKEN_DURATION),
 				intval($uverifier));
+
 		if ($r)
 			$ret = new OAuthToken($key,$sec);		
 	}
@@ -131,9 +139,9 @@ class FKOAuth1 extends OAuthServer {
 	}
 	
 	function loginUser($uid){
-		logger("FKOAuth1::loginUser $uid");
+		logger("RedOAuth1::loginUser $uid");
 		$a = get_app();
-		$r = q("SELECT * FROM `user` WHERE uid=%d AND `blocked` = 0 AND `account_expired` = 0 AND `verified` = 1 LIMIT 1",
+		$r = q("SELECT * FROM channel WHERE channel_id = %d LIMIT 1",
 			intval($uid)
 		);
 		if(count($r)){
@@ -143,35 +151,36 @@ class FKOAuth1 extends OAuthServer {
 		    header('HTTP/1.0 401 Unauthorized');
 		    die('This api requires login');
 		}
-		$_SESSION['uid'] = $record['uid'];
-		$_SESSION['theme'] = $record['theme'];
-		$_SESSION['mobile_theme'] = get_pconfig($record['uid'], 'system', 'mobile_theme');
+		$_SESSION['uid'] = $record['channel_id'];
+		$_SESSION['theme'] = $record['channel_theme'];
+		$_SESSION['account_id'] = $record['channel_account_id'];
+		$_SESSION['mobile_theme'] = get_pconfig($record['channel_id'], 'system', 'mobile_theme');
 		$_SESSION['authenticated'] = 1;
-		$_SESSION['page_flags'] = $record['page-flags'];
-		$_SESSION['my_url'] = $a->get_baseurl() . '/channel/' . $record['nickname'];
+//		$_SESSION['page_flags'] = $record['page-flags'];
+		$_SESSION['my_url'] = $a->get_baseurl() . '/channel/' . $record['channel_address'];
 		$_SESSION['addr'] = $_SERVER['REMOTE_ADDR'];
+		$_SESSION['allow_api'] = true;
 
-		//notice( t("Welcome back ") . $record['username'] . EOL);
-		$a->user = $record;
+		$a->channel = $record;
 
-		if(strlen($a->user['timezone'])) {
-			date_default_timezone_set($a->user['timezone']);
-			$a->timezone = $a->user['timezone'];
+		if(strlen($a->channel['channel_timezone'])) {
+			date_default_timezone_set($a->channel['channel_timezone']);
+//			$a->timezone = $a->user['timezone'];
 		}
 
-		$r = q("SELECT * FROM `contact` WHERE `uid` = %s AND `self` = 1 LIMIT 1",
-			intval($_SESSION['uid']));
-		if(count($r)) {
-			$a->contact = $r[0];
-			$a->cid = $r[0]['id'];
-			$_SESSION['cid'] = $a->cid;
-		}
-		q("UPDATE `user` SET `login_date` = '%s' WHERE `uid` = %d LIMIT 1",
-			dbesc(datetime_convert()),
-			intval($_SESSION['uid'])
-		);
-
-		call_hooks('logged_in', $a->user);		
+//		$r = q("SELECT * FROM `contact` WHERE `uid` = %s AND `self` = 1 LIMIT 1",
+//			intval($_SESSION['uid']));
+//		if(count($r)) {
+//			$a->contact = $r[0];
+//			$a->cid = $r[0]['id'];
+//			$_SESSION['cid'] = $a->cid;
+//		}
+//		q("UPDATE `user` SET `login_date` = '%s' WHERE `uid` = %d LIMIT 1",
+//			dbesc(datetime_convert()),
+//			intval($_SESSION['uid'])
+//		);
+//
+//		call_hooks('logged_in', $a->user);		
 	}
 	
 }

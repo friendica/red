@@ -1823,9 +1823,13 @@ require_once('include/photos.php');
 	function api_oauth_request_token(&$a, $type){
 		try{
 			$oauth = new FKOAuth1();
-			$r = $oauth->fetch_request_token(OAuthRequest::from_request());
+			$req = OAuthRequest::from_request();
+logger('Req: ' . var_export($req,true));
+			$r = $oauth->fetch_request_token($req);
 		}catch(Exception $e){
-			echo "error=". OAuthUtil::urlencode_rfc3986($e->getMessage()); killme();
+			logger('oauth_exception: ' . print_r($e->getMessage(),true));
+			echo "error=". OAuthUtil::urlencode_rfc3986($e->getMessage()); 
+			killme();
 		}
 		echo $r;
 		killme();	
@@ -1833,7 +1837,8 @@ require_once('include/photos.php');
 	function api_oauth_access_token(&$a, $type){
 		try{
 			$oauth = new FKOAuth1();
-			$r = $oauth->fetch_access_token(OAuthRequest::from_request());
+			$req = OAuthRequest::from_request();
+			$r = $oauth->fetch_access_token($req);
 		}catch(Exception $e){
 			echo "error=". OAuthUtil::urlencode_rfc3986($e->getMessage()); killme();
 		}

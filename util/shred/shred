@@ -1,0 +1,211 @@
+#!/bin/bash
+# Copyright (c) 2012 Fabio Comuni
+# Copyright (c) 2010, 2012 Yu-Jie Lin
+# 
+# Permission is hereby granted, free of charge, to any person obtaining a copy of
+# this software and associated documentation files (the "Software"), to deal in
+# the Software without restriction, including without limitation the rights to
+# use, copy, modify, merge, publish, distribute, sublicense, and/or sell copies
+# of the Software, and to permit persons to whom the Software is furnished to do
+# so, subject to the following conditions:
+# 
+# The above copyright notice and this permission notice shall be included in all
+# copies or substantial portions of the Software.
+# 
+# THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+# IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
+# FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
+# AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
+# LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
+# OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
+# SOFTWARE.
+
+FCLI_RC="$HOME/.shred.rc"
+
+# Source Config
+[[ -f "$FCLI_RC" ]] && . "$FCLI_RC" || show_config_help 1
+
+# Source FriendicaOAuth.sh
+OAuth_sh=$(which FriendicaOAuth.sh)
+(( $? != 0 )) && echo 'Unable to locate FriendicaOAuth.sh! Make sure it is in searching PATH.' && exit 1
+source "$OAuth_sh"
+
+# Source JSON.sh
+JSON_sh=$(which JSON.sh)
+(( $? != 0 )) && echo 'Unable to locate JSON.sh! Make sure it is in searching PATH.' && exit 1
+source "$JSON_sh"
+
+
+usage () {
+	echo "usage: $0 options
+
+OPTIONS:
+  -h      Show this message
+
+  -c      Command
+    
+	Valid Commands:
+      statuses_update
+      home_timeline
+
+Use -h -c command to get options for the command.
+"
+	exit $1
+	}
+
+show_config_help () {
+	echo "Please create $FCLI_RC with:
+redmatrix_url=YOR_SERVER_URL (no trailing /)
+oauth_consumer_key=YOUR_CONSUMER_KEY
+oauth_consumer_secret=YOUR_CONSUMER_SECRET
+
+You can register new app consumer key and secret at
+  http://yourserver.com/settings/oauth
+"
+	exit $1
+	}
+
+
+show_statuses_update () {
+	echo "Command statuses_update
+
+Requires:
+  -s status
+
+Optional:
+  -r in_reply_to_status_id
+"
+	exit $1
+	}
+
+show_home_timeline () {
+    echo "Command home_timeline"
+    
+    exit $1
+    }
+
+#json helper
+#
+# usage:
+#   echo "$parsed_json" | js key1 [key2 [key3 ...]][,] 
+#
+#   echoes the value of json[key1][key2][key3], without surronding quotes
+#   with "," as last argument, no newline is printed
+#
+js () {
+    local arg
+    local rg='^\['
+    local ret
+    for arg in $@
+    do
+        [[ "$arg" == "," ]] && break;
+        if [[ $arg == ${arg//[0-9]/} ]]
+        then
+            rg="${rg}\"$arg\","
+        else
+            rg="${rg}$arg,"
+        fi
+    done
+    rg="${rg%?}\]"
+    ret=$(grep $rg  | cut -f 2 | sed 's/^"\(.*\)"$/\1/' | sed "s/\\\\\//\//g" )
+    if [[ "$arg" == "," ]]
+    then
+        echo -e "$ret" | tr -d '\012\015'
+    else
+        echo -e "$ret"
+    fi
+}
+
+
+load_config () {
+
+	[[ "$oauth_consumer_key" == "" ]] && show_config_help 1
+	[[ "$oauth_consumer_secret" == "" ]] && show_config_help 1
+
+
+	FO_init
+
+	if [[ "$oauth_token" == "" ]] || [[ "$oauth_token_secret" == "" ]]; then
+		FO_access_token_helper
+		if (( $? == 0 )); then
+			oauth_token=${FO_ret[0]}
+			oauth_token_secret=${FO_ret[1]}
+			echo "oauth_token='${FO_ret[0]}'" >> "$FCLI_RC"
+			echo "oauth_token_secret='${FO_ret[1]}'" >> "$FCLI_RC"
+			echo "Token saved."
+		else
+			echo 'Unable to get access token'
+			exit 1
+		fi
+	fi
+	}
+
+main () {
+	load_config
+	
+	fcli_command=
+	fcli_status=
+	fcli_in_reply_to_status_id=
+	fcli_file=
+	fcli_help_flag=
+	while getopts "c:s:r:f:h" name
+	do
+		case $name in
+		c)	fcli_command="$OPTARG";;
+		s)	fcli_status="$OPTARG";;
+		r)	fcli_in_reply_to_status_id="$OPTARG";;
+		f)	fcli_file="$OPTARG";;
+		h)  fcli_help_flag="1";;
+		?)	usage
+			exit 2;;
+		esac
+	done
+
+	if [[ "$fcli_help_flag" == "1" ]]; then case $fcli_command in
+	statuses_update)
+		show_statuses_update 0
+		;;
+	home_timeline)
+	    show_home_timeline 0
+	    ;;
+	*)
+		[[ "$fcli_command" == "" ]] && usage 0
+		usage 1
+	esac ; fi
+
+	case $fcli_command in
+	home_timeline)
+        FO_statuses_home_timeline 'json' '' 5
+        JS_Parsed=$(echo "$FO_ret" | tokenize | parse)
+		for id in 0 1 2 3 4
+		do
+		    echo "$JS_Parsed" | js $id "user" "name" ,
+		    echo -n " - "
+		    echo "$JS_Parsed" | js $id "created_at"
+            echo "$JS_Parsed" | js $id "text"
+		    echo ""
+		    echo "------------------------------------------------------------------------------"
+		done
+        
+		return $FO_rval
+		;;
+	statuses_update)
+		[[ "$fcli_status" == "" ]] && show_statuses_update 1
+		FO_statuses_update 'json' "$fcli_status" "$fcli_in_reply_to_status_id"
+        JS_Parsed=$(echo "$FO_ret" | tokenize | parse)
+        echo "$JS_Parsed" | js "user" "name" ,
+	    echo -n " - "
+	    echo "$JS_Parsed" | js "created_at"
+        echo "$JS_Parsed" | js "text"
+	    echo ""
+	    echo "------------------------------------------------------------------------------"
+		return $FO_rval
+		;;
+	*)
+		usage 1
+		;;
+	esac
+	return 0
+	}
+
+main "$@"
