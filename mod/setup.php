@@ -286,7 +286,7 @@ function setup_content(&$a) {
 			return $o;
 		}; break;
 		case 3: { // Site settings
-			require_once('datetime.php');
+			require_once('include/datetime.php');
 			$dbhost = ((x($_POST,'dbhost')) ? notags(trim($_POST['dbhost'])) : 'localhost');
 			$dbport = intval(notags(trim($_POST['dbuser'])));
 			$dbuser = notags(trim($_POST['dbuser']));
