@@ -1614,6 +1614,13 @@ function profile_load(&$a, $nickname, $profile = '') {
 			$r[0]['keywords'] = $x[0]['keywords'];
 	}
 
+	if($r[0]['keywords']) {
+		$keywords = str_replace(array('#',',',' ',',,'),array('',' ',',',','),$R[0]['keywords']);
+		if(strlen($keywords))
+			$a->page['htmlhead'] .= '<meta name="keywords" content="' . htmlentities($keywords,ENT_COMPAT,'UTF-8') . '" />' . "\r\n" ;
+
+	}
+
 	$a->profile = $r[0];
 	$a->profile_uid = $r[0]['profile_uid'];
 
