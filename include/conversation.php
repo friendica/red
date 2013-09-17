@@ -651,6 +651,7 @@ function conversation(&$a, $items, $mode, $update, $page_mode = 'traditional') {
 				$tmp_item = array(
 					'template' => $tpl,
 					'toplevel' => 'toplevel_item',
+					'mode' => $mode,
 					'id' => (($preview) ? 'P0' : $item['item_id']),
 					'linktitle' => sprintf( t('View %s\'s profile @ %s'), $profile_name, $profile_url),
 					'profile_url' => $profile_link,

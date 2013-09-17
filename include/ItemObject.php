@@ -88,6 +88,8 @@ class Item extends BaseObject {
 			: false);
 		$shareable = ((($conv->get_profile_owner() == local_user()) && ($item['item_private'] != 1)) ? true : false);
 
+		$mode = $conv->get_mode();
+
 		if(local_user() && $observer['xchan_hash'] === $item['author_xchan'])
 			$edpost = array($a->get_baseurl($ssl_state)."/editpost/".$item['id'], t("Edit"));
 		else
@@ -183,7 +185,7 @@ class Item extends BaseObject {
 
 		$tmp_item = array(
 			'template' => $this->get_template(),
-			
+			'mode' => $mode,			
 			'type' => implode("",array_slice(explode("/",$item['verb']),-1)),
 			'tags' => array(),
 			'body' => $body,

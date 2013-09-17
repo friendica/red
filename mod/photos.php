@@ -1064,6 +1064,7 @@ function photos_content(&$a) {
 				if($can_post || $a->data['perms']['post_comments']) {
 					$comments .= replace_macros($cmnt_tpl,array(
 						'$return_path' => '', 
+						'$mode' => 'photos',
 						'$jsreload' => $return_url,
 						'$type' => 'wall-comment',
 						'$id' => $link_item['id'],
@@ -1131,6 +1132,7 @@ function photos_content(&$a) {
 
 					$comments .= replace_macros($template,array(
 						'$id' => $item['item_id'],
+						'$mode' => 'photos',
 						'$profile_url' => $profile_link,
 						'$name' => $name_e,
 						'$thumb' => $profile_avatar,

@@ -732,7 +732,7 @@ require_once('include/photos.php');
 				}
 			}  
 			$status_info = array(
-				'text' => html2plain(bbcode($lastwall['body']), 0),
+				'text' => html2plain(prepare_text($lastwall['body'],$lastwall['mimetype']), 0),
 				'truncated' => false,
 				'created_at' => api_date($lastwall['created']),
 				'in_reply_to_status_id' => $in_reply_to_status_id,
@@ -804,7 +804,7 @@ require_once('include/photos.php');
 				}
 			}  
 			$user_info['status'] = array(
-				'text' => html2plain(bbcode($lastwall['body']), 0),
+				'text' => html2plain(prepare_text($lastwall['body'],$lastwall['mimetype']), 0),
 				'truncated' => false,
 				'created_at' => api_date($lastwall['created']),
 				'in_reply_to_status_id' => $in_reply_to_status_id,
@@ -1374,14 +1374,14 @@ require_once('include/photos.php');
 		if (x($_GET, 'getText')) {
 			$ret['title'] = $item['title'] ;
 			if ($_GET["getText"] == "html") {
-				$ret['text'] = bbcode($item['body']);
+				$ret['text'] = prepare_text($item['body'],$item['mimetype']);
 			}
 			elseif ($_GET["getText"] == "plain") {
-				$ret['text'] = html2plain(bbcode($item['body']), 0);
+				$ret['text'] = html2plain(prepare_text($item['body'],$item['mimetype']), 0);
 			}
 		}
 		else {
-			$ret['text'] = $item['title']."\n".html2plain(bbcode($item['body']), 0);
+			$ret['text'] = $item['title']."\n".html2plain(prepare_text($item['body'],$item['mimetype']), 0);
 		}
 		if (isset($_GET["getUserObjects"]) && $_GET["getUserObjects"] == "false") {
 			unset($ret['sender']);
@@ -1427,7 +1427,7 @@ require_once('include/photos.php');
 			}
 
 			// Workaround for ostatus messages where the title is identically to the body
-			$statusbody = trim(html2plain(bbcode($item['body']), 0));
+			$statusbody = trim(html2plain(prepare_text($item['body'],$item['mimetype']), 0));
 			$statustitle = trim($item['title']);
 
 			if (($statustitle != '') and (strpos($statusbody, $statustitle) !== false))
@@ -1448,7 +1448,7 @@ require_once('include/photos.php');
 				'geo'                       => '',
 				'favorited'                 => (($item['item_flags'] & ITEM_STARRED) ? true : false),
 				'user'                      =>  $status_user ,
-				'statusnet_html'		    => trim(bbcode($item['body'])),
+				'statusnet_html'		    => trim(prepare_text($item['body']),$item['mimetype']),
 				'statusnet_conversation_id'	=> $item['parent'],
 			);
 
