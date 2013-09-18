@@ -1087,12 +1087,15 @@ function fix_attached_photo_permissions($uid,$xchan_hash,$body,
 						intval($uid)
 					);
 					if($r) {
-						$r = q("UPDATE item SET allow_cid = '%s', allow_gid = '%s', deny_cid = '%s', deny_gid = '%s'
+						$private = (($str_contact_allow || $str_group_allow || $str_contact_deny || $str_group_deny) ? true : false);
+
+						$r = q("UPDATE item SET allow_cid = '%s', allow_gid = '%s', deny_cid = '%s', deny_gid = '%s', item_private = %d
 							WHERE id = %d AND uid = %d limit 1",
 							dbesc($str_contact_allow),
 							dbesc($str_group_allow),
 							dbesc($str_contact_deny),
 							dbesc($str_group_deny),
+							intval($private),
 							intval($r[0]['id']),
 							intval($uid)
 						);

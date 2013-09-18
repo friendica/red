@@ -303,6 +303,9 @@ function photos_post(&$a) {
 			);
 		}
 
+		$item_private = (($str_contact_allow || $str_group_allow || $str_contact_deny || $str_group_deny) ? true : false);
+
+
 		/* Don't make the item visible if the only change was the album name */
 
 		$visibility = 0;
@@ -320,10 +323,22 @@ function photos_post(&$a) {
 				intval($page_owner_uid)
 			);
 		}
-		if(count($r)) {
+		if($r) {
 			$old_tag    = $r[0]['tag'];
 			$old_inform = $r[0]['inform'];
 		}
+
+		// make sure the linked item has the same permissions as the photo regardless of any other changes
+		$x = q("update item set allow_cid = '%s', allow_gid = '%s', deny_cid = '%s', deny_gid = '%s', item_private = %d
+			where id = %d limit 1",
+				dbesc($str_contact_allow),
+				dbesc($str_group_allow),
+				dbesc($str_contact_deny),
+				dbesc($str_group_deny),
+				intval($item_private),
+				intval($item_id)
+		);
+
 
 		if(strlen($rawtags)) {
 
