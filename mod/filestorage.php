@@ -38,7 +38,7 @@ function filestorage_content(&$a) {
 
 // 	TODO This will also need to check for files on disk and delete them from there as well as the DB.
 	if ((argc() > 3 && argv(3) === 'delete') ? true : false);{
-	        if(! $perms['view_storage']) {
+	        if(! $perms['write_storage']) {
         	        notice( t('Permission denied.  VS.') . EOL);
                 return;
 		}
