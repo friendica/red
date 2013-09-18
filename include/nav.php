@@ -235,5 +235,5 @@ function nav_set_selected($item){
 		'manage'        => null,
 		'register'      => null,
 	);
-	$a->nav_sel[$item] = 'selected';
+	$a->nav_sel[$item] = 'active';
 }
