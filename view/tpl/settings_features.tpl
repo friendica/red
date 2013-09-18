@@ -1,3 +1,4 @@
+<div class="generic-content-wrapper">
 <h1>{{$title}}</h1>
 
 
@@ -17,3 +18,4 @@
 </div>
 
 </form>
+</div>

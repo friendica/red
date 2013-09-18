@@ -17,12 +17,32 @@ function filestorage_content(&$a) {
                 $owner = intval($r[0]['channel_id']);
 	}
 
+        $observer = $a->get_observer();
+        $ob_hash = (($observer) ? $observer['xchan_hash'] : '');
+
+        $perms = get_all_perms($owner,$ob_hash);
+
+        if(! $perms['view_storage']) {
+                notice( t('Permission denied.') . EOL);
+                return;
+        }
+
+//	Since we have ACL'd files in the wild, but don't have ACL here yet, we 
+//	need to return for anoyne other than the owner, despite the perms check for now.
+
 	$is_owner = (((local_user()) && ($owner  == local_user())) ? true : false);
 	if (! $is_owner) {
 		 info( t('Permission Denied.') . EOL );
 	return;
 	}
+
+// 	TODO This will also need to check for files on disk and delete them from there as well as the DB.
 	if ((argc() > 3 && argv(3) === 'delete') ? true : false);{
+	        if(! $perms['view_storage']) {
+        	        notice( t('Permission denied.  VS.') . EOL);
+                return;
+		}
+
 		 $file = argv(2);
 		 $r = q("delete from attach where id = '%s' and uid = '%s' limit 1",
 			dbesc($file),
