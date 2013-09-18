@@ -179,7 +179,8 @@ function zfinger_init(&$a) {
 					'url'      => $hub['hubloc_url'],
 					'url_sig'  => $hub['hubloc_url_sig'],
 					'callback' => $hub['hubloc_callback'],
-					'sitekey'  => $hub['hubloc_sitekey']
+					'sitekey'  => $hub['hubloc_sitekey'],
+					'deleted'  => (($hub['hubloc_flags'] & HUBLOC_FLAGS_DELETED) ? true : false)
 				);
 			}
 		}
