@@ -432,16 +432,21 @@ function network_content(&$a, $update = 0, $load = false) {
 			// NOTREACHED
 		}
 
-        $contacts = expand_groups(array($arr['group']));
-        if((is_array($contacts)) && count($contacts)) {
-            $contact_str = implode(',',$contacts);
+		$contact_str = '';
+        $contacts = group_get_members($group);
+        if($contacts) {
+			foreach($contacts as $c) {
+				if($contact_str)
+					$contact_str .= ',';
+            	$contact_str .= "'" . $c['xchan'] . "'";
+			}
         }
         else {
 			$contact_str = ' 0 ';	
 			info( t('Group is empty'));
         }
 
-        $sql_extra = " AND item.parent IN ( SELECT DISTINCT parent FROM item WHERE true $sql_options AND ( author_xchan IN ( $contact_str ) OR owner_xchan in ( $contact_str) or allow_gid like '" . protect_sprintf('%<' . dbesc($r[0]['hash']) . '>%') . "' ) and item_restrict = 0 ) ";
+        $sql_extra = " AND item.parent IN ( SELECT DISTINCT parent FROM item WHERE true $sql_options AND (( author_xchan IN ( $contact_str ) OR owner_xchan in ( $contact_str)) or allow_gid like '" . protect_sprintf('%<' . dbesc($r[0]['hash']) . '>%') . "' ) and item_restrict = 0 ) ";
 
     }
 
