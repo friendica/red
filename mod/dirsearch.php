@@ -175,7 +175,15 @@ function dirsearch_content(&$a) {
 		}
 
 		$ret['results'] = $entries;
-
+		if(! $sync) {
+			$k = dir_tagadelic(24);
+			if($k) {
+				$ret['keywords'] = array();
+				foreach($k as $kv) {
+					$ret['keywords'][] = array('term' => $kv[0],'weight' => $kv[1]);
+				}
+			}
+		}
 	}		
 	json_return_and_die($ret);
 

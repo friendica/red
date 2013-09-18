@@ -99,6 +99,7 @@ function format_term_for_display($term) {
 function tagadelic($uid, $count = 0, $authors = '', $flags = 0, $type = TERM_HASHTAG) {
 
 	$sql_options = '';
+	$count = intval($count);
 
 	if($flags)
 		$sql_options .= " and ((item_flags & " . intval($flags) . ") = " . intval($flags) . ") ";
@@ -157,6 +158,47 @@ function tags_sort($a,$b) {
 }
 
 
+function dir_tagadelic($count = 0) {
+
+	$sql_options = '';
+	$count = intval($count);
+
+	// Fetch tags
+	$r = q("select xtag_term, count(xtag_term) as total from xtag
+		group by term order by total desc %s",
+		((intval($count)) ? "limit $count" : '')
+	);
+
+	if(! $r)
+		return array();
+  
+  	// Find minimum and maximum log-count.
+	$tags = array();
+	$min = 1e9;
+	$max = -1e9;
+
+	$x = 0;
+	foreach($r as $rr) {
+		$tags[$x][0] = $rr['xtag_term'];
+		$tags[$x][1] = log($rr['total']);
+		$tags[$x][2] = 0;
+		$min = min($min,$tags[$x][1]);
+		$max = max($max,$tags[$x][1]);
+		$x ++;
+	}
+
+	usort($tags,'tags_sort');
+
+	$range = max(.01, $max - $min) * 1.0001;
+
+	for($x = 0; $x < count($tags); $x ++) {
+		$tags[$x][2] = 1 + floor(5 * ($tags[$x][1] - $min) / $range);
+	}
+
+	return $tags;
+}
+
+
 function tagblock($link,$uid,$count = 0,$authors = '',$flags = 0,$type = TERM_HASHTAG) {
   $o = '';
   $tab = 0;
@@ -171,6 +213,24 @@ function tagblock($link,$uid,$count = 0,$authors = '',$flags = 0,$type = TERM_HA
   }
 	return $o;
 }
+
+function dir_tagblock($link,$r) {
+  $o = '';
+  $tab = 0;
+
+  if($r) {
+	$o = '<div class="dirtagblock widget"><h3>' . t('Keywords') . '</h3><div class="tags" align="center">';
+	foreach($r as $rr) { 
+	  $o .= '<a href="'.$link .'/' . '?f=&keyword=' . urlencode($rr['term']).'" class="tag'.$rr['weight'].'">'.$rr['term'].'</a> ' . "\r\n";
+	}
+	$o .= '</div></div>';
+  }
+	return $o;
+}
+
+
+
+
 
 
 	/** 
