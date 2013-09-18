@@ -1567,24 +1567,27 @@ function import_site($arr,$pubkey) {
 
 	$directory_url = htmlentities($arr['directory_url'],ENT_COMPAT,'UTF-8',false);
 	$url = htmlentities($arr['url'],ENT_COMPAT,'UTF-8',false);
+	$sellpage = htmlentities($arr['sellpage'],ENT_COMPAT,'UTF-8',false);
 
 	if($exists) {
 		if(($siterecord['site_flags'] != $site_directory)
 			|| ($siterecord['site_access'] != $access_policy)
 			|| ($siterecord['site_directory'] != $directory_url)
+			|| ($siterecord['site_sellpage'] != $sellpage)
 			|| ($siterecord['site_register'] != $register_policy)) {
 			$update = true;
 
 //			logger('import_site: input: ' . print_r($arr,true));
 //			logger('import_site: stored: ' . print_r($siterecord,true));
 
-			$r = q("update site set site_flags = %d, site_access = %d, site_directory = '%s', site_register = %d, site_update = '%s'
+			$r = q("update site set site_flags = %d, site_access = %d, site_directory = '%s', site_register = %d, site_update = '%s', site_sellpage = '%s'
 				where site_url = '%s' limit 1",
 				intval($site_directory),
 				intval($access_policy),
 				dbesc($directory_url),
 				intval($register_policy),
 				dbesc(datetime_convert()),
+				dbesc($sellpage),
 				dbesc($url)
 			);
 			if(! $r) {
@@ -1594,14 +1597,15 @@ function import_site($arr,$pubkey) {
 	}
 	else {
 		$update = true;
-		$r = q("insert into site ( site_url, site_access, site_flags, site_update, site_directory, site_register )
-			values ( '%s', %d, %d, '%s', '%s', %d )",
+		$r = q("insert into site ( site_url, site_access, site_flags, site_update, site_directory, site_register, site_sellpage )
+			values ( '%s', %d, %d, '%s', '%s', %d, '%s' )",
 			dbesc($url),
 			intval($site_directory),
 			intval($access_policy),
 			dbesc(datetime_convert()),
 			dbesc($directory_url),
-			intval($register_policy)
+			intval($register_policy),
+			dbesc($sellpage)
 		);
 		if(! $r) {
 			logger('import_site: record create failed. ' . print_r($arr,true));

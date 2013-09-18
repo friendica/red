@@ -825,12 +825,14 @@ CREATE TABLE IF NOT EXISTS `site` (
   `site_update` datetime NOT NULL DEFAULT '0000-00-00 00:00:00',
   `site_directory` char(255) NOT NULL DEFAULT '',
   `site_register` int(11) NOT NULL DEFAULT '0',
+  `site_sellpage` char(255) NOT NULL DEFAULT '',
   PRIMARY KEY (`site_url`),
   KEY `site_access` (`site_access`),
   KEY `site_flags` (`site_flags`),
   KEY `site_update` (`site_update`),
   KEY `site_directory` (`site_directory`),
-  KEY `site_register` (`site_register`)
+  KEY `site_register` (`site_register`),
+  KEY `site_sellpage` (`site_sellpage`)
 ) ENGINE=MyISAM DEFAULT CHARSET=utf8;
 
 CREATE TABLE IF NOT EXISTS `spam` (

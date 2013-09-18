@@ -205,7 +205,7 @@ function list_public_sites() {
 			else
 				$register = 'closed';
 
-			$ret['sites'][] = array('url' => $rr['site_url'], 'access' => $access, 'register' => $register);
+			$ret['sites'][] = array('url' => $rr['site_url'], 'access' => $access, 'register' => $register, 'sellpage' => $rr['site_sellpage']);
 		}
 	}
 	return $ret;

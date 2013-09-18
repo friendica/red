@@ -1,6 +1,6 @@
 <?php
 
-define( 'UPDATE_VERSION' , 1069 );
+define( 'UPDATE_VERSION' , 1070 );
 
 /**
  *
@@ -787,5 +787,13 @@ function update_r1068(){
         if($r)
                 return UPDATE_SUCCESS;
         return UPDATE_FAILED;
+}
+
+function update_r1069() {
+	$r = q("ALTER TABLE `site` ADD `site_sellpage` CHAR( 255 ) NOT NULL DEFAULT '',
+ADD INDEX ( `site_sellpage` )");
+	if($r)
+		return UPDATE_SUCCESS;
+	return UPDATE_FAILED;
 }
 

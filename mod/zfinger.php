@@ -249,6 +249,7 @@ function zfinger_init(&$a) {
 		$ret['site']['plugins'] = $visible_plugins;
 		$ret['site']['sitehash'] = get_config('system','location_hash');
 		$ret['site']['sitename'] = get_config('system','sitename');
+		$ret['site']['sellpage'] = get_config('system','sellpage');
 
 	}
 	json_return_and_die($ret);
