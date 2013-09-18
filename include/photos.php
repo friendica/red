@@ -216,7 +216,7 @@ function photo_upload($channel, $observer, $args) {
 	$arr['allow_gid']     = $str_group_allow;
 	$arr['deny_cid']      = $str_contact_deny;
 	$arr['deny_gid']      = $str_group_deny;
-
+	$arr['verb']          = ACTIVITY_POST;
 
 	$arr['body']          = '[zrl=' . z_root() . '/photos/' . $channel['channel_address'] . '/image/' . $photo_hash . ']' 
 				. '[zmg]' . z_root() . "/photo/{$photo_hash}-{$smallest}.".$ph->getExt() . '[/zmg]' 
