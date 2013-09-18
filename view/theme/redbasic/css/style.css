@@ -204,7 +204,7 @@ nav .nav-link {
 	background-color: transparent !important;
 }
 
-.nav-commlink.selected {
+.nav-commlink.active {
 	background-color: #ffffff;
 	border-bottom: 1px solid #ffffff;
 	color: #000000 !important;
@@ -350,7 +350,7 @@ footer {
 	margin-bottom: 10px;
 }
 
-.group-selected, .nets-selected, .fileas-selected, .categories-selected, .settings-widget .selected {
+.group-selected, .nets-selected, .fileas-selected, .categories-selected, .settings-widget .active {
 	color: #444444 !important;
 }
 
@@ -2925,7 +2925,7 @@ nav .nav-menu-icon {
   -webkit-border-radius: $radiuspx;
   border-radius: $radiuspx;
 }
-nav .nav-menu-icon.selected {
+nav .nav-menu-icon.active {
   background-color: #FF0000;
 }
 nav .nav-menu-icon img {
@@ -2948,7 +2948,7 @@ nav:hover .nav-menu {
 /*  border-bottom: 3px solid #f00; */
 }
 
-nav .nav-menu.selected a {
+nav .nav-menu.active a {
 	color: #444444;
 }
 
@@ -2962,7 +2962,7 @@ nav .nav-notify {
   filter:alpha(opacity=60);
 
 }
-.nav-notify:hover, nav .nav-notify.selected span {
+.nav-notify:hover, nav .nav-notify.active span {
 	color: #ffffff;
 }
 
@@ -2985,10 +2985,10 @@ nav #nav-site-linkmenu .menu-popup {
   left: auto;
 }
 nav #nav-notifications-linkmenu.on .icon.s22.notify,
-nav #nav-notifications-linkmenu.selected .icon.s22.notify {
+nav #nav-notifications-linkmenu.active .icon.s22.notify {
   background-image: url("../../../../images/icons/22/notify_on.png");
 }
-nav #nav-apps-link.selected {
+nav #nav-apps-link.active {
   background-color: #364e59;
 }
 ul.menu-popup {
