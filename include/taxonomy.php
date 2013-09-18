@@ -165,7 +165,7 @@ function dir_tagadelic($count = 0) {
 
 	// Fetch tags
 	$r = q("select xtag_term, count(xtag_term) as total from xtag
-		group by term order by total desc %s",
+		group by xtag_term order by total desc %s",
 		((intval($count)) ? "limit $count" : '')
 	);
 
