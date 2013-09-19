@@ -226,6 +226,8 @@ function zfinger_init(&$a) {
 			$ret['site']['access_policy'] = 'paid';
 		if($access_policy == ACCESS_FREE)
 			$ret['site']['access_policy'] = 'free';
+		if($access_policy == ACCESS_TIERED)
+			$ret['site']['access_policy'] = 'tiered';
 
 		require_once('include/account.php');
 		$ret['site']['accounts'] = account_total();

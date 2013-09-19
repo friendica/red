@@ -221,7 +221,7 @@ function dir_tagblock($link,$r) {
   if($r) {
 	$o = '<div class="dirtagblock widget"><h3>' . t('Keywords') . '</h3><div class="tags" align="center">';
 	foreach($r as $rr) { 
-	  $o .= '<a href="'.$link .'/' . '?f=&keyword=' . urlencode($rr['term']).'" class="tag'.$rr['weight'].'">'.$rr['term'].'</a> ' . "\r\n";
+	  $o .= '<a href="'.$link .'/' . '?f=&keywords=' . urlencode($rr['term']).'" class="tag'.$rr['normalise'].'">'.$rr['term'].'</a> ' . "\r\n";
 	}
 	$o .= '</div></div>';
   }

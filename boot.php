@@ -149,7 +149,7 @@ define ( 'REGISTER_OPEN',          2 );
 define ( 'ACCESS_PRIVATE',         0 );
 define ( 'ACCESS_PAID',            1 );
 define ( 'ACCESS_FREE',            2 );
-
+define ( 'ACCESS_TIERED',          3 );
 
 /**
  * relationship types

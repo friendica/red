@@ -1563,6 +1563,8 @@ function import_site($arr,$pubkey) {
 			$access_policy = ACCESS_PAID;
 		if($arr['access_policy'] === 'free')
 			$access_policy = ACCESS_FREE;
+		if($arr['access_policy'] === 'tiered')
+			$access_policy = ACCESS_TIERED;
 	}
 
 	$directory_url = htmlentities($arr['directory_url'],ENT_COMPAT,'UTF-8',false);

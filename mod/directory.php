@@ -32,6 +32,7 @@ function directory_content(&$a) {
 	else
 		$search = ((x($_GET,'search')) ? notags(trim(rawurldecode($_GET['search']))) : '');
 
+	$keywords = (($_GET['keywords']) ? $_GET['keywords'] : '');
 
 	$tpl = get_markup_template('directory_header.tpl');
 
@@ -68,11 +69,14 @@ function directory_content(&$a) {
 
 
 	if($url) {
-		$query = $url . '?f=' ;
+		// We might want to make the tagadelic count (&kw=) configurable or turn it off completely.
+		$query = $url . '?f=&kw=24' ;
 		if($search)
 			$query .= '&name=' . urlencode($search) . '&keywords=' . urlencode($search);
 		if(strpos($search,'@'))
 			$query .= '&address=' . urlencode($search);
+		if($keywords)
+			$query .= '&keywords=' . urlencode($keywords);
 		
 		$sort_order  = ((x($_REQUEST,'order')) ? $_REQUEST['order'] : '');
 		if($sort_order)
@@ -173,6 +177,10 @@ function directory_content(&$a) {
 						unset($location);
 
 
+					}
+
+					if($j['keywords']) {
+						$a->set_widget('dirtagblock',dir_tagblock(z_root() . '/directory',$j['keywords']));
 					}
 
 //					logger('mod_directory: entries: ' . print_r($entries,true), LOGGER_DATA);

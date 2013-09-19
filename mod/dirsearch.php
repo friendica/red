@@ -40,6 +40,7 @@ function dirsearch_content(&$a) {
 	$keywords = ((x($_REQUEST,'keywords')) ? $_REQUEST['keywords'] : '');
 	$agege    = ((x($_REQUEST,'agege'))    ? intval($_REQUEST['agege']) : 0 );
 	$agele    = ((x($_REQUEST,'agele'))    ? intval($_REQUEST['agele']) : 0 );
+	$kw       = ((x($_REQUEST,'kw'))       ? intval($_REQUEST['kw'])    : 0 );
 
 	$sync     = ((x($_REQUEST,'sync'))     ? datetime_convert('UTC','UTC',$_REQUEST['sync']) : '');
 	$sort_order  = ((x($_REQUEST,'order')) ? $_REQUEST['order'] : '');
@@ -175,12 +176,12 @@ function dirsearch_content(&$a) {
 		}
 
 		$ret['results'] = $entries;
-		if(! $sync) {
-			$k = dir_tagadelic(24);
+		if(($kw) && (! $sync)) {
+			$k = dir_tagadelic($kw);
 			if($k) {
 				$ret['keywords'] = array();
 				foreach($k as $kv) {
-					$ret['keywords'][] = array('term' => $kv[0],'weight' => $kv[1]);
+					$ret['keywords'][] = array('term' => $kv[0],'weight' => $kv[1], 'normalise' => $kv[2]);
 				}
 			}
 		}
@@ -203,6 +204,8 @@ function list_public_sites() {
 				$access = 'free';
 			elseif($rr['site_access'] == ACCESS_PAID)
 				$access = 'paid';
+			elseif($rr['site_access'] == ACCESS_TIERED)
+				$access = 'tiered';
 			else
 				$access = 'private';
 
