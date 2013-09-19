@@ -1,6 +1,6 @@
 <?php
 
-define( 'UPDATE_VERSION' , 1071 );
+define( 'UPDATE_VERSION' , 1072 );
 
 /**
  *
@@ -800,6 +800,14 @@ ADD INDEX ( `site_sellpage` )");
 function update_r1070() {
 	$r = q("ALTER TABLE `updates` ADD `ud_flags` INT NOT NULL DEFAULT '0',
 ADD INDEX ( `ud_flags` )");
+	if($r)
+		return UPDATE_SUCCESS;
+	return UPDATE_FAILED;
+}
+
+function update_r1071() {
+	$r = q("ALTER TABLE `updates` ADD `ud_addr` CHAR( 255 ) NOT NULL DEFAULT '',
+ADD INDEX ( `ud_addr` ) ");
 	if($r)
 		return UPDATE_SUCCESS;
 	return UPDATE_FAILED;
