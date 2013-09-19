@@ -1487,6 +1487,7 @@ function import_directory_keywords($hash,$keywords) {
 	$clean = array();
 	foreach($keywords as $kw) {
 		$kw = trim(htmlentities($kw,ENT_COMPAT,'UTF-8',false));
+		$kw = trim($kw,',');
 		$clean[] = $kw;
 	}
 
