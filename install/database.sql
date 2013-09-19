@@ -891,10 +891,12 @@ CREATE TABLE IF NOT EXISTS `updates` (
   `ud_hash` char(128) NOT NULL,
   `ud_guid` char(255) NOT NULL DEFAULT '',
   `ud_date` datetime NOT NULL DEFAULT '0000-00-00 00:00:00',
+  `ud_flags` int(11) NOT NULL DEFAULT '0',
   PRIMARY KEY (`ud_id`),
   KEY `ud_hash` (`ud_hash`),
   KEY `ud_guid` (`ud_guid`),
-  KEY `ud_date` (`ud_date`)
+  KEY `ud_date` (`ud_date`),
+  KEY `ud_flags` (`ud_flags`)
 ) ENGINE=MyISAM DEFAULT CHARSET=utf8;
 
 CREATE TABLE IF NOT EXISTS `verify` (

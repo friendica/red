@@ -1336,7 +1336,7 @@ function xml2array($contents, $namespaces = true, $get_attributes=1, $priority =
 }  
 
 
-function email_header_encode($in_str, $charset) {
+function email_header_encode($in_str, $charset = 'UTF-8') {
     $out_str = $in_str;
 	$need_to_convert = false;
 
