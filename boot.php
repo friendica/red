@@ -44,6 +44,7 @@ require_once('include/taxonomy.php');
 define ( 'RED_PLATFORM',            'Red Matrix' );
 define ( 'RED_VERSION',             trim(file_get_contents('version.inc')) . 'R');
 define ( 'ZOT_REVISION',            1     ); 
+
 define ( 'DB_UPDATE_VERSION',       1072  );
 
 define ( 'EOL',                    '<br />' . "\r\n"     );
