@@ -24,6 +24,17 @@ function directory_content(&$a) {
 		return;
 	}
 
+	$safe_mode = 1;
+
+	if(local_user()) {
+		$safe_mode = get_pconfig(local_user(),'directory','safe_mode');
+	}
+	if($safe_mode === false)
+		$safe_mode = 1;
+	else
+		$safe_mode = intval($safe_mode);
+
+
 	$o = '';
 	nav_set_selected('directory');
 
@@ -73,7 +84,7 @@ function directory_content(&$a) {
 		$numtags = get_config('system','directorytags');
 
 		$kw = ((intval($numtags)) ? $numtags : 24);
-		$query = $url . '?f=&kw=' . $kw;
+		$query = $url . '?f=&kw=' . $kw . (($safe_mode != 1) ? '&safe=' . $safe_mode : '');
 		if($search)
 			$query .= '&name=' . urlencode($search) . '&keywords=' . urlencode($search);
 		if(strpos($search,'@'))
