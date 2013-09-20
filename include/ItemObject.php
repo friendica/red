@@ -296,9 +296,10 @@ class Item extends BaseObject {
 		return $this->threaded;
 	}
 
-
 	public function set_commentable($val) {
 		$this->commentable = $val;
+		foreach($this->get_children() as $child)
+			$child->set_commentable($val);
 	}
 
 	public function is_commentable() {
