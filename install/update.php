@@ -1,6 +1,6 @@
 <?php
 
-define( 'UPDATE_VERSION' , 1072 );
+define( 'UPDATE_VERSION' , 1073 );
 
 /**
  *
@@ -813,3 +813,10 @@ ADD INDEX ( `ud_addr` ) ");
 	return UPDATE_FAILED;
 }
 
+function update_r1072() {
+	$r = q("ALTER TABLE `xtag` ADD `xtag_flags` INT NOT NULL DEFAULT '0',
+ADD INDEX ( `xtag_flags` ) ");
+	if($r)
+		return UPDATE_SUCCESS;
+	return UPDATE_FAILED;
+}

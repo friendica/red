@@ -1025,7 +1025,9 @@ CREATE TABLE IF NOT EXISTS `xtag` (
   `xtag_id` int(10) unsigned NOT NULL AUTO_INCREMENT,
   `xtag_hash` char(255) NOT NULL,
   `xtag_term` char(255) NOT NULL DEFAULT '',
+  `xtag_flags` int(11) NOT NULL DEFAULT '0',
   PRIMARY KEY (`xtag_id`),
   KEY `xtag_term` (`xtag_term`),
-  KEY `xtag_hash` (`xtag_hash`)
+  KEY `xtag_hash` (`xtag_hash`),
+  KEY `xtag_flags` (`xtag_flags`)
 ) ENGINE=MyISAM DEFAULT CHARSET=utf8;
