@@ -983,7 +983,10 @@ function public_recips($msg) {
 	else
 		$sql = " where (( " . $col . " & " . PERMS_NETWORK . " )  or ( "  . $col . " & " . PERMS_PUBLIC . ")) ";
 
-	$r = q("select channel_hash as hash from channel " . $sql );
+
+	$r = q("select channel_hash as hash from channel $sql or channel_hash = '%s' ",
+		dbesc($msg['notify']['sender']['hash'])
+	);
 
 	if(! $r)
 		$r = array();

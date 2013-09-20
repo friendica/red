@@ -138,21 +138,24 @@ class Conversation extends BaseObject {
 			return false;
 		}
 
-		if(local_user() && $item->get_data_value('uid') == local_user()) 
-			$this->commentable = true;
+//		if(local_user() && $item->get_data_value('uid') == local_user()) 
+//			$this->commentable = true;
 
-		if($this->writable)
-			$this->commentable = true;
+//		if($this->writable)
+//			$this->commentable = true;
+
+		$item->set_commentable(false);
+		$ob_hash = (($this->observer) ? $this->observer['xchan_hash'] : '');
+		
+		if(($item->get_data_value('author_xchan') === $ob_hash) || ($item->get_data_value('owner_xchan') === $ob_hash))
+			$item->set_commentable(true);
 
 		if($item->get_data_value('item_flags') & ITEM_NOCOMMENT) {
-			$this->commentable = false;
+			$item->set_commentable(false);
 		}
-		elseif(($this->observer) && (! $this->writable)) {
-			$this->commentable = can_comment_on_post($this->observer['xchan_hash'],$item->data);
+		elseif(($this->observer) && (! $item->is_commentable())) {
+			$item->set_commentable(can_comment_on_post($this->observer['xchan_hash'],$item->data));
 		}
-
-
-
 
 		$item->set_conversation($this);
 		$this->threads[] = $item;

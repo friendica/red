@@ -14,6 +14,7 @@ class Item extends BaseObject {
 	public  $data = array();
 	private $template = 'conv_item.tpl';
 	private $comment_box_template = 'comment_item.tpl';
+	private $commentable = false;
 	private $toplevel = false;
 	private $children = array();
 	private $parent = null;
@@ -295,6 +296,15 @@ class Item extends BaseObject {
 		return $this->threaded;
 	}
 
+
+	public function set_commentable($val) {
+		$this->commentable = $val;
+	}
+
+	public function is_commentable() {
+		return $this->commentable;
+	}
+
 	/**
 	 * Add a child item
 	 */
@@ -480,7 +490,9 @@ class Item extends BaseObject {
 		$comment_box = '';
 		$conv = $this->get_conversation();
 
-		if(! $conv->is_commentable())
+//		logger('Commentable conv: ' . $conv->is_commentable());
+
+		if(! $this->is_commentable())
 			return;
 
 		$template = get_markup_template($this->get_comment_box_template());
