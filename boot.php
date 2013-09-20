@@ -347,7 +347,7 @@ define ( 'HUBLOC_FLAGS_DELETED',      0x1000);
 
 define ( 'XCHAN_FLAGS_HIDDEN',        0x0001);
 define ( 'XCHAN_FLAGS_ORPHAN',        0x0002);
-
+define ( 'XCHAN_FLAGS_CENSORED',      0x0004);
 
 /*
  * Traficlights for Administration of HubLoc

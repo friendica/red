@@ -41,6 +41,8 @@ function dirsearch_content(&$a) {
 	$agege    = ((x($_REQUEST,'agege'))    ? intval($_REQUEST['agege']) : 0 );
 	$agele    = ((x($_REQUEST,'agele'))    ? intval($_REQUEST['agele']) : 0 );
 	$kw       = ((x($_REQUEST,'kw'))       ? intval($_REQUEST['kw'])    : 0 );
+	// by default use a safe search
+	$safe     = ((x($_REQUEST,'safe'))     ? intval($_REQUEST['safe'])  : 1 );
 
 	$sync     = ((x($_REQUEST,'sync'))     ? datetime_convert('UTC','UTC',$_REQUEST['sync']) : '');
 	$sort_order  = ((x($_REQUEST,'order')) ? $_REQUEST['order'] : '');
@@ -99,12 +101,14 @@ function dirsearch_content(&$a) {
 
 	$logic = ((strlen($sql_extra)) ? 0 : 1);
 
+	$safesql = (($safe) ? " and not ( xchan_flags & " . intval(XCHAN_FLAGS_CENSORED) . " ) " : ''); 
+
 	if($limit) 
 		$qlimit = " LIMIT $limit ";
 	else {
 		$qlimit = " LIMIT " . intval($startrec) . " , " . intval($perpage);
 		if($return_total) {
-			$r = q("SELECT COUNT(xchan_hash) AS `total` FROM xchan left join xprof on xchan_hash = xprof_hash where $logic $sql_extra and not ( xchan_flags & %d) and not ( xchan_flags & %d ) ",
+			$r = q("SELECT COUNT(xchan_hash) AS `total` FROM xchan left join xprof on xchan_hash = xprof_hash where $logic $sql_extra and not ( xchan_flags & %d) and not ( xchan_flags & %d ) $safesql ",
 				intval(XCHAN_FLAGS_HIDDEN),
 				intval(XCHAN_FLAGS_ORPHAN)
 			);
@@ -135,7 +139,7 @@ function dirsearch_content(&$a) {
 
 	}
 	else {
-		$r = q("SELECT xchan.*, xprof.* from xchan left join xprof on xchan_hash = xprof_hash where $logic $sql_extra and not ( xchan_flags & %d ) and not ( xchan_flags & %d ) $order $qlimit ",
+		$r = q("SELECT xchan.*, xprof.* from xchan left join xprof on xchan_hash = xprof_hash where $logic $sql_extra and not ( xchan_flags & %d ) and not ( xchan_flags & %d ) $safesql $order $qlimit ",
 			intval(XCHAN_FLAGS_HIDDEN),
 			intval(XCHAN_FLAGS_ORPHAN)
 		);

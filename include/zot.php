@@ -1404,6 +1404,16 @@ function import_directory_profile($hash,$profile) {
 
 	$arr['xprof_keywords'] = implode(' ',$clean);
 
+	// Self censored, make it so
+	// These are not translated, so the German "erwachsenen" keyword will not censor the directory profile. Only the English form - "adult".   
+
+	if(in_arrayi('nsfw',$clean) || in_arrayi('adult',$clean)) {
+		q("update xchan set xchan_flags = (xchan_flags | %d) where xchan_hash = '%s' limit 1",
+			intval(XCHAN_FLAGS_CENSORED)
+		);
+	}
+
+
 	$r = q("select * from xprof where xprof_hash = '%s' limit 1",
 		dbesc($hash)
 	);
