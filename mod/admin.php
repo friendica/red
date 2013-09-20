@@ -401,7 +401,8 @@ function admin_page_site(&$a) {
 	$access_choices = Array(
 		ACCESS_PRIVATE => t("Private"),
 		ACCESS_PAID => t("Paid Access"),
-		ACCESS_FREE => t("Free Access")
+		ACCESS_FREE => t("Free Access"),
+		ACCESS_TIERED => t("Tiered Access")
 	);
 	
 //	$ssl_choices = array(
