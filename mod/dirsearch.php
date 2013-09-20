@@ -41,6 +41,7 @@ function dirsearch_content(&$a) {
 	$agege    = ((x($_REQUEST,'agege'))    ? intval($_REQUEST['agege']) : 0 );
 	$agele    = ((x($_REQUEST,'agele'))    ? intval($_REQUEST['agele']) : 0 );
 	$kw       = ((x($_REQUEST,'kw'))       ? intval($_REQUEST['kw'])    : 0 );
+
 	// by default use a safe search
 	$safe     = ((x($_REQUEST,'safe'))     ? intval($_REQUEST['safe'])  : 1 );
 
@@ -101,7 +102,9 @@ function dirsearch_content(&$a) {
 
 	$logic = ((strlen($sql_extra)) ? 0 : 1);
 
-	$safesql = (($safe) ? " and not ( xchan_flags & " . intval(XCHAN_FLAGS_CENSORED) . " ) " : ''); 
+	$safesql = (($safe > 0) ? " and not ( xchan_flags & " . intval(XCHAN_FLAGS_CENSORED) . " ) " : ''); 
+	if($safe < 0)
+		$safesql = " and ( xchan_flags & " . intval(XCHAN_FLAGS_CENSORED) . " ) ";
 
 	if($limit) 
 		$qlimit = " LIMIT $limit ";
