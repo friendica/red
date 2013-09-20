@@ -1409,7 +1409,8 @@ function import_directory_profile($hash,$profile) {
 
 	if(in_arrayi('nsfw',$clean) || in_arrayi('adult',$clean)) {
 		q("update xchan set xchan_flags = (xchan_flags | %d) where xchan_hash = '%s' limit 1",
-			intval(XCHAN_FLAGS_CENSORED)
+			intval(XCHAN_FLAGS_CENSORED),
+			dbesc($hash)
 		);
 	}
 
