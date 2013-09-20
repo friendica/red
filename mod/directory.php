@@ -70,7 +70,7 @@ function directory_content(&$a) {
 
 	if($url) {
 		// We might want to make the tagadelic count (&kw=) configurable or turn it off completely.
-		$numtags = $a->config['system']['directorytags'];
+		$numtags = get_config('system','directorytags');
 
 		$kw = ((intval($numtags)) ? $numtags : 24);
 		$query = $url . '?f=&kw=' . $kw;
