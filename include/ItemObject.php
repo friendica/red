@@ -164,7 +164,7 @@ class Item extends BaseObject {
 			);
 		}
 
-		if($conv->is_commentable()) {
+		if($this->is_commentable()) {
 			$like = array( t("I like this \x28toggle\x29"), t("like"));
 			$dislike = array( t("I don't like this \x28toggle\x29"), t("dislike"));
 			if ($shareable)
