@@ -34,7 +34,7 @@ function directory_content(&$a) {
 	else
 		$safe_mode = intval($safe_mode);
 
-	if(x($_REQUEST,'safe')
+	if(x($_REQUEST,'safe'))
 		$safe_mode = intval($_REQUEST['safe']);
 
 	$o = '';
