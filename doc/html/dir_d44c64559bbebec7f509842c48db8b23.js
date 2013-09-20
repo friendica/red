@@ -16,6 +16,7 @@ var dir_d44c64559bbebec7f509842c48db8b23 =
     [ "cache.php", "cache_8php.html", [
       [ "Cache", "classCache.html", null ]
     ] ],
+    [ "chanman.php", "include_2chanman_8php.html", "include_2chanman_8php" ],
     [ "cli_startup.php", "cli__startup_8php.html", "cli__startup_8php" ],
     [ "cli_suggest.php", "cli__suggest_8php.html", "cli__suggest_8php" ],
     [ "comanche.php", "comanche_8php.html", "comanche_8php" ],

@@ -6,6 +6,7 @@ var searchData=
   ['unescape_5funderscores_5fin_5flinks',['unescape_underscores_in_links',['../bb2diaspora_8php.html#a599428bceb6f6d82a6a78cb66811f747',1,'bb2diaspora.php']]],
   ['uninstall_5fplugin',['uninstall_plugin',['../plugin_8php.html#a093a9cb98f51e3643634bd8bc6ed6e76',1,'plugin.php']]],
   ['unload_5fplugin',['unload_plugin',['../plugin_8php.html#a90538627db68605aeb6db17a8ead6523',1,'plugin.php']]],
+  ['unobscure',['unobscure',['../text_8php.html#a8264348059abd1d4d5bb521323d3b19a',1,'text.php']]],
   ['unregister_5fhook',['unregister_hook',['../plugin_8php.html#a56f71fe5adf9586ce950523d8180443e',1,'plugin.php']]],
   ['unxmlify',['unxmlify',['../text_8php.html#a1360fed7f918d859daaca1c9f384f9af',1,'text.php']]],
   ['update_5fchannel_5fcontent',['update_channel_content',['../update__channel_8php.html#aca52a9da500f0db2f0a8666af5bc06ba',1,'update_channel.php']]],

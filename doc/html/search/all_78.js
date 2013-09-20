@@ -3,6 +3,7 @@ var searchData=
   ['x',['x',['../boot_8php.html#a01353c9abebc3544ea080ac161729632',1,'boot.php']]],
   ['xchan_2ephp',['xchan.php',['../xchan_8php.html',1,'']]],
   ['xchan_5fcontent',['xchan_content',['../xchan_8php.html#a9853348bf1a35c644460221ba75edc2d',1,'xchan.php']]],
+  ['xchan_5fflags_5fcensored',['XCHAN_FLAGS_CENSORED',['../boot_8php.html#accd6f36cc9f40225cbd720e4d12a7c6e',1,'boot.php']]],
   ['xchan_5fflags_5fhidden',['XCHAN_FLAGS_HIDDEN',['../boot_8php.html#a1af3ed96de14aa0d7891b39cc75b60f2',1,'boot.php']]],
   ['xchan_5fflags_5forphan',['XCHAN_FLAGS_ORPHAN',['../boot_8php.html#a1c923b99bf77e4203ae94e5684b6ad0f',1,'boot.php']]],
   ['xchan_5fmail_5fquery',['xchan_mail_query',['../text_8php.html#a543447c5ed766535221e2d9636b379ee',1,'text.php']]],

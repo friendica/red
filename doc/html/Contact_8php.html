@@ -130,10 +130,10 @@ Functions</h2></td></tr>
 <tr class="separator:a024919623a830e8703ac4f23496dd66c"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a2fc191067dd571a79603c66b04b1ca15"><td class="memItemLeft" align="right" valign="top">&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="Contact_8php.html#a2fc191067dd571a79603c66b04b1ca15">user_remove</a> ($uid)</td></tr>
 <tr class="separator:a2fc191067dd571a79603c66b04b1ca15"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a3eef54a5523e568a28257c1f9b1644d8"><td class="memItemLeft" align="right" valign="top">&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="Contact_8php.html#a3eef54a5523e568a28257c1f9b1644d8">account_remove</a> ($account_id)</td></tr>
-<tr class="separator:a3eef54a5523e568a28257c1f9b1644d8"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:ad46ff6764f12b6d3ab45c49b797f98aa"><td class="memItemLeft" align="right" valign="top">&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="Contact_8php.html#ad46ff6764f12b6d3ab45c49b797f98aa">channel_remove</a> ($channel_id)</td></tr>
-<tr class="separator:ad46ff6764f12b6d3ab45c49b797f98aa"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a6e64de7db60b7243dce45fb6347636ff"><td class="memItemLeft" align="right" valign="top">&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="Contact_8php.html#a6e64de7db60b7243dce45fb6347636ff">account_remove</a> ($account_id, $local=true)</td></tr>
+<tr class="separator:a6e64de7db60b7243dce45fb6347636ff"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a186162051a5127069cc851d78740f205"><td class="memItemLeft" align="right" valign="top">&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="Contact_8php.html#a186162051a5127069cc851d78740f205">channel_remove</a> ($channel_id, $local=true)</td></tr>
+<tr class="separator:a186162051a5127069cc851d78740f205"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:acc12cda999c88c4d6185cca967c15125"><td class="memItemLeft" align="right" valign="top">&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="Contact_8php.html#acc12cda999c88c4d6185cca967c15125">remove_all_xchan_resources</a> ($xchan, $channel_id=0)</td></tr>
 <tr class="separator:acc12cda999c88c4d6185cca967c15125"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a28e062c884331dbb5dfa713228c25ad6"><td class="memItemLeft" align="right" valign="top">&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="Contact_8php.html#a28e062c884331dbb5dfa713228c25ad6">contact_remove</a> ($channel_id, $abook_id)</td></tr>
@@ -220,7 +220,7 @@ Functions</h2></td></tr>
 
 </div>
 </div>
-<a class="anchor" id="a3eef54a5523e568a28257c1f9b1644d8"></a>
+<a class="anchor" id="a6e64de7db60b7243dce45fb6347636ff"></a>
 <div class="memitem">
 <div class="memproto">
       <table class="memname">
@@ -228,15 +228,27 @@ Functions</h2></td></tr>
           <td class="memname">account_remove </td>
           <td>(</td>
           <td class="paramtype">&#160;</td>
-          <td class="paramname"><em>$account_id</em></td><td>)</td>
+          <td class="paramname"><em>$account_id</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
           <td></td>
+          <td class="paramtype">&#160;</td>
+          <td class="paramname"><em>$local</em> = <code>true</code>&#160;</td>
+        </tr>
+        <tr>
+          <td></td>
+          <td>)</td>
+          <td></td><td></td>
         </tr>
       </table>
 </div><div class="memdoc">
 
+<p>Referenced by <a class="el" href="include_2chanman_8php.html#a21ba9a5c961e866ff27aee3ee67bf99b">chanman_remove_everything_from_network()</a>.</p>
+
 </div>
 </div>
-<a class="anchor" id="ad46ff6764f12b6d3ab45c49b797f98aa"></a>
+<a class="anchor" id="a186162051a5127069cc851d78740f205"></a>
 <div class="memitem">
 <div class="memproto">
       <table class="memname">
@@ -244,13 +256,23 @@ Functions</h2></td></tr>
           <td class="memname">channel_remove </td>
           <td>(</td>
           <td class="paramtype">&#160;</td>
-          <td class="paramname"><em>$channel_id</em></td><td>)</td>
+          <td class="paramname"><em>$channel_id</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
           <td></td>
+          <td class="paramtype">&#160;</td>
+          <td class="paramname"><em>$local</em> = <code>true</code>&#160;</td>
+        </tr>
+        <tr>
+          <td></td>
+          <td>)</td>
+          <td></td><td></td>
         </tr>
       </table>
 </div><div class="memdoc">
 
-<p>Referenced by <a class="el" href="Contact_8php.html#a3eef54a5523e568a28257c1f9b1644d8">account_remove()</a>.</p>
+<p>Referenced by <a class="el" href="Contact_8php.html#a6e64de7db60b7243dce45fb6347636ff">account_remove()</a>.</p>
 
 </div>
 </div>

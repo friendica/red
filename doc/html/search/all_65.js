@@ -9,7 +9,7 @@ var searchData=
   ['editwebpage_2ephp',['editwebpage.php',['../editwebpage_8php.html',1,'']]],
   ['editwebpage_5fcontent',['editwebpage_content',['../editwebpage_8php.html#a375e945255fad79a71036528f7480650',1,'editwebpage.php']]],
   ['else',['else',['../auth_8php.html#a0950af7c2888ca1d4743fe5d0bff9ae5',1,'else():&#160;auth.php'],['../fpostit_8php.html#a501b5ca82f287509fc691c88524064c1',1,'else():&#160;fpostit.php'],['../tpldebug_8php.html#afbc7aadb3f7ff1edf0aaaa326a42179c',1,'else():&#160;tpldebug.php']]],
-  ['email_5fheader_5fencode',['email_header_encode',['../include_2network_8php.html#a540420ff3675a72cb781ef9a7e8c2cd9',1,'network.php']]],
+  ['email_5fheader_5fencode',['email_header_encode',['../include_2network_8php.html#a469b9bd700269cd07d954f1a16c5899b',1,'network.php']]],
   ['email_5fsend',['email_send',['../include_2network_8php.html#a1ff07d9fad93b713b93da0ab77aab7f0',1,'network.php']]],
   ['encode_5fitem',['encode_item',['../items_8php.html#a82955cc578f0fa600acec84475026194',1,'items.php']]],
   ['encode_5fitem_5fflags',['encode_item_flags',['../items_8php.html#a5f690fc2484abec07840b4f9dd525bd9',1,'items.php']]],

@@ -5,7 +5,7 @@ var include_2network_8php =
     [ "allowed_url", "include_2network_8php.html#aee35d9ad6b3f872bfb39ba3598936aa7", null ],
     [ "avatar_img", "include_2network_8php.html#ab07ce9d75eae559865ed90aad2154bd7", null ],
     [ "convert_xml_element_to_array", "include_2network_8php.html#ad4056d3ce69988f5c1a997a79f503246", null ],
-    [ "email_header_encode", "include_2network_8php.html#a540420ff3675a72cb781ef9a7e8c2cd9", null ],
+    [ "email_header_encode", "include_2network_8php.html#a469b9bd700269cd07d954f1a16c5899b", null ],
     [ "email_send", "include_2network_8php.html#a1ff07d9fad93b713b93da0ab77aab7f0", null ],
     [ "fetch_lrdd_template", "include_2network_8php.html#a8d5a3afb51cc932032b5dcc159efaae0", null ],
     [ "fetch_url", "include_2network_8php.html#a37ddeb88a3fd1dee9e8339723f9edf9a", null ],
