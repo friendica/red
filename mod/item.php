@@ -135,6 +135,9 @@ function item_post(&$a) {
 				goaway($a->get_baseurl() . "/" . $return_path );
 			killme();
 		}
+
+		// can_comment_on_post() needs info from the following xchan_query 
+		xchan_query($r);
 		$parent_item = $r[0];
 		$parent = $r[0]['id'];
 

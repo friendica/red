@@ -63,6 +63,7 @@ function collect_recipients($item,&$private) {
 }
 
 
+
 function can_comment_on_post($observer_xchan,$item) {
 	if(! $observer_xchan)
 		return false;
@@ -83,9 +84,6 @@ function can_comment_on_post($observer_xchan,$item) {
 			if(array_key_exists('owner',$item)) {
 				if(($item['owner']['abook_xchan']) && ($item['owner']['abook_their_perms'] & PERMS_W_COMMENT))
 					return true;
-			}
-			else {
-				return true;
 			}
 			break;
 		default:
