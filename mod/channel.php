@@ -114,7 +114,7 @@ function channel_content(&$a, $update = 0, $load = false) {
 
 	$perms = get_all_perms($a->profile['profile_uid'],$ob_hash);
 
-	if(! $perms['view_stream']) {
+	if(! $perms['view_profile']) {
 		notice( t('Permission denied.') . EOL);
 		return;
 	}
