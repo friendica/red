@@ -79,16 +79,20 @@ function chanview_content(&$a) {
 		return;
 	}
 
-	if($xchan['xchan_hash'])
-		$a->set_widget('vcard',vcard_from_xchan($xchan,$observer,'chanview'));
-				
 	$url = (($observer) 
 		? z_root() . '/magic?f=&dest=' . $xchan['xchan_url'] . '&addr=' . $xchan['xchan_addr'] 
 		: $xchan['xchan_url']
 	);
+
+	// let somebody over-ride the iframed viewport presentation
+
+	if(local_user() && get_pconfig(local_user(),'system','chanview_full'))
+		goaway($url);
+
+
+	if($xchan['xchan_hash'])
+		$a->set_widget('vcard',vcard_from_xchan($xchan,$observer,'chanview'));
 				
-
-
 	$o = replace_macros(get_markup_template('chanview.tpl'),array(
 		'$url' => $url,
 		'$full' => t('toggle full screen mode')
