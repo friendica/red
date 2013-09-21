@@ -153,11 +153,19 @@ function item_post(&$a) {
 
 	}
 
+	$observer = $a->get_observer();
+
+
 	if($parent) {
 		logger('mod_item: item_post parent=' . $parent);
+		if(! can_comment_on_post($observer['xchan_hash'],$parent_item)) {
+			notice( t('Permission denied.') . EOL) ;
+			if(x($_REQUEST,'return')) 
+				goaway($a->get_baseurl() . "/" . $return_path );
+			killme();
+		}
 	}
 
-	$observer = $a->get_observer();
 
 	if(! perm_is_allowed($profile_uid,$observer['xchan_hash'],(($parent) ? 'post_comments' : 'post_wall'))) {
 		notice( t('Permission denied.') . EOL) ;

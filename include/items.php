@@ -68,6 +68,8 @@ function can_comment_on_post($observer_xchan,$item) {
 		return false;
 	if($item['comment_policy'] === 'none')
 		return false;
+	if($observer_xchan === $item['author_xchan'] || $observer_xchan === $item['owner_xchan'])
+		return true;
 	switch($item['comment_policy']) {
 		case 'self':
 			if($observer_xchan === $item['author_xchan'] || $observer_xchan === $item['owner_xchan'])
@@ -3660,7 +3662,7 @@ function items_fetch($arr,$channel = null,$observer_hash = null,$client_mode = C
 			info( t('Group is empty'));
         }
 
-        $sql_extra = " AND item.parent IN ( SELECT DISTINCT parent FROM item WHERE true $sql_options AND (( author_xchan IN ( $contact_str ) OR owner_xchan in ( $contact_str)) or allow_gid like '" . protect_sprintf('%<' . dbesc($r[0]['hash']) . '>%') . "' ) and item_restrict = 0 ) ";
+        $sql_extra = " AND item.parent IN ( SELECT DISTINCT parent FROM item WHERE true $sql_options AND (( author_xchan IN ( $contact_str ) OR owner_xchan in ( $contact_str)) or allow_gid like '" . protect_sprintf('%<' . dbesc($r[0]['hash']) . '>%') . "' ) and id = parent and item_restrict = 0 ) ";
 
     }
     elseif($arr['cid'] && $uid) {
