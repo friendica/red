@@ -2602,6 +2602,10 @@ brain is weird like that */
 	width: 48px; height: 48px;
 	margin: 10px;
 }
+.oauthapp .icon {
+	margin-right: 20px;
+}
+
 .oauthapp img.noicon {
 	background-image: url("../../../../images/icons/48/plugin.png");
 	background-position: center center;
@@ -2627,6 +2631,7 @@ brain is weird like that */
 .block { background-position: -32px 0px;}
 .drop { background-position: -48px 0px;}
 .drophide { background-position: -64px 0px;}
+.delete { background-position: -64px 0px;}
 .edit { background-position: -80px 0px;}
 .camera { background-position: -96px 0px;}
 .dislike { background-position: -112px 0px;}

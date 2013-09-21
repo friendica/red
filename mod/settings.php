@@ -620,11 +620,11 @@ function settings_content(&$a) {
 				'$title'	=> t('Add application'),
 				'$submit'	=> t('Submit'),
 				'$cancel'	=> t('Cancel'),
-				'$name'		=> array('name', t('Name'), '', ''),
-				'$key'		=> array('key', t('Consumer Key'), '', ''),
-				'$secret'	=> array('secret', t('Consumer Secret'), '', ''),
-				'$redirect'	=> array('redirect', t('Redirect'), '', ''),
-				'$icon'		=> array('icon', t('Icon url'), '', ''),
+				'$name'		=> array('name', t('Name'), '', t('Name of application')),
+				'$key'		=> array('key', t('Consumer Key'), random_string(16), t('Automatically generated - change if desired')),
+				'$secret'	=> array('secret', t('Consumer Secret'), random_string(16), t('Automatically generated - change if desired')),
+				'$redirect'	=> array('redirect', t('Redirect'), '', t('Redirect URI - leave blank unless your application specifically requires this')),
+				'$icon'		=> array('icon', t('Icon url'), '', t('Optional')),
 			));
 			return $o;
 		}
