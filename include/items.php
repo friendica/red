@@ -80,8 +80,13 @@ function can_comment_on_post($observer_xchan,$item) {
 			break;
 		case 'contacts':
 		case '':
-			if(($item['owner']['abook_xchan']) && ($item['owner']['abook_their_perms'] & PERMS_W_COMMENT))
+			if(array_key_exists('owner',$item)) {
+				if(($item['owner']['abook_xchan']) && ($item['owner']['abook_their_perms'] & PERMS_W_COMMENT))
+					return true;
+			}
+			else {
 				return true;
+			}
 			break;
 		default:
 			break;
