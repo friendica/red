@@ -86,7 +86,8 @@ function comanche_replace_region($match) {
 
 function comanche_block($name) {
 	$o = '';
-	$r = q("select * from item left join item_id on iid = item_id and item_id.uid = item.uid and service = 'BUILDBLOCK' and sid = '%s' limit 1",
+	$r = q("select * from item left join item_id on iid = item_id and item_id.uid = item.uid and item.uid = %d and service = 'BUILDBLOCK' and sid = '%s' limit 1",
+		intval($a->profile['profile_uid']),
 		dbesc($name)
 	);
 	if($r) {
