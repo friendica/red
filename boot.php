@@ -177,13 +177,7 @@ define ( 'CLIENT_MODE_UPDATE', 0x0002);
 
 /**
  *
- * page/profile types
- *
- * PAGE_NORMAL is a typical personal profile account
- * PAGE_SOAPBOX automatically approves all friend requests as CONTACT_IS_SHARING, (readonly)
- * PAGE_COMMUNITY automatically approves all friend requests as CONTACT_IS_SHARING, but with
- *      write access to wall and comments (no email and not included in page owner's ACL lists)
- * PAGE_FREELOVE automatically approves all friend requests as full friends (CONTACT_IS_FRIEND).
+ * Channel pageflags
  *
  */
 
@@ -193,6 +187,7 @@ define ( 'PAGE_AUTOCONNECT',       0x0002 );
 define ( 'PAGE_APPLICATION',       0x0004 );
 define ( 'PAGE_DIRECTORY_CHANNEL', 0x0008 ); // system channel used for directory synchronisation
 define ( 'PAGE_PREMIUM',           0x0010 );
+define ( 'PAGE_ADULT',             0x0020 );
 
 define ( 'PAGE_REMOVED',           0x8000 );
 
@@ -348,6 +343,7 @@ define ( 'HUBLOC_FLAGS_DELETED',      0x1000);
 define ( 'XCHAN_FLAGS_HIDDEN',        0x0001);
 define ( 'XCHAN_FLAGS_ORPHAN',        0x0002);
 define ( 'XCHAN_FLAGS_CENSORED',      0x0004);
+define ( 'XCHAN_FLAGS_SELFCENSORED',  0x0008);
 
 /*
  * Traficlights for Administration of HubLoc

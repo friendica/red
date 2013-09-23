@@ -469,6 +469,11 @@ function import_xchan($arr) {
 		else
 			$new_flags = $r[0]['xchan_flags'];
 
+		$adult = (($r[0]['xchan_flags'] & XCHAN_FLAGS_SELFCENSORED) ? true : false);
+		$adult_changed =  ((intval($adult) != intval($arr['adult_content'])) ? true : false);
+		if($adult_changed)
+			$new_flags = $new_flags ^ XCHAN_FLAGS_SELFCENSORED;
+
 
 		if(($r[0]['xchan_name_date'] != $arr['name_updated']) 
 			|| ($r[0]['xchan_connurl'] != $arr['connections_url']) 
@@ -511,6 +516,8 @@ function import_xchan($arr) {
 			$new_flags = XCHAN_FLAGS_HIDDEN;
 		else
 			$new_flags = 0;
+		if($arr['adult_content'])
+			$new_flags |= XCHAN_FLAGS_SELFCENSORED;
 		
 		$x = q("insert into xchan ( xchan_hash, xchan_guid, xchan_guid_sig, xchan_pubkey, xchan_photo_mimetype,
 				xchan_photo_l, xchan_addr, xchan_url, xchan_connurl, xchan_follow, xchan_connpage, xchan_name, xchan_network, xchan_photo_date, xchan_name_date, xchan_flags)

@@ -102,9 +102,9 @@ function dirsearch_content(&$a) {
 
 	$logic = ((strlen($sql_extra)) ? 0 : 1);
 
-	$safesql = (($safe > 0) ? " and not ( xchan_flags & " . intval(XCHAN_FLAGS_CENSORED) . " ) " : ''); 
+	$safesql = (($safe > 0) ? " and not ( xchan_flags & " . intval(XCHAN_FLAGS_CENSORED|XCHAN_FLAGS_SELFCENSORED) . " ) " : '');
 	if($safe < 0)
-		$safesql = " and ( xchan_flags & " . intval(XCHAN_FLAGS_CENSORED) . " ) ";
+		$safesql = " and ( xchan_flags & " . intval(XCHAN_FLAGS_CENSORED|XCHAN_FLAGS_SELFCENSORED) . " ) ";
 
 	if($limit) 
 		$qlimit = " LIMIT $limit ";

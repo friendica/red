@@ -361,7 +361,13 @@ function settings_post(&$a) {
 	$post_newfriend   = (($_POST['post_newfriend'] == 1) ? 1: 0);
 	$post_joingroup   = (($_POST['post_joingroup'] == 1) ? 1: 0);
 	$post_profilechange   = (($_POST['post_profilechange'] == 1) ? 1: 0);
+	$adult            = (($_POST['adult'] == 1) ? 1 : 0);
 
+	$channel = $a->get_channel();
+	$pageflags = $channel['channel_pageflags'];
+	$existing_adult = (($pageflags & PAGE_ADULT) ? 1 : 0);
+	if($adult != $existing_adult)
+		$pageflags = ($pageflags ^ PAGE_ADULT);
 
 	$arr = array();
 	$arr['channel_r_stream']   = (($_POST['view_stream'])   ? $_POST['view_stream']    : 0);
@@ -518,8 +524,9 @@ function settings_post(&$a) {
 	);
 */
 
-	$r = q("update channel set channel_name = '%s', channel_timezone = '%s', channel_location = '%s', channel_notifyflags = %d, channel_max_anon_mail = %d, channel_max_friend_req = %d, channel_expire_days = %d, channel_r_stream = %d, channel_r_profile = %d, channel_r_photos = %d, channel_r_abook = %d, channel_w_stream = %d, channel_w_wall = %d, channel_w_tagwall = %d, channel_w_comment = %d, channel_w_mail = %d, channel_w_photos = %d, channel_w_chat = %d, channel_a_delegate = %d, channel_r_storage = %d, channel_w_storage = %d, channel_r_pages = %d, channel_w_pages = %d where channel_id = %d limit 1",
+	$r = q("update channel set channel_name = '%s', channel_pageflags = %d, channel_timezone = '%s', channel_location = '%s', channel_notifyflags = %d, channel_max_anon_mail = %d, channel_max_friend_req = %d, channel_expire_days = %d, channel_r_stream = %d, channel_r_profile = %d, channel_r_photos = %d, channel_r_abook = %d, channel_w_stream = %d, channel_w_wall = %d, channel_w_tagwall = %d, channel_w_comment = %d, channel_w_mail = %d, channel_w_photos = %d, channel_w_chat = %d, channel_a_delegate = %d, channel_r_storage = %d, channel_w_storage = %d, channel_r_pages = %d, channel_w_pages = %d where channel_id = %d limit 1",
 		dbesc($username),
+		intval($pageflags),
 		dbesc($timezone),
 		dbesc($defloc),
 		intval($notify),
@@ -929,6 +936,7 @@ function settings_content(&$a) {
 
 		$maxreq     = $channel['channel_max_friend_req'];
 		$expire     = $channel['channel_expire_days'];
+		$adult_flag = intval($channel['channel_pageflags'] & PAGE_ADULT);
 
 		$blockwall  = $a->user['blockwall'];
 		$unkmail    = $a->user['unkmail'];
@@ -1034,6 +1042,7 @@ function settings_content(&$a) {
 			'$defloc'	=> array('defloc', t('Default Post Location:'), $defloc, ''),
 			'$allowloc' => array('allow_location', t('Use Browser Location:'), ((get_pconfig(local_user(),'system','use_browser_location')) ? 1 : ''), ''),
 		
+			'$adult'    => array('adult', t('Adult Content'), $adult_flag, t('This channel publishes adult content.')),
 
 			'$h_prv' 	=> t('Security and Privacy Settings'),
 
