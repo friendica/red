@@ -24,10 +24,31 @@ function collect_recipients($item,&$private) {
 	if($item['allow_cid'] || $item['allow_gid'] || $item['deny_cid'] || $item['deny_gid']) {
 		$allow_people = expand_acl($item['allow_cid']);
 		$allow_groups = expand_groups(expand_acl($item['allow_gid']));
+
+		$recipients = array_unique(array_merge($allow_people,$allow_groups));
+
+		// if you specifically deny somebody but haven't allowed anybody, we'll allow everybody in your 
+		// address book minus the denied connections. The post is still private and can't be seen publicly
+		// as that would allow the denied person to see the post by logging out. 
+
+		if((! $item['allow_cid']) && (! $item['allow_gid'])) {
+			$r = q("select * from abook where abook_channel = %d and not (abook_flags & %d) and not (abook_flags & %d) and not (abook_flags & %d)",
+				intval($item['uid']),
+				intval(ABOOK_FLAG_SELF),
+				intval(ABOOK_FLAG_PENDING),
+				intval(ABOOK_FLAG_ARCHIVED)
+			);
+
+			if($r) {
+				foreach($r as $rr) {
+					$recipients[] = $rr['abook_xchan'];
+				}
+			}
+		}
+
 		$deny_people  = expand_acl($item['deny_cid']);
 		$deny_groups  = expand_groups(expand_acl($item['deny_gid']));
 
-		$recipients = array_unique(array_merge($allow_people,$allow_groups));
 		$deny = array_unique(array_merge($deny_people,$deny_groups));
 		$recipients = array_diff($recipients,$deny);
 		$private = true;
