@@ -113,18 +113,18 @@ function display_content(&$a, $update = 0, $load = false) {
 				}
 			}
 			if($r === null) {
-dbg(1);
+
 				$r = q("SELECT * from item
 					WHERE item_restrict = 0
 					and mid = '%s'
 					AND ((( `item`.`allow_cid` = ''  AND `item`.`allow_gid` = '' AND `item`.`deny_cid`  = '' 
 					AND `item`.`deny_gid`  = '' AND item_private = 0 ) 
-					and owner_xchan in ( " . stream_perms_xchans() . " ))
+					and owner_xchan in ( " . stream_perms_xchans(($observer) ? PERMS_NETWORK : PERMS_PUBLIC) . " ))
 					$sql_extra )
 					group by mid limit 1",
 					dbesc($target_item['parent_mid'])
 				);
-dbg(0);
+
 			}
 
 		}

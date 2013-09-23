@@ -412,7 +412,7 @@ function stream_perms_api_uids($perms_min = PERMS_SITE) {
 	$ret = array();
 	if(local_user())
 		$ret[] = local_user();
-	$r = q("select channel_id from channel where channel_r_stream <= %d",
+	$r = q("select channel_id from channel where channel_r_stream > 0 and channel_r_stream <= %d",
 		intval($perms_min)
 	);
 	if($r)
@@ -435,7 +435,8 @@ function stream_perms_xchans($perms_min = PERMS_SITE) {
 	$ret = array();
 	if(local_user())
 		$ret[] = get_observer_hash();
-	$r = q("select channel_hash from channel where channel_r_stream <= %d",
+
+	$r = q("select channel_hash from channel where channel_r_stream > 0 and channel_r_stream <= %d",
 		intval($perms_min)
 	);
 	if($r)
