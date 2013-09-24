@@ -175,7 +175,7 @@ function post_post(&$a) {
 		$data = aes_unencapsulate($data,get_config('system','prvkey'));
 		logger('mod_zot: decrypt1: ' . $data, LOGGER_DATA);
 
-//	susceptible to Bleichenberger attack
+//	susceptible to Bleichenbacher's attack
 //		if(! $data) {
 //			$ret['message'] = 'Decryption failed.';
 //			json_return_and_die($ret);
@@ -187,7 +187,7 @@ function post_post(&$a) {
 
 	if(! $data) {
 
-		// possible Bleichenberger attack, just treat it as a 
+		// possible Bleichenbacher's attack, just treat it as a 
 		// message we have no handler for. It should fail a bit 
 		// further along with "no hub". Our public key is public
 		// knowledge. There's no reason why anybody should get the 
