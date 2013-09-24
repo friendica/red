@@ -222,10 +222,10 @@ function bbcode($Text,$preserve_nl = false, $tryoembed = true) {
 	$observer = $a->get_observer();
 	if (strpos($Text,'[/observer]') !== false) {
 		if ($observer) {
-			$Text = preg_replace("/\[observer(\=1)?\](.*?)\[\/observer\]/ism", '$2', $Text);
+			$Text = preg_replace("/\[observer\=1\](.*?)\[\/observer\]/ism", '$1', $Text);
 			$Text = preg_replace("/\[observer\=0\].*?\[\/observer\]/ism", '', $Text);
 		} else {
-			$Text = preg_replace("/\[observer(\=1)?\].*?\[\/observer\]/ism", '', $Text);
+			$Text = preg_replace("/\[observer\=1\].*?\[\/observer\]/ism", '', $Text);
 			$Text = preg_replace("/\[observer\=0\](.*?)\[\/observer\]/ism", '$1', $Text);
 		}
     }
