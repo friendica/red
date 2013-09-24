@@ -49,6 +49,7 @@ function admin_post(&$a){
 				if(is_ajax()) return;
 				
 				goaway($a->get_baseurl(true) . '/admin/themes/' . $theme );
+
 				return;
 				break;
 			case 'logs':
@@ -458,6 +459,25 @@ function admin_page_hubloc_post(&$a){
 
 function admin_page_hubloc(&$a) {
 	$o = '';
+	$hubloc = q("SELECT hubloc_id, hubloc_addr, hubloc_host, hubloc_status  FROM hubloc");
+
+	
+	if(! $hubloc){
+		notice( t('No server found') . EOL);
+		goaway($a->get_baseurl(true) . '/admin/hubloc');
+	}
+
+	$t = get_markup_template("admin_hubloc.tpl");
+        return replace_macros($t, array(
+		'$hubloc' => $hubloc,
+		'$th_hubloc' => array(t('ID'), t('for channel'), t('on server'), t('Status')),
+                '$title' => t('Administration'),
+                '$page' => t('Server'),
+                '$queues' => $queues,
+                '$accounts' => $accounts,
+                '$pending' => Array( t('Pending registrations'), $pending),
+                '$plugins' => Array( t('Active plugins'), $a->plugins )
+        ));
 	return $o;
 }
 
