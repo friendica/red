@@ -154,10 +154,17 @@ function settings_post(&$a) {
 		$secret		= ((x($_POST,'secret')) ? $_POST['secret'] : '');
 		$redirect	= ((x($_POST,'redirect')) ? $_POST['redirect'] : '');
 		$icon		= ((x($_POST,'icon')) ? $_POST['icon'] : '');
-		if ($name=="" || $key=="" || $secret==""){
-			notice(t("Missing some important data!"));
-			
-		} else {
+		$ok = true;
+		if($name == '') {
+			$ok = false;
+			notice( t('Name is required') . EOL);
+		}
+		if($key == '' || $secret == '') {
+			$ok = false;
+			notice( t('Key and Secret are required') . EOL);
+		}
+	
+		if($ok) {
 			if ($_POST['submit']==t("Update")){
 				$r = q("UPDATE clients SET
 							client_id='%s',
@@ -628,8 +635,8 @@ function settings_content(&$a) {
 				'$submit'	=> t('Submit'),
 				'$cancel'	=> t('Cancel'),
 				'$name'		=> array('name', t('Name'), '', t('Name of application')),
-				'$key'		=> array('key', t('Consumer Key'), random_string(16), t('Automatically generated - change if desired')),
-				'$secret'	=> array('secret', t('Consumer Secret'), random_string(16), t('Automatically generated - change if desired')),
+				'$key'		=> array('key', t('Consumer Key'), random_string(16), t('Automatically generated - change if desired. Max length 20')),
+				'$secret'	=> array('secret', t('Consumer Secret'), random_string(16), t('Automatically generated - change if desired. Max length 20')),
 				'$redirect'	=> array('redirect', t('Redirect'), '', t('Redirect URI - leave blank unless your application specifically requires this')),
 				'$icon'		=> array('icon', t('Icon url'), '', t('Optional')),
 			));
