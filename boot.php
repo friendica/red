@@ -1176,6 +1176,7 @@ function check_config(&$a) {
 		// our URL changed. Do something.
 
 		$oldurl = hex2bin($saved);
+		logger('Baseurl changed!');
 		
 		$oldhost = substr($oldurl,strpos($oldurl,'//')+2);
 		$host = substr(z_root(),strpos(z_root(),'//')+2);
