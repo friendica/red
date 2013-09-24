@@ -263,8 +263,16 @@ function bbcode($Text,$preserve_nl = false, $tryoembed = true) {
 		$obsBaseURL = $observer['xchan_url'];
 		$obsBaseURL = preg_replace("/\/channel\/.*$/", '', $obsBaseURL);
 		$Text = str_replace('[observer.baseurl]', $obsBaseURL, $Text);
+		$Text = str_replace('[observer.url]',$observer['xchan_url'], $Text);
+		$Text = str_replace('[observer.name]',$observer['xchan_name'], $Text);
+		$Text = str_replace('[observer.address]',$observer['xchan_addr'], $Text);
+		$Text = str_replace('[observer.photo]','[zmg]'.$observer['xchan_photo_l'].'[/zmg]', $Text);		
 	} else {
 		$Text = str_replace('[observer.baseurl]', '', $Text);
+		$Text = str_replace('[observer.url]','', $Text);
+		$Text = str_replace('[observer.name]','', $Text);
+		$Text = str_replace('[observer.address]','', $Text);
+		$Text = str_replace('[observer.photo]','', $Text);		
 	}
 
 	// Perform URL Search
