@@ -411,7 +411,7 @@ function zot_register_hub($arr) {
 // If the xchan already exists, update the name and photo if these have changed.
 // 
 
-function import_xchan($arr) {
+function import_xchan($arr,$ud_flags = 1) {
 
 	$ret = array('success' => false);
 	$dirmode = intval(get_config('system','directory_mode')); 
@@ -688,7 +688,7 @@ function import_xchan($arr) {
 
 	if($dirmode != DIRECTORY_MODE_NORMAL) {
 		if(array_key_exists('profile',$arr) && is_array($arr['profile'])) {
-			$profile_changed = import_directory_profile($xchan_hash,$arr['profile']);
+			$profile_changed = import_directory_profile($xchan_hash,$arr['profile'],$arr['address'],$ud_flags);
 			if($profile_changed) {
 				$what .= 'profile ';
 				$changed = true;
@@ -718,7 +718,7 @@ function import_xchan($arr) {
 
 	if($changed) {
 		$guid = random_string() . '@' . get_app()->get_hostname();		
-		update_modtime($xchan_hash,$guid);
+		update_modtime($xchan_hash,$guid,$arr['address'],$ud_flags);
 		logger('import_xchan: changed: ' . $what,LOGGER_DEBUG);
 	}
 
@@ -1371,7 +1371,12 @@ function process_profile_delivery($sender,$arr,$deliveries) {
 	// deliveries is irrelevant, what to do about birthday notification....?
 
 	logger('process_profile_delivery', LOGGER_DEBUG);
-	import_directory_profile($sender['hash'],$arr);
+
+	$r = q("select xchan_addr from xchan where xchan_hash = '%s' limit 1",
+			dbesc($sender['hash'])
+	);
+	if($r)
+		import_directory_profile($sender['hash'],$arr,$r[0]['xchan_addr'], 1);
 }
 
 
@@ -1382,7 +1387,7 @@ function process_profile_delivery($sender,$arr,$deliveries) {
  *
  */
 
-function import_directory_profile($hash,$profile) {
+function import_directory_profile($hash,$profile,$addr,$ud_flags = 1) {
 
 	logger('import_directory_profile', LOGGER_DEBUG);
 	if(! $hash)
@@ -1489,7 +1494,7 @@ function import_directory_profile($hash,$profile) {
 	call_hooks('import_directory_profile', $d);
 
 	if($d['update'])
-		update_modtime($arr['xprof_hash'],random_string() . '@' . get_app()->get_hostname());
+		update_modtime($arr['xprof_hash'],random_string() . '@' . get_app()->get_hostname(), $addr, $ud_flags);
 	return $d['update'];
 }
 
@@ -1529,11 +1534,14 @@ function import_directory_keywords($hash,$keywords) {
 }
 
 
-function update_modtime($hash,$guid) {
-	q("insert into updates (ud_hash, ud_guid, ud_date) values ( '%s', '%s', '%s' )",
+function update_modtime($hash,$guid,$addr,$flags = 0) {
+
+	q("insert into updates (ud_hash, ud_guid, ud_date, ud_flags, ud_addr ) values ( '%s', '%s', '%s', %d, '%s' )",
 		dbesc($hash),
 		dbesc($guid),
-		dbesc(datetime_convert())
+		dbesc(datetime_convert()),
+		intval($flags),
+		dbesc($addr)
 	);
 }
 
