@@ -80,6 +80,13 @@ directory/path component in the URL) is REQUIRED.
 
         chmod 777 view/tpl/smarty3
 
+		[This permission (777) is very dangerous and if you have sufficient
+		privilege and knowledge you should make this directory writeable only
+		by the webserver. In many shared hosting environments this may be
+		difficult without opening a trouble ticket with your provider. The
+		above permissions will allow the software to work, but are not
+		optimal.]
+ 
     - For installing addons
 
         - First you should be **on** your website folder
