@@ -98,6 +98,10 @@ function can_comment_on_post($observer_xchan,$item) {
 				return true;
 			break;
 		case 'public':
+			# We don't allow public comments yet, until a policy 
+			# for dealing with anonymous comments is in place with 
+			# a means to moderate comments. Until that time, return 
+			# false.
 			return false;
 			break;
 		case 'contacts':
