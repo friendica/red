@@ -1120,7 +1120,7 @@ function x($s,$k = NULL) {
 
 
 function system_unavailable() {
-	include('system_unavailable.php');
+	include('include/system_unavailable.php');
 	system_down();
 	killme();
 }

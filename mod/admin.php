@@ -751,12 +751,16 @@ function admin_page_plugins(&$a){
 		} 
 		
 		$admin_form="";
+
 		if (is_array($a->plugins_admin) && in_array($plugin, $a->plugins_admin)){
 			@require_once("addon/$plugin/$plugin.php");
-			$func = $plugin.'_plugin_admin';
-			$func($a, $admin_form);
+			if(function_exists($plugin.'_plugin_admin')) {
+				$func = $plugin.'_plugin_admin';
+				$func($a, $admin_form);
+			}
 		}
-		
+
+
 		$t = get_markup_template("admin_plugins_details.tpl");
 		return replace_macros($t, array(
 			'$title' => t('Administration'),

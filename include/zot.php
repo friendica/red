@@ -688,7 +688,7 @@ function import_xchan($arr,$ud_flags = 1) {
 
 	if($dirmode != DIRECTORY_MODE_NORMAL) {
 		if(array_key_exists('profile',$arr) && is_array($arr['profile'])) {
-			$profile_changed = import_directory_profile($xchan_hash,$arr['profile'],$arr['address'],$ud_flags);
+			$profile_changed = import_directory_profile($xchan_hash,$arr['profile'],$arr['address'],$ud_flags, 1);
 			if($profile_changed) {
 				$what .= 'profile ';
 				$changed = true;
@@ -1376,7 +1376,7 @@ function process_profile_delivery($sender,$arr,$deliveries) {
 			dbesc($sender['hash'])
 	);
 	if($r)
-		import_directory_profile($sender['hash'],$arr,$r[0]['xchan_addr'], 1);
+		import_directory_profile($sender['hash'],$arr,$r[0]['xchan_addr'], 1, 0);
 }
 
 
@@ -1387,7 +1387,7 @@ function process_profile_delivery($sender,$arr,$deliveries) {
  *
  */
 
-function import_directory_profile($hash,$profile,$addr,$ud_flags = 1) {
+function import_directory_profile($hash,$profile,$addr,$ud_flags = 1, $suppress_update = 0) {
 
 	logger('import_directory_profile', LOGGER_DEBUG);
 	if(! $hash)
@@ -1493,7 +1493,7 @@ function import_directory_profile($hash,$profile,$addr,$ud_flags = 1) {
 	$d = array('xprof' => $arr, 'profile' => $profile, 'update' => $update);
 	call_hooks('import_directory_profile', $d);
 
-	if($d['update'])
+	if(($d['update']) && (! $suppress_update))
 		update_modtime($arr['xprof_hash'],random_string() . '@' . get_app()->get_hostname(), $addr, $ud_flags);
 	return $d['update'];
 }
