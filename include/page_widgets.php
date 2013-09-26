@@ -5,7 +5,7 @@ function writepages_widget ($who,$which){
 	return replace_macros(get_markup_template('write_pages.tpl'), array(
 			'$new' => t('New Page'),
 			'$newurl' => "webpages/$who",
-                        '$edit' => t('edit'),
+                        '$edit' => t('Edit'),
                         '$editurl' => "editwebpage/$who/$which"
 			));
 }
