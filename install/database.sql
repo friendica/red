@@ -835,6 +835,18 @@ CREATE TABLE IF NOT EXISTS `site` (
   KEY `site_sellpage` (`site_sellpage`)
 ) ENGINE=MyISAM DEFAULT CHARSET=utf8;
 
+CREATE TABLE IF NOT EXISTS `source` (
+  `src_id` int(10) unsigned NOT NULL AUTO_INCREMENT,
+  `src_channel_id` int(10) unsigned NOT NULL DEFAULT '0',
+  `src_channel_xchan` char(255) NOT NULL DEFAULT '',
+  `src_xchan` char(255) NOT NULL DEFAULT '',
+  `src_patt` mediumtext NOT NULL,
+  PRIMARY KEY (`src_id`),
+  KEY `src_channel_id` (`src_channel_id`),
+  KEY `src_channel_xchan` (`src_channel_xchan`),
+  KEY `src_xchan` (`src_xchan`)
+) ENGINE=MyISAM DEFAULT CHARSET=utf8;
+
 CREATE TABLE IF NOT EXISTS `spam` (
   `id` int(11) NOT NULL AUTO_INCREMENT,
   `uid` int(11) NOT NULL,
