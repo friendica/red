@@ -2063,6 +2063,12 @@ function tag_deliver($uid,$item_id) {
 			logger('tag_deliver: tag permission denied for ' . $u[0]['channel_address']);
 	}
 
+
+	$union = check_item_source($uid,$item);
+	if($union)
+		logger('check_item_source returns true');
+
+
 	// This might be a followup by the original post author to a tagged forum
 	// If so setup a second delivery chain
 
@@ -2129,42 +2135,44 @@ function tag_deliver($uid,$item_id) {
 			intval(ITEM_MENTIONSME),
 			intval($item_id)
 		);			
-	}
-	else
-		return;
 
-	// At this point we've determined that the person receiving this post was mentioned in it.
-	// Now let's check if this mention was inside a reshare so we don't spam a forum
+		// At this point we've determined that the person receiving this post was mentioned in it or it is a union.
+		// Now let's check if this mention was inside a reshare so we don't spam a forum
 
-	$body = preg_replace('/\[share(.*?)\[\/share\]/','',$item['body']);
+		$body = preg_replace('/\[share(.*?)\[\/share\]/','',$item['body']);
 
-	$pattern = '/@\[zrl\=' . preg_quote($term['url'],'/') . '\]' . preg_quote($u[0]['channel_name'],'/') . '\[\/zrl\]/';
+		$pattern = '/@\[zrl\=' . preg_quote($term['url'],'/') . '\]' . preg_quote($u[0]['channel_name'],'/') . '\[\/zrl\]/';
 
-	if(! preg_match($pattern,$body,$matches)) {
-		logger('tag_deliver: mention was in a reshare - ignoring');
-		return;
-	}
+		if(! preg_match($pattern,$body,$matches)) {
+			logger('tag_deliver: mention was in a reshare - ignoring');
+			return;
+		}
 	
 
-	// All good. 
-	// Send a notification
+		// All good. 
+		// Send a notification
 
-	require_once('include/enotify.php');
-	notification(array(
-		'to_xchan'     => $u[0]['channel_hash'],
-		'from_xchan'   => $item['author_xchan'],
-		'type'         => NOTIFY_TAGSELF,
-		'item'         => $item,
-		'link'         => $i[0]['llink'],
-		'verb'         => ACTIVITY_TAG,
-		'otype'        => 'item'
-	));
+		require_once('include/enotify.php');
+		notification(array(
+			'to_xchan'     => $u[0]['channel_hash'],
+			'from_xchan'   => $item['author_xchan'],
+			'type'         => NOTIFY_TAGSELF,
+			'item'         => $item,
+			'link'         => $i[0]['llink'],
+			'verb'         => ACTIVITY_TAG,
+			'otype'        => 'item'
+		));
 
 
-	if(! perm_is_allowed($uid,$item['author_xchan'],'tag_deliver')) {
-		logger('tag_delivery denied for uid ' . $uid . ' and xchan ' . $item['author_xchan']);
-		return;
+		if(! perm_is_allowed($uid,$item['author_xchan'],'tag_deliver')) {
+			logger('tag_delivery denied for uid ' . $uid . ' and xchan ' . $item['author_xchan']);
+			return;
+		}
+
 	}
+
+	if((! $mention) && (! $union))
+		return;
 
 
 	// tgroup delivery - setup a second delivery chain
@@ -2271,6 +2279,58 @@ function tgroup_check($uid,$item) {
 	return true;
 
 }
+
+
+/**
+ * @function check_item_source($uid,$item)
+ * @param $uid
+ * @param $item
+ *
+ * @description
+ * Checks to see if this item owner is referenced as a source for this channel and if the post 
+ * matches the rules for inclusion in this channel. Returns true if we should create a second delivery
+ * chain and false if none of the rules apply, or if the item is private.
+ */
+ 
+
+function check_item_source($uid,$item) {
+
+	if($item['item_private'])
+		return false;
+	
+
+	$r = q("select * from source where src_channel_id = %d and src_xchan = '%s' limit 1",
+		intval($uid),
+		dbesc($item['owner_xchan'])
+	);
+
+	if(! $r)
+		return false;
+
+	if($r[0]['src_channel_xchan'] === $item['owner_xchan'])
+		return false;
+
+	if(! $r[0]['src_patt'])
+		return true;
+
+	$tags = ((count($items['term'])) ? $items['term'] : false);
+
+	$words = explode("\n",$r[0]['src_patt']);
+	if($words) {
+		foreach($words as $word) {
+			if(substr($word,0,1) === '#' && $tags) {
+				foreach($tags as $t)
+					if($t['type'] == TERM_HASHTAG && substr($t,1) === $word)
+						return true;
+			}
+			if(stristr($item['body'],$word) !== false)
+				return true;
+		}
+	}
+	return false;
+}
+
+
 
 
 function mail_store($arr) {
