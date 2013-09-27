@@ -48,7 +48,7 @@ function validate_channelname($name) {
 
 
 function create_dir_account() {
-	create_account(array(
+	create_identity(array(
 		'account_id' => 'xxx',  // This will create an identity with an (integer) account_id of 0, but account_id is required
 		'nickname' => 'dir',
 		'name' => 'Directory',

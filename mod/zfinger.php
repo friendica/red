@@ -164,11 +164,6 @@ function zfinger_init(&$a) {
 
 	$ret['locations'] = array();
 
-	
-
-
-
-
 	$x = zot_get_hubloc(array($e['channel_hash']));
 	if($x && count($x)) {
 		foreach($x as $hub) {
