@@ -2499,7 +2499,7 @@ brain is weird like that */
 }
 
 .field_abook_help {
-	color: #888;
+	color: #000;
 }
 .abook-them {
 	margin-left: 225px;
@@ -2513,6 +2513,13 @@ brain is weird like that */
 	margin-bottom: 5px !important;
 }
 
+.abook-pending-contact {
+	background: orange;
+	font-weight: bold;
+	margin: 10px;
+	padding: 20px 5px 10px;
+}
+
 #contact-slider {
 	width: 600px !important;
 }
@@ -2522,7 +2529,7 @@ brain is weird like that */
 	width: 100px !important;
 }
 .field_abook_help {
-	float: left;
+	float: right;
 }
 
 .field .onoff {

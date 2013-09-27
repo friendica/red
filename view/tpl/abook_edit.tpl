@@ -40,7 +40,9 @@
 
 
 {{if $is_pending}}
+<div class="abook-pending-contact">
 {{include file="field_checkbox.tpl" field=$unapproved}}
+</div>
 {{/if}}
 
 <br />
