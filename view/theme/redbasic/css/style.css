@@ -1228,6 +1228,9 @@ footer {
 	border: none;
 }
 
+div.dirtagblock.widget {
+  overflow: hidden;
+}
 
 .pager {
   padding: 10px;
@@ -3348,6 +3351,21 @@ margin-right: auto;
 
 div.page-list-item {
 margin: 20px;
+}
+
+div#write-pages {
+display: block;
+position: fixed;
+top: 24px;
+z-index: 99;
+background: silver;
+width: 100%;
+left: 0;  
+}
+
+div#write-pages a {
+color: #000;
+margin-right: 50px;
 }
 
 .pmenu ul {
