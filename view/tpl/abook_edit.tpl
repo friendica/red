@@ -1,3 +1,4 @@
+<div class="generic-content-wrapper">
 <h2>{{$header}}</h2>
 
 <h3>{{$addr}}</h3>
@@ -83,4 +84,5 @@
 <input class="contact-edit-submit" type="submit" name="done" value="{{$submit}}" />
 
 </form>
+</div>
 </div>
