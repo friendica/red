@@ -2313,6 +2313,10 @@ function check_item_source($uid,$item) {
 	if(! $r[0]['src_patt'])
 		return true;
 
+	require_once('include/html2plain.php');
+	$text = prepare_text($item['body'],$item['mimetype']);
+	$text = html2plain($text);
+
 	$tags = ((count($items['term'])) ? $items['term'] : false);
 
 	$words = explode("\n",$r[0]['src_patt']);
@@ -2323,7 +2327,7 @@ function check_item_source($uid,$item) {
 					if($t['type'] == TERM_HASHTAG && substr($t,1) === $word)
 						return true;
 			}
-			if(stristr($item['body'],$word) !== false)
+			if(stristr($text,$word) !== false)
 				return true;
 		}
 	}
