@@ -83,9 +83,20 @@ function collect_recipients($item,&$private) {
 
 }
 
-
+/**
+ * @function can_comment_on_post($observer_xchan,$item);
+ *
+ * This function examines the comment_policy attached to an item and decides if the current observer has
+ * sufficient privileges to comment. This will normally be called on a remote site where perm_is_allowed()
+ * will not be suitable because the post owner does not have a local channel_id.
+ * Generally we should look at the item - in particular the author['book_flags'] and see if ABOOK_FLAG_SELF is set.
+ * If it is, you should be able to use perm_is_allowed( ... 'post_comments'), and if it isn't you need to call 
+ * can_comment_on_post()
 
 function can_comment_on_post($observer_xchan,$item) {
+
+//	logger('can_comment_on_post: comment_policy: ' . $item['comment_policy'], LOGGER_DEBUG);
+
 	if(! $observer_xchan)
 		return false;
 	if($item['comment_policy'] === 'none')
@@ -98,10 +109,10 @@ function can_comment_on_post($observer_xchan,$item) {
 				return true;
 			break;
 		case 'public':
-			# We don't allow public comments yet, until a policy 
-			# for dealing with anonymous comments is in place with 
-			# a means to moderate comments. Until that time, return 
-			# false.
+			// We don't allow public comments yet, until a policy 
+			// for dealing with anonymous comments is in place with 
+			// a means to moderate comments. Until that time, return 
+			// false.
 			return false;
 			break;
 		case 'contacts':
