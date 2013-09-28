@@ -92,7 +92,7 @@ function collect_recipients($item,&$private) {
  * Generally we should look at the item - in particular the author['book_flags'] and see if ABOOK_FLAG_SELF is set.
  * If it is, you should be able to use perm_is_allowed( ... 'post_comments'), and if it isn't you need to call 
  * can_comment_on_post()
-
+ */
 function can_comment_on_post($observer_xchan,$item) {
 
 //	logger('can_comment_on_post: comment_policy: ' . $item['comment_policy'], LOGGER_DEBUG);

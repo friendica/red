@@ -7,6 +7,7 @@ require_once('boot.php');
 require_once('include/BaseObject.php');
 require_once('include/ItemObject.php');
 require_once('include/text.php');
+require_once('include/items.php');
 
 /**
  * A list of threads
