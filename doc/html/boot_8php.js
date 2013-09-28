@@ -203,6 +203,7 @@ var boot_8php =
     [ "NOTIFY_TAGSELF", "boot_8php.html#ab724491497ab2618b23a01d5da60aec0", null ],
     [ "NOTIFY_TAGSHARE", "boot_8php.html#af6937db5f581d006bf4a5c3d9c7e0461", null ],
     [ "NOTIFY_WALL", "boot_8php.html#a505410c7edc5f5bb5fa227b98359793e", null ],
+    [ "PAGE_ADULT", "boot_8php.html#ace83842dbeb84f7ed9ac59a9f57a7c32", null ],
     [ "PAGE_APPLICATION", "boot_8php.html#a8231d115060d41a9c2a677f2c86f10ed", null ],
     [ "PAGE_AUTOCONNECT", "boot_8php.html#aa275653b9c87abc7391bb8040c1c2de9", null ],
     [ "PAGE_DIRECTORY_CHANNEL", "boot_8php.html#a5b8484922918946d041e5e0515dbe718", null ],
@@ -267,6 +268,7 @@ var boot_8php =
     [ "XCHAN_FLAGS_CENSORED", "boot_8php.html#accd6f36cc9f40225cbd720e4d12a7c6e", null ],
     [ "XCHAN_FLAGS_HIDDEN", "boot_8php.html#a1af3ed96de14aa0d7891b39cc75b60f2", null ],
     [ "XCHAN_FLAGS_ORPHAN", "boot_8php.html#a1c923b99bf77e4203ae94e5684b6ad0f", null ],
+    [ "XCHAN_FLAGS_SELFCENSORED", "boot_8php.html#a5a681a672e007cdc22b43345d71f07c6", null ],
     [ "ZCURL_TIMEOUT", "boot_8php.html#a3cd42a70c6b3999590e4fd7a1a9096af", null ],
     [ "ZOT_REVISION", "boot_8php.html#a36b31575f992a10b5927b76efba9362e", null ]
 ];
