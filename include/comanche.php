@@ -1,7 +1,7 @@
 <?php /** @file */
 
 require_once('include/security.php');
-
+require_once('include/menu.php');
 // When editing a webpage - a dropdown is needed to select a page layout
 // On submit, the pdl_select value (which is the mid of an item with item_restrict = ITEM_PDL) is stored in 
 // the webpage's resource_id, with resource_type 'pdl'.
@@ -74,7 +74,7 @@ function comanche_parser(&$a,$s) {
 function comanche_menu($name) {
 	$a = get_app();
 	$m = menu_fetch($name,$a->profile['profile_uid'],get_observer_hash());
-	return render_menu($m);
+	return menu_render($m);
 }
 
 function comanche_replace_region($match) {
