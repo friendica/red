@@ -1835,7 +1835,7 @@ function json_decode_plus($s) {
 
 
 function design_tools() {
-$channel = $channel  = get_app()->get_channel();
+$channel  = get_app()->get_channel();
 $who = $channel['channel_address'];
 
 return replace_macros(get_markup_template('design_tools.tpl'), array(
