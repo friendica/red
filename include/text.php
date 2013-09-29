@@ -1835,16 +1835,17 @@ function json_decode_plus($s) {
 
 
 function design_tools() {
-// FIXME - this should be a template
+$channel = $channel  = get_app()->get_channel();
+$who = $channel['channel_address'];
 
-	$o = '<div class="widget design-tools">';
-	$o .= '<h3>' . t('Design') . '</h3>';
-	$o .= '<a href="blocks">' . t('Blocks') . '</a>' . EOL;
-	$o .= '<a href="menu">' . t('Menus') . '</a>' . EOL;
-	$o .= '<a href="layout">' . t('Layouts') . '</a>' . EOL;
-	$o .= '<a href="webpages">' . t('Pages') . '</a>' . EOL;
-	$o .= '</div>';
-	return $o;
+return replace_macros(get_markup_template('design_tools.tpl'), array(
+                        '$title' => t('Design'),
+			'$who' => $who,
+                      	'$blocks' => t('Blocks'),
+			'$menus' => t('Menus'),
+			'$layout' => t('Layouts'),
+			'$pages' => t('Pages')
+                        ));
 
 }
 
