@@ -315,6 +315,13 @@ function connections_content(&$a) {
 			),
 
 			array(
+				'label' => t('Recent Activity'),
+				'url'   => $a->get_baseurl(true) . '/network/?f=&cid=' . $contact['abook_id'], 
+				'sel'   => '',
+				'title' => t('View recent posts and comments'),
+			),
+
+			array(
 				'label' => (($contact['abook_flags'] & ABOOK_FLAG_BLOCKED) ? t('Unblock') : t('Block')),
 				'url'   => $a->get_baseurl(true) . '/connections/' . $contact['abook_id'] . '/block', 
 				'sel'   => (($contact['abook_flags'] & ABOOK_FLAG_BLOCKED) ? 'active' : ''),
