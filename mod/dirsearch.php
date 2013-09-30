@@ -135,11 +135,21 @@ function dirsearch_content(&$a) {
 
 
 	if($sync) {
-
-		$r = q("select xchan.*, updates.* from xchan left join updates on ud_hash = xchan_hash where ud_date >= '%s' and ud_guid != '' order by ud_date desc",
+		$spkt = array('transactions' => array());
+		$r = q("select * from updates where ud_date >= '%s' and ud_guid != '' order by ud_date desc",
 			dbesc($sync)
 		);
-
+		if($r) {
+			foreach($r as $rr) {
+				$spkt['transactions'][] = array(
+					'hash' => $rr['ud_hash'],
+					'address' => $rr['ud_addr'],
+					'transaction_id' => $rr['ud_guid'],
+					'timestamp' => $rr['ud_date']
+				);
+			}
+		}
+		json_return_and_die($spkt);
 	}
 	else {
 		$r = q("SELECT xchan.*, xprof.* from xchan left join xprof on xchan_hash = xprof_hash where $logic $sql_extra and not ( xchan_flags & %d ) and not ( xchan_flags & %d ) $safesql $order $qlimit ",
@@ -183,7 +193,7 @@ function dirsearch_content(&$a) {
 		}
 
 		$ret['results'] = $entries;
-		if(($kw) && (! $sync)) {
+		if($kw) {
 			$k = dir_tagadelic($kw);
 			if($k) {
 				$ret['keywords'] = array();
