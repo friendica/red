@@ -788,10 +788,6 @@ function zot_fetch($arr) {
 		logger('zot_fetch: no hub: ' . print_r($arr['sender'],true));
 		return;
 	}
-	
-
-	$ret_secret = json_encode(array($arr['secret'],'secret_sig' => base64url_encode(rsa_sign($arr['secret'],get_config('system','prvkey')))));
-	
 
 	$data = array(
 		'type'    => 'pickup',
@@ -801,7 +797,6 @@ function zot_fetch($arr) {
 		'secret' => $arr['secret'],
 		'secret_sig' => base64url_encode(rsa_sign($arr['secret'],get_config('system','prvkey')))
 	);
-
 
 	$datatosend = json_encode(aes_encapsulate(json_encode($data),$ret_hub['hubloc_sitekey']));
 	
