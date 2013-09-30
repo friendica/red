@@ -1301,14 +1301,9 @@ function get_atom_elements($feed,$item) {
 			$res['object'] .= '<orig>' . xmlify($body) . '</orig>' . "\n";
 			if((strpos($body,'<') !== false) || (strpos($body,'>') !== false)) {
 
-				$body = html2bb_video($body);
-
-				$config = HTMLPurifier_Config::createDefault();
-				$config->set('Cache.DefinitionImpl', null);
-
-				$purifier = new HTMLPurifier($config);
-				$body = $purifier->purify($body);
+				$body = purify_html($body);
 				$body = html2bbcode($body);
+
 			}
 
 			$res['object'] .= '<content>' . $body . '</content>' . "\n";
@@ -1339,13 +1334,7 @@ function get_atom_elements($feed,$item) {
 			$res['target'] .= '<orig>' . xmlify($body) . '</orig>' . "\n";
 			if((strpos($body,'<') !== false) || (strpos($body,'>') !== false)) {
 
-				$body = html2bb_video($body);
-
-				$config = HTMLPurifier_Config::createDefault();
-				$config->set('Cache.DefinitionImpl', null);
-
-				$purifier = new HTMLPurifier($config);
-				$body = $purifier->purify($body);
+				$body = purify_html($body);
 				$body = html2bbcode($body);
 			}
 
@@ -1384,6 +1373,7 @@ function get_atom_elements($feed,$item) {
 	$arr = array('feed' => $feed, 'item' => $item, 'result' => $res);
 
 	call_hooks('parse_atom', $arr);
+	logger('get_atom_elements: ' . print_r($res,true));
 
 	return $res;
 }
@@ -2676,6 +2666,9 @@ function consume_feed($xml,$importer,&$contact, &$hub, $datedir = 0, $pass = 0) 
 		logger('consume_feed: empty input');
 		return;
 	}
+
+	// Want to see this work as a content source for the matrix? 
+	// Read this: https://github.com/friendica/red/wiki/Service_Federation
 		
 	$feed = new SimplePie();
 	$feed->set_raw_data($xml);
@@ -2691,12 +2684,6 @@ function consume_feed($xml,$importer,&$contact, &$hub, $datedir = 0, $pass = 0) 
 	$permalink = $feed->get_permalink();
 
 	// Check at the feed level for updated contact name and/or photo
-
-	$name_updated  = '';
-	$new_name = '';
-	$photo_timestamp = '';
-	$photo_url = '';
-	$birthday = '';
 
 
 	// process any deleted entries
@@ -2719,7 +2706,7 @@ function consume_feed($xml,$importer,&$contact, &$hub, $datedir = 0, $pass = 0) 
 /*				$r = q("SELECT `item`.*, `contact`.`self` FROM `item` left join `contact` on `item`.`contact-id` = `contact`.`id` 
 					WHERE `mid` = '%s' AND `item`.`uid` = %d AND `contact-id` = %d AND NOT `item`.`file` LIKE '%%[%%' LIMIT 1",
 					dbesc($mid),
-					intval($importer['uid']),
+					intval($importer['channel_id']),
 					intval($contact['id'])
 				);
 */
@@ -2737,7 +2724,7 @@ function consume_feed($xml,$importer,&$contact, &$hub, $datedir = 0, $pass = 0) 
 							dbesc($when),
 							dbesc(datetime_convert()),
 							dbesc($item['mid']),
-							intval($importer['uid'])
+							intval($importer['channel_id'])
 						);
 					}
 					else {
@@ -2748,7 +2735,7 @@ function consume_feed($xml,$importer,&$contact, &$hub, $datedir = 0, $pass = 0) 
 							dbesc($when),
 							dbesc(datetime_convert()),
 							dbesc($mid),
-							intval($importer['uid'])
+							intval($importer['channel_id'])
 						);
 					}
 				}	
@@ -2773,6 +2760,9 @@ function consume_feed($xml,$importer,&$contact, &$hub, $datedir = 0, $pass = 0) 
 
 			$is_reply = false;
 			$item_id = $item->get_id();
+
+logger('consume_feed: processing ' . $item_id);
+
 			$rawthread = $item->get_item_tags( NAMESPACE_THREAD,'in-reply-to');
 			if(isset($rawthread[0]['attribs']['']['ref'])) {
 				$is_reply = true;
@@ -2783,11 +2773,6 @@ function consume_feed($xml,$importer,&$contact, &$hub, $datedir = 0, $pass = 0) 
 
 				if($pass == 1)
 					continue;
-
-				// not allowed to post
-// FIXME - check permissions
-//				if($contact['rel'] == CONTACT_IS_FOLLOWER)
-//					continue;
 
 
 				// Have we seen it? If not, import it.
@@ -2810,12 +2795,12 @@ function consume_feed($xml,$importer,&$contact, &$hub, $datedir = 0, $pass = 0) 
 
 				$r = q("SELECT `uid`, `edited`, `body` FROM `item` WHERE `mid` = '%s' AND `uid` = %d LIMIT 1",
 					dbesc($item_id),
-					intval($importer['uid'])
+					intval($importer['channel_id'])
 				);
 
 				// Update content if 'updated' changes
 
-				if(count($r)) {
+				if($r) {
 					if((x($datarray,'edited') !== false) && (datetime_convert('UTC','UTC',$datarray['edited']) !== $r[0]['edited'])) {  
 
 						// do not accept (ignore) an earlier edit than one we currently have.
@@ -2827,7 +2812,7 @@ function consume_feed($xml,$importer,&$contact, &$hub, $datedir = 0, $pass = 0) 
 							dbesc($datarray['body']),
 							dbesc(datetime_convert('UTC','UTC',$datarray['edited'])),
 							dbesc($item_id),
-							intval($importer['uid'])
+							intval($importer['channel_id'])
 						);
 					}
 
@@ -2836,7 +2821,7 @@ function consume_feed($xml,$importer,&$contact, &$hub, $datedir = 0, $pass = 0) 
 
 
 				$datarray['parent_mid'] = $parent_mid;
-				$datarray['uid'] = $importer['uid'];
+				$datarray['uid'] = $importer['channel_id'];
 				$datarray['contact-id'] = $contact['id'];
 				if((activity_match($datarray['verb'],ACTIVITY_LIKE)) || (activity_match($datarray['verb'],ACTIVITY_DISLIKE))) {
 					$datarray['type'] = 'activity';
@@ -2860,7 +2845,7 @@ function consume_feed($xml,$importer,&$contact, &$hub, $datedir = 0, $pass = 0) 
 					if($xt->type == ACTIVITY_OBJ_NOTE) {
 						$r = q("select * from item where `mid` = '%s' AND `uid` = %d limit 1",
 							dbesc($xt->id),
-							intval($importer['importer_uid'])
+							intval($importer['channel_id'])
 						);
 						if(! count($r))
 							continue;
@@ -2878,7 +2863,9 @@ function consume_feed($xml,$importer,&$contact, &$hub, $datedir = 0, $pass = 0) 
 					}
 				}
 
-				$xx = item_store($datarray);
+logger('consume_feed: ' . print_r($datarray,true));
+
+//				$xx = item_store($datarray);
 				$r = $xx['item_id'];
 				continue;
 			}
@@ -2910,7 +2897,7 @@ function consume_feed($xml,$importer,&$contact, &$hub, $datedir = 0, $pass = 0) 
 				if((x($datarray,'obj_type')) && ($datarray['obj_type'] === ACTIVITY_OBJ_EVENT)) {
 					$ev = bbtoevent($datarray['body']);
 					if(x($ev,'desc') && x($ev,'start')) {
-						$ev['uid'] = $importer['uid'];
+						$ev['uid'] = $importer['channel_id'];
 						$ev['mid'] = $item_id;
 						$ev['edited'] = $datarray['edited'];
 						$ev['private'] = $datarray['private'];
@@ -2919,23 +2906,23 @@ function consume_feed($xml,$importer,&$contact, &$hub, $datedir = 0, $pass = 0) 
 							$ev['cid'] = $contact['id'];
 						$r = q("SELECT * FROM `event` WHERE `mid` = '%s' AND `uid` = %d LIMIT 1",
 							dbesc($item_id),
-							intval($importer['uid'])
+							intval($importer['channel_id'])
 						);
 						if(count($r))
 							$ev['id'] = $r[0]['id'];
-						$xyz = event_store($ev);
+//						$xyz = event_store($ev);
 						continue;
 					}
 				}
 
 				$r = q("SELECT `uid`, `edited`, `body` FROM `item` WHERE `mid` = '%s' AND `uid` = %d LIMIT 1",
 					dbesc($item_id),
-					intval($importer['uid'])
+					intval($importer['channel_id'])
 				);
 
 				// Update content if 'updated' changes
 
-				if(count($r)) {
+				if($r) {
 					if((x($datarray,'edited') !== false) && (datetime_convert('UTC','UTC',$datarray['edited']) !== $r[0]['edited'])) {  
 
 						// do not accept (ignore) an earlier edit than one we currently have.
@@ -2947,7 +2934,7 @@ function consume_feed($xml,$importer,&$contact, &$hub, $datedir = 0, $pass = 0) 
 							dbesc($datarray['body']),
 							dbesc(datetime_convert('UTC','UTC',$datarray['edited'])),
 							dbesc($item_id),
-							intval($importer['uid'])
+							intval($importer['channel_id'])
 						);
 					}
 
@@ -2975,8 +2962,8 @@ function consume_feed($xml,$importer,&$contact, &$hub, $datedir = 0, $pass = 0) 
 				}
 
 
-				if(! is_array($contact))
-					return;
+//				if(! is_array($contact))
+//					return;
 
 
 				// This is my contact on another system, but it's really me.
@@ -2987,7 +2974,7 @@ function consume_feed($xml,$importer,&$contact, &$hub, $datedir = 0, $pass = 0) 
 				}
 
 				$datarray['parent_mid'] = $item_id;
-				$datarray['uid'] = $importer['uid'];
+				$datarray['uid'] = $importer['channel_id'];
 				$datarray['contact-id'] = $contact['id'];
 
 				if(! link_compare($datarray['owner-link'],$contact['url'])) {
@@ -3005,17 +2992,20 @@ function consume_feed($xml,$importer,&$contact, &$hub, $datedir = 0, $pass = 0) 
 				// posting an @-tag delivery, which followers are allowed to do for certain
 				// page types. Now that we've parsed the post, let's check if it is legit. Otherwise ignore it. 
 
-				if(($contact['rel'] == CONTACT_IS_FOLLOWER) && (! tgroup_check($importer['uid'],$datarray)))
+				if(($contact['rel'] == CONTACT_IS_FOLLOWER) && (! tgroup_check($importer['channel_id'],$datarray)))
 					continue;
 
+logger('consume_feed: ' . print_r($datarray,true));
 
-				$xx = item_store($datarray);
+//				$xx = item_store($datarray);
 				$r = $xx['item_id'];
 				continue;
 
 			}
 		}
 	}
+
+
 }
 
 
