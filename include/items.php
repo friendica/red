@@ -2308,6 +2308,17 @@ function check_item_source($uid,$item) {
 	if(! $r)
 		return false;
 
+	$x = q("select abook_their_perms from abook where abook_channel = %d and abook_xchan = '%s' limit 1",
+		intval($uid),
+		dbesc($item['owner_xchan'])
+	);
+			
+	if(! $x)
+		return false;
+
+	if(! ($x[0]['abook_their_perms'] & PERMS_A_REPUBLISH))
+		return false;
+
 	if($r[0]['src_channel_xchan'] === $item['owner_xchan'])
 		return false;
 

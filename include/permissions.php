@@ -28,6 +28,7 @@ function get_perms() {
 		'write_storage' => array('channel_w_storage',   intval(PERMS_W_STORAGE),   false, t('Can write to my "public" file storage'), ''),
 		'write_pages' => array('channel_w_pages',   intval(PERMS_W_PAGES),   false, t('Can edit my "public" pages'), ''),
 
+		'republish' => array('channel_a_republish', intval(PERMS_A_REPUBLISH), false, t('Can source my "public" posts in derived channels'), t('Somewhat advanced - very useful in open communities')),
 		'delegate'      => array('channel_a_delegate', intval(PERMS_A_DELEGATE),    false, t('Can administer my channel resources'), t('Extremely advanced. Leave this alone unless you know what you are doing')),
 	);
 	$ret = array('global_permissions' => $global_perms);

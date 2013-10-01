@@ -219,7 +219,8 @@ function channel_remove($channel_id, $local = true) {
 		$r = q("update channel set channel_pageflags = (channel_pageflags | %d), channel_r_stream = 0, channel_r_profile = 0,
 			channel_r_photos = 0, channel_r_abook = 0, channel_w_stream = 0, channel_w_wall = 0, channel_w_tagwall = 0,
 			channel_w_comment = 0, channel_w_mail = 0, channel_w_photos = 0, channel_w_chat = 0, channel_a_delegate = 0,
-			channel_r_storage = 0, channel_w_storage = 0, channel_r_pages = 0, channel_w_pages = 0 where channel_id = %d limit 1",
+			channel_r_storage = 0, channel_w_storage = 0, channel_r_pages = 0, channel_w_pages = 0, channel_a_republish = 0 
+			where channel_id = %d limit 1",
 			intval(PAGE_REMOVED),
 			intval($channel_id)
 		);

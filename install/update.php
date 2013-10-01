@@ -1,6 +1,6 @@
 <?php
 
-define( 'UPDATE_VERSION' , 1075 );
+define( 'UPDATE_VERSION' , 1076 );
 
 /**
  *
@@ -851,3 +851,11 @@ ADD INDEX ( `ud_last` ) ");
 }
 
 
+function update_r1075() {
+	$r = q("ALTER TABLE `channel` ADD `channel_a_republish` INT UNSIGNED NOT NULL DEFAULT '128',
+ADD INDEX ( `channel_a_republish` )");
+
+	if($r)
+		return UPDATE_SUCCESS;
+	return UPDATE_FAILED;
+}

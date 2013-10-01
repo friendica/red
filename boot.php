@@ -45,7 +45,7 @@ define ( 'RED_PLATFORM',            'Red Matrix' );
 define ( 'RED_VERSION',             trim(file_get_contents('version.inc')) . 'R');
 define ( 'ZOT_REVISION',            1     ); 
 
-define ( 'DB_UPDATE_VERSION',       1075  );
+define ( 'DB_UPDATE_VERSION',       1076  );
 
 define ( 'EOL',                    '<br />' . "\r\n"     );
 define ( 'ATOM_TIME',              'Y-m-d\TH:i:s\Z' );
@@ -228,26 +228,26 @@ define ( 'NETWORK_PHANTOM',          'unkn');    // Place holder
  */
 
 
-define ( 'PERMS_R_STREAM',         0x0001); 
-define ( 'PERMS_R_PROFILE',        0x0002);
-define ( 'PERMS_R_PHOTOS',         0x0004); 
-define ( 'PERMS_R_ABOOK',          0x0008); 
+define ( 'PERMS_R_STREAM',         0x00001); 
+define ( 'PERMS_R_PROFILE',        0x00002);
+define ( 'PERMS_R_PHOTOS',         0x00004); 
+define ( 'PERMS_R_ABOOK',          0x00008); 
 
 
-define ( 'PERMS_W_STREAM',         0x0010); 
-define ( 'PERMS_W_WALL',           0x0020);
-define ( 'PERMS_W_TAGWALL',        0x0040); 
-define ( 'PERMS_W_COMMENT',        0x0080); 
-define ( 'PERMS_W_MAIL',           0x0100); 
-define ( 'PERMS_W_PHOTOS',         0x0200);
-define ( 'PERMS_W_CHAT',           0x0400); 
-define ( 'PERMS_A_DELEGATE',       0x0800);
+define ( 'PERMS_W_STREAM',         0x00010); 
+define ( 'PERMS_W_WALL',           0x00020);
+define ( 'PERMS_W_TAGWALL',        0x00040); 
+define ( 'PERMS_W_COMMENT',        0x00080); 
+define ( 'PERMS_W_MAIL',           0x00100); 
+define ( 'PERMS_W_PHOTOS',         0x00200);
+define ( 'PERMS_W_CHAT',           0x00400); 
+define ( 'PERMS_A_DELEGATE',       0x00800);
 
-define ( 'PERMS_R_STORAGE',        0x1000);
-define ( 'PERMS_W_STORAGE',        0x2000);
-define ( 'PERMS_R_PAGES',          0x4000);
-define ( 'PERMS_W_PAGES',          0x8000);
-
+define ( 'PERMS_R_STORAGE',        0x01000);
+define ( 'PERMS_W_STORAGE',        0x02000);
+define ( 'PERMS_R_PAGES',          0x04000);
+define ( 'PERMS_W_PAGES',          0x08000);
+define ( 'PERMS_A_REPUBLISH',      0x10000);
 
 // General channel permissions
 
