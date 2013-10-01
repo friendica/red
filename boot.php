@@ -1783,6 +1783,11 @@ function profile_sidebar($profile, $block = 0, $show_connect = true) {
 		if($m)
 			$channel_menu = menu_render($m);
 	}
+	$menublock = get_pconfig($profile['uid'],'system','channel_menublock');
+	if ($menublock) {
+		require_once('include/comanche.php');
+		$channel_menu .= comanche_block($menublock);
+	}
 
 	$tpl = get_markup_template('profile_vcard.tpl');
 
