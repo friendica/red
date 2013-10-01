@@ -1,6 +1,6 @@
 <?php
 
-define( 'UPDATE_VERSION' , 1074 );
+define( 'UPDATE_VERSION' , 1075 );
 
 /**
  *
@@ -816,10 +816,12 @@ ADD INDEX ( `ud_addr` ) ");
 function update_r1072() {
 	$r = q("ALTER TABLE `xtag` ADD `xtag_flags` INT NOT NULL DEFAULT '0',
 ADD INDEX ( `xtag_flags` ) ");
+
 	if($r)
 		return UPDATE_SUCCESS;
 	return UPDATE_FAILED;
 }
+
 
 function update_r1073() {
 	$r1 = q("CREATE TABLE IF NOT EXISTS `source` (
@@ -836,3 +838,16 @@ function update_r1073() {
 		return UPDATE_SUCCESS;
 	return UPDATE_FAILED;
 }
+
+function update_r1074() {
+	$r1 = q("ALTER TABLE `site` ADD `site_sync` DATETIME NOT NULL AFTER `site_update` ");
+
+	$r2 = q("ALTER TABLE `updates` ADD `ud_last` DATETIME NOT NULL DEFAULT '0000-00-00 00:00:00' AFTER `ud_date` ,
+ADD INDEX ( `ud_last` ) ");
+
+	if($r1 && $r2)
+		return UPDATE_SUCCESS;
+	return UPDATE_FAILED;
+}
+
+

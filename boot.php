@@ -45,7 +45,7 @@ define ( 'RED_PLATFORM',            'Red Matrix' );
 define ( 'RED_VERSION',             trim(file_get_contents('version.inc')) . 'R');
 define ( 'ZOT_REVISION',            1     ); 
 
-define ( 'DB_UPDATE_VERSION',       1074  );
+define ( 'DB_UPDATE_VERSION',       1075  );
 
 define ( 'EOL',                    '<br />' . "\r\n"     );
 define ( 'ATOM_TIME',              'Y-m-d\TH:i:s\Z' );
@@ -296,6 +296,13 @@ define ( 'POLL_MULTIPLE_CHOICE', 0x0004);
 define ( 'POLL_OVERWRITE',       0x8000);  // If you vote twice remove the prior entry
 
 
+
+define ( 'UPDATE_FLAGS_UPDATED',  0x0001);
+define ( 'UPDATE_FLAGS_DELETED',  0x1000);
+
+
+
+
 /**
  * Maximum number of "people who like (or don't like) this"  that we will list by name
  */
@@ -344,7 +351,7 @@ define ( 'XCHAN_FLAGS_HIDDEN',        0x0001);
 define ( 'XCHAN_FLAGS_ORPHAN',        0x0002);
 define ( 'XCHAN_FLAGS_CENSORED',      0x0004);
 define ( 'XCHAN_FLAGS_SELFCENSORED',  0x0008);
-
+define ( 'XCHAN_FLAGS_DELETED',       0x1000);
 /*
  * Traficlights for Administration of HubLoc
  * to detect problems in inter server communication

@@ -823,6 +823,7 @@ CREATE TABLE IF NOT EXISTS `site` (
   `site_access` int(11) NOT NULL DEFAULT '0',
   `site_flags` int(11) NOT NULL DEFAULT '0',
   `site_update` datetime NOT NULL DEFAULT '0000-00-00 00:00:00',
+  `site_sync` datetime NOT NULL,
   `site_directory` char(255) NOT NULL DEFAULT '',
   `site_register` int(11) NOT NULL DEFAULT '0',
   `site_sellpage` char(255) NOT NULL DEFAULT '',
@@ -903,6 +904,7 @@ CREATE TABLE IF NOT EXISTS `updates` (
   `ud_hash` char(128) NOT NULL,
   `ud_guid` char(255) NOT NULL DEFAULT '',
   `ud_date` datetime NOT NULL DEFAULT '0000-00-00 00:00:00',
+  `ud_last` datetime NOT NULL DEFAULT '0000-00-00 00:00:00',
   `ud_flags` int(11) NOT NULL DEFAULT '0',
   `ud_addr` char(255) NOT NULL DEFAULT '',
   PRIMARY KEY (`ud_id`),
@@ -910,7 +912,8 @@ CREATE TABLE IF NOT EXISTS `updates` (
   KEY `ud_guid` (`ud_guid`),
   KEY `ud_date` (`ud_date`),
   KEY `ud_flags` (`ud_flags`),
-  KEY `ud_addr` (`ud_addr`)
+  KEY `ud_addr` (`ud_addr`),
+  KEY `ud_last` (`ud_last`)
 ) ENGINE=MyISAM DEFAULT CHARSET=utf8;
 
 CREATE TABLE IF NOT EXISTS `verify` (

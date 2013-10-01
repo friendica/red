@@ -1532,13 +1532,21 @@ function import_directory_keywords($hash,$keywords) {
 
 function update_modtime($hash,$guid,$addr,$flags = 0) {
 
-	q("insert into updates (ud_hash, ud_guid, ud_date, ud_flags, ud_addr ) values ( '%s', '%s', '%s', %d, '%s' )",
-		dbesc($hash),
-		dbesc($guid),
-		dbesc(datetime_convert()),
-		intval($flags),
-		dbesc($addr)
-	);
+	if($flags) {
+		q("insert into updates (ud_hash, ud_guid, ud_date, ud_flags, ud_addr ) values ( '%s', '%s', '%s', %d, '%s' )",
+			dbesc($hash),
+			dbesc($guid),
+			dbesc(datetime_convert()),
+			intval($flags),
+			dbesc($addr)
+		);
+	}
+	else {
+		q("update updates set ud_flags = ( ud_flags | %d ) where ud_addr = '%s' and not (ud_flags & %d) ",
+			intval(UPDATE_FLAGS_UPDATED),
+			intval(UPDATE_FLAGS_UPDATED)
+		);
+	}
 }
 
 

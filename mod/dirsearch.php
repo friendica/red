@@ -121,13 +121,9 @@ function dirsearch_content(&$a) {
 		}
 	}
 
-	if($mtime) {
-		$qlimit = '';
-//		$sql_extra .= " and xchan_hash in ( select ud_hash from updates where ud_date > '" . dbesc($mtime) . "' ) ";
-	}
 
 	if($sort_order == 'date')
-		$order = ""; // " order by ud_date desc ";
+		$order = ""; // Not currently implemented
 	elseif($sort_order == 'reverse')
 		$order = " order by xchan_name desc ";
 	else	
@@ -141,11 +137,13 @@ function dirsearch_content(&$a) {
 		);
 		if($r) {
 			foreach($r as $rr) {
+				$flags = (($rr['ud_flags'] & UPDATE_FLAGS_DELETED) ? array('deleted') : array());
 				$spkt['transactions'][] = array(
 					'hash' => $rr['ud_hash'],
 					'address' => $rr['ud_addr'],
 					'transaction_id' => $rr['ud_guid'],
-					'timestamp' => $rr['ud_date']
+					'timestamp' => $rr['ud_date'],
+					'flags' => $flags
 				);
 			}
 		}
