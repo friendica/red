@@ -113,6 +113,15 @@ function settings_aside(&$a) {
 
 	}
 
+	if(feature_enabled(local_user(),'channel_sources')) {
+		$tabs[] = array(
+			'label' => t('Channel Sources'),
+			'url' => $a->get_baseurl(true) . '/sources',
+			'selected' => ''
+		);
+
+	}
+
 
 	
 	$tabtpl = get_markup_template("generic_links_widget.tpl");
