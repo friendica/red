@@ -411,7 +411,7 @@ function zot_register_hub($arr) {
 // If the xchan already exists, update the name and photo if these have changed.
 // 
 
-function import_xchan($arr) {
+function import_xchan($arr,$ud_flags = 1) {
 
 	$ret = array('success' => false);
 	$dirmode = intval(get_config('system','directory_mode')); 
@@ -469,6 +469,11 @@ function import_xchan($arr) {
 		else
 			$new_flags = $r[0]['xchan_flags'];
 
+		$adult = (($r[0]['xchan_flags'] & XCHAN_FLAGS_SELFCENSORED) ? true : false);
+		$adult_changed =  ((intval($adult) != intval($arr['adult_content'])) ? true : false);
+		if($adult_changed)
+			$new_flags = $new_flags ^ XCHAN_FLAGS_SELFCENSORED;
+
 
 		if(($r[0]['xchan_name_date'] != $arr['name_updated']) 
 			|| ($r[0]['xchan_connurl'] != $arr['connections_url']) 
@@ -511,6 +516,8 @@ function import_xchan($arr) {
 			$new_flags = XCHAN_FLAGS_HIDDEN;
 		else
 			$new_flags = 0;
+		if($arr['adult_content'])
+			$new_flags |= XCHAN_FLAGS_SELFCENSORED;
 		
 		$x = q("insert into xchan ( xchan_hash, xchan_guid, xchan_guid_sig, xchan_pubkey, xchan_photo_mimetype,
 				xchan_photo_l, xchan_addr, xchan_url, xchan_connurl, xchan_follow, xchan_connpage, xchan_name, xchan_network, xchan_photo_date, xchan_name_date, xchan_flags)
@@ -681,7 +688,7 @@ function import_xchan($arr) {
 
 	if($dirmode != DIRECTORY_MODE_NORMAL) {
 		if(array_key_exists('profile',$arr) && is_array($arr['profile'])) {
-			$profile_changed = import_directory_profile($xchan_hash,$arr['profile']);
+			$profile_changed = import_directory_profile($xchan_hash,$arr['profile'],$arr['address'],$ud_flags, 1);
 			if($profile_changed) {
 				$what .= 'profile ';
 				$changed = true;
@@ -711,7 +718,7 @@ function import_xchan($arr) {
 
 	if($changed) {
 		$guid = random_string() . '@' . get_app()->get_hostname();		
-		update_modtime($xchan_hash,$guid);
+		update_modtime($xchan_hash,$guid,$arr['address'],$ud_flags);
 		logger('import_xchan: changed: ' . $what,LOGGER_DEBUG);
 	}
 
@@ -781,10 +788,6 @@ function zot_fetch($arr) {
 		logger('zot_fetch: no hub: ' . print_r($arr['sender'],true));
 		return;
 	}
-	
-
-	$ret_secret = json_encode(array($arr['secret'],'secret_sig' => base64url_encode(rsa_sign($arr['secret'],get_config('system','prvkey')))));
-	
 
 	$data = array(
 		'type'    => 'pickup',
@@ -794,7 +797,6 @@ function zot_fetch($arr) {
 		'secret' => $arr['secret'],
 		'secret_sig' => base64url_encode(rsa_sign($arr['secret'],get_config('system','prvkey')))
 	);
-
 
 	$datatosend = json_encode(aes_encapsulate(json_encode($data),$ret_hub['hubloc_sitekey']));
 	
@@ -1364,7 +1366,12 @@ function process_profile_delivery($sender,$arr,$deliveries) {
 	// deliveries is irrelevant, what to do about birthday notification....?
 
 	logger('process_profile_delivery', LOGGER_DEBUG);
-	import_directory_profile($sender['hash'],$arr);
+
+	$r = q("select xchan_addr from xchan where xchan_hash = '%s' limit 1",
+			dbesc($sender['hash'])
+	);
+	if($r)
+		import_directory_profile($sender['hash'],$arr,$r[0]['xchan_addr'], 1, 0);
 }
 
 
@@ -1375,7 +1382,7 @@ function process_profile_delivery($sender,$arr,$deliveries) {
  *
  */
 
-function import_directory_profile($hash,$profile) {
+function import_directory_profile($hash,$profile,$addr,$ud_flags = 1, $suppress_update = 0) {
 
 	logger('import_directory_profile', LOGGER_DEBUG);
 	if(! $hash)
@@ -1410,9 +1417,10 @@ function import_directory_profile($hash,$profile) {
 	// Self censored, make it so
 	// These are not translated, so the German "erwachsenen" keyword will not censor the directory profile. Only the English form - "adult".   
 
+
 	if(in_arrayi('nsfw',$clean) || in_arrayi('adult',$clean)) {
 		q("update xchan set xchan_flags = (xchan_flags | %d) where xchan_hash = '%s' limit 1",
-			intval(XCHAN_FLAGS_CENSORED),
+			intval(XCHAN_FLAGS_SELFCENSORED),
 			dbesc($hash)
 		);
 	}
@@ -1481,8 +1489,8 @@ function import_directory_profile($hash,$profile) {
 	$d = array('xprof' => $arr, 'profile' => $profile, 'update' => $update);
 	call_hooks('import_directory_profile', $d);
 
-	if($d['update'])
-		update_modtime($arr['xprof_hash'],random_string() . '@' . get_app()->get_hostname());
+	if(($d['update']) && (! $suppress_update))
+		update_modtime($arr['xprof_hash'],random_string() . '@' . get_app()->get_hostname(), $addr, $ud_flags);
 	return $d['update'];
 }
 
@@ -1522,12 +1530,23 @@ function import_directory_keywords($hash,$keywords) {
 }
 
 
-function update_modtime($hash,$guid) {
-	q("insert into updates (ud_hash, ud_guid, ud_date) values ( '%s', '%s', '%s' )",
-		dbesc($hash),
-		dbesc($guid),
-		dbesc(datetime_convert())
-	);
+function update_modtime($hash,$guid,$addr,$flags = 0) {
+
+	if($flags) {
+		q("insert into updates (ud_hash, ud_guid, ud_date, ud_flags, ud_addr ) values ( '%s', '%s', '%s', %d, '%s' )",
+			dbesc($hash),
+			dbesc($guid),
+			dbesc(datetime_convert()),
+			intval($flags),
+			dbesc($addr)
+		);
+	}
+	else {
+		q("update updates set ud_flags = ( ud_flags | %d ) where ud_addr = '%s' and not (ud_flags & %d) ",
+			intval(UPDATE_FLAGS_UPDATED),
+			intval(UPDATE_FLAGS_UPDATED)
+		);
+	}
 }
 
 

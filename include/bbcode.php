@@ -217,6 +217,18 @@ function bbcode($Text,$preserve_nl = false, $tryoembed = true) {
 
 	$ev = bbtoevent($Text);
 
+	// process [observer] tags before we do anything else because we might
+	// be stripping away stuff that then doesn't need to be worked on anymore
+	$observer = $a->get_observer();
+	if (strpos($Text,'[/observer]') !== false) {
+		if ($observer) {
+			$Text = preg_replace("/\[observer\=1\](.*?)\[\/observer\]/ism", '$1', $Text);
+			$Text = preg_replace("/\[observer\=0\].*?\[\/observer\]/ism", '', $Text);
+		} else {
+			$Text = preg_replace("/\[observer\=1\].*?\[\/observer\]/ism", '', $Text);
+			$Text = preg_replace("/\[observer\=0\](.*?)\[\/observer\]/ism", '$1', $Text);
+		}
+    }
 
 	// Replace any html brackets with HTML Entities to prevent executing HTML or script
 	// Don't use strip_tags here because it breaks [url] search by replacing & with amp
@@ -246,6 +258,22 @@ function bbcode($Text,$preserve_nl = false, $tryoembed = true) {
 	// Set up the parameters for a MAIL search string
 	$MAILSearchString = $URLSearchString;
 
+	// replace [observer.baseurl]
+	if ($observer) {
+		$obsBaseURL = $observer['xchan_url'];
+		$obsBaseURL = preg_replace("/\/channel\/.*$/", '', $obsBaseURL);
+		$Text = str_replace('[observer.baseurl]', $obsBaseURL, $Text);
+		$Text = str_replace('[observer.url]',$observer['xchan_url'], $Text);
+		$Text = str_replace('[observer.name]',$observer['xchan_name'], $Text);
+		$Text = str_replace('[observer.address]',$observer['xchan_addr'], $Text);
+		$Text = str_replace('[observer.photo]','[zmg]'.$observer['xchan_photo_l'].'[/zmg]', $Text);		
+	} else {
+		$Text = str_replace('[observer.baseurl]', '', $Text);
+		$Text = str_replace('[observer.url]','', $Text);
+		$Text = str_replace('[observer.name]','', $Text);
+		$Text = str_replace('[observer.address]','', $Text);
+		$Text = str_replace('[observer.photo]','', $Text);		
+	}
 
 	// Perform URL Search
 

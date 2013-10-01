@@ -24,10 +24,31 @@ function collect_recipients($item,&$private) {
 	if($item['allow_cid'] || $item['allow_gid'] || $item['deny_cid'] || $item['deny_gid']) {
 		$allow_people = expand_acl($item['allow_cid']);
 		$allow_groups = expand_groups(expand_acl($item['allow_gid']));
+
+		$recipients = array_unique(array_merge($allow_people,$allow_groups));
+
+		// if you specifically deny somebody but haven't allowed anybody, we'll allow everybody in your 
+		// address book minus the denied connections. The post is still private and can't be seen publicly
+		// as that would allow the denied person to see the post by logging out. 
+
+		if((! $item['allow_cid']) && (! $item['allow_gid'])) {
+			$r = q("select * from abook where abook_channel = %d and not (abook_flags & %d) and not (abook_flags & %d) and not (abook_flags & %d)",
+				intval($item['uid']),
+				intval(ABOOK_FLAG_SELF),
+				intval(ABOOK_FLAG_PENDING),
+				intval(ABOOK_FLAG_ARCHIVED)
+			);
+
+			if($r) {
+				foreach($r as $rr) {
+					$recipients[] = $rr['abook_xchan'];
+				}
+			}
+		}
+
 		$deny_people  = expand_acl($item['deny_cid']);
 		$deny_groups  = expand_groups(expand_acl($item['deny_gid']));
 
-		$recipients = array_unique(array_merge($allow_people,$allow_groups));
 		$deny = array_unique(array_merge($deny_people,$deny_groups));
 		$recipients = array_diff($recipients,$deny);
 		$private = true;
@@ -62,9 +83,20 @@ function collect_recipients($item,&$private) {
 
 }
 
-
-
+/**
+ * @function can_comment_on_post($observer_xchan,$item);
+ *
+ * This function examines the comment_policy attached to an item and decides if the current observer has
+ * sufficient privileges to comment. This will normally be called on a remote site where perm_is_allowed()
+ * will not be suitable because the post owner does not have a local channel_id.
+ * Generally we should look at the item - in particular the author['book_flags'] and see if ABOOK_FLAG_SELF is set.
+ * If it is, you should be able to use perm_is_allowed( ... 'post_comments'), and if it isn't you need to call 
+ * can_comment_on_post()
+ */
 function can_comment_on_post($observer_xchan,$item) {
+
+//	logger('can_comment_on_post: comment_policy: ' . $item['comment_policy'], LOGGER_DEBUG);
+
 	if(! $observer_xchan)
 		return false;
 	if($item['comment_policy'] === 'none')
@@ -77,6 +109,10 @@ function can_comment_on_post($observer_xchan,$item) {
 				return true;
 			break;
 		case 'public':
+			// We don't allow public comments yet, until a policy 
+			// for dealing with anonymous comments is in place with 
+			// a means to moderate comments. Until that time, return 
+			// false.
 			return false;
 			break;
 		case 'contacts':
@@ -1265,14 +1301,9 @@ function get_atom_elements($feed,$item) {
 			$res['object'] .= '<orig>' . xmlify($body) . '</orig>' . "\n";
 			if((strpos($body,'<') !== false) || (strpos($body,'>') !== false)) {
 
-				$body = html2bb_video($body);
-
-				$config = HTMLPurifier_Config::createDefault();
-				$config->set('Cache.DefinitionImpl', null);
-
-				$purifier = new HTMLPurifier($config);
-				$body = $purifier->purify($body);
+				$body = purify_html($body);
 				$body = html2bbcode($body);
+
 			}
 
 			$res['object'] .= '<content>' . $body . '</content>' . "\n";
@@ -1303,13 +1334,7 @@ function get_atom_elements($feed,$item) {
 			$res['target'] .= '<orig>' . xmlify($body) . '</orig>' . "\n";
 			if((strpos($body,'<') !== false) || (strpos($body,'>') !== false)) {
 
-				$body = html2bb_video($body);
-
-				$config = HTMLPurifier_Config::createDefault();
-				$config->set('Cache.DefinitionImpl', null);
-
-				$purifier = new HTMLPurifier($config);
-				$body = $purifier->purify($body);
+				$body = purify_html($body);
 				$body = html2bbcode($body);
 			}
 
@@ -1348,6 +1373,7 @@ function get_atom_elements($feed,$item) {
 	$arr = array('feed' => $feed, 'item' => $item, 'result' => $res);
 
 	call_hooks('parse_atom', $arr);
+	logger('get_atom_elements: ' . print_r($res,true));
 
 	return $res;
 }
@@ -2038,6 +2064,12 @@ function tag_deliver($uid,$item_id) {
 			logger('tag_deliver: tag permission denied for ' . $u[0]['channel_address']);
 	}
 
+
+	$union = check_item_source($uid,$item);
+	if($union)
+		logger('check_item_source returns true');
+
+
 	// This might be a followup by the original post author to a tagged forum
 	// If so setup a second delivery chain
 
@@ -2104,42 +2136,44 @@ function tag_deliver($uid,$item_id) {
 			intval(ITEM_MENTIONSME),
 			intval($item_id)
 		);			
-	}
-	else
-		return;
 
-	// At this point we've determined that the person receiving this post was mentioned in it.
-	// Now let's check if this mention was inside a reshare so we don't spam a forum
+		// At this point we've determined that the person receiving this post was mentioned in it or it is a union.
+		// Now let's check if this mention was inside a reshare so we don't spam a forum
 
-	$body = preg_replace('/\[share(.*?)\[\/share\]/','',$item['body']);
+		$body = preg_replace('/\[share(.*?)\[\/share\]/','',$item['body']);
 
-	$pattern = '/@\[zrl\=' . preg_quote($term['url'],'/') . '\]' . preg_quote($u[0]['channel_name'],'/') . '\[\/zrl\]/';
+		$pattern = '/@\[zrl\=' . preg_quote($term['url'],'/') . '\]' . preg_quote($u[0]['channel_name'],'/') . '\[\/zrl\]/';
 
-	if(! preg_match($pattern,$body,$matches)) {
-		logger('tag_deliver: mention was in a reshare - ignoring');
-		return;
-	}
+		if(! preg_match($pattern,$body,$matches)) {
+			logger('tag_deliver: mention was in a reshare - ignoring');
+			return;
+		}
 	
 
-	// All good. 
-	// Send a notification
+		// All good. 
+		// Send a notification
 
-	require_once('include/enotify.php');
-	notification(array(
-		'to_xchan'     => $u[0]['channel_hash'],
-		'from_xchan'   => $item['author_xchan'],
-		'type'         => NOTIFY_TAGSELF,
-		'item'         => $item,
-		'link'         => $i[0]['llink'],
-		'verb'         => ACTIVITY_TAG,
-		'otype'        => 'item'
-	));
+		require_once('include/enotify.php');
+		notification(array(
+			'to_xchan'     => $u[0]['channel_hash'],
+			'from_xchan'   => $item['author_xchan'],
+			'type'         => NOTIFY_TAGSELF,
+			'item'         => $item,
+			'link'         => $i[0]['llink'],
+			'verb'         => ACTIVITY_TAG,
+			'otype'        => 'item'
+		));
 
 
-	if(! perm_is_allowed($uid,$item['author_xchan'],'tag_deliver')) {
-		logger('tag_delivery denied for uid ' . $uid . ' and xchan ' . $item['author_xchan']);
-		return;
+		if(! perm_is_allowed($uid,$item['author_xchan'],'tag_deliver')) {
+			logger('tag_delivery denied for uid ' . $uid . ' and xchan ' . $item['author_xchan']);
+			return;
+		}
+
 	}
+
+	if((! $mention) && (! $union))
+		return;
 
 
 	// tgroup delivery - setup a second delivery chain
@@ -2246,6 +2280,73 @@ function tgroup_check($uid,$item) {
 	return true;
 
 }
+
+
+/**
+ * @function check_item_source($uid,$item)
+ * @param $uid
+ * @param $item
+ *
+ * @description
+ * Checks to see if this item owner is referenced as a source for this channel and if the post 
+ * matches the rules for inclusion in this channel. Returns true if we should create a second delivery
+ * chain and false if none of the rules apply, or if the item is private.
+ */
+ 
+
+function check_item_source($uid,$item) {
+
+	if($item['item_private'])
+		return false;
+	
+
+	$r = q("select * from source where src_channel_id = %d and src_xchan = '%s' limit 1",
+		intval($uid),
+		dbesc($item['owner_xchan'])
+	);
+
+	if(! $r)
+		return false;
+
+	$x = q("select abook_their_perms from abook where abook_channel = %d and abook_xchan = '%s' limit 1",
+		intval($uid),
+		dbesc($item['owner_xchan'])
+	);
+			
+	if(! $x)
+		return false;
+
+	if(! ($x[0]['abook_their_perms'] & PERMS_A_REPUBLISH))
+		return false;
+
+	if($r[0]['src_channel_xchan'] === $item['owner_xchan'])
+		return false;
+
+	if(! $r[0]['src_patt'])
+		return true;
+
+	require_once('include/html2plain.php');
+	$text = prepare_text($item['body'],$item['mimetype']);
+	$text = html2plain($text);
+
+	$tags = ((count($items['term'])) ? $items['term'] : false);
+
+	$words = explode("\n",$r[0]['src_patt']);
+	if($words) {
+		foreach($words as $word) {
+			if(substr($word,0,1) === '#' && $tags) {
+				foreach($tags as $t)
+					if($t['type'] == TERM_HASHTAG && substr($t,1) === $word)
+						return true;
+			}
+			if(stristr($text,$word) !== false)
+				return true;
+		}
+	}
+	return false;
+}
+
+
 
 
 function mail_store($arr) {
@@ -2576,6 +2677,9 @@ function consume_feed($xml,$importer,&$contact, &$hub, $datedir = 0, $pass = 0) 
 		logger('consume_feed: empty input');
 		return;
 	}
+
+	// Want to see this work as a content source for the matrix? 
+	// Read this: https://github.com/friendica/red/wiki/Service_Federation
 		
 	$feed = new SimplePie();
 	$feed->set_raw_data($xml);
@@ -2591,12 +2695,6 @@ function consume_feed($xml,$importer,&$contact, &$hub, $datedir = 0, $pass = 0) 
 	$permalink = $feed->get_permalink();
 
 	// Check at the feed level for updated contact name and/or photo
-
-	$name_updated  = '';
-	$new_name = '';
-	$photo_timestamp = '';
-	$photo_url = '';
-	$birthday = '';
 
 
 	// process any deleted entries
@@ -2619,7 +2717,7 @@ function consume_feed($xml,$importer,&$contact, &$hub, $datedir = 0, $pass = 0) 
 /*				$r = q("SELECT `item`.*, `contact`.`self` FROM `item` left join `contact` on `item`.`contact-id` = `contact`.`id` 
 					WHERE `mid` = '%s' AND `item`.`uid` = %d AND `contact-id` = %d AND NOT `item`.`file` LIKE '%%[%%' LIMIT 1",
 					dbesc($mid),
-					intval($importer['uid']),
+					intval($importer['channel_id']),
 					intval($contact['id'])
 				);
 */
@@ -2637,7 +2735,7 @@ function consume_feed($xml,$importer,&$contact, &$hub, $datedir = 0, $pass = 0) 
 							dbesc($when),
 							dbesc(datetime_convert()),
 							dbesc($item['mid']),
-							intval($importer['uid'])
+							intval($importer['channel_id'])
 						);
 					}
 					else {
@@ -2648,7 +2746,7 @@ function consume_feed($xml,$importer,&$contact, &$hub, $datedir = 0, $pass = 0) 
 							dbesc($when),
 							dbesc(datetime_convert()),
 							dbesc($mid),
-							intval($importer['uid'])
+							intval($importer['channel_id'])
 						);
 					}
 				}	
@@ -2673,6 +2771,9 @@ function consume_feed($xml,$importer,&$contact, &$hub, $datedir = 0, $pass = 0) 
 
 			$is_reply = false;
 			$item_id = $item->get_id();
+
+logger('consume_feed: processing ' . $item_id);
+
 			$rawthread = $item->get_item_tags( NAMESPACE_THREAD,'in-reply-to');
 			if(isset($rawthread[0]['attribs']['']['ref'])) {
 				$is_reply = true;
@@ -2683,11 +2784,6 @@ function consume_feed($xml,$importer,&$contact, &$hub, $datedir = 0, $pass = 0) 
 
 				if($pass == 1)
 					continue;
-
-				// not allowed to post
-// FIXME - check permissions
-//				if($contact['rel'] == CONTACT_IS_FOLLOWER)
-//					continue;
 
 
 				// Have we seen it? If not, import it.
@@ -2710,12 +2806,12 @@ function consume_feed($xml,$importer,&$contact, &$hub, $datedir = 0, $pass = 0) 
 
 				$r = q("SELECT `uid`, `edited`, `body` FROM `item` WHERE `mid` = '%s' AND `uid` = %d LIMIT 1",
 					dbesc($item_id),
-					intval($importer['uid'])
+					intval($importer['channel_id'])
 				);
 
 				// Update content if 'updated' changes
 
-				if(count($r)) {
+				if($r) {
 					if((x($datarray,'edited') !== false) && (datetime_convert('UTC','UTC',$datarray['edited']) !== $r[0]['edited'])) {  
 
 						// do not accept (ignore) an earlier edit than one we currently have.
@@ -2727,7 +2823,7 @@ function consume_feed($xml,$importer,&$contact, &$hub, $datedir = 0, $pass = 0) 
 							dbesc($datarray['body']),
 							dbesc(datetime_convert('UTC','UTC',$datarray['edited'])),
 							dbesc($item_id),
-							intval($importer['uid'])
+							intval($importer['channel_id'])
 						);
 					}
 
@@ -2736,7 +2832,7 @@ function consume_feed($xml,$importer,&$contact, &$hub, $datedir = 0, $pass = 0) 
 
 
 				$datarray['parent_mid'] = $parent_mid;
-				$datarray['uid'] = $importer['uid'];
+				$datarray['uid'] = $importer['channel_id'];
 				$datarray['contact-id'] = $contact['id'];
 				if((activity_match($datarray['verb'],ACTIVITY_LIKE)) || (activity_match($datarray['verb'],ACTIVITY_DISLIKE))) {
 					$datarray['type'] = 'activity';
@@ -2760,7 +2856,7 @@ function consume_feed($xml,$importer,&$contact, &$hub, $datedir = 0, $pass = 0) 
 					if($xt->type == ACTIVITY_OBJ_NOTE) {
 						$r = q("select * from item where `mid` = '%s' AND `uid` = %d limit 1",
 							dbesc($xt->id),
-							intval($importer['importer_uid'])
+							intval($importer['channel_id'])
 						);
 						if(! count($r))
 							continue;
@@ -2778,7 +2874,9 @@ function consume_feed($xml,$importer,&$contact, &$hub, $datedir = 0, $pass = 0) 
 					}
 				}
 
-				$xx = item_store($datarray);
+logger('consume_feed: ' . print_r($datarray,true));
+
+//				$xx = item_store($datarray);
 				$r = $xx['item_id'];
 				continue;
 			}
@@ -2810,7 +2908,7 @@ function consume_feed($xml,$importer,&$contact, &$hub, $datedir = 0, $pass = 0) 
 				if((x($datarray,'obj_type')) && ($datarray['obj_type'] === ACTIVITY_OBJ_EVENT)) {
 					$ev = bbtoevent($datarray['body']);
 					if(x($ev,'desc') && x($ev,'start')) {
-						$ev['uid'] = $importer['uid'];
+						$ev['uid'] = $importer['channel_id'];
 						$ev['mid'] = $item_id;
 						$ev['edited'] = $datarray['edited'];
 						$ev['private'] = $datarray['private'];
@@ -2819,23 +2917,23 @@ function consume_feed($xml,$importer,&$contact, &$hub, $datedir = 0, $pass = 0) 
 							$ev['cid'] = $contact['id'];
 						$r = q("SELECT * FROM `event` WHERE `mid` = '%s' AND `uid` = %d LIMIT 1",
 							dbesc($item_id),
-							intval($importer['uid'])
+							intval($importer['channel_id'])
 						);
 						if(count($r))
 							$ev['id'] = $r[0]['id'];
-						$xyz = event_store($ev);
+//						$xyz = event_store($ev);
 						continue;
 					}
 				}
 
 				$r = q("SELECT `uid`, `edited`, `body` FROM `item` WHERE `mid` = '%s' AND `uid` = %d LIMIT 1",
 					dbesc($item_id),
-					intval($importer['uid'])
+					intval($importer['channel_id'])
 				);
 
 				// Update content if 'updated' changes
 
-				if(count($r)) {
+				if($r) {
 					if((x($datarray,'edited') !== false) && (datetime_convert('UTC','UTC',$datarray['edited']) !== $r[0]['edited'])) {  
 
 						// do not accept (ignore) an earlier edit than one we currently have.
@@ -2847,7 +2945,7 @@ function consume_feed($xml,$importer,&$contact, &$hub, $datedir = 0, $pass = 0) 
 							dbesc($datarray['body']),
 							dbesc(datetime_convert('UTC','UTC',$datarray['edited'])),
 							dbesc($item_id),
-							intval($importer['uid'])
+							intval($importer['channel_id'])
 						);
 					}
 
@@ -2875,8 +2973,8 @@ function consume_feed($xml,$importer,&$contact, &$hub, $datedir = 0, $pass = 0) 
 				}
 
 
-				if(! is_array($contact))
-					return;
+//				if(! is_array($contact))
+//					return;
 
 
 				// This is my contact on another system, but it's really me.
@@ -2887,7 +2985,7 @@ function consume_feed($xml,$importer,&$contact, &$hub, $datedir = 0, $pass = 0) 
 				}
 
 				$datarray['parent_mid'] = $item_id;
-				$datarray['uid'] = $importer['uid'];
+				$datarray['uid'] = $importer['channel_id'];
 				$datarray['contact-id'] = $contact['id'];
 
 				if(! link_compare($datarray['owner-link'],$contact['url'])) {
@@ -2905,17 +3003,20 @@ function consume_feed($xml,$importer,&$contact, &$hub, $datedir = 0, $pass = 0) 
 				// posting an @-tag delivery, which followers are allowed to do for certain
 				// page types. Now that we've parsed the post, let's check if it is legit. Otherwise ignore it. 
 
-				if(($contact['rel'] == CONTACT_IS_FOLLOWER) && (! tgroup_check($importer['uid'],$datarray)))
+				if(($contact['rel'] == CONTACT_IS_FOLLOWER) && (! tgroup_check($importer['channel_id'],$datarray)))
 					continue;
 
+logger('consume_feed: ' . print_r($datarray,true));
 
-				$xx = item_store($datarray);
+//				$xx = item_store($datarray);
 				$r = $xx['item_id'];
 				continue;
 
 			}
 		}
 	}
+
+
 }
 
 
@@ -3670,9 +3771,9 @@ function items_fetch($arr,$channel = null,$observer_hash = null,$client_mode = C
     }
     elseif($arr['cid'] && $uid) {
 
-        $r = q("SELECT * from abook where abook_id = %d and abook_channel = %d and not ( abook_flags & " . intval(ABOOK_FLAG_BLOCKED) . ") limit 1",
+        $r = q("SELECT abook.*, xchan.* from abook left join xchan on abook_xchan = xchan_hash where abook_id = %d and abook_channel = %d and not ( abook_flags & " . intval(ABOOK_FLAG_BLOCKED) . ") limit 1",
 			intval($arr['cid']),
-			intval($uid)
+			intval(local_user())
         );
         if($r) {
             $sql_extra = " AND item.parent IN ( SELECT DISTINCT parent FROM item WHERE true $sql_options AND uid = " . intval($arr['uid']) . " AND ( author_xchan = '" . dbesc($r[0]['abook_xchan']) . "' or owner_xchan = '" . dbesc($r[0]['abook_xchan']) . "' ) and item_restrict = 0 ) ";

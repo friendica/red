@@ -45,7 +45,7 @@ define ( 'RED_PLATFORM',            'Red Matrix' );
 define ( 'RED_VERSION',             trim(file_get_contents('version.inc')) . 'R');
 define ( 'ZOT_REVISION',            1     ); 
 
-define ( 'DB_UPDATE_VERSION',       1073  );
+define ( 'DB_UPDATE_VERSION',       1076  );
 
 define ( 'EOL',                    '<br />' . "\r\n"     );
 define ( 'ATOM_TIME',              'Y-m-d\TH:i:s\Z' );
@@ -177,13 +177,7 @@ define ( 'CLIENT_MODE_UPDATE', 0x0002);
 
 /**
  *
- * page/profile types
- *
- * PAGE_NORMAL is a typical personal profile account
- * PAGE_SOAPBOX automatically approves all friend requests as CONTACT_IS_SHARING, (readonly)
- * PAGE_COMMUNITY automatically approves all friend requests as CONTACT_IS_SHARING, but with
- *      write access to wall and comments (no email and not included in page owner's ACL lists)
- * PAGE_FREELOVE automatically approves all friend requests as full friends (CONTACT_IS_FRIEND).
+ * Channel pageflags
  *
  */
 
@@ -193,6 +187,7 @@ define ( 'PAGE_AUTOCONNECT',       0x0002 );
 define ( 'PAGE_APPLICATION',       0x0004 );
 define ( 'PAGE_DIRECTORY_CHANNEL', 0x0008 ); // system channel used for directory synchronisation
 define ( 'PAGE_PREMIUM',           0x0010 );
+define ( 'PAGE_ADULT',             0x0020 );
 
 define ( 'PAGE_REMOVED',           0x8000 );
 
@@ -233,26 +228,26 @@ define ( 'NETWORK_PHANTOM',          'unkn');    // Place holder
  */
 
 
-define ( 'PERMS_R_STREAM',         0x0001); 
-define ( 'PERMS_R_PROFILE',        0x0002);
-define ( 'PERMS_R_PHOTOS',         0x0004); 
-define ( 'PERMS_R_ABOOK',          0x0008); 
+define ( 'PERMS_R_STREAM',         0x00001); 
+define ( 'PERMS_R_PROFILE',        0x00002);
+define ( 'PERMS_R_PHOTOS',         0x00004); 
+define ( 'PERMS_R_ABOOK',          0x00008); 
 
 
-define ( 'PERMS_W_STREAM',         0x0010); 
-define ( 'PERMS_W_WALL',           0x0020);
-define ( 'PERMS_W_TAGWALL',        0x0040); 
-define ( 'PERMS_W_COMMENT',        0x0080); 
-define ( 'PERMS_W_MAIL',           0x0100); 
-define ( 'PERMS_W_PHOTOS',         0x0200);
-define ( 'PERMS_W_CHAT',           0x0400); 
-define ( 'PERMS_A_DELEGATE',       0x0800);
+define ( 'PERMS_W_STREAM',         0x00010); 
+define ( 'PERMS_W_WALL',           0x00020);
+define ( 'PERMS_W_TAGWALL',        0x00040); 
+define ( 'PERMS_W_COMMENT',        0x00080); 
+define ( 'PERMS_W_MAIL',           0x00100); 
+define ( 'PERMS_W_PHOTOS',         0x00200);
+define ( 'PERMS_W_CHAT',           0x00400); 
+define ( 'PERMS_A_DELEGATE',       0x00800);
 
-define ( 'PERMS_R_STORAGE',        0x1000);
-define ( 'PERMS_W_STORAGE',        0x2000);
-define ( 'PERMS_R_PAGES',          0x4000);
-define ( 'PERMS_W_PAGES',          0x8000);
-
+define ( 'PERMS_R_STORAGE',        0x01000);
+define ( 'PERMS_W_STORAGE',        0x02000);
+define ( 'PERMS_R_PAGES',          0x04000);
+define ( 'PERMS_W_PAGES',          0x08000);
+define ( 'PERMS_A_REPUBLISH',      0x10000);
 
 // General channel permissions
 
@@ -299,6 +294,13 @@ define ( 'POLL_SIMPLE_RATING',   0x0001);  // 1-5
 define ( 'POLL_TENSCALE',        0x0002);  // 1-10
 define ( 'POLL_MULTIPLE_CHOICE', 0x0004);
 define ( 'POLL_OVERWRITE',       0x8000);  // If you vote twice remove the prior entry
+
+
+
+define ( 'UPDATE_FLAGS_UPDATED',  0x0001);
+define ( 'UPDATE_FLAGS_DELETED',  0x1000);
+
+
 
 
 /**
@@ -348,7 +350,8 @@ define ( 'HUBLOC_FLAGS_DELETED',      0x1000);
 define ( 'XCHAN_FLAGS_HIDDEN',        0x0001);
 define ( 'XCHAN_FLAGS_ORPHAN',        0x0002);
 define ( 'XCHAN_FLAGS_CENSORED',      0x0004);
-
+define ( 'XCHAN_FLAGS_SELFCENSORED',  0x0008);
+define ( 'XCHAN_FLAGS_DELETED',       0x1000);
 /*
  * Traficlights for Administration of HubLoc
  * to detect problems in inter server communication
@@ -1124,7 +1127,7 @@ function x($s,$k = NULL) {
 
 
 function system_unavailable() {
-	include('system_unavailable.php');
+	include('include/system_unavailable.php');
 	system_down();
 	killme();
 }
@@ -1180,6 +1183,7 @@ function check_config(&$a) {
 		// our URL changed. Do something.
 
 		$oldurl = hex2bin($saved);
+		logger('Baseurl changed!');
 		
 		$oldhost = substr($oldurl,strpos($oldurl,'//')+2);
 		$host = substr(z_root(),strpos(z_root(),'//')+2);
@@ -1778,6 +1782,11 @@ function profile_sidebar($profile, $block = 0, $show_connect = true) {
 		$m = menu_fetch($menu,$profile['uid'],$observer['xchan_hash']);
 		if($m)
 			$channel_menu = menu_render($m);
+	}
+	$menublock = get_pconfig($profile['uid'],'system','channel_menublock');
+	if ($menublock) {
+		require_once('include/comanche.php');
+		$channel_menu .= comanche_block($menublock);
 	}
 
 	$tpl = get_markup_template('profile_vcard.tpl');

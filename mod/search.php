@@ -183,23 +183,37 @@ function search_content(&$a,$update = 0, $load = false) {
 
 	}
 
-
+	$pub_sql = public_permissions_sql(get_observer_hash());
 
 	if(($update) && ($load)) {
 		$pager_sql = sprintf(" LIMIT %d, %d ",intval($a->pager['start']), intval($a->pager['itemspage']));
-dbg(1);
-		if($load) {
-			$r = q("SELECT distinct mid, id as item_id from item
-				WHERE item_restrict = 0
-				AND (( `item`.`allow_cid` = ''  AND `item`.`allow_gid` = '' AND `item`.`deny_cid`  = '' AND `item`.`deny_gid`  = '' AND item_private = 0 ) 
-				OR ( `item`.`uid` = %d ))
-				$sql_extra
-				group by mid ORDER BY created DESC $pager_sql ",
-				intval(local_user()),
-				intval(ABOOK_FLAG_BLOCKED)
 
-			);
-dbg(0);
+		if($load) {
+			$r = null;
+
+			if(local_user()) {
+				$r = q("SELECT distinct mid, item.* from item
+					WHERE item_restrict = 0
+					AND (( `item`.`allow_cid` = ''  AND `item`.`allow_gid` = '' AND `item`.`deny_cid`  = '' AND `item`.`deny_gid`  = '' AND item_private = 0 ) 
+					OR ( `item`.`uid` = %d ))
+					$sql_extra
+					group by mid ORDER BY created DESC $pager_sql ",
+					intval(local_user()),
+					intval(ABOOK_FLAG_BLOCKED)
+
+				);
+			}
+			if($r === null) {
+               $r = q("SELECT distinct mid, item.* from item
+                    WHERE item_restrict = 0
+                    AND ((( `item`.`allow_cid` = ''  AND `item`.`allow_gid` = '' AND `item`.`deny_cid`  = ''
+                    AND `item`.`deny_gid`  = '' AND item_private = 0 )
+                    and owner_xchan in ( " . stream_perms_xchans(($observer) ? PERMS_NETWORK : PERMS_PUBLIC) . " ))
+					$pub_sql )
+                    $sql_extra 
+                    group by mid ORDER BY created DESC $pager_sql"
+                );
+			}
 		}
 		else {
 			$r = array();
@@ -208,19 +222,17 @@ dbg(0);
 
 	if($r) {
 
-		$parents_str = ids_to_querystr($r,'item_id');
-dbg(1); 
-		$items = q("SELECT `item`.*, `item`.`id` AS `item_id` 
-			FROM `item`
-			WHERE item_restrict = 0 
-			$sql_extra and parent in ( $parents_str ) "
-//			intval($a->profile['profile_uid']),
-//			dbesc($parents_str)
-		);
-dbg(0);
-		xchan_query($items);
-		$items = fetch_post_tags($items,true);
-		$items = conv_sort($items,'created');
+//		$parents_str = ids_to_querystr($r,'item_id');
+
+//		$items = q("SELECT `item`.*, `item`.`id` AS `item_id` 
+//			FROM `item`
+//			WHERE item_restrict = 0 
+//			$sql_extra and parent in ( $parents_str ) "
+//		);
+
+		xchan_query($r);
+		$items = fetch_post_tags($r,true);
+//		$items = conv_sort($items,'created');
 
 	} else {
 		$items = array();

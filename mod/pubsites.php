@@ -1,7 +1,7 @@
 <?php
 
 function pubsites_content(&$a) {
-
+	require_once('include/dir_fns.php'); 
 	$dirmode = intval(get_config('system','directory_mode'));
 
 	if(($dirmode == DIRECTORY_MODE_PRIMARY) || ($dirmode == DIRECTORY_MODE_STANDALONE)) {

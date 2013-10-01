@@ -69,6 +69,8 @@ function poller_run($argv, $argc){
 	$d1 = get_config('system','last_expire_day');
 	$d2 = intval(datetime_convert('UTC','UTC','now','d'));
 
+	$dirmode = get_config('system','directory_mode');
+
 	if($d2 != intval($d1)) {
 
 		// If this is a directory server, request a sync with an upstream
@@ -76,7 +78,6 @@ function poller_run($argv, $argc){
 		// Pull remote changes and push local changes.
 		// potential issue: how do we keep from creating an endless update loop? 
 
-		$dirmode = get_config('system','directory_mode');
 		if($dirmode == DIRECTORY_MODE_SECONDARY || $dirmode == DIRECTORY_MODE_PRIMARY) {
 			require_once('include/dir_fns.php');
 			sync_directories($dirmode);
@@ -171,76 +172,95 @@ function poller_run($argv, $argc){
 
 	);
 
-	if(! $contacts) {
-		return;
-	}
+	if($contacts) {
 
-	foreach($contacts as $contact) {
+		foreach($contacts as $contact) {
 
-		$update  = false;
+			$update  = false;
 
-		$t = $contact['abook_updated'];
-		$c = $contact['abook_connected'];
+			$t = $contact['abook_updated'];
+			$c = $contact['abook_connected'];
 
 
-		if($c == $t) {
-			if(datetime_convert('UTC','UTC', 'now') > datetime_convert('UTC','UTC', $t . " + 1 day"))
-				$update = true;
-		}
-		else {
-			// if we've never connected with them, start the mark for death countdown from now
-
-			if($c == '0000-00-00 00:00:00') {
-				$r = q("update abook set abook_connected = '%s'  where abook_id = %d limit 1",
-					dbesc(datetime_convert()),
-					intval($contact['abook_id'])
-				);
-				$c = datetime_convert();
-				$update = true;
+			if($c == $t) {
+				if(datetime_convert('UTC','UTC', 'now') > datetime_convert('UTC','UTC', $t . " + 1 day"))
+					$update = true;
 			}
+			else {
+				// if we've never connected with them, start the mark for death countdown from now
 
-			// He's dead, Jim
+				if($c == '0000-00-00 00:00:00') {
+					$r = q("update abook set abook_connected = '%s'  where abook_id = %d limit 1",
+						dbesc(datetime_convert()),
+						intval($contact['abook_id'])
+					);
+					$c = datetime_convert();
+					$update = true;
+				}
 
-			if(strcmp(datetime_convert('UTC','UTC', 'now'),datetime_convert('UTC','UTC', $c . " + 30 day")) > 0) {
-				$r = q("update abook set abook_flags = (abook_flags | %d) where abook_id = %d limit 1",
-					intval(ABOOK_FLAG_ARCHIVED),
-					intval($contact['abook_id'])
-				);
-				$update = false;
-				continue;
-			}
+				// He's dead, Jim
 
-			if($contact['abook_flags'] & ABOOK_FLAG_ARCHIVED) {
-				$update = false;
-				continue;
-			}
+				if(strcmp(datetime_convert('UTC','UTC', 'now'),datetime_convert('UTC','UTC', $c . " + 30 day")) > 0) {	
+					$r = q("update abook set abook_flags = (abook_flags | %d) where abook_id = %d limit 1",
+						intval(ABOOK_FLAG_ARCHIVED),
+						intval($contact['abook_id'])
+					);
+					$update = false;
+					continue;
+				}
 
-			// might be dead, so maybe don't poll quite so often
+				if($contact['abook_flags'] & ABOOK_FLAG_ARCHIVED) {
+					$update = false;
+					continue;
+				}
 
-			// recently deceased, so keep up the regular schedule for 3 days
+				// might be dead, so maybe don't poll quite so often
+	
+				// recently deceased, so keep up the regular schedule for 3 days
  
-			if((strcmp(datetime_convert('UTC','UTC', 'now'),datetime_convert('UTC','UTC', $c . " + 3 day")) > 0)
-			 && (strcmp(datetime_convert('UTC','UTC', 'now'),datetime_convert('UTC','UTC', $t . " + 1 day")) > 0))
-				$update = true;
+				if((strcmp(datetime_convert('UTC','UTC', 'now'),datetime_convert('UTC','UTC', $c . " + 3 day")) > 0)
+				 && (strcmp(datetime_convert('UTC','UTC', 'now'),datetime_convert('UTC','UTC', $t . " + 1 day")) > 0))
+					$update = true;
 
-			// After that back off and put them on a morphine drip
+				// After that back off and put them on a morphine drip
 
-			if(strcmp(datetime_convert('UTC','UTC', 'now'),datetime_convert('UTC','UTC', $t . " + 2 day")) > 0) {
-				$update = true;
+				if(strcmp(datetime_convert('UTC','UTC', 'now'),datetime_convert('UTC','UTC', $t . " + 2 day")) > 0) {	
+					$update = true;
+				}
+
+
 			}
 
+			if((! $update) && (! $force))
+					continue;
+
+			proc_run('php','include/onepoll.php',$contact['abook_id']);
+			if($interval)
+				@time_sleep_until(microtime(true) + (float) $interval);
 
 		}
-
-		if((! $update) && (! $force))
-				continue;
-
-		proc_run('php','include/onepoll.php',$contact['abook_id']);
-		if($interval)
-			@time_sleep_until(microtime(true) + (float) $interval);
-
 	}
 
+	if($dirmode == DIRECTORY_MODE_SECONDARY || $dirmode == DIRECTORY_MODE_PRIMARY) {
+		$r = q("select ud_id from updates where not ( ud_flags & %d ) and ( ud_last = '0000-00-00 00:00:00' OR ud_last > UTC_TIMESTAMP() - INTERVAL 7 DAYS) ",
+			intval(UPDATE_FLAGS_UPDATED)
+		);
+		if($r) {
+			foreach($r as $rr) {
+
+				// If they didn't respond when we attempted before, back off to once a day
+				// After 7 days we won't bother anymore
+
+				if($rr['ud_last'] != '0000-00-00 00:00:00')
+					if($rr['ud_last'] > datetime_convert('UTC','UTC', 'now - 1 day'))
+						continue;
+				proc_run('php','include/onedirsync.php',$rr['ud_id']);
+				if($interval)
+					@time_sleep_until(microtime(true) + (float) $interval);
+			}
+		}
+	}
+	
 	return;
 }
 

@@ -8,13 +8,17 @@ nav {
 	background-color: #ff0000;
 }
 
-aside {
+aside#region_1 {
 	display: block;
 	width: 210px;
 	position: absolute;
 	top: 48px;
 	left: 0;
 	margin-left: 10px;
+}
+
+aside input[type='text'] {
+ width: 174px;
 }
 
 

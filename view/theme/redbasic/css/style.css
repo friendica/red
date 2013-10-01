@@ -1228,6 +1228,9 @@ footer {
 	border: none;
 }
 
+div.dirtagblock.widget {
+  overflow: hidden;
+}
 
 .pager {
   padding: 10px;
@@ -1888,9 +1891,6 @@ a.mail-list-link {
 	margin-top: 10px;
 }
 
-aside input[type='text'] {
- width: 174px;
-}
 
 .widget, .pmenu {
 	border-bottom: 1px solid #eec;
@@ -2496,7 +2496,7 @@ brain is weird like that */
 }
 
 .field_abook_help {
-	color: #888;
+	color: #000;
 }
 .abook-them {
 	margin-left: 225px;
@@ -2508,6 +2508,13 @@ brain is weird like that */
 }
 .acheckbox {
 	margin-bottom: 5px !important;
+}
+
+.abook-pending-contact {
+	background: orange;
+	font-weight: bold;
+	margin: 10px;
+	padding: 20px 5px 10px;
 }
 
 #contact-slider {
@@ -3348,6 +3355,20 @@ margin-right: auto;
 
 div.page-list-item {
 margin: 20px;
+}
+
+div#write-pages {
+display: block;
+position: fixed;
+top: 24px;
+z-index: 99;
+background: silver;
+width: 100%;
+}
+
+div#write-pages a {
+color: #000;
+margin-right: 50px;
 }
 
 .pmenu ul {

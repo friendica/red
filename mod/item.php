@@ -161,20 +161,26 @@ function item_post(&$a) {
 
 	if($parent) {
 		logger('mod_item: item_post parent=' . $parent);
-		if(! can_comment_on_post($observer['xchan_hash'],$parent_item)) {
+		$can_comment = false;
+		if((array_key_exists('owner',$parent_item)) && ($parent_item['owner']['abook_flags'] & ABOOK_FLAG_SELF))
+			$can_comment = perm_is_allowed($profile_uid,$observer['xchan_hash'],'post_comments');
+		else
+			$can_comment = can_comment_on_post($observer['xchan_hash'],$parent_item);
+
+		if(! $can_comment) {
 			notice( t('Permission denied.') . EOL) ;
 			if(x($_REQUEST,'return')) 
 				goaway($a->get_baseurl() . "/" . $return_path );
 			killme();
 		}
 	}
-
-
-	if(! perm_is_allowed($profile_uid,$observer['xchan_hash'],(($parent) ? 'post_comments' : 'post_wall'))) {
-		notice( t('Permission denied.') . EOL) ;
-		if(x($_REQUEST,'return')) 
-			goaway($a->get_baseurl() . "/" . $return_path );
-		killme();
+	else {
+		if(! perm_is_allowed($profile_uid,$observer['xchan_hash'],'post_wall')) {
+			notice( t('Permission denied.') . EOL) ;
+			if(x($_REQUEST,'return')) 
+				goaway($a->get_baseurl() . "/" . $return_path );
+			killme();
+		}
 	}
 
 

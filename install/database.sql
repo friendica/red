@@ -181,6 +181,7 @@ CREATE TABLE IF NOT EXISTS `channel` (
   `channel_w_storage` int(10) unsigned NOT NULL DEFAULT '128',
   `channel_r_pages` int(10) unsigned NOT NULL DEFAULT '128',
   `channel_w_pages` int(10) unsigned NOT NULL DEFAULT '128',
+  `channel_a_republish` int(1) unsigned NOT NULL DEFAULT '128',
   PRIMARY KEY (`channel_id`),
   UNIQUE KEY `channel_address_unique` (`channel_address`),
   KEY `channel_account_id` (`channel_account_id`),
@@ -213,6 +214,7 @@ CREATE TABLE IF NOT EXISTS `channel` (
   KEY `channel_w_storage` (`channel_w_storage`),
   KEY `channel_r_pages` (`channel_r_pages`),
   KEY `channel_w_pages` (`channel_w_pages`),
+  KEY `channel_a_republish` (`channel_a_republish`),
   KEY `channel_deleted` (`channel_deleted`)
 ) ENGINE=MyISAM  DEFAULT CHARSET=utf8;
 
@@ -823,6 +825,7 @@ CREATE TABLE IF NOT EXISTS `site` (
   `site_access` int(11) NOT NULL DEFAULT '0',
   `site_flags` int(11) NOT NULL DEFAULT '0',
   `site_update` datetime NOT NULL DEFAULT '0000-00-00 00:00:00',
+  `site_sync` datetime NOT NULL,
   `site_directory` char(255) NOT NULL DEFAULT '',
   `site_register` int(11) NOT NULL DEFAULT '0',
   `site_sellpage` char(255) NOT NULL DEFAULT '',
@@ -833,6 +836,18 @@ CREATE TABLE IF NOT EXISTS `site` (
   KEY `site_directory` (`site_directory`),
   KEY `site_register` (`site_register`),
   KEY `site_sellpage` (`site_sellpage`)
+) ENGINE=MyISAM DEFAULT CHARSET=utf8;
+
+CREATE TABLE IF NOT EXISTS `source` (
+  `src_id` int(10) unsigned NOT NULL AUTO_INCREMENT,
+  `src_channel_id` int(10) unsigned NOT NULL DEFAULT '0',
+  `src_channel_xchan` char(255) NOT NULL DEFAULT '',
+  `src_xchan` char(255) NOT NULL DEFAULT '',
+  `src_patt` mediumtext NOT NULL,
+  PRIMARY KEY (`src_id`),
+  KEY `src_channel_id` (`src_channel_id`),
+  KEY `src_channel_xchan` (`src_channel_xchan`),
+  KEY `src_xchan` (`src_xchan`)
 ) ENGINE=MyISAM DEFAULT CHARSET=utf8;
 
 CREATE TABLE IF NOT EXISTS `spam` (
@@ -891,6 +906,7 @@ CREATE TABLE IF NOT EXISTS `updates` (
   `ud_hash` char(128) NOT NULL,
   `ud_guid` char(255) NOT NULL DEFAULT '',
   `ud_date` datetime NOT NULL DEFAULT '0000-00-00 00:00:00',
+  `ud_last` datetime NOT NULL DEFAULT '0000-00-00 00:00:00',
   `ud_flags` int(11) NOT NULL DEFAULT '0',
   `ud_addr` char(255) NOT NULL DEFAULT '',
   PRIMARY KEY (`ud_id`),
@@ -898,7 +914,8 @@ CREATE TABLE IF NOT EXISTS `updates` (
   KEY `ud_guid` (`ud_guid`),
   KEY `ud_date` (`ud_date`),
   KEY `ud_flags` (`ud_flags`),
-  KEY `ud_addr` (`ud_addr`)
+  KEY `ud_addr` (`ud_addr`),
+  KEY `ud_last` (`ud_last`)
 ) ENGINE=MyISAM DEFAULT CHARSET=utf8;
 
 CREATE TABLE IF NOT EXISTS `verify` (

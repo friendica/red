@@ -174,18 +174,30 @@ function post_post(&$a) {
 	if(array_key_exists('iv',$data)) {
 		$data = aes_unencapsulate($data,get_config('system','prvkey'));
 		logger('mod_zot: decrypt1: ' . $data, LOGGER_DATA);
-		if(! $data) {
-			$ret['message'] = 'Decryption failed.';
-			json_return_and_die($ret);
-		}
+
+//	susceptible to Bleichenbacher's attack
+//		if(! $data) {
+//			$ret['message'] = 'Decryption failed.';
+//			json_return_and_die($ret);
+//		}
 
 		$data = json_decode($data,true);
 
 	}
 
 	if(! $data) {
-		$ret['message'] = 'No data received.';
-		json_return_and_die($ret);
+
+		// possible Bleichenbacher's attack, just treat it as a 
+		// message we have no handler for. It should fail a bit 
+		// further along with "no hub". Our public key is public
+		// knowledge. There's no reason why anybody should get the 
+		// encryption wrong unless they're fishing or hacking. If 
+		// they're developing and made a goof, this can be discovered 
+		// in the logs of the destination site. If they're fishing or 
+		// hacking, the bottom line is we can't verify their hub. 
+		// That's all we're going to tell them.
+
+		$data = array('type' => 'bogus');
 	}
 
 	logger('mod_zot: decoded data: ' . print_r($data,true), LOGGER_DATA);

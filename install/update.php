@@ -1,6 +1,6 @@
 <?php
 
-define( 'UPDATE_VERSION' , 1073 );
+define( 'UPDATE_VERSION' , 1076 );
 
 /**
  *
@@ -816,6 +816,45 @@ ADD INDEX ( `ud_addr` ) ");
 function update_r1072() {
 	$r = q("ALTER TABLE `xtag` ADD `xtag_flags` INT NOT NULL DEFAULT '0',
 ADD INDEX ( `xtag_flags` ) ");
+
+	if($r)
+		return UPDATE_SUCCESS;
+	return UPDATE_FAILED;
+}
+
+
+function update_r1073() {
+	$r1 = q("CREATE TABLE IF NOT EXISTS `source` (
+`src_id` INT UNSIGNED NOT NULL AUTO_INCREMENT PRIMARY KEY ,
+`src_channel_id` INT UNSIGNED NOT NULL DEFAULT '0',
+`src_channel_xchan` CHAR( 255 ) NOT NULL DEFAULT '',
+`src_xchan` CHAR( 255 ) NOT NULL DEFAULT '',
+`src_patt` MEDIUMTEXT NOT NULL DEFAULT ''
+) ENGINE=MyISAM DEFAULT CHARSET=utf8 ");
+
+	$r2 = q("ALTER TABLE `source` ADD INDEX ( `src_channel_id` ), ADD INDEX ( `src_channel_xchan` ), ADD INDEX ( `src_xchan` ) ");
+
+	if($r1 && $r2)
+		return UPDATE_SUCCESS;
+	return UPDATE_FAILED;
+}
+
+function update_r1074() {
+	$r1 = q("ALTER TABLE `site` ADD `site_sync` DATETIME NOT NULL AFTER `site_update` ");
+
+	$r2 = q("ALTER TABLE `updates` ADD `ud_last` DATETIME NOT NULL DEFAULT '0000-00-00 00:00:00' AFTER `ud_date` ,
+ADD INDEX ( `ud_last` ) ");
+
+	if($r1 && $r2)
+		return UPDATE_SUCCESS;
+	return UPDATE_FAILED;
+}
+
+
+function update_r1075() {
+	$r = q("ALTER TABLE `channel` ADD `channel_a_republish` INT UNSIGNED NOT NULL DEFAULT '128',
+ADD INDEX ( `channel_a_republish` )");
+
 	if($r)
 		return UPDATE_SUCCESS;
 	return UPDATE_FAILED;

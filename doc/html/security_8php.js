@@ -10,5 +10,6 @@ var security_8php =
     [ "item_permissions_sql", "security_8php.html#a9355488460ab11d6058656ff919e5cf9", null ],
     [ "permissions_sql", "security_8php.html#afa683bc025a1d2fe9065e2f6cd71a22f", null ],
     [ "public_permissions_sql", "security_8php.html#ab3bdd30dc60d9ee72370b866aa4a2d01", null ],
-    [ "stream_perms_api_uids", "security_8php.html#ae92c5c1a1cbbc49ddbb8b3265d2db809", null ]
+    [ "stream_perms_api_uids", "security_8php.html#ae92c5c1a1cbbc49ddbb8b3265d2db809", null ],
+    [ "stream_perms_xchans", "security_8php.html#a15e0f8f511cc06192db63387f97238b3", null ]
 ];

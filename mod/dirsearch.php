@@ -45,7 +45,16 @@ function dirsearch_content(&$a) {
 	// by default use a safe search
 	$safe     = ((x($_REQUEST,'safe'))     ? intval($_REQUEST['safe'])  : 1 );
 
-	$sync     = ((x($_REQUEST,'sync'))     ? datetime_convert('UTC','UTC',$_REQUEST['sync']) : '');
+
+	if(array_key_exists('sync',$_REQUEST)) {
+		if($_REQUEST['sync'])
+			$sync = datetime_convert('UTC','UTC',$_REQUEST['sync']);
+		else
+			$sync = datetime_convert('UTC','UTC','2010-01-01 01:01:00');
+	}
+	else
+		$sync = false;
+
 	$sort_order  = ((x($_REQUEST,'order')) ? $_REQUEST['order'] : '');
 
 // TODO - a meta search which joins all of these things to one search string
@@ -102,9 +111,9 @@ function dirsearch_content(&$a) {
 
 	$logic = ((strlen($sql_extra)) ? 0 : 1);
 
-	$safesql = (($safe > 0) ? " and not ( xchan_flags & " . intval(XCHAN_FLAGS_CENSORED) . " ) " : ''); 
+	$safesql = (($safe > 0) ? " and not ( xchan_flags & " . intval(XCHAN_FLAGS_CENSORED|XCHAN_FLAGS_SELFCENSORED) . " ) " : '');
 	if($safe < 0)
-		$safesql = " and ( xchan_flags & " . intval(XCHAN_FLAGS_CENSORED) . " ) ";
+		$safesql = " and ( xchan_flags & " . intval(XCHAN_FLAGS_CENSORED|XCHAN_FLAGS_SELFCENSORED) . " ) ";
 
 	if($limit) 
 		$qlimit = " LIMIT $limit ";
@@ -121,13 +130,9 @@ function dirsearch_content(&$a) {
 		}
 	}
 
-	if($mtime) {
-		$qlimit = '';
-//		$sql_extra .= " and xchan_hash in ( select ud_hash from updates where ud_date > '" . dbesc($mtime) . "' ) ";
-	}
 
 	if($sort_order == 'date')
-		$order = ""; // " order by ud_date desc ";
+		$order = ""; // Not currently implemented
 	elseif($sort_order == 'reverse')
 		$order = " order by xchan_name desc ";
 	else	
@@ -135,11 +140,23 @@ function dirsearch_content(&$a) {
 
 
 	if($sync) {
-
-		$r = q("select xchan.*, updates.* from xchan left join updates on ud_hash = xchan_hash where ud_date >= '%s' and ud_guid != '' order by ud_date desc",
+		$spkt = array('transactions' => array());
+		$r = q("select * from updates where ud_date >= '%s' and ud_guid != '' order by ud_date desc",
 			dbesc($sync)
 		);
-
+		if($r) {
+			foreach($r as $rr) {
+				$flags = (($rr['ud_flags'] & UPDATE_FLAGS_DELETED) ? array('deleted') : array());
+				$spkt['transactions'][] = array(
+					'hash' => $rr['ud_hash'],
+					'address' => $rr['ud_addr'],
+					'transaction_id' => $rr['ud_guid'],
+					'timestamp' => $rr['ud_date'],
+					'flags' => $flags
+				);
+			}
+		}
+		json_return_and_die($spkt);
 	}
 	else {
 		$r = q("SELECT xchan.*, xprof.* from xchan left join xprof on xchan_hash = xprof_hash where $logic $sql_extra and not ( xchan_flags & %d ) and not ( xchan_flags & %d ) $safesql $order $qlimit ",
@@ -183,7 +200,7 @@ function dirsearch_content(&$a) {
 		}
 
 		$ret['results'] = $entries;
-		if(($kw) && (! $sync)) {
+		if($kw) {
 			$k = dir_tagadelic($kw);
 			if($k) {
 				$ret['keywords'] = array();

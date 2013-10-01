@@ -452,16 +452,16 @@ function network_content(&$a, $update = 0, $load = false) {
 
 	elseif($cid) {
 
-        $r = q("SELECT * from abook where abook_id = %d and abook_channel = %d and not ( abook_flags & " . intval(ABOOK_FLAG_BLOCKED) . ") limit 1",
+        $r = q("SELECT abook.*, xchan.* from abook left join xchan on abook_xchan = xchan_hash where abook_id = %d and abook_channel = %d and not ( abook_flags & " . intval(ABOOK_FLAG_BLOCKED) . ") limit 1",
 			intval($cid),
 			intval(local_user())
         );
         if($r) {
             $sql_extra = " AND item.parent IN ( SELECT DISTINCT parent FROM item WHERE true $sql_options AND uid = " . intval(local_user()) . " AND ( author_xchan = '" . dbesc($r[0]['abook_xchan']) . "' or owner_xchan = '" . dbesc($r[0]['abook_xchan']) . "' ) and item_restrict = 0 ) ";
-			$o = '<h2>' . t('Contact: ') . $r[0]['name'] . '</h2>' . $o;
+			$o = '<h2>' . t('Connection: ') . $r[0]['xchan_name'] . '</h2>' . $o;
         }
         else {
-			notice( t('Invalid contact.') . EOL);
+			notice( t('Invalid connection.') . EOL);
 			goaway($a->get_baseurl(true) . '/network');
         }
 	}

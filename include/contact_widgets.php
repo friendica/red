@@ -47,7 +47,7 @@ function findpeople_widget() {
 		'$hint' => t('Examples: Robert Morgenstein, Fishing'),
 		'$findthem' => t('Find'),
 		'$suggest' => t('Channel Suggestions'),
-		'$similar' => t('Similar Interests'),
+		'$similar' => '', // FIXME and uncomment when mod/match working // t('Similar Interests'),
 		'$random' => t('Random Profile'),
 		'$inv' => t('Invite Friends')
 	));

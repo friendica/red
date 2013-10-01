@@ -19,7 +19,7 @@ var searchData=
   ['_24cmd',['$cmd',['../classApp.html#a495ec082c2719314e536070ca1ce073d',1,'App']]],
   ['_24colour',['$colour',['../redbasic_2php_2style_8php.html#a4086b1a341b7c8462a47fb1b25fd49ab',1,'$colour():&#160;style.php'],['../redstrap_2php_2style_8php.html#a4086b1a341b7c8462a47fb1b25fd49ab',1,'$colour():&#160;style.php']]],
   ['_24comment_5fbox_5ftemplate',['$comment_box_template',['../classItem.html#a90743c8348b13213275c223bb9333aa0',1,'Item']]],
-  ['_24commentable',['$commentable',['../classConversation.html#afd4965d22a6e4bfea2f35e931b3273c6',1,'Conversation']]],
+  ['_24commentable',['$commentable',['../classConversation.html#afd4965d22a6e4bfea2f35e931b3273c6',1,'Conversation\$commentable()'],['../classItem.html#aa2c221231ad0fc3720ccc1f00f0c6304',1,'Item\$commentable()']]],
   ['_24config',['$config',['../classApp.html#ac73dc90e4764497e2f1b7e6612c8fb88',1,'App']]],
   ['_24connected',['$connected',['../classdba__driver.html#a205f6535e399700b6fca2492f96f2229',1,'dba_driver']]],
   ['_24contact',['$contact',['../classApp.html#a98ef4cfd36693a3457c879b76bc6d694',1,'App']]],

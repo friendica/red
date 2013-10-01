@@ -5,6 +5,7 @@ var items_8php =
     [ "atom_author", "items_8php.html#a016dd86c827d08db89061ea81d15c6cb", null ],
     [ "atom_entry", "items_8php.html#a275108c050f7eb18bcbb5018e6b81cf6", null ],
     [ "can_comment_on_post", "items_8php.html#a1e75047cf175aaee8dd16aa761913ff9", null ],
+    [ "check_item_source", "items_8php.html#a87ac9e359591721a824ecd23bbb56296", null ],
     [ "collect_recipients", "items_8php.html#a01e3cf44e082fa9bd06dcde5bf713d70", null ],
     [ "compare_permissions", "items_8php.html#a0790a4550b829e85504af548623002ca", null ],
     [ "construct_activity_object", "items_8php.html#aa9e99613d38a97b39c8cf5449699c2ee", null ],

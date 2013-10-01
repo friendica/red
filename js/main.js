@@ -119,6 +119,7 @@
 	var next_page = 1;
 	var page_load = true;
 	var loadingPage = false;
+	var pageHasMoreContent = true;
 
 	$(function() {
 		$.ajaxSetup({cache: false});
@@ -984,7 +985,7 @@ $(window).scroll(function () {
 		}
 	
 		if($(window).scrollTop() + $(window).height() == $(document).height()) {
-			if(! loadingPage) {
+			if((pageHasMoreContent) && (! loadingPage)) {
 				$('#more').hide();
 				$('#no-more').hide();
 				//			alert('scroll');

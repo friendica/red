@@ -72,8 +72,8 @@ function zfinger_init(&$a) {
 	$id = $e['channel_id'];
 
 	$special_channel = (($e['channel_pageflags'] & PAGE_PREMIUM) ? true : false);
-
-	$searchable = (($e['channel_pageflags'] & PAGE_HIDDEN) ? false : true);
+	$adult_channel   = (($e['channel_pageflags'] & PAGE_ADULT)   ? true : false);
+	$searchable      = (($e['channel_pageflags'] & PAGE_HIDDEN)  ? false : true);
 	if($e['xchan_flags'] & XCHAN_FLAGS_HIDDEN)
 		$searchable = false;
 	 
@@ -136,7 +136,8 @@ function zfinger_init(&$a) {
 	$ret['target']         = $ztarget;
 	$ret['target_sig']     = $zsig;
 	$ret['searchable']     = $searchable;
-
+	$ret['adult_content']  = $adult_channel;
+		
 
 	// premium or other channel desiring some contact with potential followers before connecting.
 	// This is a template - %s will be replaced with the follow_url we discover for the return channel.
@@ -162,11 +163,6 @@ function zfinger_init(&$a) {
 	// array of (verified) hubs this channel uses
 
 	$ret['locations'] = array();
-
-	
-
-
-
 
 	$x = zot_get_hubloc(array($e['channel_hash']));
 	if($x && count($x)) {

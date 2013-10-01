@@ -113,6 +113,15 @@ function settings_aside(&$a) {
 
 	}
 
+	if(feature_enabled(local_user(),'channel_sources')) {
+		$tabs[] = array(
+			'label' => t('Channel Sources'),
+			'url' => $a->get_baseurl(true) . '/sources',
+			'selected' => ''
+		);
+
+	}
+
 
 	
 	$tabtpl = get_markup_template("generic_links_widget.tpl");
@@ -154,10 +163,17 @@ function settings_post(&$a) {
 		$secret		= ((x($_POST,'secret')) ? $_POST['secret'] : '');
 		$redirect	= ((x($_POST,'redirect')) ? $_POST['redirect'] : '');
 		$icon		= ((x($_POST,'icon')) ? $_POST['icon'] : '');
-		if ($name=="" || $key=="" || $secret==""){
-			notice(t("Missing some important data!"));
-			
-		} else {
+		$ok = true;
+		if($name == '') {
+			$ok = false;
+			notice( t('Name is required') . EOL);
+		}
+		if($key == '' || $secret == '') {
+			$ok = false;
+			notice( t('Key and Secret are required') . EOL);
+		}
+	
+		if($ok) {
 			if ($_POST['submit']==t("Update")){
 				$r = q("UPDATE clients SET
 							client_id='%s',
@@ -361,26 +377,33 @@ function settings_post(&$a) {
 	$post_newfriend   = (($_POST['post_newfriend'] == 1) ? 1: 0);
 	$post_joingroup   = (($_POST['post_joingroup'] == 1) ? 1: 0);
 	$post_profilechange   = (($_POST['post_profilechange'] == 1) ? 1: 0);
+	$adult            = (($_POST['adult'] == 1) ? 1 : 0);
 
+	$channel = $a->get_channel();
+	$pageflags = $channel['channel_pageflags'];
+	$existing_adult = (($pageflags & PAGE_ADULT) ? 1 : 0);
+	if($adult != $existing_adult)
+		$pageflags = ($pageflags ^ PAGE_ADULT);
 
 	$arr = array();
-	$arr['channel_r_stream']   = (($_POST['view_stream'])   ? $_POST['view_stream']    : 0);
-	$arr['channel_r_profile']  = (($_POST['view_profile'])  ? $_POST['view_profile']   : 0);
-	$arr['channel_r_photos']   = (($_POST['view_photos'])   ? $_POST['view_photos']    : 0);
-	$arr['channel_r_abook']    = (($_POST['view_contacts']) ? $_POST['view_contacts']  : 0);
-	$arr['channel_w_stream']   = (($_POST['send_stream'])   ? $_POST['send_stream']    : 0);
-	$arr['channel_w_wall']     = (($_POST['post_wall'])     ? $_POST['post_wall']      : 0);
-	$arr['channel_w_tagwall']  = (($_POST['tag_deliver'])   ? $_POST['tag_deliver']    : 0);
-	$arr['channel_w_comment']  = (($_POST['post_comments']) ? $_POST['post_comments']  : 0);
-	$arr['channel_w_mail']     = (($_POST['post_mail'])     ? $_POST['post_mail']      : 0);
-	$arr['channel_w_photos']   = (($_POST['post_photos'])   ? $_POST['post_photos']    : 0);
-	$arr['channel_w_chat']     = (($_POST['chat'])          ? $_POST['chat']           : 0);
-	$arr['channel_a_delegate'] = (($_POST['delegate'])      ? $_POST['delegate']       : 0);
-	$arr['channel_r_storage']  = (($_POST['view_storage'])  ? $_POST['view_storage']   : 0);
-	$arr['channel_w_storage']  = (($_POST['write_storage']) ? $_POST['write_storage']  : 0);
-	$arr['channel_r_pages']    = (($_POST['view_pages'])    ? $_POST['view_pages']     : 0);
-	$arr['channel_w_pages']    = (($_POST['write_pages'])   ? $_POST['write_pages']    : 0);
-
+	$arr['channel_r_stream']    = (($_POST['view_stream'])   ? $_POST['view_stream']    : 0);
+	$arr['channel_r_profile']   = (($_POST['view_profile'])  ? $_POST['view_profile']   : 0);
+	$arr['channel_r_photos']    = (($_POST['view_photos'])   ? $_POST['view_photos']    : 0);
+	$arr['channel_r_abook']     = (($_POST['view_contacts']) ? $_POST['view_contacts']  : 0);
+	$arr['channel_w_stream']    = (($_POST['send_stream'])   ? $_POST['send_stream']    : 0);
+	$arr['channel_w_wall']      = (($_POST['post_wall'])     ? $_POST['post_wall']      : 0);
+	$arr['channel_w_tagwall']   = (($_POST['tag_deliver'])   ? $_POST['tag_deliver']    : 0);
+	$arr['channel_w_comment']   = (($_POST['post_comments']) ? $_POST['post_comments']  : 0);
+	$arr['channel_w_mail']      = (($_POST['post_mail'])     ? $_POST['post_mail']      : 0);
+	$arr['channel_w_photos']    = (($_POST['post_photos'])   ? $_POST['post_photos']    : 0);
+	$arr['channel_w_chat']      = (($_POST['chat'])          ? $_POST['chat']           : 0);
+	$arr['channel_a_delegate']  = (($_POST['delegate'])      ? $_POST['delegate']       : 0);
+	$arr['channel_r_storage']   = (($_POST['view_storage'])  ? $_POST['view_storage']   : 0);
+	$arr['channel_w_storage']   = (($_POST['write_storage']) ? $_POST['write_storage']  : 0);
+	$arr['channel_r_pages']     = (($_POST['view_pages'])    ? $_POST['view_pages']     : 0);
+	$arr['channel_w_pages']     = (($_POST['write_pages'])   ? $_POST['write_pages']    : 0);
+	$arr['channel_a_republish'] = (($_POST['republish'])     ? $_POST['republish']      : 0);
+	
 	$defperms = 0;
 	if(x($_POST['def_view_stream']))
 		$defperms += $_POST['def_view_stream'];
@@ -414,6 +437,8 @@ function settings_post(&$a) {
 		$defperms += $_POST['def_view_pages'];
 	if(x($_POST['def_write_pages']))
 		$defperms += $_POST['def_write_pages'];
+	if(x($_POST['def_republish']))
+		$defperms += $_POST['def_republish'];
 
 	$notify = 0;
 
@@ -518,8 +543,9 @@ function settings_post(&$a) {
 	);
 */
 
-	$r = q("update channel set channel_name = '%s', channel_timezone = '%s', channel_location = '%s', channel_notifyflags = %d, channel_max_anon_mail = %d, channel_max_friend_req = %d, channel_expire_days = %d, channel_r_stream = %d, channel_r_profile = %d, channel_r_photos = %d, channel_r_abook = %d, channel_w_stream = %d, channel_w_wall = %d, channel_w_tagwall = %d, channel_w_comment = %d, channel_w_mail = %d, channel_w_photos = %d, channel_w_chat = %d, channel_a_delegate = %d, channel_r_storage = %d, channel_w_storage = %d, channel_r_pages = %d, channel_w_pages = %d where channel_id = %d limit 1",
+	$r = q("update channel set channel_name = '%s', channel_pageflags = %d, channel_timezone = '%s', channel_location = '%s', channel_notifyflags = %d, channel_max_anon_mail = %d, channel_max_friend_req = %d, channel_expire_days = %d, channel_r_stream = %d, channel_r_profile = %d, channel_r_photos = %d, channel_r_abook = %d, channel_w_stream = %d, channel_w_wall = %d, channel_w_tagwall = %d, channel_w_comment = %d, channel_w_mail = %d, channel_w_photos = %d, channel_w_chat = %d, channel_a_delegate = %d, channel_r_storage = %d, channel_w_storage = %d, channel_r_pages = %d, channel_w_pages = %d, channel_a_republish = %d where channel_id = %d limit 1",
 		dbesc($username),
+		intval($pageflags),
 		dbesc($timezone),
 		dbesc($defloc),
 		intval($notify),
@@ -542,6 +568,7 @@ function settings_post(&$a) {
 		intval($arr['channel_w_storage']),
 		intval($arr['channel_r_pages']),
 		intval($arr['channel_w_pages']),
+		intval($arr['channel_a_republish']),
 		intval(local_user())
 	);   
 
@@ -621,8 +648,8 @@ function settings_content(&$a) {
 				'$submit'	=> t('Submit'),
 				'$cancel'	=> t('Cancel'),
 				'$name'		=> array('name', t('Name'), '', t('Name of application')),
-				'$key'		=> array('key', t('Consumer Key'), random_string(16), t('Automatically generated - change if desired')),
-				'$secret'	=> array('secret', t('Consumer Secret'), random_string(16), t('Automatically generated - change if desired')),
+				'$key'		=> array('key', t('Consumer Key'), random_string(16), t('Automatically generated - change if desired. Max length 20')),
+				'$secret'	=> array('secret', t('Consumer Secret'), random_string(16), t('Automatically generated - change if desired. Max length 20')),
 				'$redirect'	=> array('redirect', t('Redirect'), '', t('Redirect URI - leave blank unless your application specifically requires this')),
 				'$icon'		=> array('icon', t('Icon url'), '', t('Optional')),
 			));
@@ -929,6 +956,7 @@ function settings_content(&$a) {
 
 		$maxreq     = $channel['channel_max_friend_req'];
 		$expire     = $channel['channel_expire_days'];
+		$adult_flag = intval($channel['channel_pageflags'] & PAGE_ADULT);
 
 		$blockwall  = $a->user['blockwall'];
 		$unkmail    = $a->user['unkmail'];
@@ -1034,6 +1062,7 @@ function settings_content(&$a) {
 			'$defloc'	=> array('defloc', t('Default Post Location:'), $defloc, ''),
 			'$allowloc' => array('allow_location', t('Use Browser Location:'), ((get_pconfig(local_user(),'system','use_browser_location')) ? 1 : ''), ''),
 		
+			'$adult'    => array('adult', t('Adult Content'), $adult_flag, t('This channel publishes adult content.')),
 
 			'$h_prv' 	=> t('Security and Privacy Settings'),
 
