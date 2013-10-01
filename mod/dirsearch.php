@@ -45,7 +45,16 @@ function dirsearch_content(&$a) {
 	// by default use a safe search
 	$safe     = ((x($_REQUEST,'safe'))     ? intval($_REQUEST['safe'])  : 1 );
 
-	$sync     = ((x($_REQUEST,'sync'))     ? datetime_convert('UTC','UTC',$_REQUEST['sync']) : '');
+
+	if(array_key_exists('sync',$_REQUEST)) {
+		if($_REQUEST['sync'])
+			$sync = datetime_convert('UTC','UTC',$_REQUEST['sync']);
+		else
+			$sync = datetime_convert('UTC','UTC','2010-01-01 01:01:00');
+	}
+	else
+		$sync = false;
+
 	$sort_order  = ((x($_REQUEST,'order')) ? $_REQUEST['order'] : '');
 
 // TODO - a meta search which joins all of these things to one search string

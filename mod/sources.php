@@ -60,7 +60,7 @@ function sources_content(&$a) {
 		);
 		if($r) {
 			for($x = 0; $x < count($r); $x ++) {
-				$r[$x]['src_patt'] = htmlspecialchars($r[$x]['src_patt']);
+				$r[$x]['src_patt'] = htmlspecialchars($r[$x]['src_patt'], ENT_COMPAT,'UTF-8');
 			}
 		}
 		$o = replace_macros(get_markup_template('sources_list.tpl'), array(
@@ -97,7 +97,7 @@ function sources_content(&$a) {
 			return '';
 		}
 
-		$r[0]['src_patt'] = htmlspecialchars($r[0]['src_patt']);
+		$r[0]['src_patt'] = htmlspecialchars($r[0]['src_patt'], ENT_QUOTES,'UTF-8');
 
 		$o = replace_macros(get_markup_template('sources_edit.tpl'), array(
 			'$title' => t('Edit Source'),
