@@ -10,8 +10,11 @@
 body {
 	font-family: arial,freesans,clean,sans-serif;
 	font-size: 12px;
-	background-color: #FFFFFF;
-	color: #000000;
+	background-color: #$background_colour;
+	background-image: url('$background_image');
+	background-attachment: fixed;
+	background-size: cover;
+	color: #$font_colour;
 	margin: 0px;
 }
 .jslider {
@@ -112,6 +115,21 @@ blockquote {
 #langselector:hover {
 	opacity: 1.0;
 	filter:alpha(opacity=100);
+}
+
+nav {background-image: linear-gradient(bottom, #$nav_bg_1 26%, #$nav_bg_2 82%) !important;
+	      background-image: -o-linear-gradient(bottom, $nav_bg_1 26%, $nav_bg_2 82%) !important;
+	      background-image: -moz-linear-gradient(bottom,$nav_bg_1 26%, $nav_bg_2 82%) !important;
+	      background-image: -webkit-linear-gradient(bottom, $nav_bg_1 26%, $nav_bg_2 82%) !important;
+	      background-image: -ms-linear-gradient(bottom, $nav_bg_1 26%, $nav_bg_2 82%) !important;
+}
+
+
+nav:hover {background-image: linear-gradient(bottom, $nav_bg_3 26%, $nav_bg_4 82%);
+	      background-image: -o-linear-gradient(bottom, $nav_bg_3 26%, $nav_bg_4 82%);
+	      background-image: -moz-linear-gradient(bottom, $nav_bg_3 26%, $nav_bg_4 82%) !important;
+	      background-image: -webkit-linear-gradient(bottom, $nav_bg_3 26%, $nav_bg_4 82%);
+	      background-image: -ms-linear-gradient(bottom, $nav_bg_3 26%, $nav_bg_4 82%);
 }
 
 
@@ -805,7 +823,8 @@ footer {
 	margin-top: 10px;
 	position: relative;
 	border-radius: $radiuspx;
-	border: 1px solid #eec;
+	background-color: #$item_colour;
+	opacity: $item_opacity;
 }
 
 .thread-end-wrapper {
@@ -953,6 +972,7 @@ footer {
 .wall-item-content {
 	margin-left: 10px;
 	overflow: auto;
+	font-size: $font_sizepx;
 }
 
 .wall-item-content img {
