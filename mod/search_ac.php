@@ -30,22 +30,22 @@ function search_ac_init(&$a){
 		$people_sql_extra = protect_sprintf(" AND `name` LIKE '%". dbesc($search) . "%' ");
 		$tag_sql_extra = protect_sprintf(" AND term LIKE '%". dbesc($search) . "%' ");
 	}
+// FIXME - this is whacked
+//	$r = q("SELECT `id`, `name`, `micro`, `url` FROM `contact` 
+//		WHERE `uid` = %d AND `pending` = 0
+//		$people_sql_extra
+//		ORDER BY `name` ASC ",
+//		intval(local_user())
+//	);
 
-	$r = q("SELECT `id`, `name`, `micro`, `url` FROM `contact` 
-		WHERE `uid` = %d AND `pending` = 0
-		$people_sql_extra
-		ORDER BY `name` ASC ",
-		intval(local_user())
-	);
-
-	if(count($r)) {
-		foreach($r as $g) {
-			$x['photos'][] = $g['micro'];
-			$x['links'][] = $g['url'];
-			$x['suggestions'][] = '@' . $g['name'];
-			$x['data'][] = intval($g['id']);
-		}
-	}
+//	if($r) {
+//		foreach($r as $g) {
+//			$x['photos'][] = $g['micro'];
+//			$x['links'][] = $g['url'];
+//			$x['suggestions'][] = '@' . $g['name'];
+//			$x['data'][] = intval($g['id']);
+//		}
+//	}
 // FIXME - extend search to non-connnections if you couldn't find any connections with that name, use poco or directory
 //	else {
 //
@@ -64,7 +64,7 @@ function search_ac_init(&$a){
 //		}
 //	}
 
-	$r = q("select tid, term, url from term where type = %d $tag_sql_extra order by term asc",
+	$r = q("select distinct term, tid, url from term where type = %d $tag_sql_extra group by term order by term asc",
 		intval(TERM_HASHTAG)
 	);
 
