@@ -801,8 +801,7 @@ function zot_fetch($arr) {
 	$datatosend = json_encode(aes_encapsulate(json_encode($data),$ret_hub['hubloc_sitekey']));
 	
 	$fetch = zot_zot($url,$datatosend);
-
-	$result = zot_import($fetch);
+	$result = zot_import($fetch, $arr['sender']['url']);
 	return $result;
 }
 
@@ -815,7 +814,7 @@ function zot_fetch($arr) {
  * The message types handled here are 'activity' (e.g. posts), 'mail' and 'profile'
  */
 
-function zot_import($arr) {
+function zot_import($arr, $sender_url) {
 
 	$data = json_decode($arr['body'],true);
 
@@ -841,6 +840,13 @@ function zot_import($arr) {
     		}
 
 			logger('zot_import: notify: ' . print_r($i['notify'],true), LOGGER_DATA);
+
+			$hub = zot_gethub($i['notify']['sender']);			
+			if((! $hub) || ($hub['hubloc_url'] != $sender_url)) {
+				logger('zot_import: potential forgery: wrong site for sender: ' . $sender_url . ' != ' . print_r($i['notify'],true));
+				continue;
+			}
+
 
 			$i['notify']['sender']['hash'] = base64url_encode(hash('whirlpool',$i['notify']['sender']['guid'] . $i['notify']['sender']['guid_sig'], true));
 			$deliveries = null;
@@ -1093,6 +1099,15 @@ function allowed_public_recips($msg) {
 function process_delivery($sender,$arr,$deliveries,$relay) {
 
 	$result = array();
+
+
+	// We've validated the sender. Now make sure that the sender is the owner or author
+	// This needs to be done in each process_xxxx function because the data arrays and conditions will be different. 
+
+	if($sender['hash'] != $arr['owner_xchan'] && $sender_hash != $arr['author_xchan']) {
+		logger('process_delivery: sender is not owner or author');
+		return;
+	}
 	
 	foreach($deliveries as $d) {
 		$r = q("select * from channel where channel_hash = '%s' limit 1",
