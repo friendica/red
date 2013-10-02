@@ -131,7 +131,7 @@ function bb_ShareAttributes($match) {
 	// FIXME - this should really be a wall-item-ago so it will get updated on the client
 	$reldate = (($posted) ? relative_date($posted) : ''); 
 
-	$headline = '<div class="shared_header">';
+	$headline = '<div class="shared_container"> <div class="shared_header">';
 
 	if ($avatar != "")
 		$headline .= '<img src="' . $avatar . '" alt="' . $author . '" height="32" width="32" />';
@@ -146,7 +146,7 @@ function bb_ShareAttributes($match) {
 
 	$headline .= '<span>' . $fmt . '</span></div>';
 
-	$text = $headline . '<div class="reshared-content">' . trim($match[2]) . '</div>';
+	$text = $headline . '<div class="reshared-content">' . trim($match[2]) . '</div></div>';
 
 	return($text);
 }
