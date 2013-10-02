@@ -117,17 +117,17 @@ blockquote {
 	filter:alpha(opacity=100);
 }
 
-nav {background-image: linear-gradient(bottom, #$nav_bg_1 26%, #$nav_bg_2 82%) !important;
-	      background-image: -o-linear-gradient(bottom, $nav_bg_1 26%, $nav_bg_2 82%) !important;
-	      background-image: -moz-linear-gradient(bottom,$nav_bg_1 26%, $nav_bg_2 82%) !important;
-	      background-image: -webkit-linear-gradient(bottom, $nav_bg_1 26%, $nav_bg_2 82%) !important;
-	      background-image: -ms-linear-gradient(bottom, $nav_bg_1 26%, $nav_bg_2 82%) !important;
+nav {background-image: linear-gradient(bottom, #$nav_bg_1 26%, #$nav_bg_2 82%);
+	      background-image: -o-linear-gradient(bottom, $nav_bg_1 26%, $nav_bg_2 82%);
+	      background-image: -moz-linear-gradient(bottom,$nav_bg_1 26%, $nav_bg_2 82%);
+	      background-image: -webkit-linear-gradient(bottom, $nav_bg_1 26%, $nav_bg_2 82%);
+	      background-image: -ms-linear-gradient(bottom, $nav_bg_1 26%, $nav_bg_2 82%);
 }
 
 
 nav:hover {background-image: linear-gradient(bottom, $nav_bg_3 26%, $nav_bg_4 82%);
 	      background-image: -o-linear-gradient(bottom, $nav_bg_3 26%, $nav_bg_4 82%);
-	      background-image: -moz-linear-gradient(bottom, $nav_bg_3 26%, $nav_bg_4 82%) !important;
+	      background-image: -moz-linear-gradient(bottom, $nav_bg_3 26%, $nav_bg_4 82%);
 	      background-image: -webkit-linear-gradient(bottom, $nav_bg_3 26%, $nav_bg_4 82%);
 	      background-image: -ms-linear-gradient(bottom, $nav_bg_3 26%, $nav_bg_4 82%);
 }
