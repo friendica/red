@@ -37,6 +37,7 @@ function channel_privacy_macro(n) {
         $('#id_write_storage option').eq(0).attr('selected','selected');
         $('#id_write_pages option').eq(0).attr('selected','selected');
         $('#id_delegate option').eq(0).attr('selected','selected');
+		$('#id_republish option').eq(0).attr('selected','selected');
 		$('#id_profile_in_directory_onoff .off').removeClass('hidden');
 		$('#id_profile_in_directory_onoff .on').addClass('hidden');
 		$('#id_profile_in_directory').val(0);
@@ -58,6 +59,7 @@ function channel_privacy_macro(n) {
         $('#id_write_storage option').eq(1).attr('selected','selected');
         $('#id_write_pages option').eq(1).attr('selected','selected');
         $('#id_delegate option').eq(0).attr('selected','selected');
+		$('#id_republish option').eq(0).attr('selected','selected');
 		$('#id_profile_in_directory_onoff .off').removeClass('hidden');
 		$('#id_profile_in_directory_onoff .on').addClass('hidden');
 		$('#id_profile_in_directory').val(0);
@@ -79,6 +81,7 @@ function channel_privacy_macro(n) {
         $('#id_write_storage option').eq(0).attr('selected','selected');
         $('#id_write_pages option').eq(0).attr('selected','selected');
         $('#id_delegate option').eq(0).attr('selected','selected');
+		$('#id_republish option').eq(1).attr('selected','selected');
 		$('#id_profile_in_directory_onoff .on').removeClass('hidden');
 		$('#id_profile_in_directory_onoff .off').addClass('hidden');
 		$('#id_profile_in_directory').val(1);
@@ -100,6 +103,7 @@ function channel_privacy_macro(n) {
         $('#id_write_storage option').eq(2).attr('selected','selected');
         $('#id_write_pages option').eq(2).attr('selected','selected');
         $('#id_delegate option').eq(0).attr('selected','selected');
+		$('#id_republish option').eq(4).attr('selected','selected');
 		$('#id_profile_in_directory_onoff .on').removeClass('hidden');
 		$('#id_profile_in_directory_onoff .off').addClass('hidden');
 		$('#id_profile_in_directory').val(1);
