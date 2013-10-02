@@ -1405,7 +1405,7 @@ tr.mceLast {
 .wall-item-photo, .photo, .contact-block-img, .my-comment-photo {
     border-radius: $radiuspx;
     -moz-border-radius: $radiuspx;
-    box-shadow: 4px 4px 3px 0 #444444;
+    /*box-shadow: 4px 4px 3px 0 #444444; */
 }
 
 

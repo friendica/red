@@ -37,6 +37,9 @@
 				    $nav_bg_1 = $nav_bg_3 = "#000";
 		      		    $nav_bg_2 = $nav_bg_4 = "#222";
 		}
+		if ($nav_colour == "silver") {
+				    $nav_bg_1 = $nav_bg_2 = $nav_bg_3 = $nav_bg_4 = "silver";
+		}
 
 	    $background_colour = get_pconfig($uid, "redbasic", "background_colour");	
 	    $background_image = get_pconfig($uid, "redbasic", "background_image");	
