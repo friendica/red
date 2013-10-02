@@ -1,10 +1,10 @@
-Red translations
+Translating the Red Matrix
 ======================
 
 Translation Process
 -------------------
 
-The strings used in the UI of Red is translated at (Transifex)[1] and then
+The strings used in the UI of Red is translated at [Transifex][1] and then
 included in the git repository at github. If you want to help with translation
 for any language, be it correcting terms or translating Red to a
 currently not supported language, please register an account at transifex.com
@@ -40,30 +40,30 @@ utility from the util directory of your Red installation.
 Assuming you want to convert the German localization which is placed in
 view/de/message.po you would do the following.
 
-    1. Navigate at the command prompt to the base directory of your
-       Red installation
+1. Navigate at the command prompt to the base directory of your
+   Red installation
 
-    2. Execute the po2php script, which will place the translation
-       in the strings.php file that is used by Red.
+2. Execute the po2php script, which will place the translation
+   in the strings.php file that is used by Red.
 
        $> php util/po2php.php view/de/message.po
 
-       The output of the script will be placed at view/de/strings.php where
-       froemdoca os expecting it, so you can test your translation mmediately.
+   The output of the script will be placed at view/de/strings.php where
+   froemdoca os expecting it, so you can test your translation mmediately.
                                   
-    3. Visit your Red page to check if it still works in the language you
-       just translated. If not try to find the error, most likely PHP will give
-       you a hint in the log/warnings.about the error.
+3. Visit your Red page to check if it still works in the language you
+   just translated. If not try to find the error, most likely PHP will give
+   you a hint in the log/warnings.about the error.
                                         
-       For debugging you can also try to "run" the file with PHP. This should
-       not give any output if the file is ok but might give a hint for
-       searching the bug in the file.
+   For debugging you can also try to "run" the file with PHP. This should
+   not give any output if the file is ok but might give a hint for
+   searching the bug in the file.
 
        $> php view/de/strings.php
 
-    4. commit the two files with a meaningful commit message to your git
-       repository, push it to your fork of the Red repository at github and
-       issue a pull request for that commit.
+4. commit the two files with a meaningful commit message to your git
+   repository, push it to your fork of the Red repository at github and
+   issue a pull request for that commit.
 
 Utilities
 ---------
@@ -79,19 +79,13 @@ For further information see the utils/README file.
 Known Problems
 --------------
 
-Red uses the language setting of the visitors browser to determain the
-language for the UI. Most of the time this works, but there are some known
-quirks.
-
-One is that some browsers, like Safari, do the setting to "de-de" but Red
-only has a "de" localisation.  A workaround would be to add a symbolic link
-from
-    $Red/view/de-de
-pointing to
-    $Red/view/de
+* Red uses the language setting of the visitors browser to determain the
+  language for the UI. Most of the time this works, but there are some known
+  quirks.
+* the early translations are based on the friendica translations, if you 
+  some rough translations please let us know or fix them at Transifex.
 
 Links
------
-
-[1]   http://www.transifex.com/projects/p/red-matrix/
+------
+[1]:   http://www.transifex.com/projects/p/red-matrix/
 
