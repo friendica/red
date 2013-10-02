@@ -64,7 +64,6 @@ function network_init(&$a) {
 		}
 	}
 	
-	$group_id = ((x($_GET,'gid')) ? intval($_GET['gid']) : 0);
 		  
 	require_once('include/group.php');
 	require_once('include/contact_widgets.php');
@@ -74,8 +73,10 @@ function network_init(&$a) {
 		$a->page['aside'] = '';
 
 	$search = ((x($_GET,'search')) ? $_GET['search'] : '');
+	
 
-	if(x($_GET,'save')) {
+
+	if(x($_GET,'save') && $search) {
 		$r = q("select * from `term` where `uid` = %d and `type` = %d and `term` = '%s' limit 1",
 			intval(local_user()),
 			intval(TERM_SAVEDSEARCH),
@@ -103,6 +104,28 @@ function network_init(&$a) {
 
 	$a->page['aside'] .= saved_searches($search);
 	$a->page['aside'] .= fileas_widget($a->get_baseurl(true) . '/network',(x($_GET, 'file') ? $_GET['file'] : ''));
+
+
+	if($search) {
+		if(strpos($search,'@') === 0) {
+			$r = q("select abook_id from abook left join xchan on abook_xchan = xchan_hash where xchan_name = '%s' and abook_channel = %d limit 1",
+				dbesc(substr($search,1)),
+				intval(local_user())
+			);
+			if($r) {
+				$_GET['cid'] = $r[0]['abook_id'];
+				$search = $_GET['search'] = '';
+			}
+		}
+		elseif(strpos($search,'#') === 0) {
+			$search = $_GET['search'] = substr($search,1);
+		}
+	}
+
+	$group_id = ((x($_GET,'gid')) ? intval($_GET['gid']) : 0);
+
+
+
 
 }
 
@@ -149,7 +172,7 @@ function saved_searches($search) {
 	$o = replace_macros($tpl, array(
 		'$title'	 => t('Saved Searches'),
 		'$add'		 => t('add'),
-		'$searchbox' => search($search,'netsearch-box',$srchurl,true),
+		'$searchbox' => search('','netsearch-box',$srchurl,true),
 		'$saved' 	 => $saved,
 	));
 	
