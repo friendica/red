@@ -3,10 +3,10 @@
 //Set some defaults
 
 	$nav_colour = "red";
-		$nav_bg_1 = "f88";
-		$nav_bg_2 = "b00";
-		$nav_bg_3 = "f00";
-		$nav_bg_4 = "b00";
+		$nav_bg_1 = "#f88";
+		$nav_bg_2 = "#b00";
+		$nav_bg_3 = "#f00";
+		$nav_bg_4 = "#b00";
 	$background_colour = "fff";
 	$background_image ='';
 	$item_colour = "fff";
