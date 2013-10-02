@@ -116,7 +116,7 @@ function zot_zot($url,$data) {
  */
 
 
-function zot_finger($webbie,$channel) {
+function zot_finger($webbie,$channel,$autofallback = true) {
 
 
 	if(strpos($webbie,'@') === false) {
@@ -165,7 +165,7 @@ function zot_finger($webbie,$channel) {
 		$result = z_post_url($url . $rhs,$postvars);
 
 
-		if(! $result['success']) {
+		if((! $result['success']) && ($autofallback)) {
 			if($https) {
 				logger('zot_finger: https failed. falling back to http');
 				$result = z_post_url('http://' . $host . $rhs,$postvars);
@@ -176,7 +176,7 @@ function zot_finger($webbie,$channel) {
 		$rhs .= '?f=&address=' . urlencode($address);
 
 		$result =  z_fetch_url($url . $rhs);
-		if(! $result['success']) {
+		if((! $result['success']) && ($autofallback)) {
 			if($https) {
 				logger('zot_finger: https failed. falling back to http');
 				$result = z_fetch_url('http://' . $host . $rhs);
