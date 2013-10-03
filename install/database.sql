@@ -441,7 +441,7 @@ CREATE TABLE IF NOT EXISTS `item` (
   `resource_id` char(255) NOT NULL DEFAULT '',
   `resource_type` char(16) NOT NULL DEFAULT '',
   `attach` mediumtext NOT NULL,
-  `inform` mediumtext NOT NULL,
+  `sig` text NOT NULL DEFAULT '',
   `location` char(255) NOT NULL DEFAULT '',
   `coord` char(255) NOT NULL DEFAULT '',
   `comment_policy` char(255) NOT NULL DEFAULT '',

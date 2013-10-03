@@ -45,7 +45,7 @@ define ( 'RED_PLATFORM',            'Red Matrix' );
 define ( 'RED_VERSION',             trim(file_get_contents('version.inc')) . 'R');
 define ( 'ZOT_REVISION',            1     ); 
 
-define ( 'DB_UPDATE_VERSION',       1076  );
+define ( 'DB_UPDATE_VERSION',       1077  );
 
 define ( 'EOL',                    '<br />' . "\r\n"     );
 define ( 'ATOM_TIME',              'Y-m-d\TH:i:s\Z' );
@@ -497,6 +497,7 @@ define ( 'ITEM_RELAY',           0x0200);  // used only in the communication lay
 define ( 'ITEM_MENTIONSME',      0x0400);
 define ( 'ITEM_NOCOMMENT',       0x0800);  // commenting/followups are disabled
 define ( 'ITEM_OBSCURED',        0x1000);  // bit-mangled to protect from casual browsing by site admin
+define ( 'ITEM_VERIFIED',        0x2000);  // Signature verification was successful
 
 /**
  *

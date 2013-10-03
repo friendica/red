@@ -454,15 +454,15 @@ function photos_post(&$a) {
 			if(strlen($newinform) && strlen($inform))
 				$newinform .= ',';
 			$newinform .= $inform;
-
-			$r = q("UPDATE `item` SET `tag` = '%s', `inform` = '%s', `edited` = '%s', `changed` = '%s' WHERE `id` = %d AND `uid` = %d LIMIT 1",
-				dbesc($newtag),
-				dbesc($newinform),
-				dbesc(datetime_convert()),
-				dbesc(datetime_convert()),
-				intval($item_id),
-				intval($page_owner_uid)
-			);
+//FIXME - inform is gone
+//			$r = q("UPDATE `item` SET `tag` = '%s', `inform` = '%s', `edited` = '%s', `changed` = '%s' WHERE `id` = %d AND `uid` = %d LIMIT 1",
+//				dbesc($newtag),
+//				dbesc($newinform),
+//				dbesc(datetime_convert()),
+//				dbesc(datetime_convert()),
+//				intval($item_id),
+//				intval($page_owner_uid)
+//			);
 
 			$best = 0;
 			foreach($p as $scales) {

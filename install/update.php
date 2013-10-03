@@ -1,6 +1,6 @@
 <?php
 
-define( 'UPDATE_VERSION' , 1076 );
+define( 'UPDATE_VERSION' , 1077 );
 
 /**
  *
@@ -855,6 +855,13 @@ function update_r1075() {
 	$r = q("ALTER TABLE `channel` ADD `channel_a_republish` INT UNSIGNED NOT NULL DEFAULT '128',
 ADD INDEX ( `channel_a_republish` )");
 
+	if($r)
+		return UPDATE_SUCCESS;
+	return UPDATE_FAILED;
+}
+
+function update_r1076() {
+	$r = q("ALTER TABLE `item` CHANGE `inform` `sig` TEXT CHARACTER SET utf8 COLLATE utf8_general_ci NOT NULL DEFAULT '' ");
 	if($r)
 		return UPDATE_SUCCESS;
 	return UPDATE_FAILED;

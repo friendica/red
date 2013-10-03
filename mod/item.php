@@ -588,7 +588,6 @@ function item_post(&$a) {
 	$datarray['app']            = $app;
 	$datarray['location']       = $location;
 	$datarray['coord']          = $coord;
-	$datarray['inform']         = $inform;
 	$datarray['verb']           = $verb;
 	$datarray['allow_cid']      = $str_contact_allow;
 	$datarray['allow_gid']      = $str_group_allow;
@@ -642,6 +641,13 @@ function item_post(&$a) {
 
 		$datarray['body'] = z_input_filter($datarray['uid'],$datarray['body'],$datarray['mimetype']);
 
+		if(local_user()) {
+			if($channel['channel_hash'] === $datarray['author_xchan']) {
+				$datarray['sig'] = base64url_encode(rsa_sign($datarray['body'],$channel['channel_prvkey']));
+				$datarray['item_flags'] = $datarray['item_flags'] | ITEM_VERIFIED;
+			}
+		}
+
 		logger('Encrypting local storage');
 		$key = get_config('system','pubkey');
 		$datarray['item_flags'] = $datarray['item_flags'] | ITEM_OBSCURED;
@@ -651,17 +657,16 @@ function item_post(&$a) {
 			$datarray['body']  = json_encode(aes_encapsulate($datarray['body'],$key));
 	}
 
-
-
-
 	if($orig_post) {
-		$r = q("UPDATE `item` SET `title` = '%s', `body` = '%s', `mimetype` = '%s', `attach` = '%s', `edited` = '%s', layout_mid = '%s' WHERE `id` = %d AND `uid` = %d LIMIT 1",
+		$r = q("UPDATE `item` SET `title` = '%s', `body` = '%s', `mimetype` = '%s', `attach` = '%s', `edited` = '%s', layout_mid = '%s', sig = '%s', item_flags = %d WHERE `id` = %d AND `uid` = %d LIMIT 1",
 			dbesc($datarray['title']),
 			dbesc($datarray['body']),
 			dbesc($datarray['mimetype']),
 			dbesc($datarray['attach']),
 			dbesc(datetime_convert()),
 			dbesc($layout_mid),
+			dbesc($datarray['sig']),
+			intval($item_flags),
 			intval($post_id),
 			intval($profile_uid)
 		);

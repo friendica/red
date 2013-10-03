@@ -638,6 +638,11 @@ function conversation(&$a, $items, $mode, $update, $page_mode = 'traditional') {
 				$likebuttons = false;
 				$shareable = false;
 
+				$verified = (($item['item_flags'] & ITEM_VERIFIED) ? t('Message is verified') : '');
+				$unverified = '';
+
+
+
 				$tags=array();
 				$terms = get_terms_oftype($item['term'],array(TERM_HASHTAG,TERM_MENTION,TERM_UNKNOWN));
 				if(count($terms))
@@ -665,6 +670,8 @@ function conversation(&$a, $items, $mode, $update, $page_mode = 'traditional') {
 					'tags' => $tags,
 					'hashtags' => $hashtags,
 					'mentions' => $mentions,
+					'verified' => $verified,
+					'unverified' => $unverified,
 					'txt_cats' => t('Categories:'),
                     'txt_folders' => t('Filed under:'),
                     'has_cats' => ((count($categories)) ? 'true' : ''),

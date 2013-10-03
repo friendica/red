@@ -546,6 +546,7 @@ function title_is_body($title, $body) {
 
 function get_item_elements($x) {
 
+//	logger('get_item_elements');
 	$arr = array();
 	$arr['body']         = (($x['body']) ? htmlentities($x['body'],ENT_COMPAT,'UTF-8',false) : '');
 
@@ -579,6 +580,9 @@ function get_item_elements($x) {
 	$arr['obj_type']     = (($x['object_type'])    ? htmlentities($x['object_type'],    ENT_COMPAT,'UTF-8',false) : '');
 	$arr['tgt_type']     = (($x['target_type'])    ? htmlentities($x['target_type'],    ENT_COMPAT,'UTF-8',false) : '');
 	$arr['comment_policy'] = (($x['comment_scope']) ? htmlentities($x['comment_scope'],  ENT_COMPAT,'UTF-8',false) : 'contacts');
+
+	$arr['sig']          = (($x['signature']) ? htmlentities($x['signature'],  ENT_COMPAT,'UTF-8',false) : '');
+
 	
 	$arr['object']       = activity_sanitise($x['object']);
 	$arr['target']       = activity_sanitise($x['target']);
@@ -590,18 +594,6 @@ function get_item_elements($x) {
 
 	$arr['item_flags'] = 0;
 
-	// if it's a private post, encrypt it in the DB.
-	// We have to do that here because we need to cleanse the input and prevent bad stuff from getting in,
-	// and we need plaintext to do that. 
-
-	if(intval($arr['item_private'])) {
-		$arr['item_flags'] = $arr['item_flags'] | ITEM_OBSCURED;
-		$key = get_config('system','pubkey');
-		if($arr['title'])
-			$arr['title'] = json_encode(aes_encapsulate($arr['title'],$key));
-		if($arr['body'])
-			$arr['body']  = json_encode(aes_encapsulate($arr['body'],$key));
-	}
 
 	if(array_key_exists('flags',$x) && in_array('deleted',$x['flags']))
 		$arr['item_restrict'] = ITEM_DELETED; 
@@ -625,6 +617,31 @@ function get_item_elements($x) {
 			$arr['owner_xchan']  = base64url_encode(hash('whirlpool',$x['owner']['guid'] . $x['owner']['guid_sig'], true));
 		else
 			return array();
+	}
+
+
+	if($arr['sig']) {
+		$r = q("select xchan_pubkey from xchan where xchan_hash = '%s' limit 1",
+			dbesc($arr['author_xchan'])
+		);
+		if($r && rsa_verify($x['body'],base64url_decode($arr['sig']),$r[0]['xchan_pubkey']))
+			$arr['item_flags'] |= ITEM_VERIFIED;
+		else
+			logger('get_item_elements: message verification failed.');
+	}
+
+
+	// if it's a private post, encrypt it in the DB.
+	// We have to do that here because we need to cleanse the input and prevent bad stuff from getting in,
+	// and we need plaintext to do that. 
+
+	if(intval($arr['item_private'])) {
+		$arr['item_flags'] = $arr['item_flags'] | ITEM_OBSCURED;
+		$key = get_config('system','pubkey');
+		if($arr['title'])
+			$arr['title'] = json_encode(aes_encapsulate($arr['title'],$key));
+		if($arr['body'])
+			$arr['body']  = json_encode(aes_encapsulate($arr['body'],$key));
 	}
 
 
@@ -656,7 +673,7 @@ function encode_item($item) {
 	$x = array();
 	$x['type'] = 'activity';
 
-	logger('encode_item: ' . print_r($item,true));
+//	logger('encode_item: ' . print_r($item,true));
 
 	$r = q("select channel_r_stream, channel_w_comment from channel where channel_id = %d limit 1",
 		intval($item['uid'])
@@ -707,6 +724,7 @@ function encode_item($item) {
 	$x['permalink']      = $item['plink'];
 	$x['location']       = $item['location'];
 	$x['longlat']        = $item['coord'];
+	$x['signature']      = $item['sig'];
 
 	$x['owner']          = encode_item_xchan($item['owner']);
 	$x['author']         = encode_item_xchan($item['author']);
@@ -729,6 +747,8 @@ function encode_item($item) {
 
 	if($item['term'])
 		$x['tags']       = encode_item_terms($item['term']);
+
+	logger('encode_item: ' . print_r($x,true));
 
 	return $x;
 
@@ -1445,17 +1465,27 @@ function item_store($arr,$allow_exec = false) {
 	$arr['deny_gid']      = ((x($arr,'deny_gid'))      ? trim($arr['deny_gid'])              : '');
 	$arr['item_private']  = ((x($arr,'item_private'))  ? intval($arr['item_private'])        : 0 );
 	$arr['item_flags']    = ((x($arr,'item_flags'))    ? intval($arr['item_flags'])          : 0 );
-	
 
 	$arr['title'] = escape_tags($arr['title']);
+
 
 	// only detect language if we have text content, and if the post is private but not yet
 	// obscured, make it so.
 
 	if(! ($arr['item_flags'] & ITEM_OBSCURED)) {
+
 		$arr['lang'] = detect_language($arr['body']);
 		// apply the input filter here - if it is obscured it has been filtered already
 		$arr['body'] = z_input_filter($arr['uid'],$arr['body'],$arr['mimetype']);
+
+
+		if(local_user() && (! $arr['sig'])) {
+			$channel = get_app()->get_channel();
+			if($channel['channel_hash'] === $arr['author_xchan']) {
+				$arr['sig'] = base64url_encode(rsa_sign($arr['body'],$channel['channel_prvkey']));
+				$arr['item_flags'] |= ITEM_VERIFIED;
+			}
+		}
 
 		$allowed_languages = get_pconfig($arr['uid'],'system','allowed_languages');
 	
@@ -1767,22 +1797,6 @@ function item_store_update($arr,$allow_exec = false) {
 	$uid = $arr['uid'];
 	unset($arr['uid']);
 	
-
-	$arr['lang'] = detect_language($arr['body']);
-
-	$allowed_languages = get_pconfig($arr['uid'],'system','allowed_languages');
-	
-	if((is_array($allowed_languages)) && ($arr['lang']) && (! array_key_exists($arr['lang'],$allowed_languages))) {
-		$translate = array('item' => $arr, 'from' => $arr['lang'], 'to' => $allowed_languages, 'translated' => false);
-		call_hooks('item_translate', $translate);
-		if((! $translate['translated']) && (intval(get_pconfig($arr['uid'],'system','reject_disallowed_languages')))) {
-			logger('item_store: language ' . $arr['lang'] . ' not accepted for uid ' . $arr['uid']);
-			$ret['message'] = 'language not accepted';
-			return $ret;
-		}
-		$arr = $translate['item'];
-	}
-
 	$arr['mimetype']      = ((x($arr,'mimetype'))      ? notags(trim($arr['mimetype']))      : 'text/bbcode');
 
 	if(($arr['mimetype'] == 'application/x-php') && (! $allow_exec)) {
@@ -1791,29 +1805,59 @@ function item_store_update($arr,$allow_exec = false) {
 		return $ret;
 	}
 
+    if(! ($arr['item_flags'] & ITEM_OBSCURED)) {
 
-	// Shouldn't happen but we want to make absolutely sure it doesn't leak from a plugin.
+		$arr['lang'] = detect_language($arr['body']);
+        // apply the input filter here - if it is obscured it has been filtered already
+        $arr['body'] = z_input_filter($arr['uid'],$arr['body'],$arr['mimetype']);
 
-	if($arr['mimetype'] != 'text/html' && $arr['mimetype'] != 'application/x-php') {
+        if(local_user() && (! $arr['sig'])) {
+            $channel = get_app()->get_channel();
+            if($channel['channel_hash'] === $arr['author_xchan']) {
+                $arr['sig'] = base64url_encode(rsa_sign($arr['body'],$channel['channel_prvkey']));
+                $arr['item_flags'] |= ITEM_VERIFIED;
+            }
+        }
 
-		if((strpos($arr['body'],'<') !== false) || (strpos($arr['body'],'>') !== false)) 
-			$arr['body'] = escape_tags($arr['body']);
-
-		if((x($arr,'object')) && is_array($arr['object'])) {
-			activity_sanitise($arr['object']);
-			$arr['object'] = json_encode($arr['object']);
+		$allowed_languages = get_pconfig($arr['uid'],'system','allowed_languages');
+	
+		if((is_array($allowed_languages)) && ($arr['lang']) && (! array_key_exists($arr['lang'],$allowed_languages))) {
+			$translate = array('item' => $arr, 'from' => $arr['lang'], 'to' => $allowed_languages, 'translated' => false);
+			call_hooks('item_translate', $translate);
+			if((! $translate['translated']) && (intval(get_pconfig($arr['uid'],'system','reject_disallowed_languages')))) {
+				logger('item_store: language ' . $arr['lang'] . ' not accepted for uid ' . $arr['uid']);
+				$ret['message'] = 'language not accepted';
+				return $ret;
+			}
+			$arr = $translate['item'];
 		}
+		if($arr['item_private']) {
+            $key = get_config('system','pubkey');
+            $arr['item_flags'] = $arr['item_flags'] | ITEM_OBSCURED;
+            if($arr['title'])
+                $arr['title'] = json_encode(aes_encapsulate($arr['title'],$key));
+            if($arr['body'])
+                $arr['body']  = json_encode(aes_encapsulate($arr['body'],$key));
+        }
 
-		if((x($arr,'target')) && is_array($arr['target'])) {
-			activity_sanitise($arr['target']);
-			$arr['target'] = json_encode($arr['target']);
-		}
-
-		if((x($arr,'attach')) && is_array($arr['attach'])) {
-			activity_sanitise($arr['attach']);
-			$arr['attach'] = json_encode($arr['attach']);
-		}
 	}
+
+
+	if((x($arr,'object')) && is_array($arr['object'])) {
+		activity_sanitise($arr['object']);
+		$arr['object'] = json_encode($arr['object']);
+	}
+
+	if((x($arr,'target')) && is_array($arr['target'])) {
+		activity_sanitise($arr['target']);
+		$arr['target'] = json_encode($arr['target']);
+	}
+
+	if((x($arr,'attach')) && is_array($arr['attach'])) {
+		activity_sanitise($arr['attach']);
+		$arr['attach'] = json_encode($arr['attach']);
+	}
+
 
 	$orig = q("select * from item where id = %d and uid = %d limit 1",
 		intval($orig_post_id),
@@ -1860,6 +1904,7 @@ function item_store_update($arr,$allow_exec = false) {
 	$arr['item_restrict'] = ((x($arr,'item_restrict')) ? intval($arr['item_restrict'])       : $orig[0]['item_restrict'] );
 	$arr['item_flags']    = ((x($arr,'item_flags'))    ? intval($arr['item_flags'])          : $orig[0]['item_flags'] );
 	
+	$arr['sig']          = ((x($arr,'sig'))          ? $arr['sig']                  : '');
 
 	call_hooks('post_remote_update',$arr);
 

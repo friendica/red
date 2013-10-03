@@ -1327,6 +1327,14 @@ function process_mail_delivery($sender,$arr,$deliveries) {
 
 
 	$result = array();
+
+
+	if($sender['hash'] != $arr['from_xchan']) {
+		logger('process_mail_delivery: sender is not mail author');
+		return;
+	}
+
+
 	
 	foreach($deliveries as $d) {
 		$r = q("select * from channel where channel_hash = '%s' limit 1",

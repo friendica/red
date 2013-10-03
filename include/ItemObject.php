@@ -156,6 +156,12 @@ class Item extends BaseObject {
 			$indent = 'comment';
 		}
 
+
+		$verified = (($item['item_flags'] & ITEM_VERIFIED) ? t('Message is verified') : '');
+		$unverified = '' ; // (($this->is_wall_to_wall() && (! ($item['item_flags'] & ITEM_VERIFIED))) ? t('Message cannot be verified') : '');
+
+
+
 		// FIXME - check this permission
 		if($conv->get_profile_owner() == local_user()) {
 			$tagger = array(
@@ -210,6 +216,8 @@ class Item extends BaseObject {
 			'isotime' => datetime_convert('UTC', date_default_timezone_get(), $item['created'], 'c'),
 			'localtime' => datetime_convert('UTC', date_default_timezone_get(), $item['created'], 'r'),
 			'lock' => $lock,
+			'verified' => $verified,
+			'unverified' => $unverified,
 			'location' => $location,
 			'indent' => $indent,
 			'owner_url' => $this->get_owner_url(),

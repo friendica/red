@@ -34,6 +34,8 @@
 				{{if $item.lock}}<div class="wall-item-lock"><img src="images/lock_icon.gif" class="lockview" alt="{{$item.lock}}" onclick="lockview(event,{{$item.id}});" /></div>
 				{{else}}<div class="wall-item-lock"></div>{{/if}}	
 				<div class="wall-item-location" id="wall-item-location-{{$item.id}}">{{$item.location}}</div>
+				{{if $item.verified}}<img src="images/lock_icon.gif" alt="{{$item.verified}}" title="{{$item.verified}}" height="10" width="10" />{{/if}}
+				{{if $item.unverified}}<img src="images/unlock_icon.gif" alt="{{$item.unverified}}" title="{{$item.unverified}}" height="10" width="10" />{{/if}}
 			</div>
 		</div>
 		<div class="wall-item-author">
