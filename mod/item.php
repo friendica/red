@@ -637,17 +637,16 @@ function item_post(&$a) {
 	if(mb_strlen($datarray['title']) > 255)
 		$datarray['title'] = mb_substr($datarray['title'],0,255);
 
-	if(array_key_exists('item_private',$datarray) && $datarray['item_private']) {
+	$datarray['body'] = z_input_filter($datarray['uid'],$datarray['body'],$datarray['mimetype']);
 
-		$datarray['body'] = z_input_filter($datarray['uid'],$datarray['body'],$datarray['mimetype']);
-
-		if(local_user()) {
-			if($channel['channel_hash'] === $datarray['author_xchan']) {
-				$datarray['sig'] = base64url_encode(rsa_sign($datarray['body'],$channel['channel_prvkey']));
-				$datarray['item_flags'] = $datarray['item_flags'] | ITEM_VERIFIED;
-			}
+	if(local_user()) {
+		if($channel['channel_hash'] === $datarray['author_xchan']) {
+			$datarray['sig'] = base64url_encode(rsa_sign($datarray['body'],$channel['channel_prvkey']));
+			$datarray['item_flags'] = $datarray['item_flags'] | ITEM_VERIFIED;
 		}
+	}
 
+	if(array_key_exists('item_private',$datarray) && $datarray['item_private']) {
 		logger('Encrypting local storage');
 		$key = get_config('system','pubkey');
 		$datarray['item_flags'] = $datarray['item_flags'] | ITEM_OBSCURED;
