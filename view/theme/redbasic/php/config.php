@@ -36,6 +36,7 @@ function redbasic_form(&$a, $nav_colour, $background_colour, $background_image, 
 		$nav_colours = array (
 		  'red' => 'red',
 		  'black' => 'black',	
+		  'silver' => 'silver',	
 		);
 
 	  $t = get_markup_template('theme_settings.tpl');

@@ -1,20 +1,5 @@
 <?php
 
-//Set some defaults
-
-	$nav_colour = "red";
-		$nav_bg_1 = "#f88";
-		$nav_bg_2 = "#b00";
-		$nav_bg_3 = "#f00";
-		$nav_bg_4 = "#b00";
-	$background_colour = "fff";
-	$background_image ='';
-	$item_colour = "fff";
-	$item_opacity = "1";
-	$font_size = "12";
-	$font_colour = "000";
-	$radius = "5";
-
 // Get the UID of the channel owner
 	$uid = get_theme_uid();
 
@@ -37,6 +22,9 @@
 				    $nav_bg_1 = $nav_bg_3 = "#000";
 		      		    $nav_bg_2 = $nav_bg_4 = "#222";
 		}
+		if ($nav_colour == "silver") {
+				    $nav_bg_1 = $nav_bg_2 = $nav_bg_3 = $nav_bg_4 = "silver";
+		}
 
 	    $background_colour = get_pconfig($uid, "redbasic", "background_colour");	
 	    $background_image = get_pconfig($uid, "redbasic", "background_image");	
@@ -45,6 +33,32 @@
 	    $font_size = get_pconfig($uid, "redbasic", "font_size");	
 	    $font_colour = get_pconfig($uid, "redbasic", "font_colour");	
 	    $radius = get_pconfig($uid, "redbasic", "radius");	
+
+//Set some defaults - we have to do this after pulling owner settings, and we have to check for each setting
+//individually.  If we don't, we'll have problems if a user has set one, but not all options.
+
+	if (! $nav_colour) {
+		$nav_colour = "red";
+			$nav_bg_1 = "#f88";
+			$nav_bg_2 = "#b00";
+			$nav_bg_3 = "#f00";
+			$nav_bg_4 = "#b00";
+		}
+	if (! $background_colour)
+		$background_colour = "fff";
+	if (! $background_image)
+		$background_image ='';
+	if (! $item_colour)
+		$item_colour = "fff";
+	if (! $item_opacity)
+		$item_opacity = "1";
+	if (! $font_size)
+		$font_size = "12";
+	if (! $font_colour)
+		$font_colour = "000";
+	if (! $radius)
+		$radius = "5";
+
 
 
 // Apply the settings
