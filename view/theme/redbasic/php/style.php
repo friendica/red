@@ -16,14 +16,17 @@
 					$nav_bg_2 = "#b00";
 					$nav_bg_3 = "#f00";
 					$nav_bg_4 = "#b00";
+					$search_background = '#FFDDDD';
 		}
 
 		if ($nav_colour == "black") {
 				    $nav_bg_1 = $nav_bg_3 = "#000";
 		      		    $nav_bg_2 = $nav_bg_4 = "#222";
+					$search_background = '#EEEEEE';
 		}
 		if ($nav_colour == "silver") {
 				    $nav_bg_1 = $nav_bg_2 = $nav_bg_3 = $nav_bg_4 = "silver";
+					$search_background = '#EEEEEE';
 		}
 
 	    $background_colour = get_pconfig($uid, "redbasic", "background_colour");	
@@ -73,6 +76,7 @@ $options = array (
 '$nav_bg_2' => $nav_bg_2,
 '$nav_bg_3' => $nav_bg_3,
 '$nav_bg_4' => $nav_bg_4,
+'$search_background' => $search_background,
 '$background_colour' => $background_colour,
 '$background_image' => $background_image,
 '$item_colour' => $item_colour,

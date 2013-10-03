@@ -2041,7 +2041,7 @@ a.mail-list-link {
 	font-size: 0.8em;
 	border-radius: 14px;
 	border: none;
-	background-color: #FFDDDD;
+	background-color: $search_background;
 	color: #eec; 
 }
 
