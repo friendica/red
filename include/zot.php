@@ -111,6 +111,8 @@ function zot_zot($url,$data) {
  *   does not have to be host qualified e.g. 'foo' is treated as 'foo@thishub'
  * @param: array $channel
  *   (optional), if supplied permissions will be enumerated specifically for $channel
+ * @param: boolean $autofallback
+ *   fallback/failover to http if https connection cannot be established. Default is true.
  *
  * @returns: array => see z_post_url and mod/zfinger.php
  */
@@ -1102,7 +1104,6 @@ function process_delivery($sender,$arr,$deliveries,$relay) {
 
 
 	// We've validated the sender. Now make sure that the sender is the owner or author
-	// This needs to be done in each process_xxxx function because the data arrays and conditions will be different. 
 
 	if($sender['hash'] != $arr['owner_xchan'] && $sender['hash'] != $arr['author_xchan']) {
 		logger('process_delivery: sender is not owner or author');

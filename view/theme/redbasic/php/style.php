@@ -33,6 +33,7 @@
 	    $font_size = get_pconfig($uid, "redbasic", "font_size");	
 	    $font_colour = get_pconfig($uid, "redbasic", "font_colour");	
 	    $radius = get_pconfig($uid, "redbasic", "radius");	
+		$shadow = get_pconfig($uid,"redbasic","photo_shadow");
 
 //Set some defaults - we have to do this after pulling owner settings, and we have to check for each setting
 //individually.  If we don't, we'll have problems if a user has set one, but not all options.
@@ -58,6 +59,8 @@
 		$font_colour = "000";
 	if (! $radius)
 		$radius = "5";
+	if (! $shadow)
+		$shadow = "0";
 
 
 
@@ -76,7 +79,8 @@ $options = array (
 '$item_opacity' => $item_opacity,
 '$font_size' => $font_size,
 '$font_colour' => $font_colour,
-'$radius' => $radius
+'$radius' => $radius,
+'$shadow' => $shadow
 );
 
 echo str_replace(array_keys($options), array_values($options), $x);    
