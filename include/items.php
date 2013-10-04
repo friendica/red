@@ -1793,10 +1793,28 @@ function item_store_update($arr,$allow_exec = false) {
 	}
 
 	$orig_post_id = $arr['id'];
-	unset($arr['id']);
 	$uid = $arr['uid'];
+
+	$orig = q("select * from item where id = %d and uid = %d limit 1",
+		intval($orig_post_id),
+		intval($uid)
+	);
+	if(! $orig) {
+		logger('item_store_update: original post not found: ' . $orig_post_id);
+		$ret['message'] = 'no original';
+		return $ret;
+	}		
+
+	if($orig[0]['item_flags'] & ITEM_VERIFIED)
+		$orig[0]['item_flags'] = $orig[0]['item_flags'] ^ ITEM_VERIFIED;
+
+	$arr['item_flags'] = intval($arr['item_flags']) | $orig[0]['item_flags'];
+	$arr['item_restrict'] = intval($arr['item_restrict']) | $orig[0]['item_restrict'];
+
+	unset($arr['id']);
 	unset($arr['uid']);
-	
+	if(array_key_exists('edit',$arr))
+		unset($arr['edit']);	
 	$arr['mimetype']      = ((x($arr,'mimetype'))      ? notags(trim($arr['mimetype']))      : 'text/bbcode');
 
 	if(($arr['mimetype'] == 'application/x-php') && (! $allow_exec)) {
@@ -1859,15 +1877,6 @@ function item_store_update($arr,$allow_exec = false) {
 	}
 
 
-	$orig = q("select * from item where id = %d and uid = %d limit 1",
-		intval($orig_post_id),
-		intval($uid)
-	);
-	if(! $orig) {
-		logger('item_store_update: original post not found: ' . $orig_post_id);
-		$ret['message'] = 'no original';
-		return $ret;
-	}		
 
 	unset($arr['aid']);
 	unset($arr['mid']);
@@ -1885,13 +1894,13 @@ function item_store_update($arr,$allow_exec = false) {
 	$arr['received']      = datetime_convert();
 	$arr['changed']       = datetime_convert();
 	$arr['title']         = ((x($arr,'title'))         ? notags(trim($arr['title']))         : '');
-	$arr['location']      = ((x($arr,'location'))      ? notags(trim($arr['location']))      : '');
-	$arr['coord']         = ((x($arr,'coord'))         ? notags(trim($arr['coord']))         : '');
-	$arr['verb']          = ((x($arr,'verb'))          ? notags(trim($arr['verb']))          : '');
-	$arr['obj_type']      = ((x($arr,'obj_type'))      ? notags(trim($arr['obj_type']))      : '');
-	$arr['object']        = ((x($arr,'object'))        ? trim($arr['object'])                : '');
-	$arr['tgt_type']      = ((x($arr,'tgt_type'))      ? notags(trim($arr['tgt_type']))      : '');
-	$arr['target']        = ((x($arr,'target'))        ? trim($arr['target'])                : '');
+	$arr['location']      = ((x($arr,'location'))      ? notags(trim($arr['location']))      : $orig[0]['location']);
+	$arr['coord']         = ((x($arr,'coord'))         ? notags(trim($arr['coord']))         : $orig[0]['coord']);
+	$arr['verb']          = ((x($arr,'verb'))          ? notags(trim($arr['verb']))          : $orig[0]['verb']);
+	$arr['obj_type']      = ((x($arr,'obj_type'))      ? notags(trim($arr['obj_type']))      : $orig[0]['obj_type']);
+	$arr['object']        = ((x($arr,'object'))        ? trim($arr['object'])                : $orig[0]['object']);
+	$arr['tgt_type']      = ((x($arr,'tgt_type'))      ? notags(trim($arr['tgt_type']))      : $orig[0]['tgt_type']);
+	$arr['target']        = ((x($arr,'target'))        ? trim($arr['target'])                : $orig[0]['target']);
 	$arr['plink']         = ((x($arr,'plink'))         ? notags(trim($arr['plink']))         : $orig[0]['plink']);
 	$arr['allow_cid']     = ((x($arr,'allow_cid'))     ? trim($arr['allow_cid'])             : $orig[0]['allow_cid']);
 	$arr['allow_gid']     = ((x($arr,'allow_gid'))     ? trim($arr['allow_gid'])             : $orig[0]['allow_gid']);
@@ -1899,12 +1908,13 @@ function item_store_update($arr,$allow_exec = false) {
 	$arr['deny_gid']      = ((x($arr,'deny_gid'))      ? trim($arr['deny_gid'])              : $orig[0]['deny_gid']);
 	$arr['item_private']  = ((x($arr,'item_private'))  ? intval($arr['item_private'])        : $orig[0]['item_private']);
 	$arr['body']          = ((x($arr,'body'))          ? trim($arr['body'])                  : '');
-	$arr['attach']        = ((x($arr,'attach'))        ? notags(trim($arr['attach']))        : '');
-	$arr['app']           = ((x($arr,'app'))           ? notags(trim($arr['app']))           : '');
-	$arr['item_restrict'] = ((x($arr,'item_restrict')) ? intval($arr['item_restrict'])       : $orig[0]['item_restrict'] );
-	$arr['item_flags']    = ((x($arr,'item_flags'))    ? intval($arr['item_flags'])          : $orig[0]['item_flags'] );
+	$arr['attach']        = ((x($arr,'attach'))        ? notags(trim($arr['attach']))        : $orig[0]['attach']);
+	$arr['app']           = ((x($arr,'app'))           ? notags(trim($arr['app']))           : $orig[0]['app']);
+//	$arr['item_restrict'] = ((x($arr,'item_restrict')) ? intval($arr['item_restrict'])       : $orig[0]['item_restrict'] );
+//	$arr['item_flags']    = ((x($arr,'item_flags'))    ? intval($arr['item_flags'])          : $orig[0]['item_flags'] );
 	
-	$arr['sig']          = ((x($arr,'sig'))          ? $arr['sig']                  : '');
+	$arr['sig']           = ((x($arr,'sig'))           ? $arr['sig']                         : '');
+	$arr['layout_mid']     = ((x($arr,'layout_mid'))    ? dbesc($arr['layout_mid'])           : $orig[0]['layout_mid'] );
 
 	call_hooks('post_remote_update',$arr);
 

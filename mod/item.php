@@ -88,6 +88,9 @@ function item_post(&$a) {
 		$pagetitle = strtolower(URLify::transliterate($pagetitle));
 	}
 
+
+	$item_flags = $item_restrict = 0;
+
 	/**
 	 * Is this a reply to something?
 	 */
@@ -251,7 +254,8 @@ function item_post(&$a) {
 		$title             = escape_tags(trim($_REQUEST['title']));
 		$body              = $_REQUEST['body'];
 		$private           = $orig_post['item_private'];
-
+		$item_flags        = $orig_post['item_flags'];
+		$item_restrict     = $irog_post['item_restrict'];
 	}
 	else {
 
@@ -530,8 +534,8 @@ function item_post(&$a) {
 		}
 	}
 
-	$item_flags = ITEM_UNSEEN;
-	$item_restrict = ITEM_VISIBLE;
+	$item_flags |= ITEM_UNSEEN;
+	$item_restrict |= ITEM_VISIBLE;
 	
 	if($post_type === 'wall' || $post_type === 'wall-comment')
 		$item_flags = $item_flags | ITEM_WALL;
@@ -658,47 +662,9 @@ function item_post(&$a) {
 	}
 
 	if($orig_post) {
-		$r = q("UPDATE `item` SET `title` = '%s', `body` = '%s', `mimetype` = '%s', `attach` = '%s', `edited` = '%s', layout_mid = '%s', sig = '%s', item_flags = %d WHERE `id` = %d AND `uid` = %d LIMIT 1",
-			dbesc($datarray['title']),
-			dbesc($datarray['body']),
-			dbesc($datarray['mimetype']),
-			dbesc($datarray['attach']),
-			dbesc(datetime_convert()),
-			dbesc($layout_mid),
-			dbesc($datarray['sig']),
-			intval($item_flags),
-			intval($post_id),
-			intval($profile_uid)
-		);
+		$datarray['id'] = $post_id;
 
-		// remove taxonomy items for this post - we'll recreate them
-
-		q("delete from term where otype = %d and oid = %d and type in (%d, %d, %d, %d) ",
-			intval(TERM_OBJ_POST),
-			intval($post_id),
-			intval(TERM_UNKNOWN),
-			intval(TERM_HASHTAG),
-			intval(TERM_MENTION),
-			intval(TERM_CATEGORY)
-		);
-
-
-		if(count($post_tags)) {
-			foreach($post_tags as $tag) {
-				if(strlen(trim($tag['term']))) {
-					q("insert into term (uid,oid,otype,type,term,url) values (%d,%d,%d,%d,'%s','%s')",
-						intval($tag['uid']),
-						intval($post_id),
-						intval($tag['otype']),
-						intval($tag['type']),
-						dbesc(trim($tag['term'])),
-						dbesc(trim($tag['url']))
-					);
-				}
-			}
-		}
-
-
+		item_store_update($datarray,$execflag);
 
 		proc_run('php', "include/notifier.php", 'edit_post', $post_id);
 		if((x($_REQUEST,'return')) && strlen($return_path)) {
@@ -712,6 +678,8 @@ function item_post(&$a) {
 
 
 	$post = item_store($datarray,$execflag);
+
+
 	$post_id = $post['item_id'];
 
 	if($post_id) {
