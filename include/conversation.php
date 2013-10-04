@@ -743,7 +743,7 @@ function conversation(&$a, $items, $mode, $update, $page_mode = 'traditional') {
 				if($arr_blocked) {
 					$blocked = false;
 					foreach($arr_blocked as $b) {
-						if(($b) && ($item['author_xchan'] == $b)) {
+						if(($b) && (($item['author_xchan'] == $b)) || ($item['author']['xchan_flags'] == $b)) {
 							$blocked = true;
 							break;
 						}

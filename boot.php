@@ -249,6 +249,20 @@ define ( 'PERMS_R_PAGES',          0x04000);
 define ( 'PERMS_W_PAGES',          0x08000);
 define ( 'PERMS_A_REPUBLISH',      0x10000);
 
+/**
+* System Permissions
+*/
+
+define ( 'PERMS_R_DIRECTORY',         0x00001);
+define ( 'PERMS_R_GIT',     	      0x00002);
+define ( 'PERMS_R_DOCO',     	      0x00004);
+define ( 'PERMS_R_SYSINFO',           0x00008);
+
+define ( 'PERMS_R_GIT',     	      0x00010);
+define ( 'PERMS_R_DOCO',     	      0x00020);
+
+
+
 // General channel permissions
 
 define ( 'PERMS_PUBLIC'     , 0x0001 );
@@ -351,6 +365,7 @@ define ( 'XCHAN_FLAGS_HIDDEN',        0x0001);
 define ( 'XCHAN_FLAGS_ORPHAN',        0x0002);
 define ( 'XCHAN_FLAGS_CENSORED',      0x0004);
 define ( 'XCHAN_FLAGS_SELFCENSORED',  0x0008);
+define ( 'XCHAN_FLAGS_SYSTEM',        0x0010);
 define ( 'XCHAN_FLAGS_DELETED',       0x1000);
 /*
  * Traficlights for Administration of HubLoc
@@ -480,6 +495,7 @@ define ( 'ITEM_WEBPAGE',         0x0040);  // is a static web page, not a conver
 define ( 'ITEM_DELAYED_PUBLISH', 0x0080); 
 define ( 'ITEM_BUILDBLOCK',      0x0100);  // Named thusly to make sure nobody confuses this with ITEM_BLOCKED
 define ( 'ITEM_PDL',             0x0200);  // Page Description Language - e.g. Comanche
+define ( 'ITEM_BUG',		 0x0400);
 /**
  * Item Flags
  */

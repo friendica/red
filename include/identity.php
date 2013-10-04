@@ -44,15 +44,14 @@ function validate_channelname($name) {
 }
 
 
-// Create the system channel for directory synchronisation - this has no account attached
+// Create the system channel 
 
-
-function create_dir_account() {
+function create_system_account() {
 	create_identity(array(
 		'account_id' => 'xxx',  // This will create an identity with an (integer) account_id of 0, but account_id is required
-		'nickname' => 'dir',
-		'name' => 'Directory',
-		'pageflags' => PAGE_DIRECTORY_CHANNEL|PAGE_HIDDEN,
+		'nickname' => 'zroot',
+		'name' => 'System',
+		'pageflags' => PAGE_SYSTEM_CHANNEL|PAGE_HIDDEN,
 		'publish' => 0
 	));
 }
