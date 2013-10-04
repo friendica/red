@@ -64,6 +64,7 @@ var dir_d44c64559bbebec7f509842c48db8b23 =
     [ "notify.php", "include_2notify_8php.html", "include_2notify_8php" ],
     [ "oauth.php", "oauth_8php.html", "oauth_8php" ],
     [ "oembed.php", "include_2oembed_8php.html", "include_2oembed_8php" ],
+    [ "onedirsync.php", "onedirsync_8php.html", "onedirsync_8php" ],
     [ "onepoll.php", "onepoll_8php.html", "onepoll_8php" ],
     [ "page_widgets.php", "page__widgets_8php.html", "page__widgets_8php" ],
     [ "permissions.php", "permissions_8php.html", "permissions_8php" ],

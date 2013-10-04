@@ -96,6 +96,7 @@ var dir_d41ce877eb409a4791b288730010abe2 =
     [ "siteinfo.php", "siteinfo_8php.html", "siteinfo_8php" ],
     [ "sitelist.php", "sitelist_8php.html", "sitelist_8php" ],
     [ "smilies.php", "smilies_8php.html", "smilies_8php" ],
+    [ "sources.php", "sources_8php.html", "sources_8php" ],
     [ "starred.php", "starred_8php.html", "starred_8php" ],
     [ "subthread.php", "subthread_8php.html", "subthread_8php" ],
     [ "suggest.php", "suggest_8php.html", "suggest_8php" ],
