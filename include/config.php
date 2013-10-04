@@ -29,9 +29,9 @@ function load_config($family) {
 		// If the DB was successfully opened, but we can't read from it, 
 		// we must assume catastrophic failure of the DB. Report the system down.
 
-		if($r === false) {
-			system_unavailable();
-		}
+//		if($r === false) {
+//			system_unavailable();
+//		}
 
 		if($r !== false) {
 			if($r) {
