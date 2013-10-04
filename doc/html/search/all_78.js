@@ -4,6 +4,7 @@ var searchData=
   ['xchan_2ephp',['xchan.php',['../xchan_8php.html',1,'']]],
   ['xchan_5fcontent',['xchan_content',['../xchan_8php.html#a9853348bf1a35c644460221ba75edc2d',1,'xchan.php']]],
   ['xchan_5fflags_5fcensored',['XCHAN_FLAGS_CENSORED',['../boot_8php.html#accd6f36cc9f40225cbd720e4d12a7c6e',1,'boot.php']]],
+  ['xchan_5fflags_5fdeleted',['XCHAN_FLAGS_DELETED',['../boot_8php.html#a9ea1290e00c6d40684892047f2c778a9',1,'boot.php']]],
   ['xchan_5fflags_5fhidden',['XCHAN_FLAGS_HIDDEN',['../boot_8php.html#a1af3ed96de14aa0d7891b39cc75b60f2',1,'boot.php']]],
   ['xchan_5fflags_5forphan',['XCHAN_FLAGS_ORPHAN',['../boot_8php.html#a1c923b99bf77e4203ae94e5684b6ad0f',1,'boot.php']]],
   ['xchan_5fflags_5fselfcensored',['XCHAN_FLAGS_SELFCENSORED',['../boot_8php.html#a5a681a672e007cdc22b43345d71f07c6',1,'boot.php']]],

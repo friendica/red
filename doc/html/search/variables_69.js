@@ -1,6 +1,6 @@
 var searchData=
 [
-  ['if',['if',['../php2po_8php.html#a45b05625748f412ec97afcd61cf7980b',1,'if():&#160;php2po.php'],['../php_2default_8php.html#a23bc1996b18e69c1a3ab44536613a762',1,'if():&#160;default.php'],['../full_8php.html#a6fac1b4b8cdfde06ea1b7713479e92db',1,'if():&#160;full.php'],['../redbasic_2php_2style_8php.html#ac4c6bc3cd9cc92204f04cf6cb34b47dd',1,'if():&#160;style.php'],['../theme_2redstrap_2php_2default_8php.html#a23bc1996b18e69c1a3ab44536613a762',1,'if():&#160;default.php'],['../redstrap_2php_2style_8php.html#a0c4684da834439885ae2285649d1aaea',1,'if():&#160;style.php']]],
+  ['if',['if',['../php2po_8php.html#a45b05625748f412ec97afcd61cf7980b',1,'if():&#160;php2po.php'],['../php_2default_8php.html#a23bc1996b18e69c1a3ab44536613a762',1,'if():&#160;default.php'],['../full_8php.html#a6fac1b4b8cdfde06ea1b7713479e92db',1,'if():&#160;full.php'],['../redbasic_2php_2style_8php.html#a883f9f14e205f7aa7de02c14df67b40a',1,'if():&#160;style.php'],['../theme_2redstrap_2php_2default_8php.html#a23bc1996b18e69c1a3ab44536613a762',1,'if():&#160;default.php'],['../redstrap_2php_2style_8php.html#a0c4684da834439885ae2285649d1aaea',1,'if():&#160;style.php']]],
   ['item_5fblocked',['ITEM_BLOCKED',['../boot_8php.html#ab28dc518fa90b6f617dd8c564eb4f35f',1,'boot.php']]],
   ['item_5fbuildblock',['ITEM_BUILDBLOCK',['../boot_8php.html#a7fc4b291a7cdaa48b38e27344ea183cf',1,'boot.php']]],
   ['item_5fdelayed_5fpublish',['ITEM_DELAYED_PUBLISH',['../boot_8php.html#ac890557fedc5b5a3b1d996249b1e1a20',1,'boot.php']]],
@@ -22,6 +22,7 @@ var searchData=
   ['item_5funseen',['ITEM_UNSEEN',['../boot_8php.html#a009e6a0637cb65804ea8094ecc4450b0',1,'boot.php']]],
   ['item_5fuplink',['ITEM_UPLINK',['../boot_8php.html#aefba06f1c0842036329033e7567ecf6d',1,'boot.php']]],
   ['item_5fuplink_5fprv',['ITEM_UPLINK_PRV',['../boot_8php.html#aad33b494084f729b6ee3b0bc457718a1',1,'boot.php']]],
+  ['item_5fverified',['ITEM_VERIFIED',['../boot_8php.html#a18a400fa45e5632811b33041d8c048bf',1,'boot.php']]],
   ['item_5fvisible',['ITEM_VISIBLE',['../boot_8php.html#ab55b16ae7fc19fafe5afaedd49163bbf',1,'boot.php']]],
   ['item_5fwall',['ITEM_WALL',['../boot_8php.html#a6788e99021ec8ffb0fa94d651f22a322',1,'boot.php']]],
   ['item_5fwebpage',['ITEM_WEBPAGE',['../boot_8php.html#af489d0c3166551b93e63a79ff2c9be35',1,'boot.php']]]
