@@ -115,6 +115,11 @@ function channel_content(&$a, $update = 0, $load = false) {
 	$perms = get_all_perms($a->profile['profile_uid'],$ob_hash);
 
 	if(! $perms['view_stream']) {
+			// We may want to make the target of this redirect configurable
+			if($perms['view_profile']) {
+				notice( t('Insufficient permissions.  Request redirected to profile page.') . EOL);
+				goaway (z_root() . "/profile/" . $a->profile['channel_address']);
+			}
 		notice( t('Permission denied.') . EOL);
 		return;
 	}
