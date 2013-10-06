@@ -250,12 +250,12 @@ function item_post(&$a) {
 		$location          = $orig_post['location'];
 		$coord             = $orig_post['coord'];
 		$verb              = $orig_post['verb'];
-		$app			   = $orig_post['app'];
+		$app               = $orig_post['app'];
 		$title             = escape_tags(trim($_REQUEST['title']));
 		$body              = $_REQUEST['body'];
 		$private           = $orig_post['item_private'];
 		$item_flags        = $orig_post['item_flags'];
-		$item_restrict     = $irog_post['item_restrict'];
+		$item_restrict     = $orig_post['item_restrict'];
 	}
 	else {
 
