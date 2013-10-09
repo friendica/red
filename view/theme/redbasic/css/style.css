@@ -909,6 +909,12 @@ footer {
 .wall-item-wrapper {
     margin-left:10px;
 }
+
+.wall-item-wrapper .icon-ok {
+	cursor: pointer;
+	color: darkgreen;
+}
+
 .wall-item-lock {
     left: 105px;
     position: absolute;
