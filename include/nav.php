@@ -141,11 +141,11 @@ EOT;
 
 	if(local_user()) {
 
-		$nav['network'] = array('network', t('Matrix'), "", t('Conversations from your grid'));
+		$nav['network'] = array('network', t('Matrix'), "", t('Conversations from your matrix'));
 		$nav['network']['all']=array('notifications/network', t('See all matrix notifications'), "", "");
 		$nav['network']['mark'] = array('', t('Mark all matrix notifications seen'), '','');
 
-		$nav['home'] = array('channel/' . $channel['channel_address'], t('Home'), "", t('Your posts and conversations'));
+		$nav['home'] = array('channel/' . $channel['channel_address'], t('Channel Home'), "", t('Your posts and conversations'));
 		$nav['home']['all']=array('notifications/channel', t('See all channel notifications'), "", "");
 		$nav['home']['mark'] = array('', t('Mark all channel notifications seen'), '','');
 

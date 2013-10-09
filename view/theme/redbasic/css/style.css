@@ -3114,7 +3114,7 @@ header {
 	font-size: 10px;
 	padding: 1px 3px;
 	top: 0px;
-	right: -10px;
+	right: -5px;
 	min-width: 15px;
 	text-align: right;
 }
@@ -3413,4 +3413,8 @@ margin-right: 50px;
 
 .comment-icon, .jot-icons {
 	font-size: 1.2em;
+}
+.nav-icon {
+	font-size: 1.4em;
+	margin-right: 15px;
 }
