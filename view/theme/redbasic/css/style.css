@@ -2032,33 +2032,29 @@ a.mail-list-link {
 
 #nav-searchbar {
 	float: right;
-	margin-top: 3px;
+	margin-top: 2px;
 }
 
 #nav-search-spinner {
 	float: right;
 	margin: 12px 12px 0px 0px;
+	color: #fff;
 }
 
-#nav-search-text:hover {
-	background-color: #FFF;
+#nav-search-text:hover,
+#nav-search-text:focus {
+	background-color: #fff;
 	color: #000; 
 }
 
 #nav-search-text {
-	margin-top: -1px;
-	font-size: 0.8em;
-	border-radius: 14px;
+	height: 20px;
+	padding: 0px 5px 0px 5px;
+	font-size: 0.9em;
+	border-radius: 10px;
 	border: none;
 	background-color: $search_background;
-	color: #eec; 
-}
-
-/* this doesn't seem to work */
-
-#nav-search-text::-moz-placeholder { color: #444; }
-#nav-search-text::-webkit-input-placeholder {
-	color: #444 !important;
+    	transition: background-color 300ms ease 0s;
 }
 
 #nav-user-linkmenu img {
