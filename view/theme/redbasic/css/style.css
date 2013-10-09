@@ -910,7 +910,7 @@ footer {
     margin-left:10px;
 }
 
-.wall-item-wrapper .icon-ok {
+.wall-item-ago .icon-ok {
 	cursor: pointer;
 	color: darkgreen;
 }
