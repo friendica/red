@@ -2043,9 +2043,8 @@ a.mail-list-link {
 
 #nav-search-text:hover,
 #nav-search-text:focus {
-	background-color: #FFF;
+	background-color: #fff;
 	color: #000; 
-	opacity: 1;
 }
 
 #nav-search-text {
@@ -2055,8 +2054,7 @@ a.mail-list-link {
 	border-radius: 10px;
 	border: none;
 	background-color: $search_background;
-	opacity: 0.7;
-    	transition: opacity 300ms ease 0s;
+    	transition: background-color 300ms ease 0s;
 }
 
 #nav-user-linkmenu img {
