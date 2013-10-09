@@ -75,7 +75,7 @@ class Item extends BaseObject {
 		$buttons = '';
 		$dropping = false;
 		$star = false;
-		$isstarred = "unstarred";
+		$isstarred = "unstarred icon-star-empty";
 		$indent = '';
 		$osparkle = '';
 		$total_children = $this->count_descendants();
@@ -147,7 +147,7 @@ class Item extends BaseObject {
 					'toggle' => t("toggle star status"),
 					'classdo' => (($item['item_flags'] & ITEM_STARRED) ? "hidden" : ""),
 					'classundo' => (($item['item_flags'] & ITEM_STARRED) ? "" : "hidden"),
-					'isstarred' => (($item['item_flags'] & ITEM_STARRED) ? "starred" : "unstarred"),
+					'isstarred' => (($item['item_flags'] & ITEM_STARRED) ? "starred icon-star" : "unstarred icon-star-empty"),
 					'starred' =>  t('starred'),
 				);
 

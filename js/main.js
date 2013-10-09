@@ -658,12 +658,16 @@ function updateConvItems(mode,data) {
 			if(data.result == 1) {
 				$('#starred-' + ident).addClass('starred');
 				$('#starred-' + ident).removeClass('unstarred');
+				$('#starred-' + ident).addClass('icon-star-full');
+				$('#starred-' + ident).removeClass('icon-star-empty');
 				$('#star-' + ident).addClass('hidden');
 				$('#unstar-' + ident).removeClass('hidden');
 			}
 			else {			
 				$('#starred-' + ident).addClass('unstarred');
 				$('#starred-' + ident).removeClass('starred');
+				$('#starred-' + ident).addClass('icon-star-empty');
+				$('#starred-' + ident).removeClass('icon-star-full');
 				$('#star-' + ident).removeClass('hidden');
 				$('#unstar-' + ident).addClass('hidden');
 			}

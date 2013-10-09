@@ -632,7 +632,7 @@ function conversation(&$a, $items, $mode, $update, $page_mode = 'traditional') {
 				);
 
 				$star = false;
-				$isstarred = "unstarred";
+				$isstarred = "unstarred icon-star-empty";
 				
 				$lock = false;
 				$likebuttons = false;

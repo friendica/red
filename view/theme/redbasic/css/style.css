@@ -916,6 +916,7 @@ footer {
 }
 
 .wall-item-lock {
+	font-size: 1.4em;
     left: 105px;
     position: absolute;
     top: 1px;	
@@ -944,6 +945,8 @@ footer {
 .item-tool {
 	float: left;
 	margin-right: 8px;
+	font-size: 1.2em;
+	cursor: pointer;
 }
 
 .like-rotator {
@@ -2694,11 +2697,14 @@ brain is weird like that */
 .on { background-position: -144px -32px; }
 
 .off { background-position: 0px -48px; }
-.starred { background-position: -16px -48px; }
-.unstarred { background-position: -32px -48px; }
+/*.starred { background-position: -16px -48px; }
+.unstarred { background-position: -32px -48px; }*/
 .tagged { background-position: -48px -48px; }
 .yellow { background-position: -64px -48px; }
 
+.starred {
+	color: gold;
+}
 
 .filer-icon {
 	display: block; width: 16px; height: 16px;
@@ -3403,4 +3409,8 @@ margin-right: 50px;
 
 .pmenu li {
 	margin-left: -20px;
+}
+
+.comment-icon, .jot-icons {
+	font-size: 1.2em;
 }
