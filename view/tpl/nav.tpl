@@ -136,7 +136,7 @@
 
 		<li id="nav-searchbar">		
 			<form method="get" action="search">
-				<input id="nav-search-text" type="text" value="" placeholder="{{$nav.search.1}}" name="search" title="{{$nav.search.3}}" onclick="this.submit();" />
+				<input class="icon-search" id="nav-search-text" type="text" value="" placeholder="&#xf002;" name="search" title="{{$nav.search.3}}" onclick="this.submit();" />
 			</form>
 		</li>
 		<div id="nav-search-spinner"></div>
