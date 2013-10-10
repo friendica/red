@@ -8,7 +8,7 @@
 
 /* generals */
 body {
-	font-family: arial,freesans,clean,sans-serif;
+	font-family: arial,freesans,sans-serif;
 	font-size: 12px;
 	background-color: #$background_colour;
 	background-image: url('$background_image');
@@ -18,7 +18,7 @@ body {
 	margin: 0px;
 }
 .jslider {
-	font-family: arial,freesans,clean,sans-serif;
+	font-family: arial,freesans,sans-serif;
 }
 
 abbr {
