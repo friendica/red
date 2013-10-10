@@ -55,10 +55,14 @@ function redbasic_form(&$a, $schema, $nav_colour, $background_colour, $backgroun
 		  'silver' => 'silver',	
 		);
 
+if(feature_enabled(local_user(),'expert')) 
+				$expert = 1;
+					
 	  $t = get_markup_template('theme_settings.tpl');
 	  $o .= replace_macros($t, array(
 		'$submit' => t('Submit'),
 		'$baseurl' => $a->get_baseurl(),
+		'$expert' => $expert,
 		'$title' => t("Theme settings"),
 		'$schema' => array('redbasic_schema', t('Set scheme'), $schema, '', $scheme_choices),
 		'$nav_colour' => array('redbasic_nav_colour', t('Navigation bar colour'), $nav_colour, '', $nav_colours),
