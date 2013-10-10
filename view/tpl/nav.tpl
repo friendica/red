@@ -29,14 +29,14 @@
 
 	{{if $nav.lock}}
 		<li id="nav-rmagic-link" class="nav-menu-icon" >
-			<a class="icon {{$nav.lock.2}}" href="{{$nav.lock.0}}" title="{{$nav.lock.3}}" >{{$nav.lock.1}}</a>
+			<i class="{{if $nav.locked}}icon-lock{{else}}icon-unlock{{/if}} fakelink nav-icon" onclick="window.location.href='{{$nav.lock.0}}'; return false;"  title="{{$nav.lock.3}}" ></i>
 		</li>
 	{{/if}}
 
 		
 	{{if $nav.network}}
 		<li id="nav-network-link" class="nav-menu {{$sel.network}}">
-			<a class="{{$nav.network.2}}" href="{{$nav.network.0}}" title="{{$nav.network.3}}" ><i class="icon-globe nav-icon"></i></a>
+			<a class="{{$nav.network.2}}" href="{{$nav.network.0}}" title="{{$nav.network.3}}" ><i class="icon-th nav-icon"></i></a>
 			<span id="net-update" class="nav-notify fakelink" rel="#nav-network-menu"></span>
 			<ul id="nav-network-menu" class="menu-popup notify-menus" rel="network">
 				<li id="nav-network-see-all"><a href="{{$nav.network.all.0}}">{{$nav.network.all.1}}</a></li>

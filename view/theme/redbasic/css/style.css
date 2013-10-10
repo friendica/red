@@ -2033,6 +2033,7 @@ a.mail-list-link {
 #nav-searchbar {
 	float: right;
 	margin-top: 2px;
+	margin-right: 10px;
 }
 
 #nav-search-spinner {
