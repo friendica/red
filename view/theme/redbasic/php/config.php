@@ -5,7 +5,7 @@ function theme_content(&$a) {
 
 	$schema = get_pconfig(local_user(),'redbasic', 'schema' );
 	$nav_colour = get_pconfig(local_user(),'redbasic', 'nav_colour' );
-	$background_colour = get_pconfig(local_user(),'redbasic', 'background_colour' );
+	$bgcolour = get_pconfig(local_user(),'redbasic', 'bgcolour' );
 	$background_image = get_pconfig(local_user(),'redbasic', 'background_image' );
 	$item_colour = get_pconfig(local_user(),'redbasic', 'item_colour' );
 	$item_opacity = get_pconfig(local_user(),'redbasic', 'item_opacity' );
@@ -13,7 +13,7 @@ function theme_content(&$a) {
 	$font_colour = get_pconfig(local_user(),'redbasic', 'font_colour' );
 	$radius = get_pconfig(local_user(),'redbasic', 'radius' );
 	$shadow = get_pconfig(local_user(),'redbasic', 'photo_shadow' );
-	return redbasic_form($a, $schema, $nav_colour, $background_colour, $background_image, $item_colour, $item_opacity, 
+	return redbasic_form($a, $schema, $nav_colour, $bgcolour, $background_image, $item_colour, $item_opacity, 
 		$font_size, $font_colour, $radius, $shadow);
 }
 
@@ -34,7 +34,7 @@ function theme_post(&$a) {
 	}
 }
 
-function redbasic_form(&$a, $schema, $nav_colour, $background_colour, $background_image, $item_colour, $item_opacity, 
+function redbasic_form(&$a, $schema, $nav_colour, $bgcolour, $background_image, $item_colour, $item_opacity, 
 		$font_size, $font_colour, $radius, $shadow) {
 
 	$scheme_choices = array();
@@ -66,7 +66,7 @@ if(feature_enabled(local_user(),'expert'))
 		'$title' => t("Theme settings"),
 		'$schema' => array('redbasic_schema', t('Set scheme'), $schema, '', $scheme_choices),
 		'$nav_colour' => array('redbasic_nav_colour', t('Navigation bar colour'), $nav_colour, '', $nav_colours),
-		'$background_colour' => array('redbasic_background_colour', t('Set the background colour'), $background_colour),
+		'$bgcolour' => array('redbasic_background_colour', t('Set the background colour'), $bgcolour),
 		'$background_image' => array('redbasic_background_image', t('Set the background image'), $background_image),
 		'$item_colour' => array('redbasic_item_colour', t('Set the background colour of items'), $item_colour),
 		'$item_opacity' => array('redbasic_item_opacity', t('Set the opacity of items'), $item_opacity),

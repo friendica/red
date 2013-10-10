@@ -5,7 +5,7 @@
 
 {{if $expert}}
 {{include file="field_select.tpl" field=$nav_colour}}
-{{include file="field_input.tpl" field=$background_colour}}
+{{include file="field_input.tpl" field=$bgcolour}}
 {{include file="field_input.tpl" field=$background_image}}
 {{include file="field_input.tpl" field=$item_colour}}
 {{include file="field_input.tpl" field=$item_opacity}}
