@@ -1239,7 +1239,13 @@ function check_config(&$a) {
 						$func = 'update_r' . $x;
 						$retval = $func();
 						if($retval) {
+							// Prevent sending hundreds of thousands of emails by creating
+							// a lockfile.  view/tpl/smarty3 is the only place we can
+							// guarantee the server can write to.
+							if (file_exists('view/tpl/smarty3/mailsent'))
+									return;
 							//send the administrator an e-mail
+							file_put_contents('view/tpl/smarty3/mailsent', $x);
 
 							$email_tpl = get_intltext_template("update_fail_eml.tpl");
 							$email_msg = replace_macros($email_tpl, array(
