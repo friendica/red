@@ -177,7 +177,7 @@ header #banner {
   text-align: center;
   font-size: 1.4em;
   font-family: tahoma, "Lucida Sans", sans;
-  color: #eec;
+  color: #FFF;
   font-weight: bold;
   margin-top: 1px;
 }
@@ -186,7 +186,7 @@ header #banner a:active,
 header #banner a:visited,
 header #banner a:link,
 header #banner a:hover {
-  color: #eec;
+  color: #FFF;
   text-decoration: none;
   outline: none;
   vertical-align: bottom;

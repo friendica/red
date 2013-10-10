@@ -66,21 +66,21 @@ $('.sidebar-group-element').hover(
 	);
 
 
-$('.savedsearchdrop').hover(
-	function() {
-		$(this).addClass('drop'); $(this).addClass('icon'); $(this).removeClass('iconspacer');},
-	function() {
-		$(this).removeClass('drop'); $(this).removeClass('icon'); $(this).addClass('iconspacer');}
-	);
+//$('.savedsearchdrop').hover(
+//	function() {
+//		$(this).addClass('drop'); $(this).addClass('icon'); $(this).removeClass('iconspacer');},
+//	function() {
+//		$(this).removeClass('drop'); $(this).removeClass('icon'); $(this).addClass('iconspacer');}
+//	);
 
 $('.savedsearchterm').hover(
 	function() {
 		id = $(this).attr('id');
-		$('#drop-' + id).addClass('icon'); 	$('#drop-' + id).addClass('drophide'); $('#drop-' + id).removeClass('iconspacer');},
+		$('#dropicon-' + id).addClass('searchdrop'); $('#dropicon-' + id).removeClass('iconspacer');},
 
 	function() {
 		id = $(this).attr('id');
-		$('#drop-' + id).removeClass('icon');$('#drop-' + id).removeClass('drophide'); $('#drop-' + id).addClass('iconspacer');}
+		$('#dropicon-' + id).removeClass('searchdrop'); $('#dropicon-' + id).addClass('iconspacer');}
 	);
 
 });

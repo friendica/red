@@ -581,11 +581,11 @@ function updateConvItems(mode,data) {
 
 
 	function imgbright(node) {
-		$(node).removeClass("drophide").addClass("drop");
+//		$(node).removeClass("drophide").addClass("drop");
 	}
 
 	function imgdull(node) {
-		$(node).removeClass("drop").addClass("drophide");
+//		$(node).removeClass("drop").addClass("drophide");
 	}
 
 	function notify_popup_loader(notifyType) {
