@@ -2653,6 +2653,15 @@ brain is weird like that */
  */
 .iconspacer {
 	display: block; width: 16px; height: 16px;
+/*	visibility: hidden; */
+}
+
+.iconspacer:hover {
+/*	visibility: visible; */
+}
+
+.wall-item-ago i {
+	font-size: 0.6em;
 }
 
 .icon {
