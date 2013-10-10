@@ -3,6 +3,7 @@
 function theme_content(&$a) {
 	if(!local_user()) { return;}
 
+	$schema = get_pconfig(local_user(),'redbasic', 'schema' );
 	$nav_colour = get_pconfig(local_user(),'redbasic', 'nav_colour' );
 	$background_colour = get_pconfig(local_user(),'redbasic', 'background_colour' );
 	$background_image = get_pconfig(local_user(),'redbasic', 'background_image' );
@@ -12,7 +13,7 @@ function theme_content(&$a) {
 	$font_colour = get_pconfig(local_user(),'redbasic', 'font_colour' );
 	$radius = get_pconfig(local_user(),'redbasic', 'radius' );
 	$shadow = get_pconfig(local_user(),'redbasic', 'photo_shadow' );
-	return redbasic_form($a, $nav_colour, $background_colour, $background_image, $item_colour, $item_opacity, 
+	return redbasic_form($a, $schema, $nav_colour, $background_colour, $background_image, $item_colour, $item_opacity, 
 		$font_size, $font_colour, $radius, $shadow);
 }
 
@@ -20,6 +21,7 @@ function theme_post(&$a) {
 	if(!local_user()) { return;}
 
 	if (isset($_POST['redbasic-settings-submit'])) {
+		set_pconfig(local_user(), 'redbasic', 'schema', $_POST['redbasic_schema']);
 		set_pconfig(local_user(), 'redbasic', 'nav_colour', $_POST['redbasic_nav_colour']);
 		set_pconfig(local_user(), 'redbasic', 'background_colour', $_POST['redbasic_background_colour']);
 		set_pconfig(local_user(), 'redbasic', 'background_image', $_POST['redbasic_background_image']);
@@ -32,9 +34,21 @@ function theme_post(&$a) {
 	}
 }
 
-function redbasic_form(&$a, $nav_colour, $background_colour, $background_image, $item_colour, $item_opacity, 
+function redbasic_form(&$a, $schema, $nav_colour, $background_colour, $background_image, $item_colour, $item_opacity, 
 		$font_size, $font_colour, $radius, $shadow) {
 
+	$scheme_choices = array();
+	$scheme_choices["---"] = t("Default");
+	$files = glob('view/theme/' . current_theme() . '/schema/*');
+	if($files) {
+		foreach($files as $file) {
+			$f = basename($file, ".php");
+			$scheme_name = $f;
+			$scheme_choices[$f] = $scheme_name;
+		}
+	}
+		
+		
 		$nav_colours = array (
 		  'red' => 'red',
 		  'black' => 'black',	
@@ -46,6 +60,7 @@ function redbasic_form(&$a, $nav_colour, $background_colour, $background_image, 
 		'$submit' => t('Submit'),
 		'$baseurl' => $a->get_baseurl(),
 		'$title' => t("Theme settings"),
+		'$schema' => array('redbasic_schema', t('Set scheme'), $schema, '', $scheme_choices),
 		'$nav_colour' => array('redbasic_nav_colour', t('Navigation bar colour'), $nav_colour, '', $nav_colours),
 		'$background_colour' => array('redbasic_background_colour', t('Set the background colour'), $background_colour),
 		'$background_image' => array('redbasic_background_image', t('Set the background image'), $background_image),
