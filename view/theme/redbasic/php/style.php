@@ -47,7 +47,7 @@
 		if (($schema) && ($schema != '---')) {
 			$schemefile = 'view/theme/' . current_theme() . '/schema/' . $schema . '.php';
 			require_once ($schemefile);
-		
+		}
 		// If we haven't got a schema, load the default.  We shouldn't touch this - we
 		// should leave it for admins to define for themselves.
 			if (! $schema) {
@@ -56,7 +56,7 @@
 				    require_once ($schemefile);
 				    }
 			}
-		}
+		
 		
 //Set some defaults - we have to do this after pulling owner settings, and we have to check for each setting
 //individually.  If we don't, we'll have problems if a user has set one, but not all options.
