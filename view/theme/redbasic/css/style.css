@@ -2936,6 +2936,11 @@ nav a:link {
 nav a:hover {
 	color: #0080FF;
 }
+nav .fakelink {
+  color: #ffffff;
+  text-decoration: none;
+  outline: none;
+}
 nav .fakelink:hover { text-decoration: none; }
 
 #profiles-menu li a {
