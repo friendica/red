@@ -8,17 +8,17 @@
 
 /* generals */
 body {
-	font-family: arial,freesans,clean,sans-serif;
+	font-family: arial,freesans,sans-serif;
 	font-size: 12px;
-	background-color: #$background_colour;
+	background-color: $bgcolour;
 	background-image: url('$background_image');
 	background-attachment: fixed;
 	background-size: cover;
-	color: #$font_colour;
+	color: $font_colour;
 	margin: 0px;
 }
 .jslider {
-	font-family: arial,freesans,clean,sans-serif;
+	font-family: arial,freesans,sans-serif;
 }
 
 abbr {
@@ -117,7 +117,7 @@ blockquote {
 	filter:alpha(opacity=100);
 }
 
-nav {background-image: linear-gradient(bottom, #$nav_bg_1 26%, #$nav_bg_2 82%);
+nav {background-image: linear-gradient(bottom, $nav_bg_1 26%, $nav_bg_2 82%);
 	      background-image: -o-linear-gradient(bottom, $nav_bg_1 26%, $nav_bg_2 82%);
 	      background-image: -moz-linear-gradient(bottom,$nav_bg_1 26%, $nav_bg_2 82%);
 	      background-image: -webkit-linear-gradient(bottom, $nav_bg_1 26%, $nav_bg_2 82%);
@@ -823,7 +823,7 @@ footer {
 	margin-top: 10px;
 	position: relative;
 	border-radius: $radiuspx;
-	background-color: #$item_colour;
+	background-color: $item_colour;
 	opacity: $item_opacity;
 }
 

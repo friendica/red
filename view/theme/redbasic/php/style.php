@@ -29,15 +29,35 @@
 					$search_background = '#EEEEEE';
 		}
 
-	    $background_colour = get_pconfig($uid, "redbasic", "background_colour");	
+// Load the owners pconfig
+	    $bgcolour = get_pconfig($uid, "redbasic", "background_colour");	
 	    $background_image = get_pconfig($uid, "redbasic", "background_image");	
 	    $item_colour = get_pconfig($uid, "redbasic", "item_colour");	
 	    $item_opacity = get_pconfig($uid, "redbasic", "item_opacity");	
 	    $font_size = get_pconfig($uid, "redbasic", "font_size");	
 	    $font_colour = get_pconfig($uid, "redbasic", "font_colour");	
 	    $radius = get_pconfig($uid, "redbasic", "radius");	
-		$shadow = get_pconfig($uid,"redbasic","photo_shadow");
+	    $shadow = get_pconfig($uid,"redbasic","photo_shadow");
 
+// Now load the scheme.  If a value is changed above, we'll keep the settings
+// If not, we'll keep those defined by the schema
+// Setting $scheme to '' wasn't working for some reason, so we'll check it's
+// not --- like the mobile theme does instead.
+
+		if (($schema) && ($schema != '---')) {
+			$schemefile = 'view/theme/' . current_theme() . '/schema/' . $schema . '.php';
+			require_once ($schemefile);
+		}
+		// If we haven't got a schema, load the default.  We shouldn't touch this - we
+		// should leave it for admins to define for themselves.
+			if (! $schema) {
+			      if(file_exists('view/theme/' . current_theme() . '/schema/default.php')) {
+				    $schemefile = 'view/theme/' . current_theme() . '/schema/' . 'default.php';
+				    require_once ($schemefile);
+				    }
+			}
+		
+		
 //Set some defaults - we have to do this after pulling owner settings, and we have to check for each setting
 //individually.  If we don't, we'll have problems if a user has set one, but not all options.
 
@@ -48,8 +68,8 @@
 			$nav_bg_3 = "#f00";
 			$nav_bg_4 = "#b00";
 		}
-	if (! $background_colour)
-		$background_colour = "fff";
+	if (! $bgcolour)
+		$bgcolour = "fff";
 	if (! $background_image)
 		$background_image ='';
 	if (! $item_colour)
@@ -77,7 +97,7 @@ $options = array (
 '$nav_bg_3' => $nav_bg_3,
 '$nav_bg_4' => $nav_bg_4,
 '$search_background' => $search_background,
-'$background_colour' => $background_colour,
+'$bgcolour' => $bgcolour,
 '$background_image' => $background_image,
 '$item_colour' => $item_colour,
 '$item_opacity' => $item_opacity,
