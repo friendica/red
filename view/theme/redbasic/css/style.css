@@ -3415,3 +3415,12 @@ margin-right: 50px;
 	font-size: 1.4em;
 	margin-right: 15px;
 }
+
+a .drop-icons {
+	color: #000000;
+	font-size: 1.2em;
+}
+ 
+.drop-icons:hover {
+	color: #FF0000;
+}
