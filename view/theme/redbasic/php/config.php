@@ -50,6 +50,7 @@ function redbasic_form(&$a, $schema, $nav_colour, $bgcolour, $background_image, 
 		
 		
 		$nav_colours = array (
+		  '' => 'Scheme Default',
 		  'red' => 'red',
 		  'black' => 'black',	
 		  'silver' => 'silver',	
