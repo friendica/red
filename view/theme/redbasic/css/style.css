@@ -3013,8 +3013,8 @@ nav .nav-notify {
   -moz-border-radius: $radiuspx;
   -webkit-border-radius: $radiuspx;
   border-radius: $radiuspx;
-  opacity: 0.6;
-  filter:alpha(opacity=60);
+/*  opacity: 0.6;
+  filter:alpha(opacity=60); */
 
 }
 .nav-notify:hover, nav .nav-notify.active span {
