@@ -192,7 +192,7 @@ function search_content(&$a,$update = 0, $load = false) {
 			$r = null;
 
 			if(local_user()) {
-				$r = q("SELECT distinct mid, item.* from item
+				$r = q("SELECT distinct mid, item.id as item_id, item.* from item
 					WHERE item_restrict = 0
 					AND (( `item`.`allow_cid` = ''  AND `item`.`allow_gid` = '' AND `item`.`deny_cid`  = '' AND `item`.`deny_gid`  = '' AND item_private = 0 ) 
 					OR ( `item`.`uid` = %d ))
@@ -204,7 +204,7 @@ function search_content(&$a,$update = 0, $load = false) {
 				);
 			}
 			if($r === null) {
-               $r = q("SELECT distinct mid, item.* from item
+               $r = q("SELECT distinct mid, item.id as item_id, item.* from item
                     WHERE item_restrict = 0
                     AND ((( `item`.`allow_cid` = ''  AND `item`.`allow_gid` = '' AND `item`.`deny_cid`  = ''
                     AND `item`.`deny_gid`  = '' AND item_private = 0 )
@@ -238,7 +238,7 @@ function search_content(&$a,$update = 0, $load = false) {
 		$items = array();
 	}
 
-
+//logger('mod_search: items ' . count($items));
 
 //	$r = q("SELECT distinct(`item`.`mid`), `item`.*, `item`.`id` AS `item_id`, 
 //		`contact`.`name`, `contact`.`photo`, `contact`.`url`, `contact`.`alias`, `contact`.`rel`,
