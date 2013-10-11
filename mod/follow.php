@@ -12,8 +12,9 @@ function follow_init(&$a) {
 	$uid = local_user();
 	$url = notags(trim($_REQUEST['url']));
 	$return_url = $_SESSION['return_url'];
+	$confirm = intval($_REQUEST['confirm']);
 
-	$result = new_contact($uid,$url,$a->get_channel(),true);
+	$result = new_contact($uid,$url,$a->get_channel(),true,$confirm);
 
 	if($result['success'] == false) {
 		if($result['message'])

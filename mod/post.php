@@ -127,6 +127,12 @@ function post_init(&$a) {
 				info(sprintf( t('Welcome %s. Remote authentication successful.'),$x[0]['xchan_name']));
 				logger('mod_zot: auth success from ' . $x[0]['xchan_addr'] . ' for ' . $webbie); 
 
+			} else {
+				logger('mod_zot: still not authenticated: ' . $x[0]['xchan_addr']);
+				q("update hubloc set hubloc_status =  (hubloc_status | %d ) where hubloc_addr = '%s'",
+				intval(HUBLOC_RECEIVE_ERROR),
+				$x[0][xchan_addr]
+				);
 			}
 
 // FIXME - we really want to save the return_url in the session before we visit rmagic.
@@ -168,13 +174,49 @@ function post_post(&$a) {
 	if(array_key_exists('iv',$data)) {
 		$data = aes_unencapsulate($data,get_config('system','prvkey'));
 		logger('mod_zot: decrypt1: ' . $data, LOGGER_DATA);
+
+//	susceptible to Bleichenbacher's attack
+//		if(! $data) {
+//			$ret['message'] = 'Decryption failed.';
+//			json_return_and_die($ret);
+//		}
+
 		$data = json_decode($data,true);
+
+	}
+
+	if(! $data) {
+
+		// possible Bleichenbacher's attack, just treat it as a 
+		// message we have no handler for. It should fail a bit 
+		// further along with "no hub". Our public key is public
+		// knowledge. There's no reason why anybody should get the 
+		// encryption wrong unless they're fishing or hacking. If 
+		// they're developing and made a goof, this can be discovered 
+		// in the logs of the destination site. If they're fishing or 
+		// hacking, the bottom line is we can't verify their hub. 
+		// That's all we're going to tell them.
+
+		$data = array('type' => 'bogus');
 	}
 
 	logger('mod_zot: decoded data: ' . print_r($data,true), LOGGER_DATA);
 
 	$msgtype = ((array_key_exists('type',$data)) ? $data['type'] : '');
 
+	if($msgtype === 'ping') {
+
+		// Useful to get a health check on a remote site.
+		// This will let us know if any important communication details
+		// that we may have stored are no longer valid, regardless of xchan details.
+ 
+		$ret['success'] = true;
+		$ret['site'] = array();
+		$ret['site']['url'] = z_root();
+		$ret['site']['url_sig'] = base64url_encode(rsa_sign(z_root(),get_config('system','prvkey')));
+		$ret['site']['sitekey'] = get_config('system','pubkey');
+		json_return_and_die($ret);
+	}
 
 	if($msgtype === 'pickup') {
 
@@ -297,12 +339,22 @@ function post_post(&$a) {
 		// (!!) this will validate the sender
 		$result = zot_register_hub($sender);
 
-		if((! $result['success']) || (! zot_gethub($sender))) {
+		if((! $result['success']) || (! ($hub = zot_gethub($sender)))) {
 			$ret['message'] = 'Hub not available.';
 			logger('mod_zot: no hub');
 			json_return_and_die($ret);
 		}
 	}
+
+
+	// Update our DB to show when we last communicated successfully with this hub
+	// This will allow us to prune dead hubs from using up resources
+
+	$r = q("update hubloc set hubloc_connected = '%s' where hubloc_id = %d limit 1",
+		dbesc(datetime_convert()),
+		intval($hub['hubloc_id'])
+	);
+
 
 	// TODO: check which hub is primary and take action if mismatched
 

@@ -33,3 +33,6 @@ report/
 
 #netbeans project folder
 nbproject
+
+#Kdevelop project files
+*.kdev4

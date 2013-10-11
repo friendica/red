@@ -41,20 +41,37 @@ function webpages_content(&$a) {
                 return;
         }
 
+		if(local_user() && local_user() == $owner) {
+			$a->set_widget('design',design_tools());
+		}
+
+
+		$mimetype = get_config('system','page_mimetype');
+		if(! $mimetype)
+			$mimetype = 'choose';
+
+		$layout = get_config('system','page_layout');
+		if(! $layout)
+			$layout = 'choose';
+
+
 // Create a status editor (for now - we'll need a WYSIWYG eventually) to create pages
 // Nickname is set to the observers xchan, and profile_uid to the owners.  This lets you post pages at other people's channels.
 require_once ('include/conversation.php');
 		$x = array(
-			'webpage' => 1,
+			'webpage' => ITEM_WEBPAGE,
 			'is_owner' => true,
 			'nickname' => $a->profile['channel_address'],
 			'lockstate' => (($group || $cid || $channel['channel_allow_cid'] || $channel['channel_allow_gid'] || $channel['channel_deny_cid'] || $channel['channel_deny_gid']) ? 'lock' : 'unlock'),
 			'bang' => (($group || $cid) ? '!' : ''),
 			'visitor' => 'block',
 			'profile_uid' => intval($owner),
+			'mimetype' => $mimetype,			
+			'layout' => $layout,
 		);
 
 		$o .= status_editor($a,$x);
+
 
 //Get a list of webpages.  We can't display all them because endless scroll makes that unusable, so just list titles and an edit link.
 //TODO - this should be replaced with pagelist_widget

@@ -7,12 +7,12 @@
 {{if $tools}}
 <a id="photo-toprofile-link" href="{{$tools.profile.0}}">{{$tools.profile.1}}</a>
 {{/if}}
-{{if $lock}} | <img src="images/lock_icon.gif" class="lockview" alt="{{$lock}}" onclick="lockview(event,'photo/{{$id}}');" /> {{/if}}
+{{if $lock}} | <i class="lockview icon-lock" title="{{$lock}}" onclick="lockview(event,'photo/{{$id}}');" ></i> {{/if}}
 </div>
 
-{{if $prevlink}}<div id="photo-prev-link"><a href="{{$prevlink.0}}">{{$prevlink.1}}</a></div>{{/if}}
+{{if $prevlink}}<div id="photo-prev-link"><a href="{{$prevlink.0}}"><i class="icon-backward photo-icons"></i></div>{{/if}}
 <div id="photo-photo"><a href="{{$photo.href}}" title="{{$photo.title}}" rel="prettyPhoto"><img src="{{$photo.src}}" /></a></div>
-{{if $nextlink}}<div id="photo-next-link"><a href="{{$nextlink.0}}">{{$nextlink.1}}</a></div>{{/if}}
+{{if $nextlink}}<div id="photo-next-link"><a href="{{$nextlink.0}}"><i class="icon-forward photo-icons"></i></a></div>{{/if}}
 <div id="photo-photo-end"></div>
 <div id="photo-caption">{{$desc}}</div>
 {{if $tags}}

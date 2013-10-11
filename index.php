@@ -1,4 +1,4 @@
-<?php
+<?php /** @file */
 
 /**
  *
@@ -50,7 +50,7 @@ if(! $install) {
 	load_config('system');
 	load_config('feature');
 
-	require_once("session.php");
+	require_once("include/session.php");
 	load_hooks();
 	call_hooks('init_1');
 	
@@ -102,7 +102,7 @@ if((x($_GET,'zid')) && (! $install)) {
 }
 
 if((x($_SESSION,'authenticated')) || (x($_POST,'auth-params')) || ($a->module === 'login'))
-	require("auth.php");
+	require("include/auth.php");
 
 
 if(! x($_SESSION,'sysmsg'))

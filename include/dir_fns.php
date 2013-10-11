@@ -13,7 +13,7 @@ function sync_directories($dirmode) {
 		return;
 
 	$r = q("select * from site where (site_flags & %d) and site_url != '%s'",
-		intval(DIRECTORY_MODE_PRIMARY),
+		intval(DIRECTORY_MODE_PRIMARY|DIRECTORY_MODE_SECONDARY),
 		dbesc(z_root())
 	);
 
@@ -34,16 +34,74 @@ function sync_directories($dirmode) {
 			dbesc($r[0]['site_directory'])
 		);
 
+		$r = q("select * from site where (site_flags & %d) and site_url != '%s'",
+			intval(DIRECTORY_MODE_PRIMARY|DIRECTORY_MODE_SECONDARY),
+			dbesc(z_root())
+		);
+
 	} 
+	if(! $r)
+		return;
 
+	foreach($r as $rr) {
+		if(! $rr['site_directory'])
+			continue;
+		$x = z_fetch_url($rr['site_directory'] . '?f=&sync=' . urlencode($rr['site_sync']));
+		if(! $x['success'])
+			continue;
+		$j = json_decode($x['body'],true);
+		if((! $j['transactions']) || (! is_array($j['transactions'])))
+			continue;
 
+		q("update site set site_sync = '%s' where site_url = '%s' limit 1",
+			dbesc(datetime_convert()),
+			dbesc($rr['site_url'])
+		);
 
+		logger('sync_directories: ' . $rr['site_url'] . ': ' . print_r($j,true), LOGGER_DATA);
 
-
-
+		if(count($j['transactions'])) {
+			foreach($j['transactions'] as $t) {
+				$r = q("select * from updates where ud_guid = '%s' limit 1",
+					dbesc($t['transaction_id'])
+				);
+				if($r)
+					continue;
+				$ud_flags = 0;
+				if(is_array($t['flags']) && in_array('deleted',$t['flags']))
+					$ud_flags |= UPDATE_FLAGS_DELETED;
+				$z = q("insert into updates ( ud_hash, ud_guid, ud_date, ud_flags, ud_addr )
+					values ( '%s', '%s', '%s', '%d, '%s' ) ",
+					dbesc($t['hash']),
+					dbesc($t['transaction_id']),
+					dbesc($t['timestamp']),
+					intval($ud_flags),
+					dbesc($t['address'])
+				);
+			}
+		}
+	}
 }
 
 
+function update_directory_entry($ud) {
+
+	logger('update_directory_entry: ' . print_r($ud,true), LOGGER_DATA);
+
+	if($ud['ud_addr'] && (! ($ud['ud_flags'] & UPDATE_FLAGS_DELETED))) {
+		$x = zot_finger($ud['ud_addr'],'');
+		if($x['success']) {
+			$j = json_decode($x['body'],true);
+			$y = import_xchan($j,0);
+		}
+		else {
+			$r = q("update updates set ud_last = '%s' where ud_addr = '%s'",
+				dbesc(datetime_convert()),
+				dbesc($ud['ud_addr'])
+			);
+		}
+	}
+}
 
 
 

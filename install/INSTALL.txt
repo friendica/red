@@ -80,6 +80,13 @@ directory/path component in the URL) is REQUIRED.
 
         chmod 777 view/tpl/smarty3
 
+		[This permission (777) is very dangerous and if you have sufficient
+		privilege and knowledge you should make this directory writeable only
+		by the webserver. In many shared hosting environments this may be
+		difficult without opening a trouble ticket with your provider. The
+		above permissions will allow the software to work, but are not
+		optimal.]
+ 
     - For installing addons
 
         - First you should be **on** your website folder
@@ -95,6 +102,24 @@ directory/path component in the URL) is REQUIRED.
             cd mywebsite/addon
 
 			git pull
+
+	- If you wish to use WebDAV file services
+
+        - First you should be **on** your website folder
+
+            cd mywebsite
+
+        - Then you should clone the sabre-dav repository (separately)
+
+            git clone https://github.com/fruux/sabre-dav sabre
+
+        - For keeping the sabre tree updated, you should be on you sabre tree and issue a git pull
+
+            cd mywebsite/sabre
+
+			git pull
+
+
 
 
 3. Create an empty database and note the access details (hostname, username, 

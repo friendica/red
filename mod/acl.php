@@ -51,7 +51,7 @@ function acl_init(&$a){
 		$r = q("SELECT COUNT(abook_id) AS c FROM abook left join xchan on abook_xchan = xchan_hash 
 				WHERE abook_channel = %d AND not ( abook_flags & %d ) $sql_extra2" ,
 			intval(local_user()),
-			intval(ABOOK_FLAG_SELF|ABOOK_FLAG_BLOCKED|ABOOK_FLAG_PENDING|ABOOK_FLAG_ARCHIVE)
+			intval(ABOOK_FLAG_SELF|ABOOK_FLAG_BLOCKED|ABOOK_FLAG_PENDING|ABOOK_FLAG_ARCHIVED)
 		);
 		$contact_count = (int)$r[0]['c'];
 	} 
@@ -77,9 +77,8 @@ function acl_init(&$a){
 
 		// autocomplete for Contacts
 
-		$r = q("SELECT COUNT(`id`) AS c FROM `contact` 
-				WHERE `uid` = %d AND `self` = 0 
-				AND `pending` = 0 $sql_extra2" ,
+		$r = q("SELECT COUNT(abook_id) AS c FROM abook left join xchan on abook_xchan = xchan_hash 
+				WHERE abook_channel = %d $sql_extra2" ,
 			intval(local_user())
 		);
 		$contact_count = (int)$r[0]['c'];
@@ -128,7 +127,7 @@ function acl_init(&$a){
 				FROM abook left join xchan on abook_xchan = xchan_hash 
 				WHERE abook_channel = %d AND not ( abook_flags & %d ) $sql_extra2 order by xchan_name asc" ,
 			intval(local_user()),
-			intval(ABOOK_FLAG_SELF|ABOOK_FLAG_BLOCKED|ABOOK_FLAG_PENDING|ABOOK_FLAG_ARCHIVE)
+			intval(ABOOK_FLAG_SELF|ABOOK_FLAG_BLOCKED|ABOOK_FLAG_PENDING|ABOOK_FLAG_ARCHIVED)
 		);
 	}
 	elseif($type == 'm') {

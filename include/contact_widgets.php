@@ -1,12 +1,27 @@
 <?php /** @file */
 
 function follow_widget() {
-
+	$a = get_app();
+	$uid =$a->channel['channel_id'];
+	$r = q("select count(*) as total from abook where abook_channel = %d and not (abook_flags & %d) ",
+		intval($uid),
+		intval(ABOOK_FLAG_SELF)
+	);
+	if($r)
+		$total_channels = $r[0]['total'];	
+	$limit = service_class_fetch($uid,'total_channels');
+	if($limit !== false) {
+			$abook_usage_message = sprintf( t("You have %1$.0f of %2$.0f allowed connections."), $total_channels, $limit);
+	}
+	else {
+			$abook_usage_message = '';
+ 	}
 	return replace_macros(get_markup_template('follow.tpl'),array(
 		'$connect' => t('Add New Connection'),
 		'$desc' => t('Enter the channel address'),
 		'$hint' => t('Example: bob@example.com, http://example.com/barbara'),
-		'$follow' => t('Connect')
+		'$follow' => t('Connect'),
+		'$abook_usage_message' => $abook_usage_message
 	));
 
 }
@@ -32,7 +47,7 @@ function findpeople_widget() {
 		'$hint' => t('Examples: Robert Morgenstein, Fishing'),
 		'$findthem' => t('Find'),
 		'$suggest' => t('Channel Suggestions'),
-		'$similar' => t('Similar Interests'),
+		'$similar' => '', // FIXME and uncomment when mod/match working // t('Similar Interests'),
 		'$random' => t('Random Profile'),
 		'$inv' => t('Invite Friends')
 	));
@@ -70,15 +85,22 @@ function fileas_widget($baseurl,$selected = '') {
 
 function categories_widget($baseurl,$selected = '') {
 
+	$a = get_app();
+	
 	if(! feature_enabled($a->profile['profile_uid'],'categories'))
 		return '';
 
-	$a = get_app();
-
 	$terms = array();
-	$r = q("select distinct(term) from term where uid = %d and type = %d order by term asc",
+	$r = q("select distinct(term.term)
+                from term join item on term.oid = item.id
+                where item.uid = %d
+                and term.uid = item.uid
+                and term.type = %d
+                and item.author_xchan = '%s'
+                order by term.term asc",
 		intval($a->profile['profile_uid']),
-		intval(TERM_CATEGORY)
+	        intval(TERM_CATEGORY),
+	        dbesc($a->profile['channel_hash'])
 	);
 	if($r && count($r)) {
 		foreach($r as $rr)

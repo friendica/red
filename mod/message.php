@@ -273,6 +273,11 @@ function message_content(&$a) {
 
 		$prefill = (($preselect) ? $prename  : '');
 
+		if(! $prefill) {
+			if(array_key_exists('to',$_REQUEST))
+				$prefill = $_REQUEST['to'];
+		}
+
 		// the ugly select box
 		
 		$select = contact_select('messageto','message-to-select', $preselect, 4, true, false, false, 10);

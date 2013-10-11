@@ -11,7 +11,7 @@
 
 require_once('include/zot.php');
 
-function new_contact($uid,$url,$channel,$interactive = false) {
+function new_contact($uid,$url,$channel,$interactive = false, $confirm = false) {
 
 	$result = array('success' => false,'message' => '');
 
@@ -59,6 +59,11 @@ function new_contact($uid,$url,$channel,$interactive = false) {
 		logger('mod_follow: ' . $result['message']);
 		return $result;
 	}
+
+	// Premium channel, set confirm before callback to avoid recursion
+
+	if(array_key_exists('connect_url',$j) && (! $confirm))
+		goaway(zid($j['connect_url']));
 
 
 	// check service class limits

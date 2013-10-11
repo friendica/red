@@ -16,8 +16,10 @@ var dir_d44c64559bbebec7f509842c48db8b23 =
     [ "cache.php", "cache_8php.html", [
       [ "Cache", "classCache.html", null ]
     ] ],
+    [ "chanman.php", "include_2chanman_8php.html", "include_2chanman_8php" ],
     [ "cli_startup.php", "cli__startup_8php.html", "cli__startup_8php" ],
     [ "cli_suggest.php", "cli__suggest_8php.html", "cli__suggest_8php" ],
+    [ "comanche.php", "comanche_8php.html", "comanche_8php" ],
     [ "config.php", "include_2config_8php.html", "include_2config_8php" ],
     [ "Contact.php", "Contact_8php.html", "Contact_8php" ],
     [ "contact_selectors.php", "contact__selectors_8php.html", "contact__selectors_8php" ],
@@ -62,6 +64,7 @@ var dir_d44c64559bbebec7f509842c48db8b23 =
     [ "notify.php", "include_2notify_8php.html", "include_2notify_8php" ],
     [ "oauth.php", "oauth_8php.html", "oauth_8php" ],
     [ "oembed.php", "include_2oembed_8php.html", "include_2oembed_8php" ],
+    [ "onedirsync.php", "onedirsync_8php.html", "onedirsync_8php" ],
     [ "onepoll.php", "onepoll_8php.html", "onepoll_8php" ],
     [ "page_widgets.php", "page__widgets_8php.html", "page__widgets_8php" ],
     [ "permissions.php", "permissions_8php.html", "permissions_8php" ],

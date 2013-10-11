@@ -3,7 +3,7 @@ $(document).ready(function() {
 	a = $("#search-text").autocomplete({ 
 		serviceUrl: baseurl + '/search_ac',
 		minChars: 2,
-		width: 350,
+		width: 250,
 	});
 }); 
 

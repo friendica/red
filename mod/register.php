@@ -64,6 +64,12 @@ function register_post(&$a) {
 			break;
 	}
 
+
+	if((! $_POST['password']) || ($_POST['password'] !== $_POST['password2'])) {
+		notice( t('Passwords do not match.') . EOL);
+		return;
+	}
+
 	$arr = $_POST;
 	$arr['account_flags'] = $flags;
 

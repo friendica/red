@@ -47,16 +47,22 @@ $a->config['system']['admin_email'] = '{{$adminmail}}';
 
 
 // Site access restrictions. By default we will create private sites.
-// Your choices are ACCESS_PRIVATE, ACCESS_PAID, and ACCESS_FREE.
+// Your choices are ACCESS_PRIVATE, ACCESS_PAID, ACCESS_TIERED, and ACCESS_FREE.
 // If you leave REGISTER_OPEN above, anybody may register on your
 // site, however your site will not be listed anywhere as an open
 // registration  hub. We will use the system access policy (below) 
 // to determine whether or not to list your site in the directory 
 // as an open hub where anybody may create accounts. Your choice of 
-// paid or free determines how these listings will be presented.  
+// paid, tiered, or free determines how these listings will be presented.  
+
 
 $a->config['system']['access_policy'] = ACCESS_PRIVATE;
 
+// If you operate a public site, you might wish that people are directed
+// to a "sellpage" where you can describe for features or policies or service plans in depth.
+// This must be an absolute URL beginning with http:// or https:// .
+
+$a->config['system']['sellpage'] = '';
 
 // Maximum size of an imported message, 0 is unlimited
 

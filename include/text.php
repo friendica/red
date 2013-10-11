@@ -81,6 +81,34 @@ function escape_tags($string) {
 }
 
 
+function z_input_filter($channel_id,$s,$type = 'text/bbcode') {
+
+	if($type === 'text/bbcode')
+		return escape_tags($s);
+	if($type === 'text/markdown')
+		return escape_tags($s);
+	if($type == 'text/plain')
+		return escape_tags($s);
+	$r = q("select account_id, account_roles from account left join channel on channel_account_id = account_id where channel_id = %d limit 1",
+		intval($channel_id)
+	);
+	if($r && ($r[0]['account_roles'] & ACCOUNT_ROLE_ALLOWCODE)) {
+		if(local_user() && (get_account_id() == $r[0]['account_id'])) {
+			return $s;
+		}
+	}
+
+	if($type === 'text/html')
+		return purify_html($s);
+
+	return escape_tags($s);
+	
+}
+
+
+
+
+
 function purify_html($s) {
 	require_once('library/HTMLPurifier.auto.php');
 	require_once('include/html2bbcode.php');
@@ -698,7 +726,7 @@ function search($s,$id='search-box',$url='/search',$save = false) {
 	$a = get_app();
 	$o  = '<div id="' . $id . '">';
 	$o .= '<form action="' . $a->get_baseurl((stristr($url,'network')) ? true : false) . $url . '" method="get" >';
-	$o .= '<input type="text" name="search" id="search-text" placeholder="' . t('Search') . '" value="' . $s .'" />';
+	$o .= '<input type="text" class="icon-search" name="search" id="search-text" placeholder="&#xf002;" value="' . $s .'" onclick="this.submit();" />';
 	$o .= '<input type="submit" name="submit" id="search-submit" value="' . t('Search') . '" />'; 
 	if($save)
 		$o .= '<input type="submit" name="save" id="search-save" value="' . t('Save') . '" />'; 
@@ -976,6 +1004,17 @@ function link_compare($a,$b) {
 // If attach is true, also add icons for item attachments
 
 
+function unobscure(&$item) {
+	if(array_key_exists('item_flags',$item) && ($item['item_flags'] & ITEM_OBSCURED)) {
+		$key = get_config('system','prvkey');
+		if($item['title'])
+			$item['title'] = aes_unencapsulate(json_decode_plus($item['title']),$key);
+		if($item['body'])
+			$item['body'] = aes_unencapsulate(json_decode_plus($item['body']),$key);
+	}
+
+}
+
 
 function prepare_body(&$item,$attach = false) {
 
@@ -985,13 +1024,7 @@ function prepare_body(&$item,$attach = false) {
 
 	call_hooks('prepare_body_init', $item); 
 
-	if(array_key_exists('item_flags',$item) && ($item['item_flags'] & ITEM_OBSCURED)) {
-		$key = get_config('system','prvkey');
-		if($item['title'])
-			$item['title'] = aes_unencapsulate(json_decode_plus($item['title']),$key);
-		if($item['body'])
-			$item['body'] = aes_unencapsulate(json_decode_plus($item['body']),$key);
-	}
+	unobscure($item);
 
 	$s = prepare_text($item['body'],$item['mimetype']);
 
@@ -1127,6 +1160,7 @@ function prepare_body(&$item,$attach = false) {
 function prepare_text($text,$content_type = 'text/bbcode') {
 
 
+
 	switch($content_type) {
 
 		case 'text/plain':
@@ -1170,6 +1204,8 @@ function prepare_text($text,$content_type = 'text/bbcode') {
 			$s = zidify_links($s);
 			break;
 	}
+
+//logger('prepare_text: ' . $s);
 
 	return $s;
 }
@@ -1276,7 +1312,7 @@ function get_plink($item) {
 	$a = get_app();	
 	if (x($item,'plink') && ($item['item_private'] != 1)) {
 		return array(
-			'href' => $item['plink'],
+			'href' => zid($item['plink']),
 			'title' => t('link to source'),
 		);
 	} 
@@ -1290,7 +1326,62 @@ function unamp($s) {
 	return str_replace('&amp;', '&', $s);
 }
 
+function layout_select($channel_id, $current = '') {
+	$r = q("select mid,sid from item left join item_id on iid = item.id where service = 'PDL' and item.uid = item_id.uid and item_id.uid = %d and (item_restrict & %d)",
+		intval($channel_id),
+		intval(ITEM_PDL)
+	);
+	if($r) {
+		$o = t('Select a page layout: ');
+		$o .= '<select name="layout_mid" id="select-layout_mid" >';
+		$empty_selected = (($current === '') ? ' selected="selected" ' : '');
+		$o .= '<option value="" ' . $empty_selected . '>' . t('default') . '</option>';
+		foreach($r as $rr) {
+			$selected = (($rr['mid'] == $current) ? ' selected="selected" ' : '');
+			$o .= '<option value="' . $rr['mid'] . '"' . $selected . '>' . $rr['sid'] . '</option>';
+		}
+		$o .= '</select>';
+	}
 
+	return $o;
+}
+
+
+
+
+
+function mimetype_select($channel_id, $current = 'text/bbcode') {
+
+	$x = array(
+		'text/bbcode',
+		'text/html',
+		'text/markdown',
+		'text/plain'
+	);
+
+	$r = q("select account_id, account_roles from account left join channel on account_id = channel_account_id where
+		channel_id = %d limit 1",
+		intval($channel_id)
+	);
+
+	if($r) {
+		if($r[0]['account_roles'] & ACCOUNT_ROLE_ALLOWCODE) {
+			if(local_user() && get_account_id() == $r[0]['account_id'])
+				$x[] = 'application/x-php';
+		}
+	}
+
+	$o = t('Page content type: ');
+	$o .= '<select name="mimetype" id="mimetype-select">';
+	foreach($x as $y) {
+		$select = (($y == $current)	? ' selected="selected" ' : '');
+		$o .= '<option name="' . $y . '"' . $select . '>' . $y . '</option>';
+	}
+	$o .= '</select>';
+
+	return $o;
+
+}
 
 
 
@@ -1741,3 +1832,26 @@ function json_decode_plus($s) {
 	return $x;	
 
 }
+
+
+function design_tools() {
+$channel  = get_app()->get_channel();
+$who = $channel['channel_address'];
+
+return replace_macros(get_markup_template('design_tools.tpl'), array(
+                        '$title' => t('Design'),
+			'$who' => $who,
+                      	'$blocks' => t('Blocks'),
+			'$menus' => t('Menus'),
+			'$layout' => t('Layouts'),
+			'$pages' => t('Pages')
+                        ));
+
+}
+
+/* case insensitive in_array() */
+
+function in_arrayi($needle, $haystack) {
+	return in_array(strtolower($needle), array_map('strtolower', $haystack));
+}
+

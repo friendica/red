@@ -1,3 +1,4 @@
+<div class="generic-content-wrapper">
 <h1>{{$ptitle}}</h1>
 
 {{$nickname_block}}
@@ -12,6 +13,7 @@
 {{include file="field_input.tpl" field=$defloc}}
 {{include file="field_checkbox.tpl" field=$allowloc}}
 
+{{include file="field_checkbox.tpl" field=$adult}}
 
 <div class="settings-submit-wrapper" >
 <input type="submit" name="submit" class="settings-submit" value="{{$submit}}" />
@@ -100,9 +102,9 @@
 <div id="settings-notifications">
 
 <div id="settings-activity-desc">{{$activity_options}}</div>
-
-{{include file="field_checkbox.tpl" field=$post_newfriend}}
-{{include file="field_checkbox.tpl" field=$post_joingroup}}
+{{*the next two aren't yet implemented *}}
+{{*include file="field_checkbox.tpl" field=$post_newfriend*}}
+{{*include file="field_checkbox.tpl" field=$post_joingroup*}}
 {{include file="field_checkbox.tpl" field=$post_profilechange}}
 
 
@@ -125,3 +127,4 @@
 <input type="submit" name="submit" class="settings-submit" value="{{$submit}}" />
 </div>
 
+</div>

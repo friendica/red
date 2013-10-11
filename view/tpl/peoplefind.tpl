@@ -1,10 +1,12 @@
 <div id="peoplefind-sidebar" class="widget">
 	<h3>{{$findpeople}}</h3>
 	<div id="peoplefind-desc">{{$desc}}</div>
-	<form action="dirfind" method="post" />
+	<form action="directory" method="post" />
 		<input id="side-peoplefind-url" type="text" name="search" size="24" title="{{$hint}}" /><input id="side-peoplefind-submit" type="submit" name="submit" value="{{$findthem}}" />
 	</form>
+	{{if $similar}}
 	<div class="side-link" id="side-match-link"><a href="match" >{{$similar}}</a></div>
+	{{/if}}
 	<div class="side-link" id="side-suggest-link"><a href="suggest" >{{$suggest}}</a></div>
 	<div class="side-link" id="side-random-profile-link" ><a href="randprof" >{{$random}}</a></div>
 	{{if $inv}} 

@@ -70,7 +70,7 @@ class dba_mysqli extends dba_driver {
 	function close() {
 		if($this->db)
 			$this->db->close();
-		$this->connected = flase;
+		$this->connected = false;
 	}
 
 }

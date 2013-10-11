@@ -84,7 +84,9 @@ function mood_init(&$a) {
 	$arr['verb']          = $activity;
 	$arr['body']          = $action;
 
-	$item_id = item_store($arr);
+	$post = item_store($arr);
+	$item_id = $post['item_id'];
+
 	if($item_id) {
 //		q("UPDATE `item` SET `plink` = '%s' WHERE `uid` = %d AND `id` = %d LIMIT 1",
 //			dbesc($a->get_baseurl() . '/display/' . $poster['nickname'] . '/' . $item_id),

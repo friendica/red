@@ -730,9 +730,10 @@ require_once('include/photos.php');
 					$in_reply_to_user_id = $user_info['id'];
 					$in_reply_to_screen_name = $user_info['screen_name'];
 				}
-			}  
+			}
+			unobscure($lastwall);  
 			$status_info = array(
-				'text' => html2plain(bbcode($lastwall['body']), 0),
+				'text' => html2plain(prepare_text($lastwall['body'],$lastwall['mimetype']), 0),
 				'truncated' => false,
 				'created_at' => api_date($lastwall['created']),
 				'in_reply_to_status_id' => $in_reply_to_status_id,
@@ -803,8 +804,9 @@ require_once('include/photos.php');
 					$in_reply_to_screen_name = $user_info['screen_name'];
 				}
 			}  
+			unobscure($lastwall);
 			$user_info['status'] = array(
-				'text' => html2plain(bbcode($lastwall['body']), 0),
+				'text' => html2plain(prepare_text($lastwall['body'],$lastwall['mimetype']), 0),
 				'truncated' => false,
 				'created_at' => api_date($lastwall['created']),
 				'in_reply_to_status_id' => $in_reply_to_status_id,
@@ -1369,19 +1371,19 @@ require_once('include/photos.php');
 				'recipient_screen_name' => $recipient['screen_name'],
 				'recipient'             => $recipient,
 		);
-
+		unobscure($item);
 		//don't send title to regular StatusNET requests to avoid confusing these apps
 		if (x($_GET, 'getText')) {
 			$ret['title'] = $item['title'] ;
 			if ($_GET["getText"] == "html") {
-				$ret['text'] = bbcode($item['body']);
+				$ret['text'] = prepare_text($item['body'],$item['mimetype']);
 			}
 			elseif ($_GET["getText"] == "plain") {
-				$ret['text'] = html2plain(bbcode($item['body']), 0);
+				$ret['text'] = html2plain(prepare_text($item['body'],$item['mimetype']), 0);
 			}
 		}
 		else {
-			$ret['text'] = $item['title']."\n".html2plain(bbcode($item['body']), 0);
+			$ret['text'] = $item['title']."\n".html2plain(prepare_text($item['body'],$item['mimetype']), 0);
 		}
 		if (isset($_GET["getUserObjects"]) && $_GET["getUserObjects"] == "false") {
 			unset($ret['sender']);
@@ -1425,9 +1427,9 @@ require_once('include/photos.php');
 				$in_reply_to_user_id = 0;
 				$in_reply_to_status_id = 0;
 			}
-
+			unobscure($item);
 			// Workaround for ostatus messages where the title is identically to the body
-			$statusbody = trim(html2plain(bbcode($item['body']), 0));
+			$statusbody = trim(html2plain(prepare_text($item['body'],$item['mimetype']), 0));
 			$statustitle = trim($item['title']);
 
 			if (($statustitle != '') and (strpos($statusbody, $statustitle) !== false))
@@ -1448,7 +1450,7 @@ require_once('include/photos.php');
 				'geo'                       => '',
 				'favorited'                 => (($item['item_flags'] & ITEM_STARRED) ? true : false),
 				'user'                      =>  $status_user ,
-				'statusnet_html'		    => trim(bbcode($item['body'])),
+				'statusnet_html'		    => trim(prepare_text($item['body']),$item['mimetype']),
 				'statusnet_conversation_id'	=> $item['parent'],
 			);
 
@@ -1823,9 +1825,13 @@ require_once('include/photos.php');
 	function api_oauth_request_token(&$a, $type){
 		try{
 			$oauth = new FKOAuth1();
-			$r = $oauth->fetch_request_token(OAuthRequest::from_request());
+			$req = OAuthRequest::from_request();
+logger('Req: ' . var_export($req,true));
+			$r = $oauth->fetch_request_token($req);
 		}catch(Exception $e){
-			echo "error=". OAuthUtil::urlencode_rfc3986($e->getMessage()); killme();
+			logger('oauth_exception: ' . print_r($e->getMessage(),true));
+			echo "error=". OAuthUtil::urlencode_rfc3986($e->getMessage()); 
+			killme();
 		}
 		echo $r;
 		killme();	
@@ -1833,7 +1839,8 @@ require_once('include/photos.php');
 	function api_oauth_access_token(&$a, $type){
 		try{
 			$oauth = new FKOAuth1();
-			$r = $oauth->fetch_access_token(OAuthRequest::from_request());
+			$req = OAuthRequest::from_request();
+			$r = $oauth->fetch_access_token($req);
 		}catch(Exception $e){
 			echo "error=". OAuthUtil::urlencode_rfc3986($e->getMessage()); killme();
 		}

@@ -178,6 +178,8 @@ Functions</h2></td></tr>
 <tr class="separator:ab1bce4261bcf75ad62753b498a144d17"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a88c6cf7649ac836fbbed82a7a0315110"><td class="memItemLeft" align="right" valign="top">&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="items_8php.html#a88c6cf7649ac836fbbed82a7a0315110">tgroup_check</a> ($uid, $item)</td></tr>
 <tr class="separator:a88c6cf7649ac836fbbed82a7a0315110"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a87ac9e359591721a824ecd23bbb56296"><td class="memItemLeft" align="right" valign="top">&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="items_8php.html#a87ac9e359591721a824ecd23bbb56296">check_item_source</a> ($uid, $item)</td></tr>
+<tr class="separator:a87ac9e359591721a824ecd23bbb56296"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a77da7ce9a117601d49ac4a67c71b514f"><td class="memItemLeft" align="right" valign="top">&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="items_8php.html#a77da7ce9a117601d49ac4a67c71b514f">mail_store</a> ($arr)</td></tr>
 <tr class="separator:a77da7ce9a117601d49ac4a67c71b514f"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a8395d189a36abfa0dfff81a2b0e70669"><td class="memItemLeft" align="right" valign="top">&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="items_8php.html#a8395d189a36abfa0dfff81a2b0e70669">dfrn_deliver</a> ($owner, $contact, $atom, $dissolve=false)</td></tr>
@@ -236,7 +238,7 @@ Functions</h2></td></tr>
       </table>
 </div><div class="memdoc">
 
-<p>Referenced by <a class="el" href="items_8php.html#a536d0313b6ffe33b9d2490c4e25c5361">get_item_elements()</a>, <a class="el" href="items_8php.html#a2541e6861a56d145c9281877cc501615">item_store()</a>, and <a class="el" href="items_8php.html#acf0bf7c9d21ac84f32effb754f7ad484">item_store_update()</a>.</p>
+<p>Referenced by <a class="el" href="items_8php.html#a536d0313b6ffe33b9d2490c4e25c5361">get_item_elements()</a>, <a class="el" href="items_8php.html#a94ddb1d6c8fa21dd7433677e85168037">get_mail_elements()</a>, <a class="el" href="items_8php.html#a2541e6861a56d145c9281877cc501615">item_store()</a>, and <a class="el" href="items_8php.html#acf0bf7c9d21ac84f32effb754f7ad484">item_store_update()</a>.</p>
 
 </div>
 </div>
@@ -391,8 +393,46 @@ Functions</h2></td></tr>
         </tr>
       </table>
 </div><div class="memdoc">
+<p>can_comment_on_post($observer_xchan,$item);</p>
+<p>This function examines the comment_policy attached to an item and decides if the current observer has sufficient privileges to comment. This will normally be called on a remote site where <a class="el" href="permissions_8php.html#a67ada9ed51e77885b6b0f6a28cee1835">perm_is_allowed()</a> will not be suitable because the post owner does not have a local channel_id. Generally we should look at the item - in particular the author['book_flags'] and see if ABOOK_FLAG_SELF is set. If it is, you should be able to use perm_is_allowed( ... 'post_comments'), and if it isn't you need to call <a class="el" href="items_8php.html#a1e75047cf175aaee8dd16aa761913ff9">can_comment_on_post()</a> </p>
 
-<p>Referenced by <a class="el" href="classConversation.html#a8335cdd43f1836e3c255638e61a09e16">Conversation\add_thread()</a>.</p>
+<p>Referenced by <a class="el" href="classConversation.html#a8335cdd43f1836e3c255638e61a09e16">Conversation\add_thread()</a>, and <a class="el" href="item_8php.html#a693cd09805755ab85bbb5ecae69a48c3">item_post()</a>.</p>
+
+</div>
+</div>
+<a class="anchor" id="a87ac9e359591721a824ecd23bbb56296"></a>
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">check_item_source </td>
+          <td>(</td>
+          <td class="paramtype">&#160;</td>
+          <td class="paramname"><em>$uid</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">&#160;</td>
+          <td class="paramname"><em>$item</em>&#160;</td>
+        </tr>
+        <tr>
+          <td></td>
+          <td>)</td>
+          <td></td><td></td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+<p>check_item_source($uid,$item) </p>
+<dl class="params"><dt>Parameters</dt><dd>
+  <table class="params">
+    <tr><td class="paramname">$uid</td><td></td></tr>
+    <tr><td class="paramname">$item</td><td>Checks to see if this item owner is referenced as a source for this channel and if the post matches the rules for inclusion in this channel. Returns true if we should create a second delivery chain and false if none of the rules apply, or if the item is private. </td></tr>
+  </table>
+  </dd>
+</dl>
+
+<p>Referenced by <a class="el" href="items_8php.html#ab1bce4261bcf75ad62753b498a144d17">tag_deliver()</a>.</p>
 
 </div>
 </div>
@@ -832,7 +872,7 @@ Functions</h2></td></tr>
       </table>
 </div><div class="memdoc">
 
-<p>Referenced by <a class="el" href="channel_8php.html#a9c6a6179e0e626398ebecc6151905ef1">channel_content()</a>, <a class="el" href="display_8php.html#a37137c98d47bf3306f4c2bb9f5b60de0">display_content()</a>, <a class="el" href="events_8php.html#a1d293fb217ae6bc9e3858c4b32e363ec">events_content()</a>, <a class="el" href="items_8php.html#a6f7e1334af5d684a987fa6a3eb37f4cc">item_expire()</a>, <a class="el" href="items_8php.html#a756738301f2ed96be50232500677d58a">items_fetch()</a>, <a class="el" href="lastpost_8php.html#a82f14cce5d3cfe27f40bdbd2c679d493">lastpost_content()</a>, <a class="el" href="mod_2network_8php.html#a43f2f29b90c5e29072c561934bc8f8b4">network_content()</a>, <a class="el" href="notifier_8php.html#a568c502f626cff95e344c0748938b85d">notifier_run()</a>, <a class="el" href="page_8php.html#a91a5f649f68406149108bded1dc90b22">page_content()</a>, <a class="el" href="search_8php.html#ab2568591359edde5b483a6cd9a24b2cc">search_content()</a>, <a class="el" href="items_8php.html#ab1bce4261bcf75ad62753b498a144d17">tag_deliver()</a>, and <a class="el" href="items_8php.html#a004e89d86b0f29b2c4da20108ecc4091">zot_feed()</a>.</p>
+<p>Referenced by <a class="el" href="channel_8php.html#a9c6a6179e0e626398ebecc6151905ef1">channel_content()</a>, <a class="el" href="display_8php.html#a37137c98d47bf3306f4c2bb9f5b60de0">display_content()</a>, <a class="el" href="editpost_8php.html#a34011690864d122680c802e9e748ccfb">editpost_content()</a>, <a class="el" href="events_8php.html#a1d293fb217ae6bc9e3858c4b32e363ec">events_content()</a>, <a class="el" href="items_8php.html#a6f7e1334af5d684a987fa6a3eb37f4cc">item_expire()</a>, <a class="el" href="items_8php.html#a756738301f2ed96be50232500677d58a">items_fetch()</a>, <a class="el" href="lastpost_8php.html#a82f14cce5d3cfe27f40bdbd2c679d493">lastpost_content()</a>, <a class="el" href="mod_2network_8php.html#a43f2f29b90c5e29072c561934bc8f8b4">network_content()</a>, <a class="el" href="notifier_8php.html#a568c502f626cff95e344c0748938b85d">notifier_run()</a>, <a class="el" href="page_8php.html#a91a5f649f68406149108bded1dc90b22">page_content()</a>, <a class="el" href="search_8php.html#ab2568591359edde5b483a6cd9a24b2cc">search_content()</a>, <a class="el" href="items_8php.html#ab1bce4261bcf75ad62753b498a144d17">tag_deliver()</a>, and <a class="el" href="items_8php.html#a004e89d86b0f29b2c4da20108ecc4091">zot_feed()</a>.</p>
 
 </div>
 </div>
@@ -1007,7 +1047,7 @@ Functions</h2></td></tr>
       </table>
 </div><div class="memdoc">
 
-<p>Referenced by <a class="el" href="zot_8php.html#a22e3f9b97b7969ddbe43ccf0db93a19c">zot_import()</a>.</p>
+<p>Referenced by <a class="el" href="zot_8php.html#aeea071f17e306fe3d0c488551906bfab">zot_import()</a>.</p>
 
 </div>
 </div>
@@ -1025,7 +1065,7 @@ Functions</h2></td></tr>
       </table>
 </div><div class="memdoc">
 
-<p>Referenced by <a class="el" href="zot_8php.html#a22e3f9b97b7969ddbe43ccf0db93a19c">zot_import()</a>.</p>
+<p>Referenced by <a class="el" href="zot_8php.html#aeea071f17e306fe3d0c488551906bfab">zot_import()</a>.</p>
 
 </div>
 </div>
@@ -1043,7 +1083,7 @@ Functions</h2></td></tr>
       </table>
 </div><div class="memdoc">
 
-<p>Referenced by <a class="el" href="zot_8php.html#a22e3f9b97b7969ddbe43ccf0db93a19c">zot_import()</a>.</p>
+<p>Referenced by <a class="el" href="zot_8php.html#aeea071f17e306fe3d0c488551906bfab">zot_import()</a>.</p>
 
 </div>
 </div>
@@ -1195,7 +1235,7 @@ Functions</h2></td></tr>
       </table>
 </div><div class="memdoc">
 
-<p>Referenced by <a class="el" href="items_8php.html#a8794863cdf8ce1333040933d3a3f66bd">consume_feed()</a>, <a class="el" href="event_8php.html#a89ef533faf345db8d64a58d4856bde3a">event_store()</a>, <a class="el" href="item_8php.html#a693cd09805755ab85bbb5ecae69a48c3">item_post()</a>, <a class="el" href="like_8php.html#a9d7dd268f21c21e9d29dd2aca2dd9538">like_content()</a>, <a class="el" href="mood_8php.html#a7ae136dd7476865b4828136175db5022">mood_init()</a>, <a class="el" href="include_2photos_8php.html#a6c40ef58aefef705a5adc84a40e97109">photo_upload()</a>, <a class="el" href="include_2photos_8php.html#ad648c0c5544fe9263409b6f6e57c6274">photos_create_item()</a>, <a class="el" href="mod_2photos_8php.html#a062bed4d04d14fee8a53f4c9be673080">photos_post()</a>, <a class="el" href="items_8php.html#a410f9c743877c125ca06312373346903">post_activity_item()</a>, <a class="el" href="zot_8php.html#a37ec13b18057634eadb071f05297f5e1">process_delivery()</a>, <a class="el" href="activities_8php.html#a80134e807719b3c54aba971958d2e132">profile_activity()</a>, and <a class="el" href="subthread_8php.html#a50368f3d825b77996030528e7fbfa3d3">subthread_content()</a>.</p>
+<p>Referenced by <a class="el" href="event_8php.html#a89ef533faf345db8d64a58d4856bde3a">event_store()</a>, <a class="el" href="item_8php.html#a693cd09805755ab85bbb5ecae69a48c3">item_post()</a>, <a class="el" href="like_8php.html#a9d7dd268f21c21e9d29dd2aca2dd9538">like_content()</a>, <a class="el" href="mood_8php.html#a7ae136dd7476865b4828136175db5022">mood_init()</a>, <a class="el" href="include_2photos_8php.html#a6c40ef58aefef705a5adc84a40e97109">photo_upload()</a>, <a class="el" href="include_2photos_8php.html#ad648c0c5544fe9263409b6f6e57c6274">photos_create_item()</a>, <a class="el" href="mod_2photos_8php.html#a062bed4d04d14fee8a53f4c9be673080">photos_post()</a>, <a class="el" href="items_8php.html#a410f9c743877c125ca06312373346903">post_activity_item()</a>, <a class="el" href="zot_8php.html#a37ec13b18057634eadb071f05297f5e1">process_delivery()</a>, <a class="el" href="activities_8php.html#a80134e807719b3c54aba971958d2e132">profile_activity()</a>, and <a class="el" href="subthread_8php.html#a50368f3d825b77996030528e7fbfa3d3">subthread_content()</a>.</p>
 
 </div>
 </div>

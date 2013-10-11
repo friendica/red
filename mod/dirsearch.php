@@ -22,6 +22,12 @@ function dirsearch_content(&$a) {
 		json_return_and_die($ret);
 	}
 
+	if(argc() > 1 && argv(1) === 'sites') {
+		$ret = list_public_sites();
+		json_return_and_die($ret);
+	}
+
+
 	$name     = ((x($_REQUEST,'name'))     ? $_REQUEST['name']     : '');
 	$hub      = ((x($_REQUEST,'hub'))      ? $_REQUEST['hub']     : '');
 	$address  = ((x($_REQUEST,'address'))  ? $_REQUEST['address']  : '');
@@ -34,6 +40,20 @@ function dirsearch_content(&$a) {
 	$keywords = ((x($_REQUEST,'keywords')) ? $_REQUEST['keywords'] : '');
 	$agege    = ((x($_REQUEST,'agege'))    ? intval($_REQUEST['agege']) : 0 );
 	$agele    = ((x($_REQUEST,'agele'))    ? intval($_REQUEST['agele']) : 0 );
+	$kw       = ((x($_REQUEST,'kw'))       ? intval($_REQUEST['kw'])    : 0 );
+
+	// by default use a safe search
+	$safe     = ((x($_REQUEST,'safe'))     ? intval($_REQUEST['safe'])  : 1 );
+
+
+	if(array_key_exists('sync',$_REQUEST)) {
+		if($_REQUEST['sync'])
+			$sync = datetime_convert('UTC','UTC',$_REQUEST['sync']);
+		else
+			$sync = datetime_convert('UTC','UTC','2010-01-01 01:01:00');
+	}
+	else
+		$sync = false;
 
 	$sort_order  = ((x($_REQUEST,'order')) ? $_REQUEST['order'] : '');
 
@@ -76,6 +96,7 @@ function dirsearch_content(&$a) {
 	$limit        = (($_REQUEST['limit'])          ? intval($_REQUEST['limit'])        : 0);
 	$return_total = ((x($_REQUEST,'return_total')) ? intval($_REQUEST['return_total']) : 0);
 
+	// mtime is not currently working
 
 	$mtime        = ((x($_REQUEST,'mtime'))        ? datetime_convert('UTC','UTC',$_REQUEST['mtime']) : '');
 
@@ -90,12 +111,16 @@ function dirsearch_content(&$a) {
 
 	$logic = ((strlen($sql_extra)) ? 0 : 1);
 
+	$safesql = (($safe > 0) ? " and not ( xchan_flags & " . intval(XCHAN_FLAGS_CENSORED|XCHAN_FLAGS_SELFCENSORED) . " ) " : '');
+	if($safe < 0)
+		$safesql = " and ( xchan_flags & " . intval(XCHAN_FLAGS_CENSORED|XCHAN_FLAGS_SELFCENSORED) . " ) ";
+
 	if($limit) 
 		$qlimit = " LIMIT $limit ";
 	else {
 		$qlimit = " LIMIT " . intval($startrec) . " , " . intval($perpage);
 		if($return_total) {
-			$r = q("SELECT COUNT(xchan_hash) AS `total` FROM xchan left join xprof on xchan_hash = xprof_hash where $logic $sql_extra and not ( xchan_flags & %d) and not ( xchan_flags & %d ) ",
+			$r = q("SELECT COUNT(xchan_hash) AS `total` FROM xchan left join xprof on xchan_hash = xprof_hash where $logic $sql_extra and not ( xchan_flags & %d) and not ( xchan_flags & %d ) $safesql ",
 				intval(XCHAN_FLAGS_HIDDEN),
 				intval(XCHAN_FLAGS_ORPHAN)
 			);
@@ -105,24 +130,40 @@ function dirsearch_content(&$a) {
 		}
 	}
 
-	if($mtime) {
-		$qlimit = '';
-		$sql_extra .= " and xchan_hash in ( select ud_hash from updates where ud_date > '" . dbesc($mtime) . "' ) ";
-	}
 
 	if($sort_order == 'date')
-		$order = " order by ud_date desc ";
+		$order = ""; // Not currently implemented
 	elseif($sort_order == 'reverse')
 		$order = " order by xchan_name desc ";
 	else	
 		$order = " order by xchan_name asc ";
 
 
-
-	$r = q("SELECT xchan.*, xprof.*, updates.* from xchan left join xprof on xchan_hash = xprof_hash left join updates on xchan_hash = ud_hash where $logic $sql_extra and not ( xchan_flags & %d ) and not ( xchan_flags & %d ) $order $qlimit ",
-		intval(XCHAN_FLAGS_HIDDEN),
-		intval(XCHAN_FLAGS_ORPHAN)
-	);
+	if($sync) {
+		$spkt = array('transactions' => array());
+		$r = q("select * from updates where ud_date >= '%s' and ud_guid != '' order by ud_date desc",
+			dbesc($sync)
+		);
+		if($r) {
+			foreach($r as $rr) {
+				$flags = (($rr['ud_flags'] & UPDATE_FLAGS_DELETED) ? array('deleted') : array());
+				$spkt['transactions'][] = array(
+					'hash' => $rr['ud_hash'],
+					'address' => $rr['ud_addr'],
+					'transaction_id' => $rr['ud_guid'],
+					'timestamp' => $rr['ud_date'],
+					'flags' => $flags
+				);
+			}
+		}
+		json_return_and_die($spkt);
+	}
+	else {
+		$r = q("SELECT xchan.*, xprof.* from xchan left join xprof on xchan_hash = xprof_hash where $logic $sql_extra and not ( xchan_flags & %d ) and not ( xchan_flags & %d ) $safesql $order $qlimit ",
+			intval(XCHAN_FLAGS_HIDDEN),
+			intval(XCHAN_FLAGS_ORPHAN)
+		);
+	}
 
 	$ret['page'] = $page + 1;
 	$ret['records'] = count($r);		
@@ -139,6 +180,7 @@ function dirsearch_content(&$a) {
 			$entry['hash']        = $rr['xchan_hash'];
 
 			$entry['updated']     = (($rr['ud_date']) ? $rr['ud_date'] : '0000-00-00 00:00:00');
+			$entry['update_guid'] = (($rr['ud_guid']) ? $rr['ud_guid'] : ''); 
 			$entry['url']         = $rr['xchan_url'];
 			$entry['photo']       = $rr['xchan_photo_m'];
 			$entry['address']     = $rr['xchan_addr'];
@@ -158,8 +200,48 @@ function dirsearch_content(&$a) {
 		}
 
 		$ret['results'] = $entries;
-
+		if($kw) {
+			$k = dir_tagadelic($kw);
+			if($k) {
+				$ret['keywords'] = array();
+				foreach($k as $kv) {
+					$ret['keywords'][] = array('term' => $kv[0],'weight' => $kv[1], 'normalise' => $kv[2]);
+				}
+			}
+		}
 	}		
 	json_return_and_die($ret);
 
 }
+
+
+function list_public_sites() {
+	$r = q("select * from site where site_access != 0 order by rand()");
+	$ret = array('success' => false);
+
+	if($r) {
+		$ret['success'] = true;
+		$ret['sites'] = array();
+		foreach($r as $rr) {
+			
+			if($rr['site_access'] == ACCESS_FREE)
+				$access = 'free';
+			elseif($rr['site_access'] == ACCESS_PAID)
+				$access = 'paid';
+			elseif($rr['site_access'] == ACCESS_TIERED)
+				$access = 'tiered';
+			else
+				$access = 'private';
+
+			if($rr['site_register'] == REGISTER_OPEN)
+				$register = 'open';
+			elseif($rr['site_register'] == REGISTER_APPROVE)
+				$register = 'approve';
+			else
+				$register = 'closed';
+
+			$ret['sites'][] = array('url' => $rr['site_url'], 'access' => $access, 'register' => $register, 'sellpage' => $rr['site_sellpage']);
+		}
+	}
+	return $ret;
+}		

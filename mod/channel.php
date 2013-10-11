@@ -64,17 +64,18 @@ function channel_content(&$a, $update = 0, $load = false) {
 
 	$category = $datequery = $datequery2 = '';
 
-	if(argc() > 2) {
-		for($x = 2; $x < argc(); $x ++) {
-			if(is_a_date_arg(argv($x))) {
-				if($datequery)
-					$datequery2 = escape_tags(argv($x));
-				else
-					$datequery = escape_tags(argv($x));
-			}
-		}
-	}
-
+	// if(argc() > 2) {
+	//	for($x = 2; $x < argc(); $x ++) {
+	//		if(is_a_date_arg(argv($x))) {
+	//			if($datequery)
+	//				$datequery2 = escape_tags(argv($x));
+	//			else
+	//				$datequery = escape_tags(argv($x));
+	//		}
+	//	}
+	// }
+	$datequery = ((x($_GET,'dend') && is_a_date_arg($_GET['dend'])) ? notags($_GET['dend']) : '');
+	$datequery2 = ((x($_GET,'dbegin') && is_a_date_arg($_GET['dbegin'])) ? notags($_GET['dbegin']) : '');
 
 	if(get_config('system','block_public') && (! get_account_id()) && (! remote_user())) {
 			return login();
@@ -89,6 +90,8 @@ function channel_content(&$a, $update = 0, $load = false) {
 	require_once('include/items.php');
 	require_once('include/permissions.php');
 
+
+	$category = ((x($_REQUEST,'cat')) ? $_REQUEST['cat'] : '');
 
 	$groups = array();
 
@@ -112,6 +115,11 @@ function channel_content(&$a, $update = 0, $load = false) {
 	$perms = get_all_perms($a->profile['profile_uid'],$ob_hash);
 
 	if(! $perms['view_stream']) {
+			// We may want to make the target of this redirect configurable
+			if($perms['view_profile']) {
+				notice( t('Insufficient permissions.  Request redirected to profile page.') . EOL);
+				goaway (z_root() . "/profile/" . $a->profile['channel_address']);
+			}
 		notice( t('Permission denied.') . EOL);
 		return;
 	}
@@ -171,8 +179,9 @@ function channel_content(&$a, $update = 0, $load = false) {
 	}
 	else {
 
+
 		if(x($category)) {
-			$sql_extra .= protect_sprintf(file_tag_file_query('item',$category,'category'));
+		        $sql_extra .= protect_sprintf(term_query('item', $category, TERM_CATEGORY));
 		}
 
 		if($datequery) {
@@ -182,9 +191,8 @@ function channel_content(&$a, $update = 0, $load = false) {
 			$sql_extra2 .= protect_sprintf(sprintf(" AND item.created >= '%s' ", dbesc(datetime_convert(date_default_timezone_get(),'',$datequery2))));
 		}
 
-
-		$a->set_pager_itemspage(40);
-
+		$itemspage = get_pconfig(local_user(),'system','itemspage');
+		$a->set_pager_itemspage(((intval($itemspage)) ? $itemspage : 20));
 		$pager_sql = sprintf(" LIMIT %d, %d ",intval($a->pager['start']), intval($a->pager['itemspage']));
 
 		if($load) {

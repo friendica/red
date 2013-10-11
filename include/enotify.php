@@ -51,9 +51,9 @@ function notification($params) {
 	$additional_mail_header = "";
 
 	if(array_key_exists('item',$params)) {
+		require_once('include/conversation.php');
 		// if it's a normal item...
 		if(array_key_exists('verb',$params['item'])) {
-			require_once('include/conversation.php');
 			// localize_item() alters the original item so make a copy first
 			$i = $params['item'];
 			logger('calling localize');
@@ -88,6 +88,11 @@ function notification($params) {
 
 	if($params['type'] == NOTIFY_COMMENT) {
 //		logger("notification: params = " . print_r($params, true), LOGGER_DEBUG);
+
+		// ignore like/unlike activity on posts - they probably require a sepearate notification preference
+
+		if(array_key_exists('item',$params) && (! visible_activity($params['item'])))
+			return;
 
 		$parent_id = $params['parent'];
 
@@ -379,11 +384,9 @@ function notification($params) {
 		logger('notification: sending notification email');
 
 
-		$textversion = strip_tags(html_entity_decode(bbcode(stripslashes(str_replace(array("\\r\\n", "\\r", "\\n"), "\n",
-			$body))),ENT_QUOTES,'UTF-8'));
+		$textversion = strip_tags(html_entity_decode(bbcode(stripslashes(str_replace(array("\\r", "\\n"), array( "", "\n"), $body))),ENT_QUOTES,'UTF-8'));
 
-		$htmlversion = html_entity_decode(bbcode(stripslashes(str_replace(array("\\r\\n", "\\r","\\n\\n" ,"\\n"), 
-			"<br />\n",$body))), ENT_QUOTES,'UTF-8');
+		$htmlversion = html_entity_decode(bbcode(stripslashes(str_replace(array("\\r","\\n"), array("","<br />\n"),$body))), ENT_QUOTES,'UTF-8');
 
 
 		// use $_SESSION['zid_override'] to force zid() to use 

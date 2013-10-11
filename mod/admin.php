@@ -49,10 +49,14 @@ function admin_post(&$a){
 				if(is_ajax()) return;
 				
 				goaway($a->get_baseurl(true) . '/admin/themes/' . $theme );
+
 				return;
 				break;
 			case 'logs':
 				admin_page_logs_post($a);
+				break;
+			case 'hubloc':
+				admin_page_hubloc_post($a);
 				break;
 			case 'dbsync':
 				admin_page_dbsync_post($a);
@@ -84,6 +88,7 @@ function admin_content(&$a) {
 		'users'	 =>	Array($a->get_baseurl(true)."/admin/users/", t("Users") , "users"),
 		'plugins'=>	Array($a->get_baseurl(true)."/admin/plugins/", t("Plugins") , "plugins"),
 		'themes' =>	Array($a->get_baseurl(true)."/admin/themes/", t("Themes") , "themes"),
+		'hubloc' =>	Array($a->get_baseurl(true)."/admin/hubloc/", t("Server") , "server"),
 		'dbsync' => Array($a->get_baseurl(true)."/admin/dbsync/", t('DB updates'), "dbsync")
 	);
 	
@@ -131,6 +136,9 @@ function admin_content(&$a) {
 				break;
 			case 'themes':
 				$o = admin_page_themes($a);
+				break;
+			case 'hubloc':
+				$o = admin_page_hubloc($a);
 				break;
 			case 'logs':
 				$o = admin_page_logs($a);
@@ -235,7 +243,7 @@ function admin_page_site_post(&$a){
 	$timeout			=	((x($_POST,'timeout'))			? intval(trim($_POST['timeout']))		: 60);
 	$delivery_interval	=	((x($_POST,'delivery_interval'))? intval(trim($_POST['delivery_interval']))		: 0);
 	$poll_interval	=	((x($_POST,'poll_interval'))? intval(trim($_POST['poll_interval']))		: 0);
-	$ssl_policy         =   ((x($_POST,'ssl_policy')) ? intval($_POST['ssl_policy']) : 0);
+//	$ssl_policy         =   ((x($_POST,'ssl_policy')) ? intval($_POST['ssl_policy']) : 0);
 /*
 	if($ssl_policy != intval(get_config('system','ssl_policy'))) {
 		if($ssl_policy == SSL_POLICY_FULL) {
@@ -278,7 +286,7 @@ function admin_page_site_post(&$a){
 		}
 	}
 */
-	set_config('system','ssl_policy',$ssl_policy);
+//	set_config('system','ssl_policy',$ssl_policy);
 	set_config('system','delivery_interval',$delivery_interval);
 	set_config('system','poll_interval',$poll_interval);
 	set_config('system','maxloadavg',$maxloadavg);
@@ -365,11 +373,11 @@ function admin_page_site(&$a) {
 	if($files) {
 		foreach($files as $file) {
 			$f = basename($file);
-			$theme_name = ((file_exists($file . '/.experimental')) ?  sprintf("%s - Experimental", $f) : $f);
-		if (file_exists($file . '/.mobile')) {
+			$theme_name = ((file_exists($file . '/experimental')) ?  sprintf("%s - Experimental", $f) : $f);
+		if (file_exists($file . '/mobile')) {
 			$theme_choices_mobile[$f] = $theme_name;
             }
-		if (file_exists($file . '/.accessibility')) {
+		if (file_exists($file . '/accessibility')) {
                 $theme_choices_accessibility[$f] = $theme_name;
             }
 			$theme_choices[$f] = $theme_name;
@@ -394,13 +402,14 @@ function admin_page_site(&$a) {
 	$access_choices = Array(
 		ACCESS_PRIVATE => t("Private"),
 		ACCESS_PAID => t("Paid Access"),
-		ACCESS_FREE => t("Free Access")
+		ACCESS_FREE => t("Free Access"),
+		ACCESS_TIERED => t("Tiered Access")
 	);
 	
-	$ssl_choices = array(
-		SSL_POLICY_NONE     => t("No SSL policy, links will track page SSL state"),
-		SSL_POLICY_FULL     => t("Force all links to use SSL")
-	);
+//	$ssl_choices = array(
+//		SSL_POLICY_NONE     => t("No SSL policy, links will track page SSL state"),
+//		SSL_POLICY_FULL     => t("Force all links to use SSL")
+//	);
 
 	$t = get_markup_template("admin_site.tpl");
 	return replace_macros($t, array(
@@ -421,7 +430,7 @@ function admin_page_site(&$a) {
 		'$theme_mobile' 	=> array('theme_mobile', t("Mobile system theme"), get_config('system','mobile_theme'), t("Theme for mobile devices"), $theme_choices_mobile),
 		'$theme_accessibility' 	=> array('theme_accessibility', t("Accessibility system theme"), get_config('system','accessibility_theme'), t("Accessibility theme"), $theme_choices_accessibility),
 		'$site_channel' 	=> array('site_channel', t("Channel to use for this website's static pages"), get_config('system','site_channel'), t("Site Channel")),
-		'$ssl_policy'       => array('ssl_policy', t("SSL link policy"), (string) intval(get_config('system','ssl_policy')), t("Determines whether generated links should be forced to use SSL"), $ssl_choices),
+//		'$ssl_policy'       => array('ssl_policy', t("SSL link policy"), (string) intval(get_config('system','ssl_policy')), t("Determines whether generated links should be forced to use SSL"), $ssl_choices),
 		'$maximagesize'		=> array('maximagesize', t("Maximum image size"), get_config('system','maximagesize'), t("Maximum size in bytes of uploaded images. Default is 0, which means no limits.")),
 		'$register_policy'	=> array('register_policy', t("Register policy"), get_config('system','register_policy'), "", $register_choices),
 		'$access_policy'	=> array('access_policy', t("Access policy"), get_config('system','access_policy'), "", $access_choices),
@@ -442,6 +451,34 @@ function admin_page_site(&$a) {
 			
 	));
 
+}
+function admin_page_hubloc_post(&$a){
+	 check_form_security_token_redirectOnErr('/admin/hubloc', 'hubloc');
+	return;
+}
+
+function admin_page_hubloc(&$a) {
+	$o = '';
+	$hubloc = q("SELECT hubloc_id, hubloc_addr, hubloc_host, hubloc_status  FROM hubloc");
+
+	
+	if(! $hubloc){
+		notice( t('No server found') . EOL);
+		goaway($a->get_baseurl(true) . '/admin/hubloc');
+	}
+
+	$t = get_markup_template("admin_hubloc.tpl");
+        return replace_macros($t, array(
+		'$hubloc' => $hubloc,
+		'$th_hubloc' => array(t('ID'), t('for channel'), t('on server'), t('Status')),
+                '$title' => t('Administration'),
+                '$page' => t('Server'),
+                '$queues' => $queues,
+                '$accounts' => $accounts,
+                '$pending' => Array( t('Pending registrations'), $pending),
+                '$plugins' => Array( t('Active plugins'), $a->plugins )
+        ));
+	return $o;
 }
 
 
@@ -714,12 +751,16 @@ function admin_page_plugins(&$a){
 		} 
 		
 		$admin_form="";
+
 		if (is_array($a->plugins_admin) && in_array($plugin, $a->plugins_admin)){
 			@require_once("addon/$plugin/$plugin.php");
-			$func = $plugin.'_plugin_admin';
-			$func($a, $admin_form);
+			if(function_exists($plugin.'_plugin_admin')) {
+				$func = $plugin.'_plugin_admin';
+				$func($a, $admin_form);
+			}
 		}
-		
+
+
 		$t = get_markup_template("admin_plugins_details.tpl");
 		return replace_macros($t, array(
 			'$title' => t('Administration'),

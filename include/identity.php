@@ -7,7 +7,7 @@ require_once('include/crypto.php');
 function identity_check_service_class($account_id) {
 	$ret = array('success' => false, $message => '');
 	
-	$r = q("select count(channel_id) as total from channel were channel_account_id = %d ",
+	$r = q("select count(channel_id) as total from channel where channel_account_id = %d ",
 		intval($account_id)
 	);
 	if(! ($r && count($r))) {
@@ -48,7 +48,7 @@ function validate_channelname($name) {
 
 
 function create_dir_account() {
-	create_account(array(
+	create_identity(array(
 		'account_id' => 'xxx',  // This will create an identity with an (integer) account_id of 0, but account_id is required
 		'nickname' => 'dir',
 		'name' => 'Directory',
@@ -80,8 +80,11 @@ function create_identity($arr) {
 		$ret['message'] = t('No account identifier');
 		return $ret;
 	}
-
-	$nick = trim($arr['nickname']);
+	$ret=identity_check_service_class($arr['account_id']);
+	if (!$ret['success']) { 
+		return $ret;
+	}
+	$nick = mb_strtolower(trim($arr['nickname']));
 	$name = escape_tags($arr['name']);
 	$pageflags = ((x($arr,'pageflags')) ? intval($arr['pageflags']) : PAGE_NORMAL);
 
@@ -182,7 +185,7 @@ function create_identity($arr) {
 
 	$newuid = $ret['channel']['channel_id'];
 
-	$r = q("insert into xchan ( xchan_hash, xchan_guid, xchan_guid_sig, xchan_pubkey, xchan_photo_l, xchan_photo_m, xchan_photo_s, xchan_addr, xchan_url, xchan_name, xchan_network, xchan_photo_date, xchan_name_date ) values ('%s', '%s', '%s', '%s', '%s', '%s', '%s', '%s', '%s', '%s', '%s', '%s', '%s')",
+	$r = q("insert into xchan ( xchan_hash, xchan_guid, xchan_guid_sig, xchan_pubkey, xchan_photo_l, xchan_photo_m, xchan_photo_s, xchan_addr, xchan_url, xchan_follow, xchan_name, xchan_network, xchan_photo_date, xchan_name_date ) values ('%s', '%s', '%s', '%s', '%s', '%s', '%s', '%s', '%s', '%s', '%s', '%s', '%s', '%s')",
 		dbesc($hash),
 		dbesc($guid),
 		dbesc($sig),
@@ -192,6 +195,7 @@ function create_identity($arr) {
 		dbesc($a->get_baseurl() . "/photo/profile/s/{$newuid}"),
 		dbesc($ret['channel']['channel_address'] . '@' . get_app()->get_hostname()),
 		dbesc(z_root() . '/channel/' . $ret['channel']['channel_address']),
+		dbesc(z_root() . '/follow?f=&url=%s'),
 		dbesc($ret['channel']['channel_name']),
 		dbesc('zot'),
 		dbesc(datetime_convert()),

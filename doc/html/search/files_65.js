@@ -1,5 +1,7 @@
 var searchData=
 [
+  ['editblock_2ephp',['editblock.php',['../editblock_8php.html',1,'']]],
+  ['editlayout_2ephp',['editlayout.php',['../editlayout_8php.html',1,'']]],
   ['editpost_2ephp',['editpost.php',['../editpost_8php.html',1,'']]],
   ['editwebpage_2ephp',['editwebpage.php',['../editwebpage_8php.html',1,'']]],
   ['enotify_2ephp',['enotify.php',['../enotify_8php.html',1,'']]],

@@ -302,16 +302,19 @@ function public_permissions_sql($observer_hash) {
 		foreach($groups as $g)
 			$gs .= '|<' . $g . '>';
 	} 
-	$sql = sprintf(
-		" OR (( NOT (deny_cid like '%s' OR deny_gid REGEXP '%s')
-		  AND ( allow_cid like '%s' OR allow_gid REGEXP '%s' OR ( allow_cid = '' AND allow_gid = '') )
-		  ))
-		",
-		dbesc(protect_sprintf( '%<' . $observer_hash . '>%')),
-		dbesc($gs),
-		dbesc(protect_sprintf( '%<' . $observer_hash . '>%')),
-		dbesc($gs)
-	);
+	$sql = '';
+	if($observer_hash) {
+		$sql = sprintf(
+			" OR (( NOT (deny_cid like '%s' OR deny_gid REGEXP '%s')
+			  AND ( allow_cid like '%s' OR allow_gid REGEXP '%s' OR ( allow_cid = '' AND allow_gid = '') )
+			  ))
+			",
+			dbesc(protect_sprintf( '%<' . $observer_hash . '>%')),
+			dbesc($gs),
+			dbesc(protect_sprintf( '%<' . $observer_hash . '>%')),
+			dbesc($gs)
+		);
+	}
 
 	return $sql;
 }
@@ -409,7 +412,7 @@ function stream_perms_api_uids($perms_min = PERMS_SITE) {
 	$ret = array();
 	if(local_user())
 		$ret[] = local_user();
-	$r = q("select channel_id from channel where channel_r_stream <= %d",
+	$r = q("select channel_id from channel where channel_r_stream > 0 and channel_r_stream <= %d",
 		intval($perms_min)
 	);
 	if($r)
@@ -424,6 +427,30 @@ function stream_perms_api_uids($perms_min = PERMS_SITE) {
 				$str .= ',';
 			$str .= intval($rr); 
 		}
+logger('stream_perms_api_uids: ' . $str);
 	return $str;
 }
 
+function stream_perms_xchans($perms_min = PERMS_SITE) {
+	$ret = array();
+	if(local_user())
+		$ret[] = get_observer_hash();
+
+	$r = q("select channel_hash from channel where channel_r_stream > 0 and channel_r_stream <= %d",
+		intval($perms_min)
+	);
+	if($r)
+		foreach($r as $rr)
+			if(! in_array($rr['channel_hash'],$ret))
+				$ret[] = $rr['channel_hash']; 
+
+	$str = '';
+	if($ret)
+		foreach($ret as $rr) {
+			if($str)
+				$str .= ',';
+			$str .= "'" . dbesc($rr) . "'"; 
+		}
+logger('stream_perms_xchans: ' . $str);
+	return $str;
+}

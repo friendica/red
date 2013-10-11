@@ -2,6 +2,8 @@ var admin_8php =
 [
     [ "admin_content", "admin_8php.html#afef415e4011607fbb665610441595015", null ],
     [ "admin_page_dbsync", "admin_8php.html#aaa6addf2dbc3f3fcf99244a56b41eade", null ],
+    [ "admin_page_hubloc", "admin_8php.html#a6943543f3138f6ee182cb701f415d1cc", null ],
+    [ "admin_page_hubloc_post", "admin_8php.html#a60ba9783ad14545814919970bc3fb725", null ],
     [ "admin_page_logs", "admin_8php.html#a1d1362698af14d209aa3a0fb655551dd", null ],
     [ "admin_page_logs_post", "admin_8php.html#a233b7c8c31776b7020532003c6e44e1c", null ],
     [ "admin_page_plugins", "admin_8php.html#a54128076986ba80c4a103de3fc3e19a8", null ],

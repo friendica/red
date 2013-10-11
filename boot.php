@@ -1,6 +1,7 @@
 <?php
 /** @file */
 
+
 /**
  * Red Matrix.
  * 
@@ -43,7 +44,8 @@ require_once('include/taxonomy.php');
 define ( 'RED_PLATFORM',            'Red Matrix' );
 define ( 'RED_VERSION',             trim(file_get_contents('version.inc')) . 'R');
 define ( 'ZOT_REVISION',            1     ); 
-define ( 'DB_UPDATE_VERSION',       1060  );
+
+define ( 'DB_UPDATE_VERSION',       1077  );
 
 define ( 'EOL',                    '<br />' . "\r\n"     );
 define ( 'ATOM_TIME',              'Y-m-d\TH:i:s\Z' );
@@ -148,7 +150,7 @@ define ( 'REGISTER_OPEN',          2 );
 define ( 'ACCESS_PRIVATE',         0 );
 define ( 'ACCESS_PAID',            1 );
 define ( 'ACCESS_FREE',            2 );
-
+define ( 'ACCESS_TIERED',          3 );
 
 /**
  * relationship types
@@ -175,13 +177,7 @@ define ( 'CLIENT_MODE_UPDATE', 0x0002);
 
 /**
  *
- * page/profile types
- *
- * PAGE_NORMAL is a typical personal profile account
- * PAGE_SOAPBOX automatically approves all friend requests as CONTACT_IS_SHARING, (readonly)
- * PAGE_COMMUNITY automatically approves all friend requests as CONTACT_IS_SHARING, but with
- *      write access to wall and comments (no email and not included in page owner's ACL lists)
- * PAGE_FREELOVE automatically approves all friend requests as full friends (CONTACT_IS_FRIEND).
+ * Channel pageflags
  *
  */
 
@@ -190,12 +186,10 @@ define ( 'PAGE_HIDDEN',            0x0001 );
 define ( 'PAGE_AUTOCONNECT',       0x0002 );
 define ( 'PAGE_APPLICATION',       0x0004 );
 define ( 'PAGE_DIRECTORY_CHANNEL', 0x0008 ); // system channel used for directory synchronisation
+define ( 'PAGE_PREMIUM',           0x0010 );
+define ( 'PAGE_ADULT',             0x0020 );
 
 define ( 'PAGE_REMOVED',           0x8000 );
-
-//define ( 'PAGE_FREELOVE',          3 );
-//define ( 'PAGE_BLOG',              4 );
-//define ( 'PAGE_PRVGROUP',          5 );
 
 
 /**
@@ -234,26 +228,26 @@ define ( 'NETWORK_PHANTOM',          'unkn');    // Place holder
  */
 
 
-define ( 'PERMS_R_STREAM',         0x0001); 
-define ( 'PERMS_R_PROFILE',        0x0002);
-define ( 'PERMS_R_PHOTOS',         0x0004); 
-define ( 'PERMS_R_ABOOK',          0x0008); 
+define ( 'PERMS_R_STREAM',         0x00001); 
+define ( 'PERMS_R_PROFILE',        0x00002);
+define ( 'PERMS_R_PHOTOS',         0x00004); 
+define ( 'PERMS_R_ABOOK',          0x00008); 
 
 
-define ( 'PERMS_W_STREAM',         0x0010); 
-define ( 'PERMS_W_WALL',           0x0020);
-define ( 'PERMS_W_TAGWALL',        0x0040); 
-define ( 'PERMS_W_COMMENT',        0x0080); 
-define ( 'PERMS_W_MAIL',           0x0100); 
-define ( 'PERMS_W_PHOTOS',         0x0200);
-define ( 'PERMS_W_CHAT',           0x0400); 
-define ( 'PERMS_A_DELEGATE',       0x0800);
+define ( 'PERMS_W_STREAM',         0x00010); 
+define ( 'PERMS_W_WALL',           0x00020);
+define ( 'PERMS_W_TAGWALL',        0x00040); 
+define ( 'PERMS_W_COMMENT',        0x00080); 
+define ( 'PERMS_W_MAIL',           0x00100); 
+define ( 'PERMS_W_PHOTOS',         0x00200);
+define ( 'PERMS_W_CHAT',           0x00400); 
+define ( 'PERMS_A_DELEGATE',       0x00800);
 
-define ( 'PERMS_R_STORAGE',        0x1000);
-define ( 'PERMS_W_STORAGE',        0x2000);
-define ( 'PERMS_R_PAGES',          0x4000);
-define ( 'PERMS_W_PAGES',          0x8000);
-
+define ( 'PERMS_R_STORAGE',        0x01000);
+define ( 'PERMS_W_STORAGE',        0x02000);
+define ( 'PERMS_R_PAGES',          0x04000);
+define ( 'PERMS_W_PAGES',          0x08000);
+define ( 'PERMS_A_REPUBLISH',      0x10000);
 
 // General channel permissions
 
@@ -290,6 +284,23 @@ define ( 'ATTACH_FLAG_OS',     0x0002);
 
 define ( 'MENU_ITEM_ZID',      0x0001);
 define ( 'MENU_ITEM_NEWWIN',   0x0002);
+
+
+/**
+ * Poll/Survey types
+ */
+
+define ( 'POLL_SIMPLE_RATING',   0x0001);  // 1-5
+define ( 'POLL_TENSCALE',        0x0002);  // 1-10
+define ( 'POLL_MULTIPLE_CHOICE', 0x0004);
+define ( 'POLL_OVERWRITE',       0x8000);  // If you vote twice remove the prior entry
+
+
+
+define ( 'UPDATE_FLAGS_UPDATED',  0x0001);
+define ( 'UPDATE_FLAGS_DELETED',  0x1000);
+
+
 
 
 /**
@@ -333,10 +344,23 @@ define ( 'NOTIFY_SYSTEM',   0x8000 );
 
 define ( 'HUBLOC_FLAGS_PRIMARY',      0x0001);
 define ( 'HUBLOC_FLAGS_UNVERIFIED',   0x0002);
+define ( 'HUBLOC_FLAGS_DELETED',      0x1000);
 
 
 define ( 'XCHAN_FLAGS_HIDDEN',        0x0001);
 define ( 'XCHAN_FLAGS_ORPHAN',        0x0002);
+define ( 'XCHAN_FLAGS_CENSORED',      0x0004);
+define ( 'XCHAN_FLAGS_SELFCENSORED',  0x0008);
+define ( 'XCHAN_FLAGS_DELETED',       0x1000);
+/*
+ * Traficlights for Administration of HubLoc
+ * to detect problems in inter server communication
+ */
+define ('HUBLOC_NOTUSED',	0x0000);
+define ('HUBLOC_SEND_ERROR',	0x0001);
+define ('HUBLOC_RECEIVE_ERROR',	0x0002);
+define ('HUBLOC_WORKS',		0x0004);
+define ('HUBLOC_OFFLINE',	0x0008);
 
 
 /**
@@ -455,7 +479,7 @@ define ( 'ITEM_UNPUBLISHED',     0x0020);
 define ( 'ITEM_WEBPAGE',         0x0040);  // is a static web page, not a conversational item
 define ( 'ITEM_DELAYED_PUBLISH', 0x0080); 
 define ( 'ITEM_BUILDBLOCK',      0x0100);  // Named thusly to make sure nobody confuses this with ITEM_BLOCKED
-
+define ( 'ITEM_PDL',             0x0200);  // Page Description Language - e.g. Comanche
 /**
  * Item Flags
  */
@@ -473,6 +497,7 @@ define ( 'ITEM_RELAY',           0x0200);  // used only in the communication lay
 define ( 'ITEM_MENTIONSME',      0x0400);
 define ( 'ITEM_NOCOMMENT',       0x0800);  // commenting/followups are disabled
 define ( 'ITEM_OBSCURED',        0x1000);  // bit-mangled to protect from casual browsing by site admin
+define ( 'ITEM_VERIFIED',        0x2000);  // Signature verification was successful
 
 /**
  *
@@ -531,7 +556,7 @@ class App {
 	public  $channel    = null;            // channel record
 	public  $observer   = null;            // xchan record
 	public  $profile_uid = 0;              // If applicable, the uid of the person whose stuff this is. 
-                                           
+	public  $layout     = array();         // Comanche parsed template                                           
 
 
 	private $perms      = null;            // observer permissions
@@ -620,6 +645,8 @@ class App {
 
 	private $cached_profile_image;
 	private $cached_profile_picdate;
+
+
 							
 	function __construct() {
 
@@ -747,13 +774,25 @@ class App {
 	}
 
 	function get_baseurl($ssl = false) {
+
+
+		if(is_array($this->config) 
+			&& array_key_exists('system',$this->config) 
+			&& is_array($this->config['system']) 
+			&& array_key_exists('baseurl',$this->config['system']) 
+			&& strlen($this->config['system']['baseurl'])) {
+			$url = $this->config['system']['baseurl'];
+			return $url;
+		}
+
+
 		$scheme = $this->scheme;
 
-		if((x($this->config,'system')) && (x($this->config['system'],'ssl_policy'))) {
-			if(intval($this->config['system']['ssl_policy']) === intval(SSL_POLICY_FULL)) {
-				$scheme = 'https';
-			}
-		}
+//		if((x($this->config,'system')) && (x($this->config['system'],'ssl_policy'))) {
+//			if(intval($this->config['system']['ssl_policy']) === intval(SSL_POLICY_FULL)) {
+//				$scheme = 'https';
+//			}
+//		}
 			
 		$this->baseurl = $scheme . "://" . $this->hostname . ((isset($this->path) && strlen($this->path)) ? '/' . $this->path : '' );
 		return $this->baseurl;
@@ -1089,7 +1128,7 @@ function x($s,$k = NULL) {
 
 
 function system_unavailable() {
-	include('system_unavailable.php');
+	include('include/system_unavailable.php');
 	system_down();
 	killme();
 }
@@ -1143,9 +1182,22 @@ function check_config(&$a) {
 		set_config('system','urlverify',bin2hex(z_root()));
 	if(($saved) && ($saved != bin2hex(z_root()))) {
 		// our URL changed. Do something.
+
 		$oldurl = hex2bin($saved);
-		fix_system_urls($oldurl,z_root());
-		set_config('system','urlverify',bin2hex(z_root()));
+		logger('Baseurl changed!');
+		
+		$oldhost = substr($oldurl,strpos($oldurl,'//')+2);
+		$host = substr(z_root(),strpos(z_root(),'//')+2);
+
+		$is_ip_addr = ((preg_match("/^(\d{1,3})\.(\d{1,3})\.(\d{1,3})\.(\d{1,3})$/",$host)) ? true : false);
+		$was_ip_addr = ((preg_match("/^(\d{1,3})\.(\d{1,3})\.(\d{1,3})\.(\d{1,3})$/",$oldhost)) ? true : false);
+		// only change the url to an ip address if it was already an ip and not a dns name
+		if((! $is_ip_addr) || ($is_ip_addr && $was_ip_addr)) {
+			fix_system_urls($oldurl,z_root());
+			set_config('system','urlverify',bin2hex(z_root()));
+		}
+		else
+			logger('Attempt to change baseurl from a DNS name to an IP address was refused.');  
 	}
 
 	// This will actually set the url to the one stored in .htconfig, and ignore what 
@@ -1162,7 +1214,6 @@ function check_config(&$a) {
 
 			// We're reporting a different version than what is currently installed.
 			// Run any existing update scripts to bring the database up to current.
-
 			require_once('install/update.php');
 
 			// make sure that boot.php and update.php are the same release, we might be
@@ -1170,10 +1221,8 @@ function check_config(&$a) {
 			// file may not be here yet. This can happen on a very busy site.
 
 			if(DB_UPDATE_VERSION == UPDATE_VERSION) {
-
 				for($x = $stored; $x < $current; $x ++) {
 					if(function_exists('update_r' . $x)) {
-
 						// There could be a lot of processes running or about to run.
 						// We want exactly one process to run the update command.
 						// So store the fact that we're taking responsibility
@@ -1185,26 +1234,31 @@ function check_config(&$a) {
 						if(get_config('database','update_r' . $x))
 							break;
 						set_config('database','update_r' . $x, '1');
-
 						// call the specific update
 
 						$func = 'update_r' . $x;
 						$retval = $func();
 						if($retval) {
+							// Prevent sending hundreds of thousands of emails by creating
+							// a lockfile.  view/tpl/smarty3 is the only place we can
+							// guarantee the server can write to.
+							if (file_exists('view/tpl/smarty3/mailsent'))
+									return;
 							//send the administrator an e-mail
+							file_put_contents('view/tpl/smarty3/mailsent', $x);
 
 							$email_tpl = get_intltext_template("update_fail_eml.tpl");
 							$email_msg = replace_macros($email_tpl, array(
-								'$sitename' => $a->config['sitename'],
+								'$sitename' => $a->config['system']['sitename'],
 								'$siteurl' =>  $a->get_baseurl(),
 								'$update' => $x,
 								'$error' => sprintf( t('Update %s failed. See error logs.'), $x)
 							));
 
-							$subject=sprintf(t('Update Error at %s'), $a->get_baseurl());
+							$subject = email_header_encode(sprintf(t('Update Error at %s'), $a->get_baseurl()));
 									
-							mail($a->config['admin_email'], $subject, $email_msg,
-								'From: ' . t('Administrator') . '@' . $_SERVER['SERVER_NAME'] . "\n"
+							mail($a->config['system']['admin_email'], $subject, $email_msg,
+								'From: Administrator' . '@' . $_SERVER['SERVER_NAME'] . "\n"
 								. 'Content-type: text/plain; charset=UTF-8' . "\n"
 								. 'Content-transfer-encoding: 8bit' );
 							//try the logger
@@ -1280,6 +1334,8 @@ function fix_system_urls($oldurl,$newurl) {
 
 	require_once('include/crypto.php');
 
+	logger('fix_system_urls: renaming ' . $oldurl . '  to ' . $newurl);
+
 	// Basically a site rename, but this can happen if you change from http to https for instance - even if the site name didn't change
 	// This should fix URL changes on our site, but other sites will end up with orphan hublocs which they will try to contact and will
 	// cause wasted communications.
@@ -1287,22 +1343,38 @@ function fix_system_urls($oldurl,$newurl) {
 	// that they can clean up their hubloc tables (this includes directories).
 	// It's a very expensive operation so you don't want to have to do it often or after your site gets to be large.
 
-	$r = q("select xchan_hash, channel_prvkey from xchan left join channel on channel_hash = xchan_hash where xchan_url = '%s'",
-		dbesc($oldurl)
+	$r = q("select xchan.*, channel.* from xchan left join channel on channel_hash = xchan_hash where xchan_url like '%s'",
+		dbesc($oldurl . '%')
 	);
 	if($r) {
 		foreach($r as $rr) {
 			$channel = substr($rr['xchan_addr'],0,strpos($rr['xchan_addr'],'@'));
-			$parsed = @parse_url($rr['xchan_url']);
+
+			$parsed = @parse_url($newurl);
 			if(! $parsed)
 				continue;
 			$newhost = $parsed['host'];
-			$rhs = $newhost . (($parsed['port']) ? ':' . $parsed['port'] : '') . (($parsed['path']) ? $parsed['path'] : '');
 
-			$x = q("update xchan set xchan_addr = '%s', xchan_url = '%s', xchan_connurl = '%s' where xchan_hash = '%s' limit 1",
+			// sometimes parse_url returns unexpected results.
+
+			if(strpos($newhost,'/') !== false)
+				$newhost = substr($newhost,0,strpos($newhost,'/'));
+
+			$rhs = $newhost . (($parsed['port']) ? ':' . $parsed['port'] : '');
+
+			// paths aren't going to work. You have to be at the (sub)domain root
+			// . (($parsed['path']) ? $parsed['path'] : '');
+
+			$x = q("update xchan set xchan_addr = '%s', xchan_url = '%s', xchan_connurl = '%s', xchan_follow = '%s', xchan_connpage = '%s', xchan_photo_l = '%s', xchan_photo_m = '%s', xchan_photo_s = '%s', xchan_photo_date = '%s' where xchan_hash = '%s' limit 1",
 				dbesc($channel . '@' . $rhs),
-				dbesc($newurl),
-				dbesc($newurl . '/poco/' . $channel),
+				dbesc(str_replace($oldurl,$newurl,$rr['xchan_url'])),
+				dbesc(str_replace($oldurl,$newurl,$rr['xchan_connurl'])),
+				dbesc(str_replace($oldurl,$newurl,$rr['xchan_follow'])),
+				dbesc(str_replace($oldurl,$newurl,$rr['xchan_connpage'])),
+				dbesc(str_replace($oldurl,$newurl,$rr['xchan_photo_l'])),
+				dbesc(str_replace($oldurl,$newurl,$rr['xchan_photo_m'])),
+				dbesc(str_replace($oldurl,$newurl,$rr['xchan_photo_s'])),
+				dbesc(datetime_convert()),
 				dbesc($rr['xchan_hash'])
 			);
 
@@ -1315,7 +1387,10 @@ function fix_system_urls($oldurl,$newurl) {
 				dbesc($newurl . '/post'),
 				dbesc($rr['xchan_hash']),
 				dbesc($oldurl)
-			);		
+			);
+		
+			proc_run('php', 'include/notifier.php', 'refresh_all', $rr['channel_id']);
+
 		}
 	}
 }
@@ -1552,6 +1627,13 @@ function profile_load(&$a, $nickname, $profile = '') {
 			$r[0]['keywords'] = $x[0]['keywords'];
 	}
 
+	if($r[0]['keywords']) {
+		$keywords = str_replace(array('#',',',' ',',,'),array('',' ',',',','),$r[0]['keywords']);
+		if(strlen($keywords))
+			$a->page['htmlhead'] .= '<meta name="keywords" content="' . htmlentities($keywords,ENT_COMPAT,'UTF-8') . '" />' . "\r\n" ;
+
+	}
+
 	$a->profile = $r[0];
 	$a->profile_uid = $r[0]['profile_uid'];
 
@@ -1575,11 +1657,11 @@ function profile_load(&$a, $nickname, $profile = '') {
 	return;
 }
 
-function profile_create_sidebar(&$a) {
+function profile_create_sidebar(&$a,$connect = true) {
 
 	$block = (((get_config('system','block_public')) && (! local_user()) && (! remote_user())) ? true : false);
 
-	$a->set_widget('profile',profile_sidebar($a->profile, $block));
+	$a->set_widget('profile',profile_sidebar($a->profile, $block, $connect));
 	return;
 }
 
@@ -1601,7 +1683,7 @@ function profile_create_sidebar(&$a) {
 
 
 
-function profile_sidebar($profile, $block = 0) {
+function profile_sidebar($profile, $block = 0, $show_connect = true) {
 
 	$a = get_app();
 
@@ -1626,11 +1708,20 @@ function profile_sidebar($profile, $block = 0) {
 
 	require_once('include/Contact.php');
 
-	$connect_url = rconnect_url($profile['uid'],get_observer_hash());
-	$connect = (($connect_url) ? t('Connect') : '');
+	if($show_connect) {
 
-	if($connect_url) 
-		$connect_url = $connect_url . '/follow?f=1&url=' . $profile['channel_address'] . '@' . $a->get_hostname();
+		// This will return an empty string if we're already connected.
+
+		$connect_url = rconnect_url($profile['uid'],get_observer_hash());
+		$connect = (($connect_url) ? t('Connect') : '');
+		if($connect_url) 
+			$connect_url = sprintf($connect_url,urlencode($profile['channel_address'] . '@' . $a->get_hostname()));
+
+		// premium channel - over-ride
+
+		if($profile['channel_pageflags'] & PAGE_PREMIUM)
+			$connect_url = z_root() . '/connect/' . $profile['channel_address'];
+	}
 
 	// show edit profile to yourself
 	if($is_owner) {
@@ -1698,6 +1789,11 @@ function profile_sidebar($profile, $block = 0) {
 		$m = menu_fetch($menu,$profile['uid'],$observer['xchan_hash']);
 		if($m)
 			$channel_menu = menu_render($m);
+	}
+	$menublock = get_pconfig($profile['uid'],'system','channel_menublock');
+	if ($menublock) {
+		require_once('include/comanche.php');
+		$channel_menu .= comanche_block($menublock);
 	}
 
 	$tpl = get_markup_template('profile_vcard.tpl');
@@ -1949,6 +2045,9 @@ function current_theme(){
 			$page_theme = $r[0]['channel_theme'];
 	}
 
+	if(array_key_exists('theme', $a->layout) && $a->layout['theme'])
+		$page_theme = $a->layout['theme'];
+
 	// Allow folks to over-rule channel themes and always use their own on their own site.
 	// The default is for channel themes to take precedence over your own on pages belonging 
 	// to that channel. 
@@ -1959,33 +2058,35 @@ function current_theme(){
 	}
 
 	
-//		$mobile_detect = new Mobile_Detect();
-//		$is_mobile = $mobile_detect->isMobile() || $mobile_detect->isTablet();
 	$is_mobile = $a->is_mobile || $a->is_tablet;
 	
+    $standard_system_theme = ((isset($a->config['system']['theme'])) ? $a->config['system']['theme'] : '');
+    $standard_theme_name = ((isset($_SESSION) && x($_SESSION,'theme')) ? $_SESSION['theme'] : $standard_system_theme);
+    	
 	if($is_mobile) {
 		if(isset($_SESSION['show_mobile']) && !$_SESSION['show_mobile']) {
-				$system_theme = '';
-				$theme_name = '';
+			$system_theme = $standard_system_theme;
+			$theme_name = $standard_theme_name;
 		}
 		else {	
 			$system_theme = ((isset($a->config['system']['mobile_theme'])) ? $a->config['system']['mobile_theme'] : '');
 			$theme_name = ((isset($_SESSION) && x($_SESSION,'mobile_theme')) ? $_SESSION['mobile_theme'] : $system_theme);
 
-			if($theme_name === '---') {
+			if($theme_name === '' || $theme_name === '---'  ) {
 				// user has selected to have the mobile theme be the same as the normal one
-				$system_theme = '';
-				$theme_name = '';
+				$system_theme = $standard_system_theme;
+				$theme_name = $standard_theme_name;				
 			}
 		}
 	}
 	else {
-		$system_theme = ((isset($a->config['system']['theme'])) ? $a->config['system']['theme'] : '');
-		$theme_name = ((isset($_SESSION) && x($_SESSION,'theme')) ? $_SESSION['theme'] : $system_theme);
+			$system_theme = $standard_system_theme;
+			$theme_name = $standard_theme_name;
 
 		if($page_theme)
 			$theme_name = $page_theme;
 	}
+
 	
 	if($theme_name &&
 			(file_exists('view/theme/' . $theme_name . '/css/style.css') ||
@@ -2230,6 +2331,10 @@ function zid($s,$address = '') {
 	$mine = get_my_url();
 	$myaddr = (($address) ? $address : get_my_address());
 
+	// FIXME checking against our own channel url is no longer reliable. We may have a lot
+	// of urls attached to out channel. Should probably match against our site, since we
+	// will not need to remote authenticate on our own site anyway.
+
 	if($mine && $myaddr && (! link_compare($mine,$s)))
 		$zurl = $s . (($num_slashes >= 3) ? '' : '/') . $achar . 'zid=' . urlencode($myaddr);
 	else
@@ -2276,7 +2381,9 @@ function argc() {
 }
 
 function argv($x) {
-	return get_app()->argv[$x];
+	if(array_key_exists($x,get_app()->argv))
+		return get_app()->argv[$x];
+	return '';
 }
 
 function dba_timer() {
@@ -2308,9 +2415,19 @@ function curPageURL() {
 	return $pageURL;
 }
 
+function get_custom_nav(&$a,$navname) {
+	if(! $navname)
+		return $a->page['nav'];
+	// load custom nav menu by name here
+	
+}
+
 function construct_page(&$a) {
 
-
+	require_once('include/comanche.php');
+	
+	$comanche = ((count($a->layout)) ? true : false);
+		
 	/**
  	 * Build the page - now that we have all the components
  	 */
@@ -2319,8 +2436,15 @@ function construct_page(&$a) {
 
 	if($a->module == 'setup')
 		$installing = true;
-	else
+	else {
 		nav($a);
+	} 
+
+	if($comanche) {
+		if($a->layout['nav']) {
+			$a->page['nav'] = get_custom_nav($a->layout['nav']);
+		}
+	}
 
 	require_once(theme_include('theme_init.php'));
 
@@ -2350,6 +2474,36 @@ function construct_page(&$a) {
 		}
 	}
 
+	// Let's say we have a comanche declaration '[region=nav][/region][region=content]$nav $content[/region]'.
+	// The text 'region=' identifies a section of the layout by that name. So what we want to do here is leave 
+	// $a->page['nav'] empty and put the default content from $a->page['nav'] and $a->page['section'] 
+	// into a new region called $a->data['content']. It is presumed that the chosen layout file for this comanche page
+	// has a '<content>' element instead of a '<section>'. 
+	
+	// This way the Comanche layout can include any existing content, alter the layout by adding stuff around it or changing the 
+	// layout completely with a new layout definition, or replace/remove existing content. 
+
+	if($comanche) {
+		foreach($a->layout as $k => $v) {
+			if((strpos($k,'region_') === 0) && strlen($v)) {
+				if(strpos($v,'$region_') !== false) {
+					$v = preg_replace_callback('/\$region_([a-zA-Z0-9]+)/ism','comanche_replace_region',$v);
+				}
+
+				// And a couple of convenience macros
+
+				if(strpos($v,'$nav') !== false) {
+					$v = str_replace('$nav',$a->page['nav'],$v);
+				}
+				if(strpos($v,'$content') !== false) {
+					$v = str_replace('$content',$a->page['section'],$v);
+				}
+
+				$a->page[substr($k,7)] = $v;
+			}
+		}
+	}	
+
 	if($a->is_mobile || $a->is_tablet) {
 		if(isset($_SESSION['show_mobile']) && !$_SESSION['show_mobile']) {
 			$link = $a->get_baseurl() . '/toggle_mobile?f=&address=' . curPageURL();
@@ -2357,10 +2511,13 @@ function construct_page(&$a) {
 		else {
 			$link = $a->get_baseurl() . '/toggle_mobile?f=&off=1&address=' . curPageURL();
 		}
-		$a->page['footer'] .= replace_macros(get_markup_template("toggle_mobile_footer.tpl"), array(
-			'$toggle_link' => $link,
-			'$toggle_text' => t('toggle mobile')
-		));
+		if ((isset($_SESSION) && $_SESSION['mobile_theme'] !='' && $_SESSION['mobile_theme'] !='---' ) || 
+		    (isset($a->config['system']['mobile_theme']) && !isset($_SESSION['mobile_theme']))) {
+			$a->page['footer'] .= replace_macros(get_markup_template("toggle_mobile_footer.tpl"), array(
+				'$toggle_link' => $link,
+				'$toggle_text' => t('toggle mobile')
+			));
+		}
 	}
 
 	$page    = $a->page;

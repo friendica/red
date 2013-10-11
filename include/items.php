@@ -18,13 +18,37 @@ function collect_recipients($item,&$private) {
 
 	require_once('include/group.php');
 
+	if($item['item_private'])
+		$private = true;
+
 	if($item['allow_cid'] || $item['allow_gid'] || $item['deny_cid'] || $item['deny_gid']) {
 		$allow_people = expand_acl($item['allow_cid']);
 		$allow_groups = expand_groups(expand_acl($item['allow_gid']));
+
+		$recipients = array_unique(array_merge($allow_people,$allow_groups));
+
+		// if you specifically deny somebody but haven't allowed anybody, we'll allow everybody in your 
+		// address book minus the denied connections. The post is still private and can't be seen publicly
+		// as that would allow the denied person to see the post by logging out. 
+
+		if((! $item['allow_cid']) && (! $item['allow_gid'])) {
+			$r = q("select * from abook where abook_channel = %d and not (abook_flags & %d) and not (abook_flags & %d) and not (abook_flags & %d)",
+				intval($item['uid']),
+				intval(ABOOK_FLAG_SELF),
+				intval(ABOOK_FLAG_PENDING),
+				intval(ABOOK_FLAG_ARCHIVED)
+			);
+
+			if($r) {
+				foreach($r as $rr) {
+					$recipients[] = $rr['abook_xchan'];
+				}
+			}
+		}
+
 		$deny_people  = expand_acl($item['deny_cid']);
 		$deny_groups  = expand_groups(expand_acl($item['deny_gid']));
 
-		$recipients = array_unique(array_merge($allow_people,$allow_groups));
 		$deny = array_unique(array_merge($deny_people,$deny_groups));
 		$recipients = array_diff($recipients,$deny);
 		$private = true;
@@ -59,24 +83,44 @@ function collect_recipients($item,&$private) {
 
 }
 
-
+/**
+ * @function can_comment_on_post($observer_xchan,$item);
+ *
+ * This function examines the comment_policy attached to an item and decides if the current observer has
+ * sufficient privileges to comment. This will normally be called on a remote site where perm_is_allowed()
+ * will not be suitable because the post owner does not have a local channel_id.
+ * Generally we should look at the item - in particular the author['book_flags'] and see if ABOOK_FLAG_SELF is set.
+ * If it is, you should be able to use perm_is_allowed( ... 'post_comments'), and if it isn't you need to call 
+ * can_comment_on_post()
+ */
 function can_comment_on_post($observer_xchan,$item) {
+
+//	logger('can_comment_on_post: comment_policy: ' . $item['comment_policy'], LOGGER_DEBUG);
+
 	if(! $observer_xchan)
 		return false;
 	if($item['comment_policy'] === 'none')
 		return false;
+	if($observer_xchan === $item['author_xchan'] || $observer_xchan === $item['owner_xchan'])
+		return true;
 	switch($item['comment_policy']) {
 		case 'self':
 			if($observer_xchan === $item['author_xchan'] || $observer_xchan === $item['owner_xchan'])
 				return true;
 			break;
 		case 'public':
+			// We don't allow public comments yet, until a policy 
+			// for dealing with anonymous comments is in place with 
+			// a means to moderate comments. Until that time, return 
+			// false.
 			return false;
 			break;
 		case 'contacts':
 		case '':
-			if(($item['owner']['abook_xchan']) && ($item['owner']['abook_their_perms'] & PERMS_W_COMMENT))
-				return true;
+			if(array_key_exists('owner',$item)) {
+				if(($item['owner']['abook_xchan']) && ($item['owner']['abook_their_perms'] & PERMS_W_COMMENT))
+					return true;
+			}
 			break;
 		default:
 			break;
@@ -193,7 +237,9 @@ function post_activity_item($arr) {
 	}
 
 
-	$post_id = item_store($arr);	
+	$post = item_store($arr);	
+	if($post['result'])
+		$post_id = $post['item_id'];
 
 	if($post_id) {
 		$arr['id'] = $post_id;
@@ -220,16 +266,18 @@ function get_public_feed($channel,$params) {
 	$start     = 0;
 	$records   = 40;
 	$direction = 'desc';
+	$pages     = 0;
 
 	if(! $params)
 		$params = array();
 
-	$params['type']      = ((x($params,'type'))      ? $params['type']      : 'xml');
-	$params['begin']     = ((x($params,'begin'))     ? $params['begin']     : '0000-00-00 00:00:00');
-	$params['end']       = ((x($params,'end'))       ? $params['end']       : datetime_convert('UTC','UTC','now'));
-	$params['start']     = ((x($params,'start'))     ? $params['start']     : 0);
-	$params['records']   = ((x($params,'records'))   ? $params['records']   : 40);
-	$params['direction'] = ((x($params,'direction')) ? $params['direction'] : 'desc');
+	$params['type']      = ((x($params,'type'))      ? $params['type']          : 'xml');
+	$params['begin']     = ((x($params,'begin'))     ? $params['begin']         : '0000-00-00 00:00:00');
+	$params['end']       = ((x($params,'end'))       ? $params['end']           : datetime_convert('UTC','UTC','now'));
+	$params['start']     = ((x($params,'start'))     ? $params['start']         : 0);
+	$params['records']   = ((x($params,'records'))   ? $params['records']       : 40);
+	$params['direction'] = ((x($params,'direction')) ? $params['direction']     : 'desc');
+	$params['pages']     = ((x($params,'pages'))     ? intval($params['pages']) : 0);
 		
 	switch($params['type']) {
 		case 'json':
@@ -250,9 +298,15 @@ function get_feed_for($channel, $observer_hash, $params) {
 	if(! channel)
 		http_status_exit(401);
 
-	if(! perm_is_allowed($channel['channel_id'],$observer_hash,'view_stream'))
-		http_status_exit(403);
 
+	if($params['pages']) {
+		if(! perm_is_allowed($channel['channel_id'],$observer_hash,'view_pages'))
+			http_status_exit(403);
+	}
+	else {
+		if(! perm_is_allowed($channel['channel_id'],$observer_hash,'view_stream'))
+			http_status_exit(403);
+	}
 	$items = items_fetch(array(
 		'wall' => '1',
 		'datequery' => $params['begin'],
@@ -260,6 +314,7 @@ function get_feed_for($channel, $observer_hash, $params) {
 		'start' => $params['start'],          // FIXME
 	 	'records' => $params['records'],      // FIXME
 		'direction' => $params['direction'],  // FIXME
+		'pages' => $params['pages'],
 		'order' => 'post'
 		), $channel, $observer_hash, CLIENT_MODE_NORMAL, get_app()->module);
 
@@ -491,6 +546,7 @@ function title_is_body($title, $body) {
 
 function get_item_elements($x) {
 
+//	logger('get_item_elements');
 	$arr = array();
 	$arr['body']         = (($x['body']) ? htmlentities($x['body'],ENT_COMPAT,'UTF-8',false) : '');
 
@@ -524,6 +580,9 @@ function get_item_elements($x) {
 	$arr['obj_type']     = (($x['object_type'])    ? htmlentities($x['object_type'],    ENT_COMPAT,'UTF-8',false) : '');
 	$arr['tgt_type']     = (($x['target_type'])    ? htmlentities($x['target_type'],    ENT_COMPAT,'UTF-8',false) : '');
 	$arr['comment_policy'] = (($x['comment_scope']) ? htmlentities($x['comment_scope'],  ENT_COMPAT,'UTF-8',false) : 'contacts');
+
+	$arr['sig']          = (($x['signature']) ? htmlentities($x['signature'],  ENT_COMPAT,'UTF-8',false) : '');
+
 	
 	$arr['object']       = activity_sanitise($x['object']);
 	$arr['target']       = activity_sanitise($x['target']);
@@ -535,18 +594,6 @@ function get_item_elements($x) {
 
 	$arr['item_flags'] = 0;
 
-	// if it's a private post, encrypt it in the DB.
-	// We have to do that here because we need to cleanse the input and prevent bad stuff from getting in,
-	// and we need plaintext to do that. 
-
-	if(intval($arr['item_private'])) {
-		$arr['item_flags'] = $arr['item_flags'] | ITEM_OBSCURED;
-		$key = get_config('system','pubkey');
-		if($arr['title'])
-			$arr['title'] = json_encode(aes_encapsulate($arr['title'],$key));
-		if($arr['body'])
-			$arr['body']  = json_encode(aes_encapsulate($arr['body'],$key));
-	}
 
 	if(array_key_exists('flags',$x) && in_array('deleted',$x['flags']))
 		$arr['item_restrict'] = ITEM_DELETED; 
@@ -570,6 +617,31 @@ function get_item_elements($x) {
 			$arr['owner_xchan']  = base64url_encode(hash('whirlpool',$x['owner']['guid'] . $x['owner']['guid_sig'], true));
 		else
 			return array();
+	}
+
+
+	if($arr['sig']) {
+		$r = q("select xchan_pubkey from xchan where xchan_hash = '%s' limit 1",
+			dbesc($arr['author_xchan'])
+		);
+		if($r && rsa_verify($x['body'],base64url_decode($arr['sig']),$r[0]['xchan_pubkey']))
+			$arr['item_flags'] |= ITEM_VERIFIED;
+		else
+			logger('get_item_elements: message verification failed.');
+	}
+
+
+	// if it's a private post, encrypt it in the DB.
+	// We have to do that here because we need to cleanse the input and prevent bad stuff from getting in,
+	// and we need plaintext to do that. 
+
+	if(intval($arr['item_private'])) {
+		$arr['item_flags'] = $arr['item_flags'] | ITEM_OBSCURED;
+		$key = get_config('system','pubkey');
+		if($arr['title'])
+			$arr['title'] = json_encode(aes_encapsulate($arr['title'],$key));
+		if($arr['body'])
+			$arr['body']  = json_encode(aes_encapsulate($arr['body'],$key));
 	}
 
 
@@ -601,7 +673,7 @@ function encode_item($item) {
 	$x = array();
 	$x['type'] = 'activity';
 
-	logger('encode_item: ' . print_r($item,true));
+//	logger('encode_item: ' . print_r($item,true));
 
 	$r = q("select channel_r_stream, channel_w_comment from channel where channel_id = %d limit 1",
 		intval($item['uid'])
@@ -652,6 +724,7 @@ function encode_item($item) {
 	$x['permalink']      = $item['plink'];
 	$x['location']       = $item['location'];
 	$x['longlat']        = $item['coord'];
+	$x['signature']      = $item['sig'];
 
 	$x['owner']          = encode_item_xchan($item['owner']);
 	$x['author']         = encode_item_xchan($item['author']);
@@ -674,6 +747,8 @@ function encode_item($item) {
 
 	if($item['term'])
 		$x['tags']       = encode_item_terms($item['term']);
+
+	logger('encode_item: ' . print_r($x,true));
 
 	return $x;
 
@@ -1246,14 +1321,9 @@ function get_atom_elements($feed,$item) {
 			$res['object'] .= '<orig>' . xmlify($body) . '</orig>' . "\n";
 			if((strpos($body,'<') !== false) || (strpos($body,'>') !== false)) {
 
-				$body = html2bb_video($body);
-
-				$config = HTMLPurifier_Config::createDefault();
-				$config->set('Cache.DefinitionImpl', null);
-
-				$purifier = new HTMLPurifier($config);
-				$body = $purifier->purify($body);
+				$body = purify_html($body);
 				$body = html2bbcode($body);
+
 			}
 
 			$res['object'] .= '<content>' . $body . '</content>' . "\n";
@@ -1284,13 +1354,7 @@ function get_atom_elements($feed,$item) {
 			$res['target'] .= '<orig>' . xmlify($body) . '</orig>' . "\n";
 			if((strpos($body,'<') !== false) || (strpos($body,'>') !== false)) {
 
-				$body = html2bb_video($body);
-
-				$config = HTMLPurifier_Config::createDefault();
-				$config->set('Cache.DefinitionImpl', null);
-
-				$purifier = new HTMLPurifier($config);
-				$body = $purifier->purify($body);
+				$body = purify_html($body);
 				$body = html2bbcode($body);
 			}
 
@@ -1329,6 +1393,7 @@ function get_atom_elements($feed,$item) {
 	$arr = array('feed' => $feed, 'item' => $item, 'result' => $res);
 
 	call_hooks('parse_atom', $arr);
+	logger('get_atom_elements: ' . print_r($res,true));
 
 	return $res;
 }
@@ -1356,9 +1421,23 @@ function encode_rel_links($links) {
 
 function item_store($arr,$allow_exec = false) {
 
+	$ret = array('result' => false, 'item_id' => 0);
+
 	if(! $arr['uid']) {
 		logger('item_store: no uid');
-		return 0;
+		$ret['message'] = 'No uid.';
+		return ret;
+	}
+
+	// If a page layout is provided, ensure it exists and belongs to us. 
+
+	if(array_key_exists('layout_mid',$arr) && $arr['layout_mid']) {
+		$l = q("select item_restrict from item where mid = '%s' and uid = %d limit 1",
+			dbesc($arr['layout_mid']),
+			intval($arr['uid'])
+		);
+		if((! $l) || (! ($l[0]['item_restrict'] & ITEM_PDL)))
+			unset($arr['layout_mid']);
 	}
 
 	// Don't let anybody set these, either intentionally or accidentally
@@ -1372,7 +1451,8 @@ function item_store($arr,$allow_exec = false) {
 
 	if(($arr['mimetype'] == 'application/x-php') && (! $allow_exec)) {
 		logger('item_store: php mimetype but allow_exec is denied.');
-		return 0;
+		$ret['message'] = 'exec denied.';
+		return $ret;
 	}
 
 
@@ -1385,21 +1465,27 @@ function item_store($arr,$allow_exec = false) {
 	$arr['deny_gid']      = ((x($arr,'deny_gid'))      ? trim($arr['deny_gid'])              : '');
 	$arr['item_private']  = ((x($arr,'item_private'))  ? intval($arr['item_private'])        : 0 );
 	$arr['item_flags']    = ((x($arr,'item_flags'))    ? intval($arr['item_flags'])          : 0 );
-	
-	// this is a bit messy - we really need an input filter chain that temporarily undoes obscuring
 
-	if($arr['mimetype'] != 'text/html' && $arr['mimetype'] != 'application/x-php') {
-		if((strpos($arr['body'],'<') !== false) || (strpos($arr['body'],'>') !== false)) 
-			$arr['body'] = escape_tags($arr['body']);
-		if((strpos($arr['title'],'<') !== false) || (strpos($arr['title'],'>') !== false)) 
-			$arr['title'] = escape_tags($arr['title']);
-	}
+	$arr['title'] = escape_tags($arr['title']);
+
 
 	// only detect language if we have text content, and if the post is private but not yet
 	// obscured, make it so.
 
 	if(! ($arr['item_flags'] & ITEM_OBSCURED)) {
+
 		$arr['lang'] = detect_language($arr['body']);
+		// apply the input filter here - if it is obscured it has been filtered already
+		$arr['body'] = z_input_filter($arr['uid'],$arr['body'],$arr['mimetype']);
+
+
+		if(local_user() && (! $arr['sig'])) {
+			$channel = get_app()->get_channel();
+			if($channel['channel_hash'] === $arr['author_xchan']) {
+				$arr['sig'] = base64url_encode(rsa_sign($arr['body'],$channel['channel_prvkey']));
+				$arr['item_flags'] |= ITEM_VERIFIED;
+			}
+		}
 
 		$allowed_languages = get_pconfig($arr['uid'],'system','allowed_languages');
 	
@@ -1408,7 +1494,8 @@ function item_store($arr,$allow_exec = false) {
 			call_hooks('item_translate', $translate);
 			if((! $translate['translated']) && (intval(get_pconfig($arr['uid'],'system','reject_disallowed_languages')))) {
 				logger('item_store: language ' . $arr['lang'] . ' not accepted for uid ' . $arr['uid']);
-				return;
+				$ret['message'] = 'language not accepted';
+				return $ret;
 			}
 			$arr = $translate['item'];
 		}
@@ -1423,15 +1510,10 @@ function item_store($arr,$allow_exec = false) {
 
 	}
 
-	if($arr['object'])
-		logger('item_store: input object: ' . print_r($arr['object'],true), LOGGER_DATA);
-
 
 	if((x($arr,'object')) && is_array($arr['object'])) {
 		activity_sanitise($arr['object']);
-		logger('item_store: sanitised object: ' . print_r($arr['object'],true), LOGGER_DATA);
 		$arr['object'] = json_encode($arr['object']);
-		logger('item_store: encoded object: ' . print_r($arr['object'],true), LOGGER_DATA);
 	}
 
 	if((x($arr,'target')) && is_array($arr['target'])) {
@@ -1554,7 +1636,8 @@ function item_store($arr,$allow_exec = false) {
 		}
 		else {
 			logger('item_store: item parent was not found - ignoring item');
-			return 0;
+			$ret['message'] = 'parent not found.';
+			return $ret;
 		}
 	}
 
@@ -1567,15 +1650,17 @@ function item_store($arr,$allow_exec = false) {
 		intval($arr['uid'])
 	);
 	if($r) {
-		logger('item-store: duplicate item ignored. ' . print_r($arr,true));
-		return 0;
+		logger('item_store: duplicate item ignored. ' . print_r($arr,true));
+		$ret['message'] = 'duplicate post.';
+		return $ret;
 	}
 
 	call_hooks('post_remote',$arr);
 
 	if(x($arr,'cancel')) {
 		logger('item_store: post cancelled by plugin.');
-		return 0;
+		$ret['message'] = 'cancelled.';
+		return $ret;
 	}
 
 	// pull out all the taxonomy stuff for separate storage
@@ -1598,18 +1683,21 @@ function item_store($arr,$allow_exec = false) {
 
 	// find the item we just created
 
-	$r = q("SELECT `id` FROM `item` WHERE `mid` = '%s' AND `uid` = %d ORDER BY `id` ASC ",
+	$r = q("SELECT * FROM `item` WHERE `mid` = '%s' AND `uid` = %d ORDER BY `id` ASC ",
 		$arr['mid'],           // already dbesc'd
 		intval($arr['uid'])
 	);
 
+
 	if($r && count($r)) {
 		$current_post = $r[0]['id'];
+		$arr = $r[0];  // This will gives us a fresh copy of what's now in the DB and undo the db escaping, which really messes up the notifications
 		logger('item_store: created item ' . $current_post, LOGGER_DEBUG);
 	}
 	else {
-		logger('item_store: could not locate created item');
-		return 0;
+		logger('item_store: could not locate stored item');
+		$ret['message'] = 'unable to retrieve.';
+		return $ret;
 	}
 	if(count($r) > 1) {
 		logger('item_store: duplicated post occurred. Removing duplicates.');
@@ -1641,6 +1729,7 @@ function item_store($arr,$allow_exec = false) {
 		intval($current_post)
 	);
 
+	// These are probably redundant now that we've queried the just stored post
 	$arr['id']        = $current_post;
 	$arr['parent']    = $parent_id;
 	$arr['allow_cid'] = $allow_cid;
@@ -1681,73 +1770,30 @@ function item_store($arr,$allow_exec = false) {
 	send_status_notifications($current_post,$arr);
 
 	tag_deliver($arr['uid'],$current_post);
+	$ret['success'] = true;
+	$ret['item_id'] = $current_post;
 
-	return $current_post;
+	return $ret;
 }
 
 
 
 function item_store_update($arr,$allow_exec = false) {
 
+	$ret = array('result' => false, 'item_id' => 0);
 	if(! intval($arr['uid'])) {
 		logger('item_store_update: no uid');
-		return 0;
+		$ret['message'] = 'no uid.';
+		return $ret;
 	}
 	if(! intval($arr['id'])) {
 		logger('item_store_update: no id');
-		return 0;
+		$ret['message'] = 'no id.';
+		return $ret;
 	}
 
 	$orig_post_id = $arr['id'];
-	unset($arr['id']);
 	$uid = $arr['uid'];
-	unset($arr['uid']);
-	
-
-	$arr['lang'] = detect_language($arr['body']);
-
-	$allowed_languages = get_pconfig($arr['uid'],'system','allowed_languages');
-	
-	if((is_array($allowed_languages)) && ($arr['lang']) && (! array_key_exists($arr['lang'],$allowed_languages))) {
-		$translate = array('item' => $arr, 'from' => $arr['lang'], 'to' => $allowed_languages, 'translated' => false);
-		call_hooks('item_translate', $translate);
-		if((! $translate['translated']) && (intval(get_pconfig($arr['uid'],'system','reject_disallowed_languages')))) {
-			logger('item_store: language ' . $arr['lang'] . ' not accepted for uid ' . $arr['uid']);
-			return;
-		}
-		$arr = $translate['item'];
-	}
-
-	$arr['mimetype']      = ((x($arr,'mimetype'))      ? notags(trim($arr['mimetype']))      : 'text/bbcode');
-
-	if(($arr['mimetype'] == 'application/x-php') && (! $allow_exec)) {
-		logger('item_store: php mimetype but allow_exec is denied.');
-		return 0;
-	}
-
-
-	// Shouldn't happen but we want to make absolutely sure it doesn't leak from a plugin.
-
-	if($arr['mimetype'] != 'text/html' && $arr['mimetype'] != 'application/x-php') {
-
-		if((strpos($arr['body'],'<') !== false) || (strpos($arr['body'],'>') !== false)) 
-			$arr['body'] = escape_tags($arr['body']);
-
-		if((x($arr,'object')) && is_array($arr['object'])) {
-			activity_sanitise($arr['object']);
-			$arr['object'] = json_encode($arr['object']);
-		}
-
-		if((x($arr,'target')) && is_array($arr['target'])) {
-			activity_sanitise($arr['target']);
-			$arr['target'] = json_encode($arr['target']);
-		}
-
-		if((x($arr,'attach')) && is_array($arr['attach'])) {
-			activity_sanitise($arr['attach']);
-			$arr['attach'] = json_encode($arr['attach']);
-		}
-	}
 
 	$orig = q("select * from item where id = %d and uid = %d limit 1",
 		intval($orig_post_id),
@@ -1755,8 +1801,82 @@ function item_store_update($arr,$allow_exec = false) {
 	);
 	if(! $orig) {
 		logger('item_store_update: original post not found: ' . $orig_post_id);
-		return 0;
+		$ret['message'] = 'no original';
+		return $ret;
 	}		
+
+	if($orig[0]['item_flags'] & ITEM_VERIFIED)
+		$orig[0]['item_flags'] = $orig[0]['item_flags'] ^ ITEM_VERIFIED;
+
+	$arr['item_flags'] = intval($arr['item_flags']) | $orig[0]['item_flags'];
+	$arr['item_restrict'] = intval($arr['item_restrict']) | $orig[0]['item_restrict'];
+
+	unset($arr['id']);
+	unset($arr['uid']);
+	if(array_key_exists('edit',$arr))
+		unset($arr['edit']);	
+	$arr['mimetype']      = ((x($arr,'mimetype'))      ? notags(trim($arr['mimetype']))      : 'text/bbcode');
+
+	if(($arr['mimetype'] == 'application/x-php') && (! $allow_exec)) {
+		logger('item_store: php mimetype but allow_exec is denied.');
+		$ret['message'] = 'exec denied.';
+		return $ret;
+	}
+
+    if(! ($arr['item_flags'] & ITEM_OBSCURED)) {
+
+		$arr['lang'] = detect_language($arr['body']);
+        // apply the input filter here - if it is obscured it has been filtered already
+        $arr['body'] = z_input_filter($arr['uid'],$arr['body'],$arr['mimetype']);
+
+        if(local_user() && (! $arr['sig'])) {
+            $channel = get_app()->get_channel();
+            if($channel['channel_hash'] === $arr['author_xchan']) {
+                $arr['sig'] = base64url_encode(rsa_sign($arr['body'],$channel['channel_prvkey']));
+                $arr['item_flags'] |= ITEM_VERIFIED;
+            }
+        }
+
+		$allowed_languages = get_pconfig($arr['uid'],'system','allowed_languages');
+	
+		if((is_array($allowed_languages)) && ($arr['lang']) && (! array_key_exists($arr['lang'],$allowed_languages))) {
+			$translate = array('item' => $arr, 'from' => $arr['lang'], 'to' => $allowed_languages, 'translated' => false);
+			call_hooks('item_translate', $translate);
+			if((! $translate['translated']) && (intval(get_pconfig($arr['uid'],'system','reject_disallowed_languages')))) {
+				logger('item_store: language ' . $arr['lang'] . ' not accepted for uid ' . $arr['uid']);
+				$ret['message'] = 'language not accepted';
+				return $ret;
+			}
+			$arr = $translate['item'];
+		}
+		if($arr['item_private']) {
+            $key = get_config('system','pubkey');
+            $arr['item_flags'] = $arr['item_flags'] | ITEM_OBSCURED;
+            if($arr['title'])
+                $arr['title'] = json_encode(aes_encapsulate($arr['title'],$key));
+            if($arr['body'])
+                $arr['body']  = json_encode(aes_encapsulate($arr['body'],$key));
+        }
+
+	}
+
+
+	if((x($arr,'object')) && is_array($arr['object'])) {
+		activity_sanitise($arr['object']);
+		$arr['object'] = json_encode($arr['object']);
+	}
+
+	if((x($arr,'target')) && is_array($arr['target'])) {
+		activity_sanitise($arr['target']);
+		$arr['target'] = json_encode($arr['target']);
+	}
+
+	if((x($arr,'attach')) && is_array($arr['attach'])) {
+		activity_sanitise($arr['attach']);
+		$arr['attach'] = json_encode($arr['attach']);
+	}
+
+
 
 	unset($arr['aid']);
 	unset($arr['mid']);
@@ -1774,13 +1894,13 @@ function item_store_update($arr,$allow_exec = false) {
 	$arr['received']      = datetime_convert();
 	$arr['changed']       = datetime_convert();
 	$arr['title']         = ((x($arr,'title'))         ? notags(trim($arr['title']))         : '');
-	$arr['location']      = ((x($arr,'location'))      ? notags(trim($arr['location']))      : '');
-	$arr['coord']         = ((x($arr,'coord'))         ? notags(trim($arr['coord']))         : '');
-	$arr['verb']          = ((x($arr,'verb'))          ? notags(trim($arr['verb']))          : '');
-	$arr['obj_type']      = ((x($arr,'obj_type'))      ? notags(trim($arr['obj_type']))      : '');
-	$arr['object']        = ((x($arr,'object'))        ? trim($arr['object'])                : '');
-	$arr['tgt_type']      = ((x($arr,'tgt_type'))      ? notags(trim($arr['tgt_type']))      : '');
-	$arr['target']        = ((x($arr,'target'))        ? trim($arr['target'])                : '');
+	$arr['location']      = ((x($arr,'location'))      ? notags(trim($arr['location']))      : $orig[0]['location']);
+	$arr['coord']         = ((x($arr,'coord'))         ? notags(trim($arr['coord']))         : $orig[0]['coord']);
+	$arr['verb']          = ((x($arr,'verb'))          ? notags(trim($arr['verb']))          : $orig[0]['verb']);
+	$arr['obj_type']      = ((x($arr,'obj_type'))      ? notags(trim($arr['obj_type']))      : $orig[0]['obj_type']);
+	$arr['object']        = ((x($arr,'object'))        ? trim($arr['object'])                : $orig[0]['object']);
+	$arr['tgt_type']      = ((x($arr,'tgt_type'))      ? notags(trim($arr['tgt_type']))      : $orig[0]['tgt_type']);
+	$arr['target']        = ((x($arr,'target'))        ? trim($arr['target'])                : $orig[0]['target']);
 	$arr['plink']         = ((x($arr,'plink'))         ? notags(trim($arr['plink']))         : $orig[0]['plink']);
 	$arr['allow_cid']     = ((x($arr,'allow_cid'))     ? trim($arr['allow_cid'])             : $orig[0]['allow_cid']);
 	$arr['allow_gid']     = ((x($arr,'allow_gid'))     ? trim($arr['allow_gid'])             : $orig[0]['allow_gid']);
@@ -1788,17 +1908,20 @@ function item_store_update($arr,$allow_exec = false) {
 	$arr['deny_gid']      = ((x($arr,'deny_gid'))      ? trim($arr['deny_gid'])              : $orig[0]['deny_gid']);
 	$arr['item_private']  = ((x($arr,'item_private'))  ? intval($arr['item_private'])        : $orig[0]['item_private']);
 	$arr['body']          = ((x($arr,'body'))          ? trim($arr['body'])                  : '');
-	$arr['attach']        = ((x($arr,'attach'))        ? notags(trim($arr['attach']))        : '');
-	$arr['app']           = ((x($arr,'app'))           ? notags(trim($arr['app']))           : '');
-	$arr['item_restrict'] = ((x($arr,'item_restrict')) ? intval($arr['item_restrict'])       : $orig[0]['item_restrict'] );
-	$arr['item_flags']    = ((x($arr,'item_flags'))    ? intval($arr['item_flags'])          : $orig[0]['item_flags'] );
+	$arr['attach']        = ((x($arr,'attach'))        ? notags(trim($arr['attach']))        : $orig[0]['attach']);
+	$arr['app']           = ((x($arr,'app'))           ? notags(trim($arr['app']))           : $orig[0]['app']);
+//	$arr['item_restrict'] = ((x($arr,'item_restrict')) ? intval($arr['item_restrict'])       : $orig[0]['item_restrict'] );
+//	$arr['item_flags']    = ((x($arr,'item_flags'))    ? intval($arr['item_flags'])          : $orig[0]['item_flags'] );
 	
+	$arr['sig']           = ((x($arr,'sig'))           ? $arr['sig']                         : '');
+	$arr['layout_mid']     = ((x($arr,'layout_mid'))    ? dbesc($arr['layout_mid'])           : $orig[0]['layout_mid'] );
 
 	call_hooks('post_remote_update',$arr);
 
 	if(x($arr,'cancel')) {
 		logger('item_store_update: post cancelled by plugin.');
-		return 0;
+		$ret['message'] = 'cancelled.';
+		return $ret;
 	}
 
 	// pull out all the taxonomy stuff for separate storage
@@ -1826,7 +1949,8 @@ function item_store_update($arr,$allow_exec = false) {
 		logger('item_store_update: updated item ' . $orig_post_id, LOGGER_DEBUG);
 	else {
 		logger('item_store_update: could not update item');
-		return 0;
+		$ret['message'] = 'DB update failed.';
+		return $ret;
 	}
 
 	$r = q("delete from term where oid = %d and otype = %d",
@@ -1855,8 +1979,10 @@ function item_store_update($arr,$allow_exec = false) {
 	send_status_notifications($orig_post_id,$arr);
 
 	tag_deliver($uid,$orig_post_id);
+	$ret['success'] = true;
+	$ret['item_id'] = $orig_post_id;
 
-	return $orig_post_id;
+	return $ret;
 }
 
 
@@ -1993,6 +2119,12 @@ function tag_deliver($uid,$item_id) {
 			logger('tag_deliver: tag permission denied for ' . $u[0]['channel_address']);
 	}
 
+
+	$union = check_item_source($uid,$item);
+	if($union)
+		logger('check_item_source returns true');
+
+
 	// This might be a followup by the original post author to a tagged forum
 	// If so setup a second delivery chain
 
@@ -2003,8 +2135,13 @@ function tag_deliver($uid,$item_id) {
 			intval($item['parent']),
 			intval($uid)
 		);
-		if(($x) && ($x[0]['item_flags'] & ITEM_UPLINK) && ($x[0]['author_xchan'] == $item['author_xchan'])) {
-			logger('tag_deliver: creating second delivery chain for owner comment.');
+
+// issue #59
+// FIXME - check security on post and allowed senders, right now we just allow it. The author *may* be foreign and the original owner is lost on our copy of the post. So this could be very hard to verify. For instance what happens if the top-level post was a wall-to-wall?  
+//		if(($x) && ($x[0]['item_flags'] & ITEM_UPLINK) && ($x[0]['author_xchan'] == $item['author_xchan'])) {
+		if(($x) && ($x[0]['item_flags'] & ITEM_UPLINK)) {
+//			logger('tag_deliver: creating second delivery chain for owner comment.');
+			logger('tag_deliver: creating second delivery chain for comment to tagged post.');
 
 			// now change this copy of the post to a forum head message and deliver to all the tgroup members
 			// also reset all the privacy bits to the forum default permissions
@@ -2054,42 +2191,44 @@ function tag_deliver($uid,$item_id) {
 			intval(ITEM_MENTIONSME),
 			intval($item_id)
 		);			
-	}
-	else
-		return;
 
-	// At this point we've determined that the person receiving this post was mentioned in it.
-	// Now let's check if this mention was inside a reshare so we don't spam a forum
+		// At this point we've determined that the person receiving this post was mentioned in it or it is a union.
+		// Now let's check if this mention was inside a reshare so we don't spam a forum
 
-	$body = preg_replace('/\[share(.*?)\[\/share\]/','',$item['body']);
+		$body = preg_replace('/\[share(.*?)\[\/share\]/','',$item['body']);
 
-	$pattern = '/@\[zrl\=' . preg_quote($term['url'],'/') . '\]' . preg_quote($u[0]['channel_name'],'/') . '\[\/zrl\]/';
+		$pattern = '/@\[zrl\=' . preg_quote($term['url'],'/') . '\]' . preg_quote($u[0]['channel_name'],'/') . '\[\/zrl\]/';
 
-	if(! preg_match($pattern,$body,$matches)) {
-		logger('tag_deliver: mention was in a reshare - ignoring');
-		return;
-	}
+		if(! preg_match($pattern,$body,$matches)) {
+			logger('tag_deliver: mention was in a reshare - ignoring');
+			return;
+		}
 	
 
-	// All good. 
-	// Send a notification
+		// All good. 
+		// Send a notification
 
-	require_once('include/enotify.php');
-	notification(array(
-		'to_xchan'     => $u[0]['channel_hash'],
-		'from_xchan'   => $item['author_xchan'],
-		'type'         => NOTIFY_TAGSELF,
-		'item'         => $item,
-		'link'         => $i[0]['llink'],
-		'verb'         => ACTIVITY_TAG,
-		'otype'        => 'item'
-	));
+		require_once('include/enotify.php');
+		notification(array(
+			'to_xchan'     => $u[0]['channel_hash'],
+			'from_xchan'   => $item['author_xchan'],
+			'type'         => NOTIFY_TAGSELF,
+			'item'         => $item,
+			'link'         => $i[0]['llink'],
+			'verb'         => ACTIVITY_TAG,
+			'otype'        => 'item'
+		));
 
 
-	if(! perm_is_allowed($uid,$item['author_xchan'],'tag_deliver')) {
-		logger('tag_delivery denied for uid ' . $uid . ' and xchan ' . $item['author_xchan']);
-		return;
+		if(! perm_is_allowed($uid,$item['author_xchan'],'tag_deliver')) {
+			logger('tag_delivery denied for uid ' . $uid . ' and xchan ' . $item['author_xchan']);
+			return;
+		}
+
 	}
+
+	if((! $mention) && (! $union))
+		return;
 
 
 	// tgroup delivery - setup a second delivery chain
@@ -2196,6 +2335,73 @@ function tgroup_check($uid,$item) {
 	return true;
 
 }
+
+
+/**
+ * @function check_item_source($uid,$item)
+ * @param $uid
+ * @param $item
+ *
+ * @description
+ * Checks to see if this item owner is referenced as a source for this channel and if the post 
+ * matches the rules for inclusion in this channel. Returns true if we should create a second delivery
+ * chain and false if none of the rules apply, or if the item is private.
+ */
+ 
+
+function check_item_source($uid,$item) {
+
+	if($item['item_private'])
+		return false;
+	
+
+	$r = q("select * from source where src_channel_id = %d and src_xchan = '%s' limit 1",
+		intval($uid),
+		dbesc($item['owner_xchan'])
+	);
+
+	if(! $r)
+		return false;
+
+	$x = q("select abook_their_perms from abook where abook_channel = %d and abook_xchan = '%s' limit 1",
+		intval($uid),
+		dbesc($item['owner_xchan'])
+	);
+			
+	if(! $x)
+		return false;
+
+	if(! ($x[0]['abook_their_perms'] & PERMS_A_REPUBLISH))
+		return false;
+
+	if($r[0]['src_channel_xchan'] === $item['owner_xchan'])
+		return false;
+
+	if(! $r[0]['src_patt'])
+		return true;
+
+	require_once('include/html2plain.php');
+	$text = prepare_text($item['body'],$item['mimetype']);
+	$text = html2plain($text);
+
+	$tags = ((count($items['term'])) ? $items['term'] : false);
+
+	$words = explode("\n",$r[0]['src_patt']);
+	if($words) {
+		foreach($words as $word) {
+			if(substr($word,0,1) === '#' && $tags) {
+				foreach($tags as $t)
+					if($t['type'] == TERM_HASHTAG && substr($t,1) === $word)
+						return true;
+			}
+			if(stristr($text,$word) !== false)
+				return true;
+		}
+	}
+	return false;
+}
+
+
 
 
 function mail_store($arr) {
@@ -2320,21 +2526,21 @@ function dfrn_deliver($owner,$contact,$atom, $dissolve = false) {
 	if(! $rino_enable)
 		$rino = 0;
 
-	$ssl_val = intval(get_config('system','ssl_policy'));
-	$ssl_policy = '';
+//	$ssl_val = intval(get_config('system','ssl_policy'));
+//	$ssl_policy = '';
 
-	switch($ssl_val){
-		case SSL_POLICY_FULL:
-			$ssl_policy = 'full';
-			break;
-		case SSL_POLICY_SELFSIGN:
-			$ssl_policy = 'self';
-			break;			
-		case SSL_POLICY_NONE:
-		default:
-			$ssl_policy = 'none';
-			break;
-	}
+//	switch($ssl_val){
+//		case SSL_POLICY_FULL:
+//			$ssl_policy = 'full';
+//			break;
+//		case SSL_POLICY_SELFSIGN:
+//			$ssl_policy = 'self';
+//			break;			
+//		case SSL_POLICY_NONE:
+//		default:
+//			$ssl_policy = 'none';
+//			break;
+//	}
 
 	$url = $contact['notify'] . '&dfrn_id=' . $idtosend . '&dfrn_version=' . DFRN_PROTOCOL_VERSION . (($rino) ? '&rino=1' : '');
 
@@ -2423,7 +2629,7 @@ function dfrn_deliver($owner,$contact,$atom, $dissolve = false) {
 		$postvars['perm'] = 'r';
 	}
 
-	$postvars['ssl_policy'] = $ssl_policy;
+//	$postvars['ssl_policy'] = $ssl_policy;
 
 	if($page)
 		$postvars['page'] = $page;
@@ -2526,6 +2732,9 @@ function consume_feed($xml,$importer,&$contact, &$hub, $datedir = 0, $pass = 0) 
 		logger('consume_feed: empty input');
 		return;
 	}
+
+	// Want to see this work as a content source for the matrix? 
+	// Read this: https://github.com/friendica/red/wiki/Service_Federation
 		
 	$feed = new SimplePie();
 	$feed->set_raw_data($xml);
@@ -2541,12 +2750,6 @@ function consume_feed($xml,$importer,&$contact, &$hub, $datedir = 0, $pass = 0) 
 	$permalink = $feed->get_permalink();
 
 	// Check at the feed level for updated contact name and/or photo
-
-	$name_updated  = '';
-	$new_name = '';
-	$photo_timestamp = '';
-	$photo_url = '';
-	$birthday = '';
 
 
 	// process any deleted entries
@@ -2569,7 +2772,7 @@ function consume_feed($xml,$importer,&$contact, &$hub, $datedir = 0, $pass = 0) 
 /*				$r = q("SELECT `item`.*, `contact`.`self` FROM `item` left join `contact` on `item`.`contact-id` = `contact`.`id` 
 					WHERE `mid` = '%s' AND `item`.`uid` = %d AND `contact-id` = %d AND NOT `item`.`file` LIKE '%%[%%' LIMIT 1",
 					dbesc($mid),
-					intval($importer['uid']),
+					intval($importer['channel_id']),
 					intval($contact['id'])
 				);
 */
@@ -2587,7 +2790,7 @@ function consume_feed($xml,$importer,&$contact, &$hub, $datedir = 0, $pass = 0) 
 							dbesc($when),
 							dbesc(datetime_convert()),
 							dbesc($item['mid']),
-							intval($importer['uid'])
+							intval($importer['channel_id'])
 						);
 					}
 					else {
@@ -2598,7 +2801,7 @@ function consume_feed($xml,$importer,&$contact, &$hub, $datedir = 0, $pass = 0) 
 							dbesc($when),
 							dbesc(datetime_convert()),
 							dbesc($mid),
-							intval($importer['uid'])
+							intval($importer['channel_id'])
 						);
 					}
 				}	
@@ -2623,6 +2826,9 @@ function consume_feed($xml,$importer,&$contact, &$hub, $datedir = 0, $pass = 0) 
 
 			$is_reply = false;
 			$item_id = $item->get_id();
+
+logger('consume_feed: processing ' . $item_id);
+
 			$rawthread = $item->get_item_tags( NAMESPACE_THREAD,'in-reply-to');
 			if(isset($rawthread[0]['attribs']['']['ref'])) {
 				$is_reply = true;
@@ -2633,11 +2839,6 @@ function consume_feed($xml,$importer,&$contact, &$hub, $datedir = 0, $pass = 0) 
 
 				if($pass == 1)
 					continue;
-
-				// not allowed to post
-// FIXME - check permissions
-//				if($contact['rel'] == CONTACT_IS_FOLLOWER)
-//					continue;
 
 
 				// Have we seen it? If not, import it.
@@ -2660,12 +2861,12 @@ function consume_feed($xml,$importer,&$contact, &$hub, $datedir = 0, $pass = 0) 
 
 				$r = q("SELECT `uid`, `edited`, `body` FROM `item` WHERE `mid` = '%s' AND `uid` = %d LIMIT 1",
 					dbesc($item_id),
-					intval($importer['uid'])
+					intval($importer['channel_id'])
 				);
 
 				// Update content if 'updated' changes
 
-				if(count($r)) {
+				if($r) {
 					if((x($datarray,'edited') !== false) && (datetime_convert('UTC','UTC',$datarray['edited']) !== $r[0]['edited'])) {  
 
 						// do not accept (ignore) an earlier edit than one we currently have.
@@ -2677,7 +2878,7 @@ function consume_feed($xml,$importer,&$contact, &$hub, $datedir = 0, $pass = 0) 
 							dbesc($datarray['body']),
 							dbesc(datetime_convert('UTC','UTC',$datarray['edited'])),
 							dbesc($item_id),
-							intval($importer['uid'])
+							intval($importer['channel_id'])
 						);
 					}
 
@@ -2686,7 +2887,7 @@ function consume_feed($xml,$importer,&$contact, &$hub, $datedir = 0, $pass = 0) 
 
 
 				$datarray['parent_mid'] = $parent_mid;
-				$datarray['uid'] = $importer['uid'];
+				$datarray['uid'] = $importer['channel_id'];
 				$datarray['contact-id'] = $contact['id'];
 				if((activity_match($datarray['verb'],ACTIVITY_LIKE)) || (activity_match($datarray['verb'],ACTIVITY_DISLIKE))) {
 					$datarray['type'] = 'activity';
@@ -2710,7 +2911,7 @@ function consume_feed($xml,$importer,&$contact, &$hub, $datedir = 0, $pass = 0) 
 					if($xt->type == ACTIVITY_OBJ_NOTE) {
 						$r = q("select * from item where `mid` = '%s' AND `uid` = %d limit 1",
 							dbesc($xt->id),
-							intval($importer['importer_uid'])
+							intval($importer['channel_id'])
 						);
 						if(! count($r))
 							continue;
@@ -2728,7 +2929,10 @@ function consume_feed($xml,$importer,&$contact, &$hub, $datedir = 0, $pass = 0) 
 					}
 				}
 
-				$r = item_store($datarray);
+logger('consume_feed: ' . print_r($datarray,true));
+
+//				$xx = item_store($datarray);
+				$r = $xx['item_id'];
 				continue;
 			}
 
@@ -2759,7 +2963,7 @@ function consume_feed($xml,$importer,&$contact, &$hub, $datedir = 0, $pass = 0) 
 				if((x($datarray,'obj_type')) && ($datarray['obj_type'] === ACTIVITY_OBJ_EVENT)) {
 					$ev = bbtoevent($datarray['body']);
 					if(x($ev,'desc') && x($ev,'start')) {
-						$ev['uid'] = $importer['uid'];
+						$ev['uid'] = $importer['channel_id'];
 						$ev['mid'] = $item_id;
 						$ev['edited'] = $datarray['edited'];
 						$ev['private'] = $datarray['private'];
@@ -2768,23 +2972,23 @@ function consume_feed($xml,$importer,&$contact, &$hub, $datedir = 0, $pass = 0) 
 							$ev['cid'] = $contact['id'];
 						$r = q("SELECT * FROM `event` WHERE `mid` = '%s' AND `uid` = %d LIMIT 1",
 							dbesc($item_id),
-							intval($importer['uid'])
+							intval($importer['channel_id'])
 						);
 						if(count($r))
 							$ev['id'] = $r[0]['id'];
-						$xyz = event_store($ev);
+//						$xyz = event_store($ev);
 						continue;
 					}
 				}
 
 				$r = q("SELECT `uid`, `edited`, `body` FROM `item` WHERE `mid` = '%s' AND `uid` = %d LIMIT 1",
 					dbesc($item_id),
-					intval($importer['uid'])
+					intval($importer['channel_id'])
 				);
 
 				// Update content if 'updated' changes
 
-				if(count($r)) {
+				if($r) {
 					if((x($datarray,'edited') !== false) && (datetime_convert('UTC','UTC',$datarray['edited']) !== $r[0]['edited'])) {  
 
 						// do not accept (ignore) an earlier edit than one we currently have.
@@ -2796,7 +3000,7 @@ function consume_feed($xml,$importer,&$contact, &$hub, $datedir = 0, $pass = 0) 
 							dbesc($datarray['body']),
 							dbesc(datetime_convert('UTC','UTC',$datarray['edited'])),
 							dbesc($item_id),
-							intval($importer['uid'])
+							intval($importer['channel_id'])
 						);
 					}
 
@@ -2824,8 +3028,8 @@ function consume_feed($xml,$importer,&$contact, &$hub, $datedir = 0, $pass = 0) 
 				}
 
 
-				if(! is_array($contact))
-					return;
+//				if(! is_array($contact))
+//					return;
 
 
 				// This is my contact on another system, but it's really me.
@@ -2836,7 +3040,7 @@ function consume_feed($xml,$importer,&$contact, &$hub, $datedir = 0, $pass = 0) 
 				}
 
 				$datarray['parent_mid'] = $item_id;
-				$datarray['uid'] = $importer['uid'];
+				$datarray['uid'] = $importer['channel_id'];
 				$datarray['contact-id'] = $contact['id'];
 
 				if(! link_compare($datarray['owner-link'],$contact['url'])) {
@@ -2854,16 +3058,20 @@ function consume_feed($xml,$importer,&$contact, &$hub, $datedir = 0, $pass = 0) 
 				// posting an @-tag delivery, which followers are allowed to do for certain
 				// page types. Now that we've parsed the post, let's check if it is legit. Otherwise ignore it. 
 
-				if(($contact['rel'] == CONTACT_IS_FOLLOWER) && (! tgroup_check($importer['uid'],$datarray)))
+				if(($contact['rel'] == CONTACT_IS_FOLLOWER) && (! tgroup_check($importer['channel_id'],$datarray)))
 					continue;
 
+logger('consume_feed: ' . print_r($datarray,true));
 
-				$r = item_store($datarray);
+//				$xx = item_store($datarray);
+				$r = $xx['item_id'];
 				continue;
 
 			}
 		}
 	}
+
+
 }
 
 
@@ -2926,9 +3134,8 @@ function atom_entry($item,$type,$author,$owner,$comment = false,$cid = 0) {
 	$o .= '<title>' . xmlify($item['title']) . '</title>' . "\r\n";
 	$o .= '<published>' . xmlify(datetime_convert('UTC','UTC',$item['created'] . '+00:00',ATOM_TIME)) . '</published>' . "\r\n";
 	$o .= '<updated>' . xmlify(datetime_convert('UTC','UTC',$item['edited'] . '+00:00',ATOM_TIME)) . '</updated>' . "\r\n";
-	$o .= '<zot:env>' . base64url_encode($body, true) . '</zot:env>' . "\r\n";
-	// FIXME for other content types
-	$o .= '<content type="' . $type . '" >' . xmlify((($type === 'html') ? bbcode($body) : $body)) . '</content>' . "\r\n";
+
+	$o .= '<content type="' . $type . '" >' . xmlify(prepare_text($body,$item['mimetype'])) . '</content>' . "\r\n";
 	$o .= '<link rel="alternate" type="text/html" href="' . xmlify($item['plink']) . '" />' . "\r\n";
 
 	if($item['location']) {
@@ -3599,23 +3806,29 @@ function items_fetch($arr,$channel = null,$observer_hash = null,$client_mode = C
 			return $result;
         }
 
-        $contacts = expand_groups(array($arr['group']));
-        if((is_array($contacts)) && count($contacts)) {
-            $contact_str = implode(',',$contacts);
+
+		$contact_str = '';
+        $contacts = group_get_members($group);
+        if($contacts) {
+			foreach($contacts as $c) {
+				if($contact_str)
+					$contact_str .= ',';
+            	$contact_str .= "'" . $c['xchan'] . "'";
+			}
         }
         else {
-			$contact_str = ' 0 ';
-            $result['message'] = t('Collection has no members.');
+			$contact_str = ' 0 ';	
+			info( t('Group is empty'));
         }
 
-        $sql_extra = " AND item.parent IN ( SELECT DISTINCT parent FROM item WHERE true $sql_options AND ( author_xchan IN ( $contact_str ) OR owner_xchan in ( $contact_str) or allow_gid like '" . protect_sprintf('%<' . dbesc($r[0]['hash']) . '>%') . "' ) and item_restrict = 0 ) ";
+        $sql_extra = " AND item.parent IN ( SELECT DISTINCT parent FROM item WHERE true $sql_options AND (( author_xchan IN ( $contact_str ) OR owner_xchan in ( $contact_str)) or allow_gid like '" . protect_sprintf('%<' . dbesc($r[0]['hash']) . '>%') . "' ) and id = parent and item_restrict = 0 ) ";
 
     }
     elseif($arr['cid'] && $uid) {
 
-        $r = q("SELECT * from abook where abook_id = %d and abook_channel = %d and not ( abook_flags & " . intval(ABOOK_FLAG_BLOCKED) . ") limit 1",
+        $r = q("SELECT abook.*, xchan.* from abook left join xchan on abook_xchan = xchan_hash where abook_id = %d and abook_channel = %d and not ( abook_flags & " . intval(ABOOK_FLAG_BLOCKED) . ") limit 1",
 			intval($arr['cid']),
-			intval($uid)
+			intval(local_user())
         );
         if($r) {
             $sql_extra = " AND item.parent IN ( SELECT DISTINCT parent FROM item WHERE true $sql_options AND uid = " . intval($arr['uid']) . " AND ( author_xchan = '" . dbesc($r[0]['abook_xchan']) . "' or owner_xchan = '" . dbesc($r[0]['abook_xchan']) . "' ) and item_restrict = 0 ) ";
@@ -3698,11 +3911,17 @@ function items_fetch($arr,$channel = null,$observer_hash = null,$client_mode = C
 	require_once('include/security.php');
 	$sql_extra .= item_permissions_sql($channel['channel_id']);
 
+	if($arr['pages'])
+		$item_restrict = " AND (item_restrict & " . ITEM_WEBPAGE . ") ";
+	else
+		$item_restrict = " AND item_restrict = 0 ";
+
+
     if($arr['nouveau'] && ($client_mode & CLIENT_MODELOAD) && $channel) {
         // "New Item View" - show all items unthreaded in reverse created date order
 
         $items = q("SELECT item.*, item.id AS item_id FROM item
-            WHERE $item_uids AND item_restrict = 0
+            WHERE $item_uids $item_restrict
             $simple_update
             $sql_extra $sql_nets
             ORDER BY item.received DESC $pager_sql "
@@ -3729,7 +3948,7 @@ function items_fetch($arr,$channel = null,$observer_hash = null,$client_mode = C
 
             $r = q("SELECT distinct item.id AS item_id FROM item
                 left join abook on item.author_xchan = abook.abook_xchan
-                WHERE $item_uids AND item.item_restrict = 0
+                WHERE $item_uids $item_restrict
                 AND item.parent = item.id
                 and ((abook.abook_flags & %d) = 0 or abook.abook_flags is null)
                 $sql_extra3 $sql_extra $sql_nets
@@ -3742,7 +3961,7 @@ function items_fetch($arr,$channel = null,$observer_hash = null,$client_mode = C
             // update
             $r = q("SELECT item.parent AS item_id FROM item
                 left join abook on item.author_xchan = abook.abook_xchan
-                WHERE $item_uids AND item.item_restrict = 0 $simple_update
+                WHERE $item_uids $item_restrict $simple_update
                 and ((abook.abook_flags & %d) = 0 or abook.abook_flags is null)
                 $sql_extra3 $sql_extra $sql_nets ",
                 intval(ABOOK_FLAG_BLOCKED)
@@ -3758,7 +3977,7 @@ function items_fetch($arr,$channel = null,$observer_hash = null,$client_mode = C
             $parents_str = ids_to_querystr($r,'item_id');
 
             $items = q("SELECT item.*, item.id AS item_id FROM item
-                WHERE $item_uids AND item.item_restrict = 0
+                WHERE $item_uids $item_restrict
                 AND item.parent IN ( %s )
                 $sql_extra ",
                 dbesc($parents_str)

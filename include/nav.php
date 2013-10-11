@@ -95,12 +95,16 @@ EOT;
 		);
 	}
 
-	if($observer)
+	if($observer) {
+		$nav['locked'] = true;
 		$nav['lock'] = array('logout','','lock', 
 			sprintf( t('%s - click to logout'), $observer['xchan_addr']));
-	else
+	}
+	else {
+		$nav['locked'] = false;
 		$nav['lock'] = array('rmagic','','unlock', 
 			t('Click to authenticate to your home hub'));
+	}
 
 	/**
 	 * "Home" should also take you home from an authenticated remote profile connection
@@ -141,11 +145,11 @@ EOT;
 
 	if(local_user()) {
 
-		$nav['network'] = array('network', t('Matrix'), "", t('Conversations from your grid'));
+		$nav['network'] = array('network', t('Matrix'), "", t('Your matrix'));
 		$nav['network']['all']=array('notifications/network', t('See all matrix notifications'), "", "");
 		$nav['network']['mark'] = array('', t('Mark all matrix notifications seen'), '','');
 
-		$nav['home'] = array('channel/' . $channel['channel_address'], t('Home'), "", t('Your posts and conversations'));
+		$nav['home'] = array('channel/' . $channel['channel_address'], t('Channel Home'), "", t('Channel home'));
 		$nav['home']['all']=array('notifications/channel', t('See all channel notifications'), "", "");
 		$nav['home']['mark'] = array('', t('Mark all channel notifications seen'), '','');
 
@@ -200,7 +204,7 @@ EOT;
 
 	$a->page['nav'] .= replace_macros($tpl, array(
         '$baseurl' => $a->get_baseurl(),
-		'$langselector' => lang_selector(),
+		'$langselector' => ((get_config('system','select_language')) ? lang_selector() : ''),
 		'$sitelocation' => $sitelocation,
 		'$nav' => $nav,
 		'$banner' =>  $banner,
@@ -235,5 +239,5 @@ function nav_set_selected($item){
 		'manage'        => null,
 		'register'      => null,
 	);
-	$a->nav_sel[$item] = 'selected';
+	$a->nav_sel[$item] = 'active';
 }

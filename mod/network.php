@@ -64,7 +64,6 @@ function network_init(&$a) {
 		}
 	}
 	
-	$group_id = ((x($_GET,'gid')) ? intval($_GET['gid']) : 0);
 		  
 	require_once('include/group.php');
 	require_once('include/contact_widgets.php');
@@ -74,8 +73,10 @@ function network_init(&$a) {
 		$a->page['aside'] = '';
 
 	$search = ((x($_GET,'search')) ? $_GET['search'] : '');
+	
 
-	if(x($_GET,'save')) {
+
+	if(x($_GET,'save') && $search) {
 		$r = q("select * from `term` where `uid` = %d and `type` = %d and `term` = '%s' limit 1",
 			intval(local_user()),
 			intval(TERM_SAVEDSEARCH),
@@ -103,6 +104,28 @@ function network_init(&$a) {
 
 	$a->page['aside'] .= saved_searches($search);
 	$a->page['aside'] .= fileas_widget($a->get_baseurl(true) . '/network',(x($_GET, 'file') ? $_GET['file'] : ''));
+
+
+	if($search) {
+		if(strpos($search,'@') === 0) {
+			$r = q("select abook_id from abook left join xchan on abook_xchan = xchan_hash where xchan_name = '%s' and abook_channel = %d limit 1",
+				dbesc(substr($search,1)),
+				intval(local_user())
+			);
+			if($r) {
+				$_GET['cid'] = $r[0]['abook_id'];
+				$search = $_GET['search'] = '';
+			}
+		}
+		elseif(strpos($search,'#') === 0) {
+			$search = $_GET['search'] = substr($search,1);
+		}
+	}
+
+	$group_id = ((x($_GET,'gid')) ? intval($_GET['gid']) : 0);
+
+
+
 
 }
 
@@ -149,7 +172,7 @@ function saved_searches($search) {
 	$o = replace_macros($tpl, array(
 		'$title'	 => t('Saved Searches'),
 		'$add'		 => t('add'),
-		'$searchbox' => search($search,'netsearch-box',$srchurl,true),
+		'$searchbox' => search('','netsearch-box',$srchurl,true),
 		'$saved' 	 => $saved,
 	));
 	
@@ -325,9 +348,9 @@ function network_content(&$a, $update = 0, $load = false) {
 
 	
 	// save selected tab, but only if not in search or file mode
-	if(!x($_GET,'search') && !x($_GET,'file')) {
-		set_pconfig( local_user(), 'network.view','tab.selected',array($all_active, $postord_active, $conv_active, $new_active, $starred_active, $bookmarked_active, $spam_active) );
-	}
+//	if(!x($_GET,'search') && !x($_GET,'file')) {
+//		set_pconfig( local_user(), 'network.view','tab.selected',array($all_active, $postord_active, $conv_active, $new_active, $starred_active, $bookmarked_active, $spam_active) );
+//	}
 
 
 	$contact_id = $a->cid;
@@ -379,14 +402,14 @@ function network_content(&$a, $update = 0, $load = false) {
 
 		// --- end item filter tabs
 
-
+		$search = (($_GET['search']) ? $_GET['search'] : '');
 		// search terms header
 		if($search)
 			$o .= '<h2>' . t('Search Results For:') . ' '  . htmlspecialchars($search) . '</h2>';
 
 		nav_set_selected('network');
 
-		$celeb = ((($a->user['page-flags'] == PAGE_SOAPBOX) || ($a->user['page-flags'] == PAGE_COMMUNITY)) ? true : false);
+		$celeb = false;
 
 		$x = array(
 			'is_owner' => true,
@@ -432,31 +455,36 @@ function network_content(&$a, $update = 0, $load = false) {
 			// NOTREACHED
 		}
 
-        $contacts = expand_groups(array($arr['group']));
-        if((is_array($contacts)) && count($contacts)) {
-            $contact_str = implode(',',$contacts);
+		$contact_str = '';
+        $contacts = group_get_members($group);
+        if($contacts) {
+			foreach($contacts as $c) {
+				if($contact_str)
+					$contact_str .= ',';
+            	$contact_str .= "'" . $c['xchan'] . "'";
+			}
         }
         else {
 			$contact_str = ' 0 ';	
 			info( t('Group is empty'));
         }
 
-        $sql_extra = " AND item.parent IN ( SELECT DISTINCT parent FROM item WHERE true $sql_options AND ( author_xchan IN ( $contact_str ) OR owner_xchan in ( $contact_str) or allow_gid like '" . protect_sprintf('%<' . dbesc($r[0]['hash']) . '>%') . "' ) and item_restrict = 0 ) ";
+        $sql_extra = " AND item.parent IN ( SELECT DISTINCT parent FROM item WHERE true $sql_options AND (( author_xchan IN ( $contact_str ) OR owner_xchan in ( $contact_str)) or allow_gid like '" . protect_sprintf('%<' . dbesc($r[0]['hash']) . '>%') . "' ) and id = parent and item_restrict = 0 ) ";
 
     }
 
 	elseif($cid) {
 
-        $r = q("SELECT * from abook where abook_id = %d and abook_channel = %d and not ( abook_flags & " . intval(ABOOK_FLAG_BLOCKED) . ") limit 1",
+        $r = q("SELECT abook.*, xchan.* from abook left join xchan on abook_xchan = xchan_hash where abook_id = %d and abook_channel = %d and not ( abook_flags & " . intval(ABOOK_FLAG_BLOCKED) . ") limit 1",
 			intval($cid),
 			intval(local_user())
         );
         if($r) {
             $sql_extra = " AND item.parent IN ( SELECT DISTINCT parent FROM item WHERE true $sql_options AND uid = " . intval(local_user()) . " AND ( author_xchan = '" . dbesc($r[0]['abook_xchan']) . "' or owner_xchan = '" . dbesc($r[0]['abook_xchan']) . "' ) and item_restrict = 0 ) ";
-			$o = '<h2>' . t('Contact: ') . $r[0]['name'] . '</h2>' . $o;
+			$o = '<h2>' . t('Connection: ') . $r[0]['xchan_name'] . '</h2>' . $o;
         }
         else {
-			notice( t('Invalid contact.') . EOL);
+			notice( t('Invalid connection.') . EOL);
 			goaway($a->get_baseurl(true) . '/network');
         }
 	}
@@ -484,6 +512,7 @@ function network_content(&$a, $update = 0, $load = false) {
 
 			. "'; var profile_page = " . $a->pager['page'] . ";</script>";
 
+logger('Search: ' . $search);
 
 		$a->page['htmlhead'] .= replace_macros(get_markup_template("build_query.tpl"),array(
 			'$baseurl' => z_root(),
@@ -500,7 +529,7 @@ function network_content(&$a, $update = 0, $load = false) {
 			'$nouveau' => (($nouveau) ? $nouveau : '0'),
 			'$wall' => '0',
 			'$page' => (($a->pager['page'] != 1) ? $a->pager['page'] : 1),
-			'$search' => $search,
+			'$search' => (($search) ? $search : ''),
 			'$order' => $order,
 			'$file' => $file,
 			'$cats' => '',
@@ -641,6 +670,8 @@ function network_content(&$a, $update = 0, $load = false) {
 		$first = dba_timer();
 
 		// Then fetch all the children of the parents that are on this page
+		$parents_str = '';
+		$update_unseen = '';
 
 		if($r) {
 
@@ -699,7 +730,7 @@ function network_content(&$a, $update = 0, $load = false) {
 	$sixth = dba_timer();
 
 
-	if(! $update) 
+	if(($items) && (! $update)) 
         $o .= alt_pager($a,count($items));
 
 	if($load) {

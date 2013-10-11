@@ -184,12 +184,13 @@ function photos_post(&$a) {
 				intval($page_owner_uid),
 				dbesc($r[0]['resource_id'])
 			);
-			$i = q("SELECT * FROM `item` WHERE `resource_id` = '%s' AND `uid` = %d LIMIT 1",
+			$i = q("SELECT * FROM `item` WHERE `resource_id` = '%s' AND resource_type = 'photo' and `uid` = %d LIMIT 1",
 				dbesc($r[0]['resource_id']),
 				intval($page_owner_uid)
 			);
 			if(count($i)) {
-				q("UPDATE `item` SET `deleted` = 1, `edited` = '%s', `changed` = '%s' WHERE `parent_mid` = '%s' AND `uid` = %d",
+				q("UPDATE `item` SET item_restrict = (item_restrict & %d), `edited` = '%s', `changed` = '%s' WHERE `parent_mid` = '%s' AND `uid` = %d",
+					intval(ITEM_DELETED),
 					dbesc(datetime_convert()),
 					dbesc(datetime_convert()),
 					dbesc($i[0]['mid']),
@@ -302,6 +303,9 @@ function photos_post(&$a) {
 			);
 		}
 
+		$item_private = (($str_contact_allow || $str_group_allow || $str_contact_deny || $str_group_deny) ? true : false);
+
+
 		/* Don't make the item visible if the only change was the album name */
 
 		$visibility = 0;
@@ -319,10 +323,22 @@ function photos_post(&$a) {
 				intval($page_owner_uid)
 			);
 		}
-		if(count($r)) {
+		if($r) {
 			$old_tag    = $r[0]['tag'];
 			$old_inform = $r[0]['inform'];
 		}
+
+		// make sure the linked item has the same permissions as the photo regardless of any other changes
+		$x = q("update item set allow_cid = '%s', allow_gid = '%s', deny_cid = '%s', deny_gid = '%s', item_private = %d
+			where id = %d limit 1",
+				dbesc($str_contact_allow),
+				dbesc($str_group_allow),
+				dbesc($str_contact_deny),
+				dbesc($str_group_deny),
+				intval($item_private),
+				intval($item_id)
+		);
+
 
 		if(strlen($rawtags)) {
 
@@ -438,15 +454,15 @@ function photos_post(&$a) {
 			if(strlen($newinform) && strlen($inform))
 				$newinform .= ',';
 			$newinform .= $inform;
-
-			$r = q("UPDATE `item` SET `tag` = '%s', `inform` = '%s', `edited` = '%s', `changed` = '%s' WHERE `id` = %d AND `uid` = %d LIMIT 1",
-				dbesc($newtag),
-				dbesc($newinform),
-				dbesc(datetime_convert()),
-				dbesc(datetime_convert()),
-				intval($item_id),
-				intval($page_owner_uid)
-			);
+//FIXME - inform is gone
+//			$r = q("UPDATE `item` SET `tag` = '%s', `inform` = '%s', `edited` = '%s', `changed` = '%s' WHERE `id` = %d AND `uid` = %d LIMIT 1",
+//				dbesc($newtag),
+//				dbesc($newinform),
+//				dbesc(datetime_convert()),
+//				dbesc(datetime_convert()),
+//				intval($item_id),
+//				intval($page_owner_uid)
+//			);
 
 			$best = 0;
 			foreach($p as $scales) {
@@ -505,7 +521,9 @@ function photos_post(&$a) {
 						. $a->get_baseurl() . '/photos/' . $owner_record['nickname'] . '/image/' . $p[0]['resource_id'] . '</id>';
 					$arr['target'] .= '<link>' . xmlify('<link rel="alternate" type="text/html" href="' . $a->get_baseurl() . '/photos/' . $owner_record['nickname'] . '/image/' . $p[0]['resource_id'] . '" />' . "\n" . '<link rel="preview" type="'.$p[0]['type'].'" href="' . $a->get_baseurl() . "/photo/" . $p[0]['resource_id'] . '-' . $best . '.' . $ext . '" />') . '</link></target>';
 
-					$item_id = item_store($arr);
+					$post = item_store($arr);
+					$item_id = $post['item_id'];
+
 					if($item_id) {
 						q("UPDATE `item` SET `plink` = '%s' WHERE `uid` = %d AND `id` = %d LIMIT 1",
 							dbesc($a->get_baseurl() . '/display/' . $owner_record['nickname'] . '/' . $item_id),
@@ -851,7 +869,7 @@ function photos_content(&$a) {
 
 		// fetch image, item containing image, then comments
 
-		$ph = q("SELECT * FROM `photo` WHERE `uid` = %d AND `resource_id` = '%s' 
+		$ph = q("SELECT aid,uid,xchan,resource_id,created,edited,title,`desc`,album,filename,`type`,height,width,`size`,scale,profile,photo_flags,allow_cid,allow_gid,deny_cid,deny_gid FROM `photo` WHERE `uid` = %d AND `resource_id` = '%s' 
 			and (photo_flags = %d or photo_flags = %d ) $sql_extra ORDER BY `scale` ASC ",
 			intval($owner_uid),
 			dbesc($datum),
@@ -873,7 +891,7 @@ function photos_content(&$a) {
 				intval(PHOTO_PROFILE)
 			);
 			if($ph) 
-				notice( t('Permission denied. Access to this item may be restricted.'));
+				notice( t('Permission denied. Access to this item may be restricted.') . EOL);
 			else
 				notice( t('Photo not available') . EOL );
 			return;
@@ -957,7 +975,7 @@ function photos_content(&$a) {
 		}
 
 		if($prevlink)
-			$prevlink = array($prevlink, '<div class="icon prev"></div>') ;
+			$prevlink = array($prevlink, '<i class="icon-backward photo-icons""></i>') ;
 
 		$photo = array(
 			'href' => $a->get_baseurl() . '/photo/' . $hires['resource_id'] . '-' . $hires['scale'] . '.' . $phototypes[$hires['type']],
@@ -966,7 +984,7 @@ function photos_content(&$a) {
 		);
 
 		if($nextlink)
-			$nextlink = array($nextlink, '<div class="icon next"></div>');
+			$nextlink = array($nextlink, '<i class="icon-forward photo-icons"></i>');
 
 
 		// Do we have an item for this photo?
@@ -975,13 +993,13 @@ function photos_content(&$a) {
 			$sql_extra LIMIT 1",
 			dbesc($datum)
 		);
+
 		if($linked_items) {
 
 			$link_item = $linked_items[0];
 
-			$r = q("select * from item where parent_mid = '%s' and mid != '%s' 
+			$r = q("select * from item where parent_mid = '%s' 
 				and item_restrict = 0 and uid = %d $sql_extra ",
-				dbesc($link_item['mid']),
 				dbesc($link_item['mid']),
 				intval($link_item['uid'])
 
@@ -1003,6 +1021,9 @@ function photos_content(&$a) {
 			}
 		}
 
+		// FIXME - remove this when we move to conversation module 
+
+		$r = $r[0]['children'];
 
 		$edit = null;
 		if($can_post) {
@@ -1058,6 +1079,7 @@ function photos_content(&$a) {
 				if($can_post || $a->data['perms']['post_comments']) {
 					$comments .= replace_macros($cmnt_tpl,array(
 						'$return_path' => '', 
+						'$mode' => 'photos',
 						'$jsreload' => $return_url,
 						'$type' => 'wall-comment',
 						'$id' => $link_item['id'],
@@ -1093,6 +1115,54 @@ function photos_content(&$a) {
 
 
 
+				foreach($r as $item) {
+					$comment = '';
+					$template = $tpl;
+					$sparkle = '';
+
+					if(((activity_match($item['verb'],ACTIVITY_LIKE)) || (activity_match($item['verb'],ACTIVITY_DISLIKE))) && ($item['id'] != $item['parent']))
+						continue;
+
+					$redirect_url = $a->get_baseurl() . '/redir/' . $item['cid'] ;
+			
+
+					$profile_url = zid($item['author']['xchan_url']);
+					$sparkle = '';
+
+
+					$profile_name   = $item['author']['xchan_name'];
+					$profile_avatar = $item['author']['xchan_photo_m'];
+
+					$profile_link = $profile_url;
+
+					$drop = '';
+
+					if(($item['contact-id'] == $contact_id) || ($item['uid'] == local_user()))
+						$drop = replace_macros(get_markup_template('photo_drop.tpl'), array('$id' => $item['id'], '$delete' => t('Delete')));
+
+
+					$name_e = $profile_name;
+					$title_e = $item['title'];
+					unobscure($item);
+					$body_e = prepare_text($item['body'],$item['mimetype']);
+
+					$comments .= replace_macros($template,array(
+						'$id' => $item['item_id'],
+						'$mode' => 'photos',
+						'$profile_url' => $profile_link,
+						'$name' => $name_e,
+						'$thumb' => $profile_avatar,
+						'$sparkle' => $sparkle,
+						'$title' => $title_e,
+						'$body' => $body_e,
+						'$ago' => relative_date($item['created']),
+						'$indent' => (($item['parent'] != $item['item_id']) ? ' comment' : ''),
+						'$drop' => $drop,
+						'$comment' => $comment
+					));
+
+				}
+			
 				if($can_post || $a->data['perms']['post_comments']) {
 					$comments .= replace_macros($cmnt_tpl,array(
 						'$return_path' => '',
@@ -1110,79 +1180,7 @@ function photos_content(&$a) {
 					));
 				}
 
-				foreach($r as $item) {
-					$comment = '';
-					$template = $tpl;
-					$sparkle = '';
-
-					if(((activity_match($item['verb'],ACTIVITY_LIKE)) || (activity_match($item['verb'],ACTIVITY_DISLIKE))) && ($item['id'] != $item['parent']))
-						continue;
-
-					$redirect_url = $a->get_baseurl() . '/redir/' . $item['cid'] ;
-			
-					if($can_post || $a->data['perms']['post_comments']) {
-						$comments .= replace_macros($cmnt_tpl,array(
-							'$return_path' => '',
-							'$jsreload' => $return_url,
-							'$type' => 'wall-comment',
-							'$id' => $item['item_id'],
-							'$parent' => $item['parent'],
-							'$profile_uid' =>  $owner_uid,
-							'$mylink' => $contact['url'],
-							'$mytitle' => t('This is you'),
-							'$myphoto' => $contact['thumb'],
-							'$comment' => t('Comment'),
-							'$submit' => t('Submit'),
-							'$sourceapp' => t($a->sourcename),
-							'$ww' => ''
-						));
-					}
-
-
-					if(local_user() && ($item['contact-uid'] == local_user()) 
-						&& ($item['network'] == 'dfrn') && (! $item['self'] )) {
-						$profile_url = $redirect_url;
-						$sparkle = ' sparkle';
-					}
-					else {
-						$profile_url = $item['url'];
-						$sparkle = '';
-					}
- 
-					$diff_author = (($item['url'] !== $item['author-link']) ? true : false);
-
-					$profile_name   = (((strlen($item['author-name']))   && $diff_author) ? $item['author-name']   : $item['name']);
-					$profile_avatar = (((strlen($item['author-avatar'])) && $diff_author) ? $item['author-avatar'] : $item['thumb']);
-
-					$profile_link = $profile_url;
-
-					$drop = '';
-
-					if(($item['contact-id'] == $contact_id) || ($item['uid'] == local_user()))
-						$drop = replace_macros(get_markup_template('photo_drop.tpl'), array('$id' => $item['id'], '$delete' => t('Delete')));
-
-
-					$name_e = $profile_name;
-					$title_e = $item['title'];
-					$body_e = bbcode($item['body']);
-
-
-					$comments .= replace_macros($template,array(
-						'$id' => $item['item_id'],
-						'$profile_url' => $profile_link,
-						'$name' => $name_e,
-						'$thumb' => $profile_avatar,
-						'$sparkle' => $sparkle,
-						'$title' => $title_e,
-						'$body' => $body_e,
-						'$ago' => relative_date($item['created']),
-						'$indent' => (($item['parent'] != $item['item_id']) ? ' comment' : ''),
-						'$drop' => $drop,
-						'$comment' => $comment
-					));
-				}
 			}
-
 			$paginate = paginate($a);
 		}
 		
@@ -1209,6 +1207,8 @@ function photos_content(&$a) {
 			'$comments' => $comments,
 			'$paginate' => $paginate,
 		));
+
+		$a->data['photo_html'] = $o;
 		
 		return $o;
 	}

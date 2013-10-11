@@ -92,8 +92,14 @@ function item_redir_and_replace_images($body, $images, $cid) {
 function localize_item(&$item){
 
 	if (activity_match($item['verb'],ACTIVITY_LIKE) || activity_match($item['verb'],ACTIVITY_DISLIKE)){
-		
+	
+		if(! $item['object'])
+			return;
+	
 		$obj = json_decode_plus($item['object']);
+		if((! $obj) && ($item['object'])) {
+			logger('localize_item: failed to decode object: ' . print_r($item['object'],true));
+		}
 		
 		if($obj['author'] && $obj['author']['link'])
 			$author_link = get_rel_link($obj['author']['link'],'alternate');
@@ -161,6 +167,9 @@ function localize_item(&$item){
 			if($Bphoto != "") 
 				$item['body'] .= "\n\n\n" . '[zrl=' . chanlink_url($author_link) . '][zmg=80x80]' . $Bphoto . '[/zmg][/zrl]';
 
+		}
+		else {
+			logger('localize_item like failed: link ' . $author_link . ' name ' . $author_name . ' url ' . $item_url);
 		}
 
 	}
@@ -391,6 +400,9 @@ function visible_activity($item) {
 function conversation(&$a, $items, $mode, $update, $page_mode = 'traditional') {
 
 	$tstart = dba_timer();
+	$t0 = $t1 = $t2 = $t3 = $t4 = $t5 = $t6 = null;
+	$content_html = '';
+	$o = '';
 
 	require_once('bbcode.php');
 
@@ -488,10 +500,16 @@ function conversation(&$a, $items, $mode, $update, $page_mode = 'traditional') {
 	}
 
 
-    else if($mode === 'search') {
+    elseif($mode === 'search') {
         $live_update_div = '<div id="live-search"></div>' . "\r\n";
     }
-
+	elseif($mode === 'photos') {
+		$profile_onwer = $a->profile['profile_uid'];
+		$page_writeable = ($profile_owner == local_user());
+		$live_update_div = '<div id="live-photos"></div>' . "\r\n";
+		// for photos we've already formatted the top-level item (the photo)
+		$content_html = $a->data['photo_html'];
+	}
 
 	$page_dropping = ((local_user() && local_user() == $profile_owner) ? true : false);
 
@@ -614,11 +632,16 @@ function conversation(&$a, $items, $mode, $update, $page_mode = 'traditional') {
 				);
 
 				$star = false;
-				$isstarred = "unstarred";
+				$isstarred = "unstarred icon-star-empty";
 				
 				$lock = false;
 				$likebuttons = false;
 				$shareable = false;
+
+				$verified = (($item['item_flags'] & ITEM_VERIFIED) ? t('Message is verified') : '');
+				$unverified = '';
+
+
 
 				$tags=array();
 				$terms = get_terms_oftype($item['term'],array(TERM_HASHTAG,TERM_MENTION,TERM_UNKNOWN));
@@ -633,6 +656,7 @@ function conversation(&$a, $items, $mode, $update, $page_mode = 'traditional') {
 				$tmp_item = array(
 					'template' => $tpl,
 					'toplevel' => 'toplevel_item',
+					'mode' => $mode,
 					'id' => (($preview) ? 'P0' : $item['item_id']),
 					'linktitle' => sprintf( t('View %s\'s profile @ %s'), $profile_name, $profile_url),
 					'profile_url' => $profile_link,
@@ -646,6 +670,8 @@ function conversation(&$a, $items, $mode, $update, $page_mode = 'traditional') {
 					'tags' => $tags,
 					'hashtags' => $hashtags,
 					'mentions' => $mentions,
+					'verified' => $verified,
+					'unverified' => $unverified,
 					'txt_cats' => t('Categories:'),
                     'txt_folders' => t('Filed under:'),
                     'has_cats' => ((count($categories)) ? 'true' : ''),
@@ -712,6 +738,8 @@ function conversation(&$a, $items, $mode, $update, $page_mode = 'traditional') {
             $threads = array();
             foreach($items as $item) {
 
+				// Check for any blocked authors
+
 				if($arr_blocked) {
 					$blocked = false;
 					foreach($arr_blocked as $b) {
@@ -724,6 +752,18 @@ function conversation(&$a, $items, $mode, $update, $page_mode = 'traditional') {
 						continue;
 				}
 							
+				// Check all the kids too
+
+				if($arr_blocked && $item['children']) {
+					for($d = 0; $d < count($item['children']); $d ++) {
+						foreach($arr_blocked as $b) {
+							if(($b) && ($item['children'][$d]['author_xchan'] == $b))
+								$item['children'][$d]['author_blocked'] = true;
+						}
+					}
+				}
+
+
                 // Can we put this after the visibility check?
                 like_puller($a,$item,$alike,'like');
 
@@ -781,8 +821,9 @@ function conversation(&$a, $items, $mode, $update, $page_mode = 'traditional') {
 //	logger('nouveau: ' . print_r($threads,true));
 
 
-    $o = replace_macros($page_template, array(
+    $o .= replace_macros($page_template, array(
         '$baseurl' => $a->get_baseurl($ssl_state),
+		'$photo_item' => $content_html,
         '$live_update' => $live_update_div,
         '$remove' => t('remove'),
         '$mode' => $mode,
@@ -843,6 +884,12 @@ function item_photo_menu($item){
 
 	$ssl_state = false;
 
+	$sub_link="";
+	$poke_link="";
+	$contact_url="";
+	$pm_url="";
+	$vsrc_link = "";
+
 	if(local_user()) {
 		$ssl_state = true;
 		if(! count($a->contacts))
@@ -851,14 +898,11 @@ function item_photo_menu($item){
 		$channel_hash = (($channel) ? $channel['channel_hash'] : '');
 	}
 
-	$sub_link="";
-	$poke_link="";
-	$contact_url="";
-	$pm_url="";
-
-	if((local_user()) && local_user() == $item['uid'] && $item['parent'] == $item['id'] 
-		&& $channel && ($channel_hash != $item['author_xchan'])) {
-		$sub_link = 'javascript:dosubthread(' . $item['id'] . '); return false;';
+	if((local_user()) && local_user() == $item['uid']) {
+		$vsrc_link = $a->get_baseurl() . '/viewsrc/' . $item['id'];
+		if($item['parent'] == $item['id'] && $channel && ($channel_hash != $item['author_xchan'])) {
+			$sub_link = 'javascript:dosubthread(' . $item['id'] . '); return false;';
+		}
 	}
 
     $profile_link = z_root() . "/chanview/?f=&hash=" . $item['author_xchan'];
@@ -877,11 +921,12 @@ function item_photo_menu($item){
 	}
 
 	$menu = Array(
+		t("View Source") => $vsrc_link,
 		t("Follow Thread") => $sub_link,
 		t("View Status") => $status_link,
 		t("View Profile") => $profile_link,
 		t("View Photos") => $photos_link,
-		t("Network Posts") => $posts_link,
+		t("Matrix Activity") => $posts_link,
 		t("Edit Contact") => $contact_url,
 		t("Send PM") => $pm_url,
 		t("Poke") => $poke_link
@@ -976,8 +1021,33 @@ function status_editor($a,$x,$popup=false) {
 	$geotag = (($x['allow_location']) ? replace_macros(get_markup_template('jot_geotag.tpl'), array()) : '');
 
 	$plaintext = true;
+
 	if(feature_enabled(local_user(),'richtext'))
 		$plaintext = false;
+
+	$mimeselect = '';
+	if(array_key_exists('mimetype',$x) && $x['mimetype']) {
+		if($x['mimetype'] != 'text/bbcode')
+			$plaintext = true;
+ 		if($x['mimetype'] === 'choose') {
+			$mimeselect = mimetype_select($x['profile_uid']);
+		}
+		else
+			$mimeselect = '<input type="hidden" name="mimetype" value="' . $x['mimetype'] . '" />'; 			
+	}
+
+	$layoutselect = '';
+	if(array_key_exists('layout',$x) && $x['layout']) {
+ 		if($x['layout'] === 'choose') {
+			$layoutselect = layout_select($x['profile_uid']);
+		}
+		else
+			$layoutselect = '<input type="hidden" name="layout_mid" value="' . $x['layout'] . '" />'; 			
+	}
+	
+
+
+	$webpage = ((x($x,'webpage')) ? $x['webpage'] : '');
 
 	$tpl = get_markup_template('jot-header.tpl');
 	
@@ -1009,7 +1079,7 @@ function status_editor($a,$x,$popup=false) {
 		'$return_path' => $a->query_string,
 		'$action' =>  $a->get_baseurl(true) . '/item',
 		'$share' => (x($x,'button') ? $x['button'] : t('Share')),
-		'$webpage' => (x($x,'webpage') ? '1' : ''),
+		'$webpage' => $webpage,
 		'$placeholdpagetitle' => t('Page link title'),
 		'$pagetitle' => (x($x,'pagetitle') ? $x['pagetitle'] : ''),		
 		'$upload' => t('Upload photo'),
@@ -1028,7 +1098,7 @@ function status_editor($a,$x,$popup=false) {
 		'$shortnoloc' => t('clear location'),
 		'$title' => "",
 		'$placeholdertitle' => t('Set title'),
-		'$catsenabled' => ((feature_enabled($x['profile_uid'],'categories')) ? 'categories' : ''),
+		'$catsenabled' => ((feature_enabled($x['profile_uid'],'categories') && (! $webpage)) ? 'categories' : ''),
 		'$category' => "",
 		'$placeholdercategory' => t('Categories (comma-separated list)'),
 		'$wait' => t('Please wait'),
@@ -1046,6 +1116,8 @@ function status_editor($a,$x,$popup=false) {
 		'$emtitle' => t('Example: bob@example.com, mary@example.com'),
 		'$lockstate' => $x['lockstate'],
 		'$acl' => $x['acl'],
+		'$mimeselect' => $mimeselect,
+		'$layoutselect' => $layoutselect,
 		'$showacl' => ((array_key_exists('showacl',$x)) ? $x['showacl'] : 'yes'),
 		'$bang' => $x['bang'],
 		'$profile_uid' => $x['profile_uid'],
@@ -1125,6 +1197,7 @@ function conv_sort($arr,$order) {
 	elseif(stristr($order,'ascending'))
 		usort($parents,'sort_thr_created_rev');
 
+
 	if(count($parents))
 		foreach($parents as $i=>$_x)
 			$parents[$i]['children'] = get_item_children($arr, $_x);
@@ -1200,12 +1273,21 @@ function render_location_default($item) {
 
 
 function prepare_page($item) {
+
+	$a = get_app();
+	$naked = ((get_pconfig($item['uid'],'system','nakedpage')) ? 1 : 0);
+	if(array_key_exists('webpage',$a->layout) && array_key_exists('authored',$a->layout['webpage'])) {
+		if($a->layout['webpage']['authored'] === 'none')
+			$naked = 1;
+		// ... other possible options
+	}
+
 	return replace_macros(get_markup_template('page_display.tpl'),array(
-		'$author' => $item['author']['xchan_name'],
-		'$auth_url' => $item['author']['xchan_url'],
-		'$date' => datetime_convert('UTC',date_default_timezone_get(),$item['created'],'Y-m-d H:i'),
+		'$author' => (($naked) ? '' : $item['author']['xchan_name']),
+		'$auth_url' => (($naked) ? '' : $item['author']['xchan_url']),
+		'$date' => (($naked) ? '' : datetime_convert('UTC',date_default_timezone_get(),$item['created'],'Y-m-d H:i')),
 		'$title' => smilies(bbcode($item['title'])),
-		'$body' => smilies(bbcode($item['body']))
+		'$body' => prepare_text($item['body'],$item['mimetype'])
 	));
 }
 

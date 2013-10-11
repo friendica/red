@@ -9,6 +9,7 @@ var searchData=
   ['access_5ffree',['ACCESS_FREE',['../boot_8php.html#afbb1fe1b2c8c730ec8e08da93b6512c4',1,'boot.php']]],
   ['access_5fpaid',['ACCESS_PAID',['../boot_8php.html#a9c80420e5a063a4a87ce4831f086134d',1,'boot.php']]],
   ['access_5fprivate',['ACCESS_PRIVATE',['../boot_8php.html#a7f3474fec541e261fc8dff47313c4017',1,'boot.php']]],
+  ['access_5ftiered',['ACCESS_TIERED',['../boot_8php.html#aeb1039302affcbe7e8872c01c08c88f8',1,'boot.php']]],
   ['access_5ftoken_5fduration',['ACCESS_TOKEN_DURATION',['../oauth_8php.html#ad343cab37aa860d2d14dc86b7f5ca0c6',1,'oauth.php']]],
   ['account_5fblocked',['ACCOUNT_BLOCKED',['../boot_8php.html#af3bdfc20979c16f15bb9c60446a480f9',1,'boot.php']]],
   ['account_5fexpired',['ACCOUNT_EXPIRED',['../boot_8php.html#a400519fa181591cd6fdbb8f25fbcba0a',1,'boot.php']]],

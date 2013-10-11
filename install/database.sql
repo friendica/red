@@ -136,7 +136,7 @@ CREATE TABLE IF NOT EXISTS `challenge` (
   `type` char(255) NOT NULL,
   `last_update` char(255) NOT NULL,
   PRIMARY KEY (`id`)
-) ENGINE=MyISAM  DEFAULT CHARSET=utf8;
+) ENGINE=MyISAM DEFAULT CHARSET=utf8;
 
 CREATE TABLE IF NOT EXISTS `channel` (
   `channel_id` int(10) unsigned NOT NULL AUTO_INCREMENT,
@@ -181,6 +181,7 @@ CREATE TABLE IF NOT EXISTS `channel` (
   `channel_w_storage` int(10) unsigned NOT NULL DEFAULT '128',
   `channel_r_pages` int(10) unsigned NOT NULL DEFAULT '128',
   `channel_w_pages` int(10) unsigned NOT NULL DEFAULT '128',
+  `channel_a_republish` int(1) unsigned NOT NULL DEFAULT '128',
   PRIMARY KEY (`channel_id`),
   UNIQUE KEY `channel_address_unique` (`channel_address`),
   KEY `channel_account_id` (`channel_account_id`),
@@ -213,6 +214,7 @@ CREATE TABLE IF NOT EXISTS `channel` (
   KEY `channel_w_storage` (`channel_w_storage`),
   KEY `channel_r_pages` (`channel_r_pages`),
   KEY `channel_w_pages` (`channel_w_pages`),
+  KEY `channel_a_republish` (`channel_a_republish`),
   KEY `channel_deleted` (`channel_deleted`)
 ) ENGINE=MyISAM  DEFAULT CHARSET=utf8;
 
@@ -267,7 +269,7 @@ CREATE TABLE IF NOT EXISTS `event` (
   KEY `aid` (`aid`),
   KEY `event_hash` (`event_hash`),
   KEY `event_xchan` (`event_xchan`)
-) ENGINE=MyISAM  DEFAULT CHARSET=utf8;
+) ENGINE=MyISAM DEFAULT CHARSET=utf8;
 
 CREATE TABLE IF NOT EXISTS `fcontact` (
   `id` int(10) unsigned NOT NULL AUTO_INCREMENT,
@@ -348,7 +350,7 @@ CREATE TABLE IF NOT EXISTS `group_member` (
   KEY `uid` (`uid`),
   KEY `gid` (`gid`),
   KEY `xchan` (`xchan`)
-) ENGINE=MyISAM  DEFAULT CHARSET=utf8;
+) ENGINE=MyISAM DEFAULT CHARSET=utf8;
 
 CREATE TABLE IF NOT EXISTS `hook` (
   `id` int(11) NOT NULL AUTO_INCREMENT,
@@ -367,6 +369,7 @@ CREATE TABLE IF NOT EXISTS `hubloc` (
   `hubloc_hash` char(255) NOT NULL,
   `hubloc_addr` char(255) NOT NULL DEFAULT '',
   `hubloc_flags` int(10) unsigned NOT NULL DEFAULT '0',
+  `hubloc_status` int(10) unsigned NOT NULL DEFAULT '0',
   `hubloc_url` char(255) NOT NULL DEFAULT '',
   `hubloc_url_sig` text NOT NULL,
   `hubloc_host` char(255) NOT NULL DEFAULT '',
@@ -379,6 +382,7 @@ CREATE TABLE IF NOT EXISTS `hubloc` (
   KEY `hubloc_url` (`hubloc_url`),
   KEY `hubloc_guid` (`hubloc_guid`),
   KEY `hubloc_flags` (`hubloc_flags`),
+  KEY `hubloc_status` (`hubloc_status`),
   KEY `hubloc_connect` (`hubloc_connect`),
   KEY `hubloc_host` (`hubloc_host`),
   KEY `hubloc_addr` (`hubloc_addr`),
@@ -408,7 +412,6 @@ CREATE TABLE IF NOT EXISTS `item` (
   `mid` char(255) CHARACTER SET ascii NOT NULL DEFAULT '',
   `aid` int(10) unsigned NOT NULL DEFAULT '0',
   `uid` int(10) unsigned NOT NULL DEFAULT '0',
-  `wall` tinyint(1) NOT NULL DEFAULT '0',
   `parent` int(10) unsigned NOT NULL DEFAULT '0',
   `parent_mid` char(255) CHARACTER SET ascii NOT NULL DEFAULT '',
   `thr_parent` char(255) NOT NULL DEFAULT '',
@@ -421,7 +424,7 @@ CREATE TABLE IF NOT EXISTS `item` (
   `owner_xchan` char(255) NOT NULL DEFAULT '',
   `author_xchan` char(255) NOT NULL DEFAULT '',
   `mimetype` char(255) NOT NULL DEFAULT '',
-  `title` text NOT NULL DEFAULT '',
+  `title` text NOT NULL,
   `body` mediumtext NOT NULL,
   `app` char(255) NOT NULL DEFAULT '',
   `lang` char(64) NOT NULL DEFAULT '',
@@ -431,13 +434,14 @@ CREATE TABLE IF NOT EXISTS `item` (
   `object` text NOT NULL,
   `tgt_type` char(255) NOT NULL DEFAULT '',
   `target` text NOT NULL,
+  `layout_mid` char(255) NOT NULL DEFAULT '',
   `postopts` text NOT NULL,
   `llink` char(255) NOT NULL DEFAULT '',
   `plink` char(255) NOT NULL DEFAULT '',
   `resource_id` char(255) NOT NULL DEFAULT '',
   `resource_type` char(16) NOT NULL DEFAULT '',
   `attach` mediumtext NOT NULL,
-  `inform` mediumtext NOT NULL,
+  `sig` text NOT NULL DEFAULT '',
   `location` char(255) NOT NULL DEFAULT '',
   `coord` char(255) NOT NULL DEFAULT '',
   `comment_policy` char(255) NOT NULL DEFAULT '',
@@ -454,7 +458,6 @@ CREATE TABLE IF NOT EXISTS `item` (
   KEY `created` (`created`),
   KEY `edited` (`edited`),
   KEY `received` (`received`),
-  KEY `wall` (`wall`),
   KEY `uid_commented` (`uid`,`commented`),
   KEY `uid_created` (`uid`,`created`),
   KEY `aid` (`aid`),
@@ -474,6 +477,7 @@ CREATE TABLE IF NOT EXISTS `item` (
   KEY `parent_mid` (`parent_mid`),
   KEY `uid_mid` (`mid`,`uid`),
   KEY `comment_policy` (`comment_policy`),
+  KEY `layout_mid` (`layout_mid`),
   FULLTEXT KEY `title` (`title`),
   FULLTEXT KEY `body` (`body`),
   FULLTEXT KEY `allow_cid` (`allow_cid`),
@@ -493,7 +497,7 @@ CREATE TABLE IF NOT EXISTS `item_id` (
   KEY `sid` (`sid`),
   KEY `service` (`service`),
   KEY `iid` (`iid`)
-) ENGINE=MyISAM  DEFAULT CHARSET=utf8;
+) ENGINE=MyISAM DEFAULT CHARSET=utf8;
 
 CREATE TABLE IF NOT EXISTS `mail` (
   `id` int(10) unsigned NOT NULL AUTO_INCREMENT,
@@ -504,7 +508,7 @@ CREATE TABLE IF NOT EXISTS `mail` (
   `channel_id` int(10) unsigned NOT NULL,
   `title` text NOT NULL,
   `body` mediumtext NOT NULL,
-  `attach` mediumtext NOT NULL DEFAULT '',
+  `attach` mediumtext NOT NULL,
   `mid` char(255) NOT NULL,
   `parent_mid` char(255) NOT NULL,
   `created` datetime NOT NULL DEFAULT '0000-00-00 00:00:00',
@@ -536,7 +540,7 @@ CREATE TABLE IF NOT EXISTS `menu` (
   PRIMARY KEY (`menu_id`),
   KEY `menu_channel_id` (`menu_channel_id`),
   KEY `menu_name` (`menu_name`)
-) ENGINE=MyISAM DEFAULT CHARSET=utf8;
+) ENGINE=MyISAM  DEFAULT CHARSET=utf8;
 
 CREATE TABLE IF NOT EXISTS `menu_item` (
   `mitem_id` int(10) unsigned NOT NULL AUTO_INCREMENT,
@@ -551,10 +555,10 @@ CREATE TABLE IF NOT EXISTS `menu_item` (
   `mitem_menu_id` int(10) unsigned NOT NULL DEFAULT '0',
   `mitem_order` int(11) NOT NULL DEFAULT '0',
   PRIMARY KEY (`mitem_id`),
-  KEY `mitem_flags` (`mitem_flags`),
   KEY `mitem_channel_id` (`mitem_channel_id`),
-  KEY `mitem_menu_id` (`mitem_menu_id`)
-) ENGINE=MyISAM DEFAULT CHARSET=utf8;
+  KEY `mitem_menu_id` (`mitem_menu_id`),
+  KEY `mitem_flags` (`mitem_flags`)
+) ENGINE=MyISAM  DEFAULT CHARSET=utf8;
 
 CREATE TABLE IF NOT EXISTS `notify` (
   `id` int(11) NOT NULL AUTO_INCREMENT,
@@ -595,7 +599,7 @@ CREATE TABLE IF NOT EXISTS `obj` (
   KEY `obj_type` (`obj_type`),
   KEY `obj_channel` (`obj_channel`),
   KEY `obj_obj` (`obj_obj`)
-) ENGINE=MyISAM  DEFAULT CHARSET=utf8;
+) ENGINE=MyISAM DEFAULT CHARSET=utf8;
 
 CREATE TABLE IF NOT EXISTS `outq` (
   `outq_hash` char(255) NOT NULL,
@@ -658,13 +662,36 @@ CREATE TABLE IF NOT EXISTS `photo` (
   KEY `album` (`album`),
   KEY `scale` (`scale`),
   KEY `profile` (`profile`),
-  KEY `photo_flags` (`photo_flags`), 
+  KEY `photo_flags` (`photo_flags`),
   KEY `type` (`type`),
   KEY `aid` (`aid`),
   KEY `xchan` (`xchan`),
   KEY `size` (`size`),
   KEY `resource_id` (`resource_id`)
 ) ENGINE=MyISAM  DEFAULT CHARSET=utf8;
+
+CREATE TABLE IF NOT EXISTS `poll` (
+  `poll_id` int(10) unsigned NOT NULL AUTO_INCREMENT,
+  `poll_channel` int(10) unsigned NOT NULL DEFAULT '0',
+  `poll_desc` text NOT NULL,
+  `poll_flags` int(11) NOT NULL DEFAULT '0',
+  `poll_votes` int(11) NOT NULL DEFAULT '0',
+  PRIMARY KEY (`poll_id`),
+  KEY `poll_channel` (`poll_channel`),
+  KEY `poll_flags` (`poll_flags`),
+  KEY `poll_votes` (`poll_votes`)
+) ENGINE=MyISAM DEFAULT CHARSET=utf8;
+
+CREATE TABLE IF NOT EXISTS `poll_elm` (
+  `pelm_id` int(10) unsigned NOT NULL AUTO_INCREMENT,
+  `pelm_poll` int(10) unsigned NOT NULL DEFAULT '0',
+  `pelm_desc` text NOT NULL,
+  `pelm_flags` int(11) NOT NULL DEFAULT '0',
+  `pelm_result` float NOT NULL DEFAULT '0',
+  PRIMARY KEY (`pelm_id`),
+  KEY `pelm_poll` (`pelm_poll`),
+  KEY `pelm_result` (`pelm_result`)
+) ENGINE=MyISAM DEFAULT CHARSET=utf8;
 
 CREATE TABLE IF NOT EXISTS `profile` (
   `id` int(11) NOT NULL AUTO_INCREMENT,
@@ -676,7 +703,7 @@ CREATE TABLE IF NOT EXISTS `profile` (
   `hide_friends` tinyint(1) NOT NULL DEFAULT '0',
   `name` char(255) NOT NULL,
   `pdesc` char(255) NOT NULL,
-  `chandesc` text NOT NULL DEFAULT '',
+  `chandesc` text NOT NULL,
   `dob` char(32) NOT NULL DEFAULT '0000-00-00',
   `dob_tz` char(255) NOT NULL DEFAULT 'UTC',
   `address` char(255) NOT NULL,
@@ -770,7 +797,7 @@ CREATE TABLE IF NOT EXISTS `register` (
   KEY `hash` (`hash`),
   KEY `created` (`created`),
   KEY `uid` (`uid`)
-) ENGINE=MyISAM  DEFAULT CHARSET=utf8;
+) ENGINE=MyISAM DEFAULT CHARSET=utf8;
 
 CREATE TABLE IF NOT EXISTS `session` (
   `id` bigint(20) unsigned NOT NULL AUTO_INCREMENT,
@@ -795,15 +822,32 @@ CREATE TABLE IF NOT EXISTS `shares` (
 
 CREATE TABLE IF NOT EXISTS `site` (
   `site_url` char(255) NOT NULL,
+  `site_access` int(11) NOT NULL DEFAULT '0',
   `site_flags` int(11) NOT NULL DEFAULT '0',
   `site_update` datetime NOT NULL DEFAULT '0000-00-00 00:00:00',
+  `site_sync` datetime NOT NULL,
   `site_directory` char(255) NOT NULL DEFAULT '',
   `site_register` int(11) NOT NULL DEFAULT '0',
+  `site_sellpage` char(255) NOT NULL DEFAULT '',
   PRIMARY KEY (`site_url`),
+  KEY `site_access` (`site_access`),
   KEY `site_flags` (`site_flags`),
   KEY `site_update` (`site_update`),
   KEY `site_directory` (`site_directory`),
-  KEY `site_register` (`site_register`)
+  KEY `site_register` (`site_register`),
+  KEY `site_sellpage` (`site_sellpage`)
+) ENGINE=MyISAM DEFAULT CHARSET=utf8;
+
+CREATE TABLE IF NOT EXISTS `source` (
+  `src_id` int(10) unsigned NOT NULL AUTO_INCREMENT,
+  `src_channel_id` int(10) unsigned NOT NULL DEFAULT '0',
+  `src_channel_xchan` char(255) NOT NULL DEFAULT '',
+  `src_xchan` char(255) NOT NULL DEFAULT '',
+  `src_patt` mediumtext NOT NULL,
+  PRIMARY KEY (`src_id`),
+  KEY `src_channel_id` (`src_channel_id`),
+  KEY `src_channel_xchan` (`src_channel_xchan`),
+  KEY `src_xchan` (`src_xchan`)
 ) ENGINE=MyISAM DEFAULT CHARSET=utf8;
 
 CREATE TABLE IF NOT EXISTS `spam` (
@@ -842,7 +886,7 @@ CREATE TABLE IF NOT EXISTS `term` (
   KEY `imgurl` (`imgurl`),
   KEY `term_hash` (`term_hash`),
   KEY `parent_hash` (`parent_hash`)
-) ENGINE=MyISAM  DEFAULT CHARSET=utf8;
+) ENGINE=MyISAM DEFAULT CHARSET=utf8;
 
 CREATE TABLE IF NOT EXISTS `tokens` (
   `id` varchar(40) NOT NULL,
@@ -858,10 +902,20 @@ CREATE TABLE IF NOT EXISTS `tokens` (
 ) ENGINE=MyISAM DEFAULT CHARSET=utf8;
 
 CREATE TABLE IF NOT EXISTS `updates` (
+  `ud_id` int(10) unsigned NOT NULL AUTO_INCREMENT,
   `ud_hash` char(128) NOT NULL,
+  `ud_guid` char(255) NOT NULL DEFAULT '',
   `ud_date` datetime NOT NULL DEFAULT '0000-00-00 00:00:00',
-  PRIMARY KEY (`ud_hash`),
-  KEY `ud_date` (`ud_date`)
+  `ud_last` datetime NOT NULL DEFAULT '0000-00-00 00:00:00',
+  `ud_flags` int(11) NOT NULL DEFAULT '0',
+  `ud_addr` char(255) NOT NULL DEFAULT '',
+  PRIMARY KEY (`ud_id`),
+  KEY `ud_hash` (`ud_hash`),
+  KEY `ud_guid` (`ud_guid`),
+  KEY `ud_date` (`ud_date`),
+  KEY `ud_flags` (`ud_flags`),
+  KEY `ud_addr` (`ud_addr`),
+  KEY `ud_last` (`ud_last`)
 ) ENGINE=MyISAM DEFAULT CHARSET=utf8;
 
 CREATE TABLE IF NOT EXISTS `verify` (
@@ -877,7 +931,19 @@ CREATE TABLE IF NOT EXISTS `verify` (
   KEY `token` (`token`),
   KEY `meta` (`meta`),
   KEY `created` (`created`)
-) ENGINE=MyISAM  DEFAULT CHARSET=utf8;
+) ENGINE=MyISAM DEFAULT CHARSET=utf8;
+
+CREATE TABLE IF NOT EXISTS `vote` (
+  `vote_id` int(10) unsigned NOT NULL AUTO_INCREMENT,
+  `vote_poll` int(11) NOT NULL DEFAULT '0',
+  `vote_element` int(11) NOT NULL DEFAULT '0',
+  `vote_result` text NOT NULL,
+  `vote_xchan` char(255) NOT NULL DEFAULT '',
+  PRIMARY KEY (`vote_id`),
+  UNIQUE KEY `vote_vote` (`vote_poll`,`vote_element`,`vote_xchan`),
+  KEY `vote_poll` (`vote_poll`),
+  KEY `vote_element` (`vote_element`)
+) ENGINE=MyISAM DEFAULT CHARSET=utf8;
 
 CREATE TABLE IF NOT EXISTS `xchan` (
   `xchan_hash` char(255) NOT NULL,
@@ -891,6 +957,8 @@ CREATE TABLE IF NOT EXISTS `xchan` (
   `xchan_addr` char(255) NOT NULL DEFAULT '',
   `xchan_url` char(255) NOT NULL DEFAULT '',
   `xchan_connurl` char(255) NOT NULL DEFAULT '',
+  `xchan_follow` char(255) NOT NULL DEFAULT '',
+  `xchan_connpage` char(255) NOT NULL DEFAULT '',
   `xchan_name` char(255) NOT NULL DEFAULT '',
   `xchan_network` char(255) NOT NULL DEFAULT '',
   `xchan_instance_url` char(255) NOT NULL DEFAULT '',
@@ -902,10 +970,12 @@ CREATE TABLE IF NOT EXISTS `xchan` (
   KEY `xchan_addr` (`xchan_addr`),
   KEY `xchan_name` (`xchan_name`),
   KEY `xchan_network` (`xchan_network`),
-  KEY `xchan_instance_url` (`xchan_instance_url`),
   KEY `xchan_url` (`xchan_url`),
   KEY `xchan_flags` (`xchan_flags`),
-  KEY `xchan_connurl` (`xchan_connurl`)
+  KEY `xchan_connurl` (`xchan_connurl`),
+  KEY `xchan_follow` (`xchan_follow`),
+  KEY `xchan_connpage` (`xchan_connpage`),
+  KEY `xchan_instance_url` (`xchan_instance_url`)
 ) ENGINE=MyISAM DEFAULT CHARSET=utf8;
 
 CREATE TABLE IF NOT EXISTS `xconfig` (
@@ -972,7 +1042,9 @@ CREATE TABLE IF NOT EXISTS `xtag` (
   `xtag_id` int(10) unsigned NOT NULL AUTO_INCREMENT,
   `xtag_hash` char(255) NOT NULL,
   `xtag_term` char(255) NOT NULL DEFAULT '',
+  `xtag_flags` int(11) NOT NULL DEFAULT '0',
   PRIMARY KEY (`xtag_id`),
   KEY `xtag_term` (`xtag_term`),
-  KEY `xtag_hash` (`xtag_hash`)
+  KEY `xtag_hash` (`xtag_hash`),
+  KEY `xtag_flags` (`xtag_flags`)
 ) ENGINE=MyISAM DEFAULT CHARSET=utf8;

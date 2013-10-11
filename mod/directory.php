@@ -24,6 +24,19 @@ function directory_content(&$a) {
 		return;
 	}
 
+	$safe_mode = 1;
+
+	if(local_user()) {
+		$safe_mode = get_pconfig(local_user(),'directory','safe_mode');
+	}
+	if($safe_mode === false)
+		$safe_mode = 1;
+	else
+		$safe_mode = intval($safe_mode);
+
+	if(x($_REQUEST,'safe'))
+		$safe_mode = intval($_REQUEST['safe']);
+
 	$o = '';
 	nav_set_selected('directory');
 
@@ -32,6 +45,7 @@ function directory_content(&$a) {
 	else
 		$search = ((x($_GET,'search')) ? notags(trim(rawurldecode($_GET['search']))) : '');
 
+	$keywords = (($_GET['keywords']) ? $_GET['keywords'] : '');
 
 	$tpl = get_markup_template('directory_header.tpl');
 
@@ -68,11 +82,17 @@ function directory_content(&$a) {
 
 
 	if($url) {
-		$query = $url . '?f=' ;
+		// We might want to make the tagadelic count (&kw=) configurable or turn it off completely.
+		$numtags = get_config('system','directorytags');
+
+		$kw = ((intval($numtags)) ? $numtags : 24);
+		$query = $url . '?f=&kw=' . $kw . (($safe_mode != 1) ? '&safe=' . $safe_mode : '');
 		if($search)
-			$query .= '&name=' . urlencode($search);
+			$query .= '&name=' . urlencode($search) . '&keywords=' . urlencode($search);
 		if(strpos($search,'@'))
 			$query .= '&address=' . urlencode($search);
+		if($keywords)
+			$query .= '&keywords=' . urlencode($keywords);
 		
 		$sort_order  = ((x($_REQUEST,'order')) ? $_REQUEST['order'] : '');
 		if($sort_order)
@@ -173,6 +193,10 @@ function directory_content(&$a) {
 						unset($location);
 
 
+					}
+
+					if($j['keywords']) {
+						$a->set_widget('dirtagblock',dir_tagblock(z_root() . '/directory',$j['keywords']));
 					}
 
 //					logger('mod_directory: entries: ' . print_r($entries,true), LOGGER_DATA);

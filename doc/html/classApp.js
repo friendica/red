@@ -65,6 +65,7 @@ var classApp =
     [ "$interactive", "classApp.html#a4c7cfc62d39508086cf300dc2e39c4df", null ],
     [ "$js_sources", "classApp.html#a11e24b3ed9b33ffee7dd41d110b4366d", null ],
     [ "$language", "classApp.html#a1a297e70b3667b83f4460aa7ed9f5d6f", null ],
+    [ "$layout", "classApp.html#a58ac598544892ff7c32890291b72635e", null ],
     [ "$ldelim", "classApp.html#a59dd4b665c70e7dbd80682c014ff7145", null ],
     [ "$module", "classApp.html#a9bf62f8e39585c0aa48fcffc3bf3484d", null ],
     [ "$module_loaded", "classApp.html#a6e4f0fbfa3cf6c11baebe22a03db6165", null ],

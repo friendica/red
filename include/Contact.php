@@ -15,13 +15,20 @@ function rconnect_url($channel_id,$xchan) {
 	if($r)
 		return '';
 
+	$r = q("select * from xchan where xchan_hash = '%s' limit 1",
+		dbesc($xchan)
+	);
+
+	if(($r) && ($r[0]['xchan_follow']))
+		return $r[0]['xchan_follow'];
+
 	$r = q("select hubloc_url from hubloc where hubloc_hash = '%s' and ( hubloc_flags & %d ) limit 1",
 		dbesc($xchan),
 		intval(HUBLOC_FLAGS_PRIMARY)
 	);
 
 	if($r)
-		return $r[0]['hubloc_url'];
+		return $r[0]['hubloc_url'] . '/follow?f=&url=%s';
 	return '';
 
 }
@@ -140,7 +147,9 @@ function user_remove($uid) {
 
 }
 
-function account_remove($account_id) {
+function account_remove($account_id,$local = true) {
+
+	logger('account_remove: ' . $account_id);
 
 	if(! intval($account_id)) {
 		logger('account_remove: no account.');
@@ -172,7 +181,7 @@ function account_remove($account_id) {
 	);
 	if($x) {
 		foreach($x as $xx) {
-			channel_remove($xx['channel_id']);
+			channel_remove($xx['channel_id'],$local);
 		}
 	}
 
@@ -184,7 +193,7 @@ function account_remove($account_id) {
 
 }
 
-function channel_remove($channel_id) {
+function channel_remove($channel_id, $local = true) {
 
 	if(! $channel_id)
 		return;
@@ -192,13 +201,39 @@ function channel_remove($channel_id) {
 	logger('Removing channel: ' . $channel_id);
 
 	$r = q("select * from channel where channel_id = %d limit 1", intval($channel_id));
+	if(! $r) {
+		logger('channel_remove: channel not found: ' . $channel_id);
+		return;
+	}
+
+	$channel = $r[0];
 
 	call_hooks('channel_remove',$r[0]);
+
+	if(! $local) {
 
 	// FIXME notify the directory
 	
 	// FIXME notify all contacts
 
+		$r = q("update channel set channel_pageflags = (channel_pageflags | %d), channel_r_stream = 0, channel_r_profile = 0,
+			channel_r_photos = 0, channel_r_abook = 0, channel_w_stream = 0, channel_w_wall = 0, channel_w_tagwall = 0,
+			channel_w_comment = 0, channel_w_mail = 0, channel_w_photos = 0, channel_w_chat = 0, channel_a_delegate = 0,
+			channel_r_storage = 0, channel_w_storage = 0, channel_r_pages = 0, channel_w_pages = 0, channel_a_republish = 0 
+			where channel_id = %d limit 1",
+			intval(PAGE_REMOVED),
+			intval($channel_id)
+		);
+
+		$r = q("update hubloc set hubloc_flags = hubloc_flags | %d where hubloc_hash = '%s'",
+			intval(HUBLOC_FLAGS_DELETED),
+			dbesc($channel['channel_hash'])
+		);
+
+		proc_run('php','include/notifier.php','purge_all',$channel_id);
+
+
+	}
 
 	q("DELETE FROM `group` WHERE `uid` = %d", intval($channel_id));
 	q("DELETE FROM `group_member` WHERE `uid` = %d", intval($channel_id));
@@ -271,18 +306,20 @@ function remove_all_xchan_resources($xchan, $channel_id = 0) {
 		);
 
 
-		$r = q("delete from xchan where xchan_hash = '%s' limit 1",
-			dbesc($xchan)
-		);
-		$r = q("delete from hubloc where hubloc_hash = '%s'",
-			dbesc($xchan)
-		);
-		$r = q("delete from abook where abook_xchan = '%s'",
-			dbesc($xchan)
-		);
-		$r = q("delete from xtag where xtag_hash = '%s'",
-			dbesc($xchan)
-		);
+// This could get sticky with directories
+
+//		$r = q("delete from xchan where xchan_hash = '%s' limit 1",
+//			dbesc($xchan)
+//		);
+//		$r = q("delete from hubloc where hubloc_hash = '%s'",
+//			dbesc($xchan)
+//		);
+//		$r = q("delete from abook where abook_xchan = '%s'",
+//			dbesc($xchan)
+//		);
+//		$r = q("delete from xtag where xtag_hash = '%s'",
+//			dbesc($xchan)
+//		);
 
 	}
 }

@@ -29,14 +29,14 @@
 
 	{{if $nav.lock}}
 		<li id="nav-rmagic-link" class="nav-menu-icon" >
-			<a class="icon {{$nav.lock.2}}" href="{{$nav.lock.0}}" title="{{$nav.lock.3}}" >{{$nav.lock.1}}</a>
+			<i class="{{if $nav.locked}}icon-lock{{else}}icon-unlock{{/if}} fakelink nav-icon" onclick="window.location.href='{{$nav.lock.0}}'; return false;"  title="{{$nav.lock.3}}" ></i>
 		</li>
 	{{/if}}
 
 		
 	{{if $nav.network}}
 		<li id="nav-network-link" class="nav-menu {{$sel.network}}">
-			<a class="{{$nav.network.2}}" href="{{$nav.network.0}}" title="{{$nav.network.3}}" >{{$nav.network.1}}</a>
+			<a class="{{$nav.network.2}}" href="{{$nav.network.0}}" title="{{$nav.network.3}}" ><i class="icon-th nav-icon"></i></a>
 			<span id="net-update" class="nav-notify fakelink" rel="#nav-network-menu"></span>
 			<ul id="nav-network-menu" class="menu-popup notify-menus" rel="network">
 				<li id="nav-network-see-all"><a href="{{$nav.network.all.0}}">{{$nav.network.all.1}}</a></li>
@@ -48,7 +48,7 @@
 
 	{{if $nav.home}}
 		<li id="nav-home-link" class="nav-menu {{$sel.home}}">
-			<a class="{{$nav.home.2}}" href="{{$nav.home.0}}" title="{{$nav.home.3}}" >{{$nav.home.1}}</a>
+			<a class="{{$nav.home.2}}" href="{{$nav.home.0}}" title="{{$nav.home.3}}" ><i class="icon-home nav-icon"></i></a>
 			<span id="home-update" class="nav-notify fakelink" rel="#nav-home-menu"></span>
 			<ul id="nav-home-menu" class="menu-popup notify-menus" rel="home">
 				<li id="nav-home-see-all"><a href="{{$nav.home.all.0}}">{{$nav.home.all.1}}</a></li>
@@ -63,7 +63,7 @@
 
 	{{if $nav.messages}}
 		<li id="nav-mail-link" class="nav-menu {{$sel.messages}}">
-			<a class="{{$nav.messages.2}}" href="{{$nav.messages.0}}" title="{{$nav.messages.3}}" >{{$nav.messages.1}}</a>
+			<a class="{{$nav.messages.2}}" href="{{$nav.messages.0}}" title="{{$nav.messages.3}}" ><i class="icon-envelope nav-icon"></i></a>
 			<span id="mail-update" class="nav-notify fakelink" rel="#nav-messages-menu"></span>
 			<ul id="nav-messages-menu" class="menu-popup notify-menus" rel="messages">
 				<li id="nav-messages-see-all"><a href="{{$nav.messages.all.0}}">{{$nav.messages.all.1}}</a></li>
@@ -75,7 +75,7 @@
 
 	{{if $nav.all_events}}
 		<li id="nav-all_events-link" class="nav-menu {{$sel.all_events}}">
-			<a class="{{$nav.all_events.2}}" href="{{$nav.all_events.0}}" title="{{$nav.all_events.3}}" >{{$nav.all_events.1}}</a>
+			<a class="{{$nav.all_events.2}}" href="{{$nav.all_events.0}}" title="{{$nav.all_events.3}}" ><i class="icon-calendar nav-icon"></i></a>
 			<span id="all_events-update" class="nav-notify fakelink" rel="#nav-all_events-menu"></span>
 			<ul id="nav-all_events-menu" class="menu-popup notify-menus" rel="all_events">
 				<li id="nav-all_events-see-all"><a href="{{$nav.all_events.all.0}}">{{$nav.all_events.all.1}}</a></li>
@@ -87,7 +87,7 @@
 
 	{{if $nav.intros}}
 		<li id="nav-intros-link" class="nav-menu {{$sel.intros}}">
-			<a class="{{$nav.intros.2}}" href="{{$nav.intros.0}}" title="{{$nav.intros.3}}" >{{$nav.intros.1}}</a>
+			<a class="{{$nav.intros.2}}" href="{{$nav.intros.0}}" title="{{$nav.intros.3}}" ><i class="icon-user nav-icon"></i></a>
 			<span id="intro-update" class="nav-notify fakelink" rel="#nav-intros-menu"></span>
 			<ul id="nav-intros-menu" class="menu-popup notify-menus" rel="intros">
 				<li id="nav-intros-see-all"><a href="{{$nav.intros.all.0}}">{{$nav.intros.all.1}}</a></li>
@@ -98,7 +98,7 @@
 		
 	{{if $nav.notifications}}
 		<li id="nav-notify-linkmenu" class="nav-menu fakelink {{$sel.notifications}}">
-			<a href="{{$nav.notifications.0}}" title="{{$nav.notifications.1}}">{{$nav.notifications.1}}</a>
+			<a href="{{$nav.notifications.0}}" title="{{$nav.notifications.1}}"><i class="icon-exclamation nav-icon"></i></a>
 			<span id="notify-update" class="nav-notify fakelink" rel="#nav-notify-menu"></span>
 			<ul id="nav-notify-menu" class="menu-popup notify-menus" rel="notify">
 				<li id="nav-notify-see-all"><a href="{{$nav.notifications.all.0}}">{{$nav.notifications.all.1}}</a></li>
@@ -113,19 +113,19 @@
 
 	{{if $nav.directory}}
 		<li id="nav-directory-link" class="nav-menu {{$sel.directory}}">
-			<a class="{{$nav.directory.2}}" href="{{$nav.directory.0}}" title="{{$nav.directory.3}}">{{$nav.directory.1}}</a>
+			<a class="{{$nav.directory.2}}" href="{{$nav.directory.0}}" title="{{$nav.directory.3}}"><i class="icon-sitemap nav-icon"></i></a>
 		</li>
 	{{/if}}
 
 	{{if $nav.help}} 
 		<li id="nav-help-link" class="nav-menu {{$sel.help}}">
-			<a class="{{$nav.help.2}}" target="friendika-help" href="{{$nav.help.0}}" title="{{$nav.help.3}}" >{{$nav.help.1}}</a>
+			<a class="{{$nav.help.2}}" target="friendika-help" href="{{$nav.help.0}}" title="{{$nav.help.3}}" ><i class="icon-question nav-icon"></i></a>
 		</li>
 	{{/if}}
 
 	{{if $nav.apps}}
 		<li id="nav-apps-link" class="nav-menu {{$sel.apps}}">
-			<a class=" {{$nav.apps.2}}" href="#" rel="#nav-apps-menu" title="{{$nav.apps.3}}" >{{$nav.apps.1}}</a>
+			<a class=" {{$nav.apps.2}}" href="#" rel="#nav-apps-menu" title="{{$nav.apps.3}}" ><i class="icon-cogs nav-icon"></i></a>
 			<ul id="nav-apps-menu" class="menu-popup">
 			{{foreach $apps as $ap}}
 				<li>{{$ap}}</li>
@@ -136,7 +136,7 @@
 
 		<li id="nav-searchbar">		
 			<form method="get" action="search">
-				<input id="nav-search-text" type="text" value="" placeholder="{{$nav.search.1}}" name="search" title="{{$nav.search.3}}" onclick="this.submit();" />
+				<input class="icon-search" id="nav-search-text" type="text" value="" placeholder="&#xf002;" name="search" title="{{$nav.search.3}}" onclick="this.submit();" />
 			</form>
 		</li>
 		<div id="nav-search-spinner"></div>
@@ -148,5 +148,5 @@
 	<li class="{4}"><a href="{0}"><img src="{1}">{2} <span class="notif-when">{3}</span></a></li>
 </ul>
 
-<div id="langselector" >{{$langselector}}</div>
+{{if $langselector}}<div id="langselector" >{{$langselector}}</div>{{/if}}
 <div id="panel" style="display: none;"></div>

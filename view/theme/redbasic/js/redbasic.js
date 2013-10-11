@@ -66,22 +66,24 @@ $('.sidebar-group-element').hover(
 	);
 
 
-$('.savedsearchdrop').hover(
-	function() {
-		$(this).addClass('drop'); $(this).addClass('icon'); $(this).removeClass('iconspacer');},
-	function() {
-		$(this).removeClass('drop'); $(this).removeClass('icon'); $(this).addClass('iconspacer');}
-	);
+//$('.saved-search-li a').hover(
+//	function() {
+//		id = $(this).attr('id');
+//		$('#dropicon-' + id).css('visibility','visible');},
+//	function() {
+//		id = $(this).attr('id');
+//		$('#dropicon-' + id).css('visibility','hidden');}
+//	);
 
-$('.savedsearchterm').hover(
-	function() {
-		id = $(this).attr('id');
-		$('#drop-' + id).addClass('icon'); 	$('#drop-' + id).addClass('drophide'); $('#drop-' + id).removeClass('iconspacer');},
-
-	function() {
-		id = $(this).attr('id');
-		$('#drop-' + id).removeClass('icon');$('#drop-' + id).removeClass('drophide'); $('#drop-' + id).addClass('iconspacer');}
-	);
+//$('.savedsearchterm').hover(
+//	function() {
+//		id = $(this).attr('id');
+//		$('#dropicon-' + id).css('visibility','visible');},
+//
+//	function() {
+//		id = $(this).attr('id');
+//		$('#dropicon-' + id).css('visibility','hidden');
+//	});
 
 });
 

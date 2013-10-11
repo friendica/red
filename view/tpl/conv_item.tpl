@@ -31,14 +31,15 @@
 			</div>
 			<div class="wall-item-photo-end"></div>
 			<div class="wall-item-wrapper" id="wall-item-wrapper-{{$item.id}}" >
-				{{if $item.lock}}<div class="wall-item-lock"><img src="images/lock_icon.gif" class="lockview" alt="{{$item.lock}}" onclick="lockview(event,{{$item.id}});" /></div>
+				{{if $item.lock}}<i class="wall-item-lock icon-lock lockview" title="{{$item.lock}}" onclick="lockview(event,{{$item.id}});" ></i>
 				{{else}}<div class="wall-item-lock"></div>{{/if}}	
 				<div class="wall-item-location" id="wall-item-location-{{$item.id}}">{{$item.location}}</div>
 			</div>
 		</div>
 		<div class="wall-item-author">
 				<a href="{{$item.profile_url}}" title="{{$item.linktitle}}" class="wall-item-name-link"><span class="wall-item-name{{$item.sparkle}}" id="wall-item-name-{{$item.id}}" >{{$item.name}}</span></a>{{if $item.owner_url}} {{$item.to}} <a href="{{$item.owner_url}}" title="{{$item.olinktitle}}" class="wall-item-name-link"><span class="wall-item-name{{$item.osparkle}}" id="wall-item-ownername-{{$item.id}}">{{$item.owner_name}}</span></a> {{$item.vwall}}{{/if}}<br />
-				<div class="wall-item-ago"  id="wall-item-ago-{{$item.id}}"><span class="autotime" title="{{$item.isotime}}">{{$item.localtime}}</span>{{if $item.app}}<span class="item.app">{{$item.str_app}}</span>{{/if}}</div>
+
+				<div class="wall-item-ago"  id="wall-item-ago-{{$item.id}}">{{if $item.verified}}<i class="icon-ok" title="{{$item.verified}}"></i>&nbsp;{{/if}}<span class="autotime" title="{{$item.isotime}}">{{$item.localtime}}</span>{{if $item.app}}<span class="item.app">{{$item.str_app}}</span>{{/if}}</div>
 		</div>			
 		<div class="wall-item-content" id="wall-item-content-{{$item.id}}" >
 			<div class="wall-item-title" id="wall-item-title-{{$item.id}}">{{$item.title}}</div>
@@ -62,33 +63,33 @@
 		</div>
 		<div class="wall-item-tools" id="wall-item-tools-{{$item.id}}">
 			{{if $item.like}}
-				<a href="#" class="icon like item-tool" title="{{$item.like.0}}" onclick="dolike({{$item.id}},'like'); return false"></a>
+				<i class="icon-thumbs-up-alt item-tool" title="{{$item.like.0}}" onclick="dolike({{$item.id}},'like'); return false"></i>
 			{{/if}}
 			{{if $item.dislike}}
-				<a href="#" class="icon dislike item-tool" title="{{$item.dislike.0}}" onclick="dolike({{$item.id}},'dislike'); return false"></a>
+				<i class="icon-thumbs-down-alt item-tool" title="{{$item.dislike.0}}" onclick="dolike({{$item.id}},'dislike'); return false"></i>
 			{{/if}}
 			{{if $item.share}}
-				<a href="#" class="icon recycle item-tool" title="{{$item.share.0}}" onclick="jotShare({{$item.id}}); return false"></a>
+				<i class="icon-retweet item-tool" title="{{$item.share.0}}" onclick="jotShare({{$item.id}}); return false"></i>
 			{{/if}}
 			{{if $item.plink}}
-				<a href="{{$item.plink.href}}" title="{{$item.plink.title}}" target="external-link" class="icon item-tool remote-link{{$item.sparkle}}"></a>
+				<i class="icon-external-link item-tool" onclick="window.location.href='{{$item.plink.href}}'; return false;" title="{{$item.plink.title}}"></i>
 			{{/if}}
 			{{if $item.edpost}}
-				<a class="editpost icon pencil item-tool" href="{{$item.edpost.0}}" title="{{$item.edpost.1}}"></a>
+				<i class="editpost icon-pencil item-tool" onclick="window.location.href='{{$item.edpost.0}}'; return false;" title="{{$item.edpost.1}}"></i>
 			{{/if}}			 
 			{{if $item.star}}
-			<a href="#" id="starred-{{$item.id}}" onclick="dostar({{$item.id}}); return false;" class="star-item icon item-tool {{$item.star.isstarred}}" title="{{$item.star.toggle}}"></a>
+			<i id="starred-{{$item.id}}" onclick="dostar({{$item.id}}); return false;" class="star-item item-tool {{$item.star.isstarred}}" title="{{$item.star.toggle}}"></i>
 			{{/if}}
 			{{if $item.tagger}}
-			<a href="#" id="tagger-{{$item.id}}" onclick="itemTag({{$item.id}}); return false;" class="tag-item icon item-tool tagged" title="{{$item.tagger.tagit}}"></a>
+			<i id="tagger-{{$item.id}}" onclick="itemTag({{$item.id}}); return false;" class="tag-item icon-tag item-tool" title="{{$item.tagger.tagit}}"></i>
 			{{/if}}
 			{{if $item.filer}}
-			<a href="#" id="filer-{{$item.id}}" onclick="itemFiler({{$item.id}}); return false;" class="filer-item filer-icon item-tool" title="{{$item.filer}}"></a>
+			<i id="filer-{{$item.id}}" onclick="itemFiler({{$item.id}}); return false;" class="filer-item icon-folder-open item-tool" title="{{$item.filer}}"></i>
 			{{/if}}			
 			<div id="like-rotator-{{$item.id}}" class="like-rotator"></div>
 
 			<div class="wall-item-delete-wrapper" id="wall-item-delete-wrapper-{{$item.id}}" >
-				{{if $item.drop.dropping}}<a href="item/drop/{{$item.id}}" onclick="return confirmDelete();" class="icon drophide" title="{{$item.drop.delete}}" onmouseover="imgbright(this);" onmouseout="imgdull(this);" ></a>{{/if}}
+				{{if $item.drop.dropping}}<a href="item/drop/{{$item.id}}" onclick="return confirmDelete();" title="{{$item.drop.delete}}" onmouseover="imgbright(this);" onmouseout="imgdull(this);" ><i class="icon-remove drop-icons"></i></a>{{/if}}
 			</div>
 				{{if $item.drop.pagedrop}}<input type="checkbox" onclick="checkboxhighlight(this);" title="{{$item.drop.select}}" class="item-select" name="itemselected[]" value="{{$item.id}}" />{{/if}}
 			<div class="wall-item-delete-end"></div>

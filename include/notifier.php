@@ -54,6 +54,7 @@ require_once('include/html2plain.php');
  * ZOT 
  *       permission_update      abook_id
  *       refresh_all            channel_id
+ *       purge_all              channel_id
  *       expire                 channel_id
  *       relay					item_id (item was relayed to owner, we will deliver it as owner)
  *
@@ -208,9 +209,8 @@ function notifier_run($argv, $argc){
 			$channel = $s[0];
 		$uid = $item_id;
 		$recipients = array();
-		$r = q("select * from abook where abook_channel = %d and not (abook_flags & %d)",
-			intval($item_id),
-			intval(ABOOK_FLAG_SELF)
+		$r = q("select abook_xchan from abook where abook_channel = %d",
+			intval($item_id)
 		);
 		if($r) {
 			foreach($r as $rr) {
@@ -219,6 +219,26 @@ function notifier_run($argv, $argc){
 		}
 		$private = false;
 		$packet_type = 'refresh';
+	}
+	elseif($cmd === 'purge_all') {
+		logger('notifier: purge_all: ' . $item_id);
+		$s = q("select * from channel where channel_id = %d limit 1",
+			intval($item_id)
+		);
+		if($s)
+			$channel = $s[0];
+		$uid = $item_id;
+		$recipients = array();
+		$r = q("select abook_xchan from abook where abook_channel = %d",
+			intval($item_id)
+		);
+		if($r) {
+			foreach($r as $rr) {
+				$recipients[] = $rr['abook_xchan'];
+			}
+		}
+		$private = false;
+		$packet_type = 'purge';
 	}
 	else {
 
@@ -257,6 +277,10 @@ function notifier_run($argv, $argc){
 			return;
 		}
 
+		if($target_item['item_restrict'] & ITEM_PDL) {
+			logger('notifier: target item ITEM_PDL', LOGGER_DEBUG);
+			return;
+		}
 
 		$s = q("select * from channel where channel_id = %d limit 1",
 			intval($target_item['uid'])
@@ -369,6 +393,10 @@ function notifier_run($argv, $argc){
 		}
 	}
 
+	if(($private) && (! $env_recips)) {
+		// shouldn't happen
+		logger('notifier: private message with no envelope recipients.' . print_r($argv,true));
+	}
 	
 	logger('notifier: recipients (may be delivered to more if public): ' . print_r($recip_list,true), LOGGER_DEBUG);
 	
@@ -381,7 +409,7 @@ function notifier_run($argv, $argc){
 
 	$sql_extra = (($private) ? "" : " or hubloc_url = '" . z_root() . "' ");
 
-	$r = q("select distinct hubloc_sitekey, hubloc_callback, hubloc_host from hubloc 
+	$r = q("select distinct hubloc_sitekey, hubloc_flags, hubloc_callback, hubloc_host from hubloc 
 		where hubloc_hash in (" . implode(',',$recipients) . ") $sql_extra group by hubloc_sitekey");
 	if(! $r) {
 		logger('notifier: no hubs');
@@ -390,8 +418,12 @@ function notifier_run($argv, $argc){
 	$hubs = $r;
 
 	$hublist = array();
-	foreach($hubs as $hub)
-		$hublist[] = $hub['hubloc_host'];
+	foreach($hubs as $hub) {
+		// don't try to deliver to deleted hublocs
+		if(! ($hub['hubloc_flags'] & HUBLOC_FLAGS_DELETED)) {
+			$hublist[] = $hub['hubloc_host'];
+		}
+	}
 
 	logger('notifier: will notify/deliver to these hubs: ' . print_r($hublist,true), LOGGER_DEBUG);
 			 
@@ -407,8 +439,8 @@ function notifier_run($argv, $argc){
 
 	foreach($hubs as $hub) {
 		$hash = random_string();
-		if($packet_type === 'refresh') {
-			$n = zot_build_packet($channel,'refresh');
+		if($packet_type === 'refresh' || $packet_type === 'purge') {
+			$n = zot_build_packet($channel,$packet_type);
 			q("insert into outq ( outq_hash, outq_account, outq_channel, outq_posturl, outq_async, outq_created, outq_updated, outq_notify, outq_msg ) values ( '%s', %d, %d, '%s', %d, '%s', '%s', '%s', '%s' )",
 				dbesc($hash),
 				intval($channel['channel_account']),

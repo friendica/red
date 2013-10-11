@@ -119,6 +119,7 @@
 	var next_page = 1;
 	var page_load = true;
 	var loadingPage = false;
+	var pageHasMoreContent = true;
 
 	$(function() {
 		$.ajaxSetup({cache: false});
@@ -580,11 +581,11 @@ function updateConvItems(mode,data) {
 
 
 	function imgbright(node) {
-		$(node).removeClass("drophide").addClass("drop");
+//		$(node).removeClass("drophide").addClass("drop");
 	}
 
 	function imgdull(node) {
-		$(node).removeClass("drop").addClass("drophide");
+//		$(node).removeClass("drop").addClass("drophide");
 	}
 
 	function notify_popup_loader(notifyType) {
@@ -657,12 +658,16 @@ function updateConvItems(mode,data) {
 			if(data.result == 1) {
 				$('#starred-' + ident).addClass('starred');
 				$('#starred-' + ident).removeClass('unstarred');
+				$('#starred-' + ident).addClass('icon-star-full');
+				$('#starred-' + ident).removeClass('icon-star-empty');
 				$('#star-' + ident).addClass('hidden');
 				$('#unstar-' + ident).removeClass('hidden');
 			}
 			else {			
 				$('#starred-' + ident).addClass('unstarred');
 				$('#starred-' + ident).removeClass('starred');
+				$('#starred-' + ident).addClass('icon-star-empty');
+				$('#starred-' + ident).removeClass('icon-star-full');
 				$('#star-' + ident).removeClass('hidden');
 				$('#unstar-' + ident).addClass('hidden');
 			}
@@ -984,7 +989,7 @@ $(window).scroll(function () {
 		}
 	
 		if($(window).scrollTop() + $(window).height() == $(document).height()) {
-			if(! loadingPage) {
+			if((pageHasMoreContent) && (! loadingPage)) {
 				$('#more').hide();
 				$('#no-more').hide();
 				//			alert('scroll');

@@ -3,7 +3,7 @@
 
 function display_content(&$a, $update = 0, $load = false) {
 
-	logger("mod-display: update = $update load = $load");
+//	logger("mod-display: update = $update load = $load");
 
 	if(intval(get_config('system','block_public')) && (! local_user()) && (! remote_user())) {
 		notice( t('Public access denied.') . EOL);
@@ -18,7 +18,6 @@ function display_content(&$a, $update = 0, $load = false) {
 
 
 	$a->page['htmlhead'] .= replace_macros(get_markup_template('display-head.tpl'), array());
-
 
 	if(argc() > 1 && argv(1) !== 'load')
 		$item_hash = argv(1);
@@ -91,7 +90,6 @@ function display_content(&$a, $update = 0, $load = false) {
 
 	$sql_extra = public_permissions_sql(get_observer_hash());
 
-
 	if($update && $load) {
 
 		$updateable = false;
@@ -109,20 +107,24 @@ function display_content(&$a, $update = 0, $load = false) {
 					intval(local_user()),
 					dbesc($target_item['parent_mid'])
 				);
-				if($r)
+				if($r) {
 					$updateable = true;
+
+				}
 			}
 			if($r === null) {
+
 				$r = q("SELECT * from item
 					WHERE item_restrict = 0
 					and mid = '%s'
 					AND ((( `item`.`allow_cid` = ''  AND `item`.`allow_gid` = '' AND `item`.`deny_cid`  = '' 
 					AND `item`.`deny_gid`  = '' AND item_private = 0 ) 
-					and uid in ( " . stream_perms_api_uids() . " ))
+					and owner_xchan in ( " . stream_perms_xchans(($observer) ? PERMS_NETWORK : PERMS_PUBLIC) . " ))
 					$sql_extra )
 					group by mid limit 1",
 					dbesc($target_item['parent_mid'])
 				);
+
 			}
 
 		}

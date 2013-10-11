@@ -273,6 +273,7 @@ class OAuthRequest {
           && @strstr($request_headers["Content-Type"],
                      "application/x-www-form-urlencoded")
           ) {
+
         $post_data = OAuthUtil::parse_parameters(
           file_get_contents(self::$POST_INPUT)
         );
@@ -286,15 +287,15 @@ class OAuthRequest {
           $request_headers['Authorization']
         );
         $parameters = array_merge($parameters, $header_parameters);
+
       }
 
     }
     // fix for friendica redirect system
-    
+    // FIXME or don't, but figure out if this is absolutely necessary and act accordingly
     $http_url =  substr($http_url, 0, strpos($http_url,$parameters['q'])+strlen($parameters['q']));
     unset( $parameters['q'] );
     
-	//echo "<pre>".__function__."\n"; var_dump($http_method, $http_url, $parameters, $_SERVER['REQUEST_URI']); killme();
     return new OAuthRequest($http_method, $http_url, $parameters);
   }
 
@@ -514,9 +515,7 @@ class OAuthServer {
    */
   public function fetch_request_token(&$request) {
     $this->get_version($request);
-
     $consumer = $this->get_consumer($request);
-
     // no token required for the initial token request
     $token = NULL;
 
@@ -525,7 +524,6 @@ class OAuthServer {
     // Rev A change
     $callback = $request->get_parameter('oauth_callback');
     $new_token = $this->data_store->new_request_token($consumer, $callback);
-
     return $new_token;
   }
 
@@ -796,7 +794,8 @@ class OAuthUtil {
           );
         $out[$key] = $value;
       }
-    } else {
+    }
+	if((! isset($out)) || (! array_key_exists('Authorization',$out))) {
       // otherwise we don't have apache and are just going to have to hope
       // that $_SERVER actually contains what we need
       $out = array();
@@ -806,6 +805,8 @@ class OAuthUtil {
         $out['Content-Type'] = $_ENV['CONTENT_TYPE'];
 
       foreach ($_SERVER as $key => $value) {
+		if($key === 'REDIRECT_REMOTE_USER')
+			$out['Authorization'] = $value;
         if (substr($key, 0, 5) == "HTTP_") {
           // this is chaos, basically it is just there to capitalize the first
           // letter of every word that is not an initial HTTP and strip HTTP

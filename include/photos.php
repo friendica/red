@@ -216,13 +216,14 @@ function photo_upload($channel, $observer, $args) {
 	$arr['allow_gid']     = $str_group_allow;
 	$arr['deny_cid']      = $str_contact_deny;
 	$arr['deny_gid']      = $str_group_deny;
-
+	$arr['verb']          = ACTIVITY_POST;
 
 	$arr['body']          = '[zrl=' . z_root() . '/photos/' . $channel['channel_address'] . '/image/' . $photo_hash . ']' 
 				. '[zmg]' . z_root() . "/photo/{$photo_hash}-{$smallest}.".$ph->getExt() . '[/zmg]' 
 				. '[/zrl]';
 		
-	$item_id = item_store($arr);
+	$result = item_store($arr);
+	$item_id = $result['item_id'];
 
 	if($visible) 
 		proc_run('php', "include/notifier.php", 'wall-new', $item_id);
@@ -402,7 +403,8 @@ function photos_create_item($channel, $creator_hash, $photo, $visible = false) {
 		. '[zmg]' . z_root() . '/photo/' . $photo['resource_id'] . '-' . $photo['scale'] . '[/zmg]' 
 		. '[/zrl]';
 		
-	$item_id = item_store($arr);
+	$result = item_store($arr);
+	$item_id = $result['item_id'];
 	return $item_id;
 
 }

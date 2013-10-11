@@ -1,6 +1,6 @@
 <?php
 
-define( 'UPDATE_VERSION' , 1060 );
+define( 'UPDATE_VERSION' , 1077 );
 
 /**
  *
@@ -685,6 +685,183 @@ ADD INDEX ( `mitem_flags` ) ");
 
 function update_r1059() {
 	$r = q("ALTER TABLE `mail` ADD `attach` MEDIUMTEXT NOT NULL DEFAULT '' AFTER `body` ");
+	if($r)
+		return UPDATE_SUCCESS;
+	return UPDATE_FAILED;
+}
+
+function update_r1060() {
+
+	$r = q("CREATE TABLE IF NOT EXISTS `vote` (
+  `vote_id` int(10) unsigned NOT NULL AUTO_INCREMENT,
+  `vote_poll` int(11) NOT NULL DEFAULT '0',
+  `vote_element` int(11) NOT NULL DEFAULT '0',
+  `vote_result` text NOT NULL,
+  `vote_xchan` char(255) NOT NULL DEFAULT '',
+  PRIMARY KEY (`vote_id`),
+  UNIQUE KEY `vote_vote` (`vote_poll`,`vote_element`,`vote_xchan`)
+) ENGINE=MyISAM DEFAULT CHARSET=utf8 ");
+
+	if($r)
+		return UPDATE_SUCCESS;
+	return UPDATE_FAILED;
+}
+
+function update_r1061() {
+	$r = q("ALTER TABLE `vote` ADD INDEX ( `vote_poll` ),  ADD INDEX ( `vote_element` ) ");
+
+	if($r)
+		return UPDATE_SUCCESS;
+	return UPDATE_FAILED;
+}
+
+function update_r1062() {
+	$r1 = q("CREATE TABLE IF NOT EXISTS `poll` (
+`poll_id` INT UNSIGNED NOT NULL AUTO_INCREMENT PRIMARY KEY ,
+`poll_channel` INT UNSIGNED NOT NULL DEFAULT '0',
+`poll_desc` TEXT NOT NULL DEFAULT '',
+`poll_flags` INT NOT NULL DEFAULT '0',
+`poll_votes` INT NOT NULL DEFAULT '0',
+KEY `poll_channel` (`poll_channel`),
+KEY `poll_flags` (`poll_flags`),
+KEY `poll_votes` (`poll_votes`)
+) ENGINE=MyISAM DEFAULT CHARSET=utf8 ");
+
+	$r2 = q("CREATE TABLE IF NOT EXISTS `poll_elm` (
+`pelm_id` INT UNSIGNED NOT NULL AUTO_INCREMENT PRIMARY KEY ,
+`pelm_poll` INT UNSIGNED NOT NULL DEFAULT '0',
+`pelm_desc` TEXT NOT NULL DEFAULT '',
+`pelm_flags` INT NOT NULL DEFAULT '0',
+`pelm_result` FLOAT NOT NULL DEFAULT '0',
+KEY `pelm_poll` (`pelm_poll`),
+KEY `pelm_result` (`pelm_result`)
+) ENGINE=MyISAM DEFAULT CHARSET=utf8 ");
+
+	if($r1 && $r2)
+		return UPDATE_SUCCESS;
+	return UPDATE_FAILED;
+}
+
+function update_r1063() {
+	$r = q("ALTER TABLE `xchan` ADD `xchan_follow` CHAR( 255 ) NOT NULL DEFAULT '' AFTER `xchan_connurl` ,
+ADD `xchan_connpage` CHAR( 255 ) NOT NULL DEFAULT '' AFTER `xchan_follow` ,
+ADD INDEX ( `xchan_follow` ), ADD INDEX ( `xchan_connpage`) ");
+	if($r)
+		return UPDATE_SUCCESS;
+	return UPDATE_FAILED;
+}
+
+function update_r1064() {
+	$r = q("ALTER TABLE `updates` ADD `ud_guid` CHAR( 255 ) NOT NULL DEFAULT '' AFTER `ud_hash` ,
+ADD INDEX ( `ud_guid` )");
+	if($r)
+		return UPDATE_SUCCESS;
+	return UPDATE_FAILED;
+}
+
+function update_r1065() {
+	$r = q("ALTER TABLE `item` DROP `wall`, ADD `layout_mid` CHAR( 255 ) NOT NULL DEFAULT '' AFTER `target` ,
+ADD INDEX ( `layout_mid` ) ");
+	if($r)
+		return UPDATE_SUCCESS;
+	return UPDATE_FAILED;
+}
+
+function update_r1066() {
+	$r = q("ALTER TABLE `site` ADD `site_access` INT NOT NULL DEFAULT '0' AFTER `site_url` ,
+ADD INDEX ( `site_access` )");
+	if($r)
+		return UPDATE_SUCCESS;
+	return UPDATE_FAILED;
+}
+
+function update_r1067() {
+	$r = q("ALTER TABLE `updates` DROP PRIMARY KEY , ADD `ud_id` INT UNSIGNED NOT NULL AUTO_INCREMENT PRIMARY KEY FIRST,  ADD INDEX ( `ud_hash` ) ");
+	if($r)
+		return UPDATE_SUCCESS;
+	return UPDATE_FAILED;
+}
+
+function update_r1068(){
+        $r = q("ALTER TABLE `hubloc` ADD `hubloc_status` INT UNSIGNED NOT NULL DEFAULT '0' AFTER `hubloc_flags` , ADD INDEX ( `hubloc_status` )");
+        if($r)
+                return UPDATE_SUCCESS;
+        return UPDATE_FAILED;
+}
+
+function update_r1069() {
+	$r = q("ALTER TABLE `site` ADD `site_sellpage` CHAR( 255 ) NOT NULL DEFAULT '',
+ADD INDEX ( `site_sellpage` )");
+	if($r)
+		return UPDATE_SUCCESS;
+	return UPDATE_FAILED;
+}
+
+function update_r1070() {
+	$r = q("ALTER TABLE `updates` ADD `ud_flags` INT NOT NULL DEFAULT '0',
+ADD INDEX ( `ud_flags` )");
+	if($r)
+		return UPDATE_SUCCESS;
+	return UPDATE_FAILED;
+}
+
+function update_r1071() {
+	$r = q("ALTER TABLE `updates` ADD `ud_addr` CHAR( 255 ) NOT NULL DEFAULT '',
+ADD INDEX ( `ud_addr` ) ");
+	if($r)
+		return UPDATE_SUCCESS;
+	return UPDATE_FAILED;
+}
+
+function update_r1072() {
+	$r = q("ALTER TABLE `xtag` ADD `xtag_flags` INT NOT NULL DEFAULT '0',
+ADD INDEX ( `xtag_flags` ) ");
+
+	if($r)
+		return UPDATE_SUCCESS;
+	return UPDATE_FAILED;
+}
+
+
+function update_r1073() {
+	$r1 = q("CREATE TABLE IF NOT EXISTS `source` (
+`src_id` INT UNSIGNED NOT NULL AUTO_INCREMENT PRIMARY KEY ,
+`src_channel_id` INT UNSIGNED NOT NULL DEFAULT '0',
+`src_channel_xchan` CHAR( 255 ) NOT NULL DEFAULT '',
+`src_xchan` CHAR( 255 ) NOT NULL DEFAULT '',
+`src_patt` MEDIUMTEXT NOT NULL DEFAULT ''
+) ENGINE=MyISAM DEFAULT CHARSET=utf8 ");
+
+	$r2 = q("ALTER TABLE `source` ADD INDEX ( `src_channel_id` ), ADD INDEX ( `src_channel_xchan` ), ADD INDEX ( `src_xchan` ) ");
+
+	if($r1 && $r2)
+		return UPDATE_SUCCESS;
+	return UPDATE_FAILED;
+}
+
+function update_r1074() {
+	$r1 = q("ALTER TABLE `site` ADD `site_sync` DATETIME NOT NULL AFTER `site_update` ");
+
+	$r2 = q("ALTER TABLE `updates` ADD `ud_last` DATETIME NOT NULL DEFAULT '0000-00-00 00:00:00' AFTER `ud_date` ,
+ADD INDEX ( `ud_last` ) ");
+
+	if($r1 && $r2)
+		return UPDATE_SUCCESS;
+	return UPDATE_FAILED;
+}
+
+
+function update_r1075() {
+	$r = q("ALTER TABLE `channel` ADD `channel_a_republish` INT UNSIGNED NOT NULL DEFAULT '128',
+ADD INDEX ( `channel_a_republish` )");
+
+	if($r)
+		return UPDATE_SUCCESS;
+	return UPDATE_FAILED;
+}
+
+function update_r1076() {
+	$r = q("ALTER TABLE `item` CHANGE `inform` `sig` TEXT CHARACTER SET utf8 COLLATE utf8_general_ci NOT NULL DEFAULT '' ");
 	if($r)
 		return UPDATE_SUCCESS;
 	return UPDATE_FAILED;

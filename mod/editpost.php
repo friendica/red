@@ -2,6 +2,8 @@
 
 require_once('acl_selectors.php');
 require_once('include/crypto.php');
+require_once('include/items.php');
+require_once('include/taxonomy.php');
 
 function editpost_content(&$a) {
 
@@ -70,6 +72,22 @@ function editpost_content(&$a) {
 	//$tpl = replace_macros($tpl,array('$jotplugins' => $jotplugins));	
 	
 
+	$category = '';
+	$catsenabled = ((feature_enabled(local_user(),'categories')) ? 'categories' : '');
+
+	if ($catsenabled){
+	        $itm = fetch_post_tags($itm);
+
+                $cats = get_terms_oftype($itm[0]['term'], TERM_CATEGORY);
+
+	        foreach ($cats as $cat) {
+	                if (strlen($category))
+	                        $category .= ', ';
+	                $category .= $cat['term'];
+	        }
+
+	}
+
 	$o .= replace_macros($tpl,array(
 		'$return_path' => $_SESSION['return_url'],
 		'$action' => 'item',
@@ -95,7 +113,7 @@ function editpost_content(&$a) {
 		'$jotnets' => $jotnets,
 		'$title' => htmlspecialchars($itm[0]['title']),
 		'$placeholdertitle' => t('Set title'),
-		'$category' => '', // FIXME
+		'$category' => $category,
 		'$placeholdercategory' => t('Categories (comma-separated list)'),
 		'$emtitle' => t('Example: bob@example.com, mary@example.com'),
 		'$lockstate' => $lockstate,
@@ -105,6 +123,7 @@ function editpost_content(&$a) {
 		'$preview' => ((feature_enabled(local_user(),'preview')) ? t('Preview') : ''),
 		'$jotplugins' => $jotplugins,
 		'$sourceapp' => t($a->sourcename),
+		'$catsenabled' => $catsenabled,
 	));
 
 	return $o;

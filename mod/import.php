@@ -347,6 +347,10 @@ function import_post(&$a) {
 		
 	}
 
+	// This will indirectly perform a refresh_all *and* update the directory
+
+	proc_run('php', 'include/directory.php', $channel['channel_id']);
+
 	// send out refresh requests
 
 	notice( t('Import completed.') . EOL);

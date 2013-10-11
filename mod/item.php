@@ -62,20 +62,34 @@ function item_post(&$a) {
 
 	$message_id     = ((x($_REQUEST,'message_id') && $api_source)  ? strip_tags($_REQUEST['message_id'])       : '');
 
-	$profile_uid = ((x($_REQUEST,'profile_uid')) ? intval($_REQUEST['profile_uid'])   : 0);
-	$post_id     = ((x($_REQUEST,'post_id'))     ? intval($_REQUEST['post_id'])       : 0);
-	$app         = ((x($_REQUEST,'source'))      ? strip_tags($_REQUEST['source'])    : '');
-	$return_path = ((x($_REQUEST,'return'))      ? $_REQUEST['return']                : '');
-	$preview     = ((x($_REQUEST,'preview'))     ? intval($_REQUEST['preview'])       : 0);
-	$categories  = ((x($_REQUEST,'category'))    ? escape_tags($_REQUEST['category']) : '');
-	$webpage     = ((x($_REQUEST,'webpage'))     ? intval($_REQUEST['webpage'])       : 0);
-	$pagetitle   = ((x($_REQUEST,'pagetitle'))   ? escape_tags($_REQUEST['pagetitle']): '');
-	$buildblock  = ((x($_REQUEST,'buildblock'))  ? intval($_REQUEST['buildblock'])    : 0);
-
+	$profile_uid = ((x($_REQUEST,'profile_uid')) ? intval($_REQUEST['profile_uid'])    : 0);
+	$post_id     = ((x($_REQUEST,'post_id'))     ? intval($_REQUEST['post_id'])        : 0);
+	$app         = ((x($_REQUEST,'source'))      ? strip_tags($_REQUEST['source'])     : '');
+	$return_path = ((x($_REQUEST,'return'))      ? $_REQUEST['return']                 : '');
+	$preview     = ((x($_REQUEST,'preview'))     ? intval($_REQUEST['preview'])        : 0);
+	$categories  = ((x($_REQUEST,'category'))    ? escape_tags($_REQUEST['category'])  : '');
+	$webpage     = ((x($_REQUEST,'webpage'))     ? intval($_REQUEST['webpage'])        : 0);
+	$pagetitle   = ((x($_REQUEST,'pagetitle'))   ? escape_tags($_REQUEST['pagetitle']) : '');
+	$layout_mid  = ((x($_REQUEST,'layout_mid'))  ? escape_tags($_REQUEST['layout_mid']): '');
+	/*
+	Check service class limits
+	*/
+	if (local_user() && !(x($_REQUEST,'parent')) && !(x($_REQUEST,'post_id'))) {
+	$ret=item_check_service_class(local_user(),x($_REQUEST,'webpage'));
+	if (!$ret['success']) { 
+          notice( t($ret['message']) . EOL) ;
+      	  if(x($_REQUEST,'return')) 
+				goaway($a->get_baseurl() . "/" . $return_path );
+			killme();
+	}
+	}
 	if($pagetitle) {
 		require_once('library/urlify/URLify.php');
 		$pagetitle = strtolower(URLify::transliterate($pagetitle));
 	}
+
+
+	$item_flags = $item_restrict = 0;
 
 	/**
 	 * Is this a reply to something?
@@ -124,6 +138,9 @@ function item_post(&$a) {
 				goaway($a->get_baseurl() . "/" . $return_path );
 			killme();
 		}
+
+		// can_comment_on_post() needs info from the following xchan_query 
+		xchan_query($r);
 		$parent_item = $r[0];
 		$parent = $r[0]['id'];
 
@@ -142,17 +159,31 @@ function item_post(&$a) {
 
 	}
 
-	if($parent) {
-		logger('mod_item: item_post parent=' . $parent);
-	}
-
 	$observer = $a->get_observer();
 
-	if(! perm_is_allowed($profile_uid,$observer['xchan_hash'],(($parent) ? 'post_comments' : 'post_wall'))) {
-		notice( t('Permission denied.') . EOL) ;
-		if(x($_REQUEST,'return')) 
-			goaway($a->get_baseurl() . "/" . $return_path );
-		killme();
+
+	if($parent) {
+		logger('mod_item: item_post parent=' . $parent);
+		$can_comment = false;
+		if((array_key_exists('owner',$parent_item)) && ($parent_item['owner']['abook_flags'] & ABOOK_FLAG_SELF))
+			$can_comment = perm_is_allowed($profile_uid,$observer['xchan_hash'],'post_comments');
+		else
+			$can_comment = can_comment_on_post($observer['xchan_hash'],$parent_item);
+
+		if(! $can_comment) {
+			notice( t('Permission denied.') . EOL) ;
+			if(x($_REQUEST,'return')) 
+				goaway($a->get_baseurl() . "/" . $return_path );
+			killme();
+		}
+	}
+	else {
+		if(! perm_is_allowed($profile_uid,$observer['xchan_hash'],'post_wall')) {
+			notice( t('Permission denied.') . EOL) ;
+			if(x($_REQUEST,'return')) 
+				goaway($a->get_baseurl() . "/" . $return_path );
+			killme();
+		}
 	}
 
 
@@ -219,11 +250,12 @@ function item_post(&$a) {
 		$location          = $orig_post['location'];
 		$coord             = $orig_post['coord'];
 		$verb              = $orig_post['verb'];
-		$app			   = $orig_post['app'];
+		$app               = $orig_post['app'];
 		$title             = escape_tags(trim($_REQUEST['title']));
-		$body              = escape_tags(trim($_REQUEST['body']));
+		$body              = $_REQUEST['body'];
 		$private           = $orig_post['item_private'];
-
+		$item_flags        = $orig_post['item_flags'];
+		$item_restrict     = $orig_post['item_restrict'];
 	}
 	else {
 
@@ -255,7 +287,7 @@ function item_post(&$a) {
 		$coord             = notags(trim($_REQUEST['coord']));
 		$verb              = notags(trim($_REQUEST['verb']));
 		$title             = escape_tags(trim($_REQUEST['title']));
-		$body              = escape_tags(trim($_REQUEST['body']));
+		$body              = $_REQUEST['body'];
 
 		$private = ( 
 				(  strlen($str_group_allow) 
@@ -310,154 +342,179 @@ function item_post(&$a) {
 
 	$post_type = notags(trim($_REQUEST['type']));
 
-	$content_type = notags(trim($_REQUEST['content_type']));
-	if(! $content_type)
-		$content_type = 'text/bbcode';
+	$mimetype = notags(trim($_REQUEST['mimetype']));
+	if(! $mimetype)
+		$mimetype = 'text/bbcode';
 
+	// Verify ability to use html or php!!!
 
-// BBCODE alert: the following functions assume bbcode input
-// and will require alternatives for alternative content-types (text/html, text/markdown, text/plain, etc.)
-// we may need virtual or template classes to implement the possible alternatives
-
-	// Work around doubled linefeeds in Tinymce 3.5b2
-	// First figure out if it's a status post that would've been
-	// created using tinymce. Otherwise leave it alone. 
-
-	$plaintext = ((feature_enabled($profile_uid,'richtext')) ? false : true);
-	if((! $parent) && (! $api_source) && (! $plaintext)) {
-		$body = fix_mce_lf($body);
+	if($preview) {
+		$body = z_input_filter($profile_uid,$body,$mimetype);
 	}
 
-	// If we're sending a private top-level message with a single @-taggable channel as a recipient, @-tag it. 
+	$execflag = false;
 
-	if((! $parent) && (substr_count($str_contact_allow,'<') == 1) && ($str_group_allow == '') && ($str_contact_deny == '') && ($str_group_deny == '')) {
-		$x = q("select abook_id, abook_their_perms from abook where abook_xchan = '%s' and abook_channel = %d limit 1",
-			dbesc(str_replace(array('<','>'),array('',''),$str_contact_allow)),
+	if($mimetype === 'application/x-php') {
+		$z = q("select account_id, account_roles from account left join channel on channel_account_id = account_id where channel_id = %d limit 1",
 			intval($profile_uid)
 		);
-		if($x && ($x[0]['abook_their_perms'] & PERMS_W_TAGWALL))
-			$body .= "\n\n@group+" . $x[0]['abook_id'] . "\n";
-	}
-
-	/**
-	 * fix naked links by passing through a callback to see if this is a red site
-	 * (already known to us) which will get a zrl, otherwise link with url
-	 */
-
-	$body = preg_replace_callback("/([^\]\='".'"'."]|^)(https?\:\/\/[a-zA-Z0-9\:\/\-\?\&\;\.\=\@\_\~\#\%\$\!\+\,]+)/ism", 'red_zrl_callback', $body);
-
-	/**
-	 *
-	 * When a photo was uploaded into the message using the (profile wall) ajax 
-	 * uploader, The permissions are initially set to disallow anybody but the
-	 * owner from seeing it. This is because the permissions may not yet have been
-	 * set for the post. If it's private, the photo permissions should be set
-	 * appropriately. But we didn't know the final permissions on the post until
-	 * now. So now we'll look for links of uploaded messages that are in the
-	 * post and set them to the same permissions as the post itself.
-	 *
-	 */
-
-	if(! $preview) {
-		fix_attached_photo_permissions($profile_uid,$owner_xchan['xchan_hash'],$body,
-		$str_contact_allow,$str_group_allow,$str_contact_deny,$str_group_deny);
-
-		fix_attached_file_permissions($channel,$observer['xchan_hash'],$body,
-		$str_contact_allow,$str_group_allow,$str_contact_deny,$str_group_deny);
-
-	}
-
-
-
-	$body = bb_translate_video($body);
-
-	/**
-	 * Fold multi-line [code] sequences
-	 */
-
-	$body = preg_replace('/\[\/code\]\s*\[code\]/ism',"\n",$body); 
-
-	$body = scale_external_images($body,false);
-
-	/**
-	 * Look for any tags and linkify them
-	 */
-
-	$str_tags = '';
-	$inform   = '';
-	$post_tags = array();
-
-	$tags = get_tags($body);
-
-	$tagged = array();
-
-	$private_forum = false;
-
-	if(count($tags)) {
-		foreach($tags as $tag) {
-
-			// If we already tagged 'Robert Johnson', don't try and tag 'Robert'.
-			// Robert Johnson should be first in the $tags array
-
-			$fullnametagged = false;
-			for($x = 0; $x < count($tagged); $x ++) {
-				if(stristr($tagged[$x],$tag . ' ')) {
-					$fullnametagged = true;
-					break;
-				}
+		if($z && ($z[0]['account_roles'] & ACCOUNT_ROLE_ALLOWCODE)) {
+			if(local_user() && (get_account_id() == $z[0]['account_id'])) {
+				$execflag = true;
 			}
-			if($fullnametagged)
-				continue;
-
-			$success = handle_tag($a, $body, $inform, $str_tags, (local_user()) ? local_user() : $profile_uid , $tag); 
-			logger('handle_tag: ' . print_r($success,tue));
-
-			if($success['replaced']) {
-				$tagged[] = $tag;
-				$post_tags[] = array(
-					'uid'   => $profile_uid, 
-					'type'  => $success['termtype'],
-					'otype' => TERM_OBJ_POST,
-					'term'  => $success['term'],
-					'url'   => $success['url']
-				); 				
-			}
-			if(is_array($success['contact']) && intval($success['contact']['prv'])) {
-				$private_forum = true;
-				$private_id = $success['contact']['id'];
+			else {
+				notice( t('Executable content type not permitted to this channel.') . EOL);
+				if(x($_REQUEST,'return')) 
+					goaway($a->get_baseurl() . "/" . $return_path );
+				killme();
 			}
 		}
 	}
 
+	if($mimetype === 'text/bbcode') {
+
+		// BBCODE alert: the following functions assume bbcode input
+		// and will require alternatives for alternative content-types (text/html, text/markdown, text/plain, etc.)
+		// we may need virtual or template classes to implement the possible alternatives
+
+		// Work around doubled linefeeds in Tinymce 3.5b2
+		// First figure out if it's a status post that would've been
+		// created using tinymce. Otherwise leave it alone. 
+
+		$plaintext = ((feature_enabled($profile_uid,'richtext')) ? false : true);
+		if((! $parent) && (! $api_source) && (! $plaintext)) {
+			$body = fix_mce_lf($body);
+		}
+
+		// If we're sending a private top-level message with a single @-taggable channel as a recipient, @-tag it. 
+
+		if((! $parent) && (substr_count($str_contact_allow,'<') == 1) && ($str_group_allow == '') && ($str_contact_deny == '') && ($str_group_deny == '')) {
+			$x = q("select abook_id, abook_their_perms from abook where abook_xchan = '%s' and abook_channel = %d limit 1",
+				dbesc(str_replace(array('<','>'),array('',''),$str_contact_allow)),
+				intval($profile_uid)
+			);
+			if($x && ($x[0]['abook_their_perms'] & PERMS_W_TAGWALL))
+				$body .= "\n\n@group+" . $x[0]['abook_id'] . "\n";
+		}
+
+		/**
+		 * fix naked links by passing through a callback to see if this is a red site
+		 * (already known to us) which will get a zrl, otherwise link with url
+		 */
+
+		$body = preg_replace_callback("/([^\]\='".'"'."]|^)(https?\:\/\/[a-zA-Z0-9\:\/\-\?\&\;\.\=\@\_\~\#\%\$\!\+\,]+)/ism", 'red_zrl_callback', $body);
+
+		/**
+		 *
+		 * When a photo was uploaded into the message using the (profile wall) ajax 
+		 * uploader, The permissions are initially set to disallow anybody but the
+		 * owner from seeing it. This is because the permissions may not yet have been
+		 * set for the post. If it's private, the photo permissions should be set
+		 * appropriately. But we didn't know the final permissions on the post until
+		 * now. So now we'll look for links of uploaded messages that are in the
+		 * post and set them to the same permissions as the post itself.
+		 *
+		 */
+
+		if(! $preview) {
+			fix_attached_photo_permissions($profile_uid,$owner_xchan['xchan_hash'],$body,$str_contact_allow,$str_group_allow,$str_contact_deny,$str_group_deny);
+
+			fix_attached_file_permissions($channel,$observer['xchan_hash'],$body,$str_contact_allow,$str_group_allow,$str_contact_deny,$str_group_deny);
+
+		}
+
+
+
+		$body = bb_translate_video($body);
+
+		/**
+		 * Fold multi-line [code] sequences
+		 */
+
+		$body = preg_replace('/\[\/code\]\s*\[code\]/ism',"\n",$body); 
+
+		$body = scale_external_images($body,false);
+
+		/**
+		 * Look for any tags and linkify them
+		 */
+
+		$str_tags = '';
+		$inform   = '';
+		$post_tags = array();
+
+		$tags = get_tags($body);
+
+		$tagged = array();
+
+		$private_forum = false;
+
+		if(count($tags)) {
+			foreach($tags as $tag) {
+
+				// If we already tagged 'Robert Johnson', don't try and tag 'Robert'.
+				// Robert Johnson should be first in the $tags array
+
+				$fullnametagged = false;
+				for($x = 0; $x < count($tagged); $x ++) {
+					if(stristr($tagged[$x],$tag . ' ')) {
+						$fullnametagged = true;
+						break;
+					}
+				}
+				if($fullnametagged)
+					continue;
+
+				$success = handle_tag($a, $body, $inform, $str_tags, (local_user()) ? local_user() : $profile_uid , $tag); 
+				logger('handle_tag: ' . print_r($success,tue));
+
+				if($success['replaced']) {
+					$tagged[] = $tag;
+					$post_tags[] = array(
+						'uid'   => $profile_uid, 
+						'type'  => $success['termtype'],
+						'otype' => TERM_OBJ_POST,
+						'term'  => $success['term'],
+						'url'   => $success['url']
+					); 				
+				}
+				if(is_array($success['contact']) && intval($success['contact']['prv'])) {
+					$private_forum = true;
+					$private_id = $success['contact']['id'];
+				}
+			}
+		}
+
 
 //	logger('post_tags: ' . print_r($post_tags,true));
 
-	if(($private_forum) && (! $parent) && (! $private)) {
-		// we tagged a private forum in a top level post and the message was public.
-		// Restrict it.
-		$private = 1;
-		$str_contact_allow = '<' . $private_id . '>'; 
-	}
+		if(($private_forum) && (! $parent) && (! $private)) {
+			// we tagged a private forum in a top level post and the message was public.
+			// Restrict it.
+			$private = 1;
+			$str_contact_allow = '<' . $private_id . '>'; 
+		}
 
-	$attachments = '';
-	$match = false;
+		$attachments = '';
+		$match = false;
 
-	if(preg_match_all('/(\[attachment\](.*?)\[\/attachment\])/',$body,$match)) {
-		$attachments = array();
-		foreach($match[2] as $mtch) {
-			$hash = substr($mtch,0,strpos($mtch,','));
-			$rev = intval(substr($mtch,strpos($mtch,',')));
-			$r = attach_by_hash_nodata($hash,$rev);
-			if($r['success']) {
-				$attachments[] = array(
-					'href'     => $a->get_baseurl() . '/attach/' . $r['data']['hash'],
-					'length'   =>  $r['data']['filesize'],
-					'type'     => $r['data']['filetype'],
-					'title'    => urlencode($r['data']['filename']),
-					'revision' => $r['data']['revision']
-				);
+		if(preg_match_all('/(\[attachment\](.*?)\[\/attachment\])/',$body,$match)) {
+			$attachments = array();
+			foreach($match[2] as $mtch) {
+				$hash = substr($mtch,0,strpos($mtch,','));
+				$rev = intval(substr($mtch,strpos($mtch,',')));
+				$r = attach_by_hash_nodata($hash,$rev);
+				if($r['success']) {
+					$attachments[] = array(
+						'href'     => $a->get_baseurl() . '/attach/' . $r['data']['hash'],
+						'length'   =>  $r['data']['filesize'],
+						'type'     => $r['data']['filetype'],
+						'title'    => urlencode($r['data']['filename']),
+						'revision' => $r['data']['revision']
+					);
+				}
+				$body = str_replace($match[1],'',$body);
 			}
-			$body = str_replace($match[1],'',$body);
 		}
 	}
 
@@ -477,9 +534,8 @@ function item_post(&$a) {
 		}
 	}
 
-
-	$item_flags = ITEM_UNSEEN;
-	$item_restrict = ITEM_VISIBLE;
+	$item_flags |= ITEM_UNSEEN;
+	$item_restrict |= ITEM_VISIBLE;
 	
 	if($post_type === 'wall' || $post_type === 'wall-comment')
 		$item_flags = $item_flags | ITEM_WALL;
@@ -491,10 +547,7 @@ function item_post(&$a) {
 		$item_restrict = $item_restrict | ITEM_MODERATED;
 
 	if($webpage)
-		$item_restrict = $item_restrict | ITEM_WEBPAGE;
-
-	if($buildblock)
-		$item_restrict = $item_restrict | ITEM_BUILDBLOCK;
+		$item_restrict = $item_restrict | $webpage;
 		
 		
 	if(! strlen($verb))
@@ -520,38 +573,37 @@ function item_post(&$a) {
 		$item_flags = $item_flags | ITEM_THREAD_TOP;
 	}
 	
-	$datarray['aid']           = $channel['channel_account_id'];
-	$datarray['uid']           = $profile_uid;
+	$datarray['aid']            = $channel['channel_account_id'];
+	$datarray['uid']            = $profile_uid;
 
-	$datarray['owner_xchan']   = (($owner_hash) ? $owner_hash : $owner_xchan['xchan_hash']);
-	$datarray['author_xchan']  = $observer['xchan_hash'];
-	$datarray['created']       = datetime_convert();
-	$datarray['edited']        = datetime_convert();
-	$datarray['expires']       = $expires;
-	$datarray['commented']     = datetime_convert();
-	$datarray['received']      = datetime_convert();
-	$datarray['changed']       = datetime_convert();
-	$datarray['mid']           = $mid;
-	$datarray['parent_mid']    = $parent_mid;
-	$datarray['mimetype']      = $content_type;
-	$datarray['title']         = $title;
-	$datarray['body']          = $body;
-	$datarray['app']           = $app;
-	$datarray['location']      = $location;
-	$datarray['coord']         = $coord;
-	$datarray['inform']        = $inform;
-	$datarray['verb']          = $verb;
-	$datarray['allow_cid']     = $str_contact_allow;
-	$datarray['allow_gid']     = $str_group_allow;
-	$datarray['deny_cid']      = $str_contact_deny;
-	$datarray['deny_gid']      = $str_group_deny;
-	$datarray['item_private']  = $private;
-	$datarray['attach']        = $attachments;
-	$datarray['thr_parent']    = $thr_parent;
-	$datarray['postopts']      = '';
-	$datarray['item_restrict'] = $item_restrict;
-	$datarray['item_flags']    = $item_flags;
-
+	$datarray['owner_xchan']    = (($owner_hash) ? $owner_hash : $owner_xchan['xchan_hash']);
+	$datarray['author_xchan']   = $observer['xchan_hash'];
+	$datarray['created']        = datetime_convert();
+	$datarray['edited']         = datetime_convert();
+	$datarray['expires']        = $expires;
+	$datarray['commented']      = datetime_convert();
+	$datarray['received']       = datetime_convert();
+	$datarray['changed']        = datetime_convert();
+	$datarray['mid']            = $mid;
+	$datarray['parent_mid']     = $parent_mid;
+	$datarray['mimetype']       = $mimetype;
+	$datarray['title']          = $title;
+	$datarray['body']           = $body;
+	$datarray['app']            = $app;
+	$datarray['location']       = $location;
+	$datarray['coord']          = $coord;
+	$datarray['verb']           = $verb;
+	$datarray['allow_cid']      = $str_contact_allow;
+	$datarray['allow_gid']      = $str_group_allow;
+	$datarray['deny_cid']       = $str_contact_deny;
+	$datarray['deny_gid']       = $str_group_deny;
+	$datarray['item_private']   = $private;
+	$datarray['attach']         = $attachments;
+	$datarray['thr_parent']     = $thr_parent;
+	$datarray['postopts']       = '';
+	$datarray['item_restrict']  = $item_restrict;
+	$datarray['item_flags']     = $item_flags;
+	$datarray['layout_mid']     = $layout_mid;
 	$datarray['comment_policy'] = map_scope($channel['channel_w_comment']); 
 
 	// preview mode - prepare the body for display and send it via json
@@ -590,6 +642,16 @@ function item_post(&$a) {
 		$datarray['title'] = mb_substr($datarray['title'],0,255);
 
 	if(array_key_exists('item_private',$datarray) && $datarray['item_private']) {
+
+		$datarray['body'] = z_input_filter($datarray['uid'],$datarray['body'],$datarray['mimetype']);
+
+		if(local_user()) {
+			if($channel['channel_hash'] === $datarray['author_xchan']) {
+				$datarray['sig'] = base64url_encode(rsa_sign($datarray['body'],$channel['channel_prvkey']));
+				$datarray['item_flags'] = $datarray['item_flags'] | ITEM_VERIFIED;
+			}
+		}
+
 		logger('Encrypting local storage');
 		$key = get_config('system','pubkey');
 		$datarray['item_flags'] = $datarray['item_flags'] | ITEM_OBSCURED;
@@ -599,47 +661,10 @@ function item_post(&$a) {
 			$datarray['body']  = json_encode(aes_encapsulate($datarray['body'],$key));
 	}
 
-
-
-
 	if($orig_post) {
-		$r = q("UPDATE `item` SET `title` = '%s', `body` = '%s', `attach` = '%s', `edited` = '%s' WHERE `id` = %d AND `uid` = %d LIMIT 1",
-			dbesc($datarray['title']),
-			dbesc($datarray['body']),
-			dbesc($datarray['attach']),
-			dbesc(datetime_convert()),
-			intval($post_id),
-			intval($profile_uid)
-		);
+		$datarray['id'] = $post_id;
 
-		// remove taxonomy items for this post - we'll recreate them
-
-		q("delete from term where otype = %d and oid = %d and type in (%d, %d, %d, %d) ",
-			intval(TERM_OBJ_POST),
-			intval($post_id),
-			intval(TERM_UNKNOWN),
-			intval(TERM_HASHTAG),
-			intval(TERM_MENTION),
-			intval(TERM_CATEGORY)
-		);
-
-
-		if(count($post_tags)) {
-			foreach($post_tags as $tag) {
-				if(strlen(trim($tag['term']))) {
-					q("insert into term (uid,oid,otype,type,term,url) values (%d,%d,%d,%d,'%s','%s')",
-						intval($tag['uid']),
-						intval($post_id),
-						intval($tag['otype']),
-						intval($tag['type']),
-						dbesc(trim($tag['term'])),
-						dbesc(trim($tag['url']))
-					);
-				}
-			}
-		}
-
-
+		item_store_update($datarray,$execflag);
 
 		proc_run('php', "include/notifier.php", 'edit_post', $post_id);
 		if((x($_REQUEST,'return')) && strlen($return_path)) {
@@ -652,7 +677,10 @@ function item_post(&$a) {
 		$post_id = 0;
 
 
-	$post_id = item_store($datarray);
+	$post = item_store($datarray,$execflag);
+
+
+	$post_id = $post['item_id'];
 
 	if($post_id) {
 		logger('mod_item: saved item ' . $post_id);
@@ -764,20 +792,28 @@ function item_post(&$a) {
 		intval($parent)
 	);
 
-	if($webpage) {
+	$page_type = '';
+
+	if($webpage & ITEM_WEBPAGE)
+		$page_type = 'WEBPAGE';
+	elseif($webpage & ITEM_BUILDBLOCK)
+		$page_type = 'BUILDBLOCK';
+	elseif($webpage & ITEM_PDL)
+		$page_type = 'PDL';
+
+	if($page_type) {	
 
 		// store page info as an alternate message_id so we can access it via 
 		//    https://sitename/page/$channelname/$pagetitle
 		// if no pagetitle was given or it couldn't be transliterated into a url, use the first 
 		// sixteen bytes of the mid - which makes the link portable and not quite as daunting
 		// as the entire mid. If it were the post_id the link would be less portable.
-		// We should have the ability to edit this and arrange pages into menus via the pages module 
 
 		q("insert into item_id ( iid, uid, sid, service ) values ( %d, %d, '%s','%s' )",
 			intval($post_id),
 			intval($channel['channel_id']),
 			dbesc(($pagetitle) ? $pagetitle : substr($mid,0,16)),
-			dbesc('WEBPAGE')
+			dbesc($page_type)
 		);
 	}
 
@@ -1041,12 +1077,15 @@ function fix_attached_photo_permissions($uid,$xchan_hash,$body,
 						intval($uid)
 					);
 					if($r) {
-						$r = q("UPDATE item SET allow_cid = '%s', allow_gid = '%s', deny_cid = '%s', deny_gid = '%s'
+						$private = (($str_contact_allow || $str_group_allow || $str_contact_deny || $str_group_deny) ? true : false);
+
+						$r = q("UPDATE item SET allow_cid = '%s', allow_gid = '%s', deny_cid = '%s', deny_gid = '%s', item_private = %d
 							WHERE id = %d AND uid = %d limit 1",
 							dbesc($str_contact_allow),
 							dbesc($str_group_allow),
 							dbesc($str_contact_deny),
 							dbesc($str_group_deny),
+							intval($private),
 							intval($r[0]['id']),
 							intval($uid)
 						);
@@ -1080,4 +1119,41 @@ function fix_attached_file_permissions($channel,$observer_hash,$body,
 			}
 		}
 	}
+}
+function item_check_service_class($channel_id,$iswebpage) {
+	$ret = array('success' => false, $message => '');
+	if ($iswebpage) {
+		$r = q("select count(i.id)  as total from item i 
+			right join channel c on (i.author_xchan=c.channel_hash and i.uid=c.channel_id )  
+			and i.parent=i.id and (i.item_restrict & %d) and i.uid= %d ",
+			intval(ITEM_WEBPAGE),
+		intval($channel_id)
+	);
+	}
+	else {
+		$r = q("select count(i.id)  as total from item i 
+			right join channel c on (i.author_xchan=c.channel_hash and i.uid=c.channel_id )  
+			and i.parent=i.id and (i.item_restrict=0) and i.uid= %d ",
+		intval($channel_id)
+	);
+	}
+	if(! ($r && count($r))) {
+		$ret['message'] = t('Unable to obtain identity information from database');
+		return $ret;
+	} 
+	if (!$iswebpage) {
+	if(! service_class_allows($channel_id,'total_items',$r[0]['total'])) {
+		$result['message'] .= upgrade_message().sprintf(t("You have reached your limit of %1$.0f top level posts."),$r[0]['total']);
+		return $result;
+	}
+	}
+	else {
+	if(! service_class_allows($channel_id,'total_pages',$r[0]['total'])) {
+		$result['message'] .= upgrade_message().sprintf(t("You have reached your limit of %1$.0f webpages."),$r[0]['total']);
+		return $result;
+	}	
+	}
+
+	$ret['success'] = true;
+	return $ret;
 }

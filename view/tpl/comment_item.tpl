@@ -16,30 +16,30 @@
 				</div>
 				<div class="comment-edit-photo-end"></div>
 				<ul class="comment-edit-bb-{{$id}}">
-					<li><a class="editicon boldbb shadow"
+					<li><i class="icon-bold shadow comment-icon"
 						style="cursor: pointer;" title="{{$edbold}}"
-						onclick="insertFormatting('{{$comment}}','b', {{$id}});"></a></li>
-					<li><a class="editicon italicbb shadow"
+						onclick="insertFormatting('{{$comment}}','b', {{$id}});"></i></li>
+					<li><i class="icon-italic shadow comment-icon"
 						style="cursor: pointer;" title="{{$editalic}}"
-						onclick="insertFormatting('{{$comment}}','i', {{$id}});"></a></li>
-					<li><a class="editicon underlinebb shadow"
+						onclick="insertFormatting('{{$comment}}','i', {{$id}});"></i></li>
+					<li><i class="icon-underline shadow comment-icon"
 						style="cursor: pointer;" title="{{$eduline}}"
-						onclick="insertFormatting('{{$comment}}','u', {{$id}});"></a></li>
-					<li><a class="editicon quotebb shadow"
+						onclick="insertFormatting('{{$comment}}','u', {{$id}});"></i></li>
+					<li><i class="icon-quote-left shadow comment-icon"
 						style="cursor: pointer;" title="{{$edquote}}"
-						onclick="insertFormatting('{{$comment}}','quote', {{$id}});"></a></li>
-					<li><a class="editicon codebb shadow"
+						onclick="insertFormatting('{{$comment}}','quote', {{$id}});"></i></li>
+					<li><i class="icon-terminal shadow comment-icon"
 						style="cursor: pointer;" title="{{$edcode}}"
-						onclick="insertFormatting('{{$comment}}','code', {{$id}});"></a></li>
-					<li><a class="editicon imagebb shadow"
+						onclick="insertFormatting('{{$comment}}','code', {{$id}});"></i></li>
+					<li><i class="icon-camera shadow comment-icon"
 						style="cursor: pointer;" title="{{$edimg}}"
-						onclick="insertFormatting('{{$comment}}','img', {{$id}});"></a></li>
-					<li><a class="editicon urlbb shadow"
+						onclick="insertFormatting('{{$comment}}','img', {{$id}});"></i></li>
+					<li><i class="icon-link shadow comment-icon"
 						style="cursor: pointer;" title="{{$edurl}}"
-						onclick="insertFormatting('{{$comment}}','url', {{$id}});"></a></li>
-					<li><a class="editicon videobb shadow"
+						onclick="insertFormatting('{{$comment}}','url', {{$id}});"></i></li>
+					<li><i class="icon-facetime-video shadow comment-icon"
 						style="cursor: pointer;" title="{{$edvideo}}"
-						onclick="insertFormatting('{{$comment}}','video', {{$id}});"></a></li>
+						onclick="insertFormatting('{{$comment}}','video', {{$id}});"></i></li>
 				</ul>	
 				<div class="comment-edit-bb-end"></div>
 				<textarea id="comment-edit-text-{{$id}}" class="comment-edit-text-empty" name="body" onFocus="commentOpen(this,{{$id}});cmtBbOpen(this, {{$id}});" onBlur="commentClose(this,{{$id}});cmtBbClose(this,{{$id}});" >{{$comment}}</textarea>			

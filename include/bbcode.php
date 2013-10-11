@@ -106,18 +106,10 @@ function bb_ShareAttributes($match) {
 	$author = "";
 	preg_match("/author='(.*?)'/ism", $attributes, $matches);
 	if ($matches[1] != "")
-		$author = html_entity_decode($matches[1],ENT_QUOTES,'UTF-8');
-
-	preg_match('/author="(.*?)"/ism', $attributes, $matches);
-	if ($matches[1] != "")
-		$author = $matches[1];
+		$author = urldecode($matches[1]);
 
 	$link = "";
 	preg_match("/link='(.*?)'/ism", $attributes, $matches);
-	if ($matches[1] != "")
-		$link = $matches[1];
-
-	preg_match('/link="(.*?)"/ism', $attributes, $matches);
 	if ($matches[1] != "")
 		$link = $matches[1];
 
@@ -126,16 +118,8 @@ function bb_ShareAttributes($match) {
 	if ($matches[1] != "")
 		$avatar = $matches[1];
 
-	preg_match('/avatar="(.*?)"/ism', $attributes, $matches);
-	if ($matches[1] != "")
-		$avatar = $matches[1];
-
 	$profile = "";
 	preg_match("/profile='(.*?)'/ism", $attributes, $matches);
-	if ($matches[1] != "")
-		$profile = $matches[1];
-
-	preg_match('/profile="(.*?)"/ism', $attributes, $matches);
 	if ($matches[1] != "")
 		$profile = $matches[1];
 
@@ -144,14 +128,10 @@ function bb_ShareAttributes($match) {
 	if ($matches[1] != "")
 		$posted = $matches[1];
 
-	preg_match('/posted="(.*?)"/ism', $attributes, $matches);
-	if ($matches[1] != "")
-		$posted = $matches[1];
-
 	// FIXME - this should really be a wall-item-ago so it will get updated on the client
 	$reldate = (($posted) ? relative_date($posted) : ''); 
 
-	$headline = '<div class="shared_header">';
+	$headline = '<div class="shared_container"> <div class="shared_header">';
 
 	if ($avatar != "")
 		$headline .= '<img src="' . $avatar . '" alt="' . $author . '" height="32" width="32" />';
@@ -166,7 +146,7 @@ function bb_ShareAttributes($match) {
 
 	$headline .= '<span>' . $fmt . '</span></div>';
 
-	$text = $headline . '<div class="reshared-content">' . trim($match[2]) . '</div>';
+	$text = $headline . '<div class="reshared-content">' . trim($match[2]) . '</div></div>';
 
 	return($text);
 }
@@ -237,6 +217,18 @@ function bbcode($Text,$preserve_nl = false, $tryoembed = true) {
 
 	$ev = bbtoevent($Text);
 
+	// process [observer] tags before we do anything else because we might
+	// be stripping away stuff that then doesn't need to be worked on anymore
+	$observer = $a->get_observer();
+	if (strpos($Text,'[/observer]') !== false) {
+		if ($observer) {
+			$Text = preg_replace("/\[observer\=1\](.*?)\[\/observer\]/ism", '$1', $Text);
+			$Text = preg_replace("/\[observer\=0\].*?\[\/observer\]/ism", '', $Text);
+		} else {
+			$Text = preg_replace("/\[observer\=1\].*?\[\/observer\]/ism", '', $Text);
+			$Text = preg_replace("/\[observer\=0\](.*?)\[\/observer\]/ism", '$1', $Text);
+		}
+    }
 
 	// Replace any html brackets with HTML Entities to prevent executing HTML or script
 	// Don't use strip_tags here because it breaks [url] search by replacing & with amp
@@ -259,12 +251,29 @@ function bbcode($Text,$preserve_nl = false, $tryoembed = true) {
 		$Text = str_replace(array("\n","\r"), array('',''),$Text);
 
 
+	$Text = str_replace(array("\t","  "),array("&nbsp;&nbsp;&nbsp;&nbsp;","&nbsp;&nbsp;"),$Text);
 
 	// Set up the parameters for a URL search string
 	$URLSearchString = "^\[\]";
 	// Set up the parameters for a MAIL search string
 	$MAILSearchString = $URLSearchString;
 
+	// replace [observer.baseurl]
+	if ($observer) {
+		$obsBaseURL = $observer['xchan_url'];
+		$obsBaseURL = preg_replace("/\/channel\/.*$/", '', $obsBaseURL);
+		$Text = str_replace('[observer.baseurl]', $obsBaseURL, $Text);
+		$Text = str_replace('[observer.url]',$observer['xchan_url'], $Text);
+		$Text = str_replace('[observer.name]',$observer['xchan_name'], $Text);
+		$Text = str_replace('[observer.address]',$observer['xchan_addr'], $Text);
+		$Text = str_replace('[observer.photo]','[zmg]'.$observer['xchan_photo_l'].'[/zmg]', $Text);		
+	} else {
+		$Text = str_replace('[observer.baseurl]', '', $Text);
+		$Text = str_replace('[observer.url]','', $Text);
+		$Text = str_replace('[observer.name]','', $Text);
+		$Text = str_replace('[observer.address]','', $Text);
+		$Text = str_replace('[observer.photo]','', $Text);		
+	}
 
 	// Perform URL Search
 

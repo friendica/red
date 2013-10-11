@@ -17,15 +17,14 @@
 			</div>
 			<div class="wall-item-photo-end"></div>	
 			<div class="wall-item-wrapper" id="wall-item-wrapper-{{$item.id}}" >
-				{{if $item.lock}}<div class="wall-item-lock"><img src="images/lock_icon.gif" class="lockview" alt="{{$item.lock}}" onclick="lockview(event,{{$item.id}});" /></div>
+				{{if $item.lock}}<i class="wall-item-lock icon-lock lockview" title="{{$item.lock}}" onclick="lockview(event,{{$item.id}});" /></i>
 				{{else}}<div class="wall-item-lock"></div>{{/if}}	
 				<div class="wall-item-location" id="wall-item-location-{{$item.id}}">{{$item.location}}</div>
 			</div>
 		</div>
 		<div class="wall-item-author">
-				<a href="{{$item.profile_url}}"  title="{{$item.linktitle}}" class="wall-item-name-link"><span class="wall-item-name{{$item.sparkle}}" id="wall-item-name-{{$item.id}}" >{{$item.name}}</span></a>
-
-				<div class="wall-item-ago" id="wall-item-ago-{{$item.id}}"><span class="autotime" title="{{$item.isotime}}">{{$item.localtime}}</span>{{if $item.app}}<span class="item.app">{{$item.str_app}}</span>{{/if}}</div>
+				<a href="{{$item.profile_url}}"  title="{{$item.linktitle}}" class="wall-item-name-link"><span class="wall-item-name{{$item.sparkle}}" id="wall-item-name-{{$item.id}}" >{{$item.name}}</span></a><br />
+				<div class="wall-item-ago" id="wall-item-ago-{{$item.id}}">{{if $item.verified}}<i class="icon-ok" title="{{$item.verified}}"></i>&nbsp;{{/if}}<span class="autotime" title="{{$item.isotime}}">{{$item.localtime}}</span>{{if $item.app}}<span class="item.app">{{$item.str_app}}</span>{{/if}}</div>
 				
 		</div>			
 		<div class="wall-item-content" id="wall-item-content-{{$item.id}}" >

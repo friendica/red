@@ -71,7 +71,9 @@ function zfinger_init(&$a) {
 
 	$id = $e['channel_id'];
 
-	$searchable = (($e['channel_pageflags'] & PAGE_HIDDEN) ? false : true);
+	$special_channel = (($e['channel_pageflags'] & PAGE_PREMIUM) ? true : false);
+	$adult_channel   = (($e['channel_pageflags'] & PAGE_ADULT)   ? true : false);
+	$searchable      = (($e['channel_pageflags'] & PAGE_HIDDEN)  ? false : true);
 	if($e['xchan_flags'] & XCHAN_FLAGS_HIDDEN)
 		$searchable = false;
 	 
@@ -104,10 +106,13 @@ function zfinger_init(&$a) {
 		if($p[0]['keywords']) {
 			$tags = array();
 			$k = explode(' ',$p[0]['keywords']);
-			if($k)
-				foreach($k as $kk)
-					if(trim($kk))
-						$tags[] = trim($kk);
+			if($k) {
+				foreach($k as $kk) {
+					if(trim($kk)) {
+						$tags[] = trim($kk," \t\n\r\0\x0B,");
+					}
+				}
+			}
 			if($tags)
 				$profile['keywords'] = $tags;
 		}
@@ -128,11 +133,21 @@ function zfinger_init(&$a) {
 	$ret['photo_updated']  = $e['xchan_photo_date'];
 	$ret['url']            = $e['xchan_url'];
 	$ret['connections_url']= (($e['xchan_connurl']) ? $e['xchan_connurl'] : z_root() . '/poco/' . $e['channel_address']);
-	$ret['name_updated']   = $e['xchan_name_date'];
 	$ret['target']         = $ztarget;
 	$ret['target_sig']     = $zsig;
 	$ret['searchable']     = $searchable;
+	$ret['adult_content']  = $adult_channel;
+		
 
+	// premium or other channel desiring some contact with potential followers before connecting.
+	// This is a template - %s will be replaced with the follow_url we discover for the return channel.
+
+	if($special_channel) 
+		$ret['connect_url'] = z_root() . '/connect/' . $e['channel_address'];
+
+	// This is a template for our follow url, %s will be replaced with a webbie
+
+	$ret['follow_url'] = z_root() . '/follow?f=&url=%s';
 
 	$permissions = get_all_perms($e['channel_id'],(($ztarget && $zsig) 
 			? base64url_encode(hash('whirlpool',$ztarget . $zsig,true)) 
@@ -149,11 +164,6 @@ function zfinger_init(&$a) {
 
 	$ret['locations'] = array();
 
-	
-
-
-
-
 	$x = zot_get_hubloc(array($e['channel_hash']));
 	if($x && count($x)) {
 		foreach($x as $hub) {
@@ -165,7 +175,8 @@ function zfinger_init(&$a) {
 					'url'      => $hub['hubloc_url'],
 					'url_sig'  => $hub['hubloc_url_sig'],
 					'callback' => $hub['hubloc_callback'],
-					'sitekey'  => $hub['hubloc_sitekey']
+					'sitekey'  => $hub['hubloc_sitekey'],
+					'deleted'  => (($hub['hubloc_flags'] & HUBLOC_FLAGS_DELETED) ? true : false)
 				);
 			}
 		}
@@ -211,6 +222,8 @@ function zfinger_init(&$a) {
 			$ret['site']['access_policy'] = 'paid';
 		if($access_policy == ACCESS_FREE)
 			$ret['site']['access_policy'] = 'free';
+		if($access_policy == ACCESS_TIERED)
+			$ret['site']['access_policy'] = 'tiered';
 
 		require_once('include/account.php');
 		$ret['site']['accounts'] = account_total();
@@ -234,6 +247,7 @@ function zfinger_init(&$a) {
 		$ret['site']['plugins'] = $visible_plugins;
 		$ret['site']['sitehash'] = get_config('system','location_hash');
 		$ret['site']['sitename'] = get_config('system','sitename');
+		$ret['site']['sellpage'] = get_config('system','sellpage');
 
 	}
 	json_return_and_die($ret);

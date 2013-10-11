@@ -1,5 +1,5 @@
-Red Documentation and Resources
-===============================
+Red Matrix Documentation and Resources
+======================================
 
 
 **Contents**
@@ -18,11 +18,11 @@ Red Documentation and Resources
 * [Install](help/Install)
 * [Plugins](help/Plugins)
 * [Developers](help/Developers)
-
+* [Code](doc/html)
 
 **External Resources**
 
-* [Main Website](http://friendica.com)
+* [Main Website](https://github.com/friendica/red)
 * [Development Channel](http://zothub.com/channel/one)
 
 **About**

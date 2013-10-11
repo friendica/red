@@ -14,6 +14,7 @@ class Item extends BaseObject {
 	public  $data = array();
 	private $template = 'conv_item.tpl';
 	private $comment_box_template = 'comment_item.tpl';
+	private $commentable = false;
 	private $toplevel = false;
 	private $children = array();
 	private $parent = null;
@@ -39,10 +40,10 @@ class Item extends BaseObject {
 			foreach($data['children'] as $item) {
 
 				/*
-				 * Only add thos that will be displayed
+				 * Only add those that will be displayed
 				 */
 
-				if(! visible_activity($item)) {
+				if((! visible_activity($item)) || array_key_exists('author_blocked',$item)) {
 					continue;
 				}
 
@@ -74,7 +75,7 @@ class Item extends BaseObject {
 		$buttons = '';
 		$dropping = false;
 		$star = false;
-		$isstarred = "unstarred";
+		$isstarred = "unstarred icon-star-empty";
 		$indent = '';
 		$osparkle = '';
 		$total_children = $this->count_descendants();
@@ -87,6 +88,8 @@ class Item extends BaseObject {
 			? t('Private Message')
 			: false);
 		$shareable = ((($conv->get_profile_owner() == local_user()) && ($item['item_private'] != 1)) ? true : false);
+
+		$mode = $conv->get_mode();
 
 		if(local_user() && $observer['xchan_hash'] === $item['author_xchan'])
 			$edpost = array($a->get_baseurl($ssl_state)."/editpost/".$item['id'], t("Edit"));
@@ -144,7 +147,7 @@ class Item extends BaseObject {
 					'toggle' => t("toggle star status"),
 					'classdo' => (($item['item_flags'] & ITEM_STARRED) ? "hidden" : ""),
 					'classundo' => (($item['item_flags'] & ITEM_STARRED) ? "" : "hidden"),
-					'isstarred' => (($item['item_flags'] & ITEM_STARRED) ? "starred" : "unstarred"),
+					'isstarred' => (($item['item_flags'] & ITEM_STARRED) ? "starred icon-star" : "unstarred icon-star-empty"),
 					'starred' =>  t('starred'),
 				);
 
@@ -152,6 +155,12 @@ class Item extends BaseObject {
 		} else {
 			$indent = 'comment';
 		}
+
+
+		$verified = (($item['item_flags'] & ITEM_VERIFIED) ? t('Message is verified') : '');
+		$unverified = '' ; // (($this->is_wall_to_wall() && (! ($item['item_flags'] & ITEM_VERIFIED))) ? t('Message cannot be verified') : '');
+
+
 
 		// FIXME - check this permission
 		if($conv->get_profile_owner() == local_user()) {
@@ -161,7 +170,7 @@ class Item extends BaseObject {
 			);
 		}
 
-		if($conv->is_commentable()) {
+		if($this->is_commentable()) {
 			$like = array( t("I like this \x28toggle\x29"), t("like"));
 			$dislike = array( t("I don't like this \x28toggle\x29"), t("dislike"));
 			if ($shareable)
@@ -183,7 +192,7 @@ class Item extends BaseObject {
 
 		$tmp_item = array(
 			'template' => $this->get_template(),
-			
+			'mode' => $mode,			
 			'type' => implode("",array_slice(explode("/",$item['verb']),-1)),
 			'tags' => array(),
 			'body' => $body,
@@ -207,6 +216,8 @@ class Item extends BaseObject {
 			'isotime' => datetime_convert('UTC', date_default_timezone_get(), $item['created'], 'c'),
 			'localtime' => datetime_convert('UTC', date_default_timezone_get(), $item['created'], 'r'),
 			'lock' => $lock,
+			'verified' => $verified,
+			'unverified' => $unverified,
 			'location' => $location,
 			'indent' => $indent,
 			'owner_url' => $this->get_owner_url(),
@@ -291,6 +302,16 @@ class Item extends BaseObject {
 
 	public function is_threaded() {
 		return $this->threaded;
+	}
+
+	public function set_commentable($val) {
+		$this->commentable = $val;
+		foreach($this->get_children() as $child)
+			$child->set_commentable($val);
+	}
+
+	public function is_commentable() {
+		return $this->commentable;
 	}
 
 	/**
@@ -478,7 +499,9 @@ class Item extends BaseObject {
 		$comment_box = '';
 		$conv = $this->get_conversation();
 
-		if(! $conv->is_commentable())
+//		logger('Commentable conv: ' . $conv->is_commentable());
+
+		if(! $this->is_commentable())
 			return;
 
 		$template = get_markup_template($this->get_comment_box_template());

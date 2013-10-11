@@ -1,4 +1,5 @@
-/* There's probably some stuff in here we don't need, and maybe some missing stuff we do need.  We can clean it up incrementaly, just get the heavy lifting done for now */
+/*This file is deprecated.  We'll keep it for reference until we provide window decorations */
+
 
 aside {
 border-radius: $radiuspx;}
