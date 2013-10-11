@@ -364,7 +364,7 @@ function alt_pager(&$a, $i, $more = '', $less = '') {
 
 	return replace_macros(get_markup_template('alt_pager.tpl'),array(
 		'$has_less' => (($a->pager['page'] > 1) ? true : false),
-		'$has_more' => (($i > 0 && $i == $a->pager['itemspage']) ? true : false),
+		'$has_more' => (($i > 0 && $i >= $a->pager['itemspage']) ? true : false),
 		'$less' => $less,
 		'$more' => $more,
 		'$url' => $url,
