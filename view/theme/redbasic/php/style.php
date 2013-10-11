@@ -30,6 +30,7 @@
 		}
 
 // Load the owners pconfig
+		$schema = get_pconfig($uid,'redbasic','schema');
 	    $bgcolour = get_pconfig($uid, "redbasic", "background_colour");	
 	    $background_image = get_pconfig($uid, "redbasic", "background_image");	
 	    $item_colour = get_pconfig($uid, "redbasic", "item_colour");	
