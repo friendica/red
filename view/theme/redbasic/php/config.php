@@ -5,7 +5,7 @@ function theme_content(&$a) {
 
 	$schema = get_pconfig(local_user(),'redbasic', 'schema' );
 	$nav_colour = get_pconfig(local_user(),'redbasic', 'nav_colour' );
-	$bgcolour = get_pconfig(local_user(),'redbasic', 'bgcolour' );
+	$bgcolour = get_pconfig(local_user(),'redbasic', 'background_colour' );
 	$background_image = get_pconfig(local_user(),'redbasic', 'background_image' );
 	$item_colour = get_pconfig(local_user(),'redbasic', 'item_colour' );
 	$item_opacity = get_pconfig(local_user(),'redbasic', 'item_opacity' );
