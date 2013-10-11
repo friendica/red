@@ -17,12 +17,14 @@
 					$nav_bg_3 = "#f00";
 					$nav_bg_4 = "#b00";
 					$search_background = '#FFDDDD';
+					$active_colour = '#444444';
 		}
 
 		if ($nav_colour == "black") {
 				    $nav_bg_1 = $nav_bg_3 = "#000";
 		      		    $nav_bg_2 = $nav_bg_4 = "#222";
 					$search_background = '#EEEEEE';
+					$active_colour = '#AAAAAA';
 		}
 		if ($nav_colour == "silver") {
 				    $nav_bg_1 = $nav_bg_2 = $nav_bg_3 = $nav_bg_4 = "silver";
@@ -85,7 +87,8 @@
 		$radius = "5";
 	if (! $shadow)
 		$shadow = "0";
-
+	if(! $active_colour)
+		$active_colour = '#FFFFFF';
 
 
 // Apply the settings
@@ -105,7 +108,8 @@ $options = array (
 '$font_size' => $font_size,
 '$font_colour' => $font_colour,
 '$radius' => $radius,
-'$shadow' => $shadow
+'$shadow' => $shadow,
+'$active_colour' => $active_colour
 );
 
 echo str_replace(array_keys($options), array_values($options), $x);    

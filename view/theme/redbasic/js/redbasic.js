@@ -66,22 +66,24 @@ $('.sidebar-group-element').hover(
 	);
 
 
-//$('.savedsearchdrop').hover(
+//$('.saved-search-li a').hover(
 //	function() {
-//		$(this).addClass('drop'); $(this).addClass('icon'); $(this).removeClass('iconspacer');},
+//		id = $(this).attr('id');
+//		$('#dropicon-' + id).css('visibility','visible');},
 //	function() {
-//		$(this).removeClass('drop'); $(this).removeClass('icon'); $(this).addClass('iconspacer');}
+//		id = $(this).attr('id');
+//		$('#dropicon-' + id).css('visibility','hidden');}
 //	);
 
-$('.savedsearchterm').hover(
-	function() {
-		id = $(this).attr('id');
-		$('#dropicon-' + id).addClass('searchdrop'); $('#dropicon-' + id).removeClass('iconspacer');},
-
-	function() {
-		id = $(this).attr('id');
-		$('#dropicon-' + id).removeClass('searchdrop'); $('#dropicon-' + id).addClass('iconspacer');}
-	);
+//$('.savedsearchterm').hover(
+//	function() {
+//		id = $(this).attr('id');
+//		$('#dropicon-' + id).css('visibility','visible');},
+//
+//	function() {
+//		id = $(this).attr('id');
+//		$('#dropicon-' + id).css('visibility','hidden');
+//	});
 
 });
 

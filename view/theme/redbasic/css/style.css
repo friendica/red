@@ -3003,8 +3003,8 @@ nav:hover .nav-menu {
 /*  border-bottom: 3px solid #f00; */
 }
 
-nav .nav-menu.active a {
-	color: #444444;
+nav .nav-menu.active i {
+	color: $active_colour;
 }
 
 nav .nav-notify {
