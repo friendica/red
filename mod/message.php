@@ -378,6 +378,16 @@ function message_content(&$a) {
 			return $o;
 		}
 
+		$other_channel = null;
+		if($messages[0]['to_xchan'] === $channel['channel_hash'])
+			$other_channel = $messages[0]['from'];
+		else
+			$other_channel = $messages[0]['to'];
+
+		require_once('include/Contact.php');
+
+		$a->set_widget('mail_conversant',vcard_from_xchan($other_channel,$get_observer_hash,'mail'));
+
 
 		$tpl = get_markup_template('msg-header.tpl');
 	
@@ -461,6 +471,7 @@ function message_content(&$a) {
 
 		$tpl = get_markup_template('mail_display.tpl');
 		$o = replace_macros($tpl, array(
+			'$prvmsg_header' => t('Private Conversation'),
 			'$thread_id' => $a->argv[1],
 			'$thread_subject' => $message['title'],
 			'$thread_seen' => $seen,

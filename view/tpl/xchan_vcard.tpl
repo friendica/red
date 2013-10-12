@@ -4,7 +4,7 @@
 </div>
 
 
-	
+{{if $mode != 'mail'}}	
 <div id="profile-extra-links">
 <ul>
 {{if $connect}}
@@ -17,4 +17,4 @@
 
 
 </div>
-
+{{/if}}
