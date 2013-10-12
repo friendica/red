@@ -1,5 +1,8 @@
 var searchData=
 [
+  ['darkness_2ephp',['darkness.php',['../darkness_8php.html',1,'']]],
+  ['darknessleftaside_2ephp',['darknessleftaside.php',['../darknessleftaside_8php.html',1,'']]],
+  ['darknessrightaside_2ephp',['darknessrightaside.php',['../darknessrightaside_8php.html',1,'']]],
   ['datesel',['datesel',['../datetime_8php.html#ac265b86f384ee094ed5479aae02aa5c8',1,'datetime.php']]],
   ['datesel_5fformat',['datesel_format',['../datetime_8php.html#a5f29553799005b1fd4e9ce9d98ce05aa',1,'datetime.php']]],
   ['datetime_2ephp',['datetime.php',['../datetime_8php.html',1,'']]],
@@ -22,7 +25,7 @@ var searchData=
   ['dbq',['dbq',['../dba__driver_8php.html#aa377074e70981e8c4e82ca0accd068ee',1,'dba_driver.php']]],
   ['decode_5ftags',['decode_tags',['../items_8php.html#a56b2a4abcadfac71175cd50555528cc3',1,'items.php']]],
   ['default_2ephp',['default.php',['../php_2default_8php.html',1,'']]],
-  ['default_2ephp',['default.php',['../theme_2redstrap_2php_2default_8php.html',1,'']]],
+  ['default_2ephp',['default.php',['../theme_2apw_2schema_2default_8php.html',1,'']]],
   ['default_5fdb_5fengine',['DEFAULT_DB_ENGINE',['../boot_8php.html#aa8a2b61e70900139d1ca28e46f1da49d',1,'boot.php']]],
   ['del_5fconfig',['del_config',['../include_2config_8php.html#a549910227348003efc3c05c9105c42da',1,'config.php']]],
   ['del_5fpconfig',['del_pconfig',['../include_2config_8php.html#a7ad2081c5f812ac4387fd76f3762d941',1,'config.php']]],

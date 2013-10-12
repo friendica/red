@@ -3,7 +3,7 @@ var NAVTREE =
   [ "The Red Matrix", "index.html", [
     [ "CLI config utility", "md_config.html", null ],
     [ "Fresh - The Freaking REd Shell", "md_fresh.html", null ],
-    [ "Redstrap theme", "md_README.html", null ],
+    [ "apw", "md_README.html", null ],
     [ "Namespaces", null, [
       [ "Namespace List", "namespaces.html", "namespaces" ],
       [ "Namespace Members", "namespacemembers.html", [
@@ -36,12 +36,12 @@ var NAVTREE =
 var NAVTREEINDEX =
 [
 "BaseObject_8php.html",
-"boot_8php.html#a9690d73434125ce594a1f5e7c2a4f7c0",
-"classFKOAuthDataStore.html#a96f76387c3a93b0abe27a98013804bab",
-"crypto_8php.html",
-"help_8php.html#af055e15f600ffa6fbca9386fdf715224",
-"items_8php.html#ac1fcf621dce7370515b420a7753f4726",
-"pubsites_8php.html#af614e279aab54065345bda6b03eafdf0",
+"boot_8php.html#a9255af5ae9c887520091ea04763c1a88",
+"classFKOAuthDataStore.html",
+"crepair_8php.html#a29464c01838e209c8059cfcd2d195caa",
+"globals_vars_0x77.html",
+"items_8php.html#aa371905f0a211b307cb3f7188c6cba04",
+"profile__photo_8php.html",
 "text_8php.html#af8a3e3a66a7b862d4510f145d2e13186"
 ];
 

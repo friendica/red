@@ -1,6 +1,5 @@
 var searchData=
 [
-  ['redstrap_20theme',['Redstrap theme',['../md_README.html',1,'']]],
   ['random_5fprofile',['random_profile',['../Contact_8php.html#a91281b5d4bbbb2ed468e27ec82ca083c',1,'Contact.php']]],
   ['random_5fstring',['random_string',['../text_8php.html#a9d6a5ee1290de7a8b483fe78585daade',1,'text.php']]],
   ['random_5fstring_5fhex',['RANDOM_STRING_HEX',['../text_8php.html#aad557c054cf2ed915633701018fc7e3f',1,'text.php']]],
@@ -14,11 +13,11 @@ var searchData=
   ['red_5fplatform',['RED_PLATFORM',['../boot_8php.html#a96ad56755a21e1361dbd7bf93c9e7ff4',1,'boot.php']]],
   ['red_5fversion',['RED_VERSION',['../boot_8php.html#a21cc29e0025943e7c28ff58cb4856ac3',1,'boot.php']]],
   ['red_5fzrl_5fcallback',['red_zrl_callback',['../items_8php.html#a4e6d7639431e0dd8e9f4dba8e1ac408b',1,'items.php']]],
-  ['redbasic_5fform',['redbasic_form',['../view_2theme_2redbasic_2php_2config_8php.html#ad4670f52e4977efc3e196694c6a61f9c',1,'redbasic_form(&amp;$a, $nav_colour, $background_colour, $background_image, $item_colour, $item_opacity, $font_size, $font_colour, $radius, $shadow):&#160;config.php'],['../view_2theme_2redstrap_2php_2config_8php.html#af58e97b437c1e98a5e434886494cc70e',1,'redbasic_form(&amp;$a, $font_size, $line_height, $colour, $shadow, $navcolour, $opaquenav, $displaystyle, $linkcolour, $iconset, $shiny):&#160;config.php']]],
+  ['redbasic_2ephp',['redbasic.php',['../redbasic_8php.html',1,'']]],
+  ['redbasic_5fform',['redbasic_form',['../view_2theme_2redbasic_2php_2config_8php.html#a86a3b96966d4302d8ad997514f913dd1',1,'config.php']]],
   ['redbasic_5finit',['redbasic_init',['../redbasic_2php_2theme_8php.html#af6eb813e9fc7e2d76ac1b82bc5c0ed9b',1,'theme.php']]],
   ['redir_2ephp',['redir.php',['../redir_8php.html',1,'']]],
   ['redir_5finit',['redir_init',['../redir_8php.html#a9ac266c3f5cf0d94ef63e6d0f2edf1f5',1,'redir.php']]],
-  ['redstrap_5finit',['redstrap_init',['../redstrap_2php_2theme_8php.html#a4dac61d466b4261deca2846f548e484a',1,'theme.php']]],
   ['reduce',['reduce',['../docblox__errorchecker_8php.html#ae9562cf60aa693114603d27b55d2185f',1,'docblox_errorchecker.php']]],
   ['ref_5fsession_5fclose',['ref_session_close',['../session_8php.html#a5e1c616e02b863d5450317d101366bb7',1,'session.php']]],
   ['ref_5fsession_5fdestroy',['ref_session_destroy',['../session_8php.html#af230b86bfff7db66c3bdd7e0bbc24052',1,'session.php']]],
