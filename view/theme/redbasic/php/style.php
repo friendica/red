@@ -11,25 +11,6 @@
 // A further two - $nav_bg_3 and $nav_bg_4 are used to create the hover, if any particular scheme
 // wants to implement that
 	    $nav_colour = get_pconfig($uid, "redbasic", "nav_colour");	
-		if ($nav_colour == "red") {
-					$nav_bg_1 = "#f88";
-					$nav_bg_2 = "#b00";
-					$nav_bg_3 = "#f00";
-					$nav_bg_4 = "#b00";
-					$search_background = '#FFDDDD';
-					$active_colour = '#444444';
-		}
-
-		if ($nav_colour == "black") {
-				    $nav_bg_1 = $nav_bg_3 = "#000";
-		      		    $nav_bg_2 = $nav_bg_4 = "#222";
-					$search_background = '#EEEEEE';
-					$active_colour = '#AAAAAA';
-		}
-		if ($nav_colour == "silver") {
-				    $nav_bg_1 = $nav_bg_2 = $nav_bg_3 = $nav_bg_4 = "silver";
-					$search_background = '#EEEEEE';
-		}
 
 // Load the owners pconfig
 		$schema = get_pconfig($uid,'redbasic','schema');
@@ -90,7 +71,31 @@
 	if(! $active_colour)
 		$active_colour = '#FFFFFF';
 
+		
 
+// Nav colours have nested values, so we have to define the actual variables
+// used in the CSS from the higher level "red", "black", etc here
+		if ($nav_colour == "red") {
+					$nav_bg_1 = "#f88";
+					$nav_bg_2 = "#b00";
+					$nav_bg_3 = "#f00";
+					$nav_bg_4 = "#b00";
+					$search_background = '#FFDDDD';
+					$active_colour = '#444444';
+		}
+
+		if ($nav_colour == "black") {
+				    $nav_bg_1 = $nav_bg_3 = "#000";
+		      		    $nav_bg_2 = $nav_bg_4 = "#222";
+					$search_background = '#EEEEEE';
+					$active_colour = '#AAAAAA';
+		}
+		if ($nav_colour == "silver") {
+				    $nav_bg_1 = $nav_bg_2 = $nav_bg_3 = $nav_bg_4 = "silver";
+					$search_background = '#EEEEEE';
+		}
+
+		
 // Apply the settings
 	if(file_exists('view/theme/' . current_theme() . '/css/style.css')) {
 		$x = file_get_contents('view/theme/' . current_theme() . '/css/style.css');
