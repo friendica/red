@@ -1827,6 +1827,12 @@ a.mail-list-link {
 	margin-right: 30px;
 	margin-top: 15px;
 }
+.mail-conv-recall-wrapper {
+	float: right;
+	margin-right: 10px;
+	margin-top: 15px;
+}
+
 .mail-conv-break {
 	clear: both;
 }
@@ -3319,6 +3325,10 @@ margin: 5px 5px 5px 5px;
 span.mail-list {
 float: left;
 width: 20%;
+}
+
+.mail-list-remove {
+width: 5% !important;
 }
 
 span.mail-delete {

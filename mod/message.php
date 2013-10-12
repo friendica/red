@@ -233,6 +233,24 @@ function message_content(&$a) {
 		}		
 	}
 
+	if((argc() == 3) && (argv(1) === 'recall')) {
+		if(! intval(argv(2)))
+			return;
+		$cmd = argv(1);
+		$r = q("update mail set mail_flags = mail_flags | %d where id = %d and channel_id = %d limit 1",
+			intval(MAIL_RECALLED),
+			intval(argv(2)),
+			intval(local_user())
+		);
+		proc_run('php','include/notifier.php','mail',intval(argv(2)));
+
+		if($r) {
+				info( t('Message recalled.') . EOL );
+		}
+		goaway($a->get_baseurl(true) . '/message' );
+
+	}
+
 
 	if((argc() > 1) && ($a->argv[1] === 'new')) {
 		
@@ -422,6 +440,9 @@ function message_content(&$a) {
 				'subject' => $message['title'],
 				'body' => smilies(bbcode($message['body']) . $s),
 				'delete' => t('Delete message'),
+				'recall' => t('Recall message'),
+				'can_recall' => (($channel['channel_hash'] == $message['from_xchan']) ? true : false),
+				'is_recalled' => (($message['mail_flags'] & MAIL_RECALLED) ? t('Message has been recalled.') : ''),
 				'date' => datetime_convert('UTC',date_default_timezone_get(),$message['created'],'D, d M Y - g:i A'),
 			);
 				
