@@ -880,7 +880,7 @@ function handle_tag($a, &$body, &$inform, &$str_tags, $profile_uid, $tag) {
 			$url = 'http://getzot.com';
 			$newtag = '#[zrl=' . $url . ']' . $basetag . '[/zrl]';
 			$body = str_replace($tag,$newtag,$body);
-			$replace = true;
+			$replaced = true;
 		}
 		else {
 			//base tag has the tags name only
