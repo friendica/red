@@ -605,6 +605,7 @@ function item_post(&$a) {
 	$datarray['item_flags']     = $item_flags;
 	$datarray['layout_mid']     = $layout_mid;
 	$datarray['comment_policy'] = map_scope($channel['channel_w_comment']); 
+	$datarray['term']           = $post_tags;
 
 	// preview mode - prepare the body for display and send it via json
 
@@ -684,21 +685,6 @@ function item_post(&$a) {
 
 	if($post_id) {
 		logger('mod_item: saved item ' . $post_id);
-
-		if(count($post_tags)) {
-			foreach($post_tags as $tag) {
-				if(strlen(trim($tag['term']))) {
-					q("insert into term (uid,oid,otype,type,term,url) values (%d,%d,%d,%d,'%s','%s')",
-						intval($tag['uid']),
-						intval($post_id),
-						intval($tag['otype']),
-						intval($tag['type']),
-						dbesc(trim($tag['term'])),
-						dbesc(trim($tag['url']))
-					);
-				}
-			}
-		}
 
 		if($parent) {
 
