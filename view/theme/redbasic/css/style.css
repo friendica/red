@@ -3312,9 +3312,8 @@ ul.menu-popup {
 
 
 #mail-list-wrapper {
-
 border-bottom: 1px solid #ccc;
-padding: 20px;
+margin: 5px 5px 5px 5px;
 }
 
 span.mail-list {
