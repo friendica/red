@@ -132,7 +132,7 @@ function dirsearch_content(&$a) {
 
 
 	if($sort_order == 'date')
-		$order = ""; // Not currently implemented
+		$order = " order by xchan_name_date desc ";
 	elseif($sort_order == 'reverse')
 		$order = " order by xchan_name desc ";
 	else	
