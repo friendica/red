@@ -24,16 +24,16 @@
 <div id="prvmail-submit-wrapper" >
 	<input type="submit" id="prvmail-submit" name="submit" value="{{$submit}}" tabindex="13" />
 	<div id="prvmail-upload-wrapper" >
-		<div id="prvmail-upload" class="icon border camera" title="{{$upload}}" ></div>
+		<i id="prvmail-upload" class="icon-camera jot-icons" title="{{$upload}}"></i>
 	</div> 
 
 	<div id="prvmail-attach-wrapper" >
-		<div id="prvmail-attach" class="icon attach" title="{{$attach}}" ></div>
+		<i id="prvmail-attach" class="icon-paper-clip jot-icons" title="{{$attach}}"></i>
 	</div> 
 
 
 	<div id="prvmail-link-wrapper" >
-		<div id="prvmail-link" class="icon border link" title="{{$insert}}" onclick="jotGetLink();" ></div>
+		<i id="prvmail-link" class="icon-link jot-icons" title="{{$insert}}" onclick="jotGetLink(); return false;"></i>
 	</div> 
 	<div id="prvmail-rotator-wrapper" >
 		<img id="prvmail-rotator" src="images/rotator.gif" alt="{{$wait}}" title="{{$wait}}" style="display: none;" />
