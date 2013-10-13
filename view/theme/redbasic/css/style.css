@@ -3448,3 +3448,10 @@ a .drop-icons {
 .drop-icons:hover {
 	color: #FF0000;
 }
+
+.permission-inherited {
+	float: left;
+	margin-right: 10px;
+	color: #FF0000;
+}
+ 
