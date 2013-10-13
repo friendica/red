@@ -3318,8 +3318,8 @@ ul.menu-popup {
 
 
 #mail-list-wrapper {
-border-bottom: 1px solid #ccc;
-margin: 5px 5px 5px 5px;
+border-top: 1px solid #ccc;
+padding: 5px 5px 5px 5px;
 }
 
 span.mail-list {
@@ -3339,6 +3339,10 @@ width: 30px;
 img.mail-list-sender-photo {
 height: 24px;
 width: 24px;
+float: left;
+margin-right: 30px;
+-moz-border-radius: $radiuspx;
+border-radius: $radiuspx;
 }
 
 .tag1 {
