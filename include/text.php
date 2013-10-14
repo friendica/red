@@ -1015,6 +1015,56 @@ function unobscure(&$item) {
 
 }
 
+function theme_attachments(&$item) {
+
+	$arr = json_decode_plus($item['attach']);
+	if(is_array($arr) && count($arr)) {
+		$attaches = array();
+		foreach($arr as $r) {
+			$icon = '';
+			$icontype = substr($r['type'],0,strpos($r['type'],'/'));
+
+			switch($icontype) {
+				case 'video':
+					$icon = 'icon-facetime-video';
+					break;
+				case 'audio':
+					$icon = 'icon-volume-up';
+					break;
+				case 'image':
+					$icon = 'icon-camera';
+					break;
+				case 'text':
+					$icon = 'icon-align-justify';
+					break;
+				default:
+					$icon = 'icon-question';
+					break;
+			}
+
+			$title = htmlentities($r['title'], ENT_COMPAT,'UTF-8');
+			if(! $title)
+				$title = t('unknown.???');
+			$title .= ' ' . $r['length'] . ' ' . t('bytes');
+
+			$url = z_root() . '/magic?f=&hash=' . $item['author_xchan'] . '&dest=' . $r['href'] . '/' . $r['revision'];
+			$s .= '<a href="' . $url . '" title="' . $title . '" class="attachlink"  >' . $icon . '</a>';
+			$attaches[] = array('title' => $title, 'url' => $url, 'icon' => $icon );
+
+		}
+
+
+	}
+
+	$s = replace_macros(get_markup_template('item_attach.tpl'), array(
+		'$attaches' => $attaches
+	));
+
+	return $s;
+
+}
+
+
 
 function prepare_body(&$item,$attach = false) {
 
@@ -1037,36 +1087,8 @@ function prepare_body(&$item,$attach = false) {
 	}
 
 
-	$arr = json_decode_plus($item['attach']);
-	if(count($arr)) {
-		$s .= '<div class="body-attach">';
-		foreach($arr as $r) {
-			$matches = false;
-			$icon = '';
-			$icontype = substr($r['type'],0,strpos($r['type'],'/'));
+	$s .= theme_attachments($item);
 
-			switch($icontype) {
-				case 'video':
-				case 'audio':
-				case 'image':
-				case 'text':
-					$icon = '<div class="attachtype icon s22 type-' . $icontype . '"></div>';
-					break;
-				default:
-					$icon = '<div class="attachtype icon s22 type-unkn"></div>';
-					break;
-			}
-
-			$title = htmlentities($r['title'], ENT_COMPAT,'UTF-8');
-			if(! $title)
-				$title = t('unknown.???');
-			$title .= ' ' . $r['length'] . ' ' . t('bytes');
-
-			$url = $a->get_baseurl() . '/magic?f=&hash=' . $item['author_xchan'] . '&dest=' . $r['href'] . '/' . $r['revision'];
-			$s .= '<a href="' . $url . '" title="' . $title . '" class="attachlink"  >' . $icon . '</a>';
-		}
-		$s .= '<div class="clear"></div></div>';
-	}
 
 // At some point in time, posttags were removed from the threaded conversation templates, but remained in the search_item template.
 // Code to put them back was added into include/conversation.php and/or include/ItemObject.php but under new class names
