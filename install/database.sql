@@ -423,6 +423,7 @@ CREATE TABLE IF NOT EXISTS `item` (
   `changed` datetime NOT NULL DEFAULT '0000-00-00 00:00:00',
   `owner_xchan` char(255) NOT NULL DEFAULT '',
   `author_xchan` char(255) NOT NULL DEFAULT '',
+  `source_xchan` char(255) NOT NULL DEFAULT '',
   `mimetype` char(255) NOT NULL DEFAULT '',
   `title` text NOT NULL,
   `body` mediumtext NOT NULL,

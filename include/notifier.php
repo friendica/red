@@ -325,12 +325,13 @@ function notifier_run($argv, $argc){
 		// tag_deliver'd post which needs to be sent back to the original author
 
 		if(($cmd === 'uplink') && ($parent_item['item_flags'] & ITEM_UPLINK) && (! $top_level_post)) {
-			$uplink = true;			
+			logger('notifier: uplink');			
+			$uplink = true;
 		} 
 
 		if(($relay_to_owner || $uplink) && ($cmd !== 'relay')) {
 			logger('notifier: followup relay', LOGGER_DEBUG);
-			$recipients = array(($uplink) ? $parent_item['author_xchan'] : $parent_item['owner_xchan']);
+			$recipients = array(($uplink) ? $parent_item['source_xchan'] : $parent_item['owner_xchan']);
 			$private = true;
 			if(! $encoded_item['flags'])
 				$encoded_item['flags'] = array();

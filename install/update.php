@@ -1,6 +1,6 @@
 <?php
 
-define( 'UPDATE_VERSION' , 1077 );
+define( 'UPDATE_VERSION' , 1078 );
 
 /**
  *
@@ -862,6 +862,13 @@ ADD INDEX ( `channel_a_republish` )");
 
 function update_r1076() {
 	$r = q("ALTER TABLE `item` CHANGE `inform` `sig` TEXT CHARACTER SET utf8 COLLATE utf8_general_ci NOT NULL DEFAULT '' ");
+	if($r)
+		return UPDATE_SUCCESS;
+	return UPDATE_FAILED;
+}
+
+function update_r1077() {
+	$r = q("ALTER TABLE `item` ADD `source_xchan` CHAR( 255 ) NOT NULL DEFAULT '' AFTER `author_xchan` ");
 	if($r)
 		return UPDATE_SUCCESS;
 	return UPDATE_FAILED;
