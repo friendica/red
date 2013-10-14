@@ -1024,6 +1024,9 @@ function theme_attachments(&$item) {
 			$icon = '';
 			$icontype = substr($r['type'],0,strpos($r['type'],'/'));
 
+			// FIXME This should probably be a giant "if" statement in the template so that we don't have icon names
+			// embedded in php code
+
 			switch($icontype) {
 				case 'video':
 					$icon = 'icon-facetime-video';
@@ -1073,8 +1076,10 @@ function format_categories(&$item,$writeable) {
 		$categories = array();
 		foreach($terms as $t) {
 			$term = htmlspecialchars($t['term'],ENT_COMPAT,'UTF-8') ;
+			if(! trim($term))
+				continue;
 			$removelink = (($writeable) ?  z_root() . '/filerm/' . $item['id'] . '?f=&cat=' . urlencode($t['term']) : '');
-			$categories[] = array('term' => $term, 'writeable' => $writeable, 'removelink' => $removelink);
+			$categories[] = array('term' => $term, 'writeable' => $writeable, 'removelink' => $removelink, 'url' => $t['url']);
 		}
 	}
 	$s = replace_macros(get_markup_template('item_categories.tpl'),array(
@@ -1093,6 +1098,8 @@ function format_filer(&$item) {
 		$categories = array();
 		foreach($terms as $t) {
 			$term = htmlspecialchars($t['term'],ENT_COMPAT,'UTF-8') ;
+			if(! trim($term))
+				continue;
 			$removelink = z_root() . '/filerm/' . $item['id'] . '?f=&term=' . urlencode($t['term']);
 			$categories[] = array('term' => $term, 'removelink' => $removelink);
 		}

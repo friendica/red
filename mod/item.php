@@ -529,7 +529,7 @@ function item_post(&$a) {
 				'type'  => TERM_CATEGORY,
 				'otype' => TERM_OBJ_POST,
 				'term'  => trim($cat),
-				'url'   => ''
+				'url'   => $owner_xchan['xchan_url'] . '?f=&cat=' . urlencode(trim($cat))
 			); 				
 		}
 	}
