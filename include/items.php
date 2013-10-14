@@ -1825,6 +1825,7 @@ function item_store_update($arr,$allow_exec = false) {
 
 	unset($arr['id']);
 	unset($arr['uid']);
+
 	if(array_key_exists('edit',$arr))
 		unset($arr['edit']);	
 	$arr['mimetype']      = ((x($arr,'mimetype'))      ? notags(trim($arr['mimetype']))      : 'text/bbcode');

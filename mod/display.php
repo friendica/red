@@ -166,6 +166,8 @@ function display_content(&$a, $update = 0, $load = false) {
 		);
 	}
 
+	$o .= '<div id="content-complete"></div>';
+
 	return $o;
 
 
