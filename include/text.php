@@ -1032,7 +1032,7 @@ function theme_attachments(&$item) {
 					$icon = 'icon-volume-up';
 					break;
 				case 'image':
-					$icon = 'icon-camera';
+					$icon = 'icon-picture';
 					break;
 				case 'text':
 					$icon = 'icon-align-justify';
@@ -1065,6 +1065,48 @@ function theme_attachments(&$item) {
 }
 
 
+function format_categories(&$item,$writeable) {
+
+	$s = '';
+	$terms = get_terms_oftype($item['term'],TERM_CATEGORY);
+	if($terms) {
+		$categories = array();
+		foreach($terms as $t) {
+			$term = htmlspecialchars($t['term'],ENT_COMPAT,'UTF-8') ;
+			$removelink = (($writeable) ?  z_root() . '/filerm/' . $item['id'] . '?f=&cat=' . urlencode($t['term']) : '');
+			$categories[] = array('term' => $term, 'writeable' => $writeable, 'removelink' => $removelink);
+		}
+	}
+	$s = replace_macros(get_markup_template('item_categories.tpl'),array(
+		'$remove' => t('remove category'),
+		'$categories' => $categories
+	));
+	return $s;
+}
+
+
+function format_filer(&$item) {
+
+	$s = '';
+	$terms = get_terms_oftype($item['term'],TERM_FILE);
+	if($terms) {
+		$categories = array();
+		foreach($terms as $t) {
+			$term = htmlspecialchars($t['term'],ENT_COMPAT,'UTF-8') ;
+			$removelink = z_root() . '/filerm/' . $item['id'] . '?f=&term=' . urlencode($t['term']);
+			$categories[] = array('term' => $term, 'removelink' => $removelink);
+		}
+	}
+	$s = replace_macros(get_markup_template('item_filer.tpl'),array(
+		'$remove' => t('remove from file'),
+		'$categories' => $categories
+	));
+	return $s;
+}
+
+
+
+
 
 function prepare_body(&$item,$attach = false) {
 
@@ -1090,54 +1132,12 @@ function prepare_body(&$item,$attach = false) {
 	$s .= theme_attachments($item);
 
 
-// At some point in time, posttags were removed from the threaded conversation templates, but remained in the search_item template.
-// Code to put them back was added into include/conversation.php and/or include/ItemObject.php but under new class names
-// Then it was discovered that the following bits remained of the old code.
-// Commented out, but we may decide to use this instead of the other version and put all the tag rendering in one place. In the other
-// location it is more theme-able. 
-//	if(is_array($item['term']) && count($item['term'])) {
-//		$tstr = '';
-//		foreach($item['term'] as $t) {
-//			$t1 = format_term_for_display($t);
-//			if($t1) {
-//				if($tstr)
-//					$tstr .= ' ';
-//				$tstr .= $t1;
-//			}
-//		}
-//		if($tstr)
-//			$s .=  '<br /><div class="posttags">' . $tstr . '</div>';
-//	}
-
 	$writeable = ((get_observer_hash() == $item['owner_xchan']) ? true : false); 
 
-	$x = '';
-	$terms = get_terms_oftype($item['term'],TERM_CATEGORY);
-	if($terms) {
-		foreach($terms as $t) {
-			if(strlen($x))
-				$x .= ',';
-			$x .= htmlspecialchars($t['term'],ENT_COMPAT,'UTF-8') 
-				. (($writeable) ? ' <a href="' . $a->get_baseurl() . '/filerm/' . $item['id'] . '?f=&cat=' . urlencode($t['term']) . '" title="' . t('remove') . '" >' . t('[remove]') . '</a>' : '');
-		}
-		if(strlen($x))
-			$s .= '<div class="categorytags"><span>' . t('Categories:') . ' </span>' . $x . '</div>'; 
+	$s .= format_categories($item,$writeable);
 
-
-	}
-
-	$x = '';
-	$terms = get_terms_oftype($item['term'],TERM_FILE);
-	if($terms) {
-		foreach($terms as $t) {
-			if(strlen($x))
-				$x .= '&nbsp;&nbsp;&nbsp;';
-			$x .= htmlspecialchars($t['term'],ENT_COMPAT,'UTF-8') 
-				. ' <a href="' . $a->get_baseurl() . '/filerm/' . $item['id'] . '?f=&term=' . urlencode($t['term']) . '" title="' . t('remove') . '" >' . t('[remove]') . '</a>';
-		}
-		if(strlen($x) && (local_user() == $item['uid']))
-			$s .= '<div class="filesavetags"><span>' . t('Filed under:') . ' </span>' . $x . '</div>'; 
-	}
+	if(local_user() == $item['uid'])
+		$s .= format_filer($item);
 
 	// Look for spoiler
 	$spoilersearch = '<blockquote class="spoiler">';
