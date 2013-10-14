@@ -14,6 +14,8 @@ function directory_aside(&$a) {
 		require_once('include/contact_widgets.php');
 		$a->set_widget('find_people',findpeople_widget());
 	}
+	$a->set_widget('dir_sort_order',dir_sort_links());
+
 }
 
 

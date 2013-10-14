@@ -9,6 +9,17 @@ function find_upstream_directory($dirmode) {
 	return '';
 }
 
+function dir_sort_links() {
+
+	$o = replace_macros(get_markup_template('dir_sort_links.tpl'), array(
+		'$header' => t('Sort Options'),
+		'$normal' => t('Alphabetic'),
+		'$reverse' => t('Reverse Alphabetic'),
+		'$date' => t('Newest to Oldest')
+	));
+	return $o;
+}
+
 
 function sync_directories($dirmode) {
 
