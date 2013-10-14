@@ -369,7 +369,7 @@ footer {
 	margin-bottom: 10px;
 }
 
-.group-selected, .nets-selected, .fileas-selected, .categories-selected, .settings-widget .active {
+.group-selected, .nets-selected, .fileas-selected, .categories-selected, .active {
 	color: #444444 !important;
 }
 
@@ -1480,12 +1480,6 @@ tr.mceLast {
 
 #profile-jot-submit:active {
     box-shadow: 0 0 0 0;
-}
-
-.settings-widget .selected {
-    border-radius: $radiuspx;
-    -moz-border-radius: $radiuspx;
-    box-shadow: 4px 4px 3px 0 #444444;
 }
 
 #sidebar-page-list .label {
