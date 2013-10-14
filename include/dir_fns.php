@@ -3,6 +3,9 @@
 require_once('include/permissions.php');
 
 function find_upstream_directory($dirmode) {
+	$preferred = get_config('system','directory_server');
+	if($preferred)
+		return array('url' => $preferred);
 	return '';
 }
 
