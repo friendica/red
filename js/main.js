@@ -138,7 +138,7 @@
 		});*/
 		
 		var e = document.getElementById('content-complete');
-		if(typeof e !== 'undefined')
+		if(e)
 			pageHasMoreContent = false;		
 		
 		/* setup onoff widgets */
