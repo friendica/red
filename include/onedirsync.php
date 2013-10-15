@@ -31,6 +31,25 @@ function onedirsync_run($argv, $argc){
 	if(($r[0]['ud_flags'] & UPDATE_FLAGS_UPDATED) || (! $r[0]['ud_addr']))
 		return;
 
+	// Have we probed this channel more recently than the other directory server
+	// (where we received this update from) ?
+	// If we have, we don't need to do anything except mark any older entries updated
+
+	$x = q("select * from updates where ud_addr = '%s' and ud_date > '%s' and ( ud_flags & %d ) order by ud_date desc limit 1",
+		dbesc($r[0]['ud_addr']),
+		dbesc($r[0]['ud_date']),
+		intval(UPDATE_FLAGS_UPDATED)
+	);
+	if($x) {
+		$y = q("update updates set ud_flags = ( ud_flags | %d ) where ud_addr = '%s' and not ( ud_flags & %d ) and ud_date < '%s' ",
+			intval(UPDATE_FLAGS_UPDATED),
+			dbesc($r[0]['ud_addr']),
+			intval(UPDATE_FLAGS_UPDATED),
+			dbesc($x[0]['ud_date'])
+		);
+		return;
+	}
+
 	update_directory_entry($r[0]);		
 
 	return;
