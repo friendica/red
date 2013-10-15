@@ -242,7 +242,7 @@ function poller_run($argv, $argc){
 	}
 
 	if($dirmode == DIRECTORY_MODE_SECONDARY || $dirmode == DIRECTORY_MODE_PRIMARY) {
-		$r = q("select ud_id from updates where not ( ud_flags & %d ) and ( ud_last = '0000-00-00 00:00:00' OR ud_last > UTC_TIMESTAMP() - INTERVAL 7 DAY ) ",
+		$r = q("select ud_id from updates where not ( ud_flags & %d ) and ud_addr != '' and ( ud_last = '0000-00-00 00:00:00' OR ud_last > UTC_TIMESTAMP() - INTERVAL 7 DAY ) ",
 			intval(UPDATE_FLAGS_UPDATED)
 		);
 		if($r) {
