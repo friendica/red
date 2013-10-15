@@ -12,7 +12,7 @@ function onedirsync_run($argv, $argc){
 	cli_startup();
 	$a = get_app();
 
-	logger('onedirsync: start' . intval($argv[1]));
+	logger('onedirsync: start ' . intval($argv[1]));
 	
 	if(($argc > 1) && (intval($argv[1])))
 		$update_id = intval($argv[1]);
