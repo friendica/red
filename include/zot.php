@@ -723,6 +723,14 @@ function import_xchan($arr,$ud_flags = 1) {
 		update_modtime($xchan_hash,$guid,$arr['address'],$ud_flags);
 		logger('import_xchan: changed: ' . $what,LOGGER_DEBUG);
 	}
+	elseif(! $ud_flags) {
+		// nothing changed but we still need to update the updates record
+		q("update updates set ud_flags = ( ud_flags | %d ) where ud_addr = '%s' and not (ud_flags & %d) ",
+			intval(UPDATE_FLAGS_UPDATED),
+			dbesc($arr['address']),
+			intval(UPDATE_FLAGS_UPDATED)
+		);
+	}
 
 	if(! x($ret,'message')) {
 		$ret['success'] = true;
