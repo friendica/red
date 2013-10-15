@@ -161,7 +161,6 @@ function item_post(&$a) {
 
 	$observer = $a->get_observer();
 
-
 	if($parent) {
 		logger('mod_item: item_post parent=' . $parent);
 		$can_comment = false;
