@@ -28,7 +28,7 @@ function onedirsync_run($argv, $argc){
 
 	if(! $r)
 		return;
-	if($r['ud_flags'] & UPDATE_FLAGS_UPDATED)
+	if(($r[0]['ud_flags'] & UPDATE_FLAGS_UPDATED) || (! $r[0]['ud_addr']))
 		return;
 
 	update_directory_entry($r[0]);		
