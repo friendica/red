@@ -85,7 +85,7 @@ function sync_directories($dirmode) {
 				if(is_array($t['flags']) && in_array('deleted',$t['flags']))
 					$ud_flags |= UPDATE_FLAGS_DELETED;
 				$z = q("insert into updates ( ud_hash, ud_guid, ud_date, ud_flags, ud_addr )
-					values ( '%s', '%s', '%s', '%d, '%s' ) ",
+					values ( '%s', '%s', '%s', %d, '%s' ) ",
 					dbesc($t['hash']),
 					dbesc($t['transaction_id']),
 					dbesc($t['timestamp']),
