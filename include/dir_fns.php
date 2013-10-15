@@ -103,12 +103,15 @@ function update_directory_entry($ud) {
 	logger('update_directory_entry: ' . print_r($ud,true), LOGGER_DATA);
 
 	if($ud['ud_addr'] && (! ($ud['ud_flags'] & UPDATE_FLAGS_DELETED))) {
+		$success = false;
 		$x = zot_finger($ud['ud_addr'],'');
 		if($x['success']) {
 			$j = json_decode($x['body'],true);
+			if($j)
+				$success = true;
 			$y = import_xchan($j,0);
 		}
-		else {
+		if(! $success) {
 			$r = q("update updates set ud_last = '%s' where ud_addr = '%s'",
 				dbesc(datetime_convert()),
 				dbesc($ud['ud_addr'])
