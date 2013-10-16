@@ -39,7 +39,7 @@ function redbasic_form(&$a, $schema, $nav_colour, $bgcolour, $background_image, 
 
 	$scheme_choices = array();
 	$scheme_choices["---"] = t("Default");
-	$files = glob('view/theme/redbasic/schema/*');
+	$files = glob('view/theme/redbasic/schema/*.php');
 	if($files) {
 		foreach($files as $file) {
 			$f = basename($file, ".php");
