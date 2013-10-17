@@ -47,7 +47,7 @@ In our case, we'll call them randplace_load() and randplace_unload(), as that is
 * pluginname_uninstall()
 
 
-Next we'll talk about **hooks**. Hooks are places in the Red Matrix code where we allow plugins to do stuff. There are a lot of these, and they each have a name. What we normally do is use the pluginname_register() function to register a "handler function" for any hooks you are interested in. Then when any of these hooks are triggered, your code will be called.
+Next we'll talk about **hooks**. Hooks are places in the Red Matrix code where we allow plugins to do stuff. There are a lot of these, and they each have a name. What we normally do is use the pluginname_install() function to register a "handler function" for any hooks you are interested in. Then when any of these hooks are triggered, your code will be called.
 
 We register hook handlers with the 'register_hook()' function. It takes 3 arguments. The first is the hook we wish to catch, the second is the filename of the file to find our handler function (relative to the base of your Red Matrix installation), and the third is the function name of your handler function. So let's create our randplace_load() function right now. 
 
