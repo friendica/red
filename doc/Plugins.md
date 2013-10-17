@@ -99,7 +99,7 @@ Let's go ahead and add some code to implement our post_local hook handler.
 	    if(local_user() != $item['uid'])    /* Does this person own the post? */
 	        return;
 
-	    if(($item['parent']) || ($item['restrict'])) {
+	    if(($item['parent']) || ($item['item_restrict'])) {
 		    /* If the item has a parent, or item_restrict is non-zero, this is a comment or something else, not a status post. */
 	        return;
 		}
@@ -140,8 +140,9 @@ Now let's add our functions to create and store preference settings.
 	/**
 	 *
 	 * Callback from the settings post function.
-	 * $post contains the $_POST array.
-	 * We will make sure we've got a valid user account
+	 * $post contains the global $_POST array.
+	 * We will make sure we've got a valid user account 
+	 * and that only our own submit button was clicked
 	 * and if so set our configuration setting for this person.
 	 *
 	 */
@@ -158,8 +159,16 @@ Now let's add our functions to create and store preference settings.
 	/**
 	 *
 	 * Called from the Feature Setting form.
-	 * Add our own settings info to the page.
+	 * The second argument is a string in this case, the HTML content region of the page.
+	 * Add our own settings info to the string.
 	 *
+	 * For uniformity of settings pages, we use the following convention
+     *     <div class="settings-block">
+	 *       <h3>title</h3>
+	 *       .... settings html - many elements will be floated...
+	 *       <div class="clear"></div> <!-- generic class which clears all floats -->
+	 *       <input type="submit" name="pluginnname-submit" class="settings-submit" ..... />
+	 *     </div>
 	 */
 
 
