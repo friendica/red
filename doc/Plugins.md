@@ -207,4 +207,38 @@ Now let's add our functions to create and store preference settings.
    
 
 
- 
+***Advanced Plugins***
+
+Sometimes your plugins want to provide a range of new functionality which isn't provided at all or is clumsy to provide using hooks. In this case your plugin can also act as a 'module'. A module in our case refers to a structured webpage handler which responds to a given URL. Then anything which accesses that URL will be handled completely by your plugin.
+
+The key to this is to create a simple function named pluginname_module() which does nothing. 
+
+	function randplace_module() { return; }
+
+Once this function exists, the URL https://yoursite/randplace will access your plugin as a module. Then you can define functions which are called at various points to build a webpage just like the modules in the mod/ directory. The typical functions and the order which they are called is
+
+	modulename_init($a)    // (e.g. randplace_init($a);) called first - if you wish to emit json or xml, 
+	                       // you should do it here, followed by killme() which will avoid the default action of building a webpage
+	modulename_aside($a)   // Often used to create sidebar content
+	modulename_post($a)    // Called whenever the page is accessed via the "post" method
+	modulename_content($a) // called to generate the central page content. This function should return a string 
+	                       // consisting of the central page content.
+
+Your module functions have access to the URL path as if they were standalone programs in the Unix operating system. For instance if you visit the page
+	
+	https://yoursite/randplace/something/somewhere/whatever
+
+we will create an argc/argv list for use by your module functions
+
+	$x = argc(); $x will be 4, the number of path arguments after the sitename
+
+	for($x = 0; $x < argc(); $x ++)
+		echo $x . ' ' . argv($x);
+
+
+	0 randplace
+	1 something
+	2 somewhere
+	3 whatever
+
+
