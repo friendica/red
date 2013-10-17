@@ -1,6 +1,4 @@
 <?php
-  logger('redbasic start');
-
 // Get the UID of the channel owner
 	$uid = get_theme_uid();
 
