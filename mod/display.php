@@ -51,7 +51,7 @@ function display_content(&$a, $update = 0, $load = false) {
 			'bang' => '',
 			'visitor' => 'block',
 			'profile_uid' => local_user(),
-			'return_path' => '/channel/' . $channel['channel_address']
+			'return_path' => 'channel/' . $channel['channel_address']
 		);
 
 		$o .= status_editor($a,$x);
