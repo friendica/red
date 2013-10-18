@@ -1,5 +1,6 @@
 var searchData=
 [
+  ['dark_2ephp',['dark.php',['../dark_8php.html',1,'']]],
   ['darkness_2ephp',['darkness.php',['../darkness_8php.html',1,'']]],
   ['darknessleftaside_2ephp',['darknessleftaside.php',['../darknessleftaside_8php.html',1,'']]],
   ['darknessrightaside_2ephp',['darknessrightaside.php',['../darknessrightaside_8php.html',1,'']]],

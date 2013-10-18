@@ -1,5 +1,6 @@
 var searchData=
 [
+  ['dark_2ephp',['dark.php',['../dark_8php.html',1,'']]],
   ['darkness_2ephp',['darkness.php',['../darkness_8php.html',1,'']]],
   ['darknessleftaside_2ephp',['darknessleftaside.php',['../darknessleftaside_8php.html',1,'']]],
   ['darknessrightaside_2ephp',['darknessrightaside.php',['../darknessrightaside_8php.html',1,'']]],
@@ -47,10 +48,11 @@ var searchData=
   ['diaspora_5fol',['diaspora_ol',['../bb2diaspora_8php.html#a8b96bd45884fa1c40b942939354197d4',1,'bb2diaspora.php']]],
   ['diaspora_5ful',['diaspora_ul',['../bb2diaspora_8php.html#adc92ccda5f85ed27e64fcc17712c89cc',1,'bb2diaspora.php']]],
   ['dir_5ffns_2ephp',['dir_fns.php',['../dir__fns_8php.html',1,'']]],
+  ['dir_5fsort_5flinks',['dir_sort_links',['../dir__fns_8php.html#ae56881d69bb6f8e828c9e35454386774',1,'dir_fns.php']]],
   ['dir_5ftagadelic',['dir_tagadelic',['../taxonomy_8php.html#a088371f4bc19155b2291508f5cd63332',1,'taxonomy.php']]],
   ['dir_5ftagblock',['dir_tagblock',['../taxonomy_8php.html#a599ee71dd3194c8127b00dabec77abc1',1,'taxonomy.php']]],
-  ['directory_2ephp',['directory.php',['../mod_2directory_8php.html',1,'']]],
   ['directory_2ephp',['directory.php',['../include_2directory_8php.html',1,'']]],
+  ['directory_2ephp',['directory.php',['../mod_2directory_8php.html',1,'']]],
   ['directory_5faside',['directory_aside',['../mod_2directory_8php.html#aa1d928543212871491706216742dd73c',1,'directory.php']]],
   ['directory_5fcontent',['directory_content',['../mod_2directory_8php.html#aac79396570d759da2efac24fcedf5b44',1,'directory.php']]],
   ['directory_5ffallback_5fmaster',['DIRECTORY_FALLBACK_MASTER',['../boot_8php.html#abedd940e664017c61b48c6efa31d0cb8',1,'boot.php']]],
