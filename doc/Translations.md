@@ -1,5 +1,5 @@
 Translating the Red Matrix
-======================
+==========================
 
 Translation Process
 -------------------
