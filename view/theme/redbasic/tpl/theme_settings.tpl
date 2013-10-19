@@ -13,7 +13,7 @@
 {{include file="field_input.tpl" field=$font_colour}}
 {{include file="field_input.tpl" field=$radius}}
 {{include file="field_input.tpl" field=$shadow}}
-
+{{include file="field_input.tpl" field=$section_width}}
 <div class="settings-submit-wrapper">
 	<input type="submit" value="{{$submit}}" class="settings-submit" name="redbasic-settings-submit" />
 </div>
