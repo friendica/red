@@ -242,3 +242,19 @@ we will create an argc/argv list for use by your module functions
 	3 whatever
 
 
+***Porting Friendica Plugins***
+
+The Red Matrix uses a similar plugin architecture to the Friendica project. The authentication, identity, and permissions systems are completely different. Many Friendica can be ported reasonably easily by renaming a few functions - and then ensuring that the permissions model is adhered to. The functions which need to be renamed are:
+
+* Friendica's pluginname_install() is pluginname_load()
+
+* Friendica's pluginname_uninstall() is pluginname_unload()
+
+The Red Matrix has _install and _uninstall functions but these are used differently.
+
+* Friendica's "plugin_settings" hook is called "feature_settings"
+
+* Friendica's "plugin_settings_post" hook is called "feature_settings_post"
+
+Changing these will often allow your plugin to function, but please double check all your permission and identity code because the concepts behind it are completely different in the Red Matrix. Many structured data names (especially DB schema columns) are also quite different. 
+
