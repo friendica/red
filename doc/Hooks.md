@@ -49,6 +49,7 @@ Hooks - Complete List
 * 'home_init'
 * 'html2bbcode'
 * 'import_directory_profile'
+* 'init_1'
 * 'item_photo_menu'
 * 'item_translate'
 * 'jot_networks'
