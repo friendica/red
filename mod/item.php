@@ -385,9 +385,10 @@ function item_post(&$a) {
 			$body = fix_mce_lf($body);
 		}
 
-		// If we're sending a private top-level message with a single @-taggable channel as a recipient, @-tag it. 
+		// If we're sending a private top-level message with a single @-taggable channel as a recipient, @-tag it, if our pconfig is set.
 
-		if((! $parent) && (substr_count($str_contact_allow,'<') == 1) && ($str_group_allow == '') && ($str_contact_deny == '') && ($str_group_deny == '')) {
+
+		if((! $parent) && (get_pconfig($profile_uid,'system','tagifonlyrecip')) && (substr_count($str_contact_allow,'<') == 1) && ($str_group_allow == '') && ($str_contact_deny == '') && ($str_group_deny == '')) {
 			$x = q("select abook_id, abook_their_perms from abook where abook_xchan = '%s' and abook_channel = %d limit 1",
 				dbesc(str_replace(array('<','>'),array('',''),$str_contact_allow)),
 				intval($profile_uid)
