@@ -1,5 +1,4 @@
 <?php
-
 // Get the UID of the channel owner
 	$uid = get_theme_uid();
 
@@ -30,14 +29,14 @@
 // not --- like the mobile theme does instead.
 
 		if (($schema) && ($schema != '---')) {
-			$schemefile = 'view/theme/' . current_theme() . '/schema/' . $schema . '.php';
+			$schemefile = 'view/theme/redbasic/schema/' . $schema . '.php';
 			require_once ($schemefile);
 		}
 		// If we haven't got a schema, load the default.  We shouldn't touch this - we
 		// should leave it for admins to define for themselves.
 			if (! $schema) {
-			      if(file_exists('view/theme/' . current_theme() . '/schema/default.php')) {
-				    $schemefile = 'view/theme/' . current_theme() . '/schema/' . 'default.php';
+			      if(file_exists('view/theme/redbasic/schema/default.php')) {
+				    $schemefile = 'view/theme/redbasic/schema/' . 'default.php';
 				    require_once ($schemefile);
 				    }
 			}
@@ -100,8 +99,8 @@
 
 		
 // Apply the settings
-	if(file_exists('view/theme/' . current_theme() . '/css/style.css')) {
-		$x = file_get_contents('view/theme/' . current_theme() . '/css/style.css');
+	if(file_exists('view/theme/redbasic/css/style.css')) {
+		$x = file_get_contents('view/theme/redbasic/css/style.css');
 
 $options = array (
 '$nav_bg_1' => $nav_bg_1,

@@ -151,15 +151,22 @@ class FKOAuth1 extends OAuthServer {
 		    header('HTTP/1.0 401 Unauthorized');
 		    die('This api requires login');
 		}
+
 		$_SESSION['uid'] = $record['channel_id'];
 		$_SESSION['theme'] = $record['channel_theme'];
 		$_SESSION['account_id'] = $record['channel_account_id'];
 		$_SESSION['mobile_theme'] = get_pconfig($record['channel_id'], 'system', 'mobile_theme');
 		$_SESSION['authenticated'] = 1;
-//		$_SESSION['page_flags'] = $record['page-flags'];
 		$_SESSION['my_url'] = $a->get_baseurl() . '/channel/' . $record['channel_address'];
 		$_SESSION['addr'] = $_SERVER['REMOTE_ADDR'];
 		$_SESSION['allow_api'] = true;
+		$x = q("select * from account where account_id = %d limit 1",
+			intval($record['channel_account_id'])
+		);
+		if($x)
+			$a->account = $x[0];
+
+		change_channel($record['channel_id']);
 
 		$a->channel = $record;
 

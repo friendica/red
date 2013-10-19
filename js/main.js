@@ -137,7 +137,9 @@
 			e.tipTip({defaultPosition: pos, edgeOffset: 8});
 		});*/
 		
-		
+		var e = document.getElementById('content-complete');
+		if(e)
+			pageHasMoreContent = false;		
 		
 		/* setup onoff widgets */
 		$(".onoff input").each(function(){

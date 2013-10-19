@@ -1429,6 +1429,8 @@ function item_store($arr,$allow_exec = false) {
 		return ret;
 	}
 
+	$uplinked_comment = false;
+
 	// If a page layout is provided, ensure it exists and belongs to us. 
 
 	if(array_key_exists('layout_mid',$arr) && $arr['layout_mid']) {
@@ -1619,6 +1621,16 @@ function item_store($arr,$allow_exec = false) {
 
 			if($r[0]['item_flags'] & ITEM_WALL)
 				$arr['item_flags'] = $arr['item_flags'] | ITEM_WALL; 
+
+
+			// An uplinked comment might arrive with a downstream owner.
+			// Fix it.
+
+			if($r[0]['owner_xchan'] !== $arr['owner_xchan']) {
+				$arr['owner_xchan'] = $r[0]['owner_xchan'];
+				$uplinked_comment = true;
+			}
+
 
 			// if the parent is private, force privacy for the entire conversation
 			// This differs from the above settings as it subtly allows comments from 
@@ -1813,6 +1825,7 @@ function item_store_update($arr,$allow_exec = false) {
 
 	unset($arr['id']);
 	unset($arr['uid']);
+
 	if(array_key_exists('edit',$arr))
 		unset($arr['edit']);	
 	$arr['mimetype']      = ((x($arr,'mimetype'))      ? notags(trim($arr['mimetype']))      : 'text/bbcode');
@@ -2136,11 +2149,9 @@ function tag_deliver($uid,$item_id) {
 			intval($uid)
 		);
 
-// issue #59
-// FIXME - check security on post and allowed senders, right now we just allow it. The author *may* be foreign and the original owner is lost on our copy of the post. So this could be very hard to verify. For instance what happens if the top-level post was a wall-to-wall?  
-//		if(($x) && ($x[0]['item_flags'] & ITEM_UPLINK) && ($x[0]['author_xchan'] == $item['author_xchan'])) {
+
 		if(($x) && ($x[0]['item_flags'] & ITEM_UPLINK)) {
-//			logger('tag_deliver: creating second delivery chain for owner comment.');
+
 			logger('tag_deliver: creating second delivery chain for comment to tagged post.');
 
 			// now change this copy of the post to a forum head message and deliver to all the tgroup members
@@ -2149,6 +2160,14 @@ function tag_deliver($uid,$item_id) {
 			$private = (($u[0]['allow_cid'] || $u[0]['allow_gid'] || $u[0]['deny_cid'] || $u[0]['deny_gid']) ? 1 : 0);
 
 			$flag_bits = ITEM_WALL|ITEM_ORIGIN;
+
+			// maintain the original source, which will be the original item owner and was stored in source_xchan
+			// when we created the delivery fork
+
+			$r = q("update item set source_xchan = '%s' where id = %d limit 1",
+				dbesc($x[0]['source_xchan']),
+				intval($item_id)
+			); 
 
 			$r = q("update item set item_flags = ( item_flags | %d ), owner_xchan = '%s', allow_cid = '%s', allow_gid = '%s', 
 				deny_cid = '%s', deny_gid = '%s', item_private = %d  where id = %d limit 1",
@@ -2248,6 +2267,12 @@ function tag_deliver($uid,$item_id) {
 	$private = (($u[0]['allow_cid'] || $u[0]['allow_gid'] || $u[0]['deny_cid'] || $u[0]['deny_gid']) ? 1 : 0);
 
 	$flag_bits = ITEM_WALL|ITEM_ORIGIN|ITEM_UPLINK;
+
+	// preserve the source
+
+	$r = q("update item set source_xchan = owner_xchan where id = %d limit 1",
+		intval($item_id)
+	);
 
 	$r = q("update item set item_flags = ( item_flags | %d ), owner_xchan = '%s', allow_cid = '%s', allow_gid = '%s', 
 		deny_cid = '%s', deny_gid = '%s', item_private = %d  where id = %d limit 1",

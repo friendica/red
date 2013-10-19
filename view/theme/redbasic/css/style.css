@@ -371,7 +371,7 @@ footer {
 	margin-bottom: 10px;
 }
 
-.group-selected, .nets-selected, .fileas-selected, .categories-selected, .settings-widget .active {
+.group-selected, .nets-selected, .fileas-selected, .categories-selected, .active {
 	color: #444444 !important;
 }
 
@@ -1482,12 +1482,6 @@ tr.mceLast {
 
 #profile-jot-submit:active {
     box-shadow: 0 0 0 0;
-}
-
-.settings-widget .selected {
-    border-radius: $radiuspx;
-    -moz-border-radius: $radiuspx;
-    box-shadow: 4px 4px 3px 0 #444444;
 }
 
 #sidebar-page-list .label {
@@ -3320,8 +3314,8 @@ ul.menu-popup {
 
 
 #mail-list-wrapper {
-border-bottom: 1px solid #ccc;
-margin: 5px 5px 5px 5px;
+border-top: 1px solid #ccc;
+padding: 5px 5px 5px 5px;
 }
 
 span.mail-list {
@@ -3341,6 +3335,10 @@ width: 30px;
 img.mail-list-sender-photo {
 height: 24px;
 width: 24px;
+float: left;
+margin-right: 30px;
+-moz-border-radius: $radiuspx;
+border-radius: $radiuspx;
 }
 
 .tag1 {
@@ -3449,4 +3447,30 @@ a .drop-icons {
  
 .drop-icons:hover {
 	color: #FF0000;
+}
+
+.permission-inherited {
+	float: left;
+	margin-right: 10px;
+	color: #FF0000;
+}
+ 
+.attachlink {
+	float: left;
+	border: 1px solid black;
+	padding: 5px;
+	margin-right: 8px;
+}
+
+.attach-icons {
+	font-size: 1.4em;
+}
+
+.attach-clip {
+	margin-right: 3px;
+	font-size: 1.8em;
+}
+
+.item-category {
+	margin-right: 10px;
 }

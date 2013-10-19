@@ -1,6 +1,6 @@
 <?php
 /**
- * load view/theme/$current_theme/style.php with friendica contex
+ * load view/theme/$current_theme/style.php with Red context
  */
  
 function view_init($a){

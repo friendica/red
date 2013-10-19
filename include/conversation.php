@@ -1076,7 +1076,7 @@ function status_editor($a,$x,$popup=false) {
 	call_hooks('jot_networks', $jotnets);
 
 	$o .= replace_macros($tpl,array(
-		'$return_path' => $a->query_string,
+		'$return_path' => ((x($x,'return_path')) ? $x['return_path'] : $a->query_string),
 		'$action' =>  $a->get_baseurl(true) . '/item',
 		'$share' => (x($x,'button') ? $x['button'] : t('Share')),
 		'$webpage' => $webpage,

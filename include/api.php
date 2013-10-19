@@ -72,7 +72,9 @@ require_once('include/photos.php');
 		// login with oauth
 		try {
 			$oauth = new FKOAuth1();
-			list($consumer,$token) = $oauth->verify_request(OAuthRequest::from_request());
+			$req = OAuthRequest::from_request();
+			list($consumer,$token) = $oauth->verify_request($req);
+//			list($consumer,$token) = $oauth->verify_request(OAuthRequest::from_request());
 			if (!is_null($token)){
 				$oauth->loginUser($token->uid);
 				call_hooks('logged_in', $a->user);
@@ -676,7 +678,6 @@ require_once('include/photos.php');
 			}
 		}
 
-
 		// call out normal post function
 
 		require_once('mod/item.php');
@@ -696,7 +697,7 @@ require_once('include/photos.php');
 		require_once('include/security.php');
 
 		$lastwall = q("SELECT * from item where 1
-			and item_private != 0 and item_restrict = 0
+			and item_private = 0 and item_restrict = 0
 			and author_xchan = '%s'
 			and allow_cid = '' and allow_gid = '' and deny_cid = '' and deny_gid = ''
 			and verb = '%s'
@@ -749,6 +750,7 @@ require_once('include/photos.php');
 			);
 			$status_info['user'] = $user_info;
 		}
+
 		return  api_apply_template("status", $type, array('$status' => $status_info));
 		
 	}

@@ -102,7 +102,7 @@ var searchData=
   ['_24replace',['$replace',['../classTemplate.html#a4e86b566c3f728e95ce5db1b33665c10',1,'Template']]],
   ['_24res',['$res',['../docblox__errorchecker_8php.html#a49a8a4009b02e49717caa88b128affc5',1,'docblox_errorchecker.php']]],
   ['_24s',['$s',['../extract_8php.html#a50b05cf2e02ef0b67fcad97106dd7634',1,'extract.php']]],
-  ['_24schema',['$schema',['../redbasic_2php_2style_8php.html#ae1359c972b337e4bbc2bf2aece6e58db',1,'style.php']]],
+  ['_24schema',['$schema',['../redbasic_2php_2style_8php.html#a83022b1d70799d2bde3d64dca9cb40ee',1,'style.php']]],
   ['_24scheme',['$scheme',['../classApp.html#ad082d63acc078e5bf23825a03bdd6a76',1,'App']]],
   ['_24search',['$search',['../classTemplate.html#a317d535946dc065c35dd5cd38380e6c6',1,'Template']]],
   ['_24sectionleft',['$sectionleft',['../minimalisticdarkness_8php.html#a0ac3f5b52212b0af87d513273da03ead',1,'minimalisticdarkness.php']]],

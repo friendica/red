@@ -161,7 +161,6 @@ function item_post(&$a) {
 
 	$observer = $a->get_observer();
 
-
 	if($parent) {
 		logger('mod_item: item_post parent=' . $parent);
 		$can_comment = false;
@@ -529,7 +528,7 @@ function item_post(&$a) {
 				'type'  => TERM_CATEGORY,
 				'otype' => TERM_OBJ_POST,
 				'term'  => trim($cat),
-				'url'   => ''
+				'url'   => $owner_xchan['xchan_url'] . '?f=&cat=' . urlencode(trim($cat))
 			); 				
 		}
 	}

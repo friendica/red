@@ -1015,6 +1015,105 @@ function unobscure(&$item) {
 
 }
 
+function theme_attachments(&$item) {
+
+	$arr = json_decode_plus($item['attach']);
+	if(is_array($arr) && count($arr)) {
+		$attaches = array();
+		foreach($arr as $r) {
+			$icon = '';
+			$icontype = substr($r['type'],0,strpos($r['type'],'/'));
+
+			// FIXME This should probably be a giant "if" statement in the template so that we don't have icon names
+			// embedded in php code
+
+			switch($icontype) {
+				case 'video':
+					$icon = 'icon-facetime-video';
+					break;
+				case 'audio':
+					$icon = 'icon-volume-up';
+					break;
+				case 'image':
+					$icon = 'icon-picture';
+					break;
+				case 'text':
+					$icon = 'icon-align-justify';
+					break;
+				default:
+					$icon = 'icon-question';
+					break;
+			}
+
+			$title = htmlentities($r['title'], ENT_COMPAT,'UTF-8');
+			if(! $title)
+				$title = t('unknown.???');
+			$title .= ' ' . $r['length'] . ' ' . t('bytes');
+
+			$url = z_root() . '/magic?f=&hash=' . $item['author_xchan'] . '&dest=' . $r['href'] . '/' . $r['revision'];
+			$s .= '<a href="' . $url . '" title="' . $title . '" class="attachlink"  >' . $icon . '</a>';
+			$attaches[] = array('title' => $title, 'url' => $url, 'icon' => $icon );
+
+		}
+
+
+	}
+
+	$s = replace_macros(get_markup_template('item_attach.tpl'), array(
+		'$attaches' => $attaches
+	));
+
+	return $s;
+
+}
+
+
+function format_categories(&$item,$writeable) {
+
+	$s = '';
+	$terms = get_terms_oftype($item['term'],TERM_CATEGORY);
+	if($terms) {
+		$categories = array();
+		foreach($terms as $t) {
+			$term = htmlspecialchars($t['term'],ENT_COMPAT,'UTF-8') ;
+			if(! trim($term))
+				continue;
+			$removelink = (($writeable) ?  z_root() . '/filerm/' . $item['id'] . '?f=&cat=' . urlencode($t['term']) : '');
+			$categories[] = array('term' => $term, 'writeable' => $writeable, 'removelink' => $removelink, 'url' => $t['url']);
+		}
+	}
+	$s = replace_macros(get_markup_template('item_categories.tpl'),array(
+		'$remove' => t('remove category'),
+		'$categories' => $categories
+	));
+	return $s;
+}
+
+
+function format_filer(&$item) {
+
+	$s = '';
+	$terms = get_terms_oftype($item['term'],TERM_FILE);
+	if($terms) {
+		$categories = array();
+		foreach($terms as $t) {
+			$term = htmlspecialchars($t['term'],ENT_COMPAT,'UTF-8') ;
+			if(! trim($term))
+				continue;
+			$removelink = z_root() . '/filerm/' . $item['id'] . '?f=&term=' . urlencode($t['term']);
+			$categories[] = array('term' => $term, 'removelink' => $removelink);
+		}
+	}
+	$s = replace_macros(get_markup_template('item_filer.tpl'),array(
+		'$remove' => t('remove from file'),
+		'$categories' => $categories
+	));
+	return $s;
+}
+
+
+
+
 
 function prepare_body(&$item,$attach = false) {
 
@@ -1037,85 +1136,15 @@ function prepare_body(&$item,$attach = false) {
 	}
 
 
-	$arr = json_decode_plus($item['attach']);
-	if(count($arr)) {
-		$s .= '<div class="body-attach">';
-		foreach($arr as $r) {
-			$matches = false;
-			$icon = '';
-			$icontype = substr($r['type'],0,strpos($r['type'],'/'));
+	$s .= theme_attachments($item);
 
-			switch($icontype) {
-				case 'video':
-				case 'audio':
-				case 'image':
-				case 'text':
-					$icon = '<div class="attachtype icon s22 type-' . $icontype . '"></div>';
-					break;
-				default:
-					$icon = '<div class="attachtype icon s22 type-unkn"></div>';
-					break;
-			}
-
-			$title = htmlentities($r['title'], ENT_COMPAT,'UTF-8');
-			if(! $title)
-				$title = t('unknown.???');
-			$title .= ' ' . $r['length'] . ' ' . t('bytes');
-
-			$url = $a->get_baseurl() . '/magic?f=&hash=' . $item['author_xchan'] . '&dest=' . $r['href'] . '/' . $r['revision'];
-			$s .= '<a href="' . $url . '" title="' . $title . '" class="attachlink"  >' . $icon . '</a>';
-		}
-		$s .= '<div class="clear"></div></div>';
-	}
-
-// At some point in time, posttags were removed from the threaded conversation templates, but remained in the search_item template.
-// Code to put them back was added into include/conversation.php and/or include/ItemObject.php but under new class names
-// Then it was discovered that the following bits remained of the old code.
-// Commented out, but we may decide to use this instead of the other version and put all the tag rendering in one place. In the other
-// location it is more theme-able. 
-//	if(is_array($item['term']) && count($item['term'])) {
-//		$tstr = '';
-//		foreach($item['term'] as $t) {
-//			$t1 = format_term_for_display($t);
-//			if($t1) {
-//				if($tstr)
-//					$tstr .= ' ';
-//				$tstr .= $t1;
-//			}
-//		}
-//		if($tstr)
-//			$s .=  '<br /><div class="posttags">' . $tstr . '</div>';
-//	}
 
 	$writeable = ((get_observer_hash() == $item['owner_xchan']) ? true : false); 
 
-	$x = '';
-	$terms = get_terms_oftype($item['term'],TERM_CATEGORY);
-	if($terms) {
-		foreach($terms as $t) {
-			if(strlen($x))
-				$x .= ',';
-			$x .= htmlspecialchars($t['term'],ENT_COMPAT,'UTF-8') 
-				. (($writeable) ? ' <a href="' . $a->get_baseurl() . '/filerm/' . $item['id'] . '?f=&cat=' . urlencode($t['term']) . '" title="' . t('remove') . '" >' . t('[remove]') . '</a>' : '');
-		}
-		if(strlen($x))
-			$s .= '<div class="categorytags"><span>' . t('Categories:') . ' </span>' . $x . '</div>'; 
+	$s .= format_categories($item,$writeable);
 
-
-	}
-
-	$x = '';
-	$terms = get_terms_oftype($item['term'],TERM_FILE);
-	if($terms) {
-		foreach($terms as $t) {
-			if(strlen($x))
-				$x .= '&nbsp;&nbsp;&nbsp;';
-			$x .= htmlspecialchars($t['term'],ENT_COMPAT,'UTF-8') 
-				. ' <a href="' . $a->get_baseurl() . '/filerm/' . $item['id'] . '?f=&term=' . urlencode($t['term']) . '" title="' . t('remove') . '" >' . t('[remove]') . '</a>';
-		}
-		if(strlen($x) && (local_user() == $item['uid']))
-			$s .= '<div class="filesavetags"><span>' . t('Filed under:') . ' </span>' . $x . '</div>'; 
-	}
+	if(local_user() == $item['uid'])
+		$s .= format_filer($item);
 
 	// Look for spoiler
 	$spoilersearch = '<blockquote class="spoiler">';

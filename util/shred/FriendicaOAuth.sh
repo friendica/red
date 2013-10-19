@@ -128,7 +128,7 @@ FO_statuses_update () {
     $(OAuth_param 'status' "$2")
     )
   
-  params[${#params[@]}]=$(OAuth_param 'source' "fcli")
+  params[${#params[@]}]=$(OAuth_param 'source' "shred")
   
   [[ "$3" != "" ]] && params[${#params[@]}]=$(OAuth_param 'in_reply_to_status_id' "$3") && local in_reply_to_status_id=( '--data-urlencode' "in_reply_to_status_id=$3" )
     
@@ -136,7 +136,7 @@ FO_statuses_update () {
   local auth_header=$(OAuth_authorization_header 'Authorization' "$redmatrix_url" '' '' 'POST' "$F_STATUSES_UPDATE.$format" ${params[@]})
     
   
-  FO_ret=$(curl -s -H "$auth_header" --data-urlencode "status=$2" --data-urlencode "source=fcli" ${in_reply_to_status_id[@]} "$F_STATUSES_UPDATE.$format")
+  FO_ret=$(curl -s -H "$auth_header" --data-urlencode "status=$2" --data-urlencode "source=shred" ${in_reply_to_status_id[@]} "$F_STATUSES_UPDATE.$format")
 
   FO_rval=$?
   return $FO_rval

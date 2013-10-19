@@ -35,6 +35,29 @@ function display_content(&$a, $update = 0, $load = false) {
 
 	$observer_is_owner = false;
 
+
+	if(local_user() && (! $update)) {
+
+		$channel = $a->get_channel();
+
+		$x = array(
+			'is_owner' => true,
+			'allow_location' => ((intval(get_pconfig($channel['channel_id'],'system','use_browser_location'))) ? '1' : ''),
+			'default_location' => $channel['channel_location'],
+			'nickname' => $channel['channel_address'],
+			'lockstate' => (($group || $cid || $channel['channel_allow_cid'] || $channel['channel_allow_gid'] || $channel['channel_deny_cid'] || $channel['channel_deny_gid']) ? 'lock' : 'unlock'),
+
+			'acl' => populate_acl($channel, false),
+			'bang' => '',
+			'visitor' => 'block',
+			'profile_uid' => local_user(),
+			'return_path' => 'channel/' . $channel['channel_address']
+		);
+
+		$o .= status_editor($a,$x);
+
+	}
+
 	// This page can be viewed by anybody so the query could be complicated
 	// First we'll see if there is a copy of the item which is owned by us - if we're logged in locally.
 	// If that fails (or we aren't logged in locally), 
@@ -165,6 +188,8 @@ function display_content(&$a, $update = 0, $load = false) {
 			intval($r[0]['parent'])
 		);
 	}
+
+	$o .= '<div id="content-complete"></div>';
 
 	return $o;
 

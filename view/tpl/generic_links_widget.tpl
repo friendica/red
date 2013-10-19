@@ -4,7 +4,7 @@
 	
 	<ul>
 		{{foreach $items as $item}}
-			<li class="tool"><a href="{{$item.url}}" class="{{if $item.selected}}selected{{/if}}">{{$item.label}}</a></li>
+			<li class="tool"><a href="{{$item.url}}" class="{{if $item.selected}}active{{/if}}">{{$item.label}}</a></li>
 		{{/foreach}}
 	</ul>
 	
