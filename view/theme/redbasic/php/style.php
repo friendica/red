@@ -22,6 +22,7 @@
 	    $font_colour = get_pconfig($uid, "redbasic", "font_colour");	
 	    $radius = get_pconfig($uid, "redbasic", "radius");	
 	    $shadow = get_pconfig($uid,"redbasic","photo_shadow");
+	    $section_width=get_pconfig($uid,"redbasic","section_width");
 
 // Now load the scheme.  If a value is changed above, we'll keep the settings
 // If not, we'll keep those defined by the schema
@@ -70,6 +71,8 @@
 		$shadow = "0";
 	if(! $active_colour)
 		$active_colour = '#FFFFFF';
+    if (! $section_width)
+    	$section_width="72%";
 
 		
 
@@ -114,7 +117,8 @@ $options = array (
 '$font_colour' => $font_colour,
 '$radius' => $radius,
 '$shadow' => $shadow,
-'$active_colour' => $active_colour
+'$active_colour' => $active_colour,
+'$section_width' => $section_width
 );
 
 echo str_replace(array_keys($options), array_values($options), $x);    

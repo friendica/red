@@ -13,8 +13,9 @@ function theme_content(&$a) {
 	$font_colour = get_pconfig(local_user(),'redbasic', 'font_colour' );
 	$radius = get_pconfig(local_user(),'redbasic', 'radius' );
 	$shadow = get_pconfig(local_user(),'redbasic', 'photo_shadow' );
+	$section_width=get_pconfig(local_user(),"redbasic","section_width");
 	return redbasic_form($a, $schema, $nav_colour, $bgcolour, $background_image, $item_colour, $item_opacity, 
-		$font_size, $font_colour, $radius, $shadow);
+		$font_size, $font_colour, $radius, $shadow, $section_width);
 }
 
 function theme_post(&$a) {
@@ -31,11 +32,12 @@ function theme_post(&$a) {
 		set_pconfig(local_user(), 'redbasic', 'font_colour', $_POST['redbasic_font_colour']);
 		set_pconfig(local_user(), 'redbasic', 'radius', $_POST['redbasic_radius']);
 		set_pconfig(local_user(), 'redbasic', 'photo_shadow', $_POST['redbasic_shadow']);
+		set_pconfig(local_user(), 'redbasic', 'section_width', $_POST['redbasic_section_width']);
 	}
 }
 
 function redbasic_form(&$a, $schema, $nav_colour, $bgcolour, $background_image, $item_colour, $item_opacity, 
-		$font_size, $font_colour, $radius, $shadow) {
+		$font_size, $font_colour, $radius, $shadow, $section_width) {
 
 	$scheme_choices = array();
 	$scheme_choices["---"] = t("Default");
@@ -75,6 +77,7 @@ if(feature_enabled(local_user(),'expert'))
 		'$font_colour' => array('redbasic_font_colour', t('Set font-colour for posts and comments'), $font_colour),
 		'$radius' => array('redbasic_radius', t('Set radius of corners'), $radius),
 		'$shadow' => array('redbasic_shadow', t('Set shadow depth of photos'), $shadow),
+		'$section_width' => array('redbasic_section_width',t('Set width of main section'),$section_width),
 		));
 
 	return $o;
