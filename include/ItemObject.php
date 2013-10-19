@@ -201,6 +201,7 @@ class Item extends BaseObject {
 			'linktitle' => sprintf( t('View %s\'s profile - %s'), $profile_name, $item['author']['xchan_addr']),
 			'olinktitle' => sprintf( t('View %s\'s profile - %s'), $this->get_owner_name(), $item['owner']['xchan_addr']),
 			'to' => t('to'),
+			'via' => t('via'),
 			'wall' => t('Wall-to-Wall'),
 			'vwall' => t('via Wall-To-Wall:'),
 			'profile_url' => $profile_link,
