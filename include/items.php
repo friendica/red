@@ -1817,6 +1817,11 @@ function item_store_update($arr,$allow_exec = false) {
 		return $ret;
 	}		
 
+	// override the unseen flag with the original
+
+	if($arr['item_flags'] & ITEM_UNSEEN)
+		$arr['item_flags'] = $arr['item_flags'] ^ ITEM_UNSEEN;
+
 	if($orig[0]['item_flags'] & ITEM_VERIFIED)
 		$orig[0]['item_flags'] = $orig[0]['item_flags'] ^ ITEM_VERIFIED;
 
@@ -1903,7 +1908,7 @@ function item_store_update($arr,$allow_exec = false) {
 
 	$arr['edited']        = ((x($arr,'edited')  !== false) ? datetime_convert('UTC','UTC',$arr['edited'])  : datetime_convert());
 	$arr['expires']        = ((x($arr,'expires')  !== false) ? datetime_convert('UTC','UTC',$arr['expires'])  : $orig[0]['expires']);
-	$arr['commented']     = datetime_convert();
+	$arr['commented']     = $orig[0]['commented'];
 	$arr['received']      = datetime_convert();
 	$arr['changed']       = datetime_convert();
 	$arr['title']         = ((x($arr,'title'))         ? notags(trim($arr['title']))         : '');
