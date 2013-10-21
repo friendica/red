@@ -15,6 +15,8 @@ compiled/
 *.orig
 *.rej
 
+# composer files (for fetching sabre)
+composer.*
 
 #ignore documentation, it should be newly built 
 doc/api
