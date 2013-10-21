@@ -98,6 +98,7 @@
   function markRead(notifType) {
 	$.get('ping?f=&markRead='+notifType);
 	if(timer) clearTimeout(timer);
+	$('#' + notifType + '-update').html('');
 	timer = setTimeout(NavUpdate,2000);
   }
 
