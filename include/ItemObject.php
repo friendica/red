@@ -229,7 +229,7 @@ class Item extends BaseObject {
 			'like'      => $like,
 			'dislike'   => ((feature_enabled($conv->get_profile_owner(),'dislike')) ? $dislike : ''),
 			'share'     => $share,
-			'plink'     => get_plink($item),
+			'plink'     => get_plink($item,$mode),
 			'edpost'    => ((feature_enabled($conv->get_profile_owner(),'edit_posts')) ? $edpost : ''),
 			'star'      => ((feature_enabled($conv->get_profile_owner(),'star_posts')) ? $star : ''),
 			'tagger'    => ((feature_enabled($conv->get_profile_owner(),'commtag')) ? $tagger : ''),

@@ -1337,11 +1337,16 @@ function feed_salmonlinks($nick) {
 }
 
 
-function get_plink($item) {
-	$a = get_app();	
-	if (x($item,'plink') && ($item['item_private'] != 1)) {
+function get_plink($item,$mode) {
+	$a = get_app();
+	if($mode == 'display')
+		$key = 'plink';
+	else
+		$key = 'llink';
+	
+	if (x($item,$key) && ($item['item_private'] != 1)) {
 		return array(
-			'href' => zid($item['plink']),
+			'href' => zid($item[$key]),
 			'title' => t('link to source'),
 		);
 	} 
