@@ -929,7 +929,7 @@ footer {
 }
 
 .wall-item-ago {
-	color: #888888;
+	color: #777;
 	font-size: 0.8em;
 }
 
@@ -950,6 +950,11 @@ footer {
 	margin-right: 8px;
 	font-size: 1.2em;
 	cursor: pointer;
+	color: #777; 
+}
+
+.item-tool:hover {
+	color: #000; 
 }
 
 .like-rotator {
@@ -3432,9 +3437,17 @@ margin-right: 50px;
 	margin-left: -20px;
 }
 
-.comment-icon, .jot-icons {
+.comment-icon,
+.jot-icons {
 	font-size: 1.2em;
+	color: #777;
 }
+
+.comment-icon:hover,
+.jot-icons:hover {
+	color: #000; 
+}
+
 .nav-icon {
 	font-size: 1.4em;
 	margin-right: 15px;
