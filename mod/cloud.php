@@ -16,8 +16,6 @@
 	// This interface does not yet support Red stored files. Consider any content in your "store" 
 	// directory to be throw-away until advised otherwise.
 
-	if(! get_config('system','enable_cloud'))
-		killme();
 
 
 	use Sabre\DAV;
@@ -86,6 +84,8 @@ class RedBasicAuth extends Sabre\DAV\Auth\Backend\AbstractBasic {
 
 function cloud_init() {
 
+	if(! get_config('system','enable_cloud'))
+		killme();
 
 	$rootDirectory = new DAV\FS\Directory('store');
 	$server = new DAV\Server($rootDirectory);
