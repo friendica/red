@@ -616,36 +616,28 @@ function photos_content(&$a) {
 
 	$can_post       = false;
 	$visitor        = 0;
-	$contact        = null;
-	$remote_contact = false;
-	$contact_id     = 0;
+
 
 	$owner_uid = $a->data['channel']['channel_id'];
 	$owner_aid = $a->data['channel']['channel_account_id'];
 
-	$community_page = (($a->data['user']['page-flags'] == PAGE_COMMUNITY) ? true : false);
+	$observer = $a->get_observer();
 
-	if((local_user()) && (local_user() == $owner_uid))
-		$can_post = true;
+	$can_post = perm_is_allowed($owner_uid,$observer['xchan_hash'],'post_photos');
+	$can_view = perm_is_allowed($owner_uid,$observer['xchan_hash'],'view_photos');
 
-// FIXME
-	if(! $remote_contact) {
-		if(local_user()) {
-			$contact_id = $_SESSION['cid'];
-			$contact = $a->contact;
-		}
-	}
 
-	if($a->data['user']['hidewall'] && (local_user() != $owner_uid) && (! $remote_contact)) {
+	if(! $can_view) {
 		notice( t('Access to this item is restricted.') . EOL);
 		return;
 	}
 
-	$sql_extra = permissions_sql($owner_uid,$remote_contact,$groups);
+	$sql_extra = permissions_sql($owner_uid);
 
 	$o = "";
 
 	// tabs
+
 	$_is_owner = (local_user() && (local_user() == $owner_uid));
 	$o .= profile_tabs($a,$_is_owner, $a->data['channel']['channel_address']);	
 
@@ -708,7 +700,7 @@ function photos_content(&$a) {
  		}
 
 		$albumselect_e = $albumselect;
-		$aclselect_e = (($visitor) ? '' : populate_acl($a->user, $celeb));
+		$aclselect_e = (($_is_owner) ? populate_acl($a->get_channel(), false) : '');
 
 		$tpl = get_markup_template('photos_upload.tpl');
 		$o .= replace_macros($tpl,array(
@@ -963,16 +955,12 @@ function photos_content(&$a) {
 			
 		}
 
-		if(! $can_post) {
-			$a->page['htmlhead'] .= '<script>
-				$(document).keydown(function(event) {' . "\n";
-
-			if($prevlink)
-				$a->page['htmlhead'] .= 'if(event.ctrlKey && event.keyCode == 37) { event.preventDefault(); window.location.href = \'' . $prevlink . '\'; }' . "\n";
-			if($nextlink)
-				$a->page['htmlhead'] .= 'if(event.ctrlKey && event.keyCode == 39) { event.preventDefault(); window.location.href = \'' . $nextlink . '\'; }' . "\n";
-			$a->page['htmlhead'] .= '});</script>';
-		}
+		$a->page['htmlhead'] .= '<script>$(document).keydown(function(event) {' . "\n";
+		if($prevlink)
+			$a->page['htmlhead'] .= 'if(event.ctrlKey && event.keyCode == 37) { event.preventDefault(); window.location.href = \'' . $prevlink . '\'; }' . "\n";
+		if($nextlink)
+			$a->page['htmlhead'] .= 'if(event.ctrlKey && event.keyCode == 39) { event.preventDefault(); window.location.href = \'' . $nextlink . '\'; }' . "\n";
+		$a->page['htmlhead'] .= '});</script>';
 
 		if($prevlink)
 			$prevlink = array($prevlink, '<i class="icon-backward photo-icons""></i>') ;
@@ -1085,9 +1073,9 @@ function photos_content(&$a) {
 						'$id' => $link_item['id'],
 						'$parent' => $link_item['id'],
 						'$profile_uid' =>  $owner_uid,
-						'$mylink' => $contact['url'],
+						'$mylink' => $observer['xchan_url'],
 						'$mytitle' => t('This is you'),
-						'$myphoto' => $contact['thumb'],
+						'$myphoto' => $observer['xchan_photo_s'],
 						'$comment' => t('Comment'),
 						'$submit' => t('Submit'),
 						'$preview' => t('Preview'),
@@ -1137,7 +1125,7 @@ function photos_content(&$a) {
 
 					$drop = '';
 
-					if(($item['contact-id'] == $contact_id) || ($item['uid'] == local_user()))
+					if($observer['xchan_hash'] === $item['author_xchan'] || $observer['xchan_hash'] === $item['owner_xchan'])
 						$drop = replace_macros(get_markup_template('photo_drop.tpl'), array('$id' => $item['id'], '$delete' => t('Delete')));
 
 
@@ -1171,9 +1159,9 @@ function photos_content(&$a) {
 						'$id' => $link_item['id'],
 						'$parent' => $link_item['id'],
 						'$profile_uid' =>  $owner_uid,
-						'$mylink' => $contact['url'],
+						'$mylink' => $observer['xchan_url'],
 						'$mytitle' => t('This is you'),
-						'$myphoto' => $contact['thumb'],
+						'$myphoto' => $observer['xchan_photo_s'],
 						'$comment' => t('Comment'),
 						'$submit' => t('Submit'),
 						'$ww' => ''
