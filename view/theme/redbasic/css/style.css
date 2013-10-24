@@ -3487,3 +3487,11 @@ a .drop-icons {
 .item-category {
 	margin-right: 10px;
 }
+
+.design-icons {
+	margin-right: 10px;
+}
+
+#menulist {
+	list-style-type: none;
+}
