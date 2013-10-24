@@ -15,6 +15,21 @@ function oexchange_init(&$a) {
 function oexchange_content(&$a) {
 
 	if(! local_user()) {
+		if(remote_user()) {
+			$observer = $a->get_observer();
+			if($observer && $observer['xchan_url']) {
+				$parsed = @parse_url($observer['xchan_url']);
+				if(! $parsed) {
+					notice( t('Unable to find your hub.') . EOL);
+					return;
+				}
+				$url = $parsed['scheme'] . '://' . $parsed['host'] . (($parsed['port']) ? ':' . $parsed['port'] : '');
+				$url .= '/oexchange';
+				$result = z_post_url($url,$_REQUEST);
+				json_return_and_die($result);
+			}
+		}
+
 		return login(false);
 	}
 
