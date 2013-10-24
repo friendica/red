@@ -3492,6 +3492,10 @@ a .drop-icons {
 	margin-right: 10px;
 }
 
+.design-icons:hover { 
+text-decoration: none; 
+}
+
 #menulist {
 	list-style-type: none;
 }
