@@ -2,6 +2,7 @@
 
 require_once('include/security.php');
 require_once('include/menu.php');
+
 // When editing a webpage - a dropdown is needed to select a page layout
 // On submit, the pdl_select value (which is the mid of an item with item_restrict = ITEM_PDL) is stored in 
 // the webpage's resource_id, with resource_type 'pdl'.
@@ -126,11 +127,19 @@ function comanche_webpage(&$a,$s) {
 // the global app environment, or config storage until we implement argument passing
 
 
-function comanche_widget($name,$args = null) {
+function comanche_widget($name,$text) {
 	$a = get_app();
+	$vars = array();
+	$cnt = preg_match_all("/\[var=(.*?)\](.*?)\[\/var\]/ism", $text, $matches, PREG_SET_ORDER);
+	if($cnt) {
+		foreach($matches as $mtch) {
+			$vars[$mtch[1]] = $mtch[2];
+		}
+	}
+
 	$func = 'widget_' . trim($name);
 	if(function_exists($func))
-		return $func($args);
+		return $func($vars);
 }
 
 
@@ -152,10 +161,10 @@ function comanche_region(&$a,$s) {
 
 	// need to modify this to accept parameters
 
-	$cnt = preg_match_all("/\[widget\](.*?)\[\/widget\]/ism", $s, $matches, PREG_SET_ORDER);
+	$cnt = preg_match_all("/\[widget=(.*?)\](.*?)\[\/widget\]/ism", $s, $matches, PREG_SET_ORDER);
 	if($cnt) {
 		foreach($matches as $mtch) {
-			$s = str_replace($mtch[0],comanche_widget(trim($mtch[1])),$s);
+			$s = str_replace($mtch[0],comanche_widget(trim($mtch[1]),$mtch[2]),$s);
 		}
 	}
 
