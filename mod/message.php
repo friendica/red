@@ -233,6 +233,24 @@ function message_content(&$a) {
 		}		
 	}
 
+	if((argc() == 3) && (argv(1) === 'recall')) {
+		if(! intval(argv(2)))
+			return;
+		$cmd = argv(1);
+		$r = q("update mail set mail_flags = mail_flags | %d where id = %d and channel_id = %d limit 1",
+			intval(MAIL_RECALLED),
+			intval(argv(2)),
+			intval(local_user())
+		);
+		proc_run('php','include/notifier.php','mail',intval(argv(2)));
+
+		if($r) {
+				info( t('Message recalled.') . EOL );
+		}
+		goaway($a->get_baseurl(true) . '/message' );
+
+	}
+
 
 	if((argc() > 1) && ($a->argv[1] === 'new')) {
 		
@@ -360,6 +378,16 @@ function message_content(&$a) {
 			return $o;
 		}
 
+		$other_channel = null;
+		if($messages[0]['to_xchan'] === $channel['channel_hash'])
+			$other_channel = $messages[0]['from'];
+		else
+			$other_channel = $messages[0]['to'];
+
+		require_once('include/Contact.php');
+
+		$a->set_widget('mail_conversant',vcard_from_xchan($other_channel,$get_observer_hash,'mail'));
+
 
 		$tpl = get_markup_template('msg-header.tpl');
 	
@@ -422,6 +450,9 @@ function message_content(&$a) {
 				'subject' => $message['title'],
 				'body' => smilies(bbcode($message['body']) . $s),
 				'delete' => t('Delete message'),
+				'recall' => t('Recall message'),
+				'can_recall' => (($channel['channel_hash'] == $message['from_xchan']) ? true : false),
+				'is_recalled' => (($message['mail_flags'] & MAIL_RECALLED) ? t('Message has been recalled.') : ''),
 				'date' => datetime_convert('UTC',date_default_timezone_get(),$message['created'],'D, d M Y - g:i A'),
 			);
 				
@@ -440,6 +471,7 @@ function message_content(&$a) {
 
 		$tpl = get_markup_template('mail_display.tpl');
 		$o = replace_macros($tpl, array(
+			'$prvmsg_header' => t('Private Conversation'),
 			'$thread_id' => $a->argv[1],
 			'$thread_subject' => $message['title'],
 			'$thread_seen' => $seen,

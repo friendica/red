@@ -99,7 +99,7 @@ $r = q("select * from item_id where uid = %d and service = 'WEBPAGE' order by si
 		'$pages' => $pages,
 		'$channel' => $which,
 		'$view' => t('View'),
-		'$preview' => '1',
+		'$preview' => t('Preview'),
 	
         ));
     

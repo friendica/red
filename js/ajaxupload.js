@@ -58,6 +58,25 @@
         });
     }    
     
+    // Get offset adding all offsets, slow fall-back method
+    var getOffsetSlow = function(el){
+        var top = 0, left = 0;
+        do {
+            top += el.offsetTop || 0;
+            left += el.offsetLeft || 0;
+            el = el.offsetParent;
+        } while (el);
+        
+        return {
+            left: left,
+            top: top
+        };
+    };
+
+     
+
+
+
     // Needs more testing, will be rewriten for next version        
     // getOffset function copied from jQuery lib (http://jquery.com/)
     if (document.documentElement.getBoundingClientRect){
@@ -78,7 +97,12 @@
                 var bound = body.getBoundingClientRect();
                 zoom = (bound.right - bound.left) / body.clientWidth;
             }
-            
+
+		// some CSS layouts gives 0 width and/or bounding boxes
+		// in this case we fall back to the slow method
+            if (zoom == 0 || body.clientWidth == 0)
+                return getOffsetSlow(el);
+                         
             if (zoom > 1) {
                 clientTop = 0;
                 clientLeft = 0;
@@ -92,20 +116,21 @@
             };
         };        
     } else {
-        // Get offset adding all offsets 
-        var getOffset = function(el){
-            var top = 0, left = 0;
-            do {
-                top += el.offsetTop || 0;
-                left += el.offsetLeft || 0;
-                el = el.offsetParent;
-            } while (el);
+//        // Get offset adding all offsets 
+  //      var getOffset = function(el){
+    //        var top = 0, left = 0;
+      //      do {
+        //        top += el.offsetTop || 0;
+          //      left += el.offsetLeft || 0;
+            //    el = el.offsetParent;
+          //  } while (el);
             
-            return {
-                left: left,
-                top: top
-            };
-        };
+          //  return {
+            //    left: left,
+              //  top: top
+           // };
+       // };
+		var getOffset = getOffsetSlowl
     }
     
     /**

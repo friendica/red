@@ -453,8 +453,8 @@ function check_funcs(&$checks) {
 		$ck_funcs[4]['help']= t('Error: mb_string PHP module required but not installed.');
 	}
 	if(! function_exists('mcrypt_encrypt')){
-		$ck_funcs[4]['status']= false;
-		$ck_funcs[4]['help']= t('Error: mcrypt PHP module required but not installed.');
+		$ck_funcs[5]['status']= false;
+		$ck_funcs[5]['help']= t('Error: mcrypt PHP module required but not installed.');
 	}
 	
 	$checks = array_merge($checks, $ck_funcs);

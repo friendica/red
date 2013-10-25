@@ -103,24 +103,6 @@ directory/path component in the URL) is REQUIRED.
 
 			git pull
 
-	- If you wish to use WebDAV file services
-
-        - First you should be **on** your website folder
-
-            cd mywebsite
-
-        - Then you should clone the sabre-dav repository (separately)
-
-            git clone https://github.com/fruux/sabre-dav sabre
-
-        - For keeping the sabre tree updated, you should be on you sabre tree and issue a git pull
-
-            cd mywebsite/sabre
-
-			git pull
-
-
-
 
 3. Create an empty database and note the access details (hostname, username, 
 password, database name).

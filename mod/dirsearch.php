@@ -132,7 +132,7 @@ function dirsearch_content(&$a) {
 
 
 	if($sort_order == 'date')
-		$order = ""; // Not currently implemented
+		$order = " order by xchan_name_date desc ";
 	elseif($sort_order == 'reverse')
 		$order = " order by xchan_name desc ";
 	else	
@@ -159,10 +159,12 @@ function dirsearch_content(&$a) {
 		json_return_and_die($spkt);
 	}
 	else {
-		$r = q("SELECT xchan.*, xprof.* from xchan left join xprof on xchan_hash = xprof_hash where $logic $sql_extra and not ( xchan_flags & %d ) and not ( xchan_flags & %d ) $safesql $order $qlimit ",
+
+		$r = q("SELECT xchan.*, xprof.* from xchan left join xprof on xchan_hash = xprof_hash where ( $logic $sql_extra ) and not ( xchan_flags & %d ) and not ( xchan_flags & %d ) $safesql $order $qlimit ",
 			intval(XCHAN_FLAGS_HIDDEN),
 			intval(XCHAN_FLAGS_ORPHAN)
 		);
+
 	}
 
 	$ret['page'] = $page + 1;

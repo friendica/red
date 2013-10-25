@@ -1,5 +1,4 @@
 <?php
-
 // Get the UID of the channel owner
 	$uid = get_theme_uid();
 
@@ -11,25 +10,6 @@
 // A further two - $nav_bg_3 and $nav_bg_4 are used to create the hover, if any particular scheme
 // wants to implement that
 	    $nav_colour = get_pconfig($uid, "redbasic", "nav_colour");	
-		if ($nav_colour == "red") {
-					$nav_bg_1 = "#f88";
-					$nav_bg_2 = "#b00";
-					$nav_bg_3 = "#f00";
-					$nav_bg_4 = "#b00";
-					$search_background = '#FFDDDD';
-					$active_colour = '#444444';
-		}
-
-		if ($nav_colour == "black") {
-				    $nav_bg_1 = $nav_bg_3 = "#000";
-		      		    $nav_bg_2 = $nav_bg_4 = "#222";
-					$search_background = '#EEEEEE';
-					$active_colour = '#AAAAAA';
-		}
-		if ($nav_colour == "silver") {
-				    $nav_bg_1 = $nav_bg_2 = $nav_bg_3 = $nav_bg_4 = "silver";
-					$search_background = '#EEEEEE';
-		}
 
 // Load the owners pconfig
 		$schema = get_pconfig($uid,'redbasic','schema');
@@ -41,6 +21,7 @@
 	    $font_colour = get_pconfig($uid, "redbasic", "font_colour");	
 	    $radius = get_pconfig($uid, "redbasic", "radius");	
 	    $shadow = get_pconfig($uid,"redbasic","photo_shadow");
+	    $section_width=get_pconfig($uid,"redbasic","section_width");
 
 // Now load the scheme.  If a value is changed above, we'll keep the settings
 // If not, we'll keep those defined by the schema
@@ -48,14 +29,14 @@
 // not --- like the mobile theme does instead.
 
 		if (($schema) && ($schema != '---')) {
-			$schemefile = 'view/theme/' . current_theme() . '/schema/' . $schema . '.php';
+			$schemefile = 'view/theme/redbasic/schema/' . $schema . '.php';
 			require_once ($schemefile);
 		}
 		// If we haven't got a schema, load the default.  We shouldn't touch this - we
 		// should leave it for admins to define for themselves.
 			if (! $schema) {
-			      if(file_exists('view/theme/' . current_theme() . '/schema/default.php')) {
-				    $schemefile = 'view/theme/' . current_theme() . '/schema/' . 'default.php';
+			      if(file_exists('view/theme/redbasic/schema/default.php')) {
+				    $schemefile = 'view/theme/redbasic/schema/' . 'default.php';
 				    require_once ($schemefile);
 				    }
 			}
@@ -89,11 +70,37 @@
 		$shadow = "0";
 	if(! $active_colour)
 		$active_colour = '#FFFFFF';
+    if (! $section_width)
+    	$section_width="72%";
 
+		
 
+// Nav colours have nested values, so we have to define the actual variables
+// used in the CSS from the higher level "red", "black", etc here
+		if ($nav_colour == "red") {
+					$nav_bg_1 = "#f88";
+					$nav_bg_2 = "#b00";
+					$nav_bg_3 = "#f00";
+					$nav_bg_4 = "#b00";
+					$search_background = '#FFDDDD';
+					$active_colour = '#444444';
+		}
+
+		if ($nav_colour == "black") {
+				    $nav_bg_1 = $nav_bg_3 = "#000";
+		      		    $nav_bg_2 = $nav_bg_4 = "#222";
+					$search_background = '#EEEEEE';
+					$active_colour = '#AAAAAA';
+		}
+		if ($nav_colour == "silver") {
+				    $nav_bg_1 = $nav_bg_2 = $nav_bg_3 = $nav_bg_4 = "silver";
+					$search_background = '#EEEEEE';
+		}
+
+		
 // Apply the settings
-	if(file_exists('view/theme/' . current_theme() . '/css/style.css')) {
-		$x = file_get_contents('view/theme/' . current_theme() . '/css/style.css');
+	if(file_exists('view/theme/redbasic/css/style.css')) {
+		$x = file_get_contents('view/theme/redbasic/css/style.css');
 
 $options = array (
 '$nav_bg_1' => $nav_bg_1,
@@ -109,7 +116,8 @@ $options = array (
 '$font_colour' => $font_colour,
 '$radius' => $radius,
 '$shadow' => $shadow,
-'$active_colour' => $active_colour
+'$active_colour' => $active_colour,
+'$section_width' => $section_width
 );
 
 echo str_replace(array_keys($options), array_values($options), $x);    

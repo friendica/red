@@ -61,7 +61,8 @@ if((isset($_SESSION)) && (x($_SESSION,'authenticated')) && ((! (x($_POST,'auth-p
 	if(((x($_POST,'auth-params')) && ($_POST['auth-params'] === 'logout')) || ($a->module === 'logout')) {
 	
 		// process logout request
-		call_hooks("logging_out");
+		$args = array('channel_id' => local_user());
+		call_hooks('logging_out', $args);
 		nuke_session();
 		info( t('Logged out.') . EOL);
 		goaway(z_root());

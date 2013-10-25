@@ -397,7 +397,7 @@ function visible_activity($item) {
  */
 
 
-function conversation(&$a, $items, $mode, $update, $page_mode = 'traditional') {
+function conversation(&$a, $items, $mode, $update, $page_mode = 'traditional', $prepared_item = '') {
 
 	$tstart = dba_timer();
 	$t0 = $t1 = $t2 = $t3 = $t4 = $t5 = $t6 = null;
@@ -690,7 +690,7 @@ function conversation(&$a, $items, $mode, $update, $page_mode = 'traditional') {
 					'owner_name' => $owner_name,
 					'owner_url' => $owner_url,
 					'owner_photo' => $owner_photo,
-					'plink' => get_plink($item),
+					'plink' => get_plink($item,$mode),
 					'edpost' => false,
 					'isstarred' => $isstarred,
 					'star' => $star,
@@ -723,7 +723,7 @@ function conversation(&$a, $items, $mode, $update, $page_mode = 'traditional') {
             require_once('include/ConversationObject.php');
             require_once('include/ItemObject.php');
 
-            $conv = new Conversation($mode, $preview);
+            $conv = new Conversation($mode, $preview, $prepared_item);
 
 			// In the display mode we don't have a profile owner. 
 
@@ -764,7 +764,7 @@ function conversation(&$a, $items, $mode, $update, $page_mode = 'traditional') {
 				}
 
 
-                // Can we put this after the visibility check?
+
                 like_puller($a,$item,$alike,'like');
 
 				if(feature_enabled($profile_owner,'dislike'))
@@ -1076,7 +1076,7 @@ function status_editor($a,$x,$popup=false) {
 	call_hooks('jot_networks', $jotnets);
 
 	$o .= replace_macros($tpl,array(
-		'$return_path' => $a->query_string,
+		'$return_path' => ((x($x,'return_path')) ? $x['return_path'] : $a->query_string),
 		'$action' =>  $a->get_baseurl(true) . '/item',
 		'$share' => (x($x,'button') ? $x['button'] : t('Share')),
 		'$webpage' => $webpage,

@@ -325,12 +325,13 @@ function notifier_run($argv, $argc){
 		// tag_deliver'd post which needs to be sent back to the original author
 
 		if(($cmd === 'uplink') && ($parent_item['item_flags'] & ITEM_UPLINK) && (! $top_level_post)) {
-			$uplink = true;			
+			logger('notifier: uplink');			
+			$uplink = true;
 		} 
 
 		if(($relay_to_owner || $uplink) && ($cmd !== 'relay')) {
 			logger('notifier: followup relay', LOGGER_DEBUG);
-			$recipients = array(($uplink) ? $parent_item['author_xchan'] : $parent_item['owner_xchan']);
+			$recipients = array(($uplink) ? $parent_item['source_xchan'] : $parent_item['owner_xchan']);
 			$private = true;
 			if(! $encoded_item['flags'])
 				$encoded_item['flags'] = array();
@@ -443,7 +444,7 @@ function notifier_run($argv, $argc){
 			$n = zot_build_packet($channel,$packet_type);
 			q("insert into outq ( outq_hash, outq_account, outq_channel, outq_posturl, outq_async, outq_created, outq_updated, outq_notify, outq_msg ) values ( '%s', %d, %d, '%s', %d, '%s', '%s', '%s', '%s' )",
 				dbesc($hash),
-				intval($channel['channel_account']),
+				intval($channel['channel_account_id']),
 				intval($channel['channel_id']),
 				dbesc($hub['hubloc_callback']),
 				intval(1),

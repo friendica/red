@@ -3,7 +3,21 @@
 require_once('include/permissions.php');
 
 function find_upstream_directory($dirmode) {
+	$preferred = get_config('system','directory_server');
+	if($preferred)
+		return array('url' => $preferred);
 	return '';
+}
+
+function dir_sort_links() {
+
+	$o = replace_macros(get_markup_template('dir_sort_links.tpl'), array(
+		'$header' => t('Sort Options'),
+		'$normal' => t('Alphabetic'),
+		'$reverse' => t('Reverse Alphabetic'),
+		'$date' => t('Newest to Oldest')
+	));
+	return $o;
 }
 
 
@@ -71,7 +85,7 @@ function sync_directories($dirmode) {
 				if(is_array($t['flags']) && in_array('deleted',$t['flags']))
 					$ud_flags |= UPDATE_FLAGS_DELETED;
 				$z = q("insert into updates ( ud_hash, ud_guid, ud_date, ud_flags, ud_addr )
-					values ( '%s', '%s', '%s', '%d, '%s' ) ",
+					values ( '%s', '%s', '%s', %d, '%s' ) ",
 					dbesc($t['hash']),
 					dbesc($t['transaction_id']),
 					dbesc($t['timestamp']),
@@ -89,18 +103,22 @@ function update_directory_entry($ud) {
 	logger('update_directory_entry: ' . print_r($ud,true), LOGGER_DATA);
 
 	if($ud['ud_addr'] && (! ($ud['ud_flags'] & UPDATE_FLAGS_DELETED))) {
+		$success = false;
 		$x = zot_finger($ud['ud_addr'],'');
 		if($x['success']) {
 			$j = json_decode($x['body'],true);
+			if($j)
+				$success = true;
 			$y = import_xchan($j,0);
 		}
-		else {
+		if(! $success) {
 			$r = q("update updates set ud_last = '%s' where ud_addr = '%s'",
 				dbesc(datetime_convert()),
 				dbesc($ud['ud_addr'])
 			);
 		}
 	}
+
 }
 
 
@@ -111,7 +129,7 @@ function syncdirs($uid) {
 
 	logger('syncdirs', LOGGER_DEBUG);
 
-	$p = q("select channel.channel_hash, channel_timezone, profile.* from profile left join channel on channel_id = uid where uid = %d and is_default = 1",
+	$p = q("select channel.channel_hash, channel_address, channel_timezone, profile.* from profile left join channel on channel_id = uid where uid = %d and is_default = 1",
 		intval($uid)
 	);
 
@@ -182,6 +200,8 @@ function syncdirs($uid) {
 		}
 	}
 
-	// TODO send refresh zots to downstream directory servers
+	$ud_hash = random_string();
+	update_modtime($ud_hash,$hash,$p[0]['channel_address'] . '@' . get_app()->get_hostname(),1);
+
 }
 	

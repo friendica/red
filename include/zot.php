@@ -604,11 +604,14 @@ function import_xchan($arr,$ud_flags = 1) {
 			);
 			if($r) {
 				logger('import_xchan: hub exists: ' . $location['url']);
-				// update connection timestamp
-				q("update hubloc set hubloc_connected = '%s' where hubloc_id = %d limit 1",
-					dbesc(datetime_convert()),
-					intval($r[0]['hubloc_id'])
-				);
+				// update connection timestamp if this is the site we're talking to
+				if($location['url'] == $arr['site']['url']) {
+					q("update hubloc set hubloc_connected = '%s', hubloc_updated = '%s' where hubloc_id = %d limit 1",
+						dbesc(datetime_convert()),
+						dbesc(datetime_convert()),
+						intval($r[0]['hubloc_id'])
+					);
+				}
 				if((($r[0]['hubloc_flags'] & HUBLOC_FLAGS_PRIMARY) && (! $location['primary']))
 					|| ((! ($r[0]['hubloc_flags'] & HUBLOC_FLAGS_PRIMARY)) && ($location['primary']))) {
 					$r = q("update hubloc set hubloc_flags = (hubloc_flags ^ %d), hubloc_updated = '%s' where hubloc_id = %d limit 1",
@@ -722,6 +725,14 @@ function import_xchan($arr,$ud_flags = 1) {
 		$guid = random_string() . '@' . get_app()->get_hostname();		
 		update_modtime($xchan_hash,$guid,$arr['address'],$ud_flags);
 		logger('import_xchan: changed: ' . $what,LOGGER_DEBUG);
+	}
+	elseif(! $ud_flags) {
+		// nothing changed but we still need to update the updates record
+		q("update updates set ud_flags = ( ud_flags | %d ) where ud_addr = '%s' and not (ud_flags & %d) ",
+			intval(UPDATE_FLAGS_UPDATED),
+			dbesc($arr['address']),
+			intval(UPDATE_FLAGS_UPDATED)
+		);
 	}
 
 	if(! x($ret,'message')) {
@@ -1568,6 +1579,7 @@ function update_modtime($hash,$guid,$addr,$flags = 0) {
 	else {
 		q("update updates set ud_flags = ( ud_flags | %d ) where ud_addr = '%s' and not (ud_flags & %d) ",
 			intval(UPDATE_FLAGS_UPDATED),
+			dbesc($addr),
 			intval(UPDATE_FLAGS_UPDATED)
 		);
 	}

@@ -161,7 +161,6 @@ function item_post(&$a) {
 
 	$observer = $a->get_observer();
 
-
 	if($parent) {
 		logger('mod_item: item_post parent=' . $parent);
 		$can_comment = false;
@@ -386,9 +385,10 @@ function item_post(&$a) {
 			$body = fix_mce_lf($body);
 		}
 
-		// If we're sending a private top-level message with a single @-taggable channel as a recipient, @-tag it. 
+		// If we're sending a private top-level message with a single @-taggable channel as a recipient, @-tag it, if our pconfig is set.
 
-		if((! $parent) && (substr_count($str_contact_allow,'<') == 1) && ($str_group_allow == '') && ($str_contact_deny == '') && ($str_group_deny == '')) {
+
+		if((! $parent) && (get_pconfig($profile_uid,'system','tagifonlyrecip')) && (substr_count($str_contact_allow,'<') == 1) && ($str_group_allow == '') && ($str_contact_deny == '') && ($str_group_deny == '')) {
 			$x = q("select abook_id, abook_their_perms from abook where abook_xchan = '%s' and abook_channel = %d limit 1",
 				dbesc(str_replace(array('<','>'),array('',''),$str_contact_allow)),
 				intval($profile_uid)
@@ -529,7 +529,7 @@ function item_post(&$a) {
 				'type'  => TERM_CATEGORY,
 				'otype' => TERM_OBJ_POST,
 				'term'  => trim($cat),
-				'url'   => ''
+				'url'   => $owner_xchan['xchan_url'] . '?f=&cat=' . urlencode(trim($cat))
 			); 				
 		}
 	}
@@ -605,6 +605,7 @@ function item_post(&$a) {
 	$datarray['item_flags']     = $item_flags;
 	$datarray['layout_mid']     = $layout_mid;
 	$datarray['comment_policy'] = map_scope($channel['channel_w_comment']); 
+	$datarray['term']           = $post_tags;
 
 	// preview mode - prepare the body for display and send it via json
 
@@ -684,21 +685,6 @@ function item_post(&$a) {
 
 	if($post_id) {
 		logger('mod_item: saved item ' . $post_id);
-
-		if(count($post_tags)) {
-			foreach($post_tags as $tag) {
-				if(strlen(trim($tag['term']))) {
-					q("insert into term (uid,oid,otype,type,term,url) values (%d,%d,%d,%d,'%s','%s')",
-						intval($tag['uid']),
-						intval($post_id),
-						intval($tag['otype']),
-						intval($tag['type']),
-						dbesc(trim($tag['term'])),
-						dbesc(trim($tag['url']))
-					);
-				}
-			}
-		}
 
 		if($parent) {
 
@@ -894,7 +880,7 @@ function handle_tag($a, &$body, &$inform, &$str_tags, $profile_uid, $tag) {
 			$url = 'http://getzot.com';
 			$newtag = '#[zrl=' . $url . ']' . $basetag . '[/zrl]';
 			$body = str_replace($tag,$newtag,$body);
-			$replace = true;
+			$replaced = true;
 		}
 		else {
 			//base tag has the tags name only

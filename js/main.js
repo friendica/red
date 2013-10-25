@@ -98,6 +98,7 @@
   function markRead(notifType) {
 	$.get('ping?f=&markRead='+notifType);
 	if(timer) clearTimeout(timer);
+	$('#' + notifType + '-update').html('');
 	timer = setTimeout(NavUpdate,2000);
   }
 
@@ -137,7 +138,9 @@
 			e.tipTip({defaultPosition: pos, edgeOffset: 8});
 		});*/
 		
-		
+		var e = document.getElementById('content-complete');
+		if(e)
+			pageHasMoreContent = false;		
 		
 		/* setup onoff widgets */
 		$(".onoff input").each(function(){
@@ -573,7 +576,8 @@ function updateConvItems(mode,data) {
 			updateConvItems(update_mode,data);
 			$("#page-spinner").spin(false);
 			$("#profile-jot-text-loading").spin(false);
-
+			if(timer) clearTimeout(timer);
+			timer = setTimeout(NavUpdate,10);
 		});
 
 

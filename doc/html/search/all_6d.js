@@ -47,6 +47,7 @@ var searchData=
   ['mimetype_5fselect',['mimetype_select',['../text_8php.html#a1633412120f52bdce5f43e0a127d9293',1,'text.php']]],
   ['mini_5fgroup_5fselect',['mini_group_select',['../include_2group_8php.html#ab4d9e5b59f48787cb01baae5dc6c381f',1,'group.php']]],
   ['minimal_2ephp',['minimal.php',['../minimal_8php.html',1,'']]],
+  ['minimalisticdarkness_2ephp',['minimalisticdarkness.php',['../minimalisticdarkness_8php.html',1,'']]],
   ['mitem_2ephp',['mitem.php',['../mitem_8php.html',1,'']]],
   ['mitem_5fcontent',['mitem_content',['../mitem_8php.html#a7a31b702ecad18eeb6a38b243ff0037e',1,'mitem.php']]],
   ['mitem_5finit',['mitem_init',['../mitem_8php.html#a9627cd857cafdf04e4fc0ae48c8e8518',1,'mitem.php']]],

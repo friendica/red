@@ -22,10 +22,17 @@ class Conversation extends BaseObject {
 	private $commentable = false;
 	private $profile_owner = 0;
 	private $preview = false;
+	private $prepared_item = '';
 
-	public function __construct($mode, $preview) {
+
+	// $prepared_item is for use by alternate conversation structures such as photos
+	// wherein we've already prepared a top level item which doesn't look anything like
+	// a normal "post" item
+
+	public function __construct($mode, $preview, $prepared_item = '') {
 		$this->set_mode($mode);
 		$this->preview = $preview;
+		$this->prepared_item = $prepared_item;
 	}
 
 	/**
@@ -180,7 +187,12 @@ class Conversation extends BaseObject {
 
 		foreach($this->threads as $item) {
 
-			$item_data = $item->get_template_data($alike, $dlike);
+			if(($item->get_data_value('id') == $item->get_data_value('parent')) && $this->prepared_item) {
+				$item_data = $this->prepared_item;
+			}
+			else {
+				$item_data = $item->get_template_data($alike, $dlike);
+			}
 			if(!$item_data) {
 				logger('[ERROR] Conversation::get_template_data : Failed to get item template data ('. $item->get_id() .').', LOGGER_DEBUG);
 				return false;
