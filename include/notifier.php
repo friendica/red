@@ -444,7 +444,7 @@ function notifier_run($argv, $argc){
 			$n = zot_build_packet($channel,$packet_type);
 			q("insert into outq ( outq_hash, outq_account, outq_channel, outq_posturl, outq_async, outq_created, outq_updated, outq_notify, outq_msg ) values ( '%s', %d, %d, '%s', %d, '%s', '%s', '%s', '%s' )",
 				dbesc($hash),
-				intval($channel['channel_account']),
+				intval($channel['channel_account_id']),
 				intval($channel['channel_id']),
 				dbesc($hub['hubloc_callback']),
 				intval(1),

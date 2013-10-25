@@ -49,7 +49,24 @@ function directory_run($argv, $argc){
 
 	$packet = zot_build_packet($channel,'refresh');
 	$z = zot_zot($url,$packet);
+
 	// re-queue if unsuccessful
+
+	if(! $z['success']) {
+		$hash = random_string();
+		q("insert into outq ( outq_hash, outq_account, outq_channel, outq_posturl, outq_async, outq_created, outq_updated, outq_notify, outq_msg ) 
+			values ( '%s', %d, %d, '%s', %d, '%s', '%s', '%s', '%s' )",
+			dbesc($hash),
+			intval($channel['channel_account_id']),
+			intval($channel['channel_id']),
+			dbesc($url),
+			intval(1),
+			dbesc(datetime_convert()),
+			dbesc(datetime_convert()),
+			dbesc($packet),
+			dbesc('')
+		);
+	}
 
 	// Now update all the connections
 

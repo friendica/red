@@ -604,11 +604,14 @@ function import_xchan($arr,$ud_flags = 1) {
 			);
 			if($r) {
 				logger('import_xchan: hub exists: ' . $location['url']);
-				// update connection timestamp
-				q("update hubloc set hubloc_connected = '%s' where hubloc_id = %d limit 1",
-					dbesc(datetime_convert()),
-					intval($r[0]['hubloc_id'])
-				);
+				// update connection timestamp if this is the site we're talking to
+				if($location['url'] == $arr['site']['url']) {
+					q("update hubloc set hubloc_connected = '%s', hubloc_updated = '%s' where hubloc_id = %d limit 1",
+						dbesc(datetime_convert()),
+						dbesc(datetime_convert()),
+						intval($r[0]['hubloc_id'])
+					);
+				}
 				if((($r[0]['hubloc_flags'] & HUBLOC_FLAGS_PRIMARY) && (! $location['primary']))
 					|| ((! ($r[0]['hubloc_flags'] & HUBLOC_FLAGS_PRIMARY)) && ($location['primary']))) {
 					$r = q("update hubloc set hubloc_flags = (hubloc_flags ^ %d), hubloc_updated = '%s' where hubloc_id = %d limit 1",

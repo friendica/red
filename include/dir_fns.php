@@ -118,6 +118,7 @@ function update_directory_entry($ud) {
 			);
 		}
 	}
+
 }
 
 
@@ -128,7 +129,7 @@ function syncdirs($uid) {
 
 	logger('syncdirs', LOGGER_DEBUG);
 
-	$p = q("select channel.channel_hash, channel_timezone, profile.* from profile left join channel on channel_id = uid where uid = %d and is_default = 1",
+	$p = q("select channel.channel_hash, channel_address, channel_timezone, profile.* from profile left join channel on channel_id = uid where uid = %d and is_default = 1",
 		intval($uid)
 	);
 
@@ -199,6 +200,8 @@ function syncdirs($uid) {
 		}
 	}
 
-	// TODO send refresh zots to downstream directory servers
+	$ud_hash = random_string();
+	update_modtime($ud_hash,$hash,$p[0]['channel_address'] . '@' . get_app()->get_hostname(),1);
+
 }
 	
