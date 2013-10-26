@@ -3,7 +3,7 @@ var conversation_8php =
     [ "add_children_to_list", "conversation_8php.html#ad3e1d4b15e7d6d026ee182edd58f692b", null ],
     [ "best_link_url", "conversation_8php.html#ad470fc7766f0db66d138fa1916c7a8b7", null ],
     [ "conv_sort", "conversation_8php.html#abed85a41f1160598de880b84021c9cf7", null ],
-    [ "conversation", "conversation_8php.html#a1e97305a441dc143edbe09e17d1ceda1", null ],
+    [ "conversation", "conversation_8php.html#affea1afb3f32ca41e966c8ddb4204d81", null ],
     [ "count_descendants", "conversation_8php.html#ab2383dff4f823e580399ff469d90ab19", null ],
     [ "find_thread_parent_index", "conversation_8php.html#ae59703b07ce2ddf627b4172ff26058b6", null ],
     [ "format_like", "conversation_8php.html#a3d8e30cc94f9a175054c021305d3aca3", null ],

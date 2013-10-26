@@ -11,6 +11,7 @@ var dir_d41ce877eb409a4791b288730010abe2 =
     [ "chanman.php", "mod_2chanman_8php.html", null ],
     [ "channel.php", "channel_8php.html", "channel_8php" ],
     [ "chanview.php", "chanview_8php.html", "chanview_8php" ],
+    [ "cloud.php", "cloud_8php.html", "cloud_8php" ],
     [ "common.php", "common_8php.html", "common_8php" ],
     [ "community.php", "community_8php.html", "community_8php" ],
     [ "connect.php", "connect_8php.html", "connect_8php" ],

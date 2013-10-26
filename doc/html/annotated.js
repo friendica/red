@@ -23,6 +23,7 @@ var annotated =
     [ "photo_gd", "classphoto__gd.html", "classphoto__gd" ],
     [ "photo_imagick", "classphoto__imagick.html", "classphoto__imagick" ],
     [ "ProtoDriver", "classProtoDriver.html", "classProtoDriver" ],
+    [ "RedBasicAuth", "classRedBasicAuth.html", "classRedBasicAuth" ],
     [ "Template", "classTemplate.html", "classTemplate" ],
     [ "ZotDriver", "classZotDriver.html", "classZotDriver" ]
 ];

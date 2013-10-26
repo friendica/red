@@ -7,6 +7,7 @@ var searchData=
   ['chanview_2ephp',['chanview.php',['../chanview_8php.html',1,'']]],
   ['cli_5fstartup_2ephp',['cli_startup.php',['../cli__startup_8php.html',1,'']]],
   ['cli_5fsuggest_2ephp',['cli_suggest.php',['../cli__suggest_8php.html',1,'']]],
+  ['cloud_2ephp',['cloud.php',['../cloud_8php.html',1,'']]],
   ['comanche_2ephp',['comanche.php',['../comanche_8php.html',1,'']]],
   ['common_2ephp',['common.php',['../common_8php.html',1,'']]],
   ['community_2ephp',['community.php',['../community_8php.html',1,'']]],

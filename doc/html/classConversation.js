@@ -1,6 +1,6 @@
 var classConversation =
 [
-    [ "__construct", "classConversation.html#a6b064d00c56a6b7dec359d4348711c84", null ],
+    [ "__construct", "classConversation.html#af84ea6ccd72214c9bb4c504461cc8b09", null ],
     [ "add_thread", "classConversation.html#a8335cdd43f1836e3c255638e61a09e16", null ],
     [ "get_mode", "classConversation.html#a87a0d704d5f2b1a008cc2e9ce06a1bcd", null ],
     [ "get_observer", "classConversation.html#ae3d4190142e12b57051f11f2911f77a0", null ],
@@ -15,6 +15,7 @@ var classConversation =
     [ "$commentable", "classConversation.html#afd4965d22a6e4bfea2f35e931b3273c6", null ],
     [ "$mode", "classConversation.html#afb03d1648dbfafe62caa1e30f32f2b1a", null ],
     [ "$observer", "classConversation.html#a8748445aa26047ebed5141f3c3cbc244", null ],
+    [ "$prepared_item", "classConversation.html#a5b6adbb2fe24f0f53d6c22660dff91b2", null ],
     [ "$preview", "classConversation.html#ae9937f9e0f3d927acc2bed46cc72e9ae", null ],
     [ "$profile_owner", "classConversation.html#a2f12724ef0244e9049fe1bb9641b516d", null ],
     [ "$threads", "classConversation.html#a41f4a549e6a99f98935c4742addd22c8", null ],

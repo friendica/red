@@ -6,7 +6,7 @@ var searchData=
   ['rconnect_5furl',['rconnect_url',['../Contact_8php.html#a2f4f495d53f2a334ab75292af79d3c91',1,'Contact.php']]],
   ['rebuild_5ftheme_5ftable',['rebuild_theme_table',['../admin_8php.html#ae46311a3fefc21abc838a26e91789de6',1,'admin.php']]],
   ['red_5fzrl_5fcallback',['red_zrl_callback',['../items_8php.html#a4e6d7639431e0dd8e9f4dba8e1ac408b',1,'items.php']]],
-  ['redbasic_5fform',['redbasic_form',['../view_2theme_2redbasic_2php_2config_8php.html#a86a3b96966d4302d8ad997514f913dd1',1,'config.php']]],
+  ['redbasic_5fform',['redbasic_form',['../view_2theme_2redbasic_2php_2config_8php.html#a619f3215434e6e1de416edb55b4dc341',1,'config.php']]],
   ['redbasic_5finit',['redbasic_init',['../redbasic_2php_2theme_8php.html#af6eb813e9fc7e2d76ac1b82bc5c0ed9b',1,'theme.php']]],
   ['redir_5finit',['redir_init',['../redir_8php.html#a9ac266c3f5cf0d94ef63e6d0f2edf1f5',1,'redir.php']]],
   ['reduce',['reduce',['../docblox__errorchecker_8php.html#ae9562cf60aa693114603d27b55d2185f',1,'docblox_errorchecker.php']]],

@@ -1,5 +1,8 @@
 var hierarchy =
 [
+    [ "AbstractBasic", null, [
+      [ "RedBasicAuth", "classRedBasicAuth.html", null ]
+    ] ],
     [ "App", "classApp.html", null ],
     [ "BaseObject", "classBaseObject.html", [
       [ "Conversation", "classConversation.html", null ],
