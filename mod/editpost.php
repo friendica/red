@@ -1,4 +1,4 @@
-<?php
+<?php /** @file */
 
 require_once('acl_selectors.php');
 require_once('include/crypto.php');
@@ -36,6 +36,8 @@ function editpost_content(&$a) {
 	if(feature_enabled(local_user(),'richtext'))
 		$plaintext = false;
 
+	$channel = $a->get_channel();
+
 	$o .= replace_macros(get_markup_template('edpost_head.tpl'), array(
 		'$title' => t('Edit post')
 	));
@@ -46,7 +48,7 @@ function editpost_content(&$a) {
 		'$editselect' =>  (($plaintext) ? 'none' : '/(profile-jot-text|prvmail-text)/'),
 		'$ispublic' => '&nbsp;', // t('Visible to <strong>everybody</strong>'),
 		'$geotag' => $geotag,
-		'$nickname' => $a->user['nickname']
+		'$nickname' => $channel['channel_address']
 	));
 
 
