@@ -21,6 +21,11 @@ function poller_run($argv, $argc){
 		}
 	}
 
+	$interval = intval(get_config('system','poll_interval'));
+	if(! $interval) 
+		$interval = ((get_config('system','delivery_interval') === false) ? 3 : intval(get_config('system','delivery_interval')));
+
+
 	logger('poller: start');
 	
 	// run queue delivery process in the background
@@ -38,6 +43,19 @@ function poller_run($argv, $argc){
 		intval(ACCOUNT_EXPIRED)
 	);
   
+	// Ensure that every channel pings a directory server once a month. This way we can discover
+	// channels and sites that quietly vanished and prevent the directory from accumulating stale
+	// or dead entries.
+
+	$r = q("select channel_id from channel where channel_dirdate < UTC_TIMESTAMP() - INTERVAL 30 DAY");
+	if($r) {
+		foreach($r as $rr) {
+			proc_run('php','include/directory.php',$rr['channel_id']);
+			if($interval)
+				@time_sleep_until(microtime(true) + (float) $interval);
+		}
+	}
+
 	// publish any applicable items that were set to be published in the future
 	// (time travel posts)
 
@@ -134,9 +152,6 @@ function poller_run($argv, $argc){
 		$force     = true;
 	}
 
-	$interval = intval(get_config('system','poll_interval'));
-	if(! $interval) 
-		$interval = ((get_config('system','delivery_interval') === false) ? 3 : intval(get_config('system','delivery_interval')));
 
 	$sql_extra = (($manual_id) ? " AND abook_id = $manual_id " : "");
 

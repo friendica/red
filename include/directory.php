@@ -31,6 +31,12 @@ function directory_run($argv, $argc){
 	if(($dirmode == DIRECTORY_MODE_PRIMARY) || ($dirmode == DIRECTORY_MODE_STANDALONE)) {
 		syncdirs($argv[1]);
 
+		q("update channel set channel_dirdate = '%s' where channel_id = %d limit 1",
+			dbesc(datetime_convert()),
+			intval($channel['channel_id'])
+		);
+
+
 		// Now update all the connections
 		proc_run('php','include/notifier.php','refresh_all',$channel['channel_id']);
 		return;
@@ -53,6 +59,10 @@ function directory_run($argv, $argc){
 	// re-queue if unsuccessful
 
 	if(! $z['success']) {
+
+		// FIXME - we aren't updating channel_dirdate if we have to queue
+		// the directory packet. That means we'll try again on the next poll run.
+
 		$hash = random_string();
 		q("insert into outq ( outq_hash, outq_account, outq_channel, outq_posturl, outq_async, outq_created, outq_updated, outq_notify, outq_msg ) 
 			values ( '%s', %d, %d, '%s', %d, '%s', '%s', '%s', '%s' )",
@@ -65,6 +75,12 @@ function directory_run($argv, $argc){
 			dbesc(datetime_convert()),
 			dbesc($packet),
 			dbesc('')
+		);
+	}
+	else {
+		q("update channel set channel_dirdate = '%s' where channel_id = %d limit 1",
+			dbesc(datetime_convert()),
+			intval($channel['channel_id'])
 		);
 	}
 
