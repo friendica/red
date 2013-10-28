@@ -13,6 +13,18 @@ class RedInode implements DAV\INode {
 
 
 	function delete() {
+		if(! perm_is_allowed($this->channel_id,'','view_storage'))
+			return;
+		if($this->attach['flags'] & ATTACH_FLAG_OS) {
+			// FIXME delete physical file
+		}
+		if($this->attach['flags'] & ATTACH_FLAG_DIR) {
+			// FIXME delete contents (recursive?)
+		}
+		
+		q("delete from attach where id = %d limit 1",
+			intval($this->attach['id'])
+		);
 
 	}
 
@@ -21,8 +33,16 @@ class RedInode implements DAV\INode {
 	}
 
 	function setName($newName) {
+
+		if((! $newName) || (! perm_is_allowed($this->channel_id,'','view_storage')))
+			return;
+
 		$this->attach['filename'] = $newName;
-		// FIXME save the DB record
+		$r = q("update attach set filename = '%s' where id = %d limit 1",
+			dbesc($this->attach['filename']),
+			intval($this->attach['id'])
+		);
+
 	}
 
 	function getLastModified() {
@@ -66,9 +86,11 @@ abstract class RedDirectory extends DAV\Node implements DAV\ICollection {
 
 	function getChild($name) {
 		if(! perm_is_allowed($this->channel_id,'','view_storage')) {
-//check this			throw new DAV\Exception\PermissionDenied('Permission denied.');
+			throw new DAV\Exception\Forbidden('Permission denied.');
 			return;
 		}
+
+// FIXME check revisions
 
 		$r = q("select * from attach where folder = '%s' and filename = '%s' and uid = %d limit 1",
 			dbesc($this->dir_key),
@@ -101,7 +123,9 @@ abstract class RedDirectory extends DAV\Node implements DAV\ICollection {
 			dbesc($name),
 			intval($this->channel_id)
 		);
-
+		if($r)
+			return true;
+		return false;
 
 	}
 
