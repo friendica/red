@@ -15,7 +15,7 @@ function share_init(&$a) {
 
 
 	$r = q("SELECT * from item WHERE id = %d  LIMIT 1",
-		intval($post_id),
+		intval($post_id)
 	);
 	if((! $r) || $r[0]['item_private'])
 		killme();
