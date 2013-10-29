@@ -576,8 +576,8 @@ function updateConvItems(mode,data) {
 			updateConvItems(update_mode,data);
 			$("#page-spinner").spin(false);
 			$("#profile-jot-text-loading").spin(false);
-			if(timer) clearTimeout(timer);
-			timer = setTimeout(NavUpdate,10);
+//			if(timer) clearTimeout(timer);
+//			timer = setTimeout(NavUpdate,10);
 		});
 
 
