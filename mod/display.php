@@ -69,13 +69,31 @@ function display_content(&$a, $update = 0, $load = false) {
 
 	$target_item = null;
 
-	$r = q("select mid, parent_mid from item where mid = '%s' limit 1",
+	$r = q("select id, uid, mid, parent_mid, item_restrict from item where mid = '%s' limit 1",
 		dbesc($item_hash)
 	);
 
 	if($r) {
 		$target_item = $r[0];
 	}
+
+	if($target_item['item_restrict'] & ITEM_WEBPAGE) {
+		$x = q("select * from channel where channel_id = %d limit 1",
+			intval($target_item['uid'])
+		);
+		$y = q("select * from item_id where uid = %d and service = 'WEBPAGE' and iid = %d limit 1",
+			intval($target_item['uid']),
+			intval($target_item['id'])
+		);
+		if($x && $y) {
+			goaway(z_root() . '/page/' . $x[0]['channel_address'] . '/' . $y[0]['sid']);
+		}
+		else {
+			notice( t('Page not found.') . EOL);
+		 	return '';
+		}
+	}
+
 
 	if((! $update) && (! $load)) {
 
