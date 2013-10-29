@@ -1072,6 +1072,11 @@ function status_editor($a,$x,$popup=false) {
 	$jotplugins = '';
 	$jotnets = '';
 
+
+	$preview = ((feature_enabled($x['profile_uid'],'preview')) ? t('Preview') : '');
+	if(x($x,'nopreview'))
+		$preview = '';
+
 	call_hooks('jot_tool', $jotplugins);
 	call_hooks('jot_networks', $jotnets);
 
@@ -1080,7 +1085,7 @@ function status_editor($a,$x,$popup=false) {
 		'$action' =>  $a->get_baseurl(true) . '/item',
 		'$share' => (x($x,'button') ? $x['button'] : t('Share')),
 		'$webpage' => $webpage,
-		'$placeholdpagetitle' => t('Page link title'),
+		'$placeholdpagetitle' => ((x($x,'ptlabel')) ? $x['ptlabel'] : t('Page link title')),
 		'$pagetitle' => (x($x,'pagetitle') ? $x['pagetitle'] : ''),		
 		'$upload' => t('Upload photo'),
 		'$shortupload' => t('upload photo'),
@@ -1121,7 +1126,7 @@ function status_editor($a,$x,$popup=false) {
 		'$showacl' => ((array_key_exists('showacl',$x)) ? $x['showacl'] : 'yes'),
 		'$bang' => $x['bang'],
 		'$profile_uid' => $x['profile_uid'],
-		'$preview' => ((feature_enabled($x['profile_uid'],'preview')) ? t('Preview') : ''),
+		'$preview' => $preview,
 		'$sourceapp' => t($a->sourcename),
 		'$jotplugins' => $jotplugins,
 	));

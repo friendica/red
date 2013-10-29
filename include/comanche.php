@@ -46,6 +46,12 @@ function pdl_selector($uid,$current="") {
 
 function comanche_parser(&$a,$s) {
 
+	$cnt = preg_match_all("/\[comment\](.*?)\[\/comment\]/ism", $s, $matches, PREG_SET_ORDER);
+	if($cnt) {
+		foreach($matches as $mtch) {
+			$s = str_replace($mtch[0],'',$s);
+		}
+	}
 
 	$cnt = preg_match("/\[layout\](.*?)\[\/layout\]/ism", $s, $matches);
 	if($cnt)

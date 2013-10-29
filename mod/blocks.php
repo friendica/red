@@ -62,6 +62,7 @@ require_once ('include/conversation.php');
 			'bang' => (($group || $cid) ? '!' : ''),
 			'visitor' => 'block',
 			'mimetype' => 'choose',
+			'ptlabel' => t('Block Name'),
 			'profile_uid' => intval($owner),
 		);
 
