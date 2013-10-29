@@ -15,6 +15,24 @@ class RedInode implements DAV\INode {
 	function delete() {
 		if(! perm_is_allowed($this->channel_id,'','view_storage'))
 			return;
+
+		/**
+		 * Since I don't believe this is documented elsewhere -
+		 * ATTACH_FLAG_OS means that the file contents are stored in the OS
+		 * rather than in the DB - as is the case for attachments.
+		 * Exactly how they are stored (what path and filename) are still
+		 * TBD. We will probably not be using the original filename but 
+		 * instead the attachment 'hash' as this will prevent folks from 
+		 * uploading PHP code onto misconfigured servers and executing it.
+		 * It's easy to misconfigure servers because we can provide a 
+		 * rule for Apache, but folks using nginx will then be susceptible.
+		 * Then there are those who don't understand these kinds of exploits
+		 * and don't have any idea allowing uploaded PHP files to be executed
+		 * by the server could be a problem. We also don't have any idea what
+		 * executable types are served on their system - like .py, .pyc, .pl, .sh
+		 * .cgi, .exe, .bat, .net, whatever.  
+		 */
+
 		if($this->attach['flags'] & ATTACH_FLAG_OS) {
 			// FIXME delete physical file
 		}
