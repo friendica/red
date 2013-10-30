@@ -1903,7 +1903,7 @@ function get_rpost_path($observer) {
 	if(! $observer)
 		return '';
 	$parsed = parse_url($observer['xchan_url']);
-
 	return $parsed['scheme'] . '://' . $parsed['host'] . (($parsed['port']) ? ':' . $parsed['port'] : '') . '/rpost?f=';
 
 }
+

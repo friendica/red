@@ -5,6 +5,7 @@ require_once('include/crypto.php');
 require_once('include/items.php');
 require_once('include/taxonomy.php');
 require_once('include/conversation.php');
+require_once('include/zot.php');
 
 /**
  * remote post
@@ -34,8 +35,13 @@ function rpost_content(&$a) {
 			// by the wretched beast called 'shusoin'. All the browsers now allow long GET requests, but suhosin
 			// blocks them.
 
-
-
+			$url = get_rpost_path($a->get_observer());
+			if($url) {
+				foreach($_REQUEST as $key => $arg) {
+					$url .= '&' . $key . '=' . $arg;
+				}
+				goaway($url);
+			}
 		}
 
 		// FIXME
