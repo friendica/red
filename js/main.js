@@ -121,6 +121,7 @@
 	var page_load = true;
 	var loadingPage = false;
 	var pageHasMoreContent = true;
+	var updateCountsOnly = false;
 
 	$(function() {
 		$.ajaxSetup({cache: false});
@@ -269,21 +270,24 @@
 				}
 
 
-				// start live update
+				if(! updateCountsOnly) {
+					// start live update
 
-				if($('#live-network').length)   { src = 'network'; liveUpdate(); }
-				if($('#live-channel').length)   { src = 'channel'; liveUpdate(); }
-				if($('#live-community').length) { src = 'community'; liveUpdate(); }
-				if($('#live-display').length)   { src = 'display'; liveUpdate(); }
-				if($('#live-search').length)    { src = 'search'; liveUpdate(); }
+					if($('#live-network').length)   { src = 'network'; liveUpdate(); }
+					if($('#live-channel').length)   { src = 'channel'; liveUpdate(); }
+					if($('#live-community').length) { src = 'community'; liveUpdate(); }
+					if($('#live-display').length)   { src = 'display'; liveUpdate(); }
+					if($('#live-search').length)    { src = 'search'; liveUpdate(); }
 
-				if($('#live-photos').length) { 
-					if(liking) {
-						liking = 0;
-						window.location.href=window.location.href 
+					if($('#live-photos').length) { 
+						if(liking) {
+							liking = 0;
+							window.location.href=window.location.href 
+						}
 					}
 				}
 
+				updateCountsOnly = false;
 
 				if(data.network == 0) { 
 					data.network = ''; 
@@ -576,8 +580,9 @@ function updateConvItems(mode,data) {
 			updateConvItems(update_mode,data);
 			$("#page-spinner").spin(false);
 			$("#profile-jot-text-loading").spin(false);
-//			if(timer) clearTimeout(timer);
-//			timer = setTimeout(NavUpdate,10);
+			updateCountsOnly = true;
+			if(timer) clearTimeout(timer);
+			timer = setTimeout(NavUpdate,10);
 		});
 
 
