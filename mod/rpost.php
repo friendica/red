@@ -36,7 +36,8 @@ function rpost_content(&$a) {
 			// blocks them.
 
 			$url = get_rpost_path($a->get_observer());
-			if($url) {
+			// make sure we're not looping to our own hub
+			if(($url) && (! stristr($url, $a->get_hostname()))) {
 				foreach($_REQUEST as $key => $arg) {
 					$url .= '&' . $key . '=' . $arg;
 				}
