@@ -179,10 +179,10 @@ function bb_ShareAttributesSimple($match) {
 }
 
 function rpost_callback($match) {
-	if (count($match) == 3) {
-		return str_replace($match[0],get_rpost_path(get_app()->get_observer()) . '&title=' . urlencode($match[1]) . '&body=' . urlencode($match[2]),$match[0]); 
+	if ($match[2]) {
+		return str_replace($match[0],get_rpost_path(get_app()->get_observer()) . '&title=' . urlencode($match[2]) . '&body=' . urlencode($match[3]),$match[0]); 
 	} else {
-		return str_replace($match[0],get_rpost_path(get_app()->get_observer()) . '&body=' . urlencode($match[1]),$match[0]); 
+		return str_replace($match[0],get_rpost_path(get_app()->get_observer()) . '&body=' . urlencode($match[3]),$match[0]); 
 	}
 }
 
@@ -233,12 +233,11 @@ function bbcode($Text,$preserve_nl = false, $tryoembed = true) {
 		if ($observer) {
 			$Text = preg_replace("/\[observer\=1\](.*?)\[\/observer\]/ism", '$1', $Text);
 			$Text = preg_replace("/\[observer\=0\].*?\[\/observer\]/ism", '', $Text);
-			$Text = preg_replace_callback("/\[rpost\](.*?)\[\/rpost\]/ism", 'rpost_callback', $Text);
-			$Text = preg_replace_callback("/\[rpost\=(.*?)\](.*?)\[\/rpost\]/ism", 'rpost_callback', $Text);
+			$Text = preg_replace_callback("/\[rpost(=(.*?))?\](.*?)\[\/rpost\]/ism", 'rpost_callback', $Text);
 		} else {
 			$Text = preg_replace("/\[observer\=1\].*?\[\/observer\]/ism", '', $Text);
 			$Text = preg_replace("/\[observer\=0\](.*?)\[\/observer\]/ism", '$1', $Text);
-			$Text = preg_replace("/\[rpost\](.*?)\[\/rpost\]/ism", '', $Text);
+			$Text = preg_replace("/\[rpost(=.*?)?\](.*?)\[\/rpost\]/ism", '', $Text);
 		}
     }
 
