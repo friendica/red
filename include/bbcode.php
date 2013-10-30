@@ -2,7 +2,7 @@
 
 require_once("include/oembed.php");
 require_once('include/event.php');
-
+require_once('include/zot.php');
 
 
 function tryoembed($match) {
@@ -178,6 +178,11 @@ function bb_ShareAttributesSimple($match) {
 	return($text);
 }
 
+function rpost_callback($match) {
+	return str_replace($match[0],get_rpost_path(get_app()->get_observer()) . '&body=' . urlencode($match[1]),$match[0]); 
+}
+
+
 	// BBcode 2 HTML was written by WAY2WEB.net
 	// extended to work with Mistpark/Friendica/Red - Mike Macgirvin
 
@@ -220,13 +225,15 @@ function bbcode($Text,$preserve_nl = false, $tryoembed = true) {
 	// process [observer] tags before we do anything else because we might
 	// be stripping away stuff that then doesn't need to be worked on anymore
 	$observer = $a->get_observer();
-	if (strpos($Text,'[/observer]') !== false) {
+	if ((strpos($Text,'[/observer]') !== false) || (strpos($Text,'[/rpost]') !== false)) {
 		if ($observer) {
 			$Text = preg_replace("/\[observer\=1\](.*?)\[\/observer\]/ism", '$1', $Text);
 			$Text = preg_replace("/\[observer\=0\].*?\[\/observer\]/ism", '', $Text);
+			$Text = preg_replace_callback("/\[rpost\](.*?)\[\/rpost\]/ism", 'rpost_callback', $Text);
 		} else {
 			$Text = preg_replace("/\[observer\=1\].*?\[\/observer\]/ism", '', $Text);
 			$Text = preg_replace("/\[observer\=0\](.*?)\[\/observer\]/ism", '$1', $Text);
+			$Text = preg_replace("/\[rpost\](.*?)\[\/rpost\]/ism", '', $Text);
 		}
     }
 
@@ -266,7 +273,7 @@ function bbcode($Text,$preserve_nl = false, $tryoembed = true) {
 		$Text = str_replace('[observer.url]',$observer['xchan_url'], $Text);
 		$Text = str_replace('[observer.name]',$observer['xchan_name'], $Text);
 		$Text = str_replace('[observer.address]',$observer['xchan_addr'], $Text);
-		$Text = str_replace('[observer.photo]','[zmg]'.$observer['xchan_photo_l'].'[/zmg]', $Text);		
+		$Text = str_replace('[observer.photo]','[zmg]'.$observer['xchan_photo_l'].'[/zmg]', $Text);				
 	} else {
 		$Text = str_replace('[observer.baseurl]', '', $Text);
 		$Text = str_replace('[observer.url]','', $Text);

@@ -28,6 +28,16 @@ function rpost_content(&$a) {
 	$o = '';
 
 	if(! local_user()) {
+		if(remote_user()) {
+			// redirect to your own site.
+			// We can only do this with a GET request so you'll need to keep the text short or risk getting truncated
+			// by the wretched beast called 'shusoin'. All the browsers now allow long GET requests, but suhosin
+			// blocks them.
+
+
+
+		}
+
 		// FIXME
 		// probably need to figure out how to preserve the $_REQUEST variables in the session
 		// in case you aren't currently logged in. Otherwise you'll have to go back to

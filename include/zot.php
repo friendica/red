@@ -1896,3 +1896,14 @@ function process_channel_sync_delivery($sender,$arr,$deliveries) {
 	}
 	return $result;
 }
+
+// We probably should make rpost discoverable.
+ 
+function get_rpost_path($observer) {
+	if(! $observer)
+		return '';
+	$parsed = parse_url($observer['xchan_url']);
+
+	return $parsed['scheme'] . '://' . $parsed['host'] . (($parsed['port']) ? ':' . $parsed['port'] : '') . '/rpost?f=';
+
+}
