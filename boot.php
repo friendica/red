@@ -1410,14 +1410,12 @@ function login($register = false, $form_id = 'main-login', $hiddens=false) {
 	$reglink = get_config('system','register_link');
 	if(! strlen($reglink))
 		$reglink = 'register';
-
-	if ($register) {
-		$reg = array(
-			'title' => t('Create a New Account'),
-			'desc' => t('Register'),
-			'link' => $reglink
-		);
-	}
+	
+	$reg = array(
+		'title' => t('Create an account to access services and applications within the Red Matrix'),
+		'desc' => t('Register'),
+		'link' => (($register) ? $reglink : 'pubsites')
+	);
 
 	$dest_url = $a->get_baseurl(true) . '/' . $a->query_string;
 

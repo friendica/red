@@ -22,7 +22,7 @@ function pubsites_content(&$a) {
 	$o .= '<h1>' . t('Public Sites') . '</h1>';
 
 	$o .= '<div class="descriptive-text">' . 
-		t('The listed sites allow public registration. Some may require subscription or provide tiered service plans. The provider links may provide additional details.') . '</div>' . EOL;
+		t('The listed sites allow public registration into the Red Matrix. All sites in the matrix are interlinked so membership on any of them conveys membership in the matrix as a whole. Some sites may require subscription or provide tiered service plans. The provider links may provide additional details.') . '</div>' . EOL;
 
 	$ret = z_fetch_url($url);
 	if($ret['success']) {
