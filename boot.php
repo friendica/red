@@ -1174,7 +1174,7 @@ function is_ajax() {
 function check_config(&$a) {
 
 	$build = get_config('system','db_version');
-	if(! x($build))
+	if(! intval($build))
 		$build = set_config('system','db_version',DB_UPDATE_VERSION);
 
 	$saved = get_config('system','urlverify');
@@ -1207,6 +1207,10 @@ function check_config(&$a) {
 
 	if($build != DB_UPDATE_VERSION) {
 		$stored = intval($build);
+		if(! $stored) {
+			logger('Critical: check_config unable to determine database schema version');
+			return;
+		}
 		$current = intval(DB_UPDATE_VERSION);
 		if(($stored < $current) && file_exists('install/update.php')) {
 
@@ -1242,10 +1246,13 @@ function check_config(&$a) {
 							// Prevent sending hundreds of thousands of emails by creating
 							// a lockfile.  view/tpl/smarty3 is the only place we can
 							// guarantee the server can write to.
-							if (file_exists('view/tpl/smarty3/mailsent'))
+							$lockfile = 'view/tpl/smarty3/mailsent';
+
+							if ((file_exists($lockfile)) && (filemtime($lockfile) > (time() - 86400)))
 									return;
+							@unlink($lockfile);
 							//send the administrator an e-mail
-							file_put_contents('view/tpl/smarty3/mailsent', $x);
+							file_put_contents($lockfile, $x);
 
 							$email_tpl = get_intltext_template("update_fail_eml.tpl");
 							$email_msg = replace_macros($email_tpl, array(
