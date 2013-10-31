@@ -216,6 +216,7 @@ class Item extends BaseObject {
 			'str_app' => sprintf( t(' from %s'), $item['app']),
 			'isotime' => datetime_convert('UTC', date_default_timezone_get(), $item['created'], 'c'),
 			'localtime' => datetime_convert('UTC', date_default_timezone_get(), $item['created'], 'r'),
+			'editedtime' => (($item['edited'] != $item['created']) ? sprintf( t('last edited: %s'), datetime_convert('UTC', date_default_timezone_get(), $item['edited'], 'r')) : ''),
 			'lock' => $lock,
 			'verified' => $verified,
 			'unverified' => $unverified,

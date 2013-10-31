@@ -580,6 +580,17 @@ function updateConvItems(mode,data) {
 			updateConvItems(update_mode,data);
 			$("#page-spinner").spin(false);
 			$("#profile-jot-text-loading").spin(false);
+
+			// FIXME - the following lines were added so that almost
+			// immediately after we update the posts on the page, we
+			// re-check and update the notification counts.
+			// As it turns out this causes a bit of an inefficiency
+			// as we're pinging twice for every update, once before
+			// and once after. A btter way to do this is to rewrite
+			// NavUpdate and perhpas LiveUpdate so that we check for 
+			// post updates first and only call the notification ping 
+			// once. 
+
 			updateCountsOnly = true;
 			if(timer) clearTimeout(timer);
 			timer = setTimeout(NavUpdate,10);
