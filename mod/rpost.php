@@ -18,6 +18,7 @@ require_once('include/zot.php');
  * title= Title of post
  * body= Body of post
  * remote_return= absolute URL to return after posting is finished
+ * type= choices are 'html' or 'bbcode', default is 'bbcode'
  *
  * currently content type is Red Matrix bbcode, though HTML is possible. This is left as an exercise for future developers 
  */
@@ -48,7 +49,7 @@ function rpost_content(&$a) {
 		// The login procedure is going to bugger our $_REQUEST variables
 		// so save them in the session.
 
-		if(array_key_exists($_REQUEST,'body')) {
+		if(array_key_exists('body',$_REQUEST)) {
 			$_SESSION['rpost'] = $_REQUEST;
 		}
 		return login();
@@ -56,7 +57,7 @@ function rpost_content(&$a) {
 
 	// If we have saved rpost session variables, but nothing in the current $_REQUEST, recover the saved variables
 
-	if((! array_key_exists($_REQUEST,'body')) && (array_key_exists($_SESSION,'rpost'))) {
+	if((! array_key_exists('body',$_REQUEST)) && (array_key_exists('rpost',$_SESSION))) {
 		$_REQUEST = $_SESSION['rpost'];
 		unset($_SESSION['rpost']);
 	}
@@ -72,6 +73,10 @@ function rpost_content(&$a) {
 	if(feature_enabled(local_user(),'richtext'))
 		$plaintext = false;
 
+	if(array_key_exists('type', $_REQUEST) && $_REQUEST['type'] === 'html') {
+		require_once('include/html2bbcode.php');
+		$_REQUEST['body'] = html2bbcode($_REQUEST['body']); 
+	}
 
 	$channel = $a->get_channel();
 
