@@ -45,11 +45,20 @@ function rpost_content(&$a) {
 			}
 		}
 
-		// FIXME
-		// probably need to figure out how to preserve the $_REQUEST variables in the session
-		// in case you aren't currently logged in. Otherwise you'll have to go back to
-		// the site that sent you here and try again. 		
+		// The login procedure is going to bugger our $_REQUEST variables
+		// so save them in the session.
+
+		if(array_key_exists($_REQUEST,'body')) {
+			$_SESSION['rpost'] = $_REQUEST;
+		}
 		return login();
+	}
+
+	// If we have saved rpost session variables, but nothing in the current $_REQUEST, recover the saved variables
+
+	if((! array_key_exists($_REQUEST,'body')) && (array_key_exists($_SESSION,'rpost'))) {
+		$_REQUEST = $_SESSION['rpost'];
+		unset($_SESSION['rpost']);
 	}
 
 	if($_REQUEST['remote_return']) {
