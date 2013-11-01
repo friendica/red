@@ -832,7 +832,7 @@ CREATE TABLE IF NOT EXISTS `site` (
   `site_directory` char(255) NOT NULL DEFAULT '',
   `site_register` int(11) NOT NULL DEFAULT '0',
   `site_sellpage` char(255) NOT NULL DEFAULT '',
-  `site_location` char(255 NOT NULL DEFAULT '',
+  `site_location` char(255) NOT NULL DEFAULT '',
   PRIMARY KEY (`site_url`),
   KEY `site_access` (`site_access`),
   KEY `site_flags` (`site_flags`),
