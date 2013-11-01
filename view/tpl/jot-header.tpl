@@ -284,6 +284,13 @@ function enableOnUser(){
 		$('#profile-nolocation-wrapper').hide();
 	}
 
+
+	function addhtmltext(data) {
+		data = h2b(data);
+		addeditortext(data);
+	}
+
+
 	function addeditortext(data) {
 		if(plaintext == 'none') {
 			var currentText = $("#profile-jot-text").val();
@@ -292,6 +299,60 @@ function enableOnUser(){
 		else
 			tinyMCE.execCommand('mceInsertRawHTML',false,data);
 	}	
+
+    function h2b(s) {
+		var y = s;
+		function rep(re, str) {
+			y = y.replace(re,str);
+		};
+
+		rep(/<a.*?href=\"(.*?)\".*?>(.*?)<\/a>/gi,"[url=$1]$2[/url]");
+		rep(/<span style=\"font-size:(.*?);\">(.*?)<\/span>/gi,"[size=$1]$2[/size]");
+		rep(/<span style=\"color:(.*?);\">(.*?)<\/span>/gi,"[color=$1]$2[/color]");
+		rep(/<font>(.*?)<\/font>/gi,"$1");
+		rep(/<img.*?width=\"(.*?)\".*?height=\"(.*?)\".*?src=\"(.*?)\".*?\/>/gi,"[img=$1x$2]$3[/img]");
+		rep(/<img.*?height=\"(.*?)\".*?width=\"(.*?)\".*?src=\"(.*?)\".*?\/>/gi,"[img=$2x$1]$3[/img]");
+		rep(/<img.*?src=\"(.*?)\".*?height=\"(.*?)\".*?width=\"(.*?)\".*?\/>/gi,"[img=$3x$2]$1[/img]");
+		rep(/<img.*?src=\"(.*?)\".*?width=\"(.*?)\".*?height=\"(.*?)\".*?\/>/gi,"[img=$2x$3]$1[/img]");
+		rep(/<img.*?src=\"(.*?)\".*?\/>/gi,"[img]$1[/img]");
+
+
+		rep(/<ul class=\"listbullet\" style=\"list-style-type\: circle\;\">(.*?)<\/ul>/gi,"[list]$1[/list]");
+		rep(/<ul class=\"listnone\" style=\"list-style-type\: none\;\">(.*?)<\/ul>/gi,"[list=]$1[/list]");
+		rep(/<ul class=\"listdecimal\" style=\"list-style-type\: decimal\;\">(.*?)<\/ul>/gi,"[list=1]$1[/list]");
+		rep(/<ul class=\"listlowerroman\" style=\"list-style-type\: lower-roman\;\">(.*?)<\/ul>/gi,"[list=i]$1[/list]");
+		rep(/<ul class=\"listupperroman\" style=\"list-style-type\: upper-roman\;\">(.*?)<\/ul>/gi,"[list=I]$1[/list]");
+		rep(/<ul class=\"listloweralpha\" style=\"list-style-type\: lower-alpha\;\">(.*?)<\/ul>/gi,"[list=a]$1[/list]");
+		rep(/<ul class=\"listupperalpha\" style=\"list-style-type\: upper-alpha\;\">(.*?)<\/ul>/gi,"[list=A]$1[/list]");
+		rep(/<li>(.*?)<\/li>/gi,"[li]$1[/li]");
+
+		rep(/<code>(.*?)<\/code>/gi,"[code]$1[/code]");
+		rep(/<\/(strong|b)>/gi,"[/b]");
+		rep(/<(strong|b)>/gi,"[b]");
+		rep(/<\/(em|i)>/gi,"[/i]");
+		rep(/<(em|i)>/gi,"[i]");
+		rep(/<\/u>/gi,"[/u]");
+
+
+		rep(/<span style=\"text-decoration: ?underline;\">(.*?)<\/span>/gi,"[u]$1[/u]");
+		rep(/<u>/gi,"[u]");
+		rep(/<blockquote[^>]*>/gi,"[quote]");
+		rep(/<\/blockquote>/gi,"[/quote]");
+		rep(/<hr \/>/gi,"[hr]");
+		rep(/<br (.*?)\/>/gi,"\n");
+		rep(/<br\/>/gi,"\n");
+		rep(/<br>/gi,"\n");
+		rep(/<p>/gi,"");
+		rep(/<\/p>/gi,"\n");
+		rep(/&nbsp;/gi," ");
+		rep(/&quot;/gi,"\"");
+		rep(/&lt;/gi,"<");
+		rep(/&gt;/gi,">");
+		rep(/&amp;/gi,"&");
+
+		return y; 
+	};
+
 
 	{{$geotag}}
 
