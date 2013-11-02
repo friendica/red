@@ -14,9 +14,22 @@ var hierarchy =
       [ "dba_mysqli", "classdba__mysqli.html", null ]
     ] ],
     [ "enotify", "classenotify.html", null ],
+    [ "ICollection", null, [
+      [ "RedDirectory", "classRedDirectory.html", null ]
+    ] ],
+    [ "IFile", null, [
+      [ "RedFile", "classRedFile.html", null ]
+    ] ],
+    [ "INode", null, [
+      [ "RedInode", "classRedInode.html", null ]
+    ] ],
     [ "ITemplateEngine", "interfaceITemplateEngine.html", [
       [ "FriendicaSmartyEngine", "classFriendicaSmartyEngine.html", null ],
       [ "Template", "classTemplate.html", null ]
+    ] ],
+    [ "Node", null, [
+      [ "RedDirectory", "classRedDirectory.html", null ],
+      [ "RedFile", "classRedFile.html", null ]
     ] ],
     [ "OAuthDataStore", null, [
       [ "FKOAuthDataStore", "classFKOAuthDataStore.html", null ]

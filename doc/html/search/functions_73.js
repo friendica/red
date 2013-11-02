@@ -49,6 +49,7 @@ var searchData=
   ['set_5fwidget',['set_widget',['../classApp.html#a123b903dfe5d3488cc68db3471d36fd2',1,'App']]],
   ['set_5fxconfig',['set_xconfig',['../include_2config_8php.html#afe117b70f1bba2f6348d9300b601f86e',1,'config.php']]],
   ['setdimensions',['setDimensions',['../classphoto__driver.html#ae663867d2c4eaa2fae50d60670920143',1,'photo_driver\setDimensions()'],['../classphoto__gd.html#a1c75304bd15f3b9986f0b315fb59271e',1,'photo_gd\setDimensions()'],['../classphoto__imagick.html#af92901d252c1e6ab5b54eebedbed23bb',1,'photo_imagick\setDimensions()']]],
+  ['setname',['setName',['../classRedInode.html#a3d76322f25d847b123b3df37a26dd04e',1,'RedInode']]],
   ['settings_5faside',['settings_aside',['../settings_8php.html#ae5aebccb006bee1300078576baaf5582',1,'settings.php']]],
   ['settings_5finit',['settings_init',['../settings_8php.html#a3a4cde287482fced008583f54ba2a722',1,'settings.php']]],
   ['settings_5fpost',['settings_post',['../settings_8php.html#aa7ee94d88ac088edb04ccf3a26de3586',1,'settings.php']]],

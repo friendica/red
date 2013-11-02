@@ -18,7 +18,7 @@ var NAVTREE =
       [ "Class Hierarchy", "hierarchy.html", "hierarchy" ],
       [ "Class Members", "functions.html", [
         [ "All", "functions.html", "functions_dup" ],
-        [ "Functions", "functions_func.html", null ],
+        [ "Functions", "functions_func.html", "functions_func" ],
         [ "Variables", "functions_vars.html", null ]
       ] ]
     ] ],
@@ -36,13 +36,13 @@ var NAVTREE =
 var NAVTREEINDEX =
 [
 "BaseObject_8php.html",
-"boot_8php.html#a9255af5ae9c887520091ea04763c1a88",
-"classFKOAuth1.html#a2f1276872329a6f0b704ccda1a4b9fa6",
-"conversation_8php.html#ae59703b07ce2ddf627b4172ff26058b6",
-"globals_vars_0x6c.html",
-"items_8php.html#a82955cc578f0fa600acec84475026194",
-"probe_8php.html",
-"text_8php.html#aca0f589be74fab1a460c57e88dad9779"
+"boot_8php.html#a8df201788c9dd0ca91384e3a14c08bce",
+"classFKOAuth1.html#a2b1dac2ed31fc6ef84668afdda8b263f",
+"contact__widgets_8php.html#a165eb021e61c4dcab2a552f28628d353",
+"globals_0x74.html",
+"interfaceITemplateEngine.html",
+"php_8php.html#adb7164dfed9a4ecbe2e168e1e78f12f6",
+"text_8php.html#a324c58f37f6acdf9cd1922aa76077d9f"
 ];
 
 var SYNCONMSG = 'click to disable panel synchronisation';
