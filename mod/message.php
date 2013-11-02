@@ -9,6 +9,9 @@ require_once('include/Contact.php');
 
 function message_aside(&$a) {
 
+	if (! local_user())
+		return;
+
 	$a->set_widget('msgaside',replace_macros(get_markup_template('message_side.tpl'), array(
 		'$tabs'=> array(),
 

@@ -22,6 +22,8 @@ function settings_init(&$a) {
 
 function settings_aside(&$a) {
 
+if (! local_user())
+	return;
 
 	// default is channel settings in the absence of other arguments
 
