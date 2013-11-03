@@ -205,7 +205,7 @@ function message_content(&$a) {
 
 	if(! local_user()) {
 		notice( t('Permission denied.') . EOL);
-		return;
+		return login();
 	}
 
 	$channel = $a->get_channel();

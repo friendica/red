@@ -625,7 +625,7 @@ function settings_content(&$a) {
 
 	if(! local_user()) {
 		notice( t('Permission denied.') . EOL );
-		return;
+		return login();
 	}
 
 
