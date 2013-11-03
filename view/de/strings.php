@@ -7,7 +7,7 @@ function string_plural_select_de($n){
 $a->strings["Visible to everybody"] = "Für jeden sichtbar";
 $a->strings["show"] = "zeigen";
 $a->strings["don't show"] = "Verbergen";
-$a->strings[" and "] = "und";
+$a->strings[" and "] = " und ";
 $a->strings["public profile"] = "öffentliches Profil";
 $a->strings["%1\$s changed %2\$s to &ldquo;%3\$s&rdquo;"] = "%1\$s hat %2\$s auf &ldquo;%3\$s&rdquo; geändert";
 $a->strings["Visit %1\$s's %2\$s"] = "Besuche %1\$s's %2\$s";
