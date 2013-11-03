@@ -3449,3 +3449,7 @@ text-decoration: none;
 #menulist {
 	list-style-type: none;
 }
+
+.savedsearchdrop {
+	opacity: 0;
+}
