@@ -22,6 +22,7 @@
 	    $radius = get_pconfig($uid, "redbasic", "radius");	
 	    $shadow = get_pconfig($uid,"redbasic","photo_shadow");
 	    $section_width=get_pconfig($uid,"redbasic","section_width");
+		$nav_min_opacity=get_pconfig($uid,'redbasic','nav_min_opacity');
 
 // Now load the scheme.  If a value is changed above, we'll keep the settings
 // If not, we'll keep those defined by the schema
@@ -72,8 +73,15 @@
 		$active_colour = '#FFFFFF';
     if (! $section_width)
     	$section_width="72%";
-
-		
+	if($nav_min_opacity === false) {
+		$nav_float_min_opacity = 1.0;
+		$nav_percent_min_opacity = 100;
+	}
+	else {
+		$nav_float_min_opacity = (float) $nav_min_opacity;
+		$nav_percent_min_opacity = (int) 100 * $nav_min_opacity;
+	}
+			
 
 // Nav colours have nested values, so we have to define the actual variables
 // used in the CSS from the higher level "red", "black", etc here
@@ -117,7 +125,9 @@ $options = array (
 '$radius' => $radius,
 '$shadow' => $shadow,
 '$active_colour' => $active_colour,
-'$section_width' => $section_width
+'$section_width' => $section_width,
+'$nav_float_min_opacity' => $nav_float_min_opacity,
+'$nav_percent_min_opacity' => $nav_percent_min_opacity
 );
 
 echo str_replace(array_keys($options), array_values($options), $x);    

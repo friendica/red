@@ -14,8 +14,9 @@ function theme_content(&$a) {
 	$radius = get_pconfig(local_user(),'redbasic', 'radius' );
 	$shadow = get_pconfig(local_user(),'redbasic', 'photo_shadow' );
 	$section_width=get_pconfig(local_user(),"redbasic","section_width");
+	$nav_min_opacity=get_pconfig(local_user(),"redbasic","nav_min_opacity");
 	return redbasic_form($a, $schema, $nav_colour, $bgcolour, $background_image, $item_colour, $item_opacity, 
-		$font_size, $font_colour, $radius, $shadow, $section_width);
+		$font_size, $font_colour, $radius, $shadow, $section_width,$nav_min_opacity);
 }
 
 function theme_post(&$a) {
@@ -33,11 +34,14 @@ function theme_post(&$a) {
 		set_pconfig(local_user(), 'redbasic', 'radius', $_POST['redbasic_radius']);
 		set_pconfig(local_user(), 'redbasic', 'photo_shadow', $_POST['redbasic_shadow']);
 		set_pconfig(local_user(), 'redbasic', 'section_width', $_POST['redbasic_section_width']);
+		set_pconfig(local_user(), 'redbasic', 'nav_min_opacity', $_POST['redbasic_nav_min_opacity']);
 	}
 }
 
+// FIXME - this really should be an array
+
 function redbasic_form(&$a, $schema, $nav_colour, $bgcolour, $background_image, $item_colour, $item_opacity, 
-		$font_size, $font_colour, $radius, $shadow, $section_width) {
+		$font_size, $font_colour, $radius, $shadow, $section_width,$nav_min_opacity) {
 
 	$scheme_choices = array();
 	$scheme_choices["---"] = t("Default");
@@ -78,6 +82,7 @@ if(feature_enabled(local_user(),'expert'))
 		'$radius' => array('redbasic_radius', t('Set radius of corners'), $radius),
 		'$shadow' => array('redbasic_shadow', t('Set shadow depth of photos'), $shadow),
 		'$section_width' => array('redbasic_section_width',t('Set width of main section'),$section_width),
+		'$nav_min_opacity' => array('nav_min_opacity',t('Set minimum opacity of nav bar - to hide it'),$nav_min_opacity),
 		));
 
 	return $o;
