@@ -37,7 +37,7 @@ msgstr "Verbergen"
 
 #: ../../include/activities.php:37
 msgid " and "
-msgstr "und"
+msgstr " und "
 
 #: ../../include/activities.php:45
 msgid "public profile"
