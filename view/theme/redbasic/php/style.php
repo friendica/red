@@ -23,6 +23,7 @@
 	    $shadow = get_pconfig($uid,"redbasic","photo_shadow");
 	    $section_width=get_pconfig($uid,"redbasic","section_width");
 		$nav_min_opacity=get_pconfig($uid,'redbasic','nav_min_opacity');
+		$sloppy_photos=get_pconfig($uid,'redbasic','sloppy_photos');
 
 // Now load the scheme.  If a value is changed above, we'll keep the settings
 // If not, we'll keep those defined by the schema
@@ -73,7 +74,7 @@
 		$active_colour = '#FFFFFF';
     if (! $section_width)
     	$section_width="72%";
-	if($nav_min_opacity === false) {
+	if($nav_min_opacity === false || $nav_min_opacity === '') {
 		$nav_float_min_opacity = 1.0;
 		$nav_percent_min_opacity = 100;
 	}
@@ -133,3 +134,7 @@ $options = array (
 echo str_replace(array_keys($options), array_values($options), $x);    
 
 }
+
+if($sloppy_photos && file_exists('view/theme/redbasic/css/sloppy_photos.css')) {
+	echo file_get_contents('view/theme/redbasic/css/sloppy_photos.css');
+} 
