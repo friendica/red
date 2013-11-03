@@ -132,11 +132,11 @@ function dirsearch_content(&$a) {
 
 
 	if($sort_order == 'normal')
-		$order = " order by xchan_name_date desc ";
+		$order = " order by xchan_name asc ";
 	elseif($sort_order == 'reverse')
 		$order = " order by xchan_name desc ";
 	else	
-		$order = " order by xchan_name asc ";
+		$order = " order by xchan_name_date desc ";
 
 
 	if($sync) {
