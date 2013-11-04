@@ -501,3 +501,74 @@ function z_readdir($channel_id,$observer_hash,$pathname, $parent_hash = '') {
 	$ret['data'] = $r;
 	return $ret;
 }
+
+
+/**
+ * @function attach_mkdir($channel,$observer_hash,$arr);
+ * 
+ * Create directory
+ *  
+ * @param $channel channel array of owner
+ * @param $observer_hash hash of current observer
+ * @param $arr parameter array to fulfil request
+ * 
+ * Required:
+ *    $arr['filename']
+ *    $arr['folder'] // hash of parent directory, empty string for root directory
+ *
+ * Optional:
+ *    $arr['hash']  // precumputed hash for this node
+ *    $arr['allow_cid']
+ *    $arr['allow_gid']
+ *    $arr['deny_cid']
+ *    $arr['deny_gid']
+ */
+
+function attach_mkdir($channel,$observer_hash,$arr = null) {
+
+	$ret = array('success' => false);
+	$channel_id = $channel['channel_id'];
+	$sql_options = '';
+
+	if(! perm_is_allowed($channel_id,get_observer_hash(),'write_storage')) {
+		$ret['message'] = t('Permission denied.');
+		return $ret;
+	}
+
+	// Walk the directory tree from root to parent to make sure the parent is valid and name is unique.
+	// FIXME
+
+
+	$arr['hash'] = (($arr['hash']) ? $arr['hash'] : random_string());
+	$created = datetime_convert();		
+
+	$r = q("INSERT INTO attach ( aid, uid, hash, filename, filetype, filesize, revision, folder, flags, data, created, edited, allow_cid, allow_gid,deny_cid, deny_gid )
+		VALUES ( %d, %d, '%s', '%s', '%s', %d, %d, '%s', '%s', '%s', '%s', '%s', '%s', '%s', '%s', '%s' ) ",
+		intval($channel['channel_account_id']),
+		intval($channel_id),
+		dbesc($arr['hash']),
+		dbesc($arr['filename']),
+		dbesc('multipart/mixed'),
+		intval(0),
+		intval(0),
+		dbesc($arr['folder']),
+		intval(ATTACH_FLAGS_DIR),
+		dbesc(''),
+		dbesc($created),
+		dbesc($created),
+		dbesc(($arr && array_key_exists('allow_cid',$arr)) ? $arr['allow_cid'] : '<' . $channel['channel_hash'] . '>'),
+		dbesc(($arr && array_key_exists('allow_gid',$arr)) ? $arr['allow_gid'] : ''),
+		dbesc(($arr && array_key_exists('deny_cid',$arr))  ? $arr['deny_cid']  : ''),
+		dbesc(($arr && array_key_exists('deny_gid',$arr))  ? $arr['deny_gid']  : '')
+	);
+
+	if(! $r)
+		$ret['message'] = t('database storage failed.');
+	else {
+		$ret['success'] = true;
+		$ret['data'] = $arr;
+	}
+
+	return $ret;
+ 
+}
