@@ -91,6 +91,21 @@ define ( 'LANGUAGE_DETECT_MIN_CONFIDENCE', 0.01 );
 
 
 /**
+ * Default permissions for file-based storage (webDAV, etc.)
+ * These files will be owned by the webserver who will need write
+ * access to the "storage" folder.
+ * Ideally you should make this 700, however some hosted platforms
+ * may not let you change ownership of this directory so we're
+ * defaulting to both owner-write and group-write privilege.
+ * This should work for most cases without modification.
+ * Over-ride this in your .htconfig.php if you need something
+ * either more or less restrictive.
+ */
+ 
+define ( 'STORAGE_DEFAULT_PERMISSIONS',   0770 );
+
+
+/**
  *
  * An alternate way of limiting picture upload sizes. Specify the maximum pixel
  * length that pictures are allowed to be (for non-square pictures, it will apply

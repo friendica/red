@@ -532,7 +532,7 @@ function attach_mkdir($channel,$observer_hash,$arr = null) {
 
 	$basepath = 'store/' . $channel['channel_address'];
 	if(! is_dir($basepath))
-		@mkdir($basepath,0700,true);
+		@mkdir($basepath,STORAGE_DEFAULT_PERMISSIONS,true);
 
 
 	if(! perm_is_allowed($channel_id, get_observer_hash(),'write_storage')) {
@@ -619,7 +619,7 @@ function attach_mkdir($channel,$observer_hash,$arr = null) {
 	);
 
 	if($r) {
-		if(mkdir($path,0700)) {
+		if(mkdir($path,STORAGE_DEFAULT_PERMISSIONS)) {
 			$ret['success'] = true;
 			$ret['data'] = $arr;
 		}
