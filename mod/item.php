@@ -411,7 +411,7 @@ function item_post(&$a) {
 		 * owner from seeing it. This is because the permissions may not yet have been
 		 * set for the post. If it's private, the photo permissions should be set
 		 * appropriately. But we didn't know the final permissions on the post until
-		 * now. So now we'll look for links of uploaded messages that are in the
+		 * now. So now we'll look for links of uploaded photos and attachments that are in the
 		 * post and set them to the same permissions as the post itself.
 		 *
 		 */

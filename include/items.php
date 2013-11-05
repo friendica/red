@@ -2216,10 +2216,23 @@ function tag_deliver($uid,$item_id) {
 			intval($item_id)
 		);			
 
+
+
 		// At this point we've determined that the person receiving this post was mentioned in it or it is a union.
 		// Now let's check if this mention was inside a reshare so we don't spam a forum
+		// If it's private we may have to unobscure it momentarily so that we can parse it. 
 
-		$body = preg_replace('/\[share(.*?)\[\/share\]/','',$item['body']);
+		$body = '';
+
+		if($item['item_flags'] & ITEM_OBSCURED) {
+			$key = get_config('system','prvkey');
+			if($item['body'])
+				$body = aes_unencapsulate(json_decode_plus($item['body']),$key);
+		}
+		else
+			$body = $item['body'];		
+
+		$body = preg_replace('/\[share(.*?)\[\/share\]/','',$body);
 
 		$pattern = '/@\[zrl\=' . preg_quote($term['url'],'/') . '\]' . preg_quote($u[0]['channel_name'],'/') . '\[\/zrl\]/';
 
