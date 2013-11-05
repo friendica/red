@@ -55,17 +55,17 @@
 			$nav_bg_4 = "#b00";
 		}
 	if (! $bgcolour)
-		$bgcolour = "fff";
+		$bgcolour = "#f5f5f5";
 	if (! $background_image)
 		$background_image ='';
 	if (! $item_colour)
-		$item_colour = "fff";
+		$item_colour = "#f5f5f5";
 	if (! $item_opacity)
 		$item_opacity = "1";
 	if (! $font_size)
 		$font_size = "12";
 	if (! $font_colour)
-		$font_colour = "000";
+		$font_colour = "#4D4D4D";
 	if (! $radius)
 		$radius = "5";
 	if (! $shadow)
