@@ -1567,6 +1567,11 @@ function import_directory_keywords($hash,$keywords) {
 
 function update_modtime($hash,$guid,$addr,$flags = 0) {
 
+	$dirmode = intval(get_config('system','directory_mode'));
+
+	if($dirmode == DIRECTORY_MODE_NORMAL)
+		return;
+
 	if($flags) {
 		q("insert into updates (ud_hash, ud_guid, ud_date, ud_flags, ud_addr ) values ( '%s', '%s', '%s', %d, '%s' )",
 			dbesc($hash),
