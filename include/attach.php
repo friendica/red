@@ -530,19 +530,75 @@ function attach_mkdir($channel,$observer_hash,$arr = null) {
 	$channel_id = $channel['channel_id'];
 	$sql_options = '';
 
-	if(! perm_is_allowed($channel_id,get_observer_hash(),'write_storage')) {
+	$basepath = 'store/' . $channel['channel_address'];
+	if(! is_dir($basepath))
+		@mkdir($basepath,0700,true);
+
+
+	if(! perm_is_allowed($channel_id, get_observer_hash(),'write_storage')) {
 		$ret['message'] = t('Permission denied.');
 		return $ret;
 	}
 
-	// Walk the directory tree from root to parent to make sure the parent is valid and name is unique.
-	// FIXME
+	if(! $arr['filename']) {
+		$ret['message'] = t('Empty pathname');
+		return $ret;
+	}
 
 
 	$arr['hash'] = (($arr['hash']) ? $arr['hash'] : random_string());
+
+
+	// Check for duplicate name.
+	// Check both the filename and the hash as we will be making use of both.
+	
+	$r = q("select hash from attach where ( filename = '%s' or hash = '%s' ) and folder = '%s' and uid = %d limit 1",
+		dbesc($arr['filename']),
+		dbesc($arr['hash']),
+		dbesc($arr['folder']),
+		intval($channel['channel_id'])
+	);
+	if($r) {
+		$ret['message'] = t('duplicate filename or path');
+		return $ret;
+	}
+
+	if($arr['folder']) {
+
+		// Walk the directory tree from parent back to root to make sure the parent is valid and name is unique and we
+		// have permission to see this path. This implies the root directory itself is public since we won't have permissions
+		// set on the psuedo-directory. We can however set permissions for anything and everything contained within it.
+
+		$lpath = '';
+		$lfile = $arr['folder'];
+		$sql_options = permissions_sql($channel);
+
+		do {
+			$r = q("select filename, hash, flags, folder from attach where uid = %d and hash = '%s' and ( flags & %d ) 
+				$sql_options limit 1",
+				intval($channel['channel_id']),
+				dbesc($lfile),
+				intval(ATTACH_FLAG_DIR)
+			);
+			if(! $r) {
+				$ret['message'] = t('Path not found.');
+				return $ret;
+			}
+			if($lfile)
+				$lpath = $r[0]['hash'] . '/' . $lpath;
+			$lfile = $r[0]['folder'];
+		} while ( ($r[0]['folder']) && ($r[0]['flags'] & ATTACH_FLAG_DIR)) ;
+		$path = $basepath . '/' . $lpath;			
+
+	}
+	else
+		$path = $basepath . '/';
+
+	$path .= $arr['hash'];
+
 	$created = datetime_convert();		
 
-	$r = q("INSERT INTO attach ( aid, uid, hash, filename, filetype, filesize, revision, folder, flags, data, created, edited, allow_cid, allow_gid,deny_cid, deny_gid )
+	$r = q("INSERT INTO attach ( aid, uid, hash, filename, filetype, filesize, revision, folder, flags, data, created, edited, allow_cid, allow_gid, deny_cid, deny_gid )
 		VALUES ( %d, %d, '%s', '%s', '%s', %d, %d, '%s', '%s', '%s', '%s', '%s', '%s', '%s', '%s', '%s' ) ",
 		intval($channel['channel_account_id']),
 		intval($channel_id),
@@ -552,22 +608,28 @@ function attach_mkdir($channel,$observer_hash,$arr = null) {
 		intval(0),
 		intval(0),
 		dbesc($arr['folder']),
-		intval(ATTACH_FLAGS_DIR),
+		intval(ATTACH_FLAG_DIR),
 		dbesc(''),
 		dbesc($created),
 		dbesc($created),
-		dbesc(($arr && array_key_exists('allow_cid',$arr)) ? $arr['allow_cid'] : '<' . $channel['channel_hash'] . '>'),
+		dbesc(($arr && array_key_exists('allow_cid',$arr)) ? $arr['allow_cid'] : ''),
 		dbesc(($arr && array_key_exists('allow_gid',$arr)) ? $arr['allow_gid'] : ''),
 		dbesc(($arr && array_key_exists('deny_cid',$arr))  ? $arr['deny_cid']  : ''),
 		dbesc(($arr && array_key_exists('deny_gid',$arr))  ? $arr['deny_gid']  : '')
 	);
 
-	if(! $r)
-		$ret['message'] = t('database storage failed.');
-	else {
-		$ret['success'] = true;
-		$ret['data'] = $arr;
+	if($r) {
+		if(mkdir($path,0700)) {
+			$ret['success'] = true;
+			$ret['data'] = $arr;
+		}
+		else {
+			logger('attach_mkdir: ' . mkdir . ' ' . $path . 'failed.');
+			$ret['message'] = t('mkdir failed.');
+		}
 	}
+	else
+		$ret['message'] = t('database storage failed.');
 
 	return $ret;
  
