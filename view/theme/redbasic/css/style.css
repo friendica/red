@@ -188,7 +188,7 @@ header #banner {
   text-align: center;
   font-size: 1.4em;
   font-family: tahoma, "Lucida Sans", sans;
-  color: #FFF;
+  color: $banner_colour;
   font-weight: bold;
   margin-top: 1px;
 }
