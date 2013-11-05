@@ -298,12 +298,13 @@ function expand_groups($a) {
 	if(! (is_array($a) && count($a)))
 		return array();
 	$x = $a;
-	stringify_array_elms($x);
+	stringify_array_elms($x,true);
 	$groups = implode(',', $x);
-	$groups = dbesc($groups);
+
 	if($groups)
-		$r = q("SELECT xchan FROM group_member WHERE gid IN ( $groups )");
+		$r = q("SELECT xchan FROM group_member WHERE gid IN ( select id from `group` where hash in ( $groups ))");
 	$ret = array();
+
 	if($r)
 		foreach($r as $rr)
 			$ret[] = $rr['xchan'];
