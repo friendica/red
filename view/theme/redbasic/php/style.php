@@ -12,6 +12,7 @@
 	    $nav_colour = get_pconfig($uid, "redbasic", "nav_colour");	
 
 // Load the owners pconfig
+		$banner_colour = get_pconfig($uid,'redbasic','banner_colour');
 		$schema = get_pconfig($uid,'redbasic','schema');
 	    $bgcolour = get_pconfig($uid, "redbasic", "background_colour");	
 	    $background_image = get_pconfig($uid, "redbasic", "background_image");	
@@ -54,6 +55,8 @@
 			$nav_bg_3 = "#f00";
 			$nav_bg_4 = "#b00";
 		}
+	if (! $banner_colour)
+		$banner_colour = "fff";
 	if (! $bgcolour)
 		$bgcolour = "#f5f5f5";
 	if (! $background_image)
@@ -116,6 +119,7 @@ $options = array (
 '$nav_bg_2' => $nav_bg_2,
 '$nav_bg_3' => $nav_bg_3,
 '$nav_bg_4' => $nav_bg_4,
+'$banner_colour' => $banner_colour,
 '$search_background' => $search_background,
 '$bgcolour' => $bgcolour,
 '$background_image' => $background_image,
