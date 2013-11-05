@@ -5,6 +5,7 @@ function theme_content(&$a) {
 
 	$schema = get_pconfig(local_user(),'redbasic', 'schema' );
 	$nav_colour = get_pconfig(local_user(),'redbasic', 'nav_colour' );
+	$banner_colour = get_pconfig(local_user(),'redbasic', 'banner_colour' );
 	$bgcolour = get_pconfig(local_user(),'redbasic', 'background_colour' );
 	$background_image = get_pconfig(local_user(),'redbasic', 'background_image' );
 	$item_colour = get_pconfig(local_user(),'redbasic', 'item_colour' );
@@ -16,7 +17,7 @@ function theme_content(&$a) {
 	$section_width=get_pconfig(local_user(),"redbasic","section_width");
 	$nav_min_opacity=get_pconfig(local_user(),"redbasic","nav_min_opacity");
 	$sloppy_photos=get_pconfig(local_user(),"redbasic","sloppy_photos");
-	return redbasic_form($a, $schema, $nav_colour, $bgcolour, $background_image, $item_colour, $item_opacity, 
+	return redbasic_form($a, $schema, $nav_colour, $banner_colour, $bgcolour, $background_image, $item_colour, $item_opacity, 
 		$font_size, $font_colour, $radius, $shadow, $section_width,$nav_min_opacity,$sloppy_photos);
 }
 
@@ -27,6 +28,7 @@ function theme_post(&$a) {
 		set_pconfig(local_user(), 'redbasic', 'schema', $_POST['redbasic_schema']);
 		set_pconfig(local_user(), 'redbasic', 'nav_colour', $_POST['redbasic_nav_colour']);
 		set_pconfig(local_user(), 'redbasic', 'background_colour', $_POST['redbasic_background_colour']);
+		set_pconfig(local_user(), 'redbasic', 'banner_colour', $_POST['redbasic_banner_colour']);
 		set_pconfig(local_user(), 'redbasic', 'background_image', $_POST['redbasic_background_image']);
 		set_pconfig(local_user(), 'redbasic', 'item_colour', $_POST['redbasic_item_colour']);
 		set_pconfig(local_user(), 'redbasic', 'item_opacity', $_POST['redbasic_item_opacity']);
@@ -42,7 +44,7 @@ function theme_post(&$a) {
 
 // FIXME - this really should be an array
 
-function redbasic_form(&$a, $schema, $nav_colour, $bgcolour, $background_image, $item_colour, $item_opacity, 
+function redbasic_form(&$a, $schema, $nav_colour, $banner_colour, $bgcolour, $background_image, $item_colour, $item_opacity, 
 		$font_size, $font_colour, $radius, $shadow, $section_width,$nav_min_opacity,$sloppy_photos) {
 
 	$scheme_choices = array();
@@ -75,6 +77,7 @@ if(feature_enabled(local_user(),'expert'))
 		'$title' => t("Theme settings"),
 		'$schema' => array('redbasic_schema', t('Set scheme'), $schema, '', $scheme_choices),
 		'$nav_colour' => array('redbasic_nav_colour', t('Navigation bar colour'), $nav_colour, '', $nav_colours),
+		'$banner_colour' => array('redbasic_banner_colour', t('Set font-colour for banner'), $banner_colour),
 		'$bgcolour' => array('redbasic_background_colour', t('Set the background colour'), $bgcolour),
 		'$background_image' => array('redbasic_background_image', t('Set the background image'), $background_image),
 		'$item_colour' => array('redbasic_item_colour', t('Set the background colour of items'), $item_colour),
