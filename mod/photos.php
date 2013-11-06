@@ -36,7 +36,7 @@ function photos_init(&$a) {
 
 
 		$a->set_widget('vcard',vcard_from_xchan($a->data['channel'],$observer));
-
+		head_set_icon($a->data['channel']['xchan_photo_s']);
 		if($a->data['perms']['view_photos']) {
 			$a->data['albums'] = photos_albums_list($a->data['channel'],$observer);
 			$a->set_widget('photo_albums',photos_album_widget($a->data['channel'],$observer,$a->data['albums']));

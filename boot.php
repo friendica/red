@@ -1530,8 +1530,14 @@ function remote_user() {
 function notice($s) {
 	$a = get_app();
 	if(! x($_SESSION,'sysmsg'))	$_SESSION['sysmsg'] = array();
-	if($a->interactive)
+	if($a->interactive) {
+		// shameless plug, permission is denied and they have no identity. 
+		// There's a fairly good chance that they've not got zot. 
+		if((stristr($s,t('permission denied'))) && (! get_observer_hash())) {
+			$s .= '<br /><a href="http://getzot.com">' . t('Got Zot?') . '</a>';
+		}
 		$_SESSION['sysmsg'][] = $s;
+	}		
 }
 
 
