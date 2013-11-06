@@ -88,3 +88,14 @@ $a->config['system']['directory_mode']  = DIRECTORY_MODE_NORMAL;
 
 $a->config['system']['theme'] = 'redbasic';
 
+
+// PHP error logging setup
+// Before doing this ensure that the webserver has permission
+// to create and write to php.out in the top level Red directory,
+// or change the name (below) to a file/path where this is allowed.
+
+// Uncomment the following 4 lines to turn on PHP error logging.
+//error_reporting(E_ERROR | E_WARNING | E_PARSE ); 
+//ini_set('error_log','php.out'); 
+//ini_set('log_errors','1'); 
+//ini_set('display_errors', '0');
