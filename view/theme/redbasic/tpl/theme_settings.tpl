@@ -10,6 +10,8 @@
 {{include file="field_input.tpl" field=$background_image}}
 {{include file="field_input.tpl" field=$item_colour}}
 {{include file="field_input.tpl" field=$item_opacity}}
+{{include file="field_input.tpl" field=$toolicon_colour}}
+{{include file="field_input.tpl" field=$toolicon_activecolour}}
 {{include file="field_input.tpl" field=$font_size}}
 {{include file="field_input.tpl" field=$font_colour}}
 {{include file="field_input.tpl" field=$radius}}

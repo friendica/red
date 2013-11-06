@@ -930,7 +930,8 @@ footer {
 	font-size: 1.4em;
     left: 105px;
     position: absolute;
-    top: 1px;	
+    top: 1px;
+	color: $toolicon_colour;	
 }
 .comment .wall-item-lock {
 	left: 65px;
@@ -958,17 +959,21 @@ footer {
 	margin-right: 8px;
 	font-size: 1.2em;
 	cursor: pointer;
-	color: #777; 
+	color: $toolicon_colour; 
 }
 
 .item-tool:hover {
-	color: #000; 
+	color: $toolicon_activecolour; 
+}
+
+.drop-icons.item-tool {
+	color: $toolicon_colour;
 }
 
 .like-rotator {
 	float: left;
 	margin: 8px;
-	color: #777;
+	color: $toolicon_colour;
 }
 
 .wall-item-delete-wrapper {
@@ -3390,12 +3395,12 @@ margin-right: 50px;
 .comment-icon,
 .jot-icons {
 	font-size: 1.2em;
-	color: #777;
+	color: $toolicon_colour;
 }
 
 .comment-icon:hover,
 .jot-icons:hover {
-	color: #000; 
+	color: $toolicon_activecolour; 
 }
 
 .nav-icon {

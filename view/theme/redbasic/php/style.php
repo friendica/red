@@ -16,6 +16,8 @@
 		$schema = get_pconfig($uid,'redbasic','schema');
 	    $bgcolour = get_pconfig($uid, "redbasic", "background_colour");	
 	    $background_image = get_pconfig($uid, "redbasic", "background_image");	
+		$toolicon_colour = get_pconfig($uid,'redbasic','toolicon_colour');
+		$toolicon_activecolour = get_pconfig($uid,'redbasic','toolicon_activecolour');
 	    $item_colour = get_pconfig($uid, "redbasic", "item_colour");	
 	    $item_opacity = get_pconfig($uid, "redbasic", "item_opacity");	
 	    $font_size = get_pconfig($uid, "redbasic", "font_size");	
@@ -63,6 +65,10 @@
 		$background_image ='';
 	if (! $item_colour)
 		$item_colour = "#f8f8f8";
+	if (! $toolicon_colour)
+		$toolicon_colour = '#777777';
+	if (! $toolicon_activecolour)
+		$toolicon_activecolour = '#000';
 	if (! $item_opacity)
 		$item_opacity = "1";
 	if (! $font_size)
@@ -125,6 +131,8 @@ $options = array (
 '$background_image' => $background_image,
 '$item_colour' => $item_colour,
 '$item_opacity' => $item_opacity,
+'$toolicon_colour' => $toolicon_colour,
+'$toolicon_activecolour' => $toolicon_activecolour,
 '$font_size' => $font_size,
 '$font_colour' => $font_colour,
 '$radius' => $radius,
