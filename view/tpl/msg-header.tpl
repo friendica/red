@@ -85,6 +85,13 @@ else
 		}
 	}
 
+	function prvmailGetExpiry() {
+		reply = prompt("{{$expireswhen}}", $('#inp-prvmail-expires').val());
+		if(reply && reply.length) {
+			$('#inp-prvmail-expires').val(reply);
+		}
+	}
+
 	function linkdropper(event) {
 		var linkFound = event.dataTransfer.types.contains("text/uri-list");
 		if(linkFound)

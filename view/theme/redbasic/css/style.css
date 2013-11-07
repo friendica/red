@@ -1711,11 +1711,13 @@ tr.mceLast {
 #prvmail-upload-wrapper,
 #prvmail-attach-wrapper,
 #prvmail-link-wrapper,
+#prvmail-expire-wrapper,
 #prvmail-rotator-wrapper {
 	float: left;
 	margin-top: 10px;
 	margin-right: 10px;
 	width: 24px;
+	cursor: pointer;
 }
 
 #prvmail-end {

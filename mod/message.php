@@ -272,7 +272,8 @@ function message_content(&$a) {
 			'$baseurl' => $a->get_baseurl(true),
 			'$editselect' => (($plaintext) ? 'none' : '/(profile-jot-text|prvmail-text)/'),
 			'$nickname' => $channel['channel_address'],
-			'$linkurl' => t('Please enter a link URL:')
+			'$linkurl' => t('Please enter a link URL:'),
+			'$expireswhen' => t('Expires YYYY-MM-DD HH:MM')
 		));
 	
 		$preselect = (isset($a->argv[2])?array($a->argv[2]):false);
@@ -324,8 +325,9 @@ function message_content(&$a) {
 			'$insert' => t('Insert web link'),
 			'$wait' => t('Please wait'),
 			'$submit' => t('Submit'),
-			'$expires' => t('Expires: (leave blank for never)'),
-			'$feature_expire' => ((feature_enabled(local_user(),'content_expire')) ? '1' : ''),
+			'$defexpire' => '',
+			'$feature_expire' => ((feature_enabled(local_user(),'content_expire')) ? 'block' : 'none'),
+			'$expires' => t('Set expiration date'),
 		));
 
 		return $o;
@@ -401,7 +403,8 @@ function message_content(&$a) {
 			'$nickname' => $channel['channel_addr'],
 			'$baseurl' => $a->get_baseurl(true),
 			'$editselect' => (($plaintext) ? 'none' : '/(profile-jot-text|prvmail-text)/'),
-			'$linkurl' => t('Please enter a link URL:')
+			'$linkurl' => t('Please enter a link URL:'),
+			'$expireswhen' => t('Expires YYYY-MM-DD HH:MM')
 		));
 
 
@@ -500,8 +503,9 @@ function message_content(&$a) {
 			'$insert' => t('Insert web link'),
 			'$submit' => t('Submit'),
 			'$wait' => t('Please wait'),
-			'$expires' => t('Expires: (leave blank for never)'),
-			'$feature_expire' => ((feature_enabled(local_user(),'content_expire')) ? '1' : ''),
+			'$defexpire' => '',
+			'$feature_expire' => ((feature_enabled(local_user(),'content_expire')) ? 'block' : 'none'),
+			'$expires' => t('Set expiration date'),
 		));
 
 		return $o;
