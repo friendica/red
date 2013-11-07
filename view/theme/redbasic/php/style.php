@@ -33,10 +33,13 @@
 // Setting $scheme to '' wasn't working for some reason, so we'll check it's
 // not --- like the mobile theme does instead.
 
-		if (($schema) && ($schema != '---')) {
+	if (($schema) && ($schema != '---')) {
+		// Check it exists, because this setting gets distributed to clones
+		if(file_exists('view/theme/redbasic/schema/' . $schema . '.php')) {
 			$schemefile = 'view/theme/redbasic/schema/' . $schema . '.php';
 			require_once ($schemefile);
 		}
+	}
 		// If we haven't got a schema, load the default.  We shouldn't touch this - we
 		// should leave it for admins to define for themselves.
 			if (! $schema) {
