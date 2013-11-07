@@ -1064,7 +1064,8 @@ function status_editor($a,$x,$popup=false) {
 		'$audurl' => t("Please enter an audio link/URL:"),
 		'$term' => t('Tag term:'),
 		'$fileas' => t('Save to Folder:'),
-		'$whereareu' => t('Where are you right now?')
+		'$whereareu' => t('Where are you right now?'),
+		'$expireswhen' => t('Expires YYYY-MM-DD HH:MM')
 	));
 
 
@@ -1130,6 +1131,9 @@ function status_editor($a,$x,$popup=false) {
 		'$preview' => $preview,
 		'$sourceapp' => t($a->sourcename),
 		'$jotplugins' => $jotplugins,
+		'$defexpire' => '',
+		'$feature_expire' => ((feature_enabled($x['profile_uid'],'content_expire') && (! $webpage)) ? 'block' : 'none'),
+		'$expires' => t('Set expiration date'),
 	));
 
 

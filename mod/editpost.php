@@ -48,7 +48,8 @@ function editpost_content(&$a) {
 		'$editselect' =>  (($plaintext) ? 'none' : '/(profile-jot-text|prvmail-text)/'),
 		'$ispublic' => '&nbsp;', // t('Visible to <strong>everybody</strong>'),
 		'$geotag' => $geotag,
-		'$nickname' => $channel['channel_address']
+		'$nickname' => $channel['channel_address'],
+		'$expireswhen' => t('Expires YYYY-MM-DD HH:MM'),
 	));
 
 
@@ -126,6 +127,9 @@ function editpost_content(&$a) {
 		'$jotplugins' => $jotplugins,
 		'$sourceapp' => t($a->sourcename),
 		'$catsenabled' => $catsenabled,
+		'$defexpire' => $itm[0]['expires'],
+		'$feature_expire' => 'none',
+		'$expires' => t('Set expiration date'),
 	));
 
 	return $o;

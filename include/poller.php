@@ -46,7 +46,13 @@ function poller_run($argv, $argc){
 	// expire any expired mail
 
 	q("delete from mail where expires != '0000-00-00 00:00:00' and expires < UTC_TIMESTAMP() ");
-	
+
+	$r = q("select id from item where expires != '0000-00-00 00:00:00' and expires < UTC_TIMESTAMP() ");
+	if($r) {
+		require_once('include/items.php');
+		foreach($r as $rr)
+			drop_item($rr['id'],false);
+	}
   
 	// Ensure that every channel pings a directory server once a month. This way we can discover
 	// channels and sites that quietly vanished and prevent the directory from accumulating stale

@@ -17,8 +17,10 @@
 <div id="prvmail-subject-label">{{$subject}}</div>
 <input type="text" size="64" maxlength="255" id="prvmail-subject" name="subject" value="{{$subjtxt}}" {{$readonly}} tabindex="11" />
 
+{{if $feature_expire}}
 <div id="prvmail-expires-label">{{$expires}}</div>
 <input type="text" size="64" maxlength="255" id="prvmail-expires" name="expires" value="" tabindex="12" />
+{{/if}}
 
 <div id="prvmail-message-label">{{$yourmessage}}</div>
 <textarea rows="8" cols="72" class="prvmail-text" id="prvmail-text" name="body" tabindex="13">{{$text}}</textarea>

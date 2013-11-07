@@ -319,7 +319,8 @@ footer {
 #profile-video, 
 #profile-audio,
 #profile-link,
-#profile-title, 
+#profile-title,
+#profile-expires, 
 #wall-image-upload,
 #wall-file-upload,
 #profile-upload-wrapper,
@@ -1134,6 +1135,10 @@ footer {
 	margin-left: 15px;
 }
 #profile-location-wrapper {
+	float: left;
+	margin-left: 15px;
+}
+#profile-expire-wrapper {
 	float: left;
 	margin-left: 15px;
 }

@@ -324,7 +324,8 @@ function message_content(&$a) {
 			'$insert' => t('Insert web link'),
 			'$wait' => t('Please wait'),
 			'$submit' => t('Submit'),
-			'$expires' => t('Expires: (leave blank for never)')
+			'$expires' => t('Expires: (leave blank for never)'),
+			'$feature_expire' => ((feature_enabled(local_user(),'content_expire')) ? '1' : ''),
 		));
 
 		return $o;
@@ -499,7 +500,8 @@ function message_content(&$a) {
 			'$insert' => t('Insert web link'),
 			'$submit' => t('Submit'),
 			'$wait' => t('Please wait'),
-			'$expires' => t('Expires: (leave blank for never)')
+			'$expires' => t('Expires: (leave blank for never)'),
+			'$feature_expire' => ((feature_enabled(local_user(),'content_expire')) ? '1' : ''),
 		));
 
 		return $o;

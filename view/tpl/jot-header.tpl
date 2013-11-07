@@ -191,6 +191,13 @@ function enableOnUser(){
 		}
 	}
 
+	function jotGetExpiry() {
+		reply = prompt("{{$expirewhen}}", $('#jot-expire').val());
+		if(reply && reply.length) {
+			$('#jot-expire').val(reply);
+		}
+	}
+
 	function jotShare(id) {
 		if ($('#jot-popup').length != 0) $('#jot-popup').show();
 
