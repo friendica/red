@@ -182,7 +182,7 @@ CREATE TABLE IF NOT EXISTS `channel` (
   `channel_w_storage` int(10) unsigned NOT NULL DEFAULT '128',
   `channel_r_pages` int(10) unsigned NOT NULL DEFAULT '128',
   `channel_w_pages` int(10) unsigned NOT NULL DEFAULT '128',
-  `channel_a_republish` int(1) unsigned NOT NULL DEFAULT '128',
+  `channel_a_republish` int(10) unsigned NOT NULL DEFAULT '128',
   PRIMARY KEY (`channel_id`),
   UNIQUE KEY `channel_address_unique` (`channel_address`),
   KEY `channel_account_id` (`channel_account_id`),
@@ -193,7 +193,6 @@ CREATE TABLE IF NOT EXISTS `channel` (
   KEY `channel_theme` (`channel_theme`),
   KEY `channel_notifyflags` (`channel_notifyflags`),
   KEY `channel_pageflags` (`channel_pageflags`),
-  KEY `channel_dirdate` (`channel_dirdate`),
   KEY `channel_max_anon_mail` (`channel_max_anon_mail`),
   KEY `channel_max_friend_req` (`channel_max_friend_req`),
   KEY `channel_default_gid` (`channel_default_group`),
@@ -216,8 +215,9 @@ CREATE TABLE IF NOT EXISTS `channel` (
   KEY `channel_w_storage` (`channel_w_storage`),
   KEY `channel_r_pages` (`channel_r_pages`),
   KEY `channel_w_pages` (`channel_w_pages`),
+  KEY `channel_deleted` (`channel_deleted`),
   KEY `channel_a_republish` (`channel_a_republish`),
-  KEY `channel_deleted` (`channel_deleted`)
+  KEY `channel_dirdate` (`channel_dirdate`)
 ) ENGINE=MyISAM  DEFAULT CHARSET=utf8;
 
 CREATE TABLE IF NOT EXISTS `clients` (
@@ -352,7 +352,7 @@ CREATE TABLE IF NOT EXISTS `group_member` (
   KEY `uid` (`uid`),
   KEY `gid` (`gid`),
   KEY `xchan` (`xchan`)
-) ENGINE=MyISAM DEFAULT CHARSET=utf8;
+) ENGINE=MyISAM  DEFAULT CHARSET=utf8;
 
 CREATE TABLE IF NOT EXISTS `hook` (
   `id` int(11) NOT NULL AUTO_INCREMENT,
@@ -384,12 +384,12 @@ CREATE TABLE IF NOT EXISTS `hubloc` (
   KEY `hubloc_url` (`hubloc_url`),
   KEY `hubloc_guid` (`hubloc_guid`),
   KEY `hubloc_flags` (`hubloc_flags`),
-  KEY `hubloc_status` (`hubloc_status`),
   KEY `hubloc_connect` (`hubloc_connect`),
   KEY `hubloc_host` (`hubloc_host`),
   KEY `hubloc_addr` (`hubloc_addr`),
   KEY `hubloc_updated` (`hubloc_updated`),
-  KEY `hubloc_connected` (`hubloc_connected`)
+  KEY `hubloc_connected` (`hubloc_connected`),
+  KEY `hubloc_status` (`hubloc_status`)
 ) ENGINE=MyISAM  DEFAULT CHARSET=utf8;
 
 CREATE TABLE IF NOT EXISTS `issue` (
@@ -444,7 +444,7 @@ CREATE TABLE IF NOT EXISTS `item` (
   `resource_id` char(255) NOT NULL DEFAULT '',
   `resource_type` char(16) NOT NULL DEFAULT '',
   `attach` mediumtext NOT NULL,
-  `sig` text NOT NULL DEFAULT '',
+  `sig` text NOT NULL,
   `location` char(255) NOT NULL DEFAULT '',
   `coord` char(255) NOT NULL DEFAULT '',
   `comment_policy` char(255) NOT NULL DEFAULT '',
@@ -500,7 +500,7 @@ CREATE TABLE IF NOT EXISTS `item_id` (
   KEY `sid` (`sid`),
   KEY `service` (`service`),
   KEY `iid` (`iid`)
-) ENGINE=MyISAM DEFAULT CHARSET=utf8;
+) ENGINE=MyISAM  DEFAULT CHARSET=utf8;
 
 CREATE TABLE IF NOT EXISTS `mail` (
   `id` int(10) unsigned NOT NULL AUTO_INCREMENT,
@@ -515,6 +515,7 @@ CREATE TABLE IF NOT EXISTS `mail` (
   `mid` char(255) NOT NULL,
   `parent_mid` char(255) NOT NULL,
   `created` datetime NOT NULL DEFAULT '0000-00-00 00:00:00',
+  `expires` datetime NOT NULL DEFAULT '0000-00-00 00:00:00',
   PRIMARY KEY (`id`),
   KEY `created` (`created`),
   KEY `mail_flags` (`mail_flags`),
@@ -523,7 +524,8 @@ CREATE TABLE IF NOT EXISTS `mail` (
   KEY `from_xchan` (`from_xchan`),
   KEY `to_xchan` (`to_xchan`),
   KEY `mid` (`mid`),
-  KEY `parent_mid` (`parent_mid`)
+  KEY `parent_mid` (`parent_mid`),
+  KEY `expires` (`expires`)
 ) ENGINE=MyISAM  DEFAULT CHARSET=utf8;
 
 CREATE TABLE IF NOT EXISTS `manage` (
@@ -834,11 +836,11 @@ CREATE TABLE IF NOT EXISTS `site` (
   `site_sellpage` char(255) NOT NULL DEFAULT '',
   `site_location` char(255) NOT NULL DEFAULT '',
   PRIMARY KEY (`site_url`),
-  KEY `site_access` (`site_access`),
   KEY `site_flags` (`site_flags`),
   KEY `site_update` (`site_update`),
   KEY `site_directory` (`site_directory`),
   KEY `site_register` (`site_register`),
+  KEY `site_access` (`site_access`),
   KEY `site_sellpage` (`site_sellpage`)
 ) ENGINE=MyISAM DEFAULT CHARSET=utf8;
 
@@ -852,7 +854,7 @@ CREATE TABLE IF NOT EXISTS `source` (
   KEY `src_channel_id` (`src_channel_id`),
   KEY `src_channel_xchan` (`src_channel_xchan`),
   KEY `src_xchan` (`src_xchan`)
-) ENGINE=MyISAM DEFAULT CHARSET=utf8;
+) ENGINE=MyISAM  DEFAULT CHARSET=utf8;
 
 CREATE TABLE IF NOT EXISTS `spam` (
   `id` int(11) NOT NULL AUTO_INCREMENT,
@@ -890,7 +892,7 @@ CREATE TABLE IF NOT EXISTS `term` (
   KEY `imgurl` (`imgurl`),
   KEY `term_hash` (`term_hash`),
   KEY `parent_hash` (`parent_hash`)
-) ENGINE=MyISAM DEFAULT CHARSET=utf8;
+) ENGINE=MyISAM  DEFAULT CHARSET=utf8;
 
 CREATE TABLE IF NOT EXISTS `tokens` (
   `id` varchar(40) NOT NULL,
@@ -914,13 +916,13 @@ CREATE TABLE IF NOT EXISTS `updates` (
   `ud_flags` int(11) NOT NULL DEFAULT '0',
   `ud_addr` char(255) NOT NULL DEFAULT '',
   PRIMARY KEY (`ud_id`),
-  KEY `ud_hash` (`ud_hash`),
-  KEY `ud_guid` (`ud_guid`),
   KEY `ud_date` (`ud_date`),
+  KEY `ud_guid` (`ud_guid`),
+  KEY `ud_hash` (`ud_hash`),
   KEY `ud_flags` (`ud_flags`),
   KEY `ud_addr` (`ud_addr`),
   KEY `ud_last` (`ud_last`)
-) ENGINE=MyISAM DEFAULT CHARSET=utf8;
+) ENGINE=MyISAM  DEFAULT CHARSET=utf8;
 
 CREATE TABLE IF NOT EXISTS `verify` (
   `id` int(10) unsigned NOT NULL AUTO_INCREMENT,
@@ -977,9 +979,8 @@ CREATE TABLE IF NOT EXISTS `xchan` (
   KEY `xchan_url` (`xchan_url`),
   KEY `xchan_flags` (`xchan_flags`),
   KEY `xchan_connurl` (`xchan_connurl`),
-  KEY `xchan_follow` (`xchan_follow`),
-  KEY `xchan_connpage` (`xchan_connpage`),
-  KEY `xchan_instance_url` (`xchan_instance_url`)
+  KEY `xchan_instance_url` (`xchan_instance_url`),
+  KEY `xchan_follow` (`xchan_follow`)
 ) ENGINE=MyISAM DEFAULT CHARSET=utf8;
 
 CREATE TABLE IF NOT EXISTS `xconfig` (

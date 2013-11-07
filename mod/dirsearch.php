@@ -181,8 +181,8 @@ function dirsearch_content(&$a) {
 			$entry['name']        = $rr['xchan_name'];
 			$entry['hash']        = $rr['xchan_hash'];
 
-			$entry['updated']     = (($rr['ud_date']) ? $rr['ud_date'] : '0000-00-00 00:00:00');
-			$entry['update_guid'] = (($rr['ud_guid']) ? $rr['ud_guid'] : ''); 
+//			$entry['updated']     = (($rr['ud_date']) ? $rr['ud_date'] : '0000-00-00 00:00:00');
+//			$entry['update_guid'] = (($rr['ud_guid']) ? $rr['ud_guid'] : ''); 
 			$entry['url']         = $rr['xchan_url'];
 			$entry['photo']       = $rr['xchan_photo_m'];
 			$entry['address']     = $rr['xchan_addr'];
