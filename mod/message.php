@@ -40,6 +40,7 @@ function message_post(&$a) {
 	$body      = ((x($_REQUEST,'body'))         ? escape_tags(trim($_REQUEST['body']))    : '');
 	$recipient = ((x($_REQUEST,'messageto'))    ? notags(trim($_REQUEST['messageto']))    : '');
 	$rstr      = ((x($_REQUEST,'messagerecip')) ? notags(trim($_REQUEST['messagerecip'])) : '');
+	$expires   = ((x($_REQUEST,'expires')) ? datetime_convert(date_default_timezone_get(),'UTC', $_REQUEST['expires']) : '0000-00-00 00:00:00');
 
 	// If we have a raw string for a recipient which hasn't been auto-filled,
 	// it means they probably aren't in our address book, hence we don't know
@@ -111,7 +112,7 @@ function message_post(&$a) {
 
 	// We have a local_user, let send_message use the session channel and save a lookup
 	
-	$ret = send_message(0, $recipient, $body, $subject, $replyto);
+	$ret = send_message(0, $recipient, $body, $subject, $replyto, $expires);
 
 	if(! $ret['success']) {
 		notice($ret['message']);
@@ -322,7 +323,8 @@ function message_content(&$a) {
 			'$attach' => t('Attach file'),
 			'$insert' => t('Insert web link'),
 			'$wait' => t('Please wait'),
-			'$submit' => t('Submit')
+			'$submit' => t('Submit'),
+			'$expires' => t('Expires: (leave blank for never)')
 		));
 
 		return $o;
@@ -463,8 +465,6 @@ function message_content(&$a) {
 
 		}
 
-		logger('mails: ' . print_r($mails,true), LOGGER_DATA);
-
 		$recp = (($message['from_xchan'] === $channel['channel_hash']) ? 'to' : 'from');
 
 // FIXME - move this HTML to template
@@ -498,8 +498,8 @@ function message_content(&$a) {
 			'$attach' => t('Attach file'),
 			'$insert' => t('Insert web link'),
 			'$submit' => t('Submit'),
-			'$wait' => t('Please wait')
-
+			'$wait' => t('Please wait'),
+			'$expires' => t('Expires: (leave blank for never)')
 		));
 
 		return $o;

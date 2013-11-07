@@ -1693,7 +1693,7 @@ tr.mceLast {
 }
 
 
-#prvmail-to-label, #prvmail-subject-label, #prvmail-message-label {
+#prvmail-to-label, #prvmail-subject-label, #prvmail-expires-label, #prvmail-message-label {
 	margin-bottom: 10px;
 	margin-top: 20px;
 }

@@ -17,12 +17,15 @@
 <div id="prvmail-subject-label">{{$subject}}</div>
 <input type="text" size="64" maxlength="255" id="prvmail-subject" name="subject" value="{{$subjtxt}}" {{$readonly}} tabindex="11" />
 
+<div id="prvmail-expires-label">{{$expires}}</div>
+<input type="text" size="64" maxlength="255" id="prvmail-expires" name="expires" value="" tabindex="12" />
+
 <div id="prvmail-message-label">{{$yourmessage}}</div>
-<textarea rows="8" cols="72" class="prvmail-text" id="prvmail-text" name="body" tabindex="12">{{$text}}</textarea>
+<textarea rows="8" cols="72" class="prvmail-text" id="prvmail-text" name="body" tabindex="13">{{$text}}</textarea>
 
 
 <div id="prvmail-submit-wrapper" >
-	<input type="submit" id="prvmail-submit" name="submit" value="{{$submit}}" tabindex="13" />
+	<input type="submit" id="prvmail-submit" name="submit" value="{{$submit}}" tabindex="14" />
 	<div id="prvmail-upload-wrapper" >
 		<i id="prvmail-upload" class="icon-camera jot-icons" title="{{$upload}}"></i>
 	</div> 
