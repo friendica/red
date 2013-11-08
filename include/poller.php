@@ -47,7 +47,10 @@ function poller_run($argv, $argc){
 
 	q("delete from mail where expires != '0000-00-00 00:00:00' and expires < UTC_TIMESTAMP() ");
 
-	$r = q("select id from item where expires != '0000-00-00 00:00:00' and expires < UTC_TIMESTAMP() ");
+	$r = q("select id from item where expires != '0000-00-00 00:00:00' and expires < UTC_TIMESTAMP() 
+		and not ( item_restrict & %d ) ",
+		intval(ITEM_DELETED)
+	);
 	if($r) {
 		require_once('include/items.php');
 		foreach($r as $rr)
