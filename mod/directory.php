@@ -14,8 +14,9 @@ function directory_aside(&$a) {
 		require_once('include/contact_widgets.php');
 		$a->set_widget('find_people',findpeople_widget());
 	}
+	$a->set_widget('safe_search',dir_safe_mode());
 	$a->set_widget('dir_sort_order',dir_sort_links());
-
+	
 }
 
 
@@ -93,7 +94,9 @@ function directory_content(&$a) {
 		$numtags = get_config('system','directorytags');
 
 		$kw = ((intval($numtags)) ? $numtags : 24);
+//		$query = $url . '?f=&kw=' . $kw . (($safe_mode != 1) ? '&safe=' . $safe_mode : '');
 		$query = $url . '?f=&kw=' . $kw . (($safe_mode != 1) ? '&safe=' . $safe_mode : '');
+logger('query: ' . $query);
 		if($search)
 			$query .= '&name=' . urlencode($search) . '&keywords=' . urlencode($search);
 		if(strpos($search,'@'))
