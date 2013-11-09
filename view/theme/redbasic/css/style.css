@@ -2855,26 +2855,22 @@ div.jGrowl div.info {
 	
 }
 
-/*is this needed?*/
-.autocomplete-w1 { background: #ffffff; no-repeat bottom right; position:absolute; top:0px; left:0px; /* IE6 fix: */ _background:none; _margin:1px 0 0 0; }
+.autocomplete-w1 {
+	position:fixed;
+	top:24px;
+}
 
 .autocomplete { 
-	position: fixed;
-	top: 24px;
 	color: $font_colour;
 	border: 1px solid $nav_bg_1;
 	border-top: none;
 	background: #FFF;
-	cursor: default;
+	cursor: pointer;
 	text-align: left;
 	max-height: 350px;
 	overflow: auto;
 	border-bottom-left-radius:$radiuspx;
 	border-bottom-right-radius:$radiuspx;
-	/* IE6 specific: */ 
-	_height: 350px; 
-	_margin: 0;
-	_overflow-x: hidden;
 }
 
 .autocomplete .selected {
