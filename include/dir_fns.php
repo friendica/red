@@ -23,7 +23,7 @@ function dir_sort_links() {
 function dir_safe_mode(&$a) {
 	$observer = get_observer_hash();
 	
-//	if ($observer)
+	if ($observer)
 		$safe_mode = get_xconfig($observer,'directory','safe_mode');		
 	if($safe_mode == 0)
 		$toggle = t('Enable Safe Search');
