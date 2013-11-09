@@ -126,6 +126,8 @@ Functions</h2></td></tr>
 <tr class="separator:a84a8a64c4805e1525b42d4add464833f"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:aeb07968990e66a88c95483ca09a7f909"><td class="memItemLeft" align="right" valign="top">&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="include_2attach_8php.html#aeb07968990e66a88c95483ca09a7f909">z_readdir</a> ($channel_id, $observer_hash, $pathname, $parent_hash= '')</td></tr>
 <tr class="separator:aeb07968990e66a88c95483ca09a7f909"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:ab6830b3ab74a5d284876141ac80f6cbc"><td class="memItemLeft" align="right" valign="top">&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="include_2attach_8php.html#ab6830b3ab74a5d284876141ac80f6cbc">attach_mkdir</a> ($channel, $observer_hash, $arr=null)</td></tr>
+<tr class="separator:ab6830b3ab74a5d284876141ac80f6cbc"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table>
 <h2 class="groupheader">Function Documentation</h2>
 <a class="anchor" id="a0d07c5b83d3d54e186f752e571847b36"></a>
@@ -180,7 +182,7 @@ Functions</h2></td></tr>
       </table>
 </div><div class="memdoc">
 
-<p>Referenced by <a class="el" href="item_8php.html#a693cd09805755ab85bbb5ecae69a48c3">item_post()</a>, and <a class="el" href="include_2message_8php.html#ac382fdcdf990dcfa8f6528ab8fd280bd">send_message()</a>.</p>
+<p>Referenced by <a class="el" href="item_8php.html#a693cd09805755ab85bbb5ecae69a48c3">item_post()</a>, and <a class="el" href="include_2message_8php.html#a751ffd6635022b2190f56154ee745752">send_message()</a>.</p>
 
 </div>
 </div>
@@ -290,6 +292,50 @@ Functions</h2></td></tr>
 
 </div>
 </div>
+<a class="anchor" id="ab6830b3ab74a5d284876141ac80f6cbc"></a>
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">attach_mkdir </td>
+          <td>(</td>
+          <td class="paramtype">&#160;</td>
+          <td class="paramname"><em>$channel</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">&#160;</td>
+          <td class="paramname"><em>$observer_hash</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">&#160;</td>
+          <td class="paramname"><em>$arr</em> = <code>null</code>&#160;</td>
+        </tr>
+        <tr>
+          <td></td>
+          <td>)</td>
+          <td></td><td></td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+<p>attach_mkdir($channel,$observer_hash,$arr);</p>
+<p>Create directory</p>
+<dl class="params"><dt>Parameters</dt><dd>
+  <table class="params">
+    <tr><td class="paramname">$channel</td><td>channel array of owner </td></tr>
+    <tr><td class="paramname">$observer_hash</td><td>hash of current observer </td></tr>
+    <tr><td class="paramname">$arr</td><td>parameter array to fulfil request</td></tr>
+  </table>
+  </dd>
+</dl>
+<p>Required: $arr['filename'] $arr['folder'] // hash of parent directory, empty string for root directory</p>
+<p>Optional: $arr['hash'] // precumputed hash for this node $arr['allow_cid'] $arr['allow_gid'] $arr['deny_cid'] $arr['deny_gid'] </p>
+
+</div>
+</div>
 <a class="anchor" id="a84a8a64c4805e1525b42d4add464833f"></a>
 <div class="memitem">
 <div class="memproto">
@@ -326,7 +372,7 @@ Functions</h2></td></tr>
       </table>
 </div><div class="memdoc">
 
-<p>Referenced by <a class="el" href="item_8php.html#a3daae7944f737bd30412a0d042207c0f">fix_attached_file_permissions()</a>, <a class="el" href="include_2message_8php.html#ac382fdcdf990dcfa8f6528ab8fd280bd">send_message()</a>, and <a class="el" href="wall__attach_8php.html#a7385e970e93228d082f0fd7254f6e653">wall_attach_post()</a>.</p>
+<p>Referenced by <a class="el" href="item_8php.html#a3daae7944f737bd30412a0d042207c0f">fix_attached_file_permissions()</a>, <a class="el" href="include_2message_8php.html#a751ffd6635022b2190f56154ee745752">send_message()</a>, and <a class="el" href="wall__attach_8php.html#a7385e970e93228d082f0fd7254f6e653">wall_attach_post()</a>.</p>
 
 </div>
 </div>

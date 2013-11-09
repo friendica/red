@@ -16,7 +16,7 @@ var searchData=
   ['search_5fsaved_5fsearches',['search_saved_searches',['../search_8php.html#aa911f7c7f0cdb0284e35d0ed610f19c6',1,'search.php']]],
   ['select_5ftimezone',['select_timezone',['../datetime_8php.html#a633dadba426fa2f60b25fabdb19ebc1f',1,'datetime.php']]],
   ['send',['send',['../classenotify.html#afbc088860f534c6c05788b48cfc262c6',1,'enotify']]],
-  ['send_5fmessage',['send_message',['../include_2message_8php.html#ac382fdcdf990dcfa8f6528ab8fd280bd',1,'message.php']]],
+  ['send_5fmessage',['send_message',['../include_2message_8php.html#a751ffd6635022b2190f56154ee745752',1,'message.php']]],
   ['send_5freg_5fapproval_5femail',['send_reg_approval_email',['../account_8php.html#a014de2d5d5c9785de5bf547a485822fa',1,'account.php']]],
   ['send_5fstatus_5fnotifications',['send_status_notifications',['../items_8php.html#aab9e0c58247427126de0699c729c3b6c',1,'items.php']]],
   ['send_5fverification_5femail',['send_verification_email',['../account_8php.html#aa9c29c497c17d8f9344dce8631ad8761',1,'account.php']]],
