@@ -43,9 +43,10 @@ function dirsearch_content(&$a) {
 	$kw       = ((x($_REQUEST,'kw'))       ? intval($_REQUEST['kw'])    : 0 );
 
 	// by default use a safe search
-	$safe     = ((x($_REQUEST,'safe'))     ? intval($_REQUEST['safe'])  : 1 );
-
-
+	$safe     = ((x($_REQUEST,'safe')));    // ? intval($_REQUEST['safe'])  : 1 );
+	if ($safe === false)
+			$safe = 1;
+		
 	if(array_key_exists('sync',$_REQUEST)) {
 		if($_REQUEST['sync'])
 			$sync = datetime_convert('UTC','UTC',$_REQUEST['sync']);
