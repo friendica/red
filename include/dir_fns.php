@@ -36,9 +36,6 @@ function dir_safe_mode(&$a) {
 	return $o;
 }
 
-if($safe_mode == 1)
-	set_xconfig($observer,'directory','safe_mode', '0');	
-		
 function sync_directories($dirmode) {
 
 	if($dirmode == DIRECTORY_MODE_STANDALONE || $dirmode == DIRECTORY_MODE_NORMAL)
