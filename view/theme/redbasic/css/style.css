@@ -2854,10 +2854,34 @@ div.jGrowl div.info {
 #recip {
 	
 }
-.autocomplete-w1 { background: #ffffff; no-repeat bottom right; position:absolute; top:0px; left:0px; margin:6px 0 0 6px; /* IE6 fix: */ _background:none; _margin:1px 0 0 0; }
-.autocomplete { color:#000; border:1px solid #999; background:#FFF; cursor:default; text-align:left; max-height:350px; overflow:auto; margin:-6px 6px 6px -6px; /* IE6 specific: */ _height:350px;  _margin:0; _overflow-x:hidden; }
-.autocomplete .selected { background:#F0F0F0; }
-.autocomplete div { padding:2px 5px; white-space:nowrap; overflow:hidden; }
+
+.autocomplete-w1 {
+	position:fixed;
+	top:24px;
+}
+
+.autocomplete { 
+	color: $font_colour;
+	border: 1px solid $nav_bg_1;
+	border-top: none;
+	background: #FFF;
+	cursor: pointer;
+	text-align: left;
+	max-height: 350px;
+	overflow: auto;
+	border-bottom-left-radius:$radiuspx;
+	border-bottom-right-radius:$radiuspx;
+}
+
+.autocomplete .selected {
+	background:$bgcolour;
+}
+
+.autocomplete div {
+	padding:2px 5px;
+	white-space:nowrap;
+	overflow:hidden;
+}
 
 #datebrowse-sidebar select {
 	margin-left: 25px;
