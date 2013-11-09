@@ -228,6 +228,10 @@ function navbar_complete(&$a) {
 
 //	logger('navbar_complete');
 
+	if((get_config('system','block_public')) && (! local_user()) && (! remote_user())) {
+		return login();
+	}
+
 	$dirmode = intval(get_config('system','directory_mode'));
 	$search = ((x($_REQUEST,'query')) ? htmlentities($_REQUEST['query'],ENT_COMPAT,'UTF-8',false) : '');
 	if(! $search || mb_strlen($search) < 2)

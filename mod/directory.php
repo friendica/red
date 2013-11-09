@@ -14,6 +14,11 @@ function directory_aside(&$a) {
 		require_once('include/contact_widgets.php');
 		$a->set_widget('find_people',findpeople_widget());
 	}
+
+	if((get_config('system','block_public')) && (! local_user()) && (! remote_user())) {
+		return;
+	}
+	
 	$a->set_widget('dir_sort_order',dir_sort_links());
 
 }
