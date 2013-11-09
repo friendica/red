@@ -2856,7 +2856,7 @@ div.jGrowl div.info {
 }
 
 /*is this needed?*/
-.autocomplete-w1 { background: #ffffff; no-repeat bottom right; position:absolute; top:0px; left:0px; margin:6px 0 0 6px; /* IE6 fix: */ _background:none; _margin:1px 0 0 0; }
+.autocomplete-w1 { background: #ffffff; no-repeat bottom right; position:absolute; top:0px; left:0px; /* IE6 fix: */ _background:none; _margin:1px 0 0 0; }
 
 .autocomplete { 
 	position: fixed;
@@ -2876,6 +2876,7 @@ div.jGrowl div.info {
 	_margin: 0;
 	_overflow-x: hidden;
 }
+
 .autocomplete .selected {
 	background:$bgcolour;
 }
