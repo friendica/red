@@ -229,7 +229,7 @@ function navbar_complete(&$a) {
 //	logger('navbar_complete');
 
 	if((get_config('system','block_public')) && (! local_user()) && (! remote_user())) {
-		return login();
+		return;
 	}
 
 	$dirmode = intval(get_config('system','directory_mode'));
