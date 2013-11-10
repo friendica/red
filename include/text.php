@@ -1346,7 +1346,7 @@ function get_plink($item,$mode) {
 	else
 		$key = 'llink';
 	
-	if (x($item,$key) && ($item['item_private'] != 1)) {
+	if(x($item,$key)) {
 		return array(
 			'href' => zid($item[$key]),
 			'title' => t('link to source'),
