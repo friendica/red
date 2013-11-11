@@ -54,6 +54,9 @@
 	<div id="profile-expire-wrapper" style="display: {{$feature_expire}};" >
 		<i id="profile-expires" class="icon-eraser jot-icons" title="{{$expires}}" onclick="jotGetExpiry();return false;"></i>
 	</div> 
+	<!-- div id="profile-encrypt-wrapper" style="display: {{$feature_encrypt}};" >
+		<i id="profile-encrypt" class="icon-key jot-icons" title="{{$encrypt}}" onclick="red_encrypt('aes256','profile-jot-text',$('#profile-jot-text').val());return false;"></i>
+	</div --> 
 
 
 	<div id="profile-rotator-wrapper" style="display: {{$visitor}};" >

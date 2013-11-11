@@ -18,6 +18,15 @@ function str_rot13 (str) {
 }
 
 
+// We probably just want the element where the text is and find it ourself. e.g. if 
+// there is highlighted text use it, otherwise use the entire text.
+// So the third element may be useless. Fix also in view/tpl/jot.tpl before 
+// adding to all the editor templates and enabling the feature
+
+// Should probably do some input sanitising and dealing with bbcode, hiding key text, and displaying
+// results in a lightbox and/or popup form are left as an exercise for the reader. 
+
+
 function red_encrypt(alg, elem,text) {
 	var enc_text = '';
 	var newdiv = '';
