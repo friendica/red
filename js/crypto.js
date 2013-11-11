@@ -97,7 +97,17 @@ function red_decrypt(alg,hint,text,elem) {
 	// wipe out the text and make you re-enter the key if it was in the
 	// conversation. For now we do that so you can read it.
 
-	$(elem).html(b2h(enc_text.toString(CryptoJS.enc.Utf8)));
+	var enc_result = enc_text.toString(CryptoJS.enc.Utf8);
+	delete enc_text;
+
+	// incorrect decryptions *usually* but don't always have zero length
+	// If the person typo'd let them try again without reloading the page
+	// otherwise they'll have no "padlock" to click to try again.
+
+	if(enc_result.length) {
+		$(elem).html(b2h(enc_result));
+		enc_result = '';
+	}
 }
 	
 	
