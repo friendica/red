@@ -25,7 +25,7 @@ function dir_safe_mode(&$a) {
 	
 	if ($observer)
 		$safe_mode = get_xconfig($observer,'directory','safe_mode');		
-	if($safe_mode == 0)
+	if($safe_mode === '0')
 		$toggle = t('Enable Safe Search');
 	else
 		$toggle = t('Disable Safe Search');
