@@ -130,6 +130,8 @@ function editpost_content(&$a) {
 		'$defexpire' => $itm[0]['expires'],
 		'$feature_expire' => 'none',
 		'$expires' => t('Set expiration date'),
+		'$feature_encrypt' => 'none',
+		'$encrypt' => t('Encrypt text'),
 	));
 
 	return $o;
