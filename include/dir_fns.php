@@ -30,6 +30,7 @@ function dir_safe_mode(&$a) {
 	else
 		$toggle = t('Disable Safe Search');
 	$o = replace_macros(get_markup_template('safesearch.tpl'), array(
+		'$safemode' => t('Safe Mode'),
 		'$toggle' => $toggle,
 	));
 
