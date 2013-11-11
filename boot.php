@@ -990,7 +990,8 @@ class App {
 			'$icon' => head_get_icon(),
 			'$head_css' => head_get_css(),
 			'$head_js' => head_get_js(),
-			'$js_strings' => js_strings()
+			'$js_strings' => js_strings(),
+			'$zid' => get_my_address(), 
 		)) . $this->page['htmlhead'];
 	}
 
