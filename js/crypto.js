@@ -33,7 +33,12 @@ function red_encrypt(alg, elem,text) {
 
 	var text = $(elem).val();
 
+	// key and hint need to be localised
+
 	var enc_key = prompt('key');
+
+	// If you don't provide a key you get rot13, which doesn't need a key
+	// but consequently isn't secure.  
 
 	if(! enc_key)
 		alg = 'rot13';
@@ -41,6 +46,10 @@ function red_encrypt(alg, elem,text) {
 	if((alg == 'rot13') || (alg == 'triple-rot13'))
 		newdiv = "[crypt alg='rot13']" + str_rot13(text) + '[/crypt]';
 	else if(alg == 'aes256') {
+
+		// This is the prompt we're going to use when the receiver tries to open it.
+		// Maybe "Grandma's maiden name" or "our secret place" or something. 
+
 		var enc_hint = prompt('hint');
 
 		enc_text = CryptoJS.AES.encrypt(text,enc_key);
@@ -66,7 +75,7 @@ function red_encrypt(alg, elem,text) {
 //	}
 }
 
-function red_decrypt(alg,hint,text) {
+function red_decrypt(alg,hint,text,elem) {
 
 	var enc_text = '';
 
@@ -78,8 +87,13 @@ function red_decrypt(alg,hint,text) {
 		enc_text = CryptoJS.AES.decrypt(text,enc_key);
 	}
 
-	alert(enc_text.toString(CryptoJS.enc.Utf8));
+	// Not sure whether to drop this back in the conversation display.
+	// It probably needs a lightbox or popup window because any conversation 
+	// updates could 
+	// wipe out the text and make you re-enter the key if it was in the
+	// conversation. For now we do that so you can read it.
 
+	$(elem).html(b2h(enc_text.toString(CryptoJS.enc.Utf8)));
 }
 	
 	

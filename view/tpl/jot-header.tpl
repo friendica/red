@@ -361,6 +361,42 @@ function enableOnUser(){
 	};
 
 
+    function b2h(s) {
+		var y = s;
+		function rep(re, str) {
+			y = y.replace(re,str);
+		};
+
+			rep(/\n/gi,"<br />");
+			rep(/\[b\]/gi,"<strong>");
+			rep(/\[\/b\]/gi,"</strong>");
+			rep(/\[i\]/gi,"<em>");
+			rep(/\[\/i\]/gi,"</em>");
+			rep(/\[u\]/gi,"<u>");
+			rep(/\[\/u\]/gi,"</u>");
+			rep(/\[hr\]/gi,"<hr />");
+			rep(/\[url=([^\]]+)\](.*?)\[\/url\]/gi,"<a href=\"$1\">$2</a>");
+			rep(/\[url\](.*?)\[\/url\]/gi,"<a href=\"$1\">$1</a>");
+			rep(/\[img=(.*?)x(.*?)\](.*?)\[\/img\]/gi,"<img width=\"$1\" height=\"$2\" src=\"$3\" />");
+			rep(/\[img\](.*?)\[\/img\]/gi,"<img src=\"$1\" />");
+
+			rep(/\[list\](.*?)\[\/list\]/gi, '<ul class="listbullet" style="list-style-type: circle;">$1</ul>');
+			rep(/\[list=\](.*?)\[\/list\]/gi, '<ul class="listnone" style="list-style-type: none;">$1</ul>');
+			rep(/\[list=1\](.*?)\[\/list\]/gi, '<ul class="listdecimal" style="list-style-type: decimal;">$1</ul>');
+			rep(/\[list=i\](.*?)\[\/list\]/gi,'<ul class="listlowerroman" style="list-style-type: lower-roman;">$1</ul>');
+			rep(/\[list=I\](.*?)\[\/list\]/gi, '<ul class="listupperroman" style="list-style-type: upper-roman;">$1</ul>');
+			rep(/\[list=a\](.*?)\[\/list\]/gi, '<ul class="listloweralpha" style="list-style-type: lower-alpha;">$1</ul>');
+			rep(/\[list=A\](.*?)\[\/list\]/gi, '<ul class="listupperalpha" style="list-style-type: upper-alpha;">$1</ul>');
+			rep(/\[li\](.*?)\[\/li\]/gi, '<li>$1</li>');
+			rep(/\[color=(.*?)\](.*?)\[\/color\]/gi,"<span style=\"color: $1;\">$2</span>");
+			rep(/\[size=(.*?)\](.*?)\[\/size\]/gi,"<span style=\"font-size: $1;\">$2</span>");
+			rep(/\[code\](.*?)\[\/code\]/gi,"<code>$1</code>");
+			rep(/\[quote.*?\](.*?)\[\/quote\]/gi,"<blockquote>$1</blockquote>");
+
+		return y; 
+	};
+
+
 	{{$geotag}}
 
 </script>

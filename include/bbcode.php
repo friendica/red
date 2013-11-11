@@ -121,7 +121,9 @@ function bb_parse_crypt($match) {
 	if ($matches[1] != "")
 		$hint = html_entity_decode($matches[1],ENT_QUOTES,'UTF-8');
 
-	$Text = '<br/><img src="' . z_root() . '/images/lock_icon.gif" onclick="red_decrypt(\'' .  $algorithm . '\',\'' . $hint . '\',\'' . $match[2] . '\');" alt="' . t('Encrypted content') . '" title="' . t('Encrypted content') . '" /><br />';
+	$x = random_string();
+
+	$Text = '<br/><div id="' . $x . '"><img src="' . z_root() . '/images/lock_icon.gif" onclick="red_decrypt(\'' .  $algorithm . '\',\'' . $hint . '\',\'' . $match[2] . '\',\'#' . $x . '\');" alt="' . t('Encrypted content') . '" title="' . t('Encrypted content') . '" /></div><br />';
 
 	return $Text;
 
@@ -496,7 +498,8 @@ function bbcode($Text,$preserve_nl = false, $tryoembed = true) {
 	}
 
 	if (strpos($Text,'[/crypt]') !== false) {	
-		$Text = preg_replace("/\[crypt\](.*?)\[\/crypt\]/ism",'<br/><img src="' .$a->get_baseurl() . '/images/lock_icon.gif" onclick="red_decrypt(\'rot13\',\'\',\'$1\');" alt="' . t('Encrypted content') . '" title="' . t('Encrypted content') . '" /><br />', $Text);
+		$x = random_string();
+		$Text = preg_replace("/\[crypt\](.*?)\[\/crypt\]/ism",'<br/><div id="' . $x . '"><img src="' .$a->get_baseurl() . '/images/lock_icon.gif" onclick="red_decrypt(\'rot13\',\'\',\'$1\',\'#' . $x . '\');" alt="' . t('Encrypted content') . '" title="' . t('Encrypted content') . '" /><br /></div>', $Text);
 		$Text = preg_replace_callback("/\[crypt (.*?)\](.*?)\[\/crypt\]/ism", 'bb_parse_crypt', $Text);
 	}
 	// Try to Oembed
