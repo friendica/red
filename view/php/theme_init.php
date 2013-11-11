@@ -25,6 +25,7 @@ head_add_js('library/jquery_ac/friendica.complete.js');
 head_add_js('library/tiptip/jquery.tipTip.minified.js');
 head_add_js('library/jgrowl/jquery.jgrowl_minimized.js');
 head_add_js('library/tinymce/jscripts/tiny_mce/tiny_mce_src.js');
+head_add_js('library/cryptojs/components/core-min.js');
 head_add_js('library/cryptojs/rollups/aes.js');
 head_add_js('js/acl.js');
 head_add_js('js/webtoolkit.base64.js');

@@ -31,33 +31,39 @@ function red_encrypt(alg, elem,text) {
 	var enc_text = '';
 	var newdiv = '';
 
-	if(! alg)
+	var text = $(elem).val();
+
+	var enc_key = prompt('key');
+
+	if(! enc_key)
 		alg = 'rot13';
 
 	if((alg == 'rot13') || (alg == 'triple-rot13'))
 		newdiv = "[crypt alg='rot13']" + str_rot13(text) + '[/crypt]';
 	else if(alg == 'aes256') {
-		var enc_key = prompt('key');
 		var enc_hint = prompt('hint');
 
-		enc_text = base64_encode(CryptoJS.AES.encrypt(text,key));
+		enc_text = CryptoJS.AES.encrypt(text,enc_key);
 
-		newdiv = "[crypt alg='aes256' hint=' + hint + ']" + enc_text + '[/crypt]';
+		encrypted = enc_text.toString();
+
+		newdiv = "[crypt alg='aes256' hint='" + enc_hint + "']" + encrypted + '[/crypt]';
 	}
 
 	alert(newdiv);
 
+	$(elem).val(newdiv);
 
-	textarea = document.getElementById(elem);
-	if (document.selection) {
-		textarea.focus();
-		selected = document.selection.createRange();
-		selected.text = newdiv;
-	} else if (textarea.selectionStart || textarea.selectionStart == "0") {
-		var start = textarea.selectionStart;
-		var end = textarea.selectionEnd;
-		textarea.value = textarea.value.substring(0, start) + newdiv + textarea.value.substring(end, textarea.value.length);
-	}
+//	textarea = document.getElementById(elem);
+//	if (document.selection) {
+//		textarea.focus();
+//		selected = document.selection.createRange();
+//		selected.text = newdiv;
+//	} else if (textarea.selectionStart || textarea.selectionStart == "0") {
+//		var start = textarea.selectionStart;
+//		var end = textarea.selectionEnd;
+//		textarea.value = textarea.value.substring(0, start) + newdiv + textarea.value.substring(end, textarea.value.length);
+//	}
 }
 
 function red_decrypt(alg,hint,text) {
@@ -69,10 +75,10 @@ function red_decrypt(alg,hint,text) {
 
 	if(alg == 'aes256') {
 		var enc_key = prompt(hint);
-		enc_text = CryptoJS.AES.decrypt(base64_decode(text),enc_key);
+		enc_text = CryptoJS.AES.decrypt(text,enc_key);
 	}
 
-	alert(enc_text);
+	alert(enc_text.toString(CryptoJS.enc.Utf8));
 
 }
 	

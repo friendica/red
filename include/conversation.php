@@ -1134,6 +1134,8 @@ function status_editor($a,$x,$popup=false) {
 		'$defexpire' => '',
 		'$feature_expire' => ((feature_enabled($x['profile_uid'],'content_expire') && (! $webpage)) ? 'block' : 'none'),
 		'$expires' => t('Set expiration date'),
+		'$feature_encrypt' => ((feature_enabled($x['profile_uid'],'content_encrypt') && (! $webpage)) ? 'block' : 'none'),
+		'$encrypt' => t('Encrypt text'),
 	));
 
 

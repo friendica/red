@@ -36,6 +36,7 @@ function get_features() {
 			array('richtext',       t('Richtext Editor'),			t('Enable richtext editor')),
 			array('preview',        t('Post Preview'),				t('Allow previewing posts and comments before publishing them')),
 			array('channel_sources', t('Channel Sources'),          t('Automatically import channel content from other channels or feeds')),
+			array('content_encrypt', t('Encrypt Content'),          t('Allow encryption of content end-to-end with a shared secret key')),
 		),
 
 		// Network Tools

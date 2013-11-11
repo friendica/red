@@ -321,6 +321,7 @@ footer {
 #profile-link,
 #profile-title,
 #profile-expires, 
+#profile-encrypt, 
 #wall-image-upload,
 #wall-file-upload,
 #profile-upload-wrapper,
@@ -1139,6 +1140,10 @@ footer {
 	margin-left: 15px;
 }
 #profile-expire-wrapper {
+	float: left;
+	margin-left: 15px;
+}
+#profile-encrypt-wrapper {
 	float: left;
 	margin-left: 15px;
 }
