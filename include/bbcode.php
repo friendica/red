@@ -121,14 +121,7 @@ function bb_parse_crypt($match) {
 	if ($matches[1] != "")
 		$hint = html_entity_decode($matches[1],ENT_QUOTES,'UTF-8');
 
-	// Next we really should link to a JS routine based on the algorithm which prompts for a key
-	// something like zdecrypt_{algorithm}, which will be a no-op if the decryption algorithm is not present 
-	// We can either pass the text or pass a message ID and let the decryption module call /viewsrc or something
-	// to get the text. The text might be large so the message ID might be preferable. But if we pass the 
-	// text directly we won't have to do a network fetch; and can potentially display the results in a popup.
-
-
-	$Text = '<br/><img src="' . z_root() . '/images/lock_icon.gif" alt="' . t('Encrypted content') . '" title="' . t('Encrypted content') . '" /><br />' . t('Algorithm: ') . $algorithm . '<br />' . t('Key hint: ') . $hint . '<br />';
+	$Text = '<br/><img src="' . z_root() . '/images/lock_icon.gif" onclick="red_decrypt(\'' .  $algorithm . '\',\'' . $hint . '\',\'' . $match[2] . '\');" alt="' . t('Encrypted content') . '" title="' . t('Encrypted content') . '" /><br />';
 
 	return $Text;
 
@@ -503,7 +496,7 @@ function bbcode($Text,$preserve_nl = false, $tryoembed = true) {
 	}
 
 	if (strpos($Text,'[/crypt]') !== false) {	
-		$Text = preg_replace("/\[crypt\](.*?)\[\/crypt\]/ism",'<br/><img src="' .$a->get_baseurl() . '/images/lock_icon.gif" alt="' . t('Encrypted content') . '" title="' . t('Encrypted content') . '" /><br />', $Text);
+		$Text = preg_replace("/\[crypt\](.*?)\[\/crypt\]/ism",'<br/><img src="' .$a->get_baseurl() . '/images/lock_icon.gif" onclick="red_decrypt(\'rot13\',\'\',\'$1\');" alt="' . t('Encrypted content') . '" title="' . t('Encrypted content') . '" /><br />', $Text);
 		$Text = preg_replace_callback("/\[crypt (.*?)\](.*?)\[\/crypt\]/ism", 'bb_parse_crypt', $Text);
 	}
 	// Try to Oembed

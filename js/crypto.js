@@ -1,4 +1,76 @@
 
+
+function str_rot13 (str) {
+  // http://kevin.vanzonneveld.net
+  // +   original by: Jonas Raoni Soares Silva (http://www.jsfromhell.com)
+  // +   improved by: Ates Goral (http://magnetiq.com)
+  // +   bugfixed by: Onno Marsman
+  // +   improved by: Rafa? Kukawski (http://blog.kukawski.pl)
+  // *     example 1: str_rot13('Kevin van Zonneveld');
+  // *     returns 1: 'Xriva ina Mbaariryq'
+  // *     example 2: str_rot13('Xriva ina Mbaariryq');
+  // *     returns 2: 'Kevin van Zonneveld'
+  // *     example 3: str_rot13(33);
+  // *     returns 3: '33'
+	return (str + '').replace(/[a-z]/gi, function (s) {
+		return String.fromCharCode(s.charCodeAt(0) + (s.toLowerCase() < 'n' ? 13 : -13));
+	});
+}
+
+
+function red_encrypt(alg, elem,text) {
+	var enc_text = '';
+	var newdiv = '';
+
+	if(! alg)
+		alg = 'rot13';
+
+	if((alg == 'rot13') || (alg == 'triple-rot13'))
+		newdiv = "[crypt alg='rot13']" + str_rot13(text) + '[/crypt]';
+	else if(alg == 'aes256') {
+		var enc_key = prompt('key');
+		var enc_hint = prompt('hint');
+
+		enc_text = base64_encode(CryptoJS.AES.encrypt(text,key));
+
+		newdiv = "[crypt alg='aes256' hint=' + hint + ']" + enc_text + '[/crypt]';
+	}
+
+	alert(newdiv);
+
+
+	textarea = document.getElementById(elem);
+	if (document.selection) {
+		textarea.focus();
+		selected = document.selection.createRange();
+		selected.text = newdiv;
+	} else if (textarea.selectionStart || textarea.selectionStart == "0") {
+		var start = textarea.selectionStart;
+		var end = textarea.selectionEnd;
+		textarea.value = textarea.value.substring(0, start) + newdiv + textarea.value.substring(end, textarea.value.length);
+	}
+}
+
+function red_decrypt(alg,hint,text) {
+
+	var enc_text = '';
+
+	if(alg == 'rot13' || alg == 'triple-rot13')
+		enc_text = str_rot13(text);
+
+	if(alg == 'aes256') {
+		var enc_key = prompt(hint);
+		enc_text = CryptoJS.AES.decrypt(base64_decode(text),enc_key);
+	}
+
+	alert(enc_text);
+
+}
+	
+	
+
+
+
 function base64_encode (data) {
   // http://kevin.vanzonneveld.net
   // +   original by: Tyler Akins (http://rumkin.com)
