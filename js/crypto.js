@@ -59,7 +59,9 @@ function red_encrypt(alg, elem,text) {
 		newdiv = "[crypt alg='aes256' hint='" + enc_hint + "']" + encrypted + '[/crypt]';
 	}
 
-	alert(newdiv);
+	enc_key = '';
+
+//	alert(newdiv);
 
 	$(elem).val(newdiv);
 
@@ -86,6 +88,8 @@ function red_decrypt(alg,hint,text,elem) {
 		var enc_key = prompt(hint);
 		enc_text = CryptoJS.AES.decrypt(text,enc_key);
 	}
+
+	enc_key = '';
 
 	// Not sure whether to drop this back in the conversation display.
 	// It probably needs a lightbox or popup window because any conversation 
