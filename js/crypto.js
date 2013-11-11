@@ -35,7 +35,7 @@ function red_encrypt(alg, elem,text) {
 
 	// key and hint need to be localised
 
-	var enc_key = prompt('key');
+	var enc_key = prompt(aStr['passphrase']);
 
 	// If you don't provide a key you get rot13, which doesn't need a key
 	// but consequently isn't secure.  
@@ -50,7 +50,7 @@ function red_encrypt(alg, elem,text) {
 		// This is the prompt we're going to use when the receiver tries to open it.
 		// Maybe "Grandma's maiden name" or "our secret place" or something. 
 
-		var enc_hint = prompt('hint');
+		var enc_hint = prompt(aStr['passhint']);
 
 		enc_text = CryptoJS.AES.encrypt(text,enc_key);
 
@@ -85,7 +85,7 @@ function red_decrypt(alg,hint,text,elem) {
 		enc_text = str_rot13(text);
 
 	if(alg == 'aes256') {
-		var enc_key = prompt(hint);
+		var enc_key = prompt((hint.length) ? hint : aStr['passphrase']);
 		enc_text = CryptoJS.AES.decrypt(text,enc_key);
 	}
 

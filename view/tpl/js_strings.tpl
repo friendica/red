@@ -2,13 +2,15 @@
 
 	var aStr = {
 
-		'delitem'   : '{{$delitem}}',
-		'comment'   : '{{$comment}}',
-		'showmore'  : '{{$showmore}}',
-		'showfewer' : '{{$showfewer}}',
-		'pwshort'   : '{{$pwshort}}',
-		'pwnomatch' : '{{$pwnomatch}}',
-		'everybody' : '{{$everybody}}',
+		'delitem'    : '{{$delitem}}',
+		'comment'    : '{{$comment}}',
+		'showmore'   : '{{$showmore}}',
+		'showfewer'  : '{{$showfewer}}',
+		'pwshort'    : '{{$pwshort}}',
+		'pwnomatch'  : '{{$pwnomatch}}',
+		'everybody'  : '{{$everybody}}',
+		'passphrase' : '{{$passphrase}}',
+		'passhint'   : '{{$passhint}}',
 
 		't01' :  {{$t01}},
 		't02' :  {{$t02}},
