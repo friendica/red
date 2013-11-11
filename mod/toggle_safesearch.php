@@ -15,7 +15,7 @@ if($safe_mode == 1)
 if(isset($_GET['address']))
 	$address = $_GET['address'];
 else
-	$address = z_root();
+	$address = z_root() . '/directory';
 
 	goaway($address);
 }
