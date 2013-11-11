@@ -123,6 +123,7 @@ function oembed_format_object($j){
 	if (  $j->type!='rich' || !strpos($j->html,$embedurl) ){
 		$embedlink = (isset($j->title))?$j->title:$embedurl;
 		$ret .= "<a href='$embedurl' rel='oembed'>$embedlink</a>";
+		$ret .= "<br>";
 		if (isset($j->author_name)) $ret.=" by ".$j->author_name;
 		if (isset($j->provider_name)) $ret.=" on ".$j->provider_name;
 	} else {
