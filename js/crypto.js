@@ -48,18 +48,43 @@ function red_encrypt(alg, elem,text) {
 
 	if((alg == 'rot13') || (alg == 'triple-rot13'))
 		newdiv = "[crypt alg='rot13']" + str_rot13(text) + '[/crypt]';
-	else if(alg == 'aes256') {
 
-		// This is the prompt we're going to use when the receiver tries to open it.
-		// Maybe "Grandma's maiden name" or "our secret place" or something. 
+	if(alg == 'aes256') {
 
-		var enc_hint = prompt(aStr['passhint']);
+			// This is the prompt we're going to use when the receiver tries to open it.
+			// Maybe "Grandma's maiden name" or "our secret place" or something. 
 
-		enc_text = CryptoJS.AES.encrypt(text,enc_key);
+			var enc_hint = prompt(aStr['passhint']);
 
-		encrypted = enc_text.toString();
+			enc_text = CryptoJS.AES.encrypt(text,enc_key);
 
-		newdiv = "[crypt alg='aes256' hint='" + enc_hint + "']" + encrypted + '[/crypt]';
+			encrypted = enc_text.toString();
+
+			newdiv = "[crypt alg='aes256' hint='" + enc_hint + "']" + encrypted + '[/crypt]';
+	}
+	if(alg == 'rabbit') {
+
+			// This is the prompt we're going to use when the receiver tries to open it.
+			// Maybe "Grandma's maiden name" or "our secret place" or something. 
+
+			var enc_hint = prompt(aStr['passhint']);
+
+			enc_text = CryptoJS.Rabbit.encrypt(text,enc_key);
+			encrypted = enc_text.toString();
+
+			newdiv = "[crypt alg='rabbit' hint='" + enc_hint + "']" + encrypted + '[/crypt]';
+	}
+	if(alg == '3des') {
+
+			// This is the prompt we're going to use when the receiver tries to open it.
+			// Maybe "Grandma's maiden name" or "our secret place" or something. 
+
+			var enc_hint = prompt(aStr['passhint']);
+
+			enc_text = CryptoJS.TripleDES.encrypt(text,enc_key);
+			encrypted = enc_text.toString();
+
+			newdiv = "[crypt alg='3des' hint='" + enc_hint + "']" + encrypted + '[/crypt]';
 	}
 
 	enc_key = '';
@@ -101,6 +126,14 @@ function red_decrypt(alg,hint,text,elem) {
 	if(alg == 'aes256') {
 		var enc_key = prompt((hint.length) ? hint : aStr['passphrase']);
 		enc_text = CryptoJS.AES.decrypt(text,enc_key);
+	}
+	if(alg == 'rabbit') {
+		var enc_key = prompt((hint.length) ? hint : aStr['passphrase']);
+		enc_text = CryptoJS.Rabbit.decrypt(text,enc_key);
+	}
+	if(alg == '3des') {
+		var enc_key = prompt((hint.length) ? hint : aStr['passphrase']);
+		enc_text = CryptoJS.TripleDES.decrypt(text,enc_key);
 	}
 
 	enc_key = '';

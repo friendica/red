@@ -27,6 +27,8 @@ head_add_js('library/jgrowl/jquery.jgrowl_minimized.js');
 head_add_js('library/tinymce/jscripts/tiny_mce/tiny_mce_src.js');
 head_add_js('library/cryptojs/components/core-min.js');
 head_add_js('library/cryptojs/rollups/aes.js');
+head_add_js('library/cryptojs/rollups/rabbit.js');
+head_add_js('library/cryptojs/rollups/tripledes.js');
 head_add_js('js/acl.js');
 head_add_js('js/webtoolkit.base64.js');
 head_add_js('js/main.js');
