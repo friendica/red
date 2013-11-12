@@ -405,7 +405,8 @@ function enableOnUser(){
 		rep(/\[code\](.*?)\[\/code\]/gi,"<code>$1</code>");
 		rep(/\[quote.*?\](.*?)\[\/quote\]/gi,"<blockquote>$1</blockquote>");
 
-
+		rep(/\[video\](.*?)\[\/video\]/gi,"<a href=\"$1\">$1</a>");
+		rep(/\[audio\](.*?)\[\/audio\]/gi,"<a href=\"$1\">$1</a>");
 
 		rep(/\[\&amp\;([#a-z0-9]+)\;\]/gi,'&$1;');
 
