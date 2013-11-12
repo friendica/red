@@ -31,6 +31,9 @@ function red_encrypt(alg, elem,text) {
 	var enc_text = '';
 	var newdiv = '';
 
+	if(typeof tinyMCE !== "undefined")
+		tinyMCE.triggerSave(false,true);
+
 	var text = $(elem).val();
 
 	// key and hint need to be localised
@@ -63,7 +66,18 @@ function red_encrypt(alg, elem,text) {
 
 //	alert(newdiv);
 
-	$(elem).val(newdiv);
+	// This might be a comment box on a page with a tinymce editor
+	// so check if there is a tinymce editor but also check the display
+	// property of our source element - because a tinymce instance
+	// will have display "none". If a normal textarea such as in a comment
+	// box has display "none" you wouldn't be able to type in it.
+	
+	if($(elem).css('display') == 'none' && typeof tinyMCE !== "undefined") {
+		tinyMCE.activeEditor.setContent(newdiv);
+	}
+	else {
+		$(elem).val(newdiv);
+	}
 
 //	textarea = document.getElementById(elem);
 //	if (document.selection) {

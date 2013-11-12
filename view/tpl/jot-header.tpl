@@ -299,12 +299,13 @@ function enableOnUser(){
 
 
 	function addeditortext(data) {
-		if(plaintext == 'none') {
+		if(typeof tinyMCE !== "undefined") {
+			tinyMCE.execCommand('mceInsertRawHTML',false,data);
+		}
+		else {
 			var currentText = $("#profile-jot-text").val();
 			$("#profile-jot-text").val(currentText + data);
 		}
-		else
-			tinyMCE.execCommand('mceInsertRawHTML',false,data);
 	}	
 
     function h2b(s) {
