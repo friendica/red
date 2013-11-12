@@ -21,13 +21,16 @@ function pubsites_content(&$a) {
 
 	$o .= '<h1>' . t('Public Sites') . '</h1>';
 
+	$o .= '<div class="descriptive-text">' . 
+		t('The listed sites allow public registration into the Red Matrix. All sites in the matrix are interlinked so membership on any of them conveys membership in the matrix as a whole. Some sites may require subscription or provide tiered service plans. The provider links may provide additional details.') . '</div>' . EOL;
+
 	$ret = z_fetch_url($url);
 	if($ret['success']) {
 		$j = json_decode($ret['body'],true);
 		if($j) {
-			$o .= '<table border="1"><tr><td>' . t('Site URL') . '</td><td>' . t('Access Type') . '</td><td>' . t('Registration Policy') . '</td></tr>';
+			$o .= '<table border="1"><tr><td>' . t('Site URL') . '</td><td>' . t('Access Type') . '</td><td>' . t('Registration Policy') . '</td><td>' . t('Location') . '</td></tr>';
 			foreach($j['sites'] as $jj) {
-				$o .= '<tr><td>' . '<a href="'. (($jj['sellpage']) ? $jj['sellpage'] : $jj['url']) . '" >' . $jj['url'] . '</a>' . '</td><td>' . $jj['access'] . '</td><td>' . $jj['register'] . '</td></tr>';
+				$o .= '<tr><td>' . '<a href="'. (($jj['sellpage']) ? $jj['sellpage'] : $jj['url']) . '" >' . $jj['url'] . '</a>' . '</td><td>' . $jj['access'] . '</td><td>' . $jj['register'] . '</td><td>' . $jj['location'] . '</td></tr>';
 			}
 	
 			$o .= '</table>';

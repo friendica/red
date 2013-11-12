@@ -45,7 +45,7 @@ define ( 'RED_PLATFORM',            'Red Matrix' );
 define ( 'RED_VERSION',             trim(file_get_contents('version.inc')) . 'R');
 define ( 'ZOT_REVISION',            1     ); 
 
-define ( 'DB_UPDATE_VERSION',       1078  );
+define ( 'DB_UPDATE_VERSION',       1081  );
 
 define ( 'EOL',                    '<br />' . "\r\n"     );
 define ( 'ATOM_TIME',              'Y-m-d\TH:i:s\Z' );
@@ -88,6 +88,21 @@ define ( 'PNG_QUALITY',             8  );
 
 define ( 'LANGUAGE_DETECT_MIN_LENGTH',     128 );
 define ( 'LANGUAGE_DETECT_MIN_CONFIDENCE', 0.01 );
+
+
+/**
+ * Default permissions for file-based storage (webDAV, etc.)
+ * These files will be owned by the webserver who will need write
+ * access to the "storage" folder.
+ * Ideally you should make this 700, however some hosted platforms
+ * may not let you change ownership of this directory so we're
+ * defaulting to both owner-write and group-write privilege.
+ * This should work for most cases without modification.
+ * Over-ride this in your .htconfig.php if you need something
+ * either more or less restrictive.
+ */
+ 
+define ( 'STORAGE_DEFAULT_PERMISSIONS',   0770 );
 
 
 /**
@@ -975,7 +990,8 @@ class App {
 			'$icon' => head_get_icon(),
 			'$head_css' => head_get_css(),
 			'$head_js' => head_get_js(),
-			'$js_strings' => js_strings()
+			'$js_strings' => js_strings(),
+			'$zid' => get_my_address(), 
 		)) . $this->page['htmlhead'];
 	}
 
@@ -1174,7 +1190,7 @@ function is_ajax() {
 function check_config(&$a) {
 
 	$build = get_config('system','db_version');
-	if(! x($build))
+	if(! intval($build))
 		$build = set_config('system','db_version',DB_UPDATE_VERSION);
 
 	$saved = get_config('system','urlverify');
@@ -1207,6 +1223,10 @@ function check_config(&$a) {
 
 	if($build != DB_UPDATE_VERSION) {
 		$stored = intval($build);
+		if(! $stored) {
+			logger('Critical: check_config unable to determine database schema version');
+			return;
+		}
 		$current = intval(DB_UPDATE_VERSION);
 		if(($stored < $current) && file_exists('install/update.php')) {
 
@@ -1242,10 +1262,13 @@ function check_config(&$a) {
 							// Prevent sending hundreds of thousands of emails by creating
 							// a lockfile.  view/tpl/smarty3 is the only place we can
 							// guarantee the server can write to.
-							if (file_exists('view/tpl/smarty3/mailsent'))
+							$lockfile = 'view/tpl/smarty3/mailsent';
+
+							if ((file_exists($lockfile)) && (filemtime($lockfile) > (time() - 86400)))
 									return;
+							@unlink($lockfile);
 							//send the administrator an e-mail
-							file_put_contents('view/tpl/smarty3/mailsent', $x);
+							file_put_contents($lockfile, $x);
 
 							$email_tpl = get_intltext_template("update_fail_eml.tpl");
 							$email_msg = replace_macros($email_tpl, array(
@@ -1410,14 +1433,12 @@ function login($register = false, $form_id = 'main-login', $hiddens=false) {
 	$reglink = get_config('system','register_link');
 	if(! strlen($reglink))
 		$reglink = 'register';
-
-	if ($register) {
-		$reg = array(
-			'title' => t('Create a New Account'),
-			'desc' => t('Register'),
-			'link' => $reglink
-		);
-	}
+	
+	$reg = array(
+		'title' => t('Create an account to access services and applications within the Red Matrix'),
+		'desc' => t('Register'),
+		'link' => (($register) ? $reglink : 'pubsites')
+	);
 
 	$dest_url = $a->get_baseurl(true) . '/' . $a->query_string;
 
@@ -1510,8 +1531,14 @@ function remote_user() {
 function notice($s) {
 	$a = get_app();
 	if(! x($_SESSION,'sysmsg'))	$_SESSION['sysmsg'] = array();
-	if($a->interactive)
+	if($a->interactive) {
+		// shameless plug, permission is denied and they have no identity. 
+		// There's a fairly good chance that they've not got zot. 
+		if((stristr($s,t('permission denied'))) && (! get_observer_hash())) {
+			$s .= '<br /><a href="http://getzot.com">' . t('Got Zot?') . '</a>';
+		}
 		$_SESSION['sysmsg'][] = $s;
+	}		
 }
 
 

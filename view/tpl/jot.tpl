@@ -5,6 +5,7 @@
 		<input type="hidden" name="profile_uid" value="{{$profile_uid}}" />
 		<input type="hidden" name="return" value="{{$return_path}}" />
 		<input type="hidden" name="location" id="jot-location" value="{{$defloc}}" />
+		<input type="hidden" name="expire" id="jot-expire" value="{{$defexpire}}" />
 		<input type="hidden" name="coord" id="jot-coord" value="" />
 		<input type="hidden" name="post_id" value="{{$post_id}}" />
 		<input type="hidden" name="webpage" value="{{$webpage}}" />
@@ -50,6 +51,14 @@
 	<div id="profile-nolocation-wrapper" style="display: none;" >
 		<i id="profile-nolocation" class="icon-circle-blank jot-icons" title="{{$noloc}}" onclick="jotClearLocation();return false;"></i>
 	</div>
+	<div id="profile-expire-wrapper" style="display: {{$feature_expire}};" >
+		<i id="profile-expires" class="icon-eraser jot-icons" title="{{$expires}}" onclick="jotGetExpiry();return false;"></i>
+	</div> 
+	<div id="profile-encrypt-wrapper" style="display: {{$feature_encrypt}};" >
+		<i id="profile-encrypt" class="icon-key jot-icons" title="{{$encrypt}}" onclick="red_encrypt('{{$cipher}}','#profile-jot-text',$('#profile-jot-text').val());return false;"></i>
+	</div> 
+
+
 	<div id="profile-rotator-wrapper" style="display: {{$visitor}};" >
 		<div id="profile-rotator"></div>
 	</div>  

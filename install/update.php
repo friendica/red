@@ -1,6 +1,6 @@
 <?php
 
-define( 'UPDATE_VERSION' , 1078 );
+define( 'UPDATE_VERSION' , 1081 );
 
 /**
  *
@@ -869,6 +869,29 @@ function update_r1076() {
 
 function update_r1077() {
 	$r = q("ALTER TABLE `item` ADD `source_xchan` CHAR( 255 ) NOT NULL DEFAULT '' AFTER `author_xchan` ");
+	if($r)
+		return UPDATE_SUCCESS;
+	return UPDATE_FAILED;
+}
+
+function update_r1078() {
+	$r = q("ALTER TABLE `channel` ADD `channel_dirdate` DATETIME NOT NULL DEFAULT '0000-00-00 00:00:00' AFTER `channel_pageflags` , ADD INDEX ( `channel_dirdate` )");
+
+	if($r)
+		return UPDATE_SUCCESS;
+	return UPDATE_FAILED;
+}
+
+function update_r1079() {
+	$r = q("ALTER TABLE `site` ADD `site_location` CHAR( 255 ) NOT NULL DEFAULT ''");
+	if($r)
+		return UPDATE_SUCCESS;
+	return UPDATE_FAILED;
+}
+
+function update_r1080() {
+	$r = q("ALTER TABLE `mail` ADD `expires` DATETIME NOT NULL DEFAULT '0000-00-00 00:00:00',
+ADD INDEX ( `expires` ) ");
 	if($r)
 		return UPDATE_SUCCESS;
 	return UPDATE_FAILED;

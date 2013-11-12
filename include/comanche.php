@@ -2,6 +2,7 @@
 
 require_once('include/security.php');
 require_once('include/menu.php');
+require_once('include/widgets.php');
 
 // When editing a webpage - a dropdown is needed to select a page layout
 // On submit, the pdl_select value (which is the mid of an item with item_restrict = ITEM_PDL) is stored in 
@@ -45,6 +46,12 @@ function pdl_selector($uid,$current="") {
 
 function comanche_parser(&$a,$s) {
 
+	$cnt = preg_match_all("/\[comment\](.*?)\[\/comment\]/ism", $s, $matches, PREG_SET_ORDER);
+	if($cnt) {
+		foreach($matches as $mtch) {
+			$s = str_replace($mtch[0],'',$s);
+		}
+	}
 
 	$cnt = preg_match("/\[layout\](.*?)\[\/layout\]/ism", $s, $matches);
 	if($cnt)
@@ -171,9 +178,3 @@ function comanche_region(&$a,$s) {
 	return $s;
 }
 
-
-function widget_profile($args) {
-	$a = get_app();
-	$block = (((get_config('system','block_public')) && (! local_user()) && (! remote_user())) ? true : false);
-	return profile_sidebar($a->profile, $block, true);
-}

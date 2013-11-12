@@ -19,8 +19,8 @@ function get_features() {
 		// General
 		'general' => array(
 			t('General Features'),
-// uncomment when expire is fixed
-//			array('expire',         t('Content Expiration'),		t('Remove old posts/comments after a period of time')),
+// This is per post, and different from fixed expiration 'expire' which isn't working yet
+			array('content_expire',         t('Content Expiration'),		t('Remove posts/comments and/or private messages at a future time')),
 			array('multi_profiles', t('Multiple Profiles'),			t('Ability to create multiple profiles')),
 			array('webpages',       t('Web Pages'),                 t('Provide managed web pages on your channel')),
 			array('prettyphoto',       t('Enhanced Photo Albums'),                 t('Enable photo album with enhanced features')),
@@ -36,6 +36,7 @@ function get_features() {
 			array('richtext',       t('Richtext Editor'),			t('Enable richtext editor')),
 			array('preview',        t('Post Preview'),				t('Allow previewing posts and comments before publishing them')),
 			array('channel_sources', t('Channel Sources'),          t('Automatically import channel content from other channels or feeds')),
+			array('content_encrypt', t('Even More Encryption'),          t('Allow encryption of content end-to-end with a shared secret key')),
 		),
 
 		// Network Tools

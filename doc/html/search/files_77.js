@@ -5,5 +5,6 @@ var searchData=
   ['webfinger_2ephp',['webfinger.php',['../webfinger_8php.html',1,'']]],
   ['webpages_2ephp',['webpages.php',['../webpages_8php.html',1,'']]],
   ['wfinger_2ephp',['wfinger.php',['../wfinger_8php.html',1,'']]],
-  ['widedarkness_2ephp',['widedarkness.php',['../widedarkness_8php.html',1,'']]]
+  ['widedarkness_2ephp',['widedarkness.php',['../widedarkness_8php.html',1,'']]],
+  ['widgets_2ephp',['widgets.php',['../widgets_8php.html',1,'']]]
 ];

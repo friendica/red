@@ -8,7 +8,7 @@ require_once('include/attach.php');
 // send a private message
 	
 
-function send_message($uid = 0, $recipient='', $body='', $subject='', $replyto=''){ 
+function send_message($uid = 0, $recipient='', $body='', $subject='', $replyto='',$expires = ''){ 
 
 	$ret = array('success' => false);
 
@@ -22,6 +22,10 @@ function send_message($uid = 0, $recipient='', $body='', $subject='', $replyto='
 	if(! strlen($subject))
 		$subject = t('[no subject]');
 
+//	if(! $expires)
+//		$expires = '0000-00-00 00:00:00';
+//	else
+//		$expires = datetime_convert(date_default_timezone_get(),'UTC',$expires);
 
 	if($uid) {
 		$r = q("select * from channel where channel_id = %d limit 1",
@@ -111,8 +115,8 @@ function send_message($uid = 0, $recipient='', $body='', $subject='', $replyto='
 	
 
 
-	$r = q("INSERT INTO mail ( account_id, mail_flags, channel_id, from_xchan, to_xchan, title, body, attach, mid, parent_mid, created )
-		VALUES ( %d, %d, %d, '%s', '%s', '%s', '%s', '%s', '%s', '%s', '%s' )",
+	$r = q("INSERT INTO mail ( account_id, mail_flags, channel_id, from_xchan, to_xchan, title, body, attach, mid, parent_mid, created, expires )
+		VALUES ( %d, %d, %d, '%s', '%s', '%s', '%s', '%s', '%s', '%s', '%s', '%s' )",
 		intval($channel['channel_account_id']),
 		intval(MAIL_OBSCURED),
 		intval($channel['channel_id']),
@@ -123,7 +127,8 @@ function send_message($uid = 0, $recipient='', $body='', $subject='', $replyto='
 		dbesc($jattach),
 		dbesc($mid),
 		dbesc($replyto),
-		dbesc(datetime_convert())
+		dbesc(datetime_convert()),
+		dbesc($expires)
 	);
 
 	// verify the save

@@ -12,9 +12,12 @@
 	    $nav_colour = get_pconfig($uid, "redbasic", "nav_colour");	
 
 // Load the owners pconfig
+		$banner_colour = get_pconfig($uid,'redbasic','banner_colour');
 		$schema = get_pconfig($uid,'redbasic','schema');
 	    $bgcolour = get_pconfig($uid, "redbasic", "background_colour");	
 	    $background_image = get_pconfig($uid, "redbasic", "background_image");	
+		$toolicon_colour = get_pconfig($uid,'redbasic','toolicon_colour');
+		$toolicon_activecolour = get_pconfig($uid,'redbasic','toolicon_activecolour');
 	    $item_colour = get_pconfig($uid, "redbasic", "item_colour");	
 	    $item_opacity = get_pconfig($uid, "redbasic", "item_opacity");	
 	    $font_size = get_pconfig($uid, "redbasic", "font_size");	
@@ -22,16 +25,21 @@
 	    $radius = get_pconfig($uid, "redbasic", "radius");	
 	    $shadow = get_pconfig($uid,"redbasic","photo_shadow");
 	    $section_width=get_pconfig($uid,"redbasic","section_width");
+		$nav_min_opacity=get_pconfig($uid,'redbasic','nav_min_opacity');
+		$sloppy_photos=get_pconfig($uid,'redbasic','sloppy_photos');
 
 // Now load the scheme.  If a value is changed above, we'll keep the settings
 // If not, we'll keep those defined by the schema
 // Setting $scheme to '' wasn't working for some reason, so we'll check it's
 // not --- like the mobile theme does instead.
 
-		if (($schema) && ($schema != '---')) {
+	if (($schema) && ($schema != '---')) {
+		// Check it exists, because this setting gets distributed to clones
+		if(file_exists('view/theme/redbasic/schema/' . $schema . '.php')) {
 			$schemefile = 'view/theme/redbasic/schema/' . $schema . '.php';
 			require_once ($schemefile);
 		}
+	}
 		// If we haven't got a schema, load the default.  We shouldn't touch this - we
 		// should leave it for admins to define for themselves.
 			if (! $schema) {
@@ -52,18 +60,24 @@
 			$nav_bg_3 = "#f00";
 			$nav_bg_4 = "#b00";
 		}
+	if (! $banner_colour)
+		$banner_colour = "fff";
 	if (! $bgcolour)
-		$bgcolour = "fff";
+		$bgcolour = "#f8f8f8";
 	if (! $background_image)
 		$background_image ='';
 	if (! $item_colour)
-		$item_colour = "fff";
+		$item_colour = "#f8f8f8";
+	if (! $toolicon_colour)
+		$toolicon_colour = '#777777';
+	if (! $toolicon_activecolour)
+		$toolicon_activecolour = '#000';
 	if (! $item_opacity)
 		$item_opacity = "1";
 	if (! $font_size)
 		$font_size = "12";
 	if (! $font_colour)
-		$font_colour = "000";
+		$font_colour = "#4D4D4D";
 	if (! $radius)
 		$radius = "5";
 	if (! $shadow)
@@ -72,8 +86,15 @@
 		$active_colour = '#FFFFFF';
     if (! $section_width)
     	$section_width="72%";
-
-		
+	if($nav_min_opacity === false || $nav_min_opacity === '') {
+		$nav_float_min_opacity = 1.0;
+		$nav_percent_min_opacity = 100;
+	}
+	else {
+		$nav_float_min_opacity = (float) $nav_min_opacity;
+		$nav_percent_min_opacity = (int) 100 * $nav_min_opacity;
+	}
+			
 
 // Nav colours have nested values, so we have to define the actual variables
 // used in the CSS from the higher level "red", "black", etc here
@@ -107,19 +128,28 @@ $options = array (
 '$nav_bg_2' => $nav_bg_2,
 '$nav_bg_3' => $nav_bg_3,
 '$nav_bg_4' => $nav_bg_4,
+'$banner_colour' => $banner_colour,
 '$search_background' => $search_background,
 '$bgcolour' => $bgcolour,
 '$background_image' => $background_image,
 '$item_colour' => $item_colour,
 '$item_opacity' => $item_opacity,
+'$toolicon_colour' => $toolicon_colour,
+'$toolicon_activecolour' => $toolicon_activecolour,
 '$font_size' => $font_size,
 '$font_colour' => $font_colour,
 '$radius' => $radius,
 '$shadow' => $shadow,
 '$active_colour' => $active_colour,
-'$section_width' => $section_width
+'$section_width' => $section_width,
+'$nav_float_min_opacity' => $nav_float_min_opacity,
+'$nav_percent_min_opacity' => $nav_percent_min_opacity
 );
 
 echo str_replace(array_keys($options), array_values($options), $x);    
 
 }
+
+if($sloppy_photos && file_exists('view/theme/redbasic/css/sloppy_photos.css')) {
+	echo file_get_contents('view/theme/redbasic/css/sloppy_photos.css');
+} 

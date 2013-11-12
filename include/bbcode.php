@@ -2,7 +2,7 @@
 
 require_once("include/oembed.php");
 require_once('include/event.php');
-
+require_once('include/zot.php');
 
 
 function tryoembed($match) {
@@ -99,6 +99,38 @@ function bb_replace_images($body, $images) {
 }}
 
 
+
+function bb_parse_crypt($match) {
+
+	$attributes = $match[1];
+
+	$algorithm = "";
+	preg_match("/alg='(.*?)'/ism", $attributes, $matches);
+	if ($matches[1] != "")
+		$algorithm = html_entity_decode($matches[1],ENT_QUOTES,'UTF-8');
+
+	preg_match("/alg=\&quot\;(.*?)\&quot\;/ism", $attributes, $matches);
+	if ($matches[1] != "")
+		$algorithm = html_entity_decode($matches[1],ENT_QUOTES,'UTF-8');
+
+	$hint = "";
+	preg_match("/hint='(.*?)'/ism", $attributes, $matches);
+	if ($matches[1] != "")
+		$hint = html_entity_decode($matches[1],ENT_QUOTES,'UTF-8');
+	preg_match("/hint=\&quot\;(.*?)\&quot\;/ism", $attributes, $matches);
+	if ($matches[1] != "")
+		$hint = html_entity_decode($matches[1],ENT_QUOTES,'UTF-8');
+
+	$x = random_string();
+
+	$Text = '<br/><div id="' . $x . '"><img src="' . z_root() . '/images/lock_icon.gif" onclick="red_decrypt(\'' .  $algorithm . '\',\'' . $hint . '\',\'' . $match[2] . '\',\'#' . $x . '\');" alt="' . t('Encrypted content') . '" title="' . t('Encrypted content') . '" /></div><br />';
+
+	return $Text;
+
+}
+
+
+
 function bb_ShareAttributes($match) {
 
 	$attributes = $match[1];
@@ -178,6 +210,15 @@ function bb_ShareAttributesSimple($match) {
 	return($text);
 }
 
+function rpost_callback($match) {
+	if ($match[2]) {
+		return str_replace($match[0],get_rpost_path(get_app()->get_observer()) . '&title=' . urlencode($match[2]) . '&body=' . urlencode($match[3]),$match[0]); 
+	} else {
+		return str_replace($match[0],get_rpost_path(get_app()->get_observer()) . '&body=' . urlencode($match[3]),$match[0]); 
+	}
+}
+
+
 	// BBcode 2 HTML was written by WAY2WEB.net
 	// extended to work with Mistpark/Friendica/Red - Mike Macgirvin
 
@@ -220,13 +261,15 @@ function bbcode($Text,$preserve_nl = false, $tryoembed = true) {
 	// process [observer] tags before we do anything else because we might
 	// be stripping away stuff that then doesn't need to be worked on anymore
 	$observer = $a->get_observer();
-	if (strpos($Text,'[/observer]') !== false) {
+	if ((strpos($Text,'[/observer]') !== false) || (strpos($Text,'[/rpost]') !== false)) {
 		if ($observer) {
 			$Text = preg_replace("/\[observer\=1\](.*?)\[\/observer\]/ism", '$1', $Text);
 			$Text = preg_replace("/\[observer\=0\].*?\[\/observer\]/ism", '', $Text);
+			$Text = preg_replace_callback("/\[rpost(=(.*?))?\](.*?)\[\/rpost\]/ism", 'rpost_callback', $Text);
 		} else {
 			$Text = preg_replace("/\[observer\=1\].*?\[\/observer\]/ism", '', $Text);
 			$Text = preg_replace("/\[observer\=0\](.*?)\[\/observer\]/ism", '$1', $Text);
+			$Text = preg_replace("/\[rpost(=.*?)?\](.*?)\[\/rpost\]/ism", '', $Text);
 		}
     }
 
@@ -266,7 +309,7 @@ function bbcode($Text,$preserve_nl = false, $tryoembed = true) {
 		$Text = str_replace('[observer.url]',$observer['xchan_url'], $Text);
 		$Text = str_replace('[observer.name]',$observer['xchan_name'], $Text);
 		$Text = str_replace('[observer.address]',$observer['xchan_addr'], $Text);
-		$Text = str_replace('[observer.photo]','[zmg]'.$observer['xchan_photo_l'].'[/zmg]', $Text);		
+		$Text = str_replace('[observer.photo]','[zmg]'.$observer['xchan_photo_l'].'[/zmg]', $Text);				
 	} else {
 		$Text = str_replace('[observer.baseurl]', '', $Text);
 		$Text = str_replace('[observer.url]','', $Text);
@@ -454,9 +497,10 @@ function bbcode($Text,$preserve_nl = false, $tryoembed = true) {
 		$Text = preg_replace("/\[zmg\](.*?)\[\/zmg\]/ism", '<img class="zrl" src="$1" alt="' . t('Image/photo') . '" />', $Text);
 	}
 
-	if (strpos($Text,'[crypt]') !== false) {	
-		$Text = preg_replace("/\[crypt\](.*?)\[\/crypt\]/ism",'<br/><img src="' .$a->get_baseurl() . '/images/lock_icon.gif" alt="' . t('Encrypted content') . '" title="' . t('Encrypted content') . '" /><br />', $Text);
-		$Text = preg_replace("/\[crypt=(.*?)\](.*?)\[\/crypt\]/ism",'<br/><img src="' .$a->get_baseurl() . '/images/lock_icon.gif" alt="' . t('Encrypted content') . '" title="' . '$1' . ' ' . t('Encrypted content') . '" /><br />', $Text);
+	if (strpos($Text,'[/crypt]') !== false) {	
+		$x = random_string();
+		$Text = preg_replace("/\[crypt\](.*?)\[\/crypt\]/ism",'<br/><div id="' . $x . '"><img src="' .$a->get_baseurl() . '/images/lock_icon.gif" onclick="red_decrypt(\'rot13\',\'\',\'$1\',\'#' . $x . '\');" alt="' . t('Encrypted content') . '" title="' . t('Encrypted content') . '" /><br /></div>', $Text);
+		$Text = preg_replace_callback("/\[crypt (.*?)\](.*?)\[\/crypt\]/ism", 'bb_parse_crypt', $Text);
 	}
 	// Try to Oembed
 	if ($tryoembed) {

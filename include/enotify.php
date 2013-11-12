@@ -60,6 +60,7 @@ function notification($params) {
 			localize_item($i);
 			$title = $i['title'];
 			$body = $i['body'];
+			$private = $i['item_private'];
 		}
 		else {
 			$title = $params['item']['title'];
@@ -196,7 +197,6 @@ function notification($params) {
 			return;
 		}
 	
-
 		$subject =	sprintf( t('[Red:Notify] %s tagged you') , $sender['xchan_name']);
 		$preamble = sprintf( t('%1$s tagged you at %2$s') , $sender['xchan_name'], $sitename);
 		$epreamble = sprintf( t('%1$s [zrl=%2$s]tagged you[/zrl].') , 

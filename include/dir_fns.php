@@ -20,6 +20,22 @@ function dir_sort_links() {
 	return $o;
 }
 
+function dir_safe_mode(&$a) {
+	$observer = get_observer_hash();
+	
+	if ($observer)
+		$safe_mode = get_xconfig($observer,'directory','safe_mode');		
+	if($safe_mode === '0')
+		$toggle = t('Enable Safe Search');
+	else
+		$toggle = t('Disable Safe Search');
+	$o = replace_macros(get_markup_template('safesearch.tpl'), array(
+		'$safemode' => t('Safe Mode'),
+		'$toggle' => $toggle,
+	));
+
+	return $o;
+}
 
 function sync_directories($dirmode) {
 

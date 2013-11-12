@@ -144,6 +144,9 @@ function editblock_content(&$a) {
 		'$preview' => ((feature_enabled(local_user(),'preview')) ? t('Preview') : ''),
 		'$jotplugins' => $jotplugins,
 		'$sourceapp' => t($a->sourcename),
+		'$defexpire' => '',
+		'$feature_expire' => 'none',
+		'$expires' => t('Set expiration date'),
 	));
 
 

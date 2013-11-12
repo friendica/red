@@ -16,6 +16,7 @@ Red Matrix Documentation and Resources
 **Technical Documentation**
 
 * [Install](help/Install)
+* [Comanche Page Descriptions](help/Comanche)
 * [Plugins](help/Plugins)
 * [Developers](help/Developers)
 * [Code](doc/html)

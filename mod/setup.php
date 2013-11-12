@@ -4,7 +4,25 @@ $install_wizard_pass=1;
 
 
 function setup_init(&$a){
+
+	// Ensure that if somebody hasn't read the install documentation and doesn't have all 
+	// the required modules or has a totally borked shared hosting provider and they can't 
+	// figure out what the hell is going on - that we at least spit out an error message which
+	// we can inquire about when they write to tell us that our software doesn't work.
+
+	// The worst thing we can do at this point is throw a white screen of death and rely on 
+	// them knowing about servers and php modules and logfiles enough so that we can guess 
+	// at the source of the problem. As ugly as it may be, we need to throw a technically worded
+	// PHP error message in their face. Once installation is complete application errors will 
+	// throw a white screen because these error messages divulge information which can 
+	// potentially be useful to hackers.       
 	
+	
+	error_reporting(E_ERROR | E_WARNING | E_PARSE ); 
+	ini_set('log_errors','0'); 
+	ini_set('display_errors', '1');
+
+
 	// $baseurl/setup/testrwrite to test if rewite in .htaccess is working
 	if (argc() ==2  && argv(1)=="testrewrite") {
 		echo "ok";
@@ -13,6 +31,7 @@ function setup_init(&$a){
 	global $install_wizard_pass;
 	if (x($_POST,'pass'))
 		$install_wizard_pass = intval($_POST['pass']);
+
 
 }
 

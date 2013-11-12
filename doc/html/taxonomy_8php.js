@@ -10,8 +10,8 @@ var taxonomy_8php =
     [ "obj_verb_selector", "taxonomy_8php.html#ac12a651a42ed77f8dc7072c6168811a2", null ],
     [ "obj_verbs", "taxonomy_8php.html#a03f55ee46c5f496e42f3d29db8d09cce", null ],
     [ "store_item_tag", "taxonomy_8php.html#a4ba1339b2a7054971178ce194e4440fd", null ],
-    [ "tagadelic", "taxonomy_8php.html#a061b3db9426d4b074395f5824062cad4", null ],
-    [ "tagblock", "taxonomy_8php.html#abdb698bc6921429df6d697f6c5dec96f", null ],
+    [ "tagadelic", "taxonomy_8php.html#aaf90ba8b839d6459065f39a4f1109b8a", null ],
+    [ "tagblock", "taxonomy_8php.html#ac21d1dff16d569e7d110167aea4e63c2", null ],
     [ "tags_sort", "taxonomy_8php.html#aaeded36bcc983b35d9205fe5b6c18c43", null ],
     [ "term_query", "taxonomy_8php.html#a7a913d19c77610da689be48fbbf6734c", null ]
 ];

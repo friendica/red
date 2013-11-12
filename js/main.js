@@ -121,6 +121,7 @@
 	var page_load = true;
 	var loadingPage = false;
 	var pageHasMoreContent = true;
+	var updateCountsOnly = false;
 
 	$(function() {
 		$.ajaxSetup({cache: false});
@@ -269,21 +270,24 @@
 				}
 
 
-				// start live update
+				if(! updateCountsOnly) {
+					// start live update
 
-				if($('#live-network').length)   { src = 'network'; liveUpdate(); }
-				if($('#live-channel').length)   { src = 'channel'; liveUpdate(); }
-				if($('#live-community').length) { src = 'community'; liveUpdate(); }
-				if($('#live-display').length)   { src = 'display'; liveUpdate(); }
-				if($('#live-search').length)    { src = 'search'; liveUpdate(); }
+					if($('#live-network').length)   { src = 'network'; liveUpdate(); }
+					if($('#live-channel').length)   { src = 'channel'; liveUpdate(); }
+					if($('#live-community').length) { src = 'community'; liveUpdate(); }
+					if($('#live-display').length)   { src = 'display'; liveUpdate(); }
+					if($('#live-search').length)    { src = 'search'; liveUpdate(); }
 
-				if($('#live-photos').length) { 
-					if(liking) {
-						liking = 0;
-						window.location.href=window.location.href 
+					if($('#live-photos').length) { 
+						if(liking) {
+							liking = 0;
+							window.location.href=window.location.href 
+						}
 					}
 				}
 
+				updateCountsOnly = false;
 
 				if(data.network == 0) { 
 					data.network = ''; 
@@ -576,6 +580,18 @@ function updateConvItems(mode,data) {
 			updateConvItems(update_mode,data);
 			$("#page-spinner").spin(false);
 			$("#profile-jot-text-loading").spin(false);
+
+			// FIXME - the following lines were added so that almost
+			// immediately after we update the posts on the page, we
+			// re-check and update the notification counts.
+			// As it turns out this causes a bit of an inefficiency
+			// as we're pinging twice for every update, once before
+			// and once after. A btter way to do this is to rewrite
+			// NavUpdate and perhpas LiveUpdate so that we check for 
+			// post updates first and only call the notification ping 
+			// once. 
+
+			updateCountsOnly = true;
 			if(timer) clearTimeout(timer);
 			timer = setTimeout(NavUpdate,10);
 		});

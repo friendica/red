@@ -685,6 +685,7 @@ function conversation(&$a, $items, $mode, $update, $page_mode = 'traditional', $
 					'str_app' => sprintf( t(' from %s'), $item['app']),
 					'isotime' => datetime_convert('UTC', date_default_timezone_get(), $item['created'], 'c'),
 					'localtime' => datetime_convert('UTC', date_default_timezone_get(), $item['created'], 'r'),
+					'editedtime' => (($item['edited'] != $item['created']) ? sprintf( t('last edited: %s'), datetime_convert('UTC', date_default_timezone_get(), $item['edited'], 'r')) : ''),
 					'location' => $location,
 					'indent' => '',
 					'owner_name' => $owner_name,
@@ -1063,7 +1064,8 @@ function status_editor($a,$x,$popup=false) {
 		'$audurl' => t("Please enter an audio link/URL:"),
 		'$term' => t('Tag term:'),
 		'$fileas' => t('Save to Folder:'),
-		'$whereareu' => t('Where are you right now?')
+		'$whereareu' => t('Where are you right now?'),
+		'$expireswhen' => t('Expires YYYY-MM-DD HH:MM')
 	));
 
 
@@ -1071,6 +1073,15 @@ function status_editor($a,$x,$popup=false) {
 
 	$jotplugins = '';
 	$jotnets = '';
+
+
+	$preview = ((feature_enabled($x['profile_uid'],'preview')) ? t('Preview') : '');
+	if(x($x,'nopreview'))
+		$preview = '';
+
+	$cipher = get_pconfig($x['profile_uid'],'system','default_cipher');
+	if(! $cipher)
+		$cipher = 'aes256';
 
 	call_hooks('jot_tool', $jotplugins);
 	call_hooks('jot_networks', $jotnets);
@@ -1080,7 +1091,7 @@ function status_editor($a,$x,$popup=false) {
 		'$action' =>  $a->get_baseurl(true) . '/item',
 		'$share' => (x($x,'button') ? $x['button'] : t('Share')),
 		'$webpage' => $webpage,
-		'$placeholdpagetitle' => t('Page link title'),
+		'$placeholdpagetitle' => ((x($x,'ptlabel')) ? $x['ptlabel'] : t('Page link title')),
 		'$pagetitle' => (x($x,'pagetitle') ? $x['pagetitle'] : ''),		
 		'$upload' => t('Upload photo'),
 		'$shortupload' => t('upload photo'),
@@ -1096,7 +1107,7 @@ function status_editor($a,$x,$popup=false) {
 		'$shortsetloc' => t('set location'),
 		'$noloc' => t('Clear browser location'),
 		'$shortnoloc' => t('clear location'),
-		'$title' => "",
+		'$title' => ((x($x,'title')) ? htmlspecialchars($x['title']) : ''),
 		'$placeholdertitle' => t('Set title'),
 		'$catsenabled' => ((feature_enabled($x['profile_uid'],'categories') && (! $webpage)) ? 'categories' : ''),
 		'$category' => "",
@@ -1105,7 +1116,7 @@ function status_editor($a,$x,$popup=false) {
 		'$permset' => t('Permission settings'),
 		'$shortpermset' => t('permissions'),
 		'$ptyp' => (($notes_cid) ? 'note' : 'wall'),
-		'$content' => '',
+		'$content' => ((x($x,'body')) ? htmlspecialchars($x['body']) : ''),
 		'$post_id' => '',
 		'$baseurl' => $a->get_baseurl(true),
 		'$defloc' => $x['default_location'],
@@ -1121,9 +1132,15 @@ function status_editor($a,$x,$popup=false) {
 		'$showacl' => ((array_key_exists('showacl',$x)) ? $x['showacl'] : 'yes'),
 		'$bang' => $x['bang'],
 		'$profile_uid' => $x['profile_uid'],
-		'$preview' => ((feature_enabled($x['profile_uid'],'preview')) ? t('Preview') : ''),
+		'$preview' => $preview,
 		'$sourceapp' => t($a->sourcename),
 		'$jotplugins' => $jotplugins,
+		'$defexpire' => '',
+		'$feature_expire' => ((feature_enabled($x['profile_uid'],'content_expire') && (! $webpage)) ? 'block' : 'none'),
+		'$expires' => t('Set expiration date'),
+		'$feature_encrypt' => ((feature_enabled($x['profile_uid'],'content_encrypt') && (! $webpage)) ? 'block' : 'none'),
+		'$encrypt' => t('Encrypt text'),
+		'$cipher' => $cipher,
 	));
 
 

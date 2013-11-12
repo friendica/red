@@ -2,13 +2,15 @@
 
 function js_strings() {
 	return replace_macros(get_markup_template('js_strings.tpl'), array(
-		'$delitem'   => t('Delete this item?'),
-		'$comment'   => t('Comment'),
-		'$showmore'  => t('show more'),
-		'$showfewer' => t('show fewer'),
-		'$pwshort'   => t("Password too short"),
-		'$pwnomatch' => t("Passwords do not match"),
-		'$everybody' => t('everybody'),
+		'$delitem'    => t('Delete this item?'),
+		'$comment'    => t('Comment'),
+		'$showmore'   => t('show more'),
+		'$showfewer'  => t('show fewer'),
+		'$pwshort'    => t("Password too short"),
+		'$pwnomatch'  => t("Passwords do not match"),
+		'$everybody'  => t('everybody'),
+		'$passphrase' => t('Secret Passphrase'),
+		'$passhint'   => t('Passphrase hint'),
 
 		'$t01' => ((t('timeago.prefixAgo') != 'timeago.prefixAgo') ? t('timeago.prefixAgo') : 'null'),
 		'$t02' => ((t('timeago.suffixAgo') != 'timeago.suffixAgo') ? t('timeago.suffixAgo') : 'null'),

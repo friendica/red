@@ -1,0 +1,58 @@
+
+.rotleft1 {
+-webkit-transform: rotate(-1deg);
+-moz-transform: rotate(-1deg);
+-ms-transform: rotate(-1deg);
+-o-transform: rotate(-1deg);
+}
+
+.rotleft2 {
+-webkit-transform: rotate(-2deg);
+-moz-transform: rotate(-2deg);
+-ms-transform: rotate(-2deg);
+-o-transform: rotate(-2deg);
+}
+
+.rotleft3 {
+-webkit-transform: rotate(-3deg);
+-moz-transform: rotate(-3deg);
+-ms-transform: rotate(-3deg);
+-o-transform: rotate(-3deg);
+}
+
+.rotleft4 {
+-webkit-transform: rotate(-4deg);
+-moz-transform: rotate(-4deg);
+-ms-transform: rotate(-4deg);
+-o-transform: rotate(-4deg);
+}
+
+
+.rotright1 {
+-webkit-transform: rotate(1deg);
+-moz-transform: rotate(1deg);
+-ms-transform: rotate(1deg);
+-o-transform: rotate(1deg);
+}
+
+.rotright2 {
+-webkit-transform: rotate(2deg);
+-moz-transform: rotate(2deg);
+-ms-transform: rotate(2deg);
+-o-transform: rotate(2deg);
+}
+
+.rotright3 {
+-webkit-transform: rotate(3deg);
+-moz-transform: rotate(3deg);
+-ms-transform: rotate(3deg);
+-o-transform: rotate(3deg);
+}
+
+.rotright4 {
+-webkit-transform: rotate(4deg);
+-moz-transform: rotate(4deg);
+-ms-transform: rotate(4deg);
+-o-transform: rotate(4deg);
+}
+

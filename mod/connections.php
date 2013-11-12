@@ -32,6 +32,9 @@ function connections_init(&$a) {
 
 function connections_aside(&$a) {
 
+	if (! local_user())
+		return;
+	
 	if(x($a->data,'abook')) {
 		$a->set_widget('vcard',vcard_from_xchan($a->data['abook'],$a->get_observer()));
 	}
@@ -172,7 +175,7 @@ function connections_content(&$a) {
 
 	if(! local_user()) {
 		notice( t('Permission denied.') . EOL);
-		return;
+		return login();
 	}
 
 	if(argc() == 3) {

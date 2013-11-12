@@ -216,17 +216,23 @@ function channel_remove($channel_id, $local = true) {
 	
 	// FIXME notify all contacts
 
-		$r = q("update channel set channel_pageflags = (channel_pageflags | %d), channel_r_stream = 0, channel_r_profile = 0,
+		$r = q("update channel set channel_deleted = '%s', channel_pageflags = (channel_pageflags | %d), channel_r_stream = 0, channel_r_profile = 0,
 			channel_r_photos = 0, channel_r_abook = 0, channel_w_stream = 0, channel_w_wall = 0, channel_w_tagwall = 0,
 			channel_w_comment = 0, channel_w_mail = 0, channel_w_photos = 0, channel_w_chat = 0, channel_a_delegate = 0,
 			channel_r_storage = 0, channel_w_storage = 0, channel_r_pages = 0, channel_w_pages = 0, channel_a_republish = 0 
 			where channel_id = %d limit 1",
+			dbesc(datetime_convert()),
 			intval(PAGE_REMOVED),
 			intval($channel_id)
 		);
 
 		$r = q("update hubloc set hubloc_flags = hubloc_flags | %d where hubloc_hash = '%s'",
 			intval(HUBLOC_FLAGS_DELETED),
+			dbesc($channel['channel_hash'])
+		);
+
+		$r = q("update xchan set xchan_flags = xchan_flags | %d where xchan_hash = '%s'",
+			intval(XCHAN_FLAGS_DELETED),
 			dbesc($channel['channel_hash'])
 		);
 
@@ -248,13 +254,25 @@ function channel_remove($channel_id, $local = true) {
 	q("DELETE FROM `pconfig` WHERE `uid` = %d", intval($channel_id));
 	q("DELETE FROM `spam` WHERE `uid` = %d", intval($channel_id));
 
-	// We also need a timestamp in the channel DB so we know when to remove the entry.
-
-	$r = q("update channel set channel_pageflags = (channel_pageflags | %d) where channel_id = %d limit 1",
+	$r = q("update channel set channel_deleted = '%s', channel_pageflags = (channel_pageflags | %d) where channel_id = %d limit 1",
+		dbesc(datetime_convert()),
 		intval(PAGE_REMOVED),
 		intval($channel_id)
 	);
 
+	$r = q("update hubloc set hubloc_flags = hubloc_flags | %d where hubloc_hash = '%s' and hubloc_url = '%s' ",
+		intval(HUBLOC_FLAGS_DELETED),
+		dbesc($channel['channel_hash']),
+		dbesc(z_root())
+	);
+
+	$r = q("update xchan set xchan_flags = xchan_flags | %d where xchan_hash = '%s' ",
+		intval(XCHAN_FLAGS_DELETED),
+		dbesc($channel['channel_hash'])
+	);
+
+
+	proc_run('php','include/directory.php',$channel_id);
 
 	if($channel_id == local_user()) {
 		unset($_SESSION['authenticated']);

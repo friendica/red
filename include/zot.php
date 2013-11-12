@@ -1567,6 +1567,11 @@ function import_directory_keywords($hash,$keywords) {
 
 function update_modtime($hash,$guid,$addr,$flags = 0) {
 
+	$dirmode = intval(get_config('system','directory_mode'));
+
+	if($dirmode == DIRECTORY_MODE_NORMAL)
+		return;
+
 	if($flags) {
 		q("insert into updates (ud_hash, ud_guid, ud_date, ud_flags, ud_addr ) values ( '%s', '%s', '%s', %d, '%s' )",
 			dbesc($hash),
@@ -1640,20 +1645,23 @@ function import_site($arr,$pubkey) {
 	$directory_url = htmlentities($arr['directory_url'],ENT_COMPAT,'UTF-8',false);
 	$url = htmlentities($arr['url'],ENT_COMPAT,'UTF-8',false);
 	$sellpage = htmlentities($arr['sellpage'],ENT_COMPAT,'UTF-8',false);
+	$site_location = htmlentities($arr['location'],ENT_COMPAT,'UTF-8',false);
 
 	if($exists) {
 		if(($siterecord['site_flags'] != $site_directory)
 			|| ($siterecord['site_access'] != $access_policy)
 			|| ($siterecord['site_directory'] != $directory_url)
 			|| ($siterecord['site_sellpage'] != $sellpage)
+			|| ($siterecord['site_location'] != $site_location)
 			|| ($siterecord['site_register'] != $register_policy)) {
 			$update = true;
 
 //			logger('import_site: input: ' . print_r($arr,true));
 //			logger('import_site: stored: ' . print_r($siterecord,true));
 
-			$r = q("update site set site_flags = %d, site_access = %d, site_directory = '%s', site_register = %d, site_update = '%s', site_sellpage = '%s'
+			$r = q("update site set site_location = '%s', site_flags = %d, site_access = %d, site_directory = '%s', site_register = %d, site_update = '%s', site_sellpage = '%s'
 				where site_url = '%s' limit 1",
+				dbesc($site_location),
 				intval($site_directory),
 				intval($access_policy),
 				dbesc($directory_url),
@@ -1669,11 +1677,12 @@ function import_site($arr,$pubkey) {
 	}
 	else {
 		$update = true;
-		$r = q("insert into site ( site_url, site_access, site_flags, site_update, site_directory, site_register, site_sellpage )
-			values ( '%s', %d, %d, '%s', '%s', %d, '%s' )",
+		$r = q("insert into site ( site_location, site_url, site_access, site_flags, site_update, site_directory, site_register, site_sellpage )
+			values ( '%s', '%s', %d, %d, '%s', '%s', %d, '%s' )",
+			dbesc($site_location),
 			dbesc($url),
-			intval($site_directory),
 			intval($access_policy),
+			intval($site_directory),
 			dbesc(datetime_convert()),
 			dbesc($directory_url),
 			intval($register_policy),
@@ -1896,3 +1905,14 @@ function process_channel_sync_delivery($sender,$arr,$deliveries) {
 	}
 	return $result;
 }
+
+// We probably should make rpost discoverable.
+ 
+function get_rpost_path($observer) {
+	if(! $observer)
+		return '';
+	$parsed = parse_url($observer['xchan_url']);
+	return $parsed['scheme'] . '://' . $parsed['host'] . (($parsed['port']) ? ':' . $parsed['port'] : '') . '/rpost?f=';
+
+}
+

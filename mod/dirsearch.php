@@ -43,9 +43,10 @@ function dirsearch_content(&$a) {
 	$kw       = ((x($_REQUEST,'kw'))       ? intval($_REQUEST['kw'])    : 0 );
 
 	// by default use a safe search
-	$safe     = ((x($_REQUEST,'safe'))     ? intval($_REQUEST['safe'])  : 1 );
-
-
+	$safe     = ((x($_REQUEST,'safe')));    // ? intval($_REQUEST['safe'])  : 1 );
+	if ($safe === false)
+			$safe = 1;
+		
 	if(array_key_exists('sync',$_REQUEST)) {
 		if($_REQUEST['sync'])
 			$sync = datetime_convert('UTC','UTC',$_REQUEST['sync']);
@@ -131,12 +132,12 @@ function dirsearch_content(&$a) {
 	}
 
 
-	if($sort_order == 'date')
-		$order = " order by xchan_name_date desc ";
+	if($sort_order == 'normal')
+		$order = " order by xchan_name asc ";
 	elseif($sort_order == 'reverse')
 		$order = " order by xchan_name desc ";
 	else	
-		$order = " order by xchan_name asc ";
+		$order = " order by xchan_name_date desc ";
 
 
 	if($sync) {
@@ -181,8 +182,8 @@ function dirsearch_content(&$a) {
 			$entry['name']        = $rr['xchan_name'];
 			$entry['hash']        = $rr['xchan_hash'];
 
-			$entry['updated']     = (($rr['ud_date']) ? $rr['ud_date'] : '0000-00-00 00:00:00');
-			$entry['update_guid'] = (($rr['ud_guid']) ? $rr['ud_guid'] : ''); 
+//			$entry['updated']     = (($rr['ud_date']) ? $rr['ud_date'] : '0000-00-00 00:00:00');
+//			$entry['update_guid'] = (($rr['ud_guid']) ? $rr['ud_guid'] : ''); 
 			$entry['url']         = $rr['xchan_url'];
 			$entry['photo']       = $rr['xchan_photo_m'];
 			$entry['address']     = $rr['xchan_addr'];
@@ -242,7 +243,7 @@ function list_public_sites() {
 			else
 				$register = 'closed';
 
-			$ret['sites'][] = array('url' => $rr['site_url'], 'access' => $access, 'register' => $register, 'sellpage' => $rr['site_sellpage']);
+			$ret['sites'][] = array('url' => $rr['site_url'], 'access' => $access, 'register' => $register, 'sellpage' => $rr['site_sellpage'], 'location' => $rr['site_location']);
 		}
 	}
 	return $ret;

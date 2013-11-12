@@ -910,6 +910,7 @@ function encode_mail($item) {
 	$x['message_id']     = $item['mid'];
 	$x['message_parent'] = $item['parent_mid'];
 	$x['created']        = $item['created'];
+	$x['expires']        = $item['expires'];
 	$x['title']          = $item['title'];
 	$x['body']           = $item['body'];
 	$x['from']           = encode_item_xchan($item['from']);
@@ -939,6 +940,10 @@ function get_mail_elements($x) {
 	$arr['title']        = (($x['title'])? htmlentities($x['title'],ENT_COMPAT,'UTF-8',false) : '');
 
 	$arr['created']      = datetime_convert('UTC','UTC',$x['created']);
+	if((! array_key_exists('expires',$x)) || ($x['expires'] === '0000-00-00 00:00:00'))
+		$arr['expires'] = '0000-00-00 00:00:00';
+	else
+		$arr['expires']      = datetime_convert('UTC','UTC',$x['expires']);
 
 	$arr['mail_flags'] = 0;
 
@@ -2216,10 +2221,23 @@ function tag_deliver($uid,$item_id) {
 			intval($item_id)
 		);			
 
+
+
 		// At this point we've determined that the person receiving this post was mentioned in it or it is a union.
 		// Now let's check if this mention was inside a reshare so we don't spam a forum
+		// If it's private we may have to unobscure it momentarily so that we can parse it. 
 
-		$body = preg_replace('/\[share(.*?)\[\/share\]/','',$item['body']);
+		$body = '';
+
+		if($item['item_flags'] & ITEM_OBSCURED) {
+			$key = get_config('system','prvkey');
+			if($item['body'])
+				$body = aes_unencapsulate(json_decode_plus($item['body']),$key);
+		}
+		else
+			$body = $item['body'];		
+
+		$body = preg_replace('/\[share(.*?)\[\/share\]/','',$body);
 
 		$pattern = '/@\[zrl\=' . preg_quote($term['url'],'/') . '\]' . preg_quote($u[0]['channel_name'],'/') . '\[\/zrl\]/';
 
@@ -2452,6 +2470,7 @@ function mail_store($arr) {
 	$arr['from_xchan']    = ((x($arr,'from_xchan'))  ? notags(trim($arr['from_xchan']))  : '');
 	$arr['to_xchan']   = ((x($arr,'to_xchan'))   ? notags(trim($arr['to_xchan']))   : '');
 	$arr['created']       = ((x($arr,'created') !== false) ? datetime_convert('UTC','UTC',$arr['created']) : datetime_convert());
+	$arr['expires']       = ((x($arr,'expires') !== false) ? datetime_convert('UTC','UTC',$arr['expires']) : '0000-00-00 00:00:00');
 	$arr['title']         = ((x($arr,'title'))         ? notags(trim($arr['title']))         : '');
 	$arr['parent_mid']    = ((x($arr,'parent_mid'))    ? notags(trim($arr['parent_mid']))    : '');
 	$arr['body']          = ((x($arr,'body'))          ? trim($arr['body'])                  : '');

@@ -47,6 +47,17 @@ function layouts_content(&$a) {
             $a->set_widget('design',design_tools());
         }
 
+		$tabs = array(
+			array(
+			'label' => t('Layout Help'),
+			'url'   => 'help/Comanche',
+			'sel'   => '',
+			'title' => t('Help with this feature'),
+			'id'    => 'layout-help-tab',
+		));
+
+
+		$o .= replace_macros(get_markup_template('common_tabs.tpl'),array('$tabs' => $tabs));
 
 
 // Create a status editor (for now - we'll need a WYSIWYG eventually) to create pages
@@ -58,7 +69,9 @@ require_once ('include/conversation.php');
 			'nickname' => $a->profile['channel_address'],
 			'lockstate' => (($group || $cid || $channel['channel_allow_cid'] || $channel['channel_allow_gid'] || $channel['channel_deny_cid'] || $channel['channel_deny_gid']) ? 'lock' : 'unlock'),
 			'bang' => (($group || $cid) ? '!' : ''),
-			'visitor' => 'block',
+			'visitor' => 'none',
+			'nopreview' => 1,
+			'ptlabel' => t('Layout Name'),
 			'profile_uid' => intval($owner),
 		);
 

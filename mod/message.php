@@ -9,6 +9,9 @@ require_once('include/Contact.php');
 
 function message_aside(&$a) {
 
+	if (! local_user())
+		return;
+
 	$a->set_widget('msgaside',replace_macros(get_markup_template('message_side.tpl'), array(
 		'$tabs'=> array(),
 
@@ -37,6 +40,7 @@ function message_post(&$a) {
 	$body      = ((x($_REQUEST,'body'))         ? escape_tags(trim($_REQUEST['body']))    : '');
 	$recipient = ((x($_REQUEST,'messageto'))    ? notags(trim($_REQUEST['messageto']))    : '');
 	$rstr      = ((x($_REQUEST,'messagerecip')) ? notags(trim($_REQUEST['messagerecip'])) : '');
+	$expires   = ((x($_REQUEST,'expires')) ? datetime_convert(date_default_timezone_get(),'UTC', $_REQUEST['expires']) : '0000-00-00 00:00:00');
 
 	// If we have a raw string for a recipient which hasn't been auto-filled,
 	// it means they probably aren't in our address book, hence we don't know
@@ -108,7 +112,7 @@ function message_post(&$a) {
 
 	// We have a local_user, let send_message use the session channel and save a lookup
 	
-	$ret = send_message(0, $recipient, $body, $subject, $replyto);
+	$ret = send_message(0, $recipient, $body, $subject, $replyto, $expires);
 
 	if(! $ret['success']) {
 		notice($ret['message']);
@@ -202,7 +206,7 @@ function message_content(&$a) {
 
 	if(! local_user()) {
 		notice( t('Permission denied.') . EOL);
-		return;
+		return login();
 	}
 
 	$channel = $a->get_channel();
@@ -268,7 +272,8 @@ function message_content(&$a) {
 			'$baseurl' => $a->get_baseurl(true),
 			'$editselect' => (($plaintext) ? 'none' : '/(profile-jot-text|prvmail-text)/'),
 			'$nickname' => $channel['channel_address'],
-			'$linkurl' => t('Please enter a link URL:')
+			'$linkurl' => t('Please enter a link URL:'),
+			'$expireswhen' => t('Expires YYYY-MM-DD HH:MM')
 		));
 	
 		$preselect = (isset($a->argv[2])?array($a->argv[2]):false);
@@ -319,7 +324,10 @@ function message_content(&$a) {
 			'$attach' => t('Attach file'),
 			'$insert' => t('Insert web link'),
 			'$wait' => t('Please wait'),
-			'$submit' => t('Submit')
+			'$submit' => t('Submit'),
+			'$defexpire' => '',
+			'$feature_expire' => ((feature_enabled(local_user(),'content_expire')) ? 'block' : 'none'),
+			'$expires' => t('Set expiration date'),
 		));
 
 		return $o;
@@ -395,7 +403,8 @@ function message_content(&$a) {
 			'$nickname' => $channel['channel_addr'],
 			'$baseurl' => $a->get_baseurl(true),
 			'$editselect' => (($plaintext) ? 'none' : '/(profile-jot-text|prvmail-text)/'),
-			'$linkurl' => t('Please enter a link URL:')
+			'$linkurl' => t('Please enter a link URL:'),
+			'$expireswhen' => t('Expires YYYY-MM-DD HH:MM')
 		));
 
 
@@ -460,8 +469,6 @@ function message_content(&$a) {
 
 		}
 
-		logger('mails: ' . print_r($mails,true), LOGGER_DATA);
-
 		$recp = (($message['from_xchan'] === $channel['channel_hash']) ? 'to' : 'from');
 
 // FIXME - move this HTML to template
@@ -495,8 +502,10 @@ function message_content(&$a) {
 			'$attach' => t('Attach file'),
 			'$insert' => t('Insert web link'),
 			'$submit' => t('Submit'),
-			'$wait' => t('Please wait')
-
+			'$wait' => t('Please wait'),
+			'$defexpire' => '',
+			'$feature_expire' => ((feature_enabled(local_user(),'content_expire')) ? 'block' : 'none'),
+			'$expires' => t('Set expiration date'),
 		));
 
 		return $o;

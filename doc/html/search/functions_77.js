@@ -8,6 +8,7 @@ var searchData=
   ['webpages_5fcontent',['webpages_content',['../webpages_8php.html#af3b7397d4abc153e3d2147740ee1a41d',1,'webpages.php']]],
   ['wfinger_5finit',['wfinger_init',['../wfinger_8php.html#ae21e50c8d0a5f3c9be9f43a4e519acd3',1,'wfinger.php']]],
   ['what_5fnext',['what_next',['../setup_8php.html#aea1ebdda58ec938f4e7b31aa5c5f6b58',1,'setup.php']]],
-  ['widget_5fprofile',['widget_profile',['../comanche_8php.html#abd2e508a2a0b911c4a838e3cb7599923',1,'comanche.php']]],
+  ['widget_5fprofile',['widget_profile',['../widgets_8php.html#abd2e508a2a0b911c4a838e3cb7599923',1,'widgets.php']]],
+  ['widget_5ftagcloud',['widget_tagcloud',['../widgets_8php.html#a6dbc227aac750774284ee39c45f0a200',1,'widgets.php']]],
   ['writepages_5fwidget',['writepages_widget',['../page__widgets_8php.html#a1a1e729da27f252cab6678288a17958f',1,'page_widgets.php']]]
 ];

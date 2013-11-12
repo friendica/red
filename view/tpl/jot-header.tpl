@@ -191,6 +191,13 @@ function enableOnUser(){
 		}
 	}
 
+	function jotGetExpiry() {
+		reply = prompt("{{$expirewhen}}", $('#jot-expire').val());
+		if(reply && reply.length) {
+			$('#jot-expire').val(reply);
+		}
+	}
+
 	function jotShare(id) {
 		if ($('#jot-popup').length != 0) $('#jot-popup').show();
 
@@ -284,14 +291,130 @@ function enableOnUser(){
 		$('#profile-nolocation-wrapper').hide();
 	}
 
+
+	function addhtmltext(data) {
+		data = h2b(data);
+		addeditortext(data);
+	}
+
+
 	function addeditortext(data) {
-		if(plaintext == 'none') {
+		if(typeof tinyMCE !== "undefined") {
+			tinyMCE.execCommand('mceInsertRawHTML',false,data);
+		}
+		else {
 			var currentText = $("#profile-jot-text").val();
 			$("#profile-jot-text").val(currentText + data);
 		}
-		else
-			tinyMCE.execCommand('mceInsertRawHTML',false,data);
 	}	
+
+    function h2b(s) {
+		var y = s;
+		function rep(re, str) {
+			y = y.replace(re,str);
+		};
+
+		rep(/<a.*?href=\"(.*?)\".*?>(.*?)<\/a>/gi,"[url=$1]$2[/url]");
+		rep(/<span style=\"font-size:(.*?);\">(.*?)<\/span>/gi,"[size=$1]$2[/size]");
+		rep(/<span style=\"color:(.*?);\">(.*?)<\/span>/gi,"[color=$1]$2[/color]");
+		rep(/<font>(.*?)<\/font>/gi,"$1");
+		rep(/<img.*?width=\"(.*?)\".*?height=\"(.*?)\".*?src=\"(.*?)\".*?\/>/gi,"[img=$1x$2]$3[/img]");
+		rep(/<img.*?height=\"(.*?)\".*?width=\"(.*?)\".*?src=\"(.*?)\".*?\/>/gi,"[img=$2x$1]$3[/img]");
+		rep(/<img.*?src=\"(.*?)\".*?height=\"(.*?)\".*?width=\"(.*?)\".*?\/>/gi,"[img=$3x$2]$1[/img]");
+		rep(/<img.*?src=\"(.*?)\".*?width=\"(.*?)\".*?height=\"(.*?)\".*?\/>/gi,"[img=$2x$3]$1[/img]");
+		rep(/<img.*?src=\"(.*?)\".*?\/>/gi,"[img]$1[/img]");
+
+
+		rep(/<ul class=\"listbullet\" style=\"list-style-type\: circle\;\">(.*?)<\/ul>/gi,"[list]$1[/list]");
+		rep(/<ul class=\"listnone\" style=\"list-style-type\: none\;\">(.*?)<\/ul>/gi,"[list=]$1[/list]");
+		rep(/<ul class=\"listdecimal\" style=\"list-style-type\: decimal\;\">(.*?)<\/ul>/gi,"[list=1]$1[/list]");
+		rep(/<ul class=\"listlowerroman\" style=\"list-style-type\: lower-roman\;\">(.*?)<\/ul>/gi,"[list=i]$1[/list]");
+		rep(/<ul class=\"listupperroman\" style=\"list-style-type\: upper-roman\;\">(.*?)<\/ul>/gi,"[list=I]$1[/list]");
+		rep(/<ul class=\"listloweralpha\" style=\"list-style-type\: lower-alpha\;\">(.*?)<\/ul>/gi,"[list=a]$1[/list]");
+		rep(/<ul class=\"listupperalpha\" style=\"list-style-type\: upper-alpha\;\">(.*?)<\/ul>/gi,"[list=A]$1[/list]");
+		rep(/<li>(.*?)<\/li>/gi,"[li]$1[/li]");
+
+		rep(/<code>(.*?)<\/code>/gi,"[code]$1[/code]");
+		rep(/<\/(strong|b)>/gi,"[/b]");
+		rep(/<(strong|b)>/gi,"[b]");
+		rep(/<\/(em|i)>/gi,"[/i]");
+		rep(/<(em|i)>/gi,"[i]");
+		rep(/<\/u>/gi,"[/u]");
+
+
+		rep(/<span style=\"text-decoration: ?underline;\">(.*?)<\/span>/gi,"[u]$1[/u]");
+		rep(/<u>/gi,"[u]");
+		rep(/<blockquote[^>]*>/gi,"[quote]");
+		rep(/<\/blockquote>/gi,"[/quote]");
+		rep(/<hr \/>/gi,"[hr]");
+		rep(/<br (.*?)\/>/gi,"\n");
+		rep(/<br\/>/gi,"\n");
+		rep(/<br>/gi,"\n");
+		rep(/<p>/gi,"");
+		rep(/<\/p>/gi,"\n");
+		rep(/&nbsp;/gi," ");
+		rep(/&quot;/gi,"\"");
+		rep(/&lt;/gi,"<");
+		rep(/&gt;/gi,">");
+		rep(/&amp;/gi,"&");
+
+		return y; 
+	};
+
+
+    function b2h(s) {
+		var y = s;
+		function rep(re, str) {
+			y = y.replace(re,str);
+		};
+
+		rep(/\&/gi,"&amp;");
+		rep(/\</gi,"&lt;");
+		rep(/\>/gi,"&gt;");
+		rep(/\"/gi,"&quot;");
+
+		rep(/\n/gi,"<br />");
+		rep(/\[b\]/gi,"<strong>");
+		rep(/\[\/b\]/gi,"</strong>");
+		rep(/\[i\]/gi,"<em>");
+		rep(/\[\/i\]/gi,"</em>");
+		rep(/\[u\]/gi,"<u>");
+		rep(/\[\/u\]/gi,"</u>");
+		rep(/\[hr\]/gi,"<hr />");
+		rep(/\[url=([^\]]+)\](.*?)\[\/url\]/gi,"<a href=\"$1\">$2</a>");
+		rep(/\[url\](.*?)\[\/url\]/gi,"<a href=\"$1\">$1</a>");
+		rep(/\[img=(.*?)x(.*?)\](.*?)\[\/img\]/gi,"<img width=\"$1\" height=\"$2\" src=\"$3\" />");
+		rep(/\[img\](.*?)\[\/img\]/gi,"<img src=\"$1\" />");
+
+		// FIXME - add zid
+		rep(/\[zrl=([^\]]+)\](.*?)\[\/zrl\]/gi,"<a href=\"$1\">$2</a>");
+		rep(/\[zrl\](.*?)\[\/zrl\]/gi,"<a href=\"$1\">$1</a>");
+		rep(/\[zmg=(.*?)x(.*?)\](.*?)\[\/zmg\]/gi,"<img width=\"$1\" height=\"$2\" src=\"$3\" />");
+		rep(/\[zmg\](.*?)\[\/zmg\]/gi,"<img src=\"$1\" />");
+
+		rep(/\[list\](.*?)\[\/list\]/gi, '<ul class="listbullet" style="list-style-type: circle;">$1</ul>');
+		rep(/\[list=\](.*?)\[\/list\]/gi, '<ul class="listnone" style="list-style-type: none;">$1</ul>');
+		rep(/\[list=1\](.*?)\[\/list\]/gi, '<ul class="listdecimal" style="list-style-type: decimal;">$1</ul>');
+		rep(/\[list=i\](.*?)\[\/list\]/gi,'<ul class="listlowerroman" style="list-style-type: lower-roman;">$1</ul>');
+		rep(/\[list=I\](.*?)\[\/list\]/gi, '<ul class="listupperroman" style="list-style-type: upper-roman;">$1</ul>');
+		rep(/\[list=a\](.*?)\[\/list\]/gi, '<ul class="listloweralpha" style="list-style-type: lower-alpha;">$1</ul>');
+		rep(/\[list=A\](.*?)\[\/list\]/gi, '<ul class="listupperalpha" style="list-style-type: upper-alpha;">$1</ul>');
+		rep(/\[li\](.*?)\[\/li\]/gi, '<li>$1</li>');
+		rep(/\[color=(.*?)\](.*?)\[\/color\]/gi,"<span style=\"color: $1;\">$2</span>");
+		rep(/\[size=(.*?)\](.*?)\[\/size\]/gi,"<span style=\"font-size: $1;\">$2</span>");
+		rep(/\[code\](.*?)\[\/code\]/gi,"<code>$1</code>");
+		rep(/\[quote.*?\](.*?)\[\/quote\]/gi,"<blockquote>$1</blockquote>");
+
+		rep(/\[video\](.*?)\[\/video\]/gi,"<a href=\"$1\">$1</a>");
+		rep(/\[audio\](.*?)\[\/audio\]/gi,"<a href=\"$1\">$1</a>");
+
+		rep(/\[\&amp\;([#a-z0-9]+)\;\]/gi,'&$1;');
+
+		rep(/\<(.*?)(src|href)=\"[^hfm](.*?)\>/gi,'<$1$2="">');
+
+		return y; 
+	};
+
 
 	{{$geotag}}
 

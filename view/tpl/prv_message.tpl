@@ -14,6 +14,8 @@
 {{$select}}
 {{/if}}
 
+<input type="hidden" id="inp-prvmail-expires" name="expires" value="{{$defexpire}}" />
+
 <div id="prvmail-subject-label">{{$subject}}</div>
 <input type="text" size="64" maxlength="255" id="prvmail-subject" name="subject" value="{{$subjtxt}}" {{$readonly}} tabindex="11" />
 
@@ -31,10 +33,15 @@
 		<i id="prvmail-attach" class="icon-paper-clip jot-icons" title="{{$attach}}"></i>
 	</div> 
 
-
 	<div id="prvmail-link-wrapper" >
 		<i id="prvmail-link" class="icon-link jot-icons" title="{{$insert}}" onclick="jotGetLink(); return false;"></i>
 	</div> 
+
+    <div id="prvmail-expire-wrapper" style="display: {{$feature_expire}};" >
+        <i id="prvmail-expires" class="icon-eraser jot-icons" title="{{$expires}}" onclick="prvmailGetExpiry();return false;"></i>
+    </div>
+
+
 	<div id="prvmail-rotator-wrapper" >
 		<img id="prvmail-rotator" src="images/rotator.gif" alt="{{$wait}}" title="{{$wait}}" style="display: none;" />
 	</div> 

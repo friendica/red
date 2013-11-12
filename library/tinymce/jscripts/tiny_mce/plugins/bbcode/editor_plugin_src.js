@@ -45,63 +45,12 @@
 			s = tinymce.trim(s);
 
 			function rep(re, str) {
-
-
-s = s.replace(re,str);
-
-				//modify code to keep stuff intact within [code][/code] blocks
-				//Waitman Gobble NO WARRANTY
-
-/* This doesn't seem to work well with
-[code]line1
-line2[/code]
-commenting out for now
-*/
-
-/*
-				var o = new Array();
-				var x = s.split("[code]");
-				var i = 0;
-
-				var si = "";
-				si = x.shift();
-				si = si.replace(re,str);
-				o.push(si);
-
-				for (i = 0; i < x.length; i++) {
-					var no = new Array();
-					var j = x.shift();
-					var g = j.split("[/code]");
-					no.push(g.shift());
-					si = g.shift();
-					si = si.replace(re,str);
-					no.push(si);
-					o.push(no.join("[/code]"));
-				}
-
-				s = o.join("[code]");
-*/
+				s = s.replace(re,str);
 			};
-
-
 
 
 			/* oembed */
 			function _h2b_cb(match) {
-				/*
-				function s_h2b(data) {
-						match = data;
-				}
-				$.ajax({
-					type:"POST",
-					url: 'oembed/h2b',
-					data: {text: match},
-					async: false,
-					success: s_h2b,
-					dataType: 'html'
-				});
-				*/
-				
 				var f, g, tof = [], tor = [];
 				var find_spanc = /<span [^>]*class *= *[\"'](?:[^\"']* )*oembed(?: [^\"']*)*[\"'][^>]*>(.*?(?:<span[^>]*>(.*?)<\/span *>)*.*?)<\/span *>/ig;
 				while (f = find_spanc.exec(match)) {
@@ -124,11 +73,8 @@ commenting out for now
 				s = _h2b_cb(s);
 			}
 			
-			/* /oembed */
-
-
 			// example: <strong> to [b]
-			rep(/<a class=\"bookmark\" href=\"(.*?)\".*?>(.*?)<\/a>/gi,"[bookmark=$1]$2[/bookmark]");
+
 			rep(/<a.*?href=\"(.*?)\".*?>(.*?)<\/a>/gi,"[url=$1]$2[/url]");
 			rep(/<span style=\"font-size:(.*?);\">(.*?)<\/span>/gi,"[size=$1]$2[/size]");
 			rep(/<span style=\"color:(.*?);\">(.*?)<\/span>/gi,"[color=$1]$2[/color]");
@@ -222,7 +168,6 @@ commenting out for now
 			rep(/\[u\]/gi,"<u>");
 			rep(/\[\/u\]/gi,"</u>");
 			rep(/\[hr\]/gi,"<hr />");
-			rep(/\[bookmark=([^\]]+)\](.*?)\[\/bookmark\]/gi,"<a class=\"bookmark\" href=\"$1\">$2</a>");
 			rep(/\[url=([^\]]+)\](.*?)\[\/url\]/gi,"<a href=\"$1\">$2</a>");
 			rep(/\[url\](.*?)\[\/url\]/gi,"<a href=\"$1\">$1</a>");
 			rep(/\[img=(.*?)x(.*?)\](.*?)\[\/img\]/gi,"<img width=\"$1\" height=\"$2\" src=\"$3\" />");
