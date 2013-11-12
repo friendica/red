@@ -20,7 +20,7 @@ function dir_sort_links() {
 	return $o;
 }
 
-function dir_safe_mode(&$a) {
+function dir_safe_mode() {
 	$observer = get_observer_hash();
 	
 	if ($observer)
