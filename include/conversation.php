@@ -1079,6 +1079,10 @@ function status_editor($a,$x,$popup=false) {
 	if(x($x,'nopreview'))
 		$preview = '';
 
+	$cipher = get_pconfig($x['profile_uid'],'system','default_cipher');
+	if(! $cipher)
+		$cipher = 'aes256';
+
 	call_hooks('jot_tool', $jotplugins);
 	call_hooks('jot_networks', $jotnets);
 
@@ -1136,6 +1140,7 @@ function status_editor($a,$x,$popup=false) {
 		'$expires' => t('Set expiration date'),
 		'$feature_encrypt' => ((feature_enabled($x['profile_uid'],'content_encrypt') && (! $webpage)) ? 'block' : 'none'),
 		'$encrypt' => t('Encrypt text'),
+		'$cipher' => $cipher,
 	));
 
 
