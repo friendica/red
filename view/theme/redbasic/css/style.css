@@ -1024,6 +1024,7 @@ footer {
 
 .thread-wrapper.toplevel_item {
 	width: 92%; 
+	max-width: 1024px;
 }
 
 .wall-item-body {
