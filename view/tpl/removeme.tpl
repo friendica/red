@@ -13,6 +13,8 @@
 </div>
 <div id="remove-account-pass-end"></div>
 
+{{include file="field_checkbox.tpl" field=$global}}
+
 <input type="submit" name="submit" value="{{$submit}}" />
 
 </form>
