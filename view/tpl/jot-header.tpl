@@ -120,6 +120,7 @@ function enableOnUser(){
 				onSubmit: function(file,ext) { $('#profile-rotator').spin('tiny'); },
 				onComplete: function(file,response) {
 					addeditortext(response);
+					$('#jot-media').val($('#jot-media').val() + response);
 					$('#profile-rotator').spin(false);
 				}				 
 			}
@@ -131,6 +132,7 @@ function enableOnUser(){
 				onSubmit: function(file,ext) { $('#profile-rotator').spin('tiny'); },
 				onComplete: function(file,response) {
 					addeditortext(response);
+					$('#jot-media').val($('#jot-media').val() + response);
 					$('#profile-rotator').spin(false);
 				}				 
 			}
