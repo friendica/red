@@ -1896,11 +1896,11 @@ a.mail-list-link {
 }
 
 #side-peoplefind-url::-webkit-input-placeholder {
-	font-family: FontAweSome;
+	font-family: FontAwesome;
 }
 
 #side-peoplefind-url::-moz-placeholder {
-	font-family: FontAweSome;
+	font-family: FontAwesome;
 }
 
 #side-follow-submit, #side-peoplefind-submit {
@@ -2050,19 +2050,19 @@ a.mail-list-link {
 }
 
 #nav-search-text::-webkit-input-placeholder {
-	font-family: FontAweSome;
+	font-family: FontAwesome;
 }
 
 #nav-search-text::-moz-placeholder {
-	font-family: FontAweSome;
+	font-family: FontAwesome;
 }
 
 #search-text::-webkit-input-placeholder {
-	font-family: FontAweSome;
+	font-family: FontAwesome;
 }
 
 #search-text::-moz-placeholder {
-	font-family: FontAweSome;
+	font-family: FontAwesome;
 }
 
 #nav-user-linkmenu img {
