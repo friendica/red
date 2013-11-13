@@ -412,12 +412,18 @@ function item_post(&$a) {
 		 * now. So now we'll look for links of uploaded photos and attachments that are in the
 		 * post and set them to the same permissions as the post itself.
 		 *
+		 * If the post was end-to-end encrypted we can't find images and attachments in the body,
+		 * use our media_str input instead which only contains these elements - but only do this
+		 * when encrypted content exists because the photo/attachment may have been removed from 
+		 * the post and we should keep it private. If it's encrypted we have no way of knowing
+		 * so we'll set the permissions regardless and realise that the media may not be 
+		 * referenced in the post. 
 		 */
 
 		if(! $preview) {
-			fix_attached_photo_permissions($profile_uid,$owner_xchan['xchan_hash'],$body,$str_contact_allow,$str_group_allow,$str_contact_deny,$str_group_deny);
+			fix_attached_photo_permissions($profile_uid,$owner_xchan['xchan_hash'],((strpos($body,'[/crypt]')) ? $_POST['media_str'] : $body),$str_contact_allow,$str_group_allow,$str_contact_deny,$str_group_deny);
 
-			fix_attached_file_permissions($channel,$observer['xchan_hash'],$body,$str_contact_allow,$str_group_allow,$str_contact_deny,$str_group_deny);
+			fix_attached_file_permissions($channel,$observer['xchan_hash'],((strpos($body,'[/crypt]')) ? $_POST['media_str'] : $body),$str_contact_allow,$str_group_allow,$str_contact_deny,$str_group_deny);
 
 		}
 
