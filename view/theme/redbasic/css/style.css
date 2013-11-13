@@ -50,13 +50,17 @@ a:hover, .fakelink:hover { color: #44AAFF; text-decoration: underline; }
 	cursor: pointer;
 }
 
+
+input[type=text] {
+	font-family: arial,freesans,sans-serif;
+}
+
 input {
 	border: 1px solid #666666;
 	-moz-border-radius: $radiuspx;
 	border-radius: $radiuspx;	
 	padding: 3px;
 }
-
 
 code {
 	font-family: Courier, monospace;
@@ -1890,6 +1894,15 @@ a.mail-list-link {
 #side-follow-url, #side-peoplefind-url {
 	margin-top: 5px;
 }
+
+#side-peoplefind-url::-webkit-input-placeholder {
+	font-family: FontAwesome;
+}
+
+#side-peoplefind-url::-moz-placeholder {
+	font-family: FontAwesome;
+}
+
 #side-follow-submit, #side-peoplefind-submit {
 	margin-top: 15px;
 }
@@ -2034,6 +2047,22 @@ a.mail-list-link {
 	border: none;
 	background-color: $search_background;
     	transition: background-color 300ms ease 0s;
+}
+
+#nav-search-text::-webkit-input-placeholder {
+	font-family: FontAwesome;
+}
+
+#nav-search-text::-moz-placeholder {
+	font-family: FontAwesome;
+}
+
+#search-text::-webkit-input-placeholder {
+	font-family: FontAwesome;
+}
+
+#search-text::-moz-placeholder {
+	font-family: FontAwesome;
 }
 
 #nav-user-linkmenu img {
@@ -2864,8 +2893,8 @@ div.jGrowl div.info {
 }
 
 .autocomplete-w1 {
-	position:fixed;
-	top:24px;
+	position: fixed;
+	top: 24px;
 }
 
 .autocomplete { 
@@ -2877,18 +2906,19 @@ div.jGrowl div.info {
 	text-align: left;
 	max-height: 350px;
 	overflow: auto;
-	border-bottom-left-radius:$radiuspx;
-	border-bottom-right-radius:$radiuspx;
+	border-bottom-left-radius: $radiuspx;
+	border-bottom-right-radius: $radiuspx;
 }
 
 .autocomplete .selected {
-	background:$bgcolour;
+	background: $search_background;
 }
 
 .autocomplete div {
-	padding:2px 5px;
-	white-space:nowrap;
-	overflow:hidden;
+	padding: 2px 5px;
+	white-space: nowrap;
+	overflow: hidden;
+	text-overflow: ellipsis;
 }
 
 #datebrowse-sidebar select {
