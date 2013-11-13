@@ -50,6 +50,11 @@ a:hover, .fakelink:hover { color: #44AAFF; text-decoration: underline; }
 	cursor: pointer;
 }
 
+
+input[type=text] {
+	font-family: arial,freesans,sans-serif;
+}
+
 input {
 	border: 1px solid #666666;
 	-moz-border-radius: $radiuspx;
@@ -1889,6 +1894,15 @@ a.mail-list-link {
 #side-follow-url, #side-peoplefind-url {
 	margin-top: 5px;
 }
+
+#side-peoplefind-url::-webkit-input-placeholder {
+	font-family: FontAweSome;
+}
+
+#side-peoplefind-url::-moz-placeholder {
+	font-family: FontAweSome;
+}
+
 #side-follow-submit, #side-peoplefind-submit {
 	margin-top: 15px;
 }
@@ -2033,6 +2047,22 @@ a.mail-list-link {
 	border: none;
 	background-color: $search_background;
     	transition: background-color 300ms ease 0s;
+}
+
+#nav-search-text::-webkit-input-placeholder {
+	font-family: FontAweSome;
+}
+
+#nav-search-text::-moz-placeholder {
+	font-family: FontAweSome;
+}
+
+#search-text::-webkit-input-placeholder {
+	font-family: FontAweSome;
+}
+
+#search-text::-moz-placeholder {
+	font-family: FontAweSome;
 }
 
 #nav-user-linkmenu img {
