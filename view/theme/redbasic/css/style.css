@@ -1895,6 +1895,10 @@ a.mail-list-link {
 	margin-top: 5px;
 }
 
+#side-peoplefind-url {
+	font-size: 1em;
+}
+
 #side-peoplefind-url::-webkit-input-placeholder {
 	font-family: FontAwesome;
 }
@@ -2055,6 +2059,10 @@ a.mail-list-link {
 
 #nav-search-text::-moz-placeholder {
 	font-family: FontAwesome;
+}
+
+#search-text {
+	font-size: 1em;
 }
 
 #search-text::-webkit-input-placeholder {
