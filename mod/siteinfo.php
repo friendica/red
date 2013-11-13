@@ -79,14 +79,14 @@ function siteinfo_content(&$a) {
 
 	$o = replace_macros(get_markup_template('siteinfo.tpl'), array(
                 '$title' => t('Red'),
-		'$description' => t('This is Red - another decentralized, distributed communications project by the folks at Friendica.'),
+		'$description' => t('This is a hub of the Red Matrix - a global cooperative network of decentralised privacy enhanced websites.'),
 		'$version' => $version,
 		'$web_location' => t('Running at web location') . ' ' . z_root(),
-		'$visit' => t('Please visit <a href="http://friendica.com">Friendica.com</a> to learn more about the Friendica and/or Red project.'),
+		'$visit' => t('Please visit <a href="http://getzot.com">GetZot.com</a> to learn more about the Red Matrix.'),
 		'$bug_text' => t('Bug reports and issues: please visit'),
-		'$bug_link_url' => 'http://bugs.friendica.com',
-		'$bug_link_text' => 'Bugs.Friendica.com',
-		'$contact' => t('Suggestions, praise, donations, etc. - please email "Info" at Friendica - dot com'),
+		'$bug_link_url' => 'https://github.com/friendica/red/issues',
+		'$bug_link_text' => 'redmatrix issues',
+		'$contact' => t('Suggestions, praise, donations, etc. - please email "redmatrix" at librelist - dot com'),
 		'$plugins_text' => $plugins_text,
 		'$plugins_list' => $plugins_list
         ));
