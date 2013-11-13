@@ -57,7 +57,6 @@ input {
 	padding: 3px;
 }
 
-
 code {
 	font-family: Courier, monospace;
 	display: block;
@@ -2864,8 +2863,8 @@ div.jGrowl div.info {
 }
 
 .autocomplete-w1 {
-	position:fixed;
-	top:24px;
+	position: fixed;
+	top: 24px;
 }
 
 .autocomplete { 
@@ -2877,18 +2876,19 @@ div.jGrowl div.info {
 	text-align: left;
 	max-height: 350px;
 	overflow: auto;
-	border-bottom-left-radius:$radiuspx;
-	border-bottom-right-radius:$radiuspx;
+	border-bottom-left-radius: $radiuspx;
+	border-bottom-right-radius: $radiuspx;
 }
 
 .autocomplete .selected {
-	background:$bgcolour;
+	background: $search_background;
 }
 
 .autocomplete div {
-	padding:2px 5px;
-	white-space:nowrap;
-	overflow:hidden;
+	padding: 2px 5px;
+	white-space: nowrap;
+	overflow: hidden;
+	text-overflow: ellipsis;
 }
 
 #datebrowse-sidebar select {
