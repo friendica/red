@@ -253,7 +253,7 @@ function ping_init(&$a) {
 
 
 				$result[] = array(
-					'notify_link' => $a->get_baseurl() . '/events/event/' . $rr['event_hash'],
+					'notify_link' => $a->get_baseurl() . '/events', // FIXME this takes you to an edit page and it may not be yours, we really want to just view the single event  --> '/events/event/' . $rr['event_hash'],
 					'name'        => $rr['xchan_name'],
 					'url'         => $rr['xchan_url'],
 					'photo'       => $rr['xchan_photo_s'],

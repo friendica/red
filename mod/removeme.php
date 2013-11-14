@@ -17,13 +17,17 @@ function removeme_post(&$a) {
 	if($_POST['verify'] !== $_SESSION['remove_account_verify'])
 		return;
 
-	$encrypted = hash('whirlpool',trim($_POST['qxz_password']));
 
-	if((strlen($a->user['password'])) && ($encrypted === $a->user['password'])) {
-		require_once('include/Contact.php');
-		user_remove($a->user['uid']);
-		// NOTREACHED
-	}
+	$account = $a->get_account();
+
+	if(! account_verify_password($account['account_email'],$_POST['qxz_password']))
+		return;
+
+	require_once('include/Contact.php');
+
+	$global_remove = intval($_POST['global']);
+
+	channel_remove(local_user(),1 - $global_remove);
 
 }
 
@@ -42,9 +46,10 @@ function removeme_content(&$a) {
 	$o .= replace_macros($tpl, array(
 		'$basedir' => $a->get_baseurl(),
 		'$hash' => $hash,
-		'$title' => t('Remove My Account'),
-		'$desc' => t('This will completely remove your account. Once this has been done it is not recoverable.'),
+		'$title' => t('Remove This Channel'),
+		'$desc' => t('This will completely remove this channel from the network. Once this has been done it is not recoverable.'),
 		'$passwd' => t('Please enter your password for verification:'),
+		'$global' => array('global', t('Remove this channel and all its clones from the network'), false, t('By default only the instance of the channel located on this hub will be removed from the network')),
 		'$submit' => t('Remove My Account')
 	));
 

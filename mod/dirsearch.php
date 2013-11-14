@@ -121,9 +121,10 @@ function dirsearch_content(&$a) {
 	else {
 		$qlimit = " LIMIT " . intval($startrec) . " , " . intval($perpage);
 		if($return_total) {
-			$r = q("SELECT COUNT(xchan_hash) AS `total` FROM xchan left join xprof on xchan_hash = xprof_hash where $logic $sql_extra and not ( xchan_flags & %d) and not ( xchan_flags & %d ) $safesql ",
+			$r = q("SELECT COUNT(xchan_hash) AS `total` FROM xchan left join xprof on xchan_hash = xprof_hash where $logic $sql_extra and not ( xchan_flags & %d) and not ( xchan_flags & %d ) and not ( xchan_flags & %d ) $safesql ",
 				intval(XCHAN_FLAGS_HIDDEN),
-				intval(XCHAN_FLAGS_ORPHAN)
+				intval(XCHAN_FLAGS_ORPHAN),
+				intval(XCHAN_FLAGS_DELETED)
 			);
 			if($r) {
 				$ret['total_items'] = $r[0]['total'];
@@ -161,9 +162,10 @@ function dirsearch_content(&$a) {
 	}
 	else {
 
-		$r = q("SELECT xchan.*, xprof.* from xchan left join xprof on xchan_hash = xprof_hash where ( $logic $sql_extra ) and not ( xchan_flags & %d ) and not ( xchan_flags & %d ) $safesql $order $qlimit ",
+		$r = q("SELECT xchan.*, xprof.* from xchan left join xprof on xchan_hash = xprof_hash where ( $logic $sql_extra ) and not ( xchan_flags & %d ) and not ( xchan_flags & %d ) and not ( xchan_flags & %d ) $safesql $order $qlimit ",
 			intval(XCHAN_FLAGS_HIDDEN),
-			intval(XCHAN_FLAGS_ORPHAN)
+			intval(XCHAN_FLAGS_ORPHAN),
+			intval(XCHAN_FLAGS_DELETED)
 		);
 
 	}

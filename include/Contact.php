@@ -199,6 +199,7 @@ function channel_remove($channel_id, $local = true) {
 		return;
 	$a = get_app();
 	logger('Removing channel: ' . $channel_id);
+	logger('channel_remove: local only: ' . intval($local));
 
 	$r = q("select * from channel where channel_id = %d limit 1", intval($channel_id));
 	if(! $r) {
@@ -209,12 +210,8 @@ function channel_remove($channel_id, $local = true) {
 	$channel = $r[0];
 
 	call_hooks('channel_remove',$r[0]);
-
-	if(! $local) {
-
-	// FIXME notify the directory
 	
-	// FIXME notify all contacts
+	if(! $local) {
 
 		$r = q("update channel set channel_deleted = '%s', channel_pageflags = (channel_pageflags | %d), channel_r_stream = 0, channel_r_profile = 0,
 			channel_r_photos = 0, channel_r_abook = 0, channel_w_stream = 0, channel_w_wall = 0, channel_w_tagwall = 0,
@@ -254,6 +251,12 @@ function channel_remove($channel_id, $local = true) {
 	q("DELETE FROM `pconfig` WHERE `uid` = %d", intval($channel_id));
 	q("DELETE FROM `spam` WHERE `uid` = %d", intval($channel_id));
 
+
+	q("delete from abook where abook_xchan = '%s' and abook_flags & %d limit 1",
+		dbesc($channel['channel_hash']),
+		dbesc(ABOOK_FLAG_SELF)
+	);
+
 	$r = q("update channel set channel_deleted = '%s', channel_pageflags = (channel_pageflags | %d) where channel_id = %d limit 1",
 		dbesc(datetime_convert()),
 		intval(PAGE_REMOVED),
@@ -291,10 +294,8 @@ function remove_all_xchan_resources($xchan, $channel_id = 0) {
 	}
 	else {
 
-		// this is somewhat destructive
-// FIXME
-		// We don't want to be quite as destructive on directories, which will need to mirror the action 
-		// and we also don't want to completely destroy an xchan that has moved to a new primary location
+		$dirmode = intval(get_config('system','directory_mode'));
+
 
 		$r = q("delete from photo where xchan = '%s'",
 			dbesc($xchan)
@@ -323,22 +324,35 @@ function remove_all_xchan_resources($xchan, $channel_id = 0) {
 			dbesc($xchan)
 		);
 
+		$r = q("delete from abook where abook_xchan = '%s'",
+			dbesc($xchan)
+		);
 
-// This could get sticky with directories
 
-//		$r = q("delete from xchan where xchan_hash = '%s' limit 1",
-//			dbesc($xchan)
-//		);
-//		$r = q("delete from hubloc where hubloc_hash = '%s'",
-//			dbesc($xchan)
-//		);
-//		$r = q("delete from abook where abook_xchan = '%s'",
-//			dbesc($xchan)
-//		);
-//		$r = q("delete from xtag where xtag_hash = '%s'",
-//			dbesc($xchan)
-//		);
+		if($dirmode === false || $dirmode == DIRECTORY_MODE_NORMAL) {
 
+			$r = q("delete from xchan where xchan_hash = '%s' limit 1",
+				dbesc($xchan)
+			);
+			$r = q("delete from hubloc where hubloc_hash = '%s'",
+				dbesc($xchan)
+			);
+
+		}
+		else {
+
+			// directory servers need to keep the record around for sync purposes - mark it deleted
+
+	        $r = q("update hubloc set hubloc_flags = hubloc_flags | %d where hubloc_hash = '%s'",
+    	        intval(HUBLOC_FLAGS_DELETED),
+        	    dbesc($xchan)
+        	);
+
+        	$r = q("update xchan set xchan_flags = xchan_flags | %d where xchan_hash = '%s'",
+            	intval(XCHAN_FLAGS_DELETED),
+            	dbesc($xchan)
+        	);
+		}
 	}
 }
 

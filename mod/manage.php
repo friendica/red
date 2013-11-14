@@ -36,8 +36,9 @@ function manage_content(&$a) {
 	$channels = null;
 
 	if(local_user()) {
-		$r = q("select channel.*, xchan.* from channel left join xchan on channel.channel_hash = xchan.xchan_hash where channel.channel_account_id = %d order by channel_name ",
-			intval(get_account_id())
+		$r = q("select channel.*, xchan.* from channel left join xchan on channel.channel_hash = xchan.xchan_hash where channel.channel_account_id = %d and not ( channel_pageflags & %d ) order by channel_name ",
+			intval(get_account_id()),
+			intval(PAGE_REMOVED)
 		);
 
 		$selected_channel = null;

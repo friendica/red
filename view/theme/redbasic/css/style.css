@@ -50,13 +50,17 @@ a:hover, .fakelink:hover { color: #44AAFF; text-decoration: underline; }
 	cursor: pointer;
 }
 
+
+input[type=text] {
+	font-family: arial,freesans,sans-serif;
+}
+
 input {
 	border: 1px solid #666666;
 	-moz-border-radius: $radiuspx;
 	border-radius: $radiuspx;	
 	padding: 3px;
 }
-
 
 code {
 	font-family: Courier, monospace;
@@ -129,10 +133,7 @@ nav {
 
 }
 
-/*
-section {width: $section_width;
-}
-*/
+
 
 nav:hover {
 	background-image: linear-gradient(bottom, $nav_bg_3 26%, $nav_bg_4 82%);
@@ -1023,8 +1024,8 @@ footer {
 }
 
 .thread-wrapper.toplevel_item {
-	width: 92%; 
-	max-width: 1024px;
+	width: 92%;
+	max-width: $converse_width;
 }
 
 .wall-item-body {
@@ -1720,6 +1721,7 @@ tr.mceLast {
 #prvmail-attach-wrapper,
 #prvmail-link-wrapper,
 #prvmail-expire-wrapper,
+#prvmail-encrypt-wrapper,
 #prvmail-rotator-wrapper {
 	float: left;
 	margin-top: 10px;
@@ -1890,6 +1892,19 @@ a.mail-list-link {
 #side-follow-url, #side-peoplefind-url {
 	margin-top: 5px;
 }
+
+#side-peoplefind-url {
+	font-size: 1em;
+}
+
+#side-peoplefind-url::-webkit-input-placeholder {
+	font-family: FontAwesome;
+}
+
+#side-peoplefind-url::-moz-placeholder {
+	font-family: FontAwesome;
+}
+
 #side-follow-submit, #side-peoplefind-submit {
 	margin-top: 15px;
 }
@@ -2034,6 +2049,26 @@ a.mail-list-link {
 	border: none;
 	background-color: $search_background;
     	transition: background-color 300ms ease 0s;
+}
+
+#nav-search-text::-webkit-input-placeholder {
+	font-family: FontAwesome;
+}
+
+#nav-search-text::-moz-placeholder {
+	font-family: FontAwesome;
+}
+
+#search-text {
+	font-size: 1em;
+}
+
+#search-text::-webkit-input-placeholder {
+	font-family: FontAwesome;
+}
+
+#search-text::-moz-placeholder {
+	font-family: FontAwesome;
 }
 
 #nav-user-linkmenu img {
@@ -2863,11 +2898,6 @@ div.jGrowl div.info {
 	
 }
 
-.autocomplete-w1 {
-	position:fixed;
-	top:24px;
-}
-
 .autocomplete { 
 	color: $font_colour;
 	border: 1px solid $nav_bg_1;
@@ -2877,18 +2907,19 @@ div.jGrowl div.info {
 	text-align: left;
 	max-height: 350px;
 	overflow: auto;
-	border-bottom-left-radius:$radiuspx;
-	border-bottom-right-radius:$radiuspx;
+	border-bottom-left-radius: $radiuspx;
+	border-bottom-right-radius: $radiuspx;
 }
 
 .autocomplete .selected {
-	background:$bgcolour;
+	background: $search_background;
 }
 
 .autocomplete div {
-	padding:2px 5px;
-	white-space:nowrap;
-	overflow:hidden;
+	padding: 2px 5px;
+	white-space: nowrap;
+	overflow: hidden;
+	text-overflow: ellipsis;
 }
 
 #datebrowse-sidebar select {

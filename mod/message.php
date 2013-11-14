@@ -212,6 +212,12 @@ function message_content(&$a) {
 	$channel = $a->get_channel();
 	head_set_icon($channel['xchan_photo_s']);
 
+	$cipher = get_pconfig(local_user(),'system','default_cipher');
+	if(! $cipher)
+		$cipher = 'aes256';
+
+
+
 	$tpl = get_markup_template('mail_head.tpl');
 	$header = replace_macros($tpl, array(
 		'$messages' => t('Messages'),
@@ -328,6 +334,11 @@ function message_content(&$a) {
 			'$defexpire' => '',
 			'$feature_expire' => ((feature_enabled(local_user(),'content_expire')) ? 'block' : 'none'),
 			'$expires' => t('Set expiration date'),
+			'$feature_encrypt' => ((feature_enabled(local_user(),'content_encrypt')) ? 'block' : 'none'),
+			'$encrypt' => t('Encrypt text'),
+			'$cipher' => $cipher,
+
+
 		));
 
 		return $o;
@@ -506,6 +517,10 @@ function message_content(&$a) {
 			'$defexpire' => '',
 			'$feature_expire' => ((feature_enabled(local_user(),'content_expire')) ? 'block' : 'none'),
 			'$expires' => t('Set expiration date'),
+			'$feature_encrypt' => ((feature_enabled(local_user(),'content_encrypt')) ? 'block' : 'none'),
+			'$encrypt' => t('Encrypt text'),
+			'$cipher' => $cipher,
+
 		));
 
 		return $o;

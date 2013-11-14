@@ -1632,8 +1632,10 @@ function profile_load(&$a, $nickname, $profile = '') {
 	if(! $r) {
 		$r = q("SELECT profile.uid AS profile_uid, profile.*, channel.* FROM profile
 			LEFT JOIN channel ON profile.uid = channel.channel_id
-			WHERE channel.channel_address = '%s' AND profile.is_default = 1 LIMIT 1",
-			dbesc($nickname)
+			WHERE channel.channel_address = '%s' and not ( channel_pageflags & %d ) 
+			AND profile.is_default = 1 LIMIT 1",
+			dbesc($nickname),
+			intval(PAGE_REMOVED)
 		);
 	}
 

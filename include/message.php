@@ -76,12 +76,12 @@ function send_message($uid = 0, $recipient='', $body='', $subject='', $replyto='
 
 	$match = null;
 	$images = null;
-	if(preg_match_all("/\[img\](.*?)\[\/img\]/",$body,$match))
+	if(preg_match_all("/\[img\](.*?)\[\/img\]/",((strpos($body,'[/crypt]')) ? $_POST['media_str'] : $body),$match))
 		$images = $match[1];
 
 	$match = false;
 
-	if(preg_match_all("/\[attachment\](.*?)\[\/attachment\]/",$body,$match))
+	if(preg_match_all("/\[attachment\](.*?)\[\/attachment\]/",((strpos($body,'[/crypt]')) ? $_POST['media_str'] : $body),$match))
 		$attaches = $match[1];
 
 	$attachments = '';

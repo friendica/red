@@ -112,17 +112,18 @@ function photo_init(&$a) {
 				// There won't be many completely unauthorised people seeing this because
 				// they won't have the photo link, so there's a reasonable chance that the person
 				// might be able to obtain permission to view it.
- 
+
 				$r = q("SELECT * FROM `photo` WHERE `resource_id` = '%s' AND `scale` = %d LIMIT 1",
 					dbesc($photo),
 					intval($resolution)
 				);
+
 				if($r) {
-					logger('mod_photo: forbidden. ' . $a->query_string());
+					logger('mod_photo: forbidden. ' . $a->query_string);
 					$observer = $a->get_observer();
 					logger('mod_photo: observer = ' . (($observer) ? $observer['xchan_addr'] : '(not authenticated)'));
 					$data = file_get_contents('images/nosign.png');
-					$mimetype = 'image/jpeg';
+					$mimetype = 'image/png';
 					$prvcachecontrol = true;
 				}
 			}
