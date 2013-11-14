@@ -781,6 +781,12 @@ footer {
 	height: 120px;
 	padding: 10px;
 }
+
+#contacts-search {
+	font-size: 1em;
+	width: 300px;
+}
+
 #contacts-search-end {
 	margin-bottom: 10px;
 }
@@ -2894,14 +2900,26 @@ div.jGrowl div.info {
 	width:100px;
 }
 
-#recip {
-	
+#nav-search-text-ac .autocomplete {
+	position: fixed;
+	top: 24px;
+	border: 1px solid $nav_bg_2;
+	border-top: none;
 }
 
-.autocomplete { 
-	color: $font_colour;
-	border: 1px solid $nav_bg_1;
+#search-text-ac .autocomplete,
+#recip-ac .autocomplete,
+#poke-recip-ac .autocomplete,
+#id-name-ac .autocomplete,
+#contact-search-ac .autocomplete {
+	margin-top: 2px;
+	margin-left: $radiuspx;
+	border: 1px solid #666;
 	border-top: none;
+}
+
+.autocomplete {
+	color: $font_colour;
 	background: #FFF;
 	cursor: pointer;
 	text-align: left;

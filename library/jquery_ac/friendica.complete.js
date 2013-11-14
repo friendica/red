@@ -35,6 +35,7 @@
     this.ignoreValueChange = false;
     this.serviceUrl = options.serviceUrl;
     this.isLocal = false;
+    this.id = options.id;
     this.options = {
       autoSubmit: false,
       minChars: 1,
@@ -77,7 +78,7 @@
       if (!this.options.width) { this.options.width = this.el.width(); }
       this.mainContainerId = 'AutocompleteContainter_' + uid;
 
-      $('<div id="' + this.mainContainerId + '" style="position:absolute;z-index:9999;"><div class="autocomplete-w1"><div class="autocomplete" id="' + autocompleteElId + '" style="display:none; width:300px;"></div></div></div>').appendTo('body');
+      $('<div id="' + this.mainContainerId + '" style="position:absolute;z-index:9999;"><div class="autocomplete-w1" id="'+this.id+'"><div class="autocomplete" id="' + autocompleteElId + '" style="display:none; width:300px;"></div></div></div>').appendTo('body');
 
       this.container = $('#' + autocompleteElId);
       this.fixPosition();

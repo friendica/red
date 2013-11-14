@@ -3,7 +3,8 @@ $(document).ready(function() {
 	a = $("#contacts-search").autocomplete({ 
 		serviceUrl: baseurl + '/acl',
 		minChars: 2,
-		width: 350,
+		width: 250,
+		id: 'contact-search-ac',
 	});
 	a.setOptions({ autoSubmit: true, params: { type: 'a' }});
 
