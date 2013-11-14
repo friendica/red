@@ -53,20 +53,38 @@ function page_content(&$a) {
 	else
 		$revision = " order by revision desc ";
 
+	require_once('include/security.php');
+	$sql_options = item_permissions_sql($u[0]['channel_id']);
 
 	$r = q("select item.* from item left join item_id on item.id = item_id.iid
 		where item.uid = %d and sid = '%s' and service = 'WEBPAGE' and 
-		item_restrict = %d $revision limit 1",
+		item_restrict = %d $sql_options $revision limit 1",
 		intval($u[0]['channel_id']),
 		dbesc($page_id),
 		intval(ITEM_WEBPAGE)
 	);
 
 	if(! $r) {
-		notice( t('Item not found.') . EOL);
+
+		// Check again with no permissions clause to see if it is a permissions issue
+
+		$x = q("select item.* from item left join item_id on item.id = item_id.iid
+		where item.uid = %d and sid = '%s' and service = 'WEBPAGE' and 
+		item_restrict = %d $revision limit 1",
+			intval($u[0]['channel_id']),
+			dbesc($page_id),
+			intval(ITEM_WEBPAGE)
+		);
+		if($x) {
+			// Yes, it's there. You just aren't allowed to see it.
+			notice( t('Permission denied.') . EOL);
+		}
+		else {
+			notice( t('Page not found.') . EOL);
+		}
 		return;
 	}
-dbg(1);
+
 	if($r[0]['layout_mid']) {
 		$l = q("select body from item where mid = '%s' and uid = %d limit 1",
 			dbesc($r[0]['layout_mid']),
@@ -78,12 +96,11 @@ dbg(1);
 			comanche_parser(get_app(),$l[0]['body']);
 		}
 	}
-dbg(0);
-
-logger('layout: ' . print_r($a->layout,true));
 
 
-	// Use of widgets should be determined by Comanche, but we don't have it yet, so...
+	// logger('layout: ' . print_r($a->layout,true));
+
+	// Use of widgets should be determined by Comanche, but we don't have it on system pages yet, so...
 
 	if ($perms['write_pages']) {
 		$chan = $a->channel['channel_id'];
@@ -95,7 +112,7 @@ logger('layout: ' . print_r($a->layout,true));
 	xchan_query($r);
 	$r = fetch_post_tags($r,true);
 
-	$o .= prepare_page($r[0]);
+	$o .= prepare_body($r[0],true);
 	return $o;
 
 }

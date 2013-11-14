@@ -33,10 +33,12 @@ function magic_init(&$a) {
 
 		if(count($b) >= 2) {
 			$u = $b[0] . '//' . $b[2];
+dbg(1);
 			$x = q("select xchan.xchan_url, hubloc.* from xchan left join hubloc on xchan_hash = hubloc_hash
 				where hubloc_url = '%s' order by hubloc_id desc limit 1",
 				dbesc($u)
 			);
+dbg(0);
 		}
 	}
 
