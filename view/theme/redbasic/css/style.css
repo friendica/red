@@ -1721,6 +1721,7 @@ tr.mceLast {
 #prvmail-attach-wrapper,
 #prvmail-link-wrapper,
 #prvmail-expire-wrapper,
+#prvmail-encrypt-wrapper,
 #prvmail-rotator-wrapper {
 	float: left;
 	margin-top: 10px;
@@ -2895,11 +2896,6 @@ div.jGrowl div.info {
 
 #recip {
 	
-}
-
-.autocomplete-w1 {
-	position: fixed;
-	top: 24px;
 }
 
 .autocomplete { 

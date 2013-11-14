@@ -15,6 +15,7 @@
 {{/if}}
 
 <input type="hidden" id="inp-prvmail-expires" name="expires" value="{{$defexpire}}" />
+<input type="hidden" name="media_str" id="jot-media" value="" />
 
 <div id="prvmail-subject-label">{{$subject}}</div>
 <input type="text" size="64" maxlength="255" id="prvmail-subject" name="subject" value="{{$subjtxt}}" {{$readonly}} tabindex="11" />
@@ -40,7 +41,9 @@
     <div id="prvmail-expire-wrapper" style="display: {{$feature_expire}};" >
         <i id="prvmail-expires" class="icon-eraser jot-icons" title="{{$expires}}" onclick="prvmailGetExpiry();return false;"></i>
     </div>
-
+	<div id="prvmail-encrypt-wrapper" style="display: {{$feature_encrypt}};" >
+		<i id="prvmail-encrypt" class="icon-key jot-icons" title="{{$encrypt}}" onclick="red_encrypt('{{$cipher}}','#prvmail-text',$('#prvmail-text').val());return false;"></i>
+	</div> 
 
 	<div id="prvmail-rotator-wrapper" >
 		<img id="prvmail-rotator" src="images/rotator.gif" alt="{{$wait}}" title="{{$wait}}" style="display: none;" />
