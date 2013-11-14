@@ -141,7 +141,7 @@ $options = array (
 '$radius' => $radius,
 '$shadow' => $shadow,
 '$active_colour' => $active_colour,
-'$converse_width' => $section_width,
+'$converse_width' => $converse_width,
 '$nav_float_min_opacity' => $nav_float_min_opacity,
 '$nav_percent_min_opacity' => $nav_percent_min_opacity
 );
