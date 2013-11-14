@@ -22,6 +22,7 @@ function nav(&$a) {
         serviceUrl: '$base/acl',
         minChars: 2,
         width: 250,
+        id: 'nav-search-text-ac',
     });
     a.setOptions({ autoSubmit: true, params: { type: 'x' }});
 

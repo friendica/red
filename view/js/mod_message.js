@@ -3,10 +3,11 @@ $(document).ready(function() {
 	a = $("#recip").autocomplete({ 
 		serviceUrl: baseurl + '/acl',
 		minChars: 2,
-		width: 350,
+		width: 250,
+		id: 'recip-ac',
 		onSelect: function(value,data) {
 			$("#recip-complete").val(data);
-		}			
+		},
 	});
 
 }); 
