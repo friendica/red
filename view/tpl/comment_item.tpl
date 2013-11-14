@@ -18,28 +18,33 @@
 				<ul class="comment-edit-bb-{{$id}}">
 					<li><i class="icon-bold shadow comment-icon"
 						style="cursor: pointer;" title="{{$edbold}}"
-						onclick="insertFormatting('{{$comment}}','b', {{$id}});"></i></li>
+						onclick="insertbbcomment('{{$comment}}','b', {{$id}});"></i></li>
 					<li><i class="icon-italic shadow comment-icon"
 						style="cursor: pointer;" title="{{$editalic}}"
-						onclick="insertFormatting('{{$comment}}','i', {{$id}});"></i></li>
+						onclick="insertbbcomment('{{$comment}}','i', {{$id}});"></i></li>
 					<li><i class="icon-underline shadow comment-icon"
 						style="cursor: pointer;" title="{{$eduline}}"
-						onclick="insertFormatting('{{$comment}}','u', {{$id}});"></i></li>
+						onclick="insertbbcomment('{{$comment}}','u', {{$id}});"></i></li>
 					<li><i class="icon-quote-left shadow comment-icon"
 						style="cursor: pointer;" title="{{$edquote}}"
-						onclick="insertFormatting('{{$comment}}','quote', {{$id}});"></i></li>
+						onclick="insertbbcomment('{{$comment}}','quote', {{$id}});"></i></li>
 					<li><i class="icon-terminal shadow comment-icon"
 						style="cursor: pointer;" title="{{$edcode}}"
-						onclick="insertFormatting('{{$comment}}','code', {{$id}});"></i></li>
+						onclick="insertbbcomment('{{$comment}}','code', {{$id}});"></i></li>
 					<li><i class="icon-camera shadow comment-icon"
 						style="cursor: pointer;" title="{{$edimg}}"
-						onclick="insertFormatting('{{$comment}}','img', {{$id}});"></i></li>
+						onclick="insertbbcomment('{{$comment}}','img', {{$id}});"></i></li>
 					<li><i class="icon-link shadow comment-icon"
 						style="cursor: pointer;" title="{{$edurl}}"
-						onclick="insertFormatting('{{$comment}}','url', {{$id}});"></i></li>
+						onclick="insertbbcomment('{{$comment}}','url', {{$id}});"></i></li>
 					<li><i class="icon-facetime-video shadow comment-icon"
 						style="cursor: pointer;" title="{{$edvideo}}"
-						onclick="insertFormatting('{{$comment}}','video', {{$id}});"></i></li>
+						onclick="insertbbcomment('{{$comment}}','video', {{$id}});"></i></li>
+					{{if $feature_encrypt}}
+						<li><i class="icon-key shadow comment-icon"
+							style="cursor: pointer;" title="{{$encrypt}}"
+							onclick="red_encrypt('{{$cipher}}','#comment-edit-text-' + {{$id}},''); return false;"></i></li>
+					{{/if}}
 				</ul>	
 				<div class="comment-edit-bb-end"></div>
 				<textarea id="comment-edit-text-{{$id}}" class="comment-edit-text-empty" name="body" onFocus="commentOpen(this,{{$id}});cmtBbOpen(this, {{$id}});" onBlur="commentClose(this,{{$id}});cmtBbClose(this,{{$id}});" >{{$comment}}</textarea>			

@@ -532,9 +532,6 @@ function conversation(&$a, $items, $mode, $update, $page_mode = 'traditional', $
 
 	$items = $cb['items'];
 
-	$cmnt_tpl    = get_markup_template('comment_item.tpl');
-	$hide_comments_tpl = get_markup_template('hide_comments.tpl');
-
 	$alike = array();
 	$dlike = array();
 

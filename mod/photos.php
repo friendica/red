@@ -1079,7 +1079,8 @@ function photos_content(&$a) {
 						'$comment' => t('Comment'),
 						'$submit' => t('Submit'),
 						'$preview' => t('Preview'),
-						'$ww' => ''
+						'$ww' => '',
+						'$feature_encrypt' => false
 					));
 				}
 			}
