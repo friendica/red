@@ -133,10 +133,7 @@ nav {
 
 }
 
-/*
-section {width: $section_width;
-}
-*/
+
 
 nav:hover {
 	background-image: linear-gradient(bottom, $nav_bg_3 26%, $nav_bg_4 82%);
@@ -1028,7 +1025,7 @@ footer {
 
 .thread-wrapper.toplevel_item {
 	width: 92%; 
-	max-width: 1024px;
+	max-width: $converse_width;
 }
 
 .wall-item-body {

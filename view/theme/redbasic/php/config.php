@@ -18,7 +18,7 @@ function theme_content(&$a) {
 	$arr['font_colour'] = get_pconfig(local_user(),'redbasic', 'font_colour' );
 	$arr['radius'] = get_pconfig(local_user(),'redbasic', 'radius' );
 	$arr['shadow'] = get_pconfig(local_user(),'redbasic', 'photo_shadow' );
-	$arr['section_width']=get_pconfig(local_user(),"redbasic","section_width");
+	$arr['converse_width']=get_pconfig(local_user(),"redbasic","converse_width");
 	$arr['nav_min_opacity']=get_pconfig(local_user(),"redbasic","nav_min_opacity");
 	$arr['sloppy_photos']=get_pconfig(local_user(),"redbasic","sloppy_photos");
 	return redbasic_form($a, $arr);
@@ -41,7 +41,7 @@ function theme_post(&$a) {
 		set_pconfig(local_user(), 'redbasic', 'font_colour', $_POST['redbasic_font_colour']);
 		set_pconfig(local_user(), 'redbasic', 'radius', $_POST['redbasic_radius']);
 		set_pconfig(local_user(), 'redbasic', 'photo_shadow', $_POST['redbasic_shadow']);
-		set_pconfig(local_user(), 'redbasic', 'section_width', $_POST['redbasic_section_width']);
+		set_pconfig(local_user(), 'redbasic', 'converse_width', $_POST['redbasic_converse_width']);
 		set_pconfig(local_user(), 'redbasic', 'nav_min_opacity', $_POST['redbasic_nav_min_opacity']);
 		set_pconfig(local_user(), 'redbasic', 'sloppy_photos', $_POST['redbasic_sloppy_photos']);
 	}
@@ -93,7 +93,7 @@ if(feature_enabled(local_user(),'expert'))
 		'$font_colour' => array('redbasic_font_colour', t('Set font-colour for posts and comments'), $arr['font_colour']),
 		'$radius' => array('redbasic_radius', t('Set radius of corners'), $arr['radius']),
 		'$shadow' => array('redbasic_shadow', t('Set shadow depth of photos'), $arr['shadow']),
-		'$section_width' => array('redbasic_section_width',t('Set width of main section'),$arr['section_width']),
+		'$converse_width' => array('redbasic_converse_width',t('Set maximum width of conversation regions'),$arr['converse_width']),
 		'$nav_min_opacity' => array('redbasic_nav_min_opacity',t('Set minimum opacity of nav bar - to hide it'),$arr['nav_min_opacity']),
 		'$sloppy_photos' => array('redbasic_sloppy_photos',t('Sloppy photo albums'),$arr['sloppy_photos'],t('Are you a clean desk or a messy desk person?')),
 		));

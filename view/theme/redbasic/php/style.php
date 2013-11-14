@@ -24,7 +24,7 @@
 	    $font_colour = get_pconfig($uid, "redbasic", "font_colour");	
 	    $radius = get_pconfig($uid, "redbasic", "radius");	
 	    $shadow = get_pconfig($uid,"redbasic","photo_shadow");
-	    $section_width=get_pconfig($uid,"redbasic","section_width");
+	    $converse_width=get_pconfig($uid,"redbasic","converse_width");
 		$nav_min_opacity=get_pconfig($uid,'redbasic','nav_min_opacity');
 		$sloppy_photos=get_pconfig($uid,'redbasic','sloppy_photos');
 
@@ -84,8 +84,8 @@
 		$shadow = "0";
 	if(! $active_colour)
 		$active_colour = '#FFFFFF';
-    if (! $section_width)
-    	$section_width="72%";
+    if (! $converse_width)
+    	$converse_width="1024px";
 	if($nav_min_opacity === false || $nav_min_opacity === '') {
 		$nav_float_min_opacity = 1.0;
 		$nav_percent_min_opacity = 100;
@@ -141,7 +141,7 @@ $options = array (
 '$radius' => $radius,
 '$shadow' => $shadow,
 '$active_colour' => $active_colour,
-'$section_width' => $section_width,
+'$converse_width' => $section_width,
 '$nav_float_min_opacity' => $nav_float_min_opacity,
 '$nav_percent_min_opacity' => $nav_percent_min_opacity
 );
