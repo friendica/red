@@ -6,6 +6,8 @@ function magic_init(&$a) {
 
 	logger('mod_magic: invoked', LOGGER_DEBUG);
 
+	logger('mod_magic: args: ' . print_r($_REQUEST,true),LOGGER_DATA);
+
 	$addr = ((x($_REQUEST,'addr')) ? $_REQUEST['addr'] : '');
 	$hash = ((x($_REQUEST,'hash')) ? $_REQUEST['hash'] : '');
 	$dest = ((x($_REQUEST,'dest')) ? $_REQUEST['dest'] : '');

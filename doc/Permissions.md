@@ -4,7 +4,7 @@ Permissions in the Red Matrix are more complete than you may be used to.  This a
 
 **Default Permissions**
 
-On your settings page, you will find a list of default permissions.  These permissions are automatically applied to everybody unless you specify otherwise.  The scope of these permissions varies from "Only me" to "Everybody" - though some scopes may not be available for some permissions.  For example, you can't allow "anybody on the internet" to send you private messages, because we'd have no way to identify the sender, or offer a return.
+On your settings page, you will find a list of default permissions.  These permissions are automatically applied to everybody unless you specify otherwise.  The scope of these permissions varies from "Only me" to "Everybody" - though some scopes may not be available for some permissions.  For example, you can't allow "anybody on the internet" to send you private messages, because we'd have no way to identify the sender, therefore no way to reply to them.
 
 The scopes of permissions are:
 
@@ -12,7 +12,7 @@ The scopes of permissions are:
 - _Only those you specifically allow_.  By default, people you are not connected to, and all new contacts will have this permission denied.  You will be able to make exceptions for individual channels on their contact edit screen.
 - _Anybody in your address book_.  Anybody you do not know will have this permission denied, but anybody you accept as a contact will have this permission approved.  This is the way most legacy platforms handle permissions.
 - _Anybody On This Website_.  Anybody using the same website as you will have permission approved.  Anybody who registered at a different site will have this permission denied.
-- _Anybody in this network_.  Anybody who has got zot will have this permission approved.  Even complete strangers.  However, anybody not logged in/authenticated will have this permission denid.
+- _Anybody in this network_.  Anybody in the Red Matrix will have this permission approved.  Even complete strangers.  However, anybody not logged in/authenticated will have this permission denied.
 - _Anybody on the internet_.  Completely public.  This permission will be approved for anybody at all.
 
 The individual permissions are:
@@ -34,10 +34,12 @@ The individual permissions are:
 - _Can edit my "public" pages_.  This determines who can edit your webpages.  This is useful for wikis or sites with multiple editors, but this isn't done yet, so this is placeholder text.
 - _Can administer my channel resources_.  This determines who can have full control of your channel.  This should normally be set to "nobody except myself".
 
-If you have set any of these permissions to "only those I specifically allow", you may specify indivudal permissions on the contact edit screen.
+Plugins/addons may provide special permission settings, so you may be offered additional permission settings beyond what is described here. 
+
+If you have set any of these permissions to "only those I specifically allow", you may specify indivudal permissions on the connnection edit screen.
 
 **Affinity**
 
-The contact edit screen offers a slider to select a degree of friendship with the contact.  Think of this as a measure of how much you dislike them.  1 is for people you like, whose posts you want to see all the time.  99 is for people you can't stand, whose posts you never want to see.  Once you've assigned a value here, you can use the affinity tool (assuming you have it enabled) on the network page to filter content based on this number.  
+The connection edit screen offers a slider to select a degree of friendship with the connnection (this tool is enabled through the "Extra Features" tab of your Settings page).  Think of this as a measure of how much you like or dislike them.  1 is for people you like, whose posts you want to see all the time.  99 is for people you don't care for, and whose posts you might only wish to look at occasionally.  Once you've assigned a value here, you can use the affinity tool on the matrix page to filter content based on this number.  
 
-The slider has both a minimum and maximum value.  Posts will only be shown from people who fall between this range.  Affinity has no relation to permissions, and is only useful in conjunction with the affinity tool feature.
+The slider on the matrix page has both a minimum and maximum value.  Posts will only be shown from people who fall between this range.  Affinity has no relation to permissions, and is only useful in conjunction with the affinity tool feature.
