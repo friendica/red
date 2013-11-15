@@ -142,13 +142,14 @@ function invite_content(&$a) {
 		'$default_message' => t('You are cordially invited to join me and some other close friends on the Red Matrix - a revolutionary new decentralised communication and information tool.') . "\r\n" . "\r\n"
 			. $linktxt
 			. (($invonly) ? "\r\n" . "\r\n" . t('You will need to supply this invitation code: $invite_code') . "\r\n" . "\r\n" : '') 
-
 			. t('Please visit my channel at')
 			. "\r\n" . "\r\n"
 			. z_root() . "/channel/" . $channel['channel_address']
 			. "\r\n" . "\r\n"
 						. t('Once you have registered (on ANY Red Matrix site - they are all inter-connected), please connect with my Red Matrix channel address:') 
 			. "\r\n" . "\r\n" . $ob['xchan_addr']
+			. "\r\n" . "\r\n" . t('Click the [Register] link on the following page to join.') . "\r\n" . "\r\n" . z_root()
+
 			. "\r\n" . "\r\n" . t('For more information about the Red Matrix Project and why it has the potential to change the internet as we know it, please visit http://getzot.com') . "\r\n" . "\r\n"  ,
 		'$submit' => t('Submit')
 	));
