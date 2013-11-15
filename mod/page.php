@@ -112,7 +112,16 @@ function page_content(&$a) {
 	xchan_query($r);
 	$r = fetch_post_tags($r,true);
 
-	$o .= prepare_body($r[0],true);
-	return $o;
+	$body = prepare_body($r[0],true);
 
+
+        return $o . replace_macros(get_markup_template('page_display.tpl'),array(
+                '$author' => (($naked) ? '' : $item['author']['xchan_name']),
+                '$auth_url' => (($naked) ? '' : $item['author']['xchan_url']),
+                '$date' => (($naked) ? '' : datetime_convert('UTC',date_default_timezone_get(),$item['created'],'Y-m-d H:i')),
+                '$title' => smilies(bbcode($item['title'])),
+                '$body' => $body
+        ));
 }
+
+
