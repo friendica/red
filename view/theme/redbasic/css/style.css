@@ -2906,7 +2906,7 @@ div.jGrowl div.info {
 #nav-search-text-ac .autocomplete {
 	position: fixed;
 	top: 24px;
-	border: 1px solid $nav_bg_2;
+	border: 1px solid $nav_bg_1;
 	border-top: none;
 }
 
@@ -2919,6 +2919,7 @@ div.jGrowl div.info {
 	margin-left: $radiuspx;
 	border: 1px solid #666;
 	border-top: none;
+
 }
 
 .autocomplete {
