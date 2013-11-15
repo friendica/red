@@ -84,7 +84,13 @@ function create_identity($arr) {
 	if (!$ret['success']) { 
 		return $ret;
 	}
+
 	$nick = mb_strtolower(trim($arr['nickname']));
+	if(! $nick) {
+		$ret['message'] = t('Nickname is required.');
+		return $ret;
+	}
+
 	$name = escape_tags($arr['name']);
 	$pageflags = ((x($arr,'pageflags')) ? intval($arr['pageflags']) : PAGE_NORMAL);
 
