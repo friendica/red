@@ -81,7 +81,7 @@
 	if (! $font_colour)
 		$font_colour = "#4D4D4D";
 	if (! $radius)
-		$radius = "5";
+		$radius = "0";
 	if (! $shadow)
 		$shadow = "0";
 	if(! $active_colour)
@@ -89,11 +89,11 @@
     if (! $converse_width)
     	$converse_width="1024px";
 	if(! $top_photo)
-		$top_photo = '80px';
+		$top_photo = '64px';
 	$pmenu_top = intval($top_photo) - 6 . 'px';
 
 	if(! $reply_photo)
-		$reply_photo = '50px';
+		$reply_photo = '32px';
 	$pmenu_reply = intval($reply_photo) - 6 . 'px';
 
 	if($nav_min_opacity === false || $nav_min_opacity === '') {

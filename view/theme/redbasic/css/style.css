@@ -9,7 +9,7 @@
 /* generals */
 body {
 	font-family: arial,freesans,sans-serif;
-	font-size: 12px;
+	font-size: 11px;
 	background-color: $bgcolour;
 	background-image: url('$background_image');
 	background-attachment: fixed;
@@ -938,7 +938,7 @@ footer {
 }
 
 .wall-item-lock {
-	font-size: 1.4em;
+	font-size: 1.2em;
     left: 105px;
     position: absolute;
     top: 1px;
@@ -2952,7 +2952,7 @@ div.jGrowl div.info {
 
 .jslider .jslider-scale ins {
     color: #333;
-	font-size: 12px;
+	font-size: 10px;
 	width: 100px;
 	text-align: center;
 }
