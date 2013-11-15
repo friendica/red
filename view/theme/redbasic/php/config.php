@@ -20,6 +20,8 @@ function theme_content(&$a) {
 	$arr['shadow'] = get_pconfig(local_user(),'redbasic', 'photo_shadow' );
 	$arr['converse_width']=get_pconfig(local_user(),"redbasic","converse_width");
 	$arr['nav_min_opacity']=get_pconfig(local_user(),"redbasic","nav_min_opacity");
+	$arr['top_photo']=get_pconfig(local_user(),"redbasic","top_photo");
+	$arr['reply_photo']=get_pconfig(local_user(),"redbasic","reply_photo");
 	$arr['sloppy_photos']=get_pconfig(local_user(),"redbasic","sloppy_photos");
 	return redbasic_form($a, $arr);
 }
@@ -43,6 +45,8 @@ function theme_post(&$a) {
 		set_pconfig(local_user(), 'redbasic', 'photo_shadow', $_POST['redbasic_shadow']);
 		set_pconfig(local_user(), 'redbasic', 'converse_width', $_POST['redbasic_converse_width']);
 		set_pconfig(local_user(), 'redbasic', 'nav_min_opacity', $_POST['redbasic_nav_min_opacity']);
+		set_pconfig(local_user(), 'redbasic', 'top_photo', $_POST['redbasic_top_photo']);
+		set_pconfig(local_user(), 'redbasic', 'reply_photo', $_POST['redbasic_reply_photo']);
 		set_pconfig(local_user(), 'redbasic', 'sloppy_photos', $_POST['redbasic_sloppy_photos']);
 	}
 }
@@ -95,6 +99,8 @@ if(feature_enabled(local_user(),'expert'))
 		'$shadow' => array('redbasic_shadow', t('Set shadow depth of photos'), $arr['shadow']),
 		'$converse_width' => array('redbasic_converse_width',t('Set maximum width of conversation regions'),$arr['converse_width']),
 		'$nav_min_opacity' => array('redbasic_nav_min_opacity',t('Set minimum opacity of nav bar - to hide it'),$arr['nav_min_opacity']),
+		'$top_photo' => array('redbasic_top_photo', t('Set size of conversation author photo'), $arr['top_photo']),
+		'$reply_photo' => array('redbasic_reply_photo', t('Set size of followup author photos'), $arr['reply_photo']),
 		'$sloppy_photos' => array('redbasic_sloppy_photos',t('Sloppy photo albums'),$arr['sloppy_photos'],t('Are you a clean desk or a messy desk person?')),
 		));
 

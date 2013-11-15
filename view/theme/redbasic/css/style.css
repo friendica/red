@@ -1005,10 +1005,13 @@ footer {
 
 .wall-item-photo {
 	border: none;
+	width: $top_photo !important;
+	height: $top_photo !important;
+
 }
 .comment .wall-item-photo {
-	width: 50px !important; 
-	height: 50px !important;
+	width: $reply_photo !important; 
+	height: $reply_photo !important;
 }
 .wall-item-content {
 	margin-left: 10px;
