@@ -43,7 +43,7 @@
 					{{if $feature_encrypt}}
 						<li><i class="icon-key shadow comment-icon"
 							style="cursor: pointer;" title="{{$encrypt}}"
-							onclick="red_encrypt('{{$cipher}}','#comment-edit-text-' + {{$id}},''); return false;"></i></li>
+							onclick="red_encrypt('{{$cipher}}','#comment-edit-text-' + '{{$id}}',''); return false;"></i></li>
 					{{/if}}
 				</ul>	
 				<div class="comment-edit-bb-end"></div>

@@ -27,18 +27,13 @@ class Item extends BaseObject {
 	private $threaded = false;
 	private $visiting = false;
 	private $channel = null;
-	private $cipher = 'aes256';
+
 
 	public function __construct($data) {
 		$a = $this->get_app();
 				
 		$this->data = $data;
 		$this->toplevel = ($this->get_id() == $this->get_data_value('parent'));
-
-		$cipher = get_pconfig($x['profile_uid'],'system','default_cipher');
-		if($cipher)
-			$this->cipher = $cipher;
-
 
 		// Prepare the children
 		if(count($data['children'])) {
@@ -545,7 +540,7 @@ class Item extends BaseObject {
 			'$indent' => $indent,
 			'$feature_encrypt' => ((feature_enabled($conv->get_profile_owner(),'content_encrypt')) ? true : false),
 			'$encrypt' => t('Encrypt text'),
-			'$cipher' => $this->cipher,
+			'$cipher' => $conv->get_cipher(),
 			'$sourceapp' => get_app()->sourcename
 
 		));
