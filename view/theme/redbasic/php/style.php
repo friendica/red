@@ -75,7 +75,7 @@
 	if (! $item_opacity)
 		$item_opacity = "1";
 	if (! $font_size)
-		$font_size = "12";
+		$font_size = "1.0em";
 	if (! $font_colour)
 		$font_colour = "#4D4D4D";
 	if (! $radius)

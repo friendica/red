@@ -1013,7 +1013,7 @@ footer {
 .wall-item-content {
 	margin-left: 10px;
 	overflow: auto;
-	font-size: $font_sizepx;
+	font-size: $font_size;
 }
 
 .wall-item-content img {
