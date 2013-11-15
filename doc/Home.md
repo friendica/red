@@ -20,6 +20,8 @@ Red Matrix Documentation and Resources
 * [Plugins](help/Plugins)
 * [Developers](help/Developers)
 * [Code](doc/html)
+* [To-Do list for the Red Documentation Project](help/To-Do)
+* [To-Do list for Developers](help/To-Do-Code)
 
 **External Resources**
 
