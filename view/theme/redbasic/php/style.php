@@ -20,6 +20,7 @@
 		$toolicon_activecolour = get_pconfig($uid,'redbasic','toolicon_activecolour');
 	    $item_colour = get_pconfig($uid, "redbasic", "item_colour");	
 	    $item_opacity = get_pconfig($uid, "redbasic", "item_opacity");	
+	    $body_font_size = get_pconfig($uid, "redbasic", "body_font_size");	
 	    $font_size = get_pconfig($uid, "redbasic", "font_size");	
 	    $font_colour = get_pconfig($uid, "redbasic", "font_colour");	
 	    $radius = get_pconfig($uid, "redbasic", "radius");	
@@ -78,6 +79,8 @@
 		$item_opacity = "1";
 	if (! $font_size)
 		$font_size = "1.0em";
+	if (! $body_font_size)
+		$body_font_size = "11px";
 	if (! $font_colour)
 		$font_colour = "#4D4D4D";
 	if (! $radius)
@@ -148,6 +151,7 @@ $options = array (
 '$toolicon_activecolour' => $toolicon_activecolour,
 '$font_size' => $font_size,
 '$font_colour' => $font_colour,
+'$body_font_size' => $body_font_size,
 '$radius' => $radius,
 '$shadow' => $shadow,
 '$active_colour' => $active_colour,

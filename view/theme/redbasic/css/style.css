@@ -9,7 +9,7 @@
 /* generals */
 body {
 	font-family: arial,freesans,sans-serif;
-	font-size: 11px;
+	font-size: $body_font_size;
 	background-color: $bgcolour;
 	background-image: url('$background_image');
 	background-attachment: fixed;
@@ -60,6 +60,7 @@ input {
 	-moz-border-radius: $radiuspx;
 	border-radius: $radiuspx;	
 	padding: 3px;
+	font-size: $body_font_size;
 }
 
 code {
@@ -2952,7 +2953,7 @@ div.jGrowl div.info {
 
 .jslider .jslider-scale ins {
     color: #333;
-	font-size: 10px;
+	font-size: $body_font_size;
 	width: 100px;
 	text-align: center;
 }

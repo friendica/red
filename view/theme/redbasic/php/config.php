@@ -15,6 +15,7 @@ function theme_content(&$a) {
 	$arr['toolicon_colour'] = get_pconfig(local_user(),'redbasic','toolicon_colour');
 	$arr['toolicon_activecolour'] = get_pconfig(local_user(),'redbasic','toolicon_activecolour');
 	$arr['font_size'] = get_pconfig(local_user(),'redbasic', 'font_size' );
+	$arr['body_font_size'] = get_pconfig(local_user(),'redbasic', 'body_font_size' );
 	$arr['font_colour'] = get_pconfig(local_user(),'redbasic', 'font_colour' );
 	$arr['radius'] = get_pconfig(local_user(),'redbasic', 'radius' );
 	$arr['shadow'] = get_pconfig(local_user(),'redbasic', 'photo_shadow' );
@@ -40,6 +41,7 @@ function theme_post(&$a) {
 		set_pconfig(local_user(), 'redbasic', 'toolicon_colour', $_POST['redbasic_toolicon_colour']);
 		set_pconfig(local_user(), 'redbasic', 'toolicon_activecolour', $_POST['redbasic_toolicon_activecolour']);
 		set_pconfig(local_user(), 'redbasic', 'font_size', $_POST['redbasic_font_size']);
+		set_pconfig(local_user(), 'redbasic', 'body_font_size', $_POST['redbasic_body_font_size']);
 		set_pconfig(local_user(), 'redbasic', 'font_colour', $_POST['redbasic_font_colour']);
 		set_pconfig(local_user(), 'redbasic', 'radius', $_POST['redbasic_radius']);
 		set_pconfig(local_user(), 'redbasic', 'photo_shadow', $_POST['redbasic_shadow']);
@@ -93,6 +95,7 @@ if(feature_enabled(local_user(),'expert'))
 		'$item_opacity' => array('redbasic_item_opacity', t('Set the opacity of items'), $arr['item_opacity']),
 		'$toolicon_colour' => array('redbasic_toolicon_colour',t('Set the basic colour for item icons'),$arr['toolicon_colour']),
 		'$toolicon_activecolour' => array('redbasic_toolicon_activecolour',t('Set the hover colour for item icons'),$arr['toolicon_activecolour']),
+		'$body_font_size' => array('redbasic_body_font_size', t('Set font-size for the entire application'), $arr['body_font_size']),
 		'$font_size' => array('redbasic_font_size', t('Set font-size for posts and comments'), $arr['font_size']),
 		'$font_colour' => array('redbasic_font_colour', t('Set font-colour for posts and comments'), $arr['font_colour']),
 		'$radius' => array('redbasic_radius', t('Set radius of corners'), $arr['radius']),
