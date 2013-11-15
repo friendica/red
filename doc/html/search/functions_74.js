@@ -26,6 +26,7 @@ var searchData=
   ['timezone_5fcmp',['timezone_cmp',['../datetime_8php.html#aa51b5a7ea4f931b23acbdfcea46e9865',1,'datetime.php']]],
   ['title_5fis_5fbody',['title_is_body',['../items_8php.html#aa371905f0a211b307cb3f7188c6cba04',1,'items.php']]],
   ['toggle_5fmobile_5finit',['toggle_mobile_init',['../toggle__mobile_8php.html#aca53ade8971802b45c31e722b22c6254',1,'toggle_mobile.php']]],
+  ['toggle_5fsafesearch_5finit',['toggle_safesearch_init',['../toggle__safesearch_8php.html#a23d5cfb2727a266e44993ffbf5595a79',1,'toggle_safesearch.php']]],
   ['toggle_5ftheme',['toggle_theme',['../admin_8php.html#af81f081851791cd15e49e8ff6722dc27',1,'admin.php']]],
   ['tryoembed',['tryoembed',['../bbcode_8php.html#a55b0cb6973f1ec731de0e726bcc0efa7',1,'bbcode.php']]],
   ['tt',['tt',['../language_8php.html#ae310fb3880484ee1cc4faefe0c63c06d',1,'language.php']]]

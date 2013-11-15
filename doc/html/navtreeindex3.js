@@ -1,5 +1,7 @@
 var NAVTREEINDEX3 =
 {
+"contact__selectors_8php.html#a9839e8fdaac7ffb37bf1420493f5c28f":[5,0,0,18,0],
+"contact__selectors_8php.html#ad472e4716426dd1a9dd77b62962454be":[5,0,0,18,3],
 "contact__selectors_8php.html#ae499960d6467bd30c78607b1018baf53":[5,0,0,18,2],
 "contact__widgets_8php.html":[5,0,0,19],
 "contact__widgets_8php.html#a165eb021e61c4dcab2a552f28628d353":[5,0,0,19,0],
@@ -94,11 +96,12 @@ var NAVTREEINDEX3 =
 "dir_817f6d302394b98e59575acdb59998bc.html":[5,0,3,0],
 "dir_8543001e5d25368a6edede3e63efb554.html":[5,0,3,1],
 "dir__fns_8php.html":[5,0,0,26],
-"dir__fns_8php.html#a44062d4b471d1e83f92f6c184585aa13":[5,0,0,26,4],
-"dir__fns_8php.html#a6cae22cfdd6edda5ddf09e07abb3242a":[5,0,0,26,3],
-"dir__fns_8php.html#a8c15aa69da12f2d3476b9e93b82b337d":[5,0,0,26,1],
-"dir__fns_8php.html#aa666e7df6ca8c332f4081c9b66b4bdf6":[5,0,0,26,2],
-"dir__fns_8php.html#ae56881d69bb6f8e828c9e35454386774":[5,0,0,26,0],
+"dir__fns_8php.html#a44062d4b471d1e83f92f6c184585aa13":[5,0,0,26,5],
+"dir__fns_8php.html#a6cae22cfdd6edda5ddf09e07abb3242a":[5,0,0,26,4],
+"dir__fns_8php.html#a8c15aa69da12f2d3476b9e93b82b337d":[5,0,0,26,2],
+"dir__fns_8php.html#aa666e7df6ca8c332f4081c9b66b4bdf6":[5,0,0,26,3],
+"dir__fns_8php.html#acf621621e929d49441da30aad76a58cf":[5,0,0,26,0],
+"dir__fns_8php.html#ae56881d69bb6f8e828c9e35454386774":[5,0,0,26,1],
 "dir_aae29906d7bfc07d076125f669c8352e.html":[5,0,0,1],
 "dir_b2f003339c516cc00c8cadcafbe82f13.html":[5,0,3],
 "dir_cb8a8f75dcdd0b3fbfcc82e9eda410c5.html":[5,0,3,1,0,0],
@@ -211,8 +214,8 @@ var NAVTREEINDEX3 =
 "functions_0x73.html":[4,3,0,17],
 "functions_0x74.html":[4,3,0,18],
 "functions_0x76.html":[4,3,0,19],
-"functions_func.html":[4,3,1,0],
 "functions_func.html":[4,3,1],
+"functions_func.html":[4,3,1,0],
 "functions_func_0x61.html":[4,3,1,1],
 "functions_func_0x62.html":[4,3,1,2],
 "functions_func_0x63.html":[4,3,1,3],
@@ -246,8 +249,5 @@ var NAVTREEINDEX3 =
 "globals_0x69.html":[5,1,0,10],
 "globals_0x6a.html":[5,1,0,11],
 "globals_0x6b.html":[5,1,0,12],
-"globals_0x6c.html":[5,1,0,13],
-"globals_0x6d.html":[5,1,0,14],
-"globals_0x6e.html":[5,1,0,15],
-"globals_0x6f.html":[5,1,0,16]
+"globals_0x6c.html":[5,1,0,13]
 };

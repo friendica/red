@@ -19,6 +19,7 @@ var searchData=
   ['get_5fchannel',['get_channel',['../classApp.html#a084e03c77686d8c13390fef3f7428a2b',1,'App']]],
   ['get_5fchild',['get_child',['../classItem.html#a632185dd25c5caf277067c76230a4320',1,'Item']]],
   ['get_5fchildren',['get_children',['../classItem.html#aa0ee775ec94abccec6c798428835d001',1,'Item']]],
+  ['get_5fcipher',['get_cipher',['../classConversation.html#a4aab60bb39fa6761b6cacdc8d9da2901',1,'Conversation']]],
   ['get_5fcomment_5fbox',['get_comment_box',['../classItem.html#a3ee7667c2ec6cd7657328e27848c0bdf',1,'Item']]],
   ['get_5fcomment_5fbox_5ftemplate',['get_comment_box_template',['../classItem.html#a904421c7a427411bb2ab473bca872f63',1,'Item']]],
   ['get_5fconfig',['get_config',['../include_2config_8php.html#af02c96e6b37335774b548914ede1d22e',1,'config.php']]],
