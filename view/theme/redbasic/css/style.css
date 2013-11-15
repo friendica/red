@@ -883,7 +883,7 @@ footer {
 	margin: 0px; padding: 0px;
 	width: 16px;
 	height: 16px;
-	top: 74px; left:10px;
+	top: $pmenu_top; left:10px;
 	overflow: hidden;
 	text-indent: 40px;
 	display: none;
@@ -903,7 +903,7 @@ footer {
 .wall-item-photo-menu li a:hover { color: #FFFFFF; background: #3465A4; text-decoration: none; }
 
 
-.comment .wall-item-photo-menu-button {	top: 44px;}
+.comment .wall-item-photo-menu-button {	top: $pmenu_reply;}
 .comment .wall-item-photo-menu { top: 60px; }
 
 .wallwall .wwto {

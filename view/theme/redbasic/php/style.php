@@ -90,8 +90,11 @@
     	$converse_width="1024px";
 	if(! $top_photo)
 		$top_photo = '80px';
+	$pmenu_top = intval($top_photo) - 6 . 'px';
+
 	if(! $reply_photo)
 		$reply_photo = '50px';
+	$pmenu_reply = intval($reply_photo) - 6 . 'px';
 
 	if($nav_min_opacity === false || $nav_min_opacity === '') {
 		$nav_float_min_opacity = 1.0;
@@ -152,7 +155,9 @@ $options = array (
 '$nav_float_min_opacity' => $nav_float_min_opacity,
 '$nav_percent_min_opacity' => $nav_percent_min_opacity,
 '$top_photo' => $top_photo,
-'$reply_photo' => $reply_photo
+'$reply_photo' => $reply_photo,
+'$pmenu_top' => $pmenu_top,
+'$pmenu_reply' => $pmenu_reply
 );
 
 echo str_replace(array_keys($options), array_values($options), $x);    
