@@ -52,7 +52,7 @@
 
 	function insertbbcomment(comment,BBcode,id) {
 		// allow themes to override this
-		if(typeof(insertFormatting != 'undefined'))
+		if(typeof(insertFormatting) != 'undefined')
 		   return(insertFormatting(comment,BBcode,id));
 
 		var tmpStr = $("#comment-edit-text-" + id).val();
