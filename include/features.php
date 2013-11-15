@@ -53,7 +53,7 @@ function get_features() {
 		// Item tools
 		'tools' => array(
 			t('Post/Comment Tools'),
-			array('multi_delete',   t('Multiple Deletion'),			t('Select and delete multiple posts/comments at once')),
+//			array('multi_delete',   t('Multiple Deletion'),			t('Select and delete multiple posts/comments at once')),
 			array('edit_posts',     t('Edit Sent Posts'),			t('Edit and correct posts and comments after sending')),
 			array('commtag',        t('Tagging'),					t('Ability to tag existing posts')),
 			array('categories',     t('Post Categories'),			t('Add categories to your posts')),
