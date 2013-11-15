@@ -884,7 +884,7 @@ function zot_import($arr, $sender_url) {
 
 			}
 			else {
-				if((array_key_exists('flags',$i['message'])) && (in_array('private',$i['message']['flags']))) {
+				if(($i['message']) && (array_key_exists('flags',$i['message'])) && (in_array('private',$i['message']['flags']))) {
 					// This should not happen but until we can stop it...
 					logger('private message was delivered with no recipients.');
 					continue;
