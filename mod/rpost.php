@@ -17,6 +17,7 @@ require_once('include/zot.php');
  * f= placeholder, often required
  * title= Title of post
  * body= Body of post
+ * source= Source application
  * remote_return= absolute URL to return after posting is finished
  * type= choices are 'html' or 'bbcode', default is 'bbcode'
  *
@@ -107,6 +108,7 @@ function rpost_content(&$a) {
 		'profile_uid' => local_user(),
 		'title' => $_REQUEST['title'],
 		'body' => $_REQUEST['body'],
+		'source' => ((x($_REQUEST,'source')) ? strip_tags($_REQUEST['source']) : ''),
 		'return_path' => 'rpost/return'
 	);
 
