@@ -112,7 +112,7 @@ function page_content(&$a) {
 	xchan_query($r);
 	$r = fetch_post_tags($r,true);
 
-	$o .= prepare_body($r[0],true);
+	$o .= prepare_page($r[0]);
 	return $o;
 
 }
