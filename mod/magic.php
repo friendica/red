@@ -33,12 +33,20 @@ function magic_init(&$a) {
 
 		if(count($b) >= 2) {
 			$u = $b[0] . '//' . $b[2];
-dbg(1);
+
 			$x = q("select xchan.xchan_url, hubloc.* from xchan left join hubloc on xchan_hash = hubloc_hash
-				where hubloc_url = '%s' order by hubloc_id desc limit 1",
+				where hubloc_url = '%s' order by hubloc_id desc limit 5",
 				dbesc($u)
 			);
-dbg(0);
+
+			if($x) {
+				// They must have a valid hubloc_addr
+				while(! strpos($x[0]['hubloc_addr'],'@')) {
+					array_shift($x);
+				}
+			}
+
+
 		}
 	}
 
@@ -129,7 +137,10 @@ dbg(0);
 			dbesc(datetime_convert())
 		);
 
-		goaway($x[0]['hubloc_callback'] . '/' . substr($x[0]['hubloc_addr'],0,strpos($x[0]['hubloc_addr'],'@'))
+		$target_url = $x[0]['hubloc_callback'] . '/' . substr($x[0]['hubloc_addr'],0,strpos($x[0]['hubloc_addr'],'@')) ;
+		logger('mod_magic: redirecting to: ' . $target_url, LOGGER_DEBUG); 
+
+		goaway($target_url
 			. '/?f=&auth=' . $channel['channel_address'] . '@' . $a->get_hostname()
 			. '&sec=' . $token . '&dest=' . urlencode($dest) . '&version=' . ZOT_REVISION);
 	}
