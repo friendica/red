@@ -4,6 +4,8 @@ Project Code To-Do List
 We need much more than this, but here are areas where developers can help. Please edit this page when items are finished. Another place for developers to start is with the issues list.
 
 
+* ACL widget - provide cc/bcc toggle to allow recipients to be discoverable at receiving end. This should integrate with public/private collections which currently exist but have no defined function.
+
 * Documentation - see [Red Documentation Project To-Do List](help/To-Do)
 
 * Finish the anti-spam bayesian engine
