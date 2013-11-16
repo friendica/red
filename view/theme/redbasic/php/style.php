@@ -66,11 +66,11 @@
 	if (! $banner_colour)
 		$banner_colour = "fff";
 	if (! $bgcolour)
-		$bgcolour = "#f8f8f8";
+		$bgcolour = "#fdfdfd";
 	if (! $background_image)
 		$background_image ='';
 	if (! $item_colour)
-		$item_colour = "#f8f8f8";
+		$item_colour = "#fdfdfd";
 	if (! $toolicon_colour)
 		$toolicon_colour = '#777777';
 	if (! $toolicon_activecolour)

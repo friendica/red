@@ -63,6 +63,10 @@ input {
 	font-size: $body_font_size;
 }
 
+input[type="submit"] {
+	background-color: #F8F8F8;
+}
+
 code {
 	font-family: Courier, monospace;
 	display: block;
@@ -169,7 +173,7 @@ nav #site-location {
 .info-message {
 	font-size: 1.1em;
 	border: 1px solid #444;
-	background-color: #ccc;
+	background-color: #F0F0F0;
 	padding: 10px;
 	-moz-border-radius: $radiuspx;
 	border-radius: $radiuspx;	
