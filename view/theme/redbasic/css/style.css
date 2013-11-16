@@ -91,6 +91,10 @@ blockquote {
 	margin-left: 5px;
 }
 
+.hide-comments-outer {
+	margin-left: 10px;
+}
+
 #panel {
 	background-color: ivory;
 	position: absolute;
