@@ -3,8 +3,9 @@ Project Code To-Do List
 
 We need much more than this, but here are areas where developers can help. Please edit this page when items are finished. Another place for developers to start is with the issues list.
 
-
 * ACL widget - provide cc/bcc toggle to allow recipients to be discoverable at receiving end. This should integrate with public/private collections which currently exist but have no defined function.
+
+* Turn top-level Apps menu into an Apps page - which will probably require App plugins to have icons. Add documentation specifically to the plugin/addon documentation for creating apps. Add links to the App Store (which doesn't currently exist). 
 
 * Documentation - see [Red Documentation Project To-Do List](help/To-Do)
 
@@ -32,6 +33,8 @@ We need much more than this, but here are areas where developers can help. Pleas
 
 * Fully implement "things".
 
+* Create mobile clients for the top platforms - which involves extending the API so that we can do stuff far beyond the current crop of Twitter/Statusnet clients. Ditto for mobile themes. We can probably use something like the Friendica Android app as a base to start from.  
+ 
 * Activity Stream generation for liking things, liking channels and other combinations.
 
 * Implement owned and exchangeable "things".
