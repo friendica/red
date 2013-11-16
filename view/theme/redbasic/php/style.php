@@ -94,11 +94,12 @@
 	if(! $top_photo)
 		$top_photo = '64px';
 	$pmenu_top = intval($top_photo) - 6 . 'px';
+	$wwtop = intval($top_photo) - 5 . 'px';
 
 	if(! $reply_photo)
 		$reply_photo = '32px';
 	$pmenu_reply = intval($reply_photo) - 6 . 'px';
-
+	
 	if($nav_min_opacity === false || $nav_min_opacity === '') {
 		$nav_float_min_opacity = 1.0;
 		$nav_percent_min_opacity = 100;
@@ -161,7 +162,8 @@ $options = array (
 '$top_photo' => $top_photo,
 '$reply_photo' => $reply_photo,
 '$pmenu_top' => $pmenu_top,
-'$pmenu_reply' => $pmenu_reply
+'$pmenu_reply' => $pmenu_reply,
+'$wwtop' => $wwtop
 );
 
 echo str_replace(array_keys($options), array_values($options), $x);    

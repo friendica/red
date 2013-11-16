@@ -840,6 +840,7 @@ footer {
 
 .thread-wrapper .wall-item-comment-wrapper, .wall-item-content-wrapper.comment {
 	margin-left: 50px;
+	border-left: 2px solid #eee;
 }
 
 .wall-item-content-wrapper {
@@ -911,7 +912,7 @@ footer {
     left: 50px;
     margin: 0;
     position: absolute;
-    top: 70px;
+    top: $wwtop;
     width: 30px
 }
 .wallwall .wwto img {
@@ -926,7 +927,7 @@ footer {
 .wall-item-arrowphoto-wrapper {
     position: absolute;
     left: 75px;
-    top: 70px;
+    top: $wwtop;
     z-index: 99;
 }
 .wall-item-wrapper {
@@ -1084,8 +1085,8 @@ footer {
 
 .comment-edit-text-empty {
 	color: gray;
-	height: 1.5em;
-	width: 40%;  /*Too wide? */
+	height: 1.0em;
+	width: 270px; 
 	overflow: auto;
 	margin-bottom: 10px;
 }
