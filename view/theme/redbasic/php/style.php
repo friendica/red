@@ -95,6 +95,7 @@
 		$top_photo = '64px';
 	$pmenu_top = intval($top_photo) - 6 . 'px';
 	$wwtop = intval($top_photo) - 5 . 'px';
+	$comment_indent = intval($top_photo) + 10 . 'px';
 
 	if(! $reply_photo)
 		$reply_photo = '32px';
@@ -163,7 +164,8 @@ $options = array (
 '$reply_photo' => $reply_photo,
 '$pmenu_top' => $pmenu_top,
 '$pmenu_reply' => $pmenu_reply,
-'$wwtop' => $wwtop
+'$wwtop' => $wwtop,
+'$comment_indent' => $comment_indent
 );
 
 echo str_replace(array_keys($options), array_values($options), $x);    

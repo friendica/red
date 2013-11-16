@@ -839,7 +839,7 @@ footer {
 
 
 .thread-wrapper .wall-item-comment-wrapper, .wall-item-content-wrapper.comment {
-	margin-left: 50px;
+	margin-left: $comment_indent;
 	border-left: 2px solid #eee;
 }
 
