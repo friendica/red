@@ -93,13 +93,13 @@
     	$converse_width="1024px";
 	if(! $top_photo)
 		$top_photo = '64px';
-	$pmenu_top = intval($top_photo) - 6 . 'px';
-	$wwtop = intval($top_photo) - 5 . 'px';
+	$pmenu_top = intval($top_photo) - 16 . 'px';
+	$wwtop = intval($top_photo) - 15 . 'px';
 	$comment_indent = intval($top_photo) + 10 . 'px';
 
 	if(! $reply_photo)
 		$reply_photo = '32px';
-	$pmenu_reply = intval($reply_photo) - 6 . 'px';
+	$pmenu_reply = intval($reply_photo) - 16 . 'px';
 	
 	if($nav_min_opacity === false || $nav_min_opacity === '') {
 		$nav_float_min_opacity = 1.0;

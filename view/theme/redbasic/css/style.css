@@ -882,7 +882,7 @@ footer {
 }
 
 .wall-item-photo-wrapper {
-	margin-top: 10px;
+	margin-top: 0px;
 	margin-left: 10px;
 	margin-bottom: 10px;
 	width: 100px;
@@ -907,7 +907,8 @@ footer {
 	border: 2px solid #444444;
 	background: #FFFFFF;
 	position: absolute;
-	left: 10px; top: 90px;
+	left: 10px; 
+	top: $top_photo;
 	display: none;
 	z-index: 10000;
 }
@@ -917,7 +918,7 @@ footer {
 
 
 .comment .wall-item-photo-menu-button {	top: $pmenu_reply;}
-.comment .wall-item-photo-menu { top: 60px; }
+.comment .wall-item-photo-menu { top: $reply_photo; }
 
 .wallwall .wwto {
     left: 50px;
