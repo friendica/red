@@ -34,8 +34,8 @@
 					<td class="email">{{$u.email}}</td>
 					<td class="checkbox"><input type="checkbox" class="pending_ckbx" id="id_pending_{{$u.hash}}" name="pending[]" value="{{$u.hash}}" /></td>
 					<td class="tools">
-						<a href="{{$baseurl}}/regmod/allow/{{$u.hash}}" title='{{$approve}}'><span class='icon like'></span></a>
-						<a href="{{$baseurl}}/regmod/deny/{{$u.hash}}" title='{{$deny}}'><span class='icon dislike'></span></a>
+						<a href="{{$baseurl}}/regmod/allow/{{$u.hash}}" title='{{$approve}}'><i class='icon-thumbs-up-alt admin-icons'></i></a>
+						<a href="{{$baseurl}}/regmod/deny/{{$u.hash}}" title='{{$deny}}'><i class='icon-thumbs-down-alt admin-icons'></i></a>
 					</td>
 				</tr>
 			{{/foreach}}
@@ -71,8 +71,8 @@
 						<td class='service_class'>{{$u.account_service_class}}</td>
 						<td class="checkbox"><input type="checkbox" class="users_ckbx" id="id_user_{{$u.uid}}" name="user[]" value="{{$u.uid}}"/></td>
 						<td class="tools">
-							<a href="{{$baseurl}}/admin/users/block/{{$u.uid}}?t={{$form_security_token}}" title='{{if $u.blocked}}{{$unblock}}{{else}}{{$block}}{{/if}}'><span class='icon block {{if $u.blocked==0}}dim{{/if}}'></span></a>
-							<a href="{{$baseurl}}/admin/users/delete/{{$u.uid}}?t={{$form_security_token}}" title='{{$delete}}' onclick="return confirm_delete('{{$u.name}}')"><span class='icon drop'></span></a>
+							<a href="{{$baseurl}}/admin/users/block/{{$u.uid}}?t={{$form_security_token}}" title='{{if $u.blocked}}{{$unblock}}{{else}}{{$block}}{{/if}}'><i class='icon-ban-circle admin-icons {{if $u.blocked==0}}dim{{/if}}'></i></a>
+							<a href="{{$baseurl}}/admin/users/delete/{{$u.uid}}?t={{$form_security_token}}" title='{{$delete}}' onclick="return confirm_delete('{{$u.name}}')"><i class='icon-remove admin-icons'></i></a>
 						</td>
 					</tr>
 				{{/foreach}}

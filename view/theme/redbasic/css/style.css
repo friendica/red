@@ -3564,3 +3564,8 @@ text-decoration: none;
 .savedsearchdrop {
 	opacity: 0;
 }
+
+.admin-icons {
+	color: $toolicon_colour;
+	margin-right: 10px;
+}
