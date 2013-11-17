@@ -9,6 +9,7 @@ Red Matrix Documentation and Resources
 * [Channels](help/Channels)
 * [Connecting to Channels](help/Connecting-to-Channels)
 * [Permissions](help/Permissions)
+* [But Wait - There's More. MUCH More...](help/Features) 
 * [Tags and Mentions](help/Tags-and-Mentions)
 * [Web Pages](help/Webpages)
 * [Remove Account](help/Remove-Account)
