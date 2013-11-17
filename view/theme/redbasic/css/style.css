@@ -64,7 +64,10 @@ input {
 }
 
 input[type="submit"] {
-	background-color: #F8F8F8;
+	background-color: #F0F0F0;
+	font-weight: bold;
+	color: #0080FF; 
+	text-decoration: none; 
 }
 
 code {
