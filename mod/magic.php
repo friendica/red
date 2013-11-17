@@ -28,16 +28,34 @@ function magic_init(&$a) {
 		);
 	}
 	else {
+
 		// See if we know anybody at the dest site that will unlock the door for us
+		// This is the equivalent of buzzing every apartment in an apartment block
+		// to get inside the front gate. The thing about magic auth is that we're 
+		// authenticating to the other site. Permissions provided by various 
+		// channels will still affect what we can do once authenticated.
+
 		$b = explode('/',$dest);
 
 		if(count($b) >= 2) {
 			$u = $b[0] . '//' . $b[2];
 
-			$x = q("select xchan.xchan_url, hubloc.* from xchan left join hubloc on xchan_hash = hubloc_hash
-				where hubloc_url = '%s' order by hubloc_id desc limit 5",
-				dbesc($u)
-			);
+			if(local_user()) {
+				// first look for a connection or anybody who knows us
+				$x = q("select xchan.xchan_url, hubloc.* from xchan left join hubloc on xchan_hash = hubloc_hash 
+					left join abook on abook_xchan = hubloc_hash
+					where abook_channel = %d and hubloc_url = '%s' order by hubloc_id desc limit 5",
+					intval(local_user()),
+					dbesc($u)
+				);
+			}
+			if(! $x) {
+				// no luck - ok anybody will do
+				$x = q("select xchan.xchan_url, hubloc.* from xchan left join hubloc on xchan_hash = hubloc_hash
+					where hubloc_url = '%s' order by hubloc_id desc limit 5",
+					dbesc($u)
+				);
+			}
 
 			if($x) {
 				// They must have a valid hubloc_addr
