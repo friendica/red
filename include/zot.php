@@ -910,11 +910,29 @@ function zot_import($arr, $sender_url) {
 				$deliveries = allowed_public_recips($i);
 
 			}
+
+			// Go through the hash array and remove duplicates. array_unique() won't do this because the array is more than one level.
+
+			$no_dups = array();
+			if($deliveries) {
+				foreach($deliveries as $d) {
+					if(! in_array($d['hash'],$no_dups))
+						$no_dups[] = $d['hash'];
+				}
+
+				if($no_dups) {
+					$deliveries = array();
+					foreach($no_dups as $n) {
+						$deliveries[] = array('hash' => $n);
+					}
+				}
+			}
+
 			if(! $deliveries) {
 				logger('zot_import: no deliveries on this site');
 				continue;
 			}
-			
+							
 			if($i['message']) { 
 				if($i['message']['type'] === 'activity') {
 					$arr = get_item_elements($i['message']);
