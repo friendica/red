@@ -55,7 +55,7 @@ function post_init(&$a) {
 
 			if(! $x) {
 				// finger them if they can't be found. 
-				$ret = zot_finger($addr,null);
+				$ret = zot_finger($address,null);
 				if($ret['success']) {
 					$j = json_decode($ret['body'],true);
 					if($j)
@@ -66,7 +66,7 @@ function post_init(&$a) {
 				}
 			}
 			if(! $x) {
-				logger('mod_zot: auth: unable to finger ' . $addr);
+				logger('mod_zot: auth: unable to finger ' . $address);
 				goaway($desturl);
 			}
 
@@ -131,7 +131,7 @@ function post_init(&$a) {
 				logger('mod_zot: still not authenticated: ' . $x[0]['xchan_addr']);
 				q("update hubloc set hubloc_status =  (hubloc_status | %d ) where hubloc_addr = '%s'",
 					intval(HUBLOC_RECEIVE_ERROR),
-					$x[0][xchan_addr]
+					dbesc($x[0]['xchan_addr'])
 				);
 			}
 

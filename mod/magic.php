@@ -159,7 +159,7 @@ function magic_init(&$a) {
 		logger('mod_magic: redirecting to: ' . $target_url, LOGGER_DEBUG); 
 
 		goaway($target_url
-			. '/?f=&auth=' . $channel['channel_address'] . '@' . $a->get_hostname()
+			. '/?f=&auth=' . urlencode($channel['channel_address'] . '@' . $a->get_hostname())
 			. '&sec=' . $token . '&dest=' . urlencode($dest) . '&version=' . ZOT_REVISION);
 	}
 
