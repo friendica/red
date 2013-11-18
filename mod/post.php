@@ -15,140 +15,139 @@ function post_init(&$a) {
 	// as a get request, and the only communications to arrive this way.
 
 	if(argc() > 1) {
-
 		$webbie = argv(1);
+	}
+	
+	if(array_key_exists('auth',$_REQUEST)) {
+		logger('mod_zot: auth request received.');
+		$address = $_REQUEST['auth'];
+		$dest    = $_REQUEST['dest'];
+		$sec     = $_REQUEST['sec'];
+		$version = $_REQUEST['version'];
 
-		if(array_key_exists('auth',$_REQUEST)) {
-			logger('mod_zot: auth request received.');
-			$address = $_REQUEST['auth'];
-			$dest    = $_REQUEST['dest'];
-			$sec     = $_REQUEST['sec'];
-			$version = $_REQUEST['version'];
-
-			switch($dest) {
-				case 'channel':
-					$desturl = z_root() . '/channel/' . $webbie;
-					break;
-				case 'photos':
-					$desturl = z_root() . '/photos/' . $webbie;
-					break;
-				case 'profile':
-					$desturl = z_root() . '/profile/' . $webbie;
-					break;
-				default:
-					$desturl = $dest;
-					break;
-			}
+		switch($dest) {
+			case 'channel':
+				$desturl = z_root() . '/channel/' . $webbie;
+				break;
+			case 'photos':
+				$desturl = z_root() . '/photos/' . $webbie;
+				break;
+			case 'profile':
+				$desturl = z_root() . '/profile/' . $webbie;
+				break;
+			default:
+				$desturl = $dest;
+				break;
+		}
+		if($webbie) {
 			$c = q("select * from channel where channel_address = '%s' limit 1",
 				dbesc($webbie)
 			);
 			if(! $c) {
 				logger('mod_zot: auth: unable to find channel ' . $webbie);
 				// They'll get a notice when they hit the page, we don't need two of them. 
-				goaway($desturl);
+				// In fact we only need the name to map the destination, auth can proceed
+				// without it.
+				// goaway($desturl);
 			}
+		}
 
-			// Try and find a hubloc for the person attempting to auth
-			$x = q("select * from hubloc left join xchan on xchan_hash = hubloc_hash where hubloc_addr = '%s' order by hubloc_id desc limit 1",
-				dbesc($address)
-			);
+		// Try and find a hubloc for the person attempting to auth
+		$x = q("select * from hubloc left join xchan on xchan_hash = hubloc_hash where hubloc_addr = '%s' order by hubloc_id desc limit 1",
+			dbesc($address)
+		);
 
-			if(! $x) {
-				// finger them if they can't be found. 
-				$ret = zot_finger($address,null);
-				if($ret['success']) {
-					$j = json_decode($ret['body'],true);
-					if($j)
-						import_xchan($j);
-					$x = q("select * from hubloc left join xchan on xchan_hash = hubloc_hash where hubloc_addr = '%s' order by hubloc_id desc limit 1",
-						dbesc($address)
-					);
-				}
-			}
-			if(! $x) {
-				logger('mod_zot: auth: unable to finger ' . $address);
-				goaway($desturl);
-			}
-
-			logger('mod_zot: auth request received from ' . $x[0]['xchan_addr'] . ' for ' . $webbie); 
-
-			// check credentials and access
-
-			// If they are already authenticated and haven't changed credentials, 
-			// we can save an expensive network round trip and improve performance.
-
-			$remote = remote_user();
-			$result = null;
-
-			$already_authed = ((($remote) && ($x[0]['hubloc_hash'] == $remote)) ? true : false); 
-
-			if(! $already_authed) {
-				// Auth packets MUST use ultra top-secret hush-hush mode 
-				$p = zot_build_packet($c[0],$type = 'auth_check',
-					array(array('guid' => $x[0]['hubloc_guid'],'guid_sig' => $x[0]['hubloc_guid_sig'])), 
-					$x[0]['hubloc_sitekey'], $sec);
-				$result = zot_zot($x[0]['hubloc_callback'],$p);
-				if(! $result['success']) {
-					logger('mod_zot: auth_check callback failed.');
-					goaway($desturl);
-				}
-				$j = json_decode($result['body'],true);
-			}
-
-			if($already_authed || $j['success']) {
-				if($j['success']) {
-					// legit response, but we do need to check that this wasn't answered by a man-in-middle
-					if(! rsa_verify($sec . $x[0]['xchan_hash'],base64url_decode($j['confirm']),$x[0]['xchan_pubkey'])) {
-						logger('mod_zot: auth: final confirmation failed.');
-						goaway($desturl);
-					}
-				}
-				// everything is good... maybe
-				if(local_user()) {
-
-					// tell them to logout if they're logged in locally as anything but the target remote account
-					// in which case just shut up because they don't need to be doing this at all.
-
-					if($a->channel['channel_hash'] != $x[0]['xchan_hash']) {
-						logger('mod_zot: auth: already authenticated locally as somebody else.');
-						notice( t('Remote authentication blocked. You are logged into this site locally. Please logout and retry.') . EOL);
-					}
-					goaway($desturl);
-				}
-				// log them in
-				$_SESSION['authenticated'] = 1;
-				$_SESSION['visitor_id'] = $x[0]['xchan_hash'];
-				$_SESSION['my_address'] = $address;
-				$arr = array('xchan' => $x[0], 'url' => $desturl, 'channel_address' => $webbie);
-				call_hooks('magic_auth_success',$arr);
-				$a->set_observer($x[0]);
-				require_once('include/security.php');
-				$a->set_groups(init_groups_visitor($_SESSION['visitor_id']));
-				info(sprintf( t('Welcome %s. Remote authentication successful.'),$x[0]['xchan_name']));
-				logger('mod_zot: auth success from ' . $x[0]['xchan_addr'] . ' for ' . $webbie); 
-
-			} else {
-				logger('mod_zot: still not authenticated: ' . $x[0]['xchan_addr']);
-				q("update hubloc set hubloc_status =  (hubloc_status | %d ) where hubloc_addr = '%s'",
-					intval(HUBLOC_RECEIVE_ERROR),
-					dbesc($x[0]['xchan_addr'])
+		if(! $x) {
+			// finger them if they can't be found. 
+			$ret = zot_finger($address,null);
+			if($ret['success']) {
+				$j = json_decode($ret['body'],true);
+				if($j)
+					import_xchan($j);
+				$x = q("select * from hubloc left join xchan on xchan_hash = hubloc_hash where hubloc_addr = '%s' order by hubloc_id desc limit 1",
+					dbesc($address)
 				);
 			}
-
-// FIXME - we really want to save the return_url in the session before we visit rmagic.
-// This does however prevent a recursion if you visit rmagic directly, as it would otherwise send you back here again. 
-// But z_root() probably isn't where you really want to go. 
-
-			if(strstr($desturl,z_root() . '/rmagic'))
-				goaway(z_root());
-
+		}
+		if(! $x) {
+			logger('mod_zot: auth: unable to finger ' . $address);
 			goaway($desturl);
 		}
 
-		logger('mod_zot: invalid args: ' . print_r($a->argv,true));
-		killme();
-	}
+		logger('mod_zot: auth request received from ' . $x[0]['xchan_addr'] . ' for ' . (($webbie) ? $webbie : 'undefined')); 
 
+		// check credentials and access
+
+		// If they are already authenticated and haven't changed credentials, 
+		// we can save an expensive network round trip and improve performance.
+
+		$remote = remote_user();
+		$result = null;
+
+		$already_authed = ((($remote) && ($x[0]['hubloc_hash'] == $remote)) ? true : false); 
+
+		if(! $already_authed) {
+			// Auth packets MUST use ultra top-secret hush-hush mode 
+			$p = zot_build_packet($c[0],$type = 'auth_check',
+				array(array('guid' => $x[0]['hubloc_guid'],'guid_sig' => $x[0]['hubloc_guid_sig'])), 
+				$x[0]['hubloc_sitekey'], $sec);
+			$result = zot_zot($x[0]['hubloc_callback'],$p);
+			if(! $result['success']) {
+				logger('mod_zot: auth_check callback failed.');
+				goaway($desturl);
+			}
+			$j = json_decode($result['body'],true);
+		}
+
+		if($already_authed || $j['success']) {
+			if($j['success']) {
+				// legit response, but we do need to check that this wasn't answered by a man-in-middle
+				if(! rsa_verify($sec . $x[0]['xchan_hash'],base64url_decode($j['confirm']),$x[0]['xchan_pubkey'])) {
+					logger('mod_zot: auth: final confirmation failed.');
+					goaway($desturl);
+				}
+			}
+			// everything is good... maybe
+			if(local_user()) {
+
+				// tell them to logout if they're logged in locally as anything but the target remote account
+				// in which case just shut up because they don't need to be doing this at all.
+
+				if($a->channel['channel_hash'] != $x[0]['xchan_hash']) {
+					logger('mod_zot: auth: already authenticated locally as somebody else.');
+					notice( t('Remote authentication blocked. You are logged into this site locally. Please logout and retry.') . EOL);
+				}
+				goaway($desturl);
+			}
+			// log them in
+			$_SESSION['authenticated'] = 1;
+			$_SESSION['visitor_id'] = $x[0]['xchan_hash'];
+			$_SESSION['my_address'] = $address;
+			$arr = array('xchan' => $x[0], 'url' => $desturl, 'channel_address' => $webbie);
+			call_hooks('magic_auth_success',$arr);
+			$a->set_observer($x[0]);
+			require_once('include/security.php');
+			$a->set_groups(init_groups_visitor($_SESSION['visitor_id']));
+			info(sprintf( t('Welcome %s. Remote authentication successful.'),$x[0]['xchan_name']));
+			logger('mod_zot: auth success from ' . $x[0]['xchan_addr'] . ' for ' . $webbie); 
+
+		} else {
+			logger('mod_zot: still not authenticated: ' . $x[0]['xchan_addr']);
+			q("update hubloc set hubloc_status =  (hubloc_status | %d ) where hubloc_addr = '%s'",
+				intval(HUBLOC_RECEIVE_ERROR),
+				dbesc($x[0]['xchan_addr'])
+			);
+		}
+
+		// FIXME - we really want to save the return_url in the session before we visit rmagic.
+		// This does however prevent a recursion if you visit rmagic directly, as it would otherwise send you back here again. 
+		// But z_root() probably isn't where you really want to go. 
+
+		if(strstr($desturl,z_root() . '/rmagic'))
+			goaway(z_root());
+
+		goaway($desturl);
+	}
 	return;
 }
 
