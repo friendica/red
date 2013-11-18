@@ -17,6 +17,8 @@ function post_init(&$a) {
 	if(argc() > 1) {
 		$webbie = argv(1);
 	}
+	else
+		$webbie = '';
 	
 	if(array_key_exists('auth',$_REQUEST)) {
 		logger('mod_zot: auth request received.');
