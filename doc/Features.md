@@ -9,7 +9,7 @@ Remove posts/comments and/or private messages at a future time. An extra button 
  
 **Multiple Profiles**
 
-The ability to create multiple profiles which are visible only to specific persons or groups. Your default profile may be visible to anybody, but secodnary profiles can all contain different or additional information and can only be seen by those to whom that profile is assigned.
+The ability to create multiple profiles which are visible only to specific persons or groups. Your default profile may be visible to anybody, but secondary profiles can all contain different or additional information and can only be seen by those to whom that profile is assigned.
  
 **Web Pages**
 
@@ -42,11 +42,11 @@ Allows previewing posts and comments exactly as they would look on the page befo
 
 **Channel Sources**
 
-Automatically import channel content from other channels or feeds. This allows you to create sub-channels and super-channels from content provided elsewhere. The rules are that the content must be public, and the author/owner must give you permission to source their channel.
+Automatically import and re-publish channel content from other channels or feeds. This allows you to create sub-channels and super-channels from content provided elsewhere. The rules are that the content must be public, and the channel owner must give you permission to source their channel.
 
 **Even More Encryption**
 
-Private messages are encrypted during transport and storage. In this day and age, this encyption may not be enough if your communications are extremely sensitive. This options lets you provide optional encryption of content end-to-end with a shared secret key. How the recipient learns the key is up to you. You can provide a hint such as "the name of aunt Claire's first dog". 
+Private messages are encrypted during transport and storage. In this day and age, this encyption may not be enough if your communications are extremely sensitive. This options lets you provide optional encryption of content "end-to-end" with a shared secret key. How the recipient learns the secret key is completely up to you. You can provide a hint such as "the name of aunt Claire's first dog". 
  
 
 **Search by Date**
