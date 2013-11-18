@@ -1783,16 +1783,13 @@ function item_store($arr,$allow_exec = false) {
 
 	// update the commented timestamp on the parent
 
-	q("update item set commented = ( select max(created) from item where parent_mid = '%s' and uid = %d )
-		where id = %d limit 1",
+	$z = q("select max(created) as created from item where parent_mid = '%s' and uid = %d ",
 		dbesc($arr['parent_mid']),
-		intval($arr['uid']),
-		intval($parent_id)
+		intval($arr['uid'])
 	);
 
-
-	q("UPDATE item set changed = '%s' WHERE id = %d LIMIT 1",
-		dbesc(datetime_convert()),
+	q("UPDATE item set created = '%s', changed = '%s' WHERE id = %d LIMIT 1",
+		dbesc(($z) ? $z[0]['created'] : (datetime_convert())),
 		intval($parent_id)
 	);
 
