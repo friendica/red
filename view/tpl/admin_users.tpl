@@ -68,6 +68,7 @@
 						<td class='email'>{{$u.account_email}}</td>
 						<td class='register_date'>{{$u.account_created}}</td>
 						<td class='login_date'>{{$u.account_lastlog}}</td>
+						<td class='account_expires'>{{$u.account_expires}}</td>
 						<td class='service_class'>{{$u.account_service_class}}</td>
 						<td class="checkbox"><input type="checkbox" class="users_ckbx" id="id_user_{{$u.uid}}" name="user[]" value="{{$u.uid}}"/></td>
 						<td class="tools">
