@@ -306,6 +306,11 @@ function zot_refresh($them,$channel = null) {
 				);
 				if(! $y)
 					logger('abook update failed');
+				else {
+					// if we were just granted read stream permission and didn't have it before, try to pull in some posts
+					if((! ($r[0]['abook_their_perms'] & PERMS_R_STREAM)) && ($their_perms & PERMS_R_STREAM))
+						proc_run('php','include/onepoll.php',$r[0]['abook_id']); 
+				}
 			}
 			else {
 				$default_perms = 0;
@@ -330,7 +335,6 @@ function zot_refresh($them,$channel = null) {
 				);
 
 				if($y) {
-
 					logger("New introduction received for {$channel['channel_name']}");
 					if($default_perms) {
 						// send back a permissions update for auto-friend/auto-permissions
@@ -342,6 +346,14 @@ function zot_refresh($them,$channel = null) {
 						if($z)
 							proc_run('php','include/notifier.php','permission_update',$z[0]['abook_id']);
 					}
+					$new_connection = q("select abook_id, abook_flags from abook where abook_channel = %d and abook_xchan = '%s' order by abook_created desc limit 1",
+						intval($channel['channel_id']),
+						dbesc($x['hash'])
+					);
+
+					if($new_connection && (! ($new_connection[0]['abook_flags'] & ABOOK_FLAG_PENDING)) && ($their_perms & PERMS_R_STREAM))
+							proc_run('php','include/onepoll.php',$new_connection[0]['abook_id']); 
+
 				}
 			}
 		}
@@ -884,7 +896,7 @@ function zot_import($arr, $sender_url) {
 
 			}
 			else {
-				if((array_key_exists('flags',$i['message'])) && (in_array('private',$i['message']['flags']))) {
+				if(($i['message']) && (array_key_exists('flags',$i['message'])) && (in_array('private',$i['message']['flags']))) {
 					// This should not happen but until we can stop it...
 					logger('private message was delivered with no recipients.');
 					continue;
@@ -898,11 +910,29 @@ function zot_import($arr, $sender_url) {
 				$deliveries = allowed_public_recips($i);
 
 			}
+
+			// Go through the hash array and remove duplicates. array_unique() won't do this because the array is more than one level.
+
+			$no_dups = array();
+			if($deliveries) {
+				foreach($deliveries as $d) {
+					if(! in_array($d['hash'],$no_dups))
+						$no_dups[] = $d['hash'];
+				}
+
+				if($no_dups) {
+					$deliveries = array();
+					foreach($no_dups as $n) {
+						$deliveries[] = array('hash' => $n);
+					}
+				}
+			}
+
 			if(! $deliveries) {
 				logger('zot_import: no deliveries on this site');
 				continue;
 			}
-			
+							
 			if($i['message']) { 
 				if($i['message']['type'] === 'activity') {
 					$arr = get_item_elements($i['message']);

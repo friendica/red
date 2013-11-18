@@ -15,11 +15,14 @@ function theme_content(&$a) {
 	$arr['toolicon_colour'] = get_pconfig(local_user(),'redbasic','toolicon_colour');
 	$arr['toolicon_activecolour'] = get_pconfig(local_user(),'redbasic','toolicon_activecolour');
 	$arr['font_size'] = get_pconfig(local_user(),'redbasic', 'font_size' );
+	$arr['body_font_size'] = get_pconfig(local_user(),'redbasic', 'body_font_size' );
 	$arr['font_colour'] = get_pconfig(local_user(),'redbasic', 'font_colour' );
 	$arr['radius'] = get_pconfig(local_user(),'redbasic', 'radius' );
 	$arr['shadow'] = get_pconfig(local_user(),'redbasic', 'photo_shadow' );
 	$arr['converse_width']=get_pconfig(local_user(),"redbasic","converse_width");
 	$arr['nav_min_opacity']=get_pconfig(local_user(),"redbasic","nav_min_opacity");
+	$arr['top_photo']=get_pconfig(local_user(),"redbasic","top_photo");
+	$arr['reply_photo']=get_pconfig(local_user(),"redbasic","reply_photo");
 	$arr['sloppy_photos']=get_pconfig(local_user(),"redbasic","sloppy_photos");
 	return redbasic_form($a, $arr);
 }
@@ -38,11 +41,14 @@ function theme_post(&$a) {
 		set_pconfig(local_user(), 'redbasic', 'toolicon_colour', $_POST['redbasic_toolicon_colour']);
 		set_pconfig(local_user(), 'redbasic', 'toolicon_activecolour', $_POST['redbasic_toolicon_activecolour']);
 		set_pconfig(local_user(), 'redbasic', 'font_size', $_POST['redbasic_font_size']);
+		set_pconfig(local_user(), 'redbasic', 'body_font_size', $_POST['redbasic_body_font_size']);
 		set_pconfig(local_user(), 'redbasic', 'font_colour', $_POST['redbasic_font_colour']);
 		set_pconfig(local_user(), 'redbasic', 'radius', $_POST['redbasic_radius']);
 		set_pconfig(local_user(), 'redbasic', 'photo_shadow', $_POST['redbasic_shadow']);
 		set_pconfig(local_user(), 'redbasic', 'converse_width', $_POST['redbasic_converse_width']);
 		set_pconfig(local_user(), 'redbasic', 'nav_min_opacity', $_POST['redbasic_nav_min_opacity']);
+		set_pconfig(local_user(), 'redbasic', 'top_photo', $_POST['redbasic_top_photo']);
+		set_pconfig(local_user(), 'redbasic', 'reply_photo', $_POST['redbasic_reply_photo']);
 		set_pconfig(local_user(), 'redbasic', 'sloppy_photos', $_POST['redbasic_sloppy_photos']);
 	}
 }
@@ -89,12 +95,15 @@ if(feature_enabled(local_user(),'expert'))
 		'$item_opacity' => array('redbasic_item_opacity', t('Set the opacity of items'), $arr['item_opacity']),
 		'$toolicon_colour' => array('redbasic_toolicon_colour',t('Set the basic colour for item icons'),$arr['toolicon_colour']),
 		'$toolicon_activecolour' => array('redbasic_toolicon_activecolour',t('Set the hover colour for item icons'),$arr['toolicon_activecolour']),
+		'$body_font_size' => array('redbasic_body_font_size', t('Set font-size for the entire application'), $arr['body_font_size']),
 		'$font_size' => array('redbasic_font_size', t('Set font-size for posts and comments'), $arr['font_size']),
 		'$font_colour' => array('redbasic_font_colour', t('Set font-colour for posts and comments'), $arr['font_colour']),
 		'$radius' => array('redbasic_radius', t('Set radius of corners'), $arr['radius']),
 		'$shadow' => array('redbasic_shadow', t('Set shadow depth of photos'), $arr['shadow']),
 		'$converse_width' => array('redbasic_converse_width',t('Set maximum width of conversation regions'),$arr['converse_width']),
 		'$nav_min_opacity' => array('redbasic_nav_min_opacity',t('Set minimum opacity of nav bar - to hide it'),$arr['nav_min_opacity']),
+		'$top_photo' => array('redbasic_top_photo', t('Set size of conversation author photo'), $arr['top_photo']),
+		'$reply_photo' => array('redbasic_reply_photo', t('Set size of followup author photos'), $arr['reply_photo']),
 		'$sloppy_photos' => array('redbasic_sloppy_photos',t('Sloppy photo albums'),$arr['sloppy_photos'],t('Are you a clean desk or a messy desk person?')),
 		));
 

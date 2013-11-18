@@ -532,9 +532,6 @@ function conversation(&$a, $items, $mode, $update, $page_mode = 'traditional', $
 
 	$items = $cb['items'];
 
-	$cmnt_tpl    = get_markup_template('comment_item.tpl');
-	$hide_comments_tpl = get_markup_template('hide_comments.tpl');
-
 	$alike = array();
 	$dlike = array();
 
@@ -1133,7 +1130,7 @@ function status_editor($a,$x,$popup=false) {
 		'$bang' => $x['bang'],
 		'$profile_uid' => $x['profile_uid'],
 		'$preview' => $preview,
-		'$sourceapp' => t($a->sourcename),
+		'$source' => ((x($x,'source')) ? $x['source'] : ''),
 		'$jotplugins' => $jotplugins,
 		'$defexpire' => '',
 		'$feature_expire' => ((feature_enabled($x['profile_uid'],'content_expire') && (! $webpage)) ? 'block' : 'none'),
@@ -1304,7 +1301,7 @@ function prepare_page($item) {
 		'$auth_url' => (($naked) ? '' : $item['author']['xchan_url']),
 		'$date' => (($naked) ? '' : datetime_convert('UTC',date_default_timezone_get(),$item['created'],'Y-m-d H:i')),
 		'$title' => smilies(bbcode($item['title'])),
-		'$body' => prepare_text($item['body'],$item['mimetype'])
+		'$body' => prepare_body($item,true)
 	));
 }
 

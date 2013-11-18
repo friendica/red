@@ -512,7 +512,7 @@ function network_content(&$a, $update = 0, $load = false) {
 
 			. "'; var profile_page = " . $a->pager['page'] . ";</script>";
 
-logger('Search: ' . $search);
+
 
 		$a->page['htmlhead'] .= replace_macros(get_markup_template("build_query.tpl"),array(
 			'$baseurl' => z_root(),
@@ -734,7 +734,7 @@ logger('Search: ' . $search);
         $o .= alt_pager($a,count($items));
 
 	if($load) {
-		logger('mod_network: load: ' . count($items) . ' items', LOGGER_DATA);
+//		logger('mod_network: load: ' . count($items) . ' items', LOGGER_DATA);
 
 		profiler($start,$first,'network parents');
 		profiler($first,$second,'network children');

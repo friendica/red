@@ -20,6 +20,7 @@
 		$toolicon_activecolour = get_pconfig($uid,'redbasic','toolicon_activecolour');
 	    $item_colour = get_pconfig($uid, "redbasic", "item_colour");	
 	    $item_opacity = get_pconfig($uid, "redbasic", "item_opacity");	
+	    $body_font_size = get_pconfig($uid, "redbasic", "body_font_size");	
 	    $font_size = get_pconfig($uid, "redbasic", "font_size");	
 	    $font_colour = get_pconfig($uid, "redbasic", "font_colour");	
 	    $radius = get_pconfig($uid, "redbasic", "radius");	
@@ -27,6 +28,8 @@
 	    $converse_width=get_pconfig($uid,"redbasic","converse_width");
 		$nav_min_opacity=get_pconfig($uid,'redbasic','nav_min_opacity');
 		$sloppy_photos=get_pconfig($uid,'redbasic','sloppy_photos');
+		$top_photo=get_pconfig($uid,'redbasic','top_photo');
+		$reply_photo=get_pconfig($uid,'redbasic','reply_photo');
 
 // Now load the scheme.  If a value is changed above, we'll keep the settings
 // If not, we'll keep those defined by the schema
@@ -63,11 +66,11 @@
 	if (! $banner_colour)
 		$banner_colour = "fff";
 	if (! $bgcolour)
-		$bgcolour = "#f8f8f8";
+		$bgcolour = "#fdfdfd";
 	if (! $background_image)
 		$background_image ='';
 	if (! $item_colour)
-		$item_colour = "#f8f8f8";
+		$item_colour = "#fdfdfd";
 	if (! $toolicon_colour)
 		$toolicon_colour = '#777777';
 	if (! $toolicon_activecolour)
@@ -75,17 +78,29 @@
 	if (! $item_opacity)
 		$item_opacity = "1";
 	if (! $font_size)
-		$font_size = "12";
+		$font_size = "1.0em";
+	if (! $body_font_size)
+		$body_font_size = "11px";
 	if (! $font_colour)
 		$font_colour = "#4D4D4D";
 	if (! $radius)
-		$radius = "5";
+		$radius = "0";
 	if (! $shadow)
 		$shadow = "0";
 	if(! $active_colour)
 		$active_colour = '#FFFFFF';
     if (! $converse_width)
     	$converse_width="1024px";
+	if(! $top_photo)
+		$top_photo = '64px';
+	$pmenu_top = intval($top_photo) - 16 . 'px';
+	$wwtop = intval($top_photo) - 15 . 'px';
+	$comment_indent = intval($top_photo) + 10 . 'px';
+
+	if(! $reply_photo)
+		$reply_photo = '32px';
+	$pmenu_reply = intval($reply_photo) - 16 . 'px';
+	
 	if($nav_min_opacity === false || $nav_min_opacity === '') {
 		$nav_float_min_opacity = 1.0;
 		$nav_percent_min_opacity = 100;
@@ -138,12 +153,19 @@ $options = array (
 '$toolicon_activecolour' => $toolicon_activecolour,
 '$font_size' => $font_size,
 '$font_colour' => $font_colour,
+'$body_font_size' => $body_font_size,
 '$radius' => $radius,
 '$shadow' => $shadow,
 '$active_colour' => $active_colour,
 '$converse_width' => $converse_width,
 '$nav_float_min_opacity' => $nav_float_min_opacity,
-'$nav_percent_min_opacity' => $nav_percent_min_opacity
+'$nav_percent_min_opacity' => $nav_percent_min_opacity,
+'$top_photo' => $top_photo,
+'$reply_photo' => $reply_photo,
+'$pmenu_top' => $pmenu_top,
+'$pmenu_reply' => $pmenu_reply,
+'$wwtop' => $wwtop,
+'$comment_indent' => $comment_indent
 );
 
 echo str_replace(array_keys($options), array_values($options), $x);    

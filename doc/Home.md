@@ -9,6 +9,7 @@ Red Matrix Documentation and Resources
 * [Channels](help/Channels)
 * [Connecting to Channels](help/Connecting-to-Channels)
 * [Permissions](help/Permissions)
+* [But Wait - There's More. MUCH More...](help/Features) 
 * [Tags and Mentions](help/Tags-and-Mentions)
 * [Web Pages](help/Webpages)
 * [Remove Account](help/Remove-Account)
@@ -20,6 +21,8 @@ Red Matrix Documentation and Resources
 * [Plugins](help/Plugins)
 * [Developers](help/Developers)
 * [Code](doc/html)
+* [To-Do list for the Red Documentation Project](help/To-Do)
+* [To-Do list for Developers](help/To-Do-Code)
 
 **External Resources**
 

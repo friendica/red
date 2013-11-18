@@ -4,6 +4,7 @@ $(document).ready(function() {
 		serviceUrl: baseurl + '/search_ac',
 		minChars: 2,
 		width: 250,
+		id: 'search-text-ac',
 	});
 }); 
 

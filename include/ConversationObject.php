@@ -23,7 +23,7 @@ class Conversation extends BaseObject {
 	private $profile_owner = 0;
 	private $preview = false;
 	private $prepared_item = '';
-
+	private $cipher = 'aes256';
 
 	// $prepared_item is for use by alternate conversation structures such as photos
 	// wherein we've already prepared a top level item which doesn't look anything like
@@ -33,6 +33,9 @@ class Conversation extends BaseObject {
 		$this->set_mode($mode);
 		$this->preview = $preview;
 		$this->prepared_item = $prepared_item;
+		$c = ((local_user()) ? get_pconfig(local_user(),'system','default_cipher') : '');
+		if($c)
+			$this->cipher = $c;
 	}
 
 	/**
@@ -116,6 +119,10 @@ class Conversation extends BaseObject {
 
 	public function get_observer() {
 		return $this->observer;
+	}
+
+	public function get_cipher() {
+		return $this->cipher;
 	}
 
 

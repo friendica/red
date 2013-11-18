@@ -2,6 +2,7 @@ var classConversation =
 [
     [ "__construct", "classConversation.html#af84ea6ccd72214c9bb4c504461cc8b09", null ],
     [ "add_thread", "classConversation.html#a8335cdd43f1836e3c255638e61a09e16", null ],
+    [ "get_cipher", "classConversation.html#a4aab60bb39fa6761b6cacdc8d9da2901", null ],
     [ "get_mode", "classConversation.html#a87a0d704d5f2b1a008cc2e9ce06a1bcd", null ],
     [ "get_observer", "classConversation.html#ae3d4190142e12b57051f11f2911f77a0", null ],
     [ "get_profile_owner", "classConversation.html#a5effe8ad3007e01333df44b81432b813", null ],
@@ -12,6 +13,7 @@ var classConversation =
     [ "is_writable", "classConversation.html#a5879199008b96bee7550b576d614e1c1", null ],
     [ "set_mode", "classConversation.html#a66f121ca4026246f86a732e5faa0682c", null ],
     [ "set_profile_owner", "classConversation.html#a8898bddc1e8990e81dab9a13a532cc93", null ],
+    [ "$cipher", "classConversation.html#aa95c1a62af38bdfba7add9549bec083b", null ],
     [ "$commentable", "classConversation.html#afd4965d22a6e4bfea2f35e931b3273c6", null ],
     [ "$mode", "classConversation.html#afb03d1648dbfafe62caa1e30f32f2b1a", null ],
     [ "$observer", "classConversation.html#a8748445aa26047ebed5141f3c3cbc244", null ],

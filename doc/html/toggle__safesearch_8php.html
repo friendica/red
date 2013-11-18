@@ -4,7 +4,7 @@
 <meta http-equiv="Content-Type" content="text/xhtml;charset=UTF-8"/>
 <meta http-equiv="X-UA-Compatible" content="IE=9"/>
 <meta name="generator" content="Doxygen 1.8.3.1"/>
-<title>The Red Matrix: include/auth.php File Reference</title>
+<title>The Red Matrix: mod/toggle_safesearch.php File Reference</title>
 <link href="tabs.css" rel="stylesheet" type="text/css"/>
 <script type="text/javascript" src="jquery.js"></script>
 <script type="text/javascript" src="dynsections.js"></script>
@@ -85,7 +85,7 @@ var searchBox = new SearchBox("searchBox", "search",false,'Search');
   </div>
 </div>
 <script type="text/javascript">
-$(document).ready(function(){initNavTree('auth_8php.html','');});
+$(document).ready(function(){initNavTree('toggle__safesearch_8php.html','');});
 </script>
 <div id="doc-content">
 <!-- window showing the filter options -->
@@ -104,94 +104,32 @@ $(document).ready(function(){initNavTree('auth_8php.html','');});
 
 <div class="header">
   <div class="summary">
-<a href="#func-members">Functions</a> &#124;
-<a href="#var-members">Variables</a>  </div>
+<a href="#func-members">Functions</a>  </div>
   <div class="headertitle">
-<div class="title">auth.php File Reference</div>  </div>
+<div class="title">toggle_safesearch.php File Reference</div>  </div>
 </div><!--header-->
 <div class="contents">
 <table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a name="func-members"></a>
 Functions</h2></td></tr>
-<tr class="memitem:a2add3a1129ffa4d5515442a9d52a9b1a"><td class="memItemLeft" align="right" valign="top">&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="auth_8php.html#a2add3a1129ffa4d5515442a9d52a9b1a">nuke_session</a> ()</td></tr>
-<tr class="separator:a2add3a1129ffa4d5515442a9d52a9b1a"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a07bae0e623e2daa9ee2cd5a8aa294dee"><td class="memItemLeft" align="right" valign="top">&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="auth_8php.html#a07bae0e623e2daa9ee2cd5a8aa294dee">account_verify_password</a> ($email, $pass)</td></tr>
-<tr class="separator:a07bae0e623e2daa9ee2cd5a8aa294dee"><td class="memSeparator" colspan="2">&#160;</td></tr>
-</table><table class="memberdecls">
-<tr class="heading"><td colspan="2"><h2 class="groupheader"><a name="var-members"></a>
-Variables</h2></td></tr>
-<tr class="memitem:a0950af7c2888ca1d4743fe5d0bff9ae5"><td class="memItemLeft" align="right" valign="top"><a class="el" href="redbasic_2php_2style_8php.html#a883f9f14e205f7aa7de02c14df67b40a">if</a>((isset($_SESSION))&amp;&amp;(<a class="el" href="boot_8php.html#a01353c9abebc3544ea080ac161729632">x</a>($_SESSION,'authenticated'))&amp;&amp;((!(<a class="el" href="boot_8php.html#a01353c9abebc3544ea080ac161729632">x</a>($_POST,'auth-params')))||($_POST['auth-params']!== <br class="typebreak"/>
-'<a class="el" href="boot_8php.html#aefecf8599036df7f1b95d6820e0e2fa4">login</a>')))&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="auth_8php.html#a0950af7c2888ca1d4743fe5d0bff9ae5">else</a></td></tr>
-<tr class="separator:a0950af7c2888ca1d4743fe5d0bff9ae5"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a23d5cfb2727a266e44993ffbf5595a79"><td class="memItemLeft" align="right" valign="top">&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="toggle__safesearch_8php.html#a23d5cfb2727a266e44993ffbf5595a79">toggle_safesearch_init</a> (&amp;$a)</td></tr>
+<tr class="separator:a23d5cfb2727a266e44993ffbf5595a79"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table>
 <h2 class="groupheader">Function Documentation</h2>
-<a class="anchor" id="a07bae0e623e2daa9ee2cd5a8aa294dee"></a>
+<a class="anchor" id="a23d5cfb2727a266e44993ffbf5595a79"></a>
 <div class="memitem">
 <div class="memproto">
       <table class="memname">
         <tr>
-          <td class="memname">account_verify_password </td>
+          <td class="memname">toggle_safesearch_init </td>
           <td>(</td>
-          <td class="paramtype">&#160;</td>
-          <td class="paramname"><em>$email</em>, </td>
-        </tr>
-        <tr>
-          <td class="paramkey"></td>
-          <td></td>
-          <td class="paramtype">&#160;</td>
-          <td class="paramname"><em>$pass</em>&#160;</td>
-        </tr>
-        <tr>
-          <td></td>
-          <td>)</td>
-          <td></td><td></td>
-        </tr>
-      </table>
-</div><div class="memdoc">
-<p>Verify login credentials</p>
-<p>Returns account record on success, null on failure </p>
-<p>A plugin indicates successful login by setting 'authenticated' to non-zero value and returning a user record Plugins should never set 'authenticated' except to indicate success - as hooks may be chained and later plugins should not interfere with an earlier one that succeeded.</p>
-
-<p>Referenced by <a class="el" href="include_2api_8php.html#afe534f826e4282b72d66e8cadca7bb73">api_login()</a>, <a class="el" href="removeme_8php.html#a7be08738beca44bb98a79e01cdb2ee88">removeme_post()</a>, and <a class="el" href="classRedBasicAuth.html#a8dfd9a0953f8884723b421b7c1acf79b">RedBasicAuth\validateUserPass()</a>.</p>
-
-</div>
-</div>
-<a class="anchor" id="a2add3a1129ffa4d5515442a9d52a9b1a"></a>
-<div class="memitem">
-<div class="memproto">
-      <table class="memname">
-        <tr>
-          <td class="memname">nuke_session </td>
-          <td>(</td>
-          <td class="paramname"></td><td>)</td>
+          <td class="paramtype">&amp;&#160;</td>
+          <td class="paramname"><em>$a</em></td><td>)</td>
           <td></td>
         </tr>
       </table>
 </div><div class="memdoc">
 
-<p>Referenced by <a class="el" href="include_2api_8php.html#a2e94eab9d6c164bfef7a1b2ab87b339b">api_account_logout()</a>.</p>
-
-</div>
-</div>
-<h2 class="groupheader">Variable Documentation</h2>
-<a class="anchor" id="a0950af7c2888ca1d4743fe5d0bff9ae5"></a>
-<div class="memitem">
-<div class="memproto">
-      <table class="memname">
-        <tr>
-          <td class="memname"><a class="el" href="redbasic_2php_2style_8php.html#a883f9f14e205f7aa7de02c14df67b40a">if</a> ((isset($_SESSION))&amp;&amp;(<a class="el" href="boot_8php.html#a01353c9abebc3544ea080ac161729632">x</a>($_SESSION,'authenticated'))&amp;&amp;((!(<a class="el" href="boot_8php.html#a01353c9abebc3544ea080ac161729632">x</a>($_POST,'auth-params')))||($_POST['auth-params']!== '<a class="el" href="boot_8php.html#aefecf8599036df7f1b95d6820e0e2fa4">login</a>'))) else</td>
-        </tr>
-      </table>
-</div><div class="memdoc">
-<b>Initial value:</b><div class="fragment"><div class="line">{</div>
-<div class="line"></div>
-<div class="line">    <span class="keywordflow">if</span>(isset($_SESSION)) {</div>
-<div class="line">        <a class="code" href="auth_8php.html#a2add3a1129ffa4d5515442a9d52a9b1a">nuke_session</a>();</div>
-<div class="line">    }</div>
-<div class="line"></div>
-<div class="line">    <span class="keywordflow">if</span>((<a class="code" href="boot_8php.html#a01353c9abebc3544ea080ac161729632">x</a>($_POST,<span class="stringliteral">&#39;password&#39;</span>)) &amp;&amp; strlen($_POST[<span class="stringliteral">&#39;password&#39;</span>]))</div>
-<div class="line">        $encrypted = hash(<span class="stringliteral">&#39;whirlpool&#39;</span>,trim($_POST[<span class="stringliteral">&#39;password&#39;</span>]))</div>
-</div><!-- fragment -->
 </div>
 </div>
 </div><!-- contents -->

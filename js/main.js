@@ -49,6 +49,37 @@
 		$("#comment-edit-text-" + id).val(tmpStr + ins);
 	}
 
+
+	function insertbbcomment(comment,BBcode,id) {
+		// allow themes to override this
+		if(typeof(insertFormatting) != 'undefined')
+		   return(insertFormatting(comment,BBcode,id));
+
+		var tmpStr = $("#comment-edit-text-" + id).val();
+		if(tmpStr == comment) {
+			tmpStr = "";
+			$("#comment-edit-text-" + id).addClass("comment-edit-text-full");
+			$("#comment-edit-text-" + id).removeClass("comment-edit-text-empty");
+			openMenu("comment-edit-submit-wrapper-" + id);
+			$("#comment-edit-text-" + id).val(tmpStr);
+		}
+
+		textarea = document.getElementById("comment-edit-text-" +id);
+		if (document.selection) {
+			textarea.focus();
+			selected = document.selection.createRange();
+			selected.text = "["+BBcode+"]" + selected.text + "[/"+BBcode+"]";
+		} else if (textarea.selectionStart || textarea.selectionStart == "0") {
+			var start = textarea.selectionStart;
+			var end = textarea.selectionEnd;
+			textarea.value = textarea.value.substring(0, start) + "["+BBcode+"]" + textarea.value.substring(start, end) + "[/"+BBcode+"]" + textarea.value.substring(end, textarea.value.length);
+		}
+		return true;
+	}
+
+
+
+
 	function qCommentInsert(obj,id) {
 		var tmpStr = $("#comment-edit-text-" + id).val();
 		if(tmpStr == aStr['comment']) {

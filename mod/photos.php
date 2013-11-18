@@ -42,7 +42,7 @@ function photos_init(&$a) {
 			$a->set_widget('photo_albums',photos_album_widget($a->data['channel'],$observer,$a->data['albums']));
 		}
 
-		$a->page['htmlhead'] .= "<script> var ispublic = '" . t('everybody') . "';</script>" ;
+		$a->page['htmlhead'] .= "<script> var ispublic = '" . t('everybody') . "'; var profile_uid = " . (($a->data['channel']) ? $a->data['channel']['channel_id'] : 0) . "; </script>" ;
 
 	}
 
@@ -1079,7 +1079,8 @@ function photos_content(&$a) {
 						'$comment' => t('Comment'),
 						'$submit' => t('Submit'),
 						'$preview' => t('Preview'),
-						'$ww' => ''
+						'$ww' => '',
+						'$feature_encrypt' => false
 					));
 				}
 			}

@@ -1586,7 +1586,7 @@ function get_max_import_size() {
 
 function profile_load(&$a, $nickname, $profile = '') {
 
-	logger('profile_load: ' . $profile);
+	logger('profile_load: ' . $nickname . (($profile) ? ' profile: ' . $profile : ''));
 
 	$user = q("select channel_id from channel where channel_address = '%s' limit 1",
 		dbesc($nickname)
@@ -2318,8 +2318,8 @@ function zid_init(&$a) {
 		$arr = array('zid' => $tmp_str, 'url' => $a->cmd);
 		call_hooks('zid_init',$arr);
 		if((! local_user()) && (! remote_user())) {
-			logger('zid_init: not authenticated. Invoking reverse magic-auth');
-			$r = q("select * from hubloc where hubloc_addr = '%s' limit 1",
+			logger('zid_init: not authenticated. Invoking reverse magic-auth for ' . $tmp_str);
+			$r = q("select * from hubloc where hubloc_addr = '%s' order by hubloc_id desc limit 1",
 				dbesc($tmp_str)
 			);
 			// try to avoid recursion - but send them home to do a proper magic auth
@@ -2328,6 +2328,8 @@ function zid_init(&$a) {
 			if($r && ($r[0]['hubloc_url'] != z_root()) && (! strstr($dest,'/magic')) && (! strstr($dest,'/rmagic'))) {
 				goaway($r[0]['hubloc_url'] . '/magic' . '?f=&rev=1&dest=' . z_root() . $dest);
 			}
+			else
+				logger('zid_init: no hubloc found.');
 		}
 	}
 }

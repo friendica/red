@@ -563,7 +563,7 @@ function admin_page_users_post(&$a){
 	if (x($_POST,'page_users_delete')){
 		require_once("include/Contact.php");
 		foreach($users as $uid){
-			user_remove($uid);
+			account_remove($uid,true);
 		}
 		notice( sprintf( tt("%s user deleted", "%s users deleted", count($users)), count($users)) );
 	}
@@ -605,9 +605,9 @@ function admin_page_users(&$a){
                 check_form_security_token_redirectOnErr('/admin/users', 'admin_users', 't');
 				// delete user
 				require_once("include/Contact.php");
-				user_remove($uid);
+				account_remove($uid,true);
 				
-				notice( sprintf(t("User '%s' deleted"), $user[0]['username']) . EOL);
+				notice( sprintf(t("User '%s' deleted"), $account[0]['account_email']) . EOL);
 			}; break;
 			case "block":{
                 check_form_security_token_redirectOnErr('/admin/users', 'admin_users', 't');

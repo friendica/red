@@ -227,6 +227,8 @@ function list_public_sites() {
 	if($r) {
 		$ret['success'] = true;
 		$ret['sites'] = array();
+		$insecure = array();
+
 		foreach($r as $rr) {
 			
 			if($rr['site_access'] == ACCESS_FREE)
@@ -245,7 +247,13 @@ function list_public_sites() {
 			else
 				$register = 'closed';
 
-			$ret['sites'][] = array('url' => $rr['site_url'], 'access' => $access, 'register' => $register, 'sellpage' => $rr['site_sellpage'], 'location' => $rr['site_location']);
+			if(strpos($rr['site_url'],'https://') !== false)
+				$ret['sites'][] = array('url' => $rr['site_url'], 'access' => $access, 'register' => $register, 'sellpage' => $rr['site_sellpage'], 'location' => $rr['site_location']);
+			else
+				$insecure[] = array('url' => $rr['site_url'], 'access' => $access, 'register' => $register, 'sellpage' => $rr['site_sellpage'], 'location' => $rr['site_location']);
+		}
+		if($insecure) {
+			$ret['sites'] = array_merge($ret['sites'],$insecure);
 		}
 	}
 	return $ret;

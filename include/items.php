@@ -552,14 +552,19 @@ function get_item_elements($x) {
 
 	$arr['created']      = datetime_convert('UTC','UTC',$x['created']);
 	$arr['edited']       = datetime_convert('UTC','UTC',$x['edited']);
-	$arr['expires']      = ((x($x,'expires') && $x['expires']) 
-								? datetime_convert('UTC','UTC',$x['expires']) 
-								: '0000-00-00 00:00:00');
 
 	if($arr['created'] > datetime_convert())
 		$arr['created']  = datetime_convert();
 	if($arr['edited'] > datetime_convert())
 		$arr['edited']   = datetime_convert();
+
+	$arr['expires']      = ((x($x,'expires') && $x['expires']) 
+								? datetime_convert('UTC','UTC',$x['expires']) 
+								: '0000-00-00 00:00:00');
+
+	$arr['commented']    = ((x($x,'commented') && $x['commented']) 
+								? datetime_convert('UTC','UTC',$x['commented']) 
+								: $arr['created']);
 
 	$arr['title']        = (($x['title'])          ? htmlentities($x['title'],          ENT_COMPAT,'UTF-8',false) : '');
 
@@ -714,6 +719,7 @@ function encode_item($item) {
 	$x['created']        = $item['created'];
 	$x['edited']         = $item['edited'];
 	$x['expires']        = $item['expires'];
+	$x['commented']      = $item['commented'];
 	$x['mimetype']       = $item['mimetype'];
 	$x['title']          = $item['title'];
 	$x['body']           = $item['body'];
@@ -1539,8 +1545,8 @@ function item_store($arr,$allow_exec = false) {
 	$arr['owner_xchan']   = ((x($arr,'owner_xchan'))   ? notags(trim($arr['owner_xchan']))   : '');
 	$arr['created']       = ((x($arr,'created') !== false) ? datetime_convert('UTC','UTC',$arr['created']) : datetime_convert());
 	$arr['edited']        = ((x($arr,'edited')  !== false) ? datetime_convert('UTC','UTC',$arr['edited'])  : datetime_convert());
-	$arr['expires']        = ((x($arr,'expires')  !== false) ? datetime_convert('UTC','UTC',$arr['expires'])  : '0000-00-00 00:00:00');
-	$arr['commented']     = datetime_convert();
+	$arr['expires']       = ((x($arr,'expires')  !== false) ? datetime_convert('UTC','UTC',$arr['expires'])  : '0000-00-00 00:00:00');
+	$arr['commented']     = ((x($arr,'commented')  !== false) ? datetime_convert('UTC','UTC',$arr['commented'])  : datetime_convert());
 	$arr['received']      = datetime_convert();
 	$arr['changed']       = datetime_convert();
 	$arr['location']      = ((x($arr,'location'))      ? notags(trim($arr['location']))      : '');
@@ -1777,8 +1783,13 @@ function item_store($arr,$allow_exec = false) {
 
 	// update the commented timestamp on the parent
 
+	$z = q("select max(created) as commented from item where parent_mid = '%s' and uid = %d ",
+		dbesc($arr['parent_mid']),
+		intval($arr['uid'])
+	);
+
 	q("UPDATE item set commented = '%s', changed = '%s' WHERE id = %d LIMIT 1",
-		dbesc(datetime_convert()),
+		dbesc(($z) ? $z[0]['commented'] : (datetime_convert())),
 		dbesc(datetime_convert()),
 		intval($parent_id)
 	);
@@ -3757,6 +3768,7 @@ function fetch_post_tags($items,$link = false) {
 
 function zot_feed($uid,$observer_xchan,$mindate) {
 
+
 	$result = array();
 	$mindate = datetime_convert('UTC','UTC',$mindate);
 	if(! $mindate)
@@ -3764,10 +3776,14 @@ function zot_feed($uid,$observer_xchan,$mindate) {
 
 	$mindate = dbesc($mindate);
 
+	logger('zot_feed: ' . $uid);
+
 	if(! perm_is_allowed($uid,$observer_xchan,'view_stream')) {
+		logger('zot_feed: permission denied.');
 		return $result;
 	}
 
+	require_once('include/security.php');
 	$sql_extra = item_permissions_sql($uid);
 
 	if($mindate != '0000-00-00 00:00:00') {

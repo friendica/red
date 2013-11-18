@@ -9,7 +9,7 @@
 /* generals */
 body {
 	font-family: arial,freesans,sans-serif;
-	font-size: 12px;
+	font-size: $body_font_size;
 	background-color: $bgcolour;
 	background-image: url('$background_image');
 	background-attachment: fixed;
@@ -60,6 +60,14 @@ input {
 	-moz-border-radius: $radiuspx;
 	border-radius: $radiuspx;	
 	padding: 3px;
+	font-size: $body_font_size;
+}
+
+input[type="submit"] {
+	background-color: #F0F0F0;
+	font-weight: bold;
+	color: #0080FF; 
+	text-decoration: none; 
 }
 
 code {
@@ -88,6 +96,10 @@ blockquote {
 
 .hide-comments {
 	margin-left: 5px;
+}
+
+.hide-comments-outer {
+	margin-left: 10px;
 }
 
 #panel {
@@ -164,7 +176,7 @@ nav #site-location {
 .info-message {
 	font-size: 1.1em;
 	border: 1px solid #444;
-	background-color: #ccc;
+	background-color: #F0F0F0;
 	padding: 10px;
 	-moz-border-radius: $radiuspx;
 	border-radius: $radiuspx;	
@@ -781,6 +793,12 @@ footer {
 	height: 120px;
 	padding: 10px;
 }
+
+#contacts-search {
+	font-size: 1em;
+	width: 300px;
+}
+
 #contacts-search-end {
 	margin-bottom: 10px;
 }
@@ -832,7 +850,8 @@ footer {
 
 
 .thread-wrapper .wall-item-comment-wrapper, .wall-item-content-wrapper.comment {
-	margin-left: 50px;
+	margin-left: $comment_indent;
+	border-left: 2px solid #eee;
 }
 
 .wall-item-content-wrapper {
@@ -863,7 +882,7 @@ footer {
 }
 
 .wall-item-photo-wrapper {
-	margin-top: 10px;
+	margin-top: 0px;
 	margin-left: 10px;
 	margin-bottom: 10px;
 	width: 100px;
@@ -877,7 +896,7 @@ footer {
 	margin: 0px; padding: 0px;
 	width: 16px;
 	height: 16px;
-	top: 74px; left:10px;
+	top: $pmenu_top; left:10px;
 	overflow: hidden;
 	text-indent: 40px;
 	display: none;
@@ -888,7 +907,8 @@ footer {
 	border: 2px solid #444444;
 	background: #FFFFFF;
 	position: absolute;
-	left: 10px; top: 90px;
+	left: 10px; 
+	top: $top_photo;
 	display: none;
 	z-index: 10000;
 }
@@ -897,14 +917,14 @@ footer {
 .wall-item-photo-menu li a:hover { color: #FFFFFF; background: #3465A4; text-decoration: none; }
 
 
-.comment .wall-item-photo-menu-button {	top: 44px;}
-.comment .wall-item-photo-menu { top: 60px; }
+.comment .wall-item-photo-menu-button {	top: $pmenu_reply;}
+.comment .wall-item-photo-menu { top: $reply_photo; }
 
 .wallwall .wwto {
     left: 50px;
     margin: 0;
     position: absolute;
-    top: 70px;
+    top: $wwtop;
     width: 30px
 }
 .wallwall .wwto img {
@@ -919,7 +939,7 @@ footer {
 .wall-item-arrowphoto-wrapper {
     position: absolute;
     left: 75px;
-    top: 70px;
+    top: $wwtop;
     z-index: 99;
 }
 .wall-item-wrapper {
@@ -932,7 +952,7 @@ footer {
 }
 
 .wall-item-lock {
-	font-size: 1.4em;
+	font-size: 1.2em;
     left: 105px;
     position: absolute;
     top: 1px;
@@ -999,15 +1019,18 @@ footer {
 
 .wall-item-photo {
 	border: none;
+	width: $top_photo !important;
+	height: $top_photo !important;
+
 }
 .comment .wall-item-photo {
-	width: 50px !important; 
-	height: 50px !important;
+	width: $reply_photo !important; 
+	height: $reply_photo !important;
 }
 .wall-item-content {
 	margin-left: 10px;
 	overflow: auto;
-	font-size: $font_sizepx;
+	font-size: $font_size;
 }
 
 .wall-item-content img {
@@ -1061,7 +1084,7 @@ footer {
 }
 
 .comment-edit-photo img {
-	width: 25px;
+	width: $reply_photo;
 }
 .comment-edit-text-empty, .comment-edit-text-full {
 	float: left;
@@ -1074,8 +1097,8 @@ footer {
 
 .comment-edit-text-empty {
 	color: gray;
-	height: 1.5em;
-	width: 40%;  /*Too wide? */
+	height: 1.0em;
+	width: 270px; 
 	overflow: auto;
 	margin-bottom: 10px;
 }
@@ -2894,14 +2917,27 @@ div.jGrowl div.info {
 	width:100px;
 }
 
-#recip {
-	
-}
-
-.autocomplete { 
-	color: $font_colour;
+#nav-search-text-ac .autocomplete {
+	position: fixed;
+	top: 24px;
 	border: 1px solid $nav_bg_1;
 	border-top: none;
+}
+
+#search-text-ac .autocomplete,
+#recip-ac .autocomplete,
+#poke-recip-ac .autocomplete,
+#id-name-ac .autocomplete,
+#contact-search-ac .autocomplete {
+	margin-top: 2px;
+	margin-left: $radiuspx;
+	border: 1px solid #666;
+	border-top: none;
+
+}
+
+.autocomplete {
+	color: $font_colour;
 	background: #FFF;
 	cursor: pointer;
 	text-align: left;
@@ -2930,7 +2966,7 @@ div.jGrowl div.info {
 
 .jslider .jslider-scale ins {
     color: #333;
-	font-size: 12px;
+	font-size: $body_font_size;
 	width: 100px;
 	text-align: center;
 }
@@ -3527,4 +3563,9 @@ text-decoration: none;
 
 .savedsearchdrop {
 	opacity: 0;
+}
+
+.admin-icons {
+	color: $toolicon_colour;
+	margin-right: 10px;
 }

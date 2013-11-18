@@ -57,13 +57,16 @@ function webpages_content(&$a) {
 
 // Create a status editor (for now - we'll need a WYSIWYG eventually) to create pages
 // Nickname is set to the observers xchan, and profile_uid to the owners.  This lets you post pages at other people's channels.
-require_once ('include/conversation.php');
+	require_once ('include/conversation.php');
+	require_once('include/acl_selectors.php');
+
 		$x = array(
 			'webpage' => ITEM_WEBPAGE,
 			'is_owner' => true,
 			'nickname' => $a->profile['channel_address'],
 			'lockstate' => (($group || $cid || $channel['channel_allow_cid'] || $channel['channel_allow_gid'] || $channel['channel_deny_cid'] || $channel['channel_deny_gid']) ? 'lock' : 'unlock'),
 			'bang' => (($group || $cid) ? '!' : ''),
+			'acl' => ((local_user() && local_user() == $owner) ? populate_acl($a->get_channel()) : ''),
 			'visitor' => 'block',
 			'profile_uid' => intval($owner),
 			'mimetype' => $mimetype,			
@@ -76,18 +79,18 @@ require_once ('include/conversation.php');
 //Get a list of webpages.  We can't display all them because endless scroll makes that unusable, so just list titles and an edit link.
 //TODO - this should be replaced with pagelist_widget
 
-$r = q("select * from item_id where uid = %d and service = 'WEBPAGE' order by sid asc",
-	intval($owner)
-);
+	$r = q("select item_id.* from item_id left join item on item_id.iid = item.id where item_id.uid = %d and service = 'WEBPAGE' order by item.created desc",
+		intval($owner)
+	);
 
-		$pages = null;
+	$pages = null;
 
-		if($r) {
-			$pages = array();
-			foreach($r as $rr) {
-				$pages[$rr['iid']][] = array('url' => $rr['iid'],'title' => $rr['sid']);
-			} 
-		}
+	if($r) {
+		$pages = array();
+		foreach($r as $rr) {
+			$pages[$rr['iid']][] = array('url' => $rr['iid'],'title' => $rr['sid']);
+		} 
+	}
 
 
 //Build the base URL for edit links

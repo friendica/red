@@ -28,12 +28,12 @@ class Item extends BaseObject {
 	private $visiting = false;
 	private $channel = null;
 
+
 	public function __construct($data) {
 		$a = $this->get_app();
 				
 		$this->data = $data;
 		$this->toplevel = ($this->get_id() == $this->get_data_value('parent'));
-
 
 		// Prepare the children
 		if(count($data['children'])) {
@@ -538,7 +538,11 @@ class Item extends BaseObject {
 			'$edvideo' => t('Video'),
 			'$preview' => ((feature_enabled($conv->get_profile_owner(),'preview')) ? t('Preview') : ''),
 			'$indent' => $indent,
+			'$feature_encrypt' => ((feature_enabled($conv->get_profile_owner(),'content_encrypt')) ? true : false),
+			'$encrypt' => t('Encrypt text'),
+			'$cipher' => $conv->get_cipher(),
 			'$sourceapp' => get_app()->sourcename
+
 		));
 
 		return $comment_box;
