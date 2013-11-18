@@ -48,7 +48,6 @@ function post_init(&$a) {
 				// They'll get a notice when they hit the page, we don't need two of them. 
 				// In fact we only need the name to map the destination, auth can proceed
 				// without it.
-				// goaway($desturl);
 			}
 		}
 
