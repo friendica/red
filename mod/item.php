@@ -774,14 +774,6 @@ function item_post(&$a) {
 		// NOTREACHED
 	}
 
-	// update the commented timestamp on the parent
-
-	q("UPDATE `item` set `commented` = '%s', `changed` = '%s' WHERE `id` = %d LIMIT 1",
-		dbesc(datetime_convert()),
-		dbesc(datetime_convert()),
-		intval($parent)
-	);
-
 	$page_type = '';
 
 	if($webpage & ITEM_WEBPAGE)

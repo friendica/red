@@ -346,12 +346,12 @@ function zot_refresh($them,$channel = null) {
 						if($z)
 							proc_run('php','include/notifier.php','permission_update',$z[0]['abook_id']);
 					}
-					$new_connection = q("select abook_id from abook where abook_channel = %d and abook_xchan = '%s' order by abook_created desc limit 1",
+					$new_connection = q("select abook_id, abook_flags from abook where abook_channel = %d and abook_xchan = '%s' order by abook_created desc limit 1",
 						intval($channel['channel_id']),
 						dbesc($x['hash'])
 					);
 
-					if($new_connection && ($their_perms & PERMS_R_STREAM))
+					if($new_connection && (! ($new_connection[0]['abook_flags'] & ABOOK_FLAG_PENDING)) && ($their_perms & PERMS_R_STREAM))
 							proc_run('php','include/onepoll.php',$new_connection[0]['abook_id']); 
 
 				}

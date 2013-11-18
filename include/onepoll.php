@@ -36,11 +36,12 @@ function onepoll_run($argv, $argc){
 	$contacts = q("SELECT abook.*, xchan.*, account.*
 		FROM abook LEFT JOIN account on abook_account = account_id left join xchan on xchan_hash = abook_xchan 
 		where abook_id = %d
-		AND (( abook_flags = %d ) OR ( abook_flags = %d )) 
+		AND (( abook_flags = %d ) OR ( abook_flags = %d ) OR ( abook_flags & %d )) 
 		AND (( account_flags = %d ) OR ( account_flags = %d )) limit 1",
 		intval($contact_id),
 		intval(ABOOK_FLAG_HIDDEN),
 		intval(0),
+		intval(ABOOK_FLAG_PENDING),
 		intval(ACCOUNT_OK),
 		intval(ACCOUNT_UNVERIFIED)
 	);
@@ -67,7 +68,7 @@ function onepoll_run($argv, $argc){
 
 	logger("onepoll: poll: ({$contact['id']}) IMPORTER: {$importer['xchan_name']}, CONTACT: {$contact['xchan_name']}");
 
-	$last_update = (($contact['abook_updated'] === '0000-00-00 00:00:00') 
+	$last_update = ((($contact['abook_updated'] === $contact['abook_created']) || ($contact['abook_updated'] === '0000-00-00 00:00:00'))
 		? datetime_convert('UTC','UTC','now - 7 days')
 		: datetime_convert('UTC','UTC',$contact['abook_updated'] . ' - 2 days')
 	);
@@ -98,12 +99,22 @@ function onepoll_run($argv, $argc){
 		return;
 
 	if($contact['xchan_connurl']) {
-		$feedurl = str_replace('/poco/','/zotfeed/',$contact['xchan_connurl']);		
-		$x = z_fetch_url($feedurl . '?f=&mindate=' . urlencode($last_update));
+		$fetch_feed = true;
+		$x = null;
 
-		logger('feed_update: ' . print_r($x,true), LOGGER_DATA);
+		if(! ($contact['abook_their_perms'] & PERMS_R_STREAM ))
+			$fetch_feed = false;
 
-		if($x['success']) {
+		if($fetch_feed) {
+
+			$feedurl = str_replace('/poco/','/zotfeed/',$contact['xchan_connurl']);		
+			$x = z_fetch_url($feedurl . '?f=&mindate=' . urlencode($last_update));
+
+			logger('feed_update: ' . print_r($x,true), LOGGER_DATA);
+
+		}
+
+		if(($x) && ($x['success'])) {
 			$total = 0;
 			logger('onepoll: feed update ' . $contact['xchan_name']);
 
@@ -112,6 +123,7 @@ function onepoll_run($argv, $argc){
 				foreach($j['messages'] as $message) {
 					$results = process_delivery(array('hash' => $contact['xchan_hash']), get_item_elements($message),
 						array(array('hash' => $importer['xchan_hash'])), false);
+					logger('onepoll: feed_update: process_delivery: ' . print_r($results,true));
 					$total ++;
 				}
 				logger("onepoll: $total messages processed");

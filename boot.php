@@ -1586,7 +1586,7 @@ function get_max_import_size() {
 
 function profile_load(&$a, $nickname, $profile = '') {
 
-	logger('profile_load: ' . $profile);
+	logger('profile_load: ' . $nickname . (($profile) ? ' profile: ' . $profile : ''));
 
 	$user = q("select channel_id from channel where channel_address = '%s' limit 1",
 		dbesc($nickname)

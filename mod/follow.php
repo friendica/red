@@ -24,6 +24,12 @@ function follow_init(&$a) {
 
 	info( t('Channel added.') . EOL);
 
+	// If we can view their stream, pull in some posts
+
+	if($result['abook']['abook_their_perms'] & PERMS_R_STREAM)
+		proc_run('php','include/onepoll.php',$result['abook']['abook_id']);
+
+
 	goaway(z_root() . '/connections/' . $result['abook']['abook_id']);
 
 }
