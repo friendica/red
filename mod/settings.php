@@ -319,8 +319,8 @@ function settings_post(&$a) {
 		}
 
 		$email = ((x($_POST,'email')) ? trim(notags($_POST['email'])) : '');
+		$account = $a->get_account();
 		if($email != $account['account_email']) {
-			$account = $a->get_account();
     	    if(! valid_email($email))
 				$errs[] = t('Not valid email.');
 			$adm = trim(get_config('system','admin_email'));
