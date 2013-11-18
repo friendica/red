@@ -133,6 +133,9 @@ function connections_post(&$a) {
 		// friends in general or this friend in particular aren't hidden) 
 		// and send out a new friend activity
 		// TODO
+
+		// pull in a bit of content if there is any to pull in
+		proc_run('php','include/onepoll.php',$contact_id);
 	}
 
 	// Refresh the structure in memory with the new data

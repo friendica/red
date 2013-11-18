@@ -98,8 +98,11 @@ function onepoll_run($argv, $argc){
 		return;
 
 	if($contact['xchan_connurl']) {
-		$feedurl = str_replace('/poco/','/zotfeed/',$channel['xchan_connurl']);		
-		$x = z_fetch_url($feedurl . '?f=&mindate=' . $last_update);
+		$feedurl = str_replace('/poco/','/zotfeed/',$contact['xchan_connurl']);		
+		$x = z_fetch_url($feedurl . '?f=&mindate=' . urlencode($last_update));
+
+		logger('feed_update: ' . print_r($x,true), LOGGER_DATA);
+
 		if($x['success']) {
 			$total = 0;
 			logger('onepoll: feed update ' . $contact['xchan_name']);
@@ -107,7 +110,7 @@ function onepoll_run($argv, $argc){
 			$j = json_decode($x['body'],true);
 			if($j['success'] && $j['messages']) {
 				foreach($j['messages'] as $message) {
-					$results = process_delivery(array('hash' => $contact['xchan_hash']),$message,
+					$results = process_delivery(array('hash' => $contact['xchan_hash']), get_item_elements($message),
 						array(array('hash' => $importer['xchan_hash'])), false);
 					$total ++;
 				}

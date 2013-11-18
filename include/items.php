@@ -3757,6 +3757,7 @@ function fetch_post_tags($items,$link = false) {
 
 function zot_feed($uid,$observer_xchan,$mindate) {
 
+
 	$result = array();
 	$mindate = datetime_convert('UTC','UTC',$mindate);
 	if(! $mindate)
@@ -3764,10 +3765,14 @@ function zot_feed($uid,$observer_xchan,$mindate) {
 
 	$mindate = dbesc($mindate);
 
+	logger('zot_feed: ' . $uid);
+
 	if(! perm_is_allowed($uid,$observer_xchan,'view_stream')) {
+		logger('zot_feed: permission denied.');
 		return $result;
 	}
 
+	require_once('include/security.php');
 	$sql_extra = item_permissions_sql($uid);
 
 	if($mindate != '0000-00-00 00:00:00') {

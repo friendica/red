@@ -15,7 +15,7 @@ function follow_init(&$a) {
 	$confirm = intval($_REQUEST['confirm']);
 
 	$result = new_contact($uid,$url,$a->get_channel(),true,$confirm);
-
+	
 	if($result['success'] == false) {
 		if($result['message'])
 			notice($result['message']);

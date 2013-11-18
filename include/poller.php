@@ -117,7 +117,10 @@ function poller_run($argv, $argc){
 
 
 		set_config('system','last_expire_day',$d2);
+
 // Uncomment when expire protocol component is working
+// Update - this is not going to happen. We are only going to
+// implement per-item expire, not blanket expiration
 //		proc_run('php','include/expire.php');
 
 		proc_run('php','include/cli_suggest.php');
