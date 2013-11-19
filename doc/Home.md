@@ -20,13 +20,19 @@ Red Matrix Documentation and Resources
 * [Comanche Page Descriptions](help/Comanche)
 * [Plugins](help/Plugins)
 * [Developers](help/Developers)
-* [Code](doc/html)
+* [Intro for Developers](help/Intro-for-Developers.md)
+* [API functions](help/api_functions.md)
+* [Red Functions 101](help/dev-function-overview.md)
+* [Code Reference (doxygen generated)](doc/html)
 * [To-Do list for the Red Documentation Project](help/To-Do)
 * [To-Do list for Developers](help/To-Do-Code)
 
 **External Resources**
 
 * [Main Website](https://github.com/friendica/red)
+* [Plugin/Addon Website](https://github.com/friendica/red-addons)
+* [Assets Website](https://github.com/friendica/red-assets)
+
 * [Development Channel](http://zothub.com/channel/one)
 
 **About**
