@@ -128,16 +128,6 @@ CREATE TABLE IF NOT EXISTS `cache` (
   PRIMARY KEY (`k`)
 ) ENGINE=MyISAM DEFAULT CHARSET=utf8;
 
-CREATE TABLE IF NOT EXISTS `challenge` (
-  `id` int(10) unsigned NOT NULL AUTO_INCREMENT,
-  `challenge` char(255) NOT NULL,
-  `dfrn-id` char(255) NOT NULL,
-  `expire` int(11) NOT NULL,
-  `type` char(255) NOT NULL,
-  `last_update` char(255) NOT NULL,
-  PRIMARY KEY (`id`)
-) ENGINE=MyISAM DEFAULT CHARSET=utf8;
-
 CREATE TABLE IF NOT EXISTS `channel` (
   `channel_id` int(10) unsigned NOT NULL AUTO_INCREMENT,
   `channel_account_id` int(10) unsigned NOT NULL DEFAULT '0',

@@ -1,6 +1,6 @@
 <?php
 
-define( 'UPDATE_VERSION' , 1082 );
+define( 'UPDATE_VERSION' , 1083 );
 
 /**
  *
@@ -899,6 +899,13 @@ ADD INDEX ( `expires` ) ");
 
 function update_r1081() {
 	$r = q("DROP TABLE `queue` ");
+	if($r)
+		return UPDATE_SUCCESS;
+	return UPDATE_FAILED;
+}
+
+function update_r1082() {
+	$r = q("DROP TABLE `challenge` ");
 	if($r)
 		return UPDATE_SUCCESS;
 	return UPDATE_FAILED;
