@@ -775,22 +775,6 @@ CREATE TABLE IF NOT EXISTS `profile_check` (
   KEY `expire` (`expire`)
 ) ENGINE=MyISAM DEFAULT CHARSET=utf8;
 
-CREATE TABLE IF NOT EXISTS `queue` (
-  `id` int(11) NOT NULL AUTO_INCREMENT,
-  `cid` int(11) NOT NULL,
-  `network` char(32) NOT NULL,
-  `created` datetime NOT NULL,
-  `last` datetime NOT NULL,
-  `content` mediumtext NOT NULL,
-  `batch` tinyint(1) NOT NULL DEFAULT '0',
-  PRIMARY KEY (`id`),
-  KEY `cid` (`cid`),
-  KEY `network` (`network`),
-  KEY `created` (`created`),
-  KEY `last` (`last`),
-  KEY `batch` (`batch`)
-) ENGINE=MyISAM DEFAULT CHARSET=utf8;
-
 CREATE TABLE IF NOT EXISTS `register` (
   `id` int(10) unsigned NOT NULL AUTO_INCREMENT,
   `hash` char(255) NOT NULL,
