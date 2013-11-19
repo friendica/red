@@ -298,10 +298,10 @@ function get_theme_info($theme){
 		'name' => $theme,
 		'description' => "",
 		'author' => array(),
-		'maintainer' => array(),
 		'version' => "",
-		'credits' => "",
 		'compat' => "",
+		'credits' => "",
+		'maintainer' => array(),
 		'experimental' => false,
 		'unsupported' => false
 	);

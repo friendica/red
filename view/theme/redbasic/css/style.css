@@ -3499,6 +3499,7 @@ margin-right: 50px;
 }
 
 .comment-icon,
+.admin-icons,
 .jot-icons {
 	font-size: 1.2em;
 	color: $toolicon_colour;
