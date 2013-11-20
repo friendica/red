@@ -82,7 +82,7 @@ function zot_build_packet($channel,$type = 'notify',$recipients = null, $remote_
 	// Hush-hush ultra top-secret mode
 
 	if($remote_key) {
-		$data = aes_encapsulate(json_encode($data),$remote_key);
+		$data = crypto_encapsulate(json_encode($data),$remote_key);
 	}
 
 	return json_encode($data);
@@ -269,7 +269,7 @@ function zot_refresh($them,$channel = null) {
 		if($channel) {
 			$global_perms = get_perms();
 			if($j['permissions']['data']) {
-				$permissions = aes_unencapsulate(array(
+				$permissions = crypto_unencapsulate(array(
 					'data' => $j['permissions']['data'],
 					'key'  => $j['permissions']['key'],
 					'iv'   => $j['permissions']['iv']),
@@ -823,7 +823,7 @@ function zot_fetch($arr) {
 		'secret_sig' => base64url_encode(rsa_sign($arr['secret'],get_config('system','prvkey')))
 	);
 
-	$datatosend = json_encode(aes_encapsulate(json_encode($data),$ret_hub['hubloc_sitekey']));
+	$datatosend = json_encode(crypto_encapsulate(json_encode($data),$ret_hub['hubloc_sitekey']));
 	
 	$fetch = zot_zot($url,$datatosend);
 	$result = zot_import($fetch, $arr['sender']['url']);
@@ -849,7 +849,7 @@ function zot_import($arr, $sender_url) {
 	}
 
 	if(array_key_exists('iv',$data)) {
-		$data = json_decode(aes_unencapsulate($data,get_config('system','prvkey')),true);
+		$data = json_decode(crypto_unencapsulate($data,get_config('system','prvkey')),true);
     }
 
 	$incoming = $data['pickup'];
@@ -861,7 +861,7 @@ function zot_import($arr, $sender_url) {
 			$result = null;
 
 			if(array_key_exists('iv',$i['notify'])) {
-				$i['notify'] = json_decode(aes_unencapsulate($i['notify'],get_config('system','prvkey')),true);
+				$i['notify'] = json_decode(crypto_unencapsulate($i['notify'],get_config('system','prvkey')),true);
     		}
 
 			logger('zot_import: notify: ' . print_r($i['notify'],true), LOGGER_DATA);

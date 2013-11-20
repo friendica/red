@@ -172,7 +172,7 @@ function post_post(&$a) {
 	 */
 
 	if(array_key_exists('iv',$data)) {
-		$data = aes_unencapsulate($data,get_config('system','prvkey'));
+		$data = crypto_unencapsulate($data,get_config('system','prvkey'));
 		logger('mod_zot: decrypt1: ' . $data, LOGGER_DATA);
 
 //	susceptible to Bleichenbacher's attack
@@ -312,7 +312,7 @@ function post_post(&$a) {
 				);
 			}
 		}
-		$encrypted = aes_encapsulate(json_encode($ret),$sitekey);
+		$encrypted = crypto_encapsulate(json_encode($ret),$sitekey);
 		json_return_and_die($encrypted);
 
 		/** pickup: end */

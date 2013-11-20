@@ -644,9 +644,9 @@ function get_item_elements($x) {
 		$arr['item_flags'] = $arr['item_flags'] | ITEM_OBSCURED;
 		$key = get_config('system','pubkey');
 		if($arr['title'])
-			$arr['title'] = json_encode(aes_encapsulate($arr['title'],$key));
+			$arr['title'] = json_encode(crypto_encapsulate($arr['title'],$key));
 		if($arr['body'])
-			$arr['body']  = json_encode(aes_encapsulate($arr['body'],$key));
+			$arr['body']  = json_encode(crypto_encapsulate($arr['body'],$key));
 	}
 
 
@@ -699,9 +699,9 @@ function encode_item($item) {
 	if(array_key_exists('item_flags',$item) && ($item['item_flags'] & ITEM_OBSCURED)) {
 		$key = get_config('system','prvkey');
 		if($item['title'])
-			$item['title'] = aes_unencapsulate(json_decode_plus($item['title']),$key);
+			$item['title'] = crypto_unencapsulate(json_decode_plus($item['title']),$key);
 		if($item['body'])
-			$item['body'] = aes_unencapsulate(json_decode_plus($item['body']),$key);
+			$item['body'] = crypto_unencapsulate(json_decode_plus($item['body']),$key);
 	}
 
 	if($item['item_restrict']  & ITEM_DELETED) {
@@ -908,9 +908,9 @@ function encode_mail($item) {
 	if(array_key_exists('mail_flags',$item) && ($item['mail_flags'] & MAIL_OBSCURED)) {
 		$key = get_config('system','prvkey');
 		if($item['title'])
-			$item['title'] = aes_unencapsulate(json_decode_plus($item['title']),$key);
+			$item['title'] = crypto_unencapsulate(json_decode_plus($item['title']),$key);
 		if($item['body'])
-			$item['body'] = aes_unencapsulate(json_decode_plus($item['body']),$key);
+			$item['body'] = crypto_unencapsulate(json_decode_plus($item['body']),$key);
 	}
 
 	$x['message_id']     = $item['mid'];
@@ -963,10 +963,10 @@ function get_mail_elements($x) {
 	$arr['mail_flags'] |= MAIL_OBSCURED;
 	$arr['body'] = htmlentities($arr['body'],ENT_COMPAT,'UTF-8',false);
 	if($arr['body'])
-		$arr['body']  = json_encode(aes_encapsulate($arr['body'],$key));
+		$arr['body']  = json_encode(crypto_encapsulate($arr['body'],$key));
 	$arr['title'] = htmlentities($arr['title'],ENT_COMPAT,'UTF-8',false);
 	if($arr['title'])
-		$arr['title'] = json_encode(aes_encapsulate($arr['title'],$key));
+		$arr['title'] = json_encode(crypto_encapsulate($arr['title'],$key));
 
 	if($arr['created'] > datetime_convert())
 		$arr['created']  = datetime_convert();
@@ -1516,9 +1516,9 @@ function item_store($arr,$allow_exec = false) {
 			$key = get_config('system','pubkey');
 			$arr['item_flags'] = $arr['item_flags'] | ITEM_OBSCURED;
 			if($arr['title'])
-				$arr['title'] = json_encode(aes_encapsulate($arr['title'],$key));
+				$arr['title'] = json_encode(crypto_encapsulate($arr['title'],$key));
 			if($arr['body'])
-				$arr['body']  = json_encode(aes_encapsulate($arr['body'],$key));
+				$arr['body']  = json_encode(crypto_encapsulate($arr['body'],$key));
 		}
 
 	}
@@ -1887,9 +1887,9 @@ function item_store_update($arr,$allow_exec = false) {
             $key = get_config('system','pubkey');
             $arr['item_flags'] = $arr['item_flags'] | ITEM_OBSCURED;
             if($arr['title'])
-                $arr['title'] = json_encode(aes_encapsulate($arr['title'],$key));
+                $arr['title'] = json_encode(crypto_encapsulate($arr['title'],$key));
             if($arr['body'])
-                $arr['body']  = json_encode(aes_encapsulate($arr['body'],$key));
+                $arr['body']  = json_encode(crypto_encapsulate($arr['body'],$key));
         }
 
 	}
@@ -2243,7 +2243,7 @@ function tag_deliver($uid,$item_id) {
 		if($item['item_flags'] & ITEM_OBSCURED) {
 			$key = get_config('system','prvkey');
 			if($item['body'])
-				$body = aes_unencapsulate(json_decode_plus($item['body']),$key);
+				$body = crypto_unencapsulate(json_decode_plus($item['body']),$key);
 		}
 		else
 			$body = $item['body'];		

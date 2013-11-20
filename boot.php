@@ -803,12 +803,6 @@ class App {
 
 		$scheme = $this->scheme;
 
-//		if((x($this->config,'system')) && (x($this->config['system'],'ssl_policy'))) {
-//			if(intval($this->config['system']['ssl_policy']) === intval(SSL_POLICY_FULL)) {
-//				$scheme = 'https';
-//			}
-//		}
-			
 		$this->baseurl = $scheme . "://" . $this->hostname . ((isset($this->path) && strlen($this->path)) ? '/' . $this->path : '' );
 		return $this->baseurl;
 	}
@@ -994,6 +988,9 @@ class App {
 			'$zid' => get_my_address(), 
 		)) . $this->page['htmlhead'];
 	}
+
+	// The following curl functions will go away once we've converted
+	// all instances of (fetch|post)_url() to z_(fetch|post)_url()
 
 	function set_curl_code($code) {
 		$this->curl_code = $code;
@@ -1184,7 +1181,6 @@ function is_ajax() {
 // Primarily involved with database upgrade, but also sets the
 // base url for use in cmdline programs which don't have
 // $_SERVER variables, and synchronising the state of installed plugins.
-
 
 
 function check_config(&$a) {

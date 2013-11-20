@@ -79,7 +79,7 @@ function message_post(&$a) {
 		$global_perms = get_perms();
 
 		if($j['permissions']['data']) {
-			$permissions = aes_unencapsulate($j['permissions'],$channel['channel_prvkey']);
+			$permissions = crypto_unencapsulate($j['permissions'],$channel['channel_prvkey']);
 			if($permissions)
 				$permissions = json_decode($permissions);
 			logger('decrypted permissions: ' . print_r($permissions,true), LOGGER_DATA);

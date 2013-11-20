@@ -96,7 +96,7 @@ function new_contact($uid,$url,$channel,$interactive = false, $confirm = false) 
 	$global_perms = get_perms();
 
 	if( array_key_exists('permissions',$j) && array_key_exists('data',$j['permissions'])) {
-		$permissions = aes_unencapsulate(array(
+		$permissions = crypto_unencapsulate(array(
 			'data' => $j['permissions']['data'],
 			'key'  => $j['permissions']['key'],
 			'iv'   => $j['permissions']['iv']),
