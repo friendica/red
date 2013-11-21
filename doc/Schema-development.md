@@ -31,9 +31,6 @@ with the file name "default.php".  This file should never be included with a the
 is, merge conflicts will occur as people update their code.  Rather, this should be defined
 by administrators on a site by site basis.
 
-The canonical default schema is darkness.php.  Any bugs should be tested with this schema
-first, in order to determine whether we're dealing with a theme bug or a schema bug.
-
 You schema does not need to - and should not - contain all of these values.  Only the values
 that differ from the defaults should be listed.  This gives you some very powerful options
 with very few lines of code.
