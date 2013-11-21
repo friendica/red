@@ -408,9 +408,9 @@ function notifier_run($argv, $argc){
 	
 	// for public posts always include our own hub
 
-	$sql_extra = (($private) ? "" : " or hubloc_url = '" . z_root() . "' ");
+	$sql_extra = (($private) ? "" : " or hubloc_url = '" . dbesc(z_root()) . "' ");
 
-	$r = q("select distinct hubloc_sitekey, hubloc_flags, hubloc_callback, hubloc_host from hubloc 
+	$r = q("select hubloc_sitekey, hubloc_flags, hubloc_callback, hubloc_host from hubloc 
 		where hubloc_hash in (" . implode(',',$recipients) . ") $sql_extra group by hubloc_sitekey");
 	if(! $r) {
 		logger('notifier: no hubs');
@@ -419,10 +419,14 @@ function notifier_run($argv, $argc){
 	$hubs = $r;
 
 	$hublist = array();
+	$keys = array();
+
 	foreach($hubs as $hub) {
-		// don't try to deliver to deleted hublocs
-		if(! ($hub['hubloc_flags'] & HUBLOC_FLAGS_DELETED)) {
+		// don't try to deliver to deleted hublocs - and inexplicably SQL "distinct" and "group by"
+		// both return records with duplicate keys in rare circumstances
+		if((! ($hub['hubloc_flags'] & HUBLOC_FLAGS_DELETED)) && (! in_array($hub['hubloc_sitekey'],$keys))) {
 			$hublist[] = $hub['hubloc_host'];
+			$keys[] = $hub['hubloc_sitekey'];
 		}
 	}
 

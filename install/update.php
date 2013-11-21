@@ -1,6 +1,6 @@
 <?php
 
-define( 'UPDATE_VERSION' , 1083 );
+define( 'UPDATE_VERSION' , 1084 );
 
 /**
  *
@@ -910,3 +910,12 @@ function update_r1082() {
 		return UPDATE_SUCCESS;
 	return UPDATE_FAILED;
 }
+
+function update_r1083() {
+	$r = q("ALTER TABLE `notify` ADD `aid` INT NOT NULL AFTER `msg` ,
+ADD INDEX ( `aid` )");
+	if($r)
+		return UPDATE_SUCCESS;
+	return UPDATE_FAILED;
+}
+

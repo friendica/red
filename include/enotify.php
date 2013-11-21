@@ -322,6 +322,7 @@ function notification($params) {
 	$datarray['url']    = $sender['xchan_url'];
 	$datarray['photo']  = $sender['xchan_photo_s'];
 	$datarray['date']   = datetime_convert();
+	$datarray['aid']    = $recip['channel_account_id'];
 	$datarray['uid']    = $recip['channel_id'];
 	$datarray['link']   = $itemlink;
 	$datarray['parent'] = $parent_id;
@@ -340,13 +341,14 @@ function notification($params) {
 
 	// create notification entry in DB
 
-	$r = q("insert into notify (hash,name,url,photo,date,uid,link,parent,type,verb,otype)
-		values('%s','%s','%s','%s','%s',%d,'%s',%d,%d,'%s','%s')",
+	$r = q("insert into notify (hash,name,url,photo,date,aid,uid,link,parent,type,verb,otype)
+		values('%s','%s','%s','%s','%s',%d,%d,'%s',%d,%d,'%s','%s')",
 		dbesc($datarray['hash']),
 		dbesc($datarray['name']),
 		dbesc($datarray['url']),
 		dbesc($datarray['photo']),
 		dbesc($datarray['date']),
+		intval($datarray['aid']),
 		intval($datarray['uid']),
 		dbesc($datarray['link']),
 		intval($datarray['parent']),
@@ -559,7 +561,7 @@ class enotify {
 
 		// send the message
 		$res = mail(
-			$params['toEmail'],	 									// send to address
+			$params['toEmail'],	 							// send to address
 			$messageSubject,								// subject
 			$multipartMessageBody,	 						// message body
 			$messageHeader									// message headers

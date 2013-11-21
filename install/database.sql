@@ -563,6 +563,7 @@ CREATE TABLE IF NOT EXISTS `notify` (
   `photo` char(255) NOT NULL,
   `date` datetime NOT NULL,
   `msg` mediumtext NOT NULL,
+  `aid` int(11) NOT NULL,
   `uid` int(11) NOT NULL,
   `link` char(255) NOT NULL,
   `parent` int(11) NOT NULL,
@@ -578,7 +579,8 @@ CREATE TABLE IF NOT EXISTS `notify` (
   KEY `hash` (`hash`),
   KEY `parent` (`parent`),
   KEY `link` (`link`),
-  KEY `otype` (`otype`)
+  KEY `otype` (`otype`),
+  KEY `aid` (`aid`)
 ) ENGINE=MyISAM  DEFAULT CHARSET=utf8;
 
 CREATE TABLE IF NOT EXISTS `obj` (

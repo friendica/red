@@ -584,7 +584,7 @@ function import_xchan($arr,$ud_flags = 1) {
 
 	if($arr['locations']) {
 
-		$xisting = q("select hubloc_id, hubloc_url from hubloc where hubloc_hash = '%s'",
+		$xisting = q("select hubloc_id, hubloc_url, hubloc_sitekey from hubloc where hubloc_hash = '%s'",
 			dbesc($xchan_hash)
 		);
 
@@ -596,14 +596,14 @@ function import_xchan($arr,$ud_flags = 1) {
 			}
 
 			for($x = 0; $x < count($xisting); $x ++) {
-				if($xisting[$x]['hubloc_url'] == $location['url']) {
+				if(($xisting[$x]['hubloc_url'] === $location['url']) && ($xisting[$x]['hubloc_sitekey'] === $location['sitekey'])) {
 					$xisting[$x]['updated'] = true;
 				}
 			}
 
 			// match as many fields as possible in case anything at all changed. 
 
-			$r = q("select * from hubloc where hubloc_hash = '%s' and hubloc_guid = '%s' and hubloc_guid_sig = '%s' and hubloc_url = '%s' and hubloc_url_sig = '%s' and hubloc_host = '%s' and hubloc_addr = '%s' and hubloc_callback = '%s' and hubloc_sitekey = '%s' limit 1",
+			$r = q("select * from hubloc where hubloc_hash = '%s' and hubloc_guid = '%s' and hubloc_guid_sig = '%s' and hubloc_url = '%s' and hubloc_url_sig = '%s' and hubloc_host = '%s' and hubloc_addr = '%s' and hubloc_callback = '%s' and hubloc_sitekey = '%s' ",
 				dbesc($xchan_hash),
 				dbesc($arr['guid']),
 				dbesc($arr['guid_sig']),
@@ -624,6 +624,16 @@ function import_xchan($arr,$ud_flags = 1) {
 						intval($r[0]['hubloc_id'])
 					);
 				}
+
+				// Remove pure duplicates
+				if($count($r) > 1) {
+					for($h = 1; $h < count($r); $h ++) {
+						q("delete from hubloc where hubloc_id = %d limit 1",
+							intval($r[$h]['hubloc_id'])
+						);
+					}
+				}
+
 				if((($r[0]['hubloc_flags'] & HUBLOC_FLAGS_PRIMARY) && (! $location['primary']))
 					|| ((! ($r[0]['hubloc_flags'] & HUBLOC_FLAGS_PRIMARY)) && ($location['primary']))) {
 					$r = q("update hubloc set hubloc_flags = (hubloc_flags ^ %d), hubloc_updated = '%s' where hubloc_id = %d limit 1",
