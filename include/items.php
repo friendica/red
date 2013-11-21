@@ -1844,8 +1844,6 @@ function item_store_update($arr,$allow_exec = false) {
 	$arr['item_flags'] = intval($arr['item_flags']) | $orig[0]['item_flags'];
 	$arr['item_restrict'] = intval($arr['item_restrict']) | $orig[0]['item_restrict'];
 
-	unset($arr['id']);
-	unset($arr['uid']);
 
 	if(array_key_exists('edit',$arr))
 		unset($arr['edit']);	
@@ -1911,7 +1909,8 @@ function item_store_update($arr,$allow_exec = false) {
 	}
 
 
-
+	unset($arr['id']);
+	unset($arr['uid']);
 	unset($arr['aid']);
 	unset($arr['mid']);
 	unset($arr['parent']);
