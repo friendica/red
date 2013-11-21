@@ -25,9 +25,13 @@ function help_content(&$a) {
 
 	$text = '';
 
-	if($a->argc > 1) {
+	if(argc() > 1) {
 		$text = load_doc_file('doc/' . $a->argv[1] . '.md');
-		$a->page['title'] = t('Help:') . ' ' . str_replace('-',' ',notags($a->argv[1]));
+		$a->page['title'] = t('Help:') . ' ' . str_replace('-',' ',notags(argv(1)));
+	}
+	if(! $text) {
+		$text = load_doc_file('doc/Site.md');
+		$a->page['title'] = t('Help');
 	}
 	if(! $text) {
 		$text = load_doc_file('doc/Home.md');
