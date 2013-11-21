@@ -6,27 +6,27 @@ A schema, in a nutshell, is a collection of settings for a bunch of variables to
 certain elements of a theme.  A schema is loaded as though it were part of config.php
 and has access to all the same information.  Importantly, this means it is identity aware,
 and can be used to do some interesting things.  One could, for example, restrict options
-by service class, or present different options to different users.
+by service class, or present different options to different members.
 
 By default, we filter only by whether or not expert mode is enabled.  If expert mode is
-enabled, all options are presented to the user.  If it is not, only scheme, background
+enabled, all options are presented to the member.  If it is not, only scheme, background
 image, font face, and iconset are available as choices.
 
-A schema is loaded *after* the user settings.  Therefore, to allow a user to overwrite a
-particular aspect of a schmea you would use the following syntax:
+A schema is loaded *after* the member's personal settings.  Therefore, to allow a member
+to overwrite a particular aspect of a schema you would use the following syntax:
 
         if (! $foo)
             $foo = 'bar';
 
 However, there are circumstances - particularly with positional elements - where it
-may be desirable (or necessary) to override a users settings.  In this case, the syntax
+may be desirable (or necessary) to override a member's settings.  In this case, the syntax
 is even simpler:
 
             $foo = 'bar';
 
-Users will not thank you for this, however, so only use it when it is required.
+Members will not thank you for this, however, so only use it when it is required.
 
-If no user options are set, and no schema is selected, we will first try to load a schema
+If no personal options are set, and no schema is selected, we will first try to load a schema
 with the file name "default.php".  This file should never be included with a theme.  If it
 is, merge conflicts will occur as people update their code.  Rather, this should be defined
 by administrators on a site by site basis.
