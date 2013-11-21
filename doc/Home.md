@@ -19,6 +19,7 @@ Red Matrix Documentation and Resources
 * [Install](help/Install)
 * [Comanche Page Descriptions](help/Comanche)
 * [Plugins](help/Plugins)
+* [Schemas](help/Schema-development)
 * [Developers](help/Developers)
 * [Intro for Developers](help/Intro-for-Developers)
 * [API functions](help/api_functions)
