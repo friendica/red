@@ -150,7 +150,7 @@ function red_decrypt(alg,hint,text,elem) {
 
 	if((red_decryptors.length) && (! dec_text.length)) {
 		for(var i = 0; i < red_decryptors.length; i ++) {
-			dec_text = red_decryptors[i](text,enc_key);
+			dec_text = red_decryptors[i](alg,text,enc_key);
 			if(dec_text.length)
 				break;
 		}
