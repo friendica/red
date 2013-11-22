@@ -28,7 +28,7 @@ var searchData=
   ['message_5fpost',['message_post',['../mod_2message_8php.html#a0db7030362a7e9ed9549b341d7b35718',1,'message.php']]],
   ['micropro',['micropro',['../text_8php.html#a2a902f5fdba8646333e997898ac45ea3',1,'text.php']]],
   ['mimetype_5fselect',['mimetype_select',['../text_8php.html#a1633412120f52bdce5f43e0a127d9293',1,'text.php']]],
-  ['mini_5fgroup_5fselect',['mini_group_select',['../include_2group_8php.html#ab4d9e5b59f48787cb01baae5dc6c381f',1,'group.php']]],
+  ['mini_5fgroup_5fselect',['mini_group_select',['../include_2group_8php.html#ab0e422a0f31c0c64fd9084ca03d85f32',1,'group.php']]],
   ['mitem_5fcontent',['mitem_content',['../mitem_8php.html#a7a31b702ecad18eeb6a38b243ff0037e',1,'mitem.php']]],
   ['mitem_5finit',['mitem_init',['../mitem_8php.html#a9627cd857cafdf04e4fc0ae48c8e8518',1,'mitem.php']]],
   ['mitem_5fpost',['mitem_post',['../mitem_8php.html#a6ee694cca4b551a20d7c7a94b5243ec1',1,'mitem.php']]],

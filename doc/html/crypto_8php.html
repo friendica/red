@@ -124,8 +124,12 @@ Functions</h2></td></tr>
 <tr class="separator:a5c61821d205f95f127114159cbffa764"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:ac852ee41392d1358c3a54d54935e0bf9"><td class="memItemLeft" align="right" valign="top">&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="crypto_8php.html#ac852ee41392d1358c3a54d54935e0bf9">AES256CBC_decrypt</a> ($data, $key, $iv)</td></tr>
 <tr class="separator:ac852ee41392d1358c3a54d54935e0bf9"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a32fc08d57a5694f94d8543ecbb03323c"><td class="memItemLeft" align="right" valign="top">&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="crypto_8php.html#a32fc08d57a5694f94d8543ecbb03323c">crypto_encapsulate</a> ($data, $pubkey, $alg='aes256cbc')</td></tr>
+<tr class="separator:a32fc08d57a5694f94d8543ecbb03323c"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a2148d7aac7b30c720f7ebda7e9790286"><td class="memItemLeft" align="right" valign="top">&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="crypto_8php.html#a2148d7aac7b30c720f7ebda7e9790286">aes_encapsulate</a> ($data, $pubkey)</td></tr>
 <tr class="separator:a2148d7aac7b30c720f7ebda7e9790286"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a0781202b0a43b82426929cc87c2fa2b5"><td class="memItemLeft" align="right" valign="top">&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="crypto_8php.html#a0781202b0a43b82426929cc87c2fa2b5">crypto_unencapsulate</a> ($data, $prvkey)</td></tr>
+<tr class="separator:a0781202b0a43b82426929cc87c2fa2b5"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:aca7c3a574bfb6c6ef1f2403a56823914"><td class="memItemLeft" align="right" valign="top">&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="crypto_8php.html#aca7c3a574bfb6c6ef1f2403a56823914">aes_unencapsulate</a> ($data, $prvkey)</td></tr>
 <tr class="separator:aca7c3a574bfb6c6ef1f2403a56823914"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:aae0ab70d6a199b29555b1ac3cf250d6a"><td class="memItemLeft" align="right" valign="top">&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="crypto_8php.html#aae0ab70d6a199b29555b1ac3cf250d6a">new_keypair</a> ($bits)</td></tr>
@@ -224,7 +228,7 @@ Functions</h2></td></tr>
       </table>
 </div><div class="memdoc">
 
-<p>Referenced by <a class="el" href="items_8php.html#a536d0313b6ffe33b9d2490c4e25c5361">get_item_elements()</a>, <a class="el" href="items_8php.html#a94ddb1d6c8fa21dd7433677e85168037">get_mail_elements()</a>, <a class="el" href="item_8php.html#a693cd09805755ab85bbb5ecae69a48c3">item_post()</a>, <a class="el" href="items_8php.html#a2541e6861a56d145c9281877cc501615">item_store()</a>, <a class="el" href="items_8php.html#acf0bf7c9d21ac84f32effb754f7ad484">item_store_update()</a>, <a class="el" href="post_8php.html#af59e6a1dc22d19d9257b01cd7ccedb75">post_post()</a>, <a class="el" href="include_2message_8php.html#a751ffd6635022b2190f56154ee745752">send_message()</a>, <a class="el" href="zfinger_8php.html#a8139b83a22ef98869adc10aa224027a0">zfinger_init()</a>, <a class="el" href="zot_8php.html#a3862b3161b2c8557dc1a95020179bd81">zot_build_packet()</a>, and <a class="el" href="zot_8php.html#a61cdc1ec843663c423ed2d8160ae5aea">zot_fetch()</a>.</p>
+<p>Referenced by <a class="el" href="crypto_8php.html#a32fc08d57a5694f94d8543ecbb03323c">crypto_encapsulate()</a>, <a class="el" href="item_8php.html#a693cd09805755ab85bbb5ecae69a48c3">item_post()</a>, and <a class="el" href="zfinger_8php.html#a8139b83a22ef98869adc10aa224027a0">zfinger_init()</a>.</p>
 
 </div>
 </div>
@@ -234,6 +238,68 @@ Functions</h2></td></tr>
       <table class="memname">
         <tr>
           <td class="memname">aes_unencapsulate </td>
+          <td>(</td>
+          <td class="paramtype">&#160;</td>
+          <td class="paramname"><em>$data</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">&#160;</td>
+          <td class="paramname"><em>$prvkey</em>&#160;</td>
+        </tr>
+        <tr>
+          <td></td>
+          <td>)</td>
+          <td></td><td></td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+<p>Referenced by <a class="el" href="crypto_8php.html#a0781202b0a43b82426929cc87c2fa2b5">crypto_unencapsulate()</a>.</p>
+
+</div>
+</div>
+<a class="anchor" id="a32fc08d57a5694f94d8543ecbb03323c"></a>
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">crypto_encapsulate </td>
+          <td>(</td>
+          <td class="paramtype">&#160;</td>
+          <td class="paramname"><em>$data</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">&#160;</td>
+          <td class="paramname"><em>$pubkey</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">&#160;</td>
+          <td class="paramname"><em>$alg</em> = <code>'aes256cbc'</code>&#160;</td>
+        </tr>
+        <tr>
+          <td></td>
+          <td>)</td>
+          <td></td><td></td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+<p>Referenced by <a class="el" href="items_8php.html#a536d0313b6ffe33b9d2490c4e25c5361">get_item_elements()</a>, <a class="el" href="items_8php.html#a94ddb1d6c8fa21dd7433677e85168037">get_mail_elements()</a>, <a class="el" href="items_8php.html#a2541e6861a56d145c9281877cc501615">item_store()</a>, <a class="el" href="items_8php.html#acf0bf7c9d21ac84f32effb754f7ad484">item_store_update()</a>, <a class="el" href="post_8php.html#af59e6a1dc22d19d9257b01cd7ccedb75">post_post()</a>, <a class="el" href="include_2message_8php.html#a751ffd6635022b2190f56154ee745752">send_message()</a>, <a class="el" href="zot_8php.html#a3862b3161b2c8557dc1a95020179bd81">zot_build_packet()</a>, and <a class="el" href="zot_8php.html#a61cdc1ec843663c423ed2d8160ae5aea">zot_fetch()</a>.</p>
+
+</div>
+</div>
+<a class="anchor" id="a0781202b0a43b82426929cc87c2fa2b5"></a>
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">crypto_unencapsulate </td>
           <td>(</td>
           <td class="paramtype">&#160;</td>
           <td class="paramname"><em>$data</em>, </td>
