@@ -175,6 +175,10 @@ function new_contact($uid,$url,$channel,$interactive = false, $confirm = false) 
 		proc_run('php', 'include/notifier.php', 'permission_update', $result['abook']['abook_id']);
 	}
 
+	$arr = array('channel_id' => $uid, 'abook' => $result['abook']);
+
+	call_hooks('follow', $arr);
+
 	/** If there is a default group for this channel, add this member to it */
 
 	if($default_group) {

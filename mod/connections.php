@@ -138,6 +138,8 @@ function connections_post(&$a) {
 				group_add_member(local_user(),'',$a->data['abook_xchan'],$g['id']);
 		}
 
+
+
 		// Check if settings permit ("post new friend activity" is allowed, and 
 		// friends in general or this friend in particular aren't hidden) 
 		// and send out a new friend activity
@@ -145,6 +147,7 @@ function connections_post(&$a) {
 
 		// pull in a bit of content if there is any to pull in
 		proc_run('php','include/onepoll.php',$contact_id);
+
 	}
 
 	// Refresh the structure in memory with the new data
@@ -157,6 +160,11 @@ function connections_post(&$a) {
 	);
 	if($r) {
 		$a->data['abook'] = $r[0];
+	}
+
+	if($new_friend) {
+		$arr = array('channel_id' => local_user(), 'abook' => $a->data['abook']);
+		call_hooks('accept_follow', $arr);
 	}
 
 	connections_clone($a);
