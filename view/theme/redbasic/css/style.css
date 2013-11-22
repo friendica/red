@@ -51,7 +51,8 @@ a:hover, .fakelink:hover { color: #44AAFF; text-decoration: underline; }
 }
 
 
-input[type=text] {
+input[type=text],
+input[type=password] {
 	font-family: arial,freesans,sans-serif;
 }
 
@@ -458,9 +459,9 @@ footer {
 	clear: both;
 }
 
-#register-link, #lost-password-link {
+#register-link,
+#lost-password-link {
 	float: left;
-	font-size: 90%;
 	margin-left: 100px;
 }
 
