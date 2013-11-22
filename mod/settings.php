@@ -357,7 +357,7 @@ function settings_post(&$a) {
 	$openid           = ((x($_POST,'openid_url')) ? notags(trim($_POST['openid_url']))   : '');
 	$maxreq           = ((x($_POST,'maxreq'))     ? intval($_POST['maxreq'])             : 0);
 	$expire           = ((x($_POST,'expire'))     ? intval($_POST['expire'])             : 0);
-	$def_gid          = ((x($_POST,'group-selection')) ? intval($_POST['group-selection']) : 0);
+	$def_group          = ((x($_POST,'group-selection')) ? notags(trim($_POST['group-selection'])) : '');
 
 
 	$expire_items     = ((x($_POST,'expire_items')) ? intval($_POST['expire_items'])	 : 0);
@@ -506,9 +506,9 @@ function settings_post(&$a) {
 	if($page_flags == PAGE_PRVGROUP) {
 		$hidewall = 1;
 		if((! $str_contact_allow) && (! $str_group_allow) && (! $str_contact_deny) && (! $str_group_deny)) {
-			if($def_gid) {
+			if($def_group) {
 				info( t('Private forum has no privacy permissions. Using default privacy group.'). EOL);
-				$str_group_allow = '<' . $def_gid . '>';
+				$str_group_allow = '<' . $def_group . '>';
 			}
 			else {
 				notice( t('Private forum has no privacy permissions and no default privacy group.') . EOL);
@@ -519,7 +519,7 @@ function settings_post(&$a) {
 */
 
 /*
-	$r = q("UPDATE `user` SET `username` = '%s', `email` = '%s', `openid` = '%s', `timezone` = '%s',  `allow_cid` = '%s', `allow_gid` = '%s', `deny_cid` = '%s', `deny_gid` = '%s', `notify-flags` = %d, `page-flags` = %d, `default-location` = '%s', `allow_location` = %d, `maxreq` = %d, `expire` = %d, `openidserver` = '%s', `def_gid` = %d, `blockwall` = %d, `hidewall` = %d, `blocktags` = %d, `unkmail` = %d, `cntunkmail` = %d  WHERE `uid` = %d LIMIT 1",
+	$r = q("UPDATE `user` SET `username` = '%s', `email` = '%s', `openid` = '%s', `timezone` = '%s',  `allow_cid` = '%s', `allow_gid` = '%s', `deny_cid` = '%s', `deny_gid` = '%s', `notify-flags` = %d, `page-flags` = %d, `default-location` = '%s', `allow_location` = %d, `maxreq` = %d, `expire` = %d, `openidserver` = '%s', `def_group` = %d, `blockwall` = %d, `hidewall` = %d, `blocktags` = %d, `unkmail` = %d, `cntunkmail` = %d  WHERE `uid` = %d LIMIT 1",
 			dbesc($username),
 			dbesc($email),
 			dbesc($openid),
@@ -535,7 +535,7 @@ function settings_post(&$a) {
 			intval($maxreq),
 			intval($expire),
 			dbesc($openidserver),
-			intval($def_gid),
+			intval($def_group),
 			intval($blockwall),
 			intval($hidewall),
 			intval($blocktags),
@@ -545,7 +545,7 @@ function settings_post(&$a) {
 	);
 */
 
-	$r = q("update channel set channel_name = '%s', channel_pageflags = %d, channel_timezone = '%s', channel_location = '%s', channel_notifyflags = %d, channel_max_anon_mail = %d, channel_max_friend_req = %d, channel_expire_days = %d, channel_r_stream = %d, channel_r_profile = %d, channel_r_photos = %d, channel_r_abook = %d, channel_w_stream = %d, channel_w_wall = %d, channel_w_tagwall = %d, channel_w_comment = %d, channel_w_mail = %d, channel_w_photos = %d, channel_w_chat = %d, channel_a_delegate = %d, channel_r_storage = %d, channel_w_storage = %d, channel_r_pages = %d, channel_w_pages = %d, channel_a_republish = %d where channel_id = %d limit 1",
+	$r = q("update channel set channel_name = '%s', channel_pageflags = %d, channel_timezone = '%s', channel_location = '%s', channel_notifyflags = %d, channel_max_anon_mail = %d, channel_max_friend_req = %d, channel_expire_days = %d, channel_default_group = '%s', channel_r_stream = %d, channel_r_profile = %d, channel_r_photos = %d, channel_r_abook = %d, channel_w_stream = %d, channel_w_wall = %d, channel_w_tagwall = %d, channel_w_comment = %d, channel_w_mail = %d, channel_w_photos = %d, channel_w_chat = %d, channel_a_delegate = %d, channel_r_storage = %d, channel_w_storage = %d, channel_r_pages = %d, channel_w_pages = %d, channel_a_republish = %d where channel_id = %d limit 1",
 		dbesc($username),
 		intval($pageflags),
 		dbesc($timezone),
@@ -554,6 +554,7 @@ function settings_post(&$a) {
 		intval($unkmail),
 		intval($maxreq),
 		intval($expire),
+		dbesc($def_group),
 		intval($arr['channel_r_stream']),
 		intval($arr['channel_r_profile']),
 		intval($arr['channel_r_photos']),
@@ -1045,7 +1046,7 @@ function settings_content(&$a) {
 
 
 		require_once('include/group.php');
-		$group_select = mini_group_select(local_user(),$a->user['def_gid']);
+		$group_select = mini_group_select(local_user(),$channel['channel_default_group']);
 
 		$o .= replace_macros($stpl,array(
 			'$ptitle' 	=> t('Channel Settings'),

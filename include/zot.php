@@ -626,7 +626,7 @@ function import_xchan($arr,$ud_flags = 1) {
 				}
 
 				// Remove pure duplicates
-				if($count($r) > 1) {
+				if(count($r) > 1) {
 					for($h = 1; $h < count($r); $h ++) {
 						q("delete from hubloc where hubloc_id = %d limit 1",
 							intval($r[$h]['hubloc_id'])
