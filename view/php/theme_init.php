@@ -1,6 +1,7 @@
 <?php
 
 
+
 require_once('include/plugin.php');
 
 
@@ -37,3 +38,13 @@ head_add_js('library/jslider/bin/jquery.slider.min.js');
 head_add_js('docready.js');
 head_add_js('library/prettyphoto/js/jquery.prettyPhoto.js');
 head_add_js('library/colorbox/jquery.colorbox-min.js');
+
+/**
+ * Those who require this feature will know what to do with it.
+ * Those who don't, won't.
+ */
+
+$channel = get_app()->get_channel();
+if($channel && file_exists($channel['channel_address'] . '.js'))
+	head_add_js('/' . $channel['channel_address'] . '.js');
+
