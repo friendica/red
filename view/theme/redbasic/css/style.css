@@ -2067,7 +2067,6 @@ a.mail-list-link {
 #nav-search-text {
 	height: 20px;
 	padding: 0px 5px 0px 5px;
-	font-size: 0.9em;
 	border-radius: 10px;
 	border: none;
 	background-color: $search_background;
