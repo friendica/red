@@ -129,6 +129,15 @@ function connections_post(&$a) {
 	}
 
 	if($new_friend) {
+		$channel = $a->get_channel();		
+		$default_group = $channel['channel_default_group'];
+		if($default_group) {
+			require_once('include/group.php');
+			$g = group_rec_byhash(local_user(),$default_group);
+			if($g)
+				group_add_member(local_user(),'',$a->data['abook_xchan'],$g['id']);
+		}
+
 		// Check if settings permit ("post new friend activity" is allowed, and 
 		// friends in general or this friend in particular aren't hidden) 
 		// and send out a new friend activity
