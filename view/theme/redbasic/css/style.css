@@ -1464,8 +1464,20 @@ tr.mceLast {
 	border-radius: $radiuspx;	
 }
 
-#profile-jot-text:hover {
-	color: #000000;
+#profile-jot-text::-moz-placeholder {
+	font-size:1.5em;
+}
+
+#profile-jot-text:focus::-moz-placeholder {
+	color: transparent;
+}
+
+#profile-jot-text::-webkit-input-placeholder {
+	font-size:1.5em;
+}
+
+#profile-jot-text:focus::-webkit-input-placeholder {
+	color: transparent;
 }
 
 #profile-jot-text-loading {
