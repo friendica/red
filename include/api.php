@@ -233,7 +233,7 @@ require_once('include/photos.php');
 			'updated' => api_date(null),
 			'atom_updated' => datetime_convert('UTC','UTC','now',ATOM_TIME),
 			'language' => $user_info['language'],
-			'logo'	=> $a->get_baseurl()."/images/rhash-64.png",
+			'logo'	=> $a->get_baseurl()."/images/rm-64.png",
 		);
 		
 		return $arr;
@@ -1581,7 +1581,7 @@ require_once('include/photos.php');
 
 		$name   = get_config('system','sitename');
 		$server = $a->get_hostname();
-		$logo   = $a->get_baseurl() . '/images/rhash-64.png';
+		$logo   = $a->get_baseurl() . '/images/rm-64.png';
 		$email  = get_config('system','admin_email');
 		$closed = ((get_config('system','register_policy') == REGISTER_CLOSED) ? 'true' : 'false');
 		$private = ((get_config('system','block_public')) ? 'true' : 'false');
