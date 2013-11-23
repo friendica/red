@@ -687,7 +687,8 @@ function admin_page_users(&$a){
 		'$delete' => t('Delete'),
 		'$block' => t('Block'),
 		'$unblock' => t('Unblock'),
-		
+		'$currently_blocked' => t('Currently blocked'),
+
 		'$h_users' => t('Users'),
 		'$th_users' => array( t('Email'), t('Register date'), t('Last login'), t('Expires'), t('Service Class')),
 

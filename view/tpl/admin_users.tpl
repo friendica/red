@@ -55,7 +55,6 @@
 			<table id='users'>
 				<thead>
 				<tr>
-					<th></th>
 					{{foreach $th_users as $th}}<th>{{$th}}</th>{{/foreach}}
 					<th></th>
 					<th></th>
@@ -64,8 +63,11 @@
 				<tbody>
 				{{foreach $users as $u}}
 					<tr>
-						<td class='flags'>{{if $u.blocked}}<i class='icon-ban-circle admin-icons'></i>{{/if}}</td>
-						<td class='email'>{{$u.account_email}}</td>
+						<td class='email'>{{if $u.blocked}}
+							{{$u.account_email}} <i>({{$currently_blocked}})</i>
+						{{else}}
+							<strong>{{$u.account_email}}</strong>
+						{{/if}}</td>
 						<td class='register_date'>{{$u.account_created}}</td>
 						<td class='login_date'>{{$u.account_lastlog}}</td>
 						<td class='account_expires'>{{$u.account_expires}}</td>
