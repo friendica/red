@@ -14,7 +14,7 @@ msgstr ""
 "Project-Id-Version: Red Matrix\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2013-11-15 00:03-0800\n"
-"PO-Revision-Date: 2013-11-15 11:55+0000\n"
+"PO-Revision-Date: 2013-11-22 22:02+0000\n"
 "Last-Translator: tuscanhobbit Pa <pynolo@tarine.net>\n"
 "Language-Team: Italian (http://www.transifex.com/projects/p/red-matrix/language/it/)\n"
 "MIME-Version: 1.0\n"
@@ -6951,11 +6951,11 @@ msgstr "Imposta l'opacità minima della barra di navigazione per nasconderla"
 
 #: ../../view/theme/redbasic/php/config.php:98
 msgid "Sloppy photo albums"
-msgstr "Photo album semplificati"
+msgstr "Album fotografici semplificati"
 
 #: ../../view/theme/redbasic/php/config.php:98
 msgid "Are you a clean desk or a messy desk person?"
-msgstr "Hai una scrivania ordinata o sei una persona che lascia confusione?"
+msgstr "La tua scrivania è sempre a posto? Sei una persona disordinata?"
 
 #: ../../view/theme/apw/php/config.php:193
 #: ../../view/theme/apw/php/config.php:211
