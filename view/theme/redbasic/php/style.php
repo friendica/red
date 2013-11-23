@@ -114,22 +114,20 @@
 // Nav colours have nested values, so we have to define the actual variables
 // used in the CSS from the higher level "red", "black", etc here
 		if ($nav_colour == "red") {
-					$nav_bg_1 = "#f88";
-					$nav_bg_2 = "#b00";
-					$nav_bg_3 = "#f00";
-					$nav_bg_4 = "#b00";
-					$search_background = '#FFDDDD';
+					$nav_bg_1 = $nav_bg_3 = "#ba002f";
+					$nav_bg_2 = $nav_bg_4 = "#ad002c";
+					$search_background = "#EEEEEE";
 					$active_colour = '#444444';
 		}
 
 		if ($nav_colour == "black") {
-				    $nav_bg_1 = $nav_bg_3 = "#000";
-		      		    $nav_bg_2 = $nav_bg_4 = "#222";
+					$nav_bg_1 = $nav_bg_3 = "#000";
+		      			$nav_bg_2 = $nav_bg_4 = "#222";
 					$search_background = '#EEEEEE';
 					$active_colour = '#AAAAAA';
 		}
 		if ($nav_colour == "silver") {
-				    $nav_bg_1 = $nav_bg_2 = $nav_bg_3 = $nav_bg_4 = "silver";
+					$nav_bg_1 = $nav_bg_2 = $nav_bg_3 = $nav_bg_4 = "silver";
 					$search_background = '#EEEEEE';
 		}
 

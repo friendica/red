@@ -773,7 +773,7 @@ class App {
 		$this->is_mobile = $mobile_detect->isMobile();
 		$this->is_tablet = $mobile_detect->isTablet();
 
-		$this->head_set_icon('/images/rhash-32.png');
+		$this->head_set_icon('/images/rm-32.png');
 
 		BaseObject::set_app($this);
 		
