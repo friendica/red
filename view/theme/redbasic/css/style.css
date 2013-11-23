@@ -358,7 +358,7 @@ footer {
 	border: 0px;
 	margin: 0px;
 	padding: 8px;
-	height: 20px;
+	height: 1.8em;
 	width: 530px;
 	margin-bottom: 5px;
 	font-weight: bold;
@@ -1454,7 +1454,7 @@ tr.mceLast {
 /* Not MCE */
 
 #profile-jot-text {
-	height: 20px;
+	height: 1.8em;
 	color:#000;
 	border: 1px solid #cccccc;
 	padding: 8px;
