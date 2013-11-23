@@ -122,7 +122,7 @@
 
 		if ($nav_colour == "black") {
 					$nav_bg_1 = $nav_bg_3 = "#000";
-		      			$nav_bg_2 = $nav_bg_4 = "#111";
+		      			$nav_bg_2 = $nav_bg_4 = "#222";
 					$search_background = '#EEEEEE';
 					$active_colour = '#AAAAAA';
 		}
