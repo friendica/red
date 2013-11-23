@@ -649,7 +649,8 @@ function admin_page_users(&$a){
 	if($_REQUEST['order'] === 'expires')
 		$order = " order by account_expires desc ";
 
-	$users =q("SELECT `account_id` , `account_email`, `account_lastlog`, `account_created`, `account_expires`, `account_service_class` FROM `account` where true $serviceclass $order limit %d , %d ",
+	$users =q("SELECT `account_id` , `account_email`, `account_lastlog`, `account_created`, `account_expires`, `account_service_class`, ( account_flags & %d ) > 0 as `blocked` FROM `account` where true $serviceclass $order limit %d , %d ",
+		intval(ACCOUNT_BLOCKED),		
 		intval($a->pager['start']),
 		intval($a->pager['itemspage'])
 	);
