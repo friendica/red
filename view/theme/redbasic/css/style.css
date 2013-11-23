@@ -54,6 +54,7 @@ a:hover, .fakelink:hover { color: #44AAFF; text-decoration: underline; }
 input[type="text"],
 input[type="password"],
 input[type="submit"],
+select,
 textarea {
 	font-family: arial,freesans,sans-serif;
 	font-size: $body_font_size;
@@ -1464,7 +1465,7 @@ tr.mceLast {
 }
 
 #profile-jot-text:hover {
-	color: #000000;
+       color: #000000;
 }
 
 #profile-jot-text-loading {
@@ -2545,7 +2546,7 @@ brain is weird like that */
 
 .field label {
 	float: left;
-	width: 200px;
+	width: 350px;
 }
 
 .field input,
@@ -2555,7 +2556,7 @@ brain is weird like that */
 .field textarea { height: 100px; }
 .field_help {
 	display: block;
-	margin-left: 200px;
+	margin-left: 350px;
 	color: #666666;
 	
 }
