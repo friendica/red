@@ -474,7 +474,7 @@ function admin_page_hubloc(&$a) {
                 '$title' => t('Administration'),
                 '$page' => t('Server'),
                 '$queues' => $queues,
-                '$accounts' => $accounts,
+                //'$accounts' => $accounts, /*$accounts is empty here*/
                 '$pending' => Array( t('Pending registrations'), $pending),
                 '$plugins' => Array( t('Active plugins'), $a->plugins )
         ));
@@ -649,7 +649,10 @@ function admin_page_users(&$a){
 	if($_REQUEST['order'] === 'expires')
 		$order = " order by account_expires desc ";
 
-	$users =q("SELECT `account_id` , `account_email`, `account_lastlog`, `account_created`, `account_expires`, `account_service_class`, ( account_flags & %d ) > 0 as `blocked` FROM `account` where true $serviceclass $order limit %d , %d ",
+	$users =q("SELECT `account_id` , `account_email`, `account_lastlog`, `account_created`, `account_expires`, " . 			"`account_service_class`, ( account_flags & %d ) > 0 as `blocked`, " .
+			"(SELECT GROUP_CONCAT( ch.channel_address SEPARATOR ' ') FROM channel as ch " .
+			"WHERE ch.channel_account_id = ac.account_id) as `channels` " .
+		"FROM account as ac where true $serviceclass $order limit %d , %d ",
 		intval(ACCOUNT_BLOCKED),		
 		intval($a->pager['start']),
 		intval($a->pager['itemspage'])
@@ -689,7 +692,7 @@ function admin_page_users(&$a){
 		'$unblock' => t('Unblock'),
 
 		'$h_users' => t('Users'),
-		'$th_users' => array( t('Email'), t('Register date'), t('Last login'), t('Expires'), t('Service Class')),
+		'$th_users' => array( t('ID'), t('Email'), t('All Channels'), t('Register date'), t('Last login'), t('Expires'), t('Service Class')),
 
 		'$confirm_delete_multi' => t('Selected users will be deleted!\n\nEverything these users had posted on this site will be permanently deleted!\n\nAre you sure?'),
 		'$confirm_delete' => t('The user {0} will be deleted!\n\nEverything this user has posted on this site will be permanently deleted!\n\nAre you sure?'),

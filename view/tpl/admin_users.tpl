@@ -63,11 +63,13 @@
 				<tbody>
 				{{foreach $users as $u}}
 					<tr>
+						<td class='account_id'>{{$u.account_id}}</td>
 						<td class='email'>{{if $u.blocked}}
 							<i>{{$u.account_email}}</i>
 						{{else}}
 							<strong>{{$u.account_email}}</strong>
 						{{/if}}</td>
+						<td class='channels'>{{$u.channels}}</td>
 						<td class='register_date'>{{$u.account_created}}</td>
 						<td class='login_date'>{{$u.account_lastlog}}</td>
 						<td class='account_expires'>{{$u.account_expires}}</td>
