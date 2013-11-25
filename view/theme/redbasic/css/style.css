@@ -1195,21 +1195,11 @@ footer {
 
 #profile-jot-perms {
 	float: right;
-	margin-left: 100px;
-	font-weight: bold;
-	font-size: 1.2em;
-	height: auto;
-	width: auto;
-	background-color: #0080FF;
-	border-radius: $radiuspx;
-	border: 2px outset;
-	box-shadow: 5px 5px 5px #666;
-	margin-right: 8px;
-	padding: 4px;
-}
-
-#profile-jot-perms:active {
-    box-shadow: 0 0 0 0;
+	background-color: $toolicon_colour;
+	border: 1px solid #666;
+	border-right: none;
+	border-radius: $radiuspx 0px 0px $radiuspx;
+	padding: 6px;
 }
 
 #profile-jot-perms-end {
@@ -1537,23 +1527,27 @@ tr.mceLast {
 }
 
 #profile-jot-submit {
-    height: auto;
-    background-color: #0080FF;
-    color: #eeeeec;
-    font-weight: bold;
-    -webkit-border-radius: $radiuspx;
-    -moz-border-radius: $radiuspx;
-    border-radius: $radiuspx;
-    border: 2px outset #222420 !important;
-    margin: 0;
-    float: right;
-    text-shadow: 1px 1px #111;
-    width: auto;
-    box-shadow: 5px 5px 5px #444;
+	height: 30px;
+	width: 70px;
+	background: linear-gradient(top, #0080ff 0%, #0080aa);
+	background: -webkit-linear-gradient(top, #0080ff 0%, #0080aa);
+	background: -moz-linear-gradient(top, #0080ff 0%, #0080aa);
+	background: -o-linear-gradient(top, #0080ff 0%, #0080aa);
+	background: -ms-linear-gradient(top, #0080ff 0%, #0080aa);
+	color: #fff;
+	font-weight: bold;
+	border-radius: 0px $radiuspx $radiuspx 0px;
+	float: right;
+	text-shadow: 1px 1px #111;
+	cursor: pointer;
 }
 
-#profile-jot-submit:active {
-    box-shadow: 0 0 0 0;
+#profile-jot-submit:hover {
+	background: linear-gradient(top, #0080aa 0%, #0080ff);
+	background: -webkit-linear-gradient(top, #0080aa 0%, #0080ff);
+	background: -moz-linear-gradient(top, #0080aa 0%, #0080ff);
+	background: -o-linear-gradient(top, #0080aa 0%, #0080ff);
+	background: -ms-linear-gradient(top, #0080aa 0%, #0080ff);
 }
 
 #sidebar-page-list .label {
