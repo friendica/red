@@ -823,7 +823,7 @@ function item_post(&$a) {
 	}
 
 	$datarray['id']    = $post_id;
-	$datarray['plink'] = $a->get_baseurl() . '/display/' . $channel['channel_address'] . '/' . $post_id;
+	$datarray['llink'] = $a->get_baseurl() . '/display/' . $channel['channel_address'] . '/' . $post_id;
 
 	call_hooks('post_local_end', $datarray);
 

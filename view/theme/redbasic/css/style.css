@@ -1133,8 +1133,8 @@ footer {
 
 #profile-jot-plugin-wrapper,
 #profile-jot-submit-wrapper {
-	margin-top: 15px;
-	width:90%;
+	margin-top: 10px;
+	width:92%;
 }
 
 #profile-upload-wrapper {
@@ -3513,6 +3513,10 @@ margin-right: 50px;
 .jot-icons {
 	font-size: 1.2em;
 	color: $toolicon_colour;
+}
+
+.comment-preview-icon {
+	margin-left: 15px;
 }
 
 .comment-icon:hover,
