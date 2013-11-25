@@ -58,6 +58,12 @@ function item_post(&$a) {
 	// If you are unsure, it is prudent (and important) to leave it unset.   
 
 	$origin = (($api_source && array_key_exists('origin',$_REQUEST)) ? intval($_REQUEST['origin']) : 1);
+
+	// To represent message-ids on other networks - this will create an item_id record
+
+	$namespace = (($api_source && array_key_exists('namespace',$_REQUEST)) ? strip_tags($_REQUEST['namespace']) : '');
+	$remote_id = (($api_source && array_key_exists('remote_id',$_REQUEST)) ? strip_tags($_REQUEST['remote_id']) : '');
+
 	$owner_hash = null;
 
 	$message_id     = ((x($_REQUEST,'message_id') && $api_source)  ? strip_tags($_REQUEST['message_id'])       : '');
@@ -782,6 +788,10 @@ function item_post(&$a) {
 		$page_type = 'BUILDBLOCK';
 	elseif($webpage & ITEM_PDL)
 		$page_type = 'PDL';
+	elseif($namespace && $remote_id) {
+		$page_type = $namespace;
+		$pagetitle = $remote_id;
+	}
 
 	if($page_type) {	
 

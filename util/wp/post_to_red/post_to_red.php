@@ -78,6 +78,10 @@ function post_to_red_post($post_id) {
 			  	}
 			}
 
+			$message_namespace = 'wordpress';
+
+			$message_id = $site_url() . '/' . $post_id;
+
 			$message = $post->post_title . "<br /><br />" . $message;
 
 			$message .= "<br /><br />permalink: " . $post->guid;
@@ -93,7 +97,7 @@ function post_to_red_post($post_id) {
 
 			
 			$headers = array('Authorization' => 'Basic '.base64_encode("$user_name:$password"));
-			$body = array('status' => $bbcode,'source' => 'WordPress');
+			$body = array('status' => $bbcode,'source' => 'WordPress', 'namespace' => $message_namespace, 'remote_id' => $message_id);
 			if($channel)
 				$body['channel'] = $channel;
 			
