@@ -55,12 +55,19 @@ function post_to_red_get_password() {
 }
 
 function post_to_red_post($post_id) {
-	
+
 	$post = get_post($post_id);
 	
+    if (isset($_POST['post_to_red'])) {
+		update_post_meta($post_id, 'post_to_red', 1);
+	} else {
+		update_post_meta($post_id, 'post_to_red', 0);
+	}
+
+
 	// if meta has been set
 	if (get_post_meta($post_id, "post_to_red", true) == 1) {
-		
+
 		$user_name = post_to_red_get_acct_name();
 		$password = post_to_red_get_password();
 		$seed_location = post_to_red_get_seed_location();
@@ -80,7 +87,7 @@ function post_to_red_post($post_id) {
 
 			$message_namespace = 'wordpress';
 
-			$message_id = $site_url() . '/' . $post_id;
+			$message_id = site_url() . '/' . $post_id;
 
 			$message = $post->post_title . "<br /><br />" . $message;
 
@@ -148,6 +155,7 @@ EOF;
 }
 
 function post_to_red_post_checkbox() {
+
     add_meta_box(
         'post_to_red_meta_box_id', 
         'Cross Post to Red Matrix',
@@ -170,8 +178,9 @@ function post_to_red_post_field_data($post_id) {
         return;
 
     // security check
-//    if (!wp_verify_nonce( $_POST['post_to_red_nonce'], plugin_basename( __FILE__ )))
-//        return;
+	if((! array_key_exists('post_to_red_nonce', $_POST))
+    || (!wp_verify_nonce( $_POST['post_to_red_nonce'], plugin_basename( __FILE__ ))))
+        return;
 
     // now store data in custom fields based on checkboxes selected
     if (isset($_POST['post_to_red'])) {
