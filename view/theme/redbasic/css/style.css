@@ -3528,6 +3528,7 @@ margin-right: 50px;
 a .drop-icons {
 	color: #777;
 	font-size: 1.2em;
+	text-decoration: none;
 }
  
 .drop-icons:hover {
