@@ -91,8 +91,6 @@ function post_to_red_post($post_id) {
 
 			$message = $post->post_title . "<br /><br />" . $message;
 
-			$message .= "<br /><br />permalink: " . $post->guid;
-
 			if (isset($tag_string)) {
 				$message .=  "<br />$tag_string";	
 			}
@@ -104,7 +102,14 @@ function post_to_red_post($post_id) {
 
 			
 			$headers = array('Authorization' => 'Basic '.base64_encode("$user_name:$password"));
-			$body = array('status' => $bbcode,'source' => 'WordPress', 'namespace' => $message_namespace, 'remote_id' => $message_id);
+			$body = array(
+				'title'     => xpost_to_html2bbcode($post->post_title),
+				'status'    => $bbcode,
+				'source'    => 'WordPress', 
+				'namespace' => 'wordpress',
+				'remote_id' => $message_id,
+				'permalink' => $post->guid;
+			);
 			if($channel)
 				$body['channel'] = $channel;
 			

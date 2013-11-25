@@ -77,6 +77,8 @@ function item_post(&$a) {
 	$webpage     = ((x($_REQUEST,'webpage'))     ? intval($_REQUEST['webpage'])        : 0);
 	$pagetitle   = ((x($_REQUEST,'pagetitle'))   ? escape_tags($_REQUEST['pagetitle']) : '');
 	$layout_mid  = ((x($_REQUEST,'layout_mid'))  ? escape_tags($_REQUEST['layout_mid']): '');
+	$plink       = ((x($_REQUEST,'permalink'))   ? escape_tags($_REQUEST['permalink']) : '');
+
 	/*
 	Check service class limits
 	*/
@@ -195,6 +197,16 @@ function item_post(&$a) {
 	// is this an edited post?
 
 	$orig_post = null;
+
+	if($namespace && $remote_id) {
+		// It wasn't an internally generated post - see if we've got an item matching this remote service id
+		$i = q("select iid from item_id where service = '%s' and sid = '%s' limit 1",
+			dbesc($namespace),
+			dbesc($remote_id) 
+		);
+		if($i)
+			$post_id = $i[0]['iid'];	
+	}
 
 	if($post_id) {
 		$i = q("SELECT * FROM `item` WHERE `uid` = %d AND `id` = %d LIMIT 1",
@@ -616,6 +628,7 @@ function item_post(&$a) {
 	$datarray['layout_mid']     = $layout_mid;
 	$datarray['comment_policy'] = map_scope($channel['channel_w_comment']); 
 	$datarray['term']           = $post_tags;
+	$datarray['plink']          = $plink;
 
 	// preview mode - prepare the body for display and send it via json
 
