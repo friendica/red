@@ -1978,7 +1978,7 @@ a.mail-list-link {
 	display: block;
 	color: #FFFFFF;
 	margin-top: 15px;
-	background-color: #F80000;
+	background-color: $nav_bg_2;
 	-webkit-border-radius: $radiuspx ;
 	-moz-border-radius: $radiuspx;
 	border-radius: $radiuspx;
@@ -3002,7 +3002,7 @@ div.jGrowl div.info {
 	width: 90%;
 }
 
-
+a.rconnect,
 nav a,
 nav a:active,
 nav a:visited,
@@ -3012,7 +3012,7 @@ nav a:link {
   outline: none;
 }
 
-nav a:hover {
+a.rconnect:hover, nav a:hover {
 	color: #0080FF;
 }
 nav .fakelink {

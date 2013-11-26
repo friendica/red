@@ -11,7 +11,8 @@ head_add_css('library/colorbox/colorbox.css');
 // head_add_css('library/font_awesome/css/font-awesome.min.css');
 
 head_add_js('js/jquery.js');
-// head_add_js('js/jquery-migrate-1.1.1.js');
+//head_add_js('js/jquery-migrate-1.1.1.js');
+head_add_js('js/jquery-compat.js');
 head_add_js('js/spin.js');
 head_add_js('js/jquery.spin.js');
 head_add_js('js/jquery.textinputs.js');
