@@ -3551,6 +3551,9 @@ function drop_item($id,$interactive = true) {
 
 	if($ok_to_delete) {
 
+		$arr = array('item' => $item);
+		call_hooks('drop_item', $arr );
+
 		$notify_id = intval($item['id']);
 
 		$items = q("select * from item where parent = %d and uid = %d",
