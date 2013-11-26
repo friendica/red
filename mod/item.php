@@ -273,6 +273,7 @@ function item_post(&$a) {
 		$private           = $orig_post['item_private'];
 		$item_flags        = $orig_post['item_flags'];
 		$item_restrict     = $orig_post['item_restrict'];
+		$postopts          = $orig_post['postopts'];
 	}
 	else {
 
@@ -305,6 +306,7 @@ function item_post(&$a) {
 		$verb              = notags(trim($_REQUEST['verb']));
 		$title             = escape_tags(trim($_REQUEST['title']));
 		$body              = $_REQUEST['body'];
+		$postopts          = '';
 
 		$private = ( 
 				(  strlen($str_group_allow) 
@@ -622,7 +624,7 @@ function item_post(&$a) {
 	$datarray['item_private']   = $private;
 	$datarray['attach']         = $attachments;
 	$datarray['thr_parent']     = $thr_parent;
-	$datarray['postopts']       = '';
+	$datarray['postopts']       = $postopts;
 	$datarray['item_restrict']  = $item_restrict;
 	$datarray['item_flags']     = $item_flags;
 	$datarray['layout_mid']     = $layout_mid;
