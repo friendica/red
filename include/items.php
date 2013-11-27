@@ -3551,6 +3551,14 @@ function drop_item($id,$interactive = true) {
 
 	if($ok_to_delete) {
 
+		// set the deleted flag immediately on this item just in case the 
+		// hook calls a remote process which loops. We'll delete it properly in a second.
+
+		$r = q("UPDATE item SET item_restrict = ( item_restrict | %d ) WHERE id = %d LIMIT 1",
+			intval(ITEM_DELETED),
+			intval($item['id'])
+		);
+
 		$arr = array('item' => $item);
 		call_hooks('drop_item', $arr );
 
