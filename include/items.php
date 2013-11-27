@@ -3525,7 +3525,7 @@ function drop_item($id,$interactive = true) {
 		intval($id)
 	);
 
-	if(! $r) {
+	if((! $r) || ($r[0]['item_restrict'] & ITEM_DELETED)) {
 		if(! $interactive)
 			return 0;
 		notice( t('Item not found.') . EOL);
