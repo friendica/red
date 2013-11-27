@@ -119,7 +119,7 @@ function post_to_red_delete_post($post_id) {
 	$post = get_post($post_id);
 	
 	// if meta has been set
-	if (get_post_meta($post_id, "post_to_red", true) == '1') {
+	if ((get_post_meta($post_id, "post_to_red", true) == '1') || (get_post_meta($post_id, "post_from_red", true) == '1')) {
 
 		$user_name = post_to_red_get_acct_name();
 		$password = post_to_red_get_password();
