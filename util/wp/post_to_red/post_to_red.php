@@ -85,11 +85,7 @@ function post_to_red_post($post_id) {
 			  	}
 			}
 
-			$message_namespace = 'wordpress';
-
 			$message_id = site_url() . '/' . $post_id;
-
-			$message = $post->post_title . "<br /><br />" . $message;
 
 			if (isset($tag_string)) {
 				$message .=  "<br />$tag_string";	
@@ -98,8 +94,6 @@ function post_to_red_post($post_id) {
 			$bbcode = xpost_to_html2bbcode($message);
 			
 			$url = $seed_location . '/api/statuses/update';
-
-
 			
 			$headers = array('Authorization' => 'Basic '.base64_encode("$user_name:$password"));
 			$body = array(
@@ -117,19 +111,48 @@ function post_to_red_post($post_id) {
 			$request = new WP_Http;
 			$result = $request->request($url , array( 'method' => 'POST', 'body' => $body, 'headers' => $headers));
 
-//			if($result['response']['code'] == 200) {
-//				$j = json_decode($result['body'],true);
-//				if($j && $j['id']) {
-//					// store the red id in case we need to delete it in the future.					
-//
-//				}
-//			}
-//			logger('post_to_red returns: ' . print_r($result,true));
+		}
+		
+	}
+}
+
+
+function post_to_red_delete_post($post_id) {
+
+	$post = get_post($post_id);
+	
+	// if meta has been set
+	if (get_post_meta($post_id, "post_to_red", true) == 1) {
+
+		$user_name = post_to_red_get_acct_name();
+		$password = post_to_red_get_password();
+		$seed_location = post_to_red_get_seed_location();
+		$channel = post_to_red_get_channel_name();
+		
+		if ((isset($user_name)) && (isset($password)) && (isset($seed_location))) {
+
+			$message_id = site_url() . '/' . $post_id;
+			$url = $seed_location . '/api/statuses/destroy';
+			
+			$headers = array('Authorization' => 'Basic '.base64_encode("$user_name:$password"));
+			$body = array(
+				'namespace' => 'wordpress',
+				'remote_id' => $message_id,
+			);
+			if($channel)
+				$body['channel'] = $channel;
+			
+			// post:
+			$request = new WP_Http;
+			$result = $request->request($url , array( 'method' => 'POST', 'body' => $body, 'headers' => $headers));
 
 		}
 		
 	}
 }
+
+
+
 
 function post_to_red_displayAdminContent() {
 	
@@ -239,6 +262,7 @@ add_action("admin_menu", "post_to_red_admin");
 add_action('publish_post', 'post_to_red_post');
 add_action('add_meta_boxes', 'post_to_red_post_checkbox');
 add_action('save_post', 'post_to_red_post_field_data');
+add_action('before_delete_post', 'post_to_red_delete_post');
 
 // from:
 // http://www.docgate.com/tutorial/php/how-to-convert-html-to-bbcode-with-php-script.html

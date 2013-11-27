@@ -1080,19 +1080,35 @@ require_once('include/photos.php');
 
 		// params
 		$id = intval(argv(3));
+		if($id) {
+			// first prove that we own the item
 
-		// first prove that we own the item
-
-		$r = q("select * from item where id = %d and uid = %d limit 1",
-			intval($id),
-			intval($user_info['uid'])
-		);
-
-		if($r) {
-			logger('API: api_statuses_destroy: '.$id);
-			require_once('include/items.php');
-			drop_item($id, false);
+			$r = q("select * from item where id = %d and uid = %d limit 1",
+				intval($id),
+				intval($user_info['uid'])
+			);
+			if(! $r)
+				return false;
 		}
+		else {
+			if($_REQUEST['namespace'] && $_REQUEST['remote_id']) {
+				$r = q("select * from item_id where service = '%s' and sid = '%s' and uid = %d limit 1",
+					dbesc($_REQUEST['namespace']),
+					dbesc($_REQUEST['remote_id']),
+					intval($user_info['uid'])
+				);
+				if(! $r)
+					return false;
+				$id = $r[0]['iid'];
+			}
+		}
+		if(! $id)
+			return false;
+
+		logger('API: api_statuses_destroy: '.$id);
+		require_once('include/items.php');
+		drop_item($id, false);
+
 
 		if ($type == 'xml')
 			$ok = "true";
@@ -1114,7 +1130,7 @@ require_once('include/photos.php');
 		if (api_user()===false) return false;
 				
 		$user_info = api_get_user($a);
-		// get last newtork messages
+		// get last network messages
 
 
 		// params
