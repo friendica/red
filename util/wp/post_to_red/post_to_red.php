@@ -108,7 +108,7 @@ function post_to_red_post($post_id) {
 				'source'    => 'WordPress', 
 				'namespace' => 'wordpress',
 				'remote_id' => $message_id,
-				'permalink' => $post->guid;
+				'permalink' => $post->guid
 			);
 			if($channel)
 				$body['channel'] = $channel;
@@ -116,6 +116,15 @@ function post_to_red_post($post_id) {
 			// post:
 			$request = new WP_Http;
 			$result = $request->request($url , array( 'method' => 'POST', 'body' => $body, 'headers' => $headers));
+
+//			if($result['response']['code'] == 200) {
+//				$j = json_decode($result['body'],true);
+//				if($j && $j['id']) {
+//					// store the red id in case we need to delete it in the future.					
+//
+//				}
+//			}
+//			logger('post_to_red returns: ' . print_r($result,true));
 
 		}
 		

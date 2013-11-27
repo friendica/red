@@ -739,7 +739,7 @@ require_once('include/photos.php');
 				'created_at' => api_date($lastwall['created']),
 				'in_reply_to_status_id' => $in_reply_to_status_id,
 				'source' => (($lastwall['app']) ? $lastwall['app'] : 'web'),
-				'id' => (($w) ? $w[0]['abook_id'] : $user_info['id']),
+				'id' => ($lastwall['id']),
 				'in_reply_to_user_id' => $in_reply_to_user_id,
 				'in_reply_to_screen_name' => $in_reply_to_screen_name,
 				'geo' => '',
@@ -1081,10 +1081,18 @@ require_once('include/photos.php');
 		// params
 		$id = intval(argv(3));
 
-		logger('API: api_statuses_destroy: '.$id);
+		// first prove that we own the item
 
-		require_once('include/items.php');
-		drop_item($id, false);
+		$r = q("select * from item where id = %d and uid = %d limit 1",
+			intval($id),
+			intval($user_info['uid'])
+		);
+
+		if($r) {
+			logger('API: api_statuses_destroy: '.$id);
+			require_once('include/items.php');
+			drop_item($id, false);
+		}
 
 		if ($type == 'xml')
 			$ok = "true";
