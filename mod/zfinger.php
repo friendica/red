@@ -164,7 +164,7 @@ function zfinger_init(&$a) {
 
 	$ret['locations'] = array();
 
-	$x = zot_get_hubloc(array($e['channel_hash']));
+	$x = zot_get_hublocs($e['channel_hash']);
 	if($x && count($x)) {
 		foreach($x as $hub) {
 			if(! ($hub['hubloc_flags'] & HUBLOC_FLAGS_UNVERIFIED)) {

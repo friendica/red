@@ -18,33 +18,20 @@ function zot_new_uid($channel_nick) {
 
 
 /**
- *
- * Given an array of zot hashes, return all distinct hubs
- * If primary is true, return only primary hubs
- * Result is ordered by url to assist in batching.
- * Return only the first primary hub as there should only be one.
+ * @function zot_get_hublocs($hash)
+ *     Given a zot hash, return all distinct hubs
+ * @param string $hash - xchan_hash
+ * @retuns array
  *
  */
 
-function zot_get_hubloc($arr,$primary = false) {
+function zot_get_hublocs($hash) {
 
-	$tmp = '';
-	
-	if(is_array($arr)) {
-		foreach($arr as $e) {
-			if(strlen($tmp))
-				$tmp .= ',';
-			$tmp .= "'" . dbesc($e) . "'" ;
-		}
-	}
-	
-	if(! strlen($tmp))
-		return array();
+	$ret = q("select * from hubloc where hubloc_hash = '%s' group by hubloc_url ",
+		dbesc($hash)
+	);
 
-	$sql_extra = (($primary) ? " and hubloc_flags & " . intval(HUBLOC_FLAGS_PRIMARY) : "" );
-	$limit = (($primary) ? " limit 1 " : "");
-	return q("select * from hubloc where hubloc_hash in ( $tmp ) $sql_extra order by hubloc_url $limit");
-
+	return $ret;
 }
 	 
 /*
