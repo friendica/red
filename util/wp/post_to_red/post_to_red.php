@@ -261,6 +261,8 @@ add_action('before_delete_post', 'post_to_red_delete_post');
 
 add_filter('xmlrpc_methods', 'red_xmlrpc_methods');
 
+add_filter('get_avatar', 'post_to_red_get_avatar',10,5);
+
 
 function red_xmlrpc_methods($methods) {
 	$methods['red.Comment'] = 'red_comment';
@@ -333,11 +335,29 @@ function red_comment($args) {
 			wp_set_comment_status($comment_ID,'approve');
 	}
 
+	if(isset($content_struct['red_avatar']))
+		add_comment_meta($comment_ID,'red_avatar',$content_struct['red_avatar'],true);
+
 	do_action( 'xmlrpc_call_success_red_Comment', $comment_ID, $args );
 
 	return $comment_ID;
 }
 
+function post_to_red_get_avatar($avatar,$id_or_email,$size,$default,$alt) {
+
+	if(! is_object($id_or_email))
+		return $avatar;
+	if((! array_key_exists('comment_author_email',$id_or_email)) || (empty($id_or_email->comment_author_email)))
+		return $avatar;
+	if((! array_key_exists('comment_ID', $id_or_email)) || (! intval($id_or_email->comment_ID)))
+		return $avatar;
+	$l = get_comment_meta($id_or_email->comment_ID,'red_avatar',true);
+	if($l) {
+		$safe_alt = esc_attr($alt);
+		$avatar = "<img alt='{$safe_alt}' src='{$l}' class='avatar avatar-{$size} photo' height='{$size}' width='{$size}' />";
+	}
+	return $avatar;
+}
 
 
 // from:
