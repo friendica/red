@@ -993,9 +993,9 @@ function format_like($cnt,$arr,$type,$id) {
 	else {
 		$spanatts = 'class="fakelink" onclick="openClose(\'' . $type . 'list-' . $id . '\');"';
 		$o .= (($type === 'like') ?
-					sprintf( t('<span  %1$s>%2$d people</span> like this.'), $spanatts, $cnt)
+					sprintf( tt('<span  %1$s>%2$d people</span> like this.','<span  %1$s>%2$d people</span> like this.',$cnt), $spanatts, $cnt)
 					 :
-					sprintf( t('<span  %1$s>%2$d people</span> don\'t like this.'), $spanatts, $cnt) );
+					sprintf( tt('<span  %1$s>%2$d people</span> don\'t like this.','<span  %1$s>%2$d people</span> don\'t like this.',$cnt), $spanatts, $cnt) );
 		$o .= EOL ;
 		$total = count($arr);
 		if($total >= MAX_LIKERS)
@@ -1004,7 +1004,7 @@ function format_like($cnt,$arr,$type,$id) {
 			$arr[count($arr)-1] = t('and') . ' ' . $arr[count($arr)-1];
 		$str = implode(', ', $arr);
 		if($total >= MAX_LIKERS)
-			$str .= sprintf( t(', and %d other people'), $total - MAX_LIKERS );
+			$str .= sprintf( tt(', and %d other people',', and %d other people',$total - MAX_LIKERS), $total - MAX_LIKERS );
 		$str = (($type === 'like') ? sprintf( t('%s like this.'), $str) : sprintf( t('%s don\'t like this.'), $str));
 		$o .= "\t" . '<div id="' . $type . 'list-' . $id . '" style="display: none;" >' . $str . '</div>';
 	}
