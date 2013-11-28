@@ -259,6 +259,107 @@ add_action('add_meta_boxes', 'post_to_red_post_checkbox');
 add_action('save_post', 'post_to_red_post_field_data');
 add_action('before_delete_post', 'post_to_red_delete_post');
 
+add_filter('xmlrpc_methods', 'red_xmlrpc_methods');
+
+add_filter('get_avatar', 'post_to_red_get_avatar',10,5);
+
+
+function red_xmlrpc_methods($methods) {
+	$methods['red.Comment'] = 'red_comment';
+	return $methods;
+}
+
+function red_comment($args) {
+	global $wp_xmlrpc_server;
+	$wp_xmlrpc_server->escape( $args );
+
+	$blog_id  = $args[0];
+	$username = $args[1];
+	$password = $args[2];
+	$post       = $args[3];
+	$content_struct = $args[4];
+
+	if ( ! $user = $wp_xmlrpc_server->login( $username, $password ) )
+		return $wp_xmlrpc_server->error;
+
+	if ( is_numeric($post) )
+		$post_id = absint($post);
+	else
+		$post_id = url_to_postid($post);
+
+	if ( ! $post_id )
+		return new IXR_Error( 404, __( 'Invalid post ID.' ) );
+	if ( ! get_post($post_id) )
+		return new IXR_Error( 404, __( 'Invalid post ID.' ) );
+
+	$comment['comment_post_ID'] = $post_id;
+
+	$comment['comment_author'] = '';
+	if ( isset($content_struct['author']) )
+		$comment['comment_author'] = $content_struct['author'];
+
+	$comment['comment_author_email'] = '';
+	if ( isset($content_struct['author_email']) )
+		$comment['comment_author_email'] = $content_struct['author_email'];
+
+	$comment['comment_author_url'] = '';
+	if ( isset($content_struct['author_url']) )
+		$comment['comment_author_url'] = $content_struct['author_url'];
+
+	$comment['user_ID'] = 0;
+
+	if ( get_option('require_name_email') ) {
+		if ( 6 > strlen($comment['comment_author_email']) || '' == $comment['comment_author'] )
+			return new IXR_Error( 403, __( 'Comment author name and email are required' ) );
+		elseif ( !is_email($comment['comment_author_email']) )
+			return new IXR_Error( 403, __( 'A valid email address is required' ) );
+	}
+
+	if(isset($content_struct['comment_id'])) {
+		$comment['comment_ID'] = intval($content_struct['comment_id']);
+		$edit = true;
+	}
+	$comment['comment_post_ID']  = $post_id;
+	$comment['comment_parent']   = isset($content_struct['comment_parent']) ? absint($content_struct['comment_parent']) : 0;
+	$comment['comment_content']  = isset($content_struct['content'])        ? $content_struct['content'] : null;
+
+	do_action('xmlrpc_call', 'red.Comment');
+
+	if($edit) {
+		$result = wp_update_comment($comment);
+		$comment_ID = $comment['comment_ID'];
+	}
+	else {
+       	$comment_ID = wp_new_comment( $comment );
+		if($comment_ID)
+			wp_set_comment_status($comment_ID,'approve');
+	}
+
+	if(isset($content_struct['red_avatar']))
+		add_comment_meta($comment_ID,'red_avatar',$content_struct['red_avatar'],true);
+
+	do_action( 'xmlrpc_call_success_red_Comment', $comment_ID, $args );
+
+	return $comment_ID;
+}
+
+function post_to_red_get_avatar($avatar,$id_or_email,$size,$default,$alt) {
+
+	if(! is_object($id_or_email))
+		return $avatar;
+	if((! array_key_exists('comment_author_email',$id_or_email)) || (empty($id_or_email->comment_author_email)))
+		return $avatar;
+	if((! array_key_exists('comment_ID', $id_or_email)) || (! intval($id_or_email->comment_ID)))
+		return $avatar;
+	$l = get_comment_meta($id_or_email->comment_ID,'red_avatar',true);
+	if($l) {
+		$safe_alt = esc_attr($alt);
+		$avatar = "<img alt='{$safe_alt}' src='{$l}' class='avatar avatar-{$size} photo' height='{$size}' width='{$size}' />";
+	}
+	return $avatar;
+}
+
+
 // from:
 // http://www.docgate.com/tutorial/php/how-to-convert-html-to-bbcode-with-php-script.html
 function xpost_to_html2bbcode($text) {
