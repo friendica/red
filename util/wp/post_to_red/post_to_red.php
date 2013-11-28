@@ -148,6 +148,37 @@ function post_to_red_delete_post($post_id) {
 	}
 }
 
+function post_to_red_delete_comment($post_id) {
+
+	// The comment may already be destroyed so we can't query it or the parent post. That means
+	// we have to make a network call for any deleted comment to see if it's registered on Red. 
+	// We really need a "before_delete_comment" action in WP to make
+	// this more efficient.
+
+	$user_name = post_to_red_get_acct_name();
+	$password = post_to_red_get_password();
+	$seed_location = post_to_red_get_seed_location();
+	$channel = post_to_red_get_channel_name();
+		
+	if ((isset($user_name)) && (isset($password)) && (isset($seed_location))) {
+
+		$message_id = site_url() . '/' . $post_id;
+		$url = $seed_location . '/api/statuses/destroy';
+			
+		$headers = array('Authorization' => 'Basic '.base64_encode("$user_name:$password"));
+		$body = array(
+			'namespace' => 'wordpress',
+			'comment_id' => $message_id,
+		);
+		if($channel)
+			$body['channel'] = $channel;
+			
+		// post:
+		$request = new WP_Http;
+		$result = $request->request($url , array( 'method' => 'POST', 'body' => $body, 'headers' => $headers));
+	}
+}
+
 
 
 
@@ -258,6 +289,8 @@ add_action('publish_post', 'post_to_red_post');
 add_action('add_meta_boxes', 'post_to_red_post_checkbox');
 add_action('save_post', 'post_to_red_post_field_data');
 add_action('before_delete_post', 'post_to_red_delete_post');
+
+add_action('delete_comment', 'post_to_red_delete_comment');
 
 add_filter('xmlrpc_methods', 'red_xmlrpc_methods');
 

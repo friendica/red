@@ -1101,6 +1101,16 @@ require_once('include/photos.php');
 					return false;
 				$id = $r[0]['iid'];
 			}
+			if($_REQUEST['namespace'] && $_REQUEST['comment_id']) {
+				$r = q("select * from item_id left join item on item.id = item_id.iid where service = '%s' and sid = '%s' and uid = %d and item.id != item.parent limit 1",
+					dbesc($_REQUEST['namespace']),
+					dbesc($_REQUEST['comment_id']),
+					intval($user_info['uid'])
+				);
+				if(! $r)
+					return false;
+				$id = $r[0]['iid'];
+			}
 		}
 		if(! $id)
 			return false;
