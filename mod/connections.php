@@ -464,7 +464,7 @@ function connections_content(&$a) {
 			'$cautious'       => t('Cautious Sharing'),
 			'$follow'         => t('Follow Only'),
 			'$permlbl'        => t('Individual Permissions'),
-			'$permnote'       => t('Some permissions may be inherited from your <a href="settings">privacy settings</a>, which have higher priority. Changing those on this page will have no effect.'),
+			'$permnote'       => t('Some permissions may be inherited from your channel <a href="settings">privacy settings</a>, which have higher priority. Changing those inherited settings on this page will have no effect.'),
 			'$advanced'       => t('Advanced Permissions'),
 			'$quick'          => t('Quick Links'),
 			'$common_link'    => $a->get_baseurl(true) . '/common/loc/' . local_user() . '/' . $contact['id'],

@@ -15,8 +15,11 @@ require_once("include/friendica_smarty.php");
 function replace_macros($s,$r) {
 	$a = get_app();
 
+	$arr = array('template' => $s, 'params' => $r);
+	call_hooks('replace_macros', $arr);
+	
 	$t = $a->template_engine();
-	$output = $t->replace_macros($s,$r);
+	$output = $t->replace_macros($arr['template'],$arr['params']);
 	
 	return $output;
 }
