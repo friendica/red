@@ -19,7 +19,8 @@ function zot_new_uid($channel_nick) {
 
 /**
  * @function zot_get_hublocs($hash)
- *     Given a zot hash, return all distinct hubs
+ *     Given a zot hash, return all distinct hubs. 
+ *     This function is used in building the zot discovery packet
  * @param string $hash - xchan_hash
  * @retuns array
  *
@@ -27,10 +28,12 @@ function zot_new_uid($channel_nick) {
 
 function zot_get_hublocs($hash) {
 
-	$ret = q("select * from hubloc where hubloc_hash = '%s' group by hubloc_url ",
-		dbesc($hash)
-	);
+	/** Only search for active hublocs - e.g. those that haven't been marked deleted */
 
+	$ret = q("select * from hubloc where hubloc_hash = '%s' and not ( hubloc_flags & %d ) group by hubloc_url ",
+		dbesc($hash),
+		intval(HUBLOC_FLAGS_DELETED)
+	);
 	return $ret;
 }
 	 
