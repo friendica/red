@@ -141,6 +141,8 @@ function settings_post(&$a) {
 	if(! local_user())
 		return;
 
+// logger('mod_settings: ' . print_r($_REQUEST,true));
+
 	if(x($_SESSION,'submanage') && intval($_SESSION['submanage']))
 		return;
 
@@ -502,6 +504,8 @@ function settings_post(&$a) {
 	set_pconfig(local_user(),'system','blocktags',$blocktags);
 
 
+
+
 /*
 	if($page_flags == PAGE_PRVGROUP) {
 		$hidewall = 1;
@@ -545,7 +549,7 @@ function settings_post(&$a) {
 	);
 */
 
-	$r = q("update channel set channel_name = '%s', channel_pageflags = %d, channel_timezone = '%s', channel_location = '%s', channel_notifyflags = %d, channel_max_anon_mail = %d, channel_max_friend_req = %d, channel_expire_days = %d, channel_default_group = '%s', channel_r_stream = %d, channel_r_profile = %d, channel_r_photos = %d, channel_r_abook = %d, channel_w_stream = %d, channel_w_wall = %d, channel_w_tagwall = %d, channel_w_comment = %d, channel_w_mail = %d, channel_w_photos = %d, channel_w_chat = %d, channel_a_delegate = %d, channel_r_storage = %d, channel_w_storage = %d, channel_r_pages = %d, channel_w_pages = %d, channel_a_republish = %d where channel_id = %d limit 1",
+	$r = q("update channel set channel_name = '%s', channel_pageflags = %d, channel_timezone = '%s', channel_location = '%s', channel_notifyflags = %d, channel_max_anon_mail = %d, channel_max_friend_req = %d, channel_expire_days = %d, channel_default_group = '%s', channel_r_stream = %d, channel_r_profile = %d, channel_r_photos = %d, channel_r_abook = %d, channel_w_stream = %d, channel_w_wall = %d, channel_w_tagwall = %d, channel_w_comment = %d, channel_w_mail = %d, channel_w_photos = %d, channel_w_chat = %d, channel_a_delegate = %d, channel_r_storage = %d, channel_w_storage = %d, channel_r_pages = %d, channel_w_pages = %d, channel_a_republish = %d, channel_allow_cid = '%s', channel_allow_gid = '%s', channel_deny_cid = '%s', channel_deny_gid = '%s'  where channel_id = %d limit 1",
 		dbesc($username),
 		intval($pageflags),
 		dbesc($timezone),
@@ -572,6 +576,10 @@ function settings_post(&$a) {
 		intval($arr['channel_r_pages']),
 		intval($arr['channel_w_pages']),
 		intval($arr['channel_a_republish']),
+		dbesc($str_contact_allow),
+		dbesc($str_group_allow),
+		dbesc($str_contact_deny),
+		dbesc($str_group_deny),
 		intval(local_user())
 	);   
 
@@ -1042,7 +1050,12 @@ function settings_content(&$a) {
 		);
 
 
-
+		$perm_defaults = array(
+			'allow_cid' => $channel['channel_allow_cid'], 
+			'allow_gid' => $channel['channel_allow_gid'], 
+			'deny_cid' => $channel['channel_deny_cid'], 
+			'deny_gid' => $channel['channel_deny_gid']
+		); 
 
 
 		require_once('include/group.php');
@@ -1079,7 +1092,7 @@ function settings_content(&$a) {
 			'$maxreq' 	=> array('maxreq', t('Maximum Friend Requests/Day:'), intval($channel['channel_max_friend_req']) , t('May reduce spam activity')),
 			'$permissions' => t('Default Post Permissions'),
 			'$permdesc' => t("\x28click to open/close\x29"),
-			'$aclselect' => populate_acl($a->user,$celeb),
+			'$aclselect' => populate_acl($perm_defaults),
 			'$suggestme' => $suggestme,
 
 			'$group_select' => $group_select,

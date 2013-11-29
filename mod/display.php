@@ -40,6 +40,14 @@ function display_content(&$a, $update = 0, $load = false) {
 
 		$channel = $a->get_channel();
 
+
+		$channel_acl = array(
+			'allow_cid' => $channel['channel_allow_cid'], 
+			'allow_gid' => $channel['channel_allow_gid'], 
+			'deny_cid' => $channel['channel_deny_cid'], 
+			'deny_gid' => $channel['channel_deny_gid']
+		); 
+
 		$x = array(
 			'is_owner' => true,
 			'allow_location' => ((intval(get_pconfig($channel['channel_id'],'system','use_browser_location'))) ? '1' : ''),
@@ -47,7 +55,7 @@ function display_content(&$a, $update = 0, $load = false) {
 			'nickname' => $channel['channel_address'],
 			'lockstate' => (($group || $cid || $channel['channel_allow_cid'] || $channel['channel_allow_gid'] || $channel['channel_deny_cid'] || $channel['channel_deny_gid']) ? 'lock' : 'unlock'),
 
-			'acl' => populate_acl($channel, false),
+			'acl' => populate_acl($channel_acl, false),
 			'bang' => '',
 			'visitor' => 'block',
 			'profile_uid' => local_user(),

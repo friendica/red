@@ -208,22 +208,22 @@ function contact_select($selname, $selclass, $preselected = false, $size = 4, $p
 
 
 function fixacl(&$item) {
-	$item = intval(str_replace(array('<','>'),array('',''),$item));
+	$item = str_replace(array('<','>'),array('',''),$item);
 }
 
-function populate_acl($user = null,$celeb = false) {
+function populate_acl($defaults = null,$unused = false) {
 
 	$allow_cid = $allow_gid = $deny_cid = $deny_gid = false;
 
-	if(is_array($user)) {
-		$allow_cid = ((strlen($user['allow_cid'])) 
-			? explode('><', $user['allow_cid']) : array() );
-		$allow_gid = ((strlen($user['allow_gid']))
-			? explode('><', $user['allow_gid']) : array() );
-		$deny_cid  = ((strlen($user['deny_cid']))
-			? explode('><', $user['deny_cid']) : array() );
-		$deny_gid  = ((strlen($user['deny_gid']))
-			? explode('><', $user['deny_gid']) : array() );
+	if(is_array($defaults)) {
+		$allow_cid = ((strlen($defaults['allow_cid'])) 
+			? explode('><', $defaults['allow_cid']) : array() );
+		$allow_gid = ((strlen($defaults['allow_gid']))
+			? explode('><', $defaults['allow_gid']) : array() );
+		$deny_cid  = ((strlen($defaults['deny_cid']))
+			? explode('><', $defaults['deny_cid']) : array() );
+		$deny_gid  = ((strlen($defaults['deny_gid']))
+			? explode('><', $defaults['deny_gid']) : array() );
 		array_walk($allow_cid,'fixacl');
 		array_walk($allow_gid,'fixacl');
 		array_walk($deny_cid,'fixacl');

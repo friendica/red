@@ -278,8 +278,21 @@ function network_content(&$a, $update = 0, $load = false) {
 		$_GET['order'] = 'post';
 
 	if($gid) {
+        $r = q("SELECT * FROM `group` WHERE id = %d AND uid = %d LIMIT 1",
+            intval($gid),
+            intval(local_user())
+        );
+        if(! $r) {
+			if($update)
+				killme();
+			notice( t('No such group') . EOL );
+			goaway($a->get_baseurl(true) . '/network');
+			// NOTREACHED
+		}
+
 		$group = $gid;
-		$def_acl = array('allow_gid' => '<' . $group . '>');
+		$group_hash = $r[0]['hash'];
+		$def_acl = array('allow_gid' => '<' . $r[0]['hash'] . '>');
 	}
 
 	$o = '';
@@ -409,7 +422,13 @@ function network_content(&$a, $update = 0, $load = false) {
 
 		nav_set_selected('network');
 
-		$celeb = false;
+		$channel_acl = array(
+			'allow_cid' => $channel['channel_allow_cid'], 
+			'allow_gid' => $channel['channel_allow_gid'], 
+			'deny_cid' => $channel['channel_deny_cid'], 
+			'deny_gid' => $channel['channel_deny_gid']
+		); 
+
 
 		$x = array(
 			'is_owner' => true,
@@ -417,8 +436,7 @@ function network_content(&$a, $update = 0, $load = false) {
 			'default_location' => $channel['channel_location'],
 			'nickname' => $channel['channel_address'],
 			'lockstate' => (($group || $cid || $channel['channel_allow_cid'] || $channel['channel_allow_gid'] || $channel['channel_deny_cid'] || $channel['channel_deny_gid']) ? 'lock' : 'unlock'),
-// FIXME
-			'acl' => populate_acl((($group || $cid || $nets) ? $def_acl : $channel), $celeb),
+			'acl' => populate_acl((($group || $cid) ? $def_acl : $channel_acl)),
 			'bang' => (($group || $cid) ? '!' : ''),
 			'visitor' => 'block',
 			'profile_uid' => local_user()
@@ -443,18 +461,6 @@ function network_content(&$a, $update = 0, $load = false) {
 	$sql_extra = " AND `item`.`parent` IN ( SELECT `parent` FROM `item` WHERE (item_flags & " . intval(ITEM_THREAD_TOP) . ") $sql_options ) ";
 
 	if($group) {
-        $r = q("SELECT * FROM `group` WHERE id = %d AND uid = %d LIMIT 1",
-            intval($group),
-            intval(local_user())
-        );
-        if(! $r) {
-			if($update)
-				killme();
-			notice( t('No such group') . EOL );
-			goaway($a->get_baseurl(true) . '/network');
-			// NOTREACHED
-		}
-
 		$contact_str = '';
         $contacts = group_get_members($group);
         if($contacts) {
@@ -469,7 +475,7 @@ function network_content(&$a, $update = 0, $load = false) {
 			info( t('Group is empty'));
         }
 
-        $sql_extra = " AND item.parent IN ( SELECT DISTINCT parent FROM item WHERE true $sql_options AND (( author_xchan IN ( $contact_str ) OR owner_xchan in ( $contact_str)) or allow_gid like '" . protect_sprintf('%<' . dbesc($r[0]['hash']) . '>%') . "' ) and id = parent and item_restrict = 0 ) ";
+        $sql_extra = " AND item.parent IN ( SELECT DISTINCT parent FROM item WHERE true $sql_options AND (( author_xchan IN ( $contact_str ) OR owner_xchan in ( $contact_str )) or allow_gid like '" . protect_sprintf('%<' . dbesc($group_hash) . '>%') . "' ) and id = parent and item_restrict = 0 ) ";
 
     }
 

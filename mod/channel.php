@@ -131,6 +131,13 @@ function channel_content(&$a, $update = 0, $load = false) {
 
 		$o .= common_friends_visitor_widget($a->profile['profile_uid']);
 
+		$channel_acl = array(
+			'allow_cid' => $channel['channel_allow_cid'], 
+			'allow_gid' => $channel['channel_allow_gid'], 
+			'deny_cid' => $channel['channel_deny_cid'], 
+			'deny_gid' => $channel['channel_deny_gid']
+		); 
+
 
 		if($perms['post_wall']) {
 
@@ -140,7 +147,7 @@ function channel_content(&$a, $update = 0, $load = false) {
 	            'default_location' => (($is_owner) ? $a->profile['channel_location'] : ''),
     	        'nickname' => $a->profile['channel_address'],
         	    'lockstate' => (((strlen($a->profile['channel_allow_cid'])) || (strlen($a->profile['channel_allow_gid'])) || (strlen($a->profile['channel_deny_cid'])) || (strlen($a->profile['channel_deny_gid']))) ? 'lock' : 'unlock'),
-            	'acl' => (($is_owner) ? populate_acl($channel, false) : ''),
+            	'acl' => (($is_owner) ? populate_acl($channel_acl) : ''),
 				'showacl' => (($is_owner) ? 'yes' : ''),
 	            'bang' => '',
     	        'visitor' => (($is_owner || $observer) ? 'block' : 'none'),

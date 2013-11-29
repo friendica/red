@@ -4,7 +4,7 @@
 {{$nickname_block}}
 
 <form action="settings" id="settings-form" method="post" autocomplete="off" >
-<input type='hidden' name='form_security_token' value='{{$form_security_token}}'>
+<input type='hidden' name='form_security_token' value='{{$form_security_token}}' />
 
 <h3 class="settings-heading">{{$h_basic}}</h3>
 
@@ -73,7 +73,7 @@
 {{/if}}
 
 <div id="settings-default-perms" class="settings-default-perms" >
-	<a href="#profile-jot-acl-wrapper" id="settings-default-perms-menu" class='popupbox'>{{$permissions}} {{$permdesc}}</a>
+	<a href="#profile-jot-acl-wrapper" id="settings-default-perms-menu" >{{$permissions}} {{$permdesc}}</a>
 	<div id="settings-default-perms-menu-end"></div>
 
 	<div id="settings-default-perms-select" style="display: none; margin-bottom: 20px" >
