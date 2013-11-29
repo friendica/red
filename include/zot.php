@@ -4,6 +4,15 @@ require_once('include/crypto.php');
 require_once('include/items.php');
 
 /**
+ * Red implementation of zot protocol. 
+ *
+ * https://github.com/friendica/red/wiki/zot
+ * https://github.com/friendica/red/wiki/Zot---A-High-Level-Overview
+ *
+ */
+
+
+/**
  *
  * @function zot_new_uid($channel_nick)
  *

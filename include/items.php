@@ -1432,6 +1432,12 @@ function encode_rel_links($links) {
 
 function item_store($arr,$allow_exec = false) {
 
+	$d = array('item' => $arr, 'allow_exec' => $allow_exec);
+	call_hooks('item_store', $d );
+	$arr = $d['item'];
+	$allow_exec = $d['allow_exec'];
+
+
 	$ret = array('result' => false, 'item_id' => 0);
 
 	if(! $arr['uid']) {
@@ -1807,6 +1813,15 @@ function item_store($arr,$allow_exec = false) {
 
 
 function item_store_update($arr,$allow_exec = false) {
+
+
+
+	$d = array('item' => $arr, 'allow_exec' => $allow_exec);
+	call_hooks('item_store_update', $d );
+	$arr = $d['item'];
+	$allow_exec = $d['allow_exec'];
+
+
 
 	$ret = array('result' => false, 'item_id' => 0);
 	if(! intval($arr['uid'])) {
