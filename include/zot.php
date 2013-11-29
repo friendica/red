@@ -6,7 +6,15 @@ require_once('include/items.php');
 /**
  *
  * @function zot_new_uid($channel_nick)
- * @channel_id = unique nickname of controlling entity
+ *
+ *    Generates a unique string for use as a zot guid using our DNS-based url, the channel nickname and some entropy.
+ *    The entropy ensures uniqueness against re-installs where the same URL and nickname are chosen.
+ *    NOTE: zot doesn't require this to be unique. Internally we use a whirlpool hash of this guid and the signature
+ *    of this guid signed with the channel private key. This can be verified and should make the probability of 
+ *    collision of the verified result negligible within the constraints of our immediate universe.  
+ *
+ * @param string channel_nickname = unique nickname of controlling entity
+ *
  * @returns string
  *
  */
@@ -21,8 +29,25 @@ function zot_new_uid($channel_nick) {
  * @function zot_get_hublocs($hash)
  *     Given a zot hash, return all distinct hubs. 
  *     This function is used in building the zot discovery packet
+ *     and therefore should only be used by channels which are defined
+ *     on this hub
  * @param string $hash - xchan_hash
- * @retuns array
+ * @retuns array of hubloc (hub location structures)
+ *    hubloc_id          int
+ *    hubloc_guid        char(255)
+ *	  hubloc_guid_sig    text
+ *    hubloc_hash        char(255)
+ *    hubloc_addr        char(255)
+ *    hubloc_flags       int
+ *    hubloc_status      int
+ *    hubloc_url         char(255)
+ *    hubloc_url_sig     text
+ *	  hubloc_host        char(255)
+ *    hubloc_callback    char(255)
+ *    hubloc_connect     char(255)
+ *    hubloc_sitekey     text
+ *    hubloc_updated     datetime
+ *    hubloc_connected   datetime 	
  *
  */
 
@@ -37,12 +62,22 @@ function zot_get_hublocs($hash) {
 	return $ret;
 }
 	 
-/*
+/**
  *
- * zot_build_packet builds a notification packet that you can either
- * store in the queue with a message array or call zot_zot to immediately 
- * zot it to the other side
+ * @function zot_build_packet($channel,$type = 'notify',$recipients = null, $remote_key = null, $secret = null)
+ *    builds a zot notification packet that you can either
+ *    store in the queue with a message array or call zot_zot to immediately 
+ *    zot it to the other side
  *
+ * @param array $channel     => sender channel structure
+ * @param string $type       => one of 'ping', 'pickup', 'purge', 'refresh', 'notify', 'auth_check'
+ * @param array $recipients  => envelope information, array of string $xchan_hash; empty for public posts
+ * @param string $remote_key => optional public site key of target hub used to encrypt entire packet
+ *    NOTE: remote_key and encrypted packets are required for 'auth_check' packets, optional for all others 
+ * @param string $secret     => random string, required for packets which require verification/callback
+ *    e.g. 'pickup', 'purge', 'notify', 'auth_check' --- 'ping' and 'refresh' do not require verification 
+ *
+ * @returns string json encoded zot packet
  */
 
 function zot_build_packet($channel,$type = 'notify',$recipients = null, $remote_key = null, $secret = null) {
