@@ -259,6 +259,8 @@ function post_to_red_display_admin_page() {
 		
 		$password = $_REQUEST["post_to_red_password"];
 		$red_url = $_REQUEST["post_to_red_url"];
+		$channelname = $_REQUEST['post_to_red_channel'];
+
 		
 		update_option('post_to_red_acct_name', $_REQUEST["post_to_red_acct_name"]);
 		update_option('post_to_red_channel_name', $channelname);
