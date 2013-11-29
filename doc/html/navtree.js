@@ -42,8 +42,8 @@ var NAVTREEINDEX =
 "globals.html",
 "include_2network_8php.html#adf6008b38c555e98e7ed10da9ede2335",
 "permissions_8php.html",
-"socgraph_8php.html#a5ef8bef37161df53718a21e93d02fbd6",
-"zot_8php.html#a95528377d7303131958c9f0b7158fdce"
+"socgraph_8php.html#a16ac51c505d72987ed8d6d6aed0e8586",
+"zot_8php.html#a928f5643ca66ae9635d85aeb2be62e03"
 ];
 
 var SYNCONMSG = 'click to disable panel synchronisation';

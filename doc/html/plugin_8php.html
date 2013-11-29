@@ -128,6 +128,8 @@ Functions</h2></td></tr>
 <tr class="separator:a56f71fe5adf9586ce950523d8180443e"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a326365e48ef94f0b9a0a771b8d75e813"><td class="memItemLeft" align="right" valign="top">&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="plugin_8php.html#a326365e48ef94f0b9a0a771b8d75e813">load_hooks</a> ()</td></tr>
 <tr class="separator:a326365e48ef94f0b9a0a771b8d75e813"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:aeaebe63dcf6fa2794f363ba2bc0b2c6b"><td class="memItemLeft" align="right" valign="top">&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="plugin_8php.html#aeaebe63dcf6fa2794f363ba2bc0b2c6b">insert_hook</a> ($hook, $fn)</td></tr>
+<tr class="separator:aeaebe63dcf6fa2794f363ba2bc0b2c6b"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a7f05de16c0a32602853b09b99dd85e7c"><td class="memItemLeft" align="right" valign="top">&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="plugin_8php.html#a7f05de16c0a32602853b09b99dd85e7c">call_hooks</a> ($name, &amp;$data=null)</td></tr>
 <tr class="separator:a7f05de16c0a32602853b09b99dd85e7c"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:aff0178bd8d0b34a94d5efddc883edd35"><td class="memItemLeft" align="right" valign="top">&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="plugin_8php.html#aff0178bd8d0b34a94d5efddc883edd35">get_plugin_info</a> ($plugin)</td></tr>
@@ -417,6 +419,42 @@ Functions</h2></td></tr>
 </div><div class="memdoc">
 
 <p>Referenced by <a class="el" href="classApp.html#a08f0537964d98958d218066364cff785">App\build_pagehead()</a>.</p>
+
+</div>
+</div>
+<a class="anchor" id="aeaebe63dcf6fa2794f363ba2bc0b2c6b"></a>
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">insert_hook </td>
+          <td>(</td>
+          <td class="paramtype">&#160;</td>
+          <td class="paramname"><em>$hook</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">&#160;</td>
+          <td class="paramname"><em>$fn</em>&#160;</td>
+        </tr>
+        <tr>
+          <td></td>
+          <td>)</td>
+          <td></td><td></td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+<p>insert_hook($hook,$fn)</p>
+<p>Insert a short-lived hook into the running page request. Hooks are normally persistent so that they can be called across asynchronous processes such as delivery and poll processes.</p>
+<p>insert_hook lets you attach a hook callback immediately which will not persist beyond the life of this page request or the current process.</p>
+<dl class="params"><dt>Parameters</dt><dd>
+  <table class="params">
+    <tr><td class="paramtype">string</td><td class="paramname">$hook,;</td><td>name of hook to attach callback </td></tr>
+    <tr><td class="paramtype">string</td><td class="paramname">$fn,;</td><td>function name of callback handler </td></tr>
+  </table>
+  </dd>
+</dl>
 
 </div>
 </div>

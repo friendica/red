@@ -19,6 +19,7 @@ var searchData=
   ['import_5fxchan',['import_xchan',['../zot_8php.html#a56f3f65514e4e7f0cd117d01735aebd1',1,'zot.php']]],
   ['in_5farrayi',['in_arrayi',['../text_8php.html#a75c326298519ed14ebe762194c8a3f2a',1,'text.php']]],
   ['info',['info',['../boot_8php.html#adfb2fc7be5a4226c0a8e24131da9d498',1,'boot.php']]],
+  ['insert_5fhook',['insert_hook',['../plugin_8php.html#aeaebe63dcf6fa2794f363ba2bc0b2c6b',1,'plugin.php']]],
   ['install',['install',['../classdba__driver.html#a4ccb27243e62a8ca30dd8e1b8cc67746',1,'dba_driver']]],
   ['install_5fplugin',['install_plugin',['../plugin_8php.html#a482131013272a1d5d5c1b1469c6c55d5',1,'plugin.php']]],
   ['intro_2ephp',['intro.php',['../intro_8php.html',1,'']]],
