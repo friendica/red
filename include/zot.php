@@ -79,8 +79,8 @@ function zot_get_hublocs($hash) {
  *    zot it to the other side
  *
  * @param array $channel     => sender channel structure
- * @param string $type       => one of 'ping', 'pickup', 'purge', 'refresh', 'notify', 'auth_check'
- * @param array $recipients  => envelope information, array of string $xchan_hash; empty for public posts
+ * @param string $type       => packet type: one of 'ping', 'pickup', 'purge', 'refresh', 'notify', 'auth_check'
+ * @param array $recipients  => envelope information, array ( 'guid' => string, 'guid_sig' => string ); empty for public posts
  * @param string $remote_key => optional public site key of target hub used to encrypt entire packet
  *    NOTE: remote_key and encrypted packets are required for 'auth_check' packets, optional for all others 
  * @param string $secret     => random string, required for packets which require verification/callback
@@ -228,12 +228,27 @@ function zot_finger($webbie,$channel,$autofallback = true) {
 }
 
 /**
- * @function: zot_refresh
+ * @function: zot_refresh($them, $channel = null)
  *
- * zot_refresh is typically invoked when somebody has changed permissions of a channel and they are notified
- * to fetch new permissions via a finger operation. This may result in a new connection (abook entry) being added to a local channel
- * and it may result in auto-permissions being granted. 
+ *   zot_refresh is typically invoked when somebody has changed permissions of a channel and they are notified
+ *   to fetch new permissions via a finger/discovery operation. This may result in a new connection 
+ *   (abook entry) being added to a local channel and it may result in auto-permissions being granted. 
+ * 
+ *   Friending in zot is accomplished by sending a refresh packet to a specific channel which indicates a
+ *   permission change has been made by the sender which affects the target channel. The hub controlling
+ *   the target channel does targetted discovery (a zot-finger request requesting permissions for the local
+ *   channel). These are decoded here, and if necessary and abook structure (addressbook) is created to store
+ *   the permissions assigned to this channel. 
+ *   
+ *   Initially these abook structures are created with a 'pending' flag, so that no reverse permissions are 
+ *   implied until this is approved by the owner channel. A channel can also auto-populate permissions in 
+ *   return and send back a refresh packet of its own. This is used by forum and group communication channels
+ *   so that friending and membership in the channel's "club" is automatic. 
+ * 
+ * @param array $them => xchan structure of sender
+ * @param array $channel => local channel structure of target recipient, required for "friending" operations
  *
+ * @returns boolean true if successful, else false 
  */
 
 function zot_refresh($them,$channel = null) {
