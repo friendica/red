@@ -53,7 +53,8 @@ function zfinger_init(&$a) {
 	}
 	elseif(strlen($zaddr)) {
 		$r = q("select channel.*, xchan.* from channel left join xchan on channel_hash = xchan_hash
-			where channel_address = '%s' limit 1",
+			where ( channel_address = '%s' or xchan_addr = '%s' ) limit 1",
+			dbesc($zaddr),
 			dbesc($zaddr)
 		);
 	}
