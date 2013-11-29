@@ -181,12 +181,14 @@ function unregister_hook($hook,$file,$function) {
 //
 // It might not be obvious but themes can manually add hooks to the $a->hooks
 // array in their theme_init() and use this to customise the app behaviour.  
+// UPDATE: use insert_hook($hookname,$function_name) to do this
 //
 
 
 function load_hooks() {
 	$a = get_app();
-	$a->hooks = array();
+	if(! is_array($a->hooks))
+		$a->hooks = array();
 	$r = q("SELECT * FROM hook WHERE true ORDER BY priority DESC");
 	if($r) {
 		foreach($r as $rr) {
@@ -197,6 +199,36 @@ function load_hooks() {
 	}
 }
 
+/**
+ *
+ * @function insert_hook($hook,$fn)
+ *
+ * Insert a short-lived hook into the running page request. 
+ * Hooks are normally persistent so that they can be called 
+ * across asynchronous processes such as delivery and poll
+ * processes.
+ *
+ * insert_hook lets you attach a hook callback immediately
+ * which will not persist beyond the life of this page request
+ * or the current process. 
+ *
+ * @param string $hook;
+ *     name of hook to attach callback
+ * @param string $fn;
+ *     function name of callback handler
+ *
+ */ 
+
+function insert_hook($hook,$fn) {
+	$a = get_app();
+	if(! is_array($a->hooks))
+		$a->hooks = array();
+	if(! array_key_exists($hook,$a->hooks))
+		$a->hooks[$hook] = array();
+	$a->hooks[$hook][] = array('',$fn);
+}
+	
+
 
 
 function call_hooks($name, &$data = null) {
@@ -204,7 +236,8 @@ function call_hooks($name, &$data = null) {
 
 	if((is_array($a->hooks)) && (array_key_exists($name,$a->hooks))) {
 		foreach($a->hooks[$name] as $hook) {
-			@include_once($hook[0]);
+			if($hook[0])
+				@include_once($hook[0]);
 			if(function_exists($hook[1])) {
 				$func = $hook[1];
 				$func($a,$data);

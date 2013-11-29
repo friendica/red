@@ -201,16 +201,19 @@ EOT;
 	if($banner === false) 
 		$banner = 'red';
 
+	$x = array('nav' => $nav, 'usermenu' => $userinfo );
+	call_hooks('nav', $x);
+
 	$tpl = get_markup_template('nav.tpl');
 
 	$a->page['nav'] .= replace_macros($tpl, array(
         '$baseurl' => $a->get_baseurl(),
 		'$langselector' => ((get_config('system','select_language')) ? lang_selector() : ''),
 		'$sitelocation' => $sitelocation,
-		'$nav' => $nav,
+		'$nav' => $x['nav'],
 		'$banner' =>  $banner,
 		'$emptynotifications' => t('Nothing new here'),
-		'$userinfo' => $userinfo,
+		'$userinfo' => $x['usermenu'],
 		'$localuser' => local_user(),
 		'$sel' => 	$a->nav_sel,
 		'$apps' => $a->get_apps(),

@@ -2459,6 +2459,8 @@ function construct_page(&$a) {
  	 * Build the page - now that we have all the components
  	 */
 
+	require_once(theme_include('theme_init.php'));
+
 	$installing = false;
 
 	if($a->module == 'setup')
@@ -2473,7 +2475,6 @@ function construct_page(&$a) {
 		}
 	}
 
-	require_once(theme_include('theme_init.php'));
 
 	if(($p = theme_include(current_theme() . '.js')) != '')
 		head_add_js($p);
