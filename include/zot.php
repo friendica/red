@@ -353,7 +353,17 @@ function zot_refresh($them,$channel = null) {
  * @function: zot_gethub
  *
  * A guid and a url, both signed by the sender, distinguish a known sender at a known location
- * This function looks these up to see if the channel is known. If not, we will need to verify it.
+ * This function looks these up to see if the channel is known and therefore previously verified. 
+ * If not, we will need to verify it.
+ *
+ * @param array $arr
+ *    $arr must contain: 
+ *       string $arr['guid'] => guid of conversant
+ *       string $arr['guid_sig'] => guid signed with conversant's private key
+ *       string $arr['url'] => URL of the origination hub of this communication
+ *       string $arr['url_sig'] => URL signed with conversant's private key
+ *  
+ *
  * @returns: array => hubloc record
  */
 
@@ -380,6 +390,27 @@ function zot_gethub($arr) {
 	return null;
 }
 
+/**
+ * @function zot_register_hub($arr)
+ *
+ *   A communication has been received which has an unknown (to us) sender. 
+ *   Perform discovery based on our calculated hash of the sender at the origination address.
+ *   This will fetch the discovery packet of the sender, which contains the public key we 
+ *   need to verify our guid and url signatures.
+ *
+ * @param array $arr
+ *    $arr must contain: 
+ *       string $arr['guid'] => guid of conversant
+ *       string $arr['guid_sig'] => guid signed with conversant's private key
+ *       string $arr['url'] => URL of the origination hub of this communication
+ *       string $arr['url_sig'] => URL signed with conversant's private key
+ *  
+ *
+ * @returns array => 'success' (boolean true or false)
+ *                   'message' (optional error string only if success is false)
+ */
+
+
 function zot_register_hub($arr) {
 
 	$result = array('success' => false);
@@ -398,19 +429,43 @@ function zot_register_hub($arr) {
 
 		if($x['success']) {
 			$record = json_decode($x['body'],true);
-			$c = import_xchan($record);
-			if($c['success'])
-				$result['success'] = true;			
+
+			/* 
+			 * We now have a key - only continue registration if our signatures are valid 
+			 * AND the guid and guid sig in the returned packet match those provided in
+			 * our current communication.
+			 */
+
+			if((rsa_verify($arr['guid'],base64url_decode($arr['guid_sig']),$record['key']))
+				&& (rsa_verify($arr['url'],base64url_decode($arr['url_sig']),$record['key']))
+				&& ($arr['guid'] === $record['guid'])
+				&& ($arr['guid_sig'] === $record['guid_sig'])) {
+
+				$c = import_xchan($record);
+				if($c['success'])
+					$result['success'] = true;
+			}
+			else {
+				logger('zot_register_hub: failure to verify returned packet.');
+			}			
 		}
 	}
 	return $result;
 }
 
 
-
-// Takes a json associative array from zot_finger and imports the xchan and hublocs
-// If the xchan already exists, update the name and photo if these have changed.
-// 
+/**
+ * @function import_xchan($arr,$ud_flags = 1)
+ *   Takes an associative array of a fecthed discovery packet and updates
+ *   all internal data structures which need to be updated as a result.
+ * 
+ * @param array $arr => json_decoded discovery packet
+ * @param int $ud_flags
+ *    Determines whether to create a directory update record if any changes occur, default 1 or true
+ *
+ * @returns array =>  'success' (boolean true or false)
+ *                    'message' (optional error string only if success is false)
+ */
 
 function import_xchan($arr,$ud_flags = 1) {
 
@@ -435,7 +490,6 @@ function import_xchan($arr,$ud_flags = 1) {
 		$ret['message'] = t('Unable to verify channel signature');
 		return $ret;
 	}
-
 
 	logger('import_xchan: ' . $xchan_hash, LOGGER_DEBUG);
 
@@ -753,6 +807,20 @@ function import_xchan($arr,$ud_flags = 1) {
 	return $ret;
 }
 
+/**
+ * @function zot_process_response($hub,$arr,$outq) {
+ *    Called immediately after sending a zot message which is using queue processing
+ *    Updates the queue item according to the response result and logs any information
+ *    returned to aid communications troubleshooting.
+ *
+ * @param string $hub - url of site we just contacted
+ * @param array $arr - output of z_post_url()
+ * @param array $outq - The queue structure attached to this request
+ *
+ * @returns nothing
+ */
+
+
 function zot_process_response($hub,$arr,$outq) {
 
 	if(! $arr['success']) {
@@ -788,14 +856,16 @@ function zot_process_response($hub,$arr,$outq) {
 }
 
 /**
- * @function: zot_fetch
+ * @function zot_fetch($arr)
  *
- * We received a notification packet (in mod/post.php) that a message is waiting for us, and we've verified the sender.
- * Now send back a pickup message, using our message tracking ID ($arr['secret']), which we will sign.
- * The entire pickup message is encrypted with the remote site's public key. 
- * If everything checks out on the remote end, we will receive back a packet containing one or more messages,
- * which will be processed before returning.
- * 
+ *     We received a notification packet (in mod/post.php) that a message is waiting for us, and we've verified the sender.
+ *     Now send back a pickup message, using our message tracking ID ($arr['secret']), which we will sign with our site private key.
+ *     The entire pickup message is encrypted with the remote site's public key. 
+ *     If everything checks out on the remote end, we will receive back a packet containing one or more messages,
+ *     which will be processed and delivered before this function ultimately returns.
+ *   
+ * @param array $arr
+ *     decrypted and json decoded notify packet from remote site
  */
  
 
@@ -833,7 +903,16 @@ function zot_fetch($arr) {
  * Process an incoming array of messages which were obtained via pickup, and 
  * import, update, delete as directed.
  * 
- * The message types handled here are 'activity' (e.g. posts), 'mail' and 'profile'
+ * @param array $arr => 'pickup' structure returned from remote site
+ * @param string $sender_url => the url specified by the sender in the initial communication
+ *       we will verify the sender and url in each returned message structure and also verify
+ *       that all the messages returned match the site url that we are currently processing.
+ * 
+ * The message types handled here are 'activity' (e.g. posts), 'mail' , 'profile', and 'channel_sync'
+ * 
+ * @returns array => array ( [0] => string $channel_hash, [1] => string $delivery_status, [2] => string $address )
+ *    suitable for logging remotely, enumerating the processing results of each message/recipient combination.
+ * 
  */
 
 function zot_import($arr, $sender_url) {
