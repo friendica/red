@@ -1,7 +1,8 @@
 var searchData=
 [
   ['randprof_2ephp',['randprof.php',['../randprof_8php.html',1,'']]],
-  ['readme_2emd',['README.md',['../README_8md.html',1,'']]],
+  ['readme_2emd',['README.md',['../apw_2README_8md.html',1,'']]],
+  ['readme_2emd',['README.md',['../blogga_2php_2README_8md.html',1,'']]],
   ['redbasic_2ephp',['redbasic.php',['../redbasic_8php.html',1,'']]],
   ['reddav_2ephp',['reddav.php',['../reddav_8php.html',1,'']]],
   ['redir_2ephp',['redir.php',['../redir_8php.html',1,'']]],

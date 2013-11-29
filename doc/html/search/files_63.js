@@ -1,8 +1,8 @@
 var searchData=
 [
   ['cache_2ephp',['cache.php',['../cache_8php.html',1,'']]],
-  ['chanman_2ephp',['chanman.php',['../include_2chanman_8php.html',1,'']]],
   ['chanman_2ephp',['chanman.php',['../mod_2chanman_8php.html',1,'']]],
+  ['chanman_2ephp',['chanman.php',['../include_2chanman_8php.html',1,'']]],
   ['channel_2ephp',['channel.php',['../channel_8php.html',1,'']]],
   ['chanview_2ephp',['chanview.php',['../chanview_8php.html',1,'']]],
   ['cli_5fstartup_2ephp',['cli_startup.php',['../cli__startup_8php.html',1,'']]],
@@ -12,9 +12,11 @@ var searchData=
   ['common_2ephp',['common.php',['../common_8php.html',1,'']]],
   ['community_2ephp',['community.php',['../community_8php.html',1,'']]],
   ['config_2emd',['config.md',['../config_8md.html',1,'']]],
+  ['config_2ephp',['config.php',['../view_2theme_2blogga_2view_2theme_2blog_2config_8php.html',1,'']]],
+  ['config_2ephp',['config.php',['../view_2theme_2redbasic_2php_2config_8php.html',1,'']]],
   ['config_2ephp',['config.php',['../include_2config_8php.html',1,'']]],
   ['config_2ephp',['config.php',['../view_2theme_2apw_2php_2config_8php.html',1,'']]],
-  ['config_2ephp',['config.php',['../view_2theme_2redbasic_2php_2config_8php.html',1,'']]],
+  ['config_2ephp',['config.php',['../view_2theme_2blogga_2php_2config_8php.html',1,'']]],
   ['connect_2ephp',['connect.php',['../connect_8php.html',1,'']]],
   ['connections_2ephp',['connections.php',['../connections_8php.html',1,'']]],
   ['contact_2ephp',['Contact.php',['../Contact_8php.html',1,'']]],

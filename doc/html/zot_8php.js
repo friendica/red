@@ -19,7 +19,7 @@ var zot_8php =
     [ "zot_build_packet", "zot_8php.html#a3862b3161b2c8557dc1a95020179bd81", null ],
     [ "zot_fetch", "zot_8php.html#a61cdc1ec843663c423ed2d8160ae5aea", null ],
     [ "zot_finger", "zot_8php.html#a95528377d7303131958c9f0b7158fdce", null ],
-    [ "zot_get_hubloc", "zot_8php.html#acdea9362d78a63dce948fdf0ea73ef0e", null ],
+    [ "zot_get_hublocs", "zot_8php.html#ae7cec2b417b5858fd4a41070f843d1d7", null ],
     [ "zot_gethub", "zot_8php.html#a55056e863a7860bc0cf922e78fcce073", null ],
     [ "zot_import", "zot_8php.html#aeea071f17e306fe3d0c488551906bfab", null ],
     [ "zot_new_uid", "zot_8php.html#ab22d67660702056bf3f4696dcebf5ce7", null ],

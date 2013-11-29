@@ -18,7 +18,7 @@ var searchData=
   ['zot_5ffeed',['zot_feed',['../items_8php.html#a004e89d86b0f29b2c4da20108ecc4091',1,'items.php']]],
   ['zot_5ffetch',['zot_fetch',['../zot_8php.html#a61cdc1ec843663c423ed2d8160ae5aea',1,'zot.php']]],
   ['zot_5ffinger',['zot_finger',['../zot_8php.html#a95528377d7303131958c9f0b7158fdce',1,'zot.php']]],
-  ['zot_5fget_5fhubloc',['zot_get_hubloc',['../zot_8php.html#acdea9362d78a63dce948fdf0ea73ef0e',1,'zot.php']]],
+  ['zot_5fget_5fhublocs',['zot_get_hublocs',['../zot_8php.html#ae7cec2b417b5858fd4a41070f843d1d7',1,'zot.php']]],
   ['zot_5fgethub',['zot_gethub',['../zot_8php.html#a55056e863a7860bc0cf922e78fcce073',1,'zot.php']]],
   ['zot_5fimport',['zot_import',['../zot_8php.html#aeea071f17e306fe3d0c488551906bfab',1,'zot.php']]],
   ['zot_5fnew_5fuid',['zot_new_uid',['../zot_8php.html#ab22d67660702056bf3f4696dcebf5ce7',1,'zot.php']]],

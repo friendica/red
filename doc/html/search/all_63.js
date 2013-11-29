@@ -85,6 +85,8 @@ var searchData=
   ['completeurl',['completeurl',['../parse__url_8php.html#a496f4e3836154f6f32b8e805a7160d3a',1,'parse_url.php']]],
   ['config_2emd',['config.md',['../config_8md.html',1,'']]],
   ['config_2ephp',['config.php',['../view_2theme_2apw_2php_2config_8php.html',1,'']]],
+  ['config_2ephp',['config.php',['../view_2theme_2blogga_2php_2config_8php.html',1,'']]],
+  ['config_2ephp',['config.php',['../view_2theme_2blogga_2view_2theme_2blog_2config_8php.html',1,'']]],
   ['config_2ephp',['config.php',['../view_2theme_2redbasic_2php_2config_8php.html',1,'']]],
   ['config_2ephp',['config.php',['../include_2config_8php.html',1,'']]],
   ['connect',['connect',['../classdba__driver.html#ae533e62a240a793f17aef5ab4ef10edc',1,'dba_driver\connect()'],['../classdba__mysql.html#a1887338627ce0e28786839363014bd0b',1,'dba_mysql\connect()'],['../classdba__mysqli.html#add062bd93961e5f0194d94820e9a51b1',1,'dba_mysqli\connect()']]],
