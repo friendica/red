@@ -187,7 +187,7 @@ function unregister_hook($hook,$file,$function) {
 
 function load_hooks() {
 	$a = get_app();
-	if(! is_array($a->hooks))
+//	if(! is_array($a->hooks))
 		$a->hooks = array();
 	$r = q("SELECT * FROM hook WHERE true ORDER BY priority DESC");
 	if($r) {
@@ -197,6 +197,8 @@ function load_hooks() {
 			$a->hooks[$rr['hook']][] = array($rr['file'],$rr['function']);
 		}
 	}
+logger('hooks: ' . print_r($a->hooks,true));
+
 }
 
 /**
