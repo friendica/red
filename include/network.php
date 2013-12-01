@@ -65,7 +65,7 @@ function fetch_url($url,$binary = false, &$redirects = 0, $timeout = 0, $accept_
 	if($binary)
 		@curl_setopt($ch, CURLOPT_BINARYTRANSFER,1);
 
-	$a->set_curl_code(0);
+//	$a->set_curl_code(0);
 
 	// don't let curl abort the entire application
 	// if it throws any errors.
@@ -101,10 +101,10 @@ function fetch_url($url,$binary = false, &$redirects = 0, $timeout = 0, $accept_
 		}
 	}
 
-	$a->set_curl_code($http_code);
+//	$a->set_curl_code($http_code);
 
 	$body = substr($s,strlen($header));
-	$a->set_curl_headers($header);
+//	$a->set_curl_headers($header);
 	@curl_close($ch);
 	return($body);
 }
@@ -156,7 +156,7 @@ function post_url($url,$params, $headers = null, &$redirects = 0, $timeout = 0) 
 			curl_setopt($ch, CURLOPT_PROXYUSERPWD, $prxusr);
 	}
 
-	$a->set_curl_code(0);
+//	$a->set_curl_code(0);
 
 	// don't let curl abort the entire application
 	// if it throws any errors.
@@ -195,10 +195,10 @@ function post_url($url,$params, $headers = null, &$redirects = 0, $timeout = 0) 
 			}
 		}
 	}
-	$a->set_curl_code($http_code);
+//	$a->set_curl_code($http_code);
 	$body = substr($s,strlen($header));
 
-	$a->set_curl_headers($header);
+//	$a->set_curl_headers($header);
 
 	curl_close($ch);
 	return($body);
@@ -586,175 +586,6 @@ function webfinger($s, $debug = false) {
 }
 
 
-function lrdd($uri, $debug = false) {
-
-	$a = get_app();
-
-	// default priority is host priority, host-meta first
-
-	$priority = 'host';
-
-	// All we have is an email address. Resource-priority is irrelevant
-	// because our URI isn't directly resolvable.
-
-	if(strstr($uri,'@')) {	
-		return(webfinger($uri));
-	}
-
-	// get the host meta file
-
-	$host = @parse_url($uri);
-
-	if($host) {
-		$url  = ((x($host,'scheme')) ? $host['scheme'] : 'http') . '://';
-		$url .= $host['host'] . '/.well-known/host-meta' ;
-	}
-	else
-		return array();
-
-	logger('lrdd: constructed url: ' . $url);
-
-	$xml = fetch_url($url);
-	$headers = $a->get_curl_headers();
-
-	if (! $xml)
-		return array();
-
-	logger('lrdd: host_meta: ' . $xml, LOGGER_DATA);
-
-	if(! stristr($xml,'<xrd'))
-		return array();
-
-	$h = parse_xml_string($xml);
-	if(! $h)
-		return array();
-
-	$arr = convert_xml_element_to_array($h);
-
-	if(isset($arr['xrd']['property'])) {
-		$property = $arr['crd']['property'];
-		if(! isset($property[0]))
-			$properties = array($property);
-		else
-			$properties = $property;
-		foreach($properties as $prop)
-			if((string) $prop['@attributes'] === 'http://lrdd.net/priority/resource')
-				$priority = 'resource';
-	} 
-
-	// save the links in case we need them
-
-	$links = array();
-
-	if(isset($arr['xrd']['link'])) {
-		$link = $arr['xrd']['link'];
-		if(! isset($link[0]))
-			$links = array($link);
-		else
-			$links = $link;
-	}
-
-	// do we have a template or href?
-
-	if(count($links)) {
-		foreach($links as $link) {
-			if($link['@attributes']['rel'] && attribute_contains($link['@attributes']['rel'],'lrdd')) {
-				if(x($link['@attributes'],'template'))
-					$tpl = $link['@attributes']['template'];
-				elseif(x($link['@attributes'],'href'))
-					$href = $link['@attributes']['href'];
-			}
-		}		
-	}
-
-	if((! isset($tpl)) || (! strpos($tpl,'{uri}')))
-		$tpl = '';
-
-	if($priority === 'host') {
-		if(strlen($tpl)) 
-			$pxrd = str_replace('{uri}', urlencode($uri), $tpl);
-		elseif(isset($href))
-			$pxrd = $href;
-		if(isset($pxrd)) {
-			logger('lrdd: (host priority) pxrd: ' . $pxrd);
-			$links = fetch_xrd_links($pxrd);
-			return $links;
-		}
-
-		$lines = explode("\n",$headers);
-		if(count($lines)) {
-			foreach($lines as $line) {				
-				if((stristr($line,'link:')) && preg_match('/<([^>].*)>.*rel\=[\'\"]lrdd[\'\"]/',$line,$matches)) {
-					return(fetch_xrd_links($matches[1]));
-					break;
-				}
-			}
-		}
-	}
-
-
-	// priority 'resource'
-
-
-	$html = fetch_url($uri);
-	$headers = $a->get_curl_headers();
-	logger('lrdd: headers=' . $headers, LOGGER_DEBUG);
-
-	// don't try and parse raw xml as html
-	if(! strstr($html,'<?xml')) {
-		require_once('library/HTML5/Parser.php');
-
-		try {
-			$dom = HTML5_Parser::parse($html);
-		} catch (DOMException $e) {
-			logger('lrdd: parse error: ' . $e);
-		}
-
-		if(isset($dom) && $dom) {
-			$items = $dom->getElementsByTagName('link');
-			foreach($items as $item) {
-				$x = $item->getAttribute('rel');
-				if($x == "lrdd") {
-					$pagelink = $item->getAttribute('href');
-					break;
-				}
-			}
-		}
-	}
-
-	if(isset($pagelink))
-		return(fetch_xrd_links($pagelink));
-
-	// next look in HTTP headers
-
-	$lines = explode("\n",$headers);
-	if(count($lines)) {
-		foreach($lines as $line) {				
-			// TODO alter the following regex to support multiple relations (space separated)
-			if((stristr($line,'link:')) && preg_match('/<([^>].*)>.*rel\=[\'\"]lrdd[\'\"]/',$line,$matches)) {
-				$pagelink = $matches[1];
-				break;
-			}
-			// don't try and run feeds through the html5 parser
-			if(stristr($line,'content-type:') && ((stristr($line,'application/atom+xml')) || (stristr($line,'application/rss+xml'))))
-				return array();
-			if(stristr($html,'<rss') || stristr($html,'<feed'))
-				return array();
-		}
-	}
-
-	if(isset($pagelink))
-		return(fetch_xrd_links($pagelink));
-
-	// If we haven't found any links, return the host xrd links (which we have already fetched)
-
-	if(isset($links))
-		return $links;
-
-	return array();
-
-}
-
 
 
 // Given a host name, locate the LRDD template from that
@@ -1085,19 +916,20 @@ function scale_external_images($s, $include_link = true, $scale_replace = false)
 				$scaled = str_replace($scale_replace[0], $scale_replace[1], $mtch[2]);
 			else
 				$scaled = $mtch[2];
-			$i = fetch_url($scaled);
+			$i = z_fetch_url($scaled);
+
 
 			$cache = get_config('system','itemcache');
 			if (($cache != '') and is_dir($cache)) {
 				$cachefile = $cache."/".hash("md5", $scaled);
-				file_put_contents($cachefile, $i);
+				file_put_contents($cachefile, $i['body']);
 			}
 
 			// guess mimetype from headers or filename
-			$type = guess_image_type($mtch[2],true);
+			$type = guess_image_type($mtch[2],$i['header']);
 			
-			if($i) {
-				$ph = photo_factory($i, $type);
+			if($i['success']) {
+				$ph = photo_factory($i['body'], $type);
 				if($ph->is_valid()) {
 					$orig_width = $ph->getWidth();
 					$orig_height = $ph->getHeight();

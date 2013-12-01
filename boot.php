@@ -989,26 +989,6 @@ class App {
 		)) . $this->page['htmlhead'];
 	}
 
-	// The following curl functions will go away once we've converted
-	// all instances of (fetch|post)_url() to z_(fetch|post)_url()
-
-	function set_curl_code($code) {
-		$this->curl_code = $code;
-	}
-
-	function get_curl_code() {
-		return $this->curl_code;
-	}
-
-	function set_curl_headers($headers) {
-		$this->curl_headers = $headers;
-	}
-
-	function get_curl_headers() {
-		return $this->curl_headers;
-	}
-
-	
 	/**
 	* register template engine class
 	* if $name is "", is used class static property $class::$name
