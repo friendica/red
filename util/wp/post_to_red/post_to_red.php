@@ -69,6 +69,7 @@ function post_to_red_post($post_id) {
 		$password = post_to_red_get_password();
 		$seed_location = post_to_red_get_seed_location();
 		$channel = post_to_red_get_channel_name();
+		$backlink = get_option('post_to_red_backlink');
 		
 		if ((isset($user_name)) && (isset($password)) && (isset($seed_location))) {
 			// remove potential comments
@@ -88,7 +89,23 @@ function post_to_red_post($post_id) {
 				$message .=  "<br />$tag_string";	
 			}
 
+			$cats = '';
+
+			$terms = get_the_terms($post_id,'category');
+			if($terms) {
+				foreach($terms as $term) {
+					if(strlen($cats))
+						$cats .= ',';
+					$cats .= $term->name;
+				}
+			}
+
+
+
 			$bbcode = xpost_to_html2bbcode($message);
+
+			if($backlink)
+				$bbcode .= "\n\n" . _('Source:') . ' ' . '[url]' . get_permalink($post_id) . '[/url]';
 			
 			$url = $seed_location . '/api/statuses/update';
 			
@@ -103,7 +120,9 @@ function post_to_red_post($post_id) {
 			);
 			if($channel)
 				$body['channel'] = $channel;
-			
+			if($cats)
+				$body['category'] = $cats;
+
 			// post:
 			$request = new WP_Http;
 			$result = $request->request($url , array( 'method' => 'POST', 'body' => $body, 'headers' => $headers));
@@ -188,7 +207,8 @@ function post_to_red_displayAdminContent() {
 	$password = post_to_red_get_password();
 	$user_acct = post_to_red_get_acct_name();
 	$channel = post_to_red_get_channel_name();
-	
+	$backlink = get_option('post_to_red_backlink');
+	$backlink_checked = ((intval($backlink)) ? ' checked="checked" ' : '');
 	// debug...
 	// echo "seed location: $seed_url</br>";
 	// echo "password: $password</br>";
@@ -204,10 +224,11 @@ function post_to_red_displayAdminContent() {
 		<h2>Configuration</h2>
 		<form method="post" action="{$_SERVER["REQUEST_URI"]}">
 			Enter the login details of your Red Matrix account<br /><br />
-			<input type="text" name="post_to_red_acct_name" value="{$user_acct}"/> &nbsp;
-			Password: <input type="password" name="post_to_red_password" value="{$password}"/> &nbsp;
-			Red Matrix URL: <input type="text" name="post_to_red_url" value="{$seed_url}"/> &nbsp;
-			Optional channel nickname: <input type="text" name="post_to_red_channel" value="{$channel}"/> &nbsp;
+			Login (email): <input type="text" name="post_to_red_acct_name" value="{$user_acct}"/><br />
+			Password: <input type="password" name="post_to_red_password" value="{$password}"/><br />
+			Red Matrix URL: <input type="text" name="post_to_red_url" value="{$seed_url}"/><br />
+			Optional channel nickname: <input type="text" name="post_to_red_channel" value="{$channel}"/><br />
+			Add permalink to posts? <input type="checkbox" name="post_to_red_backlink" value="1" {$backlink_checked} /><br />
 			<input type="submit" value="Save" name="submit" />
 		</form>
 		<p></p>
@@ -266,7 +287,7 @@ function post_to_red_display_admin_page() {
 		update_option('post_to_red_channel_name', $channelname);
 		update_option('post_to_red_seed_location', $red_url);
 		update_option('post_to_red_password', $password);
-		
+		update_option('post_to_red_backlink', $_REQUEST['post_to_red_backlink']);		
 	}
 	
 	post_to_red_displayAdminContent();
