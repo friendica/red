@@ -197,7 +197,7 @@ function load_hooks() {
 			$a->hooks[$rr['hook']][] = array($rr['file'],$rr['function']);
 		}
 	}
-logger('hooks: ' . print_r($a->hooks,true));
+//logger('hooks: ' . print_r($a->hooks,true));
 
 }
 
