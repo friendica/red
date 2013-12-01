@@ -44,7 +44,8 @@ function oembed_fetch_url($embedurl){
 					$entries = $xpath->query("//link[@type='application/json+oembed']");
 					foreach($entries as $e){
 						$href = $e->getAttributeNode("href")->nodeValue;
-						$txt = fetch_url($href . '&maxwidth=' . $a->videowidth);
+						$x = z_fetch_url($href . '&maxwidth=' . $a->videowidth);
+						$txt = $x['body'];
 						break;
 					}
 				}
