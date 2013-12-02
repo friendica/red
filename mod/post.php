@@ -14,6 +14,72 @@ function post_init(&$a) {
 	// Here we will pick out the magic auth params which arrive
 	// as a get request, and the only communications to arrive this way.
 
+/**
+ * Magic Auth
+ * ==========
+ *
+ * So-called "magic auth" takes place by a special exchange. On the remote computer, a redirection is made to the zot endpoint with special GET parameters.
+ *
+ * Endpoint: https://example.com/post/name (name is now optional - we are authenticating to a site, not a channel)
+ *
+ * where 'name' is the left hand side of the channel webbie, for instance 'mike' where the webbie is 'mike@zothub.com'
+ *
+ * Additionally four GET parameters are supplied:
+ *
+ ** auth => the webbie of the person requesting access
+ ** dest => the desired destination URL (urlencoded)
+ ** sec  => a random string which is also stored locally for use during the verification phase. 
+ ** version => the zot revision
+ *
+ * When this packet is received, a zot message is sent to the site hosting the request auth identity.
+ * (e.g. if $_GET['auth'] is foobar@podunk.edu, a zot packet is sent to the podunk.edu zot endpoint, which is typically /post)
+ * If no information has been recorded about the requesting identity a zot information packet will be retrieved before
+ * continuing.
+ * 
+ * The sender of this packet is the name attached to the request endpoint. e.g. 'mike' in this example. If this channel
+ * cannot be located, we will choose any local channel as the sender. The recipients will be a single recipient corresponding
+ * to the guid and guid_sig we have associated with the auth identity
+ *
+ *
+ *    {
+ *      "type":"auth_check",
+ *      "sender":{
+ *        "guid":"kgVFf_...",
+ *        "guid_sig":"PT9-TApz...",
+ *        "url":"http:\/\/podunk.edu",
+ *        "url_sig":"T8Bp7j..."
+ *      },
+ *      "recipients":{
+ *        {
+ *        "guid":"ZHSqb...",
+ *        "guid_sig":"JsAAXi..."
+ *        }
+ *      }
+ *      "callback":"\/post",
+ *      "version":1,
+ *      "secret":"1eaa661",
+ *      "secret_sig":"eKV968b1..."
+ *    }
+ *
+ *
+ * auth_check messages MUST use encapsulated encryption. This message is sent to the origination site, which checks the 'secret' to see 
+ * if it is the same as the 'sec' which it passed originally. It also checks the secret_sig which is the secret signed by the 
+ * destination channel's private key and base64url encoded. If everything checks out, a json packet is returned:
+ *
+ *    { 
+ *      "success":1, 
+ *      "confirm":"q0Ysovd1u..."
+ *    }
+ *
+ * 'confirm' in this case is the base64url encoded RSA signature of the concatenation of 'secret' with the
+ * base64url encoded whirlpool hash of the source guid and guid_sig; signed with the source channel private key. 
+ * This prevents a man-in-the-middle from inserting a rogue success packet. Upon receipt and successful 
+ * verification of this packet, the destination site will redirect to the original destination URL and indicate a successful remote login. 
+ *
+ *
+ *
+ */
+
 	if(argc() > 1) {
 		$webbie = argv(1);
 	}
@@ -46,10 +112,17 @@ function post_init(&$a) {
 				dbesc($webbie)
 			);
 			if(! $c) {
-				logger('mod_zot: auth: unable to find channel ' . $webbie);
+				// They are authenticating ultimately to the site and not to a particular channel.
+				// Any channel will do. We just need to have an identity to attach to the
+				// packet we send back.
+
+				$c = q("select * from channel where true limit 1");
+				if(! $c)
+					logger('mod_zot: auth: unable to find channel ' . $webbie);
 				// They'll get a notice when they hit the page, we don't need two of them. 
 				// In fact we only need the name to map the destination, auth can proceed
 				// without it.
+
 			}
 		}
 
@@ -160,7 +233,7 @@ function post_init(&$a) {
  *     Sender HTTP posts to this endpoint ($site/post typically) with 'data' parameter set to json zot message packet.
  *     This packet is optionally encrypted, which we will discover if the json has an 'iv' element.
  *     $contents => array( 'alg' => 'aes256cbc', 'iv' => initialisation vector, 'key' => decryption key, 'data' => encrypted data);
- *     $contents->iv and $contents->key are random strings encrypted with this site's public key.
+ *     $contents->iv and $contents->key are random strings encrypted with this site's RSA public key and then base64url encoded.
  *     Currently only 'aes256cbc' is used, but this is extensible should that algorithm prove inadequate.
  *
  *     Once decrypted, one will find the normal json_encoded zot message packet. 
