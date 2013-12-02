@@ -18,14 +18,6 @@ function cmtBbClose(comment, id) {
 
 $(document).ready(function() {
 
-document.jotpermsunlock = 'icon-unlock';
-document.jotpermslock = 'icon-lock';
-
-if($('#jot-perms-icon').hasClass('lock'))
-	$('#jot-perms-icon').addClass('icon-lock');
-if($('#jot-perms-icon').hasClass('unlock'))
-	$('#jot-perms-icon').addClass('icon-unlock');
-
 $('.group-edit-icon').hover(
 	function() {
 		$(this).addClass('icon'); $(this).removeClass('iconspacer');},

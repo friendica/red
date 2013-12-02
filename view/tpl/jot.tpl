@@ -29,51 +29,51 @@
 		<div id="profile-jot-text-loading"></div>
 
 <div id="profile-jot-submit-wrapper" class="jothidden">
-	<div class="jot-tools-left">
-		<div id="profile-upload-wrapper" style="display: {{$visitor}};" >
-			<div id="wall-image-upload-div" ><i id="wall-image-upload" class="icon-camera jot-icons" title="{{$upload}}"></i></div>
-		</div>
-		<div id="profile-attach-wrapper" style="display: {{$visitor}};" >
-			<div id="wall-file-upload-div" ><i id="wall-file-upload" class="icon-paper-clip jot-icons" title="{{$attach}}"></i></div>
-		</div>
-		<div id="profile-link-wrapper" style="display: {{$visitor}};" ondragenter="linkdropper(event);" ondragover="linkdropper(event);" ondrop="linkdrop(event);" >
-			<i id="profile-link" class="icon-link jot-icons" title="{{$weblink}}" ondragenter="return linkdropper(event);" ondragover="return linkdropper(event);" ondrop="linkdrop(event);" onclick="jotGetLink(); return false;"></i>
-		</div>
-		<div id="profile-video-wrapper" style="display: {{$visitor}};" >
-			<i id="profile-video" class="icon-facetime-video jot-icons" title="{{$video}}" onclick="jotVideoURL();return false;"></i>
-		</div>
-			<div id="profile-audio-wrapper" style="display: {{$visitor}};" >
-			<i id="profile-audio" class="icon-volume-up jot-icons" title="{{$audio}}" onclick="jotAudioURL();return false;"></i>
-		</div>
-		<div id="profile-location-wrapper" style="display: {{$visitor}};" >
-			<i id="profile-location" class="icon-globe jot-icons" title="{{$setloc}}" onclick="jotGetLocation();return false;"></i>
-		</div>
-		<div id="profile-nolocation-wrapper" style="display: none;" >
-			<i id="profile-nolocation" class="icon-circle-blank jot-icons" title="{{$noloc}}" onclick="jotClearLocation();return false;"></i>
-		</div>
-		<div id="profile-expire-wrapper" style="display: {{$feature_expire}};" >
-			<i id="profile-expires" class="icon-eraser jot-icons" title="{{$expires}}" onclick="jotGetExpiry();return false;"></i>
-		</div>
-		<div id="profile-encrypt-wrapper" style="display: {{$feature_encrypt}};" >
-			<i id="profile-encrypt" class="icon-key jot-icons" title="{{$encrypt}}" onclick="red_encrypt('{{$cipher}}','#profile-jot-text',$('#profile-jot-text').val());return false;"></i>
-		</div>
-		<div id="profile-rotator-wrapper" style="display: {{$visitor}};" >
-			<div id="profile-rotator"></div>
-		</div>
+	<input type="submit" id="profile-jot-submit" name="submit" value="{{$share}}" />
+
+	<div id="profile-upload-wrapper" style="display: {{$visitor}};" >
+		<div id="wall-image-upload-div" ><i id="wall-image-upload" class="icon-camera jot-icons" title="{{$upload}}"></i></div>
+	</div> 
+	<div id="profile-attach-wrapper" style="display: {{$visitor}};" >
+		<div id="wall-file-upload-div" ><i id="wall-file-upload" class="icon-paper-clip jot-icons" title="{{$attach}}"></i></div>
+	</div> 
+
+	<div id="profile-link-wrapper" style="display: {{$visitor}};" ondragenter="linkdropper(event);" ondragover="linkdropper(event);" ondrop="linkdrop(event);" >
+		<i id="profile-link" class="icon-link jot-icons" title="{{$weblink}}" ondragenter="return linkdropper(event);" ondragover="return linkdropper(event);" ondrop="linkdrop(event);" onclick="jotGetLink(); return false;"></i>
+	</div> 
+	<div id="profile-video-wrapper" style="display: {{$visitor}};" >
+		<i id="profile-video" class="icon-facetime-video jot-icons" title="{{$video}}" onclick="jotVideoURL();return false;"></i>
+	</div> 
+	<div id="profile-audio-wrapper" style="display: {{$visitor}};" >
+		<i id="profile-audio" class="icon-volume-up jot-icons" title="{{$audio}}" onclick="jotAudioURL();return false;"></i>
+	</div> 
+	<div id="profile-location-wrapper" style="display: {{$visitor}};" >
+		<i id="profile-location" class="icon-globe jot-icons" title="{{$setloc}}" onclick="jotGetLocation();return false;"></i>
+	</div> 
+	<div id="profile-nolocation-wrapper" style="display: none;" >
+		<i id="profile-nolocation" class="icon-circle-blank jot-icons" title="{{$noloc}}" onclick="jotClearLocation();return false;"></i>
 	</div>
-	<div class="jot-tools-right">
-		<input type="submit" id="profile-jot-submit" name="submit" value="{{$share}}" />
-		{{if $preview}}
-		<div onclick="preview_post();" id="jot-preview-link" class="fakelink">
-			<i id="jot-preview-icon "class="icon-eye-open" title="{{$preview}}"></i>
-		</div>
-		{{/if}}
-		{{if $showacl}}
-		<div id="profile-jot-perms" class="profile-jot-perms" style="display: {{$pvisit}};" >
-			<a href="#profile-jot-acl-wrapper" id="jot-perms-icon" class="{{$lockstate}}" title="{{$permset}}" ></a>{{$bang}}
-		</div>
-		{{/if}}
+	<div id="profile-expire-wrapper" style="display: {{$feature_expire}};" >
+		<i id="profile-expires" class="icon-eraser jot-icons" title="{{$expires}}" onclick="jotGetExpiry();return false;"></i>
+	</div> 
+	<div id="profile-encrypt-wrapper" style="display: {{$feature_encrypt}};" >
+		<i id="profile-encrypt" class="icon-key jot-icons" title="{{$encrypt}}" onclick="red_encrypt('{{$cipher}}','#profile-jot-text',$('#profile-jot-text').val());return false;"></i>
+	</div> 
+
+
+	<div id="profile-rotator-wrapper" style="display: {{$visitor}};" >
+		<div id="profile-rotator"></div>
+	</div>  
+
+	{{if $showacl}}
+	<div id="profile-jot-perms" class="profile-jot-perms" style="display: {{$pvisit}};" >
+		<a href="#profile-jot-acl-wrapper" id="jot-perms-icon" class="icon {{$lockstate}}"  title="{{$permset}}" ></a>{{$bang}}
 	</div>
+	{{/if}}
+
+	{{if $preview}}<span onclick="preview_post();" id="jot-preview-link" class="fakelink"><i class="icon-eye-open jot-icons" title="{{$preview}}"></i></span>{{/if}}
+
+
 	<div id="profile-jot-perms-end"></div>
 
 
