@@ -576,63 +576,6 @@ function parse_xml_string($s,$strict = true) {
 	return $x;
 }
 
-function add_fcontact($arr,$update = false) {
-
-	if($update) {
-		$r = q("UPDATE `fcontact` SET
-			`name` = '%s',
-			`photo` = '%s',
-			`request` = '%s',
-			`nick` = '%s',
-			`addr` = '%s',
-			`batch` = '%s',
-			`notify` = '%s',
-			`poll` = '%s',
-			`confirm` = '%s',
-			`alias` = '%s',
-			`pubkey` = '%s',
-			`updated` = '%s'
-			WHERE `url` = '%s' AND `network` = '%s' LIMIT 1", 
-			dbesc($arr['name']),
-			dbesc($arr['photo']),
-			dbesc($arr['request']),
-			dbesc($arr['nick']),
-			dbesc($arr['addr']),
-			dbesc($arr['batch']),
-			dbesc($arr['notify']),
-			dbesc($arr['poll']),
-			dbesc($arr['confirm']),
-			dbesc($arr['alias']),
-			dbesc($arr['pubkey']),
-			dbesc(datetime_convert()),
-			dbesc($arr['url']),
-			dbesc($arr['network'])
-		);
-	}
-	else {
-		$r = q("insert into fcontact ( `url`,`name`,`photo`,`request`,`nick`,`addr`,
-			`batch`, `notify`,`poll`,`confirm`,`network`,`alias`,`pubkey`,`updated` )
-			values('%s','%s','%s','%s','%s','%s','%s','%s','%s','%s','%s','%s','%s','%s')",
-			dbesc($arr['url']),
-			dbesc($arr['name']),
-			dbesc($arr['photo']),
-			dbesc($arr['request']),
-			dbesc($arr['nick']),
-			dbesc($arr['addr']),
-			dbesc($arr['batch']),
-			dbesc($arr['notify']),
-			dbesc($arr['poll']),
-			dbesc($arr['confirm']),
-			dbesc($arr['network']),
-			dbesc($arr['alias']),
-			dbesc($arr['pubkey']),
-			dbesc(datetime_convert())
-		);
-	}
-
-	return $r;
-}
-
 
 function scale_external_images($s, $include_link = true, $scale_replace = false) {
 
@@ -709,52 +652,6 @@ function scale_external_images($s, $include_link = true, $scale_replace = false)
 
 	return $s;
 }
-
-
-function fix_contact_ssl_policy(&$contact,$new_policy) {
-
-	$ssl_changed = false;
-	if((intval($new_policy) == SSL_POLICY_SELFSIGN || $new_policy === 'self') && strstr($contact['url'],'https:')) {
-		$ssl_changed = true;
-		$contact['url']     = 	str_replace('https:','http:',$contact['url']);
-		$contact['request'] = 	str_replace('https:','http:',$contact['request']);
-		$contact['notify']  = 	str_replace('https:','http:',$contact['notify']);
-		$contact['poll']    = 	str_replace('https:','http:',$contact['poll']);
-		$contact['confirm'] = 	str_replace('https:','http:',$contact['confirm']);
-		$contact['poco']    = 	str_replace('https:','http:',$contact['poco']);
-	}
-
-	if((intval($new_policy) == SSL_POLICY_FULL || $new_policy === 'full') && strstr($contact['url'],'http:')) {
-		$ssl_changed = true;
-		$contact['url']     = 	str_replace('http:','https:',$contact['url']);
-		$contact['request'] = 	str_replace('http:','https:',$contact['request']);
-		$contact['notify']  = 	str_replace('http:','https:',$contact['notify']);
-		$contact['poll']    = 	str_replace('http:','https:',$contact['poll']);
-		$contact['confirm'] = 	str_replace('http:','https:',$contact['confirm']);
-		$contact['poco']    = 	str_replace('http:','https:',$contact['poco']);
-	}
-
-	if($ssl_changed) {
-		q("update contact set 
-			url = '%s', 
-			request = '%s',
-			notify = '%s',
-			poll = '%s',
-			confirm = '%s',
-			poco = '%s'
-			where id = %d limit 1",
-			dbesc($contact['url']),
-			dbesc($contact['request']),
-			dbesc($contact['notify']),
-			dbesc($contact['poll']),
-			dbesc($contact['confirm']),
-			dbesc($contact['poco']),
-			intval($contact['id'])
-		);
-	}
-}
-
-
 
 /**
  * xml2array() will convert the given XML text to an array in the XML structure.
