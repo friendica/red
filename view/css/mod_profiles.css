@@ -1,0 +1,144 @@
+#profile-edit-default-desc {
+	color: #FF0000;
+	border: 1px solid #FF8888;
+	background-color: #FFEEEE;
+	padding: 7px;
+}
+
+#profile-edit-clone-link-wrapper {
+	float: left;
+	margin-left: 50px;
+	margin-bottom: 20px;
+	width: 300px;
+}
+
+
+#profile-edit-links-end {
+	clear: both;
+	margin-bottom: 15px;
+}
+
+.profile-listing-photo {
+	border: none;
+}
+
+.profile-edit-submit-wrapper {
+	margin-top: 20px;
+	margin-bottom: 20px;
+}
+
+#profile-photo-link-select-wrapper {
+	margin-top: 2em;
+}
+
+#profile-photo-submit-wrapper {
+	margin-top: 10px;
+}
+
+#profile-edit-with-label {
+	width: 175px;
+	margin-left: 20px;
+}
+
+#profile-edit-profile-name-label,
+#profile-edit-name-label,
+#profile-edit-pdesc-label,
+#profile-edit-gender-label,
+#profile-edit-dob-label,
+#profile-edit-address-label,
+#profile-edit-locality-label,
+#profile-edit-region-label,
+#profile-edit-postal-code-label,
+#profile-edit-country-name-label,
+#profile-edit-marital-label,
+#profile-edit-sexual-label,
+#profile-edit-politic-label,
+#profile-edit-religion-label,
+#profile-edit-pubkeywords-label,
+#profile-edit-prvkeywords-label,
+#profile-edit-homepage-label,
+#profile-edit-hometown-label {
+	float: left;
+	width: 175px;
+}
+
+#profile-edit-profile-name,
+#profile-edit-name,
+#profile-edit-pdesc,
+#gender-select,
+#profile-edit-dob,
+#profile-edit-address,
+#profile-edit-locality,
+#profile-edit-region,
+#profile-edit-postal-code,
+#profile-edit-country-name,
+#marital-select,
+#sexual-select,
+#profile-edit-politic,
+#profile-edit-religion,
+#profile-edit-pubkeywords,
+#profile-edit-prvkeywords,
+#profile-in-dir-yes,
+#profile-in-dir-no,
+#profile-in-netdir-yes,
+#profile-in-netdir-no,
+#hide-wall-yes,
+#hide-wall-no,
+#hide-friends-yes,
+#hide-friends-no {
+	float: left;
+	margin-bottom: 20px;
+}
+
+
+#profile-edit-pdesc-desc,
+#profile-edit-pubkeywords-desc,
+#profile-edit-prvkeywords-desc {
+	float: left;
+	margin-left: 20px;
+}
+
+
+#profile-edit-homepage, #profile-edit-hometown {
+	float: left;
+	margin-bottom: 35px;
+}
+
+#profile-edit-profile-name-end,
+#profile-edit-name-end,
+#profile-edit-pdesc-end,
+#profile-edit-gender-end,
+#profile-edit-dob-end,
+#profile-edit-address-end,
+#profile-edit-locality-end,
+#profile-edit-region-end,
+#profile-edit-postal-code-end,
+#profile-edit-country-name-end,
+#profile-edit-marital-end,
+#profile-edit-sexual-end,
+#profile-edit-politic-end,
+#profile-edit-religion-end,
+#profile-edit-pubkeywords-end,
+#profile-edit-prvkeywords-end,
+#profile-edit-homepage-end,
+#profile-edit-hometown-end,
+#profile-in-dir-break,
+#profile-in-dir-end,
+#profile-in-netdir-break,
+#profile-in-netdir-end,
+#hide-wall-break,
+#hide-wall-end,
+#hide-friends-break,
+#hide-friends-end {
+	clear: both;
+}
+
+
+#gender-select, #marital-select, #sexual-select {
+	width: 220px;
+}
+
+#profile-edit-profile-name-wrapper .required {
+	color: #FF0000;
+	float: left;
+}

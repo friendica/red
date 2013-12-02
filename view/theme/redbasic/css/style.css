@@ -582,42 +582,7 @@ footer {
 #viewconnections {
 	margin-top: 15px;
 }
-#profile-edit-default-desc {
-	color: #FF0000;
-	border: 1px solid #FF8888;
-	background-color: #FFEEEE;
-	padding: 7px;
-}
 
-#profile-edit-clone-link-wrapper {
-	float: left;
-	margin-left: 50px;
-	margin-bottom: 20px;
-	width: 300px;
-}
-
-
-#profile-edit-links-end {
-	clear: both;
-	margin-bottom: 15px;
-}
-
-.profile-listing-photo {
-	border: none;
-}
-
-.profile-edit-submit-wrapper {
-	margin-top: 20px;
-	margin-bottom: 20px;
-}
-
-#profile-photo-link-select-wrapper {
-	margin-top: 2em;
-}
-
-#profile-photo-submit-wrapper {
-	margin-top: 10px;
-}
 
 #profile-photo-wrapper img {
 	width:175px;
@@ -631,65 +596,6 @@ footer {
   top: 22px;
 }
 
-
-#profile-edit-profile-name-label,
-#profile-edit-name-label,
-#profile-edit-pdesc-label,
-#profile-edit-gender-label,
-#profile-edit-dob-label,
-#profile-edit-address-label,
-#profile-edit-locality-label,
-#profile-edit-region-label,
-#profile-edit-postal-code-label,
-#profile-edit-country-name-label,
-#profile-edit-marital-label,
-#profile-edit-sexual-label,
-#profile-edit-politic-label,
-#profile-edit-religion-label,
-#profile-edit-pubkeywords-label,
-#profile-edit-prvkeywords-label,
-#profile-edit-homepage-label,
-#profile-edit-hometown-label {
-	float: left;
-	width: 175px;
-}
-
-#profile-edit-profile-name,
-#profile-edit-name,
-#profile-edit-pdesc,
-#gender-select,
-#profile-edit-dob,
-#profile-edit-address,
-#profile-edit-locality,
-#profile-edit-region,
-#profile-edit-postal-code,
-#profile-edit-country-name,
-#marital-select,
-#sexual-select,
-#profile-edit-politic,
-#profile-edit-religion,
-#profile-edit-pubkeywords,
-#profile-edit-prvkeywords,
-#profile-in-dir-yes,
-#profile-in-dir-no,
-#profile-in-netdir-yes,
-#profile-in-netdir-no,
-#hide-wall-yes,
-#hide-wall-no,
-#hide-friends-yes,
-#hide-friends-no {
-	float: left;
-	margin-bottom: 20px;
-}
-
-
-#settings-notifications label {
-	margin-left: 20px;
-}
-#settings-notify-desc, #settings-activity-desc {
-	font-weight: bold;
-	margin-bottom: 15px;
-}
 
 
 #profile-in-dir-yes-label,
@@ -705,10 +611,6 @@ footer {
 	width: 50px;
 }
 
-#profile-edit-with-label {
-	width: 175px;
-	margin-left: 20px;
-}
 
 #profile-publish-yes-reg,
 #profile-publish-no-reg {
@@ -729,48 +631,6 @@ footer {
 }
 
 
-#profile-edit-pdesc-desc,
-#profile-edit-pubkeywords-desc,
-#profile-edit-prvkeywords-desc {
-	float: left;
-	margin-left: 20px;
-}
-
-
-#profile-edit-homepage, #profile-edit-hometown {
-	float: left;
-	margin-bottom: 35px;
-}
-
-#profile-edit-profile-name-end,
-#profile-edit-name-end,
-#profile-edit-pdesc-end,
-#profile-edit-gender-end,
-#profile-edit-dob-end,
-#profile-edit-address-end,
-#profile-edit-locality-end,
-#profile-edit-region-end,
-#profile-edit-postal-code-end,
-#profile-edit-country-name-end,
-#profile-edit-marital-end,
-#profile-edit-sexual-end,
-#profile-edit-politic-end,
-#profile-edit-religion-end,
-#profile-edit-pubkeywords-end,
-#profile-edit-prvkeywords-end,
-#profile-edit-homepage-end,
-#profile-edit-hometown-end,
-#profile-in-dir-break,
-#profile-in-dir-end,
-#profile-in-netdir-break,
-#profile-in-netdir-end,
-#hide-wall-break,
-#hide-wall-end,
-#hide-friends-break,
-#hide-friends-end {
-	clear: both;
-}
-
 .settings-widget ul {
 	list-style-type: none;
 	padding: 0px;
@@ -781,15 +641,6 @@ footer {
 	margin-bottom: 8px;
 }
 
-
-#gender-select, #marital-select, #sexual-select {
-	width: 220px;
-}
-
-#profile-edit-profile-name-wrapper .required {
-	color: #FF0000;
-	float: left;
-}
 
 #contacts-main {
 	margin-top: 20px;
@@ -2600,40 +2451,6 @@ brain is weird like that */
 	
 }
 
-.field_abook_help {
-	color: #000;
-}
-.abook-them {
-	margin-left: 225px;
-	margin-bottom: 15px;
-}
-.abook-me {
-	margin-left: 36px;
-	margin-bottom: 15px;
-}
-.acheckbox {
-	margin-bottom: 5px !important;
-}
-
-.abook-pending-contact {
-	background: orange;
-	font-weight: bold;
-	margin: 10px;
-	padding: 20px 5px 10px;
-}
-
-#contact-slider {
-	width: 600px !important;
-}
-
-.abook-edit-them, .abook-edit-me {
-	float: left;
-	width: 100px !important;
-}
-.field_abook_help {
-	float: left;
-}
-
 .field .onoff {
 	float: left;
 	width: 80px;
@@ -2782,8 +2599,6 @@ brain is weird like that */
 .on { background-position: -144px -32px; }
 
 .off { background-position: 0px -48px; }
-/*.starred { background-position: -16px -48px; }
-.unstarred { background-position: -32px -48px; }*/
 .tagged { background-position: -48px -48px; }
 .yellow { background-position: -64px -48px; }
 
@@ -2791,12 +2606,8 @@ brain is weird like that */
 	color: gold;
 }
 
-.filer-icon {
-	display: block; width: 16px; height: 16px;
-	background-image: url('../img/file.gif');
-}
-
 .icon.dim { opacity: 0.3;filter:alpha(opacity=30); }
+
 [class^="comment-edit-bb"] {
 	list-style: none;
 	display: none;
@@ -2812,81 +2623,11 @@ brain is weird like that */
 [class^="comment-edit-bb-end"] {
 	clear: both;
 }
-.editicon {
-    display: inline-block;
-    width: 16px;
-    height: 16px;
-    background-image: url(../img/bbedit.png);
-	background-color: #fff;
-    text-decoration: none;
-}
-.editicon:hover {
-	background-color: #ccc;
-}
-.boldbb {
-	background-position: 0px 0px;
-}
-.boldbb:hover {
-	background-position: 0px -16px;
-}
-.italicbb {
-	background-position: -16px 0px;
-}
-.italicbb:hover {
-	background-position: -16px -16px;
-}
-.underlinebb {
-	background-position: -32px 0px;
-}
-.underlinebb:hover {
-	background-position: -32px -16px;
-}
-.quotebb {
-	background-position: -48px 0px;
-}
-.quotebb:hover {
-	background-position: -48px -16px;
-}
-.codebb {
-	background-position: -64px 0px;
-}
-.codebb:hover {
-	background-position: -64px -16px;
-}
-.imagebb {
-	background-position: -80px 0px;
-}
-.imagebb:hover {
-	background-position: -80px -16px;
-}
-.urlbb {
-	background-position: -96px 0px;
-}
-.urlbb:hover {
-	background-position: -96px -16px;
-}
-.videobb {
-	background-position: -112px 0px;
-}
-.videobb:hover {
-	background-position: -112px -16px;
-}
-
-.attachtype {
-	display: block; width: 20px; height: 23px;
-	float: left;
-	background-image: url('../../../../images/content-types.png');
-}
 
 .body-attach {
 	margin-top: 10px;
 }
 
-.type-video { background-position: 0px 0px; }
-.type-image { background-position: -20px 0px; }
-.type-audio { background-position: -40px 0px; }
-.type-text  { background-position: -60px 0px; }
-.type-unkn  { background-position: -80px 0px; }
 
 
 /* autocomplete popup */

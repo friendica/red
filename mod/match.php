@@ -1,5 +1,9 @@
 <?php
 
+// FIXME - this has never been properly ported from Friendica
+// It takes keywords from your profile and queries the directory server for 
+// matching keywords from other profiles.
+
 
 function match_content(&$a) {
 
@@ -30,10 +34,10 @@ function match_content(&$a) {
 		if($a->pager['page'] != 1)
 			$params['p'] = $a->pager['page'];
 			
-		if(strlen(get_config('system','directory_submit_url')))
-			$x = post_url('http://dir.friendica.com/msearch', $params);
-		else
-			$x = post_url($a->get_baseurl() . '/msearch', $params);
+//		if(strlen(get_config('system','directory_submit_url')))
+//			$x = post_url('http://dir.friendica.com/msearch', $params);
+//		else
+//			$x = post_url($a->get_baseurl() . '/msearch', $params);
 
 		$j = json_decode($x);
 
