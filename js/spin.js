@@ -1,4 +1,4 @@
-//fgnass.github.com/spin.js#v1.3.2
+//fgnass.github.com/spin.js#v1.3
 
 /**
  * Copyright (c) 2011-2013 Felix Gnass
@@ -89,12 +89,12 @@
       , pp
       , i
 
+    if(s[prop] !== undefined) return prop
     prop = prop.charAt(0).toUpperCase() + prop.slice(1)
     for(i=0; i<prefixes.length; i++) {
       pp = prefixes[i]+prop
       if(s[pp] !== undefined) return pp
     }
-    if(s[prop] !== undefined) return prop
   }
 
   /**
@@ -128,13 +128,6 @@
       o.x+=el.offsetLeft, o.y+=el.offsetTop
 
     return o
-  }
-
-  /**
-   * Returns the line color from the given string or array.
-   */
-  function getColor(color, idx) {
-    return typeof color == 'string' ? color : color[idx % color.length]
   }
 
   // Built-in defaults
@@ -266,7 +259,8 @@
         })
 
         if (o.shadow) ins(seg, css(fill('#000', '0 0 4px ' + '#000'), {top: 2+'px'}))
-        ins(el, ins(seg, fill(getColor(o.color, i), '0 0 1px rgba(0,0,0,.1)')))
+
+        ins(el, ins(seg, fill(o.color, '0 0 1px rgba(0,0,0,.1)')))
       }
       return el
     },
@@ -320,7 +314,7 @@
                 top: -o.width>>1,
                 filter: filter
               }),
-              vml('fill', {color: getColor(o.color, i), opacity: o.opacity}),
+              vml('fill', {color: o.color, opacity: o.opacity}),
               vml('stroke', {opacity: 0}) // transparent stroke to fix color bleeding upon opacity change
             )
           )
