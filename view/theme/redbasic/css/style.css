@@ -351,7 +351,12 @@ footer {
 }
 
 #jot-perms-icon {
-	float: left;
+	display: block;
+	color: #fff;
+	padding: 8px;
+	text-align: center;
+	text-decoration: none;
+	text-shadow: 1px 1px #111;
 }
 
 #jot-title, #jot-category, #jot-pagetitle {
@@ -1028,10 +1033,14 @@ footer {
 	float: left;
 	margin-left: 15px;
 }
-#jot-preview-link {
-	float: left;
-	margin-left: 45px;
-	margin-top: 0px !important;
+
+#jot-preview-link .icon-eye-open {
+	display:block;
+	color: #fff;
+	padding-top: 8px;
+	text-align: center;
+	text-decoration: none;
+	text-shadow: 1px 1px #111;
 }
 
 #profile-nolocation-wrapper {
@@ -1043,13 +1052,27 @@ footer {
 	margin-left: 15px;
 }
 
-#profile-jot-perms {
+#profile-jot-perms,
+#jot-preview-link {
+	height: 28px;
+	width: 28px;
 	float: right;
-	background-color: $toolicon_colour;
+	background: linear-gradient(top, $toolicon_colour 0%, #707070);
+	background: -webkit-linear-gradient(top, $toolicon_colour 0%, #707070);
+	background: -moz-linear-gradient(top, $toolicon_colour 0%, #707070);
+	background: -o-linear-gradient(top, $toolicon_colour 0%, #707070);
+	background: -ms-linear-gradient(top, $toolicon_colour 0%, #707070);
 	border: 1px solid #666;
 	border-right: none;
-	border-radius: $radiuspx 0px 0px $radiuspx;
-	padding: 6px;
+}
+
+#profile-jot-perms:hover,
+#jot-preview-link:hover {
+	background: linear-gradient(top, #707070 0%, $toolicon_colour);
+	background: -webkit-linear-gradient(top, #707070 0%, $toolicon_colour);
+	background: -moz-linear-gradient(top, #707070 0%, $toolicon_colour);
+	background: -o-linear-gradient(top, #707070 0%, $toolicon_colour);
+	background: -ms-linear-gradient(top, #707070 0%, $toolicon_colour);
 }
 
 #profile-jot-perms-end {
@@ -1376,6 +1399,18 @@ tr.mceLast {
     box-shadow: 4px 4px 3px 0 #444444;
 }
 
+.jot-tools-right :last-child {
+	border-radius: $radiuspx 0px 0px $radiuspx;
+}
+
+.jot-tools-right :first-child {
+	border-radius: 0px $radiuspx $radiuspx 0px;
+}
+
+.jot-tools-right :only-child {
+	border-radius: $radiuspx;
+}
+
 #profile-jot-submit {
 	height: 30px;
 	width: 70px;
@@ -1386,7 +1421,6 @@ tr.mceLast {
 	background: -ms-linear-gradient(top, #0080ff 0%, #0080aa);
 	color: #fff;
 	font-weight: bold;
-	border-radius: 0px $radiuspx $radiuspx 0px;
 	float: right;
 	text-shadow: 1px 1px #111;
 	cursor: pointer;
