@@ -6,7 +6,7 @@
 	<ul>
 
 	{{if $userinfo}}
-	      <li id="nav-user-linkmenu" class="nav-menu-icon">{{if $localuser}}<a href="#" rel="#nav-user-menu" title="{{$userinfo.name}}">{{/if}}<img src="{{$userinfo.icon}}" alt="{{$userinfo.name}}">{{if $localuser}}<span class="nav-dropdown-indicator">&#x25BC;</span></a>{{/if}}
+	      <li id="nav-user-linkmenu" class="nav-menu-icon"><a href="#" rel="#nav-user-menu" title="{{$userinfo.name}}"><img src="{{$userinfo.icon}}" alt="{{$userinfo.name}}"><span class="nav-dropdown-indicator">&#x25BC;</span></a>
 		{{if $localuser}}
 			<ul id="nav-user-menu" class="menu-popup">
 				{{foreach $nav.usermenu as $usermenu}}
