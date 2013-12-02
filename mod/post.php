@@ -153,6 +153,126 @@ function post_init(&$a) {
 }
 
 
+/**
+ * @function post_post(&$a)
+ *     zot communications and messaging
+ *
+ *     Sender HTTP posts to this endpoint ($site/post typically) with 'data' parameter set to json zot message packet.
+ *     This packet is optionally encrypted, which we will discover if the json has an 'iv' element.
+ *     $contents => array( 'alg' => 'aes256cbc', 'iv' => initialisation vector, 'key' => decryption key, 'data' => encrypted data);
+ *     $contents->iv and $contents->key are random strings encrypted with this site's public key.
+ *     Currently only 'aes256cbc' is used, but this is extensible should that algorithm prove inadequate.
+ *
+ *     Once decrypted, one will find the normal json_encoded zot message packet. 
+ * 
+ * Standard packet:
+ *
+ * {
+ *  "type": $message_type,
+ *  "sender":{
+ *       "guid":"kgVFf_1...",
+ *       "guid_sig":"PT9-TApzp...",
+ *       "url":"http:\/\/podunk.edu",
+ *       "url_sig":"T8Bp7j5...",
+ *    },
+ *  "recipients": { optional recipient array },
+ *  "callback":"\/post",
+ *  "version":1,
+ *  "secret":"1eaa...",
+ *  "secret_sig": "df89025470fac8..."
+ * }
+ * 
+ * Signature fields are all signed with the sender's private key.
+ * Recipients are arrays of guid and guid_sig which were signed with the recipients private 
+ * key and obtained via channel discovery.
+ *
+ * "pickup" packet:
+ * The pickup packet is sent in response to a notify packet from another site
+ * 
+ * {
+ *  "type":"pickup",
+ *  "url":"http:\/\/example.com",
+ *  "callback":"http:\/\/example.com\/post",
+ *  "callback_sig":"teE1_fLI...",
+ *  "secret":"1eaa...",
+ *  "secret_sig":"O7nB4_..."
+ * }
+ *
+ * In the pickup packet, the sig fields are the relevant data element signed with this site's system private key.
+ * The "secret" is the same as the original secret from the notify packet. 
+ *
+ * If verification is successful, a json structure is returned
+ * containing a success indicator and an array of type 'pickup'.
+ * Each pickup element contains the original notify request and a message field whose contents are 
+ * dependent on the message type
+ *
+ * This JSON array is AES encapsulated using the site public key of the site that sent the initial zot pickup packet.
+ * Using the above example, this would be example.com.
+ * 
+ * 
+ * {
+ * "success":1,
+ * "pickup":{
+ *   "notify":{
+ *     "type":"notify",
+ *     "sender":{
+ *       "guid":"kgVFf_...",
+ *       "guid_sig":"PT9-TApz...",
+ *       "url":"http:\/\/z.podunk.edu",
+ *       "url_sig":"T8Bp7j5D..."
+ *     },
+ *     "callback":"\/post",
+ *     "version":1,
+ *     "secret":"1eaa661..."
+ *   },
+ *   "message":{
+ *     "type":"activity",
+ *     "message_id":"10b049ce384cbb2da9467319bc98169ab36290b8bbb403aa0c0accd9cb072e76@podunk.edu",
+ *     "message_top":"10b049ce384cbb2da9467319bc98169ab36290b8bbb403aa0c0accd9cb072e76@podunk.edu",
+ *     "message_parent":"10b049ce384cbb2da9467319bc98169ab36290b8bbb403aa0c0accd9cb072e76@podunk.edu",
+ *     "created":"2012-11-20 04:04:16",
+ *     "edited":"2012-11-20 04:04:16",
+ *     "title":"",
+ *     "body":"Hi Nickordo",
+ *     "app":"",
+ *     "verb":"post",
+ *     "object_type":"",
+ *     "target_type":"",
+ *     "permalink":"",
+ *     "location":"",
+ *     "longlat":"",
+ *     "owner":{
+ *       "name":"Indigo",
+ *       "address":"indigo@podunk.edu",
+ *       "url":"http:\/\/podunk.edu",
+ *       "photo":{
+ *         "mimetype":"image\/jpeg",
+ *         "src":"http:\/\/podunk.edu\/photo\/profile\/m\/5"
+ *       },
+ *       "guid":"kgVFf_...",
+ *       "guid_sig":"PT9-TAp...",
+ *     },
+ *     "author":{
+ *       "name":"Indigo",
+ *       "address":"indigo@podunk.edu",
+ *       "url":"http:\/\/podunk.edu",
+ *       "photo":{
+ *         "mimetype":"image\/jpeg",
+ *         "src":"http:\/\/podunk.edu\/photo\/profile\/m\/5"
+ *       },
+ *       "guid":"kgVFf_...",
+ *       "guid_sig":"PT9-TAp..."
+ *     }
+ *   }
+ * }
+ *} 
+ *
+ * Currently defined message types are 'activity', 'mail', 'profile' and 'channel_sync', which each have 
+ * different content schemas.
+ */
+
+
+
 
 
 	
