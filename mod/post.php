@@ -111,18 +111,23 @@ function post_init(&$a) {
 			$c = q("select * from channel where channel_address = '%s' limit 1",
 				dbesc($webbie)
 			);
+		}
+		if(! $c) {
+
+			// They are authenticating ultimately to the site and not to a particular channel.
+			// Any channel will do, providing it's currently active. We just need to have an 
+			// identity to attach to the packet we send back. So find one. 
+
+			$c = q("select * from channel where not ( channel_pageflags & %d ) limit 1",
+				intval(PAGE_REMOVED)
+			);
+
 			if(! $c) {
-				// They are authenticating ultimately to the site and not to a particular channel.
-				// Any channel will do. We just need to have an identity to attach to the
-				// packet we send back.
 
-				$c = q("select * from channel where true limit 1");
-				if(! $c)
-					logger('mod_zot: auth: unable to find channel ' . $webbie);
-				// They'll get a notice when they hit the page, we don't need two of them. 
-				// In fact we only need the name to map the destination, auth can proceed
-				// without it.
+				// nobody here
 
+				logger('mod_zot: auth: unable to find channel ' . $webbie);
+				goaway($desturl);
 			}
 		}
 
