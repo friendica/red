@@ -91,8 +91,8 @@ function magic_init(&$a) {
 		if($rev)
 			goaway($dest);
 		else {
-			logger('mod_magic: channel not found.' . print_r($_REQUEST,true));
-			notice( t('Channel not found.') . EOL);
+			logger('mod_magic: no channels found for requested hub.' . print_r($_REQUEST,true));
+			notice( t('Hub not found.') . EOL);
 			return;
 		}
 	}
@@ -113,24 +113,9 @@ function magic_init(&$a) {
 		goaway($dest);
 
 	if($x[0]['hubloc_url'] === z_root()) {
-		$webbie = substr($x[0]['hubloc_addr'],0,strpos('@',$x[0]['hubloc_addr']));
-		switch($dest) {
-			case 'channel':
-				$desturl = z_root() . '/channel/' . $webbie;
-				break;
-			case 'photos':
-				$desturl = z_root() . '/photos/' . $webbie;
-				break;
-			case 'profile':
-				$desturl = z_root() . '/profile/' . $webbie;
-				break;
-			default:
-				$desturl = $dest;
-				break;
-		}
 		// We are already authenticated on this site and a registered observer.
 		// Just redirect.
-		goaway($desturl);
+		goaway($dest);
 	}
 
 	if(local_user()) {
@@ -142,20 +127,15 @@ function magic_init(&$a) {
 		$channel['token'] = $token;
 		$channel['token_sig'] = $token_sig;
 
-
-		$recip = array(array('guid' => $x[0]['hubloc_guid'],'guid_sig' => $x[0]['hubloc_guid_sig']));
-
-		$hash = random_string();
-
 		$r = q("insert into verify ( type, channel, token, meta, created) values ('%s','%d','%s','%s','%s')",
 			dbesc('auth'),
 			intval($channel['channel_id']),
 			dbesc($token),
-			dbesc($x[0]['hubloc_hash']),
+			dbesc($x[0]['hubloc_url']),
 			dbesc(datetime_convert())
 		);
 
-		$target_url = $x[0]['hubloc_callback'] . '/' . substr($x[0]['hubloc_addr'],0,strpos($x[0]['hubloc_addr'],'@')) ;
+		$target_url = $x[0]['hubloc_callback'];
 		logger('mod_magic: redirecting to: ' . $target_url, LOGGER_DEBUG); 
 
 		goaway($target_url

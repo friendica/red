@@ -89,24 +89,11 @@ function post_init(&$a) {
 	if(array_key_exists('auth',$_REQUEST)) {
 		logger('mod_zot: auth request received.');
 		$address = $_REQUEST['auth'];
-		$dest    = $_REQUEST['dest'];
+		$desturl = $_REQUEST['dest'];
 		$sec     = $_REQUEST['sec'];
 		$version = $_REQUEST['version'];
 
-		switch($dest) {
-			case 'channel':
-				$desturl = z_root() . '/channel/' . $webbie;
-				break;
-			case 'photos':
-				$desturl = z_root() . '/photos/' . $webbie;
-				break;
-			case 'profile':
-				$desturl = z_root() . '/profile/' . $webbie;
-				break;
-			default:
-				$desturl = $dest;
-				break;
-		}
+
 		if($webbie) {
 			$c = q("select * from channel where channel_address = '%s' limit 1",
 				dbesc($webbie)
@@ -707,6 +694,7 @@ function post_post(&$a) {
 		$y = q("select xchan_pubkey from xchan where xchan_hash = '%s' limit 1",
 			dbesc($sender_hash)
 		);
+
 		// We created a unique hash in mod/magic.php when we invoked remote auth, and stored it in
 		// the verify table. It is now coming back to us as 'secret' and is signed by the other site.
 		// First verify their signature.
@@ -731,13 +719,13 @@ function post_post(&$a) {
 
 			$confirm = base64url_encode(rsa_sign($data['secret'] . $recip_hash,$c[0]['channel_prvkey']));
 
-			// This additionally checks for forged senders since we already stored the expected result in meta
+			// This additionally checks for forged sites since we already stored the expected result in meta
 			// and we've already verified that this is them via zot_gethub() and that their key signed our token
 
 			$z = q("select id from verify where channel = %d and type = 'auth' and token = '%s' and meta = '%s' limit 1",
 				intval($c[0]['channel_id']),
 				dbesc($data['secret']),
-				dbesc($sender_hash)
+				dbesc($data['sender']['url'])
 			);
 			if(! $z) {
 				logger('mod_zot: auth_check: verification key not found.');

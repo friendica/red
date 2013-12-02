@@ -669,7 +669,6 @@ function connections_content(&$a) {
 				$contacts[] = array(
 					'img_hover' => sprintf( t('%1$s [%2$s]'),$rr['xchan_name'],$rr['xchan_url']),
 					'edit_hover' => t('Edit contact'),
-					'photo_menu' => contact_photo_menu($rr),
 					'id' => $rr['abook_id'],
 					'alt_text' => $alt_text,
 					'dir_icon' => $dir_icon,
