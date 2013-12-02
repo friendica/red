@@ -11,7 +11,7 @@ function events_post(&$a) {
 		return;
 
 	$event_id = ((x($_POST,'event_id')) ? intval($_POST['event_id']) : 0);
-	$cid = ((x($_POST,'cid')) ? intval($_POST['cid']) : 0);
+	$xchan = ((x($_POST,'xchan')) ? dbesc($_POST['xchan']) : '');
 	$uid      = local_user();
 	$startyear = intval($_POST['startyear']);
 	$startmonth = intval($_POST['startmonth']);
@@ -27,6 +27,11 @@ function events_post(&$a) {
 
 	$adjust   = intval($_POST['adjust']);
 	$nofinish = intval($_POST['nofinish']);
+
+	// only allow editing your own events. 
+
+	if(($xchan) && ($xchan !== get_observer_hash()))
+		return;
 
 	// The default setting for the `private` field in event_store() is false, so mirror that	
 	$private_event = false;
@@ -389,10 +394,8 @@ function events_content(&$a) {
 		else
 			$sh_checked = (($orig_event['allow_cid'] === '<' . $channel['channel_hash'] . '>' && (! $orig_event['allow_gid']) && (! $orig_event['deny_cid']) && (! $orig_event['deny_gid'])) ? '' : ' checked="checked" ' );
 
-		if($cid)
+		if($orig_event['event_xchan'])
 			$sh_checked .= ' disabled="disabled" ';
-
-
 
 		$tpl = get_markup_template('event_form.tpl');
 
@@ -426,6 +429,15 @@ function events_content(&$a) {
 
 		require_once('include/acl_selectors.php');
 
+		$perm_defaults = array(
+			'allow_cid' => $channel['channel_allow_cid'], 
+			'allow_gid' => $channel['channel_allow_gid'], 
+			'deny_cid' => $channel['channel_deny_cid'], 
+			'deny_gid' => $channel['channel_deny_gid']
+		); 
+
+
+
 		$o .= replace_macros($tpl,array(
 			'$post' => $a->get_baseurl() . '/events',
 			'$eid' => $eid, 
@@ -453,8 +465,7 @@ function events_content(&$a) {
 			'$t_orig' => $t_orig,
 			'$sh_text' => t('Share this event'),
 			'$sh_checked' => $sh_checked,
-// FIXME
-			'$acl' => (($cid) ? '' : populate_acl(((x($orig_event)) ? $orig_event : $a->user),false)),
+			'$acl' => (($orig_event['event_xchan']) ? '' : populate_acl(((x($orig_event)) ? $orig_event : $perm_defaults))),
 			'$submit' => t('Submit')
 
 		));
