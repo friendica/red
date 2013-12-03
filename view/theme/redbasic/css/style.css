@@ -1590,34 +1590,7 @@ tr.mceLast {
 	margin-left: 200px;
 }
 
-
-#prvmail-to-label, #prvmail-subject-label, #prvmail-expires-label, #prvmail-message-label {
-	margin-bottom: 10px;
-	margin-top: 20px;
-}
-
-#prvmail-submit {
-	float: left;
-	margin-top: 10px;
-	margin-right: 30px;
-}
-#prvmail-upload-wrapper,
-#prvmail-attach-wrapper,
-#prvmail-link-wrapper,
-#prvmail-expire-wrapper,
-#prvmail-encrypt-wrapper,
-#prvmail-rotator-wrapper {
-	float: left;
-	margin-top: 10px;
-	margin-right: 10px;
-	width: 24px;
-	cursor: pointer;
-}
-
-#prvmail-end {
-	clear: both;
-}
-
+/* might be obsolete
 .mail-list-sender,
 .mail-list-detail {
 	float: left;
@@ -1637,8 +1610,6 @@ a.mail-list-link {
     padding: 4px 0;
 }
 
-
-
 .mail-list-outside-wrapper-end {
 	clear: both;
 }
@@ -1656,48 +1627,10 @@ a.mail-list-link {
 .mail-list-delete-icon {
 	border: none;
 }
+*/
 
-.mail-conv-sender,
-.mail-conv-detail {
-	float: left;
-}
-.mail-conv-detail {
-	margin-left: 20px;
-	width: 500px;
-}
 
-.mail-conv-subject {
-    font-size: 1.4em;
-    margin: 10px 0;
-}
-
-.mail-conv-outside-wrapper-end {
-	clear: both;
-}
-
-.mail-conv-outside-wrapper {
-	margin-top: 30px;
-}
-
-.mail-conv-delete-wrapper {
-	float: right;
-	margin-right: 30px;
-	margin-top: 15px;
-}
-.mail-conv-recall-wrapper {
-	float: right;
-	margin-right: 10px;
-	margin-top: 15px;
-}
-
-.mail-conv-break {
-	clear: both;
-}
-
-.mail-conv-delete-icon {
-	border: none;
-}
-
+/* might be obsolete
 .message-links ul {
 	list-style-type: none;
 	padding: 0px;
@@ -1714,6 +1647,7 @@ a.mail-list-link {
 .message-links-end {
 	clear: both;
 }
+*/
 
 #sidebar-group-list ul {
 	list-style-type: none;
@@ -1817,7 +1751,6 @@ a.mail-list-link {
 	margin-top: 15px;
 	margin-bottom: 15px;
 }
-
 
 .group-delete-wrapper {
 	float: right;
@@ -3129,34 +3062,12 @@ ul.menu-popup {
 .reshared-content { margin-left: 30px; }
 .shared_header img { margin-right: 10px; }
 
-
-#mail-list-wrapper {
-border-top: 1px solid #ccc;
-padding: 5px 5px 5px 5px;
-}
-
-span.mail-list {
-float: left;
-width: 20%;
-}
-
-.mail-list-remove {
-width: 5% !important;
-}
-
+/* might be obsolete
 span.mail-delete {
 float: left;
 width: 30px;
 }
-
-img.mail-list-sender-photo {
-height: 24px;
-width: 24px;
-float: left;
-margin-right: 30px;
--moz-border-radius: $radiuspx;
-border-radius: $radiuspx;
-}
+*/
 
 .tag1 {
     font-size : 1.0em !important;
@@ -3325,4 +3236,11 @@ text-decoration: none;
 .admin-icons {
 	color: $toolicon_colour;
 	margin-right: 10px;
+}
+
+/* message */
+
+img.mail-list-sender-photo {
+	-moz-border-radius: $radiuspx;
+	border-radius: $radiuspx;
 }
