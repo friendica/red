@@ -356,7 +356,7 @@ function red_comment($args) {
 
 	$comment['comment_author_email'] = '';
 	if ( isset($content_struct['author_email']) )
-		$comment['comment_author_email'] = $content_struct['author_email'];
+		$comment['comment_author_email'] = 'zot:' . $content_struct['author_email'];
 
 	$comment['comment_author_url'] = '';
 	if ( isset($content_struct['author_url']) )
