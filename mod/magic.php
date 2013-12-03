@@ -20,7 +20,7 @@ function magic_init(&$a) {
 
 	$basepath = $parsed['scheme'] . '://' . $parsed['host'] . (($parsed['port']) ? ':' . $parsed['port'] : ''); 
 
-	$x = q("select * from hubloc where hubloc_url = '%s' order by hubloc_connected desc limit 1"
+	$x = q("select * from hubloc where hubloc_url = '%s' order by hubloc_connected desc limit 1",
 		dbesc($basepath)
 	);
 	
@@ -37,7 +37,7 @@ function magic_init(&$a) {
 
 				// Now try again
 
-				$x = q("select * from hubloc where hubloc_url = '%s' order by hubloc_connected desc limit 1"
+				$x = q("select * from hubloc where hubloc_url = '%s' order by hubloc_connected desc limit 1",
 					dbesc($basepath)
 				);
 			}

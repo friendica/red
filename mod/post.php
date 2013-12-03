@@ -28,7 +28,7 @@ function post_init(&$a) {
  *
  ** auth => the urlencoded webbie (channel@host.domain) of the channel requesting access
  ** dest => the desired destination URL (urlencoded)
- ** sec  => a random string which is also stored on the remote site for use during the verification phase. 
+ ** sec  => a random string which is also stored on $mysite for use during the verification phase. 
  ** version => the zot revision
  *
  * When this packet is received, an "auth-check" zot message is sent to $mysite.
@@ -36,7 +36,7 @@ function post_init(&$a) {
  * If no information has been recorded about the requesting identity a zot information packet will be retrieved before
  * continuing.
  * 
- * The sender of this packet is a random site user. The recipients will be a single recipient corresponding
+ * The sender of this packet is a random site channel. The recipients will be a single recipient corresponding
  * to the guid and guid_sig we have associated with the requesting auth identity
  *
  *
@@ -578,6 +578,19 @@ function post_post(&$a) {
 
 	if($msgtype === 'auth_check') {
 
+		/**
+		 * Requestor visits /magic/?dest=somewhere on their own site with a browser
+		 * magic redirects them to $destsite/post [with auth args....]
+		 * $destsite sends an auth_check packet to originator site
+		 * The auth_check packet is handled here by the originator's site 
+		 * - the browser session is still waiting
+		 * inside $destsite/post for everything to verify
+		 * If everything checks out we'll return a token to $destsite
+		 * and then $destsite will verify the token, authenticate the browser
+		 * session and then redirect to the original destination.
+		 * If authentication fails, the redirection to the original destination
+		 * will still take place but without authentication.
+		 */
 		logger('mod_zot: auth_check', LOGGER_DEBUG);
 
 		if(! $encrypted_packet) {
