@@ -691,12 +691,28 @@ function import_xchan($arr,$ud_flags = 1) {
 			dbesc($xchan_hash)
 		);
 
+		// See if a primary is specified
+
+		$has_primary = false;
+		foreach($arr['locations'] as $location) {
+			if($location['primary']) {
+				$has_primary = true;
+				break;
+			}
+		}
+
 		foreach($arr['locations'] as $location) {
 			if(! rsa_verify($location['url'],base64url_decode($location['url_sig']),$arr['key'])) {
 				logger('import_xchan: Unable to verify site signature for ' . $location['url']);
 				$ret['message'] .= sprintf( t('Unable to verify site signature for %s'), $location['url']) . EOL;
 				continue;
 			}
+
+			// Ensure that they have one primary hub
+
+			if(! $has_primary)
+				$location['primary'] = true;
+
 
 			for($x = 0; $x < count($xisting); $x ++) {
 				if(($xisting[$x]['hubloc_url'] === $location['url']) && ($xisting[$x]['hubloc_sitekey'] === $location['sitekey'])) {

@@ -23,11 +23,6 @@
   <div id="sidebar-new-group">
   <a href="group/new">{{$createtext}}</a>
   </div>
-  {{if $ungrouped}}
-  <div id="sidebar-ungrouped">
-  <a href="nogroup">{{$ungrouped}}</a>
-  </div>
-  {{/if}}
 </div>
 
 

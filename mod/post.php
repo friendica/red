@@ -18,27 +18,26 @@ function post_init(&$a) {
  * Magic Auth
  * ==========
  *
- * So-called "magic auth" takes place by a special exchange. On the remote computer, a redirection is made to the zot endpoint with special GET parameters.
+ * So-called "magic auth" takes place by a special exchange. On the site where the "channel to be authenticated" lives (e.g. $mysite), 
+ * a redirection is made via $mysite/magic to the zot endpoint of the remote site ($remotesite) with special GET parameters.
  *
- * Endpoint: https://example.com/post/name (name is now optional - we are authenticating to a site, not a channel)
+ * The endpoint is typically  https://$remotesite/post - or whatever was specified as the callback url in prior communications
+ * (we will bootstrap an address and fetch a zot info packet if possible where no prior communications exist)
  *
- * where 'name' is the left hand side of the channel webbie, for instance 'mike' where the webbie is 'mike@zothub.com'
+ * Four GET parameters are supplied:
  *
- * Additionally four GET parameters are supplied:
- *
- ** auth => the webbie of the person requesting access
+ ** auth => the urlencoded webbie (channel@host.domain) of the channel requesting access
  ** dest => the desired destination URL (urlencoded)
- ** sec  => a random string which is also stored locally for use during the verification phase. 
+ ** sec  => a random string which is also stored on $mysite for use during the verification phase. 
  ** version => the zot revision
  *
- * When this packet is received, a zot message is sent to the site hosting the request auth identity.
+ * When this packet is received, an "auth-check" zot message is sent to $mysite.
  * (e.g. if $_GET['auth'] is foobar@podunk.edu, a zot packet is sent to the podunk.edu zot endpoint, which is typically /post)
  * If no information has been recorded about the requesting identity a zot information packet will be retrieved before
  * continuing.
  * 
- * The sender of this packet is the name attached to the request endpoint. e.g. 'mike' in this example. If this channel
- * cannot be located, we will choose any local channel as the sender. The recipients will be a single recipient corresponding
- * to the guid and guid_sig we have associated with the auth identity
+ * The sender of this packet is a random site channel. The recipients will be a single recipient corresponding
+ * to the guid and guid_sig we have associated with the requesting auth identity
  *
  *
  *    {
@@ -72,63 +71,35 @@ function post_init(&$a) {
  *    }
  *
  * 'confirm' in this case is the base64url encoded RSA signature of the concatenation of 'secret' with the
- * base64url encoded whirlpool hash of the source guid and guid_sig; signed with the source channel private key. 
+ * base64url encoded whirlpool hash of the requestor's guid and guid_sig; signed with the source channel private key. 
  * This prevents a man-in-the-middle from inserting a rogue success packet. Upon receipt and successful 
  * verification of this packet, the destination site will redirect to the original destination URL and indicate a successful remote login. 
  *
  *
  *
  */
-
-	if(argc() > 1) {
-		$webbie = argv(1);
-	}
-	else
-		$webbie = '';
 	
 	if(array_key_exists('auth',$_REQUEST)) {
 		logger('mod_zot: auth request received.');
 		$address = $_REQUEST['auth'];
-		$dest    = $_REQUEST['dest'];
+		$desturl = $_REQUEST['dest'];
 		$sec     = $_REQUEST['sec'];
 		$version = $_REQUEST['version'];
 
-		switch($dest) {
-			case 'channel':
-				$desturl = z_root() . '/channel/' . $webbie;
-				break;
-			case 'photos':
-				$desturl = z_root() . '/photos/' . $webbie;
-				break;
-			case 'profile':
-				$desturl = z_root() . '/profile/' . $webbie;
-				break;
-			default:
-				$desturl = $dest;
-				break;
-		}
-		if($webbie) {
-			$c = q("select * from channel where channel_address = '%s' limit 1",
-				dbesc($webbie)
-			);
-		}
+
+		// They are authenticating ultimately to the site and not to a particular channel.
+		// Any channel will do, providing it's currently active. We just need to have an 
+		// identity to attach to the packet we send back. So find one. 
+
+		$c = q("select * from channel where not ( channel_pageflags & %d ) limit 1",
+			intval(PAGE_REMOVED)
+		);
+
 		if(! $c) {
+			// nobody here
 
-			// They are authenticating ultimately to the site and not to a particular channel.
-			// Any channel will do, providing it's currently active. We just need to have an 
-			// identity to attach to the packet we send back. So find one. 
-
-			$c = q("select * from channel where not ( channel_pageflags & %d ) limit 1",
-				intval(PAGE_REMOVED)
-			);
-
-			if(! $c) {
-
-				// nobody here
-
-				logger('mod_zot: auth: unable to find channel ' . $webbie);
-				goaway($desturl);
-			}
+			logger('mod_zot: auth: unable to find a response channel');
+			goaway($desturl);
 		}
 
 		// Try and find a hubloc for the person attempting to auth
@@ -153,7 +124,7 @@ function post_init(&$a) {
 			goaway($desturl);
 		}
 
-		logger('mod_zot: auth request received from ' . $x[0]['xchan_addr'] . ' for ' . (($webbie) ? $webbie : 'undefined')); 
+		logger('mod_zot: auth request received from ' . $x[0]['xchan_addr'] ); 
 
 		// check credentials and access
 
@@ -166,10 +137,12 @@ function post_init(&$a) {
 		$already_authed = ((($remote) && ($x[0]['hubloc_hash'] == $remote)) ? true : false); 
 
 		if(! $already_authed) {
-			// Auth packets MUST use ultra top-secret hush-hush mode 
-			$p = zot_build_packet($c[0],$type = 'auth_check',
-				array(array('guid' => $x[0]['hubloc_guid'],'guid_sig' => $x[0]['hubloc_guid_sig'])), 
-				$x[0]['hubloc_sitekey'], $sec);
+
+			// Auth packets MUST use ultra top-secret hush-hush mode - e.g. the entire packet is encrypted using the site private key
+			// The actual channel sending the packet ($c[0]) is not important, but this provides a generic zot packet with a sender
+			// which can be verified
+ 
+			$p = zot_build_packet($c[0],$type = 'auth_check', array(array('guid' => $x[0]['hubloc_guid'],'guid_sig' => $x[0]['hubloc_guid_sig'])), $x[0]['hubloc_sitekey'], $sec);
 			$result = zot_zot($x[0]['hubloc_callback'],$p);
 			if(! $result['success']) {
 				logger('mod_zot: auth_check callback failed.');
@@ -211,7 +184,7 @@ function post_init(&$a) {
 			logger('mod_zot: auth success from ' . $x[0]['xchan_addr'] . ' for ' . $webbie); 
 
 		} else {
-			logger('mod_zot: still not authenticated: ' . $x[0]['xchan_addr']);
+			logger('mod_zot: magic-auth failure - not authenticated: ' . $x[0]['xchan_addr']);
 			q("update hubloc set hubloc_status =  (hubloc_status | %d ) where hubloc_addr = '%s'",
 				intval(HUBLOC_RECEIVE_ERROR),
 				dbesc($x[0]['xchan_addr'])
@@ -391,6 +364,7 @@ function post_post(&$a) {
 
 	logger('mod_zot: ' . print_r($_REQUEST,true), LOGGER_DEBUG);
 
+	$encrypted_packet = false;
 	$ret = array('success' => false);
 
 	$data = json_decode($_REQUEST['data'],true);
@@ -403,17 +377,10 @@ function post_post(&$a) {
 	 */
 
 	if(array_key_exists('iv',$data)) {
+		$encrypted_packet = true;
 		$data = crypto_unencapsulate($data,get_config('system','prvkey'));
 		logger('mod_zot: decrypt1: ' . $data, LOGGER_DATA);
-
-//	susceptible to Bleichenbacher's attack
-//		if(! $data) {
-//			$ret['message'] = 'Decryption failed.';
-//			json_return_and_die($ret);
-//		}
-
 		$data = json_decode($data,true);
-
 	}
 
 	if(! $data) {
@@ -552,6 +519,8 @@ function post_post(&$a) {
 	}
 
 
+
+
 	/**
 	 * All other message types require us to verify the sender. This is a generic check, so we 
 	 * will do it once here and bail if anything goes wrong.
@@ -605,6 +574,91 @@ function post_post(&$a) {
 
 	if(array_key_exists('recipients',$data))
 		$recipients = $data['recipients'];
+
+
+	if($msgtype === 'auth_check') {
+
+		/**
+		 * Requestor visits /magic/?dest=somewhere on their own site with a browser
+		 * magic redirects them to $destsite/post [with auth args....]
+		 * $destsite sends an auth_check packet to originator site
+		 * The auth_check packet is handled here by the originator's site 
+		 * - the browser session is still waiting
+		 * inside $destsite/post for everything to verify
+		 * If everything checks out we'll return a token to $destsite
+		 * and then $destsite will verify the token, authenticate the browser
+		 * session and then redirect to the original destination.
+		 * If authentication fails, the redirection to the original destination
+		 * will still take place but without authentication.
+		 */
+		logger('mod_zot: auth_check', LOGGER_DEBUG);
+
+		if(! $encrypted_packet) {
+			logger('mod_zot: auth_check packet was not encrypted.');
+			json_return_and_die($ret);
+		}
+		
+		$arr = $data['sender'];
+		$sender_hash = base64url_encode(hash('whirlpool',$arr['guid'] . $arr['guid_sig'], true));
+
+		// garbage collect any old unused notifications
+		q("delete from verify where type = 'auth' and created < UTC_TIMESTAMP() - INTERVAL 10 MINUTE");
+
+		$y = q("select xchan_pubkey from xchan where xchan_hash = '%s' limit 1",
+			dbesc($sender_hash)
+		);
+
+		// We created a unique hash in mod/magic.php when we invoked remote auth, and stored it in
+		// the verify table. It is now coming back to us as 'secret' and is signed by a channel at the other end.
+		// First verify their signature. We will have obtained a zot-info packet from them as part of the sender
+		// verification. 
+
+		if((! $y) || (! rsa_verify($data['secret'],base64url_decode($data['secret_sig']),$y[0]['xchan_pubkey']))) {
+			logger('mod_zot: auth_check: sender not found or secret_sig invalid.');
+			json_return_and_die($ret);
+		}
+
+		// There should be exactly one recipient, the original auth requestor
+
+		if($data['recipients']) {
+
+			$arr = $data['recipients'][0];
+			$recip_hash = base64url_encode(hash('whirlpool',$arr['guid'] . $arr['guid_sig'], true));
+			$c = q("select channel_id, channel_prvkey from channel where channel_hash = '%s' limit 1",
+				dbesc($recip_hash)
+			);
+			if(! $c) {
+				logger('mod_zot: auth_check: recipient channel not found.');
+				json_return_and_die($ret);
+			}
+
+			$confirm = base64url_encode(rsa_sign($data['secret'] . $recip_hash,$c[0]['channel_prvkey']));
+
+			// This additionally checks for forged sites since we already stored the expected result in meta
+			// and we've already verified that this is them via zot_gethub() and that their key signed our token
+
+			$z = q("select id from verify where channel = %d and type = 'auth' and token = '%s' and meta = '%s' limit 1",
+				intval($c[0]['channel_id']),
+				dbesc($data['secret']),
+				dbesc($data['sender']['url'])
+			);
+			if(! $z) {
+				logger('mod_zot: auth_check: verification key not found.');
+				json_return_and_die($ret);
+			}
+			$r = q("delete from verify where id = %d limit 1",
+				intval($z[0]['id'])
+			);
+
+			logger('mod_zot: auth_check: success', LOGGER_DEBUG);
+			$ret['success'] = true;
+			$ret['confirm'] = $confirm;
+			json_return_and_die($ret);
+
+		}
+		json_return_and_die($ret);
+	}
+
 
 	if($msgtype === 'purge') {
 		if($recipients) {
@@ -694,66 +748,6 @@ function post_post(&$a) {
 		$ret['success'] = true;
 		json_return_and_die($ret);
 
-	}
-
-	if($msgtype === 'auth_check') {
-		logger('mod_zot: auth_check');
-		$arr = $data['sender'];
-		$sender_hash = base64url_encode(hash('whirlpool',$arr['guid'] . $arr['guid_sig'], true));
-
-		// garbage collect any old unused notifications
-		q("delete from verify where type = 'auth' and created < UTC_TIMESTAMP() - INTERVAL 10 MINUTE");
-
-		$y = q("select xchan_pubkey from xchan where xchan_hash = '%s' limit 1",
-			dbesc($sender_hash)
-		);
-		// We created a unique hash in mod/magic.php when we invoked remote auth, and stored it in
-		// the verify table. It is now coming back to us as 'secret' and is signed by the other site.
-		// First verify their signature.
-
-		if((! $y) || (! rsa_verify($data['secret'],base64url_decode($data['secret_sig']),$y[0]['xchan_pubkey']))) {
-			logger('mod_zot: auth_check: sender not found or secret_sig invalid.');
-			json_return_and_die($ret);
-		}
-
-		// There should be exactly one recipient
-		if($data['recipients']) {
-
-			$arr = $data['recipients'][0];
-			$recip_hash = base64url_encode(hash('whirlpool',$arr['guid'] . $arr['guid_sig'], true));
-			$c = q("select channel_id, channel_prvkey from channel where channel_hash = '%s' limit 1",
-				dbesc($recip_hash)
-			);
-			if(! $c) {
-				logger('mod_zot: auth_check: recipient channel not found.');
-				json_return_and_die($ret);
-			}
-
-			$confirm = base64url_encode(rsa_sign($data['secret'] . $recip_hash,$c[0]['channel_prvkey']));
-
-			// This additionally checks for forged senders since we already stored the expected result in meta
-			// and we've already verified that this is them via zot_gethub() and that their key signed our token
-
-			$z = q("select id from verify where channel = %d and type = 'auth' and token = '%s' and meta = '%s' limit 1",
-				intval($c[0]['channel_id']),
-				dbesc($data['secret']),
-				dbesc($sender_hash)
-			);
-			if(! $z) {
-				logger('mod_zot: auth_check: verification key not found.');
-				json_return_and_die($ret);
-			}
-			$r = q("delete from verify where id = %d limit 1",
-				intval($z[0]['id'])
-			);
-
-			logger('mod_zot: auth_check: success', LOGGER_DEBUG);
-			$ret['success'] = true;
-			$ret['confirm'] = $confirm;
-			json_return_and_die($ret);
-
-		}
-		json_return_and_die($ret);
 	}
 
 

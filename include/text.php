@@ -1084,7 +1084,7 @@ function format_categories(&$item,$writeable) {
 			if(! trim($term))
 				continue;
 			$removelink = (($writeable) ?  z_root() . '/filerm/' . $item['id'] . '?f=&cat=' . urlencode($t['term']) : '');
-			$categories[] = array('term' => $term, 'writeable' => $writeable, 'removelink' => $removelink, 'url' => $t['url']);
+			$categories[] = array('term' => $term, 'writeable' => $writeable, 'removelink' => $removelink, 'url' => zid($t['url']));
 		}
 	}
 	$s = replace_macros(get_markup_template('item_categories.tpl'),array(
