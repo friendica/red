@@ -15,8 +15,6 @@ img.mail-list-sender-photo {
 	width: 24px;
 	float: left;
 	margin-right: 30px;
-	-moz-border-radius: $radiuspx;
-	border-radius: $radiuspx;
 }
 
 .mail-list-remove {

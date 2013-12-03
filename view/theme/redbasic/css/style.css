@@ -3237,3 +3237,10 @@ text-decoration: none;
 	color: $toolicon_colour;
 	margin-right: 10px;
 }
+
+/* message */
+
+img.mail-list-sender-photo {
+	-moz-border-radius: $radiuspx;
+	border-radius: $radiuspx;
+}
