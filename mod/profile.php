@@ -116,7 +116,6 @@ function profile_content(&$a, $update = 0) {
 	$o .= profile_tabs($a, $is_owner, $a->profile['channel_address']);
 
 
-	require_once('include/profile_advanced.php');
 	$o .= advanced_profile($a);
 	call_hooks('profile_advanced',$o);
 	return $o;
