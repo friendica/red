@@ -1834,6 +1834,7 @@ a.mail-list-link {
 	border-radius: $radiuspx;
 	padding: 5px;
 	font-weight: bold;
+	clear: both;
 }
 
 
