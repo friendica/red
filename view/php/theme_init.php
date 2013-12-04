@@ -9,6 +9,7 @@ head_add_css('library/jslider/css/jslider.css');
 head_add_css('library/prettyphoto/css/prettyPhoto.css');
 head_add_css('library/colorbox/colorbox.css');
 // head_add_css('library/font_awesome/css/font-awesome.min.css');
+head_add_css('view/css/conversation.css');
 
 head_add_js('js/jquery.js');
 head_add_js('js/jquery-migrate-1.1.1.js');

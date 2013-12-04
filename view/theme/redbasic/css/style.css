@@ -98,14 +98,6 @@ blockquote {
 	padding: 5px;
 }
 
-.hide-comments {
-	margin-left: 5px;
-}
-
-.hide-comments-outer {
-	margin-left: 10px;
-}
-
 #panel {
 	background-color: ivory;
 	position: absolute;
@@ -330,71 +322,10 @@ footer {
 	margin: 15px 0 15px 150px;
 }
 
-/* from default */
-#jot-perms-icon, 
-#profile-location,
-#profile-nolocation,
-#profile-youtube, 
-#profile-video, 
-#profile-audio,
-#profile-link,
-#profile-title,
-#profile-expires, 
-#profile-encrypt, 
-#wall-image-upload,
-#wall-file-upload,
-#profile-upload-wrapper,
-#wall-image-upload-div,
-#wall-file-upload-div,
-.hover, .focus {
-	cursor: pointer;
-}
-
-#jot-perms-icon {
-	float: left;
-}
-
-#jot-title, #jot-category, #jot-pagetitle {
-	border: 0px;
-	margin: 0px;
-	padding: 8px;
-	height: 1.8em;
-	width: 530px;
-	margin-bottom: 5px;
-	font-weight: bold;
-	border: solid 1px #ffffff;
-	border-radius: $radiuspx;
-}
-
-#jot-title::-webkit-input-placeholder{font-weight: bold;}
-#jot-category::-webkit-input-placeholder{font-weight: bold;}
-#jot-title:-moz-placeholder{font-weight: bold;}
-#jot-category:-moz-placeholder{font-weight: bold;}
-#jot-pagetitle::-webkit-input-placeholder{font-weight: bold;}
-#jot-pagetitle:-moz-placeholder{font-weight: bold;}
-		
-#jot-title:hover,
-#jot-title:focus,
-#jot-pagetitle:hover,
-#jot-pagetitle:focus,
-#jot-category:hover,
-#jot-category:focus {
-	border: 1px solid #cccccc; 
-}
-
-.jothidden { display:none; }
-
-
-
 .fakebutton {
 	margin-top: 15px;
 	margin-bottom: 15px;
 }
-
-.lockview {
-	cursor: pointer;
-}
-
 
 #group-sidebar {
 	margin-bottom: 10px;
@@ -703,382 +634,43 @@ footer {
 	margin-bottom: 15px;
 }
 
-
-.thread-wrapper .wall-item-comment-wrapper, .wall-item-content-wrapper.comment {
-	margin-left: $comment_indent;
-	border-left: 2px solid #eee;
-}
-
-.wall-item-content-wrapper {
-	margin-top: 10px;
-	position: relative;
-	border-radius: $radiuspx;
-	background-color: $item_colour;
-	opacity: $item_opacity;
-}
-
 .thread-end-wrapper {
     margin-left: 50px;
 }
 
-
-.wall-item-like.comment, .wall-item-dislike.comment {
-	margin-left: 50px;
-}
-
-.wall-item-info {
-	display: block;
-	float: left;
-	width:110px;
-	margin-right:10px;
-}
-.comment .wall-item-info {
-	width: 70px;
-}
-
-.wall-item-photo-wrapper {
-	margin-top: 0px;
-	margin-left: 10px;
-	margin-bottom: 10px;
-	width: 100px;
-}
-.wall-item-photo-menu-button {
-	display: block;
-	position: absolute;
-	background-image: url("../img/photo-menu.jpg");
-	background-position: top left; 
-	background-repeat: no-repeat;
-	margin: 0px; padding: 0px;
-	width: 16px;
-	height: 16px;
-	top: $pmenu_top; left:10px;
-	overflow: hidden;
-	text-indent: 40px;
-	display: none;
-	
-}
-.wall-item-photo-menu {
-	width: auto;
-	border: 2px solid #444444;
-	background: #FFFFFF;
-	position: absolute;
-	left: 10px; 
-	top: $top_photo;
-	display: none;
-	z-index: 10000;
-}
-.wall-item-photo-menu ul { margin:0px; padding: 0px; list-style: none }
-.wall-item-photo-menu li a { display: block; padding: 2px; }
-.wall-item-photo-menu li a:hover { color: #FFFFFF; background: #3465A4; text-decoration: none; }
-
-
-.comment .wall-item-photo-menu-button {	top: $pmenu_reply;}
-.comment .wall-item-photo-menu { top: $reply_photo; }
-
-.wallwall .wwto {
-    left: 50px;
-    margin: 0;
-    position: absolute;
-    top: $wwtop;
-    width: 30px
-}
-.wallwall .wwto img {
-	width: 30px !important;
-	height: 30px !important;
-}
-
-.wallwall .wall-item-photo-end {
-	clear: both;
-}
-
-.wall-item-arrowphoto-wrapper {
-    position: absolute;
-    left: 75px;
-    top: $wwtop;
-    z-index: 99;
-}
-.wall-item-wrapper {
-    margin-left:10px;
-}
-
-.wall-item-ago .icon-ok {
-	cursor: pointer;
-	color: darkgreen;
-}
-
-.wall-item-lock {
-	font-size: 1.2em;
-    left: 105px;
-    position: absolute;
-    top: 1px;
-	color: $toolicon_colour;	
-}
-.comment .wall-item-lock {
-	left: 65px;
-}
-
-.wall-item-ago {
-	color: #777;
-	font-size: 0.8em;
-}
-
-.wall-item-location {
-	overflow: hidden;
-	/* add ellipsis on text overflow               */
-	/* this work on safari, opera, ie, chrome.     */
-	/* firefox users have to wait support or we    */
-	/* can use a jquery plugin http://bit.ly/zJskg */
-	text-overflow: ellipsis;
-	-o-text-overflow: ellipsis;
-	width: 100%;
-}
-
-
-.item-tool {
-	float: left;
-	margin-right: 8px;
-	font-size: 1.2em;
-	cursor: pointer;
-	color: $toolicon_colour; 
-}
-
-.item-tool:hover {
-	color: $toolicon_activecolour; 
-}
-
-.drop-icons.item-tool {
-	color: $toolicon_colour;
-}
-
-.like-rotator {
-	float: left;
-	margin: 8px;
-	color: $toolicon_colour;
-}
-
-.wall-item-delete-wrapper {
-	float: right;
-}
-
-.wall-item-delete-end {
-	clear: both;
-}
-
+/* might be obsolete
 .wall-item-delete-icon {
 	border: none;
 }
+*/
 
-.wall-item-wrapper-end {
-	clear: both;
-}
-
-.wall-item-photo {
-	border: none;
-	width: $top_photo !important;
-	height: $top_photo !important;
-
-}
-.comment .wall-item-photo {
-	width: $reply_photo !important; 
-	height: $reply_photo !important;
-}
-.wall-item-content {
-	margin-left: 10px;
-	overflow: auto;
-	font-size: $font_size;
-}
-
-.wall-item-content img {
-    max-width: 95% !important;
-}
-
-.wall-item-title {
-	float: left;
-	font-weight: bold;
-}
-
-.wall-item-title-end {
-	clear: both;
-}
-
-.thread-wrapper.toplevel_item {
-	width: 92%;
-	max-width: $converse_width;
-}
-
-.wall-item-body {
-	margin-top: 10px;
-}
-
-.wall-item-body.divmore {
-        padding-bottom: 15px;
-}
-
-.wall-item-tools {
-	clear: both;
-    padding: 5px 10px;
-}    
-
-.wall-item-like, .wall-item-dislike {
-	margin-top: 5px;
-}
-
-.wall-item-author {
-	margin-top: 10px;
-}
-
-.comment-edit-photo {
-	margin-top: 10px;
-	margin-left: 10px;
-	margin-bottom: 10px;
-	width: 100px;
-	float: left;
-}
-.comment-wwedit-wrapper.threaded > .comment-edit-form > .comment-edit-photo {
-	width: 40px;
-}
-
-.comment-edit-photo img {
-	width: $reply_photo;
-}
-.comment-edit-text-empty, .comment-edit-text-full {
-	float: left;
-	margin-top: 10px;
-	padding: 3px 1px 1px 3px;
-	border: 1px solid #ccc;
-	padding: 8px;
-	border-radius: $radiuspx;
-}
-
-.comment-edit-text-empty {
-	color: gray;
-	height: 1.0em;
-	width: 270px; 
-	overflow: auto;
-	margin-bottom: 10px;
-}
-
-.comment-wwedit-wrapper.threaded > .comment-edit-form > .comment-edit-text-empty {
-	height: 1.5em;
-}
-
-.comment-edit-text-full {
-	color: black;
-	height: 150px;
-	width: 80%;
-	overflow: auto;
-}
-
-
-.comment-edit-text-end {
-	clear: both;
-}
-
-.comment-edit-submit {
-	margin: 10px 0px 10px 110px;
-}
-
-.comment-wwedit-wrapper.threaded > .comment-edit-form > .comment-edit-submit-wrapper > .comment-edit-submit {
-	margin-left: 50px;
-}
-
-#profile-jot-submit-wrapper {
-	margin-top: 10px;
-	width: 90%;
-}
-
-#profile-upload-wrapper {
-	float: left;
-	margin-left: 15px;
-}
-#profile-attach-wrapper {
-	float: left;
-	margin-left: 15px;
-}
-#profile-rotator {
-	float: left;
-	margin: 8px 0px 0px 20px;
-	color: #777;
-}
-#profile-link-wrapper {
-	float: left;
-	margin-left: 15px;
-}
+/* might be obsolete
 #profile-youtube-wrapper {
 	float: left;
 	margin-left: 15px;
 }
-#profile-video-wrapper {
-	float: left;
-	margin-left: 15px;
-}
-#profile-audio-wrapper {
-	float: left;
-	margin-left: 15px;
-}
-#profile-location-wrapper {
-	float: left;
-	margin-left: 15px;
-}
-#profile-expire-wrapper {
-	float: left;
-	margin-left: 15px;
-}
-#profile-encrypt-wrapper {
-	float: left;
-	margin-left: 15px;
-}
-#jot-preview-link {
-	float: left;
-	margin-left: 45px;
-	margin-top: 0px !important;
-}
 
-#profile-nolocation-wrapper {
-	float: left;
-	margin-left: 15px;
-}
 #profile-title-wrapper {
 	float: left;
 	margin-left: 15px;
 }
 
-#profile-jot-perms {
-	float: right;
-	background-color: $toolicon_colour;
-	border: 1px solid #666;
-	border-right: none;
-	border-radius: $radiuspx 0px 0px $radiuspx;
-	padding: 6px;
-}
-
-#profile-jot-perms-end {
-	height: 30px;
-}
-
 #profile-jot-plugin-end{
   clear: both;
-}
-.profile-jot-net {
-	float: left;
-	margin-right: 10px;
-	margin-top: 5px;
-	margin-bottom: 5px;
 }
 
 #profile-jot-networks-end {
 	clear: both;
 }
 
-#profile-jot-end {
-	margin-bottom: 30px;
-}
 #about-jot-submit-wrapper {
 	margin-top: 15px;
 }
 #about-jot-end {
 	margin-bottom: 30px;
 }
+*/
+
 #contacts-main {
 	margin-bottom: 30px;
 }
@@ -1277,6 +869,8 @@ div.dirtagblock.widget {
 
 /* TinyMCE */
 
+/* TODO: this should, if needed at all, probably go to custom_tinymce.css
+
 DIV#profile-jot-text_toolbargroup{
 background: #FFF;
 border: 1px #111;
@@ -1290,43 +884,9 @@ box-shadow: 5px 5px 5px #000 inset !important;}
 tr.mceLast {
 
 }
+*/
 
-/* Not MCE */
-
-#profile-jot-text {
-	height: 1.8em;
-	color:#000;
-	border: 1px solid #cccccc;
-	padding: 8px;
-	margin-right: 0px;
-	width: 90%;
-	-moz-border-radius: $radiuspx;
-	border-radius: $radiuspx;	
-}
-
-#profile-jot-text::-moz-placeholder {
-	font-size:1.5em;
-}
-
-#profile-jot-text:focus::-moz-placeholder {
-	color: transparent;
-}
-
-#profile-jot-text::-webkit-input-placeholder {
-	font-size:1.5em;
-}
-
-#profile-jot-text:focus::-webkit-input-placeholder {
-	color: transparent;
-}
-
-#profile-jot-text-loading {
-	float: left;
-	margin: 14px 0px 0px 12px;
-	color: #777;
-}
-
-.wall-item-photo, .photo, .contact-block-img, .my-comment-photo {
+.photo, .contact-block-img {
     border-radius: $radiuspx;
     -moz-border-radius: $radiuspx;
     box-shadow: $shadowpx $shadowpx $shadowpx 0 #444444;
@@ -1374,30 +934,6 @@ tr.mceLast {
     border-radius: $radiuspx;
     -moz-border-radius: $radiuspx;
     box-shadow: 4px 4px 3px 0 #444444;
-}
-
-#profile-jot-submit {
-	height: 30px;
-	width: 70px;
-	background: linear-gradient(top, #0080ff 0%, #0080aa);
-	background: -webkit-linear-gradient(top, #0080ff 0%, #0080aa);
-	background: -moz-linear-gradient(top, #0080ff 0%, #0080aa);
-	background: -o-linear-gradient(top, #0080ff 0%, #0080aa);
-	background: -ms-linear-gradient(top, #0080ff 0%, #0080aa);
-	color: #fff;
-	font-weight: bold;
-	border-radius: 0px $radiuspx $radiuspx 0px;
-	float: right;
-	text-shadow: 1px 1px #111;
-	cursor: pointer;
-}
-
-#profile-jot-submit:hover {
-	background: linear-gradient(top, #0080aa 0%, #0080ff);
-	background: -webkit-linear-gradient(top, #0080aa 0%, #0080ff);
-	background: -moz-linear-gradient(top, #0080aa 0%, #0080ff);
-	background: -o-linear-gradient(top, #0080aa 0%, #0080ff);
-	background: -ms-linear-gradient(top, #0080aa 0%, #0080ff);
 }
 
 #sidebar-page-list .label {
@@ -1741,11 +1277,6 @@ a.mail-list-link {
 	border-radius: $radiuspx;
 
 }
-
-#profile-jot-wrapper {
-	margin-top: 25px;
-}
-
 
 #settings-default-perms-menu {
 	margin-top: 15px;
@@ -2245,32 +1776,21 @@ a.mail-list-link {
 	margin-top: 10px;
 }
 
-.posttags a, .body-tag, .filesavetags, .categorytags {
+/* might be obsolete
+.posttags {
 	opacity: 0.5;
 	filter:alpha(opacity=50);
 }
 
-.posttags a:hover, .body-tag:hover, .filesavetags:hover, .categorytags:hover {
+.posttags {
 	opacity: 1.0 !important;
 	filter:alpha(opacity=100) !important;
 }
 
-.posttags, .body-tag {
+.posttags {
 	margin-top: 15px;
 }
-
-.item-select {
-	opacity: 0.1;
-	filter:alpha(opacity=10);
-	float: right;
-	margin-right: 10px;
-
-}
-.item-select:hover, .checkeditem {
-	opacity: 1;
-	filter:alpha(opacity=100);
-}
-
+*/
 
 #item-delete-selected {
 	margin-top: 30px;
@@ -2456,10 +1976,6 @@ brain is weird like that */
 /*	visibility: visible; */
 }
 
-.wall-item-ago i {
-	font-size: 0.6em;
-}
-
 .icon {
 	display: block; width: 16px; height: 16px;
 	background-image: url('../../../../images/icons.png');
@@ -2508,21 +2024,7 @@ brain is weird like that */
 
 .icon.dim { opacity: 0.3;filter:alpha(opacity=30); }
 
-[class^="comment-edit-bb"] {
-	list-style: none;
-	display: none;
-	margin: 0px 0 -5px 0px;
-	padding: 0px;
-	width: 75%;
-}
-[class^="comment-edit-bb"] > li {
-	display: inline-block;
-	margin: 10px 10px 0 0;
-	visibility: none;
-}
-[class^="comment-edit-bb-end"] {
-	clear: both;
-}
+
 
 .body-attach {
 	margin-top: 10px;
@@ -2568,29 +2070,6 @@ div.jGrowl div.info {
 #jGrowl.top-right {
 	top: 15px;
 	right: 15px;
-}
-.qcomment {
-	border: 1px solid #EEE;
-	padding: 3px;
-	margin-top: 15px;
-	margin-left: 25px;
-	width: 125px;
-	overflow-y: auto;
-}
-
-
-.qcomment option {
-	width: 125px;
-	overflow-x: hidden;
-}
-
-.qcomment {
-	opacity: 0.3;
-	filter:alpha(opacity=30);
-}
-.qcomment:hover {
-	opacity: 1.0;
-	filter:alpha(opacity=100);
 }
 
 
@@ -3160,20 +2639,9 @@ margin-right: 50px;
 	margin-left: -20px;
 }
 
-.comment-icon,
-.admin-icons,
-.jot-icons {
+.admin-icons {
 	font-size: 1.2em;
 	color: $toolicon_colour;
-}
-
-.comment-preview-icon {
-	margin-left: 15px;
-}
-
-.comment-icon:hover,
-.jot-icons:hover {
-	color: $toolicon_activecolour; 
 }
 
 .nav-icon {
@@ -3243,4 +2711,271 @@ text-decoration: none;
 img.mail-list-sender-photo {
 	-moz-border-radius: $radiuspx;
 	border-radius: $radiuspx;
+}
+
+/* jot */
+
+#jot-title,
+#jot-category,
+#jot-pagetitle {
+	font-weight: bold;
+	border: solid 1px #ffffff;
+	border-radius: $radiuspx;
+}
+
+#jot-category::-webkit-input-placeholder {
+	font-weight: bold;
+}
+
+#jot-category:-moz-placeholder {
+	font-weight: bold;
+}
+
+#jot-title::-webkit-input-placeholder {
+	font-weight: bold;
+}
+
+#jot-title:-moz-placeholder {
+	font-weight: bold;
+}
+
+#jot-pagetitle::-webkit-input-placeholder {
+	font-weight: bold;
+}
+
+#jot-pagetitle:-moz-placeholder {
+	font-weight: bold;
+}
+
+#jot-title:hover,
+#jot-title:focus,
+#jot-pagetitle:hover,
+#jot-pagetitle:focus,
+#jot-category:hover,
+#jot-category:focus {
+	border: 1px solid #cccccc;
+}
+
+#profile-jot-text {
+	color:#000;
+	border: 1px solid #cccccc;
+	-moz-border-radius: $radiuspx;
+	border-radius: $radiuspx;
+}
+
+#profile-jot-text::-webkit-input-placeholder {
+	font-size:1.5em;
+}
+
+#profile-jot-text::-moz-placeholder {
+	font-size:1.5em;
+}
+
+#profile-jot-text:focus::-webkit-input-placeholder {
+	color: transparent;
+}
+
+#profile-jot-text:focus::-moz-placeholder {
+	color: transparent;
+}
+
+#profile-jot-text-loading {
+	color: #777;
+}
+
+#profile-jot-submit {
+	background: linear-gradient(top, #0080ff 0%, #0080aa);
+	background: -webkit-linear-gradient(top, #0080ff 0%, #0080aa);
+	background: -moz-linear-gradient(top, #0080ff 0%, #0080aa);
+	background: -o-linear-gradient(top, #0080ff 0%, #0080aa);
+	background: -ms-linear-gradient(top, #0080ff 0%, #0080aa);
+	color: #fff;
+	font-weight: bold;
+	border-radius: 0px $radiuspx $radiuspx 0px;
+	text-shadow: 1px 1px #111;
+	cursor: pointer;
+}
+
+#profile-jot-submit:hover {
+	background: linear-gradient(top, #0080aa 0%, #0080ff);
+	background: -webkit-linear-gradient(top, #0080aa 0%, #0080ff);
+	background: -moz-linear-gradient(top, #0080aa 0%, #0080ff);
+	background: -o-linear-gradient(top, #0080aa 0%, #0080ff);
+	background: -ms-linear-gradient(top, #0080aa 0%, #0080ff);
+}
+
+#profile-jot-perms {
+	background-color: $toolicon_colour;
+	border: 1px solid #666;
+	border-right: none;
+	border-radius: $radiuspx 0px 0px $radiuspx;
+}
+
+#profile-rotator {
+	color: #777;
+}
+
+.jot-icons {
+	font-size: 1.2em;
+	color: $toolicon_colour;
+}
+
+.jot-icons:hover {
+	color: $toolicon_activecolour;
+}
+
+/* conversation */
+
+.thread-wrapper .wall-item-comment-wrapper,
+.wall-item-content-wrapper.comment {
+	margin-left: $comment_indent;
+	border-left: 2px solid #eee;
+}
+
+.thread-wrapper .toplevel_item {
+	max-width: $converse_width;
+}
+
+/* conv_item */
+
+.wall-item-content-wrapper {
+	border-radius: $radiuspx;
+	background-color: $item_colour;
+	opacity: $item_opacity;
+}
+
+.wallwall .wwto {
+	top: $wwtop;
+}
+
+.wall-item-photo-menu-button {
+	background-image: url("../img/photo-menu.jpg");
+	background-position: top left;
+	background-repeat: no-repeat;
+	top: $pmenu_top;
+}
+
+.wall-item-photo-menu {
+	border: 2px solid #444444;
+	background: #FFFFFF;
+	top: $top_photo;
+}
+
+.wall-item-photo-menu ul {
+	list-style: none
+}
+
+.wall-item-photo-menu li a:hover {
+	color: #FFFFFF;
+	background: #3465A4;
+	text-decoration: none;
+}
+
+.comment .wall-item-photo-menu-button {
+	top: $pmenu_reply;
+}
+
+.comment .wall-item-photo-menu {
+	top: $reply_photo;
+}
+
+.wall-item-photo {
+	border: none;
+	width: $top_photo !important;
+	height: $top_photo !important;
+
+}
+
+.comment .wall-item-photo {
+	width: $reply_photo !important;
+	height: $reply_photo !important;
+}
+
+.wall-item-photo {
+    border-radius: $radiuspx;
+    -moz-border-radius: $radiuspx;
+    box-shadow: $shadowpx $shadowpx $shadowpx 0 #444444;
+}
+
+.wall-item-arrowphoto-wrapper {
+	top: $wwtop;
+}
+
+.wall-item-lock {
+	font-size: 1.2em;
+	color: $toolicon_colour;
+}
+
+.wall-item-ago .icon-ok {
+	color: darkgreen;
+}
+
+
+.wall-item-ago {
+	color: #777;
+	font-size: 0.8em;
+}
+
+.wall-item-ago i {
+	font-size: 0.6em;
+}
+
+.wall-item-content {
+	font-size: $font_size;
+}
+
+.item-tool {
+	font-size: 1.2em;
+	color: $toolicon_colour;
+}
+
+.item-tool:hover {
+	color: $toolicon_activecolour;
+}
+
+.drop-icons.item-tool {
+	color: $toolicon_colour;
+}
+
+.like-rotator {
+	color: $toolicon_colour;
+}
+
+/* comment_item */
+
+.my-comment-photo {
+    border-radius: $radiuspx;
+    -moz-border-radius: $radiuspx;
+    box-shadow: $shadowpx $shadowpx $shadowpx 0 #444444;
+}
+
+.comment-edit-photo img {
+	width: $reply_photo;
+}
+
+[class^="comment-edit-bb"] {
+	list-style: none;
+}
+
+.comment-icon {
+	font-size: 1.2em;
+	color: $toolicon_colour;
+}
+
+.comment-icon:hover {
+	color: $toolicon_activecolour;
+}
+
+.comment-edit-text-empty,
+.comment-edit-text-full {
+	border: 1px solid #ccc;
+	border-radius: $radiuspx;
+}
+
+.comment-edit-text-empty {
+	color: gray;
+}
+
+.comment-edit-text-full {
+	color: black;
 }
