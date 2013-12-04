@@ -1,0 +1,431 @@
+/* jot */
+
+#profile-jot-wrapper {
+	margin-top: 25px;
+}
+
+#jot-title,
+#jot-category,
+#jot-pagetitle {
+	border: 0px;
+	margin: 0px;
+	padding: 8px;
+	height: 1.8em;
+	width: 530px;
+	margin-bottom: 5px;
+}
+
+.jothidden {
+	display:none;
+}
+
+#profile-jot-text {
+	height: 1.8em;
+	padding: 8px;
+	margin-right: 0px;
+	width: 90%;
+}
+
+#profile-jot-text-loading {
+	float: left;
+	margin: 14px 0px 0px 12px;
+}
+
+#profile-jot-submit-wrapper {
+	margin-top: 10px;
+	width: 90%;
+}
+
+#profile-jot-submit {
+	height: 30px;
+	width: 70px;
+	float: right;
+}
+
+#profile-upload-wrapper,
+#wall-image-upload-div,
+#wall-image-upload,
+#wall-file-upload-div,
+#wall-file-upload,
+#profile-link,
+#profile-video,
+#profile-audio,
+#profile-location,
+#profile-nolocation,
+#profile-expires, 
+#profile-expires, 
+#jot-perms-icon,
+.hover, .focus {
+	cursor: pointer;
+}
+
+#profile-upload-wrapper,
+#profile-attach-wrapper,
+#profile-link-wrapper,
+#profile-video-wrapper,
+#profile-audio-wrapper,
+#profile-location-wrapper,
+#profile-nolocation-wrapper,
+#profile-expire-wrapper,
+#profile-encrypt-wrapper {
+	float: left;
+	margin-left: 15px;
+}
+
+#profile-jot-perms {
+	float: right;
+	padding: 6px;
+}
+
+#jot-perms-icon {
+	float: left;
+}
+
+#jot-preview-link {
+	float: left;
+	margin-left: 45px;
+	margin-top: 0px;
+}
+
+#profile-jot-perms-end {
+	height: 30px;
+}
+
+#profile-jot-end {
+	margin-bottom: 30px;
+}
+
+#profile-rotator {
+	float: left;
+	margin: 8px 0px 0px 20px;
+}
+
+/* this is referenced in js/acl.js - not sure if it is still needed. */
+.profile-jot-net {
+	float: left;
+	margin-right: 10px;
+	margin-top: 5px;
+	margin-bottom: 5px;
+}
+
+/* conversation */
+
+.thread-wrapper .toplevel_item {
+	width: 92%;
+}
+
+/* conv_item */
+
+.hide-comments-outer {
+	margin-left: 10px;
+}
+
+.wall-item-content-wrapper {
+	margin-top: 10px;
+	position: relative;
+}
+
+.wall-item-info {
+	display: block;
+	float: left;
+	width:110px;
+	margin-right:10px;
+}
+
+.comment .wall-item-info {
+	width: 70px;
+}
+
+.wallwall .wwto {
+	left: 50px;
+	margin: 0;
+	position: absolute;
+	width: 30px
+}
+
+.wallwall .wwto img {
+	width: 30px !important;
+	height: 30px !important;
+}
+
+.wallwall .wall-item-photo-end {
+	clear: both;
+}
+
+.wall-item-photo-wrapper {
+	margin-top: 0px;
+	margin-left: 10px;
+	margin-bottom: 10px;
+	width: 100px;
+}
+
+.wall-item-photo-menu-button {
+	left:10px;
+	display: block;
+	position: absolute;
+	margin: 0px;
+	padding: 0px;
+	width: 16px;
+	height: 16px;
+	overflow: hidden;
+	text-indent: 40px;
+	display: none;
+}
+
+.wall-item-photo-menu {
+	left:10px;
+	width: auto;
+	position: absolute;
+	display: none;
+	z-index: 10000;
+}
+
+.wall-item-photo-menu ul {
+	margin:0px;
+	padding: 0px;
+}
+
+.wall-item-photo-menu li a {
+	display: block;
+	padding: 2px;
+}
+
+.wall-item-arrowphoto-wrapper {
+	position: absolute;
+	z-index: 99;
+}
+
+.wall-item-wrapper {
+	margin-left:10px;
+}
+
+
+.wall-item-arrowphoto-wrapper {
+	left: 75px;
+}
+
+.wall-item-lock {
+	position: absolute;
+	left: 105px;
+	top: 1px;
+}
+
+.comment .wall-item-lock {
+	left: 65px;
+}
+
+.wall-item-lock {
+
+}
+
+.lockview {
+	cursor: pointer;
+}
+
+.wall-item-location {
+	overflow: hidden;
+	/* add ellipsis on text overflow               */
+	/* this work on safari, opera, ie, chrome.     */
+	/* firefox users have to wait support or we    */
+	/* can use a jquery plugin http://bit.ly/zJskg */
+	text-overflow: ellipsis;
+	-o-text-overflow: ellipsis;
+	width: 100%;
+}
+
+.wall-item-author {
+	margin-top: 10px;
+}
+
+
+.wall-item-ago .icon-ok {
+	cursor: pointer;
+}
+
+.wall-item-content {
+	margin-left: 10px;
+	overflow: auto;
+}
+
+.wall-item-content img {
+    max-width: 95% !important;
+}
+
+.wall-item-title {
+	float: left;
+	font-weight: bold;
+}
+
+.wall-item-title-end {
+	clear: both;
+}
+
+.wall-item-body {
+	margin-top: 10px;
+}
+
+.wall-item-body.divmore {
+        padding-bottom: 15px;
+}
+
+.body-tag, .filesavetags, .categorytags {
+	opacity: 0.5;
+	filter:alpha(opacity=50);
+}
+
+.body-tag:hover, .filesavetags:hover, .categorytags:hover {
+	opacity: 1.0 !important;
+	filter:alpha(opacity=100) !important;
+}
+
+.body-tag {
+	margin-top: 15px;
+}
+
+.wall-item-tools {
+	clear: both;
+	padding: 5px 10px;
+}
+
+.item-tool {
+	float: left;
+	margin-right: 8px;
+	cursor: pointer;
+}
+
+.like-rotator {
+	float: left;
+	margin: 8px;
+	color: $toolicon_colour;
+}
+
+.wall-item-delete-wrapper {
+	float: right;
+}
+
+.wall-item-delete-end {
+	clear: both;
+}
+
+.item-select {
+	opacity: 0.1;
+	filter:alpha(opacity=10);
+	float: right;
+	margin-right: 10px;
+
+}
+
+.item-select:hover,
+.checkeditem {
+	opacity: 1;
+	filter:alpha(opacity=100);
+}
+
+.wall-item-like.comment,
+.wall-item-dislike.comment {
+	margin-left: 50px;
+}
+
+.wall-item-like,
+.wall-item-dislike {
+	margin-top: 5px;
+}
+
+.wall-item-wrapper-end {
+	clear: both;
+}
+
+/* comment_item */
+
+.comment-wwedit-wrapper.threaded > .comment-edit-form > .comment-edit-photo {
+	width: 40px;
+}
+
+.comment-wwedit-wrapper.threaded > .comment-edit-form > .comment-edit-text-empty {
+	height: 1.5em;
+}
+
+.comment-wwedit-wrapper.threaded > .comment-edit-form > .comment-edit-submit-wrapper > .comment-edit-submit {
+	margin-left: 50px;
+}
+
+.comment-edit-photo {
+	margin-top: 10px;
+	margin-left: 10px;
+	margin-bottom: 10px;
+	width: 100px;
+	float: left;
+}
+
+[class^="comment-edit-bb"] {
+	display: none;
+	margin: 0px 0 -5px 0px;
+	padding: 0px;
+	width: 75%;
+}
+
+[class^="comment-edit-bb"] > li {
+	display: inline-block;
+	margin: 10px 10px 0 0;
+	visibility: none;
+}
+
+[class^="comment-edit-bb-end"] {
+	clear: both;
+}
+
+.comment-edit-text-empty, .comment-edit-text-full {
+	float: left;
+	margin-top: 10px;
+	padding: 3px 1px 1px 3px;
+	padding: 8px;
+}
+
+.comment-edit-text-empty {
+	height: 1.0em;
+	width: 270px; 
+	overflow: auto;
+	margin-bottom: 10px;
+}
+
+.comment-edit-text-full {
+	height: 150px;
+	width: 80%;
+	overflow: auto;
+}
+
+.qcomment {
+	border: 1px solid #EEE;
+	padding: 3px;
+	margin-top: 15px;
+	margin-left: 25px;
+	width: 125px;
+	overflow-y: auto;
+}
+
+.qcomment option {
+	width: 125px;
+	overflow-x: hidden;
+}
+
+.qcomment {
+	opacity: 0.3;
+	filter:alpha(opacity=30);
+}
+
+.qcomment:hover {
+	opacity: 1.0;
+	filter:alpha(opacity=100);
+}
+
+.comment-edit-text-end {
+	clear: both;
+}
+
+.comment-edit-submit {
+	margin: 10px 0px 10px 110px;
+}
+
+.comment-preview-icon {
+	margin-left: 15px;
+}
