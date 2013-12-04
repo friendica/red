@@ -36,7 +36,7 @@ function post_init(&$a) {
  * If no information has been recorded about the requesting identity a zot information packet will be retrieved before
  * continuing.
  * 
- * The sender of this packet is a random site channel. The recipients will be a single recipient corresponding
+ * The sender of this packet is an arbitrary/random site channel. The recipients will be a single recipient corresponding
  * to the guid and guid_sig we have associated with the requesting auth identity
  *
  *
@@ -68,12 +68,15 @@ function post_init(&$a) {
  *    { 
  *      "success":1, 
  *      "confirm":"q0Ysovd1u..."
+ *      "service_class":(optional)
  *    }
  *
  * 'confirm' in this case is the base64url encoded RSA signature of the concatenation of 'secret' with the
  * base64url encoded whirlpool hash of the requestor's guid and guid_sig; signed with the source channel private key. 
  * This prevents a man-in-the-middle from inserting a rogue success packet. Upon receipt and successful 
  * verification of this packet, the destination site will redirect to the original destination URL and indicate a successful remote login. 
+ * Service_class can be used by cooperating sites to provide different access rights based on account rights and subscription plans. It is 
+ * a string whose contents are not defined by protocol. Example: "basic" or "gold". 
  *
  *
  *
@@ -133,6 +136,8 @@ function post_init(&$a) {
 
 		$remote = remote_user();
 		$result = null;
+		$remote_service_class = '';
+		$remote_hub = $x[0]['hubloc_url'];
 
 		$already_authed = ((($remote) && ($x[0]['hubloc_hash'] == $remote)) ? true : false); 
 
@@ -158,6 +163,8 @@ function post_init(&$a) {
 					logger('mod_zot: auth: final confirmation failed.');
 					goaway($desturl);
 				}
+				if(array_key_exists('service_class',$j))
+					$remote_service_class = $j['service_class'];
 			}
 			// everything is good... maybe
 			if(local_user()) {
@@ -172,16 +179,20 @@ function post_init(&$a) {
 				goaway($desturl);
 			}
 			// log them in
+
 			$_SESSION['authenticated'] = 1;
 			$_SESSION['visitor_id'] = $x[0]['xchan_hash'];
 			$_SESSION['my_address'] = $address;
-			$arr = array('xchan' => $x[0], 'url' => $desturl, 'channel_address' => $webbie);
+			$_SESSION['remote_service_class'] = $remote_service_class;
+			$_SESSION['remote_hub'] = $remote_hub;
+			
+			$arr = array('xchan' => $x[0], 'url' => $desturl, 'session' => $_SESSION);
 			call_hooks('magic_auth_success',$arr);
 			$a->set_observer($x[0]);
 			require_once('include/security.php');
 			$a->set_groups(init_groups_visitor($_SESSION['visitor_id']));
 			info(sprintf( t('Welcome %s. Remote authentication successful.'),$x[0]['xchan_name']));
-			logger('mod_zot: auth success from ' . $x[0]['xchan_addr'] . ' for ' . $webbie); 
+			logger('mod_zot: auth success from ' . $x[0]['xchan_addr']); 
 
 		} else {
 			logger('mod_zot: magic-auth failure - not authenticated: ' . $x[0]['xchan_addr']);
@@ -624,7 +635,7 @@ function post_post(&$a) {
 
 			$arr = $data['recipients'][0];
 			$recip_hash = base64url_encode(hash('whirlpool',$arr['guid'] . $arr['guid_sig'], true));
-			$c = q("select channel_id, channel_prvkey from channel where channel_hash = '%s' limit 1",
+			$c = q("select channel_id, channel_account_id, channel_prvkey from channel where channel_hash = '%s' limit 1",
 				dbesc($recip_hash)
 			);
 			if(! $c) {
@@ -650,9 +661,15 @@ function post_post(&$a) {
 				intval($z[0]['id'])
 			);
 
+			$u = q("select account_service_class from account where account_id = %d limit 1",
+				intval($c[0]['channel_account_id'])
+			);
+
 			logger('mod_zot: auth_check: success', LOGGER_DEBUG);
 			$ret['success'] = true;
 			$ret['confirm'] = $confirm;
+			if($u && $u[0]['account_service_class'])
+				$ret['service_class'] = $u[0]['account_service_class'];
 			json_return_and_die($ret);
 
 		}
