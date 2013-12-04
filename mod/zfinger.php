@@ -252,6 +252,7 @@ function zfinger_init(&$a) {
 		$ret['site']['location'] = get_config('system','site_location');
 
 	}
+	call_hooks('zot_finger',$ret);
 	json_return_and_die($ret);
 
 }

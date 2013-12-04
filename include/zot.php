@@ -531,6 +531,9 @@ function zot_register_hub($arr) {
 
 function import_xchan($arr,$ud_flags = 1) {
 
+
+	call_hooks('import_xchan', $arr);
+
 	$ret = array('success' => false);
 	$dirmode = intval(get_config('system','directory_mode')); 
 
