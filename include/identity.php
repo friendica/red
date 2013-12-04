@@ -4,6 +4,21 @@ require_once('include/zot.php');
 require_once('include/crypto.php');
 
 
+/**
+ * @function identity_check_service_class($account_id)
+ *     Called when creating a new channel. Checks the account's service class and number
+ * of current channels to determine whether creating a new channel is within the current
+ * service class constraints.
+ *
+ * @param int $account_id
+ *     Account_id used for this request
+ *
+ * @returns array
+ *       'success' => boolean true if creating a new channel is allowed for this account
+ *       'message' => if success is false, optional error text
+ */
+ 
+
 function identity_check_service_class($account_id) {
 	$ret = array('success' => false, $message => '');
 	
@@ -24,11 +39,22 @@ function identity_check_service_class($account_id) {
 	return $ret;
 }
 
-// Return an error message if the name is not valid. We're currently only checking
-// for an empty name or one that exceeds our storage limit (255 chars).
-// 255 chars is probably going to create a mess on some pages. 
-// Plugins can set additional policies such as full name requirements, character sets, multi-byte
-// length, etc. 
+
+/**
+ * @function validate_channelname($name)
+ *     Determine if the channel name is allowed when creating a new channel.
+ * This action is pluggable.
+ *
+ * @param string $name
+ *
+ * @returns nil return if name is valid, or string describing the error state.
+ *
+ * We're currently only checking for an empty name or one that exceeds our storage limit (255 chars).
+ * 255 chars is probably going to create a mess on some pages. 
+ * Plugins can set additional policies such as full name requirements, character sets, multi-byte
+ * length, etc. 
+ *
+ */
 
 function validate_channelname($name) {
 
@@ -44,8 +70,13 @@ function validate_channelname($name) {
 }
 
 
-// Create the system channel for directory synchronisation - this has no account attached
-
+/**
+ * @function create_dir_account()
+ *     Create a system channel - which has no account attached
+ *
+ * Currently unused. 
+ *
+ */
 
 function create_dir_account() {
 	create_identity(array(
@@ -57,6 +88,14 @@ function create_dir_account() {
 	));
 }
 
+/**
+ * @channel_total()
+ *   Return the total number of channels on this site. No filtering is performed.
+ *
+ * @returns int 
+ *   on error returns boolean false
+ *
+ */
 
 function channel_total() {
 	$r = q("select channel_id from channel where true");
@@ -66,11 +105,24 @@ function channel_total() {
 }
 
 
-
-// Required: name, nickname, account_id
-
-// optional: pageflags
-
+/**
+ * @function create_identity($arr)
+ *     Create a new channel
+ * Also creates the related xchan, hubloc, profile, and "self" abook records, and an 
+ * empty "Friends" group/collection for the new channel
+ *
+ * @param array $arr
+ *       'name'       => full name of channel
+ *       'nickname'   => "email/url-compliant" nickname
+ *       'account_id' => account_id to attach with this channel
+ *       [other identity fields as desired]
+ *
+ * @returns array
+ *     'success' => boolean true or false
+ *     'message' => optional error text if success is false
+ *     'channel' => if successful the created channel array
+ */
+ 
 function create_identity($arr) {
 
 	$a = get_app();
@@ -254,8 +306,21 @@ function create_identity($arr) {
 
 }
 
-// set default identity for account_id to channel_id
-// if $force is false only do this if there is no current default
+
+/**
+ * @function set_default_login_identity($account_id, $channel_id, $force = true)
+ *       Set default channel to be used on login
+ *
+ * @param int $account_id
+ *       login account
+ * @param int $channel_id
+ *       channel id to set as default for this account
+ * @param boolean force
+ *       if true, set this default unconditionally
+ *       if $force is false only do this if there is no existing default
+ * 
+ * @returns nil
+ */
 
 function set_default_login_identity($account_id,$channel_id,$force = true) {
 	$r = q("select account_default_channel from account where account_id = %d limit 1",
@@ -270,6 +335,21 @@ function set_default_login_identity($account_id,$channel_id,$force = true) {
 		}
 	}
 }
+
+/**
+ * @function identity_basic_export($channel_id)
+ *     Create an array representing the important channel information
+ * which would be necessary to create a nomadic identity clone. This includes
+ * most channel resources and connection information with the exception of content.
+ *
+ * @param int $channel_id
+ *     Channel_id to export
+ *
+ *
+ * @returns array
+ *     See function for details
+ *
+ */
 
 function identity_basic_export($channel_id) {
 
@@ -349,73 +429,24 @@ function identity_basic_export($channel_id) {
 
 
 
-function identity_basic_import($arr, $seize_primary = false) {
-
-	$ret = array('result' => false );
-
-	if($arr['channel']) {
-		// import channel		
-
-		// create a new xchan (if necessary)
-
-		// create a new hubloc and seize control if applicable
-
-
-	}
-	if($arr['profile']) {
-		// FIXME - change profile assignment to a hash instead of an id we have to fix
-
-
-	}
-
-	if($arr['xchan']) {
-
-		// import any xchan and hubloc which are not yet available on this site
-		// Unset primary for all other hubloc on our own record if $seize_primary
-
-
-	}
-
-	if($arr['abook']) {
-		// import the abook entries
-
-
-	}
-
-
-	if($seize_primary) {
-
-		// send a refresh message to all our friends, telling them we've moved
-
-	}
-
-
-	$ret['result'] = true ;
-	return $ret;
-
-
-}
-
-
-
 /**
  *
- * Function : profile_load
- * @parameter App    $a
- * @parameter string $nickname
- * @parameter string $profile
+ * @function : profile_load(&$a, $nickname, $profile)
+ *     Generate
+ * @param App $a
+ * @param string $nickname
+ * @param string $profile
  *
- * Summary: Loads a profile into the page sidebar.
+ * Summary: Loads a profile into the App structure.
  * The function requires a writeable copy of the main App structure, and the nickname
- * of a registered local account.
+ * of a valid channel.
  *
- * If the viewer is an authenticated remote viewer, the profile displayed is the
- * one that has been configured for his/her viewing in the Contact manager.
- * Passing a non-zero profile ID can also allow a preview of a selected profile
- * by the owner.
+ * Permissions of the current observer are checked. If a restricted profile is available
+ * to the current observer, that will be loaded instead of the channel default profile.
+ * 
+ * The channel owner can set $profile to a valid profile_guid to preview that profile.
  *
- * Profile information is placed in the App structure for later retrieval.
- * Honours the owner's chosen theme for display.
+ * The channel default theme is also selected for use, unless over-riden elsewhere.
  *
  */
 
