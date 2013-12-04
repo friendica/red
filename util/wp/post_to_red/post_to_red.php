@@ -96,7 +96,7 @@ function post_to_red_post($post_id) {
 				foreach($terms as $term) {
 					if(strlen($cats))
 						$cats .= ',';
-					$cats .= $term->name;
+					$cats .= htmlspecialchars_decode($term->name, ENT_COMPAT);
 				}
 			}
 

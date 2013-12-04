@@ -863,8 +863,6 @@ function import_xchan($arr,$ud_flags = 1) {
 		}
 	}
 	
-
-
 	if($changed) {
 		$guid = random_string() . '@' . get_app()->get_hostname();		
 		update_modtime($xchan_hash,$guid,$arr['address'],$ud_flags);
@@ -2101,5 +2099,26 @@ function get_rpost_path($observer) {
 	$parsed = parse_url($observer['xchan_url']);
 	return $parsed['scheme'] . '://' . $parsed['host'] . (($parsed['port']) ? ':' . $parsed['port'] : '') . '/rpost?f=';
 
+}
+
+function import_author_zot($x) {
+	$hash = base64url_encode(hash('whirlpool',$x['guid'] . $x['guid_sig'], true));
+	$r = q("select hubloc_url from hubloc where hubloc_guid = '%s' and hubloc_guid_sig = '%s' and (hubloc_flags & %d) limit 1",
+		dbesc($x['guid']),
+		dbesc($x['guid_sig']),
+		intval(HUBLOC_FLAGS_PRIMARY)
+	);
+
+	if($r) {
+		logger('import_author_zot: in cache', LOGGER_DEBUG);
+		return $hash;
+	}
+
+	logger('import_author_zot: entry not in cache - probing: ' . print_r($x,true), LOGGER_DEBUG);
+	
+	$them = array('hubloc_url' => $x['url'],'xchan_guid' => $x['guid'], 'xchan_guid_sig' => $x['guid_sig']);
+	if(zot_refresh($them))
+		return $hash;
+	return false;
 }
 

@@ -609,8 +609,8 @@ function get_item_elements($x) {
 	// once, and after that your hub knows them. Sure some info is in the post, but it's only a transit identifier
 	// and not enough info to be able to look you up from your hash - which is the only thing stored with the post.
 
-	if(import_author_xchan($x['author']))
-		$arr['author_xchan'] = base64url_encode(hash('whirlpool',$x['author']['guid'] . $x['author']['guid_sig'], true));
+	if(($xchan_hash = import_author_xchan($x['author'])) !== false)
+		$arr['author_xchan'] = $xchan_hash;
 	else
 		return array();
 
@@ -618,8 +618,8 @@ function get_item_elements($x) {
 	if($arr['author_xchan'] === base64url_encode(hash('whirlpool',$x['owner']['guid'] . $x['owner']['guid_sig'], true)))
 		$arr['owner_xchan'] = $arr['author_xchan'];
 	else {
-		if(import_author_xchan($x['owner']))
-			$arr['owner_xchan']  = base64url_encode(hash('whirlpool',$x['owner']['guid'] . $x['owner']['guid_sig'], true));
+		if(($xchan_hash = import_author_xchan($x['owner'])) !== false)
+			$arr['owner_xchan'] = $xchan_hash;
 		else
 			return array();
 	}
@@ -657,21 +657,18 @@ function get_item_elements($x) {
 
 function import_author_xchan($x) {
 
-	$r = q("select hubloc_url from hubloc where hubloc_guid = '%s' and hubloc_guid_sig = '%s' and (hubloc_flags & %d) limit 1",
-		dbesc($x['guid']),
-		dbesc($x['guid_sig']),
-		intval(HUBLOC_FLAGS_PRIMARY)
-	);
+	$arr = array('xchan' => $x, 'xchan_hash' => '');
+	call_hooks('import_author_xchan',$arr);
+	if($arr['xchan_hash'])
+		return $arr['xchan_hash'];
 
-	if($r) {
-		logger('import_author_xchan: in cache', LOGGER_DEBUG);
-		return true;
+	if((! array_key_exists('network', $x)) || ($x['network'] === 'zot')) {
+		return import_author_zot($x);
 	}
 
-	logger('import_author_xchan: entry not in cache - probing: ' . print_r($x,true), LOGGER_DEBUG);
+	// TODO: create xchans for other common and/or aligned networks
 
-	$them = array('hubloc_url' => $x['url'],'xchan_guid' => $x['guid'], 'xchan_guid_sig' => $x['guid_sig']);
-	return zot_refresh($them);
+	return false;
 }
 
 function encode_item($item) {
@@ -785,6 +782,7 @@ function encode_item_xchan($xchan) {
 	$ret['name']     = $xchan['xchan_name'];
 	$ret['address']  = $xchan['xchan_addr'];
 	$ret['url']      = $xchan['hubloc_url'];
+	$ret['network']  = $xchan['xchan_network'];
 	$ret['photo']    = array('mimetype' => $xchan['xchan_photo_mimetype'], 'src' => $xchan['xchan_photo_m']);
 	$ret['guid']     = $xchan['xchan_guid'];
 	$ret['guid_sig'] = $xchan['xchan_guid_sig'];
@@ -977,17 +975,15 @@ function get_mail_elements($x) {
 	if($x['attach'])
 		$arr['attach'] = activity_sanitise($x['attach']);
 
-
-	if(import_author_xchan($x['from']))
-		$arr['from_xchan'] = base64url_encode(hash('whirlpool',$x['from']['guid'] . $x['from']['guid_sig'], true));
+	if(($xchan_hash = import_author_xchan($x['from'])) !== false)
+		$arr['from_xchan'] = $xchan_hash;
 	else
 		return array();
 
-	if(import_author_xchan($x['to']))
-		$arr['to_xchan']  = base64url_encode(hash('whirlpool',$x['to']['guid'] . $x['to']['guid_sig'], true));
+	if(($xchan_hash = import_author_xchan($x['to'])) !== false)
+		$arr['to_xchan'] = $xchan_hash;
 	else
 		return array();
-
 
 	return $arr;
 
@@ -998,8 +994,8 @@ function get_profile_elements($x) {
 
 	$arr = array();
 
-	if(import_author_xchan($x['from']))
-		$arr['xprof_hash'] = base64url_encode(hash('whirlpool',$x['from']['guid'] . $x['from']['guid_sig'], true));
+	if(($xchan_hash = import_author_xchan($x['from'])) !== false)
+		$arr['xprof_hash'] = $xchan_hash;
 	else
 		return array();
 
