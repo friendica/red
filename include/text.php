@@ -128,6 +128,9 @@ function purify_html($s) {
 }
 
 
+
+
+
 // generate a string that's random, but usually pronounceable. 
 // used to generate initial passwords
 
