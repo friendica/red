@@ -4,6 +4,10 @@ function notification($params) {
 
 	logger('notification: entry', LOGGER_DEBUG);
 
+	// throw a small amount of entropy into the system to breakup duplicates arriving at the same precise instant.
+	usleep(mt_rand(0,10000));
+	
+
 	$a = get_app();
 
 

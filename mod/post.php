@@ -127,7 +127,7 @@ function post_init(&$a) {
 			goaway($desturl);
 		}
 
-		logger('mod_zot: auth request received from ' . $x[0]['xchan_addr'] ); 
+		logger('mod_zot: auth request received from ' . $x[0]['hubloc_addr'] ); 
 
 		// check credentials and access
 
@@ -139,7 +139,9 @@ function post_init(&$a) {
 		$remote_service_class = '';
 		$remote_hub = $x[0]['hubloc_url'];
 
-		$already_authed = ((($remote) && ($x[0]['hubloc_hash'] == $remote)) ? true : false); 
+		// Also check that they are coming from the same site as they authenticated with originally.
+
+		$already_authed = ((($remote) && ($x[0]['hubloc_hash'] == $remote) && ($x[0]['hubloc_url'] === $_SESSION['remote_hub'])) ? true : false); 
 
 		if(! $already_authed) {
 

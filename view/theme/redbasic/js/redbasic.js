@@ -16,6 +16,10 @@ function cmtBbClose(comment, id) {
 	return false;
 }
 
+//document.jotpermslock = 'icon-lock';
+//document.jotpermsunlock = 'icon-unlock';
+
+
 $(document).ready(function() {
 
 $('.group-edit-icon').hover(
