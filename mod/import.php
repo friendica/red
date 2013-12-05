@@ -214,7 +214,7 @@ function import_post(&$a) {
 			dbesc($channel['channel_hash'])
 		);
 
-		$r = q("insert into xchan ( xchan_hash, xchan_guid, xchan_guid_sig, xchan_pubkey, xchan_photo_l, xchan_photo_m, xchan_photo_s, xchan_addr, xchan_url, xchan_name, xchan_network, xchan_photo_date, xchan_name_date ) values ('%s', '%s', '%s', '%s', '%s', '%s', '%s', '%s', '%s', '%s', '%s', '%s', '%s')",
+		$r = q("insert into xchan ( xchan_hash, xchan_guid, xchan_guid_sig, xchan_pubkey, xchan_photo_l, xchan_photo_m, xchan_photo_s, xchan_addr, xchan_url, xchan_follow, xchan_connurl, xchan_name, xchan_network, xchan_photo_date, xchan_name_date ) values ('%s', '%s', '%s', '%s', '%s', '%s', '%s', '%s', '%s', '%s', '%s', '%s', '%s', '%s', '%s')",
 			dbesc($channel['channel_hash']),
 			dbesc($channel['channel_guid']),
 			dbesc($channel['channel_guid_sig']),
@@ -224,6 +224,8 @@ function import_post(&$a) {
 			dbesc($a->get_baseurl() . "/photo/profile/s/" . $channel['channel_id']),
 			dbesc($channel['channel_address'] . '@' . get_app()->get_hostname()),
 			dbesc(z_root() . '/channel/' . $channel['channel_address']),
+			dbesc(z_root() . '/follow?f=&url=%s'),
+			dbesc(z_root() . '/poco/' . $channel['channel_address']),
 			dbesc($channel['channel_name']),
 			dbesc('zot'),
 			dbesc(datetime_convert()),
