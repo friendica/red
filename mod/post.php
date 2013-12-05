@@ -172,18 +172,29 @@ function post_init(&$a) {
 
 			$result = zot_zot($x[0]['hubloc_callback'],$p);
 
-			$ret['message'] .= 'auth check request to your site returned .' . print_r($result, true) . EOL;
 
 			if(! $result['success']) {
 				logger('mod_zot: auth_check callback failed.');
 				if($test) {
+					$ret['message'] .= 'auth check request to your site returned .' . print_r($result, true) . EOL;
 					json_return_and_die($ret);
 				}
 
 				goaway($desturl);
 			}
 			$j = json_decode($result['body'],true);
+			if(! $j) {
+				logger('mod_zot: auth_check json data malformed.');
+				if($test) {
+					$ret['message'] .= 'json malformed: ' . $result['body'] . EOL;
+					json_return_and_die($ret);
+				}
+			}				
 		}
+
+		if($test) {
+			$ret['message'] .= 'auth check request returned .' . print_r($j, true) . EOL;
+		}	
 
 		if($already_authed || $j['success']) {
 			if($j['success']) {
