@@ -458,6 +458,14 @@ footer {
 	clear: both;
 }
 
+.vcard-profile-edit-icon {
+	font-size: 1.2em;
+}
+.vcard-profile-edit-icon:hover {
+	text-decoration: none;
+}
+
+
 #profile-extra-links {
 	clear: both;
 	margin-top: 10px;
@@ -589,11 +597,6 @@ footer {
 	margin-bottom: 10px;
 }
 
-.contact-entry-direction-icon {
-	margin-top: 24px;
-	margin-right: 2px;
-}
-
 .contact-entry-photo img {
 	border: none;
 }
@@ -638,11 +641,7 @@ footer {
     margin-left: 50px;
 }
 
-/* might be obsolete
-.wall-item-delete-icon {
-	border: none;
-}
-*/
+
 
 /* might be obsolete
 #profile-youtube-wrapper {
@@ -2697,6 +2696,7 @@ text-decoration: none;
 	list-style-type: none;
 }
 
+.group-edit-icon,
 .savedsearchdrop {
 	opacity: 0;
 }

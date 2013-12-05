@@ -20,19 +20,19 @@ $(document).ready(function() {
 
 $('.group-edit-icon').hover(
 	function() {
-		$(this).addClass('icon'); $(this).removeClass('iconspacer');},
+		$(this).css('opacity','1.0');},
 	function() {
-		$(this).removeClass('icon'); $(this).addClass('iconspacer');}
-	);
+		$(this).css('opacity','0');}
+);
 
 $('.sidebar-group-element').hover(
 	function() {
 		id = $(this).attr('id');
-		$('#edit-' + id).addClass('icon'); $('#edit-' + id).removeClass('iconspacer');},
+		$('#edit-' + id).css('opacity','1.0');},
 
 	function() {
 		id = $(this).attr('id');
-		$('#edit-' + id).removeClass('icon');$('#edit-' + id).addClass('iconspacer');}
+		$('#edit-' + id).css('opacity','0');}
 	);
 
 
