@@ -4,6 +4,7 @@
 
 function magic_init(&$a) {
 
+	$ret = array('success' => false, 'url' => '', 'message' => '');
 	logger('mod_magic: invoked', LOGGER_DEBUG);
 
 	logger('mod_magic: args: ' . print_r($_REQUEST,true),LOGGER_DATA);
@@ -11,12 +12,18 @@ function magic_init(&$a) {
 	$addr = ((x($_REQUEST,'addr')) ? $_REQUEST['addr'] : '');
 	$hash = ((x($_REQUEST,'hash')) ? $_REQUEST['hash'] : '');
 	$dest = ((x($_REQUEST,'dest')) ? $_REQUEST['dest'] : '');
-	$rev  = ((x($_REQUEST,'rev'))  ? intval($_REQUEST['rev']) : 0);
+	$test = ((x($_REQUEST,'test')) ? intval($_REQUEST['test']) : 0);
+	$rev  = ((x($_REQUEST,'rev'))  ? intval($_REQUEST['rev'])  : 0);
 
 
 	$parsed = parse_url($dest);
-	if(! $parsed)
+	if(! $parsed) {
+		if($test) {
+			$ret['message'] .= 'could not parse ' . $dest . EOL;
+			return($ret);
+		}
 		goaway($dest);
+	}
 
 	$basepath = $parsed['scheme'] . '://' . $parsed['host'] . (($parsed['port']) ? ':' . $parsed['port'] : ''); 
 
@@ -49,6 +56,10 @@ function magic_init(&$a) {
 			goaway($dest);
 		else {
 			logger('mod_magic: no channels found for requested hub.' . print_r($_REQUEST,true));
+			if($test) {
+				$ret['message'] .= 'This site has no previous connections with ' . $basepath . EOL;
+				return $ret;
+			} 
 			notice( t('Hub not found.') . EOL);
 			return;
 		}
@@ -66,12 +77,22 @@ function magic_init(&$a) {
 
 	call_hooks('magic_auth',$arr);
 	$dest = $arr['destination'];
-	if(! $arr['proceed'])
+	if(! $arr['proceed']) {
+		if($test) {
+			$ret['message'] .= 'cancelled by plugin.' . EOL;
+			return $ret;
+		}
 		goaway($dest);
+	}
 
 	if((get_observer_hash()) && ($x[0]['hubloc_url'] === z_root())) {
 		// We are already authenticated on this site and a registered observer.
 		// Just redirect.
+		if($test) {
+			$ret['success'] = true;
+			$ret['message'] .= 'Local site - you are already authenticated.' . EOL;
+			return $ret;
+		}
 		goaway($dest);
 	}
 
@@ -92,12 +113,25 @@ function magic_init(&$a) {
 			dbesc(datetime_convert())
 		);
 
-		$target_url = $x[0]['hubloc_callback'];
+		$target_url = $x[0]['hubloc_callback'] . '/?f=&auth=' . urlencode($channel['channel_address'] . '@' . $a->get_hostname())
+			. '&sec=' . $token . '&dest=' . urlencode($dest) . '&version=' . ZOT_REVISION;
+
 		logger('mod_magic: redirecting to: ' . $target_url, LOGGER_DEBUG); 
 
-		goaway($target_url
-			. '/?f=&auth=' . urlencode($channel['channel_address'] . '@' . $a->get_hostname())
-			. '&sec=' . $token . '&dest=' . urlencode($dest) . '&version=' . ZOT_REVISION);
+		if($test) {
+			$ret['success'] = true;
+			$ret['url'] = $target_url;
+			$ret['message'] = 'token ' . $token . ' created for channel ' . $channel['channel_id'] . ' for url ' . $x[0]['hubloc_url'] . EOL;
+			return $ret;
+		}
+
+		goaway($target_url);
+			
+	}
+
+	if($test) {
+		$ret['message'] = 'Not authenticated or invalid arguments to mod_magic' . EOL;
+		return $ret;
 	}
 
 	goaway($dest);

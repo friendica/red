@@ -83,12 +83,15 @@ function post_init(&$a) {
  */
 	
 	if(array_key_exists('auth',$_REQUEST)) {
+
+		$ret = array('success' => false, 'message' => '');
+
 		logger('mod_zot: auth request received.');
 		$address = $_REQUEST['auth'];
 		$desturl = $_REQUEST['dest'];
 		$sec     = $_REQUEST['sec'];
 		$version = $_REQUEST['version'];
-
+		$test    = ((x($_REQUEST,'test')) ? intval($_REQUEST['test']) : 0);
 
 		// They are authenticating ultimately to the site and not to a particular channel.
 		// Any channel will do, providing it's currently active. We just need to have an 
@@ -100,8 +103,12 @@ function post_init(&$a) {
 
 		if(! $c) {
 			// nobody here
-
 			logger('mod_zot: auth: unable to find a response channel');
+			if($test) {
+				$ret['message'] .= 'no local channels found.' . EOL;
+				json_return_and_die($ret);
+			}
+
 			goaway($desturl);
 		}
 
@@ -124,6 +131,12 @@ function post_init(&$a) {
 		}
 		if(! $x) {
 			logger('mod_zot: auth: unable to finger ' . $address);
+
+			if($test) {
+				$ret['message'] .= 'no hubloc found for ' . $address . ' and probing failed.' . EOL;
+				json_return_and_die($ret);
+			}
+
 			goaway($desturl);
 		}
 
@@ -143,6 +156,8 @@ function post_init(&$a) {
 
 		$already_authed = ((($remote) && ($x[0]['hubloc_hash'] == $remote) && ($x[0]['hubloc_url'] === $_SESSION['remote_hub'])) ? true : false); 
 
+		$j = array();
+
 		if(! $already_authed) {
 
 			// Auth packets MUST use ultra top-secret hush-hush mode - e.g. the entire packet is encrypted using the site private key
@@ -150,9 +165,21 @@ function post_init(&$a) {
 			// which can be verified
  
 			$p = zot_build_packet($c[0],$type = 'auth_check', array(array('guid' => $x[0]['hubloc_guid'],'guid_sig' => $x[0]['hubloc_guid_sig'])), $x[0]['hubloc_sitekey'], $sec);
+			if($test) {
+				$ret['message'] .= 'auth check packet created using sitekey ' . $x[0]['hubloc_sitekey'] . EOL;
+				$ret['message'] .= 'packet contents: ' . $p . EOL;
+			}
+
 			$result = zot_zot($x[0]['hubloc_callback'],$p);
+
+			$ret['message'] .= 'auth check request to your site returned .' . print_r($result, true) . EOL;
+
 			if(! $result['success']) {
 				logger('mod_zot: auth_check callback failed.');
+				if($test) {
+					json_return_and_die($ret);
+				}
+
 				goaway($desturl);
 			}
 			$j = json_decode($result['body'],true);
@@ -163,6 +190,11 @@ function post_init(&$a) {
 				// legit response, but we do need to check that this wasn't answered by a man-in-middle
 				if(! rsa_verify($sec . $x[0]['xchan_hash'],base64url_decode($j['confirm']),$x[0]['xchan_pubkey'])) {
 					logger('mod_zot: auth: final confirmation failed.');
+					if($test) {
+						$ret['message'] .= 'final confirmation failed. ' . $sec . print_r($j,true) . print_r($x[0],true);
+						json_return_and_die($ret);
+					}
+						
 					goaway($desturl);
 				}
 				if(array_key_exists('service_class',$j))
@@ -177,10 +209,22 @@ function post_init(&$a) {
 				if($a->channel['channel_hash'] != $x[0]['xchan_hash']) {
 					logger('mod_zot: auth: already authenticated locally as somebody else.');
 					notice( t('Remote authentication blocked. You are logged into this site locally. Please logout and retry.') . EOL);
+					if($test) {
+						$ret['message'] .= 'already logged in locally with a conflicting identity.' . EOL;
+						json_return_and_die($ret);
+					}
+
 				}
 				goaway($desturl);
 			}
 			// log them in
+
+			if($test) {
+				$ret['success'] = true;
+				$ret['message'] .= 'Success' . EOL;
+				json_return_and_die($ret);
+			}
+
 
 			$_SESSION['authenticated'] = 1;
 			$_SESSION['visitor_id'] = $x[0]['xchan_hash'];
@@ -197,6 +241,11 @@ function post_init(&$a) {
 			logger('mod_zot: auth success from ' . $x[0]['xchan_addr']); 
 
 		} else {
+			if($test) {
+				$ret['message'] .= 'auth failure. ' . print_r($_REQUEST,true) . print_r($j,true) . EOL;
+				json_return_and_dir($ret);
+			}
+
 			logger('mod_zot: magic-auth failure - not authenticated: ' . $x[0]['xchan_addr']);
 			q("update hubloc set hubloc_status =  (hubloc_status | %d ) where hubloc_id = %d ",
 				intval(HUBLOC_RECEIVE_ERROR),
@@ -207,6 +256,11 @@ function post_init(&$a) {
 		// FIXME - we really want to save the return_url in the session before we visit rmagic.
 		// This does however prevent a recursion if you visit rmagic directly, as it would otherwise send you back here again. 
 		// But z_root() probably isn't where you really want to go. 
+
+		if($test) {
+			$ret['message'] .= 'auth failure fallthrough ' . print_r($_REQUEST,true) . print_r($j,true) . EOL;
+			json_return_and_dir($ret);
+		}
 
 		if(strstr($desturl,z_root() . '/rmagic'))
 			goaway(z_root());
@@ -608,6 +662,7 @@ function post_post(&$a) {
 
 		if(! $encrypted_packet) {
 			logger('mod_zot: auth_check packet was not encrypted.');
+			$ret['message'] .= 'no packet encryption' . EOL;
 			json_return_and_die($ret);
 		}
 		
@@ -628,10 +683,13 @@ function post_post(&$a) {
 
 		if((! $y) || (! rsa_verify($data['secret'],base64url_decode($data['secret_sig']),$y[0]['xchan_pubkey']))) {
 			logger('mod_zot: auth_check: sender not found or secret_sig invalid.');
+			$ret['message'] .= 'sender not found or sig invalid ' . print_r($y,true) . EOL;
 			json_return_and_die($ret);
 		}
 
 		// There should be exactly one recipient, the original auth requestor
+
+		$ret['message'] .= 'recipients ' . print_r($recipients,true) . EOL;
 
 		if($data['recipients']) {
 
@@ -642,6 +700,7 @@ function post_post(&$a) {
 			);
 			if(! $c) {
 				logger('mod_zot: auth_check: recipient channel not found.');
+				$ret['message'] .= 'recipient not found.' . EOL;
 				json_return_and_die($ret);
 			}
 
@@ -657,6 +716,7 @@ function post_post(&$a) {
 			);
 			if(! $z) {
 				logger('mod_zot: auth_check: verification key not found.');
+				$ret['message'] .= 'verification key not found' . EOL;
 				json_return_and_die($ret);
 			}
 			$r = q("delete from verify where id = %d limit 1",
