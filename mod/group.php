@@ -49,7 +49,7 @@ function group_post(&$a) {
 		$groupname = notags(trim($_POST['groupname']));
 		$public = intval($_POST['public']);
 
-		if((strlen($groupname))  && ($groupname != $group['name'])) {
+		if((strlen($groupname))  && (($groupname != $group['name']) || ($public != $group['visible']))) {
 			$r = q("UPDATE `group` SET `name` = '%s', visible = %d  WHERE `uid` = %d AND `id` = %d LIMIT 1",
 				dbesc($groupname),
 				intval($public),
@@ -57,7 +57,7 @@ function group_post(&$a) {
 				intval($group['id'])
 			);
 			if($r)
-				info( t('Collection name changed.') . EOL );
+				info( t('Collection updated.') . EOL );
 		}
 
 		goaway(z_root() . '/group/' . argv(1) . '/' . argv(2));
