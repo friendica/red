@@ -477,6 +477,12 @@ function network_content(&$a, $update = 0, $load = false) {
 
         $sql_extra = " AND item.parent IN ( SELECT DISTINCT parent FROM item WHERE true $sql_options AND (( author_xchan IN ( $contact_str ) OR owner_xchan in ( $contact_str )) or allow_gid like '" . protect_sprintf('%<' . dbesc($group_hash) . '>%') . "' ) and id = parent and item_restrict = 0 ) ";
 
+		$x = group_rec_byhash(local_user(), $group_hash);
+
+		if($x)
+			$o = '<h2>' . t('Collection: ') . $x['name'] . '</h2>' . $o;
+
+
     }
 
 	elseif($cid) {
