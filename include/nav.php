@@ -147,16 +147,13 @@ EOT;
 	if(local_user()) {
 
 		$nav['network'] = array('network', t('Matrix'), "", t('Your matrix'));
-		$nav['network']['all']=array('notifications/network', t('See all matrix notifications'), "", "");
 		$nav['network']['mark'] = array('', t('Mark all matrix notifications seen'), '','');
 
 		$nav['home'] = array('channel/' . $channel['channel_address'], t('Channel Home'), "", t('Channel home'));
-		$nav['home']['all']=array('notifications/channel', t('See all channel notifications'), "", "");
 		$nav['home']['mark'] = array('', t('Mark all channel notifications seen'), '','');
 
 
 		$nav['intros'] = array('connections/pending',	t('Intros'), "", t('New Connections'));
-		$nav['intros']['all']=array('notifications/intros', t('See all channel introductions'), "", "");
 
 
 		$nav['notifications'] = array('notifications/system',	t('Notices'), "", t('Notifications'));
