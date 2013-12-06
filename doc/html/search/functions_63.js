@@ -89,7 +89,6 @@ var searchData=
   ['contact_5freputation',['contact_reputation',['../contact__selectors_8php.html#ae499960d6467bd30c78607b1018baf53',1,'contact_selectors.php']]],
   ['contact_5fselect',['contact_select',['../acl__selectors_8php.html#a9476997d2968a5794f3723878ed89c91',1,'acl_selectors.php']]],
   ['contactgroup_5fcontent',['contactgroup_content',['../contactgroup_8php.html#a18c7391b1b25debaf98c9dba639caab3',1,'contactgroup.php']]],
-  ['contacts_5fnot_5fgrouped',['contacts_not_grouped',['../Contact_8php.html#a228fc01f90ae9bfdde4c2ad0772bd7dc',1,'Contact.php']]],
   ['conv_5fsort',['conv_sort',['../conversation_8php.html#abed85a41f1160598de880b84021c9cf7',1,'conversation.php']]],
   ['conversation',['conversation',['../conversation_8php.html#affea1afb3f32ca41e966c8ddb4204d81',1,'conversation.php']]],
   ['convert',['convert',['../namespacefriendica-to-smarty-tpl.html#a38503e37fe68ac27c88cce91a9ac9efa',1,'friendica-to-smarty-tpl']]],

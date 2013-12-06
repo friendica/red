@@ -119,7 +119,6 @@ var searchData=
   ['contact_5fwidgets_2ephp',['contact_widgets.php',['../contact__widgets_8php.html',1,'']]],
   ['contactgroup_2ephp',['contactgroup.php',['../contactgroup_8php.html',1,'']]],
   ['contactgroup_5fcontent',['contactgroup_content',['../contactgroup_8php.html#a18c7391b1b25debaf98c9dba639caab3',1,'contactgroup.php']]],
-  ['contacts_5fnot_5fgrouped',['contacts_not_grouped',['../Contact_8php.html#a228fc01f90ae9bfdde4c2ad0772bd7dc',1,'Contact.php']]],
   ['conv_5fsort',['conv_sort',['../conversation_8php.html#abed85a41f1160598de880b84021c9cf7',1,'conversation.php']]],
   ['conversation',['Conversation',['../classConversation.html',1,'Conversation'],['../conversation_8php.html#affea1afb3f32ca41e966c8ddb4204d81',1,'conversation(&amp;$a, $items, $mode, $update, $page_mode= &apos;traditional&apos;, $prepared_item= &apos;&apos;):&#160;conversation.php']]],
   ['conversation_2ephp',['conversation.php',['../conversation_8php.html',1,'']]],

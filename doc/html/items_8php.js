@@ -14,7 +14,6 @@ var items_8php =
     [ "consume_feed", "items_8php.html#a8794863cdf8ce1333040933d3a3f66bd", null ],
     [ "decode_tags", "items_8php.html#a56b2a4abcadfac71175cd50555528cc3", null ],
     [ "delete_item_lowlevel", "items_8php.html#a2b56a4c01bd22a648d52ec9af1a04259", null ],
-    [ "dfrn_deliver", "items_8php.html#a8395d189a36abfa0dfff81a2b0e70669", null ],
     [ "drop_item", "items_8php.html#afa1db13c2a8b73b5b17b97f17e5a19d1", null ],
     [ "drop_items", "items_8php.html#a668ece2c37f05cc3abe538eb0dabfe55", null ],
     [ "encode_item", "items_8php.html#a82955cc578f0fa600acec84475026194", null ],

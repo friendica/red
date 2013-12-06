@@ -49,6 +49,5 @@ var searchData=
   ['lookup_5ftoken',['lookup_token',['../classFKOAuthDataStore.html#a96f76387c3a93b0abe27a98013804bab',1,'FKOAuthDataStore']]],
   ['lostpass_2ephp',['lostpass.php',['../lostpass_8php.html',1,'']]],
   ['lostpass_5fcontent',['lostpass_content',['../lostpass_8php.html#a0314d94e48c789b1b3a201d740c9eab3',1,'lostpass.php']]],
-  ['lostpass_5fpost',['lostpass_post',['../lostpass_8php.html#a8ed35ba71a4404eaf4903da61d0321cc',1,'lostpass.php']]],
-  ['lrdd',['lrdd',['../include_2network_8php.html#adbc7fe45cc7fd9cd78f6b2f425ee9041',1,'network.php']]]
+  ['lostpass_5fpost',['lostpass_post',['../lostpass_8php.html#a8ed35ba71a4404eaf4903da61d0321cc',1,'lostpass.php']]]
 ];

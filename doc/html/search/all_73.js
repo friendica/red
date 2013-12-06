@@ -35,8 +35,6 @@ var searchData=
   ['set_5fcommentable',['set_commentable',['../classItem.html#aa1bd19fc8b5577078530265a7bf64123',1,'Item']]],
   ['set_5fconfig',['set_config',['../include_2config_8php.html#ad6da879e4fb5b37d1e161d4e9be5c32a',1,'config.php']]],
   ['set_5fconversation',['set_conversation',['../classItem.html#aa8b1bbc4236890694635295e46d7fd72',1,'Item']]],
-  ['set_5fcurl_5fcode',['set_curl_code',['../classApp.html#a5e6a6bd641e4d9909df56f0283c03821',1,'App']]],
-  ['set_5fcurl_5fheaders',['set_curl_headers',['../classApp.html#a9632092d9e8fdaa82a9fc4586433fd31',1,'App']]],
   ['set_5fdefault_5flogin_5fidentity',['set_default_login_identity',['../identity_8php.html#a78151baf4407a8482d2681a91a9c486b',1,'identity.php']]],
   ['set_5fgroups',['set_groups',['../classApp.html#a3d84af5e42082098672531cd1a618853',1,'App']]],
   ['set_5fhostname',['set_hostname',['../classApp.html#a344d2b7dc2f276648d521aee4da1731c',1,'App']]],

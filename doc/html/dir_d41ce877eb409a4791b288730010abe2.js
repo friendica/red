@@ -59,7 +59,6 @@ var dir_d41ce877eb409a4791b288730010abe2 =
     [ "msearch.php", "msearch_8php.html", "msearch_8php" ],
     [ "network.php", "mod_2network_8php.html", "mod_2network_8php" ],
     [ "new_channel.php", "new__channel_8php.html", "new__channel_8php" ],
-    [ "nogroup.php", "nogroup_8php.html", "nogroup_8php" ],
     [ "notifications.php", "notifications_8php.html", "notifications_8php" ],
     [ "notify.php", "mod_2notify_8php.html", "mod_2notify_8php" ],
     [ "oembed.php", "mod_2oembed_8php.html", "mod_2oembed_8php" ],
