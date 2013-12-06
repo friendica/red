@@ -331,7 +331,7 @@ footer {
 	margin-bottom: 10px;
 }
 
-.group-selected, .nets-selected, .fileas-selected, .categories-selected, .active {
+.group-selected, .nets-selected, .fileas-selected, .categories-selected, .search-selected, .active {
 	color: #444444 !important;
 }
 

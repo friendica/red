@@ -99,7 +99,7 @@ function network_init(&$a) {
 	}
 
 
-	$a->page['aside'] .= group_side('network','network',true,$group_id);
+	$a->page['aside'] .= group_side('network','network',true,$_GET['gid']);
 	$a->page['aside'] .= posted_date_widget($a->get_baseurl() . '/network',local_user(),false);	
 
 	$a->page['aside'] .= saved_searches($search);
