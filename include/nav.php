@@ -156,7 +156,7 @@ EOT;
 
 
 		$nav['intros'] = array('connections/pending',	t('Intros'), "", t('New Connections'));
-		$nav['intros']['all']=array('intro', t('See all channel introductions'), "", "");
+		$nav['intros']['all']=array('notifications/intros', t('See all channel introductions'), "", "");
 
 
 		$nav['notifications'] = array('notifications/system',	t('Notices'), "", t('Notifications'));

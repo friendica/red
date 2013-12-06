@@ -52,26 +52,6 @@
 
 {{include file="field_input.tpl" field=$cntunkmail}}
 
-
-{{if $expireisfixed}}
-{{* Remove above line when expire is working *}}
-{{include file="field_input.tpl" field=$expire.days}}
-
-
-<div class="field input">
-	<span class="field_help"><a href="#advanced-expire-popup" id="advanced-expire" class='popupbox' title="{{$expire.advanced}}">{{$expire.label}}</a></span>
-	<div style="display: none;">
-		<div id="advanced-expire-popup" style="width:auto;height:auto;overflow:auto;">
-			<h3>{{$expire.advanced}}</h3>
-			{{include file="field_yesno.tpl" field=$expire.items}}
-			{{include file="field_yesno.tpl" field=$expire.starred}}
-			{{include file="field_yesno.tpl" field=$expire.network_only}}
-		</div>
-	</div>
-
-</div>
-{{/if}}
-
 <div id="settings-default-perms" class="settings-default-perms" >
 	<a href="#profile-jot-acl-wrapper" id="settings-default-perms-menu" >{{$permissions}} {{$permdesc}}</a>
 	<div id="settings-default-perms-menu-end"></div>

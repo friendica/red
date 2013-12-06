@@ -491,11 +491,6 @@ function settings_post(&$a) {
 	$str_group_deny    = perms2str($_POST['group_deny']);
 	$str_contact_deny  = perms2str($_POST['contact_deny']);
 
-	set_pconfig(local_user(),'expire','items', $expire_items);
-	set_pconfig(local_user(),'expire','notes', $expire_notes);
-	set_pconfig(local_user(),'expire','starred', $expire_starred);
-	set_pconfig(local_user(),'expire','photos', $expire_photos);
-	set_pconfig(local_user(),'expire','network_only', $expire_network_only);
 	set_pconfig(local_user(),'system','use_browser_location',$allow_location);
 	set_pconfig(local_user(),'system','suggestme', $suggestme);
 	set_pconfig(local_user(),'system','post_newfriend', $post_newfriend);
@@ -503,51 +498,6 @@ function settings_post(&$a) {
 	set_pconfig(local_user(),'system','post_profilechange', $post_profilechange);
 	set_pconfig(local_user(),'system','blocktags',$blocktags);
 
-
-
-
-/*
-	if($page_flags == PAGE_PRVGROUP) {
-		$hidewall = 1;
-		if((! $str_contact_allow) && (! $str_group_allow) && (! $str_contact_deny) && (! $str_group_deny)) {
-			if($def_group) {
-				info( t('Private forum has no privacy permissions. Using default privacy group.'). EOL);
-				$str_group_allow = '<' . $def_group . '>';
-			}
-			else {
-				notice( t('Private forum has no privacy permissions and no default privacy group.') . EOL);
-			} 
-		}
-	}
-
-*/
-
-/*
-	$r = q("UPDATE `user` SET `username` = '%s', `email` = '%s', `openid` = '%s', `timezone` = '%s',  `allow_cid` = '%s', `allow_gid` = '%s', `deny_cid` = '%s', `deny_gid` = '%s', `notify-flags` = %d, `page-flags` = %d, `default-location` = '%s', `allow_location` = %d, `maxreq` = %d, `expire` = %d, `openidserver` = '%s', `def_group` = %d, `blockwall` = %d, `hidewall` = %d, `blocktags` = %d, `unkmail` = %d, `cntunkmail` = %d  WHERE `uid` = %d LIMIT 1",
-			dbesc($username),
-			dbesc($email),
-			dbesc($openid),
-			dbesc($timezone),
-			dbesc($str_contact_allow),
-			dbesc($str_group_allow),
-			dbesc($str_contact_deny),
-			dbesc($str_group_deny),
-			intval($notify),
-			intval($page_flags),
-			dbesc($defloc),
-			intval($allow_location),
-			intval($maxreq),
-			intval($expire),
-			dbesc($openidserver),
-			intval($def_group),
-			intval($blockwall),
-			intval($hidewall),
-			intval($blocktags),
-			intval($unkmail),
-			intval($cntunkmail),
-			intval(local_user())
-	);
-*/
 
 	$r = q("update channel set channel_name = '%s', channel_pageflags = %d, channel_timezone = '%s', channel_location = '%s', channel_notifyflags = %d, channel_max_anon_mail = %d, channel_max_friend_req = %d, channel_expire_days = %d, channel_default_group = '%s', channel_r_stream = %d, channel_r_profile = %d, channel_r_photos = %d, channel_r_abook = %d, channel_w_stream = %d, channel_w_wall = %d, channel_w_tagwall = %d, channel_w_comment = %d, channel_w_mail = %d, channel_w_photos = %d, channel_w_chat = %d, channel_a_delegate = %d, channel_r_storage = %d, channel_w_storage = %d, channel_r_pages = %d, channel_w_pages = %d, channel_a_republish = %d, channel_allow_cid = '%s', channel_allow_gid = '%s', channel_deny_cid = '%s', channel_deny_gid = '%s'  where channel_id = %d limit 1",
 		dbesc($username),
@@ -1038,18 +988,6 @@ function settings_content(&$a) {
 
 		$celeb = false;
 
-		$expire_arr = array(
-			'days' => array('expire',  t("Automatically expire posts after this many days:"), $expire, t('If empty, posts will not expire. Expired posts will be deleted')),
-			'advanced' => t('Advanced expiration settings'),
-			'label' => t('Advanced Expiration'),
-			'items' => array('expire_items',  t("Expire posts:"), $expire_items, '', array(t('No'),t('Yes'))),
-
-			'starred' => array('expire_starred',  t("Expire starred posts:"), $expire_starred, '', array(t('No'),t('Yes'))),
-			'photos' => array('expire_photos',  t("Expire photos:"), $expire_photos, '', array(t('No'),t('Yes'))),		
-			'network_only' => array('expire_network_only',  t("Only expire posts by others:"), $expire_network_only, '', array(t('No'),t('Yes'))),		
-		);
-
-
 		$perm_defaults = array(
 			'allow_cid' => $channel['channel_allow_cid'], 
 			'allow_gid' => $channel['channel_allow_gid'], 
@@ -1097,8 +1035,6 @@ function settings_content(&$a) {
 
 			'$group_select' => $group_select,
 
-
-			'$expire'	=> $expire_arr,
 
 			'$profile_in_dir' => $profile_in_dir,
 			'$hide_friends' => $hide_friends,
