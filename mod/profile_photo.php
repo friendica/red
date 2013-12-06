@@ -42,7 +42,7 @@ function profile_photo_post(&$a) {
 				intval($_REQUEST['profile']),
 				intval(local_user())
 			);
-			if(count($r) && (! intval($r[0]['is_default'])))
+			if(($r) && (! intval($r[0]['is_default'])))
 				$is_default_profile = 0;
 		} 
 

@@ -670,19 +670,41 @@ function import_xchan($arr,$ud_flags = 1) {
 
 		require_once('include/photo/photo_driver.php');
 
-		$photos = import_profile_photo($arr['photo'],$xchan_hash);
-		$r = q("update xchan set xchan_photo_date = '%s', xchan_photo_l = '%s', xchan_photo_m = '%s', xchan_photo_s = '%s', xchan_photo_mimetype = '%s'
+		// see if this is a channel clone that's hosted locally - which we treat different from other xchans/connections
+
+		$local = q("select channel_account_id, channel_id from channel where channel_hash = '%s' limit 1",
+			dbesc($xchan_hash)
+		);
+		if($local) {
+			$ph = z_fetch_url($arr['photo'],true);
+			if($ph['success']) {
+				import_channel_photo($ph['body'], $arr['photo_mimetype'], $local[0]['channel_account_id'],$local[0]['channel_id']);
+				// reset the names in case they got messed up when we had a bug in this function
+				$photos = array(
+					z_root() . '/photo/profile/l/' . $local[0]['channel_id'],
+					z_root() . '/photo/profile/m/' . $local[0]['channel_id'],
+					z_root() . '/photo/profile/s/' . $local[0]['channel_id'],
+					$arr['photo_mimetype']
+				);
+			}
+		}
+		else {
+			$photos = import_profile_photo($arr['photo'],$xchan_hash);
+		}
+		if($photos) {
+			$r = q("update xchan set xchan_photo_date = '%s', xchan_photo_l = '%s', xchan_photo_m = '%s', xchan_photo_s = '%s', xchan_photo_mimetype = '%s'
 				where xchan_hash = '%s' limit 1",
-				dbesc($arr['photo_updated']),
+				dbesc(datetime_convert('UTC','UTC',$arr['photo_updated'])),
 				dbesc($photos[0]),
 				dbesc($photos[1]),
 				dbesc($photos[2]),
 				dbesc($photos[3]),
 				dbesc($xchan_hash)
-		);
+			);
 
-		$what .= 'photo ';
-		$changed = true;
+			$what .= 'photo ';
+			$changed = true;
+		}
 	}
 
 	// what we are missing for true hub independence is for any changes in the primary hub to 

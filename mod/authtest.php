@@ -31,6 +31,8 @@ function authtest_content(&$a) {
 			$z = z_fetch_url($x['url'] . '&test=1');
 			if($z['success']) {
 				$j = json_decode($z['body'],true);
+				if(! $j)
+					$o .= 'json_decode failure from remote site. ' . print_r($z['body'],true);
 				$o .= 'Remote site responded: ' . print_r($j,true);
 			}
 			else {
