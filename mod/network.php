@@ -129,69 +129,6 @@ function saved_searches($search) {
 
 }
 
-/**
- * Return selected tab from query
- * 
- * urls -> returns
- * 		'/network'					=> $no_active = 'active'
- * 		'/network?f=&order=comment'	=> $comment_active = 'active'
- * 		'/network?f=&order=post'	=> $postord_active = 'active'
- * 		'/network?f=&conv=1',		=> $conv_active = 'active'
- * 		'/network/new',				=> $new_active = 'active'
- * 		'/network?f=&star=1',		=> $starred_active = 'active'
- * 		'/network?f=&spam=1',		=> $spam_active = 'active'
- * 
- * @return Array ( $no_active, $comment_active, $postord_active, $conv_active, $new_active, $starred_active, $spam_active );
- */
-function network_query_get_sel_tab($a) {
-	$no_active='';
-	$starred_active = '';
-	$new_active = '';
-	$all_active = '';
-	$search_active = '';
-	$conv_active = '';
-	$spam_active = '';
-	$postord_active = '';
-
-	if(x($_GET,'new')) {
-		$new_active = 'active';
-	}
-	
-	if(x($_GET,'search')) {
-		$search_active = 'active';
-	}
-	
-	if(x($_GET,'star')) {
-		$starred_active = 'active';
-	}
-	
-	if(x($_GET,'conv')) {
-		$conv_active = 'active';
-	}
-
-	if(x($_GET,'spam')) {
-		$spam_active = 'active';
-	}
-
-	
-	
-	if (($new_active == '') 
-		&& ($starred_active == '') 
-		&& ($conv_active == '')
-		&& ($search_active == '')
-		&& ($spam_active == '')) {
-			$no_active = 'active';
-	}
-
-	if ($no_active=='active' && x($_GET,'order')) {
-		switch($_GET['order']){
-		 case 'post': $postord_active = 'active'; $no_active=''; break;
-		 case 'comment' : $all_active = 'active'; $no_active=''; break;
-		}
-	}
-	
-	return array($no_active, $all_active, $postord_active, $conv_active, $new_active, $starred_active, $spam_active);
-}
 
 
 function network_content(&$a, $update = 0, $load = false) {
@@ -244,67 +181,9 @@ function network_content(&$a, $update = 0, $load = false) {
 
 	$o = '';
 
-	// item filter tabs
-	// TODO: fix this logic, reduce duplication
-	//$a->page['content'] .= '<div class="tabs-wrapper">';
 	
-	list($no_active, $all_active, $postord_active, $conv_active, $new_active, $starred_active, $spam_active) = network_query_get_sel_tab($a);
+
 	// if no tabs are selected, defaults to comments
-	if ($no_active=='active') $all_active='active';
-	//echo "<pre>"; var_dump($no_active, $all_active, $postord_active, $conv_active, $new_active, $starred_active, $bookmarked_active, $spam_active); killme();
-
-	$cmd = (($datequery) ? '' : $a->cmd);
-	$len_naked_cmd = strlen(str_replace('/new','',$cmd));		
-
-	// tabs
-	$tabs = array(
-		array(
-			'label' => t('Commented Order'),
-			'url'=>$a->get_baseurl(true) . '/' . $cmd . '?f=&order=comment' . ((x($_GET,'cid')) ? '&cid=' . $_GET['cid'] : ''), 
-			'sel'=>$all_active,
-			'title'=> t('Sort by Comment Date'),
-		),
-		array(
-			'label' => t('Posted Order'),
-			'url'=>$a->get_baseurl(true) . '/' . $cmd . '?f=&order=post' . ((x($_GET,'cid')) ? '&cid=' . $_GET['cid'] : ''), 
-			'sel'=>$postord_active,
-			'title' => t('Sort by Post Date'),
-		),
-
-		array(
-			'label' => t('Personal'),
-			'url' => $a->get_baseurl(true) . '/' . $cmd . ((x($_GET,'cid')) ? '/?f=&cid=' . $_GET['cid'] : '') . '&conv=1',
-			'sel' => $conv_active,
-			'title' => t('Posts that mention or involve you'),
-		),
-		array(
-			'label' => t('New'),
-			'url' => $a->get_baseurl(true) . '/' . $cmd . ((x($_GET,'cid')) ? '/?f=&cid=' . $_GET['cid'] : '') . '&new=1',
-			'sel' => $new_active,
-			'title' => t('Activity Stream - by date'),
-		),
-
-	);
-
-	if(feature_enabled(local_user(),'star_posts')) 
-		$tabs[] = array(
-			'label' => t('Starred'),
-			'url'=>$a->get_baseurl(true) . '/' . $cmd . ((x($_GET,'cid')) ? '/?f=&cid=' . $_GET['cid'] : '') . '&star=1',
-			'sel'=>$starred_active,
-			'title' => t('Favourite Posts'),
-		);
-
-	// Not yet implemented
-
-	if(feature_enabled(local_user(),'spam_filter')) 
-		$tabs[] = array(
-			'label' => t('Spam'),
-			'url'=>$a->get_baseurl(true) . '/network?f=&spam=1',
-			'sel'=> $spam_active,
-			'title' => t('Posts flagged as SPAM'),
-		);	
-
-
 
 	$cid = ((x($_GET,'cid')) ? intval($_GET['cid']) : 0);
 	$star = ((x($_GET,'star')) ? intval($_GET['star']) : 0);
@@ -344,10 +223,8 @@ function network_content(&$a, $update = 0, $load = false) {
 			$o .= $arr['html']; 
 		}
  	
-		$arr = array('tabs' => $tabs);
-		call_hooks('network_tabs', $arr);
 
-		$o .= replace_macros(get_markup_template('common_tabs.tpl'), array('$tabs'=> $arr['tabs']));
+		$o .= network_tabs();
 
 		// --- end item filter tabs
 

@@ -1305,3 +1305,187 @@ function prepare_page($item) {
 	));
 }
 
+
+function network_tabs() {
+	$a = get_app();
+	$no_active='';
+	$starred_active = '';
+	$new_active = '';
+	$all_active = '';
+	$search_active = '';
+	$conv_active = '';
+	$spam_active = '';
+	$postord_active = '';
+
+	if(x($_GET,'new')) {
+		$new_active = 'active';
+	}
+	
+	if(x($_GET,'search')) {
+		$search_active = 'active';
+	}
+	
+	if(x($_GET,'star')) {
+		$starred_active = 'active';
+	}
+	
+	if(x($_GET,'conv')) {
+		$conv_active = 'active';
+	}
+
+	if(x($_GET,'spam')) {
+		$spam_active = 'active';
+	}
+
+	
+	
+	if (($new_active == '') 
+		&& ($starred_active == '') 
+		&& ($conv_active == '')
+		&& ($search_active == '')
+		&& ($spam_active == '')) {
+			$no_active = 'active';
+	}
+
+	if ($no_active=='active' && x($_GET,'order')) {
+		switch($_GET['order']){
+		 case 'post': $postord_active = 'active'; $no_active=''; break;
+		 case 'comment' : $all_active = 'active'; $no_active=''; break;
+		}
+	}
+	
+	if ($no_active=='active') $all_active='active';
+
+	$cmd = $a->cmd;
+
+	// tabs
+	$tabs = array(
+		array(
+			'label' => t('Commented Order'),
+			'url'=>$a->get_baseurl(true) . '/' . $cmd . '?f=&order=comment' . ((x($_GET,'cid')) ? '&cid=' . $_GET['cid'] : ''), 
+			'sel'=>$all_active,
+			'title'=> t('Sort by Comment Date'),
+		),
+		array(
+			'label' => t('Posted Order'),
+			'url'=>$a->get_baseurl(true) . '/' . $cmd . '?f=&order=post' . ((x($_GET,'cid')) ? '&cid=' . $_GET['cid'] : ''), 
+			'sel'=>$postord_active,
+			'title' => t('Sort by Post Date'),
+		),
+
+		array(
+			'label' => t('Personal'),
+			'url' => $a->get_baseurl(true) . '/' . $cmd . ((x($_GET,'cid')) ? '/?f=&cid=' . $_GET['cid'] : '') . '&conv=1',
+			'sel' => $conv_active,
+			'title' => t('Posts that mention or involve you'),
+		),
+		array(
+			'label' => t('New'),
+			'url' => $a->get_baseurl(true) . '/' . $cmd . ((x($_GET,'cid')) ? '/?f=&cid=' . $_GET['cid'] : '') . '&new=1',
+			'sel' => $new_active,
+			'title' => t('Activity Stream - by date'),
+		),
+
+	);
+
+	if(feature_enabled(local_user(),'star_posts')) 
+		$tabs[] = array(
+			'label' => t('Starred'),
+			'url'=>$a->get_baseurl(true) . '/' . $cmd . ((x($_GET,'cid')) ? '/?f=&cid=' . $_GET['cid'] : '') . '&star=1',
+			'sel'=>$starred_active,
+			'title' => t('Favourite Posts'),
+		);
+
+	// Not yet implemented
+
+	if(feature_enabled(local_user(),'spam_filter')) 
+		$tabs[] = array(
+			'label' => t('Spam'),
+			'url'=>$a->get_baseurl(true) . '/network?f=&spam=1',
+			'sel'=> $spam_active,
+			'title' => t('Posts flagged as SPAM'),
+		);	
+
+	$arr = array('tabs' => $tabs);
+	call_hooks('network_tabs', $arr);
+
+	$tpl = get_markup_template('common_tabs.tpl');
+
+	return replace_macros($tpl,array('$tabs' => $arr['tabs']));
+
+}
+
+
+
+function profile_tabs($a, $is_owner=False, $nickname=Null){
+	//echo "<pre>"; var_dump($a->user); killme();
+	
+	$channel = $a->get_channel();
+
+	if (is_null($nickname))
+		$nickname  = $channel['channel_address'];
+		
+	if(x($_GET,'tab'))
+		$tab = notags(trim($_GET['tab']));
+	
+	$url = $a->get_baseurl() . '/channel/' . $nickname;
+	$pr  = $a->get_baseurl() . '/profile/' . $nickname;
+
+	$tabs = array(
+		array(
+			'label' => t('Channel'),
+			'url'   => $url,
+			'sel'   => ((argv(0) == 'channel') ? 'active' : ''),
+			'title' => t('Status Messages and Posts'),
+			'id'    => 'status-tab',
+		),
+		array(
+			'label' => t('About'),
+			'url' 	=> $pr,
+			'sel'	=> ((argv(0) == 'profile') ? 'active' : ''),
+			'title' => t('Profile Details'),
+			'id'    => 'profile-tab',
+		),
+		array(
+			'label' => t('Photos'),
+			'url'	=> $a->get_baseurl() . '/photos/' . $nickname,
+			'sel'	=> ((argv(0) == 'photos') ? 'active' : ''),
+			'title' => t('Photo Albums'),
+			'id'    => 'photo-tab',
+		),
+	);
+
+
+	if ($is_owner){
+		$tabs[] = array(
+			'label' => t('Events'),
+			'url'	=> $a->get_baseurl() . '/events',
+			'sel' 	=> ((argv(0) == 'events') ? 'active' : ''),
+			'title' => t('Events and Calendar'),
+			'id'    => 'events-tab',
+		);
+		if(feature_enabled(local_user(),'webpages')){
+		$tabs[] = array(
+			'label' => t('Webpages'),
+			'url'	=> $a->get_baseurl() . '/webpages/' . $nickname,
+			'sel' 	=> ((argv(0) == 'webpages') ? 'active' : ''),
+			'title' => t('Manage Webpages'),
+			'id'    => 'webpages-tab',
+		);}
+	}
+	else {
+		// FIXME
+		// we probably need a listing of events that were created by 
+		// this channel and are visible to the observer
+
+
+	}
+
+
+	$arr = array('is_owner' => $is_owner, 'nickname' => $nickname, 'tab' => (($tab) ? $tab : false), 'tabs' => $tabs);
+	call_hooks('profile_tabs', $arr);
+	
+	$tpl = get_markup_template('common_tabs.tpl');
+
+	return replace_macros($tpl,array('$tabs' => $arr['tabs']));
+}
