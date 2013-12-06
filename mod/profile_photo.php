@@ -119,7 +119,7 @@ function profile_photo_post(&$a) {
 						dbesc($base_image['resource_id']),
 						intval(local_user())
 					);
-					$r = q("UPDATE photo SET ( photo_flags ^ %d ) WHERE (photo_flags & %d ) 
+					$r = q("UPDATE photo SET photo_flags = ( photo_flags ^ %d ) WHERE ( photo_flags & %d ) 
 						AND resource_id != '%s' AND `uid` = %d",
 						intval(PHOTO_PROFILE),
 						intval(PHOTO_PROFILE),
@@ -236,7 +236,7 @@ function profile_photo_content(&$a) {
 			// unset any existing profile photos
 			$r = q("UPDATE photo SET profile = 0 WHERE profile = 1 AND uid = %d",
 				intval(local_user()));
-			$r = q("UPDATE photo SET (photo_flags ^ %d ) WHERE (photo_flags & %d ) AND uid = %d",
+			$r = q("UPDATE photo SET photo_flags = (photo_flags ^ %d ) WHERE (photo_flags & %d ) AND uid = %d",
 				intval(PHOTO_PROFILE),
 				intval(PHOTO_PROFILE),
 				intval(local_user()));
