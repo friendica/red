@@ -170,14 +170,16 @@ function suggest_widget() {
 	// This will throw some entropy intot he situation so you won't 
 	// be looking at the same two mug shots every time the widget runs
 
-	$index = mt_rand(0,count($r) - 2);
-	
-	
+
+	$index = ((count($r) > 2) ? mt_rand(0,count($r) - 2) : 0);
+		
 
 	for($x = $index; $x <= ($index+1); $x ++) {
 
 		$rr = $r[$x];
-
+		if(! $rr['xchan_url'])
+			break;
+		
 		$connlnk = z_root() . '/follow/?url=' . $rr['xchan_addr'];
 
 		$arr[] = array(
