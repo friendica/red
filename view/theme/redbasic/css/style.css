@@ -1634,7 +1634,7 @@ a.mail-list-link {
 	float: left;
 	text-align: center;
 	width: 120px;
-	overflow: hidden;
+	overflow: hidden !important;
 }
 
 .profile-match-note {
