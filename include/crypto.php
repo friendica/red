@@ -49,6 +49,13 @@ function AES256CBC_decrypt($data,$key,$iv) {
 		str_pad($iv,16,"\0")));
 }
 
+function crypto_encapsulate($data,$pubkey,$alg='aes256cbc') {
+	if($alg === 'aes256cbc')
+		return aes_encapsulate($data,$pubkey);
+
+}
+
+
 function aes_encapsulate($data,$pubkey) {
 	if(! $pubkey)
 		logger('aes_encapsulate: no key. data: ' . $data);
@@ -60,11 +67,20 @@ function aes_encapsulate($data,$pubkey) {
 		$x = debug_backtrace();
 		logger('aes_encapsulate: RSA failed. ' . print_r($x[0],true));
 	}
+	$result['alg'] = 'aes256cbc';
  	$result['key'] = base64url_encode($k,true);
 	openssl_public_encrypt($iv,$i,$pubkey);
 	$result['iv'] = base64url_encode($i,true);
 	return $result;
 }
+
+function crypto_unencapsulate($data,$prvkey) {
+	$alg = ((array_key_exists('alg',$data)) ? $data['alg'] : 'aes256cbc');
+	if($alg === 'aes256cbc')
+		return aes_unencapsulate($data,$prvkey);
+
+}
+
 
 function aes_unencapsulate($data,$prvkey) {
 	openssl_private_decrypt(base64url_decode($data['key']),$k,$prvkey);

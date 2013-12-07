@@ -28,7 +28,7 @@
 <table cellspacing="0" cellpadding="0">
  <tbody>
  <tr style="height: 56px;">
-  <td id="projectlogo"><img alt="Logo" src="rhash-64.png"/></td>
+  <td id="projectlogo"><img alt="Logo" src="rm-64.png"/></td>
   <td style="padding-left: 0.5em;">
    <div id="projectname">The Red Matrix
    </div>
@@ -132,6 +132,17 @@ Functions</h2></td></tr>
       </table>
 </div><div class="memdoc">
 <p>Zot endpoint </p>
+<h1>Magic Auth</h1>
+<p>So-called "magic auth" takes place by a special exchange. On the site where the "channel to be authenticated" lives (e.g. $mysite), a redirection is made via $mysite/magic to the zot endpoint of the remote site ($remotesite) with special GET parameters.</p>
+<p>The endpoint is typically <a href="https://$remotesite/post">https://$remotesite/post</a> - or whatever was specified as the callback url in prior communications (we will bootstrap an address and fetch a zot info packet if possible where no prior communications exist)</p>
+<p>Four GET parameters are supplied:</p>
+<p>auth =&gt; the urlencoded webbie (<a href="#" onclick="location.href='mai'+'lto:'+'cha'+'nn'+'el@'+'ho'+'st.'+'do'+'mai'+'n'; return false;">chann<span style="display: none;">.nosp@m.</span>el@h<span style="display: none;">.nosp@m.</span>ost.d<span style="display: none;">.nosp@m.</span>omai<span style="display: none;">.nosp@m.</span>n</a>) of the channel requesting access dest =&gt; the desired destination URL (urlencoded) sec =&gt; a random string which is also stored on $mysite for use during the verification phase. version =&gt; the zot revision</p>
+<p>When this packet is received, an "auth-check" zot message is sent to $mysite. (e.g. if $_GET['auth'] is <a href="#" onclick="location.href='mai'+'lto:'+'foo'+'ba'+'r@p'+'od'+'unk'+'.e'+'du'; return false;">fooba<span style="display: none;">.nosp@m.</span>r@po<span style="display: none;">.nosp@m.</span>dunk.<span style="display: none;">.nosp@m.</span>edu</a>, a zot packet is sent to the podunk.edu zot endpoint, which is typically /post) If no information has been recorded about the requesting identity a zot information packet will be retrieved before continuing.</p>
+<p>The sender of this packet is an arbitrary/random site channel. The recipients will be a single recipient corresponding to the guid and guid_sig we have associated with the requesting auth identity</p>
+<p>{ "type":"auth_check", "sender":{ "guid":"kgVFf_...", "guid_sig":"PT9-TApz...", "url":"http:\/\/podunk.edu", "url_sig":"T8Bp7j..." }, "recipients":{ { "guid":"ZHSqb...", "guid_sig":"JsAAXi..." } } "callback":"\/post", "version":1, "secret":"1eaa661", "secret_sig":"eKV968b1..." }</p>
+<p>auth_check messages MUST use encapsulated encryption. This message is sent to the origination site, which checks the 'secret' to see if it is the same as the 'sec' which it passed originally. It also checks the secret_sig which is the secret signed by the destination channel's private key and base64url encoded. If everything checks out, a json packet is returned:</p>
+<p>{ "success":1, "confirm":"q0Ysovd1u..." "service_class":(optional) }</p>
+<p>'confirm' in this case is the base64url encoded RSA signature of the concatenation of 'secret' with the base64url encoded whirlpool hash of the requestor's guid and guid_sig; signed with the source channel private key. This prevents a man-in-the-middle from inserting a rogue success packet. Upon receipt and successful verification of this packet, the destination site will redirect to the original destination URL and indicate a successful remote login. Service_class can be used by cooperating sites to provide different access rights based on account rights and subscription plans. It is a string whose contents are not defined by protocol. Example: "basic" or "gold".</p>
 
 </div>
 </div>
@@ -148,6 +159,26 @@ Functions</h2></td></tr>
         </tr>
       </table>
 </div><div class="memdoc">
+<p>post_post(&amp;$a) zot communications and messaging</p>
+<p>Sender HTTP posts to this endpoint ($site/post typically) with 'data' parameter set to json zot message packet. This packet is optionally encrypted, which we will discover if the json has an 'iv' element. $contents =&gt; array( 'alg' =&gt; 'aes256cbc', 'iv' =&gt; initialisation vector, 'key' =&gt; decryption key, 'data' =&gt; encrypted data); $contents-&gt;iv and $contents-&gt;key are random strings encrypted with this site's RSA public key and then base64url encoded. Currently only 'aes256cbc' is used, but this is extensible should that algorithm prove inadequate.</p>
+<p>Once decrypted, one will find the normal json_encoded zot message packet.</p>
+<p>Defined packet types are: notify, purge, refresh, auth_check, ping, and pickup</p>
+<p>Standard packet: (used by notify, purge, refresh, and auth_check)</p>
+<p>{ "type": "notify", "sender":{ "guid":"kgVFf_1...", "guid_sig":"PT9-TApzp...", "url":"http:\/\/podunk.edu", "url_sig":"T8Bp7j5...", }, "recipients": { optional recipient array }, "callback":"\/post", "version":1, "secret":"1eaa...", "secret_sig": "df89025470fac8..." }</p>
+<p>Signature fields are all signed with the sender channel private key and base64url encoded. Recipients are arrays of guid and guid_sig, which were previously signed with the recipients private key and base64url encoded and later obtained via channel discovery. Absence of recipients indicates a public message or visible to all potential listeners on this site.</p>
+<p>"pickup" packet: The pickup packet is sent in response to a notify packet from another site</p>
+<p>{ "type":"pickup", "url":"http:\/\/example.com", "callback":"http:\/\/example.com\/post", "callback_sig":"teE1_fLI...", "secret":"1eaa...", "secret_sig":"O7nB4_..." }</p>
+<p>In the pickup packet, the sig fields correspond to the respective data element signed with this site's system private key and then base64url encoded. The "secret" is the same as the original secret from the notify packet.</p>
+<p>If verification is successful, a json structure is returned containing a success indicator and an array of type 'pickup'. Each pickup element contains the original notify request and a message field whose contents are dependent on the message type</p>
+<p>This JSON array is AES encapsulated using the site public key of the site that sent the initial zot pickup packet. Using the above example, this would be example.com.</p>
+<p>{ "success":1, "pickup":{ "notify":{ "type":"notify", "sender":{ "guid":"kgVFf_...", "guid_sig":"PT9-TApz...", "url":"http:\/\/z.podunk.edu", "url_sig":"T8Bp7j5D..." }, "callback":"\/post", "version":1, "secret":"1eaa661..." }, "message":{ "type":"activity", "message_id":"10b049ce384cbb2da9467319bc98169ab36290b8bbb403aa0c0accd9cb072e76@podunk.edu", "message_top":"10b049ce384cbb2da9467319bc98169ab36290b8bbb403aa0c0accd9cb072e76@podunk.edu", "message_parent":"10b049ce384cbb2da9467319bc98169ab36290b8bbb403aa0c0accd9cb072e76@podunk.edu", "created":"2012-11-20 04:04:16", "edited":"2012-11-20 04:04:16", "title":"", "body":"Hi Nickordo", "app":"", "verb":"post", "object_type":"", "target_type":"", "permalink":"", "location":"", "longlat":"", "owner":{ "name":"Indigo", "address":"indigo@podunk.edu", "url":"http:\/\/podunk.edu", "photo":{ "mimetype":"image\/jpeg", "src":"http:\/\/podunk.edu\/photo\/profile\/m\/5" }, "guid":"kgVFf_...", "guid_sig":"PT9-TAp...", }, "author":{ "name":"Indigo", "address":"indigo@podunk.edu", "url":"http:\/\/podunk.edu", "photo":{ "mimetype":"image\/jpeg", "src":"http:\/\/podunk.edu\/photo\/profile\/m\/5" }, "guid":"kgVFf_...", "guid_sig":"PT9-TAp..." } } } }</p>
+<p>Currently defined message types are 'activity', 'mail', 'profile' and 'channel_sync', which each have different content schemas.</p>
+<p>Ping packet: A ping packet does not require any parameters except the type. It may or may not be encrypted.</p>
+<p>{ "type": "ping" }</p>
+<p>On receipt of a ping packet a ping response will be returned:</p>
+<p>{ "success" : 1, "site" { "url":"http:\/\/podunk.edu", "url_sig":"T8Bp7j5...", "sitekey": "&amp;ndash;&amp;mdash;BEGIN PUBLIC KEY&amp;ndash;&amp;mdash;
+                  MIICIjANBgkqhkiG9w0BAQE..." } }</p>
+<p>The ping packet can be used to verify that a site has not been re-installed, and to initiate corrective action if it has. The url_sig is signed with the site private key and base64url encoded - and this should verify with the enclosed sitekey. Failure to verify indicates the site is corrupt or otherwise unable to communicate using zot. This return packet is not otherwise verified, so should be compared with other results obtained from this site which were verified prior to taking action. For instance if you have one verified result with this signature and key, and other records for this url which have different signatures and keys, it indicates that the site was re-installed and corrective action may commence (remove or mark invalid any entries with different signatures). If you have no records which match this url_sig and key - no corrective action should be taken as this packet may have been returned by an imposter. </p>
 <p>Many message packets will arrive encrypted. The existence of an 'iv' element tells us we need to unencapsulate the AES-256-CBC content using the site private key</p>
 <p>The 'pickup' message arrives with a tracking ID which is associated with a particular outq_hash First verify that that the returned signatures verify, then check that we have an outbound queue item with the correct hash. If everything verifies, find any/all outbound messages in the queue for this hubloc and send them back</p>
 <p>If we made it to here, the signatures verify, but we still don't know if the tracking ID is valid. It wouldn't be an error if the tracking ID isn't found, because we may have sent this particular queue item with another pickup (after the tracking ID for the other pickup was verified).</p>
@@ -155,7 +186,12 @@ Functions</h2></td></tr>
 <p>pickup: end</p>
 <p>All other message types require us to verify the sender. This is a generic check, so we will do it once here and bail if anything goes wrong.</p>
 <p>Check if the sender is already verified here</p>
-<p>Have never seen this guid or this guid coming from this location. Check it and register it. </p>
+<p>Have never seen this guid or this guid coming from this location. Check it and register it.</p>
+<p>This hub has now been proven to be valid. Any hub with the same URL and a different sitekey cannot be valid. Get rid of them (mark them deleted). There's a good chance they were re-installs.</p>
+<p>Requestor visits /magic/?dest=somewhere on their own site with a browser magic redirects them to $destsite/post [with auth args....] $destsite sends an auth_check packet to originator site The auth_check packet is handled here by the originator's site</p>
+<ul>
+<li>the browser session is still waiting inside $destsite/post for everything to verify If everything checks out we'll return a token to $destsite and then $destsite will verify the token, authenticate the browser session and then redirect to the original destination. If authentication fails, the redirection to the original destination will still take place but without authentication.</li>
+</ul>
 
 </div>
 </div>

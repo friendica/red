@@ -15,8 +15,11 @@ require_once("include/friendica_smarty.php");
 function replace_macros($s,$r) {
 	$a = get_app();
 
+	$arr = array('template' => $s, 'params' => $r);
+	call_hooks('replace_macros', $arr);
+	
 	$t = $a->template_engine();
-	$output = $t->replace_macros($s,$r);
+	$output = $t->replace_macros($arr['template'],$arr['params']);
 	
 	return $output;
 }
@@ -123,6 +126,9 @@ function purify_html($s) {
 	$purifier = new HTMLPurifier($config);
 	return $purifier->purify($s);
 }
+
+
+
 
 
 // generate a string that's random, but usually pronounceable. 
@@ -916,8 +922,8 @@ function smilies($s, $sample = false) {
 		'<img class="smiley" src="' . $a->get_baseurl() . '/images/smiley-facepalm.gif" alt=":facepalm" />',
 		'<img class="smiley" src="' . $a->get_baseurl() . '/images/like.gif" alt=":like" />',
 		'<img class="smiley" src="' . $a->get_baseurl() . '/images/dislike.gif" alt=":dislike" />',
-		'<a href="http://getzot.com"><img class="smiley" src="' . $a->get_baseurl() . '/images/rhash-16.png" alt="red#" /> the Red Matrix</a>',
-		'<a href="http://getzot.com"><img class="smiley" src="' . $a->get_baseurl() . '/images/rhash-16.png" alt="r#" /> the Red Matrix</a>',
+		'<a href="http://getzot.com"><strong>red<img class="smiley" src="' . $a->get_baseurl() . '/images/rm-16.png" alt="red#" />matrix</strong></a>',
+		'<a href="http://getzot.com"><strong>red<img class="smiley" src="' . $a->get_baseurl() . '/images/rm-16.png" alt="r#" />matrix</strong></a>',
 		'<a href="http://friendica.com">~friendica <img class="smiley" src="' . $a->get_baseurl() . '/images/friendica-16.png" alt="~friendica" /></a>'
 	);
 
@@ -1010,9 +1016,9 @@ function unobscure(&$item) {
 	if(array_key_exists('item_flags',$item) && ($item['item_flags'] & ITEM_OBSCURED)) {
 		$key = get_config('system','prvkey');
 		if($item['title'])
-			$item['title'] = aes_unencapsulate(json_decode_plus($item['title']),$key);
+			$item['title'] = crypto_unencapsulate(json_decode_plus($item['title']),$key);
 		if($item['body'])
-			$item['body'] = aes_unencapsulate(json_decode_plus($item['body']),$key);
+			$item['body'] = crypto_unencapsulate(json_decode_plus($item['body']),$key);
 	}
 
 }
@@ -1081,7 +1087,7 @@ function format_categories(&$item,$writeable) {
 			if(! trim($term))
 				continue;
 			$removelink = (($writeable) ?  z_root() . '/filerm/' . $item['id'] . '?f=&cat=' . urlencode($t['term']) : '');
-			$categories[] = array('term' => $term, 'writeable' => $writeable, 'removelink' => $removelink, 'url' => $t['url']);
+			$categories[] = array('term' => $term, 'writeable' => $writeable, 'removelink' => $removelink, 'url' => zid($t['url']));
 		}
 	}
 	$s = replace_macros(get_markup_template('item_categories.tpl'),array(

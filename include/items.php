@@ -609,8 +609,8 @@ function get_item_elements($x) {
 	// once, and after that your hub knows them. Sure some info is in the post, but it's only a transit identifier
 	// and not enough info to be able to look you up from your hash - which is the only thing stored with the post.
 
-	if(import_author_xchan($x['author']))
-		$arr['author_xchan'] = base64url_encode(hash('whirlpool',$x['author']['guid'] . $x['author']['guid_sig'], true));
+	if(($xchan_hash = import_author_xchan($x['author'])) !== false)
+		$arr['author_xchan'] = $xchan_hash;
 	else
 		return array();
 
@@ -618,8 +618,8 @@ function get_item_elements($x) {
 	if($arr['author_xchan'] === base64url_encode(hash('whirlpool',$x['owner']['guid'] . $x['owner']['guid_sig'], true)))
 		$arr['owner_xchan'] = $arr['author_xchan'];
 	else {
-		if(import_author_xchan($x['owner']))
-			$arr['owner_xchan']  = base64url_encode(hash('whirlpool',$x['owner']['guid'] . $x['owner']['guid_sig'], true));
+		if(($xchan_hash = import_author_xchan($x['owner'])) !== false)
+			$arr['owner_xchan'] = $xchan_hash;
 		else
 			return array();
 	}
@@ -644,9 +644,9 @@ function get_item_elements($x) {
 		$arr['item_flags'] = $arr['item_flags'] | ITEM_OBSCURED;
 		$key = get_config('system','pubkey');
 		if($arr['title'])
-			$arr['title'] = json_encode(aes_encapsulate($arr['title'],$key));
+			$arr['title'] = json_encode(crypto_encapsulate($arr['title'],$key));
 		if($arr['body'])
-			$arr['body']  = json_encode(aes_encapsulate($arr['body'],$key));
+			$arr['body']  = json_encode(crypto_encapsulate($arr['body'],$key));
 	}
 
 
@@ -657,21 +657,18 @@ function get_item_elements($x) {
 
 function import_author_xchan($x) {
 
-	$r = q("select hubloc_url from hubloc where hubloc_guid = '%s' and hubloc_guid_sig = '%s' and (hubloc_flags & %d) limit 1",
-		dbesc($x['guid']),
-		dbesc($x['guid_sig']),
-		intval(HUBLOC_FLAGS_PRIMARY)
-	);
+	$arr = array('xchan' => $x, 'xchan_hash' => '');
+	call_hooks('import_author_xchan',$arr);
+	if($arr['xchan_hash'])
+		return $arr['xchan_hash'];
 
-	if($r) {
-		logger('import_author_xchan: in cache', LOGGER_DEBUG);
-		return true;
+	if((! array_key_exists('network', $x)) || ($x['network'] === 'zot')) {
+		return import_author_zot($x);
 	}
 
-	logger('import_author_xchan: entry not in cache - probing: ' . print_r($x,true), LOGGER_DEBUG);
+	// TODO: create xchans for other common and/or aligned networks
 
-	$them = array('hubloc_url' => $x['url'],'xchan_guid' => $x['guid'], 'xchan_guid_sig' => $x['guid_sig']);
-	return zot_refresh($them);
+	return false;
 }
 
 function encode_item($item) {
@@ -699,9 +696,9 @@ function encode_item($item) {
 	if(array_key_exists('item_flags',$item) && ($item['item_flags'] & ITEM_OBSCURED)) {
 		$key = get_config('system','prvkey');
 		if($item['title'])
-			$item['title'] = aes_unencapsulate(json_decode_plus($item['title']),$key);
+			$item['title'] = crypto_unencapsulate(json_decode_plus($item['title']),$key);
 		if($item['body'])
-			$item['body'] = aes_unencapsulate(json_decode_plus($item['body']),$key);
+			$item['body'] = crypto_unencapsulate(json_decode_plus($item['body']),$key);
 	}
 
 	if($item['item_restrict']  & ITEM_DELETED) {
@@ -785,6 +782,7 @@ function encode_item_xchan($xchan) {
 	$ret['name']     = $xchan['xchan_name'];
 	$ret['address']  = $xchan['xchan_addr'];
 	$ret['url']      = $xchan['hubloc_url'];
+	$ret['network']  = $xchan['xchan_network'];
 	$ret['photo']    = array('mimetype' => $xchan['xchan_photo_mimetype'], 'src' => $xchan['xchan_photo_m']);
 	$ret['guid']     = $xchan['xchan_guid'];
 	$ret['guid_sig'] = $xchan['xchan_guid_sig'];
@@ -908,9 +906,9 @@ function encode_mail($item) {
 	if(array_key_exists('mail_flags',$item) && ($item['mail_flags'] & MAIL_OBSCURED)) {
 		$key = get_config('system','prvkey');
 		if($item['title'])
-			$item['title'] = aes_unencapsulate(json_decode_plus($item['title']),$key);
+			$item['title'] = crypto_unencapsulate(json_decode_plus($item['title']),$key);
 		if($item['body'])
-			$item['body'] = aes_unencapsulate(json_decode_plus($item['body']),$key);
+			$item['body'] = crypto_unencapsulate(json_decode_plus($item['body']),$key);
 	}
 
 	$x['message_id']     = $item['mid'];
@@ -963,10 +961,10 @@ function get_mail_elements($x) {
 	$arr['mail_flags'] |= MAIL_OBSCURED;
 	$arr['body'] = htmlentities($arr['body'],ENT_COMPAT,'UTF-8',false);
 	if($arr['body'])
-		$arr['body']  = json_encode(aes_encapsulate($arr['body'],$key));
+		$arr['body']  = json_encode(crypto_encapsulate($arr['body'],$key));
 	$arr['title'] = htmlentities($arr['title'],ENT_COMPAT,'UTF-8',false);
 	if($arr['title'])
-		$arr['title'] = json_encode(aes_encapsulate($arr['title'],$key));
+		$arr['title'] = json_encode(crypto_encapsulate($arr['title'],$key));
 
 	if($arr['created'] > datetime_convert())
 		$arr['created']  = datetime_convert();
@@ -977,17 +975,15 @@ function get_mail_elements($x) {
 	if($x['attach'])
 		$arr['attach'] = activity_sanitise($x['attach']);
 
-
-	if(import_author_xchan($x['from']))
-		$arr['from_xchan'] = base64url_encode(hash('whirlpool',$x['from']['guid'] . $x['from']['guid_sig'], true));
+	if(($xchan_hash = import_author_xchan($x['from'])) !== false)
+		$arr['from_xchan'] = $xchan_hash;
 	else
 		return array();
 
-	if(import_author_xchan($x['to']))
-		$arr['to_xchan']  = base64url_encode(hash('whirlpool',$x['to']['guid'] . $x['to']['guid_sig'], true));
+	if(($xchan_hash = import_author_xchan($x['to'])) !== false)
+		$arr['to_xchan'] = $xchan_hash;
 	else
 		return array();
-
 
 	return $arr;
 
@@ -998,8 +994,8 @@ function get_profile_elements($x) {
 
 	$arr = array();
 
-	if(import_author_xchan($x['from']))
-		$arr['xprof_hash'] = base64url_encode(hash('whirlpool',$x['from']['guid'] . $x['from']['guid_sig'], true));
+	if(($xchan_hash = import_author_xchan($x['from'])) !== false)
+		$arr['xprof_hash'] = $xchan_hash;
 	else
 		return array();
 
@@ -1432,6 +1428,12 @@ function encode_rel_links($links) {
 
 function item_store($arr,$allow_exec = false) {
 
+	$d = array('item' => $arr, 'allow_exec' => $allow_exec);
+	call_hooks('item_store', $d );
+	$arr = $d['item'];
+	$allow_exec = $d['allow_exec'];
+
+
 	$ret = array('result' => false, 'item_id' => 0);
 
 	if(! $arr['uid']) {
@@ -1516,9 +1518,9 @@ function item_store($arr,$allow_exec = false) {
 			$key = get_config('system','pubkey');
 			$arr['item_flags'] = $arr['item_flags'] | ITEM_OBSCURED;
 			if($arr['title'])
-				$arr['title'] = json_encode(aes_encapsulate($arr['title'],$key));
+				$arr['title'] = json_encode(crypto_encapsulate($arr['title'],$key));
 			if($arr['body'])
-				$arr['body']  = json_encode(aes_encapsulate($arr['body'],$key));
+				$arr['body']  = json_encode(crypto_encapsulate($arr['body'],$key));
 		}
 
 	}
@@ -1808,6 +1810,15 @@ function item_store($arr,$allow_exec = false) {
 
 function item_store_update($arr,$allow_exec = false) {
 
+
+
+	$d = array('item' => $arr, 'allow_exec' => $allow_exec);
+	call_hooks('item_store_update', $d );
+	$arr = $d['item'];
+	$allow_exec = $d['allow_exec'];
+
+
+
 	$ret = array('result' => false, 'item_id' => 0);
 	if(! intval($arr['uid'])) {
 		logger('item_store_update: no uid');
@@ -1844,8 +1855,6 @@ function item_store_update($arr,$allow_exec = false) {
 	$arr['item_flags'] = intval($arr['item_flags']) | $orig[0]['item_flags'];
 	$arr['item_restrict'] = intval($arr['item_restrict']) | $orig[0]['item_restrict'];
 
-	unset($arr['id']);
-	unset($arr['uid']);
 
 	if(array_key_exists('edit',$arr))
 		unset($arr['edit']);	
@@ -1887,9 +1896,9 @@ function item_store_update($arr,$allow_exec = false) {
             $key = get_config('system','pubkey');
             $arr['item_flags'] = $arr['item_flags'] | ITEM_OBSCURED;
             if($arr['title'])
-                $arr['title'] = json_encode(aes_encapsulate($arr['title'],$key));
+                $arr['title'] = json_encode(crypto_encapsulate($arr['title'],$key));
             if($arr['body'])
-                $arr['body']  = json_encode(aes_encapsulate($arr['body'],$key));
+                $arr['body']  = json_encode(crypto_encapsulate($arr['body'],$key));
         }
 
 	}
@@ -1911,7 +1920,8 @@ function item_store_update($arr,$allow_exec = false) {
 	}
 
 
-
+	unset($arr['id']);
+	unset($arr['uid']);
 	unset($arr['aid']);
 	unset($arr['mid']);
 	unset($arr['parent']);
@@ -2243,7 +2253,7 @@ function tag_deliver($uid,$item_id) {
 		if($item['item_flags'] & ITEM_OBSCURED) {
 			$key = get_config('system','prvkey');
 			if($item['body'])
-				$body = aes_unencapsulate(json_decode_plus($item['body']),$key);
+				$body = crypto_unencapsulate(json_decode_plus($item['body']),$key);
 		}
 		else
 			$body = $item['body'];		
@@ -2563,198 +2573,6 @@ function mail_store($arr) {
 	return $current_post;
 }
 
-
-
-
-
-
-function dfrn_deliver($owner,$contact,$atom, $dissolve = false) {
-
-	$a = get_app();
-
-	$idtosend = $orig_id = (($contact['dfrn_id']) ? $contact['dfrn_id'] : $contact['issued_id']);
-
-	if($contact['duplex'] && $contact['dfrn_id'])
-		$idtosend = '0:' . $orig_id;
-	if($contact['duplex'] && $contact['issued_id'])
-		$idtosend = '1:' . $orig_id;		
-
-	$rino = ((function_exists('mcrypt_encrypt')) ? 1 : 0);
-
-	$rino_enable = get_config('system','rino_encrypt');
-
-	if(! $rino_enable)
-		$rino = 0;
-
-//	$ssl_val = intval(get_config('system','ssl_policy'));
-//	$ssl_policy = '';
-
-//	switch($ssl_val){
-//		case SSL_POLICY_FULL:
-//			$ssl_policy = 'full';
-//			break;
-//		case SSL_POLICY_SELFSIGN:
-//			$ssl_policy = 'self';
-//			break;			
-//		case SSL_POLICY_NONE:
-//		default:
-//			$ssl_policy = 'none';
-//			break;
-//	}
-
-	$url = $contact['notify'] . '&dfrn_id=' . $idtosend . '&dfrn_version=' . DFRN_PROTOCOL_VERSION . (($rino) ? '&rino=1' : '');
-
-	logger('dfrn_deliver: ' . $url);
-
-	$xml = fetch_url($url);
-
-	$curl_stat = $a->get_curl_code();
-	if(! $curl_stat)
-		return(-1); // timed out
-
-	logger('dfrn_deliver: ' . $xml, LOGGER_DATA);
-
-	if(! $xml)
-		return 3;
-
-	if(strpos($xml,'<?xml') === false) {
-		logger('dfrn_deliver: no valid XML returned');
-		logger('dfrn_deliver: returned XML: ' . $xml, LOGGER_DATA);
-		return 3;
-	}
-
-	$res = parse_xml_string($xml);
-
-	if((intval($res->status) != 0) || (! strlen($res->challenge)) || (! strlen($res->dfrn_id)))
-		return (($res->status) ? $res->status : 3);
-
-	$postvars     = array();
-	$sent_dfrn_id = hex2bin((string) $res->dfrn_id);
-	$challenge    = hex2bin((string) $res->challenge);
-	$perm         = (($res->perm) ? $res->perm : null);
-	$dfrn_version = (float) (($res->dfrn_version) ? $res->dfrn_version : 2.0);
-	$rino_allowed = ((intval($res->rino) === 1) ? 1 : 0);
-	$page         = (($owner['page-flags'] == PAGE_COMMUNITY) ? 1 : 0);
-
-	if($owner['page-flags'] == PAGE_PRVGROUP)
-		$page = 2;
-
-	$final_dfrn_id = '';
-
-	if($perm) {
-		if((($perm == 'rw') && (! intval($contact['writable']))) 
-		|| (($perm == 'r') && (intval($contact['writable'])))) {
-			q("update contact set writable = %d where id = %d limit 1",
-				intval(($perm == 'rw') ? 1 : 0),
-				intval($contact['id'])
-			);
-			$contact['writable'] = (string) 1 - intval($contact['writable']);			
-		}
-	}
-
-	if(($contact['duplex'] && strlen($contact['pubkey'])) 
-		|| ($owner['page-flags'] == PAGE_COMMUNITY && strlen($contact['pubkey']))
-		|| ($contact['rel'] == CONTACT_IS_SHARING && strlen($contact['pubkey']))) {
-		openssl_public_decrypt($sent_dfrn_id,$final_dfrn_id,$contact['pubkey']);
-		openssl_public_decrypt($challenge,$postvars['challenge'],$contact['pubkey']);
-	}
-	else {
-		openssl_private_decrypt($sent_dfrn_id,$final_dfrn_id,$contact['prvkey']);
-		openssl_private_decrypt($challenge,$postvars['challenge'],$contact['prvkey']);
-	}
-
-	$final_dfrn_id = substr($final_dfrn_id, 0, strpos($final_dfrn_id, '.'));
-
-	if(strpos($final_dfrn_id,':') == 1)
-		$final_dfrn_id = substr($final_dfrn_id,2);
-
-	if($final_dfrn_id != $orig_id) {
-		logger('dfrn_deliver: wrong dfrn_id.');
-		// did not decode properly - cannot trust this site 
-		return 3;
-	}
-
-	$postvars['dfrn_id']      = $idtosend;
-	$postvars['dfrn_version'] = DFRN_PROTOCOL_VERSION;
-	if($dissolve)
-		$postvars['dissolve'] = '1';
-
-
-	if((($contact['rel']) && ($contact['rel'] != CONTACT_IS_SHARING) && (! $contact['blocked'])) || ($owner['page-flags'] == PAGE_COMMUNITY)) {
-		$postvars['data'] = $atom;
-		$postvars['perm'] = 'rw';
-	}
-	else {
-		$postvars['data'] = str_replace('<dfrn:comment-allow>1','<dfrn:comment-allow>0',$atom);
-		$postvars['perm'] = 'r';
-	}
-
-//	$postvars['ssl_policy'] = $ssl_policy;
-
-	if($page)
-		$postvars['page'] = $page;
-	
-	if($rino && $rino_allowed && (! $dissolve)) {
-		$key = substr(random_string(),0,16);
-		$data = bin2hex(aes_encrypt($postvars['data'],$key));
-		$postvars['data'] = $data;
-		logger('rino: sent key = ' . $key, LOGGER_DEBUG);	
-
-
-		if($dfrn_version >= 2.1) {	
-			if(($contact['duplex'] && strlen($contact['pubkey'])) 
-				|| ($owner['page-flags'] == PAGE_COMMUNITY && strlen($contact['pubkey']))
-				|| ($contact['rel'] == CONTACT_IS_SHARING && strlen($contact['pubkey']))) {
-
-				openssl_public_encrypt($key,$postvars['key'],$contact['pubkey']);
-			}
-			else {
-				openssl_private_encrypt($key,$postvars['key'],$contact['prvkey']);
-			}
-		}
-		else {
-			if(($contact['duplex'] && strlen($contact['prvkey'])) || ($owner['page-flags'] == PAGE_COMMUNITY)) {
-				openssl_private_encrypt($key,$postvars['key'],$contact['prvkey']);
-			}
-			else {
-				openssl_public_encrypt($key,$postvars['key'],$contact['pubkey']);
-			}
-		}
-
-		logger('md5 rawkey ' . md5($postvars['key']));
-
-		$postvars['key'] = bin2hex($postvars['key']);
-	}
-
-	logger('dfrn_deliver: ' . "SENDING: " . print_r($postvars,true), LOGGER_DATA);
-
-	$xml = post_url($contact['notify'],$postvars);
-
-	logger('dfrn_deliver: ' . "RECEIVED: " . $xml, LOGGER_DATA);
-
-	$curl_stat = $a->get_curl_code();
-	if((! $curl_stat) || (! strlen($xml)))
-		return(-1); // timed out
-
-	if(($curl_stat == 503) && (stristr($a->get_curl_headers(),'retry-after')))
-		return(-1);
-
-	if(strpos($xml,'<?xml') === false) {
-		logger('dfrn_deliver: phase 2: no valid XML returned');
-		logger('dfrn_deliver: phase 2: returned XML: ' . $xml, LOGGER_DATA);
-		return 3;
-	}
-
-	if($contact['term_date'] != '0000-00-00 00:00:00') {
-		logger("dfrn_deliver: $url back from the dead - removing mark for death");
-		require_once('include/Contact.php');
-		unmark_for_death($contact);
-	}
-
-	$res = parse_xml_string($xml);
-
-	return $res->status; 
-}
 
 
 /**
@@ -3526,7 +3344,7 @@ function drop_item($id,$interactive = true) {
 		intval($id)
 	);
 
-	if(! $r) {
+	if((! $r) || ($r[0]['item_restrict'] & ITEM_DELETED)) {
 		if(! $interactive)
 			return 0;
 		notice( t('Item not found.') . EOL);
@@ -3551,6 +3369,17 @@ function drop_item($id,$interactive = true) {
 		$ok_to_delete = true;
 
 	if($ok_to_delete) {
+
+		// set the deleted flag immediately on this item just in case the 
+		// hook calls a remote process which loops. We'll delete it properly in a second.
+
+		$r = q("UPDATE item SET item_restrict = ( item_restrict | %d ) WHERE id = %d LIMIT 1",
+			intval(ITEM_DELETED),
+			intval($item['id'])
+		);
+
+		$arr = array('item' => $item);
+		call_hooks('drop_item', $arr );
 
 		$notify_id = intval($item['id']);
 

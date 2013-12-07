@@ -147,16 +147,13 @@ EOT;
 	if(local_user()) {
 
 		$nav['network'] = array('network', t('Matrix'), "", t('Your matrix'));
-		$nav['network']['all']=array('notifications/network', t('See all matrix notifications'), "", "");
 		$nav['network']['mark'] = array('', t('Mark all matrix notifications seen'), '','');
 
 		$nav['home'] = array('channel/' . $channel['channel_address'], t('Channel Home'), "", t('Channel home'));
-		$nav['home']['all']=array('notifications/channel', t('See all channel notifications'), "", "");
 		$nav['home']['mark'] = array('', t('Mark all channel notifications seen'), '','');
 
 
 		$nav['intros'] = array('connections/pending',	t('Intros'), "", t('New Connections'));
-		$nav['intros']['all']=array('intro', t('See all channel introductions'), "", "");
 
 
 		$nav['notifications'] = array('notifications/system',	t('Notices'), "", t('Notifications'));
@@ -201,16 +198,19 @@ EOT;
 	if($banner === false) 
 		$banner = 'red';
 
+	$x = array('nav' => $nav, 'usermenu' => $userinfo );
+	call_hooks('nav', $x);
+
 	$tpl = get_markup_template('nav.tpl');
 
 	$a->page['nav'] .= replace_macros($tpl, array(
         '$baseurl' => $a->get_baseurl(),
 		'$langselector' => ((get_config('system','select_language')) ? lang_selector() : ''),
 		'$sitelocation' => $sitelocation,
-		'$nav' => $nav,
+		'$nav' => $x['nav'],
 		'$banner' =>  $banner,
 		'$emptynotifications' => t('Nothing new here'),
-		'$userinfo' => $userinfo,
+		'$userinfo' => $x['usermenu'],
 		'$localuser' => local_user(),
 		'$sel' => 	$a->nav_sel,
 		'$apps' => $a->get_apps(),

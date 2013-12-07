@@ -4,6 +4,10 @@ function notification($params) {
 
 	logger('notification: entry', LOGGER_DEBUG);
 
+	// throw a small amount of entropy into the system to breakup duplicates arriving at the same precise instant.
+	usleep(mt_rand(0,10000));
+	
+
 	$a = get_app();
 
 
@@ -79,7 +83,7 @@ function notification($params) {
 		logger('notification: mail');
 		$subject = 	sprintf( t('[Red:Notify] New mail received at %s'),$sitename);
 
-		$preamble = sprintf( t('%1$s sent you a new private message at %2$s.'),$sender['xchan_name'],$sitename);
+		$preamble = sprintf( t('%1$s, %2$s sent you a new private message at %3$s.'),$recip['channel_name'], $sender['xchan_name'],$sitename);
 		$epreamble = sprintf( t('%1$s sent you %2$s.'),'[zrl=' . $sender['xchan_url'] . ']' . $sender['xchan_name'] . '[/zrl]', '[zrl=$itemlink]' . t('a private message') . '[/zrl]');
 		$sitelink = t('Please visit %s to view and/or reply to your private messages.');
 		$tsitelink = sprintf( $sitelink, $siteurl . '/message/' . $params['item']['id'] );
@@ -132,25 +136,28 @@ function notification($params) {
 		//$possess_desc = str_replace('<!item_type!>',$possess_desc);
 
 		// "a post"
-		$dest_str = sprintf(t('%1$s commented on [zrl=%2$s]a %3$s[/zrl]'),
-								'[zrl=' . $sender['xchan_url'] . ']' . $sender['xchan_name'] . '[/zrl]',
-								$itemlink,
-								$item_post_type);
+		$dest_str = sprintf(t('%1$s, %2$s commented on [zrl=%3$s]a %4$s[/zrl]'),
+			$recip['channel_name'],
+			'[zrl=' . $sender['xchan_url'] . ']' . $sender['xchan_name'] . '[/zrl]',
+			$itemlink,
+			$item_post_type);
 
 		// "George Bull's post"
 		if($p)
-			$dest_str = sprintf(t('%1$s commented on [zrl=%2$s]%3$s\'s %4$s[/zrl]'),
-						'[zrl=' . $sender['xchan_url'] . ']' . $sender['xchan_name'] . '[/zrl]',
-						$itemlink,
-						$p[0]['author']['xchan_name'],
-						$item_post_type);
+			$dest_str = sprintf(t('%1$s, %2$s commented on [zrl=%3$s]%4$s\'s %5$s[/zrl]'),
+				$recip['channel_name'],
+				'[zrl=' . $sender['xchan_url'] . ']' . $sender['xchan_name'] . '[/zrl]',
+				$itemlink,
+				$p[0]['author']['xchan_name'],
+				$item_post_type);
 		
 		// "your post"
 		if($p[0]['owner']['xchan_name'] == $p[0]['author']['xchan_name'] && ($p[0]['item_flags'] & ITEM_WALL))
-			$dest_str = sprintf(t('%1$s commented on [zrl=%2$s]your %3$s[/zrl]'),
-								'[zrl=' . $sender['xchan_url'] . ']' . $sender['xchan_name'] . '[/zrl]',
-								$itemlink,
-								$item_post_type);
+			$dest_str = sprintf(t('%1$s, %2$s commented on [zrl=%3$s]your %4$s[/zrl]'),
+				$recip['channel_name'],
+				'[zrl=' . $sender['xchan_url'] . ']' . $sender['xchan_name'] . '[/zrl]',
+				$itemlink,
+				$item_post_type);
 
 		// Some mail softwares relies on subject field for threading.
 		// So, we cannot have different subjects for notifications of the same thread.
@@ -158,7 +165,7 @@ function notification($params) {
 		// differents subjects for messages on the same thread.
 
 		$subject = sprintf( t('[Red:Notify] Comment to conversation #%1$d by %2$s'), $parent_id, $sender['xchan_name']);
-		$preamble = sprintf( t('%s commented on an item/conversation you have been following.'), $sender['xchan_name']); 
+		$preamble = sprintf( t('%1$s, %2$s commented on an item/conversation you have been following.'), $recip['channel_name'], $sender['xchan_name']); 
 		$epreamble = $dest_str; 
 
 		$sitelink = t('Please visit %s to view and/or reply to the conversation.');
@@ -170,11 +177,13 @@ function notification($params) {
 	if($params['type'] == NOTIFY_WALL) {
 		$subject = sprintf( t('[Red:Notify] %s posted to your profile wall') , $sender['xchan_name']);
 
-		$preamble = sprintf( t('%1$s posted to your profile wall at %2$s') , $sender['xchan_name'], $sitename);
+		$preamble = sprintf( t('%1$s, %2$s posted to your profile wall at %3$s') , $recip['channel_name'], $sender['xchan_name'], $sitename);
 		
-		$epreamble = sprintf( t('%1$s posted to [zrl=%2$s]your wall[/zrl]') , 
-								'[zrl=' . $sender['xchan_url'] . ']' . $sender['xchan_name'] . '[/zrl]',
-								$params['link']); 
+		$epreamble = sprintf( t('%1$s, %2$s posted to [zrl=%3$s]your wall[/zrl]') ,
+			$recip['channel_name'], 
+			'[zrl=' . $sender['xchan_url'] . ']' . $sender['xchan_name'] . '[/zrl]',
+			$params['link']); 
+
 		// FIXME - check the item privacy
 		$private = false;
 		
@@ -198,10 +207,11 @@ function notification($params) {
 		}
 	
 		$subject =	sprintf( t('[Red:Notify] %s tagged you') , $sender['xchan_name']);
-		$preamble = sprintf( t('%1$s tagged you at %2$s') , $sender['xchan_name'], $sitename);
-		$epreamble = sprintf( t('%1$s [zrl=%2$s]tagged you[/zrl].') , 
-								'[zrl=' . $sender['xchan_url'] . ']' . $sender['xchan_name'] . '[/zrl]',
-								$params['link']); 
+		$preamble = sprintf( t('%1$s, %2$s tagged you at %3$s') , $recip['channel_name'], $sender['xchan_name'], $sitename);
+		$epreamble = sprintf( t('%1$s, %2$s [zrl=%3$s]tagged you[/zrl].') ,
+			$recip['channel_name'],
+			'[zrl=' . $sender['xchan_url'] . ']' . $sender['xchan_name'] . '[/zrl]',
+			$params['link']); 
 
 		$sitelink = t('Please visit %s to view and/or reply to the conversation.');
 		$tsitelink = sprintf( $sitelink, $siteurl );
@@ -212,10 +222,11 @@ function notification($params) {
 	if($params['type'] == NOTIFY_POKE) {
 
 		$subject =	sprintf( t('[Red:Notify] %1$s poked you') , $sender['xchan_name']);
-		$preamble = sprintf( t('%1$s poked you at %2$s') , $sender['xchan_name'], $sitename);
-		$epreamble = sprintf( t('%1$s [zrl=%2$s]poked you[/zrl].') , 
-								'[zrl=' . $sender['xchan_url'] . ']' . $sender['xchan_name'] . '[/zrl]',
-								$params['link']); 
+		$preamble = sprintf( t('%1$s, %2$s poked you at %3$s') , $recip['channel_name'], $sender['xchan_name'], $sitename);
+		$epreamble = sprintf( t('%1$s, %2$s [zrl=%2$s]poked you[/zrl].') ,
+			$recip['channel_name'], 
+			'[zrl=' . $sender['xchan_url'] . ']' . $sender['xchan_name'] . '[/zrl]',
+			$params['link']); 
 
 		$subject = str_replace('poked', t($params['activity']), $subject);
 		$preamble = str_replace('poked', t($params['activity']), $preamble);
@@ -229,10 +240,11 @@ function notification($params) {
 
 	if($params['type'] == NOTIFY_TAGSHARE) {
 		$subject =	sprintf( t('[Red:Notify] %s tagged your post') , $sender['xchan_name']);
-		$preamble = sprintf( t('%1$s tagged your post at %2$s') , $sender['xchan_name'], $sitename);
-		$epreamble = sprintf( t('%1$s tagged [zrl=%2$s]your post[/zrl]') ,
-								'[zrl=' . $sender['xchan_url'] . ']' . $sender['xchan_name'] . '[/zrl]',
-								$itemlink); 
+		$preamble = sprintf( t('%1$s, %2$s tagged your post at %3$s') , $recip['channel_name'],$sender['xchan_name'], $sitename);
+		$epreamble = sprintf( t('%1$s, %2$s tagged [zrl=%3$s]your post[/zrl]') ,
+			$recip['channel_name'],
+			'[zrl=' . $sender['xchan_url'] . ']' . $sender['xchan_name'] . '[/zrl]',
+			$itemlink); 
 
 		$sitelink = t('Please visit %s to view and/or reply to the conversation.');
 		$tsitelink = sprintf( $sitelink, $siteurl );
@@ -242,10 +254,11 @@ function notification($params) {
 
 	if($params['type'] == NOTIFY_INTRO) {
 		$subject = sprintf( t('[Red:Notify] Introduction received'));
-		$preamble = sprintf( t('You\'ve received an introduction from \'%1$s\' at %2$s'), $sender['xchan_name'], $sitename); 
-		$epreamble = sprintf( t('You\'ve received [zrl=%1$s]an introduction[/zrl] from %2$s.'),
-								$itemlink,
-								'[zrl=' . $sender['xchan_url'] . ']' . $sender['xchan_name'] . '[/zrl]'); 
+		$preamble = sprintf( t('%1$s, you\'ve received an introduction from \'%2$s\' at %3$s'), $recip['channel_name'], $sender['xchan_name'], $sitename); 
+		$epreamble = sprintf( t('%1$s, you\'ve received [zrl=%2$s]an introduction[/zrl] from %3$s.'),
+			$recip['channel_name'],
+			$itemlink,
+			'[zrl=' . $sender['xchan_url'] . ']' . $sender['xchan_name'] . '[/zrl]'); 
 		$body = sprintf( t('You may visit their profile at %s'),$sender['xchan_url']);
 
 		$sitelink = t('Please visit %s to approve or reject the introduction.');
@@ -256,11 +269,12 @@ function notification($params) {
 
 	if($params['type'] == NOTIFY_SUGGEST) {
 		$subject = sprintf( t('[Red:Notify] Friend suggestion received'));
-		$preamble = sprintf( t('You\'ve received a friend suggestion from \'%1$s\' at %2$s'), $sender['xchan_name'], $sitename); 
-		$epreamble = sprintf( t('You\'ve received [zrl=%1$s]a friend suggestion[/zrl] for %2$s from %3$s.'),
-									$itemlink,
-									'[zrl=' . $params['item']['url'] . ']' . $params['item']['name'] . '[/zrl]',
-									'[zrl=' . $sender['xchan_url'] . ']' . $sender['xchan_name'] . '[/zrl]'); 
+		$preamble = sprintf( t('%1$s, you\'ve received a friend suggestion from \'%2$s\' at %3$s'), $recip['channel_name'], $sender['xchan_name'], $sitename); 
+		$epreamble = sprintf( t('%1$s, you\'ve received [zrl=%2$s]a friend suggestion[/zrl] for %3$s from %4$s.'),
+			$recip['channel_name'],
+			$itemlink,
+			'[zrl=' . $params['item']['url'] . ']' . $params['item']['name'] . '[/zrl]',
+			'[zrl=' . $sender['xchan_url'] . ']' . $sender['xchan_name'] . '[/zrl]'); 
 									
 		$body = t('Name:') . ' ' . $params['item']['name'] . "\n";
 		$body .= t('Photo:') . ' ' . $params['item']['photo'] . "\n";
@@ -322,6 +336,7 @@ function notification($params) {
 	$datarray['url']    = $sender['xchan_url'];
 	$datarray['photo']  = $sender['xchan_photo_s'];
 	$datarray['date']   = datetime_convert();
+	$datarray['aid']    = $recip['channel_account_id'];
 	$datarray['uid']    = $recip['channel_id'];
 	$datarray['link']   = $itemlink;
 	$datarray['parent'] = $parent_id;
@@ -340,13 +355,14 @@ function notification($params) {
 
 	// create notification entry in DB
 
-	$r = q("insert into notify (hash,name,url,photo,date,uid,link,parent,type,verb,otype)
-		values('%s','%s','%s','%s','%s',%d,'%s',%d,%d,'%s','%s')",
+	$r = q("insert into notify (hash,name,url,photo,date,aid,uid,link,parent,type,verb,otype)
+		values('%s','%s','%s','%s','%s',%d,%d,'%s',%d,%d,'%s','%s')",
 		dbesc($datarray['hash']),
 		dbesc($datarray['name']),
 		dbesc($datarray['url']),
 		dbesc($datarray['photo']),
 		dbesc($datarray['date']),
+		intval($datarray['aid']),
 		intval($datarray['uid']),
 		dbesc($datarray['link']),
 		intval($datarray['parent']),
@@ -559,7 +575,7 @@ class enotify {
 
 		// send the message
 		$res = mail(
-			$params['toEmail'],	 									// send to address
+			$params['toEmail'],	 							// send to address
 			$messageSubject,								// subject
 			$multipartMessageBody,	 						// message body
 			$messageHeader									// message headers

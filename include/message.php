@@ -109,9 +109,9 @@ function send_message($uid = 0, $recipient='', $body='', $subject='', $replyto='
 
 	$key = get_config('system','pubkey');
 	if($subject)
-		$subject = json_encode(aes_encapsulate($subject,$key));
+		$subject = json_encode(crypto_encapsulate($subject,$key));
 	if($body)
-		$body  = json_encode(aes_encapsulate($body,$key));
+		$body  = json_encode(crypto_encapsulate($body,$key));
 	
 
 
@@ -231,9 +231,9 @@ function private_messages_list($uid, $mailbox = '', $start = 0, $numitems = 0) {
 			$key = get_config('system','prvkey');
 
 			if($r[$k]['title'])
-				$r[$k]['title'] = aes_unencapsulate(json_decode_plus($r[$k]['title']),$key);
+				$r[$k]['title'] = crypto_unencapsulate(json_decode_plus($r[$k]['title']),$key);
 			if($r[$k]['body'])
-				$r[$k]['body'] = aes_unencapsulate(json_decode_plus($r[$k]['body']),$key);
+				$r[$k]['body'] = crypto_unencapsulate(json_decode_plus($r[$k]['body']),$key);
 		}
 	}
 
@@ -270,9 +270,9 @@ function private_messages_fetch_message($channel_id, $messageitem_id, $updatesee
 		if($messages[$k]['mail_flags'] & MAIL_OBSCURED) {
 			$key = get_config('system','prvkey');
 			if($messages[$k]['title'])
-				$messages[$k]['title'] = aes_unencapsulate(json_decode_plus($messages[$k]['title']),$key);
+				$messages[$k]['title'] = crypto_unencapsulate(json_decode_plus($messages[$k]['title']),$key);
 			if($messages[$k]['body'])
-				$messages[$k]['body'] = aes_unencapsulate(json_decode_plus($messages[$k]['body']),$key);
+				$messages[$k]['body'] = crypto_unencapsulate(json_decode_plus($messages[$k]['body']),$key);
 		}
 	}
 
@@ -358,9 +358,9 @@ function private_messages_fetch_conversation($channel_id, $messageitem_id, $upda
 		if($messages[$k]['mail_flags'] & MAIL_OBSCURED) {
 			$key = get_config('system','prvkey');
 			if($messages[$k]['title'])
-				$messages[$k]['title'] = aes_unencapsulate(json_decode_plus($messages[$k]['title']),$key);
+				$messages[$k]['title'] = crypto_unencapsulate(json_decode_plus($messages[$k]['title']),$key);
 			if($messages[$k]['body'])
-				$messages[$k]['body'] = aes_unencapsulate(json_decode_plus($messages[$k]['body']),$key);
+				$messages[$k]['body'] = crypto_unencapsulate(json_decode_plus($messages[$k]['body']),$key);
 		}
 	}
 

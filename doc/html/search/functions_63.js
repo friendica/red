@@ -89,7 +89,6 @@ var searchData=
   ['contact_5freputation',['contact_reputation',['../contact__selectors_8php.html#ae499960d6467bd30c78607b1018baf53',1,'contact_selectors.php']]],
   ['contact_5fselect',['contact_select',['../acl__selectors_8php.html#a9476997d2968a5794f3723878ed89c91',1,'acl_selectors.php']]],
   ['contactgroup_5fcontent',['contactgroup_content',['../contactgroup_8php.html#a18c7391b1b25debaf98c9dba639caab3',1,'contactgroup.php']]],
-  ['contacts_5fnot_5fgrouped',['contacts_not_grouped',['../Contact_8php.html#a228fc01f90ae9bfdde4c2ad0772bd7dc',1,'Contact.php']]],
   ['conv_5fsort',['conv_sort',['../conversation_8php.html#abed85a41f1160598de880b84021c9cf7',1,'conversation.php']]],
   ['conversation',['conversation',['../conversation_8php.html#affea1afb3f32ca41e966c8ddb4204d81',1,'conversation.php']]],
   ['convert',['convert',['../namespacefriendica-to-smarty-tpl.html#a38503e37fe68ac27c88cce91a9ac9efa',1,'friendica-to-smarty-tpl']]],
@@ -108,6 +107,8 @@ var searchData=
   ['crepair_5fpost',['crepair_post',['../crepair_8php.html#acc4493e1ffd1462a605dd9b870034513',1,'crepair.php']]],
   ['cronhooks_5frun',['cronhooks_run',['../cronhooks_8php.html#a4c4c1bbec4ecc9a0efa00dd6afd2c0ca',1,'cronhooks.php']]],
   ['cropimage',['cropImage',['../classphoto__driver.html#a2e6e61f1e356a90bc978f4404a77137e',1,'photo_driver\cropImage()'],['../classphoto__gd.html#ab2232d775c8bacf66773a03308105f0c',1,'photo_gd\cropImage()'],['../classphoto__imagick.html#a2f33a03a89497a2b2768e29736d4a8a4',1,'photo_imagick\cropImage()']]],
+  ['crypto_5fencapsulate',['crypto_encapsulate',['../crypto_8php.html#a32fc08d57a5694f94d8543ecbb03323c',1,'crypto.php']]],
+  ['crypto_5funencapsulate',['crypto_unencapsulate',['../crypto_8php.html#a0781202b0a43b82426929cc87c2fa2b5',1,'crypto.php']]],
   ['curpageurl',['curPageURL',['../boot_8php.html#aa4221641e5c21db69fa52c426b9017f5',1,'boot.php']]],
   ['current_5ftheme',['current_theme',['../boot_8php.html#ad206598b909e8eb67eb0e0bb5ef69c13',1,'boot.php']]],
   ['current_5ftheme_5furl',['current_theme_url',['../boot_8php.html#a926cad0b3d8b9d9ee5da1898fc063ba3',1,'boot.php']]]

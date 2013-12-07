@@ -53,7 +53,8 @@ function zfinger_init(&$a) {
 	}
 	elseif(strlen($zaddr)) {
 		$r = q("select channel.*, xchan.* from channel left join xchan on channel_hash = xchan_hash
-			where channel_address = '%s' limit 1",
+			where ( channel_address = '%s' or xchan_addr = '%s' ) limit 1",
+			dbesc($zaddr),
 			dbesc($zaddr)
 		);
 	}
@@ -164,7 +165,7 @@ function zfinger_init(&$a) {
 
 	$ret['locations'] = array();
 
-	$x = zot_get_hubloc(array($e['channel_hash']));
+	$x = zot_get_hublocs($e['channel_hash']);
 	if($x && count($x)) {
 		foreach($x as $hub) {
 			if(! ($hub['hubloc_flags'] & HUBLOC_FLAGS_UNVERIFIED)) {
@@ -251,6 +252,7 @@ function zfinger_init(&$a) {
 		$ret['site']['location'] = get_config('system','site_location');
 
 	}
+	call_hooks('zot_finger',$ret);
 	json_return_and_die($ret);
 
 }

@@ -26,7 +26,7 @@ function probe_content(&$a) {
 				$j = json_decode($res['body'],true);
 		}
 		if($j && $j['permissions'] && $j['permissions']['iv'])
-			$j['permissions'] = json_decode(aes_unencapsulate($j['permissions'],$channel['channel_prvkey']),true);
+			$j['permissions'] = json_decode(crypto_unencapsulate($j['permissions'],$channel['channel_prvkey']),true);
 		$o .= str_replace("\n",'<br />',print_r($j,true));
 		$o .= '</pre>';
 	}

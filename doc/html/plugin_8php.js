@@ -12,6 +12,7 @@ var plugin_8php =
     [ "head_add_js", "plugin_8php.html#a516591850f4fd49fd1425cfa54089db8", null ],
     [ "head_get_css", "plugin_8php.html#af92789f559b89a380e49d303218aeeca", null ],
     [ "head_get_js", "plugin_8php.html#a65ab52cb1a7030d5190e247211bef2a1", null ],
+    [ "insert_hook", "plugin_8php.html#aeaebe63dcf6fa2794f363ba2bc0b2c6b", null ],
     [ "install_plugin", "plugin_8php.html#a482131013272a1d5d5c1b1469c6c55d5", null ],
     [ "load_hooks", "plugin_8php.html#a326365e48ef94f0b9a0a771b8d75e813", null ],
     [ "load_plugin", "plugin_8php.html#a9ca9632b7309a65b05c03a3e2f473a3d", null ],

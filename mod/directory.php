@@ -213,6 +213,8 @@ function directory_content(&$a) {
 					if($j['keywords']) {
 						$a->set_widget('dirtagblock',dir_tagblock(z_root() . '/directory',$j['keywords']));
 					}
+					$a->set_widget('suggest',suggest_widget());
+
 
 //					logger('mod_directory: entries: ' . print_r($entries,true), LOGGER_DATA);
 

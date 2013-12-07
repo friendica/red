@@ -24,7 +24,7 @@
 		<div id="jot-pagetitle-wrap"><input name="pagetitle" id="jot-pagetitle" type="text" placeholder="{{$placeholdpagetitle}}" value="{{$pagetitle}}" class="jothidden" style="display:none" /></div>
 		{{/if}}
 		<div id="jot-text-wrap">
-		<textarea rows="5" cols="64" class="profile-jot-text" id="profile-jot-text" name="body" >{{if $content}}{{$content}}{{else}}{{$share}}{{/if}}</textarea>
+		<textarea rows="5" cols="64" class="profile-jot-text" id="profile-jot-text" name="body" placeholder="{{$share}}">{{$content}}</textarea>
 		</div>
 		<div id="profile-jot-text-loading"></div>
 
@@ -71,7 +71,7 @@
 	</div>
 	{{/if}}
 
-	{{if $preview}}<span onclick="preview_post();" id="jot-preview-link" class="fakelink">{{$preview}}</span>{{/if}}
+	{{if $preview}}<span onclick="preview_post();" id="jot-preview-link" class="fakelink"><i class="icon-eye-open jot-icons" title="{{$preview}}"></i></span>{{/if}}
 
 
 	<div id="profile-jot-perms-end"></div>

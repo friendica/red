@@ -1,6 +1,11 @@
 <?php
 
 require_once('include/items.php');
+require_once('include/group.php');
+require_once('include/contact_widgets.php');
+require_once('include/conversation.php');
+require_once('include/acl_selectors.php');
+
 
 function network_init(&$a) {
 	if(! local_user()) {
@@ -12,63 +17,7 @@ function network_init(&$a) {
 	$a->profile_uid = local_user();
 	head_set_icon($channel['xchan_photo_s']);
 	
-	$is_a_date_query = false;
-
-	if($a->argc > 1) {
-		for($x = 1; $x < $a->argc; $x ++) {
-			if(is_a_date_arg($a->argv[$x])) {
-				$is_a_date_query = true;
-				break;
-			}
-		}
-	}
     
-    // convert query string to array and remove first element (wich is friendica args)
-    $query_array = array();
-    parse_str($a->query_string, $query_array);
-    array_shift($query_array);
-    
-	// fetch last used tab and redirect if needed
-	$sel_tabs = network_query_get_sel_tab($a);
-	$last_sel_tabs = get_pconfig(local_user(), 'network.view','tab.selected');
-	if (is_array($last_sel_tabs)){
-		$tab_urls = array(
-			'/network?f=&order=comment',//all
-			'/network?f=&order=post',		//postord
-			'/network?f=&conv=1',			//conv
-			'/network/new',					//new
-			'/network?f=&star=1',			//starred
-			'/network?f=&spam=1',			//spam
-		);
-		
-		// redirect if current selected tab is 'no_active' and
-		// last selected tab is _not_ 'all_active'. 
-		// and this isn't a date query
-
-		if ($sel_tabs[0] == 'active' && $last_sel_tabs[0]!='active' && (! $is_a_date_query)) {
-			$k = array_search('active', $last_sel_tabs);
-          
-            // merge tab querystring with request querystring
-            $dest_qa = array();
-            list($dest_url,$dest_qs) = explode("?", $tab_urls[$k]);
-            parse_str( $dest_qs, $dest_qa);
-            $dest_qa = array_merge($query_array, $dest_qa);
-            $dest_qs = build_querystring($dest_qa);
-            
-            // groups filter is in form of "network/nnn". Add it to $dest_url, if it's possible
-            if ($a->argc==2 && is_numeric($a->argv[1]) && strpos($dest_url, "/",1)===false){
-                $dest_url .= "/".$a->argv[1];
-            }
-
-//			goaway($a->get_baseurl() . $dest_url."?".$dest_qs);
-		}
-	}
-	
-		  
-	require_once('include/group.php');
-	require_once('include/contact_widgets.php');
-	require_once('include/items.php');
-
 	if(! x($a->page,'aside'))
 		$a->page['aside'] = '';
 
@@ -99,8 +48,9 @@ function network_init(&$a) {
 	}
 
 
-	$a->page['aside'] .= group_side('network','network',true,$group_id);
+	$a->page['aside'] .= group_side('network','network',true,$_GET['gid']);
 	$a->page['aside'] .= posted_date_widget($a->get_baseurl() . '/network',local_user(),false);	
+	$a->page['aside'] .= suggest_widget();
 
 	$a->page['aside'] .= saved_searches($search);
 	$a->page['aside'] .= fileas_widget($a->get_baseurl(true) . '/network',(x($_GET, 'file') ? $_GET['file'] : ''));
@@ -180,80 +130,15 @@ function saved_searches($search) {
 
 }
 
-/**
- * Return selected tab from query
- * 
- * urls -> returns
- * 		'/network'					=> $no_active = 'active'
- * 		'/network?f=&order=comment'	=> $comment_active = 'active'
- * 		'/network?f=&order=post'	=> $postord_active = 'active'
- * 		'/network?f=&conv=1',		=> $conv_active = 'active'
- * 		'/network/new',				=> $new_active = 'active'
- * 		'/network?f=&star=1',		=> $starred_active = 'active'
- * 		'/network?f=&spam=1',		=> $spam_active = 'active'
- * 
- * @return Array ( $no_active, $comment_active, $postord_active, $conv_active, $new_active, $starred_active, $spam_active );
- */
-function network_query_get_sel_tab($a) {
-	$no_active='';
-	$starred_active = '';
-	$new_active = '';
-	$all_active = '';
-	$search_active = '';
-	$conv_active = '';
-	$spam_active = '';
-	$postord_active = '';
-
-	if(x($_GET,'new')) {
-		$new_active = 'active';
-	}
-	
-	if(x($_GET,'search')) {
-		$search_active = 'active';
-	}
-	
-	if(x($_GET,'star')) {
-		$starred_active = 'active';
-	}
-	
-	if(x($_GET,'conv')) {
-		$conv_active = 'active';
-	}
-
-	if(x($_GET,'spam')) {
-		$spam_active = 'active';
-	}
-
-	
-	
-	if (($new_active == '') 
-		&& ($starred_active == '') 
-		&& ($conv_active == '')
-		&& ($search_active == '')
-		&& ($spam_active == '')) {
-			$no_active = 'active';
-	}
-
-	if ($no_active=='active' && x($_GET,'order')) {
-		switch($_GET['order']){
-		 case 'post': $postord_active = 'active'; $no_active=''; break;
-		 case 'comment' : $all_active = 'active'; $no_active=''; break;
-		}
-	}
-	
-	return array($no_active, $all_active, $postord_active, $conv_active, $new_active, $starred_active, $spam_active);
-}
 
 
 function network_content(&$a, $update = 0, $load = false) {
 
-	require_once('include/conversation.php');
 
 	if(! local_user()) {
 		$_SESSION['return_url'] = $a->query_string;
     	return login(false);
 	}
-
 
 
 	$arr = array('query' => $a->query_string);
@@ -278,84 +163,28 @@ function network_content(&$a, $update = 0, $load = false) {
 		$_GET['order'] = 'post';
 
 	if($gid) {
+        $r = q("SELECT * FROM `group` WHERE id = %d AND uid = %d LIMIT 1",
+            intval($gid),
+            intval(local_user())
+        );
+        if(! $r) {
+			if($update)
+				killme();
+			notice( t('No such group') . EOL );
+			goaway($a->get_baseurl(true) . '/network');
+			// NOTREACHED
+		}
+
 		$group = $gid;
-		$def_acl = array('allow_gid' => '<' . $group . '>');
+		$group_hash = $r[0]['hash'];
+		$def_acl = array('allow_gid' => '<' . $r[0]['hash'] . '>');
 	}
 
 	$o = '';
 
-	// item filter tabs
-	// TODO: fix this logic, reduce duplication
-	//$a->page['content'] .= '<div class="tabs-wrapper">';
 	
-	list($no_active, $all_active, $postord_active, $conv_active, $new_active, $starred_active, $spam_active) = network_query_get_sel_tab($a);
+
 	// if no tabs are selected, defaults to comments
-	if ($no_active=='active') $all_active='active';
-	//echo "<pre>"; var_dump($no_active, $all_active, $postord_active, $conv_active, $new_active, $starred_active, $bookmarked_active, $spam_active); killme();
-
-	$cmd = (($datequery) ? '' : $a->cmd);
-	$len_naked_cmd = strlen(str_replace('/new','',$cmd));		
-
-	// tabs
-	$tabs = array(
-		array(
-			'label' => t('Commented Order'),
-			'url'=>$a->get_baseurl(true) . '/' . $cmd . '?f=&order=comment' . ((x($_GET,'cid')) ? '&cid=' . $_GET['cid'] : ''), 
-			'sel'=>$all_active,
-			'title'=> t('Sort by Comment Date'),
-		),
-		array(
-			'label' => t('Posted Order'),
-			'url'=>$a->get_baseurl(true) . '/' . $cmd . '?f=&order=post' . ((x($_GET,'cid')) ? '&cid=' . $_GET['cid'] : ''), 
-			'sel'=>$postord_active,
-			'title' => t('Sort by Post Date'),
-		),
-
-		array(
-			'label' => t('Personal'),
-			'url' => $a->get_baseurl(true) . '/' . $cmd . ((x($_GET,'cid')) ? '/?f=&cid=' . $_GET['cid'] : '') . '&conv=1',
-			'sel' => $conv_active,
-			'title' => t('Posts that mention or involve you'),
-		),
-		array(
-			'label' => t('New'),
-			'url' => $a->get_baseurl(true) . '/' . $cmd . ((x($_GET,'cid')) ? '/?f=&cid=' . $_GET['cid'] : '') . '&new=1',
-			'sel' => $new_active,
-			'title' => t('Activity Stream - by date'),
-		),
-
-	);
-
-	if(feature_enabled(local_user(),'star_posts')) 
-		$tabs[] = array(
-			'label' => t('Starred'),
-			'url'=>$a->get_baseurl(true) . '/' . $cmd . ((x($_GET,'cid')) ? '/?f=&cid=' . $_GET['cid'] : '') . '&star=1',
-			'sel'=>$starred_active,
-			'title' => t('Favourite Posts'),
-		);
-
-	// Not yet implemented
-
-	if(feature_enabled(local_user(),'spam_filter')) 
-		$tabs[] = array(
-			'label' => t('Spam'),
-			'url'=>$a->get_baseurl(true) . '/network?f=&spam=1',
-			'sel'=> $spam_active,
-			'title' => t('Posts flagged as SPAM'),
-		);	
-
-
-
-	
-	// save selected tab, but only if not in search or file mode
-//	if(!x($_GET,'search') && !x($_GET,'file')) {
-//		set_pconfig( local_user(), 'network.view','tab.selected',array($all_active, $postord_active, $conv_active, $new_active, $starred_active, $bookmarked_active, $spam_active) );
-//	}
-
-
-	$contact_id = $a->cid;
-
-	require_once('include/acl_selectors.php');
 
 	$cid = ((x($_GET,'cid')) ? intval($_GET['cid']) : 0);
 	$star = ((x($_GET,'star')) ? intval($_GET['star']) : 0);
@@ -395,10 +224,8 @@ function network_content(&$a, $update = 0, $load = false) {
 			$o .= $arr['html']; 
 		}
  	
-		$arr = array('tabs' => $tabs);
-		call_hooks('network_tabs', $arr);
 
-		$o .= replace_macros(get_markup_template('common_tabs.tpl'), array('$tabs'=> $arr['tabs']));
+		$o .= network_tabs();
 
 		// --- end item filter tabs
 
@@ -409,7 +236,13 @@ function network_content(&$a, $update = 0, $load = false) {
 
 		nav_set_selected('network');
 
-		$celeb = false;
+		$channel_acl = array(
+			'allow_cid' => $channel['channel_allow_cid'], 
+			'allow_gid' => $channel['channel_allow_gid'], 
+			'deny_cid' => $channel['channel_deny_cid'], 
+			'deny_gid' => $channel['channel_deny_gid']
+		); 
+
 
 		$x = array(
 			'is_owner' => true,
@@ -417,8 +250,7 @@ function network_content(&$a, $update = 0, $load = false) {
 			'default_location' => $channel['channel_location'],
 			'nickname' => $channel['channel_address'],
 			'lockstate' => (($group || $cid || $channel['channel_allow_cid'] || $channel['channel_allow_gid'] || $channel['channel_deny_cid'] || $channel['channel_deny_gid']) ? 'lock' : 'unlock'),
-// FIXME
-			'acl' => populate_acl((($group || $cid || $nets) ? $def_acl : $channel), $celeb),
+			'acl' => populate_acl((($group || $cid) ? $def_acl : $channel_acl)),
 			'bang' => (($group || $cid) ? '!' : ''),
 			'visitor' => 'block',
 			'profile_uid' => local_user()
@@ -443,18 +275,6 @@ function network_content(&$a, $update = 0, $load = false) {
 	$sql_extra = " AND `item`.`parent` IN ( SELECT `parent` FROM `item` WHERE (item_flags & " . intval(ITEM_THREAD_TOP) . ") $sql_options ) ";
 
 	if($group) {
-        $r = q("SELECT * FROM `group` WHERE id = %d AND uid = %d LIMIT 1",
-            intval($group),
-            intval(local_user())
-        );
-        if(! $r) {
-			if($update)
-				killme();
-			notice( t('No such group') . EOL );
-			goaway($a->get_baseurl(true) . '/network');
-			// NOTREACHED
-		}
-
 		$contact_str = '';
         $contacts = group_get_members($group);
         if($contacts) {
@@ -469,7 +289,13 @@ function network_content(&$a, $update = 0, $load = false) {
 			info( t('Group is empty'));
         }
 
-        $sql_extra = " AND item.parent IN ( SELECT DISTINCT parent FROM item WHERE true $sql_options AND (( author_xchan IN ( $contact_str ) OR owner_xchan in ( $contact_str)) or allow_gid like '" . protect_sprintf('%<' . dbesc($r[0]['hash']) . '>%') . "' ) and id = parent and item_restrict = 0 ) ";
+        $sql_extra = " AND item.parent IN ( SELECT DISTINCT parent FROM item WHERE true $sql_options AND (( author_xchan IN ( $contact_str ) OR owner_xchan in ( $contact_str )) or allow_gid like '" . protect_sprintf('%<' . dbesc($group_hash) . '>%') . "' ) and id = parent and item_restrict = 0 ) ";
+
+		$x = group_rec_byhash(local_user(), $group_hash);
+
+		if($x)
+			$o = '<h2>' . t('Collection: ') . $x['name'] . '</h2>' . $o;
+
 
     }
 

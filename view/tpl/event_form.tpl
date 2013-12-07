@@ -7,7 +7,7 @@
 <form action="{{$post}}" method="post" >
 
 <input type="hidden" name="event_id" value="{{$eid}}" />
-<input type="hidden" name="cid" value="{{$cid}}" />
+<input type="hidden" name="xchan" value="{{$xchan}}" />
 <input type="hidden" name="mid" value="{{$mid}}" />
 
 <div id="event-start-text">{{$s_text}}</div>

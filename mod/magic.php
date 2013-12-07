@@ -4,6 +4,7 @@
 
 function magic_init(&$a) {
 
+	$ret = array('success' => false, 'url' => '', 'message' => '');
 	logger('mod_magic: invoked', LOGGER_DEBUG);
 
 	logger('mod_magic: args: ' . print_r($_REQUEST,true),LOGGER_DATA);
@@ -11,66 +12,28 @@ function magic_init(&$a) {
 	$addr = ((x($_REQUEST,'addr')) ? $_REQUEST['addr'] : '');
 	$hash = ((x($_REQUEST,'hash')) ? $_REQUEST['hash'] : '');
 	$dest = ((x($_REQUEST,'dest')) ? $_REQUEST['dest'] : '');
-	$rev  = ((x($_REQUEST,'rev'))  ? intval($_REQUEST['rev']) : 0);
-
-	if($hash) {
-		$x = q("select xchan.xchan_url, hubloc.* from xchan left join hubloc on xchan_hash = hubloc_hash
-			where hubloc_hash = '%s' and (hubloc_flags & %d) order by hubloc_id desc limit 1",
-			dbesc($hash),
-			intval(HUBLOC_FLAGS_PRIMARY)
-		);
-	}
-	elseif($addr) {
-		$x = q("select hubloc.* from xchan left join hubloc on xchan_hash = hubloc_hash 
-			where xchan_addr = '%s' and (hubloc_flags & %d) order by hubloc_id desc limit 1",
-			dbesc($addr),
-			intval(HUBLOC_FLAGS_PRIMARY)
-		);
-	}
-	else {
-
-		// See if we know anybody at the dest site that will unlock the door for us
-		// This is the equivalent of buzzing every apartment in an apartment block
-		// to get inside the front gate. The thing about magic auth is that we're 
-		// authenticating to the other site. Permissions provided by various 
-		// channels will still affect what we can do once authenticated.
-
-		$b = explode('/',$dest);
-
-		if(count($b) >= 2) {
-			$u = $b[0] . '//' . $b[2];
-
-			if(local_user()) {
-				// first look for a connection or anybody who knows us
-				$x = q("select xchan.xchan_url, hubloc.* from xchan left join hubloc on xchan_hash = hubloc_hash 
-					left join abook on abook_xchan = hubloc_hash
-					where abook_channel = %d and hubloc_url = '%s' order by hubloc_id desc limit 5",
-					intval(local_user()),
-					dbesc($u)
-				);
-			}
-			if(! $x) {
-				// no luck - ok anybody will do
-				$x = q("select xchan.xchan_url, hubloc.* from xchan left join hubloc on xchan_hash = hubloc_hash
-					where hubloc_url = '%s' order by hubloc_id desc limit 5",
-					dbesc($u)
-				);
-			}
-
-			if($x) {
-				// They must have a valid hubloc_addr
-				while(! strpos($x[0]['hubloc_addr'],'@')) {
-					array_shift($x);
-				}
-			}
+	$test = ((x($_REQUEST,'test')) ? intval($_REQUEST['test']) : 0);
+	$rev  = ((x($_REQUEST,'rev'))  ? intval($_REQUEST['rev'])  : 0);
 
 
+	$parsed = parse_url($dest);
+	if(! $parsed) {
+		if($test) {
+			$ret['message'] .= 'could not parse ' . $dest . EOL;
+			return($ret);
 		}
+		goaway($dest);
 	}
 
+	$basepath = $parsed['scheme'] . '://' . $parsed['host'] . (($parsed['port']) ? ':' . $parsed['port'] : ''); 
+
+	$x = q("select * from hubloc where hubloc_url = '%s' order by hubloc_connected desc limit 1",
+		dbesc($basepath)
+	);
+	
 	if(! $x) {
 
-		// Finger them if they've never been seen here before
+		// Somebody new? Finger them if they've never been seen here before
 
 		if($addr) {
 			$ret = zot_finger($addr,null);
@@ -78,10 +41,11 @@ function magic_init(&$a) {
 				$j = json_decode($ret['body'],true);
 				if($j)
 					import_xchan($j);
-				$x = q("select hubloc.* from xchan left join hubloc on xchan_hash = hubloc_hash 
-					where xchan_addr = '%s' and (hubloc_flags & %d) order by hubloc_id desc limit 1",
-					dbesc($addr),
-					intval(HUBLOC_FLAGS_PRIMARY)
+
+				// Now try again
+
+				$x = q("select * from hubloc where hubloc_url = '%s' order by hubloc_connected desc limit 1",
+					dbesc($basepath)
 				);
 			}
 		}
@@ -91,8 +55,12 @@ function magic_init(&$a) {
 		if($rev)
 			goaway($dest);
 		else {
-			logger('mod_magic: channel not found.' . print_r($_REQUEST,true));
-			notice( t('Channel not found.') . EOL);
+			logger('mod_magic: no channels found for requested hub.' . print_r($_REQUEST,true));
+			if($test) {
+				$ret['message'] .= 'This site has no previous connections with ' . $basepath . EOL;
+				return $ret;
+			} 
+			notice( t('Hub not found.') . EOL);
 			return;
 		}
 	}
@@ -109,28 +77,23 @@ function magic_init(&$a) {
 
 	call_hooks('magic_auth',$arr);
 	$dest = $arr['destination'];
-	if(! $arr['proceed'])
-		goaway($dest);
-
-	if($x[0]['hubloc_url'] === z_root()) {
-		$webbie = substr($x[0]['hubloc_addr'],0,strpos('@',$x[0]['hubloc_addr']));
-		switch($dest) {
-			case 'channel':
-				$desturl = z_root() . '/channel/' . $webbie;
-				break;
-			case 'photos':
-				$desturl = z_root() . '/photos/' . $webbie;
-				break;
-			case 'profile':
-				$desturl = z_root() . '/profile/' . $webbie;
-				break;
-			default:
-				$desturl = $dest;
-				break;
+	if(! $arr['proceed']) {
+		if($test) {
+			$ret['message'] .= 'cancelled by plugin.' . EOL;
+			return $ret;
 		}
+		goaway($dest);
+	}
+
+	if((get_observer_hash()) && ($x[0]['hubloc_url'] === z_root())) {
 		// We are already authenticated on this site and a registered observer.
 		// Just redirect.
-		goaway($desturl);
+		if($test) {
+			$ret['success'] = true;
+			$ret['message'] .= 'Local site - you are already authenticated.' . EOL;
+			return $ret;
+		}
+		goaway($dest);
 	}
 
 	if(local_user()) {
@@ -142,28 +105,35 @@ function magic_init(&$a) {
 		$channel['token'] = $token;
 		$channel['token_sig'] = $token_sig;
 
-
-		$recip = array(array('guid' => $x[0]['hubloc_guid'],'guid_sig' => $x[0]['hubloc_guid_sig']));
-
-		$hash = random_string();
-
 		$r = q("insert into verify ( type, channel, token, meta, created) values ('%s','%d','%s','%s','%s')",
 			dbesc('auth'),
 			intval($channel['channel_id']),
 			dbesc($token),
-			dbesc($x[0]['hubloc_hash']),
+			dbesc($x[0]['hubloc_url']),
 			dbesc(datetime_convert())
 		);
 
-		$target_url = $x[0]['hubloc_callback'] . '/' . substr($x[0]['hubloc_addr'],0,strpos($x[0]['hubloc_addr'],'@')) ;
+		$target_url = $x[0]['hubloc_callback'] . '/?f=&auth=' . urlencode($channel['channel_address'] . '@' . $a->get_hostname())
+			. '&sec=' . $token . '&dest=' . urlencode($dest) . '&version=' . ZOT_REVISION;
+
 		logger('mod_magic: redirecting to: ' . $target_url, LOGGER_DEBUG); 
 
-		goaway($target_url
-			. '/?f=&auth=' . urlencode($channel['channel_address'] . '@' . $a->get_hostname())
-			. '&sec=' . $token . '&dest=' . urlencode($dest) . '&version=' . ZOT_REVISION);
+		if($test) {
+			$ret['success'] = true;
+			$ret['url'] = $target_url;
+			$ret['message'] = 'token ' . $token . ' created for channel ' . $channel['channel_id'] . ' for url ' . $x[0]['hubloc_url'] . EOL;
+			return $ret;
+		}
+
+		goaway($target_url);
+			
 	}
 
-	if(strpos($dest,'/'))
-		goaway($dest);
-	goaway(z_root());
+	if($test) {
+		$ret['message'] = 'Not authenticated or invalid arguments to mod_magic' . EOL;
+		return $ret;
+	}
+
+	goaway($dest);
+
 }

@@ -699,8 +699,19 @@ function photos_content(&$a) {
 			$usage_message = sprintf( t('You have used %1$.2f Mbytes of photo storage.'), $r[0]['total'] / 1024000 );
  		}
 
+		if($_is_owner) {
+			$channel = $a->get_channel();
+
+			$channel_acl = array(
+				'allow_cid' => $channel['channel_allow_cid'], 
+				'allow_gid' => $channel['channel_allow_gid'], 
+				'deny_cid' => $channel['channel_deny_cid'], 
+				'deny_gid' => $channel['channel_deny_gid']
+			);
+		} 
+
 		$albumselect_e = $albumselect;
-		$aclselect_e = (($_is_owner) ? populate_acl($a->get_channel(), false) : '');
+		$aclselect_e = (($_is_owner) ? populate_acl($channel_acl) : '');
 
 		$tpl = get_markup_template('photos_upload.tpl');
 		$o .= replace_macros($tpl,array(

@@ -7,6 +7,14 @@ function register_init(&$a) {
 	$result = null;
 	$cmd = ((argc() > 1) ? argv(1) : '');
 
+	// Provide a stored request for somebody desiring a connection
+	// when they first need to register someplace. Once they've
+	// created a channel, we'll try to revive the connection request 
+	// and process it.
+
+	if($_REQUEST['connect'])
+		$_SESSION['connect'] = $_REQUEST['connect'];
+
 	switch($cmd) {
 		case 'invite_check.json':
 			$result = check_account_invite($_REQUEST['invite_code']);

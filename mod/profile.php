@@ -1,4 +1,12 @@
-<?php
+<?php /** @file */
+
+require_once('include/contact_widgets.php');
+require_once('include/items.php');
+require_once("include/bbcode.php");
+require_once('include/security.php');
+require_once('include/conversation.php');
+require_once('include/acl_selectors.php');
+
 
 function profile_init(&$a) {
 
@@ -45,8 +53,6 @@ function profile_init(&$a) {
 
 function profile_aside(&$a) {
 
-	require_once('include/contact_widgets.php');
-	require_once('include/items.php');
 
 	profile_create_sidebar($a);
 
@@ -60,11 +66,6 @@ function profile_content(&$a, $update = 0) {
 	}
 
 
-	require_once("include/bbcode.php");
-	require_once('include/security.php');
-	require_once('include/conversation.php');
-	require_once('include/acl_selectors.php');
-	require_once('include/items.php');
 
 	$groups = array();
 
@@ -116,7 +117,6 @@ function profile_content(&$a, $update = 0) {
 	$o .= profile_tabs($a, $is_owner, $a->profile['channel_address']);
 
 
-	require_once('include/profile_advanced.php');
 	$o .= advanced_profile($a);
 	call_hooks('profile_advanced',$o);
 	return $o;

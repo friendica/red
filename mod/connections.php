@@ -43,6 +43,8 @@ function connections_aside(&$a) {
 	}
 
 	$a->set_widget('collections', group_side('connections','group',false,0,((array_key_exists('abook',$a->data)) ? $a->data['abook']['abook_xchan'] : '')));
+
+	$a->set_widget('suggest',suggest_widget());
 	$a->set_widget('findpeople',findpeople_widget());
 
 }
@@ -129,6 +131,17 @@ function connections_post(&$a) {
 	}
 
 	if($new_friend) {
+		$channel = $a->get_channel();		
+		$default_group = $channel['channel_default_group'];
+		if($default_group) {
+			require_once('include/group.php');
+			$g = group_rec_byhash(local_user(),$default_group);
+			if($g)
+				group_add_member(local_user(),'',$a->data['abook_xchan'],$g['id']);
+		}
+
+
+
 		// Check if settings permit ("post new friend activity" is allowed, and 
 		// friends in general or this friend in particular aren't hidden) 
 		// and send out a new friend activity
@@ -136,6 +149,7 @@ function connections_post(&$a) {
 
 		// pull in a bit of content if there is any to pull in
 		proc_run('php','include/onepoll.php',$contact_id);
+
 	}
 
 	// Refresh the structure in memory with the new data
@@ -148,6 +162,11 @@ function connections_post(&$a) {
 	);
 	if($r) {
 		$a->data['abook'] = $r[0];
+	}
+
+	if($new_friend) {
+		$arr = array('channel_id' => local_user(), 'abook' => $a->data['abook']);
+		call_hooks('accept_follow', $arr);
 	}
 
 	connections_clone($a);
@@ -447,7 +466,7 @@ function connections_content(&$a) {
 			'$cautious'       => t('Cautious Sharing'),
 			'$follow'         => t('Follow Only'),
 			'$permlbl'        => t('Individual Permissions'),
-			'$permnote'       => t('Some permissions may be inherited from your <a href="settings">privacy settings</a>, which have higher priority. Changing those on this page will have no effect.'),
+			'$permnote'       => t('Some permissions may be inherited from your channel <a href="settings">privacy settings</a>, which have higher priority. Changing those inherited settings on this page will have no effect.'),
 			'$advanced'       => t('Advanced Permissions'),
 			'$quick'          => t('Quick Links'),
 			'$common_link'    => $a->get_baseurl(true) . '/common/loc/' . local_user() . '/' . $contact['id'],
@@ -652,7 +671,6 @@ function connections_content(&$a) {
 				$contacts[] = array(
 					'img_hover' => sprintf( t('%1$s [%2$s]'),$rr['xchan_name'],$rr['xchan_url']),
 					'edit_hover' => t('Edit contact'),
-					'photo_menu' => contact_photo_menu($rr),
 					'id' => $rr['abook_id'],
 					'alt_text' => $alt_text,
 					'dir_icon' => $dir_icon,

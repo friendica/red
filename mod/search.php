@@ -186,6 +186,8 @@ function search_content(&$a,$update = 0, $load = false) {
 	$pub_sql = public_permissions_sql(get_observer_hash());
 
 	if(($update) && ($load)) {
+		$itemspage = get_pconfig(local_user(),'system','itemspage');
+		$a->set_pager_itemspage(((intval($itemspage)) ? $itemspage : 20));
 		$pager_sql = sprintf(" LIMIT %d, %d ",intval($a->pager['start']), intval($a->pager['itemspage']));
 
 		if($load) {

@@ -4,9 +4,26 @@ require_once('include/crypto.php');
 require_once('include/items.php');
 
 /**
+ * Red implementation of zot protocol. 
+ *
+ * https://github.com/friendica/red/wiki/zot
+ * https://github.com/friendica/red/wiki/Zot---A-High-Level-Overview
+ *
+ */
+
+
+/**
  *
  * @function zot_new_uid($channel_nick)
- * @channel_id = unique nickname of controlling entity
+ *
+ *    Generates a unique string for use as a zot guid using our DNS-based url, the channel nickname and some entropy.
+ *    The entropy ensures uniqueness against re-installs where the same URL and nickname are chosen.
+ *    NOTE: zot doesn't require this to be unique. Internally we use a whirlpool hash of this guid and the signature
+ *    of this guid signed with the channel private key. This can be verified and should make the probability of 
+ *    collision of the verified result negligible within the constraints of our immediate universe.  
+ *
+ * @param string channel_nickname = unique nickname of controlling entity
+ *
  * @returns string
  *
  */
@@ -18,41 +35,58 @@ function zot_new_uid($channel_nick) {
 
 
 /**
- *
- * Given an array of zot hashes, return all distinct hubs
- * If primary is true, return only primary hubs
- * Result is ordered by url to assist in batching.
- * Return only the first primary hub as there should only be one.
+ * @function zot_get_hublocs($hash)
+ *     Given a zot hash, return all distinct hubs. 
+ *     This function is used in building the zot discovery packet
+ *     and therefore should only be used by channels which are defined
+ *     on this hub
+ * @param string $hash - xchan_hash
+ * @retuns array of hubloc (hub location structures)
+ *    hubloc_id          int
+ *    hubloc_guid        char(255)
+ *	  hubloc_guid_sig    text
+ *    hubloc_hash        char(255)
+ *    hubloc_addr        char(255)
+ *    hubloc_flags       int
+ *    hubloc_status      int
+ *    hubloc_url         char(255)
+ *    hubloc_url_sig     text
+ *	  hubloc_host        char(255)
+ *    hubloc_callback    char(255)
+ *    hubloc_connect     char(255)
+ *    hubloc_sitekey     text
+ *    hubloc_updated     datetime
+ *    hubloc_connected   datetime 	
  *
  */
 
-function zot_get_hubloc($arr,$primary = false) {
+function zot_get_hublocs($hash) {
 
-	$tmp = '';
-	
-	if(is_array($arr)) {
-		foreach($arr as $e) {
-			if(strlen($tmp))
-				$tmp .= ',';
-			$tmp .= "'" . dbesc($e) . "'" ;
-		}
-	}
-	
-	if(! strlen($tmp))
-		return array();
+	/** Only search for active hublocs - e.g. those that haven't been marked deleted */
 
-	$sql_extra = (($primary) ? " and hubloc_flags & " . intval(HUBLOC_FLAGS_PRIMARY) : "" );
-	$limit = (($primary) ? " limit 1 " : "");
-	return q("select * from hubloc where hubloc_hash in ( $tmp ) $sql_extra order by hubloc_url $limit");
-
+	$ret = q("select * from hubloc where hubloc_hash = '%s' and not ( hubloc_flags & %d ) group by hubloc_url ",
+		dbesc($hash),
+		intval(HUBLOC_FLAGS_DELETED)
+	);
+	return $ret;
 }
 	 
-/*
+/**
  *
- * zot_build_packet builds a notification packet that you can either
- * store in the queue with a message array or call zot_zot to immediately 
- * zot it to the other side
+ * @function zot_build_packet($channel,$type = 'notify',$recipients = null, $remote_key = null, $secret = null)
+ *    builds a zot notification packet that you can either
+ *    store in the queue with a message array or call zot_zot to immediately 
+ *    zot it to the other side
  *
+ * @param array $channel     => sender channel structure
+ * @param string $type       => packet type: one of 'ping', 'pickup', 'purge', 'refresh', 'notify', 'auth_check'
+ * @param array $recipients  => envelope information, array ( 'guid' => string, 'guid_sig' => string ); empty for public posts
+ * @param string $remote_key => optional public site key of target hub used to encrypt entire packet
+ *    NOTE: remote_key and encrypted packets are required for 'auth_check' packets, optional for all others 
+ * @param string $secret     => random string, required for packets which require verification/callback
+ *    e.g. 'pickup', 'purge', 'notify', 'auth_check' --- 'ping' and 'refresh' do not require verification 
+ *
+ * @returns string json encoded zot packet
  */
 
 function zot_build_packet($channel,$type = 'notify',$recipients = null, $remote_key = null, $secret = null) {
@@ -82,7 +116,7 @@ function zot_build_packet($channel,$type = 'notify',$recipients = null, $remote_
 	// Hush-hush ultra top-secret mode
 
 	if($remote_key) {
-		$data = aes_encapsulate(json_encode($data),$remote_key);
+		$data = crypto_encapsulate(json_encode($data),$remote_key);
 	}
 
 	return json_encode($data);
@@ -194,12 +228,27 @@ function zot_finger($webbie,$channel,$autofallback = true) {
 }
 
 /**
- * @function: zot_refresh
+ * @function: zot_refresh($them, $channel = null)
  *
- * zot_refresh is typically invoked when somebody has changed permissions of a channel and they are notified
- * to fetch new permissions via a finger operation. This may result in a new connection (abook entry) being added to a local channel
- * and it may result in auto-permissions being granted. 
+ *   zot_refresh is typically invoked when somebody has changed permissions of a channel and they are notified
+ *   to fetch new permissions via a finger/discovery operation. This may result in a new connection 
+ *   (abook entry) being added to a local channel and it may result in auto-permissions being granted. 
+ * 
+ *   Friending in zot is accomplished by sending a refresh packet to a specific channel which indicates a
+ *   permission change has been made by the sender which affects the target channel. The hub controlling
+ *   the target channel does targetted discovery (a zot-finger request requesting permissions for the local
+ *   channel). These are decoded here, and if necessary and abook structure (addressbook) is created to store
+ *   the permissions assigned to this channel. 
+ *   
+ *   Initially these abook structures are created with a 'pending' flag, so that no reverse permissions are 
+ *   implied until this is approved by the owner channel. A channel can also auto-populate permissions in 
+ *   return and send back a refresh packet of its own. This is used by forum and group communication channels
+ *   so that friending and membership in the channel's "club" is automatic. 
+ * 
+ * @param array $them => xchan structure of sender
+ * @param array $channel => local channel structure of target recipient, required for "friending" operations
  *
+ * @returns boolean true if successful, else false 
  */
 
 function zot_refresh($them,$channel = null) {
@@ -269,7 +318,7 @@ function zot_refresh($them,$channel = null) {
 		if($channel) {
 			$global_perms = get_perms();
 			if($j['permissions']['data']) {
-				$permissions = aes_unencapsulate(array(
+				$permissions = crypto_unencapsulate(array(
 					'data' => $j['permissions']['data'],
 					'key'  => $j['permissions']['key'],
 					'iv'   => $j['permissions']['iv']),
@@ -366,7 +415,17 @@ function zot_refresh($them,$channel = null) {
  * @function: zot_gethub
  *
  * A guid and a url, both signed by the sender, distinguish a known sender at a known location
- * This function looks these up to see if the channel is known. If not, we will need to verify it.
+ * This function looks these up to see if the channel is known and therefore previously verified. 
+ * If not, we will need to verify it.
+ *
+ * @param array $arr
+ *    $arr must contain: 
+ *       string $arr['guid'] => guid of conversant
+ *       string $arr['guid_sig'] => guid signed with conversant's private key
+ *       string $arr['url'] => URL of the origination hub of this communication
+ *       string $arr['url_sig'] => URL signed with conversant's private key
+ *  
+ *
  * @returns: array => hubloc record
  */
 
@@ -393,6 +452,27 @@ function zot_gethub($arr) {
 	return null;
 }
 
+/**
+ * @function zot_register_hub($arr)
+ *
+ *   A communication has been received which has an unknown (to us) sender. 
+ *   Perform discovery based on our calculated hash of the sender at the origination address.
+ *   This will fetch the discovery packet of the sender, which contains the public key we 
+ *   need to verify our guid and url signatures.
+ *
+ * @param array $arr
+ *    $arr must contain: 
+ *       string $arr['guid'] => guid of conversant
+ *       string $arr['guid_sig'] => guid signed with conversant's private key
+ *       string $arr['url'] => URL of the origination hub of this communication
+ *       string $arr['url_sig'] => URL signed with conversant's private key
+ *  
+ *
+ * @returns array => 'success' (boolean true or false)
+ *                   'message' (optional error string only if success is false)
+ */
+
+
 function zot_register_hub($arr) {
 
 	$result = array('success' => false);
@@ -411,21 +491,48 @@ function zot_register_hub($arr) {
 
 		if($x['success']) {
 			$record = json_decode($x['body'],true);
-			$c = import_xchan($record);
-			if($c['success'])
-				$result['success'] = true;			
+
+			/* 
+			 * We now have a key - only continue registration if our signatures are valid 
+			 * AND the guid and guid sig in the returned packet match those provided in
+			 * our current communication.
+			 */
+
+			if((rsa_verify($arr['guid'],base64url_decode($arr['guid_sig']),$record['key']))
+				&& (rsa_verify($arr['url'],base64url_decode($arr['url_sig']),$record['key']))
+				&& ($arr['guid'] === $record['guid'])
+				&& ($arr['guid_sig'] === $record['guid_sig'])) {
+
+				$c = import_xchan($record);
+				if($c['success'])
+					$result['success'] = true;
+			}
+			else {
+				logger('zot_register_hub: failure to verify returned packet.');
+			}			
 		}
 	}
 	return $result;
 }
 
 
-
-// Takes a json associative array from zot_finger and imports the xchan and hublocs
-// If the xchan already exists, update the name and photo if these have changed.
-// 
+/**
+ * @function import_xchan($arr,$ud_flags = 1)
+ *   Takes an associative array of a fecthed discovery packet and updates
+ *   all internal data structures which need to be updated as a result.
+ * 
+ * @param array $arr => json_decoded discovery packet
+ * @param int $ud_flags
+ *    Determines whether to create a directory update record if any changes occur, default 1 or true
+ *
+ * @returns array =>  'success' (boolean true or false)
+ *                    'message' (optional error string only if success is false)
+ */
 
 function import_xchan($arr,$ud_flags = 1) {
+
+
+	call_hooks('import_xchan', $arr);
 
 	$ret = array('success' => false);
 	$dirmode = intval(get_config('system','directory_mode')); 
@@ -448,7 +555,6 @@ function import_xchan($arr,$ud_flags = 1) {
 		$ret['message'] = t('Unable to verify channel signature');
 		return $ret;
 	}
-
 
 	logger('import_xchan: ' . $xchan_hash, LOGGER_DEBUG);
 
@@ -564,19 +670,41 @@ function import_xchan($arr,$ud_flags = 1) {
 
 		require_once('include/photo/photo_driver.php');
 
-		$photos = import_profile_photo($arr['photo'],$xchan_hash);
-		$r = q("update xchan set xchan_photo_date = '%s', xchan_photo_l = '%s', xchan_photo_m = '%s', xchan_photo_s = '%s', xchan_photo_mimetype = '%s'
+		// see if this is a channel clone that's hosted locally - which we treat different from other xchans/connections
+
+		$local = q("select channel_account_id, channel_id from channel where channel_hash = '%s' limit 1",
+			dbesc($xchan_hash)
+		);
+		if($local) {
+			$ph = z_fetch_url($arr['photo'],true);
+			if($ph['success']) {
+				import_channel_photo($ph['body'], $arr['photo_mimetype'], $local[0]['channel_account_id'],$local[0]['channel_id']);
+				// reset the names in case they got messed up when we had a bug in this function
+				$photos = array(
+					z_root() . '/photo/profile/l/' . $local[0]['channel_id'],
+					z_root() . '/photo/profile/m/' . $local[0]['channel_id'],
+					z_root() . '/photo/profile/s/' . $local[0]['channel_id'],
+					$arr['photo_mimetype']
+				);
+			}
+		}
+		else {
+			$photos = import_profile_photo($arr['photo'],$xchan_hash);
+		}
+		if($photos) {
+			$r = q("update xchan set xchan_photo_date = '%s', xchan_photo_l = '%s', xchan_photo_m = '%s', xchan_photo_s = '%s', xchan_photo_mimetype = '%s'
 				where xchan_hash = '%s' limit 1",
-				dbesc($arr['photo_updated']),
+				dbesc(datetime_convert('UTC','UTC',$arr['photo_updated'])),
 				dbesc($photos[0]),
 				dbesc($photos[1]),
 				dbesc($photos[2]),
 				dbesc($photos[3]),
 				dbesc($xchan_hash)
-		);
+			);
 
-		$what .= 'photo ';
-		$changed = true;
+			$what .= 'photo ';
+			$changed = true;
+		}
 	}
 
 	// what we are missing for true hub independence is for any changes in the primary hub to 
@@ -584,9 +712,19 @@ function import_xchan($arr,$ud_flags = 1) {
 
 	if($arr['locations']) {
 
-		$xisting = q("select hubloc_id, hubloc_url from hubloc where hubloc_hash = '%s'",
+		$xisting = q("select hubloc_id, hubloc_url, hubloc_sitekey from hubloc where hubloc_hash = '%s'",
 			dbesc($xchan_hash)
 		);
+
+		// See if a primary is specified
+
+		$has_primary = false;
+		foreach($arr['locations'] as $location) {
+			if($location['primary']) {
+				$has_primary = true;
+				break;
+			}
+		}
 
 		foreach($arr['locations'] as $location) {
 			if(! rsa_verify($location['url'],base64url_decode($location['url_sig']),$arr['key'])) {
@@ -595,15 +733,21 @@ function import_xchan($arr,$ud_flags = 1) {
 				continue;
 			}
 
+			// Ensure that they have one primary hub
+
+			if(! $has_primary)
+				$location['primary'] = true;
+
+
 			for($x = 0; $x < count($xisting); $x ++) {
-				if($xisting[$x]['hubloc_url'] == $location['url']) {
+				if(($xisting[$x]['hubloc_url'] === $location['url']) && ($xisting[$x]['hubloc_sitekey'] === $location['sitekey'])) {
 					$xisting[$x]['updated'] = true;
 				}
 			}
 
 			// match as many fields as possible in case anything at all changed. 
 
-			$r = q("select * from hubloc where hubloc_hash = '%s' and hubloc_guid = '%s' and hubloc_guid_sig = '%s' and hubloc_url = '%s' and hubloc_url_sig = '%s' and hubloc_host = '%s' and hubloc_addr = '%s' and hubloc_callback = '%s' and hubloc_sitekey = '%s' limit 1",
+			$r = q("select * from hubloc where hubloc_hash = '%s' and hubloc_guid = '%s' and hubloc_guid_sig = '%s' and hubloc_url = '%s' and hubloc_url_sig = '%s' and hubloc_host = '%s' and hubloc_addr = '%s' and hubloc_callback = '%s' and hubloc_sitekey = '%s' ",
 				dbesc($xchan_hash),
 				dbesc($arr['guid']),
 				dbesc($arr['guid_sig']),
@@ -624,6 +768,16 @@ function import_xchan($arr,$ud_flags = 1) {
 						intval($r[0]['hubloc_id'])
 					);
 				}
+
+				// Remove pure duplicates
+				if(count($r) > 1) {
+					for($h = 1; $h < count($r); $h ++) {
+						q("delete from hubloc where hubloc_id = %d limit 1",
+							intval($r[$h]['hubloc_id'])
+						);
+					}
+				}
+
 				if((($r[0]['hubloc_flags'] & HUBLOC_FLAGS_PRIMARY) && (! $location['primary']))
 					|| ((! ($r[0]['hubloc_flags'] & HUBLOC_FLAGS_PRIMARY)) && ($location['primary']))) {
 					$r = q("update hubloc set hubloc_flags = (hubloc_flags ^ %d), hubloc_updated = '%s' where hubloc_id = %d limit 1",
@@ -731,8 +885,6 @@ function import_xchan($arr,$ud_flags = 1) {
 		}
 	}
 	
-
-
 	if($changed) {
 		$guid = random_string() . '@' . get_app()->get_hostname();		
 		update_modtime($xchan_hash,$guid,$arr['address'],$ud_flags);
@@ -755,6 +907,20 @@ function import_xchan($arr,$ud_flags = 1) {
 	logger('import_xchan: result: ' . print_r($ret,true), LOGGER_DATA);
 	return $ret;
 }
+
+/**
+ * @function zot_process_response($hub,$arr,$outq) {
+ *    Called immediately after sending a zot message which is using queue processing
+ *    Updates the queue item according to the response result and logs any information
+ *    returned to aid communications troubleshooting.
+ *
+ * @param string $hub - url of site we just contacted
+ * @param array $arr - output of z_post_url()
+ * @param array $outq - The queue structure attached to this request
+ *
+ * @returns nothing
+ */
+
 
 function zot_process_response($hub,$arr,$outq) {
 
@@ -791,14 +957,16 @@ function zot_process_response($hub,$arr,$outq) {
 }
 
 /**
- * @function: zot_fetch
+ * @function zot_fetch($arr)
  *
- * We received a notification packet (in mod/post.php) that a message is waiting for us, and we've verified the sender.
- * Now send back a pickup message, using our message tracking ID ($arr['secret']), which we will sign.
- * The entire pickup message is encrypted with the remote site's public key. 
- * If everything checks out on the remote end, we will receive back a packet containing one or more messages,
- * which will be processed before returning.
- * 
+ *     We received a notification packet (in mod/post.php) that a message is waiting for us, and we've verified the sender.
+ *     Now send back a pickup message, using our message tracking ID ($arr['secret']), which we will sign with our site private key.
+ *     The entire pickup message is encrypted with the remote site's public key. 
+ *     If everything checks out on the remote end, we will receive back a packet containing one or more messages,
+ *     which will be processed and delivered before this function ultimately returns.
+ *   
+ * @param array $arr
+ *     decrypted and json decoded notify packet from remote site
  */
  
 
@@ -823,7 +991,7 @@ function zot_fetch($arr) {
 		'secret_sig' => base64url_encode(rsa_sign($arr['secret'],get_config('system','prvkey')))
 	);
 
-	$datatosend = json_encode(aes_encapsulate(json_encode($data),$ret_hub['hubloc_sitekey']));
+	$datatosend = json_encode(crypto_encapsulate(json_encode($data),$ret_hub['hubloc_sitekey']));
 	
 	$fetch = zot_zot($url,$datatosend);
 	$result = zot_import($fetch, $arr['sender']['url']);
@@ -836,7 +1004,16 @@ function zot_fetch($arr) {
  * Process an incoming array of messages which were obtained via pickup, and 
  * import, update, delete as directed.
  * 
- * The message types handled here are 'activity' (e.g. posts), 'mail' and 'profile'
+ * @param array $arr => 'pickup' structure returned from remote site
+ * @param string $sender_url => the url specified by the sender in the initial communication
+ *       we will verify the sender and url in each returned message structure and also verify
+ *       that all the messages returned match the site url that we are currently processing.
+ * 
+ * The message types handled here are 'activity' (e.g. posts), 'mail' , 'profile', and 'channel_sync'
+ * 
+ * @returns array => array ( [0] => string $channel_hash, [1] => string $delivery_status, [2] => string $address )
+ *    suitable for logging remotely, enumerating the processing results of each message/recipient combination.
+ * 
  */
 
 function zot_import($arr, $sender_url) {
@@ -849,7 +1026,7 @@ function zot_import($arr, $sender_url) {
 	}
 
 	if(array_key_exists('iv',$data)) {
-		$data = json_decode(aes_unencapsulate($data,get_config('system','prvkey')),true);
+		$data = json_decode(crypto_unencapsulate($data,get_config('system','prvkey')),true);
     }
 
 	$incoming = $data['pickup'];
@@ -861,7 +1038,7 @@ function zot_import($arr, $sender_url) {
 			$result = null;
 
 			if(array_key_exists('iv',$i['notify'])) {
-				$i['notify'] = json_decode(aes_unencapsulate($i['notify'],get_config('system','prvkey')),true);
+				$i['notify'] = json_decode(crypto_unencapsulate($i['notify'],get_config('system','prvkey')),true);
     		}
 
 			logger('zot_import: notify: ' . print_r($i['notify'],true), LOGGER_DATA);
@@ -1944,5 +2121,26 @@ function get_rpost_path($observer) {
 	$parsed = parse_url($observer['xchan_url']);
 	return $parsed['scheme'] . '://' . $parsed['host'] . (($parsed['port']) ? ':' . $parsed['port'] : '') . '/rpost?f=';
 
+}
+
+function import_author_zot($x) {
+	$hash = base64url_encode(hash('whirlpool',$x['guid'] . $x['guid_sig'], true));
+	$r = q("select hubloc_url from hubloc where hubloc_guid = '%s' and hubloc_guid_sig = '%s' and (hubloc_flags & %d) limit 1",
+		dbesc($x['guid']),
+		dbesc($x['guid_sig']),
+		intval(HUBLOC_FLAGS_PRIMARY)
+	);
+
+	if($r) {
+		logger('import_author_zot: in cache', LOGGER_DEBUG);
+		return $hash;
+	}
+
+	logger('import_author_zot: entry not in cache - probing: ' . print_r($x,true), LOGGER_DEBUG);
+	
+	$them = array('hubloc_url' => $x['url'],'xchan_guid' => $x['guid'], 'xchan_guid_sig' => $x['guid_sig']);
+	if(zot_refresh($them))
+		return $hash;
+	return false;
 }
 
