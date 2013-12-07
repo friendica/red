@@ -1631,9 +1631,10 @@ a.mail-list-link {
 }
 
 .profile-match-name {
-	float: left;
+/*	float: left; */
 	text-align: center;
 	width: 120px;
+	height: 18px;
 	overflow: hidden !important;
 }
 
