@@ -43,6 +43,8 @@ function connections_aside(&$a) {
 	}
 
 	$a->set_widget('collections', group_side('connections','group',false,0,((array_key_exists('abook',$a->data)) ? $a->data['abook']['abook_xchan'] : '')));
+
+	$a->set_widget('suggest',suggest_widget());
 	$a->set_widget('findpeople',findpeople_widget());
 
 }
