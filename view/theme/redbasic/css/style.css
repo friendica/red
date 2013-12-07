@@ -935,6 +935,11 @@ tr.mceLast {
     box-shadow: $shadowpx $shadowpx $shadowpx 0 #444444;
 }
 
+.profile-match-photo img {
+	width: $top_photo !important;
+	height: $top_photo !important;
+}
+
 #sidebar-page-list .label {
     margin-left: 5px;
 }
