@@ -157,7 +157,7 @@ function suggest_widget() {
 
 	require_once('include/socgraph.php');
 
-	$r = suggestion_query(local_user(),get_observer_hash(),0,2);
+	$r = suggestion_query(local_user(),get_observer_hash(),0,20);
 
 	if(! $r) {
 		return;
@@ -165,7 +165,18 @@ function suggest_widget() {
 
 	$arr = array();
 
-	foreach($r as $rr) {
+	// Get two random entries from the top 20 returned.
+	// We'll grab the first one and the one immediately following.
+	// This will throw some entropy intot he situation so you won't 
+	// be looking at the same two mug shots every time the widget runs
+
+	$index = mt_rand(0,count($r) - 2);
+	
+	
+
+	for($x = $index; $x <= ($index+1); $x ++) {
+
+		$rr = $r[$x];
 
 		$connlnk = z_root() . '/follow/?url=' . $rr['xchan_addr'];
 
