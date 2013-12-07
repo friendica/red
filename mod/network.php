@@ -50,6 +50,7 @@ function network_init(&$a) {
 
 	$a->page['aside'] .= group_side('network','network',true,$_GET['gid']);
 	$a->page['aside'] .= posted_date_widget($a->get_baseurl() . '/network',local_user(),false);	
+	$a->page['aside'] .= suggest_widget();
 
 	$a->page['aside'] .= saved_searches($search);
 	$a->page['aside'] .= fileas_widget($a->get_baseurl(true) . '/network',(x($_GET, 'file') ? $_GET['file'] : ''));

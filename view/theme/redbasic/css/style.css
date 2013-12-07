@@ -932,7 +932,7 @@ tr.mceLast {
 .contact-entry-photo img, .profile-match-photo img, #photo-photo img, .directory-photo-img, .photo-album-photo, .photo-top-photo {
     border-radius: $radiuspx;
     -moz-border-radius: $radiuspx;
-    box-shadow: 4px 4px 3px 0 #444444;
+    box-shadow: $shadowpx $shadowpx $shadowpx 0 #444444;
 }
 
 #sidebar-page-list .label {
@@ -2979,3 +2979,4 @@ img.mail-list-sender-photo {
 .comment-edit-text-full {
 	color: black;
 }
+.suggest-widget-more { margin-top: 10px; }

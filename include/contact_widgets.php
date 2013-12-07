@@ -1,5 +1,6 @@
 <?php /** @file */
 
+
 function follow_widget() {
 	$a = get_app();
 	$uid =$a->channel['channel_id'];
@@ -150,3 +151,43 @@ function common_friends_visitor_widget($profile_uid) {
 	)); 
 
 };
+
+
+function suggest_widget() {
+
+	require_once('include/socgraph.php');
+
+	$r = suggestion_query(local_user(),get_observer_hash(),0,2);
+
+	if(! $r) {
+		return;
+	}
+
+	$arr = array();
+
+	foreach($r as $rr) {
+
+		$connlnk = z_root() . '/follow/?url=' . $rr['xchan_addr'];
+
+		$arr[] = array(
+			'url' => chanlink_url($rr['xchan_url']),
+			'name' => $rr['xchan_name'],
+			'photo' => $rr['xchan_photo_m'],
+			'ignlnk' => z_root() . '/suggest?ignore=' . $rr['xchan_hash'],
+			'conntxt' => t('Connect'),
+			'connlnk' => $connlnk,
+			'ignore' => t('Ignore/Hide')
+		);
+	}
+
+
+	$o = replace_macros(get_markup_template('suggest_widget.tpl'),array(
+		'$title' => t('Suggestions'),
+		'$more' => t('See more...'),
+		'$entries' => $arr
+	));
+
+	return $o;
+
+}
+
