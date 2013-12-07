@@ -60,13 +60,30 @@ function webpages_content(&$a) {
 	require_once ('include/conversation.php');
 	require_once('include/acl_selectors.php');
 
+
+		if(local_user() && local_user() == $a->profile_uid) {
+			$channel = $a->get_channel();  
+			$channel_acl = array(
+				'allow_cid' => $channel['channel_allow_cid'], 
+				'allow_gid' => $channel['channel_allow_gid'], 
+				'deny_cid'  => $channel['channel_deny_cid'], 
+				'deny_gid'  => $channel['channel_deny_gid']
+			); 
+		}
+		else
+			$channel_acl = array();
+
+
+
+
+
 		$x = array(
 			'webpage' => ITEM_WEBPAGE,
 			'is_owner' => true,
 			'nickname' => $a->profile['channel_address'],
 			'lockstate' => (($group || $cid || $channel['channel_allow_cid'] || $channel['channel_allow_gid'] || $channel['channel_deny_cid'] || $channel['channel_deny_gid']) ? 'lock' : 'unlock'),
 			'bang' => (($group || $cid) ? '!' : ''),
-			'acl' => ((local_user() && local_user() == $owner) ? populate_acl($a->get_channel()) : ''),
+			'acl' => ((local_user() && local_user() == $owner) ? populate_acl($channel_acl) : ''),
 			'visitor' => 'block',
 			'profile_uid' => intval($owner),
 			'mimetype' => $mimetype,			
