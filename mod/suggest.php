@@ -50,6 +50,7 @@ function suggest_content(&$a) {
 
 		$arr[] = array(
 			'url' => chanlink_url($rr['xchan_url']),
+			'profile' => $rr['xchan_url'],
 			'name' => $rr['xchan_name'],
 			'photo' => $rr['xchan_photo_m'],
 			'ignlnk' => $a->get_baseurl() . '/suggest?ignore=' . $rr['xchan_hash'],
