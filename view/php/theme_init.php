@@ -3,7 +3,7 @@
 require_once('include/plugin.php');
 
 head_add_css('library/bootstrap/css/bootstrap-theme.min.css');
-head_add_css('library/bootstrap/css/bootstrap.css'); 
+head_add_css('library/bootstrap/css/bootstrap.min.css'); 
 head_add_css('library/fancybox/jquery.fancybox-1.3.4.css');
 head_add_css('library/tiptip/tipTip.css');
 head_add_css('library/jgrowl/jquery.jgrowl.css');
