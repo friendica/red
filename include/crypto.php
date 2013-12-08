@@ -75,6 +75,8 @@ function aes_encapsulate($data,$pubkey) {
 }
 
 function crypto_unencapsulate($data,$prvkey) {
+	if(! $data)
+		return;
 	$alg = ((array_key_exists('alg',$data)) ? $data['alg'] : 'aes256cbc');
 	if($alg === 'aes256cbc')
 		return aes_unencapsulate($data,$prvkey);

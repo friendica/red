@@ -203,6 +203,10 @@ function localize_item(&$item){
 	}
 
 	if (stristr($item['verb'],ACTIVITY_POKE)) {
+
+		// FIXME for obscured private posts, until then leave untranslated
+		return;
+
 		$verb = urldecode(substr($item['verb'],strpos($item['verb'],'#')+1));
 		if(! $verb)
 			return;

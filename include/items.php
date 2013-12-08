@@ -202,11 +202,29 @@ function post_activity_item($arr) {
 		return $ret;
 	}
 
-	if(array_key_exists('content_type',$arr) && $arr['content_type'] == 'text/html')
-		$arr['body'] = purify_html($arr['body']);
-	else
-		$arr['body'] = escape_tags($arr['body']);
 
+	if(! array_key_exists('mimetype',$arr))
+		$arr['mimetype'] = 'text/bbcode';
+
+	if(array_key_exists('item_private',$arr) && $arr['item_private']) {
+
+		$arr['body'] = z_input_filter($arr['uid'],$arr['body'],$arr['mimetype']);
+
+		if($channel) {
+			if($channel['channel_hash'] === $arr['author_xchan']) {
+				$arr['sig'] = base64url_encode(rsa_sign($arr['body'],$channel['channel_prvkey']));
+				$arr['item_flags'] = $arr['item_flags'] | ITEM_VERIFIED;
+			}
+		}
+
+		logger('Encrypting local storage');
+		$key = get_config('system','pubkey');
+		$arr['item_flags'] = $arr['item_flags'] | ITEM_OBSCURED;
+		if($arr['title'])
+			$arr['title'] = json_encode(aes_encapsulate($arr['title'],$key));
+		if($arr['body'])
+			$arr['body']  = json_encode(aes_encapsulate($arr['body'],$key));
+	}
 
 	$arr['mid']          = 	((x($arr,'mid')) ? $arr['mid'] : item_message_id());
 	$arr['parent_mid']   =  ((x($arr,'parent_mid')) ? $arr['parent_mid'] : $arr['mid']);
@@ -238,7 +256,7 @@ function post_activity_item($arr) {
 
 
 	$post = item_store($arr);	
-	if($post['result'])
+	if($post['success'])
 		$post_id = $post['item_id'];
 
 	if($post_id) {
