@@ -78,6 +78,7 @@ require_once('include/conversation.php');
  		$o .= file_get_contents('home.html');
 }
 
+	if (!$a->config['system']['no_login_on_homepage'])
 		$o .= login(($a->config['system']['register_policy'] == REGISTER_CLOSED) ? 0 : 1);
 	
 	call_hooks("home_content",$o);

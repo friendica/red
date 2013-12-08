@@ -234,6 +234,7 @@ function admin_page_site_post(&$a){
 	$allowed_email		=	((x($_POST,'allowed_email'))	? notags(trim($_POST['allowed_email']))		: '');
 	$block_public		=	((x($_POST,'block_public'))		? True	:	False);
 	$force_publish		=	((x($_POST,'publish_all'))		? True	:	False);
+	$no_login_on_homepage	=	((x($_POST,'no_login_on_homepage'))		? True	:	False);
 	$global_directory	=	((x($_POST,'directory_submit_url'))	? notags(trim($_POST['directory_submit_url']))	: '');
 	$no_community_page	=	!((x($_POST,'no_community_page'))	? True	:	False);
 
@@ -291,6 +292,7 @@ function admin_page_site_post(&$a){
 	set_config('system','poll_interval',$poll_interval);
 	set_config('system','maxloadavg',$maxloadavg);
 	set_config('system','sitename',$sitename);
+	set_config('system','no_login_on_homepage',$no_login_on_homepage);
 
 	if ($banner=="") {
 		del_config('system','banner');
@@ -440,6 +442,7 @@ function admin_page_site(&$a) {
 		'$allowed_email'	=> array('allowed_email', t("Allowed email domains"), get_config('system','allowed_email'), t("Comma separated list of domains which are allowed in email addresses for registrations to this site. Wildcards are accepted. Empty to allow any domains")),
 		'$block_public'		=> array('block_public', t("Block public"), get_config('system','block_public'), t("Check to block public access to all otherwise public personal pages on this site unless you are currently logged in.")),
 		'$force_publish'	=> array('publish_all', t("Force publish"), get_config('system','publish_all'), t("Check to force all profiles on this site to be listed in the site directory.")),
+		'$no_login_on_homepage'	=> array('no_login_on_homepage', t("No login on Homepage"), get_config('system','no_login_on_homepage'), t("Check to hide the login form from your sites homepage when visitors arrive who are not logged in (e.g. when you put the content of the homepage in via the site channel).")),
 			
 		'$proxyuser'		=> array('proxyuser', t("Proxy user"), get_config('system','proxyuser'), ""),
 		'$proxy'			=> array('proxy', t("Proxy URL"), get_config('system','proxy'), ""),
