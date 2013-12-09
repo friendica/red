@@ -17,7 +17,7 @@ function search_saved_searches() {
 		$o .= '<h3>' . t('Saved Searches') . '</h3>' . "\r\n";
 		$o .= '<ul id="saved-search-ul">' . "\r\n";
 		foreach($r as $rr) {
-			$o .= '<li class="saved-search-li clear"><a href="search/?f=&remove=1&search=' . $rr['term'] . '" class="icon drophide savedsearchdrop" title="' . t('Remove term') . '" onclick="return confirmDelete();" onmouseover="imgbright(this);" onmouseout="imgdull(this);" ></a> <a href="search/?f=&search=' . $rr['term'] . '" class="savedsearchterm" >' . htmlspecialchars($rr['term']) . '</a></li>' . "\r\n";
+			$o .= '<li class="saved-search-li clear"><a href="search/?f=&remove=1&search=' . rawurlencode($rr['term']) . '" title="' . t('Remove term') . '" onclick="return confirmDelete();"><i class="icon-remove drop-icons"></i></a> <a href="search/?f=&search=' . $rr['term'] . '" class="savedsearchterm" >' . htmlspecialchars($rr['term']) . '</a></li>' . "\r\n";
 		}
 		$o .= '</ul><div class="clear"></div></div>' . "\r\n";
 	}		

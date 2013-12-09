@@ -734,7 +734,7 @@ function search($s,$id='search-box',$url='/search',$save = false) {
 	$o .= '<form action="' . $a->get_baseurl((stristr($url,'network')) ? true : false) . $url . '" method="get" >';
 	$o .= '<input type="text" class="icon-search" name="search" id="search-text" placeholder="&#xf002;" value="' . $s .'" onclick="this.submit();" />';
 	$o .= '<input type="submit" name="submit" id="search-submit" value="' . t('Search') . '" />'; 
-	if($save)
+	if(feature_enabled(local_user(),'savedsearch'))
 		$o .= '<input type="submit" name="save" id="search-save" value="' . t('Save') . '" />'; 
 	$o .= '</form></div>';
 	return $o;
