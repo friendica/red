@@ -189,7 +189,7 @@ function channel_content(&$a, $update = 0, $load = false) {
 		$a->set_pager_itemspage(((intval($itemspage)) ? $itemspage : 20));
 		$pager_sql = sprintf(" LIMIT %d, %d ",intval($a->pager['start']), intval($a->pager['itemspage']));
 
-		if($load) {
+		if($load || ($_COOKIE['jsAvailable'] != 1)) {
 			$r = q("SELECT distinct id AS item_id FROM item 
 				left join abook on item.author_xchan = abook.abook_xchan
 				WHERE uid = %d AND item_restrict = 0
@@ -281,9 +281,13 @@ function channel_content(&$a, $update = 0, $load = false) {
 	}
 
 
-	$o .= conversation($a,$items,'channel',$update,'client');
+	if($_COOKIE['jsAvailable'] == 1) {
+		$o .= conversation($a,$items,'channel',$update,'client');
+	} else {
+		$o .= conversation($a,$items,'channel',$update,'traditional');
+	}
 
-	if(! $update)
+	if((! $update) || ($_COOKIE['jsAvailable'] != 1))
 		$o .= alt_pager($a,count($items));
 
 	return $o;
