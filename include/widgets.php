@@ -135,3 +135,17 @@ function widget_follow($args) {
 	));
 
 }
+
+
+function widget_notes($arr) {
+	if(! local_user())
+		return '';
+	$text = htmlspecialchars(get_pconfig(local_user(),'notes','text'));
+
+	$o = replace_macros(get_markup_template('notes.tpl'), array(
+		'$banner' => t('Notes'),
+		'$text' => $text,
+		'$save' => t('Save'),
+	));
+	return $o;
+}

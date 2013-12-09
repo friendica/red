@@ -54,7 +54,7 @@ function network_init(&$a) {
 	$a->set_widget('suggestions',widget_suggestions(array()));
 	$a->set_widget('savedsearch',saved_searches($search));
 	$a->set_widget('filer',fileas_widget($a->get_baseurl(true) . '/network',(x($_GET, 'file') ? $_GET['file'] : '')));
-
+	$a->set_widget('notes',widget_notes(array()));
 
 	if($search) {
 		if(strpos($search,'@') === 0) {

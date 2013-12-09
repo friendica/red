@@ -2986,3 +2986,10 @@ img.mail-list-sender-photo {
 	color: black;
 }
 .suggest-widget-more { margin-top: 10px; }
+
+#note-text {
+	width: 190px;
+	max-width: 190px;
+	height: 150px;
+}
+#note-save { margin-top: 10px; }
