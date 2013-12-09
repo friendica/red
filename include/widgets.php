@@ -93,3 +93,32 @@ function widget_suggestions($arr) {
 	return $o;
 
 }
+
+
+function widget_follow($args) {
+	if(! local_user())
+		return '';
+	$a = get_app();
+	$uid =$a->channel['channel_id'];
+	$r = q("select count(*) as total from abook where abook_channel = %d and not (abook_flags & %d) ",
+		intval($uid),
+		intval(ABOOK_FLAG_SELF)
+	);
+	if($r)
+		$total_channels = $r[0]['total'];	
+	$limit = service_class_fetch($uid,'total_channels');
+	if($limit !== false) {
+			$abook_usage_message = sprintf( t("You have %1$.0f of %2$.0f allowed connections."), $total_channels, $limit);
+	}
+	else {
+			$abook_usage_message = '';
+ 	}
+	return replace_macros(get_markup_template('follow.tpl'),array(
+		'$connect' => t('Add New Connection'),
+		'$desc' => t('Enter the channel address'),
+		'$hint' => t('Example: bob@example.com, http://example.com/barbara'),
+		'$follow' => t('Connect'),
+		'$abook_usage_message' => $abook_usage_message
+	));
+
+}
