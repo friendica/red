@@ -150,7 +150,7 @@
 	var scroll_next = false;
 	var next_page = 1;
 	var page_load = true;
-	var loadingPage = false;
+	var loadingPage = true;
 	var pageHasMoreContent = true;
 	var updateCountsOnly = false;
 
@@ -511,6 +511,10 @@ function updateConvItems(mode,data) {
 			}
 			prev = ident;
 		});
+
+		if(loadingPage) {
+			loadingPage = false;
+		}
 	}
 
 	$('.like-rotator').spin(false);
@@ -984,35 +988,28 @@ function previewTheme(elm) {
 
 $(document).ready(function() {
 
-jQuery.timeago.settings.strings = {
-	prefixAgo     : aStr['t01'],
-	prefixFromNow : aStr['t02'],
-	suffixAgo     : aStr['t03'],
-	suffixFromNow : aStr['t04'],
-	seconds       : aStr['t05'],
-	minute        : aStr['t06'],
-	minutes       : aStr['t07'],
-	hour          : aStr['t08'],
-	hours         : aStr['t09'],
-	day           : aStr['t10'],
-	days          : aStr['t11'],
-	month         : aStr['t12'],
-	months        : aStr['t13'],
-	year          : aStr['t14'],
-	years         : aStr['t15'],
-	wordSeparator : aStr['t16'],
-	numbers       : aStr['t17'],
-};
+	jQuery.timeago.settings.strings = {
+		prefixAgo     : aStr['t01'],
+		prefixFromNow : aStr['t02'],
+		suffixAgo     : aStr['t03'],
+		suffixFromNow : aStr['t04'],
+		seconds       : aStr['t05'],
+		minute        : aStr['t06'],
+		minutes       : aStr['t07'],
+		hour          : aStr['t08'],
+		hours         : aStr['t09'],
+		day           : aStr['t10'],
+		days          : aStr['t11'],
+		month         : aStr['t12'],
+		months        : aStr['t13'],
+		year          : aStr['t14'],
+		years         : aStr['t15'],
+		wordSeparator : aStr['t16'],
+		numbers       : aStr['t17'],
+	};
 
 
-$(".autotime").timeago();
-//$("div.wall-item-body").divgrow({ initialHeight: 400 });
-
-//reCalcHeight();
-
-
-
-
+	$(".autotime").timeago();
 
 });
 
