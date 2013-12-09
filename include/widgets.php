@@ -1,5 +1,18 @@
 <?php /** @file */
 
+function list_widgets() {
+	$widgets = array(
+		'profile'      => t('Displays a full channel profile'),
+		'tagcloud'     => t('Tag cloud of webpage categories'), 		
+		'collections'  => t('List and filter by collection'),
+		'suggestions'  => t('Show a couple of channel suggestion'),
+		'follow'       => t('Provide a channel follow form')
+	);
+	$arr = array('widgets' => $widgets);
+	call_hooks('list_widgets',$arr);
+	return $arr['widgets'];
+}
+
 
 function widget_profile($args) {
 	$a = get_app();
