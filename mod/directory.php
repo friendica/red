@@ -1,6 +1,7 @@
 <?php
 
 require_once('include/dir_fns.php');
+require_once('include/widgets.php');
 
 
 function directory_init(&$a) {
@@ -213,7 +214,7 @@ function directory_content(&$a) {
 					if($j['keywords']) {
 						$a->set_widget('dirtagblock',dir_tagblock(z_root() . '/directory',$j['keywords']));
 					}
-					$a->set_widget('suggest',suggest_widget());
+					$a->set_widget('suggest',widget_suggestions(array()));
 
 
 //					logger('mod_directory: entries: ' . print_r($entries,true), LOGGER_DATA);

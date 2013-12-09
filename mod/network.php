@@ -51,7 +51,7 @@ function network_init(&$a) {
 
 	$a->set_widget('collections',widget_collections(array()));
 	$a->set_widget('archives',posted_date_widget($a->get_baseurl() . '/network',local_user(),false));	
-	$a->set_widget('suggestions',suggest_widget());
+	$a->set_widget('suggestions',widget_suggestions(array()));
 	$a->set_widget('savedsearch',saved_searches($search));
 	$a->set_widget('filer',fileas_widget($a->get_baseurl(true) . '/network',(x($_GET, 'file') ? $_GET['file'] : '')));
 
@@ -286,7 +286,7 @@ function network_content(&$a, $update = 0, $load = false) {
         }
         else {
 			$contact_str = ' 0 ';	
-			info( t('Group is empty'));
+			info( t('Collection is empty'));
         }
 
         $sql_extra = " AND item.parent IN ( SELECT DISTINCT parent FROM item WHERE true $sql_options AND (( author_xchan IN ( $contact_str ) OR owner_xchan in ( $contact_str )) or allow_gid like '" . protect_sprintf('%<' . dbesc($group_hash) . '>%') . "' ) and id = parent and item_restrict = 0 ) ";

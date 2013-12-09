@@ -3692,6 +3692,8 @@ function items_fetch($arr,$channel = null,$observer_hash = null,$client_mode = C
 	$sql_options = '';
 	$sql_extra2 = '';
     $sql_extra3 = '';
+	$def_acl = '';
+
 	$item_uids = ' true ';
 
 	if($channel) {
@@ -3708,7 +3710,7 @@ function items_fetch($arr,$channel = null,$observer_hash = null,$client_mode = C
 
 	$sql_extra = " AND item.parent IN ( SELECT parent FROM item WHERE (item_flags & " . intval(ITEM_THREAD_TOP) . ") $sql_options ) ";
 
-    if($arr['group'] && $uid) {
+    if($arr['gid'] && $uid) {
         $r = q("SELECT * FROM `group` WHERE id = %d AND uid = %d LIMIT 1",
             intval($arr['group']),
             intval($uid)
@@ -3717,7 +3719,6 @@ function items_fetch($arr,$channel = null,$observer_hash = null,$client_mode = C
 			$result['message']  = t('Collection not found.');
 			return $result;
         }
-
 
 		$contact_str = '';
         $contacts = group_get_members($group);
@@ -3730,10 +3731,14 @@ function items_fetch($arr,$channel = null,$observer_hash = null,$client_mode = C
         }
         else {
 			$contact_str = ' 0 ';	
-			info( t('Group is empty'));
+			$result['message'] = t('Collection is empty.');
+			return $result;
         }
 
         $sql_extra = " AND item.parent IN ( SELECT DISTINCT parent FROM item WHERE true $sql_options AND (( author_xchan IN ( $contact_str ) OR owner_xchan in ( $contact_str)) or allow_gid like '" . protect_sprintf('%<' . dbesc($r[0]['hash']) . '>%') . "' ) and id = parent and item_restrict = 0 ) ";
+
+		$x = group_rec_byhash($uid,$r[0]['hash']);
+		$result['headline'] = sprintf( t('Collection: %s'),$x['name']);
 
     }
     elseif($arr['cid'] && $uid) {
@@ -3744,6 +3749,7 @@ function items_fetch($arr,$channel = null,$observer_hash = null,$client_mode = C
         );
         if($r) {
             $sql_extra = " AND item.parent IN ( SELECT DISTINCT parent FROM item WHERE true $sql_options AND uid = " . intval($arr['uid']) . " AND ( author_xchan = '" . dbesc($r[0]['abook_xchan']) . "' or owner_xchan = '" . dbesc($r[0]['abook_xchan']) . "' ) and item_restrict = 0 ) ";
+			$result['headline'] = sprintf( t('Connection: %s'),$r[0]['xchan_name']);
         }
         else {
 			$result['message'] = t('Connection not found.');

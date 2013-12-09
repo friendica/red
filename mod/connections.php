@@ -6,6 +6,7 @@ require_once('include/contact_selectors.php');
 require_once('include/group.php');
 require_once('include/contact_widgets.php');
 require_once('include/zot.php');
+require_once('include/widgets.php');
 
 function connections_init(&$a) {
 
@@ -32,6 +33,7 @@ function connections_init(&$a) {
 
 function connections_aside(&$a) {
 
+
 	if (! local_user())
 		return;
 	
@@ -44,7 +46,7 @@ function connections_aside(&$a) {
 
 	$a->set_widget('collections', group_side('connections','group',false,0,((array_key_exists('abook',$a->data)) ? $a->data['abook']['abook_xchan'] : '')));
 
-	$a->set_widget('suggest',suggest_widget());
+	$a->set_widget('suggest',widget_suggestions(array()));
 	$a->set_widget('findpeople',findpeople_widget());
 
 }
