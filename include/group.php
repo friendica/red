@@ -229,7 +229,7 @@ function mini_group_select($uid,$group = '') {
 
 
 
-function group_side($every="contacts",$each="group",$edit = false, $group_id = 0, $cid = '') {
+function group_side($every="contacts",$each="group",$edit = false, $group_id = 0, $cid = '',$mode = 1) {
 
 	$o = '';
 
@@ -272,7 +272,7 @@ function group_side($every="contacts",$each="group",$edit = false, $group_id = 0
 				'cid'		=> $cid,
 				'text' 		=> $rr['name'],
 				'selected' 	=> $selected,
-				'href'		=> (($each === 'network') ? $each.'?f=&gid='.$rr['id'] : $each."/".$rr['id']),
+				'href'		=> (($mode == 0) ? $each.'?f=&gid='.$rr['id'] : $each."/".$rr['id']),
 				'edit'		=> $groupedit,
 				'ismember'	=> in_array($rr['id'],$member_of),
 			);

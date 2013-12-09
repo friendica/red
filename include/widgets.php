@@ -32,3 +32,11 @@ function widget_tagcloud($args) {
 	return $o;
 }
 
+function widget_collections($args) {
+	require_once('include/group.php');
+	$page = argv(0);
+	$gid = $_REQUEST['gid'];
+
+	return group_side($page,$page,true,$_REQUEST['gid'],'',0);
+
+}

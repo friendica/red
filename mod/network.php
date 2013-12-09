@@ -47,8 +47,8 @@ function network_init(&$a) {
 		);
 	}
 
-
-	$a->page['aside'] .= group_side('network','network',true,$_GET['gid']);
+	require_once('include/widgets.php');
+	$a->page['aside'] .= widget_collections(array());
 	$a->page['aside'] .= posted_date_widget($a->get_baseurl() . '/network',local_user(),false);	
 	$a->page['aside'] .= suggest_widget();
 
