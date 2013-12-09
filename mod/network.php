@@ -48,12 +48,12 @@ function network_init(&$a) {
 	}
 
 	require_once('include/widgets.php');
-	$a->page['aside'] .= widget_collections(array());
-	$a->page['aside'] .= posted_date_widget($a->get_baseurl() . '/network',local_user(),false);	
-	$a->page['aside'] .= suggest_widget();
 
-	$a->page['aside'] .= saved_searches($search);
-	$a->page['aside'] .= fileas_widget($a->get_baseurl(true) . '/network',(x($_GET, 'file') ? $_GET['file'] : ''));
+	$a->set_widget('collections',widget_collections(array()));
+	$a->set_widget('archives',posted_date_widget($a->get_baseurl() . '/network',local_user(),false));	
+	$a->set_widget('suggestions',suggest_widget());
+	$a->set_widget('savedsearch',saved_searches($search));
+	$a->set_widget('filer',fileas_widget($a->get_baseurl(true) . '/network',(x($_GET, 'file') ? $_GET['file'] : '')));
 
 
 	if($search) {
