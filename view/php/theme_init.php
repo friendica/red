@@ -29,7 +29,7 @@ head_add_js('library/jquery.divgrow/jquery.divgrow-1.3.1.js');
 head_add_js('library/jquery_ac/friendica.complete.js');
 head_add_js('library/tiptip/jquery.tipTip.minified.js');
 head_add_js('library/jgrowl/jquery.jgrowl_minimized.js');
-head_add_js('library/tinymce/jscripts/tiny_mce/tiny_mce_src.js');
+head_add_js('library/tinymce/jscripts/tiny_mce/tiny_mce.js');
 head_add_js('library/cryptojs/components/core-min.js');
 head_add_js('library/cryptojs/rollups/aes.js');
 head_add_js('library/cryptojs/rollups/rabbit.js');
