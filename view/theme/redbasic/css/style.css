@@ -1232,13 +1232,26 @@ a.mail-list-link {
 .groupsideedit {
 	margin-right: 10px;
 }
+
 #saved-search-ul {
 	list-style-type: none;
 }
+
+.saved-search-li i {
+	opacity: 0;
+}
+
+.saved-search-li:hover i {
+	opacity: 1;
+}
+
+/*
 .savedsearchdrop, .savedsearchterm {
 	float: left;
 	margin-top: 10px;
 }
+*/
+
 .savedsearchterm {
 	margin-left: 10px;
 }
@@ -2987,9 +3000,12 @@ img.mail-list-sender-photo {
 }
 .suggest-widget-more { margin-top: 10px; }
 
+
 #note-text {
 	width: 190px;
 	max-width: 190px;
 	height: 150px;
 }
 #note-save { margin-top: 10px; }
+
+
