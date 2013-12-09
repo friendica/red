@@ -1,3 +1,6 @@
+// Include this file and adjust as necessary for alternate icon sets which use different icon names.
+
+$(document).ready(function() {
 
 		$('.icon-smile').addClass('');
 		$('.icon-star-empty').addClass('');
@@ -47,3 +50,4 @@
 		$('.icon-check').addClass('');
 		$('.icon-globe').addClass('');
 		$('.icon-circle-blank').addClass('');
+});
