@@ -1,3 +1,4 @@
+[region=nav]$nav[/region]
 [region=aside]
 [widget=collections][/widget]
 [widget=archive][/widget]
@@ -6,3 +7,4 @@
 [widget=filer][/widget]
 [widget=notes][/widget]
 [/region]
+[region=section]$content[/region]
