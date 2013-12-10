@@ -16,15 +16,6 @@ function network_init(&$a) {
 	$channel = $a->get_channel();
 	$a->profile_uid = local_user();
 	head_set_icon($channel['xchan_photo_s']);
-		
-	require_once('include/widgets.php');
-
-	$a->set_widget('collections',widget_collections(array()));
-	$a->set_widget('archives',widget_archive(array()));
-	$a->set_widget('suggestions',widget_suggestions(array()));
-	$a->set_widget('savedsearch',widget_savedsearch(array()));
-	$a->set_widget('filer',widget_filer(array()));
-	$a->set_widget('notes',widget_notes(array()));
 
 }
 

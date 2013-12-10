@@ -1808,7 +1808,10 @@ function get_custom_nav(&$a,$navname) {
 function construct_page(&$a) {
 
 	require_once('include/comanche.php');
-	
+
+	if(file_exists('view/pdl/mod_' . $a->cmd . '.pdl'))
+		comanche_parser($a,@file_get_contents('view/pdl/mod_' . $a->cmd . '.pdl'));
+
 	$comanche = ((count($a->layout)) ? true : false);
 		
 	/**
