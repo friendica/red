@@ -152,3 +152,86 @@ function widget_notes($arr) {
 	));
 	return $o;
 }
+
+
+function widget_savedsearch($arr) {
+	if((! local_user()) || (! feature_enabled(local_user(),'savedsearch')))
+		return '';
+
+	$a = get_app();
+
+	$search = ((x($_GET,'search')) ? $_GET['search'] : '');
+
+	if(x($_GET,'searchsave') && $search) {
+		$r = q("select * from `term` where `uid` = %d and `type` = %d and `term` = '%s' limit 1",
+			intval(local_user()),
+			intval(TERM_SAVEDSEARCH),
+			dbesc($search)
+		);
+		if(! $r) {
+			q("insert into `term` ( `uid`,`type`,`term` ) values ( %d, %d, '%s') ",
+				intval(local_user()),
+				intval(TERM_SAVEDSEARCH),
+				dbesc($search)
+			);
+		}
+	}
+
+	if(x($_GET,'searchremove') && $search) {
+		q("delete from `term` where `uid` = %d and `type` = %d and `term` = '%s' limit 1",
+			intval(local_user()),
+			intval(TERM_SAVEDSEARCH),
+			dbesc($search)
+		);
+		$search = '';
+	}
+
+
+
+	$srchurl = $a->query_string;
+
+	$srchurl =  rtrim(preg_replace('/searchsave\=[^\&].*?(\&|$)/is','',$srchurl),'&');
+	$hasq = ((strpos($srchurl,'?') !== false) ? true : false);
+	$srchurl =  rtrim(preg_replace('/searchremove\=[^\&].*?(\&|$)/is','',$srchurl),'&');
+	$hasq = ((strpos($srchurl,'?') !== false) ? true : false);
+
+	$srchurl =  rtrim(preg_replace('/search\=[^\&].*?(\&|$)/is','',$srchurl),'&');
+	$hasq = ((strpos($srchurl,'?') !== false) ? true : false);
+	
+	$o = '';
+
+	$r = q("select `tid`,`term` from `term` WHERE `uid` = %d and `type` = %d ",
+		intval(local_user()),
+		intval(TERM_SAVEDSEARCH)
+	);
+
+	$saved = array();
+
+	if(count($r)) {
+		foreach($r as $rr) {
+
+			$saved[] = array(
+				'id'            => $rr['tid'],
+				'term'			=> $rr['term'],
+				'dellink'       => z_root() . '/' . $srchurl . (($hasq) ? '' : '?f=') . '&amp;searchremove=1&amp;search=' . urlencode($rr['term']),
+				'srchlink'      => z_root() . '/' . $srchurl . (($hasq) ? '' : '?f=') . '&amp;search=' . urlencode($rr['term']),
+				'displayterm'   => htmlspecialchars($rr['term']),
+				'encodedterm' 	=> urlencode($rr['term']),
+				'delete'		=> t('Remove term'),
+				'selected'		=> ($search==$rr['term']),
+			);
+		}
+	}		
+
+	
+	$tpl = get_markup_template("saved_searches.tpl");
+	$o = replace_macros($tpl, array(
+		'$title'	 => t('Saved Searches'),
+		'$add'		 => t('add'),
+		'$searchbox' => searchbox('','netsearch-box',$srchurl . (($hasq) ? '' : '?f='),true),
+		'$saved' 	 => $saved,
+	));
+	
+	return $o;
+
+}

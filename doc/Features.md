@@ -15,6 +15,10 @@ The ability to create multiple profiles which are visible only to specific perso
 
 Provides the ability to use web page design feaures and create custom webpages from your own content and also to design the pages with page layouts, custom menus, and content blocks.
 
+**Private Notes**
+
+On pages where it is available (your matrix page and personal web pages) provide a "widget" to create and store personal reminders and notes. 
+
 **Enhanced Photo Albums**
 
 Provides a photo album viewer that is a bit prettier than the normal interface.

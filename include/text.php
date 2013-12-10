@@ -741,6 +741,20 @@ function search($s,$id='search-box',$url='/search',$save = false) {
 }
 
 
+function searchbox($s,$id='search-box',$url='/search',$save = false) {
+	$a = get_app();
+	$o  = '<div id="' . $id . '">';
+	$o .= '<form action="' . z_root() . '/' . $url . '" method="get" >';
+	$o .= '<input type="hidden" name="f" value="" />';
+	$o .= '<input type="text" class="icon-search" name="search" id="search-text" placeholder="&#xf002;" value="' . $s .'" onclick="this.submit();" />';
+	$o .= '<input type="submit" name="submit" id="search-submit" value="' . t('Search') . '" />'; 
+	if(feature_enabled(local_user(),'savedsearch'))
+		$o .= '<input type="submit" name="searchsave" id="search-save" value="' . t('Save') . '" />'; 
+	$o .= '</form></div>';
+	return $o;
+}
+
+
 function valid_email($x){
 
 	if(get_config('system','disable_email_validation'))

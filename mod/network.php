@@ -24,7 +24,7 @@ function network_init(&$a) {
 	$search = ((x($_GET,'search')) ? $_GET['search'] : '');
 	
 
-
+/*
 	if(x($_GET,'save') && $search) {
 		$r = q("select * from `term` where `uid` = %d and `type` = %d and `term` = '%s' limit 1",
 			intval(local_user()),
@@ -46,13 +46,13 @@ function network_init(&$a) {
 			dbesc($search)
 		);
 	}
-
+*/
 	require_once('include/widgets.php');
 
 	$a->set_widget('collections',widget_collections(array()));
 	$a->set_widget('archives',posted_date_widget($a->get_baseurl() . '/network',local_user(),false));	
 	$a->set_widget('suggestions',widget_suggestions(array()));
-	$a->set_widget('savedsearch',saved_searches($search));
+	$a->set_widget('savedsearch',widget_savedsearch(array()));
 	$a->set_widget('filer',fileas_widget($a->get_baseurl(true) . '/network',(x($_GET, 'file') ? $_GET['file'] : '')));
 	$a->set_widget('notes',widget_notes(array()));
 
