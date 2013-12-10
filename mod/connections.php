@@ -42,9 +42,9 @@ function connections_aside(&$a) {
 	}
 	else {
 		$a->set_widget('follow', widget_follow(array()));
+		$a->set_widget('collections', group_side('connections','group',false,0,((array_key_exists('abook',$a->data)) ? $a->data['abook']['abook_xchan'] : '')));
 	}
 
-	$a->set_widget('collections', group_side('connections','group',false,0,((array_key_exists('abook',$a->data)) ? $a->data['abook']['abook_xchan'] : '')));
 
 	$a->set_widget('suggest',widget_suggestions(array()));
 	$a->set_widget('findpeople',findpeople_widget());
