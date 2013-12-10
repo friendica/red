@@ -16,46 +16,34 @@ function network_init(&$a) {
 	$channel = $a->get_channel();
 	$a->profile_uid = local_user();
 	head_set_icon($channel['xchan_photo_s']);
-	
-    
-	if(! x($a->page,'aside'))
-		$a->page['aside'] = '';
-
-	$search = ((x($_GET,'search')) ? $_GET['search'] : '');
-	
-
-/*
-	if(x($_GET,'save') && $search) {
-		$r = q("select * from `term` where `uid` = %d and `type` = %d and `term` = '%s' limit 1",
-			intval(local_user()),
-			intval(TERM_SAVEDSEARCH),
-			dbesc($search)
-		);
-		if(! count($r)) {
-			q("insert into `term` ( `uid`,`type`,`term` ) values ( %d, %d, '%s') ",
-				intval(local_user()),
-				intval(TERM_SAVEDSEARCH),
-				dbesc($search)
-			);
-		}
-	}
-	if(x($_GET,'remove')) {
-		q("delete from `term` where `uid` = %d and `type` = %d and `term` = '%s' limit 1",
-			intval(local_user()),
-			intval(TERM_SAVEDSEARCH),
-			dbesc($search)
-		);
-	}
-*/
+		
 	require_once('include/widgets.php');
 
 	$a->set_widget('collections',widget_collections(array()));
-	$a->set_widget('archives',posted_date_widget($a->get_baseurl() . '/network',local_user(),false));	
+	$a->set_widget('archives',widget_archive(array()));
 	$a->set_widget('suggestions',widget_suggestions(array()));
 	$a->set_widget('savedsearch',widget_savedsearch(array()));
-	$a->set_widget('filer',fileas_widget($a->get_baseurl(true) . '/network',(x($_GET, 'file') ? $_GET['file'] : '')));
+	$a->set_widget('filer',widget_filer(array()));
 	$a->set_widget('notes',widget_notes(array()));
 
+}
+
+function network_content(&$a, $update = 0, $load = false) {
+
+
+	if(! local_user()) {
+		$_SESSION['return_url'] = $a->query_string;
+    	return login(false);
+	}
+
+
+	$arr = array('query' => $a->query_string);
+
+	call_hooks('network_content_init', $arr);
+
+	$channel = $a->get_channel();
+
+	$search = (($_GET['search']) ? $_GET['search'] : '');
 	if($search) {
 		if(strpos($search,'@') === 0) {
 			$r = q("select abook_id from abook left join xchan on abook_xchan = xchan_hash where xchan_name = '%s' and abook_channel = %d limit 1",
@@ -72,80 +60,7 @@ function network_init(&$a) {
 		}
 	}
 
-	$group_id = ((x($_GET,'gid')) ? intval($_GET['gid']) : 0);
 
-
-
-
-}
-
-function saved_searches($search) {
-
-	if(! feature_enabled(local_user(),'savedsearch'))
-		return '';
-
-	$a = get_app();
-
-	$srchurl = '/network?f=' 
-		. ((x($_GET,'cid'))   ? '&cid='   . $_GET['cid']   : '') 
-		. ((x($_GET,'star'))  ? '&star='  . $_GET['star']  : '')
-		. ((x($_GET,'conv'))  ? '&conv='  . $_GET['conv']  : '')
-		. ((x($_GET,'cmin'))  ? '&cmin='  . $_GET['cmin']  : '')
-		. ((x($_GET,'cmax'))  ? '&cmax='  . $_GET['cmax']  : '')
-		. ((x($_GET,'file'))  ? '&file='  . $_GET['file']  : '');
-	;
-	
-	$o = '';
-
-	$r = q("select `tid`,`term` from `term` WHERE `uid` = %d and `type` = %d ",
-		intval(local_user()),
-		intval(TERM_SAVEDSEARCH)
-	);
-
-	$saved = array();
-
-	if(count($r)) {
-		foreach($r as $rr) {
-			$saved[] = array(
-				'id'            => $rr['tid'],
-				'term'			=> $rr['term'],
-				'displayterm'   => htmlspecialchars($rr['term']),
-				'encodedterm' 	=> urlencode($rr['term']),
-				'delete'		=> t('Remove term'),
-				'selected'		=> ($search==$rr['term']),
-			);
-		}
-	}		
-
-	
-	$tpl = get_markup_template("saved_searches_aside.tpl");
-	$o = replace_macros($tpl, array(
-		'$title'	 => t('Saved Searches'),
-		'$add'		 => t('add'),
-		'$searchbox' => search('','netsearch-box',$srchurl,true),
-		'$saved' 	 => $saved,
-	));
-	
-	return $o;
-
-}
-
-
-
-function network_content(&$a, $update = 0, $load = false) {
-
-
-	if(! local_user()) {
-		$_SESSION['return_url'] = $a->query_string;
-    	return login(false);
-	}
-
-
-	$arr = array('query' => $a->query_string);
-
-	call_hooks('network_content_init', $arr);
-
-	$channel = $a->get_channel();
 
 	$datequery = $datequery2 = '';
 
@@ -229,7 +144,9 @@ function network_content(&$a, $update = 0, $load = false) {
 
 		// --- end item filter tabs
 
-		$search = (($_GET['search']) ? $_GET['search'] : '');
+
+
+
 		// search terms header
 		if($search)
 			$o .= '<h2>' . t('Search Results For:') . ' '  . htmlspecialchars($search) . '</h2>';

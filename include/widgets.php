@@ -231,7 +231,72 @@ function widget_savedsearch($arr) {
 		'$searchbox' => searchbox('','netsearch-box',$srchurl . (($hasq) ? '' : '?f='),true),
 		'$saved' 	 => $saved,
 	));
-	
+
 	return $o;
 
 }
+
+
+function widget_filer($arr) {
+	if(! local_user())
+		return '';
+
+	$a = get_app();
+
+	$selected = ((x($_REQUEST,'file')) ? $_REQUEST['file'] : '');
+
+	$terms = array();
+	$r = q("select distinct(term) from term where uid = %d and type = %d order by term asc",
+		intval(local_user()),
+		intval(TERM_FILE)
+	);
+	if(! $r)
+		return;
+
+	foreach($r as $rr)
+		$terms[] = array('name' => $rr['term'], 'selected' => (($selected == $rr['term']) ? 'selected' : ''));
+
+	return replace_macros(get_markup_template('fileas_widget.tpl'),array(
+		'$title' => t('Saved Folders'),
+		'$desc' => '',
+		'$sel_all' => (($selected == '') ? 'selected' : ''),
+		'$all' => t('Everything'),
+		'$terms' => $terms,
+		'$base' => z_root() . '/' . $a->cmd
+
+	));
+}
+
+function widget_archive($arr) {
+
+	$o = '';
+	$a = get_app();
+
+	if(! $a->profile_uid) {
+		return '';
+	}
+
+	$uid = $a->profile_uid;
+
+	if(! feature_enabled($uid,'archives'))
+		return '';
+
+
+	$wall = ((array_key_exists('wall', $arr)) ? intval($arr['wall']) : 0);
+	$url = z_root() . '/' . $a->cmd;
+
+	$ret = posted_dates($uid,$wall);
+
+	if(! count($ret))
+		return '';
+
+	$o = replace_macros(get_markup_template('posted_date_widget.tpl'),array(
+		'$title' => t('Archives'),
+		'$size' => ((count($ret) > 6) ? 6 : count($ret)),
+		'$url' => $url,
+		'$dates' => $ret
+	));
+	return $o;
+}
+
+
