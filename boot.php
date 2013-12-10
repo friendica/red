@@ -1809,8 +1809,8 @@ function construct_page(&$a) {
 
 	require_once('include/comanche.php');
 
-	if(file_exists('view/pdl/mod_' . $a->cmd . '.pdl'))
-		comanche_parser($a,@file_get_contents('view/pdl/mod_' . $a->cmd . '.pdl'));
+	if(($p = theme_include('mod_' . $a->module . '.pdl')) != '')
+		comanche_parser($a,@file_get_contents($p));
 
 	$comanche = ((count($a->layout)) ? true : false);
 		
