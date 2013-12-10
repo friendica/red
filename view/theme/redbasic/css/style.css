@@ -576,61 +576,6 @@ footer {
 }
 
 
-#contacts-main {
-	margin-top: 20px;
-	margin-bottom: 20px;
-}
-
-.contact-entry-wrapper {
-	float: left;
-	width: 120px;
-	height: 120px;
-	padding: 10px;
-}
-
-#contacts-search {
-	font-size: 1em;
-	width: 300px;
-}
-
-#contacts-search-end {
-	margin-bottom: 10px;
-}
-
-.contact-entry-photo img {
-	border: none;
-}
-.contact-entry-photo-end {
-	clear: both;
-}
-.contact-entry-name {
-	float: left;
-	margin-left: 0px;
-	margin-right: 10px;
-	width: 120px;
-	overflow: hidden;
-}
-.contact-entry-edit-links {
-	margin-top: 6px;
-	margin-left: 10px;
-	width: 16px;
-}
-.contact-entry-nav-wrapper {
-	float: left;
-	margin-left: 10px;
-}
-
-.contact-entry-edit-links img {
-	border: none;
-	margin-right: 15px;
-}
-.contact-entry-photo {
-	float: left;
-	position: relative;
-}
-.contact-entry-end {
-	clear: both;
-}
 
 #fsuggest-desc, #fsuggest-submit-wrapper {
 	margin-top: 15px;
@@ -714,44 +659,8 @@ footer {
 }
 
 
-.directory-end {
-	clear: both;
-}
-.directory-name {
-	text-align: center;
-}
-.directory-photo {
-	margin-left: 25px;
-}
 .directory-details {
 	font-size: 0.7em;
-	text-align: center;
-	margin-left: 5px;
-	margin-right: 5px;
-}
-.directory-item {
-	float: left;
-	width: 225px;
-	height: 260px;
-	overflow: hidden;
-	margin: 2px;
-}
-
-#directory-search-wrapper {
-	margin-top: 20px;
-	margin-right: 20px;
-	margin-bottom: 50px;
-}
-
-#directory-search-end {
-}
-
-.directory-photo-img {
-	border: none;
-}
-
-div.dirtagblock.widget {
-  overflow: hidden;
 }
 
 .pager {
@@ -784,72 +693,6 @@ div.dirtagblock.widget {
   background: #FFCCCC;
   padding: 4px;
 }
-
-
-#contact-edit-wrapper {
-	margin-top: 10px;
-}
-
-#contact-edit-banner-name {
-	font-size: 1.4em;
-	font-weight: bold;
-}
-
-#contact-edit-poll-wrapper {
-	margin-top: 15px;
-}
-
-#contact-edit-poll-text {
-	margin-top: 15px;
-	margin-bottom: 5px;
-}
-
-#contact-edit-update-now {
-	margin-top: 15px;
-}
-
-#contact-edit-links{
-	clear: both;
-}
-
-#contact-edit-links ul {
-	list-style: none;
-	list-style-type: none;
-	margin-left: 0px;
-	padding-left: 0px;
-}
-
-#contact-edit-links li {
-	margin-top: 5px;
-}
-
-#contact-edit-drop-link {
-	float: right;
-	margin-right: 20px;
-}
-
-#contact-edit-nav-end {
-	clear: both;
-}
-
-#contact-edit-wrapper {
-	width: 100%;
-}
-
-#contact-edit-end {
-	clear: both;
-	margin-top: 15px;
-}
-
-#contact-profile-selector {
-	width: 175px;
-	margin-left: 175px;
-}
-
-.contact-edit-submit {
-	margin-top: 20px;
-}
-
 
 #block-message, #ignore-message, #archive-message, #lost-contact-message {
 	color: #FF0000;
@@ -944,8 +787,6 @@ tr.mceLast {
     margin-left: 5px;
 }
 
-/*TODO - there appears to be significant redundancy here */
-
 .photo {
     border: 1px solid #AAAAAA;
 }
@@ -957,103 +798,13 @@ tr.mceLast {
 }
 
 
-.photos-end {
-	clear: both;
-	margin-bottom: 25px;
-}
-
-.photo-album-image-wrapper {
-	float: left;
-	margin-top: 15px;
-	margin-right: 15px;
-	margin-left: 15px;
-}
 .photo-album-image-wrapper .caption {
-	display: none; 
- 	width: 100%;
- 	bottom: 0px; 
- 	padding: 0.5em 0.5em 0px 0.5em;
  	background-color: rgba(245, 245, 255, 0.8);
  	border-bottom: 2px solid #CCC;
- 	margin: 0px;
-}
-.photo-album-image-wrapper a:hover .caption {
-	display:block;
 }
 
-#photo-album-end {
-	clear: both;
-	margin-bottom: 25px;
-}
-
-.photo-top-image-wrapper {
-	float: left;
-	margin-top: 15px;
-	margin-right: 15px;
-	margin-left: 15px;
-	margin-bottom: 15px;
-}
 .photo-top-album-name {
- 	width: 100%;
- 	min-height: 2em;
- 	bottom: 0px; 
- 	padding: 0px 3px;
- 	padding-top: 0.5em;
  	background-color: rgb(255, 255, 255);
-}
-#photo-top-end {
-	clear: both;
-}
-
-#photo-top-links {
-	margin-bottom: 30px;
-	margin-left: 30px;
-}
-
-#photos-upload-newalbum-div {
-	float: left;
-	width: 175px;
-}
-
-#photos-upload-noshare {
-	margin-bottom: 10px;
-}
-#photos-upload-existing-album-text {
-	float: left;
-	width: 175px;
-}
-#photos-upload-newalbum {
-	float: left;
-}
-#photos-upload-album-select {
-	float: left;
-}
-
-#photos-upload-spacer {
-	margin-top: 25px;
-}
-#photos-upload-new-end, #photos-upload-exist-end {
-	clear: both;
-}
-#photos-upload-exist-end {
-	margin-bottom: 15px;
-}
-#photos-upload-submit {
-	margin-top: 15px;
-}
-
-#photos_upload_applet_wrapper {
-	margin-bottom: 15px;
-}
-
-#photos-upload-no-java-message {
-	margin-bottom: 15px;
-}
-
-
-#photos-upload-select-files-text {
-	margin-top: 15px;
-	margin-bottom: 15px;
 }
 
 #photos-upload-perms-menu, #photos-upload-perms-menu:visited, #photos-upload-perms-menu:link {
@@ -1068,126 +819,16 @@ tr.mceLast {
 	cursor: pointer;
 }
 
-
-#photo-edit-caption-label, #photo-edit-tags-label, #photo-edit-albumname-label, #photo-edit-rotate-label {
-	float: left;
-	width: 150px;
-}
-
-#photo-edit-perms-end {
-	margin-bottom: 15px;
-}
-
-#photo-edit-caption, #photo-edit-newtag, #photo-edit-albumname, #photo-edit-rotate {
-	float: left;
-	margin-bottom: 25px;
-}
-#photo-edit-link-wrap {
-	margin-bottom: 15px;
-}
-#photo-like-div {
-	margin-bottom: 25px;
-}
-
-#photo-edit-caption-end, #photo-edit-tags-end, #photo-edit-albumname-end, #photo-edit-rotate-end {
-	clear: both;
-}
-
-#photo-edit-rotate-end {
-	margin-bottom: 15px;
-}
-
-#photo-edit-delete-button {
-	margin-left: 200px;
-}
-#photo-edit-end {
-	margin-bottom: 35px;
-}
 #photo-caption {
 	font-size: 110%;
 	font-weight: bold;
-	margin-top: 15px;
-	margin-bottom: 15px;
 }
 
 #in-this-photo-text {
 	color: #0080FF;
-	margin-left: 30px;
 }
 
-#in-this-photo {
-	margin-left: 60px;
-	margin-top: 10px;
-	margin-bottom: 20px;
-}
-
-#photo-album-edit-submit, #photo-album-edit-drop {
-	margin-top: 15px;
-	margin-bottom: 15px;
-}
-
-#photo-album-edit-drop {
-	margin-left: 200px;
-}
-
-/* might be obsolete
-.mail-list-sender,
-.mail-list-detail {
-	float: left;
-}
-.mail-list-detail {
-	margin-left: 20px;
-}
-
-.mail-list-subject {
-	font-size: 1.1em;
-	margin-top: 10px;
-}
-a.mail-list-link {
-	font-weight: normal;
-    display: block;
-    font-size: 1.3em;
-    padding: 4px 0;
-}
-
-.mail-list-outside-wrapper-end {
-	clear: both;
-}
-
-.mail-list-outside-wrapper {
-	margin-top: 30px;
-}
-
-.mail-list-delete-wrapper {
-	float: right;
-	margin-right: 30px;
-	margin-top: 15px;
-}
-
-.mail-list-delete-icon {
-	border: none;
-}
-*/
-
-
-/* might be obsolete
-.message-links ul {
-	list-style-type: none;
-	padding: 0px;
-}
-
-.message-links li {
-	margin-top: 10px;
-	float: left;
-}
-.message-links a {
-	padding: 3px 5px;
-}
-
-.message-links-end {
-	clear: both;
-}
-*/
+#netsearch-box { margin-bottom: 5px; }
 
 #sidebar-group-list ul {
 	list-style-type: none;
@@ -1199,9 +840,11 @@ a.mail-list-link {
 	width: 12px;
 }
 
-#sidebar-group-list li {
-	margin-top: 10px;
+#sidebar-group-list li, 
+.saved-search-li {
+	margin-top: 3px;
 }
+
 
 .nets-ul, .fileas-ul, .categories-ul {
 	list-style-type: none;
@@ -1245,12 +888,7 @@ a.mail-list-link {
 	opacity: 1;
 }
 
-/*
-.savedsearchdrop, .savedsearchterm {
-	float: left;
-	margin-top: 10px;
-}
-*/
+
 
 .savedsearchterm {
 	margin-left: 10px;

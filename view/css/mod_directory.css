@@ -1,0 +1,39 @@
+
+.directory-end {
+	clear: both;
+}
+.directory-name {
+	text-align: center;
+}
+.directory-photo {
+	margin-left: 25px;
+}
+.directory-details {
+	text-align: center;
+	margin-left: 5px;
+	margin-right: 5px;
+}
+.directory-item {
+	float: left;
+	width: 225px;
+	height: 260px;
+	overflow: hidden;
+	margin: 2px;
+}
+
+#directory-search-wrapper {
+	margin-top: 20px;
+	margin-right: 20px;
+	margin-bottom: 50px;
+}
+
+#directory-search-end {
+}
+
+.directory-photo-img {
+	border: none;
+}
+
+div.dirtagblock.widget {
+  overflow: hidden;
+}
