@@ -586,39 +586,6 @@ footer {
     margin-left: 50px;
 }
 
-
-
-/* might be obsolete
-#profile-youtube-wrapper {
-	float: left;
-	margin-left: 15px;
-}
-
-#profile-title-wrapper {
-	float: left;
-	margin-left: 15px;
-}
-
-#profile-jot-plugin-end{
-  clear: both;
-}
-
-#profile-jot-networks-end {
-	clear: both;
-}
-
-#about-jot-submit-wrapper {
-	margin-top: 15px;
-}
-#about-jot-end {
-	margin-bottom: 30px;
-}
-*/
-
-#contacts-main {
-	margin-bottom: 30px;
-}
-
 #profile-listing-desc {
 	margin-left: 30px;
 }
@@ -697,36 +664,6 @@ footer {
 #block-message, #ignore-message, #archive-message, #lost-contact-message {
 	color: #FF0000;
 }
-
-#profile-edit-insecure {
-	margin-top: 20px;
-	color: #FF0000;
-	font-size: 1.1em;
-	border: 1px solid #FF8888;
-	background-color: #FFEEEE;
-	padding-left: 5px;
-	/*: 3px 3px 3px 5px; */
-	width: 587px;
-}
-
-/* TinyMCE */
-
-/* TODO: this should, if needed at all, probably go to custom_tinymce.css
-
-DIV#profile-jot-text_toolbargroup{
-background: #FFF;
-border: 1px #111;
-}
-
-
-iframe#profile-jot-text_ifr {
-width: 100% !important;
-box-shadow: 5px 5px 5px #000 inset !important;}
-
-tr.mceLast {
-
-}
-*/
 
 .photo, .contact-block-img {
     border-radius: $radiuspx;
@@ -1112,11 +1049,6 @@ tr.mceLast {
 	clear: both;
 }
 
-.cc-license {
-	margin-top: 50px;
-	font-size: 70%;
-}
-
 .descriptive-text {
 	color: #888;
 }
@@ -1267,19 +1199,6 @@ tr.mceLast {
 	margin-top: 20px;
 }
 
-#photo-prev-link, #photo-next-link {
-	padding: 10px;
-	float: left;
-}
-
-#photo-photo {
-	float: left;
-}
-
-#photo-photo-end {
-	clear: both;
-}
-
 .profile-match-photo {
 	float: left;
 	text-align: center;
@@ -1287,7 +1206,6 @@ tr.mceLast {
 }
 
 .profile-match-name {
-/*	float: left; */
 	text-align: center;
 	width: 120px;
 	height: 18px;
@@ -1431,22 +1349,6 @@ tr.mceLast {
 #event-submit {
 	margin-top: 10px;
 }
-
-/* might be obsolete
-.posttags {
-	opacity: 0.5;
-	filter:alpha(opacity=50);
-}
-
-.posttags {
-	opacity: 1.0 !important;
-	filter:alpha(opacity=100) !important;
-}
-
-.posttags {
-	margin-top: 15px;
-}
-*/
 
 #item-delete-selected {
 	margin-top: 30px;

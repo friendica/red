@@ -11,6 +11,19 @@
 	margin-bottom: 25px;
 }
 
+#photo-prev-link, #photo-next-link {
+	padding: 10px;
+	float: left;
+}
+
+#photo-photo {
+	float: left;
+}
+
+#photo-photo-end {
+	clear: both;
+}
+
 .photo-album-image-wrapper {
 	float: left;
 	margin-top: 15px;
