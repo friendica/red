@@ -140,6 +140,9 @@ function widget_follow($args) {
 function widget_notes($arr) {
 	if(! local_user())
 		return '';
+	if(! feature_enabled(local_user(),'private_notes'))
+		return '';
+
 	$text = htmlspecialchars(get_pconfig(local_user(),'notes','text'));
 
 	$o = replace_macros(get_markup_template('notes.tpl'), array(
