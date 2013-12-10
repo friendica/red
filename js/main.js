@@ -527,7 +527,7 @@ function updateConvItems(mode,data) {
 	/* autocomplete @nicknames */
 	$(".comment-edit-form  textarea").contact_autocomplete(baseurl+"/acl");
 	
-	var bimgs = $(".wall-item-body > img").not(function() { return this.complete; });
+	var bimgs = $(".wall-item-body img").not(function() { return this.complete; });
 	var bimgcount = bimgs.length;
 
 	if (bimgcount) {
