@@ -655,6 +655,7 @@ function profile_sidebar($profile, $block = 0, $show_connect = true) {
 		}
 	}
 
+
 	if((x($profile,'address') == 1)
 		|| (x($profile,'locality') == 1)
 		|| (x($profile,'region') == 1)
@@ -665,6 +666,10 @@ function profile_sidebar($profile, $block = 0, $show_connect = true) {
 	$gender   = ((x($profile,'gender')   == 1) ? t('Gender:')   : False);
 	$marital  = ((x($profile,'marital')  == 1) ? t('Status:')   : False);
 	$homepage = ((x($profile,'homepage') == 1) ? t('Homepage:') : False);
+
+	if(! perm_is_allowed($profile['uid'],((is_array($observer)) ? $observer['xchan_hash'] : ''),'view_profile')) {
+		$block = true;
+	}
 
 	if(($profile['hidewall'] || $block) && (! local_user()) && (! remote_user())) {
 		$location = $pdesc = $gender = $marital = $homepage = False;
@@ -688,7 +693,7 @@ function profile_sidebar($profile, $block = 0, $show_connect = true) {
 			$channel_menu = menu_render($m);
 	}
 	$menublock = get_pconfig($profile['uid'],'system','channel_menublock');
-	if ($menublock) {
+	if ($menublock && (! $block)) {
 		require_once('include/comanche.php');
 		$channel_menu .= comanche_block($menublock);
 	}

@@ -146,17 +146,6 @@ function profiles_init(&$a) {
 	}
 }
 
-function profiles_aside(&$a) {
-
-	if(! local_user()) {
-		return;
-	}
-
-	if((argc() > 1) && (intval(argv(1)))) {
-		profile_create_sidebar($a);
-	}
-}
-
 function profiles_post(&$a) {
 
 	if(! local_user()) {

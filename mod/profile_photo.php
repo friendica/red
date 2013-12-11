@@ -14,16 +14,6 @@ function profile_photo_init(&$a) {
 }
 
 
-function profile_photo_aside(&$a) {
-
-	if(! local_user()) {
-		return;
-	}
-
-	profile_create_sidebar($a);
-}
-
-
 function profile_photo_post(&$a) {
 
 	if(! local_user()) {

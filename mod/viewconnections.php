@@ -11,17 +11,6 @@ function viewconnections_init(&$a) {
 		profile_load($a,argv(1));
 }
 
-
-function viewconnections_aside(&$a) {
-
-	if((get_config('system','block_public')) && (! local_user()) && (! remote_user())) {
-		return;
-	}
-
-	profile_create_sidebar($a);
-}
-
-
 function viewconnections_content(&$a) {
 
 	if((get_config('system','block_public')) && (! local_user()) && (! remote_user())) {
