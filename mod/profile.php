@@ -43,21 +43,11 @@ function profile_init(&$a) {
 			$a->profile = $x[0];
 		}
 	}
-//		$channel_display = get_pconfig($a->profile['profile_uid'],'system','channel_format');
-//		if(! $channel_display)
+
 	profile_load($a,$which,$profile);
 
 
 }
-
-
-function profile_aside(&$a) {
-
-
-	profile_create_sidebar($a);
-
-}
-
 
 function profile_content(&$a, $update = 0) {
 
@@ -65,50 +55,20 @@ function profile_content(&$a, $update = 0) {
 			return login();
 	}
 
-
-
 	$groups = array();
 
 	$tab = 'profile';
 	$o = '';
 
-
-	$contact = null;
-	$remote_contact = false;
-
-	$contact_id = 0;
-
-	if(is_array($_SESSION['remote'])) {
-		foreach($_SESSION['remote'] as $v) {
-			if($v['uid'] == $a->profile['profile_uid']) {
-				$contact_id = $v['cid'];
-				break;
-			}
-		}
+	if(! (perm_is_allowed($a->profile['profile_uid'],get_observer_hash(), 'view_profile'))) {
+		notice( t('Access to this profile has been restricted.') . EOL);
+		return;
 	}
 
-	if($contact_id) {
-		$groups = init_groups_visitor($contact_id);
-		$r = q("SELECT * FROM `contact` WHERE `id` = %d AND `uid` = %d LIMIT 1",
-			intval($contact_id),
-			intval($a->profile['profile_uid'])
-		);
-		if(count($r)) {
-			$contact = $r[0];
-			$remote_contact = true;
-		}
-	}
-
-	if(! $remote_contact) {
-		if(local_user()) {
-			$contact_id = $_SESSION['cid'];
-			$contact = $a->contact;
-		}
-	}
 
 	$is_owner = ((local_user()) && (local_user() == $a->profile['profile_uid']) ? true : false);
 
-	if($a->profile['hidewall'] && (! $is_owner) && (! $remote_contact)) {
+	if($a->profile['hidewall'] && (! $is_owner) && (! remote_user())) {
 		notice( t('Access to this profile has been restricted.') . EOL);
 		return;
 	}

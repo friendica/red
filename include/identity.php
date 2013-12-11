@@ -868,6 +868,9 @@ function profile_sidebar($profile, $block = 0, $show_connect = true) {
 
 function advanced_profile(&$a) {
 
+	if(! perm_is_allowed($a->profile['profile_uid'],get_observer_hash(),'view_profile'))
+		return '';
+
 	$o = '';
 
 	$o .= '<h2>' . t('Profile') . '</h2>';
