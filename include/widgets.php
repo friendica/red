@@ -57,6 +57,9 @@ function widget_collections($args) {
 
 function widget_suggestions($arr) {
 
+	if((! local_user()) || (! feature_enabled(local_user(),'suggest')))
+		return '';
+
 	require_once('include/socgraph.php');
 
 	$r = suggestion_query(local_user(),get_observer_hash(),0,20);
