@@ -1049,7 +1049,10 @@ function fix_attached_photo_permissions($uid,$xchan_hash,$body,
 				if(! stristr($image,get_app()->get_baseurl() . '/photo/'))
 					continue;
 				$image_uri = substr($image,strrpos($image,'/') + 1);
-				$image_uri = substr($image_uri,0, strpos($image_uri,'-'));
+				if(strpos($image_uri,'-') !== false)
+					$image_uri = substr($image_uri,0, strpos($image_uri,'-'));
+				if(strpos($image_uri,'.') !== false)
+					$image_uri = substr($image_uri,0, strpos($image_uri,'.'));
 				if(! strlen($image_uri))
 					continue;
 				$srch = '<' . $xchan_hash . '>';
