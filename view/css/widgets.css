@@ -1,0 +1,98 @@
+.widget {
+	padding: 8px;
+	margin-top: 5px;
+}
+
+/* suggest */
+
+.suggest-widget-more {
+	margin-top: 10px;
+}
+
+/* follow */
+
+#side-follow-url {
+	margin-top: 5px;
+}
+
+#side-follow-submit {
+	margin-top: 15px;
+}
+
+/* notes */ 
+
+#note-text {
+	width: 190px;
+	max-width: 190px;
+	height: 150px;
+}
+
+#note-save {
+	margin-top: 10px;
+}
+
+/* saved searches */
+
+.saved-search-li {
+	margin-top: 3px;
+}
+
+.saved-search-li i {
+	opacity: 0;
+}
+
+.saved-search-li:hover i {
+	opacity: 1;
+}
+
+.savedsearchdrop {
+	opacity: 0;
+}
+
+/* fileas */
+
+.fileas-ul li {
+	margin-top: 10px;
+}
+
+.fileas-link {
+	margin-left: 24px;
+}
+
+.fileas-all {
+	margin-left: 0px;
+}
+
+/* posted date */
+
+#datebrowse-sidebar select {
+	margin-left: 25px;
+	opacity: 0.3;
+	filter:alpha(opacity=30);
+}
+
+#datebrowse-sidebar select:hover {
+	opacity: 1.0;
+	filter:alpha(opacity=100);
+}
+
+#posted-date-selector {
+	margin-left: 30px !important;
+	margin-top: 5px !important;
+	margin-right: 0px !important;
+	margin-bottom: 0px !important;
+}
+
+/* categories */
+
+.categories-ul li {
+	margin-top: 10px;
+}
+
+.categories-link {
+	margin-left: 24px;
+}
+
+.categories-all {
+	margin-left: 0px;
+}

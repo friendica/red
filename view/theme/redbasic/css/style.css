@@ -331,7 +331,8 @@ footer {
 	margin-bottom: 10px;
 }
 
-.group-selected, .nets-selected, .fileas-selected, .categories-selected, .search-selected, .active {
+/*TODO: we should use .active class for all this, nets-selected probably obsolete */
+.group-selected, /* .nets-selected, */ .fileas-selected, .categories-selected, .search-selected, .active {
 	color: #444444 !important;
 }
 
@@ -671,36 +672,6 @@ footer {
     box-shadow: $shadowpx $shadowpx $shadowpx 0 #444444;
 }
 
-
-#datebrowse-sidebar select {
-    margin-left: 25px;
-    border-radius: $radiuspx;
-    -moz-border-radius: $radiuspx;
-    opacity: 0.3;
-    filter:alpha(opacity=30);
-}
-
-#datebrowse-sidebar select:hover {
-    opacity: 1.0;
-    filter:alpha(opacity=100);
-}
-
-#posted-date-selector {
-    margin-left: 30px !important;
-    margin-top: 5px !important;
-    margin-right: 0px !important;
-    margin-bottom: 0px !important;
-}
-
-#posted-date-selector:hover {
-    box-shadow: 4px 4px 3px 0 #444444;
-    margin-left: 25px !important;
-    margin-top: 0px !important;
-    margin-right: 5px !important;
-    margin-bottom: 5px !important;
-
-}
-
 #side-bar-photos-albums {
 	margin-top: 15px;
 }
@@ -777,17 +748,16 @@ footer {
 	width: 12px;
 }
 
-#sidebar-group-list li, 
-.saved-search-li {
+#sidebar-group-list li {
 	margin-top: 3px;
 }
 
-
-.nets-ul, .fileas-ul, .categories-ul {
+/* might be obsolete
+.nets-ul {
 	list-style-type: none;
 }
 
-.nets-ul li, .fileas-ul li, .categories-ul li {
+.nets-ul li {
 	margin-top: 10px;
 }
 
@@ -797,14 +767,7 @@ footer {
 .nets-all {
 	margin-left: 42px;
 }
-
-.fileas-link, .categories-link {
-	margin-left: 24px;
-}
-
-.fileas-all, .categories-all {
-	margin-left: 0px;
-}
+*/
 
 #search-save {
 	margin-left: 5px;
@@ -812,20 +775,6 @@ footer {
 .groupsideedit {
 	margin-right: 10px;
 }
-
-#saved-search-ul {
-	list-style-type: none;
-}
-
-.saved-search-li i {
-	opacity: 0;
-}
-
-.saved-search-li:hover i {
-	opacity: 1;
-}
-
-
 
 .savedsearchterm {
 	margin-left: 10px;
@@ -835,7 +784,8 @@ footer {
 #side-follow-wrapper {
 	margin-top: 20px;
 }
-#side-follow-url, #side-peoplefind-url {
+
+#side-peoplefind-url {
 	margin-top: 5px;
 }
 
@@ -851,7 +801,7 @@ footer {
 	font-family: FontAwesome;
 }
 
-#side-follow-submit, #side-peoplefind-submit {
+#side-peoplefind-submit {
 	margin-top: 15px;
 }
 
@@ -860,7 +810,7 @@ footer {
 }
 
 
-.widget, .pmenu {
+.pmenu {
 	border-bottom: 1px solid #eec;
 	padding: 8px;
 	margin-top: 5px;
@@ -1679,12 +1629,6 @@ div.jGrowl div.info {
 	text-overflow: ellipsis;
 }
 
-#datebrowse-sidebar select {
-	margin-left: 25px;
-}
-
-
-
 .jslider .jslider-scale ins {
     color: #333;
 	font-size: $body_font_size;
@@ -2255,8 +2199,7 @@ text-decoration: none;
 	list-style-type: none;
 }
 
-.group-edit-icon,
-.savedsearchdrop {
+.group-edit-icon {
 	opacity: 0;
 }
 
@@ -2395,8 +2338,6 @@ img.mail-list-sender-photo {
 	max-width: $converse_width;
 }
 
-/* conv_item */
-
 .wall-item-content-wrapper {
 	border-radius: $radiuspx;
 	background-color: $item_colour;
@@ -2500,8 +2441,6 @@ img.mail-list-sender-photo {
 	color: $toolicon_colour;
 }
 
-/* comment_item */
-
 .my-comment-photo {
     border-radius: $radiuspx;
     -moz-border-radius: $radiuspx;
@@ -2538,14 +2477,29 @@ img.mail-list-sender-photo {
 .comment-edit-text-full {
 	color: black;
 }
-.suggest-widget-more { margin-top: 10px; }
 
+/* widgets */
 
-#note-text {
-	width: 190px;
-	max-width: 190px;
-	height: 150px;
+.widget {
+	border-bottom: 1px solid #eec;
+	-moz-border-radius: $radiuspx;
+	-webkit-border-radius: $radiuspx;
+	border-radius: $radiuspx;
 }
-#note-save { margin-top: 10px; }
 
+#saved-search-ul {
+	list-style-type: none;
+}
 
+.fileas-ul {
+	list-style-type: none;
+}
+
+#datebrowse-sidebar select {
+	border-radius: $radiuspx;
+	-moz-border-radius: $radiuspx;
+}
+
+.categories-ul {
+	list-style-type: none;
+}
