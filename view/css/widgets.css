@@ -45,6 +45,10 @@
 	opacity: 1;
 }
 
+.savedsearchterm {
+	margin-left: 10px;
+}
+
 .savedsearchdrop {
 	opacity: 0;
 }
@@ -83,4 +87,28 @@
 
 .categories-all {
 	margin-left: 0px;
+}
+
+/* group */
+
+#group-sidebar {
+	margin-bottom: 10px;
+}
+
+#sidebar-group-list .icon, #sidebar-group-list .iconspacer {
+	display: inline-block;
+	height: 12px;
+	width: 12px;
+}
+
+#sidebar-group-list li {
+	margin-top: 3px;
+}
+
+.groupsideedit {
+	margin-right: 10px;
+}
+
+.group-edit-icon {
+	opacity: 0;
 }

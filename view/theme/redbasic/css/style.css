@@ -327,11 +327,7 @@ footer {
 	margin-bottom: 15px;
 }
 
-#group-sidebar {
-	margin-bottom: 10px;
-}
-
-/*TODO: we should use .active class for all this, nets-selected probably obsolete */
+/*TODO: we should use .selected class for all this, nets-selected probably obsolete */
 .group-selected, /* .nets-selected, */ .fileas-selected, .categories-selected, .search-selected, .active {
 	color: #444444 !important;
 }
@@ -738,20 +734,6 @@ footer {
 
 #netsearch-box { margin-bottom: 5px; }
 
-#sidebar-group-list ul {
-	list-style-type: none;
-}
-
-#sidebar-group-list .icon, #sidebar-group-list .iconspacer {
-	display: inline-block;
-	height: 12px;
-	width: 12px;
-}
-
-#sidebar-group-list li {
-	margin-top: 3px;
-}
-
 /* might be obsolete
 .nets-ul {
 	list-style-type: none;
@@ -772,14 +754,6 @@ footer {
 #search-save {
 	margin-left: 5px;
 }
-.groupsideedit {
-	margin-right: 10px;
-}
-
-.savedsearchterm {
-	margin-left: 10px;
-}
-
 
 #side-follow-wrapper {
 	margin-top: 20px;
@@ -2199,10 +2173,6 @@ text-decoration: none;
 	list-style-type: none;
 }
 
-.group-edit-icon {
-	opacity: 0;
-}
-
 .admin-icons {
 	color: $toolicon_colour;
 	margin-right: 10px;
@@ -2508,5 +2478,9 @@ img.mail-list-sender-photo {
 }
 
 .categories-ul {
+	list-style-type: none;
+}
+
+#sidebar-group-list ul {
 	list-style-type: none;
 }
