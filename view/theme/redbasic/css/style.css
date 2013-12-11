@@ -2487,6 +2487,12 @@ img.mail-list-sender-photo {
 	border-radius: $radiuspx;
 }
 
+#note-text {
+	border: 1px solid #ccc;
+	border-radius: $radiuspx;
+	-moz-border-radius: $radiuspx;
+}
+
 #saved-search-ul {
 	list-style-type: none;
 }
@@ -2496,6 +2502,7 @@ img.mail-list-sender-photo {
 }
 
 #datebrowse-sidebar select {
+	border: 1px solid #ccc;
 	border-radius: $radiuspx;
 	-moz-border-radius: $radiuspx;
 }

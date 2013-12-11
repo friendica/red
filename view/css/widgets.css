@@ -66,21 +66,9 @@
 /* posted date */
 
 #datebrowse-sidebar select {
-	margin-left: 25px;
-	opacity: 0.3;
-	filter:alpha(opacity=30);
-}
-
-#datebrowse-sidebar select:hover {
-	opacity: 1.0;
-	filter:alpha(opacity=100);
-}
-
-#posted-date-selector {
-	margin-left: 30px !important;
-	margin-top: 5px !important;
-	margin-right: 0px !important;
-	margin-bottom: 0px !important;
+	width: 190px;
+	max-width: 190px;
+	height: 150px;
 }
 
 /* categories */
