@@ -30,14 +30,11 @@ function viewconnections_content(&$a) {
 
 
 
-	$r = q("SELECT COUNT(abook_id) as total FROM abook WHERE abook_channel = %d AND abook_flags = 0 ",
-		intval($a->profile['uid'])
-	);
-	if($r)
-		$a->set_pager_total($r[0]['total']);
-
-	$r = q("SELECT * FROM abook left join xchan on abook_xchan = xchan_hash where abook_channel = %d and abook_flags = 0 order by xchan_name LIMIT %d , %d ",
+	$r = q("SELECT * FROM abook left join xchan on abook_xchan = xchan_hash where abook_channel = %d and abook_flags = 0 and not ( xchan_flags & %d ) and not ( xchan_flags & %d ) and not ( xchan_flags & %d ) order by xchan_name LIMIT %d , %d ",
 		intval($a->profile['uid']),
+		intval(XCHAN_FLAGS_HIDDEN),
+		intval(XCHAN_FLAGS_ORPHAN),
+		intval(XCHAN_FLAGS_DELETED),
 		intval($a->pager['start']),
 		intval($a->pager['itemspage'])
 	);
