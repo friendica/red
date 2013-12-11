@@ -146,7 +146,7 @@ function widget_notes($arr) {
 	if(! feature_enabled(local_user(),'private_notes'))
 		return '';
 
-	$text = htmlspecialchars(get_pconfig(local_user(),'notes','text'));
+	$text = get_pconfig(local_user(),'notes','text');
 
 	$o = replace_macros(get_markup_template('notes.tpl'), array(
 		'$banner' => t('Notes'),
