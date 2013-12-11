@@ -327,7 +327,7 @@ footer {
 	margin-bottom: 15px;
 }
 
-/*TODO: we should use .selected class for all this, nets-selected probably obsolete */
+/*TODO: we should use one class for all this, nets-selected probably obsolete */
 .group-selected, /* .nets-selected, */ .fileas-selected, .categories-selected, .search-selected, .active {
 	color: #444444 !important;
 }
