@@ -43,30 +43,6 @@ function channel_init(&$a) {
 
 }
 
-
-function channel_aside(&$a) {
-
-
-	if(! $a->profile['profile_uid'])
-		return;
-
-	$channel_display = get_pconfig($a->profile['profile_uid'],'system','channel_format');
-	if(! $channel_display)
-		profile_create_sidebar($a);
-
-	if($channel_display === 'full')
-		$a->page['template'] = 'full';
-	else {
-		$cat = ((x($_REQUEST,'cat')) ? htmlspecialchars($_REQUEST['cat']) : '');
-		$a->set_widget('archive',posted_date_widget($a->get_baseurl(true) . '/channel/' . $a->profile['channel_address'],$a->profile['profile_uid'],true));  
-		$a->set_widget('categories',categories_widget($a->get_baseurl(true) . '/channel/' . $a->profile['channel_address'],$cat));
-	}
-	if(feature_enabled($a->profile['profile_uid'],'tagadelic'))
-		$a->set_widget('tagcloud',tagblock('search',$a->profile['profile_uid'],50,$a->profile['channel_hash'],ITEM_WALL));
-
-}
-
-
 function channel_content(&$a, $update = 0, $load = false) {
 
 	$category = $datequery = $datequery2 = '';

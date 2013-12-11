@@ -1872,7 +1872,6 @@ function construct_page(&$a) {
 
 	if($comanche) {
 		foreach($a->layout as $k => $v) {
-			logger('layout: ' . $k . ' ' . strlen($v));
 			if((strpos($k,'region_') === 0) && strlen($v)) {
 				if(strpos($v,'$region_') !== false) {
 					$v = preg_replace_callback('/\$region_([a-zA-Z0-9]+)/ism','comanche_replace_region',$v);

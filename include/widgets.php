@@ -196,6 +196,7 @@ function widget_savedsearch($arr) {
 	$hasq = ((strpos($srchurl,'?') !== false) ? true : false);
 
 	$srchurl =  rtrim(preg_replace('/search\=[^\&].*?(\&|$)/is','',$srchurl),'&');
+	$srchurl = str_replace(array('?f=','&f='),array('',''),$srchurl);
 	$hasq = ((strpos($srchurl,'?') !== false) ? true : false);
 	
 	$o = '';
@@ -285,6 +286,7 @@ function widget_archive($arr) {
 	$wall = ((array_key_exists('wall', $arr)) ? intval($arr['wall']) : 0);
 	$url = z_root() . '/' . $a->cmd;
 
+
 	$ret = posted_dates($uid,$wall);
 
 	if(! count($ret))
@@ -300,3 +302,32 @@ function widget_archive($arr) {
 }
 
 
+function widget_fullprofile($arr) {
+	$a = get_app();
+	if(! $a->profile['profile_uid'])
+		return;
+
+	$block = (((get_config('system','block_public')) && (! local_user()) && (! remote_user())) ? true : false);
+
+	return profile_sidebar($a->profile, $block);
+}
+
+function widget_categories($arr) {
+	$a = get_app();
+	$cat = ((x($_REQUEST,'cat')) ? htmlspecialchars($_REQUEST['cat']) : '');
+	$srchurl = $a->query_string;
+	$srchurl =  rtrim(preg_replace('/cat\=[^\&].*?(\&|$)/is','',$srchurl),'&');
+	$srchurl = str_replace(array('?f=','&f='),array('',''),$srchurl);
+	return categories_widget($srchurl,$cat);
+
+}
+
+function widget_tagcloud_wall($arr) {
+	$a = get_app();
+	if((! $a->profile['profile_uid']) || (! $a->profile['channel_hash']))
+		return '';
+	$limit = ((array_key_exists('limit',$arr)) ? intval($arr['limit']) : 50);
+	if(feature_enabled($a->profile['profile_uid'],'tagadelic'))
+		return tagblock('search',$a->profile['profile_uid'],$limit,$a->profile['channel_hash'],ITEM_WALL);
+	return '';
+}

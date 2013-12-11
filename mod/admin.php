@@ -628,7 +628,7 @@ function admin_page_users(&$a){
 	}
 	
 	/* get pending */
-	$pending = q("SELECT * from account where (account_flags & %d ) ",
+	$pending = q("SELECT account.*, register.hash from account left join register on account_id = register.uid where (account_flags & %d ) ",
 		intval(ACCOUNT_PENDING)
 	);	
 	
