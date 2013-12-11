@@ -573,14 +573,14 @@ function admin_page_users_post(&$a){
 	
 	if (x($_POST,'page_users_approve')){
 		require_once('include/account.php');
-		foreach($pending as $hash){
-			user_allow($hash);
+		foreach($pending as $uid){
+			user_allow($uid);
 		}
 	}
 	if (x($_POST,'page_users_deny')){
 		require_once('include/account.php');
-		foreach($pending as $hash){
-			user_deny($hash);
+		foreach($pending as $uid){
+			user_deny($uid);
 		}
 	}
 	goaway($a->get_baseurl(true) . '/admin/users' );
@@ -686,7 +686,7 @@ function admin_page_users(&$a){
 		'$submit' => t('Submit'),
 		'$select_all' => t('select all'),
 		'$h_pending' => t('User registrations waiting for confirm'),
-		'$th_pending' => array( t('Request date'), t('Name'), t('Email') ),
+		'$th_pending' => array( t('ID'), t('Email'), t('Register date')),
 		'$no_pending' =>  t('No registrations.'),
 		'$approve' => t('Approve'),
 		'$deny' => t('Deny'),

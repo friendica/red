@@ -29,13 +29,14 @@
 				<tbody>
 			{{foreach $pending as $u}}
 				<tr>
-					<td class="created">{{$u.created}}</td>
-					<td class="name">{{$u.name}}</td>
-					<td class="email">{{$u.email}}</td>
-					<td class="checkbox"><input type="checkbox" class="pending_ckbx" id="id_pending_{{$u.hash}}" name="pending[]" value="{{$u.hash}}" /></td>
+					<td class='account_id'>{{$u.account_id}}</td>
+					<td class="email">{{$u.account_email}}</td>
+					<td class="created">{{$u.account_created}}</td>
+					
+					<td class="checkbox"><input type="checkbox" class="pending_ckbx" id="id_pending_{{$u.account_id}}" name="pending[]" value="{{$u.account_id}}" /></td>
 					<td class="tools">
-						<a href="{{$baseurl}}/regmod/allow/{{$u.hash}}" title='{{$approve}}'><i class='icon-thumbs-up-alt admin-icons'></i></a>
-						<a href="{{$baseurl}}/regmod/deny/{{$u.hash}}" title='{{$deny}}'><i class='icon-thumbs-down-alt admin-icons'></i></a>
+						<a href="{{$baseurl}}/regmod/allow/{{$u.account_id}}" title='{{$approve}}'><i class='icon-thumbs-up-alt admin-icons'></i></a>
+						<a href="{{$baseurl}}/regmod/deny/{{$u.account_id}}" title='{{$deny}}'><i class='icon-thumbs-down-alt admin-icons'></i></a>
 					</td>
 				</tr>
 			{{/foreach}}

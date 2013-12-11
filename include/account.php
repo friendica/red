@@ -306,14 +306,14 @@ function send_verification_email($email,$password) {
 }
 
 
-function user_allow($hash) {
+function user_allow($uid) {
 
 	$a = get_app();
 
 	$ret = array('success' => false);
 
-	$register = q("SELECT * FROM `register` WHERE `hash` = '%s' LIMIT 1",
-		dbesc($hash)
+	$register = q("SELECT * FROM `register` WHERE `uid` = '%s' LIMIT 1",
+		dbesc($uid)
 	);
 
 	if(! $register)
@@ -326,8 +326,8 @@ function user_allow($hash) {
 	if(! $account)
 		return $ret;
 
-	$r = q("DELETE FROM register WHERE hash = '%s' LIMIT 1",
-		dbesc($register[0]['hash'])
+	$r = q("DELETE FROM register WHERE uid = '%s' LIMIT 1",
+		dbesc($register[0]['uid'])
 	);
 
 	$r = q("update account set account_flags = (account_flags ^ %d) where (account_flags & %d) and account_id = %d limit 1",
@@ -373,10 +373,10 @@ function user_allow($hash) {
 // permanently against re-registration, as the person was not yet
 // allowed to have friends on this system
 
-function user_deny($hash) {
+function user_deny($uid) {
 
-	$register = q("SELECT * FROM register WHERE hash = '%s' LIMIT 1",
-		dbesc($hash)
+	$register = q("SELECT * FROM register WHERE uid = '%s' LIMIT 1",
+		dbesc($uid)
 	);
 
 	if(! count($register))
@@ -393,8 +393,8 @@ function user_deny($hash) {
 		intval($register[0]['uid'])
 	);
 
-	$r = q("DELETE FROM `register` WHERE id = %d LIMIT 1",
-		dbesc($register[0]['id'])
+	$r = q("DELETE FROM `register` WHERE uid = %d LIMIT 1",
+		dbesc($register[0]['uid'])
 	);
 	notice( sprintf(t('Registration revoked for %s'), $account[0]['account_email']) . EOL);
 	return true;
