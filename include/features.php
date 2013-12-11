@@ -49,6 +49,7 @@ function get_features() {
 			array('personal_tab',   t('Network Personal Tab'),		t('Enable tab to display only Network posts that you\'ve interacted on')),
 			array('new_tab',   		t('Network New Tab'),			t('Enable tab to display all new Network activity')),
 			array('affinity',       t('Affinity Tool'),			    t('Filter stream activity by depth of relationships')),
+			array('suggest',    	t('Suggest Channels'),			t('Show channel suggestions')),
 		),
 
 		// Item tools

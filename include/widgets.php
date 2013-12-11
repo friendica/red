@@ -57,6 +57,9 @@ function widget_collections($args) {
 
 function widget_suggestions($arr) {
 
+	if((! local_user()) || (! feature_enabled(local_user(),'suggest')))
+		return '';
+
 	require_once('include/socgraph.php');
 
 	$r = suggestion_query(local_user(),get_observer_hash(),0,20);
@@ -143,7 +146,7 @@ function widget_notes($arr) {
 	if(! feature_enabled(local_user(),'private_notes'))
 		return '';
 
-	$text = htmlspecialchars(get_pconfig(local_user(),'notes','text'));
+	$text = get_pconfig(local_user(),'notes','text');
 
 	$o = replace_macros(get_markup_template('notes.tpl'), array(
 		'$banner' => t('Notes'),

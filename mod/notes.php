@@ -6,7 +6,7 @@ function notes_init(&$a) {
 	logger('mod_notes: ' . print_r($_REQUEST,true));
 
 	$ret = array('success' => true);
-	if($_REQUEST['note_text']) {
+	if($_REQUEST['note_text'] || $_REQUEST['note_text'] == '') {
 		$body = escape_tags($_REQUEST['note_text']);
 		set_pconfig(local_user(),'notes','text',$body);
 	}
