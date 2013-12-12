@@ -334,3 +334,29 @@ function widget_tagcloud_wall($arr) {
 		return tagblock('search',$a->profile['profile_uid'],$limit,$a->profile['channel_hash'],ITEM_WALL);
 	return '';
 }
+
+
+function widget_affinity($arr) {
+
+	if(! local_user())
+		return '';
+
+	if(feature_enabled(local_user(),'affinity')) {
+		$tpl = get_markup_template('main_slider.tpl');
+		$x = replace_macros($tpl,array(
+			'$val' => intval($_REQUEST['cmin']) . ';' . intval($_REQUEST['cmax']),
+			'$refresh' => t('Refresh'),
+			'$me' => t('Me'),
+			'$intimate' => t('Best Friends'),
+			'$friends' => t('Friends'),
+			'$coworkers' => t('Co-workers'),
+			'$oldfriends' => t('Former Friends'),
+			'$acquaintances' => t('Acquaintances'),
+			'$world' => t('Everybody')
+		));
+		$arr = array('html' => $x);
+		call_hooks('main_slider',$arr);
+		return $arr['html']; 
+	}
+ 	return '';
+}

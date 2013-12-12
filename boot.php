@@ -1883,7 +1883,8 @@ function construct_page(&$a) {
 					$v = str_replace('$nav',$a->page['nav'],$v);
 				}
 				if(strpos($v,'$content') !== false) {
-					$v = str_replace('$content',$a->page['section'],$v);
+
+					$v = str_replace('$content',$a->page['content'],$v);
 				}
 
 				$a->page[substr($k,7)] = $v;

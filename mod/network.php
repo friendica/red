@@ -111,32 +111,7 @@ function network_content(&$a, $update = 0, $load = false) {
 
 
 	if(! $update) {
-
-		if(feature_enabled(local_user(),'affinity')) {
-			$tpl = get_markup_template('main_slider.tpl');
-			$x = replace_macros($tpl,array(
-				'$val' => intval($cmin) . ';' . intval($cmax),
-				'$refresh' => t('Refresh'),
-				'$me' => t('Me'),
-				'$intimate' => t('Best Friends'),
-				'$friends' => t('Friends'),
-				'$coworkers' => t('Co-workers'),
-				'$oldfriends' => t('Former Friends'),
-				'$acquaintances' => t('Acquaintances'),
-				'$world' => t('Everybody')
-			));
-			$arr = array('html' => $x);
-			call_hooks('main_slider',$arr);
-			$o .= $arr['html']; 
-		}
- 	
-
 		$o .= network_tabs();
-
-		// --- end item filter tabs
-
-
-
 
 		// search terms header
 		if($search)
