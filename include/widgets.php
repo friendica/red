@@ -219,7 +219,7 @@ function widget_savedsearch($arr) {
 				'term'			=> $rr['term'],
 				'dellink'       => z_root() . '/' . $srchurl . (($hasq) ? '' : '?f=') . '&amp;searchremove=1&amp;search=' . urlencode($rr['term']),
 				'srchlink'      => z_root() . '/' . $srchurl . (($hasq) ? '' : '?f=') . '&amp;search=' . urlencode($rr['term']),
-				'displayterm'   => htmlspecialchars($rr['term']),
+				'displayterm'   => htmlspecialchars($rr['term'], ENT_COMPAT,'UTF-8'),
 				'encodedterm' 	=> urlencode($rr['term']),
 				'delete'		=> t('Remove term'),
 				'selected'		=> ($search==$rr['term']),
@@ -317,7 +317,7 @@ function widget_fullprofile($arr) {
 
 function widget_categories($arr) {
 	$a = get_app();
-	$cat = ((x($_REQUEST,'cat')) ? htmlspecialchars($_REQUEST['cat']) : '');
+	$cat = ((x($_REQUEST,'cat')) ? htmlspecialchars($_REQUEST['cat'],ENT_COMPAT,'UTF-8') : '');
 	$srchurl = $a->query_string;
 	$srchurl =  rtrim(preg_replace('/cat\=[^\&].*?(\&|$)/is','',$srchurl),'&');
 	$srchurl = str_replace(array('?f=','&f='),array('',''),$srchurl);
