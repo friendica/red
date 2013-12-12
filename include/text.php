@@ -1065,7 +1065,7 @@ function theme_attachments(&$item) {
 					break;
 			}
 
-			$title = htmlentities($r['title'], ENT_COMPAT,'UTF-8');
+			$title = htmlspecialchars($r['title'], ENT_COMPAT,'UTF-8');
 			if(! $title)
 				$title = t('unknown.???');
 			$title .= ' ' . $r['length'] . ' ' . t('bytes');

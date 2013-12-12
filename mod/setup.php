@@ -543,7 +543,7 @@ function check_htaccess(&$checks) {
 
 	
 function manual_config(&$a) {
-	$data = htmlentities($a->data['txt']);
+	$data = htmlspecialchars($a->data['txt'],ENT_COMPAT,'UTF-8');
 	$o = t('The database configuration file ".htconfig.php" could not be written. Please use the enclosed text to create a configuration file in your web server root.');
 	$o .= "<textarea rows=\"24\" cols=\"80\" >$data</textarea>";
 	return $o;

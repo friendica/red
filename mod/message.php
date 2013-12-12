@@ -425,39 +425,7 @@ function message_content(&$a) {
 
 		foreach($messages as $message) {
 
-			$s = $arr = '';
-
-			if($message['attach'])
-				$arr = json_decode_plus($message['attach']);
-			if($arr) {
-				$s .= '<div class="body-attach">';
-				foreach($arr as $r) {
-					$matches = false;
-					$icon = '';
-					$icontype = substr($r['type'],0,strpos($r['type'],'/'));
-
-					switch($icontype) {
-						case 'video':
-						case 'audio':
-						case 'image':
-						case 'text':
-							$icon = '<div class="attachtype icon s22 type-' . $icontype . '"></div>';
-							break;
-						default:
-							$icon = '<div class="attachtype icon s22 type-unkn"></div>';
-							break;
-					}
-
-					$title = htmlentities($r['title'], ENT_COMPAT,'UTF-8');
-					if(! $title)
-						$title = t('unknown.???');
-					$title .= ' ' . $r['length'] . ' ' . t('bytes');
-
-					$url = $a->get_baseurl() . '/magic?f=&hash=' . $message['from_xchan'] . '&dest=' . $r['href'] . '/' . $r['revision'];
-					$s .= '<a href="' . $url . '" title="' . $title . '" class="attachlink"  >' . $icon . '</a>';
-				}
-				$s .= '<div class="clear"></div></div>';
-			}
+			$s = theme_attachments($message);
 
 			$mails[] = array(
 				'id' => $message['id'],

@@ -1633,22 +1633,22 @@ function import_directory_profile($hash,$profile,$addr,$ud_flags = 1, $suppress_
 	$arr = array();
 
 	$arr['xprof_hash']         = $hash;
-	$arr['xprof_desc']         = (($profile['description'])    ? htmlentities($profile['description'],    ENT_COMPAT,'UTF-8',false) : '');
+	$arr['xprof_desc']         = (($profile['description'])    ? htmlspecialchars($profile['description'],    ENT_COMPAT,'UTF-8',false) : '');
 	$arr['xprof_dob']          = datetime_convert('','',$profile['birthday'],'Y-m-d'); // !!!! check this for 0000 year
 	$arr['xprof_age']          = (($profile['age']) ? intval($profile['age']) : 0);
-	$arr['xprof_gender']       = (($profile['gender'])    ? htmlentities($profile['gender'],    ENT_COMPAT,'UTF-8',false) : '');
-	$arr['xprof_marital']      = (($profile['marital'])    ? htmlentities($profile['marital'],    ENT_COMPAT,'UTF-8',false) : '');
-	$arr['xprof_sexual']       = (($profile['sexual'])    ? htmlentities($profile['sexual'],    ENT_COMPAT,'UTF-8',false) : '');
-	$arr['xprof_locale']       = (($profile['locale'])    ? htmlentities($profile['locale'],    ENT_COMPAT,'UTF-8',false) : '');
-	$arr['xprof_region']       = (($profile['region'])    ? htmlentities($profile['region'],    ENT_COMPAT,'UTF-8',false) : '');
-	$arr['xprof_postcode']     = (($profile['postcode'])    ? htmlentities($profile['postcode'],    ENT_COMPAT,'UTF-8',false) : '');
-	$arr['xprof_country']      = (($profile['country'])    ? htmlentities($profile['country'],    ENT_COMPAT,'UTF-8',false) : '');
+	$arr['xprof_gender']       = (($profile['gender'])    ? htmlspecialchars($profile['gender'],    ENT_COMPAT,'UTF-8',false) : '');
+	$arr['xprof_marital']      = (($profile['marital'])    ? htmlspecialchars($profile['marital'],    ENT_COMPAT,'UTF-8',false) : '');
+	$arr['xprof_sexual']       = (($profile['sexual'])    ? htmlspecialchars($profile['sexual'],    ENT_COMPAT,'UTF-8',false) : '');
+	$arr['xprof_locale']       = (($profile['locale'])    ? htmlspecialchars($profile['locale'],    ENT_COMPAT,'UTF-8',false) : '');
+	$arr['xprof_region']       = (($profile['region'])    ? htmlspecialchars($profile['region'],    ENT_COMPAT,'UTF-8',false) : '');
+	$arr['xprof_postcode']     = (($profile['postcode'])    ? htmlspecialchars($profile['postcode'],    ENT_COMPAT,'UTF-8',false) : '');
+	$arr['xprof_country']      = (($profile['country'])    ? htmlspecialchars($profile['country'],    ENT_COMPAT,'UTF-8',false) : '');
 
 	$clean = array();
 	if(array_key_exists('keywords',$profile) and is_array($profile['keywords'])) {
 		import_directory_keywords($hash,$profile['keywords']);
 		foreach($profile['keywords'] as $kw) {
-			$kw = trim(htmlentities($kw,ENT_COMPAT,'UTF-8',false));
+			$kw = trim(htmlspecialchars($kw,ENT_COMPAT,'UTF-8',false));
 			$kw = trim($kw,',');
 			$clean[] = $kw;
 		}
@@ -1750,7 +1750,7 @@ function import_directory_keywords($hash,$keywords) {
 
 	$clean = array();
 	foreach($keywords as $kw) {
-		$kw = trim(htmlentities($kw,ENT_COMPAT,'UTF-8',false));
+		$kw = trim(htmlspecialchars($kw,ENT_COMPAT,'UTF-8',false));
 		$kw = trim($kw,',');
 		$clean[] = $kw;
 	}
@@ -1849,10 +1849,10 @@ function import_site($arr,$pubkey) {
 			$access_policy = ACCESS_TIERED;
 	}
 
-	$directory_url = htmlentities($arr['directory_url'],ENT_COMPAT,'UTF-8',false);
-	$url = htmlentities($arr['url'],ENT_COMPAT,'UTF-8',false);
-	$sellpage = htmlentities($arr['sellpage'],ENT_COMPAT,'UTF-8',false);
-	$site_location = htmlentities($arr['location'],ENT_COMPAT,'UTF-8',false);
+	$directory_url = htmlspecialchars($arr['directory_url'],ENT_COMPAT,'UTF-8',false);
+	$url = htmlspecialchars($arr['url'],ENT_COMPAT,'UTF-8',false);
+	$sellpage = htmlspecialchars($arr['sellpage'],ENT_COMPAT,'UTF-8',false);
+	$site_location = htmlspecialchars($arr['location'],ENT_COMPAT,'UTF-8',false);
 
 	if($exists) {
 		if(($siterecord['site_flags'] != $site_directory)
