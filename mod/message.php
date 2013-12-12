@@ -321,7 +321,7 @@ function message_content(&$a) {
 			'$preid' => $preid,
 			'$subject' => t('Subject:'),
 			'$subjtxt' => ((x($_REQUEST,'subject')) ? strip_tags($_REQUEST['subject']) : ''),
-			'$text' => ((x($_REQUEST,'body')) ? escape_tags(htmlspecialchars($_REQUEST['body'])) : ''),
+			'$text' => ((x($_REQUEST,'body')) ? htmlspecialchars($_REQUEST['body'], ENT_COMPAT, 'UTF-8') : ''),
 			'$readonly' => '',
 			'$yourmessage' => t('Your message:'),
 			'$select' => $select,

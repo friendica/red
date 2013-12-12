@@ -164,7 +164,7 @@ function editwebpage_content(&$a) {
 		'$jotnets' => $jotnets,
 		'$mimeselect' => $mimeselect,
 		'$layoutselect' => $layoutselect,
-		'$title' => htmlspecialchars($itm[0]['title']),
+		'$title' => htmlspecialchars($itm[0]['title'],ENT_COMPAT,'UTF-8'),
 		'$placeholdertitle' => t('Set title'),
 		'$category' => '',
 		'$placeholdercategory' => t('Categories (comma-separated list)'),

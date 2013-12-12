@@ -17,7 +17,7 @@ function search_saved_searches() {
 		$o .= '<h3>' . t('Saved Searches') . '</h3>' . "\r\n";
 		$o .= '<ul id="saved-search-ul">' . "\r\n";
 		foreach($r as $rr) {
-			$o .= '<li class="saved-search-li clear"><a href="search/?f=&remove=1&search=' . rawurlencode($rr['term']) . '" title="' . t('Remove term') . '" onclick="return confirmDelete();"><i class="icon-remove drop-icons"></i></a> <a href="search/?f=&search=' . $rr['term'] . '" class="savedsearchterm" >' . htmlspecialchars($rr['term']) . '</a></li>' . "\r\n";
+			$o .= '<li class="saved-search-li clear"><a href="search/?f=&remove=1&search=' . rawurlencode($rr['term']) . '" title="' . t('Remove term') . '" onclick="return confirmDelete();"><i class="icon-remove drop-icons"></i></a> <a href="search/?f=&search=' . $rr['term'] . '" class="savedsearchterm" >' . htmlspecialchars($rr['term'], ENT_COMPAT,'UTF-8') . '</a></li>' . "\r\n";
 		}
 		$o .= '</ul><div class="clear"></div></div>' . "\r\n";
 	}		
@@ -272,9 +272,9 @@ function search_content(&$a,$update = 0, $load = false) {
 
 
 	if($tag) 
-		$o .= '<h2>Items tagged with: ' . htmlspecialchars($search) . '</h2>';
+		$o .= '<h2>Items tagged with: ' . htmlspecialchars($search, ENT_COMPAT,'UTF-8') . '</h2>';
 	else
-		$o .= '<h2>Search results for: ' . htmlspecialchars($search) . '</h2>';
+		$o .= '<h2>Search results for: ' . htmlspecialchars($search, ENT_COMPAT,'UTF-8') . '</h2>';
 
 	$o .= conversation($a,$items,'search',$update,'client');
 

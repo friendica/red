@@ -115,7 +115,7 @@ function network_content(&$a, $update = 0, $load = false) {
 
 		// search terms header
 		if($search)
-			$o .= '<h2>' . t('Search Results For:') . ' '  . htmlspecialchars($search) . '</h2>';
+			$o .= '<h2>' . t('Search Results For:') . ' '  . htmlspecialchars($search, ENT_COMPAT,'UTF-8') . '</h2>';
 
 		nav_set_selected('network');
 
