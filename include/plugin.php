@@ -494,6 +494,15 @@ function head_add_css($src,$media = 'screen') {
 	get_app()->css_sources[] = array($src,$media);
 }
 
+
+function head_remove_css($src,$media = 'screen') {
+	$a = get_app();
+	$index = array_search(array($src,$media),$a->css_sources);
+	if($index !== false)
+		unset($a->css_sources[$index]);
+
+}
+
 function head_get_css() {
 	$str = '';
 	$sources = get_app()->css_sources;
@@ -515,9 +524,16 @@ function format_css_if_exists($source) {
 		
 }
 
-
 function head_add_js($src) {
 	get_app()->js_sources[] = $src;
+}
+
+function head_remove_js($src) {
+	$a = get_app();
+	$index = array_search($src,$a->js_sources);
+	if($index !== false)
+		unset($a->js_sources[$index]);
+
 }
 
 function head_get_js() {
