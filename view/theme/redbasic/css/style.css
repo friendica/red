@@ -676,7 +676,7 @@ footer {
 	list-style: none;
 }
 
-.contact-entry-photo img, .profile-match-photo img, #photo-photo img, .directory-photo-img, .photo-album-photo, .photo-top-photo {
+/* .contact-entry-photo img, */ .profile-match-photo img, #photo-photo img, .directory-photo-img, .photo-album-photo, .photo-top-photo {
     border-radius: $radiuspx;
     -moz-border-radius: $radiuspx;
     box-shadow: $shadowpx $shadowpx $shadowpx 0 #444444;
@@ -2488,12 +2488,16 @@ img.mail-list-sender-photo {
 	margin-bottom: 10px;
 }
 
+/* seems oblolete
 .contact-entry-photo img {
 	border: none;
 }
+*/
+
 .contact-entry-photo-end {
 	clear: both;
 }
+
 .contact-entry-name {
 	float: left;
 	margin-left: 0px;
@@ -2501,11 +2505,14 @@ img.mail-list-sender-photo {
 	width: 120px;
 	overflow: hidden;
 }
+
+/* seems obsolete
 .contact-entry-edit-links {
 	margin-top: 6px;
 	margin-left: 10px;
 	width: 16px;
 }
+
 .contact-entry-nav-wrapper {
 	float: left;
 	margin-left: 10px;
@@ -2515,10 +2522,13 @@ img.mail-list-sender-photo {
 	border: none;
 	margin-right: 15px;
 }
+
 .contact-entry-photo {
 	float: left;
 	position: relative;
 }
+*/
+
 .contact-entry-end {
 	clear: both;
 }
