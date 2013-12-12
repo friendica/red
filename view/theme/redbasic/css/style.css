@@ -1610,21 +1610,6 @@ div.jGrowl div.info {
 	text-align: center;
 }
 
-
-.slider {
-	margin-top: 10px;
-	margin-bottom: 45px;
-}
-
-
-#main-slider {
-	position: relative; 
-	left: 5px; 
-	width: 90%;
-
-}
-
-
 #contact-slider {
 	position: relative; 
 	left: 5%; 
@@ -2477,6 +2462,13 @@ img.mail-list-sender-photo {
 	-moz-border-radius: $radiuspx;
 }
 
+.categories-ul {
+	list-style-type: none;
+}
+
+#sidebar-group-list ul {
+	list-style-type: none;
+}
 
 /* need to put these back in the theme for now - used in more than one module */
 
@@ -2529,12 +2521,4 @@ img.mail-list-sender-photo {
 }
 .contact-entry-end {
 	clear: both;
-}
-
-.categories-ul {
-	list-style-type: none;
-}
-
-#sidebar-group-list ul {
-	list-style-type: none;
 }
