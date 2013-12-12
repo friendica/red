@@ -341,10 +341,13 @@ function widget_affinity($arr) {
 	if(! local_user())
 		return '';
 
+	$cmin = ((x($_REQUEST,'cmin')) ? intval($_REQUEST['cmin']) : 0);
+	$cmax = ((x($_REQUEST,'cmax')) ? intval($_REQUEST['cmax']) : 99);
+
 	if(feature_enabled(local_user(),'affinity')) {
 		$tpl = get_markup_template('main_slider.tpl');
 		$x = replace_macros($tpl,array(
-			'$val' => intval($_REQUEST['cmin']) . ';' . intval($_REQUEST['cmax']),
+			'$val' => $cmin . ';' . $cmax,
 			'$refresh' => t('Refresh'),
 			'$me' => t('Me'),
 			'$intimate' => t('Best Friends'),
