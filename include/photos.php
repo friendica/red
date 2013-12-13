@@ -279,8 +279,16 @@ function photos_album_widget($channelx,$observer,$albums = null) {
 
 	$o = '';
 
-	if(! $albums)
-		$albums = photos_albums_list($channelx,$observer);
+	// If we weren't passed an album list, see if the photos module
+	// dropped one for us to find in $a->data['albums']. 
+	// If all else fails, load it.
+
+	if(! $albums) {
+		if(array_key_exists('albums', get_app()->data))
+			$albums = get_app()->data['albums'];
+		else
+			$albums = photos_albums_list($channelx,$observer);
+	}
 
 	if($albums) {
 		$o = replace_macros(get_markup_template('photo_albums.tpl'),array(
