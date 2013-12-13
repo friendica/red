@@ -1871,6 +1871,10 @@ function construct_page(&$a) {
 	// layout completely with a new layout definition, or replace/remove existing content. 
 
 	if($comanche) {
+		$arr = array('module' => $a->module, 'layout' => $a->layout);
+		call_hooks('construct_page',$arr);
+		$a->layout = $arr['layout'];
+
 		foreach($a->layout as $k => $v) {
 			if((strpos($k,'region_') === 0) && strlen($v)) {
 				if(strpos($v,'$region_') !== false) {
