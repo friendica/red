@@ -30,7 +30,6 @@ var searchData=
   ['flip',['flip',['../classphoto__driver.html#a2b2a99021fc63ed6465d703ddddcb832',1,'photo_driver\flip()'],['../classphoto__gd.html#a44cedef376044018702d9355ddc813ce',1,'photo_gd\flip()'],['../classphoto__imagick.html#aff6bcdbab18593a3fc5a480db8509393',1,'photo_imagick\flip()']]],
   ['follow_5fcontent',['follow_content',['../mod_2follow_8php.html#a4c540ea4e9f5c581c1a53516ac585592',1,'follow.php']]],
   ['follow_5finit',['follow_init',['../mod_2follow_8php.html#a171f5b19f50d7738adc3b2e96ec6018a',1,'follow.php']]],
-  ['follow_5fwidget',['follow_widget',['../contact__widgets_8php.html#af24e693532a045954caab515942cfc6f',1,'contact_widgets.php']]],
   ['format_5fcategories',['format_categories',['../text_8php.html#a3054189cff173977f4216c9a3dd29e1b',1,'text.php']]],
   ['format_5fcss_5fif_5fexists',['format_css_if_exists',['../plugin_8php.html#a9039e15aae27676af7777dcbee5a11d6',1,'plugin.php']]],
   ['format_5fevent_5fbbcode',['format_event_bbcode',['../event_8php.html#abb74206cf42d694307c3d7abb7af9869',1,'event.php']]],

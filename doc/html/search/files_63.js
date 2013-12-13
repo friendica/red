@@ -25,7 +25,6 @@ var searchData=
   ['contactgroup_2ephp',['contactgroup.php',['../contactgroup_8php.html',1,'']]],
   ['conversation_2ephp',['conversation.php',['../conversation_8php.html',1,'']]],
   ['conversationobject_2ephp',['ConversationObject.php',['../ConversationObject_8php.html',1,'']]],
-  ['crepair_2ephp',['crepair.php',['../crepair_8php.html',1,'']]],
   ['cronhooks_2ephp',['cronhooks.php',['../cronhooks_8php.html',1,'']]],
   ['crypto_2ephp',['crypto.php',['../crypto_8php.html',1,'']]]
 ];

@@ -44,7 +44,6 @@ var searchData=
   ['follow_2ephp',['follow.php',['../include_2follow_8php.html',1,'']]],
   ['follow_5fcontent',['follow_content',['../mod_2follow_8php.html#a4c540ea4e9f5c581c1a53516ac585592',1,'follow.php']]],
   ['follow_5finit',['follow_init',['../mod_2follow_8php.html#a171f5b19f50d7738adc3b2e96ec6018a',1,'follow.php']]],
-  ['follow_5fwidget',['follow_widget',['../contact__widgets_8php.html#af24e693532a045954caab515942cfc6f',1,'contact_widgets.php']]],
   ['foreach',['foreach',['../typo_8php.html#a329c9c12217d2c8660c47bbc7c8df4c5',1,'typo.php']]],
   ['format_5fcategories',['format_categories',['../text_8php.html#a3054189cff173977f4216c9a3dd29e1b',1,'text.php']]],
   ['format_5fcss_5fif_5fexists',['format_css_if_exists',['../plugin_8php.html#a9039e15aae27676af7777dcbee5a11d6',1,'plugin.php']]],

@@ -122,9 +122,8 @@ var NAVTREEINDEX1 =
 "boot_8php.html#aff210e8403dd72368522b17fb6e5d4e7":[5,0,4,204],
 "cache_8php.html":[5,0,0,11],
 "channel_8php.html":[5,0,1,9],
-"channel_8php.html#a9c6a6179e0e626398ebecc6151905ef1":[5,0,1,9,1],
-"channel_8php.html#ac7c8c7845741baadf87fae6bc279f3dc":[5,0,1,9,2],
-"channel_8php.html#aea8e189f2fbabfda779349dd94082e8e":[5,0,1,9,0],
+"channel_8php.html#a9c6a6179e0e626398ebecc6151905ef1":[5,0,1,9,0],
+"channel_8php.html#ac7c8c7845741baadf87fae6bc279f3dc":[5,0,1,9,1],
 "chanview_8php.html":[5,0,1,10],
 "chanview_8php.html#a4192c6da888c8c1165851acf9ad4cb8b":[5,0,1,10,0],
 "classApp.html":[4,0,5],
@@ -249,5 +248,6 @@ var NAVTREEINDEX1 =
 "classFKOAuth1.html#a2f1276872329a6f0b704ccda1a4b9fa6":[4,0,13,0],
 "classFKOAuthDataStore.html":[4,0,14],
 "classFKOAuthDataStore.html#a1148d47b546350bf440bdd92792c5df1":[4,0,14,1],
-"classFKOAuthDataStore.html#a431b44d70e3da6a8256ab38f710e3050":[4,0,14,5]
+"classFKOAuthDataStore.html#a431b44d70e3da6a8256ab38f710e3050":[4,0,14,5],
+"classFKOAuthDataStore.html#a434882f03e3cdb171ed89e09e337e934":[4,0,14,4]
 };
