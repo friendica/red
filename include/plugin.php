@@ -520,8 +520,30 @@ function format_css_if_exists($source) {
 		$path = theme_include($source[0]);
 
 	if($path)
-		return '<link rel="stylesheet" href="' . z_root() . '/' . $path . '" type="text/css" media="' . $source[1] . '" />' . "\r\n";
+		return '<link rel="stylesheet" href="' . script_path() . '/' . $path . '" type="text/css" media="' . $source[1] . '" />' . "\r\n";
 		
+}
+
+function script_path() {
+	if(x($_SERVER,'HTTPS') && $_SERVER['HTTPS'])
+		$scheme = 'https';
+	elseif(x($_SERVER,'SERVER_PORT') && (intval($_SERVER['SERVER_PORT']) == 443))
+		$scheme = 'https';
+	else
+		$scheme = 'http';
+
+	if(x($_SERVER,'SERVER_NAME')) {
+			$hostname = $_SERVER['SERVER_NAME'];
+	}
+	else {
+		return z_root();
+	}
+
+	if(x($_SERVER,'SERVER_PORT') && $_SERVER['SERVER_PORT'] != 80 && $_SERVER['SERVER_PORT'] != 443) {
+		$hostname .= ':' . $_SERVER['SERVER_PORT'];
+	}
+
+	return $scheme . '://' . $hostname;
 }
 
 function head_add_js($src) {
@@ -552,7 +574,7 @@ function format_js_if_exists($source) {
 	else
 		$path = theme_include($source);
 	if($path)
-		return '<script src="' . z_root() . '/' . $path . '" ></script>' . "\r\n" ;
+		return '<script src="' . script_path() . '/' . $path . '" ></script>' . "\r\n" ;
 
 }
 
