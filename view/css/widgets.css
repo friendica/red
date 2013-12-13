@@ -97,7 +97,6 @@
 	width: 12px;
 }
 
-
 #sidebar-group-list li {
 	margin-top: 3px;
 }
@@ -108,4 +107,17 @@
 
 .group-edit-icon {
 	opacity: 0;
+}
+
+/* affinity - slider */
+
+#main-slider {
+	position: relative; 
+	left: 5px; 
+	width: 90%;
+}
+
+.slider {
+	margin-top: 10px;
+	margin-bottom: 45px;
 }
