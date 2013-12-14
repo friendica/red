@@ -1095,7 +1095,7 @@ function format_categories(&$item,$writeable) {
 	if($terms) {
 		$categories = array();
 		foreach($terms as $t) {
-			$term = htmlspecialchars($t['term'],ENT_COMPAT,'UTF-8') ;
+			$term = htmlspecialchars($t['term'],ENT_COMPAT,'UTF-8',false) ;
 			if(! trim($term))
 				continue;
 			$removelink = (($writeable) ?  z_root() . '/filerm/' . $item['id'] . '?f=&cat=' . urlencode($t['term']) : '');
@@ -1117,7 +1117,7 @@ function format_filer(&$item) {
 	if($terms) {
 		$categories = array();
 		foreach($terms as $t) {
-			$term = htmlspecialchars($t['term'],ENT_COMPAT,'UTF-8') ;
+			$term = htmlspecialchars($t['term'],ENT_COMPAT,'UTF-8',false) ;
 			if(! trim($term))
 				continue;
 			$removelink = z_root() . '/filerm/' . $item['id'] . '?f=&term=' . urlencode($t['term']);
