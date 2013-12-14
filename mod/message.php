@@ -7,29 +7,6 @@ require_once("include/bbcode.php");
 require_once('include/Contact.php');
 
 
-function message_aside(&$a) {
-
-	if (! local_user())
-		return;
-
-	$a->set_widget('msgaside',replace_macros(get_markup_template('message_side.tpl'), array(
-		'$tabs'=> array(),
-
-		'$check'=>array(
-			'label' => t('Check Mail'),
-			'url' => $a->get_baseurl(true) . '/message',
-			'sel' => (argv(1) == ''),
-		),
-		'$new'=>array(
-			'label' => t('New Message'),
-			'url' => $a->get_baseurl(true) . '/message/new',
-			'sel'=> (argv(1) == 'new'),
-		)
-
-	)));
-
-}
-
 function message_post(&$a) {
 
 	if(! local_user())

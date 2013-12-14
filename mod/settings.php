@@ -32,7 +32,7 @@ if (! local_user())
 		$a->argc = 2;
 		$a->argv[] = 'channel';
 	}
-
+/*
 	$channel = $a->get_channel();
 
 	$abook_self_id = 0;
@@ -132,7 +132,7 @@ if (! local_user())
 		'$class' => 'settings-widget',
 		'$items' => $tabs,
 	));
-
+*/
 }
 
 
