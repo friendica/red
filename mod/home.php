@@ -1,6 +1,6 @@
 <?php
 
-if(! function_exists('home_init')) {
+
 function home_init(&$a) {
 
 	$ret = array();
@@ -20,10 +20,10 @@ function home_init(&$a) {
 		goaway(z_root() . '/new_channel');
 	}
 
-}}
+}
 
 
-if(! function_exists('home_content')) {
+
 function home_content(&$a) {
 
 	$o = '';
@@ -85,4 +85,4 @@ require_once('include/conversation.php');
 	return $o;
 }
 	
-}
+
