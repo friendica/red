@@ -1,6 +1,6 @@
 <?php
 
-
+if(! function_exists('home_init')) {
 function home_init(&$a) {
 
 	$ret = array();
@@ -20,10 +20,10 @@ function home_init(&$a) {
 		goaway(z_root() . '/new_channel');
 	}
 
-}
+}}
 
 
-
+if(! function_exists('home_content')) {
 function home_content(&$a) {
 
 	$o = '';
@@ -74,9 +74,11 @@ require_once('include/conversation.php');
 
 // If there's no site channel specified, fallback to the old behaviour
 	else {	$o .= '<h1>' . ((x($a->config,'sitename')) ? sprintf( t("Welcome to %s") ,$a->config['sitename']) : "" ) . '</h1>';
-	if(file_exists('home.html'))
- 		$o .= file_get_contents('home.html');
-}
+		if(file_exists('home.html')) {
+ 			$o .= file_get_contents('home.html');
+			$a->page['template'] = 'full';
+		}
+	}
 
 	if (!$a->config['system']['no_login_on_homepage'])
 		$o .= login(($a->config['system']['register_policy'] == REGISTER_CLOSED) ? 0 : 1);
@@ -85,4 +87,4 @@ require_once('include/conversation.php');
 	return $o;
 }
 	
-
+}
