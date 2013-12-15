@@ -33,21 +33,28 @@ function magic_init(&$a) {
 	
 	if(! $x) {
 
-		// Somebody new? Finger them if they've never been seen here before
+		/*
+		 * We have no records for, or prior communications with this hub. 
+		 * If an address was supplied, let's finger them to create a hub record. 
+		 * Otherwise we'll use the special address '[system]' which will return
+		 * either a system channel or the first available normal channel. We don't
+		 * really care about what channel is returned - we need the hub information 
+		 * from that response so that we can create signed auth packets destined 
+		 * for that hub.
+		 *
+		 */
 
-		if($addr) {
-			$ret = zot_finger($addr,null);
-			if($ret['success']) {
-				$j = json_decode($ret['body'],true);
-				if($j)
-					import_xchan($j);
+		$ret = zot_finger((($addr) ? $addr : '[system]@' . $parsed['host']),null);
+		if($ret['success']) {
+			$j = json_decode($ret['body'],true);
+			if($j)
+				import_xchan($j);
 
-				// Now try again
+			// Now try again
 
-				$x = q("select * from hubloc where hubloc_url = '%s' order by hubloc_connected desc limit 1",
-					dbesc($basepath)
-				);
-			}
+			$x = q("select * from hubloc where hubloc_url = '%s' order by hubloc_connected desc limit 1",
+				dbesc($basepath)
+			);
 		}
 	}
 
