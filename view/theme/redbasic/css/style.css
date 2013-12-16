@@ -2445,37 +2445,3 @@ img.mail-list-sender-photo {
 #sidebar-group-list ul {
 	list-style-type: none;
 }
-
-/* need to put these back in the theme for now - used in more than one module */
-
-.contact-entry-wrapper {
-	float: left;
-	width: 120px;
-	height: 120px;
-	padding: 10px;
-}
-
-#contacts-search {
-	font-size: 1em;
-	width: 300px;
-}
-
-#contacts-search-end {
-	margin-bottom: 10px;
-}
-
-.contact-entry-photo-end {
-	clear: both;
-}
-
-.contact-entry-name {
-	float: left;
-	margin-left: 0px;
-	margin-right: 10px;
-	width: 120px;
-	overflow: hidden;
-}
-
-.contact-entry-end {
-	clear: both;
-}
