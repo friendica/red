@@ -205,6 +205,7 @@ define ( 'PAGE_DIRECTORY_CHANNEL', 0x0008 ); // system channel used for director
 define ( 'PAGE_PREMIUM',           0x0010 );
 define ( 'PAGE_ADULT',             0x0020 );
 
+define ( 'PAGE_SYSTEM',            0x1000 );
 define ( 'PAGE_REMOVED',           0x8000 );
 
 
@@ -367,6 +368,7 @@ define ( 'XCHAN_FLAGS_HIDDEN',        0x0001);
 define ( 'XCHAN_FLAGS_ORPHAN',        0x0002);
 define ( 'XCHAN_FLAGS_CENSORED',      0x0004);
 define ( 'XCHAN_FLAGS_SELFCENSORED',  0x0008);
+define ( 'XCHAN_FLAGS_SYSTEM',        0x0010);
 define ( 'XCHAN_FLAGS_DELETED',       0x1000);
 /*
  * Traficlights for Administration of HubLoc
@@ -478,8 +480,10 @@ define ( 'ACCOUNT_PENDING',      0x0010 );
  * Account roles
  */
 
-define ( 'ACCOUNT_ROLE_ADMIN',     0x1000 );
 define ( 'ACCOUNT_ROLE_ALLOWCODE', 0x0001 );    
+define ( 'ACCOUNT_ROLE_SYSTEM',    0x0002 );
+
+define ( 'ACCOUNT_ROLE_ADMIN',     0x1000 );
 
 /**
  * Item visibility
@@ -1388,7 +1392,14 @@ function fix_system_urls($oldurl,$newurl) {
 				dbesc($rr['xchan_hash']),
 				dbesc($oldurl)
 			);
-		
+
+
+			$z = q("update profile set photo = '%s', thumb = '%s' where uid = %d",
+				dbesc(str_replace($oldurl,$newurl,$rr['xchan_photo_l'])),
+				dbesc(str_replace($oldurl,$newurl,$rr['xchan_photo_m'])),
+				intval($rr['channel_id'])
+			);
+						
 			proc_run('php', 'include/notifier.php', 'refresh_all', $rr['channel_id']);
 
 		}

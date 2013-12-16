@@ -35,9 +35,11 @@
 	margin-top: 10px;
 }
 
-#profile-edit-with-label {
+#profile-edit-with-label, #profile-edit-howlong-label {
+
 	width: 175px;
-	margin-left: 20px;
+	margin-left: 50px;
+	margin-bottom: 20px;
 }
 
 #profile-edit-profile-name-label,

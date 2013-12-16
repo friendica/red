@@ -4,6 +4,8 @@ function rsa_sign($data,$key,$alg = 'sha256') {
 	if(! $key)
 		return 'no key';
 	$sig = '';
+	if(intval(OPENSSL_ALGO_SHA256) && $alg === 'sha256')
+		$alg = OPENSSL_ALGO_SHA256;
 	openssl_sign($data,$sig,$key,$alg);
 	return $sig;
 }
@@ -13,6 +15,8 @@ function rsa_verify($data,$sig,$key,$alg = 'sha256') {
 	if(! $key)
 		return false;
 
+	if(intval(OPENSSL_ALGO_SHA256) && $alg === 'sha256')
+		$alg = OPENSSL_ALGO_SHA256;
 	$verify = openssl_verify($data,$sig,$key,$alg);
 	return $verify;
 }

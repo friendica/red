@@ -577,6 +577,8 @@ function load_database($db) {
 
 function what_next() {
 	$a = get_app();
+	// install the standard theme
+	set_config('system','allowed_themes','redbasic');
 	$baseurl = $a->get_baseurl();
 	return 
 		t('<h1>What next</h1>')

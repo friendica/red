@@ -196,7 +196,7 @@ EOT;
 	$banner = get_config('system','banner');
 
 	if($banner === false) 
-		$banner = 'red';
+		$banner = get_config('system','sitename');
 
 	$x = array('nav' => $nav, 'usermenu' => $userinfo );
 	call_hooks('nav', $x);

@@ -363,3 +363,135 @@ function widget_affinity($arr) {
 	}
  	return '';
 }
+
+
+function widget_settings_menu($arr) {
+
+	if(! local_user())
+		return;
+
+	$a = get_app();
+	$channel = $a->get_channel();
+
+	$abook_self_id = 0;
+
+	// Retrieve the 'self' address book entry for use in the auto-permissions link
+
+	$abk = q("select abook_id from abook where abook_channel = %d and ( abook_flags & %d ) limit 1",
+		intval(local_user()),
+		intval(ABOOK_FLAG_SELF)
+	);
+	if($abk)
+		$abook_self_id = $abk[0]['abook_id'];
+
+
+	$tabs = array(
+		array(
+			'label'	=> t('Account settings'),
+			'url' 	=> $a->get_baseurl(true).'/settings/account',
+			'selected'	=> ((argv(1) === 'account') ? 'active' : ''),
+		),
+	
+		array(
+			'label'	=> t('Channel settings'),
+			'url' 	=> $a->get_baseurl(true).'/settings/channel',
+			'selected'	=> ((argv(1) === 'channel') ? 'active' : ''),
+		),
+	
+		array(
+			'label'	=> t('Additional features'),
+			'url' 	=> $a->get_baseurl(true).'/settings/features',
+			'selected'	=> ((argv(1) === 'features') ? 'active' : ''),
+		),
+
+		array(
+			'label'	=> t('Feature settings'),
+			'url' 	=> $a->get_baseurl(true).'/settings/featured',
+			'selected'	=> ((argv(1) === 'featured') ? 'active' : ''),
+		),
+
+		array(
+			'label'	=> t('Display settings'),
+			'url' 	=> $a->get_baseurl(true).'/settings/display',
+			'selected'	=> ((argv(1) === 'display') ? 'active' : ''),
+		),	
+		
+		array(
+			'label' => t('Connected apps'),
+			'url' => $a->get_baseurl(true) . '/settings/oauth',
+			'selected' => ((argv(1) === 'oauth') ? 'active' : ''),
+		),
+
+		array(
+			'label' => t('Export channel'),
+			'url' => $a->get_baseurl(true) . '/uexport/basic',
+			'selected' => ''
+		),
+
+//		array(
+//			'label' => t('Export account'),
+//			'url' => $a->get_baseurl(true) . '/uexport/complete',
+//			'selected' => ''
+//		),
+
+		array(
+			'label' => t('Automatic Permissions (Advanced)'),
+			'url' => $a->get_baseurl(true) . '/connections/' . $abook_self_id,
+			'selected' => ''
+		),
+
+
+	);
+
+	if(feature_enabled(local_user(),'premium_channel')) {
+		$tabs[] = array(
+			'label' => t('Premium Channel Settings'),
+			'url' => $a->get_baseurl(true) . '/connect/' . $channel['channel_address'],
+			'selected' => ''
+		);
+
+	}
+
+	if(feature_enabled(local_user(),'channel_sources')) {
+		$tabs[] = array(
+			'label' => t('Channel Sources'),
+			'url' => $a->get_baseurl(true) . '/sources',
+			'selected' => ''
+		);
+
+	}
+
+
+	
+	$tabtpl = get_markup_template("generic_links_widget.tpl");
+	return replace_macros($tabtpl, array(
+		'$title' => t('Settings'),
+		'$class' => 'settings-widget',
+		'$items' => $tabs,
+	));
+
+}
+
+
+function widget_mailmenu($arr) {
+	if (! local_user())
+		return;
+
+	$a = get_app();
+	return replace_macros(get_markup_template('message_side.tpl'), array(
+		'$tabs'=> array(),
+
+		'$check'=>array(
+			'label' => t('Check Mail'),
+			'url' => $a->get_baseurl(true) . '/message',
+			'sel' => (argv(1) == ''),
+		),
+		'$new'=>array(
+			'label' => t('New Message'),
+			'url' => $a->get_baseurl(true) . '/message/new',
+			'sel'=> (argv(1) == 'new'),
+		)
+
+	));
+
+}

@@ -1,6 +1,9 @@
 <?php
 
-if(! function_exists('home_init')) {
+require_once('include/items.php');
+require_once('include/conversation.php');
+
+
 function home_init(&$a) {
 
 	$ret = array();
@@ -20,10 +23,9 @@ function home_init(&$a) {
 		goaway(z_root() . '/new_channel');
 	}
 
-}}
+}
 
 
-if(! function_exists('home_content')) {
 function home_content(&$a) {
 
 	$o = '';
@@ -33,56 +35,62 @@ function home_content(&$a) {
 	if(x($_SESSION,'mobile_theme'))
 		unset($_SESSION['mobile_theme']);
 
-$channel_address = get_config("system", "site_channel" );
+	$channel_address = get_config("system", "site_channel" );
     if ($channel_address){
 
-require_once('include/items.php');
-require_once('include/conversation.php');
+		// We can do better, but until we figure out auto-linkification, let's keep things simple
 
+		$page_id = 'home';
 
-//We can do better, but until we figure out auto-linkification, let's keep things simple
-	$page_id = 'home';
+		$u = q("select channel_id from channel where channel_address = '%s' limit 1",
+			dbesc($channel_address)
+		);
 
-	$u = q("select channel_id from channel where channel_address = '%s' limit 1",
-		dbesc($channel_address)
-	);
+		if(! $u) {
+			notice( t('Channel not found.') . EOL);
+			return;
+		}
 
-	if(! $u) {
-		notice( t('Channel not found.') . EOL);
-		return;
+		$r = q("select item.* from item left join item_id on item.id = item_id.iid
+			where item.uid = %d and sid = '%s' and service = 'WEBPAGE' and 
+			item_restrict = %d limit 1",
+			intval($u[0]['channel_id']),
+			dbesc($page_id),
+			intval(ITEM_WEBPAGE)
+		);
+
+		if(! $r) {
+			notice( t('Item not found.') . EOL);
+			return;
+		}
+
+		xchan_query($r);
+		$r = fetch_post_tags($r,true);
+		$a->profile = array('profile_uid' => $u[0]['channel_id']);
+		$o .= prepare_page($r[0]);
+		return $o;
 	}
 
-	$r = q("select item.* from item left join item_id on item.id = item_id.iid
-		where item.uid = %d and sid = '%s' and service = 'WEBPAGE' and 
-		item_restrict = %d limit 1",
-		intval($u[0]['channel_id']),
-		dbesc($page_id),
-		intval(ITEM_WEBPAGE)
-	);
-
-	if(! $r) {
-		notice( t('Item not found.') . EOL);
-		return;
+	if(get_config('system','projecthome')) {
+		$o .= file_get_contents('assets/home.html');
+		$a->page['template'] = 'full';
+		return $o;
 	}
 
-	xchan_query($r);
-	$r = fetch_post_tags($r,true);
-	$a->profile = array('profile_uid' => $u[0]['channel_id']);
-	$o .= prepare_page($r[0]);
+	if(file_exists('home.html')) {
+		$o .= file_get_contents('home.html');
+	}
+	else {
 
-}
+		// If there's no site channel or home contents configured, fallback to the old behaviour
 
-// If there's no site channel specified, fallback to the old behaviour
-	else {	$o .= '<h1>' . ((x($a->config,'sitename')) ? sprintf( t("Welcome to %s") ,$a->config['sitename']) : "" ) . '</h1>';
-	if(file_exists('home.html'))
- 		$o .= file_get_contents('home.html');
-}
-
-	if (!$a->config['system']['no_login_on_homepage'])
-		$o .= login(($a->config['system']['register_policy'] == REGISTER_CLOSED) ? 0 : 1);
+		$sitename = get_config('system','sitename');
+		if($sitename) 
+			$o .= '<h1>' . sprintf( t("Welcome to %s") ,$sitename) . '</h1>';
+		if (! $a->config['system']['no_login_on_homepage'])
+			$o .= login(($a->config['system']['register_policy'] == REGISTER_CLOSED) ? 0 : 1);
+	}
 	
-	call_hooks("home_content",$o);
-	return $o;
-}
-	
+	call_hooks('home_content',$o);
+	return $o;	
 }
