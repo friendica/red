@@ -39,10 +39,10 @@ function connections_aside(&$a) {
 	
 	if(x($a->data,'abook')) {
 		$a->set_widget('vcard',vcard_from_xchan($a->data['abook'],$a->get_observer()));
+		$a->set_widget('collections', group_side('connections','group',false,0,$a->data['abook']['abook_xchan']));
 	}
 	else {
 		$a->set_widget('follow', widget_follow(array()));
-		$a->set_widget('collections', group_side('connections','group',false,0,((array_key_exists('abook',$a->data)) ? $a->data['abook']['abook_xchan'] : '')));
 	}
 
 
