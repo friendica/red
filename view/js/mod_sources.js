@@ -10,4 +10,6 @@ $(document).ready(function() {
 		}			
 	});
 
+	a.setOptions({ autoSubmit: true, params: { type: 'a' }});
+
 }); 
