@@ -1392,7 +1392,14 @@ function fix_system_urls($oldurl,$newurl) {
 				dbesc($rr['xchan_hash']),
 				dbesc($oldurl)
 			);
-		
+
+
+			$z = q("update profile set photo = '%s', thumb = '%s' where uid = %d",
+				dbesc(str_replace($oldurl,$newurl,$rr['xchan_photo_l'])),
+				dbesc(str_replace($oldurl,$newurl,$rr['xchan_photo_m'])),
+				intval($rr['channel_id'])
+			);
+						
 			proc_run('php', 'include/notifier.php', 'refresh_all', $rr['channel_id']);
 
 		}
