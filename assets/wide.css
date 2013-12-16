@@ -19,7 +19,7 @@ body {
 color:#C60032;font-size:1.2em;width:700px;margin-right:auto;margin-left:auto;text-align:justify;
 }
 div.section-text {
-color:#C60032;font-size:1em;width:700px;margin-right:auto;margin-left:auto;text-align:justify;
+color:#C60032;font-size:1.2em;width:700px;margin-right:auto;margin-left:auto;text-align:justify;
 }
 
 
@@ -146,7 +146,7 @@ div.summary-node {
 	position: fixed;
     width: 50px;
     text-align: center ; 
-    font-size:1em;
+    font-size:1.2em;
 
 
 }
