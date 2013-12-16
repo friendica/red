@@ -6,10 +6,10 @@ $(document).ready(function() {
 		width: 250,
 		id: 'id-name-ac',
 		onSelect: function(value,data) {
-			$("#id_xchan").val(data);
+			$("#id_abook").val(data);
 		}			
 	});
 
-	a.setOptions({ autoSubmit: true, params: { type: 'a' }});
+	a.setOptions({ params: { type: 'a' }});
 
 }); 
