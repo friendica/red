@@ -234,7 +234,7 @@ header #banner #logo-text {
 	background-color: #aec0d3;
 	color: #565854;		
 	-moz-border-radius: $radiuspx;
-	border-radius: $radiuspx;;	
+	border-radius: $radiuspx;
 }
 
 nav .nav-link {
@@ -327,8 +327,8 @@ footer {
 	margin-bottom: 15px;
 }
 
-/*TODO: we should use one class for all this, nets-selected probably obsolete */
-.group-selected, /* .nets-selected, */ .fileas-selected, .categories-selected, .search-selected, .active {
+/*TODO: we should use one class for all this. */
+.group-selected, .fileas-selected, .categories-selected, .search-selected, .active {
 	color: #444444 !important;
 }
 
@@ -676,7 +676,7 @@ footer {
 	list-style: none;
 }
 
-/* .contact-entry-photo img, */ .profile-match-photo img, #photo-photo img, .directory-photo-img, .photo-album-photo, .photo-top-photo {
+.profile-match-photo img, #photo-photo img, .directory-photo-img, .photo-album-photo, .photo-top-photo {
     border-radius: $radiuspx;
     -moz-border-radius: $radiuspx;
     box-shadow: $shadowpx $shadowpx $shadowpx 0 #444444;
@@ -733,23 +733,6 @@ footer {
 }
 
 #netsearch-box { margin-bottom: 5px; }
-
-/* might be obsolete
-.nets-ul {
-	list-style-type: none;
-}
-
-.nets-ul li {
-	margin-top: 10px;
-}
-
-.nets-link {
-	margin-left: 24px;
-}
-.nets-all {
-	margin-left: 42px;
-}
-*/
 
 #search-save {
 	margin-left: 5px;
@@ -2002,13 +1985,6 @@ ul.menu-popup {
 .reshared-content { margin-left: 30px; }
 .shared_header img { margin-right: 10px; }
 
-/* might be obsolete
-span.mail-delete {
-float: left;
-width: 30px;
-}
-*/
-
 .tag1 {
     font-size : 1.0em !important;
   }
@@ -2468,67 +2444,4 @@ img.mail-list-sender-photo {
 
 #sidebar-group-list ul {
 	list-style-type: none;
-}
-
-/* need to put these back in the theme for now - used in more than one module */
-
-.contact-entry-wrapper {
-	float: left;
-	width: 120px;
-	height: 120px;
-	padding: 10px;
-}
-
-#contacts-search {
-	font-size: 1em;
-	width: 300px;
-}
-
-#contacts-search-end {
-	margin-bottom: 10px;
-}
-
-/* seems oblolete
-.contact-entry-photo img {
-	border: none;
-}
-*/
-
-.contact-entry-photo-end {
-	clear: both;
-}
-
-.contact-entry-name {
-	float: left;
-	margin-left: 0px;
-	margin-right: 10px;
-	width: 120px;
-	overflow: hidden;
-}
-
-/* seems obsolete
-.contact-entry-edit-links {
-	margin-top: 6px;
-	margin-left: 10px;
-	width: 16px;
-}
-
-.contact-entry-nav-wrapper {
-	float: left;
-	margin-left: 10px;
-}
-
-.contact-entry-edit-links img {
-	border: none;
-	margin-right: 15px;
-}
-
-.contact-entry-photo {
-	float: left;
-	position: relative;
-}
-*/
-
-.contact-entry-end {
-	clear: both;
 }
