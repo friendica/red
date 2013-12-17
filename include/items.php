@@ -2362,12 +2362,13 @@ function tgroup_check($uid,$item) {
 	$mention = false;
 
 	// check that the message originated elsewhere and is a top-level post
-	// or is a followup and we have already accepted the top level post
+	// or is a followup and we have already accepted the top level post as an uplink
 
 	if($item['mid'] != $item['parent_mid']) {
-		$r = q("select id from item where mid = '%s' and uid = %d limit 1",
+		$r = q("select id from item where mid = '%s' and uid = %d and ( item_flags & %d ) limit 1",
 			dbesc($item['parent_mid']),
-			intval($uid)
+			intval($uid),
+			intval(ITEM_UPLINK)
 		);
 		if($r)
 			return true;
