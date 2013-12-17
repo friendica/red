@@ -11,6 +11,8 @@ We need much more than this, but here are areas where developers can help. Pleas
 
 * Finish the anti-spam bayesian engine
 
+* Integrate the "open site" list with the register page
+
 * Write more webpage layouts
 
 * Write more webpage widgets 
