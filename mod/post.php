@@ -232,7 +232,7 @@ function post_init(&$a) {
 
 			if($test) {
 				$ret['success'] = true;
-				$ret['message'] .= 'Success' . EOL;
+				$ret['message'] .= 'Authentication Success!' . EOL;
 				json_return_and_die($ret);
 			}
 
