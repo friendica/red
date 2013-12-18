@@ -125,6 +125,14 @@
 	position: relative;
 }
 
+.wall-item-content-wrapper .wall-item-delete-wrapper {
+	opacity: 0;
+}
+
+.wall-item-content-wrapper:hover .wall-item-delete-wrapper {
+	opacity: 1;
+}
+
 .wall-item-info {
 	display: block;
 	float: left;

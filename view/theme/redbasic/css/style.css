@@ -2087,12 +2087,12 @@ margin-right: 50px;
 }
 
 a .drop-icons {
-	color: #777;
+	color: $toolicon_colour;;
 	font-size: 1.2em;
 	text-decoration: none;
 }
  
-.drop-icons:hover {
+a .drop-icons:hover {
 	color: #FF0000;
 }
 
@@ -2362,10 +2362,6 @@ img.mail-list-sender-photo {
 
 .item-tool:hover {
 	color: $toolicon_activecolour;
-}
-
-.drop-icons.item-tool {
-	color: $toolicon_colour;
 }
 
 .like-rotator {
