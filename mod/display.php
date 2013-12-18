@@ -139,13 +139,13 @@ function display_content(&$a, $update = 0, $load = false) {
 
 	$sql_extra = public_permissions_sql(get_observer_hash());
 
-	if($update && $load) {
+	if(($update && $load) || ($_COOKIE['jsAvailable'] != 1)) {
 
 		$updateable = false;
 
 		$pager_sql = sprintf(" LIMIT %d, %d ",intval($a->pager['start']), intval($a->pager['itemspage']));
 
-		if($load) {
+		if($load || ($_COOKIE['jsAvailable'] != 1)) {
 			$r = null;
 			if(local_user()) {
 				$r = q("SELECT * from item
@@ -202,8 +202,11 @@ function display_content(&$a, $update = 0, $load = false) {
 	}
 
 
-
-	$o .= conversation($a, $items, 'display', $update, 'client');
+	if ($_COOKIE['jsAvailable'] == 1) {
+		$o .= conversation($a, $items, 'display', $update, 'client');
+	} else {
+		$o .= conversation($a, $items, 'display', $update, 'traditional');
+	}
 
 	if($updateable) {
 		$x = q("UPDATE item SET item_flags = ( item_flags ^ %d )
