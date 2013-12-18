@@ -99,7 +99,7 @@ if (! local_user())
 
 		array(
 			'label' => t('Automatic Permissions (Advanced)'),
-			'url' => $a->get_baseurl(true) . '/connections/' . $abook_self_id,
+			'url' => $a->get_baseurl(true) . '/connedit/' . $abook_self_id,
 			'selected' => ''
 		),
 

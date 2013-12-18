@@ -362,7 +362,8 @@ require_once('include/photos.php');
 			'location' => ($usr) ? $usr[0]['channel_location'] : '',
 			'profile_image_url' => $uinfo[0]['xchan_photo_l'],
 			'url' => $uinfo[0]['xchan_url'],
-			'contact_url' => $a->get_baseurl()."/connections/".$uinfo[0]['abook_id'],
+//FIXME
+			'contact_url' => $a->get_baseurl() . "/connections/".$uinfo[0]['abook_id'],
 			'protected' => false,	
 			'friends_count' => intval($countfriends),
 			'created_at' => api_date($uinfo[0]['abook_created']),

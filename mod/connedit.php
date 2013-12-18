@@ -41,10 +41,6 @@ function connedit_aside(&$a) {
 		$a->set_widget('vcard',vcard_from_xchan($a->data['abook'],$a->get_observer()));
 		$a->set_widget('collections', group_side('connections','group',false,0,$a->data['abook']['abook_xchan']));
 	}
-	else {
-		$a->set_widget('follow', widget_follow(array()));
-	}
-
 
 	$a->set_widget('suggest',widget_suggestions(array()));
 	$a->set_widget('findpeople',findpeople_widget());
@@ -228,14 +224,14 @@ function connedit_content(&$a) {
 
 			// pull feed and consume it, which should subscribe to the hub.
 			proc_run('php',"include/poller.php","$contact_id");
-			goaway($a->get_baseurl(true) . '/connections/' . $contact_id);
+			goaway($a->get_baseurl(true) . '/connedit/' . $contact_id);
 
 		}
 
 		if($cmd === 'refresh') {
 			if(! zot_refresh($orig_record[0],get_app()->get_channel())) 
 				notice( t('Refresh failed - channel is currently unavailable.') );
-			goaway($a->get_baseurl(true) . '/connections/' . $contact_id);
+			goaway($a->get_baseurl(true) . '/connedit/' . $contact_id);
 		}
 
 		if($cmd === 'block') {
@@ -247,7 +243,7 @@ function connedit_content(&$a) {
 			}
 			else
 				notice(t('Unable to set address book parameters.') . EOL);
-			goaway($a->get_baseurl(true) . '/connections/' . $contact_id);
+			goaway($a->get_baseurl(true) . '/connedit/' . $contact_id);
 		}
 
 		if($cmd === 'ignore') {
@@ -259,7 +255,7 @@ function connedit_content(&$a) {
 			}
 			else
 				notice(t('Unable to set address book parameters.') . EOL);
-			goaway($a->get_baseurl(true) . '/connections/' . $contact_id);
+			goaway($a->get_baseurl(true) . '/connedit/' . $contact_id);
 		}
 
 		if($cmd === 'archive') {
@@ -271,7 +267,7 @@ function connedit_content(&$a) {
 			}
 			else
 				notice(t('Unable to set address book parameters.') . EOL);
-			goaway($a->get_baseurl(true) . '/connections/' . $contact_id);
+			goaway($a->get_baseurl(true) . '/connedit/' . $contact_id);
 		}
 
 		if($cmd === 'hide') {
@@ -283,7 +279,7 @@ function connedit_content(&$a) {
 			}
 			else
 				notice(t('Unable to set address book parameters.') . EOL);
-			goaway($a->get_baseurl(true) . '/connections/' . $contact_id);
+			goaway($a->get_baseurl(true) . '/connedit/' . $contact_id);
 		}
 
 		// We'll prevent somebody from unapproving a contact.
@@ -299,7 +295,7 @@ function connedit_content(&$a) {
 				else
 					notice(t('Unable to set address book parameters.') . EOL);
 			}
-			goaway($a->get_baseurl(true) . '/connections/' . $contact_id);
+			goaway($a->get_baseurl(true) . '/connedit/' . $contact_id);
 		}
 
 
@@ -336,7 +332,7 @@ function connedit_content(&$a) {
 
 			array(
 				'label' => t('Refresh Permissions'),
-				'url'   => $a->get_baseurl(true) . '/connections/' . $contact['abook_id'] . '/refresh', 
+				'url'   => $a->get_baseurl(true) . '/connedit/' . $contact['abook_id'] . '/refresh', 
 				'sel'   => '',
 				'title' => t('Fetch updated permissions'),
 			),
@@ -350,33 +346,33 @@ function connedit_content(&$a) {
 
 			array(
 				'label' => (($contact['abook_flags'] & ABOOK_FLAG_BLOCKED) ? t('Unblock') : t('Block')),
-				'url'   => $a->get_baseurl(true) . '/connections/' . $contact['abook_id'] . '/block', 
+				'url'   => $a->get_baseurl(true) . '/connedit/' . $contact['abook_id'] . '/block', 
 				'sel'   => (($contact['abook_flags'] & ABOOK_FLAG_BLOCKED) ? 'active' : ''),
 				'title' => t('Block or Unblock this connection'),
 			),
 
 			array(
 				'label' => (($contact['abook_flags'] & ABOOK_FLAG_IGNORED) ? t('Unignore') : t('Ignore')),
-				'url'   => $a->get_baseurl(true) . '/connections/' . $contact['abook_id'] . '/ignore', 
+				'url'   => $a->get_baseurl(true) . '/connedit/' . $contact['abook_id'] . '/ignore', 
 				'sel'   => (($contact['abook_flags'] & ABOOK_FLAG_IGNORED) ? 'active' : ''),
 				'title' => t('Ignore or Unignore this connection'),
 			),
 			array(
 				'label' => (($contact['abook_flags'] & ABOOK_FLAG_ARCHIVED) ? t('Unarchive') : t('Archive')),
-				'url'   => $a->get_baseurl(true) . '/connections/' . $contact['abook_id'] . '/archive', 
+				'url'   => $a->get_baseurl(true) . '/connedit/' . $contact['abook_id'] . '/archive', 
 				'sel'   => (($contact['abook_flags'] & ABOOK_FLAG_ARCHIVED) ? 'active' : ''),
 				'title' => t('Archive or Unarchive this connection'),
 			),
 			array(
 				'label' => (($contact['abook_flags'] & ABOOK_FLAG_HIDDEN) ? t('Unhide') : t('Hide')),
-				'url'   => $a->get_baseurl(true) . '/connections/' . $contact['abook_id'] . '/hide', 
+				'url'   => $a->get_baseurl(true) . '/connedit/' . $contact['abook_id'] . '/hide', 
 				'sel'   => (($contact['abook_flags'] & ABOOK_FLAG_HIDDEN) ? 'active' : ''),
 				'title' => t('Hide or Unhide this connection'),
 			),
 
 			array(
 				'label' => t('Delete'),
-				'url'   => $a->get_baseurl(true) . '/connections/' . $contact['abook_id'] . '/drop', 
+				'url'   => $a->get_baseurl(true) . '/connedit/' . $contact['abook_id'] . '/drop', 
 				'sel'   => '',
 				'title' => t('Delete this connection'),
 			),
@@ -515,194 +511,5 @@ function connedit_content(&$a) {
 
 	}
 
-	$blocked   = false;
-	$hidden    = false;
-	$ignored   = false;
-	$archived  = false;
-	$unblocked = false;
-	$pending   = false;
 
-	$all = false;
-
-	$_SESSION['return_url'] = $a->query_string;
-
-	$search_flags = 0;
-	$head = '';
-
-	if(argc() == 2) {
-		switch(argv(1)) {
-			case 'blocked':
-				$search_flags = ABOOK_FLAG_BLOCKED;
-				$head = t('Blocked');
-				$blocked = true;
-				break;
-			case 'ignored':
-				$search_flags = ABOOK_FLAG_IGNORED;
-				$head = t('Ignored');
-				$ignored = true;
-				break;
-			case 'hidden':
-				$search_flags = ABOOK_FLAG_HIDDEN;
-				$head = t('Hidden');
-				$hidden = true;
-				break;
-			case 'archived':
-				$search_flags = ABOOK_FLAG_ARCHIVED;
-				$head = t('Archived');
-				$archived = true;
-				break;
-			case 'pending':
-				$search_flags = ABOOK_FLAG_PENDING;
-				$head = t('New');
-				$pending = true;
-				nav_set_selected('intros');
-				break;
-
-			case 'all':
-				$head = t('All');
-			default:
-				$search_flags = 0;
-				$all = true;
-				break;
-
-		}
-
-		$sql_extra = (($search_flags) ? " and ( abook_flags & " . $search_flags . " ) " : "");
-
-
-	}
-	else {
-		$sql_extra = " and not ( abook_flags & " . ABOOK_FLAG_BLOCKED . " ) ";
-		$unblocked = true;
-	}
-
-	$search = ((x($_REQUEST,'search')) ? notags(trim($_REQUEST['search'])) : '');
-
-	$tabs = array(
-		array(
-			'label' => t('Suggestions'),
-			'url'   => $a->get_baseurl(true) . '/suggest', 
-			'sel'   => '',
-			'title' => t('Suggest new connections'),
-		),
-		array(
-			'label' => t('New Connections'),
-			'url'   => $a->get_baseurl(true) . '/connections/pending', 
-			'sel'   => ($pending) ? 'active' : '',
-			'title' => t('Show pending (new) connections'),
-		),
-		array(
-			'label' => t('All Connections'),
-			'url'   => $a->get_baseurl(true) . '/connections/all', 
-			'sel'   => ($all) ? 'active' : '',
-			'title' => t('Show all connections'),
-		),
-		array(
-			'label' => t('Unblocked'),
-			'url'   => $a->get_baseurl(true) . '/connections',
-			'sel'   => (($unblocked) && (! $search) && (! $nets)) ? 'active' : '',
-			'title' => t('Only show unblocked connections'),
-		),
-
-		array(
-			'label' => t('Blocked'),
-			'url'   => $a->get_baseurl(true) . '/connections/blocked',
-			'sel'   => ($blocked) ? 'active' : '',
-			'title' => t('Only show blocked connections'),
-		),
-
-		array(
-			'label' => t('Ignored'),
-			'url'   => $a->get_baseurl(true) . '/connections/ignored',
-			'sel'   => ($ignored) ? 'active' : '',
-			'title' => t('Only show ignored connections'),
-		),
-
-		array(
-			'label' => t('Archived'),
-			'url'   => $a->get_baseurl(true) . '/connections/archived',
-			'sel'   => ($archived) ? 'active' : '',
-			'title' => t('Only show archived connections'),
-		),
-
-		array(
-			'label' => t('Hidden'),
-			'url'   => $a->get_baseurl(true) . '/connections/hidden',
-			'sel'   => ($hidden) ? 'active' : '',
-			'title' => t('Only show hidden connections'),
-		),
-
-	);
-
-	$tab_tpl = get_markup_template('common_tabs.tpl');
-	$t = replace_macros($tab_tpl, array('$tabs'=>$tabs));
-
-	$searching = false;
-	if($search) {
-		$search_hdr = $search;
-		$search_txt = dbesc(protect_sprintf(preg_quote($search)));
-		$searching = true;
-	}
-	$sql_extra .= (($searching) ? protect_sprintf(" AND xchan_name like '%$search_txt%' ") : "");
-
- 	
-	$r = q("SELECT COUNT(abook.abook_id) AS total FROM abook left join xchan on abook.abook_xchan = xchan.xchan_hash 
-		where abook_channel = %d and not (abook_flags & %d) $sql_extra $sql_extra2 ",
-		intval(local_user()),
-		intval(ABOOK_FLAG_SELF)
-	);
-	if(count($r)) {
-		$a->set_pager_total($r[0]['total']);
-		$total = $r[0]['total'];
-	}
-
-	$r = q("SELECT abook.*, xchan.* FROM abook left join xchan on abook.abook_xchan = xchan.xchan_hash
-		WHERE abook_channel = %d and not (abook_flags & %d) $sql_extra $sql_extra2 ORDER BY xchan_name LIMIT %d , %d ",
-		intval(local_user()),
-		intval(ABOOK_FLAG_SELF),
-		intval($a->pager['start']),
-		intval($a->pager['itemspage'])
-	);
-
-	$contacts = array();
-
-	if(count($r)) {
-
-		foreach($r as $rr) {
-			if($rr['xchan_url']) {
-				$contacts[] = array(
-					'img_hover' => sprintf( t('%1$s [%2$s]'),$rr['xchan_name'],$rr['xchan_url']),
-					'edit_hover' => t('Edit contact'),
-					'id' => $rr['abook_id'],
-					'alt_text' => $alt_text,
-					'dir_icon' => $dir_icon,
-					'thumb' => $rr['xchan_photo_m'], 
-					'name' => $rr['xchan_name'],
-					'username' => $rr['xchan_name'],
-					'sparkle' => $sparkle,
-					'link' => z_root() . '/connections/' . $rr['abook_id'],
-					'url' => $rr['xchan_url'],
-					'network' => network_to_name($rr['network']),
-				);
-			}
-		}
-	}
-	
-
-	$tpl = get_markup_template("contacts-template.tpl");
-	$o .= replace_macros($tpl,array(
-		'$header' => t('Connections') . (($head) ? ' - ' . $head : ''),
-		'$tabs' => $t,
-		'$total' => $total,
-		'$search' => $search_hdr,
-		'$desc' => t('Search your connections'),
-		'$finding' => (($searching) ? t('Finding: ') . "'" . $search . "'" : ""),
-		'$submit' => t('Find'),
-		'$cmd' => $a->cmd,
-		'$contacts' => $contacts,
-		'$paginate' => paginate($a),
-
-	)); 
-	
-	return $o;
 }

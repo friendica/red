@@ -915,7 +915,7 @@ function item_photo_menu($item){
 
 	if($contact) {
 		$poke_link = $a->get_baseurl($ssl_state) . '/poke/?f=&c=' . $contact['abook_id'];
-		$contact_url = $a->get_baseurl($ssl_state) . '/connections/' . $contact['abook_id'];
+		$contact_url = $a->get_baseurl($ssl_state) . '/connedit/' . $contact['abook_id'];
 		$posts_link = $a->get_baseurl($ssl_state) . '/network/?cid=' . $contact['abook_id'];
 
 		$clean_url = normalise_link($item['author-link']);
