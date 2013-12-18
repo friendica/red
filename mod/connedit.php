@@ -21,7 +21,7 @@ function connedit_init(&$a) {
 			intval(argv(1))
 		);
 		if($r) {
-			$a->data['abook'] = $r[0];
+			$a->poi = $r[0];
 		}
 	}
 
@@ -37,9 +37,9 @@ function connedit_aside(&$a) {
 	if (! local_user())
 		return;
 	
-	if(x($a->data,'abook')) {
-		$a->set_widget('vcard',vcard_from_xchan($a->data['abook'],$a->get_observer()));
-		$a->set_widget('collections', group_side('connections','group',false,0,$a->data['abook']['abook_xchan']));
+	if($a->poi) {
+		$a->set_widget('vcard',vcard_from_xchan($a->poi,$a->get_observer()));
+		$a->set_widget('collections', group_side('connections','group',false,0,$a->poi['abook_xchan']));
 	}
 
 	$a->set_widget('suggest',widget_suggestions(array()));
@@ -123,8 +123,8 @@ function connedit_post(&$a) {
 	else
 		notice( t('Failed to update connection record.') . EOL);
 
-	if((x($a->data,'abook')) && $a->data['abook']['abook_my_perms'] != $abook_my_perms 
-		&& (! ($a->data['abook']['abook_flags'] & ABOOK_FLAG_SELF))) {
+	if($a->poi && $a->poi['abook_my_perms'] != $abook_my_perms 
+		&& (! ($a->poi['abook_flags'] & ABOOK_FLAG_SELF))) {
 		proc_run('php', 'include/notifier.php', 'permission_update', $contact_id);
 	}
 
@@ -135,7 +135,7 @@ function connedit_post(&$a) {
 			require_once('include/group.php');
 			$g = group_rec_byhash(local_user(),$default_group);
 			if($g)
-				group_add_member(local_user(),'',$a->data['abook_xchan'],$g['id']);
+				group_add_member(local_user(),'',$a->poi['abook_xchan'],$g['id']);
 		}
 
 
@@ -159,11 +159,11 @@ function connedit_post(&$a) {
 		intval($contact_id)
 	);
 	if($r) {
-		$a->data['abook'] = $r[0];
+		$a->poi = $r[0];
 	}
 
 	if($new_friend) {
-		$arr = array('channel_id' => local_user(), 'abook' => $a->data['abook']);
+		$arr = array('channel_id' => local_user(), 'abook' => $a->poi);
 		call_hooks('accept_follow', $arr);
 	}
 
@@ -175,9 +175,9 @@ function connedit_post(&$a) {
 
 function connedit_clone(&$a) {
 
-		if(! array_key_exists('abook',$a->data))
+		if(! $a->poi)
 			return;
-		$clone = $a->data['abook'];
+		$clone = $a->poi;
 
 		unset($clone['abook_id']);
 		unset($clone['abook_account']);
@@ -315,10 +315,10 @@ function connedit_content(&$a) {
 		}
 	}
 
-	if((x($a->data,'abook')) && (is_array($a->data['abook']))) {
+	if($a->poi) {
 
-		$contact_id = $a->data['abook']['abook_id'];
-		$contact = $a->data['abook'];
+		$contact_id = $a->poi['abook_id'];
+		$contact = $a->poi;
 
 
 		$tabs = array(

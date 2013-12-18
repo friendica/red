@@ -38,9 +38,8 @@ function chanview_content(&$a) {
 		);
 	}
 	if($r) {
-		$xchan = $r[0];
+		$a->poi = $r[0];
 	}
-
 
 
 	// Here, let's see if we have an xchan. If we don't, how we proceed is determined by what
@@ -48,7 +47,7 @@ function chanview_content(&$a) {
 	// address, we can and should try to import it. If it's just a hash, we can't continue, but we 
 	// probably wouldn't have a hash if we don't already have an xchan for this channel.
 
-	if(! $xchan) {
+	if(! $a->poi) {
 		logger('mod_chanview: fallback');
 		// This is hackish - construct a zot address from the url
 		if($_REQUEST['url']) {
@@ -68,20 +67,20 @@ function chanview_content(&$a) {
 					dbesc($_REQUEST['address'])
 				);
 				if($r)
-					$xchan = $r[0];
+					$a->poi = $r[0];
 			}
 
 		}
 	}
 
-	if(! $xchan) {
+	if(! $a->poi) {
 		notice( t('Channel not found.') . EOL);
 		return;
 	}
 
 	$url = (($observer) 
-		? z_root() . '/magic?f=&dest=' . $xchan['xchan_url'] . '&addr=' . $xchan['xchan_addr'] 
-		: $xchan['xchan_url']
+		? z_root() . '/magic?f=&dest=' . $a->poi['xchan_url'] . '&addr=' . $a->poi['xchan_addr'] 
+		: $a->poi['xchan_url']
 	);
 
 	// let somebody over-ride the iframed viewport presentation
@@ -90,8 +89,8 @@ function chanview_content(&$a) {
 		goaway($url);
 
 
-	if($xchan['xchan_hash'])
-		$a->set_widget('vcard',vcard_from_xchan($xchan,$observer,'chanview'));
+	if($a->poi['xchan_hash'])
+		$a->set_widget('vcard',vcard_from_xchan($a->poi,$observer,'chanview'));
 				
 	$o = replace_macros(get_markup_template('chanview.tpl'),array(
 		'$url' => $url,

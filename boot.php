@@ -572,11 +572,12 @@ function startup() {
 class App {
 
 		
-	public  $account    = null;            // account record
-	public  $channel    = null;            // channel record
-	public  $observer   = null;            // xchan record
-	public  $profile_uid = 0;              // If applicable, the uid of the person whose stuff this is. 
-	public  $layout     = array();         // Comanche parsed template                                           
+	public  $account    = null;            // account record of the logged-in account
+	public  $channel    = null;            // channel record of the current channel of the logged-in account
+	public  $observer   = null;            // xchan record of the page observer
+	public  $profile_uid = 0;              // If applicable, the channel_id of the "page owner"
+	public  $poi        = null;            // "person of interest", generally a referenced connection
+	public  $layout     = array();         // Comanche parsed template
 
 
 	private $perms      = null;            // observer permissions

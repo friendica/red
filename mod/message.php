@@ -374,15 +374,14 @@ function message_content(&$a) {
 			return $o;
 		}
 
-		$other_channel = null;
 		if($messages[0]['to_xchan'] === $channel['channel_hash'])
-			$other_channel = $messages[0]['from'];
+			$a->poi = $messages[0]['from'];
 		else
-			$other_channel = $messages[0]['to'];
+			$a->poi = $messages[0]['to'];
 
 		require_once('include/Contact.php');
 
-		$a->set_widget('mail_conversant',vcard_from_xchan($other_channel,$get_observer_hash,'mail'));
+		$a->set_widget('mail_conversant',vcard_from_xchan($a->poi,$get_observer_hash,'mail'));
 
 
 		$tpl = get_markup_template('msg-header.tpl');
