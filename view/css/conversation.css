@@ -110,7 +110,7 @@
 
 /* conversation */
 
-.thread-wrapper .toplevel_item {
+.thread-wrapper.toplevel_item {
 	width: 92%;
 }
 

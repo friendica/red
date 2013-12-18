@@ -2265,7 +2265,7 @@ img.mail-list-sender-photo {
 	border-left: 2px solid #eee;
 }
 
-.thread-wrapper .toplevel_item {
+.thread-wrapper.toplevel_item {
 	max-width: $converse_width;
 }
 
