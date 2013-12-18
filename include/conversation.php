@@ -203,6 +203,10 @@ function localize_item(&$item){
 	}
 
 	if (stristr($item['verb'],ACTIVITY_POKE)) {
+
+		// FIXME for obscured private posts, until then leave untranslated
+		return;
+
 		$verb = urldecode(substr($item['verb'],strpos($item['verb'],'#')+1));
 		if(! $verb)
 			return;
@@ -911,7 +915,7 @@ function item_photo_menu($item){
 
 	if($contact) {
 		$poke_link = $a->get_baseurl($ssl_state) . '/poke/?f=&c=' . $contact['abook_id'];
-		$contact_url = $a->get_baseurl($ssl_state) . '/connections/' . $contact['abook_id'];
+		$contact_url = $a->get_baseurl($ssl_state) . '/connedit/' . $contact['abook_id'];
 		$posts_link = $a->get_baseurl($ssl_state) . '/network/?cid=' . $contact['abook_id'];
 
 		$clean_url = normalise_link($item['author-link']);
@@ -993,9 +997,9 @@ function format_like($cnt,$arr,$type,$id) {
 	else {
 		$spanatts = 'class="fakelink" onclick="openClose(\'' . $type . 'list-' . $id . '\');"';
 		$o .= (($type === 'like') ?
-					sprintf( t('<span  %1$s>%2$d people</span> like this.'), $spanatts, $cnt)
+					sprintf( tt('<span  %1$s>%2$d people</span> like this.','<span  %1$s>%2$d people</span> like this.',$cnt), $spanatts, $cnt)
 					 :
-					sprintf( t('<span  %1$s>%2$d people</span> don\'t like this.'), $spanatts, $cnt) );
+					sprintf( tt('<span  %1$s>%2$d people</span> don\'t like this.','<span  %1$s>%2$d people</span> don\'t like this.',$cnt), $spanatts, $cnt) );
 		$o .= EOL ;
 		$total = count($arr);
 		if($total >= MAX_LIKERS)
@@ -1004,7 +1008,7 @@ function format_like($cnt,$arr,$type,$id) {
 			$arr[count($arr)-1] = t('and') . ' ' . $arr[count($arr)-1];
 		$str = implode(', ', $arr);
 		if($total >= MAX_LIKERS)
-			$str .= sprintf( t(', and %d other people'), $total - MAX_LIKERS );
+			$str .= sprintf( tt(', and %d other people',', and %d other people',$total - MAX_LIKERS), $total - MAX_LIKERS );
 		$str = (($type === 'like') ? sprintf( t('%s like this.'), $str) : sprintf( t('%s don\'t like this.'), $str));
 		$o .= "\t" . '<div id="' . $type . 'list-' . $id . '" style="display: none;" >' . $str . '</div>';
 	}
@@ -1104,7 +1108,7 @@ function status_editor($a,$x,$popup=false) {
 		'$shortsetloc' => t('set location'),
 		'$noloc' => t('Clear browser location'),
 		'$shortnoloc' => t('clear location'),
-		'$title' => ((x($x,'title')) ? htmlspecialchars($x['title']) : ''),
+		'$title' => ((x($x,'title')) ? htmlspecialchars($x['title'], ENT_COMPAT,'UTF-8') : ''),
 		'$placeholdertitle' => t('Set title'),
 		'$catsenabled' => ((feature_enabled($x['profile_uid'],'categories') && (! $webpage)) ? 'categories' : ''),
 		'$category' => "",
@@ -1113,7 +1117,7 @@ function status_editor($a,$x,$popup=false) {
 		'$permset' => t('Permission settings'),
 		'$shortpermset' => t('permissions'),
 		'$ptyp' => (($notes_cid) ? 'note' : 'wall'),
-		'$content' => ((x($x,'body')) ? htmlspecialchars($x['body']) : ''),
+		'$content' => ((x($x,'body')) ? htmlspecialchars($x['body'], ENT_COMPAT,'UTF-8') : ''),
 		'$post_id' => '',
 		'$baseurl' => $a->get_baseurl(true),
 		'$defloc' => $x['default_location'],
@@ -1301,7 +1305,191 @@ function prepare_page($item) {
 		'$auth_url' => (($naked) ? '' : $item['author']['xchan_url']),
 		'$date' => (($naked) ? '' : datetime_convert('UTC',date_default_timezone_get(),$item['created'],'Y-m-d H:i')),
 		'$title' => smilies(bbcode($item['title'])),
-		'$body' => prepare_text($item['body'],$item['mimetype'])
+		'$body' => prepare_body($item,true)
 	));
 }
 
+
+function network_tabs() {
+	$a = get_app();
+	$no_active='';
+	$starred_active = '';
+	$new_active = '';
+	$all_active = '';
+	$search_active = '';
+	$conv_active = '';
+	$spam_active = '';
+	$postord_active = '';
+
+	if(x($_GET,'new')) {
+		$new_active = 'active';
+	}
+	
+	if(x($_GET,'search')) {
+		$search_active = 'active';
+	}
+	
+	if(x($_GET,'star')) {
+		$starred_active = 'active';
+	}
+	
+	if(x($_GET,'conv')) {
+		$conv_active = 'active';
+	}
+
+	if(x($_GET,'spam')) {
+		$spam_active = 'active';
+	}
+
+	
+	
+	if (($new_active == '') 
+		&& ($starred_active == '') 
+		&& ($conv_active == '')
+		&& ($search_active == '')
+		&& ($spam_active == '')) {
+			$no_active = 'active';
+	}
+
+	if ($no_active=='active' && x($_GET,'order')) {
+		switch($_GET['order']){
+		 case 'post': $postord_active = 'active'; $no_active=''; break;
+		 case 'comment' : $all_active = 'active'; $no_active=''; break;
+		}
+	}
+	
+	if ($no_active=='active') $all_active='active';
+
+	$cmd = $a->cmd;
+
+	// tabs
+	$tabs = array(
+		array(
+			'label' => t('Commented Order'),
+			'url'=>$a->get_baseurl(true) . '/' . $cmd . '?f=&order=comment' . ((x($_GET,'cid')) ? '&cid=' . $_GET['cid'] : ''), 
+			'sel'=>$all_active,
+			'title'=> t('Sort by Comment Date'),
+		),
+		array(
+			'label' => t('Posted Order'),
+			'url'=>$a->get_baseurl(true) . '/' . $cmd . '?f=&order=post' . ((x($_GET,'cid')) ? '&cid=' . $_GET['cid'] : ''), 
+			'sel'=>$postord_active,
+			'title' => t('Sort by Post Date'),
+		),
+
+		array(
+			'label' => t('Personal'),
+			'url' => $a->get_baseurl(true) . '/' . $cmd . ((x($_GET,'cid')) ? '/?f=&cid=' . $_GET['cid'] : '') . '&conv=1',
+			'sel' => $conv_active,
+			'title' => t('Posts that mention or involve you'),
+		),
+		array(
+			'label' => t('New'),
+			'url' => $a->get_baseurl(true) . '/' . $cmd . ((x($_GET,'cid')) ? '/?f=&cid=' . $_GET['cid'] : '') . '&new=1',
+			'sel' => $new_active,
+			'title' => t('Activity Stream - by date'),
+		),
+
+	);
+
+	if(feature_enabled(local_user(),'star_posts')) 
+		$tabs[] = array(
+			'label' => t('Starred'),
+			'url'=>$a->get_baseurl(true) . '/' . $cmd . ((x($_GET,'cid')) ? '/?f=&cid=' . $_GET['cid'] : '') . '&star=1',
+			'sel'=>$starred_active,
+			'title' => t('Favourite Posts'),
+		);
+
+	// Not yet implemented
+
+	if(feature_enabled(local_user(),'spam_filter')) 
+		$tabs[] = array(
+			'label' => t('Spam'),
+			'url'=>$a->get_baseurl(true) . '/network?f=&spam=1',
+			'sel'=> $spam_active,
+			'title' => t('Posts flagged as SPAM'),
+		);	
+
+	$arr = array('tabs' => $tabs);
+	call_hooks('network_tabs', $arr);
+
+	$tpl = get_markup_template('common_tabs.tpl');
+
+	return replace_macros($tpl,array('$tabs' => $arr['tabs']));
+
+}
+
+
+
+function profile_tabs($a, $is_owner=False, $nickname=Null){
+	//echo "<pre>"; var_dump($a->user); killme();
+	
+	$channel = $a->get_channel();
+
+	if (is_null($nickname))
+		$nickname  = $channel['channel_address'];
+		
+	if(x($_GET,'tab'))
+		$tab = notags(trim($_GET['tab']));
+	
+	$url = $a->get_baseurl() . '/channel/' . $nickname;
+	$pr  = $a->get_baseurl() . '/profile/' . $nickname;
+
+	$tabs = array(
+		array(
+			'label' => t('Channel'),
+			'url'   => $url,
+			'sel'   => ((argv(0) == 'channel') ? 'active' : ''),
+			'title' => t('Status Messages and Posts'),
+			'id'    => 'status-tab',
+		),
+		array(
+			'label' => t('About'),
+			'url' 	=> $pr,
+			'sel'	=> ((argv(0) == 'profile') ? 'active' : ''),
+			'title' => t('Profile Details'),
+			'id'    => 'profile-tab',
+		),
+		array(
+			'label' => t('Photos'),
+			'url'	=> $a->get_baseurl() . '/photos/' . $nickname,
+			'sel'	=> ((argv(0) == 'photos') ? 'active' : ''),
+			'title' => t('Photo Albums'),
+			'id'    => 'photo-tab',
+		),
+	);
+
+
+	if ($is_owner){
+		$tabs[] = array(
+			'label' => t('Events'),
+			'url'	=> $a->get_baseurl() . '/events',
+			'sel' 	=> ((argv(0) == 'events') ? 'active' : ''),
+			'title' => t('Events and Calendar'),
+			'id'    => 'events-tab',
+		);
+		if(feature_enabled(local_user(),'webpages')){
+		$tabs[] = array(
+			'label' => t('Webpages'),
+			'url'	=> $a->get_baseurl() . '/webpages/' . $nickname,
+			'sel' 	=> ((argv(0) == 'webpages') ? 'active' : ''),
+			'title' => t('Manage Webpages'),
+			'id'    => 'webpages-tab',
+		);}
+	}
+	else {
+		// FIXME
+		// we probably need a listing of events that were created by 
+		// this channel and are visible to the observer
+
+
+	}
+
+
+	$arr = array('is_owner' => $is_owner, 'nickname' => $nickname, 'tab' => (($tab) ? $tab : false), 'tabs' => $tabs);
+	call_hooks('profile_tabs', $arr);
+	
+	$tpl = get_markup_template('common_tabs.tpl');
+
+	return replace_macros($tpl,array('$tabs' => $arr['tabs']));
+}

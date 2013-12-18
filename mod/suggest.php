@@ -2,6 +2,7 @@
 
 require_once('include/socgraph.php');
 require_once('include/contact_widgets.php');
+require_once('include/widgets.php');
 
 
 function suggest_init(&$a) {
@@ -20,7 +21,7 @@ function suggest_init(&$a) {
 
 function suggest_aside(&$a) {
 
-	$a->set_widget('follow', follow_widget());
+	$a->set_widget('follow', widget_follow(array()));
 	$a->set_widget('findpeople', findpeople_widget());
 }
 
@@ -50,6 +51,7 @@ function suggest_content(&$a) {
 
 		$arr[] = array(
 			'url' => chanlink_url($rr['xchan_url']),
+			'profile' => $rr['xchan_url'],
 			'name' => $rr['xchan_name'],
 			'photo' => $rr['xchan_photo_m'],
 			'ignlnk' => $a->get_baseurl() . '/suggest?ignore=' . $rr['xchan_hash'],

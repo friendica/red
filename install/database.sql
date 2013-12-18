@@ -128,16 +128,6 @@ CREATE TABLE IF NOT EXISTS `cache` (
   PRIMARY KEY (`k`)
 ) ENGINE=MyISAM DEFAULT CHARSET=utf8;
 
-CREATE TABLE IF NOT EXISTS `challenge` (
-  `id` int(10) unsigned NOT NULL AUTO_INCREMENT,
-  `challenge` char(255) NOT NULL,
-  `dfrn-id` char(255) NOT NULL,
-  `expire` int(11) NOT NULL,
-  `type` char(255) NOT NULL,
-  `last_update` char(255) NOT NULL,
-  PRIMARY KEY (`id`)
-) ENGINE=MyISAM DEFAULT CHARSET=utf8;
-
 CREATE TABLE IF NOT EXISTS `channel` (
   `channel_id` int(10) unsigned NOT NULL AUTO_INCREMENT,
   `channel_account_id` int(10) unsigned NOT NULL DEFAULT '0',
@@ -573,6 +563,7 @@ CREATE TABLE IF NOT EXISTS `notify` (
   `photo` char(255) NOT NULL,
   `date` datetime NOT NULL,
   `msg` mediumtext NOT NULL,
+  `aid` int(11) NOT NULL,
   `uid` int(11) NOT NULL,
   `link` char(255) NOT NULL,
   `parent` int(11) NOT NULL,
@@ -588,7 +579,8 @@ CREATE TABLE IF NOT EXISTS `notify` (
   KEY `hash` (`hash`),
   KEY `parent` (`parent`),
   KEY `link` (`link`),
-  KEY `otype` (`otype`)
+  KEY `otype` (`otype`),
+  KEY `aid` (`aid`)
 ) ENGINE=MyISAM  DEFAULT CHARSET=utf8;
 
 CREATE TABLE IF NOT EXISTS `obj` (
@@ -773,22 +765,6 @@ CREATE TABLE IF NOT EXISTS `profile_check` (
   KEY `dfrn_id` (`dfrn_id`),
   KEY `sec` (`sec`),
   KEY `expire` (`expire`)
-) ENGINE=MyISAM DEFAULT CHARSET=utf8;
-
-CREATE TABLE IF NOT EXISTS `queue` (
-  `id` int(11) NOT NULL AUTO_INCREMENT,
-  `cid` int(11) NOT NULL,
-  `network` char(32) NOT NULL,
-  `created` datetime NOT NULL,
-  `last` datetime NOT NULL,
-  `content` mediumtext NOT NULL,
-  `batch` tinyint(1) NOT NULL DEFAULT '0',
-  PRIMARY KEY (`id`),
-  KEY `cid` (`cid`),
-  KEY `network` (`network`),
-  KEY `created` (`created`),
-  KEY `last` (`last`),
-  KEY `batch` (`batch`)
 ) ENGINE=MyISAM DEFAULT CHARSET=utf8;
 
 CREATE TABLE IF NOT EXISTS `register` (

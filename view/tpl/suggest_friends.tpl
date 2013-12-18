@@ -1,8 +1,8 @@
 <div class="profile-match-wrapper">
-	<a href="{{$entry.ignlnk}}" title="{{$entry.ignore}}" class="icon drophide smalldrop profile-match-ignore" onmouseout="imgdull(this);" onmouseover="imgbright(this);" onclick="return confirmDelete();" ></a>
+	<a href="{{$entry.ignlnk}}" title="{{$entry.ignore}}" class="profile-match-ignore" onclick="return confirmDelete();" ><i class="icon-remove drop-icons"></i></a>
 	<div class="profile-match-photo">
 		<a href="{{$entry.url}}">
-			<img src="{{$entry.photo}}" alt="{{$entry.name}}" width="80" height="80" title="{{$entry.name}} [{{$entry.url}}]" />
+			<img src="{{$entry.photo}}" alt="{{$entry.name}}" width="80" height="80" title="{{$entry.name}} [{{$entry.profile}}]" />
 		</a>
 	</div>
 	<div class="profile-match-break"></div>

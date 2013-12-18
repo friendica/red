@@ -57,9 +57,9 @@ function editpost_content(&$a) {
 	if($itm[0]['item_flags'] & ITEM_OBSCURED) {
 		$key = get_config('system','prvkey');
 		if($itm[0]['title'])
-			$itm[0]['title'] = aes_unencapsulate(json_decode_plus($itm[0]['title']),$key);
+			$itm[0]['title'] = crypto_unencapsulate(json_decode_plus($itm[0]['title']),$key);
 		if($itm[0]['body'])
-			$itm[0]['body'] = aes_unencapsulate(json_decode_plus($itm[0]['body']),$key);
+			$itm[0]['body'] = crypto_unencapsulate(json_decode_plus($itm[0]['body']),$key);
 	}
 
 	$tpl = get_markup_template("jot.tpl");
@@ -114,7 +114,7 @@ function editpost_content(&$a) {
 		'$pvisit' => 'none',
 		'$public' => t('Public post'),
 		'$jotnets' => $jotnets,
-		'$title' => htmlspecialchars($itm[0]['title']),
+		'$title' => htmlspecialchars($itm[0]['title'],ENT_COMPAT,'UTF-8'),
 		'$placeholdertitle' => t('Set title'),
 		'$category' => $category,
 		'$placeholdercategory' => t('Categories (comma-separated list)'),

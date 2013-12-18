@@ -202,7 +202,7 @@ function group_get_members($gid) {
 	return $ret;
 }
 
-function mini_group_select($uid,$gid = 0) {
+function mini_group_select($uid,$group = '') {
 	
 	$grps = array();
 	$o = '';
@@ -210,10 +210,10 @@ function mini_group_select($uid,$gid = 0) {
 	$r = q("SELECT * FROM `group` WHERE `deleted` = 0 AND `uid` = %d ORDER BY `name` ASC",
 		intval($uid)
 	);
-	$grps[] = array('name' => '', 'id' => '0', 'selected' => '');
+	$grps[] = array('name' => '', 'hash' => '0', 'selected' => '');
 	if(count($r)) {
 		foreach($r as $rr) {
-			$grps[] = array('name' => $rr['name'], 'id' => $rr['id'], 'selected' => (($gid == $rr['id']) ? 'true' : ''));
+			$grps[] = array('name' => $rr['name'], 'id' => $rr['hash'], 'selected' => (($group == $rr['hash']) ? 'true' : ''));
 		}
 
 	}
@@ -229,7 +229,7 @@ function mini_group_select($uid,$gid = 0) {
 
 
 
-function group_side($every="contacts",$each="group",$edit = false, $group_id = 0, $cid = '') {
+function group_side($every="contacts",$each="group",$edit = false, $group_id = 0, $cid = '',$mode = 1) {
 
 	$o = '';
 
@@ -272,7 +272,7 @@ function group_side($every="contacts",$each="group",$edit = false, $group_id = 0
 				'cid'		=> $cid,
 				'text' 		=> $rr['name'],
 				'selected' 	=> $selected,
-				'href'		=> (($each === 'network') ? $each.'?f=&gid='.$rr['id'] : $each."/".$rr['id']),
+				'href'		=> (($mode == 0) ? $each.'?f=&gid='.$rr['id'] : $each."/".$rr['id']),
 				'edit'		=> $groupedit,
 				'ismember'	=> in_array($rr['id'],$member_of),
 			);

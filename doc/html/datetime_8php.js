@@ -12,5 +12,6 @@ var datetime_8php =
     [ "relative_date", "datetime_8php.html#a8ae8dc95ace7ac27fa5a1ecf42b78c82", null ],
     [ "select_timezone", "datetime_8php.html#a633dadba426fa2f60b25fabdb19ebc1f", null ],
     [ "timesel", "datetime_8php.html#a36d3d6dff8d76b5f295bb3d9c535a5b1", null ],
-    [ "timezone_cmp", "datetime_8php.html#aa51b5a7ea4f931b23acbdfcea46e9865", null ]
+    [ "timezone_cmp", "datetime_8php.html#aa51b5a7ea4f931b23acbdfcea46e9865", null ],
+    [ "z_birthday", "datetime_8php.html#ab55e545b72ec8c097e052ea7d373491f", null ]
 ];

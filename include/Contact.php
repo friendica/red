@@ -77,6 +77,19 @@ function vcard_from_xchan($xchan, $observer = null, $mode = '') {
 
 	$a = get_app();
 
+	if(! $xchan) {
+		if($a->profile['channel_hash'])
+			$r = q("select * from xchan where xchan_hash = '%s' limit 1",
+				dbesc($a->profile['channel_hash'])
+			);
+			if($r)
+				$xchan = $r[0];
+	}
+
+	if(! $xchan)
+		return;
+
+// FIXME - show connect button to observer if appropriate
 	$connect = false;
 	if(local_user()) {
 		$r = q("select * from abook where abook_xchan = '%s' and abook_channel = %d limit 1",
@@ -489,62 +502,6 @@ function unmark_for_death($contact) {
 	);
 }}
 
-if(! function_exists('contact_photo_menu')){
-function contact_photo_menu($contact) {
-
-	$a = get_app();
-	
-	$contact_url="";
-	$pm_url="";
-	$status_link="";
-	$photos_link="";
-	$posts_link="";
-	$poke_link="";
-
-	$sparkle = false;
-	if($contact['xchan_network'] === NETWORK_ZOT) {
-		$sparkle = true;
-		$profile_link = $a->get_baseurl() . '/magic?f=&id=' . $contact['abook_id'];
-	}
-	else
-		$profile_link = $contact['xchan_url'];
-
-	if($sparkle) {
-		$status_link = $profile_link . "&url=status";
-		$photos_link = $profile_link . "&url=photos";
-		$profile_link = $profile_link . "&url=profile";
-		$pm_url = $a->get_baseurl() . '/message/new/' . $contact['xchan_hash'];
-	}
-
-	$poke_link = $a->get_baseurl() . '/poke/?f=&c=' . $contact['abook_id'];
-	$contact_url = $a->get_baseurl() . '/connections/' . $contact['abook_id'];
-	$posts_link = $a->get_baseurl() . '/network/?cid=' . $contact['abook_id'];
-
-	$menu = Array(
-		t("Poke") => $poke_link,
-		t("View Status") => $status_link,
-		t("View Profile") => $profile_link,
-		t("View Photos") => $photos_link,		
-		t("Network Posts") => $posts_link, 
-		t("Edit Contact") => $contact_url,
-		t("Send PM") => $pm_url,
-	);
-	
-	
-	$args = array('contact' => $contact, 'menu' => &$menu);
-	
-	call_hooks('contact_photo_menu', $args);
-	
-	$o = "";
-	foreach($menu as $k=>$v){
-		if ($v!="") {
-			$o .= "<li><a href=\"$v\">$k</a></li>\n";
-		}
-	}
-	return $o;
-}}
-
-
 function random_profile() {
 	$r = q("select xchan_url from xchan where 1 order by rand() limit 1");
 	if($r)
@@ -552,27 +509,4 @@ function random_profile() {
 	return '';
 }
 
-
-function contacts_not_grouped($uid,$start = 0,$count = 0) {
-
-	if(! $count) {
-		$r = q("select count(*) as total from contact where uid = %d and self = 0 and id not in (select distinct(`contact-id`) from group_member where uid = %d) ",
-			intval($uid),
-			intval($uid)
-		);
-
-		return $r;
-
-
-	}
-
-	$r = q("select * from contact where uid = %d and self = 0 and id not in (select distinct(`contact-id`) from group_member where uid = %d) and blocked = 0 and pending = 0 limit %d, %d",
-		intval($uid),
-		intval($uid),
-		intval($start),
-		intval($count)
-	);
-
-	return $r;
-}
 

@@ -87,9 +87,9 @@ function format_term_for_display($term) {
 		return $s;
 
 	if($term['url']) 
-		$s .= '<a href="' . $term['url'] . '">' . htmlspecialchars($term['term']) . '</a>';
+		$s .= '<a href="' . $term['url'] . '">' . htmlspecialchars($term['term'], ENT_COMPAT,'UTF-8') . '</a>';
 	else 
-		$s .= htmlspecialchars($term['term']);
+		$s .= htmlspecialchars($term['term'], ENT_COMPAT,'UTF-8');
 	return $s;
 }
 

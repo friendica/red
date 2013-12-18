@@ -39,13 +39,14 @@ require_once('library/Mobile_Detect/Mobile_Detect.php');
 require_once('include/BaseObject.php');
 require_once('include/features.php');
 require_once('include/taxonomy.php');
+require_once('include/identity.php');
 
 
 define ( 'RED_PLATFORM',            'Red Matrix' );
 define ( 'RED_VERSION',             trim(file_get_contents('version.inc')) . 'R');
 define ( 'ZOT_REVISION',            1     ); 
 
-define ( 'DB_UPDATE_VERSION',       1081  );
+define ( 'DB_UPDATE_VERSION',       1084  );
 
 define ( 'EOL',                    '<br />' . "\r\n"     );
 define ( 'ATOM_TIME',              'Y-m-d\TH:i:s\Z' );
@@ -204,6 +205,7 @@ define ( 'PAGE_DIRECTORY_CHANNEL', 0x0008 ); // system channel used for director
 define ( 'PAGE_PREMIUM',           0x0010 );
 define ( 'PAGE_ADULT',             0x0020 );
 
+define ( 'PAGE_SYSTEM',            0x1000 );
 define ( 'PAGE_REMOVED',           0x8000 );
 
 
@@ -366,6 +368,7 @@ define ( 'XCHAN_FLAGS_HIDDEN',        0x0001);
 define ( 'XCHAN_FLAGS_ORPHAN',        0x0002);
 define ( 'XCHAN_FLAGS_CENSORED',      0x0004);
 define ( 'XCHAN_FLAGS_SELFCENSORED',  0x0008);
+define ( 'XCHAN_FLAGS_SYSTEM',        0x0010);
 define ( 'XCHAN_FLAGS_DELETED',       0x1000);
 /*
  * Traficlights for Administration of HubLoc
@@ -477,8 +480,10 @@ define ( 'ACCOUNT_PENDING',      0x0010 );
  * Account roles
  */
 
-define ( 'ACCOUNT_ROLE_ADMIN',     0x1000 );
 define ( 'ACCOUNT_ROLE_ALLOWCODE', 0x0001 );    
+define ( 'ACCOUNT_ROLE_SYSTEM',    0x0002 );
+
+define ( 'ACCOUNT_ROLE_ADMIN',     0x1000 );
 
 /**
  * Item visibility
@@ -773,7 +778,7 @@ class App {
 		$this->is_mobile = $mobile_detect->isMobile();
 		$this->is_tablet = $mobile_detect->isTablet();
 
-		$this->head_set_icon('/images/rhash-32.png');
+		$this->head_set_icon('/images/rm-32.png');
 
 		BaseObject::set_app($this);
 		
@@ -803,12 +808,6 @@ class App {
 
 		$scheme = $this->scheme;
 
-//		if((x($this->config,'system')) && (x($this->config['system'],'ssl_policy'))) {
-//			if(intval($this->config['system']['ssl_policy']) === intval(SSL_POLICY_FULL)) {
-//				$scheme = 'https';
-//			}
-//		}
-			
 		$this->baseurl = $scheme . "://" . $this->hostname . ((isset($this->path) && strlen($this->path)) ? '/' . $this->path : '' );
 		return $this->baseurl;
 	}
@@ -995,23 +994,6 @@ class App {
 		)) . $this->page['htmlhead'];
 	}
 
-	function set_curl_code($code) {
-		$this->curl_code = $code;
-	}
-
-	function get_curl_code() {
-		return $this->curl_code;
-	}
-
-	function set_curl_headers($headers) {
-		$this->curl_headers = $headers;
-	}
-
-	function get_curl_headers() {
-		return $this->curl_headers;
-	}
-
-	
 	/**
 	* register template engine class
 	* if $name is "", is used class static property $class::$name
@@ -1184,7 +1166,6 @@ function is_ajax() {
 // Primarily involved with database upgrade, but also sets the
 // base url for use in cmdline programs which don't have
 // $_SERVER variables, and synchronising the state of installed plugins.
-
 
 
 function check_config(&$a) {
@@ -1411,7 +1392,14 @@ function fix_system_urls($oldurl,$newurl) {
 				dbesc($rr['xchan_hash']),
 				dbesc($oldurl)
 			);
-		
+
+
+			$z = q("update profile set photo = '%s', thumb = '%s' where uid = %d",
+				dbesc(str_replace($oldurl,$newurl,$rr['xchan_photo_l'])),
+				dbesc(str_replace($oldurl,$newurl,$rr['xchan_photo_m'])),
+				intval($rr['channel_id'])
+			);
+						
 			proc_run('php', 'include/notifier.php', 'refresh_all', $rr['channel_id']);
 
 		}
@@ -1555,447 +1543,10 @@ function info($s) {
 
 
 function get_max_import_size() {
-	global $a;
-	return ((x($a->config,'max_import_size')) ? $a->config['max_import_size'] : 0 );
+	return(intval(get_config('system','max_import_size')));
 }
 
 
-
-
-/**
- *
- * Function : profile_load
- * @parameter App    $a
- * @parameter string $nickname
- * @parameter string $profile
- *
- * Summary: Loads a profile into the page sidebar.
- * The function requires a writeable copy of the main App structure, and the nickname
- * of a registered local account.
- *
- * If the viewer is an authenticated remote viewer, the profile displayed is the
- * one that has been configured for his/her viewing in the Contact manager.
- * Passing a non-zero profile ID can also allow a preview of a selected profile
- * by the owner.
- *
- * Profile information is placed in the App structure for later retrieval.
- * Honours the owner's chosen theme for display.
- *
- */
-
-
-function profile_load(&$a, $nickname, $profile = '') {
-
-	logger('profile_load: ' . $profile);
-
-	$user = q("select channel_id from channel where channel_address = '%s' limit 1",
-		dbesc($nickname)
-	);
-		
-	if(! $user) {
-		logger('profile error: ' . $a->query_string, LOGGER_DEBUG);
-		notice( t('Requested channel is not available.') . EOL );
-		$a->error = 404;
-		return;
-	}
-
-	// get the current observer
-	$observer = $a->get_observer();
-
-	// Can the observer see our profile?
-	require_once('include/permissions.php');
-	if(! perm_is_allowed($user[0]['channel_id'],$observer['xchan_hash'],'view_profile')) {
-		// permission denied
-		notice( t(' Sorry, you don\'t have the permission to view this profile. ') . EOL);
-		return;
-	}
-
-	if(! $profile) {
-		$r = q("SELECT abook_profile FROM abook WHERE abook_xchan = '%s' and abook_channel = '%d' limit 1",
-			dbesc($observer['xchan_hash']),
-			intval($user[0]['channel_id'])
-		);
-		if($r)
-			$profile = $r[0]['abook_profile'];
-	}
-	$r = null;
-
-	if($profile) {
-		$r = q("SELECT profile.uid AS profile_uid, profile.*, channel.* FROM profile
-				LEFT JOIN channel ON profile.uid = channel.channel_id
-				WHERE channel.channel_address = '%s' AND profile.profile_guid = '%s' LIMIT 1",
-				dbesc($nickname),
-				dbesc($profile)
-		);
-	}
-
-	if(! $r) {
-		$r = q("SELECT profile.uid AS profile_uid, profile.*, channel.* FROM profile
-			LEFT JOIN channel ON profile.uid = channel.channel_id
-			WHERE channel.channel_address = '%s' and not ( channel_pageflags & %d ) 
-			AND profile.is_default = 1 LIMIT 1",
-			dbesc($nickname),
-			intval(PAGE_REMOVED)
-		);
-	}
-
-	if(! $r) {
-		logger('profile error: ' . $a->query_string, LOGGER_DEBUG);
-		notice( t('Requested profile is not available.') . EOL );
-		$a->error = 404;
-		return;
-	}
-	
-	// fetch user tags if this isn't the default profile
-
-	if(! $r[0]['is_default']) {
-		$x = q("select `keywords` from `profile` where uid = %d and `is_default` = 1 limit 1",
-				intval($profile_uid)
-		);
-		if($x)
-			$r[0]['keywords'] = $x[0]['keywords'];
-	}
-
-	if($r[0]['keywords']) {
-		$keywords = str_replace(array('#',',',' ',',,'),array('',' ',',',','),$r[0]['keywords']);
-		if(strlen($keywords))
-			$a->page['htmlhead'] .= '<meta name="keywords" content="' . htmlentities($keywords,ENT_COMPAT,'UTF-8') . '" />' . "\r\n" ;
-
-	}
-
-	$a->profile = $r[0];
-	$a->profile_uid = $r[0]['profile_uid'];
-
-	$a->page['title'] = $a->profile['channel_name'] . " - " . $a->profile['channel_address'] . "@" . $a->get_hostname();
-
-	$a->profile['channel_mobile_theme'] = get_pconfig(local_user(),'system', 'mobile_theme');
-	$_SESSION['theme'] = $a->profile['channel_theme'];
-	$_SESSION['mobile_theme'] = $a->profile['channel_mobile_theme'];
-
-	/**
-	 * load/reload current theme info
-	 */
-
-	$a->set_template_engine(); // reset the template engine to the default in case the user's theme doesn't specify one
-
-	$theme_info_file = "view/theme/".current_theme()."/php/theme.php";
-	if (file_exists($theme_info_file)){
-		require_once($theme_info_file);
-	}
-
-	return;
-}
-
-function profile_create_sidebar(&$a,$connect = true) {
-
-	$block = (((get_config('system','block_public')) && (! local_user()) && (! remote_user())) ? true : false);
-
-	$a->set_widget('profile',profile_sidebar($a->profile, $block, $connect));
-	return;
-}
-
-
-/**
- *
- * Function: profile_sidebar
- *
- * Formats a profile for display in the sidebar.
- * It is very difficult to templatise the HTML completely
- * because of all the conditional logic.
- *
- * @parameter: array $profile
- *
- * Returns HTML string stuitable for sidebar inclusion
- * Exceptions: Returns empty string if passed $profile is wrong type or not populated
- *
- */
-
-
-
-function profile_sidebar($profile, $block = 0, $show_connect = true) {
-
-	$a = get_app();
-
-	$observer = $a->get_observer();
-
-	$o = '';
-	$location = false;
-	$address = false;
-	$pdesc = true;
-
-	if((! is_array($profile)) && (! count($profile)))
-		return $o;
-
-
-	head_set_icon($profile['thumb']);
-
-	$is_owner = (($profile['uid'] == local_user()) ? true : false);
-
-	$profile['picdate'] = urlencode($profile['picdate']);
-
-	call_hooks('profile_sidebar_enter', $profile);
-
-	require_once('include/Contact.php');
-
-	if($show_connect) {
-
-		// This will return an empty string if we're already connected.
-
-		$connect_url = rconnect_url($profile['uid'],get_observer_hash());
-		$connect = (($connect_url) ? t('Connect') : '');
-		if($connect_url) 
-			$connect_url = sprintf($connect_url,urlencode($profile['channel_address'] . '@' . $a->get_hostname()));
-
-		// premium channel - over-ride
-
-		if($profile['channel_pageflags'] & PAGE_PREMIUM)
-			$connect_url = z_root() . '/connect/' . $profile['channel_address'];
-	}
-
-	// show edit profile to yourself
-	if($is_owner) {
-
-		$profile['menu'] = array(
-			'chg_photo' => t('Change profile photo'),
-			'entries' => array(),
-		);
-
-
-		if(feature_enabled(local_user(),'multi_profiles')) {
-			$profile['edit'] = array($a->get_baseurl(). '/profiles', t('Profiles'),"", t('Manage/edit profiles'));
-			$profile['menu']['cr_new'] = t('Create New Profile');
-		}
-		else
-			$profile['edit'] = array($a->get_baseurl() . '/profiles/' . $profile['id'], t('Edit Profile'),'',t('Edit Profile'));
-						
-		$r = q("SELECT * FROM `profile` WHERE `uid` = %d",
-				local_user());
-		
-
-		if($r) {
-			foreach($r as $rr) {
-				$profile['menu']['entries'][] = array(
-					'photo'                => $rr['thumb'],
-					'id'                   => $rr['id'],
-					'alt'                  => t('Profile Image'),
-					'profile_name'         => $rr['profile_name'],
-					'isdefault'            => $rr['is_default'],
-					'visible_to_everybody' => t('visible to everybody'),
-					'edit_visibility'      => t('Edit visibility'),
-				);
-			}
-		}
-	}
-
-	if((x($profile,'address') == 1)
-		|| (x($profile,'locality') == 1)
-		|| (x($profile,'region') == 1)
-		|| (x($profile,'postal_code') == 1)
-		|| (x($profile,'country_name') == 1))
-		$location = t('Location:');
-
-	$gender   = ((x($profile,'gender')   == 1) ? t('Gender:')   : False);
-	$marital  = ((x($profile,'marital')  == 1) ? t('Status:')   : False);
-	$homepage = ((x($profile,'homepage') == 1) ? t('Homepage:') : False);
-
-	if(($profile['hidewall'] || $block) && (! local_user()) && (! remote_user())) {
-		$location = $pdesc = $gender = $marital = $homepage = False;
-	}
-
-	$firstname = ((strpos($profile['name'],' '))
-		? trim(substr($profile['name'],0,strpos($profile['name'],' '))) : $profile['name']);
-	$lastname = (($firstname === $profile['name']) ? '' : trim(substr($profile['name'],strlen($firstname))));
-
-	if(is_array($observer) 
-		&& perm_is_allowed($profile['uid'],$observer['xchan_hash'],'view_contacts')) {
-		$contact_block = contact_block();
-	}
-
-	$channel_menu = false;
-	$menu = get_pconfig($profile['uid'],'system','channel_menu');
-	if($menu) {
-		require_once('include/menu.php');
-		$m = menu_fetch($menu,$profile['uid'],$observer['xchan_hash']);
-		if($m)
-			$channel_menu = menu_render($m);
-	}
-	$menublock = get_pconfig($profile['uid'],'system','channel_menublock');
-	if ($menublock) {
-		require_once('include/comanche.php');
-		$channel_menu .= comanche_block($menublock);
-	}
-
-	$tpl = get_markup_template('profile_vcard.tpl');
-
-	$o .= replace_macros($tpl, array(
-		'$profile'       => $profile,
-		'$connect'       => $connect,
-		'$connect_url'   => $connect_url,
-		'$location'      => $location,
-		'$gender'        => $gender,
-		'$pdesc'         => $pdesc,
-		'$marital'       => $marital,
-		'$homepage'      => $homepage,
-		'$chanmenu'      => $channel_menu,
-		'$contact_block' => $contact_block,
-	));
-
-	$arr = array('profile' => &$profile, 'entry' => &$o);
-
-	call_hooks('profile_sidebar', $arr);
-
-	return $o;
-}
-
-
-// FIXME or remove
-
-
-	function get_birthdays() {
-
-		$a = get_app();
-		$o = '';
-
-		if(! local_user())
-			return $o;
-
-		$bd_format = t('g A l F d') ; // 8 AM Friday January 18
-		$bd_short = t('F d');
-
-		$r = q("SELECT `event`.*, `event`.`id` AS `eid`, `contact`.* FROM `event`
-				LEFT JOIN `contact` ON `contact`.`id` = `event`.`cid`
-				WHERE `event`.`uid` = %d AND `type` = 'birthday' AND `start` < '%s' AND `finish` > '%s'
-				ORDER BY `start` ASC ",
-				intval(local_user()),
-				dbesc(datetime_convert('UTC','UTC','now + 6 days')),
-				dbesc(datetime_convert('UTC','UTC','now'))
-		);
-
-		if($r && count($r)) {
-			$total = 0;
-			$now = strtotime('now');
-			$cids = array();
-
-			$istoday = false;
-			foreach($r as $rr) {
-				if(strlen($rr['name']))
-					$total ++;
-				if((strtotime($rr['start'] . ' +00:00') < $now) && (strtotime($rr['finish'] . ' +00:00') > $now))
-					$istoday = true;
-			}
-			$classtoday = $istoday ? ' birthday-today ' : '';
-			if($total) {
-				foreach($r as &$rr) {
-					if(! strlen($rr['name']))
-						continue;
-
-					// avoid duplicates
-
-					if(in_array($rr['cid'],$cids))
-						continue;
-					$cids[] = $rr['cid'];
-
-					$today = (((strtotime($rr['start'] . ' +00:00') < $now) && (strtotime($rr['finish'] . ' +00:00') > $now)) ? true : false);
-					$sparkle = '';
-					$url = $rr['url'];
-					if($rr['network'] === NETWORK_DFRN) {
-						$sparkle = " sparkle";
-						$url = $a->get_baseurl() . '/redir/'  . $rr['cid'];
-					}
-	
-					$rr['link'] = $url;
-					$rr['title'] = $rr['name'];
-					$rr['date'] = day_translate(datetime_convert('UTC', $a->timezone, $rr['start'], $rr['adjust'] ? $bd_format : $bd_short)) . (($today) ?  ' ' . t('[today]') : '');
-					$rr['startime'] = Null;
-					$rr['today'] = $today;
-	
-				}
-			}
-		}
-		$tpl = get_markup_template("birthdays_reminder.tpl");
-		return replace_macros($tpl, array(
-			'$baseurl' => $a->get_baseurl(),
-			'$classtoday' => $classtoday,
-			'$count' => $total,
-			'$event_reminders' => t('Birthday Reminders'),
-			'$event_title' => t('Birthdays this week:'),
-			'$events' => $r,
-			'$lbr' => '{',  // raw brackets mess up if/endif macro processing
-			'$rbr' => '}'
-
-		));
-	}
-
-
-// FIXME
-
-
-	function get_events() {
-
-		require_once('include/bbcode.php');
-
-		$a = get_app();
-
-		if(! local_user())
-			return $o;
-
-		$bd_format = t('g A l F d') ; // 8 AM Friday January 18
-		$bd_short = t('F d');
-
-		$r = q("SELECT `event`.* FROM `event`
-				WHERE `event`.`uid` = %d AND `type` != 'birthday' AND `start` < '%s' AND `start` > '%s'
-				ORDER BY `start` ASC ",
-				intval(local_user()),
-				dbesc(datetime_convert('UTC','UTC','now + 6 days')),
-				dbesc(datetime_convert('UTC','UTC','now - 1 days'))
-		);
-
-		if($r && count($r)) {
-			$now = strtotime('now');
-			$istoday = false;
-			foreach($r as $rr) {
-				if(strlen($rr['name']))
-					$total ++;
-
-				$strt = datetime_convert('UTC',$rr['convert'] ? $a->timezone : 'UTC',$rr['start'],'Y-m-d');
-				if($strt === datetime_convert('UTC',$a->timezone,'now','Y-m-d'))
-					$istoday = true;
-			}
-			$classtoday = (($istoday) ? 'event-today' : '');
-
-
-			foreach($r as &$rr) {
-				if($rr['adjust'])
-					$md = datetime_convert('UTC',$a->timezone,$rr['start'],'Y/m');
-				else
-					$md = datetime_convert('UTC','UTC',$rr['start'],'Y/m');
-				$md .= "/#link-".$rr['id'];
-
-				$title = substr(strip_tags(bbcode($rr['desc'])),0,32) . '... ';
-				if(! $title)
-					$title = t('[No description]');
-
-				$strt = datetime_convert('UTC',$rr['convert'] ? $a->timezone : 'UTC',$rr['start']);
-				$today = ((substr($strt,0,10) === datetime_convert('UTC',$a->timezone,'now','Y-m-d')) ? true : false);
-				
-				$rr['link'] = $md;
-				$rr['title'] = $title;
-				$rr['date'] = day_translate(datetime_convert('UTC', $rr['adjust'] ? $a->timezone : 'UTC', $rr['start'], $bd_format)) . (($today) ?  ' ' . t('[today]') : '');
-				$rr['startime'] = $strt;
-				$rr['today'] = $today;
-			}
-		}
-
-		$tpl = get_markup_template("events_reminder.tpl");
-		return replace_macros($tpl, array(
-			'$baseurl' => $a->get_baseurl(),
-			'$classtoday' => $classtoday,
-			'$count' => count($r),
-			'$event_reminders' => t('Event Reminders'),
-			'$event_title' => t('Events this week:'),
-			'$events' => $r,
-		));
-	}
 
 
 
@@ -2150,27 +1701,6 @@ function current_theme_url($installing = false) {
 	return('view/theme/' . $t . '/css/style.css');
 }
 
-
-function z_birthday($dob,$tz,$format="Y-m-d H:i:s") {
-
-	if(! strlen($tz))
-		$tz = 'UTC';
-
-	$tmp_dob = substr($dob,5);
-	if(intval($tmp_dob)) {
-		$y = datetime_convert($tz,$tz,'now','Y');
-		$bd = $y . '-' . $tmp_dob . ' 00:00';
-		$t_dob = strtotime($bd);
-		$now = strtotime(datetime_convert($tz,$tz,'now'));
-		if($t_dob < $now)
-			$bd = $y + 1 . '-' . $tmp_dob . ' 00:00';
-		$birthday = datetime_convert($tz,'UTC',$bd,$format);
-	}
-
-	return $birthday;
-
-}
-
 function is_site_admin() {
 	$a = get_app();
 	if((intval($_SESSION['authenticated'])) 
@@ -2208,171 +1738,6 @@ function load_contact_links($uid) {
 	return;
 }
 
-
-
-function profile_tabs($a, $is_owner=False, $nickname=Null){
-	//echo "<pre>"; var_dump($a->user); killme();
-	
-	$channel = $a->get_channel();
-
-	if (is_null($nickname))
-		$nickname  = $channel['channel_address'];
-		
-	if(x($_GET,'tab'))
-		$tab = notags(trim($_GET['tab']));
-	
-	$url = $a->get_baseurl() . '/channel/' . $nickname;
-	$pr  = $a->get_baseurl() . '/profile/' . $nickname;
-
-	$tabs = array(
-		array(
-			'label' => t('Channel'),
-			'url'   => $url,
-			'sel'   => ((argv(0) == 'channel') ? 'active' : ''),
-			'title' => t('Status Messages and Posts'),
-			'id'    => 'status-tab',
-		),
-		array(
-			'label' => t('About'),
-			'url' 	=> $pr,
-			'sel'	=> ((argv(0) == 'profile') ? 'active' : ''),
-			'title' => t('Profile Details'),
-			'id'    => 'profile-tab',
-		),
-		array(
-			'label' => t('Photos'),
-			'url'	=> $a->get_baseurl() . '/photos/' . $nickname,
-			'sel'	=> ((argv(0) == 'photos') ? 'active' : ''),
-			'title' => t('Photo Albums'),
-			'id'    => 'photo-tab',
-		),
-	);
-
-
-	if ($is_owner){
-		$tabs[] = array(
-			'label' => t('Events'),
-			'url'	=> $a->get_baseurl() . '/events',
-			'sel' 	=> ((argv(0) == 'events') ? 'active' : ''),
-			'title' => t('Events and Calendar'),
-			'id'    => 'events-tab',
-		);
-		if(feature_enabled(local_user(),'webpages')){
-		$tabs[] = array(
-			'label' => t('Webpages'),
-			'url'	=> $a->get_baseurl() . '/webpages/' . $nickname,
-			'sel' 	=> ((argv(0) == 'webpages') ? 'active' : ''),
-			'title' => t('Manage Webpages'),
-			'id'    => 'webpages-tab',
-		);}
-	}
-	else {
-		// FIXME
-		// we probably need a listing of events that were created by 
-		// this channel and are visible to the observer
-
-
-	}
-
-
-	$arr = array('is_owner' => $is_owner, 'nickname' => $nickname, 'tab' => (($tab) ? $tab : false), 'tabs' => $tabs);
-	call_hooks('profile_tabs', $arr);
-	
-	$tpl = get_markup_template('common_tabs.tpl');
-
-	return replace_macros($tpl,array('$tabs' => $arr['tabs']));
-}
-
-
-function get_my_url() {
-	if(x($_SESSION,'zrl_override'))
-		return $_SESSION['zrl_override'];
-	if(x($_SESSION,'my_url'))
-		return $_SESSION['my_url'];
-	return false;
-}
-
-function get_my_address() {
-	if(x($_SESSION,'zid_override'))
-		return $_SESSION['zid_override'];
-	if(x($_SESSION,'my_address'))
-		return $_SESSION['my_address'];
-	return false;
-}
-
-/**
- * @function zid_init(&$a)
- *   If somebody arrives at our site using a zid, add their xchan to our DB if we don't have it already.
- *   And if they aren't already authenticated here, attempt reverse magic auth.
- *
- * @hooks 'zid_init'
- *      string 'zid' - their zid
- *      string 'url' - the destination url
- *
- */
-
-function zid_init(&$a) {
-	$tmp_str = get_my_address();
-	if(validate_email($tmp_str)) {
-		proc_run('php','include/gprobe.php',bin2hex($tmp_str));
-		$arr = array('zid' => $tmp_str, 'url' => $a->cmd);
-		call_hooks('zid_init',$arr);
-		if((! local_user()) && (! remote_user())) {
-			logger('zid_init: not authenticated. Invoking reverse magic-auth');
-			$r = q("select * from hubloc where hubloc_addr = '%s' limit 1",
-				dbesc($tmp_str)
-			);
-			// try to avoid recursion - but send them home to do a proper magic auth
-			$dest = '/' . $a->query_string;
-			$dest = str_replace(array('?zid=','&zid='),array('?rzid=','&rzid='),$dest);
-			if($r && ($r[0]['hubloc_url'] != z_root()) && (! strstr($dest,'/magic')) && (! strstr($dest,'/rmagic'))) {
-				goaway($r[0]['hubloc_url'] . '/magic' . '?f=&rev=1&dest=' . z_root() . $dest);
-			}
-		}
-	}
-}
-
-/**
- * @function zid($s,$address = '')
- *   Adds a zid parameter to a url
- * @param string $s
- *   The url to accept the zid
- * @param boolean $address
- *   $address to use instead of session environment
- * @return string
- *
- * @hooks 'zid'
- *      string url - url to accept zid
- *      string zid - urlencoded zid
- *      string result - the return string we calculated, change it if you want to return something else
- */
-
-
-function zid($s,$address = '') {
-	if(! strlen($s) || strpos($s,'zid='))
-		return $s;
-	$has_params = ((strpos($s,'?')) ? true : false);
-	$num_slashes = substr_count($s,'/');
-	if(! $has_params)
-		$has_params = ((strpos($s,'&')) ? true : false);
-	$achar = strpos($s,'?') ? '&' : '?';
-
-	$mine = get_my_url();
-	$myaddr = (($address) ? $address : get_my_address());
-
-	// FIXME checking against our own channel url is no longer reliable. We may have a lot
-	// of urls attached to out channel. Should probably match against our site, since we
-	// will not need to remote authenticate on our own site anyway.
-
-	if($mine && $myaddr && (! link_compare($mine,$s)))
-		$zurl = $s . (($num_slashes >= 3) ? '' : '/') . $achar . 'zid=' . urlencode($myaddr);
-	else
-		$zurl = $s;
-
-	$arr = array('url' => $s, 'zid' => urlencode($myaddr), 'result' => $zurl);
-	call_hooks('zid', $arr);
-	return $arr['result'];
-}
 
 /**
  * returns querystring as string from a mapped array
@@ -2454,12 +1819,17 @@ function get_custom_nav(&$a,$navname) {
 function construct_page(&$a) {
 
 	require_once('include/comanche.php');
-	
+
+	if(($p = theme_include('mod_' . $a->module . '.pdl')) != '')
+		comanche_parser($a,@file_get_contents($p));
+
 	$comanche = ((count($a->layout)) ? true : false);
 		
 	/**
  	 * Build the page - now that we have all the components
  	 */
+
+	require_once(theme_include('theme_init.php'));
 
 	$installing = false;
 
@@ -2475,7 +1845,6 @@ function construct_page(&$a) {
 		}
 	}
 
-	require_once(theme_include('theme_init.php'));
 
 	if(($p = theme_include(current_theme() . '.js')) != '')
 		head_add_js($p);
@@ -2513,6 +1882,10 @@ function construct_page(&$a) {
 	// layout completely with a new layout definition, or replace/remove existing content. 
 
 	if($comanche) {
+		$arr = array('module' => $a->module, 'layout' => $a->layout);
+		call_hooks('construct_page',$arr);
+		$a->layout = $arr['layout'];
+
 		foreach($a->layout as $k => $v) {
 			if((strpos($k,'region_') === 0) && strlen($v)) {
 				if(strpos($v,'$region_') !== false) {
@@ -2525,10 +1898,12 @@ function construct_page(&$a) {
 					$v = str_replace('$nav',$a->page['nav'],$v);
 				}
 				if(strpos($v,'$content') !== false) {
-					$v = str_replace('$content',$a->page['section'],$v);
+
+					$v = str_replace('$content',$a->page['content'],$v);
 				}
 
 				$a->page[substr($k,7)] = $v;
+
 			}
 		}
 	}	
@@ -2584,19 +1959,3 @@ function head_get_icon() {
 	return $icon;
 }
 
-// Used from within PCSS themes to set theme parameters. If there's a
-// puid request variable, that is the "page owner" and normally their theme
-// settings take precedence; unless a local user sets the "always_my_theme" 
-// system pconfig, which means they don't want to see anybody else's theme 
-// settings except their own while on this site.
-
-function get_theme_uid() {
-	$uid = (($_REQUEST['puid']) ? intval($_REQUEST['puid']) : 0);
-	if(local_user()) {
-		if((get_pconfig(local_user(),'system','always_my_theme')) || (! $uid))
-			return local_user();
-		if(! $uid)
-			return local_user();
-	}
-	return $uid;
-}

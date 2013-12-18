@@ -1,5 +1,4 @@
-The Red Matrix
-==============   
+![the Red Matrix](images/rm300.png)
 
 ***"Connected Websites"***
 
@@ -33,7 +32,7 @@ Within the Red Matrix, identity is nomadic. It defines you and it belongs to you
 The Red Matrix is free and open source distributed under the MIT license.
 
 
-Currently the project is in "Developer Preview". A lot of work remains, but many important bits are functioning. Please connect with one of the developer channels ("Channel One" would be a good choice) if you are interested in helping us out. 
+Currently the project is in "Public Preview". A lot of work remains, but many important bits are functioning. Please connect with one of the developer channels ("Channel One" would be a good choice) if you are interested in helping us out. 
 
 [Please help us change the world by providing a small donation.](http://pledgie.com/campaigns/18417) (Large donations are also graciously accepted).
 

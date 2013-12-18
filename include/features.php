@@ -23,6 +23,7 @@ function get_features() {
 			array('content_expire',         t('Content Expiration'),		t('Remove posts/comments and/or private messages at a future time')),
 			array('multi_profiles', t('Multiple Profiles'),			t('Ability to create multiple profiles')),
 			array('webpages',       t('Web Pages'),                 t('Provide managed web pages on your channel')),
+			array('private_notes',  t('Private Notes'),             t('Enables a tool to store notes and reminders')),
 			array('prettyphoto',       t('Enhanced Photo Albums'),                 t('Enable photo album with enhanced features')),
 			//FIXME - needs a description, but how the hell do we explain this to normals?
 			array('sendzid',		t('Extended Identity Sharing'),	t(' ')),
@@ -48,6 +49,7 @@ function get_features() {
 			array('personal_tab',   t('Network Personal Tab'),		t('Enable tab to display only Network posts that you\'ve interacted on')),
 			array('new_tab',   		t('Network New Tab'),			t('Enable tab to display all new Network activity')),
 			array('affinity',       t('Affinity Tool'),			    t('Filter stream activity by depth of relationships')),
+			array('suggest',    	t('Suggest Channels'),			t('Show channel suggestions')),
 		),
 
 		// Item tools

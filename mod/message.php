@@ -7,29 +7,6 @@ require_once("include/bbcode.php");
 require_once('include/Contact.php');
 
 
-function message_aside(&$a) {
-
-	if (! local_user())
-		return;
-
-	$a->set_widget('msgaside',replace_macros(get_markup_template('message_side.tpl'), array(
-		'$tabs'=> array(),
-
-		'$check'=>array(
-			'label' => t('Check Mail'),
-			'url' => $a->get_baseurl(true) . '/message',
-			'sel' => (argv(1) == ''),
-		),
-		'$new'=>array(
-			'label' => t('New Message'),
-			'url' => $a->get_baseurl(true) . '/message/new',
-			'sel'=> (argv(1) == 'new'),
-		)
-
-	)));
-
-}
-
 function message_post(&$a) {
 
 	if(! local_user())
@@ -79,7 +56,7 @@ function message_post(&$a) {
 		$global_perms = get_perms();
 
 		if($j['permissions']['data']) {
-			$permissions = aes_unencapsulate($j['permissions'],$channel['channel_prvkey']);
+			$permissions = crypto_unencapsulate($j['permissions'],$channel['channel_prvkey']);
 			if($permissions)
 				$permissions = json_decode($permissions);
 			logger('decrypted permissions: ' . print_r($permissions,true), LOGGER_DATA);
@@ -321,7 +298,7 @@ function message_content(&$a) {
 			'$preid' => $preid,
 			'$subject' => t('Subject:'),
 			'$subjtxt' => ((x($_REQUEST,'subject')) ? strip_tags($_REQUEST['subject']) : ''),
-			'$text' => ((x($_REQUEST,'body')) ? escape_tags(htmlspecialchars($_REQUEST['body'])) : ''),
+			'$text' => ((x($_REQUEST,'body')) ? htmlspecialchars($_REQUEST['body'], ENT_COMPAT, 'UTF-8') : ''),
 			'$readonly' => '',
 			'$yourmessage' => t('Your message:'),
 			'$select' => $select,
@@ -425,39 +402,7 @@ function message_content(&$a) {
 
 		foreach($messages as $message) {
 
-			$s = $arr = '';
-
-			if($message['attach'])
-				$arr = json_decode_plus($message['attach']);
-			if($arr) {
-				$s .= '<div class="body-attach">';
-				foreach($arr as $r) {
-					$matches = false;
-					$icon = '';
-					$icontype = substr($r['type'],0,strpos($r['type'],'/'));
-
-					switch($icontype) {
-						case 'video':
-						case 'audio':
-						case 'image':
-						case 'text':
-							$icon = '<div class="attachtype icon s22 type-' . $icontype . '"></div>';
-							break;
-						default:
-							$icon = '<div class="attachtype icon s22 type-unkn"></div>';
-							break;
-					}
-
-					$title = htmlentities($r['title'], ENT_COMPAT,'UTF-8');
-					if(! $title)
-						$title = t('unknown.???');
-					$title .= ' ' . $r['length'] . ' ' . t('bytes');
-
-					$url = $a->get_baseurl() . '/magic?f=&hash=' . $message['from_xchan'] . '&dest=' . $r['href'] . '/' . $r['revision'];
-					$s .= '<a href="' . $url . '" title="' . $title . '" class="attachlink"  >' . $icon . '</a>';
-				}
-				$s .= '<div class="clear"></div></div>';
-			}
+			$s = theme_attachments($message);
 
 			$mails[] = array(
 				'id' => $message['id'],

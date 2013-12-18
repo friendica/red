@@ -1,5 +1,14 @@
 <?php
 
+require_once('include/contact_widgets.php');
+require_once('include/items.php');
+require_once("include/bbcode.php");
+require_once('include/security.php');
+require_once('include/conversation.php');
+require_once('include/acl_selectors.php');
+require_once('include/permissions.php');
+
+
 function channel_init(&$a) {
 
 	$which = null;
@@ -34,62 +43,16 @@ function channel_init(&$a) {
 
 }
 
-
-function channel_aside(&$a) {
-
-	require_once('include/contact_widgets.php');
-	require_once('include/items.php');
-
-	if(! $a->profile['profile_uid'])
-		return;
-
-	$channel_display = get_pconfig($a->profile['profile_uid'],'system','channel_format');
-	if(! $channel_display)
-		profile_create_sidebar($a);
-
-	if($channel_display === 'full')
-		$a->page['template'] = 'full';
-	else {
-		$cat = ((x($_REQUEST,'cat')) ? htmlspecialchars($_REQUEST['cat']) : '');
-		$a->set_widget('archive',posted_date_widget($a->get_baseurl(true) . '/channel/' . $a->profile['channel_address'],$a->profile['profile_uid'],true));  
-		$a->set_widget('categories',categories_widget($a->get_baseurl(true) . '/channel/' . $a->profile['channel_address'],$cat));
-	}
-	if(feature_enabled($a->profile['profile_uid'],'tagadelic'))
-		$a->set_widget('tagcloud',tagblock('search',$a->profile['profile_uid'],50,$a->profile['channel_hash'],ITEM_WALL));
-
-}
-
-
 function channel_content(&$a, $update = 0, $load = false) {
 
 	$category = $datequery = $datequery2 = '';
 
-	// if(argc() > 2) {
-	//	for($x = 2; $x < argc(); $x ++) {
-	//		if(is_a_date_arg(argv($x))) {
-	//			if($datequery)
-	//				$datequery2 = escape_tags(argv($x));
-	//			else
-	//				$datequery = escape_tags(argv($x));
-	//		}
-	//	}
-	// }
 	$datequery = ((x($_GET,'dend') && is_a_date_arg($_GET['dend'])) ? notags($_GET['dend']) : '');
 	$datequery2 = ((x($_GET,'dbegin') && is_a_date_arg($_GET['dbegin'])) ? notags($_GET['dbegin']) : '');
 
 	if(get_config('system','block_public') && (! get_account_id()) && (! remote_user())) {
 			return login();
 	}
-
-
-
-	require_once("include/bbcode.php");
-	require_once('include/security.php');
-	require_once('include/conversation.php');
-	require_once('include/acl_selectors.php');
-	require_once('include/items.php');
-	require_once('include/permissions.php');
-
 
 	$category = ((x($_REQUEST,'cat')) ? $_REQUEST['cat'] : '');
 
@@ -131,6 +94,13 @@ function channel_content(&$a, $update = 0, $load = false) {
 
 		$o .= common_friends_visitor_widget($a->profile['profile_uid']);
 
+		$channel_acl = array(
+			'allow_cid' => $channel['channel_allow_cid'], 
+			'allow_gid' => $channel['channel_allow_gid'], 
+			'deny_cid' => $channel['channel_deny_cid'], 
+			'deny_gid' => $channel['channel_deny_gid']
+		); 
+
 
 		if($perms['post_wall']) {
 
@@ -140,7 +110,7 @@ function channel_content(&$a, $update = 0, $load = false) {
 	            'default_location' => (($is_owner) ? $a->profile['channel_location'] : ''),
     	        'nickname' => $a->profile['channel_address'],
         	    'lockstate' => (((strlen($a->profile['channel_allow_cid'])) || (strlen($a->profile['channel_allow_gid'])) || (strlen($a->profile['channel_deny_cid'])) || (strlen($a->profile['channel_deny_gid']))) ? 'lock' : 'unlock'),
-            	'acl' => (($is_owner) ? populate_acl($channel, false) : ''),
+            	'acl' => (($is_owner) ? populate_acl($channel_acl) : ''),
 				'showacl' => (($is_owner) ? 'yes' : ''),
 	            'bang' => '',
     	        'visitor' => (($is_owner || $observer) ? 'block' : 'none'),
@@ -195,7 +165,7 @@ function channel_content(&$a, $update = 0, $load = false) {
 		$a->set_pager_itemspage(((intval($itemspage)) ? $itemspage : 20));
 		$pager_sql = sprintf(" LIMIT %d, %d ",intval($a->pager['start']), intval($a->pager['itemspage']));
 
-		if($load) {
+		if($load || ($_COOKIE['jsAvailable'] != 1)) {
 			$r = q("SELECT distinct id AS item_id FROM item 
 				left join abook on item.author_xchan = abook.abook_xchan
 				WHERE uid = %d AND item_restrict = 0
@@ -287,9 +257,13 @@ function channel_content(&$a, $update = 0, $load = false) {
 	}
 
 
-	$o .= conversation($a,$items,'channel',$update,'client');
+	if($_COOKIE['jsAvailable'] == 1) {
+		$o .= conversation($a,$items,'channel',$update,'client');
+	} else {
+		$o .= conversation($a,$items,'channel',$update,'traditional');
+	}
 
-	if(! $update)
+	if((! $update) || ($_COOKIE['jsAvailable'] != 1))
 		$o .= alt_pager($a,count($items));
 
 	return $o;

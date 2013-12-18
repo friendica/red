@@ -96,7 +96,7 @@ function new_contact($uid,$url,$channel,$interactive = false, $confirm = false) 
 	$global_perms = get_perms();
 
 	if( array_key_exists('permissions',$j) && array_key_exists('data',$j['permissions'])) {
-		$permissions = aes_unencapsulate(array(
+		$permissions = crypto_unencapsulate(array(
 			'data' => $j['permissions']['data'],
 			'key'  => $j['permissions']['key'],
 			'iv'   => $j['permissions']['iv']),
@@ -174,6 +174,10 @@ function new_contact($uid,$url,$channel,$interactive = false, $confirm = false) 
 		$result['abook'] = $r[0];
 		proc_run('php', 'include/notifier.php', 'permission_update', $result['abook']['abook_id']);
 	}
+
+	$arr = array('channel_id' => $uid, 'abook' => $result['abook']);
+
+	call_hooks('follow', $arr);
 
 	/** If there is a default group for this channel, add this member to it */
 

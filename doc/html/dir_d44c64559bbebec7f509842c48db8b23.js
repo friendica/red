@@ -71,7 +71,6 @@ var dir_d44c64559bbebec7f509842c48db8b23 =
     [ "photos.php", "include_2photos_8php.html", "include_2photos_8php" ],
     [ "plugin.php", "plugin_8php.html", "plugin_8php" ],
     [ "poller.php", "poller_8php.html", "poller_8php" ],
-    [ "profile_advanced.php", "profile__advanced_8php.html", "profile__advanced_8php" ],
     [ "profile_selectors.php", "profile__selectors_8php.html", "profile__selectors_8php" ],
     [ "ProtoDriver.php", "ProtoDriver_8php.html", [
       [ "ProtoDriver", "classProtoDriver.html", "classProtoDriver" ],

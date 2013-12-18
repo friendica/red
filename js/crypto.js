@@ -18,6 +18,11 @@ function str_rot13 (str) {
 }
 
 
+// Arrays for pluggable encryptors/decryptors
+
+var red_encryptors = new Array();
+var red_decryptors = new Array();
+
 // We probably just want the element where the text is and find it ourself. e.g. if 
 // there is highlighted text use it, otherwise use the entire text.
 // So the third element may be useless. Fix also in view/tpl/jot.tpl before 
@@ -86,6 +91,13 @@ function red_encrypt(alg, elem,text) {
 
 			newdiv = "[crypt alg='3des' hint='" + enc_hint + "']" + encrypted + '[/crypt]';
 	}
+	if((red_encryptors.length) && (! newdiv.length)) {
+		for(var i = 0; i < red_encryptors.length; i ++) {
+			newdiv = red_encryptors[i](alg,text);
+			if(newdiv.length)
+				break;
+		}
+	}
 
 	enc_key = '';
 
@@ -118,22 +130,30 @@ function red_encrypt(alg, elem,text) {
 
 function red_decrypt(alg,hint,text,elem) {
 
-	var enc_text = '';
+	var dec_text = '';
 
 	if(alg == 'rot13' || alg == 'triple-rot13')
-		enc_text = str_rot13(text);
+		dec_text = str_rot13(text);
+	else {
+		var enc_key = prompt((hint.length) ? hint : aStr['passphrase']);
+	}
 
 	if(alg == 'aes256') {
-		var enc_key = prompt((hint.length) ? hint : aStr['passphrase']);
-		enc_text = CryptoJS.AES.decrypt(text,enc_key);
+		dec_text = CryptoJS.AES.decrypt(text,enc_key);
 	}
 	if(alg == 'rabbit') {
-		var enc_key = prompt((hint.length) ? hint : aStr['passphrase']);
-		enc_text = CryptoJS.Rabbit.decrypt(text,enc_key);
+		dec_text = CryptoJS.Rabbit.decrypt(text,enc_key);
 	}
 	if(alg == '3des') {
-		var enc_key = prompt((hint.length) ? hint : aStr['passphrase']);
-		enc_text = CryptoJS.TripleDES.decrypt(text,enc_key);
+		dec_text = CryptoJS.TripleDES.decrypt(text,enc_key);
+	}
+
+	if((red_decryptors.length) && (! dec_text.length)) {
+		for(var i = 0; i < red_decryptors.length; i ++) {
+			dec_text = red_decryptors[i](alg,text,enc_key);
+			if(dec_text.length)
+				break;
+		}
 	}
 
 	enc_key = '';
@@ -144,16 +164,16 @@ function red_decrypt(alg,hint,text,elem) {
 	// wipe out the text and make you re-enter the key if it was in the
 	// conversation. For now we do that so you can read it.
 
-	var enc_result = enc_text.toString(CryptoJS.enc.Utf8);
-	delete enc_text;
+	var dec_result = dec_text.toString(CryptoJS.enc.Utf8);
+	delete dec_text;
 
 	// incorrect decryptions *usually* but don't always have zero length
 	// If the person typo'd let them try again without reloading the page
 	// otherwise they'll have no "padlock" to click to try again.
 
-	if(enc_result.length) {
-		$(elem).html(b2h(enc_result));
-		enc_result = '';
+	if(dec_result.length) {
+		$(elem).html(b2h(dec_result));
+		dec_result = '';
 	}
 }
 	

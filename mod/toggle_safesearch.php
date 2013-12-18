@@ -3,6 +3,8 @@
 function toggle_safesearch_init(&$a) {
 
 $observer = get_observer_hash();
+if (! $observer)
+	return;
 
 if($observer) 
 	$safe_mode = get_xconfig($observer,'directory','safe_mode');

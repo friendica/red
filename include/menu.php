@@ -196,6 +196,31 @@ function menu_add_item($menu_id, $uid, $arr) {
 	$mitem_desc = escape_tags($arr['mitem_desc']);
 	$mitem_order = intval($arr['mitem_order']);	
 	$mitem_flags = intval($arr['mitem_flags']);
+
+	if(local_user() == $uid) {
+		$channel = get_app()->get_channel();	
+	}
+
+	if ((! $arr['contact_allow'])
+		&& (! $arr['group_allow'])
+		&& (! $arr['contact_deny'])
+		&& (! $arr['group_deny'])) {
+		$str_group_allow   = $channel['channel_allow_gid'];
+		$str_contact_allow = $channel['channel_allow_cid'];
+		$str_group_deny    = $channel['channel_deny_gid'];
+		$str_contact_deny  = $channel['channel_deny_cid'];
+	}
+	else {
+
+		// use the posted permissions
+
+		$str_group_allow   = perms2str($arr['group_allow']);
+		$str_contact_allow = perms2str($arr['contact_allow']);
+		$str_group_deny    = perms2str($arr['group_deny']);
+		$str_contact_deny  = perms2str($arr['contact_deny']);
+	}
+
+
 	$allow_cid = perms2str($arr['allow_cid']);
 	$allow_gid = perms2str($arr['allow_gid']);
 	$deny_cid = perms2str($arr['deny_cid']);
@@ -205,10 +230,10 @@ function menu_add_item($menu_id, $uid, $arr) {
 		dbesc($mitem_link),
 		dbesc($mitem_desc),
 		intval($mitem_flags),
-		dbesc($allow_cid),
-		dbesc($allow_gid),
-		dbesc($deny_cid),
-		dbesc($deny_gid),
+		dbesc($str_contact_allow),
+		dbesc($str_group_allow),
+		dbesc($str_contact_deny),
+		dbesc($str_group_deny),
 		intval($uid),
 		intval($menu_id),
 		intval($mitem_order)
@@ -225,19 +250,40 @@ function menu_edit_item($menu_id, $uid, $arr) {
 	$mitem_desc = escape_tags($arr['mitem_desc']);
 	$mitem_order = intval($arr['mitem_order']);	
 	$mitem_flags = intval($arr['mitem_flags']);
-	$allow_cid = perms2str($arr['allow_cid']);
-	$allow_gid = perms2str($arr['allow_gid']);
-	$deny_cid = perms2str($arr['deny_cid']);
-	$deny_gid = perms2str($arr['deny_gid']);
+
+
+	if(local_user() == $uid) {
+		$channel = get_app()->get_channel();	
+	}
+
+	if ((! $arr['contact_allow'])
+		&& (! $arr['group_allow'])
+		&& (! $arr['contact_deny'])
+		&& (! $arr['group_deny'])) {
+		$str_group_allow   = $channel['channel_allow_gid'];
+		$str_contact_allow = $channel['channel_allow_cid'];
+		$str_group_deny    = $channel['channel_deny_gid'];
+		$str_contact_deny  = $channel['channel_deny_cid'];
+	}
+	else {
+
+		// use the posted permissions
+
+		$str_group_allow   = perms2str($arr['group_allow']);
+		$str_contact_allow = perms2str($arr['contact_allow']);
+		$str_group_deny    = perms2str($arr['group_deny']);
+		$str_contact_deny  = perms2str($arr['contact_deny']);
+	}
+
 
 	$r = q("update menu_item set mitem_link = '%s', mitem_desc = '%s', mitem_flags = %d, allow_cid = '%s', allow_gid = '%s', deny_cid = '%s', deny_gid = '%s', mitem_order = %d  where mitem_channel_id = %d and mitem_menu_id = %d and mitem_id = %d limit 1",
 		dbesc($mitem_link),
 		dbesc($mitem_desc),
 		intval($mitem_flags),
-		dbesc($allow_cid),
-		dbesc($allow_gid),
-		dbesc($deny_cid),
-		dbesc($deny_gid),
+		dbesc($str_contact_allow),
+		dbesc($str_group_allow),
+		dbesc($str_contact_deny),
+		dbesc($str_group_deny),
 		intval($mitem_order),
 		intval($uid),
 		intval($menu_id),

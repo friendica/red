@@ -58,6 +58,12 @@ function item_post(&$a) {
 	// If you are unsure, it is prudent (and important) to leave it unset.   
 
 	$origin = (($api_source && array_key_exists('origin',$_REQUEST)) ? intval($_REQUEST['origin']) : 1);
+
+	// To represent message-ids on other networks - this will create an item_id record
+
+	$namespace = (($api_source && array_key_exists('namespace',$_REQUEST)) ? strip_tags($_REQUEST['namespace']) : '');
+	$remote_id = (($api_source && array_key_exists('remote_id',$_REQUEST)) ? strip_tags($_REQUEST['remote_id']) : '');
+
 	$owner_hash = null;
 
 	$message_id     = ((x($_REQUEST,'message_id') && $api_source)  ? strip_tags($_REQUEST['message_id'])       : '');
@@ -71,6 +77,8 @@ function item_post(&$a) {
 	$webpage     = ((x($_REQUEST,'webpage'))     ? intval($_REQUEST['webpage'])        : 0);
 	$pagetitle   = ((x($_REQUEST,'pagetitle'))   ? escape_tags($_REQUEST['pagetitle']) : '');
 	$layout_mid  = ((x($_REQUEST,'layout_mid'))  ? escape_tags($_REQUEST['layout_mid']): '');
+	$plink       = ((x($_REQUEST,'permalink'))   ? escape_tags($_REQUEST['permalink']) : '');
+
 	/*
 	Check service class limits
 	*/
@@ -190,6 +198,16 @@ function item_post(&$a) {
 
 	$orig_post = null;
 
+	if($namespace && $remote_id) {
+		// It wasn't an internally generated post - see if we've got an item matching this remote service id
+		$i = q("select iid from item_id where service = '%s' and sid = '%s' limit 1",
+			dbesc($namespace),
+			dbesc($remote_id) 
+		);
+		if($i)
+			$post_id = $i[0]['iid'];	
+	}
+
 	if($post_id) {
 		$i = q("SELECT * FROM `item` WHERE `uid` = %d AND `id` = %d LIMIT 1",
 			intval($profile_uid),
@@ -255,6 +273,7 @@ function item_post(&$a) {
 		$private           = $orig_post['item_private'];
 		$item_flags        = $orig_post['item_flags'];
 		$item_restrict     = $orig_post['item_restrict'];
+		$postopts          = $orig_post['postopts'];
 	}
 	else {
 
@@ -287,6 +306,7 @@ function item_post(&$a) {
 		$verb              = notags(trim($_REQUEST['verb']));
 		$title             = escape_tags(trim($_REQUEST['title']));
 		$body              = $_REQUEST['body'];
+		$postopts          = '';
 
 		$private = ( 
 				(  strlen($str_group_allow) 
@@ -604,12 +624,13 @@ function item_post(&$a) {
 	$datarray['item_private']   = $private;
 	$datarray['attach']         = $attachments;
 	$datarray['thr_parent']     = $thr_parent;
-	$datarray['postopts']       = '';
+	$datarray['postopts']       = $postopts;
 	$datarray['item_restrict']  = $item_restrict;
 	$datarray['item_flags']     = $item_flags;
 	$datarray['layout_mid']     = $layout_mid;
 	$datarray['comment_policy'] = map_scope($channel['channel_w_comment']); 
 	$datarray['term']           = $post_tags;
+	$datarray['plink']          = $plink;
 
 	// preview mode - prepare the body for display and send it via json
 
@@ -774,14 +795,6 @@ function item_post(&$a) {
 		// NOTREACHED
 	}
 
-	// update the commented timestamp on the parent
-
-	q("UPDATE `item` set `commented` = '%s', `changed` = '%s' WHERE `id` = %d LIMIT 1",
-		dbesc(datetime_convert()),
-		dbesc(datetime_convert()),
-		intval($parent)
-	);
-
 	$page_type = '';
 
 	if($webpage & ITEM_WEBPAGE)
@@ -790,6 +803,10 @@ function item_post(&$a) {
 		$page_type = 'BUILDBLOCK';
 	elseif($webpage & ITEM_PDL)
 		$page_type = 'PDL';
+	elseif($namespace && $remote_id) {
+		$page_type = $namespace;
+		$pagetitle = $remote_id;
+	}
 
 	if($page_type) {	
 
@@ -808,7 +825,7 @@ function item_post(&$a) {
 	}
 
 	$datarray['id']    = $post_id;
-	$datarray['plink'] = $a->get_baseurl() . '/display/' . $channel['channel_address'] . '/' . $post_id;
+	$datarray['llink'] = $a->get_baseurl() . '/display/' . $channel['channel_address'] . '/' . $post_id;
 
 	call_hooks('post_local_end', $datarray);
 
@@ -1032,7 +1049,10 @@ function fix_attached_photo_permissions($uid,$xchan_hash,$body,
 				if(! stristr($image,get_app()->get_baseurl() . '/photo/'))
 					continue;
 				$image_uri = substr($image,strrpos($image,'/') + 1);
-				$image_uri = substr($image_uri,0, strpos($image_uri,'-'));
+				if(strpos($image_uri,'-') !== false)
+					$image_uri = substr($image_uri,0, strpos($image_uri,'-'));
+				if(strpos($image_uri,'.') !== false)
+					$image_uri = substr($image_uri,0, strpos($image_uri,'.'));
 				if(! strlen($image_uri))
 					continue;
 				$srch = '<' . $xchan_hash . '>';

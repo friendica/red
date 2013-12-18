@@ -245,6 +245,12 @@ if (file_exists($theme_info_file)){
 if(! x($a->page,'content'))
 	$a->page['content'] = '';
 
+/* set JS cookie */
+if($_COOKIE['jsAvailable'] != 1) {
+	$a->page['content'] .= '<script>document.cookie="jsAvailable=1; path=/"; location.reload();</script>';
+}
+
+
 if(! $install)
 	call_hooks('page_content_top',$a->page['content']);
 

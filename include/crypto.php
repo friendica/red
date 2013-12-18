@@ -4,6 +4,8 @@ function rsa_sign($data,$key,$alg = 'sha256') {
 	if(! $key)
 		return 'no key';
 	$sig = '';
+	if(intval(OPENSSL_ALGO_SHA256) && $alg === 'sha256')
+		$alg = OPENSSL_ALGO_SHA256;
 	openssl_sign($data,$sig,$key,$alg);
 	return $sig;
 }
@@ -13,6 +15,8 @@ function rsa_verify($data,$sig,$key,$alg = 'sha256') {
 	if(! $key)
 		return false;
 
+	if(intval(OPENSSL_ALGO_SHA256) && $alg === 'sha256')
+		$alg = OPENSSL_ALGO_SHA256;
 	$verify = openssl_verify($data,$sig,$key,$alg);
 	return $verify;
 }
@@ -49,6 +53,13 @@ function AES256CBC_decrypt($data,$key,$iv) {
 		str_pad($iv,16,"\0")));
 }
 
+function crypto_encapsulate($data,$pubkey,$alg='aes256cbc') {
+	if($alg === 'aes256cbc')
+		return aes_encapsulate($data,$pubkey);
+
+}
+
+
 function aes_encapsulate($data,$pubkey) {
 	if(! $pubkey)
 		logger('aes_encapsulate: no key. data: ' . $data);
@@ -60,11 +71,22 @@ function aes_encapsulate($data,$pubkey) {
 		$x = debug_backtrace();
 		logger('aes_encapsulate: RSA failed. ' . print_r($x[0],true));
 	}
+	$result['alg'] = 'aes256cbc';
  	$result['key'] = base64url_encode($k,true);
 	openssl_public_encrypt($iv,$i,$pubkey);
 	$result['iv'] = base64url_encode($i,true);
 	return $result;
 }
+
+function crypto_unencapsulate($data,$prvkey) {
+	if(! $data)
+		return;
+	$alg = ((array_key_exists('alg',$data)) ? $data['alg'] : 'aes256cbc');
+	if($alg === 'aes256cbc')
+		return aes_unencapsulate($data,$prvkey);
+
+}
+
 
 function aes_unencapsulate($data,$prvkey) {
 	openssl_private_decrypt(base64url_decode($data['key']),$k,$prvkey);

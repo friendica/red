@@ -19,6 +19,9 @@ function photos_init(&$a) {
 
 	if(argc() > 1) {
 		$nick = argv(1);
+
+		profile_load($a,$nick);
+
 		$channelx = channelx_by_nick($nick);
 
 		if(! $channelx)
@@ -35,7 +38,7 @@ function photos_init(&$a) {
 
 
 
-		$a->set_widget('vcard',vcard_from_xchan($a->data['channel'],$observer));
+		$a->set_widget('vcard',vcard_from_xchan('',$observer));
 		head_set_icon($a->data['channel']['xchan_photo_s']);
 		if($a->data['perms']['view_photos']) {
 			$a->data['albums'] = photos_albums_list($a->data['channel'],$observer);
@@ -699,8 +702,19 @@ function photos_content(&$a) {
 			$usage_message = sprintf( t('You have used %1$.2f Mbytes of photo storage.'), $r[0]['total'] / 1024000 );
  		}
 
+		if($_is_owner) {
+			$channel = $a->get_channel();
+
+			$channel_acl = array(
+				'allow_cid' => $channel['channel_allow_cid'], 
+				'allow_gid' => $channel['channel_allow_gid'], 
+				'deny_cid' => $channel['channel_deny_cid'], 
+				'deny_gid' => $channel['channel_deny_gid']
+			);
+		} 
+
 		$albumselect_e = $albumselect;
-		$aclselect_e = (($_is_owner) ? populate_acl($a->get_channel(), false) : '');
+		$aclselect_e = (($_is_owner) ? populate_acl($channel_acl) : '');
 
 		$tpl = get_markup_template('photos_upload.tpl');
 		$o .= replace_macros($tpl,array(

@@ -19,6 +19,8 @@ function editwebpage_content(&$a) {
 		$owner = intval($r[0]['channel_id']);
 		//logger('owner: ' . print_r($owner,true));
 	}
+
+	$is_owner = ((local_user() && local_user() == $owner) ? true : false);
 			
 	$o = '';
 
@@ -50,6 +52,23 @@ function editwebpage_content(&$a) {
 		intval($post_id),
 		intval($owner)
    );
+
+
+	if($itm[0]['item_flags'] & ITEM_OBSCURED) {
+		$key = get_config('system','prvkey');
+		if($itm[0]['title'])
+			$itm[0]['title'] = crypto_unencapsulate(json_decode_plus($itm[0]['title']),$key);
+		if($itm[0]['body'])
+			$itm[0]['body'] = crypto_unencapsulate(json_decode_plus($itm[0]['body']),$key);
+	}
+
+	$item_id = q("select * from item_id where service = 'WEBPAGE' and iid = %d limit 1",
+		$itm[0]['id']
+	);
+	if($item_id)
+		$page_title = $item_id[0]['sid'];
+
+
 
 
 	$plaintext = true;
@@ -112,9 +131,14 @@ function editwebpage_content(&$a) {
 //FIXME A return path with $_SESSION doesn't always work for observer - it may WSoD instead of loading a sensible page.  So, send folk to the webpage list.
 
 	$rp = '/webpages/' . $which;
+	$lockstate = 
 
 	$o .= replace_macros($tpl,array(
 		'$return_path' => $rp,
+		'$webpage' => true,
+		'$placeholdpagetitle' => t('Page link title'),
+		'$pagetitle' => $page_title,
+
 		'$action' => 'item',
 		'$share' => t('Edit'),
 		'$upload' => t('Upload photo'),
@@ -131,20 +155,22 @@ function editwebpage_content(&$a) {
 		'$content' => undo_post_tagging($itm[0]['body']),
 		'$post_id' => $post_id,
 		'$baseurl' => $a->get_baseurl(),
-		'$defloc' => $channel['channel_location'],
-		'$visitor' => 'none',
-		'$pvisit' => 'none',
+		'$defloc' => $itm[0]['location'],
+    	'$visitor' => ($is_owner) ? 'block' : 'none',
+		'$acl' => populate_acl($itm[0]),
+		'$showacl' => true,
+		'$pvisit' => ($is_owner) ? 'block' : 'none',
 		'$public' => t('Public post'),
 		'$jotnets' => $jotnets,
 		'$mimeselect' => $mimeselect,
 		'$layoutselect' => $layoutselect,
-		'$title' => htmlspecialchars($itm[0]['title']),
+		'$title' => htmlspecialchars($itm[0]['title'],ENT_COMPAT,'UTF-8'),
 		'$placeholdertitle' => t('Set title'),
 		'$category' => '',
 		'$placeholdercategory' => t('Categories (comma-separated list)'),
 		'$emtitle' => t('Example: bob@example.com, mary@example.com'),
-		'$lockstate' => $lockstate,
-		'$acl' => '', 
+		'lockstate' => (((strlen($itm[0]['allow_cid'])) || (strlen($itm[0]['allow_gid'])) || (strlen($itm[0]['deny_cid'])) || (strlen($itm[0]['deny_gid']))) ? 'lock' : 'unlock'),
+		'$acl' => populate_acl($itm[0]), 
 		'$bang' => '',
 		'$profile_uid' => (intval($owner)),
 		'$preview' => ((feature_enabled(local_user(),'preview')) ? t('Preview') : ''),

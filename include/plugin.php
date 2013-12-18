@@ -181,12 +181,14 @@ function unregister_hook($hook,$file,$function) {
 //
 // It might not be obvious but themes can manually add hooks to the $a->hooks
 // array in their theme_init() and use this to customise the app behaviour.  
+// UPDATE: use insert_hook($hookname,$function_name) to do this
 //
 
 
 function load_hooks() {
 	$a = get_app();
-	$a->hooks = array();
+//	if(! is_array($a->hooks))
+		$a->hooks = array();
 	$r = q("SELECT * FROM hook WHERE true ORDER BY priority DESC");
 	if($r) {
 		foreach($r as $rr) {
@@ -195,7 +197,39 @@ function load_hooks() {
 			$a->hooks[$rr['hook']][] = array($rr['file'],$rr['function']);
 		}
 	}
+//logger('hooks: ' . print_r($a->hooks,true));
+
 }
+
+/**
+ *
+ * @function insert_hook($hook,$fn)
+ *
+ * Insert a short-lived hook into the running page request. 
+ * Hooks are normally persistent so that they can be called 
+ * across asynchronous processes such as delivery and poll
+ * processes.
+ *
+ * insert_hook lets you attach a hook callback immediately
+ * which will not persist beyond the life of this page request
+ * or the current process. 
+ *
+ * @param string $hook;
+ *     name of hook to attach callback
+ * @param string $fn;
+ *     function name of callback handler
+ *
+ */ 
+
+function insert_hook($hook,$fn) {
+	$a = get_app();
+	if(! is_array($a->hooks))
+		$a->hooks = array();
+	if(! array_key_exists($hook,$a->hooks))
+		$a->hooks[$hook] = array();
+	$a->hooks[$hook][] = array('',$fn);
+}
+	
 
 
 
@@ -204,7 +238,8 @@ function call_hooks($name, &$data = null) {
 
 	if((is_array($a->hooks)) && (array_key_exists($name,$a->hooks))) {
 		foreach($a->hooks[$name] as $hook) {
-			@include_once($hook[0]);
+			if($hook[0])
+				@include_once($hook[0]);
 			if(function_exists($hook[1])) {
 				$func = $hook[1];
 				$func($a,$data);
@@ -298,10 +333,10 @@ function get_theme_info($theme){
 		'name' => $theme,
 		'description' => "",
 		'author' => array(),
-		'maintainer' => array(),
 		'version' => "",
-		'credits' => "",
 		'compat' => "",
+		'credits' => "",
+		'maintainer' => array(),
 		'experimental' => false,
 		'unsupported' => false
 	);
@@ -459,6 +494,15 @@ function head_add_css($src,$media = 'screen') {
 	get_app()->css_sources[] = array($src,$media);
 }
 
+
+function head_remove_css($src,$media = 'screen') {
+	$a = get_app();
+	$index = array_search(array($src,$media),$a->css_sources);
+	if($index !== false)
+		unset($a->css_sources[$index]);
+
+}
+
 function head_get_css() {
 	$str = '';
 	$sources = get_app()->css_sources;
@@ -476,13 +520,42 @@ function format_css_if_exists($source) {
 		$path = theme_include($source[0]);
 
 	if($path)
-		return '<link rel="stylesheet" href="' . z_root() . '/' . $path . '" type="text/css" media="' . $source[1] . '" />' . "\r\n";
+		return '<link rel="stylesheet" href="' . script_path() . '/' . $path . '" type="text/css" media="' . $source[1] . '" />' . "\r\n";
 		
 }
 
+function script_path() {
+	if(x($_SERVER,'HTTPS') && $_SERVER['HTTPS'])
+		$scheme = 'https';
+	elseif(x($_SERVER,'SERVER_PORT') && (intval($_SERVER['SERVER_PORT']) == 443))
+		$scheme = 'https';
+	else
+		$scheme = 'http';
+
+	if(x($_SERVER,'SERVER_NAME')) {
+			$hostname = $_SERVER['SERVER_NAME'];
+	}
+	else {
+		return z_root();
+	}
+
+	if(x($_SERVER,'SERVER_PORT') && $_SERVER['SERVER_PORT'] != 80 && $_SERVER['SERVER_PORT'] != 443) {
+		$hostname .= ':' . $_SERVER['SERVER_PORT'];
+	}
+
+	return $scheme . '://' . $hostname;
+}
 
 function head_add_js($src) {
 	get_app()->js_sources[] = $src;
+}
+
+function head_remove_js($src) {
+	$a = get_app();
+	$index = array_search($src,$a->js_sources);
+	if($index !== false)
+		unset($a->js_sources[$index]);
+
 }
 
 function head_get_js() {
@@ -501,7 +574,7 @@ function format_js_if_exists($source) {
 	else
 		$path = theme_include($source);
 	if($path)
-		return '<script src="' . z_root() . '/' . $path . '" ></script>' . "\r\n" ;
+		return '<script src="' . script_path() . '/' . $path . '" ></script>' . "\r\n" ;
 
 }
 

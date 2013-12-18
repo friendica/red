@@ -24,7 +24,7 @@ function photo_init(&$a) {
 
 	$observer_xchan = get_observer_hash();
 
-	$default = 'images/person-175.jpg';
+	$default = 'images/default_profile_photos/rainbow_man/175.jpg';
 
 	if(isset($type)) {
 
@@ -38,11 +38,11 @@ function photo_init(&$a) {
 
 				case 'm':
 					$resolution = 5;
-					$default = 'images/person-80.jpg';
+					$default = 'images/default_profile_photos/rainbow_man/80.jpg';
 					break;
 				case 's':
 					$resolution = 6;
-					$default = 'images/person-48.jpg';
+					$default = 'images/default_profile_photos/rainbow_man/48.jpg';
 					break;
 				case 'l':
 				default:
@@ -135,15 +135,15 @@ function photo_init(&$a) {
 			switch($resolution) {
 
 				case 4:
-					$data = file_get_contents('images/person-175.jpg');
+					$data = file_get_contents('images/default_profile_photos/rainbow_man/175.jpg');
 					$mimetype = 'image/jpeg';
 					break;
 				case 5:
-					$data = file_get_contents('images/person-80.jpg');
+					$data = file_get_contents('images/default_profile_photos/rainbow_man/80.jpg');
 					$mimetype = 'image/jpeg';
 					break;
 				case 6:
-					$data = file_get_contents('images/person-48.jpg');
+					$data = file_get_contents('images/default_profile_photos/rainbow_man/48.jpg');
 					$mimetype = 'image/jpeg';
 					break;
 				default:

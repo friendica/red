@@ -234,6 +234,7 @@ function admin_page_site_post(&$a){
 	$allowed_email		=	((x($_POST,'allowed_email'))	? notags(trim($_POST['allowed_email']))		: '');
 	$block_public		=	((x($_POST,'block_public'))		? True	:	False);
 	$force_publish		=	((x($_POST,'publish_all'))		? True	:	False);
+	$no_login_on_homepage	=	((x($_POST,'no_login_on_homepage'))		? True	:	False);
 	$global_directory	=	((x($_POST,'directory_submit_url'))	? notags(trim($_POST['directory_submit_url']))	: '');
 	$no_community_page	=	!((x($_POST,'no_community_page'))	? True	:	False);
 
@@ -291,6 +292,7 @@ function admin_page_site_post(&$a){
 	set_config('system','poll_interval',$poll_interval);
 	set_config('system','maxloadavg',$maxloadavg);
 	set_config('system','sitename',$sitename);
+	set_config('system','no_login_on_homepage',$no_login_on_homepage);
 
 	if ($banner=="") {
 		del_config('system','banner');
@@ -423,7 +425,7 @@ function admin_page_site(&$a) {
 		
 		'$baseurl' => $a->get_baseurl(true),
 									// name, label, value, help string, extra data...
-		'$sitename' 		=> array('sitename', t("Site name"), htmlentities(get_config('system','sitename'), ENT_QUOTES), ""),
+		'$sitename' 		=> array('sitename', t("Site name"), htmlspecialchars(get_config('system','sitename'), ENT_QUOTES, 'UTF-8'),''),
 		'$banner'			=> array('banner', t("Banner/Logo"), $banner, ""),
 		'$language' 		=> array('language', t("System language"), get_config('system','language'), "", $lang_choices),
 		'$theme' 			=> array('theme', t("System theme"), get_config('system','theme'), t("Default system theme - may be over-ridden by user profiles - <a href='#' id='cnftheme'>change theme settings</a>"), $theme_choices),
@@ -434,12 +436,13 @@ function admin_page_site(&$a) {
 		'$maximagesize'		=> array('maximagesize', t("Maximum image size"), get_config('system','maximagesize'), t("Maximum size in bytes of uploaded images. Default is 0, which means no limits.")),
 		'$register_policy'	=> array('register_policy', t("Register policy"), get_config('system','register_policy'), "", $register_choices),
 		'$access_policy'	=> array('access_policy', t("Access policy"), get_config('system','access_policy'), "", $access_choices),
-		'$register_text'	=> array('register_text', t("Register text"), htmlentities(get_config('system','register_text'), ENT_QUOTES, 'UTF-8'), t("Will be displayed prominently on the registration page.")),
+		'$register_text'	=> array('register_text', t("Register text"), htmlspecialchars(get_config('system','register_text'), ENT_QUOTES, 'UTF-8'), t("Will be displayed prominently on the registration page.")),
 		'$abandon_days'     => array('abandon_days', t('Accounts abandoned after x days'), get_config('system','account_abandon_days'), t('Will not waste system resources polling external sites for abandonded accounts. Enter 0 for no time limit.')),
 		'$allowed_sites'	=> array('allowed_sites', t("Allowed friend domains"), get_config('system','allowed_sites'), t("Comma separated list of domains which are allowed to establish friendships with this site. Wildcards are accepted. Empty to allow any domains")),
 		'$allowed_email'	=> array('allowed_email', t("Allowed email domains"), get_config('system','allowed_email'), t("Comma separated list of domains which are allowed in email addresses for registrations to this site. Wildcards are accepted. Empty to allow any domains")),
 		'$block_public'		=> array('block_public', t("Block public"), get_config('system','block_public'), t("Check to block public access to all otherwise public personal pages on this site unless you are currently logged in.")),
 		'$force_publish'	=> array('publish_all', t("Force publish"), get_config('system','publish_all'), t("Check to force all profiles on this site to be listed in the site directory.")),
+		'$no_login_on_homepage'	=> array('no_login_on_homepage', t("No login on Homepage"), get_config('system','no_login_on_homepage'), t("Check to hide the login form from your sites homepage when visitors arrive who are not logged in (e.g. when you put the content of the homepage in via the site channel).")),
 			
 		'$proxyuser'		=> array('proxyuser', t("Proxy user"), get_config('system','proxyuser'), ""),
 		'$proxy'			=> array('proxy', t("Proxy URL"), get_config('system','proxy'), ""),
@@ -474,7 +477,7 @@ function admin_page_hubloc(&$a) {
                 '$title' => t('Administration'),
                 '$page' => t('Server'),
                 '$queues' => $queues,
-                '$accounts' => $accounts,
+                //'$accounts' => $accounts, /*$accounts is empty here*/
                 '$pending' => Array( t('Pending registrations'), $pending),
                 '$plugins' => Array( t('Active plugins'), $a->plugins )
         ));
@@ -563,7 +566,7 @@ function admin_page_users_post(&$a){
 	if (x($_POST,'page_users_delete')){
 		require_once("include/Contact.php");
 		foreach($users as $uid){
-			user_remove($uid);
+			account_remove($uid,true);
 		}
 		notice( sprintf( tt("%s user deleted", "%s users deleted", count($users)), count($users)) );
 	}
@@ -605,9 +608,9 @@ function admin_page_users(&$a){
                 check_form_security_token_redirectOnErr('/admin/users', 'admin_users', 't');
 				// delete user
 				require_once("include/Contact.php");
-				user_remove($uid);
+				account_remove($uid,true);
 				
-				notice( sprintf(t("User '%s' deleted"), $user[0]['username']) . EOL);
+				notice( sprintf(t("User '%s' deleted"), $account[0]['account_email']) . EOL);
 			}; break;
 			case "block":{
                 check_form_security_token_redirectOnErr('/admin/users', 'admin_users', 't');
@@ -625,7 +628,7 @@ function admin_page_users(&$a){
 	}
 	
 	/* get pending */
-	$pending = q("SELECT * from account where (account_flags & %d ) ",
+	$pending = q("SELECT account.*, register.hash from account left join register on account_id = register.uid where (account_flags & %d ) ",
 		intval(ACCOUNT_PENDING)
 	);	
 	
@@ -640,26 +643,39 @@ function admin_page_users(&$a){
 
 //	WEe'll still need to link email addresses to admin/users/channels or some such, but this bit doesn't exist yet.
 //	That's where we need to be doing last post/channel flags/etc, not here.
-	$users =q("SELECT `account_id` , `account_email`, `account_lastlog`, `account_created`, `account_service_class` FROM `account`",
-				intval($a->pager['start']),
-				intval($a->pager['itemspage'])
-				);
-					
-	function _setup_users($e){
-		$accounts = Array(
-			t('Normal Account'), 
-			t('Soapbox Account'),
-			t('Community/Celebrity Account'),
-			t('Automatic Friend Account')
-		);
 
-		$e['page_flags'] = $accounts[$e['page-flags']];
-		$e['register_date'] = relative_date($e['register_date']);
-		$e['login_date'] = relative_date($e['login_date']);
-		$e['lastitem_date'] = relative_date($e['lastitem_date']);
-		return $e;
-	}
-	$users = array_map("_setup_users", $users);
+
+	$serviceclass = (($_REQUEST['class']) ? " and account_service_class = '" . dbesc($_REQUEST['class']) . "' " : '');
+
+
+	$order = " order by account_email asc ";
+	if($_REQUEST['order'] === 'expires')
+		$order = " order by account_expires desc ";
+
+	$users =q("SELECT `account_id` , `account_email`, `account_lastlog`, `account_created`, `account_expires`, " . 			"`account_service_class`, ( account_flags & %d ) > 0 as `blocked`, " .
+			"(SELECT GROUP_CONCAT( ch.channel_address SEPARATOR ' ') FROM channel as ch " .
+			"WHERE ch.channel_account_id = ac.account_id) as `channels` " .
+		"FROM account as ac where true $serviceclass $order limit %d , %d ",
+		intval(ACCOUNT_BLOCKED),		
+		intval($a->pager['start']),
+		intval($a->pager['itemspage'])
+	);
+					
+//	function _setup_users($e){
+//		$accounts = Array(
+//			t('Normal Account'), 
+//			t('Soapbox Account'),
+//			t('Community/Celebrity Account'),
+//			t('Automatic Friend Account')
+//		);
+
+//		$e['page_flags'] = $accounts[$e['page-flags']];
+//		$e['register_date'] = relative_date($e['register_date']);
+//		$e['login_date'] = relative_date($e['login_date']);
+//		$e['lastitem_date'] = relative_date($e['lastitem_date']);
+//		return $e;
+//	}
+//	$users = array_map("_setup_users", $users);
 	
 	
 	$t = get_markup_template("admin_users.tpl");
@@ -677,9 +693,9 @@ function admin_page_users(&$a){
 		'$delete' => t('Delete'),
 		'$block' => t('Block'),
 		'$unblock' => t('Unblock'),
-		
+
 		'$h_users' => t('Users'),
-		'$th_users' => array( t('Email'), t('Register date'), t('Last login'), t('Service Class')),
+		'$th_users' => array( t('ID'), t('Email'), t('All Channels'), t('Register date'), t('Last login'), t('Expires'), t('Service Class')),
 
 		'$confirm_delete_multi' => t('Selected users will be deleted!\n\nEverything these users had posted on this site will be permanently deleted!\n\nAre you sure?'),
 		'$confirm_delete' => t('The user {0} will be deleted!\n\nEverything this user has posted on this site will be permanently deleted!\n\nAre you sure?'),

@@ -29,17 +29,11 @@
 		<div class="wall-item-content" id="wall-item-content-{{$item.id}}" >
 			<div class="wall-item-title" id="wall-item-title-{{$item.id}}">{{$item.title}}</div>
 			<div class="wall-item-title-end"></div>
-			<div class="wall-item-body" id="wall-item-body-{{$item.id}}" >{{$item.body}}
-				<div class="body-tag">
-				{{foreach $item.tags as $tag}}
-					<span class='tag'>{{$tag}}</span>
-				{{/foreach}}
-				</div>
-			</div>
+			<div class="wall-item-body" id="wall-item-body-{{$item.id}}" >{{$item.body}}</div>
 		</div>
 		<div class="wall-item-tools" id="wall-item-tools-{{$item.id}}">
 			<div class="wall-item-delete-wrapper" id="wall-item-delete-wrapper-{{$item.id}}" >
-				{{if $item.drop.dropping}}<a href="item/drop/{{$item.id}}" onclick="return confirmDelete();" class="icon drophide" title="{{$item.drop.delete}}" onmouseover="imgbright(this);" onmouseout="imgdull(this);" ></a>{{/if}}
+				{{if $item.drop.dropping}}<a href="item/drop/{{$item.id}}" onclick="return confirmDelete();" title="{{$item.drop.delete}}" ><i class="icon-remove drop-icons item-tool"></i></a>{{/if}}
 			</div>
 				{{if $item.drop.pagedropping}}<input type="checkbox" onclick="checkboxhighlight(this);" title="{{$item.drop.select}}" class="item-select" name="itemselected[]" value="{{$item.id}}" />{{/if}}
 			<div class="wall-item-delete-end"></div>
