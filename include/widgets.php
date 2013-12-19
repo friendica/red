@@ -495,3 +495,19 @@ function widget_mailmenu($arr) {
 	));
 
 }
+
+function widget_design_tools($arr) {
+	$a = get_app();
+
+	// mod menu doesn't load a profile. For any modules which load a profile, check it.
+	// otherwise local_user() is sufficient for permissions.
+
+	if($a->profile['profile_uid']) 
+		if($a->profile['profile_uid'] != local_user())
+				return '';
+ 
+	if(! local_user())
+		return '';
+
+	return design_tools();
+}

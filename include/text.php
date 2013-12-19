@@ -1889,18 +1889,17 @@ function json_decode_plus($s) {
 
 
 function design_tools() {
-$channel  = get_app()->get_channel();
-$who = $channel['channel_address'];
+	$channel  = get_app()->get_channel();
+	$who = $channel['channel_address'];
 
-return replace_macros(get_markup_template('design_tools.tpl'), array(
-                        '$title' => t('Design'),
-			'$who' => $who,
-                      	'$blocks' => t('Blocks'),
-			'$menus' => t('Menus'),
-			'$layout' => t('Layouts'),
-			'$pages' => t('Pages')
-                        ));
-
+	return replace_macros(get_markup_template('design_tools.tpl'), array(
+		'$title' => t('Design'),
+		'$who' => $who,
+		'$blocks' => t('Blocks'),
+		'$menus' => t('Menus'),
+		'$layout' => t('Layouts'),
+		'$pages' => t('Pages')
+	));
 }
 
 /* case insensitive in_array() */

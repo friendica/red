@@ -2122,6 +2122,10 @@ a .drop-icons:hover {
 	margin-right: 10px;
 }
 
+.design-tools ul {
+	list-style-type: none;
+}
+
 .design-icons {
 	margin-right: 10px;
 }

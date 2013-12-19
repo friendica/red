@@ -16,14 +16,10 @@ function get_theme_config_file($theme){
 }
 
 function settings_init(&$a) {
+	if(! local_user())
+		return;
+
 	$a->profile_uid = local_user();
-}
-
-
-function settings_aside(&$a) {
-
-if (! local_user())
-	return;
 
 	// default is channel settings in the absence of other arguments
 
@@ -32,107 +28,9 @@ if (! local_user())
 		$a->argc = 2;
 		$a->argv[] = 'channel';
 	}
-/*
-	$channel = $a->get_channel();
-
-	$abook_self_id = 0;
-
-	// Retrieve the 'self' address book entry for use in the auto-permissions link
-	if(local_user()) {		
-		$abk = q("select abook_id from abook where abook_channel = %d and ( abook_flags & %d ) limit 1",
-			intval(local_user()),
-			intval(ABOOK_FLAG_SELF)
-		);
-		if($abk)
-			$abook_self_id = $abk[0]['abook_id'];
-	}
 
 
-	$tabs = array(
-		array(
-			'label'	=> t('Account settings'),
-			'url' 	=> $a->get_baseurl(true).'/settings/account',
-			'selected'	=> ((argv(1) === 'account') ? 'active' : ''),
-		),
-	
-		array(
-			'label'	=> t('Channel settings'),
-			'url' 	=> $a->get_baseurl(true).'/settings/channel',
-			'selected'	=> ((argv(1) === 'channel') ? 'active' : ''),
-		),
-	
-		array(
-			'label'	=> t('Additional features'),
-			'url' 	=> $a->get_baseurl(true).'/settings/features',
-			'selected'	=> ((argv(1) === 'features') ? 'active' : ''),
-		),
 
-		array(
-			'label'	=> t('Feature settings'),
-			'url' 	=> $a->get_baseurl(true).'/settings/featured',
-			'selected'	=> ((argv(1) === 'featured') ? 'active' : ''),
-		),
-
-		array(
-			'label'	=> t('Display settings'),
-			'url' 	=> $a->get_baseurl(true).'/settings/display',
-			'selected'	=> ((argv(1) === 'display') ? 'active' : ''),
-		),	
-		
-		array(
-			'label' => t('Connected apps'),
-			'url' => $a->get_baseurl(true) . '/settings/oauth',
-			'selected' => ((argv(1) === 'oauth') ? 'active' : ''),
-		),
-
-		array(
-			'label' => t('Export channel'),
-			'url' => $a->get_baseurl(true) . '/uexport/basic',
-			'selected' => ''
-		),
-
-//		array(
-//			'label' => t('Export account'),
-//			'url' => $a->get_baseurl(true) . '/uexport/complete',
-//			'selected' => ''
-//		),
-
-		array(
-			'label' => t('Automatic Permissions (Advanced)'),
-			'url' => $a->get_baseurl(true) . '/connedit/' . $abook_self_id,
-			'selected' => ''
-		),
-
-
-	);
-
-	if(feature_enabled(local_user(),'premium_channel')) {
-		$tabs[] = array(
-			'label' => t('Premium Channel Settings'),
-			'url' => $a->get_baseurl(true) . '/connect/' . $channel['channel_address'],
-			'selected' => ''
-		);
-
-	}
-
-	if(feature_enabled(local_user(),'channel_sources')) {
-		$tabs[] = array(
-			'label' => t('Channel Sources'),
-			'url' => $a->get_baseurl(true) . '/sources',
-			'selected' => ''
-		);
-
-	}
-
-
-	
-	$tabtpl = get_markup_template("generic_links_widget.tpl");
-	$a->page['aside'] = replace_macros($tabtpl, array(
-		'$title' => t('Settings'),
-		'$class' => 'settings-widget',
-		'$items' => $tabs,
-	));
-*/
 }
 
 
