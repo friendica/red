@@ -511,3 +511,7 @@ function widget_design_tools($arr) {
 
 	return design_tools();
 }
+
+function widget_findpeople($arr) {
+	return findpeople_widget();
+}
