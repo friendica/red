@@ -183,9 +183,6 @@ function notification($params) {
 			$recip['channel_name'], 
 			'[zrl=' . $sender['xchan_url'] . ']' . $sender['xchan_name'] . '[/zrl]',
 			$params['link']); 
-
-		// FIXME - check the item privacy
-		$private = false;
 		
 		$sitelink = t('Please visit %s to view and/or reply to the conversation.');
 		$tsitelink = sprintf( $sitelink, $siteurl );
@@ -455,6 +452,8 @@ function notification($params) {
 		if(! $datarray['email_secure']) {
 			switch($params['type']) {
 				case NOTIFY_WALL:
+				case NOTIFY_TAGSELF:
+				case NOTIFY_POKE:
 				case NOTIFY_COMMENT:
 					if(! $private)
 						break;
