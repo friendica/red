@@ -19,23 +19,6 @@ function connections_init(&$a) {
 
 }
 
-function connections_aside(&$a) {
-
-
-	if (! local_user())
-		return;
-	
-
-	$a->set_widget('follow', widget_follow(array()));
-
-
-	$a->set_widget('suggest',widget_suggestions(array()));
-	$a->set_widget('findpeople',findpeople_widget());
-
-}
-
-
-
 function connections_post(&$a) {
 	
 	if(! local_user())
