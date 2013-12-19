@@ -324,8 +324,11 @@ function photos_list_photos($channel,$observer,$album = '') {
 		intval(PHOTO_NORMAL),
 		intval(PHOTO_PROFILE)
 	);
-
+	
 	if($r) {
+		for($x = 0; $x < count($r); $x ++) {
+			$r[$x]['src'] = z_root() . '/photo/' . $r[$x]['resource_id'] . '-' . $r[$x]['scale'];
+		}
 		$ret['success'] = true;
 		$ret['photos'] = $r;
 	}
