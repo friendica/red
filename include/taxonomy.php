@@ -217,16 +217,19 @@ function tagblock($link,$uid,$count = 0,$authors = '',$flags = 0,$restrict = 0,$
 }
 
 function dir_tagblock($link,$r) {
-  $o = '';
-  $tab = 0;
+	$o = '';
+	$tab = 0;
 
-  if($r) {
-	$o = '<div class="dirtagblock widget"><h3>' . t('Keywords') . '</h3><div class="tags" align="center">';
-	foreach($r as $rr) { 
-	  $o .= '<a href="'.$link .'/' . '?f=&keywords=' . urlencode($rr['term']).'" class="tag'.$rr['normalise'].'" rel="nofollow" >'.$rr['term'].'</a> ' . "\r\n";
+	if(! $r)
+		$r = get_app()->data['directory_keywords'];
+
+	if($r) {
+		$o = '<div class="dirtagblock widget"><h3>' . t('Keywords') . '</h3><div class="tags" align="center">';
+		foreach($r as $rr) { 
+			$o .= '<a href="'.$link .'/' . '?f=&keywords=' . urlencode($rr['term']).'" class="tag'.$rr['normalise'].'" rel="nofollow" >'.$rr['term'].'</a> ' . "\r\n";
+		}
+		$o .= '</div></div>';
 	}
-	$o .= '</div></div>';
-  }
 	return $o;
 }
 

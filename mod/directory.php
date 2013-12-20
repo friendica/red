@@ -8,7 +8,7 @@ function directory_init(&$a) {
 	$a->set_pager_itemspage(80);
 
 }
-
+/*
 function directory_aside(&$a) {
 
 	if((get_config('system','block_public')) && (! local_user()) && (! remote_user())) {
@@ -23,7 +23,7 @@ function directory_aside(&$a) {
 	$a->set_widget('dir_sort_order',dir_sort_links());
 	
 }
-
+*/
 
 function directory_content(&$a) {
 
@@ -210,9 +210,11 @@ function directory_content(&$a) {
 					}
 
 					if($j['keywords']) {
-						$a->set_widget('dirtagblock',dir_tagblock(z_root() . '/directory',$j['keywords']));
+						$a->data['directory_keywords'] = $j['keywords'];
+
+//						$a->set_widget('dirtagblock',dir_tagblock(z_root() . '/directory',$j['keywords']));
 					}
-					$a->set_widget('suggest',widget_suggestions(array()));
+//					$a->set_widget('suggest',widget_suggestions(array()));
 
 
 //					logger('mod_directory: entries: ' . print_r($entries,true), LOGGER_DATA);
