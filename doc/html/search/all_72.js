@@ -24,8 +24,6 @@ var searchData=
   ['reddirectory',['RedDirectory',['../classRedDirectory.html',1,'']]],
   ['redfile',['RedFile',['../classRedFile.html',1,'']]],
   ['redinode',['RedInode',['../classRedInode.html',1,'']]],
-  ['redir_2ephp',['redir.php',['../redir_8php.html',1,'']]],
-  ['redir_5finit',['redir_init',['../redir_8php.html#a9ac266c3f5cf0d94ef63e6d0f2edf1f5',1,'redir.php']]],
   ['reduce',['reduce',['../docblox__errorchecker_8php.html#ae9562cf60aa693114603d27b55d2185f',1,'docblox_errorchecker.php']]],
   ['ref_5fsession_5fclose',['ref_session_close',['../session_8php.html#a5e1c616e02b863d5450317d101366bb7',1,'session.php']]],
   ['ref_5fsession_5fdestroy',['ref_session_destroy',['../session_8php.html#af230b86bfff7db66c3bdd7e0bbc24052',1,'session.php']]],

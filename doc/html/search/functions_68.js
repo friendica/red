@@ -12,6 +12,8 @@ var searchData=
   ['head_5fset_5ficon',['head_set_icon',['../classApp.html#a8863703a0305eaa45eb970dbd2046291',1,'App\head_set_icon()'],['../boot_8php.html#a0e4701c9742c3ef88f02ac450a042a84',1,'head_set_icon():&#160;boot.php']]],
   ['help',['help',['../namespacefriendica-to-smarty-tpl.html#af6b2c793958aae2aadc294577431f749',1,'friendica-to-smarty-tpl.help()'],['../namespaceupdatetpl.html#ac9d11279fed403a329a719298feafc4f',1,'updatetpl.help()']]],
   ['help_5fcontent',['help_content',['../help_8php.html#af055e15f600ffa6fbca9386fdf715224',1,'help.php']]],
+  ['home_5fcontent',['home_content',['../home_8php.html#aa1cf697851a646755baf537f75334c46',1,'home.php']]],
+  ['home_5finit',['home_init',['../home_8php.html#ac4642c38b6f23a8d065dd4a75c620bde',1,'home.php']]],
   ['hostxrd_5finit',['hostxrd_init',['../hostxrd_8php.html#aa37ffc8e7900bc76c4828bd25916db92',1,'hostxrd.php']]],
   ['html2bb_5fvideo',['html2bb_video',['../text_8php.html#a138a3a611fa7f4f3630674145fc826bf',1,'text.php']]],
   ['html2bbcode',['html2bbcode',['../html2bbcode_8php.html#a5ad726995ac4070213abdb3bd09f4837',1,'html2bbcode.php']]],

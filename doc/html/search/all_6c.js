@@ -16,7 +16,6 @@ var searchData=
   ['link_5fcompare',['link_compare',['../text_8php.html#a47c1e4a5f3f53027daacd8a9db24f285',1,'text.php']]],
   ['linkify',['linkify',['../text_8php.html#a11255c8c4e5245b6c24f97684826aa54',1,'text.php']]],
   ['list_5fpublic_5fsites',['list_public_sites',['../dirsearch_8php.html#a985d410a170549429857af6ff2673149',1,'dirsearch.php']]],
-  ['list_5fwidgets',['list_widgets',['../widgets_8php.html#a8e670642c7a957d2b5578dfb75aedc05',1,'widgets.php']]],
   ['load',['load',['../classphoto__driver.html#a19e1af2b6af4c63aa6230abe69f83712',1,'photo_driver\load()'],['../classphoto__gd.html#a33092b889875b68bfb1c97ff123012d9',1,'photo_gd\load()'],['../classphoto__imagick.html#a2c9168f110ccd6c264095d766615dfa8',1,'photo_imagick\load()']]],
   ['load_5fconfig',['load_config',['../include_2config_8php.html#a27559f388c9b9af81c94e48d6889d1d1',1,'config.php']]],
   ['load_5fcontact_5flinks',['load_contact_links',['../boot_8php.html#a719c7f3972d5f9268f37a41c76cd4ef6',1,'boot.php']]],

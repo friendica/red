@@ -54,6 +54,7 @@ var boot_8php =
     [ "ACCOUNT_REMOVED", "boot_8php.html#ab5ddbe69d3d03acd06e1fb281488cb78", null ],
     [ "ACCOUNT_ROLE_ADMIN", "boot_8php.html#ac8400313df2c831653f9036f71ebd86d", null ],
     [ "ACCOUNT_ROLE_ALLOWCODE", "boot_8php.html#a84f48897059bbd4a8738d7ee4cec6688", null ],
+    [ "ACCOUNT_ROLE_SYSTEM", "boot_8php.html#a7c2eb822d50e1554bf5c32861f36342b", null ],
     [ "ACCOUNT_UNVERIFIED", "boot_8php.html#af3a4271630aabd8be592213f925d6a36", null ],
     [ "ACTIVITY_DISLIKE", "boot_8php.html#a0e57f846e6d47a308feced0f7274f178", null ],
     [ "ACTIVITY_FAVORITE", "boot_8php.html#a3e2ea123d29a72012db1241f96280b0e", null ],
@@ -200,6 +201,7 @@ var boot_8php =
     [ "PAGE_NORMAL", "boot_8php.html#a09532c3f750ae8c4527e63b2b790cbf3", null ],
     [ "PAGE_PREMIUM", "boot_8php.html#ab3920c2f3cd64802c0b7ff625c3b2ea8", null ],
     [ "PAGE_REMOVED", "boot_8php.html#a4edce16cb7f21cdafa1e85bf63d713e6", null ],
+    [ "PAGE_SYSTEM", "boot_8php.html#a6ee7a72d558d1851bbb9e3cdde377932", null ],
     [ "PERMS_A_DELEGATE", "boot_8php.html#a423505ab8dbd8e39d04ae3fe1374102b", null ],
     [ "PERMS_A_REPUBLISH", "boot_8php.html#aae6c941bde5fd6fce07e51dba7326ead", null ],
     [ "PERMS_CONTACTS", "boot_8php.html#ab2d0e8a9b81ee548ef2ce8e4560da2f6", null ],
@@ -263,6 +265,7 @@ var boot_8php =
     [ "XCHAN_FLAGS_HIDDEN", "boot_8php.html#a1af3ed96de14aa0d7891b39cc75b60f2", null ],
     [ "XCHAN_FLAGS_ORPHAN", "boot_8php.html#a1c923b99bf77e4203ae94e5684b6ad0f", null ],
     [ "XCHAN_FLAGS_SELFCENSORED", "boot_8php.html#a5a681a672e007cdc22b43345d71f07c6", null ],
+    [ "XCHAN_FLAGS_SYSTEM", "boot_8php.html#afef254290febac854c85fc698d9483a6", null ],
     [ "ZCURL_TIMEOUT", "boot_8php.html#a3cd42a70c6b3999590e4fd7a1a9096af", null ],
     [ "ZOT_REVISION", "boot_8php.html#a36b31575f992a10b5927b76efba9362e", null ]
 ];

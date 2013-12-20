@@ -19,6 +19,7 @@ var searchData=
   ['config_2ephp',['config.php',['../view_2theme_2blogga_2php_2config_8php.html',1,'']]],
   ['connect_2ephp',['connect.php',['../connect_8php.html',1,'']]],
   ['connections_2ephp',['connections.php',['../connections_8php.html',1,'']]],
+  ['connedit_2ephp',['connedit.php',['../connedit_8php.html',1,'']]],
   ['contact_2ephp',['Contact.php',['../Contact_8php.html',1,'']]],
   ['contact_5fselectors_2ephp',['contact_selectors.php',['../contact__selectors_8php.html',1,'']]],
   ['contact_5fwidgets_2ephp',['contact_widgets.php',['../contact__widgets_8php.html',1,'']]],

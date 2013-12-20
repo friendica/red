@@ -5,6 +5,7 @@ var identity_8php =
     [ "create_dir_account", "identity_8php.html#abf6a9c6ed92d594f1d4513c4e22a7abd", null ],
     [ "create_identity", "identity_8php.html#a345f4c943d84de502ec6e72d2c813945", null ],
     [ "get_birthdays", "identity_8php.html#ad2c97627a313d53df1a1c7b4215ddb51", null ],
+    [ "get_default_profile_photo", "identity_8php.html#ab1485a26b032956e1496fc08c58b83ed", null ],
     [ "get_events", "identity_8php.html#ae381db3d43f8e7c1da8b15d14ecf5312", null ],
     [ "get_my_address", "identity_8php.html#a490972c02fdb638c52ec0e012a30bfd2", null ],
     [ "get_my_url", "identity_8php.html#aa46321e1cd6a3b8dfde8bf9510112fec", null ],

@@ -1,6 +1,6 @@
 var searchData=
 [
-  ['page',['page',['../mod__import_8php.html#a8db1899eeeb44dabd0904065b63627bb',1,'page():&#160;mod_import.php'],['../mod__new__channel_8php.html#a8db1899eeeb44dabd0904065b63627bb',1,'page():&#160;mod_new_channel.php'],['../mod__register_8php.html#a8db1899eeeb44dabd0904065b63627bb',1,'page():&#160;mod_register.php']]],
+  ['page',['page',['../mod__import_8php.html#a8db1899eeeb44dabd0904065b63627bb',1,'mod_import.php']]],
   ['page_2ephp',['page.php',['../page_8php.html',1,'']]],
   ['page_5fadult',['PAGE_ADULT',['../boot_8php.html#ace83842dbeb84f7ed9ac59a9f57a7c32',1,'boot.php']]],
   ['page_5fapplication',['PAGE_APPLICATION',['../boot_8php.html#a8231d115060d41a9c2a677f2c86f10ed',1,'boot.php']]],
@@ -12,6 +12,7 @@ var searchData=
   ['page_5fnormal',['PAGE_NORMAL',['../boot_8php.html#a09532c3f750ae8c4527e63b2b790cbf3',1,'boot.php']]],
   ['page_5fpremium',['PAGE_PREMIUM',['../boot_8php.html#ab3920c2f3cd64802c0b7ff625c3b2ea8',1,'boot.php']]],
   ['page_5fremoved',['PAGE_REMOVED',['../boot_8php.html#a4edce16cb7f21cdafa1e85bf63d713e6',1,'boot.php']]],
+  ['page_5fsystem',['PAGE_SYSTEM',['../boot_8php.html#a6ee7a72d558d1851bbb9e3cdde377932',1,'boot.php']]],
   ['page_5fwidgets_2ephp',['page_widgets.php',['../page__widgets_8php.html',1,'']]],
   ['pagelist_5fwidget',['pagelist_widget',['../page__widgets_8php.html#ad82011c1ed90d9de8b9f34c12af5c6f0',1,'page_widgets.php']]],
   ['paginate',['paginate',['../text_8php.html#afe9f178d264d44a94dc1292aaf0fd585',1,'text.php']]],

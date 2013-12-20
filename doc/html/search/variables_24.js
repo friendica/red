@@ -108,6 +108,7 @@ var searchData=
   ['_24pmenu_5freply',['$pmenu_reply',['../redbasic_2php_2style_8php.html#a9b489f1c595b867212d30eca0c85b38c',1,'style.php']]],
   ['_24pmenu_5ftop',['$pmenu_top',['../redbasic_2php_2style_8php.html#ac98bd8264411bd207a5740d08e81a158',1,'style.php']]],
   ['_24pofile',['$pofile',['../php2po_8php.html#a401d84ce156e49e8168bd0c4781e1be1',1,'php2po.php']]],
+  ['_24poi',['$poi',['../classApp.html#a1936f2afce0dc0d1bbed15ae1f2ee81a',1,'App']]],
   ['_24prepared_5fitem',['$prepared_item',['../classConversation.html#a5b6adbb2fe24f0f53d6c22660dff91b2',1,'Conversation']]],
   ['_24preview',['$preview',['../classConversation.html#ae9937f9e0f3d927acc2bed46cc72e9ae',1,'Conversation']]],
   ['_24profile',['$profile',['../classApp.html#a57d041fcc003d08c127dfa99a02bc192',1,'App']]],
