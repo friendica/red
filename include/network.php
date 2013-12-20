@@ -548,7 +548,7 @@ function avatar_img($email) {
 	call_hooks('avatar_lookup', $avatar);
 
 	if(! $avatar['success'])
-		$avatar['url'] = $a->get_baseurl() . '/images/default_profile_photos/rainbow_man/175.jpg';
+		$avatar['url'] = $a->get_baseurl() . '/' . get_default_profile_photo();
 
 	logger('Avatar: ' . $avatar['email'] . ' ' . $avatar['url'], LOGGER_DEBUG);
 	return $avatar['url'];
