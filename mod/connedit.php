@@ -482,7 +482,7 @@ function connedit_content(&$a) {
 			'$lastupdtext'    => t('Last update:'),
 			'$lost_contact'   => $lost_contact,
 			'$updpub'         => t('Update public posts'),
-			'$last_update'    => $last_update,
+			'$last_update'    => relative_date($contact['abook_connected']),
 			'$udnow'          => t('Update now'),
 			'$profile_select' => contact_profile_assign($contact['abook_profile']),
 			'$multiprofs'     => feature_enabled(local_user(),'multi_profiles'),

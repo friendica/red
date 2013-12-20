@@ -1124,7 +1124,7 @@ function get_default_profile_photo($size = 175) {
 	$scheme = get_config('system','default_profile_photo');
 	if(! $scheme)
 		$scheme = 'rainbow_man';
-	return 'images/default_profile_photos/' . $scheme . '/' . $size . 'jpg';
+	return 'images/default_profile_photos/' . $scheme . '/' . $size . '.jpg';
 }
 
 
