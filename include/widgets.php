@@ -1,18 +1,5 @@
 <?php /** @file */
 
-function list_widgets() {
-	$widgets = array(
-		'profile'      => t('Displays a full channel profile'),
-		'tagcloud'     => t('Tag cloud of webpage categories'), 		
-		'collections'  => t('List and filter by collection'),
-		'suggestions'  => t('Show a couple of channel suggestion'),
-		'follow'       => t('Provide a channel follow form')
-	);
-	$arr = array('widgets' => $widgets);
-	call_hooks('list_widgets',$arr);
-	return $arr['widgets'];
-}
-
 
 function widget_profile($args) {
 	$a = get_app();
@@ -515,3 +502,21 @@ function widget_design_tools($arr) {
 function widget_findpeople($arr) {
 	return findpeople_widget();
 }
+
+
+function widget_photo_albums($arr) {
+	$a = get_app();
+	if(! $a->profile['profile_uid'])
+		return '';
+	$channelx = channelx_by_n($a->profile['profile_uid']);
+	if((! $channelx) || (! perm_is_allowed($a->profile['profile_uid'],get_observer_hash(),'view_photos')))
+		return '';
+	return photos_album_widget($channelx[0],$a->get_observer());	
+
+}
+
+
+function widget_vcard($arr) {
+	return vcard_from_xchan('',get_app()->get_observer());
+}
+
