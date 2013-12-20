@@ -2148,6 +2148,13 @@ function tag_deliver($uid,$item_id) {
 
 	$item = $i[0];
 
+	if(($item['source_xchan']) && ($item['item_flags'] & ITEM_UPLINK) && ($item['item_flags'] & ITEM_THREAD_TOP) && ($item['edited'] != $item['created'])) {
+		// this is an update to a post which was already processed by us and has a second delivery chain
+		// Just start the second delivery chain to deliver the updated post
+		proc_run('php','include/notifier.php','tgroup',$item['id']);
+		return;
+	}
+
 
 	if($item['obj_type'] === ACTIVITY_OBJ_TAGTERM) {
 
@@ -2444,7 +2451,7 @@ function check_item_source($uid,$item) {
 
 	$r = q("select * from source where src_channel_id = %d and src_xchan = '%s' limit 1",
 		intval($uid),
-		dbesc($item['owner_xchan'])
+		dbesc(($item['source_xchan']) ?  $item['source_xchan'] : $item['owner_xchan'])
 	);
 
 	if(! $r)
