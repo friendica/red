@@ -31,24 +31,6 @@ function connedit_init(&$a) {
 
 }
 
-function connedit_aside(&$a) {
-
-
-	if (! local_user())
-		return;
-	
-	if($a->poi) {
-		$a->set_widget('vcard',vcard_from_xchan($a->poi,$a->get_observer()));
-		$a->set_widget('collections', group_side('connections','group',false,0,$a->poi['abook_xchan']));
-	}
-
-	$a->set_widget('suggest',widget_suggestions(array()));
-	$a->set_widget('findpeople',findpeople_widget());
-
-}
-
-
-
 function connedit_post(&$a) {
 	
 	if(! local_user())
