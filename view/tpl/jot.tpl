@@ -101,7 +101,8 @@
      <!--  <div class="modal-body"> -->
             <div class="modal-body form-group" style="width:90%">
                 <div class="input-group input-group-sm date" id="datetimepicker1">
-                    <span class="input-group-addon"><span class="glyphicon glyphicon-calendar"></span>
+                    <span class="input-group-addon"><!-- <span class="glyphicon glyphicon-calendar"></span> -->
+                    <span class="icon-calendar"></span>
                     </span>
                     <input id="expiration-date" type='text' class="form-control" data-format="YYYY-MM-DD HH:mm" size="20"/>
                 </div>
@@ -117,7 +118,13 @@
 <script type="text/javascript">
   $(function() {
     $('#datetimepicker1').datetimepicker({
-      language: 'us'
+      language: 'us',
+      icons: {
+					time: "icon-time",
+					date: "icon-calendar",
+					up: "icon-arrow-up",
+					down: "icon-arrow-down"
+				}
     });
   });
 </script>
