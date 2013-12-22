@@ -12,7 +12,6 @@
 		<input type="hidden" name="post_id" value="{{$post_id}}" />
 		<input type="hidden" name="webpage" value="{{$webpage}}" />
 		<input type="hidden" name="preview" id="jot-preview" value="0" />
-
 		{{$mimeselect}}
 		{{$layoutselect}}
 

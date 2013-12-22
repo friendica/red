@@ -66,8 +66,8 @@ function item_post(&$a) {
 
 	$owner_hash = null;
 
-	$message_id     = ((x($_REQUEST,'message_id') && $api_source)  ? strip_tags($_REQUEST['message_id'])       : '');
-
+	$message_id  = ((x($_REQUEST,'message_id') && $api_source)  ? strip_tags($_REQUEST['message_id'])       : '');
+	$created     = ((x($_REQUEST,'created'))     ? datetime_convert('UTC','UTC',$_REQUEST['created']) : datetime_convert());
 	$profile_uid = ((x($_REQUEST,'profile_uid')) ? intval($_REQUEST['profile_uid'])    : 0);
 	$post_id     = ((x($_REQUEST,'post_id'))     ? intval($_REQUEST['post_id'])        : 0);
 	$app         = ((x($_REQUEST,'source'))      ? strip_tags($_REQUEST['source'])     : '');
@@ -274,6 +274,7 @@ function item_post(&$a) {
 		$item_flags        = $orig_post['item_flags'];
 		$item_restrict     = $orig_post['item_restrict'];
 		$postopts          = $orig_post['postopts'];
+		$created           = $orig_post['created'];
 	}
 	else {
 
@@ -602,7 +603,7 @@ function item_post(&$a) {
 
 	$datarray['owner_xchan']    = (($owner_hash) ? $owner_hash : $owner_xchan['xchan_hash']);
 	$datarray['author_xchan']   = $observer['xchan_hash'];
-	$datarray['created']        = datetime_convert();
+	$datarray['created']        = $created;
 	$datarray['edited']         = datetime_convert();
 	$datarray['expires']        = $expires;
 	$datarray['commented']      = datetime_convert();
