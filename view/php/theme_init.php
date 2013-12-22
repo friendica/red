@@ -10,10 +10,15 @@ head_add_css('library/jgrowl/jquery.jgrowl.css');
 head_add_css('library/jslider/css/jslider.css');
 head_add_css('library/prettyphoto/css/prettyPhoto.css');
 head_add_css('library/colorbox/colorbox.css');
+
 // head_add_css('library/font_awesome/css/font-awesome.min.css');
 head_add_css('view/css/conversation.css');
 head_add_css('view/css/bootstrap-red.css');
 head_add_css('view/css/widgets.css');
+<<<<<<< HEAD
+head_add_css('library/bootstrap-datetimepicker/css/bootstrap-datetimepicker.min.css');
+=======
+>>>>>>> upstream/master
 
 head_add_js('js/jquery.js');
 head_add_js('library/bootstrap/js/bootstrap.min.js');
@@ -43,7 +48,8 @@ head_add_js('library/jslider/bin/jquery.slider.min.js');
 head_add_js('docready.js');
 head_add_js('library/prettyphoto/js/jquery.prettyPhoto.js');
 head_add_js('library/colorbox/jquery.colorbox-min.js');
-
+head_add_js('library/bootstrap-datetimepicker/js/moment.js');
+head_add_js('library/bootstrap-datetimepicker/js/bootstrap-datetimepicker.min.js');
 /**
  * Those who require this feature will know what to do with it.
  * Those who don't, won't.
