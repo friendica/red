@@ -568,3 +568,10 @@ function widget_dirsort($arr) {
 function widget_dirtags($arr) {
 	return dir_tagblock(z_root() . '/directory',null);
 }
+
+function widget_menu_preview($arr) {
+	if(! get_app()->data['menu_item'])
+		return;
+	require_once('include/menu.php');
+	return menu_render(get_app()->data['menu_item']);
+}
