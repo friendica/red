@@ -194,10 +194,17 @@ function enableOnUser(){
 	}
 
 	function jotGetExpiry() {
-		reply = prompt("{{$expirewhen}}", $('#jot-expire').val());
-		if(reply && reply.length) {
+		//reply = prompt("{{$expirewhen}}", $('#jot-expire').val());
+		$('#expiryModal').modal();
+		$('#expiry-modal-OKButton').on('click', function() {
+    	reply=$('#expiration-date').val();
+    	if(reply && reply.length) {
 			$('#jot-expire').val(reply);
+			$('#expiryModal').modal('hide');
 		}
+})
+		
+		
 	}
 
 	function jotShare(id) {
@@ -298,4 +305,17 @@ function enableOnUser(){
 	{{$geotag}}
 
 </script>
+
+<!-- 
+<script>
+$( document ).on( "click", ".wall-item-delete-link", function(e) {
+	var link = $(this).attr("href"); // "get" the intended link in a var
+    e.preventDefault();
+  	bootbox.confirm("<h4>Delete item?</h4>", function(result) {
+    				if (result) {
+      				document.location.href = link;}
+      				});
+    });
+</script>
+ -->
 
