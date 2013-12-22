@@ -1,4 +1,4 @@
-<div id="lang-select-icon" class="icon s22 language" title="{{$title}}" onclick="openClose('language-selector');" ></div>
+<div id="lang-select-icon" title="{{$title}}" onclick="openClose('language-selector');" ><i class="icon-flag"></i></div>
 <div id="language-selector" style="display: none;" >
 	<form action="#" method="post" >
 		<select name="system_language" onchange="this.form.submit();" >

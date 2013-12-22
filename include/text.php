@@ -15,8 +15,11 @@ require_once("include/friendica_smarty.php");
 function replace_macros($s,$r) {
 	$a = get_app();
 
+	$arr = array('template' => $s, 'params' => $r);
+	call_hooks('replace_macros', $arr);
+	
 	$t = $a->template_engine();
-	$output = $t->replace_macros($s,$r);
+	$output = $t->replace_macros($arr['template'],$arr['params']);
 	
 	return $output;
 }
@@ -123,6 +126,9 @@ function purify_html($s) {
 	$purifier = new HTMLPurifier($config);
 	return $purifier->purify($s);
 }
+
+
+
 
 
 // generate a string that's random, but usually pronounceable. 
@@ -728,8 +734,22 @@ function search($s,$id='search-box',$url='/search',$save = false) {
 	$o .= '<form action="' . $a->get_baseurl((stristr($url,'network')) ? true : false) . $url . '" method="get" >';
 	$o .= '<input type="text" class="icon-search" name="search" id="search-text" placeholder="&#xf002;" value="' . $s .'" onclick="this.submit();" />';
 	$o .= '<input type="submit" name="submit" id="search-submit" value="' . t('Search') . '" />'; 
-	if($save)
+	if(feature_enabled(local_user(),'savedsearch'))
 		$o .= '<input type="submit" name="save" id="search-save" value="' . t('Save') . '" />'; 
+	$o .= '</form></div>';
+	return $o;
+}
+
+
+function searchbox($s,$id='search-box',$url='/search',$save = false) {
+	$a = get_app();
+	$o  = '<div id="' . $id . '">';
+	$o .= '<form action="' . z_root() . '/' . $url . '" method="get" >';
+	$o .= '<input type="hidden" name="f" value="" />';
+	$o .= '<input type="text" class="icon-search" name="search" id="search-text" placeholder="&#xf002;" value="' . $s .'" onclick="this.submit();" />';
+	$o .= '<input type="submit" name="submit" id="search-submit" value="' . t('Search') . '" />'; 
+	if(feature_enabled(local_user(),'savedsearch'))
+		$o .= '<input type="submit" name="searchsave" id="search-save" value="' . t('Save') . '" />'; 
 	$o .= '</form></div>';
 	return $o;
 }
@@ -878,9 +898,7 @@ function smilies($s, $sample = false) {
 		':like',
 		':dislike',
 		'red#',
-		'r#',
-		'~friendica'
-
+		'r#'
 	);
 
 	$icons = array(
@@ -916,9 +934,9 @@ function smilies($s, $sample = false) {
 		'<img class="smiley" src="' . $a->get_baseurl() . '/images/smiley-facepalm.gif" alt=":facepalm" />',
 		'<img class="smiley" src="' . $a->get_baseurl() . '/images/like.gif" alt=":like" />',
 		'<img class="smiley" src="' . $a->get_baseurl() . '/images/dislike.gif" alt=":dislike" />',
-		'<a href="http://getzot.com"><img class="smiley" src="' . $a->get_baseurl() . '/images/rhash-16.png" alt="red#" /> the Red Matrix</a>',
-		'<a href="http://getzot.com"><img class="smiley" src="' . $a->get_baseurl() . '/images/rhash-16.png" alt="r#" /> the Red Matrix</a>',
-		'<a href="http://friendica.com">~friendica <img class="smiley" src="' . $a->get_baseurl() . '/images/friendica-16.png" alt="~friendica" /></a>'
+		'<a href="http://getzot.com"><strong>red<img class="smiley" src="' . $a->get_baseurl() . '/images/rm-16.png" alt="red#" />matrix</strong></a>',
+		'<a href="http://getzot.com"><strong>red<img class="smiley" src="' . $a->get_baseurl() . '/images/rm-16.png" alt="r#" />matrix</strong></a>'
+
 	);
 
 	$params = array('texts' => $texts, 'icons' => $icons, 'string' => $s);
@@ -1010,9 +1028,9 @@ function unobscure(&$item) {
 	if(array_key_exists('item_flags',$item) && ($item['item_flags'] & ITEM_OBSCURED)) {
 		$key = get_config('system','prvkey');
 		if($item['title'])
-			$item['title'] = aes_unencapsulate(json_decode_plus($item['title']),$key);
+			$item['title'] = crypto_unencapsulate(json_decode_plus($item['title']),$key);
 		if($item['body'])
-			$item['body'] = aes_unencapsulate(json_decode_plus($item['body']),$key);
+			$item['body'] = crypto_unencapsulate(json_decode_plus($item['body']),$key);
 	}
 
 }
@@ -1047,7 +1065,7 @@ function theme_attachments(&$item) {
 					break;
 			}
 
-			$title = htmlentities($r['title'], ENT_COMPAT,'UTF-8');
+			$title = htmlspecialchars($r['title'], ENT_COMPAT,'UTF-8');
 			if(! $title)
 				$title = t('unknown.???');
 			$title .= ' ' . $r['length'] . ' ' . t('bytes');
@@ -1077,11 +1095,11 @@ function format_categories(&$item,$writeable) {
 	if($terms) {
 		$categories = array();
 		foreach($terms as $t) {
-			$term = htmlspecialchars($t['term'],ENT_COMPAT,'UTF-8') ;
+			$term = htmlspecialchars($t['term'],ENT_COMPAT,'UTF-8',false) ;
 			if(! trim($term))
 				continue;
 			$removelink = (($writeable) ?  z_root() . '/filerm/' . $item['id'] . '?f=&cat=' . urlencode($t['term']) : '');
-			$categories[] = array('term' => $term, 'writeable' => $writeable, 'removelink' => $removelink, 'url' => $t['url']);
+			$categories[] = array('term' => $term, 'writeable' => $writeable, 'removelink' => $removelink, 'url' => zid($t['url']));
 		}
 	}
 	$s = replace_macros(get_markup_template('item_categories.tpl'),array(
@@ -1099,7 +1117,7 @@ function format_filer(&$item) {
 	if($terms) {
 		$categories = array();
 		foreach($terms as $t) {
-			$term = htmlspecialchars($t['term'],ENT_COMPAT,'UTF-8') ;
+			$term = htmlspecialchars($t['term'],ENT_COMPAT,'UTF-8',false) ;
 			if(! trim($term))
 				continue;
 			$removelink = z_root() . '/filerm/' . $item['id'] . '?f=&term=' . urlencode($t['term']);
@@ -1871,18 +1889,17 @@ function json_decode_plus($s) {
 
 
 function design_tools() {
-$channel  = get_app()->get_channel();
-$who = $channel['channel_address'];
+	$channel  = get_app()->get_channel();
+	$who = $channel['channel_address'];
 
-return replace_macros(get_markup_template('design_tools.tpl'), array(
-                        '$title' => t('Design'),
-			'$who' => $who,
-                      	'$blocks' => t('Blocks'),
-			'$menus' => t('Menus'),
-			'$layout' => t('Layouts'),
-			'$pages' => t('Pages')
-                        ));
-
+	return replace_macros(get_markup_template('design_tools.tpl'), array(
+		'$title' => t('Design'),
+		'$who' => $who,
+		'$blocks' => t('Blocks'),
+		'$menus' => t('Menus'),
+		'$layout' => t('Layouts'),
+		'$pages' => t('Pages')
+	));
 }
 
 /* case insensitive in_array() */

@@ -1,0 +1,67 @@
+/* override some bootstrap settings */
+*,
+*:before,
+*:after {
+  -webkit-box-sizing: content-box;
+     -moz-box-sizing: content-box;
+          box-sizing: content-box;
+}
+
+html {
+font-size: 100%;
+}
+
+.panel-body .form-control{
+  -webkit-box-sizing: border-box;
+     -moz-box-sizing: border-box;
+          box-sizing: border-box;
+} 
+.profile-jot-text{
+  -webkit-box-sizing: content-box;
+     -moz-box-sizing: content-box;
+          box-sizing: content-box;
+} 
+
+
+h1,
+.h1 {
+  font-size: 24px;
+}
+
+h2,
+.h2 {
+  font-size: 18px;
+}
+
+h3,
+.h3 {
+  font-size: 16px;
+}
+
+h4,
+.h4 {
+  font-size: 14px;
+}
+
+h5,
+.h5 {
+  font-size: 12px;
+}
+
+h6,
+.h6 {
+  font-size: 10px;
+}
+textarea {
+line-height: initial;
+}
+
+.radio, .checkbox{
+padding-left: 0px;
+margin-left: 0px;
+}
+
+.checkbox input[type="checkbox"], inline input[type="checkbox"]{
+float:none;
+margin-left:0px;
+}

@@ -28,7 +28,7 @@
 <table cellspacing="0" cellpadding="0">
  <tbody>
  <tr style="height: 56px;">
-  <td id="projectlogo"><img alt="Logo" src="rhash-64.png"/></td>
+  <td id="projectlogo"><img alt="Logo" src="rm-64.png"/></td>
   <td style="padding-left: 0.5em;">
    <div id="projectname">The Red Matrix
    </div>
@@ -114,8 +114,8 @@ $(document).ready(function(){initNavTree('zot_8php.html','');});
 Functions</h2></td></tr>
 <tr class="memitem:ab22d67660702056bf3f4696dcebf5ce7"><td class="memItemLeft" align="right" valign="top">&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="zot_8php.html#ab22d67660702056bf3f4696dcebf5ce7">zot_new_uid</a> ($channel_nick)</td></tr>
 <tr class="separator:ab22d67660702056bf3f4696dcebf5ce7"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:acdea9362d78a63dce948fdf0ea73ef0e"><td class="memItemLeft" align="right" valign="top">&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="zot_8php.html#acdea9362d78a63dce948fdf0ea73ef0e">zot_get_hubloc</a> ($arr, $primary=false)</td></tr>
-<tr class="separator:acdea9362d78a63dce948fdf0ea73ef0e"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:ae7cec2b417b5858fd4a41070f843d1d7"><td class="memItemLeft" align="right" valign="top">&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="zot_8php.html#ae7cec2b417b5858fd4a41070f843d1d7">zot_get_hublocs</a> ($hash)</td></tr>
+<tr class="separator:ae7cec2b417b5858fd4a41070f843d1d7"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a3862b3161b2c8557dc1a95020179bd81"><td class="memItemLeft" align="right" valign="top">&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="zot_8php.html#a3862b3161b2c8557dc1a95020179bd81">zot_build_packet</a> ($channel, $type= 'notify', $recipients=null, $remote_key=null, $secret=null)</td></tr>
 <tr class="separator:a3862b3161b2c8557dc1a95020179bd81"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:ab3e9b99ddb11353f37f265a05bb42142"><td class="memItemLeft" align="right" valign="top">&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="zot_8php.html#ab3e9b99ddb11353f37f265a05bb42142">zot_zot</a> ($url, $data)</td></tr>
@@ -166,6 +166,8 @@ Functions</h2></td></tr>
 <tr class="separator:ac301c67864917c35922257950ae0f95c"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a8e22dbc6f884be3644a892a876cbd972"><td class="memItemLeft" align="right" valign="top">&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="zot_8php.html#a8e22dbc6f884be3644a892a876cbd972">get_rpost_path</a> ($observer)</td></tr>
 <tr class="separator:a8e22dbc6f884be3644a892a876cbd972"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:ad149f1e98c0c5b88ff9147e6ee3f330d"><td class="memItemLeft" align="right" valign="top">&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="zot_8php.html#ad149f1e98c0c5b88ff9147e6ee3f330d">import_author_zot</a> ($<a class="el" href="boot_8php.html#a01353c9abebc3544ea080ac161729632">x</a>)</td></tr>
+<tr class="separator:ad149f1e98c0c5b88ff9147e6ee3f330d"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table>
 <h2 class="groupheader">Function Documentation</h2>
 <a class="anchor" id="a703f528ade8382cf374e4119bd6f7859"></a>
@@ -211,7 +213,7 @@ Functions</h2></td></tr>
 </div><div class="memdoc">
 <p>Send a zot packet to all hubs where this channel is duplicated, refreshing such things as personal settings, channel permissions, address book updates, etc. </p>
 
-<p>Referenced by <a class="el" href="connections_8php.html#a15af118efee9c948b6f8294e54a73bb2">connections_clone()</a>, and <a class="el" href="settings_8php.html#aa7ee94d88ac088edb04ccf3a26de3586">settings_post()</a>.</p>
+<p>Referenced by <a class="el" href="connections_8php.html#a15af118efee9c948b6f8294e54a73bb2">connections_clone()</a>, <a class="el" href="connedit_8php.html#a707ea7e63cf9674025b1d6b081ae74f5">connedit_clone()</a>, and <a class="el" href="settings_8php.html#aa7ee94d88ac088edb04ccf3a26de3586">settings_post()</a>.</p>
 
 </div>
 </div>
@@ -264,6 +266,24 @@ Functions</h2></td></tr>
 </div><div class="memdoc">
 
 <p>Referenced by <a class="el" href="bbcode_8php.html#a5165a5221a52cf1bc1d7812ebd2069c7">rpost_callback()</a>, and <a class="el" href="rpost_8php.html#a8190354d789000806d9879aea276728f">rpost_content()</a>.</p>
+
+</div>
+</div>
+<a class="anchor" id="ad149f1e98c0c5b88ff9147e6ee3f330d"></a>
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">import_author_zot </td>
+          <td>(</td>
+          <td class="paramtype">&#160;</td>
+          <td class="paramname"><em>$x</em></td><td>)</td>
+          <td></td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+<p>Referenced by <a class="el" href="items_8php.html#ae73794179b62d39bb597ff670ab1c1e5">import_author_xchan()</a>.</p>
 
 </div>
 </div>
@@ -392,6 +412,15 @@ Functions</h2></td></tr>
         </tr>
       </table>
 </div><div class="memdoc">
+<p>import_xchan($arr,$ud_flags = 1) Takes an associative array of a fecthed discovery packet and updates all internal data structures which need to be updated as a result.</p>
+<dl class="params"><dt>Parameters</dt><dd>
+  <table class="params">
+    <tr><td class="paramtype">array</td><td class="paramname">$arr</td><td>=&gt; json_decoded discovery packet </td></tr>
+    <tr><td class="paramtype">int</td><td class="paramname">$ud_flags</td><td>Determines whether to create a directory update record if any changes occur, default 1 or true</td></tr>
+  </table>
+  </dd>
+</dl>
+<dl class="section return"><dt>Returns</dt><dd>array =&gt; 'success' (boolean true or false) 'message' (optional error string only if success is false) </dd></dl>
 
 <p>Referenced by <a class="el" href="chanview_8php.html#a4192c6da888c8c1165851acf9ad4cb8b">chanview_content()</a>, <a class="el" href="gprobe_8php.html#adf72cb0a70b5b9d99fdec1cc60e18ed1">gprobe_run()</a>, <a class="el" href="magic_8php.html#acea2cc792849ca2d71d4b689f66518bf">magic_init()</a>, <a class="el" href="mod_2message_8php.html#a0db7030362a7e9ed9549b341d7b35718">message_post()</a>, <a class="el" href="include_2follow_8php.html#ae387d4ae097c23d69f3247e7f08140c7">new_contact()</a>, <a class="el" href="socgraph_8php.html#a5ef8bef37161df53718a21e93d02fbd6">poco_load()</a>, <a class="el" href="post_8php.html#af4b48181ce773ef0cdfc972441445c34">post_init()</a>, <a class="el" href="dir__fns_8php.html#a44062d4b471d1e83f92f6c184585aa13">update_directory_entry()</a>, <a class="el" href="zot_8php.html#a7b23bfb31d4491231e1e73bdc077240d">zot_refresh()</a>, and <a class="el" href="zot_8php.html#a5bcdfef419b16075a0eca990956223dc">zot_register_hub()</a>.</p>
 
@@ -706,6 +735,18 @@ Functions</h2></td></tr>
         </tr>
       </table>
 </div><div class="memdoc">
+<p>zot_build_packet($channel,$type = 'notify',$recipients = null, $remote_key = null, $secret = null) builds a zot notification packet that you can either store in the queue with a message array or call zot_zot to immediately zot it to the other side</p>
+<dl class="params"><dt>Parameters</dt><dd>
+  <table class="params">
+    <tr><td class="paramtype">array</td><td class="paramname">$channel</td><td>=&gt; sender channel structure </td></tr>
+    <tr><td class="paramtype">string</td><td class="paramname">$type</td><td>=&gt; packet type: one of 'ping', 'pickup', 'purge', 'refresh', 'notify', 'auth_check' </td></tr>
+    <tr><td class="paramtype">array</td><td class="paramname">$recipients</td><td>=&gt; envelope information, array ( 'guid' =&gt; string, 'guid_sig' =&gt; string ); empty for public posts </td></tr>
+    <tr><td class="paramtype">string</td><td class="paramname">$remote_key</td><td>=&gt; optional public site key of target hub used to encrypt entire packet NOTE: remote_key and encrypted packets are required for 'auth_check' packets, optional for all others </td></tr>
+    <tr><td class="paramtype">string</td><td class="paramname">$secret</td><td>=&gt; random string, required for packets which require verification/callback e.g. 'pickup', 'purge', 'notify', 'auth_check' &mdash; 'ping' and 'refresh' do not require verification</td></tr>
+  </table>
+  </dd>
+</dl>
+<dl class="section return"><dt>Returns</dt><dd>string json encoded zot packet </dd></dl>
 
 <p>Referenced by <a class="el" href="zot_8php.html#ac34e479d27f32b82dd6b33542f81a6a7">build_sync_packet()</a>, <a class="el" href="include_2directory_8php.html#aa75d3b0697ca1456aaabdb37a74aa0f0">directory_run()</a>, <a class="el" href="notifier_8php.html#a568c502f626cff95e344c0748938b85d">notifier_run()</a>, <a class="el" href="post_8php.html#af4b48181ce773ef0cdfc972441445c34">post_init()</a>, and <a class="el" href="zping_8php.html#a4d3a6b0b8b04ed6469015823e615ee75">zping_content()</a>.</p>
 
@@ -724,8 +765,18 @@ Functions</h2></td></tr>
         </tr>
       </table>
 </div><div class="memdoc">
-<p>: zot_fetch</p>
-<p>We received a notification packet (in <a class="el" href="post_8php.html">mod/post.php</a>) that a message is waiting for us, and we've verified the sender. Now send back a pickup message, using our message tracking ID ($arr['secret']), which we will sign. The entire pickup message is encrypted with the remote site's public key. If everything checks out on the remote end, we will receive back a packet containing one or more messages, which will be processed before returning. </p>
+<p>zot_fetch($arr) </p>
+<pre class="fragment">We received a notification packet (in mod/post.php) that a message is waiting for us, and we've verified the sender.
+Now send back a pickup message, using our message tracking ID ($arr['secret']), which we will sign with our site private key.
+The entire pickup message is encrypted with the remote site's public key. 
+If everything checks out on the remote end, we will receive back a packet containing one or more messages,
+which will be processed and delivered before this function ultimately returns.
+</pre><dl class="params"><dt>Parameters</dt><dd>
+  <table class="params">
+    <tr><td class="paramtype">array</td><td class="paramname">$arr</td><td>decrypted and json decoded notify packet from remote site </td></tr>
+  </table>
+  </dd>
+</dl>
 
 <p>Referenced by <a class="el" href="post_8php.html#af59e6a1dc22d19d9257b01cd7ccedb75">post_post()</a>.</p>
 
@@ -776,30 +827,27 @@ Functions</h2></td></tr>
 
 </div>
 </div>
-<a class="anchor" id="acdea9362d78a63dce948fdf0ea73ef0e"></a>
+<a class="anchor" id="ae7cec2b417b5858fd4a41070f843d1d7"></a>
 <div class="memitem">
 <div class="memproto">
       <table class="memname">
         <tr>
-          <td class="memname">zot_get_hubloc </td>
+          <td class="memname">zot_get_hublocs </td>
           <td>(</td>
           <td class="paramtype">&#160;</td>
-          <td class="paramname"><em>$arr</em>, </td>
-        </tr>
-        <tr>
-          <td class="paramkey"></td>
+          <td class="paramname"><em>$hash</em></td><td>)</td>
           <td></td>
-          <td class="paramtype">&#160;</td>
-          <td class="paramname"><em>$primary</em> = <code>false</code>&#160;</td>
-        </tr>
-        <tr>
-          <td></td>
-          <td>)</td>
-          <td></td><td></td>
         </tr>
       </table>
 </div><div class="memdoc">
-<p>Given an array of zot hashes, return all distinct hubs If primary is true, return only primary hubs Result is ordered by url to assist in batching. Return only the first primary hub as there should only be one. </p>
+<p>zot_get_hublocs($hash) Given a zot hash, return all distinct hubs. This function is used in building the zot discovery packet and therefore should only be used by channels which are defined on this hub </p>
+<dl class="params"><dt>Parameters</dt><dd>
+  <table class="params">
+    <tr><td class="paramtype">string</td><td class="paramname">$hash</td><td>- xchan_hash  array of hubloc (hub location structures) hubloc_id int hubloc_guid char(255) hubloc_guid_sig text hubloc_hash char(255) hubloc_addr char(255) hubloc_flags int hubloc_status int hubloc_url char(255) hubloc_url_sig text hubloc_host char(255) hubloc_callback char(255) hubloc_connect char(255) hubloc_sitekey text hubloc_updated datetime hubloc_connected datetime </td></tr>
+  </table>
+  </dd>
+</dl>
+<p>Only search for active hublocs - e.g. those that haven't been marked deleted </p>
 
 <p>Referenced by <a class="el" href="zfinger_8php.html#a8139b83a22ef98869adc10aa224027a0">zfinger_init()</a>.</p>
 
@@ -819,7 +867,13 @@ Functions</h2></td></tr>
       </table>
 </div><div class="memdoc">
 <p>: zot_gethub</p>
-<p>A guid and a url, both signed by the sender, distinguish a known sender at a known location This function looks these up to see if the channel is known. If not, we will need to verify it. </p>
+<p>A guid and a url, both signed by the sender, distinguish a known sender at a known location This function looks these up to see if the channel is known and therefore previously verified. If not, we will need to verify it.</p>
+<dl class="params"><dt>Parameters</dt><dd>
+  <table class="params">
+    <tr><td class="paramtype">array</td><td class="paramname">$arr</td><td>$arr must contain: string $arr['guid'] =&gt; guid of conversant string $arr['guid_sig'] =&gt; guid signed with conversant's private key string $arr['url'] =&gt; URL of the origination hub of this communication string $arr['url_sig'] =&gt; URL signed with conversant's private key</td></tr>
+  </table>
+  </dd>
+</dl>
 <dl class="section return"><dt>Returns</dt><dd>: array =&gt; hubloc record </dd></dl>
 
 <p>Referenced by <a class="el" href="import_8php.html#af17fef0410518f7eac205d0ea416eaa2">import_post()</a>, <a class="el" href="post_8php.html#af59e6a1dc22d19d9257b01cd7ccedb75">post_post()</a>, <a class="el" href="zot_8php.html#a61cdc1ec843663c423ed2d8160ae5aea">zot_fetch()</a>, and <a class="el" href="zot_8php.html#aeea071f17e306fe3d0c488551906bfab">zot_import()</a>.</p>
@@ -851,7 +905,15 @@ Functions</h2></td></tr>
 </div><div class="memdoc">
 <p>zot_import</p>
 <p>Process an incoming array of messages which were obtained via pickup, and import, update, delete as directed.</p>
-<p>The message types handled here are 'activity' (e.g. posts), 'mail' and 'profile' </p>
+<dl class="params"><dt>Parameters</dt><dd>
+  <table class="params">
+    <tr><td class="paramtype">array</td><td class="paramname">$arr</td><td>=&gt; 'pickup' structure returned from remote site </td></tr>
+    <tr><td class="paramtype">string</td><td class="paramname">$sender_url</td><td>=&gt; the url specified by the sender in the initial communication we will verify the sender and url in each returned message structure and also verify that all the messages returned match the site url that we are currently processing.</td></tr>
+  </table>
+  </dd>
+</dl>
+<p>The message types handled here are 'activity' (e.g. posts), 'mail' , 'profile', and 'channel_sync'</p>
+<dl class="section return"><dt>Returns</dt><dd>array =&gt; array ( [0] =&gt; string $channel_hash, [1] =&gt; string $delivery_status, [2] =&gt; string $address ) suitable for logging remotely, enumerating the processing results of each message/recipient combination. </dd></dl>
 
 <p>Referenced by <a class="el" href="deliver_8php.html#a397afcb9afecf0c1816b0951189dd346">deliver_run()</a>, and <a class="el" href="zot_8php.html#a61cdc1ec843663c423ed2d8160ae5aea">zot_fetch()</a>.</p>
 
@@ -870,7 +932,16 @@ Functions</h2></td></tr>
         </tr>
       </table>
 </div><div class="memdoc">
-<p>zot_new_uid($channel_nick)  = unique nickname of controlling entity </p>
+<p>Red implementation of zot protocol.</p>
+<p><a href="https://github.com/friendica/red/wiki/zot">https://github.com/friendica/red/wiki/zot</a> <a href="https://github.com/friendica/red/wiki/Zot&mdash;A-High-Level-Overview">https://github.com/friendica/red/wiki/Zot&amp;mdash;A-High-Level-Overview</a></p>
+<p>zot_new_uid($channel_nick)</p>
+<p>Generates a unique string for use as a zot guid using our DNS-based url, the channel nickname and some entropy. The entropy ensures uniqueness against re-installs where the same URL and nickname are chosen. NOTE: zot doesn't require this to be unique. Internally we use a whirlpool hash of this guid and the signature of this guid signed with the channel private key. This can be verified and should make the probability of collision of the verified result negligible within the constraints of our immediate universe.</p>
+<dl class="params"><dt>Parameters</dt><dd>
+  <table class="params">
+    <tr><td class="paramname">string</td><td>channel_nickname = unique nickname of controlling entity</td></tr>
+  </table>
+  </dd>
+</dl>
 <dl class="section return"><dt>Returns</dt><dd>string </dd></dl>
 
 <p>Referenced by <a class="el" href="identity_8php.html#a345f4c943d84de502ec6e72d2c813945">create_identity()</a>.</p>
@@ -906,6 +977,16 @@ Functions</h2></td></tr>
         </tr>
       </table>
 </div><div class="memdoc">
+<p>zot_process_response($hub,$arr,$outq) { Called immediately after sending a zot message which is using queue processing Updates the queue item according to the response result and logs any information returned to aid communications troubleshooting.</p>
+<dl class="params"><dt>Parameters</dt><dd>
+  <table class="params">
+    <tr><td class="paramtype">string</td><td class="paramname">$hub</td><td>- url of site we just contacted </td></tr>
+    <tr><td class="paramtype">array</td><td class="paramname">$arr</td><td>- output of <a class="el" href="include_2network_8php.html#a9129fd55e7fc175b4ea9a195cccc16bc">z_post_url()</a> </td></tr>
+    <tr><td class="paramtype">array</td><td class="paramname">$outq</td><td>- The queue structure attached to this request</td></tr>
+  </table>
+  </dd>
+</dl>
+<dl class="section return"><dt>Returns</dt><dd>nothing </dd></dl>
 
 <p>Referenced by <a class="el" href="deliver_8php.html#a397afcb9afecf0c1816b0951189dd346">deliver_run()</a>, and <a class="el" href="queue_8php.html#af8c93de86d866c3200174c8450a0f341">queue_run()</a>.</p>
 
@@ -934,10 +1015,20 @@ Functions</h2></td></tr>
         </tr>
       </table>
 </div><div class="memdoc">
-<p>: zot_refresh</p>
-<p>zot_refresh is typically invoked when somebody has changed permissions of a channel and they are notified to fetch new permissions via a finger operation. This may result in a new connection (abook entry) being added to a local channel and it may result in auto-permissions being granted. </p>
+<p>: zot_refresh($them, $channel = null)</p>
+<p>zot_refresh is typically invoked when somebody has changed permissions of a channel and they are notified to fetch new permissions via a finger/discovery operation. This may result in a new connection (abook entry) being added to a local channel and it may result in auto-permissions being granted.</p>
+<p>Friending in zot is accomplished by sending a refresh packet to a specific channel which indicates a permission change has been made by the sender which affects the target channel. The hub controlling the target channel does targetted discovery (a zot-finger request requesting permissions for the local channel). These are decoded here, and if necessary and abook structure (addressbook) is created to store the permissions assigned to this channel.</p>
+<p>Initially these abook structures are created with a 'pending' flag, so that no reverse permissions are implied until this is approved by the owner channel. A channel can also auto-populate permissions in return and send back a refresh packet of its own. This is used by forum and group communication channels so that friending and membership in the channel's "club" is automatic.</p>
+<dl class="params"><dt>Parameters</dt><dd>
+  <table class="params">
+    <tr><td class="paramtype">array</td><td class="paramname">$them</td><td>=&gt; xchan structure of sender </td></tr>
+    <tr><td class="paramtype">array</td><td class="paramname">$channel</td><td>=&gt; local channel structure of target recipient, required for "friending" operations</td></tr>
+  </table>
+  </dd>
+</dl>
+<dl class="section return"><dt>Returns</dt><dd>boolean true if successful, else false </dd></dl>
 
-<p>Referenced by <a class="el" href="connections_8php.html#aec2e457420fce3e3bf6a9f48e36df25c">connections_content()</a>, <a class="el" href="items_8php.html#ae73794179b62d39bb597ff670ab1c1e5">import_author_xchan()</a>, <a class="el" href="onepoll_8php.html#a72753b2fdec79b37c7f432035c91fb6d">onepoll_run()</a>, and <a class="el" href="post_8php.html#af59e6a1dc22d19d9257b01cd7ccedb75">post_post()</a>.</p>
+<p>Referenced by <a class="el" href="connedit_8php.html#a795acb3d9d841f55c255d7611681ab67">connedit_content()</a>, <a class="el" href="zot_8php.html#ad149f1e98c0c5b88ff9147e6ee3f330d">import_author_zot()</a>, <a class="el" href="onepoll_8php.html#a72753b2fdec79b37c7f432035c91fb6d">onepoll_run()</a>, and <a class="el" href="post_8php.html#af59e6a1dc22d19d9257b01cd7ccedb75">post_post()</a>.</p>
 
 </div>
 </div>
@@ -954,6 +1045,15 @@ Functions</h2></td></tr>
         </tr>
       </table>
 </div><div class="memdoc">
+<p>zot_register_hub($arr)</p>
+<p>A communication has been received which has an unknown (to us) sender. Perform discovery based on our calculated hash of the sender at the origination address. This will fetch the discovery packet of the sender, which contains the public key we need to verify our guid and url signatures.</p>
+<dl class="params"><dt>Parameters</dt><dd>
+  <table class="params">
+    <tr><td class="paramtype">array</td><td class="paramname">$arr</td><td>$arr must contain: string $arr['guid'] =&gt; guid of conversant string $arr['guid_sig'] =&gt; guid signed with conversant's private key string $arr['url'] =&gt; URL of the origination hub of this communication string $arr['url_sig'] =&gt; URL signed with conversant's private key</td></tr>
+  </table>
+  </dd>
+</dl>
+<dl class="section return"><dt>Returns</dt><dd>array =&gt; 'success' (boolean true or false) 'message' (optional error string only if success is false) </dd></dl>
 
 <p>Referenced by <a class="el" href="post_8php.html#af59e6a1dc22d19d9257b01cd7ccedb75">post_post()</a>.</p>
 

@@ -1,0 +1,6 @@
+[region=aside]
+[widget=fullprofile][/widget]
+[widget=archive][var=wall]1[/var][/widget]
+[widget=categories][/widget]
+[widget=tagcloud_wall][var=limit]24[/var][/widget]
+[/region]

@@ -1,6 +1,6 @@
 <?php
 
-define( 'UPDATE_VERSION' , 1081 );
+define( 'UPDATE_VERSION' , 1084 );
 
 /**
  *
@@ -896,3 +896,26 @@ ADD INDEX ( `expires` ) ");
 		return UPDATE_SUCCESS;
 	return UPDATE_FAILED;
 }
+
+function update_r1081() {
+	$r = q("DROP TABLE `queue` ");
+	if($r)
+		return UPDATE_SUCCESS;
+	return UPDATE_FAILED;
+}
+
+function update_r1082() {
+	$r = q("DROP TABLE `challenge` ");
+	if($r)
+		return UPDATE_SUCCESS;
+	return UPDATE_FAILED;
+}
+
+function update_r1083() {
+	$r = q("ALTER TABLE `notify` ADD `aid` INT NOT NULL AFTER `msg` ,
+ADD INDEX ( `aid` )");
+	if($r)
+		return UPDATE_SUCCESS;
+	return UPDATE_FAILED;
+}
+

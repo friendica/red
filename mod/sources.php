@@ -9,11 +9,25 @@ function sources_post(&$a) {
 
 	$source = intval($_REQUEST['source']);
 	$xchan = $_REQUEST['xchan'];
+	$abook = intval($_REQUEST['abook']);
 	$words = $_REQUEST['words'];
 	$frequency = $_REQUEST['frequency'];
 
 	$channel = $a->get_channel();
 
+	if($abook) {
+		$r = q("select abook_xchan from abook where abook_id = %d and abook_channel = %d limit 1",
+			intval($abook),
+			intval(local_user())
+		);
+		if($r) 
+			$xchan = $r[0]['abook_xchan'];
+	}
+
+	if(! $xchan) {
+		notice ( t('Failed to create source. No channel selected.') . EOL);
+		return;
+	}
 
 	if(! $source) {
 		$r = q("insert into source ( src_channel_id, src_channel_xchan, src_xchan, src_patt )
@@ -92,6 +106,12 @@ function sources_content(&$a) {
 			intval(argv(1)),
 			intval(local_user())
 		);
+		if($r) {
+			$x = q("select abook_id from abook where abook_xchan = '%s' and abook_channel = %d limit 1",
+				dbesc($r[0]['src_xchan']),
+				intval(local_user())
+			);
+		}
 		if(! $r) {
 			notice( t('Source not found.') . EOL);
 			return '';
@@ -106,6 +126,7 @@ function sources_content(&$a) {
 			'$desc' => t('Import all or selected content from the following channel into this channel and distribute it according to your channel settings.'),
 			'$words' => array( 'words', t('Only import content with these words (one per line)'),$r[0]['src_patt'],t('Leave blank to import all public content')),
 			'$xchan' => $r[0]['src_xchan'],
+			'$abook' => $x[0]['abook_id'],
 			'$name' => array( 'name', t('Channel Name'), $r[0]['xchan_name'], ''),
 			'$submit' => t('Submit')
 		));

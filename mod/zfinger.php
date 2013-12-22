@@ -52,10 +52,33 @@ function zfinger_init(&$a) {
 		);
 	}
 	elseif(strlen($zaddr)) {
-		$r = q("select channel.*, xchan.* from channel left join xchan on channel_hash = xchan_hash
-			where channel_address = '%s' limit 1",
-			dbesc($zaddr)
-		);
+		if(strpos($zaddr,'[system]') === false) {       /* normal address lookup */
+			$r = q("select channel.*, xchan.* from channel left join xchan on channel_hash = xchan_hash
+				where ( channel_address = '%s' or xchan_addr = '%s' ) limit 1",
+				dbesc($zaddr),
+				dbesc($zaddr)
+			);
+		}
+
+		else {
+
+			/**
+			 * The special address '[system]' will return a system channel if one has been defined,
+			 * Or the first valid channel we find if there are no system channels. 
+			 *
+			 * This is used by magic-auth if we have no prior communications with this site - and
+			 * returns an identity on this site which we can use to create a valid hub record so that
+			 * we can exchange signed messages. The precise identity is irrelevant. It's the hub
+			 * information that we really need at the other end - and this will return it.
+			 *
+			 */
+
+			$r = q("select channel.*, xchan.* from channel left join xchan on channel_hash = xchan_hash
+				where (( channel_pageflags & %d ) or not ( channel_pageflags & %d )) order by channel_id limit 1",
+				intval(PAGE_SYSTEM),
+				intval(PAGE_REMOVED)
+			);
+		} 
 	}
 	else {
 		$ret['message'] = 'Invalid request';
@@ -164,7 +187,7 @@ function zfinger_init(&$a) {
 
 	$ret['locations'] = array();
 
-	$x = zot_get_hubloc(array($e['channel_hash']));
+	$x = zot_get_hublocs($e['channel_hash']);
 	if($x && count($x)) {
 		foreach($x as $hub) {
 			if(! ($hub['hubloc_flags'] & HUBLOC_FLAGS_UNVERIFIED)) {
@@ -251,6 +274,7 @@ function zfinger_init(&$a) {
 		$ret['site']['location'] = get_config('system','site_location');
 
 	}
+	call_hooks('zot_finger',$ret);
 	json_return_and_die($ret);
 
 }

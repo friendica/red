@@ -23,8 +23,8 @@
 			{{/if}}
 		{{/if}}
 		{{if $app.my}}
-		<a href="{{$baseurl}}/settings/oauth/edit/{{$app.client_id}}" class="icon s22 edit" title="{{$edit}}">&nbsp;</a>
-		<a href="{{$baseurl}}/settings/oauth/delete/{{$app.client_id}}?t={{$form_security_token}}" class="icon s22 delete" title="{{$delete}}">&nbsp;</a>
+		<a href="{{$baseurl}}/settings/oauth/edit/{{$app.client_id}}" title="{{$edit}}"><i class="icon-pencil"></i></a>
+		<a href="{{$baseurl}}/settings/oauth/delete/{{$app.client_id}}?t={{$form_security_token}}" title="{{$delete}}"><i class="icon-remove"></i></a>
 		{{/if}}		
 	</div>
 	{{/foreach}}

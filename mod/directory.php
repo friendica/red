@@ -1,30 +1,13 @@
 <?php
 
 require_once('include/dir_fns.php');
+require_once('include/widgets.php');
 
 
 function directory_init(&$a) {
 	$a->set_pager_itemspage(80);
 
 }
-
-function directory_aside(&$a) {
-
-	if(local_user()) {
-		require_once('include/contact_widgets.php');
-		$a->set_widget('find_people',findpeople_widget());
-	}
-
-	if((get_config('system','block_public')) && (! local_user()) && (! remote_user())) {
-		return;
-	}
-	
-	$a->set_widget('safe_search',dir_safe_mode());
-
-	$a->set_widget('dir_sort_order',dir_sort_links());
-	
-}
-
 
 function directory_content(&$a) {
 
@@ -211,7 +194,7 @@ function directory_content(&$a) {
 					}
 
 					if($j['keywords']) {
-						$a->set_widget('dirtagblock',dir_tagblock(z_root() . '/directory',$j['keywords']));
+						$a->data['directory_keywords'] = $j['keywords'];
 					}
 
 //					logger('mod_directory: entries: ' . print_r($entries,true), LOGGER_DATA);

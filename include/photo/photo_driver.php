@@ -473,19 +473,19 @@ abstract class photo_driver {
  * @arg $fromcurl boolean Check Content-Type header from curl request
  */
 
-function guess_image_type($filename, $fromcurl=false) {
+function guess_image_type($filename, $headers = '') {
 	logger('Photo: guess_image_type: '.$filename . ($fromcurl?' from curl headers':''), LOGGER_DEBUG);
 	$type = null;
-	if ($fromcurl) {
+	if ($headers) {
 		$a = get_app();
-		$headers=array();
-		$h = explode("\n",$a->get_curl_headers());
+		$hdrs=array();
+		$h = explode("\n",$headers);
 		foreach ($h as $l) {
 			list($k,$v) = array_map("trim", explode(":", trim($l), 2));
-			$headers[$k] = $v;
+			$hdrs[$k] = $v;
 		}
-		if (array_key_exists('Content-Type', $headers))
-			$type = $headers['Content-Type'];
+		if (array_key_exists('Content-Type', $hdrs))
+			$type = $hdrs['Content-Type'];
 	}
 	if (is_null($type)){
 // FIXME!!!!
@@ -576,9 +576,9 @@ function import_profile_photo($photo,$xchan) {
 		$photo_failure = true;
 	}
 	if($photo_failure) {
-		$photo = $a->get_baseurl() . '/images/person-175.jpg';
-		$thumb = $a->get_baseurl() . '/images/person-80.jpg';
-		$micro = $a->get_baseurl() . '/images/person-48.jpg';
+		$photo = $a->get_baseurl() . '/' . get_default_profile_photo();
+		$thumb = $a->get_baseurl() . '/' . get_default_profile_photo(80);
+		$micro = $a->get_baseurl() . '/' . get_default_profile_photo(48);
 		$type = 'image/jpeg';
 	}
 

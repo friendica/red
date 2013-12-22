@@ -7,8 +7,8 @@
 	</form>
 	<br />
 	{{if $similar}}<a href="match" >{{$similar}}</a><br />{{/if}}
-	<a href="suggest" >{{$suggest}}</a><br />
+	{{if $loggedin}}<a href="suggest" >{{$suggest}}</a><br />{{/if}}
 	<a href="randprof" >{{$random}}</a><br />
-	{{if $inv}}<a href="invite" >{{$inv}}</a>{{/if}}
+	{{if $loggedin}}{{if $inv}}<a href="invite" >{{$inv}}</a>{{/if}}{{/if}}
 </div>
 

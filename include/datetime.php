@@ -443,3 +443,24 @@ function cal($y = 0,$m = 0, $links = false, $class='') {
 }
 
 
+
+
+function z_birthday($dob,$tz,$format="Y-m-d H:i:s") {
+
+	if(! strlen($tz))
+		$tz = 'UTC';
+
+	$tmp_dob = substr($dob,5);
+	if(intval($tmp_dob)) {
+		$y = datetime_convert($tz,$tz,'now','Y');
+		$bd = $y . '-' . $tmp_dob . ' 00:00';
+		$t_dob = strtotime($bd);
+		$now = strtotime(datetime_convert($tz,$tz,'now'));
+		if($t_dob < $now)
+			$bd = $y + 1 . '-' . $tmp_dob . ' 00:00';
+		$birthday = datetime_convert($tz,'UTC',$bd,$format);
+	}
+
+	return $birthday;
+
+}

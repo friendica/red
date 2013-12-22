@@ -13,7 +13,7 @@
 					/>
 				{{/if}}			
 				{{if $group.edit}}
-					<a class="groupsideedit" href="{{$group.edit.href}}" title="{{$edittext}}"><span id="edit-sidebar-group-element-{{$group.id}}" class="group-edit-icon iconspacer small-pencil"></span></a>
+					<a class="groupsideedit" href="{{$group.edit.href}}" title="{{$edittext}}"><i id="edit-sidebar-group-element-{{$group.id}}" class="group-edit-icon iconspacer icon-pencil"></i></a>
 				{{/if}}
 				<a id="sidebar-group-element-{{$group.id}}" class="sidebar-group-element {{if $group.selected}}group-selected{{/if}}" href="{{$group.href}}">{{$group.text}}</a>
 			</li>
@@ -23,11 +23,6 @@
   <div id="sidebar-new-group">
   <a href="group/new">{{$createtext}}</a>
   </div>
-  {{if $ungrouped}}
-  <div id="sidebar-ungrouped">
-  <a href="nogroup">{{$ungrouped}}</a>
-  </div>
-  {{/if}}
 </div>
 
 

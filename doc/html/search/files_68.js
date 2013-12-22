@@ -1,6 +1,5 @@
 var searchData=
 [
-  ['hcard_2ephp',['hcard.php',['../hcard_8php.html',1,'']]],
   ['help_2ephp',['help.php',['../help_8php.html',1,'']]],
   ['home_2ephp',['home.php',['../home_8php.html',1,'']]],
   ['hostxrd_2ephp',['hostxrd.php',['../hostxrd_8php.html',1,'']]],

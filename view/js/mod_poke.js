@@ -4,7 +4,7 @@ $(document).ready(function() {
 		serviceUrl: baseurl + '/acl',
 		minChars: 2,
 		width: 250,
-		id: 'poke-recip-ac';
+		id: 'poke-recip-ac',
 		onSelect: function(value,data) {
 			$("#poke-recip-complete").val(data);
 		}			

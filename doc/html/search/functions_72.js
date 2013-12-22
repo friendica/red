@@ -1,14 +1,15 @@
 var searchData=
 [
-  ['random_5fprofile',['random_profile',['../Contact_8php.html#a91281b5d4bbbb2ed468e27ec82ca083c',1,'Contact.php']]],
+  ['random_5fprofile',['random_profile',['../Contact_8php.html#a852fa476f0c70bde10a4f2533aec5f71',1,'Contact.php']]],
   ['random_5fstring',['random_string',['../text_8php.html#a9d6a5ee1290de7a8b483fe78585daade',1,'text.php']]],
   ['randprof_5finit',['randprof_init',['../randprof_8php.html#abf5dba3c608b9304cbf68327cd31b090',1,'randprof.php']]],
   ['rconnect_5furl',['rconnect_url',['../Contact_8php.html#a2f4f495d53f2a334ab75292af79d3c91',1,'Contact.php']]],
   ['rebuild_5ftheme_5ftable',['rebuild_theme_table',['../admin_8php.html#ae46311a3fefc21abc838a26e91789de6',1,'admin.php']]],
+  ['red_5fcomment',['red_comment',['../post__to__red_8php.html#a085c250d4ceff5e4f10052f3d2039823',1,'post_to_red.php']]],
+  ['red_5fxmlrpc_5fmethods',['red_xmlrpc_methods',['../post__to__red_8php.html#a3a2af6ad845239f26e86fccabf8639e1',1,'post_to_red.php']]],
   ['red_5fzrl_5fcallback',['red_zrl_callback',['../items_8php.html#a4e6d7639431e0dd8e9f4dba8e1ac408b',1,'items.php']]],
   ['redbasic_5fform',['redbasic_form',['../view_2theme_2redbasic_2php_2config_8php.html#a8574a41fa9735ee391ba57ab24b93793',1,'config.php']]],
   ['redbasic_5finit',['redbasic_init',['../redbasic_2php_2theme_8php.html#af6eb813e9fc7e2d76ac1b82bc5c0ed9b',1,'theme.php']]],
-  ['redir_5finit',['redir_init',['../redir_8php.html#a9ac266c3f5cf0d94ef63e6d0f2edf1f5',1,'redir.php']]],
   ['reduce',['reduce',['../docblox__errorchecker_8php.html#ae9562cf60aa693114603d27b55d2185f',1,'docblox_errorchecker.php']]],
   ['ref_5fsession_5fclose',['ref_session_close',['../session_8php.html#a5e1c616e02b863d5450317d101366bb7',1,'session.php']]],
   ['ref_5fsession_5fdestroy',['ref_session_destroy',['../session_8php.html#af230b86bfff7db66c3bdd7e0bbc24052',1,'session.php']]],

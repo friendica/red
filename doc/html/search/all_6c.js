@@ -4,10 +4,6 @@ var searchData=
   ['language_2ephp',['language.php',['../language_8php.html',1,'']]],
   ['language_5fdetect_5fmin_5fconfidence',['LANGUAGE_DETECT_MIN_CONFIDENCE',['../boot_8php.html#a68d1d5bc9c7ccb663dc671b48c66df11',1,'boot.php']]],
   ['language_5fdetect_5fmin_5flength',['LANGUAGE_DETECT_MIN_LENGTH',['../boot_8php.html#a17cf72338b040891781a4bcbdd9a8595',1,'boot.php']]],
-  ['lastpost_2ephp',['lastpost.php',['../lastpost_8php.html',1,'']]],
-  ['lastpost_5faside',['lastpost_aside',['../lastpost_8php.html#a6108289ef2a767495c7c85a24f364983',1,'lastpost.php']]],
-  ['lastpost_5fcontent',['lastpost_content',['../lastpost_8php.html#a82f14cce5d3cfe27f40bdbd2c679d493',1,'lastpost.php']]],
-  ['lastpost_5finit',['lastpost_init',['../lastpost_8php.html#ab4c6ebd25736af678e64d55ce508ce8c',1,'lastpost.php']]],
   ['layout_5fselect',['layout_select',['../text_8php.html#a3999a0b3e22e440f280ee791ce34d384',1,'text.php']]],
   ['layouts_2ephp',['layouts.php',['../layouts_8php.html',1,'']]],
   ['layouts_5fcontent',['layouts_content',['../layouts_8php.html#a6e0193759ad9eef76d3df2db24237b50',1,'layouts.php']]],
@@ -49,6 +45,5 @@ var searchData=
   ['lookup_5ftoken',['lookup_token',['../classFKOAuthDataStore.html#a96f76387c3a93b0abe27a98013804bab',1,'FKOAuthDataStore']]],
   ['lostpass_2ephp',['lostpass.php',['../lostpass_8php.html',1,'']]],
   ['lostpass_5fcontent',['lostpass_content',['../lostpass_8php.html#a0314d94e48c789b1b3a201d740c9eab3',1,'lostpass.php']]],
-  ['lostpass_5fpost',['lostpass_post',['../lostpass_8php.html#a8ed35ba71a4404eaf4903da61d0321cc',1,'lostpass.php']]],
-  ['lrdd',['lrdd',['../include_2network_8php.html#adbc7fe45cc7fd9cd78f6b2f425ee9041',1,'network.php']]]
+  ['lostpass_5fpost',['lostpass_post',['../lostpass_8php.html#a8ed35ba71a4404eaf4903da61d0321cc',1,'lostpass.php']]]
 ];

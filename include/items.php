@@ -202,11 +202,29 @@ function post_activity_item($arr) {
 		return $ret;
 	}
 
-	if(array_key_exists('content_type',$arr) && $arr['content_type'] == 'text/html')
-		$arr['body'] = purify_html($arr['body']);
-	else
-		$arr['body'] = escape_tags($arr['body']);
 
+	if(! array_key_exists('mimetype',$arr))
+		$arr['mimetype'] = 'text/bbcode';
+
+	if(array_key_exists('item_private',$arr) && $arr['item_private']) {
+
+		$arr['body'] = z_input_filter($arr['uid'],$arr['body'],$arr['mimetype']);
+
+		if($channel) {
+			if($channel['channel_hash'] === $arr['author_xchan']) {
+				$arr['sig'] = base64url_encode(rsa_sign($arr['body'],$channel['channel_prvkey']));
+				$arr['item_flags'] = $arr['item_flags'] | ITEM_VERIFIED;
+			}
+		}
+
+		logger('Encrypting local storage');
+		$key = get_config('system','pubkey');
+		$arr['item_flags'] = $arr['item_flags'] | ITEM_OBSCURED;
+		if($arr['title'])
+			$arr['title'] = json_encode(aes_encapsulate($arr['title'],$key));
+		if($arr['body'])
+			$arr['body']  = json_encode(aes_encapsulate($arr['body'],$key));
+	}
 
 	$arr['mid']          = 	((x($arr,'mid')) ? $arr['mid'] : item_message_id());
 	$arr['parent_mid']   =  ((x($arr,'parent_mid')) ? $arr['parent_mid'] : $arr['mid']);
@@ -238,7 +256,7 @@ function post_activity_item($arr) {
 
 
 	$post = item_store($arr);	
-	if($post['result'])
+	if($post['success'])
 		$post_id = $post['item_id'];
 
 	if($post_id) {
@@ -546,42 +564,47 @@ function title_is_body($title, $body) {
 
 function get_item_elements($x) {
 
-//	logger('get_item_elements');
+
 	$arr = array();
-	$arr['body']         = (($x['body']) ? htmlentities($x['body'],ENT_COMPAT,'UTF-8',false) : '');
+	$arr['body']         = (($x['body']) ? htmlspecialchars($x['body'],ENT_COMPAT,'UTF-8',false) : '');
 
 	$arr['created']      = datetime_convert('UTC','UTC',$x['created']);
 	$arr['edited']       = datetime_convert('UTC','UTC',$x['edited']);
-	$arr['expires']      = ((x($x,'expires') && $x['expires']) 
-								? datetime_convert('UTC','UTC',$x['expires']) 
-								: '0000-00-00 00:00:00');
 
 	if($arr['created'] > datetime_convert())
 		$arr['created']  = datetime_convert();
 	if($arr['edited'] > datetime_convert())
 		$arr['edited']   = datetime_convert();
 
-	$arr['title']        = (($x['title'])          ? htmlentities($x['title'],          ENT_COMPAT,'UTF-8',false) : '');
+	$arr['expires']      = ((x($x,'expires') && $x['expires']) 
+								? datetime_convert('UTC','UTC',$x['expires']) 
+								: '0000-00-00 00:00:00');
+
+	$arr['commented']    = ((x($x,'commented') && $x['commented']) 
+								? datetime_convert('UTC','UTC',$x['commented']) 
+								: $arr['created']);
+
+	$arr['title']        = (($x['title'])          ? htmlspecialchars($x['title'],          ENT_COMPAT,'UTF-8',false) : '');
 
 	if(mb_strlen($arr['title']) > 255)
 		$arr['title'] = mb_substr($arr['title'],0,255);
 
 
-	$arr['app']          = (($x['app'])            ? htmlentities($x['app'],            ENT_COMPAT,'UTF-8',false) : '');
-	$arr['mid']          = (($x['message_id'])     ? htmlentities($x['message_id'],     ENT_COMPAT,'UTF-8',false) : '');
-	$arr['parent_mid']   = (($x['message_top'])    ? htmlentities($x['message_top'],    ENT_COMPAT,'UTF-8',false) : '');
-	$arr['thr_parent']   = (($x['message_parent']) ? htmlentities($x['message_parent'], ENT_COMPAT,'UTF-8',false) : '');
+	$arr['app']          = (($x['app'])            ? htmlspecialchars($x['app'],            ENT_COMPAT,'UTF-8',false) : '');
+	$arr['mid']          = (($x['message_id'])     ? htmlspecialchars($x['message_id'],     ENT_COMPAT,'UTF-8',false) : '');
+	$arr['parent_mid']   = (($x['message_top'])    ? htmlspecialchars($x['message_top'],    ENT_COMPAT,'UTF-8',false) : '');
+	$arr['thr_parent']   = (($x['message_parent']) ? htmlspecialchars($x['message_parent'], ENT_COMPAT,'UTF-8',false) : '');
 
-	$arr['plink']        = (($x['permalink'])      ? htmlentities($x['permalink'],      ENT_COMPAT,'UTF-8',false) : '');
-	$arr['location']     = (($x['location'])       ? htmlentities($x['location'],       ENT_COMPAT,'UTF-8',false) : '');
-	$arr['coord']        = (($x['longlat'])        ? htmlentities($x['longlat'],        ENT_COMPAT,'UTF-8',false) : '');
-	$arr['verb']         = (($x['verb'])           ? htmlentities($x['verb'],           ENT_COMPAT,'UTF-8',false) : '');
-	$arr['mimetype']     = (($x['mimetype'])       ? htmlentities($x['mimetype'],       ENT_COMPAT,'UTF-8',false) : '');
-	$arr['obj_type']     = (($x['object_type'])    ? htmlentities($x['object_type'],    ENT_COMPAT,'UTF-8',false) : '');
-	$arr['tgt_type']     = (($x['target_type'])    ? htmlentities($x['target_type'],    ENT_COMPAT,'UTF-8',false) : '');
-	$arr['comment_policy'] = (($x['comment_scope']) ? htmlentities($x['comment_scope'],  ENT_COMPAT,'UTF-8',false) : 'contacts');
+	$arr['plink']        = (($x['permalink'])      ? htmlspecialchars($x['permalink'],      ENT_COMPAT,'UTF-8',false) : '');
+	$arr['location']     = (($x['location'])       ? htmlspecialchars($x['location'],       ENT_COMPAT,'UTF-8',false) : '');
+	$arr['coord']        = (($x['longlat'])        ? htmlspecialchars($x['longlat'],        ENT_COMPAT,'UTF-8',false) : '');
+	$arr['verb']         = (($x['verb'])           ? htmlspecialchars($x['verb'],           ENT_COMPAT,'UTF-8',false) : '');
+	$arr['mimetype']     = (($x['mimetype'])       ? htmlspecialchars($x['mimetype'],       ENT_COMPAT,'UTF-8',false) : '');
+	$arr['obj_type']     = (($x['object_type'])    ? htmlspecialchars($x['object_type'],    ENT_COMPAT,'UTF-8',false) : '');
+	$arr['tgt_type']     = (($x['target_type'])    ? htmlspecialchars($x['target_type'],    ENT_COMPAT,'UTF-8',false) : '');
+	$arr['comment_policy'] = (($x['comment_scope']) ? htmlspecialchars($x['comment_scope'],  ENT_COMPAT,'UTF-8',false) : 'contacts');
 
-	$arr['sig']          = (($x['signature']) ? htmlentities($x['signature'],  ENT_COMPAT,'UTF-8',false) : '');
+	$arr['sig']          = (($x['signature']) ? htmlspecialchars($x['signature'],  ENT_COMPAT,'UTF-8',false) : '');
 
 	
 	$arr['object']       = activity_sanitise($x['object']);
@@ -604,8 +627,8 @@ function get_item_elements($x) {
 	// once, and after that your hub knows them. Sure some info is in the post, but it's only a transit identifier
 	// and not enough info to be able to look you up from your hash - which is the only thing stored with the post.
 
-	if(import_author_xchan($x['author']))
-		$arr['author_xchan'] = base64url_encode(hash('whirlpool',$x['author']['guid'] . $x['author']['guid_sig'], true));
+	if(($xchan_hash = import_author_xchan($x['author'])) !== false)
+		$arr['author_xchan'] = $xchan_hash;
 	else
 		return array();
 
@@ -613,8 +636,8 @@ function get_item_elements($x) {
 	if($arr['author_xchan'] === base64url_encode(hash('whirlpool',$x['owner']['guid'] . $x['owner']['guid_sig'], true)))
 		$arr['owner_xchan'] = $arr['author_xchan'];
 	else {
-		if(import_author_xchan($x['owner']))
-			$arr['owner_xchan']  = base64url_encode(hash('whirlpool',$x['owner']['guid'] . $x['owner']['guid_sig'], true));
+		if(($xchan_hash = import_author_xchan($x['owner'])) !== false)
+			$arr['owner_xchan'] = $xchan_hash;
 		else
 			return array();
 	}
@@ -639,11 +662,10 @@ function get_item_elements($x) {
 		$arr['item_flags'] = $arr['item_flags'] | ITEM_OBSCURED;
 		$key = get_config('system','pubkey');
 		if($arr['title'])
-			$arr['title'] = json_encode(aes_encapsulate($arr['title'],$key));
+			$arr['title'] = json_encode(crypto_encapsulate($arr['title'],$key));
 		if($arr['body'])
-			$arr['body']  = json_encode(aes_encapsulate($arr['body'],$key));
+			$arr['body']  = json_encode(crypto_encapsulate($arr['body'],$key));
 	}
-
 
 	return $arr;
 
@@ -652,21 +674,18 @@ function get_item_elements($x) {
 
 function import_author_xchan($x) {
 
-	$r = q("select hubloc_url from hubloc where hubloc_guid = '%s' and hubloc_guid_sig = '%s' and (hubloc_flags & %d) limit 1",
-		dbesc($x['guid']),
-		dbesc($x['guid_sig']),
-		intval(HUBLOC_FLAGS_PRIMARY)
-	);
+	$arr = array('xchan' => $x, 'xchan_hash' => '');
+	call_hooks('import_author_xchan',$arr);
+	if($arr['xchan_hash'])
+		return $arr['xchan_hash'];
 
-	if($r) {
-		logger('import_author_xchan: in cache', LOGGER_DEBUG);
-		return true;
+	if((! array_key_exists('network', $x)) || ($x['network'] === 'zot')) {
+		return import_author_zot($x);
 	}
 
-	logger('import_author_xchan: entry not in cache - probing: ' . print_r($x,true), LOGGER_DEBUG);
+	// TODO: create xchans for other common and/or aligned networks
 
-	$them = array('hubloc_url' => $x['url'],'xchan_guid' => $x['guid'], 'xchan_guid_sig' => $x['guid_sig']);
-	return zot_refresh($them);
+	return false;
 }
 
 function encode_item($item) {
@@ -694,9 +713,9 @@ function encode_item($item) {
 	if(array_key_exists('item_flags',$item) && ($item['item_flags'] & ITEM_OBSCURED)) {
 		$key = get_config('system','prvkey');
 		if($item['title'])
-			$item['title'] = aes_unencapsulate(json_decode_plus($item['title']),$key);
+			$item['title'] = crypto_unencapsulate(json_decode_plus($item['title']),$key);
 		if($item['body'])
-			$item['body'] = aes_unencapsulate(json_decode_plus($item['body']),$key);
+			$item['body'] = crypto_unencapsulate(json_decode_plus($item['body']),$key);
 	}
 
 	if($item['item_restrict']  & ITEM_DELETED) {
@@ -714,6 +733,7 @@ function encode_item($item) {
 	$x['created']        = $item['created'];
 	$x['edited']         = $item['edited'];
 	$x['expires']        = $item['expires'];
+	$x['commented']      = $item['commented'];
 	$x['mimetype']       = $item['mimetype'];
 	$x['title']          = $item['title'];
 	$x['body']           = $item['body'];
@@ -779,6 +799,7 @@ function encode_item_xchan($xchan) {
 	$ret['name']     = $xchan['xchan_name'];
 	$ret['address']  = $xchan['xchan_addr'];
 	$ret['url']      = $xchan['hubloc_url'];
+	$ret['network']  = $xchan['xchan_network'];
 	$ret['photo']    = array('mimetype' => $xchan['xchan_photo_mimetype'], 'src' => $xchan['xchan_photo_m']);
 	$ret['guid']     = $xchan['xchan_guid'];
 	$ret['guid_sig'] = $xchan['xchan_guid_sig'];
@@ -810,8 +831,8 @@ function decode_tags($t) {
 		$ret = array();
 		foreach($t as $x) {
 			$tag = array();
-			$tag['term'] = htmlentities($x['tag'],  ENT_COMPAT,'UTF-8',false);
-			$tag['url']  = htmlentities($x['url'],  ENT_COMPAT,'UTF-8',false);
+			$tag['term'] = htmlspecialchars($x['tag'],  ENT_COMPAT,'UTF-8',false);
+			$tag['url']  = htmlspecialchars($x['url'],  ENT_COMPAT,'UTF-8',false);
 			switch($x['type']) {
 				case 'hashtag':
 					$tag['type'] = TERM_HASHTAG;
@@ -854,12 +875,12 @@ function activity_sanitise($arr) {
 				if(is_array($x))
 					$ret[$k] = activity_sanitise($x);
 				else
-					$ret[$k] = htmlentities($x, ENT_COMPAT,'UTF-8',false);
+					$ret[$k] = htmlspecialchars($x, ENT_COMPAT,'UTF-8',false);
 			}
 			return $ret;
 		}
 		else {
-			return htmlentities($arr, ENT_COMPAT,'UTF-8', false);
+			return htmlspecialchars($arr, ENT_COMPAT,'UTF-8', false);
 		}
 	}
 	return '';
@@ -871,7 +892,7 @@ function array_sanitise($arr) {
 	if($arr) {
 		$ret = array();
 		foreach($arr as $x) {
-			$ret[] = htmlentities($x, ENT_COMPAT,'UTF-8',false);
+			$ret[] = htmlspecialchars($x, ENT_COMPAT,'UTF-8',false);
 		}
 		return $ret;
 	}
@@ -902,9 +923,9 @@ function encode_mail($item) {
 	if(array_key_exists('mail_flags',$item) && ($item['mail_flags'] & MAIL_OBSCURED)) {
 		$key = get_config('system','prvkey');
 		if($item['title'])
-			$item['title'] = aes_unencapsulate(json_decode_plus($item['title']),$key);
+			$item['title'] = crypto_unencapsulate(json_decode_plus($item['title']),$key);
 		if($item['body'])
-			$item['body'] = aes_unencapsulate(json_decode_plus($item['body']),$key);
+			$item['body'] = crypto_unencapsulate(json_decode_plus($item['body']),$key);
 	}
 
 	$x['message_id']     = $item['mid'];
@@ -936,8 +957,8 @@ function get_mail_elements($x) {
 
 	$arr = array();
 
-	$arr['body']         = (($x['body']) ? htmlentities($x['body'], ENT_COMPAT,'UTF-8',false) : '');
-	$arr['title']        = (($x['title'])? htmlentities($x['title'],ENT_COMPAT,'UTF-8',false) : '');
+	$arr['body']         = (($x['body']) ? htmlspecialchars($x['body'], ENT_COMPAT,'UTF-8',false) : '');
+	$arr['title']        = (($x['title'])? htmlspecialchars($x['title'],ENT_COMPAT,'UTF-8',false) : '');
 
 	$arr['created']      = datetime_convert('UTC','UTC',$x['created']);
 	if((! array_key_exists('expires',$x)) || ($x['expires'] === '0000-00-00 00:00:00'))
@@ -955,33 +976,31 @@ function get_mail_elements($x) {
 
 	$key = get_config('system','pubkey');
 	$arr['mail_flags'] |= MAIL_OBSCURED;
-	$arr['body'] = htmlentities($arr['body'],ENT_COMPAT,'UTF-8',false);
+	$arr['body'] = htmlspecialchars($arr['body'],ENT_COMPAT,'UTF-8',false);
 	if($arr['body'])
-		$arr['body']  = json_encode(aes_encapsulate($arr['body'],$key));
-	$arr['title'] = htmlentities($arr['title'],ENT_COMPAT,'UTF-8',false);
+		$arr['body']  = json_encode(crypto_encapsulate($arr['body'],$key));
+	$arr['title'] = htmlspecialchars($arr['title'],ENT_COMPAT,'UTF-8',false);
 	if($arr['title'])
-		$arr['title'] = json_encode(aes_encapsulate($arr['title'],$key));
+		$arr['title'] = json_encode(crypto_encapsulate($arr['title'],$key));
 
 	if($arr['created'] > datetime_convert())
 		$arr['created']  = datetime_convert();
 
-	$arr['mid']          = (($x['message_id'])     ? htmlentities($x['message_id'],     ENT_COMPAT,'UTF-8',false) : '');
-	$arr['parent_mid']   = (($x['message_parent']) ? htmlentities($x['message_parent'], ENT_COMPAT,'UTF-8',false) : '');
+	$arr['mid']          = (($x['message_id'])     ? htmlspecialchars($x['message_id'],     ENT_COMPAT,'UTF-8',false) : '');
+	$arr['parent_mid']   = (($x['message_parent']) ? htmlspecialchars($x['message_parent'], ENT_COMPAT,'UTF-8',false) : '');
 
 	if($x['attach'])
 		$arr['attach'] = activity_sanitise($x['attach']);
 
-
-	if(import_author_xchan($x['from']))
-		$arr['from_xchan'] = base64url_encode(hash('whirlpool',$x['from']['guid'] . $x['from']['guid_sig'], true));
+	if(($xchan_hash = import_author_xchan($x['from'])) !== false)
+		$arr['from_xchan'] = $xchan_hash;
 	else
 		return array();
 
-	if(import_author_xchan($x['to']))
-		$arr['to_xchan']  = base64url_encode(hash('whirlpool',$x['to']['guid'] . $x['to']['guid_sig'], true));
+	if(($xchan_hash = import_author_xchan($x['to'])) !== false)
+		$arr['to_xchan'] = $xchan_hash;
 	else
 		return array();
-
 
 	return $arr;
 
@@ -992,23 +1011,23 @@ function get_profile_elements($x) {
 
 	$arr = array();
 
-	if(import_author_xchan($x['from']))
-		$arr['xprof_hash'] = base64url_encode(hash('whirlpool',$x['from']['guid'] . $x['from']['guid_sig'], true));
+	if(($xchan_hash = import_author_xchan($x['from'])) !== false)
+		$arr['xprof_hash'] = $xchan_hash;
 	else
 		return array();
 
-	$arr['desc']         = (($x['title']) ? htmlentities($x['title'],ENT_COMPAT,'UTF-8',false) : '');
+	$arr['desc']         = (($x['title']) ? htmlspecialchars($x['title'],ENT_COMPAT,'UTF-8',false) : '');
 
 	$arr['dob']          = datetime_convert('UTC','UTC',$x['birthday'],'Y-m-d');
 	$arr['age']          = (($x['age']) ? intval($x['age']) : 0);
 
-	$arr['gender']       = (($x['gender'])    ? htmlentities($x['gender'],    ENT_COMPAT,'UTF-8',false) : '');
-	$arr['marital']      = (($x['marital'])   ? htmlentities($x['marital'],   ENT_COMPAT,'UTF-8',false) : '');
-	$arr['sexual']       = (($x['sexual'])    ? htmlentities($x['sexual'],    ENT_COMPAT,'UTF-8',false) : '');
-	$arr['locale']       = (($x['locale'])    ? htmlentities($x['locale'],    ENT_COMPAT,'UTF-8',false) : '');
-	$arr['region']       = (($x['region'])    ? htmlentities($x['region'],    ENT_COMPAT,'UTF-8',false) : '');
-	$arr['postcode']     = (($x['postcode'])  ? htmlentities($x['postcode'],  ENT_COMPAT,'UTF-8',false) : '');
-	$arr['country']      = (($x['country'])   ? htmlentities($x['country'],   ENT_COMPAT,'UTF-8',false) : '');
+	$arr['gender']       = (($x['gender'])    ? htmlspecialchars($x['gender'],    ENT_COMPAT,'UTF-8',false) : '');
+	$arr['marital']      = (($x['marital'])   ? htmlspecialchars($x['marital'],   ENT_COMPAT,'UTF-8',false) : '');
+	$arr['sexual']       = (($x['sexual'])    ? htmlspecialchars($x['sexual'],    ENT_COMPAT,'UTF-8',false) : '');
+	$arr['locale']       = (($x['locale'])    ? htmlspecialchars($x['locale'],    ENT_COMPAT,'UTF-8',false) : '');
+	$arr['region']       = (($x['region'])    ? htmlspecialchars($x['region'],    ENT_COMPAT,'UTF-8',false) : '');
+	$arr['postcode']     = (($x['postcode'])  ? htmlspecialchars($x['postcode'],  ENT_COMPAT,'UTF-8',false) : '');
+	$arr['country']      = (($x['country'])   ? htmlspecialchars($x['country'],   ENT_COMPAT,'UTF-8',false) : '');
 
 	$arr['keywords']     = (($x['keywords'] && is_array($x['keywords'])) ? array_sanitise($x['keywords']) : array()); 
 
@@ -1426,6 +1445,12 @@ function encode_rel_links($links) {
 
 function item_store($arr,$allow_exec = false) {
 
+	$d = array('item' => $arr, 'allow_exec' => $allow_exec);
+	call_hooks('item_store', $d );
+	$arr = $d['item'];
+	$allow_exec = $d['allow_exec'];
+
+
 	$ret = array('result' => false, 'item_id' => 0);
 
 	if(! $arr['uid']) {
@@ -1510,9 +1535,9 @@ function item_store($arr,$allow_exec = false) {
 			$key = get_config('system','pubkey');
 			$arr['item_flags'] = $arr['item_flags'] | ITEM_OBSCURED;
 			if($arr['title'])
-				$arr['title'] = json_encode(aes_encapsulate($arr['title'],$key));
+				$arr['title'] = json_encode(crypto_encapsulate($arr['title'],$key));
 			if($arr['body'])
-				$arr['body']  = json_encode(aes_encapsulate($arr['body'],$key));
+				$arr['body']  = json_encode(crypto_encapsulate($arr['body'],$key));
 		}
 
 	}
@@ -1539,8 +1564,8 @@ function item_store($arr,$allow_exec = false) {
 	$arr['owner_xchan']   = ((x($arr,'owner_xchan'))   ? notags(trim($arr['owner_xchan']))   : '');
 	$arr['created']       = ((x($arr,'created') !== false) ? datetime_convert('UTC','UTC',$arr['created']) : datetime_convert());
 	$arr['edited']        = ((x($arr,'edited')  !== false) ? datetime_convert('UTC','UTC',$arr['edited'])  : datetime_convert());
-	$arr['expires']        = ((x($arr,'expires')  !== false) ? datetime_convert('UTC','UTC',$arr['expires'])  : '0000-00-00 00:00:00');
-	$arr['commented']     = datetime_convert();
+	$arr['expires']       = ((x($arr,'expires')  !== false) ? datetime_convert('UTC','UTC',$arr['expires'])  : '0000-00-00 00:00:00');
+	$arr['commented']     = ((x($arr,'commented')  !== false) ? datetime_convert('UTC','UTC',$arr['commented'])  : datetime_convert());
 	$arr['received']      = datetime_convert();
 	$arr['changed']       = datetime_convert();
 	$arr['location']      = ((x($arr,'location'))      ? notags(trim($arr['location']))      : '');
@@ -1777,8 +1802,13 @@ function item_store($arr,$allow_exec = false) {
 
 	// update the commented timestamp on the parent
 
+	$z = q("select max(created) as commented from item where parent_mid = '%s' and uid = %d ",
+		dbesc($arr['parent_mid']),
+		intval($arr['uid'])
+	);
+
 	q("UPDATE item set commented = '%s', changed = '%s' WHERE id = %d LIMIT 1",
-		dbesc(datetime_convert()),
+		dbesc(($z) ? $z[0]['commented'] : (datetime_convert())),
 		dbesc(datetime_convert()),
 		intval($parent_id)
 	);
@@ -1796,6 +1826,15 @@ function item_store($arr,$allow_exec = false) {
 
 
 function item_store_update($arr,$allow_exec = false) {
+
+
+
+	$d = array('item' => $arr, 'allow_exec' => $allow_exec);
+	call_hooks('item_store_update', $d );
+	$arr = $d['item'];
+	$allow_exec = $d['allow_exec'];
+
+
 
 	$ret = array('result' => false, 'item_id' => 0);
 	if(! intval($arr['uid'])) {
@@ -1833,8 +1872,6 @@ function item_store_update($arr,$allow_exec = false) {
 	$arr['item_flags'] = intval($arr['item_flags']) | $orig[0]['item_flags'];
 	$arr['item_restrict'] = intval($arr['item_restrict']) | $orig[0]['item_restrict'];
 
-	unset($arr['id']);
-	unset($arr['uid']);
 
 	if(array_key_exists('edit',$arr))
 		unset($arr['edit']);	
@@ -1876,9 +1913,9 @@ function item_store_update($arr,$allow_exec = false) {
             $key = get_config('system','pubkey');
             $arr['item_flags'] = $arr['item_flags'] | ITEM_OBSCURED;
             if($arr['title'])
-                $arr['title'] = json_encode(aes_encapsulate($arr['title'],$key));
+                $arr['title'] = json_encode(crypto_encapsulate($arr['title'],$key));
             if($arr['body'])
-                $arr['body']  = json_encode(aes_encapsulate($arr['body'],$key));
+                $arr['body']  = json_encode(crypto_encapsulate($arr['body'],$key));
         }
 
 	}
@@ -1900,7 +1937,8 @@ function item_store_update($arr,$allow_exec = false) {
 	}
 
 
-
+	unset($arr['id']);
+	unset($arr['uid']);
 	unset($arr['aid']);
 	unset($arr['mid']);
 	unset($arr['parent']);
@@ -2110,6 +2148,13 @@ function tag_deliver($uid,$item_id) {
 
 	$item = $i[0];
 
+	if(($item['source_xchan']) && ($item['item_flags'] & ITEM_UPLINK) && ($item['item_flags'] & ITEM_THREAD_TOP) && ($item['edited'] != $item['created'])) {
+		// this is an update to a post which was already processed by us and has a second delivery chain
+		// Just start the second delivery chain to deliver the updated post
+		proc_run('php','include/notifier.php','tgroup',$item['id']);
+		return;
+	}
+
 
 	if($item['obj_type'] === ACTIVITY_OBJ_TAGTERM) {
 
@@ -2232,7 +2277,7 @@ function tag_deliver($uid,$item_id) {
 		if($item['item_flags'] & ITEM_OBSCURED) {
 			$key = get_config('system','prvkey');
 			if($item['body'])
-				$body = aes_unencapsulate(json_decode_plus($item['body']),$key);
+				$body = crypto_unencapsulate(json_decode_plus($item['body']),$key);
 		}
 		else
 			$body = $item['body'];		
@@ -2324,12 +2369,13 @@ function tgroup_check($uid,$item) {
 	$mention = false;
 
 	// check that the message originated elsewhere and is a top-level post
-	// or is a followup and we have already accepted the top level post
+	// or is a followup and we have already accepted the top level post as an uplink
 
 	if($item['mid'] != $item['parent_mid']) {
-		$r = q("select id from item where mid = '%s' and uid = %d limit 1",
+		$r = q("select id from item where mid = '%s' and uid = %d and ( item_flags & %d ) limit 1",
 			dbesc($item['parent_mid']),
-			intval($uid)
+			intval($uid),
+			intval(ITEM_UPLINK)
 		);
 		if($r)
 			return true;
@@ -2405,7 +2451,7 @@ function check_item_source($uid,$item) {
 
 	$r = q("select * from source where src_channel_id = %d and src_xchan = '%s' limit 1",
 		intval($uid),
-		dbesc($item['owner_xchan'])
+		dbesc(($item['source_xchan']) ?  $item['source_xchan'] : $item['owner_xchan'])
 	);
 
 	if(! $r)
@@ -2552,198 +2598,6 @@ function mail_store($arr) {
 	return $current_post;
 }
 
-
-
-
-
-
-function dfrn_deliver($owner,$contact,$atom, $dissolve = false) {
-
-	$a = get_app();
-
-	$idtosend = $orig_id = (($contact['dfrn_id']) ? $contact['dfrn_id'] : $contact['issued_id']);
-
-	if($contact['duplex'] && $contact['dfrn_id'])
-		$idtosend = '0:' . $orig_id;
-	if($contact['duplex'] && $contact['issued_id'])
-		$idtosend = '1:' . $orig_id;		
-
-	$rino = ((function_exists('mcrypt_encrypt')) ? 1 : 0);
-
-	$rino_enable = get_config('system','rino_encrypt');
-
-	if(! $rino_enable)
-		$rino = 0;
-
-//	$ssl_val = intval(get_config('system','ssl_policy'));
-//	$ssl_policy = '';
-
-//	switch($ssl_val){
-//		case SSL_POLICY_FULL:
-//			$ssl_policy = 'full';
-//			break;
-//		case SSL_POLICY_SELFSIGN:
-//			$ssl_policy = 'self';
-//			break;			
-//		case SSL_POLICY_NONE:
-//		default:
-//			$ssl_policy = 'none';
-//			break;
-//	}
-
-	$url = $contact['notify'] . '&dfrn_id=' . $idtosend . '&dfrn_version=' . DFRN_PROTOCOL_VERSION . (($rino) ? '&rino=1' : '');
-
-	logger('dfrn_deliver: ' . $url);
-
-	$xml = fetch_url($url);
-
-	$curl_stat = $a->get_curl_code();
-	if(! $curl_stat)
-		return(-1); // timed out
-
-	logger('dfrn_deliver: ' . $xml, LOGGER_DATA);
-
-	if(! $xml)
-		return 3;
-
-	if(strpos($xml,'<?xml') === false) {
-		logger('dfrn_deliver: no valid XML returned');
-		logger('dfrn_deliver: returned XML: ' . $xml, LOGGER_DATA);
-		return 3;
-	}
-
-	$res = parse_xml_string($xml);
-
-	if((intval($res->status) != 0) || (! strlen($res->challenge)) || (! strlen($res->dfrn_id)))
-		return (($res->status) ? $res->status : 3);
-
-	$postvars     = array();
-	$sent_dfrn_id = hex2bin((string) $res->dfrn_id);
-	$challenge    = hex2bin((string) $res->challenge);
-	$perm         = (($res->perm) ? $res->perm : null);
-	$dfrn_version = (float) (($res->dfrn_version) ? $res->dfrn_version : 2.0);
-	$rino_allowed = ((intval($res->rino) === 1) ? 1 : 0);
-	$page         = (($owner['page-flags'] == PAGE_COMMUNITY) ? 1 : 0);
-
-	if($owner['page-flags'] == PAGE_PRVGROUP)
-		$page = 2;
-
-	$final_dfrn_id = '';
-
-	if($perm) {
-		if((($perm == 'rw') && (! intval($contact['writable']))) 
-		|| (($perm == 'r') && (intval($contact['writable'])))) {
-			q("update contact set writable = %d where id = %d limit 1",
-				intval(($perm == 'rw') ? 1 : 0),
-				intval($contact['id'])
-			);
-			$contact['writable'] = (string) 1 - intval($contact['writable']);			
-		}
-	}
-
-	if(($contact['duplex'] && strlen($contact['pubkey'])) 
-		|| ($owner['page-flags'] == PAGE_COMMUNITY && strlen($contact['pubkey']))
-		|| ($contact['rel'] == CONTACT_IS_SHARING && strlen($contact['pubkey']))) {
-		openssl_public_decrypt($sent_dfrn_id,$final_dfrn_id,$contact['pubkey']);
-		openssl_public_decrypt($challenge,$postvars['challenge'],$contact['pubkey']);
-	}
-	else {
-		openssl_private_decrypt($sent_dfrn_id,$final_dfrn_id,$contact['prvkey']);
-		openssl_private_decrypt($challenge,$postvars['challenge'],$contact['prvkey']);
-	}
-
-	$final_dfrn_id = substr($final_dfrn_id, 0, strpos($final_dfrn_id, '.'));
-
-	if(strpos($final_dfrn_id,':') == 1)
-		$final_dfrn_id = substr($final_dfrn_id,2);
-
-	if($final_dfrn_id != $orig_id) {
-		logger('dfrn_deliver: wrong dfrn_id.');
-		// did not decode properly - cannot trust this site 
-		return 3;
-	}
-
-	$postvars['dfrn_id']      = $idtosend;
-	$postvars['dfrn_version'] = DFRN_PROTOCOL_VERSION;
-	if($dissolve)
-		$postvars['dissolve'] = '1';
-
-
-	if((($contact['rel']) && ($contact['rel'] != CONTACT_IS_SHARING) && (! $contact['blocked'])) || ($owner['page-flags'] == PAGE_COMMUNITY)) {
-		$postvars['data'] = $atom;
-		$postvars['perm'] = 'rw';
-	}
-	else {
-		$postvars['data'] = str_replace('<dfrn:comment-allow>1','<dfrn:comment-allow>0',$atom);
-		$postvars['perm'] = 'r';
-	}
-
-//	$postvars['ssl_policy'] = $ssl_policy;
-
-	if($page)
-		$postvars['page'] = $page;
-	
-	if($rino && $rino_allowed && (! $dissolve)) {
-		$key = substr(random_string(),0,16);
-		$data = bin2hex(aes_encrypt($postvars['data'],$key));
-		$postvars['data'] = $data;
-		logger('rino: sent key = ' . $key, LOGGER_DEBUG);	
-
-
-		if($dfrn_version >= 2.1) {	
-			if(($contact['duplex'] && strlen($contact['pubkey'])) 
-				|| ($owner['page-flags'] == PAGE_COMMUNITY && strlen($contact['pubkey']))
-				|| ($contact['rel'] == CONTACT_IS_SHARING && strlen($contact['pubkey']))) {
-
-				openssl_public_encrypt($key,$postvars['key'],$contact['pubkey']);
-			}
-			else {
-				openssl_private_encrypt($key,$postvars['key'],$contact['prvkey']);
-			}
-		}
-		else {
-			if(($contact['duplex'] && strlen($contact['prvkey'])) || ($owner['page-flags'] == PAGE_COMMUNITY)) {
-				openssl_private_encrypt($key,$postvars['key'],$contact['prvkey']);
-			}
-			else {
-				openssl_public_encrypt($key,$postvars['key'],$contact['pubkey']);
-			}
-		}
-
-		logger('md5 rawkey ' . md5($postvars['key']));
-
-		$postvars['key'] = bin2hex($postvars['key']);
-	}
-
-	logger('dfrn_deliver: ' . "SENDING: " . print_r($postvars,true), LOGGER_DATA);
-
-	$xml = post_url($contact['notify'],$postvars);
-
-	logger('dfrn_deliver: ' . "RECEIVED: " . $xml, LOGGER_DATA);
-
-	$curl_stat = $a->get_curl_code();
-	if((! $curl_stat) || (! strlen($xml)))
-		return(-1); // timed out
-
-	if(($curl_stat == 503) && (stristr($a->get_curl_headers(),'retry-after')))
-		return(-1);
-
-	if(strpos($xml,'<?xml') === false) {
-		logger('dfrn_deliver: phase 2: no valid XML returned');
-		logger('dfrn_deliver: phase 2: returned XML: ' . $xml, LOGGER_DATA);
-		return 3;
-	}
-
-	if($contact['term_date'] != '0000-00-00 00:00:00') {
-		logger("dfrn_deliver: $url back from the dead - removing mark for death");
-		require_once('include/Contact.php');
-		unmark_for_death($contact);
-	}
-
-	$res = parse_xml_string($xml);
-
-	return $res->status; 
-}
 
 
 /**
@@ -3515,7 +3369,7 @@ function drop_item($id,$interactive = true) {
 		intval($id)
 	);
 
-	if(! $r) {
+	if((! $r) || ($r[0]['item_restrict'] & ITEM_DELETED)) {
 		if(! $interactive)
 			return 0;
 		notice( t('Item not found.') . EOL);
@@ -3540,6 +3394,17 @@ function drop_item($id,$interactive = true) {
 		$ok_to_delete = true;
 
 	if($ok_to_delete) {
+
+		// set the deleted flag immediately on this item just in case the 
+		// hook calls a remote process which loops. We'll delete it properly in a second.
+
+		$r = q("UPDATE item SET item_restrict = ( item_restrict | %d ) WHERE id = %d LIMIT 1",
+			intval(ITEM_DELETED),
+			intval($item['id'])
+		);
+
+		$arr = array('item' => $item);
+		call_hooks('drop_item', $arr );
 
 		$notify_id = intval($item['id']);
 
@@ -3757,6 +3622,7 @@ function fetch_post_tags($items,$link = false) {
 
 function zot_feed($uid,$observer_xchan,$mindate) {
 
+
 	$result = array();
 	$mindate = datetime_convert('UTC','UTC',$mindate);
 	if(! $mindate)
@@ -3764,10 +3630,14 @@ function zot_feed($uid,$observer_xchan,$mindate) {
 
 	$mindate = dbesc($mindate);
 
+	logger('zot_feed: ' . $uid);
+
 	if(! perm_is_allowed($uid,$observer_xchan,'view_stream')) {
+		logger('zot_feed: permission denied.');
 		return $result;
 	}
 
+	require_once('include/security.php');
 	$sql_extra = item_permissions_sql($uid);
 
 	if($mindate != '0000-00-00 00:00:00') {
@@ -3829,6 +3699,8 @@ function items_fetch($arr,$channel = null,$observer_hash = null,$client_mode = C
 	$sql_options = '';
 	$sql_extra2 = '';
     $sql_extra3 = '';
+	$def_acl = '';
+
 	$item_uids = ' true ';
 
 	if($channel) {
@@ -3845,7 +3717,7 @@ function items_fetch($arr,$channel = null,$observer_hash = null,$client_mode = C
 
 	$sql_extra = " AND item.parent IN ( SELECT parent FROM item WHERE (item_flags & " . intval(ITEM_THREAD_TOP) . ") $sql_options ) ";
 
-    if($arr['group'] && $uid) {
+    if($arr['gid'] && $uid) {
         $r = q("SELECT * FROM `group` WHERE id = %d AND uid = %d LIMIT 1",
             intval($arr['group']),
             intval($uid)
@@ -3854,7 +3726,6 @@ function items_fetch($arr,$channel = null,$observer_hash = null,$client_mode = C
 			$result['message']  = t('Collection not found.');
 			return $result;
         }
-
 
 		$contact_str = '';
         $contacts = group_get_members($group);
@@ -3867,10 +3738,14 @@ function items_fetch($arr,$channel = null,$observer_hash = null,$client_mode = C
         }
         else {
 			$contact_str = ' 0 ';	
-			info( t('Group is empty'));
+			$result['message'] = t('Collection is empty.');
+			return $result;
         }
 
         $sql_extra = " AND item.parent IN ( SELECT DISTINCT parent FROM item WHERE true $sql_options AND (( author_xchan IN ( $contact_str ) OR owner_xchan in ( $contact_str)) or allow_gid like '" . protect_sprintf('%<' . dbesc($r[0]['hash']) . '>%') . "' ) and id = parent and item_restrict = 0 ) ";
+
+		$x = group_rec_byhash($uid,$r[0]['hash']);
+		$result['headline'] = sprintf( t('Collection: %s'),$x['name']);
 
     }
     elseif($arr['cid'] && $uid) {
@@ -3881,6 +3756,7 @@ function items_fetch($arr,$channel = null,$observer_hash = null,$client_mode = C
         );
         if($r) {
             $sql_extra = " AND item.parent IN ( SELECT DISTINCT parent FROM item WHERE true $sql_options AND uid = " . intval($arr['uid']) . " AND ( author_xchan = '" . dbesc($r[0]['abook_xchan']) . "' or owner_xchan = '" . dbesc($r[0]['abook_xchan']) . "' ) and item_restrict = 0 ) ";
+			$result['headline'] = sprintf( t('Connection: %s'),$r[0]['xchan_name']);
         }
         else {
 			$result['message'] = t('Connection not found.');

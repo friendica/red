@@ -8,8 +8,8 @@ var include_2group_8php =
     [ "group_rec_byhash", "include_2group_8php.html#a90e157b3e1b99c981809cb5a2abd3245", null ],
     [ "group_rmv", "include_2group_8php.html#a4118f498bbd1530c1d0136d016d197a5", null ],
     [ "group_rmv_member", "include_2group_8php.html#a540e3ef36f47d47532646be4241f6518", null ],
-    [ "group_side", "include_2group_8php.html#a1042d74055bafe54a6a30103d87a7f17", null ],
+    [ "group_side", "include_2group_8php.html#a6a69bd7be032fa8ce4e49c43a42cc6e9", null ],
     [ "groups_containing", "include_2group_8php.html#afb802ae2ce73aae4bc36d157f7b6a92f", null ],
     [ "member_of", "include_2group_8php.html#a048f6892bfd28852de1b76470df411de", null ],
-    [ "mini_group_select", "include_2group_8php.html#ab4d9e5b59f48787cb01baae5dc6c381f", null ]
+    [ "mini_group_select", "include_2group_8php.html#ab0e422a0f31c0c64fd9084ca03d85f32", null ]
 ];

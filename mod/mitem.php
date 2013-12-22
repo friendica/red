@@ -1,6 +1,7 @@
 <?php
 
 require_once('include/menu.php');
+require_once('include/acl_selectors.php');
 
 function mitem_init(&$a) {
 	if(! local_user())
@@ -25,6 +26,9 @@ function mitem_post(&$a) {
 	if(! $a->data['menu'])
 		return;
 
+
+	$channel = $a->get_channel();
+
 	$_REQUEST['mitem_channel_id'] = local_user();
 	$_REQUEST['menu_id'] = $a->data['menu']['menu_id'];
 
@@ -33,29 +37,6 @@ function mitem_post(&$a) {
 		$_REQUEST['mitem_flags'] |= MENU_ITEM_ZID;
 	if($_REQUEST['newwin'])
 		$_REQUEST['mitem_flags'] |= MENU_ITEM_NEWWIN;
-
-// FIXME!!!! 
-
-	if ((! $_REQUEST['contact_allow'])
-		&& (! $_REQUEST['group_allow'])
-		&& (! $_REQUEST['contact_deny'])
-		&& (! $_REQUEST['group_deny'])) {
-		$str_group_allow   = $channel['channel_allow_gid'];
-		$str_contact_allow = $channel['channel_allow_cid'];
-		$str_group_deny    = $channel['channel_deny_gid'];
-		$str_contact_deny  = $channel['channel_deny_cid'];
-	}
-	else {
-
-		// use the posted permissions
-
-		$str_group_allow   = perms2str($_REQUEST['group_allow']);
-		$str_contact_allow = perms2str($_REQUEST['contact_allow']);
-		$str_group_deny    = perms2str($_REQUEST['group_deny']);
-		$str_contact_deny  = perms2str($_REQUEST['contact_deny']);
-	}
-
-
 
 	
 	$mitem_id = ((argc() > 2) ? intval(argv(2)) : 0);
@@ -98,11 +79,10 @@ function mitem_content(&$a) {
 		return '';
 	}
 
-	$a->set_widget('design',design_tools());
-
+	$channel = $a->get_channel();
 
 	$m = menu_fetch($a->data['menu']['menu_name'],local_user(), get_observer_hash());
-	$a->set_widget('menu_preview',menu_render($m));
+	$a->data['menu_item'] = $m;
 
 
 	if(argc() == 2) {
@@ -135,11 +115,24 @@ function mitem_content(&$a) {
 
 
 	if(argc() > 2) {
+
+
+
 		if(argv(2) === 'new') {
+
+			$perm_defaults = array(
+				'allow_cid' => $channel['channel_allow_cid'], 
+				'allow_gid' => $channel['channel_allow_gid'], 
+				'deny_cid' => $channel['channel_deny_cid'], 
+				'deny_gid' => $channel['channel_deny_gid']
+			); 
 
 			$o = replace_macros(get_markup_template('mitemedit.tpl'), array(
 				'$header' => t('New Menu Element'),
 				'$menu_id' => $a->data['menu']['menu_id'],
+				'$permissions' => t('Menu Item Permissions'),
+				'$permdesc' => t("\x28click to open/close\x29"),
+				'$aclselect' => populate_acl($perm_defaults),
 				'$mitem_desc' => array('mitem_desc', t('Link text'), '', '','*'),
 				'$mitem_link' => array('mitem_link', t('URL of link'), '', '', '*'),
 				'$usezid' => array('usezid', t('Use Red magic-auth if available'), true, ''),
@@ -180,6 +173,9 @@ function mitem_content(&$a) {
 				$o = replace_macros(get_markup_template('mitemedit.tpl'), array(
 					'$header' => t('Edit Menu Element'),
 					'$menu_id' => $a->data['menu']['menu_id'],
+					'$permissions' => t('Menu Item Permissions'),
+					'$permdesc' => t("\x28click to open/close\x29"),
+					'$aclselect' => populate_acl($mitem),
 					'$mitem_id' => intval(argv(2)),
 					'$mitem_desc' => array('mitem_desc', t('Link text'), $mitem['mitem_desc'], '','*'),
 					'$mitem_link' => array('mitem_link', t('URL of link'), $mitem['mitem_link'], '', '*'),

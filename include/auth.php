@@ -22,6 +22,8 @@ function nuke_session() {
 	unset($_SESSION['my_address']);
 	unset($_SESSION['addr']);
 	unset($_SESSION['return_url']);
+	unset($_SESSION['remote_service_class']);
+	unset($_SESSION['remote_hub']);
 }
 
 /**

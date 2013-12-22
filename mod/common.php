@@ -21,14 +21,6 @@ function common_init(&$a) {
 
 }
 
-function common_aside(&$a) {
-	if(! $a->profile['profile_uid'])
-		return;
-
-	profile_create_sidebar($a);
-}
-
-
 function common_content(&$a) {
 
 	$o = '';

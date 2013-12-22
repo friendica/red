@@ -14,6 +14,26 @@
 {{include file="field_input.tpl" field=$mitem_order}}
 {{include file="field_checkbox.tpl" field=$usezid}}
 {{include file="field_checkbox.tpl" field=$newwin}}
+
+<div id="settings-default-perms" class="settings-default-perms" >
+	<a href="#profile-jot-acl-wrapper" id="settings-default-perms-menu" >{{$permissions}} {{$permdesc}}</a>
+	<div id="settings-default-perms-menu-end"></div>
+
+	<div id="settings-default-perms-select" style="display: none; margin-bottom: 20px" >
+	
+	<div style="display: none;">
+		<div id="profile-jot-acl-wrapper" style="width:auto;height:auto;overflow:auto;">
+			{{$aclselect}}
+		</div>
+	</div>
+
+	</div>
+</div>
+<br/>
+<div id="settings-default-perms-end"></div>
+
+
+
 <div class="mitemedit-submit-wrapper" >
 <input type="submit" name="submit" class="mitemedit-submit" value="{{$submit}}" />
 </div>

@@ -23,10 +23,6 @@ function connect_init(&$a) {
 		$a->data['channel'] = $r[0];
 
 	profile_load($a,$which,'');
-
-    profile_create_sidebar($a,false);
-
-
 }
 
 function connect_post(&$a) {

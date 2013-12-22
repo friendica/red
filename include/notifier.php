@@ -382,12 +382,27 @@ function notifier_run($argv, $argc){
 
 	$env_recips = (($private) ? array() : null);
 
-	$details = q("select xchan_hash, xchan_addr, xchan_guid, xchan_guid_sig from xchan where xchan_hash in (" . implode(',',$recipients) . ")");
+	$details = q("select xchan_hash, xchan_instance_url, xchan_addr, xchan_guid, xchan_guid_sig from xchan where xchan_hash in (" . implode(',',$recipients) . ")");
 
 	$recip_list = array();
 
 	if($details) {
 		foreach($details as $d) {
+
+			// If the recipient is federated from a traditional network they won't be able to 
+			// handle nomadic identity. If we're publishing from a site that they aren't
+			// directly connected with, ignore them.
+
+			// FIXME: make sure we run through a notifier loop on the hub they're connected
+			// with if this post comes in from a different hub - so that we will deliver to them.
+
+			// On the down side, these channels will stop working if the hub they connected with
+			// goes down permanently, as they are (doh) not nomadic. 
+
+			if(($d['xchan_instance_url']) && ($d['xchan_instance_url'] != z_root()))
+				continue; 
+
+
 			$recip_list[] = $d['xchan_addr'] . ' (' . $d['xchan_hash'] . ')'; 
 			if($private)
 				$env_recips[] = array('guid' => $d['xchan_guid'],'guid_sig' => $d['xchan_guid_sig']);
@@ -408,9 +423,9 @@ function notifier_run($argv, $argc){
 	
 	// for public posts always include our own hub
 
-	$sql_extra = (($private) ? "" : " or hubloc_url = '" . z_root() . "' ");
+	$sql_extra = (($private) ? "" : " or hubloc_url = '" . dbesc(z_root()) . "' ");
 
-	$r = q("select distinct hubloc_sitekey, hubloc_flags, hubloc_callback, hubloc_host from hubloc 
+	$r = q("select hubloc_sitekey, hubloc_flags, hubloc_callback, hubloc_host from hubloc 
 		where hubloc_hash in (" . implode(',',$recipients) . ") $sql_extra group by hubloc_sitekey");
 	if(! $r) {
 		logger('notifier: no hubs');
@@ -419,10 +434,14 @@ function notifier_run($argv, $argc){
 	$hubs = $r;
 
 	$hublist = array();
+	$keys = array();
+
 	foreach($hubs as $hub) {
-		// don't try to deliver to deleted hublocs
-		if(! ($hub['hubloc_flags'] & HUBLOC_FLAGS_DELETED)) {
+		// don't try to deliver to deleted hublocs - and inexplicably SQL "distinct" and "group by"
+		// both return records with duplicate keys in rare circumstances
+		if((! ($hub['hubloc_flags'] & HUBLOC_FLAGS_DELETED)) && (! in_array($hub['hubloc_sitekey'],$keys))) {
 			$hublist[] = $hub['hubloc_host'];
+			$keys[] = $hub['hubloc_sitekey'];
 		}
 	}
 

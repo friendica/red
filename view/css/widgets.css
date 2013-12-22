@@ -1,0 +1,123 @@
+.widget {
+	padding: 8px;
+	margin-top: 5px;
+}
+
+/* suggest */
+
+.suggest-widget-more {
+	margin-top: 10px;
+}
+
+/* follow */
+
+#side-follow-url {
+	margin-top: 5px;
+}
+
+#side-follow-submit {
+	margin-top: 15px;
+}
+
+/* notes */ 
+
+#note-text {
+	width: 190px;
+	max-width: 190px;
+	height: 150px;
+}
+
+#note-save {
+	margin-top: 10px;
+}
+
+/* saved searches */
+
+.saved-search-li {
+	margin-top: 3px;
+}
+
+.saved-search-li i {
+	opacity: 0;
+}
+
+.saved-search-li:hover i {
+	opacity: 1;
+}
+
+.savedsearchterm {
+	margin-left: 10px;
+}
+
+/* fileas */
+
+.fileas-ul li {
+	margin-top: 10px;
+}
+
+.fileas-link {
+	margin-left: 24px;
+}
+
+.fileas-all {
+	margin-left: 0px;
+}
+
+/* posted date */
+
+#datebrowse-sidebar select {
+	width: 190px;
+	max-width: 190px;
+	height: 150px;
+}
+
+/* categories */
+
+.categories-ul li {
+	margin-top: 10px;
+}
+
+.categories-link {
+	margin-left: 24px;
+}
+
+.categories-all {
+	margin-left: 0px;
+}
+
+/* group */
+
+#group-sidebar {
+	margin-bottom: 10px;
+}
+
+#sidebar-group-list .icon, #sidebar-group-list .iconspacer {
+	display: inline-block;
+	height: 12px;
+	width: 12px;
+}
+
+#sidebar-group-list li {
+	margin-top: 3px;
+}
+
+.groupsideedit {
+	margin-right: 10px;
+}
+
+.group-edit-icon {
+	opacity: 0;
+}
+
+/* affinity - slider */
+
+#main-slider {
+	position: relative; 
+	left: 5px; 
+	width: 90%;
+}
+
+.slider {
+	margin-top: 10px;
+	margin-bottom: 45px;
+}

@@ -1,5 +1,16 @@
 <?php
 
+/**
+ * You can create local site resources in doc/Site.md and either link to doc/Home.md for the standard resources
+ * or use our include mechanism to include it on your local page.
+ *
+ * #include doc/Home.md;
+ *
+ * The syntax is somewhat strict. 
+ *
+ */
+
+
 if(! function_exists('load_doc_file')) {
 function load_doc_file($s) {
 	$lang = get_app()->language;
@@ -21,13 +32,32 @@ function help_content(&$a) {
 
 	global $lang;
 
+	$doctype = 'markdown';
+
 	require_once('library/markdown.php');
 
 	$text = '';
 
-	if($a->argc > 1) {
+	if(argc() > 1) {
 		$text = load_doc_file('doc/' . $a->argv[1] . '.md');
-		$a->page['title'] = t('Help:') . ' ' . str_replace('-',' ',notags($a->argv[1]));
+		$a->page['title'] = t('Help:') . ' ' . str_replace('-',' ',notags(argv(1)));
+	}
+	if(! $text) {
+		$text = load_doc_file('doc/' . $a->argv[1] . '.bb');
+		if($text)
+			$doctype = 'bbcode';
+		$a->page['title'] = t('Help:') . ' ' . str_replace('-',' ',notags(argv(1)));
+	}
+	if(! $text) {
+		$text = load_doc_file('doc/' . $a->argv[1] . '.html');
+		if($text)
+			$doctype = 'html';
+		$a->page['title'] = t('Help:') . ' ' . str_replace('-',' ',notags(argv(1)));
+	}
+
+	if(! $text) {
+		$text = load_doc_file('doc/Site.md');
+		$a->page['title'] = t('Help');
 	}
 	if(! $text) {
 		$text = load_doc_file('doc/Home.md');
@@ -41,7 +71,26 @@ function help_content(&$a) {
 			'$message' =>  t('Page not found.' )
 		));
 	}
-	
-	return Markdown($text);
+
+	$text = preg_replace_callback("/#include (.*?)\;/ism", 'preg_callback_help_include', $text);
+
+	if($doctype === 'html')
+		return $text;
+	if($doctype === 'markdown')	
+		return Markdown($text);
+	if($doctype === 'bbcode') {
+		require_once('include/bbcode.php');
+		return bbcode($text);
+	} 
 
 }
+
+
+function preg_callback_help_include($matches) {
+	print_r($matches);
+
+	if($matches[1])
+		return str_replace($matches[0],load_doc_file($matches[1]),$matches[0]);
+
+}
+

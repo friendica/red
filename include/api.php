@@ -233,7 +233,7 @@ require_once('include/photos.php');
 			'updated' => api_date(null),
 			'atom_updated' => datetime_convert('UTC','UTC','now',ATOM_TIME),
 			'language' => $user_info['language'],
-			'logo'	=> $a->get_baseurl()."/images/rhash-64.png",
+			'logo'	=> $a->get_baseurl()."/images/rm-64.png",
 		);
 		
 		return $arr;
@@ -362,7 +362,8 @@ require_once('include/photos.php');
 			'location' => ($usr) ? $usr[0]['channel_location'] : '',
 			'profile_image_url' => $uinfo[0]['xchan_photo_l'],
 			'url' => $uinfo[0]['xchan_url'],
-			'contact_url' => $a->get_baseurl()."/connections/".$uinfo[0]['abook_id'],
+//FIXME
+			'contact_url' => $a->get_baseurl() . "/connections/".$uinfo[0]['abook_id'],
 			'protected' => false,	
 			'friends_count' => intval($countfriends),
 			'created_at' => api_date($uinfo[0]['abook_created']),
@@ -739,7 +740,7 @@ require_once('include/photos.php');
 				'created_at' => api_date($lastwall['created']),
 				'in_reply_to_status_id' => $in_reply_to_status_id,
 				'source' => (($lastwall['app']) ? $lastwall['app'] : 'web'),
-				'id' => (($w) ? $w[0]['abook_id'] : $user_info['id']),
+				'id' => ($lastwall['id']),
 				'in_reply_to_user_id' => $in_reply_to_user_id,
 				'in_reply_to_screen_name' => $in_reply_to_screen_name,
 				'geo' => '',
@@ -1080,11 +1081,45 @@ require_once('include/photos.php');
 
 		// params
 		$id = intval(argv(3));
+		if($id) {
+			// first prove that we own the item
+
+			$r = q("select * from item where id = %d and uid = %d limit 1",
+				intval($id),
+				intval($user_info['uid'])
+			);
+			if(! $r)
+				return false;
+		}
+		else {
+			if($_REQUEST['namespace'] && $_REQUEST['remote_id']) {
+				$r = q("select * from item_id where service = '%s' and sid = '%s' and uid = %d limit 1",
+					dbesc($_REQUEST['namespace']),
+					dbesc($_REQUEST['remote_id']),
+					intval($user_info['uid'])
+				);
+				if(! $r)
+					return false;
+				$id = $r[0]['iid'];
+			}
+			if($_REQUEST['namespace'] && $_REQUEST['comment_id']) {
+				$r = q("select * from item_id left join item on item.id = item_id.iid where service = '%s' and sid = '%s' and uid = %d and item.id != item.parent limit 1",
+					dbesc($_REQUEST['namespace']),
+					dbesc($_REQUEST['comment_id']),
+					intval($user_info['uid'])
+				);
+				if(! $r)
+					return false;
+				$id = $r[0]['iid'];
+			}
+		}
+		if(! $id)
+			return false;
 
 		logger('API: api_statuses_destroy: '.$id);
-
 		require_once('include/items.php');
 		drop_item($id, false);
+
 
 		if ($type == 'xml')
 			$ok = "true";
@@ -1106,7 +1141,7 @@ require_once('include/photos.php');
 		if (api_user()===false) return false;
 				
 		$user_info = api_get_user($a);
-		// get last newtork messages
+		// get last network messages
 
 
 		// params
@@ -1581,7 +1616,7 @@ require_once('include/photos.php');
 
 		$name   = get_config('system','sitename');
 		$server = $a->get_hostname();
-		$logo   = $a->get_baseurl() . '/images/rhash-64.png';
+		$logo   = $a->get_baseurl() . '/images/rm-64.png';
 		$email  = get_config('system','admin_email');
 		$closed = ((get_config('system','register_policy') == REGISTER_CLOSED) ? 'true' : 'false');
 		$private = ((get_config('system','block_public')) ? 'true' : 'false');

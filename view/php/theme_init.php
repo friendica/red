@@ -3,7 +3,7 @@
 require_once('include/plugin.php');
 
 head_add_css('library/bootstrap/css/bootstrap-theme.min.css');
-head_add_css('library/bootstrap/css/bootstrap.css'); 
+head_add_css('library/bootstrap/css/bootstrap.min.css'); 
 head_add_css('library/fancybox/jquery.fancybox-1.3.4.css');
 head_add_css('library/tiptip/tipTip.css');
 head_add_css('library/jgrowl/jquery.jgrowl.css');
@@ -15,7 +15,10 @@ head_add_css('library/colorbox/colorbox.css');
 head_add_css('view/css/conversation.css');
 head_add_css('view/css/bootstrap-red.css');
 head_add_css('view/css/widgets.css');
+<<<<<<< HEAD
 head_add_css('library/bootstrap-datetimepicker/css/bootstrap-datetimepicker.min.css');
+=======
+>>>>>>> upstream/master
 
 head_add_js('js/jquery.js');
 head_add_js('library/bootstrap/js/bootstrap.min.js');
@@ -32,7 +35,7 @@ head_add_js('library/jquery.divgrow/jquery.divgrow-1.3.1.js');
 head_add_js('library/jquery_ac/friendica.complete.js');
 head_add_js('library/tiptip/jquery.tipTip.minified.js');
 head_add_js('library/jgrowl/jquery.jgrowl_minimized.js');
-head_add_js('library/tinymce/jscripts/tiny_mce/tiny_mce_src.js');
+head_add_js('library/tinymce/jscripts/tiny_mce/tiny_mce.js');
 head_add_js('library/cryptojs/components/core-min.js');
 head_add_js('library/cryptojs/rollups/aes.js');
 head_add_js('library/cryptojs/rollups/rabbit.js');
@@ -57,4 +60,5 @@ head_add_js('library/bootstrap-datetimepicker/js/bootstrap-datetimepicker.min.js
 
 $channel = get_app()->get_channel();
 if($channel && file_exists($channel['channel_address'] . '.js'))
-        head_add_js('/' . $channel['channel_address'] . '.js');
+	head_add_js('/' . $channel['channel_address'] . '.js');
+
