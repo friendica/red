@@ -1142,6 +1142,8 @@ function status_editor($a,$x,$popup=false) {
 		'$feature_encrypt' => ((feature_enabled($x['profile_uid'],'content_encrypt') && (! $webpage)) ? 'block' : 'none'),
 		'$encrypt' => t('Encrypt text'),
 		'$cipher' => $cipher,
+		'$expiryModalOK' => t('OK'),
+		'$expiryModalCANCEL' => t('Cancel'),
 	));
 
 

@@ -132,6 +132,8 @@ function editpost_content(&$a) {
 		'$expires' => t('Set expiration date'),
 		'$feature_encrypt' => 'none',
 		'$encrypt' => t('Encrypt text'),
+		'$expiryModalOK' => t('OK'),
+		'$expiryModalCANCEL' => t('Cancel'),
 	));
 
 	return $o;
