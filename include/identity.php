@@ -1112,17 +1112,17 @@ function get_theme_uid() {
 
 /**
 * @function get_default_profile_photo($size = 175)
-* Retrieves the path of the default_profile_photo for this system
-* with the specified size.
+* 	Retrieves the path of the default_profile_photo for this system
+* 	with the specified size.
 * @param int $size
-* one of (175, 80, 48)
+* 	one of (175, 80, 48)
 * @returns string
 *
 */
 
 function get_default_profile_photo($size = 175) {
-        $scheme = get_config('system','default_profile_photo');
-        if(! $scheme)
-                $scheme = 'rainbow_man';
-        return 'images/default_profile_photos/' . $scheme . '/' . $size . '.jpg';
+		$scheme = get_config('system','default_profile_photo');
+		if(! $scheme)
+			$scheme = 'rainbow_man';
+		return 'images/default_profile_photos/' . $scheme . '/' . $size . '.jpg';
 }
