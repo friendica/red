@@ -71,21 +71,33 @@ function validate_channelname($name) {
 
 
 /**
- * @function create_sys_account()
+ * @function create_sys_channel()
  *     Create a system channel - which has no account attached
- *
  *
  */
 
-//function create_sys_channel() {
-//	create_identity(array(
-//		'nickname' => 'sys',
-//		'name' => 'System',
-//		'pageflags' => PAGE_SYSTEM,
-//		'publish' => 0,
-//		'xchanflags' => XCHAN_FLAGS_SYSTEM
-//	));
-//}
+function create_sys_channel() {
+	if(get_sys_channel())
+		return;
+	create_identity(array(
+		'account_id' => 'xxx',  // This will create an identity with an (integer) account_id of 0, but account_id is required
+		'nickname' => 'sys',
+		'name' => 'System',
+		'pageflags' => PAGE_SYSTEM,
+		'publish' => 0,
+		'xchanflags' => XCHAN_FLAGS_SYSTEM
+	));
+}
+
+function get_sys_channel() {
+	$r = q("select * from channel left join xchan on channel_hash = xchan_hash where (channel_pageflags & %d) limit 1",
+		intval(PAGE_SYSTEM)
+	);
+	if($r)
+		return $r[0];
+	return false;
+}
+
 
 /**
  * @channel_total()
@@ -242,7 +254,7 @@ function create_identity($arr) {
 
 	$newuid = $ret['channel']['channel_id'];
 
-	$r = q("insert into xchan ( xchan_hash, xchan_guid, xchan_guid_sig, xchan_pubkey, xchan_photo_l, xchan_photo_m, xchan_photo_s, xchan_addr, xchan_url, xchan_follow, xchan_connurl, xchan_name, xchan_network, xchan_photo_date, xchan_name_date, xchan_flags ) values ('%s', '%s', '%s', '%s', '%s', '%s', '%s', '%s', '%s', '%s', '%s', '%s', '%s', '%s', '%s', '%d')",
+	$r = q("insert into xchan ( xchan_hash, xchan_guid, xchan_guid_sig, xchan_pubkey, xchan_photo_l, xchan_photo_m, xchan_photo_s, xchan_addr, xchan_url, xchan_follow, xchan_connurl, xchan_name, xchan_network, xchan_photo_date, xchan_name_date, xchan_flags ) values ('%s', '%s', '%s', '%s', '%s', '%s', '%s', '%s', '%s', '%s', '%s', '%s', '%s', '%s', '%s', %d)",
 		dbesc($hash),
 		dbesc($guid),
 		dbesc($sig),
