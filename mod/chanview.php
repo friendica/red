@@ -88,10 +88,6 @@ function chanview_content(&$a) {
 	if(local_user() && get_pconfig(local_user(),'system','chanview_full'))
 		goaway($url);
 
-
-	if($a->poi['xchan_hash'])
-		$a->set_widget('vcard',vcard_from_xchan($a->poi,$observer,'chanview'));
-				
 	$o = replace_macros(get_markup_template('chanview.tpl'),array(
 		'$url' => $url,
 		'$full' => t('toggle full screen mode')
