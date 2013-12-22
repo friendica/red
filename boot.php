@@ -46,7 +46,7 @@ define ( 'RED_PLATFORM',            'Red Matrix' );
 define ( 'RED_VERSION',             trim(file_get_contents('version.inc')) . 'R');
 define ( 'ZOT_REVISION',            1     ); 
 
-define ( 'DB_UPDATE_VERSION',       1084  );
+define ( 'DB_UPDATE_VERSION',       1085  );
 
 define ( 'EOL',                    '<br />' . "\r\n"     );
 define ( 'ATOM_TIME',              'Y-m-d\TH:i:s\Z' );
@@ -363,7 +363,7 @@ define ( 'HUBLOC_FLAGS_PRIMARY',      0x0001);
 define ( 'HUBLOC_FLAGS_UNVERIFIED',   0x0002);
 define ( 'HUBLOC_FLAGS_DELETED',      0x1000);
 
-
+define ( 'XCHAN_FLAGS_NORMAL',		  0x0000);
 define ( 'XCHAN_FLAGS_HIDDEN',        0x0001);
 define ( 'XCHAN_FLAGS_ORPHAN',        0x0002);
 define ( 'XCHAN_FLAGS_CENSORED',      0x0004);
@@ -496,10 +496,11 @@ define ( 'ITEM_MODERATED',       0x0004);
 define ( 'ITEM_SPAM',            0x0008);
 define ( 'ITEM_DELETED',         0x0010);
 define ( 'ITEM_UNPUBLISHED',     0x0020);
-define ( 'ITEM_WEBPAGE',         0x0040);  // is a static web page, not a conversational item
+define ( 'ITEM_WEBPAGE',         0x0040);	// is a static web page, not a conversational item
 define ( 'ITEM_DELAYED_PUBLISH', 0x0080); 
-define ( 'ITEM_BUILDBLOCK',      0x0100);  // Named thusly to make sure nobody confuses this with ITEM_BLOCKED
-define ( 'ITEM_PDL',             0x0200);  // Page Description Language - e.g. Comanche
+define ( 'ITEM_BUILDBLOCK',      0x0100);	// Named thusly to make sure nobody confuses this with ITEM_BLOCKED
+define ( 'ITEM_PDL',			 0x0200);	// Page Description Language - e.g. Comanche
+define ( 'ITEM_BUG',			 0x0400);	// Is a bug, can be used by the internal bug tracker
 /**
  * Item Flags
  */
@@ -518,7 +519,6 @@ define ( 'ITEM_MENTIONSME',      0x0400);
 define ( 'ITEM_NOCOMMENT',       0x0800);  // commenting/followups are disabled
 define ( 'ITEM_OBSCURED',        0x1000);  // bit-mangled to protect from casual browsing by site admin
 define ( 'ITEM_VERIFIED',        0x2000);  // Signature verification was successful
-
 /**
  *
  * Reverse the effect of magic_quotes_gpc if it is enabled.
