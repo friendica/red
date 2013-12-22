@@ -507,7 +507,7 @@ function widget_mailmenu($arr) {
 		),
 		'$new'=>array(
 			'label' => t('New Message'),
-			'url' => $a->get_baseurl(true) . '/message/new',
+			'url' => $a->get_baseurl(true) . '/mail/new',
 			'sel'=> (argv(1) == 'new'),
 		)
 

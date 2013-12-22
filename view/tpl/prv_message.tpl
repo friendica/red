@@ -1,7 +1,7 @@
 <h3>{{$header}}</h3>
 
 <div id="prvmail-wrapper" >
-<form id="prvmail-form" action="message" method="post" >
+<form id="prvmail-form" action="mail" method="post" >
 
 {{$parent}}
 

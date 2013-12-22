@@ -86,8 +86,8 @@ function notification($params) {
 		$preamble = sprintf( t('%1$s, %2$s sent you a new private message at %3$s.'),$recip['channel_name'], $sender['xchan_name'],$sitename);
 		$epreamble = sprintf( t('%1$s sent you %2$s.'),'[zrl=' . $sender['xchan_url'] . ']' . $sender['xchan_name'] . '[/zrl]', '[zrl=$itemlink]' . t('a private message') . '[/zrl]');
 		$sitelink = t('Please visit %s to view and/or reply to your private messages.');
-		$tsitelink = sprintf( $sitelink, $siteurl . '/message/' . $params['item']['id'] );
-		$hsitelink = sprintf( $sitelink, '<a href="' . $siteurl . '/message/' . $params['item']['id'] . '">' . $sitename . '</a>');
+		$tsitelink = sprintf( $sitelink, $siteurl . '/mail/' . $params['item']['id'] );
+		$hsitelink = sprintf( $sitelink, '<a href="' . $siteurl . '/mail/' . $params['item']['id'] . '">' . $sitename . '</a>');
 		$itemlink = $siteurl . '/message/' . $params['item']['id'];
 	}
 

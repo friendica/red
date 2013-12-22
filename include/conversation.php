@@ -908,7 +908,7 @@ function item_photo_menu($item){
 	}
 
     $profile_link = z_root() . "/chanview/?f=&hash=" . $item['author_xchan'];
-	$pm_url = $a->get_baseurl($ssl_state) . '/message/new/?f=&hash=' . $item['author_xchan'];
+	$pm_url = $a->get_baseurl($ssl_state) . '/mail/new/?f=&hash=' . $item['author_xchan'];
 
 	if($a->contacts && array_key_exists($item['author_xchan'],$a->contacts))
 		$contact = $a->contacts[$item['author_xchan']];
