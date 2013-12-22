@@ -71,22 +71,21 @@ function validate_channelname($name) {
 
 
 /**
- * @function create_dir_account()
+ * @function create_sys_account()
  *     Create a system channel - which has no account attached
  *
- * Currently unused. 
  *
  */
 
-function create_dir_account() {
-	create_identity(array(
-		'account_id' => 'xxx',  // This will create an identity with an (integer) account_id of 0, but account_id is required
-		'nickname' => 'dir',
-		'name' => 'Directory',
-		'pageflags' => PAGE_DIRECTORY_CHANNEL|PAGE_HIDDEN,
-		'publish' => 0
-	));
-}
+//function create_sys_channel() {
+//	create_identity(array(
+//		'nickname' => 'sys',
+//		'name' => 'System',
+//		'pageflags' => PAGE_SYSTEM,
+//		'publish' => 0,
+//		'xchanflags' => XCHAN_FLAGS_SYSTEM
+//	));
+//}
 
 /**
  * @channel_total()
@@ -145,7 +144,7 @@ function create_identity($arr) {
 
 	$name = escape_tags($arr['name']);
 	$pageflags = ((x($arr,'pageflags')) ? intval($arr['pageflags']) : PAGE_NORMAL);
-
+	$xchanflags = ((x($arr,'xchanflags')) ? intval($arr['xchanflags']) : XCHAN_FLAGS_NORMAL);
 	$name_error = validate_channelname($arr['name']);
 	if($name_error) {
 		$ret['message'] = $name_error;
@@ -243,7 +242,7 @@ function create_identity($arr) {
 
 	$newuid = $ret['channel']['channel_id'];
 
-	$r = q("insert into xchan ( xchan_hash, xchan_guid, xchan_guid_sig, xchan_pubkey, xchan_photo_l, xchan_photo_m, xchan_photo_s, xchan_addr, xchan_url, xchan_follow, xchan_connurl, xchan_name, xchan_network, xchan_photo_date, xchan_name_date ) values ('%s', '%s', '%s', '%s', '%s', '%s', '%s', '%s', '%s', '%s', '%s', '%s', '%s', '%s', '%s')",
+	$r = q("insert into xchan ( xchan_hash, xchan_guid, xchan_guid_sig, xchan_pubkey, xchan_photo_l, xchan_photo_m, xchan_photo_s, xchan_addr, xchan_url, xchan_follow, xchan_connurl, xchan_name, xchan_network, xchan_photo_date, xchan_name_date, xchan_flags ) values ('%s', '%s', '%s', '%s', '%s', '%s', '%s', '%s', '%s', '%s', '%s', '%s', '%s', '%s', '%s', '%d')",
 		dbesc($hash),
 		dbesc($guid),
 		dbesc($sig),
@@ -258,7 +257,8 @@ function create_identity($arr) {
 		dbesc($ret['channel']['channel_name']),
 		dbesc('zot'),
 		dbesc(datetime_convert()),
-		dbesc(datetime_convert())
+		dbesc(datetime_convert()),
+		intval($xchanflags)
 	);
 
 	// Not checking return value. 
@@ -1109,24 +1109,3 @@ function get_theme_uid() {
 	}
 	return $uid;
 }
-
-/**
- * @function get_default_profile_photo($size = 175)
- *   Retrieves the path of the default_profile_photo for this system
- *   with the specified size.
- * @param int $size
- *    one of (175, 80, 48)
- * @returns string
- * 
- */
-
-function get_default_profile_photo($size = 175) {
-	$scheme = get_config('system','default_profile_photo');
-	if(! $scheme)
-		$scheme = 'rainbow_man';
-	return 'images/default_profile_photos/' . $scheme . '/' . $size . '.jpg';
-}
-
-
-
- 
