@@ -2,12 +2,6 @@
 
 require_once('include/group.php');
 
-function group_aside(&$a) {
-	if(local_user()) {
-		$a->set_widget('groups_edit',group_side('connections','group',false,(($a->argc > 1) ? intval($a->argv[1]) : 0)));
-	}
-}
-
 
 function group_post(&$a) {
 

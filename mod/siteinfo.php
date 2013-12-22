@@ -27,8 +27,14 @@ function siteinfo_init(&$a) {
 					$visible_plugins[] = $rr['name'];
 		}
 
+		if(@is_dir('.git') && function_exists('shell_exec'))
+			$commit = @shell_exec('git log -1 --format="%h"');
+		if(! isset($commit) || strlen($commit) > 16)
+			$commit = '';
+
 		$data = Array(
 			'version' => RED_VERSION,
+			'commit' => $commit,
 			'url' => z_root(),
 			'plugins' => $visible_plugins,
 			'register_policy' =>  $register_policy[$a->config['system']['register_policy']],
@@ -47,11 +53,16 @@ function siteinfo_init(&$a) {
 
 function siteinfo_content(&$a) {
 
-	if(! get_config('system','hidden_version_siteinfo'))
+	if(! get_config('system','hidden_version_siteinfo')) {
 		$version = sprintf( t('Version %s'), RED_VERSION );
-	else
-	        $version = "";
-
+		if(@is_dir('.git') && function_exists('shell_exec'))
+			$commit = @shell_exec('git log -1 --format="%h"');
+		if(! isset($commit) || strlen($commit) > 16)
+			$commit = '';
+	}
+	else {
+	        $version = $commit = '';
+	}
 	$visible_plugins = array();
 	if(is_array($a->plugins) && count($a->plugins)) {
 		$r = q("select * from addon where hidden = 0");
@@ -81,6 +92,7 @@ function siteinfo_content(&$a) {
                 '$title' => t('Red'),
 		'$description' => t('This is a hub of the Red Matrix - a global cooperative network of decentralised privacy enhanced websites.'),
 		'$version' => $version,
+		'$commit' => $commit,
 		'$web_location' => t('Running at web location') . ' ' . z_root(),
 		'$visit' => t('Please visit <a href="http://getzot.com">GetZot.com</a> to learn more about the Red Matrix.'),
 		'$bug_text' => t('Bug reports and issues: please visit'),

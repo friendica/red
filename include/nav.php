@@ -165,7 +165,7 @@ EOT;
 		$nav['messages']['mark'] = array('', t('Mark all private messages seen'), '','');
 		$nav['messages']['inbox'] = array('message', t('Inbox'), "", t('Inbox'));
 		$nav['messages']['outbox']= array('message/sent', t('Outbox'), "", t('Outbox'));
-		$nav['messages']['new'] = array('message/new', t('New Message'), "", t('New Message'));
+		$nav['messages']['new'] = array('mail/new', t('New Message'), "", t('New Message'));
 
 
 		$nav['all_events'] = array('events', t('Events'), "", t('Event Calendar'));

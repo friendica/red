@@ -572,11 +572,12 @@ function startup() {
 class App {
 
 		
-	public  $account    = null;            // account record
-	public  $channel    = null;            // channel record
-	public  $observer   = null;            // xchan record
-	public  $profile_uid = 0;              // If applicable, the uid of the person whose stuff this is. 
-	public  $layout     = array();         // Comanche parsed template                                           
+	public  $account    = null;            // account record of the logged-in account
+	public  $channel    = null;            // channel record of the current channel of the logged-in account
+	public  $observer   = null;            // xchan record of the page observer
+	public  $profile_uid = 0;              // If applicable, the channel_id of the "page owner"
+	public  $poi        = null;            // "person of interest", generally a referenced connection
+	public  $layout     = array();         // Comanche parsed template
 
 
 	private $perms      = null;            // observer permissions
@@ -903,44 +904,8 @@ class App {
 		return $this->groups;
 	}
 
-	/*
-	 * Use a theme or app specific widget ordering list to determine what widgets should be included
-	 * for each module and in what order and optionally what region of the page to place them.
-	 * For example:
-	 * view/wgl/mod_connections.wgl:
-	 * -----------------------------
-	 * vcard aside
-	 * follow aside
-	 * findpeople rightside
-	 * collections aside
-	 *
-	 * If your widgetlist does not include a widget that is destined for the page, it will not be rendered.
-	 * You can also use this to change the order of presentation, as they will be presented in the order you specify.
-	 *
-	 */
-
 	function set_widget($title,$html, $location = 'aside') {
-		$widgetlist_file = 'mod_' . $this->module . '.wgl';
-		if(! $this->widgetlist) {
-			if($this->module && (($f = theme_include($widgetlist_file)) !== '')) {
-				$s = file($f, FILE_IGNORE_NEW_LINES|FILE_SKIP_EMPTY_LINES);
-				if(is_array($s)) {
-					foreach($s as $x) {
-						$this->widgetlist[] = explode(' ', $x);
-					}
-				}
-			}
-			else {
-				$this->widgets[] = array('title' => $title, 'html' => $html, 'location' => $location);
-			}
-		}
-		if($this->widgetlist) {
-			foreach($this->widgetlist as $k => $v) {
-				if($v[0] && $v[0] === $title) {
-					$this->widgets[$k] = array('title' => $title, 'html' => $html, 'location' => (($v[1]) ?$v[1] : $location));
-				}
-			}
-		}
+		$this->widgets[] = array('title' => $title, 'html' => $html, 'location' => $location);
 	}
 
 	function get_widgets($location = '') {

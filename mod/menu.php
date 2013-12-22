@@ -42,7 +42,7 @@ function menu_content(&$a) {
 	}
 
 
-	$a->set_widget('design',design_tools());
+//	$a->set_widget('design',design_tools());
 
 
 	if(argc() == 1) {

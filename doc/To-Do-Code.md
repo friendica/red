@@ -43,7 +43,7 @@ We need much more than this, but here are areas where developers can help. Pleas
 
 * Family Account creation - using service classes (an account holder can create a certain number of sub-accounts which are all tied to their subscription - if the subscription lapses they all go away).
 
-* Re-working of widgets so that entire application and page contents (e.g. modules) will be available to and under the control of themes/apps using Comanche layouts.
+* (In Progress) Re-working of widgets so that entire application and page contents (e.g. modules) will be available to and under the control of themes/apps using Comanche layouts.
 
 In many cases some of the work has already been started and code exists so that you needn't start from scratch. Please contact one of the developer channels like Channel One (one@zothub.com) before embarking and we can tell you what we already have and provide some insights on how we envision these features fitting together. 
 

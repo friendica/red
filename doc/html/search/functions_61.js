@@ -35,7 +35,6 @@ var searchData=
   ['aes_5funencapsulate',['aes_unencapsulate',['../crypto_8php.html#aca7c3a574bfb6c6ef1f2403a56823914',1,'crypto.php']]],
   ['age',['age',['../datetime_8php.html#abc1652f96799cec6fce8797ba2ebc2df',1,'datetime.php']]],
   ['all_5ffriends',['all_friends',['../socgraph_8php.html#a16ac51c505d72987ed8d6d6aed0e8586',1,'socgraph.php']]],
-  ['allfriends_5fcontent',['allfriends_content',['../allfriends_8php.html#aad992ddbb5f20e81c5cf2259718aec83',1,'allfriends.php']]],
   ['allowed_5femail',['allowed_email',['../include_2network_8php.html#aba38458a2ff2d92d3536488dbb119694',1,'network.php']]],
   ['allowed_5fpublic_5frecips',['allowed_public_recips',['../zot_8php.html#a703f528ade8382cf374e4119bd6f7859',1,'zot.php']]],
   ['allowed_5furl',['allowed_url',['../include_2network_8php.html#aee35d9ad6b3f872bfb39ba3598936aa7',1,'network.php']]],

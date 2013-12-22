@@ -10,7 +10,6 @@ var searchData=
   ['red_5fzrl_5fcallback',['red_zrl_callback',['../items_8php.html#a4e6d7639431e0dd8e9f4dba8e1ac408b',1,'items.php']]],
   ['redbasic_5fform',['redbasic_form',['../view_2theme_2redbasic_2php_2config_8php.html#a8574a41fa9735ee391ba57ab24b93793',1,'config.php']]],
   ['redbasic_5finit',['redbasic_init',['../redbasic_2php_2theme_8php.html#af6eb813e9fc7e2d76ac1b82bc5c0ed9b',1,'theme.php']]],
-  ['redir_5finit',['redir_init',['../redir_8php.html#a9ac266c3f5cf0d94ef63e6d0f2edf1f5',1,'redir.php']]],
   ['reduce',['reduce',['../docblox__errorchecker_8php.html#ae9562cf60aa693114603d27b55d2185f',1,'docblox_errorchecker.php']]],
   ['ref_5fsession_5fclose',['ref_session_close',['../session_8php.html#a5e1c616e02b863d5450317d101366bb7',1,'session.php']]],
   ['ref_5fsession_5fdestroy',['ref_session_destroy',['../session_8php.html#af230b86bfff7db66c3bdd7e0bbc24052',1,'session.php']]],

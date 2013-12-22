@@ -229,7 +229,7 @@ function mini_group_select($uid,$group = '') {
 
 
 
-function group_side($every="contacts",$each="group",$edit = false, $group_id = 0, $cid = '',$mode = 1) {
+function group_side($every="connections",$each="group",$edit = false, $group_id = 0, $cid = '',$mode = 1) {
 
 	$o = '';
 

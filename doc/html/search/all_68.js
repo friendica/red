@@ -14,6 +14,8 @@ var searchData=
   ['help_2ephp',['help.php',['../help_8php.html',1,'']]],
   ['help_5fcontent',['help_content',['../help_8php.html#af055e15f600ffa6fbca9386fdf715224',1,'help.php']]],
   ['home_2ephp',['home.php',['../home_8php.html',1,'']]],
+  ['home_5fcontent',['home_content',['../home_8php.html#aa1cf697851a646755baf537f75334c46',1,'home.php']]],
+  ['home_5finit',['home_init',['../home_8php.html#ac4642c38b6f23a8d065dd4a75c620bde',1,'home.php']]],
   ['hostxrd_2ephp',['hostxrd.php',['../hostxrd_8php.html',1,'']]],
   ['hostxrd_5finit',['hostxrd_init',['../hostxrd_8php.html#aa37ffc8e7900bc76c4828bd25916db92',1,'hostxrd.php']]],
   ['html2bb_5fvideo',['html2bb_video',['../text_8php.html#a138a3a611fa7f4f3630674145fc826bf',1,'text.php']]],

@@ -110,7 +110,7 @@
 
 /* conversation */
 
-.thread-wrapper .toplevel_item {
+.thread-wrapper.toplevel_item {
 	width: 92%;
 }
 
@@ -123,6 +123,14 @@
 .wall-item-content-wrapper {
 	margin-top: 10px;
 	position: relative;
+}
+
+.wall-item-content-wrapper .wall-item-delete-wrapper {
+	opacity: 0;
+}
+
+.wall-item-content-wrapper:hover .wall-item-delete-wrapper {
+	opacity: 1;
 }
 
 .wall-item-info {

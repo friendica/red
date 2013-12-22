@@ -11,8 +11,6 @@ var searchData=
   ['minimalisticdarkness_2ephp',['minimalisticdarkness.php',['../minimalisticdarkness_8php.html',1,'']]],
   ['mitem_2ephp',['mitem.php',['../mitem_8php.html',1,'']]],
   ['mod_5fimport_2ephp',['mod_import.php',['../mod__import_8php.html',1,'']]],
-  ['mod_5fnew_5fchannel_2ephp',['mod_new_channel.php',['../mod__new__channel_8php.html',1,'']]],
-  ['mod_5fregister_2ephp',['mod_register.php',['../mod__register_8php.html',1,'']]],
   ['mood_2ephp',['mood.php',['../mood_8php.html',1,'']]],
   ['msearch_2ephp',['msearch.php',['../msearch_8php.html',1,'']]]
 ];

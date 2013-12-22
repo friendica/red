@@ -2,7 +2,7 @@
 <p></p>
 <p>{{$description}}</p>
 {{if $version}}
-<p>{{$version}}</p>
+<p>{{$version}}{{if $commit}}+{{$commit}}{{/if}}</p>
 {{/if}}
 <p>{{$web_location}}</p>
 <p>{{$visit}}</p>

@@ -78,12 +78,16 @@ function vcard_from_xchan($xchan, $observer = null, $mode = '') {
 	$a = get_app();
 
 	if(! $xchan) {
-		if($a->profile['channel_hash'])
+		if($a->poi) {
+			$xchan = $a->poi;
+		}
+		elseif($a->profile['channel_hash']) {
 			$r = q("select * from xchan where xchan_hash = '%s' limit 1",
 				dbesc($a->profile['channel_hash'])
 			);
 			if($r)
 				$xchan = $r[0];
+		}
 	}
 
 	if(! $xchan)

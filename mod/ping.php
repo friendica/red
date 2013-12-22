@@ -151,7 +151,7 @@ function ping_init(&$a) {
 			foreach($t as $zz) {
 //				$msg = sprintf( t('sent you a private message.'), $zz['xchan_name']);
 				$notifs[] = array(
-					'notify_link' => $a->get_baseurl() . '/message/' . $zz['id'], 
+					'notify_link' => $a->get_baseurl() . '/mail/' . $zz['id'], 
 					'name' => $zz['xchan_name'],
 					'url' => $zz['xchan_url'],
 					'photo' => $zz['xchan_photo_s'],

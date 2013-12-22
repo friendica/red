@@ -34,16 +34,7 @@ function photos_init(&$a) {
 
 		$observer_xchan = (($observer) ? $observer['xchan_hash'] : '');
 
-		$a->data['perms'] = get_all_perms($channelx[0]['channel_id'],$observer_xchan);
-
-
-
-		$a->set_widget('vcard',vcard_from_xchan('',$observer));
 		head_set_icon($a->data['channel']['xchan_photo_s']);
-		if($a->data['perms']['view_photos']) {
-			$a->data['albums'] = photos_albums_list($a->data['channel'],$observer);
-			$a->set_widget('photo_albums',photos_album_widget($a->data['channel'],$observer,$a->data['albums']));
-		}
 
 		$a->page['htmlhead'] .= "<script> var ispublic = '" . t('everybody') . "'; var profile_uid = " . (($a->data['channel']) ? $a->data['channel']['channel_id'] : 0) . "; </script>" ;
 
@@ -599,6 +590,8 @@ function photos_content(&$a) {
 	// Parse arguments 
 	//
 
+	$can_comment = perm_is_allowed($a->profile['profile_uid'],get_observer_hash(),'post_comments');
+
 	if(argc() > 3) {
 		$datatype = argv(2);
 		$datum = argv(3);
@@ -1066,7 +1059,7 @@ function photos_content(&$a) {
 
 			$likebuttons = '';
 
-			if($can_post || $a->data['perms']['post_comments']) {
+			if($can_post || $can_comment) {
 				$likebuttons = replace_macros($like_tpl,array(
 					'$id' => $link_item['id'],
 					'$likethis' => t("I like this \x28toggle\x29"),
@@ -1078,7 +1071,7 @@ function photos_content(&$a) {
 
 			$comments = '';
 			if(! count($r)) {
-				if($can_post || $a->data['perms']['post_comments']) {
+				if($can_post || $can_comment) {
 					$comments .= replace_macros($cmnt_tpl,array(
 						'$return_path' => '', 
 						'$mode' => 'photos',
@@ -1166,7 +1159,7 @@ function photos_content(&$a) {
 
 				}
 			
-				if($can_post || $a->data['perms']['post_comments']) {
+				if($can_post || $can_comment) {
 					$comments .= replace_macros($cmnt_tpl,array(
 						'$return_path' => '',
 						'$jsreload' => $return_url,

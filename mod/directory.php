@@ -9,22 +9,6 @@ function directory_init(&$a) {
 
 }
 
-function directory_aside(&$a) {
-
-	if((get_config('system','block_public')) && (! local_user()) && (! remote_user())) {
-		return;
-	}
-
-	require_once('include/contact_widgets.php');
-	$a->set_widget('find_people',findpeople_widget());
-
-	$a->set_widget('safe_search',dir_safe_mode());
-
-	$a->set_widget('dir_sort_order',dir_sort_links());
-	
-}
-
-
 function directory_content(&$a) {
 
 	if((get_config('system','block_public')) && (! local_user()) && (! remote_user())) {
@@ -210,10 +194,8 @@ function directory_content(&$a) {
 					}
 
 					if($j['keywords']) {
-						$a->set_widget('dirtagblock',dir_tagblock(z_root() . '/directory',$j['keywords']));
+						$a->data['directory_keywords'] = $j['keywords'];
 					}
-					$a->set_widget('suggest',widget_suggestions(array()));
-
 
 //					logger('mod_directory: entries: ' . print_r($entries,true), LOGGER_DATA);
 

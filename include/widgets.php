@@ -1,17 +1,7 @@
 <?php /** @file */
 
-function list_widgets() {
-	$widgets = array(
-		'profile'      => t('Displays a full channel profile'),
-		'tagcloud'     => t('Tag cloud of webpage categories'), 		
-		'collections'  => t('List and filter by collection'),
-		'suggestions'  => t('Show a couple of channel suggestion'),
-		'follow'       => t('Provide a channel follow form')
-	);
-	$arr = array('widgets' => $widgets);
-	call_hooks('list_widgets',$arr);
-	return $arr['widgets'];
-}
+require_once('include/dir_fns.php');
+require_once('include/contact_widgets.php');
 
 
 function widget_profile($args) {
@@ -47,10 +37,39 @@ function widget_tagcloud($args) {
 
 function widget_collections($args) {
 	require_once('include/group.php');
-	$page = argv(0);
-	$gid = $_REQUEST['gid'];
 
-	return group_side($page,$page,true,$_REQUEST['gid'],'',0);
+	$mode = ((array_key_exists('mode',$args)) ? $args['mode'] : 'conversation');
+	switch($mode) {
+		case 'conversation':
+				$every = argv(0);
+				$each = argv(0);
+				$edit = true;
+				$current = $_REQUEST['gid'];
+				$abook_id = 0;
+				$wmode = 0;
+				break;
+		case 'groups':
+				$every = 'connections';
+				$each = argv(0);
+				$edit = false;
+				$current = intval(argv(1));
+				$abook_id = 0;
+				$wmode = 1;
+				break;
+		case 'abook':
+				$every = 'connections';
+				$each = 'group';
+				$edit = false;
+				$current = 0;
+				$abook_id = get_app()->poi['abook_xchan'];
+				$wmode = 1;
+				break;
+		default:
+			return '';
+			break;
+	}
+			
+	return group_side($every, $each, $edit, $current, $abook_id, $wmode);
 
 }
 
@@ -488,10 +507,71 @@ function widget_mailmenu($arr) {
 		),
 		'$new'=>array(
 			'label' => t('New Message'),
-			'url' => $a->get_baseurl(true) . '/message/new',
+			'url' => $a->get_baseurl(true) . '/mail/new',
 			'sel'=> (argv(1) == 'new'),
 		)
 
 	));
 
+}
+
+function widget_design_tools($arr) {
+	$a = get_app();
+
+	// mod menu doesn't load a profile. For any modules which load a profile, check it.
+	// otherwise local_user() is sufficient for permissions.
+
+	if($a->profile['profile_uid']) 
+		if($a->profile['profile_uid'] != local_user())
+				return '';
+ 
+	if(! local_user())
+		return '';
+
+	return design_tools();
+}
+
+function widget_findpeople($arr) {
+	return findpeople_widget();
+}
+
+
+function widget_photo_albums($arr) {
+	$a = get_app();
+	if(! $a->profile['profile_uid'])
+		return '';
+	$channelx = channelx_by_n($a->profile['profile_uid']);
+	if((! $channelx) || (! perm_is_allowed($a->profile['profile_uid'],get_observer_hash(),'view_photos')))
+		return '';
+	return photos_album_widget($channelx[0],$a->get_observer());	
+
+}
+
+
+function widget_vcard($arr) {
+	return vcard_from_xchan('',get_app()->get_observer());
+}
+
+
+/**
+ * The following directory widgets are only useful on the directory page
+ */
+
+function widget_dirsafemode($arr) {
+	return dir_safe_mode();
+}
+
+function widget_dirsort($arr) {
+	return dir_sort_links();
+}
+
+function widget_dirtags($arr) {
+	return dir_tagblock(z_root() . '/directory',null);
+}
+
+function widget_menu_preview($arr) {
+	if(! get_app()->data['menu_item'])
+		return;
+	require_once('include/menu.php');
+	return menu_render(get_app()->data['menu_item']);
 }

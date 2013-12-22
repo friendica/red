@@ -47,16 +47,6 @@ $('.savedsearchdrop').hover(
 		$(this).css('opacity','0');}
 	);
 
-$('.savedsearchterm').hover(
-	function() {
-		id = $(this).attr('id');
-		$('#dropicon-' + id).css('opacity','1.0');},
-
-	function() {
-		id = $(this).attr('id');
-		$('#dropicon-' + id).css('opacity','0');
-	});
-
 });
 
 

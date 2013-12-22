@@ -19,23 +19,6 @@ function connections_init(&$a) {
 
 }
 
-function connections_aside(&$a) {
-
-
-	if (! local_user())
-		return;
-	
-
-	$a->set_widget('follow', widget_follow(array()));
-
-
-	$a->set_widget('suggest',widget_suggestions(array()));
-	$a->set_widget('findpeople',findpeople_widget());
-
-}
-
-
-
 function connections_post(&$a) {
 	
 	if(! local_user())
@@ -317,9 +300,10 @@ function connections_content(&$a) {
 
  	
 	$r = q("SELECT COUNT(abook.abook_id) AS total FROM abook left join xchan on abook.abook_xchan = xchan.xchan_hash 
-		where abook_channel = %d and not (abook_flags & %d) $sql_extra $sql_extra2 ",
+		where abook_channel = %d and not (abook_flags & %d) and not (xchan_flags & %d ) $sql_extra $sql_extra2 ",
 		intval(local_user()),
-		intval(ABOOK_FLAG_SELF)
+		intval(ABOOK_FLAG_SELF),
+		intval(XCHAN_FLAGS_DELETED)
 	);
 	if(count($r)) {
 		$a->set_pager_total($r[0]['total']);
@@ -327,9 +311,10 @@ function connections_content(&$a) {
 	}
 
 	$r = q("SELECT abook.*, xchan.* FROM abook left join xchan on abook.abook_xchan = xchan.xchan_hash
-		WHERE abook_channel = %d and not (abook_flags & %d) $sql_extra $sql_extra2 ORDER BY xchan_name LIMIT %d , %d ",
+		WHERE abook_channel = %d and not (abook_flags & %d) and not ( xchan_flags & %d) $sql_extra $sql_extra2 ORDER BY xchan_name LIMIT %d , %d ",
 		intval(local_user()),
 		intval(ABOOK_FLAG_SELF),
+		intval(XCHAN_FLAGS_DELETED),
 		intval($a->pager['start']),
 		intval($a->pager['itemspage'])
 	);

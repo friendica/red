@@ -16,6 +16,10 @@
 
 <div id="contact-edit-wrapper">
 
+{{if $last_update}}
+{{$lastupdtext}} {{$last_update}}
+{{/if}}
+
 {{if $notself}}
 {{if $slide}}
 <h3>{{$lbl_slider}}</h3>

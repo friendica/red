@@ -13,6 +13,7 @@ Red Matrix Documentation and Resources
 * [Tags and Mentions](help/Tags-and-Mentions)
 * [Web Pages](help/Webpages)
 * [Remove Account](help/Remove-Account)
+* [BBcode reference for posts and comments](help/bbcode)
 
 **Technical Documentation**
 

@@ -72,6 +72,7 @@ var classApp =
     [ "$path", "classApp.html#acad5896b7a79ae31433ad8f89606c728", null ],
     [ "$perms", "classApp.html#ab47de68fa39806d1fb0976407e188b77", null ],
     [ "$plugins", "classApp.html#ae9f96338f32187d308b67b980eea0008", null ],
+    [ "$poi", "classApp.html#a1936f2afce0dc0d1bbed15ae1f2ee81a", null ],
     [ "$profile", "classApp.html#a57d041fcc003d08c127dfa99a02bc192", null ],
     [ "$profile_uid", "classApp.html#a08c24d6a6fc52fcc784b0f765f13b820", null ],
     [ "$query_string", "classApp.html#a2e82da4aecfc2017a8d1d332ca501f9f", null ],
