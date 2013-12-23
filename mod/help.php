@@ -87,7 +87,6 @@ function help_content(&$a) {
 
 
 function preg_callback_help_include($matches) {
-	print_r($matches);
 
 	if($matches[1])
 		return str_replace($matches[0],load_doc_file($matches[1]),$matches[0]);
