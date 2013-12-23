@@ -183,7 +183,7 @@ function photos_post(&$a) {
 				intval($page_owner_uid)
 			);
 			if(count($i)) {
-				q("UPDATE `item` SET item_restrict = (item_restrict & %d), `edited` = '%s', `changed` = '%s' WHERE `parent_mid` = '%s' AND `uid` = %d",
+				q("UPDATE `item` SET item_restrict = (item_restrict | %d), `edited` = '%s', `changed` = '%s' WHERE `parent_mid` = '%s' AND `uid` = %d",
 					intval(ITEM_DELETED),
 					dbesc(datetime_convert()),
 					dbesc(datetime_convert()),
