@@ -1296,15 +1296,18 @@ function prepare_page($item) {
 
 	$a = get_app();
 	$naked = ((get_pconfig($item['uid'],'system','nakedpage')) ? 1 : 0);
+	$observer = $a->get_observer();
+	$zid = ($observer['xchan_addr']);
+
 	if(array_key_exists('webpage',$a->layout) && array_key_exists('authored',$a->layout['webpage'])) {
 		if($a->layout['webpage']['authored'] === 'none')
 			$naked = 1;
 		// ... other possible options
 	}
-
 	return replace_macros(get_markup_template('page_display.tpl'),array(
 		'$author' => (($naked) ? '' : $item['author']['xchan_name']),
 		'$auth_url' => (($naked) ? '' : $item['author']['xchan_url']),
+		'$zid' => $zid,
 		'$date' => (($naked) ? '' : datetime_convert('UTC',date_default_timezone_get(),$item['created'],'Y-m-d H:i')),
 		'$title' => smilies(bbcode($item['title'])),
 		'$body' => prepare_body($item,true)
