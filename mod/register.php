@@ -137,8 +137,8 @@ function register_content(&$a) {
 
 
 	if(get_config('system','register_policy') == REGISTER_CLOSED) {
-		notice("Permission denied." . EOL);
-		return;
+		require_once('mod/pubsites.php');
+		return pubsites_content($a);
 	}
 
 	$max_dailies = intval(get_config('system','max_daily_registrations'));
