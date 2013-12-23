@@ -157,23 +157,20 @@ function photos_post(&$a) {
 	}
 
 	if((argc() > 2) && (x($_REQUEST,'delete')) && ($_REQUEST['delete'] === t('Delete Photo'))) {
-// FIXME
+
 		// same as above but remove single photo
 
-		if($visitor) {
-			$r = q("SELECT `id`, `resource_id` FROM `photo` WHERE `contact-id` = %d AND `uid` = %d AND `resource_id` = '%s' LIMIT 1",
-				intval($visitor),
-				intval($page_owner_uid),
-				dbesc($a->argv[2])
-			);
-		}
-		else {
-			$r = q("SELECT `id`, `resource_id` FROM `photo` WHERE `uid` = %d AND `resource_id` = '%s' LIMIT 1",
-				intval(local_user()),
-				dbesc($a->argv[2])
-			);
-		}
-		if(count($r)) {
+		$ob_hash = get_observer_hash();
+		if(! $ob_hash)
+			goaway($a->get_baseurl() . '/' . $_SESSION['photo_return']);
+
+		$r = q("SELECT `id`, `resource_id` FROM `photo` WHERE ( xchan = '%s' or `uid` = %d ) AND `resource_id` = '%s' LIMIT 1",
+			dbesc($ob_hash),
+			intval(local_user()),
+			dbesc($a->argv[2])
+		);
+
+		if($r) {
 			q("DELETE FROM `photo` WHERE `uid` = %d AND `resource_id` = '%s'",
 				intval($page_owner_uid),
 				dbesc($r[0]['resource_id'])
@@ -200,7 +197,6 @@ function photos_post(&$a) {
 		}
 
 		goaway($a->get_baseurl() . '/' . $_SESSION['photo_return']);
-		return; // NOTREACHED
 	}
 
 	if(($a->argc > 2) && ((x($_POST,'desc') !== false) || (x($_POST,'newtag') !== false)) || (x($_POST,'albname') !== false)) {
