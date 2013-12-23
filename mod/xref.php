@@ -7,7 +7,7 @@ function xref_init(&$a) {
 	// Cookie lasts 24 hours to survive a browser restart.  Contains no personal
 	// information at all - just somebody else's xchan.
 	$referrer = argv(1);
-	$expire=time()+60*60*24;
+	$expire=time()+60*60*2;
 	$path = 'xref';
 	setcookie($path, $referrer, $expire, "/"); 
 	$url = '';
