@@ -20,7 +20,7 @@ function contactgroup_content(&$a) {
 
 	if((argc() > 1) && (intval(argv(1)))) {
 
-		$r = q("SELECT * FROM `group` WHERE `id` = %d AND `uid` = %d AND `deleted` = 0 LIMIT 1",
+		$r = q("SELECT * FROM `groups` WHERE `id` = %d AND `uid` = %d AND `deleted` = 0 LIMIT 1",
 			intval(argv(1)),
 			intval(local_user())
 		);

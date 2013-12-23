@@ -386,7 +386,7 @@ function check_form_security_token_ForbiddenOnErr($typename = '', $formname = 'f
 if(! function_exists('init_groups_visitor')) {
 function init_groups_visitor($contact_id) {
 	$groups = array();
-	$r = q("SELECT hash FROM `group` left join group_member on group.id = group_member.gid WHERE xchan = '%s' ",
+	$r = q("SELECT hash FROM `groups` left join group_member on groups.id = group_member.gid WHERE xchan = '%s' ",
 		dbesc($contact_id)
 	);
 	if(count($r)) {

@@ -240,7 +240,7 @@ CREATE TABLE IF NOT EXISTS `event` (
   `start` datetime NOT NULL,
   `finish` datetime NOT NULL,
   `summary` text NOT NULL,
-  `desc` text NOT NULL,
+  `description` text NOT NULL,
   `location` text NOT NULL,
   `type` char(255) NOT NULL,
   `nofinish` tinyint(1) NOT NULL DEFAULT '0',
@@ -319,7 +319,7 @@ CREATE TABLE IF NOT EXISTS `fsuggest` (
   PRIMARY KEY (`id`)
 ) ENGINE=MyISAM DEFAULT CHARSET=utf8;
 
-CREATE TABLE IF NOT EXISTS `group` (
+CREATE TABLE IF NOT EXISTS `groups` (
   `id` int(10) unsigned NOT NULL AUTO_INCREMENT,
   `hash` char(255) NOT NULL DEFAULT '',
   `uid` int(10) unsigned NOT NULL,
@@ -639,7 +639,7 @@ CREATE TABLE IF NOT EXISTS `photo` (
   `created` datetime NOT NULL,
   `edited` datetime NOT NULL,
   `title` char(255) NOT NULL,
-  `desc` text NOT NULL,
+  `description` text NOT NULL,
   `album` char(255) NOT NULL,
   `filename` char(255) NOT NULL,
   `type` char(128) NOT NULL DEFAULT 'image/jpeg',

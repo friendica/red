@@ -49,7 +49,7 @@ function lockview_content(&$a) {
 	stringify_array_elms($deny_users,true);
 
 	if(count($allowed_groups)) {
-		$r = q("SELECT name FROM `group` WHERE hash IN ( " . implode(', ', $allowed_groups) . " )");
+		$r = q("SELECT name FROM `groups` WHERE hash IN ( " . implode(', ', $allowed_groups) . " )");
 		if($r)
 			foreach($r as $rr) 
 				$l[] = '<b>' . $rr['name'] . '</b>';
@@ -61,7 +61,7 @@ function lockview_content(&$a) {
 				$l[] = $rr['xchan_name'];
 	}
 	if(count($deny_groups)) {
-		$r = q("SELECT name FROM `group` WHERE hash IN ( " . implode(', ', $deny_groups) . " )");
+		$r = q("SELECT name FROM `groups` WHERE hash IN ( " . implode(', ', $deny_groups) . " )");
 		if($r)
 			foreach($r as $rr) 
 				$l[] = '<b><strike>' . $rr['name'] . '</strike></b>';

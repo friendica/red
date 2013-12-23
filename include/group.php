@@ -14,11 +14,11 @@ function group_add($uid,$name,$public = 0) {
 			// access lists. What we're doing here is reviving the dead group, but old content which
 			// was restricted to this group may now be seen by the new group members. 
 
-			$z = q("SELECT * FROM `group` WHERE `id` = %d LIMIT 1",
+			$z = q("SELECT * FROM `groups` WHERE `id` = %d LIMIT 1",
 				intval($r)
 			);
 			if(count($z) && $z[0]['deleted']) {
-				$r = q("UPDATE `group` SET `deleted` = 0 WHERE `uid` = %d AND `name` = '%s' LIMIT 1",
+				$r = q("UPDATE `groups` SET `deleted` = 0 WHERE `uid` = %d AND `name` = '%s' LIMIT 1",
 					intval($uid),
 					dbesc($name)
 				);
@@ -31,13 +31,13 @@ function group_add($uid,$name,$public = 0) {
 			$dups = false;
 			$hash = random_string() . $name;
 
-			$r = q("SELECT id FROM `group` WHERE hash = '%s' LIMIT 1", dbesc($hash));
+			$r = q("SELECT id FROM `groups` WHERE hash = '%s' LIMIT 1", dbesc($hash));
 			if($r)
 				$dups = true;
 		} while($dups == true);
 
 
-		$r = q("INSERT INTO `group` ( hash, uid, visible, name )
+		$r = q("INSERT INTO `groups` ( hash, uid, visible, name )
 			VALUES( '%s', %d, %d, '%s' ) ",
 			dbesc($hash),
 			intval($uid),
@@ -53,7 +53,7 @@ function group_add($uid,$name,$public = 0) {
 function group_rmv($uid,$name) {
 	$ret = false;
 	if(x($uid) && x($name)) {
-		$r = q("SELECT id, hash FROM `group` WHERE `uid` = %d AND `name` = '%s' LIMIT 1",
+		$r = q("SELECT id, hash FROM `groups` WHERE `uid` = %d AND `name` = '%s' LIMIT 1",
 			intval($uid),
 			dbesc($name)
 		);
@@ -104,7 +104,7 @@ function group_rmv($uid,$name) {
 		);
 
 		// remove group
-		$r = q("UPDATE `group` SET `deleted` = 1 WHERE `uid` = %d AND `name` = '%s' LIMIT 1",
+		$r = q("UPDATE `groups` SET `deleted` = 1 WHERE `uid` = %d AND `name` = '%s' LIMIT 1",
 			intval($uid),
 			dbesc($name)
 		);
@@ -119,7 +119,7 @@ function group_rmv($uid,$name) {
 function group_byname($uid,$name) {
 	if((! $uid) || (! strlen($name)))
 		return false;
-	$r = q("SELECT * FROM `group` WHERE `uid` = %d AND `name` = '%s' LIMIT 1",
+	$r = q("SELECT * FROM `groups` WHERE `uid` = %d AND `name` = '%s' LIMIT 1",
 		intval($uid),
 		dbesc($name)
 	);
@@ -132,7 +132,7 @@ function group_byname($uid,$name) {
 function group_rec_byhash($uid,$hash) {
 	if((! $uid) || (! strlen($hash)))
 		return false;
-	$r = q("SELECT * FROM `group` WHERE `uid` = %d AND `hash` = '%s' LIMIT 1",
+	$r = q("SELECT * FROM `groups` WHERE `uid` = %d AND `hash` = '%s' LIMIT 1",
 		intval($uid),
 		dbesc($hash)
 	);
@@ -207,7 +207,7 @@ function mini_group_select($uid,$group = '') {
 	$grps = array();
 	$o = '';
 
-	$r = q("SELECT * FROM `group` WHERE `deleted` = 0 AND `uid` = %d ORDER BY `name` ASC",
+	$r = q("SELECT * FROM `groups` WHERE `deleted` = 0 AND `uid` = %d ORDER BY `name` ASC",
 		intval($uid)
 	);
 	$grps[] = array('name' => '', 'hash' => '0', 'selected' => '');
@@ -246,7 +246,7 @@ function group_side($every="connections",$each="group",$edit = false, $group_id 
 	);
 
 
-	$r = q("SELECT * FROM `group` WHERE `deleted` = 0 AND `uid` = %d ORDER BY `name` ASC",
+	$r = q("SELECT * FROM `groups` WHERE `deleted` = 0 AND `uid` = %d ORDER BY `name` ASC",
 		intval($_SESSION['uid'])
 	);
 	$member_of = array();
@@ -302,7 +302,7 @@ function expand_groups($a) {
 	$groups = implode(',', $x);
 
 	if($groups)
-		$r = q("SELECT xchan FROM group_member WHERE gid IN ( select id from `group` where hash in ( $groups ))");
+		$r = q("SELECT xchan FROM group_member WHERE gid IN ( select id from `groups` where hash in ( $groups ))");
 	$ret = array();
 
 	if($r)
@@ -314,7 +314,7 @@ function expand_groups($a) {
 
 function member_of($c) {
 
-	$r = q("SELECT `group`.`name`, `group`.`id` FROM `group` LEFT JOIN `group_member` ON `group_member`.`gid` = `group`.`id` WHERE `group_member`.`xchan` = '%s' AND `group`.`deleted` = 0 ORDER BY `group`.`name`  ASC ",
+	$r = q("SELECT `groups`.`name`, `groups`.`id` FROM `groups` LEFT JOIN `group_member` ON `group_member`.`gid` = `groups`.`id` WHERE `group_member`.`xchan` = '%s' AND `groups`.`deleted` = 0 ORDER BY `groups`.`name`  ASC ",
 		dbesc($c)
 	);
 

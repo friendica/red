@@ -30,7 +30,7 @@ function group_post(&$a) {
 	if((argc() == 2) && (intval(argv(1)))) {
 		check_form_security_token_redirectOnErr('/group', 'group_edit');
 		
-		$r = q("SELECT * FROM `group` WHERE `id` = %d AND `uid` = %d LIMIT 1",
+		$r = q("SELECT * FROM `groups` WHERE `id` = %d AND `uid` = %d LIMIT 1",
 			intval(argv(1)),
 			intval(local_user())
 		);
@@ -44,7 +44,7 @@ function group_post(&$a) {
 		$public = intval($_POST['public']);
 
 		if((strlen($groupname))  && (($groupname != $group['name']) || ($public != $group['visible']))) {
-			$r = q("UPDATE `group` SET `name` = '%s', visible = %d  WHERE `uid` = %d AND `id` = %d LIMIT 1",
+			$r = q("UPDATE `groups` SET `name` = '%s', visible = %d  WHERE `uid` = %d AND `id` = %d LIMIT 1",
 				dbesc($groupname),
 				intval($public),
 				intval(local_user()),
@@ -97,7 +97,7 @@ function group_content(&$a) {
 		check_form_security_token_redirectOnErr('/group', 'group_drop', 't');
 		
 		if(intval(argv(2))) {
-			$r = q("SELECT `name` FROM `group` WHERE `id` = %d AND `uid` = %d LIMIT 1",
+			$r = q("SELECT `name` FROM `groups` WHERE `id` = %d AND `uid` = %d LIMIT 1",
 				intval(argv(2)),
 				intval(local_user())
 			);
@@ -132,7 +132,7 @@ function group_content(&$a) {
 	if((argc() > 1) && (intval(argv(1)))) {
 
 		require_once('include/acl_selectors.php');
-		$r = q("SELECT * FROM `group` WHERE `id` = %d AND `uid` = %d AND `deleted` = 0 LIMIT 1",
+		$r = q("SELECT * FROM `groups` WHERE `id` = %d AND `uid` = %d AND `deleted` = 0 LIMIT 1",
 			intval(argv(1)),
 			intval(local_user())
 		);

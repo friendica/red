@@ -281,7 +281,7 @@ function photos_post(&$a) {
 		);
 		if(count($p)) {
 			$ext = $phototypes[$p[0]['type']];
-			$r = q("UPDATE `photo` SET `desc` = '%s', `album` = '%s', `allow_cid` = '%s', `allow_gid` = '%s', `deny_cid` = '%s', `deny_gid` = '%s' WHERE `resource_id` = '%s' AND `uid` = %d",
+			$r = q("UPDATE `photo` SET `description` = '%s', `album` = '%s', `allow_cid` = '%s', `allow_gid` = '%s', `deny_cid` = '%s', `deny_gid` = '%s' WHERE `resource_id` = '%s' AND `uid` = %d",
 				dbesc($desc),
 				dbesc($albname),
 				dbesc($str_contact_allow),
@@ -299,7 +299,7 @@ function photos_post(&$a) {
 		/* Don't make the item visible if the only change was the album name */
 
 		$visibility = 0;
-		if($p[0]['desc'] !== $desc || strlen($rawtags))
+		if($p[0]['description'] !== $desc || strlen($rawtags))
 			$visibility = 1;
 
 		if(! $item_id) {
@@ -507,7 +507,7 @@ function photos_post(&$a) {
 						$arr['object'] .= xmlify('<link rel="photo" type="'.$p[0]['type'].'" href="' . $tagged[3]['photo'] . '" />' . "\n");
 					$arr['object'] .= '</link></object>' . "\n";
 
-					$arr['target'] = '<target><type>' . ACTIVITY_OBJ_PHOTO . '</type><title>' . $p[0]['desc'] . '</title><id>'
+					$arr['target'] = '<target><type>' . ACTIVITY_OBJ_PHOTO . '</type><title>' . $p[0]['description'] . '</title><id>'
 						. $a->get_baseurl() . '/photos/' . $owner_record['nickname'] . '/image/' . $p[0]['resource_id'] . '</id>';
 					$arr['target'] .= '<link>' . xmlify('<link rel="alternate" type="text/html" href="' . $a->get_baseurl() . '/photos/' . $owner_record['nickname'] . '/image/' . $p[0]['resource_id'] . '" />' . "\n" . '<link rel="preview" type="'.$p[0]['type'].'" href="' . $a->get_baseurl() . "/photo/" . $p[0]['resource_id'] . '-' . $best . '.' . $ext . '" />') . '</link></target>';
 
@@ -751,7 +751,7 @@ function photos_content(&$a) {
 		else
 			$order = 'DESC';
 
-		$r = q("SELECT `resource_id`, `id`, `filename`, type, max(`scale`) AS `scale`, `desc` FROM `photo` WHERE `uid` = %d AND `album` = '%s' 
+		$r = q("SELECT `resource_id`, `id`, `filename`, type, max(`scale`) AS `scale`, `description` FROM `photo` WHERE `uid` = %d AND `album` = '%s' 
 			AND `scale` <= 4 and (photo_flags = %d or photo_flags = %d ) $sql_extra GROUP BY `resource_id` ORDER BY `created` $order LIMIT %d , %d",
 			intval($owner_uid),
 			dbesc($album),
@@ -819,11 +819,11 @@ function photos_content(&$a) {
 
 				if($a->get_template_engine() === 'internal') {
 					$imgalt_e = template_escape($rr['filename']);
-					$desc_e = template_escape($rr['desc']);
+					$desc_e = template_escape($rr['description']);
 				}
 				else {
 					$imgalt_e = $rr['filename'];
-					$desc_e = $rr['desc'];
+					$desc_e = $rr['description'];
 				}
 
         
@@ -864,7 +864,7 @@ function photos_content(&$a) {
 
 		// fetch image, item containing image, then comments
 
-		$ph = q("SELECT aid,uid,xchan,resource_id,created,edited,title,`desc`,album,filename,`type`,height,width,`size`,scale,profile,photo_flags,allow_cid,allow_gid,deny_cid,deny_gid FROM `photo` WHERE `uid` = %d AND `resource_id` = '%s' 
+		$ph = q("SELECT aid,uid,xchan,resource_id,created,edited,title,`description`,album,filename,`type`,height,width,`size`,scale,profile,photo_flags,allow_cid,allow_gid,deny_cid,deny_gid FROM `photo` WHERE `uid` = %d AND `resource_id` = '%s' 
 			and (photo_flags = %d or photo_flags = %d ) $sql_extra ORDER BY `scale` ASC ",
 			intval($owner_uid),
 			dbesc($datum),
@@ -1020,7 +1020,7 @@ function photos_content(&$a) {
 		if($can_post) {
 
 			$album_e = $ph[0]['album'];
-			$caption_e = $ph[0]['desc'];
+			$caption_e = $ph[0]['description'];
 			$aclselect_e = populate_acl($ph[0]);
 
 			$edit = array(
@@ -1190,7 +1190,7 @@ function photos_content(&$a) {
 			'$photo' => $photo,
 			'$prevlink' => $prevlink,
 			'$nextlink' => $nextlink,
-			'$desc' => $ph[0]['desc'],
+			'$desc' => $ph[0]['description'],
 			'$tags' => $tags_e,
 			'$edit' => $edit,	
 			'$likebuttons' => $likebuttons,

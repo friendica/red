@@ -69,7 +69,7 @@ function network_content(&$a, $update = 0, $load = false) {
 		$_GET['order'] = 'post';
 
 	if($gid) {
-        $r = q("SELECT * FROM `group` WHERE id = %d AND uid = %d LIMIT 1",
+        $r = q("SELECT * FROM `groups` WHERE id = %d AND uid = %d LIMIT 1",
             intval($gid),
             intval(local_user())
         );

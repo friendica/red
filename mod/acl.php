@@ -39,7 +39,7 @@ function acl_init(&$a){
 	
 	// count groups and contacts
 	if ($type=='' || $type=='g'){
-		$r = q("SELECT COUNT(`id`) AS g FROM `group` WHERE `deleted` = 0 AND `uid` = %d $sql_extra",
+		$r = q("SELECT COUNT(`id`) AS g FROM `groups` WHERE `deleted` = 0 AND `uid` = %d $sql_extra",
 			intval(local_user())
 		);
 		$group_count = (int)$r[0]['g'];
@@ -94,14 +94,14 @@ function acl_init(&$a){
 	
 	if ($type=='' || $type=='g'){
 		
-		$r = q("SELECT `group`.`id`, `group`.`hash`, `group`.`name`, 
+		$r = q("SELECT `groups`.`id`, `groups`.`hash`, `groups`.`name`, 
 				GROUP_CONCAT(DISTINCT `group_member`.`xchan` SEPARATOR ',') as uids
-				FROM `group`,`group_member` 
-				WHERE `group`.`deleted` = 0 AND `group`.`uid` = %d 
-					AND `group_member`.`gid`=`group`.`id`
+				FROM `groups`,`group_member` 
+				WHERE `groups`.`deleted` = 0 AND `groups`.`uid` = %d 
+					AND `group_member`.`gid`=`groups`.`id`
 					$sql_extra
-				GROUP BY `group`.`id`
-				ORDER BY `group`.`name` 
+				GROUP BY `groups`.`id`
+				ORDER BY `groups`.`name` 
 				LIMIT %d,%d",
 			intval(local_user()),
 			intval($start),

@@ -255,7 +255,7 @@ function channel_remove($channel_id, $local = true) {
 
 	}
 
-	q("DELETE FROM `group` WHERE `uid` = %d", intval($channel_id));
+	q("DELETE FROM `groups` WHERE `uid` = %d", intval($channel_id));
 	q("DELETE FROM `group_member` WHERE `uid` = %d", intval($channel_id));
 	q("DELETE FROM `event` WHERE `uid` = %d", intval($channel_id));
 	q("DELETE FROM `item` WHERE `uid` = %d", intval($channel_id));

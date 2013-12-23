@@ -1,6 +1,6 @@
 <?php
 
-define( 'UPDATE_VERSION' , 1085 );
+define( 'UPDATE_VERSION' , 1086 );
 
 /**
  *
@@ -931,6 +931,19 @@ function update_r1084() {
 ) ENGINE = MYISAM DEFAULT CHARSET = utf8");
 
 	if($r)
+		return UPDATE_SUCCESS;
+	return UPDATE_FAILED;
+
+}
+
+function update_r1085() {
+	$r1 = q("ALTER TABLE `photo` CHANGE `desc` `description` TEXT CHARACTER SET utf8 COLLATE utf8_general_ci NOT NULL ");
+
+	$r2 = q("RENAME TABLE `group` TO `groups`");
+
+	$r3 = q("ALTER TABLE `event` CHANGE `desc` `description` TEXT CHARACTER SET utf8 COLLATE utf8_general_ci NOT NULL ");
+
+	if($r1 && $r2 && $r3)
 		return UPDATE_SUCCESS;
 	return UPDATE_FAILED;
 

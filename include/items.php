@@ -3718,7 +3718,7 @@ function items_fetch($arr,$channel = null,$observer_hash = null,$client_mode = C
 	$sql_extra = " AND item.parent IN ( SELECT parent FROM item WHERE (item_flags & " . intval(ITEM_THREAD_TOP) . ") $sql_options ) ";
 
     if($arr['gid'] && $uid) {
-        $r = q("SELECT * FROM `group` WHERE id = %d AND uid = %d LIMIT 1",
+        $r = q("SELECT * FROM `groups` WHERE id = %d AND uid = %d LIMIT 1",
             intval($arr['group']),
             intval($uid)
         );

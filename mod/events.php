@@ -108,7 +108,7 @@ function events_post(&$a) {
 	$datarray['start'] = $start;
 	$datarray['finish'] = $finish;
 	$datarray['summary'] = $summary;
-	$datarray['desc'] = $desc;
+	$datarray['description'] = $desc;
 	$datarray['location'] = $location;
 	$datarray['type'] = $type;
 	$datarray['adjust'] = $adjust;
