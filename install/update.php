@@ -1,6 +1,6 @@
 <?php
 
-define( 'UPDATE_VERSION' , 1086 );
+define( 'UPDATE_VERSION' , 1087 );
 
 /**
  *
@@ -948,3 +948,12 @@ function update_r1085() {
 	return UPDATE_FAILED;
 
 }
+
+function update_r1086() {
+	$r = q("ALTER TABLE `account` ADD `account_level` INT UNSIGNED NOT NULL DEFAULT '0',
+ADD INDEX ( `account_level` )");
+	if($r)
+		return UPDATE_SUCCESS;
+	return UPDATE_FAILED;
+}
+

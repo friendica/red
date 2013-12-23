@@ -69,6 +69,7 @@ function post_init(&$a) {
  *      "success":1, 
  *      "confirm":"q0Ysovd1u..."
  *      "service_class":(optional)
+ *      "level":(optional)
  *    }
  *
  * 'confirm' in this case is the base64url encoded RSA signature of the concatenation of 'secret' with the
@@ -150,6 +151,7 @@ function post_init(&$a) {
 		$remote = remote_user();
 		$result = null;
 		$remote_service_class = '';
+		$remote_level = 0;
 		$remote_hub = $x[0]['hubloc_url'];
 
 		// Also check that they are coming from the same site as they authenticated with originally.
@@ -210,6 +212,8 @@ function post_init(&$a) {
 				}
 				if(array_key_exists('service_class',$j))
 					$remote_service_class = $j['service_class'];
+				if(array_key_exists('level',$j))
+					$remote_level = $j['level'];
 			}
 			// everything is good... maybe
 			if(local_user()) {
@@ -241,6 +245,7 @@ function post_init(&$a) {
 			$_SESSION['visitor_id'] = $x[0]['xchan_hash'];
 			$_SESSION['my_address'] = $address;
 			$_SESSION['remote_service_class'] = $remote_service_class;
+			$_SESSION['remote_level'] = $remote_level;
 			$_SESSION['remote_hub'] = $remote_hub;
 			
 			$arr = array('xchan' => $x[0], 'url' => $desturl, 'session' => $_SESSION);

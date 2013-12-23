@@ -873,6 +873,15 @@ function updateConvItems(mode,data) {
         return a.join('');  
     }  
 
+	function hex2bin(hex) {
+    	var bytes = [], str;
+
+    	for(var i=0; i< hex.length-1; i+=2)
+        	bytes.push(parseInt(hex.substr(i, 2), 16));
+
+    	return String.fromCharCode.apply(String, bytes);    
+	}
+
 	function groupChangeMember(gid, cid, sec_token) {
 		$('body .fakelink').css('cursor', 'wait');
 		$.get('group/' + gid + '/' + cid + "?t=" + sec_token, function(data) {

@@ -105,21 +105,24 @@ function bb_parse_crypt($match) {
 	$attributes = $match[1];
 
 	$algorithm = "";
+
 	preg_match("/alg='(.*?)'/ism", $attributes, $matches);
 	if ($matches[1] != "")
-		$algorithm = html_entity_decode($matches[1],ENT_QUOTES,'UTF-8');
+		$algorithm = $matches[1];
 
 	preg_match("/alg=\&quot\;(.*?)\&quot\;/ism", $attributes, $matches);
 	if ($matches[1] != "")
-		$algorithm = html_entity_decode($matches[1],ENT_QUOTES,'UTF-8');
+		$algorithm = $matches[1];
 
 	$hint = "";
+
+
 	preg_match("/hint='(.*?)'/ism", $attributes, $matches);
 	if ($matches[1] != "")
-		$hint = html_entity_decode($matches[1],ENT_QUOTES,'UTF-8');
+		$hint = $matches[1];
 	preg_match("/hint=\&quot\;(.*?)\&quot\;/ism", $attributes, $matches);
 	if ($matches[1] != "")
-		$hint = html_entity_decode($matches[1],ENT_QUOTES,'UTF-8');
+		$hint = $matches[1];
 
 	$x = random_string();
 

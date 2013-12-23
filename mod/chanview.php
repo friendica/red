@@ -78,10 +78,14 @@ function chanview_content(&$a) {
 		return;
 	}
 
-	$url = (($observer) 
-		? z_root() . '/magic?f=&dest=' . $a->poi['xchan_url'] . '&addr=' . $a->poi['xchan_addr'] 
-		: $a->poi['xchan_url']
-	);
+	if(is_foreigner($a->poi['xchan_hash']))
+		$url = $a->poi['xchan_url'];
+	else {
+		$url = (($observer) 
+			? z_root() . '/magic?f=&dest=' . $a->poi['xchan_url'] . '&addr=' . $a->poi['xchan_addr'] 
+			: $a->poi['xchan_url']
+		);
+	}
 
 	// let somebody over-ride the iframed viewport presentation
 

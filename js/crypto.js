@@ -43,7 +43,7 @@ function red_encrypt(alg, elem,text) {
 
 	// key and hint need to be localised
 
-	var enc_key = prompt(aStr['passphrase']);
+	var enc_key = bin2hex(prompt(aStr['passphrase']));
 
 	// If you don't provide a key you get rot13, which doesn't need a key
 	// but consequently isn't secure.  
@@ -59,7 +59,7 @@ function red_encrypt(alg, elem,text) {
 			// This is the prompt we're going to use when the receiver tries to open it.
 			// Maybe "Grandma's maiden name" or "our secret place" or something. 
 
-			var enc_hint = prompt(aStr['passhint']);
+			var enc_hint = bin2hex(prompt(aStr['passhint']));
 
 			enc_text = CryptoJS.AES.encrypt(text,enc_key);
 
@@ -72,7 +72,7 @@ function red_encrypt(alg, elem,text) {
 			// This is the prompt we're going to use when the receiver tries to open it.
 			// Maybe "Grandma's maiden name" or "our secret place" or something. 
 
-			var enc_hint = prompt(aStr['passhint']);
+			var enc_hint = bin2hex(prompt(aStr['passhint']));
 
 			enc_text = CryptoJS.Rabbit.encrypt(text,enc_key);
 			encrypted = enc_text.toString();
@@ -84,7 +84,7 @@ function red_encrypt(alg, elem,text) {
 			// This is the prompt we're going to use when the receiver tries to open it.
 			// Maybe "Grandma's maiden name" or "our secret place" or something. 
 
-			var enc_hint = prompt(aStr['passhint']);
+			var enc_hint = bin2hex(prompt(aStr['passhint']));
 
 			enc_text = CryptoJS.TripleDES.encrypt(text,enc_key);
 			encrypted = enc_text.toString();
@@ -135,7 +135,7 @@ function red_decrypt(alg,hint,text,elem) {
 	if(alg == 'rot13' || alg == 'triple-rot13')
 		dec_text = str_rot13(text);
 	else {
-		var enc_key = prompt((hint.length) ? hint : aStr['passphrase']);
+		var enc_key = bin2hex(prompt((hint.length) ? hex2bin(hint) : aStr['passphrase']));
 	}
 
 	if(alg == 'aes256') {

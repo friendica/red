@@ -1138,3 +1138,35 @@ function get_default_profile_photo($size = 175) {
 			$scheme = 'rainbow_man';
 		return 'images/default_profile_photos/' . $scheme . '/' . $size . '.jpg';
 }
+
+
+/**
+ *
+ * @function is_foreigner($s)
+ *    Test whether a given identity is NOT a member of the Red Matrix
+ * @param string $s;
+ *    xchan_hash of the identity in question
+ *
+ * @returns boolean true or false
+ *
+ */
+
+function is_foreigner($s) {
+	return((strpbrk($s,':@')) ? true : false);
+}
+
+
+/**
+ *
+ * @function is_member($s)
+ *    Test whether a given identity is a member of the Red Matrix
+ * @param string $s;
+ *    xchan_hash of the identity in question
+ *
+ * @returns boolean true or false
+ *
+ */
+
+function is_member($s) {
+	return((is_foreigner($s)) ? false : true);
+}
