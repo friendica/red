@@ -201,10 +201,10 @@ function syncdirs($uid) {
 
 		}
 
+		$address = $p[0]['channel_address'] . '@' . get_app()->get_hostname();
 
 		if(perm_is_allowed($uid,'','view_profile')) {
-			import_directory_profile($hash,$profile);
-
+			import_directory_profile($hash,$profile,$address,0);
 		}
 		else {
 			// they may have made it private

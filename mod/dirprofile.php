@@ -104,16 +104,42 @@ function dirprofile_init(&$a) {
 							|| (x($profile,'country') == 1))
 						$location = t('Location:');
 
-						$gender = ((x($profile,'gender') == 1) ? t('Gender:') : False);
 	
-						$marital = ((x($profile,'marital') == 1) ?  t('Status:') : False);
+						$marital = ((x($profile,'marital') == 1) ?  t('Status: ') . $profile['marital']  : False);
+						$sexual = ((x($profile,'sexual') == 1) ?  t('Sexual Preference: ') . $profile['sexual'] : False);
 		
-						$homepage = ((x($profile,'homepage') == 1) ?  t('Homepage:') : False);
+//						$homepage = ((x($profile,'homepage') == 1) ?  t('Homepage: ') . $profile['homepage'] : False);
 
-						$about = ((x($profile,'about') == 1) ?  t('About:') : False);
-
+//						$about = ((x($profile,'about') == 1) ?  t('About: ') . $profile['about'] : False);
+						
+						$keywords = ((x($profile,'keywords')) ? $profile['keywords'] : '');
+						if($keywords) {
+							$keywords = str_replace(',',' ', $keywords);
+							$keywords = str_replace('  ',' ', $keywords);
+							$karr = explode(' ', $keywords);
+							$out = '';
+							if($karr) {
+								if(local_user()) {
+									$r = q("select keywords from profile where uid = %d and is_default = 1 limit 1",
+										intval(local_user())
+									);
+									if($r) {
+										$keywords = str_replace(',',' ', $r[0]['keywords']);
+										$keywords = str_replace('  ',' ', $keywords);
+										$marr = explode(' ', $keywords);
+									}
+								}
+								foreach($karr as $k) {
+									if(strlen($out))
+										$out .= ', ';
+									if($marr && in_array($k,$marr))
+										$out .= '<strong>' . $k . '</strong>';
+									else
+										$out .= $k;
+								}
+							}
 			
-
+						}
 						$entry = replace_macros(get_markup_template('direntry_large.tpl'), array(
 							'$id' => ++$t,
 							'$profile_link' => $profile_link,
@@ -128,6 +154,8 @@ function dirprofile_init(&$a) {
 							'$marital'  => $marital,
 							'$homepage' => $homepage,
 							'$about' => $about,
+							'$kw' => (($out) ? t('Keywords: ') : ''),
+							'$keywords' => $out,
 							'$conn_label' => t('Connect'),
 							'$connect' => $connect_link,
 						));

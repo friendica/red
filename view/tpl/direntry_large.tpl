@@ -8,9 +8,18 @@
 </div>
 
 <div class="contact-name" id="directory-name-{{$id}}"  >{{$name}}</div>
-{{if $entry.connect}}
+{{if $connect}}
 <div class="directory-connect"><a href="{{$connect}}">{{$conn_label}}</a></div>
 {{/if}}
 <div class="contact-details">{{$details}}</div>
 </div>
+{{if $marital}}
+<div class="directory-marital">{{$marital}} </div>
+{{/if}}
+{{if $sexual}}
+<div class="directory-sexual">{{$sexual}} </div>
+{{/if}}
+{{if $kw}}
+<div class="directory-keywords">{{$kw}} {{$keywords}}</div>
+{{/if}}
 </div>

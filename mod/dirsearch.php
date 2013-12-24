@@ -172,13 +172,11 @@ function dirsearch_content(&$a) {
 		json_return_and_die($spkt);
 	}
 	else {
-dbg(1);
 		$r = q("SELECT xchan.*, xprof.* from xchan left join xprof on xchan_hash = xprof_hash where ( $logic $sql_extra ) and not ( xchan_flags & %d ) and not ( xchan_flags & %d ) and not ( xchan_flags & %d ) $safesql $order $qlimit ",
 			intval(XCHAN_FLAGS_HIDDEN),
 			intval(XCHAN_FLAGS_ORPHAN),
 			intval(XCHAN_FLAGS_DELETED)
 		);
-dbg(0);
 	}
 
 	$ret['page'] = $page + 1;
@@ -195,8 +193,6 @@ dbg(0);
 			$entry['name']        = $rr['xchan_name'];
 			$entry['hash']        = $rr['xchan_hash'];
 
-//			$entry['updated']     = (($rr['ud_date']) ? $rr['ud_date'] : '0000-00-00 00:00:00');
-//			$entry['update_guid'] = (($rr['ud_guid']) ? $rr['ud_guid'] : ''); 
 			$entry['url']         = $rr['xchan_url'];
 			$entry['photo_l']     = $rr['xchan_photo_l'];
 			$entry['photo']       = $rr['xchan_photo_m'];
@@ -210,6 +206,7 @@ dbg(0);
 			$entry['age']         = $rr['xprof_age'];
 			$entry['gender']      = $rr['xprof_gender'];
 			$entry['marital']     = $rr['xprof_marital'];
+			$entry['sexual']      = $rr['xprof_sexual'];
 			$entry['keywords']    = $rr['xprof_keywords'];
 
 			$entries[] = $entry;
