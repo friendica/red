@@ -132,7 +132,7 @@ function dirprofile_init(&$a) {
 								foreach($karr as $k) {
 									if(strlen($out))
 										$out .= ', ';
-									if($marr && in_array($k,$marr))
+									if($marr && in_arrayi($k,$marr))
 										$out .= '<strong>' . $k . '</strong>';
 									else
 										$out .= $k;

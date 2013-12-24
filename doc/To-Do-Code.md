@@ -23,7 +23,7 @@ We need much more than this, but here are areas where developers can help. Pleas
 
 * Extend WebDAV to provide desktop access to photo albums and existing file (attachment) storage
 
-* Directory - provide a hover popup providing much more detail about the channel of interest. Keywords, additional public profile details, perhaps the last public post, anything else of interest. 
+* Directory - provide a hover popup providing much more detail about the channel of interest. Keywords, additional public profile details, perhaps the last public post, anything else of interest. [Update - we now have this, but it can be improved.] 
 
 * Events module - bring back birthday reminders for friends, fix permissions on events, and provide JS translation support for the calendar overview
 
