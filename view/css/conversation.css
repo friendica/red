@@ -55,6 +55,8 @@
 #profile-expires, 
 #profile-expires, 
 #jot-perms-icon,
+#jot-preview-link,
+#profile-encrypt,
 .hover, .focus {
 	cursor: pointer;
 }

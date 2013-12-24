@@ -70,7 +70,7 @@
 	</div>
 	{{/if}}
 
-	{{if $preview}}<span onclick="preview_post();" id="jot-preview-link" class="fakelink"><i class="icon-eye-open jot-icons" title="{{$preview}}"></i></span>{{/if}}
+	{{if $preview}}<span onclick="preview_post();" id="jot-preview-link"><i class="icon-eye-open jot-icons" title="{{$preview}}"></i></span>{{/if}}
 
 
 	<div id="profile-jot-perms-end"></div>

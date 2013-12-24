@@ -168,6 +168,7 @@ function directory_content(&$a) {
 							'id' => ++$t,
 							'profile_link' => $profile_link,
 							'photo' => $rr['photo'],
+							'hash' => $rr['hash'],
 							'alttext' => $rr['name'] . ' ' . $rr['address'],
 							'name' => $rr['name'],
 							'details' => $pdesc . $details,
@@ -186,7 +187,7 @@ function directory_content(&$a) {
 
 						call_hooks('directory_item', $arr);
 			
-						$entries[] = $entry;
+						$entries[] = $arr['entry'];
 						unset($profile);
 						unset($location);
 
