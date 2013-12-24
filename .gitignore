@@ -10,6 +10,7 @@ home.html
 addon
 *~
 compiled/
+custom/
 
 # patch attempts
 *.orig
