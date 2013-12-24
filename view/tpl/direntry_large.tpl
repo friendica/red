@@ -3,7 +3,7 @@
 
 <div class="contact-photo-wrapper" id="directory-photo-wrapper-{{$id}}" >
 <div class="contact-photo" id="directory-photo-{{$id}}" >
-<a href="{{$profile_link}}" class="directory-profile-link" id="directory-profile-link-{{$id}}" ><img class="directory-photo-img" src="{{$photo}}" alt="{{$alttext}}" title="{{$alttext}}" /></a>
+<a href="{{$profile_link}}" class="directory-profile-link" id="directory-profile-link-{{$id}}" ><img class="directory-photo-img" height="175" width="175" src="{{$photo}}" alt="{{$alttext}}" title="{{$alttext}}" /></a>
 </div>
 </div>
 
