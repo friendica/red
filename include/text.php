@@ -781,6 +781,34 @@ function linkify($s) {
 	return($s);
 }
 
+/**
+ * @function sslify($s)
+ *    Replace media element using http url with https to a local redirector if using https locally
+ * @param string $s
+ *
+ * Looks for HTML tags containing src elements that are http when we're viewing an https page
+ * Typically this throws an insecure content violation in the browser. So we redirect them
+ * to a local redirector which uses https and which redirects to the selected content
+ *
+ * @returns string
+ */
+
+
+function sslify($s) {
+	if(strpos(z_root(),'https:') === false)
+		return $s;
+	$matches = null;
+	$cnt = preg_match_all("/\<(.*?)src=\"(http\:.*?)\"(.*?)\>/",$s,$matches,PREG_SET_ORDER);
+	if($cnt) {
+		foreach($matches as $match) {
+			$s = str_replace($match[2],z_root() . '/sslify?f=&url=' . urlencode($match[2]),$s);
+		}
+	}
+	return $s;
+}
+
+
+
 function get_poke_verbs() {
 	
 	// index is present tense verb
@@ -1165,6 +1193,10 @@ function prepare_body(&$item,$attach = false) {
 
 	if(local_user() == $item['uid'])
 		$s .= format_filer($item);
+
+
+	$s = sslify($s);
+
 
 	// Look for spoiler
 	$spoilersearch = '<blockquote class="spoiler">';
