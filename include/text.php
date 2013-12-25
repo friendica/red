@@ -1195,7 +1195,7 @@ function prepare_body(&$item,$attach = false) {
 		$s .= format_filer($item);
 
 
-//	$s = sslify($s);
+	$s = sslify($s);
 
 
 	// Look for spoiler
