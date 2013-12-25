@@ -1,6 +1,6 @@
 <?php
 
-define( 'UPDATE_VERSION' , 1087 );
+define( 'UPDATE_VERSION' , 1088 );
 
 /**
  *
@@ -952,6 +952,16 @@ function update_r1085() {
 function update_r1086() {
 	$r = q("ALTER TABLE `account` ADD `account_level` INT UNSIGNED NOT NULL DEFAULT '0',
 ADD INDEX ( `account_level` )");
+	if($r)
+		return UPDATE_SUCCESS;
+	return UPDATE_FAILED;
+}
+
+function update_r1087() {
+	$r = q("ALTER TABLE `xprof` ADD `xprof_about` TEXT NOT NULL DEFAULT '',
+ADD `xprof_homepage` CHAR( 255 ) NOT NULL DEFAULT '',
+ADD `xprof_hometown` CHAR( 255 ) NOT NULL DEFAULT '',
+ADD INDEX ( `xprof_hometown` )");
 	if($r)
 		return UPDATE_SUCCESS;
 	return UPDATE_FAILED;

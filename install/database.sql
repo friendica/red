@@ -54,7 +54,7 @@ CREATE TABLE IF NOT EXISTS `account` (
   `account_expires` datetime NOT NULL DEFAULT '0000-00-00 00:00:00',
   `account_expire_notified` datetime NOT NULL DEFAULT '0000-00-00 00:00:00',
   `account_service_class` char(32) NOT NULL DEFAULT '',
-  `account_level` int(10) unsigned NOT NULL DEFAULT 0,
+  `account_level` int(10) unsigned NOT NULL,
   PRIMARY KEY (`account_id`),
   KEY `account_email` (`account_email`),
   KEY `account_service_class` (`account_service_class`),
@@ -848,6 +848,15 @@ CREATE TABLE IF NOT EXISTS `spam` (
   KEY `term` (`term`)
 ) ENGINE=MyISAM DEFAULT CHARSET=utf8;
 
+CREATE TABLE IF NOT EXISTS `sys_perms` (
+  `id` int(10) unsigned NOT NULL AUTO_INCREMENT,
+  `cat` char(255) NOT NULL,
+  `k` char(255) NOT NULL,
+  `v` mediumtext NOT NULL,
+  `public_perm` tinyint(1) unsigned NOT NULL,
+  PRIMARY KEY (`id`)
+) ENGINE=MyISAM DEFAULT CHARSET=utf8;
+
 CREATE TABLE IF NOT EXISTS `term` (
   `tid` int(10) unsigned NOT NULL AUTO_INCREMENT,
   `aid` int(10) unsigned NOT NULL DEFAULT '0',
@@ -915,7 +924,7 @@ CREATE TABLE IF NOT EXISTS `verify` (
   KEY `token` (`token`),
   KEY `meta` (`meta`),
   KEY `created` (`created`)
-) ENGINE=MyISAM DEFAULT CHARSET=utf8;
+) ENGINE=MyISAM  DEFAULT CHARSET=utf8;
 
 CREATE TABLE IF NOT EXISTS `vote` (
   `vote_id` int(10) unsigned NOT NULL AUTO_INCREMENT,
@@ -971,7 +980,7 @@ CREATE TABLE IF NOT EXISTS `xconfig` (
   KEY `xchan` (`xchan`),
   KEY `cat` (`cat`),
   KEY `k` (`k`)
-) ENGINE=MyISAM DEFAULT CHARSET=utf8;
+) ENGINE=MyISAM  DEFAULT CHARSET=utf8;
 
 CREATE TABLE IF NOT EXISTS `xign` (
   `id` int(10) unsigned NOT NULL AUTO_INCREMENT,
@@ -1008,6 +1017,9 @@ CREATE TABLE IF NOT EXISTS `xprof` (
   `xprof_postcode` char(32) NOT NULL DEFAULT '',
   `xprof_country` char(255) NOT NULL DEFAULT '',
   `xprof_keywords` text NOT NULL,
+  `xprof_about` text NOT NULL,
+  `xprof_homepage` char(255) NOT NULL DEFAULT '',
+  `xprof_hometown` char(255) NOT NULL DEFAULT '',
   PRIMARY KEY (`xprof_hash`),
   KEY `xprof_desc` (`xprof_desc`),
   KEY `xprof_dob` (`xprof_dob`),
@@ -1018,7 +1030,8 @@ CREATE TABLE IF NOT EXISTS `xprof` (
   KEY `xprof_region` (`xprof_region`),
   KEY `xprof_postcode` (`xprof_postcode`),
   KEY `xprof_country` (`xprof_country`),
-  KEY `xprof_age` (`xprof_age`)
+  KEY `xprof_age` (`xprof_age`),
+  KEY `xprof_hometown` (`xprof_hometown`)
 ) ENGINE=MyISAM DEFAULT CHARSET=utf8;
 
 CREATE TABLE IF NOT EXISTS `xtag` (
@@ -1030,12 +1043,4 @@ CREATE TABLE IF NOT EXISTS `xtag` (
   KEY `xtag_term` (`xtag_term`),
   KEY `xtag_hash` (`xtag_hash`),
   KEY `xtag_flags` (`xtag_flags`)
-) ENGINE=MyISAM DEFAULT CHARSET=utf8;
-
-CREATE TABLE if not exists `sys_perms` (
-	`id` INT UNSIGNED NOT NULL AUTO_INCREMENT PRIMARY KEY ,
-	`cat` CHAR( 255 ) NOT NULL ,
-	`k` CHAR( 255 ) NOT NULL ,
-	`v` MEDIUMTEXT NOT NULL,
-	`public_perm` TINYINT( 1 ) UNSIGNED NOT NULL
-) ENGINE = MYISAM DEFAULT CHARSET = utf8");
+) ENGINE=MyISAM  DEFAULT CHARSET=utf8;
