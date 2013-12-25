@@ -13,8 +13,6 @@ We need much more than this, but here are areas where developers can help. Pleas
 
 * Integrate the "open site" list with the register page
 
-* "mixed content warning" redirector so that if your server is https (as it should be) so are all your embedded content and media links
-
 * Write more webpage layouts
 
 * Write more webpage widgets 
@@ -24,8 +22,6 @@ We need much more than this, but here are areas where developers can help. Pleas
 * Help with WebDAV and file storage implementation
 
 * Extend WebDAV to provide desktop access to photo albums and existing file (attachment) storage
-
-* Directory - provide a hover popup providing much more detail about the channel of interest. Keywords, additional public profile details, perhaps the last public post, anything else of interest. [Update - we now have this, but it can be improved.] 
 
 * Events module - bring back birthday reminders for friends, fix permissions on events, and provide JS translation support for the calendar overview
 
@@ -45,7 +41,7 @@ We need much more than this, but here are areas where developers can help. Pleas
 
 * Family Account creation - using service classes (an account holder can create a certain number of sub-accounts which are all tied to their subscription - if the subscription lapses they all go away).
 
-* (In Progress) Re-working of widgets so that entire application and page contents (e.g. modules) will be available to and under the control of themes/apps using Comanche layouts.
+* Put mod_admin under Comanche
 
 In many cases some of the work has already been started and code exists so that you needn't start from scratch. Please contact one of the developer channels like Channel One (one@zothub.com) before embarking and we can tell you what we already have and provide some insights on how we envision these features fitting together. 
 
