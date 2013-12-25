@@ -13,6 +13,8 @@ We need much more than this, but here are areas where developers can help. Pleas
 
 * Integrate the "open site" list with the register page
 
+* "mixed content warning" redirector so that if your server is https (as it should be) so are all your embedded content and media links
+
 * Write more webpage layouts
 
 * Write more webpage widgets 

@@ -11,7 +11,7 @@
 </div>
 
 {{if $prevlink}}<div id="photo-prev-link"><a href="{{$prevlink.0}}"><i class="icon-backward photo-icons"></i></div>{{/if}}
-<div id="photo-photo"><a href="{{$photo.href}}" title="{{$photo.title}}" rel="prettyPhoto"><img src="{{$photo.src}}" /></a></div>
+<div id="photo-photo"><a href="{{$photo.href}}" title="{{$photo.title}}" onclick="$.colorbox({href: '{{$photo.href}}'}); return false;" ><img src="{{$photo.src}}" /></a></div>
 {{if $nextlink}}<div id="photo-next-link"><a href="{{$nextlink.0}}"><i class="icon-forward photo-icons"></i></a></div>{{/if}}
 <div id="photo-photo-end"></div>
 <div id="photo-caption">{{$desc}}</div>
