@@ -167,6 +167,10 @@ function syncdirs($uid) {
 		$profile['region']      = $p[0]['region'];
 		$profile['postcode']    = $p[0]['postal_code'];
 		$profile['country']     = $p[0]['country_name'];
+		$profile['about']       = $p[0]['about'];
+		$profile['homepage']    = $p[0]['homepage'];
+		$profile['hometown']    = $p[0]['hometown'];
+
 		if($p[0]['keywords']) {
 			$tags = array();
 			$k = explode(' ',$p[0]['keywords']);

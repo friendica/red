@@ -207,6 +207,9 @@ function dirsearch_content(&$a) {
 			$entry['gender']      = $rr['xprof_gender'];
 			$entry['marital']     = $rr['xprof_marital'];
 			$entry['sexual']      = $rr['xprof_sexual'];
+			$entry['sexual']      = $rr['xprof_about'];
+			$entry['sexual']      = $rr['xprof_homepage'];
+			$entry['sexual']      = $rr['xprof_hometown'];
 			$entry['keywords']    = $rr['xprof_keywords'];
 
 			$entries[] = $entry;

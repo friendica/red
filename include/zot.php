@@ -1644,6 +1644,10 @@ function import_directory_profile($hash,$profile,$addr,$ud_flags = 1, $suppress_
 	$arr['xprof_postcode']     = (($profile['postcode'])    ? htmlspecialchars($profile['postcode'],    ENT_COMPAT,'UTF-8',false) : '');
 	$arr['xprof_country']      = (($profile['country'])    ? htmlspecialchars($profile['country'],    ENT_COMPAT,'UTF-8',false) : '');
 
+	$arr['xprof_about']      = (($profile['about'])    ? htmlspecialchars($profile['about'],    ENT_COMPAT,'UTF-8',false) : '');
+	$arr['xprof_homepage']      = (($profile['homepage'])    ? htmlspecialchars($profile['homepage'],    ENT_COMPAT,'UTF-8',false) : '');
+	$arr['xprof_hometown']      = (($profile['hometown'])    ? htmlspecialchars($profile['hometown'],    ENT_COMPAT,'UTF-8',false) : '');
+
 	$clean = array();
 	if(array_key_exists('keywords',$profile) and is_array($profile['keywords'])) {
 		import_directory_keywords($hash,$profile['keywords']);
@@ -1692,6 +1696,9 @@ function import_directory_profile($hash,$profile,$addr,$ud_flags = 1, $suppress_
 				xprof_region = '%s', 
 				xprof_postcode = '%s', 
 				xprof_country = '%s',
+				xprof_about = '%s',
+				xprof_homepage = '%s',
+				xprof_hometown = '%s',
 				xprof_keywords = '%s'
 				where xprof_hash = '%s' limit 1",
 				dbesc($arr['xprof_desc']),
@@ -1704,6 +1711,9 @@ function import_directory_profile($hash,$profile,$addr,$ud_flags = 1, $suppress_
 				dbesc($arr['xprof_region']),
 				dbesc($arr['xprof_postcode']),
 				dbesc($arr['xprof_country']),
+				dbesc($arr['xprof_about']),
+				dbesc($arr['xprof_homepage']),
+				dbesc($arr['xprof_hometown']),
 				dbesc($arr['xprof_keywords']),
 				dbesc($arr['xprof_hash'])
 			);
@@ -1712,7 +1722,7 @@ function import_directory_profile($hash,$profile,$addr,$ud_flags = 1, $suppress_
 	else {
 		$update = true;
 		logger('import_directory_profile: new profile');
-		$x = q("insert into xprof (xprof_hash, xprof_desc, xprof_dob, xprof_age, xprof_gender, xprof_marital, xprof_sexual, xprof_locale, xprof_region, xprof_postcode, xprof_country, xprof_keywords) values ('%s', '%s', '%s', %d, '%s', '%s', '%s', '%s', '%s', '%s', '%s', '%s') ",
+		$x = q("insert into xprof (xprof_hash, xprof_desc, xprof_dob, xprof_age, xprof_gender, xprof_marital, xprof_sexual, xprof_locale, xprof_region, xprof_postcode, xprof_country, xrpof_about, xprof_homepage, xprof_hometown, xprof_keywords) values ('%s', '%s', '%s', %d, '%s', '%s', '%s', '%s', '%s', '%s', '%s', '%s', '%s', '%s', '%s') ",
 			dbesc($arr['xprof_hash']),
 			dbesc($arr['xprof_desc']),
 			dbesc($arr['xprof_dob']),
@@ -1724,6 +1734,9 @@ function import_directory_profile($hash,$profile,$addr,$ud_flags = 1, $suppress_
 			dbesc($arr['xprof_region']),
 			dbesc($arr['xprof_postcode']),
 			dbesc($arr['xprof_country']),
+			dbesc($arr['xprof_about']),
+			dbesc($arr['xprof_homepage']),
+			dbesc($arr['xprof_hometown']),
 			dbesc($arr['xprof_keywords'])
 		);
 	}

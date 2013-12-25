@@ -126,12 +126,16 @@ function zfinger_init(&$a) {
 		$profile['region']        = $p[0]['region'];
 		$profile['postcode']      = $p[0]['postal_code'];
 		$profile['country']       = $p[0]['country_name'];
+		$profile['about']         = $p[0]['about'];
+		$profile['homepage']      = $p[0]['homepage'];
+		$profile['hometown']      = $p[0]['hometown'];
+
 		if($p[0]['keywords']) {
 			$tags = array();
 			$k = explode(' ',$p[0]['keywords']);
 			if($k) {
 				foreach($k as $kk) {
-					if(trim($kk)) {
+					if(trim($kk," \t\n\r\0\x0B,")) {
 						$tags[] = trim($kk," \t\n\r\0\x0B,");
 					}
 				}

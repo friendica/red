@@ -18,6 +18,15 @@
 {{if $sexual}}
 <div class="directory-sexual">{{$sexual}} </div>
 {{/if}}
+{{if $homepage}}
+<div class="directory-homepage">{{$homepage}} </div>
+{{/if}}
+{{if $hometown}}
+<div class="directory-hometown">{{$hometown}} </div>
+{{/if}}
+{{if $about}}
+<div class="directory-about">{{$about}} </div>
+{{/if}}
 {{if $kw}}
 <div class="directory-keywords">{{$kw}} {{$keywords}}</div>
 {{/if}}

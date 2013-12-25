@@ -1,6 +1,7 @@
 <?php
 
 require_once('include/dir_fns.php');
+require_once('include/bbcode.php');
 
 function dirprofile_init(&$a) {
 
@@ -108,9 +109,10 @@ function dirprofile_init(&$a) {
 						$marital = ((x($profile,'marital') == 1) ?  t('Status: ') . $profile['marital']  : False);
 						$sexual = ((x($profile,'sexual') == 1) ?  t('Sexual Preference: ') . $profile['sexual'] : False);
 		
-//						$homepage = ((x($profile,'homepage') == 1) ?  t('Homepage: ') . $profile['homepage'] : False);
+						$homepage = ((x($profile,'homepage') == 1) ?  t('Homepage: ') . linkify($profile['homepage']) : False);
+						$hometown = ((x($profile,'hometown') == 1) ?  t('Hometown: ') . $profile['hometown']  : False);
 
-//						$about = ((x($profile,'about') == 1) ?  t('About: ') . $profile['about'] : False);
+						$about = ((x($profile,'about') == 1) ?  t('About: ') . bbcode($profile['about']) : False);
 						
 						$keywords = ((x($profile,'keywords')) ? $profile['keywords'] : '');
 						if($keywords) {
@@ -153,6 +155,7 @@ function dirprofile_init(&$a) {
 							'$pdesc'	=> $pdesc,
 							'$marital'  => $marital,
 							'$homepage' => $homepage,
+							'$hometown' => $hometown,
 							'$about' => $about,
 							'$kw' => (($out) ? t('Keywords: ') : ''),
 							'$keywords' => $out,
