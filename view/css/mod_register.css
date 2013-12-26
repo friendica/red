@@ -10,6 +10,11 @@ h2 {
 	margin-top: 5%;
 }
 
+#register-desc, #register-text, #register-sites {
+	font-weight: bold;
+	margin-bottom: 15px;
+}
+
 .register-label {
 	float: left;
 	width: 275px;
