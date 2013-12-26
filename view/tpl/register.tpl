@@ -5,7 +5,7 @@
 
 
 {{if $reg_is}}
-<div id="register-desc" class="descriptive-paragraph">{{$reg_is}}
+<div id="register-desc" class="descriptive-paragraph">{{$reg_is}}</div>
 {{/if}}
 {{if $registertext}}<div id="register-text" class="descriptive-paragraph">{{$registertext}}</div>
 {{/if}}
