@@ -13,6 +13,8 @@ h2 {
 #register-desc, #register-text, #register-sites {
 	font-weight: bold;
 	margin-bottom: 15px;
+	padding: 8px;
+	border: 1px solid #ccc;
 }
 
 .register-label {
