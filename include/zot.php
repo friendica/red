@@ -1384,7 +1384,7 @@ function process_delivery($sender,$arr,$deliveries,$relay) {
 		if((x($arr,'obj_type')) && (activity_match($arr['obj_type'],ACTIVITY_OBJ_EVENT))) {
 			require_once('include/event.php');
 			$ev = bbtoevent($arr['body']);
-			if(x($ev,'desc') && x($ev,'start')) {
+		if(x($ev,'desc') && x($ev,'start')) {
 				$ev['event_xchan'] = $arr['author_xchan'];
 				$ev['uid']         = $channel['channel_id'];
 				$ev['account']     = $channel['channel_account_id'];
@@ -1539,6 +1539,9 @@ function delete_imported_item($sender,$item,$uid) {
 		
 	require_once('include/items.php');
 	drop_item($r[0]['id'],false);
+
+	tag_deliver($uid,$r[0]['id']);
+
 	return $r[0]['id'];
 }
 
