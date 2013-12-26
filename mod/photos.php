@@ -817,25 +817,24 @@ function photos_content(&$a) {
 				
 				$ext = $phototypes[$rr['type']];
 
-				if($a->get_template_engine() === 'internal') {
-					$imgalt_e = template_escape($rr['filename']);
-					$desc_e = template_escape($rr['description']);
-				}
-				else {
-					$imgalt_e = $rr['filename'];
-					$desc_e = $rr['description'];
-				}
+				$imgalt_e = $rr['filename'];
+				$desc_e = $rr['description'];
 
+
+// prettyphoto has potential license issues, so we can no longer include it in core
+// The following lines would need to be modified so that they are provided in theme specific files
+// instead of core modules for themes that wish to make use of prettyphoto. I would suggest
+// the feature as a per-theme display option and putting the rel line inside a template. 
         
-				if(feature_enabled($a->data['channel']['channel_id'],'prettyphoto')){
-				      $imagelink = ($a->get_baseurl() . '/photo/' . $rr['resource_id'] . '.' . $ext );
-				      $rel=("prettyPhoto[pp_gal]");
-				}
-				else {
+//				if(feature_enabled($a->data['channel']['channel_id'],'prettyphoto')){
+//				      $imagelink = ($a->get_baseurl() . '/photo/' . $rr['resource_id'] . '.' . $ext );
+//				      $rel=("prettyPhoto[pp_gal]");
+//				}
+//				else {
 				      $imagelink = ($a->get_baseurl() . '/photos/' . $a->data['channel']['channel_address'] . '/image/' . $rr['resource_id']
 				      . (($_GET['order'] === 'posted') ? '?f=&order=posted' : ''));
 				      $rel=("photo");
-				}
+//				}
       
 				$o .= replace_macros($tpl,array(
 					'$id' => $rr['id'],

@@ -1,5 +1,3 @@
-{{include file="prettyphoto.tpl"}}
-
 <div id="live-display"></div>
 <h3><a href="{{$album.0}}">{{$album.1}}</a></h3>
 
