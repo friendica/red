@@ -73,6 +73,7 @@ var text_8php =
     [ "smile_decode", "text_8php.html#aca0f589be74fab1a460c57e88dad9779", null ],
     [ "smile_encode", "text_8php.html#a44d460fcdee6247c67b9bef3ea15f3e6", null ],
     [ "smilies", "text_8php.html#a3d225b253bb9e0f2498c11647d927b0b", null ],
+    [ "sslify", "text_8php.html#a33bdb5d4bfff2ede7caf61a98ac0a2e9", null ],
     [ "stringify_array_elms", "text_8php.html#a8796f6a9ca592ecdce7b3afc3462aa13", null ],
     [ "theme_attachments", "text_8php.html#af9c9ac3f74c82dc60acfa404d0e9dc53", null ],
     [ "unamp", "text_8php.html#a29d6b804e368d3ef359ee295e96ed4c7", null ],

@@ -116,8 +116,10 @@ Functions</h2></td></tr>
 <tr class="separator:ac9fcd5c4c371998790b5c55c3d0f4633"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:af2802bc13a00a17b867bba7978ba8f58"><td class="memItemLeft" align="right" valign="top">&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="identity_8php.html#af2802bc13a00a17b867bba7978ba8f58">validate_channelname</a> ($name)</td></tr>
 <tr class="separator:af2802bc13a00a17b867bba7978ba8f58"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:abf6a9c6ed92d594f1d4513c4e22a7abd"><td class="memItemLeft" align="right" valign="top">&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="identity_8php.html#abf6a9c6ed92d594f1d4513c4e22a7abd">create_dir_account</a> ()</td></tr>
-<tr class="separator:abf6a9c6ed92d594f1d4513c4e22a7abd"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a1cf83ac2b645de12868edaa3a5718f05"><td class="memItemLeft" align="right" valign="top">&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="identity_8php.html#a1cf83ac2b645de12868edaa3a5718f05">create_sys_channel</a> ()</td></tr>
+<tr class="separator:a1cf83ac2b645de12868edaa3a5718f05"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:aaff86ee3b5984821e7a256c2da5f1a51"><td class="memItemLeft" align="right" valign="top">&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="identity_8php.html#aaff86ee3b5984821e7a256c2da5f1a51">get_sys_channel</a> ()</td></tr>
+<tr class="separator:aaff86ee3b5984821e7a256c2da5f1a51"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a77d2237f1846964634b1c99089c27c7d"><td class="memItemLeft" align="right" valign="top">&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="identity_8php.html#a77d2237f1846964634b1c99089c27c7d">channel_total</a> ()</td></tr>
 <tr class="separator:a77d2237f1846964634b1c99089c27c7d"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a345f4c943d84de502ec6e72d2c813945"><td class="memItemLeft" align="right" valign="top">&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="identity_8php.html#a345f4c943d84de502ec6e72d2c813945">create_identity</a> ($arr)</td></tr>
@@ -150,6 +152,10 @@ Functions</h2></td></tr>
 <tr class="separator:aaeb666872995e3ab8da8f7bc5f3b2bd3"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:ab1485a26b032956e1496fc08c58b83ed"><td class="memItemLeft" align="right" valign="top">&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="identity_8php.html#ab1485a26b032956e1496fc08c58b83ed">get_default_profile_photo</a> ($size=175)</td></tr>
 <tr class="separator:ab1485a26b032956e1496fc08c58b83ed"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:ae2b140df652a55ca11bb6a99005fce35"><td class="memItemLeft" align="right" valign="top">&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="identity_8php.html#ae2b140df652a55ca11bb6a99005fce35">is_foreigner</a> ($s)</td></tr>
+<tr class="separator:ae2b140df652a55ca11bb6a99005fce35"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a9637c557e13d9671f3eeb124ab98212a"><td class="memItemLeft" align="right" valign="top">&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="identity_8php.html#a9637c557e13d9671f3eeb124ab98212a">is_member</a> ($s)</td></tr>
+<tr class="separator:a9637c557e13d9671f3eeb124ab98212a"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table>
 <h2 class="groupheader">Function Documentation</h2>
 <a class="anchor" id="aa870d2c1f558cfd52bef05bc124e8fa4"></a>
@@ -189,23 +195,6 @@ Functions</h2></td></tr>
 
 </div>
 </div>
-<a class="anchor" id="abf6a9c6ed92d594f1d4513c4e22a7abd"></a>
-<div class="memitem">
-<div class="memproto">
-      <table class="memname">
-        <tr>
-          <td class="memname">create_dir_account </td>
-          <td>(</td>
-          <td class="paramname"></td><td>)</td>
-          <td></td>
-        </tr>
-      </table>
-</div><div class="memdoc">
-<p><a class="el" href="identity_8php.html#abf6a9c6ed92d594f1d4513c4e22a7abd">create_dir_account()</a> Create a system channel - which has no account attached</p>
-<p>Currently unused. </p>
-
-</div>
-</div>
 <a class="anchor" id="a345f4c943d84de502ec6e72d2c813945"></a>
 <div class="memitem">
 <div class="memproto">
@@ -228,7 +217,23 @@ Functions</h2></td></tr>
 </dl>
 <dl class="section return"><dt>Returns</dt><dd>array 'success' =&gt; boolean true or false 'message' =&gt; optional error text if success is false 'channel' =&gt; if successful the created channel array </dd></dl>
 
-<p>Referenced by <a class="el" href="identity_8php.html#abf6a9c6ed92d594f1d4513c4e22a7abd">create_dir_account()</a>, and <a class="el" href="new__channel_8php.html#a180b0646957db8290482f02454ad7f23">new_channel_post()</a>.</p>
+<p>Referenced by <a class="el" href="identity_8php.html#a1cf83ac2b645de12868edaa3a5718f05">create_sys_channel()</a>, and <a class="el" href="new__channel_8php.html#a180b0646957db8290482f02454ad7f23">new_channel_post()</a>.</p>
+
+</div>
+</div>
+<a class="anchor" id="a1cf83ac2b645de12868edaa3a5718f05"></a>
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">create_sys_channel </td>
+          <td>(</td>
+          <td class="paramname"></td><td>)</td>
+          <td></td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+<p><a class="el" href="identity_8php.html#a1cf83ac2b645de12868edaa3a5718f05">create_sys_channel()</a> Create a system channel - which has no account attached </p>
 
 </div>
 </div>
@@ -322,6 +327,23 @@ Functions</h2></td></tr>
 
 </div>
 </div>
+<a class="anchor" id="aaff86ee3b5984821e7a256c2da5f1a51"></a>
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">get_sys_channel </td>
+          <td>(</td>
+          <td class="paramname"></td><td>)</td>
+          <td></td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+<p>Referenced by <a class="el" href="identity_8php.html#a1cf83ac2b645de12868edaa3a5718f05">create_sys_channel()</a>.</p>
+
+</div>
+</div>
 <a class="anchor" id="aaeb666872995e3ab8da8f7bc5f3b2bd3"></a>
 <div class="memitem">
 <div class="memproto">
@@ -389,6 +411,56 @@ Functions</h2></td></tr>
 
 </div>
 </div>
+<a class="anchor" id="ae2b140df652a55ca11bb6a99005fce35"></a>
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">is_foreigner </td>
+          <td>(</td>
+          <td class="paramtype">&#160;</td>
+          <td class="paramname"><em>$s</em></td><td>)</td>
+          <td></td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+<p>is_foreigner($s) Test whether a given identity is NOT a member of the Red Matrix </p>
+<dl class="params"><dt>Parameters</dt><dd>
+  <table class="params">
+    <tr><td class="paramtype">string</td><td class="paramname">$s,;</td><td>xchan_hash of the identity in question</td></tr>
+  </table>
+  </dd>
+</dl>
+<dl class="section return"><dt>Returns</dt><dd>boolean true or false </dd></dl>
+
+<p>Referenced by <a class="el" href="chanview_8php.html#a4192c6da888c8c1165851acf9ad4cb8b">chanview_content()</a>, and <a class="el" href="identity_8php.html#a9637c557e13d9671f3eeb124ab98212a">is_member()</a>.</p>
+
+</div>
+</div>
+<a class="anchor" id="a9637c557e13d9671f3eeb124ab98212a"></a>
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">is_member </td>
+          <td>(</td>
+          <td class="paramtype">&#160;</td>
+          <td class="paramname"><em>$s</em></td><td>)</td>
+          <td></td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+<p>is_member($s) Test whether a given identity is a member of the Red Matrix </p>
+<dl class="params"><dt>Parameters</dt><dd>
+  <table class="params">
+    <tr><td class="paramtype">string</td><td class="paramname">$s,;</td><td>xchan_hash of the identity in question</td></tr>
+  </table>
+  </dd>
+</dl>
+<dl class="section return"><dt>Returns</dt><dd>boolean true or false </dd></dl>
+
+</div>
+</div>
 <a class="anchor" id="ad4a2c8caca8f6ae93633ebeca0ed6620"></a>
 <div class="memitem">
 <div class="memproto">
@@ -412,8 +484,6 @@ Functions</h2></td></tr>
         </tr>
       </table>
 </div><div class="memdoc">
-
-<p>Referenced by <a class="el" href="connect_8php.html#ad46a38f32fd7a3d324b1fa26373efa36">connect_init()</a>.</p>
 
 </div>
 </div>
@@ -460,7 +530,7 @@ Functions</h2></td></tr>
 <p>The channel default theme is also selected for use, unless over-riden elsewhere. </p>
 <p>load/reload current theme info</p>
 
-<p>Referenced by <a class="el" href="blocks_8php.html#a2531a8fd51db3cecb2eb20c002c66e12">blocks_content()</a>, <a class="el" href="channel_8php.html#ac7c8c7845741baadf87fae6bc279f3dc">channel_init()</a>, <a class="el" href="common_8php.html#aca62f113655809f41f49042ce9b123c2">common_init()</a>, <a class="el" href="connect_8php.html#ad46a38f32fd7a3d324b1fa26373efa36">connect_init()</a>, <a class="el" href="layouts_8php.html#a6e0193759ad9eef76d3df2db24237b50">layouts_content()</a>, <a class="el" href="page_8php.html#a4d89800c0366a239191b1692c09635cf">page_init()</a>, <a class="el" href="mod_2photos_8php.html#ab950295cd77626f5fe65331a87693014">photos_init()</a>, <a class="el" href="profile_8php.html#ab5d0246be0552e2182a585c1206d22a5">profile_init()</a>, <a class="el" href="profile__photo_8php.html#a140631c56438fbfacb61a1eb43067d02">profile_photo_init()</a>, <a class="el" href="profiles_8php.html#a36f71405ad536228f8bb84a551b23f7e">profiles_init()</a>, <a class="el" href="profperm_8php.html#a17fb64ec05edee1dc94d95438807d6c6">profperm_init()</a>, <a class="el" href="viewconnections_8php.html#a00163d50b17568f7b0e48b1ca9ab7330">viewconnections_init()</a>, and <a class="el" href="webpages_8php.html#af3b7397d4abc153e3d2147740ee1a41d">webpages_content()</a>.</p>
+<p>Referenced by <a class="el" href="achievements_8php.html#a35ae04ada0e227d19671f289a32fb30e">achievements_content()</a>, <a class="el" href="blocks_8php.html#a2531a8fd51db3cecb2eb20c002c66e12">blocks_content()</a>, <a class="el" href="channel_8php.html#ac7c8c7845741baadf87fae6bc279f3dc">channel_init()</a>, <a class="el" href="common_8php.html#aca62f113655809f41f49042ce9b123c2">common_init()</a>, <a class="el" href="connect_8php.html#ad46a38f32fd7a3d324b1fa26373efa36">connect_init()</a>, <a class="el" href="layouts_8php.html#a6e0193759ad9eef76d3df2db24237b50">layouts_content()</a>, <a class="el" href="page_8php.html#a4d89800c0366a239191b1692c09635cf">page_init()</a>, <a class="el" href="mod_2photos_8php.html#ab950295cd77626f5fe65331a87693014">photos_init()</a>, <a class="el" href="profile_8php.html#ab5d0246be0552e2182a585c1206d22a5">profile_init()</a>, <a class="el" href="profile__photo_8php.html#a140631c56438fbfacb61a1eb43067d02">profile_photo_init()</a>, <a class="el" href="profiles_8php.html#a36f71405ad536228f8bb84a551b23f7e">profiles_init()</a>, <a class="el" href="profperm_8php.html#a17fb64ec05edee1dc94d95438807d6c6">profperm_init()</a>, <a class="el" href="viewconnections_8php.html#a00163d50b17568f7b0e48b1ca9ab7330">viewconnections_init()</a>, and <a class="el" href="webpages_8php.html#af3b7397d4abc153e3d2147740ee1a41d">webpages_content()</a>.</p>
 
 </div>
 </div>

@@ -70,6 +70,7 @@ var searchData=
   ['get_5fredirect_5furl',['get_redirect_url',['../classItem.html#a428f448f89a8629055ea3294eb942aea',1,'Item']]],
   ['get_5frel_5flink',['get_rel_link',['../text_8php.html#a3972701c5c83624ec4e2d06242f614e7',1,'text.php']]],
   ['get_5frpost_5fpath',['get_rpost_path',['../zot_8php.html#a8e22dbc6f884be3644a892a876cbd972',1,'zot.php']]],
+  ['get_5fsys_5fchannel',['get_sys_channel',['../identity_8php.html#aaff86ee3b5984821e7a256c2da5f1a51',1,'identity.php']]],
   ['get_5ftags',['get_tags',['../text_8php.html#a4659fbc4e54ddc700c3aa66b9092c623',1,'text.php']]],
   ['get_5ftemplate',['get_template',['../classItem.html#aba23a0a9d89e316d2b343cc46d695d91',1,'Item']]],
   ['get_5ftemplate_5fdata',['get_template_data',['../classConversation.html#a2a96b7a6573ae53db861624659e831cb',1,'Conversation\get_template_data()'],['../classItem.html#ad5dcbe0b94cb2d5719bc5b6bd8ad60c8',1,'Item\get_template_data()']]],

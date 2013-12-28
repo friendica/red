@@ -1,6 +1,7 @@
 var dir_d41ce877eb409a4791b288730010abe2 =
 [
     [ "_well_known.php", "__well__known_8php.html", "__well__known_8php" ],
+    [ "achievements.php", "achievements_8php.html", "achievements_8php" ],
     [ "acl.php", "acl_8php.html", "acl_8php" ],
     [ "admin.php", "admin_8php.html", "admin_8php" ],
     [ "api.php", "mod_2api_8php.html", "mod_2api_8php" ],
@@ -19,6 +20,7 @@ var dir_d41ce877eb409a4791b288730010abe2 =
     [ "contactgroup.php", "contactgroup_8php.html", "contactgroup_8php" ],
     [ "delegate.php", "delegate_8php.html", "delegate_8php" ],
     [ "directory.php", "mod_2directory_8php.html", "mod_2directory_8php" ],
+    [ "dirprofile.php", "dirprofile_8php.html", "dirprofile_8php" ],
     [ "dirsearch.php", "dirsearch_8php.html", "dirsearch_8php" ],
     [ "display.php", "display_8php.html", "display_8php" ],
     [ "editblock.php", "editblock_8php.html", "editblock_8php" ],
@@ -46,6 +48,7 @@ var dir_d41ce877eb409a4791b288730010abe2 =
     [ "login.php", "login_8php.html", "login_8php" ],
     [ "lostpass.php", "lostpass_8php.html", "lostpass_8php" ],
     [ "magic.php", "magic_8php.html", "magic_8php" ],
+    [ "mail.php", "mail_8php.html", "mail_8php" ],
     [ "manage.php", "manage_8php.html", "manage_8php" ],
     [ "match.php", "match_8php.html", "match_8php" ],
     [ "menu.php", "mod_2menu_8php.html", "mod_2menu_8php" ],
@@ -93,6 +96,7 @@ var dir_d41ce877eb409a4791b288730010abe2 =
     [ "sitelist.php", "sitelist_8php.html", "sitelist_8php" ],
     [ "smilies.php", "smilies_8php.html", "smilies_8php" ],
     [ "sources.php", "sources_8php.html", "sources_8php" ],
+    [ "sslify.php", "sslify_8php.html", "sslify_8php" ],
     [ "starred.php", "starred_8php.html", "starred_8php" ],
     [ "subthread.php", "subthread_8php.html", "subthread_8php" ],
     [ "suggest.php", "suggest_8php.html", "suggest_8php" ],
@@ -118,6 +122,7 @@ var dir_d41ce877eb409a4791b288730010abe2 =
     [ "wfinger.php", "wfinger_8php.html", "wfinger_8php" ],
     [ "xchan.php", "xchan_8php.html", "xchan_8php" ],
     [ "xrd.php", "xrd_8php.html", "xrd_8php" ],
+    [ "xref.php", "xref_8php.html", "xref_8php" ],
     [ "zfinger.php", "zfinger_8php.html", "zfinger_8php" ],
     [ "zotfeed.php", "zotfeed_8php.html", "zotfeed_8php" ],
     [ "zping.php", "zping_8php.html", "zping_8php" ]

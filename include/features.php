@@ -28,7 +28,7 @@ function get_features() {
 // in any event this setting should probably be a theme option or plugin 
 //			array('prettyphoto',       t('Enhanced Photo Albums'),                 t('Enable photo album with enhanced features')),
 			//FIXME - needs a description, but how the hell do we explain this to normals?
-			array('sendzid',		t('Extended Identity Sharing'),	t(' ')),
+			array('sendzid',		t('Extended Identity Sharing'),	t('Share your identity with all websites on the internet. When disabled, identity is only shared with sites in the matrix.')),
 			array('expert',       t('Expert Mode'),                 t('Enable Expert Mode to provide advanced configuration options')),
 			array('premium_channel', t('Premium Channel'), t('Allows you to set restrictions and terms on those that connect with your channel')),
 		),
@@ -39,7 +39,7 @@ function get_features() {
 			array('richtext',       t('Richtext Editor'),			t('Enable richtext editor')),
 			array('preview',        t('Post Preview'),				t('Allow previewing posts and comments before publishing them')),
 			array('channel_sources', t('Channel Sources'),          t('Automatically import channel content from other channels or feeds')),
-			array('content_encrypt', t('Even More Encryption'),          t('Allow encryption of content end-to-end with a shared secret key')),
+			array('content_encrypt', t('Even More Encryption'),          t('Allow optional encryption of content end-to-end with a shared secret key')),
 		),
 
 		// Network Tools

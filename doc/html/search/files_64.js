@@ -17,6 +17,7 @@ var searchData=
   ['dir_5ffns_2ephp',['dir_fns.php',['../dir__fns_8php.html',1,'']]],
   ['directory_2ephp',['directory.php',['../mod_2directory_8php.html',1,'']]],
   ['directory_2ephp',['directory.php',['../include_2directory_8php.html',1,'']]],
+  ['dirprofile_2ephp',['dirprofile.php',['../dirprofile_8php.html',1,'']]],
   ['dirsearch_2ephp',['dirsearch.php',['../dirsearch_8php.html',1,'']]],
   ['display_2ephp',['display.php',['../display_8php.html',1,'']]],
   ['docblox_5ferrorchecker_2ephp',['docblox_errorchecker.php',['../docblox__errorchecker_8php.html',1,'']]]

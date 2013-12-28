@@ -24,6 +24,8 @@ var searchData=
   ['is_5fa_5fdate_5farg',['is_a_date_arg',['../text_8php.html#a1557112a774ec00fa06ed6b6f6495506',1,'text.php']]],
   ['is_5fajax',['is_ajax',['../boot_8php.html#ac17fc8a416ea79e9d5cb4dc9a8ff8c5c',1,'boot.php']]],
   ['is_5fcommentable',['is_commentable',['../classConversation.html#a8b47c92b69459d461ea3cc9aae9597a3',1,'Conversation\is_commentable()'],['../classItem.html#ac04525a8be24c12b0a2ae4ca1ba4b967',1,'Item\is_commentable()']]],
+  ['is_5fforeigner',['is_foreigner',['../identity_8php.html#ae2b140df652a55ca11bb6a99005fce35',1,'identity.php']]],
+  ['is_5fmember',['is_member',['../identity_8php.html#a9637c557e13d9671f3eeb124ab98212a',1,'identity.php']]],
   ['is_5fpreview',['is_preview',['../classConversation.html#adf25ce023b69a166c63c6e84e02c136a',1,'Conversation']]],
   ['is_5fsite_5fadmin',['is_site_admin',['../boot_8php.html#aa1e828bbbcba170265eb2668d8daf42e',1,'boot.php']]],
   ['is_5fthreaded',['is_threaded',['../classItem.html#a5b2fafdca55aefeaa08993a5a60529f0',1,'Item']]],

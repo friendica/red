@@ -15,7 +15,10 @@ function sslify_init(&$a) {
 		echo $x['body'];
 		killme();
 	}
-
+	killme();
+	// for some reason when this fallback is in place - it gets triggered
+	// often, (creating mixed content exceptions) even though there is 
+	// nothing obvious missing on the page when we bypass it. 
 	goaway($_REQUEST['url']);
 }
 

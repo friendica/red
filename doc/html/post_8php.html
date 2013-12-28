@@ -141,7 +141,7 @@ Functions</h2></td></tr>
 <p>The sender of this packet is an arbitrary/random site channel. The recipients will be a single recipient corresponding to the guid and guid_sig we have associated with the requesting auth identity</p>
 <p>{ "type":"auth_check", "sender":{ "guid":"kgVFf_...", "guid_sig":"PT9-TApz...", "url":"http:\/\/podunk.edu", "url_sig":"T8Bp7j..." }, "recipients":{ { "guid":"ZHSqb...", "guid_sig":"JsAAXi..." } } "callback":"\/post", "version":1, "secret":"1eaa661", "secret_sig":"eKV968b1..." }</p>
 <p>auth_check messages MUST use encapsulated encryption. This message is sent to the origination site, which checks the 'secret' to see if it is the same as the 'sec' which it passed originally. It also checks the secret_sig which is the secret signed by the destination channel's private key and base64url encoded. If everything checks out, a json packet is returned:</p>
-<p>{ "success":1, "confirm":"q0Ysovd1u..." "service_class":(optional) }</p>
+<p>{ "success":1, "confirm":"q0Ysovd1u..." "service_class":(optional) "level":(optional) }</p>
 <p>'confirm' in this case is the base64url encoded RSA signature of the concatenation of 'secret' with the base64url encoded whirlpool hash of the requestor's guid and guid_sig; signed with the source channel private key. This prevents a man-in-the-middle from inserting a rogue success packet. Upon receipt and successful verification of this packet, the destination site will redirect to the original destination URL and indicate a successful remote login. Service_class can be used by cooperating sites to provide different access rights based on account rights and subscription plans. It is a string whose contents are not defined by protocol. Example: "basic" or "gold".</p>
 
 </div>
