@@ -513,20 +513,28 @@ function guess_image_type($filename, $headers = '') {
 
 }
 
-function import_profile_photo($photo,$xchan) {
+function import_profile_photo($photo,$xchan,$thing = false) {
 
 	$a = get_app();
 
+	$flags = (($thing) ? PHOTO_THING : PHOTO_XCHAN);
+	$album = (($thing) ? 'Things' : 'Contact Photos');
+
 	logger('import_profile_photo: updating channel photo from ' . $photo . ' for ' . $xchan, LOGGER_DEBUG);
 
-	$r = q("select resource_id from photo where xchan = '%s' and scale = 4 limit 1",
-		dbesc($xchan)
-	);
-	if($r) {
-		$hash = $r[0]['resource_id'];
-	}
-	else {
+	if($thing)
 		$hash = photo_new_resource();
+	else {
+		$r = q("select resource_id from photo where xchan = '%s' and (photo_flags & %d ) scale = 4 limit 1",
+			dbesc($xchan),
+			intval(PHOTO_XCHAN)
+		);
+		if($r) {
+			$hash = $r[0]['resource_id'];
+		}
+		else {
+			$hash = photo_new_resource();
+		}
 	}
 
 	$photo_failure = false;
@@ -544,7 +552,7 @@ function import_profile_photo($photo,$xchan) {
 
 		$img->scaleImageSquare(175);
 
-		$p = array('xchan' => $xchan,'resource_id' => $hash, 'filename' => 'Contact Photos', 'photo_flags' => PHOTO_XCHAN, 'scale' => 4);
+		$p = array('xchan' => $xchan,'resource_id' => $hash, 'filename' => basename($photo), 'album' => $album, 'photo_flags' => $flags, 'scale' => 4);
 
 		$r = $img->save($p);
 

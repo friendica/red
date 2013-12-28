@@ -16,7 +16,7 @@ function thing_init(&$a) {
 	$verb = escape_tags($_REQUEST['verb']);
 	$profile_guid = escape_tags($_REQUEST['profile']);
 	$url = $_REQUEST['link'];
-	$photo = $_REQUEST['photo'];
+	$photo = $_REQUEST['img'];
 
 	$hash = random_string();
 
@@ -68,6 +68,14 @@ function thing_init(&$a) {
 	else
 		return;
 
+	$local_photo = null;
+
+	if($photo) {
+		$arr = import_profile_photo($photo,get_observer_hash(),true);
+		$local_photo = $arr[0];
+		$local_photo_type = $arr[3];
+	}
+
 
 	$r = q("select * from term where uid = %d and otype = %d and type = %d and term = '%s' limit 1",
 		intval(local_user()),
@@ -85,7 +93,7 @@ function thing_init(&$a) {
 			intval(TERM_THING),
 			dbesc($name),
 			dbesc(($url) ? $url : z_root() . '/thing/' . $hash),
-			dbesc(($photo) ? $photo : ''),
+			dbesc(($photo) ? $local_photo : ''),
 			dbesc($hash)
 		);
 		$r = q("select * from term where uid = %d and otype = %d and type = %d and term = '%s' limit 1",
@@ -113,8 +121,10 @@ function thing_init(&$a) {
 	info( t('thing/stuff added'));
 
 	$arr = array();
-	$links = array(array('rel' => 'alternate','type' => 'text/html', 
-		'href' => $term['url']));
+	$links = array(array('rel' => 'alternate','type' => 'text/html', 'href' => $term['url']));
+	if($local_photo)
+		$links[] = array('rel' => 'photo', 'type' => $local_photo_type, 'href' => $local_photo);
+
 
 	$objtype = ACTIVITY_OBJ_THING;
 
@@ -139,6 +149,9 @@ function thing_init(&$a) {
 
 	$arr['body'] =  sprintf( $bodyverb, $ulink, $translated_verb, $plink );
 
+	if($local_photo)
+		$arr['body'] .= "\n\n[zmg]" . $local_photo . "[/zmg]";
+
 	$arr['verb'] = $verb;
 	$arr['obj_type'] = $objtype;
 	$arr['object'] = $obj;
@@ -161,8 +174,6 @@ function thing_init(&$a) {
 	
 	$ret = post_activity_item($arr);
 
-	if($ret['success'])
-		proc_run('php','include/notifier.php','tag',$ret['activity']['id']);
 	
 }
 
