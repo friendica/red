@@ -281,7 +281,6 @@ function get_things($profile_hash,$uid) {
 		intval(TERM_OBJ_THING)
 	);
 
-
 	$things = $sorted_things = null;
 
 	$profile_hashes = array();

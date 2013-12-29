@@ -180,10 +180,20 @@ function thing_init(&$a) {
 
 function thing_content(&$a) {
 	
-	/* placeholders */
-
 	if(argc() > 1) {
-		return t('not yet implemented.');
+
+		$r = q("select * from obj left join term on obj_obj = term_hash where term_hash != '' and obj_type = %d and term_hash = '%s' limit 1",
+			intval(TERM_OBJ_THING),
+			dbesc(argv(1))
+		);
+
+		if($r) {
+			return replace_macros(get_markup_template('show_thing.tpl'), array( '$header' => t('Show Thing'), '$thing' => $r[0] ));
+		}
+		else {
+			notice( t('item not found.') . EOL);
+			return;
+		}
 	}
 
 	require_once('include/contact_selectors.php');
