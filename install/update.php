@@ -1,6 +1,6 @@
 <?php
 
-define( 'UPDATE_VERSION' , 1088 );
+define( 'UPDATE_VERSION' , 1089 );
 
 /**
  *
@@ -962,6 +962,16 @@ function update_r1087() {
 ADD `xprof_homepage` CHAR( 255 ) NOT NULL DEFAULT '',
 ADD `xprof_hometown` CHAR( 255 ) NOT NULL DEFAULT '',
 ADD INDEX ( `xprof_hometown` )");
+	if($r)
+		return UPDATE_SUCCESS;
+	return UPDATE_FAILED;
+}
+
+function update_r1088() {
+	$r = q("ALTER TABLE `obj` ADD `allow_cid` MEDIUMTEXT NOT NULL DEFAULT '',
+ADD `allow_gid` MEDIUMTEXT NOT NULL DEFAULT '',
+ADD `deny_cid` MEDIUMTEXT NOT NULL DEFAULT '',
+ADD `deny_gid` MEDIUMTEXT NOT NULL DEFAULT ''");
 	if($r)
 		return UPDATE_SUCCESS;
 	return UPDATE_FAILED;
