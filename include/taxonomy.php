@@ -271,3 +271,71 @@ function obj_verb_selector() {
 	return $o;
 
 }
+
+function get_things($profile_hash,$uid) {
+
+	$sql_extra = (($profile_hash) ? " and obj_page = '" . $profile_hash . "' " : '');
+	
+	$r = q("select * from obj left join term on obj_obj = term_hash where term_hash != '' and uid = %d and obj_type = %d $sql_extra order by obj_verb, term",
+		intval($uid),
+		intval(TERM_OBJ_THING)
+	);
+
+
+	$things = $sorted_things = null;
+
+	$profile_hashes = array();
+
+	if($r) {
+
+		// if no profile_hash was specified (display on profile page mode), match each of the things to a profile name 
+		// (list all my things mode). This is harder than it sounds.
+
+		foreach($r as $rr) {
+			$rr['profile_name'] = '';
+			if(! in_array($rr['term_hash'],$profile_hashes))
+				$profile_hashes[] = $rr['term_hash'];
+		}
+		stringify_array_elms($profile_hashes);
+		if(! $profile_hash) {
+			$exp = explode(',',$profile_hashes);
+			$p = q("select profile_guid as hash, profile_name as name from profile where profile_guid in ( $exp ) ");
+			if($p) {
+				foreach($r as $rr) {
+					foreach($p as $pp) { 
+						if($rr['obj_page'] == $pp['hash']) {
+							$rr['profile_name'] == $pp['name'];
+						}
+					}
+				}
+			}
+ 		}
+
+		$things = array();
+
+		// Use the system obj_verbs array as a sort key, since we don't really
+		// want an alphabetic sort. To change the order, use a plugin to
+		// alter the obj_verbs() array or alter it in code. Unknown verbs come
+		// after the known ones - in no particular order. 
+
+		$v = obj_verbs();
+		foreach($v as $k => $foo)
+			$things[$k] = null;
+		foreach($r as $rr) {
+			if(! $things[$rr['obj_verb']])
+				$things[$rr['obj_verb']] = array();
+			$things[$rr['obj_verb']][] = array('term' => $rr['term'],'url' => $rr['url'],'img' => $rr['imgurl'], 'profile' => $rr['profile_name']);
+		} 
+		$sorted_things = array();
+		if($things) {
+			foreach($things as $k => $v) {
+				if(is_array($things[$k])) {
+					$sorted_things[$k] = $v;
+				}
+			}
+		}
+	}
+
+	return $sorted_things;
+
+}
