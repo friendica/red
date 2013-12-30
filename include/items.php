@@ -2284,7 +2284,7 @@ function tag_deliver($uid,$item_id) {
 
 		$body = preg_replace('/\[share(.*?)\[\/share\]/','',$body);
 
-		$pattern = '/@\[zrl\=' . preg_quote($term['url'],'/') . '\]' . preg_quote($u[0]['channel_name'],'/') . '\[\/zrl\]/';
+		$pattern = '/@\!?\[zrl\=' . preg_quote($term['url'],'/') . '\]' . preg_quote($u[0]['channel_name'],'/') . '\[\/zrl\]/';
 
 		if(! preg_match($pattern,$body,$matches)) {
 			logger('tag_deliver: mention was in a reshare - ignoring');
@@ -2418,7 +2418,7 @@ function tgroup_check($uid,$item) {
 
 	$body = preg_replace('/\[share(.*?)\[\/share\]/','',$item['body']);
 
-	$pattern = '/@\[zrl\=' . preg_quote($term['url'],'/') . '\]' . preg_quote($u[0]['channel_name'],'/') . '\[\/zrl\]/';
+	$pattern = '/@\!?\[zrl\=' . preg_quote($term['url'],'/') . '\]' . preg_quote($u[0]['channel_name'],'/') . '\[\/zrl\]/';
 
 	if(! preg_match($pattern,$body,$matches)) {
 		logger('tgroup_check: mention was in a reshare - ignoring');
