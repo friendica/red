@@ -490,15 +490,20 @@ function item_post(&$a) {
 				if($fullnametagged)
 					continue;
 
-				$success = handle_tag($a, $body, $inform, $str_tags, (local_user()) ? local_user() : $profile_uid , $tag); 
-				logger('handle_tag: ' . print_r($success,tue));
-				if($inform) {
-					logger('inform: ' . $tag . ' ' . print_r($inform,true));
-					if(strpos($inform,'cid:') === 0) {
-						$str_contact_allow .= '<' . substr($inform,4) . '>';
-						$inform = '';	
+				$success = handle_tag($a, $body, $access_tag, $str_tags, (local_user()) ? local_user() : $profile_uid , $tag); 
+				logger('handle_tag: ' . print_r($success,tue), LOGGER_DEBUG);
+				if(($access_tag) && (! $parent_item)) {
+					logger('access_tag: ' . $tag . ' ' . print_r($access_tag,true), LOGGER_DEBUG);
+					if(strpos($access_tag,'cid:') === 0) {
+						$str_contact_allow .= '<' . substr($access_tag,4) . '>';
+						$access_tag = '';	
+					}
+					elseif(strpos($access_tag,'gid:') === 0) {
+						$str_group_allow .= '<' . substr($access_tag,4) . '>';
+						$access_tag = '';	
 					}
 				}
+
 				if($success['replaced']) {
 					$tagged[] = $tag;
 					$post_tags[] = array(
@@ -882,14 +887,14 @@ function item_content(&$a) {
  * the appropiate link. 
  * 
  * @param unknown_type $body the text to replace the tag in
- * @param unknown_type $inform a comma-seperated string containing everybody to inform
+ * @param unknown_type $access_tag  - used to return tag ACL exclusions e.g. @!foo
  * @param unknown_type $str_tags string to add the tag to
  * @param unknown_type $profile_uid
  * @param unknown_type $tag the tag to replace
  *
  * @return boolean true if replaced, false if not replaced
  */
-function handle_tag($a, &$body, &$inform, &$str_tags, $profile_uid, $tag) {
+function handle_tag($a, &$body, &$access_tag, &$str_tags, $profile_uid, $tag) {
 
 	$replaced = false;
 	$r = null;
@@ -944,7 +949,7 @@ function handle_tag($a, &$body, &$inform, &$str_tags, $profile_uid, $tag) {
 		$alias = '';
 		$tagcid = 0;
 
-		//is it some generated name?
+		// is it some generated name?
 
 		if(strrpos($newname,'+')) {
 			//get the id
@@ -984,35 +989,60 @@ function handle_tag($a, &$body, &$inform, &$str_tags, $profile_uid, $tag) {
 			}
 		}
 
-		//$r is set, if someone could be selected
+		// $r is set, if someone could be selected
 
 		if($r) {
 			$profile = $r[0]['xchan_url'];
 			$newname = $r[0]['xchan_name'];
-			//add person's id to $inform if exclusive
+			//add person's id to $access_tag if exclusive
 			if($exclusive) {
-				$inform .= 'cid:' . $r[0]['xchan_hash'];
+				$access_tag .= 'cid:' . $r[0]['xchan_hash'];
 			}
 		}
-	
+		else {
+			// check for a group/collection exclusion tag			
 
-	//if there is an url for this persons profile
-	if(isset($profile)) {
-		$replaced = true;
-		//create profile link
-		$profile = str_replace(',','%2c',$profile);
-		$url = $profile;
-		$newtag = '@' . (($exclusive) ? '!' : '') . '[zrl=' . $profile . ']' . $newname	. '[/zrl]';
-		$body = str_replace('@' . (($exclusive) ? '!' : '') . $name, $newtag, $body);
-		//append tag to str_tags
-		if(! stristr($str_tags,$newtag)) {
-			if(strlen($str_tags))
-				$str_tags .= ',';
-			$str_tags .= $newtag;
+			// note that we aren't setting $replaced even though we're replacing text.
+			// This tag isn't going to get a term attached to it. It's only used for
+			// access control. The link points to out own channel just so it doesn't look
+			// weird - as all the other tags are linked to something. 
+
+			if(local_user() && local_user() == $profile_uid) {
+				require_once('include/group.php');
+				$grp = group_byname($profile_uid,$name);
+				if($grp) {
+					$g = q("select hash from groups where id = %d and visible = 1 limit 1",
+						intval($grp[0]['id'])
+					);
+					if($g && $exclusive) {
+						$access_tag .= 'gid:' . $g[0]['hash'];
+					}
+					$channel = get_app()->get_channel();
+					if($channel) {
+						$newtag = '@' . (($exclusive) ? '!' : '') . '[zrl=' . z_root() . '/channel/' . $channel['channel_address'] . ']' . $newname	. '[/zrl]';
+						$body = str_replace('@' . (($exclusive) ? '!' : '') . $name, $newtag, $body);
+					}
+				}		
+			}
+		}
+
+		//if there is an url for this persons profile
+		if(isset($profile)) {
+			$replaced = true;
+			//create profile link
+			$profile = str_replace(',','%2c',$profile);
+			$url = $profile;
+			$newtag = '@' . (($exclusive) ? '!' : '') . '[zrl=' . $profile . ']' . $newname	. '[/zrl]';
+			$body = str_replace('@' . (($exclusive) ? '!' : '') . $name, $newtag, $body);
+			//append tag to str_tags
+			if(! stristr($str_tags,$newtag)) {
+				if(strlen($str_tags))
+					$str_tags .= ',';
+				$str_tags .= $newtag;
+			}
 		}
 	}
-}
-	return array('replaced' => $replaced, 'termtype' => $termtype, 'term' => $newname, 'url' => $url, 'contact' => $r[0]);	
+	return array('replaced' => $replaced, 'termtype' => $termtype, 'term' => $newname, 'url' => $url, 'contact' => $r[0]);
 }
 
 
