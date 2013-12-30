@@ -494,6 +494,10 @@ function item_post(&$a) {
 				logger('handle_tag: ' . print_r($success,tue));
 				if($inform) {
 					logger('inform: ' . $tag . ' ' . print_r($inform,true));
+					if(strpos($inform,'cid:') === 0) {
+						$str_contact_allow .= '<' . substr($inform,4) . '>';
+						$inform = '';	
+					}
 				}
 				if($success['replaced']) {
 					$tagged[] = $tag;
@@ -987,9 +991,7 @@ function handle_tag($a, &$body, &$inform, &$str_tags, $profile_uid, $tag) {
 			$newname = $r[0]['xchan_name'];
 			//add person's id to $inform if exclusive
 			if($exclusive) {
-				if(strlen($inform))
-					$inform .= ',';
-				$inform .= 'cid:' . $r[0]['abook_id'];
+				$inform .= 'cid:' . $r[0]['xchan_hash'];
 			}
 		}
 	
