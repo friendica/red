@@ -237,8 +237,10 @@ function thing_content(&$a) {
 		}
 	}
 
-	if(! local_user())
+	if(! local_user()) {
+		notice( t('Permission denied.') . EOL);
 		return;
+	}
 
 	$thing_hash = '';
 
