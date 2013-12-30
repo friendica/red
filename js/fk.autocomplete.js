@@ -151,7 +151,7 @@ ACPopup.prototype.onkey = function(event){
 }
 
 function ContactAutocomplete(element,backend_url){
-	this.pattern=/@([^ \n]+)$/;
+	this.pattern=/@(\!*)([^ \n]+)$/;
 	this.popup=null;
 	var that = this;
 	
@@ -170,7 +170,7 @@ function ContactAutocomplete(element,backend_url){
 				if (that.popup===null){
 					that.popup = new ACPopup(this, backend_url);
 				}
-				if (that.popup.ready && match[1]!==that.popup.searchText) that.popup.search(match[1]);
+				if (that.popup.ready && match[2]!==that.popup.searchText) that.popup.search(match[2]);
 				if (!that.popup.ready) that.popup=null;
 				
 			} else {
