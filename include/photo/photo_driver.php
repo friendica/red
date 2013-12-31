@@ -549,8 +549,28 @@ function import_profile_photo($photo,$xchan,$thing = false) {
 
 	$img = photo_factory($img_str, $type);
 	if($img->is_valid()) {
+		$width = $img->getWidth();
+		$height = $img->getHeight();
+	
+		if($width && $height) {
+			if(($width / $height) > 1.2) {
+				// crop out the sides
+				$margin = $width - $height;
+				$img->cropImage(175,($margin / 2),0,$height,$height); 
+			}
+			elseif(($height / $width) > 1.2) {
+				// crop out the bottom
+				$margin = $height - $width;
+				$img->cropImage(175,0,0,$width,$width);
 
-		$img->scaleImageSquare(175);
+			}
+			else {
+				$img->scaleImageSquare(175);
+			}
+
+		}
+		else 
+			$photo_failure = true;
 
 		$p = array('xchan' => $xchan,'resource_id' => $hash, 'filename' => basename($photo), 'album' => $album, 'photo_flags' => $flags, 'scale' => 4);
 
