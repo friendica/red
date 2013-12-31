@@ -29,8 +29,6 @@ We need much more than this, but here are areas where developers can help. Pleas
 
 * Provide RSS feed support which look like channels (in matrix only - copyright issues)
 
-* provide either auto-crop or manual crop for "thing" photos to preserve aspect ratio when scaled
-
 * Create mobile clients for the top platforms - which involves extending the API so that we can do stuff far beyond the current crop of Twitter/Statusnet clients. Ditto for mobile themes. We can probably use something like the Friendica Android app as a base to start from.  
  
 * Activity Stream generation for liking things, liking channels and other combinations.
