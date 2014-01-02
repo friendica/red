@@ -73,46 +73,39 @@ class RedInode implements DAV\INode {
 class RedDirectory extends DAV\Node implements DAV\ICollection {
 
 	private $red_path;
+	private $ext_path;
 	private $root_dir = '';
-	private $dir_key;
+//	private $dir_key;
 	private $auth;
-	private $channel_id;
+//	private $channel_id;
 
 
-	function __construct($red_path,&$auth_plugin) {
-		logger('RedDirectory::__construct()');
-		$this->red_path = $red_path;
+	function __construct($ext_path,&$auth_plugin) {
+		logger('RedDirectory::__construct() ' . $ext_path);
+		$this->ext_path = $ext_path;
+		$this->red_path = ((strpos($ext_path,'/cloud') === 0) ? substr($ext_path,6) : $ext_path);
+		if(! $this->red_path)
+			$this->red_path = '/';
 		$this->auth = $auth_plugin;
-		logger('RedDirectory: ' . print_r($this->auth,true));
+		logger('Red_Directory: ' . print_r($this,true));
+
 
 	}
 
 	function getChildren() {
 
-		logger('RedDirectory::getChildren : ' . print_r($this->auth,true));
+		logger('RedDirectory::getChildren : ' . print_r($this,true));
+
+		if(get_config('system','block_public') && (! $this->auth->channel_id) && (! $this->auth->observer)) {
+			throw new DAV\Exception\Forbidden('Permission denied.');
+			return;
+		}
 
 		if(! perm_is_allowed($this->auth->channel_id,$this->auth->observer,'view_storage'))
 			return array();
 
-		if($this->red_path === '/' . $this->auth->channel_name) {
 
-			return new RedFile('/' . $this->auth->channel_name . '/' . 'test',$this->auth);
-
-		}
-
-
-
-		$ret = array();
-		$r = q("select distinct filename from attach where folder = '%s' and uid = %d group by filename",
-			dbesc($this->dir_key),
-			intval($this->channel_id)
-		);
-		if($r) {
-			foreach($r as $rr) {
-				$ret[] = $rr['filename'];
-			}
-		}
-		return $ret;
+		return RedCollectionData($this->red_path,$this->auth);
 
 	}
 
@@ -121,48 +114,34 @@ class RedDirectory extends DAV\Node implements DAV\ICollection {
 
 
 		logger('RedDirectory::getChild : ' . $name);
-		logger('RedDirectory::getChild red_path : ' . $this->red_path);
+		logger('RedDirectory::getChild : ' . print_r($this,true));
 
-		logger('RedDirectory::getChild : ' . print_r($this->auth,true));
-
-
+		if(get_config('system','block_public') && (! $this->auth->channel_id) && (! $this->auth->observer)) {
+			throw new DAV\Exception\Forbidden('Permission denied.');
+			return;
+		}
+ 
 		if(! perm_is_allowed($this->auth->channel_id,$this->auth->observer,'view_storage')) {
 			throw new DAV\Exception\Forbidden('Permission denied.');
 			return;
 		}
 
-
-		// These should be constants
-
-		if($this->red_path == 'store' && $name == 'cloud') {
-			return new RedDirectory('/' . $this->auth->channel_name,$this->auth);
-		}
-		
-		if($this->red_path === '/' . $this->auth->channel_name) {
-
-			return new RedFile('/' . $this->auth->channel_name . '/' . 'test',$this->auth);
-
+		if($this->red_path === '/' && $name === 'cloud') {
+			return new RedDirectory('/cloud', $this->auth);
 		}
 
-		// FIXME check file revisions
 
-
-		$r = q("select * from attach where folder = '%s' and filename = '%s' and uid = %d limit 1",
-			dbesc($this->dir_key),
-			dbesc($name),
-			dbesc($this->auth->channel_id)
-		);
-		if(! $r) {
-			throw new DAV\Exception\NotFound('The file with name: ' . $name . ' could not be found');
-      	}
-
+		$x = RedFileData('/cloud' . (($this->red_path === '/') ? '' : '/') . '/' . $name, $this->auth);
+		logger('RedFileData returns: ' . print_r($x,true));
+		if($x)
+			return $x;
+		throw new DAV\Exception\NotFound('The file with name: ' . $name . ' could not be found');
 		
 	}
 
 	function getName() {
-		logger('RedDirectory::getName : ' . print_r($this->auth,true));
-
-
+		logger('RedDirectory::getName : ' . print_r($this,true));
+		return (basename($this->red_path));
 	}
 
 
@@ -250,34 +229,181 @@ class RedFile extends DAV\Node implements DAV\IFile {
 
 }
 
+function RedChannelList(&$auth) {
 
-function RedFileData($file, $auth) {
+	$ret = array();
+
+	$r = q("select channel_address from channel where not (channel_pageflags & %d)",
+		intval(PAGE_REMOVED)
+	);
+
+	if($r) {
+		foreach($r as $rr) {
+			$ret[] = new RedDirectory('/cloud/' . $rr['channel_address'],$auth);
+		}
+	}
+	return $ret;
+
+}
 
 
-	if(substr($file,0,1) !== '/')
-		return null;
-	$path_arr = explode('/',$file);
+function RedCollectionData($file,&$auth) {
+
+	$ret = array();
+
+
+	$x = strpos($file,'/cloud');
+	if($x === 0) {
+		$file = substr($file,6);
+	}
+
+	if((! $file) || ($file === '/')) {
+		return RedChannelList($auth);
+
+	}
+
+	$file = trim($file,'/');
+	$path_arr = explode('/', $file);
+	
 	if(! $path_arr)
 		return null;
 
 	$channel_name = $path_arr[0];
 
+	$r = q("select channel_id from channel where channel_name = '%s' limit 1",
+		dbesc($channel_name)
+	);
+	if(! $r)
+		return null;
+
+	$channel_id = $r[0]['channel_id'];
+
+	$path = '/' . $channel_name;
+
 	$folder = '';
 
-	for($x = 1; $x < count($path_arr); $x ++) {
-		
-		$r = q("select distinct filename from attach where folder = '%s' and filename = '%s' and uid = %d group by filename",
+	for($x = 1; $x < count($path_arr); $x ++) {		
+		$r = q("hash, filename, flags from attach where folder = '%s' and (flags & %d)",
 			dbesc($folder),
-			dbesc($path_arr[$x]),
-			intval($this->auth->channel_id)
+			intval($channel_id),
+			intval(ATTACH_FLAG_DIR)
 		);
-
-		if($r && ( $r[0]['flags'] && ATTACH_FLAG_DIR)) {
-			$folder = $r[0]['filename'];
-		}
+		if($r && ( $r[0]['flags'] & ATTACH_FLAG_DIR)) {
+			$folder = $r[0]['hash'];
+			$path = $path . '/' . $r[0]['filename'];
+		}	
 	}
 
-	return $r[0];
+	if($path !== '/' . $file) {
+		logger("RedCollectionData: Path mismatch: $path !== /$file");
+		return NULL;
+	}
+
+	$ret = array();
+
+	$r = q("select filename from attach where folder = '%s' group by filename",
+		dbesc($folder),
+		intval($channel_id),
+		intval(ATTACH_FLAG_DIR)
+	);
+
+	foreach($r as $rr) {
+		if($rr['flags'] & ATTACH_FLAG_DIR)
+			$ret[] = new RedDirectory('/cloud' . $path . '/' . $rr['filename'],$auth);
+		else
+			$ret[] = newRedFile('/cloud' . $path . '/' . $rr['filename'],$auth);
+	}
+
+	return $ret;
+
+}
+
+function RedFileData($file, &$auth) {
+
+logger('RedFileData:' . $file);
+
+
+	$x = strpos($file,'/cloud');
+	if($x === 0) {
+		$file = substr($file,6);
+	}
+
+logger('RedFileData2: ' . $file);
+
+	if((! $file) || ($file === '/')) {
+		return RedDirectory('/',$auth);
+
+	}
+
+	$file = trim($file,'/');
+
+logger('file=' . $file);
+
+	$path_arr = explode('/', $file);
+	
+	if(! $path_arr)
+		return null;
+
+	logger("file = $file - path = " . print_r($path_arr,true));
+
+	$channel_name = $path_arr[0];
+//dbg(1);
+
+	$r = q("select channel_id from channel where channel_address = '%s' limit 1",
+		dbesc($channel_name)
+	);
+
+//dbg(0);
+
+	if(! $r)
+		return null;
+
+	$channel_id = $r[0]['channel_id'];
+
+	$path = '/' . $channel_name;
+
+	$folder = '';
+//dbg(1);
+	for($x = 1; $x < count($path_arr); $x ++) {		
+		$r = q("hash, filename, flags from attach where folder = '%s' and uid = %d and (flags & %d)",
+			dbesc($folder),
+			intval($channel_id),
+			intval(ATTACH_FLAG_DIR)
+		);
+		if($r && ( $r[0]['flags'] & ATTACH_FLAG_DIR)) {
+			$folder = $r[0]['hash'];
+			$path = $path . '/' . $r[0]['filename'];
+		}	
+	}
+//dbg(0);
+
+	if($path === '/' . $file) {
+		// final component was a directory.
+		return new RedDirectory('/cloud/' . $file,$auth);
+	}
+
+//	//if($path !== dirname($file)) {
+//		logger("RedFileData: Path mismatch: $path !== dirname($file)");
+//		return NULL;
+//	}
+
+	$ret = array();
+//dbg(1);
+	$r = q("select filename from attach where folder = '%s' and filename = '%s' and uid = %d group by filename limit 1",
+		dbesc($folder),
+		basename($file),
+		intval($channel_id)
+
+	);
+//dbg(0);
+	foreach($r as $rr) {
+		if($rr['flags'] & ATTACH_FLAG_DIR)
+			$ret[] = new RedDirectory($path . '/' . $rr['filename'],$auth);
+		else
+			$ret[] = newRedFile($path . '/' . $rr['filename'],$auth);
+	}
+
+	return $ret[0];
 
 }
 

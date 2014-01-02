@@ -93,7 +93,7 @@ class RedBasicAuth extends Sabre\DAV\Auth\Backend\AbstractBasic {
 }
 
 
-function cloud_init() {
+function cloud_init(&$a) {
 
 	if(! get_config('system','enable_cloud'))
 		killme();
@@ -102,7 +102,7 @@ function cloud_init() {
 
 	$auth = new RedBasicAuth();
 
-	$rootDirectory = new RedDirectory('store',$auth);
+	$rootDirectory = new RedDirectory('/cloud',$auth);
 	$server = new DAV\Server($rootDirectory);
 	$lockBackend = new DAV\Locks\Backend\File('store/data/locks');
 	$lockPlugin = new DAV\Locks\Plugin($lockBackend);
@@ -112,7 +112,6 @@ function cloud_init() {
 
 	$auth->Authenticate($server,'Red Matrix');
 
-
 	$browser = new DAV\Browser\Plugin();
 	$server->addPlugin($browser);
 
@@ -120,6 +119,5 @@ function cloud_init() {
 	// All we need to do now, is to fire up the server
 	$server->exec();
 
-	exit;
-
+	killme();
 }
