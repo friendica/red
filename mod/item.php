@@ -651,6 +651,7 @@ function item_post(&$a) {
 
 		$datarray['owner'] = $owner_xchan;
 		$datarray['author'] = $observer;
+		$datarray['attach'] = json_encode($datarray['attach']);
 		$o = conversation($a,array($datarray),'search',false,'preview');
 		logger('preview: ' . $o, LOGGER_DEBUG);
 		echo json_encode(array('preview' => $o));
