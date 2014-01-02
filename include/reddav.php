@@ -1,7 +1,7 @@
 <?php /** @file */
 
 use Sabre\DAV;
-    require_once('vendor/autoload.php');
+require_once('vendor/autoload.php');
 
 class RedInode implements DAV\INode {
 
@@ -70,22 +70,37 @@ class RedInode implements DAV\INode {
 }
 
 
-abstract class RedDirectory extends DAV\Node implements DAV\ICollection {
+class RedDirectory extends DAV\Node implements DAV\ICollection {
 
 	private $red_path;
+	private $root_dir = '';
 	private $dir_key;
 	private $auth;
 	private $channel_id;
 
-	function __construct($red_path,$auth_plugin) {
+
+	function __construct($red_path,&$auth_plugin) {
+		logger('RedDirectory::__construct()');
 		$this->red_path = $red_path;
 		$this->auth = $auth_plugin;
+		logger('RedDirectory: ' . print_r($this->auth,true));
+
 	}
 
 	function getChildren() {
 
-		if(! perm_is_allowed($this->channel_id,'','view_storage'))
+		logger('RedDirectory::getChildren : ' . print_r($this->auth,true));
+
+		if(! perm_is_allowed($this->auth->channel_id,$this->auth->observer,'view_storage'))
 			return array();
+
+		if($this->red_path === '/' . $this->auth->channel_name) {
+
+			return new RedFile('/' . $this->auth->channel_name . '/' . 'test',$this->auth);
+
+		}
+
+
 
 		$ret = array();
 		$r = q("select distinct filename from attach where folder = '%s' and uid = %d group by filename",
@@ -103,23 +118,51 @@ abstract class RedDirectory extends DAV\Node implements DAV\ICollection {
 
 
 	function getChild($name) {
-		if(! perm_is_allowed($this->channel_id,'','view_storage')) {
+
+
+		logger('RedDirectory::getChild : ' . $name);
+		logger('RedDirectory::getChild red_path : ' . $this->red_path);
+
+		logger('RedDirectory::getChild : ' . print_r($this->auth,true));
+
+
+		if(! perm_is_allowed($this->auth->channel_id,$this->auth->observer,'view_storage')) {
 			throw new DAV\Exception\Forbidden('Permission denied.');
 			return;
 		}
 
-// FIXME check revisions
+
+		// These should be constants
+
+		if($this->red_path == 'store' && $name == 'cloud') {
+			return new RedDirectory('/' . $this->auth->channel_name,$this->auth);
+		}
+		
+		if($this->red_path === '/' . $this->auth->channel_name) {
+
+			return new RedFile('/' . $this->auth->channel_name . '/' . 'test',$this->auth);
+
+		}
+
+		// FIXME check file revisions
+
 
 		$r = q("select * from attach where folder = '%s' and filename = '%s' and uid = %d limit 1",
 			dbesc($this->dir_key),
 			dbesc($name),
-			dbesc($this->channel_id)
+			dbesc($this->auth->channel_id)
 		);
 		if(! $r) {
 			throw new DAV\Exception\NotFound('The file with name: ' . $name . ' could not be found');
       	}
 
 		
+	}
+
+	function getName() {
+		logger('RedDirectory::getName : ' . print_r($this->auth,true));
+
+
 	}
 
 
@@ -136,10 +179,13 @@ abstract class RedDirectory extends DAV\Node implements DAV\ICollection {
 
 
 	function childExists($name) {
+
+		logger('RedDirectory::childExists : ' . print_r($this->auth,true));
+
 		$r = q("select distinct filename from attach where folder = '%s' and filename = '%s' and uid = %d group by filename",
 			dbesc($this->dir_key),
 			dbesc($name),
-			intval($this->channel_id)
+			intval($this->auth->channel_id)
 		);
 		if($r)
 			return true;
@@ -150,17 +196,27 @@ abstract class RedDirectory extends DAV\Node implements DAV\ICollection {
 }
 
 
-abstract class RedFile extends DAV\Node implements DAV\IFile {
+class RedFile extends DAV\Node implements DAV\IFile {
 
 	private $data;
+	private $auth;
+	private $name;
 
+	function __construct($name, &$auth) {
+		logger('RedFile::_construct: ' . $name);
+		$this->name = $name;
+		$this->auth = $auth;
+		$this->data = RedFileData($name,$auth);
 
-	function __construct($data) {
-		$this->data = $data;
-
+		logger('RedFile::_construct: ' . print_r($this->data,true));
 	}
 
 
+	function getName() {
+		logger('RedFile::getName');
+		return basename($data);
+
+	}
 
 	function put($data) {
 
@@ -180,17 +236,49 @@ abstract class RedFile extends DAV\Node implements DAV\IFile {
 
 
 	function getContentType() {
-		return $this->data['filetype'];
+		$type = 'text/plain';
+		return $type;
+
+//		return $this->data['filetype'];
 	}
 
 
 	function getSize() {
-		return $this->data['filesize'];
+		return 33122;
+//		return $this->data['filesize'];
 	}
 
 }
 
 
+function RedFileData($file, $auth) {
 
+
+	if(substr($file,0,1) !== '/')
+		return null;
+	$path_arr = explode('/',$file);
+	if(! $path_arr)
+		return null;
+
+	$channel_name = $path_arr[0];
+
+	$folder = '';
+
+	for($x = 1; $x < count($path_arr); $x ++) {
+		
+		$r = q("select distinct filename from attach where folder = '%s' and filename = '%s' and uid = %d group by filename",
+			dbesc($folder),
+			dbesc($path_arr[$x]),
+			intval($this->auth->channel_id)
+		);
+
+		if($r && ( $r[0]['flags'] && ATTACH_FLAG_DIR)) {
+			$folder = $r[0]['filename'];
+		}
+	}
+
+	return $r[0];
+
+}
 
 

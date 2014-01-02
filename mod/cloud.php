@@ -46,6 +46,11 @@
 
 class RedBasicAuth extends Sabre\DAV\Auth\Backend\AbstractBasic {
 
+	public $channel_name = '';
+	public $channel_id = 0;
+	public $channel_hash = '';
+	public $observer = '';
+
     protected function validateUserPass($username, $password) {
 		require_once('include/auth.php');
 		$record = account_verify_password($email,$pass);
@@ -56,10 +61,13 @@ class RedBasicAuth extends Sabre\DAV\Auth\Backend\AbstractBasic {
 			);
 			if($r) {
 				$this->currentUser = $r[0]['channel_address'];
+				$this->channel_name = $r[0]['channel_address'];
+				$this->channel_id = $r[0]['channel_id'];
+				$this->channel_hash = $this->observer = $r[0]['channel_hash'];
 				return true;
 			}
 		}
-		$r = q("select channel_account_id from channel where channel_address = '%s' limit 1",
+		$r = q("select * from channel where channel_address = '%s' limit 1",
 			dbesc($username)
 		);
 		if($r) {
@@ -71,6 +79,9 @@ class RedBasicAuth extends Sabre\DAV\Auth\Backend\AbstractBasic {
 			        if(($record['account_flags'] == ACCOUNT_OK) || ($record['account_flags'] == ACCOUNT_UNVERIFIED)
             		&& (hash('whirlpool',$record['account_salt'] . $password) === $record['account_password'])) {
 			            logger('(DAV) RedBasicAuth: password verified for ' . $username);
+						$this->channel_name = $r[0]['channel_address'];
+						$this->channel_id = $r[0]['channel_id'];
+						$this->channel_hash = $r[0]['channel_hash'];
             			return true;
         			}
     			}
@@ -87,16 +98,23 @@ function cloud_init() {
 	if(! get_config('system','enable_cloud'))
 		killme();
 
-	$rootDirectory = new DAV\FS\Directory('store');
+	require_once('include/reddav.php');
+
+	$auth = new RedBasicAuth();
+
+	$rootDirectory = new RedDirectory('store',$auth);
 	$server = new DAV\Server($rootDirectory);
 	$lockBackend = new DAV\Locks\Backend\File('store/data/locks');
 	$lockPlugin = new DAV\Locks\Plugin($lockBackend);
 
 	$server->addPlugin($lockPlugin);
 
-	$auth = new RedBasicAuth();
 
 	$auth->Authenticate($server,'Red Matrix');
+
+
+	$browser = new DAV\Browser\Plugin();
+	$server->addPlugin($browser);
 
 
 	// All we need to do now, is to fire up the server
