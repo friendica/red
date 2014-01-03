@@ -58,7 +58,7 @@ function page_content(&$a) {
 
 	$r = q("select item.* from item left join item_id on item.id = item_id.iid
 		where item.uid = %d and sid = '%s' and service = 'WEBPAGE' and 
-		(item_restrict & %d) $sql_options $revision limit 1",
+		item_restrict = %d $sql_options $revision limit 1",
 		intval($u[0]['channel_id']),
 		dbesc($page_id),
 		intval(ITEM_WEBPAGE)
