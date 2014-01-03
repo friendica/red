@@ -112,7 +112,8 @@ function editwebpage_content(&$a) {
 		'$editselect' =>  (($plaintext) ? 'none' : '/(profile-jot-text|prvmail-text)/'),
 		'$ispublic' => '&nbsp;', // t('Visible to <strong>everybody</strong>'),
 		'$geotag' => $geotag,
-		'$nickname' => $a->user['nickname']
+		'$nickname' => $a->user['nickname'],
+		'$confirmdelete' => t('Delete webpage?')
 	));
 
 	
@@ -185,7 +186,7 @@ function editwebpage_content(&$a) {
 	$ob = get_observer_hash();
 
 	if(($itm[0]['author_xchan'] === $ob) || ($itm[0]['owner_xchan'] === $ob))
-		$o .= '<br /><br /><a href="item/drop/' . $itm[0]['id'] . '" >' . t('Delete Webpage') . '</a><br />';
+		$o .= '<br /><br /><a class="page-delete-link" href="item/drop/' . $itm[0]['id'] . '" >' . t('Delete Webpage') . '</a><br />';
 
 	return $o;
 
