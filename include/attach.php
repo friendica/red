@@ -79,17 +79,12 @@ function z_mime_content_type($filename) {
 		if (array_key_exists($ext, $mime_types)) {
 			return $mime_types[$ext];
 		}
+
+
 	}
-// can't use this because we're just passing a name, e.g. not a file that can be opened
-//	elseif (function_exists('finfo_open')) {
-//		$finfo = @finfo_open(FILEINFO_MIME);
-//		$mimetype = @finfo_file($finfo, $filename);
-//		@finfo_close($finfo);
-//		return $mimetype;
-//	}
-	else {
-		return 'application/octet-stream';
-	}
+
+	return 'application/octet-stream';
+
 }
 
 
