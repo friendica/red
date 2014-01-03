@@ -75,9 +75,8 @@ class RedDirectory extends DAV\Node implements DAV\ICollection {
 	private $red_path;
 	private $ext_path;
 	private $root_dir = '';
-//	private $dir_key;
 	private $auth;
-//	private $channel_id;
+
 
 
 	function __construct($ext_path,&$auth_plugin) {
@@ -101,9 +100,10 @@ class RedDirectory extends DAV\Node implements DAV\ICollection {
 			return;
 		}
 
-		if(! perm_is_allowed($this->auth->channel_id,$this->auth->observer,'view_storage'))
-			return array();
-
+		if(! perm_is_allowed($this->auth->channel_id,$this->auth->observer,'view_storage')) {
+			throw new DAV\Exception\Forbidden('Permission denied.');
+			return;
+		}
 
 		return RedCollectionData($this->red_path,$this->auth);
 
@@ -130,8 +130,7 @@ class RedDirectory extends DAV\Node implements DAV\ICollection {
 			return new RedDirectory('/cloud', $this->auth);
 		}
 
-
-		$x = RedFileData('/cloud' . (($this->red_path === '/') ? '' : '/') . '/' . $name, $this->auth);
+		$x = RedFileData($this->ext_path . '/' . $name, $this->auth);
 		logger('RedFileData returns: ' . print_r($x,true));
 		if($x)
 			return $x;
@@ -141,16 +140,29 @@ class RedDirectory extends DAV\Node implements DAV\ICollection {
 
 	function getName() {
 		logger('RedDirectory::getName : ' . print_r($this,true));
+		logger('RedDirectory::getName returns: ' . basename($this->red_path));
+
 		return (basename($this->red_path));
 	}
 
 
+
+
 	function createFile($name,$data = null) {
+		if(! perm_is_allowed($this->auth->channel_id,$this->auth->observer,'write_storage')) {
+			throw new DAV\Exception\Forbidden('Permission denied.');
+			return;
+		}
+
 
 
 	}
 
 	function createDirectory($name) {
+		if(! perm_is_allowed($this->auth->channel_id,$this->auth->observer,'write_storage')) {
+			throw new DAV\Exception\Forbidden('Permission denied.');
+			return;
+		}
 
 
 
@@ -161,12 +173,13 @@ class RedDirectory extends DAV\Node implements DAV\ICollection {
 
 		logger('RedDirectory::childExists : ' . print_r($this->auth,true));
 
-		$r = q("select distinct filename from attach where folder = '%s' and filename = '%s' and uid = %d group by filename",
-			dbesc($this->dir_key),
-			dbesc($name),
-			intval($this->auth->channel_id)
-		);
-		if($r)
+		if($this->red_path === '/' && $name === 'cloud') {
+			return true;
+		}
+
+		$x = RedFileData($this->ext_path . '/' . $name, $this->auth);
+		logger('RedFileData returns: ' . print_r($x,true));
+		if($x)
 			return true;
 		return false;
 
@@ -181,51 +194,85 @@ class RedFile extends DAV\Node implements DAV\IFile {
 	private $auth;
 	private $name;
 
-	function __construct($name, &$auth) {
+	function __construct($name, $data, &$auth) {
 		logger('RedFile::_construct: ' . $name);
 		$this->name = $name;
+		$this->data = $data;
 		$this->auth = $auth;
-		$this->data = RedFileData($name,$auth);
 
 		logger('RedFile::_construct: ' . print_r($this->data,true));
 	}
 
 
 	function getName() {
-		logger('RedFile::getName');
-		return basename($data);
+		logger('RedFile::getName: ' . basename($this->name));
+		return basename($this->name);
 
 	}
 
-	function put($data) {
 
+	function setName($newName) {
+		logger('RedFile::setName: ' . basename($this->name) . ' -> ' . $newName);
+
+		if((! $newName) || (! perm_is_allowed($this->auth->channel_id,$this->auth->observer,'write_storage'))) {
+			throw new DAV\Exception\Forbidden('Permission denied.');
+			return;
+		}
+
+		$newName = str_replace('/','%2F',$newName);
+
+		$r = q("update attach set filename = '%s' where hash = '%s' and id = %d limit 1",
+			dbesc($this->data['filename']),
+			intval($this->data['id'])
+		);
+
+	}
+
+
+
+	function put($data) {
+		logger('RedFile::put: ' . basename($this->name));
+		$r = q("update attach set data = '%s' where hash = '%s' and uid = %d limit 1",
+			dbesc($data),
+			dbesc($this->data['hash']),
+			intval($this->data['uid'])
+		);
 	}
 
 
 	function get() {
+		logger('RedFile::get: ' . basename($this->name));
 
+		$r = q("select data from attach where hash = '%s' and uid = %d limit 1",
+			dbesc($this->data['hash']),
+			intval($this->data['uid'])
+		);
+		if($r) return $r[0]['data'];
 
 	}
 
 	function getETag() {
-
-
+		logger('RedFile::getETag: ' . basename($this->name));
+		return $this->data['hash'];
 
 	}
 
 
 	function getContentType() {
-		$type = 'text/plain';
-		return $type;
-
-//		return $this->data['filetype'];
+		return $this->data['filetype'];
 	}
 
 
 	function getSize() {
-		return 33122;
-//		return $this->data['filesize'];
+		return $this->data['filesize'];
 	}
+
+
+	function getLastModified() {
+		logger('RedFile::getLastModified: ' . basename($this->name));
+		return $this->data['edited'];
+	}
+
 
 }
 
@@ -233,13 +280,15 @@ function RedChannelList(&$auth) {
 
 	$ret = array();
 
-	$r = q("select channel_address from channel where not (channel_pageflags & %d)",
+	$r = q("select channel_id, channel_address from channel where not (channel_pageflags & %d)",
 		intval(PAGE_REMOVED)
 	);
 
 	if($r) {
 		foreach($r as $rr) {
-			$ret[] = new RedDirectory('/cloud/' . $rr['channel_address'],$auth);
+			if(perm_is_allowed($rr['channel_id'],$auth->observer,'view_storage')) {
+				$ret[] = new RedDirectory('/cloud/' . $rr['channel_address'],$auth);
+			}
 		}
 	}
 	return $ret;
@@ -251,11 +300,13 @@ function RedCollectionData($file,&$auth) {
 
 	$ret = array();
 
-
 	$x = strpos($file,'/cloud');
 	if($x === 0) {
 		$file = substr($file,6);
 	}
+
+
+logger('RedCollectionData: ' . $file); 
 
 	if((! $file) || ($file === '/')) {
 		return RedChannelList($auth);
@@ -270,9 +321,12 @@ function RedCollectionData($file,&$auth) {
 
 	$channel_name = $path_arr[0];
 
-	$r = q("select channel_id from channel where channel_name = '%s' limit 1",
+	$r = q("select channel_id from channel where channel_address = '%s' limit 1",
 		dbesc($channel_name)
 	);
+
+logger('dbg1: ' . print_r($r,true));
+
 	if(! $r)
 		return null;
 
@@ -283,7 +337,7 @@ function RedCollectionData($file,&$auth) {
 	$folder = '';
 
 	for($x = 1; $x < count($path_arr); $x ++) {		
-		$r = q("hash, filename, flags from attach where folder = '%s' and (flags & %d)",
+		$r = q("select id, hash, filename, flags from attach where folder = '%s' and (flags & %d)",
 			dbesc($folder),
 			intval($channel_id),
 			intval(ATTACH_FLAG_DIR)
@@ -294,6 +348,8 @@ function RedCollectionData($file,&$auth) {
 		}	
 	}
 
+logger('dbg2: ' . print_r($r,true));
+
 	if($path !== '/' . $file) {
 		logger("RedCollectionData: Path mismatch: $path !== /$file");
 		return NULL;
@@ -301,17 +357,19 @@ function RedCollectionData($file,&$auth) {
 
 	$ret = array();
 
-	$r = q("select filename from attach where folder = '%s' group by filename",
+
+	$r = q("select id, uid, hash, filename, filetype, filesize, revision, folder, flags, created, edited from attach where folder = '%s' and uid = %d group by filename",
 		dbesc($folder),
-		intval($channel_id),
-		intval(ATTACH_FLAG_DIR)
+		intval($channel_id)
 	);
+
+logger('dbg2: ' . print_r($r,true));
 
 	foreach($r as $rr) {
 		if($rr['flags'] & ATTACH_FLAG_DIR)
 			$ret[] = new RedDirectory('/cloud' . $path . '/' . $rr['filename'],$auth);
 		else
-			$ret[] = newRedFile('/cloud' . $path . '/' . $rr['filename'],$auth);
+			$ret[] = new RedFile('/cloud' . $path . '/' . $rr['filename'],$rr,$auth);
 	}
 
 	return $ret;
@@ -347,13 +405,13 @@ logger('file=' . $file);
 	logger("file = $file - path = " . print_r($path_arr,true));
 
 	$channel_name = $path_arr[0];
-//dbg(1);
+
 
 	$r = q("select channel_id from channel where channel_address = '%s' limit 1",
 		dbesc($channel_name)
 	);
 
-//dbg(0);
+	logger('dbg0: ' . print_r($r,true));
 
 	if(! $r)
 		return null;
@@ -364,46 +422,55 @@ logger('file=' . $file);
 
 	$folder = '';
 //dbg(1);
+
+	require_once('include/security.php');
+	$perms = permissions_sql($channel_id);
+
+	$errors = false;
+
 	for($x = 1; $x < count($path_arr); $x ++) {		
-		$r = q("hash, filename, flags from attach where folder = '%s' and uid = %d and (flags & %d)",
+dbg(1);
+		$r = q("select id, hash, filename, flags from attach where folder = '%s' and uid = %d and (flags & %d) $perms",
 			dbesc($folder),
 			intval($channel_id),
 			intval(ATTACH_FLAG_DIR)
 		);
+dbg(0);
+	logger('dbg1: ' . print_r($r,true));
+
 		if($r && ( $r[0]['flags'] & ATTACH_FLAG_DIR)) {
 			$folder = $r[0]['hash'];
 			$path = $path . '/' . $r[0]['filename'];
 		}	
+		if(! $r) {
+			$r = q("select id, uid, hash, filename, filetype, filesize, revision, folder, flags, created, edited from attach 
+				where folder = '%s' and filename = '%s' and uid = %d $perms group by filename limit 1",
+				dbesc($folder),
+				basename($file),
+				intval($channel_id)
+
+			);
+		}
+		if(! $r)
+			$errors = true;
 	}
-//dbg(0);
+
+	logger('dbg1: ' . print_r($r,true));
 
 	if($path === '/' . $file) {
 		// final component was a directory.
 		return new RedDirectory('/cloud/' . $file,$auth);
 	}
 
-//	//if($path !== dirname($file)) {
-//		logger("RedFileData: Path mismatch: $path !== dirname($file)");
-//		return NULL;
-//	}
-
-	$ret = array();
-//dbg(1);
-	$r = q("select filename from attach where folder = '%s' and filename = '%s' and uid = %d group by filename limit 1",
-		dbesc($folder),
-		basename($file),
-		intval($channel_id)
-
-	);
-//dbg(0);
-	foreach($r as $rr) {
-		if($rr['flags'] & ATTACH_FLAG_DIR)
-			$ret[] = new RedDirectory($path . '/' . $rr['filename'],$auth);
-		else
-			$ret[] = newRedFile($path . '/' . $rr['filename'],$auth);
+	if($errors) {
+		throw new DAV\Exception\Forbidden('Permission denied.');
+		return;
 	}
 
-	return $ret[0];
+	if($r[0]['flags'] & ATTACH_FLAG_DIR)
+		return new RedDirectory('/cloud' . $path . '/' . $r[0]['filename'],$auth);
+	else
+		return new RedFile('/cloud' . $path . '/' . $r[0]['filename'],$r[0],$auth);
 
 }
 

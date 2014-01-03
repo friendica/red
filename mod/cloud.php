@@ -102,7 +102,7 @@ function cloud_init(&$a) {
 
 	$auth = new RedBasicAuth();
 
-	$rootDirectory = new RedDirectory('/cloud',$auth);
+	$rootDirectory = new RedDirectory('/',$auth);
 	$server = new DAV\Server($rootDirectory);
 	$lockBackend = new DAV\Locks\Backend\File('store/data/locks');
 	$lockPlugin = new DAV\Locks\Plugin($lockBackend);
