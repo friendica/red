@@ -62,8 +62,6 @@ else {
 }
 
 
-
-
 /**
  *
  * Important stuff we always need to do.

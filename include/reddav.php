@@ -3,6 +3,8 @@
 use Sabre\DAV;
 require_once('vendor/autoload.php');
 
+require_once('include/attach.php');
+
 class RedInode implements DAV\INode {
 
 	private $attach;
@@ -149,20 +151,67 @@ class RedDirectory extends DAV\Node implements DAV\ICollection {
 
 
 	function createFile($name,$data = null) {
+		logger('RedDirectory::createFile : ' . $name);
+		logger('RedDirectory::createFile : ' . print_r($this,true));
+
+		logger('createFile():' . stream_get_contents($data));
+
+
 		if(! perm_is_allowed($this->auth->channel_id,$this->auth->observer,'write_storage')) {
+			logger('createFile: permission denied');
 			throw new DAV\Exception\Forbidden('Permission denied.');
 			return;
 		}
 
+		$mimetype = z_mime_content_type($name);
 
 
+		$c = q("select * from channel where channel_id = %d limit 1",
+			intval($this->auth->channel_id)
+		);
+
+
+		$filesize = 0;
+		$hash = random_string();
+
+dbg(1);
+
+        $r = q("INSERT INTO attach ( aid, uid, hash, filename, filetype, filesize, revision, data, created, edited )
+            VALUES ( %d, %d, '%s', '%s', '%s', %d, %d, '%s', '%s', '%s' ) ",
+            intval($c[0]['channel_account_id']),
+            intval($c[0]['channel_id']),
+            dbesc($hash),
+            dbesc($name),
+            dbesc($mimetype),
+            intval($filesize),
+            intval(0),
+            dbesc(stream_get_contents($data)),
+            dbesc(datetime_convert()),
+            dbesc(datetime_convert())
+		);
+
+		$r = q("update attach set filesize = length(data) where hash = '%s' and uid = %d limit 1",
+			dbesc($hash),
+			intval($c[0]['channel_id'])
+		);
+
+
+dbg(0);
+ 
 	}
+
 
 	function createDirectory($name) {
 		if(! perm_is_allowed($this->auth->channel_id,$this->auth->observer,'write_storage')) {
 			throw new DAV\Exception\Forbidden('Permission denied.');
 			return;
 		}
+
+
+
+
+
+
 
 
 
@@ -174,10 +223,11 @@ class RedDirectory extends DAV\Node implements DAV\ICollection {
 		logger('RedDirectory::childExists : ' . print_r($this->auth,true));
 
 		if($this->red_path === '/' && $name === 'cloud') {
+			logger('RedDirectory::childExists /cloud: true');
 			return true;
 		}
 
-		$x = RedFileData($this->ext_path . '/' . $name, $this->auth);
+		$x = RedFileData($this->ext_path . '/' . $name, $this->auth,true);
 		logger('RedFileData returns: ' . print_r($x,true));
 		if($x)
 			return true;
@@ -232,11 +282,20 @@ class RedFile extends DAV\Node implements DAV\IFile {
 
 	function put($data) {
 		logger('RedFile::put: ' . basename($this->name));
+		logger('put():' . stream_get_contents($data));
+
+dbg(1);
 		$r = q("update attach set data = '%s' where hash = '%s' and uid = %d limit 1",
-			dbesc($data),
+			dbesc(stream_get_contents($data)),
 			dbesc($this->data['hash']),
 			intval($this->data['uid'])
 		);
+		$r = q("update attach set filesize = length(data) where hash = '%s' and uid = %d limit 1",
+			dbesc($this->data['hash']),
+			intval($this->data['uid'])
+		);
+dbg(0);
+
 	}
 
 
@@ -376,7 +435,7 @@ logger('dbg2: ' . print_r($r,true));
 
 }
 
-function RedFileData($file, &$auth) {
+function RedFileData($file, &$auth,$test = false) {
 
 logger('RedFileData:' . $file);
 
@@ -463,15 +522,19 @@ dbg(0);
 	}
 
 	if($errors) {
+		if($test)
+			return false;
 		throw new DAV\Exception\Forbidden('Permission denied.');
 		return;
 	}
 
-	if($r[0]['flags'] & ATTACH_FLAG_DIR)
-		return new RedDirectory('/cloud' . $path . '/' . $r[0]['filename'],$auth);
-	else
-		return new RedFile('/cloud' . $path . '/' . $r[0]['filename'],$r[0],$auth);
-
+	if($r) {
+		if($r[0]['flags'] & ATTACH_FLAG_DIR)
+			return new RedDirectory('/cloud' . $path . '/' . $r[0]['filename'],$auth);
+		else
+			return new RedFile('/cloud' . $path . '/' . $r[0]['filename'],$r[0],$auth);
+	}
+	return false;
 }
 
 

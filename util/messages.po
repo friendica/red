@@ -6,9 +6,9 @@
 #, fuzzy
 msgid ""
 msgstr ""
-"Project-Id-Version: 2013-12-27.539\n"
+"Project-Id-Version: 2014-01-03.546\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2013-12-27 00:04-0800\n"
+"POT-Creation-Date: 2014-01-03 00:02-0800\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -803,7 +803,7 @@ msgstr ""
 msgid "Stored post could not be verified."
 msgstr ""
 
-#: ../../include/photo/photo_driver.php:609 ../../include/photos.php:51
+#: ../../include/photo/photo_driver.php:637 ../../include/photos.php:51
 #: ../../mod/photos.php:91 ../../mod/photos.php:767 ../../mod/photos.php:789
 #: ../../mod/profile_photo.php:78 ../../mod/profile_photo.php:225
 #: ../../mod/profile_photo.php:336
@@ -1111,9 +1111,9 @@ msgid "Select"
 msgstr ""
 
 #: ../../include/conversation.php:632 ../../include/ItemObject.php:107
-#: ../../mod/connedit.php:356 ../../mod/admin.php:693 ../../mod/group.php:176
-#: ../../mod/photos.php:1132 ../../mod/filestorage.php:82
-#: ../../mod/settings.php:570
+#: ../../mod/thing.php:230 ../../mod/connedit.php:356 ../../mod/admin.php:693
+#: ../../mod/group.php:176 ../../mod/photos.php:1132
+#: ../../mod/filestorage.php:82 ../../mod/settings.php:570
 msgid "Delete"
 msgstr ""
 
@@ -1516,7 +1516,8 @@ msgstr ""
 #: ../../include/attach.php:251 ../../include/attach.php:272
 #: ../../include/attach.php:464 ../../include/attach.php:539
 #: ../../include/items.php:3437 ../../mod/common.php:35
-#: ../../mod/events.php:140 ../../mod/invite.php:13 ../../mod/invite.php:104
+#: ../../mod/events.php:140 ../../mod/thing.php:241 ../../mod/thing.php:257
+#: ../../mod/thing.php:291 ../../mod/invite.php:13 ../../mod/invite.php:104
 #: ../../mod/connedit.php:179 ../../mod/webpages.php:40 ../../mod/api.php:26
 #: ../../mod/api.php:31 ../../mod/page.php:30 ../../mod/page.php:80
 #: ../../mod/setup.php:200 ../../mod/viewconnections.php:22
@@ -1534,10 +1535,10 @@ msgstr ""
 #: ../../mod/editwebpage.php:83 ../../mod/notifications.php:66
 #: ../../mod/blocks.php:29 ../../mod/blocks.php:44 ../../mod/editpost.php:13
 #: ../../mod/poke.php:128 ../../mod/channel.php:86 ../../mod/fsuggest.php:78
-#: ../../mod/editblock.php:48 ../../mod/item.php:181 ../../mod/item.php:189
-#: ../../mod/suggest.php:26 ../../mod/message.php:16 ../../mod/register.php:68
-#: ../../mod/regmod.php:18 ../../mod/authtest.php:13 ../../mod/mood.php:114
-#: ../../index.php:178 ../../index.php:346
+#: ../../mod/editblock.php:48 ../../mod/suggest.php:26
+#: ../../mod/message.php:16 ../../mod/register.php:68 ../../mod/regmod.php:18
+#: ../../mod/authtest.php:13 ../../mod/item.php:181 ../../mod/item.php:189
+#: ../../mod/mood.php:114 ../../index.php:176 ../../index.php:344
 msgid "Permission denied."
 msgstr ""
 
@@ -2240,10 +2241,11 @@ msgid "New Page"
 msgstr ""
 
 #: ../../include/page_widgets.php:8 ../../include/ItemObject.php:95
-#: ../../mod/webpages.php:118 ../../mod/menu.php:55 ../../mod/layouts.php:102
-#: ../../mod/settings.php:569 ../../mod/editlayout.php:100
-#: ../../mod/editwebpage.php:143 ../../mod/blocks.php:93
-#: ../../mod/editpost.php:97 ../../mod/editblock.php:114
+#: ../../mod/thing.php:229 ../../mod/webpages.php:118 ../../mod/menu.php:55
+#: ../../mod/layouts.php:102 ../../mod/settings.php:569
+#: ../../mod/editlayout.php:100 ../../mod/editwebpage.php:143
+#: ../../mod/blocks.php:93 ../../mod/editpost.php:97
+#: ../../mod/editblock.php:114
 msgid "Edit"
 msgstr ""
 
@@ -2679,7 +2681,7 @@ msgstr ""
 msgid "Default"
 msgstr ""
 
-#: ../../include/identity.php:29 ../../mod/item.php:1152
+#: ../../include/identity.php:29 ../../mod/item.php:1162
 msgid "Unable to obtain identity information from database"
 msgstr ""
 
@@ -2727,7 +2729,7 @@ msgstr ""
 msgid "Requested profile is not available."
 msgstr ""
 
-#: ../../include/identity.php:639 ../../mod/profiles.php:613
+#: ../../include/identity.php:639 ../../mod/profiles.php:615
 msgid "Change profile photo"
 msgstr ""
 
@@ -2739,7 +2741,7 @@ msgstr ""
 msgid "Manage/edit profiles"
 msgstr ""
 
-#: ../../include/identity.php:646 ../../mod/profiles.php:614
+#: ../../include/identity.php:646 ../../mod/profiles.php:616
 msgid "Create New Profile"
 msgstr ""
 
@@ -2747,15 +2749,15 @@ msgstr ""
 msgid "Edit Profile"
 msgstr ""
 
-#: ../../include/identity.php:660 ../../mod/profiles.php:625
+#: ../../include/identity.php:660 ../../mod/profiles.php:627
 msgid "Profile Image"
 msgstr ""
 
-#: ../../include/identity.php:663 ../../mod/profiles.php:628
+#: ../../include/identity.php:663 ../../mod/profiles.php:630
 msgid "visible to everybody"
 msgstr ""
 
-#: ../../include/identity.php:664 ../../mod/profiles.php:629
+#: ../../include/identity.php:664 ../../mod/profiles.php:631
 msgid "Edit visibility"
 msgstr ""
 
@@ -2808,7 +2810,7 @@ msgstr ""
 msgid "Events this week:"
 msgstr ""
 
-#: ../../include/identity.php:893 ../../include/identity.php:1004
+#: ../../include/identity.php:893 ../../include/identity.php:975
 #: ../../mod/profperm.php:103
 msgid "Profile"
 msgstr ""
@@ -2989,12 +2991,12 @@ msgid "This is you"
 msgstr ""
 
 #: ../../include/ItemObject.php:531 ../../mod/events.php:470
-#: ../../mod/thing.php:190 ../../mod/invite.php:156 ../../mod/connedit.php:434
-#: ../../mod/setup.php:302 ../../mod/setup.php:345 ../../mod/connect.php:92
-#: ../../mod/sources.php:97 ../../mod/sources.php:131 ../../mod/admin.php:420
-#: ../../mod/admin.php:686 ../../mod/admin.php:826 ../../mod/admin.php:1025
-#: ../../mod/admin.php:1112 ../../mod/group.php:81 ../../mod/photos.php:677
-#: ../../mod/photos.php:782 ../../mod/photos.php:1042
+#: ../../mod/thing.php:276 ../../mod/thing.php:318 ../../mod/invite.php:156
+#: ../../mod/connedit.php:434 ../../mod/setup.php:302 ../../mod/setup.php:345
+#: ../../mod/connect.php:92 ../../mod/sources.php:97 ../../mod/sources.php:131
+#: ../../mod/admin.php:420 ../../mod/admin.php:686 ../../mod/admin.php:826
+#: ../../mod/admin.php:1025 ../../mod/admin.php:1112 ../../mod/group.php:81
+#: ../../mod/photos.php:677 ../../mod/photos.php:782 ../../mod/photos.php:1042
 #: ../../mod/photos.php:1082 ../../mod/photos.php:1169
 #: ../../mod/profiles.php:518 ../../mod/import.php:387
 #: ../../mod/settings.php:507 ../../mod/settings.php:619
@@ -3060,11 +3062,11 @@ msgid ""
 msgstr ""
 
 #: ../../include/items.php:201 ../../mod/like.php:55 ../../mod/group.php:68
-#: ../../mod/profperm.php:19 ../../index.php:345
+#: ../../mod/profperm.php:19 ../../index.php:343
 msgid "Permission denied"
 msgstr ""
 
-#: ../../include/items.php:3375 ../../mod/admin.php:150
+#: ../../include/items.php:3375 ../../mod/thing.php:74 ../../mod/admin.php:150
 #: ../../mod/admin.php:730 ../../mod/admin.php:933 ../../mod/viewsrc.php:18
 #: ../../mod/home.php:63 ../../mod/display.php:32
 msgid "Item not found."
@@ -3173,45 +3175,57 @@ msgstr ""
 msgid "Share this event"
 msgstr ""
 
-#: ../../mod/thing.php:109
+#: ../../mod/thing.php:94
+msgid "Thing updated"
+msgstr ""
+
+#: ../../mod/thing.php:153
 msgid "Object store: failed"
 msgstr ""
 
-#: ../../mod/thing.php:113
-msgid "thing/stuff added"
+#: ../../mod/thing.php:157
+msgid "Thing added"
 msgstr ""
 
-#: ../../mod/thing.php:129
+#: ../../mod/thing.php:175
 #, php-format
 msgid "OBJ: %1$s %2$s %3$s"
 msgstr ""
 
-#: ../../mod/thing.php:175
-msgid "not yet implemented."
+#: ../../mod/thing.php:228
+msgid "Show Thing"
 msgstr ""
 
-#: ../../mod/thing.php:181
-msgid "Add Stuff to your Profile"
+#: ../../mod/thing.php:235
+msgid "item not found."
 msgstr ""
 
-#: ../../mod/thing.php:183
+#: ../../mod/thing.php:263
+msgid "Edit Thing"
+msgstr ""
+
+#: ../../mod/thing.php:265 ../../mod/thing.php:311
 msgid "Select a profile"
 msgstr ""
 
-#: ../../mod/thing.php:185
+#: ../../mod/thing.php:267 ../../mod/thing.php:313
 msgid "Select a category of stuff. e.g. I ______ something"
 msgstr ""
 
-#: ../../mod/thing.php:187
-msgid "Name of thing or stuff e.g. something"
+#: ../../mod/thing.php:270 ../../mod/thing.php:315
+msgid "Name of thing e.g. something"
 msgstr ""
 
-#: ../../mod/thing.php:188
-msgid "URL of thing or stuff (optional)"
+#: ../../mod/thing.php:272 ../../mod/thing.php:316
+msgid "URL of thing (optional)"
 msgstr ""
 
-#: ../../mod/thing.php:189
-msgid "URL for photo of thing or stuff (optional)"
+#: ../../mod/thing.php:274 ../../mod/thing.php:317
+msgid "URL for photo of thing (optional)"
+msgstr ""
+
+#: ../../mod/thing.php:309
+msgid "Add Thing to your Profile"
 msgstr ""
 
 #: ../../mod/invite.php:25
@@ -3666,7 +3680,7 @@ msgid "Channel not found."
 msgstr ""
 
 #: ../../mod/page.php:83 ../../mod/help.php:71 ../../mod/display.php:100
-#: ../../index.php:229
+#: ../../index.php:227
 msgid "Page not found."
 msgstr ""
 
@@ -5239,7 +5253,7 @@ msgstr ""
 msgid "Help:"
 msgstr ""
 
-#: ../../mod/help.php:68 ../../index.php:226
+#: ../../mod/help.php:68 ../../index.php:224
 msgid "Not Found"
 msgstr ""
 
@@ -5548,6 +5562,14 @@ msgstr ""
 
 #: ../../mod/profiles.php:612
 msgid "Edit/Manage Profiles"
+msgstr ""
+
+#: ../../mod/profiles.php:613
+msgid "Add profile things"
+msgstr ""
+
+#: ../../mod/profiles.php:614
+msgid "Include desirable objects in your profile"
 msgstr ""
 
 #: ../../mod/new_channel.php:107
@@ -6418,7 +6440,7 @@ msgstr ""
 msgid "Make this post private"
 msgstr ""
 
-#: ../../mod/wall_upload.php:41 ../../mod/item.php:1078
+#: ../../mod/wall_upload.php:41 ../../mod/item.php:1088
 msgid "Wall Photos"
 msgstr ""
 
@@ -6489,32 +6511,6 @@ msgstr ""
 
 #: ../../mod/profperm.php:130
 msgid "All Contacts (with secure profile access)"
-msgstr ""
-
-#: ../../mod/item.php:144
-msgid "Unable to locate original post."
-msgstr ""
-
-#: ../../mod/item.php:342
-msgid "Empty post discarded."
-msgstr ""
-
-#: ../../mod/item.php:384
-msgid "Executable content type not permitted to this channel."
-msgstr ""
-
-#: ../../mod/item.php:794
-msgid "System error. Post not saved."
-msgstr ""
-
-#: ../../mod/item.php:1157
-#, php-format
-msgid "You have reached your limit of %1$.0f top level posts."
-msgstr ""
-
-#: ../../mod/item.php:1163
-#, php-format
-msgid "You have reached your limit of %1$.0f webpages."
 msgstr ""
 
 #: ../../mod/siteinfo.php:57
@@ -6707,6 +6703,32 @@ msgstr ""
 
 #: ../../mod/removeme.php:53
 msgid "Remove My Account"
+msgstr ""
+
+#: ../../mod/item.php:144
+msgid "Unable to locate original post."
+msgstr ""
+
+#: ../../mod/item.php:342
+msgid "Empty post discarded."
+msgstr ""
+
+#: ../../mod/item.php:384
+msgid "Executable content type not permitted to this channel."
+msgstr ""
+
+#: ../../mod/item.php:806
+msgid "System error. Post not saved."
+msgstr ""
+
+#: ../../mod/item.php:1167
+#, php-format
+msgid "You have reached your limit of %1$.0f top level posts."
+msgstr ""
+
+#: ../../mod/item.php:1173
+#, php-format
+msgid "You have reached your limit of %1$.0f webpages."
 msgstr ""
 
 #: ../../mod/mood.php:133

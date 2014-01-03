@@ -81,7 +81,7 @@ class RedBasicAuth extends Sabre\DAV\Auth\Backend\AbstractBasic {
 			            logger('(DAV) RedBasicAuth: password verified for ' . $username);
 						$this->channel_name = $r[0]['channel_address'];
 						$this->channel_id = $r[0]['channel_id'];
-						$this->channel_hash = $r[0]['channel_hash'];
+						$this->channel_hash = $this->observer = $r[0]['channel_hash'];
             			return true;
         			}
     			}
