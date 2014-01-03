@@ -50,6 +50,7 @@ function editpost_content(&$a) {
 		'$geotag' => $geotag,
 		'$nickname' => $channel['channel_address'],
 		'$expireswhen' => t('Expires YYYY-MM-DD HH:MM'),
+	    '$confirmdelete' => t('Delete item?'),
 	));
 
 
