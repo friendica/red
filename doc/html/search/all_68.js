@@ -1,6 +1,6 @@
 var searchData=
 [
-  ['handle_5ftag',['handle_tag',['../item_8php.html#abd0e603a6696051af16476eb968d52e7',1,'item.php']]],
+  ['handle_5ftag',['handle_tag',['../item_8php.html#aa22feef4de326e1d7078dedd892e615c',1,'item.php']]],
   ['has_5fpermissions',['has_permissions',['../items_8php.html#a77051724d1784074ff187e73a4db93fe',1,'items.php']]],
   ['head_5fadd_5fcss',['head_add_css',['../plugin_8php.html#a23c4fccf1eb5fcd63b24783ba1f05f7a',1,'plugin.php']]],
   ['head_5fadd_5fjs',['head_add_js',['../plugin_8php.html#a516591850f4fd49fd1425cfa54089db8',1,'plugin.php']]],

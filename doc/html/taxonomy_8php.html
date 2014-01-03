@@ -138,8 +138,10 @@ Functions</h2></td></tr>
 <tr class="separator:a599ee71dd3194c8127b00dabec77abc1"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a03f55ee46c5f496e42f3d29db8d09cce"><td class="memItemLeft" align="right" valign="top">&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="taxonomy_8php.html#a03f55ee46c5f496e42f3d29db8d09cce">obj_verbs</a> ()</td></tr>
 <tr class="separator:a03f55ee46c5f496e42f3d29db8d09cce"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:ac12a651a42ed77f8dc7072c6168811a2"><td class="memItemLeft" align="right" valign="top">&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="taxonomy_8php.html#ac12a651a42ed77f8dc7072c6168811a2">obj_verb_selector</a> ()</td></tr>
-<tr class="separator:ac12a651a42ed77f8dc7072c6168811a2"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:af387463d42ffdf7d2ab3d5b22e40a0c7"><td class="memItemLeft" align="right" valign="top">&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="taxonomy_8php.html#af387463d42ffdf7d2ab3d5b22e40a0c7">obj_verb_selector</a> ($current= '')</td></tr>
+<tr class="separator:af387463d42ffdf7d2ab3d5b22e40a0c7"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a7747fa859ac56fbffd4f9782d85505de"><td class="memItemLeft" align="right" valign="top">&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="taxonomy_8php.html#a7747fa859ac56fbffd4f9782d85505de">get_things</a> ($profile_hash, $uid)</td></tr>
+<tr class="separator:a7747fa859ac56fbffd4f9782d85505de"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table>
 <h2 class="groupheader">Function Documentation</h2>
 <a class="anchor" id="a088371f4bc19155b2291508f5cd63332"></a>
@@ -298,14 +300,43 @@ Functions</h2></td></tr>
 
 </div>
 </div>
-<a class="anchor" id="ac12a651a42ed77f8dc7072c6168811a2"></a>
+<a class="anchor" id="a7747fa859ac56fbffd4f9782d85505de"></a>
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">get_things </td>
+          <td>(</td>
+          <td class="paramtype">&#160;</td>
+          <td class="paramname"><em>$profile_hash</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">&#160;</td>
+          <td class="paramname"><em>$uid</em>&#160;</td>
+        </tr>
+        <tr>
+          <td></td>
+          <td>)</td>
+          <td></td><td></td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+<p>Referenced by <a class="el" href="identity_8php.html#aa870d2c1f558cfd52bef05bc124e8fa4">advanced_profile()</a>.</p>
+
+</div>
+</div>
+<a class="anchor" id="af387463d42ffdf7d2ab3d5b22e40a0c7"></a>
 <div class="memitem">
 <div class="memproto">
       <table class="memname">
         <tr>
           <td class="memname">obj_verb_selector </td>
           <td>(</td>
-          <td class="paramname"></td><td>)</td>
+          <td class="paramtype">&#160;</td>
+          <td class="paramname"><em>$current</em> = <code>''</code></td><td>)</td>
           <td></td>
         </tr>
       </table>
@@ -329,7 +360,7 @@ Functions</h2></td></tr>
 </div><div class="memdoc">
 <p>verbs: [0] = first person singular, e.g. "I want", [1] = 3rd person singular, e.g. "Bill wants" We use the first person form when creating an activity, but the third person for use in activities FIXME: There is no accounting for verb gender for languages where this is significant. We may eventually require <a class="el" href="taxonomy_8php.html#a03f55ee46c5f496e42f3d29db8d09cce">obj_verbs()</a> to provide full conjugations and specify which form to use in the $_REQUEST params to this module. </p>
 
-<p>Referenced by <a class="el" href="identity_8php.html#aa870d2c1f558cfd52bef05bc124e8fa4">advanced_profile()</a>, <a class="el" href="taxonomy_8php.html#ac12a651a42ed77f8dc7072c6168811a2">obj_verb_selector()</a>, and <a class="el" href="thing_8php.html#a8be23b1d475ec3d9291999221c674c80">thing_init()</a>.</p>
+<p>Referenced by <a class="el" href="taxonomy_8php.html#a7747fa859ac56fbffd4f9782d85505de">get_things()</a>, <a class="el" href="taxonomy_8php.html#af387463d42ffdf7d2ab3d5b22e40a0c7">obj_verb_selector()</a>, and <a class="el" href="thing_8php.html#a8be23b1d475ec3d9291999221c674c80">thing_init()</a>.</p>
 
 </div>
 </div>

@@ -57,7 +57,7 @@ var searchData=
   ['client_5fmode_5fupdate',['CLIENT_MODE_UPDATE',['../boot_8php.html#a3f40aa5bafff8c4eebdc62e5121daf77',1,'boot.php']]],
   ['close',['close',['../classdba__driver.html#a5afa54172f3c837df61643f8f5b2c975',1,'dba_driver\close()'],['../classdba__mysql.html#a850586714ef897bd25f643c89b4ef76e',1,'dba_mysql\close()'],['../classdba__mysqli.html#acb38f2c851187ad632ecfab30fdfab55',1,'dba_mysqli\close()']]],
   ['cloud_2ephp',['cloud.php',['../cloud_8php.html',1,'']]],
-  ['cloud_5finit',['cloud_init',['../cloud_8php.html#a080071b784fe01d04ed6c09d9f2785b8',1,'cloud.php']]],
+  ['cloud_5finit',['cloud_init',['../cloud_8php.html#a0717860601aaa775e7cb65fd9d4011b4',1,'cloud.php']]],
   ['collect',['collect',['../classProtoDriver.html#a2ba1758f0f9e3564580b6ff85292804d',1,'ProtoDriver\collect()'],['../classZotDriver.html#af65febb26031eb7f39871b9e2a539797',1,'ZotDriver\collect()']]],
   ['collect_5fprivate',['collect_private',['../classProtoDriver.html#af66171aa7dab9b62cee915cb4f1abe1b',1,'ProtoDriver\collect_private()'],['../classZotDriver.html#a2e15ff09772f0608203dad1c98299394',1,'ZotDriver\collect_private()']]],
   ['collect_5frecipients',['collect_recipients',['../items_8php.html#a01e3cf44e082fa9bd06dcde5bf713d70',1,'items.php']]],

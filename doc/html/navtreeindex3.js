@@ -1,5 +1,15 @@
 var NAVTREEINDEX3 =
 {
+"connections_8php.html#a1f23623f802af7bd35e95b0e94e5d558":[5,0,1,15,2],
+"connections_8php.html#aec2e457420fce3e3bf6a9f48e36df25c":[5,0,1,15,1],
+"connedit_8php.html":[5,0,1,16],
+"connedit_8php.html#a234c48426b652bf4d37053f2af329ac5":[5,0,1,16,3],
+"connedit_8php.html#a4da871e075597a09a8b374b9171dd92e":[5,0,1,16,2],
+"connedit_8php.html#a707ea7e63cf9674025b1d6b081ae74f5":[5,0,1,16,0],
+"connedit_8php.html#a795acb3d9d841f55c255d7611681ab67":[5,0,1,16,1],
+"contact__selectors_8php.html":[5,0,0,18],
+"contact__selectors_8php.html#a2c743d2eb526eb758d943a1490162d75":[5,0,0,18,1],
+"contact__selectors_8php.html#a9839e8fdaac7ffb37bf1420493f5c28f":[5,0,0,18,0],
 "contact__selectors_8php.html#ad472e4716426dd1a9dd77b62962454be":[5,0,0,18,3],
 "contact__selectors_8php.html#ae499960d6467bd30c78607b1018baf53":[5,0,0,18,2],
 "contact__widgets_8php.html":[5,0,0,19],
@@ -220,8 +230,8 @@ var NAVTREEINDEX3 =
 "functions_0x73.html":[4,3,0,17],
 "functions_0x74.html":[4,3,0,18],
 "functions_0x76.html":[4,3,0,19],
-"functions_func.html":[4,3,1,0],
 "functions_func.html":[4,3,1],
+"functions_func.html":[4,3,1,0],
 "functions_func_0x61.html":[4,3,1,1],
 "functions_func_0x62.html":[4,3,1,2],
 "functions_func_0x63.html":[4,3,1,3],
@@ -239,15 +249,5 @@ var NAVTREEINDEX3 =
 "functions_func_0x72.html":[4,3,1,15],
 "functions_func_0x73.html":[4,3,1,16],
 "functions_func_0x74.html":[4,3,1,17],
-"functions_func_0x76.html":[4,3,1,18],
-"functions_vars.html":[4,3,2],
-"globals.html":[5,1,0,0],
-"globals.html":[5,1,0],
-"globals_0x5f.html":[5,1,0,1],
-"globals_0x61.html":[5,1,0,2],
-"globals_0x62.html":[5,1,0,3],
-"globals_0x63.html":[5,1,0,4],
-"globals_0x64.html":[5,1,0,5],
-"globals_0x65.html":[5,1,0,6],
-"globals_0x66.html":[5,1,0,7]
+"functions_func_0x76.html":[4,3,1,18]
 };

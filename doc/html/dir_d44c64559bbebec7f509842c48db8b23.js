@@ -78,11 +78,7 @@ var dir_d44c64559bbebec7f509842c48db8b23 =
     ] ],
     [ "queue.php", "queue_8php.html", "queue_8php" ],
     [ "queue_fn.php", "queue__fn_8php.html", "queue__fn_8php" ],
-    [ "reddav.php", "reddav_8php.html", [
-      [ "RedInode", "classRedInode.html", "classRedInode" ],
-      [ "RedDirectory", "classRedDirectory.html", "classRedDirectory" ],
-      [ "RedFile", "classRedFile.html", "classRedFile" ]
-    ] ],
+    [ "reddav.php", "reddav_8php.html", "reddav_8php" ],
     [ "security.php", "security_8php.html", "security_8php" ],
     [ "session.php", "session_8php.html", "session_8php" ],
     [ "socgraph.php", "socgraph_8php.html", "socgraph_8php" ],

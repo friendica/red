@@ -122,8 +122,8 @@ Functions</h2></td></tr>
 <tr class="separator:a32e2817faa25d7f11f60a8abff565035"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a243cee492ce443afb6a7d77d54b6c4aa"><td class="memItemLeft" align="right" valign="top">&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="photo__driver_8php.html#a243cee492ce443afb6a7d77d54b6c4aa">guess_image_type</a> ($filename, $headers= '')</td></tr>
 <tr class="separator:a243cee492ce443afb6a7d77d54b6c4aa"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a102f3f26f67e0e38f4322a771951c1ca"><td class="memItemLeft" align="right" valign="top">&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="photo__driver_8php.html#a102f3f26f67e0e38f4322a771951c1ca">import_profile_photo</a> ($photo, $xchan)</td></tr>
-<tr class="separator:a102f3f26f67e0e38f4322a771951c1ca"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a78f5a10c568d2a9bbbb129dc96548887"><td class="memItemLeft" align="right" valign="top">&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="photo__driver_8php.html#a78f5a10c568d2a9bbbb129dc96548887">import_profile_photo</a> ($photo, $xchan, $thing=false)</td></tr>
+<tr class="separator:a78f5a10c568d2a9bbbb129dc96548887"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a1d0bc7161dec0d177b7d3bbe4421af9a"><td class="memItemLeft" align="right" valign="top">&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="photo__driver_8php.html#a1d0bc7161dec0d177b7d3bbe4421af9a">import_channel_photo</a> ($photo, $type, $aid, $uid)</td></tr>
 <tr class="separator:a1d0bc7161dec0d177b7d3bbe4421af9a"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table>
@@ -158,7 +158,7 @@ Functions</h2></td></tr>
 </ul>
 <p>Well, this not much better, but at least it comes from the data inside the image, we won't be tricked by a manipulated extension</p>
 
-<p>Referenced by <a class="el" href="photo__driver_8php.html#a102f3f26f67e0e38f4322a771951c1ca">import_profile_photo()</a>, <a class="el" href="include_2photos_8php.html#a6c40ef58aefef705a5adc84a40e97109">photo_upload()</a>, <a class="el" href="profile__photo_8php.html#a4b80234074bd603221aa5364f330e479">profile_photo_post()</a>, and <a class="el" href="include_2network_8php.html#ae8d9c41a11000fb8667039fc71b4f73f">scale_external_images()</a>.</p>
+<p>Referenced by <a class="el" href="photo__driver_8php.html#a78f5a10c568d2a9bbbb129dc96548887">import_profile_photo()</a>, <a class="el" href="include_2photos_8php.html#a6c40ef58aefef705a5adc84a40e97109">photo_upload()</a>, <a class="el" href="profile__photo_8php.html#a4b80234074bd603221aa5364f330e479">profile_photo_post()</a>, and <a class="el" href="include_2network_8php.html#ae8d9c41a11000fb8667039fc71b4f73f">scale_external_images()</a>.</p>
 
 </div>
 </div>
@@ -202,7 +202,7 @@ Functions</h2></td></tr>
 
 </div>
 </div>
-<a class="anchor" id="a102f3f26f67e0e38f4322a771951c1ca"></a>
+<a class="anchor" id="a78f5a10c568d2a9bbbb129dc96548887"></a>
 <div class="memitem">
 <div class="memproto">
       <table class="memname">
@@ -216,7 +216,13 @@ Functions</h2></td></tr>
           <td class="paramkey"></td>
           <td></td>
           <td class="paramtype">&#160;</td>
-          <td class="paramname"><em>$xchan</em>&#160;</td>
+          <td class="paramname"><em>$xchan</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">&#160;</td>
+          <td class="paramname"><em>$thing</em> = <code>false</code>&#160;</td>
         </tr>
         <tr>
           <td></td>
@@ -226,7 +232,7 @@ Functions</h2></td></tr>
       </table>
 </div><div class="memdoc">
 
-<p>Referenced by <a class="el" href="import_8php.html#af17fef0410518f7eac205d0ea416eaa2">import_post()</a>, <a class="el" href="zot_8php.html#a56f3f65514e4e7f0cd117d01735aebd1">import_xchan()</a>, and <a class="el" href="poller_8php.html#a5f12df3a4738124b6c039971e87e76da">poller_run()</a>.</p>
+<p>Referenced by <a class="el" href="import_8php.html#af17fef0410518f7eac205d0ea416eaa2">import_post()</a>, <a class="el" href="zot_8php.html#a56f3f65514e4e7f0cd117d01735aebd1">import_xchan()</a>, <a class="el" href="poller_8php.html#a5f12df3a4738124b6c039971e87e76da">poller_run()</a>, and <a class="el" href="thing_8php.html#a8be23b1d475ec3d9291999221c674c80">thing_init()</a>.</p>
 
 </div>
 </div>
@@ -254,7 +260,7 @@ Functions</h2></td></tr>
       </table>
 </div><div class="memdoc">
 
-<p>Referenced by <a class="el" href="fbrowser_8php.html#aee476addcf7a3e0fe9454f7dfd5a56c4">fbrowser_content()</a>, <a class="el" href="items_8php.html#aba98fcbbcd7044a7e9ea34edabc14c87">fix_private_photos()</a>, <a class="el" href="photo__driver_8php.html#a243cee492ce443afb6a7d77d54b6c4aa">guess_image_type()</a>, <a class="el" href="photo__driver_8php.html#a1d0bc7161dec0d177b7d3bbe4421af9a">import_channel_photo()</a>, <a class="el" href="photo__driver_8php.html#a102f3f26f67e0e38f4322a771951c1ca">import_profile_photo()</a>, <a class="el" href="photo_8php.html#a582779d24882b0d31ee909a91d70a448">photo_init()</a>, <a class="el" href="include_2photos_8php.html#a6c40ef58aefef705a5adc84a40e97109">photo_upload()</a>, <a class="el" href="mod_2photos_8php.html#aa87382611a66ec5effdb2d78f13f5812">photos_content()</a>, <a class="el" href="mod_2photos_8php.html#a062bed4d04d14fee8a53f4c9be673080">photos_post()</a>, <a class="el" href="profile__photo_8php.html#a4b80234074bd603221aa5364f330e479">profile_photo_post()</a>, and <a class="el" href="include_2network_8php.html#ae8d9c41a11000fb8667039fc71b4f73f">scale_external_images()</a>.</p>
+<p>Referenced by <a class="el" href="fbrowser_8php.html#aee476addcf7a3e0fe9454f7dfd5a56c4">fbrowser_content()</a>, <a class="el" href="items_8php.html#aba98fcbbcd7044a7e9ea34edabc14c87">fix_private_photos()</a>, <a class="el" href="photo__driver_8php.html#a243cee492ce443afb6a7d77d54b6c4aa">guess_image_type()</a>, <a class="el" href="photo__driver_8php.html#a1d0bc7161dec0d177b7d3bbe4421af9a">import_channel_photo()</a>, <a class="el" href="photo__driver_8php.html#a78f5a10c568d2a9bbbb129dc96548887">import_profile_photo()</a>, <a class="el" href="photo_8php.html#a582779d24882b0d31ee909a91d70a448">photo_init()</a>, <a class="el" href="include_2photos_8php.html#a6c40ef58aefef705a5adc84a40e97109">photo_upload()</a>, <a class="el" href="mod_2photos_8php.html#aa87382611a66ec5effdb2d78f13f5812">photos_content()</a>, <a class="el" href="mod_2photos_8php.html#a062bed4d04d14fee8a53f4c9be673080">photos_post()</a>, <a class="el" href="profile__photo_8php.html#a4b80234074bd603221aa5364f330e479">profile_photo_post()</a>, and <a class="el" href="include_2network_8php.html#ae8d9c41a11000fb8667039fc71b4f73f">scale_external_images()</a>.</p>
 
 </div>
 </div>
