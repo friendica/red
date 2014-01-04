@@ -1368,7 +1368,7 @@ function process_delivery($sender,$arr,$deliveries,$relay) {
 			remove_community_tag($sender,$arr,$channel['channel_id']);
 
 			$item_id = delete_imported_item($sender,$arr,$channel['channel_id']);
-			$result[] = array($d['hash'],'deleted',$channel['channel_name'] . ' <' . $channel['channel_address'] . '@' . get_app()->get_hostname() . '>');
+			$result[] = array($d['hash'],(($item_id) ? 'deleted' : 'delete_failed'),$channel['channel_name'] . ' <' . $channel['channel_address'] . '@' . get_app()->get_hostname() . '>');
 
 			if($relay && $item_id) {
 				logger('process_delivery: invoking relay');
@@ -1524,8 +1524,9 @@ function delete_imported_item($sender,$item,$uid) {
 
 	logger('delete_imported_item invoked',LOGGER_DEBUG);
 
-	$r = q("select id from item where ( author_xchan = '%s' or owner_xchan = '%s' )
+	$r = q("select id from item where ( author_xchan = '%s' or owner_xchan = '%s' or source_xchan = '%s' )
 		and mid = '%s' and uid = %d limit 1",
+		dbesc($sender['hash']),
 		dbesc($sender['hash']),
 		dbesc($sender['hash']),
 		dbesc($item['mid']),
