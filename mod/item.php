@@ -44,7 +44,7 @@ function item_post(&$a) {
 
 	call_hooks('post_local_start', $_REQUEST);
 
-//	logger('postvars ' . print_r($_REQUEST,true), LOGGER_DATA);
+	logger('postvars ' . print_r($_REQUEST,true), LOGGER_DATA);
 
 	$api_source = ((x($_REQUEST,'api_source') && $_REQUEST['api_source']) ? true : false);
 
@@ -571,7 +571,7 @@ function item_post(&$a) {
 	}
 
 	$item_flags |= ITEM_UNSEEN;
-	$item_restrict |= ITEM_VISIBLE;
+//	$item_restrict |= ITEM_VISIBLE;
 	
 	if($post_type === 'wall' || $post_type === 'wall-comment')
 		$item_flags = $item_flags | ITEM_WALL;
@@ -705,6 +705,8 @@ function item_post(&$a) {
 
 		item_store_update($datarray,$execflag);
 
+		update_remote_id($channel,$post_id,$webpage,$pagetitle,$namespace,$remote_id,$mid);
+
 		proc_run('php', "include/notifier.php", 'edit_post', $post_id);
 		if((x($_REQUEST,'return')) && strlen($return_path)) {
 			logger('return: ' . $return_path);
@@ -808,34 +810,8 @@ function item_post(&$a) {
 		// NOTREACHED
 	}
 
-	$page_type = '';
 
-	if($webpage & ITEM_WEBPAGE)
-		$page_type = 'WEBPAGE';
-	elseif($webpage & ITEM_BUILDBLOCK)
-		$page_type = 'BUILDBLOCK';
-	elseif($webpage & ITEM_PDL)
-		$page_type = 'PDL';
-	elseif($namespace && $remote_id) {
-		$page_type = $namespace;
-		$pagetitle = $remote_id;
-	}
-
-	if($page_type) {	
-
-		// store page info as an alternate message_id so we can access it via 
-		//    https://sitename/page/$channelname/$pagetitle
-		// if no pagetitle was given or it couldn't be transliterated into a url, use the first 
-		// sixteen bytes of the mid - which makes the link portable and not quite as daunting
-		// as the entire mid. If it were the post_id the link would be less portable.
-
-		q("insert into item_id ( iid, uid, sid, service ) values ( %d, %d, '%s','%s' )",
-			intval($post_id),
-			intval($channel['channel_id']),
-			dbesc(($pagetitle) ? $pagetitle : substr($mid,0,16)),
-			dbesc($page_type)
-		);
-	}
+	update_remote_id($channel,$post_id,$webpage,$pagetitle,$namespace,$remote_id,$mid);
 
 	$datarray['id']    = $post_id;
 	$datarray['llink'] = $a->get_baseurl() . '/display/' . $channel['channel_address'] . '/' . $post_id;

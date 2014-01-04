@@ -3935,3 +3935,52 @@ function items_fetch($arr,$channel = null,$observer_hash = null,$client_mode = C
 
 	return $items;
 }
+
+
+function update_remote_id($channel,$post_id,$webpage,$pagetitle,$namespace,$remote_id,$mid) {
+
+	$page_type = '';
+
+	if($webpage & ITEM_WEBPAGE)
+		$page_type = 'WEBPAGE';
+	elseif($webpage & ITEM_BUILDBLOCK)
+		$page_type = 'BUILDBLOCK';
+	elseif($webpage & ITEM_PDL)
+		$page_type = 'PDL';
+	elseif($namespace && $remote_id) {
+		$page_type = $namespace;
+		$pagetitle = $remote_id;
+	}
+
+	if($page_type) {	
+
+		// store page info as an alternate message_id so we can access it via 
+		//    https://sitename/page/$channelname/$pagetitle
+		// if no pagetitle was given or it couldn't be transliterated into a url, use the first 
+		// sixteen bytes of the mid - which makes the link portable and not quite as daunting
+		// as the entire mid. If it were the post_id the link would be less portable.
+
+		$r = q("select * from item_id where iid = %d and uid = %d and service = '%s' limit 1",
+			intval($post_id),
+			intval($channel['channel_id']),
+			dbesc($page_type)
+		);
+		if($r) {
+			q("update item_id set sid = '%s' where id = %d limit 1",
+				dbesc(($pagetitle) ? $pagetitle : substr($mid,0,16)),
+				intval($r[0]['id'])
+			);
+		}
+		else {
+			q("insert into item_id ( iid, uid, sid, service ) values ( %d, %d, '%s','%s' )",
+				intval($post_id),
+				intval($channel['channel_id']),
+				dbesc(($pagetitle) ? $pagetitle : substr($mid,0,16)),
+				dbesc($page_type)
+			);
+		}
+	}
+
+}
+
+
