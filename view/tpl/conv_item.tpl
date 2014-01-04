@@ -72,10 +72,10 @@
 				<i class="icon-retweet item-tool" title="{{$item.share.0}}" onclick="jotShare({{$item.id}}); return false"></i>
 			{{/if}}
 			{{if $item.plink}}
-				<i class="icon-external-link item-tool" onclick="window.location.href='{{$item.plink.href}}'; return false;" title="{{$item.plink.title}}"></i>
+				<a href="{{$item.plink.href}}" title="{{$item.plink.title}}" ><i class="icon-external-link item-tool"></i></a>
 			{{/if}}
 			{{if $item.edpost}}
-				<i class="editpost icon-pencil item-tool" onclick="window.location.href='{{$item.edpost.0}}'; return false;" title="{{$item.edpost.1}}"></i>
+				<a href="{{$item.edpost.0}}" title="{{$item.edpost.1}}"><i class="editpost icon-pencil item-tool"></i></a>
 			{{/if}}			 
 			{{if $item.star}}
 			<i id="starred-{{$item.id}}" onclick="dostar({{$item.id}}); return false;" class="star-item item-tool {{$item.star.isstarred}}" title="{{$item.star.toggle}}"></i>
