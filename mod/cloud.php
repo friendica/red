@@ -79,6 +79,7 @@ class RedBasicAuth extends Sabre\DAV\Auth\Backend\AbstractBasic {
 			        if(($record['account_flags'] == ACCOUNT_OK) || ($record['account_flags'] == ACCOUNT_UNVERIFIED)
             		&& (hash('whirlpool',$record['account_salt'] . $password) === $record['account_password'])) {
 			            logger('(DAV) RedBasicAuth: password verified for ' . $username);
+						$this->currentUser = $r[0]['channel_address'];
 						$this->channel_name = $r[0]['channel_address'];
 						$this->channel_id = $r[0]['channel_id'];
 						$this->channel_hash = $this->observer = $r[0]['channel_hash'];
@@ -90,6 +91,12 @@ class RedBasicAuth extends Sabre\DAV\Auth\Backend\AbstractBasic {
 	    logger('(DAV) RedBasicAuth: password failed for ' . $username);
     	return false;
 	}
+
+	function setCurrentUser($name) {
+		$this->currentUser = $name;
+	}
+
+
 }
 
 
@@ -102,6 +109,20 @@ function cloud_init(&$a) {
 
 	$auth = new RedBasicAuth();
 
+	$ob_hash = get_observer_hash();
+
+	if($ob_hash) {
+		if(local_user()) {
+			$channel = $a->get_channel();
+			$auth->setCurrentUser($channel['channel_address']);
+			$auth->channel_name = $channel['channel_address'];
+			$auth->channel_id = $channel['channel_id'];
+			$auth->channel_hash = $channel['channel_hash'];
+		}	
+		$auth->observer = $ob_hash;
+	}	
+
+
 	$rootDirectory = new RedDirectory('/',$auth);
 	$server = new DAV\Server($rootDirectory);
 	$lockBackend = new DAV\Locks\Backend\File('store/data/locks');
@@ -110,7 +131,8 @@ function cloud_init(&$a) {
 	$server->addPlugin($lockPlugin);
 
 
-	$auth->Authenticate($server,'Red Matrix');
+	if(! $auth->observer)
+		$auth->Authenticate($server,'Red Matrix');
 
 	$browser = new DAV\Browser\Plugin();
 	$server->addPlugin($browser);
