@@ -632,3 +632,43 @@ function attach_mkdir($channel,$observer_hash,$arr = null) {
 	return $ret;
  
 }
+
+
+
+function attach_change_permissions($channel_id,$resource,$allow_cid,$allow_gid,$deny_cid,$deny_gid,$recurse = false) {
+
+	$r = q("select hash, flags from attach where hash = '%s' and uid = %d limit 1",
+		dbesc($resource),
+		intval($channel_id)
+	);
+
+	if(! $r)
+		return;
+
+	if($r[0]['flags'] & ATTACH_FLAG_DIR) {
+		if($recurse) {
+			$r = q("select hash, flags from attach where folder = '%s' and uid = %d",
+				dbesc($resource),
+				intval($channel_id)
+			);
+			if($r) {
+				foreach($r as $rr) {
+					attach_change_permissions($channel_id,$resource,$allow_cid,$allow_gid,$deny_cid,$deny_gid,$recurse);
+				}
+			}
+		}
+	}
+
+	$x = q("update attach set allow_cid = '%s', allow_gid = '%s', deny_cid = '%s', deny_gid = '%s' where hash = '%s' and uid = %d limit 1",
+		dbesc($allow_cid),
+		dbesc($allow_gid),
+		dbesc($deny_cid),
+		dbesc($deny_gid),
+		dbesc($resource),
+		intval($channel_id)
+	);
+
+	return;
+}
+			 	
+
