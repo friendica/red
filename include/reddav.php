@@ -92,6 +92,8 @@ class RedDirectory extends DAV\Node implements DAV\ICollection {
 		$this->folder_hash = '';
 
 		$this->getDir();
+		if($this->auth->browser)
+			$this->auth->browser->set_writeable();
 
 	}
 
@@ -657,3 +659,90 @@ dbg(0);
 }
 
 
+class RedBasicAuth extends Sabre\DAV\Auth\Backend\AbstractBasic {
+
+	public $channel_name = '';
+	public $channel_id = 0;
+	public $channel_hash = '';
+	public $observer = '';
+	public $browser;
+	public $owner_id;
+
+    protected function validateUserPass($username, $password) {
+		require_once('include/auth.php');
+		$record = account_verify_password($email,$pass);
+		if($record && $record['account_default_channel']) {
+			$r = q("select * from channel where channel_account_id = %d and channel_id = %d limit 1",
+				intval($record['account_id']),
+				intval($record['account_default_channel'])
+			);
+			if($r) {
+				$this->currentUser = $r[0]['channel_address'];
+				$this->channel_name = $r[0]['channel_address'];
+				$this->channel_id = $r[0]['channel_id'];
+				$this->channel_hash = $this->observer = $r[0]['channel_hash'];
+				return true;
+			}
+		}
+		$r = q("select * from channel where channel_address = '%s' limit 1",
+			dbesc($username)
+		);
+		if($r) {
+			$x = q("select * from account where account_id = %d limit 1",
+				intval($r[0]['channel_account_id'])
+			);
+			if($x) {
+			    foreach($x as $record) {
+			        if(($record['account_flags'] == ACCOUNT_OK) || ($record['account_flags'] == ACCOUNT_UNVERIFIED)
+            		&& (hash('whirlpool',$record['account_salt'] . $password) === $record['account_password'])) {
+			            logger('(DAV) RedBasicAuth: password verified for ' . $username);
+						$this->currentUser = $r[0]['channel_address'];
+						$this->channel_name = $r[0]['channel_address'];
+						$this->channel_id = $r[0]['channel_id'];
+						$this->channel_hash = $this->observer = $r[0]['channel_hash'];
+            			return true;
+        			}
+    			}
+			}
+		}
+	    logger('(DAV) RedBasicAuth: password failed for ' . $username);
+    	return false;
+	}
+
+	function setCurrentUser($name) {
+		$this->currentUser = $name;
+	}
+
+	function setBrowserPlugin($browser) {
+		$this->browser = $browser;
+	}
+		
+}
+
+
+class RedBrowser extends DAV\Browser\Plugin {
+
+	private $auth;
+
+	function __construct(&$auth) {
+
+		$this->auth = $auth;
+
+
+	}
+
+	function set_writeable() {
+		logger('RedBrowser: ' . print_r($this->auth,true));
+
+		if(! $this->auth->owner_id)
+			$this->enablePost = false;
+
+
+		if(! perm_is_allowed($this->auth->owner_id, get_observer_hash(), 'write_storage'))
+			$this->enablePost = false;
+		else
+			$this->enablePost = true;
+
+	}
+
+}
