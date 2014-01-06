@@ -196,10 +196,10 @@ dbg(1);
             dbesc(stream_get_contents($data)),
             dbesc(datetime_convert()),
             dbesc(datetime_convert()),
-			dbesc($[0]['channel_allow_cid']),
-			dbesc($[0]['channel_allow_gid']),
-			dbesc($[0]['channel_deny_cid']),
-			dbesc($[0]['channel_deny_gid']),
+			dbesc($c[0]['channel_allow_cid']),
+			dbesc($c[0]['channel_allow_gid']),
+			dbesc($c[0]['channel_deny_cid']),
+			dbesc($c[0]['channel_deny_gid']),
 
 
 		);
