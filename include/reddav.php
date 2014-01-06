@@ -184,12 +184,13 @@ class RedDirectory extends DAV\Node implements DAV\ICollection {
 
 dbg(1);
 
-        $r = q("INSERT INTO attach ( aid, uid, hash, filename, filetype, filesize, revision, data, created, edited, allow_cid, allow_gid, deny_cid, deny_gid )
-            VALUES ( %d, %d, '%s', '%s', '%s', %d, %d, '%s', '%s', '%s', '%s', '%s', '%s', '%s' ) ",
+        $r = q("INSERT INTO attach ( aid, uid, hash, filename, folder, filetype, filesize, revision, data, created, edited, allow_cid, allow_gid, deny_cid, deny_gid )
+            VALUES ( %d, %d, '%s', '%s', '%s', '%s', %d, %d, '%s', '%s', '%s', '%s', '%s', '%s', '%s' ) ",
             intval($c[0]['channel_account_id']),
             intval($c[0]['channel_id']),
             dbesc($hash),
             dbesc($name),
+			dbesc($this->folder_hash),
             dbesc($mimetype),
             intval($filesize),
             intval(0),
@@ -264,8 +265,10 @@ dbg(0);
 	function getDir() {
 
 		logger('getDir: ' . $this->ext_path);
+		$file = $this->ext_path;
 
-		$x = strpos($this->ext_path,'/cloud');
+
+		$x = strpos($file,'/cloud');
 		if($x === false)
 			return;
 		if($x === 0) {
@@ -281,6 +284,9 @@ dbg(0);
 	
 		if(! $path_arr)
 			return;
+
+
+		logger('getDir(): path: ' . print_r($path_arr,true));
 
 		$channel_name = $path_arr[0];
 
@@ -300,8 +306,9 @@ dbg(0);
 
 		for($x = 1; $x < count($path_arr); $x ++) {		
 dbg(1);
-			$r = q("select id, hash, filename, flags from attach where folder = '%s' and (flags & %d)",
+			$r = q("select id, hash, filename, flags from attach where folder = '%s' and filename = '%s' and (flags & %d)",
 				dbesc($folder),
+				dbesc($path_arr[$x]),
 				intval($channel_id),
 				intval(ATTACH_FLAG_DIR)
 			);
