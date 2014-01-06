@@ -97,6 +97,7 @@ function editlayout_content(&$a) {
 	$o .= replace_macros($tpl,array(
 		'$return_path' => $rp,
 		'$action' => 'item',
+		'$webpage' => ITEM_PDL,
 		'$share' => t('Edit'),
 		'$upload' => t('Upload photo'),
 		'$attach' => t('Attach file'),

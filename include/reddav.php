@@ -75,10 +75,10 @@ class RedInode implements DAV\INode {
 class RedDirectory extends DAV\Node implements DAV\ICollection {
 
 	private $red_path;
+	private $folder_hash;
 	private $ext_path;
 	private $root_dir = '';
 	private $auth;
-
 
 
 	function __construct($ext_path,&$auth_plugin) {
@@ -89,7 +89,11 @@ class RedDirectory extends DAV\Node implements DAV\ICollection {
 			$this->red_path = '/';
 		$this->auth = $auth_plugin;
 		logger('Red_Directory: ' . print_r($this,true));
+		$this->folder_hash = '';
 
+		$this->getDir();
+		if($this->auth->browser)
+			$this->auth->browser->set_writeable();
 
 	}
 
@@ -102,13 +106,13 @@ class RedDirectory extends DAV\Node implements DAV\ICollection {
 			return;
 		}
 
-		if(! perm_is_allowed($this->auth->channel_id,$this->auth->observer,'view_storage')) {
+		if(($this->auth->owner_id) && (! perm_is_allowed($this->auth->owner_id,$this->auth->observer,'view_storage'))) {
 			throw new DAV\Exception\Forbidden('Permission denied.');
 			return;
 		}
 
-		return RedCollectionData($this->red_path,$this->auth);
-
+		$contents =  RedCollectionData($this->red_path,$this->auth);
+		return $contents;
 	}
 
 
@@ -123,7 +127,7 @@ class RedDirectory extends DAV\Node implements DAV\ICollection {
 			return;
 		}
  
-		if(! perm_is_allowed($this->auth->channel_id,$this->auth->observer,'view_storage')) {
+		if(($this->auth->owner_id) && (! perm_is_allowed($this->auth->owner_id,$this->auth->observer,'view_storage'))) {
 			throw new DAV\Exception\Forbidden('Permission denied.');
 			return;
 		}
@@ -154,10 +158,16 @@ class RedDirectory extends DAV\Node implements DAV\ICollection {
 		logger('RedDirectory::createFile : ' . $name);
 		logger('RedDirectory::createFile : ' . print_r($this,true));
 
-		logger('createFile():' . stream_get_contents($data));
+//		logger('createFile():' . stream_get_contents($data));
 
 
-		if(! perm_is_allowed($this->auth->channel_id,$this->auth->observer,'write_storage')) {
+		if(! $this->auth->owner_id) {
+			logger('createFile: permission denied');
+			throw new DAV\Exception\Forbidden('Permission denied.');
+			return;
+		}
+
+		if(! perm_is_allowed($this->auth->owner_id,$this->auth->observer,'write_storage')) {
 			logger('createFile: permission denied');
 			throw new DAV\Exception\Forbidden('Permission denied.');
 			return;
@@ -174,20 +184,25 @@ class RedDirectory extends DAV\Node implements DAV\ICollection {
 		$filesize = 0;
 		$hash = random_string();
 
-dbg(1);
-
-        $r = q("INSERT INTO attach ( aid, uid, hash, filename, filetype, filesize, revision, data, created, edited )
-            VALUES ( %d, %d, '%s', '%s', '%s', %d, %d, '%s', '%s', '%s' ) ",
+        $r = q("INSERT INTO attach ( aid, uid, hash, filename, folder, filetype, filesize, revision, data, created, edited, allow_cid, allow_gid, deny_cid, deny_gid )
+            VALUES ( %d, %d, '%s', '%s', '%s', '%s', %d, %d, '%s', '%s', '%s', '%s', '%s', '%s', '%s' ) ",
             intval($c[0]['channel_account_id']),
             intval($c[0]['channel_id']),
             dbesc($hash),
             dbesc($name),
+			dbesc($this->folder_hash),
             dbesc($mimetype),
             intval($filesize),
             intval(0),
             dbesc(stream_get_contents($data)),
             dbesc(datetime_convert()),
-            dbesc(datetime_convert())
+            dbesc(datetime_convert()),
+			dbesc($c[0]['channel_allow_cid']),
+			dbesc($c[0]['channel_allow_gid']),
+			dbesc($c[0]['channel_deny_cid']),
+			dbesc($c[0]['channel_deny_gid'])
+
+
 		);
 
 		$r = q("update attach set filesize = length(data) where hash = '%s' and uid = %d limit 1",
@@ -195,25 +210,58 @@ dbg(1);
 			intval($c[0]['channel_id'])
 		);
 
+		$r = q("select filesize from attach where hash = '%s' and uid = %d limit 1",
+			dbesc($hash),
+			intval($c[0]['channel_id'])
+		);
 
-dbg(0);
- 
+		// FIXME - delete attached file resource if using OS storage
+
+		$maxfilesize = get_config('system','maxfilesize');
+
+		if(($maxfilesize) && ($r[0]['filesize'] > $maxfilesize)) {
+			q("delete from attach where hash = '%s' and uid = %d limit 1",
+				dbesc($hash),
+				intval($c[0]['channel_id'])
+			);
+			return;
+		}
+
+		$limit = service_class_fetch($c[0]['channel_id'],'attach_upload_limit');
+		if($limit !== false) {
+			$x = q("select sum(filesize) as total from attach where uid = %d ",
+				intval($c[0]['channel_id'])
+			);
+			if(($x) &&  ($x[0]['total'] + $r[0]['filesize'] > $limit)) {
+				q("delete from attach where hash = '%s' and uid = %d limit 1",
+					dbesc($hash),
+					intval($c[0]['channel_id'])
+				);
+				return;
+			}
+		}
 	}
 
 
 	function createDirectory($name) {
-		if(! perm_is_allowed($this->auth->channel_id,$this->auth->observer,'write_storage')) {
+
+		logger('RedDirectory::createDirectory: ' . $name);
+
+		if((! $this->auth->owner_id) || (! perm_is_allowed($this->auth->owner_id,$this->auth->observer,'write_storage'))) {
 			throw new DAV\Exception\Forbidden('Permission denied.');
 			return;
 		}
 
+		$r = q("select * from channel where channel_id = %d limit 1",
+			dbesc($this->auth->owner_id)
+		);
 
+		if($r) {
+			$result = attach_mkdir($r[0],$this->auth->observer,array('filename' => $name,'folder' => $this->folder_hash));
 
+			logger('RedDirectory::createDirectory: ' . print_r($result,true));
 
-
-
-
-
+		}
 
 	}
 
@@ -234,6 +282,70 @@ dbg(0);
 		return false;
 
 	}
+
+	function getDir() {
+
+		logger('getDir: ' . $this->ext_path);
+		$file = $this->ext_path;
+
+
+		$x = strpos($file,'/cloud');
+		if($x === false)
+			return;
+		if($x === 0) {
+			$file = substr($file,6);
+		}
+
+		if((! $file) || ($file === '/')) {
+			return;
+		}
+
+		$file = trim($file,'/');
+		$path_arr = explode('/', $file);
+	
+		if(! $path_arr)
+			return;
+
+
+		logger('getDir(): path: ' . print_r($path_arr,true));
+
+		$channel_name = $path_arr[0];
+
+		$r = q("select channel_id from channel where channel_address = '%s' limit 1",
+			dbesc($channel_name)
+		);
+
+		if(! $r)
+			return;
+
+		$channel_id = $r[0]['channel_id'];
+		$this->auth->owner_id = $channel_id;
+
+		$path = '/' . $channel_name;
+
+		$folder = '';
+
+		for($x = 1; $x < count($path_arr); $x ++) {		
+
+			$r = q("select id, hash, filename, flags from attach where folder = '%s' and filename = '%s' and (flags & %d)",
+				dbesc($folder),
+				dbesc($path_arr[$x]),
+				intval($channel_id),
+				intval(ATTACH_FLAG_DIR)
+			);
+
+			if($r && ( $r[0]['flags'] & ATTACH_FLAG_DIR)) {
+				$folder = $r[0]['hash'];
+				$path = $path . '/' . $r[0]['filename'];
+			}	
+		}
+		$this->folder_hash = $folder;
+		return;
+	}
+
+
+
+
 
 }
 
@@ -264,7 +376,7 @@ class RedFile extends DAV\Node implements DAV\IFile {
 	function setName($newName) {
 		logger('RedFile::setName: ' . basename($this->name) . ' -> ' . $newName);
 
-		if((! $newName) || (! perm_is_allowed($this->auth->channel_id,$this->auth->observer,'write_storage'))) {
+		if((! $newName) || (! $this->auth->owner_id) || (! perm_is_allowed($this->auth->owner_id,$this->auth->observer,'write_storage'))) {
 			throw new DAV\Exception\Forbidden('Permission denied.');
 			return;
 		}
@@ -282,9 +394,8 @@ class RedFile extends DAV\Node implements DAV\IFile {
 
 	function put($data) {
 		logger('RedFile::put: ' . basename($this->name));
-		logger('put():' . stream_get_contents($data));
+//		logger('put():' . stream_get_contents($data));
 
-dbg(1);
 		$r = q("update attach set data = '%s' where hash = '%s' and uid = %d limit 1",
 			dbesc(stream_get_contents($data)),
 			dbesc($this->data['hash']),
@@ -294,8 +405,35 @@ dbg(1);
 			dbesc($this->data['hash']),
 			intval($this->data['uid'])
 		);
-dbg(0);
 
+		$r = q("select filesize from attach where hash = '%s' and uid = %d limit 1",
+			dbesc($this->data['hash']),
+			intval($c[0]['channel_id'])
+		);
+
+		$maxfilesize = get_config('system','maxfilesize');
+
+		if(($maxfilesize) && ($r[0]['filesize'] > $maxfilesize)) {
+			q("delete from attach where hash = '%s' and uid = %d limit 1",
+				dbesc($this->data['hash']),
+				intval($c[0]['channel_id'])
+			);
+			return;
+		}
+
+		$limit = service_class_fetch($c[0]['channel_id'],'attach_upload_limit');
+		if($limit !== false) {
+			$x = q("select sum(filesize) as total from attach where uid = %d ",
+				intval($c[0]['channel_id'])
+			);
+			if(($x) &&  ($x[0]['total'] + $r[0]['filesize'] > $limit)) {
+				q("delete from attach where hash = '%s' and uid = %d limit 1",
+					dbesc($this->data['hash']),
+					intval($c[0]['channel_id'])
+				);
+				return;
+			}
+		}
 	}
 
 
@@ -390,15 +528,16 @@ logger('dbg1: ' . print_r($r,true));
 		return null;
 
 	$channel_id = $r[0]['channel_id'];
+	$auth->owner_id = $channel_id;
 
 	$path = '/' . $channel_name;
 
 	$folder = '';
 
 	for($x = 1; $x < count($path_arr); $x ++) {		
-		$r = q("select id, hash, filename, flags from attach where folder = '%s' and (flags & %d)",
+		$r = q("select id, hash, filename, flags from attach where folder = '%s' and filename = '%s' and (flags & %d)",
 			dbesc($folder),
-			intval($channel_id),
+			dbesc($path_arr[$x]),
 			intval(ATTACH_FLAG_DIR)
 		);
 		if($r && ( $r[0]['flags'] & ATTACH_FLAG_DIR)) {
@@ -437,7 +576,7 @@ logger('dbg2: ' . print_r($r,true));
 
 function RedFileData($file, &$auth,$test = false) {
 
-logger('RedFileData:' . $file);
+logger('RedFileData:' . $file . (($test) ? ' (test mode) ' : ''));
 
 
 	$x = strpos($file,'/cloud');
@@ -479,6 +618,11 @@ logger('file=' . $file);
 
 	$path = '/' . $channel_name;
 
+	$auth->owner_id = $channel_id;
+
+	$permission_error = false;
+
+
 	$folder = '';
 //dbg(1);
 
@@ -489,8 +633,9 @@ logger('file=' . $file);
 
 	for($x = 1; $x < count($path_arr); $x ++) {		
 dbg(1);
-		$r = q("select id, hash, filename, flags from attach where folder = '%s' and uid = %d and (flags & %d) $perms",
+		$r = q("select id, hash, filename, flags from attach where folder = '%s' and filename = '%s' and uid = %d and (flags & %d) $perms",
 			dbesc($folder),
+			dbesc($path_arr[$x]),
 			intval($channel_id),
 			intval(ATTACH_FLAG_DIR)
 		);
@@ -510,13 +655,27 @@ dbg(0);
 
 			);
 		}
-		if(! $r)
+		if(! $r) {
+
 			$errors = true;
+			$r = q("select id, uid, hash, filename, filetype, filesize, revision, folder, flags, created, edited from attach 
+				where folder = '%s' and filename = '%s' and uid = %d group by filename limit 1",
+				dbesc($folder),
+				basename($file),
+				intval($channel_id)
+			);
+			if($r)
+				$permission_error = true;
+
+		}
+
 	}
 
 	logger('dbg1: ' . print_r($r,true));
 
 	if($path === '/' . $file) {
+		if($test)
+			return true;
 		// final component was a directory.
 		return new RedDirectory('/cloud/' . $file,$auth);
 	}
@@ -524,11 +683,18 @@ dbg(0);
 	if($errors) {
 		if($test)
 			return false;
-		throw new DAV\Exception\Forbidden('Permission denied.');
+		if($permission_error) {
+			logger('RedFileData: permission error');	
+			throw new DAV\Exception\Forbidden('Permission denied.');
+		}
+		logger('RedFileData: not found');
 		return;
 	}
 
 	if($r) {
+		if($test)
+			return true;
+
 		if($r[0]['flags'] & ATTACH_FLAG_DIR)
 			return new RedDirectory('/cloud' . $path . '/' . $r[0]['filename'],$auth);
 		else
@@ -538,3 +704,90 @@ dbg(0);
 }
 
 
+class RedBasicAuth extends Sabre\DAV\Auth\Backend\AbstractBasic {
+
+	public $channel_name = '';
+	public $channel_id = 0;
+	public $channel_hash = '';
+	public $observer = '';
+	public $browser;
+	public $owner_id;
+
+    protected function validateUserPass($username, $password) {
+		require_once('include/auth.php');
+		$record = account_verify_password($email,$pass);
+		if($record && $record['account_default_channel']) {
+			$r = q("select * from channel where channel_account_id = %d and channel_id = %d limit 1",
+				intval($record['account_id']),
+				intval($record['account_default_channel'])
+			);
+			if($r) {
+				$this->currentUser = $r[0]['channel_address'];
+				$this->channel_name = $r[0]['channel_address'];
+				$this->channel_id = $r[0]['channel_id'];
+				$this->channel_hash = $this->observer = $r[0]['channel_hash'];
+				return true;
+			}
+		}
+		$r = q("select * from channel where channel_address = '%s' limit 1",
+			dbesc($username)
+		);
+		if($r) {
+			$x = q("select * from account where account_id = %d limit 1",
+				intval($r[0]['channel_account_id'])
+			);
+			if($x) {
+			    foreach($x as $record) {
+			        if(($record['account_flags'] == ACCOUNT_OK) || ($record['account_flags'] == ACCOUNT_UNVERIFIED)
+            		&& (hash('whirlpool',$record['account_salt'] . $password) === $record['account_password'])) {
+			            logger('(DAV) RedBasicAuth: password verified for ' . $username);
+						$this->currentUser = $r[0]['channel_address'];
+						$this->channel_name = $r[0]['channel_address'];
+						$this->channel_id = $r[0]['channel_id'];
+						$this->channel_hash = $this->observer = $r[0]['channel_hash'];
+            			return true;
+        			}
+    			}
+			}
+		}
+	    logger('(DAV) RedBasicAuth: password failed for ' . $username);
+    	return false;
+	}
+
+	function setCurrentUser($name) {
+		$this->currentUser = $name;
+	}
+
+	function setBrowserPlugin($browser) {
+		$this->browser = $browser;
+	}
+		
+}
+
+
+class RedBrowser extends DAV\Browser\Plugin {
+
+	private $auth;
+
+	function __construct(&$auth) {
+
+		$this->auth = $auth;
+
+
+	}
+
+	function set_writeable() {
+		logger('RedBrowser: ' . print_r($this->auth,true));
+
+		if(! $this->auth->owner_id)
+			$this->enablePost = false;
+
+
+		if(! perm_is_allowed($this->auth->owner_id, get_observer_hash(), 'write_storage'))
+			$this->enablePost = false;
+		else
+			$this->enablePost = true;
+
+	}
+
+}

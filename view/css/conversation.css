@@ -331,11 +331,6 @@
 	filter:alpha(opacity=100);
 }
 
-.wall-item-like.comment,
-.wall-item-dislike.comment {
-	margin-left: 50px;
-}
-
 .wall-item-like,
 .wall-item-dislike {
 	margin-top: 5px;

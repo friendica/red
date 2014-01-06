@@ -25,7 +25,7 @@ head_add_js('jquery-migrate-1.1.1.js');
 head_add_js('spin.js');
 head_add_js('jquery.spin.js');
 head_add_js('jquery.textinputs.js');
-head_add_js('fk.autocomplete.js');
+head_add_js('autocomplete.js');
 head_add_js('library/fancybox/jquery.fancybox-1.3.4.js');
 head_add_js('library/jquery.timeago.js');
 head_add_js('library/jquery.divgrow/jquery.divgrow-1.3.1.js');
