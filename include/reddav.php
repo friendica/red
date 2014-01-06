@@ -184,8 +184,8 @@ class RedDirectory extends DAV\Node implements DAV\ICollection {
 
 dbg(1);
 
-        $r = q("INSERT INTO attach ( aid, uid, hash, filename, filetype, filesize, revision, data, created, edited )
-            VALUES ( %d, %d, '%s', '%s', '%s', %d, %d, '%s', '%s', '%s' ) ",
+        $r = q("INSERT INTO attach ( aid, uid, hash, filename, filetype, filesize, revision, data, created, edited, allow_cid, allow_gid, deny_cid, deny_gid )
+            VALUES ( %d, %d, '%s', '%s', '%s', %d, %d, '%s', '%s', '%s', '%s', '%s', '%s', '%s' ) ",
             intval($c[0]['channel_account_id']),
             intval($c[0]['channel_id']),
             dbesc($hash),
@@ -195,7 +195,13 @@ dbg(1);
             intval(0),
             dbesc(stream_get_contents($data)),
             dbesc(datetime_convert()),
-            dbesc(datetime_convert())
+            dbesc(datetime_convert()),
+			dbesc($[0]['channel_allow_cid']),
+			dbesc($[0]['channel_allow_gid']),
+			dbesc($[0]['channel_deny_cid']),
+			dbesc($[0]['channel_deny_gid']),
+
+
 		);
 
 		$r = q("update attach set filesize = length(data) where hash = '%s' and uid = %d limit 1",
