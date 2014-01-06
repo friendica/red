@@ -263,12 +263,6 @@ class RedDirectory extends DAV\Node implements DAV\ICollection {
 
 		}
 
-
-
-
-
-
-
 	}
 
 
