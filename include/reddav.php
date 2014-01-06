@@ -199,7 +199,7 @@ dbg(1);
 			dbesc($c[0]['channel_allow_cid']),
 			dbesc($c[0]['channel_allow_gid']),
 			dbesc($c[0]['channel_deny_cid']),
-			dbesc($c[0]['channel_deny_gid']),
+			dbesc($c[0]['channel_deny_gid'])
 
 
 		);
