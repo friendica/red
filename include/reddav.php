@@ -156,7 +156,7 @@ class RedDirectory extends DAV\Node implements DAV\ICollection {
 		logger('RedDirectory::createFile : ' . $name);
 		logger('RedDirectory::createFile : ' . print_r($this,true));
 
-		logger('createFile():' . stream_get_contents($data));
+//		logger('createFile():' . stream_get_contents($data));
 
 
 		if(! perm_is_allowed($this->auth->channel_id,$this->auth->observer,'write_storage')) {
@@ -354,7 +354,7 @@ class RedFile extends DAV\Node implements DAV\IFile {
 
 	function put($data) {
 		logger('RedFile::put: ' . basename($this->name));
-		logger('put():' . stream_get_contents($data));
+//		logger('put():' . stream_get_contents($data));
 
 dbg(1);
 		$r = q("update attach set data = '%s' where hash = '%s' and uid = %d limit 1",
