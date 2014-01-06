@@ -125,7 +125,7 @@ class RedDirectory extends DAV\Node implements DAV\ICollection {
 			return;
 		}
  
-		if(! perm_is_allowed($this->auth->channel_id,$this->auth->observer,'view_storage')) {
+		if(($this->auth->owner_id) && (! perm_is_allowed($this->auth->owner_id,$this->auth->observer,'view_storage'))) {
 			throw new DAV\Exception\Forbidden('Permission denied.');
 			return;
 		}
@@ -159,7 +159,13 @@ class RedDirectory extends DAV\Node implements DAV\ICollection {
 //		logger('createFile():' . stream_get_contents($data));
 
 
-		if(! perm_is_allowed($this->auth->channel_id,$this->auth->observer,'write_storage')) {
+		if(! $this->auth->owner_id) {
+			logger('createFile: permission denied');
+			throw new DAV\Exception\Forbidden('Permission denied.');
+			return;
+		}
+
+		if(! perm_is_allowed($this->auth->owner_id,$this->auth->observer,'write_storage')) {
 			logger('createFile: permission denied');
 			throw new DAV\Exception\Forbidden('Permission denied.');
 			return;
@@ -336,7 +342,7 @@ class RedFile extends DAV\Node implements DAV\IFile {
 	function setName($newName) {
 		logger('RedFile::setName: ' . basename($this->name) . ' -> ' . $newName);
 
-		if((! $newName) || (! perm_is_allowed($this->auth->channel_id,$this->auth->observer,'write_storage'))) {
+		if((! $newName) || (! $this->auth->owner_id) || (! perm_is_allowed($this->auth->owner_id,$this->auth->observer,'write_storage'))) {
 			throw new DAV\Exception\Forbidden('Permission denied.');
 			return;
 		}
