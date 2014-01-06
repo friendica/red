@@ -526,11 +526,14 @@ function attach_mkdir($channel,$observer_hash,$arr = null) {
 	$sql_options = '';
 
 	$basepath = 'store/' . $channel['channel_address'];
+
+	logger('attach_mkdir: basepath: ' . $basepath);
+
 	if(! is_dir($basepath))
-		@mkdir($basepath,STORAGE_DEFAULT_PERMISSIONS,true);
+		mkdir($basepath,STORAGE_DEFAULT_PERMISSIONS,true);
 
 
-	if(! perm_is_allowed($channel_id, get_observer_hash(),'write_storage')) {
+	if(! perm_is_allowed($channel_id, $observer_hash,'write_storage')) {
 		$ret['message'] = t('Permission denied.');
 		return $ret;
 	}
@@ -607,10 +610,10 @@ function attach_mkdir($channel,$observer_hash,$arr = null) {
 		dbesc(''),
 		dbesc($created),
 		dbesc($created),
-		dbesc(($arr && array_key_exists('allow_cid',$arr)) ? $arr['allow_cid'] : ''),
-		dbesc(($arr && array_key_exists('allow_gid',$arr)) ? $arr['allow_gid'] : ''),
-		dbesc(($arr && array_key_exists('deny_cid',$arr))  ? $arr['deny_cid']  : ''),
-		dbesc(($arr && array_key_exists('deny_gid',$arr))  ? $arr['deny_gid']  : '')
+		dbesc(($arr && array_key_exists('allow_cid',$arr)) ? $arr['allow_cid'] : $channel['channel_allow_cid']),
+		dbesc(($arr && array_key_exists('allow_gid',$arr)) ? $arr['allow_gid'] : $channel['channel_allow_gid']),
+		dbesc(($arr && array_key_exists('deny_cid',$arr))  ? $arr['deny_cid']  : $channel['channel_deny_cid']),
+		dbesc(($arr && array_key_exists('deny_gid',$arr))  ? $arr['deny_gid']  : $channel['channel_deny_gid'])
 	);
 
 	if($r) {

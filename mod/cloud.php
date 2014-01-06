@@ -51,6 +51,8 @@ class RedBasicAuth extends Sabre\DAV\Auth\Backend\AbstractBasic {
 	public $channel_hash = '';
 	public $observer = '';
 
+	public $owner_id;
+
     protected function validateUserPass($username, $password) {
 		require_once('include/auth.php');
 		$record = account_verify_password($email,$pass);

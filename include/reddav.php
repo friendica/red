@@ -75,10 +75,10 @@ class RedInode implements DAV\INode {
 class RedDirectory extends DAV\Node implements DAV\ICollection {
 
 	private $red_path;
+	private $folder_hash;
 	private $ext_path;
 	private $root_dir = '';
 	private $auth;
-
 
 
 	function __construct($ext_path,&$auth_plugin) {
@@ -89,7 +89,9 @@ class RedDirectory extends DAV\Node implements DAV\ICollection {
 			$this->red_path = '/';
 		$this->auth = $auth_plugin;
 		logger('Red_Directory: ' . print_r($this,true));
+		$this->folder_hash = '';
 
+		$this->getDir();
 
 	}
 
@@ -202,12 +204,24 @@ dbg(0);
 
 
 	function createDirectory($name) {
-		if(! perm_is_allowed($this->auth->channel_id,$this->auth->observer,'write_storage')) {
+
+		logger('RedDirectory::createDirectory: ' . $name);
+
+		if((! $this->auth->owner_id) || (! perm_is_allowed($this->auth->owner_id,$this->auth->observer,'write_storage'))) {
 			throw new DAV\Exception\Forbidden('Permission denied.');
 			return;
 		}
 
+		$r = q("select * from channel where channel_id = %d limit 1",
+			dbesc($this->auth->owner_id)
+		);
 
+		if($r) {
+			$result = attach_mkdir($r[0],$this->auth->observer,array('filename' => $name,'folder' => $this->folder_hash));
+
+			logger('RedDirectory::createDirectory: ' . print_r($result,true));
+
+		}
 
 
 
@@ -234,6 +248,64 @@ dbg(0);
 		return false;
 
 	}
+
+	function getDir() {
+
+		logger('getDir: ' . $this->ext_path);
+
+		$x = strpos($this->ext_path,'/cloud');
+		if($x === false)
+			return;
+		if($x === 0) {
+			$file = substr($file,6);
+		}
+
+		if((! $file) || ($file === '/')) {
+			return;
+		}
+
+		$file = trim($file,'/');
+		$path_arr = explode('/', $file);
+	
+		if(! $path_arr)
+			return;
+
+		$channel_name = $path_arr[0];
+
+		$r = q("select channel_id from channel where channel_address = '%s' limit 1",
+			dbesc($channel_name)
+		);
+
+		if(! $r)
+			return;
+
+		$channel_id = $r[0]['channel_id'];
+		$this->auth->owner_id = $channel_id;
+
+		$path = '/' . $channel_name;
+
+		$folder = '';
+
+		for($x = 1; $x < count($path_arr); $x ++) {		
+dbg(1);
+			$r = q("select id, hash, filename, flags from attach where folder = '%s' and (flags & %d)",
+				dbesc($folder),
+				intval($channel_id),
+				intval(ATTACH_FLAG_DIR)
+			);
+dbg(0);
+			if($r && ( $r[0]['flags'] & ATTACH_FLAG_DIR)) {
+				$folder = $r[0]['hash'];
+				$path = $path . '/' . $r[0]['filename'];
+			}	
+		}
+		$this->folder_hash = $folder;
+		return;
+	}
+
+
+
+
 
 }
 
@@ -390,6 +462,7 @@ logger('dbg1: ' . print_r($r,true));
 		return null;
 
 	$channel_id = $r[0]['channel_id'];
+	$auth->owner_id = $channel_id;
 
 	$path = '/' . $channel_name;
 
@@ -437,7 +510,7 @@ logger('dbg2: ' . print_r($r,true));
 
 function RedFileData($file, &$auth,$test = false) {
 
-logger('RedFileData:' . $file);
+logger('RedFileData:' . $file . (($test) ? ' (test mode) ' : ''));
 
 
 	$x = strpos($file,'/cloud');
@@ -479,6 +552,11 @@ logger('file=' . $file);
 
 	$path = '/' . $channel_name;
 
+	$auth->owner_id = $channel_id;
+
+	$permission_error = false;
+
+
 	$folder = '';
 //dbg(1);
 
@@ -510,13 +588,27 @@ dbg(0);
 
 			);
 		}
-		if(! $r)
+		if(! $r) {
+
 			$errors = true;
+			$r = q("select id, uid, hash, filename, filetype, filesize, revision, folder, flags, created, edited from attach 
+				where folder = '%s' and filename = '%s' and uid = %d group by filename limit 1",
+				dbesc($folder),
+				basename($file),
+				intval($channel_id)
+			);
+			if($r)
+				$permission_error = true;
+
+		}
+
 	}
 
 	logger('dbg1: ' . print_r($r,true));
 
 	if($path === '/' . $file) {
+		if($test)
+			return true;
 		// final component was a directory.
 		return new RedDirectory('/cloud/' . $file,$auth);
 	}
@@ -524,11 +616,18 @@ dbg(0);
 	if($errors) {
 		if($test)
 			return false;
-		throw new DAV\Exception\Forbidden('Permission denied.');
+		if($permission_error) {
+			logger('RedFileData: permission error');	
+			throw new DAV\Exception\Forbidden('Permission denied.');
+		}
+		logger('RedFileData: not found');
 		return;
 	}
 
 	if($r) {
+		if($test)
+			return true;
+
 		if($r[0]['flags'] & ATTACH_FLAG_DIR)
 			return new RedDirectory('/cloud' . $path . '/' . $r[0]['filename'],$auth);
 		else
