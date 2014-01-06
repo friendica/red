@@ -184,8 +184,6 @@ class RedDirectory extends DAV\Node implements DAV\ICollection {
 		$filesize = 0;
 		$hash = random_string();
 
-dbg(1);
-
         $r = q("INSERT INTO attach ( aid, uid, hash, filename, folder, filetype, filesize, revision, data, created, edited, allow_cid, allow_gid, deny_cid, deny_gid )
             VALUES ( %d, %d, '%s', '%s', '%s', '%s', %d, %d, '%s', '%s', '%s', '%s', '%s', '%s', '%s' ) ",
             intval($c[0]['channel_account_id']),
@@ -212,9 +210,36 @@ dbg(1);
 			intval($c[0]['channel_id'])
 		);
 
+		$r = q("select filesize from attach where hash = '%s' and uid = %d limit 1",
+			dbesc($hash),
+			intval($c[0]['channel_id'])
+		);
 
-dbg(0);
- 
+		// FIXME - delete attached file resource if using OS storage
+
+		$maxfilesize = get_config('system','maxfilesize');
+
+		if(($maxfilesize) && ($r[0]['filesize'] > $maxfilesize)) {
+			q("delete from attach where hash = '%s' and uid = %d limit 1",
+				dbesc($hash),
+				intval($c[0]['channel_id'])
+			);
+			return;
+		}
+
+		$limit = service_class_fetch($c[0]['channel_id'],'attach_upload_limit');
+		if($limit !== false) {
+			$x = q("select sum(filesize) as total from attach where uid = %d ",
+				intval($c[0]['channel_id'])
+			);
+			if(($x) &&  ($x[0]['total'] + $r[0]['filesize'] > $limit)) {
+				q("delete from attach where hash = '%s' and uid = %d limit 1",
+					dbesc($hash),
+					intval($c[0]['channel_id'])
+				);
+				return;
+			}
+		}
 	}
 
 
@@ -307,14 +332,14 @@ dbg(0);
 		$folder = '';
 
 		for($x = 1; $x < count($path_arr); $x ++) {		
-dbg(1);
+
 			$r = q("select id, hash, filename, flags from attach where folder = '%s' and filename = '%s' and (flags & %d)",
 				dbesc($folder),
 				dbesc($path_arr[$x]),
 				intval($channel_id),
 				intval(ATTACH_FLAG_DIR)
 			);
-dbg(0);
+
 			if($r && ( $r[0]['flags'] & ATTACH_FLAG_DIR)) {
 				$folder = $r[0]['hash'];
 				$path = $path . '/' . $r[0]['filename'];
@@ -377,7 +402,6 @@ class RedFile extends DAV\Node implements DAV\IFile {
 		logger('RedFile::put: ' . basename($this->name));
 //		logger('put():' . stream_get_contents($data));
 
-dbg(1);
 		$r = q("update attach set data = '%s' where hash = '%s' and uid = %d limit 1",
 			dbesc(stream_get_contents($data)),
 			dbesc($this->data['hash']),
@@ -387,8 +411,35 @@ dbg(1);
 			dbesc($this->data['hash']),
 			intval($this->data['uid'])
 		);
-dbg(0);
 
+		$r = q("select filesize from attach where hash = '%s' and uid = %d limit 1",
+			dbesc($this->data['hash']),
+			intval($c[0]['channel_id'])
+		);
+
+		$maxfilesize = get_config('system','maxfilesize');
+
+		if(($maxfilesize) && ($r[0]['filesize'] > $maxfilesize)) {
+			q("delete from attach where hash = '%s' and uid = %d limit 1",
+				dbesc($this->data['hash']),
+				intval($c[0]['channel_id'])
+			);
+			return;
+		}
+
+		$limit = service_class_fetch($c[0]['channel_id'],'attach_upload_limit');
+		if($limit !== false) {
+			$x = q("select sum(filesize) as total from attach where uid = %d ",
+				intval($c[0]['channel_id'])
+			);
+			if(($x) &&  ($x[0]['total'] + $r[0]['filesize'] > $limit)) {
+				q("delete from attach where hash = '%s' and uid = %d limit 1",
+					dbesc($this->data['hash']),
+					intval($c[0]['channel_id'])
+				);
+				return;
+			}
+		}
 	}
 
 
