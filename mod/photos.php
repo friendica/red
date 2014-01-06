@@ -647,12 +647,21 @@ function photos_content(&$a) {
 			return;
 		}
 
+
+
+		if(array_key_exists('albums', $a->data))
+			$albums = get_app()->data['albums'];
+		else
+			$albums = photos_albums_list($a->data['channel'],$a->data['observer']);
+
+
+
 		$selname = (($datum) ? hex2bin($datum) : '');
 		$albumselect = '<select id="photos-upload-album-select" name="album" size="4">';
 		
 		$albumselect .= '<option value="" ' . ((! $selname) ? ' selected="selected" ' : '') . '>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</option>';
-		if(count($a->data['albums'])) {
-			foreach($a->data['albums'] as $album) {
+		if(count($albums)) {
+			foreach($albums as $album) {
 				if($album['text'] === '') 
 					continue;
 				$selected = (($selname === $album['text']) ? ' selected="selected" ' : '');
