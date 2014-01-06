@@ -104,13 +104,13 @@ class RedDirectory extends DAV\Node implements DAV\ICollection {
 			return;
 		}
 
-		if(! perm_is_allowed($this->auth->channel_id,$this->auth->observer,'view_storage')) {
+		if(($this->auth->owner_id) && (! perm_is_allowed($this->auth->owner_id,$this->auth->observer,'view_storage'))) {
 			throw new DAV\Exception\Forbidden('Permission denied.');
 			return;
 		}
 
-		return RedCollectionData($this->red_path,$this->auth);
-
+		$contents =  RedCollectionData($this->red_path,$this->auth);
+		return $contents;
 	}
 
 
@@ -469,9 +469,9 @@ logger('dbg1: ' . print_r($r,true));
 	$folder = '';
 
 	for($x = 1; $x < count($path_arr); $x ++) {		
-		$r = q("select id, hash, filename, flags from attach where folder = '%s' and (flags & %d)",
+		$r = q("select id, hash, filename, flags from attach where folder = '%s' and filename = '%s' and (flags & %d)",
 			dbesc($folder),
-			intval($channel_id),
+			dbesc($path_arr[$x]),
 			intval(ATTACH_FLAG_DIR)
 		);
 		if($r && ( $r[0]['flags'] & ATTACH_FLAG_DIR)) {
@@ -567,8 +567,9 @@ logger('file=' . $file);
 
 	for($x = 1; $x < count($path_arr); $x ++) {		
 dbg(1);
-		$r = q("select id, hash, filename, flags from attach where folder = '%s' and uid = %d and (flags & %d) $perms",
+		$r = q("select id, hash, filename, flags from attach where folder = '%s' and filename = '%s' and uid = %d and (flags & %d) $perms",
 			dbesc($folder),
+			dbesc($path_arr[$x]),
 			intval($channel_id),
 			intval(ATTACH_FLAG_DIR)
 		);
