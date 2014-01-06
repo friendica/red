@@ -5,73 +5,6 @@ require_once('vendor/autoload.php');
 
 require_once('include/attach.php');
 
-class RedInode implements DAV\INode {
-
-	private $attach;
-
-	function __construct($attach) {
-		$this->attach = $attach;
-	}
-
-
-	function delete() {
-		if(! perm_is_allowed($this->channel_id,'','view_storage'))
-			return;
-
-		/**
-		 * Since I don't believe this is documented elsewhere -
-		 * ATTACH_FLAG_OS means that the file contents are stored in the OS
-		 * rather than in the DB - as is the case for attachments.
-		 * Exactly how they are stored (what path and filename) are still
-		 * TBD. We will probably not be using the original filename but 
-		 * instead the attachment 'hash' as this will prevent folks from 
-		 * uploading PHP code onto misconfigured servers and executing it.
-		 * It's easy to misconfigure servers because we can provide a 
-		 * rule for Apache, but folks using nginx will then be susceptible.
-		 * Then there are those who don't understand these kinds of exploits
-		 * and don't have any idea allowing uploaded PHP files to be executed
-		 * by the server could be a problem. We also don't have any idea what
-		 * executable types are served on their system - like .py, .pyc, .pl, .sh
-		 * .cgi, .exe, .bat, .net, whatever.  
-		 */
-
-		if($this->attach['flags'] & ATTACH_FLAG_OS) {
-			// FIXME delete physical file
-		}
-		if($this->attach['flags'] & ATTACH_FLAG_DIR) {
-			// FIXME delete contents (recursive?)
-		}
-		
-		q("delete from attach where id = %d limit 1",
-			intval($this->attach['id'])
-		);
-
-	}
-
-	function getName() {
-		return $this->attach['filename'];
-	}
-
-	function setName($newName) {
-
-		if((! $newName) || (! perm_is_allowed($this->channel_id,'','view_storage')))
-			return;
-
-		$this->attach['filename'] = $newName;
-		$r = q("update attach set filename = '%s' where id = %d limit 1",
-			dbesc($this->attach['filename']),
-			intval($this->attach['id'])
-		);
-
-	}
-
-	function getLastModified() {
-		return $this->attach['edited'];
-	}
-
-}
-
-
 class RedDirectory extends DAV\Node implements DAV\ICollection {
 
 	private $red_path;
@@ -79,7 +12,7 @@ class RedDirectory extends DAV\Node implements DAV\ICollection {
 	private $ext_path;
 	private $root_dir = '';
 	private $auth;
-
+	private $os_path = '';
 
 	function __construct($ext_path,&$auth_plugin) {
 		logger('RedDirectory::__construct() ' . $ext_path);
@@ -157,8 +90,6 @@ class RedDirectory extends DAV\Node implements DAV\ICollection {
 	function createFile($name,$data = null) {
 		logger('RedDirectory::createFile : ' . $name);
 		logger('RedDirectory::createFile : ' . print_r($this,true));
-
-//		logger('createFile():' . stream_get_contents($data));
 
 
 		if(! $this->auth->owner_id) {
@@ -324,6 +255,7 @@ class RedDirectory extends DAV\Node implements DAV\ICollection {
 		$path = '/' . $channel_name;
 
 		$folder = '';
+		$os_path = '';
 
 		for($x = 1; $x < count($path_arr); $x ++) {		
 
@@ -336,10 +268,15 @@ class RedDirectory extends DAV\Node implements DAV\ICollection {
 
 			if($r && ( $r[0]['flags'] & ATTACH_FLAG_DIR)) {
 				$folder = $r[0]['hash'];
+				if(strlen($os_path))
+					$os_path .= '/';
+				$os_path .= $folder;
+
 				$path = $path . '/' . $r[0]['filename'];
 			}	
 		}
 		$this->folder_hash = $folder;
+		$this->os_path = $os_path;
 		return;
 	}
 
@@ -394,7 +331,6 @@ class RedFile extends DAV\Node implements DAV\IFile {
 
 	function put($data) {
 		logger('RedFile::put: ' . basename($this->name));
-//		logger('put():' . stream_get_contents($data));
 
 		$r = q("update attach set data = '%s' where hash = '%s' and uid = %d limit 1",
 			dbesc(stream_get_contents($data)),
@@ -471,6 +407,23 @@ class RedFile extends DAV\Node implements DAV\IFile {
 	}
 
 
+	function delete() {
+
+		if($this->data['flags'] & ATTACH_FLAG_OS) {
+			// FIXME delete physical file
+		}
+		if($this->data['flags'] & ATTACH_FLAG_DIR) {
+			// FIXME delete contents (recursive?)
+		}
+		
+//		q("delete from attach where id = %d limit 1",
+//			intval($this->data['id'])
+//		);
+
+
+
+	}
+
 }
 
 function RedChannelList(&$auth) {
@@ -507,7 +460,6 @@ logger('RedCollectionData: ' . $file);
 
 	if((! $file) || ($file === '/')) {
 		return RedChannelList($auth);
-
 	}
 
 	$file = trim($file,'/');
@@ -528,25 +480,54 @@ logger('dbg1: ' . print_r($r,true));
 		return null;
 
 	$channel_id = $r[0]['channel_id'];
+	$perms = permissions_sql($channel_id);
+
 	$auth->owner_id = $channel_id;
 
 	$path = '/' . $channel_name;
 
 	$folder = '';
+	$errors = false;
+	$permission_error = false;
 
 	for($x = 1; $x < count($path_arr); $x ++) {		
-		$r = q("select id, hash, filename, flags from attach where folder = '%s' and filename = '%s' and (flags & %d)",
+		$r = q("select id, hash, filename, flags from attach where folder = '%s' and filename = '%s' and (flags & %d) $perms limit 1",
 			dbesc($folder),
 			dbesc($path_arr[$x]),
 			intval(ATTACH_FLAG_DIR)
 		);
+		if(! $r) {
+			// path wasn't found. Try without permissions to see if it was the result of permissions.
+			$errors = true;
+			$r = q("select id, hash, filename, flags from attach where folder = '%s' and filename = '%s' and (flags & %d) limit 1",
+				dbesc($folder),
+				basename($path_arr[$x]),
+				intval(ATTACH_FLAG_DIR)
+			);
+			if($r) {
+				$permission_error = true;
+			}
+			break;
+		}
+
 		if($r && ( $r[0]['flags'] & ATTACH_FLAG_DIR)) {
 			$folder = $r[0]['hash'];
 			$path = $path . '/' . $r[0]['filename'];
 		}	
 	}
 
-logger('dbg2: ' . print_r($r,true));
+	if($errors) {
+		if($permission_error) {
+			throw new DAV\Exception\Forbidden('Permission denied.');
+			return;
+		}
+		else {
+			throw new DAV\Exception\NotFound('A component of the request file path could not be found');
+			return;
+		}
+	}
+
+	logger('dbg2: ' . print_r($r,true));
 
 	if($path !== '/' . $file) {
 		logger("RedCollectionData: Path mismatch: $path !== /$file");
@@ -555,8 +536,7 @@ logger('dbg2: ' . print_r($r,true));
 
 	$ret = array();
 
-
-	$r = q("select id, uid, hash, filename, filetype, filesize, revision, folder, flags, created, edited from attach where folder = '%s' and uid = %d group by filename",
+	$r = q("select id, uid, hash, filename, filetype, filesize, revision, folder, flags, created, edited from attach where folder = '%s' and uid = %d $perms group by filename",
 		dbesc($folder),
 		intval($channel_id)
 	);
@@ -775,6 +755,12 @@ class RedBrowser extends DAV\Browser\Plugin {
 
 
 	}
+
+	// The DAV browser is instantiated after the auth module and directory classes but before we know the current
+	// directory and who the owner and observer are. So we add a pointer to the browser into the auth module and vice 
+	// versa. Then when we've figured out what directory is actually being accessed, we call the following function
+	// to decide whether or not to show web elements which include writeable objects.
+
 
 	function set_writeable() {
 		logger('RedBrowser: ' . print_r($this->auth,true));
