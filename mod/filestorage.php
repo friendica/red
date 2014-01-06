@@ -10,62 +10,66 @@ function filestorage_content(&$a) {
 		return;
 	}
 
-        $r = q("select channel_id from channel where channel_address = '%s'",
-                dbesc($which)
-                );
-               if($r) {
-                $owner = intval($r[0]['channel_id']);
+	$r = q("select channel_id from channel where channel_address = '%s'",
+		dbesc($which)
+	);
+	if($r) {
+		$owner = intval($r[0]['channel_id']);
 	}
 
-        $observer = $a->get_observer();
-        $ob_hash = (($observer) ? $observer['xchan_hash'] : '');
+	$observer = $a->get_observer();
+	$ob_hash = (($observer) ? $observer['xchan_hash'] : '');
 
-        $perms = get_all_perms($owner,$ob_hash);
+	$perms = get_all_perms($owner,$ob_hash);
 
-        if(! $perms['view_storage']) {
-                notice( t('Permission denied.') . EOL);
-                return;
-        }
+	if(! $perms['view_storage']) {
+		notice( t('Permission denied.') . EOL);
+		return;
+	}
 
-//	Since we have ACL'd files in the wild, but don't have ACL here yet, we 
-//	need to return for anoyne other than the owner, despite the perms check for now.
+	//	Since we have ACL'd files in the wild, but don't have ACL here yet, we 
+	//	need to return for anyone other than the owner, despite the perms check for now.
 
 	$is_owner = (((local_user()) && ($owner  == local_user())) ? true : false);
-	if (! $is_owner) {
-		 info( t('Permission Denied.') . EOL );
-	return;
+	if(! $is_owner) {
+		info( t('Permission Denied.') . EOL );
+		return;
 	}
 
-// 	TODO This will also need to check for files on disk and delete them from there as well as the DB.
-	if ((argc() > 3 && argv(3) === 'delete') ? true : false);{
-	        if(! $perms['write_storage']) {
-        	        notice( t('Permission denied.  VS.') . EOL);
-                return;
+	// 	TODO This will also need to check for files on disk and delete them from there as well as the DB.
+
+	if(argc() > 3 && argv(3) === 'delete') {
+		if(! $perms['write_storage']) {
+			notice( t('Permission denied.  VS.') . EOL);
+			return;
 		}
 
-		 $file = argv(2);
-		 $r = q("delete from attach where id = '%s' and uid = '%s' limit 1",
+		$file = intval(argv(2));
+		$r = q("delete from attach where id = %d and uid = %d limit 1",
 			dbesc($file),
 			intval($owner)
 		);
-
-
+		goaway(z_root() . '/filestorage' . $which);
 	}	
 
 
-$r = q("select * from attach where uid = %d order by filename asc",
-	intval($owner)
-);
+	$r = q("select * from attach where uid = %d order by edited desc",
+		intval($owner)
+	);
 
-		$files = null;
+	$files = null;
 
-		if($r) {
-			$files = array();
-			foreach($r as $rr) {
-				$files[$rr['id']][] = array('id' => $rr['id'],'download' => $rr['hash'], 'title' => $rr['filename'], 'size' => $rr['filesize']);
-			} 
-		}
-
+	if($r) {
+		$files = array();
+		foreach($r as $rr) {
+			$files[$rr['id']][] = array(
+				'id' => $rr['id'],
+				'download' => $rr['hash'], 
+				'title' => $rr['filename'], 
+				'size' => $rr['filesize']
+			);
+		} 
+	}
 
 	$limit = service_class_fetch ($owner,'attach_upload_limit'); 
 		$r = q("select sum(filesize) as total from attach where uid = %d ",
@@ -73,8 +77,8 @@ $r = q("select * from attach where uid = %d order by filename asc",
 	);
 	$used = $r[0]['total'];
 
-		$url = z_root() . "/filestorage/" . $which; 
-       return $o . replace_macros(get_markup_template("filestorage.tpl"), array(
+	$url = z_root() . "/filestorage/" . $which; 
+	return $o . replace_macros(get_markup_template("filestorage.tpl"), array(
 		'$baseurl' => $url,
 		'$download' => t('Download'),
 		'$files' => $files,
@@ -84,7 +88,6 @@ $r = q("select * from attach where uid = %d order by filename asc",
 		'$usedlabel' => t('Used: '),
 		'$limit' => $limit,
 		'$limitlabel' => t('Limit: '),
-        ));
+	));
     
-
 }
