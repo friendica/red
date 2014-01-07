@@ -276,6 +276,8 @@ function bbcode($Text,$preserve_nl = false, $tryoembed = true) {
 		}
     }
 
+	$Text = str_replace(array('[baseurl]','[sitename]'),array(z_root(),get_config('system','sitename')),$Text);
+	
 	// Replace any html brackets with HTML Entities to prevent executing HTML or script
 	// Don't use strip_tags here because it breaks [url] search by replacing & with amp
 
