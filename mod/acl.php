@@ -51,7 +51,7 @@ function acl_init(&$a){
 		$r = q("SELECT COUNT(abook_id) AS c FROM abook left join xchan on abook_xchan = xchan_hash 
 				WHERE abook_channel = %d AND not ( abook_flags & %d ) and not (xchan_flags & %d ) $sql_extra2" ,
 			intval(local_user()),
-			intval(ABOOK_FLAG_SELF|ABOOK_FLAG_BLOCKED|ABOOK_FLAG_PENDING|ABOOK_FLAG_ARCHIVED),
+			intval(ABOOK_FLAG_BLOCKED|ABOOK_FLAG_PENDING|ABOOK_FLAG_ARCHIVED),
 			intval(XCHAN_FLAGS_DELETED)
 		);
 		$contact_count = (int)$r[0]['c'];
@@ -127,11 +127,11 @@ function acl_init(&$a){
 	}
 
 	if ($type=='' || $type=='c') {
-		$r = q("SELECT abook_id as id, xchan_hash as hash, xchan_name as name, xchan_photo_s as micro, xchan_url as url, xchan_addr as nick, abook_their_perms 
+		$r = q("SELECT abook_id as id, xchan_hash as hash, xchan_name as name, xchan_photo_s as micro, xchan_url as url, xchan_addr as nick, abook_their_perms, abook_flags 
 				FROM abook left join xchan on abook_xchan = xchan_hash 
 				WHERE abook_channel = %d AND not ( abook_flags & %d ) and not (xchan_flags & %d ) $sql_extra2 order by xchan_name asc" ,
 			intval(local_user()),
-			intval(ABOOK_FLAG_SELF|ABOOK_FLAG_BLOCKED|ABOOK_FLAG_PENDING|ABOOK_FLAG_ARCHIVED),
+			intval(ABOOK_FLAG_BLOCKED|ABOOK_FLAG_PENDING|ABOOK_FLAG_ARCHIVED),
 			intval(XCHAN_FLAGS_DELETED)
 		);
 
@@ -214,7 +214,7 @@ function acl_init(&$a){
 				"xid"      => $g['hash'],
 				"link"     => $g['nick'],
 				"nick"     => substr($g['nick'],0,strpos($g['nick'],'@')),
-				"network"  => '',
+				"self"     => (($g['abook_flags'] & ABOOK_FLAG_SELF) ? 'abook-self' : ''),
 				"taggable" => (($g['abook_their_perms'] & PERMS_W_TAGWALL) ? 'taggable' : '')
 			);
 		}			
