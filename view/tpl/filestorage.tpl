@@ -10,7 +10,7 @@
 					<a href="{{$baseurl}}/{{$item.id}}/edit">{{$edit}}</a> |
 					<a href="{{$baseurl}}/{{$item.id}}/delete">{{$delete}}</a> |
 					[attachment]{{$item.download}},{{$item.rev}}[/attachment] |
-					<a href="attach/{{$item.download}}">{{$item.title}}</a> | 
+					{{if ! $item.dir}}<a href="attach/{{$item.download}}">{{/if}}{{$item.title}}{{if ! $item.dir}}</a>{{/if}} | 
 					{{$item.size}} bytes
 
 </div>

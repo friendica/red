@@ -138,8 +138,8 @@ function filestorage_content(&$a) {
 				'download' => $rr['hash'], 
 				'title' => $rr['filename'], 
 				'size' => $rr['filesize'],
-				'rev' => $rr['revision']
-
+				'rev' => $rr['revision'],
+				'dir' => (($rr['flags'] & ATTACH_FLAG_DIR) ? true : false)
 			);
 		} 
 	}
