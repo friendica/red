@@ -8,6 +8,7 @@
 				{{foreach $items as $item}}
 					<div class="files-list-item">
 					<a href="attach/{{$item.download}}">{{$download}}</a> |
+					<a href="{{$baseurl}}/{{$item.id}}/edit">{{$edit}} |
 					<a href="{{$baseurl}}/{{$item.id}}/delete">{{$delete}}
 					<a href="page/{{$channel}}/{{$item.title}}">{{$title}}</a> {{$item.title}} | 
 					{{$item.size}} bytes

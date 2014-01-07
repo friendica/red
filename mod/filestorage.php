@@ -1,5 +1,37 @@
 <?php
 
+require_once('include/attach.php');
+
+function filestorage_post(&$a) {
+
+	$channel_id = ((x($_POST,'uid')) ? intval($_POST['uid']) : 0);
+
+	if((! $channel_id) || (! local_user()) || ($channel_id != local_user())) {
+		notice( t('Permission denied.') . EOL);
+		return;
+	}
+
+	$recurse = ((x($_POST,'recurse')) ? intval($_POST['recurse']) : 0);
+	$resource = ((x($_POST,'filehash')) ? notags($_POST['filehash']) : '');
+
+	if(! $resource) {
+		notice(t('Item not found.') . EOL);
+		return;
+	}
+
+	$str_group_allow   = perms2str($_REQUEST['group_allow']);
+	$str_contact_allow = perms2str($_REQUEST['contact_allow']);
+	$str_group_deny    = perms2str($_REQUEST['group_deny']);
+	$str_contact_deny  = perms2str($_REQUEST['contact_deny']);
+ 
+	attach_change_permissions($channel_id,$resource,$str_contact_allow,$str_group_allow,$str_contact_deny,$str_group_deny,$recurse = false);
+
+}
+
+
+
+
+
 function filestorage_content(&$a) {
 
 	if(argc() > 1)
@@ -40,7 +72,7 @@ function filestorage_content(&$a) {
 
 	if(argc() > 3 && argv(3) === 'delete') {
 		if(! $perms['write_storage']) {
-			notice( t('Permission denied.  VS.') . EOL);
+			notice( t('Permission denied.') . EOL);
 			return;
 		}
 
@@ -52,6 +84,45 @@ function filestorage_content(&$a) {
 		goaway(z_root() . '/filestorage' . $which);
 	}	
 
+
+	if(argc() > 3 && argv(3) === 'edit') {
+		require_once('include/acl_selectors.php');
+		if(! $perms['write_storage']) {
+			notice( t('Permission denied.') . EOL);
+			return;
+		}
+		$file = intval(argv(2));
+
+		$r = q("select id, folder, filename, flags, hash, allow_cid, allow_gid, deny_cid, deny_gid from attach where id = %d and uid = %d limit 1",
+			intval($file),
+			intval($owner)
+		);
+
+		$f = $r[0];
+
+		$channel = $a->get_channel();
+
+
+		$aclselect_e = populate_acl($f);
+		$is_a_dir = (($f['flags'] & ATTACH_FLAG_DIR) ? true : false);
+
+
+		$o = replace_macros(get_markup_template('attach_edit.tpl'), array(
+			'$header' => t('Edit file permissions'),
+			'$file' => $f,
+			'$uid' => $channel['channel_id'],
+			'$channelnick' => $channel['channel_address'],
+			'$permissions' => t('Permissions'),
+			'$aclselect' => $aclselect_e,
+			'$recurse' => t('Include all files and sub folders'),
+			'$backlink' => t('Return to file list'),
+			'$isadir' => $is_a_dir,
+			'$submit' => t('Submit')
+
+		));
+
+		return $o;
+	}	
 
 	$r = q("select * from attach where uid = %d order by edited desc",
 		intval($owner)
@@ -83,6 +154,7 @@ function filestorage_content(&$a) {
 		'$download' => t('Download'),
 		'$files' => $files,
 		'$channel' => $which,
+		'$edit' => t('Edit Permissions'),
 		'$delete' => t('Delete'),
 		'$used' => $used,
 		'$usedlabel' => t('Used: '),
