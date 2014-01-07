@@ -42,10 +42,11 @@ function filestorage_content(&$a) {
 		return;
 	}
 
-	$r = q("select channel_id from channel where channel_address = '%s'",
+	$r = q("select * from channel where channel_address = '%s'",
 		dbesc($which)
 	);
 	if($r) {
+		$channel = $r[0];
 		$owner = intval($r[0]['channel_id']);
 	}
 
@@ -146,8 +147,8 @@ function filestorage_content(&$a) {
 	}
 
 	$limit = service_class_fetch ($owner,'attach_upload_limit'); 
-		$r = q("select sum(filesize) as total from attach where uid = %d ",
-		intval($owner)
+		$r = q("select sum(filesize) as total from attach where aid = %d ",
+		intval($channel['channel_account_id'])
 	);
 	$used = $r[0]['total'];
 

@@ -330,8 +330,8 @@ function attach_store($channel,$observer_hash,$options = '',$arr = null) {
 
 		$limit = service_class_fetch($channel_id,'attach_upload_limit');
 		if($limit !== false) {
-			$r = q("select sum(filesize) as total from attach where uid = %d ",
-				intval($channel_id)
+			$r = q("select sum(filesize) as total from attach where aid = %d ",
+				intval($channel['channel_account_id'])
 			);
 			if(($r) &&  (($r[0]['total'] + $filesize) > ($limit - $existing_size))) {
 				$ret['message'] = upgrade_message(true).sprintf(t("You have reached your limit of %1$.0f Mbytes attachment storage."),$limit / 1024000);

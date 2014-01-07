@@ -102,11 +102,9 @@ function photo_upload($channel, $observer, $args) {
 
 	$imagedata = @file_get_contents($src);
 
-	$r = q("select sum(size) as total from photo where uid = %d and scale = 0 ",
-		intval($channel_id)
+	$r = q("select sum(size) as total from photo where aid = %d and scale = 0 ",
+		intval($account_id)
 	);
-
-// FIXME service class limits should probably apply to accounts and not channels
 
 	$limit = service_class_fetch($channel_id,'photo_upload_limit');
 

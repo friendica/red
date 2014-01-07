@@ -687,8 +687,8 @@ function photos_content(&$a) {
 
 		/* Show space usage */
 
-		$r = q("select sum(size) as total from photo where uid = %d and scale = 0 ",
-			intval($a->data['channel']['channel_id'])
+		$r = q("select sum(size) as total from photo where aid = %d and scale = 0 ",
+			intval($a->data['channel']['channel_account_id'])
 		);
 
 

@@ -160,8 +160,8 @@ class RedDirectory extends DAV\Node implements DAV\ICollection {
 
 		$limit = service_class_fetch($c[0]['channel_id'],'attach_upload_limit');
 		if($limit !== false) {
-			$x = q("select sum(filesize) as total from attach where uid = %d ",
-				intval($c[0]['channel_id'])
+			$x = q("select sum(filesize) as total from attach where aid = %d ",
+				intval($c[0]['channel_account_id'])
 			);
 			if(($x) &&  ($x[0]['total'] + $r[0]['filesize'] > $limit)) {
 				q("delete from attach where hash = '%s' and uid = %d limit 1",
@@ -359,8 +359,8 @@ class RedFile extends DAV\Node implements DAV\IFile {
 
 		$limit = service_class_fetch($c[0]['channel_id'],'attach_upload_limit');
 		if($limit !== false) {
-			$x = q("select sum(filesize) as total from attach where uid = %d ",
-				intval($c[0]['channel_id'])
+			$x = q("select sum(filesize) as total from attach where aid = %d ",
+				intval($c[0]['channel_account_id'])
 			);
 			if(($x) &&  ($x[0]['total'] + $r[0]['filesize'] > $limit)) {
 				q("delete from attach where hash = '%s' and uid = %d limit 1",
