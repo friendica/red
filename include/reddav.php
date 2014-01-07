@@ -376,11 +376,16 @@ class RedFile extends DAV\Node implements DAV\IFile {
 	function get() {
 		logger('RedFile::get: ' . basename($this->name));
 
-		$r = q("select data from attach where hash = '%s' and uid = %d limit 1",
+		$r = q("select data, flags from attach where hash = '%s' and uid = %d limit 1",
 			dbesc($this->data['hash']),
 			intval($this->data['uid'])
 		);
-		if($r) return $r[0]['data'];
+		if($r) {
+			if($r[0]['flags'] & ATTACH_FLAG_OS ) {
+				return fopen($r[0]['data'],'rb');
+			}
+			return $r[0]['data'];
+		}
 
 	}
 

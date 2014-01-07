@@ -7,10 +7,10 @@
 		{{foreach $files as $key => $items}} 
 				{{foreach $items as $item}}
 					<div class="files-list-item">
-					<a href="attach/{{$item.download}}">{{$download}}</a> |
-					<a href="{{$baseurl}}/{{$item.id}}/edit">{{$edit}} |
-					<a href="{{$baseurl}}/{{$item.id}}/delete">{{$delete}}
-					<a href="page/{{$channel}}/{{$item.title}}">{{$title}}</a> {{$item.title}} | 
+					<a href="{{$baseurl}}/{{$item.id}}/edit">{{$edit}}</a> |
+					<a href="{{$baseurl}}/{{$item.id}}/delete">{{$delete}}</a> |
+					[attachment]{{$item.download}},{{$item.rev}}[/attachment] |
+					<a href="attach/{{$item.download}}">{{$item.title}}</a> | 
 					{{$item.size}} bytes
 
 </div>

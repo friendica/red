@@ -137,7 +137,9 @@ function filestorage_content(&$a) {
 				'id' => $rr['id'],
 				'download' => $rr['hash'], 
 				'title' => $rr['filename'], 
-				'size' => $rr['filesize']
+				'size' => $rr['filesize'],
+				'rev' => $rr['revision']
+
 			);
 		} 
 	}
