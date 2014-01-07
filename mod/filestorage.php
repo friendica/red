@@ -93,7 +93,7 @@ function filestorage_content(&$a) {
 		}
 		$file = intval(argv(2));
 
-		$r = q("select id, folder, filename, flags, hash, allow_cid, allow_gid, deny_cid, deny_gid from attach where id = %d and uid = %d limit 1",
+		$r = q("select id, folder, filename, revision, flags, hash, allow_cid, allow_gid, deny_cid, deny_gid from attach where id = %d and uid = %d limit 1",
 			intval($file),
 			intval($owner)
 		);
@@ -117,6 +117,7 @@ function filestorage_content(&$a) {
 			'$recurse' => t('Include all files and sub folders'),
 			'$backlink' => t('Return to file list'),
 			'$isadir' => $is_a_dir,
+			'$cpdesc' => t('Copy/paste this code to attach file to a post'),
 			'$submit' => t('Submit')
 
 		));
@@ -156,10 +157,11 @@ function filestorage_content(&$a) {
 		'$download' => t('Download'),
 		'$files' => $files,
 		'$channel' => $which,
-		'$edit' => t('Edit Permissions'),
+		'$edit' => t('Edit'),
 		'$delete' => t('Delete'),
 		'$used' => $used,
 		'$usedlabel' => t('Used: '),
+		'$directory' => t('[directory]'),
 		'$limit' => $limit,
 		'$limitlabel' => t('Limit: '),
 	));

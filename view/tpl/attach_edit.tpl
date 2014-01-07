@@ -14,10 +14,17 @@
 <input type="hidden" name="uid" value="{{$uid}}" />
 <input type="hidden" name="fileid" value="{{$file.id}}" />
 
+
 {{if $isadir}}
 <div id="attach-edit-recurse" >
   <label id="attach-edit-recurse-text" for="attach-recurse-input" >{{$recurse}}</label>
   <input id="attach-recurse-input" type="checkbox" name="recurse" value="1" />
+</div>
+{{else}}
+<div class="cut-paste-desc">{{$cpdesc}}</div>
+<div id="cut-paste-link">
+<input type="text" id="cutpasteinput" name="cutpastelink" value="[attachment]{{$file.hash}},{{$file.revision}}[/attachment]" />
+<script>$('#cutpasteinput').select();</script>
 </div>
 {{/if}}
 
@@ -26,7 +33,7 @@
 </div>
 
 <div class="clear"></div>
-<input type="submit" name="submit" value="{{$submit}}" />
+<input id="attach-edit-submit" type="submit" name="submit" value="{{$submit}}" />
 </form>
 
 
