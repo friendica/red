@@ -21,7 +21,7 @@ class RedDirectory extends DAV\Node implements DAV\ICollection {
 		if(! $this->red_path)
 			$this->red_path = '/';
 		$this->auth = $auth_plugin;
-		logger('Red_Directory: ' . print_r($this,true));
+//		logger('Red_Directory: ' . print_r($this,true));
 		$this->folder_hash = '';
 
 		$this->getDir();
@@ -414,19 +414,12 @@ class RedFile extends DAV\Node implements DAV\IFile {
 
 	function delete() {
 
-		if($this->data['flags'] & ATTACH_FLAG_OS) {
-			// FIXME delete physical file
+		if((! $this->auth->owner_id) || (! perm_is_allowed($this->auth->owner_id,$this->auth->observer,'write_storage'))) {
+			throw new DAV\Exception\Forbidden('Permission denied.');
+			return;
 		}
-		if($this->data['flags'] & ATTACH_FLAG_DIR) {
-			// FIXME delete contents (recursive?)
-		}
-		
-//		q("delete from attach where id = %d limit 1",
-//			intval($this->data['id'])
-//		);
 
-
-
+		attach_delete($this->auth->owner_id,$this->data['hash']);
 	}
 
 }

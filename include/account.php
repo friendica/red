@@ -111,6 +111,7 @@ function create_account($arr) {
 	$expires     = ((x($arr,'expires'))       ? intval($arr['expires'])            : '0000-00-00 00:00:00');
 	
 	$default_service_class = get_config('system','default_service_class');
+
 	if($default_service_class === false)
 		$default_service_class = '';
 

@@ -569,16 +569,19 @@ function attach_mkdir($channel,$observer_hash,$arr = null) {
 
 		$lpath = '';
 		$lfile = $arr['folder'];
-		$sql_options = permissions_sql($channel);
+		$sql_options = permissions_sql($channel['channel_id']);
 
 		do {
+
 			$r = q("select filename, hash, flags, folder from attach where uid = %d and hash = '%s' and ( flags & %d ) 
 				$sql_options limit 1",
 				intval($channel['channel_id']),
 				dbesc($lfile),
 				intval(ATTACH_FLAG_DIR)
 			);
+
 			if(! $r) {
+				logger('attach_mkdir: hash ' . $lfile . ' not found in ' . $lpath);
 				$ret['message'] = t('Path not found.');
 				return $ret;
 			}
@@ -606,8 +609,8 @@ function attach_mkdir($channel,$observer_hash,$arr = null) {
 		intval(0),
 		intval(0),
 		dbesc($arr['folder']),
-		intval(ATTACH_FLAG_DIR),
-		dbesc(''),
+		intval(ATTACH_FLAG_DIR|ATTACH_FLAG_OS),
+		dbesc($path),
 		dbesc($created),
 		dbesc($created),
 		dbesc(($arr && array_key_exists('allow_cid',$arr)) ? $arr['allow_cid'] : $channel['channel_allow_cid']),
@@ -671,6 +674,56 @@ function attach_change_permissions($channel_id,$resource,$allow_cid,$allow_gid,$
 	return;
 }
 			 	
+
+
+function attach_delete($channel_id,$resource) {
+
+
+	$r = q("select hash, flags from attach where hash = '%s' and uid = %d limit 1",
+		dbesc($resource),
+		intval($channel_id)
+	);
+
+	if(! $r)
+		return;
+
+	if($r[0]['flags'] & ATTACH_FLAG_DIR) {
+		$x = q("select hash, flags from attach where folder = '%s' and uid = %d",
+			dbesc($resource),
+			intval($channel_id)
+		);
+		if($x) {
+			foreach($x as $xx) {
+				attach_delete($channel_id,$xx['hash']);
+			}
+		}
+	}
+	if($r[0]['flags'] & ATTACH_FLAG_OS) {
+		$y = q("select data from attach where hash = '%s' and uid = %d limit 1",
+			dbesc($resource),
+			intval($channel_id)
+		);
+
+		if($y) {
+			if(is_dir($y[0]['data']))
+				@rmdir($y[0]['data']);
+			elseif(file_exists($y[0]['data']))
+				unlink($y[0]['data']);
+		}
+	}
+
+	$z = q("delete from attach where hash = '%s' and uid = %d limit 1",
+		dbesc($resource),
+		intval($channel_id)
+	);
+
+	return;
+}
+			 	
+
+
+
+
 
 function pipe_streams($in, $out) {
 	$size = 0;
