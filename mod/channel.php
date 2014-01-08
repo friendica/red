@@ -47,6 +47,8 @@ function channel_content(&$a, $update = 0, $load = false) {
 
 	$category = $datequery = $datequery2 = '';
 
+	$mid = $_GET['mid'];
+
 	$datequery = ((x($_GET,'dend') && is_a_date_arg($_GET['dend'])) ? notags($_GET['dend']) : '');
 	$datequery2 = ((x($_GET,'dbegin') && is_a_date_arg($_GET['dbegin'])) ? notags($_GET['dbegin']) : '');
 
@@ -102,7 +104,7 @@ function channel_content(&$a, $update = 0, $load = false) {
 		); 
 
 
-		if($perms['post_wall']) {
+		if($perms['post_wall'] && (!$mid)) {
 
 			$x = array(
 				'is_owner' => $is_owner,
@@ -132,19 +134,24 @@ function channel_content(&$a, $update = 0, $load = false) {
 
 
 	if(($update) && (! $load)) {
-
-		$r = q("SELECT distinct parent AS `item_id` from item
-			left join abook on item.author_xchan = abook.abook_xchan
-			WHERE uid = %d AND item_restrict = 0
-			AND (item_flags &  %d) AND ( item_flags & %d ) 
-			AND ((abook.abook_flags & %d) = 0 or abook.abook_flags is null)
-			$sql_extra
-			ORDER BY created DESC",
-			intval($a->profile['profile_uid']),
-			intval(ITEM_WALL),
-			intval(ITEM_UNSEEN),
-			intval(ABOOK_FLAG_BLOCKED)
-		);
+		if ($mid) {
+			$r = q("SELECT parent AS item_id from item where mid = '%s' limit 1",
+				dbesc($mid)
+			);
+		} else {
+			$r = q("SELECT distinct parent AS `item_id` from item
+				left join abook on item.author_xchan = abook.abook_xchan
+				WHERE uid = %d AND item_restrict = 0
+				AND (item_flags &  %d) AND ( item_flags & %d ) 
+				AND ((abook.abook_flags & %d) = 0 or abook.abook_flags is null)
+				$sql_extra
+				ORDER BY created DESC",
+				intval($a->profile['profile_uid']),
+				intval(ITEM_WALL),
+				intval(ITEM_UNSEEN),
+				intval(ABOOK_FLAG_BLOCKED)
+			);
+		}
 
 	}
 	else {
@@ -166,19 +173,24 @@ function channel_content(&$a, $update = 0, $load = false) {
 		$pager_sql = sprintf(" LIMIT %d, %d ",intval($a->pager['start']), intval($a->pager['itemspage']));
 
 		if($load || ($_COOKIE['jsAvailable'] != 1)) {
-			$r = q("SELECT distinct id AS item_id FROM item 
-				left join abook on item.author_xchan = abook.abook_xchan
-				WHERE uid = %d AND item_restrict = 0
-				AND (item_flags &  %d) and (item_flags & %d)
-				AND ((abook.abook_flags & %d) = 0 or abook.abook_flags is null)
-				$sql_extra $sql_extra2
-				ORDER BY created DESC $pager_sql ",
-				intval($a->profile['profile_uid']),
-				intval(ITEM_WALL),
-				intval(ITEM_THREAD_TOP),
-				intval(ABOOK_FLAG_BLOCKED)
-
-			);
+			if ($mid) {
+				$r = q("SELECT parent AS item_id from item where mid = '%s' limit 1",
+					dbesc($mid)
+				);
+			} else {
+				$r = q("SELECT distinct id AS item_id FROM item 
+					left join abook on item.author_xchan = abook.abook_xchan
+					WHERE uid = %d AND item_restrict = 0
+					AND (item_flags &  %d) and (item_flags & %d)
+					AND ((abook.abook_flags & %d) = 0 or abook.abook_flags is null)
+					$sql_extra $sql_extra2
+					ORDER BY created DESC $pager_sql ",
+					intval($a->profile['profile_uid']),
+					intval(ITEM_WALL),
+					intval(ITEM_THREAD_TOP),
+					intval(ABOOK_FLAG_BLOCKED)
+				);
+			}
 		}
 		else {
 			$r = array();
@@ -201,6 +213,14 @@ function channel_content(&$a, $update = 0, $load = false) {
 		xchan_query($items);
 		$items = fetch_post_tags($items, true);
 		$items = conv_sort($items,'created');
+
+		if ($mid && (! count($items))) {
+			// This will happen if channel is called with a mid from another
+			// channel, if we don't have sufficient permissions to view the
+			// item, or if it doesn't exist.
+			// Do we need separate error messages for that?
+			notice( t('Item not found.') . EOL);
+		}
 
 	} else {
 		$items = array();
@@ -235,7 +255,7 @@ function channel_content(&$a, $update = 0, $load = false) {
 			'$order' => '',
 			'$file' => '',
 			'$cats' => (($category) ? $category : ''),
-			'$mid' => '',
+			'$mid' => $mid,
 			'$dend' => $datequery,
 			'$dbegin' => $datequery2
 		));
