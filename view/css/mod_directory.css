@@ -37,3 +37,8 @@
 div.dirtagblock.widget {
   overflow: hidden;
 }
+
+.dirpopup {
+	float: left;
+	width: 225px;
+}

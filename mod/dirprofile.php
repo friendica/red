@@ -70,6 +70,8 @@ function dirprofile_init(&$a) {
 						$profile_link = chanlink_url($rr['url']);
 		
 						$pdesc = (($rr['description']) ? $rr['description'] . '<br />' : '');
+
+						$qrlink = zid($rr['url']);
 						$connect_link = ((local_user()) ? z_root() . '/follow?f=&url=' . urlencode($rr['address']) : ''); 		
 
 						if(in_array($rr['hash'],$contacts))
@@ -145,6 +147,7 @@ function dirprofile_init(&$a) {
 						$entry = replace_macros(get_markup_template('direntry_large.tpl'), array(
 							'$id' => ++$t,
 							'$profile_link' => $profile_link,
+							'$qrlink' => $qrlink,
 							'$photo' => $rr['photo_l'],
 							'$alttext' => $rr['name'] . ' ' . $rr['address'],
 							'$name' => $rr['name'],

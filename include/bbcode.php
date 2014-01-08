@@ -133,7 +133,7 @@ function bb_parse_crypt($match) {
 }
 
 function bb_qr($match) {
-	return '<img class="zrl" src="' . z_root() . '/photo/qr?f=&qr=' . urlencode($match[1]) . '" alt="' . t('QR code') . '" />';
+	return '<img class="zrl" src="' . z_root() . '/photo/qr?f=&qr=' . urlencode($match[1]) . '" alt="' . t('QR code') . '" title="' . urlencode($match[1]) . '" />';
 } 	
 
 

@@ -2,10 +2,15 @@
 <div class="generic-content-wrapper">
 
 <div class="contact-photo-wrapper" id="directory-photo-wrapper-{{$id}}" >
-<div class="contact-photo" id="directory-photo-{{$id}}" >
-<a href="{{$profile_link}}" class="directory-profile-link" id="directory-profile-link-{{$id}}" ><img class="directory-photo-img" style="height:175px; width:175px;" src="{{$photo}}" alt="{{$alttext}}" title="{{$alttext}}" /></a>
+	<div class="contact-photo dirpopup" id="directory-photo-{{$id}}" >
+	<a href="{{$profile_link}}" class="directory-profile-link" id="directory-profile-link-{{$id}}" ><img class="directory-photo-img" style="height:175px; width:175px;" src="{{$photo}}" alt="{{$alttext}}" title="{{$alttext}}" /></a>
+	</div>
+	<div class="contact-photo dirpopup" id="directory-qr-{{$id}}" >
+	<img class="directory-photo-img" style="height:175px; width:175px;" src="photo/qr?f=&qr={{$qrlink}}" alt="QR" title="{{$qrlink}}" />
+	</div>
 </div>
-</div>
+
+<div class="clear"></div>
 
 <div class="contact-name" id="directory-name-{{$id}}"  >{{$name}}</div>
 {{if $connect}}
