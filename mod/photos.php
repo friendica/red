@@ -854,6 +854,8 @@ function photos_content(&$a) {
 					'$imgsrc' => $a->get_baseurl() . '/photo/' . $rr['resource_id'] . '-' . $rr['scale'] . '.' .$ext,
 					'$imgalt' => $imgalt_e,
 					'$desc'=> $desc_e,
+					'$ext' => $ext,
+					'$hash'=> $rr['resource_id'],
 				));
 
 		}
