@@ -782,6 +782,9 @@ function conversation(&$a, $items, $mode, $update, $page_mode = 'traditional', $
 //					$tx1 = dba_timer();
                     $item_object = new Item($item);
                     $conv->add_thread($item_object);
+					if($page_mode === 'list') 
+						$item_object->set_template('conv_list.tpl');
+
 //					$tx2 = dba_timer();
 //					if($mode === 'network')
 //						profiler($tx1,$tx2,'add thread ' . $item['id']);

@@ -233,6 +233,7 @@ function channel_content(&$a, $update = 0, $load = false) {
 			'$page' => (($a->pager['page'] != 1) ? $a->pager['page'] : 1),
 			'$search' => '',
 			'$order' => '',
+			'$list' => ((x($_REQUEST,'list')) ? intval($_REQUEST['list']) : 0),
 			'$file' => '',
 			'$cats' => (($category) ? $category : ''),
 			'$mid' => '',

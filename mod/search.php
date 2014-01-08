@@ -96,6 +96,7 @@ function search_content(&$a,$update = 0, $load = false) {
 			'$spam' => '0',
 			'$nouveau' => '0',
 			'$wall' => '0',
+			'$list' => ((x($_REQUEST,'list')) ? intval($_REQUEST['list']) : 0),
 			'$page' => (($a->pager['page'] != 1) ? $a->pager['page'] : 1),
 			'$search' => (($tag) ? urlencode('#') : '') . $search,
 			'$order' => '',

@@ -10,6 +10,7 @@ require_once('boot.php');
 /**
  * An item
  */
+
 class Item extends BaseObject {
 	public  $data = array();
 	private $template = 'conv_item.tpl';
@@ -456,6 +457,11 @@ class Item extends BaseObject {
 	 */
 	private function get_template() {
 		return $this->template;
+	}
+
+
+	private function set_template($t) {
+		$this->template = $t;
 	}
 
 	/**
