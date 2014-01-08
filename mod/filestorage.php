@@ -78,10 +78,17 @@ function filestorage_content(&$a) {
 		}
 
 		$file = intval(argv(2));
-		$r = q("delete from attach where id = %d and uid = %d limit 1",
+		$r = q("select hash from attach where id = %d and uid = %d limit 1",
 			dbesc($file),
 			intval($owner)
 		);
+		if(! $r) {
+			notice( t('File not found.') . EOL);
+			goaway(z_root() . '/filestorage' . $which);
+		}
+
+		attach_delete($owner,$r[0]['hash']);
+		
 		goaway(z_root() . '/filestorage' . $which);
 	}	
 

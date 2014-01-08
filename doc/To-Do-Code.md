@@ -17,13 +17,19 @@ We need much more than this, but here are areas where developers can help. Pleas
 
 * (Advanced) create a UI for building Comanche pages
 
-* Help with WebDAV and file storage implementation
+* Help with WebDAV and file storage implementation, especially replacing the fugly web UI. 
 
 * Extend WebDAV to provide desktop access to photo albums and existing file (attachment) storage
 
 * Events module - bring back birthday reminders for friends, fix permissions on events, and provide JS translation support for the calendar overview
 
 * Events module - event followups and RSVP
+
+
+* Uploads - integrate https://github.com/blueimp/jQuery-File-Upload
+
+
+* replace the tinymce visual editor and/or make the visual editor pluggable and responsive to different output formats. We probably want library/bbedit for bbcode. This needs a fair bit of work to catch up with our "enhanced bbcode", but start with images, links, bold and highlight and work from there.
 
 * Photos module - turn photos into normal conversations and fix tagging
 
