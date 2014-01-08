@@ -17,9 +17,13 @@ We need much more than this, but here are areas where developers can help. Pleas
 
 * (Advanced) create a UI for building Comanche pages
 
-* Help with WebDAV and file storage implementation, especially replacing the fugly web UI. 
+* Help with WebDAV and file storage implementation, especially replacing the fugly Sabre web UI. 
 
-* Extend WebDAV to provide desktop access to photo albums and existing file (attachment) storage
+* Extend WebDAV to provide desktop access to photo albums
+
+* service classes - provide a pluggable subscription payment gateway for premium accounts
+
+* service classes - account overview page showing resources consumed by channel. With special consideration this page can also be accessed at a meta level by the site admin to drill down on problematic accounts/channels. 
 
 * Events module - bring back birthday reminders for friends, fix permissions on events, and provide JS translation support for the calendar overview
 
