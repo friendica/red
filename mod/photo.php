@@ -22,6 +22,14 @@ function photo_init(&$a) {
 			// NOTREACHED
 	}
 
+	if($photo === 'qr') {
+		$t = $_GET['qr'];
+		require_once('library/phpqrcode/phpqrcode.php');
+		header("Content-type: image/png");
+		QRcode::png(($t) ? $t : '.');
+		killme();
+	}
+
 	$observer_xchan = get_observer_hash();
 
 	$default = get_default_profile_photo();

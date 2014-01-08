@@ -132,6 +132,9 @@ function bb_parse_crypt($match) {
 
 }
 
+function bb_qr($match) {
+	return '<img class="zrl" src="' . z_root() . '/photo/qr?f=&qr=' . urlencode($match[1]) . '" alt="' . t('QR code') . '" />';
+} 	
 
 
 function bb_ShareAttributes($match) {
@@ -277,6 +280,7 @@ function bbcode($Text,$preserve_nl = false, $tryoembed = true) {
     }
 
 	$Text = str_replace(array('[baseurl]','[sitename]'),array(z_root(),get_config('system','sitename')),$Text);
+
 	
 	// Replace any html brackets with HTML Entities to prevent executing HTML or script
 	// Don't use strip_tags here because it breaks [url] search by replacing & with amp
@@ -330,6 +334,12 @@ function bbcode($Text,$preserve_nl = false, $tryoembed = true) {
 	if (strpos($Text,'http') !== false) {
 		$Text = preg_replace("/([^\]\='".'"'."]|^)(https?\:\/\/$urlchars+)/ism", '$1<a href="$2" >$2</a>', $Text);
 	}
+
+	if (strpos($Text,'[/qr]') !== false) {
+		$Text = preg_replace_callback("/\[qr\](.*?)\[\/qr\]/ism","bb_qr",$Text);	
+	}
+
+
 	if (strpos($Text,'[/share]') !== false) {
 		$Text = preg_replace_callback("/\[share(.*?)\](.*?)\[\/share\]/ism","bb_ShareAttributes",$Text);	
 	}
