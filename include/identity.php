@@ -1023,7 +1023,7 @@ function zid_init(&$a) {
 				dbesc($tmp_str)
 			);
 			// try to avoid recursion - but send them home to do a proper magic auth
-			$dest = '/' . $a->query_string;
+			$dest = '/' . urlencode($a->query_string);
 			$dest = str_replace(array('?zid=','&zid='),array('?rzid=','&rzid='),$dest);
 			if($r && ($r[0]['hubloc_url'] != z_root()) && (! strstr($dest,'/magic')) && (! strstr($dest,'/rmagic'))) {
 				goaway($r[0]['hubloc_url'] . '/magic' . '?f=&rev=1&dest=' . z_root() . $dest);
