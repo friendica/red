@@ -15,24 +15,22 @@ class RedDirectory extends DAV\Node implements DAV\ICollection {
 	private $os_path = '';
 
 	function __construct($ext_path,&$auth_plugin) {
-		logger('RedDirectory::__construct() ' . $ext_path);
+		logger('RedDirectory::__construct() ' . $ext_path, LOGGER_DEBUG);
 		$this->ext_path = $ext_path;
 		$this->red_path = ((strpos($ext_path,'/cloud') === 0) ? substr($ext_path,6) : $ext_path);
 		if(! $this->red_path)
 			$this->red_path = '/';
 		$this->auth = $auth_plugin;
-//		logger('Red_Directory: ' . print_r($this,true));
 		$this->folder_hash = '';
 
 		$this->getDir();
+
 		if($this->auth->browser)
 			$this->auth->browser->set_writeable();
 
 	}
 
 	function getChildren() {
-
-		logger('RedDirectory::getChildren : ' . print_r($this,true));
 
 		if(get_config('system','block_public') && (! $this->auth->channel_id) && (! $this->auth->observer)) {
 			throw new DAV\Exception\Forbidden('Permission denied.');
@@ -51,9 +49,8 @@ class RedDirectory extends DAV\Node implements DAV\ICollection {
 
 	function getChild($name) {
 
+		logger('RedDirectory::getChild : ' . $name, LOGGER_DATA);
 
-		logger('RedDirectory::getChild : ' . $name);
-		logger('RedDirectory::getChild : ' . print_r($this,true));
 
 		if(get_config('system','block_public') && (! $this->auth->channel_id) && (! $this->auth->observer)) {
 			throw new DAV\Exception\Forbidden('Permission denied.');
@@ -70,17 +67,15 @@ class RedDirectory extends DAV\Node implements DAV\ICollection {
 		}
 
 		$x = RedFileData($this->ext_path . '/' . $name, $this->auth);
-		logger('RedFileData returns: ' . print_r($x,true));
 		if($x)
 			return $x;
+
 		throw new DAV\Exception\NotFound('The file with name: ' . $name . ' could not be found');
 		
 	}
 
 	function getName() {
-		logger('RedDirectory::getName : ' . print_r($this,true));
-		logger('RedDirectory::getName returns: ' . basename($this->red_path));
-
+		logger('RedDirectory::getName returns: ' . basename($this->red_path), LOGGER_DATA);
 		return (basename($this->red_path));
 	}
 
@@ -88,9 +83,7 @@ class RedDirectory extends DAV\Node implements DAV\ICollection {
 
 
 	function createFile($name,$data = null) {
-		logger('RedDirectory::createFile : ' . $name);
-		logger('RedDirectory::createFile : ' . print_r($this,true));
-
+		logger('RedDirectory::createFile : ' . $name, LOGGER_DEBUG);
 
 		if(! $this->auth->owner_id) {
 			logger('createFile: permission denied');
@@ -108,8 +101,15 @@ class RedDirectory extends DAV\Node implements DAV\ICollection {
 
 
 		$c = q("select * from channel where channel_id = %d limit 1",
-			intval($this->auth->channel_id)
+			intval($this->auth->owner_id)
 		);
+
+
+		if(! $c) {
+			logger('createFile: no channel');
+			throw new DAV\Exception\Forbidden('Permission denied.');
+			return;
+		}
 
 
 		$filesize = 0;
@@ -171,7 +171,7 @@ class RedDirectory extends DAV\Node implements DAV\ICollection {
 
 	function createDirectory($name) {
 
-		logger('RedDirectory::createDirectory: ' . $name);
+		logger('RedDirectory::createDirectory: ' . $name, LOGGER_DEBUG);
 
 		if((! $this->auth->owner_id) || (! perm_is_allowed($this->auth->owner_id,$this->auth->observer,'write_storage'))) {
 			throw new DAV\Exception\Forbidden('Permission denied.');
@@ -184,36 +184,30 @@ class RedDirectory extends DAV\Node implements DAV\ICollection {
 
 		if($r) {
 			$result = attach_mkdir($r[0],$this->auth->observer,array('filename' => $name,'folder' => $this->folder_hash));
-
-			logger('RedDirectory::createDirectory: ' . print_r($result,true));
-
+			if(! $result['success'])
+				logger('RedDirectory::createDirectory: ' . print_r($result,true), LOGGER_DEBUG);
 		}
-
 	}
 
 
 	function childExists($name) {
 
-		logger('RedDirectory::childExists : ' . print_r($this->auth,true));
-
 		if($this->red_path === '/' && $name === 'cloud') {
-			logger('RedDirectory::childExists /cloud: true');
+			logger('RedDirectory::childExists /cloud: true', LOGGER_DATA);
 			return true;
 		}
 
 		$x = RedFileData($this->ext_path . '/' . $name, $this->auth,true);
-		logger('RedFileData returns: ' . print_r($x,true));
+		logger('RedFileData returns: ' . print_r($x,true), LOGGER_DATA);
 		if($x)
 			return true;
 		return false;
-
 	}
 
 	function getDir() {
+		logger('getDir: ' . $this->ext_path, LOGGER_DEBUG);
 
-		logger('getDir: ' . $this->ext_path);
 		$file = $this->ext_path;
-
 
 		$x = strpos($file,'/cloud');
 		if($x === false)
@@ -290,24 +284,23 @@ class RedFile extends DAV\Node implements DAV\IFile {
 	private $name;
 
 	function __construct($name, $data, &$auth) {
-		logger('RedFile::_construct: ' . $name);
 		$this->name = $name;
 		$this->data = $data;
 		$this->auth = $auth;
 
-		logger('RedFile::_construct: ' . print_r($this->data,true));
+		logger('RedFile::_construct: ' . print_r($this->data,true), LOGGER_DATA);
 	}
 
 
 	function getName() {
-		logger('RedFile::getName: ' . basename($this->name));
+		logger('RedFile::getName: ' . basename($this->name), LOGGER_DEBUG);
 		return basename($this->name);
 
 	}
 
 
 	function setName($newName) {
-		logger('RedFile::setName: ' . basename($this->name) . ' -> ' . $newName);
+		logger('RedFile::setName: ' . basename($this->name) . ' -> ' . $newName, LOGGER_DEBUG);
 
 		if((! $newName) || (! $this->auth->owner_id) || (! perm_is_allowed($this->auth->owner_id,$this->auth->observer,'write_storage'))) {
 			throw new DAV\Exception\Forbidden('Permission denied.');
@@ -325,7 +318,7 @@ class RedFile extends DAV\Node implements DAV\IFile {
 
 
 	function put($data) {
-		logger('RedFile::put: ' . basename($this->name));
+		logger('RedFile::put: ' . basename($this->name), LOGGER_DEBUG);
 
 
 		$r = q("select flags, data from attach where hash = '%s' and uid = %d limit 1",
@@ -380,7 +373,7 @@ class RedFile extends DAV\Node implements DAV\IFile {
 
 
 	function get() {
-		logger('RedFile::get: ' . basename($this->name));
+		logger('RedFile::get: ' . basename($this->name), LOGGER_DEBUG);
 
 		$r = q("select data, flags from attach where hash = '%s' and uid = %d limit 1",
 			dbesc($this->data['hash']),
@@ -397,9 +390,7 @@ class RedFile extends DAV\Node implements DAV\IFile {
 	}
 
 	function getETag() {
-		logger('RedFile::getETag: ' . basename($this->name));
 		return $this->data['hash'];
-
 	}
 
 
@@ -414,13 +405,11 @@ class RedFile extends DAV\Node implements DAV\IFile {
 
 
 	function getLastModified() {
-		logger('RedFile::getLastModified: ' . basename($this->name));
 		return $this->data['edited'];
 	}
 
 
 	function delete() {
-
 		if((! $this->auth->owner_id) || (! perm_is_allowed($this->auth->owner_id,$this->auth->observer,'write_storage'))) {
 			throw new DAV\Exception\Forbidden('Permission denied.');
 			return;
@@ -460,9 +449,6 @@ function RedCollectionData($file,&$auth) {
 		$file = substr($file,6);
 	}
 
-
-logger('RedCollectionData: ' . $file); 
-
 	if((! $file) || ($file === '/')) {
 		return RedChannelList($auth);
 	}
@@ -478,8 +464,6 @@ logger('RedCollectionData: ' . $file);
 	$r = q("select channel_id from channel where channel_address = '%s' limit 1",
 		dbesc($channel_name)
 	);
-
-logger('dbg1: ' . print_r($r,true));
 
 	if(! $r)
 		return null;
@@ -532,7 +516,7 @@ logger('dbg1: ' . print_r($r,true));
 		}
 	}
 
-	logger('dbg2: ' . print_r($r,true));
+	// This should no longer be needed since we just returned errors for paths not found
 
 	if($path !== '/' . $file) {
 		logger("RedCollectionData: Path mismatch: $path !== /$file");
@@ -545,8 +529,6 @@ logger('dbg1: ' . print_r($r,true));
 		dbesc($folder),
 		intval($channel_id)
 	);
-
-logger('dbg2: ' . print_r($r,true));
 
 	foreach($r as $rr) {
 		if($rr['flags'] & ATTACH_FLAG_DIR)
@@ -561,15 +543,13 @@ logger('dbg2: ' . print_r($r,true));
 
 function RedFileData($file, &$auth,$test = false) {
 
-logger('RedFileData:' . $file . (($test) ? ' (test mode) ' : ''));
+	logger('RedFileData:' . $file . (($test) ? ' (test mode) ' : ''), LOGGER_DEBUG);
 
 
 	$x = strpos($file,'/cloud');
 	if($x === 0) {
 		$file = substr($file,6);
 	}
-
-logger('RedFileData2: ' . $file);
 
 	if((! $file) || ($file === '/')) {
 		return RedDirectory('/',$auth);
@@ -578,14 +558,11 @@ logger('RedFileData2: ' . $file);
 
 	$file = trim($file,'/');
 
-logger('file=' . $file);
-
 	$path_arr = explode('/', $file);
 	
 	if(! $path_arr)
 		return null;
 
-	logger("file = $file - path = " . print_r($path_arr,true));
 
 	$channel_name = $path_arr[0];
 
@@ -593,8 +570,6 @@ logger('file=' . $file);
 	$r = q("select channel_id from channel where channel_address = '%s' limit 1",
 		dbesc($channel_name)
 	);
-
-	logger('dbg0: ' . print_r($r,true));
 
 	if(! $r)
 		return null;
@@ -607,9 +582,7 @@ logger('file=' . $file);
 
 	$permission_error = false;
 
-
 	$folder = '';
-//dbg(1);
 
 	require_once('include/security.php');
 	$perms = permissions_sql($channel_id);
@@ -617,15 +590,12 @@ logger('file=' . $file);
 	$errors = false;
 
 	for($x = 1; $x < count($path_arr); $x ++) {		
-dbg(1);
 		$r = q("select id, hash, filename, flags from attach where folder = '%s' and filename = '%s' and uid = %d and (flags & %d) $perms",
 			dbesc($folder),
 			dbesc($path_arr[$x]),
 			intval($channel_id),
 			intval(ATTACH_FLAG_DIR)
 		);
-dbg(0);
-	logger('dbg1: ' . print_r($r,true));
 
 		if($r && ( $r[0]['flags'] & ATTACH_FLAG_DIR)) {
 			$folder = $r[0]['hash'];
@@ -656,8 +626,6 @@ dbg(0);
 
 	}
 
-	logger('dbg1: ' . print_r($r,true));
-
 	if($path === '/' . $file) {
 		if($test)
 			return true;
@@ -666,13 +634,13 @@ dbg(0);
 	}
 
 	if($errors) {
+		logger('RedFileData: not found');
 		if($test)
 			return false;
 		if($permission_error) {
 			logger('RedFileData: permission error');	
 			throw new DAV\Exception\Forbidden('Permission denied.');
 		}
-		logger('RedFileData: not found');
 		return;
 	}
 
@@ -769,11 +737,9 @@ class RedBrowser extends DAV\Browser\Plugin {
 
 
 	function set_writeable() {
-		logger('RedBrowser: ' . print_r($this->auth,true));
 
 		if(! $this->auth->owner_id)
 			$this->enablePost = false;
-
 
 		if(! perm_is_allowed($this->auth->owner_id, get_observer_hash(), 'write_storage'))
 			$this->enablePost = false;
@@ -781,5 +747,4 @@ class RedBrowser extends DAV\Browser\Plugin {
 			$this->enablePost = true;
 
 	}
-
 }
