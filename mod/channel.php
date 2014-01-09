@@ -177,6 +177,10 @@ function channel_content(&$a, $update = 0, $load = false) {
 				$r = q("SELECT parent AS item_id from item where mid = '%s' limit 1",
 					dbesc($mid)
 				);
+				if (! $r) {
+					notice( t('Item not found.') . EOL);
+				}
+
 			} else {
 				$r = q("SELECT distinct id AS item_id FROM item 
 					left join abook on item.author_xchan = abook.abook_xchan
@@ -207,8 +211,11 @@ function channel_content(&$a, $update = 0, $load = false) {
 			dbesc($r[0]['item_id']),
 			intval($a->profile['profile_uid'])
 		);
-		if (!$ismine)
+		if (!$ismine) {
+			if ($load)
+				notice( t('Permission denied.') . EOL);
 			$r = array();
+		}
 	}
 
 	if($r) {
@@ -228,12 +235,10 @@ function channel_content(&$a, $update = 0, $load = false) {
 		$items = fetch_post_tags($items, true);
 		$items = conv_sort($items,'created');
 
-		if ($mid && (! count($items))) {
-			// This will happen if channel is called with a mid from another
-			// channel, if we don't have sufficient permissions to view the
-			// item, or if it doesn't exist.
-			// Do we need separate error messages for that?
-			notice( t('Item not found.') . EOL);
+		if ($load && $mid && (! count($items))) {
+			// This will happen if we don't have sufficient permissions
+			// to view the parent item (or the item itself if it is toplevel)
+			notice( t('Permission denied.') . EOL);
 		}
 
 	} else {
