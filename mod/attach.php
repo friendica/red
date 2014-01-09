@@ -17,10 +17,17 @@ function attach_init(&$a) {
 		return;
 	}
 
+	$c = q("select channel_address from channel where channel_id = %d limit 1",
+		intval($r[0]['uid'])
+	);
+
+	if(! $c)
+		return;
+
 	header('Content-type: ' . $r['data']['filetype']);
 	header('Content-disposition: attachment; filename=' . $r['data']['filename']);
 	if($r['data']['flags'] & ATTACH_FLAG_OS ) {
-		$stream = fopen($r['data']['data'],'rb');
+		$stream = fopen('store/' . $c[0]['channel_address'] . '/' . $r['data']['data'],'rb');
 		if($stream) {
 			pipe_stream($stream,STDOUT);
 			fclose($stream);

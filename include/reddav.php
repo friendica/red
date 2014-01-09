@@ -115,17 +115,18 @@ class RedDirectory extends DAV\Node implements DAV\ICollection {
 		$filesize = 0;
 		$hash = random_string();
 
-        $r = q("INSERT INTO attach ( aid, uid, hash, filename, folder, filetype, filesize, revision, data, created, edited, allow_cid, allow_gid, deny_cid, deny_gid )
-            VALUES ( %d, %d, '%s', '%s', '%s', '%s', %d, %d, '%s', '%s', '%s', '%s', '%s', '%s', '%s' ) ",
+        $r = q("INSERT INTO attach ( aid, uid, hash, filename, folder, flags, filetype, filesize, revision, data, created, edited, allow_cid, allow_gid, deny_cid, deny_gid )
+            VALUES ( %d, %d, '%s', '%s', '%s', '%s', '%s', %d, %d, '%s', '%s', '%s', '%s', '%s', '%s', '%s' ) ",
             intval($c[0]['channel_account_id']),
             intval($c[0]['channel_id']),
             dbesc($hash),
             dbesc($name),
 			dbesc($this->folder_hash),
+			dbesc(ATTACH_FLAG_OS),
             dbesc($mimetype),
             intval($filesize),
             intval(0),
-            dbesc(stream_get_contents($data)),
+            dbesc($this->os_path . '/' . $hash),
             dbesc(datetime_convert()),
             dbesc(datetime_convert()),
 			dbesc($c[0]['channel_allow_cid']),
@@ -136,25 +137,22 @@ class RedDirectory extends DAV\Node implements DAV\ICollection {
 
 		);
 
-		$r = q("update attach set filesize = length(data) where hash = '%s' and uid = %d limit 1",
+		$f = 'store/' . $this->auth->owner_nick . '/' . (($this->os_path) ? $this->os_path . '/' : '') . $hash;
+
+		file_put_contents($f, $data);
+		$size = filesize($f);
+
+
+		$r = q("update attach set filesize = '%s' where hash = '%s' and uid = %d limit 1",
+			dbesc($size),
 			dbesc($hash),
 			intval($c[0]['channel_id'])
 		);
-
-		$r = q("select filesize from attach where hash = '%s' and uid = %d limit 1",
-			dbesc($hash),
-			intval($c[0]['channel_id'])
-		);
-
-		// FIXME - delete attached file resource if using OS storage
 
 		$maxfilesize = get_config('system','maxfilesize');
 
-		if(($maxfilesize) && ($r[0]['filesize'] > $maxfilesize)) {
-			q("delete from attach where hash = '%s' and uid = %d limit 1",
-				dbesc($hash),
-				intval($c[0]['channel_id'])
-			);
+		if(($maxfilesize) && ($size > $maxfilesize)) {
+			attach_delete($c[0]['channel_id'],$hash);
 			return;
 		}
 
@@ -163,11 +161,8 @@ class RedDirectory extends DAV\Node implements DAV\ICollection {
 			$x = q("select sum(filesize) as total from attach where aid = %d ",
 				intval($c[0]['channel_account_id'])
 			);
-			if(($x) &&  ($x[0]['total'] + $r[0]['filesize'] > $limit)) {
-				q("delete from attach where hash = '%s' and uid = %d limit 1",
-					dbesc($hash),
-					intval($c[0]['channel_id'])
-				);
+			if(($x) &&  ($x[0]['total'] + $size > $limit)) {
+				attach_delete($c[0]['channel_id'],$hash);
 				return;
 			}
 		}
@@ -251,6 +246,7 @@ class RedDirectory extends DAV\Node implements DAV\ICollection {
 
 		$channel_id = $r[0]['channel_id'];
 		$this->auth->owner_id = $channel_id;
+		$this->auth->owner_nick = $channel_name;
 
 		$path = '/' . $channel_name;
 
@@ -328,32 +324,45 @@ class RedFile extends DAV\Node implements DAV\IFile {
 	}
 
 
-
 	function put($data) {
 		logger('RedFile::put: ' . basename($this->name));
 
-		$r = q("update attach set data = '%s' where hash = '%s' and uid = %d limit 1",
-			dbesc(stream_get_contents($data)),
-			dbesc($this->data['hash']),
-			intval($this->data['uid'])
-		);
-		$r = q("update attach set filesize = length(data) where hash = '%s' and uid = %d limit 1",
-			dbesc($this->data['hash']),
-			intval($this->data['uid'])
-		);
 
-		$r = q("select filesize from attach where hash = '%s' and uid = %d limit 1",
-			dbesc($this->data['hash']),
+		$r = q("select flags, data from attach where hash = '%s' and uid = %d limit 1",
+			dbesc($hash),
+			intval($c[0]['channel_id'])
+		);
+		if($r) {
+			if($r[0]['flags'] & ATTACH_FLAG_OS) {
+				@file_put_contents($r[0]['data'], $data);
+				$size = @filesize($r[0]['data']);
+			}
+			else {
+				$r = q("update attach set data = '%s' where hash = '%s' and uid = %d limit 1",
+					dbesc(stream_get_contents($data)),
+					dbesc($this->data['hash']),
+					intval($this->data['uid'])
+				);
+				$r = q("select length(data) as fsize from attach where hash = '%s' and uid = %d limit 1",
+					dbesc($this->data['hash']),
+					intval($this->data['uid'])
+				);
+				if($r)
+					$size = $r[0]['fsize'];
+			}
+		}
+ 
+		$r = q("update attach set filesize = '%s' where hash = '%s' and uid = %d limit 1",
+			dbesc($size),
+			dbesc($hash),
 			intval($c[0]['channel_id'])
 		);
 
+
 		$maxfilesize = get_config('system','maxfilesize');
 
-		if(($maxfilesize) && ($r[0]['filesize'] > $maxfilesize)) {
-			q("delete from attach where hash = '%s' and uid = %d limit 1",
-				dbesc($this->data['hash']),
-				intval($c[0]['channel_id'])
-			);
+		if(($maxfilesize) && ($size > $maxfilesize)) {
+			attach_delete($c[0]['channel_id'],$hash);
 			return;
 		}
 
@@ -362,11 +371,8 @@ class RedFile extends DAV\Node implements DAV\IFile {
 			$x = q("select sum(filesize) as total from attach where aid = %d ",
 				intval($c[0]['channel_account_id'])
 			);
-			if(($x) &&  ($x[0]['total'] + $r[0]['filesize'] > $limit)) {
-				q("delete from attach where hash = '%s' and uid = %d limit 1",
-					dbesc($this->data['hash']),
-					intval($c[0]['channel_id'])
-				);
+			if(($x) &&  ($x[0]['total'] + $size > $limit)) {
+				attach_delete($c[0]['channel_id'],$hash);
 				return;
 			}
 		}
@@ -382,7 +388,8 @@ class RedFile extends DAV\Node implements DAV\IFile {
 		);
 		if($r) {
 			if($r[0]['flags'] & ATTACH_FLAG_OS ) {
-				return fopen($r[0]['data'],'rb');
+				$f = 'store/' . $this->auth->owner_nick . '/' . (($this->os_path) ? $this->os_path . '/' : '') . $r[0]['data'];
+				return fopen($f,'rb');
 			}
 			return $r[0]['data'];
 		}
@@ -690,6 +697,7 @@ class RedBasicAuth extends Sabre\DAV\Auth\Backend\AbstractBasic {
 	public $observer = '';
 	public $browser;
 	public $owner_id;
+	public $owner_nick = '';
 
     protected function validateUserPass($username, $password) {
 		require_once('include/auth.php');

@@ -679,6 +679,12 @@ function attach_change_permissions($channel_id,$resource,$allow_cid,$allow_gid,$
 function attach_delete($channel_id,$resource) {
 
 
+	$c = q("select channel_address from channel where channel_id = %d limit 1",
+		intval($channel_id)
+	);
+
+	$channel_address = (($c) ? $c[0]['channel_address'] : 'notfound');
+
 	$r = q("select hash, flags from attach where hash = '%s' and uid = %d limit 1",
 		dbesc($resource),
 		intval($channel_id)
@@ -705,10 +711,11 @@ function attach_delete($channel_id,$resource) {
 		);
 
 		if($y) {
-			if(is_dir($y[0]['data']))
-				@rmdir($y[0]['data']);
-			elseif(file_exists($y[0]['data']))
-				unlink($y[0]['data']);
+			$f = 'store/' . $channel_address . '/' . $y[0]['data'];
+			if(is_dir($f))
+				@rmdir($f);
+			elseif(file_exists($f))
+				unlink($f);
 		}
 	}
 
