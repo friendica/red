@@ -138,6 +138,17 @@ function channel_content(&$a, $update = 0, $load = false) {
 			$r = q("SELECT parent AS item_id from item where mid = '%s' limit 1",
 				dbesc($mid)
 			);
+logger("update ");
+			if ($r) {
+				// make sure we don't show other people's posts from our matrix
+				$parent = q("SELECT owner_xchan from item where id = %d",
+					dbesc($r[0]['item_id'])
+				);
+logger("update ");
+logger($parent);
+				if ($parent['owner_xchan'] != $a->profile['channel_hash'])
+					$r = array();
+			}
 		} else {
 			$r = q("SELECT distinct parent AS `item_id` from item
 				left join abook on item.author_xchan = abook.abook_xchan
@@ -177,6 +188,7 @@ function channel_content(&$a, $update = 0, $load = false) {
 				$r = q("SELECT parent AS item_id from item where mid = '%s' limit 1",
 					dbesc($mid)
 				);
+logger("load ");
 			} else {
 				$r = q("SELECT distinct id AS item_id FROM item 
 					left join abook on item.author_xchan = abook.abook_xchan
@@ -195,6 +207,20 @@ function channel_content(&$a, $update = 0, $load = false) {
 		else {
 			$r = array();
 		}
+	}
+
+	if ($mid && $r) {
+		// make sure we don't show other people's posts from our matrix
+		// as $a->profile['channel_hash'] isn't set when a JS query comes in
+		// we have to do that with a join
+		$ismine = q("SELECT * from item
+			join channel on item.owner_xchan = channel.channel_hash
+			where item.id = %d and channel.channel_id = %d",
+			dbesc($r[0]['item_id']),
+			intval($a->profile['profile_uid'])
+		);
+		if (!$ismine)
+			$r = array();
 	}
 
 	if($r) {
