@@ -11,6 +11,7 @@ function mood_init(&$a) {
 		return;
 
 	$uid = local_user();
+	$channel = $a->get_channel();
 	$verb = notags(trim($_GET['verb']));
 	
 	if(! $verb) 
@@ -48,7 +49,6 @@ function mood_init(&$a) {
 	else {
 
 		$private       = 0;
-		$channel       = $a->get_channel();
 
 		$allow_cid     =  $channel['channel_allow_cid'];
 		$allow_gid     =  $channel['channel_allow_gid'];
@@ -83,6 +83,11 @@ function mood_init(&$a) {
 	$arr['item_private']  = $private;
 	$arr['verb']          = $activity;
 	$arr['body']          = $action;
+
+	if ((! $arr['plink']) && ($arr['item_flags'] & ITEM_THREAD_TOP)) {
+		$arr['plink'] = z_root() . '/channel/' . $channel['channel_address'] . '/?f=&mid=' . $arr['mid'];
+	}
+
 
 	$post = item_store($arr);
 	$item_id = $post['item_id'];

@@ -243,6 +243,12 @@ function post_activity_item($arr) {
 
 	$arr['comment_policy'] = map_scope($channel['channel_w_comment']); 
 
+
+	if ((! $arr['plink']) && ($arr['item_flags'] & ITEM_THREAD_TOP)) {
+		$arr['plink'] = z_root() . '/channel/' . $channel['channel_address'] . '/?f=&mid=' . $arr['mid'];
+	}
+
+
 	// for the benefit of plugins, we will behave as if this is an API call rather than a normal online post
 
 	$_REQUEST['api_source'] = 1;
@@ -1602,14 +1608,10 @@ function item_store($arr,$allow_exec = false) {
 
 	$arr['llink'] = z_root() . '/display/' . $arr['mid'];
 
-	if((! $arr['plink'])) {
-		if (local_user() && ($arr['item_flags'] & ITEM_THREAD_TOP)) {
-			$channel = get_app()->get_channel();
-			$arr['plink'] = z_root() . '/channel/' . $channel['channel_address'] . '/?mid=' . $arr['mid'];
-		} else {
-			$arr['plink'] = $arr['llink'];
-		}
-	}
+	if(! $arr['plink'])
+		$arr['plink'] = $arr['llink'];
+
+
 
 	if($arr['parent_mid'] === $arr['mid']) {
 		$parent_id = 0;

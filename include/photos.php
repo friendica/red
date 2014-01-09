@@ -216,6 +216,9 @@ function photo_upload($channel, $observer, $args) {
 	$arr['deny_gid']      = $str_group_deny;
 	$arr['verb']          = ACTIVITY_POST;
 
+	$arr['plink']         = z_root() . '/channel/' . $channel['channel_address'] . '/?f=&mid=' . $arr['mid'];
+
+
 	$arr['body']          = '[zrl=' . z_root() . '/photos/' . $channel['channel_address'] . '/image/' . $photo_hash . ']' 
 				. '[zmg]' . z_root() . "/photo/{$photo_hash}-{$smallest}.".$ph->getExt() . '[/zmg]' 
 				. '[/zrl]';
@@ -407,6 +410,8 @@ function photos_create_item($channel, $creator_hash, $photo, $visible = false) {
 	$arr['allow_gid']     = $photo['allow_gid'];
 	$arr['deny_cid']      = $photo['deny_cid'];
 	$arr['deny_gid']      = $photo['deny_gid'];
+
+	$arr['plink']         = z_root() . '/channel/' . $channel['channel_address'] . '/?f=&mid=' . $arr['mid'];
 			
 	$arr['body']          = '[zrl=' . z_root() . '/photos/' . $channel['channel_address'] . '/image/' . $photo['resource_id'] . ']' 
 		. '[zmg]' . z_root() . '/photo/' . $photo['resource_id'] . '-' . $photo['scale'] . '[/zmg]' 

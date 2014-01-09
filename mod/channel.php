@@ -104,7 +104,7 @@ function channel_content(&$a, $update = 0, $load = false) {
 		); 
 
 
-		if($perms['post_wall'] && (!$mid)) {
+		if($perms['post_wall']) {
 
 			$x = array(
 				'is_owner' => $is_owner,
@@ -135,8 +135,9 @@ function channel_content(&$a, $update = 0, $load = false) {
 
 	if(($update) && (! $load)) {
 		if ($mid) {
-			$r = q("SELECT parent AS item_id from item where mid = '%s' limit 1",
-				dbesc($mid)
+			$r = q("SELECT parent AS item_id from item where mid = '%s' and uid = %d $sql_extra limit 1",
+				dbesc($mid),
+				intval($a->profile['profile_uid'])
 			);
 		} else {
 			$r = q("SELECT distinct parent AS `item_id` from item
@@ -197,23 +198,6 @@ function channel_content(&$a, $update = 0, $load = false) {
 			}
 		}
 		else {
-			$r = array();
-		}
-	}
-
-	if ($mid && $r) {
-		// make sure we don't show other people's posts from our matrix
-		// as $a->profile['channel_hash'] isn't set when a JS query comes in
-		// we have to do that with a join
-		$ismine = q("SELECT * from item
-			join channel on item.owner_xchan = channel.channel_hash
-			where item.id = %d and channel.channel_id = %d",
-			dbesc($r[0]['item_id']),
-			intval($a->profile['profile_uid'])
-		);
-		if (!$ismine) {
-			if ($load)
-				notice( t('Permission denied.') . EOL);
 			$r = array();
 		}
 	}

@@ -472,7 +472,7 @@ function photos_post(&$a) {
 					$mid = item_message_id();
 
 					$arr = array();
-
+//FIXME
 					$arr['uid']           = $page_owner_uid;
 					$arr['mid']           = $mid;
 					$arr['parent_mid']    = $mid;
@@ -510,6 +510,13 @@ function photos_post(&$a) {
 					$arr['target'] = '<target><type>' . ACTIVITY_OBJ_PHOTO . '</type><title>' . $p[0]['description'] . '</title><id>'
 						. $a->get_baseurl() . '/photos/' . $owner_record['nickname'] . '/image/' . $p[0]['resource_id'] . '</id>';
 					$arr['target'] .= '<link>' . xmlify('<link rel="alternate" type="text/html" href="' . $a->get_baseurl() . '/photos/' . $owner_record['nickname'] . '/image/' . $p[0]['resource_id'] . '" />' . "\n" . '<link rel="preview" type="'.$p[0]['type'].'" href="' . $a->get_baseurl() . "/photo/" . $p[0]['resource_id'] . '-' . $best . '.' . $ext . '" />') . '</link></target>';
+
+					if ((! $arr['plink']) && ($arr['item_flags'] & ITEM_THREAD_TOP)) {
+						$arr['plink'] = z_root() . '/channel/' . $owner_record['channel_address'] . '/?f=&mid=' . $arr['mid'];
+					}
+
+
+
 
 					$post = item_store($arr);
 					$item_id = $post['item_id'];

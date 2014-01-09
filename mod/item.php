@@ -79,6 +79,7 @@ function item_post(&$a) {
 	$layout_mid  = ((x($_REQUEST,'layout_mid'))  ? escape_tags($_REQUEST['layout_mid']): '');
 	$plink       = ((x($_REQUEST,'permalink'))   ? escape_tags($_REQUEST['permalink']) : '');
 
+
 	/*
 	Check service class limits
 	*/
@@ -605,8 +606,11 @@ function item_post(&$a) {
 	$datarray = array();
 
 	if(! $parent) {
-		$datarray['parent_mid'] = $mid;
 		$item_flags = $item_flags | ITEM_THREAD_TOP;
+	}
+
+	if ((! $plink) && ($item_flags & ITEM_THREAD_TOP)) {
+		$plink = z_root() . '/channel/' . $channel['channel_address'] . '/?f=&mid=' . $mid;
 	}
 	
 	$datarray['aid']            = $channel['channel_account_id'];

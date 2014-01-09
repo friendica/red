@@ -337,6 +337,8 @@ function event_store($arr) {
 		$item_arr['obj_type']      = ACTIVITY_OBJ_EVENT;
 		$item_arr['body']          = format_event_bbcode($arr);
 
+		$item_arr['plink'] = z_root() . '/channel/' . $z[0]['channel_address'] . '/?f=&mid=' . $item_arr['mid'];
+
 		$x = q("select * from xchan where xchan_hash = '%s' limit 1",
 				dbesc($arr['event_xchan'])
 		);
