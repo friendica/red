@@ -138,17 +138,6 @@ function channel_content(&$a, $update = 0, $load = false) {
 			$r = q("SELECT parent AS item_id from item where mid = '%s' limit 1",
 				dbesc($mid)
 			);
-logger("update ");
-			if ($r) {
-				// make sure we don't show other people's posts from our matrix
-				$parent = q("SELECT owner_xchan from item where id = %d",
-					dbesc($r[0]['item_id'])
-				);
-logger("update ");
-logger($parent);
-				if ($parent['owner_xchan'] != $a->profile['channel_hash'])
-					$r = array();
-			}
 		} else {
 			$r = q("SELECT distinct parent AS `item_id` from item
 				left join abook on item.author_xchan = abook.abook_xchan
@@ -188,7 +177,6 @@ logger($parent);
 				$r = q("SELECT parent AS item_id from item where mid = '%s' limit 1",
 					dbesc($mid)
 				);
-logger("load ");
 			} else {
 				$r = q("SELECT distinct id AS item_id FROM item 
 					left join abook on item.author_xchan = abook.abook_xchan
