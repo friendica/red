@@ -18,7 +18,7 @@ function attach_init(&$a) {
 	}
 
 	$c = q("select channel_address from channel where channel_id = %d limit 1",
-		intval($r[0]['uid'])
+		intval($r['data']['uid'])
 	);
 
 	if(! $c)
