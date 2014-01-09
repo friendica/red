@@ -433,7 +433,7 @@ function bbcode($Text,$preserve_nl = false, $tryoembed = true) {
 	if (strpos($Text,'[tr]') !== false) {	
 		$Text = preg_replace("/\[tr\](.*?)\[\/tr\]/sm", '<tr>$1</tr>' ,$Text);
 	}
-	if (strpos($Text,'[table]') !== false) {	
+	if (strpos($Text,'[/table]') !== false) {	
 		$Text = preg_replace("/\[table\](.*?)\[\/table\]/sm", '<table>$1</table>' ,$Text);
 		$Text = preg_replace("/\[table border=1\](.*?)\[\/table\]/sm", '<table border="1" >$1</table>' ,$Text);
 		$Text = preg_replace("/\[table border=0\](.*?)\[\/table\]/sm", '<table border="0" >$1</table>' ,$Text);
