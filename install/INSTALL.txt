@@ -74,11 +74,13 @@ directory/path component in the URL) is REQUIRED.
 
         git pull
 
-    - make sure folder *view/tpl/smarty3* exists and is writable by webserver
+    - make sure folders *view/tpl/smarty3* and *store* exist and are writable by webserver
 
         mkdir view/tpl/smarty3
+		mkdir store
 
         chmod 777 view/tpl/smarty3
+		chmod 777 store
 
 		[This permission (777) is very dangerous and if you have sufficient
 		privilege and knowledge you should make this directory writeable only

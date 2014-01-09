@@ -228,6 +228,8 @@ function setup_content(&$a) {
 
 			check_smarty3($checks);
 
+			check_store($checks);
+
 			check_keys($checks);
 			
 			if(x($_POST,'phpath'))
@@ -514,6 +516,24 @@ function check_smarty3(&$checks) {
 	check_add($checks, t('view/tpl/smarty3 is writable'), $status, true, $help);
 
 }
+
+function check_store(&$checks) {
+	$status = true;
+	$help = "";
+
+	@mkdir('store',STORAGE_DEFAULT_PERMISSIONS);
+
+	if(	!is_writable('store') ) {
+	
+		$status=false;
+		$help = t('Red uses the store directory to save uploaded files. The web server needs to have write access to the store directory under the Red top level folder') . EOL;
+		$help .= t('Please ensure that the user that your web server runs as (e.g. www-data) has write access to this folder.').EOL;
+	}
+    
+	check_add($checks, t('store is writable'), $status, true, $help);
+
+}
+
 
 function check_htaccess(&$checks) {
 	$a = get_app();
