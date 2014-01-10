@@ -747,4 +747,185 @@ class RedBrowser extends DAV\Browser\Plugin {
 			$this->enablePost = true;
 
 	}
+
+    public function generateDirectoryIndex($path) {
+
+        $version = '';
+
+        $html = "
+<body>
+  <h1>Index for " . $this->escapeHTML($path) . "/</h1>
+  <table>
+    <tr><th width=\"24\"></th><th>Name</th><th>Type</th><th>Size</th><th>Last modified</th></tr>
+    <tr><td colspan=\"5\"><hr /></td></tr>";
+
+        $files = $this->server->getPropertiesForPath($path,array(
+            '{DAV:}displayname',
+            '{DAV:}resourcetype',
+            '{DAV:}getcontenttype',
+            '{DAV:}getcontentlength',
+            '{DAV:}getlastmodified',
+        ),1);
+
+        $parent = $this->server->tree->getNodeForPath($path);
+
+
+        if ($path) {
+
+            list($parentUri) = DAV\URLUtil::splitPath($path);
+            $fullPath = DAV\URLUtil::encodePath($this->server->getBaseUri() . $parentUri);
+
+            $icon = $this->enableAssets?'<a href="' . $fullPath . '"><img src="' . $this->getAssetUrl('icons/parent' . $this->iconExtension) . '" width="24" alt="Parent" /></a>':'';
+            $html.= "<tr>
+    <td>$icon</td>
+    <td><a href=\"{$fullPath}\">..</a></td>
+    <td>[parent]</td>
+    <td></td>
+    <td></td>
+    </tr>";
+
+        }
+
+        foreach($files as $file) {
+
+            // This is the current directory, we can skip it
+            if (rtrim($file['href'],'/')==$path) continue;
+
+            list(, $name) = DAV\URLUtil::splitPath($file['href']);
+
+            $type = null;
+
+
+            if (isset($file[200]['{DAV:}resourcetype'])) {
+                $type = $file[200]['{DAV:}resourcetype']->getValue();
+
+                // resourcetype can have multiple values
+                if (!is_array($type)) $type = array($type);
+
+                foreach($type as $k=>$v) {
+
+                    // Some name mapping is preferred
+                    switch($v) {
+                        case '{DAV:}collection' :
+                            $type[$k] = 'Collection';
+                            break;
+                        case '{DAV:}principal' :
+                            $type[$k] = 'Principal';
+                            break;
+                        case '{urn:ietf:params:xml:ns:carddav}addressbook' :
+                            $type[$k] = 'Addressbook';
+                            break;
+                        case '{urn:ietf:params:xml:ns:caldav}calendar' :
+                            $type[$k] = 'Calendar';
+                            break;
+                        case '{urn:ietf:params:xml:ns:caldav}schedule-inbox' :
+                            $type[$k] = 'Schedule Inbox';
+                            break;
+                        case '{urn:ietf:params:xml:ns:caldav}schedule-outbox' :
+                            $type[$k] = 'Schedule Outbox';
+                            break;
+                        case '{http://calendarserver.org/ns/}calendar-proxy-read' :
+                            $type[$k] = 'Proxy-Read';
+                            break;
+                        case '{http://calendarserver.org/ns/}calendar-proxy-write' :
+                            $type[$k] = 'Proxy-Write';
+                            break;
+                    }
+
+                }
+                $type = implode(', ', $type);
+            }
+
+            // If no resourcetype was found, we attempt to use
+            // the contenttype property
+            if (!$type && isset($file[200]['{DAV:}getcontenttype'])) {
+                $type = $file[200]['{DAV:}getcontenttype'];
+            }
+            if (!$type) $type = 'Unknown';
+
+            $size = isset($file[200]['{DAV:}getcontentlength'])?(int)$file[200]['{DAV:}getcontentlength']:'';
+            $lastmodified = isset($file[200]['{DAV:}getlastmodified'])?$file[200]['{DAV:}getlastmodified']->getTime()->format(\DateTime::ATOM):'';
+
+            $fullPath = DAV\URLUtil::encodePath('/' . trim($this->server->getBaseUri() . ($path?$path . '/':'') . $name,'/'));
+
+            $displayName = isset($file[200]['{DAV:}displayname'])?$file[200]['{DAV:}displayname']:$name;
+
+            $displayName = $this->escapeHTML($displayName);
+            $type = $this->escapeHTML($type);
+
+            $icon = '';
+
+            if ($this->enableAssets) {
+                $node = $this->server->tree->getNodeForPath(($path?$path.'/':'') . $name);
+                foreach(array_reverse($this->iconMap) as $class=>$iconName) {
+
+                    if ($node instanceof $class) {
+                        $icon = '<a href="' . $fullPath . '"><img src="' . $this->getAssetUrl($iconName . $this->iconExtension) . '" alt="" width="24" /></a>';
+                        break;
+                    }
+
+
+                }
+
+            }
+
+            $html.= "<tr>
+    <td>$icon</td>
+    <td><a href=\"{$fullPath}\">{$displayName}</a></td>
+    <td>{$type}</td>
+    <td>{$size}</td>
+    <td>{$lastmodified}</td>
+    </tr>";
+
+        }
+
+        $html.= "<tr><td colspan=\"5\"><hr /></td></tr>";
+
+        $output = '';
+
+        if ($this->enablePost) {
+            $this->server->broadcastEvent('onHTMLActionsPanel',array($parent, &$output));
+        }
+
+        $html.=$output;
+
+        $html.= "</table>";
+
+		get_app()->page['content'] = $html;
+		construct_page(get_app());
+
+//        return $html;
+
+    }
+
+
+    public function htmlActionsPanel(DAV\INode $node, &$output) {
+
+        if (!$node instanceof DAV\ICollection)
+            return;
+
+        // We also know fairly certain that if an object is a non-extended
+        // SimpleCollection, we won't need to show the panel either.
+
+        if (get_class($node)==='Sabre\\DAV\\SimpleCollection')
+            return;
+
+        $output.= '<tr><td colspan="2"><form method="post" action="">
+            <h3>Create new folder</h3>
+            <input type="hidden" name="sabreAction" value="mkcol" />
+            Name: <input type="text" name="name" />
+            <input type="submit" value="create" />
+            </form>
+            <form method="post" action="" enctype="multipart/form-data">
+            <h3>Upload file</h3>
+            <input type="hidden" name="sabreAction" value="put" />
+            Name (optional): <input type="text" name="name" /><br />
+            File: <input type="file" name="file" /><br />
+            <input type="submit" value="upload" />
+            </form>
+            </td></tr>';
+
+    }
+
+
 }
