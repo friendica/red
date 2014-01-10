@@ -177,11 +177,14 @@ function channel_content(&$a, $update = 0, $load = false) {
 
 		if($load || ($_COOKIE['jsAvailable'] != 1)) {
 			if ($mid) {
-				$r = q("SELECT parent AS item_id from item where mid = '%s' limit 1",
-					dbesc($mid)
+				$r = q("SELECT parent AS item_id from item where mid = '%s' and uid = %d AND item_restrict = 0
+					AND (item_flags &  %d) $sql_extra limit 1",
+					dbesc($mid),
+					intval($a->profile['profile_uid']),
+					intval(ITEM_WALL)
 				);
 				if (! $r) {
-					notice( t('Item not found.') . EOL);
+					notice( t('Permission denied.') . EOL);
 				}
 
 			} else {
