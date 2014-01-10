@@ -1389,9 +1389,9 @@ function feed_salmonlinks($nick) {
 }
 
 
-function get_plink($item,$mode) {
+function get_plink($item,$conversation_mode = true) {
 	$a = get_app();
-	if(($mode == 'display') || ($mode == 'channel') || ($mode == 'network'))
+	if($conversation_mode)
 		$key = 'plink';
 	else
 		$key = 'llink';

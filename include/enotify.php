@@ -94,6 +94,9 @@ function notification($params) {
 	if($params['type'] == NOTIFY_COMMENT) {
 //		logger("notification: params = " . print_r($params, true), LOGGER_DEBUG);
 
+		$itemlink =  $params['link'];
+
+
 		// ignore like/unlike activity on posts - they probably require a sepearate notification preference
 
 		if(array_key_exists('item',$params) && (! visible_activity($params['item'])))
@@ -171,7 +174,6 @@ function notification($params) {
 		$sitelink = t('Please visit %s to view and/or reply to the conversation.');
 		$tsitelink = sprintf( $sitelink, $siteurl );
 		$hsitelink = sprintf( $sitelink, '<a href="' . $siteurl . '">' . $sitename . '</a>');
-		$itemlink =  $params['link'];
 	}
 
 	if($params['type'] == NOTIFY_WALL) {
