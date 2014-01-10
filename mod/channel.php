@@ -135,9 +135,11 @@ function channel_content(&$a, $update = 0, $load = false) {
 
 	if(($update) && (! $load)) {
 		if ($mid) {
-			$r = q("SELECT parent AS item_id from item where mid = '%s' and uid = %d $sql_extra limit 1",
+			$r = q("SELECT parent AS item_id from item where mid = '%s' and uid = %d AND item_restrict = 0
+				AND (item_flags &  %d) $sql_extra limit 1",
 				dbesc($mid),
-				intval($a->profile['profile_uid'])
+				intval($a->profile['profile_uid']),
+				intval(ITEM_WALL)
 			);
 		} else {
 			$r = q("SELECT distinct parent AS `item_id` from item
