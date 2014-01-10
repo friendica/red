@@ -84,12 +84,12 @@ function filestorage_content(&$a) {
 		);
 		if(! $r) {
 			notice( t('File not found.') . EOL);
-			goaway(z_root() . '/filestorage' . $which);
+			goaway(z_root() . '/filestorage/' . $which);
 		}
 
 		attach_delete($owner,$r[0]['hash']);
 		
-		goaway(z_root() . '/filestorage' . $which);
+		goaway(z_root() . '/filestorage/' . $which);
 	}	
 
 
