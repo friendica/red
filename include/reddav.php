@@ -886,7 +886,7 @@ class RedBrowser extends DAV\Browser\Plugin {
     <td><a href=\"{$fullPath}\">{$displayName}</a></td>
     <td>{$type}</td>
     <td>{$size}</td>
-    <td>" . datetime_convert('UTC', date_default_timezone_get(),$lastmodified) . "</td>
+    <td>" . (($lastmodified) ? datetime_convert('UTC', date_default_timezone_get(),$lastmodified) : '') . "</td>
     </tr>";
 
         }

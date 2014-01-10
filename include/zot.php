@@ -1367,6 +1367,8 @@ function process_delivery($sender,$arr,$deliveries,$relay) {
 			// remove_community_tag is a no-op if this isn't a community tag activity
 			remove_community_tag($sender,$arr,$channel['channel_id']);
 
+
+
 			$item_id = delete_imported_item($sender,$arr,$channel['channel_id']);
 			$result[] = array($d['hash'],(($item_id) ? 'deleted' : 'delete_failed'),$channel['channel_name'] . ' <' . $channel['channel_address'] . '@' . get_app()->get_hostname() . '>');
 
@@ -1524,7 +1526,7 @@ function delete_imported_item($sender,$item,$uid) {
 
 	logger('delete_imported_item invoked',LOGGER_DEBUG);
 
-	$r = q("select id from item where ( author_xchan = '%s' or owner_xchan = '%s' or source_xchan = '%s' )
+	$r = q("select id, item_restrict from item where ( author_xchan = '%s' or owner_xchan = '%s' or source_xchan = '%s' )
 		and mid = '%s' and uid = %d limit 1",
 		dbesc($sender['hash']),
 		dbesc($sender['hash']),
@@ -1537,6 +1539,11 @@ function delete_imported_item($sender,$item,$uid) {
 		logger('delete_imported_item: failed: ownership issue');
 		return false;
 	}
+
+	if($r[0]['item_restrict'] & ITEM_DELETED) {
+		logger('delete_imported_item: item was already deleted');
+		return false;
+	} 
 		
 	require_once('include/items.php');
 	drop_item($r[0]['id'],false);
