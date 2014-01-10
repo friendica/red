@@ -32,6 +32,21 @@ function cloud_init(&$a) {
 
 	require_once('include/reddav.php');
 
+	$which = null;
+	if(argc() > 1)
+		$which = argv(1);
+
+	$profile = 0;
+	$channel = $a->get_channel();
+
+	$a->page['htmlhead'] .= '<link rel="alternate" type="application/atom+xml" href="' . $a->get_baseurl() . '/feed/' . $which .'" />' . "\r\n" ;
+
+	if($which)
+		profile_load($a,$which,$profile);
+
+
+
+
 	$auth = new RedBasicAuth();
 
 	$ob_hash = get_observer_hash();

@@ -1465,6 +1465,15 @@ function profile_tabs($a, $is_owner=False, $nickname=Null){
 			'title' => t('Photo Albums'),
 			'id'    => 'photo-tab',
 		),
+
+		array(
+			'label' => t('Files'),
+			'url'	=> $a->get_baseurl() . '/cloud/' . $nickname,
+			'sel'	=> ((argv(0) == 'cloud') ? 'active' : ''),
+			'title' => t('Files and Storage'),
+			'id'    => 'files-tab',
+		),
+
 	);
 
 
