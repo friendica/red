@@ -1,6 +1,6 @@
 <?php
 
-define( 'UPDATE_VERSION' , 1089 );
+define( 'UPDATE_VERSION' , 1090 );
 
 /**
  *
@@ -976,4 +976,13 @@ ADD `deny_gid` MEDIUMTEXT NOT NULL DEFAULT ''");
 		return UPDATE_SUCCESS;
 	return UPDATE_FAILED;
 }
+
+function update_r1089() {
+	$r = q("ALTER TABLE `attach` ADD `creator` CHAR( 128 ) NOT NULL DEFAULT '' AFTER `hash` ,
+ADD INDEX ( `creator` ) ");
+	if($r)
+		return UPDATE_SUCCESS;
+	return UPDATE_FAILED;
+}
+
 

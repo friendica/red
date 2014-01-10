@@ -237,7 +237,7 @@ function attach_by_hash_nodata($hash,$rev = 0) {
 
 	// Now we'll see if we can access the attachment
 
-	$r = q("select id, aid, uid, hash, filename, filetype, filesize, revision, folder, flags, created, edited, allow_cid, allow_gid, deny_cid, deny_gid from attach where uid = %d and hash = '%s' $sql_extra limit 1",
+	$r = q("select id, aid, uid, hash, creator, filename, filetype, filesize, revision, folder, flags, created, edited, allow_cid, allow_gid, deny_cid, deny_gid from attach where uid = %d and hash = '%s' $sql_extra limit 1",
 		intval($r[0]['uid']),
 		dbesc($hash)
 	);
@@ -358,11 +358,12 @@ function attach_store($channel,$observer_hash,$options = '',$arr = null) {
 		);
 	}
 	elseif($options === 'revise') {
-		$r = q("insert into attach ( aid, uid, hash, filename, filetype, filesize, revision, data, created, edited, allow_cid, allow_gid, deny_cid, deny_gid )
-			VALUES ( %d, %d, '%s', '%s', '%s', %d, %d, '%s', '%s', '%s', '%s', '%s', '%s', '%s' ) ",
+		$r = q("insert into attach ( aid, uid, hash, creator, filename, filetype, filesize, revision, data, created, edited, allow_cid, allow_gid, deny_cid, deny_gid )
+			VALUES ( %d, %d, '%s', '%s', '%s', '%s', %d, %d, '%s', '%s', '%s', '%s', '%s', '%s', '%s' ) ",
 			intval($x[0]['aid']),
 			intval($channel_id),
 			dbesc($x[0]['hash']),
+			dbesc(get_observer_hash()),
 			dbesc($filename),
 			dbesc($mimetype),
 			intval($filesize),
@@ -393,11 +394,12 @@ function attach_store($channel,$observer_hash,$options = '',$arr = null) {
 	}		
 
 	else {
-		$r = q("INSERT INTO attach ( aid, uid, hash, filename, filetype, filesize, revision, data, created, edited, allow_cid, allow_gid,deny_cid, deny_gid )
-			VALUES ( %d, %d, '%s', '%s', '%s', %d, %d, '%s', '%s', '%s', '%s', '%s', '%s', '%s' ) ",
+		$r = q("INSERT INTO attach ( aid, uid, hash, creator, filename, filetype, filesize, revision, data, created, edited, allow_cid, allow_gid,deny_cid, deny_gid )
+			VALUES ( %d, %d, '%s', '%s', '%s', '%s', %d, %d, '%s', '%s', '%s', '%s', '%s', '%s', '%s' ) ",
 			intval($channel['channel_account_id']),
 			intval($channel_id),
 			dbesc($hash),
+			dbesc(get_observer_hash()),
 			dbesc($filename),
 			dbesc($mimetype),
 			intval($filesize),
@@ -422,7 +424,7 @@ function attach_store($channel,$observer_hash,$options = '',$arr = null) {
 
 	// Caution: This re-uses $sql_options set further above
 
-	$r = q("select id, aid, uid, hash, filename, filetype, filesize, revision, folder, flags, created, edited, allow_cid, allow_gid, deny_cid, deny_gid from attach where uid = %d and hash = '%s' $sql_options limit 1",
+	$r = q("select id, aid, uid, hash, creator, filename, filetype, filesize, revision, folder, flags, created, edited, allow_cid, allow_gid, deny_cid, deny_gid from attach where uid = %d and hash = '%s' $sql_options limit 1",
 		intval($channel_id),
 		dbesc($hash)
 	);
@@ -482,7 +484,7 @@ function z_readdir($channel_id,$observer_hash,$pathname, $parent_hash = '') {
 	else
 		$paths = array($pathname);
 	
-	$r = q("select id, aid, uid, hash, filename, filetype, filesize, revision, folder, flags, created, edited, allow_cid, allow_gid, deny_cid, deny_gid from attach where id = %d and folder = '%s' and filename = '%s' and (flags & %d ) " . permissions_sql($channel_id),
+	$r = q("select id, aid, uid, hash, creator, filename, filetype, filesize, revision, folder, flags, created, edited, allow_cid, allow_gid, deny_cid, deny_gid from attach where id = %d and folder = '%s' and filename = '%s' and (flags & %d ) " . permissions_sql($channel_id),
 		intval($channel_id),
 		dbesc($parent_hash),
 		dbesc($paths[0]),
@@ -599,11 +601,12 @@ function attach_mkdir($channel,$observer_hash,$arr = null) {
 
 	$created = datetime_convert();		
 
-	$r = q("INSERT INTO attach ( aid, uid, hash, filename, filetype, filesize, revision, folder, flags, data, created, edited, allow_cid, allow_gid, deny_cid, deny_gid )
+	$r = q("INSERT INTO attach ( aid, uid, hash, creator, filename, filetype, filesize, revision, folder, flags, data, created, edited, allow_cid, allow_gid, deny_cid, deny_gid )
 		VALUES ( %d, %d, '%s', '%s', '%s', %d, %d, '%s', '%s', '%s', '%s', '%s', '%s', '%s', '%s', '%s' ) ",
 		intval($channel['channel_account_id']),
 		intval($channel_id),
 		dbesc($arr['hash']),
+		dbesc(get_observer_hash()),
 		dbesc($arr['filename']),
 		dbesc('multipart/mixed'),
 		intval(0),
@@ -689,6 +692,7 @@ function attach_delete($channel_id,$resource) {
 		dbesc($resource),
 		intval($channel_id)
 	);
+
 
 	if(! $r)
 		return;

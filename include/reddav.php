@@ -115,11 +115,12 @@ class RedDirectory extends DAV\Node implements DAV\ICollection {
 		$filesize = 0;
 		$hash = random_string();
 
-        $r = q("INSERT INTO attach ( aid, uid, hash, filename, folder, flags, filetype, filesize, revision, data, created, edited, allow_cid, allow_gid, deny_cid, deny_gid )
-            VALUES ( %d, %d, '%s', '%s', '%s', '%s', '%s', %d, %d, '%s', '%s', '%s', '%s', '%s', '%s', '%s' ) ",
+        $r = q("INSERT INTO attach ( aid, uid, hash, creator, filename, folder, flags, filetype, filesize, revision, data, created, edited, allow_cid, allow_gid, deny_cid, deny_gid )
+            VALUES ( %d, %d, '%s', '%s', '%s', '%s', '%s', '%s', %d, %d, '%s', '%s', '%s', '%s', '%s', '%s', '%s' ) ",
             intval($c[0]['channel_account_id']),
             intval($c[0]['channel_id']),
             dbesc($hash),
+			dbesc($this->auth->observer),
             dbesc($name),
 			dbesc($this->folder_hash),
 			dbesc(ATTACH_FLAG_OS),
@@ -413,6 +414,13 @@ class RedFile extends DAV\Node implements DAV\IFile {
 		if((! $this->auth->owner_id) || (! perm_is_allowed($this->auth->owner_id,$this->auth->observer,'write_storage'))) {
 			throw new DAV\Exception\Forbidden('Permission denied.');
 			return;
+		}
+
+		if($this->auth->owner_id !== $this->auth->channel_id) {
+			if(($this->auth->observer !== $this->data['creator']) || ($this->data['flags'] & ATTACH_FLAG_DIR)) {
+				throw new DAV\Exception\Forbidden('Permission denied.');
+				return;
+			}
 		}
 
 		attach_delete($this->auth->owner_id,$this->data['hash']);
