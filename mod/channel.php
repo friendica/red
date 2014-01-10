@@ -141,9 +141,6 @@ function channel_content(&$a, $update = 0, $load = false) {
 				intval($a->profile['profile_uid']),
 				intval(ITEM_WALL)
 			);
-			if (! $r) {
-				notice( t('Permission denied.') . EOL);
-			}
 		} else {
 			$r = q("SELECT distinct parent AS `item_id` from item
 				left join abook on item.author_xchan = abook.abook_xchan
