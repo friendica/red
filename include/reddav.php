@@ -674,6 +674,7 @@ class RedBasicAuth extends Sabre\DAV\Auth\Backend\AbstractBasic {
 	public $browser;
 	public $owner_id;
 	public $owner_nick = '';
+	public $timezone;
 
     protected function validateUserPass($username, $password) {
 		require_once('include/auth.php');
@@ -757,6 +758,9 @@ class RedBrowser extends DAV\Browser\Plugin {
 	}
 
     public function generateDirectoryIndex($path) {
+
+		if($this->auth->timezone)
+			date_default_timezone_set($this->auth->timezone);
 
         $version = '';
 
@@ -852,7 +856,7 @@ class RedBrowser extends DAV\Browser\Plugin {
             if (!$type) $type = 'Unknown';
 
             $size = isset($file[200]['{DAV:}getcontentlength'])?(int)$file[200]['{DAV:}getcontentlength']:'';
-            $lastmodified = isset($file[200]['{DAV:}getlastmodified'])?$file[200]['{DAV:}getlastmodified']->getTime()->format(\DateTime::ATOM):'';
+            $lastmodified = ((isset($file[200]['{DAV:}getlastmodified']))? $file[200]['{DAV:}getlastmodified']->getTime()->format('Y-m-d H:i:s') :'');
 
             $fullPath = DAV\URLUtil::encodePath('/' . trim($this->server->getBaseUri() . ($path?$path . '/':'') . $name,'/'));
 
@@ -882,7 +886,7 @@ class RedBrowser extends DAV\Browser\Plugin {
     <td><a href=\"{$fullPath}\">{$displayName}</a></td>
     <td>{$type}</td>
     <td>{$size}</td>
-    <td>{$lastmodified}</td>
+    <td>" . datetime_convert('UTC', date_default_timezone_get(),$lastmodified) . "</td>
     </tr>";
 
         }

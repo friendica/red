@@ -29,6 +29,7 @@ var classItem =
     [ "set_commentable", "classItem.html#aa1bd19fc8b5577078530265a7bf64123", null ],
     [ "set_conversation", "classItem.html#aa8b1bbc4236890694635295e46d7fd72", null ],
     [ "set_parent", "classItem.html#a9890ff72662d5bba301d1f2dd8aec9d7", null ],
+    [ "set_template", "classItem.html#af1b73df9b7c4b927e26b7e243b491f42", null ],
     [ "$channel", "classItem.html#acc32426c0f465391be8a99ad810c7b8e", null ],
     [ "$children", "classItem.html#a80dcd0fb7673776c0967839d429c2a0f", null ],
     [ "$comment_box_template", "classItem.html#a90743c8348b13213275c223bb9333aa0", null ],

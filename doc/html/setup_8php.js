@@ -7,6 +7,7 @@ var setup_8php =
     [ "check_keys", "setup_8php.html#aa3bbb111780da70ba35cc23a306f2c76", null ],
     [ "check_php", "setup_8php.html#a14d208682a88632290c895d20da6e7d6", null ],
     [ "check_smarty3", "setup_8php.html#afd8b0b3ade1507c45325caf377bf459d", null ],
+    [ "check_store", "setup_8php.html#ab4b71369a25021d59247c917e98d8246", null ],
     [ "get_db_errno", "setup_8php.html#a8652788e8589778c5f81634a9d5b9429", null ],
     [ "load_database", "setup_8php.html#ad2e0375a9ab87ebe6e78124ee125054a", null ],
     [ "load_database_rem", "setup_8php.html#a2b375ddc555140236fc500135de99371", null ],

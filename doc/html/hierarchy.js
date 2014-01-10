@@ -20,9 +20,6 @@ var hierarchy =
     [ "IFile", null, [
       [ "RedFile", "classRedFile.html", null ]
     ] ],
-    [ "INode", null, [
-      [ "RedInode", "classRedInode.html", null ]
-    ] ],
     [ "ITemplateEngine", "interfaceITemplateEngine.html", [
       [ "FriendicaSmartyEngine", "classFriendicaSmartyEngine.html", null ],
       [ "Template", "classTemplate.html", null ]
@@ -40,6 +37,9 @@ var hierarchy =
     [ "photo_driver", "classphoto__driver.html", [
       [ "photo_gd", "classphoto__gd.html", null ],
       [ "photo_imagick", "classphoto__imagick.html", null ]
+    ] ],
+    [ "Plugin", null, [
+      [ "RedBrowser", "classRedBrowser.html", null ]
     ] ],
     [ "ProtoDriver", "classProtoDriver.html", [
       [ "ZotDriver", "classZotDriver.html", null ]

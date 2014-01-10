@@ -602,7 +602,7 @@ function attach_mkdir($channel,$observer_hash,$arr = null) {
 	$created = datetime_convert();		
 
 	$r = q("INSERT INTO attach ( aid, uid, hash, creator, filename, filetype, filesize, revision, folder, flags, data, created, edited, allow_cid, allow_gid, deny_cid, deny_gid )
-		VALUES ( %d, %d, '%s', '%s', '%s', %d, %d, '%s', '%s', '%s', '%s', '%s', '%s', '%s', '%s', '%s' ) ",
+		VALUES ( %d, %d, '%s', '%s', '%s', '%s', %d, %d, '%s', '%s', '%s', '%s', '%s', '%s', '%s', '%s', '%s' ) ",
 		intval($channel['channel_account_id']),
 		intval($channel_id),
 		dbesc($arr['hash']),

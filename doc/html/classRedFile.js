@@ -1,6 +1,7 @@
 var classRedFile =
 [
     [ "__construct", "classRedFile.html#a9a67bdb34c9db6ce144b3f371148b183", null ],
+    [ "delete", "classRedFile.html#aef71c9eaac7052be7dc8602eb12171e7", null ],
     [ "get", "classRedFile.html#a7c868dfcef6c70cd0e24cf3caa2c3535", null ],
     [ "getContentType", "classRedFile.html#a26416827eb68554d033d1e2e5cc6dd3b", null ],
     [ "getETag", "classRedFile.html#ae96d5caa2db7a461c57b24380fa87e28", null ],

@@ -58,6 +58,8 @@ function cloud_init(&$a) {
 			$auth->channel_name = $channel['channel_address'];
 			$auth->channel_id = $channel['channel_id'];
 			$auth->channel_hash = $channel['channel_hash'];
+			if($channel['channel_timezone'])
+				$auth->timezone = $channel['channel_timezone'];
 		}	
 		$auth->observer = $ob_hash;
 	}	

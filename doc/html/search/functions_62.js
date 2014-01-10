@@ -4,6 +4,7 @@ var searchData=
   ['base64url_5fencode',['base64url_encode',['../text_8php.html#a070384ec000fd65043fce11d5392d241',1,'text.php']]],
   ['bb2diaspora',['bb2diaspora',['../bb2diaspora_8php.html#a4f10e0876b27373c762bc1abbe745f5c',1,'bb2diaspora.php']]],
   ['bb_5fparse_5fcrypt',['bb_parse_crypt',['../bbcode_8php.html#a851f5aafefe52474201b83f9fd65931f',1,'bbcode.php']]],
+  ['bb_5fqr',['bb_qr',['../bbcode_8php.html#a98d0eecc620c19561639f06cfbe8e74c',1,'bbcode.php']]],
   ['bb_5fshareattributes',['bb_ShareAttributes',['../bbcode_8php.html#a1c69e021d5e0aef97d6966bf3169c86a',1,'bbcode.php']]],
   ['bb_5fshareattributessimple',['bb_ShareAttributesSimple',['../bbcode_8php.html#a2be26414a367118143cc89e2d58e7377',1,'bbcode.php']]],
   ['bb_5fspacefy',['bb_spacefy',['../bbcode_8php.html#a8911e027907820df3db03b4f76724b50',1,'bbcode.php']]],

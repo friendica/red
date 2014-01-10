@@ -34,7 +34,7 @@ var searchData=
   ['del_5fxconfig',['del_xconfig',['../include_2config_8php.html#a9c171def547deee16738dc58fdeb4b72',1,'config.php']]],
   ['delegate_2ephp',['delegate.php',['../delegate_8php.html',1,'']]],
   ['delegate_5fcontent',['delegate_content',['../delegate_8php.html#a943eea8996ef348eb845c498f9f354dd',1,'delegate.php']]],
-  ['delete',['delete',['../classRedInode.html#a5e8f09bc887725c3c448f8d72fe3edfc',1,'RedInode']]],
+  ['delete',['delete',['../classRedFile.html#aef71c9eaac7052be7dc8602eb12171e7',1,'RedFile']]],
   ['delete_5fimported_5fitem',['delete_imported_item',['../zot_8php.html#adfeb9400ae6b726beec89f8f1e8fde72',1,'zot.php']]],
   ['delete_5fitem_5flowlevel',['delete_item_lowlevel',['../items_8php.html#a2b56a4c01bd22a648d52ec9af1a04259',1,'items.php']]],
   ['deletenode',['deletenode',['../html2bbcode_8php.html#a71a07f135d196ec5943b13f7b2e6a9b2',1,'html2bbcode.php']]],

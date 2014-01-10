@@ -53,5 +53,6 @@ var items_8php =
     [ "termtype", "items_8php.html#ad34827ed330898456783fb14c7b46154", null ],
     [ "tgroup_check", "items_8php.html#a88c6cf7649ac836fbbed82a7a0315110", null ],
     [ "title_is_body", "items_8php.html#aa371905f0a211b307cb3f7188c6cba04", null ],
+    [ "update_remote_id", "items_8php.html#a2baa9e05f1e8aa3dd61c85803ae39bd6", null ],
     [ "zot_feed", "items_8php.html#a004e89d86b0f29b2c4da20108ecc4091", null ]
 ];

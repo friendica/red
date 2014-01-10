@@ -128,6 +128,14 @@ Functions</h2></td></tr>
 <tr class="separator:aeb07968990e66a88c95483ca09a7f909"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:ab6830b3ab74a5d284876141ac80f6cbc"><td class="memItemLeft" align="right" valign="top">&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="include_2attach_8php.html#ab6830b3ab74a5d284876141ac80f6cbc">attach_mkdir</a> ($channel, $observer_hash, $arr=null)</td></tr>
 <tr class="separator:ab6830b3ab74a5d284876141ac80f6cbc"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a5c0875eafb8c0f8a0620ff7a875a2221"><td class="memItemLeft" align="right" valign="top">&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="include_2attach_8php.html#a5c0875eafb8c0f8a0620ff7a875a2221">attach_change_permissions</a> ($channel_id, $resource, $allow_cid, $allow_gid, $deny_cid, $deny_gid, $recurse=false)</td></tr>
+<tr class="separator:a5c0875eafb8c0f8a0620ff7a875a2221"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a70bd666e080c2af5a91f5d14c297b8cd"><td class="memItemLeft" align="right" valign="top">&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="include_2attach_8php.html#a70bd666e080c2af5a91f5d14c297b8cd">attach_delete</a> ($channel_id, $resource)</td></tr>
+<tr class="separator:a70bd666e080c2af5a91f5d14c297b8cd"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a6aa00ea010ea030110faefb75eafc1ce"><td class="memItemLeft" align="right" valign="top">&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="include_2attach_8php.html#a6aa00ea010ea030110faefb75eafc1ce">get_cloudpath</a> ($arr)</td></tr>
+<tr class="separator:a6aa00ea010ea030110faefb75eafc1ce"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a5d484de2d19a93071571d6499a50ae34"><td class="memItemLeft" align="right" valign="top">&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="include_2attach_8php.html#a5d484de2d19a93071571d6499a50ae34">pipe_streams</a> ($in, $out)</td></tr>
+<tr class="separator:a5d484de2d19a93071571d6499a50ae34"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table>
 <h2 class="groupheader">Function Documentation</h2>
 <a class="anchor" id="a0d07c5b83d3d54e186f752e571847b36"></a>
@@ -186,6 +194,64 @@ Functions</h2></td></tr>
 
 </div>
 </div>
+<a class="anchor" id="a5c0875eafb8c0f8a0620ff7a875a2221"></a>
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">attach_change_permissions </td>
+          <td>(</td>
+          <td class="paramtype">&#160;</td>
+          <td class="paramname"><em>$channel_id</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">&#160;</td>
+          <td class="paramname"><em>$resource</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">&#160;</td>
+          <td class="paramname"><em>$allow_cid</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">&#160;</td>
+          <td class="paramname"><em>$allow_gid</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">&#160;</td>
+          <td class="paramname"><em>$deny_cid</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">&#160;</td>
+          <td class="paramname"><em>$deny_gid</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">&#160;</td>
+          <td class="paramname"><em>$recurse</em> = <code>false</code>&#160;</td>
+        </tr>
+        <tr>
+          <td></td>
+          <td>)</td>
+          <td></td><td></td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+<p>Referenced by <a class="el" href="filestorage_8php.html#ad3b64e3ece9831f9d3a9f00c0ae983cd">filestorage_post()</a>.</p>
+
+</div>
+</div>
 <a class="anchor" id="a887d2d44a3ef18dcb6624e7fb58dc8e3"></a>
 <div class="memitem">
 <div class="memproto">
@@ -227,6 +293,34 @@ Functions</h2></td></tr>
         </tr>
       </table>
 </div><div class="memdoc">
+
+</div>
+</div>
+<a class="anchor" id="a70bd666e080c2af5a91f5d14c297b8cd"></a>
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">attach_delete </td>
+          <td>(</td>
+          <td class="paramtype">&#160;</td>
+          <td class="paramname"><em>$channel_id</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">&#160;</td>
+          <td class="paramname"><em>$resource</em>&#160;</td>
+        </tr>
+        <tr>
+          <td></td>
+          <td>)</td>
+          <td></td><td></td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+<p>Referenced by <a class="el" href="classRedDirectory.html#a2d12d99d38a6a75fc9a830b2f7fc0bf0">RedDirectory\createFile()</a>, <a class="el" href="classRedFile.html#aef71c9eaac7052be7dc8602eb12171e7">RedFile\delete()</a>, <a class="el" href="filestorage_8php.html#a61bb1be78472555df4ce619f51014040">filestorage_content()</a>, and <a class="el" href="classRedFile.html#a41a49a583eb276b75626fcf97f4a699c">RedFile\put()</a>.</p>
 
 </div>
 </div>
@@ -334,6 +428,8 @@ Functions</h2></td></tr>
 <p>Required: $arr['filename'] $arr['folder'] // hash of parent directory, empty string for root directory</p>
 <p>Optional: $arr['hash'] // precumputed hash for this node $arr['allow_cid'] $arr['allow_gid'] $arr['deny_cid'] $arr['deny_gid'] </p>
 
+<p>Referenced by <a class="el" href="classRedDirectory.html#a986936910f0216887a25e28916c166c7">RedDirectory\createDirectory()</a>.</p>
+
 </div>
 </div>
 <a class="anchor" id="a84a8a64c4805e1525b42d4add464833f"></a>
@@ -373,6 +469,50 @@ Functions</h2></td></tr>
 </div><div class="memdoc">
 
 <p>Referenced by <a class="el" href="item_8php.html#a3daae7944f737bd30412a0d042207c0f">fix_attached_file_permissions()</a>, <a class="el" href="include_2message_8php.html#a751ffd6635022b2190f56154ee745752">send_message()</a>, and <a class="el" href="wall__attach_8php.html#a7385e970e93228d082f0fd7254f6e653">wall_attach_post()</a>.</p>
+
+</div>
+</div>
+<a class="anchor" id="a6aa00ea010ea030110faefb75eafc1ce"></a>
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">get_cloudpath </td>
+          <td>(</td>
+          <td class="paramtype">&#160;</td>
+          <td class="paramname"><em>$arr</em></td><td>)</td>
+          <td></td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+<p>Referenced by <a class="el" href="filestorage_8php.html#a61bb1be78472555df4ce619f51014040">filestorage_content()</a>.</p>
+
+</div>
+</div>
+<a class="anchor" id="a5d484de2d19a93071571d6499a50ae34"></a>
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">pipe_streams </td>
+          <td>(</td>
+          <td class="paramtype">&#160;</td>
+          <td class="paramname"><em>$in</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">&#160;</td>
+          <td class="paramname"><em>$out</em>&#160;</td>
+        </tr>
+        <tr>
+          <td></td>
+          <td>)</td>
+          <td></td><td></td>
+        </tr>
+      </table>
+</div><div class="memdoc">
 
 </div>
 </div>

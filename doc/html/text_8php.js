@@ -28,7 +28,7 @@ var text_8php =
     [ "generate_user_guid", "text_8php.html#ae4f6881d7e13623f8eded6277595112a", null ],
     [ "get_mentions", "text_8php.html#a76d1b3435c067978d7b484c45f56472b", null ],
     [ "get_mood_verbs", "text_8php.html#a736db13a966b8abaf8c9198faa35911a", null ],
-    [ "get_plink", "text_8php.html#a3ef8c0cf31f35f77462067de8712fa34", null ],
+    [ "get_plink", "text_8php.html#aac0969ae09853205992ba06ab9f9f61a", null ],
     [ "get_poke_verbs", "text_8php.html#aa46f941155c2ac1155f2f17ffb0adb66", null ],
     [ "get_rel_link", "text_8php.html#a3972701c5c83624ec4e2d06242f614e7", null ],
     [ "get_tags", "text_8php.html#a4659fbc4e54ddc700c3aa66b9092c623", null ],
