@@ -925,6 +925,14 @@ class RedBrowser extends DAV\Browser\Plugin {
             </form>
             </td></tr>';
 
+
+		if($this->auth->owner_id && $this->auth->owner_id == $this->auth->channel_id) {
+			$channel = get_app()->get_channel();
+			if($channel) {
+				$output .= '<tr><td>&nbsp;</td></tr><tr><td colspan="2"><a href="filestorage/' . $channel['channel_address'] . '" >' . t('Edit File properties') . '</a></td></tr>';
+			}
+		}
+
     }
 
 
