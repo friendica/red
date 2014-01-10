@@ -101,7 +101,7 @@ function filestorage_content(&$a) {
 		}
 		$file = intval(argv(2));
 
-		$r = q("select id, folder, filename, revision, flags, hash, allow_cid, allow_gid, deny_cid, deny_gid from attach where id = %d and uid = %d limit 1",
+		$r = q("select id, uid, folder, filename, revision, flags, hash, allow_cid, allow_gid, deny_cid, deny_gid from attach where id = %d and uid = %d limit 1",
 			intval($file),
 			intval($owner)
 		);
@@ -110,6 +110,7 @@ function filestorage_content(&$a) {
 
 		$channel = $a->get_channel();
 
+		$cloudpath = get_cloudpath($f);
 
 		$aclselect_e = populate_acl($f);
 		$is_a_dir = (($f['flags'] & ATTACH_FLAG_DIR) ? true : false);
@@ -118,6 +119,7 @@ function filestorage_content(&$a) {
 		$o = replace_macros(get_markup_template('attach_edit.tpl'), array(
 			'$header' => t('Edit file permissions'),
 			'$file' => $f,
+			'$cloudpath' => z_root() . '/' . $cloudpath,
 			'$uid' => $channel['channel_id'],
 			'$channelnick' => $channel['channel_address'],
 			'$permissions' => t('Permissions'),
@@ -126,6 +128,7 @@ function filestorage_content(&$a) {
 			'$backlink' => t('Return to file list'),
 			'$isadir' => $is_a_dir,
 			'$cpdesc' => t('Copy/paste this code to attach file to a post'),
+			'$cpldesc' => t('Copy/paste this URL to link file from a web page'),
 			'$submit' => t('Submit')
 
 		));

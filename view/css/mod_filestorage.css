@@ -1,4 +1,4 @@
-#attach-edit-backlink, #cut-paste-link {
+#attach-edit-backlink, #cutpasteinput, #linkpasteinput {
 	margin-bottom: 10px;
 }
 
@@ -6,6 +6,6 @@
 	margin-top: 20px;
 }
 
-#cutpasteinput {
+#cutpasteinput, #linkpasteinput {
 	width: 600px;
 }

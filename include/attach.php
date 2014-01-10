@@ -733,6 +733,51 @@ function attach_delete($channel_id,$resource) {
 			 	
 
 
+function get_cloudpath($arr) {
+
+	$basepath = 'store/';
+	if($arr['uid']) {
+		$r = q("select channel_address from channel where channel_id = %d limit 1",
+			intval($arr['uid'])
+		);
+		if($r)
+			$basepath .= $r[0]['channel_address'] . '/';
+	}
+
+
+	$path = $basepath;
+
+	if($arr['folder']) {
+
+		$lpath = '';
+		$lfile = $arr['folder'];
+
+		do {
+			$r = q("select filename, hash, flags, folder from attach where uid = %d and hash = '%s' and ( flags & %d ) 
+				limit 1",
+				intval($arr['uid']),
+				dbesc($lfile),
+				intval(ATTACH_FLAG_DIR)
+			);
+
+			if(! $r)
+				break;
+
+			if($lfile)
+				$lpath = $r[0]['filename'] . '/' . $lpath;
+			$lfile = $r[0]['folder'];
+
+		} while ( ($r[0]['folder']) && ($r[0]['flags'] & ATTACH_FLAG_DIR)) ;
+
+		$path .= $lpath;			
+
+	}
+
+	$path .= $arr['filename'];
+	return $path;
+
+}
+
 
 
 

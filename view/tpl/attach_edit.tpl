@@ -22,10 +22,11 @@
 </div>
 {{else}}
 <div class="cut-paste-desc">{{$cpdesc}}</div>
-<div id="cut-paste-link">
-<input type="text" id="cutpasteinput" name="cutpastelink" value="[attachment]{{$file.hash}},{{$file.revision}}[/attachment]" />
-<script>$('#cutpasteinput').select();</script>
-</div>
+<input type="text" id="cutpasteinput" name="cutpastelink" value="[attachment]{{$file.hash}},{{$file.revision}}[/attachment]" onclick="this.select();" /><br />
+
+<div class="cut-paste-desc">{{$cpldesc}}</div>
+<input type="text" id="linkpasteinput" name="cutpasteextlink" value="{{$cloudpath}}" onclick="this.select();"/><br />
+
 {{/if}}
 
 <div id="attach-edit-perms" >
