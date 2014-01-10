@@ -322,7 +322,7 @@ class RedFile extends DAV\Node implements DAV\IFile {
 		logger('RedFile::put: ' . basename($this->name), LOGGER_DEBUG);
 
 		$r = q("select flags, data from attach where hash = '%s' and uid = %d limit 1",
-			dbesc($hash),
+			dbesc($this->data['hash']),
 			intval($c[0]['channel_id'])
 		);
 		if($r) {
@@ -330,6 +330,7 @@ class RedFile extends DAV\Node implements DAV\IFile {
 				$f = 'store/' . $this->auth->owner_nick . '/' . (($r[0]['data']) ? $r[0]['data'] . '/' : '');
 				@file_put_contents($f, $data);
 				$size = @filesize($f);
+				logger('reddav: put() filename: ' . $f . ' size: ' . $size, LOGGER_DEBUG);
 			}
 			else {
 				$r = q("update attach set data = '%s' where hash = '%s' and uid = %d limit 1",
@@ -348,7 +349,7 @@ class RedFile extends DAV\Node implements DAV\IFile {
  
 		$r = q("update attach set filesize = '%s' where hash = '%s' and uid = %d limit 1",
 			dbesc($size),
-			dbesc($hash),
+			dbesc($this->data['hash']),
 			intval($c[0]['channel_id'])
 		);
 
@@ -356,7 +357,7 @@ class RedFile extends DAV\Node implements DAV\IFile {
 		$maxfilesize = get_config('system','maxfilesize');
 
 		if(($maxfilesize) && ($size > $maxfilesize)) {
-			attach_delete($c[0]['channel_id'],$hash);
+			attach_delete($c[0]['channel_id'],$this->data['hash']);
 			return;
 		}
 
@@ -366,7 +367,7 @@ class RedFile extends DAV\Node implements DAV\IFile {
 				intval($c[0]['channel_account_id'])
 			);
 			if(($x) &&  ($x[0]['total'] + $size > $limit)) {
-				attach_delete($c[0]['channel_id'],$hash);
+				attach_delete($c[0]['channel_id'],$this->data['hash']);
 				return;
 			}
 		}
