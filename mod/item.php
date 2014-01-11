@@ -276,6 +276,9 @@ function item_post(&$a) {
 		$item_restrict     = $orig_post['item_restrict'];
 		$postopts          = $orig_post['postopts'];
 		$created           = $orig_post['created'];
+		$mid               = $orig_post['mid'];
+		$parent_mid        = $orig_post['parent_mid'];
+		$plink             = $orig_post['plink'];
 	}
 	else {
 
@@ -592,9 +595,13 @@ function item_post(&$a) {
 
 	$notify_type = (($parent) ? 'comment-new' : 'wall-new' );
 
-	$mid = (($message_id) ? $message_id : item_message_id());
+	if(! $mid) {
+		$mid = (($message_id) ? $message_id : item_message_id());
+	}
+	if(! $parent_mid) {
+		$parent_mid = $mid;
+	}
 
-	$parent_mid = $mid;
 	if($parent_item)
 		$parent_mid = $parent_item['mid'];
 
