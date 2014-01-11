@@ -163,6 +163,7 @@ class RedDirectory extends DAV\Node implements DAV\ICollection {
 				intval($c[0]['channel_account_id'])
 			);
 			if(($x) &&  ($x[0]['total'] + $size > $limit)) {
+				logger('reddav: service class limit exceeded for ' . $c[0]['channel_name'] . ' total usage is ' . $x[0]['total'] . ' limit is ' . $limit);
 				attach_delete($c[0]['channel_id'],$hash);
 				return;
 			}
@@ -372,6 +373,7 @@ class RedFile extends DAV\Node implements DAV\IFile {
 				intval($c[0]['channel_account_id'])
 			);
 			if(($x) &&  ($x[0]['total'] + $size > $limit)) {
+				logger('reddav: service class limit exceeded for ' . $c[0]['channel_name'] . ' total usage is ' . $x[0]['total'] . ' limit is ' . $limit);
 				attach_delete($c[0]['channel_id'],$this->data['hash']);
 				return;
 			}

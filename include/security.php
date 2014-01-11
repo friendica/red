@@ -163,6 +163,9 @@ function change_channel($change_channel) {
 			get_app()->set_observer($x[0]);
 			get_app()->set_perms(get_all_perms(local_user(),$hash));
 		}
+		if(! is_dir('store/' . $r[0]['channel_address']))
+			@mkdir('store/' . $r[0]['channel_address'], STORAGE_DEFAULT_PERMISSIONS,true);
+
 	}
 
 	return $ret;

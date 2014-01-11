@@ -329,6 +329,7 @@ function attach_store($channel,$observer_hash,$options = '',$arr = null) {
 		}
 
 		$limit = service_class_fetch($channel_id,'attach_upload_limit');
+
 		if($limit !== false) {
 			$r = q("select sum(filesize) as total from attach where aid = %d ",
 				intval($channel['channel_account_id'])
@@ -623,7 +624,7 @@ function attach_mkdir($channel,$observer_hash,$arr = null) {
 	);
 
 	if($r) {
-		if(mkdir($path,STORAGE_DEFAULT_PERMISSIONS)) {
+		if(mkdir($path,STORAGE_DEFAULT_PERMISSIONS,true)) {
 			$ret['success'] = true;
 			$ret['data'] = $arr;
 		}

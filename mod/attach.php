@@ -27,10 +27,12 @@ function attach_init(&$a) {
 	header('Content-type: ' . $r['data']['filetype']);
 	header('Content-disposition: attachment; filename=' . $r['data']['filename']);
 	if($r['data']['flags'] & ATTACH_FLAG_OS ) {
-		$stream = fopen('store/' . $c[0]['channel_address'] . '/' . $r['data']['data'],'rb');
-		if($stream) {
-			pipe_stream($stream,STDOUT);
-			fclose($stream);
+		$istream = fopen('store/' . $c[0]['channel_address'] . '/' . $r['data']['data'],'rb');
+		$ostream = fopen('php://output','wb');
+		if($istream && $ostream) {
+			pipe_streams($istream,$ostream);
+			fclose($istream);
+			fclose($ostream);
 		}
 	}
 	else
