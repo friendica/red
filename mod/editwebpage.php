@@ -99,8 +99,8 @@ function editwebpage_content(&$a) {
 	if($layout)
 		$layoutselect = '<input type="hidden" name="layout_mid" value="' . $layout . '" />'; 			
 	else
-		$layoutselect = layout_select($itm[0]['uid']);
-
+		$layoutselect = layout_select($itm[0]['uid'],$itm[0]['layout_mid']);
+		
 
 	$o .= replace_macros(get_markup_template('edpost_head.tpl'), array(
 		'$title' => t('Edit Webpage')
