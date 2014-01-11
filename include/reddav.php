@@ -321,13 +321,18 @@ class RedFile extends DAV\Node implements DAV\IFile {
 	function put($data) {
 		logger('RedFile::put: ' . basename($this->name), LOGGER_DEBUG);
 
+
+		$c = q("select * from channel where channel_id = %d limit 1",
+			intval($this->auth->owner_id)
+		);
+
 		$r = q("select flags, data from attach where hash = '%s' and uid = %d limit 1",
 			dbesc($this->data['hash']),
 			intval($c[0]['channel_id'])
 		);
 		if($r) {
 			if($r[0]['flags'] & ATTACH_FLAG_OS) {
-				$f = 'store/' . $this->auth->owner_nick . '/' . (($r[0]['data']) ? $r[0]['data'] . '/' : '');
+				$f = 'store/' . $this->auth->owner_nick . '/' . (($r[0]['data']) ? $r[0]['data'] : '');
 				@file_put_contents($f, $data);
 				$size = @filesize($f);
 				logger('reddav: put() filename: ' . $f . ' size: ' . $size, LOGGER_DEBUG);
