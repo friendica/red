@@ -1422,10 +1422,7 @@ function layout_select($channel_id, $current = '') {
 		$o .= '<select name="layout_mid" id="select-layout_mid" >';
 		$empty_selected = (($current === '') ? ' selected="selected" ' : '');
 		$o .= '<option value="" ' . $empty_selected . '>' . t('default') . '</option>';
-					logger('current'.$current);
 		foreach($r as $rr) {
-			logger('current'.$current);
-			logger('mid'.$rr['mid']);
 			$selected = (($rr['mid'] == $current) ? ' selected="selected" ' : '');
 			$o .= '<option value="' . $rr['mid'] . '"' . $selected . '>' . $rr['sid'] . '</option>';
 		}
