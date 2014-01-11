@@ -735,7 +735,7 @@ function attach_delete($channel_id,$resource) {
 
 function get_cloudpath($arr) {
 
-	$basepath = 'store/';
+	$basepath = 'cloud/';
 	if($arr['uid']) {
 		$r = q("select channel_address from channel where channel_id = %d limit 1",
 			intval($arr['uid'])
