@@ -56,7 +56,11 @@ function editblock_content(&$a) {
                 intval($post_id),
                 intval($owner)
         );
-
+	$item_id = q("select * from item_id where service = 'BUILDBLOCK' and iid = %d limit 1",
+		$itm[0]['id']
+	);
+	if($item_id)
+		$block_title = $item_id[0]['sid'];
 
 
 	$plaintext = true;
@@ -135,6 +139,7 @@ function editblock_content(&$a) {
 		'$jotnets' => $jotnets,
 		'$title' => htmlspecialchars($itm[0]['title'],ENT_COMPAT,'UTF-8'),
 		'$placeholdertitle' => t('Set title'),
+		'$pagetitle' => $block_title,
 		'$category' => '',
 		'$placeholdercategory' => t('Categories (comma-separated list)'),
 		'$emtitle' => t('Example: bob@example.com, mary@example.com'),
