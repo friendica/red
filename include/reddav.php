@@ -143,12 +143,20 @@ class RedDirectory extends DAV\Node implements DAV\ICollection {
 		file_put_contents($f, $data);
 		$size = filesize($f);
 
+		$edited = datetime_convert(); 
 
-		$r = q("update attach set filesize = '%s' where hash = '%s' and uid = %d limit 1",
+		$d = q("update attach set filesize = '%s', edited = '%s' where hash = '%s' and uid = %d limit 1",
 			dbesc($size),
+			dbesc($edited),
 			dbesc($hash),
 			intval($c[0]['channel_id'])
 		);
+
+		$e = q("update attach set edited = '%s' where folder = '%s' and uid = %d limit 1",
+			dbesc($edited),
+			dbesc($this->folder_hash),
+			intval($c[0]['channel_id'])
+		);		
 
 		$maxfilesize = get_config('system','maxfilesize');
 
@@ -278,6 +286,15 @@ class RedDirectory extends DAV\Node implements DAV\ICollection {
 	}
 
 
+	function getLastModified() {
+		$r = q("select edited from attach where folder = '%s' and uid = %d order by edited desc limit 1",
+			dbesc($this->folder_hash),
+			intval($this->auth->owner_id)			
+		);
+		if($r)
+			return datetime_convert('UTC','UTC', $r[0]['edited'],'U');
+		return '';
+	}
 
 
 
@@ -332,7 +349,7 @@ class RedFile extends DAV\Node implements DAV\IFile {
 			intval($this->auth->owner_id)
 		);
 
-		$r = q("select flags, data from attach where hash = '%s' and uid = %d limit 1",
+		$r = q("select flags, folder, data from attach where hash = '%s' and uid = %d limit 1",
 			dbesc($this->data['hash']),
 			intval($c[0]['channel_id'])
 		);
@@ -356,14 +373,23 @@ class RedFile extends DAV\Node implements DAV\IFile {
 				if($r)
 					$size = $r[0]['fsize'];
 			}
+			
 		}
- 
-		$r = q("update attach set filesize = '%s' where hash = '%s' and uid = %d limit 1",
+
+		$edited = datetime_convert(); 
+
+		$d = q("update attach set filesize = '%s', edited = '%s' where hash = '%s' and uid = %d limit 1",
 			dbesc($size),
+			dbesc($edited),
 			dbesc($this->data['hash']),
 			intval($c[0]['channel_id'])
 		);
 
+		$e = q("update attach set edited = '%s' where folder = '%s' and uid = %d limit 1",
+			dbesc($edited),
+			dbesc($r[0]['folder']),
+			intval($c[0]['channel_id'])
+		);		
 
 		$maxfilesize = get_config('system','maxfilesize');
 
@@ -419,7 +445,7 @@ class RedFile extends DAV\Node implements DAV\IFile {
 
 
 	function getLastModified() {
-		return $this->data['edited'];
+		return datetime_convert('UTC','UTC',$this->data['edited'],'U');
 	}
 
 
