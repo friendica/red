@@ -100,10 +100,10 @@ class RedDirectory extends DAV\Node implements DAV\ICollection {
 		$mimetype = z_mime_content_type($name);
 
 
-		$c = q("select * from channel where channel_id = %d limit 1",
+		$c = q("select * from channel where channel_id = %d and not (channel_pageflags & %d) limit 1",
+			intval(PAGE_REMOVED),
 			intval($this->auth->owner_id)
 		);
-
 
 		if(! $c) {
 			logger('createFile: no channel');
@@ -180,8 +180,9 @@ class RedDirectory extends DAV\Node implements DAV\ICollection {
 			return;
 		}
 
-		$r = q("select * from channel where channel_id = %d limit 1",
-			dbesc($this->auth->owner_id)
+		$r = q("select * from channel where channel_id = %d and not (channel_pageflags & %d) limit 1",
+			intval(PAGE_REMOVED),
+			intval($this->auth->owner_id)
 		);
 
 		if($r) {
@@ -233,13 +234,17 @@ class RedDirectory extends DAV\Node implements DAV\ICollection {
 
 		$channel_name = $path_arr[0];
 
-		$r = q("select channel_id from channel where channel_address = '%s' limit 1",
-			dbesc($channel_name)
+
+		$r = q("select channel_id from channel where channel_address = '%s' and not ( channel_pageflags & %d ) limit 1",
+			dbesc($channel_name),
+			intval(PAGE_REMOVED)
 		);
 
-		if(! $r)
-			return;
+		if(! $r) {
+			throw new DAV\Exception\NotFound('The file with name: ' . $channel_name . ' could not be found');
 
+			return;
+		}
 		$channel_id = $r[0]['channel_id'];
 		$this->auth->owner_id = $channel_id;
 		$this->auth->owner_nick = $channel_name;
@@ -322,8 +327,8 @@ class RedFile extends DAV\Node implements DAV\IFile {
 	function put($data) {
 		logger('RedFile::put: ' . basename($this->name), LOGGER_DEBUG);
 
-
-		$c = q("select * from channel where channel_id = %d limit 1",
+		$c = q("select * from channel where channel_id = %d and not (channel_pageflags & %d) limit 1",
+			intval(PAGE_REMOVED),
 			intval($this->auth->owner_id)
 		);
 
@@ -440,8 +445,9 @@ function RedChannelList(&$auth) {
 
 	$ret = array();
 
-	$r = q("select channel_id, channel_address from channel where not (channel_pageflags & %d)",
-		intval(PAGE_REMOVED)
+	$r = q("select channel_id, channel_address from channel where not (channel_pageflags & %d) and not (channel_pageflags & %d) ",
+		intval(PAGE_REMOVED),
+		intval(PAGE_HIDDEN)
 	);
 
 	if($r) {

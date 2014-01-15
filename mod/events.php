@@ -355,8 +355,7 @@ function events_content(&$a) {
 			'$new_event'=> array($a->get_baseurl().'/events/new',t('Create New Event'),'',''),
 			'$previus'	=> array($a->get_baseurl()."/events/$prevyear/$prevmonth",t('Previous'),'',''),
 			'$next'		=> array($a->get_baseurl()."/events/$nextyear/$nextmonth",t('Next'),'',''),
-			'$calendar' => cal($y,$m,$links, ' eventcal'),
-			
+			'$calendar' => cal($y,$m,$links, ' eventcal'),			
 			'$events'	=> $events,
 			
 			

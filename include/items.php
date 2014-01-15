@@ -2259,7 +2259,7 @@ function tag_deliver($uid,$item_id) {
 
 	if($terms) {
 		foreach($terms as $term) {
-			if(($term['term'] == $u[0]['channel_name']) && link_compare($term['url'],$link)) {			
+			if((strcasecmp($term['term'],$u[0]['channel_name']) == 0) && link_compare($term['url'],$link)) {			
 				$mention = true;
 				break;
 			}
@@ -2322,8 +2322,10 @@ function tag_deliver($uid,$item_id) {
 
 	}
 
-	if((! $mention) && (! $union))
+	if((! $mention) && (! $union)) {
+		logger('tag_deliver: no mention and no union.');
 		return;
+	}
 
 
 	// tgroup delivery - setup a second delivery chain
