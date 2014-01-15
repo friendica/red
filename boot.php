@@ -46,7 +46,7 @@ define ( 'RED_PLATFORM',            'Red Matrix' );
 define ( 'RED_VERSION',             trim(file_get_contents('version.inc')) . 'R');
 define ( 'ZOT_REVISION',            1     ); 
 
-define ( 'DB_UPDATE_VERSION',       1090  );
+define ( 'DB_UPDATE_VERSION',       1091  );
 
 define ( 'EOL',                    '<br />' . "\r\n"     );
 define ( 'ATOM_TIME',              'Y-m-d\TH:i:s\Z' );
@@ -218,7 +218,12 @@ define ( 'PHOTO_PROFILE',          0x0001 );
 define ( 'PHOTO_XCHAN',            0x0002 );
 define ( 'PHOTO_THING',            0x0004 );
 
- 
+/**
+ * Menu types
+ */ 
+
+define ( 'MENU_SYSTEM',          0x0001 );
+define ( 'MENU_BOOKMARK',        0x0002 );
 
 /**
  * Network and protocol family types

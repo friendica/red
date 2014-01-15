@@ -38,7 +38,7 @@ function page_content(&$a) {
 
 	$channel_address = argv(1);
 	$page_id = argv(2);
-
+dbg(1);
 	$u = q("select channel_id from channel where channel_address = '%s' limit 1",
 		dbesc($channel_address)
 	);
@@ -63,7 +63,7 @@ function page_content(&$a) {
 		dbesc($page_id),
 		intval(ITEM_WEBPAGE)
 	);
-
+dbg(0);
 	if(! $r) {
 
 		// Check again with no permissions clause to see if it is a permissions issue
