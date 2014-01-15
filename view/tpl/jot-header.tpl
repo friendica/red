@@ -307,13 +307,18 @@ function enableOnUser(){
 </script>
 
 <script>
-$( document ).on( "click", ".wall-item-delete-link,.page-delete-link", function(e) {
+$( document ).on( "click", ".wall-item-delete-link,.page-delete-link,.layout-delete-link,.block-delete-link", function(e) {
 	var link = $(this).attr("href"); // "get" the intended link in a var
-    e.preventDefault();
-  	bootbox.confirm("<h4>{{$confirmdelete}}</h4>", function(result) {
+
+    if (typeof(eval($.fn.modal)) === 'function'){
+        e.preventDefault();
+  		bootbox.confirm("<h4>{{$confirmdelete}}</h4>",function(result) {
     				if (result) {
       				document.location.href = link;}
-      				});
+      				});}
+    else { 
+    	return confirm("{{$confirmdelete}}");
+    }			
     });
 </script>
 

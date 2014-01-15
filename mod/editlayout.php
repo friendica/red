@@ -57,7 +57,11 @@ function editlayout_content(&$a) {
                 intval($owner)
         );
 
-
+	$item_id = q("select * from item_id where service = 'PDL' and iid = %d limit 1",
+		$itm[0]['id']
+	);
+	if($item_id)
+		$layout_title = $item_id[0]['sid'];
 
 	$plaintext = true;
 // You may or may not be a local user.  This won't work,
@@ -74,7 +78,8 @@ function editlayout_content(&$a) {
 		'$editselect' =>  (($plaintext) ? 'none' : '/(profile-jot-text|prvmail-text)/'),
 		'$ispublic' => '&nbsp;', // t('Visible to <strong>everybody</strong>'),
 		'$geotag' => $geotag,
-		'$nickname' => $a->user['nickname']
+		'$nickname' => $a->user['nickname'],
+	    '$confirmdelete' => t('Delete layout?')
 	));
 
 
@@ -120,6 +125,7 @@ function editlayout_content(&$a) {
 		'$jotnets' => $jotnets,
 		'$title' => htmlspecialchars($itm[0]['title'],ENT_COMPAT,'UTF-8'),
 		'$placeholdertitle' => t('Set title'),
+		'$pagetitle' => $layout_title,
 		'$category' => '',
 		'$placeholdercategory' => t('Categories (comma-separated list)'),
 		'$emtitle' => t('Example: bob@example.com, mary@example.com'),
@@ -134,11 +140,11 @@ function editlayout_content(&$a) {
 		'$feature_expire' => 'none',
 		'$expires' => t('Set expiration date'),
 	));
-
+	
 	$ob = get_observer_hash();
 
 	if(($itm[0]['author_xchan'] === $ob) || ($itm[0]['owner_xchan'] === $ob))
-		$o .= '<br /><br /><a href="item/drop/' . $itm[0]['id'] . '" >' . t('Delete Layout') . '</a><br />';
+		$o .= '<br /><br /><a class="layout-delete-link" href="item/drop/' . $itm[0]['id'] . '" >' . t('Delete Layout') . '</a><br />';
 
 	return $o;
 

@@ -56,7 +56,11 @@ function editblock_content(&$a) {
                 intval($post_id),
                 intval($owner)
         );
-
+	$item_id = q("select * from item_id where service = 'BUILDBLOCK' and iid = %d limit 1",
+		$itm[0]['id']
+	);
+	if($item_id)
+		$block_title = $item_id[0]['sid'];
 
 
 	$plaintext = true;
@@ -88,7 +92,8 @@ function editblock_content(&$a) {
 		'$editselect' =>  (($plaintext) ? 'none' : '/(profile-jot-text|prvmail-text)/'),
 		'$ispublic' => '&nbsp;', // t('Visible to <strong>everybody</strong>'),
 		'$geotag' => $geotag,
-		'$nickname' => $a->user['nickname']
+		'$nickname' => $a->user['nickname'],
+	    '$confirmdelete' => t('Delete block?')
 	));
 
 
@@ -135,6 +140,7 @@ function editblock_content(&$a) {
 		'$jotnets' => $jotnets,
 		'$title' => htmlspecialchars($itm[0]['title'],ENT_COMPAT,'UTF-8'),
 		'$placeholdertitle' => t('Set title'),
+		'$pagetitle' => $block_title,
 		'$category' => '',
 		'$placeholdercategory' => t('Categories (comma-separated list)'),
 		'$emtitle' => t('Example: bob@example.com, mary@example.com'),
@@ -154,7 +160,7 @@ function editblock_content(&$a) {
 	$ob = get_observer_hash();
 
 	if(($itm[0]['author_xchan'] === $ob) || ($itm[0]['owner_xchan'] === $ob))
-		$o .= '<br /><br /><a href="item/drop/' . $itm[0]['id'] . '" >' . t('Delete Block') . '</a><br />';
+		$o .= '<br /><br /><a class="block-delete-link" href="item/drop/' . $itm[0]['id'] . '" >' . t('Delete Block') . '</a><br />';
 
 	return $o;
 
