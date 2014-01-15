@@ -34,6 +34,7 @@ function nuke_session() {
  */
 
 function account_verify_password($email,$pass) {
+
 	$r = q("select * from account where account_email = '%s'",
 		dbesc($email)
 	);
@@ -46,7 +47,13 @@ function account_verify_password($email,$pass) {
 			return $record;
 		}
 	}
-	logger('password failed for ' . $email);
+	$error = 'password failed for ' . $email;
+	logger($error);
+	// Also log failed logins to a separate auth log to reduce overhead for server side intrusion prevention
+	$authlog = get_config('system', 'authlog');
+	if ($authlog)
+	@file_put_contents($authlog, datetime_convert() . ':' . session_id() . ' ' . $error . "\n", FILE_APPEND);
+
 	return null;
 }
 
@@ -186,7 +193,13 @@ else {
 		}
 
 		if((! $record) || (! count($record))) {
-			logger('authenticate: failed login attempt: ' . notags(trim($_POST['username'])) . ' from IP ' . $_SERVER['REMOTE_ADDR']); 
+			$error = 'authenticate: failed login attempt: ' . notags(trim($_POST['username'])) . ' from IP ' . $_SERVER['REMOTE_ADDR'];
+			logger($error); 
+			// Also log failed logins to a separate auth log to reduce overhead for server side intrusion prevention
+		        $authlog = get_config('system', 'authlog');
+		        if ($authlog)
+		        @file_put_contents($authlog, datetime_convert() . ':' . session_id() . ' ' . $error . "\n", FILE_APPEND);
+
 			notice( t('Login failed.') . EOL );
 			goaway(z_root());
   		}
