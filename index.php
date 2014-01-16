@@ -245,7 +245,11 @@ if(! x($a->page,'content'))
 
 /* set JS cookie */
 if($_COOKIE['jsAvailable'] != 1) {
-	$a->page['content'] .= '<script>document.cookie="jsAvailable=1; path=/"; location.reload();</script>';
+	$a->page['content'] .= '<script>document.cookie="jsAvailable=1; path=/"; var jsMatch = /\&JS=1/; if (!jsMatch.exec(location.href)) { location.href = location.href + "&JS=1"; }</script>';
+	/* emulate JS cookie if cookies are not accepted */
+	if ($_GET['JS'] == 1) {
+		$_COOKIE['jsAvailable'] = 1;
+	}
 }
 
 
