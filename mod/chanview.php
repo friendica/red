@@ -89,7 +89,7 @@ function chanview_content(&$a) {
 
 	// let somebody over-ride the iframed viewport presentation
 
-	if(local_user() && get_pconfig(local_user(),'system','chanview_full'))
+	if((! local_user()) || (get_pconfig(local_user(),'system','chanview_full')))
 		goaway($url);
 
 	$o = replace_macros(get_markup_template('chanview.tpl'),array(

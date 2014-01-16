@@ -65,6 +65,10 @@ function cloud_init(&$a) {
 	}	
 
 
+	$_SERVER['QUERY_STRING'] = str_replace(array('?f=','&f='),array('',''),$_SERVER['QUERY_STRING']);
+	$_SERVER['QUERY_STRING'] = preg_replace('/[\?&]zid=(.*?)([\?&]|$)/ism','',$_SERVER['QUERY_STRING']);
+
+
 	$rootDirectory = new RedDirectory('/',$auth);
 	$server = new DAV\Server($rootDirectory);
 	$lockBackend = new DAV\Locks\Backend\File('store/data/locks');
@@ -82,8 +86,6 @@ function cloud_init(&$a) {
 
 	$auth->setBrowserPlugin($browser);
 
-	$_SERVER['QUERY_STRING'] = str_replace(array('?f=','&f='),array('',''),$_SERVER['QUERY_STRING']);
-	$_SERVER['QUERY_STRING'] = preg_replace('/[\?&]zid=(.*?)([\?&]|$)/ism','',$_SERVER['QUERY_STRING']);
 
 	$server->addPlugin($browser);
 
