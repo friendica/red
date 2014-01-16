@@ -76,9 +76,9 @@ function channel_privacy_macro(n) {
         $('#id_view_contacts option').eq(5).attr('selected','selected');
         $('#id_view_storage option').eq(5).attr('selected','selected');
         $('#id_view_pages option').eq(5).attr('selected','selected');
-        $('#id_send_stream option').eq(1).attr('selected','selected');
+        $('#id_send_stream option').eq(2).attr('selected','selected');
         $('#id_post_wall option').eq(1).attr('selected','selected');
-        $('#id_post_comments option').eq(1).attr('selected','selected');
+        $('#id_post_comments option').eq(2).attr('selected','selected');
         $('#id_post_mail option').eq(1).attr('selected','selected');
         $('#id_post_photos option').eq(0).attr('selected','selected');
         $('#id_tag_deliver option').eq(1).attr('selected','selected');
