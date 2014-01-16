@@ -1019,7 +1019,7 @@ function zid_init(&$a) {
 		call_hooks('zid_init',$arr);
 		if((! local_user()) && (! remote_user())) {
 			logger('zid_init: not authenticated. Invoking reverse magic-auth for ' . $tmp_str);
-			$r = q("select * from hubloc where hubloc_addr = '%s' order by hubloc_id desc limit 1",
+			$r = q("select * from hubloc where hubloc_addr = '%s' order by hubloc_connected desc limit 1",
 				dbesc($tmp_str)
 			);
 			// try to avoid recursion - but send them home to do a proper magic auth

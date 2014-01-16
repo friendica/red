@@ -82,6 +82,9 @@ function cloud_init(&$a) {
 
 	$auth->setBrowserPlugin($browser);
 
+	$_SERVER['QUERY_STRING'] = str_replace(array('?f=','&f='),array('',''),$_SERVER['QUERY_STRING']);
+	$_SERVER['QUERY_STRING'] = preg_replace('/[\?&]zid=(.*?)([\?&]|$)/ism','',$_SERVER['QUERY_STRING']);
+
 	$server->addPlugin($browser);
 
 
