@@ -15,6 +15,15 @@ function new_cookie($time) {
     session_regenerate_id(false);
 
     q("UPDATE session SET sid = '%s' WHERE sid = '%s'", dbesc(session_id()), dbesc($old_sid));
+
+	if (x($_COOKIE, 'jsAvailable')) {
+		if ($time) {
+			$expires = time() + $time;
+		} else {
+			$expires = 0;
+		}
+		setcookie('jsAvailable', $_COOKIE['jsAvailable'], $expires);
+	}
 }
 
 
