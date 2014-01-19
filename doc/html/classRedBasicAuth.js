@@ -9,5 +9,6 @@ var classRedBasicAuth =
     [ "$channel_name", "classRedBasicAuth.html#a438ab125b6ef46581947e35d49cdebac", null ],
     [ "$observer", "classRedBasicAuth.html#aa75dc43b59adc98e38a98517d3fd35d1", null ],
     [ "$owner_id", "classRedBasicAuth.html#a09c1488a0b290f5a54dc15180c5690d7", null ],
-    [ "$owner_nick", "classRedBasicAuth.html#a8d09b8d784cc810a0b3be580d05106a7", null ]
+    [ "$owner_nick", "classRedBasicAuth.html#a8d09b8d784cc810a0b3be580d05106a7", null ],
+    [ "$timezone", "classRedBasicAuth.html#a2d0246ed446fd5e55c17938b4ce6ac47", null ]
 ];

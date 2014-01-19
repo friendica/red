@@ -23,6 +23,28 @@ function menu_fetch($name,$uid,$observer_xchan) {
 	return null;
 }
 	
+function bookmarks_menu_fetch($uid,$observer_xchan,$flags = MENU_BOOKMARK) {
+
+	$sel_option = (($flags) ? ' and menu_flags = ' . intval($menu_flags) . ' ' : '');
+
+	$sql_options = permissions_sql($uid);
+
+	$r = q("select * from menu where menu_channel_id = %d $sel_option limit 1",
+		intval($uid)
+	);
+	if($r) {
+		$x = q("select * from menu_item where mitem_menu_id = %d and mitem_channel_id = %d
+			$sql_options 
+			order by mitem_order asc, mitem_desc asc",
+			intval($r[0]['menu_id']),
+			intval($uid)
+		);
+		return array('menu' => $r[0], 'items' => $x );
+	}
+
+	return null;
+}
+	
 
 function menu_render($menu) {
 	if(! $menu)
@@ -58,6 +80,8 @@ function menu_create($arr) {
 
 	$menu_name = trim(escape_tags($arr['menu_name']));
 	$menu_desc = trim(escape_tags($arr['menu_desc']));
+	$menu_flags = intval($arr['menu_flags']);
+
 
 	if(! $menu_desc)
 		$menu_desc = $menu_name;
@@ -65,21 +89,26 @@ function menu_create($arr) {
 	if(! $menu_name)
 		return false;
 
+	if(! $menu_flags)
+		$menu_flags = 0;
+
 
 	$menu_channel_id = intval($arr['menu_channel_id']);
 
-	$r = q("select * from menu where menu_name = '%s' and menu_channel_id = %d limit 1",
+	$r = q("select * from menu where menu_name = '%s' and menu_channel_id = %d and menu_flags = %d limit 1",
 		dbesc($menu_name),
-		intval($menu_channel_id)
+		intval($menu_channel_id),
+		intval($menu_flags)
 	);
 
 	if($r)
 		return false;
 
-	$r = q("insert into menu ( menu_name, menu_desc, menu_channel_id ) 
-		values( '%s', '%s', %d )",
+	$r = q("insert into menu ( menu_name, menu_desc, menu_flags, menu_channel_id ) 
+		values( '%s', '%s', %d, %d )",
  		dbesc($menu_name),
 		dbesc($menu_desc),
+		intval($menu_flags),
 		intval($menu_channel_id)
 	);
 	if(! $r)
@@ -110,6 +139,7 @@ function menu_edit($arr) {
 
 	$menu_name = trim(escape_tags($arr['menu_name']));
 	$menu_desc = trim(escape_tags($arr['menu_desc']));
+	$menu_flags = intval($arr['menu_flags']);
 
 	if(! $menu_desc)
 		$menu_desc = $menu_name;
@@ -117,11 +147,15 @@ function menu_edit($arr) {
 	if(! $menu_name)
 		return false;
 
+	if(! $menu_flags)
+		$menu_flags = 0;
+
 
 	$menu_channel_id = intval($arr['menu_channel_id']);
 
-	$r = q("select menu_id from menu where menu_name = '%s' and menu_channel_id = %d limit 1",
+	$r = q("select menu_id from menu where menu_name = '%s' and menu_flags = %d and menu_channel_id = %d limit 1",
 		dbesc($menu_name),
+		intval($menu_flags),
 		intval($menu_channel_id)
 	);
 	if(($r) && ($r[0]['menu_id'] != $menu_id)) {
@@ -140,17 +174,18 @@ function menu_edit($arr) {
 	}
 
 
-	$r = q("select * from menu where menu_name = '%s' and menu_channel_id = %d and menu_desc = '%s' limit 1",
+	$r = q("select * from menu where menu_name = '%s' and menu_channel_id = %d and menu_desc = '%s' and menu_flags = %d limit 1",
 		dbesc($menu_name),
-	        intval($menu_channel_id),
-	        dbesc($menu_desc)
+        intval($menu_channel_id),
+        dbesc($menu_desc),
+		intval($menu_flags)
 	);
 
 	if($r)
 		return false;
 
 
-	return q("update menu set menu_name = '%s', menu_desc = '%s' 
+	return q("update menu set menu_name = '%s', menu_desc = '%s', 
 		where menu_id = %d and menu_channel_id = %d limit 1", 
  		dbesc($menu_name),
 		dbesc($menu_desc),

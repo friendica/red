@@ -152,7 +152,7 @@ var searchData=
   ['_24theme_5fthread_5fallow',['$theme_thread_allow',['../classApp.html#a487332f8de40414ca1a54a4265570b70',1,'App']]],
   ['_24threaded',['$threaded',['../classItem.html#a1cb6aa8abdf7ea7daca647e40c8ea3a2',1,'Item']]],
   ['_24threads',['$threads',['../classConversation.html#a41f4a549e6a99f98935c4742addd22c8',1,'Conversation']]],
-  ['_24timezone',['$timezone',['../classApp.html#ab35b01a366a2ea95725e97af278f87ab',1,'App']]],
+  ['_24timezone',['$timezone',['../classApp.html#ab35b01a366a2ea95725e97af278f87ab',1,'App\$timezone()'],['../classRedBasicAuth.html#a2d0246ed446fd5e55c17938b4ce6ac47',1,'RedBasicAuth\$timezone()']]],
   ['_24toolicon_5factivecolour',['$toolicon_activecolour',['../redbasic_2php_2style_8php.html#acfd00ec469ca3c5e8bfac787573093f3',1,'style.php']]],
   ['_24toolicon_5fcolour',['$toolicon_colour',['../redbasic_2php_2style_8php.html#a4161f6b8aa923f67e53f54dfb6554cdb',1,'style.php']]],
   ['_24top_5fphoto',['$top_photo',['../redbasic_2php_2style_8php.html#a810142b4bdd35a1d377ab279b02b47eb',1,'style.php']]],

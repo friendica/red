@@ -7,6 +7,7 @@ var classRedDirectory =
     [ "getChild", "classRedDirectory.html#aaa20f0f44da23781917af8170c0a2569", null ],
     [ "getChildren", "classRedDirectory.html#aa42d3065f6f065b17db87146a7cb031a", null ],
     [ "getDir", "classRedDirectory.html#a70173d4458572d95e586b2037d2fd2f4", null ],
+    [ "getLastModified", "classRedDirectory.html#a6c7e08199abc24e6eeb94a4037ef8bfc", null ],
     [ "getName", "classRedDirectory.html#af6e4475dbd5abcdede00d20b8d388583", null ],
     [ "$auth", "classRedDirectory.html#a9616af16cd19a18a6afebebcc2881c44", null ],
     [ "$ext_path", "classRedDirectory.html#a0f113244cd85c17848df991001d024f4", null ],
