@@ -10,6 +10,10 @@
  * http://www.opensource.org/licenses/MIT
  */
 
+// Don't allow files to be stored from the demo server 
+
+exit;
+
 error_reporting(E_ALL | E_STRICT);
 require('UploadHandler.php');
 $upload_handler = new UploadHandler();
