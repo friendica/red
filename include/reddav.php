@@ -101,8 +101,9 @@ class RedDirectory extends DAV\Node implements DAV\ICollection {
 
 
 		$c = q("select * from channel where channel_id = %d and not (channel_pageflags & %d) limit 1",
-			intval(PAGE_REMOVED),
-			intval($this->auth->owner_id)
+			intval($this->auth->owner_id),
+			intval(PAGE_REMOVED)
+
 		);
 
 		if(! $c) {

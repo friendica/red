@@ -549,6 +549,7 @@ function widget_photo_albums($arr) {
 
 
 function widget_vcard($arr) {
+	require_once ('include/Contact.php');
 	return vcard_from_xchan('',get_app()->get_observer());
 }
 
