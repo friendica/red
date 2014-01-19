@@ -8,11 +8,12 @@ function search_init(&$a) {
 
 function search_content(&$a,$update = 0, $load = false) {
 
-	if((get_config('system','block_public')) && (! local_user()) && (! remote_user())) {
-		notice( t('Public access denied.') . EOL);
+	if((get_config('system','block_public')) || (get_config('system','block_public_search'))) {
+		if ((! local_user()) && (! remote_user())) {
+			notice( t('Public access denied.') . EOL);
 		return;
+		}
 	}
-
 	nav_set_selected('search');
 
 	require_once("include/bbcode.php");
