@@ -32,10 +32,10 @@ Red Matrix Documentation and Resources
 
 **External Resources**
 
+* [External Resource Links](help/External-Resources)
 * [Main Website](https://github.com/friendica/red)
 * [Plugin/Addon Website](https://github.com/friendica/red-addons)
 * [Assets Website](https://github.com/friendica/red-assets)
-
 * [Development Channel](http://zothub.com/channel/one)
 
 **About**
