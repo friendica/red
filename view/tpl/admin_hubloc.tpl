@@ -14,8 +14,9 @@
 			
 			{{foreach $hubloc as $hub}}<tr>
 			<td>{{$hub.hubloc_id}}</td><td>{{$hub.hubloc_addr}}</td><td>{{$hub.hubloc_host}}</td><td>{{$hub.hubloc_status}}</td>
-			<td><input type="hidden" name="hublocid" value="{{$hub.hubloc_id}}"><input type="submit" name="check" value="check" ></td>
-			<td><input type="hidden" name="hublocid" value="{{$hub.hubloc_id}}"><input type="submit" name="repair" value="repair" ></td>
+			<td><input type="hidden" name="hublocid" value="{{$hub.hubloc_id}}">
+			<input type="submit" name="check" value="check" >
+			<input type="submit" name="repair" value="repair" ></td>
 			</tr>{{/foreach}}
 		</tbody>
 	</table>
