@@ -518,10 +518,10 @@ function item_post(&$a) {
 						'url'   => $success['url']
 					); 				
 				}
-				if(is_array($success['contact']) && intval($success['contact']['prv'])) {
-					$private_forum = true;
-					$private_id = $success['contact']['id'];
-				}
+//				if(is_array($success['contact']) && intval($success['contact']['prv'])) {
+//					$private_forum = true;
+//					$private_id = $success['contact']['id'];
+//				}
 			}
 		}
 

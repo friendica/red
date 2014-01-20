@@ -335,208 +335,77 @@ function photos_post(&$a) {
 			$str_tags = '';
 			$inform   = '';
 
-			// if the new tag doesn't have a namespace specifier (@foo or #foo) give it a hashtag
+			// if the new tag doesn't have a namespace specifier (@foo or #foo) give it a mention
 
 			$x = substr($rawtags,0,1);
 			if($x !== '@' && $x !== '#')
-				$rawtags = '#' . $rawtags;
+				$rawtags = '@' . $rawtags;
 
 			$taginfo = array();
 			$tags = get_tags($rawtags);
 
 			if(count($tags)) {
 				foreach($tags as $tag) {
-					if(isset($profile))
-						unset($profile);
-					if(strpos($tag,'@') === 0) {
-						$name = substr($tag,1);
-						if((strpos($name,'@')) || (strpos($name,'http://'))) {
-							$newname = $name;
-							$links = @lrdd($name);
-							if(count($links)) {
-								foreach($links as $link) {
-									if($link['@attributes']['rel'] === 'http://webfinger.net/rel/profile-page')
-        		            			$profile = $link['@attributes']['href'];
-									if($link['@attributes']['rel'] === 'salmon') {
-										$salmon = '$url:' . str_replace(',','%sc',$link['@attributes']['href']);
-										if(strlen($inform))
-											$inform .= ',';
-                    					$inform .= $salmon;
-									}
-								}
-							}
-							$taginfo[] = array($newname,$profile,$salmon);
-						}
-						else {
-							$newname = $name;
-							$alias = '';
-							$tagcid = 0;
-							if(strrpos($newname,'+'))
-								$tagcid = intval(substr($newname,strrpos($newname,'+') + 1));
 
-							if($tagcid) {
-								$r = q("SELECT * FROM `contact` WHERE `id` = %d AND `uid` = %d LIMIT 1",
-									intval($tagcid),
-									intval($profile_uid)
-								);
-							}
-							else {
-								$newname = str_replace('_',' ',$name);
+					// If we already tagged 'Robert Johnson', don't try and tag 'Robert'.
+					// Robert Johnson should be first in the $tags array
 
-								//select someone from this user's contacts by name
-								$r = q("SELECT * FROM `contact` WHERE `name` = '%s' AND `uid` = %d LIMIT 1",
-										dbesc($newname),
-										intval($page_owner_uid)
-								);
-
-								if(! $r) {
-									//select someone by attag or nick and the name passed in
-									$r = q("SELECT * FROM `contact` WHERE `attag` = '%s' OR `nick` = '%s' AND `uid` = %d ORDER BY `attag` DESC LIMIT 1",
-											dbesc($name),
-											dbesc($name),
-											intval($page_owner_uid)
-									);
-								}
-							}
-/*							elseif(strstr($name,'_') || strstr($name,' ')) {
-								$newname = str_replace('_',' ',$name);
-								$r = q("SELECT * FROM `contact` WHERE `name` = '%s' AND `uid` = %d LIMIT 1",
-									dbesc($newname),
-									intval($page_owner_uid)
-								);
-							}
-							else {
-								$r = q("SELECT * FROM `contact` WHERE `attag` = '%s' OR `nick` = '%s' AND `uid` = %d ORDER BY `attag` DESC LIMIT 1",
-									dbesc($name),
-									dbesc($name),
-									intval($page_owner_uid)
-								);
-							}*/
-							if(count($r)) {
-								$newname = $r[0]['name'];
-								$profile = $r[0]['url'];
-								$notify = 'cid:' . $r[0]['id'];
-								if(strlen($inform))
-									$inform .= ',';
-								$inform .= $notify;
-							}
+					$fullnametagged = false;
+					for($x = 0; $x < count($tagged); $x ++) {
+						if(stristr($tagged[$x],$tag . ' ')) {
+							$fullnametagged = true;
+							break;
 						}
-						if($profile) {
-							if(substr($notify,0,4) === 'cid:')
-								$taginfo[] = array($newname,$profile,$notify,$r[0],'@[zrl=' . str_replace(',','%2c',$profile) . ']' . $newname	. '[/zrl]');
-							else
-								$taginfo[] = array($newname,$profile,$notify,null,$str_tags .= '@[url=' . $profile . ']' . $newname	. '[/url]');
-							if(strlen($str_tags))
-								$str_tags .= ',';
-							$profile = str_replace(',','%2c',$profile);
-							$str_tags .= '@[zrl=' . $profile . ']' . $newname	. '[/zrl]';
+					}
+					if($fullnametagged)
+						continue;
+	
+					require_once('mod/item.php');
+					$body = $access_tag = '';
+	
+					$success = handle_tag($a, $body, $access_tag, $str_tags, (local_user()) ? local_user() : $a->profile['profile_uid'] , $tag); 
+					logger('handle_tag: ' . print_r($success,tue), LOGGER_DEBUG);
+					if($access_tag) {
+						logger('access_tag: ' . $tag . ' ' . print_r($access_tag,true), LOGGER_DEBUG);
+						if(strpos($access_tag,'cid:') === 0) {
+							$str_contact_allow .= '<' . substr($access_tag,4) . '>';
+							$access_tag = '';	
 						}
+						elseif(strpos($access_tag,'gid:') === 0) {
+							$str_group_allow .= '<' . substr($access_tag,4) . '>';
+							$access_tag = '';	
+						}
+					}
+	
+					if($success['replaced']) {
+						$tagged[] = $tag;
+						$post_tags[] = array(
+							'uid'   => $a->profile['profile_uid'], 
+							'type'  => $success['termtype'],
+							'otype' => TERM_OBJ_POST,
+							'term'  => $success['term'],
+							'url'   => $success['url']
+						); 				
 					}
 				}
 			}
-
-			$newtag = $old_tag;
-			if(strlen($newtag) && strlen($str_tags)) 
-				$newtag .= ',';
-			$newtag .= $str_tags;
-
-			$newinform = $old_inform;
-			if(strlen($newinform) && strlen($inform))
-				$newinform .= ',';
-			$newinform .= $inform;
-//FIXME - inform is gone
-//			$r = q("UPDATE `item` SET `tag` = '%s', `inform` = '%s', `edited` = '%s', `changed` = '%s' WHERE `id` = %d AND `uid` = %d LIMIT 1",
-//				dbesc($newtag),
-//				dbesc($newinform),
-//				dbesc(datetime_convert()),
-//				dbesc(datetime_convert()),
-//				intval($item_id),
-//				intval($page_owner_uid)
-//			);
-
-			$best = 0;
-			foreach($p as $scales) {
-				if(intval($scales['scale']) == 2) {
-					$best = 2;
-					break;
-				}
-				if(intval($scales['scale']) == 4) {
-					$best = 4;
-					break;
-				}
-			}
-
-			if(count($taginfo)) {
-				foreach($taginfo as $tagged) {
 		
-					$mid = item_message_id();
+			$r = q("select * from item where id = %d and uid = %d limit 1",
+				intval($item_id),
+				intval($page_owner_uid)
+			);
 
-					$arr = array();
-//FIXME
-					$arr['uid']           = $page_owner_uid;
-					$arr['mid']           = $mid;
-					$arr['parent_mid']    = $mid;
-					$arr['type']          = 'activity';
-					$arr['wall']          = 1;
-					$arr['contact-id']    = $owner_record['id'];
-					$arr['owner-name']    = $owner_record['name'];
-					$arr['owner-link']    = $owner_record['url'];
-					$arr['owner-avatar']  = $owner_record['thumb'];
-					$arr['author-name']   = $owner_record['name'];
-					$arr['author-link']   = $owner_record['url'];
-					$arr['author-avatar'] = $owner_record['thumb'];
-					$arr['title']         = '';
-					$arr['allow_cid']     = $p[0]['allow_cid'];
-					$arr['allow_gid']     = $p[0]['allow_gid'];
-					$arr['deny_cid']      = $p[0]['deny_cid'];
-					$arr['deny_gid']      = $p[0]['deny_gid'];
-					$arr['visible']       = 1;
-					$arr['verb']          = ACTIVITY_TAG;
-					$arr['obj_type']   = ACTIVITY_OBJ_PERSON;
-					$arr['tgt_type']   = ACTIVITY_OBJ_PHOTO;
-					$arr['tag']           = $tagged[4];
-					$arr['inform']        = $tagged[2];
-					$arr['origin']        = 1;
-					$arr['body']          = sprintf( t('%1$s was tagged in %2$s by %3$s'), '[zrl=' . $tagged[1] . ']' . $tagged[0] . '[/zrl]', '[zrl=' . $a->get_baseurl() . '/photos/' . $owner_record['nickname'] . '/image/' . $p[0]['resource-id'] . ']' . t('a photo') . '[/zrl]', '[zrl=' . $owner_record['url'] . ']' . $owner_record['name'] . '[/zrl]') ;
-
-					$arr['body'] .= "\n\n" . '[zrl=' . $a->get_baseurl() . '/photos/' . $owner_record['nickname'] . '/image/' . $p[0]['resource_id'] . ']' . '[zmg]' . $a->get_baseurl() . "/photo/" . $p[0]['resource_id'] . '-' . $best . '.' . $ext . '[/zmg][/zrl]' . "\n" ;
-
-					$arr['object'] = '<object><type>' . ACTIVITY_OBJ_PERSON . '</type><title>' . $tagged[0] . '</title><id>' . $tagged[1] . '/' . $tagged[0] . '</id>';
-					$arr['object'] .= '<link>' . xmlify('<link rel="alternate" type="text/html" href="' . $tagged[1] . '" />' . "\n");
-					if($tagged[3])
-						$arr['object'] .= xmlify('<link rel="photo" type="'.$p[0]['type'].'" href="' . $tagged[3]['photo'] . '" />' . "\n");
-					$arr['object'] .= '</link></object>' . "\n";
-
-					$arr['target'] = '<target><type>' . ACTIVITY_OBJ_PHOTO . '</type><title>' . $p[0]['description'] . '</title><id>'
-						. $a->get_baseurl() . '/photos/' . $owner_record['nickname'] . '/image/' . $p[0]['resource_id'] . '</id>';
-					$arr['target'] .= '<link>' . xmlify('<link rel="alternate" type="text/html" href="' . $a->get_baseurl() . '/photos/' . $owner_record['nickname'] . '/image/' . $p[0]['resource_id'] . '" />' . "\n" . '<link rel="preview" type="'.$p[0]['type'].'" href="' . $a->get_baseurl() . "/photo/" . $p[0]['resource_id'] . '-' . $best . '.' . $ext . '" />') . '</link></target>';
-
-					if ((! $arr['plink']) && ($arr['item_flags'] & ITEM_THREAD_TOP)) {
-						$arr['plink'] = z_root() . '/channel/' . $owner_record['channel_address'] . '/?f=&mid=' . $arr['mid'];
-					}
-
-
-
-
-					$post = item_store($arr);
-					$item_id = $post['item_id'];
-
-					if($item_id) {
-						q("UPDATE `item` SET `plink` = '%s' WHERE `uid` = %d AND `id` = %d LIMIT 1",
-							dbesc($a->get_baseurl() . '/display/' . $owner_record['nickname'] . '/' . $item_id),
-							intval($page_owner_uid),
-							intval($item_id)
-						);
-
-						proc_run('php',"include/notifier.php","tag","$item_id");
-					}
-				}
-
+			if($r) {
+				$datarray = $r[0];
+				$datarray['term']   = $post_tags;	
+				item_store_update($datarray,$execflag);
 			}
 
 		}
+	
 		goaway($a->get_baseurl() . '/' . $_SESSION['photo_return']);
 		return; // NOTREACHED
+
 	}
 
 
