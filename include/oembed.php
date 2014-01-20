@@ -26,7 +26,20 @@ function oembed_fetch_url($embedurl){
 	if(is_null($txt)){
 		$txt = "";
 		
-		if (!in_array($ext, $noexts)){
+		if (in_array($ext, $noexts)) {
+			$m = @parse_url($embedurl);
+			$zrl = false;
+			if($m['host']) {
+				$r = q("select hubloc_url from hubloc where hubloc_host = '%s' limit 1",
+					dbesc($m['host'])
+				);
+				if($r)
+					$zrl = true;
+			}
+			if($zrl)
+				$embedurl = zid($embedurl);
+		}
+		else {
 			// try oembed autodiscovery
 			$redirects = 0;
 
@@ -57,12 +70,6 @@ function oembed_fetch_url($embedurl){
 			call_hooks('oembed_probe',$x);
 			if(array_key_exists('embed',$x))
 				$txt = $x['embed'];
-
-			// try oohembed service
-//			$ourl = "http://oohembed.com/oohembed/?url=".urlencode($embedurl).'&maxwidth=' . $a->videowidth;  
-//			$result = z_fetch_url($ourl);
-//			if($result['success'])
-//				$txt = $result['body'];
 		}
 		
 		$txt=trim($txt);
