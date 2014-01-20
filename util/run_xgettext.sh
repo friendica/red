@@ -48,7 +48,7 @@ KEYWORDS="-k -kt -ktt:1,2"
 
 echo "extract strings to $OUTFILE.."
 
-echo "extract strings to $OUTFILE.."
+
 rm "$OUTFILE"; touch "$OUTFILE"
 for f in $(find "$FINDSTARTDIR" $FINDOPTS -name "*.php" -type f)
 do
@@ -67,7 +67,7 @@ then
     sed -i "s/PACKAGE VERSION//g" "$OUTFILE"
     sed -i "s/PACKAGE/RedMatrix $ADDONNAME addon/g" "$OUTFILE"
     sed -i "s/CHARSET/UTF-8/g" "$OUTFILE"
-    sed -i "s/^\"Plural-Forms/#\"Plural-Forms/g" "$OUTFILE"
+#    sed -i "s/^\"Plural-Forms/#\"Plural-Forms/g" "$OUTFILE"
 else
     sed -i "s/SOME DESCRIPTIVE TITLE./Red Communications Project/g" "$OUTFILE"
     sed -i "s/YEAR THE PACKAGE'S COPYRIGHT HOLDER/2012-2014 the Red Matrix Project/g" "$OUTFILE"
@@ -75,7 +75,7 @@ else
     sed -i "s/PACKAGE VERSION/$F9KVERSION/g" "$OUTFILE"
     sed -i "s/PACKAGE/Red/g" "$OUTFILE"
     sed -i "s/CHARSET/UTF-8/g" "$OUTFILE"
-    sed -i "s/^\"Plural-Forms/#\"Plural-Forms/g" "$OUTFILE"
+#    sed -i "s/^\"Plural-Forms//g" "$OUTFILE"
 fi
 
 echo "done."
