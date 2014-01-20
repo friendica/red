@@ -339,7 +339,7 @@ function get_form_security_token($typename = '') {
 	
 	$timestamp = time();
 	$sec_hash = hash('whirlpool', $a->user['guid'] . $a->user['prvkey'] . session_id() . $timestamp . $typename);
-	
+
 	return $timestamp . '.' . $sec_hash;
 }
 

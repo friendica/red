@@ -456,7 +456,8 @@ function admin_page_site(&$a) {
 
 }
 function admin_page_hubloc_post(&$a){
-	 check_form_security_token_redirectOnErr('/admin/hubloc', 'hubloc');
+	check_form_security_token_redirectOnErr('/admin/hubloc', 'admin_hubloc');
+	goaway($a->get_baseurl(true) . '/admin/hubloc' );
 	return;
 }
 
@@ -479,7 +480,8 @@ function admin_page_hubloc(&$a) {
                 '$queues' => $queues,
                 //'$accounts' => $accounts, /*$accounts is empty here*/
                 '$pending' => Array( t('Pending registrations'), $pending),
-                '$plugins' => Array( t('Active plugins'), $a->plugins )
+                '$plugins' => Array( t('Active plugins'), $a->plugins ),
+		'$form_security_token' => get_form_security_token("admin_hubloc")
         ));
 	return $o;
 }
