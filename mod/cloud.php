@@ -80,9 +80,14 @@ function cloud_init(&$a) {
 	$server->addPlugin($lockPlugin);
 
 
-	if(! $auth->observer)
-		$auth->Authenticate($server,'Red Matrix');
+	if(! $auth->observer) {
+		try {
+			$auth->Authenticate($server,'Red Matrix');
+		}
+		catch ( Exception $e) {
 
+		}
+	}
 //	$browser = new DAV\Browser\Plugin();
 
 	$browser = new RedBrowser($auth);
