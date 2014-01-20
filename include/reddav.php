@@ -50,6 +50,9 @@ class RedDirectory extends DAV\Node implements DAV\ICollection {
 	function getChild($name) {
 
 		logger('RedDirectory::getChild : ' . $name, LOGGER_DATA);
+		$name = str_replace(array('?f=','&f='),array('',''),$name);
+		$name = preg_replace('/[\?&]zid=(.*?)([\?&]|$)/ism','',$name);
+		logger('RedDirectory::getChild post strip zid: ' . $name, LOGGER_DATA);
 
 
 		if(get_config('system','block_public') && (! $this->auth->channel_id) && (! $this->auth->observer)) {
