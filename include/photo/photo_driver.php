@@ -525,7 +525,7 @@ function import_profile_photo($photo,$xchan,$thing = false) {
 	if($thing)
 		$hash = photo_new_resource();
 	else {
-		$r = q("select resource_id from photo where xchan = '%s' and (photo_flags & %d ) scale = 4 limit 1",
+		$r = q("select resource_id from photo where xchan = '%s' and (photo_flags & %d ) and scale = 4 limit 1",
 			dbesc($xchan),
 			intval(PHOTO_XCHAN)
 		);
