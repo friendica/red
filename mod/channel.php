@@ -136,10 +136,11 @@ function channel_content(&$a, $update = 0, $load = false) {
 	if(($update) && (! $load)) {
 		if ($mid) {
 			$r = q("SELECT parent AS item_id from item where mid = '%s' and uid = %d AND item_restrict = 0
-				AND (item_flags &  %d) $sql_extra limit 1",
+				AND (item_flags &  %d) AND (item_flags & %d) $sql_extra limit 1",
 				dbesc($mid),
 				intval($a->profile['profile_uid']),
-				intval(ITEM_WALL)
+				intval(ITEM_WALL),
+				intval(ITEM_UNSEEN)
 			);
 		} else {
 			$r = q("SELECT distinct parent AS `item_id` from item
@@ -294,6 +295,9 @@ function channel_content(&$a, $update = 0, $load = false) {
 
 	if((! $update) || ($_COOKIE['jsAvailable'] != 1))
 		$o .= alt_pager($a,count($items));
+
+	if($mid) 
+		$o .= '<div id="content-complete"></div>';
 
 	return $o;
 }
