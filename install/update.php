@@ -1,6 +1,6 @@
 <?php
 
-define( 'UPDATE_VERSION' , 1091 );
+define( 'UPDATE_VERSION' , 1092 );
 
 /**
  *
@@ -994,3 +994,8 @@ ADD INDEX ( `menu_flags` )");
 	return UPDATE_FAILED;
 }
 
+function update_r1091() {
+	@mkdir('store/[data]/smarty',STORAGE_DEFAULT_PERMISSIONS,true);
+	@file_put_contents('store/[data]/locks','');
+	return UPDATE_SUCCESS;
+}

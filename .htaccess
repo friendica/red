@@ -11,6 +11,7 @@ Deny from all
   RewriteEngine on
   # Protect repository directory from browsing
   RewriteRule "(^|/)\.git" - [F]
+  RewriteRule "(^|/)store" - [F]
 
 
   # Rewrite current-style URLs of the form 'index.php?q=x'.
