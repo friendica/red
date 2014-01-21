@@ -5,7 +5,7 @@ require_once('vendor/autoload.php');
 
 require_once('include/attach.php');
 
-class RedDirectory extends DAV\Node implements DAV\ICollection {
+class RedDirectory extends DAV\Node implements DAV\ICollection, DAV\IQuota {
 
 	private $red_path;
 	private $folder_hash;
@@ -297,6 +297,34 @@ class RedDirectory extends DAV\Node implements DAV\ICollection {
 	}
 
 
+	public function getQuotaInfo() {
+
+		$limit = disk_total_space('store');
+		$free = disk_free_space('store');
+
+		if($this->auth->owner_id) {
+
+			$c = q("select * from channel where channel_id = %d and not (channel_pageflags & %d) limit 1",
+				intval($this->auth->owner_id),
+				intval(PAGE_REMOVED)
+
+			);
+
+			$ulimit = service_class_fetch($c[0]['channel_id'],'attach_upload_limit');
+			$limit = (($ulimit) ? $ulimit : $limit);
+
+			$x = q("select sum(filesize) as total from attach where aid = %d ",
+				intval($c[0]['channel_account_id'])
+			);
+			$free = (($x) ? $limit - $x[0]['total'] : 0);
+		}
+
+		return array(
+			$limit - $free,
+			$free
+		);
+
+	}
 
 }
 
