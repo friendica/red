@@ -18,8 +18,8 @@ External Resources
 **Related projects**
 
 * [Redshare for Firefox](https://addons.mozilla.org/en-US/firefox/addon/redshare/)
-
 * [Red for Android](https://github.com/cvogeley/red-for-android)
+* [feed2red.pl (posts Atom/RSS feeds to channels)](https://github.com/zzottel/feed2red)
 
 **Utilities**
 
