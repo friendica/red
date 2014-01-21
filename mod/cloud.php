@@ -32,6 +32,9 @@ function cloud_init(&$a) {
 
 	require_once('include/reddav.php');
 
+	if(! is_dir('store'))
+		mkdir('store',STORAGE_DEFAULT_PERMISSIONS,false);
+
 	$which = null;
 	if(argc() > 1)
 		$which = argv(1);
@@ -74,7 +77,7 @@ function cloud_init(&$a) {
 
 	$rootDirectory = new RedDirectory('/',$auth);
 	$server = new DAV\Server($rootDirectory);
-	$lockBackend = new DAV\Locks\Backend\File('store/data/locks');
+	$lockBackend = new DAV\Locks\Backend\File('store/[data]/locks');
 	$lockPlugin = new DAV\Locks\Plugin($lockBackend);
 
 	$server->addPlugin($lockPlugin);
