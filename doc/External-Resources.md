@@ -21,3 +21,6 @@ External Resources
 
 * [Red for Android](https://github.com/cvogeley/red-for-android)
 
+**Utilities**
+
+* [Debian Install Script](https://github.com/beardy-unixer/lowendscript-ng)
