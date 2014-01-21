@@ -383,11 +383,11 @@ function user_deny($hash) {
 	if(! count($register))
 		return false;
 
-	$user = q("SELECT account_id FROM account WHERE account_id = %d LIMIT 1",
+	$account = q("SELECT account_id FROM account WHERE account_id = %d LIMIT 1",
 		intval($register[0]['uid'])
 	);
 	
-	if(! $user)
+	if(! $account)
 		return false;
 
 	$r = q("DELETE FROM account WHERE account_id = %d LIMIT 1",

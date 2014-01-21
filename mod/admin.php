@@ -688,7 +688,7 @@ function admin_page_users(&$a){
 		'$submit' => t('Submit'),
 		'$select_all' => t('select all'),
 		'$h_pending' => t('User registrations waiting for confirm'),
-		'$th_pending' => array( t('Request date'), t('Name'), t('Email') ),
+		'$th_pending' => array( t('Request date'), t('Email') ),
 		'$no_pending' =>  t('No registrations.'),
 		'$approve' => t('Approve'),
 		'$deny' => t('Deny'),
