@@ -1431,7 +1431,8 @@ function network_tabs() {
 
 function profile_tabs($a, $is_owner=False, $nickname=Null){
 	//echo "<pre>"; var_dump($a->user); killme();
-	
+
+		
 	$channel = $a->get_channel();
 
 	if (is_null($nickname))
@@ -1451,33 +1452,38 @@ function profile_tabs($a, $is_owner=False, $nickname=Null){
 			'title' => t('Status Messages and Posts'),
 			'id'    => 'status-tab',
 		),
-		array(
+	);
+
+	$p = get_all_perms($a->profile['profile_uid'],get_observer_hash());
+
+	if($p['view_profile']) {
+		$tabs[] = array(
 			'label' => t('About'),
 			'url' 	=> $pr,
 			'sel'	=> ((argv(0) == 'profile') ? 'active' : ''),
 			'title' => t('Profile Details'),
 			'id'    => 'profile-tab',
-		),
-		array(
+		);
+	}
+	if($p['view_photos']) {
+		$tabs[] = array(
 			'label' => t('Photos'),
 			'url'	=> $a->get_baseurl() . '/photos/' . $nickname,
 			'sel'	=> ((argv(0) == 'photos') ? 'active' : ''),
 			'title' => t('Photo Albums'),
 			'id'    => 'photo-tab',
-		),
-
-		array(
+		);
+	}
+	if($p['view_storage']) {
+		$tabs[] = array(
 			'label' => t('Files'),
 			'url'	=> $a->get_baseurl() . '/cloud/' . $nickname,
 			'sel'	=> ((argv(0) == 'cloud') ? 'active' : ''),
 			'title' => t('Files and Storage'),
 			'id'    => 'files-tab',
-		),
-
-	);
-
-
-	if ($is_owner){
+		);
+	}
+	if($is_owner) {
 		$tabs[] = array(
 			'label' => t('Events'),
 			'url'	=> $a->get_baseurl() . '/events',
@@ -1485,15 +1491,18 @@ function profile_tabs($a, $is_owner=False, $nickname=Null){
 			'title' => t('Events and Calendar'),
 			'id'    => 'events-tab',
 		);
-		if(feature_enabled(local_user(),'webpages')){
+	}
+
+	if($is_owner && feature_enabled($a->profile['profile_uid'],'webpages')) {
 		$tabs[] = array(
 			'label' => t('Webpages'),
 			'url'	=> $a->get_baseurl() . '/webpages/' . $nickname,
 			'sel' 	=> ((argv(0) == 'webpages') ? 'active' : ''),
 			'title' => t('Manage Webpages'),
 			'id'    => 'webpages-tab',
-		);}
+		);
 	}
+
 	else {
 		// FIXME
 		// we probably need a listing of events that were created by 
