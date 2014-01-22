@@ -1387,13 +1387,13 @@ function network_tabs() {
 
 		array(
 			'label' => t('Personal'),
-			'url' => $a->get_baseurl(true) . '/' . $cmd . ((x($_GET,'cid')) ? '/?f=&cid=' . $_GET['cid'] : '') . '&conv=1',
+			'url' => $a->get_baseurl(true) . '/' . $cmd . '?f=' . ((x($_GET,'cid')) ? '&cid=' . $_GET['cid'] : '') . '&conv=1',
 			'sel' => $conv_active,
 			'title' => t('Posts that mention or involve you'),
 		),
 		array(
 			'label' => t('New'),
-			'url' => $a->get_baseurl(true) . '/' . $cmd . ((x($_GET,'cid')) ? '/?f=&cid=' . $_GET['cid'] : '') . '&new=1' . ((x($_GET,'gid')) ? '&gid=' . $_GET['gid'] : ''),
+			'url' => $a->get_baseurl(true) . '/' . $cmd . '?f=' . ((x($_GET,'cid')) ? '&cid=' . $_GET['cid'] : '') . '&new=1' . ((x($_GET,'gid')) ? '&gid=' . $_GET['gid'] : ''),
 			'sel' => $new_active,
 			'title' => t('Activity Stream - by date'),
 		),
