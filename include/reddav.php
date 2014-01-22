@@ -745,6 +745,12 @@ class RedBasicAuth extends Sabre\DAV\Auth\Backend\AbstractBasic {
 	public $timezone;
 
     protected function validateUserPass($username, $password) {
+
+		if(trim($password) === '+++') {
+			logger('reddav: validateUserPass: guest ' . $username);
+			return true;
+		}
+
 		require_once('include/auth.php');
 		$record = account_verify_password($email,$pass);
 		if($record && $record['account_default_channel']) {

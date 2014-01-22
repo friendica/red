@@ -85,12 +85,14 @@ function cloud_init(&$a) {
 
 	if(! $auth->observer) {
 		try {
-			$auth->Authenticate($server,'Red Matrix');
+			$auth->Authenticate($server, t('Red Matrix - Guests: Username: {your email address}, Password: +++'));
 		}
 		catch ( Exception $e) {
-
+			logger('mod_cloud: auth exception' .  $e->getMessage());
+			http_status_exit($e->getHTTPCode(),$e->getMessage());
 		}
 	}
+
 //	$browser = new DAV\Browser\Plugin();
 
 	$browser = new RedBrowser($auth);
