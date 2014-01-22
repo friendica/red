@@ -457,6 +457,15 @@ function admin_page_site(&$a) {
 }
 function admin_page_hubloc_post(&$a){
 	check_form_security_token_redirectOnErr('/admin/hubloc', 'admin_hubloc');
+
+	//prepare for ping
+	logger('POST input: '.$_POST , LOGGER_DEBUG);
+	//perform ping
+	//handle results and set the hubloc flags in db to make results visible
+
+	//in case of repair store new pub key for tested hubloc (all channel with this hubloc) in db
+	//after repair set hubloc flags to 0
+
 	goaway($a->get_baseurl(true) . '/admin/hubloc' );
 	return;
 }
