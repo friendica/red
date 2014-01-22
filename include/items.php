@@ -3718,7 +3718,7 @@ function items_fetch($arr,$channel = null,$observer_hash = null,$client_mode = C
 		$uidhash = $channel['channel_hash'];
 		$item_uids = " item.uid = " . intval($uid) . " ";
 	}
-	
+
 	if($arr['star'])
 		$sql_options .= " and (item_flags & " . intval(ITEM_STARRED) . ") ";
 
@@ -3726,7 +3726,10 @@ function items_fetch($arr,$channel = null,$observer_hash = null,$client_mode = C
 		$sql_options .= " and (item_flags & " . intval(ITEM_WALL) . ") ";
 
 	$sql_extra = " AND item.parent IN ( SELECT parent FROM item WHERE (item_flags & " . intval(ITEM_THREAD_TOP) . ") $sql_options ) ";
-
+	
+	if($arr['since_id'])
+   		$sql_extra .= " and item.id > " . $since_id . " ";
+   		
     if($arr['gid'] && $uid) {
         $r = q("SELECT * FROM `groups` WHERE id = %d AND uid = %d LIMIT 1",
             intval($arr['group']),
