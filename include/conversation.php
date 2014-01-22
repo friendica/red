@@ -1301,7 +1301,8 @@ function prepare_page($item) {
 	$naked = ((get_pconfig($item['uid'],'system','nakedpage')) ? 1 : 0);
 	$observer = $a->get_observer();
 	$zid = ($observer['xchan_addr']);
-
+	$preview = substr(urlencode($item['body']), 0, 100);
+	$link = z_root() . '/' . $a->cmd;
 	if(array_key_exists('webpage',$a->layout) && array_key_exists('authored',$a->layout['webpage'])) {
 		if($a->layout['webpage']['authored'] === 'none')
 			$naked = 1;
@@ -1313,7 +1314,9 @@ function prepare_page($item) {
 		'$zid' => $zid,
 		'$date' => (($naked) ? '' : datetime_convert('UTC',date_default_timezone_get(),$item['created'],'Y-m-d H:i')),
 		'$title' => smilies(bbcode($item['title'])),
-		'$body' => prepare_body($item,true)
+		'$body' => prepare_body($item,true),
+		'$preview' => $preview,
+		'$link' => $link
 	));
 }
 
