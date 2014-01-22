@@ -67,15 +67,15 @@ then
     sed -i "s/PACKAGE VERSION//g" "$OUTFILE"
     sed -i "s/PACKAGE/RedMatrix $ADDONNAME addon/g" "$OUTFILE"
     sed -i "s/CHARSET/UTF-8/g" "$OUTFILE"
-#    sed -i "s/^\"Plural-Forms/#\"Plural-Forms/g" "$OUTFILE"
 else
-    sed -i "s/SOME DESCRIPTIVE TITLE./Red Communications Project/g" "$OUTFILE"
+    sed -i "s/SOME DESCRIPTIVE TITLE./Red Matrix Project/g" "$OUTFILE"
     sed -i "s/YEAR THE PACKAGE'S COPYRIGHT HOLDER/2012-2014 the Red Matrix Project/g" "$OUTFILE"
-    sed -i "s/FIRST AUTHOR <EMAIL@ADDRESS>, YEAR./Mike Macgirvin, 2013/g" "$OUTFILE"
+    sed -i "s/FIRST AUTHOR <EMAIL@ADDRESS>, YEAR./Mike Macgirvin, 2012/g" "$OUTFILE"
     sed -i "s/PACKAGE VERSION/$F9KVERSION/g" "$OUTFILE"
     sed -i "s/PACKAGE/Red/g" "$OUTFILE"
     sed -i "s/CHARSET/UTF-8/g" "$OUTFILE"
-#    sed -i "s/^\"Plural-Forms//g" "$OUTFILE"
 fi
 
+grep -v "Plural-Forms:" $OUTFILE > tmpout
+mv tmpout $OUTFILE
 echo "done."
