@@ -28,7 +28,6 @@ function channel_init(&$a) {
 
 	$profile = 0;
 	$channel = $a->get_channel();
-logger('channel: ' . $channel['channel_name']);
 
 	if((local_user()) && (argc() > 2) && (argv(2) === 'view')) {
 		$which = $channel['channel_address'];
