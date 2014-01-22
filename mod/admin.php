@@ -459,7 +459,16 @@ function admin_page_hubloc_post(&$a){
 	check_form_security_token_redirectOnErr('/admin/hubloc', 'admin_hubloc');
 
 	//prepare for ping
-	logger('POST input: '.$_POST , LOGGER_DEBUG);
+	logger('POST input: '. print_r($_POST,true), LOGGER_DEBUG);
+
+	if ( $_POST['hublocid']) {
+		logger('hublocid is not empty: ' . $_POST['hublocid'], LOGGER_DEBUG);
+	}
+
+	//if ( $_POST'' == "check" ) {
+	//	//todo
+	//}
+
 	//perform ping
 	//handle results and set the hubloc flags in db to make results visible
 
