@@ -153,6 +153,7 @@ function dirprofile_init(&$a) {
 							'$name' => $rr['name'],
 							'$details' => $pdesc . $details,
 							'$profile' => $profile,
+							'$address' => $rr['address'],
 							'$location' => $location,
 							'$gender'   => $gender,
 							'$pdesc'	=> $pdesc,

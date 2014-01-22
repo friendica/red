@@ -12,10 +12,14 @@
 
 <div class="clear"></div>
 
+
 <div class="contact-name" id="directory-name-{{$id}}"  >{{$name}}</div>
 {{if $connect}}
 <div class="directory-connect"><a href="{{$connect}}">{{$conn_label}}</a></div>
 {{/if}}
+
+<div class="contact-webbie">{{$address}}</div>
+
 <div class="contact-details">{{$details}}</div>
 {{if $marital}}
 <div class="directory-marital">{{$marital}} </div>

@@ -173,6 +173,7 @@ function directory_content(&$a) {
 							'name' => $rr['name'],
 							'details' => $pdesc . $details,
 							'profile' => $profile,
+							'address' =>  $rr['address'],
 							'location' => $location,
 							'gender'   => $gender,
 							'pdesc'	=> $pdesc,
