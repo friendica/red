@@ -462,7 +462,12 @@ function admin_page_hubloc_post(&$a){
 	logger('POST input: '. print_r($_POST,true), LOGGER_DEBUG);
 
 	if ( $_POST['hublocid']) {
-		logger('hublocid is not empty: ' . $_POST['hublocid'], LOGGER_DEBUG);
+		$hublocid = $_POST['hublocid'];
+		logger('hublocid is not empty: ' . $hublocid , LOGGER_DEBUG);
+		$hublocurl = q("SELECT hubloc_url FROM hubloc WHERE hubloc_id = %d ",
+			intval($hublocid)
+		);
+		logger('hubloc_url : ' . print_r($hublocurl, true) , LOGGER_DEBUG);
 	}
 
 	//if ( $_POST'' == "check" ) {
