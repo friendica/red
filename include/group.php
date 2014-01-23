@@ -272,7 +272,7 @@ function group_side($every="connections",$each="group",$edit = false, $group_id 
 				'cid'		=> $cid,
 				'text' 		=> $rr['name'],
 				'selected' 	=> $selected,
-				'href'		=> (($mode == 0) ? $each.'?f=&gid='.$rr['id'] : $each."/".$rr['id']),
+				'href'		=> (($mode == 0) ? $each.'?f=&gid='.$rr['id'] : $each."/".$rr['id']) . ((x($_GET,'new')) ? '&new=' . $_GET['new'] : '') . ((x($_GET,'order')) ? '&order=' . $_GET['order'] : ''),
 				'edit'		=> $groupedit,
 				'ismember'	=> in_array($rr['id'],$member_of),
 			);
