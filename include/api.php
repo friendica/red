@@ -556,7 +556,7 @@ require_once('include/photos.php');
 
 	function api_photos(&$a,$type) {
 		$album = $_REQUEST['album'];
-		json_return_and_die(photos_list_photos($a->get_channel(),$a->get_observer()),$album);
+		json_return_and_die(photos_list_photos($a->get_channel(),$a->get_observer(),$album));
 	}
 	api_register_func('api/red/photos','api_photos', true);
 

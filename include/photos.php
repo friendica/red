@@ -268,7 +268,11 @@ function photos_albums_list($channel,$observer) {
 	if($albums) {
 		$ret['success'] = true;
 		foreach($albums as $k => $album) {
-			$entry = array('text' => $album['album'], 'urlencode' => urlencode($album['album']),'bin2hex' => bin2hex($album['album']));
+			$entry = array(
+				'text' => $album['album'], 
+				'url' => z_root() . '/photos/' . $channel['channel_address'] . '/album/' . bin2hex($album['album']), 
+				'urlencode' => urlencode($album['album']),
+				'bin2hex' => bin2hex($album['album']));
 			$ret[] = $entry;
 		}
 	}

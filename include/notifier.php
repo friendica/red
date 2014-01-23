@@ -425,8 +425,28 @@ function notifier_run($argv, $argc){
 
 	$sql_extra = (($private) ? "" : " or hubloc_url = '" . dbesc(z_root()) . "' ");
 
-	$r = q("select hubloc_sitekey, hubloc_flags, hubloc_callback, hubloc_host from hubloc 
-		where hubloc_hash in (" . implode(',',$recipients) . ") $sql_extra group by hubloc_sitekey");
+
+	if($relay_to_owner && (! $private) && ($cmd !== 'relay')) {
+
+		// If sending a followup to the post owner, only send it to one channel clone - to avoid race conditions.
+		// In this case we'll pick the most recently contacted hub, as their primary might be down and the most
+		// recently contacted has the best chance of being alive.
+
+		// For private posts or uplinks we have to do things differently as only the sending clone will have the recipient list. 
+		// We have to send to all clone channels of the owner to find out who has the definitive list. Posts with 
+		// item_private set (but no ACL list) will return empty recipients (except for the sender and owner) in 
+		// collect_recipients() above. The end result is we should get only one delivery per delivery chain if we 
+		// aren't the owner or author.  
+
+
+		$r = q("select hubloc_sitekey, hubloc_flags, hubloc_callback, hubloc_host from hubloc 
+			where hubloc_hash in (" . implode(',',$recipients) . ") group by hubloc_sitekey order by hubloc_connected desc limit 1");
+	} 
+	else {
+		$r = q("select hubloc_sitekey, hubloc_flags, hubloc_callback, hubloc_host from hubloc 
+			where hubloc_hash in (" . implode(',',$recipients) . ") $sql_extra group by hubloc_sitekey");
+	}
+
 	if(! $r) {
 		logger('notifier: no hubs');
 		return;
