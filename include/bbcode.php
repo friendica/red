@@ -189,6 +189,10 @@ function bb_ShareAttributes($match) {
 	return($text);
 }
 
+function bb_location($match) {
+	// not yet implemented
+}
+
 function bb_ShareAttributesSimple($match) {
 
 	$attributes = $match[1];
@@ -256,6 +260,11 @@ function bbcode($Text,$preserve_nl = false, $tryoembed = true) {
 		$Text = preg_replace_callback("/\[pre\](.*?)\[\/pre\]/ism", 'bb_spacefy',$Text);
 	}
 
+//  Not yet implemented - thinking this should display a map or perhaps be a map directive
+//	if (strpos($Text,'[location]') !== false) {
+//		$Text = preg_replace_callback("/\[location\](.*?)\[\/location\]/ism", 'bb_location',$Text);
+//	}
+
 
 
 	// If we find any event code, turn it into an event.
@@ -266,6 +275,7 @@ function bbcode($Text,$preserve_nl = false, $tryoembed = true) {
 
 	// process [observer] tags before we do anything else because we might
 	// be stripping away stuff that then doesn't need to be worked on anymore
+
 	$observer = $a->get_observer();
 	if ((strpos($Text,'[/observer]') !== false) || (strpos($Text,'[/rpost]') !== false)) {
 		if ($observer) {
