@@ -18,10 +18,17 @@ function collect_recipients($item,&$private) {
 
 	require_once('include/group.php');
 
-	if($item['item_private'])
-		$private = true;
+	$private = ((intval($item['item_private'])) ? true : false);
+	$recipients = array();
+
+	// if the post is marked private but there are no recipients, only add the author and owner
+	// as recipients. The ACL for the post may live on the hub of a different clone. We need to 
+	// get the post to that hub.
 
 	if($item['allow_cid'] || $item['allow_gid'] || $item['deny_cid'] || $item['deny_gid']) {
+
+		// it is private
+
 		$allow_people = expand_acl($item['allow_cid']);
 		$allow_groups = expand_groups(expand_acl($item['allow_gid']));
 
@@ -54,19 +61,19 @@ function collect_recipients($item,&$private) {
 		$private = true;
 	}
 	else {
-		$recipients = array();
-		$r = q("select * from abook where abook_channel = %d and not (abook_flags & %d) and not (abook_flags & %d) and not (abook_flags & %d)",
-			intval($item['uid']),
-			intval(ABOOK_FLAG_SELF),
-			intval(ABOOK_FLAG_PENDING),
-			intval(ABOOK_FLAG_ARCHIVED)
-		);
-		if($r) {
-			foreach($r as $rr) {
-				$recipients[] = $rr['abook_xchan'];
+		if(! $private) {
+			$r = q("select abook_xchan from abook where abook_channel = %d and not (abook_flags & %d) and not (abook_flags & %d) and not (abook_flags & %d)",
+				intval($item['uid']),
+				intval(ABOOK_FLAG_SELF),
+				intval(ABOOK_FLAG_PENDING),
+				intval(ABOOK_FLAG_ARCHIVED)
+			);
+			if($r) {
+				foreach($r as $rr) {
+					$recipients[] = $rr['abook_xchan'];
+				}
 			}
 		}
-		$private = false;
 	}
 
 	// This is a somewhat expensive operation but important.
