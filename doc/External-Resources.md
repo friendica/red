@@ -8,7 +8,7 @@ External Resources
 * [APW](https://github.com/beardy-unixer/apw)
 * [Redstrap](https://github.com/omigeot/redstrap3)
 * [Pluto](https://github.com/23n/Pluto)
-* [bootstrap](https://bitbucket.org/tobiasd/red-theme-bootstrap/overview)
+* [clean](https://bitbucket.org/tobiasd/red-clean)
 
 
 **Third-Party Addons**

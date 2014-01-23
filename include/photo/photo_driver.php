@@ -357,7 +357,7 @@ abstract class photo_driver {
 				dbesc($p['resource_id']),
 				dbesc(datetime_convert()),
 				dbesc(datetime_convert()),
-				dbesc(basename($filename)),
+				dbesc(basename($p['filename'])),
 				dbesc($this->getType()),
 				dbesc($p['album']),
 				intval($this->getHeight()),
