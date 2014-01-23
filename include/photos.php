@@ -77,6 +77,7 @@ function photo_upload($channel, $observer, $args) {
 		$filesize   = intval($_FILES['userfile']['size']);
 		$type       = $_FILES['userfile']['type'];
 	}
+
 	if (! $type) 
 		$type=guess_image_type($filename);
 
