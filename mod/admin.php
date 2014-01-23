@@ -459,15 +459,14 @@ function admin_page_hubloc_post(&$a){
 	check_form_security_token_redirectOnErr('/admin/hubloc', 'admin_hubloc');
 
 	//prepare for ping
-	logger('POST input: '. print_r($_POST,true), LOGGER_DEBUG);
 
 	if ( $_POST['hublocid']) {
 		$hublocid = $_POST['hublocid'];
-		logger('hublocid is not empty: ' . $hublocid , LOGGER_DEBUG);
-		$hublocurl = q("SELECT hubloc_url FROM hubloc WHERE hubloc_id = %d ",
+		$arrhublocurl = q("SELECT hubloc_url FROM hubloc WHERE hubloc_id = %d ",
 			intval($hublocid)
 		);
-		logger('hubloc_url : ' . print_r($hublocurl, true) , LOGGER_DEBUG);
+		$hublocurl = $arrhublocurl[0]['hubloc_url'] . '/post';
+		logger('hubloc_url : ' . $hublocurl , LOGGER_DEBUG);
 	}
 
 	//if ( $_POST'' == "check" ) {
