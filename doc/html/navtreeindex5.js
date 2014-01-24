@@ -1,8 +1,13 @@
 var NAVTREEINDEX5 =
 {
-"include_2menu_8php.html#acef15a498d52666b1c7e5c12765c689b":[5,0,0,43,9],
-"include_2menu_8php.html#ad87f51ce85172bcc3f931aa0cd96a804":[5,0,0,43,4],
-"include_2menu_8php.html#add35fae5e9695031b3d46e30ac409eb8":[5,0,0,43,0],
+"include_2menu_8php.html#a6a33c6a3db2a7510b16cc656edaec571":[5,0,0,43,6],
+"include_2menu_8php.html#a7fb5f4847bc94436e43be4b81478febc":[5,0,0,43,0],
+"include_2menu_8php.html#a890cc6237971e15f15702e6b2e88502e":[5,0,0,43,11],
+"include_2menu_8php.html#a9aa8e0052dd47c1a93f53a983bd4620a":[5,0,0,43,3],
+"include_2menu_8php.html#acb66f80ca895a6ccd562b3d9ae7b41aa":[5,0,0,43,7],
+"include_2menu_8php.html#acef15a498d52666b1c7e5c12765c689b":[5,0,0,43,10],
+"include_2menu_8php.html#ad87f51ce85172bcc3f931aa0cd96a804":[5,0,0,43,5],
+"include_2menu_8php.html#add35fae5e9695031b3d46e30ac409eb8":[5,0,0,43,1],
 "include_2message_8php.html":[5,0,0,44],
 "include_2message_8php.html#a254a756031e4d5e94f85e2939bdb5091":[5,0,0,44,2],
 "include_2message_8php.html#a5f8de9847e203329e317ac38dc646898":[5,0,0,44,1],
@@ -209,8 +214,8 @@ var NAVTREEINDEX5 =
 "namespaceFriendica.html":[4,0,1],
 "namespaceacl__selectors.html":[4,0,0],
 "namespaceacl__selectors.html":[3,0,0],
-"namespacefriendica-to-smarty-tpl.html":[4,0,2],
 "namespacefriendica-to-smarty-tpl.html":[3,0,2],
+"namespacefriendica-to-smarty-tpl.html":[4,0,2],
 "namespacemembers.html":[3,1,0],
 "namespacemembers_func.html":[3,1,1],
 "namespacemembers_vars.html":[3,1,2],
@@ -244,10 +249,5 @@ var NAVTREEINDEX5 =
 "onedirsync_8php.html":[5,0,0,51],
 "onedirsync_8php.html#a411aedd47c57476099647961e6a86691":[5,0,0,51,0],
 "onepoll_8php.html":[5,0,0,52],
-"onepoll_8php.html#a72753b2fdec79b37c7f432035c91fb6d":[5,0,0,52,0],
-"opensearch_8php.html":[5,0,1,63],
-"opensearch_8php.html#ad13034877a496565ac7d99e9fc6f55e9":[5,0,1,63,0],
-"page_8php.html":[5,0,1,64],
-"page_8php.html#a4d89800c0366a239191b1692c09635cf":[5,0,1,64,1],
-"page_8php.html#a91a5f649f68406149108bded1dc90b22":[5,0,1,64,0]
+"onepoll_8php.html#a72753b2fdec79b37c7f432035c91fb6d":[5,0,0,52,0]
 };

@@ -1,5 +1,6 @@
 var include_2menu_8php =
 [
+    [ "bookmarks_menu_fetch", "include_2menu_8php.html#a7fb5f4847bc94436e43be4b81478febc", null ],
     [ "menu_add_item", "include_2menu_8php.html#add35fae5e9695031b3d46e30ac409eb8", null ],
     [ "menu_create", "include_2menu_8php.html#a08a800821721781a8dfffbe31481ff98", null ],
     [ "menu_del_item", "include_2menu_8php.html#a9aa8e0052dd47c1a93f53a983bd4620a", null ],
