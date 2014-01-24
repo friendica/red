@@ -1296,13 +1296,8 @@ function render_location_default($item) {
 
 
 function prepare_page($item) {
-$foo = $item['owner_xchan'];
 
 	$a = get_app();
-	$upstreamshare = '1';
-	if ($foo == 'njsQ2vWa65pH-kwIKfGINOqDT2k_05ZIAeQxP9Ozk16z1WLTxTNlly4_vQKx2huTPCQqMz8shvgB3f7JVPzkdw') {
-		$upstreamshare = '';
-	}
 	$naked = ((get_pconfig($item['uid'],'system','nakedpage')) ? 1 : 0);
 	$observer = $a->get_observer();
 	$zid = ($observer['xchan_addr']);
@@ -1323,7 +1318,6 @@ $foo = $item['owner_xchan'];
 		'$body' => prepare_body($item,true),
 		'$preview' => $preview,
 		'$link' => $link,
-		'$upstreamshare' => $upstreamshare
 	));
 }
 
