@@ -1301,7 +1301,8 @@ function prepare_page($item) {
 	$naked = ((get_pconfig($item['uid'],'system','nakedpage')) ? 1 : 0);
 	$observer = $a->get_observer();
 	$zid = ($observer['xchan_addr']);
-	$preview = substr(urlencode($item['body']), 0, 100);
+	//240 chars is the longest we can have before we start hitting problems with suhosin sites
+	$preview = substr(urlencode($item['body']), 0, 240);
 	$link = z_root() . '/' . $a->cmd;
 	if(array_key_exists('webpage',$a->layout) && array_key_exists('authored',$a->layout['webpage'])) {
 		if($a->layout['webpage']['authored'] === 'none')
@@ -1316,7 +1317,7 @@ function prepare_page($item) {
 		'$title' => smilies(bbcode($item['title'])),
 		'$body' => prepare_body($item,true),
 		'$preview' => $preview,
-		'$link' => $link
+		'$link' => $link,
 	));
 }
 

@@ -256,35 +256,23 @@ function profiles_post(&$a) {
 				if(strpos($lookup,'@') === 0)
 					$lookup = substr($lookup,1);
 				$lookup = str_replace('_',' ', $lookup);
-				if(strpos($lookup,'@') || (strpos($lookup,'http://'))) {
-					$newname = $lookup;
-					$links = @lrdd($lookup);
-					if(count($links)) {
-						foreach($links as $link) {
-							if($link['@attributes']['rel'] === 'http://webfinger.net/rel/profile-page') {
-            	       			$prf = $link['@attributes']['href'];
-							}
-						}
-					}
-				}
-				else {
-					$newname = $lookup;
+				$newname = $lookup;
 
-					$r = q("SELECT * FROM `contact` WHERE `name` = '%s' AND `uid` = %d LIMIT 1",
-						dbesc($newname),
+				$r = q("SELECT * FROM abook left join xchan on abook_xchan = xchan_hash WHERE xchan_name = '%s' AND abook_channel = %d LIMIT 1",
+					dbesc($newname),
+					intval(local_user())
+				);
+				if(! $r) {
+					$r = q("SELECT * FROM abook left join xchan on abook_xchan = xchan_hash WHERE xchan_addr = '%s' AND abook_channel = %d LIMIT 1",
+						dbesc($lookup . '@%'),
 						intval(local_user())
 					);
-					if(! $r) {
-						$r = q("SELECT * FROM `contact` WHERE `nick` = '%s' AND `uid` = %d LIMIT 1",
-							dbesc($lookup),
-							intval(local_user())
-						);
-					}
-					if(count($r)) {
-						$prf = $r[0]['url'];
-						$newname = $r[0]['name'];
-					}
 				}
+				if($r) {
+					$prf = $r[0]['xchan_url'];
+					$newname = $r[0]['xchan_name'];
+				}
+
 	
 				if($prf) {
 					$with = str_replace($lookup,'<a href="' . $prf . '">' . $newname	. '</a>', $with);

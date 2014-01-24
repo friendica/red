@@ -1,12 +1,10 @@
 <?php /** @file */
 function oembed_replacecb($matches){
-//	logger('oembedcb');
+
 	$embedurl=$matches[1];
 	$j = oembed_fetch_url($embedurl);
-	$s =  oembed_format_object($j);
-	return $s;//oembed_iframe($s,$j->width,$j->height);
-
-
+	$s = oembed_format_object($j);
+	return $s;  
 }
 
 
@@ -36,8 +34,9 @@ function oembed_fetch_url($embedurl){
 				if($r)
 					$zrl = true;
 			}
-			if($zrl)
+			if($zrl) {
 				$embedurl = zid($embedurl);
+			}			
 		}
 		else {
 			// try oembed autodiscovery
@@ -89,6 +88,7 @@ function oembed_format_object($j){
 	$a = get_app();
     $embedurl = $j->embedurl;
 	$jhtml = oembed_iframe($j->embedurl,(isset($j->width) ? $j->width : null), (isset($j->height) ? $j->height : null) );
+
 	$ret="<span class='oembed ".$j->type."'>";
 	switch ($j->type) {
 		case "video": {

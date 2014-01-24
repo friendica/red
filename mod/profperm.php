@@ -1,11 +1,15 @@
 <?php
 
+require_once('include/Contact.php');
+
 function profperm_init(&$a) {
 
 	if(! local_user())
 		return;
 
-	$which = $a->user['nickname'];
+	$channel = $a->get_channel();
+	$which = $channel['channel_address'];
+
 	$profile = $a->argv[1];		
 
 	profile_load($a,$which,$profile);
@@ -21,7 +25,7 @@ function profperm_content(&$a) {
 	}
 
 
-	if($a->argc < 2) {
+	if(argc() < 2) {
 		notice( t('Invalid profile identifier.') . EOL );
 		return;
 	}
@@ -35,59 +39,59 @@ function profperm_content(&$a) {
 		$switchtotext = 400;
 
 
-	if(($a->argc > 2) && intval($a->argv[1]) && intval($a->argv[2])) {
-		$r = q("SELECT `id` FROM `contact` WHERE `blocked` = 0 AND `pending` = 0 AND `self` = 0 
-			AND `network` = 'dfrn' AND `id` = %d AND `uid` = %d LIMIT 1",
-			intval($a->argv[2]),
+	if((argc() > 2) && intval(argv(1)) && intval(argv(2))) {
+		$r = q("SELECT abook_id FROM abook WHERE abook_id = %d and abook_channel = %d limit 1",
+			intval(argv(2)),
 			intval(local_user())
 		);
-		if(count($r))
-			$change = intval($a->argv[2]);
+		if($r)
+			$change = intval(argv(2));
 	}
 
 
-	if(($a->argc > 1) && (intval($a->argv[1]))) {
+	if((argc() > 1) && (intval(argv(1)))) {
 		$r = q("SELECT * FROM `profile` WHERE `id` = %d AND `uid` = %d AND `is_default` = 0 LIMIT 1",
-			intval($a->argv[1]),
+			intval(argv(1)),
 			intval(local_user())
 		);
-		if(! count($r)) {
+		if(! $r) {
 			notice( t('Invalid profile identifier.') . EOL );
 			return;
 		}
+
 		$profile = $r[0];
 
-		$r = q("SELECT * FROM `contact` WHERE `uid` = %d AND `profile_id` = %d",
+		$r = q("SELECT * FROM abook left join xchan on abook_xchan = xchan_hash WHERE abook_channel = %d AND abook_profile = %d",
 			intval(local_user()),
-			intval($a->argv[1])
+			intval(argv(1))
 		);
 
 		$ingroup = array();
-		if(count($r))
+		if($r)
 			foreach($r as $member)
-				$ingroup[] = $member['id'];
+				$ingroup[] = $member['abook_id'];
 
 		$members = $r;
 
 		if($change) {
 			if(in_array($change,$ingroup)) {
-				q("UPDATE `contact` SET `profile_id` = 0 WHERE `id` = %d AND `uid` = %d LIMIT 1",
+				q("UPDATE abook SET abook_profile = 0 WHERE abook_id = %d AND abook_channel = %d LIMIT 1",
 					intval($change),
 					intval(local_user())
 				);
 			}
 			else {
-				q("UPDATE `contact` SET `profile_id` = %d WHERE `id` = %d AND `uid` = %d LIMIT 1",
-					intval($a->argv[1]),
+				q("UPDATE abook SET abook_profile = %d WHERE abook_id = %d AND abook_channel = %d LIMIT 1",
+					intval(argv(1)),
 					intval($change),
 					intval(local_user())
 				);
 
 			}
 
-			$r = q("SELECT * FROM `contact` WHERE `uid` = %d AND `profile_id` = %d",
+			$r = q("SELECT * FROM abook left join xchan on abook_xchan = xchan_hash WHERE abook_channel = %d AND abook_profile = %d",
 				intval(local_user()),
-				intval($a->argv[1])
+				intval(argv(1))
 			);
 
 			$members = $r;
@@ -95,7 +99,7 @@ function profperm_content(&$a) {
 			$ingroup = array();
 			if(count($r))
 				foreach($r as $member)
-					$ingroup[] = $member['id'];
+					$ingroup[] = $member['abook_id'];
 		}
 
 		$o .= '<h2>' . t('Profile Visibility Editor') . '</h2>';
@@ -118,8 +122,8 @@ function profperm_content(&$a) {
 	$textmode = (($switchtotext && (count($members) > $switchtotext)) ? true : false);
 
 	foreach($members as $member) {
-		if($member['url']) {
-			$member['click'] = 'profChangeMember(' . $profile['id'] . ',' . $member['id'] . '); return true;';
+		if($member['xchan_url']) {
+			$member['click'] = 'profChangeMember(' . $profile['id'] . ',' . $member['abook_id'] . '); return false;';
 			$o .= micropro($member,true,'mpprof', $textmode);
 		}
 	}
@@ -127,20 +131,17 @@ function profperm_content(&$a) {
 	$o .= '<hr id="prof-separator" />';
 
 	$o .= '<div id="prof-all-contcts-title">';
-	$o .= '<h3>' . t("All Contacts \x28with secure profile access\x29") . '</h3>';
+	$o .= '<h3>' . t("All Connections") . '</h3>';
 	$o .= '</div>';
 	$o .= '<div id="prof-all-contacts">';
 		
-		$r = q("SELECT * FROM `contact` WHERE `uid` = %d AND `blocked` = 0 and `pending` = 0 and `self` = 0 
-			AND `network` = 'dfrn' ORDER BY `name` ASC",
-			intval(local_user())
-		);
+		$r = abook_connections(local_user());
 
-		if(count($r)) {
+		if($r) {
 			$textmode = (($switchtotext && (count($r) > $switchtotext)) ? true : false);
 			foreach($r as $member) {
-				if(! in_array($member['id'],$ingroup)) {
-					$member['click'] = 'profChangeMember(' . $profile['id'] . ',' . $member['id'] . '); return true;';
+				if(! in_array($member['abook_id'],$ingroup)) {
+					$member['click'] = 'profChangeMember(' . $profile['id'] . ',' . $member['abook_id'] . '); return false;';
 					$o .= micropro($member,true,'mpprof',$textmode);
 				}
 			}

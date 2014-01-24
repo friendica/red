@@ -16,6 +16,40 @@ function tryoembed($match) {
 	return $html; 
 }
 
+function tryzrlaudio($match) {
+
+	$link = $match[1];
+	$m = @parse_url($link);
+	$zrl = false;
+	if($m['host']) {
+		$r = q("select hubloc_url from hubloc where hubloc_host = '%s' limit 1",
+			dbesc($m['host'])
+		);
+		if($r)
+			$zrl = true;
+	}
+	if($zrl)
+		$link = zid($link);
+	return	'<audio src="' .  $link . '" controls="controls" ><a href="' . $link . '">' . $link . '</a></audio>';
+}
+
+function tryzrlvideo($match) {
+	$link = $match[1];
+	$m = @parse_url($link);
+	$zrl = false;
+	if($m['host']) {
+		$r = q("select hubloc_url from hubloc where hubloc_host = '%s' limit 1",
+			dbesc($m['host'])
+		);
+		if($r)
+			$zrl = true;
+	}
+	if($zrl)
+		$link = zid($link);
+	return	'<video src="' . $link . '" controls="controls" width="' . get_app()->videowidth . '" height="' . $a->videoheight . '"><a href="' . $link . '">' . $link . '</a></video>';
+
+}
+
 // [noparse][i]italic[/i][/noparse] turns into
 // [noparse][ i ]italic[ /i ][/noparse],
 // to hide them from parser.
@@ -133,7 +167,7 @@ function bb_parse_crypt($match) {
 }
 
 function bb_qr($match) {
-	return '<img class="zrl" src="' . z_root() . '/photo/qr?f=&qr=' . urlencode($match[1]) . '" alt="' . t('QR code') . '" title="' . urlencode($match[1]) . '" />';
+	return '<img class="zrl" src="' . z_root() . '/photo/qr?f=&qr=' . urlencode($match[1]) . '" alt="' . t('QR code') . '" title="' . htmlspecialchars($match[1],ENT_QUOTES,'UTF-8') . '" />';
 } 	
 
 
@@ -187,6 +221,10 @@ function bb_ShareAttributes($match) {
 	$text = $headline . '<div class="reshared-content">' . trim($match[2]) . '</div></div>';
 
 	return($text);
+}
+
+function bb_location($match) {
+	// not yet implemented
 }
 
 function bb_ShareAttributesSimple($match) {
@@ -256,6 +294,11 @@ function bbcode($Text,$preserve_nl = false, $tryoembed = true) {
 		$Text = preg_replace_callback("/\[pre\](.*?)\[\/pre\]/ism", 'bb_spacefy',$Text);
 	}
 
+//  Not yet implemented - thinking this should display a map or perhaps be a map directive
+//	if (strpos($Text,'[location]') !== false) {
+//		$Text = preg_replace_callback("/\[location\](.*?)\[\/location\]/ism", 'bb_location',$Text);
+//	}
+
 
 
 	// If we find any event code, turn it into an event.
@@ -266,6 +309,7 @@ function bbcode($Text,$preserve_nl = false, $tryoembed = true) {
 
 	// process [observer] tags before we do anything else because we might
 	// be stripping away stuff that then doesn't need to be worked on anymore
+
 	$observer = $a->get_observer();
 	if ((strpos($Text,'[/observer]') !== false) || (strpos($Text,'[/rpost]') !== false)) {
 		if ($observer) {
@@ -517,14 +561,18 @@ function bbcode($Text,$preserve_nl = false, $tryoembed = true) {
 		$Text = preg_replace("/\[crypt\](.*?)\[\/crypt\]/ism",'<br/><div id="' . $x . '"><img src="' .$a->get_baseurl() . '/images/lock_icon.gif" onclick="red_decrypt(\'rot13\',\'\',\'$1\',\'#' . $x . '\');" alt="' . t('Encrypted content') . '" title="' . t('Encrypted content') . '" /><br /></div>', $Text);
 		$Text = preg_replace_callback("/\[crypt (.*?)\](.*?)\[\/crypt\]/ism", 'bb_parse_crypt', $Text);
 	}
+
+	// html5 video and audio
+	if (strpos($Text,'[/video]') !== false) {	
+		$Text = preg_replace_callback("/\[video\](.*?\.(ogg|ogv|oga|ogm|webm|mp4))\[\/video\]/ism", 'tryzrlvideo', $Text);
+	}
+	if (strpos($Text,'[/audio]') !== false) {		
+		$Text = preg_replace_callback("/\[audio\](.*?\.(ogg|ogv|oga|ogm|webm|mp4|mp3))\[\/audio\]/ism", 'tryzrlaudio', $Text);
+	}
+
 	// Try to Oembed
 	if ($tryoembed) {
-		if (strpos($Text,'[/video]') !== false) {	
-			$Text = preg_replace("/\[video\](.*?\.(ogg|ogv|oga|ogm|webm|mp4))\[\/video\]/ism", '<video src="$1" controls="controls" width="' . $a->videowidth . '" height="' . $a->videoheight . '"><a href="$1">$1</a></video>', $Text);
-		}
-		if (strpos($Text,'[/audio]') !== false) {		
-			$Text = preg_replace("/\[audio\](.*?\.(ogg|ogv|oga|ogm|webm|mp4|mp3))\[\/audio\]/ism", '<audio src="$1" controls="controls"><a href="$1">$1</a></audio>', $Text);
-		}
+
 		if (strpos($Text,'[/video]') !== false) {			
 			$Text = preg_replace_callback("/\[video\](.*?)\[\/video\]/ism", 'tryoembed', $Text);
 		}
@@ -542,7 +590,6 @@ function bbcode($Text,$preserve_nl = false, $tryoembed = true) {
 	}
 
 
-	// html5 video and audio
 
 
 	if ($tryoembed){
