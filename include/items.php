@@ -3719,21 +3719,26 @@ function items_fetch($arr,$channel = null,$observer_hash = null,$client_mode = C
 	$def_acl = '';
 
 	$item_uids = ' true ';
-
+	
+	if ($arr['uid']) $uid= $arr['uid'];
+	
 	if($channel) {
 		$uid = $channel['channel_id'];
 		$uidhash = $channel['channel_hash'];
 		$item_uids = " item.uid = " . intval($uid) . " ";
 	}
-	
+
 	if($arr['star'])
 		$sql_options .= " and (item_flags & " . intval(ITEM_STARRED) . ") ";
 
 	if($arr['wall'])
 		$sql_options .= " and (item_flags & " . intval(ITEM_WALL) . ") ";
-
+									
 	$sql_extra = " AND item.parent IN ( SELECT parent FROM item WHERE (item_flags & " . intval(ITEM_THREAD_TOP) . ") $sql_options ) ";
-
+	
+	if($arr['since_id'])
+   		$sql_extra .= " and item.id > " . $since_id . " ";
+   		
     if($arr['gid'] && $uid) {
         $r = q("SELECT * FROM `groups` WHERE id = %d AND uid = %d LIMIT 1",
             intval($arr['group']),
@@ -3897,7 +3902,7 @@ function items_fetch($arr,$channel = null,$observer_hash = null,$client_mode = C
                 ORDER BY item.$ordering DESC $pager_sql ",
                 intval(ABOOK_FLAG_BLOCKED)
             );
-
+            
         }
         else {
             // update
