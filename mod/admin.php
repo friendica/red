@@ -402,7 +402,6 @@ function admin_page_site(&$a) {
 	
 	/* Admin Info */
 	$admininfo = get_config('system','admininfo');
-	$admininfo = $admininfo;
 
 	/* Register policy */
 	$register_choices = Array(
