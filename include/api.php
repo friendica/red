@@ -1269,8 +1269,7 @@ require_once('include/items.php');
 		          'cid' => $user_info['id'],
 		          'since_id' => $since_id,
 		          'start' => $start,
-		          'records' => $count,
-		          'wall' => 1));
+		          'records' => $count));
 
 
 		$ret = api_format_items($r,$user_info);
