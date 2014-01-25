@@ -1263,15 +1263,24 @@ require_once('include/items.php');
 // 			intval($since_id),
 // 			intval($start),	intval($count)
 // 		);
-
+	  if ($user_info['self']==1) {
 		$r = items_fetch(array(
 		          'uid' => api_user(),
 		          'cid' => $user_info['id'],
 		          'since_id' => $since_id,
 		          'start' => $start,
-		          'records' => $count));
-
-
+		          'records' => $count,
+		          'wall' => 1));
+		}
+		else {
+		$r = items_fetch(array(
+		          'uid' => api_user(),
+		          'cid' => $user_info['id'],
+		          'since_id' => $since_id,
+		          'start' => $start,
+		          'records' => $count));		
+        }
+        
 		$ret = api_format_items($r,$user_info);
 
 
