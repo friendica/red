@@ -42,6 +42,7 @@
 
 	{{include file="field_input.tpl" field=$sitename}}
 	{{include file="field_textarea.tpl" field=$banner}}
+	{{include file="field_textarea.tpl" field=$admininfo}}
 	{{include file="field_select.tpl" field=$language}}
 	{{include file="field_select.tpl" field=$theme}}
     {{include file="field_select.tpl" field=$theme_mobile}}

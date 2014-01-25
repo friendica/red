@@ -7,6 +7,8 @@
 <p>{{$web_location}}</p>
 <p>{{$visit}}</p>
 <p>{{$bug_text}} <a href="{{$bug_link_url}}">{{$bug_link_text}}</a></p>
+<p>{{$adminlabel}}</p>
+<p>{{$admininfo}}</p>
 <p>{{$contact}}</p>
 <p>{{$plugins_text}}</p>
 {{if $plugins_list}}
