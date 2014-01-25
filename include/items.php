@@ -3818,6 +3818,7 @@ function items_fetch($arr,$channel = null,$observer_hash = null,$client_mode = C
         );
     }
 
+
     if(($client_mode & CLIENT_MODE_UPDATE) && (! ($client_mode & CLIENT_MODE_LOAD))) {
 
         // only setup pagination on initial page view
@@ -3830,6 +3831,8 @@ function items_fetch($arr,$channel = null,$observer_hash = null,$client_mode = C
         $pager_sql = sprintf(" LIMIT %d, %d ",intval(get_app()->pager['start']), intval(get_app()->pager['itemspage']));
     }
 
+	if(isset($arr['start']) && isset($arr['records']))
+        $pager_sql = sprintf(" LIMIT %d, %d ",intval($arr['start']), intval($arr['records']));
 
     if(($arr['cmin'] != 0) || ($arr['cmax'] != 99)) {
 
@@ -3864,7 +3867,7 @@ function items_fetch($arr,$channel = null,$observer_hash = null,$client_mode = C
 		$item_restrict = " AND item_restrict = 0 ";
 
 
-    if($arr['nouveau'] && ($client_mode & CLIENT_MODELOAD) && $channel) {
+    if($arr['nouveau'] && ($client_mode & CLIENT_MODE_LOAD) && $channel) {
         // "New Item View" - show all items unthreaded in reverse created date order
 
         $items = q("SELECT item.*, item.id AS item_id FROM item
@@ -3889,7 +3892,7 @@ function items_fetch($arr,$channel = null,$observer_hash = null,$client_mode = C
         else
 			$ordering = "commented";
 
-        if(($client_mode & CLIENT_MODE_LOAD) || ($client_mode & CLIENT_MODE_NORMAL)) {
+        if(($client_mode & CLIENT_MODE_LOAD) || ($client_mode == CLIENT_MODE_NORMAL)) {
 
             // Fetch a page full of parent items for this page
 
