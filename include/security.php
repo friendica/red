@@ -60,7 +60,8 @@ function change_channel($change_channel) {
 			intval(get_account_id()),
 			intval(PAGE_REMOVED)
 		);
-		if($r) {
+
+	if($r) {
 			$hash = $r[0]['channel_hash'];
 			$_SESSION['uid'] = intval($r[0]['channel_id']);
 			get_app()->set_channel($r[0]);
@@ -74,7 +75,7 @@ function change_channel($change_channel) {
 		);
 		if($x) {
 			$_SESSION['my_url'] = $x[0]['xchan_url'];
-			$_SESSION['my_address'] = $x[0]['channel_address'] . '@' . substr(get_app()->get_baseurl(),strpos(get_app()->get_baseurl(),'://')+3);
+			$_SESSION['my_address'] = $r[0]['channel_address'] . '@' . substr(get_app()->get_baseurl(),strpos(get_app()->get_baseurl(),'://')+3);
 
 			get_app()->set_observer($x[0]);
 			get_app()->set_perms(get_all_perms(local_user(),$hash));
