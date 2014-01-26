@@ -61,7 +61,7 @@ function change_channel($change_channel) {
 			intval(PAGE_REMOVED)
 		);
 
-	if($r) {
+		if($r) {
 			$hash = $r[0]['channel_hash'];
 			$_SESSION['uid'] = intval($r[0]['channel_id']);
 			get_app()->set_channel($r[0]);
