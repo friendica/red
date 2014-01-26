@@ -1388,23 +1388,21 @@ function network_tabs() {
 			'sel'=>$postord_active,
 			'title' => t('Sort by Post Date'),
 		),
-	);
 
-	if(feature_enabled(local_user(),'personal_tab'))
-		$tabs[] = array(
+		array(
 			'label' => t('Personal'),
 			'url' => $a->get_baseurl(true) . '/' . $cmd . '?f=' . ((x($_GET,'cid')) ? '&cid=' . $_GET['cid'] : '') . '&conv=1',
 			'sel' => $conv_active,
 			'title' => t('Posts that mention or involve you'),
-		);
-
-	if(feature_enabled(local_user(),'new_tab'))
-		$tabs[] = array(
+		),
+		array(
 			'label' => t('New'),
 			'url' => $a->get_baseurl(true) . '/' . $cmd . '?f=' . ((x($_GET,'cid')) ? '&cid=' . $_GET['cid'] : '') . '&new=1' . ((x($_GET,'gid')) ? '&gid=' . $_GET['gid'] : ''),
 			'sel' => $new_active,
 			'title' => t('Activity Stream - by date'),
-		);
+		),
+
+	);
 
 	if(feature_enabled(local_user(),'star_posts')) 
 		$tabs[] = array(

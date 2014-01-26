@@ -48,8 +48,7 @@ function get_features() {
 		'net_module' => array(
 			t('Network and Stream Filtering'),
 			array('archives',       t('Search by Date'),			t('Ability to select posts by date ranges')),
-			// Disabled until a solution for default feature settings is found.
-			// array('groups',    		t('Collections Filter'),		t('Enable widget to display Network posts only from selected collections')),
+			array('groups',    		t('Collections Filter'),		t('Enable widget to display Network posts only from selected collections')),
 			array('savedsearch',    t('Saved Searches'),			t('Save search terms for re-use')),
 			array('personal_tab',   t('Network Personal Tab'),		t('Enable tab to display only Network posts that you\'ve interacted on')),
 			array('new_tab',   		t('Network New Tab'),			t('Enable tab to display all new Network activity')),
