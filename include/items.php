@@ -3719,21 +3719,26 @@ function items_fetch($arr,$channel = null,$observer_hash = null,$client_mode = C
 	$def_acl = '';
 
 	$item_uids = ' true ';
-
+	
+	if ($arr['uid']) $uid= $arr['uid'];
+	
 	if($channel) {
 		$uid = $channel['channel_id'];
 		$uidhash = $channel['channel_hash'];
 		$item_uids = " item.uid = " . intval($uid) . " ";
 	}
-	
+
 	if($arr['star'])
 		$sql_options .= " and (item_flags & " . intval(ITEM_STARRED) . ") ";
 
 	if($arr['wall'])
 		$sql_options .= " and (item_flags & " . intval(ITEM_WALL) . ") ";
-
+									
 	$sql_extra = " AND item.parent IN ( SELECT parent FROM item WHERE (item_flags & " . intval(ITEM_THREAD_TOP) . ") $sql_options ) ";
-
+	
+	if($arr['since_id'])
+   		$sql_extra .= " and item.id > " . $since_id . " ";
+   		
     if($arr['gid'] && $uid) {
         $r = q("SELECT * FROM `groups` WHERE id = %d AND uid = %d LIMIT 1",
             intval($arr['group']),
@@ -3813,6 +3818,7 @@ function items_fetch($arr,$channel = null,$observer_hash = null,$client_mode = C
         );
     }
 
+
     if(($client_mode & CLIENT_MODE_UPDATE) && (! ($client_mode & CLIENT_MODE_LOAD))) {
 
         // only setup pagination on initial page view
@@ -3825,6 +3831,8 @@ function items_fetch($arr,$channel = null,$observer_hash = null,$client_mode = C
         $pager_sql = sprintf(" LIMIT %d, %d ",intval(get_app()->pager['start']), intval(get_app()->pager['itemspage']));
     }
 
+	if(isset($arr['start']) && isset($arr['records']))
+        $pager_sql = sprintf(" LIMIT %d, %d ",intval($arr['start']), intval($arr['records']));
 
     if(($arr['cmin'] != 0) || ($arr['cmax'] != 99)) {
 
@@ -3859,7 +3867,7 @@ function items_fetch($arr,$channel = null,$observer_hash = null,$client_mode = C
 		$item_restrict = " AND item_restrict = 0 ";
 
 
-    if($arr['nouveau'] && ($client_mode & CLIENT_MODELOAD) && $channel) {
+    if($arr['nouveau'] && ($client_mode & CLIENT_MODE_LOAD) && $channel) {
         // "New Item View" - show all items unthreaded in reverse created date order
 
         $items = q("SELECT item.*, item.id AS item_id FROM item
@@ -3884,7 +3892,7 @@ function items_fetch($arr,$channel = null,$observer_hash = null,$client_mode = C
         else
 			$ordering = "commented";
 
-        if(($client_mode & CLIENT_MODE_LOAD) || ($client_mode & CLIENT_MODE_NORMAL)) {
+        if(($client_mode & CLIENT_MODE_LOAD) || ($client_mode == CLIENT_MODE_NORMAL)) {
 
             // Fetch a page full of parent items for this page
 
@@ -3897,7 +3905,7 @@ function items_fetch($arr,$channel = null,$observer_hash = null,$client_mode = C
                 ORDER BY item.$ordering DESC $pager_sql ",
                 intval(ABOOK_FLAG_BLOCKED)
             );
-
+            
         }
         else {
             // update

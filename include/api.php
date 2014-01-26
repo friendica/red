@@ -7,6 +7,7 @@ require_once("oauth.php");
 require_once("html2plain.php");
 require_once('include/security.php');
 require_once('include/photos.php');
+require_once('include/items.php');
 
 	/*
 	 *
@@ -1242,27 +1243,43 @@ require_once('include/photos.php');
 
 		$sql_extra = '';
 		if ($user_info['self']==1) $sql_extra .= " AND `item`.`wall` = 1 ";
+
+//FIXME - this isn't yet implemented
 		if ($exclude_replies > 0)  $sql_extra .= ' AND `item`.`parent` = `item`.`id`';
 
-		$r = q("SELECT `item`.*, `item`.`id` AS `item_id`, 
-			`contact`.`name`, `contact`.`photo`, `contact`.`url`, `contact`.`rel`,
-			`contact`.`network`, `contact`.`thumb`, `contact`.`dfrn_id`, `contact`.`self`,
-			`contact`.`id` AS `cid`, `contact`.`uid` AS `contact-uid`
-			FROM `item`, `contact`
-			WHERE `item`.`uid` = %d
-			AND `item`.`contact-id` = %d
-			AND `item`.`visible` = 1 and `item`.`moderated` = 0 AND `item`.`deleted` = 0
-			AND `contact`.`id` = `item`.`contact-id`
-			AND `contact`.`blocked` = 0 AND `contact`.`pending` = 0
-			$sql_extra
-			AND `item`.`id`>%d
-			ORDER BY `item`.`received` DESC LIMIT %d ,%d ",
-			intval(api_user()),
-			intval($user_info['id']),
-			intval($since_id),
-			intval($start),	intval($count)
-		);
+// 	$r = q("SELECT `item`.*, `item`.`id` AS `item_id`, 
+// 			`contact`.`name`, `contact`.`photo`, `contact`.`url`, `contact`.`rel`,
+// 			`contact`.`network`, `contact`.`thumb`, `contact`.`dfrn_id`, `contact`.`self`,
+// 			`contact`.`id` AS `cid`, `contact`.`uid` AS `contact-uid`
+// 			FROM `item`, `contact`
+// 			WHERE `item`.`uid` = %d
+// 			AND `item`.`contact-id` = %d
+// 			AND `item`.`visible` = 1 and `item`.`moderated` = 0 AND `item`.`deleted` = 0
+// 			AND `contact`.`id` = `item`.`contact-id`
+// 			AND `contact`.`blocked` = 0 AND `contact`.`pending` = 0
+// 			$sql_extra
+// 			AND `item`.`id`>%d
+// 			ORDER BY `item`.`received` DESC LIMIT %d ,%d ",
+// 			intval(api_user()),
+// 			intval($user_info['id']),
+// 			intval($since_id),
+// 			intval($start),	intval($count)
+// 		);
 
+		$arr = array(
+          'uid' => api_user(),
+          'since_id' => $since_id,
+          'start' => $start,
+          'records' => $count);
+	
+		if ($user_info['self']==1)
+			$arr['wall'] = 1;
+		else
+			$arr['cid'] = $user_info['id'];
+
+
+		$r = items_fetch($arr,get_app()->get_channel(),get_observer_hash());
+        
 		$ret = api_format_items($r,$user_info);
 
 
