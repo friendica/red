@@ -1481,7 +1481,7 @@ function profile_tabs($a, $is_owner=False, $nickname=Null){
 	if($p['view_storage']) {
 		$tabs[] = array(
 			'label' => t('Files'),
-			'url'	=> $a->get_baseurl() . '/cloud/' . $nickname,
+			'url'	=> $a->get_baseurl() . '/cloud/' . $nickname . ((get_observer_hash()) ? '' : '?f=&davguest=1'),
 			'sel'	=> ((argv(0) == 'cloud') ? 'active' : ''),
 			'title' => t('Files and Storage'),
 			'id'    => 'files-tab',
