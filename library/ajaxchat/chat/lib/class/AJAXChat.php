@@ -60,12 +60,12 @@ class AJAXChat {
 	function initRequestVars() {
 		$this->_requestVars = array();
 		$this->_requestVars['ajax']			= isset($_REQUEST['ajax'])			? true							: false;
-		$this->_requestVars['userID']		= isset($_REQUEST['userID'])		? (int)$_REQUEST['userID']		: null;
+		$this->_requestVars['userID']		= isset($_REQUEST['userID'])		? $_REQUEST['userID']			: null;
 		$this->_requestVars['userName']		= isset($_REQUEST['userName'])		? $_REQUEST['userName']			: null;
-		$this->_requestVars['channelID']	= isset($_REQUEST['channelID'])		? (int)$_REQUEST['channelID']	: null;
+		$this->_requestVars['channelID']	= isset($_REQUEST['channelID'])		? $_REQUEST['channelID']		: null;
 		$this->_requestVars['channelName']	= isset($_REQUEST['channelName'])	? $_REQUEST['channelName']		: null;
 		$this->_requestVars['text']			= isset($_POST['text'])				? $_POST['text']				: null;
-		$this->_requestVars['lastID']		= isset($_REQUEST['lastID'])		? (int)$_REQUEST['lastID']		: 0;
+		$this->_requestVars['lastID']		= isset($_REQUEST['lastID'])		? $_REQUEST['lastID']			: '';
 		$this->_requestVars['login']		= isset($_REQUEST['login'])			? true							: false;
 		$this->_requestVars['logout']		= isset($_REQUEST['logout'])		? true							: false;
 		$this->_requestVars['password']		= isset($_REQUEST['password'])		? $_REQUEST['password']			: null;
@@ -3052,14 +3052,14 @@ class AJAXChat {
 		if($userID === null) {
 			$userID = $this->getUserID();
 		}
-		return $userID + $this->getConfig('privateChannelDiff');
+		return $userID  . '.' .  $this->getConfig('privateChannelDiff');
 	}
 	
 	function getPrivateMessageID($userID=null) {
 		if($userID === null) {
 			$userID = $this->getUserID();
 		}
-		return $userID + $this->getConfig('privateMessageDiff');
+		return $userID  . '.' . $this->getConfig('privateMessageDiff');
 	}
 
 	function isAllowedToSendPrivateMessage() {
