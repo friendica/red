@@ -31,90 +31,6 @@ function authenticate_success($user_record, $login_initial = false, $interactive
 		}
 
 	}
-	else {
-		$_SESSION['uid'] = $user_record['uid'];
-		$_SESSION['theme'] = $user_record['theme'];
-		$_SESSION['mobile_theme'] = get_pconfig($user_record['uid'], 'system', 'mobile_theme');
-		$_SESSION['authenticated'] = 1;
-		$_SESSION['page_flags'] = $user_record['page-flags'];
-		$_SESSION['my_url'] = $a->get_baseurl() . '/channel/' . $user_record['nickname'];
-		$_SESSION['my_address'] = $user_record['nickname'] . '@' . substr($a->get_baseurl(),strpos($a->get_baseurl(),'://')+3);
-
-		$a->user = $user_record;
-
-		if($interactive) {
-			if($a->user['login_date'] === '0000-00-00 00:00:00') {
-				$_SESSION['return_url'] = 'profile_photo/new';
-				$a->module = 'profile_photo';
-				info( t("Welcome ") . $a->user['username'] . EOL);
-				info( t('Please upload a profile photo.') . EOL);
-			}
-			else
-				info( t("Welcome back ") . $a->user['username'] . EOL);
-		}
-
-		$member_since = strtotime($a->user['register_date']);
-		if(time() < ($member_since + ( 60 * 60 * 24 * 14)))
-			$_SESSION['new_member'] = true;
-		else
-			$_SESSION['new_member'] = false;
-		if(strlen($a->user['timezone'])) {
-			date_default_timezone_set($a->user['timezone']);
-			$a->timezone = $a->user['timezone'];
-		}
-
-		$master_record = $a->user;	
-
-		if((x($_SESSION,'submanage')) && intval($_SESSION['submanage'])) {
-			$r = q("select * from user where uid = %d limit 1",
-				intval($_SESSION['submanage'])
-			);
-			if(count($r))
-				$master_record = $r[0];
-		}
-
-		$r = q("SELECT `uid`,`username`,`nickname` FROM `user` WHERE `password` = '%s' AND `email` = '%s'",
-			dbesc($master_record['password']),
-			dbesc($master_record['email'])
-		);
-		if($r && count($r))
-			$a->identities = $r;
-		else
-			$a->identities = array();
-
-		$r = q("select `user`.`uid`, `user`.`username`, `user`.`nickname` 
-			from manage left join user on manage.mid = user.uid 
-			where `manage`.`uid` = %d",
-			intval($master_record['uid'])
-		);
-		if($r && count($r))
-			$a->identities = array_merge($a->identities,$r);
-
-		if($login_initial)
-			logger('auth_identities: ' . print_r($a->identities,true), LOGGER_DEBUG);
-
-		$r = q("SELECT * FROM `contact` WHERE `uid` = %d AND `self` = 1 LIMIT 1",
-			intval($_SESSION['uid']));
-		if(count($r)) {
-			$a->contact = $r[0];
-			$a->cid = $r[0]['id'];
-			$_SESSION['cid'] = $a->cid;
-		}
-
-		header('X-Account-Management-Status: active; name="' . $a->user['username'] . '"; id="' . $a->user['nickname'] .'"');
-
-		if($login_initial) {
-			$l = get_browser_language();
-
-			q("UPDATE `user` SET `login_date` = '%s', `language` = '%s' WHERE `uid` = %d LIMIT 1",
-				dbesc(datetime_convert()),
-				dbesc($l),
-				intval($_SESSION['uid'])
-			);
-
-
-		}
-	}
 
 	if($login_initial)
 		call_hooks('logged_in', $user_record);
@@ -144,6 +60,7 @@ function change_channel($change_channel) {
 			intval(get_account_id()),
 			intval(PAGE_REMOVED)
 		);
+
 		if($r) {
 			$hash = $r[0]['channel_hash'];
 			$_SESSION['uid'] = intval($r[0]['channel_id']);
@@ -158,7 +75,7 @@ function change_channel($change_channel) {
 		);
 		if($x) {
 			$_SESSION['my_url'] = $x[0]['xchan_url'];
-			$_SESSION['my_address'] = $x[0]['xchan_addr'];
+			$_SESSION['my_address'] = $r[0]['channel_address'] . '@' . substr(get_app()->get_baseurl(),strpos(get_app()->get_baseurl(),'://')+3);
 
 			get_app()->set_observer($x[0]);
 			get_app()->set_perms(get_all_perms(local_user(),$hash));

@@ -215,13 +215,14 @@ function admin_page_site_post(&$a){
     check_form_security_token_redirectOnErr('/admin/site', 'admin_site');
 
 	$sitename 			=	((x($_POST,'sitename'))			? notags(trim($_POST['sitename']))			: '');
-	$banner				=	((x($_POST,'banner'))      		? trim($_POST['banner'])					: false);
+	$banner				=	((x($_POST,'banner'))      		? trim($_POST['banner'])				: false);
+	$admininfo			=	((x($_POST,'admininfo'))		? trim($_POST['admininfo'])				: false);
 	$language			=	((x($_POST,'language'))			? notags(trim($_POST['language']))			: '');
 	$theme				=	((x($_POST,'theme'))			? notags(trim($_POST['theme']))				: '');
-	$theme_mobile		=	((x($_POST,'theme_mobile'))	? notags(trim($_POST['theme_mobile']))				: '');
-	$theme_accessibility		=	((x($_POST,'theme_accessibility'))	? notags(trim($_POST['theme_accessibility']))				: '');
-	$site_channel		=	((x($_POST,'site_channel'))	? notags(trim($_POST['site_channel']))				: '');
-	$maximagesize		=	((x($_POST,'maximagesize'))		? intval(trim($_POST['maximagesize']))		:  0);
+	$theme_mobile			=	((x($_POST,'theme_mobile'))		? notags(trim($_POST['theme_mobile']))			: '');
+	$theme_accessibility		=	((x($_POST,'theme_accessibility'))	? notags(trim($_POST['theme_accessibility']))		: '');
+	$site_channel			=	((x($_POST,'site_channel'))	? notags(trim($_POST['site_channel']))				: '');
+	$maximagesize		=	((x($_POST,'maximagesize'))		? intval(trim($_POST['maximagesize']))				:  0);
 	
 	
 	$register_policy	=	((x($_POST,'register_policy'))	? intval(trim($_POST['register_policy']))	:  0);
@@ -301,6 +302,12 @@ function admin_page_site_post(&$a){
 		set_config('system','banner', $banner);
 	}
 
+	if ($admininfo==''){
+		del_config('system','admininfo');
+	}
+	else {
+		set_config('system','admininfo', $admininfo);
+	}
 	set_config('system','language', $language);
 	set_config('system','theme', $theme);
 	if ( $theme_mobile === '---' ) {
@@ -393,6 +400,9 @@ function admin_page_site(&$a) {
 		$banner = 'red';
 	$banner = htmlspecialchars($banner);
 	
+	/* Admin Info */
+	$admininfo = get_config('system','admininfo');
+
 	/* Register policy */
 	$register_choices = Array(
 		REGISTER_CLOSED  => t("Closed"),
@@ -427,6 +437,7 @@ function admin_page_site(&$a) {
 									// name, label, value, help string, extra data...
 		'$sitename' 		=> array('sitename', t("Site name"), htmlspecialchars(get_config('system','sitename'), ENT_QUOTES, 'UTF-8'),''),
 		'$banner'			=> array('banner', t("Banner/Logo"), $banner, ""),
+		'$admininfo'		=> array('admininfo', t("Administrator Information"), $admininfo, t("Contact information for site administrators.  Displayed on siteinfo page.  BBCode can be used here")),
 		'$language' 		=> array('language', t("System language"), get_config('system','language'), "", $lang_choices),
 		'$theme' 			=> array('theme', t("System theme"), get_config('system','theme'), t("Default system theme - may be over-ridden by user profiles - <a href='#' id='cnftheme'>change theme settings</a>"), $theme_choices),
 		'$theme_mobile' 	=> array('theme_mobile', t("Mobile system theme"), get_config('system','mobile_theme'), t("Theme for mobile devices"), $theme_choices_mobile),

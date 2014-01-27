@@ -20,6 +20,9 @@ var hierarchy =
     [ "IFile", null, [
       [ "RedFile", "classRedFile.html", null ]
     ] ],
+    [ "IQuota", null, [
+      [ "RedDirectory", "classRedDirectory.html", null ]
+    ] ],
     [ "ITemplateEngine", "interfaceITemplateEngine.html", [
       [ "FriendicaSmartyEngine", "classFriendicaSmartyEngine.html", null ],
       [ "Template", "classTemplate.html", null ]

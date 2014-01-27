@@ -98,6 +98,7 @@ var searchData=
   ['getimage',['getImage',['../classphoto__driver.html#ab98da263bd7341fc132c4fb6fc76e8d5',1,'photo_driver\getImage()'],['../classphoto__gd.html#a86757ba021fd80d1a5cf8c2f766a8484',1,'photo_gd\getImage()'],['../classphoto__imagick.html#ad07288e0eb3922cb08cc9d33a163decc',1,'photo_imagick\getImage()']]],
   ['getlastmodified',['getLastModified',['../classRedDirectory.html#a6c7e08199abc24e6eeb94a4037ef8bfc',1,'RedDirectory\getLastModified()'],['../classRedFile.html#a41562a28007789bbe7fe06d6a20eef47',1,'RedFile\getLastModified()']]],
   ['getname',['getName',['../classRedDirectory.html#af6e4475dbd5abcdede00d20b8d388583',1,'RedDirectory\getName()'],['../classRedFile.html#a0c961c5f49544d2502420361fa526437',1,'RedFile\getName()']]],
+  ['getquotainfo',['getQuotaInfo',['../classRedDirectory.html#a2f7a574f2115f099d6dd103d5b252375',1,'RedDirectory']]],
   ['getsize',['getSize',['../classRedFile.html#acb1edbe1848fab05347746fa1ea09d8f',1,'RedFile']]],
   ['gettype',['getType',['../classphoto__driver.html#a6c6c16dbc4f517ce799f9143ed61f0e3',1,'photo_driver']]],
   ['getwidth',['getWidth',['../classphoto__driver.html#acc30486acee9e89e32701f44a1738117',1,'photo_driver']]],

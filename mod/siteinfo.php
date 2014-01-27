@@ -88,6 +88,8 @@ function siteinfo_content(&$a) {
 	else
 		$plugins_text = t('No installed plugins/addons/apps');
 
+		$admininfo = bbcode(get_config('system','admininfo'));
+
 	$o = replace_macros(get_markup_template('siteinfo.tpl'), array(
                 '$title' => t('Red'),
 		'$description' => t('This is a hub of the Red Matrix - a global cooperative network of decentralised privacy enhanced websites.'),
@@ -99,6 +101,8 @@ function siteinfo_content(&$a) {
 		'$bug_link_url' => 'https://github.com/friendica/red/issues',
 		'$bug_link_text' => 'redmatrix issues',
 		'$contact' => t('Suggestions, praise, donations, etc. - please email "redmatrix" at librelist - dot com'),
+		'$adminlabel' => t('Site Administrators'),
+		'$admininfo' => $admininfo,
 		'$plugins_text' => $plugins_text,
 		'$plugins_list' => $plugins_list
         ));

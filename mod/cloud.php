@@ -67,13 +67,18 @@ function cloud_init(&$a) {
 		$auth->observer = $ob_hash;
 	}	
 
+	if($_GET['davguest'])
+		$_SESSION['davguest'] = true;
+
+
 
 	$_SERVER['QUERY_STRING'] = str_replace(array('?f=','&f='),array('',''),$_SERVER['QUERY_STRING']);
 	$_SERVER['QUERY_STRING'] = preg_replace('/[\?&]zid=(.*?)([\?&]|$)/ism','',$_SERVER['QUERY_STRING']);
+	$_SERVER['QUERY_STRING'] = preg_replace('/[\?&]davguest=(.*?)([\?&]|$)/ism','',$_SERVER['QUERY_STRING']);
 
 	$_SERVER['REQUEST_URI'] = str_replace(array('?f=','&f='),array('',''),$_SERVER['REQUEST_URI']);
 	$_SERVER['REQUEST_URI'] = preg_replace('/[\?&]zid=(.*?)([\?&]|$)/ism','',$_SERVER['REQUEST_URI']);
-
+	$_SERVER['REQUEST_URI'] = preg_replace('/[\?&]davguest=(.*?)([\?&]|$)/ism','',$_SERVER['REQUEST_URI']);
 
 	$rootDirectory = new RedDirectory('/',$auth);
 	$server = new DAV\Server($rootDirectory);
@@ -82,8 +87,27 @@ function cloud_init(&$a) {
 
 	$server->addPlugin($lockPlugin);
 
+	// The next section of code allows us to bypass prompting for http-auth if a FILE is being accessed anonymously and permissions
+	// allow this. This way one can create hotlinks to public media files in their cloud and anonymous viewers won't get asked to login.
+	// If a DIRECTORY is accessed or there are permission issues accessing the file and we aren't previously authenticated via zot, 
+	// prompt for HTTP-auth. This will be the default case for mounting a DAV directory. 
+	// In order to avoid prompting for passwords for viewing a DIRECTORY, add the URL query parameter 'davguest=1'
 
-	if(! $auth->observer) {
+	$isapublic_file = false;
+	$davguest = ((x($_SESSION,'davguest')) ? true : false);
+
+	if((! $auth->observer) && ($_SERVER['REQUEST_METHOD'] === 'GET')) {
+		try { 
+			$x = RedFileData('/' . $a->cmd,$auth);
+			if($x instanceof RedFile)
+				$isapublic_file = true;
+		}
+		catch  ( Exception $e ) {
+			$isapublic_file = false;
+		}
+	}
+
+	if((! $auth->observer) && (! $isapublic_file) && (! $davguest)) {
 		try {
 			$auth->Authenticate($server, t('Red Matrix - Guests: Username: {your email address}, Password: +++'));
 		}

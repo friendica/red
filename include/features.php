@@ -7,6 +7,8 @@
 
 function feature_enabled($uid,$feature) {
 	$x = get_pconfig($uid,'feature',$feature);
+	if($x === false)
+		$x = get_config('feature',$feature);
 	$arr = array('uid' => $uid, 'feature' => $feature, 'enabled' => $x);
 	call_hooks('feature_enabled',$arr);
 	return($arr['enabled']);

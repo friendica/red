@@ -69,7 +69,6 @@ function filestorage_content(&$a) {
 		return;
 	}
 
-	// 	TODO This will also need to check for files on disk and delete them from there as well as the DB.
 
 	if(argc() > 3 && argv(3) === 'delete') {
 		if(! $perms['write_storage']) {
@@ -110,7 +109,7 @@ function filestorage_content(&$a) {
 
 		$channel = $a->get_channel();
 
-		$cloudpath = get_cloudpath($f);
+		$cloudpath = get_cloudpath($f) . (($f['flags'] & ATTACH_FLAG_DIR) ? '?f=&davguest=1' : '');
 
 		$aclselect_e = populate_acl($f);
 		$is_a_dir = (($f['flags'] & ATTACH_FLAG_DIR) ? true : false);

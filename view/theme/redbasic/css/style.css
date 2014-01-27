@@ -91,6 +91,7 @@ blockquote {
 	border-left: 4px solid #dae4ee;
 	padding: 0.4em;
 	color: #000;
+	margin-left: 20px;
 }
 
 .ccollapse-wrapper {

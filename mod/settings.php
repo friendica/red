@@ -635,7 +635,7 @@ function settings_content(&$a) {
 			$arr[$fname] = array();
 			$arr[$fname][0] = $fdata[0];
 			foreach(array_slice($fdata,1) as $f) {
-				$arr[$fname][1][] = array('feature_' .$f[0],$f[1],((intval(get_pconfig(local_user(),'feature',$f[0]))) ? "1" : ''),$f[2],array(t('Off'),t('On')));
+				$arr[$fname][1][] = array('feature_' .$f[0],$f[1],((intval(feature_enabled(local_user(),$f[0]))) ? "1" : ''),$f[2],array(t('Off'),t('On')));
 			}
 		}
 		
