@@ -490,6 +490,7 @@ function post_post(&$a) {
 		// Useful to get a health check on a remote site.
 		// This will let us know if any important communication details
 		// that we may have stored are no longer valid, regardless of xchan details.
+		logger('POST: got ping send pong now back: ' . z_root() , LOGGER_DEBUG );
  
 		$ret['success'] = true;
 		$ret['site'] = array();
