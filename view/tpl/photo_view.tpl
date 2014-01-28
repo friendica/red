@@ -24,7 +24,7 @@
 <div id="photo-edit-edit" style="display: none;">
 <form action="photos/{{$edit.nickname}}/{{$edit.resource_id}}" method="post" id="photo_edit_form" >
 
-	<input type="hidden" name="item_id" value="{{$item_id}}" />
+	<input type="hidden" name="item_id" value="{{$edit.item_id}}" />
 
 	<label id="photo-edit-albumname-label" for="photo-edit-albumname">{{$edit.newalbum}}</label>
 	<input id="photo-edit-albumname" type="text" size="32" name="albname" value="{{$edit.album}}" />
