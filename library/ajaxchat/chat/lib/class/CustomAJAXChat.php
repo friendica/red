@@ -13,6 +13,8 @@ class CustomAJAXChat extends AJAXChat {
 	// Returns null if login is invalid
 	function getValidLoginUserData() {
 		
+
+
 		$customUsers = $this->getCustomUsers();
 		
 		if($this->getRequestVar('password')) {

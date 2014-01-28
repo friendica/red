@@ -778,6 +778,8 @@ function photos_content(&$a) {
 			return;
 		}
 
+
+
 		$prevlink = '';
 		$nextlink = '';
 
@@ -897,6 +899,8 @@ function photos_content(&$a) {
 				);
 			}
 		}
+
+//		logger('mod_photo: link_item' . print_r($link_item,true));
 
 		// FIXME - remove this when we move to conversation module 
 
