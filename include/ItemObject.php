@@ -218,7 +218,7 @@ class Item extends BaseObject {
 			'isotime' => datetime_convert('UTC', date_default_timezone_get(), $item['created'], 'c'),
 			'localtime' => datetime_convert('UTC', date_default_timezone_get(), $item['created'], 'r'),
 			'editedtime' => (($item['edited'] != $item['created']) ? sprintf( t('last edited: %s'), datetime_convert('UTC', date_default_timezone_get(), $item['edited'], 'r')) : ''),
-			'expiretime' => (($item['expires'] > 0) ? sprintf( t('Expires: %s'), datetime_convert('UTC', date_default_timezone_get(), $item['expires'], 'r')):''),
+			'expiretime' => (($item['expires'] !== '0000-00-00 00:00:00') ? sprintf( t('Expires: %s'), datetime_convert('UTC', date_default_timezone_get(), $item['expires'], 'r')):''),
 			'lock' => $lock,
 			'verified' => $verified,
 			'unverified' => $unverified,
