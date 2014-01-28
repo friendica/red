@@ -1,6 +1,6 @@
 <?php
 
-define( 'UPDATE_VERSION' , 1093 );
+define( 'UPDATE_VERSION' , 1094 );
 
 /**
  *
@@ -1054,3 +1054,9 @@ function update_r1092() {
 
 
 
+function update_r1093() {
+	$r = q("ALTER TABLE `chatpresence` ADD `cp_client` CHAR( 128 ) NOT NULL DEFAULT ''");
+	if($r)
+		return UPDATE_SUCCESS;
+	return UPDATE_FAILED;
+}
