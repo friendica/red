@@ -468,6 +468,7 @@ function admin_page_site(&$a) {
 }
 function admin_page_hubloc_post(&$a){
 	check_form_security_token_redirectOnErr('/admin/hubloc', 'admin_hubloc');
+	require_once('include/zot.php');
 
 	//prepare for ping
 
@@ -477,7 +478,12 @@ function admin_page_hubloc_post(&$a){
 			intval($hublocid)
 		);
 		$hublocurl = $arrhublocurl[0]['hubloc_url'] . '/post';
-		logger('hubloc_url : ' . $hublocurl , LOGGER_DEBUG);
+		logger('ping hubloc_url : ' . $hublocurl , LOGGER_DEBUG);
+		logger('ping get_channel : ' . print_r($a->get_channel(),true), LOGGER_DEBUG);
+		$m = zot_build_packet($a->get_channel(),'ping');
+	        $r = zot_zot($hubloc_url,$m);
+        	logger('ping answer: ' . print_r($r,true), LOGGER_DEBUG);
+
 	}
 
 	//if ( $_POST'' == "check" ) {

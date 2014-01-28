@@ -9,6 +9,8 @@ require_once('include/zot.php');
 
 
 function post_init(&$a) {
+	logger('POST inside',LOGGER_DEBUG);
+	logger('POST given parameter: ' . print_r($_REQUEST,true), LOGGER_DEBUG);
 
 	// Most access to this endpoint is via the post method.
 	// Here we will pick out the magic auth params which arrive
