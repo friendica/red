@@ -1170,3 +1170,25 @@ function get_online_status($nick) {
 
 	return $ret;
 }
+
+
+function remote_online_status($webbie) {
+
+	$result = false;
+	$r = q("select * from hubloc where hubloc_addr = '%s' limit 1",
+		dbesc($webbie)
+	);
+	if(! $r)
+		return $result;
+
+	$url = $r[0]['hubloc_url'] . '/online/' . substr($webbie,0,strpos($webbie,'@'));
+
+	$x = z_fetch_url($url);
+	if($x['success']) {
+		$j = json_decode($x['body'],true);
+		if($j)
+			$result = (($j['result']) ? $j['result'] : false);
+	}
+	return $result;
+
+}
