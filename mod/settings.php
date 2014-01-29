@@ -266,6 +266,7 @@ function settings_post(&$a) {
 	$expire_network_only    = ((x($_POST,'expire_network_only'))? intval($_POST['expire_network_only'])	 : 0);
 
 	$allow_location   = (((x($_POST,'allow_location')) && (intval($_POST['allow_location']) == 1)) ? 1: 0);
+	$hide_presence    = (((x($_POST,'hide_presence')) && (intval($_POST['hide_presence']) == 1)) ? 1: 0);
 
 	$publish          = (((x($_POST,'profile_in_directory')) && (intval($_POST['profile_in_directory']) == 1)) ? 1: 0);
 	$page_flags       = (((x($_POST,'page-flags')) && (intval($_POST['page-flags']))) ? intval($_POST['page-flags']) : 0);
@@ -395,6 +396,7 @@ function settings_post(&$a) {
 	set_pconfig(local_user(),'system','post_joingroup', $post_joingroup);
 	set_pconfig(local_user(),'system','post_profilechange', $post_profilechange);
 	set_pconfig(local_user(),'system','blocktags',$blocktags);
+	set_pconfig(local_user(),'system','hide_online_status',$hide_presence);
 
 
 	$r = q("update channel set channel_name = '%s', channel_pageflags = %d, channel_timezone = '%s', channel_location = '%s', channel_notifyflags = %d, channel_max_anon_mail = %d, channel_max_friend_req = %d, channel_expire_days = %d, channel_default_group = '%s', channel_r_stream = %d, channel_r_profile = %d, channel_r_photos = %d, channel_r_abook = %d, channel_w_stream = %d, channel_w_wall = %d, channel_w_tagwall = %d, channel_w_comment = %d, channel_w_mail = %d, channel_w_photos = %d, channel_w_chat = %d, channel_a_delegate = %d, channel_r_storage = %d, channel_w_storage = %d, channel_r_pages = %d, channel_w_pages = %d, channel_a_republish = %d, channel_allow_cid = '%s', channel_allow_gid = '%s', channel_deny_cid = '%s', channel_deny_gid = '%s'  where channel_id = %d limit 1",
@@ -821,6 +823,9 @@ function settings_content(&$a) {
 		$unkmail    = $a->user['unkmail'];
 		$cntunkmail = $a->user['cntunkmail'];
 
+		$hide_presence = intval(get_pconfig(local_user(), 'system','hide_online_status'));
+
+
 		$expire_items = get_pconfig(local_user(), 'expire','items');
 		$expire_items = (($expire_items===false)? '1' : $expire_items); // default if not set: 1
 	
@@ -917,6 +922,8 @@ function settings_content(&$a) {
 			'$adult'    => array('adult', t('Adult Content'), $adult_flag, t('This channel publishes adult content.')),
 
 			'$h_prv' 	=> t('Security and Privacy Settings'),
+
+			'$hide_presence' => array('hide_presence', t('Hide my online presence'),$hide_presence, t('Prevents showing if you are available for chat')),
 
 			'$lbl_pmacro' => t('Quick Privacy Settings:'),
 			'$pmacro3'    => t('Very Public - extremely permissive'),
