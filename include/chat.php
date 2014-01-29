@@ -76,8 +76,27 @@ function chatroom_destroy($channel,$arr) {
 
 
 function chatroom_enter($observer_xchan,$room_id,$status,$client) {
+
 	if(! $room_id || ! $observer_xchan)
 		return;
+
+	$r = q("select * from chatroom where cr_id = %d limit 1",
+		intval($room_id)
+	);
+	if(! $r)
+		return;
+	require_once('include/security.php');
+	$sql_extra = permissions_sql($r[0]['cr_uid']);
+
+	$x = q("select * from chatroom where cr_id = %d and uid = %d $sql_extra limit 1",
+			intval($room_id)
+			intval($r[0]['cr_uid'])
+	);
+	if(! $x) {
+		notice( t('Permission denied.') . EOL);
+		return;
+	}
+
 	$r = q("select * from chatpresence where cp_xchan = '%s' and cp_room = %d limit 1",
 		dbesc($observer_xchan),
 		intval($room_id)
