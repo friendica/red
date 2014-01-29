@@ -1,10 +1,10 @@
 <div class="widget">
 <h3>{{$header}}</h3>
-{{$if $items}}
+{{if $items}}
 <table>
-{{for $items as $item}}
+{{foreach $items as $item}}
 <tr><td>{{$item.cr_name}}</td><td>{{$item.cr_inroom}}</td></tr>
-{{/for}}
+{{/foreach}}
 </table>
 {{/if}}
 </div>
