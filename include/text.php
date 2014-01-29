@@ -891,7 +891,7 @@ function smilies($s, $sample = false) {
 
 	$s = preg_replace_callback('/<pre>(.*?)<\/pre>/ism','smile_encode',$s);
 	$s = preg_replace_callback('/<code>(.*?)<\/code>/ism','smile_encode',$s);
-	$s = preg_replace_callback('/<(.*?)>/s','smile_encode',$s);
+//	$s = preg_replace_callback('/<(.*?)>/ism','smile_encode',$s);
 
 	$texts =  array( 
 		'&lt;3', 
@@ -984,7 +984,7 @@ function smilies($s, $sample = false) {
 
 	$s = preg_replace_callback('/<pre>(.*?)<\/pre>/ism','smile_decode',$s);
 	$s = preg_replace_callback('/<code>(.*?)<\/code>/ism','smile_decode',$s);
-	$s = preg_replace_callback('/<(.*?)>/s','smile_decode',$s);
+//	$s = preg_replace_callback('/<(.*?)>/s','smile_decode',$s);
 
 	return $s;
 
