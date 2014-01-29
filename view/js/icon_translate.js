@@ -50,4 +50,5 @@ $(document).ready(function() {
 		$('.icon-check').addClass('');
 		$('.icon-globe').addClass('');
 		$('.icon-circle-blank').addClass('');
+		$('.icon-circle').addClass('');
 });
