@@ -576,3 +576,12 @@ function widget_menu_preview($arr) {
 	require_once('include/menu.php');
 	return menu_render(get_app()->data['menu_item']);
 }
+
+function widget_chatroom_list($arr) {
+	require_once("include/chat.php");
+	$r = chatroom_list(local_user());
+	return replace_macros(get_markup_template('chatroomlist.tpl'),array(
+		'$header' => t('Chat Rooms'),
+		'$items' => $r,
+	));
+}

@@ -3,7 +3,7 @@
 // If automatic system installation fails: 
 
 // Copy or rename this file to .htconfig.php in the top level 
-// Friendica directory
+// Red Matrix directory
 
 // Why .htconfig.php? Because it contains sensitive information which could
 // give somebody complete control of your database. Apache's default 

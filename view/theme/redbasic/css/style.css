@@ -2446,3 +2446,7 @@ img.mail-list-sender-photo {
 .abook-self {
 	background-color: #ffdddd;
 }
+.online-now {
+	color: red;
+	cursor: pointer;
+}

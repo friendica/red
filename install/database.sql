@@ -232,6 +232,7 @@ CREATE TABLE IF NOT EXISTS `chatpresence` (
   `cp_xchan` char(255) NOT NULL DEFAULT '',
   `cp_last` datetime NOT NULL DEFAULT '0000-00-00 00:00:00',
   `cp_status` char(255) NOT NULL,
+  `cp_client` char(128) NOT NULL DEFAULT '',
   PRIMARY KEY (`cp_id`),
   KEY `cp_room` (`cp_room`),
   KEY `cp_xchan` (`cp_xchan`),
