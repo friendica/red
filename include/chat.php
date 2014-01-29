@@ -115,3 +115,12 @@ function chatroom_leave($observer_xchan,$room_id,$status) {
 	}
 	return true;
 }
+
+
+function chatroom_list($uid) {
+
+	$r = q("select cr_name, cr_id, count(cp_id) as cr_inroom from chatroom left join chatpresence on cr_id = cp_room where cr_uid = %d order by cr_name group by cp_id",
+		intval($uid)
+	);
+	return $r;
+}
