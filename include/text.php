@@ -871,8 +871,8 @@ function get_mood_verbs() {
  * Returns string
  *
  * It is expected that this function will be called using HTML text.
- * We will escape text between HTML pre and code blocks from being 
- * processed. 
+ * We will escape text between HTML pre and code blocks, and HTML attributes
+ * (such as urls) from being processed.
  * 
  * At a higher level, the bbcode [nosmile] tag can be used to prevent this 
  * function from being executed by the prepare_text() routine when preparing
@@ -889,9 +889,8 @@ function smilies($s, $sample = false) {
 		|| (local_user() && intval(get_pconfig(local_user(),'system','no_smilies'))))
 		return $s;
 
-	$s = preg_replace_callback('/<pre>(.*?)<\/pre>/ism','smile_encode',$s);
-	$s = preg_replace_callback('/<code>(.*?)<\/code>/ism','smile_encode',$s);
-//	$s = preg_replace_callback('/<(.*?)>/ism','smile_encode',$s);
+	$s = preg_replace_callback('{<(pre|code)>(?<target>.*?)</\1>}ism','smile_encode',$s);
+	$s = preg_replace_callback('/<[a-z]+ (?<target>.*?)>/ism','smile_encode',$s);
 
 	$texts =  array( 
 		'&lt;3', 
@@ -982,20 +981,20 @@ function smilies($s, $sample = false) {
 		$s = str_replace($params['texts'],$params['icons'],$params['string']);
 	}
 
-	$s = preg_replace_callback('/<pre>(.*?)<\/pre>/ism','smile_decode',$s);
-	$s = preg_replace_callback('/<code>(.*?)<\/code>/ism','smile_decode',$s);
-//	$s = preg_replace_callback('/<(.*?)>/s','smile_decode',$s);
+	$s = preg_replace_callback(
+		'/<!--base64:(.*?)-->/ism',
+		function ($m) { return base64url_decode($m[1]); },
+		$s
+	);
 
 	return $s;
 
 }
 
-function smile_encode($m) {
-	return(str_replace($m[1],base64url_encode($m[1]),$m[0]));
-}
 
-function smile_decode($m) {
-	return(str_replace($m[1],base64url_decode($m[1]),$m[0]));
+function smile_encode($m) {
+	$cleartext = $m['target'];
+	return str_replace($cleartext,'<!--base64:' . base64url_encode($cleartext) . '-->',$m[0]);
 }
 
 // expand <3333 to the correct number of hearts
