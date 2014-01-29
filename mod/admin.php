@@ -478,23 +478,25 @@ function admin_page_hubloc_post(&$a){
 			intval($hublocid)
 		);
 		$hublocurl = $arrhublocurl[0]['hubloc_url'] . '/post';
-		logger('ping hubloc_url : ' . $hublocurl , LOGGER_DEBUG);
-		logger('ping get_channel : ' . print_r($a->get_channel(),true), LOGGER_DEBUG);
+		
+		//perform ping
 		$m = zot_build_packet($a->get_channel(),'ping');
+		logger('ping message : ' . print_r($m,true), LOGGER_DEBUG);
 	        $r = zot_zot($hubloc_url,$m);
         	logger('ping answer: ' . print_r($r,true), LOGGER_DEBUG);
+		
+		//unfotunatly zping wont work, I guess return format is not correct
+		 //require_once('mod/zping.php');
+		 //$r = zping_content($hublocurl);
+        	 //logger('zping answer: ' . $r, LOGGER_DEBUG);
+		
+		//handle results and set the hubloc flags in db to make results visible
+
+		//in case of repair store new pub key for tested hubloc (all channel with this hubloc) in db
+		//after repair set hubloc flags to 0
 
 	}
 
-	//if ( $_POST'' == "check" ) {
-	//	//todo
-	//}
-
-	//perform ping
-	//handle results and set the hubloc flags in db to make results visible
-
-	//in case of repair store new pub key for tested hubloc (all channel with this hubloc) in db
-	//after repair set hubloc flags to 0
 
 	goaway($a->get_baseurl(true) . '/admin/hubloc' );
 	return;
