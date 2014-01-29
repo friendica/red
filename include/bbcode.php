@@ -439,6 +439,7 @@ function bbcode($Text,$preserve_nl = false, $tryoembed = true) {
 	if (strpos($Text,'[/center]') !== false) {	
 	$Text = preg_replace("(\[center\](.*?)\[\/center\])ism","<div style=\"text-align:center;\">$1</div>",$Text);
 	}
+
 	// Check for list text
 	$Text = str_replace("[*]", "<li>", $Text);
 
@@ -531,23 +532,52 @@ function bbcode($Text,$preserve_nl = false, $tryoembed = true) {
 			"<br /><strong class=".'"author"'.">" . $t_wrote . "</strong><blockquote>$2</blockquote>",
 			$Text);
 
-	// [img=widthxheight]image source[/img]
-	//$Text = preg_replace("/\[img\=([0-9]*)x([0-9]*)\](.*?)\[\/img\]/ism", '<img src="$3" style="height: $2px; width: $1px;" >', $Text);
-	if (strpos($Text,'[/img]') !== false) {
-		$Text = preg_replace("/\[img\=([0-9]*)x([0-9]*)\](.*?)\[\/img\]/ism", '<img src="$3" style="width: $1px;" >', $Text);
-	}
-	if (strpos($Text,'[/zmg]') !== false) {	
-		$Text = preg_replace("/\[zmg\=([0-9]*)x([0-9]*)\](.*?)\[\/zmg\]/ism", '<img class="zrl" src="$3" style="width: $1px;" >', $Text);
-	}
 	// Images
 	// [img]pathtoimage[/img]
-	if (strpos($Text,'[/img]') !== false) {	
+	if (strpos($Text,'[/img]') !== false) {
 		$Text = preg_replace("/\[img\](.*?)\[\/img\]/ism", '<img src="$1" alt="' . t('Image/photo') . '" />', $Text);
 	}
-	if (strpos($Text,'[/zmg]') !== false) {	
+	if (strpos($Text,'[/zmg]') !== false) {
 		$Text = preg_replace("/\[zmg\](.*?)\[\/zmg\]/ism", '<img class="zrl" src="$1" alt="' . t('Image/photo') . '" />', $Text);
 	}
 
+	// [img float={left, right}]pathtoimage[/img]
+	if (strpos($Text,'[/img]') !== false) {
+		$Text = preg_replace("/\[img float=left\](.*?)\[\/img\]/ism", '<img src="$1" style="float: left;" alt="' . t('Image/photo') . '" />', $Text);
+	}
+	if (strpos($Text,'[/img]') !== false) {
+		$Text = preg_replace("/\[img float=right\](.*?)\[\/img\]/ism", '<img src="$1" style="float: right;" alt="' . t('Image/photo') . '" />', $Text);
+	}
+	if (strpos($Text,'[/zmg]') !== false) {
+		$Text = preg_replace("/\[zmg float=left\](.*?)\[\/zmg\]/ism", '<img class="zrl" src="$1" style="float: left;" alt="' . t('Image/photo') . '" />', $Text);
+	}
+	if (strpos($Text,'[/zmg]') !== false) {
+		$Text = preg_replace("/\[zmg float=right\](.*?)\[\/zmg\]/ism", '<img class="zrl" src="$1" style="float: right;" alt="' . t('Image/photo') . '" />', $Text);
+	}
+
+	// [img=widthxheight]pathtoimage[/img]
+	if (strpos($Text,'[/img]') !== false) {
+		$Text = preg_replace("/\[img\=([0-9]*)x([0-9]*)\](.*?)\[\/img\]/ism", '<img src="$3" style="width: $1px;" alt="' . t('Image/photo') . '" >', $Text);
+	}
+	if (strpos($Text,'[/zmg]') !== false) {
+		$Text = preg_replace("/\[zmg\=([0-9]*)x([0-9]*)\](.*?)\[\/zmg\]/ism", '<img class="zrl" src="$3" style="width: $1px;" alt="' . t('Image/photo') . '" >', $Text);
+	}
+
+	// [img=widthxheight float={left, right}]pathtoimage[/img]
+	if (strpos($Text,'[/img]') !== false) {
+		$Text = preg_replace("/\[img\=([0-9]*)x([0-9]*) float=left\](.*?)\[\/img\]/ism", '<img src="$3" style="width: $1px; float: left;" alt="' . t('Image/photo') . '" >', $Text);
+	}
+	if (strpos($Text,'[/img]') !== false) {
+		$Text = preg_replace("/\[img\=([0-9]*)x([0-9]*) float=right\](.*?)\[\/img\]/ism", '<img src="$3" style="width: $1px; float: right;" alt="' . t('Image/photo') . '" >', $Text);
+	}
+	if (strpos($Text,'[/zmg]') !== false) {
+		$Text = preg_replace("/\[zmg\=([0-9]*)x([0-9]*) float=left\](.*?)\[\/zmg\]/ism", '<img class="zrl" src="$3" style="width: $1px; float: left;" alt="' . t('Image/photo') . '" >', $Text);
+	}
+	if (strpos($Text,'[/zmg]') !== false) {
+		$Text = preg_replace("/\[zmg\=([0-9]*)x([0-9]*) float=right\](.*?)\[\/zmg\]/ism", '<img class="zrl" src="$3" style="width: $1px; float: right;" alt="' . t('Image/photo') . '" >', $Text);
+	}
+
+	// crypt
 	if (strpos($Text,'[/crypt]') !== false) {	
 		$x = random_string();
 		$Text = preg_replace("/\[crypt\](.*?)\[\/crypt\]/ism",'<br/><div id="' . $x . '"><img src="' .$a->get_baseurl() . '/images/lock_icon.gif" onclick="red_decrypt(\'rot13\',\'\',\'$1\',\'#' . $x . '\');" alt="' . t('Encrypted content') . '" title="' . t('Encrypted content') . '" /><br /></div>', $Text);
