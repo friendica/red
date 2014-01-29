@@ -23,8 +23,8 @@ function chatroom_create($channel,$arr) {
 	$created = datetime_convert();
 
 	$x = q("insert into chatroom ( cr_aid, cr_uid, cr_name, cr_created, cr_edited, allow_cid, allow_gid, deny_cid, deny_gid )
-		values ( %d, %d , '%s' '%s', '%s', '%s', '%s', '%s', '%s' ) ",
-		intval($channel['account_id']),
+		values ( %d, %d , '%s', '%s', '%s', '%s', '%s', '%s', '%s' ) ",
+		intval($channel['channel_account_id']),
 		intval($channel['channel_id']),
 		dbesc($name),
 		dbesc($created),
@@ -34,6 +34,7 @@ function chatroom_create($channel,$arr) {
 		dbesc($arr['deny_cid']),
 		dbesc($arr['deny_gid'])
 	);
+
 	if($x)
 		$ret['success'] = true;
 
@@ -74,8 +75,8 @@ function chatroom_destroy($channel,$arr) {
 }
 
 
-function chatroom_enter($observer_xchan,$room_id,$status) {
-	if(! $room_id || ! $observer)
+function chatroom_enter($observer_xchan,$room_id,$status,$client) {
+	if(! $room_id || ! $observer_xchan)
 		return;
 	$r = q("select * from chatpresence where cp_xchan = '%s' and cp_room = %d limit 1",
 		dbesc($observer_xchan),
@@ -90,19 +91,20 @@ function chatroom_enter($observer_xchan,$room_id,$status) {
 		return true;
 	}
 
-	$r = q("insert into chatpresence ( cp_room, cp_xchan, cp_last, cp_status )
-		values ( %d, '%s', '%s', '%s' )",
+	$r = q("insert into chatpresence ( cp_room, cp_xchan, cp_last, cp_status, cp_client )
+		values ( %d, '%s', '%s', '%s', '%s' )",
 		intval($room_id),
 		dbesc($observer_xchan),
 		dbesc(datetime_convert()),
-		dbesc($status)
+		dbesc($status),
+		dbesc($client)
 	);
 	return $r;
 }
 
 
 function chatroom_leave($observer_xchan,$room_id,$status) {
-	if(! $room_id || ! $observer)
+	if(! $room_id || ! $observer_xchan)
 		return;
 	$r = q("select * from chatpresence where cp_xchan = '%s' and cp_room = %d limit 1",
 		dbesc($observer_xchan),
