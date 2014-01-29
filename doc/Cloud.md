@@ -22,10 +22,27 @@ Your files are visible on the web at the location "cloud/$channel_nickname" to a
 
 **WebDAV access**
 
-This varies by operating system. In Windows, open the Windows Explorer (file manager) and type "$yoursite\cloud\$channel_nickname" into the address bar. Replace $yoursite with the URL to your Red Matrix hub and $channel_nickname with the nickname for your channel.
+This varies by operating system. 
+
+
+*Windows*
+
+In Windows, open the Windows Explorer (file manager) and type "$yoursite\cloud\$channel_nickname" into the address bar. Replace $yoursite with the URL to your Red Matrix hub and $channel_nickname with the nickname for your channel.
 
 You will be prompted for a username and password. For the username, you may supply either your account email address (which will select the default channel), or a channel nickname for the channel you wish to authenticate as. In either case use your account password for the password field. You will then be able to copy, drag/drop, edit, delete and otherwise work with files as if they were an attached disk drive.
 
+*Linux KDE*
+
+Simply log in to your hub as normal using Konqueror.  Once logged in, visit webdavs://$yoursite/cloud.  No further authentication is required.
+
+*Linux GNOME*
+
+Open a File browsing window (that's Nautilus), Select File > Connect to server from the menu. Type davs://$yoursite/cloud/$channel_nickname and click Connect.  You will be prompted for your username and password.  For the username, you may supply either your account email address (which will select the default channel) or a channel nickname.
+
+
+*See Also*
+
+- [Linux - Mounting the cloud as a file system](help/dav_davfs2)
 
 **Permissions**
 
