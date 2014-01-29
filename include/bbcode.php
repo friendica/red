@@ -439,7 +439,6 @@ function bbcode($Text,$preserve_nl = false, $tryoembed = true) {
 	if (strpos($Text,'[/center]') !== false) {	
 	$Text = preg_replace("(\[center\](.*?)\[\/center\])ism","<div style=\"text-align:center;\">$1</div>",$Text);
 	}
-
 	// Check for list text
 	$Text = str_replace("[*]", "<li>", $Text);
 
