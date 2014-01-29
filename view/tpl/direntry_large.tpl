@@ -13,7 +13,7 @@
 <div class="clear"></div>
 
 
-<div class="contact-name" id="directory-name-{{$id}}"  >{{$name}}</div>
+<div class="contact-name" id="directory-name-{{$id}}"  >{{$name}}{{if $online}} <i class="icon-asterisk online-now" title="{{$online}}"></i>{{/if}}</div>
 {{if $connect}}
 <div class="directory-connect"><a href="{{$connect}}">{{$conn_label}}</a></div>
 {{/if}}

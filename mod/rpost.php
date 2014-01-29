@@ -65,8 +65,10 @@ function rpost_content(&$a) {
 	if($_REQUEST['remote_return']) {
 		$_SESSION['remote_return'] = $_REQUEST['remote_return'];
 	}
-	if(argc() > 1 && argv(1) === 'return' && $_SESSION['remote_return']) {
-		goaway($_SESSION['remote_return']);
+	if(argc() > 1 && argv(1) === 'return') {
+		if($_SESSION['remote_return'])
+			goaway($_SESSION['remote_return']);
+		goaway(z_root() . '/network');
 	}
 
 	$plaintext = true;

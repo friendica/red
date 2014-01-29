@@ -44,6 +44,7 @@ head_add_js('docready.js');
 head_add_js('library/colorbox/jquery.colorbox-min.js');
 head_add_js('library/bootstrap-datetimepicker/js/moment.js');
 head_add_js('library/bootstrap-datetimepicker/js/bootstrap-datetimepicker.min.js');
+
 /**
  * Those who require this feature will know what to do with it.
  * Those who don't, won't.

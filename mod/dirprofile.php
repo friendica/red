@@ -74,6 +74,9 @@ function dirprofile_init(&$a) {
 						$qrlink = zid($rr['url']);
 						$connect_link = ((local_user()) ? z_root() . '/follow?f=&url=' . urlencode($rr['address']) : ''); 		
 
+						$online = remote_online_status($rr['address']);
+
+
 						if(in_array($rr['hash'],$contacts))
 							$connect_link = '';
 
@@ -151,6 +154,7 @@ function dirprofile_init(&$a) {
 							'$photo' => $rr['photo_l'],
 							'$alttext' => $rr['name'] . ' ' . $rr['address'],
 							'$name' => $rr['name'],
+							'$online' => (($online) ? t('Online Now') : ''),
 							'$details' => $pdesc . $details,
 							'$profile' => $profile,
 							'$address' => $rr['address'],

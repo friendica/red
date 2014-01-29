@@ -544,6 +544,9 @@ function profile_load(&$a, $nickname, $profile = '') {
 	}
 
 	$a->profile = $r[0];
+	$online = get_online_status($nickname);
+	$a->profile['online_status'] = $online['result'];
+
 	$a->profile_uid = $r[0]['profile_uid'];
 
 	$a->page['title'] = $a->profile['channel_name'] . " - " . $a->profile['channel_address'] . "@" . $a->get_hostname();
@@ -678,13 +681,15 @@ function profile_sidebar($profile, $block = 0, $show_connect = true) {
 	$gender   = ((x($profile,'gender')   == 1) ? t('Gender:')   : False);
 	$marital  = ((x($profile,'marital')  == 1) ? t('Status:')   : False);
 	$homepage = ((x($profile,'homepage') == 1) ? t('Homepage:') : False);
+	$profile['online']   = (($profile['online_status'] === 'online') ? t('Online Now') : False);
+logger('online: ' . $profile['online']);
 
 	if(! perm_is_allowed($profile['uid'],((is_array($observer)) ? $observer['xchan_hash'] : ''),'view_profile')) {
 		$block = true;
 	}
 
 	if(($profile['hidewall'] || $block) && (! local_user()) && (! remote_user())) {
-		$location = $pdesc = $gender = $marital = $homepage = False;
+		$location = $pdesc = $gender = $marital = $homepage = $online = False;
 	}
 
 	$firstname = ((strpos($profile['name'],' '))
@@ -1143,4 +1148,47 @@ function is_foreigner($s) {
 
 function is_member($s) {
 	return((is_foreigner($s)) ? false : true);
+}
+
+function get_online_status($nick) {
+
+	$ret = array('result' => false);
+
+	$r = q("select channel_id, channel_hash from channel where channel_address = '%s' limit 1",
+		dbesc(argv(1))
+	);
+	if($r) {
+		$hide = get_pconfig($r[0]['channel_id'],'system','hide_online_status');
+		if($hide)
+			return $ret;
+		$x = q("select cp_status from chatpresence where cp_xchan = '%s' and cp_room = 0 limit 1",
+			dbesc($r[0]['channel_hash'])
+		);
+		if($x)
+			$ret['result'] = $x[0]['cp_status'];
+	}
+
+	return $ret;
+}
+
+
+function remote_online_status($webbie) {
+
+	$result = false;
+	$r = q("select * from hubloc where hubloc_addr = '%s' limit 1",
+		dbesc($webbie)
+	);
+	if(! $r)
+		return $result;
+
+	$url = $r[0]['hubloc_url'] . '/online/' . substr($webbie,0,strpos($webbie,'@'));
+
+	$x = z_fetch_url($url);
+	if($x['success']) {
+		$j = json_decode($x['body'],true);
+		if($j)
+			$result = (($j['result']) ? $j['result'] : false);
+	}
+	return $result;
+
 }

@@ -43,6 +43,35 @@ function ping_init(&$a) {
 		unset($_SESSION['sysmsg_info']);
 	}
 
+	if(get_observer_hash() && (! $result['invalid'])) {
+		$r = q("select cp_id, cp_room from chatpresence where cp_xchan = '%s' and cp_client = '%s'",
+			dbesc(get_observer_hash()),
+			dbesc($_SERVER['REMOTE_ADDR'])
+		);
+		$basic_presence = false;
+		if($r) {
+			foreach($r as $rr) {
+				if($rr['cp_room'] == 0)
+					$basic_presence = true;	
+				q("update chatpresence set cp_last = '%s' where cp_id = %d limit 1",
+					dbesc(datetime_convert()),
+					intval($rr['cp_id'])
+				);
+			}
+		}
+		if(! $basic_presence) {
+			q("insert into chatpresence ( cp_xchan, cp_last, cp_status, cp_client)
+				values( '%s', '%s', '%s', '%s' ) ",
+				dbesc(get_observer_hash()),
+				dbesc(datetime_convert()),
+				dbesc('online'),
+				dbesc($_SERVER['REMOTE_ADDR'])
+			);
+		}
+	}
+
+	q("delete from chatpresence where cp_last < UTC_TIMESTAMP() - INTERVAL 3 MINUTE"); 
+
 	if((! local_user()) || ($result['invalid'])) {
 		echo json_encode($result);
 		killme();

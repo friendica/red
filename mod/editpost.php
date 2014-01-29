@@ -92,6 +92,11 @@ function editpost_content(&$a) {
 
 	}
 
+	$cipher = get_pconfig(get_app()->profile['profile_uid'],'system','default_cipher');
+	if(! $cipher)
+		$cipher = 'aes256';
+
+
 	$o .= replace_macros($tpl,array(
 		'$return_path' => $_SESSION['return_url'],
 		'$action' => 'item',
@@ -128,11 +133,12 @@ function editpost_content(&$a) {
 		'$jotplugins' => $jotplugins,
 		'$sourceapp' => t($a->sourcename),
 		'$catsenabled' => $catsenabled,
-		'$defexpire' => $itm[0]['expires'],
-		'$feature_expire' => 'none',
+		'$defexpire' => datetime_convert('UTC', date_default_timezone_get(),$itm[0]['expires']),
+		'$feature_expire' => ((feature_enabled(get_app()->profile['profile_uid'],'content_expire') && (! $webpage)) ? 'block' : 'none'),
 		'$expires' => t('Set expiration date'),
-		'$feature_encrypt' => 'none',
+		'$feature_encrypt' => ((feature_enabled(get_app()->profile['profile_uid'],'content_encrypt') && (! $webpage)) ? 'block' : 'none'),
 		'$encrypt' => t('Encrypt text'),
+		'$cipher' => $cipher,
 		'$expiryModalOK' => t('OK'),
 		'$expiryModalCANCEL' => t('Cancel'),
 	));

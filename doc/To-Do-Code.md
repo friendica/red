@@ -17,7 +17,7 @@ We need much more than this, but here are areas where developers can help. Pleas
 
 * (Advanced) create a UI for building Comanche pages
 
-* Help with WebDAV and file storage implementation, especially replacing the fugly Sabre web UI. 
+* templatise and translate the Web interface to webDAV
 
 * Extend WebDAV to provide desktop access to photo albums
 
@@ -25,7 +25,7 @@ We need much more than this, but here are areas where developers can help. Pleas
 
 * service classes - account overview page showing resources consumed by channel. With special consideration this page can also be accessed at a meta level by the site admin to drill down on problematic accounts/channels. 
 
-* Events module - bring back birthday reminders for friends, fix permissions on events, and provide JS translation support for the calendar overview
+* Events module - bring back birthday reminders for friends, fix permissions on events, and provide JS translation support for the calendar overview; integrate with calDAV
 
 * Events module - event followups and RSVP
 
