@@ -25,7 +25,7 @@ function attach_init(&$a) {
 		return;
 
 	header('Content-type: ' . $r['data']['filetype']);
-	header('Content-disposition: attachment; filename=' . $r['data']['filename']);
+	header('Content-disposition: attachment; filename="' . $r['data']['filename']);
 	if($r['data']['flags'] & ATTACH_FLAG_OS ) {
 		$istream = fopen('store/' . $c[0]['channel_address'] . '/' . $r['data']['data'],'rb');
 		$ostream = fopen('php://output','wb');
