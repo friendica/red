@@ -28,6 +28,7 @@ $('#chat-form').submit(function(ev) {
 	$('body').css('cursor','wait');
 	$.post("chatsvc", $('#chat-form').serialize(),function(data) {
 			if(chat_timer) clearTimeout(chat_timer);
+			$('#chatText').val('');
 			load_chats();
 			$('body').css('cursor','auto');
 		},'json');
@@ -40,9 +41,9 @@ function load_chats() {
 		if(data.success) {
 			update_inroom(data.inroom);
 			update_chats(data.chats);
-		});
-	}
-
+		}
+	});
+	
 	chat_timer = setTimeout(load_chats,10000);
 
 }
