@@ -88,8 +88,8 @@ function chatroom_enter($observer_xchan,$room_id,$status,$client) {
 	require_once('include/security.php');
 	$sql_extra = permissions_sql($r[0]['cr_uid']);
 
-	$x = q("select * from chatroom where cr_id = %d and uid = %d $sql_extra limit 1",
-			intval($room_id)
+	$x = q("select * from chatroom where cr_id = %d and cr_uid = %d $sql_extra limit 1",
+			intval($room_id),
 			intval($r[0]['cr_uid'])
 	);
 	if(! $x) {
