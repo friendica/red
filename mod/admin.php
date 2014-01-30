@@ -479,12 +479,9 @@ function admin_page_hubloc_post(&$a){
 			intval($hublocid)
 		);
 		$hublocurl = $arrhublocurl[0]['hubloc_url'] . '/post';
-		$hublocurl = "http://fred-dev.michameer.dyndns.org/post";
 		
 		//perform ping
 		$m = zot_build_packet($a->get_channel(),'ping');
-		logger('ping message : ' . print_r($m,true), LOGGER_DEBUG);
-		logger('ping  _REQUEST ' . print_r($_REQUEST,true), LOGGER_DEBUG);
 	        $r = zot_zot($hublocurl,$m);
         	logger('ping answer: ' . print_r($r,true), LOGGER_DEBUG);
 		
