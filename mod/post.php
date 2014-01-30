@@ -255,6 +255,11 @@ function post_init(&$a) {
 			$a->set_groups(init_groups_visitor($_SESSION['visitor_id']));
 			info(sprintf( t('Welcome %s. Remote authentication successful.'),$x[0]['xchan_name']));
 			logger('mod_zot: auth success from ' . $x[0]['xchan_addr']); 
+			 q("update hubloc set hubloc_status =  (hubloc_status | %d ) where hubloc_id = %d ",
+                                intval(HUBLOC_WORKS),
+                                intval($x[0]['hubloc_id'])
+                        );
+
 
 		} else {
 			if($test) {
@@ -445,14 +450,12 @@ function post_init(&$a) {
 	
 function post_post(&$a) {
 
-	logger('mod_zot: ' . print_r($_REQUEST,true), LOGGER_DEBUG);
 
 	$encrypted_packet = false;
 	$ret = array('success' => false);
 
 	$data = json_decode($_REQUEST['data'],true);
 
-	logger('mod_zot: data: ' . print_r($data,true), LOGGER_DATA);
 
 	/**
 	 * Many message packets will arrive encrypted. The existence of an 'iv' element 
@@ -481,7 +484,6 @@ function post_post(&$a) {
 		$data = array('type' => 'bogus');
 	}
 
-	logger('mod_zot: decoded data: ' . print_r($data,true), LOGGER_DATA);
 
 	$msgtype = ((array_key_exists('type',$data)) ? $data['type'] : '');
 
@@ -490,6 +492,7 @@ function post_post(&$a) {
 		// Useful to get a health check on a remote site.
 		// This will let us know if any important communication details
 		// that we may have stored are no longer valid, regardless of xchan details.
+		logger('POST: got ping send pong now back: ' . z_root() , LOGGER_DEBUG );
  
 		$ret['success'] = true;
 		$ret['site'] = array();

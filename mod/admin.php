@@ -9,7 +9,7 @@
  * @param App $a
  */
 function admin_post(&$a){
-
+	logger('admin_post', LOGGER_DEBUG);
 
 	if(!is_site_admin()) {
 		return;
@@ -74,6 +74,7 @@ function admin_post(&$a){
  */
 function admin_content(&$a) {
 
+	logger('admin_content', LOGGER_DEBUG);
 	if(!is_site_admin()) {
 		return login(false);
 	}
@@ -468,6 +469,7 @@ function admin_page_site(&$a) {
 }
 function admin_page_hubloc_post(&$a){
 	check_form_security_token_redirectOnErr('/admin/hubloc', 'admin_hubloc');
+	require_once('include/zot.php');
 
 	//prepare for ping
 
@@ -477,18 +479,33 @@ function admin_page_hubloc_post(&$a){
 			intval($hublocid)
 		);
 		$hublocurl = $arrhublocurl[0]['hubloc_url'] . '/post';
-		logger('hubloc_url : ' . $hublocurl , LOGGER_DEBUG);
+		
+		//perform ping
+		$m = zot_build_packet($a->get_channel(),'ping');
+	        $r = zot_zot($hublocurl,$m);
+		//handle results and set the hubloc flags in db to make results visible
+		$r2 = $r[body];
+		$r3 = $r2[success];
+		if ( $r3[success] == True ){
+			//set HUBLOC_OFFLINE to 0
+			logger(' success = true ',LOGGER_DEBUG);
+		} else {
+			//set HUBLOC_OFFLINE to 1 
+			logger(' success = false ', LOGGER_DEBUG);
+
+		}
+		
+		//unfotunatly zping wont work, I guess return format is not correct
+		 //require_once('mod/zping.php');
+		 //$r = zping_content($hublocurl);
+        	 //logger('zping answer: ' . $r, LOGGER_DEBUG);
+		
+
+		//in case of repair store new pub key for tested hubloc (all channel with this hubloc) in db
+		//after repair set hubloc flags to 0
+
 	}
 
-	//if ( $_POST'' == "check" ) {
-	//	//todo
-	//}
-
-	//perform ping
-	//handle results and set the hubloc flags in db to make results visible
-
-	//in case of repair store new pub key for tested hubloc (all channel with this hubloc) in db
-	//after repair set hubloc flags to 0
 
 	goaway($a->get_baseurl(true) . '/admin/hubloc' );
 	return;
