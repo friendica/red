@@ -39,20 +39,26 @@ function chat_init(&$a) {
 
 function chat_content(&$a) {
 
-	if(! perm_is_allowed($a->profile['profile_uid'],get_observer_hash(),'chat')) {
+	$observer = get_observer_hash();
+	if(! $observer) {
+		notice( t('Permission denied.') . EOL);
+		return;
+	}
+
+	if(! perm_is_allowed($a->profile['profile_uid'],$observer,'chat')) {
 		notice( t('Permission denied.') . EOL);
 		return;
 	}
 	
 	if((argc() > 3) && intval(argv(2)) && (argv(3) === 'leave')) {
-		chatroom_leave(get_observer_hash(),$room_id,$_SERVER['REMOTE_ADDR']);
+		chatroom_leave($observer,$room_id,$_SERVER['REMOTE_ADDR']);
 		goaway(z_root() . '/channel/' . argv(1));
 	}
 
 
 	if(argc() > 2 && intval(argv(2))) {
 		$room_id = intval(argv(2));
-		$x = chatroom_enter(get_observer_hash(),$room_id,'online',$_SERVER['REMOTE_ADDR']);
+		$x = chatroom_enter($observer,$room_id,'online',$_SERVER['REMOTE_ADDR']);
 		if(! $x)
 			return;
 		$o = replace_macros(get_markup_template('chat.tpl'),array());
