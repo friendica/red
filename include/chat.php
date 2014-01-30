@@ -20,6 +20,18 @@ function chatroom_create($channel,$arr) {
 		return $ret;
 	}
 
+	$r = q("select count(cr_id) as total from chatroom where cr_aid = %d",
+		intval($channel['channel_account_id'])
+	);
+	if($r)
+		 $limit = service_class_fetch($channel_id,'chatrooms');
+
+    if(($r) && ($limit !== false) && ($r[0]['total'] >= $limit)) {
+        $ret['message'] = upgrade_message();
+        return $ret;
+    }
+
+
 	$created = datetime_convert();
 
 	$x = q("insert into chatroom ( cr_aid, cr_uid, cr_name, cr_created, cr_edited, allow_cid, allow_gid, deny_cid, deny_gid )
