@@ -10,8 +10,7 @@
 		</li>
 		{{/foreach}}
 		<li><a href="profile_photo" >{{$profile.menu.chg_photo}}</a></li>
-		<li><a href="profiles/new" id="profile-listing-new-link">{{$profile.menu.cr_new}}</a></li>
-				
+		{{if $profile.menu.cr_new}}<li><a href="profiles/new" id="profile-listing-new-link">{{$profile.menu.cr_new}}</a></li>{{/if}}
 	</ul>
 	</div>
 	{{/if}}
