@@ -580,8 +580,12 @@ function widget_menu_preview($arr) {
 function widget_chatroom_list($arr) {
 	require_once("include/chat.php");
 	$r = chatroom_list(local_user());
+	$channel = get_app()->get_channel();
 	return replace_macros(get_markup_template('chatroomlist.tpl'),array(
 		'$header' => t('Chat Rooms'),
+		'$baseurl' => z_root(),
+		'$nickname' => $channel['channel_address'],
 		'$items' => $r,
 	));
 }
+

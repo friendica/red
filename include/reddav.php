@@ -628,7 +628,7 @@ function RedFileData($file, &$auth,$test = false) {
 	}
 
 	if((! $file) || ($file === '/')) {
-		return RedDirectory('/',$auth);
+		return new RedDirectory('/',$auth);
 
 	}
 
