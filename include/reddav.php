@@ -752,7 +752,7 @@ class RedBasicAuth extends Sabre\DAV\Auth\Backend\AbstractBasic {
 		}
 
 		require_once('include/auth.php');
-		$record = account_verify_password($email,$pass);
+		$record = account_verify_password($username,$password);
 		if($record && $record['account_default_channel']) {
 			$r = q("select * from channel where channel_account_id = %d and channel_id = %d limit 1",
 				intval($record['account_id']),
