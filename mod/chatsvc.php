@@ -29,7 +29,19 @@ function chatsvc_post(&$a) {
 
 	$room_id = $a->data['chat']['room_id'];
 	$text = escape_tags($_REQUEST['chat_text']);
+	$status = strip_tags($_REQUEST['status']);
 
+	if($status && $room_id) {
+		$r = q("update chatpresence set cp_status = '%s', cp_last = '%s' where cp_room = %d and cp_xchan = '%s' and cp_client = '%s' limit 1",
+			dbesc($status),
+			dbesc(datetime_convert()),
+			intval($room_id),
+			dbesc(get_observer_hash()),
+			dbesc($_SERVER['REMOTE_ADDR'])
+		);
+	}
+	if(! $text)
+		return;
 
 	$sql_extra = permissions_sql($a->data['chat']['uid']);
 
@@ -95,6 +107,13 @@ function chatsvc_content(&$a) {
 			);
 		}
 	}
+
+	$r = q("update chatpresence set cp_last = '%s' where cp_room = %d and cp_xchan = '%s' and cp_client = '%s' limit 1",
+		dbesc(datetime_convert()),
+		intval($room_id),
+		dbesc(get_observer_hash()),
+		dbesc($_SERVER['REMOTE_ADDR'])
+	);
 
 	$ret['success'] = true;
 	$ret['inroom'] = $inroom;

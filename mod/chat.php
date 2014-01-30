@@ -67,5 +67,8 @@ function chat_content(&$a) {
 		));
 		return $o;
 	}
+	require_once('include/widgets.php');
+
+	return widget_chatroom_list(array());
 
 }
