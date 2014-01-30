@@ -20,6 +20,18 @@ function chatroom_create($channel,$arr) {
 		return $ret;
 	}
 
+	$r = q("select count(cr_id) as total from chatroom where cr_aid = %d",
+		intval($channel['channel_account_id'])
+	);
+	if($r)
+		 $limit = service_class_fetch($channel_id,'chatrooms');
+
+    if(($r) && ($limit !== false) && ($r[0]['total'] >= $limit)) {
+        $ret['message'] = upgrade_message();
+        return $ret;
+    }
+
+
 	$created = datetime_convert();
 
 	$x = q("insert into chatroom ( cr_aid, cr_uid, cr_name, cr_created, cr_edited, allow_cid, allow_gid, deny_cid, deny_gid )
@@ -83,18 +95,20 @@ function chatroom_enter($observer_xchan,$room_id,$status,$client) {
 	$r = q("select * from chatroom where cr_id = %d limit 1",
 		intval($room_id)
 	);
-	if(! $r)
-		return;
+	if(! $r) {
+		notice( t('Room not found.') . EOL);
+		return false;
+	}
 	require_once('include/security.php');
 	$sql_extra = permissions_sql($r[0]['cr_uid']);
 
-	$x = q("select * from chatroom where cr_id = %d and uid = %d $sql_extra limit 1",
-			intval($room_id)
+	$x = q("select * from chatroom where cr_id = %d and cr_uid = %d $sql_extra limit 1",
+			intval($room_id),
 			intval($r[0]['cr_uid'])
 	);
 	if(! $x) {
 		notice( t('Permission denied.') . EOL);
-		return;
+		return false;
 	}
 
 	$r = q("select * from chatpresence where cp_xchan = '%s' and cp_room = %d limit 1",
@@ -122,12 +136,13 @@ function chatroom_enter($observer_xchan,$room_id,$status,$client) {
 }
 
 
-function chatroom_leave($observer_xchan,$room_id,$status) {
+function chatroom_leave($observer_xchan,$room_id,$client) {
 	if(! $room_id || ! $observer_xchan)
 		return;
-	$r = q("select * from chatpresence where cp_xchan = '%s' and cp_room = %d limit 1",
+	$r = q("select * from chatpresence where cp_xchan = '%s' and cp_room = %d and cp_client = '%s' limit 1",
 		dbesc($observer_xchan),
-		intval($room_id)
+		intval($room_id),
+		dbesc($client)
 	);
 	if($r) {
 		q("delete from chatpresence where cp_id = %d limit 1",

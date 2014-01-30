@@ -3,7 +3,7 @@
 {{if $items}}
 <table>
 {{foreach $items as $item}}
-<tr><td>{{$item.cr_name}}</td><td>{{$item.cr_inroom}}</td></tr>
+<tr><td align="left"><a href="{{$baseurl}}/chat/{{$nickname}}/{{$item.cr_id}}">{{$item.cr_name}}</a></td><td align="right">{{$item.cr_inroom}}</td></tr>
 {{/foreach}}
 </table>
 {{/if}}
