@@ -15,6 +15,7 @@
 			<form action="{{$baseurl}}/admin/hubloc" method="post">
 			<input type="hidden" name="hublocid" value="{{$hub.hubloc_id}}">
 			<input type='hidden' name='form_security_token' value='{{$form_security_token}}'>
+			<input type='hidden' name='url' value='{{$hub.hubloc_host}}'>
 			<input type="submit" name="check" value="check" >
 			<input type="submit" name="repair" value="repair" ></td>
 			</form>

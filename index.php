@@ -19,7 +19,7 @@ $a = new App;
 /**
  *
  * Load the configuration file which contains our DB credentials.
- * Ignore errors. If the file doesn't exist or is empty, we are running in installation mode.
+ * Ignore errors. If the file doesn't exist or is empty, we are running in installation mode.'
  *
  */
 
@@ -181,7 +181,6 @@ if(strlen($a->module)) {
 	 * If the site has a custom module to over-ride the standard module, use it.
 	 * Otherwise, look for the standard program module in the 'mod' directory
 	 */
-
 
 	if(! $a->module_loaded) {
 		if(file_exists("custom/{$a->module}.php")) {
