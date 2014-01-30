@@ -59,7 +59,8 @@ function chatsvc_post(&$a) {
 		dbesc(datetime_convert()),
 		dbesc($text)		
 	);
-
+	$ret['success'] = true;
+	json_return_and_die($ret);
 }
 
 function chatsvc_content(&$a) {
