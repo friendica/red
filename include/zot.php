@@ -134,6 +134,7 @@ function zot_build_packet($channel,$type = 'notify',$recipients = null, $remote_
 
 
 function zot_zot($url,$data) {
+	logger('zot_zot ',LOGGER_DEBUG);
 	return z_post_url($url,array('data' => $data));
 }
 

@@ -9,7 +9,7 @@
  * @param App $a
  */
 function admin_post(&$a){
-
+	logger('admin_post', LOGGER_DEBUG);
 
 	if(!is_site_admin()) {
 		return;
@@ -74,6 +74,7 @@ function admin_post(&$a){
  */
 function admin_content(&$a) {
 
+	logger('admin_content', LOGGER_DEBUG);
 	if(!is_site_admin()) {
 		return login(false);
 	}
@@ -478,11 +479,13 @@ function admin_page_hubloc_post(&$a){
 			intval($hublocid)
 		);
 		$hublocurl = $arrhublocurl[0]['hubloc_url'] . '/post';
+		$hublocurl = "http://fred-dev.michameer.dyndns.org/post";
 		
 		//perform ping
 		$m = zot_build_packet($a->get_channel(),'ping');
 		logger('ping message : ' . print_r($m,true), LOGGER_DEBUG);
-	        $r = zot_zot($hubloc_url,$m);
+		logger('ping  _REQUEST ' . print_r($_REQUEST,true), LOGGER_DEBUG);
+	        $r = zot_zot($hublocurl,$m);
         	logger('ping answer: ' . print_r($r,true), LOGGER_DEBUG);
 		
 		//unfotunatly zping wont work, I guess return format is not correct

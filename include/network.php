@@ -78,7 +78,7 @@ function z_fetch_url($url, $binary = false, $redirects = 0, $opts = array()) {
 		@curl_setopt($ch, CURLOPT_BINARYTRANSFER,1);
 
 
-	// don't let curl abort the entire application
+	// dont let curl abort the entire application
 	// if it throws any errors.
 
 	$s = @curl_exec($ch);
@@ -86,7 +86,7 @@ function z_fetch_url($url, $binary = false, $redirects = 0, $opts = array()) {
 	$base = $s;
 	$curl_info = @curl_getinfo($ch);
 	$http_code = $curl_info['http_code'];
-//	logger('fetch_url:' . $http_code . ' data: ' . $s);
+	logger('fetch_url:' . $http_code . ' data: ' . $s);
 	$header = '';
 
 	// Pull out multiple headers, e.g. proxy and continuation headers
@@ -129,7 +129,11 @@ function z_fetch_url($url, $binary = false, $redirects = 0, $opts = array()) {
 
 
 function z_post_url($url,$params, $redirects = 0, $opts = array()) {
-
+	
+	logger('z_post_url',LOGGER_DEBUG);
+	logger('z_post_url url ' . $url ,LOGGER_DEBUG);
+	logger('z_post_url params' . $params ,LOGGER_DEBUG);
+	logger('z_post_url redirects ' . $redirects ,LOGGER_DEBUG);
 	$ret = array('return_code' => 0, 'success' => false, 'header' => "", 'body' => "");
 
 	$ch = curl_init($url);
@@ -181,10 +185,12 @@ function z_post_url($url,$params, $redirects = 0, $opts = array()) {
 	// if it throws any errors.
 
 	$s = @curl_exec($ch);
+	logger('z_post_url s ' . $s ,LOGGER_DEBUG);
 
 	$base = $s;
 	$curl_info = curl_getinfo($ch);
 	$http_code = $curl_info['http_code'];
+	logger('z_post_url http_code ' . $http_code ,LOGGER_DEBUG);
 
 	$header = '';
 
