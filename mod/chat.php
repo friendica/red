@@ -61,7 +61,10 @@ function chat_content(&$a) {
 		$x = chatroom_enter($observer,$room_id,'online',$_SERVER['REMOTE_ADDR']);
 		if(! $x)
 			return;
-		$o = replace_macros(get_markup_template('chat.tpl'),array());
+		$o = replace_macros(get_markup_template('chat.tpl'),array(
+			'$room_id' => $room_id,
+			'$submit' => t('Submit')
+		));
 		return $o;
 	}
 

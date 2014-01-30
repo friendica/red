@@ -4,6 +4,8 @@ require_once('include/security.php');
 
 function chatsvc_init(&$a) {
 
+//logger('chatsvc');
+
 	$ret = array('success' => false);
 
 	$a->data['chat']['room_id'] = intval($_REQUEST['room_id']);
