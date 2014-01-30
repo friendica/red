@@ -155,7 +155,7 @@ function chatroom_leave($observer_xchan,$room_id,$client) {
 
 function chatroom_list($uid) {
 
-	$r = q("select cr_name, cr_id, count(cp_id) as cr_inroom from chatroom left join chatpresence on cr_id = cp_room where cr_uid = %d  group by cp_id order by cr_name",
+	$r = q("select cr_name, cr_id, count(cp_id) as cr_inroom from chatroom left join chatpresence on cr_id = cp_room where cr_uid = %d  group by cr_name order by cr_name",
 		intval($uid)
 	);
 
