@@ -588,3 +588,4 @@ function widget_chatroom_list($arr) {
 		'$items' => $r,
 	));
 }
+

@@ -36,6 +36,46 @@ function chat_init(&$a) {
 
 }
 
+function chat_post(&$a) {
+
+	if($_POST['room_name'])
+		$room = strip_tags(trim($_POST['room_name']));	
+
+	if((! $room) || (! local_user()))
+		return;
+
+	$channel = $a->get_channel();
+
+
+	if($_POST['action'] === 'drop') {
+		chatroom_destroy($channel,array('cr_name' => $room));
+		goaway(z_root() . '/chat/' . $channel['channel_address']);
+	}
+
+
+	$arr = array('name' => $room);
+	$arr['allow_gid']   = perms2str($_REQUEST['group_allow']);
+    $arr['allow_cid']   = perms2str($_REQUEST['contact_allow']);
+    $arr['deny_gid']    = perms2str($_REQUEST['group_deny']);
+    $arr['deny_cid']    = perms2str($_REQUEST['contact_deny']);
+
+	chatroom_create($channel,$arr);
+
+	$x = q("select cr_id from chatroom where cr_name = '%s' and cr_uid = %d limit 1",
+		dbesc($room),
+		intval(local_user())
+	);
+
+	if($x)
+		goaway(z_root() . '/chat/' . $channel['channel_address'] . '/' . $x[0]['cr_id']);
+
+	// that failed. Try again perhaps?
+
+	goaway(z_root() . '/chat/' . $channel['channel_address'] . '/new');
+
+
+}
+
 
 function chat_content(&$a) {
 
@@ -62,11 +102,44 @@ function chat_content(&$a) {
 		if(! $x)
 			return;
 		$o = replace_macros(get_markup_template('chat.tpl'),array(
+			'$room_name' => '', // should we get this from the API?
 			'$room_id' => $room_id,
 			'$submit' => t('Submit')
 		));
 		return $o;
 	}
+
+
+
+
+
+	if(local_user() && argc() > 2 && argv(2) === 'new') {
+
+
+		$channel = $a->get_channel();  
+		$channel_acl = array(
+			'allow_cid' => $channel['channel_allow_cid'], 
+			'allow_gid' => $channel['channel_allow_gid'], 
+			'deny_cid'  => $channel['channel_deny_cid'], 
+			'deny_gid'  => $channel['channel_deny_gid']
+		); 
+
+		require_once('include/acl_selectors.php');
+
+		$o = replace_macros(get_markup_template('chatroom_new.tpl'),array(
+			'$header' => t('New Chatroom'),
+			'$name' => array('room_name',t('Chatroom Name'),'', ''),
+			'$acl' => populate_acl($channel_acl),
+			'$submit' => t('Submit')
+		));
+		return $o;
+	}
+
+
+
+
+
+
 	require_once('include/widgets.php');
 
 	return widget_chatroom_list(array());
