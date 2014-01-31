@@ -44,20 +44,17 @@ function ping_init(&$a) {
 	}
 
 	if(get_observer_hash() && (! $result['invalid'])) {
-		$r = q("select cp_id, cp_room from chatpresence where cp_xchan = '%s' and cp_client = '%s'",
+		$r = q("select cp_id, cp_room from chatpresence where cp_xchan = '%s' and cp_client = '%s' and cp_room = 0 limit 1",
 			dbesc(get_observer_hash()),
 			dbesc($_SERVER['REMOTE_ADDR'])
 		);
 		$basic_presence = false;
 		if($r) {
-			foreach($r as $rr) {
-				if($rr['cp_room'] == 0)
-					$basic_presence = true;	
-				q("update chatpresence set cp_last = '%s' where cp_id = %d limit 1",
-					dbesc(datetime_convert()),
-					intval($rr['cp_id'])
-				);
-			}
+			$basic_presence = true;	
+			q("update chatpresence set cp_last = '%s' where cp_id = %d limit 1",
+				dbesc(datetime_convert()),
+				intval($r[0]['cp_id'])
+			);
 		}
 		if(! $basic_presence) {
 			q("insert into chatpresence ( cp_xchan, cp_last, cp_status, cp_client)
