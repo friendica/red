@@ -39,7 +39,7 @@
 			<a class="{{$nav.network.2}}" href="{{$nav.network.0}}" title="{{$nav.network.3}}" ><i class="icon-th nav-icon"></i></a>
 			<span id="net-update" class="nav-notify fakelink" rel="#nav-network-menu"></span>
 			<ul id="nav-network-menu" class="menu-popup notify-menus" rel="network">
-				<li id="nav-network-see-all"><a href="{{$nav.network.all.0}}">{{$nav.network.all.1}}</a></li>
+				{{* <li id="nav-network-see-all"><a href="{{$nav.network.all.0}}">{{$nav.network.all.1}}</a></li> *}}
 				<li id="nav-network-mark-all"><a href="#" onclick="markRead('network'); return false;">{{$nav.network.mark.1}}</a></li>
 				<li class="empty">{{$emptynotifications}}</li>
 			</ul>
@@ -51,7 +51,7 @@
 			<a class="{{$nav.home.2}}" href="{{$nav.home.0}}" title="{{$nav.home.3}}" ><i class="icon-home nav-icon"></i></a>
 			<span id="home-update" class="nav-notify fakelink" rel="#nav-home-menu"></span>
 			<ul id="nav-home-menu" class="menu-popup notify-menus" rel="home">
-				<li id="nav-home-see-all"><a href="{{$nav.home.all.0}}">{{$nav.home.all.1}}</a></li>
+				{{* <li id="nav-home-see-all"><a href="{{$nav.home.all.0}}">{{$nav.home.all.1}}</a></li> *}}
 				<li id="nav-home-mark-all"><a href="#" onclick="markRead('home'); return false;">{{$nav.home.mark.1}}</a></li>
 				<li class="empty">{{$emptynotifications}}</li>
 			</ul>
