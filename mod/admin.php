@@ -484,9 +484,9 @@ function admin_page_hubloc_post(&$a){
 		$m = zot_build_packet($a->get_channel(),'ping');
 	        $r = zot_zot($hublocurl,$m);
 		//handle results and set the hubloc flags in db to make results visible
-		$r2 = $r[body];
-		$r3 = $r2[success];
-		if ( $r3[success] == True ){
+		$r2 = $r['body'];
+		$r3 = $r2['success'];
+		if ( $r3['success'] == True ){
 			//set HUBLOC_OFFLINE to 0
 			logger(' success = true ',LOGGER_DEBUG);
 		} else {
