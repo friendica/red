@@ -1,6 +1,6 @@
 <div id="chatContainer" style="height: 100%; width: 100%;">
 
-    <div id="chatTopBar" style="float: left; height: 400px; width: 400px; overflow-y: auto;">
+    <div id="chatTopBar" style="float: left; height: 400px; width: 650px; overflow-y: auto;">
     	<div id="chatLineHolder"></div>
 	</div>
 

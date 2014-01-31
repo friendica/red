@@ -111,7 +111,7 @@ function chatsvc_content(&$a) {
 
 	$r = q("update chatpresence set cp_last = '%s' where cp_room = %d and cp_xchan = '%s' and cp_client = '%s' limit 1",
 		dbesc(datetime_convert()),
-		intval($room_id),
+		intval($a->data['chat']['room_id']),
 		dbesc(get_observer_hash()),
 		dbesc($_SERVER['REMOTE_ADDR'])
 	);
