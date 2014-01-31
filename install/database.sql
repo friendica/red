@@ -247,6 +247,7 @@ CREATE TABLE IF NOT EXISTS `chatroom` (
   `cr_name` char(255) NOT NULL DEFAULT '',
   `cr_created` datetime NOT NULL DEFAULT '0000-00-00 00:00:00',
   `cr_edited` datetime NOT NULL DEFAULT '0000-00-00 00:00:00',
+  `cr_expire` int(10) unsigned NOT NULL DEFAULT '0',
   `allow_cid` mediumtext NOT NULL,
   `allow_gid` mediumtext NOT NULL,
   `deny_cid` mediumtext NOT NULL,
@@ -256,7 +257,8 @@ CREATE TABLE IF NOT EXISTS `chatroom` (
   KEY `cr_uid` (`cr_uid`),
   KEY `cr_name` (`cr_name`),
   KEY `cr_created` (`cr_created`),
-  KEY `cr_edited` (`cr_edited`)
+  KEY `cr_edited` (`cr_edited`),
+  KEY `cr_expire` (`cr_expire`)
 ) ENGINE=MyISAM DEFAULT CHARSET=utf8;
 
 CREATE TABLE IF NOT EXISTS `clients` (

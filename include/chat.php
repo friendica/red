@@ -31,16 +31,19 @@ function chatroom_create($channel,$arr) {
         return $ret;
     }
 
+	if(! array_key_exists('expire',$arr))
+		$arr['expire'] = 120;  // minutes, e.g. 2 hours
 
 	$created = datetime_convert();
 
-	$x = q("insert into chatroom ( cr_aid, cr_uid, cr_name, cr_created, cr_edited, allow_cid, allow_gid, deny_cid, deny_gid )
-		values ( %d, %d , '%s', '%s', '%s', '%s', '%s', '%s', '%s' ) ",
+	$x = q("insert into chatroom ( cr_aid, cr_uid, cr_name, cr_created, cr_edited, cr_expire, allow_cid, allow_gid, deny_cid, deny_gid )
+		values ( %d, %d , '%s', '%s', '%s', %d, '%s', '%s', '%s', '%s' ) ",
 		intval($channel['channel_account_id']),
 		intval($channel['channel_id']),
 		dbesc($name),
 		dbesc($created),
 		dbesc($created),
+		intval($arr['expire']),
 		dbesc($arr['allow_cid']),
 		dbesc($arr['allow_gid']),
 		dbesc($arr['deny_cid']),
@@ -110,6 +113,9 @@ function chatroom_enter($observer_xchan,$room_id,$status,$client) {
 		notice( t('Permission denied.') . EOL);
 		return false;
 	}
+
+	if(intval($x[0]['cr_expire']))
+		$r = q("delete from chat where created < UTC_TIMESTAMP() - INTERVAL " . intval($x[0]['cr_expire']) . " MINUTE and chat_room = " . intval($x[0]['cr_id']));
 
 	$r = q("select * from chatpresence where cp_xchan = '%s' and cp_room = %d limit 1",
 		dbesc($observer_xchan),
