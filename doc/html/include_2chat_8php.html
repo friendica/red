@@ -4,7 +4,7 @@
 <meta http-equiv="Content-Type" content="text/xhtml;charset=UTF-8"/>
 <meta http-equiv="X-UA-Compatible" content="IE=9"/>
 <meta name="generator" content="Doxygen 1.8.3.1"/>
-<title>The Red Matrix: include/acl_selectors.php File Reference</title>
+<title>The Red Matrix: include/chat.php File Reference</title>
 <link href="tabs.css" rel="stylesheet" type="text/css"/>
 <script type="text/javascript" src="jquery.js"></script>
 <script type="text/javascript" src="dynsections.js"></script>
@@ -85,7 +85,7 @@ var searchBox = new SearchBox("searchBox", "search",false,'Search');
   </div>
 </div>
 <script type="text/javascript">
-$(document).ready(function(){initNavTree('acl__selectors_8php.html','');});
+$(document).ready(function(){initNavTree('include_2chat_8php.html','');});
 </script>
 <div id="doc-content">
 <!-- window showing the filter options -->
@@ -104,81 +104,41 @@ $(document).ready(function(){initNavTree('acl__selectors_8php.html','');});
 
 <div class="header">
   <div class="summary">
-<a href="#namespaces">Namespaces</a> &#124;
 <a href="#func-members">Functions</a>  </div>
   <div class="headertitle">
-<div class="title">acl_selectors.php File Reference</div>  </div>
+<div class="title">chat.php File Reference</div>  </div>
 </div><!--header-->
 <div class="contents">
 <table class="memberdecls">
-<tr class="heading"><td colspan="2"><h2 class="groupheader"><a name="namespaces"></a>
-Namespaces</h2></td></tr>
-<tr class="memitem:namespaceacl__selectors"><td class="memItemLeft" align="right" valign="top">namespace &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="namespaceacl__selectors.html">acl_selectors</a></td></tr>
-<tr class="separator:"><td class="memSeparator" colspan="2">&#160;</td></tr>
-</table><table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a name="func-members"></a>
 Functions</h2></td></tr>
-<tr class="memitem:aa1e3bc344ca2b29f97eb9860216d21a0"><td class="memItemLeft" align="right" valign="top">&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="acl__selectors_8php.html#aa1e3bc344ca2b29f97eb9860216d21a0">group_select</a> ($selname, $selclass, $preselected=false, $size=4)</td></tr>
-<tr class="separator:aa1e3bc344ca2b29f97eb9860216d21a0"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a9476997d2968a5794f3723878ed89c91"><td class="memItemLeft" align="right" valign="top">&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="acl__selectors_8php.html#a9476997d2968a5794f3723878ed89c91">contact_select</a> ($selname, $selclass, $preselected=false, $size=4, $privmail=false, $celeb=false, $privatenet=false, $tabindex=null)</td></tr>
-<tr class="separator:a9476997d2968a5794f3723878ed89c91"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:ad6664fb8330308e23f2645cd6624727e"><td class="memItemLeft" align="right" valign="top">&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="acl__selectors_8php.html#ad6664fb8330308e23f2645cd6624727e">fixacl</a> (&amp;$item)</td></tr>
-<tr class="separator:ad6664fb8330308e23f2645cd6624727e"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a7b5446e999636ceceea65c154d865a31"><td class="memItemLeft" align="right" valign="top">&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="acl__selectors_8php.html#a7b5446e999636ceceea65c154d865a31">populate_acl</a> ($defaults=null, $unused=false)</td></tr>
-<tr class="separator:a7b5446e999636ceceea65c154d865a31"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:acdc80dba4eb796c7472b21129b435422"><td class="memItemLeft" align="right" valign="top">&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="include_2chat_8php.html#acdc80dba4eb796c7472b21129b435422">chatroom_create</a> ($channel, $arr)</td></tr>
+<tr class="separator:acdc80dba4eb796c7472b21129b435422"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a2ba3af6884ecdce95de69262fe599639"><td class="memItemLeft" align="right" valign="top">&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="include_2chat_8php.html#a2ba3af6884ecdce95de69262fe599639">chatroom_destroy</a> ($channel, $arr)</td></tr>
+<tr class="separator:a2ba3af6884ecdce95de69262fe599639"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a2c95b545e46bfee64faa05ecf0afea91"><td class="memItemLeft" align="right" valign="top">&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="include_2chat_8php.html#a2c95b545e46bfee64faa05ecf0afea91">chatroom_enter</a> ($observer_xchan, $room_id, $status, $client)</td></tr>
+<tr class="separator:a2c95b545e46bfee64faa05ecf0afea91"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a1ee1360f7d2549c7549ae07cb5190f0f"><td class="memItemLeft" align="right" valign="top">&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="include_2chat_8php.html#a1ee1360f7d2549c7549ae07cb5190f0f">chatroom_leave</a> ($observer_xchan, $room_id, $client)</td></tr>
+<tr class="separator:a1ee1360f7d2549c7549ae07cb5190f0f"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:aedcb532a0627b8644001a2fadab4e87a"><td class="memItemLeft" align="right" valign="top">&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="include_2chat_8php.html#aedcb532a0627b8644001a2fadab4e87a">chatroom_list</a> ($uid)</td></tr>
+<tr class="separator:aedcb532a0627b8644001a2fadab4e87a"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table>
 <h2 class="groupheader">Function Documentation</h2>
-<a class="anchor" id="a9476997d2968a5794f3723878ed89c91"></a>
+<a class="anchor" id="acdc80dba4eb796c7472b21129b435422"></a>
 <div class="memitem">
 <div class="memproto">
       <table class="memname">
         <tr>
-          <td class="memname">contact_select </td>
+          <td class="memname">chatroom_create </td>
           <td>(</td>
           <td class="paramtype">&#160;</td>
-          <td class="paramname"><em>$selname</em>, </td>
+          <td class="paramname"><em>$channel</em>, </td>
         </tr>
         <tr>
           <td class="paramkey"></td>
           <td></td>
           <td class="paramtype">&#160;</td>
-          <td class="paramname"><em>$selclass</em>, </td>
-        </tr>
-        <tr>
-          <td class="paramkey"></td>
-          <td></td>
-          <td class="paramtype">&#160;</td>
-          <td class="paramname"><em>$preselected</em> = <code>false</code>, </td>
-        </tr>
-        <tr>
-          <td class="paramkey"></td>
-          <td></td>
-          <td class="paramtype">&#160;</td>
-          <td class="paramname"><em>$size</em> = <code>4</code>, </td>
-        </tr>
-        <tr>
-          <td class="paramkey"></td>
-          <td></td>
-          <td class="paramtype">&#160;</td>
-          <td class="paramname"><em>$privmail</em> = <code>false</code>, </td>
-        </tr>
-        <tr>
-          <td class="paramkey"></td>
-          <td></td>
-          <td class="paramtype">&#160;</td>
-          <td class="paramname"><em>$celeb</em> = <code>false</code>, </td>
-        </tr>
-        <tr>
-          <td class="paramkey"></td>
-          <td></td>
-          <td class="paramtype">&#160;</td>
-          <td class="paramname"><em>$privatenet</em> = <code>false</code>, </td>
-        </tr>
-        <tr>
-          <td class="paramkey"></td>
-          <td></td>
-          <td class="paramtype">&#160;</td>
-          <td class="paramname"><em>$tabindex</em> = <code>null</code>&#160;</td>
+          <td class="paramname"><em>$arr</em>&#160;</td>
         </tr>
         <tr>
           <td></td>
@@ -188,53 +148,25 @@ Functions</h2></td></tr>
       </table>
 </div><div class="memdoc">
 
-<p>Referenced by <a class="el" href="mail_8php.html#a3c7c485fc69f92371e8b20936040eca1">mail_content()</a>.</p>
+<p>Referenced by <a class="el" href="mod_2chat_8php.html#a999d594745597c656c9760253ae297ad">chat_post()</a>.</p>
 
 </div>
 </div>
-<a class="anchor" id="ad6664fb8330308e23f2645cd6624727e"></a>
+<a class="anchor" id="a2ba3af6884ecdce95de69262fe599639"></a>
 <div class="memitem">
 <div class="memproto">
       <table class="memname">
         <tr>
-          <td class="memname">fixacl </td>
-          <td>(</td>
-          <td class="paramtype">&amp;&#160;</td>
-          <td class="paramname"><em>$item</em></td><td>)</td>
-          <td></td>
-        </tr>
-      </table>
-</div><div class="memdoc">
-
-</div>
-</div>
-<a class="anchor" id="aa1e3bc344ca2b29f97eb9860216d21a0"></a>
-<div class="memitem">
-<div class="memproto">
-      <table class="memname">
-        <tr>
-          <td class="memname">group_select </td>
+          <td class="memname">chatroom_destroy </td>
           <td>(</td>
           <td class="paramtype">&#160;</td>
-          <td class="paramname"><em>$selname</em>, </td>
+          <td class="paramname"><em>$channel</em>, </td>
         </tr>
         <tr>
           <td class="paramkey"></td>
           <td></td>
           <td class="paramtype">&#160;</td>
-          <td class="paramname"><em>$selclass</em>, </td>
-        </tr>
-        <tr>
-          <td class="paramkey"></td>
-          <td></td>
-          <td class="paramtype">&#160;</td>
-          <td class="paramname"><em>$preselected</em> = <code>false</code>, </td>
-        </tr>
-        <tr>
-          <td class="paramkey"></td>
-          <td></td>
-          <td class="paramtype">&#160;</td>
-          <td class="paramname"><em>$size</em> = <code>4</code>&#160;</td>
+          <td class="paramname"><em>$arr</em>&#160;</td>
         </tr>
         <tr>
           <td></td>
@@ -244,23 +176,37 @@ Functions</h2></td></tr>
       </table>
 </div><div class="memdoc">
 
+<p>Referenced by <a class="el" href="mod_2chat_8php.html#a999d594745597c656c9760253ae297ad">chat_post()</a>.</p>
+
 </div>
 </div>
-<a class="anchor" id="a7b5446e999636ceceea65c154d865a31"></a>
+<a class="anchor" id="a2c95b545e46bfee64faa05ecf0afea91"></a>
 <div class="memitem">
 <div class="memproto">
       <table class="memname">
         <tr>
-          <td class="memname">populate_acl </td>
+          <td class="memname">chatroom_enter </td>
           <td>(</td>
           <td class="paramtype">&#160;</td>
-          <td class="paramname"><em>$defaults</em> = <code>null</code>, </td>
+          <td class="paramname"><em>$observer_xchan</em>, </td>
         </tr>
         <tr>
           <td class="paramkey"></td>
           <td></td>
           <td class="paramtype">&#160;</td>
-          <td class="paramname"><em>$unused</em> = <code>false</code>&#160;</td>
+          <td class="paramname"><em>$room_id</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">&#160;</td>
+          <td class="paramname"><em>$status</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">&#160;</td>
+          <td class="paramname"><em>$client</em>&#160;</td>
         </tr>
         <tr>
           <td></td>
@@ -270,7 +216,59 @@ Functions</h2></td></tr>
       </table>
 </div><div class="memdoc">
 
-<p>Referenced by <a class="el" href="channel_8php.html#a9c6a6179e0e626398ebecc6151905ef1">channel_content()</a>, <a class="el" href="mod_2chat_8php.html#a8b0b8bee6fef6477e8c64c5e951b1b4f">chat_content()</a>, <a class="el" href="display_8php.html#a37137c98d47bf3306f4c2bb9f5b60de0">display_content()</a>, <a class="el" href="editwebpage_8php.html#a375e945255fad79a71036528f7480650">editwebpage_content()</a>, <a class="el" href="events_8php.html#a1d293fb217ae6bc9e3858c4b32e363ec">events_content()</a>, <a class="el" href="filestorage_8php.html#a61bb1be78472555df4ce619f51014040">filestorage_content()</a>, <a class="el" href="mitem_8php.html#a7a31b702ecad18eeb6a38b243ff0037e">mitem_content()</a>, <a class="el" href="mod_2network_8php.html#a43f2f29b90c5e29072c561934bc8f8b4">network_content()</a>, <a class="el" href="mod_2photos_8php.html#aa87382611a66ec5effdb2d78f13f5812">photos_content()</a>, <a class="el" href="rpost_8php.html#a8190354d789000806d9879aea276728f">rpost_content()</a>, and <a class="el" href="webpages_8php.html#af3b7397d4abc153e3d2147740ee1a41d">webpages_content()</a>.</p>
+<p>Referenced by <a class="el" href="mod_2chat_8php.html#a8b0b8bee6fef6477e8c64c5e951b1b4f">chat_content()</a>.</p>
+
+</div>
+</div>
+<a class="anchor" id="a1ee1360f7d2549c7549ae07cb5190f0f"></a>
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">chatroom_leave </td>
+          <td>(</td>
+          <td class="paramtype">&#160;</td>
+          <td class="paramname"><em>$observer_xchan</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">&#160;</td>
+          <td class="paramname"><em>$room_id</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">&#160;</td>
+          <td class="paramname"><em>$client</em>&#160;</td>
+        </tr>
+        <tr>
+          <td></td>
+          <td>)</td>
+          <td></td><td></td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+<p>Referenced by <a class="el" href="mod_2chat_8php.html#a8b0b8bee6fef6477e8c64c5e951b1b4f">chat_content()</a>.</p>
+
+</div>
+</div>
+<a class="anchor" id="aedcb532a0627b8644001a2fadab4e87a"></a>
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">chatroom_list </td>
+          <td>(</td>
+          <td class="paramtype">&#160;</td>
+          <td class="paramname"><em>$uid</em></td><td>)</td>
+          <td></td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+<p>Referenced by <a class="el" href="widgets_8php.html#a47c72aac42058ea086c9ef8651c259da">widget_chatroom_list()</a>.</p>
 
 </div>
 </div>

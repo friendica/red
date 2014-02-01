@@ -70,7 +70,6 @@ var text_8php =
     [ "sanitise_acl", "text_8php.html#a9fbeae13c9abd6e27cb4d8d1817f969c", null ],
     [ "search", "text_8php.html#a876e94892867019935b348b573299352", null ],
     [ "searchbox", "text_8php.html#aae91e4d2a2c6f7a9daccd2c186ae3447", null ],
-    [ "smile_decode", "text_8php.html#aca0f589be74fab1a460c57e88dad9779", null ],
     [ "smile_encode", "text_8php.html#a44d460fcdee6247c67b9bef3ea15f3e6", null ],
     [ "smilies", "text_8php.html#a3d225b253bb9e0f2498c11647d927b0b", null ],
     [ "sslify", "text_8php.html#a33bdb5d4bfff2ede7caf61a98ac0a2e9", null ],
