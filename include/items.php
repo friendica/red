@@ -2466,7 +2466,7 @@ function check_item_source($uid,$item) {
 		return false;
 	
 
-	$r = q("select * from source where src_channel_id = %d and src_xchan = '%s' limit 1",
+	$r = q("select * from source where src_channel_id = %d and ( src_xchan = '%s' || src_xchan = '*' ) limit 1",
 		intval($uid),
 		dbesc(($item['source_xchan']) ?  $item['source_xchan'] : $item['owner_xchan'])
 	);
@@ -2502,7 +2502,7 @@ function check_item_source($uid,$item) {
 		foreach($words as $word) {
 			if(substr($word,0,1) === '#' && $tags) {
 				foreach($tags as $t)
-					if($t['type'] == TERM_HASHTAG && substr($t,1) === $word)
+					if(($t['type'] == TERM_HASHTAG) && ((substr($t,1) === substr($word,1)) || (substr($word,1) === '*')))
 						return true;
 			}
 			if(stristr($text,$word) !== false)
