@@ -72,7 +72,6 @@ var searchData=
   ['siteinfo_5finit',['siteinfo_init',['../siteinfo_8php.html#a3efbd0bd6564af19ec0a9ce0294e59d0',1,'siteinfo.php']]],
   ['sitelist_2ephp',['sitelist.php',['../sitelist_8php.html',1,'']]],
   ['sitelist_5finit',['sitelist_init',['../sitelist_8php.html#a665a59bf60f780b40f32c909f4a473b1',1,'sitelist.php']]],
-  ['smile_5fdecode',['smile_decode',['../text_8php.html#aca0f589be74fab1a460c57e88dad9779',1,'text.php']]],
   ['smile_5fencode',['smile_encode',['../text_8php.html#a44d460fcdee6247c67b9bef3ea15f3e6',1,'text.php']]],
   ['smilies',['smilies',['../text_8php.html#a3d225b253bb9e0f2498c11647d927b0b',1,'text.php']]],
   ['smilies_2ephp',['smilies.php',['../smilies_8php.html',1,'']]],

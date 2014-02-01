@@ -12,8 +12,12 @@ function sources_post(&$a) {
 	$abook = intval($_REQUEST['abook']);
 	$words = $_REQUEST['words'];
 	$frequency = $_REQUEST['frequency'];
+	$name = $_REQUEST['name'];
 
 	$channel = $a->get_channel();
+
+	if($name == '*')
+		$xchan = '*';
 
 	if($abook) {
 		$r = q("select abook_xchan from abook where abook_id = %d and abook_channel = %d limit 1",
@@ -74,6 +78,9 @@ function sources_content(&$a) {
 		);
 		if($r) {
 			for($x = 0; $x < count($r); $x ++) {
+				if($r[$x]['src_xchan'] == '*') {
+					$r[$x]['xchan_name'] = t('*');
+				}
 				$r[$x]['src_patt'] = htmlspecialchars($r[$x]['src_patt'], ENT_COMPAT,'UTF-8');
 			}
 		}

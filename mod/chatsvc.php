@@ -85,7 +85,17 @@ function chatsvc_content(&$a) {
 	);
 	if($r) {
 		foreach($r as $rr) {
-			$inroom[] = array('img' => zid($rr['xchan_photo_m']), 'img_type' => $rr['xchan_photo_mimetype'],'name' => $rr['xchan_name']);		
+			switch($rr['cp_status']) {
+				case 'away':
+					$status = t('Away');
+					break;
+				case 'online':
+				default:
+					$status = t('Online');
+					break;
+			}
+
+			$inroom[] = array('img' => zid($rr['xchan_photo_m']), 'img_type' => $rr['xchan_photo_mimetype'],'name' => $rr['xchan_name'], status => $status);		
 		}
 	}
 

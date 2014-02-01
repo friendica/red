@@ -137,6 +137,10 @@ var NAVTREEINDEX1 =
 "channel_8php.html#ac7c8c7845741baadf87fae6bc279f3dc":[5,0,1,9,1],
 "chanview_8php.html":[5,0,1,10],
 "chanview_8php.html#a4192c6da888c8c1165851acf9ad4cb8b":[5,0,1,10,0],
+"chatsvc_8php.html":[5,0,1,12],
+"chatsvc_8php.html#a28d248b056fa47452e28ed01130e9116":[5,0,1,12,1],
+"chatsvc_8php.html#a7032784215e1f6747cf385a6598770f9":[5,0,1,12,0],
+"chatsvc_8php.html#a7c9a9b9c24a2b02eed8efd6b09632d03":[5,0,1,12,2],
 "classApp.html":[4,0,5],
 "classApp.html#a037049cba88dfc6ff94f4b5b779e3fd3":[4,0,5,56],
 "classApp.html#a050b0696118da47e8b30859ad1a2c149":[4,0,5,40],
@@ -245,9 +249,5 @@ var NAVTREEINDEX1 =
 "classConversation.html#a8335cdd43f1836e3c255638e61a09e16":[4,0,8,1],
 "classConversation.html#a8748445aa26047ebed5141f3c3cbc244":[4,0,8,16],
 "classConversation.html#a87a0d704d5f2b1a008cc2e9ce06a1bcd":[4,0,8,3],
-"classConversation.html#a8898bddc1e8990e81dab9a13a532cc93":[4,0,8,12],
-"classConversation.html#a8b47c92b69459d461ea3cc9aae9597a3":[4,0,8,8],
-"classConversation.html#aa95c1a62af38bdfba7add9549bec083b":[4,0,8,13],
-"classConversation.html#adf25ce023b69a166c63c6e84e02c136a":[4,0,8,9],
-"classConversation.html#ae3d4190142e12b57051f11f2911f77a0":[4,0,8,4]
+"classConversation.html#a8898bddc1e8990e81dab9a13a532cc93":[4,0,8,12]
 };
