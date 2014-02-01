@@ -66,7 +66,7 @@ function update_inroom(inroom) {
 	var count = inroom.length;
 	$.each( inroom, function(index, item) {
 		var newNode = document.createElement('div');
-		$(newNode).html('<img style="height: 32px; width: 32px;" src="' + item.img + '" alt="' + item.name + '" /><br />' + item.name + '<br/>');
+		$(newNode).html('<img style="height: 32px; width: 32px;" src="' + item.img + '" alt="' + item.name + '" /> ' + item.status + '<br />' + item.name + '<br/>');
 		html.appendChild(newNode); 		
 	});
 	$('#chatUsers').html(html);	
