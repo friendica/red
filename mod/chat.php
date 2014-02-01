@@ -101,8 +101,15 @@ function chat_content(&$a) {
 		$x = chatroom_enter($observer,$room_id,'online',$_SERVER['REMOTE_ADDR']);
 		if(! $x)
 			return;
+		$x = q("select * from chatroom where cr_id = %d and cr_uid = %d $sql_extra limit 1",
+			intval($room_id),
+			intval($a->profile['profile_uid'])
+		);
+		if($x) {
+			$room_name = $x[0]['cr_name'];
+		}
 		$o = replace_macros(get_markup_template('chat.tpl'),array(
-			'$room_name' => '', // should we get this from the API?
+			'$room_name' => $room_name,
 			'$room_id' => $room_id,
 			'$submit' => t('Submit')
 		));

@@ -1,3 +1,4 @@
+<h1>{{$room_name}}</h1>
 <div id="chatContainer" style="height: 100%; width: 100%;">
 
     <div id="chatTopBar" style="float: left; height: 400px; width: 650px; overflow-y: auto;">
