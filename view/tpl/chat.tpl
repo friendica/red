@@ -65,7 +65,7 @@ function update_inroom(inroom) {
 	var count = inroom.length;
 	$.each( inroom, function(index, item) {
 		var newNode = document.createElement('div');
-		$(newNode).html('<img style="height: 32px; width: 32px;" src="' + item.img + '" alt="' + item.name + '" />');
+		$(newNode).html('<img style="height: 32px; width: 32px;" src="' + item.img + '" alt="' + item.name + '" /><br />' + item.name + '<br/>');
 		html.appendChild(newNode); 		
 	});
 	$('#chatUsers').html(html);	
@@ -77,8 +77,10 @@ function update_chats(chats) {
 	$.each( chats, function(index, item) {
 		last_chat = item.id;
 		var newNode = document.createElement('div');
-		$(newNode).html('<div style="margin-bottom: 5px; clear: both;"><img style="height: 32px; width: 32px; float: left;" src="' + item.img + '" alt="' + item.name + '" /><div class="chat-body; style="float: left; width: 80%;">' + item.text + '</div></div>');
+		$(newNode).html('<div style="margin-bottom: 5px; clear: both;"><img style="height: 32px; width: 32px; float: left;" src="' + item.img + '" alt="' + item.name + '" /><div class="chat-body" style="float: left; width: 80%; margin-left: 15px; font-size: 14px;">' + item.name + ' <span class="autotime" title="' + item.isotime + '">' + item.localtime + '</span><br />' + item.text + '</div></div>');
 		$('#chatLineHolder').append(newNode);
+		$(".autotime").timeago();
+
 		});
 	var elem = document.getElementById('chatTopBar');
 	elem.scrollTop = elem.scrollHeight;
