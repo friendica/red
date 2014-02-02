@@ -91,7 +91,7 @@ function chat_content(&$a) {
 	}
 	
 	if((argc() > 3) && intval(argv(2)) && (argv(3) === 'leave')) {
-		chatroom_leave($observer,$room_id,$_SERVER['REMOTE_ADDR']);
+		chatroom_leave($observer,argv(2),$_SERVER['REMOTE_ADDR']);
 		goaway(z_root() . '/channel/' . argv(1));
 	}
 
@@ -111,7 +111,13 @@ function chat_content(&$a) {
 		$o = replace_macros(get_markup_template('chat.tpl'),array(
 			'$room_name' => $room_name,
 			'$room_id' => $room_id,
-			'$submit' => t('Submit')
+			'$baseurl' => z_root(),
+			'$nickname' => argv(1),
+			'$submit' => t('Submit'),
+			'$leave' => t('Leave Room'),
+			'$away' => t('I am away right now'),
+			'$online' => t('I am online')
+
 		));
 		return $o;
 	}

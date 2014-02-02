@@ -29,17 +29,6 @@ function chatsvc_post(&$a) {
 
 	$room_id = $a->data['chat']['room_id'];
 	$text = escape_tags($_REQUEST['chat_text']);
-	$status = strip_tags($_REQUEST['status']);
-
-	if($status && $room_id) {
-		$r = q("update chatpresence set cp_status = '%s', cp_last = '%s' where cp_room = %d and cp_xchan = '%s' and cp_client = '%s' limit 1",
-			dbesc($status),
-			dbesc(datetime_convert()),
-			intval($room_id),
-			dbesc(get_observer_hash()),
-			dbesc($_SERVER['REMOTE_ADDR'])
-		);
-	}
 	if(! $text)
 		return;
 
@@ -64,6 +53,27 @@ function chatsvc_post(&$a) {
 }
 
 function chatsvc_content(&$a) {
+
+	$status = strip_tags($_REQUEST['status']);
+	$room_id = intval($a->data['chat']['room_id']);
+
+	if($status && $room_id) {
+
+		$x = q("select channel_address from channel where channel_id = %d limit 1",
+			intval($a->data['chat']['uid'])
+		);			
+
+		$r = q("update chatpresence set cp_status = '%s', cp_last = '%s' where cp_room = %d and cp_xchan = '%s' and cp_client = '%s' limit 1",
+			dbesc($status),
+			dbesc(datetime_convert()),
+			intval($room_id),
+			dbesc(get_observer_hash()),
+			dbesc($_SERVER['REMOTE_ADDR'])
+		);
+
+		goaway(z_root() . '/chat/' . $x[0]['channel_address'] . '/' . $room_id);		
+	}
+
 
 	$lastseen = intval($_REQUEST['last']);
 

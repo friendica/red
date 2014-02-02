@@ -17,6 +17,8 @@
             <input type="submit" name="submit" value="{{$submit}}" />
         </form>
 
+		<a href="{{$baseurl}}/chat/{{$nickname}}/{{$room_id}}/leave">{{$leave}}</a> | <a href="{{$baseurl}}/chatsvc?f=&room_id={{$room_id}}&status=away">{{$away}}</a> | <a href="{{$baseurl}}/chatsvc?f=&room_id={{$room_id}}&status=online">{{$online}}</a>
+
     </div>
 
 </div>
@@ -88,4 +90,21 @@ function update_chats(chats) {
 
 }
 
+</script>
+<script>
+function isMobile() {
+  try{ document.createEvent("TouchEvent"); return true; }
+  catch(e){ return false; }
+}
+$(function(){
+
+  $('#chatText').keypress(function(e){
+  	if (e.keyCode == 13 && e.shiftKey||isMobile()) {
+	}
+    else if (e.keyCode == 13) {
+	  e.preventDefault();
+      $(this).parent('form').trigger('submit');
+    }
+  });
+});
 </script>
