@@ -90,6 +90,21 @@ function siteinfo_content(&$a) {
 
 		$admininfo = bbcode(get_config('system','admininfo'));
 
+	$donate = <<< EOT
+<p>The Red Matrix is provided for you by volunteers working in their spare time. Your support will help us to build a better web. Select the following option for a one-time donation of your choosing</p>
+<form action="https://www.paypal.com/cgi-bin/webscr" method="post"><input type="hidden" name="cmd" value="_donations" /><input type="hidden" name="business" value="mike@macgirvin.com" /><input type="hidden" name="lc" value="US" /><input type="hidden" name="item_name" value="Distributed Social Network Support Donation" /><input type="hidden" name="no_note" value="0" /><input type="hidden" name="currency_code" value="USD" /><input type="hidden" name="bn" value="PP-DonationsBF:btn_donate_LG.gif:NonHostedGuest" /><input style="border: none;" type="image" name="submit" src="https://www.paypalobjects.com/en_US/i/btn/btn_donateCC_LG.gif" alt="Donations gladly accepted to support our work" /></form><br />
+<p>or</p>
+
+<form action="https://www.paypal.com/cgi-bin/webscr" method="post"><input type="hidden" name="cmd" value="_s-xclick" /><input type="hidden" name="hosted_button_id" value="FHV36KE28CYM8" /><br />
+<table><tbody><tr><td><input type="hidden" name="on0" value="Recurring Donation Options" />Recurring Donation Options</td>
+</tr><tr><td>
+<select name="os0"><option value="Option 1">Option 1 : $3.00USD - monthly</option><option value="Option 2">Option 2 : $5.00USD - monthly</option><option value="Option 3">Option 3 : $10.00USD - monthly</option><option value="Option 4">Option 4 : $20.00USD - monthly</option></select></td>
+</tr></tbody></table><p><input type="hidden" name="currency_code" value="USD" /><input type="image" border="0" name="submit" src="https://www.paypalobjects.com/en_US/i/btn/btn_subscribeCC_LG.gif" alt="PayPal - The safer, easier way to pay online!" /><img src="https://www.paypalobjects.com/en_US/i/scr/pixel.gif" alt="" width="1" height="1" border="0" /></p></form>
+<p></p>
+EOT;
+
+
+
 	$o = replace_macros(get_markup_template('siteinfo.tpl'), array(
                 '$title' => t('Red'),
 		'$description' => t('This is a hub of the Red Matrix - a global cooperative network of decentralised privacy enhanced websites.'),
@@ -100,7 +115,8 @@ function siteinfo_content(&$a) {
 		'$bug_text' => t('Bug reports and issues: please visit'),
 		'$bug_link_url' => 'https://github.com/friendica/red/issues',
 		'$bug_link_text' => 'redmatrix issues',
-		'$contact' => t('Suggestions, praise, donations, etc. - please email "redmatrix" at librelist - dot com'),
+		'$contact' => t('Suggestions, praise, etc. - please email "redmatrix" at librelist - dot com'),
+		'$donate' => $donate,
 		'$adminlabel' => t('Site Administrators'),
 		'$admininfo' => $admininfo,
 		'$plugins_text' => $plugins_text,
