@@ -89,3 +89,20 @@ function update_chats(chats) {
 }
 
 </script>
+<script>
+function isMobile() {
+  try{ document.createEvent("TouchEvent"); return true; }
+  catch(e){ return false; }
+}
+$(function(){
+
+  $('#chatText').keypress(function(e){
+  	if (e.keyCode == 13 && e.shiftKey||isMobile()) {
+	}
+    else if (e.keyCode == 13) {
+	  e.preventDefault();
+      $(this).parent('form').trigger('submit');
+    }
+  });
+});
+</script>
