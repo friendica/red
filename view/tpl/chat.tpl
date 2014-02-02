@@ -1,14 +1,14 @@
 <h1>{{$room_name}}</h1>
-<div id="chatContainer" style="height: 100%; width: 100%;">
+<div id="chatContainer"">
 
-    <div id="chatTopBar" style="float: left; height: 400px; width: 650px; overflow-y: auto;">
+    <div id="chatTopBar">
     	<div id="chatLineHolder"></div>
 	</div>
 
-    <div id="chatUsers" style="float: right; width: 120px; height: 100%; border: 1px solid #000;" ></div>
+    <div id="chatUsers"></div>
 
 	<div class="clear"></div>
-    <div id="chatBottomBar" style="position: relative; bottom: 0; height: 150px; margin-top: 20px;">
+    <div id="chatBottomBar">
         <div class="tip"></div>
 
         <form id="chat-form" method="post" action="#">
@@ -22,11 +22,6 @@
     </div>
 
 </div>
-<style>
-section {
-	padding-bottom: 0;
-}
-</style>
 
 <script>
 var room_id = {{$room_id}};
