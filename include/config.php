@@ -65,7 +65,7 @@ function get_config($family, $key) {
 		if(! array_key_exists($key,$a->config[$family])) {
 			return false;		
 		}
-		return ((preg_match('|^a:[0-9]+:{.*}$|s', $a->config[$family][$key])) 
+		return ((! is_array($a->config[$family][$key])) && (preg_match('|^a:[0-9]+:{.*}$|s', $a->config[$family][$key])) 
 			? unserialize($a->config[$family][$key])
 			: $a->config[$family][$key]
 		);
@@ -174,8 +174,8 @@ function get_pconfig($uid,$family, $key, $instore = false) {
 
 	if((! array_key_exists($family,$a->config[$uid])) || (! array_key_exists($key,$a->config[$uid][$family])))
 		return false;
-
-	return ((preg_match('|^a:[0-9]+:{.*}$|s', $a->config[$uid][$family][$key])) 
+		
+	return ((! is_array($a->config[$uid][$family][$key])) && (preg_match('|^a:[0-9]+:{.*}$|s', $a->config[$uid][$family][$key])) 
 		? unserialize($a->config[$uid][$family][$key])
 		: $a->config[$uid][$family][$key]
 	);
@@ -304,7 +304,7 @@ function get_xconfig($xchan,$family, $key) {
 	if((! array_key_exists($family,$a->config[$xchan])) || (! array_key_exists($key,$a->config[$xchan][$family])))
 		return false;
 
-	return ((preg_match('|^a:[0-9]+:{.*}$|s', $a->config[$xchan][$family][$key])) 
+	return ((! is_array($a->config[$xchan][$family][$key])) && (preg_match('|^a:[0-9]+:{.*}$|s', $a->config[$xchan][$family][$key])) 
 		? unserialize($a->config[$xchan][$family][$key])
 		: $a->config[$xchan][$family][$key]
 	);
