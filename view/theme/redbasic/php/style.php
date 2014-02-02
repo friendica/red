@@ -10,6 +10,7 @@
 // A further two - $nav_bg_3 and $nav_bg_4 are used to create the hover, if any particular scheme
 // wants to implement that
 	    $nav_colour = get_pconfig($uid, "redbasic", "nav_colour");	
+	    $link_colour = get_pconfig($uid, "redbasic", "link_colour");	
 
 // Load the owners pconfig
 		$banner_colour = get_pconfig($uid,'redbasic','banner_colour');
