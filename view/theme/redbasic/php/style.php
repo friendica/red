@@ -65,7 +65,7 @@
 			$nav_bg_4 = "#b00";
 		}
 	if (! $link_colour)
-		$link_colour = "#7b0000";
+		$link_colour = "#0080FF";
 	if (! $banner_colour)
 		$banner_colour = "fff";
 	if (! $bgcolour)
