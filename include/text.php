@@ -889,8 +889,8 @@ function smilies($s, $sample = false) {
 		|| (local_user() && intval(get_pconfig(local_user(),'system','no_smilies'))))
 		return $s;
 
-	$s = preg_replace_callback('{<(pre|code)>(?<target>.*?)</\1>}ism','smile_encode',$s);
-	$s = preg_replace_callback('/<[a-z]+ (?<target>.*?)>/ism','smile_encode',$s);
+	$s = preg_replace_callback('{<(pre|code)>.*?</\1>}ism','smile_shield',$s);
+	$s = preg_replace_callback('/<[a-z]+ .*?>/ism','smile_shield',$s);
 
 	$texts =  array( 
 		'&lt;3', 
@@ -981,20 +981,18 @@ function smilies($s, $sample = false) {
 		$s = str_replace($params['texts'],$params['icons'],$params['string']);
 	}
 
-	$s = preg_replace_callback(
-		'/<!--base64:(.*?)-->/ism',
-		function ($m) { return base64url_decode($m[1]); },
-		$s
-	);
+	$s = preg_replace_callback('/<!--base64:(.*?)-->/ism', 'smile_unshield', $s);
 
 	return $s;
 
 }
 
+function smile_shield($m) {
+	return '<!--base64:' . base64url_encode($m[0]) . '-->';
+}
 
-function smile_encode($m) {
-	$cleartext = $m['target'];
-	return str_replace($cleartext,'<!--base64:' . base64url_encode($cleartext) . '-->',$m[0]);
+function smile_unshield($m) { 
+	return base64url_decode($m[1]); 
 }
 
 // expand <3333 to the correct number of hearts
