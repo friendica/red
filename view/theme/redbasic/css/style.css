@@ -40,7 +40,7 @@ abbr {
 
 a, a:visited, a:link, .fakelink, .fakelink:visited, .fakelink:link { 
 	font-weight: bold;
-	color: #7b0000; 
+	color: $link_colour; 
 	text-decoration: none; 
 }
 
