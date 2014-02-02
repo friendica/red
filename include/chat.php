@@ -122,10 +122,10 @@ function chatroom_enter($observer_xchan,$room_id,$status,$client) {
 		intval($room_id)
 	);
 	if($r) {
-		q("update chatpresence set cp_status = %d and cp_last = '%s' where cp_id = %d limit 1",
-			dbesc($status),
+		q("update chatpresence set cp_last = '%s' where cp_id = %d and cp_client = '%s' limit 1",
 			dbesc(datetime_convert()),
-			intval($r[0]['cp_id'])
+			intval($r[0]['cp_id']),
+			dbesc($client)
 		);
 		return true;
 	}
@@ -145,6 +145,7 @@ function chatroom_enter($observer_xchan,$room_id,$status,$client) {
 function chatroom_leave($observer_xchan,$room_id,$client) {
 	if(! $room_id || ! $observer_xchan)
 		return;
+
 	$r = q("select * from chatpresence where cp_xchan = '%s' and cp_room = %d and cp_client = '%s' limit 1",
 		dbesc($observer_xchan),
 		intval($room_id),
@@ -155,6 +156,7 @@ function chatroom_leave($observer_xchan,$room_id,$client) {
 			intval($r[0]['cp_id'])
 		);
 	}
+
 	return true;
 }
 

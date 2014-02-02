@@ -17,6 +17,8 @@
             <input type="submit" name="submit" value="{{$submit}}" />
         </form>
 
+		<a href="{{$baseurl}}/chat/{{$nickname}}/{{$room_id}}/leave">{{$leave}}</a> | <a href="{{$baseurl}}/chatsvc?f=&room_id={{$room_id}}&status=away">{{$away}}</a> | <a href="{{$baseurl}}/chatsvc?f=&room_id={{$room_id}}&status=online">{{$online}}</a>
+
     </div>
 
 </div>
