@@ -242,18 +242,22 @@ if (file_exists($theme_info_file)){
 if(! x($a->page,'content'))
 	$a->page['content'] = '';
 
-/* set JS cookie */
-if($_COOKIE['jsAvailable'] != 1) {
-	$a->page['content'] .= '<script>document.cookie="jsAvailable=1; path=/"; var jsMatch = /\&JS=1/; if (!jsMatch.exec(location.href)) { location.href = location.href + "&JS=1"; }</script>';
-	/* emulate JS cookie if cookies are not accepted */
-	if ($_GET['JS'] == 1) {
-		$_COOKIE['jsAvailable'] = 1;
+
+
+if(! ($a->module === 'setup')) {
+	/* set JS cookie */
+	if($_COOKIE['jsAvailable'] != 1) {
+		$a->page['content'] .= '<script>document.cookie="jsAvailable=1; path=/"; var jsMatch = /\&JS=1/; if (!jsMatch.exec(location.href)) { location.href = location.href + "&JS=1"; }</script>';
+		/* emulate JS cookie if cookies are not accepted */
+		if ($_GET['JS'] == 1) {
+			$_COOKIE['jsAvailable'] = 1;
+		}
 	}
+	call_hooks('page_content_top',$a->page['content']);
 }
 
 
-if(! $install)
-	call_hooks('page_content_top',$a->page['content']);
+
 
 /**
  * Call module functions

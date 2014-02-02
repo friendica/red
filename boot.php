@@ -1571,12 +1571,16 @@ function proc_run($cmd){
 		$args[$x] = escapeshellarg($args[$x]);
 
 	$cmdline = implode($args," ");
-	if(get_config('system','proc_windows'))
+	if(is_windows())
 		proc_close(proc_open('cmd /c start /b ' . $cmdline,array(),$foo));
 	else
 		proc_close(proc_open($cmdline." &",array(),$foo));
 }
 
+
+function is_windows() {
+	return ((strtoupper(substr(PHP_OS,0,3)) === 'WIN') ? true : false);
+}
 
 
 function current_theme(){
