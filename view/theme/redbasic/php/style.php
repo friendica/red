@@ -63,6 +63,8 @@
 			$nav_bg_3 = "#f00";
 			$nav_bg_4 = "#b00";
 		}
+	if (! $link_colour)
+		$link_colour = "#7b0000";
 	if (! $banner_colour)
 		$banner_colour = "fff";
 	if (! $bgcolour)
@@ -141,6 +143,7 @@ $options = array (
 '$nav_bg_2' => $nav_bg_2,
 '$nav_bg_3' => $nav_bg_3,
 '$nav_bg_4' => $nav_bg_4,
+'$link_colour' => $link_colour,
 '$banner_colour' => $banner_colour,
 '$search_background' => $search_background,
 '$bgcolour' => $bgcolour,
