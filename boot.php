@@ -576,6 +576,7 @@ function startup() {
 
 class App {
 
+	public  $install    = false;           // true if we are installing the software
 		
 	public  $account    = null;            // account record of the logged-in account
 	public  $channel    = null;            // channel record of the current channel of the logged-in account

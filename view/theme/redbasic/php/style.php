@@ -1,5 +1,7 @@
 <?php
-// Get the UID of the channel owner
+
+if(! $a->install) {
+	// Get the UID of the channel owner
 	$uid = get_theme_uid();
 
 	if($uid)
@@ -31,6 +33,8 @@
 		$sloppy_photos=get_pconfig($uid,'redbasic','sloppy_photos');
 		$top_photo=get_pconfig($uid,'redbasic','top_photo');
 		$reply_photo=get_pconfig($uid,'redbasic','reply_photo');
+
+}
 
 // Now load the scheme.  If a value is changed above, we'll keep the settings
 // If not, we'll keep those defined by the schema
