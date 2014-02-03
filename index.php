@@ -23,7 +23,7 @@ $a = new App;
  *
  */
 
-$install = ((file_exists('.htconfig.php') && filesize('.htconfig.php')) ? false : true);
+$a->install = ((file_exists('.htconfig.php') && filesize('.htconfig.php')) ? false : true);
 
 @include(".htconfig.php");
 
@@ -38,8 +38,8 @@ $a->language = get_best_language();
 
 require_once("include/dba/dba_driver.php");
 
-if(! $install) {
-	$db = dba_factory($db_host, $db_port, $db_user, $db_pass, $db_data, $install);
+if(! $a->install) {
+	$db = dba_factory($db_host, $db_port, $db_user, $db_pass, $db_data, $a->install);
     	    unset($db_host, $db_port, $db_user, $db_pass, $db_data);
 
 	/**
@@ -91,7 +91,7 @@ if((x($_SESSION,'language')) && ($_SESSION['language'] !== $lang)) {
 	load_translation_table($a->language);
 }
 
-if((x($_GET,'zid')) && (! $install)) {
+if((x($_GET,'zid')) && (! $a->install)) {
 	$a->query_string = preg_replace('/[\?&]zid=(.*?)([\?&]|$)/is','',$a->query_string);
 	if(! local_user()) {
 		$_SESSION['my_address'] = $_GET['zid'];
@@ -116,7 +116,7 @@ if(! x($_SESSION,'sysmsg_info'))
  */
 
 
-if($install) {
+if($a->install) {
 	/* Allow an exception for the view module so that pcss will be interpreted during installation */
 	if($a->module != 'view')
 		$a->module = 'setup';

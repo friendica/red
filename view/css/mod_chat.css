@@ -1,23 +1,23 @@
- .chatContainer {
+ #chatContainer {
 	 height: 100%;
 	 width: 100%;
  }
  
- .chatTopBar {
+ #chatTopBar {
 	 float: left;
 	 height: 400px;
 	 width: 650px;
 	 overflow-y: auto;
  }
  
- .chatUsers {
+ #chatUsers {
 	 float: right;
 	 width: 120px;
 	 height: 100%;
 	 border: 1px solid #000;
  }
  
- .chatBottomBar {
+ #chatBottomBar {
 	 position: relative;
 	 bottom: 0;
 	 height: 150px;

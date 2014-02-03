@@ -74,9 +74,17 @@ function redbasic_form(&$a, $arr) {
 		
 		$nav_colours = array (
 		  '' => t('Scheme Default'),
-		  'red' => t('red'),
-		  'black' => t('black'),	
-		  'silver' => t('silver'),	
+		'red' => 'red',	
+		'pink' => 'pink',
+		'green' => 'green',
+		'blue' => 'blue',
+		'purple' => 'purple',
+		'black' => 'black',
+		'orange' => 'orange',
+		'brown' => 'brown',
+		'grey' => 'grey',
+		'gold' => 'gold',
+		'silver' => t('silver'),	
 		);
 
 if(feature_enabled(local_user(),'expert')) 

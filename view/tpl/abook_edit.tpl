@@ -31,18 +31,6 @@
 
 
 
-<h3>{{$permlbl}}</h3>
-<div id="perm-desc" class="descriptive-text">{{$permnote}}</div>
-
-<form id="abook-edit-form" action="connedit/{{$contact_id}}" method="post" >
-<input type="hidden" name="contact_id" value="{{$contact_id}}">
-<input id="contact-closeness-mirror" type="hidden" name="closeness" value="{{$close}}" />
-
-{{if $noperms}}
-<div id="noperm-msg" class="warning-text">{{$noperms}}</div>
-<div id="noperm-text" class="descriptive-text">{{$noperm_desc}}</div>
-{{/if}}
-
 
 {{if $is_pending}}
 <div class="abook-pending-contact">
@@ -50,8 +38,32 @@
 </div>
 {{/if}}
 
+{{if $multiprofs }}
+<div>
+<h3>{{$lbl_vis1}}</h3>
+<div>{{$lbl_vis2}}</div>
+
+{{$profile_select}}
+</div>
+{{/if}}
+
+<h3>{{$permlbl}}</h3>
+<div id="perm-desc" class="descriptive-text">{{$permnote}}</div>
+
+<form id="abook-edit-form" action="connedit/{{$contact_id}}" method="post" >
+<input type="hidden" name="contact_id" value="{{$contact_id}}">
+<input id="contact-closeness-mirror" type="hidden" name="closeness" value="{{$close}}" />
+
+{{* {{if $noperms}}
+<div id="noperm-msg" class="warning-text">{{$noperms}}</div>
+<div id="noperm-text" class="descriptive-text">{{$noperm_desc}}</div>
+{{/if}}
+*}}
+
+
+
 <br />
-<b>{{$quick}}</b>
+<h3>{{$quick}}</h3>
 <ul>
 {{if $self}}
 <li><span class="fakelink" onclick="connectForum(); // $('#abook-edit-form').submit();">{{$forum}}</span></li>
@@ -61,6 +73,9 @@
 <li><span class="fakelink" onclick="connectCautiousShare(); // $('#abook-edit-form').submit();">{{$cautious}}</span></li>
 <li><span class="fakelink" onclick="connectFollowOnly(); // $('#abook-edit-form').submit();">{{$follow}}</span></li>
 </ul>
+
+<input class="contact-edit-submit" type="submit" name="done" value="{{$submit}}" />
+
 
 <div id="abook-advanced" class="fakelink" onclick="openClose('abook-advanced-panel');">{{$advanced}}</div>
 
@@ -76,14 +91,6 @@
 
 </div>
 
-{{if $multiprofs }}
-<div>
-<h3>{{$lbl_vis1}}</h3>
-<div>{{$lbl_vis2}}</div>
-
-{{$profile_select}}
-</div>
-{{/if}}
 
 <input class="contact-edit-submit" type="submit" name="done" value="{{$submit}}" />
 

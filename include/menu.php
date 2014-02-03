@@ -152,7 +152,7 @@ function menu_edit($arr) {
 		return false;
 	}
 
-	return q("update menu set menu_name = '%s', menu_desc = '%s', menu_flags = %d,
+	return q("update menu set menu_name = '%s', menu_desc = '%s', menu_flags = %d
 		where menu_id = %d and menu_channel_id = %d limit 1", 
  		dbesc($menu_name),
 		dbesc($menu_desc),

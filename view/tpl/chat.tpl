@@ -47,8 +47,8 @@ $('#chat-form').submit(function(ev) {
 
 function load_chats() {
 
-	$.get("chatsvc?f=&room_id=" + room_id + '&last=' + last_chat,function(data) {
-		if(data.success) {
+	$.get("chatsvc?f=&room_id=" + room_id + '&last=' + last_chat + ((stopped) ? '&stopped=1' : ''),function(data) {
+		if(data.success && (! stopped)) {
 			update_inroom(data.inroom);
 			update_chats(data.chats);
 		}
