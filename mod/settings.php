@@ -926,10 +926,10 @@ function settings_content(&$a) {
 			'$hide_presence' => array('hide_presence', t('Hide my online presence'),$hide_presence, t('Prevents displaying in your profile that you are online')),
 
 			'$lbl_pmacro' => t('Simple Privacy Settings:'),
-			'$pmacro3'    => t('Very Public - extremely permissive (use with caution)'),
-			'$pmacro2'    => t('Typical - default public, privacy when desired (similar to social network permissions)'),
-			'$pmacro1'    => t('Private - default private, rarely open or public'),
-			'$pmacro0'    => t('Blocked - default blocked to/from everybody'),
+			'$pmacro3'    => t('Very Public - <em>extremely permissive (should be used with caution)</em>'),
+			'$pmacro2'    => t('Typical - <em>default public, privacy when desired (similar to social network permissions but with improved privacy)</em>'),
+			'$pmacro1'    => t('Private - <em>default private, never open or public</em>'),
+			'$pmacro0'    => t('Blocked - <em>default blocked to/from everybody</em>'),
 			'$permiss_arr' => $permiss,
 
 			'$lbl_p2macro' => t('Advanced Privacy Settings'),
