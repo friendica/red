@@ -133,6 +133,38 @@
 					$nav_bg_1 = $nav_bg_2 = $nav_bg_3 = $nav_bg_4 = "silver";
 					$search_background = '#EEEEEE';
 		}
+		if($nav_colour === "pink") {
+		      $nav_bg_1 = $nav_bg_3 = "#FFC1CA";
+		      $nav_bg_2 = $nav_bg_4 = "#FFC1CA";
+	}
+		if($nav_colour === "green") {
+		      $nav_bg_1 = $nav_bg_3 = "#5CD65C";
+		      $nav_bg_2 = $nav_bg_4 = "#5CD65C";
+	}
+		if($nav_colour === "blue") {
+		      $nav_bg_1 = $nav_bg_3 = "#1872a2";
+		      $nav_bg_2 = $nav_bg_4 = "#1872a2";
+	}
+		if($nav_colour === "purple") {
+		      $nav_bg_1 = $nav_bg_3 = "#551A8B";
+		      $nav_bg_2 = $nav_bg_4 = "#551A8B";
+	}
+		if($nav_colour === "orange") {
+		      $nav_bg_1 = $nav_bg_3 = "#FF3D0D";
+		      $nav_bg_2 = $nav_bg_4 = "#FF3D0D";
+	}	
+		if($nav_colour === "brown") {
+		      $nav_bg_1 = $nav_bg_3 = "#330000";
+		      $nav_bg_2 = $nav_bg_4 = "#330000";
+	}
+		if($nav_colour === "grey") {
+		      $nav_bg_1 = $nav_bg_3 = "#2e2f2e";
+		      $nav_bg_2 = $nav_bg_4 = "#2e2f2e";
+	}
+		if($nav_colour === "gold") {
+		      $nav_bg_1 = $nav_bg_3 = "#FFAA00";
+		      $nav_bg_2 = $nav_bg_4 = "#FFAA00";
+	}
 
 		
 // Apply the settings
