@@ -923,14 +923,16 @@ function settings_content(&$a) {
 
 			'$h_prv' 	=> t('Security and Privacy Settings'),
 
-			'$hide_presence' => array('hide_presence', t('Hide my online presence'),$hide_presence, t('Prevents showing if you are available for chat')),
+			'$hide_presence' => array('hide_presence', t('Hide my online presence'),$hide_presence, t('Prevents displaying in your profile that you are online')),
 
-			'$lbl_pmacro' => t('Quick Privacy Settings:'),
-			'$pmacro3'    => t('Very Public - extremely permissive'),
-			'$pmacro2'    => t('Typical - default public, privacy when desired'),
+			'$lbl_pmacro' => t('Simple Privacy Settings:'),
+			'$pmacro3'    => t('Very Public - extremely permissive (use with caution)'),
+			'$pmacro2'    => t('Typical - default public, privacy when desired (similar to social network permissions)'),
 			'$pmacro1'    => t('Private - default private, rarely open or public'),
 			'$pmacro0'    => t('Blocked - default blocked to/from everybody'),
 			'$permiss_arr' => $permiss,
+
+			'$lbl_p2macro' => t('Advanced Privacy Settings'),
 
 			'$maxreq' 	=> array('maxreq', t('Maximum Friend Requests/Day:'), intval($channel['channel_max_friend_req']) , t('May reduce spam activity')),
 			'$permissions' => t('Default Post Permissions'),

@@ -1,3 +1,17 @@
+#settings-permissions-wrapper, #settings-perm-advanced {
+	opacity: 0.3;
+	filter:alpha(opacity=30);
+}
+
+#settings-permissions-wrapper:hover, #settings-perm-advanced:hover {
+	opacity: 1.0;
+	filter:alpha(opacity=100);
+}
+
+#settings-perm-advanced {
+	margin-top: 15px;
+}
+
 #settings-permissions-wrapper .field {
 	margin-bottom: 10px;
 }

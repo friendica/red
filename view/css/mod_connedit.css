@@ -135,3 +135,17 @@
 .contact-entry-end {
 	clear: both;
 }
+
+#abook-advanced-panel, #abook-advanced {
+	opacity: 0.3;
+	filter:alpha(opacity=30);
+}
+
+#abook-advanced-panel:hover, #abook-advanced:hover {
+	opacity: 1.0;
+	filter:alpha(opacity=100);
+}
+
+#abook-advanced {
+	margin-top: 15px;
+}

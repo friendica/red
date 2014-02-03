@@ -25,7 +25,7 @@
 {{include file="field_checkbox.tpl" field=$hide_presence}}
 
 
-<div id="settings-privacy-macros">{{$lbl_pmacro}}</div>
+<h3 id="settings-privacy-macros">{{$lbl_pmacro}}</h3>
 <ul>
 <li><a href="#" onclick="channel_privacy_macro(3); return false" id="settings_pmacro3">{{$pmacro3}}</a></li>
 <li><a href="#" onclick="channel_privacy_macro(2); return false" id="settings_pmacro2">{{$pmacro2}}</a></li>
@@ -34,6 +34,7 @@
 </ul>
 
 
+<h3 id="settings-perm-advanced">{{$lbl_p2macro}}</h3>
 
 <div id="settings-permissions-wrapper">
 {{foreach $permiss_arr as $permit}}
