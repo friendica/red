@@ -1516,20 +1516,6 @@ function return_bytes ($size_str) {
     }
 }
 
-function generate_user_guid() {
-	$found = true;
-	do {
-		$guid = random_string(16);
-		$x = q("SELECT `uid` FROM `user` WHERE `guid` = '%s' LIMIT 1",
-			dbesc($guid)
-		);
-		if(! count($x))
-			$found = false;
-	} while ($found == true );
-	return $guid;
-}
-
-
 
 function base64url_encode($s, $strip_padding = true) {
 
@@ -1547,23 +1533,6 @@ function base64url_decode($s) {
 		logger('base64url_decode: illegal input: ' . print_r(debug_backtrace(), true));
 		return $s;
 	}
-
-/*
- *  // Placeholder for new rev of salmon which strips base64 padding.
- *  // PHP base64_decode handles the un-padded input without requiring this step
- *  // Uncomment if you find you need it.
- *
- *	$l = strlen($s);
- *	if(! strpos($s,'=')) {
- *		$m = $l % 4;
- *		if($m == 2)
- *			$s .= '==';
- *		if($m == 3)
- *			$s .= '=';
- *	}
- *
- */
-
 	return base64_decode(strtr($s,'-_','+/'));
 }
 
@@ -1665,11 +1634,6 @@ function item_post_type($item) {
 		$post_type = t('activity');
 
 	return $post_type;
-}
-
-
-function normalise_openid($s) {
-	return trim(str_replace(array('http://','https://'),array('',''),$s),'/');
 }
 
 
