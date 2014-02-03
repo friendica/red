@@ -919,7 +919,7 @@ function settings_content(&$a) {
 			'$defloc'	=> array('defloc', t('Default Post Location:'), $defloc, ''),
 			'$allowloc' => array('allow_location', t('Use Browser Location:'), ((get_pconfig(local_user(),'system','use_browser_location')) ? 1 : ''), ''),
 		
-			'$adult'    => array('adult', t('Adult Content'), $adult_flag, t('This channel publishes adult content.')),
+			'$adult'    => array('adult', t('Adult Content'), $adult_flag, t('This channel frequently or regularly publishes adult content. (Please tag any adult material and/or nudity with #NSFW)')),
 
 			'$h_prv' 	=> t('Security and Privacy Settings'),
 
