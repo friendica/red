@@ -78,7 +78,7 @@ function menu_content(&$a) {
 				'$header' => t('New Menu'),
 				'$menu_name' => array('menu_name', t('Menu name'), '', t('Must be unique, only seen by you'), '*'),
 				'$menu_desc' => array('menu_desc', t('Menu title'), '', t('Menu title as seen by others'), ''),
-				'$menu_bookmark' => array('menu_bookmark', t('Allow bookmarks'), 0 , t('Menu can be used to store saved bookmarks'), ''),
+				'$menu_bookmark' => array('menu_bookmark', t('Allow bookmarks'), 0 , t('Menu may be used to store saved bookmarks'), ''),
 				'$submit' => t('Create')
 			));
 			return $o;
@@ -107,7 +107,7 @@ function menu_content(&$a) {
 					'$editcontents' => t('Edit menu contents'),
 					'$menu_name' => array('menu_name', t('Menu name'), $m['menu_name'], t('Must be unique, only seen by you'), '*'),
 					'$menu_desc' => array('menu_desc', t('Menu title'), $m['menu_desc'], t('Menu title as seen by others'), ''),
-					'$menu_bookmark' => array('menu_bookmark', t('Allow bookmarks'), (($m['menu_flags'] & MENU_BOOKMARK) ? 1 : 0), t('Menu can be used to store saved bookmarks'), ''),
+					'$menu_bookmark' => array('menu_bookmark', t('Allow bookmarks'), (($m['menu_flags'] & MENU_BOOKMARK) ? 1 : 0), t('Menu may be used to store saved bookmarks'), ''),
 					'$submit' => t('Modify')
 				));
 				return $o;
