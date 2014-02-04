@@ -763,7 +763,7 @@ function photos_content(&$a) {
 
 			/* Check again - this time without specifying permissions */
 
-			$ph = q("SELECT `id` FROM `photo` WHERE `uid` = %d AND `resource_id` = '%s' 
+			$ph = q("SELECT id FROM photo WHERE uid = %d AND resource_id = '%s' 
 				and ( photo_flags = %d or photo_flags = %d )
 				LIMIT 1",
 				intval($owner_uid),
@@ -875,6 +875,9 @@ function photos_content(&$a) {
 
 		if($linked_items) {
 
+			xchan_query($linked_items);
+			$linked_items = fetch_post_tags($linked_items,true);
+
 			$link_item = $linked_items[0];
 
 			$r = q("select * from item where parent_mid = '%s' 
@@ -889,6 +892,21 @@ function photos_content(&$a) {
 				$r = fetch_post_tags($r,true);
 				$r = conv_sort($r,'commented');
 			}
+
+
+
+			$tags = array();
+			if($link_item['term']) {
+				$cnt = 0;
+				foreach($link_item['term'] as $t)
+					$tags[$cnt] = array(0 => format_term_for_display($t));
+					if($can_post && ($ph[0]['uid'] == $owner_uid)) {
+						$tags[$cnt][1] = 'tagrm?f=&item=' . $link_item['id'];
+						$tags[$cnt][2] = t('Remove');
+					}
+					$cnt ++;
+			}
+
 
 			if((local_user()) && (local_user() == $link_item['uid'])) {
 				q("UPDATE `item` SET item_flags = (item_flags ^ %d) WHERE parent = %d and uid = %d and (item_flags & %d)",
@@ -925,7 +943,6 @@ function photos_content(&$a) {
 				'capt_label' => t('Caption'),
 				'caption' => $caption_e,
 				'tag_label' => t('Add a Tag'),
-				'tags' => $link_item['tag'],
 				'permissions' => t('Permissions'),
 				'aclselect' => $aclselect_e,
 				'help_tags' => t('Example: @bob, @Barbara_Jensen, @jim@example.com, #California, #camping'),
@@ -1067,9 +1084,9 @@ function photos_content(&$a) {
 		}
 		
 		$album_e = array($album_link,$ph[0]['album']);
-		$tags_e = $tags;
 		$like_e = $like;
 		$dislike_e = $dislike;
+
 
 		$photo_tpl = get_markup_template('photo_view.tpl');
 		$o .= replace_macros($photo_tpl, array(
@@ -1081,7 +1098,8 @@ function photos_content(&$a) {
 			'$prevlink' => $prevlink,
 			'$nextlink' => $nextlink,
 			'$desc' => $ph[0]['description'],
-			'$tags' => $tags_e,
+			'$tag_hdr' => t('In This Photo:'),
+			'$tags' => $tags,
 			'$edit' => $edit,	
 			'$likebuttons' => $likebuttons,
 			'$like' => $like_e,
