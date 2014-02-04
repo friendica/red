@@ -30,6 +30,9 @@
 {{/if}}
 
 
+<form id="abook-edit-form" action="connedit/{{$contact_id}}" method="post" >
+<input type="hidden" name="contact_id" value="{{$contact_id}}">
+<input id="contact-closeness-mirror" type="hidden" name="closeness" value="{{$close}}" />
 
 
 {{if $is_pending}}
@@ -50,9 +53,6 @@
 <h3>{{$permlbl}}</h3>
 <div id="perm-desc" class="descriptive-text">{{$permnote}}</div>
 
-<form id="abook-edit-form" action="connedit/{{$contact_id}}" method="post" >
-<input type="hidden" name="contact_id" value="{{$contact_id}}">
-<input id="contact-closeness-mirror" type="hidden" name="closeness" value="{{$close}}" />
 
 {{* {{if $noperms}}
 <div id="noperm-msg" class="warning-text">{{$noperms}}</div>

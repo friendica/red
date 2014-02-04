@@ -822,7 +822,7 @@ function encode_item_xchan($xchan) {
 function encode_item_terms($terms) {
 	$ret = array();	
 
-	$allowed_export_terms = array( TERM_UNKNOWN, TERM_HASHTAG, TERM_MENTION, TERM_CATEGORY );
+	$allowed_export_terms = array( TERM_UNKNOWN, TERM_HASHTAG, TERM_MENTION, TERM_CATEGORY, TERM_BOOKMARK );
 
 	if($terms) {
 		foreach($terms as $term) {
@@ -834,7 +834,7 @@ function encode_item_terms($terms) {
 }
 
 function termtype($t) {
-	$types = array('unknown','hashtag','mention','category','private_category','file','search');
+	$types = array('unknown','hashtag','mention','category','private_category','file','search','thing','bookmark');
 	return(($types[$t]) ? $types[$t] : 'unknown');
 }
 
@@ -864,6 +864,12 @@ function decode_tags($t) {
 					break;
 				case 'search':
 					$tag['type'] = TERM_SEARCH;
+					break;
+				case 'thing':
+					$tag['type'] = TERM_THING;
+					break;
+				case 'bookmark':
+					$tag['type'] = TERM_BOOKMARK;
 					break;
 				default:
 				case 'unknown':

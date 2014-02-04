@@ -398,6 +398,7 @@ define ( 'TERM_PCATEGORY',    4 );
 define ( 'TERM_FILE',         5 );
 define ( 'TERM_SAVEDSEARCH',  6 );
 define ( 'TERM_THING',        7 );
+define ( 'TERM_BOOKMARK',     8 );
 
 define ( 'TERM_OBJ_POST',    1 );
 define ( 'TERM_OBJ_PHOTO',   2 );

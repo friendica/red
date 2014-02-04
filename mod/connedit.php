@@ -32,7 +32,7 @@ function connedit_init(&$a) {
 }
 
 function connedit_post(&$a) {
-	
+
 	if(! local_user())
 		return;
 
@@ -86,6 +86,8 @@ function connedit_post(&$a) {
 	$abook_flags = $orig_record[0]['abook_flags'];
 	$new_friend = false;
 
+
+
 	if(($_REQUEST['pending']) && ($abook_flags & ABOOK_FLAG_PENDING)) {
 		$abook_flags = ( $abook_flags ^ ABOOK_FLAG_PENDING );
 		$new_friend = true;
@@ -100,6 +102,7 @@ function connedit_post(&$a) {
 		intval($contact_id),
 		intval(local_user())
 	);
+
 	if($r)
 		info( t('Connection updated.') . EOL);
 	else
