@@ -887,13 +887,24 @@ function handle_tag($a, &$body, &$access_tag, &$str_tags, $profile_uid, $tag) {
 	$replaced = false;
 	$r = null;
 
-	$termtype = ((strpos($tag,'#') === 0) ? TERM_HASHTAG : TERM_UNKNOWN);
-	$termtype = ((strpos($tag,'@') === 0) ? TERM_MENTION : $termtype);
+
+	$termtype = ((strpos($tag,'#') === 0)   ? TERM_HASHTAG : TERM_UNKNOWN);
+	$termtype = ((strpos($tag,'@') === 0)   ? TERM_MENTION : $termtype);
+	$termtype = ((strpos($tag,'#^[') === 0) ? TERM_BOOKMARK : $termtype);
+	
 
 	//is it a hash tag? 
 	if(strpos($tag,'#') === 0) {
-		// if the tag is replaced...
-		if(strpos($tag,'[zrl=')) {
+		if(strpos($tag,'#^[') === 0) {
+			if(preg_match('/#\^\[(url|zrl)=(.*?)\](.*?)\[\/(url|zrl)\]/',$tag,$match)) {
+				$basetag = $match[3];
+				$url = $match[2];
+				$replaced = true;
+
+			}
+		}
+		// if the tag is already replaced...
+		elseif(strpos($tag,'[zrl=')) {
 			//...do nothing
 			return $replaced;
 		}
@@ -904,7 +915,7 @@ function handle_tag($a, &$body, &$access_tag, &$str_tags, $profile_uid, $tag) {
 			$body = str_replace($tag,$newtag,$body);
 			$replaced = true;
 		}
-		else {
+		if(! $replaced) {
 			//base tag has the tags name only
 			$basetag = str_replace('_',' ',substr($tag,1));
 			//create text for link

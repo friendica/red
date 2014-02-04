@@ -593,7 +593,7 @@ function get_tags($s) {
 			if(substr($mtch,-1,1) === '.')
 				$mtch = substr($mtch,0,-1);
 			// ignore strictly numeric tags like #1
-			if((strpos($mtch,'#') === 0) && ctype_digit(substr($mtch,1)))
+			if((strpos($mtch,'#') === 0) && ( ctype_digit(substr($mtch,1)) || substr($mtch,1,1) === '^'))
 				continue;
 			// try not to catch url fragments
 			if(strpos($s,$mtch) && preg_match('/[a-zA-z0-9\/]/',substr($s,strpos($s,$mtch)-1,1)))
@@ -601,6 +601,18 @@ function get_tags($s) {
 			$ret[] = $mtch;
 		}
 	}
+
+	// bookmarks
+
+	if(preg_match_all('/#\^\[(url|zrl)=(.*?)\](.*?)\[\/(url|zrl)\]/',$s,$match,PREG_SET_ORDER)) {
+		foreach($match as $mtch) {
+			$ret[] = $mtch[0];
+		}
+	}
+
+
+	// logger('get_tags: ' . print_r($ret,true));
+
 	return $ret;
 }
 
