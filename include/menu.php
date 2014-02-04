@@ -75,7 +75,6 @@ function menu_create($arr) {
 	$r = q("select * from menu where menu_name = '%s' and menu_channel_id = %d limit 1",
 		dbesc($menu_name),
 		intval($menu_channel_id),
-		intval($menu_flags)
 	);
 
 	if($r)
@@ -101,9 +100,15 @@ function menu_create($arr) {
 
 }
 
+/**
+ * If $flags is present, check that all the bits in $flags are set
+ * so that MENU_SYSTEM|MENU_BOOKMARK will return entries with both
+ * bits set. We will use this to find system generated bookmarks.
+ */
+
 function menu_list($channel_id, $flags = 0) {
 
-	$sel_options = (($flags) ? " and ( menu_flags & " . intval($flags) . " ) " : '');
+	$sel_options = (($flags) ? " and ( menu_flags & " . intval($flags) . " ) = " . intval($flags) . " " : '');
 
 	$r = q("select * from menu where menu_channel_id = %d $sel_options order by menu_name",
 		intval($channel_id)
@@ -204,7 +209,8 @@ function menu_add_item($menu_id, $uid, $arr) {
 		$channel = get_app()->get_channel();	
 	}
 
-	if ((! $arr['contact_allow'])
+	if (($channel) 
+		&& (! $arr['contact_allow'])
 		&& (! $arr['group_allow'])
 		&& (! $arr['contact_deny'])
 		&& (! $arr['group_deny'])) {
