@@ -442,7 +442,7 @@ function item_message_id() {
 
 		$mid = $hash . '@' . get_app()->get_hostname();
 
-		$r = q("SELECT `id` FROM `item` WHERE `mid` = '%s' LIMIT 1",
+		$r = q("SELECT id FROM item WHERE mid = '%s' LIMIT 1",
 			dbesc($mid));
 		if(count($r))
 			$dups = true;
@@ -459,7 +459,7 @@ function photo_new_resource() {
 	do {
 		$found = false;
 		$resource = hash('md5',uniqid(mt_rand(),true));
-		$r = q("SELECT `id` FROM `photo` WHERE `resource_id` = '%s' LIMIT 1",
+		$r = q("SELECT id FROM photo WHERE resource_id = '%s' LIMIT 1",
 			dbesc($resource)
 		);
 		if(count($r))
@@ -1651,10 +1651,10 @@ function item_post_type($item) {
 
 function undo_post_tagging($s) {
 	$matches = null;
-	$cnt = preg_match_all('/([@#])\[zrl=(.*?)\](.*?)\[\/zrl\]/ism',$s,$matches,PREG_SET_ORDER);
+	$cnt = preg_match_all('/([@#])(\!*)\[zrl=(.*?)\](.*?)\[\/zrl\]/ism',$s,$matches,PREG_SET_ORDER);
 	if($cnt) {
 		foreach($matches as $mtch) {
-			$s = str_replace($mtch[0], $mtch[1] . $mtch[3],$s);
+			$s = str_replace($mtch[0], $mtch[1] . $mtch[2] . str_replace(' ','_',$mtch[4]),$s);
 		}
 	}
 	return $s;

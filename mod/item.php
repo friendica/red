@@ -972,7 +972,7 @@ function handle_tag($a, &$body, &$access_tag, &$str_tags, $profile_uid, $tag) {
 			$newname = str_replace('_',' ',$name);
 
 			//select someone from this user's contacts by name
-			$r = q("SELECT * FROM abook left join xchan on abook_xchan - xchan_hash  
+			$r = q("SELECT * FROM abook left join xchan on abook_xchan = xchan_hash  
 				WHERE xchan_name = '%s' AND abook_channel = %d LIMIT 1",
 					dbesc($newname),
 					intval($profile_uid)
@@ -980,7 +980,7 @@ function handle_tag($a, &$body, &$access_tag, &$str_tags, $profile_uid, $tag) {
 
 			if(! $r) {
 				//select someone by attag or nick and the name passed in
-				$r = q("SELECT * FROM abook left join xchan on abook_xchan - xchan_hash  
+				$r = q("SELECT * FROM abook left join xchan on abook_xchan = xchan_hash  
 					WHERE xchan_addr like ('%s') AND abook_channel = %d LIMIT 1",
 						dbesc($newname . '@%'),
 						intval($profile_uid)
