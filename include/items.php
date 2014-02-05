@@ -2107,6 +2107,15 @@ function send_status_notifications($post_id,$item) {
 		}
 	}
 
+	$link =  get_app()->get_baseurl() . '/display/' . $item['mid'];
+
+	$r = q("select id from notify where link = '%s' and uid = %d limit 1",
+		dbesc($link),
+		intval($item['uid'])
+	);
+	if($r)
+		$notify = false;
+
 	if(! $notify)
 		return;
 	require_once('include/enotify.php');
@@ -2115,7 +2124,7 @@ function send_status_notifications($post_id,$item) {
 		'from_xchan'   => $item['author_xchan'],
 		'to_xchan'     => $r[0]['channel_hash'],
 		'item'         => $item,
-		'link'		   => get_app()->get_baseurl() . '/display/' . $item['mid'],
+		'link'		   => $link,
 		'verb'         => ACTIVITY_POST,
 		'otype'        => 'item',
 		'parent'       => $parent,
