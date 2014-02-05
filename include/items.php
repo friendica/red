@@ -2183,12 +2183,18 @@ function tag_deliver($uid,$item_id) {
 
 	if($terms && (! $i[0]['item_restrict'])) {
 		logger('tag_deliver: found bookmark');
-		if(perm_is_allowed($u[0]['channel_id'],$i[0]['author_xchan'],'bookmark') && ($i[0]['author_xchan'] != $u[0]['channel_hash'])) {
+		$bookmark_self = intval(get_pconfig($uid,'system','bookmark_self'));
+		if(perm_is_allowed($u[0]['channel_id'],$i[0]['author_xchan'],'bookmark') && (($i[0]['author_xchan'] != $u[0]['channel_hash']) || ($bookmark_self))) {
 			require_once('include/bookmarks.php');
 			require_once('include/Contact.php');
-			$s = channelx_by_hash($i[0]['author_xchan']);
-			foreach($terms as $t) {
-				bookmark_add($u[0],$s[0],$t,$i[0]['item_private']);
+
+			$s = q("select * from xchan where xchan_hash = '%s' limit 1",
+				dbesc($item['author_xchan'])
+			);
+			if($s) {
+				foreach($terms as $t) {
+					bookmark_add($u[0],$s[0],$t,$i[0]['item_private']);
+				}
 			}
 		}
 	}
