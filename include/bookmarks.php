@@ -7,6 +7,10 @@ function bookmark_add($channel,$sender,$taxonomy,$private) {
 	$iarr = array();
 	$channel_id = $channel['channel_id'];
 
+
+	
+
+
 	if($private)
 		$iarr['contact_allow'] = array($channel['channel_hash']); 
 	$iarr['mitem_link'] = $taxonomy['url'];

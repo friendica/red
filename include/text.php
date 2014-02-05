@@ -604,7 +604,7 @@ function get_tags($s) {
 
 	// bookmarks
 
-	if(preg_match_all('/#\^\[(url|zrl)=(.*?)\](.*?)\[\/(url|zrl)\]/',$s,$match,PREG_SET_ORDER)) {
+	if(preg_match_all('/#\^\[(url|zrl)(.*?)\](.*?)\[\/(url|zrl)\]/',$s,$match,PREG_SET_ORDER)) {
 		foreach($match as $mtch) {
 			$ret[] = $mtch[0];
 		}

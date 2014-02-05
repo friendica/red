@@ -55,6 +55,8 @@
 		if(typeof(insertFormatting) != 'undefined')
 		   return(insertFormatting(comment,BBcode,id));
 
+		var urlprefix = ((BBcode == 'url') ? '#^' : '');
+
 		var tmpStr = $("#comment-edit-text-" + id).val();
 		if(tmpStr == comment) {
 			tmpStr = "";
@@ -68,11 +70,11 @@
 		if (document.selection) {
 			textarea.focus();
 			selected = document.selection.createRange();
-			selected.text = "["+BBcode+"]" + selected.text + "[/"+BBcode+"]";
+			selected.text = urlprefix+"["+BBcode+"]" + selected.text + "[/"+BBcode+"]";
 		} else if (textarea.selectionStart || textarea.selectionStart == "0") {
 			var start = textarea.selectionStart;
 			var end = textarea.selectionEnd;
-			textarea.value = textarea.value.substring(0, start) + "["+BBcode+"]" + textarea.value.substring(start, end) + "[/"+BBcode+"]" + textarea.value.substring(end, textarea.value.length);
+			textarea.value = textarea.value.substring(0, start) + urlprefix+"["+BBcode+"]" + textarea.value.substring(start, end) + "[/"+BBcode+"]" + textarea.value.substring(end, textarea.value.length);
 		}
 		return true;
 	}
