@@ -10,6 +10,10 @@
 {{if $menu_id}}
 <input type="hidden" name="menu_id" value="{{$menu_id}}" />
 {{/if}}
+{{if $menu_system}}
+<input type="hidden" name="menu_system" value="{{$menu_system}}" />
+{{/if}}
+
 
 {{include file="field_input.tpl" field=$menu_name}} 
 {{include file="field_input.tpl" field=$menu_desc}}

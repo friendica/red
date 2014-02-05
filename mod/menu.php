@@ -9,7 +9,9 @@ function menu_post(&$a) {
 
 	$_REQUEST['menu_channel_id'] = local_user();
 	if($_REQUEST['menu_bookmark'])
-		$_REQUEST['menu_flags'] = MENU_BOOKMARK;
+		$_REQUEST['menu_flags'] |= MENU_BOOKMARK;
+	if($_REQUEST['menu_system'])
+		$_REQUEST['menu_flags'] |= MENU_SYSTEM;
 
 	$menu_id = ((argc() > 1) ? intval(argv(1)) : 0);
 	if($menu_id) {
@@ -108,6 +110,7 @@ function menu_content(&$a) {
 					'$menu_name' => array('menu_name', t('Menu name'), $m['menu_name'], t('Must be unique, only seen by you'), '*'),
 					'$menu_desc' => array('menu_desc', t('Menu title'), $m['menu_desc'], t('Menu title as seen by others'), ''),
 					'$menu_bookmark' => array('menu_bookmark', t('Allow bookmarks'), (($m['menu_flags'] & MENU_BOOKMARK) ? 1 : 0), t('Menu may be used to store saved bookmarks'), ''),
+					'$menu_system' => (($m['menu_flags'] & MENU_SYSTEM) ? 1 : 0),
 					'$submit' => t('Modify')
 				));
 				return $o;

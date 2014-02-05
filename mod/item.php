@@ -896,9 +896,9 @@ function handle_tag($a, &$body, &$access_tag, &$str_tags, $profile_uid, $tag) {
 	//is it a hash tag? 
 	if(strpos($tag,'#') === 0) {
 		if(strpos($tag,'#^[') === 0) {
-			if(preg_match('/#\^\[(url|zrl)=(.*?)\](.*?)\[\/(url|zrl)\]/',$tag,$match)) {
+			if(preg_match('/#\^\[(url|zrl)(.*?)\](.*?)\[\/(url|zrl)\]/',$tag,$match)) {
 				$basetag = $match[3];
-				$url = $match[2];
+				$url = ((substr($match[2],0,1) === '=') ? substr($match[2],1) : $match[3]);
 				$replaced = true;
 
 			}
