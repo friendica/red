@@ -46,7 +46,7 @@ define ( 'RED_PLATFORM',            'Red Matrix' );
 define ( 'RED_VERSION',             trim(file_get_contents('version.inc')) . 'R');
 define ( 'ZOT_REVISION',            1     ); 
 
-define ( 'DB_UPDATE_VERSION',       1095  );
+define ( 'DB_UPDATE_VERSION',       1096  );
 
 define ( 'EOL',                    '<br />' . "\r\n"     );
 define ( 'ATOM_TIME',              'Y-m-d\TH:i:s\Z' );
@@ -270,6 +270,7 @@ define ( 'PERMS_W_STORAGE',        0x02000);
 define ( 'PERMS_R_PAGES',          0x04000);
 define ( 'PERMS_W_PAGES',          0x08000);
 define ( 'PERMS_A_REPUBLISH',      0x10000);
+define ( 'PERMS_A_BOOKMARK',       0x20000);
 
 // General channel permissions
 
@@ -398,6 +399,7 @@ define ( 'TERM_PCATEGORY',    4 );
 define ( 'TERM_FILE',         5 );
 define ( 'TERM_SAVEDSEARCH',  6 );
 define ( 'TERM_THING',        7 );
+define ( 'TERM_BOOKMARK',     8 );
 
 define ( 'TERM_OBJ_POST',    1 );
 define ( 'TERM_OBJ_PHOTO',   2 );
@@ -576,6 +578,7 @@ function startup() {
 
 class App {
 
+	public  $install    = false;           // true if we are installing the software
 		
 	public  $account    = null;            // account record of the logged-in account
 	public  $channel    = null;            // channel record of the current channel of the logged-in account
@@ -1571,12 +1574,16 @@ function proc_run($cmd){
 		$args[$x] = escapeshellarg($args[$x]);
 
 	$cmdline = implode($args," ");
-	if(get_config('system','proc_windows'))
+	if(is_windows())
 		proc_close(proc_open('cmd /c start /b ' . $cmdline,array(),$foo));
 	else
 		proc_close(proc_open($cmdline." &",array(),$foo));
 }
 
+
+function is_windows() {
+	return ((strtoupper(substr(PHP_OS,0,3)) === 'WIN') ? true : false);
+}
 
 
 function current_theme(){

@@ -442,7 +442,7 @@ function item_message_id() {
 
 		$mid = $hash . '@' . get_app()->get_hostname();
 
-		$r = q("SELECT `id` FROM `item` WHERE `mid` = '%s' LIMIT 1",
+		$r = q("SELECT id FROM item WHERE mid = '%s' LIMIT 1",
 			dbesc($mid));
 		if(count($r))
 			$dups = true;
@@ -459,7 +459,7 @@ function photo_new_resource() {
 	do {
 		$found = false;
 		$resource = hash('md5',uniqid(mt_rand(),true));
-		$r = q("SELECT `id` FROM `photo` WHERE `resource_id` = '%s' LIMIT 1",
+		$r = q("SELECT id FROM photo WHERE resource_id = '%s' LIMIT 1",
 			dbesc($resource)
 		);
 		if(count($r))
@@ -593,7 +593,7 @@ function get_tags($s) {
 			if(substr($mtch,-1,1) === '.')
 				$mtch = substr($mtch,0,-1);
 			// ignore strictly numeric tags like #1
-			if((strpos($mtch,'#') === 0) && ctype_digit(substr($mtch,1)))
+			if((strpos($mtch,'#') === 0) && ( ctype_digit(substr($mtch,1)) || substr($mtch,1,1) === '^'))
 				continue;
 			// try not to catch url fragments
 			if(strpos($s,$mtch) && preg_match('/[a-zA-z0-9\/]/',substr($s,strpos($s,$mtch)-1,1)))
@@ -601,6 +601,18 @@ function get_tags($s) {
 			$ret[] = $mtch;
 		}
 	}
+
+	// bookmarks
+
+	if(preg_match_all('/#\^\[(url|zrl)(.*?)\](.*?)\[\/(url|zrl)\]/',$s,$match,PREG_SET_ORDER)) {
+		foreach($match as $mtch) {
+			$ret[] = $mtch[0];
+		}
+	}
+
+
+	// logger('get_tags: ' . print_r($ret,true));
+
 	return $ret;
 }
 
@@ -889,8 +901,8 @@ function smilies($s, $sample = false) {
 		|| (local_user() && intval(get_pconfig(local_user(),'system','no_smilies'))))
 		return $s;
 
-	$s = preg_replace_callback('{<(pre|code)>(?<target>.*?)</\1>}ism','smile_encode',$s);
-	$s = preg_replace_callback('/<[a-z]+ (?<target>.*?)>/ism','smile_encode',$s);
+	$s = preg_replace_callback('{<(pre|code)>.*?</\1>}ism','smile_shield',$s);
+	$s = preg_replace_callback('/<[a-z]+ .*?>/ism','smile_shield',$s);
 
 	$texts =  array( 
 		'&lt;3', 
@@ -981,20 +993,18 @@ function smilies($s, $sample = false) {
 		$s = str_replace($params['texts'],$params['icons'],$params['string']);
 	}
 
-	$s = preg_replace_callback(
-		'/<!--base64:(.*?)-->/ism',
-		function ($m) { return base64url_decode($m[1]); },
-		$s
-	);
+	$s = preg_replace_callback('/<!--base64:(.*?)-->/ism', 'smile_unshield', $s);
 
 	return $s;
 
 }
 
+function smile_shield($m) {
+	return '<!--base64:' . base64url_encode($m[0]) . '-->';
+}
 
-function smile_encode($m) {
-	$cleartext = $m['target'];
-	return str_replace($cleartext,'<!--base64:' . base64url_encode($cleartext) . '-->',$m[0]);
+function smile_unshield($m) { 
+	return base64url_decode($m[1]); 
 }
 
 // expand <3333 to the correct number of hearts
@@ -1518,20 +1528,6 @@ function return_bytes ($size_str) {
     }
 }
 
-function generate_user_guid() {
-	$found = true;
-	do {
-		$guid = random_string(16);
-		$x = q("SELECT `uid` FROM `user` WHERE `guid` = '%s' LIMIT 1",
-			dbesc($guid)
-		);
-		if(! count($x))
-			$found = false;
-	} while ($found == true );
-	return $guid;
-}
-
-
 
 function base64url_encode($s, $strip_padding = true) {
 
@@ -1549,23 +1545,6 @@ function base64url_decode($s) {
 		logger('base64url_decode: illegal input: ' . print_r(debug_backtrace(), true));
 		return $s;
 	}
-
-/*
- *  // Placeholder for new rev of salmon which strips base64 padding.
- *  // PHP base64_decode handles the un-padded input without requiring this step
- *  // Uncomment if you find you need it.
- *
- *	$l = strlen($s);
- *	if(! strpos($s,'=')) {
- *		$m = $l % 4;
- *		if($m == 2)
- *			$s .= '==';
- *		if($m == 3)
- *			$s .= '=';
- *	}
- *
- */
-
 	return base64_decode(strtr($s,'-_','+/'));
 }
 
@@ -1670,17 +1649,12 @@ function item_post_type($item) {
 }
 
 
-function normalise_openid($s) {
-	return trim(str_replace(array('http://','https://'),array('',''),$s),'/');
-}
-
-
 function undo_post_tagging($s) {
 	$matches = null;
-	$cnt = preg_match_all('/([@#])\[zrl=(.*?)\](.*?)\[\/zrl\]/ism',$s,$matches,PREG_SET_ORDER);
+	$cnt = preg_match_all('/([@#])(\!*)\[zrl=(.*?)\](.*?)\[\/zrl\]/ism',$s,$matches,PREG_SET_ORDER);
 	if($cnt) {
 		foreach($matches as $mtch) {
-			$s = str_replace($mtch[0], $mtch[1] . $mtch[3],$s);
+			$s = str_replace($mtch[0], $mtch[1] . $mtch[2] . str_replace(' ','_',$mtch[4]),$s);
 		}
 	}
 	return $s;

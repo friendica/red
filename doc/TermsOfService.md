@@ -1,4 +1,4 @@
 Terms of Service
 ================
 
-#include SiteTOS;
+#include doc/SiteTOS.md;

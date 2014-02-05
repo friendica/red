@@ -252,7 +252,7 @@ function parse_url_content(&$a) {
 
 	logger('parse_url: ' . $url);
 
-	$template = $br . '[url=%s]%s[/url]%s' . $br;
+	$template = $br . '#^[url=%s]%s[/url]%s' . $br;
 
 	$arr = array('url' => $url, 'text' => '');
 

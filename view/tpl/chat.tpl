@@ -1,13 +1,14 @@
-<div id="chatContainer" style="height: 100%; width: 100%;">
+<h1>{{$room_name}}</h1>
+<div id="chatContainer"">
 
-    <div id="chatTopBar" style="float: left; height: 400px; width: 650px; overflow-y: auto;">
+    <div id="chatTopBar">
     	<div id="chatLineHolder"></div>
 	</div>
 
-    <div id="chatUsers" style="float: right; width: 120px; height: 100%; border: 1px solid #000;" ></div>
+    <div id="chatUsers"></div>
 
 	<div class="clear"></div>
-    <div id="chatBottomBar" style="position: relative; bottom: 0; height: 150px; margin-top: 20px;">
+    <div id="chatBottomBar">
         <div class="tip"></div>
 
         <form id="chat-form" method="post" action="#">
@@ -16,14 +17,11 @@
             <input type="submit" name="submit" value="{{$submit}}" />
         </form>
 
+		<a href="{{$baseurl}}/chat/{{$nickname}}/{{$room_id}}/leave">{{$leave}}</a> | <a href="{{$baseurl}}/chatsvc?f=&room_id={{$room_id}}&status=away">{{$away}}</a> | <a href="{{$baseurl}}/chatsvc?f=&room_id={{$room_id}}&status=online">{{$online}}</a>
+
     </div>
 
 </div>
-<style>
-section {
-	padding-bottom: 0;
-}
-</style>
 
 <script>
 var room_id = {{$room_id}};
@@ -49,8 +47,8 @@ $('#chat-form').submit(function(ev) {
 
 function load_chats() {
 
-	$.get("chatsvc?f=&room_id=" + room_id + '&last=' + last_chat,function(data) {
-		if(data.success) {
+	$.get("chatsvc?f=&room_id=" + room_id + '&last=' + last_chat + ((stopped) ? '&stopped=1' : ''),function(data) {
+		if(data.success && (! stopped)) {
 			update_inroom(data.inroom);
 			update_chats(data.chats);
 		}
@@ -65,7 +63,7 @@ function update_inroom(inroom) {
 	var count = inroom.length;
 	$.each( inroom, function(index, item) {
 		var newNode = document.createElement('div');
-		$(newNode).html('<img style="height: 32px; width: 32px;" src="' + item.img + '" alt="' + item.name + '" />');
+		$(newNode).html('<img style="height: 32px; width: 32px;" src="' + item.img + '" alt="' + item.name + '" /> ' + item.status + '<br />' + item.name + '<br/>');
 		html.appendChild(newNode); 		
 	});
 	$('#chatUsers').html(html);	
@@ -77,12 +75,31 @@ function update_chats(chats) {
 	$.each( chats, function(index, item) {
 		last_chat = item.id;
 		var newNode = document.createElement('div');
-		$(newNode).html('<div style="margin-bottom: 5px; clear: both;"><img style="height: 32px; width: 32px; float: left;" src="' + item.img + '" alt="' + item.name + '" /><div class="chat-body; style="float: left; width: 80%;">' + item.text + '</div></div>');
+		$(newNode).html('<div style="margin-bottom: 5px; clear: both;"><img style="height: 32px; width: 32px; float: left;" src="' + item.img + '" alt="' + item.name + '" /><div class="chat-body" style="float: left; width: 80%; margin-left: 15px; font-size: 14px;">' + item.name + ' <span class="autotime" title="' + item.isotime + '">' + item.localtime + '</span><br />' + item.text + '</div></div>');
 		$('#chatLineHolder').append(newNode);
+		$(".autotime").timeago();
+
 		});
 	var elem = document.getElementById('chatTopBar');
 	elem.scrollTop = elem.scrollHeight;
 
 }
 
+</script>
+<script>
+function isMobile() {
+  try{ document.createEvent("TouchEvent"); return true; }
+  catch(e){ return false; }
+}
+$(function(){
+
+  $('#chatText').keypress(function(e){
+  	if (e.keyCode == 13 && e.shiftKey||isMobile()) {
+	}
+    else if (e.keyCode == 13) {
+	  e.preventDefault();
+      $(this).parent('form').trigger('submit');
+    }
+  });
+});
 </script>

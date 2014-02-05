@@ -1,0 +1,31 @@
+ #chatContainer {
+	 height: 100%;
+	 width: 100%;
+ }
+ 
+ #chatTopBar {
+	 float: left;
+	 height: 400px;
+	 width: 650px;
+	 overflow-y: auto;
+ }
+ 
+ #chatUsers {
+	 float: right;
+	 width: 120px;
+	 height: 100%;
+	 border: 1px solid #000;
+ }
+ 
+ #chatBottomBar {
+	 position: relative;
+	 bottom: 0;
+	 height: 150px;
+	 margin-top: 20px;
+ }
+ 
+ section {
+	 padding-bottom: 0;
+ }
+ 
+ 

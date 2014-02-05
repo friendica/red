@@ -29,17 +29,6 @@ function chatsvc_post(&$a) {
 
 	$room_id = $a->data['chat']['room_id'];
 	$text = escape_tags($_REQUEST['chat_text']);
-	$status = strip_tags($_REQUEST['status']);
-
-	if($status && $room_id) {
-		$r = q("update chatpresence set cp_status = '%s', cp_last = '%s' where cp_room = %d and cp_xchan = '%s' and cp_client = '%s' limit 1",
-			dbesc($status),
-			dbesc(datetime_convert()),
-			intval($room_id),
-			dbesc(get_observer_hash()),
-			dbesc($_SERVER['REMOTE_ADDR'])
-		);
-	}
 	if(! $text)
 		return;
 
@@ -65,47 +54,81 @@ function chatsvc_post(&$a) {
 
 function chatsvc_content(&$a) {
 
-	$lastseen = intval($_REQUEST['last']);
+	$status = strip_tags($_REQUEST['status']);
+	$room_id = intval($a->data['chat']['room_id']);
+	$stopped = ((x($_REQUEST,'stopped') && intval($_REQUEST['stopped'])) ? true : false);
 
-	$ret = array('success' => false);
+	if($status && $room_id) {
 
-	$sql_extra = permissions_sql($a->data['chat']['uid']);
+		$x = q("select channel_address from channel where channel_id = %d limit 1",
+			intval($a->data['chat']['uid'])
+		);			
 
-	$r = q("select * from chatroom where cr_uid = %d and cr_id = %d $sql_extra",
-		intval($a->data['chat']['uid']),
-		intval($a->data['chat']['room_id'])
-	);
-	if(! $r)
-		json_return_and_die($ret);
+		$r = q("update chatpresence set cp_status = '%s', cp_last = '%s' where cp_room = %d and cp_xchan = '%s' and cp_client = '%s' limit 1",
+			dbesc($status),
+			dbesc(datetime_convert()),
+			intval($room_id),
+			dbesc(get_observer_hash()),
+			dbesc($_SERVER['REMOTE_ADDR'])
+		);
 
-	$inroom = array();
-
-	$r = q("select * from chatpresence left join xchan on xchan_hash = cp_xchan where cp_room = %d order by xchan_name",
-		intval($a->data['chat']['room_id'])
-	);
-	if($r) {
-		foreach($r as $rr) {
-			$inroom[] = array('img' => zid($rr['xchan_photo_m']), 'img_type' => $rr['xchan_photo_mimetype'],'name' => $rr['xchan_name']);		
-		}
+		goaway(z_root() . '/chat/' . $x[0]['channel_address'] . '/' . $room_id);		
 	}
 
-	$chats = array();
+	if(! $stopped) {
 
-	$r = q("select * from chat left join xchan on chat_xchan = xchan_hash where chat_room = %d and chat_id > %d",
-		intval($a->data['chat']['room_id']),
-		intval($lastseen)
-	);
-	if($r) {
-		foreach($r as $rr) {
-			$chats[] = array(
-				'id' => $rr['chat_id'],
-				'img' => zid($rr['xchan_photo_m']), 
-				'img_type' => $rr['xchan_photo_mimetype'],
-				'name' => $rr['xchan_name'],
-				'isotime' => datetime_convert('UTC', date_default_timezone_get(), $rr['created'], 'c'),
-				'localtime' => datetime_convert('UTC', date_default_timezone_get(), $rr['created'], 'r'),
-				'text' => smilies(bbcode($rr['chat_text']))
-			);
+		$lastseen = intval($_REQUEST['last']);
+
+		$ret = array('success' => false);
+
+		$sql_extra = permissions_sql($a->data['chat']['uid']);
+
+		$r = q("select * from chatroom where cr_uid = %d and cr_id = %d $sql_extra",
+			intval($a->data['chat']['uid']),
+			intval($a->data['chat']['room_id'])
+		);
+		if(! $r)
+			json_return_and_die($ret);
+
+		$inroom = array();
+
+		$r = q("select * from chatpresence left join xchan on xchan_hash = cp_xchan where cp_room = %d order by xchan_name",
+			intval($a->data['chat']['room_id'])
+		);
+		if($r) {
+			foreach($r as $rr) {
+				switch($rr['cp_status']) {
+					case 'away':
+						$status = t('Away');
+						break;
+					case 'online':
+					default:
+						$status = t('Online');
+						break;
+				}
+	
+				$inroom[] = array('img' => zid($rr['xchan_photo_m']), 'img_type' => $rr['xchan_photo_mimetype'],'name' => $rr['xchan_name'], status => $status);	
+			}
+		}
+
+		$chats = array();
+
+		$r = q("select * from chat left join xchan on chat_xchan = xchan_hash where chat_room = %d and chat_id > %d",
+			intval($a->data['chat']['room_id']),
+			intval($lastseen)
+		);
+		if($r) {
+			foreach($r as $rr) {
+				$chats[] = array(
+					'id' => $rr['chat_id'],
+					'img' => zid($rr['xchan_photo_m']), 
+					'img_type' => $rr['xchan_photo_mimetype'],
+					'name' => $rr['xchan_name'],
+					'isotime' => datetime_convert('UTC', date_default_timezone_get(), $rr['created'], 'c'),
+					'localtime' => datetime_convert('UTC', date_default_timezone_get(), $rr['created'], 'r'),
+					'text' => smilies(bbcode($rr['chat_text']))
+				);
+			}
 		}
 	}
 
@@ -117,9 +140,10 @@ function chatsvc_content(&$a) {
 	);
 
 	$ret['success'] = true;
-	$ret['inroom'] = $inroom;
-	$ret['chats'] = $chats;
-
+	if(! $stopped) {
+		$ret['inroom'] = $inroom;
+		$ret['chats'] = $chats;
+	}
 	json_return_and_die($ret);
 
 }

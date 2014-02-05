@@ -24,11 +24,12 @@ function get_perms() {
 		'post_mail'     => array('channel_w_mail',    intval(PERMS_W_MAIL),    false, t('Can send me private mail messages'), ''),
 		'post_photos'   => array('channel_w_photos',  intval(PERMS_W_PHOTOS),  false, t('Can post photos to my photo albums'), ''),
 		'tag_deliver'   => array('channel_w_tagwall', intval(PERMS_W_TAGWALL), false, t('Can forward to all my channel contacts via post @mentions'), t('Advanced - useful for creating group forum channels')),
-		'chat'          => array('channel_w_chat',    intval(PERMS_W_CHAT),    false, t('Can chat with me (when available)'), t('Requires compatible chat plugin')),
+		'chat'          => array('channel_w_chat',    intval(PERMS_W_CHAT),    false, t('Can chat with me (when available)'), t('')),
 		'write_storage' => array('channel_w_storage',   intval(PERMS_W_STORAGE),   false, t('Can write to my "public" file storage'), ''),
 		'write_pages' => array('channel_w_pages',   intval(PERMS_W_PAGES),   false, t('Can edit my "public" pages'), ''),
 
 		'republish' => array('channel_a_republish', intval(PERMS_A_REPUBLISH), false, t('Can source my "public" posts in derived channels'), t('Somewhat advanced - very useful in open communities')),
+		'bookmark' => array('channel_a_bookmark', intval(PERMS_A_BOOKMARK), false, t('Can send me bookmarks'), 'Bookmarks from this person will automatically be saved'),
 		'delegate'      => array('channel_a_delegate', intval(PERMS_A_DELEGATE),    false, t('Can administer my channel resources'), t('Extremely advanced. Leave this alone unless you know what you are doing')),
 	);
 	$ret = array('global_permissions' => $global_perms);

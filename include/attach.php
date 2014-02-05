@@ -26,6 +26,7 @@ function z_mime_content_type($filename) {
 		'xml' => 'application/xml',
 		'swf' => 'application/x-shockwave-flash',
 		'flv' => 'video/x-flv',
+		'epub' => 'application/epub+zip',
 
 		// images
 		'png' => 'image/png',

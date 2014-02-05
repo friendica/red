@@ -14,10 +14,12 @@
 <div id="photo-photo-end"></div>
 <div id="photo-caption">{{$desc}}</div>
 {{if $tags}}
-<div id="in-this-photo-text">{{$tags.0}}</div>
-<div id="in-this-photo">{{$tags.1}}</div>
+<div id="in-this-photo-text">{{$tag_hdr}}</div>
+{{foreach $tags as $t}}
+<div id="in-this-photo">{{$t.0}}</div>
+{{if $edit}}<div id="tag-remove"><a href="{{$t.1}}">{{$t.2}}</a></div>{{/if}}
+{{/foreach}}
 {{/if}}
-{{if $tags.2}}<div id="tag-remove"><a href="{{$tags.2}}">{{$tags.3}}</a></div>{{/if}}
 
 {{if $edit}}
 <div id="photo-edit-edit-wrapper" class="fakelink" onclick="openClose('photo-edit-edit');">{{$edit.edit}}</div>

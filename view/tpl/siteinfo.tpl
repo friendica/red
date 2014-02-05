@@ -14,3 +14,4 @@
 {{if $plugins_list}}
    <div style="margin-left: 25px; margin-right: 25px;">{{$plugins_list}}</div>
 {{/if}}
+<p>{{$donate}}</p>

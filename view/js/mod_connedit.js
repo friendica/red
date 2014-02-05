@@ -17,6 +17,7 @@ function connectFullShare() {
 	$('#me_id_perms_chat').attr('checked','checked');
 	$('#me_id_perms_view_storage').attr('checked','checked');
 	$('#me_id_perms_republish').attr('checked','checked');
+
 }
 
 function connectCautiousShare() {

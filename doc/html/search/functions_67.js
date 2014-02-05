@@ -56,6 +56,7 @@ var searchData=
   ['get_5fmy_5furl',['get_my_url',['../identity_8php.html#aa46321e1cd6a3b8dfde8bf9510112fec',1,'identity.php']]],
   ['get_5fobserver',['get_observer',['../classApp.html#a1ad3bb1b68439b3b7cbe630918e618d2',1,'App\get_observer()'],['../classConversation.html#ae3d4190142e12b57051f11f2911f77a0',1,'Conversation\get_observer()']]],
   ['get_5fobserver_5fhash',['get_observer_hash',['../boot_8php.html#a623e49c79943f3e7bdb770d021683cf7',1,'boot.php']]],
+  ['get_5fonline_5fstatus',['get_online_status',['../identity_8php.html#a332df795f684788002f5a6424abacfd7',1,'identity.php']]],
   ['get_5fowner_5fname',['get_owner_name',['../classItem.html#a67892aa23d19f4431bb2e5f43c74000e',1,'Item']]],
   ['get_5fowner_5fphoto',['get_owner_photo',['../classItem.html#aa541bc4290e51bfd688d6921bebabc73',1,'Item']]],
   ['get_5fowner_5furl',['get_owner_url',['../classItem.html#a9f2d219da712390f59012fc32a342074',1,'Item']]],

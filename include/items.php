@@ -822,7 +822,7 @@ function encode_item_xchan($xchan) {
 function encode_item_terms($terms) {
 	$ret = array();	
 
-	$allowed_export_terms = array( TERM_UNKNOWN, TERM_HASHTAG, TERM_MENTION, TERM_CATEGORY );
+	$allowed_export_terms = array( TERM_UNKNOWN, TERM_HASHTAG, TERM_MENTION, TERM_CATEGORY, TERM_BOOKMARK );
 
 	if($terms) {
 		foreach($terms as $term) {
@@ -834,7 +834,7 @@ function encode_item_terms($terms) {
 }
 
 function termtype($t) {
-	$types = array('unknown','hashtag','mention','category','private_category','file','search');
+	$types = array('unknown','hashtag','mention','category','private_category','file','search','thing','bookmark');
 	return(($types[$t]) ? $types[$t] : 'unknown');
 }
 
@@ -864,6 +864,12 @@ function decode_tags($t) {
 					break;
 				case 'search':
 					$tag['type'] = TERM_SEARCH;
+					break;
+				case 'thing':
+					$tag['type'] = TERM_THING;
+					break;
+				case 'bookmark':
+					$tag['type'] = TERM_BOOKMARK;
 					break;
 				default:
 				case 'unknown':
@@ -2163,6 +2169,21 @@ function tag_deliver($uid,$item_id) {
 
 	$item = $i[0];
 
+
+	$terms = get_terms_oftype($item['term'],TERM_BOOKMARK);
+
+	if($terms && (! $i[0]['item_restrict'])) {
+		logger('tag_deliver: found bookmark');
+		if(perm_is_allowed($u[0]['channel_id'],$i[0]['author_xchan'],'bookmark') && ($i[0]['author_xchan'] != $u[0]['channel_hash'])) {
+			require_once('include/bookmarks.php');
+			require_once('include/Contact.php');
+			$s = channelx_by_hash($i[0]['author_xchan']);
+			foreach($terms as $t) {
+				bookmark_add($u[0],$s[0],$t,$i[0]['item_private']);
+			}
+		}
+	}
+
 	if(($item['source_xchan']) && ($item['item_flags'] & ITEM_UPLINK) && ($item['item_flags'] & ITEM_THREAD_TOP) && ($item['edited'] != $item['created'])) {
 		// this is an update to a post which was already processed by us and has a second delivery chain
 		// Just start the second delivery chain to deliver the updated post
@@ -2466,7 +2487,7 @@ function check_item_source($uid,$item) {
 		return false;
 	
 
-	$r = q("select * from source where src_channel_id = %d and src_xchan = '%s' limit 1",
+	$r = q("select * from source where src_channel_id = %d and ( src_xchan = '%s' || src_xchan = '*' ) limit 1",
 		intval($uid),
 		dbesc(($item['source_xchan']) ?  $item['source_xchan'] : $item['owner_xchan'])
 	);
@@ -2502,7 +2523,7 @@ function check_item_source($uid,$item) {
 		foreach($words as $word) {
 			if(substr($word,0,1) === '#' && $tags) {
 				foreach($tags as $t)
-					if($t['type'] == TERM_HASHTAG && substr($t,1) === $word)
+					if(($t['type'] == TERM_HASHTAG) && ((substr($t,1) === substr($word,1)) || (substr($word,1) === '*')))
 						return true;
 			}
 			if(stristr($text,$word) !== false)

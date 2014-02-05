@@ -51,4 +51,5 @@ $(document).ready(function() {
 		$('.icon-globe').addClass('');
 		$('.icon-circle-blank').addClass('');
 		$('.icon-circle').addClass('');
+		$('.icon-bookmark').addClass('');
 });

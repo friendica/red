@@ -373,7 +373,10 @@ function check_php(&$phpath, &$checks) {
 	if (strlen($phpath)){
 		$passed = file_exists($phpath);
 	} else {
-		$phpath = trim(shell_exec('which php'));
+		if(is_windows())
+			$phpath = trim(shell_exec('where php'));
+		else
+			$phpath = trim(shell_exec('which php'));
 		$passed = strlen($phpath);
 	}
 	$help = "";

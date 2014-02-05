@@ -171,6 +171,15 @@ class Item extends BaseObject {
 			);
 		}
 
+		$has_bookmarks = false;
+		if(is_array($item['term'])) {
+			foreach($item['term'] as $t) {
+				if($t['type'] == TERM_BOOKMARK)
+					$has_bookmarks = true;
+			}
+		}
+
+
 		if($this->is_commentable()) {
 			$like = array( t("I like this \x28toggle\x29"), t("like"));
 			$dislike = array( t("I don't like this \x28toggle\x29"), t("dislike"));
@@ -237,6 +246,7 @@ class Item extends BaseObject {
 			'star'      => ((feature_enabled($conv->get_profile_owner(),'star_posts')) ? $star : ''),
 			'tagger'    => ((feature_enabled($conv->get_profile_owner(),'commtag')) ? $tagger : ''),
 			'filer'     => ((feature_enabled($conv->get_profile_owner(),'filing')) ? $filer : ''),
+			'bookmark'  => (($conv->get_profile_owner() == local_user() && $has_bookmarks) ? t('Bookmark Links') : ''),
 			'drop'      => $drop,
 			'multidrop' => ((feature_enabled($conv->get_profile_owner(),'multi_delete')) ? $multidrop : ''),
 // end toolbar buttons

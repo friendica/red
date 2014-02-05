@@ -32,7 +32,7 @@ function connedit_init(&$a) {
 }
 
 function connedit_post(&$a) {
-	
+
 	if(! local_user())
 		return;
 
@@ -86,6 +86,8 @@ function connedit_post(&$a) {
 	$abook_flags = $orig_record[0]['abook_flags'];
 	$new_friend = false;
 
+
+
 	if(($_REQUEST['pending']) && ($abook_flags & ABOOK_FLAG_PENDING)) {
 		$abook_flags = ( $abook_flags ^ ABOOK_FLAG_PENDING );
 		$new_friend = true;
@@ -100,6 +102,7 @@ function connedit_post(&$a) {
 		intval($contact_id),
 		intval(local_user())
 	);
+
 	if($r)
 		info( t('Connection updated.') . EOL);
 	else
@@ -442,13 +445,13 @@ function connedit_content(&$a) {
 			'$perms'          => $perms,
 			'$forum'          => t('Forum Members'),
 			'$soapbox'        => t('Soapbox'),
-			'$full'           => t('Full Sharing'),
-			'$cautious'       => t('Cautious Sharing'),
+			'$full'           => t('Full Sharing (typical social network permissions)'),
+			'$cautious'       => t('Cautious Sharing '),
 			'$follow'         => t('Follow Only'),
 			'$permlbl'        => t('Individual Permissions'),
-			'$permnote'       => t('Some permissions may be inherited from your channel <a href="settings">privacy settings</a>, which have higher priority. Changing those inherited settings on this page will have no effect.'),
+			'$permnote'       => t('Some permissions may be inherited from your channel <a href="settings">privacy settings</a>, which have higher priority than individual settings. Changing those inherited settings on this page will have no effect.'),
 			'$advanced'       => t('Advanced Permissions'),
-			'$quick'          => t('Quick Links'),
+			'$quick'          => t('Simple Permissions (select one and submit)'),
 			'$common_link'    => $a->get_baseurl(true) . '/common/loc/' . local_user() . '/' . $contact['id'],
 			'$all_friends'    => $all_friends,
 			'$relation_text'  => $relation_text,

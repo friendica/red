@@ -18,6 +18,7 @@ var searchData=
   ['widget_5faffinity',['widget_affinity',['../widgets_8php.html#add9b24d3304e529a7975e96122315554',1,'widgets.php']]],
   ['widget_5farchive',['widget_archive',['../widgets_8php.html#a7b1e357b5a2027718470b77ec921fc65',1,'widgets.php']]],
   ['widget_5fcategories',['widget_categories',['../widgets_8php.html#af37fdad3b2e861d860a4a8c4d8a76c0b',1,'widgets.php']]],
+  ['widget_5fchatroom_5flist',['widget_chatroom_list',['../widgets_8php.html#a47c72aac42058ea086c9ef8651c259da',1,'widgets.php']]],
   ['widget_5fcollections',['widget_collections',['../widgets_8php.html#aa189a07241246d97efbee29f1c6a6f7f',1,'widgets.php']]],
   ['widget_5fdesign_5ftools',['widget_design_tools',['../widgets_8php.html#a145ff35319cfa47a9cc07f9425bd674b',1,'widgets.php']]],
   ['widget_5fdirsafemode',['widget_dirsafemode',['../widgets_8php.html#a268b01ce1ab8fe2cb346cb769b9d1091',1,'widgets.php']]],

@@ -40,11 +40,11 @@ abbr {
 
 a, a:visited, a:link, .fakelink, .fakelink:visited, .fakelink:link { 
 	font-weight: bold;
-	color: #0080FF; 
+	color: $link_colour; 
 	text-decoration: none; 
 }
 
-a:hover, .fakelink:hover { color: #44AAFF; text-decoration: underline; }
+a:hover, .fakelink:hover { color: $link_colour; text-decoration: underline; }
 
 .fakelink {
 	cursor: pointer;

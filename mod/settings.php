@@ -306,6 +306,7 @@ function settings_post(&$a) {
 	$arr['channel_r_pages']     = (($_POST['view_pages'])    ? $_POST['view_pages']     : 0);
 	$arr['channel_w_pages']     = (($_POST['write_pages'])   ? $_POST['write_pages']    : 0);
 	$arr['channel_a_republish'] = (($_POST['republish'])     ? $_POST['republish']      : 0);
+	$arr['channel_a_bookmark'] = (($_POST['bookmark'])     ? $_POST['bookmark']      : 0);
 	
 	$defperms = 0;
 	if(x($_POST['def_view_stream']))
@@ -342,6 +343,8 @@ function settings_post(&$a) {
 		$defperms += $_POST['def_write_pages'];
 	if(x($_POST['def_republish']))
 		$defperms += $_POST['def_republish'];
+	if(x($_POST['def_bookmark']))
+		$defperms += $_POST['def_bookmark'];
 
 	$notify = 0;
 
@@ -399,7 +402,7 @@ function settings_post(&$a) {
 	set_pconfig(local_user(),'system','hide_online_status',$hide_presence);
 
 
-	$r = q("update channel set channel_name = '%s', channel_pageflags = %d, channel_timezone = '%s', channel_location = '%s', channel_notifyflags = %d, channel_max_anon_mail = %d, channel_max_friend_req = %d, channel_expire_days = %d, channel_default_group = '%s', channel_r_stream = %d, channel_r_profile = %d, channel_r_photos = %d, channel_r_abook = %d, channel_w_stream = %d, channel_w_wall = %d, channel_w_tagwall = %d, channel_w_comment = %d, channel_w_mail = %d, channel_w_photos = %d, channel_w_chat = %d, channel_a_delegate = %d, channel_r_storage = %d, channel_w_storage = %d, channel_r_pages = %d, channel_w_pages = %d, channel_a_republish = %d, channel_allow_cid = '%s', channel_allow_gid = '%s', channel_deny_cid = '%s', channel_deny_gid = '%s'  where channel_id = %d limit 1",
+	$r = q("update channel set channel_name = '%s', channel_pageflags = %d, channel_timezone = '%s', channel_location = '%s', channel_notifyflags = %d, channel_max_anon_mail = %d, channel_max_friend_req = %d, channel_expire_days = %d, channel_default_group = '%s', channel_r_stream = %d, channel_r_profile = %d, channel_r_photos = %d, channel_r_abook = %d, channel_w_stream = %d, channel_w_wall = %d, channel_w_tagwall = %d, channel_w_comment = %d, channel_w_mail = %d, channel_w_photos = %d, channel_w_chat = %d, channel_a_delegate = %d, channel_r_storage = %d, channel_w_storage = %d, channel_r_pages = %d, channel_w_pages = %d, channel_a_republish = %d, channel_a_bookmark = %d, channel_allow_cid = '%s', channel_allow_gid = '%s', channel_deny_cid = '%s', channel_deny_gid = '%s'  where channel_id = %d limit 1",
 		dbesc($username),
 		intval($pageflags),
 		dbesc($timezone),
@@ -426,6 +429,7 @@ function settings_post(&$a) {
 		intval($arr['channel_r_pages']),
 		intval($arr['channel_w_pages']),
 		intval($arr['channel_a_republish']),
+		intval($arr['channel_a_bookmark']),
 		dbesc($str_contact_allow),
 		dbesc($str_group_allow),
 		dbesc($str_contact_deny),
@@ -919,18 +923,20 @@ function settings_content(&$a) {
 			'$defloc'	=> array('defloc', t('Default Post Location:'), $defloc, ''),
 			'$allowloc' => array('allow_location', t('Use Browser Location:'), ((get_pconfig(local_user(),'system','use_browser_location')) ? 1 : ''), ''),
 		
-			'$adult'    => array('adult', t('Adult Content'), $adult_flag, t('This channel publishes adult content.')),
+			'$adult'    => array('adult', t('Adult Content'), $adult_flag, t('This channel frequently or regularly publishes adult content. (Please tag any adult material and/or nudity with #NSFW)')),
 
 			'$h_prv' 	=> t('Security and Privacy Settings'),
 
-			'$hide_presence' => array('hide_presence', t('Hide my online presence'),$hide_presence, t('Prevents showing if you are available for chat')),
+			'$hide_presence' => array('hide_presence', t('Hide my online presence'),$hide_presence, t('Prevents displaying in your profile that you are online')),
 
-			'$lbl_pmacro' => t('Quick Privacy Settings:'),
-			'$pmacro3'    => t('Very Public - extremely permissive'),
-			'$pmacro2'    => t('Typical - default public, privacy when desired'),
-			'$pmacro1'    => t('Private - default private, rarely open or public'),
-			'$pmacro0'    => t('Blocked - default blocked to/from everybody'),
+			'$lbl_pmacro' => t('Simple Privacy Settings:'),
+			'$pmacro3'    => t('Very Public - <em>extremely permissive (should be used with caution)</em>'),
+			'$pmacro2'    => t('Typical - <em>default public, privacy when desired (similar to social network permissions but with improved privacy)</em>'),
+			'$pmacro1'    => t('Private - <em>default private, never open or public</em>'),
+			'$pmacro0'    => t('Blocked - <em>default blocked to/from everybody</em>'),
 			'$permiss_arr' => $permiss,
+
+			'$lbl_p2macro' => t('Advanced Privacy Settings'),
 
 			'$maxreq' 	=> array('maxreq', t('Maximum Friend Requests/Day:'), intval($channel['channel_max_friend_req']) , t('May reduce spam activity')),
 			'$permissions' => t('Default Post Permissions'),
