@@ -2169,6 +2169,21 @@ function tag_deliver($uid,$item_id) {
 
 	$item = $i[0];
 
+
+	$terms = get_terms_oftype($item['term'],TERM_BOOKMARK);
+
+	if($terms && (! $i[0]['item_restrict'])) {
+		logger('tag_deliver: found bookmark');
+		if(perm_is_allowed($u[0]['channel_id'],$i[0]['author_xchan'],'bookmark') && ($i[0]['author_xchan'] != $u[0]['channel_hash'])) {
+			require_once('include/bookmarks.php');
+			require_once('include/Contact.php');
+			$s = channelx_by_hash($i[0]['author_xchan']);
+			foreach($terms as $t) {
+				bookmark_add($u[0],$s[0],$t,$i[0]['item_private']);
+			}
+		}
+	}
+
 	if(($item['source_xchan']) && ($item['item_flags'] & ITEM_UPLINK) && ($item['item_flags'] & ITEM_THREAD_TOP) && ($item['edited'] != $item['created'])) {
 		// this is an update to a post which was already processed by us and has a second delivery chain
 		// Just start the second delivery chain to deliver the updated post

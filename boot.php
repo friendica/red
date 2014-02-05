@@ -270,7 +270,7 @@ define ( 'PERMS_W_STORAGE',        0x02000);
 define ( 'PERMS_R_PAGES',          0x04000);
 define ( 'PERMS_W_PAGES',          0x08000);
 define ( 'PERMS_A_REPUBLISH',      0x10000);
-define ( 'PERMS_A_BOOMARK',        0x20000);
+define ( 'PERMS_A_BOOKMARK',       0x20000);
 
 // General channel permissions
 

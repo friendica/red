@@ -29,7 +29,7 @@ function get_perms() {
 		'write_pages' => array('channel_w_pages',   intval(PERMS_W_PAGES),   false, t('Can edit my "public" pages'), ''),
 
 		'republish' => array('channel_a_republish', intval(PERMS_A_REPUBLISH), false, t('Can source my "public" posts in derived channels'), t('Somewhat advanced - very useful in open communities')),
-		'bookmark' => array('channel_a_bookmark', intval(PERMS_A_BOOKMARK), false, t('Can send me bookmarks'), ''),
+		'bookmark' => array('channel_a_bookmark', intval(PERMS_A_BOOKMARK), false, t('Can send me bookmarks'), 'Bookmarks from this person will automatically be saved'),
 		'delegate'      => array('channel_a_delegate', intval(PERMS_A_DELEGATE),    false, t('Can administer my channel resources'), t('Extremely advanced. Leave this alone unless you know what you are doing')),
 	);
 	$ret = array('global_permissions' => $global_perms);
