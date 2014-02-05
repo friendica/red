@@ -7,10 +7,6 @@ function bookmark_add($channel,$sender,$taxonomy,$private) {
 	$iarr = array();
 	$channel_id = $channel['channel_id'];
 
-
-	
-
-
 	if($private)
 		$iarr['contact_allow'] = array($channel['channel_hash']); 
 	$iarr['mitem_link'] = $taxonomy['url'];
@@ -45,12 +41,14 @@ function bookmark_add($channel,$sender,$taxonomy,$private) {
 		logger('bookmark_add: unable to create menu ' . $arr['menu_name']);
 		return; 
 	}
-
+	logger('add_bookmark: menu_id ' . $menu_id);
 	$r = q("select * from menu_item where mitem_link = '%s' and mitem_menu_id = %d and mitem_channel_id = %d limit 1",
 		dbesc($iarr['mitem_link']),
 		intval($menu_id),
 		intval($channel_id) 
 	);
+	if($r)
+		logger('duplicate menu entry');
 	if(! $r)
 		$r = menu_add_item($menu_id,$channel_id,$iarr);
 	return $r;

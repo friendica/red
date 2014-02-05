@@ -26,9 +26,13 @@ function bookmarks_init(&$a) {
 		require_once('include/bookmarks.php');
 		require_once('include/Contact.php');
 		$s = channelx_by_hash($i[0]['author_xchan']);
+		if(! $s) {
+			notice( t('Author lookup failed') . EOL);
+			killme();
+		}
 		foreach($terms as $t) {
 			bookmark_add($u,$s[0],$t,$i[0]['item_private']);
-			notice( t('Bookmark(s) added') . EOL);
+			notice( t('Bookmark added') . EOL);
 		}
 	}
 	killme();
