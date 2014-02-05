@@ -66,7 +66,7 @@ function channel_privacy_macro(n) {
         $('#id_write_pages option').eq(1).attr('selected','selected');
         $('#id_delegate option').eq(0).attr('selected','selected');
 		$('#id_republish option').eq(0).attr('selected','selected');
-		$('#id_bookmark option').eq(0).attr('selected','selected');
+		$('#id_bookmark option').eq(1).attr('selected','selected');
 		$('#id_profile_in_directory_onoff .off').removeClass('hidden');
 		$('#id_profile_in_directory_onoff .on').addClass('hidden');
 		$('#id_profile_in_directory').val(0);

@@ -85,6 +85,9 @@
 			{{/if}}
 			{{if $item.filer}}
 			<i id="filer-{{$item.id}}" onclick="itemFiler({{$item.id}}); return false;" class="filer-item icon-folder-open item-tool" title="{{$item.filer}}"></i>
+			{{/if}}
+			{{if $item.bookmark}}
+			<i id="bookmarker-{{$item.id}}" onclick="itemBookmark({{$item.id}}); return false;" class="bookmark-item icon-bookmark item-tool" title="{{$item.bookmark}}"></i>
 			{{/if}}			
 			<div id="like-rotator-{{$item.id}}" class="like-rotator"></div>
 

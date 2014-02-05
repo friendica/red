@@ -29,7 +29,7 @@ function bookmark_add($channel,$sender,$taxonomy,$private) {
 	$arr = array();
 	$arr['menu_name'] = substr($sender['xchan_hash'],0,16) . ' ' . $sender['xchan_name'];
 	$arr['menu_desc'] = sprintf( t('%1$s\'s bookmarks'), $sender['xchan_name']);
-	$arr['menu_flags'] = MENU_SYSTEM|MENU_BOOKMARK;
+	$arr['menu_flags'] = (($sender['xchan_hash'] === $channel['channel_hash']) ? MENU_BOOKMARK : MENU_SYSTEM|MENU_BOOKMARK);
 	$arr['menu_channel_id'] = $channel_id;
 
 	$x = menu_list($arr['menu_channel_id'],$arr['menu_name'],$arr['menu_flags']);

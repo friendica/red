@@ -1496,6 +1496,14 @@ function profile_tabs($a, $is_owner=False, $nickname=Null){
 			'title' => t('Events and Calendar'),
 			'id'    => 'events-tab',
 		);
+
+		$tabs[] = array(
+			'label' => t('Bookmarks'),
+			'url'	=> $a->get_baseurl() . '/bookmarks',
+			'sel' 	=> ((argv(0) == 'bookmarks') ? 'active' : ''),
+			'title' => t('Saved Bookmarks'),
+			'id'    => 'bookmarks-tab',
+		);
 	}
 
 	if($is_owner && feature_enabled($a->profile['profile_uid'],'webpages')) {

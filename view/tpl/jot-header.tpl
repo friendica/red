@@ -185,7 +185,6 @@ function enableOnUser(){
 		}
 	}
 
-
 	function jotGetLocation() {
 		reply = prompt("{{$whereareu}}", $('#jot-location').val());
 		if(reply && reply.length) {
@@ -294,6 +293,13 @@ function enableOnUser(){
 		});
 		
 	}
+
+	function itemBookmark(id) {
+		$.get('{{$baseurl}}/bookmarks?f=&item=' + id);
+		if(timer) clearTimeout(timer);
+		timer = setTimeout(NavUpdate,1000);
+	}
+
 
 	function jotClearLocation() {
 		$('#jot-coord').val('');
