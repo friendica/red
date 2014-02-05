@@ -8,11 +8,12 @@ function bookmarks_init(&$a) {
 		return;
 
 	$u = $a->get_channel();
-		
+
 	$i = q("select * from item where id = %d and uid = %d limit 1",
 		intval($item_id),
 		intval(local_user())
 	);
+
 	if(! $i)
 		return;
 
@@ -22,16 +23,18 @@ function bookmarks_init(&$a) {
 
 	$terms = get_terms_oftype($item['term'],TERM_BOOKMARK);
 
-	if($terms && (! $i[0]['item_restrict'])) {
+	if($terms && (! $item['item_restrict'])) {
 		require_once('include/bookmarks.php');
-		require_once('include/Contact.php');
-		$s = channelx_by_hash($i[0]['author_xchan']);
+
+		$s = q("select * from xchan where xchan_hash = '%s' limit 1",
+			dbesc($item['author_xchan'])
+		);
 		if(! $s) {
-			notice( t('Author lookup failed') . EOL);
+			logger('mod_bookmarks: author lookup failed.');
 			killme();
 		}
 		foreach($terms as $t) {
-			bookmark_add($u,$s[0],$t,$i[0]['item_private']);
+			bookmark_add($u,$s[0],$t,$item['item_private']);
 			notice( t('Bookmark added') . EOL);
 		}
 	}

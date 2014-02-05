@@ -48,7 +48,7 @@ function bookmark_add($channel,$sender,$taxonomy,$private) {
 		intval($channel_id) 
 	);
 	if($r)
-		logger('duplicate menu entry');
+		logger('add_bookmark: duplicate menu entry', LOGGER_DEBUG);
 	if(! $r)
 		$r = menu_add_item($menu_id,$channel_id,$iarr);
 	return $r;
