@@ -114,6 +114,17 @@ function chatroom_enter($observer_xchan,$room_id,$status,$client) {
 		return false;
 	}
 
+	$limit = service_class_fetch($r[0]['cr_uid'],'chatters_inroom');
+	if($limit !== false) {
+		$x = q("select count(*) as total from chatpresence where cp_room = %d",
+				intval($room_id)
+		);
+		if($x && $x[0]['total'] > $limit) {
+			notice( t('Room is full') . EOL);
+			return false;
+		}
+	}
+
 	if(intval($x[0]['cr_expire']))
 		$r = q("delete from chat where created < UTC_TIMESTAMP() - INTERVAL " . intval($x[0]['cr_expire']) . " MINUTE and chat_room = " . intval($x[0]['cr_id']));
 
