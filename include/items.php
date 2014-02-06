@@ -2181,10 +2181,10 @@ function tag_deliver($uid,$item_id) {
 
 	$terms = get_terms_oftype($item['term'],TERM_BOOKMARK);
 
-	if($terms && (! $i[0]['item_restrict'])) {
+	if($terms && (! $item['item_restrict'])) {
 		logger('tag_deliver: found bookmark');
 		$bookmark_self = intval(get_pconfig($uid,'system','bookmark_self'));
-		if(perm_is_allowed($u[0]['channel_id'],$i[0]['author_xchan'],'bookmark') && (($i[0]['author_xchan'] != $u[0]['channel_hash']) || ($bookmark_self))) {
+		if(perm_is_allowed($u[0]['channel_id'],$item['author_xchan'],'bookmark') && (($item['author_xchan'] != $u[0]['channel_hash']) || ($bookmark_self))) {
 			require_once('include/bookmarks.php');
 			require_once('include/Contact.php');
 
@@ -2193,7 +2193,7 @@ function tag_deliver($uid,$item_id) {
 			);
 			if($s) {
 				foreach($terms as $t) {
-					bookmark_add($u[0],$s[0],$t,$i[0]['item_private']);
+					bookmark_add($u[0],$s[0],$t,$item['item_private']);
 				}
 			}
 		}
