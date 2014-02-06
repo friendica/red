@@ -75,7 +75,7 @@
 			
 			// example: <strong> to [b]
 
-			rep(/<a.*?href=\"(.*?)\".*?>(.*?)<\/a>/gi,"[url=$1]$2[/url]");
+			rep(/<a.*?href=\"(.*?)\".*?>(.*?)<\/a>/gi,"#^[url=$1]$2[/url]");
 			rep(/<span style=\"font-size:(.*?);\">(.*?)<\/span>/gi,"[size=$1]$2[/size]");
 			rep(/<span style=\"color:(.*?);\">(.*?)<\/span>/gi,"[color=$1]$2[/color]");
 			rep(/<font>(.*?)<\/font>/gi,"$1");

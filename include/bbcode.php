@@ -262,6 +262,56 @@ function rpost_callback($match) {
 	}
 }
 
+function bb_sanitize_style($input) {
+	//whitelist	property			limits (0 = no limitation)
+	$w = array(	// color properties
+			"color"			=>	0,
+			"background-color"	=>	0,
+			// box properties
+			"padding"		=>	array("px"=>100, "%"=>0, "em"=>2, "ex"=>2, "mm"=>0, "cm"=>0, "in"=>0, "pt"=>0, "pc"=>0),
+			"margin"		=>	array("px"=>100, "%"=>0, "em"=>2, "ex"=>2, "mm"=>0, "cm"=>0, "in"=>0, "pt"=>0, "pc"=>0),
+			"border"		=>	array("px"=>100, "%"=>0, "em"=>2, "ex"=>2, "mm"=>0, "cm"=>0, "in"=>0, "pt"=>0, "pc"=>0),
+			"float"			=>	0,
+			"clear"			=>	0,
+			// text properties
+			"text-decoration"	=>	0,
+
+	);
+
+	$css_string = $input[1];
+	$a = explode(';',$css_string);
+	foreach($a as $parts){
+		list($k, $v) = explode(':', $parts);
+	$css[ trim($k) ] = trim($v);
+	}
+
+	// sanitize properties
+	$b = array_merge(array_diff_key($css, $w), array_diff_key($w, $css));
+	$css = array_diff_key($css, $b);
+
+	foreach($css as $key => $value) {
+		if($w[$key] != null) {
+			foreach($w[$key] as $limit_key => $limit_value) {
+				//sanitize values
+				if(strpos($value, $limit_key)) {
+					$value = preg_replace_callback(
+						"/(\S.*?)$limit_key/ism",
+						function($match) use($limit_value, $limit_key) {
+							if($match[1] > $limit_value) {
+								return $limit_value . $limit_key;
+							} else {
+								 return $match[1] . $limit_key;
+							}
+						},
+						$value
+					);
+				}
+			}
+		}
+		$css_string_san .= $key . ":" . $value ."; ";
+	}
+	return "<span style=\"" . $css_string_san . "\">" . $input[2] . "</span>";
+}
 
 	// BBcode 2 HTML was written by WAY2WEB.net
 	// extended to work with Mistpark/Friendica/Red - Mike Macgirvin
@@ -574,6 +624,11 @@ function bbcode($Text,$preserve_nl = false, $tryoembed = true) {
 	}
 	if (strpos($Text,'[/zmg]') !== false) {
 		$Text = preg_replace("/\[zmg\=([0-9]*)x([0-9]*) float=right\](.*?)\[\/zmg\]/ism", '<img class="zrl" src="$3" style="width: $1px; float: right;" alt="' . t('Image/photo') . '" >', $Text);
+	}
+
+	// style (sanitized)
+	if (strpos($Text,'[/style]') !== false) {
+		$Text = preg_replace_callback("(\[style=(.*?)\](.*?)\[\/style\])ism", "bb_sanitize_style", $Text);
 	}
 
 	// crypt

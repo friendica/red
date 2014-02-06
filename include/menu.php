@@ -1,6 +1,7 @@
 <?php /** @file */
 
 require_once('include/security.php');
+require_once('include/bbcode.php');
 
 function menu_fetch($name,$uid,$observer_xchan) {
 
@@ -27,11 +28,13 @@ function menu_render($menu) {
 	if(! $menu)
 		return '';
 
-	for($x = 0; $x < count($menu['items']); $x ++)
+	for($x = 0; $x < count($menu['items']); $x ++) {
 		if($menu['items'][$x]['mitem_flags'] & MENU_ITEM_ZID)
 			$menu['items'][$x]['mitem_link'] = zid($menu['items'][$x]['mitem_link']);
 		if($menu['items'][$x]['mitem_flags'] & MENU_ITEM_NEWWIN)
 			$menu['items'][$x]['newwin'] = '1';
+		$menu['items'][$x]['mitem_desc'] = bbcode($menu['items'][$x]['mitem_desc']);
+	}
 
 	return replace_macros(get_markup_template('usermenu.tpl'),array(
 		'$menu' => $menu['menu'],

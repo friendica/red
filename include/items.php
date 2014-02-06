@@ -2107,6 +2107,15 @@ function send_status_notifications($post_id,$item) {
 		}
 	}
 
+	$link =  get_app()->get_baseurl() . '/display/' . $item['mid'];
+
+	$r = q("select id from notify where link = '%s' and uid = %d limit 1",
+		dbesc($link),
+		intval($item['uid'])
+	);
+	if($r)
+		$notify = false;
+
 	if(! $notify)
 		return;
 	require_once('include/enotify.php');
@@ -2115,7 +2124,7 @@ function send_status_notifications($post_id,$item) {
 		'from_xchan'   => $item['author_xchan'],
 		'to_xchan'     => $r[0]['channel_hash'],
 		'item'         => $item,
-		'link'		   => get_app()->get_baseurl() . '/display/' . $item['mid'],
+		'link'		   => $link,
 		'verb'         => ACTIVITY_POST,
 		'otype'        => 'item',
 		'parent'       => $parent,
@@ -2172,14 +2181,20 @@ function tag_deliver($uid,$item_id) {
 
 	$terms = get_terms_oftype($item['term'],TERM_BOOKMARK);
 
-	if($terms && (! $i[0]['item_restrict'])) {
+	if($terms && (! $item['item_restrict'])) {
 		logger('tag_deliver: found bookmark');
-		if(perm_is_allowed($u[0]['channel_id'],$i[0]['author_xchan'],'bookmark') && ($i[0]['author_xchan'] != $u[0]['channel_hash'])) {
+		$bookmark_self = intval(get_pconfig($uid,'system','bookmark_self'));
+		if(perm_is_allowed($u[0]['channel_id'],$item['author_xchan'],'bookmark') && (($item['author_xchan'] != $u[0]['channel_hash']) || ($bookmark_self))) {
 			require_once('include/bookmarks.php');
 			require_once('include/Contact.php');
-			$s = channelx_by_hash($i[0]['author_xchan']);
-			foreach($terms as $t) {
-				bookmark_add($u[0],$s[0],$t,$i[0]['item_private']);
+
+			$s = q("select * from xchan where xchan_hash = '%s' limit 1",
+				dbesc($item['author_xchan'])
+			);
+			if($s) {
+				foreach($terms as $t) {
+					bookmark_add($u[0],$s[0],$t,$item['item_private']);
+				}
 			}
 		}
 	}

@@ -14,9 +14,11 @@ function xchan_content(&$a) {
 
 	if(x($_GET,'addr')) {
 		$addr = trim($_GET['addr']);
+
 		$r = q("select xchan_name from xchan where xchan_hash like '%s%%'",
-			dbesc(addr)
+			dbesc($addr)
 		);
+
 		if($r) {
 			foreach($r as $rr)
 				$o .= $rr['xchan_name'] . EOL;
