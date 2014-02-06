@@ -155,6 +155,15 @@ function chat_content(&$a) {
 
 	require_once('include/widgets.php');
 
-	return widget_chatroom_list(array());
+	$o = replace_macros(get_markup_template('chatrooms.tpl'), array(
+		'$header' => sprintf( t('%1$s\'s Chatrooms'), $a->profile['name']),
+		'$baseurl' => z_root(),
+		'$nickname' => $channel['channel_address'],
+		'$rooms' => widget_chatroom_list(array()),
+		'$newroom' => t('New Chatroom'),
+		'$is_owner' => ((local_user() && local_user() == $a->profile['profile_uid']) ? 1 : 0)
+	));
+ 
+	return $o;
 
 }
