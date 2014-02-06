@@ -160,7 +160,7 @@ function red_zrl_callback($matches) {
 			$zrl = true;
 	}
 	if($zrl)
-		return $matches[1] . '[zrl=' . $matches[2] . ']' . $matches[2] . '[/zrl]';
+		return $matches[1] . '#^[zrl=' . $matches[2] . ']' . $matches[2] . '[/zrl]';
 	return $matches[0];
 }
 
