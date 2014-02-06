@@ -1488,6 +1488,19 @@ function profile_tabs($a, $is_owner=False, $nickname=Null){
 			'id'    => 'files-tab',
 		);
 	}
+
+	require_once('include/chat.php');
+	$chats = chatroom_list($a->profile['profile_uid']);
+
+	$tabs[] = array(
+		'label' => t('Chatrooms') . '(' . count($chats) . ')',
+		'url'	=> $a->get_baseurl() . '/chat/' . $nickname,
+		'sel' 	=> ((argv(0) == 'chat') ? 'active' : ''),
+		'title' => t('Chatrooms'),
+		'id'    => 'chat-tab',
+	);
+
+
 	if($is_owner) {
 		$tabs[] = array(
 			'label' => t('Events'),
@@ -1505,6 +1518,7 @@ function profile_tabs($a, $is_owner=False, $nickname=Null){
 			'id'    => 'bookmarks-tab',
 		);
 	}
+
 
 	if($is_owner && feature_enabled($a->profile['profile_uid'],'webpages')) {
 		$tabs[] = array(

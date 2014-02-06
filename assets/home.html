@@ -1,206 +1,74 @@
-<style>section { position: relative; } nav { z-index: 9999; position: fixed; width: 100%; top: 0; left: 0; } header { z-index: 10000; }</style>
-<script>
-// Scroll backgrounds at different rates to achieve the parallax effect
-$(window).scroll(function(e){
-	  parallax();
-	});
-	function parallax(){
-	  var scrolled = $(window).scrollTop();
-	  $('.bg').css('top',-(scrolled*0.4)+'px');
-	  $('.bg2').css('top',-(scrolled*0.5)+'px');
+<style>
+section { position: relative; margin-left: 15px;} 
+nav { z-index: 9999; position: fixed; width: 100%; top: 0; left: 0; } 
+header { z-index: 10000; }
+
+.tr {
+  clear: both;
+}
+.tab {
+  float: left;
+  width: 25px;
+}
+.td {
+  float: left;
+  width: 200px;
+  font-size: 1.8em;
+  margin-bottom: 5px;
+  margin-right: 25px;
+	color: #808080;
 
 }
-</script>
-<link rel='stylesheet' media='screen and (max-width: 830px)' href='assets/narrow.css' />
-<link rel='stylesheet' media='screen and (min-width: 831px)' href='assets/wide.css' />
 
 
-    <div id="header" align="center"><h1>Red Matrix</h1>
-	<div id="menubutton1"><p style="margin-top:2px;"><a href="#decentralise" style="color:#FFFFFF;text-decoration:none;margin-top:0px;">decentralised</a></p></div>
-	<div id="menubutton2"><p style="margin-top:2px;"><a href="#identity" style="color:#FFFFFF;text-decoration:none;margin-top:0px;">identity</a></p></div>
-	<div id="menubutton3"><p style="margin-top:2px;"><a href="#control" style="color:#FFFFFF;text-decoration:none;margin-top:0px;">control</a></p></div>
-	<div id="menubutton4"><p style="margin-top:2px;"><a href="#freedom" style="color:#FFFFFF;text-decoration:none;margin-top:0px;">freedom</a></p></div>
-	<div id="menubutton6"><p style="margin-top:2px;"><a href="#privacy" style="color:#FFFFFF;text-decoration:none;margin-top:0px;">privacy</a></p></div>
-	</div>
+</style>
 
-<body>
-<div class="bg"></div>
-<div class="bg2"></div>
-<div class="bg-mask"></div>
-<div id="bg-narrow"></div>
+<div style="margin-top: 50px;"></div>
 
+<center>
+<div style="color:#808080;font-weight:bold;font-size:4.0em; margin-bottom: 15px;">Dream it. Do it.</div>
+<img style="width: 175px; margin-bottom: 45px;" src="assets/logo_antiprism.png" >
+</center>
+<div class="tr">
+<div class="td">Communications</div>
+<div class="td">Message Expiration</div>
+<div class="td">Photo Albums</div>
+<div class="td">Decentralised</div>
+<div class="td">Cloud Storage</div>
+<div class="td">Own Your Content</div>
+<div class="td">Blogging</div>
+<div class="td">Decent Encryption</div>
+<div class="td">Chatrooms</div>
+<div class="td">Webpage Creation</div>
+<div class="td">Content Management</div>
+<div class="td">Games</div>
+<div class="td">Unincorporated</div>
+<div class="td">Forums</div>
+<div class="td">Share Anything Digital</div>
+<div class="td">Pseudonyms</div>
+<div class="td">Multiple Identities</div>
+<div class="td">No Advertising</div>
+<div class="td">Event Calendar</div>
+<div class="td">Bookmarking</div>
+<div class="td">Community Tagging</div>
+<div class="td">Internet-scale Privacy</div>
+<div class="td">Single Sign-On</div>
+<div class="td">Directory Services</div>
+<div class="td">Nomadic Identity</div>
+<div class="td">Social Networking</div>
+<div class="td">Derivative Channels</div>
+<div class="td">Multiple Profiles</div>
+<div class="td">Privacy Groups</div>
+<div class="td">Autonomy</div>
+<div class="td">Affinity Filtering</div>
+<div class="td">Friend Suggestions</div>
+<div class="td">Cross-Site Auth</div>
+<div class="td">Themes</div>
+<div class="td">Plugins</div>
+<div class="td">External API</div>
+<div class="td">3rd Party Apps</div>
+<div class="td">Open Source</div>
 
-<div class="section-heading" style="margin-top: 32px;">
-The internet is broken. We're fixing it.</div>
+<div class="tr"></div>
 
-<div>
-<div id="tagline">
-<img style="float:center;width:175px;padding:5px;" src="assets/logo_antiprism.png"><br>
-<span style="color:#808080;font-weight:bold;font-size:1.5em;">ma&middot;trix:</span><span style="color:#808080;font-weight:light;font-size:1.2em;"><i> something within or from which something else originates, develops, or takes form </i></span>
-</div>
-</div>
-
-<div id="intro-text">
-<p>Imagine an internet slightly different than what we have today. The internet of the future won't require logging in with passwords on every site you wish to access. It will just know who you are. An internet where you need to keep track of hundreds/thousands of passwords on hundreds/thousands of websites is fundamentally broken. But an internet with no privacy and where all your online activities are monitored and tracked is likewise broken.
-</p>
-<p>Imagine if you had an internet where the people using it could <b>create new services</b> and <b>communicate freely and privately</b> - and where you didn't need a different account on every website in the network in order to use each website. Where you had your own space and could <b>share anything you wanted</b> with anybody you wanted, any time you wanted. Where the <b>things you share in private stay private</b> instead of being under constant surveillance from advertising corporations and government intelligence agencies.
-</p>
-</div>
-
-<div class="summary-menu-container">
-<a class="summary-menu-item" href="#decentralise" >Decentralise</a>
-<a class="summary-menu-item" href="#identity" >Identity</a>
-<a class="summary-menu-item" href="#freedom" >Freedom</a>
-<a class="summary-menu-item" href="#control" >Access Control</a>
-<a class="summary-menu-item" href="#privacy" >Privacy</a>
-<a class="summary-menu-item" href="#identity" >Got Zot?</a>
-</div>
-
-<div class="summary-nodes-container">
-<div class="summary-node-1">
-<div class="summary-node-1-text">
-<div class="summary-node-header"><a href="#decentralise" style="color:#FFFFFF;text-decoration:none;margin-top:0px;font-size: 1.2em;">Decentralised</a></div>
-<div class="summary-node-text">
-<p id=menutrigger1><a href="#decentralise" style="color:#FFFFFF;text-decoration:none;margin-top:0px;">No centralised servers means no one can censor your content or disable the network.</a></p>
-</div>
-</div>
-</div>
-<div class="summary-node-2">
-<div class="summary-node-2-text">
-<div class="summary-node-header"><a href="#identity" style="color:#FFFFFF;text-decoration:none;margin-top:0px;font-size: 1.2em;">Nomadic Identity</a></div>
-<div class="summary-node-text">
-<p id=menutrigger2><a href="#identity" style="color:#FFFFFF;text-decoration:none;margin-top:0px;">You own and control your identity, and it can move freely inside the matrix.</a></p>
-</div>
-</div>
-</div>
-
-<div class="summary-node-3">
-<div class="summary-node-3-text">
-<div class="summary-node-header"><a href="#freedom" style="color:#FFFFFF;text-decoration:none;margin-top:0px;font-size: 1.2em;">Freedom</a></div>
-<div class="summary-node-text">
-<p id=menutrigger3><a href="#freedom" style="color:#FFFFFF;text-decoration:none;margin-top:0px;">Use a trusted hub, or run your own server. Move where you want and take your data and connections with you. The choices are yours.</p>
-</div>
-</div>
-</div>
-<div class="summary-node-4">
-<div class="summary-node-4-text">
-<div class="summary-node-header"><a href="#control" style="color:#FFFFFF;text-decoration:none;margin-top:0px;font-size: 1.2em;">Access Control</a></div>
-<div class="summary-node-text">
-<p id=menutrigger4><a href="#control" style="color:#FFFFFF;text-decoration:none;margin-top:0px;">Share what you want with whom you want. Permissions extend to the entire matrix.</a></p>
-</div>
-</div>
-</div>
-<div class="summary-node-5">
-<div class="summary-node-5-text">
-<div class="summary-node-header"></div>
-<div class="summary-node-text">
-<p><a href="#identity" style="color:#FFFFFF;text-decoration:none;margin-top:0px;">Got Zot?</a></p>
-</div>
-</div>
-</div>
-<div class="summary-node-6">
-<div class="summary-node-6-text">
-<div class="summary-node-header"><a href="#privacy" style="color:#FFFFFF;text-decoration:none;margin-top:0px;font-size: 1.2em;">Privacy</a></div>
-<p class="summary-node-text"><a href="#privacy" style="color:#FFFFFF;text-decoration:none;margin-top:0px;">Privacy and encryption to suit your needs.</a></p>
-</div>
-</div>
-</div>
-
-
-<div id="menutrigger"></div>
-<section id="decentralise">
-
-<div class="section-heading">Decentralise. Build a more robust network.</div>
-<div class="section-text">
-<p>
-Now open your eyes. We've done some amazing things with decentralisation technology over the last few years and have created a different kind of network. We call it the Red Matrix. Forget the old internet - it's hopelessly broken and increasingly being choked off in order to take your money and spy on you. We're building tomorrow's internet today. And we're doing things a bit differently than what you may be used to. We could wait for this new internet to be built, but we don't really trust the typical corporations and governmental bodies to do it right. So we're building it on top of the old internet. And we're building privacy into its DNA. And it's <strong>here now</strong>.  
-</p>
-<p>
-The Red Matrix is a decentralised network where the <strong>people using it are in charge</strong> and the size of your server farm and wealth do not offer any comparable advantage. Anybody may participate on a level playing field. Cloud storage, file sharing, communications, content creation and management belong to <strong>everybody</strong> and can be shared with <strong>anybody</strong> (or <strong>somebody</strong>, or <strong>nobody</strong>). This is only a representative sample of the services we plan to offer. In an internet where creativity is allowed to flourish and corporate overlords have no power, the door is open to entirely new forms of expression and applications. The Red Matrix software is free and open source; created by volunteers and distributed under the MIT license. 
-</p>
-<p>
-And the Red Matrix has <strong>Got Zot.</strong> 
-</p>
-<p>
-So what the heck is <strong><em>Zot</em></strong>? I'm glad you asked...
-</div>
-</section>
-
-<br />
-<section id="identity">
-
-<div class="section-heading">Your identity is your own. One identity across the network.</div>
-<div class="section-text">
-
-<p>
-Zot is a revolutionary protocol which provides <strong>decentralised communications and identity</strong> management across the matrix. The resulting platform can provide web services comparable to those offered by large corporate providers, but without the large corporate provider and their associated privacy issues. Communications and social networking are an integral part of the matrix. Any channel (and any services provided by that channel) can make full use of feature-rich social communications on a global scale. 
-</p>
-<p>
-We use the full power of the matrix to offer friend suggestions and directory services. You can also perform other things which would typically only be possibly on a centralised provider - such as "wall to wall" posts and private/multiple profiles and web content which can be tailored to the viewer. You won't find these features at all on other decentralised communication services. The difference is that Zot also provides decentralised <strong>identity services</strong>. This is what separates the men from the boys, and what makes life in the matrix so awesome.   
-</p>
-</div>
-
-<div class="section-text">
-<p>
-Zot's identity layer is unique. It's like OpenID on steroids. It provides invisible single sign-on across all sites in the matrix; as well as nomadic identity so that your communications with friends, family, and business partners won't be affected by the loss of your primary communication node - either temporarily or permanently. The important bits of your identity and relationships can be backed up to a thumb drive and may appear at any node in the matrix at any time - with all your friends and preferences intact. These nomadic instances are kept in sync so any instance can take over if another one is compromised or damaged. This protects you against not only major system failure, but also temporary site overloads and governmental manipulation. You cannot be silenced. You cannot be removed from the matrix. 
-</p>
-<p>
-As you browse the matrix viewing channels and their unique content, you are seamlessly authenticated as you go, even across completely different server hubs. No password dialogues. Nothing to type. You're just greeted by name on every new site you visit. How does Zot do that? We call it "magic-auth" because it really is technology that is so advanced as to be indistinguishable from magic. You login only once on your home hub (or any nomadic backup hub you have chosen). This allows you to access any authenticated services provided anywhere in the matrix - such as shopping and access to private information. This is just like the services offered by large corporate providers with huge user databases; however you can be a member of this community and a server on this network using a "plug computer" like a Rasberry Pi. Your password isn't stored on a thousand different sites where it can be stolen and used to clean out your bank accounts.
-</p>
-</div>
-</section>
-<section id="control">
-
-<div class="section-heading">You control your data. Red Matrix enforces your permissions.</div>
-<div class="section-text">
-
-<p>
-Zot's identity layer allows you to provide fine-grained permissions to any content you wish to publish - and these permissions extend across the Red Matrix. This is like having one super huge website made up of an army of small individual websites - and where each channel in the matrix can completely control their privacy and sharing preferences for any web resources they create.
-</p>
-<p>
-Example: you want a photo to be visible to your family and three select friends, but not your work colleagues. In the matrix this is easy. <strong>Even if your family members, work colleagues, and friends all have accounts on different hubs.</strong>
-</p>
-<p>
-Currently the matrix supports communications, photo albums, events, and files. This will be extended in the future to provide content management services (web pages) and cloud storage facilities such as WebDAV and multi-media libraries. Every object and how it is shared and with whom is completely <strong>under your control</strong>.
-</p>
-<p>
-Again, this type of control is available on large corporate providers, because they own the user database. Within the matrix, there is no need for a huge user database on your machine - because <strong>the matrix is your user database</strong> and for all intents and purposes has infinite capacity and is spread amongst hundreds, and potentially millions of computers. Access can be granted or denied for any resource, to any channel or any group of channels; anywhere within the matrix. They do not need to have an account on your hub.
-</p> 
-</div>
-</section>
-<div class="clear"></div>
-
-<section id="privacy">
-
-<div class="section-heading">Reclaim your privacy. Red Matrix is built for <i>you</i>, not governments and corporations.</div>
-<div class="section-text">
-<p>
-Your communications may be public or private - and we allow your private communications to be as private as you wish them to be. Private communications comprise not only fully encrypted transport, but also encrypted storage to help protect against accidental snooping and disclosure by rogue system administrators and internet service providers. 
-</p>
-<p>
-Want more? You can fully encrypt your messages "end to end" using your choice of encryption ciphers and using a passphrase that only you and the recipient(s) know - <strong>in addition to</strong> our standard multi-layer encryption. 
-</p>
-<p>
-Want more? Our end to end encryption is pluggable. You can define your own chain of multiple encryption steps with multiple keys, and include algorithms known only to you and the recipient. At some point even the US National Security Agency will have to throw up their hands. There won't be enough computational power available in the universe to decode your private message. 
-</p> 
-<p>
-We also provide optional message expiration as a standard feature. When the expiration date/time passes, your message is removed from the network.
-</p> 
-</div>
-</section>
-<div class="clear"></div>
-
-
-
-<section id="freedom">   
-<a href="https://github.com/friendica/red"><img style="float:center;width:125px;" src="assets/logo_antiprism.png"></a>
-</section>
-
-<br>
-<br>
-</div>
-
-	
-    <div id="footer" align="center"> <a href="http://redmatrix.me">redmatrix.me</a> &#149; <a href="https://github.com/friendica/red"><b>Get Zot now!</b></a> &#149; <a href="https://github.com/friendica/red/wiki">Wiki</a> &#149; <a href="http://zothub.com/pubsites">Public Server Directory</a> </div>
-
-
+<center><div style="margin-top: 35px; color: #808080; font-size: 1.8em;">Welcome to the Matrix</div><div style="font-size: 1.4em; color: #808080;">&ldquo;The most fun you ever had without taking your clothes off.&rdquo;<br /><a href="pubsites">Public Sites</a> | <a href="https://redmatrix.me">Project Home</a> | <a href="https://github.com/friendica/red">Git</a> | <a href="https://zothub.com/channel/one">Developers</a></div></center>

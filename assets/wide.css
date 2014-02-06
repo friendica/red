@@ -2,7 +2,7 @@ body {
 	font-family: 'Ubuntu',Tahoma,Helvetica,Arial,sans-serif;
 	color: #111111; 
 	/*color: rgba(0,0,0,0.0); */
-		text-align: center;
+		text-align: center; 
 	/* background-image: url("redmatrixbkgd.jpg"); */
 	/*background: #ececec;*/
 	  padding:0 0 22px 0; 
@@ -15,8 +15,8 @@ body {
 	*/
 }
 
-#intro-text {
-color:#C60032;font-size:1.2em;width:700px;margin-right:auto;margin-left:auto;text-align:justify;
+#intro-textl, #intro-textr {
+text-align: left; color:#444444;font-size:1.3em;
 }
 div.section-text {
 color:#C60032;font-size:1.2em;width:700px;margin-right:auto;margin-left:auto;text-align:justify;
@@ -61,11 +61,11 @@ color:#C60032;font-size:1.2em;width:700px;margin-right:auto;margin-left:auto;tex
 
 #tagline {
 	color: #880000;
-	width:600px;
+/*	width:600px;
 	margin-top:0px;
 	margin-bottom:20px;
 	margin-left: auto; 
-	margin-right: auto; 
+	margin-right: auto; */
 }
 
 
