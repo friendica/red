@@ -8,6 +8,7 @@ var dir_d41ce877eb409a4791b288730010abe2 =
     [ "apps.php", "apps_8php.html", "apps_8php" ],
     [ "attach.php", "mod_2attach_8php.html", "mod_2attach_8php" ],
     [ "blocks.php", "blocks_8php.html", "blocks_8php" ],
+    [ "bookmarks.php", "mod_2bookmarks_8php.html", "mod_2bookmarks_8php" ],
     [ "chanman.php", "mod_2chanman_8php.html", null ],
     [ "channel.php", "channel_8php.html", "channel_8php" ],
     [ "chanview.php", "chanview_8php.html", "chanview_8php" ],

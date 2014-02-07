@@ -55,7 +55,6 @@ var searchData=
   ['node2bbcodesub',['node2bbcodesub',['../html2bbcode_8php.html#a39c662b19d318990fee2ba795a55d7a7',1,'html2bbcode.php']]],
   ['none_2ephp',['none.php',['../none_8php.html',1,'']]],
   ['normalise_5flink',['normalise_link',['../text_8php.html#a4bbb7d00c05cd20b4e043424f322388f',1,'text.php']]],
-  ['normalise_5fopenid',['normalise_openid',['../text_8php.html#adba17ec946f4285285dc100f7860bf51',1,'text.php']]],
   ['notags',['notags',['../text_8php.html#a1af49756c8c71902a66c7e329c462beb',1,'text.php']]],
   ['notes_2ephp',['notes.php',['../notes_8php.html',1,'']]],
   ['notes_5finit',['notes_init',['../notes_8php.html#a4dbd7b1f906440746af48b484d66535a',1,'notes.php']]],

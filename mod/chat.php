@@ -79,6 +79,9 @@ function chat_post(&$a) {
 
 function chat_content(&$a) {
 
+	if(local_user())
+		$channel = $a->get_channel();
+
 	$observer = get_observer_hash();
 	if(! $observer) {
 		notice( t('Permission denied.') . EOL);
@@ -129,7 +132,7 @@ function chat_content(&$a) {
 	if(local_user() && argc() > 2 && argv(2) === 'new') {
 
 
-		$channel = $a->get_channel();  
+
 		$channel_acl = array(
 			'allow_cid' => $channel['channel_allow_cid'], 
 			'allow_gid' => $channel['channel_allow_gid'], 

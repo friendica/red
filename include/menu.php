@@ -116,7 +116,7 @@ function menu_list($channel_id, $name = '', $flags = 0) {
 	$sel_options .= (($name) ? " and menu_name = '" . protect_sprintf(dbesc($name)) . "' " : '');
 	$sel_options .= (($flags) ? " and menu_flags = " . intval($flags) . " " : '');
 
-	$r = q("select * from menu where menu_channel_id = %d $sel_options order by menu_name",
+	$r = q("select * from menu where menu_channel_id = %d $sel_options order by menu_desc",
 		intval($channel_id)
 	);
 	return $r;

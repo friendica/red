@@ -75,10 +75,14 @@ EOT;
 		$nav['usermenu'][] = Array('channel/' . $channel['channel_address'], t('Home'), "", t('Your posts and conversations'));
 		$nav['usermenu'][] = Array('profile/' . $channel['channel_address'], t('View Profile'), "", t('Your profile page'));
 		if(feature_enabled(local_user(),'multi_profiles'))
-			$nav['usermenu'][]   = Array('profiles', t('Edit Profiles'),"", t('Manage/Edit Profiles'));
+			$nav['usermenu'][]   = Array('profiles', t('Edit Profiles'),"", t('Manage/Edit profiles'));
 		$nav['usermenu'][] = Array('photos/' . $channel['channel_address'], t('Photos'), "", t('Your photos'));
-//		$nav['usermenu'][] = Array('events/', t('Events'), "", t('Your events'));
-		
+		$nav['usermenu'][] = Array('cloud/' . $channel['channel_address'],t('Files'),"",t('Your files'));
+		$nav['usermenu'][] = Array('chat/' . $channel['channel_address'],t('Chat'),"",t('Your chatrooms'));
+		$nav['usermenu'][] = Array('events', t('Events'), "", t('Your events'));
+		$nav['usermenu'][] = Array('bookmarks', t('Bookmarks'), "", t('Your bookmarks'));
+		if(feature_enabled($channel['channel_id'],'webpages'))
+			$nav['usermenu'][] = Array('webpages/' . $channel['channel_address'],t('Webpages'),"",t('Your webpages'));	
 	}
 	else {
 		if(! get_account_id()) 
