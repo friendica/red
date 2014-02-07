@@ -46,6 +46,7 @@ function directory_content(&$a) {
 
 	$tpl = get_markup_template('directory_header.tpl');
 
+		
 
 	$dirmode = intval(get_config('system','directory_mode'));
 
