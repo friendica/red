@@ -33,6 +33,7 @@ var searchData=
   ['is_5fvalid',['is_valid',['../classphoto__driver.html#a97289aef3be43d9435ca3717ef10b8ab',1,'photo_driver']]],
   ['is_5fvisiting',['is_visiting',['../classItem.html#a97c7feeea7f26a73176cb19faa455e12',1,'Item']]],
   ['is_5fwall_5fto_5fwall',['is_wall_to_wall',['../classItem.html#aabf87ded59c25b5fe2b2296678e70509',1,'Item']]],
+  ['is_5fwindows',['is_windows',['../boot_8php.html#ac5e74f899f6e98d8e91b14ba1c08bc08',1,'boot.php']]],
   ['is_5fwritable',['is_writable',['../classConversation.html#a5879199008b96bee7550b576d614e1c1',1,'Conversation']]],
   ['item_5fcheck_5fservice_5fclass',['item_check_service_class',['../item_8php.html#a5b1b36cb301a94b38150074f0d424e74',1,'item.php']]],
   ['item_5fcontent',['item_content',['../item_8php.html#a764bbb2e9a885a86fb23d0b5e4a09221',1,'item.php']]],

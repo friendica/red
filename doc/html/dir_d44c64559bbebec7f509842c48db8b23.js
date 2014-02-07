@@ -13,6 +13,7 @@ var dir_d44c64559bbebec7f509842c48db8b23 =
     ] ],
     [ "bb2diaspora.php", "bb2diaspora_8php.html", "bb2diaspora_8php" ],
     [ "bbcode.php", "bbcode_8php.html", "bbcode_8php" ],
+    [ "bookmarks.php", "include_2bookmarks_8php.html", "include_2bookmarks_8php" ],
     [ "cache.php", "cache_8php.html", [
       [ "Cache", "classCache.html", null ]
     ] ],
@@ -83,6 +84,7 @@ var dir_d44c64559bbebec7f509842c48db8b23 =
     [ "security.php", "security_8php.html", "security_8php" ],
     [ "session.php", "session_8php.html", "session_8php" ],
     [ "socgraph.php", "socgraph_8php.html", "socgraph_8php" ],
+    [ "spam.php", "spam_8php.html", "spam_8php" ],
     [ "system_unavailable.php", "system__unavailable_8php.html", "system__unavailable_8php" ],
     [ "taxonomy.php", "taxonomy_8php.html", "taxonomy_8php" ],
     [ "template_processor.php", "template__processor_8php.html", "template__processor_8php" ],

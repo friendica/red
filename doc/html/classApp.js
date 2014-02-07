@@ -58,6 +58,7 @@ var classApp =
     [ "$hooks", "classApp.html#a3694aa1907aa103a2adbc71f926f0fa0", null ],
     [ "$hostname", "classApp.html#a037049cba88dfc6ff94f4b5b779e3fd3", null ],
     [ "$identities", "classApp.html#a7954862f44f606b0ff83d4c74d15e792", null ],
+    [ "$install", "classApp.html#a576ecb1c5b4a283221e6f2f0ec248251", null ],
     [ "$interactive", "classApp.html#a4c7cfc62d39508086cf300dc2e39c4df", null ],
     [ "$js_sources", "classApp.html#a11e24b3ed9b33ffee7dd41d110b4366d", null ],
     [ "$language", "classApp.html#a1a297e70b3667b83f4460aa7ed9f5d6f", null ],
