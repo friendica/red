@@ -1873,6 +1873,17 @@ function import_site($arr,$pubkey) {
 			$access_policy = ACCESS_TIERED;
 	}
 
+	// don't let insecure sites register as public hubs
+
+	if(strpos($arr['url'],'https://') === false)
+		$access_policy = ACCESS_PRIVATE;
+
+	if($access_policy != ACCESS_PRIVATE) {
+		$x = z_fetch_url($arr['url'] . '/siteinfo/json');
+		if(! $x['success'])
+			$access_policy = ACCESS_PRIVATE;
+	}
+	
 	$directory_url = htmlspecialchars($arr['directory_url'],ENT_COMPAT,'UTF-8',false);
 	$url = htmlspecialchars($arr['url'],ENT_COMPAT,'UTF-8',false);
 	$sellpage = htmlspecialchars($arr['sellpage'],ENT_COMPAT,'UTF-8',false);
