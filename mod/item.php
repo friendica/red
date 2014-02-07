@@ -422,8 +422,14 @@ function item_post(&$a) {
 
 		/**
 		 * fix naked links by passing through a callback to see if this is a red site
-		 * (already known to us) which will get a zrl, otherwise link with url
+		 * (already known to us) which will get a zrl, otherwise link with url, add bookmark tag to both.
+		 * First wrap any url which is part of link anchor text already in quotes so we don't double link it.
+		 * e.g. [url=http://foobar.com]something with http://elsewhere.com in it[/url]
+		 * becomes [url=http://foobar.com]something with "http://elsewhere.com" in it[/url]
+		 * otherwise http://elsewhere.com becomes #^[url=http://elsewhere.com]http://elsewhere.com[/url]
 		 */
+
+		$body = preg_replace('/\[([uz])rl(.*?)\](.*?)(https?\:\/\/[a-zA-Z0-9\:\/\-\?\&\;\.\=\@\_\~\#\%\$\!\+\,]+)(.*?)\[\/([uz])rl\]/ism','[$1rl$2]$3"$4"$5[/$6rl]',$body);
 
 		$body = preg_replace_callback("/([^\^\]\='".'"'."]|^)(https?\:\/\/[a-zA-Z0-9\:\/\-\?\&\;\.\=\@\_\~\#\%\$\!\+\,]+)/ism", 'red_zrl_callback', $body);
 
