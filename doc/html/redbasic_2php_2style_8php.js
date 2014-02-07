@@ -1,30 +1,9 @@
 var redbasic_2php_2style_8php =
 [
-    [ "$background_image", "redbasic_2php_2style_8php.html#a339624aeef6604a2f00209a3962c6e1c", null ],
-    [ "$banner_colour", "redbasic_2php_2style_8php.html#ae587aa6949ab6e4aa77a591e60f67ee0", null ],
-    [ "$bgcolour", "redbasic_2php_2style_8php.html#a0bdce350cf14bac44976e786d1be6574", null ],
-    [ "$body_font_size", "redbasic_2php_2style_8php.html#ad78cb8a1793834626d73aca22a1501f8", null ],
     [ "$comment_indent", "redbasic_2php_2style_8php.html#a5bff5012c56e34da6b3b2ed475726b27", null ],
-    [ "$converse_width", "redbasic_2php_2style_8php.html#a0cb037986e32302685d4f580dedd6473", null ],
-    [ "$font_colour", "redbasic_2php_2style_8php.html#a68e3ff836ec87ae1370c9f4a12c21c6b", null ],
-    [ "$font_size", "redbasic_2php_2style_8php.html#afcbcf57d0b90d2e4226c2e8a1171befc", null ],
-    [ "$item_colour", "redbasic_2php_2style_8php.html#a27cb59bbc750341f448cd0c298a7ea16", null ],
-    [ "$item_opacity", "redbasic_2php_2style_8php.html#a136b0a2cdeb37f3fa506d28f82dcdbf8", null ],
-    [ "$nav_colour", "redbasic_2php_2style_8php.html#a8fdd5874587a9ad86fb05ed0be265649", null ],
-    [ "$nav_min_opacity", "redbasic_2php_2style_8php.html#ab5ec5703848e0132f8a8f3d3a53a58e1", null ],
     [ "$nav_percent_min_opacity", "redbasic_2php_2style_8php.html#a01c151bf47f7da2b979aaa4cb868da4c", null ],
     [ "$pmenu_reply", "redbasic_2php_2style_8php.html#a9b489f1c595b867212d30eca0c85b38c", null ],
     [ "$pmenu_top", "redbasic_2php_2style_8php.html#ac98bd8264411bd207a5740d08e81a158", null ],
-    [ "$radius", "redbasic_2php_2style_8php.html#a6502bedd57105ad1fb2dee2be9cf6351", null ],
-    [ "$reply_photo", "redbasic_2php_2style_8php.html#a0b070f2c9140a7a12a0b1f88601a29e4", null ],
-    [ "$schema", "redbasic_2php_2style_8php.html#a83022b1d70799d2bde3d64dca9cb40ee", null ],
-    [ "$shadow", "redbasic_2php_2style_8php.html#ab00dfc29448b183055d2ae61a0e1874a", null ],
-    [ "$sloppy_photos", "redbasic_2php_2style_8php.html#a6ffadaf926b41ad84c30da319011e9ad", null ],
-    [ "$toolicon_activecolour", "redbasic_2php_2style_8php.html#acfd00ec469ca3c5e8bfac787573093f3", null ],
-    [ "$toolicon_colour", "redbasic_2php_2style_8php.html#a4161f6b8aa923f67e53f54dfb6554cdb", null ],
-    [ "$top_photo", "redbasic_2php_2style_8php.html#a810142b4bdd35a1d377ab279b02b47eb", null ],
-    [ "$uid", "redbasic_2php_2style_8php.html#a109bbd7f4add27541707b191b73ef84a", null ],
     [ "$wwtop", "redbasic_2php_2style_8php.html#a61891d0d3e6894f52410d507b04e565d", null ],
-    [ "else", "redbasic_2php_2style_8php.html#ab3afb90d611eca90819f597a2c0bb459", null ],
-    [ "if", "redbasic_2php_2style_8php.html#a883f9f14e205f7aa7de02c14df67b40a", null ]
+    [ "else", "redbasic_2php_2style_8php.html#ab3afb90d611eca90819f597a2c0bb459", null ]
 ];

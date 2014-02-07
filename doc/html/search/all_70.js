@@ -29,6 +29,7 @@ var searchData=
   ['permissions_2ephp',['permissions.php',['../permissions_8php.html',1,'']]],
   ['permissions_5fsql',['permissions_sql',['../security_8php.html#afa683bc025a1d2fe9065e2f6cd71a22f',1,'security.php']]],
   ['perms2str',['perms2str',['../text_8php.html#a98fd99dee3da8cf4c148dc04efe782ee',1,'text.php']]],
+  ['perms_5fa_5fbookmark',['PERMS_A_BOOKMARK',['../boot_8php.html#a8b2af16eaee9e7768a88d0e437877f3b',1,'boot.php']]],
   ['perms_5fa_5fdelegate',['PERMS_A_DELEGATE',['../boot_8php.html#a423505ab8dbd8e39d04ae3fe1374102b',1,'boot.php']]],
   ['perms_5fa_5frepublish',['PERMS_A_REPUBLISH',['../boot_8php.html#aae6c941bde5fd6fce07e51dba7326ead',1,'boot.php']]],
   ['perms_5fcontacts',['PERMS_CONTACTS',['../boot_8php.html#ab2d0e8a9b81ee548ef2ce8e4560da2f6',1,'boot.php']]],

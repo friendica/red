@@ -160,8 +160,8 @@ function red_zrl_callback($matches) {
 			$zrl = true;
 	}
 	if($zrl)
-		return $matches[1] . '[zrl=' . $matches[2] . ']' . $matches[2] . '[/zrl]';
-	return $matches[0];
+		return $matches[1] . '#^[zrl=' . $matches[2] . ']' . $matches[2] . '[/zrl]';
+	return $matches[1] . '#^[url=' . $matches[2] . ']' . $matches[2] . '[/url]';
 }
 
 
@@ -2109,11 +2109,13 @@ function send_status_notifications($post_id,$item) {
 
 	$link =  get_app()->get_baseurl() . '/display/' . $item['mid'];
 
-	$r = q("select id from notify where link = '%s' and uid = %d limit 1",
+
+	$y = q("select id from notify where link = '%s' and uid = %d limit 1",
 		dbesc($link),
 		intval($item['uid'])
 	);
-	if($r)
+
+	if($y)
 		$notify = false;
 
 	if(! $notify)

@@ -120,8 +120,8 @@ Functions</h2></td></tr>
 <tr class="separator:a47447c01ba8ea04cd74af1d4c5b68fc7"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a08a800821721781a8dfffbe31481ff98"><td class="memItemLeft" align="right" valign="top">&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="include_2menu_8php.html#a08a800821721781a8dfffbe31481ff98">menu_create</a> ($arr)</td></tr>
 <tr class="separator:a08a800821721781a8dfffbe31481ff98"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a9ec50f81c81866f4c966410fa099ef10"><td class="memItemLeft" align="right" valign="top">&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="include_2menu_8php.html#a9ec50f81c81866f4c966410fa099ef10">menu_list</a> ($channel_id, $flags=0)</td></tr>
-<tr class="separator:a9ec50f81c81866f4c966410fa099ef10"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a32701c4245e78ba9106eef52c08bf33d"><td class="memItemLeft" align="right" valign="top">&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="include_2menu_8php.html#a32701c4245e78ba9106eef52c08bf33d">menu_list</a> ($channel_id, $name= '', $flags=0)</td></tr>
+<tr class="separator:a32701c4245e78ba9106eef52c08bf33d"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a6a33c6a3db2a7510b16cc656edaec571"><td class="memItemLeft" align="right" valign="top">&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="include_2menu_8php.html#a6a33c6a3db2a7510b16cc656edaec571">menu_edit</a> ($arr)</td></tr>
 <tr class="separator:a6a33c6a3db2a7510b16cc656edaec571"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a3884bda4d85d84ec99447db9403a68d8"><td class="memItemLeft" align="right" valign="top">&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="include_2menu_8php.html#a3884bda4d85d84ec99447db9403a68d8">menu_delete</a> ($menu_name, $uid)</td></tr>
@@ -166,7 +166,7 @@ Functions</h2></td></tr>
       </table>
 </div><div class="memdoc">
 
-<p>Referenced by <a class="el" href="mitem_8php.html#a6ee694cca4b551a20d7c7a94b5243ec1">mitem_post()</a>.</p>
+<p>Referenced by <a class="el" href="include_2bookmarks_8php.html#a88ce7dee6a3dc7465aa9b8eaa45b0087">bookmark_add()</a>, and <a class="el" href="mitem_8php.html#a6ee694cca4b551a20d7c7a94b5243ec1">mitem_post()</a>.</p>
 
 </div>
 </div>
@@ -184,7 +184,7 @@ Functions</h2></td></tr>
       </table>
 </div><div class="memdoc">
 
-<p>Referenced by <a class="el" href="mod_2menu_8php.html#aaa491ef173868fe002aece4632bcf393">menu_post()</a>.</p>
+<p>Referenced by <a class="el" href="include_2bookmarks_8php.html#a88ce7dee6a3dc7465aa9b8eaa45b0087">bookmark_add()</a>, and <a class="el" href="mod_2menu_8php.html#aaa491ef173868fe002aece4632bcf393">menu_post()</a>.</p>
 
 </div>
 </div>
@@ -358,7 +358,7 @@ Functions</h2></td></tr>
       </table>
 </div><div class="memdoc">
 
-<p>Referenced by <a class="el" href="comanche_8php.html#a1fe339e1454803aa502ac89379c17f5b">comanche_menu()</a>, <a class="el" href="mitem_8php.html#a7a31b702ecad18eeb6a38b243ff0037e">mitem_content()</a>, and <a class="el" href="identity_8php.html#a432259b2cf5b6f59be53e71db9f2c7dc">profile_sidebar()</a>.</p>
+<p>Referenced by <a class="el" href="mod_2bookmarks_8php.html#a774364b1c8404529581083631703527a">bookmarks_content()</a>, <a class="el" href="comanche_8php.html#a1fe339e1454803aa502ac89379c17f5b">comanche_menu()</a>, <a class="el" href="mitem_8php.html#a7a31b702ecad18eeb6a38b243ff0037e">mitem_content()</a>, and <a class="el" href="identity_8php.html#a432259b2cf5b6f59be53e71db9f2c7dc">profile_sidebar()</a>.</p>
 
 </div>
 </div>
@@ -390,7 +390,7 @@ Functions</h2></td></tr>
 
 </div>
 </div>
-<a class="anchor" id="a9ec50f81c81866f4c966410fa099ef10"></a>
+<a class="anchor" id="a32701c4245e78ba9106eef52c08bf33d"></a>
 <div class="memitem">
 <div class="memproto">
       <table class="memname">
@@ -399,6 +399,12 @@ Functions</h2></td></tr>
           <td>(</td>
           <td class="paramtype">&#160;</td>
           <td class="paramname"><em>$channel_id</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">&#160;</td>
+          <td class="paramname"><em>$name</em> = <code>''</code>, </td>
         </tr>
         <tr>
           <td class="paramkey"></td>
@@ -413,8 +419,9 @@ Functions</h2></td></tr>
         </tr>
       </table>
 </div><div class="memdoc">
+<p>If $flags is present, check that all the bits in $flags are set so that MENU_SYSTEM|MENU_BOOKMARK will return entries with both bits set. We will use this to find system generated bookmarks. </p>
 
-<p>Referenced by <a class="el" href="mod_2menu_8php.html#a6fed23af14d71a78a4153c8363a685cf">menu_content()</a>.</p>
+<p>Referenced by <a class="el" href="include_2bookmarks_8php.html#a88ce7dee6a3dc7465aa9b8eaa45b0087">bookmark_add()</a>, <a class="el" href="mod_2bookmarks_8php.html#a774364b1c8404529581083631703527a">bookmarks_content()</a>, and <a class="el" href="mod_2menu_8php.html#a6fed23af14d71a78a4153c8363a685cf">menu_content()</a>.</p>
 
 </div>
 </div>
@@ -432,7 +439,7 @@ Functions</h2></td></tr>
       </table>
 </div><div class="memdoc">
 
-<p>Referenced by <a class="el" href="comanche_8php.html#a1fe339e1454803aa502ac89379c17f5b">comanche_menu()</a>, <a class="el" href="identity_8php.html#a432259b2cf5b6f59be53e71db9f2c7dc">profile_sidebar()</a>, and <a class="el" href="widgets_8php.html#a3bdfb81bf9a8ddf219924fa7eaf22013">widget_menu_preview()</a>.</p>
+<p>Referenced by <a class="el" href="mod_2bookmarks_8php.html#a774364b1c8404529581083631703527a">bookmarks_content()</a>, <a class="el" href="comanche_8php.html#a1fe339e1454803aa502ac89379c17f5b">comanche_menu()</a>, <a class="el" href="identity_8php.html#a432259b2cf5b6f59be53e71db9f2c7dc">profile_sidebar()</a>, and <a class="el" href="widgets_8php.html#a3bdfb81bf9a8ddf219924fa7eaf22013">widget_menu_preview()</a>.</p>
 
 </div>
 </div>

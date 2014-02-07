@@ -65,12 +65,13 @@ $a->config['system']['access_policy'] = ACCESS_PRIVATE;
 $a->config['system']['sellpage'] = '';
 
 // Maximum size of an imported message, 0 is unlimited
+// FIXME - NOT currently implemented. 
 
 $a->config['system']['max_import_size'] = 200000;
 
 // maximum size of uploaded photos
 
-$a->config['system']['maximagesize'] = 3000000;
+$a->config['system']['maximagesize'] = 12000000;
 
 // Location of PHP command line processor
 

@@ -2,7 +2,6 @@ var searchData=
 [
   ['gen_5ftoken',['gen_token',['../classFKOAuthDataStore.html#aa1a268be88ad3979bb4cc35bbb4dc819',1,'FKOAuthDataStore']]],
   ['gender_5fselector',['gender_selector',['../profile__selectors_8php.html#ae2b2c087e6530c61c0b256fd26d52355',1,'profile_selectors.php']]],
-  ['generate_5fuser_5fguid',['generate_user_guid',['../text_8php.html#ae4f6881d7e13623f8eded6277595112a',1,'text.php']]],
   ['generatedirectoryindex',['generateDirectoryIndex',['../classRedBrowser.html#a1f7daf50bb9bfcde7345b3b1908dbd7e',1,'RedBrowser']]],
   ['get',['get',['../classCache.html#a70392b109331897bf9fdd7f1960e21de',1,'Cache\get()'],['../classRedFile.html#a7c868dfcef6c70cd0e24cf3caa2c3535',1,'RedFile\get()']]],
   ['get_5faccount',['get_account',['../classApp.html#a08bc87aff64f39fbc084e9d6545cee4d',1,'App']]],
@@ -88,6 +87,7 @@ var searchData=
   ['get_5fthings',['get_things',['../taxonomy_8php.html#a7747fa859ac56fbffd4f9782d85505de',1,'taxonomy.php']]],
   ['get_5fthread',['get_thread',['../classConversation.html#a4cff75d8c46b517e7133e4d0da6fc1c8',1,'Conversation']]],
   ['get_5fwidgets',['get_widgets',['../classApp.html#a871898becd0697d778f36d9336253ae8',1,'App']]],
+  ['get_5fwords',['get_words',['../spam_8php.html#ab8fd81a82c9622cbebb8ceab6b310ca6',1,'spam.php']]],
   ['get_5fxconfig',['get_xconfig',['../include_2config_8php.html#aa3dc1d3de2d091ac702e675acd3a085e',1,'config.php']]],
   ['getchild',['getChild',['../classRedDirectory.html#aaa20f0f44da23781917af8170c0a2569',1,'RedDirectory']]],
   ['getchildren',['getChildren',['../classRedDirectory.html#aa42d3065f6f065b17db87146a7cb031a',1,'RedDirectory']]],
