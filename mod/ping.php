@@ -43,6 +43,12 @@ function ping_init(&$a) {
 		unset($_SESSION['sysmsg_info']);
 	}
 
+	if($a->install) {
+		echo json_encode($result);
+		killme();
+	}
+
+
 	if(get_observer_hash() && (! $result['invalid'])) {
 		$r = q("select cp_id, cp_room from chatpresence where cp_xchan = '%s' and cp_client = '%s' and cp_room = 0 limit 1",
 			dbesc(get_observer_hash()),
