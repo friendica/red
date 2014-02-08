@@ -35,7 +35,7 @@ function bookmarks_init(&$a) {
 		}
 		foreach($terms as $t) {
 			bookmark_add($u,$s[0],$t,$item['item_private']);
-			notice( t('Bookmark added') . EOL);
+			info( t('Bookmark added') . EOL);
 		}
 	}
 	killme();
