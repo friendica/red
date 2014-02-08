@@ -1491,11 +1491,11 @@ function profile_tabs($a, $is_owner=False, $nickname=Null){
 
 	require_once('include/chat.php');
 	$chats = chatroom_list($a->profile['profile_uid']);
-
+	$subdued = ((count($chats)) ? '' : ' subdued');
 	$tabs[] = array(
-		'label' => t('Chatrooms') . '(' . count($chats) . ')',
+		'label' => t('Chatrooms'),
 		'url'	=> $a->get_baseurl() . '/chat/' . $nickname,
-		'sel' 	=> ((argv(0) == 'chat') ? 'active' : ''),
+		'sel' 	=> ((argv(0) == 'chat') ? 'active' . $subdued : '' . $subdued),
 		'title' => t('Chatrooms'),
 		'id'    => 'chat-tab',
 	);

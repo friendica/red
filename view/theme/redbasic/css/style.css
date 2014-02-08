@@ -114,6 +114,15 @@ blockquote {
 	margin-right: 5px;
 }
 
+.subdued {
+	opacity: 0.3;
+	filter:alpha(opacity=30);
+}
+
+.subdued:hover {
+	opacity: 1.0;
+	filter:alpha(opacity=100);
+}
 
 
 #langselector {
