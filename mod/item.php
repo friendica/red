@@ -431,7 +431,7 @@ function item_post(&$a) {
 
 		$body = preg_replace('/\[([uz])rl(.*?)\](.*?)(https?\:\/\/[a-zA-Z0-9\:\/\-\?\&\;\.\=\@\_\~\#\%\$\!\+\,]+)(.*?)\[\/([uz])rl\]/ism','[$1rl$2]$3"$4"$5[/$6rl]',$body);
 
-		$body = preg_replace_callback("/([^\]\='".'"'."]|^)(https?\:\/\/[a-zA-Z0-9\:\/\-\?\&\;\.\=\@\_\~\#\%\$\!\+\,]+)/ism", 'red_zrl_callback', $body);
+		$body = preg_replace_callback("/([^\^\]\='".'"'."]|^)(https?\:\/\/[a-zA-Z0-9\:\/\-\?\&\;\.\=\@\_\~\#\%\$\!\+\,]+)/ism", 'red_zrl_callback', $body);
 
 		/**
 		 *
