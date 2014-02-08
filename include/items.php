@@ -159,6 +159,8 @@ function red_zrl_callback($matches) {
 		if($r)
 			$zrl = true;
 	}
+	if($matches[1] === '#^')
+		$matches[1] = '';
 	if($zrl)
 		return $matches[1] . '#^[zrl=' . $matches[2] . ']' . $matches[2] . '[/zrl]';
 	return $matches[1] . '#^[url=' . $matches[2] . ']' . $matches[2] . '[/url]';
