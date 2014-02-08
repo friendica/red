@@ -54,7 +54,7 @@ CREATE TABLE IF NOT EXISTS `account` (
   `account_expires` datetime NOT NULL DEFAULT '0000-00-00 00:00:00',
   `account_expire_notified` datetime NOT NULL DEFAULT '0000-00-00 00:00:00',
   `account_service_class` char(32) NOT NULL DEFAULT '',
-  `account_level` int(10) unsigned NOT NULL,
+  `account_level` int(10) unsigned NOT NULL DEFAULT '0',
   PRIMARY KEY (`account_id`),
   KEY `account_email` (`account_email`),
   KEY `account_service_class` (`account_service_class`),

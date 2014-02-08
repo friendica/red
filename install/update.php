@@ -1,6 +1,6 @@
 <?php
 
-define( 'UPDATE_VERSION' , 1096 );
+define( 'UPDATE_VERSION' , 1097 );
 
 /**
  *
@@ -1072,6 +1072,13 @@ ADD INDEX ( `cr_expire` )");
 function update_r1095() {
 	$r = q("ALTER TABLE `channel` ADD `channel_a_bookmark` INT UNSIGNED NOT NULL DEFAULT '128',
 ADD INDEX ( `channel_a_bookmark` )");
+	if($r)
+		return UPDATE_SUCCESS;
+	return UPDATE_FAILED;
+}
+
+function update_r1096() {
+	$r = q("ALTER TABLE `account` CHANGE `account_level` `account_level` INT( 10 ) UNSIGNED NOT NULL DEFAULT '0'");
 	if($r)
 		return UPDATE_SUCCESS;
 	return UPDATE_FAILED;
