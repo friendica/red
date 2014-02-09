@@ -2467,4 +2467,5 @@ img.mail-list-sender-photo {
 
 .chat-item-text {
 	border-radius: $radiuspx;
+	background-color:#eee;
 }

@@ -50,7 +50,6 @@
 
 .chat-item-text {
 	float: left;
-	background-color:#eee;
 	padding: 3px;
-	display:inline-block;
+	display: inline-block;
 }
