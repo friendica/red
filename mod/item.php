@@ -429,7 +429,7 @@ function item_post(&$a) {
 		 * otherwise http://elsewhere.com becomes #^[url=http://elsewhere.com]http://elsewhere.com[/url]
 		 */
 
-		$body = preg_replace('/\[([uz])rl(.*?)\](.*?)(https?\:\/\/[a-zA-Z0-9\:\/\-\?\&\;\.\=\@\_\~\#\%\$\!\+\,]+)(.*?)\[\/([uz])rl\]/ism','[$1rl$2]$3"$4"$5[/$6rl]',$body);
+		$body = preg_replace_callback('/\[([uz])rl(.*?)\](.*?)(https?\:\/\/[a-zA-Z0-9\:\/\-\?\&\;\.\=\@\_\~\#\%\$\!\+\,]+)(.*?)\[\/([uz])rl\]/ism','red_escape_zrl_callback',$body);
 
 		$body = preg_replace_callback("/([^\]\='".'"'."]|^|\#\^)(https?\:\/\/[a-zA-Z0-9\:\/\-\?\&\;\.\=\@\_\~\#\%\$\!\+\,]+)/ism", 'red_zrl_callback', $body);
 

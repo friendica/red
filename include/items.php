@@ -167,6 +167,15 @@ function red_zrl_callback($matches) {
 }
 
 
+// If we've got a url or zrl tag with a naked url somewhere in the link text, 
+// escape it with quotes unless the naked url is a linked photo. 
+
+function red_escape_zrl_callback($matches) {
+
+	if((strpos($matches[3],'zmg') !== false) || (strpos($matches[3],'img') !== false))
+		return $matches[0];
+	return '[' . $matches[1] . 'rl' . $matches[2] . ']' . $matches[3] . '"' . $matches[4] . '"' . $matches[5] . '[/' . $matches[6] . 'rl]';
+}
 
 /**
  * @function post_activity_item($arr)
