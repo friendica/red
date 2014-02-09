@@ -443,11 +443,18 @@ class RedFile extends DAV\Node implements DAV\IFile {
 	function get() {
 		logger('RedFile::get: ' . basename($this->name), LOGGER_DEBUG);
 
-		$r = q("select data, flags from attach where hash = '%s' and uid = %d limit 1",
+		$r = q("select data, flags, filename, filetype from attach where hash = '%s' and uid = %d limit 1",
 			dbesc($this->data['hash']),
 			intval($this->data['uid'])
 		);
 		if($r) {
+			$unsafe_types = array('text/html','text/css','application/javascript');
+
+			if(in_array($r[0]['filetype'],$unsafe_types)) {
+				header('Content-disposition: attachment; filename="' . $r[0]['filename'] . '"');
+				header('Content-type: text/plain');
+			}
+
 			if($r[0]['flags'] & ATTACH_FLAG_OS ) {
 				$f = 'store/' . $this->auth->owner_nick . '/' . (($this->os_path) ? $this->os_path . '/' : '') . $r[0]['data'];
 				return fopen($f,'rb');
@@ -463,6 +470,10 @@ class RedFile extends DAV\Node implements DAV\IFile {
 
 
 	function getContentType() {
+		$unsafe_types = array('text/html','text/css','application/javascript');
+		if(in_array($this->data['filetype'],$unsafe_types)) {
+			return 'text/plain';
+		}
 		return $this->data['filetype'];
 	}
 
