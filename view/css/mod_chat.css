@@ -27,5 +27,30 @@
  section {
 	 padding-bottom: 0;
  }
- 
- 
+
+.chat-item {
+	padding: 3px;
+}
+
+.chat-item-end {
+	clear: both;
+}
+
+.chat-item-photo {
+	float: left;
+	height: 32px;
+	width: 32px;
+}
+
+.chat-body {
+	float: left;
+	width: 80%;
+	margin-left: 15px;
+}
+
+.chat-item-text {
+	float: left;
+	background-color:#eee;
+	padding: 3px;
+	display:inline-block;
+}

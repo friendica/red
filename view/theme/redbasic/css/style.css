@@ -2455,8 +2455,16 @@ img.mail-list-sender-photo {
 .abook-self {
 	background-color: #ffdddd;
 }
+
 .online-now {
 	color: red;
 	cursor: pointer;
 }
 
+.chat-item-photo {
+	border-radius: $radiuspx;
+}
+
+.chat-item-text {
+	border-radius: $radiuspx;
+}
