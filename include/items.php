@@ -172,7 +172,9 @@ function red_zrl_callback($matches) {
 
 function red_escape_zrl_callback($matches) {
 
-	if((strpos($matches[3],'zmg') !== false) || (strpos($matches[3],'img') !== false))
+	// Uncertain why the url/zrl forms weren't picked up by the non-greedy regex.
+
+	if((strpos($matches[3],'zmg') !== false) || (strpos($matches[3],'img') !== false) || (strpos($matches[3],'zrl') !== false) || (strpos($matches[3],'url') !== false))
 		return $matches[0];
 	return '[' . $matches[1] . 'rl' . $matches[2] . ']' . $matches[3] . '"' . $matches[4] . '"' . $matches[5] . '[/' . $matches[6] . 'rl]';
 }
