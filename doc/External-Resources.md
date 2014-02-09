@@ -14,6 +14,7 @@ External Resources
 **Third-Party Addons**
 
 * [BBCode Extensions for Webpages/Wikis](https://github.com/beardy-unixer/red-addons-extra)
+* [ABCjs integration - display scores in posts (WIP)](https://abcentric.net/git/abcjsplugin.git)
 
 **Related projects**
 
