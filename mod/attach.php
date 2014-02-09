@@ -24,7 +24,16 @@ function attach_init(&$a) {
 	if(! $c)
 		return;
 
-	header('Content-type: ' . $r['data']['filetype']);
+
+	$unsafe_types = array('text/html','text/css','application/javascript');
+
+	if(in_array($r['data']['filetype'],$unsafe_types)) {
+			header('Content-type: text/plain');
+	}
+	else {
+		header('Content-type: ' . $r['data']['filetype']);
+	}
+
 	header('Content-disposition: attachment; filename="' . $r['data']['filename'] . '"');
 	if($r['data']['flags'] & ATTACH_FLAG_OS ) {
 		$istream = fopen('store/' . $c[0]['channel_address'] . '/' . $r['data']['data'],'rb');
