@@ -88,22 +88,28 @@ function siteinfo_content(&$a) {
 	else
 		$plugins_text = t('No installed plugins/addons/apps');
 
-		$admininfo = bbcode(get_config('system','admininfo'));
+	$admininfo = bbcode(get_config('system','admininfo'));
 
+	$project_donate = t('Project Donations');
+	$donate_text = t('<p>The Red Matrix is provided for you by volunteers working in their spare time. Your support will help us to build a better web. Select the following option for a one-time donation of your choosing</p>');
+	$alternatively = t('<p>or</p>');
+	$recurring = t('Recurring Donation Options');
+	
 	$donate = <<< EOT
-<p>The Red Matrix is provided for you by volunteers working in their spare time. Your support will help us to build a better web. Select the following option for a one-time donation of your choosing</p>
+<h3>{$project_donate}</h3>
+$donate_text
 <form action="https://www.paypal.com/cgi-bin/webscr" method="post"><input type="hidden" name="cmd" value="_donations" /><input type="hidden" name="business" value="mike@macgirvin.com" /><input type="hidden" name="lc" value="US" /><input type="hidden" name="item_name" value="Distributed Social Network Support Donation" /><input type="hidden" name="no_note" value="0" /><input type="hidden" name="currency_code" value="USD" /><input type="hidden" name="bn" value="PP-DonationsBF:btn_donate_LG.gif:NonHostedGuest" /><input style="border: none;" type="image" name="submit" src="https://www.paypalobjects.com/en_US/i/btn/btn_donateCC_LG.gif" alt="Donations gladly accepted to support our work" /></form><br />
-<p>or</p>
-
+$alternatively
 <form action="https://www.paypal.com/cgi-bin/webscr" method="post"><input type="hidden" name="cmd" value="_s-xclick" /><input type="hidden" name="hosted_button_id" value="FHV36KE28CYM8" /><br />
-<table><tbody><tr><td><input type="hidden" name="on0" value="Recurring Donation Options" />Recurring Donation Options</td>
+<table><tbody><tr><td><input type="hidden" name="on0" value="$recurring" />$recurring</td>
 </tr><tr><td>
 <select name="os0"><option value="Option 1">Option 1 : $3.00USD - monthly</option><option value="Option 2">Option 2 : $5.00USD - monthly</option><option value="Option 3">Option 3 : $10.00USD - monthly</option><option value="Option 4">Option 4 : $20.00USD - monthly</option></select></td>
 </tr></tbody></table><p><input type="hidden" name="currency_code" value="USD" /><input type="image" border="0" name="submit" src="https://www.paypalobjects.com/en_US/i/btn/btn_subscribeCC_LG.gif" alt="PayPal - The safer, easier way to pay online!" /><img src="https://www.paypalobjects.com/en_US/i/scr/pixel.gif" alt="" width="1" height="1" border="0" /></p></form>
 <p></p>
 EOT;
 
-
+	if(file_exists('doc/site_donate.html'))
+		$donate .= file_get_contents('doc/site_donate.html');
 
 	$o = replace_macros(get_markup_template('siteinfo.tpl'), array(
                 '$title' => t('Red'),
