@@ -179,6 +179,15 @@ function red_escape_zrl_callback($matches) {
 	return '[' . $matches[1] . 'rl' . $matches[2] . ']' . $matches[3] . '"' . $matches[4] . '"' . $matches[5] . '[/' . $matches[6] . 'rl]';
 }
 
+function red_escape_codeblock($m) {
+	return '[code]' . base64_encode($m[1]) . '[/code]';
+}
+
+function red_unescape_codeblock($m) {
+	return '[code]' . base64_decode($m[1]) . '[/code]';
+}
+
+
 /**
  * @function post_activity_item($arr)
  *
