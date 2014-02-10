@@ -429,13 +429,18 @@ function item_post(&$a) {
 		 * otherwise http://elsewhere.com becomes #^[url=http://elsewhere.com]http://elsewhere.com[/url]
 		 */
 
-		$body = preg_replace_callback('/\[code\](.*?)\[\/code\]/ism','red_escape_codeblock',$body);
+		$body = preg_replace_callback('/\[code(.*?)\[\/(code)\]/ism','red_escape_codeblock',$body);
+		$body = preg_replace_callback('/\[url(.*?)\[\/(url)\]/ism','red_escape_codeblock',$body);
+		$body = preg_replace_callback('/\[zrl(.*?)\[\/(zrl)\]/ism','red_escape_codeblock',$body);
 
-		$body = preg_replace_callback('/\[([uz])rl(.*?)\](.*?)(https?\:\/\/[a-zA-Z0-9\:\/\-\?\&\;\.\=\@\_\~\#\%\$\!\+\,]+)(.*?)\[\/([uz])rl\]/ism','red_escape_zrl_callback',$body);
+// no longer needed
+//		$body = preg_replace_callback('/\[([uz])rl(.*?)\](.*?)(https?\:\/\/[a-zA-Z0-9\:\/\-\?\&\;\.\=\@\_\~\#\%\$\!\+\,]+)(.*?)\[\/([uz])rl\]/ism','red_escape_zrl_callback',$body);
 
 		$body = preg_replace_callback("/([^\]\='".'"'."]|^|\#\^)(https?\:\/\/[a-zA-Z0-9\:\/\-\?\&\;\.\=\@\_\~\#\%\$\!\+\,]+)/ism", 'red_zrl_callback', $body);
 
-		$body = preg_replace_callback('/\[code\](.*?)\[\/code\]/ism','red_unescape_codeblock',$body);
+		$body = preg_replace_callback('/\[\$b64zrl(.*?)\[\/(zrl)\]/ism','red_unescape_codeblock',$body);
+		$body = preg_replace_callback('/\[\$b64url(.*?)\[\/(url)\]/ism','red_unescape_codeblock',$body);
+		$body = preg_replace_callback('/\[\$b64code(.*?)\[\/(code)\]/ism','red_unescape_codeblock',$body);
 
 
 		/**
