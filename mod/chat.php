@@ -99,6 +99,49 @@ function chat_content(&$a) {
 	}
 
 
+	if((argc() > 3) && intval(argv(2)) && (argv(3) === 'status')) {
+		$ret = array('success' => false);
+		$room_id = intval(argv(2));
+		if(! $room_id || ! $observer)
+			return;
+
+		$r = q("select * from chatroom where cr_id = %d limit 1",
+			intval($room_id)
+		);
+		if(! $r) {
+			json_return_and_die($ret);
+		}
+		require_once('include/security.php');
+		$sql_extra = permissions_sql($r[0]['cr_uid']);
+
+		$x = q("select * from chatroom where cr_id = %d and cr_uid = %d $sql_extra limit 1",
+			intval($room_id),
+			intval($r[0]['cr_uid'])
+		);
+		if(! $x) {
+			json_return_and_die($ret);
+		}
+		$y = q("select count(*) as total from chatpresence where cp_room = %d",
+			intval($room_id)
+		);
+		if($y) {
+			$ret['success'] = true;
+			$ret['chatroom'] = $r[0]['cr_name'];
+			$ret['inroom'] = $y[0]['total'];
+		}
+
+		// figure out how to present a timestamp of the last activity, since we don't know the observer's timezone.
+
+		$z = q("select created from chat where chat_room = %d order by created desc limit 1",
+			intval($room_id)
+		);
+		if($z) {
+			$ret['last'] = $z[0]['created'];
+		}
+		json_return_and_die($ret);
+	}
+
+
 	if(argc() > 2 && intval(argv(2))) {
 		$room_id = intval(argv(2));
 		$x = chatroom_enter($observer,$room_id,'online',$_SERVER['REMOTE_ADDR']);
