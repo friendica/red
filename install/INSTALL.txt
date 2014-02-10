@@ -37,7 +37,7 @@ Decide if you will use SSL and obtain an SSL cert before software installation. 
  
 
 1. Requirements
-	- Apache with mod-rewrite enabled and "Options All" so you can use a 
+	- Apache with mod-rewrite enabled and "AllowOverride All" so you can use a 
 local .htaccess file
 
 	- PHP 5.3+. The later the better. 
