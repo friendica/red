@@ -1023,12 +1023,14 @@ function zid_init(&$a) {
 	if(validate_email($tmp_str)) {
 		proc_run('php','include/gprobe.php',bin2hex($tmp_str));
 		$arr = array('zid' => $tmp_str, 'url' => $a->cmd);
-		call_hooks('zid_init',$arr);
-		if((! local_user()) && (! remote_user())) {
-			logger('zid_init: not authenticated. Invoking reverse magic-auth for ' . $tmp_str);
+		call_hooks('zid_init',$arr);		
+		if(! local_user()) {
 			$r = q("select * from hubloc where hubloc_addr = '%s' order by hubloc_connected desc limit 1",
 				dbesc($tmp_str)
 			);
+			if($r && remote_user() && remote_user() === $r[0]['hubloc_hash'])
+				return;
+			logger('zid_init: not authenticated. Invoking reverse magic-auth for ' . $tmp_str);
 			// try to avoid recursion - but send them home to do a proper magic auth
 			$query = $a->query_string;
 			$query = str_replace(array('?zid=','&zid='),array('?rzid=','&rzid='),$query);
