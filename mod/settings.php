@@ -150,9 +150,12 @@ function settings_post(&$a) {
 			set_pconfig(local_user(),'system','mobile_theme',$mobile_theme);
 		}
 
+		$chanview_full = ((x($_POST,'chanview_full')) ? intval($_POST['chanview_full']) : 0);
+
 		set_pconfig(local_user(),'system','update_interval', $browser_update);
 		set_pconfig(local_user(),'system','itemspage', $itemspage);
 		set_pconfig(local_user(),'system','no_smilies',$nosmile);
+		set_pconfig(local_user(),'system','chanview_full',$chanview_full);
 
 
 		if ($theme == $a->channel['channel_theme']){
@@ -734,6 +737,7 @@ function settings_content(&$a) {
 		$nosmile = get_pconfig(local_user(),'system','no_smilies');
 		$nosmile = (($nosmile===false)? '0': $nosmile); // default if not set: 0
 
+		$chanview = intval(get_pconfig(local_user(),'system','chanview_full'));
 
 		$theme_config = "";
 		if( ($themeconfigfile = get_theme_config_file($theme_selected)) != null){
@@ -754,7 +758,7 @@ function settings_content(&$a) {
 			'$ajaxint'   => array('browser_update',  t("Update browser every xx seconds"), $browser_update, t('Minimum of 10 seconds, no maximum')),
 			'$itemspage'   => array('itemspage',  t("Maximum number of conversations to load at any time:"), $itemspage, t('Maximum of 100 items')),
 			'$nosmile'	=> array('nosmile', t("Don't show emoticons"), $nosmile, ''),
-			
+			'$chanview_full' => array('chanview_full', t('View remote profiles as webpages'), $chanview, t('By default open in a sub-window of your own site')), 			
 			'$theme_config' => $theme_config,
 		));
 		
