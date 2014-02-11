@@ -139,12 +139,15 @@ function update_directory_entry($ud) {
 }
 
 
+/**
+ * @function local_dir_update($uid,$force)
+ *     push local channel updates to a local directory server 
+ *
+ */
 
+function local_dir_update($uid,$force) {
 
-
-function syncdirs($uid) {
-
-	logger('syncdirs', LOGGER_DEBUG);
+	logger('local_dir_update', LOGGER_DEBUG);
 
 	$p = q("select channel.channel_hash, channel_address, channel_timezone, profile.* from profile left join channel on channel_id = uid where uid = %d and is_default = 1",
 		intval($uid)
@@ -222,7 +225,7 @@ function syncdirs($uid) {
 	}
 
 	$ud_hash = random_string() . '@' . get_app()->get_hostname();
-	update_modtime($hash,$ud_hash,$p[0]['channel_address'] . '@' . get_app()->get_hostname(),1);
+	update_modtime($hash,$ud_hash,$p[0]['channel_address'] . '@' . get_app()->get_hostname(),(($force) ? (-1) : 1));
 
 }
 	

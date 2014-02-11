@@ -304,9 +304,9 @@ function post_init(&$a) {
  *
  *     Once decrypted, one will find the normal json_encoded zot message packet. 
  * 
- * Defined packet types are: notify, purge, refresh, auth_check, ping, and pickup 
+ * Defined packet types are: notify, purge, refresh, force_refresh, auth_check, ping, and pickup 
  *
- * Standard packet: (used by notify, purge, refresh, and auth_check)
+ * Standard packet: (used by notify, purge, refresh, force_refresh, and auth_check)
  *
  * {
  *  "type": "notify",
@@ -793,10 +793,13 @@ function post_post(&$a) {
 		}
 	}
 
-	if($msgtype === 'refresh') {
+	if(($msgtype === 'refresh') || ($msgtype === 'force_refresh')) {
 
 		// remote channel info (such as permissions or photo or something)
 		// has been updated. Grab a fresh copy and sync it.
+		// The difference between refresh and force_refresh is that 
+		// force_refresh unconditionally creates a directory update record,
+		// even if no changes were detected upon processing.
 
 		if($recipients) {
 
@@ -814,7 +817,7 @@ function post_post(&$a) {
 						'xchan_guid'     => $sender['guid'], 
 						'xchan_guid_sig' => $sender['guid_sig'],
 						'hubloc_url'     => $sender['url']
-				),$r[0]);
+				),$r[0], (($msgtype === 'force_refresh') ? true : false));
 			}
 		}
 		else {

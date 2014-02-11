@@ -64,7 +64,7 @@ function poller_run($argv, $argc){
 	$r = q("select channel_id from channel where channel_dirdate < UTC_TIMESTAMP() - INTERVAL 30 DAY");
 	if($r) {
 		foreach($r as $rr) {
-			proc_run('php','include/directory.php',$rr['channel_id'],'ping');
+			proc_run('php','include/directory.php',$rr['channel_id'],'force');
 			if($interval)
 				@time_sleep_until(microtime(true) + (float) $interval);
 		}

@@ -79,12 +79,12 @@ function zot_get_hublocs($hash) {
  *    zot it to the other side
  *
  * @param array $channel     => sender channel structure
- * @param string $type       => packet type: one of 'ping', 'pickup', 'purge', 'refresh', 'notify', 'auth_check'
+ * @param string $type       => packet type: one of 'ping', 'pickup', 'purge', 'refresh', 'force_refresh', 'notify', 'auth_check'
  * @param array $recipients  => envelope information, array ( 'guid' => string, 'guid_sig' => string ); empty for public posts
  * @param string $remote_key => optional public site key of target hub used to encrypt entire packet
  *    NOTE: remote_key and encrypted packets are required for 'auth_check' packets, optional for all others 
  * @param string $secret     => random string, required for packets which require verification/callback
- *    e.g. 'pickup', 'purge', 'notify', 'auth_check' --- 'ping' and 'refresh' do not require verification 
+ *    e.g. 'pickup', 'purge', 'notify', 'auth_check'. Packet types 'ping', 'force_refresh', and 'refresh' do not require verification 
  *
  * @returns string json encoded zot packet
  */
@@ -228,7 +228,7 @@ function zot_finger($webbie,$channel,$autofallback = true) {
 }
 
 /**
- * @function: zot_refresh($them, $channel = null)
+ * @function: zot_refresh($them, $channel = null, $force = false)
  *
  *   zot_refresh is typically invoked when somebody has changed permissions of a channel and they are notified
  *   to fetch new permissions via a finger/discovery operation. This may result in a new connection 
@@ -251,7 +251,7 @@ function zot_finger($webbie,$channel,$autofallback = true) {
  * @returns boolean true if successful, else false 
  */
 
-function zot_refresh($them,$channel = null) {
+function zot_refresh($them,$channel = null, $force = false) {
 
 	logger('zot_refresh: them: ' . print_r($them,true), LOGGER_DATA);
 	if($channel)
@@ -305,7 +305,7 @@ function zot_refresh($them,$channel = null) {
 			return false;
 		}
 
-		$x = import_xchan($j);
+		$x = import_xchan($j,(($force) ? (-1) : 1));
 
 		if(! $x['success'])
 			return false;
@@ -524,6 +524,9 @@ function zot_register_hub($arr) {
  * @param array $arr => json_decoded discovery packet
  * @param int $ud_flags
  *    Determines whether to create a directory update record if any changes occur, default 1 or true
+ *    $ud_flags = (-1) indicates a forced refresh where we unconditionally create a directory update record
+ *      this typically occurs once a month for each channel as part of a scheduled ping to notify the directory
+ *      that the channel still exists
  *
  * @returns array =>  'success' (boolean true or false)
  *                    'message' (optional error string only if success is false)
@@ -885,7 +888,7 @@ function import_xchan($arr,$ud_flags = 1) {
 		}
 	}
 	
-	if($changed) {
+	if(($changed) || ($ud_flags == (-1))) {
 		$guid = random_string() . '@' . get_app()->get_hostname();		
 		update_modtime($xchan_hash,$guid,$arr['address'],$ud_flags);
 		logger('import_xchan: changed: ' . $what,LOGGER_DEBUG);
