@@ -34,7 +34,7 @@ function authtest_content(&$a) {
 				if(! $j)
 					$o .= 'json_decode failure from remote site. ' . print_r($z['body'],true);
 				$o .= 'Remote site responded: ' . print_r($j,true);
-				if(strpos($j,'Authentication Success'))
+				if(j['success'] && strpos($j[message'],'Authentication Success'))
 					$auth_success = true;
 			}
 			else {
