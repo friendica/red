@@ -2085,7 +2085,7 @@ function process_channel_sync_delivery($sender,$arr,$deliveries) {
 		}
 
 		if(array_key_exists('channel',$arr) && is_array($arr['channel']) && count($arr['channel'])) {
-			$disallowed = array('channel_id','channel_account_id','channel_primary','channel_prvkey', 'channel_address', 'channel_notify_flags');
+			$disallowed = array('channel_id','channel_account_id','channel_primary','channel_prvkey', 'channel_address', 'channel_notifyflags');
 
 			$clean = array();
 			foreach($arr['channel'] as $k => $v) {
