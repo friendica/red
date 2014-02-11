@@ -56,7 +56,11 @@ function poller_run($argv, $argc){
 		foreach($r as $rr)
 			drop_item($rr['id'],false);
 	}
-  
+
+	// expire any read notifications over a month old
+
+	q("delete from notify where seen = 1 and date < UTC_TIMESTAMP() - INTERVAL 30 DAY");
+
 	// Ensure that every channel pings a directory server once a month. This way we can discover
 	// channels and sites that quietly vanished and prevent the directory from accumulating stale
 	// or dead entries.
