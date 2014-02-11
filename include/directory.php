@@ -10,7 +10,7 @@ function directory_run($argv, $argc){
 
 	cli_startup();		 
 
-	if($argc != 2)
+	if($argc < 2)
 		return;
 
 	logger('directory update', LOGGER_DEBUG);

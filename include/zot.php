@@ -518,7 +518,7 @@ function zot_register_hub($arr) {
 
 /**
  * @function import_xchan($arr,$ud_flags = 1)
- *   Takes an associative array of a fecthed discovery packet and updates
+ *   Takes an associative array of a fetched discovery packet and updates
  *   all internal data structures which need to be updated as a result.
  * 
  * @param array $arr => json_decoded discovery packet

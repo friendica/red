@@ -221,8 +221,8 @@ function syncdirs($uid) {
 		}
 	}
 
-	$ud_hash = random_string();
-	update_modtime($ud_hash,$hash,$p[0]['channel_address'] . '@' . get_app()->get_hostname(),1);
+	$ud_hash = random_string() . '@' . get_app()->get_hostname();
+	update_modtime($hash,$ud_hash,$p[0]['channel_address'] . '@' . get_app()->get_hostname(),1);
 
 }
 	
