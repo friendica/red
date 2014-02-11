@@ -47,6 +47,8 @@ function poller_run($argv, $argc){
 
 	q("delete from mail where expires != '0000-00-00 00:00:00' and expires < UTC_TIMESTAMP() ");
 
+	// expire any expired items
+
 	$r = q("select id from item where expires != '0000-00-00 00:00:00' and expires < UTC_TIMESTAMP() 
 		and not ( item_restrict & %d ) ",
 		intval(ITEM_DELETED)
@@ -57,9 +59,6 @@ function poller_run($argv, $argc){
 			drop_item($rr['id'],false);
 	}
 
-	// expire any read notifications over a month old
-
-	q("delete from notify where seen = 1 and date < UTC_TIMESTAMP() - INTERVAL 30 DAY");
 
 	// Ensure that every channel pings a directory server once a month. This way we can discover
 	// channels and sites that quietly vanished and prevent the directory from accumulating stale
@@ -107,7 +106,15 @@ function poller_run($argv, $argc){
 
 	$dirmode = get_config('system','directory_mode');
 
+
+	// Actions in the following block are executed once per day, not on every poller run
+	
 	if($d2 != intval($d1)) {
+
+		// expire any read notifications over a month old
+
+		q("delete from notify where seen = 1 and date < UTC_TIMESTAMP() - INTERVAL 30 DAY");
+
 
 		// If this is a directory server, request a sync with an upstream
 		// directory at least once a day, up to once every poll interval. 
@@ -119,13 +126,7 @@ function poller_run($argv, $argc){
 			sync_directories($dirmode);
 		}
 
-
 		set_config('system','last_expire_day',$d2);
-
-// Uncomment when expire protocol component is working
-// Update - this is not going to happen. We are only going to
-// implement per-item expire, not blanket expiration
-//		proc_run('php','include/expire.php');
 
 		proc_run('php','include/cli_suggest.php');
 
