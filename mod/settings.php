@@ -39,7 +39,7 @@ function settings_post(&$a) {
 	if(! local_user())
 		return;
 
-// logger('mod_settings: ' . print_r($_REQUEST,true));
+	// logger('mod_settings: ' . print_r($_REQUEST,true));
 
 	if(x($_SESSION,'submanage') && intval($_SESSION['submanage']))
 		return;

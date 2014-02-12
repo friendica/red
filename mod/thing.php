@@ -199,14 +199,14 @@ function thing_init(&$a) {
 	if(! $profile['is_default']) {
 		$arr['item_private'] = true;
 		$str = '';
-		$r = q("select abook_hash from abook where abook_channel = %d and abook_profile = '%s'",
+		$r = q("select abook_xchan from abook where abook_channel = %d and abook_profile = '%s'",
 			intval(local_user()),
 			dbesc($profile_guid)
 		);
 		if($r) {
 			$arr['allow_cid'] = '';
 			foreach($r as $rr)
-				$arr['allow_cid'] .= '<' . $rr['abook_hash'] . '>';
+				$arr['allow_cid'] .= '<' . $rr['abook_xchan'] . '>';
 		}
 		else
 			$arr['allow_cid'] = '<' . get_observer_hash() . '>';
