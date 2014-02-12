@@ -1,4 +1,4 @@
-<div id="live-display"></div>
+<div id="live-photos"></div>
 <h3><a href="{{$album.0}}">{{$album.1}}</a></h3>
 
 <div id="photo-edit-link-wrap">
@@ -52,19 +52,20 @@
 	</div>
 	<div id="photo-edit-rotate-end"></div>
 
-	<div id="photo-edit-perms" class="photo-edit-perms" >
-		<a href="#photo-edit-perms-select" id="photo-edit-perms-menu" class="button popupbox" title="{{$edit.permissions}}"/>
-			<span id="jot-perms-icon" class="icon {{$edit.lockstate}}" ></span>{{$edit.permissions}}
-		</a>
-		<div id="photo-edit-perms-menu-end"></div>
-		
-		<div style="display: none;">
-			<div id="photo-edit-perms-select" >
-				{{$edit.aclselect}}
+	<div id="settings-default-perms" class="settings-default-perms" >
+		<span id="jot-perms-icon" class="icon {{$edit.lockstate}}" ></span>
+		<a href="#profile-jot-acl-wrapper" id="settings-default-perms-menu" >{{$edit.permissions}}</a>
+		<div id="settings-default-perms-menu-end"></div>
+		<div id="settings-default-perms-select" style="display: none; margin-bottom: 20px" >
+			<div style="display: none;">    
+				<div id="profile-jot-acl-wrapper" style="width:auto;height:auto;overflow:auto;">
+					{{$edit.aclselect}}     
+				</div>
 			</div>
 		</div>
-	</div>
-	<div id="photo-edit-perms-end"></div>
+	</div>                                                                                  
+	<br/>
+	<div id="settings-default-perms-end"></div>
 
 	<input id="photo-edit-submit-button" type="submit" name="submit" value="{{$edit.submit}}" />
 	<input id="photo-edit-delete-button" type="submit" name="delete" value="{{$edit.delete}}" onclick="return confirmDelete()"; />

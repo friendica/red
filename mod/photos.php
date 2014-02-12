@@ -281,6 +281,7 @@ function photos_post(&$a) {
 		);
 		if(count($p)) {
 			$ext = $phototypes[$p[0]['type']];
+
 			$r = q("UPDATE `photo` SET `description` = '%s', `album` = '%s', `allow_cid` = '%s', `allow_gid` = '%s', `deny_cid` = '%s', `deny_gid` = '%s' WHERE `resource_id` = '%s' AND `uid` = %d",
 				dbesc($desc),
 				dbesc($albname),
@@ -503,6 +504,9 @@ function photos_content(&$a) {
 	$sql_extra = permissions_sql($owner_uid);
 
 	$o = "";
+
+		$o .= "<script> var profile_uid = " . $a->profile['profile_uid'] 
+			. "; var netargs = '?f='; var profile_page = " . $a->pager['page'] . "; </script>\r\n";
 
 	// tabs
 
