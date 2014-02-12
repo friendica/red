@@ -373,7 +373,7 @@ function bbcode($Text,$preserve_nl = false, $tryoembed = true) {
 		}
     }
 
-	$Text = str_replace(array('[baseurl]','[sitename]'),array(z_root(),get_config('system','sitename')),$Text);
+	$Text = str_replace(array('[baseurl]','[sitename]','[sitepath]'),array(z_root(),get_config('system','sitename'),$_SESSION['return_url']),$Text);
 
 	
 	// Replace any html brackets with HTML Entities to prevent executing HTML or script
