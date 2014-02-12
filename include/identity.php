@@ -1154,10 +1154,10 @@ function is_member($s) {
 
 function get_online_status($nick) {
 
-	if(get_config('system','block_public') && ! local_user() && ! remote_user())
-		return;
-
 	$ret = array('result' => false);
+
+	if(get_config('system','block_public') && ! local_user() && ! remote_user())
+		return $ret;
 
 	$r = q("select channel_id, channel_hash from channel where channel_address = '%s' limit 1",
 		dbesc(argv(1))
