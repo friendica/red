@@ -9,6 +9,9 @@ function thing_init(&$a) {
 	if(! local_user())
 		return;
 
+
+
+
 	$account_id = $a->get_account();
 	$channel    = $a->get_channel();
 
@@ -16,7 +19,7 @@ function thing_init(&$a) {
 
 	$name = escape_tags($_REQUEST['term']);
 	$verb = escape_tags($_REQUEST['verb']);
-	$profile_guid = escape_tags($_REQUEST['profile']);
+	$profile_guid = escape_tags($_REQUEST['profile_assign']);
 	$url = $_REQUEST['link'];
 	$photo = $_REQUEST['img'];
 
@@ -99,6 +102,7 @@ function thing_init(&$a) {
 	$p = q("select profile_guid, is_default from profile where uid = %d $sql limit 1",
 		intval(local_user())
 	);
+
 	if($p)
 		$profile = $p[0];
 	else
@@ -209,7 +213,6 @@ function thing_init(&$a) {
 	}
 	
 	$ret = post_activity_item($arr);
-
 	
 }
 

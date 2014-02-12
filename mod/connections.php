@@ -41,7 +41,7 @@ function connections_post(&$a) {
 
 	call_hooks('contact_edit_post', $_POST);
 
-	$profile_id = $_POST['profile-assign'];
+	$profile_id = $_POST['profile_assign'];
 	if($profile_id) {
 		$r = q("SELECT profile_guid FROM profile WHERE profile_guid = '%s' AND `uid` = %d LIMIT 1",
 			dbesc($profile_id),
