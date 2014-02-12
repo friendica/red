@@ -217,6 +217,7 @@ class RedDirectory extends DAV\Node implements DAV\ICollection, DAV\IQuota {
 
 	function getDir() {
 		logger('getDir: ' . $this->ext_path, LOGGER_DEBUG);
+		$this->auth->log();
 
 		$file = $this->ext_path;
 
@@ -810,6 +811,17 @@ class RedBasicAuth extends Sabre\DAV\Auth\Backend\AbstractBasic {
 		$this->browser = $browser;
 	}
 		
+
+	function log() {
+		logger('dav: auth: channel_name ' . $this->channel_name);
+		logger('dav: auth: channel_id ' . $this->channel_id);
+		logger('dav: auth: channel_hash ' . $this->channel_hash);
+		logger('dav: auth: observer ' . $this->observer);
+		logger('dav: auth: owner_id ' . $this->owner_id);
+		logger('dav: auth: owner_nick ' . $this->owner_nick);
+	}
+
+
 }
 
 
