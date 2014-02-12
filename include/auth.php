@@ -52,7 +52,7 @@ function account_verify_password($email,$pass) {
 	// Also log failed logins to a separate auth log to reduce overhead for server side intrusion prevention
 	$authlog = get_config('system', 'authlog');
 	if ($authlog)
-	@file_put_contents($authlog, datetime_convert() . ':' . session_id() . ' ' . $error . "\n", FILE_APPEND);
+		@file_put_contents($authlog, datetime_convert() . ':' . session_id() . ' ' . $error . "\n", FILE_APPEND);
 
 	return null;
 }
