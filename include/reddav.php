@@ -30,7 +30,18 @@ class RedDirectory extends DAV\Node implements DAV\ICollection, DAV\IQuota {
 
 	}
 
+
+	function log() {
+		logger('RedDirectory::log() ext_path ' . $this->ext_path, LOGGER_DATA);
+		logger('RedDirectory::log() os_path ' . $this->os_path, LOGGER_DATA);
+		logger('RedDirectory::log() red_path ' . $this->red_path, LOGGER_DATA);
+	}
+
 	function getChildren() {
+
+		logger('RedDirectory::getChildren() called for ' . $this->ext_path, LOGGER_DATA);
+
+		$this->log();
 
 		if(get_config('system','block_public') && (! $this->auth->channel_id) && (! $this->auth->observer)) {
 			throw new DAV\Exception\Forbidden('Permission denied.');
@@ -239,7 +250,7 @@ class RedDirectory extends DAV\Node implements DAV\ICollection, DAV\IQuota {
 			return;
 
 
-		logger('getDir(): path: ' . print_r($path_arr,true));
+		logger('getDir(): path: ' . print_r($path_arr,true), LOGGER_DEBUG);
 
 		$channel_name = $path_arr[0];
 
@@ -519,6 +530,7 @@ function RedChannelList(&$auth) {
 	if($r) {
 		foreach($r as $rr) {
 			if(perm_is_allowed($rr['channel_id'],$auth->observer,'view_storage')) {
+				logger('RedChannelList: ' . '/cloud/' . $rr['channel_address'], LOGGER_DATA);
 				$ret[] = new RedDirectory('/cloud/' . $rr['channel_address'],$auth);
 			}
 		}
@@ -568,6 +580,7 @@ function RedCollectionData($file,&$auth) {
 	$permission_error = false;
 
 	for($x = 1; $x < count($path_arr); $x ++) {		
+
 		$r = q("select id, hash, filename, flags from attach where folder = '%s' and filename = '%s' and (flags & %d) $perms limit 1",
 			dbesc($folder),
 			dbesc($path_arr[$x]),
@@ -619,6 +632,8 @@ function RedCollectionData($file,&$auth) {
 	);
 
 	foreach($r as $rr) {
+		logger('RedCollectionData: filename: ' . $rr['filename'], LOGGER_DATA);
+
 		if($rr['flags'] & ATTACH_FLAG_DIR)
 			$ret[] = new RedDirectory('/cloud' . $path . '/' . $rr['filename'],$auth);
 		else
@@ -775,6 +790,8 @@ class RedBasicAuth extends Sabre\DAV\Auth\Backend\AbstractBasic {
 				$this->channel_name = $r[0]['channel_address'];
 				$this->channel_id = $r[0]['channel_id'];
 				$this->channel_hash = $this->observer = $r[0]['channel_hash'];
+				$_SESSION['uid'] = $r[0]['channel_id'];
+				$_SESSION['authenticated'] = true;
 				return true;
 			}
 		}
@@ -794,6 +811,8 @@ class RedBasicAuth extends Sabre\DAV\Auth\Backend\AbstractBasic {
 						$this->channel_name = $r[0]['channel_address'];
 						$this->channel_id = $r[0]['channel_id'];
 						$this->channel_hash = $this->observer = $r[0]['channel_hash'];
+						$_SESSION['uid'] = $r[0]['channel_id'];
+						$_SESSION['authenticated'] = true;
             			return true;
         			}
     			}
@@ -813,12 +832,12 @@ class RedBasicAuth extends Sabre\DAV\Auth\Backend\AbstractBasic {
 		
 
 	function log() {
-		logger('dav: auth: channel_name ' . $this->channel_name);
-		logger('dav: auth: channel_id ' . $this->channel_id);
-		logger('dav: auth: channel_hash ' . $this->channel_hash);
-		logger('dav: auth: observer ' . $this->observer);
-		logger('dav: auth: owner_id ' . $this->owner_id);
-		logger('dav: auth: owner_nick ' . $this->owner_nick);
+		logger('dav: auth: channel_name ' . $this->channel_name, LOGGER_DATA);
+		logger('dav: auth: channel_id ' . $this->channel_id, LOGGER_DATA);
+		logger('dav: auth: channel_hash ' . $this->channel_hash, LOGGER_DATA);
+		logger('dav: auth: observer ' . $this->observer, LOGGER_DATA);
+		logger('dav: auth: owner_id ' . $this->owner_id, LOGGER_DATA);
+		logger('dav: auth: owner_nick ' . $this->owner_nick, LOGGER_DATA);
 	}
 
 
