@@ -5,11 +5,14 @@
 <div class="thing-profile-label">{{$profile_lbl}}</div>
 
 <div class="thing-profile">{{$profile_select}}</div>
+<div class="thing-field-end"></div>
 {{/if}}
+
 
 <div class="thing-verb-label">{{$verb_lbl}}</div>
 
 <div class="thing-verb">{{$verb_select}}</div>
+<div class="thing-field-end"></div>
 
 
 <label class="thing-label" for="thing-term">{{$thing_lbl}}</label>
@@ -21,6 +24,8 @@
 <label class="thing-label" for="thing-img">{{$img_lbl}}</label>
 <input type="text" class="thing-input" id="thing-img" name="img" />
 <div class="thing-field-end"></div>
+
+{{include file="field_checkbox.tpl" field=$activity}}
 
 <div class="thing-end"></div> 
 

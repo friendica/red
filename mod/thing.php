@@ -19,6 +19,7 @@ function thing_init(&$a) {
 
 	$name = escape_tags($_REQUEST['term']);
 	$verb = escape_tags($_REQUEST['verb']);
+	$activity = intval($_REQUEST['activity']);
 	$profile_guid = escape_tags($_REQUEST['profile_assign']);
 	$url = $_REQUEST['link'];
 	$photo = $_REQUEST['img'];
@@ -160,60 +161,62 @@ function thing_init(&$a) {
 
 	info( t('Thing added'));
 
-	$arr = array();
-	$links = array(array('rel' => 'alternate','type' => 'text/html', 'href' => $term['url']));
-	if($local_photo)
-		$links[] = array('rel' => 'photo', 'type' => $local_photo_type, 'href' => $local_photo);
+
+	if($activity) {
+		$arr = array();
+		$links = array(array('rel' => 'alternate','type' => 'text/html', 'href' => $term['url']));
+		if($local_photo)
+			$links[] = array('rel' => 'photo', 'type' => $local_photo_type, 'href' => $local_photo);
 
 
-	$objtype = ACTIVITY_OBJ_THING;
+		$objtype = ACTIVITY_OBJ_THING;
 
-	$obj = json_encode(array(
-		'type'    => $objtype,
-		'id'      => $term['url'],
-		'link'    => $links,
-		'title'   => $term['term'],
-		'content' => $term['term']
-	));
+		$obj = json_encode(array(
+			'type'    => $objtype,
+			'id'      => $term['url'],
+			'link'    => $links,
+			'title'   => $term['term'],
+			'content' => $term['term']
+		));
 
-	$bodyverb = str_replace('OBJ: ', '',t('OBJ: %1$s %2$s %3$s'));
+		$bodyverb = str_replace('OBJ: ', '',t('OBJ: %1$s %2$s %3$s'));
 
-	$arr['owner_xchan']  = $channel['channel_hash'];
-	$arr['author_xchan'] = $channel['channel_hash'];
+		$arr['owner_xchan']  = $channel['channel_hash'];
+		$arr['author_xchan'] = $channel['channel_hash'];
 
 
-	$arr['item_flags'] = ITEM_ORIGIN|ITEM_WALL|ITEM_THREAD_TOP;
+		$arr['item_flags'] = ITEM_ORIGIN|ITEM_WALL|ITEM_THREAD_TOP;
 	
-	$ulink = '[zrl=' . $channel['xchan_url'] . ']' . $channel['channel_name'] . '[/zrl]';
-	$plink = '[zrl=' . $term['url'] . ']' . $term['term'] . '[/zrl]';
+		$ulink = '[zrl=' . $channel['xchan_url'] . ']' . $channel['channel_name'] . '[/zrl]';
+		$plink = '[zrl=' . $term['url'] . ']' . $term['term'] . '[/zrl]';
 
-	$arr['body'] =  sprintf( $bodyverb, $ulink, $translated_verb, $plink );
+		$arr['body'] =  sprintf( $bodyverb, $ulink, $translated_verb, $plink );
 
-	if($local_photo)
-		$arr['body'] .= "\n\n[zmg]" . $local_photo . "[/zmg]";
+		if($local_photo)
+			$arr['body'] .= "\n\n[zmg]" . $local_photo . "[/zmg]";
 
-	$arr['verb'] = $verb;
-	$arr['obj_type'] = $objtype;
-	$arr['object'] = $obj;
+		$arr['verb'] = $verb;
+		$arr['obj_type'] = $objtype;
+		$arr['object'] = $obj;
 
-	if(! $profile['is_default']) {
-		$arr['item_private'] = true;
-		$str = '';
-		$r = q("select abook_xchan from abook where abook_channel = %d and abook_profile = '%s'",
-			intval(local_user()),
-			dbesc($profile_guid)
-		);
-		if($r) {
-			$arr['allow_cid'] = '';
-			foreach($r as $rr)
-				$arr['allow_cid'] .= '<' . $rr['abook_xchan'] . '>';
+		if(! $profile['is_default']) {
+			$arr['item_private'] = true;
+			$str = '';
+			$r = q("select abook_xchan from abook where abook_channel = %d and abook_profile = '%s'",
+				intval(local_user()),
+				dbesc($profile_guid)
+			);
+			if($r) {
+				$arr['allow_cid'] = '';
+				foreach($r as $rr)
+					$arr['allow_cid'] .= '<' . $rr['abook_xchan'] . '>';
+			}
+			else
+				$arr['allow_cid'] = '<' . get_observer_hash() . '>';
 		}
-		else
-			$arr['allow_cid'] = '<' . get_observer_hash() . '>';
+	
+		$ret = post_activity_item($arr);
 	}
-	
-	$ret = post_activity_item($arr);
-	
 }
 
 
@@ -269,6 +272,7 @@ function thing_content(&$a) {
 			'$profile_select' => contact_profile_assign($r[0]['obj_page']),
 			'$verb_lbl' => t('Select a category of stuff. e.g. I ______ something'),
 			'$verb_select' => obj_verb_selector($r[0]['obj_verb']),
+			'$activity' => array('activity',t('Post an activity'),true,t('Only sends to viewers of the applicable profile')),
 			'$thing_hash' => $thing_hash,
 			'$thing_lbl' => t('Name of thing e.g. something'),
 			'$thething' => $r[0]['term'],
@@ -314,6 +318,7 @@ function thing_content(&$a) {
 		'$profile_lbl' => t('Select a profile'),
 		'$profile_select' => contact_profile_assign(''),
 		'$verb_lbl' => t('Select a category of stuff. e.g. I ______ something'),
+		'$activity' => array('activity',t('Post an activity'),true,t('Only sends to viewers of the applicable profile')),
 		'$verb_select' => obj_verb_selector(),
 		'$thing_lbl' => t('Name of thing e.g. something'),
 		'$url_lbl' => t('URL of thing (optional)'),
