@@ -373,6 +373,20 @@ function bbcode($Text,$preserve_nl = false, $tryoembed = true) {
 		}
     }
 
+	$channel = $a->get_channel();
+	if (strpos($Text,'[/channel]') !== false) {
+		if ($channel) {
+			$Text = preg_replace("/\[channel\=1\](.*?)\[\/channel\]/ism", '$1', $Text);
+			$Text = preg_replace("/\[channel\=0\].*?\[\/channel\]/ism", '', $Text);
+		} else {
+			$Text = preg_replace("/\[channel\=1\].*?\[\/channel\]/ism", '', $Text);
+			$Text = preg_replace("/\[channel\=0\](.*?)\[\/channel\]/ism", '$1', $Text);
+		}
+    }
+
+
+
+
 	$Text = str_replace(array('[baseurl]','[sitename]','[sitepath]'),array(z_root(),get_config('system','sitename'),$_SESSION['return_url']),$Text);
 
 	
