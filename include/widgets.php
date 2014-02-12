@@ -578,12 +578,9 @@ function widget_menu_preview($arr) {
 }
 
 function widget_chatroom_list($arr) {
-
 	$a = get_app();
-
 	require_once("include/chat.php");
 	$r = chatroom_list($a->profile['profile_uid']);
-
 	return replace_macros(get_markup_template('chatroomlist.tpl'),array(
 		'$header' => t('Chat Rooms'),
 		'$baseurl' => z_root(),
