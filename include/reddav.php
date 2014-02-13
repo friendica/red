@@ -851,7 +851,7 @@ class RedBrowser extends DAV\Browser\Plugin {
 	function __construct(&$auth) {
 
 		$this->auth = $auth;
-
+		$this->enableAssets = false;
 
 	}
 
