@@ -2269,7 +2269,7 @@ function tag_deliver($uid,$item_id) {
 		logger('check_item_source returns true');
 
 
-	// This might be a followup by the original post author to a tagged forum
+	// This might be a followup (e.g. comment) by the original post author to a tagged forum
 	// If so setup a second delivery chain
 
 	$r = null;
@@ -2288,7 +2288,7 @@ function tag_deliver($uid,$item_id) {
 			// now change this copy of the post to a forum head message and deliver to all the tgroup members
 			// also reset all the privacy bits to the forum default permissions
 
-			$private = (($u[0]['allow_cid'] || $u[0]['allow_gid'] || $u[0]['deny_cid'] || $u[0]['deny_gid']) ? 1 : 0);
+			$private = (($u[0]['channel_allow_cid'] || $u[0]['channel_allow_gid'] || $u[0]['channel_deny_cid'] || $u[0]['channel_deny_gid']) ? 1 : 0);
 
 			$flag_bits = ITEM_WALL|ITEM_ORIGIN;
 
@@ -2304,10 +2304,10 @@ function tag_deliver($uid,$item_id) {
 				deny_cid = '%s', deny_gid = '%s', item_private = %d  where id = %d limit 1",
 				intval($flag_bits),
 				dbesc($u[0]['channel_hash']),
-				dbesc($u[0]['allow_cid']),
-				dbesc($u[0]['allow_gid']),
-				dbesc($u[0]['deny_cid']),
-				dbesc($u[0]['deny_gid']),
+				dbesc($u[0]['channel_allow_cid']),
+				dbesc($u[0]['channel_allow_gid']),
+				dbesc($u[0]['channel_deny_cid']),
+				dbesc($u[0]['channel_deny_gid']),
 				intval($private),
 				intval($item_id)
 			);
@@ -2410,7 +2410,7 @@ function tag_deliver($uid,$item_id) {
 	// now change this copy of the post to a forum head message and deliver to all the tgroup members
 	// also reset all the privacy bits to the forum default permissions
 
-	$private = (($u[0]['allow_cid'] || $u[0]['allow_gid'] || $u[0]['deny_cid'] || $u[0]['deny_gid']) ? 1 : 0);
+	$private = (($u[0]['channel_allow_cid'] || $u[0]['channel_allow_gid'] || $u[0]['channel_deny_cid'] || $u[0]['channel_deny_gid']) ? 1 : 0);
 
 	$flag_bits = ITEM_WALL|ITEM_ORIGIN|ITEM_UPLINK;
 
@@ -2424,10 +2424,10 @@ function tag_deliver($uid,$item_id) {
 		deny_cid = '%s', deny_gid = '%s', item_private = %d  where id = %d limit 1",
 		intval($flag_bits),
 		dbesc($u[0]['channel_hash']),
-		dbesc($u[0]['allow_cid']),
-		dbesc($u[0]['allow_gid']),
-		dbesc($u[0]['deny_cid']),
-		dbesc($u[0]['deny_gid']),
+		dbesc($u[0]['channel_allow_cid']),
+		dbesc($u[0]['channel_allow_gid']),
+		dbesc($u[0]['channel_deny_cid']),
+		dbesc($u[0]['channel_deny_gid']),
 		intval($private),
 		intval($item_id)
 	);
