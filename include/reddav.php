@@ -773,6 +773,7 @@ class RedBasicAuth extends Sabre\DAV\Auth\Backend\AbstractBasic {
 
     protected function validateUserPass($username, $password) {
 
+
 		if(trim($password) === '+++') {
 			logger('reddav: validateUserPass: guest ' . $username);
 			return true;
