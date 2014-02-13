@@ -16,7 +16,7 @@
 {{include file="field_checkbox.tpl" field=$adult}}
 
 <div class="settings-submit-wrapper" >
-<input type="submit" name="submit" class="settings-submit" value="{{$submit}}" />
+<input type="submit" name="submit" class="settings-submit" value="{{$submit}}"{{if !$expert}} onclick="$('select').prop('disabled', false);"{{/if}} />
 </div>
 
 
@@ -34,20 +34,31 @@
 </ul>
 
 
-<h3 id="settings-perm-advanced">{{$lbl_p2macro}}</h3>
+<button type="button" class="btn btn-xs btn-warning" data-toggle="collapse" data-target="#settings-permissions-wrapper">{{$lbl_p2macro}}</button>
 
-<div id="settings-permissions-wrapper">
+
+
+<div class="collapse well" id="settings-permissions-wrapper">
+{{if !$expert}}
+	<div class="alert alert-info">{{$hint}}</div>
+{{/if}}
+
 {{foreach $permiss_arr as $permit}}
-{{include file="field_select.tpl" field=$permit}}
+	{{if $expert}}
+		{{include file="field_select.tpl" field=$permit}}
+	{{else}}
+		{{include file="field_select_disabled.tpl" field=$permit}}
+	{{/if}}
 {{/foreach}}
+
+{{if $expert}}
+	<div class="settings-submit-wrapper" >
+	<input type="submit" name="submit" class="settings-submit" value="{{$submit}}" />
+	</div>
+{{/if}}
+
 </div>
-
-
-<div class="settings-submit-wrapper" >
-<input type="submit" name="submit" class="settings-submit" value="{{$submit}}" />
-</div>
-
-
+<div class="settings-common-perms">
 {{$profile_in_dir}}
 
 {{$suggestme}}
@@ -55,6 +66,7 @@
 {{include file="field_input.tpl" field=$maxreq}}
 
 {{include file="field_input.tpl" field=$cntunkmail}}
+</div>
 
 <div id="settings-default-perms" class="settings-default-perms" >
 	<a href="#profile-jot-acl-wrapper" id="settings-default-perms-menu" >{{$permissions}} {{$permdesc}}</a>
@@ -77,7 +89,7 @@
 
 
 <div class="settings-submit-wrapper" >
-<input type="submit" name="submit" class="settings-submit" value="{{$submit}}" />
+<input type="submit" name="submit" class="settings-submit" value="{{$submit}}"{{if !$expert}} onclick="$('select').prop('disabled', false);"{{/if}} />
 </div>
 
 
@@ -108,7 +120,7 @@
 </div>
 
 <div class="settings-submit-wrapper" >
-<input type="submit" name="submit" class="settings-submit" value="{{$submit}}" />
+<input type="submit" name="submit" class="settings-submit" value="{{$submit}}"{{if !$expert}} onclick="$('select').prop('disabled', false);"{{/if}} />
 </div>
 
 </div>
