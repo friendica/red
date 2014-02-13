@@ -320,15 +320,6 @@ function bbcode($Text,$preserve_nl = false, $tryoembed = true) {
 
 	$a = get_app();
 
-	// Extract the private images which use data url's since preg has issues with
-	// large data sizes. Stash them away while we do bbcode conversion, and then put them back
-	// in after we've done all the regex matching. We cannot use any preg functions to do this.
-
-	$extracted = bb_extract_images($Text);
-	$Text = $extracted['body'];
-	$saved_image = $extracted['images'];
-
-
 	// Move all spaces out of the tags
 	$Text = preg_replace("/\[(\w*)\](\s*)/ism", '$2[$1]', $Text);
 	$Text = preg_replace("/(\s*)\[\/(\w*)\]/ism", '[/$2]$1', $Text);
@@ -385,9 +376,7 @@ function bbcode($Text,$preserve_nl = false, $tryoembed = true) {
     }
 
 
-
-
-	$Text = str_replace(array('[baseurl]','[sitename]','[sitepath]'),array(z_root(),get_config('system','sitename'),$_SESSION['return_url']),$Text);
+	$Text = str_replace(array('[baseurl]','[sitename]'),array(z_root(),get_config('system','sitename')),$Text);
 
 	
 	// Replace any html brackets with HTML Entities to prevent executing HTML or script
@@ -697,37 +686,35 @@ function bbcode($Text,$preserve_nl = false, $tryoembed = true) {
 		}
 	}
 	// Youtube extensions
-	if (strpos($Text,'[youtube]') !== false) {
-		if ($tryoembed) {
-			$Text = preg_replace_callback("/\[youtube\](https?:\/\/www.youtube.com\/watch\?v\=.*?)\[\/youtube\]/ism", 'tryoembed', $Text);		
-			$Text = preg_replace_callback("/\[youtube\](www.youtube.com\/watch\?v\=.*?)\[\/youtube\]/ism", 'tryoembed', $Text);		
-			$Text = preg_replace_callback("/\[youtube\](https?:\/\/youtu.be\/.*?)\[\/youtube\]/ism",'tryoembed',$Text); 
-		}
-			$Text = preg_replace("/\[youtube\]https?:\/\/www.youtube.com\/watch\?v\=(.*?)\[\/youtube\]/ism",'[youtube]$1[/youtube]',$Text); 
-			$Text = preg_replace("/\[youtube\]https?:\/\/www.youtube.com\/embed\/(.*?)\[\/youtube\]/ism",'[youtube]$1[/youtube]',$Text); 
-			$Text = preg_replace("/\[youtube\]https?:\/\/youtu.be\/(.*?)\[\/youtube\]/ism",'[youtube]$1[/youtube]',$Text);
+//	if (strpos($Text,'[youtube]') !== false) {
+//		if ($tryoembed) {
+//			$Text = preg_replace_callback("/\[youtube\](https?:\/\/www.youtube.com\/watch\?v\=.*?)\[\/youtube\]/ism", 'tryoembed', $Text);		
+//			$Text = preg_replace_callback("/\[youtube\](www.youtube.com\/watch\?v\=.*?)\[\/youtube\]/ism", 'tryoembed', $Text);		
+//			$Text = preg_replace_callback("/\[youtube\](https?:\/\/youtu.be\/.*?)\[\/youtube\]/ism",'tryoembed',$Text); 
+//		}
+//			$Text = preg_replace("/\[youtube\]https?:\/\/www.youtube.com\/watch\?v\=(.*?)\[\/youtube\]/ism",'[youtube]$1[/youtube]',$Text); 
+//			$Text = preg_replace("/\[youtube\]https?:\/\/www.youtube.com\/embed\/(.*?)\[\/youtube\]/ism",'[youtube]$1[/youtube]',$Text); 
+//			$Text = preg_replace("/\[youtube\]https?:\/\/youtu.be\/(.*?)\[\/youtube\]/ism",'[youtube]$1[/youtube]',$Text);
 
-		if ($tryoembed)
-			$Text = preg_replace("/\[youtube\]([A-Za-z0-9\-_=]+)(.*?)\[\/youtube\]/ism", '<iframe width="' . $a->videowidth . '" height="' . $a->videoheight . '" src="http://www.youtube.com/embed/$1" frameborder="0" ></iframe>', $Text);
-		else 
-			$Text = preg_replace("/\[youtube\]([A-Za-z0-9\-_=]+)(.*?)\[\/youtube\]/ism", "http://www.youtube.com/watch?v=$1", $Text);
-	}
-	if (strpos($Text,'[vimeo]') !== false) {
-		if ($tryoembed) {
-			$Text = preg_replace_callback("/\[vimeo\](https?:\/\/player.vimeo.com\/video\/[0-9]+).*?\[\/vimeo\]/ism",'tryoembed',$Text); 
-			$Text = preg_replace_callback("/\[vimeo\](https?:\/\/vimeo.com\/[0-9]+).*?\[\/vimeo\]/ism",'tryoembed',$Text); 
-		}
+//		if ($tryoembed)
+//			$Text = preg_replace("/\[youtube\]([A-Za-z0-9\-_=]+)(.*?)\[\/youtube\]/ism", '<iframe width="' . $a->videowidth . '" height="' . $a->videoheight . '" src="http://www.youtube.com/embed/$1" frameborder="0" ></iframe>', $Text);
+//		else 
+//			$Text = preg_replace("/\[youtube\]([A-Za-z0-9\-_=]+)(.*?)\[\/youtube\]/ism", "http://www.youtube.com/watch?v=$1", $Text);
+//	}
+//	if (strpos($Text,'[vimeo]') !== false) {
+//		if ($tryoembed) {
+//			$Text = preg_replace_callback("/\[vimeo\](https?:\/\/player.vimeo.com\/video\/[0-9]+).*?\[\/vimeo\]/ism",'tryoembed',$Text); 
+//			$Text = preg_replace_callback("/\[vimeo\](https?:\/\/vimeo.com\/[0-9]+).*?\[\/vimeo\]/ism",'tryoembed',$Text); 
+//		}
 
-		$Text = preg_replace("/\[vimeo\]https?:\/\/player.vimeo.com\/video\/([0-9]+)(.*?)\[\/vimeo\]/ism",'[vimeo]$1[/vimeo]',$Text); 
-		$Text = preg_replace("/\[vimeo\]https?:\/\/vimeo.com\/([0-9]+)(.*?)\[\/vimeo\]/ism",'[vimeo]$1[/vimeo]',$Text);
+//		$Text = preg_replace("/\[vimeo\]https?:\/\/player.vimeo.com\/video\/([0-9]+)(.*?)\[\/vimeo\]/ism",'[vimeo]$1[/vimeo]',$Text); 
+//		$Text = preg_replace("/\[vimeo\]https?:\/\/vimeo.com\/([0-9]+)(.*?)\[\/vimeo\]/ism",'[vimeo]$1[/vimeo]',$Text);
 
-		if ($tryoembed)
-			$Text = preg_replace("/\[vimeo\]([0-9]+)(.*?)\[\/vimeo\]/ism", '<iframe width="' . $a->videowidth . '" height="' . $a->videoheight . '" src="http://player.vimeo.com/video/$1" frameborder="0" ></iframe>', $Text);
-		else
-			$Text = preg_replace("/\[vimeo\]([0-9]+)(.*?)\[\/vimeo\]/ism", "http://vimeo.com/$1", $Text);
-	}
-//	$Text = preg_replace("/\[youtube\](.*?)\[\/youtube\]/", '<object width="425" height="350" type="application/x-shockwave-flash" data="http://www.youtube.com/v/$1" ><param name="movie" value="http://www.youtube.com/v/$1"></param><!--[if IE]><embed src="http://www.youtube.com/v/$1" type="application/x-shockwave-flash" width="425" height="350" /><![endif]--></object>', $Text);
-
+//		if ($tryoembed)
+//			$Text = preg_replace("/\[vimeo\]([0-9]+)(.*?)\[\/vimeo\]/ism", '<iframe width="' . $a->videowidth . '" height="' . $a->videoheight . '" src="http://player.vimeo.com/video/$1" frameborder="0" ></iframe>', $Text);
+//		else
+//			$Text = preg_replace("/\[vimeo\]([0-9]+)(.*?)\[\/vimeo\]/ism", "http://vimeo.com/$1", $Text);
+//	}
 
 	// oembed tag
 	$Text = oembed_bbcode2html($Text);
@@ -769,28 +756,6 @@ function bbcode($Text,$preserve_nl = false, $tryoembed = true) {
 	$Text = preg_replace("/\<(.*?)(src|href)=(.*?)\&amp\;(.*?)\>/ism",'<$1$2=$3&$4>',$Text);
 
 	$Text = preg_replace("/\<(.*?)(src|href)=\"[^hfm](.*?)\>/ism",'<$1$2="">',$Text);
-
-	if($saved_image)
-		$Text = bb_replace_images($Text, $saved_image);
-
-	// Clean up the HTML by loading and saving the HTML with the DOM
-	// Only do it when it has to be done - for performance reasons
-//	if (!$tryoembed) {//
-//		$doc = new DOMDocument();
-//		$doc->preserveWhiteSpace = false;
-
-//		$Text = mb_convert_encoding($Text, 'HTML-ENTITIES', "UTF-8");
-
-//		$doctype = '<!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.0 Transitional//EN" "http://www.w3.org/TR/REC-html40/loose.dtd">';
-//		@$doc->loadHTML($doctype."<html><body>".$Text."</body></html>");
-
-//		$Text = $doc->saveHTML();
-//		$Text = str_replace(array("<html><body>", "</body></html>", $doctype), array("", "", ""), $Text);
-
-//		$Text = str_replace('<br></li>','</li>', $Text);
-
-//		$Text = mb_convert_encoding($Text, "UTF-8", 'HTML-ENTITIES');
-//	}
 
 	call_hooks('bbcode',$Text);
 
