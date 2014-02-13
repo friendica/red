@@ -68,7 +68,7 @@
 #datebrowse-sidebar select {
 	width: 190px;
 	max-width: 190px;
-	height: 150px;
+	max-height: 150px;
 }
 
 /* categories */
