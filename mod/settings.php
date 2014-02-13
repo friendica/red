@@ -977,6 +977,8 @@ function settings_content(&$a) {
 			'$h_advn' => t('Advanced Account/Page Type Settings'),
 			'$h_descadvn' => t('Change the behaviour of this account for special situations'),
 			'$pagetype' => $pagetype,
+			'$expert' => feature_enabled(local_user(),'expert'),
+			'$hint' => t('Please enable expert mode (in Settings > Additional features) to adjust!'),
 		
 		));
 
