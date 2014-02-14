@@ -10,6 +10,7 @@ var classRedDirectory =
     [ "getLastModified", "classRedDirectory.html#a6c7e08199abc24e6eeb94a4037ef8bfc", null ],
     [ "getName", "classRedDirectory.html#af6e4475dbd5abcdede00d20b8d388583", null ],
     [ "getQuotaInfo", "classRedDirectory.html#a2f7a574f2115f099d6dd103d5b252375", null ],
+    [ "log", "classRedDirectory.html#a11376aed1963b4471eb1592c13c63976", null ],
     [ "$auth", "classRedDirectory.html#a9616af16cd19a18a6afebebcc2881c44", null ],
     [ "$ext_path", "classRedDirectory.html#a0f113244cd85c17848df991001d024f4", null ],
     [ "$folder_hash", "classRedDirectory.html#aa10254abf177bb2a0e4a88495725e09b", null ],

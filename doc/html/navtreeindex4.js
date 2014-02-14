@@ -1,5 +1,7 @@
 var NAVTREEINDEX4 =
 {
+"functions_0x68.html":[4,3,0,9],
+"functions_0x69.html":[4,3,0,10],
 "functions_0x6c.html":[4,3,0,11],
 "functions_0x6e.html":[4,3,0,12],
 "functions_0x6f.html":[4,3,0,13],
@@ -30,8 +32,8 @@ var NAVTREEINDEX4 =
 "functions_func_0x74.html":[4,3,1,17],
 "functions_func_0x76.html":[4,3,1,18],
 "functions_vars.html":[4,3,2],
-"globals.html":[5,1,0],
 "globals.html":[5,1,0,0],
+"globals.html":[5,1,0],
 "globals_0x5f.html":[5,1,0,1],
 "globals_0x61.html":[5,1,0,2],
 "globals_0x62.html":[5,1,0,3],
@@ -58,8 +60,8 @@ var NAVTREEINDEX4 =
 "globals_0x77.html":[5,1,0,24],
 "globals_0x78.html":[5,1,0,25],
 "globals_0x7a.html":[5,1,0,26],
-"globals_func.html":[5,1,1],
 "globals_func.html":[5,1,1,0],
+"globals_func.html":[5,1,1],
 "globals_func_0x61.html":[5,1,1,1],
 "globals_func_0x62.html":[5,1,1,2],
 "globals_func_0x63.html":[5,1,1,3],
@@ -247,7 +249,5 @@ var NAVTREEINDEX4 =
 "include_2config_8php.html#ad6da879e4fb5b37d1e161d4e9be5c32a":[5,0,0,18,10],
 "include_2config_8php.html#af02c96e6b37335774b548914ede1d22e":[5,0,0,18,3],
 "include_2config_8php.html#af08b7adb63adfb2eda7c466fba0cce74":[5,0,0,18,4],
-"include_2config_8php.html#afe117b70f1bba2f6348d9300b601f86e":[5,0,0,18,12],
-"include_2directory_8php.html":[5,0,0,29],
-"include_2directory_8php.html#aa75d3b0697ca1456aaabdb37a74aa0f0":[5,0,0,29,0]
+"include_2config_8php.html#afe117b70f1bba2f6348d9300b601f86e":[5,0,0,18,12]
 };

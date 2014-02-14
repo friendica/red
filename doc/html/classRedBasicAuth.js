@@ -1,5 +1,6 @@
 var classRedBasicAuth =
 [
+    [ "log", "classRedBasicAuth.html#a2cc8b1eac9c5a799bfb53ea7f287f3f0", null ],
     [ "setBrowserPlugin", "classRedBasicAuth.html#a358ddad4abb5aa8c1382cf49a907adbc", null ],
     [ "setCurrentUser", "classRedBasicAuth.html#a072e8244a9a7f191b32d3db5ac94f857", null ],
     [ "validateUserPass", "classRedBasicAuth.html#a8dfd9a0953f8884723b421b7c1acf79b", null ],
