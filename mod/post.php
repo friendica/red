@@ -828,7 +828,7 @@ function post_post(&$a) {
 				'xchan_guid'     => $sender['guid'], 
 				'xchan_guid_sig' => $sender['guid_sig'],
 				'hubloc_url'     => $sender['url']
-			),null);
+			),null,(($msgtype === 'force_refresh') ? true : false));
 		}
 		$ret['success'] = true;
 		json_return_and_die($ret);
