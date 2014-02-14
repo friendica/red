@@ -8,6 +8,7 @@ var searchData=
   ['notes_2ephp',['notes.php',['../notes_8php.html',1,'']]],
   ['notifications_2ephp',['notifications.php',['../notifications_8php.html',1,'']]],
   ['notifier_2ephp',['notifier.php',['../notifier_8php.html',1,'']]],
+  ['notify_2ephp',['notify.php',['../mod_2notify_8php.html',1,'']]],
   ['notify_2ephp',['notify.php',['../include_2notify_8php.html',1,'']]],
-  ['notify_2ephp',['notify.php',['../mod_2notify_8php.html',1,'']]]
+  ['notred_2ephp',['notred.php',['../notred_8php.html',1,'']]]
 ];

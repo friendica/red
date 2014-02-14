@@ -25,7 +25,7 @@ var zot_8php =
     [ "zot_import", "zot_8php.html#aeea071f17e306fe3d0c488551906bfab", null ],
     [ "zot_new_uid", "zot_8php.html#ab22d67660702056bf3f4696dcebf5ce7", null ],
     [ "zot_process_response", "zot_8php.html#a928f5643ca66ae9635d85aeb2be62e03", null ],
-    [ "zot_refresh", "zot_8php.html#a7b23bfb31d4491231e1e73bdc077240d", null ],
+    [ "zot_refresh", "zot_8php.html#a7ac30ff51274bf0b6d3eade37972145c", null ],
     [ "zot_register_hub", "zot_8php.html#a5bcdfef419b16075a0eca990956223dc", null ],
     [ "zot_zot", "zot_8php.html#ab3e9b99ddb11353f37f265a05bb42142", null ]
 ];

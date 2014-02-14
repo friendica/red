@@ -92,6 +92,15 @@ function editpost_content(&$a) {
 
 	}
 
+	if($itm[0]['attach']) {
+		$j = json_decode($itm[0]['attach'],true);
+		if($j) {
+			foreach($j as $jj) {
+				$itm[0]['body'] .= "\n" . '[attachment]' . basename($jj['href']) . ',' . $jj['revision'] . '[/attachment]' . "\n";
+			}
+		}
+	}
+
 	$cipher = get_pconfig(get_app()->profile['profile_uid'],'system','default_cipher');
 	if(! $cipher)
 		$cipher = 'aes256';
