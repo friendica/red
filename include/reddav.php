@@ -1064,5 +1064,15 @@ class RedBrowser extends DAV\Browser\Plugin {
 
     }
 
+    /**
+     * This method takes a path/name of an asset and turns it into url
+     * suiteable for http access.
+     *
+     * @param string $assetName
+     * @return string
+     */
+    protected function getAssetUrl($assetName) {
+        return '/cloud/?sabreAction=asset&assetName=' . urlencode($assetName);
+    }
 
 }
