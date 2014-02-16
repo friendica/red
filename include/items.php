@@ -145,7 +145,9 @@ function can_comment_on_post($observer_xchan,$item) {
  * @function red_zrl_callback
  *   preg_match function when fixing 'naked' links in mod item.php
  *   Check if we've got a hubloc for the site and use a zrl if we do, a url if we don't. 
- * 
+ *   Remove any existing zid= param which may have been pasted by mistake - and will have
+ *   the author's credentials. zid's are dynamic and can't really be passed around like
+ *   that.
  */
 
 
@@ -159,6 +161,13 @@ function red_zrl_callback($matches) {
 		if($r)
 			$zrl = true;
 	}
+
+	$t = strip_zids($matches[2]);
+	if($t !== $matches[2]) {
+		$zrl = true;
+		$matches[2] = $t;
+	}
+
 	if($matches[1] === '#^')
 		$matches[1] = '';
 	if($zrl)

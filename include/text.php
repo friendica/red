@@ -621,6 +621,11 @@ function get_tags($s) {
 }
 
 
+function strip_zids($s) {
+	return preg_replace('/[\?&]zid=(.*?)(&|$)/ism','$2',$s);
+}
+
+
 // quick and dirty quoted_printable encoding
 
 
