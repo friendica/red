@@ -2263,6 +2263,13 @@ function tag_deliver($uid,$item_id) {
 						if(is_array($j_obj['link']))
 							$taglink = get_rel_link($j_obj['link'],'alternate');
 						store_item_tag($u[0]['channel_id'],$p[0]['id'],TERM_OBJ_POST,TERM_HASHTAG,$j_obj['title'],$j_obj['id']);
+						$x = q("update item set edited = '%s', received = '%s', changed = '%s' where mid = '%s' and uid = %d limit 1",
+							dbesc(datetime_convert()),
+							dbesc(datetime_convert()),
+							dbesc(datetime_convert()),
+							dbesc($j_tgt['id']),
+							intval($u[0]['channel_id'])
+						);		
 						proc_run('php','include/notifier.php','edit_post',$p[0]['id']);
 					}
 				}
