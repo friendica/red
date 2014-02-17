@@ -725,13 +725,59 @@ function import_author_xchan($x) {
 		return $arr['xchan_hash'];
 
 	if((! array_key_exists('network', $x)) || ($x['network'] === 'zot')) {
-		return import_author_zot($x);
+		$y = import_author_zot($x);
 	}
 
-	// TODO: create xchans for other common and/or aligned networks
+	if($x['network'] === 'rss') {
+		$y = import_author_rss($x);
+	}
+
+	return(($y) ? $y : false);
+}
+
+function import_author_rss($x) {
+
+	if(! $x['url'])
+		return false;
+
+	$r = q("select xchan_hash from xchan where xchan_network = 'rss' and xchan_url = '%s' limit 1",
+		dbesc($x['url'])
+	);
+	if($r) {
+		logger('import_author_rss: in cache' , LOGGER_DEBUG);
+		return $r[0]['xchan_hash'];
+	}
+	$name = trim($x['name']);
+
+	$r = q("insert into xchan ( xchan_hash, xchan_url, xchan_name, xchan_network ) 
+		values ( '%s', '%s', '%s', '%s' )",
+		dbesc($x['url']),
+		dbesc($x['url']),
+		dbesc(($name) ? $name : t('Unknown')),
+		dbesc('rss')
+	);
+	if($r) {
+
+		$photos = import_profile_photo($x['photo'],$x['url']);
+
+		if($photos) {
+			$r = q("update xchan set xchan_photo_date = '%s', xchan_photo_l = '%s', xchan_photo_m = '%s', xchan_photo_s = '%s', xchan_photo_mimetype = '%s' where xchan_url = '%s' and xchan_network = 'rss' limit 1",
+				dbesc(datetime_convert('UTC','UTC',$arr['photo_updated'])),
+				dbesc($photos[0]),
+				dbesc($photos[1]),
+				dbesc($photos[2]),
+				dbesc($photos[3]),
+				dbesc($x['url'])
+			);
+			if($r)
+				return $x['url'];
+		}
+	}
 
 	return false;
+	
 }
+
 
 function encode_item($item) {
 	$x = array();

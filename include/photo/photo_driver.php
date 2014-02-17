@@ -538,14 +538,20 @@ function import_profile_photo($photo,$xchan,$thing = false) {
 	}
 
 	$photo_failure = false;
+	$img_str = '';
 
+	if($photo) {
+		$filename = basename($photo);
+		$type = guess_image_type($photo,true);
 
-	$filename = basename($photo);
-	$type = guess_image_type($photo,true);
-	$result = z_fetch_url($photo,true);
+		if(! $type)
+			$type = 'image/jpeg';
 
-	if($result['success'])
-		$img_str = $result['body'];
+		$result = z_fetch_url($photo,true);
+
+		if($result['success'])
+			$img_str = $result['body'];
+	}
 
 	$img = photo_factory($img_str, $type);
 	if($img->is_valid()) {
