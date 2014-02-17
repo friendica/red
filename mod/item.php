@@ -489,6 +489,7 @@ function item_post(&$a) {
 		$private_forum = false;
 
 		if(count($tags)) {
+			$first_access_tag = true;
 			foreach($tags as $tag) {
 
 				// If we already tagged 'Robert Johnson', don't try and tag 'Robert'.
@@ -508,6 +509,11 @@ function item_post(&$a) {
 				logger('handle_tag: ' . print_r($success,tue), LOGGER_DEBUG);
 				if(($access_tag) && (! $parent_item)) {
 					logger('access_tag: ' . $tag . ' ' . print_r($access_tag,true), LOGGER_DEBUG);
+					if ($first_access_tag) {
+						$str_contact_allow = '';
+						$str_group_allow = '';
+						$first_access_tag = false;
+					}
 					if(strpos($access_tag,'cid:') === 0) {
 						$str_contact_allow .= '<' . substr($access_tag,4) . '>';
 						$access_tag = '';	
