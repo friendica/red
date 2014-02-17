@@ -3638,26 +3638,6 @@ function posted_dates($uid,$wall) {
 }
 
 
-function posted_date_widget($url,$uid,$wall) {
-	$o = '';
-
-	if(! feature_enabled($uid,'archives'))
-		return $o;
-
-	$ret = posted_dates($uid,$wall);
-	if(! count($ret))
-		return $o;
-
-	$o = replace_macros(get_markup_template('posted_date_widget.tpl'),array(
-		'$title' => t('Archives'),
-		'$size' => ((count($ret) > 6) ? 6 : count($ret)),
-		'$url' => $url,
-		'$dates' => $ret
-	));
-	return $o;
-}
-
-
 function fetch_post_tags($items,$link = false) {
 
 	$tag_finder = array();

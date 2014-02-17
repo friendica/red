@@ -1072,7 +1072,7 @@ class RedBrowser extends DAV\Browser\Plugin {
      * @return string
      */
     protected function getAssetUrl($assetName) {
-        return '/cloud/?sabreAction=asset&assetName=' . urlencode($assetName);
+        return z_root() .'/cloud/?sabreAction=asset&assetName=' . urlencode($assetName);
     }
 
 }
