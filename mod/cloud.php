@@ -73,11 +73,11 @@ function cloud_init(&$a) {
 
 
 	$_SERVER['QUERY_STRING'] = str_replace(array('?f=','&f='),array('',''),$_SERVER['QUERY_STRING']);
-	$_SERVER['QUERY_STRING'] = preg_replace('/[\?&]zid=(.*?)([\?&]|$)/ism','',$_SERVER['QUERY_STRING']);
+	$_SERVER['QUERY_STRING'] = strip_zids($_SERVER['QUERY_STRING']);
 	$_SERVER['QUERY_STRING'] = preg_replace('/[\?&]davguest=(.*?)([\?&]|$)/ism','',$_SERVER['QUERY_STRING']);
 
 	$_SERVER['REQUEST_URI'] = str_replace(array('?f=','&f='),array('',''),$_SERVER['REQUEST_URI']);
-	$_SERVER['REQUEST_URI'] = preg_replace('/[\?&]zid=(.*?)([\?&]|$)/ism','',$_SERVER['REQUEST_URI']);
+	$_SERVER['REQUEST_URI'] = strip_zids($_SERVER['REQUEST_URI']);
 	$_SERVER['REQUEST_URI'] = preg_replace('/[\?&]davguest=(.*?)([\?&]|$)/ism','',$_SERVER['REQUEST_URI']);
 
 	$rootDirectory = new RedDirectory('/',$auth);

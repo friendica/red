@@ -939,6 +939,7 @@ function settings_content(&$a) {
 			'$pmacro1'    => t('Private - <em>default private, never open or public</em>'),
 			'$pmacro0'    => t('Blocked - <em>default blocked to/from everybody</em>'),
 			'$permiss_arr' => $permiss,
+			'$blocktags' => array('blocktags',t('Allow others to tag your posts'), 1-$blocktags, t('Often used by the community to retro-actively flag inappropriate content'),array(t('No'),t('Yes'))),
 
 			'$lbl_p2macro' => t('Advanced Privacy Settings'),
 

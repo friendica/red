@@ -22,8 +22,9 @@ require_once('include/crypto.php');
 function identity_check_service_class($account_id) {
 	$ret = array('success' => false, $message => '');
 	
-	$r = q("select count(channel_id) as total from channel where channel_account_id = %d ",
-		intval($account_id)
+	$r = q("select count(channel_id) as total from channel where channel_account_id = %d and not ( channel_pageflags & %d ) ",
+		intval($account_id),
+		intval(PAGE_REMOVED)
 	);
 	if(! ($r && count($r))) {
 		$ret['message'] = t('Unable to obtain identity information from database');
@@ -101,7 +102,7 @@ function get_sys_channel() {
 
 /**
  * @channel_total()
- *   Return the total number of channels on this site. No filtering is performed.
+ *   Return the total number of channels on this site. No filtering is performed except to check PAGE_REMOVED
  *
  * @returns int 
  *   on error returns boolean false
@@ -109,7 +110,10 @@ function get_sys_channel() {
  */
 
 function channel_total() {
-	$r = q("select channel_id from channel where true");
+	$r = q("select channel_id from channel where not ( channel_pageflags & %d )",
+		intval(PAGE_REMOVED)
+	);
+
 	if(is_array($r))
 		return count($r);
 	return false;

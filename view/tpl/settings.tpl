@@ -59,9 +59,13 @@
 
 </div>
 <div class="settings-common-perms">
+
+
 {{$profile_in_dir}}
 
 {{$suggestme}}
+
+{{include file="field_yesno.tpl" field=$blocktags}}
 
 {{include file="field_input.tpl" field=$maxreq}}
 

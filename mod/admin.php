@@ -706,9 +706,10 @@ function admin_page_users(&$a){
 
 	$users =q("SELECT `account_id` , `account_email`, `account_lastlog`, `account_created`, `account_expires`, " . 			"`account_service_class`, ( account_flags & %d ) > 0 as `blocked`, " .
 			"(SELECT GROUP_CONCAT( ch.channel_address SEPARATOR ' ') FROM channel as ch " .
-			"WHERE ch.channel_account_id = ac.account_id) as `channels` " .
+			"WHERE ch.channel_account_id = ac.account_id and not (ch.channel_pageflags & %d )) as `channels` " .
 		"FROM account as ac where true $serviceclass $order limit %d , %d ",
-		intval(ACCOUNT_BLOCKED),		
+		intval(ACCOUNT_BLOCKED),
+		intval(PAGE_REMOVED),		
 		intval($a->pager['start']),
 		intval($a->pager['itemspage'])
 	);

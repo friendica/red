@@ -145,7 +145,9 @@ function can_comment_on_post($observer_xchan,$item) {
  * @function red_zrl_callback
  *   preg_match function when fixing 'naked' links in mod item.php
  *   Check if we've got a hubloc for the site and use a zrl if we do, a url if we don't. 
- * 
+ *   Remove any existing zid= param which may have been pasted by mistake - and will have
+ *   the author's credentials. zid's are dynamic and can't really be passed around like
+ *   that.
  */
 
 
@@ -159,6 +161,13 @@ function red_zrl_callback($matches) {
 		if($r)
 			$zrl = true;
 	}
+
+	$t = strip_zids($matches[2]);
+	if($t !== $matches[2]) {
+		$zrl = true;
+		$matches[2] = $t;
+	}
+
 	if($matches[1] === '#^')
 		$matches[1] = '';
 	if($zrl)
@@ -2254,6 +2263,13 @@ function tag_deliver($uid,$item_id) {
 						if(is_array($j_obj['link']))
 							$taglink = get_rel_link($j_obj['link'],'alternate');
 						store_item_tag($u[0]['channel_id'],$p[0]['id'],TERM_OBJ_POST,TERM_HASHTAG,$j_obj['title'],$j_obj['id']);
+						$x = q("update item set edited = '%s', received = '%s', changed = '%s' where mid = '%s' and uid = %d limit 1",
+							dbesc(datetime_convert()),
+							dbesc(datetime_convert()),
+							dbesc(datetime_convert()),
+							dbesc($j_tgt['id']),
+							intval($u[0]['channel_id'])
+						);		
 						proc_run('php','include/notifier.php','edit_post',$p[0]['id']);
 					}
 				}
@@ -3619,26 +3635,6 @@ function posted_dates($uid,$wall) {
 		$dnow = datetime_convert('','',$dnow . ' -1 month', 'Y-m-d');
 	}
 	return $ret;
-}
-
-
-function posted_date_widget($url,$uid,$wall) {
-	$o = '';
-
-	if(! feature_enabled($uid,'archives'))
-		return $o;
-
-	$ret = posted_dates($uid,$wall);
-	if(! count($ret))
-		return $o;
-
-	$o = replace_macros(get_markup_template('posted_date_widget.tpl'),array(
-		'$title' => t('Archives'),
-		'$size' => ((count($ret) > 6) ? 6 : count($ret)),
-		'$url' => $url,
-		'$dates' => $ret
-	));
-	return $o;
 }
 
 

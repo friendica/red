@@ -1574,8 +1574,13 @@ function proc_run($cmd){
 		$args[$x] = escapeshellarg($args[$x]);
 
 	$cmdline = implode($args," ");
-	if(is_windows())
-		proc_close(proc_open('cmd /c start /b ' . $cmdline,array(),$foo));
+
+
+	if(is_windows()) {
+		$cwd = getcwd();
+		$cmd = "cmd /c start \"title\" /D \"$cwd\" /b $cmdline";
+		proc_close(proc_open($cmd, array(), $foo));
+	}
 	else
 		proc_close(proc_open($cmdline." &",array(),$foo));
 }

@@ -92,7 +92,7 @@ if((x($_SESSION,'language')) && ($_SESSION['language'] !== $lang)) {
 }
 
 if((x($_GET,'zid')) && (! $a->install)) {
-	$a->query_string = preg_replace('/[\?&]zid=(.*?)([\?&]|$)/is','',$a->query_string);
+	$a->query_string = strip_zids($a->query_string);
 	if(! local_user()) {
 		$_SESSION['my_address'] = $_GET['zid'];
 		zid_init($a);

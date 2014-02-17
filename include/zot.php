@@ -1064,7 +1064,9 @@ function zot_import($arr, $sender_url) {
 				}
 				stringify_array_elms($recip_arr);
 				$recips = implode(',',$recip_arr);
-				$r = q("select channel_hash as hash from channel where channel_hash in ( " . $recips . " ) ");
+				$r = q("select channel_hash as hash from channel where channel_hash in ( " . $recips . " ) and not ( channel_pageflags & %d ) ",
+					intval(PAGE_REMOVED)
+				);
 				if(! $r) {
 					logger('recips: no recipients on this site');
 					continue;
@@ -1222,8 +1224,7 @@ function public_recips($msg) {
 	if(! $r)
 		$r = array();
 
-	$x = q("select channel_hash as hash from channel left join abook on abook_channel = channel_id where abook_xchan = '%s'
-		and (( " . $col . " & " . PERMS_SPECIFIC . " )  and ( abook_my_perms & " . $field . " )) OR ( " . $col . " & " . PERMS_CONTACTS . " ) ",
+	$x = q("select channel_hash as hash from channel left join abook on abook_channel = channel_id where abook_xchan = '%s' and not ( channel_pageflags & " . PAGE_REMOVED . " ) and (( " . $col . " & " . PERMS_SPECIFIC . " )  and ( abook_my_perms & " . $field . " )) OR ( " . $col . " & " . PERMS_CONTACTS . " ) ",
 		dbesc($msg['notify']['sender']['hash'])
 	); 
 
@@ -1304,8 +1305,9 @@ function allowed_public_recips($msg) {
 			$condensed_recips[] = $rr['hash'];
 
 		$results = array();
-		$r = q("select channel_hash as hash from channel left join abook on abook_channel = channel_id where abook_xchan = '%s' ",
-			dbesc($hash)
+		$r = q("select channel_hash as hash from channel left join abook on abook_channel = channel_id where abook_xchan = '%s' and not ( channel_pageflags & %d ) ",
+			dbesc($hash),
+			intval(PAGE_REMOVED)
 		);
 		if($r) {
 			foreach($r as $rr)
