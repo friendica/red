@@ -1137,7 +1137,7 @@ function get_default_profile_photo($size = 175) {
  */
 
 function is_foreigner($s) {
-	return((strpbrk($s,':@')) ? true : false);
+	return((strpbrk($s,'.:@')) ? true : false);
 }
 
 
