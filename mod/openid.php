@@ -52,12 +52,6 @@ function openid_content(&$a) {
 			}
 
 			// Successful OpenID login - but we can't match it to an existing account.
-			// New registration?
-
-//			if($a->config['register_policy'] == REGISTER_CLOSED) {
-				notice( t('Account not found and OpenID registration is not permitted on this site.') . EOL);
-				goaway(z_root());
-//			}
 
 			$r = q("select * from xchan where xchan_hash = '%s' limit 1",
 				dbesc($authid)
