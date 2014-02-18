@@ -6,7 +6,7 @@ require_once('include/auth.php');
 
 function openid_content(&$a) {
 
-	$noid = get_config('system','no_openid');
+	$noid = get_config('system','disable_openid');
 	if($noid)
 		goaway(z_root());
 

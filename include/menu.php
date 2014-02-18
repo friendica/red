@@ -38,7 +38,7 @@ function menu_render($menu, $edit = false) {
 
 	return replace_macros(get_markup_template('usermenu.tpl'),array(
 		'$menu' => $menu['menu'],
-		'$edit' => $edit,
+		'$edit' => (($edit) ? t("Edit") : ''),
 		'$items' => $menu['items']
 	));
 }
