@@ -1104,6 +1104,11 @@ function get_theme_uid() {
 		if(! $uid)
 			return local_user();
 	}
+	if(! $uid) {
+		$x = get_sys_channel();
+		if($x)
+			return $x['channel_id'];
+	}	
 	return $uid;
 }
 
