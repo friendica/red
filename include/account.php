@@ -401,3 +401,55 @@ function user_deny($hash) {
 	return true;
 	
 }
+
+
+/**
+ * @function downgrade_accounts()
+ *    Checks for accounts that have past their expiration date.
+ * If the account has a service class which is not the site default, 
+ * the service class is reset to the site default and expiration reset to never.
+ * If the account has no service class it is expired and subsequently disabled.
+ * called from include/poller.php as a scheduled task.
+ *
+ * Reclaiming resources which are no longer within the service class limits is
+ * not the job of this function, but this can be implemented by plugin if desired. 
+ * Default behaviour is to stop allowing additional resources to be consumed. 
+ */
+ 
+
+function downgrade_accounts() {
+
+	$r = q("select * from account where not ( account_flags & %d ) 
+		and account_expires != '0000-00-00 00:00:00' 
+		and account_expires < UTC_TIMESTAMP() ",
+		intval(ACCOUNT_EXPIRED)
+	);
+
+	if(! $r)
+		return;
+
+	$basic = get_config('system','default_service_class');
+
+
+	foreach($r as $rr) {
+
+		if(($basic) && ($rr['account_service_class']) && ($rr['account_service_class'] != $basic)) {
+			$x = q("UPDATE account set account_service_class = '%s', account_expires = '%s'
+				where account_id = %d limit 1",
+				dbesc($basic),
+				dbesc('0000-00-00 00:00:00'),
+				intval($rr['account_id'])
+			);
+			call_hooks('account_downgrade', array('account' => $rr));
+			logger('downgrade_accounts: Account id ' . $rr['account_id'] . ' downgraded.');
+		}
+		else {
+			$x = q("UPDATE account SET account_flags = (account_flags | %d) where account_id = %d limit 1",
+				intval(ACCOUNT_EXPIRED),
+				intval($rr['account_id'])
+			);
+			call_hooks('account_downgrade', array('account' => $rr));
+			logger('downgrade_accounts: Account id ' . $rr['account_id'] . ' expired.');
+		}
+	}
+}
