@@ -89,7 +89,7 @@ function get_all_perms($uid,$observer_xchan,$internal_use = true) {
 
 		if($observer_xchan) {
 			if(! $abook_checked) {
-				$x = q("select abook_my_perms, abook_flags from abook 
+				$x = q("select abook_my_perms, abook_flags, xchan_network from abook left join xchan on abook_xchan = xchan_hash
 					where abook_channel = %d and abook_xchan = '%s' and not ( abook_flags & %d ) limit 1",
 					intval($uid),
 					dbesc($observer_xchan),
@@ -137,9 +137,9 @@ function get_all_perms($uid,$observer_xchan,$internal_use = true) {
 			continue;
 		}
 
-		// If we're still here, we have an observer, which means they're in the network.
+		// If we're still here, we have an observer, check the network.
 
-		if($r[0][$channel_perm] & PERMS_NETWORK) {
+		if(($r[0][$channel_perm] & PERMS_NETWORK) && ($x[0]['xchan_network'] === 'zot')) {
 			$ret[$perm_name] = true;
 			continue;
 		}
@@ -240,7 +240,8 @@ function perm_is_allowed($uid,$observer_xchan,$permission) {
 		return false;
 
 	if($observer_xchan) {
-		$x = q("select abook_my_perms, abook_flags from abook where abook_channel = %d and abook_xchan = '%s' and not ( abook_flags & %d ) limit 1",
+		$x = q("select abook_my_perms, abook_flags, xchan_network from abook left join xchan on abook_xchan = xchan_hash 
+			where abook_channel = %d and abook_xchan = '%s' and not ( abook_flags & %d ) limit 1",
 			intval($uid),
 			dbesc($observer_xchan),
 			intval(ABOOK_FLAG_SELF)
@@ -272,9 +273,9 @@ function perm_is_allowed($uid,$observer_xchan,$permission) {
 		return false;
 	}
 
-	// If we're still here, we have an observer, which means they're in the network.
+	// If we're still here, we have an observer, check the network.
 
-	if($r[0][$channel_perm] & PERMS_NETWORK)
+	if(($r[0][$channel_perm] & PERMS_NETWORK) && ($x[0]['xchan_network'] === 'zot'))
 		return true;
 
 

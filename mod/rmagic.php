@@ -22,31 +22,45 @@ function rmagic_init(&$a) {
 
 function rmagic_post(&$a) {
 
-	$address = $_REQUEST['address'];
-	if(strpos($address,'@') === false) {
-		notice('Invalid address.');
+	$address = trim($_REQUEST['address']);
+	$other = intval($_REQUEST['other']);
+
+	if($other) {
+		$arr = array('address' => $address);
+		call_hooks('reverse_magic_auth', $arr);		
+
+
+		// if they're still here...
+		notice( t('Authentication failed.') . EOL);		
 		return;
 	}
-
-	$r = null;
-	if($address) {
-		$r = q("select hubloc_url from hubloc where hubloc_addr = '%s' limit 1",
-			dbesc($address)
-		);		
-	}
-	if($r) {
-		$url = $r[0]['hubloc_url'];
-	}
 	else {
-		$url = 'https://' . substr($address,strpos($address,'@')+1);
-	}	
 
-	if($url) {	
-		$dest = z_root() . '/' . str_replace('zid=','zid_=',$a->query_string);
-		goaway($url . '/magic' . '?f=&dest=' . $dest);
+		// Presumed Red identity. Perform reverse magic auth
+
+		if(strpos($address,'@') === false) {
+			notice('Invalid address.');
+			return;
+		}
+
+		$r = null;
+		if($address) {
+			$r = q("select hubloc_url from hubloc where hubloc_addr = '%s' limit 1",
+				dbesc($address)
+			);		
+		}
+		if($r) {
+			$url = $r[0]['hubloc_url'];
+		}
+		else {
+			$url = 'https://' . substr($address,strpos($address,'@')+1);
+		}	
+
+		if($url) {	
+			$dest = z_root() . '/' . str_replace('zid=','zid_=',$a->query_string);
+			goaway($url . '/magic' . '?f=&dest=' . $dest);
+		}
 	}
-
-
 }
 
 
