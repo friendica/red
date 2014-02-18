@@ -230,3 +230,13 @@ else {
 		authenticate_success($record, true, true);
 	}
 }
+
+
+function match_openid($authid) {
+	$r = q("select * from pconfig where cat = 'system' and k = 'openid' ");
+	if($r)
+		foreach($r as $rr)
+			if($rr['v'] === $authid)
+				return $rr['uid'];
+	return false;
+}					
