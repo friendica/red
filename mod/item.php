@@ -453,6 +453,16 @@ function item_post(&$a) {
 		 * the post and we should keep it private. If it's encrypted we have no way of knowing
 		 * so we'll set the permissions regardless and realise that the media may not be 
 		 * referenced in the post. 
+		 *
+		 * What is preventing us from being able to upload photos into comments is dealing with
+		 * the photo and attachment permissions, since we don't always know who was in the 
+		 * distribution for the top level post.
+		 * 
+		 * We might be able to provide this functionality with a lot of fiddling:
+		 * - if the top level post is public (make the photo public)
+		 * - if the top level post was written by us or a wall post that belongs to us (match the top level post)
+		 * - if the top level post has privacy mentions, add those to the permissions.
+		 * - otherwise disallow the photo *or* make the photo public. This is the part that gets messy. 
 		 */
 
 		if(! $preview) {

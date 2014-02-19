@@ -32,16 +32,6 @@ function poller_run($argv, $argc){
 
 	proc_run('php',"include/queue.php");
 	
-	// expire any expired accounts
-
-	q("UPDATE account 
-		SET account_flags = (account_flags | %d) 
-		where not (account_flags & %d) 
-		and account_expires != '0000-00-00 00:00:00' 
-		and account_expires < UTC_TIMESTAMP() ",
-		intval(ACCOUNT_EXPIRED),
-		intval(ACCOUNT_EXPIRED)
-	);
 
 	// expire any expired mail
 
@@ -115,6 +105,9 @@ function poller_run($argv, $argc){
 
 		q("delete from notify where seen = 1 and date < UTC_TIMESTAMP() - INTERVAL 30 DAY");
 
+		// expire any expired accounts
+		require_once('include/account.php');
+		downgrade_accounts();
 
 		// If this is a directory server, request a sync with an upstream
 		// directory at least once a day, up to once every poll interval. 

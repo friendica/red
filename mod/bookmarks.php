@@ -57,7 +57,7 @@ function bookmarks_content(&$a) {
 	if($x) {
 		foreach($x as $xx) {
 			$y = menu_fetch($xx['menu_name'],local_user(),get_observer_hash());
-			$o .= menu_render($y);
+			$o .= menu_render($y,true);
 		}
 	}
 
@@ -69,7 +69,7 @@ function bookmarks_content(&$a) {
 	if($x) {
 		foreach($x as $xx) {
 			$y = menu_fetch($xx['menu_name'],local_user(),get_observer_hash());
-			$o .= menu_render($y);
+			$o .= menu_render($y,true);
 		}
 	}
 

@@ -2,6 +2,9 @@
 {{if $menu.menu_desc}}
   <h3 class="pmenu-title">{{$menu.menu_desc}}</h3>
 {{/if}}
+{{if $edit}}
+<a href="mitem/{{$menu.menu_id}}" title="{{$edit}}"><i class="icon-pencil fakelink" title="{{$edit}}"></i></a>
+{{/if}}
 {{if $items }}
 <ul class="pmenu-body">
 {{foreach $items as $mitem }}

@@ -1324,24 +1324,15 @@ function prepare_text($text,$content_type = 'text/bbcode') {
 
 
 function zidify_callback($match) {
-	if (feature_enabled(local_user(),'sendzid')) {
-		$replace = '<a' . $match[1] . ' href="' . zid($match[2]) . '"';
-	}
-	else {
-		$replace = '<a' . $match[1] . 'class="zrl"' . $match[2] . ' href="' . zid($match[3]) . '"';
-	}
-
+	$is_zid = ((feature_enabled(local_user(),'sendzid')) || (strpos($match[1],'zrl')) ? true : false);
+	$replace = '<a' . $match[1] . ' href="' . (($is_zid) ? zid($match[2]) : $match[2]) . '"';			
 	$x = str_replace($match[0],$replace,$match[0]);
 	return $x;
 }
 
 function zidify_img_callback($match) {
-  if (feature_enabled(local_user(),'sendzid')) {
-	$replace = '<img' . $match[1] . ' src="' . zid($match[2]) . '"';
-	}
-	else {
-	  $replace = '<img' . $match[1] . ' src="' . zid($match[2]) . '"';
-	}
+	$is_zid = ((feature_enabled(local_user(),'sendzid')) || (strpos($match[1],'zrl')) ? true : false);
+	$replace = '<img' . $match[1] . ' src="' . (($is_zid) ? zid($match[2]) : $match[2]) . '"';
     
 	$x = str_replace($match[0],$replace,$match[0]);
 	return $x;
@@ -1349,22 +1340,10 @@ function zidify_img_callback($match) {
 
 
 function zidify_links($s) {
-	if(feature_enabled(local_user(),'sendzid')) {
-		$s = preg_replace_callback('/\<a(.*?)href\=\"(.*?)\"/ism','zidify_callback',$s);
-		$s = preg_replace_callback('/\<img(.*?)src\=\"(.*?)\"/ism','zidify_img_callback',$s);
-	}
-    else {
-		$s = preg_replace_callback('/\<a(.*?)class\=\"zrl\"(.*?)href\=\"(.*?)\"/ism','zidify_callback',$s);
-		$s = preg_replace_callback('/\<img class\=\"zrl\"(.*?)src\=\"(.*?)\"/ism','zidify_img_callback',$s);
-// FIXME - remove the following line and redo the regex for the prev line once all Red images are converted to zmg
-		$s = preg_replace_callback('/\<img(.*?)src\=\"(.*?)\"/ism','zidify_img_callback',$s);
-	}
-
+	$s = preg_replace_callback('/\<a(.*?)href\=\"(.*?)\"/ism','zidify_callback',$s);
+	$s = preg_replace_callback('/\<img(.*?)src\=\"(.*?)\"/ism','zidify_img_callback',$s);
 	return $s;
 }
-
-
-
 
 
 
@@ -1922,5 +1901,9 @@ function design_tools() {
 
 function in_arrayi($needle, $haystack) {
 	return in_array(strtolower($needle), array_map('strtolower', $haystack));
+}
+
+function normalise_openid($s) {
+	return trim(str_replace(array('http://','https://'),array('',''),$s),'/');
 }
 

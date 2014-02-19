@@ -1104,6 +1104,11 @@ function get_theme_uid() {
 		if(! $uid)
 			return local_user();
 	}
+	if(! $uid) {
+		$x = get_sys_channel();
+		if($x)
+			return $x['channel_id'];
+	}	
 	return $uid;
 }
 
@@ -1137,7 +1142,7 @@ function get_default_profile_photo($size = 175) {
  */
 
 function is_foreigner($s) {
-	return((strpbrk($s,':@')) ? true : false);
+	return((strpbrk($s,'.:@')) ? true : false);
 }
 
 
