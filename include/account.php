@@ -440,7 +440,8 @@ function downgrade_accounts() {
 				dbesc('0000-00-00 00:00:00'),
 				intval($rr['account_id'])
 			);
-			call_hooks('account_downgrade', array('account' => $rr));
+			$ret = array('account' => $rr);
+			call_hooks('account_downgrade', $ret );
 			logger('downgrade_accounts: Account id ' . $rr['account_id'] . ' downgraded.');
 		}
 		else {
@@ -448,8 +449,10 @@ function downgrade_accounts() {
 				intval(ACCOUNT_EXPIRED),
 				intval($rr['account_id'])
 			);
-			call_hooks('account_downgrade', array('account' => $rr));
+			$ret = array('account' => $rr);
+			call_hooks('account_downgrade', $ret);
 			logger('downgrade_accounts: Account id ' . $rr['account_id'] . ' expired.');
 		}
 	}
 }
+

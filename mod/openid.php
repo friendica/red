@@ -52,8 +52,9 @@ function openid_content(&$a) {
 			}
 
 			// Successful OpenID login - but we can't match it to an existing account.
+			// See if they've got an xchan
 
-			$r = q("select * from xchan where xchan_hash = '%s' limit 1",
+			$r = q("select * from xconfig left join xchan on xchan_hash = xconfig.xchan where cat = 'system' and k = 'openid' and v = '%s' limit 1",
 				dbesc($authid)
 			);				
 
@@ -73,7 +74,22 @@ function openid_content(&$a) {
 				goaway(z_root());
 			}
 
+			// no xchan...
+			// create one.
+			// We should probably probe the openid url.
+
+			$name = $authid;
+			$url = $_REQUEST['openid_identity'];
+			if(strpos($url,'http') === false)
+				$url = 'https://' . $url;
+			$pphoto = get_default_profile_photo();
+			$parsed = @parse_url($url);
+			if($parsed) {
+				$host = $parsed['host'];
+			}
+
 			$attr = $openid->getAttributes();
+
 			if(is_array($attr) && count($attr)) {
 				foreach($attr as $k => $v) {
 					if($k === 'namePerson/friendly')
@@ -81,30 +97,37 @@ function openid_content(&$a) {
 					if($k === 'namePerson/first')
 						$first = notags(trim($v));
 					if($k === 'namePerson')
-						$args .= '&username=' . notags(trim($v));
+						$name = notags(trim($v));
 					if($k === 'contact/email')
-						$args .= '&email=' . notags(trim($v));
+						$addr = notags(trim($v));
 					if($k === 'media/image/aspect11')
-						$photosq = bin2hex(trim($v));
+						$photosq = trim($v);
 					if($k === 'media/image/default')
-						$photo = bin2hex(trim($v));
+						$photo_other = trim($v);
 				}
 			}
-			if($nick)
-				$args .= '&nickname=' . $nick;
-			elseif($first)
-				$args .= '&nickname=' . $first;
+			if(! $nick) {
+				if($first)
+					$nick = $first;
+				else
+					$nick = $name;
+			}
 
+			require_once('library/urlify/URLify.php');
+			$x = strtolower(URLify::transliterate($nick));
+			if(! $addr)
+				$addr = $nick . '@' . $host;
+			$network = 'unknown';
+			
 			if($photosq)
-				$args .= '&photo=' . $photosq;
+				$pphoto = $photosq;
 			elseif($photo)
-				$args .= '&photo=' . $photo;
+				$pphoto = $photo;
 
-			$args .= '&openid_url=' . notags(trim($authid));
-
-			goaway($a->get_baseurl() . '/register' . $args);
+			// add the xchan record and xconfig for the openid
 
 			// NOTREACHED
+			// actually it is reached until the other bits get written
 		}
 	}
 	notice( t('Login failed.') . EOL);

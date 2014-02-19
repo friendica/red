@@ -233,10 +233,10 @@ else {
 
 
 function match_openid($authid) {
-	$r = q("select * from pconfig where cat = 'system' and k = 'openid' ");
+	$r = q("select * from pconfig where cat = 'system' and k = 'openid' and v = '%s' limit 1",
+		dbesc($authid)
+	);
 	if($r)
-		foreach($r as $rr)
-			if($rr['v'] === $authid)
-				return $rr['uid'];
+		return $r[0]['uid'];
 	return false;
 }					
