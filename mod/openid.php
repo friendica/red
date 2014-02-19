@@ -76,10 +76,11 @@ function openid_content(&$a) {
 
 			// no xchan...
 			// create one.
-			// We should probably probe the openid url.
+			// We should probably probe the openid url and figure out if they have any kind of social presence we might be able to 
+			// scrape some identifying info from. 
 
 			$name = $authid;
-			$url = $_REQUEST['openid_identity'];
+			$url = trim($_REQUEST['openid_identity'],'/');
 			if(strpos($url,'http') === false)
 				$url = 'https://' . $url;
 			$pphoto = get_default_profile_photo();
@@ -115,19 +116,70 @@ function openid_content(&$a) {
 
 			require_once('library/urlify/URLify.php');
 			$x = strtolower(URLify::transliterate($nick));
-			if(! $addr)
+			if($nick & $host)
 				$addr = $nick . '@' . $host;
 			$network = 'unknown';
 			
 			if($photosq)
 				$pphoto = $photosq;
-			elseif($photo)
-				$pphoto = $photo;
+			elseif($photo_other)
+				$pphoto = $photo_other;
 
-			// add the xchan record and xconfig for the openid
+	        $x = q("insert into xchan ( xchan_hash, xchan_guid, xchan_guid_sig, xchan_pubkey, xchan_photo_mimetype,
+                xchan_photo_l, xchan_addr, xchan_url, xchan_connurl, xchan_follow, xchan_connpage, xchan_name, xchan_network, xchan_photo_date, 
+				xchan_name_date, xchan_flags)
+                values ( '%s', '%s', '%s', '%s' , '%s', '%s', '%s', '%s', '%s', '%s', '%s', '%s', '%s', '%s', '%s', %d) ",
+	            dbesc($url),
+    	        dbesc(''),
+        	    dbesc(''),
+            	dbesc(''),
+	            dbesc('image/jpeg'),
+    	        dbesc($pphoto),
+        	    dbesc($addr),
+            	dbesc($url),
+	            dbesc(''),
+    	        dbesc(''),
+        	    dbesc(''),
+            	dbesc($name),
+	            dbesc($network),
+    	        dbesc(datetime_convert()),
+        	    dbesc(datetime_convert()),
+            	intval(XCHAN_FLAGS_HIDDEN)
+        	);
+			if($x) {
+				$r = q("select * from xchan where xchan_hash = '%s' limit 1",
+					dbesc($url)
+				);
+				if($r) {
 
-			// NOTREACHED
-			// actually it is reached until the other bits get written
+					$photos = import_profile_photo($pphoto,$url);
+					if($photos) {
+						$z = q("update xchan set xchan_photo_date = '%s', xchan_photo_l = '%s', xchan_photo_m = '%s', 
+							xchan_photo_s = '%s', xchan_photo_mimetype = '%s' where xchan_hash = '%s' limit 1",
+							dbesc(datetime_convert()),
+							dbesc($photos[0]),
+							dbesc($photos[1]),
+							dbesc($photos[2]),
+							dbesc($photos[3]),
+							dbesc($url)
+	            		);
+					}
+
+					set_xconfig($url,'system','openid',$authid);
+					$_SESSION['authenticated'] = 1;
+					$_SESSION['visitor_id'] = $r[0]['xchan_hash'];
+					$_SESSION['my_address'] = $r[0]['xchan_addr'];
+					$arr = array('xchan' => $r[0], 'session' => $_SESSION);
+					call_hooks('magic_auth_openid_success',$arr);
+					$a->set_observer($r[0]);
+					info(sprintf( t('Welcome %s. Remote authentication successful.'),$r[0]['xchan_name']));
+					logger('mod_openid: remote auth success from ' . $r[0]['xchan_addr']); 
+					if($_SESSION['return_url'])
+						goaway($_SESSION['return_url']);
+					goaway(z_root());
+				}
+			}
+
 		}
 	}
 	notice( t('Login failed.') . EOL);

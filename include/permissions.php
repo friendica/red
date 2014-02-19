@@ -88,6 +88,11 @@ function get_all_perms($uid,$observer_xchan,$internal_use = true) {
 		// These take priority over all other settings.
 
 		if($observer_xchan) {
+			if($r[0][$channel_perm] & PERMS_AUTHED) {
+				$ret[$perm_name] = true;
+				continue;
+			}
+			
 			if(! $abook_checked) {
 				$x = q("select abook_my_perms, abook_flags, xchan_network from abook left join xchan on abook_xchan = xchan_hash
 					where abook_channel = %d and abook_xchan = '%s' and not ( abook_flags & %d ) limit 1",
@@ -240,6 +245,9 @@ function perm_is_allowed($uid,$observer_xchan,$permission) {
 		return false;
 
 	if($observer_xchan) {
+		if($r[0][$channel_perm] & PERMS_AUTHED)
+			return true;
+
 		$x = q("select abook_my_perms, abook_flags, xchan_network from abook left join xchan on abook_xchan = xchan_hash 
 			where abook_channel = %d and abook_xchan = '%s' and not ( abook_flags & %d ) limit 1",
 			intval($uid),
