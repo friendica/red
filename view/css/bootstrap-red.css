@@ -78,7 +78,7 @@ nav .badge {
 }
 
 nav .dropdown-menu {
-	top: 51px;
+	top: 50px;
 	max-height: 450px;
 	max-width: 300px;
 	overflow-y: auto;
