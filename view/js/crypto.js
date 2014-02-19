@@ -1,5 +1,4 @@
 
-
 function str_rot13 (str) {
   // http://kevin.vanzonneveld.net
   // +   original by: Jonas Raoni Soares Silva (http://www.jsfromhell.com)
@@ -43,7 +42,11 @@ function red_encrypt(alg, elem,text) {
 
 	// key and hint need to be localised
 
-	var enc_key = bin2hex(prompt(aStr['passphrase']));
+        var passphrase = prompt(aStr['passphrase']);
+        // let the user cancel this dialogue
+        if (passphrase == null)
+                return false;
+        var enc_key = bin2hex(passphrase);
 
 	// If you don't provide a key you get rot13, which doesn't need a key
 	// but consequently isn't secure.  
