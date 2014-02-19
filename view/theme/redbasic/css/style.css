@@ -210,7 +210,7 @@ header #banner {
   font-family: tahoma, "Lucida Sans", sans;
   color: $banner_colour;
   font-weight: bold;
-  margin: 14px;
+  margin-top: 14px;
 }
 
 header #banner a,
