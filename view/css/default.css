@@ -1,18 +1,8 @@
-
-nav {
-	height: 24px;
-	display: block;
-	position: fixed;
-	width: 100%;
-	z-index: 100;
-	background-color: #ff0000;
-}
-
 aside#region_1 {
 	display: block;
 	width: 210px;
 	position: absolute;
-	top: 48px;
+	top: 65px;
 	left: 0;
 	margin-left: 10px;
 }
@@ -24,7 +14,7 @@ aside input[type='text'] {
 
 section {
 	position: absolute;
-	top: 48px;
+	top: 65px;
 	left: 250px;
 	display: block;
 	right: 15px;

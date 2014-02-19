@@ -4,7 +4,7 @@
 </div>
 
 {{if $expert}}
-{{include file="field_select.tpl" field=$nav_colour}}
+{{* include file="field_select.tpl" field=$nav_colour *}}
 {{include file="field_input.tpl" field=$banner_colour}}
 {{include file="field_input.tpl" field=$link_colour}}
 {{include file="field_input.tpl" field=$bgcolour}}
@@ -19,7 +19,7 @@
 {{include file="field_input.tpl" field=$radius}}
 {{include file="field_input.tpl" field=$shadow}}
 {{include file="field_input.tpl" field=$converse_width}}
-{{include file="field_input.tpl" field=$nav_min_opacity}}
+{{* include file="field_input.tpl" field=$nav_min_opacity *}}
 {{include file="field_input.tpl" field=$top_photo}}
 {{include file="field_input.tpl" field=$reply_photo}}
 {{include file="field_checkbox.tpl" field=$sloppy_photos}}
