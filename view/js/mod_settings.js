@@ -72,12 +72,12 @@ function channel_privacy_macro(n) {
 		$('#id_profile_in_directory').val(0);
 	}
     if(n == 2) {
-        $('#id_view_stream option').eq(5).attr('selected','selected');
-        $('#id_view_profile option').eq(5).attr('selected','selected');
-        $('#id_view_photos option').eq(5).attr('selected','selected');
-        $('#id_view_contacts option').eq(5).attr('selected','selected');
-        $('#id_view_storage option').eq(5).attr('selected','selected');
-        $('#id_view_pages option').eq(5).attr('selected','selected');
+        $('#id_view_stream option').eq(6).attr('selected','selected');
+        $('#id_view_profile option').eq(6).attr('selected','selected');
+        $('#id_view_photos option').eq(6).attr('selected','selected');
+        $('#id_view_contacts option').eq(6).attr('selected','selected');
+        $('#id_view_storage option').eq(6).attr('selected','selected');
+        $('#id_view_pages option').eq(6).attr('selected','selected');
         $('#id_send_stream option').eq(2).attr('selected','selected');
         $('#id_post_wall option').eq(1).attr('selected','selected');
         $('#id_post_comments option').eq(2).attr('selected','selected');
@@ -95,12 +95,12 @@ function channel_privacy_macro(n) {
 		$('#id_profile_in_directory').val(1);
 	}
     if(n == 3) {
-        $('#id_view_stream option').eq(5).attr('selected','selected');
-        $('#id_view_profile option').eq(5).attr('selected','selected');
-        $('#id_view_photos option').eq(5).attr('selected','selected');
-        $('#id_view_contacts option').eq(5).attr('selected','selected');
-        $('#id_view_storage option').eq(5).attr('selected','selected');
-        $('#id_view_pages option').eq(5).attr('selected','selected');
+        $('#id_view_stream option').eq(6).attr('selected','selected');
+        $('#id_view_profile option').eq(6).attr('selected','selected');
+        $('#id_view_photos option').eq(6).attr('selected','selected');
+        $('#id_view_contacts option').eq(6).attr('selected','selected');
+        $('#id_view_storage option').eq(6).attr('selected','selected');
+        $('#id_view_pages option').eq(6).attr('selected','selected');
         $('#id_send_stream option').eq(4).attr('selected','selected');
         $('#id_post_wall option').eq(4).attr('selected','selected');
         $('#id_post_comments option').eq(4).attr('selected','selected');

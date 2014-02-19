@@ -798,6 +798,7 @@ function settings_content(&$a) {
 			array( t('Anybody in your address book'), PERMS_CONTACTS),
 			array( t('Anybody on this website'), PERMS_SITE),
 			array( t('Anybody in this network'), PERMS_NETWORK),
+			array( t('Anybody authenticated'), PERMS_AUTHED),
 			array( t('Anybody on the internet'), PERMS_PUBLIC)
 		);
 
@@ -979,7 +980,7 @@ function settings_content(&$a) {
 			'$h_descadvn' => t('Change the behaviour of this account for special situations'),
 			'$pagetype' => $pagetype,
 			'$expert' => feature_enabled(local_user(),'expert'),
-			'$hint' => t('Please enable expert mode (in Settings > Additional features) to adjust!'),
+			'$hint' => t('Please enable expert mode (in <a href="settings/features">Settings > Additional features</a>) to adjust!'),
 		
 		));
 

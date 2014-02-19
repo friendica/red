@@ -93,7 +93,7 @@ if((isset($_SESSION)) && (x($_SESSION,'authenticated')) && ((! (x($_POST,'auth-p
 			}
 		}
 
-		$r = q("select * from hubloc left join xchan on xchan_hash = hubloc_hash where hubloc_hash = '%s' limit 1",
+		$r = q("select * from xchan left join hubloc on xchan_hash = hubloc_hash where xchan_hash = '%s' limit 1",
 			dbesc($_SESSION['visitor_id'])
 		);
 		if($r) {
