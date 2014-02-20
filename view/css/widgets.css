@@ -109,6 +109,9 @@
 	opacity: 0;
 }
 
+li:hover .group-edit-icon {
+	opacity: 1;
+}
 /* affinity - slider */
 
 #main-slider {

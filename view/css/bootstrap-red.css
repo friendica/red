@@ -65,3 +65,51 @@ margin-left: 0px;
 float:none;
 margin-left:0px;
 }
+
+/* nav overrides */
+
+nav .badge {
+	position: relative;
+	top: -48px;
+	float: left;
+	font-size: 10px;
+	padding: 2px 6px;
+	cursor: pointer;
+}
+
+nav .dropdown-menu {
+	top: 50px;
+	max-height: 450px;
+	max-width: 300px;
+	overflow-y: auto;
+	margin-top: 0px;
+}
+
+nav .dropdown-menu .contactname {
+	padding-top: 2px;
+	font-weight: bold;
+	display: block;
+}
+
+nav .dropdown-menu img {
+	float: left;
+	margin-right: 5px;
+	width: 32px;
+	height: 32px;
+}
+
+nav .dropdown-menu li a {
+	overflow: hidden;
+	text-overflow: ellipsis;
+	line-height: 1em;
+	padding: 5px 10px;
+}
+
+nav .navbar-collapse {
+	max-height: 450px;
+}
+
+nav .navbar-right li:last-child {
+	padding-right: 20px;
+}
+/* nav overrides end */
