@@ -5994,7 +5994,7 @@ msgid "Don't show emoticons"
 msgstr "Emoticons nicht zeigen"
 
 #: ../../mod/settings.php:761
-msgid "View remote profiles as webpages"
+msgid "Do not view remote profiles in frames"
 msgstr ""
 
 #: ../../mod/settings.php:761

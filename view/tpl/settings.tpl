@@ -127,4 +127,23 @@
 <input type="submit" name="submit" class="settings-submit" value="{{$submit}}"{{if !$expert}} onclick="$('select').prop('disabled', false);"{{/if}} />
 </div>
 
+
+{{if $menus}}
+<h3 class="settings-heading">{{$lbl_misc}}</h3>
+
+<div id="settings-menu-desc">{{$menu_desc}}</div>
+<div class="settings-channel-menu-div">
+<select name="channel_menu" class="settings-channel-menu-sel">
+{{foreach $menus as $menu }}
+<option value="{{$menu.name}}" {{$menu.selected}} >{{$menu.name}} </option>
+{{/foreach}}
+</select>
+</div>
+<div class="settings-submit-wrapper" >
+<input type="submit" name="submit" class="settings-submit" value="{{$submit}}"{{if !$expert}} onclick="$('select').prop('disabled', false);"{{/if}} />
+</div>
+<div id="settings-channel-menu-end"></div>
+{{/if}}
+
+
 </div>

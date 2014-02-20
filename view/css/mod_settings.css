@@ -35,3 +35,17 @@
 	margin-bottom: 15px;
 }
 
+#settings-menu-desc {
+	font-weight: bold;
+	float: left;
+	width: 350px;
+}
+
+#settings-channel-menu-div select {
+	float: left;
+}
+
+#settings-channel-menu-end {
+	clear: both;
+	margin-bottom: 15px;
+}
