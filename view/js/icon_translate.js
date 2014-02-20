@@ -52,4 +52,5 @@ $(document).ready(function() {
 		$('.icon-circle-blank').addClass('');
 		$('.icon-circle').addClass('');
 		$('.icon-bookmark').addClass('');
+		$('.icon-fullscreen').addClass('');
 });

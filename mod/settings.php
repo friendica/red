@@ -261,7 +261,7 @@ function settings_post(&$a) {
 	$maxreq           = ((x($_POST,'maxreq'))     ? intval($_POST['maxreq'])             : 0);
 	$expire           = ((x($_POST,'expire'))     ? intval($_POST['expire'])             : 0);
 	$def_group          = ((x($_POST,'group-selection')) ? notags(trim($_POST['group-selection'])) : '');
-
+	$channel_menu     = ((x($_POST['channel_menu'])) ? htmlspecialchars_decode(trim($_POST['channel_menu'])) : '');
 
 	$expire_items     = ((x($_POST,'expire_items')) ? intval($_POST['expire_items'])	 : 0);
 	$expire_starred   = ((x($_POST,'expire_starred')) ? intval($_POST['expire_starred']) : 0);
@@ -403,7 +403,7 @@ function settings_post(&$a) {
 	set_pconfig(local_user(),'system','post_profilechange', $post_profilechange);
 	set_pconfig(local_user(),'system','blocktags',$blocktags);
 	set_pconfig(local_user(),'system','hide_online_status',$hide_presence);
-
+	set_pconfig(local_user(),'system','channel_menu',$channel_menu);
 
 	$r = q("update channel set channel_name = '%s', channel_pageflags = %d, channel_timezone = '%s', channel_location = '%s', channel_notifyflags = %d, channel_max_anon_mail = %d, channel_max_friend_req = %d, channel_expire_days = %d, channel_default_group = '%s', channel_r_stream = %d, channel_r_profile = %d, channel_r_photos = %d, channel_r_abook = %d, channel_w_stream = %d, channel_w_wall = %d, channel_w_tagwall = %d, channel_w_comment = %d, channel_w_mail = %d, channel_w_photos = %d, channel_w_chat = %d, channel_a_delegate = %d, channel_r_storage = %d, channel_w_storage = %d, channel_r_pages = %d, channel_w_pages = %d, channel_a_republish = %d, channel_a_bookmark = %d, channel_allow_cid = '%s', channel_allow_gid = '%s', channel_deny_cid = '%s', channel_deny_gid = '%s'  where channel_id = %d limit 1",
 		dbesc($username),
@@ -911,6 +911,18 @@ function settings_content(&$a) {
 		require_once('include/group.php');
 		$group_select = mini_group_select(local_user(),$channel['channel_default_group']);
 
+		require_once('include/menu.php');
+		$m1 = menu_list(local_user());
+		$menu = false;
+		if($m1) {
+			$menu = array();
+			$current = get_pconfig(local_user(),'system','channel_menu');
+			$menu[] = array('name' => '', 'selected' => ((! $current) ? true : false));
+			foreach($m1 as $m) {
+				$menu[] = array('name' => htmlspecialchars($m['menu_name'],ENT_COMPAT,'UTF-8'), 'selected' => (($m['menu_name'] === $current) ? ' selected="selected" ' : false));
+			}
+		}
+
 		$o .= replace_macros($stpl,array(
 			'$ptitle' 	=> t('Channel Settings'),
 
@@ -981,7 +993,9 @@ function settings_content(&$a) {
 			'$pagetype' => $pagetype,
 			'$expert' => feature_enabled(local_user(),'expert'),
 			'$hint' => t('Please enable expert mode (in <a href="settings/features">Settings > Additional features</a>) to adjust!'),
-		
+			'$lbl_misc' => t('Miscellaneous Settings'),
+			'$menus' => $menu,
+			'$menu_desc' => t('Personal menu to display in your channel pages'),		
 		));
 
 		call_hooks('settings_form',$o);
