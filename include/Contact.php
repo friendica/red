@@ -81,7 +81,7 @@ function vcard_from_xchan($xchan, $observer = null, $mode = '') {
 		if($a->poi) {
 			$xchan = $a->poi;
 		}
-		elseif($a->profile['channel_hash']) {
+		elseif(is_array($a->profile) && $a->profile['channel_hash']) {
 			$r = q("select * from xchan where xchan_hash = '%s' limit 1",
 				dbesc($a->profile['channel_hash'])
 			);
@@ -114,7 +114,7 @@ function vcard_from_xchan($xchan, $observer = null, $mode = '') {
 					
 	return replace_macros(get_markup_template('xchan_vcard.tpl'),array(
 		'$name'    => $xchan['xchan_name'],
-		'$photo'   => ((array_key_exists('photo',$a->profile)) ? $a->profile['photo'] : $xchan['xchan_photo_l']),
+		'$photo'   => ((is_array($a->profile) && array_key_exists('photo',$a->profile)) ? $a->profile['photo'] : $xchan['xchan_photo_l']),
 		'$follow'  => $xchan['xchan_addr'],
 		'$connect' => $connect,
 		'$newwin'  => (($mode === 'chanview') ? t('New window') : ''),
