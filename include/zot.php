@@ -748,6 +748,16 @@ function import_xchan($arr,$ud_flags = 1) {
 				}
 			}
 
+			if(! $location['sitekey']) {
+				logger('import_xchan: empty hubloc sitekey. ' . print_r($location,true));
+				continue;
+			}
+
+			// Catch some malformed entries from the past which still exist
+
+			if(strpos($location['address'],'/') !== false)
+				$location['address'] = substr($location['address'],0,strpos($location['address'],'/'));
+
 			// match as many fields as possible in case anything at all changed. 
 
 			$r = q("select * from hubloc where hubloc_hash = '%s' and hubloc_guid = '%s' and hubloc_guid_sig = '%s' and hubloc_url = '%s' and hubloc_url_sig = '%s' and hubloc_host = '%s' and hubloc_addr = '%s' and hubloc_callback = '%s' and hubloc_sitekey = '%s' ",
@@ -804,14 +814,6 @@ function import_xchan($arr,$ud_flags = 1) {
 				continue;
 			}
 
-			if(! $location['sitekey']) {
-				logger('import_xchan: empty hubloc sitekey. ' . print_r($location,true));
-				continue;
-			}
-
-			if(strpos($location['address'],'/') !== false)
-				$location['address'] = substr($location['address'],0,strpos($location['address'],'/'));
-
 			// new hub claiming to be primary. Make it so.
 
 			if(intval($location['primary'])) {
@@ -840,9 +842,11 @@ function import_xchan($arr,$ud_flags = 1) {
 			);
 			$what .= 'newhub ';
 			$changed = true;
+
 		}
 
 		// get rid of any hubs we have for this channel which weren't reported.
+
 		if($xisting) {
 			foreach($xisting as $x) {
 				if(! array_key_exists('updated',$x)) {
@@ -855,7 +859,6 @@ function import_xchan($arr,$ud_flags = 1) {
 				}
 			}
 		}
-
 	}
 
 	// Are we a directory server of some kind?

@@ -261,7 +261,7 @@ function settings_post(&$a) {
 	$maxreq           = ((x($_POST,'maxreq'))     ? intval($_POST['maxreq'])             : 0);
 	$expire           = ((x($_POST,'expire'))     ? intval($_POST['expire'])             : 0);
 	$def_group          = ((x($_POST,'group-selection')) ? notags(trim($_POST['group-selection'])) : '');
-	$channel_menu     = ((x($_POST['channel_menu'])) ? htmlspecialchars_decode(trim($_POST['channel_menu'])) : '');
+	$channel_menu     = ((x($_POST['channel_menu'])) ? htmlspecialchars_decode(trim($_POST['channel_menu']),ENT_QUOTES) : '');
 
 	$expire_items     = ((x($_POST,'expire_items')) ? intval($_POST['expire_items'])	 : 0);
 	$expire_starred   = ((x($_POST,'expire_starred')) ? intval($_POST['expire_starred']) : 0);
