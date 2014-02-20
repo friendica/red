@@ -1,7 +1,8 @@
-<?php /** @file */
+<?php
 
-/*
- * File/attach API with the potential for revision control.
+/** @file
+ *
+ * @brief File/attach API with the potential for revision control.
  *
  * TODO: a filesystem storage abstraction which maintains security (and 'data' contains a system filename
  * which is inaccessible from the web). This could get around PHP storage limits and store videos and larger
@@ -12,6 +13,15 @@
 require_once('include/permissions.php');
 require_once('include/security.php');
 
+/**
+ * @brief Guess the mimetype from file ending.
+ * 
+ * This function takes a file name and guess the mimetype from the
+ * filename extension.
+ * 
+ * @param $filename a string filename
+ * @return string The mimetype according to a file ending.
+ */
 function z_mime_content_type($filename) {
 
 	$mime_types = array(
@@ -80,8 +90,6 @@ function z_mime_content_type($filename) {
 		if (array_key_exists($ext, $mime_types)) {
 			return $mime_types[$ext];
 		}
-
-
 	}
 
 	return 'application/octet-stream';
@@ -89,7 +97,20 @@ function z_mime_content_type($filename) {
 }
 
 
-
+/**
+ * @brief Count files/attachments.
+ * 
+ * 
+ * @param $channel_id
+ * @param $observer
+ * @param $hash (optional)
+ * @param $filename (optional)
+ * @param $filetype (optional)
+ * @return array
+ * 	$ret['success'] boolean
+ * 	$ret['results'] amount of found results, or false
+ * 	$ret['message'] string with error messages if any
+ */
 function attach_count_files($channel_id, $observer, $hash = '', $filename = '', $filetype = '') {
 
 	$ret = array('success' => false);
@@ -121,6 +142,22 @@ function attach_count_files($channel_id, $observer, $hash = '', $filename = '', 
 
 }
 
+/**
+ * @brief Returns a list of files/attachments.
+ * 
+ * @param $channel_id
+ * @param $observer
+ * @param $hash (optional)
+ * @param $filename (optional)
+ * @param $filetype (optional)
+ * @param $orderby
+ * @param $start
+ * @param $entries
+ * @return array
+ * 	$ret['success'] boolean
+ * 	$ret['results'] array with results, or false
+ * 	$ret['message'] string with error messages if any
+ */
 function attach_list_files($channel_id, $observer, $hash = '', $filename = '', $filetype = '', $orderby = 'created desc', $start = 0, $entries = 0) {
 
 	$ret = array('success' => false);
@@ -157,10 +194,17 @@ function attach_list_files($channel_id, $observer, $hash = '', $filename = '', $
 
 }
 
-// Find an attachment by hash and revision. Returns the entire attach structure including data. 
-// This could exhaust memory so most useful only when immediately sending the data.  
-
-function attach_by_hash($hash,$rev = 0) {
+/**
+ * @brief Find an attachment by hash and revision.
+ * 
+ * Returns the entire attach structure including data.
+ * 
+ * This could exhaust memory so most useful only when immediately sending the data.
+ * 
+ * @param $hash
+ * @param $rev
+ */
+function attach_by_hash($hash, $rev = 0) {
 
 	$ret = array('success' => false);
 
@@ -181,7 +225,7 @@ function attach_by_hash($hash,$rev = 0) {
 		return $ret;
 	}
 
-	if(! perm_is_allowed($r[0]['uid'],get_observer_hash(),'view_storage')) {
+	if(! perm_is_allowed($r[0]['uid'], get_observer_hash(), 'view_storage')) {
 		$ret['message'] = t('Permission denied.');
 		return $ret;
 	}
@@ -190,14 +234,13 @@ function attach_by_hash($hash,$rev = 0) {
 
 	// Now we'll see if we can access the attachment
 
-
 	$r = q("SELECT * FROM attach WHERE hash = '%s' and uid = %d $sql_extra LIMIT 1",
 		dbesc($hash),
 		intval($r[0]['uid'])
 	);
 
 	if(! $r) {
-		$ret['message'] =  t('Permission denied.');
+		$ret['message'] = t('Permission denied.');
 		return $ret;
 	}
 
@@ -207,9 +250,16 @@ function attach_by_hash($hash,$rev = 0) {
 
 }
 
-
-
-function attach_by_hash_nodata($hash,$rev = 0) {
+/**
+ * @brief Find an attachment by hash and revision.
+ * 
+ * Returns the entire attach structure excluding data.
+ * 
+ * @see attach_by_hash()
+ * @param $hash
+ * @param $ref
+ */
+function attach_by_hash_nodata($hash, $rev = 0) {
 
 	$ret = array('success' => false);
 
@@ -244,7 +294,7 @@ function attach_by_hash_nodata($hash,$rev = 0) {
 	);
 
 	if(! $r) {
-		$ret['message'] =  t('Permission denied.');
+		$ret['message'] = t('Permission denied.');
 		return $ret;
 	}
 
@@ -254,17 +304,21 @@ function attach_by_hash_nodata($hash,$rev = 0) {
 
 }
 
-
-
-
-function attach_store($channel,$observer_hash,$options = '',$arr = null) {
-
+/**
+ * @brief 
+ *
+ * @param $channel channel array of owner
+ * @param $observer_hash hash of current observer
+ * @param $options (optional)
+ * @param $arr (optional)
+ */
+function attach_store($channel, $observer_hash, $options = '', $arr = null) {
 
 	$ret = array('success' => false);
 	$channel_id = $channel['channel_id'];
 	$sql_options = '';
 
-	if(! perm_is_allowed($channel_id,get_observer_hash(),'write_storage')) {
+	if(! perm_is_allowed($channel_id,get_observer_hash(), 'write_storage')) {
 		$ret['message'] = t('Permission denied.');
 		return $ret;
 	}
@@ -308,7 +362,7 @@ function attach_store($channel,$observer_hash,$options = '',$arr = null) {
 		if($options === 'update' &&  $arr && array_key_exists('revision',$arr))
 			$sql_options = " and revision = " . intval($arr['revision']) . " ";
 
-		$x =q("select id, aid, uid, filename, filetype, filesize, hash, revision, folder, flags, created, edited, allow_cid, allow_gid, deny_cid, deny_gid from attach where hash = '%s' and uid = %d $sql_options limit 1",
+		$x = q("select id, aid, uid, filename, filetype, filesize, hash, revision, folder, flags, created, edited, allow_cid, allow_gid, deny_cid, deny_gid from attach where hash = '%s' and uid = %d $sql_options limit 1",
 			dbesc($arr['hash']),
 			intval($channel_id)
 		);
@@ -329,14 +383,14 @@ function attach_store($channel,$observer_hash,$options = '',$arr = null) {
 			return $ret;
 		}
 
-		$limit = service_class_fetch($channel_id,'attach_upload_limit');
+		$limit = service_class_fetch($channel_id, 'attach_upload_limit');
 
 		if($limit !== false) {
 			$r = q("select sum(filesize) as total from attach where aid = %d ",
 				intval($channel['channel_account_id'])
 			);
 			if(($r) &&  (($r[0]['total'] + $filesize) > ($limit - $existing_size))) {
-				$ret['message'] = upgrade_message(true).sprintf(t("You have reached your limit of %1$.0f Mbytes attachment storage."),$limit / 1024000);
+				$ret['message'] = upgrade_message(true) . sprintf(t("You have reached your limit of %1$.0f Mbytes attachment storage."), $limit / 1024000);
 				@unlink($src);
 				return $ret;
 			}
@@ -379,7 +433,6 @@ function attach_store($channel,$observer_hash,$options = '',$arr = null) {
 			dbesc($x[0]['deny_gid'])
 		);
 	}		
-
 	elseif($options === 'update') {
 		$r = q("update attach set filename = '%s', filetype = '%s', edited = '%s', 
 			allow_cid = '%s', allow_gid = '%s', deny_cid = '%s', deny_gid  = '%s' where id = %d and uid = %d limit 1",
@@ -394,7 +447,6 @@ function attach_store($channel,$observer_hash,$options = '',$arr = null) {
 			intval($x[0]['uid'])
 		);
 	}		
-
 	else {
 		$r = q("INSERT INTO attach ( aid, uid, hash, creator, filename, filetype, filesize, revision, data, created, edited, allow_cid, allow_gid,deny_cid, deny_gid )
 			VALUES ( %d, %d, '%s', '%s', '%s', '%s', %d, %d, '%s', '%s', '%s', '%s', '%s', '%s', '%s' ) ",
@@ -441,12 +493,11 @@ function attach_store($channel,$observer_hash,$options = '',$arr = null) {
 	return $ret;
 }
 
-
 /**
  * Read a virtual directory and return contents, checking permissions of all parent components.
  * @function z_readdir
  * @param integer $channel_id
- * @param string $observer_hash
+ * @param string $observer_hash hash of current observer
  * @param string $pathname
  * @param string $parent_hash (optional)
  *
@@ -455,18 +506,16 @@ function attach_store($channel,$observer_hash,$options = '',$arr = null) {
  * $ret['message'] = error message if success is false
  * $ret['data'] = array of attach DB entries without data component
  */
-
-function z_readdir($channel_id,$observer_hash,$pathname, $parent_hash = '') {
+function z_readdir($channel_id, $observer_hash, $pathname, $parent_hash = '') {
 
 	$ret = array('success' => false);
-	if(! perm_is_allowed($r[0]['uid'],get_observer_hash(),'view_storage')) {
+	if(! perm_is_allowed($r[0]['uid'], get_observer_hash(), 'view_storage')) {
 		$ret['message'] = t('Permission denied.');
 		return $ret;
 	}
 
-
-	if(strpos($pathname,'/')) {
-		$paths = explode('/',$pathname);
+	if(strpos($pathname, '/')) {
+		$paths = explode('/', $pathname);
 		if(count($paths) > 1) {
 			$curpath = array_shift($paths);
 
@@ -480,7 +529,7 @@ function z_readdir($channel_id,$observer_hash,$pathname, $parent_hash = '') {
 				return $ret;
 			}
 
-			return z_readdir($channel_id,$observer_hash,implode('/',$paths),$r[0]['hash']);
+			return z_readdir($channel_id, $observer_hash, implode('/', $paths), $r[0]['hash']);
 		}
 	}
 	else
@@ -501,20 +550,17 @@ function z_readdir($channel_id,$observer_hash,$pathname, $parent_hash = '') {
 	return $ret;
 }
 
-
 /**
  * @function attach_mkdir($channel,$observer_hash,$arr);
  * 
- * Create directory
+ * @brief Create directory.
  *  
  * @param $channel channel array of owner
  * @param $observer_hash hash of current observer
  * @param $arr parameter array to fulfil request
- * 
  * Required:
  *    $arr['filename']
  *    $arr['folder'] // hash of parent directory, empty string for root directory
- *
  * Optional:
  *    $arr['hash']  // precumputed hash for this node
  *    $arr['allow_cid']
@@ -522,8 +568,7 @@ function z_readdir($channel_id,$observer_hash,$pathname, $parent_hash = '') {
  *    $arr['deny_cid']
  *    $arr['deny_gid']
  */
-
-function attach_mkdir($channel,$observer_hash,$arr = null) {
+function attach_mkdir($channel, $observer_hash, $arr = null) {
 
 	$ret = array('success' => false);
 	$channel_id = $channel['channel_id'];
@@ -534,10 +579,9 @@ function attach_mkdir($channel,$observer_hash,$arr = null) {
 	logger('attach_mkdir: basepath: ' . $basepath);
 
 	if(! is_dir($basepath))
-		mkdir($basepath,STORAGE_DEFAULT_PERMISSIONS,true);
+		mkdir($basepath,STORAGE_DEFAULT_PERMISSIONS, true);
 
-
-	if(! perm_is_allowed($channel_id, $observer_hash,'write_storage')) {
+	if(! perm_is_allowed($channel_id, $observer_hash, 'write_storage')) {
 		$ret['message'] = t('Permission denied.');
 		return $ret;
 	}
@@ -547,9 +591,7 @@ function attach_mkdir($channel,$observer_hash,$arr = null) {
 		return $ret;
 	}
 
-
 	$arr['hash'] = (($arr['hash']) ? $arr['hash'] : random_string());
-
 
 	// Check for duplicate name.
 	// Check both the filename and the hash as we will be making use of both.
@@ -576,7 +618,6 @@ function attach_mkdir($channel,$observer_hash,$arr = null) {
 		$sql_options = permissions_sql($channel['channel_id']);
 
 		do {
-
 			$r = q("select filename, hash, flags, folder from attach where uid = %d and hash = '%s' and ( flags & %d ) 
 				$sql_options limit 1",
 				intval($channel['channel_id']),
@@ -594,7 +635,6 @@ function attach_mkdir($channel,$observer_hash,$arr = null) {
 			$lfile = $r[0]['folder'];
 		} while ( ($r[0]['folder']) && ($r[0]['flags'] & ATTACH_FLAG_DIR)) ;
 		$path = $basepath . '/' . $lpath;			
-
 	}
 	else
 		$path = $basepath . '/';
@@ -625,7 +665,7 @@ function attach_mkdir($channel,$observer_hash,$arr = null) {
 	);
 
 	if($r) {
-		if(mkdir($path,STORAGE_DEFAULT_PERMISSIONS,true)) {
+		if(mkdir($path,STORAGE_DEFAULT_PERMISSIONS, true)) {
 			$ret['success'] = true;
 			$ret['data'] = $arr;
 		}
@@ -641,9 +681,18 @@ function attach_mkdir($channel,$observer_hash,$arr = null) {
  
 }
 
-
-
-function attach_change_permissions($channel_id,$resource,$allow_cid,$allow_gid,$deny_cid,$deny_gid,$recurse = false) {
+/**
+ * @brief Changes permissions of a file.
+ * 
+ * @param $channel_id
+ * @param $resource
+ * @param $allow_cid
+ * @param $allow_gid
+ * @param $deny_cid
+ * @param $deny_gid
+ * @param $recurse
+ */
+function attach_change_permissions($channel_id, $resource, $allow_cid, $allow_gid, $deny_cid, $deny_gid, $recurse = false) {
 
 	$r = q("select hash, flags from attach where hash = '%s' and uid = %d limit 1",
 		dbesc($resource),
@@ -661,7 +710,7 @@ function attach_change_permissions($channel_id,$resource,$allow_cid,$allow_gid,$
 			);
 			if($r) {
 				foreach($r as $rr) {
-					attach_change_permissions($channel_id,$resource,$allow_cid,$allow_gid,$deny_cid,$deny_gid,$recurse);
+					attach_change_permissions($channel_id, $resource, $allow_cid, $allow_gid, $deny_cid, $deny_gid, $recurse);
 				}
 			}
 		}
@@ -679,9 +728,13 @@ function attach_change_permissions($channel_id,$resource,$allow_cid,$allow_gid,$
 	return;
 }
 			 	
-
-
-function attach_delete($channel_id,$resource) {
+/**
+ * @brief Delete a file.
+ * 
+ * @param $channel_id
+ * @param $resource
+ */
+function attach_delete($channel_id, $resource) {
 
 
 	$c = q("select channel_address from channel where channel_id = %d limit 1",
@@ -706,7 +759,7 @@ function attach_delete($channel_id,$resource) {
 		);
 		if($x) {
 			foreach($x as $xx) {
-				attach_delete($channel_id,$xx['hash']);
+				attach_delete($channel_id, $xx['hash']);
 			}
 		}
 	}
@@ -733,8 +786,12 @@ function attach_delete($channel_id,$resource) {
 	return;
 }
 			 	
-
-
+/**
+ * @brief Returns path to file in cloud/.
+ * 
+ * @param $arr
+ * @return string with the path the file to cloud/
+ */
 function get_cloudpath($arr) {
 
 	$basepath = 'cloud/';
@@ -745,7 +802,6 @@ function get_cloudpath($arr) {
 		if($r)
 			$basepath .= $r[0]['channel_address'] . '/';
 	}
-
 
 	$path = $basepath;
 
@@ -772,20 +828,20 @@ function get_cloudpath($arr) {
 		} while ( ($r[0]['folder']) && ($r[0]['flags'] & ATTACH_FLAG_DIR)) ;
 
 		$path .= $lpath;			
-
 	}
 
 	$path .= $arr['filename'];
 	return $path;
-
 }
 
-
-
-
+/**
+ * 
+ * @param $in
+ * @param $out
+ */
 function pipe_streams($in, $out) {
 	$size = 0;
-    while (!feof($in))
-		$size += fwrite($out,fread($in,8192));
+	while (!feof($in))
+		$size += fwrite($out, fread($in,8192));
 	return $size;
 }
