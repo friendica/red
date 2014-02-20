@@ -758,7 +758,7 @@ function settings_content(&$a) {
 			'$ajaxint'   => array('browser_update',  t("Update browser every xx seconds"), $browser_update, t('Minimum of 10 seconds, no maximum')),
 			'$itemspage'   => array('itemspage',  t("Maximum number of conversations to load at any time:"), $itemspage, t('Maximum of 100 items')),
 			'$nosmile'	=> array('nosmile', t("Don't show emoticons"), $nosmile, ''),
-			'$chanview_full' => array('chanview_full', t('View remote profiles as webpages'), $chanview, t('By default open in a sub-window of your own site')), 			
+			'$chanview_full' => array('chanview_full', t('Do not view remote profiles in frames'), $chanview, t('By default open in a sub-window of your own site')), 			
 			'$theme_config' => $theme_config,
 		));
 		
