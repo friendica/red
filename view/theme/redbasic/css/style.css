@@ -140,8 +140,6 @@ blockquote {
 	filter:alpha(opacity=100);
 }
 
-/* this is not yet supported
-
 nav {
 	background-image: linear-gradient(bottom, $nav_bg_1 26%, $nav_bg_2 82%);
 	background-image: -o-linear-gradient(bottom, $nav_bg_1 26%, $nav_bg_2 82%);
@@ -163,7 +161,6 @@ nav:hover {
 	filter:alpha(opacity=100);
 
 }
-*/
 
 nav #site-location {
 	color: #888a85;
