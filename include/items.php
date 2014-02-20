@@ -1585,7 +1585,7 @@ function item_store($arr,$allow_exec = false) {
 	}
 
 
-	$arr['title']         = ((x($arr,'title'))         ? notags(trim($arr['title']))         : '');
+	$arr['title']         = ((x($arr,'title'))         ? trim($arr['title'])                 : '');
 	$arr['body']          = ((x($arr,'body'))          ? trim($arr['body'])                  : '');
 
 	$arr['allow_cid']     = ((x($arr,'allow_cid'))     ? trim($arr['allow_cid'])             : '');
@@ -1595,7 +1595,6 @@ function item_store($arr,$allow_exec = false) {
 	$arr['item_private']  = ((x($arr,'item_private'))  ? intval($arr['item_private'])        : 0 );
 	$arr['item_flags']    = ((x($arr,'item_flags'))    ? intval($arr['item_flags'])          : 0 );
 
-	$arr['title'] = escape_tags($arr['title']);
 
 
 	// only detect language if we have text content, and if the post is private but not yet
@@ -1638,7 +1637,6 @@ function item_store($arr,$allow_exec = false) {
 		}
 
 	}
-
 
 	if((x($arr,'object')) && is_array($arr['object'])) {
 		activity_sanitise($arr['object']);
