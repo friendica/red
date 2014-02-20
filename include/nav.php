@@ -95,7 +95,7 @@ EOT;
 
 	if($observer) {
 			$userinfo = array(
-			'icon' => $observer['xchan_photo_s'],
+			'icon' => $observer['xchan_photo_m'],
 			'name' => $observer['xchan_addr'],
 		);
 	}
