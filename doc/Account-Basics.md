@@ -18,7 +18,7 @@ Enter a password of your choice, and repeat it in the second box to ensure it wa
 
 *Terms Of Service*
 
-Click the link to read the site's terms of service.  This will open in a new tab.  Once you've read them, tick the box to confirm.
+Click the link to read the site's terms of service. Once you've read them, tick the box in the register form to confirm.
 
 *Register*
 
