@@ -109,7 +109,4 @@ nav .navbar-collapse {
 	max-height: 450px;
 }
 
-nav .navbar-right li:last-child {
-	padding-right: 20px;
-}
 /* nav overrides end */
