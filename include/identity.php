@@ -1206,3 +1206,12 @@ function remote_online_status($webbie) {
 	return $result;
 
 }
+
+
+function get_channel_by_nick($nick) {
+	$r = q("select * from channel where channel_address = '%s' limit 1",
+		dbesc($nick)
+	);
+	return(($r) ? $r[0] : false);
+
+}
