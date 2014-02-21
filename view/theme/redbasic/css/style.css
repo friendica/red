@@ -494,6 +494,64 @@ footer {
   top: 22px;
 }
 
+ul.menu-popup {
+  position: absolute;
+  display: none;
+  width: 10em;
+  background: #0080FF;
+  color: #eec;
+  padding: 0px;
+  list-style: none;
+/*  border-radius: 0px 0px 20px 20px; */
+  z-index: 100000;
+  -webkit-box-shadow: 0px 5px 10px rgba(0, 0, 0, 0.7);
+  -moz-box-shadow: 0px 5px 10px rgba(0, 0, 0, 0.7);
+  box-shadow: 0px 5px 10px rgba(0, 0, 0, 0.7);
+}
+ul.menu-popup a {
+  display: block;
+  color: #FFFFFF;
+  padding: 5px 10px;
+  text-decoration: none;
+}
+
+
+ul.menu-popup a:hover {
+  background-color: #888888;
+  color: #FFFFFF;
+}
+ul.menu-popup .menu-sep {
+  border-top: 1px solid #9eabb0;
+}
+ul.menu-popup li {
+  float: none;
+  overflow: auto;
+  height: auto;
+  display: block;
+}
+ul.menu-popup li img {
+  float: left;
+  width: 16px;
+  height: 16px;
+  padding-right: 5px;
+}
+ul.menu-popup .empty {
+  padding: 5px;
+  text-align: center;
+  color: #9eabb0;
+}
+ul.menu-popup .toolbar {
+  background-color: #9eabb0;
+  height: auto;
+  overflow: auto;
+}
+ul.menu-popup .toolbar a {
+  float: right;
+}
+ul.menu-popup .toolbar a:hover {
+  background-color: #ffffff;
+}
+
 
 
 #profile-in-dir-yes-label,
