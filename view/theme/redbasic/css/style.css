@@ -231,49 +231,6 @@ header #banner #logo-text {
   font-size: 22px;
 }
 
-.nav-commlink, .nav-login-link  {
-    display: block;
-    height: 15px;
-	margin-top: 67px;
-	margin-right: 2px;
-	padding: 6px 3px;
-	float: left;
-	bottom: 140px;
-	border: 1px solid #babdb6;
-	border-bottom: 0px;
-	background-color: #aec0d3;
-	color: #565854;		
-	-moz-border-radius: $radiuspx;
-	border-radius: $radiuspx;
-}
-
-nav .nav-link {
-	float: right;
-	margin: 0.2em 0em;
-	padding: 0em 0.5em;
-	background-color: transparent !important;
-}
-
-.nav-commlink.active {
-	background-color: #ffffff;
-	border-bottom: 1px solid #ffffff;
-	color: #000000 !important;
-	margin-top: 64px;
-	padding-top: 6px;
-	padding-bottom: 8px;
-}
-
-.nav-ajax-left {
-	font-size: 0.8em;
-	float: left;
-	margin-top: 62px;	
-}
-
-
-nav #nav-link-wrapper .nav-link {
-	border-right: 1px solid #babdb6;
-}
-
 .tabs {
 	height: 28px;
 	border-bottom: 1px solid #aaaaaa;
@@ -919,17 +876,6 @@ footer {
 #search-text::-moz-placeholder {
 	font-family: FontAwesome;
 }
-
-.nav-dropdown-indicator {
-    opacity: 0.8;
-    filter:alpha(opacity=80);
-}
-
-.nav-dropdown-indicator:hover {
-    opacity: 1.0;
-    filter:alpha(opacity=100);
-}
-
 
 .location-label, .gender-label, .marital-label, .homepage-label {
 	float: left;
@@ -1596,25 +1542,15 @@ div.jGrowl div.info {
 	width: 90%;
 }
 
-a.rconnect,
-nav a,
-nav a:active,
-nav a:visited,
-nav a:link {
+a.rconnect {
   color: #ffffff;
   text-decoration: none;
   outline: none;
 }
 
-a.rconnect:hover, nav a:hover {
+a.rconnect:hover {
 	color: #0080FF;
 }
-nav .fakelink {
-  color: #ffffff;
-  text-decoration: none;
-  outline: none;
-}
-nav .fakelink:hover { text-decoration: none; }
 
 #profiles-menu li a {
 	color: #ffffff;
@@ -1624,138 +1560,7 @@ nav .fakelink:hover { text-decoration: none; }
 	color: #000000;
 }
 
-nav .nav-menu-icon {
-  position: relative;
-  height: 22px;
-  padding: 5px;
-/*  margin: 3px 10px; */
-  -moz-border-radius: $radiuspx;
-  -webkit-border-radius: $radiuspx;
-  border-radius: $radiuspx;
-}
-nav .nav-menu-icon.active {
-  background-color: #FF0000;
-}
-nav .nav-menu-icon img {
-  width: 22px;
-  height: 22px;
-}
-nav .nav-menu-icon .nav-notify {
-  top: 3px;
-}
-nav .nav-menu {
-  position: relative;
-  height: 16px;
-  padding: 5px;
-  margin: 0px 5px 0px;
-  font-size: 1.0em;
-/*  border-bottom: 3px solid #f88; */
-}
 
-nav:hover .nav-menu {
-/*  border-bottom: 3px solid #f00; */
-}
-
-nav .nav-menu.active i {
-	color: $active_colour;
-}
-
-nav .nav-notify {
-  background-color: #0080FF;
-  color: #fff;
-  -moz-border-radius: $radiuspx;
-  -webkit-border-radius: $radiuspx;
-  border-radius: $radiuspx;
-/*  opacity: 0.6;
-  filter:alpha(opacity=60); */
-
-}
-.nav-notify:hover, nav .nav-notify.active span {
-	color: #ffffff;
-}
-
-nav .nav-notify.show {
-  display: block;
-}
-nav #nav-help-link,
-nav #nav-login-link,
-nav #nav-search-link,
-nav #nav-directory-link,
-nav #nav-apps-link {
-  float: right;
-}
-nav #nav-help-link .menu-popup,
-nav #nav-search-link .menu-popup,
-nav #nav-directory-link .menu-popup,
-nav #nav-apps-link .menu-popup,
-nav #nav-site-linkmenu .menu-popup {
-  right: 0px;
-  left: auto;
-}
-nav #nav-notifications-linkmenu.on .icon.s22.notify,
-nav #nav-notifications-linkmenu.active .icon.s22.notify {
-  background-image: url("../../../../images/icons/22/notify_on.png");
-}
-nav #nav-apps-link.active {
-  background-color: #364e59;
-}
-ul.menu-popup {
-  position: absolute;
-  display: none;
-  width: 10em;
-  background: #0080FF;
-  color: #eec;
-  padding: 0px;
-  list-style: none;
-/*  border-radius: 0px 0px 20px 20px; */
-  z-index: 100000;
-  -webkit-box-shadow: 0px 5px 10px rgba(0, 0, 0, 0.7);
-  -moz-box-shadow: 0px 5px 10px rgba(0, 0, 0, 0.7);
-  box-shadow: 0px 5px 10px rgba(0, 0, 0, 0.7);
-}
-ul.menu-popup a {
-  display: block;
-  color: #FFFFFF;
-  padding: 5px 10px;
-  text-decoration: none;
-}
-
-
-ul.menu-popup a:hover {
-  background-color: #888888;
-  color: #FFFFFF;
-}
-ul.menu-popup .menu-sep {
-  border-top: 1px solid #9eabb0;
-}
-ul.menu-popup li {
-  float: none;
-  overflow: auto;
-  height: auto;
-  display: block;
-}
-ul.menu-popup li img {
-  float: left;
-  width: 16px;
-  height: 16px;
-  padding-right: 5px;
-}
-ul.menu-popup .empty {
-  padding: 5px;
-  text-align: center;
-  color: #9eabb0;
-}
-ul.menu-popup .toolbar {
-  background-color: #9eabb0;
-  height: auto;
-  overflow: auto;
-}
-ul.menu-popup .toolbar a {
-  float: right;
-}
-ul.menu-popup .toolbar a:hover {
-  background-color: #ffffff;
-}
 /* header */
 header {
   position: fixed;
@@ -1765,66 +1570,6 @@ header {
   padding: 0px;
   z-index: 1400;
   color: #fff;
-}
-
-
-/* notifications popup menu */
-.nav-notify {
-	display: none;
-	position: absolute;
-	font-size: 10px;
-	padding: 1px 3px;
-	top: 0px;
-	right: -5px;
-	min-width: 15px;
-	text-align: right;
-}
-.nav-notify.show {
-	display: block;
-}
-ul.menu-popup {
-	position: absolute;
-	display: none;
-	width: 10em;
-	margin: 0px;
-	padding: 0px;
-	list-style: none;
-	z-index: 100000;
-/*	top: 90px; */
-/*	left: 400px; */
-}
-
-.notify-menus {
-	width: 320px !important;
-	max-height: 400px;
-	overflow-y: scroll;overflow-style:scrollbar;
-}
-
-#nav-notifications-menu {
-	width: 320px;
-	max-height: 400px;
-	overflow-y: scroll;overflow-style:scrollbar;
-	background-color:#FFFFFF;
-	-moz-border-radius: $radiuspx;
-	-webkit-border-radius: $radiuspx;
-	border-radius: $radiuspx;
-	border: 1px solid #888;
-}
-#nav-notifications-menu .contactname { font-weight: bold; font-size: 0.9em; }
-#nav-notifications-menu img { float: left; margin-right: 5px; }
-#nav-notifications-menu .notif-when { font-size: 0.8em; display: block; }
-#nav-notifications-menu li {
-	padding: 7px 0px 7px 10px;
-	word-wrap:normal;
-	border-bottom: 1px solid #000;
-}
-
-#nav-notifications-menu li:hover {
-
-}
-
-#nav-notifications-menu a:hover {
-	text-decoration: underline;
 }
 
 .notif-item a {
@@ -2053,11 +1798,6 @@ margin-right: 50px;
 .admin-icons {
 	font-size: 1.2em;
 	color: $toolicon_colour;
-}
-
-.nav-icon {
-	font-size: 1.4em;
-	margin-right: 15px;
 }
 
 a .drop-icons {
@@ -2457,13 +2197,6 @@ nav img {
 
 nav ul li {
 	max-height: 50px
-}
-
-nav a,
-nav a:active,
-nav a:visited,
-nav a:link {
-  color: #333;
 }
 
 nav .badge {

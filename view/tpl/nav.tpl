@@ -159,7 +159,7 @@
 			{{if $nav.apps}}
 				<li class="{{$sel.apps}} hidden-xs">
 					<a class="{{$nav.apps.2}} dropdown-toggle" data-toggle="dropdown" href="#" rel="#nav-apps-menu" title="{{$nav.apps.3}}" ><i class="icon-cogs"></i></a>
-					<ul id="nav-apps-menu" class="dropdown-menu">
+					<ul class="dropdown-menu">
 					{{foreach $apps as $ap}}
 						<li>{{$ap}}</li>
 					{{/foreach}}
