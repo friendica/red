@@ -2249,7 +2249,7 @@ nav i {
 nav img {
 	height: 47px;
 	width: 47px;
-	margin: 2px 0px 1px 10px;
+	margin-top: 2px;
 	border-radius: $radiuspx;
 }
 
