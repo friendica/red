@@ -7,6 +7,8 @@ We need much more than this, but here are areas where developers can help. Pleas
 
 * Documentation - see [Red Documentation Project To-Do List](help/To-Do)
 
+* Infinite scroll to the directory pages
+
 * Finish the anti-spam bayesian engine
 
 * Integrate the "open site" list with the register page
