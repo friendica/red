@@ -52,24 +52,27 @@ function abook_self($channel_id) {
 }	
 
 function channelx_by_nick($nick) {
-	return q("SELECT * FROM channel left join xchan on channel_hash = xchan_hash WHERE channel_address = '%s'  and not ( channel_pageflags & %d ) LIMIT 1",
+	$r = q("SELECT * FROM channel left join xchan on channel_hash = xchan_hash WHERE channel_address = '%s'  and not ( channel_pageflags & %d ) LIMIT 1",
 		dbesc($nick),
 		intval(PAGE_REMOVED)
 	);
+	return(($r) ? $r[0] : false);
 }
 
 function channelx_by_hash($hash) {
-	return q("SELECT * FROM channel left join xchan on channel_hash = xchan_hash WHERE channel_hash = '%s'  and not ( channel_pageflags & %d ) LIMIT 1",
+	$r = q("SELECT * FROM channel left join xchan on channel_hash = xchan_hash WHERE channel_hash = '%s'  and not ( channel_pageflags & %d ) LIMIT 1",
 		dbesc($hash),
 		intval(PAGE_REMOVED)
 	);
+	return(($r) ? $r[0] : false);
 }
 
 function channelx_by_n($id) {
-	return q("SELECT * FROM channel left join xchan on channel_hash = xchan_hash WHERE channel_id = %d  and not ( channel_pageflags & %d ) LIMIT 1",
+	$r = q("SELECT * FROM channel left join xchan on channel_hash = xchan_hash WHERE channel_id = %d  and not ( channel_pageflags & %d ) LIMIT 1",
 		dbesc($id),
 		intval(PAGE_REMOVED)
 	);
+	return(($r) ? $r[0] : false);
 }
 
 
