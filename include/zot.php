@@ -1279,11 +1279,6 @@ function allowed_public_recips($msg) {
 	if(array_key_exists('public_scope',$msg['message']))
 		$scope = $msg['message']['public_scope'];
 
-	// we can pull out these two lines once everybody has upgraded to >= 2013-02-15.225
-
-	else
-		$scope = 'public';
-
 	$hash = base64url_encode(hash('whirlpool',$msg['notify']['sender']['guid'] . $msg['notify']['sender']['guid_sig'], true));
 
 	if($scope === 'public' || $scope === 'network: red')

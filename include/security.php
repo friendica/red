@@ -47,6 +47,17 @@ function authenticate_success($user_record, $login_initial = false, $interactive
 		goaway($a->get_baseurl() . '/' . $return_url);
 	}
 
+	/* This account has never created a channel. Send them to new_channel by default */
+
+	if($a->module === 'login') {
+		$r = q("select count(channel_id) as total from channel where channel_account_id = %d",
+			intval($a->account['account_id'])
+		);
+		if(($r) && (! $r[0]['total']))
+			goaway(z_root() . '/new_channel');
+	}
+
+	/* else just return */
 }
 
 
