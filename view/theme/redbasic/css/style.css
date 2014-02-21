@@ -2268,3 +2268,8 @@ nav .dropdown-menu {
 	border-bottom-right-radius: $radiuspx;
 	border-bottom-left-radius: $radiuspx;
 }
+
+/* bootstrap overrides */
+blockquote {
+    font-size: $body_font_size;
+}
