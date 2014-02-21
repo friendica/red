@@ -40,6 +40,7 @@ require_once('include/BaseObject.php');
 require_once('include/features.php');
 require_once('include/taxonomy.php');
 require_once('include/identity.php');
+require_once('include/Contact.php');
 
 
 define ( 'RED_PLATFORM',            'Red Matrix' );

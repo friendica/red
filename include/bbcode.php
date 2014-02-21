@@ -227,6 +227,13 @@ function bb_location($match) {
 	// not yet implemented
 }
 
+function bbiframe($match) {
+	$a = get_app();
+	if(strpos($match[1],get_app()->get_hostname()))
+		return '<a href="' . $match[1] . '">' . $match[1] . '</a>';
+	return '<iframe src="' . $match[1] . '" width="' . $a->videowidth . '" height="' . $a->videoheight . '"><a href="' . $match[1] . '">' . $match[1] . '</a></iframe>';
+}
+
 function bb_ShareAttributesSimple($match) {
 
 	$attributes = $match[1];
@@ -677,7 +684,7 @@ function bbcode($Text,$preserve_nl = false, $tryoembed = true) {
 
 	if ($tryoembed){
 		if (strpos($Text,'[/iframe]') !== false) {
-			$Text = preg_replace("/\[iframe\](.*?)\[\/iframe\]/ism", '<iframe src="$1" width="' . $a->videowidth . '" height="' . $a->videoheight . '"><a href="$1">$1</a></iframe>', $Text);
+			$Text = preg_replace_callback("/\[iframe\](.*?)\[\/iframe\]/ism", 'bbiframe', $Text);
 		}
 	}
 	else {

@@ -1,6 +1,7 @@
 <?php
 
 require_once('include/photo/photo_driver.php');
+require_once('include/identity.php');
 require_once('include/photos.php');
 
 
@@ -19,15 +20,7 @@ function wall_upload_post(&$a) {
 			$nick = argv(1);
 	}
 
-	$channel = null;
-
-	if($nick) {		
-		$r = q("SELECT channel.* from channel where channel_address = '%s' limit 1",
-			dbesc($nick)
-		);
-		if($r)
-			$channel = $r[0];
-	}
+	$channel = (($nick) ? get_channel_by_nick($nick) : false);
 
 	if(! $channel) {
 		if($using_api)

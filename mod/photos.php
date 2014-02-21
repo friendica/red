@@ -27,7 +27,7 @@ function photos_init(&$a) {
 		if(! $channelx)
 			return;
 
-		$a->data['channel'] = $channelx[0];
+		$a->data['channel'] = $channelx;
 
 		$observer = $a->get_observer();
 		$a->data['observer'] = $observer;
