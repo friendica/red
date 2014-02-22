@@ -105,6 +105,7 @@ var searchData=
   ['string_5fplural_5fselect_5fdefault',['string_plural_select_default',['../language_8php.html#a151e5b4689aef86a12642cbb7a00bfe0',1,'language.php']]],
   ['string_5fsplitter',['string_splitter',['../spam_8php.html#a05861201147b9a538d006f0269255cf9',1,'spam.php']]],
   ['stringify_5farray_5felms',['stringify_array_elms',['../text_8php.html#a8796f6a9ca592ecdce7b3afc3462aa13',1,'text.php']]],
+  ['strip_5fzids',['strip_zids',['../text_8php.html#a2f2585385530cb935a6325c809d84a4d',1,'text.php']]],
   ['stripdcode_5fbr_5fcb',['stripdcode_br_cb',['../bb2diaspora_8php.html#a180b0e3a7d702998be19e3c3b44b0e93',1,'bb2diaspora.php']]],
   ['style_2ephp',['style.php',['../apw_2php_2style_8php.html',1,'']]],
   ['style_2ephp',['style.php',['../redbasic_2php_2style_8php.html',1,'']]],

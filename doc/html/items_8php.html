@@ -144,6 +144,8 @@ Functions</h2></td></tr>
 <tr class="separator:a536d0313b6ffe33b9d2490c4e25c5361"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:ae73794179b62d39bb597ff670ab1c1e5"><td class="memItemLeft" align="right" valign="top">&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="items_8php.html#ae73794179b62d39bb597ff670ab1c1e5">import_author_xchan</a> ($<a class="el" href="boot_8php.html#a01353c9abebc3544ea080ac161729632">x</a>)</td></tr>
 <tr class="separator:ae73794179b62d39bb597ff670ab1c1e5"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a6bee35961f2e32905f20367a9309d627"><td class="memItemLeft" align="right" valign="top">&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="items_8php.html#a6bee35961f2e32905f20367a9309d627">import_author_rss</a> ($<a class="el" href="boot_8php.html#a01353c9abebc3544ea080ac161729632">x</a>)</td></tr>
+<tr class="separator:a6bee35961f2e32905f20367a9309d627"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a82955cc578f0fa600acec84475026194"><td class="memItemLeft" align="right" valign="top">&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="items_8php.html#a82955cc578f0fa600acec84475026194">encode_item</a> ($item)</td></tr>
 <tr class="separator:a82955cc578f0fa600acec84475026194"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:ac1fcf621dce7370515b420a7753f4726"><td class="memItemLeft" align="right" valign="top">&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="items_8php.html#ac1fcf621dce7370515b420a7753f4726">map_scope</a> ($scope)</td></tr>
@@ -218,8 +220,6 @@ Functions</h2></td></tr>
 <tr class="separator:a0cf98bb619f07dd18f602683a55a5f59"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:ad2abb4644ff1f20fefbc80326fe01cf0"><td class="memItemLeft" align="right" valign="top">&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="items_8php.html#ad2abb4644ff1f20fefbc80326fe01cf0">posted_dates</a> ($uid, $wall)</td></tr>
 <tr class="separator:ad2abb4644ff1f20fefbc80326fe01cf0"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:abe695dd89e1e10ed042c26b80114f0ed"><td class="memItemLeft" align="right" valign="top">&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="items_8php.html#abe695dd89e1e10ed042c26b80114f0ed">posted_date_widget</a> ($url, $uid, $wall)</td></tr>
-<tr class="separator:abe695dd89e1e10ed042c26b80114f0ed"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:adf980098b6de9c3993bc3ff26a8dd6f9"><td class="memItemLeft" align="right" valign="top">&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="items_8php.html#adf980098b6de9c3993bc3ff26a8dd6f9">fetch_post_tags</a> ($items, $link=false)</td></tr>
 <tr class="separator:adf980098b6de9c3993bc3ff26a8dd6f9"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a004e89d86b0f29b2c4da20108ecc4091"><td class="memItemLeft" align="right" valign="top">&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="items_8php.html#a004e89d86b0f29b2c4da20108ecc4091">zot_feed</a> ($uid, $observer_xchan, $mindate)</td></tr>
@@ -1099,6 +1099,24 @@ Functions</h2></td></tr>
 
 </div>
 </div>
+<a class="anchor" id="a6bee35961f2e32905f20367a9309d627"></a>
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">import_author_rss </td>
+          <td>(</td>
+          <td class="paramtype">&#160;</td>
+          <td class="paramname"><em>$x</em></td><td>)</td>
+          <td></td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+<p>Referenced by <a class="el" href="items_8php.html#ae73794179b62d39bb597ff670ab1c1e5">import_author_xchan()</a>.</p>
+
+</div>
+</div>
 <a class="anchor" id="ae73794179b62d39bb597ff670ab1c1e5"></a>
 <div class="memitem">
 <div class="memproto">
@@ -1360,38 +1378,6 @@ Functions</h2></td></tr>
 
 </div>
 </div>
-<a class="anchor" id="abe695dd89e1e10ed042c26b80114f0ed"></a>
-<div class="memitem">
-<div class="memproto">
-      <table class="memname">
-        <tr>
-          <td class="memname">posted_date_widget </td>
-          <td>(</td>
-          <td class="paramtype">&#160;</td>
-          <td class="paramname"><em>$url</em>, </td>
-        </tr>
-        <tr>
-          <td class="paramkey"></td>
-          <td></td>
-          <td class="paramtype">&#160;</td>
-          <td class="paramname"><em>$uid</em>, </td>
-        </tr>
-        <tr>
-          <td class="paramkey"></td>
-          <td></td>
-          <td class="paramtype">&#160;</td>
-          <td class="paramname"><em>$wall</em>&#160;</td>
-        </tr>
-        <tr>
-          <td></td>
-          <td>)</td>
-          <td></td><td></td>
-        </tr>
-      </table>
-</div><div class="memdoc">
-
-</div>
-</div>
 <a class="anchor" id="ad2abb4644ff1f20fefbc80326fe01cf0"></a>
 <div class="memitem">
 <div class="memproto">
@@ -1416,7 +1402,7 @@ Functions</h2></td></tr>
       </table>
 </div><div class="memdoc">
 
-<p>Referenced by <a class="el" href="items_8php.html#abe695dd89e1e10ed042c26b80114f0ed">posted_date_widget()</a>, and <a class="el" href="widgets_8php.html#a7b1e357b5a2027718470b77ec921fc65">widget_archive()</a>.</p>
+<p>Referenced by <a class="el" href="widgets_8php.html#a7b1e357b5a2027718470b77ec921fc65">widget_archive()</a>.</p>
 
 </div>
 </div>
@@ -1481,7 +1467,7 @@ Functions</h2></td></tr>
         </tr>
       </table>
 </div><div class="memdoc">
-<p>red_zrl_callback preg_match function when fixing 'naked' links in mod <a class="el" href="item_8php.html">item.php</a> Check if we've got a hubloc for the site and use a zrl if we do, a url if we don't. </p>
+<p>red_zrl_callback preg_match function when fixing 'naked' links in mod <a class="el" href="item_8php.html">item.php</a> Check if we've got a hubloc for the site and use a zrl if we do, a url if we don't. Remove any existing zid= param which may have been pasted by mistake - and will have the author's credentials. zid's are dynamic and can't really be passed around like that. </p>
 
 </div>
 </div>

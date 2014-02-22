@@ -67,6 +67,7 @@ var dir_d41ce877eb409a4791b288730010abe2 =
     [ "oembed.php", "mod_2oembed_8php.html", "mod_2oembed_8php" ],
     [ "oexchange.php", "oexchange_8php.html", "oexchange_8php" ],
     [ "online.php", "online_8php.html", "online_8php" ],
+    [ "openid.php", "openid_8php.html", "openid_8php" ],
     [ "opensearch.php", "opensearch_8php.html", "opensearch_8php" ],
     [ "page.php", "page_8php.html", "page_8php" ],
     [ "parse_url.php", "parse__url_8php.html", "parse__url_8php" ],

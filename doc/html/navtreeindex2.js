@@ -1,5 +1,9 @@
 var NAVTREEINDEX2 =
 {
+"classConversation.html#a4cff75d8c46b517e7133e4d0da6fc1c8":[4,0,8,7],
+"classConversation.html#a5879199008b96bee7550b576d614e1c1":[4,0,8,10],
+"classConversation.html#a5b6adbb2fe24f0f53d6c22660dff91b2":[4,0,8,17],
+"classConversation.html#a5effe8ad3007e01333df44b81432b813":[4,0,8,5],
 "classConversation.html#a66f121ca4026246f86a732e5faa0682c":[4,0,8,11],
 "classConversation.html#a8335cdd43f1836e3c255638e61a09e16":[4,0,8,1],
 "classConversation.html#a8748445aa26047ebed5141f3c3cbc244":[4,0,8,16],
@@ -103,10 +107,11 @@ var NAVTREEINDEX2 =
 "classRedBasicAuth.html#af14337f1baad407f8a85d48205c0f30e":[4,0,23,4],
 "classRedBrowser.html":[4,0,24],
 "classRedBrowser.html#a1f7daf50bb9bfcde7345b3b1908dbd7e":[4,0,24,1],
-"classRedBrowser.html#a40fdbb9d9fe6c1243bbf135dd5b0a06f":[4,0,24,3],
+"classRedBrowser.html#a40fdbb9d9fe6c1243bbf135dd5b0a06f":[4,0,24,4],
 "classRedBrowser.html#a4b76be9ccef0262cf78fffb4129eda93":[4,0,24,0],
-"classRedBrowser.html#a7f6bf0bda07833f4c647557bd172e349":[4,0,24,2],
-"classRedBrowser.html#ab6d6d1e2a67e06b344a4cede1bd00b35":[4,0,24,4],
+"classRedBrowser.html#a7f6bf0bda07833f4c647557bd172e349":[4,0,24,3],
+"classRedBrowser.html#a87529b4988a7777b49616f5c0a1c55d3":[4,0,24,2],
+"classRedBrowser.html#ab6d6d1e2a67e06b344a4cede1bd00b35":[4,0,24,5],
 "classRedDirectory.html":[4,0,25],
 "classRedDirectory.html#a0f113244cd85c17848df991001d024f4":[4,0,25,12],
 "classRedDirectory.html#a11376aed1963b4471eb1592c13c63976":[4,0,25,10],
@@ -244,10 +249,5 @@ var NAVTREEINDEX2 =
 "classphoto__imagick.html#a2c9168f110ccd6c264095d766615dfa8":[4,0,21,7],
 "classphoto__imagick.html#a2f33a03a89497a2b2768e29736d4a8a4":[4,0,21,0],
 "classphoto__imagick.html#a3047c68bb4de7f66c2893fe451db2b66":[4,0,21,2],
-"classphoto__imagick.html#a70adbef31128c0ac8cbc5dcf34cdb019":[4,0,21,6],
-"classphoto__imagick.html#a9df5738a4a18e76dd304c440e96f045f":[4,0,21,8],
-"classphoto__imagick.html#ad07288e0eb3922cb08cc9d33a163decc":[4,0,21,5],
-"classphoto__imagick.html#aef020d929f66f4370e33fc158c8eebd4":[4,0,21,4],
-"classphoto__imagick.html#af92901d252c1e6ab5b54eebedbed23bb":[4,0,21,9],
-"classphoto__imagick.html#afd49d64751ee3a298eac0c0ce0ba0207":[4,0,21,1]
+"classphoto__imagick.html#a70adbef31128c0ac8cbc5dcf34cdb019":[4,0,21,6]
 };

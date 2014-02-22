@@ -58,7 +58,6 @@ var searchData=
   ['post_5fto_5fred_5fpost_5ffield_5fdata',['post_to_red_post_field_data',['../post__to__red_8php.html#a7e68a8d9c83cb28d032aad3ea85ce0a6',1,'post_to_red.php']]],
   ['post_5fto_5fred_5fpost_5fmeta_5fcontent',['post_to_red_post_meta_content',['../post__to__red_8php.html#aa97aeda12ef080665f16311a4e1eb901',1,'post_to_red.php']]],
   ['post_5fto_5fred_5fsettings_5flink',['post_to_red_settings_link',['../post__to__red_8php.html#a906be8f72cf1aa2e199c0683ea6a4017',1,'post_to_red.php']]],
-  ['posted_5fdate_5fwidget',['posted_date_widget',['../items_8php.html#abe695dd89e1e10ed042c26b80114f0ed',1,'items.php']]],
   ['posted_5fdates',['posted_dates',['../items_8php.html#ad2abb4644ff1f20fefbc80326fe01cf0',1,'items.php']]],
   ['preg_5fcallback_5fhelp_5finclude',['preg_callback_help_include',['../help_8php.html#a06b2a51aaabed99e53a9b639047c4ce4',1,'help.php']]],
   ['preg_5fheart',['preg_heart',['../text_8php.html#ac19d2b33a58372a357a43d51eed19162',1,'text.php']]],

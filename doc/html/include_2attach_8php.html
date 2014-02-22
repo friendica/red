@@ -109,35 +109,50 @@ $(document).ready(function(){initNavTree('include_2attach_8php.html','');});
 <div class="title">attach.php File Reference</div>  </div>
 </div><!--header-->
 <div class="contents">
+
+<p>File/attach API with the potential for revision control.  
+<a href="#details">More...</a></p>
 <table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a name="func-members"></a>
 Functions</h2></td></tr>
 <tr class="memitem:a6fdd92775f31c07d2863e16e0026018a"><td class="memItemLeft" align="right" valign="top">&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="include_2attach_8php.html#a6fdd92775f31c07d2863e16e0026018a">z_mime_content_type</a> ($filename)</td></tr>
+<tr class="memdesc:a6fdd92775f31c07d2863e16e0026018a"><td class="mdescLeft">&#160;</td><td class="mdescRight">Guess the mimetype from file ending.  <a href="#a6fdd92775f31c07d2863e16e0026018a">More...</a><br/></td></tr>
 <tr class="separator:a6fdd92775f31c07d2863e16e0026018a"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a887d2d44a3ef18dcb6624e7fb58dc8e3"><td class="memItemLeft" align="right" valign="top">&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="include_2attach_8php.html#a887d2d44a3ef18dcb6624e7fb58dc8e3">attach_count_files</a> ($channel_id, $observer, $hash= '', $filename= '', $filetype= '')</td></tr>
+<tr class="memdesc:a887d2d44a3ef18dcb6624e7fb58dc8e3"><td class="mdescLeft">&#160;</td><td class="mdescRight">Count files/attachments.  <a href="#a887d2d44a3ef18dcb6624e7fb58dc8e3">More...</a><br/></td></tr>
 <tr class="separator:a887d2d44a3ef18dcb6624e7fb58dc8e3"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a3634af95f11a023dd8e882c3c7a3600d"><td class="memItemLeft" align="right" valign="top">&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="include_2attach_8php.html#a3634af95f11a023dd8e882c3c7a3600d">attach_list_files</a> ($channel_id, $observer, $hash= '', $filename= '', $filetype= '', $orderby= 'created desc', $start=0, $entries=0)</td></tr>
+<tr class="memdesc:a3634af95f11a023dd8e882c3c7a3600d"><td class="mdescLeft">&#160;</td><td class="mdescRight">Returns a list of files/attachments.  <a href="#a3634af95f11a023dd8e882c3c7a3600d">More...</a><br/></td></tr>
 <tr class="separator:a3634af95f11a023dd8e882c3c7a3600d"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a0d07c5b83d3d54e186f752e571847b36"><td class="memItemLeft" align="right" valign="top">&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="include_2attach_8php.html#a0d07c5b83d3d54e186f752e571847b36">attach_by_hash</a> ($hash, $rev=0)</td></tr>
+<tr class="memdesc:a0d07c5b83d3d54e186f752e571847b36"><td class="mdescLeft">&#160;</td><td class="mdescRight">Find an attachment by hash and revision.  <a href="#a0d07c5b83d3d54e186f752e571847b36">More...</a><br/></td></tr>
 <tr class="separator:a0d07c5b83d3d54e186f752e571847b36"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:ad991208ce939387e2f93a3bce7d09932"><td class="memItemLeft" align="right" valign="top">&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="include_2attach_8php.html#ad991208ce939387e2f93a3bce7d09932">attach_by_hash_nodata</a> ($hash, $rev=0)</td></tr>
+<tr class="memdesc:ad991208ce939387e2f93a3bce7d09932"><td class="mdescLeft">&#160;</td><td class="mdescRight">Find an attachment by hash and revision.  <a href="#ad991208ce939387e2f93a3bce7d09932">More...</a><br/></td></tr>
 <tr class="separator:ad991208ce939387e2f93a3bce7d09932"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a84a8a64c4805e1525b42d4add464833f"><td class="memItemLeft" align="right" valign="top">&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="include_2attach_8php.html#a84a8a64c4805e1525b42d4add464833f">attach_store</a> ($channel, $observer_hash, $options= '', $arr=null)</td></tr>
 <tr class="separator:a84a8a64c4805e1525b42d4add464833f"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:aeb07968990e66a88c95483ca09a7f909"><td class="memItemLeft" align="right" valign="top">&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="include_2attach_8php.html#aeb07968990e66a88c95483ca09a7f909">z_readdir</a> ($channel_id, $observer_hash, $pathname, $parent_hash= '')</td></tr>
 <tr class="separator:aeb07968990e66a88c95483ca09a7f909"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:ab6830b3ab74a5d284876141ac80f6cbc"><td class="memItemLeft" align="right" valign="top">&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="include_2attach_8php.html#ab6830b3ab74a5d284876141ac80f6cbc">attach_mkdir</a> ($channel, $observer_hash, $arr=null)</td></tr>
+<tr class="memdesc:ab6830b3ab74a5d284876141ac80f6cbc"><td class="mdescLeft">&#160;</td><td class="mdescRight">Create directory.  <a href="#ab6830b3ab74a5d284876141ac80f6cbc">More...</a><br/></td></tr>
 <tr class="separator:ab6830b3ab74a5d284876141ac80f6cbc"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a5c0875eafb8c0f8a0620ff7a875a2221"><td class="memItemLeft" align="right" valign="top">&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="include_2attach_8php.html#a5c0875eafb8c0f8a0620ff7a875a2221">attach_change_permissions</a> ($channel_id, $resource, $allow_cid, $allow_gid, $deny_cid, $deny_gid, $recurse=false)</td></tr>
+<tr class="memdesc:a5c0875eafb8c0f8a0620ff7a875a2221"><td class="mdescLeft">&#160;</td><td class="mdescRight">Changes permissions of a file.  <a href="#a5c0875eafb8c0f8a0620ff7a875a2221">More...</a><br/></td></tr>
 <tr class="separator:a5c0875eafb8c0f8a0620ff7a875a2221"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a70bd666e080c2af5a91f5d14c297b8cd"><td class="memItemLeft" align="right" valign="top">&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="include_2attach_8php.html#a70bd666e080c2af5a91f5d14c297b8cd">attach_delete</a> ($channel_id, $resource)</td></tr>
+<tr class="memdesc:a70bd666e080c2af5a91f5d14c297b8cd"><td class="mdescLeft">&#160;</td><td class="mdescRight">Delete a file.  <a href="#a70bd666e080c2af5a91f5d14c297b8cd">More...</a><br/></td></tr>
 <tr class="separator:a70bd666e080c2af5a91f5d14c297b8cd"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a6aa00ea010ea030110faefb75eafc1ce"><td class="memItemLeft" align="right" valign="top">&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="include_2attach_8php.html#a6aa00ea010ea030110faefb75eafc1ce">get_cloudpath</a> ($arr)</td></tr>
+<tr class="memdesc:a6aa00ea010ea030110faefb75eafc1ce"><td class="mdescLeft">&#160;</td><td class="mdescRight">Returns path to file in cloud/.  <a href="#a6aa00ea010ea030110faefb75eafc1ce">More...</a><br/></td></tr>
 <tr class="separator:a6aa00ea010ea030110faefb75eafc1ce"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a5d484de2d19a93071571d6499a50ae34"><td class="memItemLeft" align="right" valign="top">&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="include_2attach_8php.html#a5d484de2d19a93071571d6499a50ae34">pipe_streams</a> ($in, $out)</td></tr>
 <tr class="separator:a5d484de2d19a93071571d6499a50ae34"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table>
-<h2 class="groupheader">Function Documentation</h2>
+<a name="details" id="details"></a><h2 class="groupheader">Detailed Description</h2>
+<div class="textblock"><p>File/attach API with the potential for revision control. </p>
+<p>TODO: a filesystem storage abstraction which maintains security (and 'data' contains a system filename which is inaccessible from the web). This could get around PHP storage limits and store videos and larger items, using fread or OS methods or native code to read/write or chunk it through. Also an 'append' option to the storage function might be a useful addition. </p>
+</div><h2 class="groupheader">Function Documentation</h2>
 <a class="anchor" id="a0d07c5b83d3d54e186f752e571847b36"></a>
 <div class="memitem">
 <div class="memproto">
@@ -161,6 +176,17 @@ Functions</h2></td></tr>
         </tr>
       </table>
 </div><div class="memdoc">
+
+<p>Find an attachment by hash and revision. </p>
+<p>Returns the entire attach structure including data.</p>
+<p>This could exhaust memory so most useful only when immediately sending the data.</p>
+<dl class="params"><dt>Parameters</dt><dd>
+  <table class="params">
+    <tr><td class="paramname">$hash</td><td></td></tr>
+    <tr><td class="paramname">$rev</td><td></td></tr>
+  </table>
+  </dd>
+</dl>
 
 <p>Referenced by <a class="el" href="mod_2attach_8php.html#aa88eb5ad87aa1036a30e70339cc6c1b1">attach_init()</a>.</p>
 
@@ -189,6 +215,17 @@ Functions</h2></td></tr>
         </tr>
       </table>
 </div><div class="memdoc">
+
+<p>Find an attachment by hash and revision. </p>
+<p>Returns the entire attach structure excluding data.</p>
+<dl class="section see"><dt>See Also</dt><dd><a class="el" href="include_2attach_8php.html#a0d07c5b83d3d54e186f752e571847b36" title="Find an attachment by hash and revision.">attach_by_hash()</a> </dd></dl>
+<dl class="params"><dt>Parameters</dt><dd>
+  <table class="params">
+    <tr><td class="paramname">$hash</td><td></td></tr>
+    <tr><td class="paramname">$ref</td><td></td></tr>
+  </table>
+  </dd>
+</dl>
 
 <p>Referenced by <a class="el" href="item_8php.html#a693cd09805755ab85bbb5ecae69a48c3">item_post()</a>, and <a class="el" href="include_2message_8php.html#a751ffd6635022b2190f56154ee745752">send_message()</a>.</p>
 
@@ -248,6 +285,20 @@ Functions</h2></td></tr>
       </table>
 </div><div class="memdoc">
 
+<p>Changes permissions of a file. </p>
+<dl class="params"><dt>Parameters</dt><dd>
+  <table class="params">
+    <tr><td class="paramname">$channel_id</td><td></td></tr>
+    <tr><td class="paramname">$resource</td><td></td></tr>
+    <tr><td class="paramname">$allow_cid</td><td></td></tr>
+    <tr><td class="paramname">$allow_gid</td><td></td></tr>
+    <tr><td class="paramname">$deny_cid</td><td></td></tr>
+    <tr><td class="paramname">$deny_gid</td><td></td></tr>
+    <tr><td class="paramname">$recurse</td><td></td></tr>
+  </table>
+  </dd>
+</dl>
+
 <p>Referenced by <a class="el" href="filestorage_8php.html#ad3b64e3ece9831f9d3a9f00c0ae983cd">filestorage_post()</a>.</p>
 
 </div>
@@ -294,6 +345,19 @@ Functions</h2></td></tr>
       </table>
 </div><div class="memdoc">
 
+<p>Count files/attachments. </p>
+<dl class="params"><dt>Parameters</dt><dd>
+  <table class="params">
+    <tr><td class="paramname">$channel_id</td><td></td></tr>
+    <tr><td class="paramname">$observer</td><td></td></tr>
+    <tr><td class="paramname">$hash</td><td>(optional) </td></tr>
+    <tr><td class="paramname">$filename</td><td>(optional) </td></tr>
+    <tr><td class="paramname">$filetype</td><td>(optional) </td></tr>
+  </table>
+  </dd>
+</dl>
+<dl class="section return"><dt>Returns</dt><dd>array $ret['success'] boolean $ret['results'] amount of found results, or false $ret['message'] string with error messages if any </dd></dl>
+
 </div>
 </div>
 <a class="anchor" id="a70bd666e080c2af5a91f5d14c297b8cd"></a>
@@ -319,6 +383,15 @@ Functions</h2></td></tr>
         </tr>
       </table>
 </div><div class="memdoc">
+
+<p>Delete a file. </p>
+<dl class="params"><dt>Parameters</dt><dd>
+  <table class="params">
+    <tr><td class="paramname">$channel_id</td><td></td></tr>
+    <tr><td class="paramname">$resource</td><td></td></tr>
+  </table>
+  </dd>
+</dl>
 
 <p>Referenced by <a class="el" href="classRedDirectory.html#a2d12d99d38a6a75fc9a830b2f7fc0bf0">RedDirectory\createFile()</a>, <a class="el" href="classRedFile.html#aef71c9eaac7052be7dc8602eb12171e7">RedFile\delete()</a>, <a class="el" href="filestorage_8php.html#a61bb1be78472555df4ce619f51014040">filestorage_content()</a>, and <a class="el" href="classRedFile.html#a41a49a583eb276b75626fcf97f4a699c">RedFile\put()</a>.</p>
 
@@ -384,6 +457,22 @@ Functions</h2></td></tr>
       </table>
 </div><div class="memdoc">
 
+<p>Returns a list of files/attachments. </p>
+<dl class="params"><dt>Parameters</dt><dd>
+  <table class="params">
+    <tr><td class="paramname">$channel_id</td><td></td></tr>
+    <tr><td class="paramname">$observer</td><td></td></tr>
+    <tr><td class="paramname">$hash</td><td>(optional) </td></tr>
+    <tr><td class="paramname">$filename</td><td>(optional) </td></tr>
+    <tr><td class="paramname">$filetype</td><td>(optional) </td></tr>
+    <tr><td class="paramname">$orderby</td><td></td></tr>
+    <tr><td class="paramname">$start</td><td></td></tr>
+    <tr><td class="paramname">$entries</td><td></td></tr>
+  </table>
+  </dd>
+</dl>
+<dl class="section return"><dt>Returns</dt><dd>array $ret['success'] boolean $ret['results'] array with results, or false $ret['message'] string with error messages if any </dd></dl>
+
 </div>
 </div>
 <a class="anchor" id="ab6830b3ab74a5d284876141ac80f6cbc"></a>
@@ -415,18 +504,17 @@ Functions</h2></td></tr>
         </tr>
       </table>
 </div><div class="memdoc">
+
+<p>Create directory. </p>
 <p>attach_mkdir($channel,$observer_hash,$arr);</p>
-<p>Create directory</p>
 <dl class="params"><dt>Parameters</dt><dd>
   <table class="params">
     <tr><td class="paramname">$channel</td><td>channel array of owner </td></tr>
     <tr><td class="paramname">$observer_hash</td><td>hash of current observer </td></tr>
-    <tr><td class="paramname">$arr</td><td>parameter array to fulfil request</td></tr>
+    <tr><td class="paramname">$arr</td><td>parameter array to fulfil request Required: $arr['filename'] $arr['folder'] // hash of parent directory, empty string for root directory Optional: $arr['hash'] // precumputed hash for this node $arr['allow_cid'] $arr['allow_gid'] $arr['deny_cid'] $arr['deny_gid'] </td></tr>
   </table>
   </dd>
 </dl>
-<p>Required: $arr['filename'] $arr['folder'] // hash of parent directory, empty string for root directory</p>
-<p>Optional: $arr['hash'] // precumputed hash for this node $arr['allow_cid'] $arr['allow_gid'] $arr['deny_cid'] $arr['deny_gid'] </p>
 
 <p>Referenced by <a class="el" href="classRedDirectory.html#a986936910f0216887a25e28916c166c7">RedDirectory\createDirectory()</a>.</p>
 
@@ -467,6 +555,15 @@ Functions</h2></td></tr>
         </tr>
       </table>
 </div><div class="memdoc">
+<dl class="params"><dt>Parameters</dt><dd>
+  <table class="params">
+    <tr><td class="paramname">$channel</td><td>channel array of owner </td></tr>
+    <tr><td class="paramname">$observer_hash</td><td>hash of current observer </td></tr>
+    <tr><td class="paramname">$options</td><td>(optional) </td></tr>
+    <tr><td class="paramname">$arr</td><td>(optional) </td></tr>
+  </table>
+  </dd>
+</dl>
 
 <p>Referenced by <a class="el" href="item_8php.html#a3daae7944f737bd30412a0d042207c0f">fix_attached_file_permissions()</a>, <a class="el" href="include_2message_8php.html#a751ffd6635022b2190f56154ee745752">send_message()</a>, and <a class="el" href="wall__attach_8php.html#a7385e970e93228d082f0fd7254f6e653">wall_attach_post()</a>.</p>
 
@@ -485,6 +582,15 @@ Functions</h2></td></tr>
         </tr>
       </table>
 </div><div class="memdoc">
+
+<p>Returns path to file in cloud/. </p>
+<dl class="params"><dt>Parameters</dt><dd>
+  <table class="params">
+    <tr><td class="paramname">$arr</td><td></td></tr>
+  </table>
+  </dd>
+</dl>
+<dl class="section return"><dt>Returns</dt><dd>string with the path the file to cloud/ </dd></dl>
 
 <p>Referenced by <a class="el" href="filestorage_8php.html#a61bb1be78472555df4ce619f51014040">filestorage_content()</a>.</p>
 
@@ -513,6 +619,13 @@ Functions</h2></td></tr>
         </tr>
       </table>
 </div><div class="memdoc">
+<dl class="params"><dt>Parameters</dt><dd>
+  <table class="params">
+    <tr><td class="paramname">$in</td><td></td></tr>
+    <tr><td class="paramname">$out</td><td></td></tr>
+  </table>
+  </dd>
+</dl>
 
 <p>Referenced by <a class="el" href="mod_2attach_8php.html#aa88eb5ad87aa1036a30e70339cc6c1b1">attach_init()</a>.</p>
 
@@ -531,6 +644,16 @@ Functions</h2></td></tr>
         </tr>
       </table>
 </div><div class="memdoc">
+
+<p>Guess the mimetype from file ending. </p>
+<p>This function takes a file name and guess the mimetype from the filename extension.</p>
+<dl class="params"><dt>Parameters</dt><dd>
+  <table class="params">
+    <tr><td class="paramname">$filename</td><td>a string filename </td></tr>
+  </table>
+  </dd>
+</dl>
+<dl class="section return"><dt>Returns</dt><dd>string The mimetype according to a file ending. </dd></dl>
 
 <p>Referenced by <a class="el" href="include_2attach_8php.html#a84a8a64c4805e1525b42d4add464833f">attach_store()</a>, and <a class="el" href="classRedDirectory.html#a2d12d99d38a6a75fc9a830b2f7fc0bf0">RedDirectory\createFile()</a>.</p>
 
@@ -575,7 +698,7 @@ Functions</h2></td></tr>
 <dl class="params"><dt>Parameters</dt><dd>
   <table class="params">
     <tr><td class="paramtype">integer</td><td class="paramname">$channel_id</td><td></td></tr>
-    <tr><td class="paramtype">string</td><td class="paramname">$observer_hash</td><td></td></tr>
+    <tr><td class="paramtype">string</td><td class="paramname">$observer_hash</td><td>hash of current observer </td></tr>
     <tr><td class="paramtype">string</td><td class="paramname">$pathname</td><td></td></tr>
     <tr><td class="paramtype">string</td><td class="paramname">$parent_hash</td><td>(optional)</td></tr>
   </table>
