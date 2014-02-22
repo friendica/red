@@ -7,10 +7,9 @@ margin: 2px 0px 1px 10px;
 border-radius: 0px;
 }
 .navbar-left{height: 30px;}
-.container-fluid {min-height:30px;}
 .collapse .navbar-collapse {min-height:30px;}
 #nav-search-text {margin:5px;}
-header #banner {margin-top:5px;}
+header #banner {margin:5px;}
 nav .dropdown-menu {
 top: 30px;}
 nav .badge {
