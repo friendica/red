@@ -5,6 +5,7 @@
 
 {{if $expert}}
 {{* include file="field_select.tpl" field=$nav_colour *}}
+{{include file="field_checkbox.tpl" field=$narrow_navbar}}
 {{include file="field_input.tpl" field=$banner_colour}}
 {{include file="field_input.tpl" field=$link_colour}}
 {{include file="field_input.tpl" field=$bgcolour}}
