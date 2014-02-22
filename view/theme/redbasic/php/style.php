@@ -14,6 +14,7 @@ if(! $a->install) {
 	    $nav_colour = get_pconfig($uid, "redbasic", "nav_colour");	
 
 // Load the owners pconfig
+		$narrow_navbar = get_pconfig($uid,'redbasic','narrow_navbar');
 		$banner_colour = get_pconfig($uid,'redbasic','banner_colour');
 	    $link_colour = get_pconfig($uid, "redbasic", "link_colour");	
 		$schema = get_pconfig($uid,'redbasic','schema');
@@ -212,4 +213,7 @@ echo str_replace(array_keys($options), array_values($options), $x);
 
 if($sloppy_photos && file_exists('view/theme/redbasic/css/sloppy_photos.css')) {
 	echo file_get_contents('view/theme/redbasic/css/sloppy_photos.css');
+} 
+if($narrow_navbar && file_exists('view/theme/redbasic/css/narrow_navbar.css')) {
+	echo file_get_contents('view/theme/redbasic/css/narrow_navbar.css');
 } 
