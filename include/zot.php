@@ -1370,8 +1370,6 @@ function process_delivery($sender,$arr,$deliveries,$relay) {
 			// remove_community_tag is a no-op if this isn't a community tag activity
 			remove_community_tag($sender,$arr,$channel['channel_id']);
 
-
-
 			$item_id = delete_imported_item($sender,$arr,$channel['channel_id']);
 			$result[] = array($d['hash'],(($item_id) ? 'deleted' : 'delete_failed'),$channel['channel_name'] . ' <' . $channel['channel_address'] . '@' . get_app()->get_hostname() . '>');
 
@@ -1413,8 +1411,6 @@ function process_delivery($sender,$arr,$deliveries,$relay) {
 				continue;
 			}
 		}
-
-
 
 		$r = q("select id, edited from item where mid = '%s' and uid = %d limit 1",
 			dbesc($arr['mid']),

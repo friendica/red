@@ -42,6 +42,7 @@ function openid_content(&$a) {
 					        if(($record['account_flags'] == ACCOUNT_OK) || ($record['account_flags'] == ACCOUNT_UNVERIFIED)) {
 			            		logger('mod_openid: openid success for ' . $x[0]['channel_name']);
 								$_SESSION['uid'] = $r[0]['channel_id'];
+								$_SESSION['account_id'] = $r[0]['channel_account_id'];
 								$_SESSION['authenticated'] = true;
 								authenticate_success($record,true,true,true,true);
 								goaway(z_root());

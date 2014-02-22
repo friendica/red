@@ -753,7 +753,7 @@ function import_author_rss($x) {
 		values ( '%s', '%s', '%s', '%s' )",
 		dbesc($x['url']),
 		dbesc($x['url']),
-		dbesc(($name) ? $name : t('Unknown')),
+		dbesc(($name) ? $name : t('(Unknown)')),
 		dbesc('rss')
 	);
 	if($r) {
