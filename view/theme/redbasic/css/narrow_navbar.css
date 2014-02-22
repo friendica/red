@@ -1,5 +1,5 @@
 .navbar-nav > li > a {padding-top:5px !important; padding-bottom:5px !important;}
-.navbar {min-height:18px !important;}
+.navbar {min-height:25px !important;}
 nav img {
 height: 25px;
 width: 25px;
@@ -8,7 +8,7 @@ border-radius: 0px;
 }
 .navbar-left{height: 30px;}
 .container-fluid {min-height:30px;}
-.collapse .navbar-collapse {min-height:30px; max-height:30px;}
+.collapse .navbar-collapse {min-height:30px;}
 #nav-search-text {margin:5px;}
 header #banner {margin-top:5px;}
 nav .dropdown-menu {
