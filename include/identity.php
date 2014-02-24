@@ -514,7 +514,7 @@ function profile_load(&$a, $nickname, $profile = '') {
 	}
 
 	if(! $p) {
-		$r = q("SELECT profile.uid AS profile_uid, profile.*, channel.* FROM profile
+		$p = q("SELECT profile.uid AS profile_uid, profile.*, channel.* FROM profile
 			LEFT JOIN channel ON profile.uid = channel.channel_id
 			WHERE channel.channel_address = '%s' and not ( channel_pageflags & %d ) 
 			AND profile.is_default = 1 LIMIT 1",
