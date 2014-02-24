@@ -42,7 +42,7 @@ Contents
 [zrl=[baseurl]/help/intro_for_developers]Intro for Developers[/zrl]
 [zrl=[baseurl]/help/api_functions]API functions[/zrl]
 [zrl=[baseurl]/help/developer_function_primer]Red Functions 101[/zrl]
-[zrl=https://friendicared.net/doc/html/]Code Reference (doxygen generated - sets cookies)[/zrl]
+[zrl=[baseurl]/doc/html/]Code Reference (doxygen generated - sets cookies)[/zrl]
 [zrl=[baseurl]/help/to_do_doco]To-Do list for the Red Documentation Project[/zrl]
 [zrl=[baseurl]/help/to_do_code]To-Do list for Developers[/zrl]
 [zrl=[baseurl]/help/git_for_non_developers]Git for Non-Developers[/zrl]
