@@ -60,7 +60,8 @@ function help_content(&$a) {
 		$a->page['title'] = t('Help');
 	}
 	if(! $text) {
-		$text = load_doc_file('doc/Home.md');
+		$doctype = 'bbcode';
+		$text = load_doc_file('doc/main.bb');
 		$a->page['title'] = t('Help');
 	}
 	
