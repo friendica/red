@@ -14,8 +14,8 @@ function js_strings() {
 		'$passphrase'  => t('Secret Passphrase'),
 		'$passhint'    => t('Passphrase hint'),
 
-		'$t01' => ((t('timeago.prefixAgo') != 'timeago.prefixAgo') ? t('timeago.prefixAgo') : 'null'),
-		'$t02' => ((t('timeago.prefixFromNow') != 'timeago.prefixFromNow') ? t('timeago.prefixFromNow') : 'null'),
+		'$t01' => ((t('timeago.prefixAgo') != 'timeago.prefixAgo') ? t('timeago.prefixAgo') : ''),
+		'$t02' => ((t('timeago.prefixFromNow') != 'timeago.prefixFromNow') ? t('timeago.prefixFromNow') : ''),
 		'$t03' => t('ago'),
 		'$t04' => t('from now'),
 		'$t05' => t('less than a minute'),
@@ -31,7 +31,6 @@ function js_strings() {
 		'$t15' => t('%d years'),
 		'$t16' => t(' '), // wordSeparator
 		'$t17' => ((t('timeago.numbers') != 'timeago.numbers') ? t('timeago.numbers') : '[]')
-
 
 	));
 }
