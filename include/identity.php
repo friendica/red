@@ -486,12 +486,12 @@ function profile_load(&$a, $nickname, $profile = '') {
 	// get the current observer
 	$observer = $a->get_observer();
 
+	$can_view_profile = true;
+
 	// Can the observer see our profile?
 	require_once('include/permissions.php');
 	if(! perm_is_allowed($user[0]['channel_id'],$observer['xchan_hash'],'view_profile')) {
-		// permission denied
-		notice( t(' Sorry, you don\'t have the permission to view this profile. ') . EOL);
-		return;
+		$can_view_profile = false;
 	}
 
 	if(! $profile) {
@@ -502,10 +502,10 @@ function profile_load(&$a, $nickname, $profile = '') {
 		if($r)
 			$profile = $r[0]['abook_profile'];
 	}
-	$r = null;
+	$p = null;
 
 	if($profile) {
-		$r = q("SELECT profile.uid AS profile_uid, profile.*, channel.* FROM profile
+		$p = q("SELECT profile.uid AS profile_uid, profile.*, channel.* FROM profile
 				LEFT JOIN channel ON profile.uid = channel.channel_id
 				WHERE channel.channel_address = '%s' AND profile.profile_guid = '%s' LIMIT 1",
 				dbesc($nickname),
@@ -513,7 +513,7 @@ function profile_load(&$a, $nickname, $profile = '') {
 		);
 	}
 
-	if(! $r) {
+	if(! $p) {
 		$r = q("SELECT profile.uid AS profile_uid, profile.*, channel.* FROM profile
 			LEFT JOIN channel ON profile.uid = channel.channel_id
 			WHERE channel.channel_address = '%s' and not ( channel_pageflags & %d ) 
@@ -523,7 +523,7 @@ function profile_load(&$a, $nickname, $profile = '') {
 		);
 	}
 
-	if(! $r) {
+	if(! $p) {
 		logger('profile error: ' . $a->query_string, LOGGER_DEBUG);
 		notice( t('Requested profile is not available.') . EOL );
 		$a->error = 404;
@@ -532,42 +532,53 @@ function profile_load(&$a, $nickname, $profile = '') {
 	
 	// fetch user tags if this isn't the default profile
 
-	if(! $r[0]['is_default']) {
+	if(! $p[0]['is_default']) {
 		$x = q("select `keywords` from `profile` where uid = %d and `is_default` = 1 limit 1",
 				intval($profile_uid)
 		);
-		if($x)
-			$r[0]['keywords'] = $x[0]['keywords'];
+		if($x && $can_view_profile)
+			$p[0]['keywords'] = $x[0]['keywords'];
 	}
 
-	if($r[0]['keywords']) {
-		$keywords = str_replace(array('#',',',' ',',,'),array('',' ',',',','),$r[0]['keywords']);
-		if(strlen($keywords))
+	if($p[0]['keywords']) {
+		$keywords = str_replace(array('#',',',' ',',,'),array('',' ',',',','),$p[0]['keywords']);
+		if(strlen($keywords) && $can_view_profile)
 			$a->page['htmlhead'] .= '<meta name="keywords" content="' . htmlentities($keywords,ENT_COMPAT,'UTF-8') . '" />' . "\r\n" ;
 
 	}
 
-	$a->profile = $r[0];
-	$online = get_online_status($nickname);
-	$a->profile['online_status'] = $online['result'];
+	if($can_view_profile) {
+		$a->profile = $p[0];
+		$online = get_online_status($nickname);
+		$a->profile['online_status'] = $online['result'];
 
-	$a->profile_uid = $r[0]['profile_uid'];
+		$a->profile_uid = $p[0]['profile_uid'];
 
-	$a->page['title'] = $a->profile['channel_name'] . " - " . $a->profile['channel_address'] . "@" . $a->get_hostname();
+		$a->page['title'] = $a->profile['channel_name'] . " - " . $a->profile['channel_address'] . "@" . $a->get_hostname();
+	}
 
-	$a->profile['channel_mobile_theme'] = get_pconfig(local_user(),'system', 'mobile_theme');
-	$_SESSION['theme'] = $a->profile['channel_theme'];
-	$_SESSION['mobile_theme'] = $a->profile['channel_mobile_theme'];
+	if(local_user()) {
+		$a->profile['channel_mobile_theme'] = get_pconfig(local_user(),'system', 'mobile_theme');
+		$_SESSION['mobile_theme'] = $a->profile['channel_mobile_theme'];
+	}
 
 	/**
 	 * load/reload current theme info
 	 */
+
+	$_SESSION['theme'] = $p[0]['channel_theme'];
 
 	$a->set_template_engine(); // reset the template engine to the default in case the user's theme doesn't specify one
 
 	$theme_info_file = "view/theme/".current_theme()."/php/theme.php";
 	if (file_exists($theme_info_file)){
 		require_once($theme_info_file);
+	}
+
+	if(! $can_view_profile) {
+		// permission denied
+		notice( t(' Sorry, you don\'t have the permission to view this profile. ') . EOL);
+		return;
 	}
 
 	return;
