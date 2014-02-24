@@ -1804,7 +1804,10 @@ function construct_page(&$a) {
 
 	require_once('include/comanche.php');
 
-	if(($p = theme_include('mod_' . $a->module . '.pdl')) != '')
+	// in case a page has overloaded a module, see if we already have a layout defined
+	// otherwise, if a pdl file exists for this module, use it
+
+	if((! count($a->layout)) && ($p = theme_include('mod_' . $a->module . '.pdl')) != '')
 		comanche_parser($a,@file_get_contents($p));
 
 	$comanche = ((count($a->layout)) ? true : false);
