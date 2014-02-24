@@ -56,4 +56,4 @@ Contents
 
 [b]About[/b]
 
-[url=https://friendicared.net/siteinfo] Site/Version Info[/url]
+[zrl=[baseurl]/siteinfo]Site/Version Info[/zrl]
