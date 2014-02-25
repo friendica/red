@@ -37,9 +37,13 @@ function bookmark_add($channel,$sender,$taxonomy,$private,$opts = null) {
 		$iarr['mitem_flags'] |= MENU_ITEM_ZID;
 
 	$arr = array();
-	if(! $menu_name)
+	if(! $menu_name) {
 		$arr['menu_name'] = substr($sender['xchan_hash'],0,16) . ' ' . $sender['xchan_name'];
-	$arr['menu_desc'] = sprintf( t('%1$s\'s bookmarks'), $sender['xchan_name']);
+		$arr['menu_desc'] = sprintf( t('%1$s\'s bookmarks'), $sender['xchan_name']);
+	}
+	else {
+		$arr['menu_name'] = $arr['menu_desc'] = $menu_name;
+	}
 	$arr['menu_flags'] = (($sender['xchan_hash'] === $channel['channel_hash']) ? MENU_BOOKMARK : MENU_SYSTEM|MENU_BOOKMARK);
 	$arr['menu_channel_id'] = $channel_id;
 
@@ -67,4 +71,15 @@ function bookmark_add($channel,$sender,$taxonomy,$private,$opts = null) {
 		$r = menu_add_item($menu_id,$channel_id,$iarr);
 
 	return $r;
+}
+
+function get_bookmark_link($observer) {
+
+	if((! $observer) || ($observer['xchan_network'] !== 'zot'))
+		return '';
+
+	$h = @parse_url($observer['xchan_url']);
+	if($h)
+		return $h['scheme'] . '://' . $h['host'] . (($h['port']) ? ':' . $h['port'] : '') . '/rbmark?f=';
+	return '';
 }

@@ -1,6 +1,7 @@
 <?php /** @file */
 
 require_once('include/chat.php');
+require_once('include/bookmarks.php');
 
 function chat_init(&$a) {
 
@@ -82,6 +83,7 @@ function chat_content(&$a) {
 	if(local_user())
 		$channel = $a->get_channel();
 
+	$ob = $a->get_observer();
 	$observer = get_observer_hash();
 	if(! $observer) {
 		notice( t('Permission denied.') . EOL);
@@ -144,6 +146,8 @@ function chat_content(&$a) {
 
 	if(argc() > 2 && intval(argv(2))) {
 		$room_id = intval(argv(2));
+		$bookmark_link = get_bookmark_link($ob);
+
 		$x = chatroom_enter($observer,$room_id,'online',$_SERVER['REMOTE_ADDR']);
 		if(! $x)
 			return;
@@ -152,8 +156,16 @@ function chat_content(&$a) {
 			intval($a->profile['profile_uid'])
 		);
 		if($x) {
+			$private = ((($x[0]['allow_cid']) || ($x[0]['allow_gid']) || ($x[0]['deny_cid']) || ($x[0]['deny_gid'])) ? true : false);
 			$room_name = $x[0]['cr_name'];
+			if($bookmark_link)
+				$bookmark_link .= '&url=' . z_root() . '/chat/' . argv(1) . '/' . argv(2) . '&title=' . urlencode($x[0]['cr_name']) . (($private) ? '&private=1' : '') . '&ischat=1'; 
 		}
+		else {
+			notice( t('Room not found') . EOL);
+			return;
+		}
+
 		$o = replace_macros(get_markup_template('chat.tpl'),array(
 			'$room_name' => $room_name,
 			'$room_id' => $room_id,
@@ -162,7 +174,9 @@ function chat_content(&$a) {
 			'$submit' => t('Submit'),
 			'$leave' => t('Leave Room'),
 			'$away' => t('I am away right now'),
-			'$online' => t('I am online')
+			'$online' => t('I am online'),
+			'$bookmark_link' => $bookmark_link,
+			'$bookmark' => t('Bookmark this room')
 
 		));
 		return $o;
