@@ -1112,8 +1112,6 @@ function get_theme_uid() {
 	if(local_user()) {
 		if((get_pconfig(local_user(),'system','always_my_theme')) || (! $uid))
 			return local_user();
-		if(! $uid)
-			return local_user();
 	}
 	if(! $uid) {
 		$x = get_sys_channel();

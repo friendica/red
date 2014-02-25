@@ -439,7 +439,6 @@ function settings_post(&$a) {
 		dbesc($str_group_deny),
 		intval(local_user())
 	);   
-
 	if($r)
 		info( t('Settings updated.') . EOL);
 

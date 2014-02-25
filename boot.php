@@ -1807,8 +1807,18 @@ function construct_page(&$a) {
 	// in case a page has overloaded a module, see if we already have a layout defined
 	// otherwise, if a pdl file exists for this module, use it
 
-	if((! count($a->layout)) && ($p = theme_include('mod_' . $a->module . '.pdl')) != '')
-		comanche_parser($a,@file_get_contents($p));
+	if(! count($a->layout)) {
+		$n = 'mod_' . $a->module . '.pdl' ;
+		$u = get_theme_uid();
+		if((! $u) && $a->profile_uid)
+			$u = $a->profile_uid;
+		if($u)
+			$s = get_pconfig($u,'system',$n);
+		if((! $s) && (($p = theme_include($n)) != ''))
+			$s = @file_get_contents($p);
+		if($s)
+			comanche_parser($a,$s);
+	}
 
 	$comanche = ((count($a->layout)) ? true : false);
 		
