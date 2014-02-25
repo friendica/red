@@ -69,7 +69,7 @@ function network_content(&$a, $update = 0, $load = false) {
 		$_GET['order'] = 'post';
 
 	if($gid) {
-        $r = q("SELECT * FROM `group` WHERE id = %d AND uid = %d LIMIT 1",
+        $r = q("SELECT * FROM `groups` WHERE id = %d AND uid = %d LIMIT 1",
             intval($gid),
             intval(local_user())
         );
@@ -111,36 +111,11 @@ function network_content(&$a, $update = 0, $load = false) {
 
 
 	if(! $update) {
-
-		if(feature_enabled(local_user(),'affinity')) {
-			$tpl = get_markup_template('main_slider.tpl');
-			$x = replace_macros($tpl,array(
-				'$val' => intval($cmin) . ';' . intval($cmax),
-				'$refresh' => t('Refresh'),
-				'$me' => t('Me'),
-				'$intimate' => t('Best Friends'),
-				'$friends' => t('Friends'),
-				'$coworkers' => t('Co-workers'),
-				'$oldfriends' => t('Former Friends'),
-				'$acquaintances' => t('Acquaintances'),
-				'$world' => t('Everybody')
-			));
-			$arr = array('html' => $x);
-			call_hooks('main_slider',$arr);
-			$o .= $arr['html']; 
-		}
- 	
-
 		$o .= network_tabs();
-
-		// --- end item filter tabs
-
-
-
 
 		// search terms header
 		if($search)
-			$o .= '<h2>' . t('Search Results For:') . ' '  . htmlspecialchars($search) . '</h2>';
+			$o .= '<h2>' . t('Search Results For:') . ' '  . htmlspecialchars($search, ENT_COMPAT,'UTF-8') . '</h2>';
 
 		nav_set_selected('network');
 
@@ -262,6 +237,7 @@ function network_content(&$a, $update = 0, $load = false) {
 			'$spam' => (($spam) ? $spam : '0'),
 			'$nouveau' => (($nouveau) ? $nouveau : '0'),
 			'$wall' => '0',
+			'$list' => ((x($_REQUEST,'list')) ? intval($_REQUEST['list']) : 0),
 			'$page' => (($a->pager['page'] != 1) ? $a->pager['page'] : 1),
 			'$search' => (($search) ? $search : ''),
 			'$order' => $order,

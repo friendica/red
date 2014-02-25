@@ -16,6 +16,40 @@ function tryoembed($match) {
 	return $html; 
 }
 
+function tryzrlaudio($match) {
+
+	$link = $match[1];
+	$m = @parse_url($link);
+	$zrl = false;
+	if($m['host']) {
+		$r = q("select hubloc_url from hubloc where hubloc_host = '%s' limit 1",
+			dbesc($m['host'])
+		);
+		if($r)
+			$zrl = true;
+	}
+	if($zrl)
+		$link = zid($link);
+	return	'<audio src="' .  $link . '" controls="controls" ><a href="' . $link . '">' . $link . '</a></audio>';
+}
+
+function tryzrlvideo($match) {
+	$link = $match[1];
+	$m = @parse_url($link);
+	$zrl = false;
+	if($m['host']) {
+		$r = q("select hubloc_url from hubloc where hubloc_host = '%s' limit 1",
+			dbesc($m['host'])
+		);
+		if($r)
+			$zrl = true;
+	}
+	if($zrl)
+		$link = zid($link);
+	return	'<video src="' . $link . '" controls="controls" width="' . get_app()->videowidth . '" height="' . $a->videoheight . '"><a href="' . $link . '">' . $link . '</a></video>';
+
+}
+
 // [noparse][i]italic[/i][/noparse] turns into
 // [noparse][ i ]italic[ /i ][/noparse],
 // to hide them from parser.
@@ -105,21 +139,24 @@ function bb_parse_crypt($match) {
 	$attributes = $match[1];
 
 	$algorithm = "";
+
 	preg_match("/alg='(.*?)'/ism", $attributes, $matches);
 	if ($matches[1] != "")
-		$algorithm = html_entity_decode($matches[1],ENT_QUOTES,'UTF-8');
+		$algorithm = $matches[1];
 
 	preg_match("/alg=\&quot\;(.*?)\&quot\;/ism", $attributes, $matches);
 	if ($matches[1] != "")
-		$algorithm = html_entity_decode($matches[1],ENT_QUOTES,'UTF-8');
+		$algorithm = $matches[1];
 
 	$hint = "";
+
+
 	preg_match("/hint='(.*?)'/ism", $attributes, $matches);
 	if ($matches[1] != "")
-		$hint = html_entity_decode($matches[1],ENT_QUOTES,'UTF-8');
+		$hint = $matches[1];
 	preg_match("/hint=\&quot\;(.*?)\&quot\;/ism", $attributes, $matches);
 	if ($matches[1] != "")
-		$hint = html_entity_decode($matches[1],ENT_QUOTES,'UTF-8');
+		$hint = $matches[1];
 
 	$x = random_string();
 
@@ -129,6 +166,9 @@ function bb_parse_crypt($match) {
 
 }
 
+function bb_qr($match) {
+	return '<img class="zrl" src="' . z_root() . '/photo/qr?f=&qr=' . urlencode($match[1]) . '" alt="' . t('QR code') . '" title="' . htmlspecialchars($match[1],ENT_QUOTES,'UTF-8') . '" />';
+} 	
 
 
 function bb_ShareAttributes($match) {
@@ -183,6 +223,17 @@ function bb_ShareAttributes($match) {
 	return($text);
 }
 
+function bb_location($match) {
+	// not yet implemented
+}
+
+function bbiframe($match) {
+	$a = get_app();
+	if(strpos($match[1],get_app()->get_hostname()))
+		return '<a href="' . $match[1] . '">' . $match[1] . '</a>';
+	return '<iframe src="' . $match[1] . '" width="' . $a->videowidth . '" height="' . $a->videoheight . '"><a href="' . $match[1] . '">' . $match[1] . '</a></iframe>';
+}
+
 function bb_ShareAttributesSimple($match) {
 
 	$attributes = $match[1];
@@ -218,6 +269,56 @@ function rpost_callback($match) {
 	}
 }
 
+function bb_sanitize_style($input) {
+	//whitelist	property			limits (0 = no limitation)
+	$w = array(	// color properties
+			"color"			=>	0,
+			"background-color"	=>	0,
+			// box properties
+			"padding"		=>	array("px"=>100, "%"=>0, "em"=>2, "ex"=>2, "mm"=>0, "cm"=>0, "in"=>0, "pt"=>0, "pc"=>0),
+			"margin"		=>	array("px"=>100, "%"=>0, "em"=>2, "ex"=>2, "mm"=>0, "cm"=>0, "in"=>0, "pt"=>0, "pc"=>0),
+			"border"		=>	array("px"=>100, "%"=>0, "em"=>2, "ex"=>2, "mm"=>0, "cm"=>0, "in"=>0, "pt"=>0, "pc"=>0),
+			"float"			=>	0,
+			"clear"			=>	0,
+			// text properties
+			"text-decoration"	=>	0,
+
+	);
+
+	$css_string = $input[1];
+	$a = explode(';',$css_string);
+	foreach($a as $parts){
+		list($k, $v) = explode(':', $parts);
+	$css[ trim($k) ] = trim($v);
+	}
+
+	// sanitize properties
+	$b = array_merge(array_diff_key($css, $w), array_diff_key($w, $css));
+	$css = array_diff_key($css, $b);
+
+	foreach($css as $key => $value) {
+		if($w[$key] != null) {
+			foreach($w[$key] as $limit_key => $limit_value) {
+				//sanitize values
+				if(strpos($value, $limit_key)) {
+					$value = preg_replace_callback(
+						"/(\S.*?)$limit_key/ism",
+						function($match) use($limit_value, $limit_key) {
+							if($match[1] > $limit_value) {
+								return $limit_value . $limit_key;
+							} else {
+								 return $match[1] . $limit_key;
+							}
+						},
+						$value
+					);
+				}
+			}
+		}
+		$css_string_san .= $key . ":" . $value ."; ";
+	}
+	return "<span style=\"" . $css_string_san . "\">" . $input[2] . "</span>";
+}
 
 	// BBcode 2 HTML was written by WAY2WEB.net
 	// extended to work with Mistpark/Friendica/Red - Mike Macgirvin
@@ -225,15 +326,6 @@ function rpost_callback($match) {
 function bbcode($Text,$preserve_nl = false, $tryoembed = true) {
 
 	$a = get_app();
-
-	// Extract the private images which use data url's since preg has issues with
-	// large data sizes. Stash them away while we do bbcode conversion, and then put them back
-	// in after we've done all the regex matching. We cannot use any preg functions to do this.
-
-	$extracted = bb_extract_images($Text);
-	$Text = $extracted['body'];
-	$saved_image = $extracted['images'];
-
 
 	// Move all spaces out of the tags
 	$Text = preg_replace("/\[(\w*)\](\s*)/ism", '$2[$1]', $Text);
@@ -250,6 +342,11 @@ function bbcode($Text,$preserve_nl = false, $tryoembed = true) {
 		$Text = preg_replace_callback("/\[pre\](.*?)\[\/pre\]/ism", 'bb_spacefy',$Text);
 	}
 
+//  Not yet implemented - thinking this should display a map or perhaps be a map directive
+//	if (strpos($Text,'[location]') !== false) {
+//		$Text = preg_replace_callback("/\[location\](.*?)\[\/location\]/ism", 'bb_location',$Text);
+//	}
+
 
 
 	// If we find any event code, turn it into an event.
@@ -260,6 +357,7 @@ function bbcode($Text,$preserve_nl = false, $tryoembed = true) {
 
 	// process [observer] tags before we do anything else because we might
 	// be stripping away stuff that then doesn't need to be worked on anymore
+
 	$observer = $a->get_observer();
 	if ((strpos($Text,'[/observer]') !== false) || (strpos($Text,'[/rpost]') !== false)) {
 		if ($observer) {
@@ -273,6 +371,21 @@ function bbcode($Text,$preserve_nl = false, $tryoembed = true) {
 		}
     }
 
+	$channel = $a->get_channel();
+	if (strpos($Text,'[/channel]') !== false) {
+		if ($channel) {
+			$Text = preg_replace("/\[channel\=1\](.*?)\[\/channel\]/ism", '$1', $Text);
+			$Text = preg_replace("/\[channel\=0\].*?\[\/channel\]/ism", '', $Text);
+		} else {
+			$Text = preg_replace("/\[channel\=1\].*?\[\/channel\]/ism", '', $Text);
+			$Text = preg_replace("/\[channel\=0\](.*?)\[\/channel\]/ism", '$1', $Text);
+		}
+    }
+
+
+	$Text = str_replace(array('[baseurl]','[sitename]'),array(z_root(),get_config('system','sitename')),$Text);
+
+	
 	// Replace any html brackets with HTML Entities to prevent executing HTML or script
 	// Don't use strip_tags here because it breaks [url] search by replacing & with amp
 
@@ -325,6 +438,12 @@ function bbcode($Text,$preserve_nl = false, $tryoembed = true) {
 	if (strpos($Text,'http') !== false) {
 		$Text = preg_replace("/([^\]\='".'"'."]|^)(https?\:\/\/$urlchars+)/ism", '$1<a href="$2" >$2</a>', $Text);
 	}
+
+	if (strpos($Text,'[/qr]') !== false) {
+		$Text = preg_replace_callback("/\[qr\](.*?)\[\/qr\]/ism","bb_qr",$Text);	
+	}
+
+
 	if (strpos($Text,'[/share]') !== false) {
 		$Text = preg_replace_callback("/\[share(.*?)\](.*?)\[\/share\]/ism","bb_ShareAttributes",$Text);	
 	}
@@ -334,10 +453,14 @@ function bbcode($Text,$preserve_nl = false, $tryoembed = true) {
 		}
 	  }
 	if (strpos($Text,'[/url]') !== false) {
+	    $Text = preg_replace("/\#\^\[url\]([$URLSearchString]*)\[\/url\]/ism", '<span class="bookmark-identifier">#^</span><a class="bookmark" href="$1" >$1</a>', $Text);
+		$Text = preg_replace("/\#\^\[url\=([$URLSearchString]*)\](.*?)\[\/url\]/ism", '<span class="bookmark-identifier">#^</span><a class="bookmark" href="$1" >$2</a>', $Text);
 		$Text = preg_replace("/\[url\]([$URLSearchString]*)\[\/url\]/ism", '<a href="$1" >$1</a>', $Text);
 		$Text = preg_replace("/\[url\=([$URLSearchString]*)\](.*?)\[\/url\]/ism", '<a href="$1" >$2</a>', $Text);
     }
 	if (strpos($Text,'[/zrl]') !== false) {
+	    $Text = preg_replace("/\#\^\[zrl\]([$URLSearchString]*)\[\/zrl\]/ism", '<span class="bookmark-identifier">#^</span><a class="zrl bookmark" href="$1" >$1</a>', $Text);
+		$Text = preg_replace("/\#\^\[zrl\=([$URLSearchString]*)\](.*?)\[\/zrl\]/ism", '<span class="bookmark-identifier">#^</span><a class="zrl bookmark" href="$1" >$2</a>', $Text);	
 		$Text = preg_replace("/\[zrl\]([$URLSearchString]*)\[\/zrl\]/ism", '<a class="zrl" href="$1" >$1</a>', $Text);
 		$Text = preg_replace("/\[zrl\=([$URLSearchString]*)\](.*?)\[\/zrl\]/ism", '<a class="zrl" href="$1" >$2</a>', $Text);
     }
@@ -383,14 +506,6 @@ function bbcode($Text,$preserve_nl = false, $tryoembed = true) {
 	// Check for list text
 	$Text = str_replace("[*]", "<li>", $Text);
 
-	// Check for style sheet commands
-	if (strpos($Text,'[/style]') !== false) {		
-		$Text = preg_replace("(\[style=(.*?)\](.*?)\[\/style\])ism","<span style=\"$1;\">$2</span>",$Text);
-	}
-	// Check for CSS classes
-	if (strpos($Text,'[/class]') !== false) {	
-		$Text = preg_replace("(\[class=(.*?)\](.*?)\[\/class\])ism","<span class=\"$1\">$2</span>",$Text);
-	}
  	// handle nested lists
 	$endlessloop = 0;
 
@@ -418,7 +533,7 @@ function bbcode($Text,$preserve_nl = false, $tryoembed = true) {
 	if (strpos($Text,'[tr]') !== false) {	
 		$Text = preg_replace("/\[tr\](.*?)\[\/tr\]/sm", '<tr>$1</tr>' ,$Text);
 	}
-	if (strpos($Text,'[table]') !== false) {	
+	if (strpos($Text,'[/table]') !== false) {	
 		$Text = preg_replace("/\[table\](.*?)\[\/table\]/sm", '<table>$1</table>' ,$Text);
 		$Text = preg_replace("/\[table border=1\](.*?)\[\/table\]/sm", '<table border="1" >$1</table>' ,$Text);
 		$Text = preg_replace("/\[table border=0\](.*?)\[\/table\]/sm", '<table border="0" >$1</table>' ,$Text);
@@ -480,36 +595,74 @@ function bbcode($Text,$preserve_nl = false, $tryoembed = true) {
 			"<br /><strong class=".'"author"'.">" . $t_wrote . "</strong><blockquote>$2</blockquote>",
 			$Text);
 
-	// [img=widthxheight]image source[/img]
-	//$Text = preg_replace("/\[img\=([0-9]*)x([0-9]*)\](.*?)\[\/img\]/ism", '<img src="$3" style="height: $2px; width: $1px;" >', $Text);
-	if (strpos($Text,'[/img]') !== false) {
-		$Text = preg_replace("/\[img\=([0-9]*)x([0-9]*)\](.*?)\[\/img\]/ism", '<img src="$3" style="width: $1px;" >', $Text);
-	}
-	if (strpos($Text,'[/zmg]') !== false) {	
-		$Text = preg_replace("/\[zmg\=([0-9]*)x([0-9]*)\](.*?)\[\/zmg\]/ism", '<img class="zrl" src="$3" style="width: $1px;" >', $Text);
-	}
 	// Images
 	// [img]pathtoimage[/img]
-	if (strpos($Text,'[/img]') !== false) {	
+	if (strpos($Text,'[/img]') !== false) {
 		$Text = preg_replace("/\[img\](.*?)\[\/img\]/ism", '<img src="$1" alt="' . t('Image/photo') . '" />', $Text);
 	}
-	if (strpos($Text,'[/zmg]') !== false) {	
+	if (strpos($Text,'[/zmg]') !== false) {
 		$Text = preg_replace("/\[zmg\](.*?)\[\/zmg\]/ism", '<img class="zrl" src="$1" alt="' . t('Image/photo') . '" />', $Text);
 	}
 
+	// [img float={left, right}]pathtoimage[/img]
+	if (strpos($Text,'[/img]') !== false) {
+		$Text = preg_replace("/\[img float=left\](.*?)\[\/img\]/ism", '<img src="$1" style="float: left;" alt="' . t('Image/photo') . '" />', $Text);
+	}
+	if (strpos($Text,'[/img]') !== false) {
+		$Text = preg_replace("/\[img float=right\](.*?)\[\/img\]/ism", '<img src="$1" style="float: right;" alt="' . t('Image/photo') . '" />', $Text);
+	}
+	if (strpos($Text,'[/zmg]') !== false) {
+		$Text = preg_replace("/\[zmg float=left\](.*?)\[\/zmg\]/ism", '<img class="zrl" src="$1" style="float: left;" alt="' . t('Image/photo') . '" />', $Text);
+	}
+	if (strpos($Text,'[/zmg]') !== false) {
+		$Text = preg_replace("/\[zmg float=right\](.*?)\[\/zmg\]/ism", '<img class="zrl" src="$1" style="float: right;" alt="' . t('Image/photo') . '" />', $Text);
+	}
+
+	// [img=widthxheight]pathtoimage[/img]
+	if (strpos($Text,'[/img]') !== false) {
+		$Text = preg_replace("/\[img\=([0-9]*)x([0-9]*)\](.*?)\[\/img\]/ism", '<img src="$3" style="width: $1px;" alt="' . t('Image/photo') . '" >', $Text);
+	}
+	if (strpos($Text,'[/zmg]') !== false) {
+		$Text = preg_replace("/\[zmg\=([0-9]*)x([0-9]*)\](.*?)\[\/zmg\]/ism", '<img class="zrl" src="$3" style="width: $1px;" alt="' . t('Image/photo') . '" >', $Text);
+	}
+
+	// [img=widthxheight float={left, right}]pathtoimage[/img]
+	if (strpos($Text,'[/img]') !== false) {
+		$Text = preg_replace("/\[img\=([0-9]*)x([0-9]*) float=left\](.*?)\[\/img\]/ism", '<img src="$3" style="width: $1px; float: left;" alt="' . t('Image/photo') . '" >', $Text);
+	}
+	if (strpos($Text,'[/img]') !== false) {
+		$Text = preg_replace("/\[img\=([0-9]*)x([0-9]*) float=right\](.*?)\[\/img\]/ism", '<img src="$3" style="width: $1px; float: right;" alt="' . t('Image/photo') . '" >', $Text);
+	}
+	if (strpos($Text,'[/zmg]') !== false) {
+		$Text = preg_replace("/\[zmg\=([0-9]*)x([0-9]*) float=left\](.*?)\[\/zmg\]/ism", '<img class="zrl" src="$3" style="width: $1px; float: left;" alt="' . t('Image/photo') . '" >', $Text);
+	}
+	if (strpos($Text,'[/zmg]') !== false) {
+		$Text = preg_replace("/\[zmg\=([0-9]*)x([0-9]*) float=right\](.*?)\[\/zmg\]/ism", '<img class="zrl" src="$3" style="width: $1px; float: right;" alt="' . t('Image/photo') . '" >', $Text);
+	}
+
+	// style (sanitized)
+	if (strpos($Text,'[/style]') !== false) {
+		$Text = preg_replace_callback("(\[style=(.*?)\](.*?)\[\/style\])ism", "bb_sanitize_style", $Text);
+	}
+
+	// crypt
 	if (strpos($Text,'[/crypt]') !== false) {	
 		$x = random_string();
 		$Text = preg_replace("/\[crypt\](.*?)\[\/crypt\]/ism",'<br/><div id="' . $x . '"><img src="' .$a->get_baseurl() . '/images/lock_icon.gif" onclick="red_decrypt(\'rot13\',\'\',\'$1\',\'#' . $x . '\');" alt="' . t('Encrypted content') . '" title="' . t('Encrypted content') . '" /><br /></div>', $Text);
 		$Text = preg_replace_callback("/\[crypt (.*?)\](.*?)\[\/crypt\]/ism", 'bb_parse_crypt', $Text);
 	}
+
+	// html5 video and audio
+	if (strpos($Text,'[/video]') !== false) {	
+		$Text = preg_replace_callback("/\[video\](.*?\.(ogg|ogv|oga|ogm|webm|mp4))\[\/video\]/ism", 'tryzrlvideo', $Text);
+	}
+	if (strpos($Text,'[/audio]') !== false) {		
+		$Text = preg_replace_callback("/\[audio\](.*?\.(ogg|ogv|oga|ogm|webm|mp4|mp3))\[\/audio\]/ism", 'tryzrlaudio', $Text);
+	}
+
 	// Try to Oembed
 	if ($tryoembed) {
-		if (strpos($Text,'[/video]') !== false) {	
-			$Text = preg_replace("/\[video\](.*?\.(ogg|ogv|oga|ogm|webm|mp4))\[\/video\]/ism", '<video src="$1" controls="controls" width="' . $a->videowidth . '" height="' . $a->videoheight . '"><a href="$1">$1</a></video>', $Text);
-		}
-		if (strpos($Text,'[/audio]') !== false) {		
-			$Text = preg_replace("/\[audio\](.*?\.(ogg|ogv|oga|ogm|webm|mp4|mp3))\[\/audio\]/ism", '<audio src="$1" controls="controls"><a href="$1">$1</a></audio>', $Text);
-		}
+
 		if (strpos($Text,'[/video]') !== false) {			
 			$Text = preg_replace_callback("/\[video\](.*?)\[\/video\]/ism", 'tryoembed', $Text);
 		}
@@ -527,12 +680,11 @@ function bbcode($Text,$preserve_nl = false, $tryoembed = true) {
 	}
 
 
-	// html5 video and audio
 
 
 	if ($tryoembed){
 		if (strpos($Text,'[/iframe]') !== false) {
-			$Text = preg_replace("/\[iframe\](.*?)\[\/iframe\]/ism", '<iframe src="$1" width="' . $a->videowidth . '" height="' . $a->videoheight . '"><a href="$1">$1</a></iframe>', $Text);
+			$Text = preg_replace_callback("/\[iframe\](.*?)\[\/iframe\]/ism", 'bbiframe', $Text);
 		}
 	}
 	else {
@@ -570,8 +722,6 @@ function bbcode($Text,$preserve_nl = false, $tryoembed = true) {
 		else
 			$Text = preg_replace("/\[vimeo\]([0-9]+)(.*?)\[\/vimeo\]/ism", "http://vimeo.com/$1", $Text);
 	}
-//	$Text = preg_replace("/\[youtube\](.*?)\[\/youtube\]/", '<object width="425" height="350" type="application/x-shockwave-flash" data="http://www.youtube.com/v/$1" ><param name="movie" value="http://www.youtube.com/v/$1"></param><!--[if IE]><embed src="http://www.youtube.com/v/$1" type="application/x-shockwave-flash" width="425" height="350" /><![endif]--></object>', $Text);
-
 
 	// oembed tag
 	$Text = oembed_bbcode2html($Text);
@@ -613,28 +763,6 @@ function bbcode($Text,$preserve_nl = false, $tryoembed = true) {
 	$Text = preg_replace("/\<(.*?)(src|href)=(.*?)\&amp\;(.*?)\>/ism",'<$1$2=$3&$4>',$Text);
 
 	$Text = preg_replace("/\<(.*?)(src|href)=\"[^hfm](.*?)\>/ism",'<$1$2="">',$Text);
-
-	if($saved_image)
-		$Text = bb_replace_images($Text, $saved_image);
-
-	// Clean up the HTML by loading and saving the HTML with the DOM
-	// Only do it when it has to be done - for performance reasons
-//	if (!$tryoembed) {//
-//		$doc = new DOMDocument();
-//		$doc->preserveWhiteSpace = false;
-
-//		$Text = mb_convert_encoding($Text, 'HTML-ENTITIES', "UTF-8");
-
-//		$doctype = '<!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.0 Transitional//EN" "http://www.w3.org/TR/REC-html40/loose.dtd">';
-//		@$doc->loadHTML($doctype."<html><body>".$Text."</body></html>");
-
-//		$Text = $doc->saveHTML();
-//		$Text = str_replace(array("<html><body>", "</body></html>", $doctype), array("", "", ""), $Text);
-
-//		$Text = str_replace('<br></li>','</li>', $Text);
-
-//		$Text = mb_convert_encoding($Text, "UTF-8", 'HTML-ENTITIES');
-//	}
 
 	call_hooks('bbcode',$Text);
 

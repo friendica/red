@@ -41,9 +41,9 @@ function webpages_content(&$a) {
                 return;
         }
 
-		if(local_user() && local_user() == $owner) {
-			$a->set_widget('design',design_tools());
-		}
+//		if(local_user() && local_user() == $owner) {
+//			$a->set_widget('design',design_tools());
+//		}
 
 
 		$mimetype = get_config('system','page_mimetype');

@@ -9,7 +9,7 @@
  * @param App $a
  */
 function admin_post(&$a){
-
+	logger('admin_post', LOGGER_DEBUG);
 
 	if(!is_site_admin()) {
 		return;
@@ -74,6 +74,7 @@ function admin_post(&$a){
  */
 function admin_content(&$a) {
 
+	logger('admin_content', LOGGER_DEBUG);
 	if(!is_site_admin()) {
 		return login(false);
 	}
@@ -215,13 +216,14 @@ function admin_page_site_post(&$a){
     check_form_security_token_redirectOnErr('/admin/site', 'admin_site');
 
 	$sitename 			=	((x($_POST,'sitename'))			? notags(trim($_POST['sitename']))			: '');
-	$banner				=	((x($_POST,'banner'))      		? trim($_POST['banner'])					: false);
+	$banner				=	((x($_POST,'banner'))      		? trim($_POST['banner'])				: false);
+	$admininfo			=	((x($_POST,'admininfo'))		? trim($_POST['admininfo'])				: false);
 	$language			=	((x($_POST,'language'))			? notags(trim($_POST['language']))			: '');
 	$theme				=	((x($_POST,'theme'))			? notags(trim($_POST['theme']))				: '');
-	$theme_mobile		=	((x($_POST,'theme_mobile'))	? notags(trim($_POST['theme_mobile']))				: '');
-	$theme_accessibility		=	((x($_POST,'theme_accessibility'))	? notags(trim($_POST['theme_accessibility']))				: '');
-	$site_channel		=	((x($_POST,'site_channel'))	? notags(trim($_POST['site_channel']))				: '');
-	$maximagesize		=	((x($_POST,'maximagesize'))		? intval(trim($_POST['maximagesize']))		:  0);
+	$theme_mobile			=	((x($_POST,'theme_mobile'))		? notags(trim($_POST['theme_mobile']))			: '');
+	$theme_accessibility		=	((x($_POST,'theme_accessibility'))	? notags(trim($_POST['theme_accessibility']))		: '');
+	$site_channel			=	((x($_POST,'site_channel'))	? notags(trim($_POST['site_channel']))				: '');
+	$maximagesize		=	((x($_POST,'maximagesize'))		? intval(trim($_POST['maximagesize']))				:  0);
 	
 	
 	$register_policy	=	((x($_POST,'register_policy'))	? intval(trim($_POST['register_policy']))	:  0);
@@ -301,6 +303,12 @@ function admin_page_site_post(&$a){
 		set_config('system','banner', $banner);
 	}
 
+	if ($admininfo==''){
+		del_config('system','admininfo');
+	}
+	else {
+		set_config('system','admininfo', $admininfo);
+	}
 	set_config('system','language', $language);
 	set_config('system','theme', $theme);
 	if ( $theme_mobile === '---' ) {
@@ -393,6 +401,9 @@ function admin_page_site(&$a) {
 		$banner = 'red';
 	$banner = htmlspecialchars($banner);
 	
+	/* Admin Info */
+	$admininfo = get_config('system','admininfo');
+
 	/* Register policy */
 	$register_choices = Array(
 		REGISTER_CLOSED  => t("Closed"),
@@ -425,8 +436,9 @@ function admin_page_site(&$a) {
 		
 		'$baseurl' => $a->get_baseurl(true),
 									// name, label, value, help string, extra data...
-		'$sitename' 		=> array('sitename', t("Site name"), htmlentities(get_config('system','sitename'), ENT_QUOTES), ""),
+		'$sitename' 		=> array('sitename', t("Site name"), htmlspecialchars(get_config('system','sitename'), ENT_QUOTES, 'UTF-8'),''),
 		'$banner'			=> array('banner', t("Banner/Logo"), $banner, ""),
+		'$admininfo'		=> array('admininfo', t("Administrator Information"), $admininfo, t("Contact information for site administrators.  Displayed on siteinfo page.  BBCode can be used here")),
 		'$language' 		=> array('language', t("System language"), get_config('system','language'), "", $lang_choices),
 		'$theme' 			=> array('theme', t("System theme"), get_config('system','theme'), t("Default system theme - may be over-ridden by user profiles - <a href='#' id='cnftheme'>change theme settings</a>"), $theme_choices),
 		'$theme_mobile' 	=> array('theme_mobile', t("Mobile system theme"), get_config('system','mobile_theme'), t("Theme for mobile devices"), $theme_choices_mobile),
@@ -436,7 +448,7 @@ function admin_page_site(&$a) {
 		'$maximagesize'		=> array('maximagesize', t("Maximum image size"), get_config('system','maximagesize'), t("Maximum size in bytes of uploaded images. Default is 0, which means no limits.")),
 		'$register_policy'	=> array('register_policy', t("Register policy"), get_config('system','register_policy'), "", $register_choices),
 		'$access_policy'	=> array('access_policy', t("Access policy"), get_config('system','access_policy'), "", $access_choices),
-		'$register_text'	=> array('register_text', t("Register text"), htmlentities(get_config('system','register_text'), ENT_QUOTES, 'UTF-8'), t("Will be displayed prominently on the registration page.")),
+		'$register_text'	=> array('register_text', t("Register text"), htmlspecialchars(get_config('system','register_text'), ENT_QUOTES, 'UTF-8'), t("Will be displayed prominently on the registration page.")),
 		'$abandon_days'     => array('abandon_days', t('Accounts abandoned after x days'), get_config('system','account_abandon_days'), t('Will not waste system resources polling external sites for abandonded accounts. Enter 0 for no time limit.')),
 		'$allowed_sites'	=> array('allowed_sites', t("Allowed friend domains"), get_config('system','allowed_sites'), t("Comma separated list of domains which are allowed to establish friendships with this site. Wildcards are accepted. Empty to allow any domains")),
 		'$allowed_email'	=> array('allowed_email', t("Allowed email domains"), get_config('system','allowed_email'), t("Comma separated list of domains which are allowed in email addresses for registrations to this site. Wildcards are accepted. Empty to allow any domains")),
@@ -456,7 +468,46 @@ function admin_page_site(&$a) {
 
 }
 function admin_page_hubloc_post(&$a){
-	 check_form_security_token_redirectOnErr('/admin/hubloc', 'hubloc');
+	check_form_security_token_redirectOnErr('/admin/hubloc', 'admin_hubloc');
+	require_once('include/zot.php');
+
+	//prepare for ping
+
+	if ( $_POST['hublocid']) {
+		$hublocid = $_POST['hublocid'];
+		$arrhublocurl = q("SELECT hubloc_url FROM hubloc WHERE hubloc_id = %d ",
+			intval($hublocid)
+		);
+		$hublocurl = $arrhublocurl[0]['hubloc_url'] . '/post';
+		
+		//perform ping
+		$m = zot_build_packet($a->get_channel(),'ping');
+	        $r = zot_zot($hublocurl,$m);
+		//handle results and set the hubloc flags in db to make results visible
+		$r2 = $r['body'];
+		$r3 = $r2['success'];
+		if ( $r3['success'] == True ){
+			//set HUBLOC_OFFLINE to 0
+			logger(' success = true ',LOGGER_DEBUG);
+		} else {
+			//set HUBLOC_OFFLINE to 1 
+			logger(' success = false ', LOGGER_DEBUG);
+
+		}
+		
+		//unfotunatly zping wont work, I guess return format is not correct
+		 //require_once('mod/zping.php');
+		 //$r = zping_content($hublocurl);
+        	 //logger('zping answer: ' . $r, LOGGER_DEBUG);
+		
+
+		//in case of repair store new pub key for tested hubloc (all channel with this hubloc) in db
+		//after repair set hubloc flags to 0
+
+	}
+
+
+	goaway($a->get_baseurl(true) . '/admin/hubloc' );
 	return;
 }
 
@@ -479,7 +530,8 @@ function admin_page_hubloc(&$a) {
                 '$queues' => $queues,
                 //'$accounts' => $accounts, /*$accounts is empty here*/
                 '$pending' => Array( t('Pending registrations'), $pending),
-                '$plugins' => Array( t('Active plugins'), $a->plugins )
+                '$plugins' => Array( t('Active plugins'), $a->plugins ),
+		'$form_security_token' => get_form_security_token("admin_hubloc")
         ));
 	return $o;
 }
@@ -654,9 +706,10 @@ function admin_page_users(&$a){
 
 	$users =q("SELECT `account_id` , `account_email`, `account_lastlog`, `account_created`, `account_expires`, " . 			"`account_service_class`, ( account_flags & %d ) > 0 as `blocked`, " .
 			"(SELECT GROUP_CONCAT( ch.channel_address SEPARATOR ' ') FROM channel as ch " .
-			"WHERE ch.channel_account_id = ac.account_id) as `channels` " .
+			"WHERE ch.channel_account_id = ac.account_id and not (ch.channel_pageflags & %d )) as `channels` " .
 		"FROM account as ac where true $serviceclass $order limit %d , %d ",
-		intval(ACCOUNT_BLOCKED),		
+		intval(ACCOUNT_BLOCKED),
+		intval(PAGE_REMOVED),		
 		intval($a->pager['start']),
 		intval($a->pager['itemspage'])
 	);
@@ -686,7 +739,7 @@ function admin_page_users(&$a){
 		'$submit' => t('Submit'),
 		'$select_all' => t('select all'),
 		'$h_pending' => t('User registrations waiting for confirm'),
-		'$th_pending' => array( t('Request date'), t('Name'), t('Email') ),
+		'$th_pending' => array( t('Request date'), t('Email') ),
 		'$no_pending' =>  t('No registrations.'),
 		'$approve' => t('Approve'),
 		'$deny' => t('Deny'),

@@ -47,7 +47,7 @@ you might have trouble getting everything to work.]
         
         `mkdir view/tpl/smarty3`
         
-        `chown 777 view/smarty3`
+        `chmod 777 view/smarty3`
     
     - For installing addons
     

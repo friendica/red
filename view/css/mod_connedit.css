@@ -1,0 +1,151 @@
+
+.field_abook_help {
+	color: #000;
+}
+.abook-them {
+	margin-left: 375px;
+	margin-bottom: 15px;
+}
+.abook-me {
+	margin-left: 36px;
+	margin-bottom: 15px;
+}
+.acheckbox {
+	margin-bottom: 5px !important;
+}
+
+.abook-pending-contact {
+	background: orange;
+	font-weight: bold;
+	margin: 10px;
+	padding: 20px 5px 10px;
+}
+
+#contact-slider {
+	width: 600px !important;
+}
+
+.abook-edit-them, .abook-edit-me {
+	float: left;
+	width: 100px !important;
+}
+.field_abook_help {
+	float: left;
+}
+
+#contacts-main {
+	margin-top: 20px;
+	margin-bottom: 20px;
+}
+
+
+
+#contact-edit-wrapper {
+	margin-top: 10px;
+}
+
+#contact-edit-banner-name {
+	font-size: 1.4em;
+	font-weight: bold;
+}
+
+#contact-edit-poll-wrapper {
+	margin-top: 15px;
+}
+
+#contact-edit-poll-text {
+	margin-top: 15px;
+	margin-bottom: 5px;
+}
+
+#contact-edit-update-now {
+	margin-top: 15px;
+}
+
+#contact-edit-links{
+	clear: both;
+}
+
+#contact-edit-links ul {
+	list-style: none;
+	list-style-type: none;
+	margin-left: 0px;
+	padding-left: 0px;
+}
+
+#contact-edit-links li {
+	margin-top: 5px;
+}
+
+#contact-edit-drop-link {
+	float: right;
+	margin-right: 20px;
+}
+
+#contact-edit-nav-end {
+	clear: both;
+}
+
+#contact-edit-wrapper {
+	width: 100%;
+}
+
+#contact-edit-end {
+	clear: both;
+	margin-top: 15px;
+}
+
+#contact-profile-selector {
+	width: 175px;
+	margin-left: 175px;
+}
+
+.contact-edit-submit {
+	margin-top: 20px;
+}
+
+.contact-entry-wrapper {
+	float: left;
+	width: 120px;
+	height: 120px;
+	padding: 10px;
+}
+
+#contacts-search {
+	font-size: 1em;
+	width: 300px;
+}
+
+#contacts-search-end {
+	margin-bottom: 10px;
+}
+
+.contact-entry-photo-end {
+	clear: both;
+}
+
+.contact-entry-name {
+	float: left;
+	margin-left: 0px;
+	margin-right: 10px;
+	width: 120px;
+	overflow: hidden;
+}
+
+.contact-entry-end {
+	clear: both;
+}
+
+#abook-advanced-panel, #abook-advanced {
+	opacity: 0.3;
+	filter:alpha(opacity=30);
+}
+
+#abook-advanced-panel:hover, #abook-advanced:hover {
+	opacity: 1.0;
+	filter:alpha(opacity=100);
+}
+
+#abook-advanced {
+	margin-top: 15px;
+}

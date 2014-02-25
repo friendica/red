@@ -29,9 +29,8 @@
 				<tbody>
 			{{foreach $pending as $u}}
 				<tr>
-					<td class="created">{{$u.created}}</td>
-					<td class="name">{{$u.name}}</td>
-					<td class="email">{{$u.email}}</td>
+					<td class="created">{{$u.account_created}}</td>
+					<td class="email">{{$u.account_email}}</td>
 					<td class="checkbox"><input type="checkbox" class="pending_ckbx" id="id_pending_{{$u.hash}}" name="pending[]" value="{{$u.hash}}" /></td>
 					<td class="tools">
 						<a href="{{$baseurl}}/regmod/allow/{{$u.hash}}" title='{{$approve}}'><i class='icon-thumbs-up-alt admin-icons'></i></a>

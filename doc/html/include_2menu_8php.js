@@ -9,6 +9,6 @@ var include_2menu_8php =
     [ "menu_edit_item", "include_2menu_8php.html#acb66f80ca895a6ccd562b3d9ae7b41aa", null ],
     [ "menu_fetch", "include_2menu_8php.html#a68ebbf492470c930f652013656f9071d", null ],
     [ "menu_fetch_id", "include_2menu_8php.html#a47447c01ba8ea04cd74af1d4c5b68fc7", null ],
-    [ "menu_list", "include_2menu_8php.html#acef15a498d52666b1c7e5c12765c689b", null ],
-    [ "menu_render", "include_2menu_8php.html#a890cc6237971e15f15702e6b2e88502e", null ]
+    [ "menu_list", "include_2menu_8php.html#a32701c4245e78ba9106eef52c08bf33d", null ],
+    [ "menu_render", "include_2menu_8php.html#a4d7123b0577fa994770199f9b831da11", null ]
 ];

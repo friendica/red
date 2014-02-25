@@ -1,6 +1,19 @@
+#settings-permissions-wrapper {
+	margin-top: 15px;
+}
+
+#settings-perm-advanced {
+	margin-top: 15px;
+}
+
+.settings-common-perms {
+	margin-top: 15px;
+}
+
 #settings-permissions-wrapper .field {
 	margin-bottom: 10px;
 }
+
 #settings-permissions-wrapper .field label{
 	width: 350px;
 }
@@ -14,8 +27,6 @@
 	margin-bottom: 45px;
 }
 
-
-
 #settings-notifications label {
 	margin-left: 20px;
 }
@@ -24,3 +35,17 @@
 	margin-bottom: 15px;
 }
 
+#settings-menu-desc {
+	font-weight: bold;
+	float: left;
+	width: 350px;
+}
+
+#settings-channel-menu-div select {
+	float: left;
+}
+
+#settings-channel-menu-end {
+	clear: both;
+	margin-bottom: 15px;
+}

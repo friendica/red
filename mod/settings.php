@@ -16,14 +16,10 @@ function get_theme_config_file($theme){
 }
 
 function settings_init(&$a) {
+	if(! local_user())
+		return;
+
 	$a->profile_uid = local_user();
-}
-
-
-function settings_aside(&$a) {
-
-if (! local_user())
-	return;
 
 	// default is channel settings in the absence of other arguments
 
@@ -33,105 +29,7 @@ if (! local_user())
 		$a->argv[] = 'channel';
 	}
 
-	$channel = $a->get_channel();
 
-	$abook_self_id = 0;
-
-	// Retrieve the 'self' address book entry for use in the auto-permissions link
-	if(local_user()) {		
-		$abk = q("select abook_id from abook where abook_channel = %d and ( abook_flags & %d ) limit 1",
-			intval(local_user()),
-			intval(ABOOK_FLAG_SELF)
-		);
-		if($abk)
-			$abook_self_id = $abk[0]['abook_id'];
-	}
-
-
-	$tabs = array(
-		array(
-			'label'	=> t('Account settings'),
-			'url' 	=> $a->get_baseurl(true).'/settings/account',
-			'selected'	=> ((argv(1) === 'account') ? 'active' : ''),
-		),
-	
-		array(
-			'label'	=> t('Channel settings'),
-			'url' 	=> $a->get_baseurl(true).'/settings/channel',
-			'selected'	=> ((argv(1) === 'channel') ? 'active' : ''),
-		),
-	
-		array(
-			'label'	=> t('Additional features'),
-			'url' 	=> $a->get_baseurl(true).'/settings/features',
-			'selected'	=> ((argv(1) === 'features') ? 'active' : ''),
-		),
-
-		array(
-			'label'	=> t('Feature settings'),
-			'url' 	=> $a->get_baseurl(true).'/settings/featured',
-			'selected'	=> ((argv(1) === 'featured') ? 'active' : ''),
-		),
-
-		array(
-			'label'	=> t('Display settings'),
-			'url' 	=> $a->get_baseurl(true).'/settings/display',
-			'selected'	=> ((argv(1) === 'display') ? 'active' : ''),
-		),	
-		
-		array(
-			'label' => t('Connected apps'),
-			'url' => $a->get_baseurl(true) . '/settings/oauth',
-			'selected' => ((argv(1) === 'oauth') ? 'active' : ''),
-		),
-
-		array(
-			'label' => t('Export channel'),
-			'url' => $a->get_baseurl(true) . '/uexport/basic',
-			'selected' => ''
-		),
-
-//		array(
-//			'label' => t('Export account'),
-//			'url' => $a->get_baseurl(true) . '/uexport/complete',
-//			'selected' => ''
-//		),
-
-		array(
-			'label' => t('Automatic Permissions (Advanced)'),
-			'url' => $a->get_baseurl(true) . '/connections/' . $abook_self_id,
-			'selected' => ''
-		),
-
-
-	);
-
-	if(feature_enabled(local_user(),'premium_channel')) {
-		$tabs[] = array(
-			'label' => t('Premium Channel Settings'),
-			'url' => $a->get_baseurl(true) . '/connect/' . $channel['channel_address'],
-			'selected' => ''
-		);
-
-	}
-
-	if(feature_enabled(local_user(),'channel_sources')) {
-		$tabs[] = array(
-			'label' => t('Channel Sources'),
-			'url' => $a->get_baseurl(true) . '/sources',
-			'selected' => ''
-		);
-
-	}
-
-
-	
-	$tabtpl = get_markup_template("generic_links_widget.tpl");
-	$a->page['aside'] = replace_macros($tabtpl, array(
-		'$title' => t('Settings'),
-		'$class' => 'settings-widget',
-		'$items' => $tabs,
-	));
 
 }
 
@@ -141,7 +39,7 @@ function settings_post(&$a) {
 	if(! local_user())
 		return;
 
-// logger('mod_settings: ' . print_r($_REQUEST,true));
+	// logger('mod_settings: ' . print_r($_REQUEST,true));
 
 	if(x($_SESSION,'submanage') && intval($_SESSION['submanage']))
 		return;
@@ -252,9 +150,12 @@ function settings_post(&$a) {
 			set_pconfig(local_user(),'system','mobile_theme',$mobile_theme);
 		}
 
+		$chanview_full = ((x($_POST,'chanview_full')) ? intval($_POST['chanview_full']) : 0);
+
 		set_pconfig(local_user(),'system','update_interval', $browser_update);
 		set_pconfig(local_user(),'system','itemspage', $itemspage);
 		set_pconfig(local_user(),'system','no_smilies',$nosmile);
+		set_pconfig(local_user(),'system','chanview_full',$chanview_full);
 
 
 		if ($theme == $a->channel['channel_theme']){
@@ -360,7 +261,7 @@ function settings_post(&$a) {
 	$maxreq           = ((x($_POST,'maxreq'))     ? intval($_POST['maxreq'])             : 0);
 	$expire           = ((x($_POST,'expire'))     ? intval($_POST['expire'])             : 0);
 	$def_group          = ((x($_POST,'group-selection')) ? notags(trim($_POST['group-selection'])) : '');
-
+	$channel_menu     = ((x($_POST['channel_menu'])) ? htmlspecialchars_decode(trim($_POST['channel_menu']),ENT_QUOTES) : '');
 
 	$expire_items     = ((x($_POST,'expire_items')) ? intval($_POST['expire_items'])	 : 0);
 	$expire_starred   = ((x($_POST,'expire_starred')) ? intval($_POST['expire_starred']) : 0);
@@ -368,6 +269,7 @@ function settings_post(&$a) {
 	$expire_network_only    = ((x($_POST,'expire_network_only'))? intval($_POST['expire_network_only'])	 : 0);
 
 	$allow_location   = (((x($_POST,'allow_location')) && (intval($_POST['allow_location']) == 1)) ? 1: 0);
+	$hide_presence    = (((x($_POST,'hide_presence')) && (intval($_POST['hide_presence']) == 1)) ? 1: 0);
 
 	$publish          = (((x($_POST,'profile_in_directory')) && (intval($_POST['profile_in_directory']) == 1)) ? 1: 0);
 	$page_flags       = (((x($_POST,'page-flags')) && (intval($_POST['page-flags']))) ? intval($_POST['page-flags']) : 0);
@@ -407,6 +309,7 @@ function settings_post(&$a) {
 	$arr['channel_r_pages']     = (($_POST['view_pages'])    ? $_POST['view_pages']     : 0);
 	$arr['channel_w_pages']     = (($_POST['write_pages'])   ? $_POST['write_pages']    : 0);
 	$arr['channel_a_republish'] = (($_POST['republish'])     ? $_POST['republish']      : 0);
+	$arr['channel_a_bookmark'] = (($_POST['bookmark'])     ? $_POST['bookmark']      : 0);
 	
 	$defperms = 0;
 	if(x($_POST['def_view_stream']))
@@ -443,6 +346,8 @@ function settings_post(&$a) {
 		$defperms += $_POST['def_write_pages'];
 	if(x($_POST['def_republish']))
 		$defperms += $_POST['def_republish'];
+	if(x($_POST['def_bookmark']))
+		$defperms += $_POST['def_bookmark'];
 
 	$notify = 0;
 
@@ -497,9 +402,10 @@ function settings_post(&$a) {
 	set_pconfig(local_user(),'system','post_joingroup', $post_joingroup);
 	set_pconfig(local_user(),'system','post_profilechange', $post_profilechange);
 	set_pconfig(local_user(),'system','blocktags',$blocktags);
+	set_pconfig(local_user(),'system','hide_online_status',$hide_presence);
+	set_pconfig(local_user(),'system','channel_menu',$channel_menu);
 
-
-	$r = q("update channel set channel_name = '%s', channel_pageflags = %d, channel_timezone = '%s', channel_location = '%s', channel_notifyflags = %d, channel_max_anon_mail = %d, channel_max_friend_req = %d, channel_expire_days = %d, channel_default_group = '%s', channel_r_stream = %d, channel_r_profile = %d, channel_r_photos = %d, channel_r_abook = %d, channel_w_stream = %d, channel_w_wall = %d, channel_w_tagwall = %d, channel_w_comment = %d, channel_w_mail = %d, channel_w_photos = %d, channel_w_chat = %d, channel_a_delegate = %d, channel_r_storage = %d, channel_w_storage = %d, channel_r_pages = %d, channel_w_pages = %d, channel_a_republish = %d, channel_allow_cid = '%s', channel_allow_gid = '%s', channel_deny_cid = '%s', channel_deny_gid = '%s'  where channel_id = %d limit 1",
+	$r = q("update channel set channel_name = '%s', channel_pageflags = %d, channel_timezone = '%s', channel_location = '%s', channel_notifyflags = %d, channel_max_anon_mail = %d, channel_max_friend_req = %d, channel_expire_days = %d, channel_default_group = '%s', channel_r_stream = %d, channel_r_profile = %d, channel_r_photos = %d, channel_r_abook = %d, channel_w_stream = %d, channel_w_wall = %d, channel_w_tagwall = %d, channel_w_comment = %d, channel_w_mail = %d, channel_w_photos = %d, channel_w_chat = %d, channel_a_delegate = %d, channel_r_storage = %d, channel_w_storage = %d, channel_r_pages = %d, channel_w_pages = %d, channel_a_republish = %d, channel_a_bookmark = %d, channel_allow_cid = '%s', channel_allow_gid = '%s', channel_deny_cid = '%s', channel_deny_gid = '%s'  where channel_id = %d limit 1",
 		dbesc($username),
 		intval($pageflags),
 		dbesc($timezone),
@@ -526,6 +432,7 @@ function settings_post(&$a) {
 		intval($arr['channel_r_pages']),
 		intval($arr['channel_w_pages']),
 		intval($arr['channel_a_republish']),
+		intval($arr['channel_a_bookmark']),
 		dbesc($str_contact_allow),
 		dbesc($str_group_allow),
 		dbesc($str_contact_deny),
@@ -737,7 +644,7 @@ function settings_content(&$a) {
 			$arr[$fname] = array();
 			$arr[$fname][0] = $fdata[0];
 			foreach(array_slice($fdata,1) as $f) {
-				$arr[$fname][1][] = array('feature_' .$f[0],$f[1],((intval(get_pconfig(local_user(),'feature',$f[0]))) ? "1" : ''),$f[2],array(t('Off'),t('On')));
+				$arr[$fname][1][] = array('feature_' .$f[0],$f[1],((intval(feature_enabled(local_user(),$f[0]))) ? "1" : ''),$f[2],array(t('Off'),t('On')));
 			}
 		}
 		
@@ -830,6 +737,7 @@ function settings_content(&$a) {
 		$nosmile = get_pconfig(local_user(),'system','no_smilies');
 		$nosmile = (($nosmile===false)? '0': $nosmile); // default if not set: 0
 
+		$chanview = intval(get_pconfig(local_user(),'system','chanview_full'));
 
 		$theme_config = "";
 		if( ($themeconfigfile = get_theme_config_file($theme_selected)) != null){
@@ -850,7 +758,7 @@ function settings_content(&$a) {
 			'$ajaxint'   => array('browser_update',  t("Update browser every xx seconds"), $browser_update, t('Minimum of 10 seconds, no maximum')),
 			'$itemspage'   => array('itemspage',  t("Maximum number of conversations to load at any time:"), $itemspage, t('Maximum of 100 items')),
 			'$nosmile'	=> array('nosmile', t("Don't show emoticons"), $nosmile, ''),
-			
+			'$chanview_full' => array('chanview_full', t('Do not view remote profiles in frames'), $chanview, t('By default open in a sub-window of your own site')), 			
 			'$theme_config' => $theme_config,
 		));
 		
@@ -890,6 +798,7 @@ function settings_content(&$a) {
 			array( t('Anybody in your address book'), PERMS_CONTACTS),
 			array( t('Anybody on this website'), PERMS_SITE),
 			array( t('Anybody in this network'), PERMS_NETWORK),
+			array( t('Anybody authenticated'), PERMS_AUTHED),
 			array( t('Anybody on the internet'), PERMS_PUBLIC)
 		);
 
@@ -922,6 +831,9 @@ function settings_content(&$a) {
 		$blockwall  = $a->user['blockwall'];
 		$unkmail    = $a->user['unkmail'];
 		$cntunkmail = $a->user['cntunkmail'];
+
+		$hide_presence = intval(get_pconfig(local_user(), 'system','hide_online_status'));
+
 
 		$expire_items = get_pconfig(local_user(), 'expire','items');
 		$expire_items = (($expire_items===false)? '1' : $expire_items); // default if not set: 1
@@ -999,6 +911,18 @@ function settings_content(&$a) {
 		require_once('include/group.php');
 		$group_select = mini_group_select(local_user(),$channel['channel_default_group']);
 
+		require_once('include/menu.php');
+		$m1 = menu_list(local_user());
+		$menu = false;
+		if($m1) {
+			$menu = array();
+			$current = get_pconfig(local_user(),'system','channel_menu');
+			$menu[] = array('name' => '', 'selected' => ((! $current) ? true : false));
+			foreach($m1 as $m) {
+				$menu[] = array('name' => htmlspecialchars($m['menu_name'],ENT_COMPAT,'UTF-8'), 'selected' => (($m['menu_name'] === $current) ? ' selected="selected" ' : false));
+			}
+		}
+
 		$o .= replace_macros($stpl,array(
 			'$ptitle' 	=> t('Channel Settings'),
 
@@ -1016,16 +940,21 @@ function settings_content(&$a) {
 			'$defloc'	=> array('defloc', t('Default Post Location:'), $defloc, ''),
 			'$allowloc' => array('allow_location', t('Use Browser Location:'), ((get_pconfig(local_user(),'system','use_browser_location')) ? 1 : ''), ''),
 		
-			'$adult'    => array('adult', t('Adult Content'), $adult_flag, t('This channel publishes adult content.')),
+			'$adult'    => array('adult', t('Adult Content'), $adult_flag, t('This channel frequently or regularly publishes adult content. (Please tag any adult material and/or nudity with #NSFW)')),
 
 			'$h_prv' 	=> t('Security and Privacy Settings'),
 
-			'$lbl_pmacro' => t('Quick Privacy Settings:'),
-			'$pmacro3'    => t('Very Public - extremely permissive'),
-			'$pmacro2'    => t('Typical - default public, privacy when desired'),
-			'$pmacro1'    => t('Private - default private, rarely open or public'),
-			'$pmacro0'    => t('Blocked - default blocked to/from everybody'),
+			'$hide_presence' => array('hide_presence', t('Hide my online presence'),$hide_presence, t('Prevents displaying in your profile that you are online')),
+
+			'$lbl_pmacro' => t('Simple Privacy Settings:'),
+			'$pmacro3'    => t('Very Public - <em>extremely permissive (should be used with caution)</em>'),
+			'$pmacro2'    => t('Typical - <em>default public, privacy when desired (similar to social network permissions but with improved privacy)</em>'),
+			'$pmacro1'    => t('Private - <em>default private, never open or public</em>'),
+			'$pmacro0'    => t('Blocked - <em>default blocked to/from everybody</em>'),
 			'$permiss_arr' => $permiss,
+			'$blocktags' => array('blocktags',t('Allow others to tag your posts'), 1-$blocktags, t('Often used by the community to retro-actively flag inappropriate content'),array(t('No'),t('Yes'))),
+
+			'$lbl_p2macro' => t('Advanced Privacy Settings'),
 
 			'$maxreq' 	=> array('maxreq', t('Maximum Friend Requests/Day:'), intval($channel['channel_max_friend_req']) , t('May reduce spam activity')),
 			'$permissions' => t('Default Post Permissions'),
@@ -1062,7 +991,11 @@ function settings_content(&$a) {
 			'$h_advn' => t('Advanced Account/Page Type Settings'),
 			'$h_descadvn' => t('Change the behaviour of this account for special situations'),
 			'$pagetype' => $pagetype,
-		
+			'$expert' => feature_enabled(local_user(),'expert'),
+			'$hint' => t('Please enable expert mode (in <a href="settings/features">Settings > Additional features</a>) to adjust!'),
+			'$lbl_misc' => t('Miscellaneous Settings'),
+			'$menus' => $menu,
+			'$menu_desc' => t('Personal menu to display in your channel pages'),		
 		));
 
 		call_hooks('settings_form',$o);

@@ -75,10 +75,14 @@ EOT;
 		$nav['usermenu'][] = Array('channel/' . $channel['channel_address'], t('Home'), "", t('Your posts and conversations'));
 		$nav['usermenu'][] = Array('profile/' . $channel['channel_address'], t('View Profile'), "", t('Your profile page'));
 		if(feature_enabled(local_user(),'multi_profiles'))
-			$nav['usermenu'][]   = Array('profiles', t('Edit Profiles'),"", t('Manage/Edit Profiles'));
+			$nav['usermenu'][]   = Array('profiles', t('Edit Profiles'),"", t('Manage/Edit profiles'));
 		$nav['usermenu'][] = Array('photos/' . $channel['channel_address'], t('Photos'), "", t('Your photos'));
-//		$nav['usermenu'][] = Array('events/', t('Events'), "", t('Your events'));
-		
+		$nav['usermenu'][] = Array('cloud/' . $channel['channel_address'],t('Files'),"",t('Your files'));
+		$nav['usermenu'][] = Array('chat/' . $channel['channel_address'],t('Chat'),"",t('Your chatrooms'));
+		$nav['usermenu'][] = Array('events', t('Events'), "", t('Your events'));
+		$nav['usermenu'][] = Array('bookmarks', t('Bookmarks'), "", t('Your bookmarks'));
+		if(feature_enabled($channel['channel_id'],'webpages'))
+			$nav['usermenu'][] = Array('webpages/' . $channel['channel_address'],t('Webpages'),"",t('Your webpages'));	
 	}
 	else {
 		if(! get_account_id()) 
@@ -91,7 +95,7 @@ EOT;
 
 	if($observer) {
 			$userinfo = array(
-			'icon' => $observer['xchan_photo_s'],
+			'icon' => $observer['xchan_photo_m'],
 			'name' => $observer['xchan_addr'],
 		);
 	}
@@ -165,7 +169,7 @@ EOT;
 		$nav['messages']['mark'] = array('', t('Mark all private messages seen'), '','');
 		$nav['messages']['inbox'] = array('message', t('Inbox'), "", t('Inbox'));
 		$nav['messages']['outbox']= array('message/sent', t('Outbox'), "", t('Outbox'));
-		$nav['messages']['new'] = array('message/new', t('New Message'), "", t('New Message'));
+		$nav['messages']['new'] = array('mail/new', t('New Message'), "", t('New Message'));
 
 
 		$nav['all_events'] = array('events', t('Events'), "", t('Event Calendar'));
@@ -196,7 +200,7 @@ EOT;
 	$banner = get_config('system','banner');
 
 	if($banner === false) 
-		$banner = 'red';
+		$banner = get_config('system','sitename');
 
 	$x = array('nav' => $nav, 'usermenu' => $userinfo );
 	call_hooks('nav', $x);

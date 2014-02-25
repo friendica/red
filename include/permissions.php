@@ -24,11 +24,12 @@ function get_perms() {
 		'post_mail'     => array('channel_w_mail',    intval(PERMS_W_MAIL),    false, t('Can send me private mail messages'), ''),
 		'post_photos'   => array('channel_w_photos',  intval(PERMS_W_PHOTOS),  false, t('Can post photos to my photo albums'), ''),
 		'tag_deliver'   => array('channel_w_tagwall', intval(PERMS_W_TAGWALL), false, t('Can forward to all my channel contacts via post @mentions'), t('Advanced - useful for creating group forum channels')),
-		'chat'          => array('channel_w_chat',    intval(PERMS_W_CHAT),    false, t('Can chat with me (when available)'), t('Requires compatible chat plugin')),
+		'chat'          => array('channel_w_chat',    intval(PERMS_W_CHAT),    false, t('Can chat with me (when available)'), t('')),
 		'write_storage' => array('channel_w_storage',   intval(PERMS_W_STORAGE),   false, t('Can write to my "public" file storage'), ''),
 		'write_pages' => array('channel_w_pages',   intval(PERMS_W_PAGES),   false, t('Can edit my "public" pages'), ''),
 
 		'republish' => array('channel_a_republish', intval(PERMS_A_REPUBLISH), false, t('Can source my "public" posts in derived channels'), t('Somewhat advanced - very useful in open communities')),
+		'bookmark' => array('channel_a_bookmark', intval(PERMS_A_BOOKMARK), false, t('Can send me bookmarks'), 'Bookmarks from this person will automatically be saved'),
 		'delegate'      => array('channel_a_delegate', intval(PERMS_A_DELEGATE),    false, t('Can administer my channel resources'), t('Extremely advanced. Leave this alone unless you know what you are doing')),
 	);
 	$ret = array('global_permissions' => $global_perms);
@@ -87,8 +88,13 @@ function get_all_perms($uid,$observer_xchan,$internal_use = true) {
 		// These take priority over all other settings.
 
 		if($observer_xchan) {
+			if($r[0][$channel_perm] & PERMS_AUTHED) {
+				$ret[$perm_name] = true;
+				continue;
+			}
+			
 			if(! $abook_checked) {
-				$x = q("select abook_my_perms, abook_flags from abook 
+				$x = q("select abook_my_perms, abook_flags, xchan_network from abook left join xchan on abook_xchan = xchan_hash
 					where abook_channel = %d and abook_xchan = '%s' and not ( abook_flags & %d ) limit 1",
 					intval($uid),
 					dbesc($observer_xchan),
@@ -136,9 +142,9 @@ function get_all_perms($uid,$observer_xchan,$internal_use = true) {
 			continue;
 		}
 
-		// If we're still here, we have an observer, which means they're in the network.
+		// If we're still here, we have an observer, check the network.
 
-		if($r[0][$channel_perm] & PERMS_NETWORK) {
+		if(($r[0][$channel_perm] & PERMS_NETWORK) && ($x[0]['xchan_network'] === 'zot')) {
 			$ret[$perm_name] = true;
 			continue;
 		}
@@ -239,7 +245,11 @@ function perm_is_allowed($uid,$observer_xchan,$permission) {
 		return false;
 
 	if($observer_xchan) {
-		$x = q("select abook_my_perms, abook_flags from abook where abook_channel = %d and abook_xchan = '%s' and not ( abook_flags & %d ) limit 1",
+		if($r[0][$channel_perm] & PERMS_AUTHED)
+			return true;
+
+		$x = q("select abook_my_perms, abook_flags, xchan_network from abook left join xchan on abook_xchan = xchan_hash 
+			where abook_channel = %d and abook_xchan = '%s' and not ( abook_flags & %d ) limit 1",
 			intval($uid),
 			dbesc($observer_xchan),
 			intval(ABOOK_FLAG_SELF)
@@ -271,9 +281,9 @@ function perm_is_allowed($uid,$observer_xchan,$permission) {
 		return false;
 	}
 
-	// If we're still here, we have an observer, which means they're in the network.
+	// If we're still here, we have an observer, check the network.
 
-	if($r[0][$channel_perm] & PERMS_NETWORK)
+	if(($r[0][$channel_perm] & PERMS_NETWORK) && ($x[0]['xchan_network'] === 'zot'))
 		return true;
 
 

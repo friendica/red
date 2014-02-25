@@ -25,7 +25,8 @@ function findpeople_widget() {
 		'$suggest' => t('Channel Suggestions'),
 		'$similar' => '', // FIXME and uncomment when mod/match working // t('Similar Interests'),
 		'$random' => t('Random Profile'),
-		'$inv' => t('Invite Friends')
+		'$inv' => t('Invite Friends'),
+		'$loggedin' => local_user()
 	));
 
 }

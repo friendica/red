@@ -78,7 +78,7 @@ function z_fetch_url($url, $binary = false, $redirects = 0, $opts = array()) {
 		@curl_setopt($ch, CURLOPT_BINARYTRANSFER,1);
 
 
-	// don't let curl abort the entire application
+	// don't let curl abort the entire application'
 	// if it throws any errors.
 
 	$s = @curl_exec($ch);
@@ -86,7 +86,7 @@ function z_fetch_url($url, $binary = false, $redirects = 0, $opts = array()) {
 	$base = $s;
 	$curl_info = @curl_getinfo($ch);
 	$http_code = $curl_info['http_code'];
-//	logger('fetch_url:' . $http_code . ' data: ' . $s);
+	//logger('fetch_url:' . $http_code . ' data: ' . $s);
 	$header = '';
 
 	// Pull out multiple headers, e.g. proxy and continuation headers
@@ -129,7 +129,7 @@ function z_fetch_url($url, $binary = false, $redirects = 0, $opts = array()) {
 
 
 function z_post_url($url,$params, $redirects = 0, $opts = array()) {
-
+	
 	$ret = array('return_code' => 0, 'success' => false, 'header' => "", 'body' => "");
 
 	$ch = curl_init($url);
@@ -548,7 +548,7 @@ function avatar_img($email) {
 	call_hooks('avatar_lookup', $avatar);
 
 	if(! $avatar['success'])
-		$avatar['url'] = $a->get_baseurl() . '/images/default_profile_photos/rainbow_man/175.jpg';
+		$avatar['url'] = $a->get_baseurl() . '/' . get_default_profile_photo();
 
 	logger('Avatar: ' . $avatar['email'] . ' ' . $avatar['url'], LOGGER_DEBUG);
 	return $avatar['url'];
@@ -582,7 +582,7 @@ function scale_external_images($s, $include_link = true, $scale_replace = false)
 	$a = get_app();
 
 	// Picture addresses can contain special characters
-	$s = htmlspecialchars_decode($s);
+	$s = htmlspecialchars_decode($s, ENT_COMPAT);
 
 	$matches = null;
 	$c = preg_match_all('/\[img(.*?)\](.*?)\[\/img\]/ism',$s,$matches,PREG_SET_ORDER);

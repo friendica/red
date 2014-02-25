@@ -40,13 +40,14 @@ require_once('include/BaseObject.php');
 require_once('include/features.php');
 require_once('include/taxonomy.php');
 require_once('include/identity.php');
+require_once('include/Contact.php');
 
 
 define ( 'RED_PLATFORM',            'Red Matrix' );
 define ( 'RED_VERSION',             trim(file_get_contents('version.inc')) . 'R');
 define ( 'ZOT_REVISION',            1     ); 
 
-define ( 'DB_UPDATE_VERSION',       1084  );
+define ( 'DB_UPDATE_VERSION',       1098  );
 
 define ( 'EOL',                    '<br />' . "\r\n"     );
 define ( 'ATOM_TIME',              'Y-m-d\TH:i:s\Z' );
@@ -205,6 +206,7 @@ define ( 'PAGE_DIRECTORY_CHANNEL', 0x0008 ); // system channel used for director
 define ( 'PAGE_PREMIUM',           0x0010 );
 define ( 'PAGE_ADULT',             0x0020 );
 
+define ( 'PAGE_SYSTEM',            0x1000 );
 define ( 'PAGE_REMOVED',           0x8000 );
 
 
@@ -217,7 +219,12 @@ define ( 'PHOTO_PROFILE',          0x0001 );
 define ( 'PHOTO_XCHAN',            0x0002 );
 define ( 'PHOTO_THING',            0x0004 );
 
- 
+/**
+ * Menu types
+ */ 
+
+define ( 'MENU_SYSTEM',          0x0001 );
+define ( 'MENU_BOOKMARK',        0x0002 );
 
 /**
  * Network and protocol family types
@@ -264,6 +271,7 @@ define ( 'PERMS_W_STORAGE',        0x02000);
 define ( 'PERMS_R_PAGES',          0x04000);
 define ( 'PERMS_W_PAGES',          0x08000);
 define ( 'PERMS_A_REPUBLISH',      0x10000);
+define ( 'PERMS_A_BOOKMARK',       0x20000);
 
 // General channel permissions
 
@@ -272,6 +280,7 @@ define ( 'PERMS_NETWORK'    , 0x0002 );
 define ( 'PERMS_SITE'       , 0x0004 );
 define ( 'PERMS_CONTACTS'   , 0x0008 );
 define ( 'PERMS_SPECIFIC'   , 0x0080 );
+define ( 'PERMS_AUTHED'     , 0x0100 );
 
 
 // Address book flags
@@ -298,9 +307,9 @@ define ( 'ATTACH_FLAG_OS',     0x0002);
 
 
 
-define ( 'MENU_ITEM_ZID',      0x0001);
-define ( 'MENU_ITEM_NEWWIN',   0x0002);
-
+define ( 'MENU_ITEM_ZID',       0x0001);
+define ( 'MENU_ITEM_NEWWIN',    0x0002);
+define ( 'MENU_ITEM_CHATROOM',  0x0004);
 
 /**
  * Poll/Survey types
@@ -362,11 +371,12 @@ define ( 'HUBLOC_FLAGS_PRIMARY',      0x0001);
 define ( 'HUBLOC_FLAGS_UNVERIFIED',   0x0002);
 define ( 'HUBLOC_FLAGS_DELETED',      0x1000);
 
-
+define ( 'XCHAN_FLAGS_NORMAL',		  0x0000);
 define ( 'XCHAN_FLAGS_HIDDEN',        0x0001);
 define ( 'XCHAN_FLAGS_ORPHAN',        0x0002);
 define ( 'XCHAN_FLAGS_CENSORED',      0x0004);
 define ( 'XCHAN_FLAGS_SELFCENSORED',  0x0008);
+define ( 'XCHAN_FLAGS_SYSTEM',        0x0010);
 define ( 'XCHAN_FLAGS_DELETED',       0x1000);
 /*
  * Traficlights for Administration of HubLoc
@@ -391,6 +401,7 @@ define ( 'TERM_PCATEGORY',    4 );
 define ( 'TERM_FILE',         5 );
 define ( 'TERM_SAVEDSEARCH',  6 );
 define ( 'TERM_THING',        7 );
+define ( 'TERM_BOOKMARK',     8 );
 
 define ( 'TERM_OBJ_POST',    1 );
 define ( 'TERM_OBJ_PHOTO',   2 );
@@ -478,8 +489,10 @@ define ( 'ACCOUNT_PENDING',      0x0010 );
  * Account roles
  */
 
-define ( 'ACCOUNT_ROLE_ADMIN',     0x1000 );
 define ( 'ACCOUNT_ROLE_ALLOWCODE', 0x0001 );    
+define ( 'ACCOUNT_ROLE_SYSTEM',    0x0002 );
+
+define ( 'ACCOUNT_ROLE_ADMIN',     0x1000 );
 
 /**
  * Item visibility
@@ -492,10 +505,11 @@ define ( 'ITEM_MODERATED',       0x0004);
 define ( 'ITEM_SPAM',            0x0008);
 define ( 'ITEM_DELETED',         0x0010);
 define ( 'ITEM_UNPUBLISHED',     0x0020);
-define ( 'ITEM_WEBPAGE',         0x0040);  // is a static web page, not a conversational item
+define ( 'ITEM_WEBPAGE',         0x0040);	// is a static web page, not a conversational item
 define ( 'ITEM_DELAYED_PUBLISH', 0x0080); 
-define ( 'ITEM_BUILDBLOCK',      0x0100);  // Named thusly to make sure nobody confuses this with ITEM_BLOCKED
-define ( 'ITEM_PDL',             0x0200);  // Page Description Language - e.g. Comanche
+define ( 'ITEM_BUILDBLOCK',      0x0100);	// Named thusly to make sure nobody confuses this with ITEM_BLOCKED
+define ( 'ITEM_PDL',			 0x0200);	// Page Description Language - e.g. Comanche
+define ( 'ITEM_BUG',			 0x0400);	// Is a bug, can be used by the internal bug tracker
 /**
  * Item Flags
  */
@@ -514,7 +528,6 @@ define ( 'ITEM_MENTIONSME',      0x0400);
 define ( 'ITEM_NOCOMMENT',       0x0800);  // commenting/followups are disabled
 define ( 'ITEM_OBSCURED',        0x1000);  // bit-mangled to protect from casual browsing by site admin
 define ( 'ITEM_VERIFIED',        0x2000);  // Signature verification was successful
-
 /**
  *
  * Reverse the effect of magic_quotes_gpc if it is enabled.
@@ -567,12 +580,14 @@ function startup() {
 
 class App {
 
+	public  $install    = false;           // true if we are installing the software
 		
-	public  $account    = null;            // account record
-	public  $channel    = null;            // channel record
-	public  $observer   = null;            // xchan record
-	public  $profile_uid = 0;              // If applicable, the uid of the person whose stuff this is. 
-	public  $layout     = array();         // Comanche parsed template                                           
+	public  $account    = null;            // account record of the logged-in account
+	public  $channel    = null;            // channel record of the current channel of the logged-in account
+	public  $observer   = null;            // xchan record of the page observer
+	public  $profile_uid = 0;              // If applicable, the channel_id of the "page owner"
+	public  $poi        = null;            // "person of interest", generally a referenced connection
+	public  $layout     = array();         // Comanche parsed template
 
 
 	private $perms      = null;            // observer permissions
@@ -899,44 +914,8 @@ class App {
 		return $this->groups;
 	}
 
-	/*
-	 * Use a theme or app specific widget ordering list to determine what widgets should be included
-	 * for each module and in what order and optionally what region of the page to place them.
-	 * For example:
-	 * view/wgl/mod_connections.wgl:
-	 * -----------------------------
-	 * vcard aside
-	 * follow aside
-	 * findpeople rightside
-	 * collections aside
-	 *
-	 * If your widgetlist does not include a widget that is destined for the page, it will not be rendered.
-	 * You can also use this to change the order of presentation, as they will be presented in the order you specify.
-	 *
-	 */
-
 	function set_widget($title,$html, $location = 'aside') {
-		$widgetlist_file = 'mod_' . $this->module . '.wgl';
-		if(! $this->widgetlist) {
-			if($this->module && (($f = theme_include($widgetlist_file)) !== '')) {
-				$s = file($f, FILE_IGNORE_NEW_LINES|FILE_SKIP_EMPTY_LINES);
-				if(is_array($s)) {
-					foreach($s as $x) {
-						$this->widgetlist[] = explode(' ', $x);
-					}
-				}
-			}
-			else {
-				$this->widgets[] = array('title' => $title, 'html' => $html, 'location' => $location);
-			}
-		}
-		if($this->widgetlist) {
-			foreach($this->widgetlist as $k => $v) {
-				if($v[0] && $v[0] === $title) {
-					$this->widgets[$k] = array('title' => $title, 'html' => $html, 'location' => (($v[1]) ?$v[1] : $location));
-				}
-			}
-		}
+		$this->widgets[] = array('title' => $title, 'html' => $html, 'location' => $location);
 	}
 
 	function get_widgets($location = '') {
@@ -1388,7 +1367,14 @@ function fix_system_urls($oldurl,$newurl) {
 				dbesc($rr['xchan_hash']),
 				dbesc($oldurl)
 			);
-		
+
+
+			$z = q("update profile set photo = '%s', thumb = '%s' where uid = %d",
+				dbesc(str_replace($oldurl,$newurl,$rr['xchan_photo_l'])),
+				dbesc(str_replace($oldurl,$newurl,$rr['xchan_photo_m'])),
+				intval($rr['channel_id'])
+			);
+						
 			proc_run('php', 'include/notifier.php', 'refresh_all', $rr['channel_id']);
 
 		}
@@ -1590,12 +1576,21 @@ function proc_run($cmd){
 		$args[$x] = escapeshellarg($args[$x]);
 
 	$cmdline = implode($args," ");
-	if(get_config('system','proc_windows'))
-		proc_close(proc_open('cmd /c start /b ' . $cmdline,array(),$foo));
+
+
+	if(is_windows()) {
+		$cwd = getcwd();
+		$cmd = "cmd /c start \"title\" /D \"$cwd\" /b $cmdline";
+		proc_close(proc_open($cmd, array(), $foo));
+	}
 	else
 		proc_close(proc_open($cmdline." &",array(),$foo));
 }
 
+
+function is_windows() {
+	return ((strtoupper(substr(PHP_OS,0,3)) === 'WIN') ? true : false);
+}
 
 
 function current_theme(){
@@ -1809,7 +1804,10 @@ function construct_page(&$a) {
 
 	require_once('include/comanche.php');
 
-	if(($p = theme_include('mod_' . $a->module . '.pdl')) != '')
+	// in case a page has overloaded a module, see if we already have a layout defined
+	// otherwise, if a pdl file exists for this module, use it
+
+	if((! count($a->layout)) && ($p = theme_include('mod_' . $a->module . '.pdl')) != '')
 		comanche_parser($a,@file_get_contents($p));
 
 	$comanche = ((count($a->layout)) ? true : false);
@@ -1871,6 +1869,10 @@ function construct_page(&$a) {
 	// layout completely with a new layout definition, or replace/remove existing content. 
 
 	if($comanche) {
+		$arr = array('module' => $a->module, 'layout' => $a->layout);
+		call_hooks('construct_page',$arr);
+		$a->layout = $arr['layout'];
+
 		foreach($a->layout as $k => $v) {
 			if((strpos($k,'region_') === 0) && strlen($v)) {
 				if(strpos($v,'$region_') !== false) {
@@ -1883,7 +1885,8 @@ function construct_page(&$a) {
 					$v = str_replace('$nav',$a->page['nav'],$v);
 				}
 				if(strpos($v,'$content') !== false) {
-					$v = str_replace('$content',$a->page['section'],$v);
+
+					$v = str_replace('$content',$a->page['content'],$v);
 				}
 
 				$a->page[substr($k,7)] = $v;

@@ -81,11 +81,8 @@ function mitem_content(&$a) {
 
 	$channel = $a->get_channel();
 
-	$a->set_widget('design',design_tools());
-
-
 	$m = menu_fetch($a->data['menu']['menu_name'],local_user(), get_observer_hash());
-	$a->set_widget('menu_preview',menu_render($m));
+	$a->data['menu_item'] = $m;
 
 
 	if(argc() == 2) {

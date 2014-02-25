@@ -10,8 +10,12 @@ function directory_run($argv, $argc){
 
 	cli_startup();		 
 
-	if($argc != 2)
+	if($argc < 2)
 		return;
+
+	$force = false;
+	if(($argc > 2) && ($argv[2] === 'force'))
+		$force = true;
 
 	logger('directory update', LOGGER_DEBUG);
 
@@ -29,7 +33,8 @@ function directory_run($argv, $argc){
 
 
 	if(($dirmode == DIRECTORY_MODE_PRIMARY) || ($dirmode == DIRECTORY_MODE_STANDALONE)) {
-		syncdirs($argv[1]);
+
+		local_dir_update($argv[1],$force);
 
 		q("update channel set channel_dirdate = '%s' where channel_id = %d limit 1",
 			dbesc(datetime_convert()),
@@ -53,7 +58,7 @@ function directory_run($argv, $argc){
 
 	// ensure the upstream directory is updated
 
-	$packet = zot_build_packet($channel,'refresh');
+	$packet = zot_build_packet($channel,(($force) ? 'force_refresh' : 'refresh'));
 	$z = zot_zot($url,$packet);
 
 	// re-queue if unsuccessful

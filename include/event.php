@@ -15,7 +15,7 @@ function format_event_html($ev) {
 
 	$o .= '<p class="summary event-summary">' . bbcode($ev['summary']) .  '</p>' . "\r\n";
 
-	$o .= '<p class="description event-description">' . bbcode($ev['desc']) .  '</p>' . "\r\n";
+	$o .= '<p class="description event-description">' . bbcode($ev['description']) .  '</p>' . "\r\n";
 
 	$o .= '<p class="event-start">' . t('Starts:') . ' <abbr class="dtstart" title="'
 		. datetime_convert('UTC','UTC',$ev['start'], (($ev['adjust']) ? ATOM_TIME : 'Y-m-d\TH:i:s' ))
@@ -52,8 +52,8 @@ function format_event_bbcode($ev) {
 	if($ev['summary'])
 		$o .= '[event-summary]' . $ev['summary'] . '[/event-summary]';
 
-	if($ev['desc'])
-		$o .= '[event-description]' . $ev['desc'] . '[/event-description]';
+	if($ev['description'])
+		$o .= '[event-description]' . $ev['description'] . '[/event-description]';
 
 	if($ev['start'])
 		$o .= '[event-start]' . $ev['start'] . '[/event-start]';
@@ -75,7 +75,7 @@ function format_event_bbcode($ev) {
 function bbtovcal($s) {
 	$o = '';
 	$ev = bbtoevent($s);
-	if($ev['desc'])
+	if($ev['description'])
 		$o = format_event_html($ev);
 	return $o;
 }
@@ -90,7 +90,7 @@ function bbtoevent($s) {
 		$ev['summary'] = $match[1];
 	$match = '';
 	if(preg_match("/\[event\-description\](.*?)\[\/event\-description\]/is",$s,$match))
-		$ev['desc'] = $match[1];
+		$ev['description'] = $match[1];
 	$match = '';
 	if(preg_match("/\[event\-start\](.*?)\[\/event\-start\]/is",$s,$match))
 		$ev['start'] = $match[1];
@@ -122,7 +122,7 @@ function ev_compare($a,$b) {
 	$date_b = (($b['adjust']) ? datetime_convert('UTC',date_default_timezone_get(),$b['start']) : $b['start']);
 
 	if($date_a === $date_b)
-		return strcasecmp($a['desc'],$b['desc']);
+		return strcasecmp($a['description'],$b['description']);
 	
 	return strcmp($date_a,$date_b);
 }
@@ -178,7 +178,7 @@ function event_store($arr) {
 			`start` = '%s',
 			`finish` = '%s',
 			`summary` = '%s',
-			`desc` = '%s',
+			`description` = '%s',
 			`location` = '%s',
 			`type` = '%s',
 			`adjust` = %d,
@@ -193,7 +193,7 @@ function event_store($arr) {
 			dbesc($arr['start']),
 			dbesc($arr['finish']),
 			dbesc($arr['summary']),
-			dbesc($arr['desc']),
+			dbesc($arr['description']),
 			dbesc($arr['location']),
 			dbesc($arr['type']),
 			intval($arr['adjust']),
@@ -266,7 +266,7 @@ function event_store($arr) {
 			$arr['mid'] = item_message_id();
 
 
-		$r = q("INSERT INTO event ( uid,aid,event_xchan,event_hash,created,edited,start,finish,summary, `desc`,location,type,
+		$r = q("INSERT INTO event ( uid,aid,event_xchan,event_hash,created,edited,start,finish,summary,description,location,type,
 			adjust,nofinish,allow_cid,allow_gid,deny_cid,deny_gid)
 			VALUES ( %d, %d, '%s', '%s', '%s', '%s', '%s', '%s', '%s', '%s', '%s', '%s', %d, %d, '%s', '%s', '%s', '%s' ) ",
 			intval($arr['uid']),
@@ -278,7 +278,7 @@ function event_store($arr) {
 			dbesc($arr['start']),
 			dbesc($arr['finish']),
 			dbesc($arr['summary']),
-			dbesc($arr['desc']),
+			dbesc($arr['description']),
 			dbesc($arr['location']),
 			dbesc($arr['type']),
 			intval($arr['adjust']),
@@ -336,6 +336,8 @@ function event_store($arr) {
 
 		$item_arr['obj_type']      = ACTIVITY_OBJ_EVENT;
 		$item_arr['body']          = format_event_bbcode($arr);
+
+		$item_arr['plink'] = z_root() . '/channel/' . $z[0]['channel_address'] . '/?f=&mid=' . $item_arr['mid'];
 
 		$x = q("select * from xchan where xchan_hash = '%s' limit 1",
 				dbesc($arr['event_xchan'])

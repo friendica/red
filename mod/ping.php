@@ -43,6 +43,38 @@ function ping_init(&$a) {
 		unset($_SESSION['sysmsg_info']);
 	}
 
+	if($a->install) {
+		echo json_encode($result);
+		killme();
+	}
+
+
+	if(get_observer_hash() && (! $result['invalid'])) {
+		$r = q("select cp_id, cp_room from chatpresence where cp_xchan = '%s' and cp_client = '%s' and cp_room = 0 limit 1",
+			dbesc(get_observer_hash()),
+			dbesc($_SERVER['REMOTE_ADDR'])
+		);
+		$basic_presence = false;
+		if($r) {
+			$basic_presence = true;	
+			q("update chatpresence set cp_last = '%s' where cp_id = %d limit 1",
+				dbesc(datetime_convert()),
+				intval($r[0]['cp_id'])
+			);
+		}
+		if(! $basic_presence) {
+			q("insert into chatpresence ( cp_xchan, cp_last, cp_status, cp_client)
+				values( '%s', '%s', '%s', '%s' ) ",
+				dbesc(get_observer_hash()),
+				dbesc(datetime_convert()),
+				dbesc('online'),
+				dbesc($_SERVER['REMOTE_ADDR'])
+			);
+		}
+	}
+
+	q("delete from chatpresence where cp_last < UTC_TIMESTAMP() - INTERVAL 3 MINUTE"); 
+
 	if((! local_user()) || ($result['invalid'])) {
 		echo json_encode($result);
 		killme();
@@ -151,7 +183,7 @@ function ping_init(&$a) {
 			foreach($t as $zz) {
 //				$msg = sprintf( t('sent you a private message.'), $zz['xchan_name']);
 				$notifs[] = array(
-					'notify_link' => $a->get_baseurl() . '/message/' . $zz['id'], 
+					'notify_link' => $a->get_baseurl() . '/mail/' . $zz['id'], 
 					'name' => $zz['xchan_name'],
 					'url' => $zz['xchan_url'],
 					'photo' => $zz['xchan_photo_s'],
@@ -209,7 +241,7 @@ function ping_init(&$a) {
 		if($r) {
 			foreach($r as $rr) {
 				$result[] = array(
-					'notify_link' => $a->get_baseurl() . '/connections/' . $rr['abook_id'],
+					'notify_link' => $a->get_baseurl() . '/connedit/' . $rr['abook_id'],
 					'name' => $rr['xchan_name'],
 					'url' => $rr['xchan_url'],
 					'photo' => $rr['xchan_photo_s'],

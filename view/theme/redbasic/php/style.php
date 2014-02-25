@@ -1,5 +1,7 @@
 <?php
-// Get the UID of the channel owner
+
+if(! $a->install) {
+	// Get the UID of the channel owner
 	$uid = get_theme_uid();
 
 	if($uid)
@@ -12,7 +14,9 @@
 	    $nav_colour = get_pconfig($uid, "redbasic", "nav_colour");	
 
 // Load the owners pconfig
+		$narrow_navbar = get_pconfig($uid,'redbasic','narrow_navbar');
 		$banner_colour = get_pconfig($uid,'redbasic','banner_colour');
+	    $link_colour = get_pconfig($uid, "redbasic", "link_colour");	
 		$schema = get_pconfig($uid,'redbasic','schema');
 	    $bgcolour = get_pconfig($uid, "redbasic", "background_colour");	
 	    $background_image = get_pconfig($uid, "redbasic", "background_image");	
@@ -30,6 +34,8 @@
 		$sloppy_photos=get_pconfig($uid,'redbasic','sloppy_photos');
 		$top_photo=get_pconfig($uid,'redbasic','top_photo');
 		$reply_photo=get_pconfig($uid,'redbasic','reply_photo');
+
+}
 
 // Now load the scheme.  If a value is changed above, we'll keep the settings
 // If not, we'll keep those defined by the schema
@@ -63,6 +69,8 @@
 			$nav_bg_3 = "#f00";
 			$nav_bg_4 = "#b00";
 		}
+	if (! $link_colour)
+		$link_colour = "#0080FF";
 	if (! $banner_colour)
 		$banner_colour = "fff";
 	if (! $bgcolour)
@@ -130,6 +138,38 @@
 					$nav_bg_1 = $nav_bg_2 = $nav_bg_3 = $nav_bg_4 = "silver";
 					$search_background = '#EEEEEE';
 		}
+		if($nav_colour === "pink") {
+		      $nav_bg_1 = $nav_bg_3 = "#FFC1CA";
+		      $nav_bg_2 = $nav_bg_4 = "#FFC1CA";
+	}
+		if($nav_colour === "green") {
+		      $nav_bg_1 = $nav_bg_3 = "#5CD65C";
+		      $nav_bg_2 = $nav_bg_4 = "#5CD65C";
+	}
+		if($nav_colour === "blue") {
+		      $nav_bg_1 = $nav_bg_3 = "#1872a2";
+		      $nav_bg_2 = $nav_bg_4 = "#1872a2";
+	}
+		if($nav_colour === "purple") {
+		      $nav_bg_1 = $nav_bg_3 = "#551A8B";
+		      $nav_bg_2 = $nav_bg_4 = "#551A8B";
+	}
+		if($nav_colour === "orange") {
+		      $nav_bg_1 = $nav_bg_3 = "#FF3D0D";
+		      $nav_bg_2 = $nav_bg_4 = "#FF3D0D";
+	}	
+		if($nav_colour === "brown") {
+		      $nav_bg_1 = $nav_bg_3 = "#330000";
+		      $nav_bg_2 = $nav_bg_4 = "#330000";
+	}
+		if($nav_colour === "grey") {
+		      $nav_bg_1 = $nav_bg_3 = "#2e2f2e";
+		      $nav_bg_2 = $nav_bg_4 = "#2e2f2e";
+	}
+		if($nav_colour === "gold") {
+		      $nav_bg_1 = $nav_bg_3 = "#FFAA00";
+		      $nav_bg_2 = $nav_bg_4 = "#FFAA00";
+	}
 
 		
 // Apply the settings
@@ -141,6 +181,7 @@ $options = array (
 '$nav_bg_2' => $nav_bg_2,
 '$nav_bg_3' => $nav_bg_3,
 '$nav_bg_4' => $nav_bg_4,
+'$link_colour' => $link_colour,
 '$banner_colour' => $banner_colour,
 '$search_background' => $search_background,
 '$bgcolour' => $bgcolour,
@@ -172,4 +213,7 @@ echo str_replace(array_keys($options), array_values($options), $x);
 
 if($sloppy_photos && file_exists('view/theme/redbasic/css/sloppy_photos.css')) {
 	echo file_get_contents('view/theme/redbasic/css/sloppy_photos.css');
+} 
+if($narrow_navbar && file_exists('view/theme/redbasic/css/narrow_navbar.css')) {
+	echo file_get_contents('view/theme/redbasic/css/narrow_navbar.css');
 } 

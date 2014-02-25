@@ -141,7 +141,7 @@ Functions</h2></td></tr>
 <p>The sender of this packet is an arbitrary/random site channel. The recipients will be a single recipient corresponding to the guid and guid_sig we have associated with the requesting auth identity</p>
 <p>{ "type":"auth_check", "sender":{ "guid":"kgVFf_...", "guid_sig":"PT9-TApz...", "url":"http:\/\/podunk.edu", "url_sig":"T8Bp7j..." }, "recipients":{ { "guid":"ZHSqb...", "guid_sig":"JsAAXi..." } } "callback":"\/post", "version":1, "secret":"1eaa661", "secret_sig":"eKV968b1..." }</p>
 <p>auth_check messages MUST use encapsulated encryption. This message is sent to the origination site, which checks the 'secret' to see if it is the same as the 'sec' which it passed originally. It also checks the secret_sig which is the secret signed by the destination channel's private key and base64url encoded. If everything checks out, a json packet is returned:</p>
-<p>{ "success":1, "confirm":"q0Ysovd1u..." "service_class":(optional) }</p>
+<p>{ "success":1, "confirm":"q0Ysovd1u..." "service_class":(optional) "level":(optional) }</p>
 <p>'confirm' in this case is the base64url encoded RSA signature of the concatenation of 'secret' with the base64url encoded whirlpool hash of the requestor's guid and guid_sig; signed with the source channel private key. This prevents a man-in-the-middle from inserting a rogue success packet. Upon receipt and successful verification of this packet, the destination site will redirect to the original destination URL and indicate a successful remote login. Service_class can be used by cooperating sites to provide different access rights based on account rights and subscription plans. It is a string whose contents are not defined by protocol. Example: "basic" or "gold".</p>
 
 </div>
@@ -162,8 +162,8 @@ Functions</h2></td></tr>
 <p>post_post(&amp;$a) zot communications and messaging</p>
 <p>Sender HTTP posts to this endpoint ($site/post typically) with 'data' parameter set to json zot message packet. This packet is optionally encrypted, which we will discover if the json has an 'iv' element. $contents =&gt; array( 'alg' =&gt; 'aes256cbc', 'iv' =&gt; initialisation vector, 'key' =&gt; decryption key, 'data' =&gt; encrypted data); $contents-&gt;iv and $contents-&gt;key are random strings encrypted with this site's RSA public key and then base64url encoded. Currently only 'aes256cbc' is used, but this is extensible should that algorithm prove inadequate.</p>
 <p>Once decrypted, one will find the normal json_encoded zot message packet.</p>
-<p>Defined packet types are: notify, purge, refresh, auth_check, ping, and pickup</p>
-<p>Standard packet: (used by notify, purge, refresh, and auth_check)</p>
+<p>Defined packet types are: notify, purge, refresh, force_refresh, auth_check, ping, and pickup</p>
+<p>Standard packet: (used by notify, purge, refresh, force_refresh, and auth_check)</p>
 <p>{ "type": "notify", "sender":{ "guid":"kgVFf_1...", "guid_sig":"PT9-TApzp...", "url":"http:\/\/podunk.edu", "url_sig":"T8Bp7j5...", }, "recipients": { optional recipient array }, "callback":"\/post", "version":1, "secret":"1eaa...", "secret_sig": "df89025470fac8..." }</p>
 <p>Signature fields are all signed with the sender channel private key and base64url encoded. Recipients are arrays of guid and guid_sig, which were previously signed with the recipients private key and base64url encoded and later obtained via channel discovery. Absence of recipients indicates a public message or visible to all potential listeners on this site.</p>
 <p>"pickup" packet: The pickup packet is sent in response to a notify packet from another site</p>

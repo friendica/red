@@ -39,7 +39,7 @@
 		<div class="wall-item-author">
 				<a href="{{$item.profile_url}}" title="{{$item.linktitle}}" class="wall-item-name-link"><span class="wall-item-name{{$item.sparkle}}" id="wall-item-name-{{$item.id}}" >{{$item.name}}</span></a>{{if $item.owner_url}} {{$item.via}} <a href="{{$item.owner_url}}" title="{{$item.olinktitle}}" class="wall-item-name-link"><span class="wall-item-name{{$item.osparkle}}" id="wall-item-ownername-{{$item.id}}">{{$item.owner_name}}</span></a>{{/if}}<br />
 
-				<div class="wall-item-ago"  id="wall-item-ago-{{$item.id}}">{{if $item.verified}}<i class="icon-ok" title="{{$item.verified}}"></i>&nbsp;{{/if}}<span class="autotime" title="{{$item.isotime}}">{{$item.localtime}}{{if $item.editedtime}} {{$item.editedtime}}{{/if}}</span>{{if $item.app}}<span class="item.app">{{$item.str_app}}</span>{{/if}}</div>
+				<div class="wall-item-ago"  id="wall-item-ago-{{$item.id}}">{{if $item.verified}}<i class="icon-ok" title="{{$item.verified}}"></i>&nbsp;{{/if}}<span class="autotime" title="{{$item.isotime}}">{{$item.localtime}}{{if $item.editedtime}} {{$item.editedtime}}{{/if}}{{if $item.expiretime}} {{$item.expiretime}}{{/if}}</span>{{if $item.app}}<span class="item.app">{{$item.str_app}}</span>{{/if}}</div>
 		</div>			
 		<div class="wall-item-content" id="wall-item-content-{{$item.id}}" >
 			<div class="wall-item-title" id="wall-item-title-{{$item.id}}">{{$item.title}}</div>
@@ -72,10 +72,10 @@
 				<i class="icon-retweet item-tool" title="{{$item.share.0}}" onclick="jotShare({{$item.id}}); return false"></i>
 			{{/if}}
 			{{if $item.plink}}
-				<i class="icon-external-link item-tool" onclick="window.location.href='{{$item.plink.href}}'; return false;" title="{{$item.plink.title}}"></i>
+				<a href="{{$item.plink.href}}" title="{{$item.plink.title}}" ><i class="icon-external-link item-tool"></i></a>
 			{{/if}}
 			{{if $item.edpost}}
-				<i class="editpost icon-pencil item-tool" onclick="window.location.href='{{$item.edpost.0}}'; return false;" title="{{$item.edpost.1}}"></i>
+				<a href="{{$item.edpost.0}}" title="{{$item.edpost.1}}"><i class="editpost icon-pencil item-tool"></i></a>
 			{{/if}}			 
 			{{if $item.star}}
 			<i id="starred-{{$item.id}}" onclick="dostar({{$item.id}}); return false;" class="star-item item-tool {{$item.star.isstarred}}" title="{{$item.star.toggle}}"></i>
@@ -85,6 +85,9 @@
 			{{/if}}
 			{{if $item.filer}}
 			<i id="filer-{{$item.id}}" onclick="itemFiler({{$item.id}}); return false;" class="filer-item icon-folder-open item-tool" title="{{$item.filer}}"></i>
+			{{/if}}
+			{{if $item.bookmark}}
+			<i id="bookmarker-{{$item.id}}" onclick="itemBookmark({{$item.id}}); return false;" class="bookmark-item icon-bookmark item-tool" title="{{$item.bookmark}}"></i>
 			{{/if}}			
 			<div id="like-rotator-{{$item.id}}" class="like-rotator"></div>
 

@@ -1,9 +1,6 @@
 var searchData=
 [
   ['lang_5fselector',['lang_selector',['../text_8php.html#a71f6952243d3fe1c5a8154f78027e29c',1,'text.php']]],
-  ['lastpost_5faside',['lastpost_aside',['../lastpost_8php.html#a6108289ef2a767495c7c85a24f364983',1,'lastpost.php']]],
-  ['lastpost_5fcontent',['lastpost_content',['../lastpost_8php.html#a82f14cce5d3cfe27f40bdbd2c679d493',1,'lastpost.php']]],
-  ['lastpost_5finit',['lastpost_init',['../lastpost_8php.html#ab4c6ebd25736af678e64d55ce508ce8c',1,'lastpost.php']]],
   ['layout_5fselect',['layout_select',['../text_8php.html#a3999a0b3e22e440f280ee791ce34d384',1,'text.php']]],
   ['layouts_5fcontent',['layouts_content',['../layouts_8php.html#a6e0193759ad9eef76d3df2db24237b50',1,'layouts.php']]],
   ['legal_5fwebbie',['legal_webbie',['../text_8php.html#a2690ad67bb6fb97ef69de3e8d23f2728',1,'text.php']]],
@@ -23,9 +20,11 @@ var searchData=
   ['load_5fplugin',['load_plugin',['../plugin_8php.html#a9ca9632b7309a65b05c03a3e2f473a3d',1,'plugin.php']]],
   ['load_5ftranslation_5ftable',['load_translation_table',['../language_8php.html#a7e9904c730bb24ddcb0ff50fc96f6b05',1,'language.php']]],
   ['load_5fxconfig',['load_xconfig',['../include_2config_8php.html#a55bbed9a014c9109c767486834f3ca33',1,'config.php']]],
+  ['local_5fdir_5fupdate',['local_dir_update',['../dir__fns_8php.html#acd37b17dce3bdec6d5a6344a20598c1e',1,'dir_fns.php']]],
   ['local_5fuser',['local_user',['../boot_8php.html#ad4c9dc2c8a82e8f52b7404c1655eab44',1,'boot.php']]],
   ['localize_5fitem',['localize_item',['../conversation_8php.html#a9bd7f9fb6678736c581bcba3b17f471c',1,'conversation.php']]],
   ['lockview_5fcontent',['lockview_content',['../lockview_8php.html#a851e26ab9a1008df5c5ebebea31e9b44',1,'lockview.php']]],
+  ['log',['log',['../classRedDirectory.html#a11376aed1963b4471eb1592c13c63976',1,'RedDirectory\log()'],['../classRedBasicAuth.html#a2cc8b1eac9c5a799bfb53ea7f287f3f0',1,'RedBasicAuth\log()']]],
   ['logger',['logger',['../text_8php.html#a030fa5ecc64168af0c4f44897a9bce63',1,'text.php']]],
   ['login',['login',['../boot_8php.html#aefecf8599036df7f1b95d6820e0e2fa4',1,'boot.php']]],
   ['login_5fcontent',['login_content',['../login_8php.html#a1d69ca88eb9005a7026e128b9a645904',1,'login.php']]],

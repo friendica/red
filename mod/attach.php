@@ -17,10 +17,33 @@ function attach_init(&$a) {
 		return;
 	}
 
-	header('Content-type: ' . $r['data']['filetype']);
-	header('Content-disposition: attachment; filename=' . $r['data']['filename']);
-	if($r['data']['flags'] & ATTACH_FLAG_OS )
-		echo @file_get_contents($r['data']['data']);
+	$c = q("select channel_address from channel where channel_id = %d limit 1",
+		intval($r['data']['uid'])
+	);
+
+	if(! $c)
+		return;
+
+
+	$unsafe_types = array('text/html','text/css','application/javascript');
+
+	if(in_array($r['data']['filetype'],$unsafe_types)) {
+			header('Content-type: text/plain');
+	}
+	else {
+		header('Content-type: ' . $r['data']['filetype']);
+	}
+
+	header('Content-disposition: attachment; filename="' . $r['data']['filename'] . '"');
+	if($r['data']['flags'] & ATTACH_FLAG_OS ) {
+		$istream = fopen('store/' . $c[0]['channel_address'] . '/' . $r['data']['data'],'rb');
+		$ostream = fopen('php://output','wb');
+		if($istream && $ostream) {
+			pipe_streams($istream,$ostream);
+			fclose($istream);
+			fclose($ostream);
+		}
+	}
 	else
 		echo $r['data']['data'];
 	killme();

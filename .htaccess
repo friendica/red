@@ -1,6 +1,7 @@
 Options -Indexes
 AddType application/x-java-archive .jar
 AddType audio/ogg .oga
+#SSLCipherSuite ECDHE-RSA-AES128-SHA256:AES128-GCM-SHA256:RC4:HIGH:!MD5:!aNULL:!EDH
 
 # don't allow any web access to logfiles, even after rotation/compression
 <FilesMatch "\.(out|log|gz)$">
@@ -11,6 +12,7 @@ Deny from all
   RewriteEngine on
   # Protect repository directory from browsing
   RewriteRule "(^|/)\.git" - [F]
+  RewriteRule "(^|/)store" - [F]
 
 
   # Rewrite current-style URLs of the form 'index.php?q=x'.

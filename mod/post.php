@@ -69,6 +69,7 @@ function post_init(&$a) {
  *      "success":1, 
  *      "confirm":"q0Ysovd1u..."
  *      "service_class":(optional)
+ *      "level":(optional)
  *    }
  *
  * 'confirm' in this case is the base64url encoded RSA signature of the concatenation of 'secret' with the
@@ -150,6 +151,7 @@ function post_init(&$a) {
 		$remote = remote_user();
 		$result = null;
 		$remote_service_class = '';
+		$remote_level = 0;
 		$remote_hub = $x[0]['hubloc_url'];
 
 		// Also check that they are coming from the same site as they authenticated with originally.
@@ -210,6 +212,8 @@ function post_init(&$a) {
 				}
 				if(array_key_exists('service_class',$j))
 					$remote_service_class = $j['service_class'];
+				if(array_key_exists('level',$j))
+					$remote_level = $j['level'];
 			}
 			// everything is good... maybe
 			if(local_user()) {
@@ -232,7 +236,7 @@ function post_init(&$a) {
 
 			if($test) {
 				$ret['success'] = true;
-				$ret['message'] .= 'Success' . EOL;
+				$ret['message'] .= 'Authentication Success!' . EOL;
 				json_return_and_die($ret);
 			}
 
@@ -241,6 +245,7 @@ function post_init(&$a) {
 			$_SESSION['visitor_id'] = $x[0]['xchan_hash'];
 			$_SESSION['my_address'] = $address;
 			$_SESSION['remote_service_class'] = $remote_service_class;
+			$_SESSION['remote_level'] = $remote_level;
 			$_SESSION['remote_hub'] = $remote_hub;
 			
 			$arr = array('xchan' => $x[0], 'url' => $desturl, 'session' => $_SESSION);
@@ -250,6 +255,11 @@ function post_init(&$a) {
 			$a->set_groups(init_groups_visitor($_SESSION['visitor_id']));
 			info(sprintf( t('Welcome %s. Remote authentication successful.'),$x[0]['xchan_name']));
 			logger('mod_zot: auth success from ' . $x[0]['xchan_addr']); 
+			 q("update hubloc set hubloc_status =  (hubloc_status | %d ) where hubloc_id = %d ",
+                                intval(HUBLOC_WORKS),
+                                intval($x[0]['hubloc_id'])
+                        );
+
 
 		} else {
 			if($test) {
@@ -294,9 +304,9 @@ function post_init(&$a) {
  *
  *     Once decrypted, one will find the normal json_encoded zot message packet. 
  * 
- * Defined packet types are: notify, purge, refresh, auth_check, ping, and pickup 
+ * Defined packet types are: notify, purge, refresh, force_refresh, auth_check, ping, and pickup 
  *
- * Standard packet: (used by notify, purge, refresh, and auth_check)
+ * Standard packet: (used by notify, purge, refresh, force_refresh, and auth_check)
  *
  * {
  *  "type": "notify",
@@ -440,14 +450,12 @@ function post_init(&$a) {
 	
 function post_post(&$a) {
 
-	logger('mod_zot: ' . print_r($_REQUEST,true), LOGGER_DEBUG);
 
 	$encrypted_packet = false;
 	$ret = array('success' => false);
 
 	$data = json_decode($_REQUEST['data'],true);
 
-	logger('mod_zot: data: ' . print_r($data,true), LOGGER_DATA);
 
 	/**
 	 * Many message packets will arrive encrypted. The existence of an 'iv' element 
@@ -476,7 +484,6 @@ function post_post(&$a) {
 		$data = array('type' => 'bogus');
 	}
 
-	logger('mod_zot: decoded data: ' . print_r($data,true), LOGGER_DATA);
 
 	$msgtype = ((array_key_exists('type',$data)) ? $data['type'] : '');
 
@@ -485,6 +492,7 @@ function post_post(&$a) {
 		// Useful to get a health check on a remote site.
 		// This will let us know if any important communication details
 		// that we may have stored are no longer valid, regardless of xchan details.
+		logger('POST: got ping send pong now back: ' . z_root() , LOGGER_DEBUG );
  
 		$ret['success'] = true;
 		$ret['site'] = array();
@@ -785,10 +793,13 @@ function post_post(&$a) {
 		}
 	}
 
-	if($msgtype === 'refresh') {
+	if(($msgtype === 'refresh') || ($msgtype === 'force_refresh')) {
 
 		// remote channel info (such as permissions or photo or something)
 		// has been updated. Grab a fresh copy and sync it.
+		// The difference between refresh and force_refresh is that 
+		// force_refresh unconditionally creates a directory update record,
+		// even if no changes were detected upon processing.
 
 		if($recipients) {
 
@@ -806,7 +817,7 @@ function post_post(&$a) {
 						'xchan_guid'     => $sender['guid'], 
 						'xchan_guid_sig' => $sender['guid_sig'],
 						'hubloc_url'     => $sender['url']
-				),$r[0]);
+				),$r[0], (($msgtype === 'force_refresh') ? true : false));
 			}
 		}
 		else {
@@ -817,7 +828,7 @@ function post_post(&$a) {
 				'xchan_guid'     => $sender['guid'], 
 				'xchan_guid_sig' => $sender['guid_sig'],
 				'hubloc_url'     => $sender['url']
-			),null);
+			),null,(($msgtype === 'force_refresh') ? true : false));
 		}
 		$ret['success'] = true;
 		json_return_and_die($ret);

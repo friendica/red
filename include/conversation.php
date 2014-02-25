@@ -687,12 +687,13 @@ function conversation(&$a, $items, $mode, $update, $page_mode = 'traditional', $
 					'isotime' => datetime_convert('UTC', date_default_timezone_get(), $item['created'], 'c'),
 					'localtime' => datetime_convert('UTC', date_default_timezone_get(), $item['created'], 'r'),
 					'editedtime' => (($item['edited'] != $item['created']) ? sprintf( t('last edited: %s'), datetime_convert('UTC', date_default_timezone_get(), $item['edited'], 'r')) : ''),
+					'expiretime' => (($item['expires'] !== '0000-00-00 00:00:00') ? sprintf( t('Expires: %s'), datetime_convert('UTC', date_default_timezone_get(), $item['expires'], 'r')):''),
 					'location' => $location,
 					'indent' => '',
 					'owner_name' => $owner_name,
 					'owner_url' => $owner_url,
 					'owner_photo' => $owner_photo,
-					'plink' => get_plink($item,$mode),
+					'plink' => get_plink($item,false),
 					'edpost' => false,
 					'isstarred' => $isstarred,
 					'star' => $star,
@@ -782,6 +783,9 @@ function conversation(&$a, $items, $mode, $update, $page_mode = 'traditional', $
 //					$tx1 = dba_timer();
                     $item_object = new Item($item);
                     $conv->add_thread($item_object);
+					if($page_mode === 'list') 
+						$item_object->set_template('conv_list.tpl');
+
 //					$tx2 = dba_timer();
 //					if($mode === 'network')
 //						profiler($tx1,$tx2,'add thread ' . $item['id']);
@@ -908,14 +912,14 @@ function item_photo_menu($item){
 	}
 
     $profile_link = z_root() . "/chanview/?f=&hash=" . $item['author_xchan'];
-	$pm_url = $a->get_baseurl($ssl_state) . '/message/new/?f=&hash=' . $item['author_xchan'];
+	$pm_url = $a->get_baseurl($ssl_state) . '/mail/new/?f=&hash=' . $item['author_xchan'];
 
 	if($a->contacts && array_key_exists($item['author_xchan'],$a->contacts))
 		$contact = $a->contacts[$item['author_xchan']];
 
 	if($contact) {
 		$poke_link = $a->get_baseurl($ssl_state) . '/poke/?f=&c=' . $contact['abook_id'];
-		$contact_url = $a->get_baseurl($ssl_state) . '/connections/' . $contact['abook_id'];
+		$contact_url = $a->get_baseurl($ssl_state) . '/connedit/' . $contact['abook_id'];
 		$posts_link = $a->get_baseurl($ssl_state) . '/network/?cid=' . $contact['abook_id'];
 
 		$clean_url = normalise_link($item['author-link']);
@@ -1108,7 +1112,7 @@ function status_editor($a,$x,$popup=false) {
 		'$shortsetloc' => t('set location'),
 		'$noloc' => t('Clear browser location'),
 		'$shortnoloc' => t('clear location'),
-		'$title' => ((x($x,'title')) ? htmlspecialchars($x['title']) : ''),
+		'$title' => ((x($x,'title')) ? htmlspecialchars($x['title'], ENT_COMPAT,'UTF-8') : ''),
 		'$placeholdertitle' => t('Set title'),
 		'$catsenabled' => ((feature_enabled($x['profile_uid'],'categories') && (! $webpage)) ? 'categories' : ''),
 		'$category' => "",
@@ -1117,7 +1121,7 @@ function status_editor($a,$x,$popup=false) {
 		'$permset' => t('Permission settings'),
 		'$shortpermset' => t('permissions'),
 		'$ptyp' => (($notes_cid) ? 'note' : 'wall'),
-		'$content' => ((x($x,'body')) ? htmlspecialchars($x['body']) : ''),
+		'$content' => ((x($x,'body')) ? htmlspecialchars($x['body'], ENT_COMPAT,'UTF-8') : ''),
 		'$post_id' => '',
 		'$baseurl' => $a->get_baseurl(true),
 		'$defloc' => $x['default_location'],
@@ -1142,6 +1146,8 @@ function status_editor($a,$x,$popup=false) {
 		'$feature_encrypt' => ((feature_enabled($x['profile_uid'],'content_encrypt') && (! $webpage)) ? 'block' : 'none'),
 		'$encrypt' => t('Encrypt text'),
 		'$cipher' => $cipher,
+		'$expiryModalOK' => t('OK'),
+		'$expiryModalCANCEL' => t('Cancel'),
 	));
 
 
@@ -1294,18 +1300,25 @@ function prepare_page($item) {
 
 	$a = get_app();
 	$naked = ((get_pconfig($item['uid'],'system','nakedpage')) ? 1 : 0);
+	$observer = $a->get_observer();
+	$zid = ($observer['xchan_addr']);
+	//240 chars is the longest we can have before we start hitting problems with suhosin sites
+	$preview = substr(urlencode($item['body']), 0, 240);
+	$link = z_root() . '/' . $a->cmd;
 	if(array_key_exists('webpage',$a->layout) && array_key_exists('authored',$a->layout['webpage'])) {
 		if($a->layout['webpage']['authored'] === 'none')
 			$naked = 1;
 		// ... other possible options
 	}
-
 	return replace_macros(get_markup_template('page_display.tpl'),array(
 		'$author' => (($naked) ? '' : $item['author']['xchan_name']),
 		'$auth_url' => (($naked) ? '' : $item['author']['xchan_url']),
+		'$zid' => $zid,
 		'$date' => (($naked) ? '' : datetime_convert('UTC',date_default_timezone_get(),$item['created'],'Y-m-d H:i')),
 		'$title' => smilies(bbcode($item['title'])),
-		'$body' => prepare_body($item,true)
+		'$body' => prepare_body($item,true),
+		'$preview' => $preview,
+		'$link' => $link,
 	));
 }
 
@@ -1366,26 +1379,26 @@ function network_tabs() {
 	$tabs = array(
 		array(
 			'label' => t('Commented Order'),
-			'url'=>$a->get_baseurl(true) . '/' . $cmd . '?f=&order=comment' . ((x($_GET,'cid')) ? '&cid=' . $_GET['cid'] : ''), 
+			'url'=>$a->get_baseurl(true) . '/' . $cmd . '?f=&order=comment' . ((x($_GET,'cid')) ? '&cid=' . $_GET['cid'] : '') . ((x($_GET,'gid')) ? '&gid=' . $_GET['gid'] : ''), 
 			'sel'=>$all_active,
 			'title'=> t('Sort by Comment Date'),
 		),
 		array(
 			'label' => t('Posted Order'),
-			'url'=>$a->get_baseurl(true) . '/' . $cmd . '?f=&order=post' . ((x($_GET,'cid')) ? '&cid=' . $_GET['cid'] : ''), 
+			'url'=>$a->get_baseurl(true) . '/' . $cmd . '?f=&order=post' . ((x($_GET,'cid')) ? '&cid=' . $_GET['cid'] : '') . ((x($_GET,'gid')) ? '&gid=' . $_GET['gid'] : ''), 
 			'sel'=>$postord_active,
 			'title' => t('Sort by Post Date'),
 		),
 
 		array(
 			'label' => t('Personal'),
-			'url' => $a->get_baseurl(true) . '/' . $cmd . ((x($_GET,'cid')) ? '/?f=&cid=' . $_GET['cid'] : '') . '&conv=1',
+			'url' => $a->get_baseurl(true) . '/' . $cmd . '?f=' . ((x($_GET,'cid')) ? '&cid=' . $_GET['cid'] : '') . '&conv=1',
 			'sel' => $conv_active,
 			'title' => t('Posts that mention or involve you'),
 		),
 		array(
 			'label' => t('New'),
-			'url' => $a->get_baseurl(true) . '/' . $cmd . ((x($_GET,'cid')) ? '/?f=&cid=' . $_GET['cid'] : '') . '&new=1',
+			'url' => $a->get_baseurl(true) . '/' . $cmd . '?f=' . ((x($_GET,'cid')) ? '&cid=' . $_GET['cid'] : '') . '&new=1' . ((x($_GET,'gid')) ? '&gid=' . $_GET['gid'] : ''),
 			'sel' => $new_active,
 			'title' => t('Activity Stream - by date'),
 		),
@@ -1423,7 +1436,8 @@ function network_tabs() {
 
 function profile_tabs($a, $is_owner=False, $nickname=Null){
 	//echo "<pre>"; var_dump($a->user); killme();
-	
+
+		
 	$channel = $a->get_channel();
 
 	if (is_null($nickname))
@@ -1443,24 +1457,51 @@ function profile_tabs($a, $is_owner=False, $nickname=Null){
 			'title' => t('Status Messages and Posts'),
 			'id'    => 'status-tab',
 		),
-		array(
+	);
+
+	$p = get_all_perms($a->profile['profile_uid'],get_observer_hash());
+
+	if($p['view_profile']) {
+		$tabs[] = array(
 			'label' => t('About'),
 			'url' 	=> $pr,
 			'sel'	=> ((argv(0) == 'profile') ? 'active' : ''),
 			'title' => t('Profile Details'),
 			'id'    => 'profile-tab',
-		),
-		array(
+		);
+	}
+	if($p['view_photos']) {
+		$tabs[] = array(
 			'label' => t('Photos'),
 			'url'	=> $a->get_baseurl() . '/photos/' . $nickname,
 			'sel'	=> ((argv(0) == 'photos') ? 'active' : ''),
 			'title' => t('Photo Albums'),
 			'id'    => 'photo-tab',
-		),
+		);
+	}
+	if($p['view_storage']) {
+		$tabs[] = array(
+			'label' => t('Files'),
+			'url'	=> $a->get_baseurl() . '/cloud/' . $nickname . ((get_observer_hash()) ? '' : '?f=&davguest=1'),
+			'sel'	=> ((argv(0) == 'cloud') ? 'active' : ''),
+			'title' => t('Files and Storage'),
+			'id'    => 'files-tab',
+		);
+	}
+
+	require_once('include/chat.php');
+	$chats = chatroom_list($a->profile['profile_uid']);
+	$subdued = ((count($chats)) ? '' : ' subdued');
+	$tabs[] = array(
+		'label' => t('Chatrooms'),
+		'url'	=> $a->get_baseurl() . '/chat/' . $nickname,
+		'sel' 	=> ((argv(0) == 'chat') ? 'active' . $subdued : '' . $subdued),
+		'title' => t('Chatrooms'),
+		'id'    => 'chat-tab',
 	);
 
 
-	if ($is_owner){
+	if($is_owner) {
 		$tabs[] = array(
 			'label' => t('Events'),
 			'url'	=> $a->get_baseurl() . '/events',
@@ -1468,15 +1509,27 @@ function profile_tabs($a, $is_owner=False, $nickname=Null){
 			'title' => t('Events and Calendar'),
 			'id'    => 'events-tab',
 		);
-		if(feature_enabled(local_user(),'webpages')){
+
+		$tabs[] = array(
+			'label' => t('Bookmarks'),
+			'url'	=> $a->get_baseurl() . '/bookmarks',
+			'sel' 	=> ((argv(0) == 'bookmarks') ? 'active' : ''),
+			'title' => t('Saved Bookmarks'),
+			'id'    => 'bookmarks-tab',
+		);
+	}
+
+
+	if($is_owner && feature_enabled($a->profile['profile_uid'],'webpages')) {
 		$tabs[] = array(
 			'label' => t('Webpages'),
 			'url'	=> $a->get_baseurl() . '/webpages/' . $nickname,
 			'sel' 	=> ((argv(0) == 'webpages') ? 'active' : ''),
 			'title' => t('Manage Webpages'),
 			'id'    => 'webpages-tab',
-		);}
+		);
 	}
+
 	else {
 		// FIXME
 		// we probably need a listing of events that were created by 

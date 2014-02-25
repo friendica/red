@@ -50,6 +50,7 @@ function editpost_content(&$a) {
 		'$geotag' => $geotag,
 		'$nickname' => $channel['channel_address'],
 		'$expireswhen' => t('Expires YYYY-MM-DD HH:MM'),
+	    '$confirmdelete' => t('Delete item?'),
 	));
 
 
@@ -91,6 +92,20 @@ function editpost_content(&$a) {
 
 	}
 
+	if($itm[0]['attach']) {
+		$j = json_decode($itm[0]['attach'],true);
+		if($j) {
+			foreach($j as $jj) {
+				$itm[0]['body'] .= "\n" . '[attachment]' . basename($jj['href']) . ',' . $jj['revision'] . '[/attachment]' . "\n";
+			}
+		}
+	}
+
+	$cipher = get_pconfig(get_app()->profile['profile_uid'],'system','default_cipher');
+	if(! $cipher)
+		$cipher = 'aes256';
+
+
 	$o .= replace_macros($tpl,array(
 		'$return_path' => $_SESSION['return_url'],
 		'$action' => 'item',
@@ -114,7 +129,7 @@ function editpost_content(&$a) {
 		'$pvisit' => 'none',
 		'$public' => t('Public post'),
 		'$jotnets' => $jotnets,
-		'$title' => htmlspecialchars($itm[0]['title']),
+		'$title' => htmlspecialchars($itm[0]['title'],ENT_COMPAT,'UTF-8'),
 		'$placeholdertitle' => t('Set title'),
 		'$category' => $category,
 		'$placeholdercategory' => t('Categories (comma-separated list)'),
@@ -127,11 +142,14 @@ function editpost_content(&$a) {
 		'$jotplugins' => $jotplugins,
 		'$sourceapp' => t($a->sourcename),
 		'$catsenabled' => $catsenabled,
-		'$defexpire' => $itm[0]['expires'],
-		'$feature_expire' => 'none',
+		'$defexpire' => datetime_convert('UTC', date_default_timezone_get(),$itm[0]['expires']),
+		'$feature_expire' => ((feature_enabled(get_app()->profile['profile_uid'],'content_expire') && (! $webpage)) ? 'block' : 'none'),
 		'$expires' => t('Set expiration date'),
-		'$feature_encrypt' => 'none',
+		'$feature_encrypt' => ((feature_enabled(get_app()->profile['profile_uid'],'content_encrypt') && (! $webpage)) ? 'block' : 'none'),
 		'$encrypt' => t('Encrypt text'),
+		'$cipher' => $cipher,
+		'$expiryModalOK' => t('OK'),
+		'$expiryModalCANCEL' => t('Cancel'),
 	));
 
 	return $o;

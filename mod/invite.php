@@ -42,6 +42,8 @@ function invite_post(&$a) {
 	foreach($recips as $recip) {
 
 		$recip = trim($recip);
+		if(! $recip)
+			continue;
 
 		if(! valid_email($recip)) {
 			notice(  sprintf( t('%s : Not a valid email address.'), $recip) . EOL);

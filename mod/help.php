@@ -32,6 +32,8 @@ function help_content(&$a) {
 
 	global $lang;
 
+	$doctype = 'markdown';
+
 	require_once('library/markdown.php');
 
 	$text = '';
@@ -41,11 +43,25 @@ function help_content(&$a) {
 		$a->page['title'] = t('Help:') . ' ' . str_replace('-',' ',notags(argv(1)));
 	}
 	if(! $text) {
+		$text = load_doc_file('doc/' . $a->argv[1] . '.bb');
+		if($text)
+			$doctype = 'bbcode';
+		$a->page['title'] = t('Help:') . ' ' . str_replace('-',' ',notags(argv(1)));
+	}
+	if(! $text) {
+		$text = load_doc_file('doc/' . $a->argv[1] . '.html');
+		if($text)
+			$doctype = 'html';
+		$a->page['title'] = t('Help:') . ' ' . str_replace('-',' ',notags(argv(1)));
+	}
+
+	if(! $text) {
 		$text = load_doc_file('doc/Site.md');
 		$a->page['title'] = t('Help');
 	}
 	if(! $text) {
-		$text = load_doc_file('doc/Home.md');
+		$doctype = 'bbcode';
+		$text = load_doc_file('doc/main.bb');
 		$a->page['title'] = t('Help');
 	}
 	
@@ -58,15 +74,20 @@ function help_content(&$a) {
 	}
 
 	$text = preg_replace_callback("/#include (.*?)\;/ism", 'preg_callback_help_include', $text);
-	
-	
-	return Markdown($text);
+
+	if($doctype === 'html')
+		return $text;
+	if($doctype === 'markdown')	
+		return Markdown($text);
+	if($doctype === 'bbcode') {
+		require_once('include/bbcode.php');
+		return bbcode($text);
+	} 
 
 }
 
 
 function preg_callback_help_include($matches) {
-	print_r($matches);
 
 	if($matches[1])
 		return str_replace($matches[0],load_doc_file($matches[1]),$matches[0]);

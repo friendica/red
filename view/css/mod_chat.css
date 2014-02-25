@@ -1,0 +1,55 @@
+ #chatContainer {
+	 height: 100%;
+	 width: 100%;
+ }
+ 
+ #chatTopBar {
+	 float: left;
+	 height: 400px;
+	 width: 650px;
+	 overflow-y: auto;
+ }
+ 
+ #chatUsers {
+	 float: right;
+	 width: 120px;
+	 height: 100%;
+	 border: 1px solid #000;
+ }
+ 
+ #chatBottomBar {
+	 position: relative;
+	 bottom: 0;
+	 height: 150px;
+	 margin-top: 20px;
+ }
+ 
+ section {
+	 padding-bottom: 0;
+ }
+
+.chat-item {
+	padding: 3px;
+}
+
+.chat-item-end {
+	clear: both;
+}
+
+.chat-item-photo {
+	float: left;
+	height: 32px;
+	width: 32px;
+}
+
+.chat-body {
+	float: left;
+	width: 80%;
+	margin-left: 15px;
+}
+
+.chat-item-text {
+	float: left;
+	padding: 3px;
+	display: inline-block;
+}

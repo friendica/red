@@ -9,6 +9,7 @@
 {{include file="field_input.tpl" field=$ajaxint}}
 {{include file="field_input.tpl" field=$itemspage}}
 {{include file="field_checkbox.tpl" field=$nosmile}}
+{{include file="field_checkbox.tpl" field=$chanview_full}}
 
 
 <div class="settings-submit-wrapper" >

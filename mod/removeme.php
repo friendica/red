@@ -50,7 +50,7 @@ function removeme_content(&$a) {
 		'$desc' => t('This will completely remove this channel from the network. Once this has been done it is not recoverable.'),
 		'$passwd' => t('Please enter your password for verification:'),
 		'$global' => array('global', t('Remove this channel and all its clones from the network'), false, t('By default only the instance of the channel located on this hub will be removed from the network')),
-		'$submit' => t('Remove My Account')
+		'$submit' => t('Remove Channel')
 	));
 
 	return $o;		

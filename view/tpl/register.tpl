@@ -2,8 +2,14 @@
 
 <form action="register" method="post" id="register-form">
 
-{{if $registertext}}
-<div id="register-desc" class="descriptive-paragraph">{{$registertext}}</div>
+
+
+{{if $reg_is}}
+<div id="register-desc" class="descriptive-paragraph">{{$reg_is}}</div>
+{{/if}}
+{{if $registertext}}<div id="register-text" class="descriptive-paragraph">{{$registertext}}</div>
+{{/if}}
+{{if $other_sites}}<div id="register-sites" class="descriptive-paragraph">{{$other_sites}}</div>
 {{/if}}
 
 {{if $invitations}}

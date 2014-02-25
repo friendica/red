@@ -103,7 +103,7 @@ function enableOnUser(){
 }
 
 </script>
-<script type="text/javascript" src="{{$baseurl}}/js/ajaxupload.js" ></script>
+<script type="text/javascript" src="{{$baseurl}}/view/js/ajaxupload.js" ></script>
 <script>
 	var ispublic = '{{$ispublic}}';
 
@@ -185,7 +185,6 @@ function enableOnUser(){
 		}
 	}
 
-
 	function jotGetLocation() {
 		reply = prompt("{{$whereareu}}", $('#jot-location').val());
 		if(reply && reply.length) {
@@ -194,10 +193,17 @@ function enableOnUser(){
 	}
 
 	function jotGetExpiry() {
-		reply = prompt("{{$expirewhen}}", $('#jot-expire').val());
-		if(reply && reply.length) {
+		//reply = prompt("{{$expirewhen}}", $('#jot-expire').val());
+		$('#expiryModal').modal();
+		$('#expiry-modal-OKButton').on('click', function() {
+    	reply=$('#expiration-date').val();
+    	if(reply && reply.length) {
 			$('#jot-expire').val(reply);
+			$('#expiryModal').modal('hide');
 		}
+})
+		
+		
 	}
 
 	function jotShare(id) {
@@ -288,6 +294,13 @@ function enableOnUser(){
 		
 	}
 
+	function itemBookmark(id) {
+		$.get('{{$baseurl}}/bookmarks?f=&item=' + id);
+		if(timer) clearTimeout(timer);
+		timer = setTimeout(NavUpdate,1000);
+	}
+
+
 	function jotClearLocation() {
 		$('#jot-coord').val('');
 		$('#profile-nolocation-wrapper').hide();
@@ -298,4 +311,21 @@ function enableOnUser(){
 	{{$geotag}}
 
 </script>
+
+<script>
+$( document ).on( "click", ".wall-item-delete-link,.page-delete-link,.layout-delete-link,.block-delete-link", function(e) {
+	var link = $(this).attr("href"); // "get" the intended link in a var
+
+    if (typeof(eval($.fn.modal)) === 'function'){
+        e.preventDefault();
+  		bootbox.confirm("<h4>{{$confirmdelete}}</h4>",function(result) {
+    				if (result) {
+      				document.location.href = link;}
+      				});}
+    else { 
+    	return confirm("{{$confirmdelete}}");
+    }			
+    });
+</script>
+
 

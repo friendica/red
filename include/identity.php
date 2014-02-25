@@ -22,8 +22,9 @@ require_once('include/crypto.php');
 function identity_check_service_class($account_id) {
 	$ret = array('success' => false, $message => '');
 	
-	$r = q("select count(channel_id) as total from channel where channel_account_id = %d ",
-		intval($account_id)
+	$r = q("select count(channel_id) as total from channel where channel_account_id = %d and not ( channel_pageflags & %d ) ",
+		intval($account_id),
+		intval(PAGE_REMOVED)
 	);
 	if(! ($r && count($r))) {
 		$ret['message'] = t('Unable to obtain identity information from database');
@@ -71,26 +72,37 @@ function validate_channelname($name) {
 
 
 /**
- * @function create_dir_account()
+ * @function create_sys_channel()
  *     Create a system channel - which has no account attached
- *
- * Currently unused. 
  *
  */
 
-function create_dir_account() {
+function create_sys_channel() {
+	if(get_sys_channel())
+		return;
 	create_identity(array(
 		'account_id' => 'xxx',  // This will create an identity with an (integer) account_id of 0, but account_id is required
-		'nickname' => 'dir',
-		'name' => 'Directory',
-		'pageflags' => PAGE_DIRECTORY_CHANNEL|PAGE_HIDDEN,
-		'publish' => 0
+		'nickname' => 'sys',
+		'name' => 'System',
+		'pageflags' => PAGE_SYSTEM,
+		'publish' => 0,
+		'xchanflags' => XCHAN_FLAGS_SYSTEM
 	));
 }
 
+function get_sys_channel() {
+	$r = q("select * from channel left join xchan on channel_hash = xchan_hash where (channel_pageflags & %d) limit 1",
+		intval(PAGE_SYSTEM)
+	);
+	if($r)
+		return $r[0];
+	return false;
+}
+
+
 /**
  * @channel_total()
- *   Return the total number of channels on this site. No filtering is performed.
+ *   Return the total number of channels on this site. No filtering is performed except to check PAGE_REMOVED
  *
  * @returns int 
  *   on error returns boolean false
@@ -98,7 +110,10 @@ function create_dir_account() {
  */
 
 function channel_total() {
-	$r = q("select channel_id from channel where true");
+	$r = q("select channel_id from channel where not ( channel_pageflags & %d )",
+		intval(PAGE_REMOVED)
+	);
+
 	if(is_array($r))
 		return count($r);
 	return false;
@@ -145,7 +160,7 @@ function create_identity($arr) {
 
 	$name = escape_tags($arr['name']);
 	$pageflags = ((x($arr,'pageflags')) ? intval($arr['pageflags']) : PAGE_NORMAL);
-
+	$xchanflags = ((x($arr,'xchanflags')) ? intval($arr['xchanflags']) : XCHAN_FLAGS_NORMAL);
 	$name_error = validate_channelname($arr['name']);
 	if($name_error) {
 		$ret['message'] = $name_error;
@@ -243,7 +258,7 @@ function create_identity($arr) {
 
 	$newuid = $ret['channel']['channel_id'];
 
-	$r = q("insert into xchan ( xchan_hash, xchan_guid, xchan_guid_sig, xchan_pubkey, xchan_photo_l, xchan_photo_m, xchan_photo_s, xchan_addr, xchan_url, xchan_follow, xchan_connurl, xchan_name, xchan_network, xchan_photo_date, xchan_name_date ) values ('%s', '%s', '%s', '%s', '%s', '%s', '%s', '%s', '%s', '%s', '%s', '%s', '%s', '%s', '%s')",
+	$r = q("insert into xchan ( xchan_hash, xchan_guid, xchan_guid_sig, xchan_pubkey, xchan_photo_l, xchan_photo_m, xchan_photo_s, xchan_addr, xchan_url, xchan_follow, xchan_connurl, xchan_name, xchan_network, xchan_photo_date, xchan_name_date, xchan_flags ) values ('%s', '%s', '%s', '%s', '%s', '%s', '%s', '%s', '%s', '%s', '%s', '%s', '%s', '%s', '%s', %d)",
 		dbesc($hash),
 		dbesc($guid),
 		dbesc($sig),
@@ -258,7 +273,8 @@ function create_identity($arr) {
 		dbesc($ret['channel']['channel_name']),
 		dbesc('zot'),
 		dbesc(datetime_convert()),
-		dbesc(datetime_convert())
+		dbesc(datetime_convert()),
+		intval($xchanflags)
 	);
 
 	// Not checking return value. 
@@ -396,7 +412,7 @@ function identity_basic_export($channel_id) {
 			$ret['hubloc'] = $r;
 	}
 
-	$r = q("select * from `group` where uid = %d ",
+	$r = q("select * from `groups` where uid = %d ",
 		intval($channel_id)
 	);
 
@@ -470,12 +486,12 @@ function profile_load(&$a, $nickname, $profile = '') {
 	// get the current observer
 	$observer = $a->get_observer();
 
+	$can_view_profile = true;
+
 	// Can the observer see our profile?
 	require_once('include/permissions.php');
 	if(! perm_is_allowed($user[0]['channel_id'],$observer['xchan_hash'],'view_profile')) {
-		// permission denied
-		notice( t(' Sorry, you don\'t have the permission to view this profile. ') . EOL);
-		return;
+		$can_view_profile = false;
 	}
 
 	if(! $profile) {
@@ -486,10 +502,10 @@ function profile_load(&$a, $nickname, $profile = '') {
 		if($r)
 			$profile = $r[0]['abook_profile'];
 	}
-	$r = null;
+	$p = null;
 
 	if($profile) {
-		$r = q("SELECT profile.uid AS profile_uid, profile.*, channel.* FROM profile
+		$p = q("SELECT profile.uid AS profile_uid, profile.*, channel.* FROM profile
 				LEFT JOIN channel ON profile.uid = channel.channel_id
 				WHERE channel.channel_address = '%s' AND profile.profile_guid = '%s' LIMIT 1",
 				dbesc($nickname),
@@ -497,8 +513,8 @@ function profile_load(&$a, $nickname, $profile = '') {
 		);
 	}
 
-	if(! $r) {
-		$r = q("SELECT profile.uid AS profile_uid, profile.*, channel.* FROM profile
+	if(! $p) {
+		$p = q("SELECT profile.uid AS profile_uid, profile.*, channel.* FROM profile
 			LEFT JOIN channel ON profile.uid = channel.channel_id
 			WHERE channel.channel_address = '%s' and not ( channel_pageflags & %d ) 
 			AND profile.is_default = 1 LIMIT 1",
@@ -507,7 +523,7 @@ function profile_load(&$a, $nickname, $profile = '') {
 		);
 	}
 
-	if(! $r) {
+	if(! $p) {
 		logger('profile error: ' . $a->query_string, LOGGER_DEBUG);
 		notice( t('Requested profile is not available.') . EOL );
 		$a->error = 404;
@@ -516,39 +532,53 @@ function profile_load(&$a, $nickname, $profile = '') {
 	
 	// fetch user tags if this isn't the default profile
 
-	if(! $r[0]['is_default']) {
+	if(! $p[0]['is_default']) {
 		$x = q("select `keywords` from `profile` where uid = %d and `is_default` = 1 limit 1",
 				intval($profile_uid)
 		);
-		if($x)
-			$r[0]['keywords'] = $x[0]['keywords'];
+		if($x && $can_view_profile)
+			$p[0]['keywords'] = $x[0]['keywords'];
 	}
 
-	if($r[0]['keywords']) {
-		$keywords = str_replace(array('#',',',' ',',,'),array('',' ',',',','),$r[0]['keywords']);
-		if(strlen($keywords))
+	if($p[0]['keywords']) {
+		$keywords = str_replace(array('#',',',' ',',,'),array('',' ',',',','),$p[0]['keywords']);
+		if(strlen($keywords) && $can_view_profile)
 			$a->page['htmlhead'] .= '<meta name="keywords" content="' . htmlentities($keywords,ENT_COMPAT,'UTF-8') . '" />' . "\r\n" ;
 
 	}
 
-	$a->profile = $r[0];
-	$a->profile_uid = $r[0]['profile_uid'];
+	if($can_view_profile) {
+		$a->profile = $p[0];
+		$online = get_online_status($nickname);
+		$a->profile['online_status'] = $online['result'];
 
-	$a->page['title'] = $a->profile['channel_name'] . " - " . $a->profile['channel_address'] . "@" . $a->get_hostname();
+		$a->profile_uid = $p[0]['profile_uid'];
 
-	$a->profile['channel_mobile_theme'] = get_pconfig(local_user(),'system', 'mobile_theme');
-	$_SESSION['theme'] = $a->profile['channel_theme'];
-	$_SESSION['mobile_theme'] = $a->profile['channel_mobile_theme'];
+		$a->page['title'] = $a->profile['channel_name'] . " - " . $a->profile['channel_address'] . "@" . $a->get_hostname();
+	}
+
+	if(local_user()) {
+		$a->profile['channel_mobile_theme'] = get_pconfig(local_user(),'system', 'mobile_theme');
+		$_SESSION['mobile_theme'] = $a->profile['channel_mobile_theme'];
+	}
 
 	/**
 	 * load/reload current theme info
 	 */
+
+	$_SESSION['theme'] = $p[0]['channel_theme'];
 
 	$a->set_template_engine(); // reset the template engine to the default in case the user's theme doesn't specify one
 
 	$theme_info_file = "view/theme/".current_theme()."/php/theme.php";
 	if (file_exists($theme_info_file)){
 		require_once($theme_info_file);
+	}
+
+	if(! $can_view_profile) {
+		// permission denied
+		notice( t(' Sorry, you don\'t have the permission to view this profile. ') . EOL);
+		return;
 	}
 
 	return;
@@ -655,6 +685,7 @@ function profile_sidebar($profile, $block = 0, $show_connect = true) {
 		}
 	}
 
+
 	if((x($profile,'address') == 1)
 		|| (x($profile,'locality') == 1)
 		|| (x($profile,'region') == 1)
@@ -665,9 +696,15 @@ function profile_sidebar($profile, $block = 0, $show_connect = true) {
 	$gender   = ((x($profile,'gender')   == 1) ? t('Gender:')   : False);
 	$marital  = ((x($profile,'marital')  == 1) ? t('Status:')   : False);
 	$homepage = ((x($profile,'homepage') == 1) ? t('Homepage:') : False);
+	$profile['online']   = (($profile['online_status'] === 'online') ? t('Online Now') : False);
+logger('online: ' . $profile['online']);
+
+	if(! perm_is_allowed($profile['uid'],((is_array($observer)) ? $observer['xchan_hash'] : ''),'view_profile')) {
+		$block = true;
+	}
 
 	if(($profile['hidewall'] || $block) && (! local_user()) && (! remote_user())) {
-		$location = $pdesc = $gender = $marital = $homepage = False;
+		$location = $pdesc = $gender = $marital = $homepage = $online = False;
 	}
 
 	$firstname = ((strpos($profile['name'],' '))
@@ -688,7 +725,7 @@ function profile_sidebar($profile, $block = 0, $show_connect = true) {
 			$channel_menu = menu_render($m);
 	}
 	$menublock = get_pconfig($profile['uid'],'system','channel_menublock');
-	if ($menublock) {
+	if ($menublock && (! $block)) {
 		require_once('include/comanche.php');
 		$channel_menu .= comanche_block($menublock);
 	}
@@ -935,6 +972,8 @@ function advanced_profile(&$a) {
 
 		if($txt = prepare_text($a->profile['contact'])) $profile['contact'] = array( t('Contact information and Social Networks:'), $txt);
 
+		if($txt = prepare_text($a->profile['channels'])) $profile['channels'] = array( t('My other channels:'), $txt);
+
 		if($txt = prepare_text($a->profile['music'])) $profile['music'] = array( t('Musical interests:'), $txt);
 		
 		if($txt = prepare_text($a->profile['book'])) $profile['book'] = array( t('Books, literature:'), $txt);
@@ -949,44 +988,15 @@ function advanced_profile(&$a) {
 
 		if($txt = prepare_text($a->profile['education'])) $profile['education'] = array( t('School/education:'), $txt );
 
-		$r = q("select * from obj left join term on obj_obj = term_hash where term_hash != '' and obj_page = '%s' and uid = %d and obj_type = %d 
-			order by obj_verb, term",
-				dbesc($a->profile['profile_guid']),
-				intval($a->profile['profile_uid']),
-				intval(TERM_OBJ_THING)
-		);
 
-		$things = null;
+		$things = get_things($a->profile['profile_guid'],$a->profile['profile_uid']);
 
-		if($r) {
-			$things = array();
-
-			// Use the system obj_verbs array as a sort key, since we don't really
-			// want an alphabetic sort. To change the order, use a plugin to
-			// alter the obj_verbs() array or alter it in code. Unknown verbs come
-			// after the known ones - in no particular order. 
-
-			$v = obj_verbs();
-			foreach($v as $k => $foo)
-				$things[$k] = null;
-			foreach($r as $rr) {
-				if(! $things[$rr['obj_verb']])
-					$things[$rr['obj_verb']] = array();
-				$things[$rr['obj_verb']][] = array('term' => $rr['term'],'url' => $rr['url'],'img' => $rr['imgurl']);
-			} 
-			$sorted_things = array();
-			if($things)
-				foreach($things as $k => $v)
-					if(is_array($things[$k]))
-						$sorted_things[$k] = $v;
-		}
-
-		logger('mod_profile: things: ' . print_r($sorted_things,true), LOGGER_DATA); 
+		logger('mod_profile: things: ' . print_r($things,true), LOGGER_DATA); 
 
         return replace_macros($tpl, array(
             '$title' => t('Profile'),
             '$profile' => $profile,
-			'$things' => $sorted_things
+			'$things' => $things
         ));
     }
 
@@ -1028,15 +1038,18 @@ function zid_init(&$a) {
 	if(validate_email($tmp_str)) {
 		proc_run('php','include/gprobe.php',bin2hex($tmp_str));
 		$arr = array('zid' => $tmp_str, 'url' => $a->cmd);
-		call_hooks('zid_init',$arr);
-		if((! local_user()) && (! remote_user())) {
-			logger('zid_init: not authenticated. Invoking reverse magic-auth for ' . $tmp_str);
-			$r = q("select * from hubloc where hubloc_addr = '%s' order by hubloc_id desc limit 1",
+		call_hooks('zid_init',$arr);		
+		if(! local_user()) {
+			$r = q("select * from hubloc where hubloc_addr = '%s' order by hubloc_connected desc limit 1",
 				dbesc($tmp_str)
 			);
+			if($r && remote_user() && remote_user() === $r[0]['hubloc_hash'])
+				return;
+			logger('zid_init: not authenticated. Invoking reverse magic-auth for ' . $tmp_str);
 			// try to avoid recursion - but send them home to do a proper magic auth
-			$dest = '/' . $a->query_string;
-			$dest = str_replace(array('?zid=','&zid='),array('?rzid=','&rzid='),$dest);
+			$query = $a->query_string;
+			$query = str_replace(array('?zid=','&zid='),array('?rzid=','&rzid='),$query);
+			$dest = '/' . urlencode($query);
 			if($r && ($r[0]['hubloc_url'] != z_root()) && (! strstr($dest,'/magic')) && (! strstr($dest,'/rmagic'))) {
 				goaway($r[0]['hubloc_url'] . '/magic' . '?f=&rev=1&dest=' . z_root() . $dest);
 			}
@@ -1102,5 +1115,114 @@ function get_theme_uid() {
 		if(! $uid)
 			return local_user();
 	}
+	if(! $uid) {
+		$x = get_sys_channel();
+		if($x)
+			return $x['channel_id'];
+	}	
 	return $uid;
+}
+
+/**
+* @function get_default_profile_photo($size = 175)
+* 	Retrieves the path of the default_profile_photo for this system
+* 	with the specified size.
+* @param int $size
+* 	one of (175, 80, 48)
+* @returns string
+*
+*/
+
+function get_default_profile_photo($size = 175) {
+		$scheme = get_config('system','default_profile_photo');
+		if(! $scheme)
+			$scheme = 'rainbow_man';
+		return 'images/default_profile_photos/' . $scheme . '/' . $size . '.jpg';
+}
+
+
+/**
+ *
+ * @function is_foreigner($s)
+ *    Test whether a given identity is NOT a member of the Red Matrix
+ * @param string $s;
+ *    xchan_hash of the identity in question
+ *
+ * @returns boolean true or false
+ *
+ */
+
+function is_foreigner($s) {
+	return((strpbrk($s,'.:@')) ? true : false);
+}
+
+
+/**
+ *
+ * @function is_member($s)
+ *    Test whether a given identity is a member of the Red Matrix
+ * @param string $s;
+ *    xchan_hash of the identity in question
+ *
+ * @returns boolean true or false
+ *
+ */
+
+function is_member($s) {
+	return((is_foreigner($s)) ? false : true);
+}
+
+function get_online_status($nick) {
+
+	$ret = array('result' => false);
+
+	if(get_config('system','block_public') && ! local_user() && ! remote_user())
+		return $ret;
+
+	$r = q("select channel_id, channel_hash from channel where channel_address = '%s' limit 1",
+		dbesc(argv(1))
+	);
+	if($r) {
+		$hide = get_pconfig($r[0]['channel_id'],'system','hide_online_status');
+		if($hide)
+			return $ret;
+		$x = q("select cp_status from chatpresence where cp_xchan = '%s' and cp_room = 0 limit 1",
+			dbesc($r[0]['channel_hash'])
+		);
+		if($x)
+			$ret['result'] = $x[0]['cp_status'];
+	}
+
+	return $ret;
+}
+
+
+function remote_online_status($webbie) {
+
+	$result = false;
+	$r = q("select * from hubloc where hubloc_addr = '%s' limit 1",
+		dbesc($webbie)
+	);
+	if(! $r)
+		return $result;
+
+	$url = $r[0]['hubloc_url'] . '/online/' . substr($webbie,0,strpos($webbie,'@'));
+
+	$x = z_fetch_url($url);
+	if($x['success']) {
+		$j = json_decode($x['body'],true);
+		if($j)
+			$result = (($j['result']) ? $j['result'] : false);
+	}
+	return $result;
+
+}
+
+
+function get_channel_by_nick($nick) {
+	$r = q("select * from channel where channel_address = '%s' limit 1",
+		dbesc($nick)
+	);
+	return(($r) ? $r[0] : false);
+
 }

@@ -6,7 +6,9 @@ function theme_content(&$a) {
 	$arr = array();
 
 	$arr['schema'] = get_pconfig(local_user(),'redbasic', 'schema' );
+    $arr['narrow_navbar'] = get_pconfig(local_user(),'redbasic', 'narrow_navbar' );
 	$arr['nav_colour'] = get_pconfig(local_user(),'redbasic', 'nav_colour' );
+	$arr['link_colour'] = get_pconfig(local_user(),'redbasic', 'link_colour' );
 	$arr['banner_colour'] = get_pconfig(local_user(),'redbasic', 'banner_colour' );
 	$arr['bgcolour'] = get_pconfig(local_user(),'redbasic', 'background_colour' );
 	$arr['background_image'] = get_pconfig(local_user(),'redbasic', 'background_image' );
@@ -32,7 +34,9 @@ function theme_post(&$a) {
 
 	if (isset($_POST['redbasic-settings-submit'])) {
 		set_pconfig(local_user(), 'redbasic', 'schema', $_POST['redbasic_schema']);
+		set_pconfig(local_user(), 'redbasic', 'narrow_navbar', $_POST['redbasic_narrow_navbar']);
 		set_pconfig(local_user(), 'redbasic', 'nav_colour', $_POST['redbasic_nav_colour']);
+		set_pconfig(local_user(), 'redbasic', 'link_colour', $_POST['redbasic_link_colour']);
 		set_pconfig(local_user(), 'redbasic', 'background_colour', $_POST['redbasic_background_colour']);
 		set_pconfig(local_user(), 'redbasic', 'banner_colour', $_POST['redbasic_banner_colour']);
 		set_pconfig(local_user(), 'redbasic', 'background_image', $_POST['redbasic_background_image']);
@@ -72,9 +76,17 @@ function redbasic_form(&$a, $arr) {
 		
 		$nav_colours = array (
 		  '' => t('Scheme Default'),
-		  'red' => t('red'),
-		  'black' => t('black'),	
-		  'silver' => t('silver'),	
+		'red' => 'red',	
+		'pink' => 'pink',
+		'green' => 'green',
+		'blue' => 'blue',
+		'purple' => 'purple',
+		'black' => 'black',
+		'orange' => 'orange',
+		'brown' => 'brown',
+		'grey' => 'grey',
+		'gold' => 'gold',
+		'silver' => t('silver'),	
 		);
 
 if(feature_enabled(local_user(),'expert')) 
@@ -87,7 +99,9 @@ if(feature_enabled(local_user(),'expert'))
 		'$expert' => $expert,
 		'$title' => t("Theme settings"),
 		'$schema' => array('redbasic_schema', t('Set scheme'), $arr['schema'], '', $scheme_choices),
+		'$narrow_navbar' => array('redbasic_narrow_navbar',t('Narrow navbar'),$arr['narrow_navbar']),		
 		'$nav_colour' => array('redbasic_nav_colour', t('Navigation bar colour'), $arr['nav_colour'], '', $nav_colours),
+		'$link_colour' => array('redbasic_link_colour', t('link colour'), $arr['link_colour'], '', $link_colours),
 		'$banner_colour' => array('redbasic_banner_colour', t('Set font-colour for banner'), $arr['banner_colour']),
 		'$bgcolour' => array('redbasic_background_colour', t('Set the background colour'), $arr['bgcolour']),
 		'$background_image' => array('redbasic_background_image', t('Set the background image'), $arr['background_image']),

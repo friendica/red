@@ -99,8 +99,8 @@ function editwebpage_content(&$a) {
 	if($layout)
 		$layoutselect = '<input type="hidden" name="layout_mid" value="' . $layout . '" />'; 			
 	else
-		$layoutselect = layout_select($itm[0]['uid']);
-
+		$layoutselect = layout_select($itm[0]['uid'],$itm[0]['layout_mid']);
+		
 
 	$o .= replace_macros(get_markup_template('edpost_head.tpl'), array(
 		'$title' => t('Edit Webpage')
@@ -112,7 +112,8 @@ function editwebpage_content(&$a) {
 		'$editselect' =>  (($plaintext) ? 'none' : '/(profile-jot-text|prvmail-text)/'),
 		'$ispublic' => '&nbsp;', // t('Visible to <strong>everybody</strong>'),
 		'$geotag' => $geotag,
-		'$nickname' => $a->user['nickname']
+		'$nickname' => $a->user['nickname'],
+		'$confirmdelete' => t('Delete webpage?')
 	));
 
 	
@@ -135,7 +136,7 @@ function editwebpage_content(&$a) {
 
 	$o .= replace_macros($tpl,array(
 		'$return_path' => $rp,
-		'$webpage' => true,
+		'$webpage' => ITEM_WEBPAGE,
 		'$placeholdpagetitle' => t('Page link title'),
 		'$pagetitle' => $page_title,
 
@@ -164,7 +165,7 @@ function editwebpage_content(&$a) {
 		'$jotnets' => $jotnets,
 		'$mimeselect' => $mimeselect,
 		'$layoutselect' => $layoutselect,
-		'$title' => htmlspecialchars($itm[0]['title']),
+		'$title' => htmlspecialchars($itm[0]['title'],ENT_COMPAT,'UTF-8'),
 		'$placeholdertitle' => t('Set title'),
 		'$category' => '',
 		'$placeholdercategory' => t('Categories (comma-separated list)'),
@@ -185,7 +186,7 @@ function editwebpage_content(&$a) {
 	$ob = get_observer_hash();
 
 	if(($itm[0]['author_xchan'] === $ob) || ($itm[0]['owner_xchan'] === $ob))
-		$o .= '<br /><br /><a href="item/drop/' . $itm[0]['id'] . '" >' . t('Delete Webpage') . '</a><br />';
+		$o .= '<br /><br /><a class="page-delete-link" href="item/drop/' . $itm[0]['id'] . '" >' . t('Delete Webpage') . '</a><br />';
 
 	return $o;
 

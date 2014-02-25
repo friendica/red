@@ -22,31 +22,53 @@ function rmagic_init(&$a) {
 
 function rmagic_post(&$a) {
 
-	$address = $_REQUEST['address'];
+	$address = trim($_REQUEST['address']);
+
 	if(strpos($address,'@') === false) {
-		notice('Invalid address.');
+		$arr = array('address' => $address);
+		call_hooks('reverse_magic_auth', $arr);		
+
+		try {
+			require_once('library/openid/openid.php');
+			$openid = new LightOpenID(z_root());
+			$openid->identity = $address;
+			$openid->returnUrl = z_root() . '/openid'; 
+			goaway($openid->authUrl());
+		} catch (Exception $e) {
+			notice( t('We encountered a problem while logging in with the OpenID you provided. Please check the correct spelling of the ID.').'<br /><br >'. t('The error message was:').' '.$e->getMessage());
+		}
+
+		// if they're still here...
+		notice( t('Authentication failed.') . EOL);		
 		return;
 	}
-
-	$r = null;
-	if($address) {
-		$r = q("select hubloc_url from hubloc where hubloc_addr = '%s' limit 1",
-			dbesc($address)
-		);		
-	}
-	if($r) {
-		$url = $r[0]['hubloc_url'];
-	}
 	else {
-		$url = 'https://' . substr($address,strpos($address,'@')+1);
-	}	
 
-	if($url) {	
-		$dest = z_root() . '/' . str_replace('zid=','zid_=',$a->query_string);
-		goaway($url . '/magic' . '?f=&dest=' . $dest);
+		// Presumed Red identity. Perform reverse magic auth
+
+		if(strpos($address,'@') === false) {
+			notice('Invalid address.');
+			return;
+		}
+
+		$r = null;
+		if($address) {
+			$r = q("select hubloc_url from hubloc where hubloc_addr = '%s' limit 1",
+				dbesc($address)
+			);		
+		}
+		if($r) {
+			$url = $r[0]['hubloc_url'];
+		}
+		else {
+			$url = 'https://' . substr($address,strpos($address,'@')+1);
+		}	
+
+		if($url) {	
+			$dest = z_root() . '/' . str_replace('zid=','zid_=',$a->query_string);
+			goaway($url . '/magic' . '?f=&dest=' . $dest);
+		}
 	}
-
-
 }
 
 

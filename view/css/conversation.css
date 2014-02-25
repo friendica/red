@@ -55,6 +55,8 @@
 #profile-expires, 
 #profile-expires, 
 #jot-perms-icon,
+#jot-preview-link,
+#profile-encrypt,
 .hover, .focus {
 	cursor: pointer;
 }
@@ -110,7 +112,7 @@
 
 /* conversation */
 
-.thread-wrapper .toplevel_item {
+.thread-wrapper.toplevel_item {
 	width: 92%;
 }
 
@@ -123,6 +125,14 @@
 .wall-item-content-wrapper {
 	margin-top: 10px;
 	position: relative;
+}
+
+.wall-item-content-wrapper .wall-item-delete-wrapper {
+	opacity: 0;
+}
+
+.wall-item-content-wrapper:hover .wall-item-delete-wrapper {
+	opacity: 1;
 }
 
 .wall-item-info {
@@ -319,11 +329,6 @@
 .checkeditem {
 	opacity: 1;
 	filter:alpha(opacity=100);
-}
-
-.wall-item-like.comment,
-.wall-item-dislike.comment {
-	margin-left: 50px;
 }
 
 .wall-item-like,

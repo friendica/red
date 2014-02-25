@@ -4,7 +4,7 @@
 
 <form action="sources" method="post">
 <input type="hidden" name="source" value="{{$id}}" />
-<input type="hidden" id="id_xchan" name="xchan" value="{{$xchan}}" />
+<input type="hidden" id="id_abook" name="abook" value="{{$abook}}" />
 {{include file="field_input.tpl" field=$name}}
 {{include file="field_textarea.tpl" field=$words}}
 

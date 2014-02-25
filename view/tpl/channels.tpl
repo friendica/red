@@ -6,6 +6,7 @@
 <a class="channels-links" href="{{$l.0}}" title="{{$l.1}}">{{$l.2}}</a>
 {{/foreach}}
 {{/if}} 
+<div class="channels-break"></div>
 
 {{if $channel_usage_message}}
 <div id="channel-usage-message" class="usage-message">
@@ -16,10 +17,10 @@
 <div id="selected-channel">
 <div id="channels-selected">{{$msg_selected}}</div>
 {{include file="channel.tpl" channel=$selected}}
-<div class="channels-end selected"></div>
 </div>
+<div class="channels-end selected"></div>
 {{/if}}
-
+<br />
 <div id="channels-desc" class="descriptive-text">{{$desc}}</div>
 
 <div id="all-channels">

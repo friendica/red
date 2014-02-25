@@ -6,9 +6,7 @@
 <p>
 {{$lbl3}}
 </p>
-<p>
-{{$newpass}}
-</p>
+<p>{{$newpass}}</p>
 <p>
 {{$lbl4}} {{$lbl5}}
 </p>

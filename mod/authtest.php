@@ -6,7 +6,7 @@ require_once('mod/magic.php');
 function authtest_content(&$a) {
 
 
-
+	$auth_success = false;
 	$o .= '<h3>Magic-Auth Diagnostic</h3>';
 
 	if(! local_user()) {
@@ -34,11 +34,16 @@ function authtest_content(&$a) {
 				if(! $j)
 					$o .= 'json_decode failure from remote site. ' . print_r($z['body'],true);
 				$o .= 'Remote site responded: ' . print_r($j,true);
+				if($j['success'] && strpos($j['message'],'Authentication Success'))
+					$auth_success = true;
 			}
 			else {
 				$o .= 'fetch url failure.' . print_r($z,true);
 			}
 		}
+
+		if(! $auth_success)
+			$o .= 'Authentication Failed!' . EOL;
 	}
 
 	return str_replace("\n",'<br />',$o);

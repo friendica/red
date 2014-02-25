@@ -13,10 +13,12 @@ var dir_d44c64559bbebec7f509842c48db8b23 =
     ] ],
     [ "bb2diaspora.php", "bb2diaspora_8php.html", "bb2diaspora_8php" ],
     [ "bbcode.php", "bbcode_8php.html", "bbcode_8php" ],
+    [ "bookmarks.php", "include_2bookmarks_8php.html", "include_2bookmarks_8php" ],
     [ "cache.php", "cache_8php.html", [
       [ "Cache", "classCache.html", null ]
     ] ],
     [ "chanman.php", "include_2chanman_8php.html", "include_2chanman_8php" ],
+    [ "chat.php", "include_2chat_8php.html", "include_2chat_8php" ],
     [ "cli_startup.php", "cli__startup_8php.html", "cli__startup_8php" ],
     [ "cli_suggest.php", "cli__suggest_8php.html", "cli__suggest_8php" ],
     [ "comanche.php", "comanche_8php.html", "comanche_8php" ],
@@ -78,14 +80,11 @@ var dir_d44c64559bbebec7f509842c48db8b23 =
     ] ],
     [ "queue.php", "queue_8php.html", "queue_8php" ],
     [ "queue_fn.php", "queue__fn_8php.html", "queue__fn_8php" ],
-    [ "reddav.php", "reddav_8php.html", [
-      [ "RedInode", "classRedInode.html", "classRedInode" ],
-      [ "RedDirectory", "classRedDirectory.html", "classRedDirectory" ],
-      [ "RedFile", "classRedFile.html", "classRedFile" ]
-    ] ],
+    [ "reddav.php", "reddav_8php.html", "reddav_8php" ],
     [ "security.php", "security_8php.html", "security_8php" ],
     [ "session.php", "session_8php.html", "session_8php" ],
     [ "socgraph.php", "socgraph_8php.html", "socgraph_8php" ],
+    [ "spam.php", "spam_8php.html", "spam_8php" ],
     [ "system_unavailable.php", "system__unavailable_8php.html", "system__unavailable_8php" ],
     [ "taxonomy.php", "taxonomy_8php.html", "taxonomy_8php" ],
     [ "template_processor.php", "template__processor_8php.html", "template__processor_8php" ],

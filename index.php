@@ -19,11 +19,11 @@ $a = new App;
 /**
  *
  * Load the configuration file which contains our DB credentials.
- * Ignore errors. If the file doesn't exist or is empty, we are running in installation mode.
+ * Ignore errors. If the file doesn't exist or is empty, we are running in installation mode.'
  *
  */
 
-$install = ((file_exists('.htconfig.php') && filesize('.htconfig.php')) ? false : true);
+$a->install = ((file_exists('.htconfig.php') && filesize('.htconfig.php')) ? false : true);
 
 @include(".htconfig.php");
 
@@ -38,8 +38,8 @@ $a->language = get_best_language();
 
 require_once("include/dba/dba_driver.php");
 
-if(! $install) {
-	$db = dba_factory($db_host, $db_port, $db_user, $db_pass, $db_data, $install);
+if(! $a->install) {
+	$db = dba_factory($db_host, $db_port, $db_user, $db_pass, $db_data, $a->install);
     	    unset($db_host, $db_port, $db_user, $db_pass, $db_data);
 
 	/**
@@ -60,8 +60,6 @@ else {
 	// load translations but do not check plugins as we have no database
 	load_translation_table($a->language,true);
 }
-
-
 
 
 /**
@@ -93,8 +91,8 @@ if((x($_SESSION,'language')) && ($_SESSION['language'] !== $lang)) {
 	load_translation_table($a->language);
 }
 
-if((x($_GET,'zid')) && (! $install)) {
-	$a->query_string = preg_replace('/[\?&]zid=(.*?)([\?&]|$)/is','',$a->query_string);
+if((x($_GET,'zid')) && (! $a->install)) {
+	$a->query_string = strip_zids($a->query_string);
 	if(! local_user()) {
 		$_SESSION['my_address'] = $_GET['zid'];
 		zid_init($a);
@@ -118,7 +116,7 @@ if(! x($_SESSION,'sysmsg_info'))
  */
 
 
-if($install) {
+if($a->install) {
 	/* Allow an exception for the view module so that pcss will be interpreted during installation */
 	if($a->module != 'view')
 		$a->module = 'setup';
@@ -184,7 +182,6 @@ if(strlen($a->module)) {
 	 * Otherwise, look for the standard program module in the 'mod' directory
 	 */
 
-
 	if(! $a->module_loaded) {
 		if(file_exists("custom/{$a->module}.php")) {
 			include_once("custom/{$a->module}.php");
@@ -245,14 +242,22 @@ if (file_exists($theme_info_file)){
 if(! x($a->page,'content'))
 	$a->page['content'] = '';
 
-/* set JS cookie */
-if($_COOKIE['jsAvailable'] != 1) {
-	$a->page['content'] .= '<script>document.cookie="jsAvailable=1; path=/"; location.reload();</script>';
+
+
+if(! ($a->module === 'setup')) {
+	/* set JS cookie */
+	if($_COOKIE['jsAvailable'] != 1) {
+		$a->page['content'] .= '<script>document.cookie="jsAvailable=1; path=/"; var jsMatch = /\&JS=1/; if (!jsMatch.exec(location.href)) { location.href = location.href + "&JS=1"; }</script>';
+		/* emulate JS cookie if cookies are not accepted */
+		if ($_GET['JS'] == 1) {
+			$_COOKIE['jsAvailable'] = 1;
+		}
+	}
+	call_hooks('page_content_top',$a->page['content']);
 }
 
 
-if(! $install)
-	call_hooks('page_content_top',$a->page['content']);
+
 
 /**
  * Call module functions

@@ -10,6 +10,13 @@
 
 /* Macgirvin Aug-2010 changed from punbb to dfrn dialect */
 
+/**
+ * If you want to try and get bookmark content (#^{somelink}) working in tinymce,
+ * I've made some progress, but one or the other of insert-url or insert-link gets it wrong, 
+ * and the error compounds on every edit.
+ * See editor_plugin_src.js2/editor_plugin.js2 if you're interested in fixing this.
+ */
+
 (function() {
 	tinymce.create('tinymce.plugins.BBCodePlugin', {
 		init : function(ed, url) {

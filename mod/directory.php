@@ -9,24 +9,6 @@ function directory_init(&$a) {
 
 }
 
-function directory_aside(&$a) {
-
-	if(local_user()) {
-		require_once('include/contact_widgets.php');
-		$a->set_widget('find_people',findpeople_widget());
-	}
-
-	if((get_config('system','block_public')) && (! local_user()) && (! remote_user())) {
-		return;
-	}
-	
-	$a->set_widget('safe_search',dir_safe_mode());
-
-	$a->set_widget('dir_sort_order',dir_sort_links());
-	
-}
-
-
 function directory_content(&$a) {
 
 	if((get_config('system','block_public')) && (! local_user()) && (! remote_user())) {
@@ -64,6 +46,7 @@ function directory_content(&$a) {
 
 	$tpl = get_markup_template('directory_header.tpl');
 
+		
 
 	$dirmode = intval(get_config('system','directory_mode'));
 
@@ -186,10 +169,12 @@ function directory_content(&$a) {
 							'id' => ++$t,
 							'profile_link' => $profile_link,
 							'photo' => $rr['photo'],
+							'hash' => $rr['hash'],
 							'alttext' => $rr['name'] . ' ' . $rr['address'],
 							'name' => $rr['name'],
 							'details' => $pdesc . $details,
 							'profile' => $profile,
+							'address' =>  $rr['address'],
 							'location' => $location,
 							'gender'   => $gender,
 							'pdesc'	=> $pdesc,
@@ -204,7 +189,7 @@ function directory_content(&$a) {
 
 						call_hooks('directory_item', $arr);
 			
-						$entries[] = $entry;
+						$entries[] = $arr['entry'];
 						unset($profile);
 						unset($location);
 
@@ -212,10 +197,8 @@ function directory_content(&$a) {
 					}
 
 					if($j['keywords']) {
-						$a->set_widget('dirtagblock',dir_tagblock(z_root() . '/directory',$j['keywords']));
+						$a->data['directory_keywords'] = $j['keywords'];
 					}
-					$a->set_widget('suggest',widget_suggestions(array()));
-
 
 //					logger('mod_directory: entries: ' . print_r($entries,true), LOGGER_DATA);
 

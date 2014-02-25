@@ -494,6 +494,15 @@ function head_add_css($src,$media = 'screen') {
 	get_app()->css_sources[] = array($src,$media);
 }
 
+
+function head_remove_css($src,$media = 'screen') {
+	$a = get_app();
+	$index = array_search(array($src,$media),$a->css_sources);
+	if($index !== false)
+		unset($a->css_sources[$index]);
+
+}
+
 function head_get_css() {
 	$str = '';
 	$sources = get_app()->css_sources;
@@ -511,13 +520,42 @@ function format_css_if_exists($source) {
 		$path = theme_include($source[0]);
 
 	if($path)
-		return '<link rel="stylesheet" href="' . z_root() . '/' . $path . '" type="text/css" media="' . $source[1] . '" />' . "\r\n";
+		return '<link rel="stylesheet" href="' . script_path() . '/' . $path . '" type="text/css" media="' . $source[1] . '" />' . "\r\n";
 		
 }
 
+function script_path() {
+	if(x($_SERVER,'HTTPS') && $_SERVER['HTTPS'])
+		$scheme = 'https';
+	elseif(x($_SERVER,'SERVER_PORT') && (intval($_SERVER['SERVER_PORT']) == 443))
+		$scheme = 'https';
+	else
+		$scheme = 'http';
+
+	if(x($_SERVER,'SERVER_NAME')) {
+			$hostname = $_SERVER['SERVER_NAME'];
+	}
+	else {
+		return z_root();
+	}
+
+	if(x($_SERVER,'SERVER_PORT') && $_SERVER['SERVER_PORT'] != 80 && $_SERVER['SERVER_PORT'] != 443) {
+		$hostname .= ':' . $_SERVER['SERVER_PORT'];
+	}
+
+	return $scheme . '://' . $hostname;
+}
 
 function head_add_js($src) {
 	get_app()->js_sources[] = $src;
+}
+
+function head_remove_js($src) {
+	$a = get_app();
+	$index = array_search($src,$a->js_sources);
+	if($index !== false)
+		unset($a->js_sources[$index]);
+
 }
 
 function head_get_js() {
@@ -536,7 +574,7 @@ function format_js_if_exists($source) {
 	else
 		$path = theme_include($source);
 	if($path)
-		return '<script src="' . z_root() . '/' . $path . '" ></script>' . "\r\n" ;
+		return '<script src="' . script_path() . '/' . $path . '" ></script>' . "\r\n" ;
 
 }
 

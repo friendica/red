@@ -45,7 +45,7 @@ function fbrowser_content($a){
 				$path[]=array($a->get_baseurl()."/fbrowser/image/".$a->argv[2]."/", $album);
 			}
 				
-			$r = q("SELECT `resource_id`, `id`, `filename`, type, min(`scale`) AS `hiq`,max(`scale`) AS `loq`, `desc`  
+			$r = q("SELECT `resource_id`, `id`, `filename`, type, min(`scale`) AS `hiq`,max(`scale`) AS `loq`, `description`  
 					FROM `photo` WHERE `uid` = %d $sql_extra
 					GROUP BY `resource_id` $sql_extra2",
 				intval(local_user())					

@@ -12,7 +12,6 @@
 		<input type="hidden" name="post_id" value="{{$post_id}}" />
 		<input type="hidden" name="webpage" value="{{$webpage}}" />
 		<input type="hidden" name="preview" id="jot-preview" value="0" />
-
 		{{$mimeselect}}
 		{{$layoutselect}}
 
@@ -71,7 +70,7 @@
 	</div>
 	{{/if}}
 
-	{{if $preview}}<span onclick="preview_post();" id="jot-preview-link" class="fakelink"><i class="icon-eye-open jot-icons" title="{{$preview}}"></i></span>{{/if}}
+	{{if $preview}}<span onclick="preview_post();" id="jot-preview-link"><i class="icon-eye-open jot-icons" title="{{$preview}}"></i></span>{{/if}}
 
 
 	<div id="profile-jot-perms-end"></div>
@@ -90,9 +89,49 @@
 			{{$jotnets}}
 		</div>
 	</div>
-
-
+<!-- Modal for item expiry-->
+<div class="modal fade" id="expiryModal" tabindex="-1" role="dialog" aria-labelledby="expiryModalLabel" aria-hidden="true">
+  <div class="modal-dialog">
+    <div class="modal-content">
+      <div class="modal-header">
+        <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
+        <h4 class="modal-title" id="expiryModalLabel">{{$expires}}</h4>
+      </div>
+     <!--  <div class="modal-body"> -->
+            <div class="modal-body form-group" style="width:90%">
+                <div class="input-group input-group-sm date" id="datetimepicker1">
+                    <span class="input-group-addon"><!-- <span class="glyphicon glyphicon-calendar"></span> -->
+                    <span class="icon-calendar"></span>
+                    </span>
+                    <input id="expiration-date" type='text' class="form-control" data-format="YYYY-MM-DD HH:mm" size="20"/>
+                </div>
+            </div>
+      <!-- </div> -->
+      <div class="modal-footer">
+        <button type="button" class="btn btn-default" data-dismiss="modal">{{$expiryModalCANCEL}}</button>
+        <button id="expiry-modal-OKButton" type="button" class="btn btn-primary">{{$expiryModalOK}}</button>
+      </div>
+    </div><!-- /.modal-content -->
+  </div><!-- /.modal-dialog -->
+</div><!-- /.modal -->
+<script type="text/javascript">
+  $(function() {
+    $('#datetimepicker1').datetimepicker({
+      language: 'us',
+      icons: {
+					time: "icon-time",
+					date: "icon-calendar",
+					up: "icon-arrow-up",
+					down: "icon-arrow-down"
+				}
+    });
+  });
+</script>
 </div>
+
+
+
+
 
 <div id="profile-jot-end"></div>
 </form>

@@ -16,7 +16,7 @@ var searchData=
   ['del_5fpconfig',['del_pconfig',['../include_2config_8php.html#a7ad2081c5f812ac4387fd76f3762d941',1,'config.php']]],
   ['del_5fxconfig',['del_xconfig',['../include_2config_8php.html#a9c171def547deee16738dc58fdeb4b72',1,'config.php']]],
   ['delegate_5fcontent',['delegate_content',['../delegate_8php.html#a943eea8996ef348eb845c498f9f354dd',1,'delegate.php']]],
-  ['delete',['delete',['../classRedInode.html#a5e8f09bc887725c3c448f8d72fe3edfc',1,'RedInode']]],
+  ['delete',['delete',['../classRedFile.html#aef71c9eaac7052be7dc8602eb12171e7',1,'RedFile']]],
   ['delete_5fimported_5fitem',['delete_imported_item',['../zot_8php.html#adfeb9400ae6b726beec89f8f1e8fde72',1,'zot.php']]],
   ['delete_5fitem_5flowlevel',['delete_item_lowlevel',['../items_8php.html#a2b56a4c01bd22a648d52ec9af1a04259',1,'items.php']]],
   ['deletenode',['deletenode',['../html2bbcode_8php.html#a71a07f135d196ec5943b13f7b2e6a9b2',1,'html2bbcode.php']]],
@@ -33,10 +33,10 @@ var searchData=
   ['dir_5fsort_5flinks',['dir_sort_links',['../dir__fns_8php.html#ae56881d69bb6f8e828c9e35454386774',1,'dir_fns.php']]],
   ['dir_5ftagadelic',['dir_tagadelic',['../taxonomy_8php.html#a088371f4bc19155b2291508f5cd63332',1,'taxonomy.php']]],
   ['dir_5ftagblock',['dir_tagblock',['../taxonomy_8php.html#a599ee71dd3194c8127b00dabec77abc1',1,'taxonomy.php']]],
-  ['directory_5faside',['directory_aside',['../mod_2directory_8php.html#aa1d928543212871491706216742dd73c',1,'directory.php']]],
   ['directory_5fcontent',['directory_content',['../mod_2directory_8php.html#aac79396570d759da2efac24fcedf5b44',1,'directory.php']]],
   ['directory_5finit',['directory_init',['../mod_2directory_8php.html#a5ee59c213508b6b9787612a8219cb5bf',1,'directory.php']]],
   ['directory_5frun',['directory_run',['../include_2directory_8php.html#aa75d3b0697ca1456aaabdb37a74aa0f0',1,'directory.php']]],
+  ['dirprofile_5finit',['dirprofile_init',['../dirprofile_8php.html#a3e1d30d3d93863ff5615f2df4ac7f052',1,'dirprofile.php']]],
   ['dirsearch_5fcontent',['dirsearch_content',['../dirsearch_8php.html#aa1fb04e1de4f25b63349ac78f94ceb4c',1,'dirsearch.php']]],
   ['dirsearch_5finit',['dirsearch_init',['../dirsearch_8php.html#a3e51964ae3f5ff147403407b65324752',1,'dirsearch.php']]],
   ['discover',['discover',['../classProtoDriver.html#a64a3868cffe27d601d55f69a2ecc4337',1,'ProtoDriver\discover()'],['../classZotDriver.html#a40d328ff9f6b0a238afe286dddee1514',1,'ZotDriver\discover()']]],
@@ -44,6 +44,7 @@ var searchData=
   ['dlogger',['dlogger',['../text_8php.html#a0a1f7c0e97f9ecbebf3e5834582b014c',1,'text.php']]],
   ['dob',['dob',['../datetime_8php.html#a3f2897db32e745fe2f3e70a6b46578f8',1,'datetime.php']]],
   ['doscaleimage',['doScaleImage',['../classphoto__driver.html#ae18716018afcf362c7c24586b53e9e2f',1,'photo_driver\doScaleImage()'],['../classphoto__gd.html#a2f2e5900e6d8b1667892ac631b1d4754',1,'photo_gd\doScaleImage()'],['../classphoto__imagick.html#a3047c68bb4de7f66c2893fe451db2b66',1,'photo_imagick\doScaleImage()']]],
+  ['downgrade_5faccounts',['downgrade_accounts',['../account_8php.html#a0d183a3cb4c67a0f5e906811df7a1fc9',1,'account.php']]],
   ['drop_5fitem',['drop_item',['../items_8php.html#afa1db13c2a8b73b5b17b97f17e5a19d1',1,'items.php']]],
   ['drop_5fitems',['drop_items',['../items_8php.html#a668ece2c37f05cc3abe538eb0dabfe55',1,'items.php']]]
 ];

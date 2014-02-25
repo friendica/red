@@ -228,6 +228,8 @@ function setup_content(&$a) {
 
 			check_smarty3($checks);
 
+			check_store($checks);
+
 			check_keys($checks);
 			
 			if(x($_POST,'phpath'))
@@ -371,7 +373,10 @@ function check_php(&$phpath, &$checks) {
 	if (strlen($phpath)){
 		$passed = file_exists($phpath);
 	} else {
-		$phpath = trim(shell_exec('which php'));
+		if(is_windows())
+			$phpath = trim(shell_exec('where php'));
+		else
+			$phpath = trim(shell_exec('which php'));
 		$passed = strlen($phpath);
 	}
 	$help = "";
@@ -515,6 +520,24 @@ function check_smarty3(&$checks) {
 
 }
 
+function check_store(&$checks) {
+	$status = true;
+	$help = "";
+
+	@mkdir('store',STORAGE_DEFAULT_PERMISSIONS);
+
+	if(	!is_writable('store') ) {
+	
+		$status=false;
+		$help = t('Red uses the store directory to save uploaded files. The web server needs to have write access to the store directory under the Red top level folder') . EOL;
+		$help .= t('Please ensure that the user that your web server runs as (e.g. www-data) has write access to this folder.').EOL;
+	}
+    
+	check_add($checks, t('store is writable'), $status, true, $help);
+
+}
+
+
 function check_htaccess(&$checks) {
 	$a = get_app();
 	$status = true;
@@ -543,7 +566,7 @@ function check_htaccess(&$checks) {
 
 	
 function manual_config(&$a) {
-	$data = htmlentities($a->data['txt']);
+	$data = htmlspecialchars($a->data['txt'],ENT_COMPAT,'UTF-8');
 	$o = t('The database configuration file ".htconfig.php" could not be written. Please use the enclosed text to create a configuration file in your web server root.');
 	$o .= "<textarea rows=\"24\" cols=\"80\" >$data</textarea>";
 	return $o;
@@ -577,6 +600,8 @@ function load_database($db) {
 
 function what_next() {
 	$a = get_app();
+	// install the standard theme
+	set_config('system','allowed_themes','redbasic');
 	$baseurl = $a->get_baseurl();
 	return 
 		t('<h1>What next</h1>')

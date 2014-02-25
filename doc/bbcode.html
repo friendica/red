@@ -1,0 +1,72 @@
+<h3>BBcode reference</h3>
+<div style="font-size: 14px;">
+<br /><br />
+<ul class="listdecimal" style="list-style-type: decimal;">
+<li>[b]bold[/b] - <strong>bold</strong><br />
+<li>[i]italic[/i] - <em>italic</em><br />
+<li>[u]underlined[/u] - <u>underlined</u><br />
+<li>[s]strike[/s] - <strike>strike</strike><br />
+<li>[color=red]red[/color] - <span style="color:  red;">red</span><br />
+<li>[url=https://redmatrix.me]Red Matrix[/url] <a href="https://redmatrix.me">Red Matrix</a><br />
+<li>[img]https://redmatrix.me/images/default_profile_photos/rainbow_man/48.jpg[/img] <img src="https://redmatrix.me/images/default_profile_photos/rainbow_man/48.jpg" alt="Image/photo" /><br />
+<li>[img float=left]https://redmatrix.me/images/default_profile_photos/rainbow_man/48.jpg[/img] <img src="https://redmatrix.me/images/default_profile_photos/rainbow_man/48.jpg" style="float:left;" alt="Image/photo" /><br />
+<div style="clear:both;"></div>
+<li>[img float=right]https://redmatrix.me/images/default_profile_photos/rainbow_man/48.jpg[/img] <img src="https://redmatrix.me/images/default_profile_photos/rainbow_man/48.jpg" style="float:right;" alt="Image/photo" /><br />
+<div style="clear:both;"></div>
+<li>[code]code[/code] <code>code</code><br />
+<li>[quote]quote[/quote] <blockquote>quote</blockquote><br />
+<li>[quote=Author]Author? Me? No, no, no...[/quote] <br /><strong class="author">Author wrote:</strong><blockquote>Author? Me? No, no, no...</blockquote><br />
+<li> [nobb] may be used to escape bbcode.</ul><br /> 
+
+<br />You can make lists with:<br />
+<ul class="listbullet" style="list-style-type: circle;">
+<li>[list]<br />
+<li>[list=1]<br />
+<li>[list=i]<br />
+<li>[list=I] <br />
+<li>[list=a]<br />
+<li>[list=A] <br />
+<li>[ul]<br />
+<li>[ol]
+
+</ul>For example:<br />[ul]<br />[*] First list element<br />[*] Second list element<br />[/ul]<br /><br />Will render something like: <br />
+<ul class="listbullet" style="list-style-type: circle;">
+<li> First list element<br />
+<li> Second list element</ul><br /> 
+<br />There's also:<br />
+<ul class="listloweralpha" style="list-style-type: lower-alpha;">
+<li>[hr]<br />
+<li>[video]video URL[/video]<br />
+<li>[audio]audio URL[/audio]<br />
+<li>[table]<br />
+<li>[th] <br />
+<li>[td]<br />
+<li>[tr]<br />
+<li>[center]<br />
+<li>[font=courier]some text[/font] <span style="font-family: courier;">some text</span><br />
+</ul><br />
+<br />Tables? Yes!<br /><br />[table border=1]<br />  [tr]<br />    [th]Tables now[/th]<br />  [/tr]<br />  [tr]<br />    [td]Have headers[/td]<br />  [/tr]<br />[/table]<br /><br /><table border="1" ><tr><th>Tables now</th></tr><tr><td>Have headers</td></tr></table><br />All sizes, <br />From the [size=xx-small] - <span style="font-size: xx-small;">xx-small</span>.<br />To the [size=xx-large] - <span style="font-size: xx-large;">xx-large</span>.<br />To fit exactly <span style="font-size: 20px;">20px</span> use [size=20].<br /><br />
+
+<p>Red Matrix specific codes</p>
+<ul class="listbullet" style="list-style-type: circle;">
+<li>[&amp;copy;] &copy;  This works for many HTML entities<br />
+<li>[zrl]https://redmatrix.me[/zrl] Magic-auth version of [url] tag<br />
+<li>[zmg]https://redmatrix.me/some/photo.jpg[/zmg] Magic-auth version of [img] tag<br />
+<br />
+<li>[observer=1]Text to display if observer is authenticated in the matrix[/observer]
+<li>[observer=0]Text to display if observer is <strong>not</strong> authenticated in the matrix[/observer]<br />
+<li>[observer.baseurl] website of observer <br />
+<li>[observer.url] channel URL of observer <br />
+<li>[observer.name] name of observer <br />
+<li>[observer.address] address (zot-id) of observer <br />
+<li>[observer.photo] profile photo of observer <br />
+<br />
+
+<li>[rpost=title]Text to post[/rpost] The observer will be returned to their home hub to enter a post with the specified title and body. Both are optional <br />
+
+
+
+</div>
+
+
+ 

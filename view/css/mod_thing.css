@@ -4,22 +4,16 @@
 	margin-left: 0;
 }
 
-.thing-verb-label {
-	margin-top: 15px;
-}
 
-.thing-verb {
-	margin-bottom: 15px;
-}
-
-.thing-label {
+.thing-label, .field label, .thing-verb-label, .thing-profile-label{
 	float: left;
-	width: 250px;
+	width: 350px;
 }
 
-.thing-input {
+.thing-input, .thing-verb, .thing-profile{
 	float: left;
 	margin-bottom: 15px;
+	width: 400px;
 }
 
 .thing-field-end {

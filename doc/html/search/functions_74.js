@@ -31,5 +31,7 @@ var searchData=
   ['toggle_5fsafesearch_5finit',['toggle_safesearch_init',['../toggle__safesearch_8php.html#a23d5cfb2727a266e44993ffbf5595a79',1,'toggle_safesearch.php']]],
   ['toggle_5ftheme',['toggle_theme',['../admin_8php.html#af81f081851791cd15e49e8ff6722dc27',1,'admin.php']]],
   ['tryoembed',['tryoembed',['../bbcode_8php.html#a55b0cb6973f1ec731de0e726bcc0efa7',1,'bbcode.php']]],
+  ['tryzrlaudio',['tryzrlaudio',['../bbcode_8php.html#a39de4de32a9456d1ca914d0dc52bd322',1,'bbcode.php']]],
+  ['tryzrlvideo',['tryzrlvideo',['../bbcode_8php.html#aa92f119341f4c69dcef2768a013079b8',1,'bbcode.php']]],
   ['tt',['tt',['../language_8php.html#ae310fb3880484ee1cc4faefe0c63c06d',1,'language.php']]]
 ];

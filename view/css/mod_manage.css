@@ -1,8 +1,7 @@
 #channels-selected {
 	color: #666666;
-	font-size: 1.2em;
-	width: 120px;
-	margin: 20px auto 10px auto;
+	font-size: 0.8em;
+
 }
 
 #channels-desc {
@@ -12,9 +11,16 @@
 	margin-bottom: 20px;
 }
 
+.channels-break {
+	margin-bottom: 15px;
+}
 #selected-channel {
-	width: 200px;
-	margin: 0px auto 0px auto;
+	float: left;
+	margin-left: 0;
+}
+
+.channels-end.selected {
+	clear: both;
 }
 
 #selected-channel .channel-selection {
@@ -31,6 +37,7 @@
 #all-channels .channel-selection {
 	width: 120px;
 	float: left;
+	margin-bottom: 15px;
 }
 .channels-end {
 	clear: both;

@@ -38,56 +38,6 @@
 	margin-bottom: 20px;
 }
 
-.contact-entry-wrapper {
-	float: left;
-	width: 120px;
-	height: 120px;
-	padding: 10px;
-}
-
-#contacts-search {
-	font-size: 1em;
-	width: 300px;
-}
-
-#contacts-search-end {
-	margin-bottom: 10px;
-}
-
-.contact-entry-photo img {
-	border: none;
-}
-.contact-entry-photo-end {
-	clear: both;
-}
-.contact-entry-name {
-	float: left;
-	margin-left: 0px;
-	margin-right: 10px;
-	width: 120px;
-	overflow: hidden;
-}
-.contact-entry-edit-links {
-	margin-top: 6px;
-	margin-left: 10px;
-	width: 16px;
-}
-.contact-entry-nav-wrapper {
-	float: left;
-	margin-left: 10px;
-}
-
-.contact-entry-edit-links img {
-	border: none;
-	margin-right: 15px;
-}
-.contact-entry-photo {
-	float: left;
-	position: relative;
-}
-.contact-entry-end {
-	clear: both;
-}
 
 
 #contact-edit-wrapper {
@@ -154,3 +104,34 @@
 	margin-top: 20px;
 }
 
+.contact-entry-wrapper {
+	float: left;
+	width: 120px;
+	height: 120px;
+	padding: 10px;
+}
+
+#contacts-search {
+	font-size: 1em;
+	width: 300px;
+}
+
+#contacts-search-end {
+	margin-bottom: 10px;
+}
+
+.contact-entry-photo-end {
+	clear: both;
+}
+
+.contact-entry-name {
+	float: left;
+	margin-left: 0px;
+	margin-right: 10px;
+	width: 120px;
+	overflow: hidden;
+}
+
+.contact-entry-end {
+	clear: both;
+}

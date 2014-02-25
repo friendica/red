@@ -111,6 +111,13 @@
 </dl>
 {{/if}}
 
+{{if $profile.channels}}
+<dl id="aprofile-channels" class="aprofile">
+ <dt>{{$profile.channels.0}}</dt>
+ <dd>{{$profile.channels.1}}</dd>
+</dl>
+{{/if}}
+
 
 {{if $profile.music}}
 <dl id="aprofile-music" class="aprofile">

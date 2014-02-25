@@ -357,7 +357,7 @@ abstract class photo_driver {
 				dbesc($p['resource_id']),
 				dbesc(datetime_convert()),
 				dbesc(datetime_convert()),
-				dbesc(basename($filename)),
+				dbesc(basename($p['filename'])),
 				dbesc($this->getType()),
 				dbesc($p['album']),
 				intval($this->getHeight()),
@@ -513,38 +513,72 @@ function guess_image_type($filename, $headers = '') {
 
 }
 
-function import_profile_photo($photo,$xchan) {
+function import_profile_photo($photo,$xchan,$thing = false) {
 
 	$a = get_app();
 
+	$flags = (($thing) ? PHOTO_THING : PHOTO_XCHAN);
+	$album = (($thing) ? 'Things' : 'Contact Photos');
+
 	logger('import_profile_photo: updating channel photo from ' . $photo . ' for ' . $xchan, LOGGER_DEBUG);
 
-	$r = q("select resource_id from photo where xchan = '%s' and scale = 4 limit 1",
-		dbesc($xchan)
-	);
-	if($r) {
-		$hash = $r[0]['resource_id'];
-	}
-	else {
+	if($thing)
 		$hash = photo_new_resource();
+	else {
+		$r = q("select resource_id from photo where xchan = '%s' and (photo_flags & %d ) and scale = 4 limit 1",
+			dbesc($xchan),
+			intval(PHOTO_XCHAN)
+		);
+		if($r) {
+			$hash = $r[0]['resource_id'];
+		}
+		else {
+			$hash = photo_new_resource();
+		}
 	}
 
 	$photo_failure = false;
+	$img_str = '';
 
+	if($photo) {
+		$filename = basename($photo);
+		$type = guess_image_type($photo,true);
 
-	$filename = basename($photo);
-	$type = guess_image_type($photo,true);
-	$result = z_fetch_url($photo,true);
+		if(! $type)
+			$type = 'image/jpeg';
 
-	if($result['success'])
-		$img_str = $result['body'];
+		$result = z_fetch_url($photo,true);
+
+		if($result['success'])
+			$img_str = $result['body'];
+	}
 
 	$img = photo_factory($img_str, $type);
 	if($img->is_valid()) {
+		$width = $img->getWidth();
+		$height = $img->getHeight();
+	
+		if($width && $height) {
+			if(($width / $height) > 1.2) {
+				// crop out the sides
+				$margin = $width - $height;
+				$img->cropImage(175,($margin / 2),0,$height,$height); 
+			}
+			elseif(($height / $width) > 1.2) {
+				// crop out the bottom
+				$margin = $height - $width;
+				$img->cropImage(175,0,0,$width,$width);
 
-		$img->scaleImageSquare(175);
+			}
+			else {
+				$img->scaleImageSquare(175);
+			}
 
-		$p = array('xchan' => $xchan,'resource_id' => $hash, 'filename' => 'Contact Photos', 'photo_flags' => PHOTO_XCHAN, 'scale' => 4);
+		}
+		else 
+			$photo_failure = true;
+
+		$p = array('xchan' => $xchan,'resource_id' => $hash, 'filename' => basename($photo), 'album' => $album, 'photo_flags' => $flags, 'scale' => 4);
 
 		$r = $img->save($p);
 
@@ -576,9 +610,9 @@ function import_profile_photo($photo,$xchan) {
 		$photo_failure = true;
 	}
 	if($photo_failure) {
-		$photo = $a->get_baseurl() . '/images/default_profile_photos/rainbow_man/175.jpg';
-		$thumb = $a->get_baseurl() . '/images/default_profile_photos/rainbow_man/80.jpg';
-		$micro = $a->get_baseurl() . '/images/default_profile_photos/rainbow_man/48.jpg';
+		$photo = $a->get_baseurl() . '/' . get_default_profile_photo();
+		$thumb = $a->get_baseurl() . '/' . get_default_profile_photo(80);
+		$micro = $a->get_baseurl() . '/' . get_default_profile_photo(48);
 		$type = 'image/jpeg';
 	}
 

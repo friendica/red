@@ -52,11 +52,33 @@ function zfinger_init(&$a) {
 		);
 	}
 	elseif(strlen($zaddr)) {
-		$r = q("select channel.*, xchan.* from channel left join xchan on channel_hash = xchan_hash
-			where ( channel_address = '%s' or xchan_addr = '%s' ) limit 1",
-			dbesc($zaddr),
-			dbesc($zaddr)
-		);
+		if(strpos($zaddr,'[system]') === false) {       /* normal address lookup */
+			$r = q("select channel.*, xchan.* from channel left join xchan on channel_hash = xchan_hash
+				where ( channel_address = '%s' or xchan_addr = '%s' ) limit 1",
+				dbesc($zaddr),
+				dbesc($zaddr)
+			);
+		}
+
+		else {
+
+			/**
+			 * The special address '[system]' will return a system channel if one has been defined,
+			 * Or the first valid channel we find if there are no system channels. 
+			 *
+			 * This is used by magic-auth if we have no prior communications with this site - and
+			 * returns an identity on this site which we can use to create a valid hub record so that
+			 * we can exchange signed messages. The precise identity is irrelevant. It's the hub
+			 * information that we really need at the other end - and this will return it.
+			 *
+			 */
+
+			$r = q("select channel.*, xchan.* from channel left join xchan on channel_hash = xchan_hash
+				where (( channel_pageflags & %d ) or not ( channel_pageflags & %d )) order by channel_id limit 1",
+				intval(PAGE_SYSTEM),
+				intval(PAGE_REMOVED)
+			);
+		} 
 	}
 	else {
 		$ret['message'] = 'Invalid request';
@@ -104,12 +126,16 @@ function zfinger_init(&$a) {
 		$profile['region']        = $p[0]['region'];
 		$profile['postcode']      = $p[0]['postal_code'];
 		$profile['country']       = $p[0]['country_name'];
+		$profile['about']         = $p[0]['about'];
+		$profile['homepage']      = $p[0]['homepage'];
+		$profile['hometown']      = $p[0]['hometown'];
+
 		if($p[0]['keywords']) {
 			$tags = array();
 			$k = explode(' ',$p[0]['keywords']);
 			if($k) {
 				foreach($k as $kk) {
-					if(trim($kk)) {
+					if(trim($kk," \t\n\r\0\x0B,")) {
 						$tags[] = trim($kk," \t\n\r\0\x0B,");
 					}
 				}

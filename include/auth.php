@@ -34,6 +34,7 @@ function nuke_session() {
  */
 
 function account_verify_password($email,$pass) {
+
 	$r = q("select * from account where account_email = '%s'",
 		dbesc($email)
 	);
@@ -46,19 +47,28 @@ function account_verify_password($email,$pass) {
 			return $record;
 		}
 	}
-	logger('password failed for ' . $email);
+	$error = 'password failed for ' . $email;
+	logger($error);
+	// Also log failed logins to a separate auth log to reduce overhead for server side intrusion prevention
+	$authlog = get_config('system', 'authlog');
+	if ($authlog)
+		@file_put_contents($authlog, datetime_convert() . ':' . session_id() . ' ' . $error . "\n", FILE_APPEND);
+
 	return null;
 }
 
 
-// login/logout 
-
-
-
-
+/**
+ * Inline - not a function
+ * look for auth parameters or re-validate an existing session
+ * also handles logout
+ */
 
 
 if((isset($_SESSION)) && (x($_SESSION,'authenticated')) && ((! (x($_POST,'auth-params'))) || ($_POST['auth-params'] !== 'login'))) {
+
+
+	// process a logout request
 
 	if(((x($_POST,'auth-params')) && ($_POST['auth-params'] === 'logout')) || ($a->module === 'logout')) {
 	
@@ -69,6 +79,8 @@ if((isset($_SESSION)) && (x($_SESSION,'authenticated')) && ((! (x($_POST,'auth-p
 		info( t('Logged out.') . EOL);
 		goaway(z_root());
 	}
+
+	// re-validate a visitor, optionally invoke "su" if permitted to do so
 
 	if(x($_SESSION,'visitor_id') && (! x($_SESSION,'uid'))) {
 		// if our authenticated guest is allowed to take control of the admin channel, make it so.
@@ -86,7 +98,7 @@ if((isset($_SESSION)) && (x($_SESSION,'authenticated')) && ((! (x($_POST,'auth-p
 			}
 		}
 
-		$r = q("select * from hubloc left join xchan on xchan_hash = hubloc_hash where hubloc_hash = '%s' limit 1",
+		$r = q("select * from xchan left join hubloc on xchan_hash = hubloc_hash where xchan_hash = '%s' limit 1",
 			dbesc($_SESSION['visitor_id'])
 		);
 		if($r) {
@@ -99,9 +111,11 @@ if((isset($_SESSION)) && (x($_SESSION,'authenticated')) && ((! (x($_POST,'auth-p
 		$a->set_groups(init_groups_visitor($_SESSION['visitor_id']));
 	}
 
+	// already logged in user returning
+
 	if(x($_SESSION,'uid') || x($_SESSION,'account_id')) {
 
-		// already logged in user returning
+		// first check if we're enforcing that sessions can't change IP address
 
 		$check = get_config('system','paranoia');
 		// extra paranoia - if the IP changed, log them out
@@ -143,6 +157,8 @@ else {
 		nuke_session();
 	}
 
+	// handle a fresh login request
+
 	if((x($_POST,'password')) && strlen($_POST['password']))
 		$encrypted = hash('whirlpool',trim($_POST['password']));
 
@@ -181,12 +197,18 @@ else {
 				notice( t('Failed authentication') . EOL);
 			}
 
-			logger('authenticate: ' . print_r(get_app()->account,true));
+			logger('authenticate: ' . print_r(get_app()->account,true), LOGGER_DEBUG);
 
 		}
 
 		if((! $record) || (! count($record))) {
-			logger('authenticate: failed login attempt: ' . notags(trim($_POST['username'])) . ' from IP ' . $_SERVER['REMOTE_ADDR']); 
+			$error = 'authenticate: failed login attempt: ' . notags(trim($_POST['username'])) . ' from IP ' . $_SERVER['REMOTE_ADDR'];
+			logger($error); 
+			// Also log failed logins to a separate auth log to reduce overhead for server side intrusion prevention
+		        $authlog = get_config('system', 'authlog');
+		        if ($authlog)
+		        @file_put_contents($authlog, datetime_convert() . ':' . session_id() . ' ' . $error . "\n", FILE_APPEND);
+
 			notice( t('Login failed.') . EOL );
 			goaway(z_root());
   		}
@@ -217,3 +239,13 @@ else {
 		authenticate_success($record, true, true);
 	}
 }
+
+
+function match_openid($authid) {
+	$r = q("select * from pconfig where cat = 'system' and k = 'openid' and v = '%s' limit 1",
+		dbesc($authid)
+	);
+	if($r)
+		return $r[0]['uid'];
+	return false;
+}					

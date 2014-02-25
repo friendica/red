@@ -2,21 +2,20 @@
 
 	{{if $profile.edit}}
 	<div class="action">
-	<a class="profile-edit-side-link" rel="#profiles-menu" title="{{$profile.edit.3}}" href="#" ><i class="icon-pencil vcard-profile-edit-icon" title="{{$profile.edit.1}}" ></i></a>
-	<ul id="profiles-menu" class="menu-popup">
+	<a class="profile-edit-side-link dropdown-toggle" data-toggle="dropdown" rel="#profiles-menu" title="{{$profile.edit.3}}" href="#" ><i class="icon-pencil vcard-profile-edit-icon" title="{{$profile.edit.1}}" ></i></a>
+	<ul id="profiles-menu" class="menu-popup dropdown-menu">
 		{{foreach $profile.menu.entries as $e}}
 		<li>
 			<a href="profiles/{{$e.id}}"><img src='{{$e.photo}}'>{{$e.profile_name}}</a>
 		</li>
 		{{/foreach}}
 		<li><a href="profile_photo" >{{$profile.menu.chg_photo}}</a></li>
-		<li><a href="profiles/new" id="profile-listing-new-link">{{$profile.menu.cr_new}}</a></li>
-				
+		{{if $profile.menu.cr_new}}<li><a href="profiles/new" id="profile-listing-new-link">{{$profile.menu.cr_new}}</a></li>{{/if}}
 	</ul>
 	</div>
 	{{/if}}
 
-	<div class="fn label">{{$profile.name}}</div>
+	<div class="fn label">{{$profile.name}}{{if $profile.online}} <i class="icon-asterisk online-now" title="{{$profile.online}}"></i>{{/if}}</div>
 		
 	{{if $pdesc}}<div class="title">{{$profile.pdesc}}</div>{{/if}}
 	<div id="profile-photo-wrapper"><img class="photo" width="175" height="175" src="{{$profile.photo}}?rev={{$profile.picdate}}" alt="{{$profile.name}}"></div>

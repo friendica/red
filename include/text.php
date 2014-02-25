@@ -442,7 +442,7 @@ function item_message_id() {
 
 		$mid = $hash . '@' . get_app()->get_hostname();
 
-		$r = q("SELECT `id` FROM `item` WHERE `mid` = '%s' LIMIT 1",
+		$r = q("SELECT id FROM item WHERE mid = '%s' LIMIT 1",
 			dbesc($mid));
 		if(count($r))
 			$dups = true;
@@ -459,7 +459,7 @@ function photo_new_resource() {
 	do {
 		$found = false;
 		$resource = hash('md5',uniqid(mt_rand(),true));
-		$r = q("SELECT `id` FROM `photo` WHERE `resource_id` = '%s' LIMIT 1",
+		$r = q("SELECT id FROM photo WHERE resource_id = '%s' LIMIT 1",
 			dbesc($resource)
 		);
 		if(count($r))
@@ -565,6 +565,10 @@ function get_tags($s) {
 
 	$s = preg_replace('/\[code\](.*?)\[\/code\]/sm','',$s);
 
+	// ignore anything in [style= ]
+
+	$s = preg_replace('/\[style=(.*?)\]/sm','',$s);
+
 	// Match full names against @tags including the space between first and last
 	// We will look these up afterward to see if they are full names or not recognisable.
 
@@ -593,7 +597,7 @@ function get_tags($s) {
 			if(substr($mtch,-1,1) === '.')
 				$mtch = substr($mtch,0,-1);
 			// ignore strictly numeric tags like #1
-			if((strpos($mtch,'#') === 0) && ctype_digit(substr($mtch,1)))
+			if((strpos($mtch,'#') === 0) && ( ctype_digit(substr($mtch,1)) || substr($mtch,1,1) === '^'))
 				continue;
 			// try not to catch url fragments
 			if(strpos($s,$mtch) && preg_match('/[a-zA-z0-9\/]/',substr($s,strpos($s,$mtch)-1,1)))
@@ -601,7 +605,24 @@ function get_tags($s) {
 			$ret[] = $mtch;
 		}
 	}
+
+	// bookmarks
+
+	if(preg_match_all('/#\^\[(url|zrl)(.*?)\](.*?)\[\/(url|zrl)\]/',$s,$match,PREG_SET_ORDER)) {
+		foreach($match as $mtch) {
+			$ret[] = $mtch[0];
+		}
+	}
+
+
+	// logger('get_tags: ' . print_r($ret,true));
+
 	return $ret;
+}
+
+
+function strip_zids($s) {
+	return preg_replace('/[\?&]zid=(.*?)(&|$)/ism','$2',$s);
 }
 
 
@@ -781,6 +802,34 @@ function linkify($s) {
 	return($s);
 }
 
+/**
+ * @function sslify($s)
+ *    Replace media element using http url with https to a local redirector if using https locally
+ * @param string $s
+ *
+ * Looks for HTML tags containing src elements that are http when we're viewing an https page
+ * Typically this throws an insecure content violation in the browser. So we redirect them
+ * to a local redirector which uses https and which redirects to the selected content
+ *
+ * @returns string
+ */
+
+
+function sslify($s) {
+	if(strpos(z_root(),'https:') === false)
+		return $s;
+	$matches = null;
+	$cnt = preg_match_all("/\<(.*?)src=\"(http\:.*?)\"(.*?)\>/",$s,$matches,PREG_SET_ORDER);
+	if($cnt) {
+		foreach($matches as $match) {
+			$s = str_replace($match[2],z_root() . '/sslify?f=&url=' . urlencode($match[2]),$s);
+		}
+	}
+	return $s;
+}
+
+
+
 function get_poke_verbs() {
 	
 	// index is present tense verb
@@ -843,8 +892,8 @@ function get_mood_verbs() {
  * Returns string
  *
  * It is expected that this function will be called using HTML text.
- * We will escape text between HTML pre and code blocks from being 
- * processed. 
+ * We will escape text between HTML pre and code blocks, and HTML attributes
+ * (such as urls) from being processed.
  * 
  * At a higher level, the bbcode [nosmile] tag can be used to prevent this 
  * function from being executed by the prepare_text() routine when preparing
@@ -861,8 +910,8 @@ function smilies($s, $sample = false) {
 		|| (local_user() && intval(get_pconfig(local_user(),'system','no_smilies'))))
 		return $s;
 
-	$s = preg_replace_callback('/<pre>(.*?)<\/pre>/ism','smile_encode',$s);
-	$s = preg_replace_callback('/<code>(.*?)<\/code>/ism','smile_encode',$s);
+	$s = preg_replace_callback('{<(pre|code)>.*?</\1>}ism','smile_shield',$s);
+	$s = preg_replace_callback('/<[a-z]+ .*?>/ism','smile_shield',$s);
 
 	$texts =  array( 
 		'&lt;3', 
@@ -953,19 +1002,18 @@ function smilies($s, $sample = false) {
 		$s = str_replace($params['texts'],$params['icons'],$params['string']);
 	}
 
-	$s = preg_replace_callback('/<pre>(.*?)<\/pre>/ism','smile_decode',$s);
-	$s = preg_replace_callback('/<code>(.*?)<\/code>/ism','smile_decode',$s);
+	$s = preg_replace_callback('/<!--base64:(.*?)-->/ism', 'smile_unshield', $s);
 
 	return $s;
 
 }
 
-function smile_encode($m) {
-	return(str_replace($m[1],base64url_encode($m[1]),$m[0]));
+function smile_shield($m) {
+	return '<!--base64:' . base64url_encode($m[0]) . '-->';
 }
 
-function smile_decode($m) {
-	return(str_replace($m[1],base64url_decode($m[1]),$m[0]));
+function smile_unshield($m) { 
+	return base64url_decode($m[1]); 
 }
 
 // expand <3333 to the correct number of hearts
@@ -1065,7 +1113,7 @@ function theme_attachments(&$item) {
 					break;
 			}
 
-			$title = htmlentities($r['title'], ENT_COMPAT,'UTF-8');
+			$title = htmlspecialchars($r['title'], ENT_COMPAT,'UTF-8');
 			if(! $title)
 				$title = t('unknown.???');
 			$title .= ' ' . $r['length'] . ' ' . t('bytes');
@@ -1095,7 +1143,7 @@ function format_categories(&$item,$writeable) {
 	if($terms) {
 		$categories = array();
 		foreach($terms as $t) {
-			$term = htmlspecialchars($t['term'],ENT_COMPAT,'UTF-8') ;
+			$term = htmlspecialchars($t['term'],ENT_COMPAT,'UTF-8',false) ;
 			if(! trim($term))
 				continue;
 			$removelink = (($writeable) ?  z_root() . '/filerm/' . $item['id'] . '?f=&cat=' . urlencode($t['term']) : '');
@@ -1117,7 +1165,7 @@ function format_filer(&$item) {
 	if($terms) {
 		$categories = array();
 		foreach($terms as $t) {
-			$term = htmlspecialchars($t['term'],ENT_COMPAT,'UTF-8') ;
+			$term = htmlspecialchars($t['term'],ENT_COMPAT,'UTF-8',false) ;
 			if(! trim($term))
 				continue;
 			$removelink = z_root() . '/filerm/' . $item['id'] . '?f=&term=' . urlencode($t['term']);
@@ -1165,6 +1213,10 @@ function prepare_body(&$item,$attach = false) {
 
 	if(local_user() == $item['uid'])
 		$s .= format_filer($item);
+
+
+	$s = sslify($s);
+
 
 	// Look for spoiler
 	$spoilersearch = '<blockquote class="spoiler">';
@@ -1272,24 +1324,15 @@ function prepare_text($text,$content_type = 'text/bbcode') {
 
 
 function zidify_callback($match) {
-	if (feature_enabled(local_user(),'sendzid')) {
-		$replace = '<a' . $match[1] . ' href="' . zid($match[2]) . '"';
-	}
-	else {
-		$replace = '<a' . $match[1] . 'class="zrl"' . $match[2] . ' href="' . zid($match[3]) . '"';
-	}
-
+	$is_zid = ((feature_enabled(local_user(),'sendzid')) || (strpos($match[1],'zrl')) ? true : false);
+	$replace = '<a' . $match[1] . ' href="' . (($is_zid) ? zid($match[2]) : $match[2]) . '"';			
 	$x = str_replace($match[0],$replace,$match[0]);
 	return $x;
 }
 
 function zidify_img_callback($match) {
-  if (feature_enabled(local_user(),'sendzid')) {
-	$replace = '<img' . $match[1] . ' src="' . zid($match[2]) . '"';
-	}
-	else {
-	  $replace = '<img' . $match[1] . ' src="' . zid($match[2]) . '"';
-	}
+	$is_zid = ((feature_enabled(local_user(),'sendzid')) || (strpos($match[1],'zrl')) ? true : false);
+	$replace = '<img' . $match[1] . ' src="' . (($is_zid) ? zid($match[2]) : $match[2]) . '"';
     
 	$x = str_replace($match[0],$replace,$match[0]);
 	return $x;
@@ -1297,22 +1340,10 @@ function zidify_img_callback($match) {
 
 
 function zidify_links($s) {
-	if(feature_enabled(local_user(),'sendzid')) {
-		$s = preg_replace_callback('/\<a(.*?)href\=\"(.*?)\"/ism','zidify_callback',$s);
-		$s = preg_replace_callback('/\<img(.*?)src\=\"(.*?)\"/ism','zidify_img_callback',$s);
-	}
-    else {
-		$s = preg_replace_callback('/\<a(.*?)class\=\"zrl\"(.*?)href\=\"(.*?)\"/ism','zidify_callback',$s);
-		$s = preg_replace_callback('/\<img class\=\"zrl\"(.*?)src\=\"(.*?)\"/ism','zidify_img_callback',$s);
-// FIXME - remove the following line and redo the regex for the prev line once all Red images are converted to zmg
-		$s = preg_replace_callback('/\<img(.*?)src\=\"(.*?)\"/ism','zidify_img_callback',$s);
-	}
-
+	$s = preg_replace_callback('/\<a(.*?)href\=\"(.*?)\"/ism','zidify_callback',$s);
+	$s = preg_replace_callback('/\<img(.*?)src\=\"(.*?)\"/ism','zidify_img_callback',$s);
 	return $s;
 }
-
-
-
 
 
 
@@ -1357,9 +1388,9 @@ function feed_salmonlinks($nick) {
 }
 
 
-function get_plink($item,$mode) {
+function get_plink($item,$conversation_mode = true) {
 	$a = get_app();
-	if($mode == 'display')
+	if($conversation_mode)
 		$key = 'plink';
 	else
 		$key = 'llink';
@@ -1485,20 +1516,6 @@ function return_bytes ($size_str) {
     }
 }
 
-function generate_user_guid() {
-	$found = true;
-	do {
-		$guid = random_string(16);
-		$x = q("SELECT `uid` FROM `user` WHERE `guid` = '%s' LIMIT 1",
-			dbesc($guid)
-		);
-		if(! count($x))
-			$found = false;
-	} while ($found == true );
-	return $guid;
-}
-
-
 
 function base64url_encode($s, $strip_padding = true) {
 
@@ -1516,23 +1533,6 @@ function base64url_decode($s) {
 		logger('base64url_decode: illegal input: ' . print_r(debug_backtrace(), true));
 		return $s;
 	}
-
-/*
- *  // Placeholder for new rev of salmon which strips base64 padding.
- *  // PHP base64_decode handles the un-padded input without requiring this step
- *  // Uncomment if you find you need it.
- *
- *	$l = strlen($s);
- *	if(! strpos($s,'=')) {
- *		$m = $l % 4;
- *		if($m == 2)
- *			$s .= '==';
- *		if($m == 3)
- *			$s .= '=';
- *	}
- *
- */
-
 	return base64_decode(strtr($s,'-_','+/'));
 }
 
@@ -1637,17 +1637,12 @@ function item_post_type($item) {
 }
 
 
-function normalise_openid($s) {
-	return trim(str_replace(array('http://','https://'),array('',''),$s),'/');
-}
-
-
 function undo_post_tagging($s) {
 	$matches = null;
-	$cnt = preg_match_all('/([@#])\[zrl=(.*?)\](.*?)\[\/zrl\]/ism',$s,$matches,PREG_SET_ORDER);
+	$cnt = preg_match_all('/([@#])(\!*)\[zrl=(.*?)\](.*?)\[\/zrl\]/ism',$s,$matches,PREG_SET_ORDER);
 	if($cnt) {
 		foreach($matches as $mtch) {
-			$s = str_replace($mtch[0], $mtch[1] . $mtch[3],$s);
+			$s = str_replace($mtch[0], $mtch[1] . $mtch[2] . str_replace(' ','_',$mtch[4]),$s);
 		}
 	}
 	return $s;
@@ -1889,23 +1884,26 @@ function json_decode_plus($s) {
 
 
 function design_tools() {
-$channel  = get_app()->get_channel();
-$who = $channel['channel_address'];
+	$channel  = get_app()->get_channel();
+	$who = $channel['channel_address'];
 
-return replace_macros(get_markup_template('design_tools.tpl'), array(
-                        '$title' => t('Design'),
-			'$who' => $who,
-                      	'$blocks' => t('Blocks'),
-			'$menus' => t('Menus'),
-			'$layout' => t('Layouts'),
-			'$pages' => t('Pages')
-                        ));
-
+	return replace_macros(get_markup_template('design_tools.tpl'), array(
+		'$title' => t('Design'),
+		'$who' => $who,
+		'$blocks' => t('Blocks'),
+		'$menus' => t('Menus'),
+		'$layout' => t('Layouts'),
+		'$pages' => t('Pages')
+	));
 }
 
 /* case insensitive in_array() */
 
 function in_arrayi($needle, $haystack) {
 	return in_array(strtolower($needle), array_map('strtolower', $haystack));
+}
+
+function normalise_openid($s) {
+	return trim(str_replace(array('http://','https://'),array('',''),$s),'/');
 }
 

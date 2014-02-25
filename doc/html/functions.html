@@ -154,14 +154,16 @@ $(document).ready(function(){initNavTree('functions.html','');});
 <li>$argv
 : <a class="el" href="classApp.html#ab3da757abe5cb45bf88f07cc51a73b58">App</a>
 </li>
-<li>$attach
-: <a class="el" href="classRedInode.html#a7b317eb1230930154107ed51e54193f5">RedInode</a>
-</li>
 <li>$auth
-: <a class="el" href="classRedDirectory.html#a9616af16cd19a18a6afebebcc2881c44">RedDirectory</a>
+: <a class="el" href="classRedBrowser.html#ab6d6d1e2a67e06b344a4cede1bd00b35">RedBrowser</a>
+, <a class="el" href="classRedDirectory.html#a9616af16cd19a18a6afebebcc2881c44">RedDirectory</a>
+, <a class="el" href="classRedFile.html#a4b5d0e33f919c6c175b30a55de6263f2">RedFile</a>
 </li>
 <li>$baseurl
 : <a class="el" href="classApp.html#ad5175536561021548ae8188e24c7b80c">App</a>
+</li>
+<li>$browser
+: <a class="el" href="classRedBasicAuth.html#af14337f1baad407f8a85d48205c0f30e">RedBasicAuth</a>
 </li>
 <li>$cached_profile_image
 : <a class="el" href="classApp.html#abe0e4fa91097f7a6588e1213a834121c">App</a>
@@ -176,8 +178,14 @@ $(document).ready(function(){initNavTree('functions.html','');});
 : <a class="el" href="classApp.html#a050b0696118da47e8b30859ad1a2c149">App</a>
 , <a class="el" href="classItem.html#acc32426c0f465391be8a99ad810c7b8e">Item</a>
 </li>
+<li>$channel_hash
+: <a class="el" href="classRedBasicAuth.html#ad5a3ea4dc4783b242d9dc6e76478b6ef">RedBasicAuth</a>
+</li>
 <li>$channel_id
-: <a class="el" href="classRedDirectory.html#ae624dcaa4d73a517f4b1616d33df690d">RedDirectory</a>
+: <a class="el" href="classRedBasicAuth.html#a2dab393650d1573e3515969a153e8354">RedBasicAuth</a>
+</li>
+<li>$channel_name
+: <a class="el" href="classRedBasicAuth.html#a438ab125b6ef46581947e35d49cdebac">RedBasicAuth</a>
 </li>
 <li>$children
 : <a class="el" href="classItem.html#a80dcd0fb7673776c0967839d429c2a0f">Item</a>
@@ -241,9 +249,6 @@ $(document).ready(function(){initNavTree('functions.html','');});
 : <a class="el" href="classdba__driver.html#af48e2afeded5285766bf92e22123ed03">dba_driver</a>
 , <a class="el" href="classTemplate.html#afc4afb6f89bebcd5480022312a56cb4a">Template</a>
 </li>
-<li>$dir_key
-: <a class="el" href="classRedDirectory.html#a8d5df814b2f825dd14c628a51b5829b5">RedDirectory</a>
-</li>
 <li>$done
 : <a class="el" href="classTemplate.html#abda4c8d049f70553338eae7c905e9d5c">Template</a>
 </li>
@@ -251,8 +256,14 @@ $(document).ready(function(){initNavTree('functions.html','');});
 : <a class="el" href="classApp.html#ac1a8b2cd40609b231a560201a08852ba">App</a>
 , <a class="el" href="classdba__driver.html#a84675d28c7bd9b7290dd37e66dbd216c">dba_driver</a>
 </li>
+<li>$ext_path
+: <a class="el" href="classRedDirectory.html#a0f113244cd85c17848df991001d024f4">RedDirectory</a>
+</li>
 <li>$filename
 : <a class="el" href="classFriendicaSmarty.html#a33fabbd4d6eef869df496adf357ae690">FriendicaSmarty</a>
+</li>
+<li>$folder_hash
+: <a class="el" href="classRedDirectory.html#aa10254abf177bb2a0e4a88495725e09b">RedDirectory</a>
 </li>
 <li>$force_max_items
 : <a class="el" href="classApp.html#ae3f47830543d0d902f66913def8db66b">App</a>
@@ -274,6 +285,9 @@ $(document).ready(function(){initNavTree('functions.html','');});
 </li>
 <li>$image
 : <a class="el" href="classphoto__driver.html#a7c78b5a01afe61ba3895ac07f4869b55">photo_driver</a>
+</li>
+<li>$install
+: <a class="el" href="classApp.html#a576ecb1c5b4a283221e6f2f0ec248251">App</a>
 </li>
 <li>$interactive
 : <a class="el" href="classApp.html#a4c7cfc62d39508086cf300dc2e39c4df">App</a>
@@ -304,6 +318,7 @@ $(document).ready(function(){initNavTree('functions.html','');});
 </li>
 <li>$name
 : <a class="el" href="classFriendicaSmartyEngine.html#aaba6a42101bc9ae32e36b7fa2e243f02">FriendicaSmartyEngine</a>
+, <a class="el" href="classRedFile.html#acc48c05cd5a70951cb3c615ad84f03ba">RedFile</a>
 , <a class="el" href="classTemplate.html#a6eb301a51cc94d8b94f4548fbad85eae">Template</a>
 </li>
 <li>$nav_sel
@@ -313,11 +328,21 @@ $(document).ready(function(){initNavTree('functions.html','');});
 : <a class="el" href="classTemplate.html#a8f4d17e49f42b876a97364c13fb572d1">Template</a>
 </li>
 <li>$observer
-: <a class="el" href="classApp.html#a4ffe529fb14389f7fedf5fdc5f722e7f">App</a>
-, <a class="el" href="classConversation.html#a8748445aa26047ebed5141f3c3cbc244">Conversation</a>
+: <a class="el" href="classConversation.html#a8748445aa26047ebed5141f3c3cbc244">Conversation</a>
+, <a class="el" href="classRedBasicAuth.html#aa75dc43b59adc98e38a98517d3fd35d1">RedBasicAuth</a>
+, <a class="el" href="classApp.html#a4ffe529fb14389f7fedf5fdc5f722e7f">App</a>
+</li>
+<li>$os_path
+: <a class="el" href="classRedDirectory.html#a3c148c07ad909985125aa4926d8d0021">RedDirectory</a>
+</li>
+<li>$owner_id
+: <a class="el" href="classRedBasicAuth.html#a09c1488a0b290f5a54dc15180c5690d7">RedBasicAuth</a>
 </li>
 <li>$owner_name
 : <a class="el" href="classItem.html#a9594df6014b0b6f45364ea7a34510130">Item</a>
+</li>
+<li>$owner_nick
+: <a class="el" href="classRedBasicAuth.html#a8d09b8d784cc810a0b3be580d05106a7">RedBasicAuth</a>
 </li>
 <li>$owner_photo
 : <a class="el" href="classItem.html#a078f95b4134ce3a1df344cf8d386f986">Item</a>
@@ -342,6 +367,9 @@ $(document).ready(function(){initNavTree('functions.html','');});
 </li>
 <li>$plugins
 : <a class="el" href="classApp.html#ae9f96338f32187d308b67b980eea0008">App</a>
+</li>
+<li>$poi
+: <a class="el" href="classApp.html#a1936f2afce0dc0d1bbed15ae1f2ee81a">App</a>
 </li>
 <li>$prepared_item
 : <a class="el" href="classConversation.html#a5b6adbb2fe24f0f53d6c22660dff91b2">Conversation</a>
@@ -375,6 +403,9 @@ $(document).ready(function(){initNavTree('functions.html','');});
 </li>
 <li>$replace
 : <a class="el" href="classTemplate.html#a4e86b566c3f728e95ce5db1b33665c10">Template</a>
+</li>
+<li>$root_dir
+: <a class="el" href="classRedDirectory.html#ad87c514a307ec97ba0f1372e9bcfa6a4">RedDirectory</a>
 </li>
 <li>$scheme
 : <a class="el" href="classApp.html#ad082d63acc078e5bf23825a03bdd6a76">App</a>
@@ -416,7 +447,8 @@ $(document).ready(function(){initNavTree('functions.html','');});
 : <a class="el" href="classConversation.html#a41f4a549e6a99f98935c4742addd22c8">Conversation</a>
 </li>
 <li>$timezone
-: <a class="el" href="classApp.html#ab35b01a366a2ea95725e97af278f87ab">App</a>
+: <a class="el" href="classRedBasicAuth.html#a2d0246ed446fd5e55c17938b4ce6ac47">RedBasicAuth</a>
+, <a class="el" href="classApp.html#ab35b01a366a2ea95725e97af278f87ab">App</a>
 </li>
 <li>$toplevel
 : <a class="el" href="classItem.html#a5cfa6cf964f433a917a81cab079ff9d8">Item</a>

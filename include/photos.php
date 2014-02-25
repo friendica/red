@@ -77,6 +77,7 @@ function photo_upload($channel, $observer, $args) {
 		$filesize   = intval($_FILES['userfile']['size']);
 		$type       = $_FILES['userfile']['type'];
 	}
+
 	if (! $type) 
 		$type=guess_image_type($filename);
 
@@ -102,11 +103,9 @@ function photo_upload($channel, $observer, $args) {
 
 	$imagedata = @file_get_contents($src);
 
-	$r = q("select sum(size) as total from photo where uid = %d and scale = 0 ",
-		intval($channel_id)
+	$r = q("select sum(size) as total from photo where aid = %d and scale = 0 ",
+		intval($account_id)
 	);
-
-// FIXME service class limits should probably apply to accounts and not channels
 
 	$limit = service_class_fetch($channel_id,'photo_upload_limit');
 
@@ -218,6 +217,9 @@ function photo_upload($channel, $observer, $args) {
 	$arr['deny_gid']      = $str_group_deny;
 	$arr['verb']          = ACTIVITY_POST;
 
+	$arr['plink']         = z_root() . '/channel/' . $channel['channel_address'] . '/?f=&mid=' . $arr['mid'];
+
+
 	$arr['body']          = '[zrl=' . z_root() . '/photos/' . $channel['channel_address'] . '/image/' . $photo_hash . ']' 
 				. '[zmg]' . z_root() . "/photo/{$photo_hash}-{$smallest}.".$ph->getExt() . '[/zmg]' 
 				. '[/zrl]';
@@ -267,7 +269,11 @@ function photos_albums_list($channel,$observer) {
 	if($albums) {
 		$ret['success'] = true;
 		foreach($albums as $k => $album) {
-			$entry = array('text' => $album['album'], 'urlencode' => urlencode($album['album']),'bin2hex' => bin2hex($album['album']));
+			$entry = array(
+				'text' => $album['album'], 
+				'url' => z_root() . '/photos/' . $channel['channel_address'] . '/album/' . bin2hex($album['album']), 
+				'urlencode' => urlencode($album['album']),
+				'bin2hex' => bin2hex($album['album']));
 			$ret[] = $entry;
 		}
 	}
@@ -279,8 +285,16 @@ function photos_album_widget($channelx,$observer,$albums = null) {
 
 	$o = '';
 
-	if(! $albums)
-		$albums = photos_albums_list($channelx,$observer);
+	// If we weren't passed an album list, see if the photos module
+	// dropped one for us to find in $a->data['albums']. 
+	// If all else fails, load it.
+
+	if(! $albums) {
+		if(array_key_exists('albums', get_app()->data))
+			$albums = get_app()->data['albums'];
+		else
+			$albums = photos_albums_list($channelx,$observer);
+	}
 
 	if($albums) {
 		$o = replace_macros(get_markup_template('photo_albums.tpl'),array(
@@ -311,13 +325,16 @@ function photos_list_photos($channel,$observer,$album = '') {
 
 	$ret = array('success' => false);
 
-	$r = q("select resource_id, created, edited, title, `desc`, album, filename, `type`, height, width, `size`, `scale`, profile, photo_flags, allow_cid, allow_gid, deny_cid, deny_gid from photo where uid = %d and ( photo_flags = %d or photo_flags = %d ) $sql_extra ",
+	$r = q("select resource_id, created, edited, title, description, album, filename, type, height, width, size, scale, profile, photo_flags, allow_cid, allow_gid, deny_cid, deny_gid from photo where uid = %d and ( photo_flags = %d or photo_flags = %d ) $sql_extra ",
 		intval($channel_id),
 		intval(PHOTO_NORMAL),
 		intval(PHOTO_PROFILE)
 	);
-
+	
 	if($r) {
+		for($x = 0; $x < count($r); $x ++) {
+			$r[$x]['src'] = z_root() . '/photo/' . $r[$x]['resource_id'] . '-' . $r[$x]['scale'];
+		}
 		$ret['success'] = true;
 		$ret['photos'] = $r;
 	}
@@ -398,6 +415,8 @@ function photos_create_item($channel, $creator_hash, $photo, $visible = false) {
 	$arr['allow_gid']     = $photo['allow_gid'];
 	$arr['deny_cid']      = $photo['deny_cid'];
 	$arr['deny_gid']      = $photo['deny_gid'];
+
+	$arr['plink']         = z_root() . '/channel/' . $channel['channel_address'] . '/?f=&mid=' . $arr['mid'];
 			
 	$arr['body']          = '[zrl=' . z_root() . '/photos/' . $channel['channel_address'] . '/image/' . $photo['resource_id'] . ']' 
 		. '[zmg]' . z_root() . '/photo/' . $photo['resource_id'] . '-' . $photo['scale'] . '[/zmg]' 

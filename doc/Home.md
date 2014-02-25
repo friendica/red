@@ -9,10 +9,12 @@ Red Matrix Documentation and Resources
 * [Channels](help/Channels)
 * [Connecting to Channels](help/Connecting-to-Channels)
 * [Permissions](help/Permissions)
+* [Cloud Storage](help/Cloud)
 * [But Wait - There's More. MUCH More...](help/Features) 
 * [Tags and Mentions](help/Tags-and-Mentions)
 * [Web Pages](help/Webpages)
 * [Remove Account](help/Remove-Account)
+* [BBcode reference for posts and comments](help/bbcode)
 
 **Technical Documentation**
 
@@ -30,10 +32,10 @@ Red Matrix Documentation and Resources
 
 **External Resources**
 
+* [External Resource Links](help/External-Resources)
 * [Main Website](https://github.com/friendica/red)
 * [Plugin/Addon Website](https://github.com/friendica/red-addons)
 * [Assets Website](https://github.com/friendica/red-assets)
-
 * [Development Channel](http://zothub.com/channel/one)
 
 **About**

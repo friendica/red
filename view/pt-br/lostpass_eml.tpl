@@ -1,32 +1,33 @@
 
-Dear {{$username}},
-	A request was recently received at {{$sitename}} to reset your account 
-password. In order to confirm this request, please select the verification link
-below or paste it into your web browser address bar. 
+Caro/a {{$username}},
 
-If you did NOT request this change, please DO NOT follow the link
-provided and ignore and/or delete this email. 
+	Uma solicitação para reiniciar a senha da sua conta foi recebida em
+{{$sitename}}. Para confirmar este pedido, acesse o link de verificação clicando
+nele abaixo ou copiando na barra de endereço do seu navegador.
 
-Your password will not be changed unless we can verify that you
-issued this request. 
+Se você NÃO solicitou essa mudança, por favor NÃO SIGA o link a seguir e
+ignore e/ou delete este e-mail.
 
-Follow this link to verify your identity:
+Sua senha não será modificada até que você confirme este pedido.
+
+Siga este link para confirmá-lo:
 
 {{$reset_link}}
 
-You will then receive a follow-up message containing the new password.
+Você receberá então um outro e-mail contendo uma nova senha.
 
-You may change that password from your account settings page after logging in.
+Você poderá trocar essa senha a partir das suas configurações de conta,
+após autenticar-se.
 
-The login details are as follows:
+Os detalhes de autenticação são os seguintes:
 
-Site Location:	{{$siteurl}}
-Login Name:	{{$email}}
-
-
+Localização do site:	{{$siteurl}}
+Nome:	{{$email}}
 
 
-Sincerely,
-	{{$sitename}} Administrator
+
+
+Atenciosamente,
+	{{$sitename}} Administrador
 
  

@@ -7,6 +7,7 @@ require_once("oauth.php");
 require_once("html2plain.php");
 require_once('include/security.php');
 require_once('include/photos.php');
+require_once('include/items.php');
 
 	/*
 	 *
@@ -362,7 +363,8 @@ require_once('include/photos.php');
 			'location' => ($usr) ? $usr[0]['channel_location'] : '',
 			'profile_image_url' => $uinfo[0]['xchan_photo_l'],
 			'url' => $uinfo[0]['xchan_url'],
-			'contact_url' => $a->get_baseurl()."/connections/".$uinfo[0]['abook_id'],
+//FIXME
+			'contact_url' => $a->get_baseurl() . "/connections/".$uinfo[0]['abook_id'],
 			'protected' => false,	
 			'friends_count' => intval($countfriends),
 			'created_at' => api_date($uinfo[0]['abook_created']),
@@ -555,7 +557,7 @@ require_once('include/photos.php');
 
 	function api_photos(&$a,$type) {
 		$album = $_REQUEST['album'];
-		json_return_and_die(photos_list_photos($a->get_channel(),$a->get_observer()),$album);
+		json_return_and_die(photos_list_photos($a->get_channel(),$a->get_observer(),$album));
 	}
 	api_register_func('api/red/photos','api_photos', true);
 
@@ -1241,27 +1243,43 @@ require_once('include/photos.php');
 
 		$sql_extra = '';
 		if ($user_info['self']==1) $sql_extra .= " AND `item`.`wall` = 1 ";
+
+//FIXME - this isn't yet implemented
 		if ($exclude_replies > 0)  $sql_extra .= ' AND `item`.`parent` = `item`.`id`';
 
-		$r = q("SELECT `item`.*, `item`.`id` AS `item_id`, 
-			`contact`.`name`, `contact`.`photo`, `contact`.`url`, `contact`.`rel`,
-			`contact`.`network`, `contact`.`thumb`, `contact`.`dfrn_id`, `contact`.`self`,
-			`contact`.`id` AS `cid`, `contact`.`uid` AS `contact-uid`
-			FROM `item`, `contact`
-			WHERE `item`.`uid` = %d
-			AND `item`.`contact-id` = %d
-			AND `item`.`visible` = 1 and `item`.`moderated` = 0 AND `item`.`deleted` = 0
-			AND `contact`.`id` = `item`.`contact-id`
-			AND `contact`.`blocked` = 0 AND `contact`.`pending` = 0
-			$sql_extra
-			AND `item`.`id`>%d
-			ORDER BY `item`.`received` DESC LIMIT %d ,%d ",
-			intval(api_user()),
-			intval($user_info['id']),
-			intval($since_id),
-			intval($start),	intval($count)
-		);
+// 	$r = q("SELECT `item`.*, `item`.`id` AS `item_id`, 
+// 			`contact`.`name`, `contact`.`photo`, `contact`.`url`, `contact`.`rel`,
+// 			`contact`.`network`, `contact`.`thumb`, `contact`.`dfrn_id`, `contact`.`self`,
+// 			`contact`.`id` AS `cid`, `contact`.`uid` AS `contact-uid`
+// 			FROM `item`, `contact`
+// 			WHERE `item`.`uid` = %d
+// 			AND `item`.`contact-id` = %d
+// 			AND `item`.`visible` = 1 and `item`.`moderated` = 0 AND `item`.`deleted` = 0
+// 			AND `contact`.`id` = `item`.`contact-id`
+// 			AND `contact`.`blocked` = 0 AND `contact`.`pending` = 0
+// 			$sql_extra
+// 			AND `item`.`id`>%d
+// 			ORDER BY `item`.`received` DESC LIMIT %d ,%d ",
+// 			intval(api_user()),
+// 			intval($user_info['id']),
+// 			intval($since_id),
+// 			intval($start),	intval($count)
+// 		);
 
+		$arr = array(
+          'uid' => api_user(),
+          'since_id' => $since_id,
+          'start' => $start,
+          'records' => $count);
+	
+		if ($user_info['self']==1)
+			$arr['wall'] = 1;
+		else
+			$arr['cid'] = $user_info['id'];
+
+
+		$r = items_fetch($arr,get_app()->get_channel(),get_observer_hash());
+        
 		$ret = api_format_items($r,$user_info);
 
 

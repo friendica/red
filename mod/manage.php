@@ -55,8 +55,9 @@ function manage_content(&$a) {
 			}
 		}
 		
-	    $r = q("select count(channel_id) as total from channel where channel_account_id = %d ",
-		intval(get_account_id())
+	    $r = q("select count(channel_id) as total from channel where channel_account_id = %d and not ( channel_pageflags & %d )",
+			intval(get_account_id()),
+			intval(PAGE_REMOVED)
 		);
 		$limit = service_class_fetch(local_user(),'total_identities');
 		if($limit !== false) {

@@ -19,28 +19,22 @@ function photos_init(&$a) {
 
 	if(argc() > 1) {
 		$nick = argv(1);
+
+		profile_load($a,$nick);
+
 		$channelx = channelx_by_nick($nick);
 
 		if(! $channelx)
 			return;
 
-		$a->data['channel'] = $channelx[0];
+		$a->data['channel'] = $channelx;
 
 		$observer = $a->get_observer();
 		$a->data['observer'] = $observer;
 
 		$observer_xchan = (($observer) ? $observer['xchan_hash'] : '');
 
-		$a->data['perms'] = get_all_perms($channelx[0]['channel_id'],$observer_xchan);
-
-
-
-		$a->set_widget('vcard',vcard_from_xchan($a->data['channel'],$observer));
 		head_set_icon($a->data['channel']['xchan_photo_s']);
-		if($a->data['perms']['view_photos']) {
-			$a->data['albums'] = photos_albums_list($a->data['channel'],$observer);
-			$a->set_widget('photo_albums',photos_album_widget($a->data['channel'],$observer,$a->data['albums']));
-		}
 
 		$a->page['htmlhead'] .= "<script> var ispublic = '" . t('everybody') . "'; var profile_uid = " . (($a->data['channel']) ? $a->data['channel']['channel_id'] : 0) . "; </script>" ;
 
@@ -163,23 +157,20 @@ function photos_post(&$a) {
 	}
 
 	if((argc() > 2) && (x($_REQUEST,'delete')) && ($_REQUEST['delete'] === t('Delete Photo'))) {
-// FIXME
+
 		// same as above but remove single photo
 
-		if($visitor) {
-			$r = q("SELECT `id`, `resource_id` FROM `photo` WHERE `contact-id` = %d AND `uid` = %d AND `resource_id` = '%s' LIMIT 1",
-				intval($visitor),
-				intval($page_owner_uid),
-				dbesc($a->argv[2])
-			);
-		}
-		else {
-			$r = q("SELECT `id`, `resource_id` FROM `photo` WHERE `uid` = %d AND `resource_id` = '%s' LIMIT 1",
-				intval(local_user()),
-				dbesc($a->argv[2])
-			);
-		}
-		if(count($r)) {
+		$ob_hash = get_observer_hash();
+		if(! $ob_hash)
+			goaway($a->get_baseurl() . '/' . $_SESSION['photo_return']);
+
+		$r = q("SELECT `id`, `resource_id` FROM `photo` WHERE ( xchan = '%s' or `uid` = %d ) AND `resource_id` = '%s' LIMIT 1",
+			dbesc($ob_hash),
+			intval(local_user()),
+			dbesc($a->argv[2])
+		);
+
+		if($r) {
 			q("DELETE FROM `photo` WHERE `uid` = %d AND `resource_id` = '%s'",
 				intval($page_owner_uid),
 				dbesc($r[0]['resource_id'])
@@ -189,7 +180,7 @@ function photos_post(&$a) {
 				intval($page_owner_uid)
 			);
 			if(count($i)) {
-				q("UPDATE `item` SET item_restrict = (item_restrict & %d), `edited` = '%s', `changed` = '%s' WHERE `parent_mid` = '%s' AND `uid` = %d",
+				q("UPDATE `item` SET item_restrict = (item_restrict | %d), `edited` = '%s', `changed` = '%s' WHERE `parent_mid` = '%s' AND `uid` = %d",
 					intval(ITEM_DELETED),
 					dbesc(datetime_convert()),
 					dbesc(datetime_convert()),
@@ -206,7 +197,6 @@ function photos_post(&$a) {
 		}
 
 		goaway($a->get_baseurl() . '/' . $_SESSION['photo_return']);
-		return; // NOTREACHED
 	}
 
 	if(($a->argc > 2) && ((x($_POST,'desc') !== false) || (x($_POST,'newtag') !== false)) || (x($_POST,'albname') !== false)) {
@@ -291,7 +281,8 @@ function photos_post(&$a) {
 		);
 		if(count($p)) {
 			$ext = $phototypes[$p[0]['type']];
-			$r = q("UPDATE `photo` SET `desc` = '%s', `album` = '%s', `allow_cid` = '%s', `allow_gid` = '%s', `deny_cid` = '%s', `deny_gid` = '%s' WHERE `resource_id` = '%s' AND `uid` = %d",
+
+			$r = q("UPDATE `photo` SET `description` = '%s', `album` = '%s', `allow_cid` = '%s', `allow_gid` = '%s', `deny_cid` = '%s', `deny_gid` = '%s' WHERE `resource_id` = '%s' AND `uid` = %d",
 				dbesc($desc),
 				dbesc($albname),
 				dbesc($str_contact_allow),
@@ -309,7 +300,7 @@ function photos_post(&$a) {
 		/* Don't make the item visible if the only change was the album name */
 
 		$visibility = 0;
-		if($p[0]['desc'] !== $desc || strlen($rawtags))
+		if($p[0]['description'] !== $desc || strlen($rawtags))
 			$visibility = 1;
 
 		if(! $item_id) {
@@ -345,201 +336,77 @@ function photos_post(&$a) {
 			$str_tags = '';
 			$inform   = '';
 
-			// if the new tag doesn't have a namespace specifier (@foo or #foo) give it a hashtag
+			// if the new tag doesn't have a namespace specifier (@foo or #foo) give it a mention
 
 			$x = substr($rawtags,0,1);
 			if($x !== '@' && $x !== '#')
-				$rawtags = '#' . $rawtags;
+				$rawtags = '@' . $rawtags;
 
 			$taginfo = array();
 			$tags = get_tags($rawtags);
 
 			if(count($tags)) {
 				foreach($tags as $tag) {
-					if(isset($profile))
-						unset($profile);
-					if(strpos($tag,'@') === 0) {
-						$name = substr($tag,1);
-						if((strpos($name,'@')) || (strpos($name,'http://'))) {
-							$newname = $name;
-							$links = @lrdd($name);
-							if(count($links)) {
-								foreach($links as $link) {
-									if($link['@attributes']['rel'] === 'http://webfinger.net/rel/profile-page')
-        		            			$profile = $link['@attributes']['href'];
-									if($link['@attributes']['rel'] === 'salmon') {
-										$salmon = '$url:' . str_replace(',','%sc',$link['@attributes']['href']);
-										if(strlen($inform))
-											$inform .= ',';
-                    					$inform .= $salmon;
-									}
-								}
-							}
-							$taginfo[] = array($newname,$profile,$salmon);
-						}
-						else {
-							$newname = $name;
-							$alias = '';
-							$tagcid = 0;
-							if(strrpos($newname,'+'))
-								$tagcid = intval(substr($newname,strrpos($newname,'+') + 1));
 
-							if($tagcid) {
-								$r = q("SELECT * FROM `contact` WHERE `id` = %d AND `uid` = %d LIMIT 1",
-									intval($tagcid),
-									intval($profile_uid)
-								);
-							}
-							else {
-								$newname = str_replace('_',' ',$name);
+					// If we already tagged 'Robert Johnson', don't try and tag 'Robert'.
+					// Robert Johnson should be first in the $tags array
 
-								//select someone from this user's contacts by name
-								$r = q("SELECT * FROM `contact` WHERE `name` = '%s' AND `uid` = %d LIMIT 1",
-										dbesc($newname),
-										intval($page_owner_uid)
-								);
-
-								if(! $r) {
-									//select someone by attag or nick and the name passed in
-									$r = q("SELECT * FROM `contact` WHERE `attag` = '%s' OR `nick` = '%s' AND `uid` = %d ORDER BY `attag` DESC LIMIT 1",
-											dbesc($name),
-											dbesc($name),
-											intval($page_owner_uid)
-									);
-								}
-							}
-/*							elseif(strstr($name,'_') || strstr($name,' ')) {
-								$newname = str_replace('_',' ',$name);
-								$r = q("SELECT * FROM `contact` WHERE `name` = '%s' AND `uid` = %d LIMIT 1",
-									dbesc($newname),
-									intval($page_owner_uid)
-								);
-							}
-							else {
-								$r = q("SELECT * FROM `contact` WHERE `attag` = '%s' OR `nick` = '%s' AND `uid` = %d ORDER BY `attag` DESC LIMIT 1",
-									dbesc($name),
-									dbesc($name),
-									intval($page_owner_uid)
-								);
-							}*/
-							if(count($r)) {
-								$newname = $r[0]['name'];
-								$profile = $r[0]['url'];
-								$notify = 'cid:' . $r[0]['id'];
-								if(strlen($inform))
-									$inform .= ',';
-								$inform .= $notify;
-							}
+					$fullnametagged = false;
+					for($x = 0; $x < count($tagged); $x ++) {
+						if(stristr($tagged[$x],$tag . ' ')) {
+							$fullnametagged = true;
+							break;
 						}
-						if($profile) {
-							if(substr($notify,0,4) === 'cid:')
-								$taginfo[] = array($newname,$profile,$notify,$r[0],'@[zrl=' . str_replace(',','%2c',$profile) . ']' . $newname	. '[/zrl]');
-							else
-								$taginfo[] = array($newname,$profile,$notify,null,$str_tags .= '@[url=' . $profile . ']' . $newname	. '[/url]');
-							if(strlen($str_tags))
-								$str_tags .= ',';
-							$profile = str_replace(',','%2c',$profile);
-							$str_tags .= '@[zrl=' . $profile . ']' . $newname	. '[/zrl]';
+					}
+					if($fullnametagged)
+						continue;
+	
+					require_once('mod/item.php');
+					$body = $access_tag = '';
+	
+					$success = handle_tag($a, $body, $access_tag, $str_tags, (local_user()) ? local_user() : $a->profile['profile_uid'] , $tag); 
+					logger('handle_tag: ' . print_r($success,tue), LOGGER_DEBUG);
+					if($access_tag) {
+						logger('access_tag: ' . $tag . ' ' . print_r($access_tag,true), LOGGER_DEBUG);
+						if(strpos($access_tag,'cid:') === 0) {
+							$str_contact_allow .= '<' . substr($access_tag,4) . '>';
+							$access_tag = '';	
 						}
+						elseif(strpos($access_tag,'gid:') === 0) {
+							$str_group_allow .= '<' . substr($access_tag,4) . '>';
+							$access_tag = '';	
+						}
+					}
+	
+					if($success['replaced']) {
+						$tagged[] = $tag;
+						$post_tags[] = array(
+							'uid'   => $a->profile['profile_uid'], 
+							'type'  => $success['termtype'],
+							'otype' => TERM_OBJ_POST,
+							'term'  => $success['term'],
+							'url'   => $success['url']
+						); 				
 					}
 				}
 			}
-
-			$newtag = $old_tag;
-			if(strlen($newtag) && strlen($str_tags)) 
-				$newtag .= ',';
-			$newtag .= $str_tags;
-
-			$newinform = $old_inform;
-			if(strlen($newinform) && strlen($inform))
-				$newinform .= ',';
-			$newinform .= $inform;
-//FIXME - inform is gone
-//			$r = q("UPDATE `item` SET `tag` = '%s', `inform` = '%s', `edited` = '%s', `changed` = '%s' WHERE `id` = %d AND `uid` = %d LIMIT 1",
-//				dbesc($newtag),
-//				dbesc($newinform),
-//				dbesc(datetime_convert()),
-//				dbesc(datetime_convert()),
-//				intval($item_id),
-//				intval($page_owner_uid)
-//			);
-
-			$best = 0;
-			foreach($p as $scales) {
-				if(intval($scales['scale']) == 2) {
-					$best = 2;
-					break;
-				}
-				if(intval($scales['scale']) == 4) {
-					$best = 4;
-					break;
-				}
-			}
-
-			if(count($taginfo)) {
-				foreach($taginfo as $tagged) {
 		
-					$mid = item_message_id();
+			$r = q("select * from item where id = %d and uid = %d limit 1",
+				intval($item_id),
+				intval($page_owner_uid)
+			);
 
-					$arr = array();
-
-					$arr['uid']           = $page_owner_uid;
-					$arr['mid']           = $mid;
-					$arr['parent_mid']    = $mid;
-					$arr['type']          = 'activity';
-					$arr['wall']          = 1;
-					$arr['contact-id']    = $owner_record['id'];
-					$arr['owner-name']    = $owner_record['name'];
-					$arr['owner-link']    = $owner_record['url'];
-					$arr['owner-avatar']  = $owner_record['thumb'];
-					$arr['author-name']   = $owner_record['name'];
-					$arr['author-link']   = $owner_record['url'];
-					$arr['author-avatar'] = $owner_record['thumb'];
-					$arr['title']         = '';
-					$arr['allow_cid']     = $p[0]['allow_cid'];
-					$arr['allow_gid']     = $p[0]['allow_gid'];
-					$arr['deny_cid']      = $p[0]['deny_cid'];
-					$arr['deny_gid']      = $p[0]['deny_gid'];
-					$arr['visible']       = 1;
-					$arr['verb']          = ACTIVITY_TAG;
-					$arr['obj_type']   = ACTIVITY_OBJ_PERSON;
-					$arr['tgt_type']   = ACTIVITY_OBJ_PHOTO;
-					$arr['tag']           = $tagged[4];
-					$arr['inform']        = $tagged[2];
-					$arr['origin']        = 1;
-					$arr['body']          = sprintf( t('%1$s was tagged in %2$s by %3$s'), '[zrl=' . $tagged[1] . ']' . $tagged[0] . '[/zrl]', '[zrl=' . $a->get_baseurl() . '/photos/' . $owner_record['nickname'] . '/image/' . $p[0]['resource-id'] . ']' . t('a photo') . '[/zrl]', '[zrl=' . $owner_record['url'] . ']' . $owner_record['name'] . '[/zrl]') ;
-
-					$arr['body'] .= "\n\n" . '[zrl=' . $a->get_baseurl() . '/photos/' . $owner_record['nickname'] . '/image/' . $p[0]['resource_id'] . ']' . '[zmg]' . $a->get_baseurl() . "/photo/" . $p[0]['resource_id'] . '-' . $best . '.' . $ext . '[/zmg][/zrl]' . "\n" ;
-
-					$arr['object'] = '<object><type>' . ACTIVITY_OBJ_PERSON . '</type><title>' . $tagged[0] . '</title><id>' . $tagged[1] . '/' . $tagged[0] . '</id>';
-					$arr['object'] .= '<link>' . xmlify('<link rel="alternate" type="text/html" href="' . $tagged[1] . '" />' . "\n");
-					if($tagged[3])
-						$arr['object'] .= xmlify('<link rel="photo" type="'.$p[0]['type'].'" href="' . $tagged[3]['photo'] . '" />' . "\n");
-					$arr['object'] .= '</link></object>' . "\n";
-
-					$arr['target'] = '<target><type>' . ACTIVITY_OBJ_PHOTO . '</type><title>' . $p[0]['desc'] . '</title><id>'
-						. $a->get_baseurl() . '/photos/' . $owner_record['nickname'] . '/image/' . $p[0]['resource_id'] . '</id>';
-					$arr['target'] .= '<link>' . xmlify('<link rel="alternate" type="text/html" href="' . $a->get_baseurl() . '/photos/' . $owner_record['nickname'] . '/image/' . $p[0]['resource_id'] . '" />' . "\n" . '<link rel="preview" type="'.$p[0]['type'].'" href="' . $a->get_baseurl() . "/photo/" . $p[0]['resource_id'] . '-' . $best . '.' . $ext . '" />') . '</link></target>';
-
-					$post = item_store($arr);
-					$item_id = $post['item_id'];
-
-					if($item_id) {
-						q("UPDATE `item` SET `plink` = '%s' WHERE `uid` = %d AND `id` = %d LIMIT 1",
-							dbesc($a->get_baseurl() . '/display/' . $owner_record['nickname'] . '/' . $item_id),
-							intval($page_owner_uid),
-							intval($item_id)
-						);
-
-						proc_run('php',"include/notifier.php","tag","$item_id");
-					}
-				}
-
+			if($r) {
+				$datarray = $r[0];
+				$datarray['term']   = $post_tags;	
+				item_store_update($datarray,$execflag);
 			}
 
 		}
+	
 		goaway($a->get_baseurl() . '/' . $_SESSION['photo_return']);
 		return; // NOTREACHED
+
 	}
 
 
@@ -596,6 +463,8 @@ function photos_content(&$a) {
 	// Parse arguments 
 	//
 
+	$can_comment = perm_is_allowed($a->profile['profile_uid'],get_observer_hash(),'post_comments');
+
 	if(argc() > 3) {
 		$datatype = argv(2);
 		$datum = argv(3);
@@ -636,6 +505,9 @@ function photos_content(&$a) {
 
 	$o = "";
 
+		$o .= "<script> var profile_uid = " . $a->profile['profile_uid'] 
+			. "; var netargs = '?f='; var profile_page = " . $a->pager['page'] . "; </script>\r\n";
+
 	// tabs
 
 	$_is_owner = (local_user() && (local_user() == $owner_uid));
@@ -655,12 +527,21 @@ function photos_content(&$a) {
 			return;
 		}
 
+
+
+		if(array_key_exists('albums', $a->data))
+			$albums = get_app()->data['albums'];
+		else
+			$albums = photos_albums_list($a->data['channel'],$a->data['observer']);
+
+
+
 		$selname = (($datum) ? hex2bin($datum) : '');
 		$albumselect = '<select id="photos-upload-album-select" name="album" size="4">';
 		
 		$albumselect .= '<option value="" ' . ((! $selname) ? ' selected="selected" ' : '') . '>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</option>';
-		if(count($a->data['albums'])) {
-			foreach($a->data['albums'] as $album) {
+		if(count($albums)) {
+			foreach($albums as $album) {
 				if($album['text'] === '') 
 					continue;
 				$selected = (($selname === $album['text']) ? ' selected="selected" ' : '');
@@ -686,8 +567,8 @@ function photos_content(&$a) {
 
 		/* Show space usage */
 
-		$r = q("select sum(size) as total from photo where uid = %d and scale = 0 ",
-			intval($a->data['channel']['channel_id'])
+		$r = q("select sum(size) as total from photo where aid = %d and scale = 0 ",
+			intval($a->data['channel']['channel_account_id'])
 		);
 
 
@@ -759,7 +640,7 @@ function photos_content(&$a) {
 		else
 			$order = 'DESC';
 
-		$r = q("SELECT `resource_id`, `id`, `filename`, type, max(`scale`) AS `scale`, `desc` FROM `photo` WHERE `uid` = %d AND `album` = '%s' 
+		$r = q("SELECT `resource_id`, `id`, `filename`, type, max(`scale`) AS `scale`, `description` FROM `photo` WHERE `uid` = %d AND `album` = '%s' 
 			AND `scale` <= 4 and (photo_flags = %d or photo_flags = %d ) $sql_extra GROUP BY `resource_id` ORDER BY `created` $order LIMIT %d , %d",
 			intval($owner_uid),
 			dbesc($album),
@@ -825,25 +706,24 @@ function photos_content(&$a) {
 				
 				$ext = $phototypes[$rr['type']];
 
-				if($a->get_template_engine() === 'internal') {
-					$imgalt_e = template_escape($rr['filename']);
-					$desc_e = template_escape($rr['desc']);
-				}
-				else {
-					$imgalt_e = $rr['filename'];
-					$desc_e = $rr['desc'];
-				}
+				$imgalt_e = $rr['filename'];
+				$desc_e = $rr['description'];
 
+
+// prettyphoto has potential license issues, so we can no longer include it in core
+// The following lines would need to be modified so that they are provided in theme specific files
+// instead of core modules for themes that wish to make use of prettyphoto. I would suggest
+// the feature as a per-theme display option and putting the rel line inside a template. 
         
-				if(feature_enabled($a->data['channel']['channel_id'],'prettyphoto')){
-				      $imagelink = ($a->get_baseurl() . '/photo/' . $rr['resource_id'] . '.' . $ext );
-				      $rel=("prettyPhoto[pp_gal]");
-				}
-				else {
+//				if(feature_enabled($a->data['channel']['channel_id'],'prettyphoto')){
+//				      $imagelink = ($a->get_baseurl() . '/photo/' . $rr['resource_id'] . '.' . $ext );
+//				      $rel=("prettyPhoto[pp_gal]");
+//				}
+//				else {
 				      $imagelink = ($a->get_baseurl() . '/photos/' . $a->data['channel']['channel_address'] . '/image/' . $rr['resource_id']
 				      . (($_GET['order'] === 'posted') ? '?f=&order=posted' : ''));
 				      $rel=("photo");
-				}
+//				}
       
 				$o .= replace_macros($tpl,array(
 					'$id' => $rr['id'],
@@ -854,6 +734,8 @@ function photos_content(&$a) {
 					'$imgsrc' => $a->get_baseurl() . '/photo/' . $rr['resource_id'] . '-' . $rr['scale'] . '.' .$ext,
 					'$imgalt' => $imgalt_e,
 					'$desc'=> $desc_e,
+					'$ext' => $ext,
+					'$hash'=> $rr['resource_id'],
 				));
 
 		}
@@ -872,7 +754,7 @@ function photos_content(&$a) {
 
 		// fetch image, item containing image, then comments
 
-		$ph = q("SELECT aid,uid,xchan,resource_id,created,edited,title,`desc`,album,filename,`type`,height,width,`size`,scale,profile,photo_flags,allow_cid,allow_gid,deny_cid,deny_gid FROM `photo` WHERE `uid` = %d AND `resource_id` = '%s' 
+		$ph = q("SELECT aid,uid,xchan,resource_id,created,edited,title,`description`,album,filename,`type`,height,width,`size`,scale,profile,photo_flags,allow_cid,allow_gid,deny_cid,deny_gid FROM `photo` WHERE `uid` = %d AND `resource_id` = '%s' 
 			and (photo_flags = %d or photo_flags = %d ) $sql_extra ORDER BY `scale` ASC ",
 			intval($owner_uid),
 			dbesc($datum),
@@ -885,7 +767,7 @@ function photos_content(&$a) {
 
 			/* Check again - this time without specifying permissions */
 
-			$ph = q("SELECT `id` FROM `photo` WHERE `uid` = %d AND `resource_id` = '%s' 
+			$ph = q("SELECT id FROM photo WHERE uid = %d AND resource_id = '%s' 
 				and ( photo_flags = %d or photo_flags = %d )
 				LIMIT 1",
 				intval($owner_uid),
@@ -899,6 +781,8 @@ function photos_content(&$a) {
 				notice( t('Photo not available') . EOL );
 			return;
 		}
+
+
 
 		$prevlink = '';
 		$nextlink = '';
@@ -995,6 +879,9 @@ function photos_content(&$a) {
 
 		if($linked_items) {
 
+			xchan_query($linked_items);
+			$linked_items = fetch_post_tags($linked_items,true);
+
 			$link_item = $linked_items[0];
 
 			$r = q("select * from item where parent_mid = '%s' 
@@ -1010,6 +897,21 @@ function photos_content(&$a) {
 				$r = conv_sort($r,'commented');
 			}
 
+
+
+			$tags = array();
+			if($link_item['term']) {
+				$cnt = 0;
+				foreach($link_item['term'] as $t)
+					$tags[$cnt] = array(0 => format_term_for_display($t));
+					if($can_post && ($ph[0]['uid'] == $owner_uid)) {
+						$tags[$cnt][1] = 'tagrm?f=&item=' . $link_item['id'];
+						$tags[$cnt][2] = t('Remove');
+					}
+					$cnt ++;
+			}
+
+
 			if((local_user()) && (local_user() == $link_item['uid'])) {
 				q("UPDATE `item` SET item_flags = (item_flags ^ %d) WHERE parent = %d and uid = %d and (item_flags & %d)",
 					intval(ITEM_UNSEEN),
@@ -1020,6 +922,8 @@ function photos_content(&$a) {
 			}
 		}
 
+//		logger('mod_photo: link_item' . print_r($link_item,true));
+
 		// FIXME - remove this when we move to conversation module 
 
 		$r = $r[0]['children'];
@@ -1028,7 +932,7 @@ function photos_content(&$a) {
 		if($can_post) {
 
 			$album_e = $ph[0]['album'];
-			$caption_e = $ph[0]['desc'];
+			$caption_e = $ph[0]['description'];
 			$aclselect_e = populate_acl($ph[0]);
 
 			$edit = array(
@@ -1043,7 +947,6 @@ function photos_content(&$a) {
 				'capt_label' => t('Caption'),
 				'caption' => $caption_e,
 				'tag_label' => t('Add a Tag'),
-				'tags' => $link_item['tag'],
 				'permissions' => t('Permissions'),
 				'aclselect' => $aclselect_e,
 				'help_tags' => t('Example: @bob, @Barbara_Jensen, @jim@example.com, #California, #camping'),
@@ -1063,7 +966,7 @@ function photos_content(&$a) {
 
 			$likebuttons = '';
 
-			if($can_post || $a->data['perms']['post_comments']) {
+			if($can_post || $can_comment) {
 				$likebuttons = replace_macros($like_tpl,array(
 					'$id' => $link_item['id'],
 					'$likethis' => t("I like this \x28toggle\x29"),
@@ -1075,7 +978,7 @@ function photos_content(&$a) {
 
 			$comments = '';
 			if(! count($r)) {
-				if($can_post || $a->data['perms']['post_comments']) {
+				if($can_post || $can_comment) {
 					$comments .= replace_macros($cmnt_tpl,array(
 						'$return_path' => '', 
 						'$mode' => 'photos',
@@ -1163,7 +1066,7 @@ function photos_content(&$a) {
 
 				}
 			
-				if($can_post || $a->data['perms']['post_comments']) {
+				if($can_post || $can_comment) {
 					$comments .= replace_macros($cmnt_tpl,array(
 						'$return_path' => '',
 						'$jsreload' => $return_url,
@@ -1185,9 +1088,9 @@ function photos_content(&$a) {
 		}
 		
 		$album_e = array($album_link,$ph[0]['album']);
-		$tags_e = $tags;
 		$like_e = $like;
 		$dislike_e = $dislike;
+
 
 		$photo_tpl = get_markup_template('photo_view.tpl');
 		$o .= replace_macros($photo_tpl, array(
@@ -1198,8 +1101,9 @@ function photos_content(&$a) {
 			'$photo' => $photo,
 			'$prevlink' => $prevlink,
 			'$nextlink' => $nextlink,
-			'$desc' => $ph[0]['desc'],
-			'$tags' => $tags_e,
+			'$desc' => $ph[0]['description'],
+			'$tag_hdr' => t('In This Photo:'),
+			'$tags' => $tags,
 			'$edit' => $edit,	
 			'$likebuttons' => $likebuttons,
 			'$like' => $like_e,

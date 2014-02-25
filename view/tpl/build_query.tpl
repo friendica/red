@@ -15,6 +15,7 @@
 	var bParam_new = {{$nouveau}};
 	var bParam_page = {{$page}};
 	var bParam_wall = {{$wall}};
+	var bParam_list = {{$list}};
 
 	var bParam_search = "{{$search}}";
 	var bParam_order = "{{$order}}";
@@ -38,6 +39,7 @@
 		if(bParam_spam != 0) bCmd = bCmd + "&spam=" + bParam_spam;
 		if(bParam_new != 0) bCmd = bCmd + "&new=" + bParam_new;
 		if(bParam_wall != 0) bCmd = bCmd + "&wall=" + bParam_wall;
+		if(bParam_list != 0) bCmd = bCmd + "&list=" + bParam_list;
 		if(bParam_search != "") bCmd = bCmd + "&search=" + bParam_search;
 		if(bParam_order != "") bCmd = bCmd + "&order=" + bParam_order;
 		if(bParam_file != "") bCmd = bCmd + "&file=" + bParam_file;

@@ -135,10 +135,17 @@ function register_post(&$a) {
 
 function register_content(&$a) {
 
+	$registration_is = '';
+	$other_sites = '';
 
 	if(get_config('system','register_policy') == REGISTER_CLOSED) {
-		notice("Permission denied." . EOL);
-		return;
+		require_once('mod/pubsites.php');
+		return pubsites_content($a);
+	}
+
+	if(get_config('system','register_policy') == REGISTER_APPROVE) {
+		$registration_is = t('Registration on this site/hub is by approval only.');
+		$other_sites = t('<a href="pubsites">Register at another affiliated site/hub</a>'); 
 	}
 
 	$max_dailies = intval(get_config('system','max_daily_registrations'));
@@ -175,10 +182,14 @@ function register_content(&$a) {
 	$invite_code  = ((x($_REQUEST,'invite_code')) ? strip_tags(trim($_REQUEST['invite_code'])) :  "" );
 
 
+
+
 	$o = replace_macros(get_markup_template('register.tpl'), array(
 
 		'$title'        => t('Registration'),
+		'$reg_is'       => $registration_is,
 		'$registertext' => get_config('system','register_text'),
+		'$other_sites'  => $other_sites,
 		'$invitations'  => get_config('system','invitation_only'),
 		'$invite_desc'  => t('Membership on this site is by invitation only.'),
 		'$label_invite' => t('Please enter your invitation code'),

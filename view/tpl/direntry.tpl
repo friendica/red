@@ -7,7 +7,7 @@
 </div>
 </div>
 
-<div class="contact-name" id="directory-name-{{$entry.id}}">{{$entry.name}}</div>
+<div class="contact-name" id="directory-name-{{$entry.id}}"  ><span onclick="dirdetails('{{$entry.hash}}');" class="fakelink" >{{$entry.name}}</span></div>
 {{if $entry.connect}}
 <div class="directory-connect"><a href="{{$entry.connect}}">{{$entry.conn_label}}</a></div>
 {{/if}}

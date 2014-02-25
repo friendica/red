@@ -27,9 +27,10 @@ function dirsearch_content(&$a) {
 		json_return_and_die($ret);
 	}
 
+	$hash     = ((x($_REQUEST['hash']))    ? $_REQUEST['hash']     : '');
 
 	$name     = ((x($_REQUEST,'name'))     ? $_REQUEST['name']     : '');
-	$hub      = ((x($_REQUEST,'hub'))      ? $_REQUEST['hub']     : '');
+	$hub      = ((x($_REQUEST,'hub'))      ? $_REQUEST['hub']      : '');
 	$address  = ((x($_REQUEST,'address'))  ? $_REQUEST['address']  : '');
 	$locale   = ((x($_REQUEST,'locale'))   ? $_REQUEST['locale']   : '');
 	$region   = ((x($_REQUEST,'region'))   ? $_REQUEST['region']   : '');
@@ -91,6 +92,13 @@ function dirsearch_content(&$a) {
 		$sql_extra .= " AND  xprof_age >= " . intval($agege) . ") ";
 	}
 
+
+	if($hash) {
+		$sql_extra = " AND xchan_hash = '" . dbesc($hash) . "' ";
+	}
+
+
+
     $perpage      = (($_REQUEST['n'])              ? $_REQUEST['n']                    : 80);
     $page         = (($_REQUEST['p'])              ? intval($_REQUEST['p'] - 1)        : 0);
     $startrec     = (($page+1) * $perpage) - $perpage;
@@ -111,6 +119,9 @@ function dirsearch_content(&$a) {
 	// By default we return one page (default 80 items maximum) and do not count total entries
 
 	$logic = ((strlen($sql_extra)) ? 0 : 1);
+
+	if($hash)
+		$logic = 1;
 
 	$safesql = (($safe > 0) ? " and not ( xchan_flags & " . intval(XCHAN_FLAGS_CENSORED|XCHAN_FLAGS_SELFCENSORED) . " ) " : '');
 	if($safe < 0)
@@ -161,13 +172,11 @@ function dirsearch_content(&$a) {
 		json_return_and_die($spkt);
 	}
 	else {
-
 		$r = q("SELECT xchan.*, xprof.* from xchan left join xprof on xchan_hash = xprof_hash where ( $logic $sql_extra ) and not ( xchan_flags & %d ) and not ( xchan_flags & %d ) and not ( xchan_flags & %d ) $safesql $order $qlimit ",
 			intval(XCHAN_FLAGS_HIDDEN),
 			intval(XCHAN_FLAGS_ORPHAN),
 			intval(XCHAN_FLAGS_DELETED)
 		);
-
 	}
 
 	$ret['page'] = $page + 1;
@@ -184,9 +193,8 @@ function dirsearch_content(&$a) {
 			$entry['name']        = $rr['xchan_name'];
 			$entry['hash']        = $rr['xchan_hash'];
 
-//			$entry['updated']     = (($rr['ud_date']) ? $rr['ud_date'] : '0000-00-00 00:00:00');
-//			$entry['update_guid'] = (($rr['ud_guid']) ? $rr['ud_guid'] : ''); 
 			$entry['url']         = $rr['xchan_url'];
+			$entry['photo_l']     = $rr['xchan_photo_l'];
 			$entry['photo']       = $rr['xchan_photo_m'];
 			$entry['address']     = $rr['xchan_addr'];
 			$entry['description'] = $rr['xprof_desc'];
@@ -198,6 +206,10 @@ function dirsearch_content(&$a) {
 			$entry['age']         = $rr['xprof_age'];
 			$entry['gender']      = $rr['xprof_gender'];
 			$entry['marital']     = $rr['xprof_marital'];
+			$entry['sexual']      = $rr['xprof_sexual'];
+			$entry['about']       = $rr['xprof_about'];
+			$entry['homepage']    = $rr['xprof_homepage'];
+			$entry['hometown']    = $rr['xprof_hometown'];
 			$entry['keywords']    = $rr['xprof_keywords'];
 
 			$entries[] = $entry;
@@ -221,7 +233,7 @@ function dirsearch_content(&$a) {
 
 
 function list_public_sites() {
-	$r = q("select * from site where site_access != 0 order by rand()");
+	$r = q("select * from site where site_access != 0 and site_register !=0 order by rand()");
 	$ret = array('success' => false);
 
 	if($r) {

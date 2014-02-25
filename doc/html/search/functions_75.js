@@ -17,6 +17,7 @@ var searchData=
   ['update_5fmodtime',['update_modtime',['../zot_8php.html#ab319d1d9fff9c7775d9daef42d1f33dd',1,'zot.php']]],
   ['update_5fnetwork_5fcontent',['update_network_content',['../update__network_8php.html#a8abf5b9f65af6a27ee2f9d7207ed1b41',1,'update_network.php']]],
   ['update_5fqueue_5ftime',['update_queue_time',['../queue__fn_8php.html#a4c2876181f75a4a61e85b7f00dfdbba1',1,'queue_fn.php']]],
+  ['update_5fremote_5fid',['update_remote_id',['../items_8php.html#a2baa9e05f1e8aa3dd61c85803ae39bd6',1,'items.php']]],
   ['update_5fsearch_5fcontent',['update_search_content',['../update__search_8php.html#ace4c3a23fa7d6922399e27c297a6ba52',1,'update_search.php']]],
   ['update_5fsuggestions',['update_suggestions',['../socgraph_8php.html#a790690bb1a1d02483fe31632a160144d',1,'socgraph.php']]],
   ['upgrade_5fbool_5fmessage',['upgrade_bool_message',['../plugin_8php.html#a754d7f53b3abc557b753c057dc4e021d',1,'plugin.php']]],

@@ -1,6 +1,7 @@
 <?php /** @file */
 
 require_once('include/security.php');
+require_once('include/bbcode.php');
 
 function menu_fetch($name,$uid,$observer_xchan) {
 
@@ -23,18 +24,21 @@ function menu_fetch($name,$uid,$observer_xchan) {
 	return null;
 }
 	
-
-function menu_render($menu) {
+function menu_render($menu, $edit = false) {
 	if(! $menu)
 		return '';
-	for($x = 0; $x < count($menu['items']); $x ++)
-		if($menu['items']['mitem_flags'] & MENU_ITEM_ZID)
-			$menu['items']['mitem_link'] = zid($menu['items']['mitem_link']);
-		if($menu['items']['mitem_flags'] & MENU_ITEM_NEWWIN)
-			$menu['items']['newwin'] = '1';
+
+	for($x = 0; $x < count($menu['items']); $x ++) {
+		if($menu['items'][$x]['mitem_flags'] & MENU_ITEM_ZID)
+			$menu['items'][$x]['mitem_link'] = zid($menu['items'][$x]['mitem_link']);
+		if($menu['items'][$x]['mitem_flags'] & MENU_ITEM_NEWWIN)
+			$menu['items'][$x]['newwin'] = '1';
+		$menu['items'][$x]['mitem_desc'] = bbcode($menu['items'][$x]['mitem_desc']);
+	}
 
 	return replace_macros(get_markup_template('usermenu.tpl'),array(
 		'$menu' => $menu['menu'],
+		'$edit' => (($edit) ? t("Edit") : ''),
 		'$items' => $menu['items']
 	));
 }
@@ -58,12 +62,17 @@ function menu_create($arr) {
 
 	$menu_name = trim(escape_tags($arr['menu_name']));
 	$menu_desc = trim(escape_tags($arr['menu_desc']));
+	$menu_flags = intval($arr['menu_flags']);
+
 
 	if(! $menu_desc)
 		$menu_desc = $menu_name;
 
 	if(! $menu_name)
 		return false;
+
+	if(! $menu_flags)
+		$menu_flags = 0;
 
 
 	$menu_channel_id = intval($arr['menu_channel_id']);
@@ -76,10 +85,11 @@ function menu_create($arr) {
 	if($r)
 		return false;
 
-	$r = q("insert into menu ( menu_name, menu_desc, menu_channel_id ) 
-		values( '%s', '%s', %d )",
+	$r = q("insert into menu ( menu_name, menu_desc, menu_flags, menu_channel_id ) 
+		values( '%s', '%s', %d, %d )",
  		dbesc($menu_name),
 		dbesc($menu_desc),
+		intval($menu_flags),
 		intval($menu_channel_id)
 	);
 	if(! $r)
@@ -95,8 +105,19 @@ function menu_create($arr) {
 
 }
 
-function menu_list($channel_id) {
-	$r = q("select * from menu where menu_channel_id = %d order by menu_name",
+/**
+ * If $flags is present, check that all the bits in $flags are set
+ * so that MENU_SYSTEM|MENU_BOOKMARK will return entries with both
+ * bits set. We will use this to find system generated bookmarks.
+ */
+
+function menu_list($channel_id, $name = '', $flags = 0) {
+
+	$sel_options = '';
+	$sel_options .= (($name) ? " and menu_name = '" . protect_sprintf(dbesc($name)) . "' " : '');
+	$sel_options .= (($flags) ? " and menu_flags = " . intval($flags) . " " : '');
+
+	$r = q("select * from menu where menu_channel_id = %d $sel_options order by menu_desc",
 		intval($channel_id)
 	);
 	return $r;
@@ -110,12 +131,16 @@ function menu_edit($arr) {
 
 	$menu_name = trim(escape_tags($arr['menu_name']));
 	$menu_desc = trim(escape_tags($arr['menu_desc']));
+	$menu_flags = intval($arr['menu_flags']);
 
 	if(! $menu_desc)
 		$menu_desc = $menu_name;
 
 	if(! $menu_name)
 		return false;
+
+	if(! $menu_flags)
+		$menu_flags = 0;
 
 
 	$menu_channel_id = intval($arr['menu_channel_id']);
@@ -139,21 +164,11 @@ function menu_edit($arr) {
 		return false;
 	}
 
-
-	$r = q("select * from menu where menu_name = '%s' and menu_channel_id = %d and menu_desc = '%s' limit 1",
-		dbesc($menu_name),
-	        intval($menu_channel_id),
-	        dbesc($menu_desc)
-	);
-
-	if($r)
-		return false;
-
-
-	return q("update menu set menu_name = '%s', menu_desc = '%s' 
+	return q("update menu set menu_name = '%s', menu_desc = '%s', menu_flags = %d
 		where menu_id = %d and menu_channel_id = %d limit 1", 
  		dbesc($menu_name),
 		dbesc($menu_desc),
+		intval($menu_flags),
 		intval($menu_id),
 		intval($menu_channel_id)
 	);
@@ -201,7 +216,8 @@ function menu_add_item($menu_id, $uid, $arr) {
 		$channel = get_app()->get_channel();	
 	}
 
-	if ((! $arr['contact_allow'])
+	if (($channel) 
+		&& (! $arr['contact_allow'])
 		&& (! $arr['group_allow'])
 		&& (! $arr['contact_deny'])
 		&& (! $arr['group_deny'])) {
@@ -220,11 +236,11 @@ function menu_add_item($menu_id, $uid, $arr) {
 		$str_contact_deny  = perms2str($arr['contact_deny']);
 	}
 
-
-	$allow_cid = perms2str($arr['allow_cid']);
-	$allow_gid = perms2str($arr['allow_gid']);
-	$deny_cid = perms2str($arr['deny_cid']);
-	$deny_gid = perms2str($arr['deny_gid']);
+//  unused
+//	$allow_cid = perms2str($arr['allow_cid']);
+//	$allow_gid = perms2str($arr['allow_gid']);
+//	$deny_cid = perms2str($arr['deny_cid']);
+//	$deny_gid = perms2str($arr['deny_gid']);
 
 	$r = q("insert into menu_item ( mitem_link, mitem_desc, mitem_flags, allow_cid, allow_gid, deny_cid, deny_gid, mitem_channel_id, mitem_menu_id, mitem_order ) values ( '%s', '%s', %d, '%s', '%s', '%s', '%s', %d, %d, %d ) ",
 		dbesc($mitem_link),

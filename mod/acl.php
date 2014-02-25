@@ -39,7 +39,7 @@ function acl_init(&$a){
 	
 	// count groups and contacts
 	if ($type=='' || $type=='g'){
-		$r = q("SELECT COUNT(`id`) AS g FROM `group` WHERE `deleted` = 0 AND `uid` = %d $sql_extra",
+		$r = q("SELECT COUNT(`id`) AS g FROM `groups` WHERE `deleted` = 0 AND `uid` = %d $sql_extra",
 			intval(local_user())
 		);
 		$group_count = (int)$r[0]['g'];
@@ -49,9 +49,10 @@ function acl_init(&$a){
 	
 	if ($type=='' || $type=='c'){
 		$r = q("SELECT COUNT(abook_id) AS c FROM abook left join xchan on abook_xchan = xchan_hash 
-				WHERE abook_channel = %d AND not ( abook_flags & %d ) $sql_extra2" ,
+				WHERE abook_channel = %d AND not ( abook_flags & %d ) and not (xchan_flags & %d ) $sql_extra2" ,
 			intval(local_user()),
-			intval(ABOOK_FLAG_SELF|ABOOK_FLAG_BLOCKED|ABOOK_FLAG_PENDING|ABOOK_FLAG_ARCHIVED)
+			intval(ABOOK_FLAG_BLOCKED|ABOOK_FLAG_PENDING|ABOOK_FLAG_ARCHIVED),
+			intval(XCHAN_FLAGS_DELETED)
 		);
 		$contact_count = (int)$r[0]['c'];
 	} 
@@ -64,9 +65,11 @@ function acl_init(&$a){
 		$r = q("SELECT count(xchan_hash) as c
 			FROM abook left join xchan on abook_xchan = xchan_hash
 			WHERE abook_channel = %d and ( (abook_their_perms = null) or (abook_their_perms & %d ))
+			and not ( xchan_flags & %d )
 			$sql_extra2 ",
 			intval(local_user()),
-			intval(PERMS_W_MAIL)
+			intval(PERMS_W_MAIL),
+			intval(XCHAN_FLAGS_DELETED)
 		);
 
 		if($r)
@@ -78,8 +81,9 @@ function acl_init(&$a){
 		// autocomplete for Contacts
 
 		$r = q("SELECT COUNT(abook_id) AS c FROM abook left join xchan on abook_xchan = xchan_hash 
-				WHERE abook_channel = %d $sql_extra2" ,
-			intval(local_user())
+				WHERE abook_channel = %d and not ( xchan_flags & %d ) $sql_extra2" ,
+			intval(local_user()),
+			intval(XCHAN_FLAGS_DELETED)
 		);
 		$contact_count = (int)$r[0]['c'];
 
@@ -94,14 +98,14 @@ function acl_init(&$a){
 	
 	if ($type=='' || $type=='g'){
 		
-		$r = q("SELECT `group`.`id`, `group`.`hash`, `group`.`name`, 
+		$r = q("SELECT `groups`.`id`, `groups`.`hash`, `groups`.`name`, 
 				GROUP_CONCAT(DISTINCT `group_member`.`xchan` SEPARATOR ',') as uids
-				FROM `group`,`group_member` 
-				WHERE `group`.`deleted` = 0 AND `group`.`uid` = %d 
-					AND `group_member`.`gid`=`group`.`id`
+				FROM `groups`,`group_member` 
+				WHERE `groups`.`deleted` = 0 AND `groups`.`uid` = %d 
+					AND `group_member`.`gid`=`groups`.`id`
 					$sql_extra
-				GROUP BY `group`.`id`
-				ORDER BY `group`.`name` 
+				GROUP BY `groups`.`id`
+				ORDER BY `groups`.`name` 
 				LIMIT %d,%d",
 			intval(local_user()),
 			intval($start),
@@ -121,32 +125,39 @@ function acl_init(&$a){
 			);
 		}
 	}
-	
+
 	if ($type=='' || $type=='c') {
-		$r = q("SELECT abook_id as id, xchan_hash as hash, xchan_name as name, xchan_photo_s as micro, xchan_url as url, xchan_addr as nick, abook_their_perms 
+		$r = q("SELECT abook_id as id, xchan_hash as hash, xchan_name as name, xchan_photo_s as micro, xchan_url as url, xchan_addr as nick, abook_their_perms, abook_flags 
 				FROM abook left join xchan on abook_xchan = xchan_hash 
-				WHERE abook_channel = %d AND not ( abook_flags & %d ) $sql_extra2 order by xchan_name asc" ,
+				WHERE abook_channel = %d AND not ( abook_flags & %d ) and not (xchan_flags & %d ) $sql_extra2 order by xchan_name asc" ,
 			intval(local_user()),
-			intval(ABOOK_FLAG_SELF|ABOOK_FLAG_BLOCKED|ABOOK_FLAG_PENDING|ABOOK_FLAG_ARCHIVED)
+			intval(ABOOK_FLAG_BLOCKED|ABOOK_FLAG_PENDING|ABOOK_FLAG_ARCHIVED),
+			intval(XCHAN_FLAGS_DELETED)
 		);
+
 	}
 	elseif($type == 'm') {
 
 		$r = q("SELECT xchan_hash as id, xchan_name as name, xchan_addr as nick, xchan_photo_s as micro, xchan_url as url 
 			FROM abook left join xchan on abook_xchan = xchan_hash
 			WHERE abook_channel = %d and ( (abook_their_perms = null) or (abook_their_perms & %d ))
+			and not (xchan_flags & %d)
 			$sql_extra3
 			ORDER BY `xchan_name` ASC ",
 			intval(local_user()),
-			intval(PERMS_W_MAIL)
+			intval(PERMS_W_MAIL),
+			intval(XCHAN_FLAGS_DELETED)
 		);
 	}
 	elseif($type == 'a') {
 		$r = q("SELECT abook_id as id, xchan_name as name, xchan_hash as hash, xchan_addr as nick, xchan_photo_s as micro, xchan_network as network, xchan_url as url, xchan_addr as attag , abook_their_perms FROM abook left join xchan on abook_xchan = xchan_hash
 			WHERE abook_channel = %d
+			and not (xchan_flags & %d)
 			$sql_extra3
 			ORDER BY xchan_name ASC ",
-			intval(local_user())
+			intval(local_user()),
+			intval(XCHAN_FLAGS_DELETED)
+
 		);
 	}
 	elseif($type == 'x') {
@@ -203,7 +214,7 @@ function acl_init(&$a){
 				"xid"      => $g['hash'],
 				"link"     => $g['nick'],
 				"nick"     => substr($g['nick'],0,strpos($g['nick'],'@')),
-				"network"  => '',
+				"self"     => (($g['abook_flags'] & ABOOK_FLAG_SELF) ? 'abook-self' : ''),
 				"taggable" => (($g['abook_their_perms'] & PERMS_W_TAGWALL) ? 'taggable' : '')
 			);
 		}			

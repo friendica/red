@@ -79,12 +79,12 @@ function zot_get_hublocs($hash) {
  *    zot it to the other side
  *
  * @param array $channel     => sender channel structure
- * @param string $type       => packet type: one of 'ping', 'pickup', 'purge', 'refresh', 'notify', 'auth_check'
+ * @param string $type       => packet type: one of 'ping', 'pickup', 'purge', 'refresh', 'force_refresh', 'notify', 'auth_check'
  * @param array $recipients  => envelope information, array ( 'guid' => string, 'guid_sig' => string ); empty for public posts
  * @param string $remote_key => optional public site key of target hub used to encrypt entire packet
  *    NOTE: remote_key and encrypted packets are required for 'auth_check' packets, optional for all others 
  * @param string $secret     => random string, required for packets which require verification/callback
- *    e.g. 'pickup', 'purge', 'notify', 'auth_check' --- 'ping' and 'refresh' do not require verification 
+ *    e.g. 'pickup', 'purge', 'notify', 'auth_check'. Packet types 'ping', 'force_refresh', and 'refresh' do not require verification 
  *
  * @returns string json encoded zot packet
  */
@@ -228,7 +228,7 @@ function zot_finger($webbie,$channel,$autofallback = true) {
 }
 
 /**
- * @function: zot_refresh($them, $channel = null)
+ * @function: zot_refresh($them, $channel = null, $force = false)
  *
  *   zot_refresh is typically invoked when somebody has changed permissions of a channel and they are notified
  *   to fetch new permissions via a finger/discovery operation. This may result in a new connection 
@@ -251,7 +251,7 @@ function zot_finger($webbie,$channel,$autofallback = true) {
  * @returns boolean true if successful, else false 
  */
 
-function zot_refresh($them,$channel = null) {
+function zot_refresh($them,$channel = null, $force = false) {
 
 	logger('zot_refresh: them: ' . print_r($them,true), LOGGER_DATA);
 	if($channel)
@@ -305,7 +305,7 @@ function zot_refresh($them,$channel = null) {
 			return false;
 		}
 
-		$x = import_xchan($j);
+		$x = import_xchan($j,(($force) ? (-1) : 1));
 
 		if(! $x['success'])
 			return false;
@@ -518,12 +518,15 @@ function zot_register_hub($arr) {
 
 /**
  * @function import_xchan($arr,$ud_flags = 1)
- *   Takes an associative array of a fecthed discovery packet and updates
+ *   Takes an associative array of a fetched discovery packet and updates
  *   all internal data structures which need to be updated as a result.
  * 
  * @param array $arr => json_decoded discovery packet
  * @param int $ud_flags
  *    Determines whether to create a directory update record if any changes occur, default 1 or true
+ *    $ud_flags = (-1) indicates a forced refresh where we unconditionally create a directory update record
+ *      this typically occurs once a month for each channel as part of a scheduled ping to notify the directory
+ *      that the channel still exists
  *
  * @returns array =>  'success' (boolean true or false)
  *                    'message' (optional error string only if success is false)
@@ -745,6 +748,16 @@ function import_xchan($arr,$ud_flags = 1) {
 				}
 			}
 
+			if(! $location['sitekey']) {
+				logger('import_xchan: empty hubloc sitekey. ' . print_r($location,true));
+				continue;
+			}
+
+			// Catch some malformed entries from the past which still exist
+
+			if(strpos($location['address'],'/') !== false)
+				$location['address'] = substr($location['address'],0,strpos($location['address'],'/'));
+
 			// match as many fields as possible in case anything at all changed. 
 
 			$r = q("select * from hubloc where hubloc_hash = '%s' and hubloc_guid = '%s' and hubloc_guid_sig = '%s' and hubloc_url = '%s' and hubloc_url_sig = '%s' and hubloc_host = '%s' and hubloc_addr = '%s' and hubloc_callback = '%s' and hubloc_sitekey = '%s' ",
@@ -801,14 +814,6 @@ function import_xchan($arr,$ud_flags = 1) {
 				continue;
 			}
 
-			if(! $location['sitekey']) {
-				logger('import_xchan: empty hubloc sitekey. ' . print_r($location,true));
-				continue;
-			}
-
-			if(strpos($location['address'],'/') !== false)
-				$location['address'] = substr($location['address'],0,strpos($location['address'],'/'));
-
 			// new hub claiming to be primary. Make it so.
 
 			if(intval($location['primary'])) {
@@ -837,9 +842,11 @@ function import_xchan($arr,$ud_flags = 1) {
 			);
 			$what .= 'newhub ';
 			$changed = true;
+
 		}
 
 		// get rid of any hubs we have for this channel which weren't reported.
+
 		if($xisting) {
 			foreach($xisting as $x) {
 				if(! array_key_exists('updated',$x)) {
@@ -852,7 +859,6 @@ function import_xchan($arr,$ud_flags = 1) {
 				}
 			}
 		}
-
 	}
 
 	// Are we a directory server of some kind?
@@ -885,7 +891,7 @@ function import_xchan($arr,$ud_flags = 1) {
 		}
 	}
 	
-	if($changed) {
+	if(($changed) || ($ud_flags == (-1))) {
 		$guid = random_string() . '@' . get_app()->get_hostname();		
 		update_modtime($xchan_hash,$guid,$arr['address'],$ud_flags);
 		logger('import_xchan: changed: ' . $what,LOGGER_DEBUG);
@@ -1061,7 +1067,9 @@ function zot_import($arr, $sender_url) {
 				}
 				stringify_array_elms($recip_arr);
 				$recips = implode(',',$recip_arr);
-				$r = q("select channel_hash as hash from channel where channel_hash in ( " . $recips . " ) ");
+				$r = q("select channel_hash as hash from channel where channel_hash in ( " . $recips . " ) and not ( channel_pageflags & %d ) ",
+					intval(PAGE_REMOVED)
+				);
 				if(! $r) {
 					logger('recips: no recipients on this site');
 					continue;
@@ -1219,8 +1227,7 @@ function public_recips($msg) {
 	if(! $r)
 		$r = array();
 
-	$x = q("select channel_hash as hash from channel left join abook on abook_channel = channel_id where abook_xchan = '%s'
-		and (( " . $col . " & " . PERMS_SPECIFIC . " )  and ( abook_my_perms & " . $field . " )) OR ( " . $col . " & " . PERMS_CONTACTS . " ) ",
+	$x = q("select channel_hash as hash from channel left join abook on abook_channel = channel_id where abook_xchan = '%s' and not ( channel_pageflags & " . PAGE_REMOVED . " ) and (( " . $col . " & " . PERMS_SPECIFIC . " )  and ( abook_my_perms & " . $field . " )) OR ( " . $col . " & " . PERMS_CONTACTS . " ) ",
 		dbesc($msg['notify']['sender']['hash'])
 	); 
 
@@ -1272,11 +1279,6 @@ function allowed_public_recips($msg) {
 	if(array_key_exists('public_scope',$msg['message']))
 		$scope = $msg['message']['public_scope'];
 
-	// we can pull out these two lines once everybody has upgraded to >= 2013-02-15.225
-
-	else
-		$scope = 'public';
-
 	$hash = base64url_encode(hash('whirlpool',$msg['notify']['sender']['guid'] . $msg['notify']['sender']['guid_sig'], true));
 
 	if($scope === 'public' || $scope === 'network: red')
@@ -1301,8 +1303,9 @@ function allowed_public_recips($msg) {
 			$condensed_recips[] = $rr['hash'];
 
 		$results = array();
-		$r = q("select channel_hash as hash from channel left join abook on abook_channel = channel_id where abook_xchan = '%s' ",
-			dbesc($hash)
+		$r = q("select channel_hash as hash from channel left join abook on abook_channel = channel_id where abook_xchan = '%s' and not ( channel_pageflags & %d ) ",
+			dbesc($hash),
+			intval(PAGE_REMOVED)
 		);
 		if($r) {
 			foreach($r as $rr)
@@ -1368,7 +1371,7 @@ function process_delivery($sender,$arr,$deliveries,$relay) {
 			remove_community_tag($sender,$arr,$channel['channel_id']);
 
 			$item_id = delete_imported_item($sender,$arr,$channel['channel_id']);
-			$result[] = array($d['hash'],'deleted',$channel['channel_name'] . ' <' . $channel['channel_address'] . '@' . get_app()->get_hostname() . '>');
+			$result[] = array($d['hash'],(($item_id) ? 'deleted' : 'delete_failed'),$channel['channel_name'] . ' <' . $channel['channel_address'] . '@' . get_app()->get_hostname() . '>');
 
 			if($relay && $item_id) {
 				logger('process_delivery: invoking relay');
@@ -1384,7 +1387,7 @@ function process_delivery($sender,$arr,$deliveries,$relay) {
 		if((x($arr,'obj_type')) && (activity_match($arr['obj_type'],ACTIVITY_OBJ_EVENT))) {
 			require_once('include/event.php');
 			$ev = bbtoevent($arr['body']);
-			if(x($ev,'desc') && x($ev,'start')) {
+		if(x($ev,'desc') && x($ev,'start')) {
 				$ev['event_xchan'] = $arr['author_xchan'];
 				$ev['uid']         = $channel['channel_id'];
 				$ev['account']     = $channel['channel_account_id'];
@@ -1408,8 +1411,6 @@ function process_delivery($sender,$arr,$deliveries,$relay) {
 				continue;
 			}
 		}
-
-
 
 		$r = q("select id, edited from item where mid = '%s' and uid = %d limit 1",
 			dbesc($arr['mid']),
@@ -1524,8 +1525,9 @@ function delete_imported_item($sender,$item,$uid) {
 
 	logger('delete_imported_item invoked',LOGGER_DEBUG);
 
-	$r = q("select id from item where ( author_xchan = '%s' or owner_xchan = '%s' )
+	$r = q("select id, item_restrict from item where ( author_xchan = '%s' or owner_xchan = '%s' or source_xchan = '%s' )
 		and mid = '%s' and uid = %d limit 1",
+		dbesc($sender['hash']),
 		dbesc($sender['hash']),
 		dbesc($sender['hash']),
 		dbesc($item['mid']),
@@ -1536,9 +1538,17 @@ function delete_imported_item($sender,$item,$uid) {
 		logger('delete_imported_item: failed: ownership issue');
 		return false;
 	}
+
+	if($r[0]['item_restrict'] & ITEM_DELETED) {
+		logger('delete_imported_item: item was already deleted');
+		return false;
+	} 
 		
 	require_once('include/items.php');
 	drop_item($r[0]['id'],false);
+
+	tag_deliver($uid,$r[0]['id']);
+
 	return $r[0]['id'];
 }
 
@@ -1633,22 +1643,26 @@ function import_directory_profile($hash,$profile,$addr,$ud_flags = 1, $suppress_
 	$arr = array();
 
 	$arr['xprof_hash']         = $hash;
-	$arr['xprof_desc']         = (($profile['description'])    ? htmlentities($profile['description'],    ENT_COMPAT,'UTF-8',false) : '');
+	$arr['xprof_desc']         = (($profile['description'])    ? htmlspecialchars($profile['description'],    ENT_COMPAT,'UTF-8',false) : '');
 	$arr['xprof_dob']          = datetime_convert('','',$profile['birthday'],'Y-m-d'); // !!!! check this for 0000 year
 	$arr['xprof_age']          = (($profile['age']) ? intval($profile['age']) : 0);
-	$arr['xprof_gender']       = (($profile['gender'])    ? htmlentities($profile['gender'],    ENT_COMPAT,'UTF-8',false) : '');
-	$arr['xprof_marital']      = (($profile['marital'])    ? htmlentities($profile['marital'],    ENT_COMPAT,'UTF-8',false) : '');
-	$arr['xprof_sexual']       = (($profile['sexual'])    ? htmlentities($profile['sexual'],    ENT_COMPAT,'UTF-8',false) : '');
-	$arr['xprof_locale']       = (($profile['locale'])    ? htmlentities($profile['locale'],    ENT_COMPAT,'UTF-8',false) : '');
-	$arr['xprof_region']       = (($profile['region'])    ? htmlentities($profile['region'],    ENT_COMPAT,'UTF-8',false) : '');
-	$arr['xprof_postcode']     = (($profile['postcode'])    ? htmlentities($profile['postcode'],    ENT_COMPAT,'UTF-8',false) : '');
-	$arr['xprof_country']      = (($profile['country'])    ? htmlentities($profile['country'],    ENT_COMPAT,'UTF-8',false) : '');
+	$arr['xprof_gender']       = (($profile['gender'])    ? htmlspecialchars($profile['gender'],    ENT_COMPAT,'UTF-8',false) : '');
+	$arr['xprof_marital']      = (($profile['marital'])    ? htmlspecialchars($profile['marital'],    ENT_COMPAT,'UTF-8',false) : '');
+	$arr['xprof_sexual']       = (($profile['sexual'])    ? htmlspecialchars($profile['sexual'],    ENT_COMPAT,'UTF-8',false) : '');
+	$arr['xprof_locale']       = (($profile['locale'])    ? htmlspecialchars($profile['locale'],    ENT_COMPAT,'UTF-8',false) : '');
+	$arr['xprof_region']       = (($profile['region'])    ? htmlspecialchars($profile['region'],    ENT_COMPAT,'UTF-8',false) : '');
+	$arr['xprof_postcode']     = (($profile['postcode'])    ? htmlspecialchars($profile['postcode'],    ENT_COMPAT,'UTF-8',false) : '');
+	$arr['xprof_country']      = (($profile['country'])    ? htmlspecialchars($profile['country'],    ENT_COMPAT,'UTF-8',false) : '');
+
+	$arr['xprof_about']      = (($profile['about'])    ? htmlspecialchars($profile['about'],    ENT_COMPAT,'UTF-8',false) : '');
+	$arr['xprof_homepage']      = (($profile['homepage'])    ? htmlspecialchars($profile['homepage'],    ENT_COMPAT,'UTF-8',false) : '');
+	$arr['xprof_hometown']      = (($profile['hometown'])    ? htmlspecialchars($profile['hometown'],    ENT_COMPAT,'UTF-8',false) : '');
 
 	$clean = array();
 	if(array_key_exists('keywords',$profile) and is_array($profile['keywords'])) {
 		import_directory_keywords($hash,$profile['keywords']);
 		foreach($profile['keywords'] as $kw) {
-			$kw = trim(htmlentities($kw,ENT_COMPAT,'UTF-8',false));
+			$kw = trim(htmlspecialchars($kw,ENT_COMPAT,'UTF-8',false));
 			$kw = trim($kw,',');
 			$clean[] = $kw;
 		}
@@ -1692,6 +1706,9 @@ function import_directory_profile($hash,$profile,$addr,$ud_flags = 1, $suppress_
 				xprof_region = '%s', 
 				xprof_postcode = '%s', 
 				xprof_country = '%s',
+				xprof_about = '%s',
+				xprof_homepage = '%s',
+				xprof_hometown = '%s',
 				xprof_keywords = '%s'
 				where xprof_hash = '%s' limit 1",
 				dbesc($arr['xprof_desc']),
@@ -1704,6 +1721,9 @@ function import_directory_profile($hash,$profile,$addr,$ud_flags = 1, $suppress_
 				dbesc($arr['xprof_region']),
 				dbesc($arr['xprof_postcode']),
 				dbesc($arr['xprof_country']),
+				dbesc($arr['xprof_about']),
+				dbesc($arr['xprof_homepage']),
+				dbesc($arr['xprof_hometown']),
 				dbesc($arr['xprof_keywords']),
 				dbesc($arr['xprof_hash'])
 			);
@@ -1712,7 +1732,7 @@ function import_directory_profile($hash,$profile,$addr,$ud_flags = 1, $suppress_
 	else {
 		$update = true;
 		logger('import_directory_profile: new profile');
-		$x = q("insert into xprof (xprof_hash, xprof_desc, xprof_dob, xprof_age, xprof_gender, xprof_marital, xprof_sexual, xprof_locale, xprof_region, xprof_postcode, xprof_country, xprof_keywords) values ('%s', '%s', '%s', %d, '%s', '%s', '%s', '%s', '%s', '%s', '%s', '%s') ",
+		$x = q("insert into xprof (xprof_hash, xprof_desc, xprof_dob, xprof_age, xprof_gender, xprof_marital, xprof_sexual, xprof_locale, xprof_region, xprof_postcode, xprof_country, xprof_about, xprof_homepage, xprof_hometown, xprof_keywords) values ('%s', '%s', '%s', %d, '%s', '%s', '%s', '%s', '%s', '%s', '%s', '%s', '%s', '%s', '%s') ",
 			dbesc($arr['xprof_hash']),
 			dbesc($arr['xprof_desc']),
 			dbesc($arr['xprof_dob']),
@@ -1724,6 +1744,9 @@ function import_directory_profile($hash,$profile,$addr,$ud_flags = 1, $suppress_
 			dbesc($arr['xprof_region']),
 			dbesc($arr['xprof_postcode']),
 			dbesc($arr['xprof_country']),
+			dbesc($arr['xprof_about']),
+			dbesc($arr['xprof_homepage']),
+			dbesc($arr['xprof_hometown']),
 			dbesc($arr['xprof_keywords'])
 		);
 	}
@@ -1750,7 +1773,7 @@ function import_directory_keywords($hash,$keywords) {
 
 	$clean = array();
 	foreach($keywords as $kw) {
-		$kw = trim(htmlentities($kw,ENT_COMPAT,'UTF-8',false));
+		$kw = trim(htmlspecialchars($kw,ENT_COMPAT,'UTF-8',false));
 		$kw = trim($kw,',');
 		$clean[] = $kw;
 	}
@@ -1849,10 +1872,21 @@ function import_site($arr,$pubkey) {
 			$access_policy = ACCESS_TIERED;
 	}
 
-	$directory_url = htmlentities($arr['directory_url'],ENT_COMPAT,'UTF-8',false);
-	$url = htmlentities($arr['url'],ENT_COMPAT,'UTF-8',false);
-	$sellpage = htmlentities($arr['sellpage'],ENT_COMPAT,'UTF-8',false);
-	$site_location = htmlentities($arr['location'],ENT_COMPAT,'UTF-8',false);
+	// don't let insecure sites register as public hubs
+
+	if(strpos($arr['url'],'https://') === false)
+		$access_policy = ACCESS_PRIVATE;
+
+	if($access_policy != ACCESS_PRIVATE) {
+		$x = z_fetch_url($arr['url'] . '/siteinfo/json');
+		if(! $x['success'])
+			$access_policy = ACCESS_PRIVATE;
+	}
+	
+	$directory_url = htmlspecialchars($arr['directory_url'],ENT_COMPAT,'UTF-8',false);
+	$url = htmlspecialchars($arr['url'],ENT_COMPAT,'UTF-8',false);
+	$sellpage = htmlspecialchars($arr['sellpage'],ENT_COMPAT,'UTF-8',false);
+	$site_location = htmlspecialchars($arr['location'],ENT_COMPAT,'UTF-8',false);
 
 	if($exists) {
 		if(($siterecord['site_flags'] != $site_directory)
@@ -2050,7 +2084,7 @@ function process_channel_sync_delivery($sender,$arr,$deliveries) {
 		}
 
 		if(array_key_exists('channel',$arr) && is_array($arr['channel']) && count($arr['channel'])) {
-			$disallowed = array('channel_id','channel_account_id','channel_primary','channel_prvkey', 'channel_address');
+			$disallowed = array('channel_id','channel_account_id','channel_primary','channel_prvkey', 'channel_address', 'channel_notifyflags');
 
 			$clean = array();
 			foreach($arr['channel'] as $k => $v) {
@@ -2073,6 +2107,33 @@ function process_channel_sync_delivery($sender,$arr,$deliveries) {
 
 			$clean = array();
 			foreach($arr['abook'] as $abook) {
+
+				// Perform discovery if the referenced xchan hasn't ever been seen on this hub.
+				// This relies on the undocumented behaviour that red sites send xchan info with the abook
+
+				if($abook['abook_xchan'] && $abook['xchan_address']) {
+					$h = zot_get_hublocs($abook['abook_xchan']);
+					if(! $h) {
+						$f = zot_finger($abook['xchan_address'],$channel);
+						if(! $f['success']) {
+							logger('process_channel_sync_delivery: abook not probe-able' . $abook['xchan_address']);
+							continue;
+						}
+						$j = json_decode($f['body'],true);
+				        if(! ($j['success'] && $j['guid'])) {
+							logger('process_channel_sync_delivery: probe failed.');
+							continue;
+						}
+
+						$x = import_xchan($j);
+
+						if(! $x['success']) {
+							logger('process_channel_sync_delivery: import failed.');
+							continue;
+						}
+					}
+				}
+
 				foreach($abook as $k => $v) {
 					if(in_array($k,$disallowed) || (strpos($k,'abook') !== 0))
 						continue;

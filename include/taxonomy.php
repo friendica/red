@@ -87,9 +87,9 @@ function format_term_for_display($term) {
 		return $s;
 
 	if($term['url']) 
-		$s .= '<a href="' . $term['url'] . '">' . htmlspecialchars($term['term']) . '</a>';
+		$s .= '<a href="' . $term['url'] . '">' . htmlspecialchars($term['term'], ENT_COMPAT,'UTF-8') . '</a>';
 	else 
-		$s .= htmlspecialchars($term['term']);
+		$s .= htmlspecialchars($term['term'], ENT_COMPAT,'UTF-8');
 	return $s;
 }
 
@@ -217,16 +217,19 @@ function tagblock($link,$uid,$count = 0,$authors = '',$flags = 0,$restrict = 0,$
 }
 
 function dir_tagblock($link,$r) {
-  $o = '';
-  $tab = 0;
+	$o = '';
+	$tab = 0;
 
-  if($r) {
-	$o = '<div class="dirtagblock widget"><h3>' . t('Keywords') . '</h3><div class="tags" align="center">';
-	foreach($r as $rr) { 
-	  $o .= '<a href="'.$link .'/' . '?f=&keywords=' . urlencode($rr['term']).'" class="tag'.$rr['normalise'].'" rel="nofollow" >'.$rr['term'].'</a> ' . "\r\n";
+	if(! $r)
+		$r = get_app()->data['directory_keywords'];
+
+	if($r) {
+		$o = '<div class="dirtagblock widget"><h3>' . t('Keywords') . '</h3><div class="tags" align="center">';
+		foreach($r as $rr) { 
+			$o .= '<a href="'.$link .'/' . '?f=&keywords=' . urlencode($rr['term']).'" class="tag'.$rr['normalise'].'" rel="nofollow" >'.$rr['term'].'</a> ' . "\r\n";
+		}
+		$o .= '</div></div>';
 	}
-	$o .= '</div></div>';
-  }
 	return $o;
 }
 
@@ -258,13 +261,81 @@ function obj_verbs() {
 }
 
 
-function obj_verb_selector() {
+function obj_verb_selector($current = '') {
 	$verbs = obj_verbs();
 	$o .= '<select class="obj-verb-selector" name="verb" >';
 	foreach($verbs as $k => $v) {
-		$o .= '<option value="' . urlencode($k) . '">' . $v[0] . '</option>';
+		$selected = (($k == $current) ? ' selected="selected" ' : '');
+		$o .= '<option value="' . urlencode($k) . '"' . $selected . '>' . $v[0] . '</option>';
 	}
 	$o .= '</select>';
 	return $o;
+
+}
+
+function get_things($profile_hash,$uid) {
+
+	$sql_extra = (($profile_hash) ? " and obj_page = '" . $profile_hash . "' " : '');
+	
+	$r = q("select * from obj left join term on obj_obj = term_hash where term_hash != '' and uid = %d and obj_type = %d $sql_extra order by obj_verb, term",
+		intval($uid),
+		intval(TERM_OBJ_THING)
+	);
+
+	$things = $sorted_things = null;
+
+	$profile_hashes = array();
+
+	if($r) {
+
+		// if no profile_hash was specified (display on profile page mode), match each of the things to a profile name 
+		// (list all my things mode). This is harder than it sounds.
+
+		foreach($r as $rr) {
+			$rr['profile_name'] = '';
+			if(! in_array($rr['term_hash'],$profile_hashes))
+				$profile_hashes[] = $rr['term_hash'];
+		}
+		stringify_array_elms($profile_hashes);
+		if(! $profile_hash) {
+			$exp = explode(',',$profile_hashes);
+			$p = q("select profile_guid as hash, profile_name as name from profile where profile_guid in ( $exp ) ");
+			if($p) {
+				foreach($r as $rr) {
+					foreach($p as $pp) { 
+						if($rr['obj_page'] == $pp['hash']) {
+							$rr['profile_name'] == $pp['name'];
+						}
+					}
+				}
+			}
+ 		}
+
+		$things = array();
+
+		// Use the system obj_verbs array as a sort key, since we don't really
+		// want an alphabetic sort. To change the order, use a plugin to
+		// alter the obj_verbs() array or alter it in code. Unknown verbs come
+		// after the known ones - in no particular order. 
+
+		$v = obj_verbs();
+		foreach($v as $k => $foo)
+			$things[$k] = null;
+		foreach($r as $rr) {
+			if(! $things[$rr['obj_verb']])
+				$things[$rr['obj_verb']] = array();
+			$things[$rr['obj_verb']][] = array('term' => $rr['term'],'url' => $rr['url'],'img' => $rr['imgurl'], 'profile' => $rr['profile_name']);
+		} 
+		$sorted_things = array();
+		if($things) {
+			foreach($things as $k => $v) {
+				if(is_array($things[$k])) {
+					$sorted_things[$k] = $v;
+				}
+			}
+		}
+	}
+
+	return $sorted_things;
 
 }

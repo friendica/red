@@ -32,20 +32,12 @@ function poller_run($argv, $argc){
 
 	proc_run('php',"include/queue.php");
 	
-	// expire any expired accounts
-
-	q("UPDATE account 
-		SET account_flags = (account_flags | %d) 
-		where not (account_flags & %d) 
-		and account_expires != '0000-00-00 00:00:00' 
-		and account_expires < UTC_TIMESTAMP() ",
-		intval(ACCOUNT_EXPIRED),
-		intval(ACCOUNT_EXPIRED)
-	);
 
 	// expire any expired mail
 
 	q("delete from mail where expires != '0000-00-00 00:00:00' and expires < UTC_TIMESTAMP() ");
+
+	// expire any expired items
 
 	$r = q("select id from item where expires != '0000-00-00 00:00:00' and expires < UTC_TIMESTAMP() 
 		and not ( item_restrict & %d ) ",
@@ -56,7 +48,8 @@ function poller_run($argv, $argc){
 		foreach($r as $rr)
 			drop_item($rr['id'],false);
 	}
-  
+
+
 	// Ensure that every channel pings a directory server once a month. This way we can discover
 	// channels and sites that quietly vanished and prevent the directory from accumulating stale
 	// or dead entries.
@@ -64,7 +57,7 @@ function poller_run($argv, $argc){
 	$r = q("select channel_id from channel where channel_dirdate < UTC_TIMESTAMP() - INTERVAL 30 DAY");
 	if($r) {
 		foreach($r as $rr) {
-			proc_run('php','include/directory.php',$rr['channel_id']);
+			proc_run('php','include/directory.php',$rr['channel_id'],'force');
 			if($interval)
 				@time_sleep_until(microtime(true) + (float) $interval);
 		}
@@ -103,7 +96,18 @@ function poller_run($argv, $argc){
 
 	$dirmode = get_config('system','directory_mode');
 
+
+	// Actions in the following block are executed once per day, not on every poller run
+	
 	if($d2 != intval($d1)) {
+
+		// expire any read notifications over a month old
+
+		q("delete from notify where seen = 1 and date < UTC_TIMESTAMP() - INTERVAL 30 DAY");
+
+		// expire any expired accounts
+		require_once('include/account.php');
+		downgrade_accounts();
 
 		// If this is a directory server, request a sync with an upstream
 		// directory at least once a day, up to once every poll interval. 
@@ -115,13 +119,7 @@ function poller_run($argv, $argc){
 			sync_directories($dirmode);
 		}
 
-
 		set_config('system','last_expire_day',$d2);
-
-// Uncomment when expire protocol component is working
-// Update - this is not going to happen. We are only going to
-// implement per-item expire, not blanket expiration
-//		proc_run('php','include/expire.php');
 
 		proc_run('php','include/cli_suggest.php');
 

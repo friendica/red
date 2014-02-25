@@ -19,13 +19,6 @@ function suggest_init(&$a) {
 }
 		
 
-function suggest_aside(&$a) {
-
-	$a->set_widget('follow', widget_follow(array()));
-	$a->set_widget('findpeople', findpeople_widget());
-}
-
-
 function suggest_content(&$a) {
 
 	$o = '';

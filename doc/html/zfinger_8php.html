@@ -129,6 +129,8 @@ Functions</h2></td></tr>
         </tr>
       </table>
 </div><div class="memdoc">
+<p>The special address '[system]' will return a system channel if one has been defined, Or the first valid channel we find if there are no system channels.</p>
+<p>This is used by magic-auth if we have no prior communications with this site - and returns an identity on this site which we can use to create a valid hub record so that we can exchange signed messages. The precise identity is irrelevant. It's the hub information that we really need at the other end - and this will return it.</p>
 
 <p>Referenced by <a class="el" href="__well__known_8php.html#a6ebfa937a2024f0b5dab53f0ac90fed0">_well_known_init()</a>.</p>
 

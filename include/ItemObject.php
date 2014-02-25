@@ -10,6 +10,7 @@ require_once('boot.php');
 /**
  * An item
  */
+
 class Item extends BaseObject {
 	public  $data = array();
 	private $template = 'conv_item.tpl';
@@ -170,6 +171,15 @@ class Item extends BaseObject {
 			);
 		}
 
+		$has_bookmarks = false;
+		if(is_array($item['term'])) {
+			foreach($item['term'] as $t) {
+				if($t['type'] == TERM_BOOKMARK)
+					$has_bookmarks = true;
+			}
+		}
+
+
 		if($this->is_commentable()) {
 			$like = array( t("I like this \x28toggle\x29"), t("like"));
 			$dislike = array( t("I don't like this \x28toggle\x29"), t("dislike"));
@@ -217,6 +227,7 @@ class Item extends BaseObject {
 			'isotime' => datetime_convert('UTC', date_default_timezone_get(), $item['created'], 'c'),
 			'localtime' => datetime_convert('UTC', date_default_timezone_get(), $item['created'], 'r'),
 			'editedtime' => (($item['edited'] != $item['created']) ? sprintf( t('last edited: %s'), datetime_convert('UTC', date_default_timezone_get(), $item['edited'], 'r')) : ''),
+			'expiretime' => (($item['expires'] !== '0000-00-00 00:00:00') ? sprintf( t('Expires: %s'), datetime_convert('UTC', date_default_timezone_get(), $item['expires'], 'r')):''),
 			'lock' => $lock,
 			'verified' => $verified,
 			'unverified' => $unverified,
@@ -230,11 +241,13 @@ class Item extends BaseObject {
 			'like'      => $like,
 			'dislike'   => ((feature_enabled($conv->get_profile_owner(),'dislike')) ? $dislike : ''),
 			'share'     => $share,
-			'plink'     => get_plink($item,$mode),
+			'rawmid'	=> $item['mid'],
+			'plink'     => get_plink($item),
 			'edpost'    => ((feature_enabled($conv->get_profile_owner(),'edit_posts')) ? $edpost : ''),
 			'star'      => ((feature_enabled($conv->get_profile_owner(),'star_posts')) ? $star : ''),
 			'tagger'    => ((feature_enabled($conv->get_profile_owner(),'commtag')) ? $tagger : ''),
 			'filer'     => ((feature_enabled($conv->get_profile_owner(),'filing')) ? $filer : ''),
+			'bookmark'  => (($conv->get_profile_owner() == local_user() && $has_bookmarks) ? t('Bookmark Links') : ''),
 			'drop'      => $drop,
 			'multidrop' => ((feature_enabled($conv->get_profile_owner(),'multi_delete')) ? $multidrop : ''),
 // end toolbar buttons
@@ -455,6 +468,11 @@ class Item extends BaseObject {
 	 */
 	private function get_template() {
 		return $this->template;
+	}
+
+
+	private function set_template($t) {
+		$this->template = $t;
 	}
 
 	/**

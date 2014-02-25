@@ -22,7 +22,8 @@ function dir_sort_links() {
 
 function dir_safe_mode() {
 	$observer = get_observer_hash();
-	
+	if (! $observer)
+		return;
 	if ($observer)
 		$safe_mode = get_xconfig($observer,'directory','safe_mode');		
 	if($safe_mode === '0')
@@ -138,12 +139,15 @@ function update_directory_entry($ud) {
 }
 
 
+/**
+ * @function local_dir_update($uid,$force)
+ *     push local channel updates to a local directory server 
+ *
+ */
 
+function local_dir_update($uid,$force) {
 
-
-function syncdirs($uid) {
-
-	logger('syncdirs', LOGGER_DEBUG);
+	logger('local_dir_update', LOGGER_DEBUG);
 
 	$p = q("select channel.channel_hash, channel_address, channel_timezone, profile.* from profile left join channel on channel_id = uid where uid = %d and is_default = 1",
 		intval($uid)
@@ -166,6 +170,10 @@ function syncdirs($uid) {
 		$profile['region']      = $p[0]['region'];
 		$profile['postcode']    = $p[0]['postal_code'];
 		$profile['country']     = $p[0]['country_name'];
+		$profile['about']       = $p[0]['about'];
+		$profile['homepage']    = $p[0]['homepage'];
+		$profile['hometown']    = $p[0]['hometown'];
+
 		if($p[0]['keywords']) {
 			$tags = array();
 			$k = explode(' ',$p[0]['keywords']);
@@ -200,10 +208,10 @@ function syncdirs($uid) {
 
 		}
 
+		$address = $p[0]['channel_address'] . '@' . get_app()->get_hostname();
 
 		if(perm_is_allowed($uid,'','view_profile')) {
-			import_directory_profile($hash,$profile);
-
+			import_directory_profile($hash,$profile,$address,0);
 		}
 		else {
 			// they may have made it private
@@ -216,8 +224,8 @@ function syncdirs($uid) {
 		}
 	}
 
-	$ud_hash = random_string();
-	update_modtime($ud_hash,$hash,$p[0]['channel_address'] . '@' . get_app()->get_hostname(),1);
+	$ud_hash = random_string() . '@' . get_app()->get_hostname();
+	update_modtime($hash,$ud_hash,$p[0]['channel_address'] . '@' . get_app()->get_hostname(),(($force) ? (-1) : 1));
 
 }
 	

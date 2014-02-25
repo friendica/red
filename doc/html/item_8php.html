@@ -116,8 +116,8 @@ Functions</h2></td></tr>
 <tr class="separator:a693cd09805755ab85bbb5ecae69a48c3"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a764bbb2e9a885a86fb23d0b5e4a09221"><td class="memItemLeft" align="right" valign="top">&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="item_8php.html#a764bbb2e9a885a86fb23d0b5e4a09221">item_content</a> (&amp;$a)</td></tr>
 <tr class="separator:a764bbb2e9a885a86fb23d0b5e4a09221"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:abd0e603a6696051af16476eb968d52e7"><td class="memItemLeft" align="right" valign="top">&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="item_8php.html#abd0e603a6696051af16476eb968d52e7">handle_tag</a> ($a, &amp;$body, &amp;$inform, &amp;$str_tags, $profile_uid, $tag)</td></tr>
-<tr class="separator:abd0e603a6696051af16476eb968d52e7"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:aa22feef4de326e1d7078dedd892e615c"><td class="memItemLeft" align="right" valign="top">&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="item_8php.html#aa22feef4de326e1d7078dedd892e615c">handle_tag</a> ($a, &amp;$body, &amp;$access_tag, &amp;$str_tags, $profile_uid, $tag)</td></tr>
+<tr class="separator:aa22feef4de326e1d7078dedd892e615c"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a7b63a9d0cd02096e17dcf11f4afa7c10"><td class="memItemLeft" align="right" valign="top">&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="item_8php.html#a7b63a9d0cd02096e17dcf11f4afa7c10">fix_attached_photo_permissions</a> ($uid, $xchan_hash, $body, $str_contact_allow, $str_group_allow, $str_contact_deny, $str_group_deny)</td></tr>
 <tr class="separator:a7b63a9d0cd02096e17dcf11f4afa7c10"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a3daae7944f737bd30412a0d042207c0f"><td class="memItemLeft" align="right" valign="top">&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="item_8php.html#a3daae7944f737bd30412a0d042207c0f">fix_attached_file_permissions</a> ($channel, $observer_hash, $body, $str_contact_allow, $str_group_allow, $str_contact_deny, $str_group_deny)</td></tr>
@@ -242,7 +242,7 @@ Functions</h2></td></tr>
 
 </div>
 </div>
-<a class="anchor" id="abd0e603a6696051af16476eb968d52e7"></a>
+<a class="anchor" id="aa22feef4de326e1d7078dedd892e615c"></a>
 <div class="memitem">
 <div class="memproto">
       <table class="memname">
@@ -262,7 +262,7 @@ Functions</h2></td></tr>
           <td class="paramkey"></td>
           <td></td>
           <td class="paramtype">&amp;&#160;</td>
-          <td class="paramname"><em>$inform</em>, </td>
+          <td class="paramname"><em>$access_tag</em>, </td>
         </tr>
         <tr>
           <td class="paramkey"></td>
@@ -293,7 +293,7 @@ Functions</h2></td></tr>
 <dl class="params"><dt>Parameters</dt><dd>
   <table class="params">
     <tr><td class="paramtype">unknown_type</td><td class="paramname">$body</td><td>the text to replace the tag in </td></tr>
-    <tr><td class="paramtype">unknown_type</td><td class="paramname">$inform</td><td>a comma-seperated string containing everybody to inform </td></tr>
+    <tr><td class="paramtype">unknown_type</td><td class="paramname">$access_tag</td><td>- used to return tag ACL exclusions e.g. @!foo </td></tr>
     <tr><td class="paramtype">unknown_type</td><td class="paramname">$str_tags</td><td>string to add the tag to </td></tr>
     <tr><td class="paramtype">unknown_type</td><td class="paramname">$profile_uid</td><td></td></tr>
     <tr><td class="paramtype">unknown_type</td><td class="paramname">$tag</td><td>the tag to replace</td></tr>
@@ -302,7 +302,7 @@ Functions</h2></td></tr>
 </dl>
 <dl class="section return"><dt>Returns</dt><dd>boolean true if replaced, false if not replaced </dd></dl>
 
-<p>Referenced by <a class="el" href="item_8php.html#a693cd09805755ab85bbb5ecae69a48c3">item_post()</a>.</p>
+<p>Referenced by <a class="el" href="item_8php.html#a693cd09805755ab85bbb5ecae69a48c3">item_post()</a>, and <a class="el" href="mod_2photos_8php.html#a062bed4d04d14fee8a53f4c9be673080">photos_post()</a>.</p>
 
 </div>
 </div>
@@ -365,9 +365,17 @@ Functions</h2></td></tr>
 </div><div class="memdoc">
 <p>This is the POST destination for most all locally posted text stuff. This function handles status, wall-to-wall status, local comments, and remote coments that are posted on this site (as opposed to being delivered in a feed). Also processed here are posts and comments coming through the statusnet/twitter API. All of these become an "item" which is our basic unit of information. Posts that originate externally or do not fall into the above posting categories go through <a class="el" href="items_8php.html#a2541e6861a56d145c9281877cc501615">item_store()</a> instead of this function. </p>
 <p>Is this a reply to something?</p>
-<p>fix naked links by passing through a callback to see if this is a red site (already known to us) which will get a zrl, otherwise link with url</p>
+<p>fix naked links by passing through a callback to see if this is a red site (already known to us) which will get a zrl, otherwise link with url, add bookmark tag to both. First protect any url inside certain bbcode tags so we don't double link it.</p>
 <p>When a photo was uploaded into the message using the (profile wall) ajax uploader, The permissions are initially set to disallow anybody but the owner from seeing it. This is because the permissions may not yet have been set for the post. If it's private, the photo permissions should be set appropriately. But we didn't know the final permissions on the post until now. So now we'll look for links of uploaded photos and attachments that are in the post and set them to the same permissions as the post itself.</p>
 <p>If the post was end-to-end encrypted we can't find images and attachments in the body, use our media_str input instead which only contains these elements - but only do this when encrypted content exists because the photo/attachment may have been removed from the post and we should keep it private. If it's encrypted we have no way of knowing so we'll set the permissions regardless and realise that the media may not be referenced in the post.</p>
+<p>What is preventing us from being able to upload photos into comments is dealing with the photo and attachment permissions, since we don't always know who was in the distribution for the top level post.</p>
+<p>We might be able to provide this functionality with a lot of fiddling:</p>
+<ul>
+<li>if the top level post is public (make the photo public)</li>
+<li>if the top level post was written by us or a wall post that belongs to us (match the top level post)</li>
+<li>if the top level post has privacy mentions, add those to the permissions.</li>
+<li>otherwise disallow the photo <em>or</em> make the photo public. This is the part that gets messy.</li>
+</ul>
 <p>Fold multi-line [code] sequences</p>
 <p>Look for any tags and linkify them</p>
 

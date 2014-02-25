@@ -22,9 +22,17 @@ function photo_init(&$a) {
 			// NOTREACHED
 	}
 
+	if($photo === 'qr') {
+		$t = $_GET['qr'];
+		require_once('library/phpqrcode/phpqrcode.php');
+		header("Content-type: image/png");
+		QRcode::png(($t) ? $t : '.');
+		killme();
+	}
+
 	$observer_xchan = get_observer_hash();
 
-	$default = 'images/default_profile_photos/rainbow_man/175.jpg';
+	$default = get_default_profile_photo();
 
 	if(isset($type)) {
 
@@ -38,11 +46,11 @@ function photo_init(&$a) {
 
 				case 'm':
 					$resolution = 5;
-					$default = 'images/default_profile_photos/rainbow_man/80.jpg';
+					$default = get_default_profile_photo(80);
 					break;
 				case 's':
 					$resolution = 6;
-					$default = 'images/default_profile_photos/rainbow_man/48.jpg';
+					$default = get_default_profile_photo(48);
 					break;
 				case 'l':
 				default:
@@ -135,15 +143,15 @@ function photo_init(&$a) {
 			switch($resolution) {
 
 				case 4:
-					$data = file_get_contents('images/default_profile_photos/rainbow_man/175.jpg');
+					$data = file_get_contents(get_default_profile_photo());
 					$mimetype = 'image/jpeg';
 					break;
 				case 5:
-					$data = file_get_contents('images/default_profile_photos/rainbow_man/80.jpg');
+					$data = file_get_contents(get_default_profile_photo(80));
 					$mimetype = 'image/jpeg';
 					break;
 				case 6:
-					$data = file_get_contents('images/default_profile_photos/rainbow_man/48.jpg');
+					$data = file_get_contents(get_default_profile_photo(48));
 					$mimetype = 'image/jpeg';
 					break;
 				default:

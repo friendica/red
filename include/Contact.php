@@ -52,24 +52,27 @@ function abook_self($channel_id) {
 }	
 
 function channelx_by_nick($nick) {
-	return q("SELECT * FROM channel left join xchan on channel_hash = xchan_hash WHERE channel_address = '%s'  and not ( channel_pageflags & %d ) LIMIT 1",
+	$r = q("SELECT * FROM channel left join xchan on channel_hash = xchan_hash WHERE channel_address = '%s'  and not ( channel_pageflags & %d ) LIMIT 1",
 		dbesc($nick),
 		intval(PAGE_REMOVED)
 	);
+	return(($r) ? $r[0] : false);
 }
 
 function channelx_by_hash($hash) {
-	return q("SELECT * FROM channel left join xchan on channel_hash = xchan_hash WHERE channel_hash = '%s'  and not ( channel_pageflags & %d ) LIMIT 1",
+	$r = q("SELECT * FROM channel left join xchan on channel_hash = xchan_hash WHERE channel_hash = '%s'  and not ( channel_pageflags & %d ) LIMIT 1",
 		dbesc($hash),
 		intval(PAGE_REMOVED)
 	);
+	return(($r) ? $r[0] : false);
 }
 
 function channelx_by_n($id) {
-	return q("SELECT * FROM channel left join xchan on channel_hash = xchan_hash WHERE channel_id = %d  and not ( channel_pageflags & %d ) LIMIT 1",
+	$r = q("SELECT * FROM channel left join xchan on channel_hash = xchan_hash WHERE channel_id = %d  and not ( channel_pageflags & %d ) LIMIT 1",
 		dbesc($id),
 		intval(PAGE_REMOVED)
 	);
+	return(($r) ? $r[0] : false);
 }
 
 
@@ -77,6 +80,23 @@ function vcard_from_xchan($xchan, $observer = null, $mode = '') {
 
 	$a = get_app();
 
+	if(! $xchan) {
+		if($a->poi) {
+			$xchan = $a->poi;
+		}
+		elseif(is_array($a->profile) && $a->profile['channel_hash']) {
+			$r = q("select * from xchan where xchan_hash = '%s' limit 1",
+				dbesc($a->profile['channel_hash'])
+			);
+			if($r)
+				$xchan = $r[0];
+		}
+	}
+
+	if(! $xchan)
+		return;
+
+// FIXME - show connect button to observer if appropriate
 	$connect = false;
 	if(local_user()) {
 		$r = q("select * from abook where abook_xchan = '%s' and abook_channel = %d limit 1",
@@ -97,7 +117,7 @@ function vcard_from_xchan($xchan, $observer = null, $mode = '') {
 					
 	return replace_macros(get_markup_template('xchan_vcard.tpl'),array(
 		'$name'    => $xchan['xchan_name'],
-		'$photo'   => $xchan['xchan_photo_l'],
+		'$photo'   => ((is_array($a->profile) && array_key_exists('photo',$a->profile)) ? $a->profile['photo'] : $xchan['xchan_photo_l']),
 		'$follow'  => $xchan['xchan_addr'],
 		'$connect' => $connect,
 		'$newwin'  => (($mode === 'chanview') ? t('New window') : ''),
@@ -238,7 +258,7 @@ function channel_remove($channel_id, $local = true) {
 
 	}
 
-	q("DELETE FROM `group` WHERE `uid` = %d", intval($channel_id));
+	q("DELETE FROM `groups` WHERE `uid` = %d", intval($channel_id));
 	q("DELETE FROM `group_member` WHERE `uid` = %d", intval($channel_id));
 	q("DELETE FROM `event` WHERE `uid` = %d", intval($channel_id));
 	q("DELETE FROM `item` WHERE `uid` = %d", intval($channel_id));

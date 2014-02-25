@@ -16,41 +16,61 @@
 {{include file="field_checkbox.tpl" field=$adult}}
 
 <div class="settings-submit-wrapper" >
-<input type="submit" name="submit" class="settings-submit" value="{{$submit}}" />
+<input type="submit" name="submit" class="settings-submit" value="{{$submit}}"{{if !$expert}} onclick="$('select').prop('disabled', false);"{{/if}} />
 </div>
 
 
 <h3 class="settings-heading">{{$h_prv}}</h3>
 
-<div id="settings-privacy-macros">{{$lbl_pmacro}}</div>
+{{include file="field_checkbox.tpl" field=$hide_presence}}
+
+
+<h3 id="settings-privacy-macros">{{$lbl_pmacro}}</h3>
 <ul>
-<li><a href="#" onclick="channel_privacy_macro(3); return false" id="settings_pmacro3">{{$pmacro3}}</a></li>
 <li><a href="#" onclick="channel_privacy_macro(2); return false" id="settings_pmacro2">{{$pmacro2}}</a></li>
 <li><a href="#" onclick="channel_privacy_macro(1); return false" id="settings_pmacro1">{{$pmacro1}}</a></li>
+<li><a href="#" onclick="channel_privacy_macro(3); return false" id="settings_pmacro3">{{$pmacro3}}</a></li>
 <li><a href="#" onclick="channel_privacy_macro(0); return false" id="settings_pmacro0">{{$pmacro0}}</a></li>
 </ul>
 
 
+<button type="button" class="btn btn-xs btn-warning" data-toggle="collapse" data-target="#settings-permissions-wrapper">{{$lbl_p2macro}}</button>
 
-<div id="settings-permissions-wrapper">
+
+
+<div class="collapse well" id="settings-permissions-wrapper">
+{{if !$expert}}
+	<div class="alert alert-info">{{$hint}}</div>
+{{/if}}
+
 {{foreach $permiss_arr as $permit}}
-{{include file="field_select.tpl" field=$permit}}
+	{{if $expert}}
+		{{include file="field_select.tpl" field=$permit}}
+	{{else}}
+		{{include file="field_select_disabled.tpl" field=$permit}}
+	{{/if}}
 {{/foreach}}
-</div>
 
+{{if $expert}}
+	<div class="settings-submit-wrapper" >
+	<input type="submit" name="submit" class="settings-submit" value="{{$submit}}" />
+	</div>
+{{/if}}
 
-<div class="settings-submit-wrapper" >
-<input type="submit" name="submit" class="settings-submit" value="{{$submit}}" />
 </div>
+<div class="settings-common-perms">
 
 
 {{$profile_in_dir}}
 
 {{$suggestme}}
 
+{{include file="field_yesno.tpl" field=$blocktags}}
+
 {{include file="field_input.tpl" field=$maxreq}}
 
 {{include file="field_input.tpl" field=$cntunkmail}}
+</div>
 
 <div id="settings-default-perms" class="settings-default-perms" >
 	<a href="#profile-jot-acl-wrapper" id="settings-default-perms-menu" >{{$permissions}} {{$permdesc}}</a>
@@ -73,7 +93,7 @@
 
 
 <div class="settings-submit-wrapper" >
-<input type="submit" name="submit" class="settings-submit" value="{{$submit}}" />
+<input type="submit" name="submit" class="settings-submit" value="{{$submit}}"{{if !$expert}} onclick="$('select').prop('disabled', false);"{{/if}} />
 </div>
 
 
@@ -104,7 +124,26 @@
 </div>
 
 <div class="settings-submit-wrapper" >
-<input type="submit" name="submit" class="settings-submit" value="{{$submit}}" />
+<input type="submit" name="submit" class="settings-submit" value="{{$submit}}"{{if !$expert}} onclick="$('select').prop('disabled', false);"{{/if}} />
 </div>
+
+
+{{if $menus}}
+<h3 class="settings-heading">{{$lbl_misc}}</h3>
+
+<div id="settings-menu-desc">{{$menu_desc}}</div>
+<div class="settings-channel-menu-div">
+<select name="channel_menu" class="settings-channel-menu-sel">
+{{foreach $menus as $menu }}
+<option value="{{$menu.name}}" {{$menu.selected}} >{{$menu.name}} </option>
+{{/foreach}}
+</select>
+</div>
+<div class="settings-submit-wrapper" >
+<input type="submit" name="submit" class="settings-submit" value="{{$submit}}"{{if !$expert}} onclick="$('select').prop('disabled', false);"{{/if}} />
+</div>
+<div id="settings-channel-menu-end"></div>
+{{/if}}
+
 
 </div>

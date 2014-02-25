@@ -33,7 +33,7 @@ function rpost_content(&$a) {
 		if(remote_user()) {
 			// redirect to your own site.
 			// We can only do this with a GET request so you'll need to keep the text short or risk getting truncated
-			// by the wretched beast called 'shusoin'. All the browsers now allow long GET requests, but suhosin
+			// by the wretched beast called 'suhosin'. All the browsers now allow long GET requests, but suhosin
 			// blocks them.
 
 			$url = get_rpost_path($a->get_observer());
@@ -65,8 +65,10 @@ function rpost_content(&$a) {
 	if($_REQUEST['remote_return']) {
 		$_SESSION['remote_return'] = $_REQUEST['remote_return'];
 	}
-	if(argc() > 1 && argv(1) === 'return' && $_SESSION['remote_return']) {
-		goaway($_SESSION['remote_return']);
+	if(argc() > 1 && argv(1) === 'return') {
+		if($_SESSION['remote_return'])
+			goaway($_SESSION['remote_return']);
+		goaway(z_root() . '/network');
 	}
 
 	$plaintext = true;
