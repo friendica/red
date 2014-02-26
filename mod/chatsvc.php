@@ -113,7 +113,7 @@ function chatsvc_content(&$a) {
 
 		$chats = array();
 
-		$r = q("select * from chat left join xchan on chat_xchan = xchan_hash where chat_room = %d and chat_id > %d",
+		$r = q("select * from chat left join xchan on chat_xchan = xchan_hash where chat_room = %d and chat_id > %d order by created",
 			intval($a->data['chat']['room_id']),
 			intval($lastseen)
 		);
