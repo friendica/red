@@ -79,10 +79,10 @@ function comanche_parser(&$a,$s) {
 }
 
 
-function comanche_menu($name) {
+function comanche_menu($name,$class = '') {
 	$a = get_app();
 	$m = menu_fetch($name,$a->profile['profile_uid'],get_observer_hash());
-	return menu_render($m);
+	return menu_render($m,$class);
 }
 
 function comanche_replace_region($match) {
@@ -152,11 +152,20 @@ function comanche_widget($name,$text) {
 
 function comanche_region(&$a,$s) {
 
-
 	$cnt = preg_match_all("/\[menu\](.*?)\[\/menu\]/ism", $s, $matches, PREG_SET_ORDER);
 	if($cnt) {
 		foreach($matches as $mtch) {
 			$s = str_replace($mtch[0],comanche_menu(trim($mtch[1])),$s);
+		}
+	}
+
+	// menu class e.g. [menu=horizontal]my_menu[/menu] or [menu=tabbed]my_menu[/menu]
+	// allows different menu renderings to be applied
+
+	$cnt = preg_match_all("/\[menu=(.*?)\](.*?)\[\/menu\]/ism", $s, $matches, PREG_SET_ORDER);
+	if($cnt) {
+		foreach($matches as $mtch) {
+			$s = str_replace($mtch[0],comanche_menu(trim($mtch[2]),$match[1]),$s);
 		}
 	}
 	$cnt = preg_match_all("/\[block\](.*?)\[\/block\]/ism", $s, $matches, PREG_SET_ORDER);
