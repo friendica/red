@@ -64,6 +64,34 @@ function poco_load($xchan = '',$url = null) {
 
 	logger('poco_load: ' . print_r($j,true),LOGGER_DATA);
 
+	if($xchan) {
+		if(array_key_exists('chatrooms',$j) && is_array($j['chatrooms'])) {
+			foreach($j['chatrooms'] as $room) {
+				$r = q("select * from xchat where xchat_url = '%s' and xchat_xchan = '%s' limit 1",
+					dbesc($room['url'])
+				);
+				if($r) {
+					q("update xchat set xchat_edited = '%s' where xchat_id = %d limit 1",
+						dbesc(datetime_convert()),
+						intval($r[0]['xchat_id'])
+					);
+				}
+				else {
+					$x = q("insert into xchat ( xchat_url, xchat_desc, xchat_xchan, xchat_edited )
+						values ( '%s', '%s', '%s', '%s' ) ",
+						dbesc(escape_tags($room['url'])),
+						dbesc(escape_tags($room['desc'])),
+						dbesc($xchan),
+						dbesc(datetime_convert())
+					);
+				}
+			}
+		}
+		q("delete from xchat where xchat_edited < UTC_TIMESTAMP() - INTERVAL 7 DAY and xchat_xchan = '%s' ",
+			dbesc($xchan)
+		);
+	}
+
 	if(! ((x($j,'entry')) && (is_array($j['entry'])))) {
 		logger('poco_load: no entries');
 		return;

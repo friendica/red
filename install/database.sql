@@ -1032,10 +1032,12 @@ CREATE TABLE IF NOT EXISTS `xchat` (
   `xchat_url` char(255) NOT NULL DEFAULT '',
   `xchat_desc` char(255) NOT NULL DEFAULT '',
   `xchat_xchan` char(255) NOT NULL DEFAULT '',
+  `xchat_edited` datetime NOT NULL DEFAULT '0000-00-00 00:00:00'
   PRIMARY KEY (`xchat_id`),
   KEY `xchat_url` (`xchat_url`),
   KEY `xchat_desc` (`xchat_desc`),
-  KEY `xchat_xchan` (`xchat_xchan`)
+  KEY `xchat_xchan` (`xchat_xchan`),
+  KEY `xchat_edited` (`xchat_edited`)
 ) ENGINE=MyISAM DEFAULT CHARSET=utf8;
 
 CREATE TABLE IF NOT EXISTS `xconfig` (

@@ -1,6 +1,6 @@
 <?php
 
-define( 'UPDATE_VERSION' , 1100 );
+define( 'UPDATE_VERSION' , 1101 );
 
 /**
  *
@@ -1136,3 +1136,11 @@ function update_r1099() {
 	return UPDATE_FAILED;
 }
 
+function update_r1100() {
+	$r = q("ALTER TABLE `xchat` ADD `xchat_edited` DATETIME NOT NULL DEFAULT '0000-00-00 00:00:00',
+ADD INDEX ( `xchat_edited` ) ");
+	if($r)
+		return UPDATE_SUCCESS;
+	return UPDATE_FAILED;
+}
+	
