@@ -40,19 +40,19 @@ function help_content(&$a) {
 
 	if(argc() > 1) {
 		$text = load_doc_file('doc/' . $a->argv[1] . '.md');
-		$a->page['title'] = t('Help:') . ' ' . str_replace('-',' ',notags(argv(1)));
+		$a->page['title'] = t('Help:') . ' ' . ucwords(str_replace('-',' ',notags(argv(1))));
 	}
 	if(! $text) {
 		$text = load_doc_file('doc/' . $a->argv[1] . '.bb');
 		if($text)
 			$doctype = 'bbcode';
-		$a->page['title'] = t('Help:') . ' ' . str_replace('-',' ',notags(argv(1)));
+		$a->page['title'] = t('Help:') . ' ' . ucwords(str_replace('_',' ',notags(argv(1))));
 	}
 	if(! $text) {
 		$text = load_doc_file('doc/' . $a->argv[1] . '.html');
 		if($text)
 			$doctype = 'html';
-		$a->page['title'] = t('Help:') . ' ' . str_replace('-',' ',notags(argv(1)));
+		$a->page['title'] = t('Help:') . ' ' . ucwords(str_replace('-',' ',notags(argv(1))));
 	}
 
 	if(! $text) {
