@@ -5,7 +5,7 @@
 
 The Red Matrix is a general-purpose communication network, with several unique features.  It is designed to be used by the widest range of users on the web, from non-technical bloggers, to expert PHP programmers and seasoned systems administrators.
 
-This page lists some of the core features of Red that are bundled with the official.  As we any free and open source software, there many other extensions, additions, plugins, themes and configurations that limited only by the needs and imagination of Red's users.
+This page lists some of the core features of Red that are bundled with the official.  As with any free and open source software, there may be many other extensions, additions, plugins, themes and configurations that are limited only by the needs and imagination of Red's users.
 
 [b][color= grey][size=20]Built for Privacy and Freedom[/size][/color][/b]
 

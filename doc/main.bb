@@ -1,6 +1,6 @@
 [b]Red Matrix Documentation and Resources[/b]
 
-Contents
+[b]Contents[/b]
 
 [zrl=[baseurl]/help/about]What is the Red Matrix?[/zrl]
 [zrl=[baseurl]/help/features]Red Matrix Features[/zrl]
@@ -20,7 +20,7 @@ Contents
 [zrl=[baseurl]/help/tags_and_mentions]Tags and Mentions[/zrl]
 [zrl=[baseurl]/help/webpages]Web Pages[/zrl]
 [zrl=[baseurl]/help/remove_account]Remove Account[/zrl]
-[zrl=[baseurl]/help/extra_features]BBcode reference for posts and comments[/zrl]
+[zrl=[baseurl]/help/bbcode]BBcode reference for posts and comments[/zrl]
 [zrl=[baseurl]/help/checking_account_quota_usage]Checking Account Quota Usage[/zrl]
 [zrl=[baseurl]/help/cloud_desktop_clients]Cloud Desktop Clients[/zrl]
 
@@ -56,4 +56,4 @@ Contents
 
 [b]About[/b]
 
-[zrl=[baseurl]/siteinfo]Site/Version Info[/zrl]
+[zrl=[baseurl]/siteinfo] Site/Version Info[/zrl]
