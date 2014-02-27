@@ -76,7 +76,7 @@ function poller_run($argv, $argc){
 				intval($rr['id'])
 			);
 			if($x) {
-				proc_run('php','include/notifer.php','wall-new',$rr['id']);
+				proc_run('php','include/notifier.php','wall-new',$rr['id']);
 			}
 		}
 	}
