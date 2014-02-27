@@ -46,7 +46,7 @@ function help_content(&$a) {
 		$text = load_doc_file('doc/' . $a->argv[1] . '.bb');
 		if($text)
 			$doctype = 'bbcode';
-		$a->page['title'] = t('Help:') . ' ' . str_replace('-',' ',notags(argv(1)));
+		$a->page['title'] = t('Help:') . ' ' . str_replace('_',' ',ucfirst(notags(argv(1))));
 	}
 	if(! $text) {
 		$text = load_doc_file('doc/' . $a->argv[1] . '.html');
