@@ -2,8 +2,8 @@
 
 [size=18][b]Inhalt[/b][/size]
 
-[zrl=[baseurl]/help/about]What is the Red Matrix?[/zrl]
-[zrl=[baseurl]/help/features]Red Matrix Features[/zrl]
+[zrl=[baseurl]/help/redmatrix]Was ist die Red-Matrix?[/zrl]
+[zrl=[baseurl]/help/features]Features der Red-Matrix[/zrl]
 [zrl=[baseurl]/help/what_is_zot]What is Zot?[/zrl]
 
 [b]Grundlegende Anleitung[/b]
