@@ -56,4 +56,4 @@
 
 [b]About[/b]
 
-[zrl=[baseurl]/siteinfo] Site/Version Info[/url]
+[zrl=[baseurl]/siteinfo] Site/Version Info[/zrl]
