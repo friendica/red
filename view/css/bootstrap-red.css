@@ -110,3 +110,9 @@ nav .navbar-collapse {
 }
 
 /* nav overrides end */
+
+.dropdown-menu img {
+	width: 32px;
+	height: 32px;
+	margin-right: 5px;
+}
