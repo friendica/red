@@ -76,7 +76,7 @@ function send_message($uid = 0, $recipient='', $body='', $subject='', $replyto='
 
 	$match = null;
 	$images = null;
-	if(preg_match_all("/\[img\](.*?)\[\/img\]/",((strpos($body,'[/crypt]')) ? $_POST['media_str'] : $body),$match))
+	if(preg_match_all("/\[zmg\](.*?)\[\/zmg\]/",((strpos($body,'[/crypt]')) ? $_POST['media_str'] : $body),$match))
 		$images = $match[1];
 
 	$match = false;

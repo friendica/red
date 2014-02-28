@@ -1678,10 +1678,11 @@ function current_theme(){
 function current_theme_url($installing = false) {
 	global $a;
 	$t = current_theme();
-	$uid = '';
-	$uid = (($a->profile_uid) ? '?f=&puid=' . $a->profile_uid : '');
+	$opts = '';
+	$opts = (($a->profile_uid) ? '?f=&puid=' . $a->profile_uid : '');
+	$opts .= ((x($a->layout,'schema')) ? '&schema=' . $a->layout['schema'] : '');
 	if(file_exists('view/theme/' . $t . '/php/style.php'))
-		return('view/theme/' . $t . '/php/style.pcss' . $uid);
+		return('view/theme/' . $t . '/php/style.pcss' . $opts);
 	return('view/theme/' . $t . '/css/style.css');
 }
 

@@ -74,6 +74,10 @@ input[type="submit"] {
 	text-decoration: none;
 }
 
+pre code {
+	border: none;
+}
+
 code {
 	font-family: Courier, monospace;
 	display: block;

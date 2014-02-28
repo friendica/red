@@ -589,3 +589,37 @@ function widget_chatroom_list($arr) {
 	));
 }
 
+function widget_bookmarkedchats($arr) {
+	$h = get_observer_hash();
+	if(! $h)
+		return;
+	$r = q("select * from xchat where xchat_xchan = '%s' group by xchat_url order by xchat_desc",
+			dbesc($h)
+	);
+
+	for($x = 0; $x < count($r); $x ++)
+		$r[$x]['xchat_url'] = zid($r[$x]['xchat_url']);
+	return replace_macros(get_markup_template('bookmarkedchats.tpl'),array(
+		'$header' => t('Bookmarked Chatrooms'),
+		'$rooms' => $r
+	));
+}
+
+function widget_suggestedchats($arr) {
+
+	// probably should restrict this to your friends, but then the widget will only work
+	// if you are logged in locally.
+
+	$h = get_observer_hash();
+	if(! $h)
+		return;
+	$r = q("select *, count(xchat_url) as total from xchat group by xchat_url order by total desc, xchat_desc limit 24");
+
+	for($x = 0; $x < count($r); $x ++)
+		$r[$x]['xchat_url'] = zid($r[$x]['xchat_url']);
+	return replace_macros(get_markup_template('bookmarkedchats.tpl'),array(
+		'$header' => t('Suggested Chatrooms'),
+		'$rooms' => $r
+	));
+}
+
