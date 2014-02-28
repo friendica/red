@@ -116,3 +116,7 @@ nav .navbar-collapse {
 	height: 32px;
 	margin-right: 5px;
 }
+
+.container-fluid {
+    padding-left: 0px;
+}
