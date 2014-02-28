@@ -6,7 +6,7 @@ Comanche is a markup language similar to bbcode with which to create elaborate a
 
 Comanche primarily chooses what content will appear in various regions of the page. The various regions have names and these names can change depending on what layout template you choose.
 
-Currently there are two layout templates, unless your site provides additional layouts (TODO list all templates)
+Currently there are two layout templates, unless your site provides additional layouts. 
 
 	default
 
@@ -42,6 +42,9 @@ To select a theme for your page, use the 'theme' tag.
 
 This will select the theme named "apw". By default your channel's preferred theme will be used.
 
+	[theme=dark]redbasic[/theme]
+
+This will select the theme named "redbasic" and load the "dark" theme schema for this theme. 
 
 **Regions**
 
@@ -59,6 +62,11 @@ Your webpage creation tools allow you to create menus and blocks, in addition to
 	[menu]mymenu[/menu]
 
 This places the menu called "mymenu" at this location on the page, which must be inside a region. 
+
+	[menu=horizontal-menu]mymenu[/menu]
+
+This places the menu called "mymenu" at this location on the page, which must be inside a region. Additionally it adds the CSS class "horizontal-menu" to this menu. This *may* result in a menu that looks different than the default menu style, *if* the css for the current theme defines a "horizontal-menu" class. 
+
 
 	[block]contributors[/block]
 
@@ -91,6 +99,8 @@ The 'comment' tag is used to delimit comments. These comments will not appear on
  
 
 **Complex Example**
+
+Please note that pasting this example into a layout page is not likely to do anything useful as the chosen names (layout, theme, regions, etc.) may not correspond to any existing webpage components.  
 
 	[comment]use an existing page template which provides a banner region plus 3 columns beneath it[/comment]
 

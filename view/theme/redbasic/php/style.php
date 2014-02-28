@@ -37,10 +37,16 @@ if(! $a->install) {
 
 }
 
-// Now load the scheme.  If a value is changed above, we'll keep the settings
-// If not, we'll keep those defined by the schema
-// Setting $scheme to '' wasn't working for some reason, so we'll check it's
-// not --- like the mobile theme does instead.
+	// Now load the scheme.  If a value is changed above, we'll keep the settings
+	// If not, we'll keep those defined by the schema
+	// Setting $schema to '' wasn't working for some reason, so we'll check it's
+	// not --- like the mobile theme does instead.
+
+
+	// Allow layouts to over-ride the schema
+
+	if($_REQUEST['schema'])
+		$schema = $_REQUEST['schema'];
 
 	if (($schema) && ($schema != '---')) {
 		// Check it exists, because this setting gets distributed to clones
