@@ -14,6 +14,7 @@ var searchData=
   ['get_5fbb_5ftag_5fpos',['get_bb_tag_pos',['../bb2diaspora_8php.html#a4c2f8f11b29a06809d9b07782215b1b2',1,'bb2diaspora.php']]],
   ['get_5fbest_5flanguage',['get_best_language',['../language_8php.html#a980dee1d8715a98ab02e36b59facf8ed',1,'language.php']]],
   ['get_5fbirthdays',['get_birthdays',['../identity_8php.html#ad2c97627a313d53df1a1c7b4215ddb51',1,'identity.php']]],
+  ['get_5fbookmark_5flink',['get_bookmark_link',['../include_2bookmarks_8php.html#a743763b0ce83af0bbc8a2f7ac16033aa',1,'bookmarks.php']]],
   ['get_5fbrowser_5flanguage',['get_browser_language',['../language_8php.html#ace67d6cad57da08d030ad9dc9b8c836e',1,'language.php']]],
   ['get_5fcapath',['get_capath',['../include_2network_8php.html#a78e89557b2fbd344ad790846d761b0c7',1,'network.php']]],
   ['get_5fchannel',['get_channel',['../classApp.html#a084e03c77686d8c13390fef3f7428a2b',1,'App']]],

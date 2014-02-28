@@ -25,7 +25,7 @@ var searchData=
   ['blogtheme_5fdisplay_5fitem',['blogtheme_display_item',['../blogga_2view_2theme_2blog_2theme_8php.html#a028ae8e9f2824670dfa76a6651d817e5',1,'theme.php']]],
   ['blogtheme_5fform',['blogtheme_form',['../view_2theme_2blogga_2php_2config_8php.html#a8a311a402d3e746ce53fadc38e4b2d27',1,'blogtheme_form(&amp;$a, $headimg, $headimghome):&#160;config.php'],['../view_2theme_2blogga_2view_2theme_2blog_2config_8php.html#a8a311a402d3e746ce53fadc38e4b2d27',1,'blogtheme_form(&amp;$a, $headimg, $headimghome):&#160;config.php']]],
   ['blogtheme_5fimgurl',['blogtheme_imgurl',['../blogga_2view_2theme_2blog_2theme_8php.html#af634a3f721c5e238530d0636d33230ec',1,'theme.php']]],
-  ['bookmark_5fadd',['bookmark_add',['../include_2bookmarks_8php.html#a88ce7dee6a3dc7465aa9b8eaa45b0087',1,'bookmarks.php']]],
+  ['bookmark_5fadd',['bookmark_add',['../include_2bookmarks_8php.html#aef1cb2968c41c759f2d106e1088ca323',1,'bookmarks.php']]],
   ['bookmarks_5fcontent',['bookmarks_content',['../mod_2bookmarks_8php.html#a774364b1c8404529581083631703527a',1,'bookmarks.php']]],
   ['bookmarks_5finit',['bookmarks_init',['../mod_2bookmarks_8php.html#a6b7942f3d27e40f0f47c88704127b9b3',1,'bookmarks.php']]],
   ['breaklines',['breaklines',['../html2plain_8php.html#a3214912e3d00cf0a948072daccf16740',1,'html2plain.php']]],

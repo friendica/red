@@ -155,6 +155,7 @@ var boot_8php =
     [ "MAX_IMAGE_LENGTH", "boot_8php.html#a525ca93ff35d3535d1a2b8ba57876afa", null ],
     [ "MAX_LIKERS", "boot_8php.html#a35625dacd2158b9f1f1a8e77f9f081fd", null ],
     [ "MENU_BOOKMARK", "boot_8php.html#a458e19af801bc4b0d1f1ce1a6d9e857e", null ],
+    [ "MENU_ITEM_CHATROOM", "boot_8php.html#af6b3de425e5849c73370a484c44607a3", null ],
     [ "MENU_ITEM_NEWWIN", "boot_8php.html#ad11f30a6590d3d77f0c5e1e3909af8f5", null ],
     [ "MENU_ITEM_ZID", "boot_8php.html#aed0dfb35f7dd00dc9e4f868ea7f7ff53", null ],
     [ "MENU_SYSTEM", "boot_8php.html#a718a801b0be6cbaef5e519516da12721", null ],

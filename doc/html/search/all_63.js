@@ -79,7 +79,7 @@ var searchData=
   ['collecturls',['collecturls',['../html2plain_8php.html#ae1c203d0f089d5678d73a6c64a395201',1,'html2plain.php']]],
   ['comanche_2ephp',['comanche.php',['../comanche_8php.html',1,'']]],
   ['comanche_5fblock',['comanche_block',['../comanche_8php.html#a5a7ab801717d38e91ac910b933973887',1,'comanche.php']]],
-  ['comanche_5fmenu',['comanche_menu',['../comanche_8php.html#a1fe339e1454803aa502ac89379c17f5b',1,'comanche.php']]],
+  ['comanche_5fmenu',['comanche_menu',['../comanche_8php.html#ad5a44e42231759aba1dda49e0490501e',1,'comanche.php']]],
   ['comanche_5fparser',['comanche_parser',['../comanche_8php.html#a1a208fdb40dd83d6298caec4290ee922',1,'comanche.php']]],
   ['comanche_5fregion',['comanche_region',['../comanche_8php.html#a5718daeda40bf835345fe061e8808cdf',1,'comanche.php']]],
   ['comanche_5freplace_5fregion',['comanche_replace_region',['../comanche_8php.html#a028f004d5b8c23d6367816d899e17cfe',1,'comanche.php']]],
