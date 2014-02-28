@@ -24,6 +24,8 @@ We need much more than this, but here are areas where developers can help. Pleas
 
 [li]Extend WebDAV to provide desktop access to photo albums]/li]
 
+[li]Create a module PDL editor (separate from but integrated with the page layout editor) as a separate module. This will allow folks to view and alter the pre-defined layouts for any module in the system. If the custom module is removed or empty, revert to the system layout.   
+
 [li]service classes - provide a pluggable subscription payment gateway for premium accounts[/li]
 
 [li]service classes - account overview page showing resources consumed by channel. With special consideration this page can also be accessed at a meta level by the site admin to drill down on problematic accounts/channels.[/li]
