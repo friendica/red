@@ -613,9 +613,7 @@ function widget_suggestedchats($arr) {
 	$h = get_observer_hash();
 	if(! $h)
 		return;
-	$r = q("select *, count(xchat_url) as total from xchat group by xchat_url order by total desc, xchat_desc",
-			dbesc($h)
-	);
+	$r = q("select *, count(xchat_url) as total from xchat group by xchat_url order by total desc, xchat_desc");
 
 	for($x = 0; $x < count($r); $x ++)
 		$r[$x]['xchat_url'] = zid($r[$x]['xchat_url']);
