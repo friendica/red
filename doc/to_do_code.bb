@@ -10,6 +10,8 @@ We need much more than this, but here are areas where developers can help. Pleas
 
 [li]Finish the anti-spam bayesian engine[/li]
 
+[li]If DAV folders exist, add an option to the Settings page to set a default folder for attachment uploads.[/li] 
+
 [li]Integrate the &quot;open site&quot; list with the register page[/li]
 
 [li]Write more webpage layouts[/li]
