@@ -20,7 +20,7 @@
 [zrl=[baseurl]/help/tags_and_mentions]Tags and Mentions[/zrl]
 [zrl=[baseurl]/help/webpages]Web Pages[/zrl]
 [zrl=[baseurl]/help/remove_account]Remove Account[/zrl]
-[zrl=[baseurl]/help/extra_features]BBcode reference for posts and comments[/zrl]
+[zrl=[baseurl]/help/bbcode]BBcode reference for posts and comments[/zrl]
 [zrl=[baseurl]/help/checking_account_quota_usage]Checking Account Quota Usage[/zrl]
 [zrl=[baseurl]/help/cloud_desktop_clients]Cloud Desktop Clients[/zrl]
 
