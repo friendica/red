@@ -223,7 +223,8 @@ function connections_content(&$a) {
 		}
 
 		$sql_extra = (($search_flags) ? " and ( abook_flags & " . $search_flags . " ) " : "");
-
+		if(argv(1) === 'pending')
+			$sql_extra .= " and not ( abook_flags & " . ABOOK_FLAG_IGNORED . " ) ";
 
 	}
 	else {
