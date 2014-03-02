@@ -851,7 +851,7 @@ footer {
 	margin: 15px;
 	padding: 0px 5px 0px 5px;
 	border-radius: 10px;
-	border: none;
+	border-color: $nav_bd;
 	background-color: $search_background;
     	transition: background-color 300ms ease 0s;
 }
@@ -2183,6 +2183,7 @@ img.mail-list-sender-photo {
 }
 
 /* nav bootstrap */
+
 nav i {
 	font-size: 14px;
 }
@@ -2211,11 +2212,11 @@ nav .dropdown-menu {
 }
 
 #usermenu-caret {
-	color: #999;
+	color: $nav_icon_colour;
 }
 
 #avatar:hover + #usermenu-caret {
-	color: #fff;
+	color: $nav_active_icon_colour;
 }
 
 /* bootstrap overrides */
@@ -2230,4 +2231,36 @@ blockquote {
 
 .dropdown-menu img {
 	border-radius: $radiuspx;
+}
+
+.navbar-inverse {
+	background-image: -webkit-linear-gradient(top, $nav_gradient_top 0%, $nav_gradient_bottom 100%);
+	background-image:         linear-gradient(to bottom, $nav_gradient_top 0%, $nav_gradient_bottom 100%);
+	filter: progid:DXImageTransform.Microsoft.gradient(startColorstr=$nav_gradient_top, endColorstr=$nav_gradient_bottom, GradientType=0);
+	background-color: $nav_bg;
+	border-color: $nav_bd;
+}
+
+.navbar-inverse .navbar-nav > .active > a {
+	background-image: -webkit-linear-gradient(top, $nav_active_gradient_top 0%, $nav_active_gradient_bottom 100%);
+	background-image:         linear-gradient(to bottom, $nav_active_gradient_top 0%, $nav_active_gradient_bottom 100%);
+	filter: progid:DXImageTransform.Microsoft.gradient(startColorstr=$nav_active_gradient_top, endColorstr=$nav_active_gradient_bottom, GradientType=0);
+}
+
+
+.navbar-inverse .navbar-nav > li > a {
+	color: $nav_icon_colour;
+	text-shadow: 0px 0px 0px;
+}
+
+.navbar-inverse .navbar-nav > li > a:hover,
+.navbar-inverse .navbar-nav > li > a:focus {
+	color: $nav_active_icon_colour;
+}
+
+.navbar-inverse .navbar-nav > .active > a,
+.navbar-inverse .navbar-nav > .active > a:hover,
+.navbar-inverse .navbar-nav > .active > a:focus {
+	color: $nav_active_icon_colour;
+	background-color: $nav_bg;
 }
