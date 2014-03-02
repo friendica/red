@@ -19,9 +19,9 @@ Currently there are two layout templates, unless your site provides additional l
 	The full template defines the same as the default template with the exception that there is no "aside" region.
 
 
-To choose a layout template, use the 'layout' tag.
+To choose a layout template, use the 'template' tag.
 
-	[layout]full[/layout]
+	[template]full[/template]
 
 
 The default template will be used if no other template is specified. The template can use any names it desires for content regions. You will be using 'region' tags to decide what content to place in the respective regions.
@@ -100,11 +100,11 @@ The 'comment' tag is used to delimit comments. These comments will not appear on
 
 **Complex Example**
 
-Please note that pasting this example into a layout page is not likely to do anything useful as the chosen names (layout, theme, regions, etc.) may not correspond to any existing webpage components.  
+Please note that pasting this example into a layout page is not likely to do anything useful as the chosen names (template, theme, regions, etc.) may not correspond to any existing webpage components.  
 
 	[comment]use an existing page template which provides a banner region plus 3 columns beneath it[/comment]
 
-	[layout]3-column-with-header[/layout]
+	[template]3-column-with-header[/template]
 
 	[comment]Use the "darknight" theme[/comment]
 

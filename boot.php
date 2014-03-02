@@ -1852,7 +1852,11 @@ function construct_page(&$a) {
 
 	require_once('include/js_strings.php');
 
-	head_add_css(((x($a->page,'template')) ? $a->page['template'] : 'default' ) . '.css');
+	if(x($a->page,'template_style'))
+		head_add_css($a->page['template_style'] . '.css');
+	else
+		head_add_css(((x($a->page,'template')) ? $a->page['template'] : 'default' ) . '.css');
+
 	head_add_css('mod_' . $a->module . '.css');
 	head_add_css(current_theme_url($installing));
 

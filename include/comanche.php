@@ -57,6 +57,16 @@ function comanche_parser(&$a,$s) {
 	if($cnt)
 		$a->page['template'] = trim($matches[1]);
 
+	$cnt = preg_match("/\[template=(.*?)\](.*?)\[\/template\]/ism", $s, $matches);
+	if($cnt) {
+		$a->page['template'] = trim($matches[2]);
+		$a->page['template_style'] = trim($matches[2]) . '_' . $matches[1]; 
+	}
+
+	$cnt = preg_match("/\[template\](.*?)\[\/template\]/ism", $s, $matches);
+	if($cnt) {
+		$a->page['template'] = trim($matches[1]);
+	}
 
 	$cnt = preg_match("/\[theme=(.*?)\](.*?)\[\/theme\]/ism", $s, $matches);
 	if($cnt) {
