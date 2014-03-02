@@ -2210,6 +2210,14 @@ nav .dropdown-menu {
 	border-bottom-left-radius: $radiuspx;
 }
 
+#usermenu-caret {
+	color: #999;
+}
+
+#avatar:hover + #usermenu-caret {
+	color: #fff;
+}
+
 /* bootstrap overrides */
 blockquote {
     font-size: $body_font_size;
@@ -2221,8 +2229,5 @@ blockquote {
 }
 
 .dropdown-menu img {
-	width: 32px;
-	height: 32px;
-	margin-right: 5px;
 	border-radius: $radiuspx;
 }
