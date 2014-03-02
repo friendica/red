@@ -4,8 +4,15 @@
 </div>
 
 {{if $expert}}
-{{* include file="field_select.tpl" field=$nav_colour *}}
 {{include file="field_checkbox.tpl" field=$narrow_navbar}}
+{{include file="field_input.tpl" field=$nav_bg}}
+{{include file="field_input.tpl" field=$nav_gradient_top}}
+{{include file="field_input.tpl" field=$nav_gradient_bottom}}
+{{include file="field_input.tpl" field=$nav_active_gradient_top}}
+{{include file="field_input.tpl" field=$nav_active_gradient_bottom}}
+{{include file="field_input.tpl" field=$nav_bd}}
+{{include file="field_input.tpl" field=$nav_icon_colour}}
+{{include file="field_input.tpl" field=$nav_active_icon_colour}}
 {{include file="field_input.tpl" field=$banner_colour}}
 {{include file="field_input.tpl" field=$link_colour}}
 {{include file="field_input.tpl" field=$bgcolour}}
