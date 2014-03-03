@@ -4,7 +4,7 @@ Comanche is a markup language similar to bbcode with which to create elaborate a
 
 Comanche primarily chooses what content will appear in various regions of the page. The various regions have names and these names can change depending on what layout template you choose.
 
-Currently there are two layout templates, unless your site provides additional layouts (TODO list all templates)
+Currently there are three layout templates, unless your site provides additional layouts (TODO list all templates)
 
 [code]
 	default
@@ -16,6 +16,18 @@ Currently there are two layout templates, unless your site provides additional l
 	full
 
 	The full template defines the same as the default template with the exception that there is no &quot;aside&quot; region.
+
+
+	choklet
+
+	The choklet template provides a number of fluid layout styles which can be specified by flavour:
+
+			(default flavour) - a two column layout similar to the "default" template, but more fluid
+			three - three column layout (adds a "right_aside" region to the default template)
+			edgestwo - two column layout with fixed side margins
+			edgesthree - three column layout with fixed side margins
+			full - three column layout with fixed side margins and adds a "header" region beneath the navigation bar
+
 [/code]
 
 To choose a layout template, use the 'template' tag.
@@ -23,6 +35,17 @@ To choose a layout template, use the 'template' tag.
 [code]
 	[template]full[/template]
 [/code]
+
+
+To choose the "choklet" template with the "three" flavour:
+
+[code]
+	[template=three]choklet[/template]
+[/code]
+
+
+
+
 
 The default template will be used if no other template is specified. The template can use any names it desires for content regions. You will be using 'region' tags to decide what content to place in the respective regions.
 
