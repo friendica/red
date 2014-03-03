@@ -748,7 +748,7 @@ footer {
 	display: block;
 	color: #FFFFFF;
 	margin-top: 15px;
-	background-color: $nav_bg_2;
+	background-color: $nav_bg;
 	-webkit-border-radius: $radiuspx ;
 	-moz-border-radius: $radiuspx;
 	border-radius: $radiuspx;
