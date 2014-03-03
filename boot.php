@@ -1810,9 +1810,7 @@ function construct_page(&$a) {
 
 	if(! count($a->layout)) {
 		$n = 'mod_' . $a->module . '.pdl' ;
-		$u = get_theme_uid();
-		if((! $u) && $a->profile_uid)
-			$u = $a->profile_uid;
+		$u = comanche_get_channel_id();
 		if($u)
 			$s = get_pconfig($u,'system',$n);
 		if((! $s) && (($p = theme_include($n)) != ''))

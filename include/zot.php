@@ -330,8 +330,15 @@ function zot_refresh($them,$channel = null, $force = false) {
 			else
 				$permissions = $j['permissions'];
 
+			$connected_set = false;
+
 			if($permissions && is_array($permissions)) {
 				foreach($permissions as $k => $v) {
+					// The connected permission means you are in their address book
+					if($k === 'connected') {
+						$connected_set = intval($v);
+						continue;
+					}	
 					if($v) {
 						$their_perms = $their_perms | intval($global_perms[$k][1]);
 					}
@@ -353,6 +360,20 @@ function zot_refresh($them,$channel = null, $force = false) {
 					intval($channel['channel_id']),
 					intval(ABOOK_FLAG_SELF)
 				);
+				if($connected_set === 0) {
+
+					// if they are in your address book but you aren't in theirs, mark their address book entry hidden.
+
+					$y1 = q("update abook set abook_flags = (abook_flags | %d)
+						where abook_xchan = '%s' and abook_channel = %d 
+						and not (abook_flags & %d) limit 1",
+						intval(ABOOK_FLAG_HIDDEN),
+						dbesc($x['hash']),
+						intval($channel['channel_id']),
+						intval(ABOOK_FLAG_SELF)
+					);
+				}
+
 				if(! $y)
 					logger('abook update failed');
 				else {
