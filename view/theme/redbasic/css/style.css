@@ -1490,7 +1490,7 @@ div.jGrowl div.info {
 #nav-search-text-ac .autocomplete {
 	position: fixed;
 	top: 51px;
-	border: 1px solid #222;
+	border: 1px solid $nav_bd;
 	border-top: none;
 }
 
@@ -2262,5 +2262,11 @@ blockquote {
 .navbar-inverse .navbar-nav > .active > a:hover,
 .navbar-inverse .navbar-nav > .active > a:focus {
 	color: $nav_active_icon_colour;
-	background-color: $nav_bg;
+}
+
+.navbar-inverse .navbar-nav > .open > a,
+.navbar-inverse .navbar-nav > .open > a:hover,
+.navbar-inverse .navbar-nav > .open > a:focus {
+	background-color: $nav_bd;
+	color: $nav_active_icon_colour;
 }

@@ -61,7 +61,7 @@
 				</li>
 				<li class="{{$sel.home}} visible-xs">
 					<a class="{{$nav.home.2}}" href="{{$nav.home.0}}" title="{{$nav.home.3}}" ><i class="icon-home"></i></a>
-					<span class="home-update badge"rel="#nav-home-menu"></span>
+					<span class="home-update badge" rel="#nav-home-menu"></span>
 				</li>
 			{{/if}}
 
@@ -170,6 +170,9 @@
 		</div>
 	</div>
 
+	<ul id="nav-notifications-template" style="display:none;" rel="template">
+		<li class="{5}"><a href="{0}" title="{2} {3}"><img src="{1}"><span class='contactname'>{2}</span>{3}<br><span class="notif-when">{4}</span></a></li>
+	</ul>
 
 <ul id="nav-notifications-template" style="display:none;" rel="template">
 	<li class="{5}"><a href="{0}" title="{2} {3}"><img src="{1}"><span class='contactname'>{2}</span>{3}<br><span class="notif-when">{4}</span></a></li>
