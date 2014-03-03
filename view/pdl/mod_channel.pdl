@@ -5,4 +5,3 @@
 [widget=tagcloud_wall][var=limit]24[/var][/widget]
 [/region]
 
-[region=content][menu=horizontal]test[/menu]$content[/region]
