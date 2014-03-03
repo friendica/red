@@ -748,7 +748,7 @@ footer {
 	display: block;
 	color: #FFFFFF;
 	margin-top: 15px;
-	background-color: $nav_bg_2;
+	background-color: $nav_bg;
 	-webkit-border-radius: $radiuspx ;
 	-moz-border-radius: $radiuspx;
 	border-radius: $radiuspx;
@@ -837,7 +837,7 @@ footer {
 #nav-search-spinner {
 	float: left;
 	margin: 25px 0px 0px 25px;
-	color: #fff;
+	color: $nav_active_icon_colour;
 }
 
 #nav-search-text:hover,
@@ -1490,7 +1490,7 @@ div.jGrowl div.info {
 #nav-search-text-ac .autocomplete {
 	position: fixed;
 	top: 51px;
-	border: 1px solid #222;
+	border: 1px solid $nav_bd;
 	border-top: none;
 }
 
@@ -2262,5 +2262,11 @@ blockquote {
 .navbar-inverse .navbar-nav > .active > a:hover,
 .navbar-inverse .navbar-nav > .active > a:focus {
 	color: $nav_active_icon_colour;
-	background-color: $nav_bg;
+}
+
+.navbar-inverse .navbar-nav > .open > a,
+.navbar-inverse .navbar-nav > .open > a:hover,
+.navbar-inverse .navbar-nav > .open > a:focus {
+	background-color: $nav_bd;
+	color: $nav_active_icon_colour;
 }

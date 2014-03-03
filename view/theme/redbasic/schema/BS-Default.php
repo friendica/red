@@ -16,3 +16,5 @@
 		$nav_icon_colour = "#777";
 	if (! $nav_active_icon_colour)
 		$nav_active_icon_colour = "#555";
+	if (! $radius)
+		$radius = "4";
