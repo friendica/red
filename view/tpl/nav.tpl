@@ -163,7 +163,7 @@
 
 			{{if $nav.help}}
 				<li class="{{$sel.help}}">
-					<a class="{{$nav.help.2}}" target="friendika-help" href="{{$nav.help.0}}" title="{{$nav.help.3}}" ><i class="icon-question"></i></a>
+					<a class="{{$nav.help.2}}" target="redmatrix-help" href="{{$nav.help.0}}" title="{{$nav.help.3}}" ><i class="icon-question"></i></a>
 				</li>
 			{{/if}}
 			</ul>
@@ -171,6 +171,3 @@
 	</div>
 
 
-<ul id="nav-notifications-template" style="display:none;" rel="template">
-	<li class="{5}"><a href="{0}" title="{2} {3}"><img src="{1}"><span class='contactname'>{2}</span>{3}<br><span class="notif-when">{4}</span></a></li>
-</ul>
