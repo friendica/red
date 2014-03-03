@@ -5,7 +5,6 @@ header #banner {
 	margin-left: auto;
 	margin-right: auto;
 }
-
 #blog-banner {
 	position: relative;
 	margin-top: 75px;
@@ -14,9 +13,9 @@ header #banner {
 }
 
 nav.navbar { 
-	width: 100%;
-	margin-left: 0;
-	margin-right: 0;
+	width: 90%;
+	margin-left: 5%;
+	margin-right: 5%;
 }
 
 aside#region_1 {
@@ -43,8 +42,7 @@ section {
 	padding-bottom: 350px;
 }
 
-
 #blog-margin {
-	margin-right: 0;
-	margin-left: 0;
+	margin-right: 5%;
+	margin-left: 5%;
 }

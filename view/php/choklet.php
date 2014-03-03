@@ -7,7 +7,8 @@
 </head>
 <body>
 	<div id="blog-margin">
-		<?php if(x($page,'nav')) echo $page['nav']; ?>
+		<header><?php if(x($page,'header')) echo $page['header']; ?></header>
+		<nav class="navbar navbar-inverse navbar-fixed-top" role="navigation"><?php if(x($page,'nav')) echo $page['nav']; ?></nav>
 		<div id="blog-banner"><?php if(x($page,'banner')) echo $page['banner']; ?></div>
 		<aside id="region_1"><?php if(x($page,'aside')) echo $page['aside']; ?></aside>
 		<section id="region_2"><?php if(x($page,'content')) echo $page['content']; ?>

@@ -1,9 +1,3 @@
-<header>
-<!--	<div id="site-location">{{$sitelocation}}</div> -->
-	<div id="banner" class="hidden-sm hidden-xs">{{$banner}}</div>
-</header>
-
-<nav class="navbar navbar-inverse navbar-fixed-top" role="navigation">
 	<div class="container-fluid">
 		<div class="navbar-header">
 			<button type="button" class="navbar-toggle" data-toggle="collapse" data-target="#navbar-collapse-1">
@@ -175,11 +169,5 @@
 			</ul>
 		</div>
 	</div>
-</nav>
 
-<ul id="nav-notifications-template" style="display:none;" rel="template">
-	<li class="{5}"><a href="{0}" title="{2} {3}"><img src="{1}"><span class='contactname'>{2}</span>{3}<br><span class="notif-when">{4}</span></a></li>
-</ul>
 
-{{if $langselector}}<div id="langselector" >{{$langselector}}</div>{{/if}}
-<div id="panel" style="display: none;"></div>

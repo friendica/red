@@ -8,12 +8,10 @@ function nav(&$a) {
 	 *
 	 */
 
-	$ssl_state = ((local_user()) ? true : false);
-
 	if(!(x($a->page,'nav')))
 		$a->page['nav'] = '';
 
-	$base = $a->get_baseurl($ssl_state);
+	$base = z_root();
     $a->page['htmlhead'] .= <<< EOT
 
 <script>$(document).ready(function() {
@@ -33,18 +31,6 @@ EOT;
 
 
 
-	/**
-	 * Placeholder div for popup panel
-	 */
-
-	/**
-	 *
-	 * Our network is distributed, and as you visit friends some of the 
-	 * sites look exactly the same - it isn't always easy to know where you are.
-	 * Display the current site location as a navigation aid.
-	 *
-	 */
-
 	if(local_user()) {
 		$channel = $a->get_channel();
 		$observer = $a->get_observer();
@@ -56,6 +42,26 @@ EOT;
 	$myident = (($channel) ? $channel['xchan_addr'] : '');
 		
 	$sitelocation = (($myident) ? $myident : $a->get_hostname());
+
+
+
+	/**
+	 *
+	 * Provide a banner/logo/whatever
+	 *
+	 */
+
+	$banner = get_config('system','banner');
+
+	if($banner === false) 
+		$banner = get_config('system','sitename');
+
+	$a->page['header'] .= replace_macros(get_markup_template('hdr.tpl'), array(
+        '$baseurl' => $a->get_baseurl(),
+		'$sitelocation' => $sitelocation,
+		'$langselector' => ((get_config('system','select_language')) ? lang_selector() : ''),
+		'$banner' =>  $banner
+	));
 
 
 	// nav links: array of array('href', 'text', 'extra css classes', 'title')
@@ -128,7 +134,7 @@ EOT;
 	if(($a->config['system']['register_policy'] == REGISTER_OPEN) && (! local_user()) && (! remote_user()))
 		$nav['register'] = array('register',t('Register'), "", t('Create an account'));
 
-	$help_url = $a->get_baseurl($ssl_state) . '/help';
+	$help_url = z_root() . '/help';
 
 	if(! get_config('system','hide_help'))
 		$nav['help'] = array($help_url, t('Help'), "", t('Help and documentation'));
@@ -209,7 +215,6 @@ EOT;
 
 	$a->page['nav'] .= replace_macros($tpl, array(
         '$baseurl' => $a->get_baseurl(),
-		'$langselector' => ((get_config('system','select_language')) ? lang_selector() : ''),
 		'$sitelocation' => $sitelocation,
 		'$nav' => $x['nav'],
 		'$banner' =>  $banner,
