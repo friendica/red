@@ -89,7 +89,9 @@ if(! $a->install) {
 	if (! $link_colour)
 		$link_colour = "#0080FF";
 	if (! $banner_colour)
-		$banner_colour = "fff";
+		$banner_colour = "#fff";
+	if (! $search_background)
+		$search_background = "#eee";
 	if (! $bgcolour)
 		$bgcolour = "#fdfdfd";
 	if (! $background_image)
