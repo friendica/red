@@ -43,6 +43,9 @@ section {
 	padding-bottom: 350px;
 }
 
+#region_3 {
+	display: none;
+}
 
 #blog-margin {
 	margin-right: 0;
