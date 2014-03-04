@@ -1009,8 +1009,8 @@ function advanced_profile(&$a) {
 function get_my_url() {
 	if(x($_SESSION,'zrl_override'))
 		return $_SESSION['zrl_override'];
-	if(x($_SESSION,'my_address'))
-		return $_SESSION['my_address'];
+	if(x($_SESSION,'my_url'))
+		return $_SESSION['my_url'];
 	return false;
 }
 
