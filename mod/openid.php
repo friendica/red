@@ -62,6 +62,7 @@ function openid_content(&$a) {
 			if($r) {
 				$_SESSION['authenticated'] = 1;
 				$_SESSION['visitor_id'] = $r[0]['xchan_hash'];
+				$_SESSION['my_url'] = $r[0]['xchan_url'];
 				$_SESSION['my_address'] = $r[0]['xchan_addr'];
 				$arr = array('xchan' => $r[0], 'session' => $_SESSION);
 				call_hooks('magic_auth_openid_success',$arr);
@@ -169,6 +170,7 @@ function openid_content(&$a) {
 					set_xconfig($url,'system','openid',$authid);
 					$_SESSION['authenticated'] = 1;
 					$_SESSION['visitor_id'] = $r[0]['xchan_hash'];
+					$_SESSION['my_url'] = $r[0]['xchan_url'];
 					$_SESSION['my_address'] = $r[0]['xchan_addr'];
 					$arr = array('xchan' => $r[0], 'session' => $_SESSION);
 					call_hooks('magic_auth_openid_success',$arr);
