@@ -29,19 +29,16 @@ function onepoll_run($argv, $argc){
 		return;
 	}
 	
-
 	$d = datetime_convert();
-
 
 	$contacts = q("SELECT abook.*, xchan.*, account.*
 		FROM abook LEFT JOIN account on abook_account = account_id left join xchan on xchan_hash = abook_xchan 
 		where abook_id = %d
-		AND (( abook_flags = %d ) OR ( abook_flags = %d ) OR ( abook_flags & %d )) 
+		AND (( abook_flags & %d ) OR ( abook_flags = %d ))
 		AND (( account_flags = %d ) OR ( account_flags = %d )) limit 1",
 		intval($contact_id),
-		intval(ABOOK_FLAG_HIDDEN),
+		intval(ABOOK_FLAG_HIDDEN|ABOOK_FLAG_PENDING|ABOOK_FLAG_UNCONNECTED),
 		intval(0),
-		intval(ABOOK_FLAG_PENDING),
 		intval(ACCOUNT_OK),
 		intval(ACCOUNT_UNVERIFIED)
 	);

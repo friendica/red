@@ -351,7 +351,10 @@ function zot_refresh($them,$channel = null, $force = false) {
 				intval(ABOOK_FLAG_SELF)
 			);
 
-			if($r) {		
+			if($r) {
+
+				$current_abook_connected = (($r[0]['abook_flags'] & ABOOK_FLAG_UNCONNECTED) ? 0 : 1);
+		
 				$y = q("update abook set abook_their_perms = %d
 					where abook_xchan = '%s' and abook_channel = %d 
 					and not (abook_flags & %d) limit 1",
@@ -360,14 +363,16 @@ function zot_refresh($them,$channel = null, $force = false) {
 					intval($channel['channel_id']),
 					intval(ABOOK_FLAG_SELF)
 				);
-				if($connected_set === 0) {
 
-					// if they are in your address book but you aren't in theirs, mark their address book entry hidden.
+				if(($connected_set === 0 || $connected_set === 1) && ($connected_set !== $current_abook_unconnected)) {
 
-					$y1 = q("update abook set abook_flags = (abook_flags | %d)
+					// if they are in your address book but you aren't in theirs, and/or this does not
+					// match your current connected state setting, toggle it. 
+
+					$y1 = q("update abook set abook_flags = (abook_flags ^ %d)
 						where abook_xchan = '%s' and abook_channel = %d 
 						and not (abook_flags & %d) limit 1",
-						intval(ABOOK_FLAG_HIDDEN),
+						intval(ABOOK_FLAG_UNCONNECTED),
 						dbesc($x['hash']),
 						intval($channel['channel_id']),
 						intval(ABOOK_FLAG_SELF)
