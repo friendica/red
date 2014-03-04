@@ -101,6 +101,9 @@ function sync_directories($dirmode) {
 				$ud_flags = 0;
 				if(is_array($t['flags']) && in_array('deleted',$t['flags']))
 					$ud_flags |= UPDATE_FLAGS_DELETED;
+				if(is_array($t['flags']) && in_array('forced',$t['flags']))
+					$ud_flags |= UPDATE_FLAGS_FORCED;
+
 				$z = q("insert into updates ( ud_hash, ud_guid, ud_date, ud_flags, ud_addr )
 					values ( '%s', '%s', '%s', %d, '%s' ) ",
 					dbesc($t['hash']),

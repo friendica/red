@@ -47,7 +47,7 @@ define ( 'RED_PLATFORM',            'Red Matrix' );
 define ( 'RED_VERSION',             trim(file_get_contents('version.inc')) . 'R');
 define ( 'ZOT_REVISION',            1     ); 
 
-define ( 'DB_UPDATE_VERSION',       1101  );
+define ( 'DB_UPDATE_VERSION',       1102  );
 
 define ( 'EOL',                    '<br />' . "\r\n"     );
 define ( 'ATOM_TIME',              'Y-m-d\TH:i:s\Z' );
@@ -323,9 +323,8 @@ define ( 'POLL_OVERWRITE',       0x8000);  // If you vote twice remove the prior
 
 
 define ( 'UPDATE_FLAGS_UPDATED',  0x0001);
+define ( 'UPDATE_FLAGS_FORCED',   0x0002);
 define ( 'UPDATE_FLAGS_DELETED',  0x1000);
-
-
 
 
 /**

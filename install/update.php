@@ -1,6 +1,6 @@
 <?php
 
-define( 'UPDATE_VERSION' , 1101 );
+define( 'UPDATE_VERSION' , 1102 );
 
 /**
  *
@@ -1144,3 +1144,10 @@ ADD INDEX ( `xchat_edited` ) ");
 	return UPDATE_FAILED;
 }
 	
+
+function update_r1101() {
+	$r = q("update updates set ud_flags = 2 where ud_flags = (-1)");
+	$r = q("update updates set ud_flags = 0 where ud_flags = 4096");
+	return UPDATE_SUCCESS;
+}
+

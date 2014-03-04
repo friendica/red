@@ -159,7 +159,12 @@ function dirsearch_content(&$a) {
 		);
 		if($r) {
 			foreach($r as $rr) {
-				$flags = (($rr['ud_flags'] & UPDATE_FLAGS_DELETED) ? array('deleted') : array());
+				$flags = array();
+				if($rr['ud_flags'] & UPDATE_FLAGS_DELETED)
+					$flags[] = 'deleted';
+				if($rr['ud_flags'] & UPDATE_FLAGS_FORCED)
+					$flags[] = 'forced';
+
 				$spkt['transactions'][] = array(
 					'hash' => $rr['ud_hash'],
 					'address' => $rr['ud_addr'],
