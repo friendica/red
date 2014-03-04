@@ -734,6 +734,24 @@ footer {
 
 }
 
+.pmenu.horizontal {
+	padding: 0 0 0 0;
+	border-bottom: none;
+}
+
+.pmenu.horizontal .pmenu-title {
+	display: none;
+}
+.pmenu.horizontal ul {
+	-moz-padding-start: 0;
+}
+
+.pmenu.horizontal li {
+	margin-left: 0;
+	display: inline;
+	padding-right: 15px;
+}
+
 #settings-default-perms-menu {
 	margin-top: 15px;
 	margin-bottom: 15px;

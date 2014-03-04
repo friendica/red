@@ -201,7 +201,7 @@ function comanche_region(&$a,$s) {
 	$cnt = preg_match_all("/\[menu=(.*?)\](.*?)\[\/menu\]/ism", $s, $matches, PREG_SET_ORDER);
 	if($cnt) {
 		foreach($matches as $mtch) {
-			$s = str_replace($mtch[0],comanche_menu(trim($mtch[2]),$match[1]),$s);
+			$s = str_replace($mtch[0],comanche_menu(trim($mtch[2]),$mtch[1]),$s);
 		}
 	}
 	$cnt = preg_match_all("/\[block\](.*?)\[\/block\]/ism", $s, $matches, PREG_SET_ORDER);

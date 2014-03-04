@@ -65,6 +65,11 @@ To select a theme for your page, use the 'theme' tag.
 [/code]
 This will select the theme named &quot;apw&quot;. By default your channel's preferred theme will be used.
 
+[code]
+	[theme=passion]apw[/theme]
+[/code]
+This will select the theme named &quot;apw&quot; and select the &quot;passion&quot; schema (theme variant). 
+
 
 [b]Regions[/b]
 
@@ -83,6 +88,13 @@ Your webpage creation tools allow you to create menus and blocks, in addition to
 	[menu]mymenu[/menu]
 [/code]
 This places the menu called &quot;mymenu&quot; at this location on the page, which must be inside a region. 
+
+[code]
+	[menu=horizontal]mymenu[/menu]
+[/code]
+This places the menu called &quot;mymenu&quot; at this location on the page, which must be inside a region. Additionally it applies the "horizontal" style to the menu. "horizontal" is defined in the redbasic theme. It may or may not be available in other themes. 
+
+
 [code]
 	[block]contributors[/block]
 [/code]

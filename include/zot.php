@@ -305,7 +305,7 @@ function zot_refresh($them,$channel = null, $force = false) {
 			return false;
 		}
 
-		$x = import_xchan($j,(($force) ? (-1) : 1));
+		$x = import_xchan($j,(($force) ? UPDATE_FLAGS_FORCED : UPDATE_FLAGS_UPDATED));
 
 		if(! $x['success'])
 			return false;
@@ -538,14 +538,14 @@ function zot_register_hub($arr) {
 
 
 /**
- * @function import_xchan($arr,$ud_flags = 1)
+ * @function import_xchan($arr,$ud_flags = UPDATE_FLAGS_UPDATED)
  *   Takes an associative array of a fetched discovery packet and updates
  *   all internal data structures which need to be updated as a result.
  * 
  * @param array $arr => json_decoded discovery packet
  * @param int $ud_flags
- *    Determines whether to create a directory update record if any changes occur, default 1 or true
- *    $ud_flags = (-1) indicates a forced refresh where we unconditionally create a directory update record
+ *    Determines whether to create a directory update record if any changes occur, default is UPDATE_FLAGS_UPDATED (true)
+ *    $ud_flags = UPDATE_FLAGS_FORCED indicates a forced refresh where we unconditionally create a directory update record
  *      this typically occurs once a month for each channel as part of a scheduled ping to notify the directory
  *      that the channel still exists
  *
@@ -553,7 +553,7 @@ function zot_register_hub($arr) {
  *                    'message' (optional error string only if success is false)
  */
 
-function import_xchan($arr,$ud_flags = 1) {
+function import_xchan($arr,$ud_flags = UPDATE_FLAGS_UPDATED) {
 
 
 	call_hooks('import_xchan', $arr);
@@ -912,7 +912,7 @@ function import_xchan($arr,$ud_flags = 1) {
 		}
 	}
 	
-	if(($changed) || ($ud_flags == (-1))) {
+	if(($changed) || ($ud_flags == UPDATE_FLAGS_FORCED)) {
 		$guid = random_string() . '@' . get_app()->get_hostname();		
 		update_modtime($xchan_hash,$guid,$arr['address'],$ud_flags);
 		logger('import_xchan: changed: ' . $what,LOGGER_DEBUG);
@@ -1644,7 +1644,7 @@ function process_profile_delivery($sender,$arr,$deliveries) {
 			dbesc($sender['hash'])
 	);
 	if($r)
-		import_directory_profile($sender['hash'],$arr,$r[0]['xchan_addr'], 1, 0);
+		import_directory_profile($sender['hash'],$arr,$r[0]['xchan_addr'], UPDATE_FLAGS_UPDATED, 0);
 }
 
 
@@ -1655,7 +1655,7 @@ function process_profile_delivery($sender,$arr,$deliveries) {
  *
  */
 
-function import_directory_profile($hash,$profile,$addr,$ud_flags = 1, $suppress_update = 0) {
+function import_directory_profile($hash,$profile,$addr,$ud_flags = UPDATE_FLAGS_UPDATED, $suppress_update = 0) {
 
 	logger('import_directory_profile', LOGGER_DEBUG);
 	if(! $hash)

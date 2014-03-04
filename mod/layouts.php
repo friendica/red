@@ -40,6 +40,20 @@ function layouts_content(&$a) {
 		return;
 	}
 
+	if((argc() > 3) && (argv(2) === 'share') && (argv(3))) {
+		$r = q("select sid, service, mimetype, title, body  from item_id left join item on item.id = item_id.iid where item_id.uid = %d and item.mid = '%s' and service = 'PDL' order by sid asc",
+			intval($owner),
+			dbesc(argv(3))
+		);
+		if($r) {
+			header('Content-type: application/x-redmatrix-layout');
+			header('Content-disposition: attachment; filename="' . $r[0]['sid'] . '.pdl"');
+			echo json_encode($r);
+			killme();
+
+		}
+	}
+
 	$tabs = array(
 		array(
 		'label' => t('Layout Help'),
@@ -75,7 +89,7 @@ function layouts_content(&$a) {
 	// Get a list of blocks.  We can't display all them because endless scroll makes that unusable, so just list titles and an edit link.
 	// TODO - this should be replaced with pagelist_widget
 
-	$r = q("select * from item_id where uid = %d and service = 'PDL' order by sid asc",
+	$r = q("select iid, sid, mid from item_id left join item on item.id = item_id.iid where item_id.uid = %d and service = 'PDL' order by sid asc",
 		intval($owner)
 	);
 
@@ -84,7 +98,7 @@ function layouts_content(&$a) {
 	if($r) {
 		$pages = array();
 		foreach($r as $rr) {
-			$pages[$rr['iid']][] = array('url' => $rr['iid'],'title' => $rr['sid']);
+			$pages[$rr['iid']][] = array('url' => $rr['iid'],'title' => $rr['sid'], 'mid' => $rr['mid']);
 		} 
 	}
 
@@ -92,9 +106,10 @@ function layouts_content(&$a) {
 	//Build the base URL for edit links
 	$url = z_root() . "/editlayout/" . $which; 
 
-	return $o . replace_macros(get_markup_template("webpagelist.tpl"), array(
+	return $o . replace_macros(get_markup_template("layoutlist.tpl"), array(
 		'$baseurl' => $url,
 		'$edit' => t('Edit'),
+		'$share' => t('Share'),
 		'$pages' => $pages,
 		'$channel' => $which,
 		'$view' => t('View'),
