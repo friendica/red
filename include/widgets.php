@@ -623,3 +623,30 @@ function widget_suggestedchats($arr) {
 	));
 }
 
+function widget_item($arr) {
+	$uid = $a->profile['profile_uid'];
+	if((! $uid) || (! $arr['mid']))
+		return '';
+
+	if(! perm_is_allowed($uid,get_observer_hash(),'view_pages'))
+		return '';
+
+	require_once('include/security.php');
+	$sql_extra = item_permissions_sql($uid);
+
+
+	$r = q("select * from item where mid = '%s' and uid = %d and item_restrict = " . intval(ITEM_WEBPAGE) . " $sql_extra limit 1",
+		dbesc($arr['mid']),
+		intval($uid)
+	);
+
+	if(! $r)
+		return '';
+
+	xchan_query($r);
+	$r = fetch_post_tags($r,true);
+
+	$o .= prepare_page($r[0]);
+	return $o;
+
+}
