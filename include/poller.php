@@ -96,9 +96,13 @@ function poller_run($argv, $argc){
 
 	$dirmode = get_config('system','directory_mode');
 
+	/**
+	 * Cron Daily
+	 *
+	 * Actions in the following block are executed once per day, not on every poller run
+	 *
+	 */
 
-	// Actions in the following block are executed once per day, not on every poller run
-	
 	if($d2 != intval($d1)) {
 
 		// expire any read notifications over a month old
@@ -121,6 +125,7 @@ function poller_run($argv, $argc){
 
 		set_config('system','last_expire_day',$d2);
 
+		proc_run('php','include/expire.php');
 		proc_run('php','include/cli_suggest.php');
 
 	}
