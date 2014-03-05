@@ -4,6 +4,10 @@ Core Widgets
 Some/many of these widgets have restrictions which may restrict the type of page where they may appear or may require login
 
 
+* clock - displays the current time
+    * args: military (1 or 0) - use 24 hour time as opposed to AM/PM
+    *
+
 * profile - displays a profile sidebar on pages which load profiles (pages with nickname in the URL)
 
 * tagcloud - display a tagcloud of webpage items

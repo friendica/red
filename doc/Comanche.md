@@ -98,9 +98,9 @@ Widgets are executable apps provided by the system which you can place on your p
 
 
 
-Widgets and arguments are specified with the 'widget' and 'arg' tags.
+Widgets and arguments are specified with the 'widget' and 'var' tags.
 
-	[widget=recent_visitors][arg=count]24[/arg][/widget]
+	[widget=recent_visitors][var=count]24[/var][/widget]
 
 This loads the "recent_visitors" widget and supplies it with the argument "count" set to "24". 
  
@@ -136,8 +136,8 @@ Please note that pasting this example into a layout page is not likely to do any
 		[menu]myfavouritemenu[/menu]
 
 		[widget=recent_visitors]
-			[arg=count]24[/arg]
-			[arg=names_only]1[/arg]
+			[var=count]24[/var]
+			[var=names_only]1[/var]
 		[/widget]
 
 		[widget=tagcloud][/widget]
