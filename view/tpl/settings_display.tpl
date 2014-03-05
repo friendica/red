@@ -16,6 +16,10 @@
 <input type="submit" name="submit" class="settings-submit" value="{{$submit}}" />
 </div>
 
+<br />
+<a href="pdledit">{{$layout_editor}}</a>
+<br />
+
 {{if $theme_config}}
 <h2>Theme settings</h2>
 {{$theme_config}}
