@@ -37,6 +37,7 @@
 [zrl=[baseurl]/help/install]Install[/zrl]
 [zrl=[baseurl]/help/comanche]Comanche Page Descriptions[/zrl]
 [zrl=[baseurl]/help/Creating-Templates]Creating Comanche Templates[/zrl]
+[zrl=[baseurl]/help/Widgets]Core Widgets[/zrl]
 [zrl=[baseurl]/help/plugins]Plugins[/zrl]
 [zrl=[baseurl]/help/schema_development]Schemas[/zrl]
 [zrl=[baseurl]/help/developers]Developers[/zrl]
