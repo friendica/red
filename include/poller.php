@@ -184,9 +184,7 @@ function poller_run($argv, $argc){
 	if(! $restart)
 		proc_run('php','include/cronhooks.php');
 
-	// Only poll from those with suitable relationships,
-	// and which have a polling address and ignore Diaspora since 
-	// we are unable to match those posts with a Diaspora GUID and prevent duplicates.
+	// Only poll from those with suitable relationships
 
 	$abandon_sql = (($abandon_days) 
 		? sprintf(" AND account_lastlog > UTC_TIMESTAMP() - INTERVAL %d DAY ", intval($abandon_days)) 
@@ -197,10 +195,9 @@ function poller_run($argv, $argc){
 	$contacts = q("SELECT abook_id, abook_flags, abook_updated, abook_connected, abook_closeness, abook_channel
 		FROM abook LEFT JOIN account on abook_account = account_id where 1
 		$sql_extra 
-		AND (( abook_flags = %d ) OR  ( abook_flags = %d )) 
+		AND (( abook_flags & %d ) OR  ( abook_flags = %d )) 
 		AND (( account_flags = %d ) OR ( account_flags = %d )) $abandon_sql ORDER BY RAND()",
-
-		intval(ABOOK_FLAG_HIDDEN),
+		intval(ABOOK_FLAG_HIDDEN|ABOOK_FLAG_PENDING|ABOOK_FLAG_UNCONNECTED),
 		intval(0),
 		intval(ACCOUNT_OK),
 		intval(ACCOUNT_UNVERIFIED)     // FIXME

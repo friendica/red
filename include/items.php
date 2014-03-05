@@ -1548,7 +1548,7 @@ function item_store($arr,$allow_exec = false) {
 	$allow_exec = $d['allow_exec'];
 
 
-	$ret = array('result' => false, 'item_id' => 0);
+	$ret = array('success' => false, 'item_id' => 0);
 
 	if(! $arr['uid']) {
 		logger('item_store: no uid');
@@ -1933,7 +1933,7 @@ function item_store_update($arr,$allow_exec = false) {
 
 
 
-	$ret = array('result' => false, 'item_id' => 0);
+	$ret = array('success' => false, 'item_id' => 0);
 	if(! intval($arr['uid'])) {
 		logger('item_store_update: no uid');
 		$ret['message'] = 'no uid.';

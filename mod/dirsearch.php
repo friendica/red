@@ -99,7 +99,7 @@ function dirsearch_content(&$a) {
 
 
 
-    $perpage      = (($_REQUEST['n'])              ? $_REQUEST['n']                    : 80);
+    $perpage      = (($_REQUEST['n'])              ? $_REQUEST['n']                    : 300);
     $page         = (($_REQUEST['p'])              ? intval($_REQUEST['p'] - 1)        : 0);
     $startrec     = (($page+1) * $perpage) - $perpage;
 	$limit        = (($_REQUEST['limit'])          ? intval($_REQUEST['limit'])        : 0);

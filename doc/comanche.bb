@@ -111,9 +111,9 @@ Widgets are executable apps provided by the system which you can place on your p
 [/code]
 
 
-Widgets and arguments are specified with the 'widget' and 'arg' tags.
+Widgets and arguments are specified with the 'widget' and 'var' tags.
 [code]
-	[widget=recent_visitors][arg=count]24[/arg][/widget]
+	[widget=recent_visitors][var=count]24[/var][/widget]
 [/code]
 
 This loads the &quot;recent_visitors&quot; widget and supplies it with the argument &quot;count&quot; set to &quot;24&quot;. 
@@ -150,8 +150,8 @@ The 'comment' tag is used to delimit comments. These comments will not appear on
 		[menu]myfavouritemenu[/menu]
 
 		[widget=recent_visitors]
-			[arg=count]24[/arg]
-			[arg=names_only]1[/arg]
+			[var=count]24[/var]
+			[var=names_only]1[/var]
 		[/widget]
 
 		[widget=tagcloud][/widget]
