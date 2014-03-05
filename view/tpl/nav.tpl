@@ -33,6 +33,10 @@
 				</li>
 			{{/if}}
 
+			{{if $nav.login}}<li class="{{$nav.login.2}}"><a href="{{$nav.login.0}}" title="{{$nav.login.3}}" >{{$nav.login.1}}</a><li>{{/if}}
+
+			{{if $nav.alogout}}<li class="{{$nav}}-alogout.2"><a href="{{$nav.alogout.0}}" title="{{$nav.alogout.3}}" >{{$nav.alogout.1}}</a></li>{{/if}}
+
 			{{if $nav.network}}
 				<li class="{{$sel.network}} hidden-xs">
 					<a href="{{$nav.network.0}}" title="{{$nav.network.3}}" ><i class="icon-th"></i></a>
@@ -137,12 +141,8 @@
 					</form>
 				</li>
 				<li class="visible-xs">
-					<a href="/search" title="Search"><i class="icon-search"></i></a>
+					<a href="/search" title="{{$nav.search.3}}"><i class="icon-search"></i></a>
 				</li>
-
-			{{if $nav.login}}<li class="{{$nav.login.2}}"><a href="{{$nav.login.0}}" title="{{$nav.login.3}}" >{{$nav.login.1}}</a><li>{{/if}}
-
-			{{if $nav.alogout}}<li class="{{$nav}}-alogout.2"><a href="{{$nav.alogout.0}}" title="{{$nav.alogout.3}}" >{{$nav.alogout.1}}</a></li>{{/if}}
 
 			{{if $nav.directory}}
 				<li class="{{$sel.directory}}">
@@ -155,7 +155,7 @@
 					<a class="{{$nav.apps.2}} dropdown-toggle" data-toggle="dropdown" href="#" rel="#nav-apps-menu" title="{{$nav.apps.3}}" ><i class="icon-cogs"></i></a>
 					<ul class="dropdown-menu">
 					{{foreach $apps as $ap}}
-						<li>{{$ap}}</li>
+						<li role="presentation">{{$ap}}</li>
 					{{/foreach}}
 					</ul>
 				</li>
