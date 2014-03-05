@@ -52,6 +52,7 @@ function pdledit_content(&$a) {
 	$o = replace_macros(get_markup_template('pdledit.tpl'),array(
 		'$header' => t('Edit System Page Description'),
 		'$mname' => t('Module Name:'),
+		'$help' => t('Layout Help'),
 		'$module' => argv(1),
 		'$content' => htmlspecialchars($t,ENT_COMPAT,'UTF-8'),
 		'$submit' => t('Submit')
