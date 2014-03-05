@@ -59,7 +59,6 @@ EOT;
 	$a->page['header'] .= replace_macros(get_markup_template('hdr.tpl'), array(
         '$baseurl' => $a->get_baseurl(),
 		'$sitelocation' => $sitelocation,
-		'$langselector' => ((get_config('system','select_language')) ? lang_selector() : ''),
 		'$banner' =>  $banner
 	));
 
