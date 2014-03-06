@@ -182,9 +182,8 @@ function zfinger_init(&$a) {
 
 	$permissions = get_all_perms($e['channel_id'],$ztarget_hash,false);
 
-	$permissions['connected'] = false;
-
 	if($ztarget_hash) {
+		$permissions['connected'] = false;
 		$b = q("select * from abook where abook_xchan = '%s' and abook_channel = %d limit 1",
 			dbesc($ztarget_hash),
 			intval($e['channel_id'])

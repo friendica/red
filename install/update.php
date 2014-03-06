@@ -1,6 +1,6 @@
 <?php
 
-define( 'UPDATE_VERSION' , 1102 );
+define( 'UPDATE_VERSION' , 1103 );
 
 /**
  *
@@ -1151,3 +1151,11 @@ function update_r1101() {
 	return UPDATE_SUCCESS;
 }
 
+function update_r1102() {
+	$r = q("update abook set abook_flags = (abook_flags - %d)
+		where ( abook_flags & %d)",
+		intval(ABOOK_FLAG_UNCONNECTED),
+		intval(ABOOK_FLAG_UNCONNECTED),
+	);
+	return UPDATE_SUCCESS;
+}

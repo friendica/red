@@ -364,20 +364,20 @@ function zot_refresh($them,$channel = null, $force = false) {
 					intval(ABOOK_FLAG_SELF)
 				);
 
-				if(($connected_set === 0 || $connected_set === 1) && ($connected_set !== $current_abook_unconnected)) {
+//				if(($connected_set === 0 || $connected_set === 1) && ($connected_set !== $current_abook_unconnected)) {
 
 					// if they are in your address book but you aren't in theirs, and/or this does not
 					// match your current connected state setting, toggle it. 
 
-					$y1 = q("update abook set abook_flags = (abook_flags ^ %d)
-						where abook_xchan = '%s' and abook_channel = %d 
-						and not (abook_flags & %d) limit 1",
-						intval(ABOOK_FLAG_UNCONNECTED),
-						dbesc($x['hash']),
-						intval($channel['channel_id']),
-						intval(ABOOK_FLAG_SELF)
-					);
-				}
+//					$y1 = q("update abook set abook_flags = (abook_flags ^ %d)
+//						where abook_xchan = '%s' and abook_channel = %d 
+//						and not (abook_flags & %d) limit 1",
+//						intval(ABOOK_FLAG_UNCONNECTED),
+//						dbesc($x['hash']),
+//						intval($channel['channel_id']),
+//						intval(ABOOK_FLAG_SELF)
+//					);
+//				}
 
 				if(! $y)
 					logger('abook update failed');
