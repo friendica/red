@@ -18,8 +18,7 @@ aside input[type='text'] {
 }
 
 section {
-	padding-top: 65px;
-	padding-left: 10px;
+	padding: 65px 0px 200px 10px
 	width: 100%;
 	display: table-cell;
 	vertical-align: top;
