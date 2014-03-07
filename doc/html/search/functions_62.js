@@ -18,6 +18,8 @@ var searchData=
   ['bbtoevent',['bbtoevent',['../event_8php.html#a180cccd63c2a2f00ff432b03113531f3',1,'event.php']]],
   ['bbtovcal',['bbtovcal',['../event_8php.html#a184d6b9690e5b6dee35a0aa9edd47279',1,'event.php']]],
   ['best_5flink_5furl',['best_link_url',['../conversation_8php.html#ad470fc7766f0db66d138fa1916c7a8b7',1,'conversation.php']]],
+  ['block_5fcontent',['block_content',['../block_8php.html#a8a82a470acdfbc7a8e749509caeeea45',1,'block.php']]],
+  ['block_5finit',['block_init',['../block_8php.html#a9b61c96044ed2a068f18c10370a78d5c',1,'block.php']]],
   ['blocks_5fcontent',['blocks_content',['../blocks_8php.html#a2531a8fd51db3cecb2eb20c002c66e12',1,'blocks.php']]],
   ['blog_5finit',['blog_init',['../blogga_2php_2theme_8php.html#aa55c1cb1f05087b5002ecb633b550b1b',1,'blog_init(&amp;$a):&#160;theme.php'],['../blogga_2view_2theme_2blog_2theme_8php.html#aa55c1cb1f05087b5002ecb633b550b1b',1,'blog_init(&amp;$a):&#160;theme.php']]],
   ['blog_5finstall',['blog_install',['../blogga_2view_2theme_2blog_2theme_8php.html#aae58cc837fe56473d9f3370abfe533ae',1,'theme.php']]],

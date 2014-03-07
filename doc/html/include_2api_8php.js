@@ -49,6 +49,7 @@ var include_2api_8php =
     [ "api_statusnet_version", "include_2api_8php.html#a8969e8d9c683f12ba17dcd4b059e020d", null ],
     [ "api_user", "include_2api_8php.html#afb99daa6b731bf497b81f2128084852c", null ],
     [ "api_users_show", "include_2api_8php.html#abe8e929e93f7ab134b1cb1fb30f19a76", null ],
+    [ "red_item_new", "include_2api_8php.html#aafa82b65a9f879a1a1197cfe8aaf3898", null ],
     [ "requestdata", "include_2api_8php.html#a43c47de8565cc00c3369cb35c19cc75e", null ],
     [ "$API", "include_2api_8php.html#aeb2e7ad00ea666b4b6dfcf82008194f8", null ],
     [ "$called_api", "include_2api_8php.html#aa62b15a6bbb280e86b98132eb214013d", null ]

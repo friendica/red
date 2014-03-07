@@ -9,6 +9,8 @@ var searchData=
   ['parsed',['parsed',['../classFriendicaSmarty.html#a6a4d4281d6fa9be1d37a97b188ffe8c9',1,'FriendicaSmarty']]],
   ['parseurl_5fgetsiteinfo',['parseurl_getsiteinfo',['../parse__url_8php.html#a25635549f2c22955d72465f4d2e58993',1,'parse_url.php']]],
   ['pdl_5fselector',['pdl_selector',['../comanche_8php.html#af7150df735e5ff9d467994cd6f769c6e',1,'comanche.php']]],
+  ['pdledit_5fcontent',['pdledit_content',['../pdledit_8php.html#a59cb550f6b7a4e7d8196fbc9de601619',1,'pdledit.php']]],
+  ['pdledit_5fpost',['pdledit_post',['../pdledit_8php.html#a81da3c955d0e3db55d148a31483104c7',1,'pdledit.php']]],
   ['perm_5fis_5fallowed',['perm_is_allowed',['../permissions_8php.html#a67ada9ed51e77885b6b0f6a28cee1835',1,'permissions.php']]],
   ['permissions_5fsql',['permissions_sql',['../security_8php.html#afa683bc025a1d2fe9065e2f6cd71a22f',1,'security.php']]],
   ['perms2str',['perms2str',['../text_8php.html#a98fd99dee3da8cf4c148dc04efe782ee',1,'text.php']]],

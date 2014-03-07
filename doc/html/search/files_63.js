@@ -8,6 +8,7 @@ var searchData=
   ['chat_2ephp',['chat.php',['../mod_2chat_8php.html',1,'']]],
   ['chat_2ephp',['chat.php',['../include_2chat_8php.html',1,'']]],
   ['chatsvc_2ephp',['chatsvc.php',['../chatsvc_8php.html',1,'']]],
+  ['choklet_2ephp',['choklet.php',['../choklet_8php.html',1,'']]],
   ['cli_5fstartup_2ephp',['cli_startup.php',['../cli__startup_8php.html',1,'']]],
   ['cli_5fsuggest_2ephp',['cli_suggest.php',['../cli__suggest_8php.html',1,'']]],
   ['cloud_2ephp',['cloud.php',['../cloud_8php.html',1,'']]],

@@ -14,6 +14,10 @@ We need much more than this, but here are areas where developers can help. Pleas
 
 [li]Integrate the &quot;open site&quot; list with the register page[/li]
 
+[li]implement oembed provider interface[/li]
+
+[li]implement openid server interface[/li]
+
 [li]Write more webpage layouts[/li]
 
 [li]Write more webpage widgets[/li]

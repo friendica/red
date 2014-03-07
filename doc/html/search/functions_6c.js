@@ -1,5 +1,6 @@
 var searchData=
 [
+  ['lang_5fcontent',['lang_content',['../lang_8php.html#a4c5c1140f51a638f224275cd618c2f37',1,'lang.php']]],
   ['lang_5fselector',['lang_selector',['../text_8php.html#a71f6952243d3fe1c5a8154f78027e29c',1,'text.php']]],
   ['layout_5fselect',['layout_select',['../text_8php.html#a3999a0b3e22e440f280ee791ce34d384',1,'text.php']]],
   ['layouts_5fcontent',['layouts_content',['../layouts_8php.html#a6e0193759ad9eef76d3df2db24237b50',1,'layouts.php']]],
