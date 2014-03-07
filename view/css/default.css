@@ -6,25 +6,23 @@ header #banner {
 	margin-right: auto;
 }
 
+main {
+	padding: 55px 0px 200px 0px;
+	border-spacing: 10px;
+}
+
 aside#region_1 {
-	display: block;
-	width: 210px;
-	position: absolute;
-	top: 65px;
-	left: 0;
-	margin-left: 10px;
+	min-width: 210px;
+	display: table-cell;
+	vertical-align: top;
 }
 
 aside input[type='text'] {
  width: 174px;
 }
 
-
 section {
-	position: absolute;
-	top: 65px;
-	left: 250px;
-	display: block;
-	right: 15px;
-	padding-bottom: 350px;
+	width: 100%;
+	display: table-cell;
+	vertical-align: top;
 }

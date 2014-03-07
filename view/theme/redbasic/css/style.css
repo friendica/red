@@ -2233,7 +2233,7 @@ nav .dropdown-menu {
 
 /* bootstrap overrides */
 blockquote {
-    font-size: $body_font_size;
+	font-size: $body_font_size;
 }
 
 .dropdown-menu {
@@ -2281,4 +2281,9 @@ blockquote {
 .navbar-inverse .navbar-nav > .open > a:focus {
 	background-color: $nav_bd;
 	color: $nav_active_icon_colour;
+}
+
+#expand-aside {
+	color: $nav_active_icon_colour;
+	padding: 7px 10px;
 }

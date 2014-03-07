@@ -22,6 +22,11 @@ function cmtBbClose(comment, id) {
 
 $(document).ready(function() {
 
+$('[data-toggle=show_hide]').click(function() {
+	$('#expand-aside-icon').toggleClass('icon-circle-arrow-right').toggleClass('icon-circle-arrow-left');
+	$('#region_1').toggleClass('hidden-xs');
+});
+
 $('.group-edit-icon').hover(
 	function() {
 		$(this).css('opacity','1.0');},
