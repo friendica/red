@@ -2290,7 +2290,7 @@ blockquote {
 
 @media screen and (max-width:767px) {
 	aside#region_1 {
-		background-color: $nav_bg;
+		background: rgba(0, 0, 0, .1);
 		border-right: 1px solid $nav_bd;
 	}
 }
