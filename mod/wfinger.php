@@ -80,7 +80,7 @@ function wfinger_init(&$a) {
 
 			array(
 				'rel' => 'http://purl.org/zot/protocol',
-				'href' => z_root() . '/.well-known/zot-info' . '?zaddr=' . $r[0]['xchan_addr'],
+				'href' => z_root() . '/.well-known/zot-info' . '?address=' . $r[0]['xchan_addr'],
 			)
 		);
 
