@@ -1179,6 +1179,13 @@ function check_config(&$a) {
 
 	$a->set_baseurl($a->get_baseurl());
 
+	// Make sure each site has a system channel.  This is now created on install
+	// so we just need to keep this around a couple of weeks until the hubs that
+	// already exist have one
+	$syschan_exists = get_sys_channel();
+		if (! $syschan_exists)
+			create_sys_channel();
+
 	if($build != DB_UPDATE_VERSION) {
 		$stored = intval($build);
 		if(! $stored) {
