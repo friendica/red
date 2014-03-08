@@ -1,5 +1,8 @@
 
 $(document).ready(function() {
+	if(typeof(after_following) !== 'undefined' && after_following)
+		connectFullShare();
+
 	$('#id_pending').click(function() {
 		connectFullShare();
 	});
