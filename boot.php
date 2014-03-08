@@ -491,7 +491,7 @@ define ( 'ACCOUNT_PENDING',      0x0010 );
 
 define ( 'ACCOUNT_ROLE_ALLOWCODE', 0x0001 );    
 define ( 'ACCOUNT_ROLE_SYSTEM',    0x0002 );
-
+define ( 'ACCOUNT_ROLE_DEVELOPER', 0x0004 );
 define ( 'ACCOUNT_ROLE_ADMIN',     0x1000 );
 
 /**
@@ -1700,6 +1700,15 @@ function is_site_admin() {
 	if((intval($_SESSION['authenticated'])) 
 		&& (is_array($a->account)) 
 		&& ($a->account['account_roles'] & ACCOUNT_ROLE_ADMIN))
+		return true;
+	return false;
+}
+
+function is_developer() {
+	$a = get_app();
+	if((intval($_SESSION['authenticated'])) 
+		&& (is_array($a->account)) 
+		&& ($a->account['account_roles'] & ACCOUNT_ROLE_DEVELOPER))
 		return true;
 	return false;
 }
