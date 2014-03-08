@@ -2253,6 +2253,10 @@ blockquote {
 	border-color: $nav_bd;
 }
 
+.navbar-inverse .navbar-collapse {
+	border-color: $nav_bd;
+}
+
 .navbar-inverse .navbar-nav > .active > a {
 	background-image: -webkit-linear-gradient(top, $nav_active_gradient_top 0%, $nav_active_gradient_bottom 100%);
 	background-image:         linear-gradient(to bottom, $nav_active_gradient_top 0%, $nav_active_gradient_bottom 100%);
@@ -2283,12 +2287,24 @@ blockquote {
 	color: $nav_active_icon_colour;
 }
 
+.navbar-inverse .navbar-toggle {
+	border-color: $nav_bd;
+}
+.navbar-inverse .navbar-toggle:hover,
+.navbar-inverse .navbar-toggle:focus {
+	background-color: $nav_bg;
+}
+
+.navbar-inverse .navbar-toggle .icon-bar {
+	background-color: $nav_active_icon_colour;
+}
+
 #expand-aside {
 	color: $nav_active_icon_colour;
 	padding: 7px 10px;
 }
 
-@media screen and (max-width:767px) {
+@media (max-width:767px) {
 	aside#region_1 {
 		background: rgba(0, 0, 0, .1);
 		border-right: 1px solid $nav_bd;

@@ -81,7 +81,7 @@ if(! $a->install) {
 	if (! $nav_active_gradient_bottom)
 		$nav_active_gradient_bottom = "#282828";
 	if (! $nav_bd)
-		$nav_bd = "#080808";
+		$nav_bd = "#222";
 	if (! $nav_icon_colour)
 		$nav_icon_colour = "#999";
 	if (! $nav_active_icon_colour)
