@@ -30,7 +30,7 @@ function follow_init(&$a) {
 		proc_run('php','include/onepoll.php',$result['abook']['abook_id']);
 
 
-	goaway(z_root() . '/connedit/' . $result['abook']['abook_id'] . '?f=&follow=1);
+	goaway(z_root() . '/connedit/' . $result['abook']['abook_id'] . '?f=&follow=1');
 
 }
 
