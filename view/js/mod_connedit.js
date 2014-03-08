@@ -6,6 +6,13 @@ $(document).ready(function() {
 	$('#id_pending').click(function() {
 		connectFullShare();
 	});
+
+	$('.abook-edit-me').click(function() {
+		$('.abook-permschange').show();
+		$('.abook-permschange').html(aStr['permschange']);
+	});
+
+
 });
 
 function connectFullShare() {
