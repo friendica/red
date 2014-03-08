@@ -27,6 +27,8 @@ function connectFullShare() {
 	$('#me_id_perms_view_storage').attr('checked','checked');
 	$('#me_id_perms_republish').attr('checked','checked');
 
+	$('.abook-permschange').show();
+	$('.abook-permschange').html(aStr['permschange']);
 }
 
 function connectCautiousShare() {
@@ -43,6 +45,9 @@ function connectCautiousShare() {
 	$('#me_id_perms_send_stream').attr('checked','checked');
 	$('#me_id_perms_post_comments').attr('checked','checked');
 	$('#me_id_perms_post_mail').attr('checked','checked');
+	$('.abook-permschange').show();
+	$('.abook-permschange').html(aStr['permschange']);
+
 }
 
 function connectForum() {
@@ -63,6 +68,8 @@ function connectForum() {
 	$('#me_id_perms_post_mail').attr('checked','checked');
 	$('#me_id_perms_tag_deliver').attr('checked','checked');
 	$('#me_id_perms_republish').attr('checked','checked');
+	$('.abook-permschange').show();
+	$('.abook-permschange').html(aStr['permschange']);
 
 }
 
@@ -78,6 +85,8 @@ function connectSoapBox() {
 	$('#me_id_perms_view_contacts').attr('checked','checked');
 	$('#me_id_perms_view_storage').attr('checked','checked');
 	$('#me_id_perms_view_pages').attr('checked','checked');
+	$('.abook-permschange').show();
+	$('.abook-permschange').html(aStr['permschange']);
 }
 
 
@@ -88,5 +97,8 @@ function connectFollowOnly() {
 	});
 
 	$('#me_id_perms_send_stream').attr('checked','checked');
+	$('.abook-permschange').show();
+	$('.abook-permschange').html(aStr['permschange']);
+
 }
 
