@@ -1,4 +1,10 @@
 
+$(document).ready(function() {
+	$('#id_pending').click(function() {
+		connectFullShare();
+	});
+});
+
 function connectFullShare() {
 	$('.abook-edit-me').each(function() {
 		if(! $(this).is(':disabled'))
