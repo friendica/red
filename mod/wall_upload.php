@@ -45,8 +45,7 @@ function wall_upload_post(&$a) {
 
 	$m = $ret['body'];
 
-	// This might make Friendica for Android uploads work again, as it won't have any knowledge of zrl and zmg tags
-	// and these tags probably aren't useful with other client apps. 
+
 
 	if($using_api)
 		return("\n\n" . $ret['body'] . "\n\n");
