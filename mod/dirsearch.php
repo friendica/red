@@ -283,6 +283,10 @@ function dir_parse_query($s) {
 				$curr['logic'] = 'or';
 				continue;
 			}
+			if($q === 'not') {
+				$curr['logic'] .= ' not';
+				continue;
+			}
 			if(strpos($q,'=')) {
 				if(! isset($curr['logic']))
 					$curr['logic'] = 'or';
