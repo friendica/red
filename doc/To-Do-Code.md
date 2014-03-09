@@ -13,6 +13,10 @@ We need much more than this, but here are areas where developers can help. Pleas
 
 * Integrate the "open site" list with the register page
 
+* implement oembed provider interface
+
+* implement openid server interface
+
 * Write more webpage layouts
 
 * Write more webpage widgets 

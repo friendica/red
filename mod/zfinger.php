@@ -176,10 +176,21 @@ function zfinger_init(&$a) {
 
 	$ret['follow_url'] = z_root() . '/follow?f=&url=%s';
 
-	$permissions = get_all_perms($e['channel_id'],(($ztarget && $zsig) 
+	$ztarget_hash = (($ztarget && $zsig) 
 			? base64url_encode(hash('whirlpool',$ztarget . $zsig,true)) 
-			: '' ),false);
+			: '' ); 
 
+	$permissions = get_all_perms($e['channel_id'],$ztarget_hash,false);
+
+	if($ztarget_hash) {
+		$permissions['connected'] = false;
+		$b = q("select * from abook where abook_xchan = '%s' and abook_channel = %d limit 1",
+			dbesc($ztarget_hash),
+			intval($e['channel_id'])
+		);
+		if($b)
+			$permissions['connected'] = true;
+	}
 
 	$ret['permissions'] = (($ztarget && $zkey) ? aes_encapsulate(json_encode($permissions),$zkey) : $permissions);
 

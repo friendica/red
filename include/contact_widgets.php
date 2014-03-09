@@ -15,6 +15,8 @@ function findpeople_widget() {
 			. '</div>' . $inv;
 		}
 	}
+
+	$advanced_search = ((local_user() && get_pconfig(local_user(),'feature','expert')) ? t('Advanced') : false);
  
 	return replace_macros(get_markup_template('peoplefind.tpl'),array(
 		'$findpeople' => t('Find Channels'),
@@ -26,6 +28,9 @@ function findpeople_widget() {
 		'$similar' => '', // FIXME and uncomment when mod/match working // t('Similar Interests'),
 		'$random' => t('Random Profile'),
 		'$inv' => t('Invite Friends'),
+		'$advanced_search' => $advanced_search,
+		'$advanced_hint' => t('Exammple: name=fred and country=iceland'),
+		'$find_advanced' => t('Advanced Find'),
 		'$loggedin' => local_user()
 	));
 

@@ -243,6 +243,7 @@ function post_init(&$a) {
 
 			$_SESSION['authenticated'] = 1;
 			$_SESSION['visitor_id'] = $x[0]['xchan_hash'];
+			$_SESSION['my_url'] = $x[0]['xchan_url'];
 			$_SESSION['my_address'] = $address;
 			$_SESSION['remote_service_class'] = $remote_service_class;
 			$_SESSION['remote_level'] = $remote_level;

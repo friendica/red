@@ -7,13 +7,15 @@ if(! $a->install) {
 	if($uid)
 	    load_pconfig($uid,'redbasic');
 
-// Nav colours are mess.  Set $nav_colour as a single word for the sake of letting folk pick one
-// but it actually consists of at least two colours to form a gradient - $nav_bg_1 and $nav_bg_2
-// A further two - $nav_bg_3 and $nav_bg_4 are used to create the hover, if any particular scheme
-// wants to implement that
-	    $nav_colour = get_pconfig($uid, "redbasic", "nav_colour");	
-
 // Load the owners pconfig
+		$nav_bg = get_pconfig($uid, "redbasic", "nav_bg");
+		$nav_gradient_top = get_pconfig($uid, "redbasic", "nav_gradient_top");
+		$nav_gradient_bottom = get_pconfig($uid, "redbasic", "nav_gradient_bottom");
+		$nav_active_gradient_top = get_pconfig($uid, "redbasic", "nav_active_gradient_top");
+		$nav_active_gradient_bottom = get_pconfig($uid, "redbasic", "nav_active_gradient_bottom");
+		$nav_bd = get_pconfig($uid, "redbasic", "nav_bd");
+		$nav_icon_colour = get_pconfig($uid, "redbasic", "nav_icon_colour");
+		$nav_active_icon_colour = get_pconfig($uid, "redbasic", "nav_active_icon_colour");
 		$narrow_navbar = get_pconfig($uid,'redbasic','narrow_navbar');
 		$banner_colour = get_pconfig($uid,'redbasic','banner_colour');
 	    $link_colour = get_pconfig($uid, "redbasic", "link_colour");	
@@ -37,10 +39,16 @@ if(! $a->install) {
 
 }
 
-// Now load the scheme.  If a value is changed above, we'll keep the settings
-// If not, we'll keep those defined by the schema
-// Setting $scheme to '' wasn't working for some reason, so we'll check it's
-// not --- like the mobile theme does instead.
+	// Now load the scheme.  If a value is changed above, we'll keep the settings
+	// If not, we'll keep those defined by the schema
+	// Setting $schema to '' wasn't working for some reason, so we'll check it's
+	// not --- like the mobile theme does instead.
+
+
+	// Allow layouts to over-ride the schema
+
+	if($_REQUEST['schema'])
+		$schema = $_REQUEST['schema'];
 
 	if (($schema) && ($schema != '---')) {
 		// Check it exists, because this setting gets distributed to clones
@@ -62,17 +70,28 @@ if(! $a->install) {
 //Set some defaults - we have to do this after pulling owner settings, and we have to check for each setting
 //individually.  If we don't, we'll have problems if a user has set one, but not all options.
 
-	if (! $nav_colour) {
-		$nav_colour = "red";
-			$nav_bg_1 = "#f88";
-			$nav_bg_2 = "#b00";
-			$nav_bg_3 = "#f00";
-			$nav_bg_4 = "#b00";
-		}
+	if (! $nav_bg)
+		$nav_bg = "#222";
+	if (! $nav_gradient_top)
+		$nav_gradient_top = "#3c3c3c";
+	if (! $nav_gradient_bottom)
+		$nav_gradient_bottom = "#222";
+	if (! $nav_active_gradient_top)
+		$nav_active_gradient_top = "#222";
+	if (! $nav_active_gradient_bottom)
+		$nav_active_gradient_bottom = "#282828";
+	if (! $nav_bd)
+		$nav_bd = "#222";
+	if (! $nav_icon_colour)
+		$nav_icon_colour = "#999";
+	if (! $nav_active_icon_colour)
+		$nav_active_icon_colour = "#fff";
 	if (! $link_colour)
 		$link_colour = "#0080FF";
 	if (! $banner_colour)
-		$banner_colour = "fff";
+		$banner_colour = "#fff";
+	if (! $search_background)
+		$search_background = "#eee";
 	if (! $bgcolour)
 		$bgcolour = "#fdfdfd";
 	if (! $background_image)
@@ -117,70 +136,20 @@ if(! $a->install) {
 		$nav_float_min_opacity = (float) $nav_min_opacity;
 		$nav_percent_min_opacity = (int) 100 * $nav_min_opacity;
 	}
-			
 
-// Nav colours have nested values, so we have to define the actual variables
-// used in the CSS from the higher level "red", "black", etc here
-		if ($nav_colour == "red") {
-					$nav_bg_1 = $nav_bg_3 = "#ba002f";
-					$nav_bg_2 = $nav_bg_4 = "#ad002c";
-					$search_background = "#EEEEEE";
-					$active_colour = '#444444';
-		}
-
-		if ($nav_colour == "black") {
-					$nav_bg_1 = $nav_bg_3 = "#000";
-		      			$nav_bg_2 = $nav_bg_4 = "#222";
-					$search_background = '#EEEEEE';
-					$active_colour = '#AAAAAA';
-		}
-		if ($nav_colour == "silver") {
-					$nav_bg_1 = $nav_bg_2 = $nav_bg_3 = $nav_bg_4 = "silver";
-					$search_background = '#EEEEEE';
-		}
-		if($nav_colour === "pink") {
-		      $nav_bg_1 = $nav_bg_3 = "#FFC1CA";
-		      $nav_bg_2 = $nav_bg_4 = "#FFC1CA";
-	}
-		if($nav_colour === "green") {
-		      $nav_bg_1 = $nav_bg_3 = "#5CD65C";
-		      $nav_bg_2 = $nav_bg_4 = "#5CD65C";
-	}
-		if($nav_colour === "blue") {
-		      $nav_bg_1 = $nav_bg_3 = "#1872a2";
-		      $nav_bg_2 = $nav_bg_4 = "#1872a2";
-	}
-		if($nav_colour === "purple") {
-		      $nav_bg_1 = $nav_bg_3 = "#551A8B";
-		      $nav_bg_2 = $nav_bg_4 = "#551A8B";
-	}
-		if($nav_colour === "orange") {
-		      $nav_bg_1 = $nav_bg_3 = "#FF3D0D";
-		      $nav_bg_2 = $nav_bg_4 = "#FF3D0D";
-	}	
-		if($nav_colour === "brown") {
-		      $nav_bg_1 = $nav_bg_3 = "#330000";
-		      $nav_bg_2 = $nav_bg_4 = "#330000";
-	}
-		if($nav_colour === "grey") {
-		      $nav_bg_1 = $nav_bg_3 = "#2e2f2e";
-		      $nav_bg_2 = $nav_bg_4 = "#2e2f2e";
-	}
-		if($nav_colour === "gold") {
-		      $nav_bg_1 = $nav_bg_3 = "#FFAA00";
-		      $nav_bg_2 = $nav_bg_4 = "#FFAA00";
-	}
-
-		
 // Apply the settings
 	if(file_exists('view/theme/redbasic/css/style.css')) {
 		$x = file_get_contents('view/theme/redbasic/css/style.css');
 
 $options = array (
-'$nav_bg_1' => $nav_bg_1,
-'$nav_bg_2' => $nav_bg_2,
-'$nav_bg_3' => $nav_bg_3,
-'$nav_bg_4' => $nav_bg_4,
+'$nav_bg' => $nav_bg,
+'$nav_gradient_top' => $nav_gradient_top,
+'$nav_gradient_bottom' => $nav_gradient_bottom,
+'$nav_active_gradient_top' => $nav_active_gradient_top,
+'$nav_active_gradient_bottom' => $nav_active_gradient_bottom,
+'$nav_bd' => $nav_bd,
+'$nav_icon_colour' => $nav_icon_colour,
+'$nav_active_icon_colour' => $nav_active_icon_colour,
 '$link_colour' => $link_colour,
 '$banner_colour' => $banner_colour,
 '$search_background' => $search_background,
@@ -208,7 +177,6 @@ $options = array (
 );
 
 echo str_replace(array_keys($options), array_values($options), $x);    
-
 }
 
 if($sloppy_photos && file_exists('view/theme/redbasic/css/sloppy_photos.css')) {

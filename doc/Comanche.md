@@ -6,7 +6,7 @@ Comanche is a markup language similar to bbcode with which to create elaborate a
 
 Comanche primarily chooses what content will appear in various regions of the page. The various regions have names and these names can change depending on what layout template you choose.
 
-Currently there are two layout templates, unless your site provides additional layouts (TODO list all templates)
+Currently there are three layout templates, unless your site provides additional layouts. 
 
 	default
 
@@ -19,9 +19,24 @@ Currently there are two layout templates, unless your site provides additional l
 	The full template defines the same as the default template with the exception that there is no "aside" region.
 
 
-To choose a layout template, use the 'layout' tag.
+	choklet
 
-	[layout]full[/layout]
+	The choklet template provides a number of fluid layout styles which can be specified by flavour:
+
+			(default flavour) - a two column layout similar to the "default" template, but more fluid
+			three - three column layout (adds a "right_aside" region to the default template)
+			edgestwo - two column layout with fixed side margins
+			edgesthree - three column layout with fixed side margins
+			full - three column layout with fixed side margins and adds a "header" region beneath the navigation bar
+
+
+To choose a layout template, use the "template" tag.
+
+	[template]full[/template]
+
+To choose the "choklet" template with the "three" flavour:
+
+	[template=three]choklet[/template]
 
 
 The default template will be used if no other template is specified. The template can use any names it desires for content regions. You will be using 'region' tags to decide what content to place in the respective regions.
@@ -42,6 +57,9 @@ To select a theme for your page, use the 'theme' tag.
 
 This will select the theme named "apw". By default your channel's preferred theme will be used.
 
+	[theme=dark]redbasic[/theme]
+
+This will select the theme named "redbasic" and load the "dark" theme schema for this theme. 
 
 **Regions**
 
@@ -60,6 +78,11 @@ Your webpage creation tools allow you to create menus and blocks, in addition to
 
 This places the menu called "mymenu" at this location on the page, which must be inside a region. 
 
+	[menu=horizontal-menu]mymenu[/menu]
+
+This places the menu called "mymenu" at this location on the page, which must be inside a region. Additionally it adds the CSS class "horizontal-menu" to this menu. This *may* result in a menu that looks different than the default menu style, *if* the css for the current theme defines a "horizontal-menu" class. 
+
+
 	[block]contributors[/block]
 
 This places a block named "contributors" in this region.
@@ -75,9 +98,9 @@ Widgets are executable apps provided by the system which you can place on your p
 
 
 
-Widgets and arguments are specified with the 'widget' and 'arg' tags.
+Widgets and arguments are specified with the 'widget' and 'var' tags.
 
-	[widget=recent_visitors][arg=count]24[/arg][/widget]
+	[widget=recent_visitors][var=count]24[/var][/widget]
 
 This loads the "recent_visitors" widget and supplies it with the argument "count" set to "24". 
  
@@ -92,9 +115,11 @@ The 'comment' tag is used to delimit comments. These comments will not appear on
 
 **Complex Example**
 
+Please note that pasting this example into a layout page is not likely to do anything useful as the chosen names (template, theme, regions, etc.) may not correspond to any existing webpage components.  
+
 	[comment]use an existing page template which provides a banner region plus 3 columns beneath it[/comment]
 
-	[layout]3-column-with-header[/layout]
+	[template]3-column-with-header[/template]
 
 	[comment]Use the "darknight" theme[/comment]
 
@@ -111,8 +136,8 @@ The 'comment' tag is used to delimit comments. These comments will not appear on
 		[menu]myfavouritemenu[/menu]
 
 		[widget=recent_visitors]
-			[arg=count]24[/arg]
-			[arg=names_only]1[/arg]
+			[var=count]24[/var]
+			[var=names_only]1[/var]
 		[/widget]
 
 		[widget=tagcloud][/widget]

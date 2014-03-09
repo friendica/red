@@ -384,6 +384,12 @@ function notification($params) {
 
 	$itemlink = $a->get_baseurl() . '/notify/view/' . $notify_id;
 	$msg = str_replace('$itemlink',$itemlink,$epreamble);
+
+	// wretched hack, but we don't want to duplicate all the preamble variations and we also don't want to screw up a translation
+
+	if(($a->language === 'en' || (! $a->language)) && strpos($msg,', '))
+		$msg = substr($msg,strpos($msg,', ')+1);	
+
 	$r = q("update notify set msg = '%s' where id = %d and uid = %d limit 1",
 		dbesc($msg),
 		intval($notify_id),

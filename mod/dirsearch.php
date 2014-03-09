@@ -27,6 +27,27 @@ function dirsearch_content(&$a) {
 		json_return_and_die($ret);
 	}
 
+	$sql_extra = '';
+
+	$tables = array('name','address','locale','region','postcode','country','gender','marital','sexual','keywords');
+
+
+	if($_REQUEST['query']) {
+		$advanced = dir_parse_query($_REQUEST['query']);
+		if($advanced) {
+			foreach($advanced as $adv) {
+				if(in_array($adv['field'],$tables)) {
+					if($adv['field'] === 'name')
+						$sql_extra .= dir_query_build($adv['logic'],'xchan_name',$adv['value']);
+					elseif($adv['field'] === 'address')
+ 						$sql_extra .= dir_query_build($adv['logic'],'xchan_addr',$adv['value']);
+					else
+						$sql_extra .= dir_query_build($adv['logic'],'xprof_' . $adv['field'],$adv['value']);
+				}
+			}
+		}
+	}
+
 	$hash     = ((x($_REQUEST['hash']))    ? $_REQUEST['hash']     : '');
 
 	$name     = ((x($_REQUEST,'name'))     ? $_REQUEST['name']     : '');
@@ -38,6 +59,7 @@ function dirsearch_content(&$a) {
 	$country  = ((x($_REQUEST,'country'))  ? $_REQUEST['country']  : '');
 	$gender   = ((x($_REQUEST,'gender'))   ? $_REQUEST['gender']   : '');
 	$marital  = ((x($_REQUEST,'marital'))  ? $_REQUEST['marital']  : '');
+	$sexual   = ((x($_REQUEST,'sexual'))   ? $_REQUEST['sexual']   : '');
 	$keywords = ((x($_REQUEST,'keywords')) ? $_REQUEST['keywords'] : '');
 	$agege    = ((x($_REQUEST,'agege'))    ? intval($_REQUEST['agege']) : 0 );
 	$agele    = ((x($_REQUEST,'agele'))    ? intval($_REQUEST['agele']) : 0 );
@@ -59,36 +81,38 @@ function dirsearch_content(&$a) {
 
 	$sort_order  = ((x($_REQUEST,'order')) ? $_REQUEST['order'] : '');
 
-// TODO - a meta search which joins all of these things to one search string
-
-	$sql_extra = '';
+	$joiner = ' OR ';
+	if($_REQUEST['and'])
+		$joiner = ' AND ';
 
 	if($name)
-		$sql_extra .= " OR xchan_name like '" . protect_sprintf( '%' . dbesc($name) . '%' ) . "' ";
+		$sql_extra .= dir_query_build($joiner,'xchan_name',$name);
 	if($hub)
-		$sql_extra .= " OR xchan_hash in (select hubloc_hash from hubloc where hubloc_host =  '" . protect_sprintf(dbesc($hub)) . "') ";
+		$sql_extra .= " $joiner xchan_hash in (select hubloc_hash from hubloc where hubloc_host =  '" . protect_sprintf(dbesc($hub)) . "') ";
 	if($address)
-		$sql_extra .= " OR xchan_addr like '" . protect_sprintf( '%' . dbesc($address) . '%' ) . "' ";
+		$sql_extra .= dir_query_build($joiner,'xchan_addr',$address);
 	if($city)
-		$sql_extra .= " OR xprof_locale like '" . protect_sprintf( '%' . dbesc($city) . '%' ) . "' ";
+		$sql_extra .= dir_query_build($joiner,'xprof_locale',$city);
 	if($region)
-		$sql_extra .= " OR xprof_region like '" . protect_sprintf( '%' . dbesc($region) . '%' ) . "' ";
+		$sql_extra .= dir_query_build($joiner,'xprof_region',$region);
 	if($post)
-		$sql_extra .= " OR xprof_postcode like '" . protect_sprintf( '%' . dbesc($post) . '%' ) . "' ";
+		$sql_extra .= dir_query_build($joiner,'xprof_postcode',$post);
 	if($country)
-		$sql_extra .= " OR xprof_country like '" . protect_sprintf( '%' . dbesc($country) . '%' ) . "' ";
+		$sql_extra .= dir_query_build($joiner,'xprof_country',$country);
 	if($gender)
-		$sql_extra .= " OR xprof_gender like '" . protect_sprintf( '%' . dbesc($gender) . '%' ) . "' ";
+		$sql_extra .= dir_query_build($joiner,'xprof_gender',$gender);
 	if($marital)
-		$sql_extra .= " OR xprof_marital like '" . protect_sprintf( '%' . dbesc($marital) . '%' ) . "' ";
+		$sql_extra .= dir_query_build($joiner,'xprof_marital',$marital);
+	if($sexual)
+		$sql_extra .= dir_query_build($joiner,'xprof_sexual',$sexual);
 	if($keywords)
-		$sql_extra .= " OR xprof_keywords like '" . protect_sprintf( '%' . dbesc($keywords) . '%' ) . "' ";
+		$sql_extra .= dir_query_build($joiner,'xprof_keywords',$keywords);
 
 	// we only support an age range currently. You must set both agege 
 	// (greater than or equal) and agele (less than or equal) 
 
 	if($agele && $agege) {
-		$sql_extra .= " OR ( xprof_age <= " . intval($agele) . " ";
+		$sql_extra .= " $joiner ( xprof_age <= " . intval($agele) . " ";
 		$sql_extra .= " AND  xprof_age >= " . intval($agege) . ") ";
 	}
 
@@ -98,8 +122,7 @@ function dirsearch_content(&$a) {
 	}
 
 
-
-    $perpage      = (($_REQUEST['n'])              ? $_REQUEST['n']                    : 80);
+    $perpage      = (($_REQUEST['n'])              ? $_REQUEST['n']                    : 300);
     $page         = (($_REQUEST['p'])              ? intval($_REQUEST['p'] - 1)        : 0);
     $startrec     = (($page+1) * $perpage) - $perpage;
 	$limit        = (($_REQUEST['limit'])          ? intval($_REQUEST['limit'])        : 0);
@@ -159,7 +182,12 @@ function dirsearch_content(&$a) {
 		);
 		if($r) {
 			foreach($r as $rr) {
-				$flags = (($rr['ud_flags'] & UPDATE_FLAGS_DELETED) ? array('deleted') : array());
+				$flags = array();
+				if($rr['ud_flags'] & UPDATE_FLAGS_DELETED)
+					$flags[] = 'deleted';
+				if($rr['ud_flags'] & UPDATE_FLAGS_FORCED)
+					$flags[] = 'forced';
+
 				$spkt['transactions'][] = array(
 					'hash' => $rr['ud_hash'],
 					'address' => $rr['ud_addr'],
@@ -230,6 +258,70 @@ function dirsearch_content(&$a) {
 	json_return_and_die($ret);
 
 }
+
+function dir_query_build($joiner,$field,$s) {
+	$ret = '';
+	if(trim($s))
+		$ret .= dbesc($joiner) . " " . dbesc($field) . " like '" . protect_sprintf( '%' . dbesc($s) . '%' ) . "' ";
+	return $ret;
+}
+
+function dir_parse_query($s) {
+
+	$ret = array();
+	$curr = array();
+	$all = explode(' ',$s);
+	$quoted_string = false;
+
+	if($all) {
+		foreach($all as $q) {
+			if($q === 'and') {
+				$curr['logic'] = 'and';
+				continue;
+			}
+			if($q === 'or') {
+				$curr['logic'] = 'or';
+				continue;
+			}
+			if($q === 'not') {
+				$curr['logic'] .= ' not';
+				continue;
+			}
+			if(strpos($q,'=')) {
+				if(! isset($curr['logic']))
+					$curr['logic'] = 'or';
+				$curr['field'] = trim(substr($q,0,strpos($q,'=')));
+				$curr['value'] = trim(substr($q,strpos($q,'=')+1));
+				if(strpos($curr['value'],'"') !== false) {
+					$quoted_string = true;
+					$curr['value'] = substr($curr['value'],strpos($curr['value'],'"')+1);
+				}
+				else {
+					$ret[] = $curr;
+					$curr = array();
+					$continue;
+				}
+			}
+			elseif($quoted_string) {
+				if(strpos($q,'"') !== false) {
+					$curr['value'] .= ' ' . str_replace('"','',trim($q));
+					$ret[] = $curr;
+					$curr = array();
+					$quoted_string = false;
+				}
+				else
+					$curr['value'] .= ' ' . trim(q);
+			}
+		}
+	}
+	logger('dir_parse_query:' . print_r($ret,true),LOGGER_DATA);
+	return $ret;
+}
+
+	
+
+
+
 
 
 function list_public_sites() {

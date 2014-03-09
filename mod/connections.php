@@ -35,7 +35,7 @@ function connections_post(&$a) {
 
 	if(! $orig_record) {
 		notice( t('Could not access contact record.') . EOL);
-		goaway($a->get_baseurl(true) . '/connections');
+		goaway(z_root() . '/connections');
 		return; // NOTREACHED
 	}
 
@@ -170,14 +170,14 @@ function connections_content(&$a) {
 		return login();
 	}
 
-	$blocked   = false;
-	$hidden    = false;
-	$ignored   = false;
-	$archived  = false;
-	$unblocked = false;
-	$pending   = false;
-
-	$all = false;
+	$blocked     = false;
+	$hidden      = false;
+	$ignored     = false;
+	$archived    = false;
+	$unblocked   = false;
+	$pending     = false;
+	$unconnected = false;
+	$all         = false;
 
 	$_SESSION['return_url'] = $a->query_string;
 
@@ -212,6 +212,11 @@ function connections_content(&$a) {
 				$pending = true;
 				nav_set_selected('intros');
 				break;
+			case 'unconnected':
+				$search_flags = ABOOK_FLAG_UNCONNECTED;
+				$head = t('Unconnected');
+				$unconnected = true;
+				break;
 
 			case 'all':
 				$head = t('All');
@@ -223,7 +228,8 @@ function connections_content(&$a) {
 		}
 
 		$sql_extra = (($search_flags) ? " and ( abook_flags & " . $search_flags . " ) " : "");
-
+		if(argv(1) === 'pending')
+			$sql_extra .= " and not ( abook_flags & " . ABOOK_FLAG_IGNORED . " ) ";
 
 	}
 	else {
@@ -236,56 +242,64 @@ function connections_content(&$a) {
 	$tabs = array(
 		array(
 			'label' => t('Suggestions'),
-			'url'   => $a->get_baseurl(true) . '/suggest', 
+			'url'   => z_root() . '/suggest', 
 			'sel'   => '',
 			'title' => t('Suggest new connections'),
 		),
 		array(
 			'label' => t('New Connections'),
-			'url'   => $a->get_baseurl(true) . '/connections/pending', 
+			'url'   => z_root() . '/connections/pending', 
 			'sel'   => ($pending) ? 'active' : '',
 			'title' => t('Show pending (new) connections'),
 		),
 		array(
 			'label' => t('All Connections'),
-			'url'   => $a->get_baseurl(true) . '/connections/all', 
+			'url'   => z_root() . '/connections/all', 
 			'sel'   => ($all) ? 'active' : '',
 			'title' => t('Show all connections'),
 		),
 		array(
 			'label' => t('Unblocked'),
-			'url'   => $a->get_baseurl(true) . '/connections',
+			'url'   => z_root() . '/connections',
 			'sel'   => (($unblocked) && (! $search) && (! $nets)) ? 'active' : '',
 			'title' => t('Only show unblocked connections'),
 		),
 
 		array(
 			'label' => t('Blocked'),
-			'url'   => $a->get_baseurl(true) . '/connections/blocked',
+			'url'   => z_root() . '/connections/blocked',
 			'sel'   => ($blocked) ? 'active' : '',
 			'title' => t('Only show blocked connections'),
 		),
 
 		array(
 			'label' => t('Ignored'),
-			'url'   => $a->get_baseurl(true) . '/connections/ignored',
+			'url'   => z_root() . '/connections/ignored',
 			'sel'   => ($ignored) ? 'active' : '',
 			'title' => t('Only show ignored connections'),
 		),
 
 		array(
 			'label' => t('Archived'),
-			'url'   => $a->get_baseurl(true) . '/connections/archived',
+			'url'   => z_root() . '/connections/archived',
 			'sel'   => ($archived) ? 'active' : '',
 			'title' => t('Only show archived connections'),
 		),
 
 		array(
 			'label' => t('Hidden'),
-			'url'   => $a->get_baseurl(true) . '/connections/hidden',
+			'url'   => z_root() . '/connections/hidden',
 			'sel'   => ($hidden) ? 'active' : '',
 			'title' => t('Only show hidden connections'),
 		),
+
+		array(
+			'label' => t('Unconnected'),
+			'url'   => z_root() . '/connections/unconnected',
+			'sel'   => ($unconnected) ? 'active' : '',
+			'title' => t('Only show one-way connections'),
+		),
+
 
 	);
 

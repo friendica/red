@@ -51,6 +51,7 @@ var items_8php =
     [ "red_escape_zrl_callback", "items_8php.html#a83a349062945d585edb4b3c5d763ab6e", null ],
     [ "red_unescape_codeblock", "items_8php.html#ad4ee16e3ff1eaf60428c61f82ba25e6a", null ],
     [ "red_zrl_callback", "items_8php.html#a4e6d7639431e0dd8e9f4dba8e1ac408b", null ],
+    [ "retain_item", "items_8php.html#af6237605c60d69abdd959ddbbee3420c", null ],
     [ "send_status_notifications", "items_8php.html#aab9e0c58247427126de0699c729c3b6c", null ],
     [ "tag_deliver", "items_8php.html#ab1bce4261bcf75ad62753b498a144d17", null ],
     [ "termtype", "items_8php.html#ad34827ed330898456783fb14c7b46154", null ],

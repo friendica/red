@@ -439,7 +439,6 @@ function settings_post(&$a) {
 		dbesc($str_group_deny),
 		intval(local_user())
 	);   
-
 	if($r)
 		info( t('Settings updated.') . EOL);
 
@@ -759,6 +758,7 @@ function settings_content(&$a) {
 			'$itemspage'   => array('itemspage',  t("Maximum number of conversations to load at any time:"), $itemspage, t('Maximum of 100 items')),
 			'$nosmile'	=> array('nosmile', t("Don't show emoticons"), $nosmile, ''),
 			'$chanview_full' => array('chanview_full', t('Do not view remote profiles in frames'), $chanview, t('By default open in a sub-window of your own site')), 			
+			'$layout_editor' => t('System Page Layout Editor - (advanced)'),
 			'$theme_config' => $theme_config,
 		));
 		

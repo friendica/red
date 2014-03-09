@@ -88,7 +88,7 @@ $r = q("select * from item_id where uid = %d and service = 'BUILDBLOCK' order by
 //Build the base URL for edit links
 		$url = z_root() . "/editblock/" . $which; 
 // This isn't pretty, but it works.  Until I figure out what to do with the UI, it's Good Enough(TM).
-       return $o . replace_macros(get_markup_template("webpagelist.tpl"), array(
+       return $o . replace_macros(get_markup_template("blocklist.tpl"), array(
 		'$baseurl' => $url,
 		'$edit' => t('Edit'),
 		'$pages' => $pages,

@@ -792,6 +792,7 @@ class RedBasicAuth extends Sabre\DAV\Auth\Backend\AbstractBasic {
 				$this->channel_id = $r[0]['channel_id'];
 				$this->channel_hash = $this->observer = $r[0]['channel_hash'];
 				$_SESSION['uid'] = $r[0]['channel_id'];
+				$_SESSION['account_id'] = $r[0]['channel_account_id'];
 				$_SESSION['authenticated'] = true;
 				return true;
 			}
@@ -813,6 +814,7 @@ class RedBasicAuth extends Sabre\DAV\Auth\Backend\AbstractBasic {
 						$this->channel_id = $r[0]['channel_id'];
 						$this->channel_hash = $this->observer = $r[0]['channel_hash'];
 						$_SESSION['uid'] = $r[0]['channel_id'];
+						$_SESSION['account_id'] = $r[0]['channel_account_id'];
 						$_SESSION['authenticated'] = true;
             			return true;
         			}

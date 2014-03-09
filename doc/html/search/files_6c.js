@@ -1,5 +1,6 @@
 var searchData=
 [
+  ['lang_2ephp',['lang.php',['../lang_8php.html',1,'']]],
   ['language_2ephp',['language.php',['../language_8php.html',1,'']]],
   ['layouts_2ephp',['layouts.php',['../layouts_8php.html',1,'']]],
   ['like_2ephp',['like.php',['../like_8php.html',1,'']]],

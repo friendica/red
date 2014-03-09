@@ -862,7 +862,7 @@ function item_post(&$a) {
 	// figure out how to return, depending on from whence we came
 
 	if($api_source)
-		return;
+		return $post;
 
 	if($return_path) {
 		goaway($a->get_baseurl() . "/" . $return_path);

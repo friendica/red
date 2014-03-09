@@ -42,6 +42,7 @@ function openid_content(&$a) {
 					        if(($record['account_flags'] == ACCOUNT_OK) || ($record['account_flags'] == ACCOUNT_UNVERIFIED)) {
 			            		logger('mod_openid: openid success for ' . $x[0]['channel_name']);
 								$_SESSION['uid'] = $r[0]['channel_id'];
+								$_SESSION['account_id'] = $r[0]['channel_account_id'];
 								$_SESSION['authenticated'] = true;
 								authenticate_success($record,true,true,true,true);
 								goaway(z_root());
@@ -61,6 +62,7 @@ function openid_content(&$a) {
 			if($r) {
 				$_SESSION['authenticated'] = 1;
 				$_SESSION['visitor_id'] = $r[0]['xchan_hash'];
+				$_SESSION['my_url'] = $r[0]['xchan_url'];
 				$_SESSION['my_address'] = $r[0]['xchan_addr'];
 				$arr = array('xchan' => $r[0], 'session' => $_SESSION);
 				call_hooks('magic_auth_openid_success',$arr);
@@ -168,6 +170,7 @@ function openid_content(&$a) {
 					set_xconfig($url,'system','openid',$authid);
 					$_SESSION['authenticated'] = 1;
 					$_SESSION['visitor_id'] = $r[0]['xchan_hash'];
+					$_SESSION['my_url'] = $r[0]['xchan_url'];
 					$_SESSION['my_address'] = $r[0]['xchan_addr'];
 					$arr = array('xchan' => $r[0], 'session' => $_SESSION);
 					call_hooks('magic_auth_openid_success',$arr);

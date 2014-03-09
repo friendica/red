@@ -665,8 +665,11 @@ function contact_block() {
 
 	if((! is_array($a->profile)) || ($a->profile['hide_friends']))
 		return $o;
-	$r = q("SELECT COUNT(abook_id) AS total FROM abook WHERE abook_channel = %d and abook_flags = 0",
-			intval($a->profile['uid'])
+	$r = q("SELECT COUNT(abook_id) AS total FROM abook left join xchan on abook_xchan = xchan_hash WHERE abook_channel = %d and abook_flags = 0 and not (xchan_flags & %d) and not (xchan_flags & %d) and not (xchan_flags & %d)",
+			intval($a->profile['uid']),
+			intval(XCHAN_FLAGS_HIDDEN),
+			intval(XCHAN_FLAGS_ORPHAN),
+			intval(XCHAN_FLAGS_DELETED)
 	);
 	if(count($r)) {
 		$total = intval($r[0]['total']);
@@ -677,8 +680,11 @@ function contact_block() {
 		
 	} else {
 
-		$r = q("SELECT abook.*, xchan.* FROM abook left join xchan on abook.abook_xchan = xchan.xchan_hash WHERE abook_channel = %d AND abook_flags = 0 ORDER BY RAND() LIMIT %d",
+		$r = q("SELECT abook.*, xchan.* FROM abook left join xchan on abook.abook_xchan = xchan.xchan_hash WHERE abook_channel = %d AND abook_flags = 0 and not (xchan_flags & %d ) and not (xchan_flags & %d ) and not (xchan_flags & %d ) ORDER BY RAND() LIMIT %d",
 				intval($a->profile['uid']),
+				intval(XCHAN_FLAGS_HIDDEN),
+				intval(XCHAN_FLAGS_ORPHAN),
+				intval(XCHAN_FLAGS_DELETED),
 				intval($shown)
 		);
 

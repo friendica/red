@@ -28,7 +28,7 @@ function ping_init(&$a) {
 
 	header("content-type: application/json");
 
-	$result['invalid'] = ((local_user()) && (intval($_GET['uid'])) && (intval($_GET['uid']) != local_user()) ? 1 : 0);
+	$result['invalid'] = ((intval($_GET['uid'])) && (intval($_GET['uid']) != local_user()) ? 1 : 0);
 
 	if(x($_SESSION,'sysmsg')){
 		foreach ($_SESSION['sysmsg'] as $m){

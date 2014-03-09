@@ -74,6 +74,10 @@ input[type="submit"] {
 	text-decoration: none;
 }
 
+pre code {
+	border: none;
+}
+
 code {
 	font-family: Courier, monospace;
 	display: block;
@@ -429,6 +433,11 @@ footer {
 	text-decoration: none;
 }
 
+.vcard .dropdown-menu {
+	position: absolute;
+	left: 200px;
+	top: 18px;
+}
 
 #profile-extra-links {
 	clear: both;
@@ -445,9 +454,7 @@ footer {
 	margin-top: 5px;
 }
 
-.profile-edit-side-div {
-	float: right;
-}
+
 .profile-edit-side-link {
 	opacity: 0.3;
 	filter:alpha(opacity=30);
@@ -487,72 +494,6 @@ footer {
 	height:175px;
 	padding: 12px;
 }
-
-#profiles-menu.menu-popup {
-  left: 200px;
-  right: auto;
-  top: 22px;
-}
-
-ul.menu-popup {
-  position: absolute;
-  display: none;
-  width: 10em;
-  background: #0080FF;
-  color: #eec;
-  padding: 0px;
-  list-style: none;
-/*  border-radius: 0px 0px 20px 20px; */
-  z-index: 100000;
-  -webkit-box-shadow: 0px 5px 10px rgba(0, 0, 0, 0.7);
-  -moz-box-shadow: 0px 5px 10px rgba(0, 0, 0, 0.7);
-  box-shadow: 0px 5px 10px rgba(0, 0, 0, 0.7);
-}
-ul.menu-popup a {
-  display: block;
-  color: #FFFFFF;
-  padding: 5px 10px;
-  text-decoration: none;
-}
-
-
-ul.menu-popup a:hover {
-  background-color: #888888;
-  color: #FFFFFF;
-}
-ul.menu-popup .menu-sep {
-  border-top: 1px solid #9eabb0;
-}
-ul.menu-popup li {
-  float: none;
-  overflow: auto;
-  height: auto;
-  display: block;
-}
-ul.menu-popup li img {
-  float: left;
-  width: 16px;
-  height: 16px;
-  padding-right: 5px;
-}
-ul.menu-popup .empty {
-  padding: 5px;
-  text-align: center;
-  color: #9eabb0;
-}
-ul.menu-popup .toolbar {
-  background-color: #9eabb0;
-  height: auto;
-  overflow: auto;
-}
-ul.menu-popup .toolbar a {
-  float: right;
-}
-ul.menu-popup .toolbar a:hover {
-  background-color: #ffffff;
-}
-
-
 
 #profile-in-dir-yes-label,
 #profile-in-dir-no-label,
@@ -793,6 +734,24 @@ ul.menu-popup .toolbar a:hover {
 
 }
 
+.pmenu.horizontal {
+	padding: 0 0 0 0;
+	border-bottom: none;
+}
+
+.pmenu.horizontal .pmenu-title {
+	display: none;
+}
+.pmenu.horizontal ul {
+	-moz-padding-start: 0;
+}
+
+.pmenu.horizontal li {
+	margin-left: 0;
+	display: inline;
+	padding-right: 15px;
+}
+
 #settings-default-perms-menu {
 	margin-top: 15px;
 	margin-bottom: 15px;
@@ -807,7 +766,7 @@ ul.menu-popup .toolbar a:hover {
 	display: block;
 	color: #FFFFFF;
 	margin-top: 15px;
-	background-color: $nav_bg_2;
+	background-color: $nav_bg;
 	-webkit-border-radius: $radiuspx ;
 	-moz-border-radius: $radiuspx;
 	border-radius: $radiuspx;
@@ -896,7 +855,7 @@ ul.menu-popup .toolbar a:hover {
 #nav-search-spinner {
 	float: left;
 	margin: 25px 0px 0px 25px;
-	color: #fff;
+	color: $nav_active_icon_colour;
 }
 
 #nav-search-text:hover,
@@ -910,7 +869,7 @@ ul.menu-popup .toolbar a:hover {
 	margin: 15px;
 	padding: 0px 5px 0px 5px;
 	border-radius: 10px;
-	border: none;
+	border-color: $nav_bd;
 	background-color: $search_background;
     	transition: background-color 300ms ease 0s;
 }
@@ -1146,12 +1105,6 @@ ul.menu-popup .toolbar a:hover {
 }
 .side-link {
 	margin-bottom: 15px;
-}
-
-#language-selector {
-	position: absolute;
-	top: 0px;
-	left: 16px;
 }
 
 #group-members {
@@ -1549,7 +1502,7 @@ div.jGrowl div.info {
 #nav-search-text-ac .autocomplete {
 	position: fixed;
 	top: 51px;
-	border: 1px solid #222;
+	border: 1px solid $nav_bd;
 	border-top: none;
 }
 
@@ -2242,6 +2195,7 @@ img.mail-list-sender-photo {
 }
 
 /* nav bootstrap */
+
 nav i {
 	font-size: 14px;
 }
@@ -2269,7 +2223,90 @@ nav .dropdown-menu {
 	border-bottom-left-radius: $radiuspx;
 }
 
+#usermenu-caret {
+	color: $nav_icon_colour;
+}
+
+#avatar:hover + #usermenu-caret {
+	color: $nav_active_icon_colour;
+}
+
 /* bootstrap overrides */
 blockquote {
-    font-size: $body_font_size;
+	font-size: $body_font_size;
+}
+
+.dropdown-menu {
+	font-size: $body_font_size;
+	border-radius: $radiuspx;
+}
+
+.dropdown-menu img {
+	border-radius: $radiuspx;
+}
+
+.navbar-inverse {
+	background-image: -webkit-linear-gradient(top, $nav_gradient_top 0%, $nav_gradient_bottom 100%);
+	background-image:         linear-gradient(to bottom, $nav_gradient_top 0%, $nav_gradient_bottom 100%);
+	filter: progid:DXImageTransform.Microsoft.gradient(startColorstr=$nav_gradient_top, endColorstr=$nav_gradient_bottom, GradientType=0);
+	background-color: $nav_bg;
+	border-color: $nav_bd;
+}
+
+.navbar-inverse .navbar-collapse {
+	border-color: $nav_bd;
+}
+
+.navbar-inverse .navbar-nav > .active > a {
+	background-image: -webkit-linear-gradient(top, $nav_active_gradient_top 0%, $nav_active_gradient_bottom 100%);
+	background-image:         linear-gradient(to bottom, $nav_active_gradient_top 0%, $nav_active_gradient_bottom 100%);
+	filter: progid:DXImageTransform.Microsoft.gradient(startColorstr=$nav_active_gradient_top, endColorstr=$nav_active_gradient_bottom, GradientType=0);
+}
+
+
+.navbar-inverse .navbar-nav > li > a {
+	color: $nav_icon_colour;
+	text-shadow: 0px 0px 0px;
+}
+
+.navbar-inverse .navbar-nav > li > a:hover,
+.navbar-inverse .navbar-nav > li > a:focus {
+	color: $nav_active_icon_colour;
+}
+
+.navbar-inverse .navbar-nav > .active > a,
+.navbar-inverse .navbar-nav > .active > a:hover,
+.navbar-inverse .navbar-nav > .active > a:focus {
+	color: $nav_active_icon_colour;
+}
+
+.navbar-inverse .navbar-nav > .open > a,
+.navbar-inverse .navbar-nav > .open > a:hover,
+.navbar-inverse .navbar-nav > .open > a:focus {
+	background-color: $nav_bd;
+	color: $nav_active_icon_colour;
+}
+
+.navbar-inverse .navbar-toggle {
+	border-color: $nav_bd;
+}
+.navbar-inverse .navbar-toggle:hover,
+.navbar-inverse .navbar-toggle:focus {
+	background-color: $nav_bg;
+}
+
+.navbar-inverse .navbar-toggle .icon-bar {
+	background-color: $nav_active_icon_colour;
+}
+
+#expand-aside {
+	color: $nav_active_icon_colour;
+	padding: 7px 10px;
+}
+
+@media (max-width:767px) {
+	aside#region_1 {
+		background: rgba(0, 0, 0, .1);
+		border-right: 1px solid $nav_bd;
+	}
 }

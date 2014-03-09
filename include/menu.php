@@ -24,7 +24,7 @@ function menu_fetch($name,$uid,$observer_xchan) {
 	return null;
 }
 	
-function menu_render($menu, $edit = false) {
+function menu_render($menu, $class='', $edit = false) {
 	if(! $menu)
 		return '';
 
@@ -38,6 +38,7 @@ function menu_render($menu, $edit = false) {
 
 	return replace_macros(get_markup_template('usermenu.tpl'),array(
 		'$menu' => $menu['menu'],
+		'$class' => $class,
 		'$edit' => (($edit) ? t("Edit") : ''),
 		'$items' => $menu['items']
 	));

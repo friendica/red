@@ -32,9 +32,12 @@ function authenticate_success($user_record, $login_initial = false, $interactive
 
 	}
 
-	if($login_initial)
+	if($login_initial) {
+
 		call_hooks('logged_in', $user_record);
-	
+
+		// might want to log success here
+	}
 
 	if($return || x($_SESSION,'workflow')) {
 		unset($_SESSION['workflow']);

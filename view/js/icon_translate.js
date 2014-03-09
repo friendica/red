@@ -53,4 +53,5 @@ $(document).ready(function() {
 		$('.icon-circle').addClass('');
 		$('.icon-bookmark').addClass('');
 		$('.icon-fullscreen').addClass('');
+		$('.icon-share').addClass('');
 });

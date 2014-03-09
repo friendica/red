@@ -87,6 +87,7 @@ var searchData=
   ['sources_5fcontent',['sources_content',['../sources_8php.html#ac442ccef080ab95772d8929fcafcb4b7',1,'sources.php']]],
   ['sources_5fpost',['sources_post',['../sources_8php.html#ac73298ff162ce7b2de8dcaf3d3305b1e',1,'sources.php']]],
   ['spam_2ephp',['spam.php',['../spam_8php.html',1,'']]],
+  ['splitfilename',['splitFilename',['../functions_8php.html#adefe514c95680928b3aae250cbc3c663',1,'functions.php']]],
   ['ssl_5fpolicy_5ffull',['SSL_POLICY_FULL',['../boot_8php.html#a02566ac9d891369a1d3ebb81a15722fc',1,'boot.php']]],
   ['ssl_5fpolicy_5fnone',['SSL_POLICY_NONE',['../boot_8php.html#af86c651547aa8f9e549ee40a09455549',1,'boot.php']]],
   ['ssl_5fpolicy_5fselfsign',['SSL_POLICY_SELFSIGN',['../boot_8php.html#adca48aee78465ae3064ca4432c0d87b5',1,'boot.php']]],
