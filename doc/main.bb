@@ -39,6 +39,7 @@
 [zrl=[baseurl]/help/Creating-Templates]Creating Comanche Templates[/zrl]
 [zrl=[baseurl]/help/Widgets]Core Widgets[/zrl]
 [zrl=[baseurl]/help/plugins]Plugins[/zrl]
+[zrl=[baseurl]/help/DerivedTheme1]Creating Derivative Themes[/zrl]
 [zrl=[baseurl]/help/schema_development]Schemas[/zrl]
 [zrl=[baseurl]/help/developers]Developers[/zrl]
 [zrl=[baseurl]/help/intro_for_developers]Intro for Developers[/zrl]
