@@ -38,7 +38,9 @@ Advanced requests include
 * keywords=xxx
 [Keywords contain xxx]
 
-There are many reasons why a match may not return what you're looking for, as many channels do not provide detailed information in their default (public) profile, and many of these fields allow free-text input in any language which is difficult to match precisely. 
+There are many reasons why a match may not return what you're looking for, as many channels do not provide detailed information in their default (public) profile, and many of these fields allow free-text input in several languages - and this may be difficult to match precisely. For instance you may have better results finding somebody in the USA with 'country=u' (along with some odd channels from Deutschland and Bulgaria and Australia) because this could be represented in a profile as US, U.S.A, USA, United States, etc...
+
+Future revisions of this tool may try to smooth over some of these difficulties. 
 
 Requests may be joined together with 'and', 'or', and 'and not'. 
 
