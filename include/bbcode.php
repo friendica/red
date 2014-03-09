@@ -227,6 +227,13 @@ function bb_location($match) {
 	// not yet implemented
 }
 
+function bbiframe($match) {
+	$a = get_app();
+	if(strpos($match[1],get_app()->get_hostname()))
+		return '<a href="' . $match[1] . '">' . $match[1] . '</a>';
+	return '<iframe src="' . $match[1] . '" width="' . $a->videowidth . '" height="' . $a->videoheight . '"><a href="' . $match[1] . '">' . $match[1] . '</a></iframe>';
+}
+
 function bb_ShareAttributesSimple($match) {
 
 	$attributes = $match[1];
@@ -599,16 +606,16 @@ function bbcode($Text,$preserve_nl = false, $tryoembed = true) {
 
 	// [img float={left, right}]pathtoimage[/img]
 	if (strpos($Text,'[/img]') !== false) {
-		$Text = preg_replace("/\[img float=left\](.*?)\[\/img\]/ism", '<img src="$1" style="float: left;" alt="' . t('Image/photo') . '" />', $Text);
+		$Text = preg_replace("/\[img float=left\](.*?)\[\/img\]/ism", '<img src="$1" style="float: left;padding:8px;" alt="' . t('Image/photo') . '" />', $Text);
 	}
 	if (strpos($Text,'[/img]') !== false) {
-		$Text = preg_replace("/\[img float=right\](.*?)\[\/img\]/ism", '<img src="$1" style="float: right;" alt="' . t('Image/photo') . '" />', $Text);
+		$Text = preg_replace("/\[img float=right\](.*?)\[\/img\]/ism", '<img src="$1" style="float: right;padding:8px;" alt="' . t('Image/photo') . '" />', $Text);
 	}
 	if (strpos($Text,'[/zmg]') !== false) {
-		$Text = preg_replace("/\[zmg float=left\](.*?)\[\/zmg\]/ism", '<img class="zrl" src="$1" style="float: left;" alt="' . t('Image/photo') . '" />', $Text);
+		$Text = preg_replace("/\[zmg float=left\](.*?)\[\/zmg\]/ism", '<img class="zrl" src="$1" style="float: left;padding:8px;" alt="' . t('Image/photo') . '" />', $Text);
 	}
 	if (strpos($Text,'[/zmg]') !== false) {
-		$Text = preg_replace("/\[zmg float=right\](.*?)\[\/zmg\]/ism", '<img class="zrl" src="$1" style="float: right;" alt="' . t('Image/photo') . '" />', $Text);
+		$Text = preg_replace("/\[zmg float=right\](.*?)\[\/zmg\]/ism", '<img class="zrl" src="$1" style="float: right;padding:8px;" alt="' . t('Image/photo') . '" />', $Text);
 	}
 
 	// [img=widthxheight]pathtoimage[/img]
@@ -621,16 +628,16 @@ function bbcode($Text,$preserve_nl = false, $tryoembed = true) {
 
 	// [img=widthxheight float={left, right}]pathtoimage[/img]
 	if (strpos($Text,'[/img]') !== false) {
-		$Text = preg_replace("/\[img\=([0-9]*)x([0-9]*) float=left\](.*?)\[\/img\]/ism", '<img src="$3" style="width: $1px; float: left;" alt="' . t('Image/photo') . '" >', $Text);
+		$Text = preg_replace("/\[img\=([0-9]*)x([0-9]*) float=left\](.*?)\[\/img\]/ism", '<img src="$3" style="width: $1px; float: left;padding:8px;" alt="' . t('Image/photo') . '" >', $Text);
 	}
 	if (strpos($Text,'[/img]') !== false) {
-		$Text = preg_replace("/\[img\=([0-9]*)x([0-9]*) float=right\](.*?)\[\/img\]/ism", '<img src="$3" style="width: $1px; float: right;" alt="' . t('Image/photo') . '" >', $Text);
+		$Text = preg_replace("/\[img\=([0-9]*)x([0-9]*) float=right\](.*?)\[\/img\]/ism", '<img src="$3" style="width: $1px; float: right;padding:8px;" alt="' . t('Image/photo') . '" >', $Text);
 	}
 	if (strpos($Text,'[/zmg]') !== false) {
-		$Text = preg_replace("/\[zmg\=([0-9]*)x([0-9]*) float=left\](.*?)\[\/zmg\]/ism", '<img class="zrl" src="$3" style="width: $1px; float: left;" alt="' . t('Image/photo') . '" >', $Text);
+		$Text = preg_replace("/\[zmg\=([0-9]*)x([0-9]*) float=left\](.*?)\[\/zmg\]/ism", '<img class="zrl" src="$3" style="width: $1px; float: left;padding:8px;" alt="' . t('Image/photo') . '" >', $Text);
 	}
 	if (strpos($Text,'[/zmg]') !== false) {
-		$Text = preg_replace("/\[zmg\=([0-9]*)x([0-9]*) float=right\](.*?)\[\/zmg\]/ism", '<img class="zrl" src="$3" style="width: $1px; float: right;" alt="' . t('Image/photo') . '" >', $Text);
+		$Text = preg_replace("/\[zmg\=([0-9]*)x([0-9]*) float=right\](.*?)\[\/zmg\]/ism", '<img class="zrl" src="$3" style="width: $1px; float: right;padding:8px;" alt="' . t('Image/photo') . '" >', $Text);
 	}
 
 	// style (sanitized)
@@ -677,7 +684,7 @@ function bbcode($Text,$preserve_nl = false, $tryoembed = true) {
 
 	if ($tryoembed){
 		if (strpos($Text,'[/iframe]') !== false) {
-			$Text = preg_replace("/\[iframe\](.*?)\[\/iframe\]/ism", '<iframe src="$1" width="' . $a->videowidth . '" height="' . $a->videoheight . '"><a href="$1">$1</a></iframe>', $Text);
+			$Text = preg_replace_callback("/\[iframe\](.*?)\[\/iframe\]/ism", 'bbiframe', $Text);
 		}
 	}
 	else {
