@@ -16,7 +16,7 @@ function findpeople_widget() {
 		}
 	}
 
-	$advanced_search = ((local_user() && get_pconfig(local_user(),'feature','expert')) ? true : false);
+	$advanced_search = ((local_user() && get_pconfig(local_user(),'feature','expert')) ? t('Advanced') : false);
  
 	return replace_macros(get_markup_template('peoplefind.tpl'),array(
 		'$findpeople' => t('Find Channels'),
