@@ -23,6 +23,7 @@
 [zrl=[baseurl]/help/bbcode]BBcode reference for posts and comments[/zrl]
 [zrl=[baseurl]/help/checking_account_quota_usage]Checking Account Quota Usage[/zrl]
 [zrl=[baseurl]/help/cloud_desktop_clients]Cloud Desktop Clients[/zrl]
+[zrl=[baseurl]/help/AdvancedSearch]Advanced Directory Search[/zrl]
 
 [b]For Hub Administrators[/b]
 
