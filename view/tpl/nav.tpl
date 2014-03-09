@@ -32,7 +32,7 @@
 			<ul class="nav navbar-nav navbar-left">
 			{{if $nav.lock}}
 				<li>
-					<a class="fakelink" title="{{$nav.lock.3}}" onclick="window.location.href='{{$nav.lock.0}}'; return false;"><i class="{{if $nav.locked}}icon-lock{{else}}icon-unlock{{/if}}"></i></a>
+					<a title="{{$nav.lock.3}}" href="{{$nav.lock.0}}"><i class="{{if $nav.locked}}icon-lock{{else}}icon-unlock{{/if}}"></i></a>
 				</li>
 			{{/if}}
 
