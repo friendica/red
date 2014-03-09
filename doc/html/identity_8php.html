@@ -160,6 +160,8 @@ Functions</h2></td></tr>
 <tr class="separator:a332df795f684788002f5a6424abacfd7"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a47d6f53216f23a3484061793bef29854"><td class="memItemLeft" align="right" valign="top">&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="identity_8php.html#a47d6f53216f23a3484061793bef29854">remote_online_status</a> ($webbie)</td></tr>
 <tr class="separator:a47d6f53216f23a3484061793bef29854"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:ac73b3e13778c564c877554517a7f51ba"><td class="memItemLeft" align="right" valign="top">&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="identity_8php.html#ac73b3e13778c564c877554517a7f51ba">get_channel_by_nick</a> ($nick)</td></tr>
+<tr class="separator:ac73b3e13778c564c877554517a7f51ba"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table>
 <h2 class="groupheader">Function Documentation</h2>
 <a class="anchor" id="aa870d2c1f558cfd52bef05bc124e8fa4"></a>
@@ -192,7 +194,7 @@ Functions</h2></td></tr>
         </tr>
       </table>
 </div><div class="memdoc">
-<p>() Return the total number of channels on this site. No filtering is performed.</p>
+<p>() Return the total number of channels on this site. No filtering is performed except to check PAGE_REMOVED</p>
 <dl class="section return"><dt>Returns</dt><dd>int on error returns boolean false </dd></dl>
 
 <p>Referenced by <a class="el" href="zfinger_8php.html#a8139b83a22ef98869adc10aa224027a0">zfinger_init()</a>.</p>
@@ -256,6 +258,24 @@ Functions</h2></td></tr>
 
 </div>
 </div>
+<a class="anchor" id="ac73b3e13778c564c877554517a7f51ba"></a>
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">get_channel_by_nick </td>
+          <td>(</td>
+          <td class="paramtype">&#160;</td>
+          <td class="paramname"><em>$nick</em></td><td>)</td>
+          <td></td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+<p>Referenced by <a class="el" href="editblock_8php.html#abbe8f55de06967bc8d79d620509a49e6">editblock_content()</a>, <a class="el" href="importelm_8php.html#a1a4f71e6d76ace6add5e9659845f5e5f">importelm_post()</a>, <a class="el" href="wall__attach_8php.html#a7385e970e93228d082f0fd7254f6e653">wall_attach_post()</a>, and <a class="el" href="wall__upload_8php.html#a7cbe204244cf9e0380ee932263a74d8f">wall_upload_post()</a>.</p>
+
+</div>
+</div>
 <a class="anchor" id="ab1485a26b032956e1496fc08c58b83ed"></a>
 <div class="memitem">
 <div class="memproto">
@@ -278,7 +298,7 @@ Functions</h2></td></tr>
 </dl>
 <dl class="section return"><dt>Returns</dt><dd>string </dd></dl>
 
-<p>Referenced by <a class="el" href="include_2network_8php.html#ab07ce9d75eae559865ed90aad2154bd7">avatar_img()</a>, <a class="el" href="photo__driver_8php.html#a78f5a10c568d2a9bbbb129dc96548887">import_profile_photo()</a>, and <a class="el" href="photo_8php.html#a582779d24882b0d31ee909a91d70a448">photo_init()</a>.</p>
+<p>Referenced by <a class="el" href="include_2network_8php.html#ab07ce9d75eae559865ed90aad2154bd7">avatar_img()</a>, <a class="el" href="photo__driver_8php.html#a78f5a10c568d2a9bbbb129dc96548887">import_profile_photo()</a>, <a class="el" href="openid_8php.html#a9a13827dbcf61ae4e45f0b6b33a88f43">openid_content()</a>, and <a class="el" href="photo_8php.html#a582779d24882b0d31ee909a91d70a448">photo_init()</a>.</p>
 
 </div>
 </div>
@@ -362,7 +382,7 @@ Functions</h2></td></tr>
       </table>
 </div><div class="memdoc">
 
-<p>Referenced by <a class="el" href="identity_8php.html#a1cf83ac2b645de12868edaa3a5718f05">create_sys_channel()</a>.</p>
+<p>Referenced by <a class="el" href="identity_8php.html#a1cf83ac2b645de12868edaa3a5718f05">create_sys_channel()</a>, and <a class="el" href="identity_8php.html#aaeb666872995e3ab8da8f7bc5f3b2bd3">get_theme_uid()</a>.</p>
 
 </div>
 </div>
@@ -552,7 +572,7 @@ Functions</h2></td></tr>
 <p>The channel default theme is also selected for use, unless over-riden elsewhere. </p>
 <p>load/reload current theme info</p>
 
-<p>Referenced by <a class="el" href="achievements_8php.html#a35ae04ada0e227d19671f289a32fb30e">achievements_content()</a>, <a class="el" href="blocks_8php.html#a2531a8fd51db3cecb2eb20c002c66e12">blocks_content()</a>, <a class="el" href="channel_8php.html#ac7c8c7845741baadf87fae6bc279f3dc">channel_init()</a>, <a class="el" href="mod_2chat_8php.html#aa9ae4782e9baef0b7314ab9527c2707e">chat_init()</a>, <a class="el" href="cloud_8php.html#a1b79a6fe0454bc76673ad9aef55bf02d">cloud_init()</a>, <a class="el" href="common_8php.html#aca62f113655809f41f49042ce9b123c2">common_init()</a>, <a class="el" href="connect_8php.html#ad46a38f32fd7a3d324b1fa26373efa36">connect_init()</a>, <a class="el" href="layouts_8php.html#a6e0193759ad9eef76d3df2db24237b50">layouts_content()</a>, <a class="el" href="page_8php.html#a4d89800c0366a239191b1692c09635cf">page_init()</a>, <a class="el" href="mod_2photos_8php.html#ab950295cd77626f5fe65331a87693014">photos_init()</a>, <a class="el" href="profile_8php.html#ab5d0246be0552e2182a585c1206d22a5">profile_init()</a>, <a class="el" href="profile__photo_8php.html#a140631c56438fbfacb61a1eb43067d02">profile_photo_init()</a>, <a class="el" href="profiles_8php.html#a36f71405ad536228f8bb84a551b23f7e">profiles_init()</a>, <a class="el" href="profperm_8php.html#a17fb64ec05edee1dc94d95438807d6c6">profperm_init()</a>, <a class="el" href="viewconnections_8php.html#a00163d50b17568f7b0e48b1ca9ab7330">viewconnections_init()</a>, and <a class="el" href="webpages_8php.html#af3b7397d4abc153e3d2147740ee1a41d">webpages_content()</a>.</p>
+<p>Referenced by <a class="el" href="achievements_8php.html#a35ae04ada0e227d19671f289a32fb30e">achievements_content()</a>, <a class="el" href="block_8php.html#a9b61c96044ed2a068f18c10370a78d5c">block_init()</a>, <a class="el" href="blocks_8php.html#a2531a8fd51db3cecb2eb20c002c66e12">blocks_content()</a>, <a class="el" href="channel_8php.html#ac7c8c7845741baadf87fae6bc279f3dc">channel_init()</a>, <a class="el" href="mod_2chat_8php.html#aa9ae4782e9baef0b7314ab9527c2707e">chat_init()</a>, <a class="el" href="cloud_8php.html#a1b79a6fe0454bc76673ad9aef55bf02d">cloud_init()</a>, <a class="el" href="common_8php.html#aca62f113655809f41f49042ce9b123c2">common_init()</a>, <a class="el" href="connect_8php.html#ad46a38f32fd7a3d324b1fa26373efa36">connect_init()</a>, <a class="el" href="layouts_8php.html#a6e0193759ad9eef76d3df2db24237b50">layouts_content()</a>, <a class="el" href="page_8php.html#a4d89800c0366a239191b1692c09635cf">page_init()</a>, <a class="el" href="mod_2photos_8php.html#ab950295cd77626f5fe65331a87693014">photos_init()</a>, <a class="el" href="profile_8php.html#ab5d0246be0552e2182a585c1206d22a5">profile_init()</a>, <a class="el" href="profile__photo_8php.html#a140631c56438fbfacb61a1eb43067d02">profile_photo_init()</a>, <a class="el" href="profiles_8php.html#a36f71405ad536228f8bb84a551b23f7e">profiles_init()</a>, <a class="el" href="profperm_8php.html#a17fb64ec05edee1dc94d95438807d6c6">profperm_init()</a>, <a class="el" href="viewconnections_8php.html#a00163d50b17568f7b0e48b1ca9ab7330">viewconnections_init()</a>, and <a class="el" href="webpages_8php.html#af3b7397d4abc153e3d2147740ee1a41d">webpages_content()</a>.</p>
 
 </div>
 </div>
@@ -717,7 +737,7 @@ Functions</h2></td></tr>
 <dl class="section return"><dt>Returns</dt><dd>string</dd></dl>
 <p>'zid' string url - url to accept zid string zid - urlencoded zid string result - the return string we calculated, change it if you want to return something else </p>
 
-<p>Referenced by <a class="el" href="chanview_8php.html#a4192c6da888c8c1165851acf9ad4cb8b">chanview_content()</a>, <a class="el" href="chatsvc_8php.html#a7032784215e1f6747cf385a6598770f9">chatsvc_content()</a>, <a class="el" href="conversation_8php.html#affea1afb3f32ca41e966c8ddb4204d81">conversation()</a>, <a class="el" href="dirprofile_8php.html#a3e1d30d3d93863ff5615f2df4ac7f052">dirprofile_init()</a>, <a class="el" href="text_8php.html#a3054189cff173977f4216c9a3dd29e1b">format_categories()</a>, <a class="el" href="text_8php.html#aac0969ae09853205992ba06ab9f9f61a">get_plink()</a>, <a class="el" href="conversation_8php.html#afe5b2f38d8b803edb0d7ec5fa2868db0">like_puller()</a>, <a class="el" href="conversation_8php.html#a9bd7f9fb6678736c581bcba3b17f471c">localize_item()</a>, <a class="el" href="match_8php.html#a1dd853e959b9e70c1911bb2fb5f5130d">match_content()</a>, <a class="el" href="include_2menu_8php.html#a4d7123b0577fa994770199f9b831da11">menu_render()</a>, <a class="el" href="include_2follow_8php.html#ae387d4ae097c23d69f3247e7f08140c7">new_contact()</a>, <a class="el" href="include_2oembed_8php.html#a98549b9af8140eda3eceaeedcaabc2c2">oembed_fetch_url()</a>, <a class="el" href="bbcode_8php.html#a39de4de32a9456d1ca914d0dc52bd322">tryzrlaudio()</a>, <a class="el" href="bbcode_8php.html#aa92f119341f4c69dcef2768a013079b8">tryzrlvideo()</a>, and <a class="el" href="viewconnections_8php.html#ab6c4d983e97b3a8a879567ff76507776">viewconnections_content()</a>.</p>
+<p>Referenced by <a class="el" href="chanview_8php.html#a4192c6da888c8c1165851acf9ad4cb8b">chanview_content()</a>, <a class="el" href="chatsvc_8php.html#a7032784215e1f6747cf385a6598770f9">chatsvc_content()</a>, <a class="el" href="conversation_8php.html#affea1afb3f32ca41e966c8ddb4204d81">conversation()</a>, <a class="el" href="dirprofile_8php.html#a3e1d30d3d93863ff5615f2df4ac7f052">dirprofile_init()</a>, <a class="el" href="text_8php.html#a3054189cff173977f4216c9a3dd29e1b">format_categories()</a>, <a class="el" href="text_8php.html#aac0969ae09853205992ba06ab9f9f61a">get_plink()</a>, <a class="el" href="conversation_8php.html#afe5b2f38d8b803edb0d7ec5fa2868db0">like_puller()</a>, <a class="el" href="conversation_8php.html#a9bd7f9fb6678736c581bcba3b17f471c">localize_item()</a>, <a class="el" href="match_8php.html#a1dd853e959b9e70c1911bb2fb5f5130d">match_content()</a>, <a class="el" href="include_2menu_8php.html#a03a5deed3908543581c074ce333e9d6a">menu_render()</a>, <a class="el" href="include_2follow_8php.html#ae387d4ae097c23d69f3247e7f08140c7">new_contact()</a>, <a class="el" href="include_2oembed_8php.html#a98549b9af8140eda3eceaeedcaabc2c2">oembed_fetch_url()</a>, <a class="el" href="bbcode_8php.html#a39de4de32a9456d1ca914d0dc52bd322">tryzrlaudio()</a>, <a class="el" href="bbcode_8php.html#aa92f119341f4c69dcef2768a013079b8">tryzrlvideo()</a>, <a class="el" href="viewconnections_8php.html#ab6c4d983e97b3a8a879567ff76507776">viewconnections_content()</a>, <a class="el" href="widgets_8php.html#a0e2f5179ed1a73b282dfda7270fcabb3">widget_bookmarkedchats()</a>, and <a class="el" href="widgets_8php.html#a50b1410238100c8a94c06b0aa63ee3b8">widget_suggestedchats()</a>.</p>
 
 </div>
 </div>

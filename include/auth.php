@@ -58,14 +58,17 @@ function account_verify_password($email,$pass) {
 }
 
 
-// login/logout 
-
-
-
-
+/**
+ * Inline - not a function
+ * look for auth parameters or re-validate an existing session
+ * also handles logout
+ */
 
 
 if((isset($_SESSION)) && (x($_SESSION,'authenticated')) && ((! (x($_POST,'auth-params'))) || ($_POST['auth-params'] !== 'login'))) {
+
+
+	// process a logout request
 
 	if(((x($_POST,'auth-params')) && ($_POST['auth-params'] === 'logout')) || ($a->module === 'logout')) {
 	
@@ -76,6 +79,8 @@ if((isset($_SESSION)) && (x($_SESSION,'authenticated')) && ((! (x($_POST,'auth-p
 		info( t('Logged out.') . EOL);
 		goaway(z_root());
 	}
+
+	// re-validate a visitor, optionally invoke "su" if permitted to do so
 
 	if(x($_SESSION,'visitor_id') && (! x($_SESSION,'uid'))) {
 		// if our authenticated guest is allowed to take control of the admin channel, make it so.
@@ -106,9 +111,11 @@ if((isset($_SESSION)) && (x($_SESSION,'authenticated')) && ((! (x($_POST,'auth-p
 		$a->set_groups(init_groups_visitor($_SESSION['visitor_id']));
 	}
 
+	// already logged in user returning
+
 	if(x($_SESSION,'uid') || x($_SESSION,'account_id')) {
 
-		// already logged in user returning
+		// first check if we're enforcing that sessions can't change IP address
 
 		$check = get_config('system','paranoia');
 		// extra paranoia - if the IP changed, log them out
@@ -150,6 +157,8 @@ else {
 		nuke_session();
 	}
 
+	// handle a fresh login request
+
 	if((x($_POST,'password')) && strlen($_POST['password']))
 		$encrypted = hash('whirlpool',trim($_POST['password']));
 
@@ -188,7 +197,7 @@ else {
 				notice( t('Failed authentication') . EOL);
 			}
 
-			logger('authenticate: ' . print_r(get_app()->account,true));
+			logger('authenticate: ' . print_r(get_app()->account,true), LOGGER_DEBUG);
 
 		}
 

@@ -42,12 +42,13 @@ function directory_content(&$a) {
 	else
 		$search = ((x($_GET,'search')) ? notags(trim(rawurldecode($_GET['search']))) : '');
 
+	$advanced = ((x($_REQUEST,'query')) ? notags(trim($_REQUEST['query'])) : '');
+
 	$keywords = (($_GET['keywords']) ? $_GET['keywords'] : '');
 
 	$tpl = get_markup_template('directory_header.tpl');
 
 		
-
 	$dirmode = intval(get_config('system','directory_mode'));
 
 	if(($dirmode == DIRECTORY_MODE_PRIMARY) || ($dirmode == DIRECTORY_MODE_STANDALONE)) {
@@ -81,6 +82,7 @@ function directory_content(&$a) {
 
 	if($url) {
 		// We might want to make the tagadelic count (&kw=) configurable or turn it off completely.
+
 		$numtags = get_config('system','directorytags');
 
 		$kw = ((intval($numtags)) ? $numtags : 24);
@@ -92,7 +94,9 @@ function directory_content(&$a) {
 			$query .= '&address=' . urlencode($search);
 		if($keywords)
 			$query .= '&keywords=' . urlencode($keywords);
-		
+		if($advanced)
+			$query .= '&query=' . urlencode($advanced);
+
 		$sort_order  = ((x($_REQUEST,'order')) ? $_REQUEST['order'] : '');
 		if($sort_order)
 			$query .= '&order=' . urlencode($sort_order);

@@ -57,6 +57,23 @@ function comanche_parser(&$a,$s) {
 	if($cnt)
 		$a->page['template'] = trim($matches[1]);
 
+	$cnt = preg_match("/\[template=(.*?)\](.*?)\[\/template\]/ism", $s, $matches);
+	if($cnt) {
+		$a->page['template'] = trim($matches[2]);
+		$a->page['template_style'] = trim($matches[2]) . '_' . $matches[1]; 
+	}
+
+	$cnt = preg_match("/\[template\](.*?)\[\/template\]/ism", $s, $matches);
+	if($cnt) {
+		$a->page['template'] = trim($matches[1]);
+	}
+
+	$cnt = preg_match("/\[theme=(.*?)\](.*?)\[\/theme\]/ism", $s, $matches);
+	if($cnt) {
+		$a->layout['schema'] = trim($matches[1]);
+		$a->layout['theme'] = trim($matches[2]);
+	}
+
 	$cnt = preg_match("/\[theme\](.*?)\[\/theme\]/ism", $s, $matches);
 	if($cnt)
 		$a->layout['theme'] = trim($matches[1]);
@@ -79,10 +96,12 @@ function comanche_parser(&$a,$s) {
 }
 
 
-function comanche_menu($name) {
-	$a = get_app();
-	$m = menu_fetch($name,$a->profile['profile_uid'],get_observer_hash());
-	return menu_render($m);
+function comanche_menu($name,$class = '') {
+	$channel_id = comanche_get_channel_id();
+	if($channel_id) {
+		$m = menu_fetch($name,$channel_id,get_observer_hash());
+		return menu_render($m,$class);
+	}
 }
 
 function comanche_replace_region($match) {
@@ -92,20 +111,37 @@ function comanche_replace_region($match) {
 	}
 }
 
-function comanche_block($name) {
-	
-	$o = '';
-	$r = q("select * from item inner join item_id on iid = item.id and item_id.uid = item.uid and item.uid = %d and service = 'BUILDBLOCK' and sid = '%s' limit 1",
-		intval(get_app()->profile['profile_uid']),
-		dbesc($name)
-	);
-	if($r) {
-		$o = '<div class="widget bblock">';
-		if($r[0]['title'])
-			$o .= '<h3>' . $r[0]['title'] . '</h3>';
-		$o .= prepare_text($r[0]['body'],$r[0]['mimetype']);
-		$o .= '</div>';
+/**
+ * @function comanche_get_channel_id()
+ *    Returns the channel_id of the profile owner of the page, or the local_user if there is no profile owner.
+ * Otherwise returns 0
+ */ 
 
+function comanche_get_channel_id() {
+	$channel_id = ((is_array(get_app()->profile)) ? get_app()->profile['profile_uid'] : 0);
+	if((! $channel_id) && (local_user()))
+		$channel_id = local_user();
+	return $channel_id;
+}
+
+function comanche_block($name) {
+
+	$channel_id = comanche_get_channel_id();
+	
+	if($channel_id) {
+		$o = '';
+		$r = q("select * from item inner join item_id on iid = item.id and item_id.uid = item.uid and item.uid = %d and service = 'BUILDBLOCK' and sid = '%s' limit 1",
+			intval($channel_id),
+			dbesc($name)
+		);
+		if($r) {
+			$o = '<div class="widget bblock">';
+			if($r[0]['title'])
+				$o .= '<h3>' . $r[0]['title'] . '</h3>';
+			$o .= prepare_text($r[0]['body'],$r[0]['mimetype']);
+			$o .= '</div>';
+
+		}
 	}
 	return $o;
 }
@@ -152,11 +188,20 @@ function comanche_widget($name,$text) {
 
 function comanche_region(&$a,$s) {
 
-
 	$cnt = preg_match_all("/\[menu\](.*?)\[\/menu\]/ism", $s, $matches, PREG_SET_ORDER);
 	if($cnt) {
 		foreach($matches as $mtch) {
 			$s = str_replace($mtch[0],comanche_menu(trim($mtch[1])),$s);
+		}
+	}
+
+	// menu class e.g. [menu=horizontal]my_menu[/menu] or [menu=tabbed]my_menu[/menu]
+	// allows different menu renderings to be applied
+
+	$cnt = preg_match_all("/\[menu=(.*?)\](.*?)\[\/menu\]/ism", $s, $matches, PREG_SET_ORDER);
+	if($cnt) {
+		foreach($matches as $mtch) {
+			$s = str_replace($mtch[0],comanche_menu(trim($mtch[2]),$mtch[1]),$s);
 		}
 	}
 	$cnt = preg_match_all("/\[block\](.*?)\[\/block\]/ism", $s, $matches, PREG_SET_ORDER);

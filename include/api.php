@@ -533,6 +533,12 @@ require_once('include/items.php');
 	api_register_func('api/red/channel/export/basic','api_export_basic', true);
 
 
+
+
+
+
+
+
 	function api_channel_stream(&$a, $type) {
 		if(api_user() === false) {
 			logger('api_channel_stream: no user');
@@ -689,6 +695,48 @@ require_once('include/items.php');
 		return api_status_show($a,$type);
 	}
 	api_register_func('api/statuses/update','api_statuses_update', true);
+
+
+	function red_item_new(&$a, $type) {
+
+		if (api_user() === false) {
+			logger('api_statuses_update: no user');
+			return false;
+		}
+
+		logger('api_statuses_update: REQUEST ' . print_r($_REQUEST,true));
+		logger('api_statuses_update: FILES ' . print_r($_FILES,true));
+
+
+		// set this so that the item_post() function is quiet and doesn't redirect or emit json
+
+		$_REQUEST['api_source'] = true;
+		$_REQUEST['profile_uid'] = api_user();
+
+		if(x($_FILES,'media')) {
+			$_FILES['userfile'] = $_FILES['media'];
+			// upload the image if we have one
+			$_REQUEST['silent']='1'; //tell wall_upload function to return img info instead of echo
+			require_once('mod/wall_upload.php');
+			$media = wall_upload_post($a);
+			if(strlen($media)>0)
+				$_REQUEST['body'] .= "\n\n".$media;
+		}
+
+		require_once('mod/item.php');
+		$x = item_post($a);	
+		json_return_and_die($x);
+	}
+
+	api_register_func('api/red/item/new','red_item_new', true);
+
+
+
+
+
+
+
+
 
 
 	function api_status_show(&$a, $type){

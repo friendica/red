@@ -105,11 +105,18 @@ nav .dropdown-menu li a {
 	padding: 5px 10px;
 }
 
-nav .navbar-collapse {
-	max-height: 450px;
+nav .navbar-collapse .navbar-left {
+	float: left;
 }
 
-nav .navbar-right li:last-child {
-	padding-right: 20px;
+nav .navbar-collapse .navbar-right {
+	float: right;
 }
+
 /* nav overrides end */
+
+.dropdown-menu img {
+	width: 32px;
+	height: 32px;
+	margin-right: 5px;
+}

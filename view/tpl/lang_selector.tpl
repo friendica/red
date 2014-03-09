@@ -1,5 +1,6 @@
-<div id="lang-select-icon" title="{{$title}}" onclick="openClose('language-selector');" ><i class="icon-flag"></i></div>
-<div id="language-selector" style="display: none;" >
+<h1>{{$title}}</h1>
+<br />
+<div id="language-selector" >
 	<form action="#" method="post" >
 		<select name="system_language" onchange="this.form.submit();" >
 			{{foreach $langs.0 as $v=>$l}}

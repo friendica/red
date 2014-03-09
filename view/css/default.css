@@ -1,22 +1,25 @@
+header #banner {
+	position: fixed;
+	top: 0;
+	width: 250px;
+	margin-left: auto;
+	margin-right: auto;
+}
+
 aside#region_1 {
-	display: block;
-	width: 210px;
-	position: absolute;
-	top: 65px;
-	left: 0;
-	margin-left: 10px;
+	min-width: 210px;
+	display: table-cell;
+	vertical-align: top;
+	padding: 65px 10px 10px 10px;
 }
 
 aside input[type='text'] {
  width: 174px;
 }
 
-
 section {
-	position: absolute;
-	top: 65px;
-	left: 250px;
-	display: block;
-	right: 15px;
-	padding-bottom: 350px;
+	width: 100%;
+	display: table-cell;
+	vertical-align: top;
+	padding: 65px 15px 200px 10px;
 }

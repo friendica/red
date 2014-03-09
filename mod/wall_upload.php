@@ -1,6 +1,7 @@
 <?php
 
 require_once('include/photo/photo_driver.php');
+require_once('include/identity.php');
 require_once('include/photos.php');
 
 
@@ -19,15 +20,7 @@ function wall_upload_post(&$a) {
 			$nick = argv(1);
 	}
 
-	$channel = null;
-
-	if($nick) {		
-		$r = q("SELECT channel.* from channel where channel_address = '%s' limit 1",
-			dbesc($nick)
-		);
-		if($r)
-			$channel = $r[0];
-	}
+	$channel = (($nick) ? get_channel_by_nick($nick) : false);
 
 	if(! $channel) {
 		if($using_api)
@@ -52,11 +45,10 @@ function wall_upload_post(&$a) {
 
 	$m = $ret['body'];
 
-	// This might make Friendica for Android uploads work again, as it won't have any knowledge of zrl and zmg tags
-	// and these tags probably aren't useful with other client apps. 
+
 
 	if($using_api)
-		return(str_replace(array('zrl','zmg'),array('url','img'),$ret['body']));
+		return("\n\n" . $ret['body'] . "\n\n");
 	else
 		echo  "\n\n" . $ret['body'] . "\n\n";
 	killme();

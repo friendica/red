@@ -6,7 +6,15 @@ function theme_content(&$a) {
 	$arr = array();
 
 	$arr['schema'] = get_pconfig(local_user(),'redbasic', 'schema' );
-	$arr['nav_colour'] = get_pconfig(local_user(),'redbasic', 'nav_colour' );
+    $arr['narrow_navbar'] = get_pconfig(local_user(),'redbasic', 'narrow_navbar' );
+	$arr['nav_bg'] = get_pconfig(local_user(),'redbasic', 'nav_bg' );
+	$arr['nav_gradient_top'] = get_pconfig(local_user(),'redbasic', 'nav_gradient_top' );
+	$arr['nav_gradient_bottom'] = get_pconfig(local_user(),'redbasic', 'nav_gradient_bottom' );
+	$arr['nav_active_gradient_top'] = get_pconfig(local_user(),'redbasic', 'nav_active_gradient_top' );
+	$arr['nav_active_gradient_bottom'] = get_pconfig(local_user(),'redbasic', 'nav_active_gradient_bottom' );
+	$arr['nav_bd'] = get_pconfig(local_user(),'redbasic', 'nav_bd' );
+	$arr['nav_icon_colour'] = get_pconfig(local_user(),'redbasic', 'nav_icon_colour' );
+	$arr['nav_active_icon_colour'] = get_pconfig(local_user(),'redbasic', 'nav_active_icon_colour' );
 	$arr['link_colour'] = get_pconfig(local_user(),'redbasic', 'link_colour' );
 	$arr['banner_colour'] = get_pconfig(local_user(),'redbasic', 'banner_colour' );
 	$arr['bgcolour'] = get_pconfig(local_user(),'redbasic', 'background_colour' );
@@ -33,7 +41,15 @@ function theme_post(&$a) {
 
 	if (isset($_POST['redbasic-settings-submit'])) {
 		set_pconfig(local_user(), 'redbasic', 'schema', $_POST['redbasic_schema']);
-		set_pconfig(local_user(), 'redbasic', 'nav_colour', $_POST['redbasic_nav_colour']);
+		set_pconfig(local_user(), 'redbasic', 'narrow_navbar', $_POST['redbasic_narrow_navbar']);
+		set_pconfig(local_user(), 'redbasic', 'nav_bg', $_POST['redbasic_nav_bg']);
+		set_pconfig(local_user(), 'redbasic', 'nav_gradient_top', $_POST['redbasic_nav_gradient_top']);
+		set_pconfig(local_user(), 'redbasic', 'nav_gradient_bottom', $_POST['redbasic_nav_gradient_bottom']);
+		set_pconfig(local_user(), 'redbasic', 'nav_active_gradient_top', $_POST['redbasic_nav_active_gradient_top']);
+		set_pconfig(local_user(), 'redbasic', 'nav_active_gradient_bottom', $_POST['redbasic_nav_active_gradient_bottom']);
+		set_pconfig(local_user(), 'redbasic', 'nav_bd', $_POST['redbasic_nav_bd']);
+		set_pconfig(local_user(), 'redbasic', 'nav_icon_colour', $_POST['redbasic_nav_icon_colour']);
+		set_pconfig(local_user(), 'redbasic', 'nav_active_icon_colour', $_POST['redbasic_nav_active_icon_colour']);
 		set_pconfig(local_user(), 'redbasic', 'link_colour', $_POST['redbasic_link_colour']);
 		set_pconfig(local_user(), 'redbasic', 'background_colour', $_POST['redbasic_background_colour']);
 		set_pconfig(local_user(), 'redbasic', 'banner_colour', $_POST['redbasic_banner_colour']);
@@ -58,8 +74,6 @@ function theme_post(&$a) {
 
 
 function redbasic_form(&$a, $arr) {
-
-
 	$scheme_choices = array();
 	$scheme_choices["---"] = t("Default");
 	$files = glob('view/theme/redbasic/schema/*.php');
@@ -70,22 +84,6 @@ function redbasic_form(&$a, $arr) {
 			$scheme_choices[$f] = $scheme_name;
 		}
 	}
-		
-		
-		$nav_colours = array (
-		  '' => t('Scheme Default'),
-		'red' => 'red',	
-		'pink' => 'pink',
-		'green' => 'green',
-		'blue' => 'blue',
-		'purple' => 'purple',
-		'black' => 'black',
-		'orange' => 'orange',
-		'brown' => 'brown',
-		'grey' => 'grey',
-		'gold' => 'gold',
-		'silver' => t('silver'),	
-		);
 
 if(feature_enabled(local_user(),'expert')) 
 				$expert = 1;
@@ -97,7 +95,15 @@ if(feature_enabled(local_user(),'expert'))
 		'$expert' => $expert,
 		'$title' => t("Theme settings"),
 		'$schema' => array('redbasic_schema', t('Set scheme'), $arr['schema'], '', $scheme_choices),
-		'$nav_colour' => array('redbasic_nav_colour', t('Navigation bar colour'), $arr['nav_colour'], '', $nav_colours),
+		'$narrow_navbar' => array('redbasic_narrow_navbar',t('Narrow navbar'),$arr['narrow_navbar']),		
+		'$nav_bg' => array('redbasic_nav_bg', t('Navigation bar background colour'), $arr['nav_bg']),
+		'$nav_gradient_top' => array('redbasic_nav_gradient_top', t('Navigation bar gradient top colour'), $arr['nav_gradient_top']),
+		'$nav_gradient_bottom' => array('redbasic_nav_gradient_bottom', t('Navigation bar gradient bottom colour'), $arr['nav_gradient_bottom']),
+		'$nav_active_gradient_top' => array('redbasic_nav_active_gradient_top', t('Navigation active button gradient top colour'), $arr['nav_active_gradient_top']),
+		'$nav_active_gradient_bottom' => array('redbasic_nav_active_gradient_bottom', t('Navigation active button gradient bottom colour'), $arr['nav_active_gradient_bottom']),
+		'$nav_bd' => array('redbasic_nav_bd', t('Navigation bar border colour '), $arr['nav_bd']),
+		'$nav_icon_colour' => array('redbasic_nav_icon_colour', t('Navigation bar icon colour '), $arr['nav_icon_colour']),
+		'$nav_active_icon_colour' => array('redbasic_nav_active_icon_colour', t('Navigation bar active icon colour '), $arr['nav_active_icon_colour']),
 		'$link_colour' => array('redbasic_link_colour', t('link colour'), $arr['link_colour'], '', $link_colours),
 		'$banner_colour' => array('redbasic_banner_colour', t('Set font-colour for banner'), $arr['banner_colour']),
 		'$bgcolour' => array('redbasic_background_colour', t('Set the background colour'), $arr['bgcolour']),

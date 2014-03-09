@@ -1,0 +1,33 @@
+
+
+.contact-entry-wrapper {
+	float: left;
+	width: 120px;
+	height: 120px;
+	padding: 10px;
+}
+
+#contacts-search {
+	font-size: 1em;
+	width: 300px;
+}
+
+#contacts-search-end {
+	margin-bottom: 10px;
+}
+
+.contact-entry-photo-end {
+	clear: both;
+}
+
+.contact-entry-name {
+	float: left;
+	margin-left: 0px;
+	margin-right: 10px;
+	width: 120px;
+	overflow: hidden;
+}
+
+.contact-entry-end {
+	clear: both;
+}

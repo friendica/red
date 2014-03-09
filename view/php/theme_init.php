@@ -2,8 +2,6 @@
 
 require_once('include/plugin.php');
 
-head_add_css('library/bootstrap/css/bootstrap-theme.min.css');
-head_add_css('library/bootstrap/css/bootstrap.min.css'); 
 head_add_css('library/fancybox/jquery.fancybox-1.3.4.css');
 head_add_css('library/tiptip/tipTip.css');
 head_add_css('library/jgrowl/jquery.jgrowl.css');
@@ -11,13 +9,10 @@ head_add_css('library/jslider/css/jslider.css');
 head_add_css('library/colorbox/colorbox.css');
 
 head_add_css('view/css/conversation.css');
-head_add_css('view/css/bootstrap-red.css');
 head_add_css('view/css/widgets.css');
-head_add_css('library/bootstrap-datetimepicker/css/bootstrap-datetimepicker.min.css');
+
 
 head_add_js('jquery.js');
-head_add_js('library/bootstrap/js/bootstrap.min.js');
-head_add_js('library/bootstrap/js/bootbox.min.js');
 head_add_js('jquery-migrate-1.1.1.js');
 //head_add_js('jquery-compat.js');
 head_add_js('spin.js');
@@ -42,8 +37,6 @@ head_add_js('crypto.js');
 head_add_js('library/jslider/bin/jquery.slider.min.js');
 head_add_js('docready.js');
 head_add_js('library/colorbox/jquery.colorbox-min.js');
-head_add_js('library/bootstrap-datetimepicker/js/moment.js');
-head_add_js('library/bootstrap-datetimepicker/js/bootstrap-datetimepicker.min.js');
 
 /**
  * Those who require this feature will know what to do with it.

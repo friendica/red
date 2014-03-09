@@ -1,4 +1,4 @@
-<div class="pmenu">
+<div class="pmenu{{if $class}} {{$class}}{{/if}}">
 {{if $menu.menu_desc}}
   <h3 class="pmenu-title">{{$menu.menu_desc}}</h3>
 {{/if}}

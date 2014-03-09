@@ -1,9 +1,9 @@
 <div class="vcard">
 
 	{{if $profile.edit}}
-	<div class="action">
-	<a class="profile-edit-side-link" rel="#profiles-menu" title="{{$profile.edit.3}}" href="#" ><i class="icon-pencil vcard-profile-edit-icon" title="{{$profile.edit.1}}" ></i></a>
-	<ul id="profiles-menu" class="menu-popup">
+	<div class="dropdown">
+	<a class="profile-edit-side-link dropdown-toggle" data-toggle="dropdown" title="{{$profile.edit.3}}" href="#" ><i class="icon-pencil" title="{{$profile.edit.1}}" ></i></a>
+	<ul class="dropdown-menu" role="menu">
 		{{foreach $profile.menu.entries as $e}}
 		<li>
 			<a href="profiles/{{$e.id}}"><img src='{{$e.photo}}'>{{$e.profile_name}}</a>

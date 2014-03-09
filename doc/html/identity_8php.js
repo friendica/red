@@ -5,6 +5,7 @@ var identity_8php =
     [ "create_identity", "identity_8php.html#a345f4c943d84de502ec6e72d2c813945", null ],
     [ "create_sys_channel", "identity_8php.html#a1cf83ac2b645de12868edaa3a5718f05", null ],
     [ "get_birthdays", "identity_8php.html#ad2c97627a313d53df1a1c7b4215ddb51", null ],
+    [ "get_channel_by_nick", "identity_8php.html#ac73b3e13778c564c877554517a7f51ba", null ],
     [ "get_default_profile_photo", "identity_8php.html#ab1485a26b032956e1496fc08c58b83ed", null ],
     [ "get_events", "identity_8php.html#ae381db3d43f8e7c1da8b15d14ecf5312", null ],
     [ "get_my_address", "identity_8php.html#a490972c02fdb638c52ec0e012a30bfd2", null ],

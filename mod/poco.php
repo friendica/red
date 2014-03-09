@@ -76,6 +76,9 @@ function poco_init(&$a) {
 			$sql_extra ",
 			intval($channel_id)
 		);
+		$c = q("select * from menu_item where ( mitem_flags & " . intval(MENU_ITEM_CHATROOM) . " ) and allow_cid = '' and allow_gid = '' and deny_cid = '' and deny_gid = '' and mitem_channel_id = %d",
+			intval($channel_id)
+		);
 	}
 	if($r)
 		$totalResults = intval($r[0]['total']);
@@ -115,6 +118,14 @@ function poco_init(&$a) {
 	$ret['startIndex']   = (string) $startIndex;
 	$ret['itemsPerPage'] = (string) $itemsPerPage;
 	$ret['totalResults'] = (string) $totalResults;
+
+	if($c) {
+		$ret['chatrooms'] = array();
+		foreach($c as $d) {
+			$ret['chatrooms'][] = array('url' => $d['mitem_link'], 'desc' => $d['mitem_desc']);
+		}
+	}
+
 	$ret['entry']        = array();
 
 

@@ -543,7 +543,7 @@ function widget_photo_albums($arr) {
 	$channelx = channelx_by_n($a->profile['profile_uid']);
 	if((! $channelx) || (! perm_is_allowed($a->profile['profile_uid'],get_observer_hash(),'view_photos')))
 		return '';
-	return photos_album_widget($channelx[0],$a->get_observer());	
+	return photos_album_widget($channelx,$a->get_observer());	
 
 }
 
@@ -589,3 +589,120 @@ function widget_chatroom_list($arr) {
 	));
 }
 
+function widget_bookmarkedchats($arr) {
+	$h = get_observer_hash();
+	if(! $h)
+		return;
+	$r = q("select * from xchat where xchat_xchan = '%s' group by xchat_url order by xchat_desc",
+			dbesc($h)
+	);
+
+	for($x = 0; $x < count($r); $x ++)
+		$r[$x]['xchat_url'] = zid($r[$x]['xchat_url']);
+	return replace_macros(get_markup_template('bookmarkedchats.tpl'),array(
+		'$header' => t('Bookmarked Chatrooms'),
+		'$rooms' => $r
+	));
+}
+
+function widget_suggestedchats($arr) {
+
+	// probably should restrict this to your friends, but then the widget will only work
+	// if you are logged in locally.
+
+	$h = get_observer_hash();
+	if(! $h)
+		return;
+	$r = q("select *, count(xchat_url) as total from xchat group by xchat_url order by total desc, xchat_desc limit 24");
+
+	for($x = 0; $x < count($r); $x ++)
+		$r[$x]['xchat_url'] = zid($r[$x]['xchat_url']);
+	return replace_macros(get_markup_template('bookmarkedchats.tpl'),array(
+		'$header' => t('Suggested Chatrooms'),
+		'$rooms' => $r
+	));
+}
+
+function widget_item($arr) {
+	$uid = $a->profile['profile_uid'];
+	if((! $uid) || (! $arr['mid']))
+		return '';
+
+	if(! perm_is_allowed($uid,get_observer_hash(),'view_pages'))
+		return '';
+
+	require_once('include/security.php');
+	$sql_extra = item_permissions_sql($uid);
+
+
+	$r = q("select * from item where mid = '%s' and uid = %d and item_restrict = " . intval(ITEM_WEBPAGE) . " $sql_extra limit 1",
+		dbesc($arr['mid']),
+		intval($uid)
+	);
+
+	if(! $r)
+		return '';
+
+	xchan_query($r);
+	$r = fetch_post_tags($r,true);
+
+	$o .= prepare_page($r[0]);
+	return $o;
+
+}
+
+function widget_clock($arr) {
+
+	$miltime = 0;
+	if(isset($arr['military']) && $arr['military'])
+		$miltime = 1;
+
+$o = <<< EOT
+<div class="widget">
+<h3 class="clockface"></h3>
+<script>
+
+var timerID = null
+var timerRunning = false
+
+function stopclock(){
+    if(timerRunning)
+        clearTimeout(timerID)
+    timerRunning = false
+}
+
+function startclock(){
+    stopclock()
+    showtime()
+}
+
+function showtime(){
+    var now = new Date()
+    var hours = now.getHours()
+    var minutes = now.getMinutes()
+    var seconds = now.getSeconds()
+	var military = $miltime
+    var timeValue = ""
+	if(military)
+		timeValue = hours
+	else
+		timeValue = ((hours > 12) ? hours - 12 : hours)
+    timeValue  += ((minutes < 10) ? ":0" : ":") + minutes
+//    timeValue  += ((seconds < 10) ? ":0" : ":") + seconds
+	if(! military)
+	    timeValue  += (hours >= 12) ? " P.M." : " A.M."
+    $('.clockface').html(timeValue) 
+    timerID = setTimeout("showtime()",1000)
+    timerRunning = true
+}
+
+$(document).ready(function() {
+	startclock();
+});
+
+</script>
+</div>
+EOT;
+return $o;
+
+}

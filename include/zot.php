@@ -305,7 +305,7 @@ function zot_refresh($them,$channel = null, $force = false) {
 			return false;
 		}
 
-		$x = import_xchan($j,(($force) ? (-1) : 1));
+		$x = import_xchan($j,(($force) ? UPDATE_FLAGS_FORCED : UPDATE_FLAGS_UPDATED));
 
 		if(! $x['success'])
 			return false;
@@ -330,8 +330,15 @@ function zot_refresh($them,$channel = null, $force = false) {
 			else
 				$permissions = $j['permissions'];
 
+			$connected_set = false;
+
 			if($permissions && is_array($permissions)) {
 				foreach($permissions as $k => $v) {
+					// The connected permission means you are in their address book
+					if($k === 'connected') {
+						$connected_set = intval($v);
+						continue;
+					}	
 					if($v) {
 						$their_perms = $their_perms | intval($global_perms[$k][1]);
 					}
@@ -344,7 +351,10 @@ function zot_refresh($them,$channel = null, $force = false) {
 				intval(ABOOK_FLAG_SELF)
 			);
 
-			if($r) {		
+			if($r) {
+
+				$current_abook_connected = (($r[0]['abook_flags'] & ABOOK_FLAG_UNCONNECTED) ? 0 : 1);
+		
 				$y = q("update abook set abook_their_perms = %d
 					where abook_xchan = '%s' and abook_channel = %d 
 					and not (abook_flags & %d) limit 1",
@@ -353,6 +363,22 @@ function zot_refresh($them,$channel = null, $force = false) {
 					intval($channel['channel_id']),
 					intval(ABOOK_FLAG_SELF)
 				);
+
+//				if(($connected_set === 0 || $connected_set === 1) && ($connected_set !== $current_abook_unconnected)) {
+
+					// if they are in your address book but you aren't in theirs, and/or this does not
+					// match your current connected state setting, toggle it. 
+
+//					$y1 = q("update abook set abook_flags = (abook_flags ^ %d)
+//						where abook_xchan = '%s' and abook_channel = %d 
+//						and not (abook_flags & %d) limit 1",
+//						intval(ABOOK_FLAG_UNCONNECTED),
+//						dbesc($x['hash']),
+//						intval($channel['channel_id']),
+//						intval(ABOOK_FLAG_SELF)
+//					);
+//				}
+
 				if(! $y)
 					logger('abook update failed');
 				else {
@@ -517,14 +543,14 @@ function zot_register_hub($arr) {
 
 
 /**
- * @function import_xchan($arr,$ud_flags = 1)
+ * @function import_xchan($arr,$ud_flags = UPDATE_FLAGS_UPDATED)
  *   Takes an associative array of a fetched discovery packet and updates
  *   all internal data structures which need to be updated as a result.
  * 
  * @param array $arr => json_decoded discovery packet
  * @param int $ud_flags
- *    Determines whether to create a directory update record if any changes occur, default 1 or true
- *    $ud_flags = (-1) indicates a forced refresh where we unconditionally create a directory update record
+ *    Determines whether to create a directory update record if any changes occur, default is UPDATE_FLAGS_UPDATED (true)
+ *    $ud_flags = UPDATE_FLAGS_FORCED indicates a forced refresh where we unconditionally create a directory update record
  *      this typically occurs once a month for each channel as part of a scheduled ping to notify the directory
  *      that the channel still exists
  *
@@ -532,7 +558,7 @@ function zot_register_hub($arr) {
  *                    'message' (optional error string only if success is false)
  */
 
-function import_xchan($arr,$ud_flags = 1) {
+function import_xchan($arr,$ud_flags = UPDATE_FLAGS_UPDATED) {
 
 
 	call_hooks('import_xchan', $arr);
@@ -891,7 +917,7 @@ function import_xchan($arr,$ud_flags = 1) {
 		}
 	}
 	
-	if(($changed) || ($ud_flags == (-1))) {
+	if(($changed) || ($ud_flags == UPDATE_FLAGS_FORCED)) {
 		$guid = random_string() . '@' . get_app()->get_hostname();		
 		update_modtime($xchan_hash,$guid,$arr['address'],$ud_flags);
 		logger('import_xchan: changed: ' . $what,LOGGER_DEBUG);
@@ -1279,11 +1305,6 @@ function allowed_public_recips($msg) {
 	if(array_key_exists('public_scope',$msg['message']))
 		$scope = $msg['message']['public_scope'];
 
-	// we can pull out these two lines once everybody has upgraded to >= 2013-02-15.225
-
-	else
-		$scope = 'public';
-
 	$hash = base64url_encode(hash('whirlpool',$msg['notify']['sender']['guid'] . $msg['notify']['sender']['guid_sig'], true));
 
 	if($scope === 'public' || $scope === 'network: red')
@@ -1375,8 +1396,6 @@ function process_delivery($sender,$arr,$deliveries,$relay) {
 			// remove_community_tag is a no-op if this isn't a community tag activity
 			remove_community_tag($sender,$arr,$channel['channel_id']);
 
-
-
 			$item_id = delete_imported_item($sender,$arr,$channel['channel_id']);
 			$result[] = array($d['hash'],(($item_id) ? 'deleted' : 'delete_failed'),$channel['channel_name'] . ' <' . $channel['channel_address'] . '@' . get_app()->get_hostname() . '>');
 
@@ -1418,8 +1437,6 @@ function process_delivery($sender,$arr,$deliveries,$relay) {
 				continue;
 			}
 		}
-
-
 
 		$r = q("select id, edited from item where mid = '%s' and uid = %d limit 1",
 			dbesc($arr['mid']),
@@ -1632,7 +1649,7 @@ function process_profile_delivery($sender,$arr,$deliveries) {
 			dbesc($sender['hash'])
 	);
 	if($r)
-		import_directory_profile($sender['hash'],$arr,$r[0]['xchan_addr'], 1, 0);
+		import_directory_profile($sender['hash'],$arr,$r[0]['xchan_addr'], UPDATE_FLAGS_UPDATED, 0);
 }
 
 
@@ -1643,7 +1660,7 @@ function process_profile_delivery($sender,$arr,$deliveries) {
  *
  */
 
-function import_directory_profile($hash,$profile,$addr,$ud_flags = 1, $suppress_update = 0) {
+function import_directory_profile($hash,$profile,$addr,$ud_flags = UPDATE_FLAGS_UPDATED, $suppress_update = 0) {
 
 	logger('import_directory_profile', LOGGER_DEBUG);
 	if(! $hash)

@@ -535,7 +535,7 @@ function updateConvItems(mode,data) {
 		$(".wall-item-body").each(function() {
 				if($(this).height() > 410) {
 				if(! $(this).hasClass('divmore')) {
-					$(this).divgrow({ initialHeight: 400, showBrackets: false });
+					$(this).divgrow({ initialHeight: 400, moreText: aStr['divgrowmore'], lessText: aStr['divgrowless'], showBrackets: false });
 					$(this).addClass('divmore');
 				}
 			}					

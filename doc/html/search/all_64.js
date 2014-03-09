@@ -77,6 +77,7 @@ var searchData=
   ['dob',['dob',['../datetime_8php.html#a3f2897db32e745fe2f3e70a6b46578f8',1,'datetime.php']]],
   ['docblox_5ferrorchecker_2ephp',['docblox_errorchecker.php',['../docblox__errorchecker_8php.html',1,'']]],
   ['doscaleimage',['doScaleImage',['../classphoto__driver.html#ae18716018afcf362c7c24586b53e9e2f',1,'photo_driver\doScaleImage()'],['../classphoto__gd.html#a2f2e5900e6d8b1667892ac631b1d4754',1,'photo_gd\doScaleImage()'],['../classphoto__imagick.html#a3047c68bb4de7f66c2893fe451db2b66',1,'photo_imagick\doScaleImage()']]],
+  ['downgrade_5faccounts',['downgrade_accounts',['../account_8php.html#a0d183a3cb4c67a0f5e906811df7a1fc9',1,'account.php']]],
   ['drop_5fitem',['drop_item',['../items_8php.html#afa1db13c2a8b73b5b17b97f17e5a19d1',1,'items.php']]],
   ['drop_5fitems',['drop_items',['../items_8php.html#a668ece2c37f05cc3abe538eb0dabfe55',1,'items.php']]]
 ];

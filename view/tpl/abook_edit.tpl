@@ -34,6 +34,7 @@
 <input type="hidden" name="contact_id" value="{{$contact_id}}">
 <input id="contact-closeness-mirror" type="hidden" name="closeness" value="{{$close}}" />
 
+<div class="abook-permschange" style="display: none;"></div>
 
 {{if $is_pending}}
 <div class="abook-pending-contact">

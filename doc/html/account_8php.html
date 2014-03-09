@@ -132,6 +132,8 @@ Functions</h2></td></tr>
 <tr class="separator:ac5c570a2d46446bad4dd2501e9c5a4b1"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:ac1653efba62493b9d87513e1b6c04c83"><td class="memItemLeft" align="right" valign="top">&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="account_8php.html#ac1653efba62493b9d87513e1b6c04c83">user_deny</a> ($hash)</td></tr>
 <tr class="separator:ac1653efba62493b9d87513e1b6c04c83"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a0d183a3cb4c67a0f5e906811df7a1fc9"><td class="memItemLeft" align="right" valign="top">&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="account_8php.html#a0d183a3cb4c67a0f5e906811df7a1fc9">downgrade_accounts</a> ()</td></tr>
+<tr class="separator:a0d183a3cb4c67a0f5e906811df7a1fc9"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table>
 <h2 class="groupheader">Function Documentation</h2>
 <a class="anchor" id="a43e3042b2723d76915a030bac3c668b6"></a>
@@ -238,6 +240,25 @@ Functions</h2></td></tr>
 </div><div class="memdoc">
 
 <p>Referenced by <a class="el" href="register_8php.html#a51731dcc1917c58a790eb1c0f6132271">register_post()</a>.</p>
+
+</div>
+</div>
+<a class="anchor" id="a0d183a3cb4c67a0f5e906811df7a1fc9"></a>
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">downgrade_accounts </td>
+          <td>(</td>
+          <td class="paramname"></td><td>)</td>
+          <td></td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+<p><a class="el" href="account_8php.html#a0d183a3cb4c67a0f5e906811df7a1fc9">downgrade_accounts()</a> Checks for accounts that have past their expiration date. If the account has a service class which is not the site default, the service class is reset to the site default and expiration reset to never. If the account has no service class it is expired and subsequently disabled. called from <a class="el" href="poller_8php.html">include/poller.php</a> as a scheduled task.</p>
+<p>Reclaiming resources which are no longer within the service class limits is not the job of this function, but this can be implemented by plugin if desired. Default behaviour is to stop allowing additional resources to be consumed. </p>
+
+<p>Referenced by <a class="el" href="poller_8php.html#a5f12df3a4738124b6c039971e87e76da">poller_run()</a>.</p>
 
 </div>
 </div>

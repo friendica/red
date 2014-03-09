@@ -753,7 +753,7 @@ function import_author_rss($x) {
 		values ( '%s', '%s', '%s', '%s' )",
 		dbesc($x['url']),
 		dbesc($x['url']),
-		dbesc(($name) ? $name : t('Unknown')),
+		dbesc(($name) ? $name : t('(Unknown)')),
 		dbesc('rss')
 	);
 	if($r) {
@@ -1548,7 +1548,7 @@ function item_store($arr,$allow_exec = false) {
 	$allow_exec = $d['allow_exec'];
 
 
-	$ret = array('result' => false, 'item_id' => 0);
+	$ret = array('success' => false, 'item_id' => 0);
 
 	if(! $arr['uid']) {
 		logger('item_store: no uid');
@@ -1585,7 +1585,7 @@ function item_store($arr,$allow_exec = false) {
 	}
 
 
-	$arr['title']         = ((x($arr,'title'))         ? notags(trim($arr['title']))         : '');
+	$arr['title']         = ((x($arr,'title'))         ? trim($arr['title'])                 : '');
 	$arr['body']          = ((x($arr,'body'))          ? trim($arr['body'])                  : '');
 
 	$arr['allow_cid']     = ((x($arr,'allow_cid'))     ? trim($arr['allow_cid'])             : '');
@@ -1595,7 +1595,6 @@ function item_store($arr,$allow_exec = false) {
 	$arr['item_private']  = ((x($arr,'item_private'))  ? intval($arr['item_private'])        : 0 );
 	$arr['item_flags']    = ((x($arr,'item_flags'))    ? intval($arr['item_flags'])          : 0 );
 
-	$arr['title'] = escape_tags($arr['title']);
 
 
 	// only detect language if we have text content, and if the post is private but not yet
@@ -1638,7 +1637,6 @@ function item_store($arr,$allow_exec = false) {
 		}
 
 	}
-
 
 	if((x($arr,'object')) && is_array($arr['object'])) {
 		activity_sanitise($arr['object']);
@@ -1935,7 +1933,7 @@ function item_store_update($arr,$allow_exec = false) {
 
 
 
-	$ret = array('result' => false, 'item_id' => 0);
+	$ret = array('success' => false, 'item_id' => 0);
 	if(! intval($arr['uid'])) {
 		logger('item_store_update: no uid');
 		$ret['message'] = 'no uid.';
@@ -3411,8 +3409,11 @@ function item_expire($uid,$days) {
 
 	// $expire_network_only = save your own wall posts
 	// and just expire conversations started by others
+	// do not enable this until we can pass bulk delete messages through zot
+	//	$expire_network_only = get_pconfig($uid,'expire','network_only');
 
-	$expire_network_only = get_pconfig($uid,'expire','network_only');
+	$expire_network_only = 1;
+
 	$sql_extra = ((intval($expire_network_only)) ? " AND not (item_flags & " . intval(ITEM_WALL) . ") " : "");
 
 	$r = q("SELECT * FROM `item` 
@@ -3420,14 +3421,11 @@ function item_expire($uid,$days) {
 		AND `created` < UTC_TIMESTAMP() - INTERVAL %d DAY 
 		AND `id` = `parent` 
 		$sql_extra
-		AND NOT (item_restrict & %d )
-		AND NOT (item_restrict & %d )
-		AND NOT (item_restrict & %d ) ",
+		AND NOT ( item_flags & %d )
+		AND (item_restrict = 0 ) ",
 		intval($uid),
 		intval($days),
-		intval(ITEM_DELETED),
-		intval(ITEM_WEBPAGE),
-		intval(ITEM_BUILDBLOCK)
+		intval(ITEM_RETAINED)
 	);
 
 	if(! $r)
@@ -3435,44 +3433,40 @@ function item_expire($uid,$days) {
 
 	$r = fetch_post_tags($r,true);
 
-	$expire_items = get_pconfig($uid, 'expire','items');
-	$expire_items = (($expire_items===false)?1:intval($expire_items)); // default if not set: 1
-	
-	$expire_notes = get_pconfig($uid, 'expire','notes');
-	$expire_notes = (($expire_notes===false)?1:intval($expire_notes)); // default if not set: 1
-
-	$expire_starred = get_pconfig($uid, 'expire','starred');
-	$expire_starred = (($expire_starred===false)?1:intval($expire_starred)); // default if not set: 1
-	
-	$expire_photos = get_pconfig($uid, 'expire','photos');
-	$expire_photos = (($expire_photos===false)?0:intval($expire_photos)); // default if not set: 0
- 
-	logger('expire: # items=' . count($r). "; expire items: $expire_items, expire notes: $expire_notes, expire starred: $expire_starred, expire photos: $expire_photos");
-
 	foreach($r as $item) {
-
-
 
 		// don't expire filed items
 
 		$terms = get_terms_oftype($item['term'],TERM_FILE);
-		if($terms)
+		if($terms) {
+			retain_item($item['id']);
 			continue;
+		}
 
 		// Only expire posts, not photos and photo comments
 
-		if($expire_photos==0 && ($item['resource_type'] === 'photo'))
+		if($item['resource_type'] === 'photo') {
+			retain_item($item['id']);
 			continue;
-		if($expire_starred==0 && ($item['item_flags'] & ITEM_STARRED))
+		}
+		if($item['item_flags'] & ITEM_STARRED) {
+			retain_item($item['id']);
 			continue;
+		}
 
 		drop_item($item['id'],false);
 	}
 
-	proc_run('php',"include/notifier.php","expire","$uid");
+//	proc_run('php',"include/notifier.php","expire","$uid");
 	
 }
 
+function retain_item($id) {
+	$r = q("update item set item_flags = (item_flags | %d ) where id = %d limit 1",
+		intval(ITEM_RETAINED),
+		intval($id)
+	);
+}
 
 function drop_items($items) {
 	$uid = 0;

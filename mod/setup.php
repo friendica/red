@@ -602,6 +602,9 @@ function what_next() {
 	$a = get_app();
 	// install the standard theme
 	set_config('system','allowed_themes','redbasic');
+	// Create a system channel
+	require_once ('include/identity.php');
+	create_sys_channel();	
 	$baseurl = $a->get_baseurl();
 	return 
 		t('<h1>What next</h1>')

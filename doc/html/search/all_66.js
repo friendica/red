@@ -70,5 +70,6 @@ var searchData=
   ['fsuggest_5fpost',['fsuggest_post',['../fsuggest_8php.html#a61ecfe10ce937ed526614f8fd3de3c7d',1,'fsuggest.php']]],
   ['ftosmarty',['fToSmarty',['../namespacefriendica-to-smarty-tpl.html#a89388ea9b2826e8218ed480e917d8105',1,'friendica-to-smarty-tpl']]],
   ['full_2ephp',['full.php',['../full_8php.html',1,'']]],
+  ['functions_2ephp',['functions.php',['../functions_8php.html',1,'']]],
   ['fresh_20_2d_20the_20freaking_20red_20shell',['Fresh - The Freaking REd Shell',['../md_fresh.html',1,'']]]
 ];

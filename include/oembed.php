@@ -14,6 +14,10 @@ function oembed_fetch_url($embedurl){
 
 	$txt = Cache::get($a->videowidth . $embedurl);
 
+	if(strstr($txt,'youtu')) {
+		$txt = str_replace('http:','https:',$txt);
+	}
+
 	// These media files should now be caught in bbcode.php
 	// left here as a fallback in case this is called from another source
 
@@ -99,6 +103,13 @@ function oembed_format_object($j){
 				
 				$th=120; $tw = $th*$tr;
 				$tpl=get_markup_template('oembed_video.tpl');
+				if(strstr($embedurl,'youtu')) {
+					$embedurl = str_replace('http:','https:',$embedurl);
+					$j->thumbnail_url = str_replace('http:','https:', $j->thumbnail_url);
+					$jhtml = str_replace('http:','https:', $jhtml);
+					$j->html = str_replace('http:','https:', $j->html);
+				
+				}
 				$ret.=replace_macros($tpl, array(
                     '$baseurl' => $a->get_baseurl(),
 					'$embedurl'=>$embedurl,

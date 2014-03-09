@@ -269,7 +269,7 @@ function item_post(&$a) {
 		$coord             = $orig_post['coord'];
 		$verb              = $orig_post['verb'];
 		$app               = $orig_post['app'];
-		$title             = escape_tags(trim($_REQUEST['title']));
+		$title             = $_REQUEST['title'];
 		$body              = $_REQUEST['body'];
 		$private           = $orig_post['item_private'];
 		$item_flags        = $orig_post['item_flags'];
@@ -862,7 +862,7 @@ function item_post(&$a) {
 	// figure out how to return, depending on from whence we came
 
 	if($api_source)
-		return;
+		return $post;
 
 	if($return_path) {
 		goaway($a->get_baseurl() . "/" . $return_path);

@@ -14,6 +14,7 @@ var searchData=
   ['perms_5fa_5fbookmark',['PERMS_A_BOOKMARK',['../boot_8php.html#a8b2af16eaee9e7768a88d0e437877f3b',1,'boot.php']]],
   ['perms_5fa_5fdelegate',['PERMS_A_DELEGATE',['../boot_8php.html#a423505ab8dbd8e39d04ae3fe1374102b',1,'boot.php']]],
   ['perms_5fa_5frepublish',['PERMS_A_REPUBLISH',['../boot_8php.html#aae6c941bde5fd6fce07e51dba7326ead',1,'boot.php']]],
+  ['perms_5fauthed',['PERMS_AUTHED',['../boot_8php.html#a852d4036a3bed66af1534d014c4ecde2',1,'boot.php']]],
   ['perms_5fcontacts',['PERMS_CONTACTS',['../boot_8php.html#ab2d0e8a9b81ee548ef2ce8e4560da2f6',1,'boot.php']]],
   ['perms_5fnetwork',['PERMS_NETWORK',['../boot_8php.html#a6df1102664f64b274810db85197c2755',1,'boot.php']]],
   ['perms_5fpublic',['PERMS_PUBLIC',['../boot_8php.html#aff210e8403dd72368522b17fb6e5d4e7',1,'boot.php']]],
