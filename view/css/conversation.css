@@ -208,6 +208,7 @@
 
 }
 
+/*
 .wall-item-lock {
 	position: absolute;
 	left: 105px;
@@ -221,7 +222,7 @@
 .wall-item-lock {
 
 }
-
+*/
 .lockview {
 	cursor: pointer;
 }
