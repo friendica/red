@@ -7,6 +7,10 @@
 
 
 /* generals */
+html {
+	height: 100%;
+}
+
 body {
 	font-family: arial,freesans,sans-serif;
 	font-size: $body_font_size;
@@ -16,6 +20,7 @@ body {
 	background-size: cover;
 	color: $font_colour;
 	margin: 0px;
+	height: 100%;
 }
 .jslider {
 	font-family: arial,freesans,sans-serif;
