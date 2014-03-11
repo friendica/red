@@ -8,7 +8,7 @@ function format_event_html($ev) {
 	if(! ((is_array($ev)) && count($ev)))
 		return '';
 
-	$bd_format = t('l F d, Y \@ g:i A') ; // Friday January 18, 2011 @ 8 AM
+	$bd_format = t('l F d, Y \@ g:i A') ; // Friday January 18, 2011 @ 8:01 AM
 
 	$o = '<div class="vevent">' . "\r\n";
 
