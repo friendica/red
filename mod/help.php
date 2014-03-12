@@ -76,13 +76,17 @@ function help_content(&$a) {
 	$text = preg_replace_callback("/#include (.*?)\;/ism", 'preg_callback_help_include', $text);
 
 	if($doctype === 'html')
-		return $text;
+		$content = $text;
 	if($doctype === 'markdown')	
-		return Markdown($text);
+		$content = Markdown($text);
 	if($doctype === 'bbcode') {
 		require_once('include/bbcode.php');
-		return bbcode($text);
+		$content = bbcode($text);
 	} 
+
+	return replace_macros(get_markup_template("help.tpl"), array(
+		'$content' => $content
+	));
 
 }
 
