@@ -1,23 +1,23 @@
 Red Twitter API
 ===============
 
-The "basic" Red web API is based on the Twitter API, as this provides instant compatibility with a huge number of third-party clients and applications without requiring any code changes on their part. It is also a super-set of the StatusNet version of the Twitter API, as this also has existing wide support.
+Den "grunnleggende" Red web API-en er basert på Twitter API-en, siden dette gir umiddelbar samhandling med et stort antall tredjepartsklienter og programmer uten å kreve noen kodeendring hos disse. Det er også et super-set av StatusNet-versjonen av Twitter API-en, siden den også har bred eksisterende støtte.
 
-Red has a lot more capability that isn't exposed in the Twitter interfaces or where we are forced to "dumb-down" the API functions to work with the primitive Twitter/StatusNet communications and privacy model. So we plan to extend the Twitter API in ways that will allow Red-specific clients to make full use of Red features without being crippled. 
+Red har flere muligheter som ikke vises gjennom Twitter-grensesnittene, der vi tvinges til å gjøre API-funksjoner "dummere" for å kunne arbeide med den primitive kommunikasjons- og personvernmodellen i Twitter/StatusNet. Vi planlegger å utvide Twitter-API-et slik at Red-spesifikke klienter kan ta i bruk alle funksjoner i Red uten begrensninger.
 
-A dedicated Red API is also being developed to work with native data structures and permissions and which do not require translating to different privacy and permission models and storage formats. This will be described in other documents. The prefix for all of the native endpoints is 'api/red'. 
+Et dedikert Red API som samvirker med egne datastrukturer og tillatelser er under utvikling, og dette krever ikke oversettelse til andre personvern- og tillatelsesmodeller og lagringsformater. Denne vil bli beskrevet i andre dokumenter. Prefikset for alle egne endepunkter er 'api/red'.
 
-Red provides multiple channels accesible via the same login account. With Red, any API function which requires authentication will accept a parameter &channel={channel_nickname} - and will select that channel and make it current before executing the API command. By default, the default channel associated with an account is selected. 
- 
-Red also provides an extended permission model. In the absence of any Red specific API calls to set permissions, they will be set to the default permissions settings which are associated with the current channel.  
+Red tilbyr tilgang til flere kanaler via samme innloggingskonto. Med Red vil enhver API-funksjon som krever autentisering akseptere et parameter - &channel={channel_nickname} - og vil velge den kanalen og gjøre den gjeldende før utføring av API-kommandoen. Som standard er det standardkanalen i kontoen som velges.
 
-Red will probably never be able to support the Twitter 'api/friendships' functions fully because Red is not a social network and has no concept of "friendships" - it only recognises permissions to do stuff (or not do stuff as the case may be).  
+Red tilbyr også en utvidet tillatelsesmodell. Grunnet fraværet av Red-spesifikke API kall til å angi tillatelser, så vil disse innstillingene bli satt til standardtillatelsene assosiert med den gjeldende kanalen.
 
-Legend: T= Twitter, S= StatusNet, F= Friendica, R= Red, ()=Not yet working, J= JSON only (XML formats deprecated)
+Red vil antakelig aldri helt kunne støtte Twitter sine 'api/friendships' funksjoner, fordi Red er ikke et sosialt nettverk og har ikke innebygget noe konsept om "vennskap" - den gjenkjenner tillatelser til å gjøre ting (eller ikke gjøre ting hvis det er det som trengs).
+
+Tegnforklaring: T= Twitter, S= StatusNet, F= Friendica, R= Red, ()=Virker ikke ennå, J= kun JSON (XML-formater er avlegs)
 
 
 
-Twitter API compatible functions:
+Twitter API kompatible funksjoner:
 
 *	api/account/verify_credentials		T,S,F,R
 *	api/statuses/update					T,S,F,R
@@ -47,7 +47,7 @@ Twitter API compatible functions:
 *	api/oauth/access_token				T,S,F,R
 
 
-Twitter API functions supported by StatusNet but not currently by Friendica or Red
+Twitter API funksjoner støttet av StatusNet men for øyeblikket ikke av Friendica eller Red
 
 *	api/favorites						T,S
 *	api/favorites/create				T,S
@@ -63,7 +63,7 @@ Twitter API functions supported by StatusNet but not currently by Friendica or R
 *	api/blocks/create					T,S
 *	api/blocks/destroy					T,S
 
-Twitter API functions not currently supported by StatusNet 
+Twitter API funksjoner som for øyeblikket ikke er støttet av StatusNet 
 
 *	api/statuses/retweeted_to_me		T
 *	api/statuses/retweeted_by_me		T
@@ -77,17 +77,17 @@ Twitter API functions not currently supported by StatusNet
 *	api/lists							T
 
 
-Statusnet compatible extensions to the Twitter API supported in both Friendica and Red
+StatusNet kompatible utvidelser til Twitter API-et støttet av både Friendica og Red
 
 *	api/statusnet/version				S,F,R
 *	api/statusnet/config				S,F,R
 
-Friendica API extensions to the Twitter API supported in both Friendica and Red
+Friendica API utvidelser til Twitter API-et støttet av både Friendica og Red
 
 *	api/statuses/mediap					F,R
 
 
-Red specific API extensions to the Twitter API not supported in Friendica
+Red-spesifikke API utvidelser til Twitter API-et som ikke er støttet av Friendica
 
 *	api/account/logout					R
 *	api/export/basic					R,J
@@ -102,12 +102,12 @@ Red specific API extensions to the Twitter API not supported in Friendica
 *   api/red/photos                      R,J (option album=xxxx)
 
 
-Red proposed API extensions to the Twitter API
+Foreslåtte Red API utvidelser til Twitter API-et
 
 *	api/statuses/edit					(R),J
 *	api/statuses/permissions			(R),J
 *	api/statuses/permissions/update		(R),J
-*	api/statuses/ids					(R),J   # search for existing message_id before importing a foreign post
+*	api/statuses/ids					(R),J   # søk  etter eksisterende message_id før importering av fremmed innlegg
 *	api/files/show						(R),J
 *	api/files/destroy					(R),J
 *	api/files/update					(R),J
