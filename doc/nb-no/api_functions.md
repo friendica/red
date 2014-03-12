@@ -1,7 +1,7 @@
 Red Twitter API
 ===============
 
-Den "grunnleggende" Red web API-en er basert på Twitter API-en, siden dette gir umiddelbar samhandling med et stort antall tredjepartsklienter og programmer uten å kreve noen kodeendring hos disse. Det er også et super-set av StatusNet-versjonen av Twitter API-en, siden den også har bred eksisterende støtte.
+Det "grunnleggende" Red web API-et er basert på Twitter API-et, siden dette gir umiddelbar samhandling med et stort antall tredjepartsklienter og programmer uten å kreve noen kodeendring hos disse. Det er også et super-set av StatusNet-versjonen av Twitter API-et, siden den også har bred eksisterende støtte.
 
 Red har flere muligheter som ikke vises gjennom Twitter-grensesnittene, der vi tvinges til å gjøre API-funksjoner "dummere" for å kunne arbeide med den primitive kommunikasjons- og personvernmodellen i Twitter/StatusNet. Vi planlegger å utvide Twitter-API-et slik at Red-spesifikke klienter kan ta i bruk alle funksjoner i Red uten begrensninger.
 
