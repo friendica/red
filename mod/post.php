@@ -281,7 +281,7 @@ function post_init(&$a) {
 
 		if($test) {
 			$ret['message'] .= 'auth failure fallthrough ' . print_r($_REQUEST,true) . print_r($j,true) . EOL;
-			json_return_and_dir($ret);
+			json_return_and_die($ret);
 		}
 
 		if(strstr($desturl,z_root() . '/rmagic'))
