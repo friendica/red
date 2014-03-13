@@ -244,7 +244,7 @@ header #banner #logo-text {
 	height: 28px;
 	border-bottom: 1px solid #aaaaaa;
 	padding:0px;
-	width: 90%; 
+	width: 100%;
 }
 
 .tabs li { margin: 0px; list-style: none; }
@@ -262,8 +262,7 @@ ul.tabs {
 	margin-top: 0px;
 	margin-bottom: 0px;
 	list-style-type: none;
-	padding: 0px;
-	padding-right: 8px;
+
 }
 
 /* footer */
@@ -2309,9 +2308,24 @@ blockquote {
 	padding: 7px 10px;
 }
 
-@media (max-width:767px) {
+@media screen and (max-width: 767px) {
 	aside#region_1 {
 		background: rgba(0, 0, 0, .1);
 		border-right: 1px solid $nav_bd;
+	}
+
+	main {
+		-webkit-transition: all 0.25s ease-out;
+		-moz-transition: all 0.25s ease-out;
+		transition: all 0.25s ease-out;
+	}
+
+	main {
+		left: -227px;
+		width: calc( 100% + 227px );
+	}
+
+	main.region_1-on {
+		left: 0px;
 	}
 }

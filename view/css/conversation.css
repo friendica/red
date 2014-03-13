@@ -261,6 +261,7 @@
 
 .wall-item-body {
 	margin-top: 10px;
+	word-wrap: break-word;
 }
 
 .wall-item-body.divmore {
