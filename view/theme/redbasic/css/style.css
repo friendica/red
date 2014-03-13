@@ -79,6 +79,11 @@ input[type="submit"] {
 	text-decoration: none;
 }
 
+button, input, optgroup, select, textarea {
+	color: #000;
+}
+
+
 pre code {
 	border: none;
 }
