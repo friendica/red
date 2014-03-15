@@ -119,7 +119,7 @@ if(! $a->install) {
     if (! $converse_width)
     	$converse_width="1024px";
 	if(! $top_photo)
-		$top_photo = '64px';
+		$top_photo = '48px';
 	$pmenu_top = intval($top_photo) - 16 . 'px';
 	$wwtop = intval($top_photo) - 15 . 'px';
 	$comment_indent = intval($top_photo) + 10 . 'px';

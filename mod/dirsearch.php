@@ -31,7 +31,6 @@ function dirsearch_content(&$a) {
 
 	$tables = array('name','address','locale','region','postcode','country','gender','marital','sexual','keywords');
 
-
 	if($_REQUEST['query']) {
 		$advanced = dir_parse_query($_REQUEST['query']);
 		if($advanced) {
@@ -122,7 +121,7 @@ function dirsearch_content(&$a) {
 	}
 
 
-    $perpage      = (($_REQUEST['n'])              ? $_REQUEST['n']                    : 300);
+    $perpage      = (($_REQUEST['n'])              ? $_REQUEST['n']                    : 80);
     $page         = (($_REQUEST['p'])              ? intval($_REQUEST['p'] - 1)        : 0);
     $startrec     = (($page+1) * $perpage) - $perpage;
 	$limit        = (($_REQUEST['limit'])          ? intval($_REQUEST['limit'])        : 0);

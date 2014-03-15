@@ -120,3 +120,7 @@ nav .navbar-collapse .navbar-right {
 	height: 32px;
 	margin-right: 5px;
 }
+
+code {
+	white-space: normal;
+}

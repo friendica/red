@@ -3,10 +3,15 @@ var ispublic = aStr['everybody'];
 
 $(document).ready(function() {
 
-		  $("a#settings-default-perms-menu").colorbox({ 
-				  'inline' : true, 
-				  'transition' : 'elastic' 
-			});
+	$("a#photos-upload-perms-menu").colorbox({
+		'inline' : true, 
+		'transition' : 'elastic' 
+	});
+
+	$("a#settings-default-perms-menu").colorbox({ 
+		'inline' : true, 
+		'transition' : 'elastic' 
+	});
 
 	$('#contact_allow, #contact_deny, #group_allow, #group_deny').change(function() {
 		var selstr;

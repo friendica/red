@@ -23,6 +23,7 @@
 [zrl=[baseurl]/help/bbcode]BBcode reference for posts and comments[/zrl]
 [zrl=[baseurl]/help/checking_account_quota_usage]Checking Account Quota Usage[/zrl]
 [zrl=[baseurl]/help/cloud_desktop_clients]Cloud Desktop Clients[/zrl]
+[zrl=[baseurl]/help/AdvancedSearch]Advanced Directory Search[/zrl]
 
 [b]For Hub Administrators[/b]
 
@@ -39,6 +40,7 @@
 [zrl=[baseurl]/help/Creating-Templates]Creating Comanche Templates[/zrl]
 [zrl=[baseurl]/help/Widgets]Core Widgets[/zrl]
 [zrl=[baseurl]/help/plugins]Plugins[/zrl]
+[zrl=[baseurl]/help/DerivedTheme1]Creating Derivative Themes[/zrl]
 [zrl=[baseurl]/help/schema_development]Schemas[/zrl]
 [zrl=[baseurl]/help/developers]Developers[/zrl]
 [zrl=[baseurl]/help/intro_for_developers]Intro for Developers[/zrl]

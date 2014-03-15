@@ -5,7 +5,7 @@
 				<span class="icon-bar"></span>
 				<span class="icon-bar"></span>
 			</button>
-			<button id="expand-aside" type="button" class="navbar-toggle" data-toggle="show_hide" data-target="#region_1">
+			<button id="expand-aside" type="button" class="navbar-toggle" data-toggle="offcanvas" data-target="#region_1">
 				<i class="icon-circle-arrow-right" id="expand-aside-icon"></i>
 			</button>
 			{{if $userinfo}}
@@ -32,7 +32,7 @@
 			<ul class="nav navbar-nav navbar-left">
 			{{if $nav.lock}}
 				<li>
-					<a class="fakelink" title="{{$nav.lock.3}}" onclick="window.location.href='{{$nav.lock.0}}'; return false;"><i class="{{if $nav.locked}}icon-lock{{else}}icon-unlock{{/if}}"></i></a>
+					<a title="{{$nav.lock.3}}" href="{{$nav.lock.0}}"><i class="{{if $nav.locked}}icon-lock{{else}}icon-unlock{{/if}}"></i></a>
 				</li>
 			{{/if}}
 

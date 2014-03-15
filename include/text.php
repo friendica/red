@@ -656,6 +656,12 @@ function contact_block() {
 	$o = '';
 	$a = get_app();
 
+	if(! $a->profile['uid'])
+		return;
+
+	if(! perm_is_allowed($a->profile['uid'],get_observer_hash(),'view_contacts'))
+		return;
+
 	$shown = get_pconfig($a->profile['uid'],'system','display_friend_count');
 
 	if($shown === false)
