@@ -177,7 +177,13 @@ function connedit_content(&$a) {
 	$sort_type = 0;
 	$o = '';
 
+	// this triggers some javascript to set Full Sharing by default after 
+	// completing a "follow" - which can be changed to something else before 
+	// form submission, but this gives us something useable
 
+	if($_GET['follow'] == 1) {
+		$o .= '<script>var after_following = 1;</script>';
+	}
 	if(! local_user()) {
 		notice( t('Permission denied.') . EOL);
 		return login();

@@ -1,0 +1,53 @@
+header #banner {
+	position: fixed;
+	top: 0;
+	width: 250px;
+	margin-left: auto;
+	margin-right: auto;
+}
+
+#blog-banner {
+	position: relative;
+	margin-top: 75px;
+	width: 100%;
+	margin-bottom: 20px;
+}
+
+nav.navbar { 
+	width: 100%;
+	margin-left: 0;
+	margin-right: 0;
+}
+
+aside#region_1 {
+	display: block;
+	min-width: 210px;
+	max-width: 220px;
+	width: 20%;
+	float: left;
+	margin-left: 10px;
+}
+
+aside input[type='text'] {
+ width: 174px;
+}
+
+
+section {
+	margin-left: 15px;
+	margin-right: 15px;
+	float: left;
+	min-width: 400px;
+	width: 70%;
+	display: block;
+	padding-bottom: 350px;
+}
+
+#region_3 {
+	display: none;
+}
+
+#blog-margin {
+	margin-right: 0;
+	margin-left: 0;
+}

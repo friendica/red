@@ -7,7 +7,7 @@ The functionality it provides can also be described as follows:
  - a relationship online is just a bunch of permissions
  - the internet is just another folder
 
-[b][color= grey][size=20]Communications[/size][/color][/b]
+[b][size=20]Communications[/size][/b]
 
 Zot is a revolutionary protocol which provides [i]decentralised communications[/i] and [i]identity management[/i] across the matrix. The resulting platform can provide web services comparable to those offered by large corporate providers, but without the large corporate provider and their associated privacy issues, insatiable profit drive, and walled-garden mentality.
 
@@ -17,7 +17,7 @@ Zot allows a wide array of background services in the matrix, from offering frie
 
 You won't find these features at all on other decentralized communication services. In addition to providing hub (server) decentralization, perhaps the most innovative and interesting Zot feature is its provision of [i]decentralized identity[/i] services.
 
-[b][color= grey][size=20]Identity[/size][/color][/b] 
+[b][size=20]Identity[/size][/b] 
 
 Zot's identity layer is unique. It provides [i]invisible single sign-on[/i] across all sites in the matrix. 
 
@@ -37,7 +37,7 @@ You login only once on your home hub (or any nomadic backup hub you have chosen)
 
 You cannot be silenced. You cannot be removed from the matrix, unless you yourself choose to exit it.
 
-[b][color= grey][size=20]Access Control[/size][/color][/b]
+[b][size=20]Access Control[/size][/b]
 
 Zot's identity layer allows you to provide fine-grained permissions to any content you wish to publish - and these permissions extend across the Red Matrix. This is like having one super huge website made up of an army of small individual websites - and where each channel in the matrix can completely control their privacy and sharing preferences for any web resources they create. 
 
@@ -47,7 +47,7 @@ This type of control is available on large corporate providers such as Facebook 
 
 Access can be granted or denied for any resource, to any channel, or any group of channels; anywhere within the matrix. Others can access your content if you permit them to do so, and they do not even need to have an account on your hub. Your private photos cannot be viewed, because permission really work; they are not an addon that was added as an afterthought. If you aren't on the list of allowed viewers for a particular photo, you aren't going to look at it. 
 
-[b][color= grey][size=18]Additional Resources and Links[/size][/color][/b]
+[b][size=18]Additional Resources and Links[/size][/b]
 
 For more detailed, technical information about Zot, check out the following links: 
 

@@ -20,15 +20,22 @@ function ACL(backend_url, preset){
 	if (preset.length==0) that.showall.addClass("selected");
 	
 	/*events*/
-	that.showall.click(that.on_showall);
-	$(document).on('click','.acl-button-show',that.on_button_show);
-	$(document).on('click','.acl-button-hide',that.on_button_hide);
-	$("#acl-search").keypress(that.on_search);
-	$("#acl-wrapper").parents("form").submit(that.on_submit);
-	
-	/* startup! */
-	that.get(0,100);
+
+	$(document).ready(function() {
+		that.showall.click(that.on_showall);
+		$(document).on('click','.acl-button-show',that.on_button_show);
+		$(document).on('click','.acl-button-hide',that.on_button_hide);
+		$("#acl-search").keypress(that.on_search);
+//		$("#acl-wrapper").parents("form").submit(that.on_submit);
+
+		/* startup! */
+		that.get(0,100);
+		that.on_submit();
+	});
+
 }
+
+// no longer called on submit - call to update whenever a change occurs to the acl list. 
 
 ACL.prototype.on_submit = function(){
 	aclfileds = $("#acl-fields").html("");
@@ -44,6 +51,8 @@ ACL.prototype.on_submit = function(){
 	$(that.deny_cid).each(function(i,v){
 		aclfileds.append("<input type='hidden' name='contact_deny[]' value='"+v+"'>");
 	});	
+//	alert(aclfileds);
+
 }
 
 ACL.prototype.search = function(){
@@ -72,6 +81,7 @@ ACL.prototype.on_showall = function(event){
 	that.deny_gid  = [];
 	
 	that.update_view();
+	that.on_submit();
 	
 	return false;
 }
@@ -86,7 +96,7 @@ ACL.prototype.on_button_show = function(event){
 	$(this).toggleClass("selected");*/
 
 	that.set_allow($(this).parent().attr('id'));
-
+	that.on_submit();
 	return false;
 }
 ACL.prototype.on_button_hide = function(event){
@@ -99,7 +109,7 @@ ACL.prototype.on_button_hide = function(event){
 	$(this).toggleClass("selected");*/
 
 	that.set_deny($(this).parent().attr('id'));
-
+	that.on_submit();
 	return false;
 }
 

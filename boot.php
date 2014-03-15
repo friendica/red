@@ -47,7 +47,7 @@ define ( 'RED_PLATFORM',            'Red Matrix' );
 define ( 'RED_VERSION',             trim(file_get_contents('version.inc')) . 'R');
 define ( 'ZOT_REVISION',            1     ); 
 
-define ( 'DB_UPDATE_VERSION',       1098  );
+define ( 'DB_UPDATE_VERSION',       1103  );
 
 define ( 'EOL',                    '<br />' . "\r\n"     );
 define ( 'ATOM_TIME',              'Y-m-d\TH:i:s\Z' );
@@ -290,6 +290,7 @@ define ( 'ABOOK_FLAG_IGNORED'    , 0x0002);
 define ( 'ABOOK_FLAG_HIDDEN'     , 0x0004);
 define ( 'ABOOK_FLAG_ARCHIVED'   , 0x0008);
 define ( 'ABOOK_FLAG_PENDING'    , 0x0010);
+define ( 'ABOOK_FLAG_UNCONNECTED', 0x0020);
 define ( 'ABOOK_FLAG_SELF'       , 0x0080);
 
 
@@ -323,9 +324,8 @@ define ( 'POLL_OVERWRITE',       0x8000);  // If you vote twice remove the prior
 
 
 define ( 'UPDATE_FLAGS_UPDATED',  0x0001);
+define ( 'UPDATE_FLAGS_FORCED',   0x0002);
 define ( 'UPDATE_FLAGS_DELETED',  0x1000);
-
-
 
 
 /**
@@ -491,7 +491,7 @@ define ( 'ACCOUNT_PENDING',      0x0010 );
 
 define ( 'ACCOUNT_ROLE_ALLOWCODE', 0x0001 );    
 define ( 'ACCOUNT_ROLE_SYSTEM',    0x0002 );
-
+define ( 'ACCOUNT_ROLE_DEVELOPER', 0x0004 );
 define ( 'ACCOUNT_ROLE_ADMIN',     0x1000 );
 
 /**
@@ -528,6 +528,8 @@ define ( 'ITEM_MENTIONSME',      0x0400);
 define ( 'ITEM_NOCOMMENT',       0x0800);  // commenting/followups are disabled
 define ( 'ITEM_OBSCURED',        0x1000);  // bit-mangled to protect from casual browsing by site admin
 define ( 'ITEM_VERIFIED',        0x2000);  // Signature verification was successful
+define ( 'ITEM_RETAINED',        0x4000);  // We looked at this item once to decide whether or not to expire it, and decided not to. 
+										   // Don't make us evaluate this same item again. 
 /**
  *
  * Reverse the effect of magic_quotes_gpc if it is enabled.
@@ -1177,6 +1179,13 @@ function check_config(&$a) {
 
 	$a->set_baseurl($a->get_baseurl());
 
+	// Make sure each site has a system channel.  This is now created on install
+	// so we just need to keep this around a couple of weeks until the hubs that
+	// already exist have one
+	$syschan_exists = get_sys_channel();
+		if (! $syschan_exists)
+			create_sys_channel();
+
 	if($build != DB_UPDATE_VERSION) {
 		$stored = intval($build);
 		if(! $stored) {
@@ -1678,10 +1687,11 @@ function current_theme(){
 function current_theme_url($installing = false) {
 	global $a;
 	$t = current_theme();
-	$uid = '';
-	$uid = (($a->profile_uid) ? '?f=&puid=' . $a->profile_uid : '');
+	$opts = '';
+	$opts = (($a->profile_uid) ? '?f=&puid=' . $a->profile_uid : '');
+	$opts .= ((x($a->layout,'schema')) ? '&schema=' . $a->layout['schema'] : '');
 	if(file_exists('view/theme/' . $t . '/php/style.php'))
-		return('view/theme/' . $t . '/php/style.pcss' . $uid);
+		return('view/theme/' . $t . '/php/style.pcss' . $opts);
 	return('view/theme/' . $t . '/css/style.css');
 }
 
@@ -1690,6 +1700,15 @@ function is_site_admin() {
 	if((intval($_SESSION['authenticated'])) 
 		&& (is_array($a->account)) 
 		&& ($a->account['account_roles'] & ACCOUNT_ROLE_ADMIN))
+		return true;
+	return false;
+}
+
+function is_developer() {
+	$a = get_app();
+	if((intval($_SESSION['authenticated'])) 
+		&& (is_array($a->account)) 
+		&& ($a->account['account_roles'] & ACCOUNT_ROLE_DEVELOPER))
 		return true;
 	return false;
 }
@@ -1807,8 +1826,16 @@ function construct_page(&$a) {
 	// in case a page has overloaded a module, see if we already have a layout defined
 	// otherwise, if a pdl file exists for this module, use it
 
-	if((! count($a->layout)) && ($p = theme_include('mod_' . $a->module . '.pdl')) != '')
-		comanche_parser($a,@file_get_contents($p));
+	if(! count($a->layout)) {
+		$n = 'mod_' . $a->module . '.pdl' ;
+		$u = comanche_get_channel_id();
+		if($u)
+			$s = get_pconfig($u,'system',$n);
+		if((! $s) && (($p = theme_include($n)) != ''))
+			$s = @file_get_contents($p);
+		if($s)
+			comanche_parser($a,$s);
+	}
 
 	$comanche = ((count($a->layout)) ? true : false);
 		
@@ -1841,7 +1868,11 @@ function construct_page(&$a) {
 
 	require_once('include/js_strings.php');
 
-	head_add_css(((x($a->page,'template')) ? $a->page['template'] : 'default' ) . '.css');
+	if(x($a->page,'template_style'))
+		head_add_css($a->page['template_style'] . '.css');
+	else
+		head_add_css(((x($a->page,'template')) ? $a->page['template'] : 'default' ) . '.css');
+
 	head_add_css('mod_' . $a->module . '.css');
 	head_add_css(current_theme_url($installing));
 

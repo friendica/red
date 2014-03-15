@@ -64,8 +64,6 @@
 	{{include file="field_input.tpl" field=$maximagesize}}
 	
 	<h3>{{$corporate}}</h3>
-	{{include file="field_input.tpl" field=$allowed_sites}}
-	{{include file="field_input.tpl" field=$allowed_email}}
 	{{include file="field_checkbox.tpl" field=$block_public}}
 	{{include file="field_checkbox.tpl" field=$force_publish}}
 	

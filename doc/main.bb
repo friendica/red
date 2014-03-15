@@ -1,6 +1,6 @@
 [b]Red Matrix Documentation and Resources[/b]
 
-Contents
+[b]Contents[/b]
 
 [zrl=[baseurl]/help/about]What is the Red Matrix?[/zrl]
 [zrl=[baseurl]/help/features]Red Matrix Features[/zrl]
@@ -20,9 +20,10 @@ Contents
 [zrl=[baseurl]/help/tags_and_mentions]Tags and Mentions[/zrl]
 [zrl=[baseurl]/help/webpages]Web Pages[/zrl]
 [zrl=[baseurl]/help/remove_account]Remove Account[/zrl]
-[zrl=[baseurl]/help/extra_features]BBcode reference for posts and comments[/zrl]
+[zrl=[baseurl]/help/bbcode]BBcode reference for posts and comments[/zrl]
 [zrl=[baseurl]/help/checking_account_quota_usage]Checking Account Quota Usage[/zrl]
 [zrl=[baseurl]/help/cloud_desktop_clients]Cloud Desktop Clients[/zrl]
+[zrl=[baseurl]/help/AdvancedSearch]Advanced Directory Search[/zrl]
 
 [b]For Hub Administrators[/b]
 
@@ -36,7 +37,10 @@ Contents
 
 [zrl=[baseurl]/help/install]Install[/zrl]
 [zrl=[baseurl]/help/comanche]Comanche Page Descriptions[/zrl]
+[zrl=[baseurl]/help/Creating-Templates]Creating Comanche Templates[/zrl]
+[zrl=[baseurl]/help/Widgets]Core Widgets[/zrl]
 [zrl=[baseurl]/help/plugins]Plugins[/zrl]
+[zrl=[baseurl]/help/DerivedTheme1]Creating Derivative Themes[/zrl]
 [zrl=[baseurl]/help/schema_development]Schemas[/zrl]
 [zrl=[baseurl]/help/developers]Developers[/zrl]
 [zrl=[baseurl]/help/intro_for_developers]Intro for Developers[/zrl]
@@ -56,4 +60,4 @@ Contents
 
 [b]About[/b]
 
-[zrl=[baseurl]/siteinfo]Site/Version Info[/zrl]
+[zrl=[baseurl]/siteinfo] Site/Version Info[/zrl]

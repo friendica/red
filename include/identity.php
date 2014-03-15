@@ -711,10 +711,7 @@ logger('online: ' . $profile['online']);
 		? trim(substr($profile['name'],0,strpos($profile['name'],' '))) : $profile['name']);
 	$lastname = (($firstname === $profile['name']) ? '' : trim(substr($profile['name'],strlen($firstname))));
 
-	if(is_array($observer) 
-		&& perm_is_allowed($profile['uid'],$observer['xchan_hash'],'view_contacts')) {
-		$contact_block = contact_block();
-	}
+	$contact_block = contact_block();
 
 	$channel_menu = false;
 	$menu = get_pconfig($profile['uid'],'system','channel_menu');
@@ -1111,8 +1108,6 @@ function get_theme_uid() {
 	$uid = (($_REQUEST['puid']) ? intval($_REQUEST['puid']) : 0);
 	if(local_user()) {
 		if((get_pconfig(local_user(),'system','always_my_theme')) || (! $uid))
-			return local_user();
-		if(! $uid)
 			return local_user();
 	}
 	if(! $uid) {

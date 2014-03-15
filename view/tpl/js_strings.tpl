@@ -13,6 +13,7 @@
 		'everybody'   : "{{$everybody}}",
 		'passphrase'  : "{{$passphrase}}",
 		'passhint'    : "{{$passhint}}",
+		'permschange' : "{{$permschange}}",
 
 		't01' : "{{$t01}}",
 		't02' : "{{$t02}}",

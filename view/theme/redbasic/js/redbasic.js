@@ -22,6 +22,11 @@ function cmtBbClose(comment, id) {
 
 $(document).ready(function() {
 
+$('[data-toggle=offcanvas]').click(function() {
+	$('#expand-aside-icon').toggleClass('icon-circle-arrow-right').toggleClass('icon-circle-arrow-left');
+	$('main').toggleClass('region_1-on');
+});
+
 $('.group-edit-icon').hover(
 	function() {
 		$(this).css('opacity','1.0');},

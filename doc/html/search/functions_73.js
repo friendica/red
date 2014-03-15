@@ -74,6 +74,7 @@ var searchData=
   ['sort_5fthr_5fcreated_5frev',['sort_thr_created_rev',['../conversation_8php.html#a9cc2a679606da9e535a06433f9f553a0',1,'conversation.php']]],
   ['sources_5fcontent',['sources_content',['../sources_8php.html#ac442ccef080ab95772d8929fcafcb4b7',1,'sources.php']]],
   ['sources_5fpost',['sources_post',['../sources_8php.html#ac73298ff162ce7b2de8dcaf3d3305b1e',1,'sources.php']]],
+  ['splitfilename',['splitFilename',['../functions_8php.html#adefe514c95680928b3aae250cbc3c663',1,'functions.php']]],
   ['sslify',['sslify',['../text_8php.html#a33bdb5d4bfff2ede7caf61a98ac0a2e9',1,'text.php']]],
   ['sslify_5finit',['sslify_init',['../sslify_8php.html#a75b11e54a3d1fc83e7d4c0e8b4dab316',1,'sslify.php']]],
   ['starred_5finit',['starred_init',['../starred_8php.html#a63024fb418c678e49fd535e3752d349a',1,'starred.php']]],

@@ -9,7 +9,7 @@ function expire_run($argv, $argc){
 
 	// physically remove anything that has been deleted for more than two months
 
-	$r = q("delete from item where item_flags & %d and changed < UTC_TIMESTAMP() - INTERVAL 60 DAY",
+	$r = q("delete from item where ( item_flags & %d ) and changed < UTC_TIMESTAMP() - INTERVAL 60 DAY",
 		intval(ITEM_DELETED)
 	);
 

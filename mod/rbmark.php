@@ -35,7 +35,8 @@ function rbmark_post(&$a) {
 	$t = array('url' => escape_tags($_REQUEST['url']),'term' => escape_tags($_REQUEST['title']));
 	bookmark_add($channel,$channel,$t,((x($_REQUEST,'private')) ? intval($_REQUEST['private']) : 0),
 		array('menu_id' => ((x($_REQUEST,'menu_id')) ? intval($_REQUEST['menu_id']) : 0),
-			'menu_name' => ((x($_REQUEST,'menu_name')) ? escape_tags($_REQUEST['menu_name']) : '')
+			'menu_name' => ((x($_REQUEST,'menu_name')) ? escape_tags($_REQUEST['menu_name']) : ''),
+			'ischat' => ((x($_REQUEST['ischat'])) ? intval($_REQUEST['ischat']) : 0)
 		));
 
 	goaway(z_root() . '/bookmarks');
@@ -92,8 +93,8 @@ function rbmark_content(&$a) {
 		'$header' => t('Save Bookmark'),
 		'$url' => array('url',t('URL of bookmark'),escape_tags($_REQUEST['url'])),
 		'$title' => array('title',t('Description'),escape_tags($_REQUEST['title'])),
-		'$ischat' => (($ischat) ? 1 : 0),
-		'$private' => (($private) ? 1 : 0),
+		'$ischat' => ((x($_REQUEST,'ischat')) ? intval($_REQUEST['ischat']) : 0),
+		'$private' => ((x($_REQUEST,'private')) ? intval($_REQUEST['private']) : 0),
 		'$submit' => t('Save'),
 		'$menu_name' => array('menu_name',t('Or enter new bookmark folder name'),'',''),
 		'$menus' => $menu_select

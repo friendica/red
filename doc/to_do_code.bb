@@ -10,7 +10,13 @@ We need much more than this, but here are areas where developers can help. Pleas
 
 [li]Finish the anti-spam bayesian engine[/li]
 
+[li]If DAV folders exist, add an option to the Settings page to set a default folder for attachment uploads.[/li] 
+
 [li]Integrate the &quot;open site&quot; list with the register page[/li]
+
+[li]implement oembed provider interface[/li]
+
+[li]implement openid server interface[/li]
 
 [li]Write more webpage layouts[/li]
 
@@ -21,6 +27,8 @@ We need much more than this, but here are areas where developers can help. Pleas
 [li]templatise and translate the Web interface to webDAV[/li]
 
 [li]Extend WebDAV to provide desktop access to photo albums]/li]
+
+[li]Create a module PDL editor (separate from but integrated with the page layout editor) as a separate module. This will allow folks to view and alter the pre-defined layouts for any module in the system. If the custom module is removed or empty, revert to the system layout.   
 
 [li]service classes - provide a pluggable subscription payment gateway for premium accounts[/li]
 

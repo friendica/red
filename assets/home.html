@@ -20,56 +20,171 @@ header { z-index: 10000; }
 
 }
 
+body::after {
+	content: '';
+	background-image:url(assets/uluru2.jpg);
+	background-position: 50% 50%;
+	background-repeat: no-repeat;
+	top: 0;
+	left: 0;
+	bottom: 0;
+	right: 0;
+	position: absolute;
+	opacity: 0.5;
+	z-index: -1;
+}
 
 </style>
+
+<script>
+
+var terms = new Array(
+"Internet-scale Privacy",
+"Social Networking",
+"Single Sign-On",
+"Photo Albums",
+"Decentralised",
+"Cloud Storage",
+"Own Your Content",
+"Blogging",
+"Decent Encryption",
+"Chatrooms",
+"Cross-Site Access Control",
+"Unsend Private Mail",
+"Webpage Creation",
+"Content Management",
+"Message Expiration",
+"Games and Utilities",
+"Unincorporated",
+"Forums",
+"Like + Dislike",
+"Share Anything Digital",
+"Communications",
+"Identity-Aware Content",
+"Pseudonyms",
+"Multiple Identities",
+"No Advertising",
+"Rich Text Post/Comment",
+"Event Calendar",
+"Bookmarking",
+"Community Tagging",
+"Mirrored Directory",
+"Nomadic Identity",
+"Derivative Channels",
+"Customised Encryption",
+"Multiple Profiles",
+"Privacy Groups",
+"File Sharing",
+"MIT license",
+"Autonomy",
+"Affinity Filtering",
+"Friend Suggestions",
+"Cross-Site Auth",
+"Themes",
+"Plugins",
+"External API",
+"3rd Party Apps",
+"Open Source",
+null
+);
+
+var r = 0;
+var g = 0;
+var b = 0;
+
+var speed = 2;
+var delay = 1000;
+
+var timer = null;
+var holdid = 0;
+var element = 'word-flasher';
+var custom = '';
+var seq = 0;
+var nindex = 0;
+
+var curr = null;
+
+function update_element() {
+
+	curr = terms[nindex];
+	nindex ++;
+	if(terms[nindex] == null)
+		nindex = 0
+
+	var id = document.getElementById(element);
+	id.innerHTML = curr;
+	timer = setTimeout('fadein();',5);
+}
+
+function fadeout() {
+
+  var id = document.getElementById(element);
+  r = (((r + speed) < 255) ? r + speed : 255);
+  g = (((g + speed) < 255) ? g + speed : 255);
+  b = (((b + speed) < 255) ? b + speed : 255);
+
+  if((r != 255) && (g != 255) && (b != 255)) {
+    timer = setTimeout('fadeout();',10);
+  }
+  else
+    update_element();
+  id.style.color = "rgb(" + r + "," + g + "," + b + ")";
+}
+
+function fadein() {
+  var id = document.getElementById(element);
+  r = (((r - speed) > 0) ? r - speed : 0);
+  g = (((g - speed) > 0) ? g - speed : 0);
+  b = (((b - speed) > 0) ? b - speed : 0);
+
+  if(r && g && b) {
+    timer = setTimeout('fadein();',10);
+  }
+  else {
+    timer = setTimeout('fadeout();',delay);
+  }
+
+  id.style.color = "rgb(" + r + "," + g + "," + b + ")";
+}
+
+
+$(document).ready(function() {
+	update_element();
+	$('.cb').colorbox({width: '50%',inline: true,href:"#farmer"});
+});
+
+
+</script>
+
 
 <div style="margin-top: 50px;"></div>
 
 <center>
-<div style="color:#808080;font-weight:bold;font-size:4.0em; margin-bottom:75px;">Dream it. Do it.</div>
-<img style="width: 450px; margin-bottom: 95px;" src="assets/logo_simplifiedap.png" >
-</center>
-<div class="tr">
-<div class="td">Communications</div>
-<div class="td">Message Expiration</div>
-<div class="td">Photo Albums</div>
-<div class="td">Decentralised</div>
-<div class="td">Cloud Storage</div>
-<div class="td">Own Your Content</div>
-<div class="td">Blogging</div>
-<div class="td">Decent Encryption</div>
-<div class="td">Chatrooms</div>
-<div class="td">Unsend Private Mail</div>
-<div class="td">Webpage Creation</div>
-<div class="td">Content Management</div>
-<div class="td">Games</div>
-<div class="td">Unincorporated</div>
-<div class="td">Forums</div>
-<div class="td">Share Anything Digital</div>
-<div class="td">Pseudonyms</div>
-<div class="td">Multiple Identities</div>
-<div class="td">No Advertising</div>
-<div class="td">Event Calendar</div>
-<div class="td">Bookmarking</div>
-<div class="td">Community Tagging</div>
-<div class="td">Internet-scale Privacy</div>
-<div class="td">Single Sign-On</div>
-<div class="td">Directory Services</div>
-<div class="td">Nomadic Identity</div>
-<div class="td">Social Networking</div>
-<div class="td">Derivative Channels</div>
-<div class="td">Multiple Profiles</div>
-<div class="td">Privacy Groups</div>
-<div class="td">Autonomy</div>
-<div class="td">Affinity Filtering</div>
-<div class="td">Friend Suggestions</div>
-<div class="td">Cross-Site Auth</div>
-<div class="td">Themes</div>
-<div class="td">Plugins</div>
-<div class="td">External API</div>
-<div class="td">3rd Party Apps</div>
-<div class="td">Open Source</div>
-
+<div id="word-flasher" style="font-size: 3.0em; margin-top: 80px; font-weight: bold; margin-bottom: 35px;">RedMatrix</div>
+<img style="width: 450px; margin-bottom: 30px;" src="assets/logo_simplifiedap.png" >
+<div style="color:#808080;font-weight:bold;font-size:3.0em; margin-bottom:30px;">Dream it. Do it.</div>
+<div class="tr" style="font-size: 1.6em; color: #666; margin-left: 75px; margin-right: 75px;">
+The RedMatrix (aka "red") is a highly advanced social networking platform which was created by a <a style="color: #555;" href="#" class="cb">farmer in Australia</a> - that grew disgusted by the lack of privacy and the increasing tendency of foreign corporations and governments to monitor and control the internet. This has strangled and subverted all that was once good about the web - and turned it into a "steaming pile of crap". (Aussies typically don't mince words.) 
+</div>
+<br />
+<div class="tr" style="font-size: 1.6em; color: #666; margin-left: 75px; margin-right: 75px;">
+Working with a team of volunteers from six continents and over a period of several years, this has evolved into something quite spectacular, far removed from its humble beginnings as a tool to stay in contact with family members and friends that are separated by vast distances. It's an open source, decentralised identity and sharing system which brings back some semblance of privacy to a world that desperately needs it - today more than ever. It's a webserver platform not much more complicated than a WordPress blog and using the same technology, but thousands of times more capable in what it can do for your social communications and sharing needs.   
+</div>
+<br />
+<div class="tr" style="font-size: 1.6em; color: #666; margin-left: 75px; margin-right: 75px;">
+Taking cues from life in the Aussie outback, the Red Matrix has no central authority. Each channel (or social profile) is independent and autonomous - controlling its own publishing privacy as desired. Some will want more privacy, some less. Unlike your typical social network - the matrix has no say in this decision and cannot subvert it. Server hubs are self-sufficient and the network will continue to function if any single node in the matrix goes offline. It also provides channel resilience. You can "clone" your channel (or social profile) to any hub in the network and carry on without interruption if your primary server "chucks a wobbly" for an hour - or a week. (No fail whale needed here.) 
+</div>
+<br />
+<div class="tr" style="font-size: 1.6em; color: #666; margin-left: 75px; margin-right: 75px;">
+Are you ready to ditch the steaming pile of crap, and breathe some fresh air for a change? Join us.
+</div>
 <div class="tr"></div>
 
-<center><div style="margin-top: 35px; color: #808080; font-size: 1.8em;">Welcome to the Matrix</div><div style="font-size: 1.4em; color: #808080;">&ldquo;The most fun you ever had without taking your clothes off.&rdquo;<br /><a href="pubsites">Public Sites</a> | <a href="https://redmatrix.me">Project Home</a> | <a href="https://github.com/friendica/red">Git</a> | <a href="https://zothub.com/channel/one">Developers</a></div></center>
+<div style="margin-top: 35px; color: #808080; font-size: 1.8em;">Welcome to the Matrix</div><a href="pubsites">Public Sites (sign up now!)</a> | <a href="https://redmatrix.me">Project Home</a> | <a href="https://github.com/friendica/red">Git</a> | <a href="https://zothub.com/channel/one">Developers</a></div></center>
+
+<div id="wrapper" style="display: none">
+<div id="farmer">
+To be fair, this Aussie farmer knows more about electronic communications and web software than many professional developers. He's a somewhat respected internet pioneer who once worked for American corporate giants as a web communications and protocol wizard  - and has returned from semi-retirement to try and save the net from what is has now become. 
+</div>
+</div>
+

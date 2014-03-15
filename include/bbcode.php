@@ -46,7 +46,7 @@ function tryzrlvideo($match) {
 	}
 	if($zrl)
 		$link = zid($link);
-	return	'<video src="' . $link . '" controls="controls" width="' . get_app()->videowidth . '" height="' . $a->videoheight . '"><a href="' . $link . '">' . $link . '</a></video>';
+	return	'<video controls="controls" src="' . $link . '" style="width:100%; max-width:' . get_app()->videowidth . 'px"><a href="' . $link . '">' . $link . '</a></video>';
 
 }
 
@@ -620,24 +620,24 @@ function bbcode($Text,$preserve_nl = false, $tryoembed = true) {
 
 	// [img=widthxheight]pathtoimage[/img]
 	if (strpos($Text,'[/img]') !== false) {
-		$Text = preg_replace("/\[img\=([0-9]*)x([0-9]*)\](.*?)\[\/img\]/ism", '<img src="$3" style="width: $1px;" alt="' . t('Image/photo') . '" >', $Text);
+		$Text = preg_replace("/\[img\=([0-9]*)x([0-9]*)\](.*?)\[\/img\]/ism", '<img src="$3" style="width: 100%; max-width: $1px;" alt="' . t('Image/photo') . '" >', $Text);
 	}
 	if (strpos($Text,'[/zmg]') !== false) {
-		$Text = preg_replace("/\[zmg\=([0-9]*)x([0-9]*)\](.*?)\[\/zmg\]/ism", '<img class="zrl" src="$3" style="width: $1px;" alt="' . t('Image/photo') . '" >', $Text);
+		$Text = preg_replace("/\[zmg\=([0-9]*)x([0-9]*)\](.*?)\[\/zmg\]/ism", '<img class="zrl" src="$3" style="width: 100%; max-width: $1px;" alt="' . t('Image/photo') . '" >', $Text);
 	}
 
 	// [img=widthxheight float={left, right}]pathtoimage[/img]
 	if (strpos($Text,'[/img]') !== false) {
-		$Text = preg_replace("/\[img\=([0-9]*)x([0-9]*) float=left\](.*?)\[\/img\]/ism", '<img src="$3" style="width: $1px; float: left;" alt="' . t('Image/photo') . '" >', $Text);
+		$Text = preg_replace("/\[img\=([0-9]*)x([0-9]*) float=left\](.*?)\[\/img\]/ism", '<img src="$3" style="width: 100%; max-width: $1px; float: left;" alt="' . t('Image/photo') . '" >', $Text);
 	}
 	if (strpos($Text,'[/img]') !== false) {
-		$Text = preg_replace("/\[img\=([0-9]*)x([0-9]*) float=right\](.*?)\[\/img\]/ism", '<img src="$3" style="width: $1px; float: right;" alt="' . t('Image/photo') . '" >', $Text);
+		$Text = preg_replace("/\[img\=([0-9]*)x([0-9]*) float=right\](.*?)\[\/img\]/ism", '<img src="$3" style="width: 100%; max-width: $1px; float: right;" alt="' . t('Image/photo') . '" >', $Text);
 	}
 	if (strpos($Text,'[/zmg]') !== false) {
-		$Text = preg_replace("/\[zmg\=([0-9]*)x([0-9]*) float=left\](.*?)\[\/zmg\]/ism", '<img class="zrl" src="$3" style="width: $1px; float: left;" alt="' . t('Image/photo') . '" >', $Text);
+		$Text = preg_replace("/\[zmg\=([0-9]*)x([0-9]*) float=left\](.*?)\[\/zmg\]/ism", '<img class="zrl" src="$3" style="width: 100%; max-width: $1px; float: left;" alt="' . t('Image/photo') . '" >', $Text);
 	}
 	if (strpos($Text,'[/zmg]') !== false) {
-		$Text = preg_replace("/\[zmg\=([0-9]*)x([0-9]*) float=right\](.*?)\[\/zmg\]/ism", '<img class="zrl" src="$3" style="width: $1px; float: right;" alt="' . t('Image/photo') . '" >', $Text);
+		$Text = preg_replace("/\[zmg\=([0-9]*)x([0-9]*) float=right\](.*?)\[\/zmg\]/ism", '<img class="zrl" src="$3" style="width: 100%; max-width: $1px; float: right;" alt="' . t('Image/photo') . '" >', $Text);
 	}
 
 	// style (sanitized)

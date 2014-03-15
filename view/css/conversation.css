@@ -11,7 +11,7 @@
 	margin: 0px;
 	padding: 8px;
 	height: 1.8em;
-	width: 530px;
+	width: 70%;
 	margin-bottom: 5px;
 }
 
@@ -113,7 +113,7 @@
 /* conversation */
 
 .thread-wrapper.toplevel_item {
-	width: 92%;
+	width: 90%;
 }
 
 /* conv_item */
@@ -138,12 +138,7 @@
 .wall-item-info {
 	display: block;
 	float: left;
-	width:110px;
-	margin-right:10px;
-}
-
-.comment .wall-item-info {
-	width: 70px;
+	margin-right: 20px;
 }
 
 .wallwall .wwto {
@@ -166,7 +161,6 @@
 	margin-top: 0px;
 	margin-left: 10px;
 	margin-bottom: 10px;
-	width: 100px;
 }
 
 .wall-item-photo-menu-button {
@@ -203,17 +197,18 @@
 .wall-item-arrowphoto-wrapper {
 	position: absolute;
 	z-index: 99;
+	left: 75px;
 }
 
 .wall-item-wrapper {
 	margin-left:10px;
 }
 
-
 .wall-item-arrowphoto-wrapper {
-	left: 75px;
+
 }
 
+/*
 .wall-item-lock {
 	position: absolute;
 	left: 105px;
@@ -227,20 +222,14 @@
 .wall-item-lock {
 
 }
-
+*/
 .lockview {
 	cursor: pointer;
 }
 
 .wall-item-location {
-	overflow: hidden;
-	/* add ellipsis on text overflow               */
-	/* this work on safari, opera, ie, chrome.     */
-	/* firefox users have to wait support or we    */
-	/* can use a jquery plugin http://bit.ly/zJskg */
 	text-overflow: ellipsis;
-	-o-text-overflow: ellipsis;
-	width: 100%;
+	max-width: 30%;
 }
 
 .wall-item-author {
@@ -258,7 +247,7 @@
 }
 
 .wall-item-content img {
-    max-width: 95% !important;
+    max-width: 95%;
 }
 
 .wall-item-title {
@@ -272,6 +261,7 @@
 
 .wall-item-body {
 	margin-top: 10px;
+	word-wrap: break-word;
 }
 
 .wall-item-body.divmore {
@@ -306,7 +296,6 @@
 .like-rotator {
 	float: left;
 	margin: 8px;
-	color: $toolicon_colour;
 }
 
 .wall-item-delete-wrapper {
@@ -355,10 +344,7 @@
 }
 
 .comment-edit-photo {
-	margin-top: 10px;
-	margin-left: 10px;
-	margin-bottom: 10px;
-	width: 100px;
+	margin: 10px 20px 10px 10px;
 	float: left;
 }
 
@@ -387,15 +373,15 @@
 }
 
 .comment-edit-text-empty {
-	height: 1.0em;
-	width: 270px; 
+	height: 1.2em;
+	width: 30%;
 	overflow: auto;
 	margin-bottom: 10px;
 }
 
 .comment-edit-text-full {
 	height: 150px;
-	width: 80%;
+	width: 50%;
 	overflow: auto;
 }
 
