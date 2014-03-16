@@ -1552,7 +1552,8 @@ require_once('include/items.php');
 				'geo'                       => '',
 				'favorited'                 => (($item['item_flags'] & ITEM_STARRED) ? true : false),
 				'user'                      =>  $status_user ,
-				'statusnet_html'		    => trim(prepare_text($item['body']),$item['mimetype']),
+				//'statusnet_html'		    => trim(prepare_text($item['body']),$item['mimetype']),
+				'statusnet_html'		    => trim(prepare_text($item['body'])),
 				'statusnet_conversation_id'	=> $item['parent'],
 			);
 
