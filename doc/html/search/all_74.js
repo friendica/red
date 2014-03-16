@@ -39,6 +39,7 @@ var searchData=
   ['theme_2ephp',['theme.php',['../apw_2php_2theme_8php.html',1,'']]],
   ['theme_2ephp',['theme.php',['../blogga_2php_2theme_8php.html',1,'']]],
   ['theme_2ephp',['theme.php',['../blogga_2view_2theme_2blog_2theme_8php.html',1,'']]],
+  ['theme_2ephp',['theme.php',['../mytheme_2php_2theme_8php.html',1,'']]],
   ['theme_2ephp',['theme.php',['../redbasic_2php_2theme_8php.html',1,'']]],
   ['theme_5fadmin',['theme_admin',['../view_2theme_2blogga_2php_2config_8php.html#a09cd81013505f83aea0771243a1e4e53',1,'theme_admin(&amp;$a):&#160;config.php'],['../view_2theme_2blogga_2view_2theme_2blog_2config_8php.html#a09cd81013505f83aea0771243a1e4e53',1,'theme_admin(&amp;$a):&#160;config.php']]],
   ['theme_5fadmin_5fpost',['theme_admin_post',['../view_2theme_2blogga_2php_2config_8php.html#aef2da5582b7cb6b5f63e5ca5d69fd30b',1,'theme_admin_post(&amp;$a):&#160;config.php'],['../view_2theme_2blogga_2view_2theme_2blog_2config_8php.html#aef2da5582b7cb6b5f63e5ca5d69fd30b',1,'theme_admin_post(&amp;$a):&#160;config.php']]],

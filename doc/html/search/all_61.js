@@ -25,6 +25,7 @@ var searchData=
   ['account_5fremoved',['ACCOUNT_REMOVED',['../boot_8php.html#ab5ddbe69d3d03acd06e1fb281488cb78',1,'boot.php']]],
   ['account_5frole_5fadmin',['ACCOUNT_ROLE_ADMIN',['../boot_8php.html#ac8400313df2c831653f9036f71ebd86d',1,'boot.php']]],
   ['account_5frole_5fallowcode',['ACCOUNT_ROLE_ALLOWCODE',['../boot_8php.html#a84f48897059bbd4a8738d7ee4cec6688',1,'boot.php']]],
+  ['account_5frole_5fdeveloper',['ACCOUNT_ROLE_DEVELOPER',['../boot_8php.html#a4f507a5996dbb3da148add0339a40d5a',1,'boot.php']]],
   ['account_5frole_5fsystem',['ACCOUNT_ROLE_SYSTEM',['../boot_8php.html#a7c2eb822d50e1554bf5c32861f36342b',1,'boot.php']]],
   ['account_5ftotal',['account_total',['../account_8php.html#a43e3042b2723d76915a030bac3c668b6',1,'account.php']]],
   ['account_5funverified',['ACCOUNT_UNVERIFIED',['../boot_8php.html#af3a4271630aabd8be592213f925d6a36',1,'boot.php']]],

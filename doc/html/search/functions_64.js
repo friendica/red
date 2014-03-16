@@ -29,6 +29,8 @@ var searchData=
   ['diaspora2bb',['diaspora2bb',['../bb2diaspora_8php.html#a26c09c218413610e62e60754c579f6c6',1,'bb2diaspora.php']]],
   ['diaspora_5fol',['diaspora_ol',['../bb2diaspora_8php.html#a8b96bd45884fa1c40b942939354197d4',1,'bb2diaspora.php']]],
   ['diaspora_5ful',['diaspora_ul',['../bb2diaspora_8php.html#adc92ccda5f85ed27e64fcc17712c89cc',1,'bb2diaspora.php']]],
+  ['dir_5fparse_5fquery',['dir_parse_query',['../dirsearch_8php.html#a7d4cd9890d5ed23c3efc58e2a778a305',1,'dirsearch.php']]],
+  ['dir_5fquery_5fbuild',['dir_query_build',['../dirsearch_8php.html#a52bcac49b0e35cc8c6b70066143c2ee2',1,'dirsearch.php']]],
   ['dir_5fsafe_5fmode',['dir_safe_mode',['../dir__fns_8php.html#acf621621e929d49441da30aad76a58cf',1,'dir_fns.php']]],
   ['dir_5fsort_5flinks',['dir_sort_links',['../dir__fns_8php.html#ae56881d69bb6f8e828c9e35454386774',1,'dir_fns.php']]],
   ['dir_5ftagadelic',['dir_tagadelic',['../taxonomy_8php.html#a088371f4bc19155b2291508f5cd63332',1,'taxonomy.php']]],

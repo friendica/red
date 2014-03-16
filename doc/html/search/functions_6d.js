@@ -35,5 +35,6 @@ var searchData=
   ['mitem_5fpost',['mitem_post',['../mitem_8php.html#a6ee694cca4b551a20d7c7a94b5243ec1',1,'mitem.php']]],
   ['mood_5fcontent',['mood_content',['../mood_8php.html#a721b9b6703b3234a005641c92d409b8f',1,'mood.php']]],
   ['mood_5finit',['mood_init',['../mood_8php.html#a7ae136dd7476865b4828136175db5022',1,'mood.php']]],
-  ['msearch_5fpost',['msearch_post',['../msearch_8php.html#ac80d2a6c0a92e79eec7efbbccd74d9a8',1,'msearch.php']]]
+  ['msearch_5fpost',['msearch_post',['../msearch_8php.html#ac80d2a6c0a92e79eec7efbbccd74d9a8',1,'msearch.php']]],
+  ['mytheme_5finit',['mytheme_init',['../mytheme_2php_2theme_8php.html#a6ce5df8ece6acc09c1fddaccbeb244e8',1,'theme.php']]]
 ];
