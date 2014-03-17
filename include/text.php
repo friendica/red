@@ -278,6 +278,11 @@ function hex2bin($s) {
 	if(! (is_string($s) && strlen($s)))
 		return '';
 
+	if(strlen($s) & 1) {
+		logger('hex2bin: illegal hex string: ' . $s);
+		return $s;
+	}
+
 	if(! ctype_xdigit($s)) {
 		return($s);
 	}

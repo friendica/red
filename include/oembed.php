@@ -165,7 +165,7 @@ function oembed_iframe($src,$width,$height) {
 	$a = get_app();
 
 	$s = $a->get_baseurl()."/oembed/".base64url_encode($src);
-	return '<iframe height="' . $height . '" width="' . $width . '" src="' . $s . '" frameborder="no" >' . t('Embedded content') . '</iframe>'; 
+	return '<iframe sandbox="allow-same-origin allow-top-navigation" height="' . $height . '" width="' . $width . '" src="' . $s . '" frameborder="no" >' . t('Embedded content') . '</iframe>'; 
 
 }
 

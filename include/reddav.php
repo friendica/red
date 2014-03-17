@@ -708,7 +708,7 @@ function RedFileData($file, &$auth,$test = false) {
 			$r = q("select id, uid, hash, filename, filetype, filesize, revision, folder, flags, created, edited from attach 
 				where folder = '%s' and filename = '%s' and uid = %d $perms group by filename limit 1",
 				dbesc($folder),
-				basename($file),
+				dbesc(basename($file)),
 				intval($channel_id)
 
 			);
@@ -719,7 +719,7 @@ function RedFileData($file, &$auth,$test = false) {
 			$r = q("select id, uid, hash, filename, filetype, filesize, revision, folder, flags, created, edited from attach 
 				where folder = '%s' and filename = '%s' and uid = %d group by filename limit 1",
 				dbesc($folder),
-				basename($file),
+				dbesc(basename($file)),
 				intval($channel_id)
 			);
 			if($r)

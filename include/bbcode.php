@@ -229,9 +229,12 @@ function bb_location($match) {
 
 function bbiframe($match) {
 	$a = get_app();
-	if(strpos($match[1],get_app()->get_hostname()))
-		return '<a href="' . $match[1] . '">' . $match[1] . '</a>';
-	return '<iframe src="' . $match[1] . '" width="' . $a->videowidth . '" height="' . $a->videoheight . '"><a href="' . $match[1] . '">' . $match[1] . '</a></iframe>';
+
+	// use sandbox mode to prevent malicious goings on rather than host restriction
+	//	if(strpos($match[1],get_app()->get_hostname()))
+	//		return '<a href="' . $match[1] . '">' . $match[1] . '</a>';
+
+	return '<iframe sandbox="allow-same-origin allow-top-navigation" src="' . $match[1] . '" width="' . $a->videowidth . '" height="' . $a->videoheight . '"><a href="' . $match[1] . '">' . $match[1] . '</a></iframe>';
 }
 
 function bb_ShareAttributesSimple($match) {
