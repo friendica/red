@@ -88,7 +88,7 @@ function notification($params) {
 		$sitelink = t('Please visit %s to view and/or reply to your private messages.');
 		$tsitelink = sprintf( $sitelink, $siteurl . '/mail/' . $params['item']['id'] );
 		$hsitelink = sprintf( $sitelink, '<a href="' . $siteurl . '/mail/' . $params['item']['id'] . '">' . $sitename . '</a>');
-		$itemlink = $siteurl . '/message/' . $params['item']['id'];
+		$itemlink = $siteurl . '/mail/' . $params['item']['id'];
 	}
 
 	if($params['type'] == NOTIFY_COMMENT) {
