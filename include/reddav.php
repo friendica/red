@@ -276,7 +276,7 @@ class RedDirectory extends DAV\Node implements DAV\ICollection, DAV\IQuota {
 
 		for($x = 1; $x < count($path_arr); $x ++) {		
 
-			$r = q("select id, hash, filename, flags from attach where folder = '%s' and filename = '%s' and (flags & %d)",
+			$r = q("select id, hash, filename, flags from attach where folder = '%s' and filename = '%s' and uid = %d and (flags & %d)",
 				dbesc($folder),
 				dbesc($path_arr[$x]),
 				intval($channel_id),
