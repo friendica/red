@@ -3931,23 +3931,25 @@ function items_fetch($arr,$channel = null,$observer_hash = null,$client_mode = C
 	if(isset($arr['start']) && isset($arr['records']))
         $pager_sql = sprintf(" LIMIT %d, %d ",intval($arr['start']), intval($arr['records']));
 
-    if(($arr['cmin'] != 0) || ($arr['cmax'] != 99)) {
+	if(array_key_exists('cmin',$arr) || array_key_exists('cmax',$arr)) {
+	    if(($arr['cmin'] != 0) || ($arr['cmax'] != 99)) {
 
-        // Not everybody who shows up in the network stream will be in your address book.
-        // By default those that aren't are assumed to have closeness = 99; but this isn't
-        // recorded anywhere. So if cmax is 99, we'll open the search up to anybody in
-        // the stream with a NULL address book entry.
+    	    // Not everybody who shows up in the network stream will be in your address book.
+        	// By default those that aren't are assumed to have closeness = 99; but this isn't
+	        // recorded anywhere. So if cmax is 99, we'll open the search up to anybody in
+    	    // the stream with a NULL address book entry.
 
-        $sql_nets .= " AND ";
+			$sql_nets .= " AND ";
 
-        if($arr['cmax'] == 99)
-            $sql_nets .= " ( ";
+			if($arr['cmax'] == 99)
+				$sql_nets .= " ( ";
 
-        $sql_nets .= "( abook.abook_closeness >= " . intval($arr['cmin']) . " ";
-        $sql_nets .= " AND abook.abook_closeness <= " . intval($arr['cmax']) . " ) ";
-		if($cmax == 99)
-            $sql_nets .= " OR abook.abook_closeness IS NULL ) ";
-    }
+			$sql_nets .= "( abook.abook_closeness >= " . intval($arr['cmin']) . " ";
+			$sql_nets .= " AND abook.abook_closeness <= " . intval($arr['cmax']) . " ) ";
+			if($cmax == 99)
+				$sql_nets .= " OR abook.abook_closeness IS NULL ) ";
+    	}
+	}
 
     $simple_update = (($client_mode & CLIENT_MODE_UPDATE) ? " and ( item.item_flags & " . intval(ITEM_UNSEEN) . " ) " : '');
     if($client_mode & CLIENT_MODE_LOAD)

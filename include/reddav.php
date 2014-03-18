@@ -590,9 +590,10 @@ function RedCollectionData($file,&$auth) {
 		if(! $r) {
 			// path wasn't found. Try without permissions to see if it was the result of permissions.
 			$errors = true;
-			$r = q("select id, hash, filename, flags from attach where folder = '%s' and filename = '%s' and (flags & %d) limit 1",
+			$r = q("select id, hash, filename, flags from attach where folder = '%s' and filename = '%s' and uid = %d and (flags & %d) limit 1",
 				dbesc($folder),
 				basename($path_arr[$x]),
+				intval($channel_id),
 				intval(ATTACH_FLAG_DIR)
 			);
 			if($r) {

@@ -872,20 +872,27 @@ function import_xchan($arr,$ud_flags = UPDATE_FLAGS_UPDATED) {
 		}
 
 		// get rid of any hubs we have for this channel which weren't reported.
+		// This was needed at one time to resolve complicated cross-site inconsistencies, but can cause sync conflict.
+		// currently disabled.
 
-		if($xisting) {
-			foreach($xisting as $x) {
-				if(! array_key_exists('updated',$x)) {
-					logger('import_xchan: removing unreferenced hub location ' . $x['hubloc_url']);
-					$r = q("delete from hubloc where hubloc_id = %d limit 1",
-						intval($x['hubloc_id'])
-					);
-					$what .= 'removed_hub';
-					$changed = true;
-				}
-			}
-		}
+//		if($xisting) {
+//			foreach($xisting as $x) {
+//				if(! array_key_exists('updated',$x)) {
+//					logger('import_xchan: removing unreferenced hub location ' . $x['hubloc_url']);
+//					$r = q("delete from hubloc where hubloc_id = %d limit 1",
+//						intval($x['hubloc_id'])
+//					);
+//					$what .= 'removed_hub';
+//					$changed = true;
+//				}
+//			}
+//		}
+
 	}
+
+
+
+
 
 	// Are we a directory server of some kind?
 
