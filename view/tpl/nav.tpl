@@ -5,6 +5,9 @@
 				<span class="icon-bar"></span>
 				<span class="icon-bar"></span>
 			</button>
+			<button id="expand-tabs" type="button" class="navbar-toggle" data-toggle="collapse" data-target="#tabs-collapse-1">
+				<i class="icon-circle-arrow-down" id="expand-tabs-icon"></i>
+			</button>
 			<button id="expand-aside" type="button" class="navbar-toggle" data-toggle="offcanvas" data-target="#region_1">
 				<i class="icon-circle-arrow-right" id="expand-aside-icon"></i>
 			</button>

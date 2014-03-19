@@ -245,31 +245,6 @@ header #banner #logo-text {
   font-size: 22px;
 }
 
-.tabs {
-	height: 28px;
-	border-bottom: 1px solid #aaaaaa;
-	padding:0px;
-	width: 100%;
-}
-
-.tabs li { margin: 0px; list-style: none; }
-.tab {
-	display:block;
-	float:left;
-	margin-right: 15px ;
-}
-
-.tab.active {
-	color: #444444;
-}
-
-ul.tabs {
-	margin-top: 0px;
-	margin-bottom: 0px;
-	list-style-type: none;
-
-}
-
 /* footer */
 
 footer {
@@ -2308,9 +2283,17 @@ blockquote {
 	background-color: $nav_active_icon_colour;
 }
 
-#expand-aside {
+#expand-aside,
+#expand-tabs {
 	color: $nav_active_icon_colour;
 	padding: 7px 10px;
+}
+
+#tabs-collapse-1 {
+	padding: 0px;
+	margin-bottom: 25px;
+	border-top: none;
+	box-shadow: none;
 }
 
 @media screen and (max-width: 767px) {
@@ -2326,8 +2309,8 @@ blockquote {
 	}
 
 	main {
-		left: -227px;
-		width: calc( 100% + 227px );
+		left: -225px;
+		width: calc( 100% + 225px );
 	}
 
 	main.region_1-on {

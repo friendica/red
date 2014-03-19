@@ -121,6 +121,10 @@ nav .navbar-collapse .navbar-right {
 	margin-right: 5px;
 }
 
+.nav-tabs.nav-justified > li {
+	white-space: nowrap;
+}
+
 code {
 	white-space: normal;
 }

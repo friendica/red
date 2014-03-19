@@ -18,7 +18,7 @@ aside#region_1 {
 	min-width: 210px;
 	display: table-cell;
 	vertical-align: top;
-	padding: 65px 7px 7px 7px;
+	padding: 65px 7px 13px 7px;
 }
 
 aside input[type='text'] {
@@ -29,5 +29,5 @@ section {
 	width: 100%;
 	display: table-cell;
 	vertical-align: top;
-	padding: 65px 15px 200px 7px;
+	padding: 65px 13px 200px 13px;
 }

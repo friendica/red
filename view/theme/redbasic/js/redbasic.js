@@ -22,10 +22,23 @@ function cmtBbClose(comment, id) {
 
 $(document).ready(function() {
 
-$('[data-toggle=offcanvas]').click(function() {
+$('#expand-aside').click(function() {
 	$('#expand-aside-icon').toggleClass('icon-circle-arrow-right').toggleClass('icon-circle-arrow-left');
 	$('main').toggleClass('region_1-on');
+	$('html, body').animate({ scrollTop: position });
 });
+
+if ($('aside').html().length == 0) {
+	$('#expand-aside').hide();
+}
+
+$('#expand-tabs').click(function() {
+	$('#expand-tabs-icon').toggleClass('icon-circle-arrow-down').toggleClass('icon-circle-arrow-up');
+});
+
+if($('#tabs-collapse-1').length == 0) {
+	$('#expand-tabs').hide();
+}
 
 $('.group-edit-icon').hover(
 	function() {
