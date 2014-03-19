@@ -1,4 +1,3 @@
-
 function cmtBbOpen(comment, id) {
 	if($(comment).hasClass('comment-edit-text-full')) {
 		$(".comment-edit-bb-" + id).show();
@@ -78,4 +77,4 @@ $(document).ready(function(){
 		}
 	};
 	setInterval(function () {checkNotify();}, 10 * 1000);
-})if
+});
