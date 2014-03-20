@@ -67,9 +67,9 @@
 
 {{include file="field_yesno.tpl" field=$blocktags}}
 
-{{include file="field_input.tpl" field=$maxreq}}
 
-{{include file="field_input.tpl" field=$cntunkmail}}
+{{include file="field_input.tpl" field=$expire}}
+
 </div>
 
 <div id="settings-default-perms" class="settings-default-perms" >

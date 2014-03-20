@@ -956,6 +956,7 @@ function settings_content(&$a) {
 
 			'$lbl_p2macro' => t('Advanced Privacy Settings'),
 
+			'$expire' => array('expire',t('Expire other channel content after this many days'),$expire,t('0 or blank prevents expiration')),
 			'$maxreq' 	=> array('maxreq', t('Maximum Friend Requests/Day:'), intval($channel['channel_max_friend_req']) , t('May reduce spam activity')),
 			'$permissions' => t('Default Post Permissions'),
 			'$permdesc' => t("\x28click to open/close\x29"),
