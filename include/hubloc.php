@@ -19,6 +19,7 @@ function prune_hub_reinstalls() {
 				$d2 = datetime_convert('UTC','UTC','now - 3 days');
 
 				// allow some slop period, say 3 days - just in case this is a glitch or transient occurrence
+				// Then remove any hublocs pointing to the oldest entry.
 
 				if($d1 < $d2) {
 					logger('prune_hub_reinstalls: removing dead hublocs at ' . $rr['site_url']);
