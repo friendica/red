@@ -1360,7 +1360,7 @@ function process_delivery($sender,$arr,$deliveries,$relay) {
 	// We've validated the sender. Now make sure that the sender is the owner or author
 
 	if($sender['hash'] != $arr['owner_xchan'] && $sender['hash'] != $arr['author_xchan']) {
-		logger('process_delivery: sender is not owner or author');
+		logger("process_delivery: sender {$sender['hash']} is not owner {$arr['owner_xchan']} or author {$arr['author_xchan']} - mid {$arr['mid']}");
 		return;
 	}
 	
