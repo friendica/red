@@ -40,10 +40,10 @@ var NAVTREEINDEX =
 "classApp.html#ad5175536561021548ae8188e24c7b80c",
 "classphoto__driver.html#aea560be5dfba09117d36c12bacbf3b80",
 "friendica-to-smarty-tpl_8py.html#a0b4cf73d1a8d201a28d269eeb62a5d5c",
-"include_2attach_8php.html#a0d07c5b83d3d54e186f752e571847b36",
-"mod_2directory_8php.html#a5ee59c213508b6b9787612a8219cb5bf",
-"register_8php.html#a51731dcc1917c58a790eb1c0f6132271",
-"typohelper_8php.html#a7542d95618011800c61773127fa625cf"
+"include_2api_8php.html#aff322705cc6084b329003fc8eab0aad0",
+"mod_2chat_8php.html#aa9ae4782e9baef0b7314ab9527c2707e",
+"register_8php.html",
+"typo_8php.html#acebf83966ef6d7e5645a6b62ba368f9f"
 ];
 
 var SYNCONMSG = 'click to disable panel synchronisation';

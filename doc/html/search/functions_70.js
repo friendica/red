@@ -95,6 +95,7 @@ var searchData=
   ['profperm_5fcontent',['profperm_content',['../profperm_8php.html#aef015787de2373d9fb3fe3f814fb5023',1,'profperm.php']]],
   ['profperm_5finit',['profperm_init',['../profperm_8php.html#a17fb64ec05edee1dc94d95438807d6c6',1,'profperm.php']]],
   ['protect_5fsprintf',['protect_sprintf',['../text_8php.html#a4e7698aca48982512594b274543c3b9b',1,'text.php']]],
+  ['prune_5fhub_5freinstalls',['prune_hub_reinstalls',['../hubloc_8php.html#ad3d0dcfcfcb347744f7617fe6f5de002',1,'hubloc.php']]],
   ['public_5fpermissions_5fsql',['public_permissions_sql',['../security_8php.html#ab3bdd30dc60d9ee72370b866aa4a2d01',1,'security.php']]],
   ['public_5frecips',['public_recips',['../zot_8php.html#a083aec6c900d244e1bfc1406f9461465',1,'zot.php']]],
   ['pubsites_5fcontent',['pubsites_content',['../pubsites_8php.html#af614e279aab54065345bda6b03eafdf0',1,'pubsites.php']]],

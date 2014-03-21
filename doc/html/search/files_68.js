@@ -4,5 +4,6 @@ var searchData=
   ['home_2ephp',['home.php',['../home_8php.html',1,'']]],
   ['hostxrd_2ephp',['hostxrd.php',['../hostxrd_8php.html',1,'']]],
   ['html2bbcode_2ephp',['html2bbcode.php',['../html2bbcode_8php.html',1,'']]],
-  ['html2plain_2ephp',['html2plain.php',['../html2plain_8php.html',1,'']]]
+  ['html2plain_2ephp',['html2plain.php',['../html2plain_8php.html',1,'']]],
+  ['hubloc_2ephp',['hubloc.php',['../hubloc_8php.html',1,'']]]
 ];
