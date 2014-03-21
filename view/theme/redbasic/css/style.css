@@ -138,51 +138,10 @@ blockquote {
 	filter:alpha(opacity=100);
 }
 
-
-#langselector {
-	position: fixed; 
-	top: 3px; 
-	left: 5px; 
-	z-index:9999;
-	opacity: 0.3;
-	filter:alpha(opacity=30);
-
-
-}
-#langselector:hover {
-	opacity: 1.0;
-	filter:alpha(opacity=100);
-}
-
-/* this is not yet supported
-
-nav {
-	background-image: linear-gradient(bottom, $nav_bg_1 26%, $nav_bg_2 82%);
-	background-image: -o-linear-gradient(bottom, $nav_bg_1 26%, $nav_bg_2 82%);
-	background-image: -moz-linear-gradient(bottom,$nav_bg_1 26%, $nav_bg_2 82%);
-	background-image: -webkit-linear-gradient(bottom, $nav_bg_1 26%, $nav_bg_2 82%);
-	background-image: -ms-linear-gradient(bottom, $nav_bg_1 26%, $nav_bg_2 82%);
+nav,
+header {
 	opacity: $nav_float_min_opacity;
 	filter:alpha(opacity=$nav_percent_min_opacity);
-
-}
-
-nav:hover {
-	background-image: linear-gradient(bottom, $nav_bg_3 26%, $nav_bg_4 82%);
-	background-image: -o-linear-gradient(bottom, $nav_bg_3 26%, $nav_bg_4 82%);
-	background-image: -moz-linear-gradient(bottom, $nav_bg_3 26%, $nav_bg_4 82%);
-	background-image: -webkit-linear-gradient(bottom, $nav_bg_3 26%, $nav_bg_4 82%);
-	background-image: -ms-linear-gradient(bottom, $nav_bg_3 26%, $nav_bg_4 82%);
-	opacity: 1.0;
-	filter:alpha(opacity=100);
-
-}
-*/
-
-nav #site-location {
-	color: #888a85;
-	font-size: 0.8em;
-	position: absolute;
 }
 
 .error-message {
@@ -212,10 +171,6 @@ nav #banner #logo-text a {
 
 }
 nav #banner #logo-text a:hover { text-decoration: none; }
-
-header #site-location {
-  display: none;
-}
 
 header #banner {
   overflow: hidden;
