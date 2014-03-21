@@ -1578,7 +1578,16 @@ function delete_imported_item($sender,$item,$uid) {
 	} 
 		
 	require_once('include/items.php');
-	drop_item($r[0]['id'],false);
+
+	// FIXME issue #230 is related
+	// Chicken/egg problem because we have to drop_item, but this removes information that tag_deliver may need to do its stuff.
+	// We can't reverse the order because drop_item refuses to run if the item already has the deleted flag set and we need to
+	// set that flag prior to calling tag_deliver.
+
+	// One possibility would be to set the deleted flag, call both tag_deliver and the notifier to notify downstream channels
+	// and then clean up after ourselves with a cron job after a day or two to do the delete_item_lowlevel().
+
+	drop_item($r[0]['uid'],false);
 
 	tag_deliver($uid,$r[0]['id']);
 
@@ -1676,20 +1685,19 @@ function import_directory_profile($hash,$profile,$addr,$ud_flags = UPDATE_FLAGS_
 	$arr = array();
 
 	$arr['xprof_hash']         = $hash;
-	$arr['xprof_desc']         = (($profile['description'])    ? htmlspecialchars($profile['description'],    ENT_COMPAT,'UTF-8',false) : '');
 	$arr['xprof_dob']          = datetime_convert('','',$profile['birthday'],'Y-m-d'); // !!!! check this for 0000 year
-	$arr['xprof_age']          = (($profile['age']) ? intval($profile['age']) : 0);
-	$arr['xprof_gender']       = (($profile['gender'])    ? htmlspecialchars($profile['gender'],    ENT_COMPAT,'UTF-8',false) : '');
-	$arr['xprof_marital']      = (($profile['marital'])    ? htmlspecialchars($profile['marital'],    ENT_COMPAT,'UTF-8',false) : '');
-	$arr['xprof_sexual']       = (($profile['sexual'])    ? htmlspecialchars($profile['sexual'],    ENT_COMPAT,'UTF-8',false) : '');
-	$arr['xprof_locale']       = (($profile['locale'])    ? htmlspecialchars($profile['locale'],    ENT_COMPAT,'UTF-8',false) : '');
-	$arr['xprof_region']       = (($profile['region'])    ? htmlspecialchars($profile['region'],    ENT_COMPAT,'UTF-8',false) : '');
+	$arr['xprof_age']          = (($profile['age'])         ? intval($profile['age']) : 0);
+	$arr['xprof_desc']         = (($profile['description']) ? htmlspecialchars($profile['description'], ENT_COMPAT,'UTF-8',false) : '');
+	$arr['xprof_gender']       = (($profile['gender'])      ? htmlspecialchars($profile['gender'],      ENT_COMPAT,'UTF-8',false) : '');
+	$arr['xprof_marital']      = (($profile['marital'])     ? htmlspecialchars($profile['marital'],     ENT_COMPAT,'UTF-8',false) : '');
+	$arr['xprof_sexual']       = (($profile['sexual'])      ? htmlspecialchars($profile['sexual'],      ENT_COMPAT,'UTF-8',false) : '');
+	$arr['xprof_locale']       = (($profile['locale'])      ? htmlspecialchars($profile['locale'],      ENT_COMPAT,'UTF-8',false) : '');
+	$arr['xprof_region']       = (($profile['region'])      ? htmlspecialchars($profile['region'],      ENT_COMPAT,'UTF-8',false) : '');
 	$arr['xprof_postcode']     = (($profile['postcode'])    ? htmlspecialchars($profile['postcode'],    ENT_COMPAT,'UTF-8',false) : '');
-	$arr['xprof_country']      = (($profile['country'])    ? htmlspecialchars($profile['country'],    ENT_COMPAT,'UTF-8',false) : '');
-
-	$arr['xprof_about']      = (($profile['about'])    ? htmlspecialchars($profile['about'],    ENT_COMPAT,'UTF-8',false) : '');
-	$arr['xprof_homepage']      = (($profile['homepage'])    ? htmlspecialchars($profile['homepage'],    ENT_COMPAT,'UTF-8',false) : '');
-	$arr['xprof_hometown']      = (($profile['hometown'])    ? htmlspecialchars($profile['hometown'],    ENT_COMPAT,'UTF-8',false) : '');
+	$arr['xprof_country']      = (($profile['country'])     ? htmlspecialchars($profile['country'],     ENT_COMPAT,'UTF-8',false) : '');
+	$arr['xprof_about']        = (($profile['about'])       ? htmlspecialchars($profile['about'],       ENT_COMPAT,'UTF-8',false) : '');
+	$arr['xprof_homepage']     = (($profile['homepage'])    ? htmlspecialchars($profile['homepage'],    ENT_COMPAT,'UTF-8',false) : '');
+	$arr['xprof_hometown']     = (($profile['hometown'])    ? htmlspecialchars($profile['hometown'],    ENT_COMPAT,'UTF-8',false) : '');
 
 	$clean = array();
 	if(array_key_exists('keywords',$profile) and is_array($profile['keywords'])) {
