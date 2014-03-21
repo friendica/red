@@ -288,6 +288,11 @@ function notifier_run($argv, $argc){
 		if($s)
 			$channel = $s[0];
 
+		if($channel['channel_hash'] !== $target_item['author_xchan'] && $channel['channel_hash'] !== $target_item['owner_xchan']) {
+			logger("notifier: Sending channel {$channel['channel_hash']} is not owner {$target_item['owner_xchan']} or author {$target_item['author_xchan']}");
+			return;
+		}
+
 
 		if($target_item['id'] == $target_item['parent']) {
 			$parent_item = $target_item;
