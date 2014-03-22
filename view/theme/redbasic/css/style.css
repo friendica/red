@@ -357,6 +357,10 @@ footer {
 	color: #444444;
 }
 
+.vcard {
+	padding: 8px;
+}
+
 .vcard .title {
 	margin-bottom: 5px;
 }
@@ -429,9 +433,9 @@ footer {
 
 
 #profile-photo-wrapper img {
-	width:175px;
-	height:175px;
 	padding: 12px;
+	width: 201px;
+	height: 201px;
 }
 
 #profile-in-dir-yes-label,
@@ -727,6 +731,7 @@ footer {
 
 #contact-block {
 	margin-top: 25px;
+	padding: 8px;
 }
 
 #contact-block-numcontacts {
@@ -736,8 +741,8 @@ footer {
 
 .contact-block-div {
 	float: left;
-	width: 52px;
-	height: 52px;
+	width: 50px;
+	height: 50px;
 }
 .contact-block-textdiv {
 	float: left;
@@ -1240,7 +1245,7 @@ brain is weird like that */
 	background-image:url("../../../../images/onoff.jpg");
 	background-repeat: no-repeat;
 	padding: 4px 2px 2px 2px;
-	height: 16px;
+	height: 24px;
 	text-decoration: none;
 }
 .field .onoff .off {
@@ -1430,6 +1435,9 @@ div.jGrowl div.info {
 	right: 15px;
 }
 
+div.jGrowl div.jGrowl-notification {
+    min-height: 60px;
+}
 
 #id_term_label {
 	width:75px;
@@ -2264,8 +2272,8 @@ blockquote {
 	}
 
 	main {
-		left: -225px;
-		width: calc( 100% + 225px );
+		left: -231px;
+		width: calc( 100% + 231px );
 	}
 
 	main.region_1-on {

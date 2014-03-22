@@ -6,7 +6,7 @@
 	border: 0px;
 	margin: 0px;
 	padding: 8px;
-	height: 1.8em;
+	height: 3.4em;
 	width: 70%;
 	margin-bottom: 5px;
 }
@@ -16,10 +16,10 @@
 }
 
 #profile-jot-text {
-	height: 1.8em;
+	height: 3.4em;
 	padding: 8px;
 	margin-right: 0px;
-	width: 90%;
+	width: 100%;
 }
 
 #profile-jot-text-loading {
@@ -29,11 +29,11 @@
 
 #profile-jot-submit-wrapper {
 	margin-top: 10px;
-	width: 90%;
+	width: 100%;
 }
 
 #profile-jot-submit {
-	height: 22px;
+	height: 30px;
 	width: 70px;
 	float: right;
 }
@@ -369,7 +369,7 @@
 }
 
 .comment-edit-text-empty {
-	height: 1.2em;
+	height: 2.8em;
 	width: 30%;
 	overflow: auto;
 	margin-bottom: 10px;
