@@ -164,6 +164,7 @@ function photo_upload($channel, $observer, $args) {
 		$p['scale'] = 1;
 		$r2 = $ph->save($p);
 		$smallest = 1;
+		$width_x_height = $ph->getWidth() . 'x' . $ph->getHeight();
 		if(! $r2)
 			$errors = true;
 	}
@@ -173,6 +174,7 @@ function photo_upload($channel, $observer, $args) {
 		$p['scale'] = 2;
 		$r3 = $ph->save($p);
 		$smallest = 2;
+		$width_x_height = $ph->getWidth() . 'x' . $ph->getHeight();
 		if(! $r3)
 			$errors = true;
 	}
@@ -221,7 +223,7 @@ function photo_upload($channel, $observer, $args) {
 
 
 	$arr['body']          = '[zrl=' . z_root() . '/photos/' . $channel['channel_address'] . '/image/' . $photo_hash . ']' 
-				. '[zmg]' . z_root() . "/photo/{$photo_hash}-{$smallest}.".$ph->getExt() . '[/zmg]' 
+				. '[zmg=' . $width_x_height. ']' . z_root() . "/photo/{$photo_hash}-{$smallest}.".$ph->getExt() . '[/zmg]'
 				. '[/zrl]';
 		
 	$result = item_store($arr);
