@@ -306,6 +306,7 @@ function widget_archive($arr) {
 
 
 	$wall = ((array_key_exists('wall', $arr)) ? intval($arr['wall']) : 0);
+	$style = ((array_key_exists('style', $arr)) ? $arr['style'] : 'select');
 	$url = z_root() . '/' . $a->cmd;
 
 
@@ -318,6 +319,7 @@ function widget_archive($arr) {
 		'$title' => t('Archives'),
 		'$size' => ((count($ret) > 6) ? 6 : count($ret)),
 		'$url' => $url,
+		'$style' => $style,
 		'$dates' => $ret
 	));
 	return $o;

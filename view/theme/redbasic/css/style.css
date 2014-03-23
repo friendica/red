@@ -2114,7 +2114,7 @@ img.mail-list-sender-photo {
 	list-style-type: none;
 }
 
-#sidebar-group-list ul {
+#sidebar-group-list ul, #posted-date-selector {
 	list-style-type: none;
 }
 
