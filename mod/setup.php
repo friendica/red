@@ -103,6 +103,7 @@ function setup_post(&$a) {
 		        $test = z_fetch_url($siteurl."/setup/testrewrite");
 				if((! $test['success']) || ($test['body'] != 'ok'))  {
 					$a->data['url_fail'] = true;
+					$a->data['url_error'] = $test['error'];
 					return;
 				}
 			}
@@ -169,6 +170,8 @@ function setup_content(&$a) {
 	if(x($a->data,'url_fail')) {
 		$install_wizard_pass = 3;
 		$wizard_status =  t('Could not connect to specified site URL. Possible SSL certificate or DNS issue.');
+		if($a->data['url_error'])
+			$wizard_status .= ' ' . $a->data['url_error'];
 	}
 
 	if(x($a->data,'db_create_failed')) {
