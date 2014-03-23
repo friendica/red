@@ -14,11 +14,12 @@ main {
 }
 
 aside#region_1 {
-	width: 210px;
-	min-width: 210px;
+	width: 231px;
+	min-width: 231px;
+	max-width: 231px;
 	display: table-cell;
 	vertical-align: top;
-	padding: 65px 7px 13px 7px;
+	padding: 65px 7px 0px 7px;
 }
 
 aside input[type='text'] {
