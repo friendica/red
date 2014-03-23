@@ -116,6 +116,7 @@ function z_fetch_url($url, $binary = false, $redirects = 0, $opts = array()) {
 	$ret['success'] = (($rc >= 200 && $rc <= 299) ? true : false);
 	if(! $ret['success']) {
 		$ret['debug'] = $curl_info;
+		logger('z_fetch_url: error:' . curl_error($ch), LOGGER_DEBUG);
 		logger('z_fetch_url: debug:' . print_r($curl_info,true), LOGGER_DATA);
 	}
 	$ret['body'] = substr($s,strlen($header));
@@ -218,7 +219,8 @@ function z_post_url($url,$params, $redirects = 0, $opts = array()) {
 	$ret['success'] = (($rc >= 200 && $rc <= 299) ? true : false);
 	if(! $ret['success']) {
 		$ret['debug'] = $curl_info;
-		logger('z_fetch_url: debug:' . print_r($curl_info,true), LOGGER_DATA);
+		logger('z_post_url: error:' . curl_error($ch), LOGGER_DEBUG);
+		logger('z_post_url: debug:' . print_r($curl_info,true), LOGGER_DATA);
 	}
 
 	$ret['body'] = substr($s,strlen($header));
