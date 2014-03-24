@@ -84,6 +84,7 @@ function create_sys_channel() {
     // Ensure that there is a host keypair.
 
     if((! get_config('system','pubkey')) && (! get_config('system','prvkey'))) {
+		require_once('include/crypto.php');
         $hostkey = new_keypair(4096);
         set_config('system','pubkey',$hostkey['pubkey']);
         set_config('system','prvkey',$hostkey['prvkey']);
