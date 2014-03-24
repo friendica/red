@@ -535,14 +535,13 @@ function photos_content(&$a) {
 			$albums = photos_albums_list($a->data['channel'],$a->data['observer']);
 
 
-
 		$selname = (($datum) ? hex2bin($datum) : '');
 		$albumselect = '<select id="photos-upload-album-select" name="album" size="4">';
 		
 		$albumselect .= '<option value="" ' . ((! $selname) ? ' selected="selected" ' : '') . '>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</option>';
 		if(count($albums)) {
 			foreach($albums as $album) {
-				if($album['text'] === '') 
+				if(! $album['text']) 
 					continue;
 				$selected = (($selname === $album['text']) ? ' selected="selected" ' : '');
 				$albumselect .= '<option value="' . $album['text'] . '"' . $selected . '>' . $album['text'] . '</option>';
