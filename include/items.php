@@ -859,7 +859,7 @@ function encode_item($item) {
 	if($item['term'])
 		$x['tags']       = encode_item_terms($item['term']);
 
-	logger('encode_item: ' . print_r($x,true));
+	logger('encode_item: ' . print_r($x,true), LOGGER_DATA);
 
 	return $x;
 
