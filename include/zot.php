@@ -943,6 +943,8 @@ function import_xchan($arr,$ud_flags = UPDATE_FLAGS_UPDATED) {
 		$ret['hash'] = $xchan_hash;
 	}
 
+
+
 	logger('import_xchan: result: ' . print_r($ret,true), LOGGER_DATA);
 	return $ret;
 }

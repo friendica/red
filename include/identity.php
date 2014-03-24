@@ -80,6 +80,15 @@ function validate_channelname($name) {
 function create_sys_channel() {
 	if(get_sys_channel())
 		return;
+
+    // Ensure that there is a host keypair.
+
+    if((! get_config('system','pubkey')) && (! get_config('system','prvkey'))) {
+        $hostkey = new_keypair(4096);
+        set_config('system','pubkey',$hostkey['pubkey']);
+        set_config('system','prvkey',$hostkey['prvkey']);
+    }
+
 	create_identity(array(
 		'account_id' => 'xxx',  // This will create an identity with an (integer) account_id of 0, but account_id is required
 		'nickname' => 'sys',
