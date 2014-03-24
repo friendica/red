@@ -33,6 +33,9 @@ Some/many of these widgets have restrictions which may restrict the type of page
 * filer - select filed items from network/matrix stream - must be logged in
 
 * archive - date range selector for network and channel pages
+    * args: 'wall' - 1 or 0, limit to wall posts or network/matrix posts (default)
+    * 'style': 'list' or 'select' - presentation format, a select form element or a list, default 'select'
+    *
 
 * fullprofile - same as profile currently
 
