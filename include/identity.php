@@ -177,6 +177,11 @@ function create_identity($arr) {
 		return $ret;
 	}
 
+	if($nick === 'sys' && (! ($pageflags & PAGE_SYSTEM))) {
+		$ret['message'] = t('Reserved nickname. Please choose another.');
+		return $ret;
+	}
+
 	if(check_webbie(array($nick)) !== $nick) {
 		$ret['message'] = t('Nickname has unsupported characters or is already being used on this site.');
 		return $ret;
