@@ -23,6 +23,10 @@ We need much more than this, but here are areas where developers can help. Pleas
 
 * (Advanced) create a UI for building Comanche pages
 
+* External post connectors - create standard interface
+
+* External post connectors, add popular services
+
 * templatise and translate the Web interface to webDAV
 
 * Extend WebDAV to provide desktop access to photo albums
