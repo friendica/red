@@ -31,7 +31,7 @@ function lockview_content(&$a) {
 
 	if(($item['item_private'] == 1) && (! strlen($item['allow_cid'])) && (! strlen($item['allow_gid'])) 
 		&& (! strlen($item['deny_cid'])) && (! strlen($item['deny_gid']))) {
-		echo t('Remote privacy information not available.') . '<br />';
+		echo '<li>' . t('Remote privacy information not available.') . '</li>';
 		killme();
 	}
 
