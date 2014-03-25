@@ -221,9 +221,13 @@ function photo_upload($channel, $observer, $args) {
 
 	$arr['plink']         = z_root() . '/channel/' . $channel['channel_address'] . '/?f=&mid=' . $arr['mid'];
 
+	if ($width_x_height)
+		$tag = '[zmg=' . $width_x_height. ']';
+	else
+		$tag = '[zmg]';
 
 	$arr['body']          = '[zrl=' . z_root() . '/photos/' . $channel['channel_address'] . '/image/' . $photo_hash . ']' 
-				. '[zmg=' . $width_x_height. ']' . z_root() . "/photo/{$photo_hash}-{$smallest}.".$ph->getExt() . '[/zmg]'
+				. $tag . z_root() . "/photo/{$photo_hash}-{$smallest}.".$ph->getExt() . '[/zmg]'
 				. '[/zrl]';
 		
 	$result = item_store($arr);
