@@ -204,23 +204,12 @@
 
 }
 
-/*
-.wall-item-lock {
-	position: absolute;
-	left: 105px;
-	top: 1px;
-}
-
-.comment .wall-item-lock {
-	left: 65px;
-}
-
-.wall-item-lock {
-
-}
-*/
 .lockview {
 	cursor: pointer;
+}
+
+.lockview-panel {
+	padding: 3px 20px;
 }
 
 .wall-item-location {

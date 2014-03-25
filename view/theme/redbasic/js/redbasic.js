@@ -30,6 +30,9 @@ if ($('aside').html().length == 0) {
 }
 
 $('#expand-tabs').click(function() {
+	if(!$('#tabs-collapse-1').hasClass('in')){
+		$('html, body').animate({ scrollTop: 0 }, 'slow');
+	}
 	$('#expand-tabs-icon').toggleClass('icon-circle-arrow-down').toggleClass('icon-circle-arrow-up');
 });
 

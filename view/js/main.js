@@ -728,27 +728,10 @@ function updateConvItems(mode,data) {
 		return cursor;
 	}
 
-	var lockvisible = false;
-
 	function lockview(event,id) {
-		event = event || window.event;
-		cursor = getPosition(event);
-		if(lockvisible) {
-			lockviewhide();
-		}
-		else {
-			lockvisible = true;
-			$.get('lockview/' + id, function(data) {
-				$('#panel').html(data);
-				$('#panel').css({ 'left': cursor.x + 5 , 'top': cursor.y + 5});
-				$('#panel').show();
-			});
-		}
-	}
-
-	function lockviewhide() {
-		lockvisible = false;
-		$('#panel').hide();
+		$.get('lockview/' + id, function(data) {
+			$('#panel-' + id).html(data);
+		});
 	}
 
 	function post_comment(id) {
@@ -1022,7 +1005,7 @@ $(window).scroll(function () {
 			$('#more').show();
 		}
 	
-		if($(window).scrollTop() + $(window).height() == $(document).height()) {
+		if($(window).scrollTop() + $(window).height() > $(document).height() - 100) {
 			if((pageHasMoreContent) && (! loadingPage)) {
 				$('#more').hide();
 				$('#no-more').hide();
@@ -1032,7 +1015,6 @@ $(window).scroll(function () {
 				loadingPage = true;
 				liveUpdate();
 			}
-
 		}
 	}
 });
