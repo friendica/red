@@ -19,6 +19,8 @@ function _well_known_init(&$a){
 				require_once('mod/wfinger.php');
 				wfinger_init($a);
 				break;
+			default:
+				break;
 
 		}
 	}

@@ -1,7 +1,7 @@
 <?php
 
 function wfinger_init(&$a) {
-	
+
 	$result = array();
 
 	$scheme = '';
@@ -20,9 +20,6 @@ function wfinger_init(&$a) {
 
 	$resource = $_REQUEST['resource'];
 
-	header('Access-Control-Allow-Origin: *');
-
-	header('Content-type: application/jrd+json');
 
 	$r = null;
 
@@ -30,7 +27,13 @@ function wfinger_init(&$a) {
 
 		if(strpos($resource,'acct:') === 0) {
 			$channel = str_replace('acct:','',$resource);
-			$channel = substr($channel,0,strpos($channel,'@'));
+			if(strpos($channel,'@') !== false) {
+				$host = substr($channel,strpos($channel,'@')+1);
+				if(strcasecmp($host,get_app()->get_hostname())) {
+					goaway('https://' . $host . '/.well-known/webfinger?resource=' . $resource);
+				}
+				$channel = substr($channel,0,strpos($channel,'@'));
+			}		
 		}
 		if(strpos($resource,'http') === 0) {
 			$channel = str_replace('~','',basename($resource));
@@ -43,6 +46,13 @@ function wfinger_init(&$a) {
 
 	}
 
+
+	header('Access-Control-Allow-Origin: *');
+
+	header('Content-type: application/jrd+json');
+
+
+
 	if($resource && $r) {
 
 		$result['subject'] = $resource;
@@ -54,6 +64,8 @@ function wfinger_init(&$a) {
 		);
 
 		$result['aliases'] = array();
+
+		$result['properties'] = array('http://webfinger.example/ns/name' => $r[0]['channel_name']);
 
 		foreach($aliases as $alias) 
 			if($alias != $resource)
