@@ -113,15 +113,6 @@ blockquote {
 	padding: 5px;
 }
 
-#panel {
-	background-color: ivory;
-	position: absolute;
-	z-index: 2;
-	width: 30%;
-	padding: 25px;
-	border: 1px solid #444;
-}
-
 .heart {
 	color: #FF0000;
 	font-size: 100%;
