@@ -605,9 +605,28 @@ function what_next() {
 	$a = get_app();
 	// install the standard theme
 	set_config('system','allowed_themes','redbasic');
+
+	// Set a lenient list of ciphers if using openssl. Other ssl engines
+	// (e.g. NSS used in RedHat) require different syntax, so hopefully 
+	// the default curl cipher list will work for most sites. If not, 
+	// this can set via config. Many distros are now disabling RC4,
+	// but many Red sites still use it and are unable to change it.
+	// We do not use SSL for encryption, only to protect session cookies.
+	// z_fetch_url() is also used to import shared links and other content 
+	// so in theory most any cipher could show up and we should do our best
+	// to make the content available rather than tell folks that there's a 
+	// weird SSL error which they can't do anything about. 
+
+	$x = curl_version();
+	if(stristr($x['ssl_version'],'openssl'))
+		set_config('system','curl_ssl_ciphers','ALL:!eNULL');
+
+
 	// Create a system channel
 	require_once ('include/identity.php');
 	create_sys_channel();	
+
+
 	$baseurl = $a->get_baseurl();
 	return 
 		t('<h1>What next</h1>')

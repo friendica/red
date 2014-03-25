@@ -1,6 +1,6 @@
 <?php
 
-define( 'UPDATE_VERSION' , 1103 );
+define( 'UPDATE_VERSION' , 1104 );
 
 /**
  *
@@ -1157,5 +1157,12 @@ function update_r1102() {
 		intval(ABOOK_FLAG_UNCONNECTED),
 		intval(ABOOK_FLAG_UNCONNECTED)
 	);
+	return UPDATE_SUCCESS;
+}
+
+function update_r1103() {
+	$x = curl_version();
+	if(stristr($x['ssl_version'],'openssl'))
+		set_config('system','curl_ssl_ciphers','ALL:!eNULL');
 	return UPDATE_SUCCESS;
 }

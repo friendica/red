@@ -85,13 +85,6 @@ $a->config['system']['php_path'] = '{{$phpath}}';
 
 $a->config['system']['directory_mode']  = DIRECTORY_MODE_NORMAL;
 
-
-// libcurl default ciphers - Redhat and NSS based systems may use a different
-// syntax. This indicates the ciphers we will accept when connecting to any
-// https site. We want this to be as liberal as possible.
-
-$a->config['system']['curl_ssl_ciphers'] = 'ALL:!eNULL';
-
 // default system theme
 
 $a->config['system']['theme'] = 'redbasic';
