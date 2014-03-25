@@ -164,7 +164,6 @@ function photo_upload($channel, $observer, $args) {
 		$p['scale'] = 1;
 		$r2 = $ph->save($p);
 		$smallest = 1;
-		$width_x_height = $ph->getWidth() . 'x' . $ph->getHeight();
 		if(! $r2)
 			$errors = true;
 	}
