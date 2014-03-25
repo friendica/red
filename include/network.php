@@ -47,7 +47,7 @@ function z_fetch_url($url, $binary = false, $redirects = 0, $opts = array()) {
 	if(! $ciphers)
 		$ciphers = 'ALL:!eNULL';
 
-	@curl_setopt($ch, CURLOPT_SSL_CIPHER_LIST, $ciphers);
+//	@curl_setopt($ch, CURLOPT_SSL_CIPHER_LIST, $ciphers);
 
 	if (x($opts,'accept_content')){
 		@curl_setopt($ch,CURLOPT_HTTPHEADER, array (
@@ -155,7 +155,7 @@ function z_post_url($url,$params, $redirects = 0, $opts = array()) {
 	if(! $ciphers)
 		$ciphers = 'ALL:!eNULL';
 
-	@curl_setopt($ch, CURLOPT_SSL_CIPHER_LIST, Z_CURL_CIPHERS);
+//	@curl_setopt($ch, CURLOPT_SSL_CIPHER_LIST, Z_CURL_CIPHERS);
 
 
 	if (x($opts,'accept_content')){
