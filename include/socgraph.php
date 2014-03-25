@@ -62,6 +62,11 @@ function poco_load($xchan = '',$url = null) {
 
 	$j = json_decode($s['body'],true);
 
+	if(! $j) {
+		logger('poco_load: unable to json_decode returned data.');
+		return;
+	}
+
 	logger('poco_load: ' . print_r($j,true),LOGGER_DATA);
 
 	if($xchan) {
