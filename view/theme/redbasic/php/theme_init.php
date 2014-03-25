@@ -15,5 +15,5 @@ head_add_js('library/bootstrap-datetimepicker/js/moment.js');
 head_add_js('library/bootstrap-datetimepicker/js/bootstrap-datetimepicker.min.js');
 //head_add_js('library/colorpicker/js/colorpicker.js');
 head_add_js('library/bootstrap-colorpicker/dist/js/bootstrap-colorpicker.js');
-head_add_js('library/bootstrap-colorpicker/src/js/docs.js');
+//head_add_js('library/bootstrap-colorpicker/src/js/docs.js');
 
