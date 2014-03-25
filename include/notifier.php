@@ -486,10 +486,11 @@ function notifier_run($argv, $argc){
 		$hash = random_string();
 		if($packet_type === 'refresh' || $packet_type === 'purge') {
 			$n = zot_build_packet($channel,$packet_type);
-			q("insert into outq ( outq_hash, outq_account, outq_channel, outq_posturl, outq_async, outq_created, outq_updated, outq_notify, outq_msg ) values ( '%s', %d, %d, '%s', %d, '%s', '%s', '%s', '%s' )",
+			q("insert into outq ( outq_hash, outq_account, outq_channel, outq_driver, outq_posturl, outq_async, outq_created, outq_updated, outq_notify, outq_msg ) values ( '%s', %d, %d, '%s', '%s', %d, '%s', '%s', '%s', '%s' )",
 				dbesc($hash),
 				intval($channel['channel_account_id']),
 				intval($channel['channel_id']),
+				dbesc('zot'),
 				dbesc($hub['hubloc_callback']),
 				intval(1),
 				dbesc(datetime_convert()),
@@ -500,10 +501,11 @@ function notifier_run($argv, $argc){
 		}
 		else {
 			$n = zot_build_packet($channel,'notify',$env_recips,(($private) ? $hub['hubloc_sitekey'] : null),$hash);
-			q("insert into outq ( outq_hash, outq_account, outq_channel, outq_posturl, outq_async, outq_created, outq_updated, outq_notify, outq_msg ) values ( '%s', %d, %d, '%s', %d, '%s', '%s', '%s', '%s' )",
+			q("insert into outq ( outq_hash, outq_account, outq_channel, outq_driver, outq_posturl, outq_async, outq_created, outq_updated, outq_notify, outq_msg ) values ( '%s', %d, %d, '%s', '%s', %d, '%s', '%s', '%s', '%s' )",
 				dbesc($hash),
 				intval($target_item['aid']),
 				intval($target_item['uid']),
+				dbesc('zot'),
 				dbesc($hub['hubloc_callback']),
 				intval(1),
 				dbesc(datetime_convert()),

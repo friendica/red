@@ -69,11 +69,12 @@ function directory_run($argv, $argc){
 		// the directory packet. That means we'll try again on the next poll run.
 
 		$hash = random_string();
-		q("insert into outq ( outq_hash, outq_account, outq_channel, outq_posturl, outq_async, outq_created, outq_updated, outq_notify, outq_msg ) 
-			values ( '%s', %d, %d, '%s', %d, '%s', '%s', '%s', '%s' )",
+		q("insert into outq ( outq_hash, outq_account, outq_channel, outq_driver, outq_posturl, outq_async, outq_created, outq_updated, outq_notify, outq_msg ) 
+			values ( '%s', %d, %d, '%s', '%s', %d, '%s', '%s', '%s', '%s' )",
 			dbesc($hash),
 			intval($channel['channel_account_id']),
 			intval($channel['channel_id']),
+			dbesc('zot'),
 			dbesc($url),
 			intval(1),
 			dbesc(datetime_convert()),
