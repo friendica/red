@@ -174,10 +174,10 @@ function photo_upload($channel, $observer, $args) {
 		$p['scale'] = 2;
 		$r3 = $ph->save($p);
 		$smallest = 2;
-		$width_x_height = $ph->getWidth() . 'x' . $ph->getHeight();
 		if(! $r3)
 			$errors = true;
 	}
+
 	
 	if($errors) {
 		q("delete from photo where resource_id = '%s' and uid = %d",
@@ -189,6 +189,10 @@ function photo_upload($channel, $observer, $args) {
 		call_hooks('photo_upload_end',$ret);
 		return $ret;
 	}
+
+	// This will be the width and height of the smallest representation
+
+	$width_x_height = $ph->getWidth() . 'x' . $ph->getHeight();
 
 	$basename = basename($filename);
 	$mid = item_message_id();
