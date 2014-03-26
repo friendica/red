@@ -109,10 +109,11 @@
 {{/foreach}}
 {{/if}}
 
+{{if $item.comment}}
 <div class="wall-item-comment-wrapper" >
 	{{$item.comment}}
 </div>
-
+{{/if}}
 
 </div>
 {{if $item.comment_lastcollapsed}}</div>{{/if}}

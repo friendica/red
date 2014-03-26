@@ -1929,7 +1929,6 @@ img.mail-list-sender-photo {
 .thread-wrapper .wall-item-comment-wrapper,
 .wall-item-content-wrapper.comment {
 	margin-left: $comment_indent;
-	border-left: 2px solid #eee;
 }
 
 .thread-wrapper.toplevel_item {
@@ -1940,6 +1939,14 @@ img.mail-list-sender-photo {
 	border-radius: $radiuspx;
 	background-color: $item_colour;
 	opacity: $item_opacity;
+	border-left: 2px solid #f4f4f4;
+	border-bottom: 1px solid #f4f4f4;
+}
+
+.wall-item-comment-wrapper {
+	margin-top: 10px;
+	border-left: 2px solid #f4f4f4;
+	border-bottom: 1px solid #f4f4f4; 
 }
 
 .wallwall .wwto {
