@@ -25,6 +25,11 @@ function zotfeed_init(&$a) {
 			dbesc(argv(1))
 		);
 	}
+	else {
+		$x = get_sys_channel();
+		if($x)
+			$r = array($x);
+	}
 	if(! $r) {
 		$result['message'] = 'Channel not found.';
 		json_return_and_die($result);

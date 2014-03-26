@@ -109,6 +109,15 @@ function get_sys_channel() {
 	return false;
 }
 
+function is_sys_channel($channel_id) {
+	$r = q("select channel_pageflags from channel where channel_id = %d limit 1",
+		intval($channel_id)
+	);
+	if(($r) && ($r[0]['channel_pageflags'] & PAGE_SYSTEM))
+		return true;
+	return false;
+}
+
 
 /**
  * @channel_total()

@@ -3763,24 +3763,33 @@ function zot_feed($uid,$observer_xchan,$mindate) {
 
 	$items = array();
 
-	$r = q("SELECT item.*, item.id as item_id from item
-		WHERE uid = %d AND item_restrict = 0 and id = parent
-		AND (item_flags &  %d) 
-		$sql_extra ORDER BY created ASC $limit",
-		intval($uid),
-		intval(ITEM_WALL)
-	);
-	if($r) {
+	if(is_sys_channel($uid)) {
+		$r = q("SELECT item.*, item.id as item_id from item
+			WHERE uid in (" . stream_perms_api_uids(PERMS_PUBLIC) . ") AND item_restrict = 0 and id = parent
+			AND (item_flags &  %d) 
+			$sql_extra ORDER BY created ASC $limit",
+			intval($uid),
+			intval(ITEM_WALL)
+		);
+	}
+	else {
+		$r = q("SELECT item.*, item.id as item_id from item
+			WHERE uid = %d AND item_restrict = 0 and id = parent
+			AND (item_flags &  %d) 
+			$sql_extra ORDER BY created ASC $limit",
+			intval($uid),
+			intval(ITEM_WALL)
+		);
+	}
 
+	if($r) {
 		$parents_str = ids_to_querystr($r,'id');
 
 		$items = q("SELECT `item`.*, `item`.`id` AS `item_id` FROM `item` 
-			WHERE `item`.`uid` = %d AND `item`.`item_restrict` = 0
+			WHERE `item`.`item_restrict` = 0
 			AND `item`.`parent` IN ( %s ) ",
-			intval($uid),
 			dbesc($parents_str)
 		);
-
 	}
 
 	if($items) {
