@@ -322,7 +322,8 @@ function network_content(&$a, $update = 0, $load = false) {
 	if($firehose) {
 		require_once('include/identity.php');
 		$sys = get_sys_channel();
-		$uids = " and item.uid in ( " . intval(local_user()) . "," . intval($sys['channel_id']) . ") ";
+		$uids = " and item.uid  = " . intval($sys['channel_id']) . " ";
+		$a->data['firehose'] = intval($sys['channel_id']);
 	}
 	else {
 		$uids = " and item.uid = " . local_user() . " ";
@@ -341,7 +342,7 @@ function network_content(&$a, $update = 0, $load = false) {
 		$items = q("SELECT `item`.*, `item`.`id` AS `item_id` FROM `item` 
 			WHERE true $uids AND item_restrict = 0 
 			$simple_update
-			$sql_extra $sql_nets group by item.mid
+			$sql_extra $sql_nets
 			ORDER BY `item`.`received` DESC $pager_sql "
 		);
 
@@ -369,22 +370,23 @@ function network_content(&$a, $update = 0, $load = false) {
 				WHERE true $uids AND item.item_restrict = 0
 				AND item.parent = item.id
 				and ((abook.abook_flags & %d) = 0 or abook.abook_flags is null)
-				$sql_extra3 $sql_extra $sql_nets group by item.mid
+				$sql_extra3 $sql_extra $sql_nets
 				ORDER BY item.$ordering DESC $pager_sql ",
 				intval(ABOOK_FLAG_BLOCKED)
 			);
 
 		}
 		else {
-			// update
-			$r = q("SELECT item.parent AS item_id FROM item
-				left join abook on item.author_xchan = abook.abook_xchan
-				WHERE true $uids AND item.item_restrict = 0 $simple_update
-				and ((abook.abook_flags & %d) = 0 or abook.abook_flags is null)
-				$sql_extra3 $sql_extra $sql_nets group by item.mid ",
-				intval(ABOOK_FLAG_BLOCKED)
-			);
-
+			if(! $firehose) { 
+				// update
+				$r = q("SELECT item.parent AS item_id FROM item
+					left join abook on item.author_xchan = abook.abook_xchan
+					WHERE true $uids AND item.item_restrict = 0 $simple_update
+					and ((abook.abook_flags & %d) = 0 or abook.abook_flags is null)
+					$sql_extra3 $sql_extra $sql_nets ",
+					intval(ABOOK_FLAG_BLOCKED)
+				);
+			}
 		}
 
 		$first = dba_timer();
@@ -400,7 +402,7 @@ function network_content(&$a, $update = 0, $load = false) {
 			$items = q("SELECT `item`.*, `item`.`id` AS `item_id` FROM `item` 
 				WHERE true $uids AND `item`.`item_restrict` = 0
 				AND `item`.`parent` IN ( %s )
-				$sql_extra group by item.mid",
+				$sql_extra ",
 				dbesc($parents_str)
 			);
 
@@ -432,7 +434,7 @@ function network_content(&$a, $update = 0, $load = false) {
 
 //	logger('items: ' . count($items));
 
-	if($update_unseen)
+	if(($update_unseen) && (! $firehose))
 		$r = q("UPDATE `item` SET item_flags = ( item_flags ^ %d)
 			WHERE (item_flags & %d) AND `uid` = %d $update_unseen ",
 			intval(ITEM_UNSEEN),

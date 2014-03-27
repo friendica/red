@@ -167,31 +167,10 @@ function poller_run($argv, $argc){
 		}
 	}
 
+
 	// pull in some public posts
+	proc_run('php','include/externals.php');
 
-	$r = q("select site_url from site where site_url != '%s'  order by rand() limit 1",
-		dbesc(z_root())
-	);
-
-	if($r) {
-		$feedurl = $r[0]['site_url'] . '/zotfeed?f=&mindate=' . urlencode(datetime_convert('','','now - 15 days'));
-		$x = z_fetch_url($feedurl);
-
-		if(($x) && ($x['success'])) {
-			$total = 0;
-			$j = json_decode($x['body'],true);
-			if($j['success'] && $j['messages']) {
-				require_once('include/identity.php');
-				$sys = get_sys_channel();
-				foreach($j['messages'] as $message) {
-					$results = process_delivery(array('hash' => 'undefined'), get_item_elements($message),
-						array(array('hash' => $sys['xchan_hash'])), false, true);
-					$total ++;
-				}
-				logger('import_public_posts: ' . $total . ' messages imported', LOGGER_DEBUG);
-			}
-		}
-	}
 
 	$manual_id  = 0;
 	$generation = 0;
