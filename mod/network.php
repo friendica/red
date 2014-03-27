@@ -339,11 +339,11 @@ function network_content(&$a, $update = 0, $load = false) {
 		// "New Item View" - show all items unthreaded in reverse created date order
 
 		$items = q("SELECT `item`.*, `item`.`id` AS `item_id` FROM `item` 
-			WHERE `item`.`uid` = %d AND item_restrict = 0 
+			WHERE true $uids AND item_restrict = 0 
 			$simple_update
-			$sql_extra $sql_nets
+			$sql_extra $sql_nets group by item.mid
 			ORDER BY `item`.`received` DESC $pager_sql ",
-			intval($_SESSION['uid'])
+
 		);
 
 		require_once('include/items.php');
