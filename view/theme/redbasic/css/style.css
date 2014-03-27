@@ -2277,4 +2277,35 @@ blockquote {
 	main.region_1-on {
 		left: 0px;
 	}
+
+	.thread-wrapper.toplevel_item {
+		width: 100%;
+	}
+
+	.thread-wrapper .wall-item-comment-wrapper,
+	.wall-item-content-wrapper.comment {
+		margin-left: 24px;
+	}
+
+	.wall-item-info {
+		margin-right: 10px;
+	}
+
+	.hide-comments-outer {
+		margin-left: 24px;
+	}
+
+	.comment-edit-photo {
+		margin: 10px;
+	}
+
+	.wall-item-photo {
+		width: 48px !important;
+		height: 48px !important;
+	}
+
+	.comment .wall-item-photo {
+		width: 32px !important;
+		height: 32px !important;
+	}
 }
