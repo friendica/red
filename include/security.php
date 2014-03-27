@@ -346,9 +346,9 @@ function stream_perms_api_uids($perms_min = PERMS_SITE) {
 	$ret = array();
 	if(local_user())
 		$ret[] = local_user();
-	$r = q("select channel_id from channel where channel_r_stream > 0 and channel_r_stream <= %d and not (channel_pageflags & %d) ",
+	$r = q("select channel_id from channel where channel_r_stream > 0 and channel_r_stream <= %d and not (channel_pageflags & %d)",
 		intval($perms_min),
-		intval(PAGE_ADULT)
+		intval(PAGE_CENSORED)
 	);
 	if($r)
 		foreach($r as $rr)
@@ -373,7 +373,7 @@ function stream_perms_xchans($perms_min = PERMS_SITE) {
 
 	$r = q("select channel_hash from channel where channel_r_stream > 0 and channel_r_stream <= %d and not (channel_pageflags & %d)",
 		intval($perms_min),
-		intval(PAGE_ADULT)
+		intval(PAGE_CENSORED)
 	);
 	if($r)
 		foreach($r as $rr)

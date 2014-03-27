@@ -24,6 +24,10 @@ function admin_post(&$a){
 			case 'users':
 				admin_page_users_post($a);
 				break;
+			case 'channels':
+				admin_page_channels_post($a);
+				break;
+
 			case 'plugins':
 				if (argc() > 2 && 
 					is_file("addon/" . argv(2) . "/" . argv(2) . ".php")){
@@ -85,12 +89,13 @@ function admin_content(&$a) {
 
 	// array( url, name, extra css classes )
 	$aside = Array(
-		'site'	 =>	Array($a->get_baseurl(true)."/admin/site/", t("Site") , "site"),
-		'users'	 =>	Array($a->get_baseurl(true)."/admin/users/", t("Users") , "users"),
-		'plugins'=>	Array($a->get_baseurl(true)."/admin/plugins/", t("Plugins") , "plugins"),
-		'themes' =>	Array($a->get_baseurl(true)."/admin/themes/", t("Themes") , "themes"),
-		'hubloc' =>	Array($a->get_baseurl(true)."/admin/hubloc/", t("Server") , "server"),
-		'dbsync' => Array($a->get_baseurl(true)."/admin/dbsync/", t('DB updates'), "dbsync")
+		'site'	     =>	Array($a->get_baseurl(true)."/admin/site/", t("Site") , "site"),
+		'users'	     =>	Array($a->get_baseurl(true)."/admin/users/", t("Accounts") , "users"),
+		'channels'	 =>	Array($a->get_baseurl(true)."/admin/channels/", t("Channels") , "channels"),
+		'plugins'    =>	Array($a->get_baseurl(true)."/admin/plugins/", t("Plugins") , "plugins"),
+		'themes'     =>	Array($a->get_baseurl(true)."/admin/themes/", t("Themes") , "themes"),
+		'hubloc'     =>	Array($a->get_baseurl(true)."/admin/hubloc/", t("Server") , "server"),
+		'dbsync'     => Array($a->get_baseurl(true)."/admin/dbsync/", t('DB updates'), "dbsync")
 	);
 	
 	/* get plugins admin page */
@@ -131,6 +136,9 @@ function admin_content(&$a) {
 				break;
 			case 'users':
 				$o = admin_page_users($a);
+				break;
+			case 'channels':
+				$o = admin_page_channels($a);
 				break;
 			case 'plugins':
 				$o = admin_page_plugins($a);
@@ -671,7 +679,7 @@ function admin_page_users(&$a){
 					intval( $uid )
 				);
 
-				notice( sprintf( (($account['account_flags'] & ACCOUNT_BLOCKED) ? t("User '%s' unblocked"):t("User '%s' blocked")) , $account[0]['account_email']) . EOL);
+				notice( sprintf( (($account[0]['account_flags'] & ACCOUNT_BLOCKED) ? t("User '%s' unblocked"):t("User '%s' blocked")) , $account[0]['account_email']) . EOL);
 			}; break;
 		}
 		goaway($a->get_baseurl(true) . '/admin/users' );
@@ -759,6 +767,146 @@ function admin_page_users(&$a){
 		'$baseurl' => $a->get_baseurl(true),
 
 		'$pending' => $pending,
+		'$users' => $users,
+	));
+	$o .= paginate($a);
+	return $o;
+}
+
+
+/**
+ * Channels admin page
+ *
+ * @param App $a
+ */
+function admin_page_channels_post(&$a){
+	$pending = ( x($_POST, 'pending') ? $_POST['pending'] : Array() );
+	$users = ( x($_POST, 'user') ? $_POST['user'] : Array() );
+
+    check_form_security_token_redirectOnErr('/admin/users', 'admin_users');
+
+	if (x($_POST,'page_users_block')){
+		foreach($users as $uid){
+			q("UPDATE account SET account_flags = (account_flags & %d) where account_id = %d limit 1",
+				intval(ACCOUNT_BLOCKED),
+				intval( $uid )
+			);
+		}
+		notice( sprintf( tt("%s user blocked/unblocked", "%s users blocked/unblocked", count($users)), count($users)) );
+	}
+	if (x($_POST,'page_users_delete')){
+		require_once("include/Contact.php");
+		foreach($users as $uid){
+			account_remove($uid,true);
+		}
+		notice( sprintf( tt("%s user deleted", "%s users deleted", count($users)), count($users)) );
+	}
+	
+	if (x($_POST,'page_users_approve')){
+		require_once('include/account.php');
+		foreach($pending as $hash){
+			user_allow($hash);
+		}
+	}
+	if (x($_POST,'page_users_deny')){
+		require_once('include/account.php');
+		foreach($pending as $hash){
+			user_deny($hash);
+		}
+	}
+	goaway($a->get_baseurl(true) . '/admin/users' );
+	return; // NOTREACHED	
+}
+
+/**
+ * @param App $a
+ * @return string
+ */
+function admin_page_channels(&$a){
+	if (argc() > 2) {
+		$uid = argv(3);
+		$channel = q("SELECT * FROM channel WHERE channel_id = %d", 
+			intval($uid)
+		);
+
+		if (! $channel) {
+			notice( t('Channel not found') . EOL);
+			goaway($a->get_baseurl(true) . '/admin/channels' );
+		}		
+
+		switch(argv(2)){
+//			case "delete":{
+  //              check_form_security_token_redirectOnErr('/admin/channels', 'admin_channels', 't');
+				// delete user
+	//			require_once("include/Contact.php");
+	//			account_remove($uid,true);
+				
+	//			notice( sprintf(t("User '%s' deleted"), $account[0]['account_email']) . EOL);
+	//		}; break;
+
+			case "block":{
+                check_form_security_token_redirectOnErr('/admin/channels', 'admin_channels', 't');
+				q("UPDATE channel SET channel_pageflags = ( channel_pageflags ^ %d ) where channel_id = %d",
+					intval(PAGE_CENSORED),
+					intval( $uid )
+				);
+
+				notice( sprintf( (($channel[0]['channel_pageflags'] & PAGE_CENSORED) ? t("Channel '%s' uncensored"): t("Channel '%s' censored")) , $channel[0]['channel_name'] . ' (' . $channel[0]['channel_address'] . ')' ) . EOL);
+			}; break;
+		}
+		goaway($a->get_baseurl(true) . '/admin/users' );
+		return ''; // NOTREACHED
+		
+	}
+	
+	/* get channels */
+
+	$total = q("SELECT count(*) as total FROM channel where not (channel_pageflags & %d)",
+		intval(PAGE_REMOVED)
+	);
+	if($total) {
+		$a->set_pager_total($total[0]['total']);
+		$a->set_pager_itemspage(100);
+	}
+	
+	$order = " order by channel_name asc ";
+
+	$users = q("SELECT * from channel where not ( channel_pageflags & %d ) $order limit %d , %d ",
+		intval(PAGE_REMOVED),
+		intval($a->pager['start']),
+		intval($a->pager['itemspage'])
+	);
+					
+	if($users) {
+		for($x = 0; $x < count($users); $x ++) {
+			if($users[$x]['channel_pageflags'] & PAGE_CENSORED)
+				$users[$x]['blocked'] = true;
+			else
+				$users[$x]['blocked'] = false;
+		}
+	}
+	
+	$t = get_markup_template("admin_channels.tpl");
+	$o = replace_macros($t, array(
+		// strings //
+		'$title' => t('Administration'),
+		'$page' => t('Channels'),
+		'$submit' => t('Submit'),
+		'$select_all' => t('select all'),
+		'$delete' => t('Delete'),
+		'$block' => t('Censor'),
+		'$unblock' => t('Uncensor'),
+
+		'$h_users' => t('Channel'),
+		'$th_users' => array( t('UID'), t('Name'), t('Address')),
+
+		'$confirm_delete_multi' => t('Selected users will be deleted!\n\nEverything these users had posted on this site will be permanently deleted!\n\nAre you sure?'),
+		'$confirm_delete' => t('The user {0} will be deleted!\n\nEverything this user has posted on this site will be permanently deleted!\n\nAre you sure?'),
+
+        '$form_security_token' => get_form_security_token("admin_channels"),
+
+		// values //
+		'$baseurl' => $a->get_baseurl(true),
 		'$users' => $users,
 	));
 	$o .= paginate($a);

@@ -205,6 +205,7 @@ define ( 'PAGE_APPLICATION',       0x0004 );
 define ( 'PAGE_DIRECTORY_CHANNEL', 0x0008 ); // system channel used for directory synchronisation
 define ( 'PAGE_PREMIUM',           0x0010 );
 define ( 'PAGE_ADULT',             0x0020 );
+define ( 'PAGE_CENSORED',          0x0040 ); // Site admin has blocked this channel from appearing in casual search results and site feeds
 
 define ( 'PAGE_SYSTEM',            0x1000 );
 define ( 'PAGE_REMOVED',           0x8000 );
