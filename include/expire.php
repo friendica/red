@@ -29,10 +29,19 @@ function expire_run($argv, $argc){
 		}
 	}
 
-	$x = get_sys_channel();
-	if($x)
-		item_expire($x['channel_id'],30);
 
+	$x = get_sys_channel();
+	if($x) {
+
+		// this should probably just fetch the channel_expire_days from the sys channel,
+		// but there's no convenient way to set it.
+
+		$expire_days = get_config('externals','expire_days');
+		if($expire_days === false)
+			$expire_days = 30;
+		if($expire_days)
+			item_expire($x['channel_id'],$expire_days);
+	}
 	return;
 }
 

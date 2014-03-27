@@ -28,7 +28,11 @@ function externals_run($argv, $argc){
 	}
 
 	if($url) {
-		$feedurl = $url . '/zotfeed?f=&mindate=' . urlencode(datetime_convert('','','now - 15 days'));
+		$days = intval(getconfig('externals','since_days'));
+		if($days === false)
+			$days = 15;
+
+		$feedurl = $url . '/zotfeed?f=&mindate=' . urlencode(datetime_convert('','','now - ' . $days . ' days'));
 		$x = z_fetch_url($feedurl);
 
 		if(($x) && ($x['success'])) {
