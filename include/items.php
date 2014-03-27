@@ -3766,6 +3766,8 @@ function zot_feed($uid,$observer_xchan,$mindate) {
 	$items = array();
 
 	if(is_sys_channel($uid)) {
+
+		require_once('include/security.php');
 		$r = q("SELECT item.*, item.id as item_id from item
 			WHERE uid in (" . stream_perms_api_uids(PERMS_PUBLIC) . ") AND item_restrict = 0 and id = parent
 			AND (item_flags &  %d) 
