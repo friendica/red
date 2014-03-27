@@ -342,8 +342,7 @@ function network_content(&$a, $update = 0, $load = false) {
 			WHERE true $uids AND item_restrict = 0 
 			$simple_update
 			$sql_extra $sql_nets group by item.mid
-			ORDER BY `item`.`received` DESC $pager_sql ",
-
+			ORDER BY `item`.`received` DESC $pager_sql "
 		);
 
 		require_once('include/items.php');
