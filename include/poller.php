@@ -174,7 +174,7 @@ function poller_run($argv, $argc){
 	);
 
 	if($r) {
-		$feedurl = $r[0]['site_url'] . '/zotfeed?f=&mindate=' . urlencode(datetime_convert('','','now - 1 month'));
+		$feedurl = $r[0]['site_url'] . '/zotfeed?f=&mindate=' . urlencode(datetime_convert('','','now - 15 days'));
 		$x = z_fetch_url($feedurl);
 		if(($x) && ($x['success'])) {
 			$total = 0;
