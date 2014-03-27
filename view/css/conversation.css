@@ -338,6 +338,7 @@
 	margin: 0px 0 -5px 0px;
 	padding: 0px;
 	width: 75%;
+	min-width: 170px
 }
 
 [class^="comment-edit-bb"] > li {
@@ -360,6 +361,7 @@
 .comment-edit-text-empty {
 	height: 2.8em;
 	width: 30%;
+	min-width: 170px;
 	overflow: auto;
 	margin-bottom: 10px;
 }
@@ -367,6 +369,7 @@
 .comment-edit-text-full {
 	height: 150px;
 	width: 50%;
+	min-width: 170px;
 	overflow: auto;
 }
 
