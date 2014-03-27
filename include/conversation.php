@@ -1333,6 +1333,7 @@ function network_tabs() {
 	$conv_active = '';
 	$spam_active = '';
 	$postord_active = '';
+	$public_active = '';
 
 	if(x($_GET,'new')) {
 		$new_active = 'active';
@@ -1354,13 +1355,18 @@ function network_tabs() {
 		$spam_active = 'active';
 	}
 
+	if(x($_GET,'fh')) {
+		$public_active = 'active';
+	}
+
 	
 	
 	if (($new_active == '') 
 		&& ($starred_active == '') 
 		&& ($conv_active == '')
 		&& ($search_active == '')
-		&& ($spam_active == '')) {
+		&& ($spam_active == '')
+		&& ($public_active == '')) {
 			$no_active = 'active';
 	}
 
@@ -1377,6 +1383,13 @@ function network_tabs() {
 
 	// tabs
 	$tabs = array(
+		array(
+			'label' => t('Public'),
+			'url'=>$a->get_baseurl(true) . '/' . $cmd . '?f=&fh=1' . ((x($_GET,'cid')) ? '&cid=' . $_GET['cid'] : '') . ((x($_GET,'gid')) ? '&gid=' . $_GET['gid'] : ''), 
+			'sel'=> $public_active,
+			'title'=> t('View Public Streams'),
+		),
+
 		array(
 			'label' => t('Commented Order'),
 			'url'=>$a->get_baseurl(true) . '/' . $cmd . '?f=&order=comment' . ((x($_GET,'cid')) ? '&cid=' . $_GET['cid'] : '') . ((x($_GET,'gid')) ? '&gid=' . $_GET['gid'] : ''), 
