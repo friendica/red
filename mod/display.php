@@ -122,6 +122,7 @@ function display_content(&$a, $update = 0, $load = false) {
 			'$liked' => '0',
 			'$conv' => '0',
 			'$spam' => '0',
+			'$fh' => '0',
 			'$nouveau' => '0',
 			'$wall' => '0',
 			'$page' => (($a->pager['page'] != 1) ? $a->pager['page'] : 1),

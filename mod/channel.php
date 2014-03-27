@@ -259,6 +259,7 @@ function channel_content(&$a, $update = 0, $load = false) {
 			'$spam' => '0',
 			'$nouveau' => '0',
 			'$wall' => '1',
+			'$fh' => '0',
 			'$page' => (($a->pager['page'] != 1) ? $a->pager['page'] : 1),
 			'$search' => '',
 			'$order' => '',
