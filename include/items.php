@@ -3751,8 +3751,10 @@ function zot_feed($uid,$observer_xchan,$mindate) {
 		return $result;
 	}
 
-	require_once('include/security.php');
-	$sql_extra = item_permissions_sql($uid);
+	if(! is_sys_channel($uid)) {
+		require_once('include/security.php');
+		$sql_extra = item_permissions_sql($uid);
+	}
 
 	if($mindate != '0000-00-00 00:00:00') {
 		$sql_extra .= " and created > '$mindate' ";
@@ -3767,8 +3769,7 @@ function zot_feed($uid,$observer_xchan,$mindate) {
 		$r = q("SELECT item.*, item.id as item_id from item
 			WHERE uid in (" . stream_perms_api_uids(PERMS_PUBLIC) . ") AND item_restrict = 0 and id = parent
 			AND (item_flags &  %d) 
-			and item_private = 0 ORDER BY created ASC $limit",
-			intval($uid),
+			and item_private = 0 $sql_extra ORDER BY created ASC $limit",
 			intval(ITEM_WALL)
 		);
 	}
