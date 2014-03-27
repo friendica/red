@@ -29,6 +29,10 @@ function expire_run($argv, $argc){
 		}
 	}
 
+	$x = get_sys_channel();
+	if($x)
+		item_expire($x['channel_id'],30);
+
 	return;
 }
 

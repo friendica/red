@@ -3767,7 +3767,7 @@ function zot_feed($uid,$observer_xchan,$mindate) {
 		$r = q("SELECT item.*, item.id as item_id from item
 			WHERE uid in (" . stream_perms_api_uids(PERMS_PUBLIC) . ") AND item_restrict = 0 and id = parent
 			AND (item_flags &  %d) 
-			$sql_extra ORDER BY created ASC $limit",
+			and item_private = 0 ORDER BY created ASC $limit",
 			intval($uid),
 			intval(ITEM_WALL)
 		);

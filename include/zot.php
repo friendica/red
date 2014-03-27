@@ -1354,16 +1354,18 @@ function allowed_public_recips($msg) {
 }
 
 
-function process_delivery($sender,$arr,$deliveries,$relay) {
+function process_delivery($sender,$arr,$deliveries,$relay,$public = false) {
 
 	$result = array();
 
 
 	// We've validated the sender. Now make sure that the sender is the owner or author
 
-	if($sender['hash'] != $arr['owner_xchan'] && $sender['hash'] != $arr['author_xchan']) {
-		logger("process_delivery: sender {$sender['hash']} is not owner {$arr['owner_xchan']} or author {$arr['author_xchan']} - mid {$arr['mid']}");
-		return;
+	if(! $public) {
+		if($sender['hash'] != $arr['owner_xchan'] && $sender['hash'] != $arr['author_xchan']) {
+			logger("process_delivery: sender {$sender['hash']} is not owner {$arr['owner_xchan']} or author {$arr['author_xchan']} - mid {$arr['mid']}");
+			return;
+		}
 	}
 	
 	foreach($deliveries as $d) {
@@ -1394,7 +1396,7 @@ function process_delivery($sender,$arr,$deliveries,$relay) {
 			}
 		}
 
-		if((! perm_is_allowed($channel['channel_id'],$sender['hash'],$perm)) && (! $tag_delivery)) {
+		if((! perm_is_allowed($channel['channel_id'],$sender['hash'],$perm)) && (! $tag_delivery) && (! $public)) {
 			logger("permission denied for delivery {$channel['channel_id']}");
 			$result[] = array($d['hash'],'permission denied',$channel['channel_name'] . ' <' . $channel['channel_address'] . '@' . get_app()->get_hostname() . '>');
 			continue;

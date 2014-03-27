@@ -324,6 +324,8 @@ function dir_parse_query($s) {
 
 
 function list_public_sites() {
+
+
 	$r = q("select * from site where site_access != 0 and site_register !=0 order by rand()");
 	$ret = array('success' => false);
 
