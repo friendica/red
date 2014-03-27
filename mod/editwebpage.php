@@ -131,8 +131,7 @@ function editwebpage_content(&$a) {
 	
 //FIXME A return path with $_SESSION doesn't always work for observer - it may WSoD instead of loading a sensible page.  So, send folk to the webpage list.
 
-	$rp = '/webpages/' . $which;
-	$lockstate = 
+	$rp = 'webpages/' . $which;
 
 	$o .= replace_macros($tpl,array(
 		'$return_path' => $rp,
