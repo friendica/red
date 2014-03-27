@@ -1077,8 +1077,8 @@ function fix_attached_photo_permissions($uid,$xchan_hash,$body,
 
 	$match = null;
 	// match img and zmg image links
-	if(preg_match_all("/\[[zi]mg\](.*?)\[\/[zi]mg\]/",$body,$match)) {
-		$images = $match[1];
+	if(preg_match_all("/\[[zi]mg(.*?)\](.*?)\[\/[zi]mg\]/",$body,$match)) {
+		$images = $match[2];
 		if($images) {
 			foreach($images as $image) {
 				if(! stristr($image,get_app()->get_baseurl() . '/photo/'))
