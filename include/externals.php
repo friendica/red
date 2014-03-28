@@ -28,7 +28,7 @@ function externals_run($argv, $argc){
 	}
 
 	if($url) {
-		$days = intval(getconfig('externals','since_days'));
+		$days = intval(get_config('externals','since_days'));
 		if($days === false)
 			$days = 15;
 
