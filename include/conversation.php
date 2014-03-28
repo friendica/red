@@ -1384,7 +1384,7 @@ function network_tabs() {
 	// tabs
 	$tabs = array(
 		array(
-			'label' => t('External'),
+			'label' => t('Discover'),
 			'url'=>$a->get_baseurl(true) . '/' . $cmd . '?f=&fh=1' . ((x($_GET,'cid')) ? '&cid=' . $_GET['cid'] : '') . ((x($_GET,'gid')) ? '&gid=' . $_GET['gid'] : ''), 
 			'sel'=> $public_active,
 			'title'=> t('Imported public streams'),
