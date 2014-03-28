@@ -26,8 +26,10 @@ function lockview_content(&$a) {
 
 	$item = $r[0];
 
-	if($item['uid'] != local_user())
+	if($item['uid'] != local_user()) {
+		echo '<li>' . t('Remote privacy information not available.') . '</li>';
 		killme();
+	}
 
 	if(($item['item_private'] == 1) && (! strlen($item['allow_cid'])) && (! strlen($item['allow_gid'])) 
 		&& (! strlen($item['deny_cid'])) && (! strlen($item['deny_gid']))) {
