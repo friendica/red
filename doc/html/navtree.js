@@ -36,14 +36,14 @@ var NAVTREE =
 var NAVTREEINDEX =
 [
 "BS-Default_8php.html",
-"boot_8php.html#a74bf27f7564c9a37975e7b37d973dcab",
-"classApp.html#ad5175536561021548ae8188e24c7b80c",
-"classphoto__driver.html#aea560be5dfba09117d36c12bacbf3b80",
-"friendica-to-smarty-tpl_8py.html#a0b4cf73d1a8d201a28d269eeb62a5d5c",
-"include_2api_8php.html#aff322705cc6084b329003fc8eab0aad0",
-"mod_2chat_8php.html#aa9ae4782e9baef0b7314ab9527c2707e",
-"register_8php.html",
-"typo_8php.html#acebf83966ef6d7e5645a6b62ba368f9f"
+"boot_8php.html#a7037bcbca223395c06bc67f65024de7a",
+"classApp.html#ac1d80a14492acc932715d54567d8a589",
+"classphoto__driver.html#abc9f73ad90923772d52b9fcc4eb117dd",
+"filestorage_8php.html#ad3b64e3ece9831f9d3a9f00c0ae983cd",
+"include_2api_8php.html#ae82608c317421f27446465aa6724733d",
+"mod_2bookmarks_8php.html",
+"redbasic_2php_2theme_8php.html",
+"tpldebug_8php.html#a5358407d65f2ca826f96356a6642d149"
 ];
 
 var SYNCONMSG = 'click to disable panel synchronisation';

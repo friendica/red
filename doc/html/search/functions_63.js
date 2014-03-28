@@ -75,8 +75,6 @@ var searchData=
   ['common_5ffriends_5fvisitor_5fwidget',['common_friends_visitor_widget',['../contact__widgets_8php.html#a552f8544528cec0c995cea7287ea9d65',1,'contact_widgets.php']]],
   ['common_5ffriends_5fzcid',['common_friends_zcid',['../socgraph_8php.html#ac343a846241d36cdf046b08f3396cfe9',1,'socgraph.php']]],
   ['common_5finit',['common_init',['../common_8php.html#aca62f113655809f41f49042ce9b123c2',1,'common.php']]],
-  ['community_5fcontent',['community_content',['../community_8php.html#a1197aafd6a6b540dbb4a0c04ade3a25a',1,'community.php']]],
-  ['community_5finit',['community_init',['../community_8php.html#a56c94ec978a38633c5628fa6f8e386d9',1,'community.php']]],
   ['compare_5fpermissions',['compare_permissions',['../items_8php.html#a0790a4550b829e85504af548623002ca',1,'items.php']]],
   ['completeurl',['completeurl',['../parse__url_8php.html#a496f4e3836154f6f32b8e805a7160d3a',1,'parse_url.php']]],
   ['connect',['connect',['../classdba__driver.html#ae533e62a240a793f17aef5ab4ef10edc',1,'dba_driver\connect()'],['../classdba__mysql.html#a1887338627ce0e28786839363014bd0b',1,'dba_mysql\connect()'],['../classdba__mysqli.html#add062bd93961e5f0194d94820e9a51b1',1,'dba_mysqli\connect()']]],

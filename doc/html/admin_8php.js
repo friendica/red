@@ -1,6 +1,8 @@
 var admin_8php =
 [
     [ "admin_content", "admin_8php.html#afef415e4011607fbb665610441595015", null ],
+    [ "admin_page_channels", "admin_8php.html#ad6f87a764fd35f522c7b4c351d7878ec", null ],
+    [ "admin_page_channels_post", "admin_8php.html#a42e628f367c168add8013352ac74d33f", null ],
     [ "admin_page_dbsync", "admin_8php.html#aaa6addf2dbc3f3fcf99244a56b41eade", null ],
     [ "admin_page_hubloc", "admin_8php.html#a6943543f3138f6ee182cb701f415d1cc", null ],
     [ "admin_page_hubloc_post", "admin_8php.html#a60ba9783ad14545814919970bc3fb725", null ],

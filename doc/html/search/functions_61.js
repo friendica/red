@@ -16,6 +16,8 @@ var searchData=
   ['add_5fchildren_5fto_5flist',['add_children_to_list',['../conversation_8php.html#ad3e1d4b15e7d6d026ee182edd58f692b',1,'conversation.php']]],
   ['add_5fthread',['add_thread',['../classConversation.html#a8335cdd43f1836e3c255638e61a09e16',1,'Conversation']]],
   ['admin_5fcontent',['admin_content',['../admin_8php.html#afef415e4011607fbb665610441595015',1,'admin.php']]],
+  ['admin_5fpage_5fchannels',['admin_page_channels',['../admin_8php.html#ad6f87a764fd35f522c7b4c351d7878ec',1,'admin.php']]],
+  ['admin_5fpage_5fchannels_5fpost',['admin_page_channels_post',['../admin_8php.html#a42e628f367c168add8013352ac74d33f',1,'admin.php']]],
   ['admin_5fpage_5fdbsync',['admin_page_dbsync',['../admin_8php.html#aaa6addf2dbc3f3fcf99244a56b41eade',1,'admin.php']]],
   ['admin_5fpage_5fhubloc',['admin_page_hubloc',['../admin_8php.html#a6943543f3138f6ee182cb701f415d1cc',1,'admin.php']]],
   ['admin_5fpage_5fhubloc_5fpost',['admin_page_hubloc_post',['../admin_8php.html#a60ba9783ad14545814919970bc3fb725',1,'admin.php']]],

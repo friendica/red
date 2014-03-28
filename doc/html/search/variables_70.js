@@ -4,6 +4,7 @@ var searchData=
   ['page_5fadult',['PAGE_ADULT',['../boot_8php.html#ace83842dbeb84f7ed9ac59a9f57a7c32',1,'boot.php']]],
   ['page_5fapplication',['PAGE_APPLICATION',['../boot_8php.html#a8231d115060d41a9c2a677f2c86f10ed',1,'boot.php']]],
   ['page_5fautoconnect',['PAGE_AUTOCONNECT',['../boot_8php.html#aa275653b9c87abc7391bb8040c1c2de9',1,'boot.php']]],
+  ['page_5fcensored',['PAGE_CENSORED',['../boot_8php.html#a36003bebe4ce860c6652bcc3e09b2214',1,'boot.php']]],
   ['page_5fdirectory_5fchannel',['PAGE_DIRECTORY_CHANNEL',['../boot_8php.html#a5b8484922918946d041e5e0515dbe718',1,'boot.php']]],
   ['page_5fhidden',['PAGE_HIDDEN',['../boot_8php.html#a5e322a2a2d0f51924c0b2e874988e640',1,'boot.php']]],
   ['page_5fnormal',['PAGE_NORMAL',['../boot_8php.html#a09532c3f750ae8c4527e63b2b790cbf3',1,'boot.php']]],

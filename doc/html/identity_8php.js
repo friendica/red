@@ -17,6 +17,7 @@ var identity_8php =
     [ "identity_check_service_class", "identity_8php.html#ac9fcd5c4c371998790b5c55c3d0f4633", null ],
     [ "is_foreigner", "identity_8php.html#ae2b140df652a55ca11bb6a99005fce35", null ],
     [ "is_member", "identity_8php.html#a9637c557e13d9671f3eeb124ab98212a", null ],
+    [ "is_sys_channel", "identity_8php.html#aa4bd4abfcba883f43919e89ec6419025", null ],
     [ "profile_create_sidebar", "identity_8php.html#ad4a2c8caca8f6ae93633ebeca0ed6620", null ],
     [ "profile_load", "identity_8php.html#a4751b522ea913d0e7ed43e03d22e9e68", null ],
     [ "profile_sidebar", "identity_8php.html#a432259b2cf5b6f59be53e71db9f2c7dc", null ],

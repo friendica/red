@@ -14,7 +14,6 @@ var searchData=
   ['cloud_2ephp',['cloud.php',['../cloud_8php.html',1,'']]],
   ['comanche_2ephp',['comanche.php',['../comanche_8php.html',1,'']]],
   ['common_2ephp',['common.php',['../common_8php.html',1,'']]],
-  ['community_2ephp',['community.php',['../community_8php.html',1,'']]],
   ['config_2emd',['config.md',['../config_8md.html',1,'']]],
   ['config_2ephp',['config.php',['../view_2theme_2apw_2php_2config_8php.html',1,'']]],
   ['config_2ephp',['config.php',['../view_2theme_2blogga_2view_2theme_2blog_2config_8php.html',1,'']]],

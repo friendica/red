@@ -8,5 +8,8 @@ var searchData=
   ['directory_5fmode_5fsecondary',['DIRECTORY_MODE_SECONDARY',['../boot_8php.html#aedfb9501ed408278667995524e0d15cf',1,'boot.php']]],
   ['directory_5fmode_5fstandalone',['DIRECTORY_MODE_STANDALONE',['../boot_8php.html#a25476eec71fceda237f7dc1d78b0adb8',1,'boot.php']]],
   ['directory_5frealm',['DIRECTORY_REALM',['../boot_8php.html#a6b9909db6a7ec80ec6fdd40ba74014dd',1,'boot.php']]],
-  ['do',['do',['../docblox__errorchecker_8php.html#a721c6ff80a6d3e4ad4ffa52a04c60085',1,'docblox_errorchecker.php']]]
+  ['do',['do',['../docblox__errorchecker_8php.html#a721c6ff80a6d3e4ad4ffa52a04c60085',1,'docblox_errorchecker.php']]],
+  ['dropitem_5fnormal',['DROPITEM_NORMAL',['../boot_8php.html#a7037bcbca223395c06bc67f65024de7a',1,'boot.php']]],
+  ['dropitem_5fphase1',['DROPITEM_PHASE1',['../boot_8php.html#ae0da3ca0f54d75d22c71e007331f8d06',1,'boot.php']]],
+  ['dropitem_5fphase2',['DROPITEM_PHASE2',['../boot_8php.html#a639f079bf28f7bbb2769fee651d76dd8',1,'boot.php']]]
 ];

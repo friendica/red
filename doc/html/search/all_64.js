@@ -37,7 +37,7 @@ var searchData=
   ['delegate_5fcontent',['delegate_content',['../delegate_8php.html#a943eea8996ef348eb845c498f9f354dd',1,'delegate.php']]],
   ['delete',['delete',['../classRedFile.html#aef71c9eaac7052be7dc8602eb12171e7',1,'RedFile']]],
   ['delete_5fimported_5fitem',['delete_imported_item',['../zot_8php.html#adfeb9400ae6b726beec89f8f1e8fde72',1,'zot.php']]],
-  ['delete_5fitem_5flowlevel',['delete_item_lowlevel',['../items_8php.html#a2b56a4c01bd22a648d52ec9af1a04259',1,'items.php']]],
+  ['delete_5fitem_5flowlevel',['delete_item_lowlevel',['../items_8php.html#aac8c9eb4338e2a996c43914392c6cfdb',1,'items.php']]],
   ['deletenode',['deletenode',['../html2bbcode_8php.html#a71a07f135d196ec5943b13f7b2e6a9b2',1,'html2bbcode.php']]],
   ['deliver',['deliver',['../classProtoDriver.html#a85e9063f6d0c304410cd246f7900ea1b',1,'ProtoDriver\deliver()'],['../classZotDriver.html#a876e3e0e4cad83c0b58c8696b344be6f',1,'ZotDriver\deliver()']]],
   ['deliver_2ephp',['deliver.php',['../deliver_8php.html',1,'']]],
@@ -81,6 +81,9 @@ var searchData=
   ['docblox_5ferrorchecker_2ephp',['docblox_errorchecker.php',['../docblox__errorchecker_8php.html',1,'']]],
   ['doscaleimage',['doScaleImage',['../classphoto__driver.html#ae18716018afcf362c7c24586b53e9e2f',1,'photo_driver\doScaleImage()'],['../classphoto__gd.html#a2f2e5900e6d8b1667892ac631b1d4754',1,'photo_gd\doScaleImage()'],['../classphoto__imagick.html#a3047c68bb4de7f66c2893fe451db2b66',1,'photo_imagick\doScaleImage()']]],
   ['downgrade_5faccounts',['downgrade_accounts',['../account_8php.html#a0d183a3cb4c67a0f5e906811df7a1fc9',1,'account.php']]],
-  ['drop_5fitem',['drop_item',['../items_8php.html#afa1db13c2a8b73b5b17b97f17e5a19d1',1,'items.php']]],
-  ['drop_5fitems',['drop_items',['../items_8php.html#a668ece2c37f05cc3abe538eb0dabfe55',1,'items.php']]]
+  ['drop_5fitem',['drop_item',['../items_8php.html#a555762e1022a4b8e3c3abd32e7812408',1,'items.php']]],
+  ['drop_5fitems',['drop_items',['../items_8php.html#a668ece2c37f05cc3abe538eb0dabfe55',1,'items.php']]],
+  ['dropitem_5fnormal',['DROPITEM_NORMAL',['../boot_8php.html#a7037bcbca223395c06bc67f65024de7a',1,'boot.php']]],
+  ['dropitem_5fphase1',['DROPITEM_PHASE1',['../boot_8php.html#ae0da3ca0f54d75d22c71e007331f8d06',1,'boot.php']]],
+  ['dropitem_5fphase2',['DROPITEM_PHASE2',['../boot_8php.html#a639f079bf28f7bbb2769fee651d76dd8',1,'boot.php']]]
 ];

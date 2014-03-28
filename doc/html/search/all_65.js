@@ -36,5 +36,7 @@ var searchData=
   ['expire_2ephp',['expire.php',['../expire_8php.html',1,'']]],
   ['expire_5frun',['expire_run',['../expire_8php.html#a444e45c9b67727b27db4c779fd51a298',1,'expire.php']]],
   ['ext',['ext',['../namespacefriendica-to-smarty-tpl.html#aecf730e0884bb4ddc6c0deb1ef85f8eb',1,'friendica-to-smarty-tpl']]],
+  ['externals_2ephp',['externals.php',['../externals_8php.html',1,'']]],
+  ['externals_5frun',['externals_run',['../externals_8php.html#a4df44079e6f915286088b7a0d44db926',1,'externals.php']]],
   ['extract_2ephp',['extract.php',['../extract_8php.html',1,'']]]
 ];

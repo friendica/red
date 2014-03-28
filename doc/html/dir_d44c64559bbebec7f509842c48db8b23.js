@@ -39,6 +39,7 @@ var dir_d44c64559bbebec7f509842c48db8b23 =
     [ "enotify.php", "enotify_8php.html", "enotify_8php" ],
     [ "event.php", "event_8php.html", "event_8php" ],
     [ "expire.php", "expire_8php.html", "expire_8php" ],
+    [ "externals.php", "externals_8php.html", "externals_8php" ],
     [ "features.php", "features_8php.html", "features_8php" ],
     [ "follow.php", "include_2follow_8php.html", "include_2follow_8php" ],
     [ "friendica_smarty.php", "friendica__smarty_8php.html", [

@@ -31,6 +31,7 @@ var searchData=
   ['is_5fmember',['is_member',['../identity_8php.html#a9637c557e13d9671f3eeb124ab98212a',1,'identity.php']]],
   ['is_5fpreview',['is_preview',['../classConversation.html#adf25ce023b69a166c63c6e84e02c136a',1,'Conversation']]],
   ['is_5fsite_5fadmin',['is_site_admin',['../boot_8php.html#aa1e828bbbcba170265eb2668d8daf42e',1,'boot.php']]],
+  ['is_5fsys_5fchannel',['is_sys_channel',['../identity_8php.html#aa4bd4abfcba883f43919e89ec6419025',1,'identity.php']]],
   ['is_5fthreaded',['is_threaded',['../classItem.html#a5b2fafdca55aefeaa08993a5a60529f0',1,'Item']]],
   ['is_5ftoplevel',['is_toplevel',['../classItem.html#aa49e40f961dff66da32c5ae110e32993',1,'Item']]],
   ['is_5fvalid',['is_valid',['../classphoto__driver.html#a97289aef3be43d9435ca3717ef10b8ab',1,'photo_driver']]],
