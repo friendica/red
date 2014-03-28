@@ -3493,7 +3493,12 @@ function drop_items($items) {
 // permissions to carry out this act. If it is non-interactive, we are deleting something at the
 // system's request and do not check permission. This is very important to know. 
 
-function drop_item($id,$interactive = true) {
+// Some deletion requests (those coming from remote sites) must be staged.
+// $stage = 0 => unstaged
+// $stage = 1 => set deleted flag on the item and perform intial notifications
+// $stage = 2 => perform low level delete at a later stage
+
+function drop_item($id,$interactive = true,$stage = DROPITEM_NORMAL) {
 
 	$a = get_app();
 
@@ -3503,7 +3508,7 @@ function drop_item($id,$interactive = true) {
 		intval($id)
 	);
 
-	if((! $r) || ($r[0]['item_restrict'] & ITEM_DELETED)) {
+	if((! $r) || (($r[0]['item_restrict'] & ITEM_DELETED) && ($stage === DROPITEM_NORMAL))) {
 		if(! $interactive)
 			return 0;
 		notice( t('Item not found.') . EOL);
@@ -3537,7 +3542,7 @@ function drop_item($id,$interactive = true) {
 			intval($item['id'])
 		);
 
-		$arr = array('item' => $item);
+		$arr = array('item' => $item, 'interactive' => $interactive, 'stage' => $stage);
 		call_hooks('drop_item', $arr );
 
 		$notify_id = intval($item['id']);
@@ -3548,10 +3553,10 @@ function drop_item($id,$interactive = true) {
 		);
 		if($items) {
 			foreach($items as $i)
-				delete_item_lowlevel($i);
+				delete_item_lowlevel($i,$stage);
 		}
 		else
-			delete_item_lowlevel($item);
+			delete_item_lowlevel($item,$stage);
 
 		if(! $interactive)
 			return 1;
@@ -3559,7 +3564,7 @@ function drop_item($id,$interactive = true) {
 		// send the notification upstream/downstream as the case may be
 		// only send notifications to others if this is the owner's wall item. 
 
-		if($item['item_flags'] & ITEM_WALL)
+		if(($item['item_flags'] & ITEM_WALL) && ($stage != DROPITEM_PHASE2))
 			proc_run('php','include/notifier.php','drop',$notify_id);
 
 		goaway($a->get_baseurl() . '/' . $_SESSION['return_url']);
@@ -3578,15 +3583,47 @@ function drop_item($id,$interactive = true) {
 // It merely destroys all resources associated with an item. 
 // Please do not use without a suitable wrapper.
 
-function delete_item_lowlevel($item) {
+function delete_item_lowlevel($item,$stage = DROPITEM_NORMAL) {
 
-	$r = q("UPDATE item SET item_restrict = ( item_restrict | %d ), title = '', body = '',
-		changed = '%s', edited = '%s'  WHERE id = %d LIMIT 1",
-		intval(ITEM_DELETED),
-		dbesc(datetime_convert()),
-		dbesc(datetime_convert()),
-		intval($item['id'])
-	);
+
+	switch($stage) {
+		case DROPITEM_PHASE2:
+			$r = q("UPDATE item SET item_restrict = ( item_restrict | %d ), body = '', title = '',
+				changed = '%s', edited = '%s'  WHERE id = %d LIMIT 1",
+				intval(ITEM_PENDING_REMOVE),
+				dbesc(datetime_convert()),
+				dbesc(datetime_convert()),
+				intval($item['id'])
+			);
+			break;
+
+		case DROPITEM_PHASE1:
+			$r = q("UPDATE item SET item_restrict = ( item_restrict | %d ),
+				changed = '%s', edited = '%s'  WHERE id = %d LIMIT 1",
+				intval(ITEM_DELETED),
+				dbesc(datetime_convert()),
+				dbesc(datetime_convert()),
+				intval($item['id'])
+			);
+			break;
+
+		case DROPITEM_NORMAL:
+		default:
+			$r = q("UPDATE item SET item_restrict = ( item_restrict | %d ), body = '', title = '',
+				changed = '%s', edited = '%s'  WHERE id = %d LIMIT 1",
+				intval(ITEM_DELETED),
+				dbesc(datetime_convert()),
+				dbesc(datetime_convert()),
+				intval($item['id'])
+			);
+			break;
+	}
+
+	// network deletion request. Keep the message structure so that we can deliver delete notifications.
+	// Come back after several days (or perhaps a month) to do the lowlevel delete (DROPITEM_PHASE2).
+
+	if($stage == DROPITEM_PHASE1)
+		return true;
 
 	$r = q("delete from term where otype = %d and oid = %d limit 1",
 		intval(TERM_OBJ_POST),

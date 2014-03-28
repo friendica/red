@@ -890,9 +890,19 @@ function item_content(&$a) {
 
 	require_once('include/security.php');
 
-	if(($a->argc == 3) && ($a->argv[1] === 'drop') && intval($a->argv[2])) {
+	if((argc() == 3) && (argv(1) === 'drop') && intval(argv(2))) {
 		require_once('include/items.php');
-		drop_item($a->argv[2]);
+		$i = q("select id, item_restrict from item where id = %d and uid = %d limit 1",
+			intval(argv(2))
+		);
+		if($i) {
+			if($i[0]['item_restrict']) 
+				drop_item($i[0]['id']);
+			else {
+				drop_item($i[0]['id'],true,DROPITEM_PHASE1);
+				tag_deliver($uid,$i[0]['id']);
+			}
+		}
 	}
 }
 

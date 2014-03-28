@@ -1597,10 +1597,10 @@ function delete_imported_item($sender,$item,$uid) {
 	// We can't reverse the order because drop_item refuses to run if the item already has the deleted flag set and we need to
 	// set that flag prior to calling tag_deliver.
 
-	// One possibility would be to set the deleted flag, call both tag_deliver and the notifier to notify downstream channels
-	// and then clean up after ourselves with a cron job after a day or two to do the delete_item_lowlevel().
+	// Use phased deletion to set the deleted flag, call both tag_deliver and the notifier to notify downstream channels
+	// and then clean up after ourselves with a cron job after several days to do the delete_item_lowlevel() (DROPITEM_PHASE2).
 
-	drop_item($r[0]['uid'],false);
+	drop_item($r[0]['id'],false, DROPITEM_PHASE1);
 
 	tag_deliver($uid,$r[0]['id']);
 

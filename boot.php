@@ -329,6 +329,12 @@ define ( 'UPDATE_FLAGS_FORCED',   0x0002);
 define ( 'UPDATE_FLAGS_DELETED',  0x1000);
 
 
+
+define ( 'DROPITEM_NORMAL',      0);
+define ( 'DROPITEM_PHASE1',      1);
+define ( 'DROPITEM_PHASE2',      2);
+
+
 /**
  * Maximum number of "people who like (or don't like) this"  that we will list by name
  */
@@ -511,6 +517,8 @@ define ( 'ITEM_DELAYED_PUBLISH', 0x0080);
 define ( 'ITEM_BUILDBLOCK',      0x0100);	// Named thusly to make sure nobody confuses this with ITEM_BLOCKED
 define ( 'ITEM_PDL',			 0x0200);	// Page Description Language - e.g. Comanche
 define ( 'ITEM_BUG',			 0x0400);	// Is a bug, can be used by the internal bug tracker
+define ( 'ITEM_PENDING_REMOVE',  0x0800);  // deleted, notification period has lapsed
+
 /**
  * Item Flags
  */

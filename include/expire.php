@@ -7,10 +7,20 @@ function expire_run($argv, $argc){
 
 	cli_startup();
 
+	$r = q("select id from item where (item_restrict & %d) and not (item_restrict & %d) and changed < UTC_TIMESTAMP() - INTERVAL 10 DAY",
+		intval(ITEM_DELETED),
+		intval(ITEM_PENDING_REMOVE)
+	);
+	if($r) {
+		foreach($r as $rr) {
+			drop_item($rr['id'],false,DROPITEM_PHASE2);
+		}
+	}
+
 	// physically remove anything that has been deleted for more than two months
 
-	$r = q("delete from item where ( item_flags & %d ) and changed < UTC_TIMESTAMP() - INTERVAL 60 DAY",
-		intval(ITEM_DELETED)
+	$r = q("delete from item where ( item_restrict & %d ) and changed < UTC_TIMESTAMP() - INTERVAL 36 DAY",
+		intval(ITEM_PENDING_REMOVE)
 	);
 
 	// make this optional as it could have a performance impact on large sites
@@ -42,6 +52,8 @@ function expire_run($argv, $argc){
 		if($expire_days)
 			item_expire($x['channel_id'],$expire_days);
 	}
+
+
 	return;
 }
 
