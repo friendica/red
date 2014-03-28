@@ -899,20 +899,27 @@ function item_content(&$a) {
 
 		if($i) {
 			$can_delete = false;
+			$local_delete = false;
 			if(local_user() && local_user() == $i[0]['uid'])
-				$can_delete = true;
+				$local_delete = true;
+
 			$ob_hash = get_observer_hash();
 			if($ob_hash && ($ob_hash === $i[0]['author_xchan'] || $ob_hash === $i[0]['owner_xchan'] || $ob_hash === $i[0]['source_xchan']))
 				$can_delete = true;
 
-			if(! $can_delete) {
+			if(! ($can_delete || $local_delete)) {
 				notice( t('Permission denied.') . EOL);
 				return;
 			}
 
-			if($i[0]['item_restrict']) 
+			// if this is a different page type or it's just a local delete
+			// but not by the item author or owner, do a simple deletion
+
+			if($i[0]['item_restrict'] || ($local_delete && (! $can_delete))) {
 				drop_item($i[0]['id']);
+			}
 			else {
+				// complex deletion that needs to propagate and be performed in phases
 				drop_item($i[0]['id'],true,DROPITEM_PHASE1);
 				tag_deliver($i[0]['uid'],$i[0]['id']);
 			}
