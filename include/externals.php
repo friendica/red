@@ -28,11 +28,14 @@ function externals_run($argv, $argc){
 	}
 
 	if($url) {
-		$days = intval(get_config('externals','since_days'));
+		logger('externals: pulling public content from ' . $url, LOGGER_DEBUG);
+		$days = get_config('externals','since_days');
 		if($days === false)
 			$days = 15;
 
-		$feedurl = $url . '/zotfeed?f=&mindate=' . urlencode(datetime_convert('','','now - ' . $days . ' days'));
+		$feedurl = $url . '/zotfeed?f=&mindate=' . urlencode(datetime_convert('','','now - ' . intval($days) . ' days'));
+
+		logger('externals: pulling public content from ' . $feedurl, LOGGER_DEBUG);
 		$x = z_fetch_url($feedurl);
 
 		if(($x) && ($x['success'])) {
@@ -45,7 +48,7 @@ function externals_run($argv, $argc){
 						array(array('hash' => $sys['xchan_hash'])), false, true);
 					$total ++;
 				}
-				logger('import_public_posts: ' . $total . ' messages imported', LOGGER_DEBUG);
+				logger('externals: import_public_posts: ' . $total . ' messages imported', LOGGER_DEBUG);
 			}
 		}
 	}
