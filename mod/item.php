@@ -898,9 +898,14 @@ function item_content(&$a) {
 		);
 
 		if($i) {
-
+			$can_delete = false;
+			if(local_user() && local_user() == $i[0]['uid'])
+				$can_delete = true;
 			$ob_hash = get_observer_hash();
-			if($ob_hash !== $i[0]['author_xchan'] && $ob_hash !== $i[0]['owner_xchan'] && $ob_hash !== $i[0]['source_xchan']) {
+			if($ob_hash && ($ob_hash === $i[0]['author_xchan'] || $ob_hash === $i[0]['owner_xchan'] || $ob_hash === $i[0]['source_xchan']))
+				$can_delete = true;
+
+			if(! $can_delete) {
 				notice( t('Permission denied.') . EOL);
 				return;
 			}
