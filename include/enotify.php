@@ -253,14 +253,14 @@ function notification($params) {
 
 	if($params['type'] == NOTIFY_INTRO) {
 		$subject = sprintf( t('[Red:Notify] Introduction received'));
-		$preamble = sprintf( t('%1$s, you\'ve received an introduction from \'%2$s\' at %3$s'), $recip['channel_name'], $sender['xchan_name'], $sitename); 
-		$epreamble = sprintf( t('%1$s, you\'ve received [zrl=%2$s]an introduction[/zrl] from %3$s.'),
+		$preamble = sprintf( t('%1$s, you\'ve received an new connection request from \'%2$s\' at %3$s'), $recip['channel_name'], $sender['xchan_name'], $sitename); 
+		$epreamble = sprintf( t('%1$s, you\'ve received [zrl=%2$s]a new connection request[/zrl] from %3$s.'),
 			$recip['channel_name'],
 			$itemlink,
 			'[zrl=' . $sender['xchan_url'] . ']' . $sender['xchan_name'] . '[/zrl]'); 
 		$body = sprintf( t('You may visit their profile at %s'),$sender['xchan_url']);
 
-		$sitelink = t('Please visit %s to approve or reject the introduction.');
+		$sitelink = t('Please visit %s to approve or reject the connection request.');
 		$tsitelink = sprintf( $sitelink, $siteurl );
 		$hsitelink = sprintf( $sitelink, '<a href="' . $siteurl . '">' . $sitename . '</a>');
 		$itemlink =  $params['link'];

@@ -298,7 +298,7 @@ function connedit_content(&$a) {
 
 			contact_remove(local_user(), $orig_record[0]['abook_id']);
 // FIXME - send to clones
-			info( t('Contact has been removed.') . EOL );
+			info( t('Connection has been removed.') . EOL );
 			if(x($_SESSION,'return_url'))
 				goaway($a->get_baseurl(true) . '/' . $_SESSION['return_url']);
 			goaway($a->get_baseurl(true) . '/contacts');

@@ -425,6 +425,15 @@ function zot_refresh($them,$channel = null, $force = false) {
 						intval($channel['channel_id']),
 						dbesc($x['hash'])
 					);
+					if(($new_connection) && (! $default_perms)) {
+						require_once('include/enotify.php');
+						notification(array(
+							'type'         => NOTIFY_INTRO,
+							'from_xchan'   => $x['hash'],
+							'to_xchan'     => $channel['channel_hash'],
+							'link'		   => z_root() . '/connedit/' . $new_connection[0]['abook_id'],
+						));
+					}
 
 					if($new_connection && (! ($new_connection[0]['abook_flags'] & ABOOK_FLAG_PENDING)) && ($their_perms & PERMS_R_STREAM))
 							proc_run('php','include/onepoll.php',$new_connection[0]['abook_id']); 
