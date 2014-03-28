@@ -892,15 +892,24 @@ function item_content(&$a) {
 
 	if((argc() == 3) && (argv(1) === 'drop') && intval(argv(2))) {
 		require_once('include/items.php');
-		$i = q("select id, item_restrict from item where id = %d and uid = %d limit 1",
-			intval(argv(2))
+		$i = q("select id, uid, author_xchan, owner_xchan, source_xchan, item_restrict from item where id = %d and uid = %d limit 1",
+			intval(argv(2)),
+			intval(local_user())
 		);
+
 		if($i) {
+
+			$ob_hash = get_observer_hash();
+			if($ob_hash !== $i[0]['author_xchan'] && $ob_hash !== $i[0]['owner_xchan'] && $ob_hash !== $i[0]['source_xchan']) {
+				notice( t('Permission denied.') . EOL);
+				return;
+			}
+
 			if($i[0]['item_restrict']) 
 				drop_item($i[0]['id']);
 			else {
 				drop_item($i[0]['id'],true,DROPITEM_PHASE1);
-				tag_deliver($uid,$i[0]['id']);
+				tag_deliver($i[0]['uid'],$i[0]['id']);
 			}
 		}
 	}
