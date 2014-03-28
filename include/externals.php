@@ -20,8 +20,9 @@ function externals_run($argv, $argc){
 		$url = $arr['url'];
 	} 
 	else {
-		$r = q("select site_url from site where site_url != '%s'  order by rand() limit 1",
-			dbesc(z_root())
+		$r = q("select site_url from site where site_url != '%s' and site_flags != %d order by rand() limit 1",
+			dbesc(z_root()),
+			intval(DIRECTORY_MODE_STANDALONE)
 		);
 		if($r)
 			$url = $r[0]['site_url'];
