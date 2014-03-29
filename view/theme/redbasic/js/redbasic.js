@@ -25,7 +25,7 @@ $('#expand-aside').click(function() {
 	$('main').toggleClass('region_1-on');
 });
 
-if ($('aside').html().length == 0) {
+if($('aside').length && $('aside').html().length == 0) {
 	$('#expand-aside').hide();
 }
 
