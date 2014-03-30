@@ -81,6 +81,18 @@ function collect_recipients($item,&$private) {
 
 	$recipients = check_list_permissions($item['uid'],$recipients,'view_stream');
 
+	$routes = q("select * from route where iid = %d",
+		intval($item['id'])
+	);
+
+	if($routes) {
+		$route = explode(',',$routes[0]['route']);
+		if(count($route)) {
+			$route = array_unique($route);
+			$recipients = array_diff($recipients,$route);
+		}
+	}
+
 	// add ourself just in case we have nomadic clones that need to get a copy.
  
 	$recipients[] = $item['author_xchan'];
@@ -139,6 +151,28 @@ function can_comment_on_post($observer_xchan,$item) {
 	
 	return false;
 }
+
+
+function add_source_route($iid,$hash) {
+	if((! $iid) || (! $route))
+		return;
+	$r = q("select * from route where iid = %d limit 1",
+		intval($iid)
+	);
+	if($r && $r[0]['route']) {
+		q("update route set route = '%s' where iid = %d limit 1",
+			dbesc(',' . $hash),
+			intval($iid)
+		);
+	}
+	else {
+		q("insert into route ( iid, route ) values ( %d, '%s') ",
+			intval($iid),
+			dbesc($route)
+		);
+	}
+}
+
 
 
 /**

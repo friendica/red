@@ -1452,6 +1452,7 @@ function process_delivery($sender,$arr,$deliveries,$relay,$public = false) {
 				}
 
 				$xyz = event_store($ev);
+				add_source_route($xyz,$sender['hash']);
 
 				$result = array($d['hash'],'event processed',$channel['channel_name'] . ' <' . $channel['channel_address'] . '@' . get_app()->get_hostname() . '>');
 				continue;
@@ -1476,6 +1477,8 @@ function process_delivery($sender,$arr,$deliveries,$relay,$public = false) {
 			$arr['uid'] = $channel['channel_id'];
 			$item_result = item_store($arr);
 			$item_id = $item_result['item_id'];
+			add_source_route($item_id,$sender['hash']);
+
 			$result[] = array($d['hash'],(($item_id) ? 'posted' : 'storage failed:' . $item_result['message']),$channel['channel_name'] . ' <' . $channel['channel_address'] . '@' . get_app()->get_hostname() . '>');
 		}
 
