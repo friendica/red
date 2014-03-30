@@ -244,6 +244,7 @@ function admin_page_site_post(&$a){
 	$allowed_email		=	((x($_POST,'allowed_email'))	? notags(trim($_POST['allowed_email']))		: '');
 	$block_public		=	((x($_POST,'block_public'))		? True	:	False);
 	$force_publish		=	((x($_POST,'publish_all'))		? True	:	False);
+	$discover_tab		=	((x($_POST,'discover_tab'))		? True	:	False);
 	$no_login_on_homepage	=	((x($_POST,'no_login_on_homepage'))		? True	:	False);
 	$global_directory	=	((x($_POST,'directory_submit_url'))	? notags(trim($_POST['directory_submit_url']))	: '');
 	$no_community_page	=	!((x($_POST,'no_community_page'))	? True	:	False);
@@ -341,6 +342,7 @@ function admin_page_site_post(&$a){
 	set_config('system','allowed_email', $allowed_email);
 	set_config('system','block_public', $block_public);
 	set_config('system','publish_all', $force_publish);
+	set_config('system','discover_tab', $discover_tab);
 	if($global_directory=="") {
 		del_config('system','directory_submit_url');
 	} 
@@ -462,6 +464,7 @@ function admin_page_site(&$a) {
 		'$allowed_email'	=> array('allowed_email', t("Allowed email domains"), get_config('system','allowed_email'), t("Comma separated list of domains which are allowed in email addresses for registrations to this site. Wildcards are accepted. Empty to allow any domains")),
 		'$block_public'		=> array('block_public', t("Block public"), get_config('system','block_public'), t("Check to block public access to all otherwise public personal pages on this site unless you are currently logged in.")),
 		'$force_publish'	=> array('publish_all', t("Force publish"), get_config('system','publish_all'), t("Check to force all profiles on this site to be listed in the site directory.")),
+		'$discover_tab'	=> array('discover_tab', t("Discovery tab"), get_config('system','discover_tab'), t("Display a tab in the network view with public content pulled from sources chosen for this site.")),
 		'$no_login_on_homepage'	=> array('no_login_on_homepage', t("No login on Homepage"), get_config('system','no_login_on_homepage'), t("Check to hide the login form from your sites homepage when visitors arrive who are not logged in (e.g. when you put the content of the homepage in via the site channel).")),
 			
 		'$proxyuser'		=> array('proxyuser', t("Proxy user"), get_config('system','proxyuser'), ""),
