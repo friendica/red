@@ -1416,7 +1416,7 @@ function network_tabs() {
 		);
 	}
 
-	if(feature_enable(local_user(),'new_tab')) { 
+	if(feature_enabled(local_user(),'new_tab')) { 
 		$tabs[] = array(
 			'label' => t('New'),
 			'url' => $a->get_baseurl(true) . '/' . $cmd . '?f=' . ((x($_GET,'cid')) ? '&cid=' . $_GET['cid'] : '') . '&new=1' . ((x($_GET,'gid')) ? '&gid=' . $_GET['gid'] : ''),
