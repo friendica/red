@@ -464,7 +464,7 @@ function admin_page_site(&$a) {
 		'$allowed_email'	=> array('allowed_email', t("Allowed email domains"), get_config('system','allowed_email'), t("Comma separated list of domains which are allowed in email addresses for registrations to this site. Wildcards are accepted. Empty to allow any domains")),
 		'$block_public'		=> array('block_public', t("Block public"), get_config('system','block_public'), t("Check to block public access to all otherwise public personal pages on this site unless you are currently logged in.")),
 		'$force_publish'	=> array('publish_all', t("Force publish"), get_config('system','publish_all'), t("Check to force all profiles on this site to be listed in the site directory.")),
-		'$discover_tab'	=> array('discover_tab', t("Discovery tab"), get_config('system','discover_tab'), t("Display a tab in the network view with public content pulled from sources chosen for this site.")),
+		'$discover_tab'	=> array('discover_tab', t("Discovery tab"), ((get_config('system','discover_tab') === false) ? 1 : get_config('system','discover_tab')), t("Display a tab in the network view with public content pulled from sources chosen for this site.")),
 		'$no_login_on_homepage'	=> array('no_login_on_homepage', t("No login on Homepage"), get_config('system','no_login_on_homepage'), t("Check to hide the login form from your sites homepage when visitors arrive who are not logged in (e.g. when you put the content of the homepage in via the site channel).")),
 			
 		'$proxyuser'		=> array('proxyuser', t("Proxy user"), get_config('system','proxyuser'), ""),
