@@ -169,7 +169,7 @@ function poller_run($argv, $argc){
 
 
 	// pull in some public posts
-        if(get_config('system','discover_tab'))
+        if(! get_config('system','disable_discover_tab'))
 		proc_run('php','include/externals.php');
 
 

@@ -319,7 +319,7 @@ function network_content(&$a, $update = 0, $load = false) {
 
 	}
 
-	if($firehose && get_config('system','discover_tab')) {
+	if($firehose && (! get_config('system','discover_tab'))) {
 		require_once('include/identity.php');
 		$sys = get_sys_channel();
 		$uids = " and item.uid  = " . intval($sys['channel_id']) . " ";
