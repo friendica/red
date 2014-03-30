@@ -234,7 +234,7 @@ function bbiframe($match) {
 	//	if(strpos($match[1],get_app()->get_hostname()))
 	//		return '<a href="' . $match[1] . '">' . $match[1] . '</a>';
 
-	return '<iframe sandbox="allow-same-origin allow-top-navigation" src="' . $match[1] . '" width="' . $a->videowidth . '" height="' . $a->videoheight . '"><a href="' . $match[1] . '">' . $match[1] . '</a></iframe>';
+	return '<iframe sandbox="allow-scripts" src="' . $match[1] . '" width="' . $a->videowidth . '" height="' . $a->videoheight . '"><a href="' . $match[1] . '">' . $match[1] . '</a></iframe>';
 }
 
 function bb_ShareAttributesSimple($match) {
