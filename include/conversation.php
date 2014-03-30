@@ -1382,14 +1382,17 @@ function network_tabs() {
 	$cmd = $a->cmd;
 
 	// tabs
-	$tabs = array(
-		array(
-			'label' => t('Discover'),
-			'url'=>$a->get_baseurl(true) . '/' . $cmd . '?f=&fh=1' . ((x($_GET,'cid')) ? '&cid=' . $_GET['cid'] : '') . ((x($_GET,'gid')) ? '&gid=' . $_GET['gid'] : ''), 
-			'sel'=> $public_active,
-			'title'=> t('Imported public streams'),
-		),
+	$tabs = array();
 
+	if(get_config('system','discover_tab'))
+		$tabs[] = array(
+                        'label' => t('Discover'),
+                        'url'=>$a->get_baseurl(true) . '/' . $cmd . '?f=&fh=1' . ((x($_GET,'cid')) ? '&cid=' . $_GET['cid'] : '') . ((x($_GET,'gid')) ? '&gid=' . $_GET['gid'] : ''),
+                        'sel'=> $public_active,
+                        'title'=> t('Imported public streams'),
+                );
+
+	array_push($tabs,
 		array(
 			'label' => t('Commented Order'),
 			'url'=>$a->get_baseurl(true) . '/' . $cmd . '?f=&order=comment' . ((x($_GET,'cid')) ? '&cid=' . $_GET['cid'] : '') . ((x($_GET,'gid')) ? '&gid=' . $_GET['gid'] : ''), 
@@ -1402,7 +1405,6 @@ function network_tabs() {
 			'sel'=>$postord_active,
 			'title' => t('Sort by Post Date'),
 		),
-
 		array(
 			'label' => t('Personal'),
 			'url' => $a->get_baseurl(true) . '/' . $cmd . '?f=' . ((x($_GET,'cid')) ? '&cid=' . $_GET['cid'] : '') . '&conv=1',
@@ -1414,8 +1416,7 @@ function network_tabs() {
 			'url' => $a->get_baseurl(true) . '/' . $cmd . '?f=' . ((x($_GET,'cid')) ? '&cid=' . $_GET['cid'] : '') . '&new=1' . ((x($_GET,'gid')) ? '&gid=' . $_GET['gid'] : ''),
 			'sel' => $new_active,
 			'title' => t('Activity Stream - by date'),
-		),
-
+		)
 	);
 
 	if(feature_enabled(local_user(),'star_posts')) 

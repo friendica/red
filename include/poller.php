@@ -169,7 +169,8 @@ function poller_run($argv, $argc){
 
 
 	// pull in some public posts
-	proc_run('php','include/externals.php');
+        if(get_config('system','discover_tab'))
+		proc_run('php','include/externals.php');
 
 
 	$manual_id  = 0;
