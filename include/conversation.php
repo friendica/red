@@ -1384,7 +1384,7 @@ function network_tabs() {
 	// tabs
 	$tabs = array();
 
-	if(get_config('system','discover_tab')) {
+	if(! get_config('system','disable_discover_tab')) {
 		$tabs[] = array(
 			'label' => t('Discover'),
 			'url'=>$a->get_baseurl(true) . '/' . $cmd . '?f=&fh=1' . ((x($_GET,'cid')) ? '&cid=' . $_GET['cid'] : '') . ((x($_GET,'gid')) ? '&gid=' . $_GET['gid'] : ''),
