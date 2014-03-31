@@ -619,11 +619,27 @@ function get_tags($s) {
 		}
 	}
 
+	// make sure the longer tags are returned first so that if two or more have common substrings
+	// we'll replace the longest ones first. Otherwise the common substring would be found in
+	// both strings and the string replacement would link both to the shorter strings and 
+	// fail to link the longer string. RedMatrix github issue #378
+ 
+	usort($ret,'tag_sort_length');
 
-	// logger('get_tags: ' . print_r($ret,true));
+	
+	//logger('get_tags: ' . print_r($ret,true));
 
 	return $ret;
 }
+
+function tag_sort_length($a,$b) {
+	if(mb_strlen($a) == mb_strlen($b))
+		return 0;
+	return((mb_strlen($b) < mb_strlen($a)) ? (-1) : 1);
+}
+
+
+
 
 
 function strip_zids($s) {

@@ -2294,6 +2294,7 @@ function tag_deliver($uid,$item_id) {
 		logger('tag_deliver: community tag activity received');
 
 		if(($item['owner_xchan'] === $u[0]['channel_hash']) && (! get_pconfig($u[0]['channel_id'],'system','blocktags'))) {
+			logger('tag_deliver: community tag recipient: ' . $u[0]['channel_name']);
 			$j_tgt = json_decode_plus($item['target']);
 			if($j_tgt && $j_tgt['id']) {
 				$p = q("select * from item where mid = '%s' and uid = %d limit 1",
