@@ -81,6 +81,11 @@ function collect_recipients($item,&$private) {
 
 	$recipients = check_list_permissions($item['uid'],$recipients,'view_stream');
 
+	// remove any upstream recipients from our list. 
+	// If it is ourself we'll add it back in a second.
+	// This should prevent complex delivery chains from getting overly complex by not 
+	// sending to anybody who is on our list of those who sent it to us.
+ 
 	if($item['route']) {
 		$route = explode(',',$item['route']);
 		if(count($route)) {
