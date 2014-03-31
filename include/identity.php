@@ -547,12 +547,20 @@ function profile_load(&$a, $nickname, $profile = '') {
 		);
 	}
 
+
 	if(! $p) {
 		logger('profile error: ' . $a->query_string, LOGGER_DEBUG);
 		notice( t('Requested profile is not available.') . EOL );
 		$a->error = 404;
 		return;
 	}
+
+	$z = q("select xchan_photo_date from xchan where xchan_hash = '%s' limit 1",
+		dbesc($p[0]['channel_hash'])
+	);
+	if($z)
+		$p[0]['picdate'] = $z[0]['xchan_photo_date'];
+
 	
 	// fetch user tags if this isn't the default profile
 
