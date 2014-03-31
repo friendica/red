@@ -230,11 +230,10 @@ function bb_location($match) {
 function bbiframe($match) {
 	$a = get_app();
 
-	// use sandbox mode to prevent malicious goings on rather than host restriction
-	//	if(strpos($match[1],get_app()->get_hostname()))
-	//		return '<a href="' . $match[1] . '">' . $match[1] . '</a>';
 
-	return '<iframe sandbox="allow-scripts" src="' . $match[1] . '" width="' . $a->videowidth . '" height="' . $a->videoheight . '"><a href="' . $match[1] . '">' . $match[1] . '</a></iframe>';
+	$sandbox = ((strpos($match[1],get_app()->get_hostname())) ? ' sandbox="allow-scripts" ' : '');
+
+	return '<iframe ' . $sandbox . ' src="' . $match[1] . '" width="' . $a->videowidth . '" height="' . $a->videoheight . '"><a href="' . $match[1] . '">' . $match[1] . '</a></iframe>';
 }
 
 function bb_ShareAttributesSimple($match) {
