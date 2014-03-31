@@ -1,6 +1,6 @@
 <div class="widget">
 <script>
-$("#note-text").live('input paste',function(e){
+$(document).on('focusout',"#note-text",function(e){
 	$.post('notes', { 'note_text' : $('#note-text').val() });
 });
 </script>
