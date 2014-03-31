@@ -1,6 +1,6 @@
 <?php
 
-define( 'UPDATE_VERSION' , 1104 );
+define( 'UPDATE_VERSION' , 1105 );
 
 /**
  *
@@ -1165,4 +1165,11 @@ function update_r1103() {
 	if(stristr($x['ssl_version'],'openssl'))
 		set_config('system','curl_ssl_ciphers','ALL:!eNULL');
 	return UPDATE_SUCCESS;
+}
+
+function update_r1104() {
+	$r = q("ALTER TABLE `item` ADD `route` TEXT NOT NULL DEFAULT '' AFTER `postopts` ");
+	if($r)
+		return UPDATE_SUCCESS;
+	return UPDATE_FAILED;
 }

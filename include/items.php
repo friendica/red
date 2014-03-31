@@ -81,12 +81,8 @@ function collect_recipients($item,&$private) {
 
 	$recipients = check_list_permissions($item['uid'],$recipients,'view_stream');
 
-	$routes = q("select * from route where iid = %d",
-		intval($item['id'])
-	);
-
-	if($routes) {
-		$route = explode(',',$routes[0]['route']);
+	if($item['route']) {
+		$route = explode(',',$item['route']);
 		if(count($route)) {
 			$route = array_unique($route);
 			$recipients = array_diff($recipients,$route);
@@ -156,19 +152,14 @@ function can_comment_on_post($observer_xchan,$item) {
 function add_source_route($iid,$hash) {
 	if((! $iid) || (! $route))
 		return;
-	$r = q("select * from route where iid = %d limit 1",
+	$r = q("select route from item where id = %d limit 1",
 		intval($iid)
 	);
-	if($r && $r[0]['route']) {
-		q("update route set route = '%s' where iid = %d limit 1",
-			dbesc(',' . $hash),
+	if($r) {
+		$new_route = (($r[0]['route']) ? $r[0]['route'] . ',' : '') . $hash; 
+		q("update item set route = '%s' where id = %d limit 1",
+			(dbesc($new_route)),
 			intval($iid)
-		);
-	}
-	else {
-		q("insert into route ( iid, route ) values ( %d, '%s') ",
-			intval($iid),
-			dbesc($route)
 		);
 	}
 }
@@ -670,6 +661,7 @@ function get_item_elements($x) {
 
 
 	$arr['app']          = (($x['app'])            ? htmlspecialchars($x['app'],            ENT_COMPAT,'UTF-8',false) : '');
+	$arr['route']        = (($x['route'])          ? htmlspecialchars($x['route'],          ENT_COMPAT,'UTF-8',false) : '');
 	$arr['mid']          = (($x['message_id'])     ? htmlspecialchars($x['message_id'],     ENT_COMPAT,'UTF-8',false) : '');
 	$arr['parent_mid']   = (($x['message_top'])    ? htmlspecialchars($x['message_top'],    ENT_COMPAT,'UTF-8',false) : '');
 	$arr['thr_parent']   = (($x['message_parent']) ? htmlspecialchars($x['message_parent'], ENT_COMPAT,'UTF-8',false) : '');
@@ -681,7 +673,7 @@ function get_item_elements($x) {
 	$arr['mimetype']     = (($x['mimetype'])       ? htmlspecialchars($x['mimetype'],       ENT_COMPAT,'UTF-8',false) : '');
 	$arr['obj_type']     = (($x['object_type'])    ? htmlspecialchars($x['object_type'],    ENT_COMPAT,'UTF-8',false) : '');
 	$arr['tgt_type']     = (($x['target_type'])    ? htmlspecialchars($x['target_type'],    ENT_COMPAT,'UTF-8',false) : '');
-	$arr['comment_policy'] = (($x['comment_scope']) ? htmlspecialchars($x['comment_scope'],  ENT_COMPAT,'UTF-8',false) : 'contacts');
+	$arr['comment_policy'] = (($x['comment_scope']) ? htmlspecialchars($x['comment_scope'], ENT_COMPAT,'UTF-8',false) : 'contacts');
 
 	$arr['sig']          = (($x['signature']) ? htmlspecialchars($x['signature'],  ENT_COMPAT,'UTF-8',false) : '');
 
@@ -870,6 +862,7 @@ function encode_item($item) {
 	$x['location']       = $item['location'];
 	$x['longlat']        = $item['coord'];
 	$x['signature']      = $item['sig'];
+	$x['route']          = $item['route'];
 
 	$x['owner']          = encode_item_xchan($item['owner']);
 	$x['author']         = encode_item_xchan($item['author']);
