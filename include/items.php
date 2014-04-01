@@ -155,9 +155,9 @@ function can_comment_on_post($observer_xchan,$item) {
 
 
 function add_source_route($iid,$hash) {
-	logger('add_source_route ' . $iid . ' ' . $hash, LOGGER_DEBUG);
+//	logger('add_source_route ' . $iid . ' ' . $hash, LOGGER_DEBUG);
 
-	if((! $iid) || (! $route))
+	if((! $iid) || (! $hash))
 		return;
 	$r = q("select route from item where id = %d limit 1",
 		intval($iid)
