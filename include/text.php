@@ -1190,6 +1190,33 @@ function format_categories(&$item,$writeable) {
 	return $s;
 }
 
+// Add any hashtags which weren't mentioned in the message body, e.g. community tags
+
+function format_hashtags(&$item) {
+
+	$s = '';
+	$terms = get_terms_oftype($item['term'],TERM_HASHTAG);
+	if($terms) {
+		$categories = array();
+		foreach($terms as $t) {
+			$term = htmlspecialchars($t['term'],ENT_COMPAT,'UTF-8',false) ;
+			if(! trim($term))
+				continue;
+			if(strpos($item['body'], $t['url']))
+				continue;
+
+			if($s)
+				$s .= '&nbsp';
+
+			$s .= '#<a href="' . zid($t['url']) . '" >' . $term . '</a>';
+		}
+	}
+	return $s;
+}
+
+
+
+
 
 function format_filer(&$item) {
 
@@ -1241,6 +1268,9 @@ function prepare_body(&$item,$attach = false) {
 
 
 	$writeable = ((get_observer_hash() == $item['owner_xchan']) ? true : false); 
+
+
+	$s .= format_hashtags($item);
 
 	$s .= format_categories($item,$writeable);
 
