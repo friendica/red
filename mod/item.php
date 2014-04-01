@@ -1133,14 +1133,13 @@ function fix_attached_photo_permissions($uid,$xchan_hash,$body,
 
 				if($r) {
 					$r = q("UPDATE photo SET allow_cid = '%s', allow_gid = '%s', deny_cid = '%s', deny_gid = '%s'
-						WHERE resource_id = '%s' AND uid = %d AND album = '%s' ",
+						WHERE resource_id = '%s' AND uid = %d ",
 						dbesc($str_contact_allow),
 						dbesc($str_group_allow),
 						dbesc($str_contact_deny),
 						dbesc($str_group_deny),
 						dbesc($image_uri),
-						intval($uid),
-						dbesc( t('Wall Photos'))
+						intval($uid)
 					);
 
 					// also update the linked item (which is probably invisible)
