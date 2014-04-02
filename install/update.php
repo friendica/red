@@ -1,6 +1,6 @@
 <?php
 
-define( 'UPDATE_VERSION' , 1105 );
+define( 'UPDATE_VERSION' , 1106 );
 
 /**
  *
@@ -1173,3 +1173,12 @@ function update_r1104() {
 		return UPDATE_SUCCESS;
 	return UPDATE_FAILED;
 }
+
+function update_r1105() {
+	$r = q("ALTER TABLE `site` ADD `site_pull` DATETIME NOT NULL DEFAULT '0000-00-00 00:00:00' AFTER `site_update` ,
+CHANGE `site_sync` `site_sync` DATETIME NOT NULL DEFAULT '0000-00-00 00:00:00', ADD INDEX ( `site_pull` ) ");
+	if($r)
+		return UPDATE_SUCCESS;
+	return UPDATE_FAILED;
+}
+

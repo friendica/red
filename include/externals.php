@@ -25,7 +25,7 @@ function externals_run($argv, $argc){
 			$url = $arr['url'];
 		} 
 		else {
-			$r = q("select site_url from site where site_url != '%s' and site_flags != %d order by rand() limit 1",
+			$r = q("select site_url, site_pull from site where site_url != '%s' and site_flags != %d order by rand() limit 1",
 				dbesc(z_root()),
 				intval(DIRECTORY_MODE_STANDALONE)
 			);
@@ -36,16 +36,27 @@ function externals_run($argv, $argc){
 		$attempts ++;
 
 		if($url) {
-			$days = get_config('externals','since_days');
-			if($days === false)
-				$days = 15;
+			if($r[0]['site_pull'] !== '0000-00-00 00:00:00')
+				$mindate = urlencode($r[0]['site_pull']);
+			else {
+				$days = get_config('externals','since_days');
+				if($days === false)
+					$days = 15;
+				$mindate = urlencode(datetime_convert('','','now - ' . intval($days) . ' days'));
+			}
 
-			$feedurl = $url . '/zotfeed?f=&mindate=' . urlencode(datetime_convert('','','now - ' . intval($days) . ' days'));
+			$feedurl = $url . '/zotfeed?f=&mindate=' . $mindate;
 
 			logger('externals: pulling public content from ' . $feedurl, LOGGER_DEBUG);
-			$x = z_fetch_url($feedurl);
 
+			$x = z_fetch_url($feedurl);
 			if(($x) && ($x['success'])) {
+
+				q("update site set site_pull = '%s' where site_url = '%s limit 1",
+					dbesc(datetime_convert()),
+					dbesc($url)
+				);
+
 				$j = json_decode($x['body'],true);
 				if($j['success'] && $j['messages']) {
 					$sys = get_sys_channel();
