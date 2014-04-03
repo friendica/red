@@ -24,8 +24,6 @@
 		$search_background = "#999999";
 	if (! $bgcolour)
 		$bgcolour = "#111111";
-	if (! $background_image)
-		$background_image ='';
 	if (! $item_colour)
 		$item_colour = "#111111";
 	if (! $toolicon_colour)
