@@ -818,6 +818,7 @@ footer {
 }
 
 #search-text {
+	border: 1px solid #ccc;
 	font-size: 1em;
 }
 
@@ -1444,13 +1445,20 @@ div.jGrowl div.jGrowl-notification {
 	border-top: none;
 }
 
-#search-text-ac .autocomplete,
+#search-text-ac .autocomplete {
+	margin-top: 2px;
+	margin-left: $radiuspx;
+	border: 1px solid #ccc;
+	border-top: none;
+}
+
 #recip-ac .autocomplete,
 #poke-recip-ac .autocomplete,
 #id-name-ac .autocomplete,
 #contact-search-ac .autocomplete {
 	margin-top: 2px;
 	margin-left: $radiuspx;
+	margin-right: $radiuspx;
 	border: 1px solid #666;
 	border-top: none;
 
@@ -1881,34 +1889,7 @@ img.mail-list-sender-photo {
 
 #profile-jot-text-loading {
 	color: #777;
-}
-
-#profile-jot-submit {
-	background: linear-gradient(top, #0080ff 0%, #0080aa);
-	background: -webkit-linear-gradient(top, #0080ff 0%, #0080aa);
-	background: -moz-linear-gradient(top, #0080ff 0%, #0080aa);
-	background: -o-linear-gradient(top, #0080ff 0%, #0080aa);
-	background: -ms-linear-gradient(top, #0080ff 0%, #0080aa);
-	color: #fff;
-	font-weight: bold;
-	border-radius: 0px $radiuspx $radiuspx 0px;
-	text-shadow: 1px 1px #111;
-	cursor: pointer;
-}
-
-#profile-jot-submit:hover {
-	background: linear-gradient(top, #0080aa 0%, #0080ff);
-	background: -webkit-linear-gradient(top, #0080aa 0%, #0080ff);
-	background: -moz-linear-gradient(top, #0080aa 0%, #0080ff);
-	background: -o-linear-gradient(top, #0080aa 0%, #0080ff);
-	background: -ms-linear-gradient(top, #0080aa 0%, #0080ff);
-}
-
-#profile-jot-perms {
-	background-color: $toolicon_colour;
-	border: 1px solid #666;
-	border-right: none;
-	border-radius: $radiuspx 0px 0px $radiuspx;
+	display: none;
 }
 
 #profile-rotator {
@@ -1916,12 +1897,7 @@ img.mail-list-sender-photo {
 }
 
 .jot-icons {
-	font-size: 1.2em;
 	color: $toolicon_colour;
-}
-
-.jot-icons:hover {
-	color: $toolicon_activecolour;
 }
 
 /* conversation */
@@ -2014,7 +1990,6 @@ img.mail-list-sender-photo {
 .wall-item-ago .icon-ok {
 	color: darkgreen;
 }
-
 
 .wall-item-ago {
 	color: #777;

@@ -46,7 +46,7 @@
       params: {},
       fnFormatResult: fnFormatResult,
       delimiter: null,
-      zIndex: 9999
+      zIndex: 999
     };
     this.initialize();
     this.setOptions(options);
@@ -78,7 +78,7 @@
       if (!this.options.width) { this.options.width = this.el.width(); }
       this.mainContainerId = 'AutocompleteContainter_' + uid;
 
-      $('<div id="' + this.mainContainerId + '" style="position:absolute;z-index:9999;"><div class="autocomplete-w1" id="'+this.id+'"><div class="autocomplete" id="' + autocompleteElId + '" style="display:none; width:300px;"></div></div></div>').appendTo('body');
+      $('<div id="' + this.mainContainerId + '" style="position:absolute;z-index:999;"><div class="autocomplete-w1" id="'+this.id+'"><div class="autocomplete" id="' + autocompleteElId + '" style="display:none; width:300px;"></div></div></div>').appendTo('body');
 
       this.container = $('#' + autocompleteElId);
       this.fixPosition();

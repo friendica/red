@@ -6,9 +6,9 @@ var plaintext = '{{$editselect}}';
 
 function initEditor(cb){
 	if (editor==false){
-		$("#profile-jot-text-loading").spin('small');
+		$("#profile-jot-text-loading").spin('small').show();
 		if(plaintext == 'none') {
-			$("#profile-jot-text-loading").spin(false);
+			$("#profile-jot-text-loading").spin(false).hide();
 			$("#profile-jot-text").css({ 'height': 200, 'color': '#000' });
 			$("#profile-jot-text").contact_autocomplete(baseurl+"/acl");
 			editor = true;
@@ -77,7 +77,7 @@ function initEditor(cb){
 
 				ed.onInit.add(function(ed) {
 					ed.pasteAsPlainText = true;
-					$("#profile-jot-text-loading").spin(false);
+					$("#profile-jot-text-loading").spin(false).hide();
 					$(".jothidden").show();
 					if (typeof cb!="undefined") cb();
 				});

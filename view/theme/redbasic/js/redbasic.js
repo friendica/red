@@ -40,31 +40,6 @@ if($('#tabs-collapse-1').length == 0) {
 	$('#expand-tabs').hide();
 }
 
-$('.group-edit-icon').hover(
-	function() {
-		$(this).css('opacity','1.0');},
-	function() {
-		$(this).css('opacity','0');}
-);
-
-$('.sidebar-group-element').hover(
-	function() {
-		id = $(this).attr('id');
-		$('#edit-' + id).css('opacity','1.0');},
-
-	function() {
-		id = $(this).attr('id');
-		$('#edit-' + id).css('opacity','0');}
-	);
-
-
-$('.savedsearchdrop').hover(
-	function() {
-		$(this).css('opacity','1.0');},
-	function() {
-		$(this).css('opacity','0');}
-	);
-
 });
 
 

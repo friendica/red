@@ -24,7 +24,7 @@ aside#region_1 {
 }
 
 aside input[type='text'] {
- width: 174px;
+	width: 100%;
 }
 
 section {

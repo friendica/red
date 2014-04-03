@@ -18,71 +18,20 @@
 #profile-jot-text {
 	height: 3.4em;
 	padding: 8px;
-	margin-right: 0px;
 	width: 100%;
 }
 
 #profile-jot-text-loading {
 	float: left;
-	margin: 14px 0px 0px 12px;
+	padding: 30px 0px 0px 12px;
 }
 
 #profile-jot-submit-wrapper {
 	margin-top: 10px;
-	width: 100%;
-}
-
-#profile-jot-submit {
-	height: 30px;
-	width: 70px;
-	float: right;
-}
-
-#profile-upload-wrapper,
-#wall-image-upload-div,
-#wall-image-upload,
-#wall-file-upload-div,
-#wall-file-upload,
-#profile-link,
-#profile-video,
-#profile-audio,
-#profile-location,
-#profile-nolocation,
-#profile-expires, 
-#profile-expires, 
-#jot-perms-icon,
-#jot-preview-link,
-#profile-encrypt,
-.hover, .focus {
-	cursor: pointer;
-}
-
-#profile-upload-wrapper,
-#profile-attach-wrapper,
-#profile-link-wrapper,
-#profile-video-wrapper,
-#profile-audio-wrapper,
-#profile-location-wrapper,
-#profile-nolocation-wrapper,
-#profile-expire-wrapper,
-#profile-encrypt-wrapper {
-	float: left;
-	margin-left: 15px;
-}
-
-#profile-jot-perms {
-	float: right;
-	padding: 6px;
 }
 
 #jot-perms-icon {
-	float: left;
-}
-
-#jot-preview-link {
-	float: left;
-	margin-left: 45px;
-	margin-top: 0px;
+	margin: 1px;
 }
 
 #profile-jot-perms-end {
@@ -93,9 +42,12 @@
 	margin-bottom: 30px;
 }
 
-#profile-rotator {
+#profile-rotator-wrapper {
 	float: left;
-	margin: 8px 0px 0px 20px;
+}
+
+#profile-rotator {
+	margin: 16px 0px 0px 16px;
 }
 
 /* this is referenced in js/acl.js - not sure if it is still needed. */
