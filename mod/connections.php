@@ -212,6 +212,26 @@ function connections_content(&$a) {
 				$pending = true;
 				nav_set_selected('intros');
 				break;
+			case 'ifpending':
+				$r = q("SELECT COUNT(abook.abook_id) AS total FROM abook left join xchan on abook.abook_xchan = xchan.xchan_hash where abook_channel = %d and not (abook_flags & %d) and not (xchan_flags & %d ) and (abook_flags & %d) and not (abook_flags & %d)",
+					intval(local_user()),
+					intval(ABOOK_FLAG_SELF),
+					intval(XCHAN_FLAGS_DELETED),
+					intval(ABOOK_FLAG_PENDING),
+					intval(ABOOK_FLAG_IGNORED)		
+				);
+				if($r && $r[0]['total']) {
+					$search_flags = ABOOK_FLAG_PENDING;
+					$head = t('New');
+					$pending = true;
+					nav_set_selected('intros');
+				}
+				else {
+					$head = t('All');
+					$search_flags = 0;
+					$all = true;
+				}
+				break;
 			case 'unconnected':
 				$search_flags = ABOOK_FLAG_UNCONNECTED;
 				$head = t('Unconnected');
