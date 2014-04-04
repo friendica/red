@@ -82,7 +82,7 @@ var dir_d41ce877eb409a4791b288730010abe2 =
     [ "poke.php", "poke_8php.html", "poke_8php" ],
     [ "post.php", "post_8php.html", "post_8php" ],
     [ "pretheme.php", "pretheme_8php.html", "pretheme_8php" ],
-    [ "probe.php", "probe_8php.html", "probe_8php" ],
+    [ "probe.php", "mod_2probe_8php.html", "mod_2probe_8php" ],
     [ "profile.php", "profile_8php.html", "profile_8php" ],
     [ "profile_photo.php", "profile__photo_8php.html", "profile__photo_8php" ],
     [ "profiles.php", "profiles_8php.html", "profiles_8php" ],

@@ -2,6 +2,7 @@ var searchData=
 [
   ['t',['t',['../language_8php.html#aae0c3638fb476ae1e31f8d242f5dac04',1,'language.php']]],
   ['tag_5fdeliver',['tag_deliver',['../items_8php.html#ab1bce4261bcf75ad62753b498a144d17',1,'items.php']]],
+  ['tag_5fsort_5flength',['tag_sort_length',['../text_8php.html#ac2ff88e800f74b22e9cc091c10809c54',1,'text.php']]],
   ['tagadelic',['tagadelic',['../taxonomy_8php.html#aaf90ba8b839d6459065f39a4f1109b8a',1,'taxonomy.php']]],
   ['tagblock',['tagblock',['../taxonomy_8php.html#ac21d1dff16d569e7d110167aea4e63c2',1,'taxonomy.php']]],
   ['tagger_5fcontent',['tagger_content',['../tagger_8php.html#a0e4a3eb177d1684553c547503d67161c',1,'tagger.php']]],

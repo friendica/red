@@ -225,12 +225,26 @@ function item_post(&$a) {
 		$channel = $a->get_channel();
 	}
 	else {
-		$r = q("SELECT channel.*, account.* FROM channel left join account on channel.channel_account_id = account.account_id 
-			where channel.channel_id = %d LIMIT 1",
-			intval($profile_uid)
-		);
-		if(count($r))
-			$channel = $r[0];
+		$dest_channel = ((array_key_exists('dest_channel',$_REQUEST) && intval($_REQUEST['dest_channel'])) ? intval($_REQUEST['dest_channel']) : 0);
+
+		if(local_user() && $dest_channel) {
+			// posting as another channel which you control
+			$account = $a->get_account();
+			$r = q("select * from channel left join account on channel_account_id = account_id where account_d = %d and channel_id = %d limit 1",
+				intval($account['account_id']),
+				intval($dest_channel)
+			);
+			if($r)
+				$channel = $r[0];
+		}
+		else {
+			// posting as yourself but not necessarily to a channel you control
+			$r = q("select * from channel left join account on channel_account_id = account_id where channel_id = %d LIMIT 1",
+				intval($profile_uid)
+			);
+			if(count($r))
+				$channel = $r[0];
+		}
 	}
 
 	if(! $channel) {
