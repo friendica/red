@@ -225,11 +225,14 @@ function connections_content(&$a) {
 					$head = t('New');
 					$pending = true;
 					nav_set_selected('intros');
+					$a->argv[1] = 'pending';
 				}
 				else {
 					$head = t('All');
 					$search_flags = 0;
 					$all = true;
+					$a->argc = 1;
+					unset($a->argv[1]);
 				}
 				break;
 			case 'unconnected':
@@ -341,7 +344,7 @@ function connections_content(&$a) {
 		intval(ABOOK_FLAG_SELF),
 		intval(XCHAN_FLAGS_DELETED)
 	);
-	if(count($r)) {
+	if($r) {
 		$a->set_pager_total($r[0]['total']);
 		$total = $r[0]['total'];
 	}

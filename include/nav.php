@@ -162,7 +162,7 @@ EOT;
 		$nav['home']['mark'] = array('', t('Mark all channel notifications seen'), '','');
 
 
-		$nav['intros'] = array('connections/pending',	t('Connections'), "", t('Connections'));
+		$nav['intros'] = array('connections/ifpending',	t('Connections'), "", t('Connections'));
 
 
 		$nav['notifications'] = array('notifications/system',	t('Notices'), "", t('Notifications'));
