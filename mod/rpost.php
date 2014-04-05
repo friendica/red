@@ -106,6 +106,7 @@ function rpost_content(&$a) {
 			|| $channel['channel_deny_cid'] || $channel['channel_deny_gid']) ? 'lock' : 'unlock'),
 		'acl' => populate_acl($channel, $false),
 		'bang' => '',
+//		'channel_select' => true,
 		'visitor' => 'block',
 		'profile_uid' => local_user(),
 		'title' => $_REQUEST['title'],

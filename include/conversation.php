@@ -1052,6 +1052,13 @@ function status_editor($a,$x,$popup=false) {
 	}
 	
 
+	if(array_key_exists('channel_select',$x) && $x['channel_select']) {
+		require_once('include/identity.php');
+		$id_select = identity_selector();
+	}
+	else
+		$id_select = '';
+
 
 	$webpage = ((x($x,'webpage')) ? $x['webpage'] : '');
 
@@ -1098,6 +1105,8 @@ function status_editor($a,$x,$popup=false) {
 		'$webpage' => $webpage,
 		'$placeholdpagetitle' => ((x($x,'ptlabel')) ? $x['ptlabel'] : t('Page link title')),
 		'$pagetitle' => (x($x,'pagetitle') ? $x['pagetitle'] : ''),		
+		'$id_select' => $id_select,
+		'$id_seltext' => t('Post as'),
 		'$upload' => t('Upload photo'),
 		'$shortupload' => t('upload photo'),
 		'$attach' => t('Attach file'),

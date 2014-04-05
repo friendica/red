@@ -169,6 +169,25 @@ function item_post(&$a) {
 	}
 
 	$observer = $a->get_observer();
+	$channel = null;
+
+	$dest_channel = ((array_key_exists('dest_channel',$_REQUEST) && intval($_REQUEST['dest_channel'])) ? intval($_REQUEST['dest_channel']) : 0);
+
+	if(local_user() && $dest_channel && $dest_channel != local_user()) {
+		// posting as another channel which you control
+		$account = $a->get_account();
+		$r = q("select * from channel left join account on channel_account_id = account_id where account_id = %d and channel_id = %d limit 1",
+			intval($account['account_id']),
+			intval($dest_channel)
+		);
+		if($r) {
+			$channel = $r[0];
+			$profile_uid = $dest_channel;
+		}
+	}
+
+
+
 
 	if($parent) {
 		logger('mod_item: item_post parent=' . $parent);
@@ -219,33 +238,21 @@ function item_post(&$a) {
 		$orig_post = $i[0];
 	}
 
-	$channel = null;
 
-	if(local_user() && local_user() == $profile_uid) {
-		$channel = $a->get_channel();
-	}
-	else {
-		$dest_channel = ((array_key_exists('dest_channel',$_REQUEST) && intval($_REQUEST['dest_channel'])) ? intval($_REQUEST['dest_channel']) : 0);
-
-		if(local_user() && $dest_channel) {
-			// posting as another channel which you control
-			$account = $a->get_account();
-			$r = q("select * from channel left join account on channel_account_id = account_id where account_d = %d and channel_id = %d limit 1",
-				intval($account['account_id']),
-				intval($dest_channel)
-			);
-			if($r)
-				$channel = $r[0];
+	if(! $channel) {
+		if(local_user() && local_user() == $profile_uid) {
+			$channel = $a->get_channel();
 		}
 		else {
 			// posting as yourself but not necessarily to a channel you control
 			$r = q("select * from channel left join account on channel_account_id = account_id where channel_id = %d LIMIT 1",
 				intval($profile_uid)
 			);
-			if(count($r))
+			if($r)
 				$channel = $r[0];
 		}
 	}
+
 
 	if(! $channel) {
 		logger("mod_item: no channel.");

@@ -1257,3 +1257,24 @@ function get_channel_by_nick($nick) {
 	return(($r) ? $r[0] : false);
 
 }
+
+
+function identity_selector() {
+	if(local_user()) {
+		$r = q("select channel.*, xchan.* from channel left join xchan on channel.channel_hash = xchan.xchan_hash where channel.channel_account_id = %d and not ( channel_pageflags & %d ) order by channel_name ",
+			intval(get_account_id()),
+			intval(PAGE_REMOVED)
+		);
+		if(count($r) > 1) {
+			$selected_channel = null;
+			$account = get_app()->get_account();
+			$o = replace_macros(get_markup_template('channel_id_select.tpl'),array(
+				'$channels' => $r,
+				'$selected' => local_user()
+			));
+			return $o;
+		}
+	}
+
+	return '';
+}
