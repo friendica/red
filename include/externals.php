@@ -52,7 +52,7 @@ function externals_run($argv, $argc){
 			$x = z_fetch_url($feedurl);
 			if(($x) && ($x['success'])) {
 
-				q("update site set site_pull = '%s' where site_url = '%s limit 1",
+				q("update site set site_pull = '%s' where site_url = '%s' limit 1",
 					dbesc(datetime_convert()),
 					dbesc($url)
 				);
