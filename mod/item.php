@@ -168,8 +168,8 @@ function item_post(&$a) {
 
 	}
 
-	$observer = $a->get_observer();
 	$channel = null;
+	$observer = null;
 
 	$dest_channel = ((array_key_exists('dest_channel',$_REQUEST) && intval($_REQUEST['dest_channel'])) ? intval($_REQUEST['dest_channel']) : 0);
 
@@ -183,10 +183,17 @@ function item_post(&$a) {
 		if($r) {
 			$channel = $r[0];
 			$profile_uid = $dest_channel;
+			$x = q("select * from xchan where xchan_hash = '%s' limit 1",
+				dbesc($channel['channel_hash'])
+			);
+			if($x)
+				$observer = $x[0];
 		}
 	}
 
 
+	if(! $observer)
+		$observer = $a->get_observer();
 
 
 	if($parent) {
