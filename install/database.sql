@@ -622,7 +622,7 @@ CREATE TABLE IF NOT EXISTS `notify` (
   `aid` int(11) NOT NULL,
   `uid` int(11) NOT NULL,
   `link` char(255) NOT NULL,
-  `parent` int(11) NOT NULL,
+  `parent` char(255) NOT NULL DEFAULT '',
   `seen` tinyint(1) NOT NULL DEFAULT '0',
   `type` int(11) NOT NULL,
   `verb` char(255) NOT NULL,
