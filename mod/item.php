@@ -33,6 +33,8 @@ function item_post(&$a) {
 
 	$uid = local_user();
 
+	$channel = null;
+
 	if(x($_REQUEST,'dropitems')) {
 		require_once('include/items.php');
 		$arr_drop = explode(',',$_REQUEST['dropitems']);
@@ -150,50 +152,19 @@ function item_post(&$a) {
 
 		// can_comment_on_post() needs info from the following xchan_query 
 		xchan_query($r);
+
 		$parent_item = $r[0];
 		$parent = $r[0]['id'];
 
 		// multi-level threading - preserve the info but re-parent to our single level threading
-		//if(($parid) && ($parid != $parent))
-			$thr_parent = $parent_mid;
 
-//		if($parent_item['contact-id'] && $uid) {
-//			$r = q("SELECT * FROM `contact` WHERE `id` = %d AND `uid` = %d LIMIT 1",
-//				intval($parent_item['contact-id']),
-//				intval($uid)
-//			);
-//			if(count($r))
-//				$parent_contact = $r[0];
-//		}
+		$thr_parent = $parent_mid;
+
 
 	}
 
-	$channel = null;
-	$observer = null;
 
-	$dest_channel = ((array_key_exists('dest_channel',$_REQUEST) && intval($_REQUEST['dest_channel'])) ? intval($_REQUEST['dest_channel']) : 0);
-
-	if(local_user() && $dest_channel && $dest_channel != local_user()) {
-		// posting as another channel which you control
-		$account = $a->get_account();
-		$r = q("select * from channel left join account on channel_account_id = account_id where account_id = %d and channel_id = %d limit 1",
-			intval($account['account_id']),
-			intval($dest_channel)
-		);
-		if($r) {
-			$channel = $r[0];
-			$profile_uid = $dest_channel;
-			$x = q("select * from xchan where xchan_hash = '%s' limit 1",
-				dbesc($channel['channel_hash'])
-			);
-			if($x)
-				$observer = $x[0];
-		}
-	}
-
-
-	if(! $observer)
-		$observer = $a->get_observer();
+	$observer = $a->get_observer();
 
 
 	if($parent) {
@@ -388,19 +359,17 @@ function item_post(&$a) {
 		}
 	}
 
-
-
 	$post_type = notags(trim($_REQUEST['type']));
 
 	$mimetype = notags(trim($_REQUEST['mimetype']));
 	if(! $mimetype)
 		$mimetype = 'text/bbcode';
 
-	// Verify ability to use html or php!!!
-
 	if($preview) {
 		$body = z_input_filter($profile_uid,$body,$mimetype);
 	}
+
+	// Verify ability to use html or php!!!
 
 	$execflag = false;
 
@@ -524,8 +493,6 @@ function item_post(&$a) {
 
 		$tagged = array();
 
-		$private_forum = false;
-
 		if(count($tags)) {
 			$first_access_tag = true;
 			foreach($tags as $tag) {
@@ -544,9 +511,9 @@ function item_post(&$a) {
 					continue;
 
 				$success = handle_tag($a, $body, $access_tag, $str_tags, (local_user()) ? local_user() : $profile_uid , $tag); 
-				logger('handle_tag: ' . print_r($success,tue), LOGGER_DEBUG);
+				logger('handle_tag: ' . print_r($success,tue), LOGGER_DATA);
 				if(($access_tag) && (! $parent_item)) {
-					logger('access_tag: ' . $tag . ' ' . print_r($access_tag,true), LOGGER_DEBUG);
+					logger('access_tag: ' . $tag . ' ' . print_r($access_tag,true), LOGGER_DATA);
 					if ($first_access_tag) {
 						$str_contact_allow = '';
 						$str_group_allow = '';
@@ -572,22 +539,12 @@ function item_post(&$a) {
 						'url'   => $success['url']
 					); 				
 				}
-//				if(is_array($success['contact']) && intval($success['contact']['prv'])) {
-//					$private_forum = true;
-//					$private_id = $success['contact']['id'];
-//				}
 			}
 		}
 
 
 //	logger('post_tags: ' . print_r($post_tags,true));
 
-		if(($private_forum) && (! $parent) && (! $private)) {
-			// we tagged a private forum in a top level post and the message was public.
-			// Restrict it.
-			$private = 1;
-			$str_contact_allow = '<' . $private_id . '>'; 
-		}
 
 		$attachments = '';
 		$match = false;
@@ -601,7 +558,7 @@ function item_post(&$a) {
 				if($r['success']) {
 					$attachments[] = array(
 						'href'     => $a->get_baseurl() . '/attach/' . $r['data']['hash'],
-						'length'   =>  $r['data']['filesize'],
+						'length'   => $r['data']['filesize'],
 						'type'     => $r['data']['filetype'],
 						'title'    => urlencode($r['data']['filename']),
 						'revision' => $r['data']['revision']
@@ -629,7 +586,6 @@ function item_post(&$a) {
 	}
 
 	$item_flags |= ITEM_UNSEEN;
-//	$item_restrict |= ITEM_VISIBLE;
 	
 	if($post_type === 'wall' || $post_type === 'wall-comment')
 		$item_flags = $item_flags | ITEM_WALL;
@@ -785,31 +741,12 @@ function item_post(&$a) {
 
 	$post = item_store($datarray,$execflag);
 
-
 	$post_id = $post['item_id'];
 
 	if($post_id) {
 		logger('mod_item: saved item ' . $post_id);
 
 		if($parent) {
-
-			$r = q("UPDATE `item` SET `changed` = '%s' WHERE `parent` = %d ",
-				dbesc(datetime_convert()),
-				intval($parent)
-			);
-
-			// Inherit ACL's from the parent item.
-
-			$r = q("UPDATE `item` SET `allow_cid` = '%s', `allow_gid` = '%s', `deny_cid` = '%s', `deny_gid` = '%s', `item_private` = %d
-				WHERE `id` = %d LIMIT 1",
-				dbesc($parent_item['allow_cid']),
-				dbesc($parent_item['allow_gid']),
-				dbesc($parent_item['deny_cid']),
-				dbesc($parent_item['deny_gid']),
-				intval($parent_item['item_private']),
-				intval($post_id)
-			);
-
 			if($datarray['owner_xchan'] != $datarray['author_xchan']) {
 				notification(array(
 					'type'         => NOTIFY_COMMENT,
@@ -824,7 +761,6 @@ function item_post(&$a) {
 				));
 			
 			}
-
 		}
 		else {
 			$parent = $post_id;
@@ -842,24 +778,9 @@ function item_post(&$a) {
 			}
 		}
 
-		// fallback so that parent always gets set to non-zero.
-
-		if(! $parent)
-			$parent = $post_id;
-
-		$r = q("UPDATE `item` SET `parent` = %d, `parent_mid` = '%s', `changed` = '%s'
-			WHERE `id` = %d LIMIT 1",
-			intval($parent),
-			dbesc(($parent == $post_id) ? $mid : $parent_item['mid']),
-			dbesc(datetime_convert()),
-			intval($post_id)
-		);
-
 		// photo comments turn the corresponding item visible to the profile wall
 		// This way we don't see every picture in your new photo album posted to your wall at once.
 		// They will show up as people comment on them.
-
-// fixme set item visible as well
 
 		if($parent_item['item_restrict'] & ITEM_HIDDEN) {
 			$r = q("UPDATE `item` SET `item_restrict` = %d WHERE `id` = %d LIMIT 1",
