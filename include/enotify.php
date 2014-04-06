@@ -102,7 +102,7 @@ function notification($params) {
 		if(array_key_exists('item',$params) && (! visible_activity($params['item'])))
 			return;
 
-		$parent_id = $params['parent'];
+		$parent_mid = $params['parent_mid'];
 
 		// Check to see if there was already a notify for this post.
 		// If so don't create a second notification
@@ -123,9 +123,9 @@ function notification($params) {
 
 		$p = null;
 
-		if($params['otype'] === 'item' && $parent_id) {
-			$p = q("select * from item where id = %d and uid = %d limit 1",
-				intval($parent_id),
+		if($params['otype'] === 'item' && $parent_mid) {
+			$p = q("select * from item where mid = '%s' and uid = %d limit 1",
+				dbesc($parent_mid),
 				intval($recip['channel_id'])
 			);
 		}
@@ -135,6 +135,7 @@ function notification($params) {
 
 		$item_post_type = item_post_type($p[0]);
 		$private = $p[0]['item_private'];
+		$parent_id = $p[0]['id'];
 
 		//$possess_desc = str_replace('<!item_type!>',$possess_desc);
 
@@ -338,7 +339,7 @@ function notification($params) {
 	$datarray['aid']    = $recip['channel_account_id'];
 	$datarray['uid']    = $recip['channel_id'];
 	$datarray['link']   = $itemlink;
-	$datarray['parent'] = $parent_id;
+	$datarray['parent'] = $parent_mid;
 	$datarray['type']   = $params['type'];
 	$datarray['verb']   = $params['verb'];
 	$datarray['otype']  = $params['otype'];
@@ -355,7 +356,7 @@ function notification($params) {
 	// create notification entry in DB
 
 	$r = q("insert into notify (hash,name,url,photo,date,aid,uid,link,parent,type,verb,otype)
-		values('%s','%s','%s','%s','%s',%d,%d,'%s',%d,%d,'%s','%s')",
+		values('%s','%s','%s','%s','%s',%d,%d,'%s','%s',%d,'%s','%s')",
 		dbesc($datarray['hash']),
 		dbesc($datarray['name']),
 		dbesc($datarray['url']),
@@ -364,7 +365,7 @@ function notification($params) {
 		intval($datarray['aid']),
 		intval($datarray['uid']),
 		dbesc($datarray['link']),
-		intval($datarray['parent']),
+		dbesc($datarray['parent']),
 		intval($datarray['type']),
 		dbesc($datarray['verb']),
 		dbesc($datarray['otype'])
@@ -432,7 +433,7 @@ function notification($params) {
 		$datarray['sitename']     = $sitename;
 		$datarray['siteurl']      = $siteurl;
 		$datarray['type']         = $params['type'];
-		$datarray['parent']       = $params['parent'];
+		$datarray['parent']       = $params['parent_mid'];
 		$datarray['source_name']  = $sender['xchan_name'];
 		$datarray['source_link']  = $sender['xchan_url'];
 		$datarray['source_photo'] = $sender['xchan_photo_s'];
