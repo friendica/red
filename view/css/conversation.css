@@ -164,11 +164,6 @@
 	padding: 3px 20px;
 }
 
-.wall-item-location {
-	text-overflow: ellipsis;
-	max-width: 30%;
-}
-
 .wall-item-author {
 	margin-top: 10px;
 }

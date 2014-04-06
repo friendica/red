@@ -1296,7 +1296,7 @@ function render_location_default($item) {
 
 	if($coord) {
 		if($location)
-			$location .= '<br /><span class="smalltext">(' . $coord . ')</span>';
+			$location .= '&nbsp;<span class="smalltext">(' . $coord . ')</span>';
 		else
 			$location = '<span class="smalltext">' . $coord . '</span>';
 	}

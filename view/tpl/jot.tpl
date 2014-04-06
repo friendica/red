@@ -51,11 +51,11 @@
 				<button id="profile-audio-wrapper" class="btn btn-default btn-sm" style="display: {{$visitor}};" title="{{$audio}}" onclick="jotAudioURL();return false;">
 					<i id="profile-audio" class="icon-volume-up jot-icons"></i>
 				</button>
-				<button id="profile-location-wrapper" class="btn btn-default btn-sm" style="display: {{$visitor}};" title="{{$setloc}}" onclick="jotGetLocation();return false;">
-					<i id="profile-location" class="icon-globe jot-icons"></i>
-				</button>
 				<button id="profile-nolocation-wrapper" class="btn btn-default btn-sm" style="display: none;" title="{{$noloc}}" onclick="jotClearLocation();return false;">
 					<i id="profile-nolocation" class="icon-circle-blank jot-icons"></i>
+				</button>
+				<button id="profile-location-wrapper" class="btn btn-default btn-sm" style="display: {{$visitor}};" title="{{$setloc}}" onclick="jotGetLocation();return false;">
+					<i id="profile-location" class="icon-globe jot-icons"></i>
 				</button>
 				<button id="profile-expire-wrapper" class="btn btn-default btn-sm" style="display: {{$feature_expire}};" title="{{$expires}}" onclick="jotGetExpiry();return false;">
 					<i id="profile-expires" class="icon-eraser jot-icons"></i>
