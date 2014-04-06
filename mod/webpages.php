@@ -73,9 +73,10 @@ function webpages_content(&$a) {
 		else
 			$channel_acl = array();
 
+		require_once('include/conversation.php');
+		$o = profile_tabs($a,true);
 
-
-
+		$o .= '<h2>' . t('Webpages') . '</h2>';
 
 		$x = array(
 			'webpage' => ITEM_WEBPAGE,

@@ -884,8 +884,12 @@ class RedBrowser extends DAV\Browser\Plugin {
 			date_default_timezone_set($this->auth->timezone);
 
         $version = '';
+		require_once('include/conversation.php');
 
-        $html = "
+		if($this->auth->channel_name)
+			$html = profile_tabs(get_app(),(($this->auth->channel_id == local_user()) ? true : false),$this->auth->channel_name);
+
+        $html .= "
 <body>
   <h1>Index for " . $this->escapeHTML($path) . "/</h1>
   <table>

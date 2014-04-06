@@ -1472,6 +1472,8 @@ function profile_tabs($a, $is_owner=False, $nickname=Null){
 
 	if (is_null($nickname))
 		$nickname  = $channel['channel_address'];
+
+	$uid = (($a->profile['profile_uid']) ? $a->profile['profile_uid'] : local_user());
 		
 	if(x($_GET,'tab'))
 		$tab = notags(trim($_GET['tab']));
@@ -1489,7 +1491,7 @@ function profile_tabs($a, $is_owner=False, $nickname=Null){
 		),
 	);
 
-	$p = get_all_perms($a->profile['profile_uid'],get_observer_hash());
+	$p = get_all_perms($uid,get_observer_hash());
 
 	if($p['view_profile']) {
 		$tabs[] = array(
@@ -1550,7 +1552,7 @@ function profile_tabs($a, $is_owner=False, $nickname=Null){
 	}
 
 
-	if($is_owner && feature_enabled($a->profile['profile_uid'],'webpages')) {
+	if($is_owner && feature_enabled($uid,'webpages')) {
 		$tabs[] = array(
 			'label' => t('Webpages'),
 			'url'	=> $a->get_baseurl() . '/webpages/' . $nickname,

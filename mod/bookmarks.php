@@ -49,8 +49,13 @@ function bookmarks_content(&$a) {
 
 
 	require_once('include/menu.php');
+	require_once('include/conversation.php');
 
-	$o = '<h3>' . t('My Bookmarks') . '</h3>';
+	$channel = $a->get_channel();
+
+	$o = profile_tabs($a,true,$channel['channel_address']);
+
+	$o .= '<h3>' . t('My Bookmarks') . '</h3>';
 
 	$x = menu_list(local_user(),'',MENU_BOOKMARK);
 

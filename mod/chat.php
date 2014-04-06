@@ -145,6 +145,7 @@ function chat_content(&$a) {
 
 
 	if(argc() > 2 && intval(argv(2))) {
+
 		$room_id = intval(argv(2));
 		$bookmark_link = get_bookmark_link($ob);
 
@@ -210,12 +211,13 @@ function chat_content(&$a) {
 
 
 
+	require_once('include/conversation.php');
 
-
+	$o = profile_tabs($a,((local_user() && local_user() == $a->profile['profile_uid']) ? true : false));
 
 	require_once('include/widgets.php');
 
-	$o = replace_macros(get_markup_template('chatrooms.tpl'), array(
+	$o .= replace_macros(get_markup_template('chatrooms.tpl'), array(
 		'$header' => sprintf( t('%1$s\'s Chatrooms'), $a->profile['name']),
 		'$baseurl' => z_root(),
 		'$nickname' => $channel['channel_address'],

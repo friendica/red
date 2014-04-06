@@ -163,7 +163,10 @@ function events_content(&$a) {
 
 	$o ="";
 	// tabs
-	$tabs = profile_tabs($a, True);	
+
+	$channel = $a->get_channel();
+
+	$tabs = profile_tabs($a, True, $channel['channel_address']);	
 
 
 
