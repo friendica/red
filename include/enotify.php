@@ -18,8 +18,9 @@ function notification($params) {
 	}
 	if($params['to_xchan']) {
 		$y = q("select channel.*, account.* from channel left join account on channel_account_id = account_id
-			where channel_hash = '%s' limit 1",
-			dbesc($params['to_xchan'])
+			where channel_hash = '%s' and not (channel_pageflags & %d) limit 1",
+			dbesc($params['to_xchan']),
+			intval(PAGE_REMOVED)
 		);
 	}
 	if($x & $y) {

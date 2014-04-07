@@ -75,10 +75,16 @@ function new_contact($uid,$url,$channel,$interactive = false, $confirm = false) 
 			return $result;
 		}
 
+
 		// do we have an xchan and hubloc?
 		// If not, create them.	
 
 		$x = import_xchan($j);
+
+		if(array_key_exists('deleted',$j) && intval($j['deleted'])) {
+			$result['message'] = t('Channel was deleted and no longer exists.');
+			return $result;
+		}
 
 		if(! $x['success']) 
 			return $x;
