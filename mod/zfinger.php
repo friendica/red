@@ -94,10 +94,10 @@ function zfinger_init(&$a) {
 
 	$id = $e['channel_id'];
 
-	$special_channel = (($e['channel_pageflags'] & PAGE_PREMIUM) ? true : false);
-	$adult_channel   = (($e['channel_pageflags'] & PAGE_ADULT)   ? true : false);
-	$searchable      = (($e['channel_pageflags'] & PAGE_HIDDEN)  ? false : true);
-	$deleted         = (($e['channel_pageflags'] & PAGE_REMOVED) ? true : false);
+	$special_channel = (($e['channel_pageflags'] & PAGE_PREMIUM)  ? true : false);
+	$adult_channel   = (($e['channel_pageflags'] & PAGE_ADULT)    ? true : false);
+	$searchable      = (($e['channel_pageflags'] & PAGE_HIDDEN)   ? false : true);
+	$deleted         = (($e['xchan_flags'] & XCHAN_FLAGS_DELETED) ? true : false);
 
 	if(($e['xchan_flags'] & XCHAN_FLAGS_HIDDEN) || $deleted)
 		$searchable = false;
@@ -166,7 +166,8 @@ function zfinger_init(&$a) {
 	$ret['target_sig']     = $zsig;
 	$ret['searchable']     = $searchable;
 	$ret['adult_content']  = $adult_channel;
-	$ret['deleted']        = $deleted;	
+	if($deleted)
+		$ret['deleted']        = $deleted;	
 
 	// premium or other channel desiring some contact with potential followers before connecting.
 	// This is a template - %s will be replaced with the follow_url we discover for the return channel.

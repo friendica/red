@@ -632,13 +632,10 @@ function import_xchan($arr,$ud_flags = UPDATE_FLAGS_UPDATED) {
 		if($adult_changed)
 			$new_flags = $new_flags ^ XCHAN_FLAGS_SELFCENSORED;
 
-//		$deleted = (($r[0]['xchan_flags'] & XCHAN_FLAGS_DELETED) ? true : false);
-//		$deleted_changed =  ((intval($deleted) != intval($arr['deleted'])) ? true : false);
-//		if($deleted_changed)
-//			$new_flags = $new_flags ^ XCHAN_FLAGS_DELETED;
-
-
-
+		$deleted = (($r[0]['xchan_flags'] & XCHAN_FLAGS_DELETED) ? true : false);
+		$deleted_changed =  ((intval($deleted) != intval($arr['deleted'])) ? true : false);
+		if($deleted_changed)
+			$new_flags = $new_flags ^ XCHAN_FLAGS_DELETED;
 
 		if(($r[0]['xchan_name_date'] != $arr['name_updated']) 
 			|| ($r[0]['xchan_connurl'] != $arr['connections_url']) 
@@ -683,8 +680,8 @@ function import_xchan($arr,$ud_flags = UPDATE_FLAGS_UPDATED) {
 			$new_flags = 0;
 		if($arr['adult_content'])
 			$new_flags |= XCHAN_FLAGS_SELFCENSORED;
-//		if($arr['deleted'])
-//			$new_flags |= XCHAN_FLAGS_DELETED;
+		if(array_key_exists('deleted',$arr) && $arr['deleted'])
+			$new_flags |= XCHAN_FLAGS_DELETED;
 		
 		$x = q("insert into xchan ( xchan_hash, xchan_guid, xchan_guid_sig, xchan_pubkey, xchan_photo_mimetype,
 				xchan_photo_l, xchan_addr, xchan_url, xchan_connurl, xchan_follow, xchan_connpage, xchan_name, xchan_network, xchan_photo_date, xchan_name_date, xchan_flags)
