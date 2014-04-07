@@ -1763,6 +1763,7 @@ function check_webbie($arr) {
 				$str .= "'" . dbesc($y) . "'";
 			}
 		}
+
 		if(strlen($str)) {
 			$r = q("select channel_address from channel where channel_address in ( $str ) ");
 			if(count($r)) {
@@ -1771,8 +1772,9 @@ function check_webbie($arr) {
 				}
 			}
 			foreach($arr as $x) {
-				if(! in_array($x,$taken)) {
-					return $x;
+				$y = legal_webbie($x);
+				if(! in_array($y,$taken)) {
+					return $y;
 				}
 			}
 		}
