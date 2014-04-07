@@ -316,7 +316,7 @@ function connedit_content(&$a) {
 
 			array(
 				'label' => t('View Profile'),
-				'url'   => $a->get_baseurl(true) . '/chanview/?f=&cid=' . $contact['abook_id'], 
+				'url'   => chanlink_cid($contact['abook_id']), 
 				'sel'   => '',
 				'title' => sprintf( t('View %s\'s profile'), $contact['xchan_name']),
 			),

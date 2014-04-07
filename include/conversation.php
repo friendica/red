@@ -911,7 +911,7 @@ function item_photo_menu($item){
 		}
 	}
 
-    $profile_link = z_root() . "/chanview/?f=&hash=" . $item['author_xchan'];
+    $profile_link = chanlink_hash($item['author_xchan']);
 	$pm_url = $a->get_baseurl($ssl_state) . '/mail/new/?f=&hash=' . $item['author_xchan'];
 
 	if($a->contacts && array_key_exists($item['author_xchan'],$a->contacts))
@@ -964,13 +964,7 @@ function like_puller($a,$item,&$arr,$mode) {
 	$verb = (($mode === 'like') ? ACTIVITY_LIKE : ACTIVITY_DISLIKE);
 
 	if((activity_match($item['verb'],$verb)) && ($item['id'] != $item['parent'])) {
-		$url = $item['author']['xchan_url'];
-		if((local_user()) && (local_user() == $item['uid']) && ($item['network'] === 'dfrn') && (! $item['self']) && (link_compare($item['author-link'],$item['url']))) {
-			$url = $a->get_baseurl(true) . '/redir/' . $item['contact-id'];
-			$sparkle = ' class="sparkle" ';
-		}
-		else
-			$url = zid($url);
+		$url = chanlink_url($item['author']['xchan_url']);
 
 		if(! $item['thr_parent'])
 			$item['thr_parent'] = $item['parent_mid'];
@@ -981,7 +975,7 @@ function like_puller($a,$item,&$arr,$mode) {
 			$arr[$item['thr_parent']] = 1;
 		else
 			$arr[$item['thr_parent']] ++;
-		$arr[$item['thr_parent'] . '-l'][] = '<a href="'. $url . '"'. $sparkle .'>' . $item['author']['xchan_name'] . '</a>';
+		$arr[$item['thr_parent'] . '-l'][] = '<a href="'. $url . '">' . $item['author']['xchan_name'] . '</a>';
 	}
 	return;
 }

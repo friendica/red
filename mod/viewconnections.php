@@ -48,7 +48,7 @@ function viewconnections_content(&$a) {
 
 	foreach($r as $rr) {
 
-	    $url = zid($rr['xchan_url']);
+	    $url = chanlink_url($rr['xchan_url']);
 		if($url) {
 			$contacts[] = array(
 				'id' => $rr['abook_id'],
