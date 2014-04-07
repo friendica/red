@@ -375,16 +375,14 @@ function connections_content(&$a) {
 					'username' => $rr['xchan_name'],
 					'sparkle' => $sparkle,
 					'link' => z_root() . '/connedit/' . $rr['abook_id'],
-					'url' => $rr['xchan_url'],
+					'url' => chanlink_url($rr['xchan_url']),
 					'network' => network_to_name($rr['network']),
 				);
 			}
 		}
 	}
 	
-
-	$tpl = get_markup_template("contacts-template.tpl");
-	$o .= replace_macros($tpl,array(
+	$o .= replace_macros(get_markup_template('connections.tpl'),array(
 		'$header' => t('Connections') . (($head) ? ' - ' . $head : ''),
 		'$tabs' => $t,
 		'$total' => $total,
@@ -392,6 +390,7 @@ function connections_content(&$a) {
 		'$desc' => t('Search your connections'),
 		'$finding' => (($searching) ? t('Finding: ') . "'" . $search . "'" : ""),
 		'$submit' => t('Find'),
+		'$edit' => t('Edit'),
 		'$cmd' => $a->cmd,
 		'$contacts' => $contacts,
 		'$paginate' => paginate($a),
