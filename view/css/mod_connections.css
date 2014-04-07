@@ -107,7 +107,7 @@
 .contact-entry-wrapper {
 	float: left;
 	width: 120px;
-	height: 120px;
+	height: 150px;
 	padding: 10px;
 	margin: 8px 10px 0 0;
 	border-top: 1px solid #eee;
@@ -133,6 +133,7 @@
 	margin-right: 10px;
 	margin-bottom: 10px;
 	width: 120px;
+	height: 36px;
 	overflow: hidden;
 }
 
