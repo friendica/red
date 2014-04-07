@@ -1651,6 +1651,10 @@ header {
 .contact-block-content {
 	margin-top: 8px;
 }
+.contact-block-img.archived {
+	opacity: 0.3;
+	filter:alpha(opacity=30);
+}
 
 .profile-match-connect { margin-top: 5px; }
 

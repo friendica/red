@@ -373,7 +373,7 @@ function connections_content(&$a) {
 					'thumb' => $rr['xchan_photo_m'], 
 					'name' => $rr['xchan_name'],
 					'username' => $rr['xchan_name'],
-					'sparkle' => $sparkle,
+					'classes' => (($rr['abook_flags'] & ABOOK_FLAG_ARCHIVED) ? 'archived' : ''),
 					'link' => z_root() . '/connedit/' . $rr['abook_id'],
 					'url' => chanlink_url($rr['xchan_url']),
 					'network' => network_to_name($rr['network']),
