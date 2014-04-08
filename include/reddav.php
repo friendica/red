@@ -887,7 +887,7 @@ class RedBrowser extends DAV\Browser\Plugin {
 		require_once('include/conversation.php');
 
 		if($this->auth->channel_name)
-			$html = profile_tabs(get_app(),(($this->auth->channel_id == local_user()) ? true : false),$this->auth->channel_name);
+			$html = profile_tabs(get_app(),(($this->auth->owner_id == local_user()) ? true : false),$this->auth->owner_nick);
 
         $html .= "
 <body>

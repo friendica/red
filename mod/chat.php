@@ -213,7 +213,7 @@ function chat_content(&$a) {
 
 	require_once('include/conversation.php');
 
-	$o = profile_tabs($a,((local_user() && local_user() == $a->profile['profile_uid']) ? true : false));
+	$o = profile_tabs($a,((local_user() && local_user() == $a->profile['profile_uid']) ? true : false),$a->profile['channel_address']);
 
 	require_once('include/widgets.php');
 
