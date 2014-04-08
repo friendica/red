@@ -74,11 +74,11 @@
 				<div id="profile-rotator"></div>
 			</div>
 			<div id="profile-jot-submit-right" class="btn-group pull-right">
-			{{if $showacl}}
-			<div class="btn btn-default btn-sm" id="profile-jot-perms" style="display: {{$pvisit}};" title="{{$permset}}" >
-				<a href="#profile-jot-acl-wrapper" id="jot-perms-icon" class="icon {{$lockstate}}"></a>{{$bang}}
-			</div>
-			{{/if}}
+				{{if $showacl}}
+				<div class="btn btn-default btn-sm" id="profile-jot-perms" style="display: {{$pvisit}};" title="{{$permset}}" >
+					<a href="#profile-jot-acl-wrapper" id="jot-perms-icon" class="icon {{$lockstate}}"></a>{{$bang}}
+				</div>
+				{{/if}}
 				{{if $preview}}
 				<button class="btn btn-default btn-sm" onclick="preview_post();return false;" title="{{$preview}}">
 					<i class="icon-eye-open jot-icons" ></i>
@@ -88,7 +88,7 @@
 			</div>
 			<div id="profile-jot-perms-end"></div>
 			<div id="profile-jot-plugin-wrapper">
-			{{$jotplugins}}
+				{{$jotplugins}}
 			</div>
 			<div style="display: none;">
 				<div id="profile-jot-acl-wrapper" style="width:auto;height:auto;overflow:auto;">
