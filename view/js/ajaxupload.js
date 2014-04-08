@@ -264,6 +264,9 @@
             action: 'upload.php',
             // File upload name
             name: 'userfile',
+
+			title: 'Upload',
+
             // Additional data to send
             data: {},
             // Submit file as soon as it's selected
@@ -380,6 +383,7 @@
                         
             var input = document.createElement("input");
             input.setAttribute('type', 'file');
+			input.setAttribute('title',this._settings.title);
             input.setAttribute('name', this._settings.name);
 
             addStyles(input, {

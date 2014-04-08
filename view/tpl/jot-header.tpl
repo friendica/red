@@ -112,11 +112,14 @@ function enableOnUser(){
 		/* enable tinymce on focus and click */
 		$("#profile-jot-text").focus(enableOnUser);
 		$("#profile-jot-text").click(enableOnUser);
+		var upload_title = $('#wall-image-upload').attr('title');
+		var attach_title = $('#wall-file-upload').attr('title');
 
 		var uploader = new window.AjaxUpload(
 			'wall-image-upload',
 			{ action: '{{$baseurl}}/wall_upload/{{$nickname}}',
 				name: 'userfile',
+				title: upload_title,
 				onSubmit: function(file,ext) { $('#profile-rotator').spin('tiny'); },
 				onComplete: function(file,response) {
 					addeditortext(response);
@@ -129,6 +132,7 @@ function enableOnUser(){
 			'wall-file-upload',
 			{ action: '{{$baseurl}}/wall_attach/{{$nickname}}',
 				name: 'userfile',
+				title: attach_title,
 				onSubmit: function(file,ext) { $('#profile-rotator').spin('tiny'); },
 				onComplete: function(file,response) {
 					addeditortext(response);
