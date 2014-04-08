@@ -36,33 +36,39 @@
 		</div>
 		<div id="profile-jot-submit-wrapper" class="jothidden">
 			<div id="profile-jot-submit-left" class="btn-group pull-left">
-				<button id="wall-image-upload" class="btn btn-default btn-sm" title="{{$upload}}" style="display: {{$visitor}};" >
+				{{if $visitor}}
+				<button id="wall-image-upload" class="btn btn-default btn-sm" title="{{$upload}}" >
 					<i class="icon-camera jot-icons"></i>
 				</button>
-				<button id="wall-file-upload" class="btn btn-default btn-sm" title="{{$attach}}" style="display: {{$visitor}};" >
+				<button id="wall-file-upload" class="btn btn-default btn-sm" title="{{$attach}}" >
 					<i id="wall-file-upload" class="icon-paper-clip jot-icons"></i>
 				</button>
-				<button id="profile-link-wrapper" class="btn btn-default btn-sm" style="display: {{$visitor}};" title="{{$weblink}}" ondragenter="linkdropper(event);" ondragover="linkdropper(event);" ondrop="linkdrop(event);"  onclick="jotGetLink(); return false;">
+				<button id="profile-link-wrapper" class="btn btn-default btn-sm" title="{{$weblink}}" ondragenter="linkdropper(event);" ondragover="linkdropper(event);" ondrop="linkdrop(event);"  onclick="jotGetLink(); return false;">
 					<i id="profile-link" class="icon-link jot-icons"></i>
 				</button>
-				<button id="profile-video-wrapper" class="btn btn-default btn-sm" style="display: {{$visitor}};" title="{{$video}}" onclick="jotVideoURL();return false;">
+				<button id="profile-video-wrapper" class="btn btn-default btn-sm" title="{{$video}}" onclick="jotVideoURL();return false;">
 					<i id="profile-video" class="icon-facetime-video jot-icons"></i>
 				</button>
-				<button id="profile-audio-wrapper" class="btn btn-default btn-sm" style="display: {{$visitor}};" title="{{$audio}}" onclick="jotAudioURL();return false;">
+				<button id="profile-audio-wrapper" class="btn btn-default btn-sm" title="{{$audio}}" onclick="jotAudioURL();return false;">
 					<i id="profile-audio" class="icon-volume-up jot-icons"></i>
 				</button>
 				<button id="profile-nolocation-wrapper" class="btn btn-default btn-sm" style="display: none;" title="{{$noloc}}" onclick="jotClearLocation();return false;">
 					<i id="profile-nolocation" class="icon-circle-blank jot-icons"></i>
 				</button>
-				<button id="profile-location-wrapper" class="btn btn-default btn-sm" style="display: {{$visitor}};" title="{{$setloc}}" onclick="jotGetLocation();return false;">
+				<button id="profile-location-wrapper" class="btn btn-default btn-sm" title="{{$setloc}}" onclick="jotGetLocation();return false;">
 					<i id="profile-location" class="icon-globe jot-icons"></i>
 				</button>
-				<button id="profile-expire-wrapper" class="btn btn-default btn-sm" style="display: {{$feature_expire}};" title="{{$expires}}" onclick="jotGetExpiry();return false;">
+				{{/if}}
+				{{if $feature_expire}}
+				<button id="profile-expire-wrapper" class="btn btn-default btn-sm" title="{{$expires}}" onclick="jotGetExpiry();return false;">
 					<i id="profile-expires" class="icon-eraser jot-icons"></i>
 				</button>
-				<button id="profile-encrypt-wrapper" class="btn btn-default btn-sm" style="display: {{$feature_encrypt}};" title="{{$encrypt}}" onclick="red_encrypt('{{$cipher}}','#profile-jot-text',$('#profile-jot-text').val());return false;">
+				{{/if}}
+				{{if $feature_encrypt}}
+				<button id="profile-encrypt-wrapper" class="btn btn-default btn-sm" title="{{$encrypt}}" onclick="red_encrypt('{{$cipher}}','#profile-jot-text',$('#profile-jot-text').val());return false;">
 					<i id="profile-encrypt" class="icon-key jot-icons"></i>
 				</button>
+				{{/if}}
 			</div>
 			<div id="profile-rotator-wrapper" style="display: {{$visitor}};" >
 				<div id="profile-rotator"></div>

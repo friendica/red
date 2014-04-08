@@ -78,7 +78,7 @@ function layouts_content(&$a) {
 		'nickname' => $a->profile['channel_address'],
 		'lockstate' => (($group || $cid || $channel['channel_allow_cid'] || $channel['channel_allow_gid'] || $channel['channel_deny_cid'] || $channel['channel_deny_gid']) ? 'lock' : 'unlock'),
 		'bang' => (($group || $cid) ? '!' : ''),
-		'visitor' => 'none',
+		'visitor' => false,
 		'nopreview' => 1,
 		'ptlabel' => t('Layout Name'),
 		'profile_uid' => intval($owner),

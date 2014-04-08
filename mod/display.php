@@ -57,7 +57,7 @@ function display_content(&$a, $update = 0, $load = false) {
 
 			'acl' => populate_acl($channel_acl, false),
 			'bang' => '',
-			'visitor' => 'block',
+			'visitor' => true,
 			'profile_uid' => local_user(),
 			'return_path' => 'channel/' . $channel['channel_address']
 		);

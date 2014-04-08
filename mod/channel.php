@@ -115,7 +115,7 @@ function channel_content(&$a, $update = 0, $load = false) {
             	'acl' => (($is_owner) ? populate_acl($channel_acl) : ''),
 				'showacl' => (($is_owner) ? 'yes' : ''),
 	            'bang' => '',
-    	        'visitor' => (($is_owner || $observer) ? 'block' : 'none'),
+				'visitor' => (($is_owner || $observer) ? true : false),
         	    'profile_uid' => $a->profile['profile_uid']
         	);
 

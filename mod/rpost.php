@@ -107,7 +107,7 @@ function rpost_content(&$a) {
 		'acl' => populate_acl($channel, $false),
 		'bang' => '',
 //		'channel_select' => true,
-		'visitor' => 'block',
+		'visitor' => true,
 		'profile_uid' => local_user(),
 		'title' => $_REQUEST['title'],
 		'body' => $_REQUEST['body'],

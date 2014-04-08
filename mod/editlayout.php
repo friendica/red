@@ -119,7 +119,7 @@ function editlayout_content(&$a) {
 		'$post_id' => $post_id,
 		'$baseurl' => $a->get_baseurl(),
 		'$defloc' => $channel['channel_location'],
-		'$visitor' => 'none',
+		'$visitor' => false,
 		'$pvisit' => 'none',
 		'$public' => t('Public post'),
 		'$jotnets' => $jotnets,
@@ -137,7 +137,7 @@ function editlayout_content(&$a) {
 		'$jotplugins' => $jotplugins,
 		'$sourceapp' => t($a->sourcename),
 		'$defexpire' => '',
-		'$feature_expire' => 'none',
+		'$feature_expire' => false,
 		'$expires' => t('Set expiration date'),
 	));
 	
