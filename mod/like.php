@@ -48,12 +48,20 @@ function like_content(&$a) {
 
 	$item = $r[0];
 
+	$sys = get_sys_channel();
+
 	$owner_uid = $item['uid'];
 	$owner_aid = $item['aid'];
 
-	if(! perm_is_allowed($owner_uid,$observer['xchan_hash'],'post_comments')) {
-		notice( t('Permission denied') . EOL);
-		killme();
+	// if this is a "discover" item, (item['uid'] is the sys channel),
+	// fallback to the item comment policy, which should've been
+	// respected when generating the conversation thread.
+	// Even if the activity is rejected by the item owner, it should still get attached
+	// to the local discover conversation on this site. 
+
+	if(($owner_uid != $sys['channel_id']) && (! perm_is_allowed($owner_uid,$observer['xchan_hash'],'post_comments'))) {
+			notice( t('Permission denied') . EOL);
+			killme();
 	}
 
 	$r = q("select * from xchan where xchan_hash = '%s' limit 1",
