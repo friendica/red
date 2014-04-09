@@ -75,7 +75,7 @@
 			</div>
 			<div id="profile-jot-submit-right" class="btn-group pull-right">
 				{{if $showacl}}
-				<a href="#profile-jot-acl-wrapper" class="btn btn-default btn-sm jot-icons icon-{{$lockstate}}" id="jot-perms-icon" title="{{$permset}}" style="display: {{$pvisit}};"></a>{{$bang}}
+				<a href="#profile-jot-acl-wrapper" class="btn btn-default btn-sm jot-icons icon-{{$lockstate}}" id="jot-perms-icon" title="{{$permset}}"></a>{{$bang}}
 				{{/if}}
 				{{if $preview}}
 				<button class="btn btn-default btn-sm" onclick="preview_post();return false;" title="{{$preview}}">

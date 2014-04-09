@@ -126,7 +126,6 @@ function editpost_content(&$a) {
 		'$baseurl' => $a->get_baseurl(),
 		'$defloc' => $channel['channel_location'],
 		'$visitor' => false,
-		'$pvisit' => 'none',
 		'$public' => t('Public post'),
 		'$jotnets' => $jotnets,
 		'$title' => htmlspecialchars($itm[0]['title'],ENT_COMPAT,'UTF-8'),
