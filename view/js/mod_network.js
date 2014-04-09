@@ -5,5 +5,6 @@ $(document).ready(function() {
 		minChars: 2,
 		id: 'search-text-ac',
 	});
+	$('.jslider-scale ins').addClass('hidden-xs');
 }); 
 
