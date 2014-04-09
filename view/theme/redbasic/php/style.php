@@ -18,20 +18,21 @@ if(! $a->install) {
 		$nav_active_icon_colour = get_pconfig($uid, "redbasic", "nav_active_icon_colour");
 		$narrow_navbar = get_pconfig($uid,'redbasic','narrow_navbar');
 		$banner_colour = get_pconfig($uid,'redbasic','banner_colour');
-	    $link_colour = get_pconfig($uid, "redbasic", "link_colour");	
+		$link_colour = get_pconfig($uid, "redbasic", "link_colour");	
 		$schema = get_pconfig($uid,'redbasic','schema');
-	    $bgcolour = get_pconfig($uid, "redbasic", "background_colour");	
-	    $background_image = get_pconfig($uid, "redbasic", "background_image");	
+		$bgcolour = get_pconfig($uid, "redbasic", "background_colour");	
+		$background_image = get_pconfig($uid, "redbasic", "background_image");	
 		$toolicon_colour = get_pconfig($uid,'redbasic','toolicon_colour');
 		$toolicon_activecolour = get_pconfig($uid,'redbasic','toolicon_activecolour');
-	    $item_colour = get_pconfig($uid, "redbasic", "item_colour");	
-	    $item_opacity = get_pconfig($uid, "redbasic", "item_opacity");	
-	    $body_font_size = get_pconfig($uid, "redbasic", "body_font_size");	
-	    $font_size = get_pconfig($uid, "redbasic", "font_size");	
-	    $font_colour = get_pconfig($uid, "redbasic", "font_colour");	
-	    $radius = get_pconfig($uid, "redbasic", "radius");	
-	    $shadow = get_pconfig($uid,"redbasic","photo_shadow");
-	    $converse_width=get_pconfig($uid,"redbasic","converse_width");
+		$item_colour = get_pconfig($uid, "redbasic", "item_colour");	
+		$item_opacity = get_pconfig($uid, "redbasic", "item_opacity");	
+		$body_font_size = get_pconfig($uid, "redbasic", "body_font_size");	
+		$font_size = get_pconfig($uid, "redbasic", "font_size");	
+		$font_colour = get_pconfig($uid, "redbasic", "font_colour");	
+		$radius = get_pconfig($uid, "redbasic", "radius");	
+		$shadow = get_pconfig($uid,"redbasic","photo_shadow");
+		$converse_width=get_pconfig($uid,"redbasic","converse_width");
+		$converse_center=get_pconfig($uid,"redbasic","converse_center");
 		$nav_min_opacity=get_pconfig($uid,'redbasic','nav_min_opacity');
 		$sloppy_photos=get_pconfig($uid,'redbasic','sloppy_photos');
 		$top_photo=get_pconfig($uid,'redbasic','top_photo');
@@ -116,8 +117,9 @@ if(! $a->install) {
 		$shadow = "0";
 	if(! $active_colour)
 		$active_colour = '#FFFFFF';
-    if (! $converse_width)
-    	$converse_width="1024px";
+	if (! $converse_width) {
+		$converse_width="1024px";
+	}
 	if(! $top_photo)
 		$top_photo = '48px';
 	$pmenu_top = intval($top_photo) - 16 . 'px';
@@ -140,6 +142,8 @@ if(! $a->install) {
 // Apply the settings
 	if(file_exists('view/theme/redbasic/css/style.css')) {
 		$x = file_get_contents('view/theme/redbasic/css/style.css');
+
+$body_width = (231 + $converse_width) . 'px'; // aside is 231px + converse width; have to find a way for calculation with 'px', cannot handle '%'
 
 $options = array (
 '$nav_bg' => $nav_bg,
@@ -173,7 +177,8 @@ $options = array (
 '$pmenu_top' => $pmenu_top,
 '$pmenu_reply' => $pmenu_reply,
 '$wwtop' => $wwtop,
-'$comment_indent' => $comment_indent
+'$comment_indent' => $comment_indent,
+'$body_width' => $body_width
 );
 
 echo str_replace(array_keys($options), array_values($options), $x);    
@@ -184,4 +189,8 @@ if($sloppy_photos && file_exists('view/theme/redbasic/css/sloppy_photos.css')) {
 } 
 if($narrow_navbar && file_exists('view/theme/redbasic/css/narrow_navbar.css')) {
 	echo file_get_contents('view/theme/redbasic/css/narrow_navbar.css');
+} 
+if($converse_center && file_exists('view/theme/redbasic/css/converse_center.css')) {
+	$x = file_get_contents('view/theme/redbasic/css/converse_center.css');
+	echo str_replace(array_keys($options), array_values($options), $x);
 } 

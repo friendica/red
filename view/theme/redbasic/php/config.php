@@ -6,7 +6,7 @@ function theme_content(&$a) {
 	$arr = array();
 
 	$arr['schema'] = get_pconfig(local_user(),'redbasic', 'schema' );
-    $arr['narrow_navbar'] = get_pconfig(local_user(),'redbasic', 'narrow_navbar' );
+	$arr['narrow_navbar'] = get_pconfig(local_user(),'redbasic', 'narrow_navbar' );
 	$arr['nav_bg'] = get_pconfig(local_user(),'redbasic', 'nav_bg' );
 	$arr['nav_gradient_top'] = get_pconfig(local_user(),'redbasic', 'nav_gradient_top' );
 	$arr['nav_gradient_bottom'] = get_pconfig(local_user(),'redbasic', 'nav_gradient_bottom' );
@@ -29,6 +29,7 @@ function theme_content(&$a) {
 	$arr['radius'] = get_pconfig(local_user(),'redbasic', 'radius' );
 	$arr['shadow'] = get_pconfig(local_user(),'redbasic', 'photo_shadow' );
 	$arr['converse_width']=get_pconfig(local_user(),"redbasic","converse_width");
+	$arr['converse_center']=get_pconfig(local_user(),"redbasic","converse_center");
 	$arr['nav_min_opacity']=get_pconfig(local_user(),"redbasic","nav_min_opacity");
 	$arr['top_photo']=get_pconfig(local_user(),"redbasic","top_photo");
 	$arr['reply_photo']=get_pconfig(local_user(),"redbasic","reply_photo");
@@ -64,6 +65,7 @@ function theme_post(&$a) {
 		set_pconfig(local_user(), 'redbasic', 'radius', $_POST['redbasic_radius']);
 		set_pconfig(local_user(), 'redbasic', 'photo_shadow', $_POST['redbasic_shadow']);
 		set_pconfig(local_user(), 'redbasic', 'converse_width', $_POST['redbasic_converse_width']);
+		set_pconfig(local_user(), 'redbasic', 'converse_center', $_POST['redbasic_converse_center']);
 		set_pconfig(local_user(), 'redbasic', 'nav_min_opacity', $_POST['redbasic_nav_min_opacity']);
 		set_pconfig(local_user(), 'redbasic', 'top_photo', $_POST['redbasic_top_photo']);
 		set_pconfig(local_user(), 'redbasic', 'reply_photo', $_POST['redbasic_reply_photo']);
@@ -118,6 +120,7 @@ if(feature_enabled(local_user(),'expert'))
 		'$radius' => array('redbasic_radius', t('Set radius of corners'), $arr['radius']),
 		'$shadow' => array('redbasic_shadow', t('Set shadow depth of photos'), $arr['shadow']),
 		'$converse_width' => array('redbasic_converse_width',t('Set maximum width of conversation regions'),$arr['converse_width']),
+		'$converse_center' => array('redbasic_converse_center',t('Center conversation regions'),$arr['converse_center']),
 		'$nav_min_opacity' => array('redbasic_nav_min_opacity',t('Set minimum opacity of nav bar - to hide it'),$arr['nav_min_opacity']),
 		'$top_photo' => array('redbasic_top_photo', t('Set size of conversation author photo'), $arr['top_photo']),
 		'$reply_photo' => array('redbasic_reply_photo', t('Set size of followup author photos'), $arr['reply_photo']),
