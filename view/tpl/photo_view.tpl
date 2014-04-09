@@ -53,7 +53,7 @@
 	<div id="photo-edit-rotate-end"></div>
 
 	<div id="settings-default-perms" class="settings-default-perms" >
-		<span id="jot-perms-icon" class="icon {{$edit.lockstate}}" ></span>
+		<span id="jot-perms-icon" class="{{$edit.lockstate}}" ></span>
 		<a href="#profile-jot-acl-wrapper" id="settings-default-perms-menu" >{{$edit.permissions}}</a>
 		<div id="settings-default-perms-menu-end"></div>
 		<div id="settings-default-perms-select" style="display: none; margin-bottom: 20px" >

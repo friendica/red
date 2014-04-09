@@ -70,14 +70,12 @@
 				</button>
 				{{/if}}
 			</div>
-			<div id="profile-rotator-wrapper" style="display: {{$visitor}};" >
+			<div id="profile-rotator-wrapper">
 				<div id="profile-rotator"></div>
 			</div>
 			<div id="profile-jot-submit-right" class="btn-group pull-right">
 				{{if $showacl}}
-				<div class="btn btn-default btn-sm" id="profile-jot-perms" style="display: {{$pvisit}};" title="{{$permset}}" >
-					<a href="#profile-jot-acl-wrapper" id="jot-perms-icon" class="icon {{$lockstate}}"></a>{{$bang}}
-				</div>
+				<a href="#profile-jot-acl-wrapper" class="btn btn-default btn-sm jot-icons icon-{{$lockstate}}" id="jot-perms-icon" title="{{$permset}}" style="display: {{$pvisit}};"></a>{{$bang}}
 				{{/if}}
 				{{if $preview}}
 				<button class="btn btn-default btn-sm" onclick="preview_post();return false;" title="{{$preview}}">
@@ -105,7 +103,7 @@
 </div>
 
 <!-- Modal for item expiry-->
-<div class="modal fade" id="expiryModal" tabindex="-1" role="dialog" aria-labelledby="expiryModalLabel" aria-hidden="true">
+<div class="modal" id="expiryModal" tabindex="-1" role="dialog" aria-labelledby="expiryModalLabel" aria-hidden="true">
   <div class="modal-dialog">
     <div class="modal-content">
       <div class="modal-header">
