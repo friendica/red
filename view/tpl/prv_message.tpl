@@ -37,14 +37,16 @@
 	<div id="prvmail-link-wrapper" >
 		<i id="prvmail-link" class="icon-link jot-icons" title="{{$insert}}" onclick="jotGetLink(); return false;"></i>
 	</div> 
-
-    <div id="prvmail-expire-wrapper" style="display: {{$feature_expire}};" >
-        <i id="prvmail-expires" class="icon-eraser jot-icons" title="{{$expires}}" onclick="prvmailGetExpiry();return false;"></i>
-    </div>
-	<div id="prvmail-encrypt-wrapper" style="display: {{$feature_encrypt}};" >
+	{{if $feature_expire}}
+	<div id="prvmail-expire-wrapper" >
+		<i id="prvmail-expires" class="icon-eraser jot-icons" title="{{$expires}}" onclick="prvmailGetExpiry();return false;"></i>
+	</div>
+	{{/if}}
+	{{if $feature_encrypt}}
+	<div id="prvmail-encrypt-wrapper" >
 		<i id="prvmail-encrypt" class="icon-key jot-icons" title="{{$encrypt}}" onclick="red_encrypt('{{$cipher}}','#prvmail-text',$('#prvmail-text').val());return false;"></i>
 	</div> 
-
+	{{/if}}
 	<div id="prvmail-rotator-wrapper" >
 		<img id="prvmail-rotator" src="images/rotator.gif" alt="{{$wait}}" title="{{$wait}}" style="display: none;" />
 	</div> 

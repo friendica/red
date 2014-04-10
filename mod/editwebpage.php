@@ -156,10 +156,9 @@ function editwebpage_content(&$a) {
 		'$post_id' => $post_id,
 		'$baseurl' => $a->get_baseurl(),
 		'$defloc' => $itm[0]['location'],
-    	'$visitor' => ($is_owner) ? 'block' : 'none',
+		'$visitor' => ($is_owner) ? true : false,
 		'$acl' => populate_acl($itm[0]),
-		'$showacl' => true,
-		'$pvisit' => ($is_owner) ? 'block' : 'none',
+		'$showacl' => ($is_owner) ? true : false,
 		'$public' => t('Public post'),
 		'$jotnets' => $jotnets,
 		'$mimeselect' => $mimeselect,
@@ -177,7 +176,7 @@ function editwebpage_content(&$a) {
 		'$jotplugins' => $jotplugins,
 		'$sourceapp' => t($a->sourcename),
 		'$defexpire' => '',
-		'$feature_expire' => 'none',
+		'$feature_expire' => false,
 		'$expires' => t('Set expiration date'),
 
 	));

@@ -85,7 +85,7 @@ function webpages_content(&$a) {
 			'lockstate' => (($group || $cid || $channel['channel_allow_cid'] || $channel['channel_allow_gid'] || $channel['channel_deny_cid'] || $channel['channel_deny_gid']) ? 'lock' : 'unlock'),
 			'bang' => (($group || $cid) ? '!' : ''),
 			'acl' => ((local_user() && local_user() == $owner) ? populate_acl($channel_acl) : ''),
-			'visitor' => 'block',
+			'visitor' => true,
 			'profile_uid' => intval($owner),
 			'mimetype' => $mimetype,			
 			'layout' => $layout,

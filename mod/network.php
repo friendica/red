@@ -136,7 +136,7 @@ function network_content(&$a, $update = 0, $load = false) {
 			'lockstate' => (($group || $cid || $channel['channel_allow_cid'] || $channel['channel_allow_gid'] || $channel['channel_deny_cid'] || $channel['channel_deny_gid']) ? 'lock' : 'unlock'),
 			'acl' => populate_acl((($group || $cid) ? $def_acl : $channel_acl)),
 			'bang' => (($group || $cid) ? '!' : ''),
-			'visitor' => 'block',
+			'visitor' => true,
 			'profile_uid' => local_user()
 		);
 
