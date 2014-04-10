@@ -551,7 +551,14 @@ function check_htaccess(&$checks) {
 			if(strstr($a->get_baseurl(),'https://')) {
 				$test = z_fetch_url($a->get_baseurl() . "/setup/testrewrite",false,0,array('novalidate' => true));
 				if($test['success']) {
-					check_add($checks, t('SSL certificate validation'),false,true, t('SSL certificate cannot be validated. Fix certificate or disable https access to this site.'));
+					$help = t('SSL certificate cannot be validated. Fix certificate or disable https access to this site.') . EOL;
+					$help .= t('If you use https access, you MUST use a certification instance known by all internet browsers. You MUST NOT use self-signed certificates!') . EOL;
+					$help .= t('This restriction is incorporated because public posts from you may for example contain references to images on your own hub. If your') . EOL;
+					$help .= t('certificate is not known by the internet browser of users they get a warning message complaining about some security issues. Although') . EOL;
+					$help .= t('these complains are not the real truth - there are no security issues with your encryption! - the users may be confused, nerved or even') .EOL;
+					$help .= t('worse may become scared about redmatrix having security issues. Use one of the free certification instances!') . EOL;
+
+					check_add($checks, t('SSL certificate validation'),false,true, $help);
 				}
 			}
 		}		
