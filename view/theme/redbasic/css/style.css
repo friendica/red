@@ -1566,7 +1566,7 @@ header {
 	float: left;
 	display: block;
 	width: auto;
-	height: 18px;
+	height: 26px;
 	background-color: #cccccc;
 	background-image: url("../../../../images/show_all_off.png");
 	background-position: 7px 7px;
@@ -1611,7 +1611,7 @@ header {
 	background-color: #ddddff;
 }
 
-.acl-list-item p { height: 12px; font-size: 10px; margin: 0px; padding: 2px 0px 1px; overflow: hidden;}
+.acl-list-item p { height: 12px; font-size: 10px; margin: 0px; overflow: hidden;}
 .acl-list-item a { 
 	font-size: 8px;
 	display: block;

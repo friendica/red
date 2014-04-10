@@ -10,8 +10,8 @@
 
 <div class="acl-list-item" rel="acl-template" style="display:none">
 	<img src="{0}"><p>{1}</p>
-	<a href="#" class='acl-button-show'>{{$show}}</a>
-	<a href="#" class='acl-button-hide'>{{$hide}}</a>
+	<a href="#" class='acl-button-show'></a>
+	<a href="#" class='acl-button-hide'></a>
 </div>
 
 <script>
