@@ -24,9 +24,8 @@
 
 
 	<div id="photos-upload-perms" class="photos-upload-perms" >
-		<a href="#photos-upload-permissions-wrapper" id="photos-upload-perms-menu" class="button" />
-		<span id="jot-perms-icon" class="icon {{$lockstate}}" ></span>{{$permissions}}
-		</a>
+		<span id="jot-perms-icon" class="icon-{{$lockstate}}" ></span>
+		<a href="#photos-upload-permissions-wrapper" id="photos-upload-perms-menu" class="button" />{{$permissions}}</a>
 	</div>
 	<div id="photos-upload-perms-end"></div>
 

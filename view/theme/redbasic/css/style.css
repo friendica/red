@@ -1896,6 +1896,7 @@ img.mail-list-sender-photo {
 	color: #777;
 }
 
+#jot-perms-icon,
 .jot-icons {
 	color: $toolicon_colour;
 }

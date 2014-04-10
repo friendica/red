@@ -125,8 +125,7 @@ function editblock_content(&$a) {
 		'$post_id' => $post_id,
 		'$baseurl' => $a->get_baseurl(),
 		'$defloc' => $channel['channel_location'],
-		'$visitor' => 'none',
-		'$pvisit' => 'none',
+		'$visitor' => false,
 		'$public' => t('Public post'),
 		'$jotnets' => $jotnets,
 		'$title' => htmlspecialchars($itm[0]['title'],ENT_COMPAT,'UTF-8'),
@@ -143,7 +142,7 @@ function editblock_content(&$a) {
 		'$jotplugins' => $jotplugins,
 		'$sourceapp' => $itm[0]['app'],
 		'$defexpire' => '',
-		'$feature_expire' => 'none',
+		'$feature_expire' => false,
 		'$expires' => t('Set expiration date'),
 	));
 
