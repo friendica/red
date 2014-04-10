@@ -539,7 +539,7 @@ function post_post(&$a) {
 
 			$sitekey = $hubsite['hubloc_sitekey'];
 
-			logger('mod_zot: Checking sitekey: ' . $sitekey);
+			logger('mod_zot: Checking sitekey: ' . $sitekey, LOGGER_DATA);
 
 			if(rsa_verify($data['callback'],base64url_decode($data['callback_sig']),$sitekey)) {
 				$forgery = false;

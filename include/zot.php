@@ -1412,7 +1412,7 @@ function process_delivery($sender,$arr,$deliveries,$relay,$public = false) {
 		}
 
 		if((! perm_is_allowed($channel['channel_id'],$sender['hash'],$perm)) && (! $tag_delivery) && (! $public)) {
-			logger("permission denied for delivery {$channel['channel_id']}");
+			logger("permission denied for delivery to channel {$channel['channel_id']} {$channel['channel_address']}");
 			$result[] = array($d['hash'],'permission denied',$channel['channel_name'] . ' <' . $channel['channel_address'] . '@' . get_app()->get_hostname() . '>');
 			continue;
 		}

@@ -843,12 +843,7 @@ function encode_item($item) {
 	}
 
 	if($item['item_restrict']  & ITEM_DELETED) {
-		$x['message_id'] = $item['mid'];
-		$x['created']    = $item['created'];
 		$x['flags']      = array('deleted');
-		$x['owner']      = encode_item_xchan($item['owner']);
-		$x['author']     = encode_item_xchan($item['author']);
-		return $x;
 	}
 
 	$x['message_id']     = $item['mid'];
