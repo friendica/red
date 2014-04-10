@@ -635,7 +635,11 @@ function conversation(&$a, $items, $mode, $update, $page_mode = 'traditional', $
 				$star = false;
 				$isstarred = "unstarred icon-star-empty";
 				
-				$lock = false;
+				$lock = (($item['item_private'] || strlen($item['allow_cid']) || strlen($item['allow_gid']) || strlen($item['deny_cid']) || strlen($item['deny_gid']))
+					? t('Private Message')
+					: false
+				);
+
 				$likebuttons = false;
 				$shareable = false;
 
