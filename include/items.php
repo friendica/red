@@ -842,9 +842,6 @@ function encode_item($item) {
 			$item['body'] = crypto_unencapsulate(json_decode_plus($item['body']),$key);
 	}
 
-	if($item['item_restrict']  & ITEM_DELETED) {
-		$x['flags']      = array('deleted');
-	}
 
 	$x['message_id']     = $item['mid'];
 	$x['message_top']    = $item['parent_mid'];
@@ -1029,9 +1026,11 @@ function encode_item_flags($item) {
 
 //	most of item_flags and item_restrict are local settings which don't apply when transmitted.
 //  We may need those for the case of syncing other hub locations which you are attached to.
-//  ITEM_DELETED is handled in encode_item directly so we don't need to handle it here. 
 
 	$ret = array();
+
+	if($item['item_restrict'] & ITEM_DELETED)
+		$ret[] = 'deleted';
 	if($item['item_flags'] & ITEM_THREAD_TOP)
 		$ret[] = 'thread_parent';
 	if($item['item_flags'] & ITEM_NSFW)
