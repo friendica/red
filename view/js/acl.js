@@ -17,7 +17,7 @@ function ACL(backend_url, preset){
 	that.item_tpl = unescape($(".acl-list-item[rel=acl-template]").html());
 	that.showall = $("#acl-showall");
 
-	if (preset.length==0) that.showall.addClass("selected");
+	if (preset.length==0) that.showall.removeClass("btn-default").addClass("btn-warning");
 	
 	/*events*/
 
@@ -70,10 +70,10 @@ ACL.prototype.on_showall = function(event){
 	event.preventDefault()
 	event.stopPropagation();
 	
-	if (that.showall.hasClass("selected")){
+	if (that.showall.hasClass("btn-warning")){
 		return false;
 	}
-	that.showall.addClass("selected");
+	that.showall.removeClass("btn-default").addClass("btn-warning");
 	
 	that.allow_cid = [];
 	that.allow_gid = [];
@@ -164,7 +164,7 @@ ACL.prototype.set_deny = function(itemid){
 ACL.prototype.update_view = function(){
 	if (that.allow_gid.length==0 && that.allow_cid.length==0 &&
 		that.deny_gid.length==0 && that.deny_cid.length==0){
-			that.showall.addClass("selected");
+			that.showall.removeClass("btn-default").addClass("btn-warning");
 			/* jot acl */
 				$('#jot-perms-icon').removeClass('icon-lock').addClass('icon-unlock');
 				$('#jot-public').show();
@@ -174,7 +174,7 @@ ACL.prototype.update_view = function(){
 				}
 			
 	} else {
-			that.showall.removeClass("selected");
+			that.showall.removeClass("btn-warning").addClass("btn-default");
 			/* jot acl */
 				$('#jot-perms-icon').removeClass('icon-unlock').addClass('icon-lock');
 				$('#jot-public').hide();
@@ -190,20 +190,20 @@ ACL.prototype.update_view = function(){
 		type = itemid[0];
 		id 	 = itemid.substr(1);
 		
-		btshow = $(this).children(".acl-button-show").removeClass("selected");
-		bthide = $(this).children(".acl-button-hide").removeClass("selected");	
+		btshow = $(this).children(".acl-button-show").removeClass("btn-success").addClass("btn-default");
+		bthide = $(this).children(".acl-button-hide").removeClass("btn-danger").addClass("btn-default");
 		
 		switch(type){
 			case "g":
 				var uclass = "";
 				if (that.allow_gid.indexOf(id)>=0){
-					btshow.addClass("selected");
-					bthide.removeClass("selected");
+					btshow.removeClass("btn-default").addClass("btn-success");
+					bthide.removeClass("btn-danger").addClass("btn-default");
 					uclass="groupshow";
 				}
 				if (that.deny_gid.indexOf(id)>=0){
-					btshow.removeClass("selected");
-					bthide.addClass("selected");
+					btshow.removeClass("btn-success").addClass("btn-default");
+					bthide.removeClass("btn-default").addClass("btn-danger");
 					uclass="grouphide";
 				}
 				
@@ -223,12 +223,12 @@ ACL.prototype.update_view = function(){
 				break;
 			case "c":
 				if (that.allow_cid.indexOf(id)>=0){
-					btshow.addClass("selected");
-					bthide.removeClass("selected");
+					btshow.removeClass("btn-default").addClass("btn-success");
+					bthide.removeClass("btn-danger").addClass("btn-default");
 				}
 				if (that.deny_cid.indexOf(id)>=0){
-					btshow.removeClass("selected");
-					bthide.addClass("selected");
+					btshow.removeClass("btn-success").addClass("btn-default");
+					bthide.removeClass("btn-default").addClass("btn-danger");
 				}			
 		}
 		

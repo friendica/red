@@ -203,6 +203,7 @@ function chat_content(&$a) {
 		$o = replace_macros(get_markup_template('chatroom_new.tpl'),array(
 			'$header' => t('New Chatroom'),
 			'$name' => array('room_name',t('Chatroom Name'),'', ''),
+			'$permissions' =>  t('Permissions'),
 			'$acl' => populate_acl($channel_acl),
 			'$submit' => t('Submit')
 		));

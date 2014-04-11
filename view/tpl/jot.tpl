@@ -11,6 +11,7 @@
 		<input type="hidden" name="post_id" value="{{$post_id}}" />
 		<input type="hidden" name="webpage" value="{{$webpage}}" />
 		<input type="hidden" name="preview" id="jot-preview" value="0" />
+		{{if $showacl}}{{$acl}}{{/if}}
 		{{$mimeselect}}
 		{{$layoutselect}}
 		{{if $id_select}}
@@ -75,7 +76,9 @@
 			</div>
 			<div id="profile-jot-submit-right" class="btn-group pull-right">
 				{{if $showacl}}
-				<a href="#profile-jot-acl-wrapper" class="btn btn-default btn-sm jot-icons icon-{{$lockstate}}" id="jot-perms-icon" title="{{$permset}}"></a>{{$bang}}
+				<button class="btn btn-default btn-sm" data-toggle="modal" data-target="#aclModal" title="{{$permset}}" onclick="return false;">
+					<i id="jot-perms-icon" class="icon-{{$lockstate}} jot-icons">{{$bang}}</i>
+				</button>
 				{{/if}}
 				{{if $preview}}
 				<button class="btn btn-default btn-sm" onclick="preview_post();return false;" title="{{$preview}}">
@@ -87,13 +90,6 @@
 			<div id="profile-jot-perms-end"></div>
 			<div id="profile-jot-plugin-wrapper">
 				{{$jotplugins}}
-			</div>
-			<div style="display: none;">
-				<div id="profile-jot-acl-wrapper" style="width:auto;height:auto;overflow:auto;">
-					{{$acl}}
-					<hr style="clear:both"/>
-					{{$jotnets}}
-				</div>
 			</div>
 		</div>
 		<div id="profile-jot-text-loading"></div>

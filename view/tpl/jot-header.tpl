@@ -86,11 +86,7 @@ function initEditor(cb){
 		});
 
 		editor = true;
-		// setup acl popup
-		  $("a#jot-perms-icon").colorbox({ 
-				  'inline' : true, 
-				  'transition' : 'elastic' 
-			});
+
 	} else {
 		if (typeof cb!="undefined") cb();
 	}

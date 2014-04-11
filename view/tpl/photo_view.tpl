@@ -54,15 +54,9 @@
 
 	<div id="settings-default-perms" class="settings-default-perms" >
 		<span id="jot-perms-icon" class="{{$edit.lockstate}}" ></span>
-		<a href="#profile-jot-acl-wrapper" id="settings-default-perms-menu" >{{$edit.permissions}}</a>
+		<button class="btn btn-default btn-xs" data-toggle="modal" data-target="#aclModal" onclick="return false;">{{$edit.permissions}}</button>
+		{{$edit.aclselect}}
 		<div id="settings-default-perms-menu-end"></div>
-		<div id="settings-default-perms-select" style="display: none; margin-bottom: 20px" >
-			<div style="display: none;">    
-				<div id="profile-jot-acl-wrapper" style="width:auto;height:auto;overflow:auto;">
-					{{$edit.aclselect}}     
-				</div>
-			</div>
-		</div>
 	</div>                                                                                  
 	<br/>
 	<div id="settings-default-perms-end"></div>

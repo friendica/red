@@ -16,18 +16,9 @@
 {{include file="field_checkbox.tpl" field=$newwin}}
 
 <div id="settings-default-perms" class="settings-default-perms" >
-	<a href="#profile-jot-acl-wrapper" id="settings-default-perms-menu" >{{$permissions}} {{$permdesc}}</a>
+	<button class="btn btn-default btn-xs" data-toggle="modal" data-target="#aclModal" onclick="return false;">{{$permissions}}</button>
+	{{$aclselect}}
 	<div id="settings-default-perms-menu-end"></div>
-
-	<div id="settings-default-perms-select" style="display: none; margin-bottom: 20px" >
-	
-	<div style="display: none;">
-		<div id="profile-jot-acl-wrapper" style="width:auto;height:auto;overflow:auto;">
-			{{$aclselect}}
-		</div>
-	</div>
-
-	</div>
 </div>
 <br/>
 <div id="settings-default-perms-end"></div>
