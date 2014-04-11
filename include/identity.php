@@ -976,7 +976,7 @@ function advanced_profile(&$a) {
 		if($a->profile['marital']) $profile['marital'] = array( t('Status:'), $a->profile['marital']);
 
 
-		if($a->profile['with']) $profile['marital']['with'] = $a->profile['with'];
+		if($a->profile['with']) $profile['marital']['with'] = bbcode($a->profile['with']);
 
 		if(strlen($a->profile['howlong']) && $a->profile['howlong'] !== '0000-00-00 00:00:00') {
 				$profile['howlong'] = relative_date($a->profile['howlong'], t('for %1$d %2$s'));
@@ -994,32 +994,32 @@ function advanced_profile(&$a) {
 
 		if($a->profile['religion']) $profile['religion'] = array( t('Religion:'), $a->profile['religion']);
 
-		if($txt = prepare_text($a->profile['about'])) $profile['about'] = array( t('About:'), $txt );
+		if($txt = bbcode($a->profile['about'])) $profile['about'] = array( t('About:'), $txt );
 
-		if($txt = prepare_text($a->profile['interest'])) $profile['interest'] = array( t('Hobbies/Interests:'), $txt);
+		if($txt = bbcode($a->profile['interest'])) $profile['interest'] = array( t('Hobbies/Interests:'), $txt);
 
-		if($txt = prepare_text($a->profile['likes'])) $profile['likes'] = array( t('Likes:'), $txt);
+		if($txt = bbcode($a->profile['likes'])) $profile['likes'] = array( t('Likes:'), $txt);
 
-		if($txt = prepare_text($a->profile['dislikes'])) $profile['dislikes'] = array( t('Dislikes:'), $txt);
+		if($txt = bbcode($a->profile['dislikes'])) $profile['dislikes'] = array( t('Dislikes:'), $txt);
 
 
-		if($txt = prepare_text($a->profile['contact'])) $profile['contact'] = array( t('Contact information and Social Networks:'), $txt);
+		if($txt = bbcode($a->profile['contact'])) $profile['contact'] = array( t('Contact information and Social Networks:'), $txt);
 
-		if($txt = prepare_text($a->profile['channels'])) $profile['channels'] = array( t('My other channels:'), $txt);
+		if($txt = bbcode($a->profile['channels'])) $profile['channels'] = array( t('My other channels:'), $txt);
 
-		if($txt = prepare_text($a->profile['music'])) $profile['music'] = array( t('Musical interests:'), $txt);
+		if($txt = bbcode($a->profile['music'])) $profile['music'] = array( t('Musical interests:'), $txt);
 		
-		if($txt = prepare_text($a->profile['book'])) $profile['book'] = array( t('Books, literature:'), $txt);
+		if($txt = bbcode($a->profile['book'])) $profile['book'] = array( t('Books, literature:'), $txt);
 
-		if($txt = prepare_text($a->profile['tv'])) $profile['tv'] = array( t('Television:'), $txt);
+		if($txt = bbcode($a->profile['tv'])) $profile['tv'] = array( t('Television:'), $txt);
 
-		if($txt = prepare_text($a->profile['film'])) $profile['film'] = array( t('Film/dance/culture/entertainment:'), $txt);
+		if($txt = bbcode($a->profile['film'])) $profile['film'] = array( t('Film/dance/culture/entertainment:'), $txt);
 
-		if($txt = prepare_text($a->profile['romance'])) $profile['romance'] = array( t('Love/Romance:'), $txt);
+		if($txt = bbcode($a->profile['romance'])) $profile['romance'] = array( t('Love/Romance:'), $txt);
 		
-		if($txt = prepare_text($a->profile['work'])) $profile['work'] = array( t('Work/employment:'), $txt);
+		if($txt = bbcode($a->profile['work'])) $profile['work'] = array( t('Work/employment:'), $txt);
 
-		if($txt = prepare_text($a->profile['education'])) $profile['education'] = array( t('School/education:'), $txt );
+		if($txt = bbcode($a->profile['education'])) $profile['education'] = array( t('School/education:'), $txt );
 
 
 		$things = get_things($a->profile['profile_guid'],$a->profile['profile_uid']);
