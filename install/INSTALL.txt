@@ -29,9 +29,6 @@ issues.
 
 
 Before you begin: Choose a domain name or subdomain name for your server.
-Put some thought into this - because changing it is currently not-supported.
-Things will break, and some of your friends may have difficulty communicating
-with you. We plan to address this limitation in a future release. 
 
 Decide if you will use SSL and obtain an SSL certificate before software
 installation.  You SHOULD use SSL. If you use SSL, you MUST use a
