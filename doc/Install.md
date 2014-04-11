@@ -6,7 +6,13 @@ Red should run on commodity hosting platforms - such as those used to host Wordp
 
 Also if you encounter installation issues, please let us know via the Github issue tracker (https://github.com/friendica/red/issues). Please be as clear as you can about your operating environment and provide as much detail as possible about any error messages you may see, so that we can prevent it from happening in the future. Due to the large variety of operating systems and PHP platforms in existence we may have only limited ability to debug your PHP installation or acquire any missing modules - but we will do our best to solve any general code issues.   
 
-Before you begin: Choose a domain name or subdomain name for your server. 
+Before you begin: Choose a domain name or subdomain name for your server. Put some thought into this - because changing it is currently not-supported. Things will break, and some of your friends may have difficulty communicating with you. We plan to address this limitation in a future release. 
+
+Decide if you will use SSL and obtain an SSL certificate before software installation.  You SHOULD use SSL. If you use SSL, you MUST use a "browser-valid" certificate.  You MUST NOT use self-signed certificates!
+
+Please test your certificate prior to installation. A web tool for testing your certificate is available at "http://www.digicert.com/help/". When visiting your site for the first time, please use the SSL ("https://") URL if SSL is available. This will avoid problems later. The installation routine will not allow you to use a non browser-valid certificate.
+
+This restriction is incorporated because public posts from you may for example contain references to images on your own hub. If your certificate is not known by the internet browser of users they get a warning message complaining about some security issues. Although these complains are not the real truth - there are no security issues with your encryption! - the users may be confused, nerved or even worse may become scared about Red Matrix having security issues. Use one of the free certification instances!
 
 1. Requirements
     - Apache with mod-rewrite enabled and "Options All" so you can use a
