@@ -53,8 +53,9 @@ function authenticate_success($user_record, $login_initial = false, $interactive
 	/* This account has never created a channel. Send them to new_channel by default */
 
 	if($a->module === 'login') {
-		$r = q("select count(channel_id) as total from channel where channel_account_id = %d",
-			intval($a->account['account_id'])
+		$r = q("select count(channel_id) as total from channel where channel_account_id = %d and not ( channel_pageflags & %d)",
+			intval($a->account['account_id']),
+			intval(PAGE_REMOVED)
 		);
 		if(($r) && (! $r[0]['total']))
 			goaway(z_root() . '/new_channel');
