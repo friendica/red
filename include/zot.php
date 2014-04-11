@@ -1413,7 +1413,7 @@ function process_delivery($sender,$arr,$deliveries,$relay,$public = false) {
 
 		if((! perm_is_allowed($channel['channel_id'],$sender['hash'],$perm)) && (! $tag_delivery) && (! $public)) {
 			logger("permission denied for delivery to channel {$channel['channel_id']} {$channel['channel_address']}");
-			$result[] = array($d['hash'],'permission denied',$channel['channel_name'] . ' <' . $channel['channel_address'] . '@' . get_app()->get_hostname() . '>');
+			$result[] = array($d['hash'],'permission denied',$channel['channel_name'] . ' <' . $channel['channel_address'] . '@' . get_app()->get_hostname() . '>',$arr['mid']);
 			continue;
 		}
 	
@@ -1423,12 +1423,12 @@ function process_delivery($sender,$arr,$deliveries,$relay,$public = false) {
 			remove_community_tag($sender,$arr,$channel['channel_id']);
 
 			$item_id = delete_imported_item($sender,$arr,$channel['channel_id']);
-			$result[] = array($d['hash'],(($item_id) ? 'deleted' : 'delete_failed'),$channel['channel_name'] . ' <' . $channel['channel_address'] . '@' . get_app()->get_hostname() . '>');
+			$result[] = array($d['hash'],(($item_id) ? 'deleted' : 'delete_failed'),$channel['channel_name'] . ' <' . $channel['channel_address'] . '@' . get_app()->get_hostname() . '>',$arr['mid']);
 
 			if($relay && $item_id) {
 				logger('process_delivery: invoking relay');
 				proc_run('php','include/notifier.php','relay',intval($item_id));
-				$result[] = array($d['hash'],'relayed',$channel['channel_name'] . ' <' . $channel['channel_address'] . '@' . get_app()->get_hostname() . '>');
+				$result[] = array($d['hash'],'relayed',$channel['channel_name'] . ' <' . $channel['channel_address'] . '@' . get_app()->get_hostname() . '>',$arr['mid']);
 			}
 
 			continue;
@@ -1460,7 +1460,7 @@ function process_delivery($sender,$arr,$deliveries,$relay,$public = false) {
 				$xyz = event_store($ev);
 				add_source_route($xyz,$sender['hash']);
 
-				$result = array($d['hash'],'event processed',$channel['channel_name'] . ' <' . $channel['channel_address'] . '@' . get_app()->get_hostname() . '>');
+				$result = array($d['hash'],'event processed',$channel['channel_name'] . ' <' . $channel['channel_address'] . '@' . get_app()->get_hostname() . '>',$arr['mid']);
 				continue;
 			}
 		}
@@ -1475,7 +1475,7 @@ function process_delivery($sender,$arr,$deliveries,$relay,$public = false) {
 				$arr['uid'] = $channel['channel_id'];
 				update_imported_item($sender,$arr,$channel['channel_id']);
 			}	
-			$result[] = array($d['hash'],'updated',$channel['channel_name'] . ' <' . $channel['channel_address'] . '@' . get_app()->get_hostname() . '>');
+			$result[] = array($d['hash'],'updated',$channel['channel_name'] . ' <' . $channel['channel_address'] . '@' . get_app()->get_hostname() . '>',$arr['mid']);
 			$item_id = $r[0]['id'];
 		}
 		else {
@@ -1485,18 +1485,18 @@ function process_delivery($sender,$arr,$deliveries,$relay,$public = false) {
 			$item_id = $item_result['item_id'];
 			add_source_route($item_id,$sender['hash']);
 
-			$result[] = array($d['hash'],(($item_id) ? 'posted' : 'storage failed:' . $item_result['message']),$channel['channel_name'] . ' <' . $channel['channel_address'] . '@' . get_app()->get_hostname() . '>');
+			$result[] = array($d['hash'],(($item_id) ? 'posted' : 'storage failed:' . $item_result['message']),$channel['channel_name'] . ' <' . $channel['channel_address'] . '@' . get_app()->get_hostname() . '>',$arr['mid']);
 		}
 
 		if($relay && $item_id) {
 			logger('process_delivery: invoking relay');
 			proc_run('php','include/notifier.php','relay',intval($item_id));
-			$result[] = array($d['hash'],'relayed',$channel['channel_name'] . ' <' . $channel['channel_address'] . '@' . get_app()->get_hostname() . '>');
+			$result[] = array($d['hash'],'relayed',$channel['channel_name'] . ' <' . $channel['channel_address'] . '@' . get_app()->get_hostname() . '>',$arr['mid']);
 		}
 	}
 
 	if(! $deliveries)
-		$result[] = array('','no recipients');
+		$result[] = array('','no recipients','',$arr['mid']);
 
 	logger('process_delivery: local results: ' . print_r($result,true), LOGGER_DEBUG);
 
@@ -1643,7 +1643,7 @@ function process_mail_delivery($sender,$arr,$deliveries) {
 
 		if(! perm_is_allowed($channel['channel_id'],$sender['hash'],'post_mail')) {
 			logger("permission denied for mail delivery {$channel['channel_id']}");
-			$result[] = array($d['hash'],'permission denied',$channel['channel_name']);
+			$result[] = array($d['hash'],'permission denied',$channel['channel_name'],$arr['mid']);
 			continue;
 		}
 	
@@ -1657,11 +1657,11 @@ function process_mail_delivery($sender,$arr,$deliveries) {
 					intval($r[0]['id']),
 					intval($channel['channel_id'])
 				);
-				$result[] = array($d['hash'],'mail recalled',$channel['channel_name']);
+				$result[] = array($d['hash'],'mail recalled',$channel['channel_name'],$arr['mid']);
 				logger('mail_recalled');
 			}
 			else {				
-				$result[] = array($d['hash'],'duplicate mail received',$channel['channel_name']);
+				$result[] = array($d['hash'],'duplicate mail received',$channel['channel_name'],$arr['mid']);
 				logger('duplicate mail received');
 			}
 			continue;
@@ -1670,7 +1670,7 @@ function process_mail_delivery($sender,$arr,$deliveries) {
 			$arr['account_id'] = $channel['channel_account_id'];
 			$arr['channel_id'] = $channel['channel_id'];
 			$item_id = mail_store($arr);
-			$result[] = array($d['hash'],'mail delivered',$channel['channel_name']);
+			$result[] = array($d['hash'],'mail delivered',$channel['channel_name'],$arr['mid']);
 
 		}
 	}
@@ -2136,7 +2136,7 @@ function process_channel_sync_delivery($sender,$arr,$deliveries) {
 
 		if($channel['channel_hash'] != $sender['hash']) {
 			logger('process_channel_sync_delivery: possible forgery. Sender ' . $sender['hash'] . ' is not ' . $channel['channel_hash']);
-			$result[] = array($d['hash'],'channel mismatch',$channel['channel_name']);
+			$result[] = array($d['hash'],'channel mismatch',$channel['channel_name'],'');
 			continue;
 		}
 
@@ -2231,7 +2231,7 @@ function process_channel_sync_delivery($sender,$arr,$deliveries) {
 			}
 		}
 		
-		$result[] = array($d['hash'],'channel sync updated',$channel['channel_name']);
+		$result[] = array($d['hash'],'channel sync updated',$channel['channel_name'],'');
 
 
 	}
