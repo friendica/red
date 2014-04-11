@@ -230,15 +230,21 @@ function populate_acl($defaults = null,$unused = false) {
 		array_walk($deny_gid,'fixacl');
 	}
 	
+	$jotnets = '';
+	call_hooks('jot_networks', $jotnets);
+
 	$tpl = get_markup_template("acl_selector.tpl");
 	$o = replace_macros($tpl, array(
 		'$showall'=> t("Visible to everybody"),
-		'$show'		 => t("show"),
-		'$hide'		 => t("don't show"),
+		'$show'		 => t("Show"),
+		'$hide'		 => t("Don't show"),
 		'$allowcid' => json_encode($allow_cid),
 		'$allowgid' => json_encode($allow_gid),
 		'$denycid' => json_encode($deny_cid),
 		'$denygid' => json_encode($deny_gid),
+		'$jotnets' => $jotnets,
+		'$aclModalTitle' => t('Permissions'),
+		'$aclModalDismiss' => t('Close')
 	));
 	
 	
