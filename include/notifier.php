@@ -90,6 +90,7 @@ function notifier_run($argv, $argc){
 	if(! $item_id)
 		return;
 
+	require_once('include/identity.php');
 	$sys = get_sys_channel();
 
 	if($cmd == 'permission_update') {
