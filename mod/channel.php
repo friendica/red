@@ -74,6 +74,7 @@ function channel_content(&$a, $update = 0, $load = false) {
 
 	$is_owner = (((local_user()) && ($a->profile['profile_uid'] == local_user())) ? true : false);
 
+	$channel = $a->get_channel();
 	$observer = $a->get_observer();
 	$ob_hash = (($observer) ? $observer['xchan_hash'] : '');
 
@@ -96,12 +97,16 @@ function channel_content(&$a, $update = 0, $load = false) {
 
 		$o .= common_friends_visitor_widget($a->profile['profile_uid']);
 
-		$channel_acl = array(
-			'allow_cid' => $channel['channel_allow_cid'], 
-			'allow_gid' => $channel['channel_allow_gid'], 
-			'deny_cid' => $channel['channel_deny_cid'], 
-			'deny_gid' => $channel['channel_deny_gid']
-		); 
+		if($channel && $is_owner) {
+			$channel_acl = array(
+				'allow_cid' => $channel['channel_allow_cid'], 
+				'allow_gid' => $channel['channel_allow_gid'], 
+				'deny_cid' => $channel['channel_deny_cid'], 
+				'deny_gid' => $channel['channel_deny_gid']
+			);
+		}
+		else
+			$channel_acl = array(); 
 
 
 		if($perms['post_wall']) {
