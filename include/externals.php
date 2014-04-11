@@ -64,10 +64,11 @@ function externals_run($argv, $argc){
 						$results = process_delivery(array('hash' => 'undefined'), get_item_elements($message),
 							array(array('hash' => $sys['xchan_hash'])), false, true);
 						$total ++;
-						$z = q("select id from item where mid = '%s' and uid = %d limit 1",
-							dbesc($message['message_id']),
-							intval($sys['channel_id'])
-						);
+//						$z = q("select id from item where mid = '%s' and uid = %d limit 1",
+//							dbesc($message['message_id']),
+//							intval($sys['channel_id'])
+//						);
+$z = null;
 						if($z) {
 							$flag_bits = ITEM_WALL|ITEM_ORIGIN|ITEM_UPLINK;
 							// preserve the source
