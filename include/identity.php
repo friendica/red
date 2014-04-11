@@ -870,7 +870,7 @@ logger('online: ' . $profile['online']);
 
 	function get_events() {
 
-		require_once('include/prepare_text.php');
+		require_once('include/bbcode.php');
 
 		$a = get_app();
 
@@ -909,7 +909,7 @@ logger('online: ' . $profile['online']);
 					$md = datetime_convert('UTC','UTC',$rr['start'],'Y/m');
 				$md .= "/#link-".$rr['id'];
 
-				$title = substr(strip_tags(prepare_text($rr['desc'])),0,32) . '... ';
+				$title = substr(strip_tags(bbcode($rr['desc'])),0,32) . '... ';
 				if(! $title)
 					$title = t('[No description]');
 
