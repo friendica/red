@@ -1,5 +1,6 @@
 var NAVTREEINDEX7 =
 {
+"randprof_8php.html":[5,0,1,88],
 "randprof_8php.html#abf5dba3c608b9304cbf68327cd31b090":[5,0,1,88,0],
 "rbmark_8php.html":[5,0,1,89],
 "rbmark_8php.html#a43fec4960b50926251574762cc491f76":[5,0,1,89,0],
@@ -248,6 +249,5 @@ var NAVTREEINDEX7 =
 "theme_2blogga_2php_2default_8php.html#ac7062908d1eb80c0735270f7997c4527":[5,0,3,1,1,0,1,1],
 "theme_2blogga_2php_2theme__init_8php.html":[5,0,3,1,1,0,3],
 "theme_2blogga_2view_2theme_2blog_2default_8php.html":[5,0,3,1,1,1,0,0,1],
-"theme_2blogga_2view_2theme_2blog_2default_8php.html#a1230ab83d4ec9785d8f3a966f33dc5f3":[5,0,3,1,1,1,0,0,1,2],
-"theme_2blogga_2view_2theme_2blog_2default_8php.html#a52d9dd070ed541729088395c22502539":[5,0,3,1,1,1,0,0,1,1]
+"theme_2blogga_2view_2theme_2blog_2default_8php.html#a1230ab83d4ec9785d8f3a966f33dc5f3":[5,0,3,1,1,1,0,0,1,2]
 };

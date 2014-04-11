@@ -2,6 +2,7 @@ var searchData=
 [
   ['identity_5fbasic_5fexport',['identity_basic_export',['../identity_8php.html#a3570a4eb77332b292d394c4132cb8f03',1,'identity.php']]],
   ['identity_5fcheck_5fservice_5fclass',['identity_check_service_class',['../identity_8php.html#ac9fcd5c4c371998790b5c55c3d0f4633',1,'identity.php']]],
+  ['identity_5fselector',['identity_selector',['../identity_8php.html#a2ab5172eabd375869060c9ad68323f5c',1,'identity.php']]],
   ['ids_5fto_5fquerystr',['ids_to_querystr',['../text_8php.html#a436a8de00c942364c2d0fcfc7e1f4b5a',1,'text.php']]],
   ['imagestring',['imageString',['../classphoto__driver.html#abc9f73ad90923772d52b9fcc4eb117dd',1,'photo_driver\imageString()'],['../classphoto__gd.html#a0795fc029be382557ae3f6e285f40e00',1,'photo_gd\imageString()'],['../classphoto__imagick.html#a70adbef31128c0ac8cbc5dcf34cdb019',1,'photo_imagick\imageString()']]],
   ['import_5fauthor_5frss',['import_author_rss',['../items_8php.html#a6bee35961f2e32905f20367a9309d627',1,'items.php']]],
