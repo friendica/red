@@ -90,6 +90,8 @@ function notifier_run($argv, $argc){
 	if(! $item_id)
 		return;
 
+	$sys = get_sys_channel();
+
 	if($cmd == 'permission_update') {
 		// Get the recipient	
 		$r = q("select abook.*, hubloc.* from abook 
@@ -313,6 +315,10 @@ function notifier_run($argv, $argc){
 			$top_level_post = false;
 		}
 
+		// avoid looping of discover items 12/4/2014
+
+		if($sys && $parent_item['uid'] == $sys['channel_id'])
+			return;
 
 		$encoded_item = encode_item($target_item);
 		
