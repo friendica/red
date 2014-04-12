@@ -574,8 +574,19 @@ function get_tags($s) {
 
 	$s = preg_replace('/\[style=(.*?)\]/sm','',$s);
 
+	// match any double quoted tags
+
+	if(preg_match_all('/([@#]\&quot\;.*?\&quot\;)/',$s,$match)) {
+		foreach($match[1] as $mtch) {
+			$ret[] = $mtch;
+		}
+	}
+
 	// Match full names against @tags including the space between first and last
 	// We will look these up afterward to see if they are full names or not recognisable.
+
+
+
 
 	if(preg_match_all('/(@[^ \x0D\x0A,:?]+ [^ \x0D\x0A@,:?]+)([ \x0D\x0A@,:?]|$)/',$s,$match)) {
 		foreach($match[1] as $mtch) {
@@ -627,7 +638,7 @@ function get_tags($s) {
 	usort($ret,'tag_sort_length');
 
 	
-	//logger('get_tags: ' . print_r($ret,true));
+//	logger('get_tags: ' . print_r($ret,true));
 
 	return $ret;
 }

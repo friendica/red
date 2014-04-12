@@ -922,8 +922,16 @@ function handle_tag($a, &$body, &$access_tag, &$str_tags, $profile_uid, $tag) {
 			$replaced = true;
 		}
 		if(! $replaced) {
+
 			//base tag has the tags name only
-			$basetag = str_replace('_',' ',substr($tag,1));
+
+			if((substr($tag,0,7) === '#&quot;') && (substr($tag,-6,6) === '&quot;')) {
+				$basetag = substr($tag,7);
+				$basetag = substr($basetag,0,-6);
+			}
+			else
+				$basetag = str_replace('_',' ',substr($tag,1));
+
 			//create text for link
 			$url = $a->get_baseurl() . '/search?tag=' . rawurlencode($basetag);
 			$newtag = '#[zrl=' . $a->get_baseurl() . '/search?tag=' . rawurlencode($basetag) . ']' . $basetag . '[/zrl]';
