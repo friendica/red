@@ -30,6 +30,9 @@ issues.
 
 Before you begin: Choose a domain name or subdomain name for your server.
 
+The Red Matrix can only be installed into the root of a domain or
+sub-domain, and can not be installed using alternate TCP ports. 
+
 Decide if you will use SSL and obtain an SSL certificate before software
 installation.  You SHOULD use SSL. If you use SSL, you MUST use a
 "browser-valid" certificate.  You MUST NOT use self-signed certificates!
