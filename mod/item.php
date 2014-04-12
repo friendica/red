@@ -958,7 +958,7 @@ function handle_tag($a, &$body, &$access_tag, &$str_tags, $profile_uid, $tag) {
 
 		$forum = false;
 
-		if(substr($newname,-1,1)) === '+') {
+		if(substr($newname,-1,1) === '+') {
 			$forum = true;
 			$newname = substr($newname,0,-1);
 		}
