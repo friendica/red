@@ -210,11 +210,11 @@ function acl_init(&$a){
 				$contacts[] = array(
 					"type"     => "c",
 					"photo"    => $g['micro'],
-					"name"     => $g['name'] . ' ' . t('plus connections'),
+					"name"     => $g['name'] . '+',
 					"id"	   => $g['id'] . '+',
 					"xid"      => $g['hash'],
 					"link"     => $g['nick'],
-					"nick"     => substr($g['nick'],0,strpos($g['nick'],'@')) . '+',
+					"nick"     => substr($g['nick'],0,strpos($g['nick'],'@')),
 					"self"     => (($g['abook_flags'] & ABOOK_FLAG_SELF) ? 'abook-self' : ''),
 					"taggable" => 'taggable'
 				);
