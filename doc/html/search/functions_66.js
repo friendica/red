@@ -37,6 +37,7 @@ var searchData=
   ['format_5fevent_5fdiaspora',['format_event_diaspora',['../bb2diaspora_8php.html#a29a2ad41f5826f3975fa9a49934ff863',1,'bb2diaspora.php']]],
   ['format_5fevent_5fhtml',['format_event_html',['../event_8php.html#a2ac9f1b08de03250ecd794f705781d17',1,'event.php']]],
   ['format_5ffiler',['format_filer',['../text_8php.html#a4e4d42b0a805148d9f9a92bcac89bf91',1,'text.php']]],
+  ['format_5fhashtags',['format_hashtags',['../text_8php.html#a3a0c432a484c17d7720b8ba2d6bfdd59',1,'text.php']]],
   ['format_5fjs_5fif_5fexists',['format_js_if_exists',['../plugin_8php.html#ad9ff8ba554576383c5911a4bce068c1f',1,'plugin.php']]],
   ['format_5flike',['format_like',['../conversation_8php.html#a3d8e30cc94f9a175054c021305d3aca3',1,'conversation.php']]],
   ['format_5flocation',['format_location',['../conversation_8php.html#a0891aaa4492cba2b51eda12fe01957f3',1,'conversation.php']]],

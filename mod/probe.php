@@ -20,10 +20,14 @@ function probe_content(&$a) {
 		if($res['success'])
 			$j = json_decode($res['body'],true);
 		else {
+			$o .= sprintf( t('Fetching URL returns error: %1$s'),$res['error'] . "\r\n\r\n");
 			$o .= "<strong>https connection failed. Trying again with auto failover to http.</strong>\r\n\r\n";
 			$res = zot_finger($addr,$channel,true);
 			if($res['success'])
 				$j = json_decode($res['body'],true);
+			else
+				$o .= sprintf( t('Fetching URL returns error: %1$s'),$res['error'] . "\r\n\r\n");
+
 		}
 		if($j && $j['permissions'] && $j['permissions']['iv'])
 			$j['permissions'] = json_decode(crypto_unencapsulate($j['permissions'],$channel['channel_prvkey']),true);

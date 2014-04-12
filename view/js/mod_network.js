@@ -3,8 +3,8 @@ $(document).ready(function() {
 	a = $("#search-text").autocomplete({ 
 		serviceUrl: baseurl + '/search_ac',
 		minChars: 2,
-		width: 250,
 		id: 'search-text-ac',
 	});
+	$('.jslider-scale ins').addClass('hidden-xs');
 }); 
 

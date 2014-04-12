@@ -34,7 +34,7 @@
 </ul>
 
 
-<button type="button" class="btn btn-xs btn-warning" data-toggle="collapse" data-target="#settings-permissions-wrapper">{{$lbl_p2macro}}</button>
+<button type="button" class="btn btn-xs btn-default" data-toggle="collapse" data-target="#settings-permissions-wrapper">{{$lbl_p2macro}}</button>
 
 
 
@@ -67,24 +67,15 @@
 
 {{include file="field_yesno.tpl" field=$blocktags}}
 
-{{include file="field_input.tpl" field=$maxreq}}
 
-{{include file="field_input.tpl" field=$cntunkmail}}
+{{include file="field_input.tpl" field=$expire}}
+
 </div>
 
 <div id="settings-default-perms" class="settings-default-perms" >
-	<a href="#profile-jot-acl-wrapper" id="settings-default-perms-menu" >{{$permissions}} {{$permdesc}}</a>
+	<button class="btn btn-default btn-xs" data-toggle="modal" data-target="#aclModal" onclick="return false;">{{$permissions}}</button>
+	{{$aclselect}}
 	<div id="settings-default-perms-menu-end"></div>
-
-	<div id="settings-default-perms-select" style="display: none; margin-bottom: 20px" >
-	
-	<div style="display: none;">
-		<div id="profile-jot-acl-wrapper" style="width:auto;height:auto;overflow:auto;">
-			{{$aclselect}}
-		</div>
-	</div>
-
-	</div>
 </div>
 <br/>
 <div id="settings-default-perms-end"></div>

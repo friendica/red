@@ -276,7 +276,7 @@ class RedDirectory extends DAV\Node implements DAV\ICollection, DAV\IQuota {
 
 		for($x = 1; $x < count($path_arr); $x ++) {		
 
-			$r = q("select id, hash, filename, flags from attach where folder = '%s' and filename = '%s' and (flags & %d)",
+			$r = q("select id, hash, filename, flags from attach where folder = '%s' and filename = '%s' and uid = %d and (flags & %d)",
 				dbesc($folder),
 				dbesc($path_arr[$x]),
 				intval($channel_id),
@@ -581,17 +581,19 @@ function RedCollectionData($file,&$auth) {
 
 	for($x = 1; $x < count($path_arr); $x ++) {		
 
-		$r = q("select id, hash, filename, flags from attach where folder = '%s' and filename = '%s' and (flags & %d) $perms limit 1",
+		$r = q("select id, hash, filename, flags from attach where folder = '%s' and filename = '%s' and uid = %d and (flags & %d) $perms limit 1",
 			dbesc($folder),
 			dbesc($path_arr[$x]),
+			intval($channel_id),
 			intval(ATTACH_FLAG_DIR)
 		);
 		if(! $r) {
 			// path wasn't found. Try without permissions to see if it was the result of permissions.
 			$errors = true;
-			$r = q("select id, hash, filename, flags from attach where folder = '%s' and filename = '%s' and (flags & %d) limit 1",
+			$r = q("select id, hash, filename, flags from attach where folder = '%s' and filename = '%s' and uid = %d and (flags & %d) limit 1",
 				dbesc($folder),
 				basename($path_arr[$x]),
+				intval($channel_id),
 				intval(ATTACH_FLAG_DIR)
 			);
 			if($r) {
@@ -708,7 +710,7 @@ function RedFileData($file, &$auth,$test = false) {
 			$r = q("select id, uid, hash, filename, filetype, filesize, revision, folder, flags, created, edited from attach 
 				where folder = '%s' and filename = '%s' and uid = %d $perms group by filename limit 1",
 				dbesc($folder),
-				basename($file),
+				dbesc(basename($file)),
 				intval($channel_id)
 
 			);
@@ -719,7 +721,7 @@ function RedFileData($file, &$auth,$test = false) {
 			$r = q("select id, uid, hash, filename, filetype, filesize, revision, folder, flags, created, edited from attach 
 				where folder = '%s' and filename = '%s' and uid = %d group by filename limit 1",
 				dbesc($folder),
-				basename($file),
+				dbesc(basename($file)),
 				intval($channel_id)
 			);
 			if($r)
@@ -882,8 +884,12 @@ class RedBrowser extends DAV\Browser\Plugin {
 			date_default_timezone_set($this->auth->timezone);
 
         $version = '';
+		require_once('include/conversation.php');
 
-        $html = "
+		if($this->auth->channel_name)
+			$html = profile_tabs(get_app(),(($this->auth->owner_id == local_user()) ? true : false),$this->auth->owner_nick);
+
+        $html .= "
 <body>
   <h1>Index for " . $this->escapeHTML($path) . "/</h1>
   <table>

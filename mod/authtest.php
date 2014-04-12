@@ -21,6 +21,10 @@ function authtest_content(&$a) {
 	$o .= '<br /><br />';
 
 	if(x($_GET,'dest')) {
+		if(strpos($_GET['dest'],'@')) {
+			$_GET['dest'] = $_REQUEST['dest'] = 'https://' . substr($_GET['dest'],strpos($_GET['dest'],'@')+1) . '/channel/' . substr($_GET['dest'],0,strpos($_GET['dest'],'@'));
+		}
+
 		$_REQUEST['test'] = 1;
 		$x = magic_init($a);
 		$o .= 'Local Setup returns: ' . print_r($x,true);

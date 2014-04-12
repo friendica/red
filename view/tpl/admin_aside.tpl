@@ -14,6 +14,7 @@
 <ul class='admin linklist'>
 	<li class='admin link button {{$admin.site.2}}'><a href='{{$admin.site.0}}'>{{$admin.site.1}}</a></li>
 	<li class='admin link button {{$admin.users.2}}'><a href='{{$admin.users.0}}'>{{$admin.users.1}}</a><span id='pending-update' title='{{$h_pending}}'></span></li>
+	<li class='admin link button {{$admin.channels.2}}'><a href='{{$admin.channels.0}}'>{{$admin.channels.1}}</a></li>
 	<li class='admin link button {{$admin.plugins.2}}'><a href='{{$admin.plugins.0}}'>{{$admin.plugins.1}}</a></li>
 	<li class='admin link button {{$admin.themes.2}}'><a href='{{$admin.themes.0}}'>{{$admin.themes.1}}</a></li>
 	<li class='admin link button {{$admin.hubloc.2}}'><a href='{{$admin.hubloc.0}}'>{{$admin.hubloc.1}}</a></li>

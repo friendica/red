@@ -121,7 +121,7 @@ function dirsearch_content(&$a) {
 	}
 
 
-    $perpage      = (($_REQUEST['n'])              ? $_REQUEST['n']                    : 300);
+    $perpage      = (($_REQUEST['n'])              ? $_REQUEST['n']                    : 80);
     $page         = (($_REQUEST['p'])              ? intval($_REQUEST['p'] - 1)        : 0);
     $startrec     = (($page+1) * $perpage) - $perpage;
 	$limit        = (($_REQUEST['limit'])          ? intval($_REQUEST['limit'])        : 0);
@@ -324,6 +324,8 @@ function dir_parse_query($s) {
 
 
 function list_public_sites() {
+
+
 	$r = q("select * from site where site_access != 0 and site_register !=0 order by rand()");
 	$ret = array('success' => false);
 

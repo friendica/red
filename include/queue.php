@@ -33,8 +33,12 @@ function queue_run($argv, $argc){
 
 		// For the first 12 hours we'll try to deliver every 15 minutes
 		// After that, we'll only attempt delivery once per hour. 
-
-		$r = q("SELECT * FROM outq WHERE outq_delivered = 0 and (( outq_created > UTC_TIMESTAMP() - INTERVAL 12 HOUR and outq_updated < UTC_TIMESTAMP() - INTERVAL 15 MINUTE ) OR ( outq_updated < UTC_TIMESTAMP() - INTERVAL 1 HOUR ))");
+		// This currently only handles the default queue drivers ('zot' or '') which we will group by posturl 
+		// so that we don't start off a thousand deliveries for a couple of dead hubs.
+		// The zot driver will deliver everything destined for a single hub once contact is made (*if* contact is made).
+		// Other drivers will have to do something different here and may need their own query.
+ 
+		$r = q("SELECT * FROM outq WHERE outq_delivered = 0 and (( outq_created > UTC_TIMESTAMP() - INTERVAL 12 HOUR and outq_updated < UTC_TIMESTAMP() - INTERVAL 15 MINUTE ) OR ( outq_updated < UTC_TIMESTAMP() - INTERVAL 1 HOUR )) and outq_driver in ('','zot') group by outq_posturl");
 	}
 	if(! $r)
 		return;

@@ -95,6 +95,7 @@ function search_content(&$a,$update = 0, $load = false) {
 			'$liked' => '0',
 			'$conv' => '0',
 			'$spam' => '0',
+			'$fh' => '0',
 			'$nouveau' => '0',
 			'$wall' => '0',
 			'$list' => ((x($_REQUEST,'list')) ? intval($_REQUEST['list']) : 0),

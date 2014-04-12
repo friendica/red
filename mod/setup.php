@@ -103,6 +103,7 @@ function setup_post(&$a) {
 		        $test = z_fetch_url($siteurl."/setup/testrewrite");
 				if((! $test['success']) || ($test['body'] != 'ok'))  {
 					$a->data['url_fail'] = true;
+					$a->data['url_error'] = $test['error'];
 					return;
 				}
 			}
@@ -169,6 +170,8 @@ function setup_content(&$a) {
 	if(x($a->data,'url_fail')) {
 		$install_wizard_pass = 3;
 		$wizard_status =  t('Could not connect to specified site URL. Possible SSL certificate or DNS issue.');
+		if($a->data['url_error'])
+			$wizard_status .= ' ' . $a->data['url_error'];
 	}
 
 	if(x($a->data,'db_create_failed')) {
@@ -548,7 +551,14 @@ function check_htaccess(&$checks) {
 			if(strstr($a->get_baseurl(),'https://')) {
 				$test = z_fetch_url($a->get_baseurl() . "/setup/testrewrite",false,0,array('novalidate' => true));
 				if($test['success']) {
-					check_add($checks, t('SSL certificate validation'),false,true, t('SSL certificate cannot be validated. Fix certificate or disable https access to this site.'));
+					$help = t('SSL certificate cannot be validated. Fix certificate or disable https access to this site.') . EOL;
+					$help .= t('If you use https access, you MUST use a certification instance known by all internet browsers. You MUST NOT use self-signed certificates!') . EOL;
+					$help .= t('This restriction is incorporated because public posts from you may for example contain references to images on your own hub. If your') . EOL;
+					$help .= t('certificate is not known by the internet browser of users they get a warning message complaining about some security issues. Although') . EOL;
+					$help .= t('these complains are not the real truth - there are no security issues with your encryption! - the users may be confused, nerved or even') .EOL;
+					$help .= t('worse may become scared about redmatrix having security issues. Use one of the free certification instances!') . EOL;
+
+					check_add($checks, t('SSL certificate validation'),false,true, $help);
 				}
 			}
 		}		
@@ -602,9 +612,28 @@ function what_next() {
 	$a = get_app();
 	// install the standard theme
 	set_config('system','allowed_themes','redbasic');
+
+	// Set a lenient list of ciphers if using openssl. Other ssl engines
+	// (e.g. NSS used in RedHat) require different syntax, so hopefully 
+	// the default curl cipher list will work for most sites. If not, 
+	// this can set via config. Many distros are now disabling RC4,
+	// but many Red sites still use it and are unable to change it.
+	// We do not use SSL for encryption, only to protect session cookies.
+	// z_fetch_url() is also used to import shared links and other content 
+	// so in theory most any cipher could show up and we should do our best
+	// to make the content available rather than tell folks that there's a 
+	// weird SSL error which they can't do anything about. 
+
+	$x = curl_version();
+	if(stristr($x['ssl_version'],'openssl'))
+		set_config('system','curl_ssl_ciphers','ALL:!eNULL');
+
+
 	// Create a system channel
 	require_once ('include/identity.php');
 	create_sys_channel();	
+
+
 	$baseurl = $a->get_baseurl();
 	return 
 		t('<h1>What next</h1>')

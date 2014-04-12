@@ -22,8 +22,8 @@
 /* notes */ 
 
 #note-text {
-	width: 190px;
-	max-width: 190px;
+	width: 100%;
+	resize: vertical;
 	height: 150px;
 }
 

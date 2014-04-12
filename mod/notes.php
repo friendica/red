@@ -10,6 +10,14 @@ function notes_init(&$a) {
 		$body = escape_tags($_REQUEST['note_text']);
 		set_pconfig(local_user(),'notes','text',$body);
 	}
+
+	// push updates to channel clones
+
+	if((argc() > 1) && (argv(1) === 'sync')) {
+		require_once('include/zot.php');
+		build_sync_packet();
+	}
+
 	logger('notes saved.');
 	json_return_and_die($ret);
 	

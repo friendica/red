@@ -1,8 +1,9 @@
+@media screen and (min-width: 760px) {
 .navbar-nav > li > a {padding-top:5px !important; padding-bottom:5px !important;}
 .navbar {min-height:25px !important;}
 nav img {
-height: 25px;
-width: 25px;
+height: 30px;
+width: 30px;
 margin: 2px 0px 1px 10px;
 border-radius: 0px;
 }
@@ -12,7 +13,7 @@ border-radius: 0px;
 #nav-search-text {margin:5px;}
 header #banner {margin-top:5px;}
 nav .dropdown-menu {
-top: 30px;}
+top: 33px;}
 nav .badge {
     position: relative;
     top: -30px;
@@ -24,4 +25,5 @@ nav .badge {
 #jGrowl.top-right {
 	top: 30px;
 	right: 15px;
+}
 }

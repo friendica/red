@@ -26,12 +26,14 @@ function lockview_content(&$a) {
 
 	$item = $r[0];
 
-	if($item['uid'] != local_user())
+	if($item['uid'] != local_user()) {
+		echo '<li>' . t('Remote privacy information not available.') . '</li>';
 		killme();
+	}
 
 	if(($item['item_private'] == 1) && (! strlen($item['allow_cid'])) && (! strlen($item['allow_gid'])) 
 		&& (! strlen($item['deny_cid'])) && (! strlen($item['deny_gid']))) {
-		echo t('Remote privacy information not available.') . '<br />';
+		echo '<li>' . t('Remote privacy information not available.') . '</li>';
 		killme();
 	}
 
@@ -40,7 +42,7 @@ function lockview_content(&$a) {
 	$deny_users = expand_acl($item['deny_cid']);
 	$deny_groups = expand_acl($item['deny_gid']);
 
-	$o = t('Visible to:') . '<br />';
+	$o = '<li>' . t('Visible to:') . '</li>';
 	$l = array();
 
 	stringify_array_elms($allowed_groups,true);
@@ -52,28 +54,28 @@ function lockview_content(&$a) {
 		$r = q("SELECT name FROM `groups` WHERE hash IN ( " . implode(', ', $allowed_groups) . " )");
 		if($r)
 			foreach($r as $rr) 
-				$l[] = '<b>' . $rr['name'] . '</b>';
+				$l[] = '<li><b>' . $rr['name'] . '</b></li>';
 	}
 	if(count($allowed_users)) {
 		$r = q("SELECT xchan_name FROM xchan WHERE xchan_hash IN ( " . implode(', ',$allowed_users) . " )");
 		if($r)
 			foreach($r as $rr) 
-				$l[] = $rr['xchan_name'];
+				$l[] = '<li>' . $rr['xchan_name'] . '</li>';
 	}
 	if(count($deny_groups)) {
 		$r = q("SELECT name FROM `groups` WHERE hash IN ( " . implode(', ', $deny_groups) . " )");
 		if($r)
 			foreach($r as $rr) 
-				$l[] = '<b><strike>' . $rr['name'] . '</strike></b>';
+				$l[] = '<li><b><strike>' . $rr['name'] . '</strike></b></li>';
 	}
 	if(count($deny_users)) {
 		$r = q("SELECT xchan_name FROM xchan WHERE xchan_hash IN ( " . implode(', ', $deny_users) . " )");
 		if($r)
 			foreach($r as $rr) 
-				$l[] = '<strike>' . $rr['xchan_name'] . '</strike>';
+				$l[] = '<li><strike>' . $rr['xchan_name'] . '</strike></li>';
 	}
 
-	echo $o . implode(', ', $l);
+	echo $o . implode($l);
 	killme();
 
 }

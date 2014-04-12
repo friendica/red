@@ -24,17 +24,11 @@
 
 
 	<div id="photos-upload-perms" class="photos-upload-perms" >
-		<a href="#photos-upload-permissions-wrapper" id="photos-upload-perms-menu" class="button popupbox" />
-		<span id="jot-perms-icon" class="icon {{$lockstate}}" ></span>{{$permissions}}
-		</a>
+		<span id="jot-perms-icon" class="icon-{{$lockstate}}" ></span>
+		<button class="btn btn-default btn-xs" data-toggle="modal" data-target="#aclModal" onclick="return false;">{{$permissions}}</button>
 	</div>
+	{{$aclselect}}
 	<div id="photos-upload-perms-end"></div>
-
-	<div style="display: none;">
-		<div id="photos-upload-permissions-wrapper">
-			{{$aclselect}}
-		</div>
-	</div>
 
 	<div id="photos-upload-spacer"></div>
 

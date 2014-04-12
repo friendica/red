@@ -39,6 +39,7 @@ var dir_d44c64559bbebec7f509842c48db8b23 =
     [ "enotify.php", "enotify_8php.html", "enotify_8php" ],
     [ "event.php", "event_8php.html", "event_8php" ],
     [ "expire.php", "expire_8php.html", "expire_8php" ],
+    [ "externals.php", "externals_8php.html", "externals_8php" ],
     [ "features.php", "features_8php.html", "features_8php" ],
     [ "follow.php", "include_2follow_8php.html", "include_2follow_8php" ],
     [ "friendica_smarty.php", "friendica__smarty_8php.html", [
@@ -49,6 +50,7 @@ var dir_d44c64559bbebec7f509842c48db8b23 =
     [ "group.php", "include_2group_8php.html", "include_2group_8php" ],
     [ "html2bbcode.php", "html2bbcode_8php.html", "html2bbcode_8php" ],
     [ "html2plain.php", "html2plain_8php.html", "html2plain_8php" ],
+    [ "hubloc.php", "hubloc_8php.html", "hubloc_8php" ],
     [ "identity.php", "identity_8php.html", "identity_8php" ],
     [ "ItemObject.php", "ItemObject_8php.html", [
       [ "Item", "classItem.html", "classItem" ]
@@ -73,6 +75,7 @@ var dir_d44c64559bbebec7f509842c48db8b23 =
     [ "photos.php", "include_2photos_8php.html", "include_2photos_8php" ],
     [ "plugin.php", "plugin_8php.html", "plugin_8php" ],
     [ "poller.php", "poller_8php.html", "poller_8php" ],
+    [ "probe.php", "include_2probe_8php.html", "include_2probe_8php" ],
     [ "profile_selectors.php", "profile__selectors_8php.html", "profile__selectors_8php" ],
     [ "ProtoDriver.php", "ProtoDriver_8php.html", [
       [ "ProtoDriver", "classProtoDriver.html", "classProtoDriver" ],

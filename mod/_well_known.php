@@ -19,6 +19,15 @@ function _well_known_init(&$a){
 				require_once('mod/wfinger.php');
 				wfinger_init($a);
 				break;
+			case 'host-meta':
+				$a->argc -= 1;
+				array_shift($a->argv);
+				$a->argv[0] = 'hostxrd';
+				require_once('mod/hostxrd.php');
+				hostxrd_init($a);
+				break;
+			default:
+				break;
 
 		}
 	}

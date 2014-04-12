@@ -4,24 +4,24 @@
 
 /**
  * Red Matrix.
- * 
- * The Red Matrix (aka "Red") is an open source decentralised communications 
- * platform combined with a decentralised identity/authentication framework 
+ *
+ * The Red Matrix (aka "Red") is an open source decentralised communications
+ * platform combined with a decentralised identity/authentication framework
  * wrapped in an extensible content management system, providing website designers
- * the ability to embed fully decentralised communications and social tools 
- * into many traditional website designs (blogs, forums, small business 
- * websites, charitable organisations, etc.). Red also provides DNS mobility 
+ * the ability to embed fully decentralised communications and social tools
+ * into many traditional website designs (blogs, forums, small business
+ * websites, charitable organisations, etc.). Red also provides DNS mobility
  * and internet scale privacy/access control.
- *  
+ *
  * This allows any individual website to participate in a matrix of linked
- * sites and people and media sharing which is far greater than the reach 
+ * sites and people and media sharing which is far greater than the reach
  * of an individual site.
- * 
- * If you are reading the source code and come across a function 
- * or code block which is not documented, but you have a good idea what it 
+ *
+ * If you are reading the source code and come across a function
+ * or code block which is not documented, but you have a good idea what it
  * does, please add some descriptive comments and push it to the main project.
  * Even if your description isn't perfect, it gives us a base which we
- * can build on and correct - so that eventually everything is fully 
+ * can build on and correct - so that eventually everything is fully
  * documented.
  */
 
@@ -45,9 +45,9 @@ require_once('include/Contact.php');
 
 define ( 'RED_PLATFORM',            'Red Matrix' );
 define ( 'RED_VERSION',             trim(file_get_contents('version.inc')) . 'R');
-define ( 'ZOT_REVISION',            1     ); 
+define ( 'ZOT_REVISION',            1     );
 
-define ( 'DB_UPDATE_VERSION',       1103  );
+define ( 'DB_UPDATE_VERSION',       1107  );
 
 define ( 'EOL',                    '<br />' . "\r\n"     );
 define ( 'ATOM_TIME',              'Y-m-d\TH:i:s\Z' );
@@ -57,7 +57,7 @@ define ( 'ATOM_TIME',              'Y-m-d\TH:i:s\Z' );
 define ( 'DIRECTORY_MODE_NORMAL',      0x0000);  // This is technically DIRECTORY_MODE_TERTIARY, but it's the default, hence 0x0000
 define ( 'DIRECTORY_MODE_PRIMARY',     0x0001);
 define ( 'DIRECTORY_MODE_SECONDARY',   0x0002);
-define ( 'DIRECTORY_MODE_STANDALONE',  0x0100);      
+define ( 'DIRECTORY_MODE_STANDALONE',  0x0100);
 
 // We will look for upstream directories whenever me make contact
 // with other sites, but if this is a new installation and isn't
@@ -103,7 +103,7 @@ define ( 'LANGUAGE_DETECT_MIN_CONFIDENCE', 0.01 );
  * Over-ride this in your .htconfig.php if you need something
  * either more or less restrictive.
  */
- 
+
 define ( 'STORAGE_DEFAULT_PERMISSIONS',   0770 );
 
 
@@ -205,6 +205,7 @@ define ( 'PAGE_APPLICATION',       0x0004 );
 define ( 'PAGE_DIRECTORY_CHANNEL', 0x0008 ); // system channel used for directory synchronisation
 define ( 'PAGE_PREMIUM',           0x0010 );
 define ( 'PAGE_ADULT',             0x0020 );
+define ( 'PAGE_CENSORED',          0x0040 ); // Site admin has blocked this channel from appearing in casual search results and site feeds
 
 define ( 'PAGE_SYSTEM',            0x1000 );
 define ( 'PAGE_REMOVED',           0x8000 );
@@ -221,7 +222,7 @@ define ( 'PHOTO_THING',            0x0004 );
 
 /**
  * Menu types
- */ 
+ */
 
 define ( 'MENU_SYSTEM',          0x0001 );
 define ( 'MENU_BOOKMARK',        0x0002 );
@@ -247,23 +248,23 @@ define ( 'NETWORK_PHANTOM',          'unkn');    // Place holder
 
 
 /**
- * Permissions 
+ * Permissions
  */
 
 
-define ( 'PERMS_R_STREAM',         0x00001); 
+define ( 'PERMS_R_STREAM',         0x00001);
 define ( 'PERMS_R_PROFILE',        0x00002);
-define ( 'PERMS_R_PHOTOS',         0x00004); 
-define ( 'PERMS_R_ABOOK',          0x00008); 
+define ( 'PERMS_R_PHOTOS',         0x00004);
+define ( 'PERMS_R_ABOOK',          0x00008);
 
 
-define ( 'PERMS_W_STREAM',         0x00010); 
+define ( 'PERMS_W_STREAM',         0x00010);
 define ( 'PERMS_W_WALL',           0x00020);
-define ( 'PERMS_W_TAGWALL',        0x00040); 
-define ( 'PERMS_W_COMMENT',        0x00080); 
-define ( 'PERMS_W_MAIL',           0x00100); 
+define ( 'PERMS_W_TAGWALL',        0x00040);
+define ( 'PERMS_W_COMMENT',        0x00080);
+define ( 'PERMS_W_MAIL',           0x00100);
 define ( 'PERMS_W_PHOTOS',         0x00200);
-define ( 'PERMS_W_CHAT',           0x00400); 
+define ( 'PERMS_W_CHAT',           0x00400);
 define ( 'PERMS_A_DELEGATE',       0x00800);
 
 define ( 'PERMS_R_STORAGE',        0x01000);
@@ -328,6 +329,12 @@ define ( 'UPDATE_FLAGS_FORCED',   0x0002);
 define ( 'UPDATE_FLAGS_DELETED',  0x1000);
 
 
+
+define ( 'DROPITEM_NORMAL',      0);
+define ( 'DROPITEM_PHASE1',      1);
+define ( 'DROPITEM_PHASE2',      2);
+
+
 /**
  * Maximum number of "people who like (or don't like) this"  that we will list by name
  */
@@ -359,7 +366,7 @@ define ( 'NOTIFY_POKE',     0x0200 );
 define ( 'NOTIFY_SYSTEM',   0x8000 );
 
 
-// We need a flag to designate that a site is a 
+// We need a flag to designate that a site is a
 // global directory mirror, but probably doesn't
 // belong in hubloc.
 // This indicates a need for an 'xsite' table
@@ -395,7 +402,7 @@ define ('HUBLOC_OFFLINE',	0x0008);
 
 define ( 'TERM_UNKNOWN',      0 );
 define ( 'TERM_HASHTAG',      1 );
-define ( 'TERM_MENTION',      2 );   
+define ( 'TERM_MENTION',      2 );
 define ( 'TERM_CATEGORY',     3 );
 define ( 'TERM_PCATEGORY',    4 );
 define ( 'TERM_FILE',         5 );
@@ -489,7 +496,7 @@ define ( 'ACCOUNT_PENDING',      0x0010 );
  * Account roles
  */
 
-define ( 'ACCOUNT_ROLE_ALLOWCODE', 0x0001 );    
+define ( 'ACCOUNT_ROLE_ALLOWCODE', 0x0001 );
 define ( 'ACCOUNT_ROLE_SYSTEM',    0x0002 );
 define ( 'ACCOUNT_ROLE_DEVELOPER', 0x0004 );
 define ( 'ACCOUNT_ROLE_ADMIN',     0x1000 );
@@ -506,10 +513,12 @@ define ( 'ITEM_SPAM',            0x0008);
 define ( 'ITEM_DELETED',         0x0010);
 define ( 'ITEM_UNPUBLISHED',     0x0020);
 define ( 'ITEM_WEBPAGE',         0x0040);	// is a static web page, not a conversational item
-define ( 'ITEM_DELAYED_PUBLISH', 0x0080); 
+define ( 'ITEM_DELAYED_PUBLISH', 0x0080);
 define ( 'ITEM_BUILDBLOCK',      0x0100);	// Named thusly to make sure nobody confuses this with ITEM_BLOCKED
 define ( 'ITEM_PDL',			 0x0200);	// Page Description Language - e.g. Comanche
 define ( 'ITEM_BUG',			 0x0400);	// Is a bug, can be used by the internal bug tracker
+define ( 'ITEM_PENDING_REMOVE',  0x0800);  // deleted, notification period has lapsed
+
 /**
  * Item Flags
  */
@@ -528,8 +537,8 @@ define ( 'ITEM_MENTIONSME',      0x0400);
 define ( 'ITEM_NOCOMMENT',       0x0800);  // commenting/followups are disabled
 define ( 'ITEM_OBSCURED',        0x1000);  // bit-mangled to protect from casual browsing by site admin
 define ( 'ITEM_VERIFIED',        0x2000);  // Signature verification was successful
-define ( 'ITEM_RETAINED',        0x4000);  // We looked at this item once to decide whether or not to expire it, and decided not to. 
-										   // Don't make us evaluate this same item again. 
+define ( 'ITEM_RETAINED',        0x4000);  // We looked at this item once to decide whether or not to expire it, and decided not to.
+										   // Don't make us evaluate this same item again.
 /**
  *
  * Reverse the effect of magic_quotes_gpc if it is enabled.
@@ -583,7 +592,7 @@ function startup() {
 class App {
 
 	public  $install    = false;           // true if we are installing the software
-		
+
 	public  $account    = null;            // account record of the logged-in account
 	public  $channel    = null;            // channel record of the current channel of the logged-in account
 	public  $observer   = null;            // xchan record of the page observer
@@ -625,7 +634,7 @@ class App {
 	public  $css_sources = array();
 	public  $js_sources = array();
 	public  $theme_info = array();
-	
+
 	public $nav_sel;
 
 	public $category;
@@ -657,7 +666,7 @@ class App {
 	public $template_engines = array();
 	// array of instanced template engines ('name'=>'instance')
 	public $template_engine_instance = array();
-	
+
 	private $ldelim = array(
 		'internal' => '',
 		'smarty3' => '{{'
@@ -680,7 +689,7 @@ class App {
 	private $cached_profile_picdate;
 
 
-							
+
 	function __construct() {
 
 		global $default_timezone;
@@ -794,7 +803,7 @@ class App {
 		$this->head_set_icon('/images/rm-32.png');
 
 		BaseObject::set_app($this);
-		
+
 		/**
 		 * register template engines
 		 */
@@ -803,16 +812,16 @@ class App {
 			if (in_array("ITemplateEngine", class_implements($k))){
 				$this->register_template_engine($k);
 			}
-		}		
+		}
 	}
 
 	function get_baseurl($ssl = false) {
 
 
-		if(is_array($this->config) 
-			&& array_key_exists('system',$this->config) 
-			&& is_array($this->config['system']) 
-			&& array_key_exists('baseurl',$this->config['system']) 
+		if(is_array($this->config)
+			&& array_key_exists('system',$this->config)
+			&& is_array($this->config['system'])
+			&& array_key_exists('baseurl',$this->config['system'])
 			&& strlen($this->config['system']['baseurl'])) {
 			$url = $this->config['system']['baseurl'];
 			return $url;
@@ -827,10 +836,10 @@ class App {
 
 	function set_baseurl($url) {
 
-		if(is_array($this->config) 
-			&& array_key_exists('system',$this->config) 
-			&& is_array($this->config['system']) 
-			&& array_key_exists('baseurl',$this->config['system']) 
+		if(is_array($this->config)
+			&& array_key_exists('system',$this->config)
+			&& is_array($this->config['system'])
+			&& array_key_exists('baseurl',$this->config['system'])
 			&& strlen($this->config['system']['baseurl'])) {
 			$url = $this->config['system']['baseurl'];
 		}
@@ -929,11 +938,11 @@ class App {
 			$arr = array('location' => $location, 'widgets' => $ret);
 			call_hooks('get_widgets', $arr);
 			return $arr['widgets'];
-		}	
+		}
 		$arr = array('location' => $location, 'widgets' => $this->widgets);
 		call_hooks('get_widgets', $arr);
 		return $arr['widgets'];
-	}		
+	}
 
 	function set_pager_total($n) {
 		$this->pager['total'] = intval($n);
@@ -967,7 +976,7 @@ class App {
 			'$head_css' => head_get_css(),
 			'$head_js' => head_get_js(),
 			'$js_strings' => js_strings(),
-			'$zid' => get_my_address(), 
+			'$zid' => get_my_address(),
 		)) . $this->page['htmlhead'];
 	}
 
@@ -978,48 +987,48 @@ class App {
 	* @param string $name
 	*/
 	function register_template_engine($class, $name = '') {
-	   if ($name===""){
-		   $v = get_class_vars( $class );
-		   if(x($v,"name")) $name = $v['name'];
-	   }
-	   if ($name===""){
-		   echo "template engine <tt>$class</tt> cannot be registered without a name.\n";
-		   killme(); 
-	   }
-	   $this->template_engines[$name] = $class;
+		if ($name===""){
+			$v = get_class_vars( $class );
+			if(x($v,"name")) $name = $v['name'];
+		}
+		if ($name===""){
+			echo "template engine <tt>$class</tt> cannot be registered without a name.\n";
+			killme();
+		}
+		$this->template_engines[$name] = $class;
 	}
 
 	/**
 	* return template engine instance. If $name is not defined,
 	* return engine defined by theme, or default
-	* 
+	*
 	* @param strin $name Template engine name
 	* @return object Template Engine instance
 	*/
 	function template_engine($name = ''){
-	   if ($name!=="") {
-		   $template_engine = $name;
-	   } else {
-		   $template_engine = 'smarty3';
-		   if (x($this->theme, 'template_engine')) {
-			   $template_engine = $this->theme['template_engine'];
-		   }
-	   }
+		if ($name!=="") {
+			$template_engine = $name;
+		} else {
+			$template_engine = 'smarty3';
+			if (x($this->theme, 'template_engine')) {
+				$template_engine = $this->theme['template_engine'];
+			}
+		}
 
-	   if (isset($this->template_engines[$template_engine])){
-		   if(isset($this->template_engine_instance[$template_engine])){
-			   return $this->template_engine_instance[$template_engine];
-		   } else {
-			   $class = $this->template_engines[$template_engine];
-			   $obj = new $class;
-			   $this->template_engine_instance[$template_engine] = $obj;
-			   return $obj;
-		   }
-	   }
+		if (isset($this->template_engines[$template_engine])){
+			if(isset($this->template_engine_instance[$template_engine])){
+				return $this->template_engine_instance[$template_engine];
+			} else {
+				$class = $this->template_engines[$template_engine];
+				$obj = new $class;
+				$this->template_engine_instance[$template_engine] = $obj;
+				return $obj;
+			}
+		}
 
-	   echo "template engine <tt>$template_engine</tt> is not registered!\n"; killme();
-	}	
-	
+		echo "template engine <tt>$template_engine</tt> is not registered!\n"; killme();
+	}
+
 	function get_template_engine() {
 		return $this->theme['template_engine'];
 	}
@@ -1032,7 +1041,7 @@ class App {
 			case 'smarty3':
 				if(!is_writable('view/tpl/smarty3/'))
 					echo "<b>ERROR</b> folder <tt>view/tpl/smarty3/</tt> must be writable by webserver."; killme();
-					
+
 				break;
 			default:
 				break;
@@ -1159,7 +1168,7 @@ function check_config(&$a) {
 
 		$oldurl = hex2bin($saved);
 		logger('Baseurl changed!');
-		
+
 		$oldhost = substr($oldurl,strpos($oldurl,'//')+2);
 		$host = substr(z_root(),strpos(z_root(),'//')+2);
 
@@ -1171,11 +1180,11 @@ function check_config(&$a) {
 			set_config('system','urlverify',bin2hex(z_root()));
 		}
 		else
-			logger('Attempt to change baseurl from a DNS name to an IP address was refused.');  
+			logger('Attempt to change baseurl from a DNS name to an IP address was refused.');
 	}
 
-	// This will actually set the url to the one stored in .htconfig, and ignore what 
-	// we're passing - unless we are installing and it has never been set. 
+	// This will actually set the url to the one stored in .htconfig, and ignore what
+	// we're passing - unless we are installing and it has never been set.
 
 	$a->set_baseurl($a->get_baseurl());
 
@@ -1244,7 +1253,7 @@ function check_config(&$a) {
 							));
 
 							$subject = email_header_encode(sprintf(t('Update Error at %s'), $a->get_baseurl()));
-									
+
 							mail($a->config['system']['admin_email'], $subject, $email_msg,
 								'From: Administrator' . '@' . $_SERVER['SERVER_NAME'] . "\n"
 								. 'Content-type: text/plain; charset=UTF-8' . "\n"
@@ -1254,7 +1263,7 @@ function check_config(&$a) {
 						}
 						else
 							set_config('database','update_r' . $x, 'success');
-								
+
 					}
 				}
 				set_config('system','db_version', DB_UPDATE_VERSION);
@@ -1383,7 +1392,7 @@ function fix_system_urls($oldurl,$newurl) {
 				dbesc(str_replace($oldurl,$newurl,$rr['xchan_photo_m'])),
 				intval($rr['channel_id'])
 			);
-						
+
 			proc_run('php', 'include/notifier.php', 'refresh_all', $rr['channel_id']);
 
 		}
@@ -1405,7 +1414,7 @@ function login($register = false, $form_id = 'main-login', $hiddens=false) {
 	$reglink = get_config('system','register_link');
 	if(! strlen($reglink))
 		$reglink = 'register';
-	
+
 	$reg = array(
 		'title' => t('Create an account to access services and applications within the Red Matrix'),
 		'desc' => t('Register'),
@@ -1434,13 +1443,13 @@ function login($register = false, $form_id = 'main-login', $hiddens=false) {
 		'$logout'       => t('Logout'),
 		'$login'        => t('Login'),
 		'$form_id'      => $form_id,
-		'$lname'	 	=> array('username', t('Email') , '', ''),
-		'$lpassword' 	=> array('password', t('Password'), '', ''),
+		'$lname'        => array('username', t('Email') , '', ''),
+		'$lpassword'    => array('password', t('Password'), '', ''),
 		'$remember'     => array('remember', t('Remember me'), '', ''),
 		'$hiddens'      => $hiddens,
 
 		'$register'     => $reg,
-	
+
 		'$lostpass'     => t('Forgot your password?'),
 		'$lostlink'     => t('Password Reset'),
 	));
@@ -1504,13 +1513,13 @@ function notice($s) {
 	$a = get_app();
 	if(! x($_SESSION,'sysmsg'))	$_SESSION['sysmsg'] = array();
 	if($a->interactive) {
-		// shameless plug, permission is denied and they have no identity. 
-		// There's a fairly good chance that they've not got zot. 
+		// shameless plug, permission is denied and they have no identity.
+		// There's a fairly good chance that they've not got zot.
 		if((stristr($s,t('permission denied'))) && (! get_observer_hash())) {
 			$s .= '<br /><a href="http://getzot.com">' . t('Got Zot?') . '</a>';
 		}
 		$_SESSION['sysmsg'][] = $s;
-	}		
+	}
 }
 
 
@@ -1572,7 +1581,7 @@ function proc_run($cmd){
 	}
 
 	$args = $newargs;
-		
+
 	$arr = array('args' => $args, 'run_cmd' => true);
 
 	call_hooks("proc_run", $arr);
@@ -1604,7 +1613,7 @@ function is_windows() {
 
 function current_theme(){
 	$app_base_themes = array('redbasic');
-	
+
 	$a = get_app();
 	$page_theme = null;
 
@@ -1622,33 +1631,33 @@ function current_theme(){
 		$page_theme = $a->layout['theme'];
 
 	// Allow folks to over-rule channel themes and always use their own on their own site.
-	// The default is for channel themes to take precedence over your own on pages belonging 
-	// to that channel. 
+	// The default is for channel themes to take precedence over your own on pages belonging
+	// to that channel.
 
 	if($page_theme && local_user() && local_user() != $a->profile_url) {
 		if(get_pconfig(local_user(),'system','always_my_theme'))
 			$page_theme = null;
 	}
 
-	
+
 	$is_mobile = $a->is_mobile || $a->is_tablet;
-	
-    $standard_system_theme = ((isset($a->config['system']['theme'])) ? $a->config['system']['theme'] : '');
-    $standard_theme_name = ((isset($_SESSION) && x($_SESSION,'theme')) ? $_SESSION['theme'] : $standard_system_theme);
-    	
+
+	$standard_system_theme = ((isset($a->config['system']['theme'])) ? $a->config['system']['theme'] : '');
+	$standard_theme_name = ((isset($_SESSION) && x($_SESSION,'theme')) ? $_SESSION['theme'] : $standard_system_theme);
+
 	if($is_mobile) {
 		if(isset($_SESSION['show_mobile']) && !$_SESSION['show_mobile']) {
 			$system_theme = $standard_system_theme;
 			$theme_name = $standard_theme_name;
 		}
-		else {	
+		else {
 			$system_theme = ((isset($a->config['system']['mobile_theme'])) ? $a->config['system']['mobile_theme'] : '');
 			$theme_name = ((isset($_SESSION) && x($_SESSION,'mobile_theme')) ? $_SESSION['mobile_theme'] : $system_theme);
 
 			if($theme_name === '' || $theme_name === '---'  ) {
 				// user has selected to have the mobile theme be the same as the normal one
 				$system_theme = $standard_system_theme;
-				$theme_name = $standard_theme_name;				
+				$theme_name = $standard_theme_name;
 			}
 		}
 	}
@@ -1660,22 +1669,22 @@ function current_theme(){
 			$theme_name = $page_theme;
 	}
 
-	
+
 	if($theme_name &&
 			(file_exists('view/theme/' . $theme_name . '/css/style.css') ||
 					file_exists('view/theme/' . $theme_name . '/php/style.php')))
 		return($theme_name);
-	
+
 	foreach($app_base_themes as $t) {
 		if(file_exists('view/theme/' . $t . '/css/style.css')||
 			file_exists('view/theme/' . $t . '/php/style.php'))
 			return($t);
 	}
-	
+
 	$fallback = array_merge(glob('view/theme/*/css/style.css'),glob('view/theme/*/php/style.php'));
 	if(count($fallback))
 		return (str_replace('view/theme/','', substr($fallback[0],0,-10)));
-	
+
 }
 
 
@@ -1697,8 +1706,8 @@ function current_theme_url($installing = false) {
 
 function is_site_admin() {
 	$a = get_app();
-	if((intval($_SESSION['authenticated'])) 
-		&& (is_array($a->account)) 
+	if((intval($_SESSION['authenticated']))
+		&& (is_array($a->account))
 		&& ($a->account['account_roles'] & ACCOUNT_ROLE_ADMIN))
 		return true;
 	return false;
@@ -1706,8 +1715,8 @@ function is_site_admin() {
 
 function is_developer() {
 	$a = get_app();
-	if((intval($_SESSION['authenticated'])) 
-		&& (is_array($a->account)) 
+	if((intval($_SESSION['authenticated']))
+		&& (is_array($a->account))
 		&& ($a->account['account_roles'] & ACCOUNT_ROLE_DEVELOPER))
 		return true;
 	return false;
@@ -1745,29 +1754,29 @@ function load_contact_links($uid) {
 /**
  * returns querystring as string from a mapped array
  *
- * @param params Array 
+ * @param params Array
  * @return string
  */
 
-function build_querystring($params, $name=null) { 
-    $ret = ""; 
-    foreach($params as $key=>$val) {
-        if(is_array($val)) { 
-            if($name==null) {
-                $ret .= build_querystring($val, $key); 
-            } else {
-                $ret .= build_querystring($val, $name."[$key]");    
-            }
-        } else {
-            $val = urlencode($val);
-            if($name!=null) {
-                $ret.=$name."[$key]"."=$val&"; 
-            } else {
-                $ret.= "$key=$val&"; 
-            }
-        } 
-    } 
-    return $ret;    
+function build_querystring($params, $name=null) {
+	$ret = "";
+	foreach($params as $key=>$val) {
+		if(is_array($val)) {
+			if($name==null) {
+				$ret .= build_querystring($val, $key);
+			} else {
+				$ret .= build_querystring($val, $name."[$key]");
+			}
+		} else {
+			$val = urlencode($val);
+			if($name!=null) {
+				$ret .= $name . "[$key]" . "=$val&";
+			} else {
+				$ret .= "$key=$val&";
+			}
+		}
+	}
+	return $ret;
 }
 
 
@@ -1816,7 +1825,7 @@ function get_custom_nav(&$a,$navname) {
 	if(! $navname)
 		return $a->page['nav'];
 	// load custom nav menu by name here
-	
+
 }
 
 function construct_page(&$a) {
@@ -1838,10 +1847,10 @@ function construct_page(&$a) {
 	}
 
 	$comanche = ((count($a->layout)) ? true : false);
-		
+
 	/**
- 	 * Build the page - now that we have all the components
- 	 */
+	 * Build the page - now that we have all the components
+	 */
 
 	require_once(theme_include('theme_init.php'));
 
@@ -1851,7 +1860,7 @@ function construct_page(&$a) {
 		$installing = true;
 	else {
 		nav($a);
-	} 
+	}
 
 	if($comanche) {
 		if($a->layout['nav']) {
@@ -1886,18 +1895,18 @@ function construct_page(&$a) {
 		foreach($arr as $x) {
 			if(! array_key_exists($x['location'],$a->page))
 				$a->page[$x['location']] = '';
-			$a->page[$x['location']] .= $x['html']; 
+			$a->page[$x['location']] .= $x['html'];
 		}
 	}
 
 	// Let's say we have a comanche declaration '[region=nav][/region][region=content]$nav $content[/region]'.
-	// The text 'region=' identifies a section of the layout by that name. So what we want to do here is leave 
-	// $a->page['nav'] empty and put the default content from $a->page['nav'] and $a->page['section'] 
+	// The text 'region=' identifies a section of the layout by that name. So what we want to do here is leave
+	// $a->page['nav'] empty and put the default content from $a->page['nav'] and $a->page['section']
 	// into a new region called $a->data['content']. It is presumed that the chosen layout file for this comanche page
-	// has a '<content>' element instead of a '<section>'. 
-	
-	// This way the Comanche layout can include any existing content, alter the layout by adding stuff around it or changing the 
-	// layout completely with a new layout definition, or replace/remove existing content. 
+	// has a '<content>' element instead of a '<section>'.
+
+	// This way the Comanche layout can include any existing content, alter the layout by adding stuff around it or changing the
+	// layout completely with a new layout definition, or replace/remove existing content.
 
 	if($comanche) {
 		$arr = array('module' => $a->module, 'layout' => $a->layout);
@@ -1924,7 +1933,7 @@ function construct_page(&$a) {
 
 			}
 		}
-	}	
+	}
 
 	if($a->is_mobile || $a->is_tablet) {
 		if(isset($_SESSION['show_mobile']) && !$_SESSION['show_mobile']) {
@@ -1933,8 +1942,8 @@ function construct_page(&$a) {
 		else {
 			$link = $a->get_baseurl() . '/toggle_mobile?f=&off=1&address=' . curPageURL();
 		}
-		if ((isset($_SESSION) && $_SESSION['mobile_theme'] !='' && $_SESSION['mobile_theme'] !='---' ) || 
-		    (isset($a->config['system']['mobile_theme']) && !isset($_SESSION['mobile_theme']))) {
+		if ((isset($_SESSION) && $_SESSION['mobile_theme'] !='' && $_SESSION['mobile_theme'] !='---' ) ||
+			(isset($a->config['system']['mobile_theme']) && !isset($_SESSION['mobile_theme']))) {
 			$a->page['footer'] .= replace_macros(get_markup_template("toggle_mobile_footer.tpl"), array(
 				'$toggle_link' => $link,
 				'$toggle_text' => t('toggle mobile')
@@ -1948,11 +1957,11 @@ function construct_page(&$a) {
 	header("Content-type: text/html; charset=utf-8");
 
 	require_once(theme_include(
-		((x($a->page,'template')) 
-			? $a->page['template'] 
-			: 'default' ) 
+		((x($a->page,'template'))
+			? $a->page['template']
+			: 'default' )
 			. '.php' )
-	); 
+	);
 
 	return;
 }

@@ -212,6 +212,29 @@ function connections_content(&$a) {
 				$pending = true;
 				nav_set_selected('intros');
 				break;
+			case 'ifpending':
+				$r = q("SELECT COUNT(abook.abook_id) AS total FROM abook left join xchan on abook.abook_xchan = xchan.xchan_hash where abook_channel = %d and not (abook_flags & %d) and not (xchan_flags & %d ) and (abook_flags & %d) and not (abook_flags & %d)",
+					intval(local_user()),
+					intval(ABOOK_FLAG_SELF),
+					intval(XCHAN_FLAGS_DELETED),
+					intval(ABOOK_FLAG_PENDING),
+					intval(ABOOK_FLAG_IGNORED)		
+				);
+				if($r && $r[0]['total']) {
+					$search_flags = ABOOK_FLAG_PENDING;
+					$head = t('New');
+					$pending = true;
+					nav_set_selected('intros');
+					$a->argv[1] = 'pending';
+				}
+				else {
+					$head = t('All');
+					$search_flags = 0;
+					$all = true;
+					$a->argc = 1;
+					unset($a->argv[1]);
+				}
+				break;
 			case 'unconnected':
 				$search_flags = ABOOK_FLAG_UNCONNECTED;
 				$head = t('Unconnected');
@@ -321,7 +344,7 @@ function connections_content(&$a) {
 		intval(ABOOK_FLAG_SELF),
 		intval(XCHAN_FLAGS_DELETED)
 	);
-	if(count($r)) {
+	if($r) {
 		$a->set_pager_total($r[0]['total']);
 		$total = $r[0]['total'];
 	}
@@ -350,18 +373,16 @@ function connections_content(&$a) {
 					'thumb' => $rr['xchan_photo_m'], 
 					'name' => $rr['xchan_name'],
 					'username' => $rr['xchan_name'],
-					'sparkle' => $sparkle,
+					'classes' => (($rr['abook_flags'] & ABOOK_FLAG_ARCHIVED) ? 'archived' : ''),
 					'link' => z_root() . '/connedit/' . $rr['abook_id'],
-					'url' => $rr['xchan_url'],
+					'url' => chanlink_url($rr['xchan_url']),
 					'network' => network_to_name($rr['network']),
 				);
 			}
 		}
 	}
 	
-
-	$tpl = get_markup_template("contacts-template.tpl");
-	$o .= replace_macros($tpl,array(
+	$o .= replace_macros(get_markup_template('connections.tpl'),array(
 		'$header' => t('Connections') . (($head) ? ' - ' . $head : ''),
 		'$tabs' => $t,
 		'$total' => $total,
@@ -369,6 +390,7 @@ function connections_content(&$a) {
 		'$desc' => t('Search your connections'),
 		'$finding' => (($searching) ? t('Finding: ') . "'" . $search . "'" : ""),
 		'$submit' => t('Find'),
+		'$edit' => t('Edit'),
 		'$cmd' => $a->cmd,
 		'$contacts' => $contacts,
 		'$paginate' => paginate($a),

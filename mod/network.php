@@ -100,6 +100,7 @@ function network_content(&$a, $update = 0, $load = false) {
 	$spam = ((x($_GET,'spam')) ? intval($_GET['spam']) : 0);
 	$cmin = ((x($_GET,'cmin')) ? intval($_GET['cmin']) : 0);
 	$cmax = ((x($_GET,'cmax')) ? intval($_GET['cmax']) : 99);
+	$firehose = ((x($_GET,'fh')) ? intval($_GET['fh']) : 0);
 	$file = ((x($_GET,'file')) ? $_GET['file'] : '');
 
 
@@ -135,7 +136,7 @@ function network_content(&$a, $update = 0, $load = false) {
 			'lockstate' => (($group || $cid || $channel['channel_allow_cid'] || $channel['channel_allow_gid'] || $channel['channel_deny_cid'] || $channel['channel_deny_gid']) ? 'lock' : 'unlock'),
 			'acl' => populate_acl((($group || $cid) ? $def_acl : $channel_acl)),
 			'bang' => (($group || $cid) ? '!' : ''),
-			'visitor' => 'block',
+			'visitor' => true,
 			'profile_uid' => local_user()
 		);
 
@@ -218,6 +219,7 @@ function network_content(&$a, $update = 0, $load = false) {
 			. ((x($_GET,'cmin'))   ? '&cmin='   . $_GET['cmin']   : '') 
 			. ((x($_GET,'cmax'))   ? '&cmax='   . $_GET['cmax']   : '') 
 			. ((x($_GET,'file'))   ? '&file='   . $_GET['file']   : '') 
+			. ((x($_GET,'fh'))     ? '&fh='     . $_GET['fh']   : '') 
 
 			. "'; var profile_page = " . $a->pager['page'] . ";</script>";
 
@@ -235,6 +237,7 @@ function network_content(&$a, $update = 0, $load = false) {
 			'$liked' => (($liked) ? $liked : '0'),
 			'$conv' => (($conv) ? $conv : '0'),
 			'$spam' => (($spam) ? $spam : '0'),
+			'$fh' => (($firehose) ? $firehose : '0'),
 			'$nouveau' => (($nouveau) ? $nouveau : '0'),
 			'$wall' => '0',
 			'$list' => ((x($_REQUEST,'list')) ? intval($_REQUEST['list']) : 0),
@@ -316,6 +319,17 @@ function network_content(&$a, $update = 0, $load = false) {
 
 	}
 
+	if($firehose && (! get_config('system','disable_discover_tab'))) {
+		require_once('include/identity.php');
+		$sys = get_sys_channel();
+		$uids = " and item.uid  = " . intval($sys['channel_id']) . " ";
+		$a->data['firehose'] = intval($sys['channel_id']);
+	}
+	else {
+		$uids = " and item.uid = " . local_user() . " ";
+	}
+
+
 	$simple_update = (($update) ? " and ( item.item_flags & " . intval(ITEM_UNSEEN) . " ) " : '');
 	if($load)
 		$simple_update = '';
@@ -326,11 +340,10 @@ function network_content(&$a, $update = 0, $load = false) {
 		// "New Item View" - show all items unthreaded in reverse created date order
 
 		$items = q("SELECT `item`.*, `item`.`id` AS `item_id` FROM `item` 
-			WHERE `item`.`uid` = %d AND item_restrict = 0 
+			WHERE true $uids AND item_restrict = 0 
 			$simple_update
 			$sql_extra $sql_nets
-			ORDER BY `item`.`received` DESC $pager_sql ",
-			intval($_SESSION['uid'])
+			ORDER BY `item`.`received` DESC $pager_sql "
 		);
 
 		require_once('include/items.php');
@@ -354,27 +367,26 @@ function network_content(&$a, $update = 0, $load = false) {
 
 			$r = q("SELECT distinct item.id AS item_id FROM item 
 				left join abook on item.author_xchan = abook.abook_xchan
-				WHERE item.uid = %d AND item.item_restrict = 0
+				WHERE true $uids AND item.item_restrict = 0
 				AND item.parent = item.id
 				and ((abook.abook_flags & %d) = 0 or abook.abook_flags is null)
 				$sql_extra3 $sql_extra $sql_nets
 				ORDER BY item.$ordering DESC $pager_sql ",
-				intval(local_user()),
 				intval(ABOOK_FLAG_BLOCKED)
 			);
 
 		}
 		else {
-			// update
-			$r = q("SELECT item.parent AS item_id FROM item
-				left join abook on item.author_xchan = abook.abook_xchan
-				WHERE item.uid = %d AND item.item_restrict = 0 $simple_update
-				and ((abook.abook_flags & %d) = 0 or abook.abook_flags is null)
-				$sql_extra3 $sql_extra $sql_nets ",
-				intval(local_user()),
-				intval(ABOOK_FLAG_BLOCKED)
-			);
-
+			if(! $firehose) { 
+				// update
+				$r = q("SELECT item.parent AS item_id FROM item
+					left join abook on item.author_xchan = abook.abook_xchan
+					WHERE true $uids AND item.item_restrict = 0 $simple_update
+					and ((abook.abook_flags & %d) = 0 or abook.abook_flags is null)
+					$sql_extra3 $sql_extra $sql_nets ",
+					intval(ABOOK_FLAG_BLOCKED)
+				);
+			}
 		}
 
 		$first = dba_timer();
@@ -388,10 +400,9 @@ function network_content(&$a, $update = 0, $load = false) {
 			$parents_str = ids_to_querystr($r,'item_id');
 
 			$items = q("SELECT `item`.*, `item`.`id` AS `item_id` FROM `item` 
-				WHERE `item`.`uid` = %d AND `item`.`item_restrict` = 0
+				WHERE true $uids AND `item`.`item_restrict` = 0
 				AND `item`.`parent` IN ( %s )
 				$sql_extra ",
-				intval(local_user()),
 				dbesc($parents_str)
 			);
 
@@ -423,7 +434,7 @@ function network_content(&$a, $update = 0, $load = false) {
 
 //	logger('items: ' . count($items));
 
-	if($update_unseen)
+	if(($update_unseen) && (! $firehose))
 		$r = q("UPDATE `item` SET item_flags = ( item_flags ^ %d)
 			WHERE (item_flags & %d) AND `uid` = %d $update_unseen ",
 			intval(ITEM_UNSEEN),

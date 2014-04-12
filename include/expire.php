@@ -7,10 +7,20 @@ function expire_run($argv, $argc){
 
 	cli_startup();
 
+	$r = q("select id from item where (item_restrict & %d) and not (item_restrict & %d) and changed < UTC_TIMESTAMP() - INTERVAL 10 DAY",
+		intval(ITEM_DELETED),
+		intval(ITEM_PENDING_REMOVE)
+	);
+	if($r) {
+		foreach($r as $rr) {
+			drop_item($rr['id'],false,DROPITEM_PHASE2);
+		}
+	}
+
 	// physically remove anything that has been deleted for more than two months
 
-	$r = q("delete from item where item_flags & %d and changed < UTC_TIMESTAMP() - INTERVAL 60 DAY",
-		intval(ITEM_DELETED)
+	$r = q("delete from item where ( item_restrict & %d ) and changed < UTC_TIMESTAMP() - INTERVAL 36 DAY",
+		intval(ITEM_PENDING_REMOVE)
 	);
 
 	// make this optional as it could have a performance impact on large sites
@@ -28,6 +38,21 @@ function expire_run($argv, $argc){
 			item_expire($rr['channel_id'],$rr['channel_expire_days']);
 		}
 	}
+
+
+	$x = get_sys_channel();
+	if($x) {
+
+		// this should probably just fetch the channel_expire_days from the sys channel,
+		// but there's no convenient way to set it.
+
+		$expire_days = get_config('externals','expire_days');
+		if($expire_days === false)
+			$expire_days = 30;
+		if($expire_days)
+			item_expire($x['channel_id'],$expire_days);
+	}
+
 
 	return;
 }

@@ -176,6 +176,7 @@ function photo_upload($channel, $observer, $args) {
 		if(! $r3)
 			$errors = true;
 	}
+
 	
 	if($errors) {
 		q("delete from photo where resource_id = '%s' and uid = %d",
@@ -187,6 +188,10 @@ function photo_upload($channel, $observer, $args) {
 		call_hooks('photo_upload_end',$ret);
 		return $ret;
 	}
+
+	// This will be the width and height of the smallest representation
+
+	$width_x_height = $ph->getWidth() . 'x' . $ph->getHeight();
 
 	$basename = basename($filename);
 	$mid = item_message_id();
@@ -219,9 +224,13 @@ function photo_upload($channel, $observer, $args) {
 
 	$arr['plink']         = z_root() . '/channel/' . $channel['channel_address'] . '/?f=&mid=' . $arr['mid'];
 
+	if ($width_x_height)
+		$tag = '[zmg=' . $width_x_height. ']';
+	else
+		$tag = '[zmg]';
 
 	$arr['body']          = '[zrl=' . z_root() . '/photos/' . $channel['channel_address'] . '/image/' . $photo_hash . ']' 
-				. '[zmg]' . z_root() . "/photo/{$photo_hash}-{$smallest}.".$ph->getExt() . '[/zmg]' 
+				. $tag . z_root() . "/photo/{$photo_hash}-{$smallest}.".$ph->getExt() . '[/zmg]'
 				. '[/zrl]';
 		
 	$result = item_store($arr);

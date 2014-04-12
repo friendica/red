@@ -17,18 +17,25 @@ function ACL(backend_url, preset){
 	that.item_tpl = unescape($(".acl-list-item[rel=acl-template]").html());
 	that.showall = $("#acl-showall");
 
-	if (preset.length==0) that.showall.addClass("selected");
+	if (preset.length==0) that.showall.removeClass("btn-default").addClass("btn-warning");
 	
 	/*events*/
-	that.showall.click(that.on_showall);
-	$(document).on('click','.acl-button-show',that.on_button_show);
-	$(document).on('click','.acl-button-hide',that.on_button_hide);
-	$("#acl-search").keypress(that.on_search);
-	$("#acl-wrapper").parents("form").submit(that.on_submit);
-	
-	/* startup! */
-	that.get(0,100);
+
+	$(document).ready(function() {
+		that.showall.click(that.on_showall);
+		$(document).on('click','.acl-button-show',that.on_button_show);
+		$(document).on('click','.acl-button-hide',that.on_button_hide);
+		$("#acl-search").keypress(that.on_search);
+//		$("#acl-wrapper").parents("form").submit(that.on_submit);
+
+		/* startup! */
+		that.get(0,100);
+		that.on_submit();
+	});
+
 }
+
+// no longer called on submit - call to update whenever a change occurs to the acl list. 
 
 ACL.prototype.on_submit = function(){
 	aclfileds = $("#acl-fields").html("");
@@ -44,6 +51,8 @@ ACL.prototype.on_submit = function(){
 	$(that.deny_cid).each(function(i,v){
 		aclfileds.append("<input type='hidden' name='contact_deny[]' value='"+v+"'>");
 	});	
+//	alert(aclfileds);
+
 }
 
 ACL.prototype.search = function(){
@@ -61,10 +70,10 @@ ACL.prototype.on_showall = function(event){
 	event.preventDefault()
 	event.stopPropagation();
 	
-	if (that.showall.hasClass("selected")){
+	if (that.showall.hasClass("btn-warning")){
 		return false;
 	}
-	that.showall.addClass("selected");
+	that.showall.removeClass("btn-default").addClass("btn-warning");
 	
 	that.allow_cid = [];
 	that.allow_gid = [];
@@ -72,6 +81,7 @@ ACL.prototype.on_showall = function(event){
 	that.deny_gid  = [];
 	
 	that.update_view();
+	that.on_submit();
 	
 	return false;
 }
@@ -86,7 +96,7 @@ ACL.prototype.on_button_show = function(event){
 	$(this).toggleClass("selected");*/
 
 	that.set_allow($(this).parent().attr('id'));
-
+	that.on_submit();
 	return false;
 }
 ACL.prototype.on_button_hide = function(event){
@@ -99,7 +109,7 @@ ACL.prototype.on_button_hide = function(event){
 	$(this).toggleClass("selected");*/
 
 	that.set_deny($(this).parent().attr('id'));
-
+	that.on_submit();
 	return false;
 }
 
@@ -152,23 +162,11 @@ ACL.prototype.set_deny = function(itemid){
 }
 
 ACL.prototype.update_view = function(){
-	var jotpermslock;
-	var jotpermsunlock;
-	if (document.jotpermslock == null) {
-		jotpermslock = 'lock';
-	} else {
-		jotpermslock = document.jotpermslock;
-	}
-	if (document.jotpermsunlock == null) {
-		jotpermsunlock = 'unlock';
-	} else {
-		jotpermsunlock = document.jotpermsunlock;
-	}
 	if (that.allow_gid.length==0 && that.allow_cid.length==0 &&
 		that.deny_gid.length==0 && that.deny_cid.length==0){
-			that.showall.addClass("selected");
+			that.showall.removeClass("btn-default").addClass("btn-warning");
 			/* jot acl */
-				$('#jot-perms-icon').removeClass(jotpermslock).addClass(jotpermsunlock);
+				$('#jot-perms-icon').removeClass('icon-lock').addClass('icon-unlock');
 				$('#jot-public').show();
 				$('.profile-jot-net input').attr('disabled', false);			
 				if(typeof editor != 'undefined' && editor != false) {
@@ -176,9 +174,9 @@ ACL.prototype.update_view = function(){
 				}
 			
 	} else {
-			that.showall.removeClass("selected");
+			that.showall.removeClass("btn-warning").addClass("btn-default");
 			/* jot acl */
-				$('#jot-perms-icon').removeClass(jotpermsunlock).addClass(jotpermslock);
+				$('#jot-perms-icon').removeClass('icon-unlock').addClass('icon-lock');
 				$('#jot-public').hide();
 				$('.profile-jot-net input').attr('disabled', 'disabled');			
 				$('#profile-jot-desc').html('&nbsp;');
@@ -192,20 +190,20 @@ ACL.prototype.update_view = function(){
 		type = itemid[0];
 		id 	 = itemid.substr(1);
 		
-		btshow = $(this).children(".acl-button-show").removeClass("selected");
-		bthide = $(this).children(".acl-button-hide").removeClass("selected");	
+		btshow = $(this).children(".acl-button-show").removeClass("btn-success").addClass("btn-default");
+		bthide = $(this).children(".acl-button-hide").removeClass("btn-danger").addClass("btn-default");
 		
 		switch(type){
 			case "g":
 				var uclass = "";
 				if (that.allow_gid.indexOf(id)>=0){
-					btshow.addClass("selected");
-					bthide.removeClass("selected");
+					btshow.removeClass("btn-default").addClass("btn-success");
+					bthide.removeClass("btn-danger").addClass("btn-default");
 					uclass="groupshow";
 				}
 				if (that.deny_gid.indexOf(id)>=0){
-					btshow.removeClass("selected");
-					bthide.addClass("selected");
+					btshow.removeClass("btn-success").addClass("btn-default");
+					bthide.removeClass("btn-default").addClass("btn-danger");
 					uclass="grouphide";
 				}
 				
@@ -225,12 +223,12 @@ ACL.prototype.update_view = function(){
 				break;
 			case "c":
 				if (that.allow_cid.indexOf(id)>=0){
-					btshow.addClass("selected");
-					bthide.removeClass("selected");
+					btshow.removeClass("btn-default").addClass("btn-success");
+					bthide.removeClass("btn-danger").addClass("btn-default");
 				}
 				if (that.deny_cid.indexOf(id)>=0){
-					btshow.removeClass("selected");
-					bthide.addClass("selected");
+					btshow.removeClass("btn-success").addClass("btn-default");
+					bthide.removeClass("btn-default").addClass("btn-danger");
 				}			
 		}
 		

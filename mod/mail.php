@@ -222,9 +222,9 @@ function mail_content(&$a) {
 			'$wait' => t('Please wait'),
 			'$submit' => t('Submit'),
 			'$defexpire' => '',
-			'$feature_expire' => ((feature_enabled(local_user(),'content_expire')) ? 'block' : 'none'),
+			'$feature_expire' => ((feature_enabled(local_user(),'content_expire')) ? true : false),
 			'$expires' => t('Set expiration date'),
-			'$feature_encrypt' => ((feature_enabled(local_user(),'content_encrypt')) ? 'block' : 'none'),
+			'$feature_encrypt' => ((feature_enabled(local_user(),'content_encrypt')) ? true : false),
 			'$encrypt' => t('Encrypt text'),
 			'$cipher' => $cipher,
 
@@ -335,9 +335,9 @@ function mail_content(&$a) {
 			'$submit' => t('Submit'),
 			'$wait' => t('Please wait'),
 			'$defexpire' => '',
-			'$feature_expire' => ((feature_enabled(local_user(),'content_expire')) ? 'block' : 'none'),
+			'$feature_expire' => ((feature_enabled(local_user(),'content_expire')) ? true : false),
 			'$expires' => t('Set expiration date'),
-			'$feature_encrypt' => ((feature_enabled(local_user(),'content_encrypt')) ? 'block' : 'none'),
+			'$feature_encrypt' => ((feature_enabled(local_user(),'content_encrypt')) ? true : false),
 			'$encrypt' => t('Encrypt text'),
 			'$cipher' => $cipher,
 

@@ -80,6 +80,16 @@ function validate_channelname($name) {
 function create_sys_channel() {
 	if(get_sys_channel())
 		return;
+
+    // Ensure that there is a host keypair.
+
+    if((! get_config('system','pubkey')) && (! get_config('system','prvkey'))) {
+		require_once('include/crypto.php');
+        $hostkey = new_keypair(4096);
+        set_config('system','pubkey',$hostkey['pubkey']);
+        set_config('system','prvkey',$hostkey['prvkey']);
+    }
+
 	create_identity(array(
 		'account_id' => 'xxx',  // This will create an identity with an (integer) account_id of 0, but account_id is required
 		'nickname' => 'sys',
@@ -96,6 +106,15 @@ function get_sys_channel() {
 	);
 	if($r)
 		return $r[0];
+	return false;
+}
+
+function is_sys_channel($channel_id) {
+	$r = q("select channel_pageflags from channel where channel_id = %d limit 1",
+		intval($channel_id)
+	);
+	if(($r) && ($r[0]['channel_pageflags'] & PAGE_SYSTEM))
+		return true;
 	return false;
 }
 
@@ -167,6 +186,11 @@ function create_identity($arr) {
 		return $ret;
 	}
 
+	if($nick === 'sys' && (! ($pageflags & PAGE_SYSTEM))) {
+		$ret['message'] = t('Reserved nickname. Please choose another.');
+		return $ret;
+	}
+
 	if(check_webbie(array($nick)) !== $nick) {
 		$ret['message'] = t('Nickname has unsupported characters or is already being used on this site.');
 		return $ret;
@@ -200,10 +224,13 @@ function create_identity($arr) {
 		$perms_vals .= ', ' . intval($v);
 	}
 
+	$expire = get_config('system', 'default_expire_days');
+	$expire = (($expire===false)? '0': $expire);
+	
 	$r = q("insert into channel ( channel_account_id, channel_primary, 
 		channel_name, channel_address, channel_guid, channel_guid_sig,
-		channel_hash, channel_prvkey, channel_pubkey, channel_pageflags $perms_keys )
-		values ( %d, %d, '%s', '%s', '%s', '%s', '%s', '%s', '%s', %d $perms_vals ) ",
+		channel_hash, channel_prvkey, channel_pubkey, channel_pageflags, channel_expire_days $perms_keys )
+		values ( %d, %d, '%s', '%s', '%s', '%s', '%s', '%s', '%s', %d, %d $perms_vals ) ",
 
 		intval($arr['account_id']),
 		intval($primary),
@@ -214,7 +241,8 @@ function create_identity($arr) {
 		dbesc($hash),
 		dbesc($key['prvkey']),
 		dbesc($key['pubkey']),
-		intval($pageflags)
+		intval($pageflags),
+		intval($expire)
 	);
 			
 
@@ -523,12 +551,20 @@ function profile_load(&$a, $nickname, $profile = '') {
 		);
 	}
 
+
 	if(! $p) {
 		logger('profile error: ' . $a->query_string, LOGGER_DEBUG);
 		notice( t('Requested profile is not available.') . EOL );
 		$a->error = 404;
 		return;
 	}
+
+	$z = q("select xchan_photo_date from xchan where xchan_hash = '%s' limit 1",
+		dbesc($p[0]['channel_hash'])
+	);
+	if($z)
+		$p[0]['picdate'] = $z[0]['xchan_photo_date'];
+
 	
 	// fetch user tags if this isn't the default profile
 
@@ -711,10 +747,7 @@ logger('online: ' . $profile['online']);
 		? trim(substr($profile['name'],0,strpos($profile['name'],' '))) : $profile['name']);
 	$lastname = (($firstname === $profile['name']) ? '' : trim(substr($profile['name'],strlen($firstname))));
 
-	if(is_array($observer) 
-		&& perm_is_allowed($profile['uid'],$observer['xchan_hash'],'view_contacts')) {
-		$contact_block = contact_block();
-	}
+	$contact_block = contact_block();
 
 	$channel_menu = false;
 	$menu = get_pconfig($profile['uid'],'system','channel_menu');
@@ -943,7 +976,7 @@ function advanced_profile(&$a) {
 		if($a->profile['marital']) $profile['marital'] = array( t('Status:'), $a->profile['marital']);
 
 
-		if($a->profile['with']) $profile['marital']['with'] = $a->profile['with'];
+		if($a->profile['with']) $profile['marital']['with'] = bbcode($a->profile['with']);
 
 		if(strlen($a->profile['howlong']) && $a->profile['howlong'] !== '0000-00-00 00:00:00') {
 				$profile['howlong'] = relative_date($a->profile['howlong'], t('for %1$d %2$s'));
@@ -1223,4 +1256,25 @@ function get_channel_by_nick($nick) {
 	);
 	return(($r) ? $r[0] : false);
 
+}
+
+
+function identity_selector() {
+	if(local_user()) {
+		$r = q("select channel.*, xchan.* from channel left join xchan on channel.channel_hash = xchan.xchan_hash where channel.channel_account_id = %d and not ( channel_pageflags & %d ) order by channel_name ",
+			intval(get_account_id()),
+			intval(PAGE_REMOVED)
+		);
+		if(count($r) > 1) {
+			$selected_channel = null;
+			$account = get_app()->get_account();
+			$o = replace_macros(get_markup_template('channel_id_select.tpl'),array(
+				'$channels' => $r,
+				'$selected' => local_user()
+			));
+			return $o;
+		}
+	}
+
+	return '';
 }

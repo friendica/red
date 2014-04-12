@@ -34,7 +34,5 @@ The Red Matrix is free and open source distributed under the MIT license.
 
 Please connect with one of the developer channels ("Channel One" would be a good choice) if you are interested in helping us out. 
 
-[Please help us change the world by providing a small donation.](http://redmatrix.me/siteinfo) (Large donations are also graciously accepted).
-
 
 If you would like to become a member of the Red Matrix **right now** , please select a public hub from one of our open providers at [https://zothub.com/pubsites](https://zothub.com/pubsites). All sites are interlinked and you can always move to another, so the choice of site can be somewhat arbitrary.

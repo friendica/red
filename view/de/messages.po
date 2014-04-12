@@ -6318,7 +6318,7 @@ msgstr "Du hast %1$.0f von maximal %2$.0f erlaubten Kanälen eingerichtet."
 
 #: ../../mod/manage.php:72
 msgid "Create a new channel"
-msgstr "Erzeuge neues Kanal"
+msgstr "Erzeuge neuen Kanal"
 
 #: ../../mod/manage.php:77
 msgid "Channel Manager"

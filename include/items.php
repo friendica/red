@@ -81,6 +81,19 @@ function collect_recipients($item,&$private) {
 
 	$recipients = check_list_permissions($item['uid'],$recipients,'view_stream');
 
+	// remove any upstream recipients from our list. 
+	// If it is ourself we'll add it back in a second.
+	// This should prevent complex delivery chains from getting overly complex by not 
+	// sending to anybody who is on our list of those who sent it to us.
+ 
+	if($item['route']) {
+		$route = explode(',',$item['route']);
+		if(count($route)) {
+			$route = array_unique($route);
+			$recipients = array_diff($recipients,$route);
+		}
+	}
+
 	// add ourself just in case we have nomadic clones that need to get a copy.
  
 	$recipients[] = $item['author_xchan'];
@@ -139,6 +152,25 @@ function can_comment_on_post($observer_xchan,$item) {
 	
 	return false;
 }
+
+
+function add_source_route($iid,$hash) {
+//	logger('add_source_route ' . $iid . ' ' . $hash, LOGGER_DEBUG);
+
+	if((! $iid) || (! $hash))
+		return;
+	$r = q("select route from item where id = %d limit 1",
+		intval($iid)
+	);
+	if($r) {
+		$new_route = (($r[0]['route']) ? $r[0]['route'] . ',' : '') . $hash; 
+		q("update item set route = '%s' where id = %d limit 1",
+			(dbesc($new_route)),
+			intval($iid)
+		);
+	}
+}
+
 
 
 /**
@@ -636,6 +668,7 @@ function get_item_elements($x) {
 
 
 	$arr['app']          = (($x['app'])            ? htmlspecialchars($x['app'],            ENT_COMPAT,'UTF-8',false) : '');
+	$arr['route']        = (($x['route'])          ? htmlspecialchars($x['route'],          ENT_COMPAT,'UTF-8',false) : '');
 	$arr['mid']          = (($x['message_id'])     ? htmlspecialchars($x['message_id'],     ENT_COMPAT,'UTF-8',false) : '');
 	$arr['parent_mid']   = (($x['message_top'])    ? htmlspecialchars($x['message_top'],    ENT_COMPAT,'UTF-8',false) : '');
 	$arr['thr_parent']   = (($x['message_parent']) ? htmlspecialchars($x['message_parent'], ENT_COMPAT,'UTF-8',false) : '');
@@ -647,7 +680,7 @@ function get_item_elements($x) {
 	$arr['mimetype']     = (($x['mimetype'])       ? htmlspecialchars($x['mimetype'],       ENT_COMPAT,'UTF-8',false) : '');
 	$arr['obj_type']     = (($x['object_type'])    ? htmlspecialchars($x['object_type'],    ENT_COMPAT,'UTF-8',false) : '');
 	$arr['tgt_type']     = (($x['target_type'])    ? htmlspecialchars($x['target_type'],    ENT_COMPAT,'UTF-8',false) : '');
-	$arr['comment_policy'] = (($x['comment_scope']) ? htmlspecialchars($x['comment_scope'],  ENT_COMPAT,'UTF-8',false) : 'contacts');
+	$arr['comment_policy'] = (($x['comment_scope']) ? htmlspecialchars($x['comment_scope'], ENT_COMPAT,'UTF-8',false) : 'contacts');
 
 	$arr['sig']          = (($x['signature']) ? htmlspecialchars($x['signature'],  ENT_COMPAT,'UTF-8',false) : '');
 
@@ -809,14 +842,6 @@ function encode_item($item) {
 			$item['body'] = crypto_unencapsulate(json_decode_plus($item['body']),$key);
 	}
 
-	if($item['item_restrict']  & ITEM_DELETED) {
-		$x['message_id'] = $item['mid'];
-		$x['created']    = $item['created'];
-		$x['flags']      = array('deleted');
-		$x['owner']      = encode_item_xchan($item['owner']);
-		$x['author']     = encode_item_xchan($item['author']);
-		return $x;
-	}
 
 	$x['message_id']     = $item['mid'];
 	$x['message_top']    = $item['parent_mid'];
@@ -836,6 +861,7 @@ function encode_item($item) {
 	$x['location']       = $item['location'];
 	$x['longlat']        = $item['coord'];
 	$x['signature']      = $item['sig'];
+	$x['route']          = $item['route'];
 
 	$x['owner']          = encode_item_xchan($item['owner']);
 	$x['author']         = encode_item_xchan($item['author']);
@@ -859,7 +885,7 @@ function encode_item($item) {
 	if($item['term'])
 		$x['tags']       = encode_item_terms($item['term']);
 
-	logger('encode_item: ' . print_r($x,true));
+	logger('encode_item: ' . print_r($x,true), LOGGER_DATA);
 
 	return $x;
 
@@ -1000,9 +1026,11 @@ function encode_item_flags($item) {
 
 //	most of item_flags and item_restrict are local settings which don't apply when transmitted.
 //  We may need those for the case of syncing other hub locations which you are attached to.
-//  ITEM_DELETED is handled in encode_item directly so we don't need to handle it here. 
 
 	$ret = array();
+
+	if($item['item_restrict'] & ITEM_DELETED)
+		$ret[] = 'deleted';
 	if($item['item_flags'] & ITEM_THREAD_TOP)
 		$ret[] = 'thread_parent';
 	if($item['item_flags'] & ITEM_NSFW)
@@ -2294,6 +2322,7 @@ function tag_deliver($uid,$item_id) {
 		logger('tag_deliver: community tag activity received');
 
 		if(($item['owner_xchan'] === $u[0]['channel_hash']) && (! get_pconfig($u[0]['channel_id'],'system','blocktags'))) {
+			logger('tag_deliver: community tag recipient: ' . $u[0]['channel_name']);
 			$j_tgt = json_decode_plus($item['target']);
 			if($j_tgt && $j_tgt['id']) {
 				$p = q("select * from item where mid = '%s' and uid = %d limit 1",
@@ -2306,6 +2335,7 @@ function tag_deliver($uid,$item_id) {
 					if($j_obj && $j_obj['id'] && $j_obj['title']) {
 						if(is_array($j_obj['link']))
 							$taglink = get_rel_link($j_obj['link'],'alternate');
+
 						store_item_tag($u[0]['channel_id'],$p[0]['id'],TERM_OBJ_POST,TERM_HASHTAG,$j_obj['title'],$j_obj['id']);
 						$x = q("update item set edited = '%s', received = '%s', changed = '%s' where mid = '%s' and uid = %d limit 1",
 							dbesc(datetime_convert()),
@@ -3493,7 +3523,12 @@ function drop_items($items) {
 // permissions to carry out this act. If it is non-interactive, we are deleting something at the
 // system's request and do not check permission. This is very important to know. 
 
-function drop_item($id,$interactive = true) {
+// Some deletion requests (those coming from remote sites) must be staged.
+// $stage = 0 => unstaged
+// $stage = 1 => set deleted flag on the item and perform intial notifications
+// $stage = 2 => perform low level delete at a later stage
+
+function drop_item($id,$interactive = true,$stage = DROPITEM_NORMAL) {
 
 	$a = get_app();
 
@@ -3503,7 +3538,7 @@ function drop_item($id,$interactive = true) {
 		intval($id)
 	);
 
-	if((! $r) || ($r[0]['item_restrict'] & ITEM_DELETED)) {
+	if((! $r) || (($r[0]['item_restrict'] & ITEM_DELETED) && ($stage === DROPITEM_NORMAL))) {
 		if(! $interactive)
 			return 0;
 		notice( t('Item not found.') . EOL);
@@ -3537,7 +3572,7 @@ function drop_item($id,$interactive = true) {
 			intval($item['id'])
 		);
 
-		$arr = array('item' => $item);
+		$arr = array('item' => $item, 'interactive' => $interactive, 'stage' => $stage);
 		call_hooks('drop_item', $arr );
 
 		$notify_id = intval($item['id']);
@@ -3548,10 +3583,10 @@ function drop_item($id,$interactive = true) {
 		);
 		if($items) {
 			foreach($items as $i)
-				delete_item_lowlevel($i);
+				delete_item_lowlevel($i,$stage);
 		}
 		else
-			delete_item_lowlevel($item);
+			delete_item_lowlevel($item,$stage);
 
 		if(! $interactive)
 			return 1;
@@ -3559,7 +3594,7 @@ function drop_item($id,$interactive = true) {
 		// send the notification upstream/downstream as the case may be
 		// only send notifications to others if this is the owner's wall item. 
 
-		if($item['item_flags'] & ITEM_WALL)
+		if(($item['item_flags'] & ITEM_WALL) && ($stage != DROPITEM_PHASE2))
 			proc_run('php','include/notifier.php','drop',$notify_id);
 
 		goaway($a->get_baseurl() . '/' . $_SESSION['return_url']);
@@ -3578,15 +3613,47 @@ function drop_item($id,$interactive = true) {
 // It merely destroys all resources associated with an item. 
 // Please do not use without a suitable wrapper.
 
-function delete_item_lowlevel($item) {
+function delete_item_lowlevel($item,$stage = DROPITEM_NORMAL) {
 
-	$r = q("UPDATE item SET item_restrict = ( item_restrict | %d ), title = '', body = '',
-		changed = '%s', edited = '%s'  WHERE id = %d LIMIT 1",
-		intval(ITEM_DELETED),
-		dbesc(datetime_convert()),
-		dbesc(datetime_convert()),
-		intval($item['id'])
-	);
+
+	switch($stage) {
+		case DROPITEM_PHASE2:
+			$r = q("UPDATE item SET item_restrict = ( item_restrict | %d ), body = '', title = '',
+				changed = '%s', edited = '%s'  WHERE id = %d LIMIT 1",
+				intval(ITEM_PENDING_REMOVE),
+				dbesc(datetime_convert()),
+				dbesc(datetime_convert()),
+				intval($item['id'])
+			);
+			break;
+
+		case DROPITEM_PHASE1:
+			$r = q("UPDATE item SET item_restrict = ( item_restrict | %d ),
+				changed = '%s', edited = '%s'  WHERE id = %d LIMIT 1",
+				intval(ITEM_DELETED),
+				dbesc(datetime_convert()),
+				dbesc(datetime_convert()),
+				intval($item['id'])
+			);
+			break;
+
+		case DROPITEM_NORMAL:
+		default:
+			$r = q("UPDATE item SET item_restrict = ( item_restrict | %d ), body = '', title = '',
+				changed = '%s', edited = '%s'  WHERE id = %d LIMIT 1",
+				intval(ITEM_DELETED),
+				dbesc(datetime_convert()),
+				dbesc(datetime_convert()),
+				intval($item['id'])
+			);
+			break;
+	}
+
+	// network deletion request. Keep the message structure so that we can deliver delete notifications.
+	// Come back after several days (or perhaps a month) to do the lowlevel delete (DROPITEM_PHASE2).
+
+	if($stage == DROPITEM_PHASE1)
+		return true;
 
 	$r = q("delete from term where otype = %d and oid = %d limit 1",
 		intval(TERM_OBJ_POST),
@@ -3751,8 +3818,10 @@ function zot_feed($uid,$observer_xchan,$mindate) {
 		return $result;
 	}
 
-	require_once('include/security.php');
-	$sql_extra = item_permissions_sql($uid);
+	if(! is_sys_channel($uid)) {
+		require_once('include/security.php');
+		$sql_extra = item_permissions_sql($uid);
+	}
 
 	if($mindate != '0000-00-00 00:00:00') {
 		$sql_extra .= " and created > '$mindate' ";
@@ -3763,24 +3832,34 @@ function zot_feed($uid,$observer_xchan,$mindate) {
 
 	$items = array();
 
-	$r = q("SELECT item.*, item.id as item_id from item
-		WHERE uid = %d AND item_restrict = 0 and id = parent
-		AND (item_flags &  %d) 
-		$sql_extra ORDER BY created ASC $limit",
-		intval($uid),
-		intval(ITEM_WALL)
-	);
-	if($r) {
+	if(is_sys_channel($uid)) {
 
+		require_once('include/security.php');
+		$r = q("SELECT item.*, item.id as item_id from item
+			WHERE uid in (" . stream_perms_api_uids(PERMS_PUBLIC) . ") AND item_restrict = 0 and id = parent
+			AND (item_flags &  %d) 
+			and item_private = 0 $sql_extra ORDER BY created ASC $limit",
+			intval(ITEM_WALL)
+		);
+	}
+	else {
+		$r = q("SELECT item.*, item.id as item_id from item
+			WHERE uid = %d AND item_restrict = 0 and id = parent
+			AND (item_flags &  %d) 
+			$sql_extra ORDER BY created ASC $limit",
+			intval($uid),
+			intval(ITEM_WALL)
+		);
+	}
+
+	if($r) {
 		$parents_str = ids_to_querystr($r,'id');
 
 		$items = q("SELECT `item`.*, `item`.`id` AS `item_id` FROM `item` 
-			WHERE `item`.`uid` = %d AND `item`.`item_restrict` = 0
+			WHERE `item`.`item_restrict` = 0
 			AND `item`.`parent` IN ( %s ) ",
-			intval($uid),
 			dbesc($parents_str)
 		);
-
 	}
 
 	if($items) {
@@ -3931,23 +4010,25 @@ function items_fetch($arr,$channel = null,$observer_hash = null,$client_mode = C
 	if(isset($arr['start']) && isset($arr['records']))
         $pager_sql = sprintf(" LIMIT %d, %d ",intval($arr['start']), intval($arr['records']));
 
-    if(($arr['cmin'] != 0) || ($arr['cmax'] != 99)) {
+	if(array_key_exists('cmin',$arr) || array_key_exists('cmax',$arr)) {
+	    if(($arr['cmin'] != 0) || ($arr['cmax'] != 99)) {
 
-        // Not everybody who shows up in the network stream will be in your address book.
-        // By default those that aren't are assumed to have closeness = 99; but this isn't
-        // recorded anywhere. So if cmax is 99, we'll open the search up to anybody in
-        // the stream with a NULL address book entry.
+    	    // Not everybody who shows up in the network stream will be in your address book.
+        	// By default those that aren't are assumed to have closeness = 99; but this isn't
+	        // recorded anywhere. So if cmax is 99, we'll open the search up to anybody in
+    	    // the stream with a NULL address book entry.
 
-        $sql_nets .= " AND ";
+			$sql_nets .= " AND ";
 
-        if($arr['cmax'] == 99)
-            $sql_nets .= " ( ";
+			if($arr['cmax'] == 99)
+				$sql_nets .= " ( ";
 
-        $sql_nets .= "( abook.abook_closeness >= " . intval($arr['cmin']) . " ";
-        $sql_nets .= " AND abook.abook_closeness <= " . intval($arr['cmax']) . " ) ";
-		if($cmax == 99)
-            $sql_nets .= " OR abook.abook_closeness IS NULL ) ";
-    }
+			$sql_nets .= "( abook.abook_closeness >= " . intval($arr['cmin']) . " ";
+			$sql_nets .= " AND abook.abook_closeness <= " . intval($arr['cmax']) . " ) ";
+			if($cmax == 99)
+				$sql_nets .= " OR abook.abook_closeness IS NULL ) ";
+    	}
+	}
 
     $simple_update = (($client_mode & CLIENT_MODE_UPDATE) ? " and ( item.item_flags & " . intval(ITEM_UNSEEN) . " ) " : '');
     if($client_mode & CLIENT_MODE_LOAD)

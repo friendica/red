@@ -100,6 +100,13 @@ function get_all_perms($uid,$observer_xchan,$internal_use = true) {
 					dbesc($observer_xchan),
 					intval(ABOOK_FLAG_SELF)
 				);
+				if(! $x) {
+					// not in address book, see if they've got an xchan
+					$y = q("select xchan_network from xchan where xchan_hash = '%s' limit 1",
+	            		dbesc($observer_xchan)
+					);
+				}
+
 				$abook_checked = true;
 			}
 
@@ -144,9 +151,11 @@ function get_all_perms($uid,$observer_xchan,$internal_use = true) {
 
 		// If we're still here, we have an observer, check the network.
 
-		if(($r[0][$channel_perm] & PERMS_NETWORK) && ($x[0]['xchan_network'] === 'zot')) {
-			$ret[$perm_name] = true;
-			continue;
+		if($r[0][$channel_perm] & PERMS_NETWORK) {
+			if(($x && $x[0]['xchan_network'] === 'zot') || ($y && $y[0]['xchan_network'] === 'zot')) {
+				$ret[$perm_name] = true;
+				continue;
+			}
 		}
 
 		// If PERMS_SITE is specified, find out if they've got an account on this hub
@@ -263,6 +272,12 @@ function perm_is_allowed($uid,$observer_xchan,$permission) {
 		if(($x) && (! $global_perms[$permission][2]) && ($x[0]['abook_flags'] & ABOOK_FLAG_IGNORED))
 			return false;
 
+		if(! $x) {
+			// not in address book, see if they've got an xchan
+			$y = q("select xchan_network from xchan where xchan_hash = '%s' limit 1",
+	            dbesc($observer_xchan)
+			);
+		}
 	}
 
 
@@ -283,9 +298,10 @@ function perm_is_allowed($uid,$observer_xchan,$permission) {
 
 	// If we're still here, we have an observer, check the network.
 
-	if(($r[0][$channel_perm] & PERMS_NETWORK) && ($x[0]['xchan_network'] === 'zot'))
-		return true;
-
+	if($r[0][$channel_perm] & PERMS_NETWORK) {
+		if (($x && $x[0]['xchan_network'] === 'zot') || ($y && $y[0]['xchan_network'] === 'zot'))
+			return true;
+	}
 
 	// If PERMS_SITE is specified, find out if they've got an account on this hub
 

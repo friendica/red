@@ -1,17 +1,13 @@
 /* jot */
 
-#profile-jot-wrapper {
-	margin-top: 25px;
-}
-
 #jot-title,
 #jot-category,
 #jot-pagetitle {
 	border: 0px;
 	margin: 0px;
 	padding: 8px;
-	height: 1.8em;
-	width: 530px;
+	height: 3.4em;
+	width: 70%;
 	margin-bottom: 5px;
 }
 
@@ -20,73 +16,18 @@
 }
 
 #profile-jot-text {
-	height: 1.8em;
+	height: 3.4em;
 	padding: 8px;
-	margin-right: 0px;
-	width: 90%;
+	width: 100%;
 }
 
 #profile-jot-text-loading {
 	float: left;
-	margin: 14px 0px 0px 12px;
+	padding: 30px 0px 0px 12px;
 }
 
 #profile-jot-submit-wrapper {
 	margin-top: 10px;
-	width: 90%;
-}
-
-#profile-jot-submit {
-	height: 22px;
-	width: 70px;
-	float: right;
-}
-
-#profile-upload-wrapper,
-#wall-image-upload-div,
-#wall-image-upload,
-#wall-file-upload-div,
-#wall-file-upload,
-#profile-link,
-#profile-video,
-#profile-audio,
-#profile-location,
-#profile-nolocation,
-#profile-expires, 
-#profile-expires, 
-#jot-perms-icon,
-#jot-preview-link,
-#profile-encrypt,
-.hover, .focus {
-	cursor: pointer;
-}
-
-#profile-upload-wrapper,
-#profile-attach-wrapper,
-#profile-link-wrapper,
-#profile-video-wrapper,
-#profile-audio-wrapper,
-#profile-location-wrapper,
-#profile-nolocation-wrapper,
-#profile-expire-wrapper,
-#profile-encrypt-wrapper {
-	float: left;
-	margin-left: 15px;
-}
-
-#profile-jot-perms {
-	float: right;
-	padding: 6px;
-}
-
-#jot-perms-icon {
-	float: left;
-}
-
-#jot-preview-link {
-	float: left;
-	margin-left: 45px;
-	margin-top: 0px;
 }
 
 #profile-jot-perms-end {
@@ -97,9 +38,12 @@
 	margin-bottom: 30px;
 }
 
-#profile-rotator {
+#profile-rotator-wrapper {
 	float: left;
-	margin: 8px 0px 0px 20px;
+}
+
+#profile-rotator {
+	margin: 16px 0px 0px 16px;
 }
 
 /* this is referenced in js/acl.js - not sure if it is still needed. */
@@ -138,12 +82,7 @@
 .wall-item-info {
 	display: block;
 	float: left;
-	width:110px;
-	margin-right:10px;
-}
-
-.comment .wall-item-info {
-	width: 70px;
+	margin-right: 20px;
 }
 
 .wallwall .wwto {
@@ -166,7 +105,6 @@
 	margin-top: 0px;
 	margin-left: 10px;
 	margin-bottom: 10px;
-	width: 100px;
 }
 
 .wall-item-photo-menu-button {
@@ -203,28 +141,14 @@
 .wall-item-arrowphoto-wrapper {
 	position: absolute;
 	z-index: 99;
+	left: 75px;
 }
 
 .wall-item-wrapper {
 	margin-left:10px;
 }
 
-
 .wall-item-arrowphoto-wrapper {
-	left: 75px;
-}
-
-.wall-item-lock {
-	position: absolute;
-	left: 105px;
-	top: 1px;
-}
-
-.comment .wall-item-lock {
-	left: 65px;
-}
-
-.wall-item-lock {
 
 }
 
@@ -232,15 +156,8 @@
 	cursor: pointer;
 }
 
-.wall-item-location {
-	overflow: hidden;
-	/* add ellipsis on text overflow               */
-	/* this work on safari, opera, ie, chrome.     */
-	/* firefox users have to wait support or we    */
-	/* can use a jquery plugin http://bit.ly/zJskg */
-	text-overflow: ellipsis;
-	-o-text-overflow: ellipsis;
-	width: 100%;
+.lockview-panel {
+	padding: 3px 20px;
 }
 
 .wall-item-author {
@@ -258,7 +175,7 @@
 }
 
 .wall-item-content img {
-    max-width: 95% !important;
+    max-width: 95%;
 }
 
 .wall-item-title {
@@ -272,6 +189,7 @@
 
 .wall-item-body {
 	margin-top: 10px;
+	word-wrap: break-word;
 }
 
 .wall-item-body.divmore {
@@ -354,10 +272,7 @@
 }
 
 .comment-edit-photo {
-	margin-top: 10px;
-	margin-left: 10px;
-	margin-bottom: 10px;
-	width: 100px;
+	margin: 10px 20px 10px 10px;
 	float: left;
 }
 
@@ -366,6 +281,7 @@
 	margin: 0px 0 -5px 0px;
 	padding: 0px;
 	width: 75%;
+	min-width: 170px
 }
 
 [class^="comment-edit-bb"] > li {
@@ -386,15 +302,17 @@
 }
 
 .comment-edit-text-empty {
-	height: 1.0em;
-	width: 270px; 
+	height: 2.8em;
+	width: 30%;
+	min-width: 170px;
 	overflow: auto;
 	margin-bottom: 10px;
 }
 
 .comment-edit-text-full {
 	height: 150px;
-	width: 80%;
+	width: 50%;
+	min-width: 170px;
 	overflow: auto;
 }
 

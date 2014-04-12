@@ -24,6 +24,10 @@ function admin_post(&$a){
 			case 'users':
 				admin_page_users_post($a);
 				break;
+			case 'channels':
+				admin_page_channels_post($a);
+				break;
+
 			case 'plugins':
 				if (argc() > 2 && 
 					is_file("addon/" . argv(2) . "/" . argv(2) . ".php")){
@@ -85,12 +89,13 @@ function admin_content(&$a) {
 
 	// array( url, name, extra css classes )
 	$aside = Array(
-		'site'	 =>	Array($a->get_baseurl(true)."/admin/site/", t("Site") , "site"),
-		'users'	 =>	Array($a->get_baseurl(true)."/admin/users/", t("Users") , "users"),
-		'plugins'=>	Array($a->get_baseurl(true)."/admin/plugins/", t("Plugins") , "plugins"),
-		'themes' =>	Array($a->get_baseurl(true)."/admin/themes/", t("Themes") , "themes"),
-		'hubloc' =>	Array($a->get_baseurl(true)."/admin/hubloc/", t("Server") , "server"),
-		'dbsync' => Array($a->get_baseurl(true)."/admin/dbsync/", t('DB updates'), "dbsync")
+		'site'	     =>	Array($a->get_baseurl(true)."/admin/site/", t("Site") , "site"),
+		'users'	     =>	Array($a->get_baseurl(true)."/admin/users/", t("Accounts") , "users"),
+		'channels'	 =>	Array($a->get_baseurl(true)."/admin/channels/", t("Channels") , "channels"),
+		'plugins'    =>	Array($a->get_baseurl(true)."/admin/plugins/", t("Plugins") , "plugins"),
+		'themes'     =>	Array($a->get_baseurl(true)."/admin/themes/", t("Themes") , "themes"),
+		'hubloc'     =>	Array($a->get_baseurl(true)."/admin/hubloc/", t("Server") , "server"),
+		'dbsync'     => Array($a->get_baseurl(true)."/admin/dbsync/", t('DB updates'), "dbsync")
 	);
 	
 	/* get plugins admin page */
@@ -131,6 +136,9 @@ function admin_content(&$a) {
 				break;
 			case 'users':
 				$o = admin_page_users($a);
+				break;
+			case 'channels':
+				$o = admin_page_channels($a);
 				break;
 			case 'plugins':
 				$o = admin_page_plugins($a);
@@ -236,6 +244,7 @@ function admin_page_site_post(&$a){
 	$allowed_email		=	((x($_POST,'allowed_email'))	? notags(trim($_POST['allowed_email']))		: '');
 	$block_public		=	((x($_POST,'block_public'))		? True	:	False);
 	$force_publish		=	((x($_POST,'publish_all'))		? True	:	False);
+	$disable_discover_tab		=	((x($_POST,'disable_discover_tab'))		? True	:	False);
 	$no_login_on_homepage	=	((x($_POST,'no_login_on_homepage'))		? True	:	False);
 	$global_directory	=	((x($_POST,'directory_submit_url'))	? notags(trim($_POST['directory_submit_url']))	: '');
 	$no_community_page	=	!((x($_POST,'no_community_page'))	? True	:	False);
@@ -333,6 +342,7 @@ function admin_page_site_post(&$a){
 	set_config('system','allowed_email', $allowed_email);
 	set_config('system','block_public', $block_public);
 	set_config('system','publish_all', $force_publish);
+	set_config('system','disable_discover_tab', $disable_discover_tab);
 	if($global_directory=="") {
 		del_config('system','directory_submit_url');
 	} 
@@ -445,7 +455,7 @@ function admin_page_site(&$a) {
 		'$theme_accessibility' 	=> array('theme_accessibility', t("Accessibility system theme"), get_config('system','accessibility_theme'), t("Accessibility theme"), $theme_choices_accessibility),
 		'$site_channel' 	=> array('site_channel', t("Channel to use for this website's static pages"), get_config('system','site_channel'), t("Site Channel")),
 //		'$ssl_policy'       => array('ssl_policy', t("SSL link policy"), (string) intval(get_config('system','ssl_policy')), t("Determines whether generated links should be forced to use SSL"), $ssl_choices),
-		'$maximagesize'		=> array('maximagesize', t("Maximum image size"), get_config('system','maximagesize'), t("Maximum size in bytes of uploaded images. Default is 0, which means no limits.")),
+		'$maximagesize'		=> array('maximagesize', t("Maximum image size"), intval(get_config('system','maximagesize')), t("Maximum size in bytes of uploaded images. Default is 0, which means no limits.")),
 		'$register_policy'	=> array('register_policy', t("Register policy"), get_config('system','register_policy'), "", $register_choices),
 		'$access_policy'	=> array('access_policy', t("Access policy"), get_config('system','access_policy'), "", $access_choices),
 		'$register_text'	=> array('register_text', t("Register text"), htmlspecialchars(get_config('system','register_text'), ENT_QUOTES, 'UTF-8'), t("Will be displayed prominently on the registration page.")),
@@ -454,6 +464,7 @@ function admin_page_site(&$a) {
 		'$allowed_email'	=> array('allowed_email', t("Allowed email domains"), get_config('system','allowed_email'), t("Comma separated list of domains which are allowed in email addresses for registrations to this site. Wildcards are accepted. Empty to allow any domains")),
 		'$block_public'		=> array('block_public', t("Block public"), get_config('system','block_public'), t("Check to block public access to all otherwise public personal pages on this site unless you are currently logged in.")),
 		'$force_publish'	=> array('publish_all', t("Force publish"), get_config('system','publish_all'), t("Check to force all profiles on this site to be listed in the site directory.")),
+		'$disable_discover_tab'	=> array('disable_discover_tab', t("Disable discovery tab"), get_config('system','disable_discover_tab'), t("Remove the tab in the network view with public content pulled from sources chosen for this site.")),
 		'$no_login_on_homepage'	=> array('no_login_on_homepage', t("No login on Homepage"), get_config('system','no_login_on_homepage'), t("Check to hide the login form from your sites homepage when visitors arrive who are not logged in (e.g. when you put the content of the homepage in via the site channel).")),
 			
 		'$proxyuser'		=> array('proxyuser', t("Proxy user"), get_config('system','proxyuser'), ""),
@@ -671,7 +682,7 @@ function admin_page_users(&$a){
 					intval( $uid )
 				);
 
-				notice( sprintf( (($account['account_flags'] & ACCOUNT_BLOCKED) ? t("User '%s' unblocked"):t("User '%s' blocked")) , $account[0]['account_email']) . EOL);
+				notice( sprintf( (($account[0]['account_flags'] & ACCOUNT_BLOCKED) ? t("User '%s' unblocked"):t("User '%s' blocked")) , $account[0]['account_email']) . EOL);
 			}; break;
 		}
 		goaway($a->get_baseurl(true) . '/admin/users' );
@@ -760,6 +771,133 @@ function admin_page_users(&$a){
 
 		'$pending' => $pending,
 		'$users' => $users,
+	));
+	$o .= paginate($a);
+	return $o;
+}
+
+
+/**
+ * Channels admin page
+ *
+ * @param App $a
+ */
+function admin_page_channels_post(&$a){
+	$channels = ( x($_POST, 'channel') ? $_POST['channel'] : Array() );
+
+	check_form_security_token_redirectOnErr('/admin/channels', 'admin_channels');
+
+	if (x($_POST,'page_channels_block')){
+		foreach($channels as $uid){
+			q("UPDATE channel SET channel_pageflags = ( channel_pageflags ^ %d ) where channel_id = %d",
+				intval(PAGE_CENSORED),
+				intval( $uid )
+				);
+		}
+		notice( sprintf( tt("%s channel censored/uncensored", "%s channelss censored/uncensored", count($channels)), count($channels)) );
+	}
+	if (x($_POST,'page_channels_delete')){
+		require_once("include/Contact.php");
+		foreach($channels as $uid){
+			channel_remove($uid,true);
+		}
+		notice( sprintf( tt("%s channel deleted", "%s channels deleted", count($channels)), count($channels)) );
+	}
+
+	goaway($a->get_baseurl(true) . '/admin/channels' );
+	return; // NOTREACHED	
+}
+
+/**
+ * @param App $a
+ * @return string
+ */
+function admin_page_channels(&$a){
+	if (argc() > 2) {
+		$uid = argv(3);
+		$channel = q("SELECT * FROM channel WHERE channel_id = %d", 
+			intval($uid)
+		);
+
+		if (! $channel) {
+			notice( t('Channel not found') . EOL);
+			goaway($a->get_baseurl(true) . '/admin/channels' );
+		}		
+
+		switch(argv(2)){
+			case "delete":{
+  				check_form_security_token_redirectOnErr('/admin/channels', 'admin_channels', 't');
+				// delete channel
+				require_once("include/Contact.php");
+				channel_remove($uid,true);
+				
+				notice( sprintf(t("Channel '%s' deleted"), $channel[0]['channel_name']) . EOL);
+			}; break;
+
+			case "block":{
+				check_form_security_token_redirectOnErr('/admin/channels', 'admin_channels', 't');
+				q("UPDATE channel SET channel_pageflags = ( channel_pageflags ^ %d ) where channel_id = %d",
+					intval(PAGE_CENSORED),
+					intval( $uid )
+				);
+
+				notice( sprintf( (($channel[0]['channel_pageflags'] & PAGE_CENSORED) ? t("Channel '%s' uncensored"): t("Channel '%s' censored")) , $channel[0]['channel_name'] . ' (' . $channel[0]['channel_address'] . ')' ) . EOL);
+			}; break;
+		}
+		goaway($a->get_baseurl(true) . '/admin/channels' );
+		return ''; // NOTREACHED
+		
+	}
+	
+	/* get channels */
+
+	$total = q("SELECT count(*) as total FROM channel where not (channel_pageflags & %d)",
+		intval(PAGE_REMOVED)
+	);
+	if($total) {
+		$a->set_pager_total($total[0]['total']);
+		$a->set_pager_itemspage(100);
+	}
+	
+	$order = " order by channel_name asc ";
+
+	$channels = q("SELECT * from channel where not ( channel_pageflags & %d ) $order limit %d , %d ",
+		intval(PAGE_REMOVED),
+		intval($a->pager['start']),
+		intval($a->pager['itemspage'])
+	);
+					
+	if($channels) {
+		for($x = 0; $x < count($channels); $x ++) {
+			if($channels[$x]['channel_pageflags'] & PAGE_CENSORED)
+				$channels[$x]['blocked'] = true;
+			else
+				$channels[$x]['blocked'] = false;
+		}
+	}
+	
+	$t = get_markup_template("admin_channels.tpl");
+	$o = replace_macros($t, array(
+		// strings //
+		'$title' => t('Administration'),
+		'$page' => t('Channels'),
+		'$submit' => t('Submit'),
+		'$select_all' => t('select all'),
+		'$delete' => t('Delete'),
+		'$block' => t('Censor'),
+		'$unblock' => t('Uncensor'),
+
+		'$h_channels' => t('Channel'),
+		'$th_channels' => array( t('UID'), t('Name'), t('Address')),
+
+		'$confirm_delete_multi' => t('Selected channels will be deleted!\n\nEverything that was posted in these channels on this site will be permanently deleted!\n\nAre you sure?'),
+		'$confirm_delete' => t('The channel {0} will be deleted!\n\nEverything that was posted in this channel on this site will be permanently deleted!\n\nAre you sure?'),
+
+        '$form_security_token' => get_form_security_token("admin_channels"),
+
+		// values //
+		'$baseurl' => $a->get_baseurl(true),
+		'$channels' => $channels,
 	));
 	$o .= paginate($a);
 	return $o;

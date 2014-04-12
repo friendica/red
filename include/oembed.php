@@ -164,8 +164,11 @@ function oembed_iframe($src,$width,$height) {
 
 	$a = get_app();
 
+	$sandbox = ((strpos($src,get_app()->get_hostname())) ? ' sandbox="allow-scripts" ' : '');
+
 	$s = $a->get_baseurl()."/oembed/".base64url_encode($src);
-	return '<iframe height="' . $height . '" width="' . $width . '" src="' . $s . '" frameborder="no" >' . t('Embedded content') . '</iframe>'; 
+
+	return '<iframe ' . $sandbox . ' height="' . $height . '" width="' . $width . '" src="' . $s . '" frameborder="no" >' . t('Embedded content') . '</iframe>'; 
 
 }
 

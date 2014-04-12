@@ -18,8 +18,9 @@ function notification($params) {
 	}
 	if($params['to_xchan']) {
 		$y = q("select channel.*, account.* from channel left join account on channel_account_id = account_id
-			where channel_hash = '%s' limit 1",
-			dbesc($params['to_xchan'])
+			where channel_hash = '%s' and not (channel_pageflags & %d) limit 1",
+			dbesc($params['to_xchan']),
+			intval(PAGE_REMOVED)
 		);
 	}
 	if($x & $y) {
@@ -88,7 +89,7 @@ function notification($params) {
 		$sitelink = t('Please visit %s to view and/or reply to your private messages.');
 		$tsitelink = sprintf( $sitelink, $siteurl . '/mail/' . $params['item']['id'] );
 		$hsitelink = sprintf( $sitelink, '<a href="' . $siteurl . '/mail/' . $params['item']['id'] . '">' . $sitename . '</a>');
-		$itemlink = $siteurl . '/message/' . $params['item']['id'];
+		$itemlink = $siteurl . '/mail/' . $params['item']['id'];
 	}
 
 	if($params['type'] == NOTIFY_COMMENT) {
@@ -102,7 +103,7 @@ function notification($params) {
 		if(array_key_exists('item',$params) && (! visible_activity($params['item'])))
 			return;
 
-		$parent_id = $params['parent'];
+		$parent_mid = $params['parent_mid'];
 
 		// Check to see if there was already a notify for this post.
 		// If so don't create a second notification
@@ -123,9 +124,9 @@ function notification($params) {
 
 		$p = null;
 
-		if($params['otype'] === 'item' && $parent_id) {
-			$p = q("select * from item where id = %d and uid = %d limit 1",
-				intval($parent_id),
+		if($params['otype'] === 'item' && $parent_mid) {
+			$p = q("select * from item where mid = '%s' and uid = %d limit 1",
+				dbesc($parent_mid),
 				intval($recip['channel_id'])
 			);
 		}
@@ -135,6 +136,7 @@ function notification($params) {
 
 		$item_post_type = item_post_type($p[0]);
 		$private = $p[0]['item_private'];
+		$parent_id = $p[0]['id'];
 
 		//$possess_desc = str_replace('<!item_type!>',$possess_desc);
 
@@ -253,14 +255,14 @@ function notification($params) {
 
 	if($params['type'] == NOTIFY_INTRO) {
 		$subject = sprintf( t('[Red:Notify] Introduction received'));
-		$preamble = sprintf( t('%1$s, you\'ve received an introduction from \'%2$s\' at %3$s'), $recip['channel_name'], $sender['xchan_name'], $sitename); 
-		$epreamble = sprintf( t('%1$s, you\'ve received [zrl=%2$s]an introduction[/zrl] from %3$s.'),
+		$preamble = sprintf( t('%1$s, you\'ve received an new connection request from \'%2$s\' at %3$s'), $recip['channel_name'], $sender['xchan_name'], $sitename); 
+		$epreamble = sprintf( t('%1$s, you\'ve received [zrl=%2$s]a new connection request[/zrl] from %3$s.'),
 			$recip['channel_name'],
 			$itemlink,
 			'[zrl=' . $sender['xchan_url'] . ']' . $sender['xchan_name'] . '[/zrl]'); 
 		$body = sprintf( t('You may visit their profile at %s'),$sender['xchan_url']);
 
-		$sitelink = t('Please visit %s to approve or reject the introduction.');
+		$sitelink = t('Please visit %s to approve or reject the connection request.');
 		$tsitelink = sprintf( $sitelink, $siteurl );
 		$hsitelink = sprintf( $sitelink, '<a href="' . $siteurl . '">' . $sitename . '</a>');
 		$itemlink =  $params['link'];
@@ -338,7 +340,7 @@ function notification($params) {
 	$datarray['aid']    = $recip['channel_account_id'];
 	$datarray['uid']    = $recip['channel_id'];
 	$datarray['link']   = $itemlink;
-	$datarray['parent'] = $parent_id;
+	$datarray['parent'] = $parent_mid;
 	$datarray['type']   = $params['type'];
 	$datarray['verb']   = $params['verb'];
 	$datarray['otype']  = $params['otype'];
@@ -355,7 +357,7 @@ function notification($params) {
 	// create notification entry in DB
 
 	$r = q("insert into notify (hash,name,url,photo,date,aid,uid,link,parent,type,verb,otype)
-		values('%s','%s','%s','%s','%s',%d,%d,'%s',%d,%d,'%s','%s')",
+		values('%s','%s','%s','%s','%s',%d,%d,'%s','%s',%d,'%s','%s')",
 		dbesc($datarray['hash']),
 		dbesc($datarray['name']),
 		dbesc($datarray['url']),
@@ -364,7 +366,7 @@ function notification($params) {
 		intval($datarray['aid']),
 		intval($datarray['uid']),
 		dbesc($datarray['link']),
-		intval($datarray['parent']),
+		dbesc($datarray['parent']),
 		intval($datarray['type']),
 		dbesc($datarray['verb']),
 		dbesc($datarray['otype'])
@@ -432,7 +434,7 @@ function notification($params) {
 		$datarray['sitename']     = $sitename;
 		$datarray['siteurl']      = $siteurl;
 		$datarray['type']         = $params['type'];
-		$datarray['parent']       = $params['parent'];
+		$datarray['parent']       = $params['parent_mid'];
 		$datarray['source_name']  = $sender['xchan_name'];
 		$datarray['source_link']  = $sender['xchan_url'];
 		$datarray['source_photo'] = $sender['xchan_photo_s'];

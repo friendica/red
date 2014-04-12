@@ -105,6 +105,23 @@ function poller_run($argv, $argc){
 
 	if($d2 != intval($d1)) {
 
+		$d3 = intval(datetime_convert('UTC','UTC','now','N'));
+		if($d3 == 7) {
+		
+			/**
+			 * Cron Weekly
+			 * 
+			 * Actions in the following block are executed once per day only on Sunday (once per week).
+			 *
+			 */
+
+			require_once('include/hubloc.php');
+			prune_hub_reinstalls();
+
+
+		}
+
+
 		// expire any read notifications over a month old
 
 		q("delete from notify where seen = 1 and date < UTC_TIMESTAMP() - INTERVAL 30 DAY");
@@ -149,6 +166,11 @@ function poller_run($argv, $argc){
 			);
 		}
 	}
+
+
+	// pull in some public posts
+        if(! get_config('system','disable_discover_tab'))
+		proc_run('php','include/externals.php');
 
 
 	$manual_id  = 0;

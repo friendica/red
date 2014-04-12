@@ -29,11 +29,27 @@ issues.
 
 
 Before you begin: Choose a domain name or subdomain name for your server.
-Put some thought into this - because changing it is currently not-supported.
-Things will break, and some of your friends may have difficulty communicating
-with you. We plan to address this limitation in a future release. 
 
-Decide if you will use SSL and obtain an SSL cert before software installation. You SHOULD use SSL. If you use SSL, you MUST use a "browser-valid" certificate. Please test your certificate prior to installation. A web tool for testing your certificate is available at "http://www.digicert.com/help/". When visiting your site for the first time, please use the SSL ("https://") URL if SSL is available. This will avoid problems later.  
+The Red Matrix can only be installed into the root of a domain or
+sub-domain, and can not be installed using alternate TCP ports. 
+
+Decide if you will use SSL and obtain an SSL certificate before software
+installation.  You SHOULD use SSL. If you use SSL, you MUST use a
+"browser-valid" certificate.  You MUST NOT use self-signed certificates!
+
+Please test your certificate prior to installation. A web tool for testing your
+certificate is available at "http://www.digicert.com/help/". When visiting your
+site for the first time, please use the SSL ("https://") URL if SSL is
+available. This will avoid problems later. The installation routine will not
+allow you to use a non browser-valid certificate.
+
+This restriction is incorporated because public posts from you may for example
+contain references to images on your own hub. If your certificate is not known
+by the internet browser of users they get a warning message complaining about
+some security issues. Although these complains are not the real truth - there
+are no security issues with your encryption! - the users may be confused,
+nerved or even worse may become scared about Red Matrix having security issues.
+Use one of the free certification instances!
  
 
 1. Requirements

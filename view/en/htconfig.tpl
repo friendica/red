@@ -69,10 +69,6 @@ $a->config['system']['sellpage'] = '';
 
 $a->config['system']['max_import_size'] = 200000;
 
-// maximum size of uploaded photos
-
-$a->config['system']['maximagesize'] = 12000000;
-
 // Location of PHP command line processor
 
 $a->config['system']['php_path'] = '{{$phpath}}';

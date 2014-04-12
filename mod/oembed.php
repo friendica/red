@@ -19,8 +19,7 @@ function oembed_init(&$a){
 	
 		else {
 			echo "<html><body>";
-			$url = base64url_decode(argv(1));
-			$j = oembed_fetch_url($url);
+			$j = oembed_fetch_url(base64url_decode(argv(1)));
 			echo $j->html;
 //		    logger('mod-oembed ' . $j->html, LOGGER_ALL);
 			echo "</body></html>";

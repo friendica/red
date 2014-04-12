@@ -5,6 +5,7 @@ var searchData=
   ['taxonomy_2ephp',['taxonomy.php',['../taxonomy_8php.html',1,'']]],
   ['template_5fprocessor_2ephp',['template_processor.php',['../template__processor_8php.html',1,'']]],
   ['text_2ephp',['text.php',['../text_8php.html',1,'']]],
+  ['theme_2ephp',['theme.php',['../mytheme_2php_2theme_8php.html',1,'']]],
   ['theme_2ephp',['theme.php',['../apw_2php_2theme_8php.html',1,'']]],
   ['theme_2ephp',['theme.php',['../blogga_2php_2theme_8php.html',1,'']]],
   ['theme_2ephp',['theme.php',['../blogga_2view_2theme_2blog_2theme_8php.html',1,'']]],

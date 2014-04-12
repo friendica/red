@@ -635,7 +635,11 @@ function conversation(&$a, $items, $mode, $update, $page_mode = 'traditional', $
 				$star = false;
 				$isstarred = "unstarred icon-star-empty";
 				
-				$lock = false;
+				$lock = (($item['item_private'] || strlen($item['allow_cid']) || strlen($item['allow_gid']) || strlen($item['deny_cid']) || strlen($item['deny_gid']))
+					? t('Private Message')
+					: false
+				);
+
 				$likebuttons = false;
 				$shareable = false;
 
@@ -911,7 +915,7 @@ function item_photo_menu($item){
 		}
 	}
 
-    $profile_link = z_root() . "/chanview/?f=&hash=" . $item['author_xchan'];
+    $profile_link = chanlink_hash($item['author_xchan']);
 	$pm_url = $a->get_baseurl($ssl_state) . '/mail/new/?f=&hash=' . $item['author_xchan'];
 
 	if($a->contacts && array_key_exists($item['author_xchan'],$a->contacts))
@@ -964,13 +968,7 @@ function like_puller($a,$item,&$arr,$mode) {
 	$verb = (($mode === 'like') ? ACTIVITY_LIKE : ACTIVITY_DISLIKE);
 
 	if((activity_match($item['verb'],$verb)) && ($item['id'] != $item['parent'])) {
-		$url = $item['author']['xchan_url'];
-		if((local_user()) && (local_user() == $item['uid']) && ($item['network'] === 'dfrn') && (! $item['self']) && (link_compare($item['author-link'],$item['url']))) {
-			$url = $a->get_baseurl(true) . '/redir/' . $item['contact-id'];
-			$sparkle = ' class="sparkle" ';
-		}
-		else
-			$url = zid($url);
+		$url = chanlink_url($item['author']['xchan_url']);
 
 		if(! $item['thr_parent'])
 			$item['thr_parent'] = $item['parent_mid'];
@@ -981,7 +979,7 @@ function like_puller($a,$item,&$arr,$mode) {
 			$arr[$item['thr_parent']] = 1;
 		else
 			$arr[$item['thr_parent']] ++;
-		$arr[$item['thr_parent'] . '-l'][] = '<a href="'. $url . '"'. $sparkle .'>' . $item['author']['xchan_name'] . '</a>';
+		$arr[$item['thr_parent'] . '-l'][] = '<a href="'. $url . '">' . $item['author']['xchan_name'] . '</a>';
 	}
 	return;
 }
@@ -1052,6 +1050,13 @@ function status_editor($a,$x,$popup=false) {
 	}
 	
 
+	if(array_key_exists('channel_select',$x) && $x['channel_select']) {
+		require_once('include/identity.php');
+		$id_select = identity_selector();
+	}
+	else
+		$id_select = '';
+
 
 	$webpage = ((x($x,'webpage')) ? $x['webpage'] : '');
 
@@ -1098,6 +1103,8 @@ function status_editor($a,$x,$popup=false) {
 		'$webpage' => $webpage,
 		'$placeholdpagetitle' => ((x($x,'ptlabel')) ? $x['ptlabel'] : t('Page link title')),
 		'$pagetitle' => (x($x,'pagetitle') ? $x['pagetitle'] : ''),		
+		'$id_select' => $id_select,
+		'$id_seltext' => t('Post as'),
 		'$upload' => t('Upload photo'),
 		'$shortupload' => t('upload photo'),
 		'$attach' => t('Attach file'),
@@ -1126,7 +1133,6 @@ function status_editor($a,$x,$popup=false) {
 		'$baseurl' => $a->get_baseurl(true),
 		'$defloc' => $x['default_location'],
 		'$visitor' => $x['visitor'],
-		'$pvisit' => (($notes_cid) ? 'none' : $x['visitor']),
 		'$public' => t('Public post'),
 		'$jotnets' => $jotnets,
 		'$emtitle' => t('Example: bob@example.com, mary@example.com'),
@@ -1134,20 +1140,20 @@ function status_editor($a,$x,$popup=false) {
 		'$acl' => $x['acl'],
 		'$mimeselect' => $mimeselect,
 		'$layoutselect' => $layoutselect,
-		'$showacl' => ((array_key_exists('showacl',$x)) ? $x['showacl'] : 'yes'),
+		'$showacl' => ((array_key_exists('showacl',$x)) ? $x['showacl'] : true),
 		'$bang' => $x['bang'],
 		'$profile_uid' => $x['profile_uid'],
 		'$preview' => $preview,
 		'$source' => ((x($x,'source')) ? $x['source'] : ''),
 		'$jotplugins' => $jotplugins,
 		'$defexpire' => '',
-		'$feature_expire' => ((feature_enabled($x['profile_uid'],'content_expire') && (! $webpage)) ? 'block' : 'none'),
+		'$feature_expire' => ((feature_enabled($x['profile_uid'],'content_expire') && (! $webpage)) ? true : false),
 		'$expires' => t('Set expiration date'),
-		'$feature_encrypt' => ((feature_enabled($x['profile_uid'],'content_encrypt') && (! $webpage)) ? 'block' : 'none'),
+		'$feature_encrypt' => ((feature_enabled($x['profile_uid'],'content_encrypt') && (! $webpage)) ? true : false),
 		'$encrypt' => t('Encrypt text'),
 		'$cipher' => $cipher,
 		'$expiryModalOK' => t('OK'),
-		'$expiryModalCANCEL' => t('Cancel'),
+		'$expiryModalCANCEL' => t('Cancel')
 	));
 
 
@@ -1287,7 +1293,7 @@ function render_location_default($item) {
 
 	if($coord) {
 		if($location)
-			$location .= '<br /><span class="smalltext">(' . $coord . ')</span>';
+			$location .= '&nbsp;<span class="smalltext">(' . $coord . ')</span>';
 		else
 			$location = '<span class="smalltext">' . $coord . '</span>';
 	}
@@ -1333,6 +1339,7 @@ function network_tabs() {
 	$conv_active = '';
 	$spam_active = '';
 	$postord_active = '';
+	$public_active = '';
 
 	if(x($_GET,'new')) {
 		$new_active = 'active';
@@ -1354,13 +1361,18 @@ function network_tabs() {
 		$spam_active = 'active';
 	}
 
+	if(x($_GET,'fh')) {
+		$public_active = 'active';
+	}
+
 	
 	
 	if (($new_active == '') 
 		&& ($starred_active == '') 
 		&& ($conv_active == '')
 		&& ($search_active == '')
-		&& ($spam_active == '')) {
+		&& ($spam_active == '')
+		&& ($public_active == '')) {
 			$no_active = 'active';
 	}
 
@@ -1376,52 +1388,67 @@ function network_tabs() {
 	$cmd = $a->cmd;
 
 	// tabs
-	$tabs = array(
-		array(
-			'label' => t('Commented Order'),
-			'url'=>$a->get_baseurl(true) . '/' . $cmd . '?f=&order=comment' . ((x($_GET,'cid')) ? '&cid=' . $_GET['cid'] : '') . ((x($_GET,'gid')) ? '&gid=' . $_GET['gid'] : ''), 
-			'sel'=>$all_active,
-			'title'=> t('Sort by Comment Date'),
-		),
-		array(
-			'label' => t('Posted Order'),
-			'url'=>$a->get_baseurl(true) . '/' . $cmd . '?f=&order=post' . ((x($_GET,'cid')) ? '&cid=' . $_GET['cid'] : '') . ((x($_GET,'gid')) ? '&gid=' . $_GET['gid'] : ''), 
-			'sel'=>$postord_active,
-			'title' => t('Sort by Post Date'),
-		),
+	$tabs = array();
 
-		array(
+	if(! get_config('system','disable_discover_tab')) {
+		$tabs[] = array(
+			'label' => t('Discover'),
+			'url'=>$a->get_baseurl(true) . '/' . $cmd . '?f=&fh=1' . ((x($_GET,'cid')) ? '&cid=' . $_GET['cid'] : '') . ((x($_GET,'gid')) ? '&gid=' . $_GET['gid'] : ''),
+			'sel'=> $public_active,
+			'title'=> t('Imported public streams'),
+		);
+	}
+
+	$tabs[] = array(
+		'label' => t('Commented Order'),
+		'url'=>$a->get_baseurl(true) . '/' . $cmd . '?f=&order=comment' . ((x($_GET,'cid')) ? '&cid=' . $_GET['cid'] : '') . ((x($_GET,'gid')) ? '&gid=' . $_GET['gid'] : ''), 
+		'sel'=>$all_active,
+		'title'=> t('Sort by Comment Date'),
+	);
+	
+	$tabs[] = array(
+		'label' => t('Posted Order'),
+		'url'=>$a->get_baseurl(true) . '/' . $cmd . '?f=&order=post' . ((x($_GET,'cid')) ? '&cid=' . $_GET['cid'] : '') . ((x($_GET,'gid')) ? '&gid=' . $_GET['gid'] : ''), 
+		'sel'=>$postord_active,
+		'title' => t('Sort by Post Date'),
+	);
+
+	if(feature_enabled(local_user(),'personal_tab')) {
+		$tabs[] = array(
 			'label' => t('Personal'),
 			'url' => $a->get_baseurl(true) . '/' . $cmd . '?f=' . ((x($_GET,'cid')) ? '&cid=' . $_GET['cid'] : '') . '&conv=1',
 			'sel' => $conv_active,
 			'title' => t('Posts that mention or involve you'),
-		),
-		array(
+		);
+	}
+
+	if(feature_enabled(local_user(),'new_tab')) { 
+		$tabs[] = array(
 			'label' => t('New'),
 			'url' => $a->get_baseurl(true) . '/' . $cmd . '?f=' . ((x($_GET,'cid')) ? '&cid=' . $_GET['cid'] : '') . '&new=1' . ((x($_GET,'gid')) ? '&gid=' . $_GET['gid'] : ''),
 			'sel' => $new_active,
 			'title' => t('Activity Stream - by date'),
-		),
+		);
+	}
 
-	);
-
-	if(feature_enabled(local_user(),'star_posts')) 
+	if(feature_enabled(local_user(),'star_posts')) {
 		$tabs[] = array(
 			'label' => t('Starred'),
 			'url'=>$a->get_baseurl(true) . '/' . $cmd . ((x($_GET,'cid')) ? '/?f=&cid=' . $_GET['cid'] : '') . '&star=1',
 			'sel'=>$starred_active,
 			'title' => t('Favourite Posts'),
 		);
-
+	}
 	// Not yet implemented
 
-	if(feature_enabled(local_user(),'spam_filter')) 
+	if(feature_enabled(local_user(),'spam_filter')) {
 		$tabs[] = array(
 			'label' => t('Spam'),
 			'url'=>$a->get_baseurl(true) . '/network?f=&spam=1',
 			'sel'=> $spam_active,
 			'title' => t('Posts flagged as SPAM'),
-		);	
+		);
+	}	
 
 	$arr = array('tabs' => $tabs);
 	call_hooks('network_tabs', $arr);
@@ -1442,6 +1469,8 @@ function profile_tabs($a, $is_owner=False, $nickname=Null){
 
 	if (is_null($nickname))
 		$nickname  = $channel['channel_address'];
+
+	$uid = (($a->profile['profile_uid']) ? $a->profile['profile_uid'] : local_user());
 		
 	if(x($_GET,'tab'))
 		$tab = notags(trim($_GET['tab']));
@@ -1459,7 +1488,7 @@ function profile_tabs($a, $is_owner=False, $nickname=Null){
 		),
 	);
 
-	$p = get_all_perms($a->profile['profile_uid'],get_observer_hash());
+	$p = get_all_perms($uid,get_observer_hash());
 
 	if($p['view_profile']) {
 		$tabs[] = array(
@@ -1490,7 +1519,7 @@ function profile_tabs($a, $is_owner=False, $nickname=Null){
 	}
 
 	require_once('include/chat.php');
-	$chats = chatroom_list($a->profile['profile_uid']);
+	$chats = chatroom_list($uid);
 	$subdued = ((count($chats)) ? '' : ' subdued');
 	$tabs[] = array(
 		'label' => t('Chatrooms'),
@@ -1520,7 +1549,7 @@ function profile_tabs($a, $is_owner=False, $nickname=Null){
 	}
 
 
-	if($is_owner && feature_enabled($a->profile['profile_uid'],'webpages')) {
+	if($is_owner && feature_enabled($uid,'webpages')) {
 		$tabs[] = array(
 			'label' => t('Webpages'),
 			'url'	=> $a->get_baseurl() . '/webpages/' . $nickname,

@@ -43,8 +43,12 @@ function z_fetch_url($url, $binary = false, $redirects = 0, $opts = array()) {
 	@curl_setopt($ch, CURLOPT_RETURNTRANSFER,true);
 	@curl_setopt($ch, CURLOPT_USERAGENT, "Mozilla/5.0 (compatible; Red)");
 
+	$ciphers = @get_config('system','curl_ssl_ciphers');
+	if($ciphers)
+		@curl_setopt($ch, CURLOPT_SSL_CIPHER_LIST, $ciphers);
+
 	if (x($opts,'accept_content')){
-		curl_setopt($ch,CURLOPT_HTTPHEADER, array (
+		@curl_setopt($ch,CURLOPT_HTTPHEADER, array (
 			"Accept: " . $opts['accept_content']
 		));
 	}
@@ -115,7 +119,9 @@ function z_fetch_url($url, $binary = false, $redirects = 0, $opts = array()) {
 	$ret['return_code'] = $rc;
 	$ret['success'] = (($rc >= 200 && $rc <= 299) ? true : false);
 	if(! $ret['success']) {
+		$ret['error'] = curl_error($ch);
 		$ret['debug'] = $curl_info;
+		logger('z_fetch_url: error:' . $ret['error'], LOGGER_DEBUG);
 		logger('z_fetch_url: debug:' . print_r($curl_info,true), LOGGER_DATA);
 	}
 	$ret['body'] = substr($s,strlen($header));
@@ -136,21 +142,25 @@ function z_post_url($url,$params, $redirects = 0, $opts = array()) {
 	if(($redirects > 8) || (! $ch)) 
 		return ret;
 
-	curl_setopt($ch, CURLOPT_HEADER, true);
+	@curl_setopt($ch, CURLOPT_HEADER, true);
 	@curl_setopt($ch, CURLOPT_CAINFO, get_capath());
-	curl_setopt($ch, CURLOPT_RETURNTRANSFER,true);
-	curl_setopt($ch, CURLOPT_POST,1);
-	curl_setopt($ch, CURLOPT_POSTFIELDS,$params);
-	curl_setopt($ch, CURLOPT_USERAGENT, "Red");
+	@curl_setopt($ch, CURLOPT_RETURNTRANSFER,true);
+	@curl_setopt($ch, CURLOPT_POST,1);
+	@curl_setopt($ch, CURLOPT_POSTFIELDS,$params);
+	@curl_setopt($ch, CURLOPT_USERAGENT, "Red");
+
+	$ciphers = @get_config('system','curl_ssl_ciphers');
+	if($ciphers)
+		@curl_setopt($ch, CURLOPT_SSL_CIPHER_LIST, $ciphers);
 
 
 	if (x($opts,'accept_content')){
-		curl_setopt($ch,CURLOPT_HTTPHEADER, array (
+		@curl_setopt($ch,CURLOPT_HTTPHEADER, array (
 			"Accept: " . $opts['accept_content']
 		));
 	}
 	if(x($opts,'headers'))
-		curl_setopt($ch, CURLOPT_HTTPHEADER, $opts['headers']);
+		@curl_setopt($ch, CURLOPT_HTTPHEADER, $opts['headers']);
 
 	if(x($opts,'timeout') && intval($opts['timeout'])) {
 		@curl_setopt($ch, CURLOPT_TIMEOUT, $opts['timeout']);
@@ -170,11 +180,11 @@ function z_post_url($url,$params, $redirects = 0, $opts = array()) {
 
 	$prx = get_config('system','proxy');
 	if(strlen($prx)) {
-		curl_setopt($ch, CURLOPT_HTTPPROXYTUNNEL, 1);
-		curl_setopt($ch, CURLOPT_PROXY, $prx);
+		@curl_setopt($ch, CURLOPT_HTTPPROXYTUNNEL, 1);
+		@curl_setopt($ch, CURLOPT_PROXY, $prx);
 		$prxusr = get_config('system','proxyuser');
 		if(strlen($prxusr))
-			curl_setopt($ch, CURLOPT_PROXYUSERPWD, $prxusr);
+			@curl_setopt($ch, CURLOPT_PROXYUSERPWD, $prxusr);
 	}
 
 	// don't let curl abort the entire application
@@ -183,7 +193,7 @@ function z_post_url($url,$params, $redirects = 0, $opts = array()) {
 	$s = @curl_exec($ch);
 
 	$base = $s;
-	$curl_info = curl_getinfo($ch);
+	$curl_info = @curl_getinfo($ch);
 	$http_code = $curl_info['http_code'];
 
 	$header = '';
@@ -217,8 +227,10 @@ function z_post_url($url,$params, $redirects = 0, $opts = array()) {
 	$ret['return_code'] = $rc;
 	$ret['success'] = (($rc >= 200 && $rc <= 299) ? true : false);
 	if(! $ret['success']) {
+		$ret['error'] = curl_error($ch);
 		$ret['debug'] = $curl_info;
-		logger('z_fetch_url: debug:' . print_r($curl_info,true), LOGGER_DATA);
+		logger('z_post_url: error:' . $ret['error'], LOGGER_DEBUG);
+		logger('z_post_url: debug:' . print_r($curl_info,true), LOGGER_DATA);
 	}
 
 	$ret['body'] = substr($s,strlen($header));

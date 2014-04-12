@@ -278,6 +278,11 @@ function hex2bin($s) {
 	if(! (is_string($s) && strlen($s)))
 		return '';
 
+	if(strlen($s) & 1) {
+		logger('hex2bin: illegal hex string: ' . $s);
+		return $s;
+	}
+
 	if(! ctype_xdigit($s)) {
 		return($s);
 	}
@@ -614,11 +619,27 @@ function get_tags($s) {
 		}
 	}
 
+	// make sure the longer tags are returned first so that if two or more have common substrings
+	// we'll replace the longest ones first. Otherwise the common substring would be found in
+	// both strings and the string replacement would link both to the shorter strings and 
+	// fail to link the longer string. RedMatrix github issue #378
+ 
+	usort($ret,'tag_sort_length');
 
-	// logger('get_tags: ' . print_r($ret,true));
+	
+	//logger('get_tags: ' . print_r($ret,true));
 
 	return $ret;
 }
+
+function tag_sort_length($a,$b) {
+	if(mb_strlen($a) == mb_strlen($b))
+		return 0;
+	return((mb_strlen($b) < mb_strlen($a)) ? (-1) : 1);
+}
+
+
+
 
 
 function strip_zids($s) {
@@ -655,6 +676,12 @@ function get_mentions($item,$tags) {
 function contact_block() {
 	$o = '';
 	$a = get_app();
+
+	if(! $a->profile['uid'])
+		return;
+
+	if(! perm_is_allowed($a->profile['uid'],get_observer_hash(),'view_contacts'))
+		return;
 
 	$shown = get_pconfig($a->profile['uid'],'system','display_friend_count');
 
@@ -774,9 +801,9 @@ function searchbox($s,$id='search-box',$url='/search',$save = false) {
 	$o .= '<form action="' . z_root() . '/' . $url . '" method="get" >';
 	$o .= '<input type="hidden" name="f" value="" />';
 	$o .= '<input type="text" class="icon-search" name="search" id="search-text" placeholder="&#xf002;" value="' . $s .'" onclick="this.submit();" />';
-	$o .= '<input type="submit" name="submit" id="search-submit" value="' . t('Search') . '" />'; 
+	$o .= '<input type="submit" name="submit" class="btn btn-default" id="search-submit" value="' . t('Search') . '" />'; 
 	if(feature_enabled(local_user(),'savedsearch'))
-		$o .= '<input type="submit" name="searchsave" id="search-save" value="' . t('Save') . '" />'; 
+		$o .= '<input type="submit" name="searchsave" class="btn btn-default" id="search-save" value="' . t('Save') . '" />'; 
 	$o .= '</form></div>';
 	return $o;
 }
@@ -1163,6 +1190,33 @@ function format_categories(&$item,$writeable) {
 	return $s;
 }
 
+// Add any hashtags which weren't mentioned in the message body, e.g. community tags
+
+function format_hashtags(&$item) {
+
+	$s = '';
+	$terms = get_terms_oftype($item['term'],TERM_HASHTAG);
+	if($terms) {
+		$categories = array();
+		foreach($terms as $t) {
+			$term = htmlspecialchars($t['term'],ENT_COMPAT,'UTF-8',false) ;
+			if(! trim($term))
+				continue;
+			if(strpos($item['body'], $t['url']))
+				continue;
+
+			if($s)
+				$s .= '&nbsp';
+
+			$s .= '#<a href="' . zid($t['url']) . '" >' . $term . '</a>';
+		}
+	}
+	return $s;
+}
+
+
+
+
 
 function format_filer(&$item) {
 
@@ -1214,6 +1268,9 @@ function prepare_body(&$item,$attach = false) {
 
 
 	$writeable = ((get_observer_hash() == $item['owner_xchan']) ? true : false); 
+
+
+	$s .= format_hashtags($item);
 
 	$s .= format_categories($item,$writeable);
 
@@ -1706,6 +1763,7 @@ function check_webbie($arr) {
 				$str .= "'" . dbesc($y) . "'";
 			}
 		}
+
 		if(strlen($str)) {
 			$r = q("select channel_address from channel where channel_address in ( $str ) ");
 			if(count($r)) {
@@ -1714,8 +1772,9 @@ function check_webbie($arr) {
 				}
 			}
 			foreach($arr as $x) {
-				if(! in_array($x,$taken)) {
-					return $x;
+				$y = legal_webbie($x);
+				if(! in_array($y,$taken)) {
+					return $y;
 				}
 			}
 		}

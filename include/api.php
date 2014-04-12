@@ -533,12 +533,6 @@ require_once('include/items.php');
 	api_register_func('api/red/channel/export/basic','api_export_basic', true);
 
 
-
-
-
-
-
-
 	function api_channel_stream(&$a, $type) {
 		if(api_user() === false) {
 			logger('api_channel_stream: no user');
@@ -700,12 +694,12 @@ require_once('include/items.php');
 	function red_item_new(&$a, $type) {
 
 		if (api_user() === false) {
-			logger('api_statuses_update: no user');
+			logger('api_red_item_new: no user');
 			return false;
 		}
 
-		logger('api_statuses_update: REQUEST ' . print_r($_REQUEST,true));
-		logger('api_statuses_update: FILES ' . print_r($_FILES,true));
+		logger('api_red_item_new: REQUEST ' . print_r($_REQUEST,true));
+		logger('api_red_item_new: FILES ' . print_r($_FILES,true));
 
 
 		// set this so that the item_post() function is quiet and doesn't redirect or emit json
@@ -1552,7 +1546,8 @@ require_once('include/items.php');
 				'geo'                       => '',
 				'favorited'                 => (($item['item_flags'] & ITEM_STARRED) ? true : false),
 				'user'                      =>  $status_user ,
-				'statusnet_html'		    => trim(prepare_text($item['body']),$item['mimetype']),
+				'statusnet_html'		    => trim(prepare_text($item['body'],$item['mimetype'])),
+
 				'statusnet_conversation_id'	=> $item['parent'],
 			);
 
@@ -1697,7 +1692,7 @@ require_once('include/items.php');
 			'broughtbyurl' => '', 'timezone' => 'UTC', 'closed' => $closed, 'inviteonly' => 'false',
 			'private' => $private, 'textlimit' => $textlimit, 'sslserver' => $sslserver, 'ssl' => $ssl,
 			'shorturllength' => '30',
-        	'friendica' => array(
+        	'redmatrix' => array(
 				'RED_PLATFORM' => RED_PLATFORM,
 				'RED_VERSION' => RED_VERSION,
 				'ZOT_REVISION' => ZOT_REVISION,

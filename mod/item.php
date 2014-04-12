@@ -33,6 +33,8 @@ function item_post(&$a) {
 
 	$uid = local_user();
 
+	$channel = null;
+
 	if(x($_REQUEST,'dropitems')) {
 		require_once('include/items.php');
 		$arr_drop = explode(',',$_REQUEST['dropitems']);
@@ -150,25 +152,20 @@ function item_post(&$a) {
 
 		// can_comment_on_post() needs info from the following xchan_query 
 		xchan_query($r);
+
 		$parent_item = $r[0];
 		$parent = $r[0]['id'];
 
 		// multi-level threading - preserve the info but re-parent to our single level threading
-		//if(($parid) && ($parid != $parent))
-			$thr_parent = $parent_mid;
 
-//		if($parent_item['contact-id'] && $uid) {
-//			$r = q("SELECT * FROM `contact` WHERE `id` = %d AND `uid` = %d LIMIT 1",
-//				intval($parent_item['contact-id']),
-//				intval($uid)
-//			);
-//			if(count($r))
-//				$parent_contact = $r[0];
-//		}
+		$thr_parent = $parent_mid;
+
 
 	}
 
+
 	$observer = $a->get_observer();
+
 
 	if($parent) {
 		logger('mod_item: item_post parent=' . $parent);
@@ -219,19 +216,21 @@ function item_post(&$a) {
 		$orig_post = $i[0];
 	}
 
-	$channel = null;
 
-	if(local_user() && local_user() == $profile_uid) {
-		$channel = $a->get_channel();
+	if(! $channel) {
+		if(local_user() && local_user() == $profile_uid) {
+			$channel = $a->get_channel();
+		}
+		else {
+			// posting as yourself but not necessarily to a channel you control
+			$r = q("select * from channel left join account on channel_account_id = account_id where channel_id = %d LIMIT 1",
+				intval($profile_uid)
+			);
+			if($r)
+				$channel = $r[0];
+		}
 	}
-	else {
-		$r = q("SELECT channel.*, account.* FROM channel left join account on channel.channel_account_id = account.account_id 
-			where channel.channel_id = %d LIMIT 1",
-			intval($profile_uid)
-		);
-		if(count($r))
-			$channel = $r[0];
-	}
+
 
 	if(! $channel) {
 		logger("mod_item: no channel.");
@@ -360,19 +359,17 @@ function item_post(&$a) {
 		}
 	}
 
-
-
 	$post_type = notags(trim($_REQUEST['type']));
 
 	$mimetype = notags(trim($_REQUEST['mimetype']));
 	if(! $mimetype)
 		$mimetype = 'text/bbcode';
 
-	// Verify ability to use html or php!!!
-
 	if($preview) {
 		$body = z_input_filter($profile_uid,$body,$mimetype);
 	}
+
+	// Verify ability to use html or php!!!
 
 	$execflag = false;
 
@@ -496,8 +493,6 @@ function item_post(&$a) {
 
 		$tagged = array();
 
-		$private_forum = false;
-
 		if(count($tags)) {
 			$first_access_tag = true;
 			foreach($tags as $tag) {
@@ -516,9 +511,9 @@ function item_post(&$a) {
 					continue;
 
 				$success = handle_tag($a, $body, $access_tag, $str_tags, (local_user()) ? local_user() : $profile_uid , $tag); 
-				logger('handle_tag: ' . print_r($success,tue), LOGGER_DEBUG);
+				logger('handle_tag: ' . print_r($success,tue), LOGGER_DATA);
 				if(($access_tag) && (! $parent_item)) {
-					logger('access_tag: ' . $tag . ' ' . print_r($access_tag,true), LOGGER_DEBUG);
+					logger('access_tag: ' . $tag . ' ' . print_r($access_tag,true), LOGGER_DATA);
 					if ($first_access_tag) {
 						$str_contact_allow = '';
 						$str_group_allow = '';
@@ -544,22 +539,12 @@ function item_post(&$a) {
 						'url'   => $success['url']
 					); 				
 				}
-//				if(is_array($success['contact']) && intval($success['contact']['prv'])) {
-//					$private_forum = true;
-//					$private_id = $success['contact']['id'];
-//				}
 			}
 		}
 
 
 //	logger('post_tags: ' . print_r($post_tags,true));
 
-		if(($private_forum) && (! $parent) && (! $private)) {
-			// we tagged a private forum in a top level post and the message was public.
-			// Restrict it.
-			$private = 1;
-			$str_contact_allow = '<' . $private_id . '>'; 
-		}
 
 		$attachments = '';
 		$match = false;
@@ -573,7 +558,7 @@ function item_post(&$a) {
 				if($r['success']) {
 					$attachments[] = array(
 						'href'     => $a->get_baseurl() . '/attach/' . $r['data']['hash'],
-						'length'   =>  $r['data']['filesize'],
+						'length'   => $r['data']['filesize'],
 						'type'     => $r['data']['filetype'],
 						'title'    => urlencode($r['data']['filename']),
 						'revision' => $r['data']['revision']
@@ -601,7 +586,6 @@ function item_post(&$a) {
 	}
 
 	$item_flags |= ITEM_UNSEEN;
-//	$item_restrict |= ITEM_VISIBLE;
 	
 	if($post_type === 'wall' || $post_type === 'wall-comment')
 		$item_flags = $item_flags | ITEM_WALL;
@@ -757,31 +741,12 @@ function item_post(&$a) {
 
 	$post = item_store($datarray,$execflag);
 
-
 	$post_id = $post['item_id'];
 
 	if($post_id) {
 		logger('mod_item: saved item ' . $post_id);
 
 		if($parent) {
-
-			$r = q("UPDATE `item` SET `changed` = '%s' WHERE `parent` = %d ",
-				dbesc(datetime_convert()),
-				intval($parent)
-			);
-
-			// Inherit ACL's from the parent item.
-
-			$r = q("UPDATE `item` SET `allow_cid` = '%s', `allow_gid` = '%s', `deny_cid` = '%s', `deny_gid` = '%s', `item_private` = %d
-				WHERE `id` = %d LIMIT 1",
-				dbesc($parent_item['allow_cid']),
-				dbesc($parent_item['allow_gid']),
-				dbesc($parent_item['deny_cid']),
-				dbesc($parent_item['deny_gid']),
-				intval($parent_item['item_private']),
-				intval($post_id)
-			);
-
 			if($datarray['owner_xchan'] != $datarray['author_xchan']) {
 				notification(array(
 					'type'         => NOTIFY_COMMENT,
@@ -796,7 +761,6 @@ function item_post(&$a) {
 				));
 			
 			}
-
 		}
 		else {
 			$parent = $post_id;
@@ -814,24 +778,9 @@ function item_post(&$a) {
 			}
 		}
 
-		// fallback so that parent always gets set to non-zero.
-
-		if(! $parent)
-			$parent = $post_id;
-
-		$r = q("UPDATE `item` SET `parent` = %d, `parent_mid` = '%s', `changed` = '%s'
-			WHERE `id` = %d LIMIT 1",
-			intval($parent),
-			dbesc(($parent == $post_id) ? $mid : $parent_item['mid']),
-			dbesc(datetime_convert()),
-			intval($post_id)
-		);
-
 		// photo comments turn the corresponding item visible to the profile wall
 		// This way we don't see every picture in your new photo album posted to your wall at once.
 		// They will show up as people comment on them.
-
-// fixme set item visible as well
 
 		if($parent_item['item_restrict'] & ITEM_HIDDEN) {
 			$r = q("UPDATE `item` SET `item_restrict` = %d WHERE `id` = %d LIMIT 1",
@@ -890,9 +839,40 @@ function item_content(&$a) {
 
 	require_once('include/security.php');
 
-	if(($a->argc == 3) && ($a->argv[1] === 'drop') && intval($a->argv[2])) {
+	if((argc() == 3) && (argv(1) === 'drop') && intval(argv(2))) {
 		require_once('include/items.php');
-		drop_item($a->argv[2]);
+		$i = q("select id, uid, author_xchan, owner_xchan, source_xchan, item_restrict from item where id = %d and uid = %d limit 1",
+			intval(argv(2)),
+			intval(local_user())
+		);
+
+		if($i) {
+			$can_delete = false;
+			$local_delete = false;
+			if(local_user() && local_user() == $i[0]['uid'])
+				$local_delete = true;
+
+			$ob_hash = get_observer_hash();
+			if($ob_hash && ($ob_hash === $i[0]['author_xchan'] || $ob_hash === $i[0]['owner_xchan'] || $ob_hash === $i[0]['source_xchan']))
+				$can_delete = true;
+
+			if(! ($can_delete || $local_delete)) {
+				notice( t('Permission denied.') . EOL);
+				return;
+			}
+
+			// if this is a different page type or it's just a local delete
+			// but not by the item author or owner, do a simple deletion
+
+			if($i[0]['item_restrict'] || ($local_delete && (! $can_delete))) {
+				drop_item($i[0]['id']);
+			}
+			else {
+				// complex deletion that needs to propagate and be performed in phases
+				drop_item($i[0]['id'],true,DROPITEM_PHASE1);
+				tag_deliver($i[0]['uid'],$i[0]['id']);
+			}
+		}
 	}
 }
 
@@ -1077,8 +1057,8 @@ function fix_attached_photo_permissions($uid,$xchan_hash,$body,
 
 	$match = null;
 	// match img and zmg image links
-	if(preg_match_all("/\[[zi]mg\](.*?)\[\/[zi]mg\]/",$body,$match)) {
-		$images = $match[1];
+	if(preg_match_all("/\[[zi]mg(.*?)\](.*?)\[\/[zi]mg\]/",$body,$match)) {
+		$images = $match[2];
 		if($images) {
 			foreach($images as $image) {
 				if(! stristr($image,get_app()->get_baseurl() . '/photo/'))
@@ -1102,14 +1082,13 @@ function fix_attached_photo_permissions($uid,$xchan_hash,$body,
 
 				if($r) {
 					$r = q("UPDATE photo SET allow_cid = '%s', allow_gid = '%s', deny_cid = '%s', deny_gid = '%s'
-						WHERE resource_id = '%s' AND uid = %d AND album = '%s' ",
+						WHERE resource_id = '%s' AND uid = %d ",
 						dbesc($str_contact_allow),
 						dbesc($str_group_allow),
 						dbesc($str_contact_deny),
 						dbesc($str_group_deny),
 						dbesc($image_uri),
-						intval($uid),
-						dbesc( t('Wall Photos'))
+						intval($uid)
 					);
 
 					// also update the linked item (which is probably invisible)

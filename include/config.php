@@ -25,14 +25,6 @@ function load_config($family) {
 
 		$r = q("SELECT * FROM config WHERE cat = '%s'", dbesc($family));
 
-		// This is often one of the earliest database calls in the life of the page.
-		// If the DB was successfully opened, but we can't read from it, 
-		// we must assume catastrophic failure of the DB. Report the system down.
-
-//		if($r === false) {
-//			system_unavailable();
-//		}
-
 		if($r !== false) {
 			if($r) {
 				foreach($r as $rr) {
@@ -285,7 +277,6 @@ function load_xconfig($xchan,$family = '') {
 			$a->config[$xchan][$c][$k] = $rr['v'];
 		}
 	} 
-
 }
 
 

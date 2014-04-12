@@ -11,7 +11,7 @@ function notify_init(&$a) {
 			intval(local_user())
 		);
 		if($r) {
-			q("update notify set seen = 1 where ( link = '%s' or ( parent != 0 and parent = %d and otype = '%s' )) and uid = %d",
+			q("update notify set seen = 1 where ( link = '%s' or ( parent != '' and parent = '%s' and otype = '%s' )) and uid = %d",
 				dbesc($r[0]['link']),
 				intval($r[0]['parent']),
 				dbesc($r[0]['otype']),

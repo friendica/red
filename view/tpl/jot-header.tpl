@@ -6,9 +6,9 @@ var plaintext = '{{$editselect}}';
 
 function initEditor(cb){
 	if (editor==false){
-		$("#profile-jot-text-loading").spin('small');
+		$("#profile-jot-text-loading").spin('small').show();
 		if(plaintext == 'none') {
-			$("#profile-jot-text-loading").spin(false);
+			$("#profile-jot-text-loading").spin(false).hide();
 			$("#profile-jot-text").css({ 'height': 200, 'color': '#000' });
 			$("#profile-jot-text").contact_autocomplete(baseurl+"/acl");
 			editor = true;
@@ -77,7 +77,7 @@ function initEditor(cb){
 
 				ed.onInit.add(function(ed) {
 					ed.pasteAsPlainText = true;
-					$("#profile-jot-text-loading").spin(false);
+					$("#profile-jot-text-loading").spin(false).hide();
 					$(".jothidden").show();
 					if (typeof cb!="undefined") cb();
 				});
@@ -86,11 +86,7 @@ function initEditor(cb){
 		});
 
 		editor = true;
-		// setup acl popup
-		  $("a#jot-perms-icon").colorbox({ 
-				  'inline' : true, 
-				  'transition' : 'elastic' 
-			});
+
 	} else {
 		if (typeof cb!="undefined") cb();
 	}
@@ -112,11 +108,14 @@ function enableOnUser(){
 		/* enable tinymce on focus and click */
 		$("#profile-jot-text").focus(enableOnUser);
 		$("#profile-jot-text").click(enableOnUser);
+		var upload_title = $('#wall-image-upload').attr('title');
+		var attach_title = $('#wall-file-upload').attr('title');
 
 		var uploader = new window.AjaxUpload(
 			'wall-image-upload',
 			{ action: '{{$baseurl}}/wall_upload/{{$nickname}}',
 				name: 'userfile',
+				title: upload_title,
 				onSubmit: function(file,ext) { $('#profile-rotator').spin('tiny'); },
 				onComplete: function(file,response) {
 					addeditortext(response);
@@ -129,6 +128,7 @@ function enableOnUser(){
 			'wall-file-upload',
 			{ action: '{{$baseurl}}/wall_attach/{{$nickname}}',
 				name: 'userfile',
+				title: attach_title,
 				onSubmit: function(file,ext) { $('#profile-rotator').spin('tiny'); },
 				onComplete: function(file,response) {
 					addeditortext(response);

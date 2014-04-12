@@ -425,6 +425,15 @@ function zot_refresh($them,$channel = null, $force = false) {
 						intval($channel['channel_id']),
 						dbesc($x['hash'])
 					);
+					if(($new_connection) && (! $default_perms)) {
+						require_once('include/enotify.php');
+						notification(array(
+							'type'         => NOTIFY_INTRO,
+							'from_xchan'   => $x['hash'],
+							'to_xchan'     => $channel['channel_hash'],
+							'link'		   => z_root() . '/connedit/' . $new_connection[0]['abook_id'],
+						));
+					}
 
 					if($new_connection && (! ($new_connection[0]['abook_flags'] & ABOOK_FLAG_PENDING)) && ($their_perms & PERMS_R_STREAM))
 							proc_run('php','include/onepoll.php',$new_connection[0]['abook_id']); 
@@ -623,6 +632,10 @@ function import_xchan($arr,$ud_flags = UPDATE_FLAGS_UPDATED) {
 		if($adult_changed)
 			$new_flags = $new_flags ^ XCHAN_FLAGS_SELFCENSORED;
 
+		$deleted = (($r[0]['xchan_flags'] & XCHAN_FLAGS_DELETED) ? true : false);
+		$deleted_changed =  ((intval($deleted) != intval($arr['deleted'])) ? true : false);
+		if($deleted_changed)
+			$new_flags = $new_flags ^ XCHAN_FLAGS_DELETED;
 
 		if(($r[0]['xchan_name_date'] != $arr['name_updated']) 
 			|| ($r[0]['xchan_connurl'] != $arr['connections_url']) 
@@ -667,6 +680,8 @@ function import_xchan($arr,$ud_flags = UPDATE_FLAGS_UPDATED) {
 			$new_flags = 0;
 		if($arr['adult_content'])
 			$new_flags |= XCHAN_FLAGS_SELFCENSORED;
+		if(array_key_exists('deleted',$arr) && $arr['deleted'])
+			$new_flags |= XCHAN_FLAGS_DELETED;
 		
 		$x = q("insert into xchan ( xchan_hash, xchan_guid, xchan_guid_sig, xchan_pubkey, xchan_photo_mimetype,
 				xchan_photo_l, xchan_addr, xchan_url, xchan_connurl, xchan_follow, xchan_connpage, xchan_name, xchan_network, xchan_photo_date, xchan_name_date, xchan_flags)
@@ -872,20 +887,27 @@ function import_xchan($arr,$ud_flags = UPDATE_FLAGS_UPDATED) {
 		}
 
 		// get rid of any hubs we have for this channel which weren't reported.
+		// This was needed at one time to resolve complicated cross-site inconsistencies, but can cause sync conflict.
+		// currently disabled.
 
-		if($xisting) {
-			foreach($xisting as $x) {
-				if(! array_key_exists('updated',$x)) {
-					logger('import_xchan: removing unreferenced hub location ' . $x['hubloc_url']);
-					$r = q("delete from hubloc where hubloc_id = %d limit 1",
-						intval($x['hubloc_id'])
-					);
-					$what .= 'removed_hub';
-					$changed = true;
-				}
-			}
-		}
+//		if($xisting) {
+//			foreach($xisting as $x) {
+//				if(! array_key_exists('updated',$x)) {
+//					logger('import_xchan: removing unreferenced hub location ' . $x['hubloc_url']);
+//					$r = q("delete from hubloc where hubloc_id = %d limit 1",
+//						intval($x['hubloc_id'])
+//					);
+//					$what .= 'removed_hub';
+//					$changed = true;
+//				}
+//			}
+//		}
+
 	}
+
+
+
+
 
 	// Are we a directory server of some kind?
 
@@ -935,6 +957,8 @@ function import_xchan($arr,$ud_flags = UPDATE_FLAGS_UPDATED) {
 		$ret['success'] = true;
 		$ret['hash'] = $xchan_hash;
 	}
+
+
 
 	logger('import_xchan: result: ' . print_r($ret,true), LOGGER_DATA);
 	return $ret;
@@ -1345,16 +1369,18 @@ function allowed_public_recips($msg) {
 }
 
 
-function process_delivery($sender,$arr,$deliveries,$relay) {
+function process_delivery($sender,$arr,$deliveries,$relay,$public = false) {
 
 	$result = array();
 
 
 	// We've validated the sender. Now make sure that the sender is the owner or author
 
-	if($sender['hash'] != $arr['owner_xchan'] && $sender['hash'] != $arr['author_xchan']) {
-		logger('process_delivery: sender is not owner or author');
-		return;
+	if(! $public) {
+		if($sender['hash'] != $arr['owner_xchan'] && $sender['hash'] != $arr['author_xchan']) {
+			logger("process_delivery: sender {$sender['hash']} is not owner {$arr['owner_xchan']} or author {$arr['author_xchan']} - mid {$arr['mid']}");
+			return;
+		}
 	}
 	
 	foreach($deliveries as $d) {
@@ -1385,9 +1411,9 @@ function process_delivery($sender,$arr,$deliveries,$relay) {
 			}
 		}
 
-		if((! perm_is_allowed($channel['channel_id'],$sender['hash'],$perm)) && (! $tag_delivery)) {
-			logger("permission denied for delivery {$channel['channel_id']}");
-			$result[] = array($d['hash'],'permission denied',$channel['channel_name'] . ' <' . $channel['channel_address'] . '@' . get_app()->get_hostname() . '>');
+		if((! perm_is_allowed($channel['channel_id'],$sender['hash'],$perm)) && (! $tag_delivery) && (! $public)) {
+			logger("permission denied for delivery to channel {$channel['channel_id']} {$channel['channel_address']}");
+			$result[] = array($d['hash'],'permission denied',$channel['channel_name'] . ' <' . $channel['channel_address'] . '@' . get_app()->get_hostname() . '>',$arr['mid']);
 			continue;
 		}
 	
@@ -1397,12 +1423,12 @@ function process_delivery($sender,$arr,$deliveries,$relay) {
 			remove_community_tag($sender,$arr,$channel['channel_id']);
 
 			$item_id = delete_imported_item($sender,$arr,$channel['channel_id']);
-			$result[] = array($d['hash'],(($item_id) ? 'deleted' : 'delete_failed'),$channel['channel_name'] . ' <' . $channel['channel_address'] . '@' . get_app()->get_hostname() . '>');
+			$result[] = array($d['hash'],(($item_id) ? 'deleted' : 'delete_failed'),$channel['channel_name'] . ' <' . $channel['channel_address'] . '@' . get_app()->get_hostname() . '>',$arr['mid']);
 
 			if($relay && $item_id) {
 				logger('process_delivery: invoking relay');
 				proc_run('php','include/notifier.php','relay',intval($item_id));
-				$result[] = array($d['hash'],'relayed',$channel['channel_name'] . ' <' . $channel['channel_address'] . '@' . get_app()->get_hostname() . '>');
+				$result[] = array($d['hash'],'relayed',$channel['channel_name'] . ' <' . $channel['channel_address'] . '@' . get_app()->get_hostname() . '>',$arr['mid']);
 			}
 
 			continue;
@@ -1432,8 +1458,9 @@ function process_delivery($sender,$arr,$deliveries,$relay) {
 				}
 
 				$xyz = event_store($ev);
+				add_source_route($xyz,$sender['hash']);
 
-				$result = array($d['hash'],'event processed',$channel['channel_name'] . ' <' . $channel['channel_address'] . '@' . get_app()->get_hostname() . '>');
+				$result = array($d['hash'],'event processed',$channel['channel_name'] . ' <' . $channel['channel_address'] . '@' . get_app()->get_hostname() . '>',$arr['mid']);
 				continue;
 			}
 		}
@@ -1448,7 +1475,7 @@ function process_delivery($sender,$arr,$deliveries,$relay) {
 				$arr['uid'] = $channel['channel_id'];
 				update_imported_item($sender,$arr,$channel['channel_id']);
 			}	
-			$result[] = array($d['hash'],'updated',$channel['channel_name'] . ' <' . $channel['channel_address'] . '@' . get_app()->get_hostname() . '>');
+			$result[] = array($d['hash'],'updated',$channel['channel_name'] . ' <' . $channel['channel_address'] . '@' . get_app()->get_hostname() . '>',$arr['mid']);
 			$item_id = $r[0]['id'];
 		}
 		else {
@@ -1456,18 +1483,20 @@ function process_delivery($sender,$arr,$deliveries,$relay) {
 			$arr['uid'] = $channel['channel_id'];
 			$item_result = item_store($arr);
 			$item_id = $item_result['item_id'];
-			$result[] = array($d['hash'],(($item_id) ? 'posted' : 'storage failed:' . $item_result['message']),$channel['channel_name'] . ' <' . $channel['channel_address'] . '@' . get_app()->get_hostname() . '>');
+			add_source_route($item_id,$sender['hash']);
+
+			$result[] = array($d['hash'],(($item_id) ? 'posted' : 'storage failed:' . $item_result['message']),$channel['channel_name'] . ' <' . $channel['channel_address'] . '@' . get_app()->get_hostname() . '>',$arr['mid']);
 		}
 
 		if($relay && $item_id) {
 			logger('process_delivery: invoking relay');
 			proc_run('php','include/notifier.php','relay',intval($item_id));
-			$result[] = array($d['hash'],'relayed',$channel['channel_name'] . ' <' . $channel['channel_address'] . '@' . get_app()->get_hostname() . '>');
+			$result[] = array($d['hash'],'relayed',$channel['channel_name'] . ' <' . $channel['channel_address'] . '@' . get_app()->get_hostname() . '>',$arr['mid']);
 		}
 	}
 
 	if(! $deliveries)
-		$result[] = array('','no recipients');
+		$result[] = array('','no recipients','',$arr['mid']);
 
 	logger('process_delivery: local results: ' . print_r($result,true), LOGGER_DEBUG);
 
@@ -1571,7 +1600,16 @@ function delete_imported_item($sender,$item,$uid) {
 	} 
 		
 	require_once('include/items.php');
-	drop_item($r[0]['id'],false);
+
+	// FIXME issue #230 is related
+	// Chicken/egg problem because we have to drop_item, but this removes information that tag_deliver may need to do its stuff.
+	// We can't reverse the order because drop_item refuses to run if the item already has the deleted flag set and we need to
+	// set that flag prior to calling tag_deliver.
+
+	// Use phased deletion to set the deleted flag, call both tag_deliver and the notifier to notify downstream channels
+	// and then clean up after ourselves with a cron job after several days to do the delete_item_lowlevel() (DROPITEM_PHASE2).
+
+	drop_item($r[0]['id'],false, DROPITEM_PHASE1);
 
 	tag_deliver($uid,$r[0]['id']);
 
@@ -1605,7 +1643,7 @@ function process_mail_delivery($sender,$arr,$deliveries) {
 
 		if(! perm_is_allowed($channel['channel_id'],$sender['hash'],'post_mail')) {
 			logger("permission denied for mail delivery {$channel['channel_id']}");
-			$result[] = array($d['hash'],'permission denied',$channel['channel_name']);
+			$result[] = array($d['hash'],'permission denied',$channel['channel_name'],$arr['mid']);
 			continue;
 		}
 	
@@ -1619,11 +1657,11 @@ function process_mail_delivery($sender,$arr,$deliveries) {
 					intval($r[0]['id']),
 					intval($channel['channel_id'])
 				);
-				$result[] = array($d['hash'],'mail recalled',$channel['channel_name']);
+				$result[] = array($d['hash'],'mail recalled',$channel['channel_name'],$arr['mid']);
 				logger('mail_recalled');
 			}
 			else {				
-				$result[] = array($d['hash'],'duplicate mail received',$channel['channel_name']);
+				$result[] = array($d['hash'],'duplicate mail received',$channel['channel_name'],$arr['mid']);
 				logger('duplicate mail received');
 			}
 			continue;
@@ -1632,7 +1670,7 @@ function process_mail_delivery($sender,$arr,$deliveries) {
 			$arr['account_id'] = $channel['channel_account_id'];
 			$arr['channel_id'] = $channel['channel_id'];
 			$item_id = mail_store($arr);
-			$result[] = array($d['hash'],'mail delivered',$channel['channel_name']);
+			$result[] = array($d['hash'],'mail delivered',$channel['channel_name'],$arr['mid']);
 
 		}
 	}
@@ -1669,20 +1707,19 @@ function import_directory_profile($hash,$profile,$addr,$ud_flags = UPDATE_FLAGS_
 	$arr = array();
 
 	$arr['xprof_hash']         = $hash;
-	$arr['xprof_desc']         = (($profile['description'])    ? htmlspecialchars($profile['description'],    ENT_COMPAT,'UTF-8',false) : '');
 	$arr['xprof_dob']          = datetime_convert('','',$profile['birthday'],'Y-m-d'); // !!!! check this for 0000 year
-	$arr['xprof_age']          = (($profile['age']) ? intval($profile['age']) : 0);
-	$arr['xprof_gender']       = (($profile['gender'])    ? htmlspecialchars($profile['gender'],    ENT_COMPAT,'UTF-8',false) : '');
-	$arr['xprof_marital']      = (($profile['marital'])    ? htmlspecialchars($profile['marital'],    ENT_COMPAT,'UTF-8',false) : '');
-	$arr['xprof_sexual']       = (($profile['sexual'])    ? htmlspecialchars($profile['sexual'],    ENT_COMPAT,'UTF-8',false) : '');
-	$arr['xprof_locale']       = (($profile['locale'])    ? htmlspecialchars($profile['locale'],    ENT_COMPAT,'UTF-8',false) : '');
-	$arr['xprof_region']       = (($profile['region'])    ? htmlspecialchars($profile['region'],    ENT_COMPAT,'UTF-8',false) : '');
+	$arr['xprof_age']          = (($profile['age'])         ? intval($profile['age']) : 0);
+	$arr['xprof_desc']         = (($profile['description']) ? htmlspecialchars($profile['description'], ENT_COMPAT,'UTF-8',false) : '');
+	$arr['xprof_gender']       = (($profile['gender'])      ? htmlspecialchars($profile['gender'],      ENT_COMPAT,'UTF-8',false) : '');
+	$arr['xprof_marital']      = (($profile['marital'])     ? htmlspecialchars($profile['marital'],     ENT_COMPAT,'UTF-8',false) : '');
+	$arr['xprof_sexual']       = (($profile['sexual'])      ? htmlspecialchars($profile['sexual'],      ENT_COMPAT,'UTF-8',false) : '');
+	$arr['xprof_locale']       = (($profile['locale'])      ? htmlspecialchars($profile['locale'],      ENT_COMPAT,'UTF-8',false) : '');
+	$arr['xprof_region']       = (($profile['region'])      ? htmlspecialchars($profile['region'],      ENT_COMPAT,'UTF-8',false) : '');
 	$arr['xprof_postcode']     = (($profile['postcode'])    ? htmlspecialchars($profile['postcode'],    ENT_COMPAT,'UTF-8',false) : '');
-	$arr['xprof_country']      = (($profile['country'])    ? htmlspecialchars($profile['country'],    ENT_COMPAT,'UTF-8',false) : '');
-
-	$arr['xprof_about']      = (($profile['about'])    ? htmlspecialchars($profile['about'],    ENT_COMPAT,'UTF-8',false) : '');
-	$arr['xprof_homepage']      = (($profile['homepage'])    ? htmlspecialchars($profile['homepage'],    ENT_COMPAT,'UTF-8',false) : '');
-	$arr['xprof_hometown']      = (($profile['hometown'])    ? htmlspecialchars($profile['hometown'],    ENT_COMPAT,'UTF-8',false) : '');
+	$arr['xprof_country']      = (($profile['country'])     ? htmlspecialchars($profile['country'],     ENT_COMPAT,'UTF-8',false) : '');
+	$arr['xprof_about']        = (($profile['about'])       ? htmlspecialchars($profile['about'],       ENT_COMPAT,'UTF-8',false) : '');
+	$arr['xprof_homepage']     = (($profile['homepage'])    ? htmlspecialchars($profile['homepage'],    ENT_COMPAT,'UTF-8',false) : '');
+	$arr['xprof_hometown']     = (($profile['hometown'])    ? htmlspecialchars($profile['hometown'],    ENT_COMPAT,'UTF-8',false) : '');
 
 	$clean = array();
 	if(array_key_exists('keywords',$profile) and is_array($profile['keywords'])) {
@@ -2057,10 +2094,11 @@ function build_sync_packet($uid = 0, $packet = null) {
 	foreach($synchubs as $hub) {
 		$hash = random_string();
 		$n = zot_build_packet($channel,'notify',$env_recips,$hub['hubloc_sitekey'],$hash);
-		q("insert into outq ( outq_hash, outq_account, outq_channel, outq_posturl, outq_async, outq_created, outq_updated, outq_notify, outq_msg ) values ( '%s', %d, %d, '%s', %d, '%s', '%s', '%s', '%s' )",
+		q("insert into outq ( outq_hash, outq_account, outq_channel, outq_driver, outq_posturl, outq_async, outq_created, outq_updated, outq_notify, outq_msg ) values ( '%s', %d, %d, '%s', '%s', %d, '%s', '%s', '%s', '%s' )",
 			dbesc($hash),
 			intval($channel['channel_account']),
 			intval($channel['channel_id']),
+			dbesc('zot'),
 			dbesc($hub['hubloc_callback']),
 			intval(1),
 			dbesc(datetime_convert()),
@@ -2098,7 +2136,7 @@ function process_channel_sync_delivery($sender,$arr,$deliveries) {
 
 		if($channel['channel_hash'] != $sender['hash']) {
 			logger('process_channel_sync_delivery: possible forgery. Sender ' . $sender['hash'] . ' is not ' . $channel['channel_hash']);
-			$result[] = array($d['hash'],'channel mismatch',$channel['channel_name']);
+			$result[] = array($d['hash'],'channel mismatch',$channel['channel_name'],'');
 			continue;
 		}
 
@@ -2193,7 +2231,7 @@ function process_channel_sync_delivery($sender,$arr,$deliveries) {
 			}
 		}
 		
-		$result[] = array($d['hash'],'channel sync updated',$channel['channel_name']);
+		$result[] = array($d['hash'],'channel sync updated',$channel['channel_name'],'');
 
 
 	}
