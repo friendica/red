@@ -85,12 +85,7 @@ ACPopup.prototype._search = function(){
 			if (data.tot>0){
 				that.cont.show();
 				$(data.items).each(function(){
-					if(this.taggable)
-						ihtml = '<i class="icon-group"></i>';
-					else
-						ihtml = '<i class="icon-user"></i>';
-
-					html = "<img src='{0}' height='16px' width='16px'>{1} {2} ({3})".format(this.photo, ihtml, this.name, this.nick)
+					html = "<img src='{0}' height='16px' width='16px'>{1} ({2})".format(this.photo, this.name, ((this.label) ? this.nick + ' ' + this.label : this.nick) )
 					that.add(this.taggable, html, this.nick.replace(' ','') + '+' + this.id + ' - ' + this.link);
 				});			
 			} else {

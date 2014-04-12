@@ -209,14 +209,15 @@ function acl_init(&$a){
 			if($g['abook_their_perms'] & PERMS_W_TAGWALL) {
 				$contacts[] = array(
 					"type"     => "c",
-					"photo"    => $g['micro'],
+					"photo"    => "images/twopeople.png",
 					"name"     => $g['name'] . '+',
 					"id"	   => $g['id'] . '+',
 					"xid"      => $g['hash'],
 					"link"     => $g['nick'],
 					"nick"     => substr($g['nick'],0,strpos($g['nick'],'@')),
 					"self"     => (($g['abook_flags'] & ABOOK_FLAG_SELF) ? 'abook-self' : ''),
-					"taggable" => 'taggable'
+					"taggable" => 'taggable',
+					"label"    => t('network')
 				);
 			}
 			$contacts[] = array(
@@ -228,7 +229,8 @@ function acl_init(&$a){
 				"link"     => $g['nick'],
 				"nick"     => substr($g['nick'],0,strpos($g['nick'],'@')),
 				"self"     => (($g['abook_flags'] & ABOOK_FLAG_SELF) ? 'abook-self' : ''),
-				"taggable" => ''
+				"taggable" => '',
+				"label"    => '',
 			);
 		}			
 	}
