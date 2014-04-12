@@ -942,26 +942,38 @@ function handle_tag($a, &$body, &$access_tag, &$str_tags, $profile_uid, $tag) {
 	}
 
 	//is it a person tag? 
+
 	if(strpos($tag,'@') === 0) {
+
+		// The @! tag will alter permissions
 		$exclusive = ((strpos($tag,'!') === 1) ? true : false);
+
 		//is it already replaced? 
 		if(strpos($tag,'[zrl='))
 			return $replaced;
-		$stat = false;
+
 		//get the person's name
-		$name = substr($tag,(($exclusive) ? 2 : 1));
-		$newname = $name;
-		$alias = '';
+
+		$name = substr($tag,(($exclusive) ? 2 : 1)); // The name or name fragment we are going to replace
+		$newname = $name; // a copy that we can mess with 
 		$tagcid = 0;
+
+		$r = null;
 
 		// is it some generated name?
 
 		$forum = false;
+		$trailing_plus_name = false;
+
+		// @channel+ is a forum or network delivery tag
 
 		if(substr($newname,-1,1) === '+') {
 			$forum = true;
 			$newname = substr($newname,0,-1);
 		}
+
+		// Here we're looking for an address book entry as provided by the auto-completer
+		// of the form something+nnn where nnn is an abook_id 
 
 		if(strrpos($newname,'+')) {
 			//get the id
@@ -981,8 +993,19 @@ function handle_tag($a, &$body, &$access_tag, &$str_tags, $profile_uid, $tag) {
 			}
 		}
 
-		else {
-			$newname = str_replace('_',' ',$name);
+		if(! $r) {
+
+			// look for matching names in the address book
+
+			// Two ways to deal with spaces - doube quote the name or use underscores
+			// we see this after input filtering so quotes have been html entity encoded
+
+			if((substr($name,0,6) === '&quot;') && (substr($name,-6,6) === '&quot;')) {
+				$newname = substr($name,6);
+				$newname = substr($newname,0,-6);
+			}
+			else
+				$newname = str_replace('_',' ',$name);
 
 			//select someone from this user's contacts by name
 			$r = q("SELECT * FROM abook left join xchan on abook_xchan = xchan_hash  
@@ -999,14 +1022,28 @@ function handle_tag($a, &$body, &$access_tag, &$str_tags, $profile_uid, $tag) {
 						intval($profile_uid)
 				);
 			}
+
+			if(! $r) {
+
+				// it's possible somebody has a name ending with '+', which we stripped off as a forum indicator
+				// This is very rare but we want to get it right.
+
+				$r = q("SELECT * FROM abook left join xchan on abook_xchan = xchan_hash  
+					WHERE xchan_name = '%s' AND abook_channel = %d LIMIT 1",
+						dbesc($newname . '+'),
+						intval($profile_uid)
+				);
+				if($r)
+					$trailing_plus_name = true;
+			}
 		}
 
-		// $r is set, if someone could be selected
+		// $r is set if we found something
 
 		if($r) {
 			$profile = $r[0]['xchan_url'];
 			$newname = $r[0]['xchan_name'];
-			//add person's id to $access_tag if exclusive
+			// add the channel's xchan_hash to $access_tag if exclusive
 			if($exclusive) {
 				$access_tag .= 'cid:' . $r[0]['xchan_hash'];
 			}
@@ -1038,13 +1075,14 @@ function handle_tag($a, &$body, &$access_tag, &$str_tags, $profile_uid, $tag) {
 			}
 		}
 
-		//if there is an url for this persons profile
+		// if there is an url for this channel
+
 		if(isset($profile)) {
 			$replaced = true;
 			//create profile link
 			$profile = str_replace(',','%2c',$profile);
 			$url = $profile;
-			$newtag = '@' . (($exclusive) ? '!' : '') . '[zrl=' . $profile . ']' . $newname	. (($forum) ? '+' : '') . '[/zrl]';
+			$newtag = '@' . (($exclusive) ? '!' : '') . '[zrl=' . $profile . ']' . $newname	. (($forum &&  ! $trailing_plus_name) ? '+' : '') . '[/zrl]';
 			$body = str_replace('@' . (($exclusive) ? '!' : '') . $name, $newtag, $body);
 			//append tag to str_tags
 			if(! stristr($str_tags,$newtag)) {
