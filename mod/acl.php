@@ -206,6 +206,19 @@ function acl_init(&$a){
 
 	if(count($r)) {
 		foreach($r as $g){
+			if($g['abook_their_perms'] & PERMS_W_TAGWALL) {
+				$contacts[] = array(
+					"type"     => "c",
+					"photo"    => $g['micro'],
+					"name"     => $g['name'] . '+',
+					"id"	   => $g['id'] . '+',
+					"xid"      => $g['hash'],
+					"link"     => $g['nick'],
+					"nick"     => substr($g['nick'],0,strpos($g['nick'],'@')) . ' ' . t('plus connections'),
+					"self"     => (($g['abook_flags'] & ABOOK_FLAG_SELF) ? 'abook-self' : ''),
+					"taggable" => 'taggable'
+				);
+			}
 			$contacts[] = array(
 				"type"     => "c",
 				"photo"    => $g['micro'],
@@ -215,7 +228,7 @@ function acl_init(&$a){
 				"link"     => $g['nick'],
 				"nick"     => substr($g['nick'],0,strpos($g['nick'],'@')),
 				"self"     => (($g['abook_flags'] & ABOOK_FLAG_SELF) ? 'abook-self' : ''),
-				"taggable" => (($g['abook_their_perms'] & PERMS_W_TAGWALL) ? 'taggable' : '')
+				"taggable" => ''
 			);
 		}			
 	}
