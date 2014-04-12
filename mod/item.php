@@ -956,6 +956,13 @@ function handle_tag($a, &$body, &$access_tag, &$str_tags, $profile_uid, $tag) {
 
 		// is it some generated name?
 
+		$forum = false;
+
+		if(substr($newname,-1,1)) === '+') {
+			$forum = true;
+			$newname = substr($newname,0,-1);
+		}
+
 		if(strrpos($newname,'+')) {
 			//get the id
 			$tagcid = intval(substr($newname,strrpos($newname,'+') + 1));
@@ -1024,7 +1031,7 @@ function handle_tag($a, &$body, &$access_tag, &$str_tags, $profile_uid, $tag) {
 					}
 					$channel = get_app()->get_channel();
 					if($channel) {
-						$newtag = '@' . (($exclusive) ? '!' : '') . '[zrl=' . z_root() . '/channel/' . $channel['channel_address'] . ']' . $newname	. '[/zrl]';
+						$newtag = '@' . (($exclusive) ? '!' : '') . '[zrl=' . z_root() . '/channel/' . $channel['channel_address'] . ']' . $newname . '[/zrl]';
 						$body = str_replace('@' . (($exclusive) ? '!' : '') . $name, $newtag, $body);
 					}
 				}		
@@ -1037,7 +1044,7 @@ function handle_tag($a, &$body, &$access_tag, &$str_tags, $profile_uid, $tag) {
 			//create profile link
 			$profile = str_replace(',','%2c',$profile);
 			$url = $profile;
-			$newtag = '@' . (($exclusive) ? '!' : '') . '[zrl=' . $profile . ']' . $newname	. '[/zrl]';
+			$newtag = '@' . (($exclusive) ? '!' : '') . '[zrl=' . $profile . ']' . $newname	. (($forum) ? '+' : '') . '[/zrl]';
 			$body = str_replace('@' . (($exclusive) ? '!' : '') . $name, $newtag, $body);
 			//append tag to str_tags
 			if(! stristr($str_tags,$newtag)) {
