@@ -618,6 +618,10 @@ function get_tags($s) {
 			// try not to catch url fragments
 			if(strpos($s,$mtch) && preg_match('/[a-zA-z0-9\/]/',substr($s,strpos($s,$mtch)-1,1)))
 				continue;
+			// or quote remnants from the quoted strings we already picked out earlier
+			if(strpos($mtch,'&quot'))
+				continue;
+
 			$ret[] = $mtch;
 		}
 	}
@@ -638,7 +642,7 @@ function get_tags($s) {
 	usort($ret,'tag_sort_length');
 
 	
-//	logger('get_tags: ' . print_r($ret,true));
+	logger('get_tags: ' . print_r($ret,true));
 
 	return $ret;
 }
