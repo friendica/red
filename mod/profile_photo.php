@@ -2,6 +2,34 @@
 
 require_once('include/photo/photo_driver.php');
 
+function profile_photo_set_profile_perms($profileid) {
+
+	$allowcid = '';
+	$r = q("SELECT photo, profile_guid, id  FROM profile WHERE profile.id = %d LIMIT 1", intval($profileid));
+	$profile = $r[0];
+	
+	if(x($profile['photo'])) {
+		preg_match("@\w*(?=-\d*$)@i", $profile['photo'], $resource_id);
+		$resource_id = $resource_id[0];
+
+		if(x($profileid)) {
+
+			$r1 = q("SELECT abook.abook_xchan FROM abook WHERE abook_profile = %d ", intval($profile['id']));
+			$r2 = q("SELECT abook.abook_xchan FROM abook WHERE abook_profile = '%s'", dbesc($profile['profile_guid']));
+			foreach ($r1 as $entry) {
+				$allowcid .= "<" . $entry['abook_xchan'] . ">"; 
+			}
+			foreach ($r2 as $entry) {
+                                $allowcid .= "<" . $entry['abook_xchan'] . ">";
+                        }
+			if(x($allowcid)) {
+				q("UPDATE `photo` SET allow_cid = '%s' WHERE resource_id = '%s'",dbesc($allowcid),dbesc($resource_id));
+			}
+		}
+	}
+	return;
+}
+
 function profile_photo_init(&$a) {
 
 	if(! local_user()) {
@@ -142,6 +170,11 @@ function profile_photo_post(&$a) {
 
 				// Update directory in background
 				proc_run('php',"include/directory.php",$channel['channel_id']);
+
+				// Now copy profile-permissions to pictures, to prevent privacyleaks by automatically created folder 'Profile Pictures'
+
+                                profile_photo_set_profile_perms($_REQUEST['profile']);
+
 			}
 			else
 				notice( t('Unable to process image') . EOL);

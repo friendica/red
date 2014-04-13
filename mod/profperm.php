@@ -10,7 +10,7 @@ function profperm_init(&$a) {
 	$channel = $a->get_channel();
 	$which = $channel['channel_address'];
 
-	$profile = $a->argv[1];		
+	$profile = $a->argv[1];
 
 	profile_load($a,$which,$profile);
 
@@ -89,6 +89,10 @@ function profperm_content(&$a) {
 
 			}
 
+			//Time to update the permissions on the profile-pictures as well
+			require_once('mod/profile_photo.php');
+			profile_photo_set_profile_perms($profile['id']);
+
 			$r = q("SELECT * FROM abook left join xchan on abook_xchan = xchan_hash WHERE abook_channel = %d AND abook_profile = %d",
 				intval(local_user()),
 				intval(argv(1))
@@ -111,9 +115,9 @@ function profperm_content(&$a) {
 	}
 
 	$o .= '<div id="prof-update-wrapper">';
-	if($change) 
+	if($change)
 		$o = '';
-	
+
 	$o .= '<div id="prof-members-title">';
 	$o .= '<h3>' . t('Visible To') . '</h3>';
 	$o .= '</div>';
@@ -134,7 +138,7 @@ function profperm_content(&$a) {
 	$o .= '<h3>' . t("All Connections") . '</h3>';
 	$o .= '</div>';
 	$o .= '<div id="prof-all-contacts">';
-		
+
 		$r = abook_connections(local_user());
 
 		if($r) {
