@@ -642,7 +642,7 @@ function get_tags($s) {
 	usort($ret,'tag_sort_length');
 
 	
-	logger('get_tags: ' . print_r($ret,true));
+//	logger('get_tags: ' . print_r($ret,true));
 
 	return $ret;
 }
