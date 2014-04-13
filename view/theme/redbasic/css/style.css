@@ -285,12 +285,15 @@ footer {
 
 #login-extra-links {
 	clear: both;
+	width: 300px;
 }
 
-#register-link,
-#lost-password-link {
+#register-link {
 	float: left;
 	margin-left: 100px;
+}
+#lost-password-link {
+	float: right;
 }
 
 #login-standard-end {
@@ -828,15 +831,17 @@ footer {
 
 .location-label, .gender-label, .marital-label, .homepage-label {
 	float: left;
-	text-align: right;
 	display: block;
-	width: 65px;
+	width: 70px;
+
 }
 
 .adr, .x-gender, .marital-text, .homepage-url {
 	float: left;
 	display: block;
-	margin-left: 8px;
+	width: 130px;
+	height: 18px;
+	overflow: hidden;
 }
 
 .profile-clear {
