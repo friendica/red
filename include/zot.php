@@ -728,7 +728,8 @@ function import_xchan($arr,$ud_flags = UPDATE_FLAGS_UPDATED) {
 					z_root() . '/photo/profile/l/' . $local[0]['channel_id'],
 					z_root() . '/photo/profile/m/' . $local[0]['channel_id'],
 					z_root() . '/photo/profile/s/' . $local[0]['channel_id'],
-					$arr['photo_mimetype']
+					$arr['photo_mimetype'],
+					false
 				);
 			}
 		}
@@ -736,16 +737,29 @@ function import_xchan($arr,$ud_flags = UPDATE_FLAGS_UPDATED) {
 			$photos = import_profile_photo($arr['photo'],$xchan_hash);
 		}
 		if($photos) {
-			$r = q("update xchan set xchan_photo_date = '%s', xchan_photo_l = '%s', xchan_photo_m = '%s', xchan_photo_s = '%s', xchan_photo_mimetype = '%s'
-				where xchan_hash = '%s' limit 1",
-				dbesc(datetime_convert('UTC','UTC',$arr['photo_updated'])),
-				dbesc($photos[0]),
-				dbesc($photos[1]),
-				dbesc($photos[2]),
-				dbesc($photos[3]),
-				dbesc($xchan_hash)
-			);
-
+			if($photos[4]) {
+				// importing the photo failed somehow. Leave the photo_date alone so we can try again at a later date.
+				// This often happens when somebody joins the matrix with a bad cert. 
+				$r = q("update xchan set xchan_photo_l = '%s', xchan_photo_m = '%s', xchan_photo_s = '%s', xchan_photo_mimetype = '%s'
+					where xchan_hash = '%s' limit 1",
+					dbesc($photos[0]),
+					dbesc($photos[1]),
+					dbesc($photos[2]),
+					dbesc($photos[3]),
+					dbesc($xchan_hash)
+				);
+			}
+			else {
+				$r = q("update xchan set xchan_photo_date = '%s', xchan_photo_l = '%s', xchan_photo_m = '%s', xchan_photo_s = '%s', xchan_photo_mimetype = '%s'
+					where xchan_hash = '%s' limit 1",
+					dbesc(datetime_convert('UTC','UTC',$arr['photo_updated'])),
+					dbesc($photos[0]),
+					dbesc($photos[1]),
+					dbesc($photos[2]),
+					dbesc($photos[3]),
+					dbesc($xchan_hash)
+				);
+			}
 			$what .= 'photo ';
 			$changed = true;
 		}
