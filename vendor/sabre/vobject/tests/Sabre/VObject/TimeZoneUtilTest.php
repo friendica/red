@@ -144,7 +144,12 @@ HI;
     function testTimezoneOffset() {
 
         $tz = TimeZoneUtil::getTimeZone('GMT-0400', null, true);
-        $ex = new \DateTimeZone('Etc/GMT-4');
+
+        if (version_compare(PHP_VERSION, '5.5.10', '>=')) {
+            $ex = new \DateTimeZone('-04:00');
+        } else {
+            $ex = new \DateTimeZone('Etc/GMT-4');
+        }
         $this->assertEquals($ex->getName(), $tz->getName());
 
     }
@@ -289,7 +294,11 @@ END:VCALENDAR
 HI;
 
         $tz = TimeZoneUtil::getTimeZone('/freeassociation.sourceforge.net/Tzfile/SystemV/EST5EDT', Reader::read($vobj), true);
-        $ex = new \DateTimeZone('EST5EDT');
+        if (version_compare(PHP_VERSION, '5.5.10', '>=')) {
+            $ex = new \DateTimeZone('America/New_York');
+        } else {
+            $ex = new \DateTimeZone('EST5EDT');
+        }
         $this->assertEquals($ex->getName(), $tz->getName());
 
     }

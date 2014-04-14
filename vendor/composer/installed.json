@@ -1,24 +1,69 @@
 [
     {
-        "name": "sabre/vobject",
-        "version": "2.1.3",
-        "version_normalized": "2.1.3.0",
+        "name": "monolog/monolog",
+        "version": "1.0.2",
+        "version_normalized": "1.0.2.0",
         "source": {
             "type": "git",
-            "url": "https://github.com/fruux/sabre-vobject.git",
-            "reference": "e46d6855cfef23318e7c422cd08d36e344624675"
+            "url": "https://github.com/Seldaek/monolog.git",
+            "reference": "b704c49a3051536f67f2d39f13568f74615b9922"
         },
         "dist": {
             "type": "zip",
-            "url": "https://api.github.com/repos/fruux/sabre-vobject/zipball/e46d6855cfef23318e7c422cd08d36e344624675",
-            "reference": "e46d6855cfef23318e7c422cd08d36e344624675",
+            "url": "https://api.github.com/repos/Seldaek/monolog/zipball/b704c49a3051536f67f2d39f13568f74615b9922",
+            "reference": "b704c49a3051536f67f2d39f13568f74615b9922",
+            "shasum": ""
+        },
+        "require": {
+            "php": ">=5.3.0"
+        },
+        "time": "2011-10-24 09:39:02",
+        "type": "library",
+        "installation-source": "dist",
+        "autoload": {
+            "psr-0": {
+                "Monolog": "src/"
+            }
+        },
+        "notification-url": "https://packagist.org/downloads/",
+        "license": [
+            "MIT"
+        ],
+        "authors": [
+            {
+                "name": "Jordi Boggiano",
+                "email": "j.boggiano@seld.be",
+                "homepage": "http://seld.be",
+                "role": "Developer"
+            }
+        ],
+        "description": "Logging for PHP 5.3",
+        "homepage": "http://github.com/Seldaek/monolog",
+        "keywords": [
+            "log",
+            "logging"
+        ]
+    },
+    {
+        "name": "sabre/vobject",
+        "version": "2.1.4",
+        "version_normalized": "2.1.4.0",
+        "source": {
+            "type": "git",
+            "url": "https://github.com/fruux/sabre-vobject.git",
+            "reference": "199b6ec87104b05e3013dfd5b90eafbbe4cf97dc"
+        },
+        "dist": {
+            "type": "zip",
+            "url": "https://api.github.com/repos/fruux/sabre-vobject/zipball/199b6ec87104b05e3013dfd5b90eafbbe4cf97dc",
+            "reference": "199b6ec87104b05e3013dfd5b90eafbbe4cf97dc",
             "shasum": ""
         },
         "require": {
             "ext-mbstring": "*",
             "php": ">=5.3.1"
         },
-        "time": "2013-10-02 15:57:01",
+        "time": "2014-03-30 23:01:06",
         "bin": [
             "bin/vobjectvalidate.php"
         ],
@@ -51,17 +96,17 @@
     },
     {
         "name": "sabre/dav",
-        "version": "1.8.7",
-        "version_normalized": "1.8.7.0",
+        "version": "1.8.9",
+        "version_normalized": "1.8.9.0",
         "source": {
             "type": "git",
             "url": "https://github.com/fruux/sabre-dav.git",
-            "reference": "41c750da3c60a427cdd847df090ef0fc7e8f1076"
+            "reference": "25e095469e44d195cd255bdce55ce473224558bc"
         },
         "dist": {
             "type": "zip",
-            "url": "https://api.github.com/repos/fruux/sabre-dav/zipball/41c750da3c60a427cdd847df090ef0fc7e8f1076",
-            "reference": "41c750da3c60a427cdd847df090ef0fc7e8f1076",
+            "url": "https://api.github.com/repos/fruux/sabre-dav/zipball/25e095469e44d195cd255bdce55ce473224558bc",
+            "reference": "25e095469e44d195cd255bdce55ce473224558bc",
             "shasum": ""
         },
         "require": {
@@ -90,7 +135,7 @@
             "ext-curl": "*",
             "ext-pdo": "*"
         },
-        "time": "2013-10-02 18:38:26",
+        "time": "2014-02-26 22:17:11",
         "bin": [
             "bin/sabredav"
         ],
