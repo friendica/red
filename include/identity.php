@@ -583,14 +583,16 @@ function profile_load(&$a, $nickname, $profile = '') {
 
 	}
 
+	$a->profile = $p[0];
+	$a->profile_uid = $p[0]['profile_uid'];
+	$a->page['title'] = $a->profile['channel_name'] . " - " . $a->profile['channel_address'] . "@" . $a->get_hostname();
+
+	$a->profile['permission_to_view'] = $can_view_profile;
+
 	if($can_view_profile) {
-		$a->profile = $p[0];
 		$online = get_online_status($nickname);
 		$a->profile['online_status'] = $online['result'];
 
-		$a->profile_uid = $p[0]['profile_uid'];
-
-		$a->page['title'] = $a->profile['channel_name'] . " - " . $a->profile['channel_address'] . "@" . $a->get_hostname();
 	}
 
 	if(local_user()) {
@@ -604,18 +606,12 @@ function profile_load(&$a, $nickname, $profile = '') {
 
 	$_SESSION['theme'] = $p[0]['channel_theme'];
 
-	$a->set_template_engine(); // reset the template engine to the default in case the user's theme doesn't specify one
+//	$a->set_template_engine(); // reset the template engine to the default in case the user's theme doesn't specify one
 
-	$theme_info_file = "view/theme/".current_theme()."/php/theme.php";
-	if (file_exists($theme_info_file)){
-		require_once($theme_info_file);
-	}
-
-	if(! $can_view_profile) {
-		// permission denied
-		notice( t(' Sorry, you don\'t have the permission to view this profile. ') . EOL);
-		return;
-	}
+//	$theme_info_file = "view/theme/".current_theme()."/php/theme.php";
+//	if (file_exists($theme_info_file)){
+//		require_once($theme_info_file);
+//	}
 
 	return;
 }
@@ -739,7 +735,7 @@ logger('online: ' . $profile['online']);
 		$block = true;
 	}
 
-	if(($profile['hidewall'] || $block) && (! local_user()) && (! remote_user())) {
+	if(($profile['hidewall'] && (! local_user()) && (! remote_user())) || $block ) {
 		$location = $pdesc = $gender = $marital = $homepage = $online = False;
 	}
 
@@ -751,7 +747,7 @@ logger('online: ' . $profile['online']);
 
 	$channel_menu = false;
 	$menu = get_pconfig($profile['uid'],'system','channel_menu');
-	if($menu) {
+	if($menu && ! $block) {
 		require_once('include/menu.php');
 		$m = menu_fetch($menu,$profile['uid'],$observer['xchan_hash']);
 		if($m)
