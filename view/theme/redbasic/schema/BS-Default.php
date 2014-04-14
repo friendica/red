@@ -18,3 +18,5 @@
 		$nav_active_icon_colour = "#555";
 	if (! $radius)
 		$radius = "4";
+	if (! $banner_colour)
+		$banner_colour = "#777";

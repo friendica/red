@@ -697,17 +697,17 @@ footer {
 
 .rconnect {
 	display: block;
-	color: #FFFFFF;
+	color: $nav_active_icon_colour;
 	margin-top: 15px;
 	background-color: $nav_bg;
 	-webkit-border-radius: $radiuspx ;
 	-moz-border-radius: $radiuspx;
 	border-radius: $radiuspx;
+	border: 1px solid $nav_bd;
 	padding: 5px;
 	font-weight: bold;
 	clear: both;
 }
-
 
 #pause {
   position: fixed;
@@ -1501,7 +1501,7 @@ div.jGrowl div.jGrowl-notification {
 }
 
 a.rconnect {
-  color: #ffffff;
+  color: $nav_active_icon_colour;
   text-decoration: none;
   outline: none;
 }
