@@ -66,16 +66,16 @@ textarea {
 }
 
 input {
-	border: 1px solid #666666;
+	border: 1px solid $input_border;
 	-moz-border-radius: $radiuspx;
 	border-radius: $radiuspx;	
 	padding: 3px;
 }
 
 input[type="submit"] {
-	background-color: #F0F0F0;
+	background-color: $input_bgsubmit;
 	font-weight: bold;
-	color: #0080FF; 
+	color: $input_linksubmit;
 	text-decoration: none;
 }
 
@@ -101,10 +101,10 @@ code {
 }
 
 blockquote {
-	background-color: #f4f8f9;
-	border-left: 4px solid #dae4ee;
+	background-color: $blockquote_bgcolour;
+	border-left: 4px solid $blockquote_bordercolour;
 	padding: 0.4em;
-	color: #000;
+	color: $blockquote_colour;
 	margin-left: 20px;
 }
 
@@ -230,7 +230,16 @@ footer {
 
 /*TODO: we should use one class for all this. */
 .group-selected, .fileas-selected, .categories-selected, .search-selected, .active {
-	color: #444444 !important;
+	color: $selected_active_colour !important;
+	text-decoration: $selected_active_deco !important;
+}
+
+.fileas-all {
+	text-decoration: none !important;
+}
+
+.fileas-all:hover {
+	text-decoration: underline !important;
 }
 
 #sysmsg {
@@ -1391,21 +1400,27 @@ brain is weird like that */
 /* autocomplete popup */
 .acpopup {
 	max-height:150px;
-	background-color:#ffffff;
+	background-color:$acpopup_bgcolour;
 	overflow:auto;
 	z-index:100000;
-	border:1px solid #cccccc;
+	border:1px solid $acpopup_bordercolour;
 }
 .acpopupitem {
-	background-color:#ffffff; padding: 4px;
+	background-color:$acpopup_bgcolour; padding: 4px;
 	clear:left;
 }
 .acpopupitem.taggable {
-	background-color: #ddddff;
+	background-color: $acpopup_tgbl_bgcolour;
 }
 .acpopupitem img {
 	float: left;
 	margin-right: 4px;
+}
+
+.acpopupitem:hover {
+	text-decoration: underline;
+	color: $acpopup_hovercolour;
+	cursor:pointer;
 }
 
 .acpopupitem.selected {
@@ -1531,11 +1546,12 @@ header {
 }
 
 .notif-item a {
-	color: #000000;
+	color: $notif_itemcolour;
 }
 
 .notif-item a:hover {
 	text-decoration: underline;
+	color: $notif_itemhovercolour;
 }
 
 .notif-image {
@@ -1544,8 +1560,27 @@ header {
 	padding: 7px 7px 0px 0px;
 }
 
-.notify-seen {
-	background: #DDDDDD;
+
+#nav-notify-menu {
+	background: $notify_bgcolour;
+}
+ 	
+#nav-notify-menu a {
+	color: $notify_linkcolour;
+}
+
+#nav-notify-menu a:hover {
+	background: $notify_bghover;
+}
+
+.notify-seen a {
+	background: $notifyseen_bgcolour;
+	color: $notifyseen_linkcolour !important;
+}
+
+.notify-seen a:hover {
+	background: $notifyseen_bghover;
+	color: $notifyseen_linkhover !important;
 }
 
 #page-spinner {
@@ -1892,14 +1927,14 @@ img.mail-list-sender-photo {
 	border-radius: $radiuspx;
 	background-color: $item_colour;
 	opacity: $item_opacity;
-	border-left: 2px solid #f4f4f4;
-	border-bottom: 1px solid #f4f4f4;
+	border-left: 2px solid $item_bordercolour;
+	border-bottom: 1px solid $item_bordercolour;
 }
 
 .wall-item-comment-wrapper {
 	margin-top: 10px;
-	border-left: 2px solid #f4f4f4;
-	border-bottom: 1px solid #f4f4f4; 
+	border-left: 2px solid $item_bordercolour;
+	border-bottom: 1px solid $item_bordercolour; 
 }
 
 .wallwall .wwto {
@@ -2138,6 +2173,8 @@ blockquote {
 	border-radius: $radiuspx;
 }
 
+
+
 .dropdown-menu img {
 	border-radius: $radiuspx;
 }
@@ -2209,6 +2246,48 @@ blockquote {
 	box-shadow: none;
 }
 
+.nav-tabs{
+	border-bottom:1px solid $navtabs_borderc !important;
+}
+
+.nav-tabs>li.active>a,.nav-tabs>li.active>a:hover,.nav-tabs>li.active>a:focus{
+	color: $navtabs_fontcolour !important; 
+	background-color: $navtabs_bgcolour; 
+}
+
+.nav-tabs.nav-justified>.active>a,.nav-tabs.nav-justified>.active>a:hover,.nav-tabs.nav-justified>.active>a:focus{
+	border:1px solid $navtabs_borderc !important;
+	border-bottom:1px solid transparent !important;
+	bottom: -1px !important;
+}
+
+.nav-tabs.nav-justified > li > a {
+    	border-bottom: none;
+	$navtabs_linkcolour
+}
+
+.nav-tabs > li > a:hover, .nav-tabs > li > a:focus {
+    	text-decoration: $navtabs_decohover;
+    	background-color: $navtabs_bgchover;
+   	border-bottom: 1px solid $navtabs_bgchover;
+	border-color: $navtabs_bgchover;
+	$navtabs_linkchover
+}
+
+.btn-default {
+    	background-color: $editbuttons_bgcolour;
+    	border-color: $editbuttons_bordercolour;
+    	text-shadow: none;
+    	box-shadow: none;
+}
+
+.btn-default:hover, .btn-default:focus, .btn-default:active .btn-default.active {
+    	background-color: $editbuttons_bghover;
+    	border-color: $editbuttons_bordercolour;
+	color: $input_colourhover;
+	text-decoration: $input_decohover;
+}
+
 @media screen and (max-width: 767px) {
 	aside#region_1 {
 		background: rgba(0, 0, 0, .1);
@@ -2256,4 +2335,5 @@ blockquote {
 	.acl-list-item {
 		width: calc(100% - 10px);
 	}
+
 }
