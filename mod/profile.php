@@ -61,7 +61,7 @@ function profile_content(&$a, $update = 0) {
 	$o = '';
 
 	if(! (perm_is_allowed($a->profile['profile_uid'],get_observer_hash(), 'view_profile'))) {
-		notice( t('Access to this profile has been restricted.') . EOL);
+		notice( t('Permission denied.') . EOL);
 		return;
 	}
 
@@ -69,10 +69,9 @@ function profile_content(&$a, $update = 0) {
 	$is_owner = ((local_user()) && (local_user() == $a->profile['profile_uid']) ? true : false);
 
 	if($a->profile['hidewall'] && (! $is_owner) && (! remote_user())) {
-		notice( t('Access to this profile has been restricted.') . EOL);
+		notice( t('Permission denied.') . EOL);
 		return;
 	}
-
 
 	$o .= profile_tabs($a, $is_owner, $a->profile['channel_address']);
 

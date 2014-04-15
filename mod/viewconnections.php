@@ -29,21 +29,19 @@ function viewconnections_content(&$a) {
 	} 
 
 
-	$r = q("SELECT count(*) as total FROM abook left join xchan on abook_xchan = xchan_hash where abook_channel = %d and abook_flags = 0 and not ( xchan_flags & %d ) and not ( xchan_flags & %d ) and not ( xchan_flags & %d ) ",
+	$r = q("SELECT count(*) as total FROM abook left join xchan on abook_xchan = xchan_hash where abook_channel = %d and not (abook_flags & %d ) and not ( xchan_flags & %d ) ",
 		intval($a->profile['uid']),
-		intval(XCHAN_FLAGS_HIDDEN),
-		intval(XCHAN_FLAGS_ORPHAN),
-		intval(XCHAN_FLAGS_DELETED)
+		intval(ABOOK_FLAG_HIDDEN|ABOOK_FLAG_PENDING|ABOOK_FLAG_SELF),
+		intval(XCHAN_FLAGS_HIDDEN|XCHAN_FLAGS_ORPHAN|XCHAN_FLAGS_DELETED)
 	);
 	if($r) {
 		$a->set_pager_total($r[0]['total']);
 	}
 
-	$r = q("SELECT * FROM abook left join xchan on abook_xchan = xchan_hash where abook_channel = %d and abook_flags = 0 and not ( xchan_flags & %d ) and not ( xchan_flags & %d ) and not ( xchan_flags & %d ) order by xchan_name LIMIT %d , %d ",
+	$r = q("SELECT * FROM abook left join xchan on abook_xchan = xchan_hash where abook_channel = %d and not ( abook_flags & %d ) and not ( xchan_flags & %d ) order by xchan_name LIMIT %d , %d ",
 		intval($a->profile['uid']),
-		intval(XCHAN_FLAGS_HIDDEN),
-		intval(XCHAN_FLAGS_ORPHAN),
-		intval(XCHAN_FLAGS_DELETED),
+		intval(ABOOK_FLAG_HIDDEN|ABOOK_FLAG_PENDING|ABOOK_FLAG_SELF),
+		intval(XCHAN_FLAGS_HIDDEN|XCHAN_FLAGS_ORPHAN|XCHAN_FLAGS_DELETED),
 		intval($a->pager['start']),
 		intval($a->pager['itemspage'])
 	);

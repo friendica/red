@@ -15,7 +15,7 @@
 
 <div class="contact-name" id="directory-name-{{$id}}"  >{{$name}}{{if $online}} <i class="icon-asterisk online-now" title="{{$online}}"></i>{{/if}}</div>
 {{if $connect}}
-<div class="directory-connect"><a href="{{$connect}}">{{$conn_label}}</a></div>
+<div class="directory-connect btn btn-default"><a href="{{$connect}}">{{$conn_label}}</a></div>
 {{/if}}
 
 <div class="contact-webbie">{{$address}}</div>

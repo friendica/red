@@ -206,7 +206,7 @@ function acl_init(&$a){
 
 	if(count($r)) {
 		foreach($r as $g){
-			if($g['abook_their_perms'] & PERMS_W_TAGWALL) {
+			if(($g['abook_their_perms'] & PERMS_W_TAGWALL) && $type == 'c') {
 				$contacts[] = array(
 					"type"     => "c",
 					"photo"    => "images/twopeople.png",

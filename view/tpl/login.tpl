@@ -11,12 +11,14 @@
         <a href="lostpass" title="{{$lostpass}}" id="lost-password-link" >{{$lostlink}}</a>
 	</div>
 
+	<div class="clear"></div>
+
 	{{include file="field_checkbox.tpl" field=$remember}}
 	
 	<div id="login-standard-end"></div>
 
 	<div id="login-submit-wrapper" >
-		<input type="submit" name="submit" id="login-submit-button" value="{{$login}}" />
+		<input type="submit" name="submit" id="login-submit-button" class="btn btn-default" value="{{$login}}" />
 	</div>
 	
 	{{foreach $hiddens as $k=>$v}}

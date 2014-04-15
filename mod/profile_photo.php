@@ -1,20 +1,30 @@
 <?php
 
+/* @file profile_photo.php
+   @brief Module-file with functions for handling of profile-photos
+
+*/
+
 require_once('include/photo/photo_driver.php');
+
+/* @brief Function for sync'ing  permissions of profile-photos and their profile
+*
+*  @param $profileid The id number of the profile to sync
+*  @return void
+*/
 
 function profile_photo_set_profile_perms($profileid) {
 
 	$allowcid = '';
-	$r = q("SELECT photo, profile_guid, id  FROM profile WHERE profile.id = %d LIMIT 1", intval($profileid));
-	$profile = $r[0];
-	
-	if(x($profile['photo'])) {
-		preg_match("@\w*(?=-\d*$)@i", $profile['photo'], $resource_id);
-		$resource_id = $resource_id[0];
+	if (x($profileid)) {
 
-		if(x($profileid)) {
+		$r = q("SELECT photo, profile_guid, id, is_default  FROM profile WHERE profile.id = %d LIMIT 1", intval($profileid));
+		$profile = $r[0];
+		if(x($profile['id']) && x($profile['photo']) && intval($profile['is_default']) != 1) {	//Only set perms when query suceeded and when we are not on the default profile 
+	        	preg_match("@\w*(?=-\d*$)@i", $profile['photo'], $resource_id);
+	        	$resource_id = $resource_id[0];
 
-			$r1 = q("SELECT abook.abook_xchan FROM abook WHERE abook_profile = %d ", intval($profile['id']));
+			$r1 = q("SELECT abook.abook_xchan FROM abook WHERE abook_profile = %d ", intval($profile['id'])); //Should not be needed in future. Catches old int-profile-ids.
 			$r2 = q("SELECT abook.abook_xchan FROM abook WHERE abook_profile = '%s'", dbesc($profile['profile_guid']));
 			foreach ($r1 as $entry) {
 				$allowcid .= "<" . $entry['abook_xchan'] . ">"; 
@@ -23,7 +33,7 @@ function profile_photo_set_profile_perms($profileid) {
                                 $allowcid .= "<" . $entry['abook_xchan'] . ">";
                         }
 			if(x($allowcid)) {
-				q("UPDATE `photo` SET allow_cid = '%s' WHERE resource_id = '%s'",dbesc($allowcid),dbesc($resource_id));
+				q("UPDATE `photo` SET allow_cid = '%s' WHERE resource_id = '%s' AND uid = %d",dbesc($allowcid),dbesc($resource_id),intval($profile['id']));
 			}
 		}
 	}

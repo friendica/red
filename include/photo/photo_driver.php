@@ -616,7 +616,7 @@ function import_profile_photo($photo,$xchan,$thing = false) {
 		$type = 'image/jpeg';
 	}
 
-	return(array($photo,$thumb,$micro,$type));
+	return(array($photo,$thumb,$micro,$type,$photo_failure));
 
 }
 

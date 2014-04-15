@@ -61,9 +61,9 @@ function profperm_content(&$a) {
 
 		$profile = $r[0];
 
-		$r = q("SELECT * FROM abook left join xchan on abook_xchan = xchan_hash WHERE abook_channel = %d AND abook_profile = %d",
+		$r = q("SELECT * FROM abook left join xchan on abook_xchan = xchan_hash WHERE abook_channel = %d AND abook_profile = '%s'",
 			intval(local_user()),
-			intval(argv(1))
+			dbesc($profile['profile_guid'])
 		);
 
 		$ingroup = array();
@@ -75,27 +75,29 @@ function profperm_content(&$a) {
 
 		if($change) {
 			if(in_array($change,$ingroup)) {
-				q("UPDATE abook SET abook_profile = 0 WHERE abook_id = %d AND abook_channel = %d LIMIT 1",
+				q("UPDATE abook SET abook_profile = '' WHERE abook_id = %d AND abook_channel = %d LIMIT 1",
 					intval($change),
 					intval(local_user())
 				);
 			}
 			else {
-				q("UPDATE abook SET abook_profile = %d WHERE abook_id = %d AND abook_channel = %d LIMIT 1",
-					intval(argv(1)),
+				q("UPDATE abook SET abook_profile = '%s' WHERE abook_id = %d AND abook_channel = %d LIMIT 1",
+					dbesc($profile['profile_guid']),
 					intval($change),
 					intval(local_user())
 				);
 
 			}
 
+
 			//Time to update the permissions on the profile-pictures as well
 			require_once('mod/profile_photo.php');
 			profile_photo_set_profile_perms($profile['id']);
 
-			$r = q("SELECT * FROM abook left join xchan on abook_xchan = xchan_hash WHERE abook_channel = %d AND abook_profile = %d",
+			$r = q("SELECT * FROM abook left join xchan on abook_xchan = xchan_hash WHERE abook_channel = %d AND abook_profile = '%s'",
+
 				intval(local_user()),
-				intval(argv(1))
+				dbesc($profile['profile_guid'])
 			);
 
 			$members = $r;
