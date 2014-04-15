@@ -1,34 +1,102 @@
 <?php
 	
 	if (! $nav_bg)
-		$nav_bg = "#000000";
+		$nav_bg = "#000";
 	if (! $nav_gradient_top)
-		$nav_gradient_top = "#000000";
+		$nav_gradient_top = "#000";
 	if (! $nav_gradient_bottom)
-		$nav_gradient_bottom = "#000000";
+		$nav_gradient_bottom = "#000";
 	if (! $nav_active_gradient_top)
-		$nav_active_gradient_top = "#333333";
+		$nav_active_gradient_top = "#333";
 	if (! $nav_active_gradient_bottom)
-		$nav_active_gradient_bottom = "#111111";
+		$nav_active_gradient_bottom = "#111";
 	if (! $nav_bd)
-		$nav_bd = "#111111";
+		$nav_bd = "#111";
 	if (! $nav_icon_colour)
-		$nav_icon_colour = "#999999";
+		$nav_icon_colour = "#999";
 	if (! $nav_active_icon_colour)
-		$nav_active_icon_colour = "#ffffff";
+		$nav_active_icon_colour = "#fff";
+	if (! $navtabs_borderc)
+		$navtabs_borderc = "#333";
+	if (! $navtabs_fontcolour)
+		$navtabs_fontcolour = "#fff";
+	if (! $navtabs_bgcolour)
+		$navtabs_bgcolour = "#111";
+	if (! $navtabs_linkcolour)
+		$navtabs_linkcolour = "color: #ccc;";
+	if (! $navtabs_linkchover)
+		$navtabs_linkchover = "color: #fff;";
+	if (! $navtabs_bgchover)
+		$navtabs_bgchover = "#222";
+	if (! $navtabs_decohover)
+		$navtabs_decohover = "underline";
 	if (! $link_colour)
-		$link_colour = "#ffffff";
+		$link_colour = "#fff";
+	if (! $selected_active_colour)
+		$selected_active_colour = "#fff";
+	if (! $selected_active_deco)
+		$selected_active_deco = "underline";
 	if (! $banner_colour)
-		$banner_colour = "#999999";
+		$banner_colour = "#999";
 	if (! $search_background)
-		$search_background = "#999999";
+		$search_background = "#999";
 	if (! $bgcolour)
-		$bgcolour = "#111111";
+		$bgcolour = "#111";
 	if (! $item_colour)
-		$item_colour = "#111111";
+		$item_colour = "#111";
 	if (! $toolicon_colour)
-		$toolicon_colour = '#999999';
+		$toolicon_colour = '#999';
 	if (! $toolicon_activecolour)
-		$toolicon_activecolour = '#ffffff';
+		$toolicon_activecolour = '#fff';
 	if (! $font_colour)
-		$font_colour = "#cccccc";
+		$font_colour = "#ccc";
+	if (! $blockquote_colour)
+		$blockquote_colour = "#ccc";
+	if (! $blockquote_bgcolour)
+		$blockquote_bgcolour = "#1e1e1e";
+	if (! $blockquote_bordercolour)
+		$blockquote_bordercolour = "#666";
+	if (! $item_bordercolour)
+		$item_bordercolour = "#333";
+	if (! $notif_itemcolour)
+		$notif_itemcolour = "#ccc";
+	if (! $notif_itemhovercolour)
+		$notif_itemhovercolour = "#fff";
+	if (! $acpopup_bgcolour)
+		$acpopup_bgcolour = "#222";
+	if (! $acpopup_bordercolour)
+		$acpopup_bordercolour = "#333";
+	if (! $acpopup_tgbl_bgcolour)
+		$acpopup_tgbl_bgcolour = "#333";
+	if (! $acpopup_hovercolour)
+		$acpopup_hovercolour = "#fff";
+	if (! $editbuttons_bgcolour)
+		$editbuttons_bgcolour = "#1e1e1e";
+	if (! $editbuttons_bordercolour)
+		$editbuttons_bordercolour = "#222";
+	if (! $editbuttons_bghover)
+		$editbuttons_bghover = "#222";
+	if (! $notify_bgcolour)
+		$notify_bgcolour = "#000";
+	if (! $notify_linkcolour)
+		$notify_linkcolour = "#FFF";	
+	if (! $notify_bghover)
+		$notify_bghover = "#222";
+	if (! $notifyseen_bgcolour)
+		$notifyseen_bgcolour = "#111";
+	if (! $notifyseen_linkcolour)
+		$notifyseen_linkcolour = "#222";
+	if (! $notifyseen_bghover)
+		$notifyseen_bghover = "#222";
+	if (! $notifyseen_linkhover)
+		$notifyseen_linkhover = "#CCC";
+	if (! $input_bgsubmit)
+		$input_bgsubmit = "#333";
+	if (! $input_linksubmit)
+		$input_linksubmit = "#fff";
+	if (! $input_border)
+		$input_border = "#222";
+	if (! $input_colourhover)
+		$input_colourhover = "#fff";
+	if (! $input_decohover)
+		$input_decohover = "underline";
