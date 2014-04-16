@@ -228,6 +228,12 @@ footer {
 	margin-bottom: 15px;
 }
 
+aside ul {
+	list-style-type: none;
+	margin: 0;
+	padding: 0;
+}
+
 /*TODO: we should use one class for all this. */
 .group-selected, .fileas-selected, .categories-selected, .search-selected, .active {
 	color: #444444 !important;
@@ -2059,7 +2065,7 @@ img.mail-list-sender-photo {
 	border-radius: $radiuspx;
 	-moz-border-radius: $radiuspx;
 }
-
+/*
 .categories-ul {
 	list-style-type: none;
 }
@@ -2067,6 +2073,7 @@ img.mail-list-sender-photo {
 #sidebar-group-list ul, #posted-date-selector {
 	list-style-type: none;
 }
+*/
 
 .profile-thing-list img, .thing-show img, .thing-edit-links a {
 	margin-top: 8px;
