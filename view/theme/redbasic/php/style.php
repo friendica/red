@@ -137,6 +137,12 @@ if(! $a->install) {
 		$blockquote_bgcolour = "#f4f8f9";
 	if (! $blockquote_bordercolour)
 		$blockquote_bordercolour = "#dae4ee";
+	if (! $code_borderc)
+		$code_borderc = "#444";
+	if (! $code_bgcolour)
+		$code_bgcolour = "#EEE";
+	if (! $code_txtcolour)
+		$code_txtcolour = "#444";
 	if (! $notif_itemcolour)
 		$notif_itemcolour = "#000";
 	if (! $notif_itemhovercolour)
@@ -147,6 +153,8 @@ if(! $a->install) {
 		$editbuttons_bordercolour = "#ccc";
 	if (! $editbuttons_bghover)
 		$editbuttons_bghover = "#ebebeb";
+	if (! $preview_backgroundimg)
+		$preview_backgroundimg = "gray_and_white_diagonal_stripes_background_seamless.gif";
 	if (! $acpopup_bgcolour)
 		$acpopup_bgcolour = "#fff";
 	if (! $acpopup_bordercolour)
@@ -184,10 +192,18 @@ if(! $a->install) {
 	if (! $shadow)
 		$shadow = "0";
 	if(! $active_colour)
-		$active_colour = '#fff';
+		$active_colour = "#fff";
 	if (! $converse_width) {
-		$converse_width="1024px";
+		$converse_width = "1024px";
 	}
+	if (! $acl_bgcolour)
+		$acl_bgcolour = "#fff";
+	if (! $acl_bordercolour)
+		$acl_bordercolour = "#ccc";
+	if (! $aclbutton_linkcolour)
+		$aclbutton_linkcolour = "";
+	if (! $abookself_bgcolour)
+		$abookself_bgcolour = "#ffdddd";
 	if(! $top_photo)
 		$top_photo = '48px';
 	$pmenu_top = intval($top_photo) - 16 . 'px';
@@ -248,11 +264,15 @@ $options = array (
 '$blockquote_bgcolour' => $blockquote_bgcolour,
 '$blockquote_bordercolour' => $blockquote_bordercolour,
 '$blockquote_bgcolourhover' => $blockquote_bgcolourhover,
+'$code_borderc' => $code_borderc,
+'$code_bgcolour' => $code_bgcolour,
+'$code_txtcolour' => $code_txtcolour,
 '$notif_itemcolour' => $notif_itemcolour,
 '$notif_itemhovercolour' => $notif_itemhovercolour,
 '$editbuttons_bgcolour' => $editbuttons_bgcolour,
 '$editbuttons_bordercolour' => $editbuttons_bordercolour,
 '$editbuttons_bghover' => $editbuttons_bghover,
+'$preview_backgroundimg' => $preview_backgroundimg,
 '$acpopup_bgcolour' => $acpopup_bgcolour,
 '$acpopup_bordercolour' => $acpopup_bordercolour,
 '$acpopup_tgbl_bgcolour' => $acpopup_tgbl_bgcolour,
@@ -273,6 +293,10 @@ $options = array (
 '$shadow' => $shadow,
 '$active_colour' => $active_colour,
 '$converse_width' => $converse_width,
+'$acl_bgcolour' => $acl_bgcolour,
+'$acl_bordercolour' => $acl_bordercolour,
+'$aclbutton_linkcolour' => $aclbutton_linkcolour,
+'$abookself_bgcolour' => $abookself_bgcolour,
 '$nav_float_min_opacity' => $nav_float_min_opacity,
 '$nav_percent_min_opacity' => $nav_percent_min_opacity,
 '$top_photo' => $top_photo,

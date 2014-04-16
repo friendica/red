@@ -92,9 +92,9 @@ code {
 	font-family: Courier, monospace;
 	display: block;
 	overflow: auto;
-	border: 1px solid #444;
-	background: #EEE;
-	color: #444;
+	border: 1px solid $code_borderc;
+	background: $code_bgcolour;
+	color: $code_txtcolour;
 	padding: 10px;
 	margin-top: 20px; 
 	max-width: 80%;
@@ -216,7 +216,7 @@ footer {
 }
 
 .preview {
-	background: url('../img/gray_and_white_diagonal_stripes_background_seamless.gif');
+	background: url('../img/$preview_backgroundimg');
 }
 
 #theme-preview {
@@ -1592,6 +1592,10 @@ header {
 	clear: both;
 }
 
+.modal-content {
+    background-color: $acl_bgcolour;
+}
+
 #acl-search {
 	margin-top: 20px;
 	padding: 8px;
@@ -1609,7 +1613,7 @@ header {
 
 #acl-list {
 	display: block;
-	border: 1px solid #cccccc;
+	border: 1px solid $acl_bordercolour;
 	overflow: auto;
 	clear: both;
 	min-height: 62px;
@@ -1622,7 +1626,7 @@ header {
 
 .acl-list-item {
 	width: calc(50% - 10px);
-	border: 1px solid #cccccc;
+	border: 1px solid $acl_bordercolour;
 	margin: 0px 0px 10px 10px;
 	padding: 5px;
 	float: left;
@@ -1658,6 +1662,11 @@ header {
 .acl-button-hide {
 	float: right;
 	margin-left: 5px;
+	$aclbutton_linkcolour
+}
+
+#acl-showall {
+	$aclbutton_linkcolour
 }
 
 .contact-block-content {
@@ -2109,7 +2118,7 @@ img.mail-list-sender-photo {
 }
 
 .abook-self {
-	background-color: #ffdddd;
+	background-color: $abookself_bgcolour;
 }
 
 .online-now {
