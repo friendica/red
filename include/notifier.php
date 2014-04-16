@@ -265,23 +265,9 @@ function notifier_run($argv, $argc){
 		if($target_item['item_restrict'] & ITEM_DELETED)
 			logger('notifier: target item ITEM_DELETED', LOGGER_DEBUG);
 
-		if($target_item['item_restrict'] & ITEM_DELAYED_PUBLISH) {
-			logger('notifier: target item ITEM_DELAYED_PUBLISH', LOGGER_DEBUG);
-			return;
-		}
-
-		if($target_item['item_restrict'] & ITEM_WEBPAGE) {
-			logger('notifier: target item ITEM_WEBPAGE', LOGGER_DEBUG);
-			return;
-		}
-
-		if($target_item['item_restrict'] & ITEM_BUILDBLOCK) {
-			logger('notifier: target item ITEM_BUILDBLOCK', LOGGER_DEBUG);
-			return;
-		}
-
-		if($target_item['item_restrict'] & ITEM_PDL) {
-			logger('notifier: target item ITEM_PDL', LOGGER_DEBUG);
+		$unforwardable = ITEM_UNPUBLISHED|ITEM_DELAYED_PUBLISH|ITEM_WEBPAGE|ITEM_BUILDBLOCK|ITEM_PDL;
+		if($target_item['item_restrict'] & $unforwardable) {
+			logger('notifier: target item not forwardable: flags ' . $target_item['item_restrict'], LOGGER_DEBUG);
 			return;
 		}
 
