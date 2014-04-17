@@ -234,6 +234,10 @@ aside ul {
 	padding: 0;
 }
 
+aside li {
+	margin-top: 5px;
+}
+
 /*TODO: we should use one class for all this. */
 .group-selected, .fileas-selected, .categories-selected, .search-selected, .active {
 	color: #444444 !important;
@@ -1728,10 +1732,6 @@ margin-right: 50px;
 
 .pmenu ul {
 	list-style-type: none;
-}
-
-.pmenu li {
-	margin-left: -20px;
 }
 
 .admin-icons {
