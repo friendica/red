@@ -1541,15 +1541,15 @@ header {
 }
 
 
-#nav-notify-menu {
+#nav-notify-menu, #nav-network-menu, #nav-home-menu {
 	background: $notify_bgcolour;
 }
  	
-#nav-notify-menu a {
+#nav-notify-menu a, #nav-network-menu a, #nav-home-menu a {
 	color: $notify_linkcolour;
 }
 
-#nav-notify-menu a:hover {
+#nav-notify-menu a:hover, #nav-network-menu a:hover, #nav-home-menu a:hover {
 	background: $notify_bghover;
 }
 
@@ -2139,6 +2139,21 @@ nav .dropdown-menu {
 	border-top-left-radius: 0px;
 	border-bottom-right-radius: $radiuspx;
 	border-bottom-left-radius: $radiuspx;
+	background-color: $notify_bgcolour;
+}
+
+nav .dropdown-menu .divider{
+	background-color: $navmenu_bgchover;
+}
+
+nav .dropdown-menu>li>a{
+	color: $notify_linkcolour;
+}
+
+nav .dropdown-menu>li>a:hover,nav .dropdown-menu>li>a:focus{
+	color: $notify_linkcolour;
+	background-color: $navmenu_bgchover;
+	$navmenu_bgimage
 }
 
 #usermenu-caret {

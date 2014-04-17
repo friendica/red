@@ -16,6 +16,10 @@
 		$nav_icon_colour = "#999";
 	if (! $nav_active_icon_colour)
 		$nav_active_icon_colour = "#fff";
+	if (! $navmenu_bgchover)
+		$navmenu_bgchover = "#222";
+	if (! $navmenu_bgimage)
+		$navmenu_bgimage = "background-image: none;";
 	if (! $navtabs_borderc)
 		$navtabs_borderc = "#333";
 	if (! $navtabs_fontcolour)

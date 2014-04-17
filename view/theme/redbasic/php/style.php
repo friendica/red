@@ -87,6 +87,10 @@ if(! $a->install) {
 		$nav_icon_colour = "#999";
 	if (! $nav_active_icon_colour)
 		$nav_active_icon_colour = "#fff";
+	if (! $navmenu_bgchover)
+		$navmenu_bgchover = "#f5f5f5";
+	if (! $navmenu_bgimage)
+		$navmenu_bgimage = "";
 	if (! $navtabs_borderc)
 		$navtabs_borderc = "#ddd";
 	if (! $navtabs_fontcolour)
@@ -238,6 +242,8 @@ $options = array (
 '$nav_bd' => $nav_bd,
 '$nav_icon_colour' => $nav_icon_colour,
 '$nav_active_icon_colour' => $nav_active_icon_colour,
+'$navmenu_bgchover' => $navmenu_bgchover,
+'$navmenu_bgimage' => $navmenu_bgimage,
 '$navtabs_borderc' => $navtabs_borderc,
 '$navtabs_fontcolour' => $navtabs_fontcolour,
 '$navtabs_bgcolour' => $navtabs_bgcolour,
