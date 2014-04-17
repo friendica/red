@@ -1,7 +1,21 @@
+
 .widget {
 	padding: 8px;
 	margin-top: 5px;
 }
+
+/* Easiest way to indent the widget body - indent the entire widget and then shift the header label back to the left */
+
+.widget {
+	margin-left: 10px;
+}
+
+.widget h3 {
+	margin-left: -10px;
+}
+
+
+
 
 /* suggest */
 

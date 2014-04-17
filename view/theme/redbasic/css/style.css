@@ -236,6 +236,8 @@ aside ul {
 
 aside li {
 	margin-top: 5px;
+	/* in order to achieve consistent indentation cross-browser, set margin-left on the li element e.g. */
+	/* margin-left: 10px; */
 }
 
 /*TODO: we should use one class for all this. */

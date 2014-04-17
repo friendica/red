@@ -45,7 +45,7 @@
 	<input type="hidden" name="tos" value="1" />
 	{{/if}}
 
-	<input type="submit" name="submit" id="register-submit-button" value="{{$submit}}" />
+	<input type="submit" name="submit" class="btn btn-default" id="register-submit-button" value="{{$submit}}" />
 	<div id="register-submit-end" class="register-field-end"></div>
 
 </form>
