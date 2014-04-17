@@ -629,11 +629,6 @@ aside li {
 	color: #0080FF;
 }
 
-#netsearch-box { margin-bottom: 5px; }
-
-#search-save {
-	margin: 5px 0 0 5px;
-}
 
 #side-follow-wrapper {
 	margin-top: 20px;
@@ -1107,14 +1102,6 @@ aside li {
 	margin-top: 15px;
 }
 
-
-#netsearch-box {
-	margin-top: 20px;	
-}
-
-#netsearch-box #search-submit {
-	margin: 5px 0px 0px 0px;
-}
 
 .required {
 	color: #FF0000;

@@ -33,6 +33,15 @@
 
 /* saved searches */
 
+
+#netsearch-box #search-submit {
+	margin: 10px 0 7px 0;
+}
+
+#search-save {
+	margin: 10px 0 7px 5px;
+}
+
 .saved-search-li {
 	margin-top: 3px;
 }
