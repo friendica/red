@@ -632,11 +632,11 @@ footer {
 	margin-top: 20px;
 }
 
-#side-peoplefind-url::-webkit-input-placeholder {
+#side-peoplefind-url::-webkit-input-placeholder, #side-advanced-peoplefind-url::-webkit-input-placeholder {
 	font-family: FontAwesome;
 }
 
-#side-peoplefind-url::-moz-placeholder {
+#side-peoplefind-url::-moz-placeholder, #side-advanced-peoplefind-url::-moz-placeholder {
 	font-family: FontAwesome;
 }
 

@@ -1,6 +1,6 @@
 <div id="peoplefind-sidebar" class="widget">
 	<h3>{{$findpeople}}</h3>
-	{{$desc}}
+	<div class="descriptive-text">{{$desc}}</div>
 	<form action="directory" method="post" />
 		<input class="icon-search" id="side-peoplefind-url" type="text" name="search" size="24" title="{{$hint}}" placeholder="&#xf002;"/>
 		<input id="side-peoplefind-submit" class="btn btn-default" type="submit" name="submit" value="{{$findthem}}" />
