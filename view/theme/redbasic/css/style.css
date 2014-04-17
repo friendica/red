@@ -228,6 +228,16 @@ footer {
 	margin-bottom: 15px;
 }
 
+aside ul {
+	list-style-type: none;
+	margin: 0;
+	padding: 0;
+}
+
+aside li {
+	margin-top: 5px;
+}
+
 /*TODO: we should use one class for all this. */
 .group-selected, .fileas-selected, .categories-selected, .search-selected, .active {
 	color: $selected_active_colour !important;
@@ -470,18 +480,6 @@ footer {
 }
 
 
-.settings-widget ul {
-	list-style-type: none;
-	padding: 0px;
-}
-
-.settings-widget li {
-	margin-left: 24px;
-	margin-bottom: 8px;
-}
-
-
-
 #fsuggest-desc, #fsuggest-submit-wrapper {
 	margin-top: 15px;
 	margin-bottom: 15px;
@@ -631,35 +629,19 @@ footer {
 	color: #0080FF;
 }
 
-#netsearch-box { margin-bottom: 5px; }
-
-#search-save {
-	margin: 5px 0 0 5px;
-}
 
 #side-follow-wrapper {
 	margin-top: 20px;
 }
 
-#side-peoplefind-url {
-	margin-top: 5px;
-}
-
-#side-peoplefind-url {
-	font-size: 1em;
-}
-
-#side-peoplefind-url::-webkit-input-placeholder {
+#side-peoplefind-url::-webkit-input-placeholder, #side-advanced-peoplefind-url::-webkit-input-placeholder {
 	font-family: FontAwesome;
 }
 
-#side-peoplefind-url::-moz-placeholder {
+#side-peoplefind-url::-moz-placeholder, #side-advanced-peoplefind-url::-moz-placeholder {
 	font-family: FontAwesome;
 }
 
-#side-peoplefind-submit {
-	margin-top: 15px;
-}
 
 #side-match-link {
 	margin-top: 10px;
@@ -1121,14 +1103,6 @@ footer {
 }
 
 
-#netsearch-box {
-	margin-top: 20px;	
-}
-
-#netsearch-box #search-submit {
-	margin: 5px 0px 0px 0px;
-}
-
 .required {
 	color: #FF0000;
 }
@@ -1234,6 +1208,10 @@ brain is weird like that */
 	margin-left: 350px;
 	color: #666666;
 	
+}
+
+.field input[type="checkbox"] {
+	width: 16px;
 }
 
 .field .onoff {
@@ -1768,10 +1746,6 @@ margin-right: 50px;
 	list-style-type: none;
 }
 
-.pmenu li {
-	margin-left: -20px;
-}
-
 .admin-icons {
 	font-size: 1.2em;
 	color: $toolicon_colour;
@@ -2103,7 +2077,7 @@ img.mail-list-sender-photo {
 	border-radius: $radiuspx;
 	-moz-border-radius: $radiuspx;
 }
-
+/*
 .categories-ul {
 	list-style-type: none;
 }
@@ -2111,6 +2085,7 @@ img.mail-list-sender-photo {
 #sidebar-group-list ul, #posted-date-selector {
 	list-style-type: none;
 }
+*/
 
 .profile-thing-list img, .thing-show img, .thing-edit-links a {
 	margin-top: 8px;
