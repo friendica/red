@@ -14,6 +14,10 @@ Now you need to add any user you want to be able to mount dav to the davfs2 grou
 
 [code]usermod -aG davfs2 &lt;DesktopUser&gt;[/code]
 
+[b]Note: on some systems the user group may be different, i.e. - "network" 
+on Arch Linux. If in doubt, check the davfs documentation for your 
+particular OS.
+
 Edit /etc/fstab
 
 [code]nano /etc/fstab[/code]
