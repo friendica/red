@@ -56,6 +56,12 @@
 		$blockquote_bgcolour = "#1e1e1e";
 	if (! $blockquote_bordercolour)
 		$blockquote_bordercolour = "#666";
+	if (! $code_borderc)
+		$code_borderc = "#090909";
+	if (! $code_bgcolour)
+		$code_bgcolour = "#000";
+	if (! $code_txtcolour)
+		$code_txtcolour = "#fff";
 	if (! $item_bordercolour)
 		$item_bordercolour = "#333";
 	if (! $notif_itemcolour)
@@ -76,6 +82,8 @@
 		$editbuttons_bordercolour = "#222";
 	if (! $editbuttons_bghover)
 		$editbuttons_bghover = "#222";
+	if (! $preview_backgroundimg)
+		$preview_backgroundimg = "gray_and_black_diagonal_stripes_background_seamless.gif";
 	if (! $notify_bgcolour)
 		$notify_bgcolour = "#000";
 	if (! $notify_linkcolour)
@@ -100,3 +108,11 @@
 		$input_colourhover = "#fff";
 	if (! $input_decohover)
 		$input_decohover = "underline";
+	if (! $acl_bgcolour)
+		$acl_bgcolour = "#111";
+	if (! $acl_bordercolour)
+		$acl_bordercolour = "#333";
+	if (! $aclbutton_linkcolour)
+		$aclbutton_linkcolour = "color: #fff;";
+	if (! $abookself_bgcolour)
+		$abookself_bgcolour = "#251111";
