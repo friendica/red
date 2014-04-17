@@ -2289,6 +2289,10 @@ blockquote {
 	text-decoration: $input_decohover;
 }
 
+.btn-primary {
+    z-index: 10;
+}
+
 @media screen and (max-width: 767px) {
 	aside#region_1 {
 		background: rgba(0, 0, 0, .1);
