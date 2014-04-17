@@ -480,18 +480,6 @@ aside li {
 }
 
 
-.settings-widget ul {
-	list-style-type: none;
-	padding: 0px;
-}
-
-.settings-widget li {
-	margin-left: 24px;
-	margin-bottom: 8px;
-}
-
-
-
 #fsuggest-desc, #fsuggest-submit-wrapper {
 	margin-top: 15px;
 	margin-bottom: 15px;
@@ -1233,6 +1221,10 @@ brain is weird like that */
 	margin-left: 350px;
 	color: #666666;
 	
+}
+
+.field input[type="checkbox"] {
+	width: 16px;
 }
 
 .field .onoff {

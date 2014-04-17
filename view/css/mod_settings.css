@@ -1,3 +1,13 @@
+
+ul#settings-privacy-macros {
+	list-style-type: none;
+	margin: 0 0 10px 0;
+	padding: 0;
+}
+#settings-privacy-macros li {
+	margin-top: 5px;
+}
+
 #settings-permissions-wrapper {
 	margin-top: 15px;
 }
@@ -29,6 +39,7 @@
 
 #settings-notifications label {
 	margin-left: 20px;
+	width: 330px;
 }
 #settings-notify-desc, #settings-activity-desc {
 	font-weight: bold;
