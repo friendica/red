@@ -55,6 +55,23 @@
 	overflow: hidden;
 }
 
+/* peoplefind */
+
+#peoplefind-sidebar .btn {
+	margin: 10px 0 10px 0;
+}
+
+#side-peoplefind-url {
+	margin-top: 5px;
+}
+
+#side-peoplefind-url {
+	font-size: 1em;
+}
+
+
+/* fileas */
+
 
 /* posted date */
 
@@ -120,4 +137,10 @@ li:hover .group-edit-icon {
 .slider {
 	margin-top: 10px;
 	margin-bottom: 45px;
+}
+
+/* photo albums */
+
+#photo-albums-upload-link {
+	margin-top: 10px;
 }

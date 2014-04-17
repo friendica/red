@@ -14,6 +14,10 @@ Now you need to add any user you want to be able to mount dav to the davfs2 grou
 
 [code]usermod -aG davfs2 &lt;DesktopUser&gt;[/code]
 
+[b]Note:[/b] on some systems the user group may be different, i.e. - "network" 
+on Arch Linux. If in doubt, check the davfs documentation for your 
+particular OS.
+
 Edit /etc/fstab
 
 [code]nano /etc/fstab[/code]
@@ -59,5 +63,24 @@ Finally, mount the drive.
 [code]mount example.com/cloud[/code]
 
 You can now find your cloud at /home/bob/cloud and use it as though it were part of your local filesystem - even if the applications you are using have no dav support themselves.
+
+[b]Troubleshooting[/b]
+
+With some webservers and certain configurations, you may find davfs2 creating files with 0 bytes file size where other clients work just fine.  This is generally caused by cache and locks.  If you are affected by this issue, you need to edit your davfs2 configuration.
+
+[code]nano /etc/davfs2/davfs2.conf[/code]
+
+Your distribution will provide a sample configuration, and this file should already exist, however, most of it will be commented out with a # at the beginning of the line.  
+
+First step is to remove locks.
+
+Edit the use_locks line so it reads [code]use_locks 0[/code].
+
+Unmount your file system, remount your file system, and try copying over a file from the command line.  Note you should copy a new file, and not overwrite an old one for this test.  Leave it a minute or two then do [code]ls -l -h[/code] and check the file size of your new file is still greater than 0 bytes.  If it is, stop there, and do nothing else.
+
+If that still doesn't work, disable the cache.  Note that this has a performance impact so should only be done if disabling locks didn't solve your problem.  Edit the cache_size and set it to [code]cache_size 0[/code] and also set file_refresh to [code]file_refresh 0[/code].  Unmount your filesystem, remount your file system, and test it again.
+
+If it [i]still[/i] doesn't work, there is one more thing you can try.  (This one is caused by a bug in older versions of dav2fs itself, so updating to a new version may also help).  Enable weak etag dropping by setting [code]drop_weak_etags 1[/code].  Unmount and remount your filesystem to apply the changes.
+
 
 Return to the [zrl=[baseurl]/help/main]Main documentation page[/zrl]
