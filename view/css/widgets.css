@@ -114,9 +114,12 @@
 	margin-top: 3px;
 }
 
+.sidebar-group-li input {
+	float: right;
+}
+
 .groupsideedit {
 	float: right;
-	margin-right: 10px;
 }
 
 .group-edit-icon {
