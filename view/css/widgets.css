@@ -49,6 +49,21 @@
 	margin-left: 10px;
 }
 
+/* peoplefind */
+
+#peoplefind-sidebar .btn {
+	margin: 10px 0 10px 0;
+}
+
+#side-peoplefind-url {
+	margin-top: 5px;
+}
+
+#side-peoplefind-url {
+	font-size: 1em;
+}
+
+
 /* fileas */
 
 .fileas-ul li {

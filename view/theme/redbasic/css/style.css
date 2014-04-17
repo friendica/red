@@ -632,14 +632,6 @@ footer {
 	margin-top: 20px;
 }
 
-#side-peoplefind-url {
-	margin-top: 5px;
-}
-
-#side-peoplefind-url {
-	font-size: 1em;
-}
-
 #side-peoplefind-url::-webkit-input-placeholder {
 	font-family: FontAwesome;
 }
@@ -648,9 +640,6 @@ footer {
 	font-family: FontAwesome;
 }
 
-#side-peoplefind-submit {
-	margin-top: 15px;
-}
 
 #side-match-link {
 	margin-top: 10px;
