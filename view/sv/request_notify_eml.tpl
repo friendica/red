@@ -1,17 +1,17 @@
 
-Dear {{$myname}},
+Hej {{$myname}},
 
-You have just received a connection request at {{$sitename}} 
+Du har precis fått en kontaktförfrågan på {{$sitename}}
 
-from '{{$requestor}}'.
+från '{{$requestor}}'.
 
-You may visit their profile at {{$url}}.
+Du kan besöka profilen på {{$url}}.
 
-Please login to your site to view the complete introduction 
-and approve or ignore/cancel the request.
+Logga in på din server och se hela presentationen och
+godkänn eller ignorera/avslå förfrågan.
 
 {{$siteurl}}
 
-Regards,
+Hälsningar,
 
-	{{$sitename}} administrator
+	{{$sitename}}-administratören

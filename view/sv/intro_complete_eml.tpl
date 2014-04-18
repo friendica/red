@@ -1,22 +1,22 @@
 
-Dear {{$username}},
+Hej {{$username}},
 
-	'{{$fn}}' at '{{$dfrn_url}}' has accepted 
-your connection request at '{{$sitename}}'.
+	'{{$fn}}' med '{{$dfrn_url}}' har accepterat 
+din kontaktförfrågan på '{{$sitename}}'.
 
-	'{{$fn}}' has chosen to accept you a "fan", which restricts 
-some forms of communication - such as private messaging and some profile
-interactions. If this is a celebrity or community page, these settings were
-applied automatically.
+	'{{$fn}}' har valt att acceptera dig som ett "fan", vilket begränsar
+vissa former av kommunikation - exempelvis privata meddelanden och viss
+profilinteraktion. Om detta är en fansida eller gemenskapssida används
+de inställningarna automatiskt.
 
-	'{{$fn}}' may choose to extend this into a two-way or more permissive 
-relationship in the future. 
+	'{{$fn}}' kan välja att utöka detta till en tvåvägs eller mer
+tillåtande relation i framtiden.
 
-	You will start receiving public status updates from '{{$fn}}', 
-which will appear on your 'Matrix' page at  
+	Du kommer att börja få offentliga statusuppdateringar från '{{$fn}}',
+vilka kommer att synas på din 'Matrix'-sida på
 
 {{$siteurl}}
 
-Sincerely,
+Hälsningar,
 
-	{{$sitename}} Administrator
+	{{$sitename}}-administratören
