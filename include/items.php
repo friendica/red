@@ -3833,18 +3833,19 @@ function zot_feed($uid,$observer_xchan,$mindate) {
 	$items = array();
 
 	if(is_sys_channel($uid)) {
-
 		require_once('include/security.php');
-		$r = q("SELECT item.*, item.id as item_id from item
-			WHERE uid in (" . stream_perms_api_uids(PERMS_PUBLIC) . ") AND item_restrict = 0 and id = parent
+		$r = q("SELECT distinct parent from item
+			WHERE uid != %d
+			and uid in (" . stream_perms_api_uids(PERMS_PUBLIC) . ") AND item_restrict = 0 
 			AND (item_flags &  %d) 
 			and item_private = 0 $sql_extra ORDER BY created ASC $limit",
+			intval($uid),
 			intval(ITEM_WALL)
 		);
 	}
 	else {
-		$r = q("SELECT item.*, item.id as item_id from item
-			WHERE uid = %d AND item_restrict = 0 and id = parent
+		$r = q("SELECT distinct parent from item
+			WHERE uid = %d AND item_restrict = 0
 			AND (item_flags &  %d) 
 			$sql_extra ORDER BY created ASC $limit",
 			intval($uid),
@@ -3853,7 +3854,7 @@ function zot_feed($uid,$observer_xchan,$mindate) {
 	}
 
 	if($r) {
-		$parents_str = ids_to_querystr($r,'id');
+		$parents_str = ids_to_querystr($r,'parent');
 
 		$items = q("SELECT `item`.*, `item`.`id` AS `item_id` FROM `item` 
 			WHERE `item`.`item_restrict` = 0
@@ -3876,7 +3877,6 @@ function zot_feed($uid,$observer_xchan,$mindate) {
 		$result[] = encode_item($item);
 
 	return $result;
-
 }
 
 
