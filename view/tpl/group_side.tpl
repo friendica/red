@@ -1,9 +1,6 @@
 <div class="widget" id="group-sidebar">
 <h3>{{$title}}</h3>
 
-  <div id="sidebar-new-group">
-  <a href="group/new">{{$createtext}}</a>
-  </div>
 
 <div id="sidebar-group-list">
 	<ul id="sidebar-group-ul">
@@ -23,7 +20,14 @@
 			</li>
 		{{/foreach}}
 	</ul>
-	</div>
 </div>
+
+  <div id="sidebar-new-group">
+  <a href="group/new">{{$createtext}}</a>
+  </div>
+
+</div>
+
+
 
 

@@ -232,6 +232,9 @@ aside ul {
 	list-style-type: none;
 	margin: 0;
 	padding: 0;
+	/* border-left: 1px solid #eee; This and a 5px left border on the li is "interesting" 
+	   to delineate the list from the surrounding bits 
+	*/
 }
 
 aside li {
