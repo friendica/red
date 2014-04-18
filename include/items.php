@@ -3855,10 +3855,11 @@ function zot_feed($uid,$observer_xchan,$mindate) {
 
 	if($r) {
 		$parents_str = ids_to_querystr($r,'parent');
-
+		$sys_query = ((is_sys_channel($uid)) ? $sql_extra : '');
+			
 		$items = q("SELECT `item`.*, `item`.`id` AS `item_id` FROM `item` 
 			WHERE `item`.`item_restrict` = 0
-			AND `item`.`parent` IN ( %s ) ",
+			AND `item`.`parent` IN ( %s ) $sys_query ",
 			dbesc($parents_str)
 		);
 	}
@@ -3872,6 +3873,9 @@ function zot_feed($uid,$observer_xchan,$mindate) {
 	}
 	else
 		$items = array();
+
+
+	logger('zot_feed: number items: ' . count($items),LOGGER_DEBUG);
 
 	foreach($items as $item)
 		$result[] = encode_item($item);
