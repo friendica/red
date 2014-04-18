@@ -1389,7 +1389,7 @@ brain is weird like that */
 	border:1px solid $acpopup_bordercolour;
 }
 .acpopupitem {
-	background-color:$acpopup_bgcolour; padding: 4px;
+	background-color:$acpopup_bgcolour;
 	clear:left;
 }
 .acpopupitem.taggable {
@@ -2292,8 +2292,12 @@ blockquote {
 	text-decoration: $input_decohover;
 }
 
-.btn-primary {
-    z-index: 10;
+.btn-default.btn-sm:hover, .btn-default.btn-sm:focus, .btn-default.btn-sm:active .btn-default.btn-sm.active {
+    	text-decoration: none;
+}
+
+.btn-preview, .btn-preview:hover, .btn-preview:focus, .btn-preview:active {
+	margin-right: 1px;
 }
 
 @media screen and (max-width: 767px) {

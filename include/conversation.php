@@ -1303,11 +1303,9 @@ function render_location_default($item) {
 
 
 function prepare_page($item) {
-
 	$a = get_app();
 	$naked = ((get_pconfig($item['uid'],'system','nakedpage')) ? 1 : 0);
 	$observer = $a->get_observer();
-	$zid = ($observer['xchan_addr']);
 	//240 chars is the longest we can have before we start hitting problems with suhosin sites
 	$preview = substr(urlencode($item['body']), 0, 240);
 	$link = z_root() . '/' . $a->cmd;
@@ -1318,8 +1316,7 @@ function prepare_page($item) {
 	}
 	return replace_macros(get_markup_template('page_display.tpl'),array(
 		'$author' => (($naked) ? '' : $item['author']['xchan_name']),
-		'$auth_url' => (($naked) ? '' : $item['author']['xchan_url']),
-		'$zid' => $zid,
+		'$auth_url' => (($naked) ? '' : zid($item['author']['xchan_url'])),
 		'$date' => (($naked) ? '' : datetime_convert('UTC',date_default_timezone_get(),$item['created'],'Y-m-d H:i')),
 		'$title' => smilies(bbcode($item['title'])),
 		'$body' => prepare_body($item,true),
