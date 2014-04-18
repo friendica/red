@@ -2291,7 +2291,10 @@ blockquote {
 
 .btn-default.btn-sm:hover, .btn-default.btn-sm:focus, .btn-default.btn-sm:active .btn-default.btn-sm.active {
     	text-decoration: none;
-	z-index: 0;
+}
+
+.btn-preview, .btn-preview:hover, .btn-preview:focus, .btn-preview:active {
+	margin-right: 1px;
 }
 
 @media screen and (max-width: 767px) {
