@@ -217,7 +217,11 @@
 	padding: 5px 10px;
 	margin-left: 60px;
 }
-
+.wall-item-tools-bs {
+clear: both;
+	//padding: 5px 5px;
+	//margin-left: 40px;
+}
 .comment .wall-item-tools {
 	margin-left: 0;
 }
