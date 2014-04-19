@@ -66,16 +66,16 @@ textarea {
 }
 
 input {
-	border: 1px solid #666666;
+	border: 1px solid $input_border;
 	-moz-border-radius: $radiuspx;
 	border-radius: $radiuspx;	
 	padding: 3px;
 }
 
 input[type="submit"] {
-	background-color: #F0F0F0;
+	background-color: $input_bgsubmit;
 	font-weight: bold;
-	color: #0080FF; 
+	color: $input_linksubmit;
 	text-decoration: none;
 }
 
@@ -92,19 +92,19 @@ code {
 	font-family: Courier, monospace;
 	display: block;
 	overflow: auto;
-	border: 1px solid #444;
-	background: #EEE;
-	color: #444;
+	border: 1px solid $code_borderc;
+	background: $code_bgcolour;
+	color: $code_txtcolour;
 	padding: 10px;
 	margin-top: 20px; 
 	max-width: 80%;
 }
 
 blockquote {
-	background-color: #f4f8f9;
-	border-left: 4px solid #dae4ee;
+	background-color: $blockquote_bgcolour;
+	border-left: 4px solid $blockquote_bordercolour;
 	padding: 0.4em;
-	color: #000;
+	color: $blockquote_colour;
 	margin-left: 20px;
 }
 
@@ -216,7 +216,7 @@ footer {
 }
 
 .preview {
-	background: url('../img/gray_and_white_diagonal_stripes_background_seamless.gif');
+	background: url('../img/$preview_backgroundimg');
 }
 
 #theme-preview {
@@ -228,9 +228,33 @@ footer {
 	margin-bottom: 15px;
 }
 
+aside ul {
+	list-style-type: none;
+	margin: 0;
+	padding: 0;
+	/* border-left: 1px solid #eee; This and a 5px left border on the li is "interesting" 
+	   to delineate the list from the surrounding bits 
+	*/
+}
+
+aside li {
+	margin-top: 5px;
+	/* in order to achieve consistent indentation cross-browser, set margin-left on the li element e.g. */
+	/* margin-left: 10px; */
+}
+
 /*TODO: we should use one class for all this. */
 .group-selected, .fileas-selected, .categories-selected, .search-selected, .active {
-	color: #444444 !important;
+	color: $selected_active_colour !important;
+	text-decoration: $selected_active_deco !important;
+}
+
+.fileas-all {
+	text-decoration: none !important;
+}
+
+.fileas-all:hover {
+	text-decoration: underline !important;
 }
 
 #sysmsg {
@@ -461,18 +485,6 @@ footer {
 }
 
 
-.settings-widget ul {
-	list-style-type: none;
-	padding: 0px;
-}
-
-.settings-widget li {
-	margin-left: 24px;
-	margin-bottom: 8px;
-}
-
-
-
 #fsuggest-desc, #fsuggest-submit-wrapper {
 	margin-top: 15px;
 	margin-bottom: 15px;
@@ -622,35 +634,19 @@ footer {
 	color: #0080FF;
 }
 
-#netsearch-box { margin-bottom: 5px; }
-
-#search-save {
-	margin: 5px 0 0 5px;
-}
 
 #side-follow-wrapper {
 	margin-top: 20px;
 }
 
-#side-peoplefind-url {
-	margin-top: 5px;
-}
-
-#side-peoplefind-url {
-	font-size: 1em;
-}
-
-#side-peoplefind-url::-webkit-input-placeholder {
+#side-peoplefind-url::-webkit-input-placeholder, #side-advanced-peoplefind-url::-webkit-input-placeholder {
 	font-family: FontAwesome;
 }
 
-#side-peoplefind-url::-moz-placeholder {
+#side-peoplefind-url::-moz-placeholder, #side-advanced-peoplefind-url::-moz-placeholder {
 	font-family: FontAwesome;
 }
 
-#side-peoplefind-submit {
-	margin-top: 15px;
-}
 
 #side-match-link {
 	margin-top: 10px;
@@ -1112,14 +1108,6 @@ footer {
 }
 
 
-#netsearch-box {
-	margin-top: 20px;	
-}
-
-#netsearch-box #search-submit {
-	margin: 5px 0px 0px 0px;
-}
-
 .required {
 	color: #FF0000;
 }
@@ -1225,6 +1213,10 @@ brain is weird like that */
 	margin-left: 350px;
 	color: #666666;
 	
+}
+
+.field input[type="checkbox"] {
+	width: 16px;
 }
 
 .field .onoff {
@@ -1391,21 +1383,27 @@ brain is weird like that */
 /* autocomplete popup */
 .acpopup {
 	max-height:150px;
-	background-color:#ffffff;
+	background-color:$acpopup_bgcolour;
 	overflow:auto;
 	z-index:100000;
-	border:1px solid #cccccc;
+	border:1px solid $acpopup_bordercolour;
 }
 .acpopupitem {
-	background-color:#ffffff; padding: 4px;
+	background-color:$acpopup_bgcolour;
 	clear:left;
 }
 .acpopupitem.taggable {
-	background-color: #ddddff;
+	background-color: $acpopup_tgbl_bgcolour;
 }
 .acpopupitem img {
 	float: left;
 	margin-right: 4px;
+}
+
+.acpopupitem:hover {
+	text-decoration: underline;
+	color: $acpopup_hovercolour;
+	cursor:pointer;
 }
 
 .acpopupitem.selected {
@@ -1531,11 +1529,12 @@ header {
 }
 
 .notif-item a {
-	color: #000000;
+	color: $notif_itemcolour;
 }
 
 .notif-item a:hover {
 	text-decoration: underline;
+	color: $notif_itemhovercolour;
 }
 
 .notif-image {
@@ -1544,8 +1543,29 @@ header {
 	padding: 7px 7px 0px 0px;
 }
 
-.notify-seen {
-	background: #DDDDDD;
+
+#nav-notify-menu, #nav-network-menu, #nav-home-menu {
+	background-color: $notify_bgcolour;
+	border-top: none;
+	margin-top: $notify_topmargin;
+}
+ 	
+#nav-notify-menu a, #nav-network-menu a, #nav-home-menu a {
+	color: $notify_linkcolour;
+}
+
+#nav-notify-menu a:hover, #nav-network-menu a:hover, #nav-home-menu a:hover {
+	background: $notify_bghover;
+}
+
+.notify-seen a {
+	background: $notifyseen_bgcolour;
+	color: $notifyseen_linkcolour !important;
+}
+
+.notify-seen a:hover {
+	background: $notifyseen_bghover;
+	color: $notifyseen_linkhover !important;
 }
 
 #page-spinner {
@@ -1555,6 +1575,10 @@ header {
 
 .tabs-end {
 	clear: both;
+}
+
+.modal-content {
+    background-color: $acl_bgcolour;
 }
 
 #acl-search {
@@ -1574,7 +1598,7 @@ header {
 
 #acl-list {
 	display: block;
-	border: 1px solid #cccccc;
+	border: 1px solid $acl_bordercolour;
 	overflow: auto;
 	clear: both;
 	min-height: 62px;
@@ -1587,7 +1611,7 @@ header {
 
 .acl-list-item {
 	width: calc(50% - 10px);
-	border: 1px solid #cccccc;
+	border: 1px solid $acl_bordercolour;
 	margin: 0px 0px 10px 10px;
 	padding: 5px;
 	float: left;
@@ -1623,6 +1647,11 @@ header {
 .acl-button-hide {
 	float: right;
 	margin-left: 5px;
+	$aclbutton_linkcolour
+}
+
+#acl-showall {
+	$aclbutton_linkcolour
 }
 
 .contact-block-content {
@@ -1722,10 +1751,6 @@ margin-right: 50px;
 
 .pmenu ul {
 	list-style-type: none;
-}
-
-.pmenu li {
-	margin-left: -20px;
 }
 
 .admin-icons {
@@ -1892,14 +1917,14 @@ img.mail-list-sender-photo {
 	border-radius: $radiuspx;
 	background-color: $item_colour;
 	opacity: $item_opacity;
-	border-left: 2px solid #f4f4f4;
-	border-bottom: 1px solid #f4f4f4;
+	border-left: 2px solid $item_bordercolour;
+	border-bottom: 1px solid $item_bordercolour;
 }
 
 .wall-item-comment-wrapper {
 	margin-top: 10px;
-	border-left: 2px solid #f4f4f4;
-	border-bottom: 1px solid #f4f4f4; 
+	border-left: 2px solid $item_bordercolour;
+	border-bottom: 1px solid $item_bordercolour; 
 }
 
 .wallwall .wwto {
@@ -2059,7 +2084,7 @@ img.mail-list-sender-photo {
 	border-radius: $radiuspx;
 	-moz-border-radius: $radiuspx;
 }
-
+/*
 .categories-ul {
 	list-style-type: none;
 }
@@ -2067,6 +2092,7 @@ img.mail-list-sender-photo {
 #sidebar-group-list ul, #posted-date-selector {
 	list-style-type: none;
 }
+*/
 
 .profile-thing-list img, .thing-show img, .thing-edit-links a {
 	margin-top: 8px;
@@ -2074,7 +2100,7 @@ img.mail-list-sender-photo {
 }
 
 .abook-self {
-	background-color: #ffdddd;
+	background-color: $abookself_bgcolour;
 }
 
 .online-now {
@@ -2118,6 +2144,23 @@ nav .dropdown-menu {
 	border-top-left-radius: 0px;
 	border-bottom-right-radius: $radiuspx;
 	border-bottom-left-radius: $radiuspx;
+	background-color: $notify_bgcolour;
+	border-top: none;
+	margin-top: $notify_topmargin;
+}
+
+nav .dropdown-menu .divider{
+	background-color: $navmenu_bgchover;
+}
+
+nav .dropdown-menu>li>a{
+	color: $notify_linkcolour;
+}
+
+nav .dropdown-menu>li>a:hover,nav .dropdown-menu>li>a:focus{
+	color: $notify_linkcolour;
+	background-color: $navmenu_bgchover;
+	$navmenu_bgimage
 }
 
 #usermenu-caret {
@@ -2137,6 +2180,8 @@ blockquote {
 	font-size: $body_font_size;
 	border-radius: $radiuspx;
 }
+
+
 
 .dropdown-menu img {
 	border-radius: $radiuspx;
@@ -2209,6 +2254,56 @@ blockquote {
 	box-shadow: none;
 }
 
+.nav-tabs{
+	border-bottom:1px solid $navtabs_borderc !important;
+}
+
+.nav-tabs>li.active>a,.nav-tabs>li.active>a:hover,.nav-tabs>li.active>a:focus{
+	color: $navtabs_fontcolour !important; 
+	background-color: $navtabs_bgcolour; 
+}
+
+.nav-tabs.nav-justified>.active>a,.nav-tabs.nav-justified>.active>a:hover,.nav-tabs.nav-justified>.active>a:focus{
+	border:1px solid $navtabs_borderc !important;
+	border-bottom:1px solid transparent !important;
+	bottom: -1px !important;
+}
+
+.nav-tabs.nav-justified > li > a {
+    	border-bottom: none;
+	$navtabs_linkcolour
+}
+
+.nav-tabs > li > a:hover, .nav-tabs > li > a:focus {
+    	text-decoration: $navtabs_decohover;
+    	background-color: $navtabs_bgchover;
+   	border-bottom: 1px solid $navtabs_bgchover;
+	border-color: $navtabs_bgchover;
+	$navtabs_linkchover
+}
+
+.btn-default {
+    	background-color: $editbuttons_bgcolour;
+    	border-color: $editbuttons_bordercolour;
+    	text-shadow: none;
+    	box-shadow: none;
+}
+
+.btn-default:hover, .btn-default:focus, .btn-default:active .btn-default.active {
+    	background-color: $editbuttons_bghover;
+    	border-color: $editbuttons_bordercolour;
+	color: $input_colourhover;
+	text-decoration: $input_decohover;
+}
+
+.btn-default.btn-sm:hover, .btn-default.btn-sm:focus, .btn-default.btn-sm:active .btn-default.btn-sm.active {
+    	text-decoration: none;
+}
+
+.btn-preview, .btn-preview:hover, .btn-preview:focus, .btn-preview:active {
+	margin-right: 1px;
+}
+
 @media screen and (max-width: 767px) {
 	aside#region_1 {
 		background: rgba(0, 0, 0, .1);
@@ -2256,4 +2351,5 @@ blockquote {
 	.acl-list-item {
 		width: calc(100% - 10px);
 	}
+
 }

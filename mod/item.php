@@ -981,22 +981,35 @@ function handle_tag($a, &$body, &$access_tag, &$str_tags, $profile_uid, $tag) {
 		}
 
 		// Here we're looking for an address book entry as provided by the auto-completer
-		// of the form something+nnn where nnn is an abook_id 
+		// of the form something+nnn where nnn is an abook_id or the first chars of xchan_hash
 
 		if(strrpos($newname,'+')) {
 			//get the id
-			$tagcid = intval(substr($newname,strrpos($newname,'+') + 1));
+
+			if(strrpos($tagcid,' '))
+				$tagcid = substr($tagcid,0,strrpos($tagcid,' '));
+			
+			$tagcid = substr($newname,strrpos($newname,'+') + 1);
+
+			if(strlen($tagcid) < 16)
+				$abook_id = intval($tagcid);
 			//remove the next word from tag's name
 			if(strpos($name,' ')) {
 				$name = substr($name,0,strpos($name,' '));
 			}
 
-			if($tagcid) { // if there was an id
+			if($abook_id) { // if there was an id
 				// select channel with that id from the logged in user's address book
 				$r = q("SELECT * FROM abook left join xchan on abook_xchan = xchan_hash 
 					WHERE abook_id = %d AND abook_channel = %d LIMIT 1",
-						intval($tagcid),
+						intval($abook_id),
 						intval($profile_uid)
+				);
+			}
+			else {
+				$r = q("SELECT * FROM xchan 
+					WHERE xchan_hash like '%s%%' LIMIT 1",
+						dbesc($tagcid)
 				);
 			}
 		}

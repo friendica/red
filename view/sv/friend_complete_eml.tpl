@@ -1,22 +1,22 @@
 
-Dear {{$username}},
+Hej {{$username}},
 
-	Great news... '{{$fn}}' at '{{$dfrn_url}}' has accepted 
-your connection request at '{{$sitename}}'.
+	Goda nyheter... '{{$fn}}' med '{{$dfrn_url}}' har accepterat 
+din kontaktförfrågan på '{{$sitename}}'.
 
-You are now mutual friends and may exchange status updates, photos, and email
-without restriction.
+Ni är nu ömsesidiga vänner och kan dela statusuppdateringar, foton och
+e-post utan restriktioner.
 
-Please visit your 'Connnections' page at {{$sitename}} if you wish to make 
-any changes to this relationship. 
+Besök sidan 'Kontakter' på {{$sitename}} om du önskar göra några
+förändringar av den här relationen.
 
 {{$siteurl}}
 
-[For instance, you may create a separate profile with information that is not
-available to the general public - and assign viewing rights to '{{$fn}}'].
+[Du kan till exempel skapa en separat profil med information som inte är
+tillgänglig för allmänheten - och ge '{{$fn}}' visningsrättigheter].
 
-Sincerely,
+Hälsningar,
 
-	{{$sitename}} Administrator
+	{{$sitename}}-administratören
 
  

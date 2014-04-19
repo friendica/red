@@ -58,12 +58,14 @@
 
 .thread-wrapper.toplevel_item {
 	width: 90%;
+	margin-bottom: 10px;
 }
 
 /* conv_item */
 
 .hide-comments-outer {
-	margin-left: 10px;
+	margin-left: 60px;
+	padding: 15px 10px 15px 10px;
 }
 
 .wall-item-content-wrapper {
@@ -213,6 +215,11 @@
 .wall-item-tools {
 	clear: both;
 	padding: 5px 10px;
+	margin-left: 60px;
+}
+
+.comment .wall-item-tools {
+	margin-left: 0;
 }
 
 .item-tool {
@@ -345,7 +352,7 @@
 }
 
 .comment-edit-submit {
-	margin: 10px 0px 10px 110px;
+	margin: 10px 0px 10px 52px;
 }
 
 .comment-preview-icon {

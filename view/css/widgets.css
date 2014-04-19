@@ -1,6 +1,13 @@
+
+/* Easiest way to indent the widget body - indent the entire widget and then shift the header label back to the left */
+
 .widget {
-	padding: 8px;
-	margin-top: 5px;
+	margin-left: 10px;
+	padding: 0 8px 8px 8px;
+}
+
+.widget h3 {
+	margin-left: -10px;
 }
 
 /* suggest */
@@ -33,6 +40,15 @@
 
 /* saved searches */
 
+
+#netsearch-box #search-submit {
+	margin: 10px 0 7px 0;
+}
+
+#search-save {
+	margin: 10px 0 7px 5px;
+}
+
 .saved-search-li {
 	margin-top: 3px;
 }
@@ -45,23 +61,33 @@
 	opacity: 1;
 }
 
-.savedsearchterm {
-	margin-left: 10px;
+.saved-search-icon {
+	float: right;
 }
+
+.savedsearchterm {
+	display: block;
+	width: 150px;
+	overflow: hidden;
+}
+
+/* peoplefind */
+
+#peoplefind-sidebar .btn {
+	margin: 10px 0 10px 0;
+}
+
+#side-peoplefind-url {
+	margin-top: 5px;
+}
+
+#side-peoplefind-url {
+	font-size: 1em;
+}
+
 
 /* fileas */
 
-.fileas-ul li {
-	margin-top: 10px;
-}
-
-.fileas-link {
-	margin-left: 24px;
-}
-
-.fileas-all {
-	margin-left: 0px;
-}
 
 /* posted date */
 
@@ -73,21 +99,14 @@
 
 /* categories */
 
-.categories-ul li {
-	margin-top: 10px;
-}
-
-.categories-link {
-	margin-left: 24px;
-}
-
-.categories-all {
-	margin-left: 0px;
-}
 
 /* group */
 
 #group-sidebar {
+	margin-bottom: 10px;
+}
+
+#sidebar-new-group {
 	margin-bottom: 10px;
 }
 
@@ -97,12 +116,26 @@
 	width: 12px;
 }
 
+.sidebar-group-name {
+	display: block;
+	width: 170px;
+	overflow: hidden;
+}
+
+#sidebar-group-ul {
+	margin-bottom: 10px;
+}
+
 #sidebar-group-list li {
 	margin-top: 3px;
 }
 
+.sidebar-group-li input {
+	float: right;
+}
+
 .groupsideedit {
-	margin-right: 10px;
+	float: right;
 }
 
 .group-edit-icon {
@@ -123,4 +156,10 @@ li:hover .group-edit-icon {
 .slider {
 	margin-top: 10px;
 	margin-bottom: 45px;
+}
+
+/* photo albums */
+
+#photo-albums-upload-link {
+	margin-top: 10px;
 }

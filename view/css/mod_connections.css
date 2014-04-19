@@ -1,4 +1,9 @@
 
+.search-input {
+	padding: 4px 12px;
+	margin: 3px;
+}
+
 .field_abook_help {
 	color: #000;
 }

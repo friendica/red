@@ -347,10 +347,9 @@ function stream_perms_api_uids($perms_min = PERMS_SITE) {
 	$ret = array();
 	if(local_user())
 		$ret[] = local_user();
-	$r = q("select channel_id from channel where channel_r_stream > 0 and channel_r_stream <= %d and not (channel_pageflags & %d) and not (channel_pageflags & %d)",
+	$r = q("select channel_id from channel where channel_r_stream > 0 and channel_r_stream <= %d and not (channel_pageflags & %d)",
 		intval($perms_min),
-		intval(PAGE_CENSORED),
-		intval(PAGE_SYSTEM)
+		intval(PAGE_CENSORED|PAGE_SYSTEM|PAGE_REMOVED)
 	);
 	if($r)
 		foreach($r as $rr)
@@ -364,7 +363,7 @@ function stream_perms_api_uids($perms_min = PERMS_SITE) {
 				$str .= ',';
 			$str .= intval($rr); 
 		}
-logger('stream_perms_api_uids: ' . $str, LOGGER_DEBUG);
+	logger('stream_perms_api_uids: ' . $str, LOGGER_DEBUG);
 	return $str;
 }
 
@@ -373,10 +372,9 @@ function stream_perms_xchans($perms_min = PERMS_SITE) {
 	if(local_user())
 		$ret[] = get_observer_hash();
 
-	$r = q("select channel_hash from channel where channel_r_stream > 0 and channel_r_stream <= %d and not (channel_pageflags & %d) and not (channel_pageflags & %d)",
+	$r = q("select channel_hash from channel where channel_r_stream > 0 and channel_r_stream <= %d and not (channel_pageflags & %d)",
 		intval($perms_min),
-		intval(PAGE_CENSORED),
-		intval(PAGE_SYSTEM)
+		intval(PAGE_CENSORED|PAGE_SYETEM|PAGE_REMOVED)
 	);
 	if($r)
 		foreach($r as $rr)
@@ -390,6 +388,6 @@ function stream_perms_xchans($perms_min = PERMS_SITE) {
 				$str .= ',';
 			$str .= "'" . dbesc($rr) . "'"; 
 		}
-logger('stream_perms_xchans: ' . $str, LOGGER_DEBUG);
+	logger('stream_perms_xchans: ' . $str, LOGGER_DEBUG);
 	return $str;
 }

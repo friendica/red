@@ -1,14 +1,14 @@
 
-Dear {{$myname}},
+Hej {{$myname}},
 
-You have a new follower at {{$sitename}} -  '{{$requestor}}'.
+Du har en ny följare på {{$sitename}} -  '{{$requestor}}'.
 
-You may visit their profile at {{$url}}.
+Du kan besöka profilen på {{$url}}.
 
-Please login to your site to approve or ignore/cancel the request.
+Logga in på din server för att godkänna eller ignorera/avslå förfrågan.
 
 {{$siteurl}}
 
-Regards,
+Hälsningar,
 
-	{{$sitename}} administrator
+	{{$sitename}}-administratören

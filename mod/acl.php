@@ -55,6 +55,17 @@ function acl_init(&$a){
 			intval(XCHAN_FLAGS_DELETED)
 		);
 		$contact_count = (int)$r[0]['c'];
+
+		if(intval(get_config('system','taganyone')) || intval(get_pconfig(local_user(),'system','taganyone'))) {
+			if(((! $r) || (! $r[0]['total'])) && $type == 'c') {
+				$r = q("SELECT COUNT(xchan_hash) AS c FROM xchan 
+					WHERE not (xchan_flags & %d ) $sql_extra2" ,
+					intval(XCHAN_FLAGS_DELETED)
+				);
+				$contact_count = (int)$r[0]['c'];
+			}
+		}
+
 	} 
 
 	elseif ($type == 'm') {
@@ -134,7 +145,15 @@ function acl_init(&$a){
 			intval(ABOOK_FLAG_BLOCKED|ABOOK_FLAG_PENDING|ABOOK_FLAG_ARCHIVED),
 			intval(XCHAN_FLAGS_DELETED)
 		);
-
+		if(intval(get_config('system','taganyone')) || intval(get_pconfig(local_user(),'system','taganyone'))) {
+			if((! $r) && $type == 'c') {
+				$r = q("SELECT substr(xchan_hash,1,18) as id, xchan_hash as hash, xchan_name as name, xchan_photo_s as micro, xchan_url as url, xchan_addr as nick, 0 as abook_their_perms, 0 as abook_flags 
+					FROM xchan 
+					WHERE not (xchan_flags & %d ) $sql_extra2 order by xchan_name asc" ,
+					intval(XCHAN_FLAGS_DELETED)
+				);
+			}
+		}
 	}
 	elseif($type == 'm') {
 
