@@ -18,7 +18,7 @@ function profile_photo_set_profile_perms($profileid = '') {
 	$allowcid = '';
 	if (x($profileid)) {
 
-		$r = q("SELECT photo, profile_guid, id, is_default, uid  FROM profile WHERE profile.id = %d LIMIT 1", intval($profileid));
+		$r = q("SELECT photo, profile_guid, id, is_default, uid  FROM profile WHERE profile.id = %d OR profile.profile_guid = '%s' LIMIT 1", intval($profileid), dbesc($profileid));
 
 	} else {
 
@@ -53,6 +53,13 @@ function profile_photo_set_profile_perms($profileid = '') {
 	return;
 }
 
+/* @brief Initalize the profile-photo edit view
+ *
+ * @param $a Current application
+ * @return void
+ *
+ */
+
 function profile_photo_init(&$a) {
 
 	if(! local_user()) {
@@ -64,6 +71,12 @@ function profile_photo_init(&$a) {
 
 }
 
+/* @brief Evaluate posted values
+ *
+ * @param $a Current application
+ * @return void
+ *
+ */
 
 function profile_photo_post(&$a) {
 
@@ -235,6 +248,13 @@ function profile_photo_post(&$a) {
 	
 }
 
+/* @brief Generate content of profile-photo view
+ *
+ * @param $a Current application
+ * @return void
+ *
+ */
+
 
 if(! function_exists('profile_photo_content')) {
 function profile_photo_content(&$a) {
@@ -366,6 +386,14 @@ function profile_photo_content(&$a) {
 
 	return; // NOTREACHED
 }}
+
+/* @brief Generate the UI for photo-cropping
+ *
+ * @param $a Current application
+ * @param $ph Photo-Factory
+ * @return void
+ *
+ */
 
 
 if(! function_exists('profile_photo_crop_ui_head')) {

@@ -1,5 +1,11 @@
 <?php
 
+/* @file connedit.php
+ * @brief In this file the connection-editor form is generated and evaluated.
+ *
+ *
+ */
+
 require_once('include/Contact.php');
 require_once('include/socgraph.php');
 require_once('include/contact_selectors.php');
@@ -7,6 +13,11 @@ require_once('include/group.php');
 require_once('include/contact_widgets.php');
 require_once('include/zot.php');
 require_once('include/widgets.php');
+
+/* @brief Initialize the connection-editor
+ *
+ *
+ */
 
 function connedit_init(&$a) {
 
@@ -30,6 +41,10 @@ function connedit_init(&$a) {
 		head_set_icon($channel['xchan_photo_s']);
 
 }
+
+/* @brief Evaluate posted values and set changes
+ *
+ */
 
 function connedit_post(&$a) {
 
@@ -81,7 +96,7 @@ function connedit_post(&$a) {
 		if(strpos($k,'perms_') === 0) {
 			$abook_my_perms += $v;
 		}
-	}			
+	}
 
 	$abook_flags = $orig_record[0]['abook_flags'];
 	$new_friend = false;
@@ -103,6 +118,15 @@ function connedit_post(&$a) {
 		intval(local_user())
 	);
 
+	if($orig_record[0]['abook_profile'] != $profile_id) { //Update profile photo permissions
+
+                logger('As a new profile was assigned updateing profile photos');
+                require_once('mod/profile_photo.php');
+                profile_photo_set_profile_perms($profile_id);
+
+        }
+
+
 	if($r)
 		info( t('Connection updated.') . EOL);
 	else
@@ -114,7 +138,7 @@ function connedit_post(&$a) {
 	}
 
 	if($new_friend) {
-		$channel = $a->get_channel();		
+		$channel = $a->get_channel();
 		$default_group = $channel['channel_default_group'];
 		if($default_group) {
 			require_once('include/group.php');
@@ -158,6 +182,11 @@ function connedit_post(&$a) {
 
 }
 
+/* @brief Clone connection
+ *
+ *
+ */
+
 function connedit_clone(&$a) {
 
 		if(! $a->poi)
@@ -171,6 +200,10 @@ function connedit_clone(&$a) {
 		build_sync_packet(0 /* use the current local_user */, array('abook' => array($clone)));
 }
 
+/* @brief Generate content of connection edit page
+ *
+ *
+ */
 
 function connedit_content(&$a) {
 
