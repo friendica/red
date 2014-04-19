@@ -95,15 +95,15 @@
  -->
 		<div class="wall-item-tools-bs btn-group">
 		{{if $item.like}}
-  <button type="button" class="btn btn-default btn-sm">			
-				<i class="icon-thumbs-up-alt" title="{{$item.like.0}}" onclick="dolike({{$item.id}},'like'); return false"></i>
+  <button type="button" class="btn btn-default btn-sm" onclick="dolike({{$item.id}},'like'); return false">			
+				<i class="icon-thumbs-up-alt" title="{{$item.like.0}}"></i>
 			
 	</button>{{/if}}
-  {{if $item.dislike}}<button type="button" class="btn btn-default btn-sm">		
-				<i class="icon-thumbs-down-alt" title="{{$item.dislike.0}}" onclick="dolike({{$item.id}},'dislike'); return false"></i>
+  {{if $item.dislike}}<button type="button" class="btn btn-default btn-sm" onclick="dolike({{$item.id}},'dislike'); return false">		
+				<i class="icon-thumbs-down-alt" title="{{$item.dislike.0}}"></i>
 			
 		</button>{{/if}}
-		{{if $item.drop.dropping}}<button type="button" class="btn btn-default btn-sm">	<a href="item/drop/{{$item.id}}" onclick="return confirmDelete();" title="{{$item.drop.delete}}" ><i class="icon-remove drop-icons"></i></a></button>{{/if}}
+		{{if $item.drop.dropping}}<button type="button" class="btn btn-default btn-sm" onclick="return confirmDelete();">	<a href="item/drop/{{$item.id}}"  title="{{$item.drop.delete}}" ><i class="icon-remove drop-icons"></i></a></button>{{/if}}
 <!-- 
 		{{if $item.star}}
 		<button type="button" class="btn btn-default btn-sm">
