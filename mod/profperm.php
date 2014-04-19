@@ -95,7 +95,6 @@ function profperm_content(&$a) {
 			profile_photo_set_profile_perms($profile['id']);
 
 			$r = q("SELECT * FROM abook left join xchan on abook_xchan = xchan_hash WHERE abook_channel = %d AND abook_profile = '%s'",
-
 				intval(local_user()),
 				dbesc($profile['profile_guid'])
 			);
