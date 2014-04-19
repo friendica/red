@@ -181,6 +181,8 @@ if(! $a->install) {
 		$notifyseen_bghover = "#e7e7e7";
 	if (! $notifyseen_linkhover)
 		$notifyseen_linkhover = "#333";
+	if (! $notify_topmargin)
+		$notify_topmargin = "1px";
 	if (! $input_bgsubmit)
 		$input_bgsubmit = "#F0F0F0";
 	if (! $input_linksubmit)
@@ -290,6 +292,7 @@ $options = array (
 '$notifyseen_linkcolour' => $notifyseen_linkcolour,
 '$notifyseen_bghover' => $notifyseen_bghover,
 '$notifyseen_linkhover' => $notifyseen_linkhover,
+'$notify_topmargin' => $notify_topmargin,
 '$input_bgsubmit' => $input_bgsubmit,
 '$input_linksubmit' => $input_linksubmit,
 '$input_border' => $input_border,

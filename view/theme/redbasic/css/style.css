@@ -1545,7 +1545,9 @@ header {
 
 
 #nav-notify-menu, #nav-network-menu, #nav-home-menu {
-	background: $notify_bgcolour;
+	background-color: $notify_bgcolour;
+	border-top: none;
+	margin-top: $notify_topmargin;
 }
  	
 #nav-notify-menu a, #nav-network-menu a, #nav-home-menu a {
@@ -2143,6 +2145,8 @@ nav .dropdown-menu {
 	border-bottom-right-radius: $radiuspx;
 	border-bottom-left-radius: $radiuspx;
 	background-color: $notify_bgcolour;
+	border-top: none;
+	margin-top: $notify_topmargin;
 }
 
 nav .dropdown-menu .divider{
