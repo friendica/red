@@ -103,8 +103,8 @@
 				<i class="icon-thumbs-down-alt" title="{{$item.dislike.0}}"></i>
 			
 		</button>{{/if}}
-		{{if $item.drop.dropping}}<button type="button" class="btn btn-default btn-sm" onclick="return confirmDelete();">	<a href="item/drop/{{$item.id}}"  title="{{$item.drop.delete}}" ><i class="icon-remove drop-icons"></i></a></button>{{/if}}
-<!-- 
+<!-- 		{{if $item.drop.dropping}}<button type="button" class="btn btn-default btn-sm" onclick="return confirmDelete();" type="submit"><a href="item/drop/{{$item.id}}"  title="{{$item.drop.delete}}" ><i class="icon-remove drop-icons"></i></a></button>{{/if}}
+
 		{{if $item.star}}
 		<button type="button" class="btn btn-default btn-sm">
 
@@ -145,7 +145,7 @@
 </div>
 			<div id="like-rotator-{{$item.id}}" class="like-rotator"></div>
 			<div class="wall-item-delete-wrapper" id="wall-item-delete-wrapper-{{$item.id}}" >
-<!-- 				{{if $item.drop.dropping}}<a href="item/drop/{{$item.id}}" onclick="return confirmDelete();" title="{{$item.drop.delete}}" ><i class="icon-remove drop-icons item-tool"></i></a>{{/if}} -->
+ 				{{if $item.drop.dropping}}<a href="item/drop/{{$item.id}}" onclick="return confirmDelete();" title="{{$item.drop.delete}}" ><i class="icon-remove drop-icons item-tool"></i></a>{{/if}}
 			</div>
 				{{if $item.drop.pagedrop}}<input type="checkbox" onclick="checkboxhighlight(this);" title="{{$item.drop.select}}" class="item-select" name="itemselected[]" value="{{$item.id}}" />{{/if}}
 			<div class="wall-item-delete-end"></div>
