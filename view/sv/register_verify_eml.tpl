@@ -1,25 +1,25 @@
 
-A new user registration request was received at {{$sitename}} which requires 
-your approval. 
+En begäran om registrering av en ny användare har mottagits på
+{{$sitename}} och behöver ditt godkännande.
 
 
-The login details are as follows:
+Inloggningsuppgifterna är:
 
-Site Location:	{{$siteurl}}
-Login Name:	{{$email}}
-IP Address: {{$details}}
+Serveradress:	{{$siteurl}}
+Användarnamn:	{{$email}}
+IP-adress: {{$details}}
 
-To approve this request please visit the following link:
+För att godkänna begäran, följ följande länk:
 
 
 {{$siteurl}}/regmod/allow/{{$hash}} 
 
 
-To deny the request and remove the account, please visit:
+För att avslå begäran och ta bort kontot, besök:
 
 
 {{$siteurl}}/regmod/deny/{{$hash}}
 
 
-Thank you.
+Tack.
 

@@ -1,19 +1,19 @@
 
-An account has been created at {{$sitename}} for this email address. 
-The login details are as follows:
+Ett konto för den här e-postadressen har skapats på {{$sitename}}.
+Inloggningsuppgifterna är:
 
-Site Location:	{{$siteurl}}
-Login:	{{$email}}
-Password: (the password which was provided during registration)
+Serveradress:	{{$siteurl}}
+Användarnamn:	{{$email}}
+Lösenord: (lösenordet som angavs vid registreringen)
 
-If this account was created without your knowledge and is not desired, you may 
-visit this site and reset the password. This will allow you to remove the 
-account from the links on the Settings page, and we 
-apologise for any inconvenience. 
+Om kontot skapades utan din vetskap och inte är önskat kan du besöka
+webbplatsen och återställa lösenordet. Det låter dig ta bort kontot via
+länkarna på sidan Inställningar, och vi ber om ursäkt om detta har lett
+till besvär.
 
-Thank you and welcome to {{$sitename}}.
+Tack och välkommen till {{$sitename}}.
 
-Sincerely,
-	{{$sitename}} Administrator
+Hälsningar,
+	{{$sitename}}-administratören
 
  

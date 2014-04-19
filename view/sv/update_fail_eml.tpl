@@ -1,13 +1,13 @@
-Hey, 
-I'm the web server at {{$sitename}};
+Hej, 
+Jag är webbservern på {{$sitename}};
    
-The Red Matrix developers released update {{$update}} recently, 
-but when I tried to install it, something went terribly wrong.  
-This needs to be fixed soon and it requires human intervention. 
-Please contact a Red developer if you can not figure out how to 
-fix it on your own. My database might be invalid. 
+Red Matrix-utvecklarna släppte nyligen uppdateringen {{$update}},
+men när jag försökte installera den gick något fruktansvärt fel.
+Detta behöver fixas snart och kräver en människas ingripande.
+Kontakta en Red-utvecklare om du inte kan lösa problemet själv.
+Min databas kan ha gått sönder.
 
-The error message is '{{$error}}'.   
+Felmeddelandet är '{{$error}}'.
 
-Apologies for the inconvenience, 
-	your web server at {{$siteurl}}
+Ursäkta besväret,
+	din webbserver på {{$siteurl}}
