@@ -94,7 +94,6 @@
 		$notify_linkcolour = "#FFF";	
 	if (! $notify_bghover)
 		$notify_bghover = "#222";
-		$notifyseen_linkhover = "#333";
 	if (! $notify_topmargin)
 		$notify_topmargin = "-1px";
 	if (! $notifyseen_bgcolour)
