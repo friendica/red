@@ -65,7 +65,7 @@
 
 .hide-comments-outer {
 	margin-left: 60px;
-	padding: 15px 10px 15px 10px;
+	padding: 15px 10px 15px 7px;
 }
 
 .wall-item-content-wrapper {
@@ -265,6 +265,7 @@ clear: both;
 .wall-item-like,
 .wall-item-dislike {
 	margin-top: 5px;
+	margin-left: 65px;
 }
 
 .wall-item-wrapper-end {
