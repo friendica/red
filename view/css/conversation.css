@@ -267,9 +267,8 @@ clear: both;
 	margin-top: 5px;
 	margin-left: 65px;
 }
-.comment
-.wall-item-like,
-.wall-item-dislike {
+.comment .wall-item-like,
+.comment .wall-item-dislike {
 	margin-top: 5px;
 	margin-left: 50px;
 }
