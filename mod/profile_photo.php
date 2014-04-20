@@ -1,6 +1,64 @@
 <?php
 
+/* @file profile_photo.php
+   @brief Module-file with functions for handling of profile-photos
+
+*/
+
 require_once('include/photo/photo_driver.php');
+
+/* @brief Function for sync'ing  permissions of profile-photos and their profile
+*
+*  @param $profileid The id number of the profile to sync
+*  @return void
+*/
+
+function profile_photo_set_profile_perms($profileid = '') {
+
+	$allowcid = '';
+	if (x($profileid)) {
+
+		$r = q("SELECT photo, profile_guid, id, is_default, uid  FROM profile WHERE profile.id = %d OR profile.profile_guid = '%s' LIMIT 1", intval($profileid), dbesc($profileid));
+
+	} else {
+
+		logger('Resetting permissions on default-profile-photo for user'.local_user());
+		$r = q("SELECT photo, profile_guid, id, is_default, uid  FROM profile WHERE profile.uid = %d AND is_default = 1 LIMIT 1", intval(local_user()) ); //If no profile is given, we update the default profile
+	}
+
+	$profile = $r[0];
+	if(x($profile['id']) && x($profile['photo'])) { 
+	       	preg_match("@\w*(?=-\d*$)@i", $profile['photo'], $resource_id);
+	       	$resource_id = $resource_id[0];
+
+		if (intval($profile['is_default']) != 1) {
+			$r0 = q("SELECT channel_hash FROM channel WHERE channel_id = %d LIMIT 1", intval(local_user()) );
+			$r1 = q("SELECT abook.abook_xchan FROM abook WHERE abook_profile = %d ", intval($profile['id'])); //Should not be needed in future. Catches old int-profile-ids.
+			$r2 = q("SELECT abook.abook_xchan FROM abook WHERE abook_profile = '%s'", dbesc($profile['profile_guid']));
+			$allowcid = "<" . $r0[0]['channel_hash'] . ">";
+			foreach ($r1 as $entry) {
+				$allowcid .= "<" . $entry['abook_xchan'] . ">"; 
+			}
+			foreach ($r2 as $entry) {
+               	                $allowcid .= "<" . $entry['abook_xchan'] . ">";
+	                      	}
+
+			q("UPDATE `photo` SET allow_cid = '%s' WHERE resource_id = '%s' AND uid = %d",dbesc($allowcid),dbesc($resource_id),intval($profile['uid']));
+
+		} else {
+			q("UPDATE `photo` SET allow_cid = '' WHERE profile = 1 AND uid = %d",intval($profile['uid'])); //Reset permissions on default profile picture to public
+		}
+	}
+
+	return;
+}
+
+/* @brief Initalize the profile-photo edit view
+ *
+ * @param $a Current application
+ * @return void
+ *
+ */
 
 function profile_photo_init(&$a) {
 
@@ -13,6 +71,12 @@ function profile_photo_init(&$a) {
 
 }
 
+/* @brief Evaluate posted values
+ *
+ * @param $a Current application
+ * @return void
+ *
+ */
 
 function profile_photo_post(&$a) {
 
@@ -142,6 +206,11 @@ function profile_photo_post(&$a) {
 
 				// Update directory in background
 				proc_run('php',"include/directory.php",$channel['channel_id']);
+
+				// Now copy profile-permissions to pictures, to prevent privacyleaks by automatically created folder 'Profile Pictures'
+
+                                profile_photo_set_profile_perms($_REQUEST['profile']);
+
 			}
 			else
 				notice( t('Unable to process image') . EOL);
@@ -178,6 +247,13 @@ function profile_photo_post(&$a) {
 	return profile_photo_crop_ui_head($a, $ph);
 	
 }
+
+/* @brief Generate content of profile-photo view
+ *
+ * @param $a Current application
+ * @return void
+ *
+ */
 
 
 if(! function_exists('profile_photo_content')) {
@@ -230,7 +306,7 @@ function profile_photo_content(&$a) {
 				intval(PHOTO_PROFILE),
 				intval(PHOTO_PROFILE),
 				intval(local_user()));
-			
+
 			// set all sizes of this one as profile photos
 			$r = q("UPDATE photo SET profile = 1 WHERE uid = %d AND resource_id = '%s'",
 				intval(local_user()),
@@ -249,7 +325,8 @@ function profile_photo_content(&$a) {
 				dbesc($channel['xchan_hash'])
 			);
 
-			proc_run('php','include/directory.php',local_user());			
+			profile_photo_set_profile_perms(); //Reset default photo permissions to public
+			proc_run('php','include/directory.php',local_user());
 			goaway($a->get_baseurl() . '/profiles');
 		}
 
@@ -273,7 +350,7 @@ function profile_photo_content(&$a) {
 	);
 
 	if(! x($a->data,'imagecrop')) {
-	
+
 		$tpl = get_markup_template('profile_photo.tpl');
 
 		$o .= replace_macros($tpl,array(
@@ -309,6 +386,14 @@ function profile_photo_content(&$a) {
 
 	return; // NOTREACHED
 }}
+
+/* @brief Generate the UI for photo-cropping
+ *
+ * @param $a Current application
+ * @param $ph Photo-Factory
+ * @return void
+ *
+ */
 
 
 if(! function_exists('profile_photo_crop_ui_head')) {
@@ -346,7 +431,7 @@ function profile_photo_crop_ui_head(&$a, $ph){
 		$p['scale'] = 1;
 
 		$r = $ph->save($p);
-		
+
 		if($r === false)
 			notice( sprintf(t('Image size reduction [%s] failed.'),"640") . EOL );
 		else
