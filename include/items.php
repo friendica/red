@@ -2450,16 +2450,24 @@ function tag_deliver($uid,$item_id) {
 
 		$body = preg_replace('/\[share(.*?)\[\/share\]/','',$body);
 
-		$pattern = '/@\!?\[zrl\=' . preg_quote($term['url'],'/') . '\]' . preg_quote($u[0]['channel_name'] . '+','/') . '\[\/zrl\]/';
+		$tagged = false;
+		$plustagged = false;
 
-		if(! preg_match($pattern,$body,$matches)) {
+		$pattern = '/@\!?\[zrl\=' . preg_quote($term['url'],'/') . '\]' . preg_quote($u[0]['channel_name'],'/') . '\[\/zrl\]/';
+		if(preg_match($pattern,$body,$matches)) 
+			$tagged = true;
+
+		$pattern = '/@\!?\[zrl\=' . preg_quote($term['url'],'/') . '\]' . preg_quote($u[0]['channel_name'] . '+','/') . '\[\/zrl\]/';
+		if(preg_match($pattern,$body,$matches)) 
+			$plustagged = true;
+
+		if(! ($tagged || $plustagged)) {
 			logger('tag_deliver: mention was in a reshare - ignoring');
 			return;
 		}
-	
 
-		// All good. 
-		// Send a notification
+
+		// Valid tag. Send a notification
 
 		require_once('include/enotify.php');
 		notification(array(
@@ -2472,6 +2480,14 @@ function tag_deliver($uid,$item_id) {
 			'otype'        => 'item'
 		));
 
+		// Just a normal tag?
+
+		if(! $plustagged) {
+			logger('tag_deliver: not a plus tag', LOGGER_DEBUG);
+			return;
+		}
+
+		// plustagged - keep going, next check permissions
 
 		if(! perm_is_allowed($uid,$item['author_xchan'],'tag_deliver')) {
 			logger('tag_delivery denied for uid ' . $uid . ' and xchan ' . $item['author_xchan']);
