@@ -2331,11 +2331,11 @@ blockquote {
 
 	.thread-wrapper .wall-item-comment-wrapper,
 	.wall-item-content-wrapper.comment {
-		margin-left: 24px;
+		margin-left: 18px;
 	}
 
 	.hide-comments-outer {
-		margin-left: 24px;
+		margin-left: 18px;
 	}
 
 	.wall-item-photo {
