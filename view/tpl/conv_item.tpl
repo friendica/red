@@ -148,7 +148,7 @@
 			<div class="wall-item-dislike {{$item.indent}}" id="wall-item-dislike-{{$item.id}}">{{$item.showdislike}}</div>
 
 
-	<!--</div>	--->
+	</div>
 
 	<div class="wall-item-wrapper-end"></div>
 
