@@ -219,13 +219,16 @@
 }
 .wall-item-tools-bs {
 clear: both;
-	//padding: 5px 5px;
-	//margin-left: 40px;
+	padding: 5px 10px;
+	margin-left: 40px;
 }
 .comment .wall-item-tools {
 	margin-left: 0;
 }
-
+.comment .wall-item-tools-bs {
+	padding: 0px 0px;
+	margin-left: 30px;
+}
 .item-tool {
 	float: left;
 	margin-right: 8px;
