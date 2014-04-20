@@ -267,7 +267,12 @@ clear: both;
 	margin-top: 5px;
 	margin-left: 65px;
 }
-
+.comment
+.wall-item-like,
+.wall-item-dislike {
+	margin-top: 5px;
+	margin-left: 50px;
+}
 .wall-item-wrapper-end {
 	clear: both;
 }
