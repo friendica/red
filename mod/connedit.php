@@ -482,6 +482,7 @@ function connedit_content(&$a) {
 			'$them'           => t('Their Settings'),
 			'$me'             => t('My Settings'),
 			'$perms'          => $perms,
+			'$clear'          => t('Clear/Disable Automatic Permissions'),
 			'$forum'          => t('Forum Members'),
 			'$soapbox'        => t('Soapbox'),
 			'$full'           => t('Full Sharing (typical social network permissions)'),

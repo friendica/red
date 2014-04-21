@@ -67,12 +67,13 @@
 <h3>{{$quick}}</h3>
 <ul>
 {{if $self}}
-<li><span class="fakelink" onclick="connectForum(); // $('#abook-edit-form').submit();">{{$forum}}</span></li>
-<li><span class="fakelink" onclick="connectSoapBox(); // $('#abook-edit-form').submit();">{{$soapbox}}</span></li>
+<li><span class="fakelink" onclick="connectClear();">{{$clear}}</span></li>
+<li><span class="fakelink" onclick="connectForum();">{{$forum}}</span></li>
+<li><span class="fakelink" onclick="connectSoapBox();">{{$soapbox}}</span></li>
 {{/if}}
-<li><span class="fakelink" onclick="connectFullShare(); // $('#abook-edit-form').submit();">{{$full}}</span></li>
-<li><span class="fakelink" onclick="connectCautiousShare(); // $('#abook-edit-form').submit();">{{$cautious}}</span></li>
-<li><span class="fakelink" onclick="connectFollowOnly(); // $('#abook-edit-form').submit();">{{$follow}}</span></li>
+<li><span class="fakelink" onclick="connectFullShare();">{{$full}}</span></li>
+<li><span class="fakelink" onclick="connectCautiousShare();">{{$cautious}}</span></li>
+<li><span class="fakelink" onclick="connectFollowOnly();">{{$follow}}</span></li>
 </ul>
 
 <input class="contact-edit-submit" type="submit" name="done" value="{{$submit}}" />

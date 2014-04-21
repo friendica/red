@@ -80,6 +80,15 @@ function connectForum() {
 
 }
 
+function connectClear() {
+	$('.abook-edit-me').each(function() {
+		if(! $(this).is(':disabled'))
+			$(this).removeAttr('checked');
+	});
+	$('.abook-permschange').show();
+	$('.abook-permschange').html(aStr['permschange']);
+}
+
 function connectSoapBox() {
 	$('.abook-edit-me').each(function() {
 		if(! $(this).is(':disabled'))
