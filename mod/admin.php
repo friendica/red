@@ -416,17 +416,17 @@ function admin_page_site(&$a) {
 
 	/* Register policy */
 	$register_choices = Array(
-		REGISTER_CLOSED  => t("Closed"),
-		REGISTER_APPROVE => t("Requires approval"),
-		REGISTER_OPEN    => t("Open")
+		REGISTER_CLOSED  => t("No"),
+		REGISTER_APPROVE => t("Yes - with approval"),
+		REGISTER_OPEN    => t("Yes")
 	); 
 
 	/* Acess policy */
 	$access_choices = Array(
-		ACCESS_PRIVATE => t("Private"),
-		ACCESS_PAID => t("Paid Access"),
-		ACCESS_FREE => t("Free Access"),
-		ACCESS_TIERED => t("Tiered Access")
+		ACCESS_PRIVATE => t("My site is not a public server"),
+		ACCESS_PAID => t("My site has paid access only"),
+		ACCESS_FREE => t("My site has free access only"),
+		ACCESS_TIERED => t("My site offers free accounts with optional paid upgrades")
 	);
 	
 //	$ssl_choices = array(
@@ -456,8 +456,8 @@ function admin_page_site(&$a) {
 		'$site_channel' 	=> array('site_channel', t("Channel to use for this website's static pages"), get_config('system','site_channel'), t("Site Channel")),
 //		'$ssl_policy'       => array('ssl_policy', t("SSL link policy"), (string) intval(get_config('system','ssl_policy')), t("Determines whether generated links should be forced to use SSL"), $ssl_choices),
 		'$maximagesize'		=> array('maximagesize', t("Maximum image size"), intval(get_config('system','maximagesize')), t("Maximum size in bytes of uploaded images. Default is 0, which means no limits.")),
-		'$register_policy'	=> array('register_policy', t("Register policy"), get_config('system','register_policy'), "", $register_choices),
-		'$access_policy'	=> array('access_policy', t("Access policy"), get_config('system','access_policy'), "", $access_choices),
+		'$register_policy'	=> array('register_policy', t("Does this site allow new member registration?"), get_config('system','register_policy'), "", $register_choices),
+		'$access_policy'	=> array('access_policy', t("Which best describes the types of account offered by this hub?"), get_config('system','access_policy'), "This is displayed on the public server site list.", $access_choices),
 		'$register_text'	=> array('register_text', t("Register text"), htmlspecialchars(get_config('system','register_text'), ENT_QUOTES, 'UTF-8'), t("Will be displayed prominently on the registration page.")),
 		'$abandon_days'     => array('abandon_days', t('Accounts abandoned after x days'), get_config('system','account_abandon_days'), t('Will not waste system resources polling external sites for abandonded accounts. Enter 0 for no time limit.')),
 		'$allowed_sites'	=> array('allowed_sites', t("Allowed friend domains"), get_config('system','allowed_sites'), t("Comma separated list of domains which are allowed to establish friendships with this site. Wildcards are accepted. Empty to allow any domains")),
