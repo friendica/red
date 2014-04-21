@@ -91,11 +91,11 @@
 		<div class="wall-item-tools-bs btn-group">
 		{{if $item.like}}
   <button type="button" class="btn btn-default btn-sm" onclick="dolike({{$item.id}},'like'); return false">			
-				<i class="icon-thumbs-up-alt" title="{{$item.like.0}}"></i>
+				<i class="icon-thumbs-up-alt item-tool" title="{{$item.like.0}}"></i>
 			
 	</button>{{/if}}
   {{if $item.dislike}}<button type="button" class="btn btn-default btn-sm" onclick="dolike({{$item.id}},'dislike'); return false">		
-				<i class="icon-thumbs-down-alt" title="{{$item.dislike.0}}"></i>
+				<i class="icon-thumbs-down-alt item-tool" title="{{$item.dislike.0}}"></i>
 			
 		</button>{{/if}}
 <!-- 		{{if $item.drop.dropping}}<button type="button" class="btn btn-default btn-sm" onclick="return confirmDelete();" type="submit"><a href="item/drop/{{$item.id}}"  title="{{$item.drop.delete}}" ><i class="icon-remove drop-icons"></i></a></button>{{/if}}
@@ -103,34 +103,34 @@
 		{{if $item.star}}
 		<button type="button" class="btn btn-default btn-sm">
 
-				<i id="starred-{{$item.id}}" onclick="dostar({{$item.id}}); return false;" class="icon-star {{$item.star.isstarred}}" title="{{$item.star.toggle}}"></i>
+				<i id="starred-{{$item.id}}" onclick="dostar({{$item.id}}); return false;" class="icon-star {{$item.star.isstarred}} item-tool" title="{{$item.star.toggle}}"></i>
 			</button>{{/if}}
  -->
   <div class="btn-group">
     <button type="button" class="btn btn-default dropdown-toggle btn-sm" data-toggle="dropdown">
-      <i class="icon-caret-down"></i>
+      <i class="icon-caret-down item-tool"></i>
     </button>
     <ul class="dropdown-menu">
       <li>	{{if $item.share}}
-				<a href="#" onclick="jotShare({{$item.id}}); return false"><i class="icon-retweet" title="{{$item.share.0}}"></i> {{$item.share.0}}</a>
+				<a href="#" onclick="jotShare({{$item.id}}); return false"><i class="icon-retweet item-tool" title="{{$item.share.0}}"></i> {{$item.share.0}}</a>
 			{{/if}}</li>
       <li>	{{if $item.plink}}
-				<a href="{{$item.plink.href}}" title="{{$item.plink.title}}" ><i class="icon-external-link"></i> {{$item.plink.title}}</a>
+				<a href="{{$item.plink.href}}" title="{{$item.plink.title}}" ><i class="icon-external-link item-tool"></i> {{$item.plink.title}}</a>
 			{{/if}}</li>
       <li>	{{if $item.edpost}}
-				<a href="{{$item.edpost.0}}" title="{{$item.edpost.1}}"><i class="editpost icon-pencil"></i> {{$item.edpost.1}}</a>
+				<a href="{{$item.edpost.0}}" title="{{$item.edpost.1}}"><i class="editpost icon-pencil item-tool"></i> {{$item.edpost.1}}</a>
 			{{/if}}</li>
       <li>	{{if $item.tagger}}
-				<a href="#"  onclick="itemTag({{$item.id}}); return false;"><i id="tagger-{{$item.id}}" class="icon-tag" title="{{$item.tagger.tagit}}"></i> {{$item.tagger.tagit}}</a>
+				<a href="#"  onclick="itemTag({{$item.id}}); return false;"><i id="tagger-{{$item.id}}" class="icon-tag item-tool" title="{{$item.tagger.tagit}}"></i> {{$item.tagger.tagit}}</a>
 			{{/if}}</li>
 	  <li>	{{if $item.filer}}
-			<a href="#" onclick="itemFiler({{$item.id}}); return false;"><i id="filer-{{$item.id}}" class="icon-folder-open" title="{{$item.filer}}"></i> {{$item.filer}}</a>
+			<a href="#" onclick="itemFiler({{$item.id}}); return false;"><i id="filer-{{$item.id}}" class="icon-folder-open item-tool" title="{{$item.filer}}"></i> {{$item.filer}}</a>
 			{{/if}}</li>
 	  <li>	{{if $item.bookmark}}
-			<a href="#" onclick="itemBookmark({{$item.id}}); return false;"><i id="bookmarker-{{$item.id}}" class="icon-bookmark" title="{{$item.bookmark}}"></i> {{$item.bookmark}}</a>
+			<a href="#" onclick="itemBookmark({{$item.id}}); return false;"><i id="bookmarker-{{$item.id}}" class="icon-bookmark item-tool" title="{{$item.bookmark}}"></i> {{$item.bookmark}}</a>
 			{{/if}}	</li>	
 	  <li>	{{if $item.star}}
-			<a href="#" onclick="dostar({{$item.id}}); return false;"><i id="starred-{{$item.id}}" class="icon-star {{$item.star.isstarred}}" title="{{$item.star.toggle}}"></i> {{$item.star.toggle}}</a>
+			<a href="#" onclick="dostar({{$item.id}}); return false;"><i id="starred-{{$item.id}}" class="icon-star {{$item.star.isstarred}} item-tool" title="{{$item.star.toggle}}"></i> {{$item.star.toggle}}</a>
 			{{/if}}
 	  			</li>
 		

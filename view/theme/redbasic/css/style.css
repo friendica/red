@@ -2063,6 +2063,10 @@ img.mail-list-sender-photo {
 	border-radius: $radiuspx;
 }
 
+.widget h3 {
+	color: $toolicon_colour;
+}
+
 #note-text {
 	border: 1px solid #ccc;
 	border-radius: $radiuspx;
