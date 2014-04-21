@@ -37,15 +37,15 @@ function subthread_content(&$a) {
 
 	$remote_owner = null;
 
-	if(! $item['wall']) {
+	if(! ($item['item_flags'] & ITEM_WALL)) {
 		// The top level post may have been written by somebody on another system
-		$r = q("SELECT * FROM `contact` WHERE `id` = %d AND `uid` = %d LIMIT 1",
-			intval($item['contact-id']),
+		$r = q("SELECT * FROM abook WHERE abook_xchan = '%s'  AND uid = %d LIMIT 1",
+			intval($item['author_xchan']),
 			intval($item['uid'])
 		);
-		if(! count($r))
+		if(! $r)
 			return;
-		if(! $r[0]['self'])
+		if(! ($r[0]['abook_flags'] & ABOOK_FLAG_SELF))
 			$remote_owner = $r[0];
 	}
 
