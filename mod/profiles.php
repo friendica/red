@@ -198,27 +198,27 @@ function profiles_post(&$a) {
 		$dob = sprintf('%04d-%02d-%02d',$year,$month,$day);
 
 			
-		$name = notags(trim($_POST['name']));
+		$name = escape_tags(trim($_POST['name']));
 
 		if($orig[0]['name'] != $name)
 			$namechanged = true;
 
 
-		$pdesc        = notags(trim($_POST['pdesc']));
-		$gender       = notags(trim($_POST['gender']));
-		$address      = notags(trim($_POST['address']));
-		$locality     = notags(trim($_POST['locality']));
-		$region       = notags(trim($_POST['region']));
-		$postal_code  = notags(trim($_POST['postal_code']));
-		$country_name = notags(trim($_POST['country_name']));
-		$keywords     = notags(trim($_POST['keywords']));
-		$marital      = notags(trim($_POST['marital']));
-		$howlong      = notags(trim($_POST['howlong']));
-		$sexual       = notags(trim($_POST['sexual']));
-		$homepage     = notags(trim($_POST['homepage']));
-		$hometown     = notags(trim($_POST['hometown']));
-		$politic      = notags(trim($_POST['politic']));
-		$religion     = notags(trim($_POST['religion']));
+		$pdesc        = escape_tags(trim($_POST['pdesc']));
+		$gender       = escape_tags(trim($_POST['gender']));
+		$address      = escape_tags(trim($_POST['address']));
+		$locality     = escape_tags(trim($_POST['locality']));
+		$region       = escape_tags(trim($_POST['region']));
+		$postal_code  = escape_tags(trim($_POST['postal_code']));
+		$country_name = escape_tags(trim($_POST['country_name']));
+		$keywords     = escape_tags(trim($_POST['keywords']));
+		$marital      = escape_tags(trim($_POST['marital']));
+		$howlong      = escape_tags(trim($_POST['howlong']));
+		$sexual       = escape_tags(trim($_POST['sexual']));
+		$homepage     = escape_tags(trim($_POST['homepage']));
+		$hometown     = escape_tags(trim($_POST['hometown']));
+		$politic      = escape_tags(trim($_POST['politic']));
+		$religion     = escape_tags(trim($_POST['religion']));
 
 		$likes        = fix_mce_lf(escape_tags(trim($_POST['likes'])));
 		$dislikes     = fix_mce_lf(escape_tags(trim($_POST['dislikes'])));
@@ -237,7 +237,7 @@ function profiles_post(&$a) {
 
 		$hide_friends = (($_POST['hide_friends'] == 1) ? 1: 0);
 
-		$with         = ((x($_POST,'with')) ? notags(trim($_POST['with'])) : '');
+		$with         = ((x($_POST,'with')) ? escape_tags(trim($_POST['with'])) : '');
 
 		if(! strlen($howlong))
 			$howlong = '0000-00-00 00:00:00';
@@ -561,7 +561,7 @@ function profiles_content(&$a) {
 			'$age'          => ((intval($r[0]['dob'])) ? '(' . t('Age: ') . age($r[0]['dob'],$a->user['timezone'],$a->user['timezone']) . ')' : ''),
 			'$gender'       => gender_selector($r[0]['gender']),
 			'$marital'      => marital_selector($r[0]['marital']),
-			'$with'         => strip_tags($r[0]['with']),
+			'$with'         => $r[0]['with'],
 			'$howlong'      => ($r[0]['howlong'] === '0000-00-00 00:00:00' ? '' : datetime_convert('UTC',date_default_timezone_get(),$r[0]['howlong'])),
 			'$sexual'       => sexpref_selector($r[0]['sexual']),
 			'$about'        => $r[0]['about'],
