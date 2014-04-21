@@ -230,8 +230,6 @@ clear: both;
 	margin-left: 35px;
 }
 .item-tool {
-	float: left;
-	margin-right: 8px;
 	cursor: pointer;
 }
 
