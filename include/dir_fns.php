@@ -8,7 +8,7 @@ function find_upstream_directory($dirmode) {
 		return array('url' => $preferred);
 	// If we haven't got a preferred directory, pick one at random to spread the load
 	if(! $preferred) {
-		$r = q("select site_url from site where (site_flags & %d) order by rand()",
+		$r = q("select site_url from site where (site_flags & %d) order by rand() limit 1",
                 intval(DIRECTORY_MODE_PRIMARY|DIRECTORY_MODE_SECONDARY)
         	);
 		$preferred = $r[0]['site_url'];
