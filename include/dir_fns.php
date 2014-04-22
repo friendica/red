@@ -6,6 +6,16 @@ function find_upstream_directory($dirmode) {
 	$preferred = get_config('system','directory_server');
 	if($preferred)
 		return array('url' => $preferred);
+	// If we haven't got a preferred directory, pick one at random to spread the load
+	if(! $preferred) {
+		$r = q("select site_url from site where (site_flags & %d) order by rand()",
+                intval(DIRECTORY_MODE_PRIMARY|DIRECTORY_MODE_SECONDARY)
+        	);
+		$preferred = $r[0]['site_url'];
+	return array('url' => $preferred);
+	}
+	
+	//Still found nothing, give up and fall back to the primary directory
 	return '';
 }
 
