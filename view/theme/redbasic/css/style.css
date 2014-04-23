@@ -1920,7 +1920,7 @@ img.mail-list-sender-photo {
 }
 
 .wall-item-content-wrapper:hover{
-	z-index:100000;
+	z-index:99;
 }
 
 .wall-item-comment-wrapper {
