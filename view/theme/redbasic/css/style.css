@@ -1919,6 +1919,10 @@ img.mail-list-sender-photo {
 	border-bottom: 1px solid $item_bordercolour;
 }
 
+.wall-item-content-wrapper:hover{
+	z-index:100000;
+}
+
 .wall-item-comment-wrapper {
 	margin-top: 10px;
 	border-left: 2px solid $item_bordercolour;
