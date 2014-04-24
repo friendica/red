@@ -9,13 +9,6 @@ require_once('include/permissions.php');
 
 function collect_recipients($item,&$private) {
 
-// FIXME - this needs a revision to handle public scope (this site, this network, etc.)
-// We'll be changing this to return an array of
-// - recipients
-// - private
-// - scope if message is public ('global', 'network: red', 'site: $sitename', 'connections')
-// The receiving site will need to check the scope before creating a list of local recipients
-
 	require_once('include/group.php');
 
 	$private = ((intval($item['item_private'])) ? true : false);
@@ -113,6 +106,7 @@ function collect_recipients($item,&$private) {
  * If it is, you should be able to use perm_is_allowed( ... 'post_comments'), and if it isn't you need to call 
  * can_comment_on_post()
  */
+
 function can_comment_on_post($observer_xchan,$item) {
 
 //	logger('can_comment_on_post: comment_policy: ' . $item['comment_policy'], LOGGER_DEBUG);
@@ -153,6 +147,21 @@ function can_comment_on_post($observer_xchan,$item) {
 	return false;
 }
 
+/**
+ * @function add_source_route($iid,$hash)
+ *    Adds $hash to the item source route specified by $iid
+ * @param integer $iid 
+ *    item['id'] of target item
+ * @param string $hash
+ *    xchan_hash of the channel that sent the item
+ * Modifies item pointed to by $iid
+ *
+ * $item['route'] contains a comma-separated list of xchans that sent the current message, 
+ * somewhat analogous to the * Received: header line in email. We can use this to perform
+ * loop detection and to avoid sending a particular item to any "upstream" sender (they 
+ * already have a copy because they sent it to us).  
+ *
+ */
 
 function add_source_route($iid,$hash) {
 //	logger('add_source_route ' . $iid . ' ' . $hash, LOGGER_DEBUG);
@@ -352,6 +361,10 @@ function post_activity_item($arr) {
 
 }
 
+/**
+ * @function get_public_feed($channel,$params)
+ *     generate an Atom feed
+ */
 
 function get_public_feed($channel,$params) {
 
@@ -387,6 +400,9 @@ function get_public_feed($channel,$params) {
 	
 	return get_feed_for($channel,get_observer_hash(),$params);
 }
+
+
+
 
 function get_feed_for($channel, $observer_hash, $params) {
 
@@ -2100,7 +2116,7 @@ function item_store_update($arr,$allow_exec = false) {
 //	$arr['item_flags']    = ((x($arr,'item_flags'))    ? intval($arr['item_flags'])          : $orig[0]['item_flags'] );
 	
 	$arr['sig']           = ((x($arr,'sig'))           ? $arr['sig']                         : '');
-	$arr['layout_mid']     = ((x($arr,'layout_mid'))    ? dbesc($arr['layout_mid'])           : $orig[0]['layout_mid'] );
+	$arr['layout_mid']    = ((array_key_exists('layout_mid',$arr)) ? dbesc($arr['layout_mid'])           : $orig[0]['layout_mid'] );
 
 	call_hooks('post_remote_update',$arr);
 
