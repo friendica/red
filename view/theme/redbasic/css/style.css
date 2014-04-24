@@ -1735,8 +1735,6 @@ margin: 20px;
 
 div#write-pages {
 display: block;
-position: fixed;
-top: 24px;
 z-index: 99;
 background: silver;
 width: 100%;
