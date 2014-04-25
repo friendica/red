@@ -1,5 +1,6 @@
 var NAVTREEINDEX8 =
 {
+"theme_2blogga_2view_2theme_2blog_2default_8php.html#a1230ab83d4ec9785d8f3a966f33dc5f3":[5,0,3,1,1,1,0,0,1,2],
 "theme_2blogga_2view_2theme_2blog_2default_8php.html#a52d9dd070ed541729088395c22502539":[5,0,3,1,1,1,0,0,1,1],
 "theme_2blogga_2view_2theme_2blog_2default_8php.html#a720581ae288aa09511670563e4205a4a":[5,0,3,1,1,1,0,0,1,0],
 "theme_2mytheme_2php_2default_8php.html":[5,0,3,1,2,0,0],

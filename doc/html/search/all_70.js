@@ -175,6 +175,7 @@ var searchData=
   ['profile_5fphoto_2ephp',['profile_photo.php',['../profile__photo_8php.html',1,'']]],
   ['profile_5fphoto_5finit',['profile_photo_init',['../profile__photo_8php.html#a140631c56438fbfacb61a1eb43067d02',1,'profile_photo.php']]],
   ['profile_5fphoto_5fpost',['profile_photo_post',['../profile__photo_8php.html#a4b80234074bd603221aa5364f330e479',1,'profile_photo.php']]],
+  ['profile_5fphoto_5fset_5fprofile_5fperms',['profile_photo_set_profile_perms',['../profile__photo_8php.html#a561103564199da56e58061a4196eb102',1,'profile_photo.php']]],
   ['profile_5fselectors_2ephp',['profile_selectors.php',['../profile__selectors_8php.html',1,'']]],
   ['profile_5fsidebar',['profile_sidebar',['../identity_8php.html#a432259b2cf5b6f59be53e71db9f2c7dc',1,'identity.php']]],
   ['profile_5ftabs',['profile_tabs',['../conversation_8php.html#a1dfcb5146e9d1eca4528bc580ad5d273',1,'conversation.php']]],

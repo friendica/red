@@ -94,6 +94,7 @@ var searchData=
   ['profile_5fload',['profile_load',['../identity_8php.html#a4751b522ea913d0e7ed43e03d22e9e68',1,'identity.php']]],
   ['profile_5fphoto_5finit',['profile_photo_init',['../profile__photo_8php.html#a140631c56438fbfacb61a1eb43067d02',1,'profile_photo.php']]],
   ['profile_5fphoto_5fpost',['profile_photo_post',['../profile__photo_8php.html#a4b80234074bd603221aa5364f330e479',1,'profile_photo.php']]],
+  ['profile_5fphoto_5fset_5fprofile_5fperms',['profile_photo_set_profile_perms',['../profile__photo_8php.html#a561103564199da56e58061a4196eb102',1,'profile_photo.php']]],
   ['profile_5fsidebar',['profile_sidebar',['../identity_8php.html#a432259b2cf5b6f59be53e71db9f2c7dc',1,'identity.php']]],
   ['profile_5ftabs',['profile_tabs',['../conversation_8php.html#a1dfcb5146e9d1eca4528bc580ad5d273',1,'conversation.php']]],
   ['profiler',['profiler',['../text_8php.html#a8b0a799341b1fc4cba2c3ede3e3fc9b6',1,'text.php']]],
