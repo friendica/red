@@ -1838,6 +1838,9 @@ function item_store($arr,$allow_exec = false) {
 		return $ret;
 	}
 
+	call_hooks('item_store',$arr);
+
+	// This hook remains for backward compatibility.
 	call_hooks('post_remote',$arr);
 
 	if(x($arr,'cancel')) {
@@ -2482,6 +2485,8 @@ function tag_deliver($uid,$item_id) {
 			return;
 		}
 
+		$arr = array('channel_id' => $uid, 'item' => $item, 'body' => $body);
+		call_hooks('tagged',$arr);
 
 		// Valid tag. Send a notification
 
