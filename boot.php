@@ -67,6 +67,14 @@ define ( 'DIRECTORY_MODE_STANDALONE',  0x0100);
 define ( 'DIRECTORY_REALM',            'RED_GLOBAL');
 define ( 'DIRECTORY_FALLBACK_MASTER',  'https://zothub.com');
 
+$DIRECTORY_FALLBACK_SERVERS = array( 
+	'https://zothub.com', 
+	'https://zotid.net', 
+	'https://redmatrix.nl', 
+	'https://whogotzot.com', 
+	'https://red.mariovavti.com'
+);
+
 
 /**
  *

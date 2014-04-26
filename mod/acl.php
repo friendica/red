@@ -304,13 +304,7 @@ function navbar_complete(&$a) {
 	if(! $url) {
 		require_once("include/dir_fns.php");
 		$directory = find_upstream_directory($dirmode);
-
-		if($directory) {
-			$url = $directory['url'] . '/dirsearch';
-		}
-		else {
-			$url = DIRECTORY_FALLBACK_MASTER . '/dirsearch';
-		}
+		$url = $directory['url'] . '/dirsearch';
 	}
 
 	if($url) {

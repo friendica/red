@@ -370,13 +370,7 @@ function update_suggestions() {
 	}
 	else {
 		$directory = find_upstream_directory($dirmode);
-
-		if($directory) {
-			$url = $directory['url'] . '/sitelist';
-		}
-		else {
-			$url = DIRECTORY_FALLBACK_MASTER . '/sitelist';
-		}
+		$url = $directory['url'] . '/sitelist';
 	}
 	if(! $url)
 		return;

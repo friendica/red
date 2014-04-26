@@ -3,10 +3,31 @@
 require_once('include/permissions.php');
 
 function find_upstream_directory($dirmode) {
+	global $DIRECTORY_FALLBACK_SERVERS;
+
 	$preferred = get_config('system','directory_server');
-	if($preferred)
-		return array('url' => $preferred);
-	return '';
+	if(! $preferred) {
+
+		/**
+		 * No directory has yet been set. For most sites, pick one at random
+		 * from our list of directory servers. However, if we're a directory
+		 * server ourself, point at the local instance
+		 * We will then set this value so this should only ever happen once.
+		 * Ideally there will be an admin setting to change to a different 
+		 * directory server if you don't like our choice or if circumstances change.
+		 */
+
+		$dirmode = intval(get_config('system','directory_mode'));
+		if($dirmode == DIRECTORY_MODE_NORMAL) {
+			$toss = mt_rand(0,count($DIRECTORY_FALLBACK_SERVERS));
+			$preferred = $DIRECTORY_FALLBACK_SERVERS[$toss];
+			set_config('system','directory_server',$preferred);
+		}
+		else{
+			set_config('system','directory_server',z_root());
+		}
+	}
+	return array('url' => $preferred);
 }
 
 function dir_sort_links() {
