@@ -73,7 +73,7 @@ function ping_init(&$a) {
 		}
 	}
 
-	q("delete from chatpresence where cp_last < UTC_TIMESTAMP() - INTERVAL 3 MINUTE"); 
+	q("delete from chatpresence where cp_last < UTC_TIMESTAMP() - INTERVAL 3 MINUTE and cp_client != 'auto' "); 
 
 	if((! local_user()) || ($result['invalid'])) {
 		echo json_encode($result);
