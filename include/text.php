@@ -895,9 +895,6 @@ function get_poke_verbs() {
 
 function get_mood_verbs() {
 	
-	// index is present tense verb
-	// value is array containing past tense verb, translation of present, translation of past
-
 	$arr = array(
 		'happy'      => t('happy'),
 		'sad'        => t('sad'),
@@ -916,6 +913,7 @@ function get_mood_verbs() {
 		'cranky'     => t('cranky'),
 		'disturbed'  => t('disturbed'),
 		'frustrated' => t('frustrated'),
+		'depressed'  => t('depressed'),
 		'motivated'  => t('motivated'),
 		'relaxed'    => t('relaxed'),
 		'surprised'  => t('surprised'),
