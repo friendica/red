@@ -114,6 +114,8 @@ function filestorage_content(&$a) {
 		$aclselect_e = populate_acl($f);
 		$is_a_dir = (($f['flags'] & ATTACH_FLAG_DIR) ? true : false);
 
+		$lockstate = (($f['allow_cid'] || $f['allow_gid'] || $f['deny_cid'] || $f['deny_gid']) ? 'lock' : 'unlock'); 
+
 
 		$o = replace_macros(get_markup_template('attach_edit.tpl'), array(
 			'$header' => t('Edit file permissions'),
@@ -123,6 +125,8 @@ function filestorage_content(&$a) {
 			'$channelnick' => $channel['channel_address'],
 			'$permissions' => t('Permissions'),
 			'$aclselect' => $aclselect_e,
+			'$lockstate' => $lockstate,
+			'$permset' => t('Set/edit permissions'),
 			'$recurse' => t('Include all files and sub folders'),
 			'$backlink' => t('Return to file list'),
 			'$isadir' => $is_a_dir,

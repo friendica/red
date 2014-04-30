@@ -29,6 +29,9 @@
 <input type="text" id="linkpasteinput" name="cutpasteextlink" value="{{$cloudpath}}" onclick="this.select();"/><br />
 
 <div id="attach-edit-perms" >
+<button class="btn btn-default btn-sm" data-toggle="modal" data-target="#aclModal" title="{{$permset}}" onclick="return false;">
+	<i id="jot-perms-icon" class="icon-{{$lockstate}} jot-icons"></i>
+</button>
 {{$aclselect}}
 </div>
 
