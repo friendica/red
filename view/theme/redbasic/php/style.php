@@ -126,8 +126,6 @@ if(! $a->install) {
 		$toolicon_activecolour = '#000';
 	if (! $item_opacity)
 		$item_opacity = "1";
-	if (! $item_bordercolour)
-		$item_bordercolour = $item_colour;
 	if (! $font_size)
 		$font_size = "1.0em";
 	if (! $body_font_size)
@@ -158,6 +156,8 @@ if(! $a->install) {
 		$editbuttons_bgcolour = "transparent";
 	if (! $editbuttons_bordercolour)
 		$editbuttons_bordercolour = "#ccc";
+	if (! $editbuttons_colour)
+		$editbuttons_colour = "#333";
 	if (! $editbuttons_bghover)
 		$editbuttons_bghover = "#ebebeb";
 	if (! $preview_backgroundimg)
@@ -260,7 +260,6 @@ $options = array (
 '$item_colour' => $item_colour,
 '$comment_item_colour' => $comment_item_colour,
 '$item_opacity' => $item_opacity,
-'$item_bordercolour' => $item_bordercolour,
 '$toolicon_colour' => $toolicon_colour,
 '$toolicon_activecolour' => $toolicon_activecolour,
 '$font_size' => $font_size,
@@ -279,6 +278,7 @@ $options = array (
 '$notif_itemhovercolour' => $notif_itemhovercolour,
 '$editbuttons_bgcolour' => $editbuttons_bgcolour,
 '$editbuttons_bordercolour' => $editbuttons_bordercolour,
+'$editbuttons_colour' => $editbuttons_colour,
 '$editbuttons_bghover' => $editbuttons_bghover,
 '$preview_backgroundimg' => $preview_backgroundimg,
 '$acpopup_bgcolour' => $acpopup_bgcolour,

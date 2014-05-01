@@ -47,7 +47,9 @@
 	if (! $bgcolour)
 		$bgcolour = "#111";
 	if (! $item_colour)
-		$item_colour = "#111";
+		$item_colour = "rgba(26,26,26,0.8)";
+	if (! $comment_item_colour)
+		$comment_item_colour = "rgba(18,18,18,0.4)";
 	if (! $toolicon_colour)
 		$toolicon_colour = '#999';
 	if (! $toolicon_activecolour)
@@ -84,6 +86,8 @@
 		$editbuttons_bgcolour = "#1e1e1e";
 	if (! $editbuttons_bordercolour)
 		$editbuttons_bordercolour = "#222";
+	if (! $editbuttons_colour)
+		$editbuttons_colour = "#ccc";
 	if (! $editbuttons_bghover)
 		$editbuttons_bghover = "#222";
 	if (! $preview_backgroundimg)

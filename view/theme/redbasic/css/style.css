@@ -1909,14 +1909,14 @@ img.mail-list-sender-photo {
 .hide-comments-outer,
 .wall-item-content-wrapper.comment {
 	background-color: $comment_item_colour;
-	border-left: 3px solid $item_bordercolour;
+	border-left: 3px solid $item_colour;
 	border-radius: 0px;
 	padding: 7px 10px 7px 7px;
 }
 
 .wall-item-comment-wrapper {
 	background-color: $comment_item_colour;
-	border-left: 3px solid $item_bordercolour;
+	border-left: 3px solid $item_colour;
 	border-radius: 0px;
 	border-bottom-right-radius: $radiuspx;
 	border-bottom-left-radius: $radiuspx;
@@ -2248,6 +2248,7 @@ blockquote {
 .btn-default {
     	background-color: $editbuttons_bgcolour;
     	border-color: $editbuttons_bordercolour;
+	color: $editbuttons_colour;
     	text-shadow: none;
     	box-shadow: none;
 }
