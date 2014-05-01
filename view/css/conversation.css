@@ -97,37 +97,6 @@
 	margin-bottom: 15px;
 }
 
-.wall-item-photo-menu-button {
-	left:10px;
-	display: block;
-	position: absoulte;
-	margin: 0px;
-	padding: 0px;
-	width: 16px;
-	height: 16px;
-	overflow: hidden;
-	text-indent: 40px;
-	display: none;
-}
-
-.wall-item-photo-menu {
-	left:10px;
-	width: auto;
-	position: absoulte;
-	display: none;
-	z-index: 10000;
-}
-
-.wall-item-photo-menu ul {
-	margin:0px;
-	padding: 0px;
-}
-
-.wall-item-photo-menu li a {
-	display: block;
-	padding: 2px;
-}
-
 .wall-item-wrapper {
 	margin-left:10px;
 }
