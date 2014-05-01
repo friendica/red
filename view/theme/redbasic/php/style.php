@@ -136,6 +136,8 @@ if(! $a->install) {
 		$selected_active_colour = "#444";
 	if (! $selected_active_deco)
 		$selected_active_deco = "none";
+	if (! $widget_brdrcolour)
+		$widget_brdrcolour = "#eec";
 	if (! $blockquote_colour)
 		$blockquote_colour = "#000";
 	if (! $blockquote_bgcolour)
@@ -267,6 +269,7 @@ $options = array (
 '$selected_active_colour' => $selected_active_colour,
 '$selected_active_deco' => $selected_active_deco,
 '$body_font_size' => $body_font_size,
+'$widget_brdrcolour' => $widget_brdrcolour,
 '$blockquote_colour' => $blockquote_colour,
 '$blockquote_bgcolour' => $blockquote_bgcolour,
 '$blockquote_bordercolour' => $blockquote_bordercolour,

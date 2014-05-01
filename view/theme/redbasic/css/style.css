@@ -2018,7 +2018,7 @@ img.mail-list-sender-photo {
 /* widgets */
 
 .widget {
-	border-bottom: 1px solid #eec;
+	border-bottom: 1px solid $widget_brdrcolour;
 	-moz-border-radius: $radiuspx;
 	-webkit-border-radius: $radiuspx;
 	border-radius: $radiuspx;
