@@ -11,6 +11,7 @@ addon
 *~
 compiled/
 custom/
+/store/
 
 # patch attempts
 *.orig
