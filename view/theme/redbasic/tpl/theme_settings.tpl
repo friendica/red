@@ -19,6 +19,7 @@
 {{include file="field_colorinput.tpl" field=$bgcolour}}
 {{include file="field_colorinput.tpl" field=$background_image}}
 {{include file="field_colorinput.tpl" field=$item_colour}}
+{{include file="field_colorinput.tpl" field=$comment_item_colour}}
 {{include file="field_input.tpl" field=$item_opacity}}
 {{include file="field_colorinput.tpl" field=$toolicon_colour}}
 {{include file="field_colorinput.tpl" field=$toolicon_activecolour}}
@@ -37,7 +38,7 @@
     $(function(){
         $('#id_redbasic_nav_bg,#id_redbasic_nav_gradient_top,#id_redbasic_nav_gradient_bottom,#id_redbasic_nav_active_gradient_top,#id_redbasic_nav_active_gradient_bottom').colorpicker();
         $('#id_redbasic_nav_bd,#id_redbasic_nav_icon_colour ,#id_redbasic_nav_active_icon_colour,#id_redbasic_banner_colour,#id_redbasic_link_colour,#id_redbasic_background_colour').colorpicker();
-        $('#id_redbasic_item_colour,#id_redbasic_toolicon_colour,#id_redbasic_toolicon_activecolour,#id_redbasic_font_colour').colorpicker();
+        $('#id_redbasic_item_colour,#id_redbasic_comment_item_colour,#id_redbasic_toolicon_colour,#id_redbasic_toolicon_activecolour,#id_redbasic_font_colour').colorpicker();
     });
 </script>
 

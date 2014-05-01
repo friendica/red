@@ -1383,7 +1383,6 @@ brain is weird like that */
 	max-height:150px;
 	background-color:$acpopup_bgcolour;
 	overflow:auto;
-	z-index:100000;
 	border:1px solid $acpopup_bordercolour;
 }
 .acpopupitem {
@@ -1662,7 +1661,7 @@ header {
 
 .profile-match-connect { margin-top: 5px; }
 
-.reshared-content { margin-left: 30px; }
+.reshared-content { margin-left: 20px; }
 .shared_header img { margin-right: 10px; }
 
 .tag1 {
@@ -1722,7 +1721,6 @@ margin: 20px;
 
 div#write-pages {
 display: block;
-z-index: 99;
 background: silver;
 width: 100%;
 }
@@ -1771,10 +1769,6 @@ a .drop-icons:hover {
 .attach-clip {
 	margin-right: 3px;
 	font-size: 1.8em;
-}
-
-.item-category {
-	margin-right: 10px;
 }
 
 .design-tools ul {
@@ -1887,6 +1881,7 @@ img.mail-list-sender-photo {
 
 /* conversation */
 
+.hide-comments-outer,
 .thread-wrapper .wall-item-comment-wrapper,
 .wall-item-content-wrapper.comment {
 	margin-left: $comment_indent;
@@ -1897,56 +1892,41 @@ img.mail-list-sender-photo {
 }
 
 .wall-item-content-wrapper {
-	border-radius: $radiuspx;
 	background-color: $item_colour;
 	opacity: $item_opacity;
-	border-left: 2px solid $item_bordercolour;
-	border-bottom: 1px solid $item_bordercolour;
+	padding: 10px;
 }
 
-.wall-item-content-wrapper:hover{
+.wall-item-content-wrapper {
+	border-top-right-radius: $radiuspx;
+	border-top-left-radius: $radiuspx;
+}
+
+.wall-item-content-wrapper:hover {
 	z-index:99;
 }
 
+.hide-comments-outer,
+.wall-item-content-wrapper.comment {
+	background-color: $comment_item_colour;
+	border-left: 3px solid $item_bordercolour;
+	border-radius: 0px;
+	padding: 7px 10px 7px 7px;
+}
+
 .wall-item-comment-wrapper {
-	margin-top: 10px;
-	border-left: 2px solid $item_bordercolour;
-	border-bottom: 1px solid $item_bordercolour; 
+	background-color: $comment_item_colour;
+	border-left: 3px solid $item_bordercolour;
+	border-radius: 0px;
+	border-bottom-right-radius: $radiuspx;
+	border-bottom-left-radius: $radiuspx;
 }
 
-.wallwall .wwto {
-	top: $wwtop;
-}
-
-.wall-item-photo-menu-button {
-	background-image: url("../img/photo-menu.jpg");
-	background-position: top left;
-	background-repeat: no-repeat;
-	top: $pmenu_top;
-}
-
-.wall-item-photo-menu {
-	border: 2px solid #444444;
-	background: #FFFFFF;
-	top: $top_photo;
-}
-
-.wall-item-photo-menu ul {
-	list-style: none
-}
-
-.wall-item-photo-menu li a:hover {
-	color: #FFFFFF;
-	background: #3465A4;
-	text-decoration: none;
-}
-
-.comment .wall-item-photo-menu-button {
-	top: $pmenu_reply;
-}
-
-.comment .wall-item-photo-menu {
-	top: $reply_photo;
+.wall-item-like,
+.wall-item-dislike {
+	font-size: $body_font_size;
+	text-align: left;
+	white-space: normal;
 }
 
 .wall-item-photo {
@@ -1967,15 +1947,6 @@ img.mail-list-sender-photo {
     box-shadow: $shadowpx $shadowpx $shadowpx 0 #444444;
 }
 
-.wall-item-arrowphoto-wrapper {
-	top: $wwtop;
-}
-
-.wall-item-lock {
-	font-size: 1.2em;
-	color: $toolicon_colour;
-}
-
 .wall-item-ago .icon-ok {
 	color: darkgreen;
 }
@@ -1986,11 +1957,12 @@ img.mail-list-sender-photo {
 }
 
 .wall-item-ago i {
-	font-size: 0.6em;
+	font-size: 0.8em;
 }
 
 .wall-item-content {
 	font-size: $font_size;
+	clear: both;
 }
 
 .item-tool {
@@ -1999,7 +1971,7 @@ img.mail-list-sender-photo {
 }
 
 .item-tool:hover {
-	color: $toolicon_activecolour;
+	/*color: $toolicon_activecolour;*/
 }
 
 .like-rotator {
@@ -2318,15 +2290,6 @@ blockquote {
 
 	.thread-wrapper.toplevel_item {
 		width: 100%;
-	}
-
-	.thread-wrapper .wall-item-comment-wrapper,
-	.wall-item-content-wrapper.comment {
-		margin-left: 18px;
-	}
-
-	.hide-comments-outer {
-		margin-left: 18px;
 	}
 
 	.wall-item-photo {
