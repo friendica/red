@@ -47,7 +47,7 @@
 	if (! $bgcolour)
 		$bgcolour = "#111";
 	if (! $item_colour)
-		$item_colour = "rgba(26,26,26,0.8)";
+		$item_colour = "rgba(28,28,28,0.8)";
 	if (! $comment_item_colour)
 		$comment_item_colour = "rgba(18,18,18,0.4)";
 	if (! $toolicon_colour)
