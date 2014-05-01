@@ -24,7 +24,8 @@ if(! $a->install) {
 		$background_image = get_pconfig($uid, "redbasic", "background_image");	
 		$toolicon_colour = get_pconfig($uid,'redbasic','toolicon_colour');
 		$toolicon_activecolour = get_pconfig($uid,'redbasic','toolicon_activecolour');
-		$item_colour = get_pconfig($uid, "redbasic", "item_colour");	
+		$item_colour = get_pconfig($uid, "redbasic", "item_colour");
+		$comment_item_colour = get_pconfig($uid, "redbasic", "comment_item_colour");
 		$item_opacity = get_pconfig($uid, "redbasic", "item_opacity");	
 		$body_font_size = get_pconfig($uid, "redbasic", "body_font_size");	
 		$font_size = get_pconfig($uid, "redbasic", "font_size");	
@@ -106,7 +107,7 @@ if(! $a->install) {
 	if (! $navtabs_bgchover)
 		$navtabs_bgchover = "#eee";
 	if (! $link_colour)
-		$link_colour = "#0080ff";
+		$link_colour = "#428BCA";
 	if (! $banner_colour)
 		$banner_colour = "#fff";
 	if (! $search_background)
@@ -116,7 +117,9 @@ if(! $a->install) {
 	if (! $background_image)
 		$background_image ='';
 	if (! $item_colour)
-		$item_colour = "#fdfdfd";
+		$item_colour = "rgba(238,238,238,0.8)";
+	if (! $comment_item_colour)
+		$comment_item_colour = "rgba(254,254,254,0.4)";
 	if (! $toolicon_colour)
 		$toolicon_colour = '#777';
 	if (! $toolicon_activecolour)
@@ -124,7 +127,7 @@ if(! $a->install) {
 	if (! $item_opacity)
 		$item_opacity = "1";
 	if (! $item_bordercolour)
-		$item_bordercolour = "#f4f4f4";
+		$item_bordercolour = $item_colour;
 	if (! $font_size)
 		$font_size = "1.0em";
 	if (! $body_font_size)
@@ -152,7 +155,7 @@ if(! $a->install) {
 	if (! $notif_itemhovercolour)
 		$notif_itemhovercolour = "#000";
 	if (! $editbuttons_bgcolour)
-		$editbuttons_bgcolour = "#fff";
+		$editbuttons_bgcolour = "transparent";
 	if (! $editbuttons_bordercolour)
 		$editbuttons_bordercolour = "#ccc";
 	if (! $editbuttons_bghover)
@@ -194,7 +197,7 @@ if(! $a->install) {
 	if (! $input_decohover)
 		$input_decohover = "none";
 	if (! $radius)
-		$radius = "0";
+		$radius = "4";
 	if (! $shadow)
 		$shadow = "0";
 	if(! $active_colour)
@@ -212,14 +215,10 @@ if(! $a->install) {
 		$abookself_bgcolour = "#ffdddd";
 	if(! $top_photo)
 		$top_photo = '48px';
-	$pmenu_top = intval($top_photo) - 16 . 'px';
-	$wwtop = intval($top_photo) - 15 . 'px';
-	$comment_indent = intval($top_photo) + 10 . 'px';
-
+	if(! $comment_indent)
+		$comment_indent = '0px';
 	if(! $reply_photo)
 		$reply_photo = '32px';
-	$pmenu_reply = intval($reply_photo) - 16 . 'px';
-	
 	if($nav_min_opacity === false || $nav_min_opacity === '') {
 		$nav_float_min_opacity = 1.0;
 		$nav_percent_min_opacity = 100;
@@ -259,6 +258,7 @@ $options = array (
 '$bgcolour' => $bgcolour,
 '$background_image' => $background_image,
 '$item_colour' => $item_colour,
+'$comment_item_colour' => $comment_item_colour,
 '$item_opacity' => $item_opacity,
 '$item_bordercolour' => $item_bordercolour,
 '$toolicon_colour' => $toolicon_colour,
