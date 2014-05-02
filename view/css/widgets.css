@@ -91,6 +91,10 @@
 
 /* posted date */
 
+.posted-date-selector-months {
+	margin-left: 10px;
+}
+
 #datebrowse-sidebar select {
 	width: 190px;
 	max-width: 190px;

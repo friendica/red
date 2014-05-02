@@ -313,7 +313,7 @@ function widget_archive($arr) {
 	$url = z_root() . '/' . $a->cmd;
 
 
-	$ret = posted_dates($uid,$wall);
+	$ret = list_post_dates($uid,$wall);
 
 	if(! count($ret))
 		return '';
