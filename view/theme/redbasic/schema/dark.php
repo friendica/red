@@ -47,13 +47,17 @@
 	if (! $bgcolour)
 		$bgcolour = "#111";
 	if (! $item_colour)
-		$item_colour = "#111";
+		$item_colour = "rgba(28,28,28,0.8)";
+	if (! $comment_item_colour)
+		$comment_item_colour = "rgba(18,18,18,0.4)";
 	if (! $toolicon_colour)
 		$toolicon_colour = '#999';
 	if (! $toolicon_activecolour)
 		$toolicon_activecolour = '#fff';
 	if (! $font_colour)
 		$font_colour = "#ccc";
+	if (! $widget_brdrcolour)
+		$widget_brdrcolour = "#333";
 	if (! $blockquote_colour)
 		$blockquote_colour = "#ccc";
 	if (! $blockquote_bgcolour)
@@ -84,6 +88,8 @@
 		$editbuttons_bgcolour = "#1e1e1e";
 	if (! $editbuttons_bordercolour)
 		$editbuttons_bordercolour = "#222";
+	if (! $editbuttons_colour)
+		$editbuttons_colour = "#ccc";
 	if (! $editbuttons_bghover)
 		$editbuttons_bghover = "#222";
 	if (! $preview_backgroundimg)
