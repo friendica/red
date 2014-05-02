@@ -20,6 +20,7 @@
 {{include file="field_colorinput.tpl" field=$background_image}}
 {{include file="field_colorinput.tpl" field=$item_colour}}
 {{include file="field_colorinput.tpl" field=$comment_item_colour}}
+{{include file="field_colorinput.tpl" field=$comment_border_colour}}
 {{include file="field_input.tpl" field=$item_opacity}}
 {{include file="field_colorinput.tpl" field=$toolicon_colour}}
 {{include file="field_colorinput.tpl" field=$toolicon_activecolour}}
