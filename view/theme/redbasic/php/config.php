@@ -21,6 +21,7 @@ function theme_content(&$a) {
 	$arr['background_image'] = get_pconfig(local_user(),'redbasic', 'background_image' );
 	$arr['item_colour'] = get_pconfig(local_user(),'redbasic', 'item_colour' );
 	$arr['comment_item_colour'] = get_pconfig(local_user(),'redbasic', 'comment_item_colour' );
+	$arr['comment_border_colour'] = get_pconfig(local_user(),'redbasic', 'comment_border_colour' );
 	$arr['item_opacity'] = get_pconfig(local_user(),'redbasic', 'item_opacity' );
 	$arr['toolicon_colour'] = get_pconfig(local_user(),'redbasic','toolicon_colour');
 	$arr['toolicon_activecolour'] = get_pconfig(local_user(),'redbasic','toolicon_activecolour');
@@ -58,6 +59,7 @@ function theme_post(&$a) {
 		set_pconfig(local_user(), 'redbasic', 'background_image', $_POST['redbasic_background_image']);
 		set_pconfig(local_user(), 'redbasic', 'item_colour', $_POST['redbasic_item_colour']);
 		set_pconfig(local_user(), 'redbasic', 'comment_item_colour', $_POST['redbasic_comment_item_colour']);
+		set_pconfig(local_user(), 'redbasic', 'comment_border_colour', $_POST['redbasic_comment_border_colour']);
 		set_pconfig(local_user(), 'redbasic', 'item_opacity', $_POST['redbasic_item_opacity']);
 		set_pconfig(local_user(), 'redbasic', 'toolicon_colour', $_POST['redbasic_toolicon_colour']);
 		set_pconfig(local_user(), 'redbasic', 'toolicon_activecolour', $_POST['redbasic_toolicon_activecolour']);
@@ -114,6 +116,7 @@ if(feature_enabled(local_user(),'expert'))
 		'$background_image' => array('redbasic_background_image', t('Set the background image'), $arr['background_image']),
 		'$item_colour' => array('redbasic_item_colour', t('Set the background colour of items'), $arr['item_colour']),
 		'$comment_item_colour' => array('redbasic_comment_item_colour', t('Set the background colour of comments'), $arr['comment_item_colour']),
+		'$comment_border_colour' => array('redbasic_comment_border_colour', t('Set the border colour of comments'), $arr['comment_border_colour']),
 		'$item_opacity' => array('redbasic_item_opacity', t('Set the opacity of items'), $arr['item_opacity']),
 		'$toolicon_colour' => array('redbasic_toolicon_colour',t('Set the basic colour for item icons'),$arr['toolicon_colour']),
 		'$toolicon_activecolour' => array('redbasic_toolicon_activecolour',t('Set the hover colour for item icons'),$arr['toolicon_activecolour']),

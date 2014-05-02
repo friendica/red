@@ -26,6 +26,7 @@ if(! $a->install) {
 		$toolicon_activecolour = get_pconfig($uid,'redbasic','toolicon_activecolour');
 		$item_colour = get_pconfig($uid, "redbasic", "item_colour");
 		$comment_item_colour = get_pconfig($uid, "redbasic", "comment_item_colour");
+		$comment_border_colour = get_pconfig($uid, "redbasic", "comment_border_colour");
 		$item_opacity = get_pconfig($uid, "redbasic", "item_opacity");	
 		$body_font_size = get_pconfig($uid, "redbasic", "body_font_size");	
 		$font_size = get_pconfig($uid, "redbasic", "font_size");	
@@ -120,6 +121,8 @@ if(! $a->install) {
 		$item_colour = "rgba(238,238,238,0.8)";
 	if (! $comment_item_colour)
 		$comment_item_colour = "rgba(254,254,254,0.4)";
+	if (! $comment_border_colour)
+		$comment_border_colour = "rgba(238,238,238,0.8)";
 	if (! $toolicon_colour)
 		$toolicon_colour = '#777';
 	if (! $toolicon_activecolour)
@@ -261,6 +264,7 @@ $options = array (
 '$background_image' => $background_image,
 '$item_colour' => $item_colour,
 '$comment_item_colour' => $comment_item_colour,
+'$comment_border_colour' => $comment_border_colour,
 '$item_opacity' => $item_opacity,
 '$toolicon_colour' => $toolicon_colour,
 '$toolicon_activecolour' => $toolicon_activecolour,
