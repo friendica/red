@@ -153,6 +153,12 @@ if(! $a->install) {
 		$code_bgcolour = "#EEE";
 	if (! $code_txtcolour)
 		$code_txtcolour = "#444";
+	if (! $pre_borderc)
+		$pre_borderc = "#ccc";
+	if (! $pre_bgcolour)
+		$pre_bgcolour = "#F5F5F5";
+	if (! $pre_txtcolour)
+		$pre_txtcolour = "#333";
 	if (! $notif_itemcolour)
 		$notif_itemcolour = "#000";
 	if (! $notif_itemhovercolour)
@@ -224,6 +230,8 @@ if(! $a->install) {
 		$comment_indent = '0px';
 	if(! $reply_photo)
 		$reply_photo = '32px';
+	if(! $infomess_bgcolour)
+		$infomess_bgcolour = "#F0F0F0";
 	if($nav_min_opacity === false || $nav_min_opacity === '') {
 		$nav_float_min_opacity = 1.0;
 		$nav_percent_min_opacity = 100;
@@ -281,6 +289,9 @@ $options = array (
 '$code_borderc' => $code_borderc,
 '$code_bgcolour' => $code_bgcolour,
 '$code_txtcolour' => $code_txtcolour,
+'$pre_borderc' => $pre_borderc,
+'$pre_bgcolour' => $pre_bgcolour,
+'$pre_txtcolour' => $pre_txtcolour,
 '$notif_itemcolour' => $notif_itemcolour,
 '$notif_itemhovercolour' => $notif_itemhovercolour,
 '$editbuttons_bgcolour' => $editbuttons_bgcolour,
@@ -317,6 +328,7 @@ $options = array (
 '$nav_percent_min_opacity' => $nav_percent_min_opacity,
 '$top_photo' => $top_photo,
 '$reply_photo' => $reply_photo,
+'$infomess_bgcolour' => $infomess_bgcolour,
 '$pmenu_top' => $pmenu_top,
 '$pmenu_reply' => $pmenu_reply,
 '$wwtop' => $wwtop,

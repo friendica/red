@@ -100,6 +100,12 @@ code {
 	max-width: 80%;
 }
 
+pre {
+	background: $pre_bgcolour;
+	color: $pre_txtcolour;
+	border:1px solid $pre_borderc;
+}
+
 blockquote {
 	background-color: $blockquote_bgcolour;
 	border-left: 4px solid $blockquote_bordercolour;
@@ -146,7 +152,7 @@ header {
 .info-message {
 	font-size: 1.1em;
 	border: 1px solid #444;
-	background-color: #F0F0F0;
+	background-color: $infomess_bgcolour;
 	padding: 10px;
 	-moz-border-radius: $radiuspx;
 	border-radius: $radiuspx;	
