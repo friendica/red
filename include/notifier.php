@@ -476,6 +476,14 @@ function notifier_run($argv, $argc){
 	$deliver = array();
 
 	foreach($hubs as $hub) {
+
+		if(defined('DIASPORA_RELIABILITY_EMULATION')) {
+			$cointoss = mt_rand(0,2);
+			if($cointoss == 2) {
+				continue;
+			}
+		}
+
 		$hash = random_string();
 		if($packet_type === 'refresh' || $packet_type === 'purge') {
 			$n = zot_build_packet($channel,$packet_type);
