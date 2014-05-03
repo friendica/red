@@ -171,6 +171,22 @@ if(! $a->install) {
 		$editbuttons_colour = "#333";
 	if (! $editbuttons_bghover)
 		$editbuttons_bghover = "#ebebeb";
+	if (! $dropdown_bgcolour)
+		$dropdown_bgcolour = "#FFF";
+	if (! $dropdown_textcolour)
+		$dropdown_textcolour = "#333";
+	if (! $dropdown_txtcolhover)
+		$dropdown_txtcolhover = "#262626";
+	if (! $dropdown_bgcolhover)
+		$dropdown_bgcolhover = "#F5F5F5";
+	if (! $dropdown_bgimghover)
+		$dropdown_bgimghover = "";
+	if (! $dropdown_togglecol)
+		$dropdown_togglecol = "#333";
+	if (! $dropdown_togglebgcol)
+		$dropdown_togglebgcol = "#EBEBEB";
+	if (! $dropdown_bordercol)
+		$dropdown_bordercol = "#ADADAD";
 	if (! $preview_backgroundimg)
 		$preview_backgroundimg = "gray_and_white_diagonal_stripes_background_seamless.gif";
 	if (! $acpopup_bgcolour)
@@ -298,6 +314,14 @@ $options = array (
 '$editbuttons_bordercolour' => $editbuttons_bordercolour,
 '$editbuttons_colour' => $editbuttons_colour,
 '$editbuttons_bghover' => $editbuttons_bghover,
+'$dropdown_bgcolour' => $dropdown_bgcolour,
+'$dropdown_textcolour' => $dropdown_textcolour,
+'$dropdown_txtcolhover' => $dropdown_txtcolhover,
+'$dropdown_bgcolhover' => $dropdown_bgcolhover,
+'$dropdown_bgimghover' => $dropdown_bgimghover,
+'$dropdown_togglecol' => $dropdown_togglecol,
+'$dropdown_togglebgcol' => $dropdown_togglebgcol,
+'$dropdown_bordercol' => $dropdown_bordercol,
 '$preview_backgroundimg' => $preview_backgroundimg,
 '$acpopup_bgcolour' => $acpopup_bgcolour,
 '$acpopup_bordercolour' => $acpopup_bordercolour,

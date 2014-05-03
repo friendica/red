@@ -100,6 +100,22 @@
 		$editbuttons_colour = "#ccc";
 	if (! $editbuttons_bghover)
 		$editbuttons_bghover = "#222";
+	if (! $dropdown_bgcolour)
+		$dropdown_bgcolour = "#222";
+	if (! $dropdown_textcolour)
+		$dropdown_textcolour = "#ccc";
+	if (! $dropdown_txtcolhover)
+		$dropdown_txtcolhover = "#ddd";
+	if (! $dropdown_bgcolhover)
+		$dropdown_bgcolhover = "#333";
+	if (! $dropdown_bgimghover)
+		$dropdown_bgimghover = "background-image: none;";
+	if (! $dropdown_togglecol)
+		$dropdown_togglecol = "#ccc";
+	if (! $dropdown_togglebgcol)
+		$dropdown_togglebgcol = "#222";
+	if (! $dropdown_bordercol)
+		$dropdown_bordercol = "#222";
 	if (! $preview_backgroundimg)
 		$preview_backgroundimg = "gray_and_black_diagonal_stripes_background_seamless.gif";
 	if (! $notify_bgcolour)
