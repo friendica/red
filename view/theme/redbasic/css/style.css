@@ -1806,6 +1806,10 @@ img.mail-list-sender-photo {
 
 /* jot */
 
+#profile-jot-wrapper {
+	max-width: $converse_width;
+}
+
 #jot-title,
 #jot-category,
 #jot-pagetitle {
