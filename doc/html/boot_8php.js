@@ -39,6 +39,7 @@ var boot_8php =
     [ "x", "boot_8php.html#a01353c9abebc3544ea080ac161729632", null ],
     [ "z_path", "boot_8php.html#aba208673515cbb8a55e5fa4a1da99fda", null ],
     [ "z_root", "boot_8php.html#add517a0958ac684792c62142a3877f81", null ],
+    [ "$DIRECTORY_FALLBACK_SERVERS", "boot_8php.html#a107d53f96acf5319905a34b1870db09a", null ],
     [ "ABOOK_FLAG_ARCHIVED", "boot_8php.html#a222395aa223cfbff6166fab0b4e2e1d5", null ],
     [ "ABOOK_FLAG_BLOCKED", "boot_8php.html#a52b599cd13e152ebc80d7e4413683195", null ],
     [ "ABOOK_FLAG_HIDDEN", "boot_8php.html#a34c756469ebed32e2fc987bcde62d382", null ],

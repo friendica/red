@@ -1,5 +1,6 @@
 var include_2chat_8php =
 [
+    [ "chat_message", "include_2chat_8php.html#acea6b176eb7aff44d9ba3ae24ce511d3", null ],
     [ "chatroom_create", "include_2chat_8php.html#acdc80dba4eb796c7472b21129b435422", null ],
     [ "chatroom_destroy", "include_2chat_8php.html#a2ba3af6884ecdce95de69262fe599639", null ],
     [ "chatroom_enter", "include_2chat_8php.html#a2c95b545e46bfee64faa05ecf0afea91", null ],

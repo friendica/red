@@ -29,6 +29,7 @@ var searchData=
   ['register_5fcontent',['register_content',['../register_8php.html#a0e91f57f111407ea8d3223a05022bb2a',1,'register.php']]],
   ['register_5fhook',['register_hook',['../plugin_8php.html#a425472c5f3afc137268b2ad45652b209',1,'plugin.php']]],
   ['register_5finit',['register_init',['../register_8php.html#ae20c0cd40f738d6295de58b9202c83d5',1,'register.php']]],
+  ['register_5fpage_5ftemplate',['register_page_template',['../comanche_8php.html#a3d11417d2d846dbe72638a556529ff8f',1,'comanche.php']]],
   ['register_5fpost',['register_post',['../register_8php.html#a51731dcc1917c58a790eb1c0f6132271',1,'register.php']]],
   ['register_5ftemplate_5fengine',['register_template_engine',['../classApp.html#abf46a653d8499e7c253cc1be894a6d83',1,'App']]],
   ['regmod_5fcontent',['regmod_content',['../regmod_8php.html#a7953df4e32e63946565e90cdd5d50409',1,'regmod.php']]],

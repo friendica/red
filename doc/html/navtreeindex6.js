@@ -1,5 +1,9 @@
 var NAVTREEINDEX6 =
 {
+"minimalisticdarkness_8php.html#a04de7b747e4f0a353e0e38cf77c3404f":[5,0,3,1,0,2,4,4],
+"minimalisticdarkness_8php.html#a0ac3f5b52212b0af87d513273da03ead":[5,0,3,1,0,2,4,3],
+"minimalisticdarkness_8php.html#a5795120b4b324bc4ca83f1e6fdce7d57":[5,0,3,1,0,2,4,5],
+"minimalisticdarkness_8php.html#a6e5d97615c6faef5dbffe04b8024ceaf":[5,0,3,1,0,2,4,0],
 "minimalisticdarkness_8php.html#a70bb13be8f23ec47839da81e0796f1cb":[5,0,3,1,0,2,4,2],
 "minimalisticdarkness_8php.html#a7e6c3d4efde4e9a2de32308081372c6b":[5,0,3,1,0,2,4,1],
 "mitem_8php.html":[5,0,1,58],
@@ -61,8 +65,8 @@ var NAVTREEINDEX6 =
 "mytheme_2php_2theme_8php.html#a6ce5df8ece6acc09c1fddaccbeb244e8":[5,0,3,1,2,0,2,0],
 "namespaceFriendica.html":[3,0,1],
 "namespaceFriendica.html":[4,0,1],
-"namespaceacl__selectors.html":[3,0,0],
 "namespaceacl__selectors.html":[4,0,0],
+"namespaceacl__selectors.html":[3,0,0],
 "namespacefriendica-to-smarty-tpl.html":[4,0,2],
 "namespacefriendica-to-smarty-tpl.html":[3,0,2],
 "namespacemembers.html":[3,1,0],
@@ -111,7 +115,7 @@ var NAVTREEINDEX6 =
 "page_8php.html#a91a5f649f68406149108bded1dc90b22":[5,0,1,71,0],
 "page__widgets_8php.html":[5,0,0,57],
 "page__widgets_8php.html#a1a1e729da27f252cab6678288a17958f":[5,0,0,57,1],
-"page__widgets_8php.html#ad82011c1ed90d9de8b9f34c12af5c6f0":[5,0,0,57,0],
+"page__widgets_8php.html#a39d547771c5f12a17c097436c82f0fa2":[5,0,0,57,0],
 "pages.html":[],
 "parse__url_8php.html":[5,0,1,72],
 "parse__url_8php.html#a05a9e8944380ba3cf6bbf5893dd4b74b":[5,0,1,72,2],
@@ -245,9 +249,5 @@ var NAVTREEINDEX6 =
 "profperm_8php.html#a17fb64ec05edee1dc94d95438807d6c6":[5,0,1,86,1],
 "profperm_8php.html#aef015787de2373d9fb3fe3f814fb5023":[5,0,1,86,0],
 "pubsites_8php.html":[5,0,1,87],
-"pubsites_8php.html#af614e279aab54065345bda6b03eafdf0":[5,0,1,87,0],
-"queue_8php.html":[5,0,0,65],
-"queue_8php.html#af8c93de86d866c3200174c8450a0f341":[5,0,0,65,0],
-"queue__fn_8php.html":[5,0,0,66],
-"queue__fn_8php.html#a4c2876181f75a4a61e85b7f00dfdbba1":[5,0,0,66,1]
+"pubsites_8php.html#af614e279aab54065345bda6b03eafdf0":[5,0,1,87,0]
 };

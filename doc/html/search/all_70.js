@@ -15,7 +15,7 @@ var searchData=
   ['page_5fremoved',['PAGE_REMOVED',['../boot_8php.html#a4edce16cb7f21cdafa1e85bf63d713e6',1,'boot.php']]],
   ['page_5fsystem',['PAGE_SYSTEM',['../boot_8php.html#a6ee7a72d558d1851bbb9e3cdde377932',1,'boot.php']]],
   ['page_5fwidgets_2ephp',['page_widgets.php',['../page__widgets_8php.html',1,'']]],
-  ['pagelist_5fwidget',['pagelist_widget',['../page__widgets_8php.html#ad82011c1ed90d9de8b9f34c12af5c6f0',1,'page_widgets.php']]],
+  ['pagelist_5fwidget',['pagelist_widget',['../page__widgets_8php.html#a39d547771c5f12a17c097436c82f0fa2',1,'page_widgets.php']]],
   ['paginate',['paginate',['../text_8php.html#afe9f178d264d44a94dc1292aaf0fd585',1,'text.php']]],
   ['parse_5furl_2ephp',['parse_url.php',['../parse__url_8php.html',1,'']]],
   ['parse_5furl_5fcontent',['parse_url_content',['../parse__url_8php.html#a05a9e8944380ba3cf6bbf5893dd4b74b',1,'parse_url.php']]],

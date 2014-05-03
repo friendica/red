@@ -222,6 +222,8 @@ Functions</h2></td></tr>
 <tr class="separator:aac8c9eb4338e2a996c43914392c6cfdb"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a0cf98bb619f07dd18f602683a55a5f59"><td class="memItemLeft" align="right" valign="top">&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="items_8php.html#a0cf98bb619f07dd18f602683a55a5f59">first_post_date</a> ($uid, $wall=false)</td></tr>
 <tr class="separator:a0cf98bb619f07dd18f602683a55a5f59"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:aa2d3caa2f27720762b5c729e07df40fb"><td class="memItemLeft" align="right" valign="top">&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="items_8php.html#aa2d3caa2f27720762b5c729e07df40fb">list_post_dates</a> ($uid, $wall)</td></tr>
+<tr class="separator:aa2d3caa2f27720762b5c729e07df40fb"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:ad2abb4644ff1f20fefbc80326fe01cf0"><td class="memItemLeft" align="right" valign="top">&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="items_8php.html#ad2abb4644ff1f20fefbc80326fe01cf0">posted_dates</a> ($uid, $wall)</td></tr>
 <tr class="separator:ad2abb4644ff1f20fefbc80326fe01cf0"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:adf980098b6de9c3993bc3ff26a8dd6f9"><td class="memItemLeft" align="right" valign="top">&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="items_8php.html#adf980098b6de9c3993bc3ff26a8dd6f9">fetch_post_tags</a> ($items, $link=false)</td></tr>
@@ -923,7 +925,7 @@ Functions</h2></td></tr>
       </table>
 </div><div class="memdoc">
 
-<p>Referenced by <a class="el" href="items_8php.html#ad2abb4644ff1f20fefbc80326fe01cf0">posted_dates()</a>.</p>
+<p>Referenced by <a class="el" href="items_8php.html#aa2d3caa2f27720762b5c729e07df40fb">list_post_dates()</a>, and <a class="el" href="items_8php.html#ad2abb4644ff1f20fefbc80326fe01cf0">posted_dates()</a>.</p>
 
 </div>
 </div>
@@ -1373,6 +1375,35 @@ Functions</h2></td></tr>
 
 </div>
 </div>
+<a class="anchor" id="aa2d3caa2f27720762b5c729e07df40fb"></a>
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">list_post_dates </td>
+          <td>(</td>
+          <td class="paramtype">&#160;</td>
+          <td class="paramname"><em>$uid</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">&#160;</td>
+          <td class="paramname"><em>$wall</em>&#160;</td>
+        </tr>
+        <tr>
+          <td></td>
+          <td>)</td>
+          <td></td><td></td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+<p>modified <a class="el" href="items_8php.html#ad2abb4644ff1f20fefbc80326fe01cf0">posted_dates()</a> {below} to arrange the list in years, which we'll eventually use to make a menu of years with collapsible sub-menus for the months instead of the current flat list of all representative dates. </p>
+
+<p>Referenced by <a class="el" href="widgets_8php.html#a7b1e357b5a2027718470b77ec921fc65">widget_archive()</a>.</p>
+
+</div>
+</div>
 <a class="anchor" id="a77da7ce9a117601d49ac4a67c71b514f"></a>
 <div class="memitem">
 <div class="memproto">
@@ -1459,8 +1490,6 @@ Functions</h2></td></tr>
         </tr>
       </table>
 </div><div class="memdoc">
-
-<p>Referenced by <a class="el" href="widgets_8php.html#a7b1e357b5a2027718470b77ec921fc65">widget_archive()</a>.</p>
 
 </div>
 </div>

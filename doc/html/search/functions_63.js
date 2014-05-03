@@ -20,6 +20,7 @@ var searchData=
   ['chanview_5fcontent',['chanview_content',['../chanview_8php.html#a4192c6da888c8c1165851acf9ad4cb8b',1,'chanview.php']]],
   ['chat_5fcontent',['chat_content',['../mod_2chat_8php.html#a8b0b8bee6fef6477e8c64c5e951b1b4f',1,'chat.php']]],
   ['chat_5finit',['chat_init',['../mod_2chat_8php.html#aa9ae4782e9baef0b7314ab9527c2707e',1,'chat.php']]],
+  ['chat_5fmessage',['chat_message',['../include_2chat_8php.html#acea6b176eb7aff44d9ba3ae24ce511d3',1,'chat.php']]],
   ['chat_5fpost',['chat_post',['../mod_2chat_8php.html#a999d594745597c656c9760253ae297ad',1,'chat.php']]],
   ['chatroom_5fcreate',['chatroom_create',['../include_2chat_8php.html#acdc80dba4eb796c7472b21129b435422',1,'chat.php']]],
   ['chatroom_5fdestroy',['chatroom_destroy',['../include_2chat_8php.html#a2ba3af6884ecdce95de69262fe599639',1,'chat.php']]],

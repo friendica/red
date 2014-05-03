@@ -48,6 +48,7 @@ var searchData=
   ['register_5fhook',['register_hook',['../plugin_8php.html#a425472c5f3afc137268b2ad45652b209',1,'plugin.php']]],
   ['register_5finit',['register_init',['../register_8php.html#ae20c0cd40f738d6295de58b9202c83d5',1,'register.php']]],
   ['register_5fopen',['REGISTER_OPEN',['../boot_8php.html#ad8887b49bbb02dd30b4eb9f6c7773c63',1,'boot.php']]],
+  ['register_5fpage_5ftemplate',['register_page_template',['../comanche_8php.html#a3d11417d2d846dbe72638a556529ff8f',1,'comanche.php']]],
   ['register_5fpost',['register_post',['../register_8php.html#a51731dcc1917c58a790eb1c0f6132271',1,'register.php']]],
   ['register_5ftemplate_5fengine',['register_template_engine',['../classApp.html#abf46a653d8499e7c253cc1be894a6d83',1,'App']]],
   ['regmod_2ephp',['regmod.php',['../regmod_8php.html',1,'']]],

@@ -26,7 +26,6 @@ var searchData=
   ['_24cipher',['$cipher',['../classConversation.html#aa95c1a62af38bdfba7add9549bec083b',1,'Conversation']]],
   ['_24cmd',['$cmd',['../classApp.html#a495ec082c2719314e536070ca1ce073d',1,'App']]],
   ['_24comment_5fbox_5ftemplate',['$comment_box_template',['../classItem.html#a90743c8348b13213275c223bb9333aa0',1,'Item']]],
-  ['_24comment_5findent',['$comment_indent',['../redbasic_2php_2style_8php.html#a5bff5012c56e34da6b3b2ed475726b27',1,'style.php']]],
   ['_24commentable',['$commentable',['../classConversation.html#afd4965d22a6e4bfea2f35e931b3273c6',1,'Conversation\$commentable()'],['../classItem.html#aa2c221231ad0fc3720ccc1f00f0c6304',1,'Item\$commentable()']]],
   ['_24config',['$config',['../classApp.html#ac73dc90e4764497e2f1b7e6612c8fb88',1,'App']]],
   ['_24connected',['$connected',['../classdba__driver.html#a205f6535e399700b6fca2492f96f2229',1,'dba_driver']]],
@@ -42,6 +41,7 @@ var searchData=
   ['_24db',['$db',['../classApp.html#a330410a288f3393d53772f5e98f857ea',1,'App\$db()'],['../classdba__driver.html#a3033b5f1c2716b52202faeaae2592fe6',1,'dba_driver\$db()']]],
   ['_24debug',['$debug',['../classdba__driver.html#af48e2afeded5285766bf92e22123ed03',1,'dba_driver\$debug()'],['../classTemplate.html#afc4afb6f89bebcd5480022312a56cb4a',1,'Template\$debug()']]],
   ['_24dir',['$dir',['../docblox__errorchecker_8php.html#a1659f0a629d408e0f849dbe4ee061e62',1,'docblox_errorchecker.php']]],
+  ['_24directory_5ffallback_5fservers',['$DIRECTORY_FALLBACK_SERVERS',['../boot_8php.html#a107d53f96acf5319905a34b1870db09a',1,'boot.php']]],
   ['_24dirs',['$dirs',['../typo_8php.html#a1b709c1d79631ebc8320b41bda028b54',1,'typo.php']]],
   ['_24dirstack',['$dirstack',['../docblox__errorchecker_8php.html#ab66bc0493d25f39bf8b4dcbb429f04e6',1,'docblox_errorchecker.php']]],
   ['_24done',['$done',['../classTemplate.html#abda4c8d049f70553338eae7c905e9d5c',1,'Template']]],
@@ -106,8 +106,6 @@ var searchData=
   ['_24plugin',['$plugin',['../post__to__red_8php.html#ada8a7130088351710bb02ed622d6bf65',1,'post_to_red.php']]],
   ['_24plugin_5fdir',['$plugin_dir',['../post__to__red_8php.html#a99811555b30bde504a863e44015f2f19',1,'post_to_red.php']]],
   ['_24plugins',['$plugins',['../classApp.html#ae9f96338f32187d308b67b980eea0008',1,'App']]],
-  ['_24pmenu_5freply',['$pmenu_reply',['../redbasic_2php_2style_8php.html#a9b489f1c595b867212d30eca0c85b38c',1,'style.php']]],
-  ['_24pmenu_5ftop',['$pmenu_top',['../redbasic_2php_2style_8php.html#ac98bd8264411bd207a5740d08e81a158',1,'style.php']]],
   ['_24pofile',['$pofile',['../php2po_8php.html#a401d84ce156e49e8168bd0c4781e1be1',1,'php2po.php']]],
   ['_24poi',['$poi',['../classApp.html#a1936f2afce0dc0d1bbed15ae1f2ee81a',1,'App']]],
   ['_24prepared_5fitem',['$prepared_item',['../classConversation.html#a5b6adbb2fe24f0f53d6c22660dff91b2',1,'Conversation']]],
@@ -160,7 +158,6 @@ var searchData=
   ['_24widgets',['$widgets',['../classApp.html#aa5a87c46ab3fee21362c466bf78042ef',1,'App']]],
   ['_24width',['$width',['../classphoto__driver.html#a3e4215890f4a4894bf3799a7d2e0c0b1',1,'photo_driver\$width()'],['../minimalisticdarkness_8php.html#a5795120b4b324bc4ca83f1e6fdce7d57',1,'$width():&#160;minimalisticdarkness.php']]],
   ['_24writable',['$writable',['../classConversation.html#ae81221251307e315f566a11f921ce0a9',1,'Conversation']]],
-  ['_24wwtop',['$wwtop',['../redbasic_2php_2style_8php.html#a61891d0d3e6894f52410d507b04e565d',1,'style.php']]],
   ['_24x',['$x',['../apw_2php_2style_8php.html#af3a16c5f0dd7a74cf9acf6a49fff73a7',1,'style.php']]],
   ['_24zones',['$zones',['../extract_8php.html#a0cbe524ffc9a496114fd7ba9f423ef44',1,'extract.php']]]
 ];
