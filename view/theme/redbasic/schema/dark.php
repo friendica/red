@@ -50,6 +50,8 @@
 		$item_colour = "rgba(28,28,28,0.8)";
 	if (! $comment_item_colour)
 		$comment_item_colour = "rgba(18,18,18,0.4)";
+	if (! $comment_border_colour)
+		$comment_border_colour = "rgba(28,28,28,0.8)";
 	if (! $toolicon_colour)
 		$toolicon_colour = '#999';
 	if (! $toolicon_activecolour)
@@ -69,7 +71,13 @@
 	if (! $code_bgcolour)
 		$code_bgcolour = "#000";
 	if (! $code_txtcolour)
-		$code_txtcolour = "#fff";
+		$code_txtcolour = "#bbb";
+	if (! $pre_borderc)
+		$pre_borderc = "#090909";
+	if (! $pre_bgcolour)
+		$pre_bgcolour = "#000";
+	if (! $pre_txtcolour)
+		$pre_txtcolour = "#bbb";
 	if (! $item_bordercolour)
 		$item_bordercolour = "#333";
 	if (! $notif_itemcolour)
@@ -128,3 +136,5 @@
 		$aclbutton_linkcolour = "color: #fff;";
 	if (! $abookself_bgcolour)
 		$abookself_bgcolour = "#251111";
+	if(! $infomess_bgcolour)
+		$infomess_bgcolour = "#333";
