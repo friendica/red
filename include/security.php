@@ -108,6 +108,9 @@ function change_channel($change_channel) {
 
 function permissions_sql($owner_id,$remote_verified = false,$groups = null) {
 
+	if(defined('STATUSNET_PRIVACY_COMPATIBILITY'))
+		return '';
+
 	$local_user = local_user();
 	$remote_user = remote_user();
 
@@ -169,6 +172,9 @@ function permissions_sql($owner_id,$remote_verified = false,$groups = null) {
 }
 
 function item_permissions_sql($owner_id,$remote_verified = false,$groups = null) {
+
+	if(defined('STATUSNET_PRIVACY_COMPATIBILITY'))
+		return '';
 
 	$local_user = local_user();
 	$remote_user = remote_user();
