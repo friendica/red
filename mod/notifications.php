@@ -81,6 +81,7 @@ function notifications_content(&$a) {
 		);
 		
 		if (count($r) > 0) {
+			$notifications_available =1;
 			foreach ($r as $it) {
 				$notif_content .= replace_macros($not_tpl,array(
 					'$item_link' => $a->get_baseurl(true).'/notify/view/'. $it['id'],
@@ -97,6 +98,7 @@ function notifications_content(&$a) {
 			'$notif_header' => t('System Notifications'),
 			'$notif_link_mark_seen' => t('Mark all system notifications seen'),
 			'$notif_content' => $notif_content,
+			'$notifications_available' => $notifications_available,
 		));
 
 	return $o;
