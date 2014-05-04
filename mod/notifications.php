@@ -95,6 +95,7 @@ function notifications_content(&$a) {
 		
 		$o .= replace_macros($notif_tpl,array(
 			'$notif_header' => t('System Notifications'),
+			'$notif_link_mark_seen' => t('Mark all system notifications seen'),
 			'$notif_content' => $notif_content,
 		));
 
