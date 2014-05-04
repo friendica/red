@@ -213,10 +213,10 @@ function connections_content(&$a) {
 				nav_set_selected('intros');
 				break;
 			case 'ifpending':
-				$r = q("SELECT COUNT(abook.abook_id) AS total FROM abook left join xchan on abook.abook_xchan = xchan.xchan_hash where abook_channel = %d and not (abook_flags & %d) and (abook_flags & %d) and not (xchan_flags & %d )",
+				$r = q("SELECT COUNT(abook.abook_id) AS total FROM abook left join xchan on abook.abook_xchan = xchan.xchan_hash where abook_channel = %d and (abook_flags & %d) and not (abook_flags & %d) and not (xchan_flags & %d )",
 					intval(local_user()),
-					intval(ABOOK_FLAG_SELF|ABOOK_FLAG_PENDING|ABOOK_FLAG_IGNORED),
 					intval(ABOOK_FLAG_PENDING),
+					intval(ABOOK_FLAG_SELF|ABOOK_FLAG_IGNORED),
 					intval(XCHAN_FLAGS_DELETED|XCHAN_FLAGS_ORPHAN)
 				);
 				if($r && $r[0]['total']) {
