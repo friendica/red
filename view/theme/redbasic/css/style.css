@@ -1467,7 +1467,7 @@ div.jGrowl div.jGrowl-notification {
 
 .autocomplete {
 	color: $font_colour;
-	background: #FFF;
+	background: $dropdown_bgcolour;
 	cursor: pointer;
 	text-align: left;
 	max-height: 350px;
