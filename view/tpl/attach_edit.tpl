@@ -2,14 +2,14 @@
 
 <h1>{{$header}}</h1>
 
+<form action="filestorage/{{$channelnick}}/{{$file.id}}/edit" method="post" >
+
 <div id="attach-edit-perms" >
 <button class="btn btn-default btn-sm" data-toggle="modal" data-target="#aclModal" title="{{$permset}}" onclick="return false;">
 	<i id="jot-perms-icon" class="icon-{{$lockstate}} jot-icons"></i>
 </button>
 {{$aclselect}} {{$file.filename}}
 </div>
-
-<form action="filestorage/{{$channelnick}}/{{$file.id}}/edit" method="post" >
 
 <input type="hidden" name="channelnick" value="{{$channelnick}}" />
 <input type="hidden" name="filehash" value="{{$file.hash}}" />
