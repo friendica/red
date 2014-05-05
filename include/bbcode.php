@@ -200,6 +200,12 @@ function bb_ShareAttributes($match) {
 	if ($matches[1] != "")
 		$posted = $matches[1];
 
+	$message_id = "";
+	preg_match("/message_id='(.*?)'/ism", $attributes, $matches);
+	if ($matches[1] != "")
+		$message_id = $matches[1];
+
+
 	// FIXME - this should really be a wall-item-ago so it will get updated on the client
 	$reldate = (($posted) ? relative_date($posted) : ''); 
 
