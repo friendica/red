@@ -2253,31 +2253,40 @@ blockquote {
 }
 
 .nav-tabs{
-	border-bottom:1px solid $navtabs_borderc !important;
+	border-bottom:1px solid $navtabs_borderc;
 }
 
 .nav-tabs>li.active>a,.nav-tabs>li.active>a:hover,.nav-tabs>li.active>a:focus{
-	color: $navtabs_fontcolour !important; 
+	color: $navtabs_fontcolour;
 	background-color: $navtabs_bgcolour; 
 }
 
 .nav-tabs.nav-justified>.active>a,.nav-tabs.nav-justified>.active>a:hover,.nav-tabs.nav-justified>.active>a:focus{
-	border:1px solid $navtabs_borderc !important;
-	border-bottom:1px solid transparent !important;
-	bottom: -1px !important;
+	border:1px solid $navtabs_borderc;
+	border-bottom:1px solid transparent;
 }
 
 .nav-tabs.nav-justified > li > a {
-    	border-bottom: none;
 	$navtabs_linkcolour
 }
 
 .nav-tabs > li > a:hover, .nav-tabs > li > a:focus {
     	text-decoration: $navtabs_decohover;
     	background-color: $navtabs_bgchover;
-   	border-bottom: 1px solid $navtabs_bgchover;
-	border-color: $navtabs_bgchover;
+	border-color: transparent;
+	border-bottom-color: $navtabs_borderc;
 	$navtabs_linkchover
+}
+
+@media (min-width: 768px) {
+  .nav-tabs.nav-justified > li > a {
+    border-bottom: 1px solid $navtabs_borderc;
+  }
+  .nav-tabs.nav-justified > .active > a,
+  .nav-tabs.nav-justified > .active > a:hover,
+  .nav-tabs.nav-justified > .active > a:focus {
+    border-bottom-color: transparent;
+  }
 }
 
 .btn-default {
