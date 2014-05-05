@@ -94,11 +94,11 @@ if(! $a->install) {
 	if (! $navmenu_bgimage)
 		$navmenu_bgimage = "";
 	if (! $navtabs_borderc)
-		$navtabs_borderc = "#ddd";
+		$navtabs_borderc = "rgba(204,204,204,0.8)";
 	if (! $navtabs_fontcolour)
 		$navtabs_fontcolour = "#555";
 	if (! $navtabs_bgcolour)
-		$navtabs_bgcolour = "#fff";
+		$navtabs_bgcolour = "rgba(254,254,254,0.4)";
 	if (! $navtabs_linkcolour)
 		$navtabs_linkcolour = "";
 	if (! $navtabs_linkchover)
@@ -106,7 +106,7 @@ if(! $a->install) {
 	if (! $navtabs_decohover)
 		$navtabs_decohover = "none";
 	if (! $navtabs_bgchover)
-		$navtabs_bgchover = "#eee";
+		$navtabs_bgchover = "rgba(238,238,238,0.8)";
 	if (! $link_colour)
 		$link_colour = "#428BCA";
 	if (! $banner_colour)
