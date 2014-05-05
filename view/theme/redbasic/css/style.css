@@ -1034,7 +1034,7 @@ aside li {
 	float: left;
 	padding: 10px;
 	width: 120px;
-	min-height: auto;
+	min-height: 120px;
 	scroll: auto;
 }
 #profile-match-wrapper-end {
@@ -2150,7 +2150,7 @@ nav .dropdown-menu>li>a:hover,nav .dropdown-menu>li>a:focus{
 	margin-top: 25px;
 	margin-bottom: 20px;
 	font-weight: bold;
-	font-size: 18px;
+	font-size: 17px;
 }
 
 /* bootstrap overrides */
