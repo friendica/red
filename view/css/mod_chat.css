@@ -10,13 +10,20 @@
 	 overflow-y: auto;
  }
  
- #chatUsers {
+ #chatSide {
 	 float: right;
-	 width: 120px;
+	 width: 150px;
 	 height: 100%;
-	 border: 1px solid #000;
  }
- 
+
+ #chatDrop {
+	margin-bottom: 20px;
+}
+
+ #chatUsers {
+	border: 1px solid #000;
+}
+
  #chatBottomBar {
 	 position: relative;
 	 bottom: 0;

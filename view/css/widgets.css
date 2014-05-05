@@ -167,3 +167,9 @@ li:hover .group-edit-icon {
 #photo-albums-upload-link {
 	margin-top: 10px;
 }
+
+/* Chatrooms */
+
+.chatroomlist td {
+	padding: 0 5px 0;
+}

@@ -84,6 +84,9 @@ function chatroom_destroy($channel,$arr) {
 		q("delete from chatpresence where cp_room = %d",
 			intval($r[0]['cr_id'])
 		);
+		q("delete from chat where chat_room = %d",
+			intval($r[0]['cr_id'])
+		);
 	}
 	$ret['success'] = true;
 	return $ret;
