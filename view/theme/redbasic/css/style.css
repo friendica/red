@@ -386,6 +386,7 @@ aside li {
 
 .vcard dl {
 	clear: both;
+	word-wrap:break-word;
 }
 
 .vcard-profile-edit-icon {
@@ -1011,7 +1012,7 @@ aside li {
 .profile-match-name {
 	text-align: center;
 	width: 120px;
-	height: 18px;
+	height: 1.5em;
 	overflow: hidden !important;
 }
 
@@ -1033,7 +1034,7 @@ aside li {
 	float: left;
 	padding: 10px;
 	width: 120px;
-	height: 120px;
+	min-height: auto;
 	scroll: auto;
 }
 #profile-match-wrapper-end {
@@ -2141,6 +2142,15 @@ nav .dropdown-menu>li>a:hover,nav .dropdown-menu>li>a:focus{
 
 #avatar:hover + #usermenu-caret {
 	color: $nav_active_icon_colour;
+}
+
+/* Files */
+
+#attach-edit-perms {
+	margin-top: 25px;
+	margin-bottom: 20px;
+	font-weight: bold;
+	font-size: 18px;
 }
 
 /* bootstrap overrides */
