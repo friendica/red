@@ -1971,8 +1971,6 @@ function item_store($arr,$allow_exec = false) {
 
 function item_store_update($arr,$allow_exec = false) {
 
-
-
 	$d = array('item' => $arr, 'allow_exec' => $allow_exec);
 	call_hooks('item_store_update', $d );
 	$arr = $d['item'];

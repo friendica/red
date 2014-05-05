@@ -259,11 +259,17 @@ function item_post(&$a) {
 	}
 		
 
+
+
 	if($orig_post) {
-		$str_group_allow   = $orig_post['allow_gid'];
-		$str_contact_allow = $orig_post['allow_cid'];
-		$str_group_deny    = $orig_post['deny_gid'];
-		$str_contact_deny  = $orig_post['deny_cid'];
+		$str_group_allow   = ((array_key_exists('group_allow',$_REQUEST)) 
+			? perms2str($_REQUEST['group_allow']) : $orig_post['allow_gid']);
+		$str_contact_allow = ((array_key_exists('contact_allow',$_REQUEST)) 
+			? perms2str($_REQUEST['contact_allow']) : $orig_post['allow_cid']);
+		$str_group_deny    = ((array_key_exists('group_deny',$_REQUEST)) 
+			? perms2str($_REQUEST['group_deny']) : $orig_post['deny_gid']);
+		$str_contact_deny  = ((array_key_exists('contact_deny',$_REQUEST)) 
+			? perms2str($_REQUEST['contact_deny']) : $orig_post['deny_cid']);
 		$location          = $orig_post['location'];
 		$coord             = $orig_post['coord'];
 		$verb              = $orig_post['verb'];
@@ -304,6 +310,7 @@ function item_post(&$a) {
 			$str_group_deny    = perms2str($_REQUEST['group_deny']);
 			$str_contact_deny  = perms2str($_REQUEST['contact_deny']);
 		}
+
 
 		$location          = notags(trim($_REQUEST['location']));
 		$coord             = notags(trim($_REQUEST['coord']));
