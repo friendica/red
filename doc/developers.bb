@@ -50,3 +50,15 @@ In the interests of consistency we adopt the following code styling. We may acce
 [li] Use whitespace liberally to enhance readability. When creating arrays with many elements, we will often set one key/value pair per line, indented from the parent line appropriately. Lining up the assignment operators takes a bit more work, but also increases readability.[/li]
 
 [li] Generally speaking, opening braces go on the same line as the thing which opens the brace. They are the last character on the line. Closing braces are on a line by themselves. [/li]
+
+
+[b]Concensus Building[/b]
+
+Code changes which fix an obvious bug are pretty straight-forward. For instance if you click "Save" and the thing you're trying to save isn't saved, it's fairly obvious what the intended behaviour should be. Often when developing feature requests, it may affect large numbers of community members and it's possible that other members of the community won't agree with the need for the feature, or with your proposed implementation. They may not see something as a bug or a desirable feature.
+
+We encourage concensus building within the community when it comes to any feature which might be considered controversial or where there isn't unanimous decision that the proposed feature is the correct way to accomplish the task. The first place to pitch your ideas is to [url=https://zothub.com/channel/one]Channel One[/url]. Others may have some input or be able to point out facets of your concept which might be problematic in our environment. But also, you may encounter opposition to your plan. This doesn't mean you should stop and/or ignore the feature. Listen to the concerns of others and try and work through any implementation issues. 
+
+There are places where opposition cannot be resolved. In these cases, please consider making your feature [b]optional[/b] or non-default behaviour that must be specifically enabled. This technique can often be used when a feature has significant but less than unanimous support. Those who desire the feature can turn it on and those who don't want it - will leave it turned off.
+
+If a feature uses other networks or websites and or is only seen as deisrable by a small minority of the community, consider making the functionality available via an addon or plugin. Once again, those who don't desire the feature won't need to install it. Plugins are relatively easy to create and "hooks" can be easily added or modified if the current hooks do not do what is needed to allow your plugin to work.
+     
