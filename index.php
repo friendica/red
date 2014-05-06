@@ -73,7 +73,8 @@ else {
  *
  */
 
-session_set_cookie_params(300,'/',$a->get_hostname(),(($_SERVER['HTTPS']) ? true : false),true);
+// FIXME - doesn't work
+// session_set_cookie_params(300,'/',$a->get_hostname(),(($_SERVER['HTTPS']) ? true : false),true);
 session_start();
 
 /**
