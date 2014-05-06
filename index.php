@@ -73,8 +73,15 @@ else {
  *
  */
 
-// FIXME - doesn't work
-// session_set_cookie_params(300,'/',$a->get_hostname(),(($_SERVER['HTTPS']) ? true : false),true);
+// Force the cookie to be secure (https only) if this site is SSL enabled. Must be done before session_start().
+
+$arr = session_get_cookie_params();
+session_set_cookie_params(
+	$arr['lifetime'],
+	$arr['path'],
+	$arr['domain'],
+	(($_SERVER['HTTPS']) ? true : false),
+	$arr['httponly']);
 session_start();
 
 /**
