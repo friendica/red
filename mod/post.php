@@ -588,6 +588,8 @@ function post_post(&$a) {
 			dbesc($data['callback'])
 		);
 		if($r) {
+			logger('mod_zot: succesful pickup message received from ' . $data['callback'] . ' ' . count($r) . ' message(s) picked up', LOGGER_DEBUG);
+
 			$ret['success'] = true;
 			$ret['pickup'] = array();
 			foreach($r as $rr) {
