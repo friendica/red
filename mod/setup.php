@@ -545,21 +545,35 @@ function check_htaccess(&$checks) {
 	$a = get_app();
 	$status = true;
 	$help = "";
-	if (function_exists('curl_init')){
-        $test = z_fetch_url($a->get_baseurl()."/setup/testrewrite");
-		if(! $test['success']) {
-			if(strstr($a->get_baseurl(),'https://')) {
-				$test = z_fetch_url($a->get_baseurl() . "/setup/testrewrite",false,0,array('novalidate' => true));
-				if($test['success']) {
-					$help = t('SSL certificate cannot be validated. Fix certificate or disable https access to this site.') . EOL;
-					$help .= t('If you use https access, you MUST use a certification instance known by all internet browsers. You MUST NOT use self-signed certificates!') . EOL;
-					$help .= t('This restriction is incorporated because public posts from you may for example contain references to images on your own hub. If your') . EOL;
-					$help .= t('certificate is not known by the internet browser of users they get a warning message complaining about some security issues. Although') . EOL;
-					$help .= t('these complains are not the real truth - there are no security issues with your encryption! - the users may be confused, nerved or even') .EOL;
-					$help .= t('worse may become scared about redmatrix having security issues. Use one of the free certification instances!') . EOL;
+	$ssl_error = false;
 
-					check_add($checks, t('SSL certificate validation'),false,true, $help);
+	$url = $a->get_baseurl() . '/test/rewrite';
+
+	if (function_exists('curl_init')){
+        $test = z_fetch_url($url);
+		if(! $test['success']) {
+			if(strstr($url,'https://')) {
+				$test = z_fetch_url($url,false,0,array('novalidate' => true));
+				if($test['success']) {
+					$ssl_error = true;
 				}
+			}
+			else {
+				$test = z_fetch_url(str_replace('http://','https://',$url),false,0,array('novalidate' => true));
+				if($test['success']) {
+					$ssl_error = true;
+				}
+			}
+
+			if($ssl_error) {
+				$help = t('SSL certificate cannot be validated. Fix certificate or disable https access to this site.') . EOL;
+				$help .= t('If you have https access to your website or allow connections to TCP port 443 (the https: port), you MUST use a browser-valid certificate. You MUST NOT use self-signed certificates!') . EOL;
+				$help .= t('This restriction is incorporated because public posts from you may for example contain references to images on your own hub.') . EOL;
+				$help .= t('If your certificate is not recognised, members of other sites (who may themselves have valid certificates) will get a warning message on their own site complaining about security issues.') . EOL;
+				$help .= t('This can cause usability issues elsewhere (not just on your own site) so we must insist on this requirement.') .EOL;
+				$help .= t('Providers are available that issue free certificates which are browser-valid.'). EOL;
+
+				check_add($checks, t('SSL certificate validation'),false,true, $help);
 			}
 		}		
 
