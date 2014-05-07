@@ -643,11 +643,11 @@ function item_post(&$a) {
 	$datarray['owner_xchan']    = (($owner_hash) ? $owner_hash : $owner_xchan['xchan_hash']);
 	$datarray['author_xchan']   = $observer['xchan_hash'];
 	$datarray['created']        = $created;
-	$datarray['edited']         = datetime_convert();
+	$datarray['edited']         = (($orig_post) ? datetime_convert() : $created);
 	$datarray['expires']        = $expires;
-	$datarray['commented']      = datetime_convert();
-	$datarray['received']       = datetime_convert();
-	$datarray['changed']        = datetime_convert();
+	$datarray['commented']      = (($orig_post) ? datetime_convert() : $created);
+	$datarray['received']       = (($orig_post) ? datetime_convert() : $created);
+	$datarray['changed']        = (($orig_post) ? datetime_convert() : $created);
 	$datarray['mid']            = $mid;
 	$datarray['parent_mid']     = $parent_mid;
 	$datarray['mimetype']       = $mimetype;
