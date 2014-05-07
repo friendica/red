@@ -77,11 +77,11 @@ else {
 
 $arr = session_get_cookie_params();
 session_set_cookie_params(
-	$arr['lifetime'],
-	$arr['path'],
-	$arr['domain'],
-	(($_SERVER['HTTPS']) ? true : false),
-	$arr['httponly']);
+	((isset($arr['lifetime']))  ? $arr['lifetime'] : 60*5),
+	((isset($arr['path']))      ? $arr['path']     : '/'),
+	((isset($arr['domain']))    ? $arr['domain']   : $a->get_hostname()),
+	((isset($_SERVER['HTTPS'])) ? true             : false),
+	((isset($arr['httponly']))  ? $arr['httponly'] : true));
 session_start();
 
 /**
