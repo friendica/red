@@ -1,6 +1,6 @@
 <meta http-equiv="Content-Type" content="text/html;charset=utf-8" />
 <base href="{{$baseurl}}/" />
-<meta name="viewport" content="width=device-width, height=device-height, initial-scale=1, user-scalable=0">
+<meta name="viewport" content="width=device-width, height=device-height, initial-scale=1, user-scalable=1">
 <meta name="generator" content="{{$generator}}" />
 
 <!--[if IE]>
