@@ -57,7 +57,7 @@ if(! $a->install) {
 	load_translation_table($a->language);
 	// Force the cookie to be secure (https only) if this site is SSL enabled. Must be done before session_start().
 
-	if((! $a->install) && intval($a->config['system']['ssl_cookie_protection'])) {
+	if(intval($a->config['system']['ssl_cookie_protection'])) {
 		$arr = session_get_cookie_params();
 		session_set_cookie_params(
 			((isset($arr['lifetime']))  ? $arr['lifetime'] : 60*5),
