@@ -51,7 +51,7 @@
 						{{/if}}
 					</div>
 				</div>
-					<div class="wall-item-tools">
+				<div class="wall-item-tools">
 					<div class="wall-item-tools-right btn-group pull-right">
 						{{if $item.like}}
 						<button type="button" class="btn btn-default btn-sm" onclick="dolike({{$item.id}},'like'); return false">
@@ -63,30 +63,30 @@
 							<i class="icon-thumbs-down-alt" title="{{$item.dislike.0}}"></i>
 						</button>
 						{{/if}}
-						<button type="button" class="btn btn-default btn-sm dropdown-toggle" data-toggle="dropdown">
+						<button type="button" class="btn btn-default btn-sm dropdown-toggle" data-toggle="dropdown" id="wall-item-menu-{{$item.id}}">
 							<i class="icon-caret-down"></i>
 						</button>
-						<ul class="dropdown-menu">
+						<ul class="dropdown-menu" role="menu" aria-labelledby="wall-item-menu-{{$item.id}}">
 							{{if $item.share}}
-							<li><a href="#" onclick="jotShare({{$item.id}}); return false"><i class="icon-retweet" title="{{$item.share.0}}"></i> {{$item.share.0}}</a></li>
+							<li role="presentation"><a role="menuitem" href="#" onclick="jotShare({{$item.id}}); return false"><i class="icon-retweet" title="{{$item.share.0}}"></i> {{$item.share.0}}</a></li>
 							{{/if}}
 							{{if $item.plink}}
-							<li><a href="{{$item.plink.href}}" title="{{$item.plink.title}}" ><i class="icon-external-link"></i> {{$item.plink.title}}</a></li>
+							<li role="presentation"><a role="menuitem" href="{{$item.plink.href}}" title="{{$item.plink.title}}" ><i class="icon-external-link"></i> {{$item.plink.title}}</a></li>
 							{{/if}}
 							{{if $item.edpost}}
-							<li><a href="{{$item.edpost.0}}" title="{{$item.edpost.1}}"><i class="editpost icon-pencil"></i> {{$item.edpost.1}}</a></li>
+							<li role="presentation"><a role="menuitem" href="{{$item.edpost.0}}" title="{{$item.edpost.1}}"><i class="editpost icon-pencil"></i> {{$item.edpost.1}}</a></li>
 							{{/if}}
 							{{if $item.tagger}}
-							<li><a href="#"  onclick="itemTag({{$item.id}}); return false;"><i id="tagger-{{$item.id}}" class="icon-tag" title="{{$item.tagger.tagit}}"></i> {{$item.tagger.tagit}}</a></li>
+							<li role="presentation"><a role="menuitem" href="#"  onclick="itemTag({{$item.id}}); return false;"><i id="tagger-{{$item.id}}" class="icon-tag" title="{{$item.tagger.tagit}}"></i> {{$item.tagger.tagit}}</a></li>
 							{{/if}}
 							{{if $item.filer}}
-							<li><a href="#" onclick="itemFiler({{$item.id}}); return false;"><i id="filer-{{$item.id}}" class="icon-folder-open" title="{{$item.filer}}"></i> {{$item.filer}}</a></li>
+							<li role="presentation"><a role="menuitem" href="#" onclick="itemFiler({{$item.id}}); return false;"><i id="filer-{{$item.id}}" class="icon-folder-open" title="{{$item.filer}}"></i> {{$item.filer}}</a></li>
 							{{/if}}
 							{{if $item.bookmark}}
-							<li><a href="#" onclick="itemBookmark({{$item.id}}); return false;"><i id="bookmarker-{{$item.id}}" class="icon-bookmark" title="{{$item.bookmark}}"></i> {{$item.bookmark}}</a></li>
+							<li role="presentation"><a role="menuitem" href="#" onclick="itemBookmark({{$item.id}}); return false;"><i id="bookmarker-{{$item.id}}" class="icon-bookmark" title="{{$item.bookmark}}"></i> {{$item.bookmark}}</a></li>
 							{{/if}}
 							{{if $item.star}}
-							<li><a href="#" onclick="dostar({{$item.id}}); return false;"><i id="starred-{{$item.id}}" class="icon-star {{$item.star.isstarred}}" title="{{$item.star.toggle}}"></i> {{$item.star.toggle}}</a></li>
+							<li role="presentation"><a role="menuitem" href="#" onclick="dostar({{$item.id}}); return false;"><i id="starred-{{$item.id}}" class="icon-star {{$item.star.isstarred}}" title="{{$item.star.toggle}}"></i> {{$item.star.toggle}}</a></li>
 							{{/if}}
 							{{if $item.item_photo_menu}}
 							<li role="presentation" class="divider"></li>
@@ -99,12 +99,18 @@
 						</ul>
 					</div>
 					<div id="like-rotator-{{$item.id}}" class="like-rotator"></div>
-					<div class="wall-item-tools-left btn-group pull-left">
-						{{if $item.showlike}}
-						<div class="btn btn-default btn-sm wall-item-like pull-left" id="wall-item-like-{{$item.id}}">{{$item.showlike}}</div>
+					<div class="wall-item-tools-left{{if $item.like_count &&  $item.dislike_count}} btn-group{{/if}}">
+						{{if $item.like_count}}
+						<div class="btn-group">
+							<button type="button" class="btn btn-default btn-sm wall-item-like dropdown-toggle" data-toggle="dropdown" id="wall-item-like-{{$item.id}}">{{$item.like_count}} {{$item.like_button_label}}</button>
+							<ul class="dropdown-menu" role="menu" aria-labelledby="wall-item-like-{{$item.id}}">{{foreach $item.like_list as $liker}}<li role="presentation">{{$liker}}</li>{{/foreach}}</ul>
+						</div>
 						{{/if}}
-						{{if $item.showdislike}}
-						<div class="btn btn-default btn-sm wall-item-dislike pull-left" id="wall-item-dislike-{{$item.id}}">{{$item.showdislike}}</div>
+						{{if $item.dislike_count}}
+						<div class="btn-group">
+							<button type="button" class="btn btn-default btn-sm wall-item-dislike dropdown-toggle" data-toggle="dropdown" id="wall-item-dislike-{{$item.id}}">{{$item.dislike_count}} {{$item.dislike_button_label}}</button>
+							<ul class="dropdown-menu" role="menu" aria-labelledby="wall-item-dislike-{{$item.id}}">{{foreach $item.dislike_list as $disliker}}<li role="presentation">{{$disliker}}</li>{{/foreach}}</ul>
+						</div>
 						{{/if}}
 					</div>
 				</div>

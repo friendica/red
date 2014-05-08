@@ -1370,10 +1370,6 @@ brain is weird like that */
 .tagged { background-position: -48px -48px; }
 .yellow { background-position: -64px -48px; }
 
-.starred {
-	color: gold;
-}
-
 .icon.dim { opacity: 0.3;filter:alpha(opacity=30); }
 
 
@@ -1934,9 +1930,7 @@ img.mail-list-sender-photo {
 
 .wall-item-like,
 .wall-item-dislike {
-	font-size: $body_font_size;
-	text-align: left;
-	white-space: normal;
+	font-size: 11px;
 }
 
 .wall-item-photo {
