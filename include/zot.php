@@ -171,6 +171,10 @@ function zot_finger($webbie,$channel,$autofallback = true) {
 		return array('success' => false);
 	}		
 
+	// potential issue here; the xchan_addr points to the primary hub.
+	// The webbie we were called with may not, so it might not be found
+	// unless we query for hubloc_addr instead of xchan_addr
+
 	$r = q("select xchan.*, hubloc.* from xchan 
 			left join hubloc on xchan_hash = hubloc_hash
 			where xchan_addr = '%s' and (hubloc_flags & %d) limit 1",

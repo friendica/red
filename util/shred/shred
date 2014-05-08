@@ -23,16 +23,6 @@
 FCLI_RC="$HOME/.shred.rc"
 
 
-# Source FriendicaOAuth.sh
-OAuth_sh=$(which FriendicaOAuth.sh)
-(( $? != 0 )) && echo 'Unable to locate FriendicaOAuth.sh! Make sure it is in searching PATH.' && exit 1
-source "$OAuth_sh"
-
-# Source JSON.sh
-JSON_sh=$(which JSON.sh)
-(( $? != 0 )) && echo 'Unable to locate JSON.sh! Make sure it is in searching PATH.' && exit 1
-source "$JSON_sh"
-
 
 usage () {
 	echo "usage: $0 options
@@ -121,6 +111,18 @@ load_config () {
 
 	# Source Config
 	[[ -f "$FCLI_RC" ]] && . "$FCLI_RC" || show_config_help 1
+
+
+	# Source FriendicaOAuth.sh
+	OAuth_sh=$(which FriendicaOAuth.sh)
+	(( $? != 0 )) && echo 'Unable to locate FriendicaOAuth.sh! Make sure it is in searching PATH.' && exit 1
+	source "$OAuth_sh"
+
+	# Source JSON.sh
+	JSON_sh=$(which JSON.sh)
+	(( $? != 0 )) && echo 'Unable to locate JSON.sh! Make sure it is in searching PATH.' && exit 1
+	source "$JSON_sh"
+
 
 	[[ "$oauth_consumer_key" == "" ]] && show_config_help 1
 	[[ "$oauth_consumer_secret" == "" ]] && show_config_help 1
