@@ -1923,7 +1923,9 @@ padding-left: 42px;
 .hide-comments-outer,
 .wall-item-content-wrapper.comment {
 	background-color: $comment_item_colour;
-	border: 1px solid $comment_border_colour;
+	border-left: 1px solid $comment_border_colour;
+	border-right: 1px solid $comment_border_colour;
+	border-top: 1px solid $comment_border_colour;
 	border-radius: 0px;
 	padding: 7px 10px 7px 7px;
 }
