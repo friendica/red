@@ -22,8 +22,6 @@
 
 FCLI_RC="$HOME/.shred.rc"
 
-# Source Config
-[[ -f "$FCLI_RC" ]] && . "$FCLI_RC" || show_config_help 1
 
 # Source FriendicaOAuth.sh
 OAuth_sh=$(which FriendicaOAuth.sh)
@@ -121,6 +119,9 @@ js () {
 
 load_config () {
 
+	# Source Config
+	[[ -f "$FCLI_RC" ]] && . "$FCLI_RC" || show_config_help 1
+
 	[[ "$oauth_consumer_key" == "" ]] && show_config_help 1
 	[[ "$oauth_consumer_secret" == "" ]] && show_config_help 1
 
@@ -149,7 +150,7 @@ main () {
 	fcli_in_reply_to_status_id=
 	fcli_file=
 	fcli_help_flag=
-	while getopts "c:s:r:f:h" name
+	while getopts "C:c:s:r:f:h" name
 	do
 		case $name in
 		c)	fcli_command="$OPTARG";;

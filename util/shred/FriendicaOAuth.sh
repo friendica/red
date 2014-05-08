@@ -162,7 +162,7 @@ FO_statuses_home_timeline () {
     $(OAuth_param 'screen_name' $screen_name)
     $(OAuth_param 'count' $count)
     )
-g
+
   local auth_header=$(OAuth_authorization_header 'Authorization' "$redmatrix_url" '' '' 'GET' "$F_STATUSES_HOME_TIMELINE.$format" ${params[@]})
 
   convscreen=$(OAuth_PE "$screen_name");
