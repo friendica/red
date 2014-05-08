@@ -1452,36 +1452,6 @@ function process_delivery($sender,$arr,$deliveries,$relay,$public = false) {
 			continue;
 		}
 
-		// for events, extract the event info and create an event linked to an item 
-
-		if((x($arr,'obj_type')) && (activity_match($arr['obj_type'],ACTIVITY_OBJ_EVENT))) {
-			require_once('include/event.php');
-			$ev = bbtoevent($arr['body']);
-		if(x($ev,'desc') && x($ev,'start')) {
-				$ev['event_xchan'] = $arr['author_xchan'];
-				$ev['uid']         = $channel['channel_id'];
-				$ev['account']     = $channel['channel_account_id'];
-				$ev['edited']      = $arr['edited'];
-				$ev['mid']         = $arr['mid'];
-				$ev['private']     = $arr['item_private'];
-
-				// is this an edit?
-
-				$r = q("SELECT resource_id FROM item where mid = '%s' and uid = %d and resource_type = 'event' limit 1",
-					dbesc($arr['mid']),
-					intval($channel['channel_id'])
-				);
-				if($r) {
-					$ev['event_hash'] = $r[0]['resource_id'];
-				}
-
-				$xyz = event_store($ev);
-				add_source_route($xyz,$sender['hash']);
-
-				$result = array($d['hash'],'event processed',$channel['channel_name'] . ' <' . $channel['channel_address'] . '@' . get_app()->get_hostname() . '>',$arr['mid']);
-				continue;
-			}
-		}
 
 		$r = q("select id, edited from item where mid = '%s' and uid = %d limit 1",
 			dbesc($arr['mid']),

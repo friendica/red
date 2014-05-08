@@ -142,8 +142,21 @@ function event_store($arr) {
 	$arr['type']        = (($arr['type'])        ? $arr['type']        : 'event' );	
 	$arr['event_xchan'] = (($arr['event_xchan']) ? $arr['event_xchan'] : '');
 	
-	// Existing event being modified
+	$item = null;
 
+	if($arr['mid'] && $arr['uid']) {
+		$i = q("select * from item where mid = '%s' and uid = %d limit 1",
+			dbesc($arr['mid']),
+			intval($arr['uid'])
+		);
+		if($i) {
+			xchan_query($i);
+			$item = fetch_post_tags($i,true);
+		}
+	}
+
+	// Existing event being modified
+dbg(1);
 	if($arr['id'] || $arr['event_hash']) {
 
 		// has the event actually changed?
@@ -160,7 +173,7 @@ function event_store($arr) {
 				intval($arr['uid'])
 			);
 		}
-
+dbg(0);
 		if(! $r)
 			return 0;
 
@@ -170,7 +183,7 @@ function event_store($arr) {
 		}
 
 		$event_hash = $r[0]['event_hash'];
-		
+dbg(1);		
 		// The event changed. Update it.
 
 		$r = q("UPDATE `event` SET
@@ -253,7 +266,7 @@ function event_store($arr) {
 			$item_id = 0;
 
 		call_hooks('event_updated', $arr['id']);
-
+dbg(0);
 		return $item_id;
 	}
 	else {
@@ -265,7 +278,7 @@ function event_store($arr) {
 		if(! $arr['mid'])
 			$arr['mid'] = item_message_id();
 
-
+dbg(1);
 		$r = q("INSERT INTO event ( uid,aid,event_xchan,event_hash,created,edited,start,finish,summary,description,location,type,
 			adjust,nofinish,allow_cid,allow_gid,deny_cid,deny_gid)
 			VALUES ( %d, %d, '%s', '%s', '%s', '%s', '%s', '%s', '%s', '%s', '%s', '%s', %d, %d, '%s', '%s', '%s', '%s' ) ",
@@ -302,24 +315,32 @@ function event_store($arr) {
 			intval($arr['uid'])
 		);
 
-		$wall = (($z) ? true : false);
-
-		$item_flags = ITEM_THREAD_TOP;
-		if($wall) {
-			$item_flags |= ITEM_WALL;
-			$item_flags |= ITEM_ORIGIN;
-		}
 
 		$private = (($arr['allow_cid'] || $arr['allow_gid'] || $arr['deny_cid'] || $arr['deny_gid']) ? 1 : 0);
 				
 		$item_arr = array();
+
+
+
+		if($item) {
+			$item_arr['id'] = $item['id'];
+		}
+		else {
+			$wall = (($z) ? true : false);
+
+			$item_flags = ITEM_THREAD_TOP;
+			if($wall) {
+				$item_flags |= ITEM_WALL;
+				$item_flags |= ITEM_ORIGIN;
+			}
+			$item_arr['item_flags']    = $item_flags;
+		}
 
 		$item_arr['uid']           = $arr['uid'];
 		$item_arr['author_xchan']  = $arr['event_xchan'];
 		$item_arr['mid']           = $arr['mid'];
 		$item_arr['parent_mid']    = $arr['mid'];
 
-		$item_arr['item_flags']    = $item_flags;
 
 		$item_arr['owner_xchan']   = (($wall) ? $z[0]['channel_hash'] : $arr['event_xchan']);
 		$item_arr['author_xchan']  = $arr['event_xchan'];
@@ -362,11 +383,15 @@ function event_store($arr) {
 		}
 
 
-		$res = item_store($item_arr);
+		if($item)
+			$res = item_store_update($item_arr);
+		else
+			$res = item_store($item_arr);
+
 		$item_id = $res['item_id'];
 
 		call_hooks("event_created", $event['id']);
-
+dbg(0);
 		return $item_id;
 	}
 }
