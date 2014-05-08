@@ -94,7 +94,7 @@
 							{{/if}}
 							{{if $item.drop.dropping}}
 							<li role="presentation" class="divider"></li>
-							<li><a href="item/drop/{{$item.id}}" onclick="return confirmDelete();" title="{{$item.drop.delete}}" ><i class="icon-remove"></i> {{$item.drop.delete}}</a></li>
+							<li role="presentation"><a role="menuitem" href="item/drop/{{$item.id}}" onclick="return confirmDelete();" title="{{$item.drop.delete}}" ><i class="icon-remove"></i> {{$item.drop.delete}}</a></li>
 							{{/if}}
 						</ul>
 					</div>
