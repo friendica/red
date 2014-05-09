@@ -63,7 +63,7 @@ if(! $a->install) {
 			((isset($arr['lifetime']))  ? $arr['lifetime'] : 60*5),
 			((isset($arr['path']))      ? $arr['path']     : '/'),
 			((isset($arr['domain']))    ? $arr['domain']   : $a->get_hostname()),
-			((isset($_SERVER['HTTPS'])) ? true             : false),
+			((isset($_SERVER['HTTPS']) && strtolower($_SERVER['HTTPS']) == 'on') ? true : false),
 			((isset($arr['httponly']))  ? $arr['httponly'] : true));
 	}
 }
