@@ -158,8 +158,17 @@ function events_content(&$a) {
 	}
 
 
+		$plaintext = true;
+
+		if(feature_enabled(local_user(),'richtext'))
+			$plaintext = false;
+
+
 	$htpl = get_markup_template('event_head.tpl');
-	$a->page['htmlhead'] .= replace_macros($htpl,array('$baseurl' => $a->get_baseurl()));
+	$a->page['htmlhead'] .= replace_macros($htpl,array(
+		'$baseurl' => $a->get_baseurl(),
+		'$editselect' => (($plaintext) ? 'none' : 'textareas')
+	));
 
 	$o ="";
 	// tabs
@@ -400,7 +409,6 @@ function events_content(&$a) {
 		if($orig_event['event_xchan'])
 			$sh_checked .= ' disabled="disabled" ';
 
-		$tpl = get_markup_template('event_form.tpl');
 
 		$sdt = ((x($orig_event)) ? $orig_event['start'] : 'now');
 		$fdt = ((x($orig_event)) ? $orig_event['finish'] : 'now');
@@ -439,6 +447,7 @@ function events_content(&$a) {
 			'deny_gid' => $channel['channel_deny_gid']
 		); 
 
+		$tpl = get_markup_template('event_form.tpl');
 
 
 		$o .= replace_macros($tpl,array(
