@@ -123,6 +123,14 @@ class Item extends BaseObject {
 
 		$location = format_location($item);
 
+		$like_count = ((x($alike,$item['mid'])) ? $alike[$item['mid']] : '');
+		$like_list = ((x($alike,$item['mid'])) ? $alike[$item['mid'] . '-l'] : '');
+		$like_button_label = ((x($alike,$item['mid'])) && ($alike[$item['mid']] < 2 ) ? t('like') : t('likes'));
+		if (feature_enabled($conv->get_profile_owner(),'dislike')) {
+			$dislike_count = ((x($dlike,$item['mid'])) ? $dlike[$item['mid']] : '');
+			$dislike_list = ((x($dlike,$item['mid'])) ? $dlike[$item['mid'] . '-l'] : '');
+			$dislike_button_label = ((x($dlike,$item['mid'])) && ($dlike[$item['mid']] < 2) ? t('dislike') : t('dislikes'));
+		}
 
 		$showlike    = ((x($alike,$item['mid'])) ? format_like($alike[$item['mid']],$alike[$item['mid'] . '-l'],'like',$item['mid']) : '');
 		$showdislike = ((x($dlike,$item['mid']) && feature_enabled($conv->get_profile_owner(),'dislike'))  
@@ -251,7 +259,12 @@ class Item extends BaseObject {
 			'drop'      => $drop,
 			'multidrop' => ((feature_enabled($conv->get_profile_owner(),'multi_delete')) ? $multidrop : ''),
 // end toolbar buttons
-
+			'like_count' => $like_count,
+			'like_list' => $like_list,
+			'like_button_label' => $like_button_label,
+			'dislike_count' => ((feature_enabled($conv->get_profile_owner(),'dislike')) ? $dislike_count : ''),
+			'dislike_list' => ((feature_enabled($conv->get_profile_owner(),'dislike')) ? $dislike_list : ''),
+			'dislike_button_label' => ((feature_enabled($conv->get_profile_owner(),'dislike')) ? $dislike_button_label : ''),
 			'showlike' => $showlike,
 			'showdislike' => $showdislike,
 			'comment' => $this->get_comment_box($indent),
