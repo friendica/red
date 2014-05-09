@@ -14,7 +14,7 @@ msgstr ""
 "Project-Id-Version: Red Matrix\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2014-05-02 00:03-0700\n"
-"PO-Revision-Date: 2014-05-08 12:17+0000\n"
+"PO-Revision-Date: 2014-05-09 08:00+0000\n"
 "Last-Translator: tuscanhobbit Pa <pynolo@tarine.net>\n"
 "Language-Team: Italian (http://www.transifex.com/projects/p/red-matrix/language/it/)\n"
 "MIME-Version: 1.0\n"
@@ -733,11 +733,11 @@ msgstr "vuole"
 
 #: ../../include/taxonomy.php:254
 msgid "likes"
-msgstr "ama"
+msgstr "mi piace"
 
 #: ../../include/taxonomy.php:255
 msgid "dislikes"
-msgstr "non ama"
+msgstr "non mi piace"
 
 #: ../../include/comanche.php:35 ../../view/theme/apw/php/config.php:185
 #: ../../view/theme/redbasic/php/config.php:84
@@ -2232,7 +2232,7 @@ msgstr "È stato ripristinato un insieme con lo stesso nome che era stato elimin
 
 #: ../../include/group.php:223
 msgid "Default privacy group for new contacts"
-msgstr "Insieme predefinito per i nuovi canali che aggiungi"
+msgstr "Insieme predefinito per i canali che inizi a seguire"
 
 #: ../../include/group.php:242 ../../mod/admin.php:762
 msgid "All Channels"
@@ -4251,11 +4251,11 @@ msgstr "Partner affettivo"
 
 #: ../../mod/profiles.php:302
 msgid "Likes"
-msgstr "Cosa gli piace"
+msgstr "Mi piace"
 
 #: ../../mod/profiles.php:306
 msgid "Dislikes"
-msgstr "Cosa non gli piace"
+msgstr "Non mi piace"
 
 #: ../../mod/profiles.php:310
 msgid "Work/Employment"
