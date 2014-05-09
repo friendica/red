@@ -106,7 +106,8 @@
 		}
 
 	});
-
+	{{else}}
+	<script language="javascript" type="text/javascript">
 	{{/if}}
 
 	$(document).ready(function() { 
