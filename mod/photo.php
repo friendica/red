@@ -104,8 +104,7 @@ function photo_init(&$a) {
 		if(substr($photo,-2,1) == '-') {
 			$resolution = intval(substr($photo,-1,1));
 			$photo = substr($photo,0,-2);
-			// Serve high-resolution images regardless (this is rude):
-			// [Note: this can be improved by setting a cookie to indicate that the user is viewing on a high-resolution display]
+			// If viewing on a high-res screen, attempt to serve a higher resolution image:
 			if ($resolution == 2 && ($cookie_value > 1))
 			  {
 			    $resolution = 1;
