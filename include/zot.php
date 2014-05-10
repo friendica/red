@@ -171,6 +171,10 @@ function zot_finger($webbie,$channel,$autofallback = true) {
 		return array('success' => false);
 	}		
 
+	// potential issue here; the xchan_addr points to the primary hub.
+	// The webbie we were called with may not, so it might not be found
+	// unless we query for hubloc_addr instead of xchan_addr
+
 	$r = q("select xchan.*, hubloc.* from xchan 
 			left join hubloc on xchan_hash = hubloc_hash
 			where xchan_addr = '%s' and (hubloc_flags & %d) limit 1",
@@ -1453,7 +1457,7 @@ function process_delivery($sender,$arr,$deliveries,$relay,$public = false) {
 		if((x($arr,'obj_type')) && (activity_match($arr['obj_type'],ACTIVITY_OBJ_EVENT))) {
 			require_once('include/event.php');
 			$ev = bbtoevent($arr['body']);
-		if(x($ev,'desc') && x($ev,'start')) {
+			if(x($ev,'description') && x($ev,'start')) {
 				$ev['event_xchan'] = $arr['author_xchan'];
 				$ev['uid']         = $channel['channel_id'];
 				$ev['account']     = $channel['channel_account_id'];

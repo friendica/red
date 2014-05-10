@@ -1370,10 +1370,6 @@ brain is weird like that */
 .tagged { background-position: -48px -48px; }
 .yellow { background-position: -64px -48px; }
 
-.starred {
-	color: gold;
-}
-
 .icon.dim { opacity: 0.3;filter:alpha(opacity=30); }
 
 
@@ -1915,18 +1911,24 @@ img.mail-list-sender-photo {
 .wall-item-content-wrapper:hover {
 	z-index:99;
 }
-
+/* 
+.comment .wall-item-body {
+padding-left: 42px;
+}
+ */
 .hide-comments-outer,
 .wall-item-content-wrapper.comment {
 	background-color: $comment_item_colour;
-	border-left: 3px solid $comment_border_colour;
+	border-left: 1px solid $comment_border_colour;
+	border-right: 1px solid $comment_border_colour;
+	border-bottom: 1px solid $comment_border_colour;
 	border-radius: 0px;
 	padding: 7px 10px 7px 7px;
 }
 
 .wall-item-comment-wrapper {
 	background-color: $comment_item_colour;
-	border-left: 3px solid $item_colour;
+	border: 1px solid $item_colour;
 	border-radius: 0px;
 	border-bottom-right-radius: $radiuspx;
 	border-bottom-left-radius: $radiuspx;
@@ -1934,9 +1936,7 @@ img.mail-list-sender-photo {
 
 .wall-item-like,
 .wall-item-dislike {
-	font-size: $body_font_size;
-	text-align: left;
-	white-space: normal;
+	font-size: 11px;
 }
 
 .wall-item-photo {
@@ -2335,6 +2335,7 @@ blockquote {
 
 	.thread-wrapper.toplevel_item {
 		width: 100%;
+		border:1px;
 	}
 
 	.wall-item-photo {

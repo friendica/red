@@ -22,18 +22,6 @@
 
 FCLI_RC="$HOME/.shred.rc"
 
-# Source Config
-[[ -f "$FCLI_RC" ]] && . "$FCLI_RC" || show_config_help 1
-
-# Source FriendicaOAuth.sh
-OAuth_sh=$(which FriendicaOAuth.sh)
-(( $? != 0 )) && echo 'Unable to locate FriendicaOAuth.sh! Make sure it is in searching PATH.' && exit 1
-source "$OAuth_sh"
-
-# Source JSON.sh
-JSON_sh=$(which JSON.sh)
-(( $? != 0 )) && echo 'Unable to locate JSON.sh! Make sure it is in searching PATH.' && exit 1
-source "$JSON_sh"
 
 
 usage () {
@@ -121,6 +109,21 @@ js () {
 
 load_config () {
 
+	# Source Config
+	[[ -f "$FCLI_RC" ]] && . "$FCLI_RC" || show_config_help 1
+
+
+	# Source FriendicaOAuth.sh
+	OAuth_sh=$(which FriendicaOAuth.sh)
+	(( $? != 0 )) && echo 'Unable to locate FriendicaOAuth.sh! Make sure it is in searching PATH.' && exit 1
+	source "$OAuth_sh"
+
+	# Source JSON.sh
+	JSON_sh=$(which JSON.sh)
+	(( $? != 0 )) && echo 'Unable to locate JSON.sh! Make sure it is in searching PATH.' && exit 1
+	source "$JSON_sh"
+
+
 	[[ "$oauth_consumer_key" == "" ]] && show_config_help 1
 	[[ "$oauth_consumer_secret" == "" ]] && show_config_help 1
 
@@ -149,7 +152,7 @@ main () {
 	fcli_in_reply_to_status_id=
 	fcli_file=
 	fcli_help_flag=
-	while getopts "c:s:r:f:h" name
+	while getopts "C:c:s:r:f:h" name
 	do
 		case $name in
 		c)	fcli_command="$OPTARG";;
@@ -205,7 +208,11 @@ main () {
 		return $FO_rval
 		;;
 	*)
-		usage 1
+		FO_command $fcli_command
+        JS_Parsed=$(echo "$FO_ret" | tokenize | parse)
+		echo "$JS_Parsed"
+		return $FO_rval
+
 		;;
 	esac
 	return 0
