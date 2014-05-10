@@ -630,24 +630,24 @@ function bbcode($Text,$preserve_nl = false, $tryoembed = true) {
 	// Images
 	// [img]pathtoimage[/img]
 	if (strpos($Text,'[/img]') !== false) {
-		$Text = preg_replace("/\[img\](.*?)\[\/img\]/ism", '<img src="$1" alt="' . t('Image/photo') . '" />', $Text);
+		$Text = preg_replace("/\[img\](.*?)\[\/img\]/ism", '<img style="max-width=100%;" src="$1" alt="' . t('Image/photo') . '" />', $Text);
 	}
 	if (strpos($Text,'[/zmg]') !== false) {
-		$Text = preg_replace("/\[zmg\](.*?)\[\/zmg\]/ism", '<img class="zrl" src="$1" alt="' . t('Image/photo') . '" />', $Text);
+		$Text = preg_replace("/\[zmg\](.*?)\[\/zmg\]/ism", '<img class="zrl" style="max-width=100%;" src="$1" alt="' . t('Image/photo') . '" />', $Text);
 	}
 
 	// [img float={left, right}]pathtoimage[/img]
 	if (strpos($Text,'[/img]') !== false) {
-		$Text = preg_replace("/\[img float=left\](.*?)\[\/img\]/ism", '<img src="$1" style="float: left;" alt="' . t('Image/photo') . '" />', $Text);
+		$Text = preg_replace("/\[img float=left\](.*?)\[\/img\]/ism", '<img style="max-width=100%;" src="$1" style="float: left;" alt="' . t('Image/photo') . '" />', $Text);
 	}
 	if (strpos($Text,'[/img]') !== false) {
-		$Text = preg_replace("/\[img float=right\](.*?)\[\/img\]/ism", '<img src="$1" style="float: right;" alt="' . t('Image/photo') . '" />', $Text);
+		$Text = preg_replace("/\[img float=right\](.*?)\[\/img\]/ism", '<img style="max-width=100%;" src="$1" style="float: right;" alt="' . t('Image/photo') . '" />', $Text);
 	}
 	if (strpos($Text,'[/zmg]') !== false) {
-		$Text = preg_replace("/\[zmg float=left\](.*?)\[\/zmg\]/ism", '<img class="zrl" src="$1" style="float: left;" alt="' . t('Image/photo') . '" />', $Text);
+		$Text = preg_replace("/\[zmg float=left\](.*?)\[\/zmg\]/ism", '<img style="max-width=100%;" class="zrl" src="$1" style="float: left;" alt="' . t('Image/photo') . '" />', $Text);
 	}
 	if (strpos($Text,'[/zmg]') !== false) {
-		$Text = preg_replace("/\[zmg float=right\](.*?)\[\/zmg\]/ism", '<img class="zrl" src="$1" style="float: right;" alt="' . t('Image/photo') . '" />', $Text);
+		$Text = preg_replace("/\[zmg float=right\](.*?)\[\/zmg\]/ism", '<img style="max-width=100%;" class="zrl" src="$1" style="float: right;" alt="' . t('Image/photo') . '" />', $Text);
 	}
 
 	// [img=widthxheight]pathtoimage[/img]
