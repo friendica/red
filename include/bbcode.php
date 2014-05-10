@@ -63,7 +63,7 @@ function bb_spacefy($st) {
 }
 
 // The previously spacefied [noparse][ i ]italic[ /i ][/noparse],
-// now turns back and the [noparse] tags are trimed
+// now turns back and the [noparse] tags are trimmed
 // returning [i]italic[/i]
 
 function bb_unspacefy_and_trim($st) {
