@@ -1921,7 +1921,7 @@ img.mail-list-sender-photo {
 	border-left: $comment_border_left $comment_border_colour;
 	border-right: $comment_border_right $comment_border_colour;
 
-	border-bottom: 1px solid $comment_border_colour;
+	border-bottom: $comment_border_bottom $comment_border_colour;
 	border-radius: 0px;
 	padding: 7px 10px 7px 7px;
 }
