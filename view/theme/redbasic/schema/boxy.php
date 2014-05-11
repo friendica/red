@@ -14,4 +14,6 @@ if (!$comment_border_top)
 
 if (!$comment_border_bottom)
 	$comment_border_bottom="1px solid";
+if (! $radiuspx)
+	$radiuspx = "4";
 	

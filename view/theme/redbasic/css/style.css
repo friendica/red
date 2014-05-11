@@ -1918,19 +1918,20 @@ img.mail-list-sender-photo {
 .hide-comments-outer,
 .wall-item-content-wrapper.comment {
 	background-color: $comment_item_colour;
-	border-left: $comment_border_left $comment_border_colour;
-	border-right: $comment_border_right $comment_border_colour;
-/* 	border-bottom: 1px solid $comment_border_colour; */
 	border-radius: 0px;
 	padding: 7px 10px 7px 7px;
 }
 .thread-wrapper.toplevel_item{
 	border-bottom: $comment_border_bottom $comment_border_colour;
+	border-right: $comment_border_right $item_colour;
+	border-left: $comment_border_left $item_colour;
+    border-top-right-radius: $radiuspx;
+	border-top-left-radius: $radiuspx;
+	border-bottom-right-radius: $radiuspx;
+	border-bottom-left-radius: $radiuspx;
 }
 .wall-item-comment-wrapper {
 	background-color: $comment_item_colour;
-	border-right: $comment_border_right $item_colour;
-	border-left: $comment_border_left $item_colour;
     border-top: $comment_border_top $item_colour;
 	border-radius: 0px;
 	border-bottom-right-radius: $radiuspx;
