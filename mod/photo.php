@@ -80,6 +80,22 @@ function photo_init(&$a) {
 		 * Other photos
 		 */
 
+	        /* Check for a cookie to indicate display pixel density, in order to detect high-resolution
+		   displays. This procedure was derived from the "Retina Images" by Jeremey Worboys,
+		   used in accordance with the Creative Commons Attribution 3.0 Unported License.
+		   Project link: https://github.com/Retina-Images/Retina-Images
+		   License link: http://creativecommons.org/licenses/by/3.0/
+		*/
+		$cookie_value = false;
+		if (isset($_COOKIE['devicePixelRatio'])) {
+		  $cookie_value = intval($_COOKIE['devicePixelRatio']);
+		}
+		else {
+		  // Force revalidation of cache on next request
+		  $cache_directive = 'no-cache';
+		  $status = 'no cookie';
+		}
+
 		$resolution = 0;
 
 		if(strpos($photo,'.') !== false)
@@ -88,7 +104,23 @@ function photo_init(&$a) {
 		if(substr($photo,-2,1) == '-') {
 			$resolution = intval(substr($photo,-1,1));
 			$photo = substr($photo,0,-2);
+			// If viewing on a high-res screen, attempt to serve a higher resolution image:
+			if ($resolution == 2 && ($cookie_value > 1))
+			  {
+			    $resolution = 1;
+			  }
 		}
+		
+		// If using resolution 1, make sure it exists before proceeding:
+		if ($resolution == 1)
+		  {
+		    $r = q("SELECT uid FROM photo WHERE resource_id = '%s' AND scale = %d LIMIT 1",
+			   dbesc($photo),
+			   intval($resolution)
+			   );
+		    if (!($r))
+		      $resolution = 2;
+		  }
 
 		$r = q("SELECT uid FROM photo WHERE resource_id = '%s' AND scale = %d LIMIT 1",
 			dbesc($photo),
@@ -125,7 +157,7 @@ function photo_init(&$a) {
 					dbesc($photo),
 					intval($resolution)
 				);
-
+ 
 				if($r) {
 					logger('mod_photo: forbidden. ' . $a->query_string);
 					$observer = $a->get_observer();

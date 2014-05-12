@@ -248,6 +248,17 @@ if(! $a->install) {
 		$reply_photo = '32px';
 	if(! $infomess_bgcolour)
 		$infomess_bgcolour = "#F0F0F0";
+	if (!$comment_padding)
+		$comment_padding="0px";	
+	if (!$comment_border_left)
+		$comment_border_left="2px solid";	
+	if (!$comment_border_right)
+		$comment_border_right="0px solid";	
+	if (!$comment_border_top)
+		$comment_border_top="0px solid";		
+	if (!$comment_border_bottom)
+		$comment_border_bottom="0px solid";	
+		
 	if($nav_min_opacity === false || $nav_min_opacity === '') {
 		$nav_float_min_opacity = 1.0;
 		$nav_percent_min_opacity = 100;
@@ -357,7 +368,12 @@ $options = array (
 '$pmenu_reply' => $pmenu_reply,
 '$wwtop' => $wwtop,
 '$comment_indent' => $comment_indent,
-'$body_width' => $body_width
+'$body_width' => $body_width,
+'$comment_padding' => $comment_padding,
+'$comment_border_left' =>$comment_border_left,
+'$comment_border_right' =>$comment_border_right,
+'$comment_border_top' =>$comment_border_top,
+'$comment_border_bottom' =>$comment_border_bottom,
 );
 
 echo str_replace(array_keys($options), array_values($options), $x);    
