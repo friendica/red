@@ -27,7 +27,7 @@ if(! $a->install) {
 		$item_colour = get_pconfig($uid, "redbasic", "item_colour");
 		$comment_item_colour = get_pconfig($uid, "redbasic", "comment_item_colour");
 		$comment_border_colour = get_pconfig($uid, "redbasic", "comment_border_colour");
-		$item_opacity = get_pconfig($uid, "redbasic", "item_opacity");	
+		$comment_indent = get_pconfig($uid, "redbasic", "comment_indent");
 		$body_font_size = get_pconfig($uid, "redbasic", "body_font_size");	
 		$font_size = get_pconfig($uid, "redbasic", "font_size");	
 		$font_colour = get_pconfig($uid, "redbasic", "font_colour");	
@@ -251,7 +251,7 @@ if(! $a->install) {
 	if (!$comment_padding)
 		$comment_padding="0px";	
 	if (!$comment_border_left)
-		$comment_border_left="2px solid";	
+		$comment_border_left="3px solid";
 	if (!$comment_border_right)
 		$comment_border_right="0px solid";	
 	if (!$comment_border_top)
@@ -300,7 +300,6 @@ $options = array (
 '$item_colour' => $item_colour,
 '$comment_item_colour' => $comment_item_colour,
 '$comment_border_colour' => $comment_border_colour,
-'$item_opacity' => $item_opacity,
 '$toolicon_colour' => $toolicon_colour,
 '$toolicon_activecolour' => $toolicon_activecolour,
 '$font_size' => $font_size,
