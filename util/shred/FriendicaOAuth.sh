@@ -175,10 +175,10 @@ FO_statuses_home_timeline () {
 FO_command () {
 	local command="$1"
 
-  local params=(
-    $(OAuth_param 'screen_name' $screen_name)
-    $(OAuth_param 'count' $count)
-    )
+	local params=(
+		$(OAuth_param 'screen_name' $screen_name)
+		$(OAuth_param 'count' $count)
+	)
 
 
 	local auth_header=$(OAuth_authorization_header 'Authorization' "$redmatrix_url" '' '' 'GET' "${redmatrix_url}/api/${command}.json" ${params[@]})
