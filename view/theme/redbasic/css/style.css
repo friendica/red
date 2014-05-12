@@ -1542,21 +1542,6 @@ header {
 	padding: 7px 7px 0px 0px;
 }
 
-
-#nav-notify-menu, #nav-network-menu, #nav-home-menu {
-	background-color: $notify_bgcolour;
-	border-top: none;
-	margin-top: $notify_topmargin;
-}
- 	
-#nav-notify-menu a, #nav-network-menu a, #nav-home-menu a {
-	color: $notify_linkcolour;
-}
-
-#nav-notify-menu a:hover, #nav-network-menu a:hover, #nav-home-menu a:hover {
-	background: $notify_bghover;
-}
-
 .notify-seen a {
 	background: $notifyseen_bgcolour;
 	color: $notifyseen_linkcolour !important;
@@ -2134,8 +2119,6 @@ nav .dropdown-menu {
 	border-bottom-right-radius: $radiuspx;
 	border-bottom-left-radius: $radiuspx;
 	background-color: $notify_bgcolour;
-	border-top: none;
-	margin-top: $notify_topmargin;
 }
 
 nav .dropdown-menu .divider{
