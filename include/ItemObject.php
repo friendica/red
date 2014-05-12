@@ -125,11 +125,11 @@ class Item extends BaseObject {
 
 		$like_count = ((x($alike,$item['mid'])) ? $alike[$item['mid']] : '');
 		$like_list = ((x($alike,$item['mid'])) ? $alike[$item['mid'] . '-l'] : '');
-		$like_button_label = ((x($alike,$item['mid'])) && ($alike[$item['mid']] < 2 ) ? t('like') : t('likes'));
+		$like_button_label = ((x($alike,$item['mid'])) && ($alike[$item['mid']] < 2 ) ? t('Like') : t('Likes'));
 		if (feature_enabled($conv->get_profile_owner(),'dislike')) {
 			$dislike_count = ((x($dlike,$item['mid'])) ? $dlike[$item['mid']] : '');
 			$dislike_list = ((x($dlike,$item['mid'])) ? $dlike[$item['mid'] . '-l'] : '');
-			$dislike_button_label = ((x($dlike,$item['mid'])) && ($dlike[$item['mid']] < 2) ? t('dislike') : t('dislikes'));
+			$dislike_button_label = ((x($dlike,$item['mid'])) && ($dlike[$item['mid']] < 2) ? t('Dislike') : t('Dislikes'));
 		}
 
 		$showlike    = ((x($alike,$item['mid'])) ? format_like($alike[$item['mid']],$alike[$item['mid'] . '-l'],'like',$item['mid']) : '');
