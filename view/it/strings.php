@@ -1,8 +1,9 @@
 <?php
 
+if(! function_exists("string_plural_select_it") {
 function string_plural_select_it($n){
 	return ($n != 1);;
-}
+}}
 ;
 $a->strings["Cannot locate DNS info for database server '%s'"] = "Non trovo le informazioni DNS per il database server '%s'";
 $a->strings["Profile Photos"] = "Foto del profilo";
