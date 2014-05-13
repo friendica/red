@@ -1,6 +1,6 @@
 <?php
 
-if(! function_exists("string_plural_select_nb_no") {
+if(! function_exists("string_plural_select_nb_no")) {
 function string_plural_select_nb_no($n){
 	return ($n != 1);;
 }}
