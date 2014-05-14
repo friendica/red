@@ -6,8 +6,7 @@ header #banner {
 	margin-right: auto;
 }
 #blog-banner {
-	position: relative;
-	margin-top: 75px;
+/*	position: relative; */
 	width: 100%;
 	margin-bottom: 20px;
 	margin-left: auto;
@@ -17,6 +16,14 @@ header #banner {
 
 nav.navbar { 
 	width: 100%;
+}
+
+#nav-backer {
+	position: absolute;
+	top: 0;
+	left: 0;
+	width: 100%;
+	z-index: 0;
 }
 
 aside#region_1 {
