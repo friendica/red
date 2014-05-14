@@ -14,6 +14,7 @@
 		'passphrase'  : "{{$passphrase}}",
 		'passhint'    : "{{$passhint}}",
 		'permschange' : "{{$permschange}}",
+		'closeAll'    : "{{$closeAll}}",
 
 		't01' : "{{$t01}}",
 		't02' : "{{$t02}}",

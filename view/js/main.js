@@ -341,6 +341,7 @@
 				if(data.all_events_today == 0) { data.all_events_today = ''; $('.all_events-today-update').removeClass('show') } else { $('.all_events-today-update').addClass('show') }
 				$('.all_events-today-update').html(data.all_events_today);
 
+				$.jGrowl.defaults.closerTemplate = '<div>[ ' + aStr['closeAll'] + ']</div>';
 
 				$(data.notice).each(function() {
 					$.jGrowl(this.message, { sticky: true, theme: 'notice' });
