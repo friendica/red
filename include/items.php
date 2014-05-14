@@ -239,6 +239,31 @@ function red_unescape_codeblock($m) {
 }
 
 
+function red_zrlify_img_callback($matches) {
+	$m = @parse_url($matches[2]);
+	$zrl = false;
+	if($m['host']) {
+		$r = q("select hubloc_url from hubloc where hubloc_host = '%s' limit 1",
+			dbesc($m['host'])
+		);
+		if($r)
+			$zrl = true;
+	}
+
+	$t = strip_zids($matches[2]);
+	if($t !== $matches[2]) {
+		$zrl = true;
+		$matches[2] = $t;
+	}
+
+	if($zrl)
+		return '[zmg' . $matches[1] . ']' . $matches[2] . '[/zmg]';
+	return $matches[0];
+}
+
+
+
+
 /**
  * @function post_activity_item($arr)
  *
