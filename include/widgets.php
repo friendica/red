@@ -720,3 +720,45 @@ EOT;
 return $o;
 
 }
+
+
+/**
+ * @function widget_photo($arr)
+ *    widget to display a single photo.
+ * @param array $arr;
+ *    'src' => URL of photo
+ *    'zrl' => true or false, use zid in url
+ *    'style' => CSS string
+ * URL must be an http or https URL
+ */
+
+
+function widget_photo($arr) {
+
+	$style = $zrl = false;
+	$params = '';
+	if(array_key_exists('src',$arr) && isset($arr['src']))
+		$url = $arr['src'];
+
+	if(strpos($url,'http') !== 0)
+		return '';
+
+	if(array_key_exists('style',$arr) && isset($arr['style']))
+		$style = $arr['style'];
+
+	if(array_key_exists('zrl',$arr) && isset($arr['zrl']))
+		$zrl = (($arr['zrl']) ? true : false);
+
+	if($zrl)
+		$url = zid($url);
+
+	$o = '<div class="widget">';
+
+	$o .= '<img ' . (($zrl) ? ' class="zrl" ' : '') 
+				  . (($style) ? ' style="' . $style . '"' : '') 
+				  . ' src="' . $url . '" />';
+
+	$o .= '</div>';
+
+	return $o;
+}
