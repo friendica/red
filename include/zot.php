@@ -1501,6 +1501,9 @@ function process_delivery($sender,$arr,$deliveries,$relay,$public = false) {
 			$arr['uid'] = $channel['channel_id'];
 			$item_result = item_store($arr);
 			$item_id = $item_result['item_id'];
+			$parr = array('item_id' => $item_id,'item' => $arr,'sender' => $sender,'channel' => $channel);
+			call_hooks('activity_received',$parr);
+
 			add_source_route($item_id,$sender['hash']);
 
 			$result[] = array($d['hash'],(($item_id) ? 'posted' : 'storage failed:' . $item_result['message']),$channel['channel_name'] . ' <' . $channel['channel_address'] . '@' . get_app()->get_hostname() . '>',$arr['mid']);
