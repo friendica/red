@@ -18,6 +18,12 @@ nav.navbar {
 	margin-right: 0;
 }
 
+#nav-backer { 
+	width: 100%;
+	margin-left: 0;
+	margin-right: 0;
+}
+
 aside#region_1 {
 	display: block;
 	min-width: 210px;
