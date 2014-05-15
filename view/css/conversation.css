@@ -46,12 +46,12 @@
 	margin: 16px;
 }
 
-/* this is referenced in js/acl.js - not sure if it is still needed. */
 .profile-jot-net {
 	float: left;
 	margin-right: 10px;
 	margin-top: 5px;
 	margin-bottom: 5px;
+	padding: 5px;
 }
 
 /* conversation */
