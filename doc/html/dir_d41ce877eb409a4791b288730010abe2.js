@@ -5,7 +5,7 @@ var dir_d41ce877eb409a4791b288730010abe2 =
     [ "acl.php", "acl_8php.html", "acl_8php" ],
     [ "admin.php", "admin_8php.html", "admin_8php" ],
     [ "api.php", "mod_2api_8php.html", "mod_2api_8php" ],
-    [ "apps.php", "apps_8php.html", "apps_8php" ],
+    [ "apps.php", "mod_2apps_8php.html", "mod_2apps_8php" ],
     [ "attach.php", "mod_2attach_8php.html", "mod_2attach_8php" ],
     [ "block.php", "block_8php.html", "block_8php" ],
     [ "blocks.php", "blocks_8php.html", "blocks_8php" ],

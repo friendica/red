@@ -1,6 +1,7 @@
 var widgets_8php =
 [
     [ "widget_affinity", "widgets_8php.html#add9b24d3304e529a7975e96122315554", null ],
+    [ "widget_appselect", "widgets_8php.html#aced5cb177f630b30799c5eab873ee75c", null ],
     [ "widget_archive", "widgets_8php.html#a7b1e357b5a2027718470b77ec921fc65", null ],
     [ "widget_bookmarkedchats", "widgets_8php.html#a0e2f5179ed1a73b282dfda7270fcabb3", null ],
     [ "widget_categories", "widgets_8php.html#af37fdad3b2e861d860a4a8c4d8a76c0b", null ],
@@ -19,6 +20,7 @@ var widgets_8php =
     [ "widget_mailmenu", "widgets_8php.html#afa2e55a78f95667a6da082efac7fec74", null ],
     [ "widget_menu_preview", "widgets_8php.html#a3bdfb81bf9a8ddf219924fa7eaf22013", null ],
     [ "widget_notes", "widgets_8php.html#a45ea061dabe9a8372e4ca3b9e5714256", null ],
+    [ "widget_photo", "widgets_8php.html#a999ba893cac7600d3d3b4e7e14cf8c20", null ],
     [ "widget_photo_albums", "widgets_8php.html#a702e2fc0adc9b615999eca18b7311b5e", null ],
     [ "widget_profile", "widgets_8php.html#abd2e508a2a0b911c4a838e3cb7599923", null ],
     [ "widget_savedsearch", "widgets_8php.html#a94203eb9bcd63cbdecbbcb15163598d8", null ],

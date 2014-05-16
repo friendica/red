@@ -39,6 +39,7 @@ var searchData=
   ['bookmarks_5fcontent',['bookmarks_content',['../mod_2bookmarks_8php.html#a774364b1c8404529581083631703527a',1,'bookmarks.php']]],
   ['bookmarks_5finit',['bookmarks_init',['../mod_2bookmarks_8php.html#a6b7942f3d27e40f0f47c88704127b9b3',1,'bookmarks.php']]],
   ['boot_2ephp',['boot.php',['../boot_8php.html',1,'']]],
+  ['boxy_2ephp',['boxy.php',['../boxy_8php.html',1,'']]],
   ['breaklines',['breaklines',['../html2plain_8php.html#a3214912e3d00cf0a948072daccf16740',1,'html2plain.php']]],
   ['bs_2ddefault_2ephp',['BS-Default.php',['../BS-Default_8php.html',1,'']]],
   ['build_5fpagehead',['build_pagehead',['../classApp.html#a08f0537964d98958d218066364cff785',1,'App']]],

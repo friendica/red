@@ -1,0 +1,4 @@
+url: $baseurl/connections
+requires: local_user
+name: Address Book
+photo: $baseurl/app/connections.png
