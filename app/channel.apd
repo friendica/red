@@ -1,0 +1,3 @@
+url: $baseurl/channel/$nick
+requires: local_user
+name: Channel Home
