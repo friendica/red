@@ -46,9 +46,8 @@ function parse_app_description($f) {
 		
 	//future expansion
 
-	$observer = get_observer();
+	$observer = get_app()->get_observer();
 	
-
 
 	$lines = @file($f);
 	if($lines) {
@@ -62,5 +61,46 @@ function parse_app_description($f) {
 	if(! $ret['photo'])
 		$ret['photo'] = $baseurl . '/' . get_default_profile_photo(80);
 
-	return $ret;
+
+	foreach($ret as $k => $v) {
+		if(strpos($v,'http') === 0)
+			$ret[$k] = zid($v);
+	}
+
+	if(array_key_exists('requires',$ret)) {
+		$require = trim(strtolower($ret['requires']));
+		switch($require) {
+			case 'local_user':
+				if(! local_user())
+					unset($ret);
+				break;
+			case 'observer':
+				if(! $observer)
+					unset($ret);
+				break;
+			default:
+				if(! local_user() && feature_enabled(local_user(),$require))
+					unset($ret);
+				break;
+
+		}
+		logger('require: ' . print_r($ret,true));
+	}
+	if($ret) {
+		translate_system_apps($ret);
+		return $ret;
+	}
+	return false;
 }	
+
+
+function translate_system_apps(&$arr) {
+	$apps = array( 'Matrix' => t('Matrix'), 'Channel Home' => t('Channel Home'), 'Profile' => t('Profile'),
+		'Photos' => t('Photos')
+
+	);
+
+	if(array_key_exists($arr['name'],$apps))
+		$arr['name'] = $apps[$arr['name']];
+
+}

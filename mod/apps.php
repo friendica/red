@@ -8,14 +8,14 @@ function apps_content(&$a) {
 
 	$apps = get_system_apps();
 
-	$o .= print_r($apps,true);
+//	$o .= print_r($apps,true);
 
-	return $o;
+//	return $o;
 
-//	$tpl = get_markup_template("apps.tpl");
-//	return replace_macros($tpl, array(
-//		'$title' => t('Applications'),
-//		'$apps' => $apps,
-//	));
+
+	return replace_macros(get_markup_template('apps.tpl'), array(
+		'$title' => t('Applications'),
+		'$apps' => $apps,
+	));
 
 }
