@@ -1,4 +1,4 @@
 url: $baseurl/events
 requires: local_user
 name: Events
-
+photo: $baseurl/app/events.png
