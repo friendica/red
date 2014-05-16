@@ -1,3 +1,4 @@
 url: $baseurl/login
 requires: nologin
 name: Login
+photo: $baseurl/app/login.png
