@@ -9,7 +9,7 @@
 [*][url=https://bitbucket.org/tobiasd/red-clean]Clean[/url]
 
 [b]Third-Party Addons[/b]
-[*][url=https://github.com/beardy-unixer/red-addons-extra]BBCode Extensions for Webpages/Wikis[/url]
+[*][url=https://github.com/beardy-unixer/red-addons-extra]Webpage/Publishing orientated addons and modules[/url]
 [*][url=https://abcentric.net/git/abcjsplugin.git]ABCjs integration - display scores in posts (WIP)[/url]
 
 [b]Related Projects[/b]
