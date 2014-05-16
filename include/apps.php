@@ -58,6 +58,8 @@ function parse_app_description($f) {
 		}
 	}
 
+
+
 	if(! $ret['photo'])
 		$ret['photo'] = $baseurl . '/' . get_default_profile_photo(80);
 
@@ -66,6 +68,9 @@ function parse_app_description($f) {
 		if(strpos($v,'http') === 0)
 			$ret[$k] = zid($v);
 	}
+
+	if(array_key_exists('hover',$ret))
+		$ret['hover'] = str_replace(array('\'','"'),array('&#39;','&dquot;'),$ret['hover']);
 
 	if(array_key_exists('requires',$ret)) {
 		$require = trim(strtolower($ret['requires']));
