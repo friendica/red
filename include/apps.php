@@ -96,7 +96,7 @@ function parse_app_description($f) {
 
 function translate_system_apps(&$arr) {
 	$apps = array( 'Matrix' => t('Matrix'), 'Channel Home' => t('Channel Home'), 'Profile' => t('Profile'),
-		'Photos' => t('Photos'), 'Events' => t('Events')
+		'Photos' => t('Photos'), 'Events' => t('Events'), 'Directory' => t('Directory')
 
 	);
 
