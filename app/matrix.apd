@@ -1,3 +1,4 @@
 url: $baseurl/network
 requires: local_user
 name: Matrix
+photo: $baseurl/app/matrix.png
