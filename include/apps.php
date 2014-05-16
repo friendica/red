@@ -70,6 +70,10 @@ function parse_app_description($f) {
 	if(array_key_exists('requires',$ret)) {
 		$require = trim(strtolower($ret['requires']));
 		switch($require) {
+			case 'nologin':
+				if(local_user())
+					unset($ret);
+				break;
 			case 'local_user':
 				if(! local_user())
 					unset($ret);
