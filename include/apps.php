@@ -104,12 +104,57 @@ function parse_app_description($f) {
 
 
 function translate_system_apps(&$arr) {
-	$apps = array( 'Matrix' => t('Matrix'), 'Channel Home' => t('Channel Home'), 'Profile' => t('Profile'),
-		'Photos' => t('Photos'), 'Events' => t('Events'), 'Directory' => t('Directory'), 'Help' => t('Help')
-
+	$apps = array( 'Matrix' => t('Matrix'), 
+		'Channel Home' => t('Channel Home'), 
+		'Profile' => t('Profile'),
+		'Photos' => t('Photos'), 
+		'Events' => t('Events'), 
+		'Directory' => t('Directory'), 
+		'Help' => t('Help')
 	);
 
 	if(array_key_exists($arr['name'],$apps))
 		$arr['name'] = $apps[$arr['name']];
 
+}
+
+function app_render($app) {
+	
+
+
+
+
+}
+
+
+function app_install($uid,$app) {
+
+
+
+}
+
+
+function app_installed($uid,$app) {
+
+	$r = q("select id from app where app_id = '%s' and app_version = '%s' and app_channel = %d limit 1",
+		dbesc((array_key_exists('guid',$app)) ? $app['guid'] : ''), 
+		dbesc((array_key_exists('version',$app)) ? $app['version'] : ''), 
+		intval($uid)
+	);
+	return(($r) ? true : false);
+
+}
+
+
+function app_list($uid) {
+	$r = q("select * from app where app_channel = %d order by app_name asc",
+		intval($uid)
+	);
+	return($r);
+}
+
+
+function app_decode($s) {
+	$x = base64_decode($s);
+	return json_decode($x,true);
 }
