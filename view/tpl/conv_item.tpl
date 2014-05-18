@@ -103,16 +103,60 @@
 						{{if $item.like_count}}
 						<div class="btn-group">
 							<button type="button" class="btn btn-default btn-sm wall-item-like dropdown-toggle" data-toggle="dropdown" id="wall-item-like-{{$item.id}}">{{$item.like_count}} {{$item.like_button_label}}</button>
+							{{if $item.like_list_part}}
+							<ul class="dropdown-menu" role="menu" aria-labelledby="wall-item-like-{{$item.id}}">{{foreach $item.like_list_part as $liker}}<li role="presentation">{{$liker}}</li>{{/foreach}}</ul>
+							{{else}}
 							<ul class="dropdown-menu" role="menu" aria-labelledby="wall-item-like-{{$item.id}}">{{foreach $item.like_list as $liker}}<li role="presentation">{{$liker}}</li>{{/foreach}}</ul>
+							{{/if}}
 						</div>
 						{{/if}}
 						{{if $item.dislike_count}}
 						<div class="btn-group">
 							<button type="button" class="btn btn-default btn-sm wall-item-dislike dropdown-toggle" data-toggle="dropdown" id="wall-item-dislike-{{$item.id}}">{{$item.dislike_count}} {{$item.dislike_button_label}}</button>
+							{{if $item.dislike_list_part}}
+							<ul class="dropdown-menu" role="menu" aria-labelledby="wall-item-dislike-{{$item.id}}">{{foreach $item.dislike_list_part as $disliker}}<li role="presentation">{{$disliker}}</li>{{/foreach}}</ul>
+							{{else}}
 							<ul class="dropdown-menu" role="menu" aria-labelledby="wall-item-dislike-{{$item.id}}">{{foreach $item.dislike_list as $disliker}}<li role="presentation">{{$disliker}}</li>{{/foreach}}</ul>
+							{{/if}}
 						</div>
 						{{/if}}
 					</div>
+					{{if $item.like_list_part}}
+					<div class="modal" id="likeModal-{{$item.id}}">
+						<div class="modal-dialog">
+							<div class="modal-content">
+								<div class="modal-header">
+									<button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
+									<h4 class="modal-title">{{$item.like_modal_title}}</h4>
+								</div>
+								<div class="modal-body">
+									<ul>{{foreach $item.like_list as $liker}}<li role="presentation">{{$liker}}</li>{{/foreach}}</ul>
+								</div>
+								<div class="modal-footer clear">
+									<button type="button" class="btn btn-default" data-dismiss="modal">{{$item.modal_dismiss}}</button>
+								</div>
+							</div><!-- /.modal-content -->
+						</div><!-- /.modal-dialog -->
+					</div><!-- /.modal -->
+					{{/if}}
+					{{if $item.dislike_list_part}}
+					<div class="modal" id="dislikeModal-{{$item.id}}">
+						<div class="modal-dialog">
+							<div class="modal-content">
+								<div class="modal-header">
+									<button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
+									<h4 class="modal-title">{{$item.dislike_modal_title}}</h4>
+								</div>
+								<div class="modal-body">
+									<ul>{{foreach $item.dislike_list as $disliker}}<li role="presentation">{{$disliker}}</li>{{/foreach}}</ul>
+								</div>
+								<div class="modal-footer clear">
+									<button type="button" class="btn btn-default" data-dismiss="modal">{{$item.modal_dismiss}}</button>
+								</div>
+							</div><!-- /.modal-content -->
+						</div><!-- /.modal-dialog -->
+					</div><!-- /.modal -->
+					{{/if}}
 				</div>
 				{{* we dont' use this do we?
 				{{if $item.drop.pagedrop}}

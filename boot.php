@@ -347,7 +347,7 @@ define ( 'DROPITEM_PHASE2',      2);
  * Maximum number of "people who like (or don't like) this"  that we will list by name
  */
 
-define ( 'MAX_LIKERS',    75);
+define ( 'MAX_LIKERS',    10);
 
 /**
  * Communication timeout
