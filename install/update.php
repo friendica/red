@@ -1,6 +1,6 @@
 <?php
 
-define( 'UPDATE_VERSION' , 1108 );
+define( 'UPDATE_VERSION' , 1109 );
 
 /**
  *
@@ -1210,6 +1210,17 @@ function update_r1107() {
   KEY `app_channel` (`app_channel`)
 ) ENGINE=MyISAM DEFAULT CHARSET=utf8 ");
 
+	if($r)
+		return UPDATE_SUCCESS;
+	return UPDATE_FAILED;
+}
+
+
+function update_r11108() {
+	$r = q("ALTER TABLE `app` ADD `app_addr` CHAR( 255 ) NOT NULL DEFAULT '',
+ADD `app_price` CHAR( 255 ) NOT NULL DEFAULT '',
+ADD `app_page` CHAR( 255 ) NOT NULL DEFAULT '',
+ADD INDEX ( `app_price` )");
 	if($r)
 		return UPDATE_SUCCESS;
 	return UPDATE_FAILED;

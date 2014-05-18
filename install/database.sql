@@ -94,13 +94,17 @@ CREATE TABLE IF NOT EXISTS `app` (
   `app_photo` char(255) NOT NULL DEFAULT '',
   `app_version` char(255) NOT NULL DEFAULT '',
   `app_channel` int(11) NOT NULL DEFAULT '0',
+  `app_addr` char(255) NOT NULL DEFAULT '',
+  `app_price` char(255) NOT NULL DEFAULT '',
+  `app_page` char(255) NOT NULL DEFAULT '',
   PRIMARY KEY (`id`),
   KEY `app_id` (`app_id`),
   KEY `app_name` (`app_name`),
   KEY `app_url` (`app_url`),
   KEY `app_photo` (`app_photo`),
   KEY `app_version` (`app_version`),
-  KEY `app_channel` (`app_channel`)
+  KEY `app_channel` (`app_channel`),
+  KEY `app_price` (`app_price`)
 ) ENGINE=MyISAM DEFAULT CHARSET=utf8;
 
 
