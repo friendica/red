@@ -47,7 +47,7 @@ define ( 'RED_PLATFORM',            'Red Matrix' );
 define ( 'RED_VERSION',             trim(file_get_contents('version.inc')) . 'R');
 define ( 'ZOT_REVISION',            1     );
 
-define ( 'DB_UPDATE_VERSION',       1107  );
+define ( 'DB_UPDATE_VERSION',       1108  );
 
 define ( 'EOL',                    '<br />' . "\r\n"     );
 define ( 'ATOM_TIME',              'Y-m-d\TH:i:s\Z' );
@@ -397,12 +397,11 @@ define ( 'XCHAN_FLAGS_DELETED',       0x1000);
  * Traficlights for Administration of HubLoc
  * to detect problems in inter server communication
  */
-define ('HUBLOC_NOTUSED',	0x0000);
-define ('HUBLOC_SEND_ERROR',	0x0001);
-define ('HUBLOC_RECEIVE_ERROR',	0x0002);
-define ('HUBLOC_WORKS',		0x0004);
-define ('HUBLOC_OFFLINE',	0x0008);
-
+define ('HUBLOC_NOTUSED',             0x0000);
+define ('HUBLOC_SEND_ERROR',          0x0001);
+define ('HUBLOC_RECEIVE_ERROR',       0x0002);
+define ('HUBLOC_WORKS',               0x0004);
+define ('HUBLOC_OFFLINE',             0x0008);
 
 /**
  * Tag/term types
@@ -424,6 +423,7 @@ define ( 'TERM_OBJ_PROFILE', 3 );
 define ( 'TERM_OBJ_CHANNEL', 4 );
 define ( 'TERM_OBJ_OBJECT',  5 );
 define ( 'TERM_OBJ_THING',   6 );
+define ( 'TERM_OBJ_APP',     7 );
 
 
 /**
