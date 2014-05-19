@@ -119,10 +119,8 @@ function translate_system_apps(&$arr) {
 }
 
 function app_render($app) {
-	
-
-
-
+//debugging
+	return print_r($app,true);	
 
 }
 
@@ -177,8 +175,11 @@ function app_store($arr) {
 	$darray['app_desc'] = ((x($arr,'desc')) ? escape_tags($arr['desc']) : '');
 	$darray['app_photo'] = ((x($arr,'photo')) ? $arr['photo'] : z_root() . '/' . get_default_profile_photo(80));
 	$darray['app_version'] = ((x($arr,'version')) ? escape_tags($arr['version']) : '');
+	$darray['app_addr'] = ((x($arr,'addr')) ? escape_tags($arr['addr']) : '');
+	$darray['app_price'] = ((x($arr,'price')) ? escape_tags($arr['price']) : '');
+	$darray['app_page'] = ((x($arr,'page')) ? escape_tags($arr['page']) : '');
 
-	$r = q("insert into app ( app_id, app_sig, app_author, app_name, app_desc, app_url, app_photo, app_version, app_channel) values ( '%s', '%s', '%s', '%s', '%s', '%s', '%s', '%s', %d )",
+	$r = q("insert into app ( app_id, app_sig, app_author, app_name, app_desc, app_url, app_photo, app_version, app_channel, app_addr, app_price, app_page ) values ( '%s', '%s', '%s', '%s', '%s', '%s', '%s', '%s', %d, '%s', '%s', '%s' )",
 		dbesc($darray['app_id']),
 		dbesc($darray['app_sig']),
 		dbesc($darray['app_author']),
@@ -187,7 +188,10 @@ function app_store($arr) {
 		dbesc($darray['app_url']),
 		dbesc($darray['app_photo']),
 		dbesc($darray['app_version']),
-		intval($darray['app_channel'])
+		intval($darray['app_channel']),
+		dbesc($darray['app_addr']),
+		dbesc($darray['app_price']),
+		dbesc($darray['app_page'])
 	);
 	if($r)
 		$ret['success'] = true;
@@ -200,5 +204,51 @@ function app_update($arr) {
 
 
 
+
+}
+
+
+function app_encode($app) {
+
+	$ret = array();
+
+	if($app['app_id'])
+		$ret['guid'] = $app['app_id'];
+
+	if($app['app_id'])
+		$ret['guid'] = $app['app_id'];
+
+	if($app['app_sig'])
+		$ret['sig'] = $app['app_sig'];
+
+	if($app['app_author'])
+		$ret['author'] = $app['app_author'];
+
+	if($app['app_name'])
+		$ret['name'] = $app['app_name'];
+
+	if($app['app_desc'])
+		$ret['desc'] = $app['app_desc'];
+
+	if($app['app_url'])
+		$ret['url'] = $app['app_url'];
+
+	if($app['app_photo'])
+		$ret['photo'] = $app['app_photo'];
+
+	if($app['app_version'])
+		$ret['version'] = $app['app_version'];
+
+	if($app['app_addr'])
+		$ret['addr'] = $app['app_addr'];
+
+	if($app['app_price'])
+		$ret['price'] = $app['app_price'];
+
+	if($app['app_page'])
+		$ret['page'] = $app['app_page'];
+
+	$j = json_encode($ret);
+	return '[app]' . base64_encode($j) . '[/app]';
 
 }

@@ -166,6 +166,15 @@ function bb_parse_crypt($match) {
 
 }
 
+function bb_parse_app($match) {
+	require_once('include/apps.php');
+
+	$app = app_decode($match[1]);
+	if($app)
+		return app_render($app);
+
+}
+
 function bb_qr($match) {
 	return '<img class="zrl" src="' . z_root() . '/photo/qr?f=&qr=' . urlencode($match[1]) . '" alt="' . t('QR code') . '" title="' . htmlspecialchars($match[1],ENT_QUOTES,'UTF-8') . '" />';
 } 	
@@ -683,6 +692,11 @@ function bbcode($Text,$preserve_nl = false, $tryoembed = true) {
 		$Text = preg_replace("/\[crypt\](.*?)\[\/crypt\]/ism",'<br/><div id="' . $x . '"><img src="' .$a->get_baseurl() . '/images/lock_icon.gif" onclick="red_decrypt(\'rot13\',\'\',\'$1\',\'#' . $x . '\');" alt="' . t('Encrypted content') . '" title="' . t('Encrypted content') . '" /><br /></div>', $Text);
 		$Text = preg_replace_callback("/\[crypt (.*?)\](.*?)\[\/crypt\]/ism", 'bb_parse_crypt', $Text);
 	}
+
+	if(strpos($Text,'[/app]') !== false) {
+		$Text = preg_replace_callback("/\[app\](.*?)\[\/app\]/ism",'bb_parse_app', $Text);
+	}
+
 
 	// html5 video and audio
 	if (strpos($Text,'[/video]') !== false) {	
