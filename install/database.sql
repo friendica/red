@@ -85,7 +85,7 @@ CREATE TABLE IF NOT EXISTS `addon` (
 
 CREATE TABLE IF NOT EXISTS `app` (
   `id` int(11) NOT NULL AUTO_INCREMENT,
-  `app_id` char(64) NOT NULL DEFAULT '',
+  `app_id` char(255) NOT NULL DEFAULT '',
   `app_sig` char(255) NOT NULL DEFAULT '',
   `app_author` char(255) NOT NULL DEFAULT '',
   `app_name` char(255) NOT NULL DEFAULT '',

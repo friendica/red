@@ -126,9 +126,11 @@ function app_render($app) {
 
 
 function app_install($uid,$app) {
-
-
-
+	$app['uid'] = $uid;
+	if(app_installed($uid,$app))
+		app_update($app);
+	else
+		app_store($app);
 }
 
 
@@ -168,7 +170,7 @@ function app_store($arr) {
 	if((! $darray['url']) || (! $darray['app_channel']))
 		return $ret;
 
-	$darray['app_id'] = ((x($arr,'guid')) ? $arr['guid'] : random_string());
+	$darray['app_id'] = ((x($arr,'guid')) ? $arr['guid'] : random_string(). '.' . get_app()->get_hostname());
 	$darray['app_sig'] = ((x($arr,'sig')) ? $arr['sig'] : '');
 	$darray['app_author'] = ((x($arr,'author')) ? $arr['author'] : get_observer_hash());
 	$darray['app_name'] = ((x($arr,'name')) ? escape_tags($arr['name']) : t('Unknown'));
@@ -202,8 +204,43 @@ function app_store($arr) {
 
 function app_update($arr) {
 
+	$darray = array();
+	$ret = array('success' => false);
 
+	$darray['app_url'] = ((x($arr,'url')) ? $arr['url'] : '');
+	$darray['app_channel'] = ((x($arr,'uid')) ? $arr['uid'] : 0);
+	$darray['app_id'] = ((x($arr,'guid')) ? $arr['guid'] : 0);
+	if((! $darray['url']) || (! $darray['app_channel']) || (! $darray['app_id']))
+		return $ret;
 
+	$darray['app_sig'] = ((x($arr,'sig')) ? $arr['sig'] : '');
+	$darray['app_author'] = ((x($arr,'author')) ? $arr['author'] : get_observer_hash());
+	$darray['app_name'] = ((x($arr,'name')) ? escape_tags($arr['name']) : t('Unknown'));
+	$darray['app_desc'] = ((x($arr,'desc')) ? escape_tags($arr['desc']) : '');
+	$darray['app_photo'] = ((x($arr,'photo')) ? $arr['photo'] : z_root() . '/' . get_default_profile_photo(80));
+	$darray['app_version'] = ((x($arr,'version')) ? escape_tags($arr['version']) : '');
+	$darray['app_addr'] = ((x($arr,'addr')) ? escape_tags($arr['addr']) : '');
+	$darray['app_price'] = ((x($arr,'price')) ? escape_tags($arr['price']) : '');
+	$darray['app_page'] = ((x($arr,'page')) ? escape_tags($arr['page']) : '');
+
+	$r = q("update app set app_sig = '%s', app_author = '%s', app_name = '%s', app_desc = '%s', app_url = '%s', app_photo = '%s', app_version = '%s', app_addr = '%s', app_price = '%s', app_page = '%s' where app_id = '%s' and app_channel = %d limit 1",
+		dbesc($darray['app_sig']),
+		dbesc($darray['app_author']),
+		dbesc($darray['app_name']),
+		dbesc($darray['app_desc']),
+		dbesc($darray['app_url']),
+		dbesc($darray['app_photo']),
+		dbesc($darray['app_version']),
+		dbesc($darray['app_addr']),
+		dbesc($darray['app_price']),
+		dbesc($darray['app_page']),
+		dbesc($darray['app_id']),
+		intval($darray['app_channel'])
+	);
+	if($r)
+		$ret['success'] = true;
+
+	return $ret;
 
 }
 
