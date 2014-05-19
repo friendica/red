@@ -104,12 +104,101 @@ function parse_app_description($f) {
 
 
 function translate_system_apps(&$arr) {
-	$apps = array( 'Matrix' => t('Matrix'), 'Channel Home' => t('Channel Home'), 'Profile' => t('Profile'),
-		'Photos' => t('Photos'), 'Events' => t('Events'), 'Directory' => t('Directory'), 'Help' => t('Help')
-
+	$apps = array( 'Matrix' => t('Matrix'), 
+		'Channel Home' => t('Channel Home'), 
+		'Profile' => t('Profile'),
+		'Photos' => t('Photos'), 
+		'Events' => t('Events'), 
+		'Directory' => t('Directory'), 
+		'Help' => t('Help')
 	);
 
 	if(array_key_exists($arr['name'],$apps))
 		$arr['name'] = $apps[$arr['name']];
+
+}
+
+function app_render($app) {
+	
+
+
+
+
+}
+
+
+function app_install($uid,$app) {
+
+
+
+}
+
+
+function app_installed($uid,$app) {
+
+	$r = q("select id from app where app_id = '%s' and app_version = '%s' and app_channel = %d limit 1",
+		dbesc((array_key_exists('guid',$app)) ? $app['guid'] : ''), 
+		dbesc((array_key_exists('version',$app)) ? $app['version'] : ''), 
+		intval($uid)
+	);
+	return(($r) ? true : false);
+
+}
+
+
+function app_list($uid) {
+	$r = q("select * from app where app_channel = %d order by app_name asc",
+		intval($uid)
+	);
+	return($r);
+}
+
+
+function app_decode($s) {
+	$x = base64_decode($s);
+	return json_decode($x,true);
+}
+
+
+function app_store($arr) {
+
+	$darray = array();
+	$ret = array('success' => false);
+
+	$darray['app_url'] = ((x($arr,'url')) ? $arr['url'] : '');
+	$darray['app_channel'] = ((x($arr,'uid')) ? $arr['uid'] : 0);
+	if((! $darray['url']) || (! $darray['app_channel']))
+		return $ret;
+
+	$darray['app_id'] = ((x($arr,'guid')) ? $arr['guid'] : random_string());
+	$darray['app_sig'] = ((x($arr,'sig')) ? $arr['sig'] : '');
+	$darray['app_author'] = ((x($arr,'author')) ? $arr['author'] : get_observer_hash());
+	$darray['app_name'] = ((x($arr,'name')) ? escape_tags($arr['name']) : t('Unknown'));
+	$darray['app_desc'] = ((x($arr,'desc')) ? escape_tags($arr['desc']) : '');
+	$darray['app_photo'] = ((x($arr,'photo')) ? $arr['photo'] : z_root() . '/' . get_default_profile_photo(80));
+	$darray['app_version'] = ((x($arr,'version')) ? escape_tags($arr['version']) : '');
+
+	$r = q("insert into app ( app_id, app_sig, app_author, app_name, app_desc, app_url, app_photo, app_version, app_channel) values ( '%s', '%s', '%s', '%s', '%s', '%s', '%s', '%s', %d )",
+		dbesc($darray['app_id']),
+		dbesc($darray['app_sig']),
+		dbesc($darray['app_author']),
+		dbesc($darray['app_name']),
+		dbesc($darray['app_desc']),
+		dbesc($darray['app_url']),
+		dbesc($darray['app_photo']),
+		dbesc($darray['app_version']),
+		intval($darray['app_channel'])
+	);
+	if($r)
+		$ret['success'] = true;
+
+	return $ret;
+}
+
+
+function app_update($arr) {
+
+
+
 
 }
