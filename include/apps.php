@@ -153,7 +153,7 @@ function app_list($uid) {
 
 
 function app_decode($s) {
-	$x = base64_decode($s);
+	$x = base64_decode(str_replace(array('<br />',"\r","\n",' '),array('','','',''),$s));
 	return json_decode($x,true);
 }
 
@@ -249,6 +249,6 @@ function app_encode($app) {
 		$ret['page'] = $app['app_page'];
 
 	$j = json_encode($ret);
-	return '[app]' . base64_encode($j) . '[/app]';
+	return '[app]' . chunk_split(base64_encode($j),72,"\n") . '[/app]';
 
 }
