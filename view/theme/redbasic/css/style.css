@@ -1884,7 +1884,6 @@ img.mail-list-sender-photo {
 
 .wall-item-content-wrapper {
 	background-color: $item_colour;
-	opacity: $item_opacity;
 	padding: 10px;
 }
 
@@ -1893,9 +1892,6 @@ img.mail-list-sender-photo {
 	border-top-left-radius: $radiuspx;
 }
 
-.wall-item-content-wrapper:hover {
-	z-index:99;
-}
 .comment .wall-item-body {
 	padding-left: $comment_padding;
 }
@@ -1905,35 +1901,23 @@ img.mail-list-sender-photo {
 	background-color: $comment_item_colour;
 	border-left: $comment_border_left $comment_border_colour;
 	border-right: $comment_border_right $comment_border_colour;
-
 	border-bottom: $comment_border_bottom $comment_border_colour;
 	border-radius: 0px;
 	padding: 7px 10px 7px 7px;
 }
-/* 
-.thread-wrapper.toplevel_item{
-	border-bottom: $comment_border_bottom $comment_border_colour;
 
-	border-right: $comment_border_right $item_colour;
-	border-left: $comment_border_left $item_colour;
- 
-    border-top-right-radius: $radiuspx;
-	border-top-left-radius: $radiuspx;
-	border-bottom-right-radius: $radiuspx;
-	border-bottom-left-radius: $radiuspx;
-}
- */
 .wall-item-comment-wrapper {
-	background-color: $comment_item_colour;
-   /*  border-top: $comment_border_top $item_colour; */
-	border-right: $comment_border_right $item_colour;
-	border-left: $comment_border_left $item_colour;
-	border-bottom: $comment_border_bottom $item_colour;
+	padding: 7px 10px;
+	background-color: $item_colour;
 	border-radius: 0px;
 	border-bottom-right-radius: $radiuspx;
 	border-bottom-left-radius: $radiuspx;
+	margin-top: 3px;
 }
 
+.wall-item-comment-wrapper-wc {
+	margin-top: 0px;
+}
 
 .wall-item-like,
 .wall-item-dislike {
@@ -1981,35 +1965,13 @@ img.mail-list-sender-photo {
 	color: $toolicon_colour;
 }
 
-.item-tool:hover {
-	/*color: $toolicon_activecolour;*/
-}
-
 .like-rotator {
 	color: $toolicon_colour;
 }
 
-.my-comment-photo {
-    border-radius: $radiuspx;
-    -moz-border-radius: $radiuspx;
-    box-shadow: $shadowpx $shadowpx $shadowpx 0 #444444;
-}
-
-.comment-edit-photo img {
-	width: $reply_photo;
-}
-
-[class^="comment-edit-bb"] {
-	list-style: none;
-}
-
 .comment-icon {
-	font-size: 1.2em;
+	font-size: 0.8em;
 	color: $toolicon_colour;
-}
-
-.comment-icon:hover {
-	color: $toolicon_activecolour;
 }
 
 .comment-edit-text-empty,
