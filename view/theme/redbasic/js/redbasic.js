@@ -1,23 +1,3 @@
-function cmtBbOpen(comment, id) {
-	if($(comment).hasClass('comment-edit-text-full')) {
-		$(".comment-edit-bb-" + id).show();
-		return true;
-	}
-	return false;
-}
-
-function cmtBbClose(comment, id) {
-//	if($(comment).hasClass('comment-edit-text-empty')) {
-//		$(".comment-edit-bb-" + id).hide();
-//		return true;
-//	}
-	return false;
-}
-
-//document.jotpermslock = 'icon-lock';
-//document.jotpermsunlock = 'icon-unlock';
-
-
 $(document).ready(function() {
 
 $('#expand-aside').click(function() {
