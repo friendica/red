@@ -53,12 +53,12 @@
 						{{/if}}
 					</div>
 					<div class="btn-group pull-right" id="comment-edit-submit-wrapper-{{$id}}">
-					{{if $preview}}
-					<button id="comment-edit-submit-{{$id}}" class="btn btn-default btn-xs btn-preview" onclick="preview_comment({{$id}}); return false;" title="{{$preview}}">
-						<i class="icon-eye-open comment-icon" ></i>
-					</button>
-					{{/if}}
-					<button id="comment-edit-submit-{{$id}}" class="btn btn-primary btn-xs" type="submit" name="submit" onclick="post_comment({{$id}}); return false;">{{$submit}}</button>
+						{{if $preview}}
+						<button id="comment-edit-submit-{{$id}}" class="btn btn-default btn-xs btn-preview" onclick="preview_comment({{$id}}); return false;" title="{{$preview}}">
+							<i class="icon-eye-open comment-icon" ></i>
+						</button>
+						{{/if}}
+						<button id="comment-edit-submit-{{$id}}" class="btn btn-primary btn-xs" type="submit" name="submit" onclick="post_comment({{$id}}); return false;">{{$submit}}</button>
 					</div>
 				</div>
 				<div class="clear"></div>

@@ -13,7 +13,7 @@
 	}
 
 	function commentClose(obj,id) {
-		$(document).on('click', function() {
+		//$(document).on('click', function() {
 			if(obj.value == '') {
 				obj.value = aStr['comment'];
 				$("#comment-edit-text-" + id).removeClass("comment-edit-text-full");
@@ -23,7 +23,7 @@
 				return true;
 			}
 			return false;
-		});
+		//});
 
 	}
 
