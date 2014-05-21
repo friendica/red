@@ -30,6 +30,7 @@ function po2php_run($argv, $argc) {
 	$infile = file($pofile);
 	$k="";
 	$v="";
+	$ctx="";
 	$arr = False;
 	$ink = False;
 	$inv = False;
@@ -92,23 +93,27 @@ function po2php_run($argv, $argc) {
 			if ($k!="") $out .= $arr?");\n":";\n";
 			$arr=False;
 			$k = str_replace("msgid ","",$l);
-			if ($k != '""' ) {
-				$k = trim($k,"\"\r\n");
-			} else {
-				$k = "";
-			}
-			
+			$k = trim($k,"\"\r\n");
+			$k = $ctx.$k;
+		//	echo $ctx ? $ctx."\nX\n":"";
 			$k = preg_replace_callback($escape_s_exp,'escape_s',$k);
+			$ctx = "";
 			$ink = True;
 		}
 		
-		if ($inv && substr($l,0,6)!="msgstr") {
+		if ($inv && substr($l,0,6)!="msgstr" && substr($l,0,7)!="msgctxt") {
 			$v .= trim($l,"\"\r\n"); 
 			$v = preg_replace_callback($escape_s_exp,'escape_s',$v);
 			//$out .= '$a->strings['.$k.'] = ';
 		}
-	
-		
+
+		if (substr($l,0,7)=="msgctxt") {
+			$ctx = str_replace("msgctxt ","",$l);
+			$ctx = trim($ctx,"\"\r\n");
+			$ctx = "__ctx:".$ctx."__ ";
+			$ctx = preg_replace_callback($escape_s_exp,'escape_s',$ctx);
+		}
+
 	}
 
 	if ($inv) {	$inv = False; $out .= '"'.$v.'"'; }

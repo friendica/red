@@ -153,19 +153,21 @@ function load_translation_table($lang, $install = false) {
 function t($s,$ctx = '') {
 	global $a;
 
-	if(x($a->strings,$s)) {
-		$t = $a->strings[$s];
+	$cs = $ctx?"__ctx:".$ctx."__ ".$s:$s;
+	if(x($a->strings,$cs)) {
+		$t = $a->strings[$cs];
 		return is_array($t) ? $t[0] : $t;
 	}
 	return $s;
 }
 
 
-function tt($singular, $plural, $count){
+function tt($singular, $plural, $count, $ctx = ''){
 	$a = get_app();
 
-	if(x($a->strings,$singular)) {
-		$t = $a->strings[$singular];
+	$cs = $ctx?"__ctx:".$ctx."__ ".$singular:$singular;
+	if(x($a->strings,$cs)) {
+		$t = $a->strings[$cs];
 		$f = 'string_plural_select_' . str_replace('-', '_', $a->language);
 		if(! function_exists($f))
 			$f = 'string_plural_select_default';
