@@ -78,9 +78,9 @@ function widget_appselect($arr) {
 	return replace_macros(get_markup_template('app_select.tpl'),array(
 		'$title' => t('App Category'),
 		'$system' => t('System'),
-		'$personal' => t('Personal'),
-		'$featured' => t('Featured'),
-		'$new' => t('New')
+		'$personal' => t('Personal')
+//		'$featured' => t('Featured'),
+//		'$new' => t('New')
 	));
 }
 

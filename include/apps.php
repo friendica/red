@@ -118,10 +118,38 @@ function translate_system_apps(&$arr) {
 
 }
 
-function app_render($app) {
-//debugging
-	return print_r($app,true);	
 
+// papp is a portable app
+
+function app_render($papp,$mode = 'view') {
+
+	/**
+	 * modes:
+	 *    view: normal mode for viewing an app via bbcode from a conversation or page
+	 *       provides install/update button if you're logged in locally
+	 *    list: normal mode for viewing an app on the app page
+	 *       no buttons are shown
+	 *    edit: viewing the app page in editing mode provides a delete button
+	 */
+
+	$installed = false;
+
+	if(! $papp['photo'])
+		$papp['photo'] = z_root() . '/' . get_default_profile_photo(80);
+	
+	$papp['papp'] = papp_encode($papp);
+
+	if(local_user()) {
+		$installed = app_installed(local_user(),$papp);
+	}
+
+	$install_action = (($installed) ? t('Update') : t('Install'));
+
+	return replace_macros(get_markup_template('app.tpl'),array(
+		'$app' => $papp,
+		'$install' => ((local_user() && $mode == 'view') ? $install_action : ''),
+		'$delete' => ((local_user() && $installed && $mode == 'edit') ? t('Delete') : '')
+	));
 }
 
 
@@ -131,6 +159,15 @@ function app_install($uid,$app) {
 		app_update($app);
 	else
 		app_store($app);
+}
+
+function app_destroy($uid,$app) {
+	if($uid && $app['guid']) {
+		$r = q("delete from app where app_id = '%s' and app_channel = %d limit 1",
+			dbesc($app['guid']),
+			intval($uid)
+		);
+	}
 }
 
 
@@ -245,7 +282,7 @@ function app_update($arr) {
 }
 
 
-function app_encode($app) {
+function app_encode($app,$embed = false) {
 
 	$ret = array();
 
@@ -285,7 +322,16 @@ function app_encode($app) {
 	if($app['app_page'])
 		$ret['page'] = $app['app_page'];
 
+	if(! $embed)
+		return $ret;
+
 	$j = json_encode($ret);
 	return '[app]' . chunk_split(base64_encode($j),72,"\n") . '[/app]';
+
+}
+
+
+function papp_encode($papp) {
+	return chunk_split(base64_encode(json_encode($papp)),72,"\n");
 
 }
