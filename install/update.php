@@ -1,6 +1,6 @@
 <?php
 
-define( 'UPDATE_VERSION' , 1110 );
+define( 'UPDATE_VERSION' , 1111 );
 
 /**
  *
@@ -1231,4 +1231,16 @@ function update_r1109() {
 	if($r)
 		return UPDATE_SUCCESS;
 	return UPDATE_FAILED;
+}
+
+// We ended up with an extra zero in the name for 1108, so do it over and ignore the result.
+
+function update_r1110() {
+	$r = q("ALTER TABLE `app` ADD `app_addr` CHAR( 255 ) NOT NULL DEFAULT '',
+ADD `app_price` CHAR( 255 ) NOT NULL DEFAULT '',
+ADD `app_page` CHAR( 255 ) NOT NULL DEFAULT '',
+ADD INDEX ( `app_price` )");
+
+	return UPDATE_SUCCESS;
+
 }
