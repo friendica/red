@@ -162,11 +162,12 @@ function t($s,$ctx = '') {
 }
 
 
-function tt($singular, $plural, $count){
+function tt($singular, $plural, $count, $ctx = ''){
 	$a = get_app();
 
-	if(x($a->strings,$singular)) {
-		$t = $a->strings[$singular];
+	$cs = $ctx?"__ctx:".$ctx."__ ".$singular:$singular;
+	if(x($a->strings,$cs)) {
+		$t = $a->strings[$cs];
 		$f = 'string_plural_select_' . str_replace('-', '_', $a->language);
 		if(! function_exists($f))
 			$f = 'string_plural_select_default';

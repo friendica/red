@@ -131,12 +131,12 @@ class Item extends BaseObject {
 		} else {
 			$like_list_part = '';
 		}
-		$like_button_label = ((x($alike,$item['mid'])) && ($alike[$item['mid']] < 2 ) ? t('Like') : t('Likes'));
+		$like_button_label = tt('Like','Likes',$like_count,'noun');
 
 		if (feature_enabled($conv->get_profile_owner(),'dislike')) {
 			$dislike_count = ((x($dlike,$item['mid'])) ? $dlike[$item['mid']] : '');
 			$dislike_list = ((x($dlike,$item['mid'])) ? $dlike[$item['mid'] . '-l'] : '');
-			$dislike_button_label = ((x($dlike,$item['mid'])) && ($dlike[$item['mid']] < 2) ? t('Dislike') : t('Dislikes'));
+			$dislike_button_label = tt('Dislike','Dislikes',$dislike_count,'noun');
 			if (count($dislike_list) > MAX_LIKERS) {
 				$dislike_list_part = array_slice($dislike_list, 0, MAX_LIKERS);
 				array_push($dislike_list_part, '<a href="#" data-toggle="modal" data-target="#dislikeModal-' . $this->get_id() . '"><b>' . t('View all') . '</b></a>');
@@ -276,8 +276,8 @@ class Item extends BaseObject {
 			'like_list' => $like_list,
 			'like_list_part' => $like_list_part,
 			'like_button_label' => $like_button_label,
-			'like_modal_title' => t('Likes'),
-			'dislike_modal_title' => t('Dislikes'),
+			'like_modal_title' => t('Likes','noun'),
+			'dislike_modal_title' => t('Dislikes','noun'),
 			'dislike_count' => ((feature_enabled($conv->get_profile_owner(),'dislike')) ? $dislike_count : ''),
 			'dislike_list' => ((feature_enabled($conv->get_profile_owner(),'dislike')) ? $dislike_list : ''),
 			'dislike_list_part' => ((feature_enabled($conv->get_profile_owner(),'dislike')) ? $dislike_list_part : ''),
