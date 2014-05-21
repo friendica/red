@@ -27,8 +27,11 @@ function apps_content(&$a) {
 	$apps = array();
 	$list = app_list(local_user());
 	if($list) {
-		foreach($list as $app)
+		foreach($list as $app) {
+			if($mode == 'edit') 
+				$app['alt_url'] = z_root() . '/appman/?f=&appid=' . $app['app_id'];
 			$apps[] = app_render(app_encode($app),$mode);
+		}
 	}
 
 	return replace_macros(get_markup_template('myapps.tpl'), array(

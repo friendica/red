@@ -1,5 +1,5 @@
 <div class="app-container">
-<a href="{{$app.url}}" {{if $app.hover}}title="{{$app.hover}}"{{/if}}><img src="{{$app.photo}}" width="80" height="80" />
+<a href="{{if $app.alt_url}}{{$app.alt_url}}{{else}}{{$app.url}}{{/if}}" {{if $app.hover}}title="{{$app.hover}}"{{/if}}><img src="{{$app.photo}}" width="80" height="80" />
 <div class="app-name">{{$app.name}}</div>
 </a>
 {{if $install || $update || $delete }}

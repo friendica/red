@@ -348,6 +348,9 @@ function app_encode($app,$embed = false) {
 	if($app['app_page'])
 		$ret['page'] = $app['app_page'];
 
+	if($app['alt_url'])
+		$ret['alt_url'] = $app['alt_url'];
+
 	if(! $embed)
 		return $ret;
 
