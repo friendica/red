@@ -14,11 +14,15 @@
 
 {{include file="field_input.tpl" field=$name}}
 {{include file="field_input.tpl" field=$url}}
-{{include file="field_input.tpl" field=$desc}}
+{{include file="field_textarea.tpl" field=$desc}}
 {{include file="field_input.tpl" field=$photo}}
 {{include file="field_input.tpl" field=$version}}
 {{include file="field_input.tpl" field=$price}}
 {{include file="field_input.tpl" field=$page}}
+
+{{if $embed}}
+{{include file="field_textarea.tpl" field=$embed}}
+{{/if}}
 
 <input type="submit" name="submit" value="{{$submit}}" />
 

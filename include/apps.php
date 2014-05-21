@@ -93,7 +93,7 @@ function parse_app_description($f) {
 				break;
 
 		}
-		logger('require: ' . print_r($ret,true));
+//		logger('require: ' . print_r($ret,true));
 	}
 	if($ret) {
 		translate_system_apps($ret);
@@ -156,9 +156,14 @@ function app_render($papp,$mode = 'view') {
 function app_install($uid,$app) {
 	$app['uid'] = $uid;
 	if(app_installed($uid,$app))
-		app_update($app);
+		$x = app_update($app);
 	else
-		app_store($app);
+		$x = app_store($app);
+
+	if($x['success'])
+		return $x['app_id'];
+
+	return false;
 }
 
 function app_destroy($uid,$app) {
@@ -199,13 +204,21 @@ function app_decode($s) {
 
 function app_store($arr) {
 
+	// logger('app_store: ' . print_r($arr,true));
+
 	$darray = array();
 	$ret = array('success' => false);
 
 	$darray['app_url'] = ((x($arr,'url')) ? $arr['url'] : '');
 	$darray['app_channel'] = ((x($arr,'uid')) ? $arr['uid'] : 0);
-	if((! $darray['url']) || (! $darray['app_channel']))
+	if((! $darray['app_url']) || (! $darray['app_channel']))
 		return $ret;
+
+	if($arr['photo'] && ! strstr($arr['photo'],z_root())) {
+		$x = import_profile_photo($arr['photo'],get_observer_hash(),true);
+		$arr['photo'] = $x[1];
+	}
+
 
 	$darray['app_id'] = ((x($arr,'guid')) ? $arr['guid'] : random_string(). '.' . get_app()->get_hostname());
 	$darray['app_sig'] = ((x($arr,'sig')) ? $arr['sig'] : '');
@@ -232,9 +245,10 @@ function app_store($arr) {
 		dbesc($darray['app_price']),
 		dbesc($darray['app_page'])
 	);
-	if($r)
+	if($r) {
 		$ret['success'] = true;
-
+		$ret['app_id'] = $darray['app_id'];
+	}
 	return $ret;
 }
 
@@ -247,8 +261,13 @@ function app_update($arr) {
 	$darray['app_url'] = ((x($arr,'url')) ? $arr['url'] : '');
 	$darray['app_channel'] = ((x($arr,'uid')) ? $arr['uid'] : 0);
 	$darray['app_id'] = ((x($arr,'guid')) ? $arr['guid'] : 0);
-	if((! $darray['url']) || (! $darray['app_channel']) || (! $darray['app_id']))
+	if((! $darray['app_url']) || (! $darray['app_channel']) || (! $darray['app_id']))
 		return $ret;
+
+	if($arr['photo'] && ! strstr($arr['photo'],z_root())) {
+		$x = import_profile_photo($arr['photo'],get_observer_hash(),true);
+		$arr['photo'] = $x[1];
+	}
 
 	$darray['app_sig'] = ((x($arr,'sig')) ? $arr['sig'] : '');
 	$darray['app_author'] = ((x($arr,'author')) ? $arr['author'] : get_observer_hash());
@@ -274,8 +293,10 @@ function app_update($arr) {
 		dbesc($darray['app_id']),
 		intval($darray['app_channel'])
 	);
-	if($r)
+	if($r) {
 		$ret['success'] = true;
+		$ret['app_id'] = $darray['app_id'];
+	}
 
 	return $ret;
 
