@@ -9,6 +9,7 @@ include/jquery-1.4.2.min.js
 home.html
 addon
 *~
+.*.swp
 compiled/
 custom/
 /store/

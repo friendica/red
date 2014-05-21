@@ -153,8 +153,9 @@ function load_translation_table($lang, $install = false) {
 function t($s,$ctx = '') {
 	global $a;
 
-	if(x($a->strings,$s)) {
-		$t = $a->strings[$s];
+	$cs = $ctx?"__ctx:".$ctx."__ ".$s:$s;
+	if(x($a->strings,$cs)) {
+		$t = $a->strings[$cs];
 		return is_array($t) ? $t[0] : $t;
 	}
 	return $s;
