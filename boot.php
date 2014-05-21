@@ -53,7 +53,6 @@ define ( 'EOL',                    '<br />' . "\r\n"     );
 define ( 'ATOM_TIME',              'Y-m-d\TH:i:s\Z' );
 
 
-
 define ( 'DIRECTORY_MODE_NORMAL',      0x0000);  // This is technically DIRECTORY_MODE_TERTIARY, but it's the default, hence 0x0000
 define ( 'DIRECTORY_MODE_PRIMARY',     0x0001);
 define ( 'DIRECTORY_MODE_SECONDARY',   0x0002);

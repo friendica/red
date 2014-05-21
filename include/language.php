@@ -145,10 +145,12 @@ function load_translation_table($lang, $install = false) {
 /**
  * @brief translate string if translation exists.
  *
- * @param s string that should get translated
+ * @param $s string that should get translated
+ * @param $ctx optional context to appear in po file
  * @return translated string if exsists, otherwise s
+ *
  */
-function t($s) {
+function t($s,$ctx = '') {
 	global $a;
 
 	if(x($a->strings,$s)) {
