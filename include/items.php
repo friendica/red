@@ -2438,7 +2438,7 @@ function tag_deliver($uid,$item_id) {
 
 	if($terms) {
 		foreach($terms as $term) {
-			if((strcasecmp($term['term'],$u[0]['channel_name']) == 0) && link_compare($term['url'],$link)) {			
+			if(link_compare($term['url'],$link)) {			
 				$mention = true;
 				break;
 			}
@@ -2474,11 +2474,11 @@ function tag_deliver($uid,$item_id) {
 		$tagged = false;
 		$plustagged = false;
 
-		$pattern = '/@\!?\[zrl\=' . preg_quote($term['url'],'/') . '\]' . preg_quote($u[0]['channel_name'],'/') . '\[\/zrl\]/';
+		$pattern = '/@\!?\[zrl\=' . preg_quote($term['url'],'/') . '\]' . preg_quote($term['term'],'/') . '\[\/zrl\]/';
 		if(preg_match($pattern,$body,$matches)) 
 			$tagged = true;
 
-		$pattern = '/@\!?\[zrl\=' . preg_quote($term['url'],'/') . '\]' . preg_quote($u[0]['channel_name'] . '+','/') . '\[\/zrl\]/';
+		$pattern = '/@\!?\[zrl\=' . preg_quote($term['url'],'/') . '\]' . preg_quote($term['term'] . '+','/') . '\[\/zrl\]/';
 		if(preg_match($pattern,$body,$matches)) 
 			$plustagged = true;
 
@@ -2607,7 +2607,7 @@ function tgroup_check($uid,$item) {
 
 	if($terms) {
 		foreach($terms as $term) {
-			if(($term['term'] == $u[0]['channel_name']) && link_compare($term['url'],$link)) {			
+			if(link_compare($term['url'],$link)) {			
 				$mention = true;
 				break;
 			}
@@ -2625,7 +2625,7 @@ function tgroup_check($uid,$item) {
 
 	$body = preg_replace('/\[share(.*?)\[\/share\]/','',$item['body']);
 
-	$pattern = '/@\!?\[zrl\=' . preg_quote($term['url'],'/') . '\]' . preg_quote($u[0]['channel_name'] . '+','/') . '\[\/zrl\]/';
+	$pattern = '/@\!?\[zrl\=' . preg_quote($term['url'],'/') . '\]' . preg_quote($term['term'] . '+','/') . '\[\/zrl\]/';
 
 	if(! preg_match($pattern,$body,$matches)) {
 		logger('tgroup_check: mention was in a reshare - ignoring');
