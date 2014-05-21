@@ -139,6 +139,11 @@ function app_render($papp,$mode = 'view') {
 	
 	$papp['papp'] = papp_encode($papp);
 
+	foreach($papp as $k => $v) {
+		if(strpos($v,'http') === 0 && $k != 'papp')
+			$papp[$k] = zid($v);
+	}
+
 	if(local_user()) {
 		$installed = app_installed(local_user(),$papp);
 	}
