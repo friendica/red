@@ -12,9 +12,11 @@ function home_init(&$a) {
 	$channel = $a->get_channel();
 
 	if(local_user() && $channel && $channel['xchan_url']) {
-		$dest = get_pconfig(local_user(),'system','startpage');
+		$dest = $channel['channel_startpage'];
 		if(! $dest)
-			$dest = z_root() . '/network';
+			$dest = get_pconfig(local_user(),'system','startpage');
+		if(! $dest)
+			$dest = z_root() . '/apps';
 
 		goaway($dest);
 	}
