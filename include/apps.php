@@ -31,11 +31,14 @@ function get_system_apps() {
 			}
 		}
 	}
-
+	usort($ret,'app_name_compare');
 	return $ret;
 
 }
 
+function app_name_compare($a,$b) {
+	return strcmp($a['name'],$b['name']);
+}
 
 function parse_app_description($f) {
 	$ret = array();
