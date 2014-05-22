@@ -1,0 +1,4 @@
+url: $baseurl/store/$nick
+requires: local_user
+name: Files
+photo: $baseurl/app/storage.png
