@@ -79,6 +79,10 @@ function parse_app_description($f) {
 				if(local_user())
 					unset($ret);
 				break;
+			case 'admin':
+				if(! is_site_admin())
+					unset($ret);
+				break;
 			case 'local_user':
 				if(! local_user())
 					unset($ret);
@@ -105,6 +109,7 @@ function parse_app_description($f) {
 
 function translate_system_apps(&$arr) {
 	$apps = array(
+		'Site Admin' => t('Site Admin'),
 		'Bookmarks' => t('Bookmarks'),
 		'Address Book' => t('Address Book'),
 		'Login' => t('Login'),
