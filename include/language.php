@@ -214,8 +214,10 @@ function detect_language($s) {
 	if($min_confidence === false)
 		$min_confidence = LANGUAGE_DETECT_MIN_CONFIDENCE;
 
+	// embedded apps have long base64 strings which will trip up the detector.
+	$naked_body = preg_replace('/\[app\](.*?)\[\/app\]/','',$s);
 	// strip off bbcode
-	$naked_body = preg_replace('/\[(.+?)\]/', '', $s);
+	$naked_body = preg_replace('/\[(.+?)\]/', '', $naked_body);
 	if(mb_strlen($naked_body) < intval($min_length)) {
 		logger('detect language: string length less than ' . intval($min_length), LOGGER_DATA);
 		return '';
