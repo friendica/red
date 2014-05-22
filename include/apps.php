@@ -104,7 +104,15 @@ function parse_app_description($f) {
 
 
 function translate_system_apps(&$arr) {
-	$apps = array( 'Matrix' => t('Matrix'), 
+	$apps = array(
+		'Bookmarks' => t('Bookmarks'),
+		'Address Book' => t('Address Book'),
+		'Login' => t('Login'),
+		'Channel Select' => t('Channel Select'), 
+		'Matrix' => t('Matrix'), 
+		'Settings' => t('Settings'),
+		'Files' => t('Files'),
+		'Webpages' => t('Webpages'),
 		'Channel Home' => t('Channel Home'), 
 		'Profile' => t('Profile'),
 		'Photos' => t('Photos'), 
@@ -142,6 +150,9 @@ function app_render($papp,$mode = 'view') {
 	foreach($papp as $k => $v) {
 		if(strpos($v,'http') === 0 && $k != 'papp')
 			$papp[$k] = zid($v);
+		if($k === 'desc')
+			$papp['desc'] = str_replace(array('\'','"'),array('&#39;','&dquot;'),$papp['desc']);
+
 	}
 
 	if(local_user()) {
@@ -152,7 +163,9 @@ function app_render($papp,$mode = 'view') {
 
 	return replace_macros(get_markup_template('app.tpl'),array(
 		'$app' => $papp,
+		'$purchase' => (($papp['page'] && (! $installed)) ? t('Purchase') : ''),
 		'$install' => ((local_user() && $mode == 'view') ? $install_action : ''),
+		'$edit' => ((local_user() && $installed && $mode == 'edit') ? t('Edit') : ''),
 		'$delete' => ((local_user() && $installed && $mode == 'edit') ? t('Delete') : '')
 	));
 }
@@ -348,8 +361,8 @@ function app_encode($app,$embed = false) {
 	if($app['app_page'])
 		$ret['page'] = $app['app_page'];
 
-	if($app['alt_url'])
-		$ret['alt_url'] = $app['alt_url'];
+//	if($app['alt_url'])
+//		$ret['alt_url'] = $app['alt_url'];
 
 	if(! $embed)
 		return $ret;

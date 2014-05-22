@@ -28,8 +28,6 @@ function apps_content(&$a) {
 	$list = app_list(local_user());
 	if($list) {
 		foreach($list as $app) {
-			if($mode == 'edit') 
-				$app['alt_url'] = z_root() . '/appman/?f=&appid=' . $app['app_id'];
 			$apps[] = app_render(app_encode($app),$mode);
 		}
 	}

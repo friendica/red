@@ -44,6 +44,10 @@ function appman_post(&$a) {
 		app_destroy(local_user(),$papp);
 	}
 
+	if($_POST['edit']) {
+		return;
+	}
+
 	if($_SESSION['return_url']) 
 		goaway(z_root() . '/' . $_SESSION['return_url']);
 	goaway(z_root() . '/apps/personal');
@@ -58,7 +62,7 @@ function appman_content(&$a) {
 		notice( t('Permission denied.') . EOL);
 		return;
 	}
-
+logger('content');
 	$channel = $a->get_channel();
 	$app = null;
 	$embed = null;
@@ -75,7 +79,7 @@ function appman_content(&$a) {
 			
 	return replace_macros(get_markup_template('app_create.tpl'), array(
 
-		'$banner' => t('Create App'),
+		'$banner' => (($app) ? t('Edit App') : t('Create App')),
 		'$app' => $app,
 		'$guid' => (($app) ? $app['app_id'] : ''),
 		'$author' => (($app) ? $app['app_author'] : $channel['channel_hash']),
