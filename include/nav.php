@@ -138,8 +138,8 @@ EOT;
 	if(! get_config('system','hide_help'))
 		$nav['help'] = array($help_url, t('Help'), "", t('Help and documentation'));
 
-	if(count($a->get_apps()) > 0)
-		$nav['apps'] = array('apps', t('Apps'), "", t('Addon applications, utilities, games'));
+
+	$nav['apps'] = array('apps', t('Apps'), "", t('Applications, utilities, links, games'));
 
 	$nav['search'] = array('search', t('Search'), "", t('Search site content'));
 
@@ -221,7 +221,6 @@ EOT;
 		'$userinfo' => $x['usermenu'],
 		'$localuser' => local_user(),
 		'$sel' => 	$a->nav_sel,
-		'$apps' => $a->get_apps(),
 		'$pleasewait' => t('Please wait...')
 	));
 

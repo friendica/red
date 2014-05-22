@@ -1,0 +1,4 @@
+url: $baseurl/bookmarks
+requires: local_user
+name: Bookmarks
+photo: $baseurl/app/bookmarks.png

@@ -1,6 +1,6 @@
 <?php
 
-define( 'UPDATE_VERSION' , 1109 );
+define( 'UPDATE_VERSION' , 1111 );
 
 /**
  *
@@ -1216,7 +1216,7 @@ function update_r1107() {
 }
 
 
-function update_r11108() {
+function update_r1108() {
 	$r = q("ALTER TABLE `app` ADD `app_addr` CHAR( 255 ) NOT NULL DEFAULT '',
 ADD `app_price` CHAR( 255 ) NOT NULL DEFAULT '',
 ADD `app_page` CHAR( 255 ) NOT NULL DEFAULT '',
@@ -1224,4 +1224,23 @@ ADD INDEX ( `app_price` )");
 	if($r)
 		return UPDATE_SUCCESS;
 	return UPDATE_FAILED;
+}
+
+function update_r1109() {
+	$r = q("ALTER TABLE `app` CHANGE `app_id` `app_id` CHAR( 255 ) CHARACTER SET utf8 COLLATE utf8_general_ci NOT NULL DEFAULT ''");
+	if($r)
+		return UPDATE_SUCCESS;
+	return UPDATE_FAILED;
+}
+
+// We ended up with an extra zero in the name for 1108, so do it over and ignore the result.
+
+function update_r1110() {
+	$r = q("ALTER TABLE `app` ADD `app_addr` CHAR( 255 ) NOT NULL DEFAULT '',
+ADD `app_price` CHAR( 255 ) NOT NULL DEFAULT '',
+ADD `app_page` CHAR( 255 ) NOT NULL DEFAULT '',
+ADD INDEX ( `app_price` )");
+
+	return UPDATE_SUCCESS;
+
 }

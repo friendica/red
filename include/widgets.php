@@ -76,11 +76,11 @@ function widget_collections($args) {
 
 function widget_appselect($arr) {
 	return replace_macros(get_markup_template('app_select.tpl'),array(
-		'$title' => t('App Category'),
+		'$title' => t('Apps'),
 		'$system' => t('System'),
 		'$personal' => t('Personal'),
-		'$featured' => t('Featured'),
-		'$new' => t('New')
+		'$new' => t('Create Personal App'),
+		'$edit' => t('Edit Personal App')
 	));
 }
 

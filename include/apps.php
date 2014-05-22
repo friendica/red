@@ -31,11 +31,14 @@ function get_system_apps() {
 			}
 		}
 	}
-
+	usort($ret,'app_name_compare');
 	return $ret;
 
 }
 
+function app_name_compare($a,$b) {
+	return strcmp($a['name'],$b['name']);
+}
 
 function parse_app_description($f) {
 	$ret = array();
@@ -79,6 +82,10 @@ function parse_app_description($f) {
 				if(local_user())
 					unset($ret);
 				break;
+			case 'admin':
+				if(! is_site_admin())
+					unset($ret);
+				break;
 			case 'local_user':
 				if(! local_user())
 					unset($ret);
@@ -93,7 +100,7 @@ function parse_app_description($f) {
 				break;
 
 		}
-		logger('require: ' . print_r($ret,true));
+//		logger('require: ' . print_r($ret,true));
 	}
 	if($ret) {
 		translate_system_apps($ret);
@@ -104,7 +111,16 @@ function parse_app_description($f) {
 
 
 function translate_system_apps(&$arr) {
-	$apps = array( 'Matrix' => t('Matrix'), 
+	$apps = array(
+		'Site Admin' => t('Site Admin'),
+		'Bookmarks' => t('Bookmarks'),
+		'Address Book' => t('Address Book'),
+		'Login' => t('Login'),
+		'Channel Select' => t('Channel Select'), 
+		'Matrix' => t('Matrix'), 
+		'Settings' => t('Settings'),
+		'Files' => t('Files'),
+		'Webpages' => t('Webpages'),
 		'Channel Home' => t('Channel Home'), 
 		'Profile' => t('Profile'),
 		'Photos' => t('Photos'), 
@@ -118,19 +134,71 @@ function translate_system_apps(&$arr) {
 
 }
 
-function app_render($app) {
+
+// papp is a portable app
+
+function app_render($papp,$mode = 'view') {
+
+	/**
+	 * modes:
+	 *    view: normal mode for viewing an app via bbcode from a conversation or page
+	 *       provides install/update button if you're logged in locally
+	 *    list: normal mode for viewing an app on the app page
+	 *       no buttons are shown
+	 *    edit: viewing the app page in editing mode provides a delete button
+	 */
+
+	$installed = false;
+
+	if(! $papp['photo'])
+		$papp['photo'] = z_root() . '/' . get_default_profile_photo(80);
 	
+	$papp['papp'] = papp_encode($papp);
 
+	foreach($papp as $k => $v) {
+		if(strpos($v,'http') === 0 && $k != 'papp')
+			$papp[$k] = zid($v);
+		if($k === 'desc')
+			$papp['desc'] = str_replace(array('\'','"'),array('&#39;','&dquot;'),$papp['desc']);
 
+	}
 
+	if(local_user()) {
+		$installed = app_installed(local_user(),$papp);
+	}
 
+	$install_action = (($installed) ? t('Update') : t('Install'));
+
+	return replace_macros(get_markup_template('app.tpl'),array(
+		'$app' => $papp,
+		'$purchase' => (($papp['page'] && (! $installed)) ? t('Purchase') : ''),
+		'$install' => ((local_user() && $mode == 'view') ? $install_action : ''),
+		'$edit' => ((local_user() && $installed && $mode == 'edit') ? t('Edit') : ''),
+		'$delete' => ((local_user() && $installed && $mode == 'edit') ? t('Delete') : '')
+	));
 }
 
 
 function app_install($uid,$app) {
+	$app['uid'] = $uid;
+	if(app_installed($uid,$app))
+		$x = app_update($app);
+	else
+		$x = app_store($app);
 
+	if($x['success'])
+		return $x['app_id'];
 
+	return false;
+}
 
+function app_destroy($uid,$app) {
+	if($uid && $app['guid']) {
+		$r = q("delete from app where app_id = '%s' and app_channel = %d limit 1",
+			dbesc($app['guid']),
+			intval($uid)
+		);
+	}
 }
 
 
@@ -155,30 +223,41 @@ function app_list($uid) {
 
 
 function app_decode($s) {
-	$x = base64_decode($s);
+	$x = base64_decode(str_replace(array('<br />',"\r","\n",' '),array('','','',''),$s));
 	return json_decode($x,true);
 }
 
 
 function app_store($arr) {
 
+	// logger('app_store: ' . print_r($arr,true));
+
 	$darray = array();
 	$ret = array('success' => false);
 
 	$darray['app_url'] = ((x($arr,'url')) ? $arr['url'] : '');
 	$darray['app_channel'] = ((x($arr,'uid')) ? $arr['uid'] : 0);
-	if((! $darray['url']) || (! $darray['app_channel']))
+	if((! $darray['app_url']) || (! $darray['app_channel']))
 		return $ret;
 
-	$darray['app_id'] = ((x($arr,'guid')) ? $arr['guid'] : random_string());
+	if($arr['photo'] && ! strstr($arr['photo'],z_root())) {
+		$x = import_profile_photo($arr['photo'],get_observer_hash(),true);
+		$arr['photo'] = $x[1];
+	}
+
+
+	$darray['app_id'] = ((x($arr,'guid')) ? $arr['guid'] : random_string(). '.' . get_app()->get_hostname());
 	$darray['app_sig'] = ((x($arr,'sig')) ? $arr['sig'] : '');
 	$darray['app_author'] = ((x($arr,'author')) ? $arr['author'] : get_observer_hash());
 	$darray['app_name'] = ((x($arr,'name')) ? escape_tags($arr['name']) : t('Unknown'));
 	$darray['app_desc'] = ((x($arr,'desc')) ? escape_tags($arr['desc']) : '');
 	$darray['app_photo'] = ((x($arr,'photo')) ? $arr['photo'] : z_root() . '/' . get_default_profile_photo(80));
 	$darray['app_version'] = ((x($arr,'version')) ? escape_tags($arr['version']) : '');
+	$darray['app_addr'] = ((x($arr,'addr')) ? escape_tags($arr['addr']) : '');
+	$darray['app_price'] = ((x($arr,'price')) ? escape_tags($arr['price']) : '');
+	$darray['app_page'] = ((x($arr,'page')) ? escape_tags($arr['page']) : '');
 
-	$r = q("insert into app ( app_id, app_sig, app_author, app_name, app_desc, app_url, app_photo, app_version, app_channel) values ( '%s', '%s', '%s', '%s', '%s', '%s', '%s', '%s', %d )",
+	$r = q("insert into app ( app_id, app_sig, app_author, app_name, app_desc, app_url, app_photo, app_version, app_channel, app_addr, app_price, app_page ) values ( '%s', '%s', '%s', '%s', '%s', '%s', '%s', '%s', %d, '%s', '%s', '%s' )",
 		dbesc($darray['app_id']),
 		dbesc($darray['app_sig']),
 		dbesc($darray['app_author']),
@@ -187,18 +266,122 @@ function app_store($arr) {
 		dbesc($darray['app_url']),
 		dbesc($darray['app_photo']),
 		dbesc($darray['app_version']),
-		intval($darray['app_channel'])
+		intval($darray['app_channel']),
+		dbesc($darray['app_addr']),
+		dbesc($darray['app_price']),
+		dbesc($darray['app_page'])
 	);
-	if($r)
+	if($r) {
 		$ret['success'] = true;
-
+		$ret['app_id'] = $darray['app_id'];
+	}
 	return $ret;
 }
 
 
 function app_update($arr) {
 
+	$darray = array();
+	$ret = array('success' => false);
+
+	$darray['app_url'] = ((x($arr,'url')) ? $arr['url'] : '');
+	$darray['app_channel'] = ((x($arr,'uid')) ? $arr['uid'] : 0);
+	$darray['app_id'] = ((x($arr,'guid')) ? $arr['guid'] : 0);
+	if((! $darray['app_url']) || (! $darray['app_channel']) || (! $darray['app_id']))
+		return $ret;
+
+	if($arr['photo'] && ! strstr($arr['photo'],z_root())) {
+		$x = import_profile_photo($arr['photo'],get_observer_hash(),true);
+		$arr['photo'] = $x[1];
+	}
+
+	$darray['app_sig'] = ((x($arr,'sig')) ? $arr['sig'] : '');
+	$darray['app_author'] = ((x($arr,'author')) ? $arr['author'] : get_observer_hash());
+	$darray['app_name'] = ((x($arr,'name')) ? escape_tags($arr['name']) : t('Unknown'));
+	$darray['app_desc'] = ((x($arr,'desc')) ? escape_tags($arr['desc']) : '');
+	$darray['app_photo'] = ((x($arr,'photo')) ? $arr['photo'] : z_root() . '/' . get_default_profile_photo(80));
+	$darray['app_version'] = ((x($arr,'version')) ? escape_tags($arr['version']) : '');
+	$darray['app_addr'] = ((x($arr,'addr')) ? escape_tags($arr['addr']) : '');
+	$darray['app_price'] = ((x($arr,'price')) ? escape_tags($arr['price']) : '');
+	$darray['app_page'] = ((x($arr,'page')) ? escape_tags($arr['page']) : '');
+
+	$r = q("update app set app_sig = '%s', app_author = '%s', app_name = '%s', app_desc = '%s', app_url = '%s', app_photo = '%s', app_version = '%s', app_addr = '%s', app_price = '%s', app_page = '%s' where app_id = '%s' and app_channel = %d limit 1",
+		dbesc($darray['app_sig']),
+		dbesc($darray['app_author']),
+		dbesc($darray['app_name']),
+		dbesc($darray['app_desc']),
+		dbesc($darray['app_url']),
+		dbesc($darray['app_photo']),
+		dbesc($darray['app_version']),
+		dbesc($darray['app_addr']),
+		dbesc($darray['app_price']),
+		dbesc($darray['app_page']),
+		dbesc($darray['app_id']),
+		intval($darray['app_channel'])
+	);
+	if($r) {
+		$ret['success'] = true;
+		$ret['app_id'] = $darray['app_id'];
+	}
+
+	return $ret;
+
+}
 
 
+function app_encode($app,$embed = false) {
+
+	$ret = array();
+
+	if($app['app_id'])
+		$ret['guid'] = $app['app_id'];
+
+	if($app['app_id'])
+		$ret['guid'] = $app['app_id'];
+
+	if($app['app_sig'])
+		$ret['sig'] = $app['app_sig'];
+
+	if($app['app_author'])
+		$ret['author'] = $app['app_author'];
+
+	if($app['app_name'])
+		$ret['name'] = $app['app_name'];
+
+	if($app['app_desc'])
+		$ret['desc'] = $app['app_desc'];
+
+	if($app['app_url'])
+		$ret['url'] = $app['app_url'];
+
+	if($app['app_photo'])
+		$ret['photo'] = $app['app_photo'];
+
+	if($app['app_version'])
+		$ret['version'] = $app['app_version'];
+
+	if($app['app_addr'])
+		$ret['addr'] = $app['app_addr'];
+
+	if($app['app_price'])
+		$ret['price'] = $app['app_price'];
+
+	if($app['app_page'])
+		$ret['page'] = $app['app_page'];
+
+//	if($app['alt_url'])
+//		$ret['alt_url'] = $app['alt_url'];
+
+	if(! $embed)
+		return $ret;
+
+	$j = json_encode($ret);
+	return '[app]' . chunk_split(base64_encode($j),72,"\n") . '[/app]';
+
+}
+
+
+function papp_encode($papp) {
+	return chunk_split(base64_encode(json_encode($papp)),72,"\n");
 
 }

@@ -44,7 +44,7 @@ OPTS=
 #	fi
 #fi
 
-KEYWORDS="-k -kt -ktt:1,2"
+KEYWORDS="-k -kt:1 -kt:1,2c,2t -ktt:1,2 -ktt:1,2,4c,4t"
 
 echo "extract strings to $OUTFILE.."
 
