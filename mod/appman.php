@@ -87,7 +87,7 @@ logger('content');
 		'$name' => array('name', t('Name of app'),(($app) ? $app['app_name'] : ''), t('Required')),
 		'$url' => array('url', t('Location (URL) of app'),(($app) ? $app['app_url'] : ''), t('Required')),
  		'$desc' => array('desc', t('Description'),(($app) ? $app['app_desc'] : ''), ''),
-		'$photo' => array('photo', t('Photo icon URL'),(($app) ? $app['app_url'] : ''), t('80 x 80 pixels - optional')),
+		'$photo' => array('photo', t('Photo icon URL'),(($app) ? $app['app_photo'] : ''), t('80 x 80 pixels - optional')),
 		'$version' => array('version', t('Version ID'),(($app) ? $app['app_version'] : ''), ''),
 		'$price' => array('price', t('Price of app'),(($app) ? $app['app_price'] : ''), ''),
 		'$page' => array('page', t('Location (URL) to purchase app'),(($app) ? $app['app_page'] : ''), ''),
