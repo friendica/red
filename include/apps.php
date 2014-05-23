@@ -129,6 +129,8 @@ function translate_system_apps(&$arr) {
 		'Help' => t('Help'),
 		'Mail' => t('Mail'),
 		'Mood' => t('Mood'),
+		'Poke' => t('Poke'),
+		'Chat' => t('Chat')
 	);
 
 	if(array_key_exists($arr['name'],$apps))
