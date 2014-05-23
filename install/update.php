@@ -1,6 +1,6 @@
 <?php
 
-define( 'UPDATE_VERSION' , 1111 );
+define( 'UPDATE_VERSION' , 1112 );
 
 /**
  *
@@ -1243,4 +1243,11 @@ ADD INDEX ( `app_price` )");
 
 	return UPDATE_SUCCESS;
 
+}
+
+function update_r1111() {
+	$r = q("ALTER TABLE `app` ADD `app_requires` CHAR( 255 ) NOT NULL DEFAULT '' ");
+	if($r)
+		return UPDATE_SUCCESS;
+	return UPDATE_FAILED;
 }

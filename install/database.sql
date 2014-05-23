@@ -97,6 +97,7 @@ CREATE TABLE IF NOT EXISTS `app` (
   `app_addr` char(255) NOT NULL DEFAULT '',
   `app_price` char(255) NOT NULL DEFAULT '',
   `app_page` char(255) NOT NULL DEFAULT '',
+  `app_requires` char(255) NOT NULL DEFAULT '',
   PRIMARY KEY (`id`),
   KEY `app_id` (`app_id`),
   KEY `app_name` (`app_name`),
