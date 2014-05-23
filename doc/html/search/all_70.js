@@ -17,6 +17,7 @@ var searchData=
   ['page_5fwidgets_2ephp',['page_widgets.php',['../page__widgets_8php.html',1,'']]],
   ['pagelist_5fwidget',['pagelist_widget',['../page__widgets_8php.html#a39d547771c5f12a17c097436c82f0fa2',1,'page_widgets.php']]],
   ['paginate',['paginate',['../text_8php.html#afe9f178d264d44a94dc1292aaf0fd585',1,'text.php']]],
+  ['papp_5fencode',['papp_encode',['../include_2apps_8php.html#ad6ba3f254003f69f8f3f94ca5bda0680',1,'apps.php']]],
   ['parse_5fapp_5fdescription',['parse_app_description',['../include_2apps_8php.html#a32fe4ed9666228fd4b67dc487cc57a83',1,'apps.php']]],
   ['parse_5furl_2ephp',['parse_url.php',['../parse__url_8php.html',1,'']]],
   ['parse_5furl_5fcontent',['parse_url_content',['../parse__url_8php.html#a05a9e8944380ba3cf6bbf5893dd4b74b',1,'parse_url.php']]],

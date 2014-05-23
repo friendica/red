@@ -264,6 +264,7 @@ var boot_8php =
     [ "TERM_FILE", "boot_8php.html#afb97615e985a013799839b68b99018d7", null ],
     [ "TERM_HASHTAG", "boot_8php.html#a2750985ec445617d7e82ae3098c91e3f", null ],
     [ "TERM_MENTION", "boot_8php.html#ae37444eaa42705185080ccf3e670cbc2", null ],
+    [ "TERM_OBJ_APP", "boot_8php.html#ace6d70ac290397ddd40e561fd0831858", null ],
     [ "TERM_OBJ_CHANNEL", "boot_8php.html#a8892374789fd261eb32a7969d934a14a", null ],
     [ "TERM_OBJ_OBJECT", "boot_8php.html#a882b666adfe21f035a0f8c02806066d6", null ],
     [ "TERM_OBJ_PHOTO", "boot_8php.html#a64617d4655804de2a3c86501ab4fdbfd", null ],
