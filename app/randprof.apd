@@ -1,0 +1,5 @@
+url: $baseurl/randprof
+name: Random Channel
+target: randprof
+
+
