@@ -1,0 +1,4 @@
+url: $baseurl/mood
+requires: local_user
+name: Mood
+photo: $baseurl/app/mood.png
