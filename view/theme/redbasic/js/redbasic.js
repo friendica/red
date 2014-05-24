@@ -1,4 +1,4 @@
-function commentCloseRed(obj,id) {
+function commentCloseRedbasic(obj,id) {
 	$(document).click(function() {
 		if(obj.value == '') {
 		obj.value = aStr['comment'];
