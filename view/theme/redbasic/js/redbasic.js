@@ -1,3 +1,13 @@
+function commentOpenRedbasic(obj,id) {
+	$(document).click(function() {
+		if(obj.value == aStr['comment']) {
+			obj.value = '';
+			$("#comment-edit-text-" + id).addClass("comment-edit-text-full").removeClass("comment-edit-text-empty");
+			$("#comment-tools-" + id).show();
+		}
+	});
+}
+
 function commentCloseRedbasic(obj,id) {
 	$(document).click(function() {
 		if(obj.value == '') {
