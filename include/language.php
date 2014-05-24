@@ -43,8 +43,6 @@ function get_browser_language() {
 			arsort($langs, SORT_NUMERIC);
 		}
 	}
-	else
-		$langs['en'] = 1;
 
 	return $langs;
 }
@@ -65,6 +63,7 @@ function get_best_language() {
 
 	if(isset($langs) && count($langs)) {
 		foreach ($langs as $lang => $v) {
+			$lang = strtolower($lang);
 			if(file_exists("view/$lang") && is_dir("view/$lang")) {
 				$preferred = $lang;
 				break;

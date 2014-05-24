@@ -27,9 +27,6 @@ $a->install = ((file_exists('.htconfig.php') && filesize('.htconfig.php')) ? fal
 
 @include(".htconfig.php");
 
-$a->language = get_best_language();
-	
-
 /**
  *
  * Try to open the database;
@@ -54,6 +51,7 @@ if(! $a->install) {
 	load_hooks();
 	call_hooks('init_1');
 	
+	$a->language = get_best_language();
 	load_translation_table($a->language);
 	// Force the cookie to be secure (https only) if this site is SSL enabled. Must be done before session_start().
 
@@ -69,6 +67,7 @@ if(! $a->install) {
 }
 else {
 	// load translations but do not check plugins as we have no database
+	$a->language = get_best_language();
 	load_translation_table($a->language,true);
 }
 
