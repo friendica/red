@@ -1,3 +1,23 @@
+function commentOpenRedbasic(obj,id) {
+	$(document).click(function() {
+		if(obj.value == aStr['comment']) {
+			obj.value = '';
+			$("#comment-edit-text-" + id).addClass("comment-edit-text-full").removeClass("comment-edit-text-empty");
+			$("#comment-tools-" + id).show();
+		}
+	});
+}
+
+function commentCloseRedbasic(obj,id) {
+	$(document).click(function() {
+		if(obj.value == '') {
+		obj.value = aStr['comment'];
+			$("#comment-edit-text-" + id).removeClass("comment-edit-text-full").addClass("comment-edit-text-empty");
+			$("#comment-tools-" + id).hide();
+		}
+	});
+}
+
 $(document).ready(function() {
 
 $('#expand-aside').click(function() {
