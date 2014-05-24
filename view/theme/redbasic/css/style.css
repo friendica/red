@@ -535,6 +535,12 @@ aside li {
 	font-size: 0.7em;
 }
 
+.app-name {
+	width: 125px;
+	overflow: none;
+}
+
+
 .pager {
   padding: 10px;
   text-align: center;
