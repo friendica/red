@@ -10,7 +10,7 @@
 				<input type="hidden" name="return" value="{{$return_path}}" />
 				<input type="hidden" name="jsreload" value="{{$jsreload}}" />
 				<input type="hidden" name="preview" id="comment-preview-inp-{{$id}}" value="0" />
-				<textarea id="comment-edit-text-{{$id}}" class="comment-edit-text-empty" name="body" onFocus="commentOpen(this,{{$id}});" onBlur="commentClose(this,{{$id}});" >{{$comment}}</textarea>
+				<textarea id="comment-edit-text-{{$id}}" class="comment-edit-text-empty" name="body" onFocus="commentOpen(this,{{$id}});" onBlur="commentCloseRed(this,{{$id}});" >{{$comment}}</textarea>
 				{{if $qcomment}}
 					<select id="qcomment-select-{{$id}}" name="qcomment-{{$id}}" class="qcomment" onchange="qCommentInsert(this,{{$id}});" >
 					<option value=""></option>

@@ -13,18 +13,15 @@
 	}
 
 	function commentClose(obj,id) {
-		//$(document).on('click', function() {
-			if(obj.value == '') {
-				obj.value = aStr['comment'];
-				$("#comment-edit-text-" + id).removeClass("comment-edit-text-full");
-				$("#comment-edit-text-" + id).addClass("comment-edit-text-empty");
-				$("#mod-cmnt-wrap-" + id).hide();
-				closeMenu("comment-tools-" + id);
-				return true;
-			}
-			return false;
-		//});
-
+		if(obj.value == '') {
+			obj.value = aStr['comment'];
+			$("#comment-edit-text-" + id).removeClass("comment-edit-text-full");
+			$("#comment-edit-text-" + id).addClass("comment-edit-text-empty");
+			$("#mod-cmnt-wrap-" + id).hide();
+			closeMenu("comment-tools-" + id);
+			return true;
+		}
+		return false;
 	}
 
 	function showHideCommentBox(id) {
