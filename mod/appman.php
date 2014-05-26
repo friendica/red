@@ -23,8 +23,10 @@ function appman_post(&$a) {
 		);
 
 		$_REQUEST['appid'] = app_install(local_user(),$arr);
+
 		if(app_installed(local_user(),$arr))
 			info( t('App installed.') . EOL);
+
 		return;
 	}
 
@@ -38,6 +40,8 @@ function appman_post(&$a) {
 
 	if($_POST['install']) {
 		app_install(local_user(),$papp);
+		if(app_installed(local_user(),$papp))
+			info( t('App installed.') . EOL);
 	}
 
 	if($_POST['delete']) {
