@@ -77,7 +77,7 @@ logger('content');
 		);
 		if($r)
 			$app = $r[0];
-		$embed = array('embed', t('Embed code'), app_encode($app,true),'');
+		$embed = array('embed', t('Embed code'), app_encode($app,true),'', 'onclick="this.select();"');
 
 	}
 			
