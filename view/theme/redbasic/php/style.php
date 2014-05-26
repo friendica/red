@@ -167,6 +167,8 @@ if(! $a->install) {
 		$editbuttons_bgcolour = "transparent";
 	if (! $editbuttons_bordercolour)
 		$editbuttons_bordercolour = "#ccc";
+	if (! $editbuttons_bordercolourhover)
+		$editbuttons_bordercolourhover = "#adadad";
 	if (! $editbuttons_colour)
 		$editbuttons_colour = "#333";
 	if (! $editbuttons_bghover)
@@ -322,6 +324,7 @@ $options = array (
 '$notif_itemhovercolour' => $notif_itemhovercolour,
 '$editbuttons_bgcolour' => $editbuttons_bgcolour,
 '$editbuttons_bordercolour' => $editbuttons_bordercolour,
+'$editbuttons_bordercolourhover' => $editbuttons_bordercolourhover,
 '$editbuttons_colour' => $editbuttons_colour,
 '$editbuttons_bghover' => $editbuttons_bghover,
 '$dropdown_bgcolour' => $dropdown_bgcolour,

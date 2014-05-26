@@ -1847,11 +1847,11 @@ img.mail-list-sender-photo {
 }
 
 #profile-jot-text::-webkit-input-placeholder {
-	font-size:1.5em;
+	font-size:19px;
 }
 
 #profile-jot-text::-moz-placeholder {
-	font-size:1.5em;
+	font-size:19px;
 }
 
 #profile-jot-text:focus::-webkit-input-placeholder {
@@ -1988,6 +1988,7 @@ img.mail-list-sender-photo {
 
 .comment-edit-text-empty {
 	color: gray;
+	font-size: 11px;
 }
 
 .comment-edit-text-full {
@@ -2266,7 +2267,7 @@ blockquote {
 
 .btn-default:hover, .btn-default:focus, .btn-default:active .btn-default.active {
     	background-color: $editbuttons_bghover;
-    	border-color: $editbuttons_bordercolour;
+	border-color: $editbuttons_bordercolourhover;
 	color: $input_colourhover;
 	text-decoration: $input_decohover;
 }
@@ -2275,9 +2276,6 @@ blockquote {
     	text-decoration: none;
 }
 
-.btn-preview, .btn-preview:hover, .btn-preview:focus, .btn-preview:active {
-	margin-right: 1px;
-}
 
 @media screen and (max-width: 767px) {
 	aside#region_1 {

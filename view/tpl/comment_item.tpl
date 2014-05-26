@@ -54,7 +54,7 @@
 					</div>
 					<div class="btn-group pull-right" id="comment-edit-submit-wrapper-{{$id}}">
 						{{if $preview}}
-						<button id="comment-edit-submit-{{$id}}" class="btn btn-default btn-xs btn-preview" onclick="preview_comment({{$id}}); return false;" title="{{$preview}}">
+						<button id="comment-edit-submit-{{$id}}" class="btn btn-default btn-xs" onclick="preview_comment({{$id}}); return false;" title="{{$preview}}">
 							<i class="icon-eye-open comment-icon" ></i>
 						</button>
 						{{/if}}
