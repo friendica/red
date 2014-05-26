@@ -714,7 +714,7 @@ function settings_content(&$a) {
 				$unsupported = file_exists('view/theme/' . $th . '/unsupported');
 				$is_mobile = file_exists('view/theme/' . $th . '/mobile');
 				if (!$is_experimental or ($is_experimental && (get_config('experimentals','exp_themes')==1 or get_config('experimentals','exp_themes')===false))){ 
-					$theme_name = (($is_experimental) ?  sprintf("%s - \x28Experimental\x29", $f) : $f);
+					$theme_name = (($is_experimental) ?  sprintf(t('%s - (Experimental)'), $f) : $f);
 					if($is_mobile) {
 						$mobile_themes[$f]=$theme_name;
 					}
@@ -735,8 +735,6 @@ function settings_content(&$a) {
 		
 		$nosmile = get_pconfig(local_user(),'system','no_smilies');
 		$nosmile = (($nosmile===false)? '0': $nosmile); // default if not set: 0
-
-//		$chanview = intval(get_pconfig(local_user(),'system','chanview_full'));
 
 		$theme_config = "";
 		if( ($themeconfigfile = get_theme_config_file($theme_selected)) != null){
