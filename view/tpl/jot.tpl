@@ -81,7 +81,7 @@
 				</button>
 				{{/if}}
 				{{if $preview}}
-				<button class="btn btn-default btn-sm btn-preview" onclick="preview_post();return false;" title="{{$preview}}">
+				<button class="btn btn-default btn-sm" onclick="preview_post();return false;" title="{{$preview}}">
 					<i class="icon-eye-open jot-icons" ></i>
 				</button>
 				{{/if}}

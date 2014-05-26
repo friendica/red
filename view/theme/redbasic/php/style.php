@@ -167,6 +167,8 @@ if(! $a->install) {
 		$editbuttons_bgcolour = "transparent";
 	if (! $editbuttons_bordercolour)
 		$editbuttons_bordercolour = "#ccc";
+	if (! $editbuttons_bordercolourhover)
+		$editbuttons_bordercolourhover = "#adadad";
 	if (! $editbuttons_colour)
 		$editbuttons_colour = "#333";
 	if (! $editbuttons_bghover)
