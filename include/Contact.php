@@ -510,7 +510,7 @@ function unmark_for_death($contact) {
 }}
 
 function random_profile() {
-	$r = q("select xchan_url from xchan where 1 order by rand() limit 1");
+	$r = q("select xchan_url from xchan left join hubloc on hubloc_hash = xchan_hash where hubloc_connected > UTC_TIMESTAMP() - interval 30 day order by rand() limit 1");
 	if($r)
 		return $r[0]['xchan_url'];
 	return '';
