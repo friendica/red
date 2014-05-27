@@ -1847,11 +1847,11 @@ img.mail-list-sender-photo {
 }
 
 #profile-jot-text::-webkit-input-placeholder {
-	font-size:19px;
+	font-size:18px;
 }
 
 #profile-jot-text::-moz-placeholder {
-	font-size:19px;
+	font-size:18px;
 }
 
 #profile-jot-text:focus::-webkit-input-placeholder {
@@ -2231,7 +2231,6 @@ blockquote {
 
 .nav-tabs.nav-justified>.active>a,.nav-tabs.nav-justified>.active>a:hover,.nav-tabs.nav-justified>.active>a:focus{
 	border:1px solid $navtabs_borderc;
-	border-bottom:1px solid transparent;
 }
 
 .nav-tabs.nav-justified > li > a {
@@ -2242,7 +2241,6 @@ blockquote {
     	text-decoration: $navtabs_decohover;
     	background-color: $navtabs_bgchover;
 	border-color: transparent;
-	border-bottom-color: $navtabs_borderc;
 	$navtabs_linkchover
 }
 
