@@ -2,8 +2,6 @@
 
 We need much more than this, but here are areas where developers can help. Please edit this page when items are finished. Another place for developers to start is with the issues list.
 
-[li]Turn top-level Apps menu into an Apps page - which will probably require App plugins to have icons. Add documentation specifically to the plugin/addon documentation for creating apps. Add links to the App Store (which doesn't currently exist).[/li]
-
 [li]Documentation - see Red Documentation Project To-Do List[/li]
 
 [li]Infinite scroll to the directory pages[/li]
