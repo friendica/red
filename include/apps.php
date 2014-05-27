@@ -271,8 +271,9 @@ function app_store($arr) {
 	$darray = array();
 	$ret = array('success' => false);
 
-	$darray['app_url'] = ((x($arr,'url')) ? $arr['url'] : '');
+	$darray['app_url']     = ((x($arr,'url')) ? $arr['url'] : '');
 	$darray['app_channel'] = ((x($arr,'uid')) ? $arr['uid'] : 0);
+
 	if((! $darray['app_url']) || (! $darray['app_channel']))
 		return $ret;
 
@@ -282,16 +283,16 @@ function app_store($arr) {
 	}
 
 
-	$darray['app_id'] = ((x($arr,'guid')) ? $arr['guid'] : random_string(). '.' . get_app()->get_hostname());
-	$darray['app_sig'] = ((x($arr,'sig')) ? $arr['sig'] : '');
-	$darray['app_author'] = ((x($arr,'author')) ? $arr['author'] : get_observer_hash());
-	$darray['app_name'] = ((x($arr,'name')) ? escape_tags($arr['name']) : t('Unknown'));
-	$darray['app_desc'] = ((x($arr,'desc')) ? escape_tags($arr['desc']) : '');
-	$darray['app_photo'] = ((x($arr,'photo')) ? $arr['photo'] : z_root() . '/' . get_default_profile_photo(80));
-	$darray['app_version'] = ((x($arr,'version')) ? escape_tags($arr['version']) : '');
-	$darray['app_addr'] = ((x($arr,'addr')) ? escape_tags($arr['addr']) : '');
-	$darray['app_price'] = ((x($arr,'price')) ? escape_tags($arr['price']) : '');
-	$darray['app_page'] = ((x($arr,'page')) ? escape_tags($arr['page']) : '');
+	$darray['app_id']       = ((x($arr,'guid'))     ? $arr['guid'] : random_string(). '.' . get_app()->get_hostname());
+	$darray['app_sig']      = ((x($arr,'sig'))      ? $arr['sig'] : '');
+	$darray['app_author']   = ((x($arr,'author'))   ? $arr['author'] : get_observer_hash());
+	$darray['app_name']     = ((x($arr,'name'))     ? escape_tags($arr['name']) : t('Unknown'));
+	$darray['app_desc']     = ((x($arr,'desc'))     ? escape_tags($arr['desc']) : '');
+	$darray['app_photo']    = ((x($arr,'photo'))    ? $arr['photo'] : z_root() . '/' . get_default_profile_photo(80));
+	$darray['app_version']  = ((x($arr,'version'))  ? escape_tags($arr['version']) : '');
+	$darray['app_addr']     = ((x($arr,'addr'))     ? escape_tags($arr['addr']) : '');
+	$darray['app_price']    = ((x($arr,'price'))    ? escape_tags($arr['price']) : '');
+	$darray['app_page']     = ((x($arr,'page'))     ? escape_tags($arr['page']) : '');
 	$darray['app_requires'] = ((x($arr,'requires')) ? escape_tags($arr['requires']) : '');
 
 	$r = q("insert into app ( app_id, app_sig, app_author, app_name, app_desc, app_url, app_photo, app_version, app_channel, app_addr, app_price, app_page, app_requires ) values ( '%s', '%s', '%s', '%s', '%s', '%s', '%s', '%s', %d, '%s', '%s', '%s', '%s' )",
@@ -322,9 +323,10 @@ function app_update($arr) {
 	$darray = array();
 	$ret = array('success' => false);
 
-	$darray['app_url'] = ((x($arr,'url')) ? $arr['url'] : '');
+	$darray['app_url']     = ((x($arr,'url')) ? $arr['url'] : '');
 	$darray['app_channel'] = ((x($arr,'uid')) ? $arr['uid'] : 0);
-	$darray['app_id'] = ((x($arr,'guid')) ? $arr['guid'] : 0);
+	$darray['app_id']      = ((x($arr,'guid')) ? $arr['guid'] : 0);
+
 	if((! $darray['app_url']) || (! $darray['app_channel']) || (! $darray['app_id']))
 		return $ret;
 
@@ -333,15 +335,15 @@ function app_update($arr) {
 		$arr['photo'] = $x[1];
 	}
 
-	$darray['app_sig'] = ((x($arr,'sig')) ? $arr['sig'] : '');
-	$darray['app_author'] = ((x($arr,'author')) ? $arr['author'] : get_observer_hash());
-	$darray['app_name'] = ((x($arr,'name')) ? escape_tags($arr['name']) : t('Unknown'));
-	$darray['app_desc'] = ((x($arr,'desc')) ? escape_tags($arr['desc']) : '');
-	$darray['app_photo'] = ((x($arr,'photo')) ? $arr['photo'] : z_root() . '/' . get_default_profile_photo(80));
-	$darray['app_version'] = ((x($arr,'version')) ? escape_tags($arr['version']) : '');
-	$darray['app_addr'] = ((x($arr,'addr')) ? escape_tags($arr['addr']) : '');
-	$darray['app_price'] = ((x($arr,'price')) ? escape_tags($arr['price']) : '');
-	$darray['app_page'] = ((x($arr,'page')) ? escape_tags($arr['page']) : '');
+	$darray['app_sig']      = ((x($arr,'sig')) ? $arr['sig'] : '');
+	$darray['app_author']   = ((x($arr,'author')) ? $arr['author'] : get_observer_hash());
+	$darray['app_name']     = ((x($arr,'name')) ? escape_tags($arr['name']) : t('Unknown'));
+	$darray['app_desc']     = ((x($arr,'desc')) ? escape_tags($arr['desc']) : '');
+	$darray['app_photo']    = ((x($arr,'photo')) ? $arr['photo'] : z_root() . '/' . get_default_profile_photo(80));
+	$darray['app_version']  = ((x($arr,'version')) ? escape_tags($arr['version']) : '');
+	$darray['app_addr']     = ((x($arr,'addr')) ? escape_tags($arr['addr']) : '');
+	$darray['app_price']    = ((x($arr,'price')) ? escape_tags($arr['price']) : '');
+	$darray['app_page']     = ((x($arr,'page')) ? escape_tags($arr['page']) : '');
 	$darray['app_requires'] = ((x($arr,'requires')) ? escape_tags($arr['requires']) : '');
 
 	$r = q("update app set app_sig = '%s', app_author = '%s', app_name = '%s', app_desc = '%s', app_url = '%s', app_photo = '%s', app_version = '%s', app_addr = '%s', app_price = '%s', app_page = '%s', app_requires = '%s' where app_id = '%s' and app_channel = %d limit 1",

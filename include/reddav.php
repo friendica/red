@@ -892,7 +892,7 @@ class RedBrowser extends DAV\Browser\Plugin {
         $html .= "
 <body>
   <h1>Index for " . $this->escapeHTML($path) . "/</h1>
-  <table>
+  <table id=\"cloud-index\">
     <tr><th width=\"24\"></th><th>Name</th><th>Type</th><th>Size</th><th>Last modified</th></tr>
     <tr><td colspan=\"5\"><hr /></td></tr>";
 
