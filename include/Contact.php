@@ -298,6 +298,10 @@ function channel_remove($channel_id, $local = true) {
 
 function mark_orphan_hubsxchans() {
 
+	$dirmode = intval(get_config('system','directory_mode'));
+	if($dirmode == DIRECTORY_MODE_NORMAL)
+		return;
+
     $r = q("update hubloc set hubloc_status = (hubloc_status | %d) where not (hubloc_status & %d) 
 		and hubloc_connected < utc_timestamp() - interval 30 day",
         intval(HUBLOC_OFFLINE),
