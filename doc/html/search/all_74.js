@@ -1,6 +1,6 @@
 var searchData=
 [
-  ['t',['t',['../language_8php.html#aae0c3638fb476ae1e31f8d242f5dac04',1,'language.php']]],
+  ['t',['t',['../language_8php.html#ac6ae482ee54fa2764d5c2e77305aeb96',1,'language.php']]],
   ['tag_5fdeliver',['tag_deliver',['../items_8php.html#ab1bce4261bcf75ad62753b498a144d17',1,'items.php']]],
   ['tag_5fsort_5flength',['tag_sort_length',['../text_8php.html#ac2ff88e800f74b22e9cc091c10809c54',1,'text.php']]],
   ['tagadelic',['tagadelic',['../taxonomy_8php.html#aaf90ba8b839d6459065f39a4f1109b8a',1,'taxonomy.php']]],
@@ -22,6 +22,7 @@ var searchData=
   ['term_5ffile',['TERM_FILE',['../boot_8php.html#afb97615e985a013799839b68b99018d7',1,'boot.php']]],
   ['term_5fhashtag',['TERM_HASHTAG',['../boot_8php.html#a2750985ec445617d7e82ae3098c91e3f',1,'boot.php']]],
   ['term_5fmention',['TERM_MENTION',['../boot_8php.html#ae37444eaa42705185080ccf3e670cbc2',1,'boot.php']]],
+  ['term_5fobj_5fapp',['TERM_OBJ_APP',['../boot_8php.html#ace6d70ac290397ddd40e561fd0831858',1,'boot.php']]],
   ['term_5fobj_5fchannel',['TERM_OBJ_CHANNEL',['../boot_8php.html#a8892374789fd261eb32a7969d934a14a',1,'boot.php']]],
   ['term_5fobj_5fobject',['TERM_OBJ_OBJECT',['../boot_8php.html#a882b666adfe21f035a0f8c02806066d6',1,'boot.php']]],
   ['term_5fobj_5fphoto',['TERM_OBJ_PHOTO',['../boot_8php.html#a64617d4655804de2a3c86501ab4fdbfd',1,'boot.php']]],
@@ -47,9 +48,9 @@ var searchData=
   ['theme_5fattachments',['theme_attachments',['../text_8php.html#af9c9ac3f74c82dc60acfa404d0e9dc53',1,'text.php']]],
   ['theme_5fcontent',['theme_content',['../view_2theme_2apw_2php_2config_8php.html#aa7d5739b72efef9822535b2b32d5364d',1,'theme_content(&amp;$a):&#160;config.php'],['../view_2theme_2blogga_2php_2config_8php.html#aa7d5739b72efef9822535b2b32d5364d',1,'theme_content(&amp;$a):&#160;config.php'],['../view_2theme_2blogga_2view_2theme_2blog_2config_8php.html#aa7d5739b72efef9822535b2b32d5364d',1,'theme_content(&amp;$a):&#160;config.php'],['../view_2theme_2redbasic_2php_2config_8php.html#aa7d5739b72efef9822535b2b32d5364d',1,'theme_content(&amp;$a):&#160;config.php']]],
   ['theme_5finclude',['theme_include',['../plugin_8php.html#a65fedcffbe03562ef844cabee37d34e2',1,'plugin.php']]],
-  ['theme_5finit_2ephp',['theme_init.php',['../php_2theme__init_8php.html',1,'']]],
   ['theme_5finit_2ephp',['theme_init.php',['../theme_2redbasic_2php_2theme__init_8php.html',1,'']]],
   ['theme_5finit_2ephp',['theme_init.php',['../theme_2apw_2php_2theme__init_8php.html',1,'']]],
+  ['theme_5finit_2ephp',['theme_init.php',['../php_2theme__init_8php.html',1,'']]],
   ['theme_5finit_2ephp',['theme_init.php',['../theme_2blogga_2php_2theme__init_8php.html',1,'']]],
   ['theme_5fpost',['theme_post',['../view_2theme_2apw_2php_2config_8php.html#ad29461920cf03b9ce1428e21eb1f4ba6',1,'theme_post(&amp;$a):&#160;config.php'],['../view_2theme_2blogga_2php_2config_8php.html#ad29461920cf03b9ce1428e21eb1f4ba6',1,'theme_post(&amp;$a):&#160;config.php'],['../view_2theme_2blogga_2view_2theme_2blog_2config_8php.html#ad29461920cf03b9ce1428e21eb1f4ba6',1,'theme_post(&amp;$a):&#160;config.php'],['../view_2theme_2redbasic_2php_2config_8php.html#ad29461920cf03b9ce1428e21eb1f4ba6',1,'theme_post(&amp;$a):&#160;config.php']]],
   ['theme_5fstatus',['theme_status',['../admin_8php.html#ad4f74f33944a98b56d2c8c7601f124a4',1,'admin.php']]],
@@ -66,10 +67,11 @@ var searchData=
   ['toggle_5ftheme',['toggle_theme',['../admin_8php.html#af81f081851791cd15e49e8ff6722dc27',1,'admin.php']]],
   ['tpldebug_2ephp',['tpldebug.php',['../tpldebug_8php.html',1,'']]],
   ['tplpaths',['tplpaths',['../namespaceupdatetpl.html#a52a85ffa6b6d63d840b185a133478c12',1,'updatetpl']]],
+  ['translate_5fsystem_5fapps',['translate_system_apps',['../include_2apps_8php.html#a48289d5cc44b7638191738106ac5d030',1,'apps.php']]],
   ['tryoembed',['tryoembed',['../bbcode_8php.html#a55b0cb6973f1ec731de0e726bcc0efa7',1,'bbcode.php']]],
   ['tryzrlaudio',['tryzrlaudio',['../bbcode_8php.html#a39de4de32a9456d1ca914d0dc52bd322',1,'bbcode.php']]],
   ['tryzrlvideo',['tryzrlvideo',['../bbcode_8php.html#aa92f119341f4c69dcef2768a013079b8',1,'bbcode.php']]],
-  ['tt',['tt',['../language_8php.html#ae310fb3880484ee1cc4faefe0c63c06d',1,'language.php']]],
+  ['tt',['tt',['../language_8php.html#a686bcafa6b0d5c86d37b38a1db5b6997',1,'language.php']]],
   ['typo_2ephp',['typo.php',['../typo_8php.html',1,'']]],
   ['typohelper_2ephp',['typohelper.php',['../typohelper_8php.html',1,'']]]
 ];

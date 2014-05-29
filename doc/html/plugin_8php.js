@@ -18,6 +18,7 @@ var plugin_8php =
     [ "install_plugin", "plugin_8php.html#a482131013272a1d5d5c1b1469c6c55d5", null ],
     [ "load_hooks", "plugin_8php.html#a326365e48ef94f0b9a0a771b8d75e813", null ],
     [ "load_plugin", "plugin_8php.html#a9ca9632b7309a65b05c03a3e2f473a3d", null ],
+    [ "plugin_is_installed", "plugin_8php.html#a855c4fdb38c0fc2714d537752a4347f9", null ],
     [ "register_hook", "plugin_8php.html#a425472c5f3afc137268b2ad45652b209", null ],
     [ "reload_plugins", "plugin_8php.html#af9ac19004dca49adae1ac7a0d9f3b025", null ],
     [ "script_path", "plugin_8php.html#a0e8c2ea50bfdbc39e17ccccaea21ddc3", null ],

@@ -239,6 +239,31 @@ function red_unescape_codeblock($m) {
 }
 
 
+function red_zrlify_img_callback($matches) {
+	$m = @parse_url($matches[2]);
+	$zrl = false;
+	if($m['host']) {
+		$r = q("select hubloc_url from hubloc where hubloc_host = '%s' limit 1",
+			dbesc($m['host'])
+		);
+		if($r)
+			$zrl = true;
+	}
+
+	$t = strip_zids($matches[2]);
+	if($t !== $matches[2]) {
+		$zrl = true;
+		$matches[2] = $t;
+	}
+
+	if($zrl)
+		return '[zmg' . $matches[1] . ']' . $matches[2] . '[/zmg]';
+	return $matches[0];
+}
+
+
+
+
 /**
  * @function post_activity_item($arr)
  *
@@ -2413,7 +2438,7 @@ function tag_deliver($uid,$item_id) {
 
 	if($terms) {
 		foreach($terms as $term) {
-			if((strcasecmp($term['term'],$u[0]['channel_name']) == 0) && link_compare($term['url'],$link)) {			
+			if(link_compare($term['url'],$link)) {			
 				$mention = true;
 				break;
 			}
@@ -2449,11 +2474,11 @@ function tag_deliver($uid,$item_id) {
 		$tagged = false;
 		$plustagged = false;
 
-		$pattern = '/@\!?\[zrl\=' . preg_quote($term['url'],'/') . '\]' . preg_quote($u[0]['channel_name'],'/') . '\[\/zrl\]/';
+		$pattern = '/@\!?\[zrl\=' . preg_quote($term['url'],'/') . '\]' . preg_quote($term['term'],'/') . '\[\/zrl\]/';
 		if(preg_match($pattern,$body,$matches)) 
 			$tagged = true;
 
-		$pattern = '/@\!?\[zrl\=' . preg_quote($term['url'],'/') . '\]' . preg_quote($u[0]['channel_name'] . '+','/') . '\[\/zrl\]/';
+		$pattern = '/@\!?\[zrl\=' . preg_quote($term['url'],'/') . '\]' . preg_quote($term['term'] . '+','/') . '\[\/zrl\]/';
 		if(preg_match($pattern,$body,$matches)) 
 			$plustagged = true;
 
@@ -2582,7 +2607,7 @@ function tgroup_check($uid,$item) {
 
 	if($terms) {
 		foreach($terms as $term) {
-			if(($term['term'] == $u[0]['channel_name']) && link_compare($term['url'],$link)) {			
+			if(link_compare($term['url'],$link)) {			
 				$mention = true;
 				break;
 			}
@@ -2600,7 +2625,7 @@ function tgroup_check($uid,$item) {
 
 	$body = preg_replace('/\[share(.*?)\[\/share\]/','',$item['body']);
 
-	$pattern = '/@\!?\[zrl\=' . preg_quote($term['url'],'/') . '\]' . preg_quote($u[0]['channel_name'] . '+','/') . '\[\/zrl\]/';
+	$pattern = '/@\!?\[zrl\=' . preg_quote($term['url'],'/') . '\]' . preg_quote($term['term'] . '+','/') . '\[\/zrl\]/';
 
 	if(! preg_match($pattern,$body,$matches)) {
 		logger('tgroup_check: mention was in a reshare - ignoring');

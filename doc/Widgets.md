@@ -6,21 +6,19 @@ Some/many of these widgets have restrictions which may restrict the type of page
 
 * clock - displays the current time
     * args: military (1 or 0) - use 24 hour time as opposed to AM/PM
-    *
+<br />&nbsp;<br />
 
 * profile - displays a profile sidebar on pages which load profiles (pages with nickname in the URL)
 
 * tagcloud - display a tagcloud of webpage items
 
     * args: count - number of items to return (default 24)
-    *
-
+<br />&nbsp;<br />
 
 * collections - collection selector for the current logged in channel
 
     * args: mode - one of "conversation", "group", "abook" depending on module
-    *
-
+<br />&nbsp;<br />
 
 * suggestions - friend suggestions for the current logged on channel
 
@@ -34,8 +32,7 @@ Some/many of these widgets have restrictions which may restrict the type of page
 
 * archive - date range selector for network and channel pages
     * args: 'wall' - 1 or 0, limit to wall posts or network/matrix posts (default)
-    * 'style': 'list' or 'select' - presentation format, a select form element or a list, default 'select'
-    *
+<br />&nbsp;<br />
 
 * fullprofile - same as profile currently
 
@@ -69,8 +66,16 @@ Some/many of these widgets have restrictions which may restrict the type of page
 
 * bookmarkedchats - list of bookmarked chatrooms collected on this site for the current observer
 
-* suggestechats - "interesting" chatrooms chosen for the current observer
+* suggestedchats - "interesting" chatrooms chosen for the current observer
 
 * item - displays a single webpage item by mid
-1 args: mid - message_id of webpage to display
+    * args: mid - message_id of webpage to display
+<br />&nbsp;<br />
+
+* photo - display a single photo
+    * args: 
+    * url - URL of photo, must be http or https
+    * zrl - use zid authenticated link
+    * style - CSS style string
+<br />&nbsp;<br />
 

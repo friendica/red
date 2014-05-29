@@ -121,8 +121,8 @@ function z_fetch_url($url, $binary = false, $redirects = 0, $opts = array()) {
 	if(! $ret['success']) {
 		$ret['error'] = curl_error($ch);
 		$ret['debug'] = $curl_info;
-		logger('z_fetch_url: error:' . $ret['error'], LOGGER_DEBUG);
-		logger('z_fetch_url: debug:' . print_r($curl_info,true), LOGGER_DATA);
+		logger('z_fetch_url: error: ' . $url . ': ' . $ret['error'], LOGGER_DEBUG);
+		logger('z_fetch_url: debug: ' . print_r($curl_info,true), LOGGER_DATA);
 	}
 	$ret['body'] = substr($s,strlen($header));
 	$ret['header'] = $header;
@@ -229,8 +229,8 @@ function z_post_url($url,$params, $redirects = 0, $opts = array()) {
 	if(! $ret['success']) {
 		$ret['error'] = curl_error($ch);
 		$ret['debug'] = $curl_info;
-		logger('z_post_url: error:' . $ret['error'], LOGGER_DEBUG);
-		logger('z_post_url: debug:' . print_r($curl_info,true), LOGGER_DATA);
+		logger('z_post_url: error: ' . $url . ': ' . $ret['error'], LOGGER_DEBUG);
+		logger('z_post_url: debug: ' . print_r($curl_info,true), LOGGER_DATA);
 	}
 
 	$ret['body'] = substr($s,strlen($header));

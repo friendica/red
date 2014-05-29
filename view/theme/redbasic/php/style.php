@@ -27,7 +27,7 @@ if(! $a->install) {
 		$item_colour = get_pconfig($uid, "redbasic", "item_colour");
 		$comment_item_colour = get_pconfig($uid, "redbasic", "comment_item_colour");
 		$comment_border_colour = get_pconfig($uid, "redbasic", "comment_border_colour");
-		$item_opacity = get_pconfig($uid, "redbasic", "item_opacity");	
+		$comment_indent = get_pconfig($uid, "redbasic", "comment_indent");
 		$body_font_size = get_pconfig($uid, "redbasic", "body_font_size");	
 		$font_size = get_pconfig($uid, "redbasic", "font_size");	
 		$font_colour = get_pconfig($uid, "redbasic", "font_colour");	
@@ -167,6 +167,8 @@ if(! $a->install) {
 		$editbuttons_bgcolour = "transparent";
 	if (! $editbuttons_bordercolour)
 		$editbuttons_bordercolour = "#ccc";
+	if (! $editbuttons_bordercolourhover)
+		$editbuttons_bordercolourhover = "#adadad";
 	if (! $editbuttons_colour)
 		$editbuttons_colour = "#333";
 	if (! $editbuttons_bghover)
@@ -248,6 +250,17 @@ if(! $a->install) {
 		$reply_photo = '32px';
 	if(! $infomess_bgcolour)
 		$infomess_bgcolour = "#F0F0F0";
+	if (!$comment_padding)
+		$comment_padding="0px";	
+	if (!$comment_border_left)
+		$comment_border_left="3px solid";
+	if (!$comment_border_right)
+		$comment_border_right="0px solid";	
+	if (!$comment_border_top)
+		$comment_border_top="0px solid";		
+	if (!$comment_border_bottom)
+		$comment_border_bottom="0px solid";	
+		
 	if($nav_min_opacity === false || $nav_min_opacity === '') {
 		$nav_float_min_opacity = 1.0;
 		$nav_percent_min_opacity = 100;
@@ -289,7 +302,6 @@ $options = array (
 '$item_colour' => $item_colour,
 '$comment_item_colour' => $comment_item_colour,
 '$comment_border_colour' => $comment_border_colour,
-'$item_opacity' => $item_opacity,
 '$toolicon_colour' => $toolicon_colour,
 '$toolicon_activecolour' => $toolicon_activecolour,
 '$font_size' => $font_size,
@@ -312,6 +324,7 @@ $options = array (
 '$notif_itemhovercolour' => $notif_itemhovercolour,
 '$editbuttons_bgcolour' => $editbuttons_bgcolour,
 '$editbuttons_bordercolour' => $editbuttons_bordercolour,
+'$editbuttons_bordercolourhover' => $editbuttons_bordercolourhover,
 '$editbuttons_colour' => $editbuttons_colour,
 '$editbuttons_bghover' => $editbuttons_bghover,
 '$dropdown_bgcolour' => $dropdown_bgcolour,
@@ -357,7 +370,12 @@ $options = array (
 '$pmenu_reply' => $pmenu_reply,
 '$wwtop' => $wwtop,
 '$comment_indent' => $comment_indent,
-'$body_width' => $body_width
+'$body_width' => $body_width,
+'$comment_padding' => $comment_padding,
+'$comment_border_left' =>$comment_border_left,
+'$comment_border_right' =>$comment_border_right,
+'$comment_border_top' =>$comment_border_top,
+'$comment_border_bottom' =>$comment_border_bottom,
 );
 
 echo str_replace(array_keys($options), array_values($options), $x);    

@@ -440,6 +440,11 @@ function item_post(&$a) {
 		$body = preg_replace_callback('/\[\$b64url(.*?)\[\/(url)\]/ism','red_unescape_codeblock',$body);
 		$body = preg_replace_callback('/\[\$b64code(.*?)\[\/(code)\]/ism','red_unescape_codeblock',$body);
 
+		// fix any img tags that should be zmg
+
+		$body = preg_replace_callback('/\[img(.*?)\](.*?)\[\/img\]/ism','red_zrlify_img_callback',$body);
+
+
 
 		/**
 		 *
@@ -847,10 +852,10 @@ function item_content(&$a) {
 	require_once('include/security.php');
 
 	if((argc() == 3) && (argv(1) === 'drop') && intval(argv(2))) {
+
 		require_once('include/items.php');
-		$i = q("select id, uid, author_xchan, owner_xchan, source_xchan, item_restrict from item where id = %d and uid = %d limit 1",
-			intval(argv(2)),
-			intval(local_user())
+		$i = q("select id, uid, author_xchan, owner_xchan, source_xchan, item_restrict from item where id = %d limit 1",
+			intval(argv(2))
 		);
 
 		if($i) {

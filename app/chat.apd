@@ -1,0 +1,4 @@
+url: $baseurl/chat/$nick
+requires: local_user
+name: Chat
+photo: $baseurl/app/chat.png

@@ -8,7 +8,6 @@ header #banner {
 
 #blog-banner {
 	position: relative;
-	margin-top: 75px;
 	width: 100%;
 	margin-bottom: 20px;
 }
@@ -17,6 +16,10 @@ nav.navbar {
 	width: 100%;
 	margin-left: 0;
 	margin-right: 0;
+}
+
+#nav-backer {
+	width: 100%;
 }
 
 aside#region_1 {

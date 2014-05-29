@@ -118,9 +118,10 @@ function poller_run($argv, $argc){
 			require_once('include/hubloc.php');
 			prune_hub_reinstalls();
 
+			require_once('include/Contact.php');
+			mark_orphan_hubsxchans();
 
 		}
-
 
 		// expire any read notifications over a month old
 

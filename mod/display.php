@@ -77,8 +77,8 @@ function display_content(&$a, $update = 0, $load = false) {
 
 	$target_item = null;
 
-	$r = q("select id, uid, mid, parent_mid, item_restrict from item where mid = '%s' limit 1",
-		dbesc($item_hash)
+	$r = q("select id, uid, mid, parent_mid, item_restrict from item where mid like '%s' limit 1",
+		dbesc($item_hash . '%')
 	);
 
 	if($r) {
@@ -149,6 +149,7 @@ function display_content(&$a, $update = 0, $load = false) {
 
 		if($load || ($_COOKIE['jsAvailable'] != 1)) {
 			$r = null;
+
 			if(local_user()) {
 				$r = q("SELECT * from item
 					WHERE item_restrict = 0
@@ -177,7 +178,6 @@ function display_content(&$a, $update = 0, $load = false) {
 				);
 
 			}
-
 		}
 		else {
 			$r = array();

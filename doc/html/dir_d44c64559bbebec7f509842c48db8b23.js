@@ -6,6 +6,7 @@ var dir_d44c64559bbebec7f509842c48db8b23 =
     [ "acl_selectors.php", "acl__selectors_8php.html", "acl__selectors_8php" ],
     [ "activities.php", "activities_8php.html", "activities_8php" ],
     [ "api.php", "include_2api_8php.html", "include_2api_8php" ],
+    [ "apps.php", "include_2apps_8php.html", "include_2apps_8php" ],
     [ "attach.php", "include_2attach_8php.html", "include_2attach_8php" ],
     [ "auth.php", "auth_8php.html", "auth_8php" ],
     [ "BaseObject.php", "BaseObject_8php.html", [

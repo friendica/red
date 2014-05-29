@@ -71,13 +71,13 @@
 	if (! $code_bgcolour)
 		$code_bgcolour = "#000";
 	if (! $code_txtcolour)
-		$code_txtcolour = "#bbb";
+		$code_txtcolour = "#fff";
 	if (! $pre_borderc)
 		$pre_borderc = "#090909";
 	if (! $pre_bgcolour)
 		$pre_bgcolour = "#000";
 	if (! $pre_txtcolour)
-		$pre_txtcolour = "#bbb";
+		$pre_txtcolour = "#fff";
 	if (! $item_bordercolour)
 		$item_bordercolour = "#333";
 	if (! $notif_itemcolour)

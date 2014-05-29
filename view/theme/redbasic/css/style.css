@@ -535,6 +535,12 @@ aside li {
 	font-size: 0.7em;
 }
 
+.app-name {
+	width: 125px;
+	overflow: none;
+}
+
+
 .pager {
   padding: 10px;
   text-align: center;
@@ -1180,6 +1186,9 @@ brain is weird like that */
 	margin-bottom: 15px;
 }
 
+#cloud-index td {
+	padding:5px;
+}
 
 
 /**
@@ -1370,10 +1379,6 @@ brain is weird like that */
 .tagged { background-position: -48px -48px; }
 .yellow { background-position: -64px -48px; }
 
-.starred {
-	color: gold;
-}
-
 .icon.dim { opacity: 0.3;filter:alpha(opacity=30); }
 
 
@@ -1544,21 +1549,6 @@ header {
 	width: 32px;
 	height: 32px;
 	padding: 7px 7px 0px 0px;
-}
-
-
-#nav-notify-menu, #nav-network-menu, #nav-home-menu {
-	background-color: $notify_bgcolour;
-	border-top: none;
-	margin-top: $notify_topmargin;
-}
- 	
-#nav-notify-menu a, #nav-network-menu a, #nav-home-menu a {
-	color: $notify_linkcolour;
-}
-
-#nav-notify-menu a:hover, #nav-network-menu a:hover, #nav-home-menu a:hover {
-	background: $notify_bghover;
 }
 
 .notify-seen a {
@@ -1860,11 +1850,11 @@ img.mail-list-sender-photo {
 }
 
 #profile-jot-text::-webkit-input-placeholder {
-	font-size:1.5em;
+	font-size:18px;
 }
 
 #profile-jot-text::-moz-placeholder {
-	font-size:1.5em;
+	font-size:18px;
 }
 
 #profile-jot-text:focus::-webkit-input-placeholder {
@@ -1903,7 +1893,6 @@ img.mail-list-sender-photo {
 
 .wall-item-content-wrapper {
 	background-color: $item_colour;
-	opacity: $item_opacity;
 	padding: 10px;
 }
 
@@ -1912,31 +1901,36 @@ img.mail-list-sender-photo {
 	border-top-left-radius: $radiuspx;
 }
 
-.wall-item-content-wrapper:hover {
-	z-index:99;
+.comment .wall-item-body {
+	padding-left: $comment_padding;
 }
 
 .hide-comments-outer,
 .wall-item-content-wrapper.comment {
 	background-color: $comment_item_colour;
-	border-left: 3px solid $comment_border_colour;
+	border-left: $comment_border_left $comment_border_colour;
+	border-right: $comment_border_right $comment_border_colour;
+	border-bottom: $comment_border_bottom $comment_border_colour;
 	border-radius: 0px;
 	padding: 7px 10px 7px 7px;
 }
 
 .wall-item-comment-wrapper {
-	background-color: $comment_item_colour;
-	border-left: 3px solid $item_colour;
+	padding: 7px 10px;
+	background-color: $item_colour;
 	border-radius: 0px;
 	border-bottom-right-radius: $radiuspx;
 	border-bottom-left-radius: $radiuspx;
+	margin-top: 3px;
+}
+
+.wall-item-comment-wrapper-wc {
+	margin-top: 0px;
 }
 
 .wall-item-like,
 .wall-item-dislike {
-	font-size: $body_font_size;
-	text-align: left;
-	white-space: normal;
+	font-size: 11px;
 }
 
 .wall-item-photo {
@@ -1980,35 +1974,13 @@ img.mail-list-sender-photo {
 	color: $toolicon_colour;
 }
 
-.item-tool:hover {
-	/*color: $toolicon_activecolour;*/
-}
-
 .like-rotator {
 	color: $toolicon_colour;
 }
 
-.my-comment-photo {
-    border-radius: $radiuspx;
-    -moz-border-radius: $radiuspx;
-    box-shadow: $shadowpx $shadowpx $shadowpx 0 #444444;
-}
-
-.comment-edit-photo img {
-	width: $reply_photo;
-}
-
-[class^="comment-edit-bb"] {
-	list-style: none;
-}
-
 .comment-icon {
-	font-size: 1.2em;
+	font-size: 0.8em;
 	color: $toolicon_colour;
-}
-
-.comment-icon:hover {
-	color: $toolicon_activecolour;
 }
 
 .comment-edit-text-empty,
@@ -2019,6 +1991,7 @@ img.mail-list-sender-photo {
 
 .comment-edit-text-empty {
 	color: gray;
+	font-size: 11px;
 }
 
 .comment-edit-text-full {
@@ -2118,8 +2091,6 @@ nav .dropdown-menu {
 	border-bottom-right-radius: $radiuspx;
 	border-bottom-left-radius: $radiuspx;
 	background-color: $notify_bgcolour;
-	border-top: none;
-	margin-top: $notify_topmargin;
 }
 
 nav .dropdown-menu .divider{
@@ -2263,7 +2234,6 @@ blockquote {
 
 .nav-tabs.nav-justified>.active>a,.nav-tabs.nav-justified>.active>a:hover,.nav-tabs.nav-justified>.active>a:focus{
 	border:1px solid $navtabs_borderc;
-	border-bottom:1px solid transparent;
 }
 
 .nav-tabs.nav-justified > li > a {
@@ -2274,7 +2244,6 @@ blockquote {
     	text-decoration: $navtabs_decohover;
     	background-color: $navtabs_bgchover;
 	border-color: transparent;
-	border-bottom-color: $navtabs_borderc;
 	$navtabs_linkchover
 }
 
@@ -2299,7 +2268,7 @@ blockquote {
 
 .btn-default:hover, .btn-default:focus, .btn-default:active .btn-default.active {
     	background-color: $editbuttons_bghover;
-    	border-color: $editbuttons_bordercolour;
+	border-color: $editbuttons_bordercolourhover;
 	color: $input_colourhover;
 	text-decoration: $input_decohover;
 }
@@ -2308,9 +2277,6 @@ blockquote {
     	text-decoration: none;
 }
 
-.btn-preview, .btn-preview:hover, .btn-preview:focus, .btn-preview:active {
-	margin-right: 1px;
-}
 
 @media screen and (max-width: 767px) {
 	aside#region_1 {
@@ -2335,6 +2301,7 @@ blockquote {
 
 	.thread-wrapper.toplevel_item {
 		width: 100%;
+		border:1px;
 	}
 
 	.wall-item-photo {

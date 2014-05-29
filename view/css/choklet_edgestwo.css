@@ -10,9 +10,16 @@ header #banner {
 	margin-top: 75px;
 	width: 100%;
 	margin-bottom: 20px;
+	overflow-x: hidden;
 }
 
 nav.navbar { 
+	width: 90%;
+	margin-left: 5%;
+	margin-right: 5%;
+}
+
+#nav-backer {
 	width: 90%;
 	margin-left: 5%;
 	margin-right: 5%;

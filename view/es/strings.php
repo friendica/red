@@ -1,8 +1,9 @@
 <?php
 
+if(! function_exists("string_plural_select_es")) {
 function string_plural_select_es($n){
 	return ($n != 1);
-}
+}}
 ;
 $a->strings["Not Found"] = "No se ha encontrado";
 $a->strings["Page not found."] = "Página no encontrada.";

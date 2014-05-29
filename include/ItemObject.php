@@ -123,6 +123,27 @@ class Item extends BaseObject {
 
 		$location = format_location($item);
 
+		$like_count = ((x($alike,$item['mid'])) ? $alike[$item['mid']] : '');
+		$like_list = ((x($alike,$item['mid'])) ? $alike[$item['mid'] . '-l'] : '');
+		if (count($like_list) > MAX_LIKERS) {
+			$like_list_part = array_slice($like_list, 0, MAX_LIKERS);
+			array_push($like_list_part, '<a href="#" data-toggle="modal" data-target="#likeModal-' . $this->get_id() . '"><b>' . t('View all') . '</b></a>');
+		} else {
+			$like_list_part = '';
+		}
+		$like_button_label = tt('Like','Likes',$like_count,'noun');
+
+		if (feature_enabled($conv->get_profile_owner(),'dislike')) {
+			$dislike_count = ((x($dlike,$item['mid'])) ? $dlike[$item['mid']] : '');
+			$dislike_list = ((x($dlike,$item['mid'])) ? $dlike[$item['mid'] . '-l'] : '');
+			$dislike_button_label = tt('Dislike','Dislikes',$dislike_count,'noun');
+			if (count($dislike_list) > MAX_LIKERS) {
+				$dislike_list_part = array_slice($dislike_list, 0, MAX_LIKERS);
+				array_push($dislike_list_part, '<a href="#" data-toggle="modal" data-target="#dislikeModal-' . $this->get_id() . '"><b>' . t('View all') . '</b></a>');
+			} else {
+				$dislike_list_part = '';
+			}
+		}
 
 		$showlike    = ((x($alike,$item['mid'])) ? format_like($alike[$item['mid']],$alike[$item['mid'] . '-l'],'like',$item['mid']) : '');
 		$showdislike = ((x($dlike,$item['mid']) && feature_enabled($conv->get_profile_owner(),'dislike'))  
@@ -251,7 +272,17 @@ class Item extends BaseObject {
 			'drop'      => $drop,
 			'multidrop' => ((feature_enabled($conv->get_profile_owner(),'multi_delete')) ? $multidrop : ''),
 // end toolbar buttons
-
+			'like_count' => $like_count,
+			'like_list' => $like_list,
+			'like_list_part' => $like_list_part,
+			'like_button_label' => $like_button_label,
+			'like_modal_title' => t('Likes','noun'),
+			'dislike_modal_title' => t('Dislikes','noun'),
+			'dislike_count' => ((feature_enabled($conv->get_profile_owner(),'dislike')) ? $dislike_count : ''),
+			'dislike_list' => ((feature_enabled($conv->get_profile_owner(),'dislike')) ? $dislike_list : ''),
+			'dislike_list_part' => ((feature_enabled($conv->get_profile_owner(),'dislike')) ? $dislike_list_part : ''),
+			'dislike_button_label' => ((feature_enabled($conv->get_profile_owner(),'dislike')) ? $dislike_button_label : ''),
+			'modal_dismiss' => t('Close'),
 			'showlike' => $showlike,
 			'showdislike' => $showdislike,
 			'comment' => $this->get_comment_box($indent),

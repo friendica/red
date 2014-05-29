@@ -6,18 +6,19 @@
 			$("#comment-edit-text-" + id).addClass("comment-edit-text-full");
 			$("#comment-edit-text-" + id).removeClass("comment-edit-text-empty");
 			$("#mod-cmnt-wrap-" + id).show();
-			openMenu("comment-edit-submit-wrapper-" + id);
+			openMenu("comment-tools-" + id);
 			return true;
 		}
 		return false;
 	}
+
 	function commentClose(obj,id) {
 		if(obj.value == '') {
 			obj.value = aStr['comment'];
 			$("#comment-edit-text-" + id).removeClass("comment-edit-text-full");
 			$("#comment-edit-text-" + id).addClass("comment-edit-text-empty");
 			$("#mod-cmnt-wrap-" + id).hide();
-			closeMenu("comment-edit-submit-wrapper-" + id);
+			closeMenu("comment-tools-" + id);
 			return true;
 		}
 		return false;
@@ -32,14 +33,13 @@
 		}
 	}
 
-
 	function commentInsert(obj,id) {
 		var tmpStr = $("#comment-edit-text-" + id).val();
 		if(tmpStr == '$comment') {
 			tmpStr = '';
 			$("#comment-edit-text-" + id).addClass("comment-edit-text-full");
 			$("#comment-edit-text-" + id).removeClass("comment-edit-text-empty");
-			openMenu("comment-edit-submit-wrapper-" + id);
+			openMenu("comment-tools-" + id);
 		}
 		var ins = $(obj).html();
 		ins = ins.replace('&lt;','<');
@@ -62,7 +62,7 @@
 			tmpStr = "";
 			$("#comment-edit-text-" + id).addClass("comment-edit-text-full");
 			$("#comment-edit-text-" + id).removeClass("comment-edit-text-empty");
-			openMenu("comment-edit-submit-wrapper-" + id);
+			openMenu("comment-tools-" + id);
 			$("#comment-edit-text-" + id).val(tmpStr);
 		}
 
@@ -341,6 +341,7 @@
 				if(data.all_events_today == 0) { data.all_events_today = ''; $('.all_events-today-update').removeClass('show') } else { $('.all_events-today-update').addClass('show') }
 				$('.all_events-today-update').html(data.all_events_today);
 
+				$.jGrowl.defaults.closerTemplate = '<div>[ ' + aStr['closeAll'] + ']</div>';
 
 				$(data.notice).each(function() {
 					$.jGrowl(this.message, { sticky: true, theme: 'notice' });
@@ -747,6 +748,7 @@ function updateConvItems(mode,data) {
              $("#comment-edit-form-" + id).serialize(),
 			function(data) {
 				if(data.success) {
+					$("#comment-edit-preview-" + id).hide();
 					$("#comment-edit-wrapper-" + id).hide();
 					$("#comment-edit-text-" + id).val('');
     	  			var tarea = document.getElementById("comment-edit-text-" + id);

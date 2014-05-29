@@ -150,12 +150,12 @@ function settings_post(&$a) {
 			set_pconfig(local_user(),'system','mobile_theme',$mobile_theme);
 		}
 
-		$chanview_full = ((x($_POST,'chanview_full')) ? intval($_POST['chanview_full']) : 0);
+//		$chanview_full = ((x($_POST,'chanview_full')) ? intval($_POST['chanview_full']) : 0);
 
 		set_pconfig(local_user(),'system','update_interval', $browser_update);
 		set_pconfig(local_user(),'system','itemspage', $itemspage);
 		set_pconfig(local_user(),'system','no_smilies',$nosmile);
-		set_pconfig(local_user(),'system','chanview_full',$chanview_full);
+//		set_pconfig(local_user(),'system','chanview_full',$chanview_full);
 
 
 		if ($theme == $a->channel['channel_theme']){
@@ -714,7 +714,7 @@ function settings_content(&$a) {
 				$unsupported = file_exists('view/theme/' . $th . '/unsupported');
 				$is_mobile = file_exists('view/theme/' . $th . '/mobile');
 				if (!$is_experimental or ($is_experimental && (get_config('experimentals','exp_themes')==1 or get_config('experimentals','exp_themes')===false))){ 
-					$theme_name = (($is_experimental) ?  sprintf("%s - \x28Experimental\x29", $f) : $f);
+					$theme_name = (($is_experimental) ?  sprintf(t('%s - (Experimental)'), $f) : $f);
 					if($is_mobile) {
 						$mobile_themes[$f]=$theme_name;
 					}
@@ -736,8 +736,6 @@ function settings_content(&$a) {
 		$nosmile = get_pconfig(local_user(),'system','no_smilies');
 		$nosmile = (($nosmile===false)? '0': $nosmile); // default if not set: 0
 
-		$chanview = intval(get_pconfig(local_user(),'system','chanview_full'));
-
 		$theme_config = "";
 		if( ($themeconfigfile = get_theme_config_file($theme_selected)) != null){
 			require_once($themeconfigfile);
@@ -757,7 +755,6 @@ function settings_content(&$a) {
 			'$ajaxint'   => array('browser_update',  t("Update browser every xx seconds"), $browser_update, t('Minimum of 10 seconds, no maximum')),
 			'$itemspage'   => array('itemspage',  t("Maximum number of conversations to load at any time:"), $itemspage, t('Maximum of 100 items')),
 			'$nosmile'	=> array('nosmile', t("Don't show emoticons"), $nosmile, ''),
-			'$chanview_full' => array('chanview_full', t('Do not view remote profiles in frames'), $chanview, t('By default open in a sub-window of your own site')), 			
 			'$layout_editor' => t('System Page Layout Editor - (advanced)'),
 			'$theme_config' => $theme_config,
 		));

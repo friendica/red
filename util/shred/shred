@@ -152,7 +152,9 @@ main () {
 	fcli_in_reply_to_status_id=
 	fcli_file=
 	fcli_help_flag=
-	while getopts "C:c:s:r:f:h" name
+	JS_Fields=()
+
+	while getopts "C:c:s:r:f:h:i" name
 	do
 		case $name in
 		c)	fcli_command="$OPTARG";;
@@ -161,6 +163,7 @@ main () {
 		r)	fcli_in_reply_to_status_id="$OPTARG";;
 		f)	fcli_file="$OPTARG";;
 		h)  fcli_help_flag="1";;
+		i)  JS_Fields=("${JS_Fields[@]}" "$OPTARG");;
 		?)	usage
 			exit 2;;
 		esac
@@ -208,7 +211,22 @@ main () {
 		return $FO_rval
 		;;
 	*)
-		usage 1
+		FO_command $fcli_command
+
+        JS_Parsed=$(echo "$FO_ret" | tokenize | parse)
+
+#		for a in ${JS_Parsed[@]}; do
+
+#		if [ ${#JS_Fields[@]} != 0 ]; then
+#			for b in ${JS_Fields[@]}; do 
+#					echo "$JS_Parsed" | js ${a} ${b}
+#				done
+#			else 
+				echo "$JS_Parsed"
+#			fi
+#		done
+		return $FO_rval
+
 		;;
 	esac
 	return 0

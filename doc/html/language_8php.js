@@ -8,6 +8,6 @@ var language_8php =
     [ "pop_lang", "language_8php.html#a78bd204955ec4cc3a9ac651285a1689d", null ],
     [ "push_lang", "language_8php.html#ac9142ef1d01a235c760deb0f16643f5a", null ],
     [ "string_plural_select_default", "language_8php.html#a151e5b4689aef86a12642cbb7a00bfe0", null ],
-    [ "t", "language_8php.html#aae0c3638fb476ae1e31f8d242f5dac04", null ],
-    [ "tt", "language_8php.html#ae310fb3880484ee1cc4faefe0c63c06d", null ]
+    [ "t", "language_8php.html#ac6ae482ee54fa2764d5c2e77305aeb96", null ],
+    [ "tt", "language_8php.html#a686bcafa6b0d5c86d37b38a1db5b6997", null ]
 ];

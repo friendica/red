@@ -43,8 +43,6 @@ function get_browser_language() {
 			arsort($langs, SORT_NUMERIC);
 		}
 	}
-	else
-		$langs['en'] = 1;
 
 	return $langs;
 }
@@ -65,6 +63,7 @@ function get_best_language() {
 
 	if(isset($langs) && count($langs)) {
 		foreach ($langs as $lang => $v) {
+			$lang = strtolower($lang);
 			if(file_exists("view/$lang") && is_dir("view/$lang")) {
 				$preferred = $lang;
 				break;
@@ -145,25 +144,29 @@ function load_translation_table($lang, $install = false) {
 /**
  * @brief translate string if translation exists.
  *
- * @param s string that should get translated
+ * @param $s string that should get translated
+ * @param $ctx optional context to appear in po file
  * @return translated string if exsists, otherwise s
+ *
  */
-function t($s) {
+function t($s,$ctx = '') {
 	global $a;
 
-	if(x($a->strings,$s)) {
-		$t = $a->strings[$s];
+	$cs = $ctx?"__ctx:".$ctx."__ ".$s:$s;
+	if(x($a->strings,$cs)) {
+		$t = $a->strings[$cs];
 		return is_array($t) ? $t[0] : $t;
 	}
 	return $s;
 }
 
 
-function tt($singular, $plural, $count){
+function tt($singular, $plural, $count, $ctx = ''){
 	$a = get_app();
 
-	if(x($a->strings,$singular)) {
-		$t = $a->strings[$singular];
+	$cs = $ctx?"__ctx:".$ctx."__ ".$singular:$singular;
+	if(x($a->strings,$cs)) {
+		$t = $a->strings[$cs];
 		$f = 'string_plural_select_' . str_replace('-', '_', $a->language);
 		if(! function_exists($f))
 			$f = 'string_plural_select_default';
@@ -210,8 +213,10 @@ function detect_language($s) {
 	if($min_confidence === false)
 		$min_confidence = LANGUAGE_DETECT_MIN_CONFIDENCE;
 
+	// embedded apps have long base64 strings which will trip up the detector.
+	$naked_body = preg_replace('/\[app\](.*?)\[\/app\]/','',$s);
 	// strip off bbcode
-	$naked_body = preg_replace('/\[(.+?)\]/', '', $s);
+	$naked_body = preg_replace('/\[(.+?)\]/', '', $naked_body);
 	if(mb_strlen($naked_body) < intval($min_length)) {
 		logger('detect language: string length less than ' . intval($min_length), LOGGER_DATA);
 		return '';

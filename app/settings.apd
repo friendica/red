@@ -1,0 +1,4 @@
+url: $baseurl/settings
+requires: local_user
+name: Settings
+photo: $baseurl/app/settings.png

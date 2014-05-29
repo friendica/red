@@ -23,7 +23,7 @@
 				{{$jotnets}}
 				{{/if}}
 			</div>
-			<div class="modal-footer">
+			<div class="modal-footer clear">
 				<button type="button" class="btn btn-default" data-dismiss="modal">{{$aclModalDismiss}}</button>
 			</div>
 		</div><!-- /.modal-content -->

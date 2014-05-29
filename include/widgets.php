@@ -74,6 +74,18 @@ function widget_collections($args) {
 }
 
 
+function widget_appselect($arr) {
+	return replace_macros(get_markup_template('app_select.tpl'),array(
+		'$title' => t('Apps'),
+		'$system' => t('System'),
+		'$personal' => t('Personal'),
+		'$new' => t('Create Personal App'),
+		'$edit' => t('Edit Personal App')
+	));
+}
+
+
+
 function widget_suggestions($arr) {
 
 	if((! local_user()) || (! feature_enabled(local_user(),'suggest')))
@@ -719,4 +731,51 @@ $(document).ready(function() {
 EOT;
 return $o;
 
+}
+
+
+/**
+ * @function widget_photo($arr)
+ *    widget to display a single photo.
+ * @param array $arr;
+ *    'src' => URL of photo
+ *    'zrl' => true or false, use zid in url
+ *    'style' => CSS string
+ * URL must be an http or https URL
+ */
+
+
+function widget_photo($arr) {
+
+	$style = $zrl = false;
+	$params = '';
+	if(array_key_exists('src',$arr) && isset($arr['src']))
+		$url = $arr['src'];
+
+	if(strpos($url,'http') !== 0)
+		return '';
+
+	if(array_key_exists('style',$arr) && isset($arr['style']))
+		$style = $arr['style'];
+
+	// ensure they can't sneak in an eval(js) function
+
+	if(strpos($style,'(') !== false)
+		return '';
+
+	if(array_key_exists('zrl',$arr) && isset($arr['zrl']))
+		$zrl = (($arr['zrl']) ? true : false);
+
+	if($zrl)
+		$url = zid($url);
+
+	$o = '<div class="widget">';
+
+	$o .= '<img ' . (($zrl) ? ' class="zrl" ' : '') 
+				  . (($style) ? ' style="' . $style . '"' : '') 
+				  . ' src="' . $url . '" />';
+
+	$o .= '</div>';
+
+	return $o;
 }

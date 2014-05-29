@@ -646,6 +646,28 @@ function post_post(&$a) {
 		intval($hub['hubloc_id'])
 	);
 
+	// a dead hub came back to life - reset any tombstones we might have
+
+	if($hub['hubloc_status'] & HUBLOC_OFFLINE) {
+		q("update hubloc set hubloc_status = (hubloc_status ^ %d) where hubloc_id = %d limit 1",
+			intval(HUBLOC_OFFLINE),
+			intval($hub['hubloc_id'])		
+		);
+		if($r[0]['hubloc_flags'] & HUBLOC_FLAGS_ORPHANCHECK) {
+			q("update hubloc set hubloc_flags = (hubloc_flags ^ %d) where hubloc_id = %d limit 1",
+				intval(HUBLOC_FLAGS_ORPHANCHECK),
+				intval($hub['hubloc_id'])
+			);
+		}
+		q("update xchan set xchan_flags = (xchan_flags ^ %d) where (xchan_flags & %d) and xchan_hash = '%s' limit 1",
+			intval(XCHAN_FLAGS_ORPHAN),
+			intval(XCHAN_FLAGS_ORPHAN),
+			dbesc($hub['hubloc_hash'])
+		);
+	} 
+
+
+
 	/** 
 	 * This hub has now been proven to be valid.
 	 * Any hub with the same URL and a different sitekey cannot be valid.

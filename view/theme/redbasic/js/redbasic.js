@@ -1,22 +1,22 @@
-function cmtBbOpen(comment, id) {
-	if($(comment).hasClass('comment-edit-text-full')) {
-		$(".comment-edit-bb-" + id).show();
-		return true;
-	}
-	return false;
+function commentOpenRedbasic(obj,id) {
+	$(document).click(function() {
+		if(obj.value == aStr['comment']) {
+			obj.value = '';
+			$("#comment-edit-text-" + id).addClass("comment-edit-text-full").removeClass("comment-edit-text-empty");
+			$("#comment-tools-" + id).show();
+		}
+	});
 }
 
-function cmtBbClose(comment, id) {
-//	if($(comment).hasClass('comment-edit-text-empty')) {
-//		$(".comment-edit-bb-" + id).hide();
-//		return true;
-//	}
-	return false;
+function commentCloseRedbasic(obj,id) {
+	$(document).click(function() {
+		if(obj.value == '') {
+		obj.value = aStr['comment'];
+			$("#comment-edit-text-" + id).removeClass("comment-edit-text-full").addClass("comment-edit-text-empty");
+			$("#comment-tools-" + id).hide();
+		}
+	});
 }
-
-//document.jotpermslock = 'icon-lock';
-//document.jotpermsunlock = 'icon-unlock';
-
 
 $(document).ready(function() {
 

@@ -117,13 +117,14 @@ if((isset($_SESSION)) && (x($_SESSION,'authenticated')) && ((! (x($_POST,'auth-p
 
 		// first check if we're enforcing that sessions can't change IP address
 
-		$check = get_config('system','paranoia');
-		// extra paranoia - if the IP changed, log them out
-		if($check && ($_SESSION['addr'] != $_SERVER['REMOTE_ADDR'])) {
-			logger('Session address changed. Paranoid setting in effect, blocking session. ' 
-				. $_SESSION['addr'] . ' != ' . $_SERVER['REMOTE_ADDR']);
-			nuke_session();
-			goaway(z_root());
+		if($_SESSION['addr'] != $_SERVER['REMOTE_ADDR']) {
+			logger('SECURITY: Session IP address changed: ' . $_SESSION['addr'] . ' != ' . $_SERVER['REMOTE_ADDR']);
+			if(get_config('system','paranoia')) {
+				logger('Session address changed. Paranoid setting in effect, blocking session. ' 
+					. $_SESSION['addr'] . ' != ' . $_SERVER['REMOTE_ADDR']);
+				nuke_session();
+				goaway(z_root());
+			}
 		}
 
 		$r = q("select * from account where account_id = %d limit 1",
