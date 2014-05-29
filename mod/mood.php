@@ -60,7 +60,7 @@ function mood_init(&$a) {
 
 	$mid = item_message_id();
 
-	$action = sprintf( t('%1$s is currently %2$s'), '[zrl=' . $poster['xchan_url'] . ']' . $poster['xchan_name'] . '[/zrl]' , $verbs[$verb]); 
+	$action = sprintf( t('%1$s is %2$s','mood'), '[zrl=' . $poster['xchan_url'] . ']' . $poster['xchan_name'] . '[/zrl]' , $verbs[$verb]); 
 	$item_flags = ITEM_WALL|ITEM_ORIGIN|ITEM_UNSEEN;
 	if(! $parent_mid)
 		$item_flags |= ITEM_THREAD_TOP;
@@ -93,14 +93,7 @@ function mood_init(&$a) {
 	$item_id = $post['item_id'];
 
 	if($item_id) {
-//		q("UPDATE `item` SET `plink` = '%s' WHERE `uid` = %d AND `id` = %d LIMIT 1",
-//			dbesc($a->get_baseurl() . '/display/' . $poster['nickname'] . '/' . $item_id),
-//			intval($uid),
-//			intval($item_id)
-//		);
-
 		proc_run('php',"include/notifier.php","activity", $item_id);
-
 	}
 
 	call_hooks('post_local_end', $arr);
