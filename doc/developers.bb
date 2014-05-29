@@ -21,7 +21,7 @@ to notify us to merge your work.
 
 Our translations are managed through Transifex. If you wish to help out translating the Red Matrix to another language, sign up on transifex.com, visit [url=https://www.transifex.com/projects/p/red-matrix/]https://www.transifex.com/projects/p/red-matrix/[/url] and request to join one of the existing language teams or create a new one. Notify one of the core developers when you have a translation update which requires merging, or ask about merging it yourself if you're comfortable with git and PHP. We have a string file called 'messages.po' which is gettext compliant and a handful of email templates, and from there we automatically generate the application's language files.   
 
-[zrl=https://friendicared.net/pages/doc/translations]Translations - More Info[/zrl]
+[zrl=[baseurl]/help/Translations]Translations - More Info[/zrl]
 
 [b]Important[/b]
 

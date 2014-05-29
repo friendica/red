@@ -42,6 +42,7 @@
 [zrl=[baseurl]/help/plugins]Plugins[/zrl]
 [zrl=[baseurl]/help/DerivedTheme1]Creating Derivative Themes[/zrl]
 [zrl=[baseurl]/help/schema_development]Schemas[/zrl]
+[zrl=[baseurl]/help/Translations]Translations[/zrl]
 [zrl=[baseurl]/help/developers]Developers[/zrl]
 [zrl=[baseurl]/help/intro_for_developers]Intro for Developers[/zrl]
 [zrl=[baseurl]/help/api_functions]API functions[/zrl]
