@@ -128,33 +128,7 @@ function ev_compare($a,$b) {
 }
 
 
-
-function event_store($arr) {
-
-	require_once('include/datetime.php');
-	require_once('include/items.php');
-	require_once('include/bbcode.php');
-
-	$a = get_app();
-
-	$arr['created']     = (($arr['created'])     ? $arr['created']     : datetime_convert());
-	$arr['edited']      = (($arr['edited'])      ? $arr['edited']      : datetime_convert());
-	$arr['type']        = (($arr['type'])        ? $arr['type']        : 'event' );	
-	$arr['event_xchan'] = (($arr['event_xchan']) ? $arr['event_xchan'] : '');
-	
-	$item = null;
-
-	if($arr['mid'] && $arr['uid']) {
-		$i = q("select * from item where mid = '%s' and uid = %d limit 1",
-			dbesc($arr['mid']),
-			intval($arr['uid'])
-		);
-		if($i) {
-			xchan_query($i);
-			$item = fetch_post_tags($i,true);
-		}
-	}
-
+function event_store_event($arr) {
 	// Existing event being modified
 dbg(1);
 	if($arr['id'] || $arr['event_hash']) {
@@ -218,6 +192,82 @@ dbg(1);
 			intval($r[0]['id']),
 			intval($arr['uid'])
 		);
+	}
+	else {
+
+		// New event. Store it. 
+
+		$hash = random_string();
+
+		if(! $arr['mid'])
+			$arr['mid'] = item_message_id();
+
+dbg(1);
+		$r = q("INSERT INTO event ( uid,aid,event_xchan,event_hash,created,edited,start,finish,summary,description,location,type,
+			adjust,nofinish,allow_cid,allow_gid,deny_cid,deny_gid)
+			VALUES ( %d, %d, '%s', '%s', '%s', '%s', '%s', '%s', '%s', '%s', '%s', '%s', %d, %d, '%s', '%s', '%s', '%s' ) ",
+			intval($arr['uid']),
+			intval($arr['account']),
+			dbesc($arr['event_xchan']),
+			dbesc($hash),
+			dbesc($arr['created']),
+			dbesc($arr['edited']),
+			dbesc($arr['start']),
+			dbesc($arr['finish']),
+			dbesc($arr['summary']),
+			dbesc($arr['description']),
+			dbesc($arr['location']),
+			dbesc($arr['type']),
+			intval($arr['adjust']),
+			intval($arr['nofinish']),
+			dbesc($arr['allow_cid']),
+			dbesc($arr['allow_gid']),
+			dbesc($arr['deny_cid']),
+			dbesc($arr['deny_gid'])
+
+		);
+	}
+
+	$r = q("SELECT * FROM event WHERE event_hash = '%s' AND uid = %d LIMIT 1",
+		dbesc($hash),
+		intval($arr['uid'])
+	);
+	if($r)
+		return $r[0];
+
+	return false;
+
+}
+
+
+
+
+
+function event_store_item($arr) {
+
+	require_once('include/datetime.php');
+	require_once('include/items.php');
+	require_once('include/bbcode.php');
+
+	$a = get_app();
+
+	$arr['created']     = (($arr['created'])     ? $arr['created']     : datetime_convert());
+	$arr['edited']      = (($arr['edited'])      ? $arr['edited']      : datetime_convert());
+	$arr['type']        = (($arr['type'])        ? $arr['type']        : 'event' );	
+	$arr['event_xchan'] = (($arr['event_xchan']) ? $arr['event_xchan'] : '');
+	
+	$item = null;
+
+	if($arr['mid'] && $arr['uid']) {
+		$i = q("select * from item where mid = '%s' and uid = %d limit 1",
+			dbesc($arr['mid']),
+			intval($arr['uid'])
+		);
+		if($i) {
+			xchan_query($i);
+			$item = fetch_post_tags($i,true);
+		}
+	}
 
 		$r = q("SELECT * FROM item left join xchan on author_xchan = xchan_hash WHERE resource_id = '%s' AND resource_type = 'event' and uid = %d LIMIT 1",
 		        dbesc($event_hash),
@@ -271,44 +321,6 @@ dbg(0);
 	}
 	else {
 
-		// New event. Store it. 
-
-		$hash = random_string();
-
-		if(! $arr['mid'])
-			$arr['mid'] = item_message_id();
-
-dbg(1);
-		$r = q("INSERT INTO event ( uid,aid,event_xchan,event_hash,created,edited,start,finish,summary,description,location,type,
-			adjust,nofinish,allow_cid,allow_gid,deny_cid,deny_gid)
-			VALUES ( %d, %d, '%s', '%s', '%s', '%s', '%s', '%s', '%s', '%s', '%s', '%s', %d, %d, '%s', '%s', '%s', '%s' ) ",
-			intval($arr['uid']),
-			intval($arr['account']),
-			dbesc($arr['event_xchan']),
-			dbesc($hash),
-			dbesc($arr['created']),
-			dbesc($arr['edited']),
-			dbesc($arr['start']),
-			dbesc($arr['finish']),
-			dbesc($arr['summary']),
-			dbesc($arr['description']),
-			dbesc($arr['location']),
-			dbesc($arr['type']),
-			intval($arr['adjust']),
-			intval($arr['nofinish']),
-			dbesc($arr['allow_cid']),
-			dbesc($arr['allow_gid']),
-			dbesc($arr['deny_cid']),
-			dbesc($arr['deny_gid'])
-
-		);
-
-		$r = q("SELECT * FROM event WHERE event_hash = '%s' AND uid = %d LIMIT 1",
-			dbesc($hash),
-			intval($arr['uid'])
-		);
-		if(count($r))
-			$event = $r[0];
 
 		$z = q("select * from channel where channel_hash = '%s' and channel_id = %d limit 1",
 			dbesc($arr['event_xchan']),
