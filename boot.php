@@ -383,6 +383,7 @@ define ( 'NOTIFY_SYSTEM',   0x8000 );
 
 define ( 'HUBLOC_FLAGS_PRIMARY',      0x0001);
 define ( 'HUBLOC_FLAGS_UNVERIFIED',   0x0002);
+define ( 'HUBLOC_FLAGS_ORPHANCHECK',  0x0004); 
 define ( 'HUBLOC_FLAGS_DELETED',      0x1000);
 
 define ( 'XCHAN_FLAGS_NORMAL',		  0x0000);

@@ -840,6 +840,24 @@ function import_xchan($arr,$ud_flags = UPDATE_FLAGS_UPDATED) {
 						intval($r[0]['hubloc_id'])
 					);
 				}
+				if($r[0]['hubloc_status'] & HUBLOC_OFFLINE) {
+					q("update hubloc set hubloc_status = (hubloc_status ^ %d) where hubloc_id = %d limit 1",
+						intval(HUBLOC_OFFLINE),
+						intval($r[0]['hubloc_id'])
+					);
+					if($r[0]['hubloc_flags'] & HUBLOC_FLAGS_ORPHANCHECK) {
+						q("update hubloc set hubloc_flags = (hubloc_flags ^ %d) where hubloc_id = %d limit 1",
+							intval(HUBLOC_FLAGS_ORPHANCHECK),
+							intval($r[0]['hubloc_id'])
+						);
+					}
+					q("update xchan set xchan_flags = (xchan_flags ^ %d) where (xchan_flags & %d) and xchan_hash = '%s' limit 1",
+						intval(XCHAN_FLAGS_ORPHAN),
+						intval(XCHAN_FLAGS_ORPHAN),
+						dbesc($xchan_hash)
+					);
+
+				} 
 
 				// Remove pure duplicates
 				if(count($r) > 1) {
