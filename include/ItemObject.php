@@ -200,6 +200,9 @@ class Item extends BaseObject {
 			}
 		}
 
+		$has_event = false;
+		if(activity_compare($item['obj_type'],ACTIVITY_OBJ_EVENT) && $conv->get_profile_owner() == local_user())
+			$has_event = true;
 
 		if($this->is_commentable()) {
 			$like = array( t("I like this \x28toggle\x29"), t("like"));
@@ -268,7 +271,8 @@ class Item extends BaseObject {
 			'star'      => ((feature_enabled($conv->get_profile_owner(),'star_posts')) ? $star : ''),
 			'tagger'    => ((feature_enabled($conv->get_profile_owner(),'commtag')) ? $tagger : ''),
 			'filer'     => ((feature_enabled($conv->get_profile_owner(),'filing')) ? $filer : ''),
-			'bookmark'  => (($conv->get_profile_owner() == local_user() && $has_bookmarks) ? t('Bookmark Links') : ''),
+			'bookmark'  => (($conv->get_profile_owner() == local_user() && $has_bookmarks) ? t('Save Bookmarks') : ''),
+			'addtocal'  => (($has_event) ? t('Add to Calendar') : ''),
 			'drop'      => $drop,
 			'multidrop' => ((feature_enabled($conv->get_profile_owner(),'multi_delete')) ? $multidrop : ''),
 // end toolbar buttons

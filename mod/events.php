@@ -159,10 +159,11 @@ function events_content(&$a) {
 	}
 
 
-		$plaintext = true;
+	$plaintext = true;
 
-		if(feature_enabled(local_user(),'richtext'))
-			$plaintext = false;
+	if(feature_enabled(local_user(),'richtext'))
+		$plaintext = false;
+
 
 
 	$htpl = get_markup_template('event_head.tpl');
@@ -190,6 +191,10 @@ function events_content(&$a) {
 			$mode = 'edit';
 			$event_id = argv(2);
 		}
+		if(argc() > 2 && argv(1) === 'add') {
+			$mode = 'add';
+			$item_id = intval(argv(2));
+		}
 		if(argv(1) === 'new') {
 			$mode = 'new';
 			$event_id = '';
@@ -199,6 +204,11 @@ function events_content(&$a) {
 			$y = intval(argv(1));
 			$m = intval(argv(2));
 		}
+	}
+
+	if($mode === 'add') {
+		event_addtocal($item_id,local_user());
+		killme();
 	}
 
 	if($mode == 'view') {

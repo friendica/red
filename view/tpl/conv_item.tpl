@@ -85,6 +85,9 @@
 							{{if $item.bookmark}}
 							<li role="presentation"><a role="menuitem" href="#" onclick="itemBookmark({{$item.id}}); return false;"><i id="bookmarker-{{$item.id}}" class="icon-bookmark" title="{{$item.bookmark}}"></i> {{$item.bookmark}}</a></li>
 							{{/if}}
+							{{if $item.addtocal}}
+							<li role="presentation"><a role="menuitem" href="#" onclick="itemAddToCal({{$item.id}}); return false;"><i id="addtocal-{{$item.id}}" class="icon-calendar" title="{{$item.addtocal}}"></i> {{$item.addtocal}}</a></li>
+							{{/if}}
 							{{if $item.star}}
 							<li role="presentation"><a role="menuitem" href="#" onclick="dostar({{$item.id}}); return false;"><i id="starred-{{$item.id}}" class="icon-star {{$item.star.isstarred}}" title="{{$item.star.toggle}}"></i> {{$item.star.toggle}}</a></li>
 							{{/if}}
