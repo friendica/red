@@ -112,6 +112,7 @@ var boot_8php =
     [ "GRAVITY_LIKE", "boot_8php.html#a1f5906598e90b5ea2b4245f682be4348", null ],
     [ "GRAVITY_PARENT", "boot_8php.html#a2af173e4e9836ee7c90757b4793a2be3", null ],
     [ "HUBLOC_FLAGS_DELETED", "boot_8php.html#a7c286add8961fd2d79216314cd4aadd8", null ],
+    [ "HUBLOC_FLAGS_ORPHANCHECK", "boot_8php.html#aefe573c3c7b0d37fbff264bbae79d673", null ],
     [ "HUBLOC_FLAGS_PRIMARY", "boot_8php.html#a3ad9cc5d4354be741fa1de12b96e9955", null ],
     [ "HUBLOC_FLAGS_UNVERIFIED", "boot_8php.html#ab54b24cc302e1a42a67a49d788b6b764", null ],
     [ "HUBLOC_NOTUSED", "boot_8php.html#aa589421267f0c2f0d643f727792cce35", null ],
