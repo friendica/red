@@ -1482,7 +1482,7 @@ function get_plink($item,$conversation_mode = true) {
 	if(x($item,$key)) {
 		return array(
 			'href' => zid($item[$key]),
-			'title' => t('link to source'),
+			'title' => t('Link to Source'),
 		);
 	} 
 	else {

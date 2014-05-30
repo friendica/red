@@ -115,7 +115,7 @@ class Item extends BaseObject {
 			);
 		}
 
-		$filer = (($conv->get_profile_owner() == local_user()) ? t("save to folder") : false);
+		$filer = (($conv->get_profile_owner() == local_user()) ? t("Save to Folder") : false);
 
 		$profile_avatar = $item['author']['xchan_photo_m'];
 		$profile_link   = chanlink_url($item['author']['xchan_url']);
@@ -164,9 +164,9 @@ class Item extends BaseObject {
 // FIXME we don't need all this stuff, some can be done in the template
 
 				$star = array(
-					'do' => t("add star"),
-					'undo' => t("remove star"),
-					'toggle' => t("toggle star status"),
+					'do' => t("Add Star"),
+					'undo' => t("Remove Star"),
+					'toggle' => t("Toggle Star Status"),
 					'classdo' => (($item['item_flags'] & ITEM_STARRED) ? "hidden" : ""),
 					'classundo' => (($item['item_flags'] & ITEM_STARRED) ? "" : "hidden"),
 					'isstarred' => (($item['item_flags'] & ITEM_STARRED) ? "starred icon-star" : "unstarred icon-star-empty"),
@@ -187,7 +187,7 @@ class Item extends BaseObject {
 		// FIXME - check this permission
 		if($conv->get_profile_owner() == local_user()) {
 			$tagger = array(
-				'tagit' => t("add tag"),
+				'tagit' => t("Add Tag"),
 				'classtagger' => "",
 			);
 		}
@@ -208,7 +208,7 @@ class Item extends BaseObject {
 			$like = array( t("I like this \x28toggle\x29"), t("like"));
 			$dislike = array( t("I don't like this \x28toggle\x29"), t("dislike"));
 			if ($shareable)
-				$share = array( t('Share this'), t('share'));
+				$share = array( t('Share This'), t('share'));
 		}
 
 		if(strcmp(datetime_convert('UTC','UTC',$item['created']),datetime_convert('UTC','UTC','now - 12 hours')) > 0)

@@ -352,7 +352,7 @@ function events_content(&$a) {
 					'is_first'=>$is_first,
 					'item'=>$rr,
 					'html'=>$html,
-					'plink' => array($rr['plink'],t('link to source'),'',''),
+					'plink' => array($rr['plink'],t('Link to Source'),'',''),
 				);
 
 
