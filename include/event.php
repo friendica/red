@@ -243,7 +243,7 @@ dbg(1);
 
 
 
-function event_store_item($arr) {
+function event_store_item($arr,$event) {
 
 	require_once('include/datetime.php');
 	require_once('include/items.php');

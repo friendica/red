@@ -125,9 +125,10 @@ function events_post(&$a) {
 	$datarray['created'] = $created;
 	$datarray['edited'] = $edited;
 
-	$item_id = event_store($datarray);
+	$event = event_store_event($datarray);
+	$item_id = event_store_item($datarray,$event);
 
-	if(! $cid)
+	if($share)
 		proc_run('php',"include/notifier.php","event","$item_id");
 
 }
