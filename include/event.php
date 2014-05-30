@@ -129,6 +129,12 @@ function ev_compare($a,$b) {
 
 
 function event_store_event($arr) {
+
+	$arr['created']     = (($arr['created'])     ? $arr['created']     : datetime_convert());
+	$arr['edited']      = (($arr['edited'])      ? $arr['edited']      : datetime_convert());
+	$arr['type']        = (($arr['type'])        ? $arr['type']        : 'event' );	
+	$arr['event_xchan'] = (($arr['event_xchan']) ? $arr['event_xchan'] : '');
+
 	// Existing event being modified
 
 	if($arr['id'] || $arr['event_hash']) {
@@ -297,11 +303,6 @@ function event_store_item($arr,$event) {
 
 	$a = get_app();
 
-	$arr['created']     = (($arr['created'])     ? $arr['created']     : datetime_convert());
-	$arr['edited']      = (($arr['edited'])      ? $arr['edited']      : datetime_convert());
-	$arr['type']        = (($arr['type'])        ? $arr['type']        : 'event' );	
-	$arr['event_xchan'] = (($arr['event_xchan']) ? $arr['event_xchan'] : '');
-	
 	$item = null;
 
 	if($arr['mid'] && $arr['uid']) {
@@ -315,61 +316,54 @@ function event_store_item($arr,$event) {
 		}
 	}
 
-		$r = q("SELECT * FROM item left join xchan on author_xchan = xchan_hash WHERE resource_id = '%s' AND resource_type = 'event' and uid = %d LIMIT 1",
-		        dbesc($event_hash),
+	$r = q("SELECT * FROM item left join xchan on author_xchan = xchan_hash WHERE resource_id = '%s' AND resource_type = 'event' and uid = %d LIMIT 1",
+        dbesc($event['hash']),
+		intval($arr['uid'])
+	);
+
+	if($r) {
+		$obj = json_encode(array(
+			'type'    => ACTIVITY_OBJ_EVENT,
+			'id'      => z_root() . '/event/' . $r[0]['resource_id'],
+			'title'   => $arr['summary'],
+			'content' => format_event_bbcode($arr),
+			'author'  => array(
+			'name'     => $r[0]['xchan_name'],
+			'address'  => $r[0]['xchan_addr'],
+			'guid'     => $r[0]['xchan_guid'],
+			'guid_sig' => $r[0]['xchan_guid_sig'],
+			'link'     => array(
+				array('rel' => 'alternate', 'type' => 'text/html', 'href' => $r[0]['xchan_url']),
+				array('rel' => 'photo', 'type' => $r[0]['xchan_photo_mimetype'], 'href' => $r[0]['xchan_photo_m'])),
+			),
+		));
+
+		$private = (($arr['allow_cid'] || $arr['allow_gid'] || $arr['deny_cid'] || $arr['deny_gid']) ? 1 : 0);
+
+
+		q("UPDATE item SET title = '%s', body = '%s', object = '%s', allow_cid = '%s', allow_gid = '%s', deny_cid = '%s', deny_gid = '%s', edited = '%s', item_flags = %d, item_private = %d  WHERE id = %d AND uid = %d LIMIT 1",
+			dbesc($arr['summary']),
+			dbesc(format_event_bbcode($arr)),
+			dbesc($object),
+			dbesc($arr['allow_cid']),
+			dbesc($arr['allow_gid']),
+			dbesc($arr['deny_cid']),
+			dbesc($arr['deny_gid']),
+			dbesc($arr['edited']),
+			intval($r[0]['item_flags']),
+			intval($private),
+			intval($r[0]['id']),
 			intval($arr['uid'])
 		);
 
-		if($r) {
-
-			$obj = json_encode(array(
-				'type'    => ACTIVITY_OBJ_EVENT,
-				'id'      => z_root() . '/event/' . $r[0]['resource_id'],
-				'title'   => $arr['summary'],
-				'content' => format_event_bbcode($arr),
-				'author'  => array(
-					'name'     => $r[0]['xchan_name'],
-					'address'  => $r[0]['xchan_addr'],
-					'guid'     => $r[0]['xchan_guid'],
-					'guid_sig' => $r[0]['xchan_guid_sig'],
-					'link'     => array(
-						array('rel' => 'alternate', 'type' => 'text/html', 'href' => $r[0]['xchan_url']),
-						array('rel' => 'photo', 'type' => $r[0]['xchan_photo_mimetype'], 'href' => $r[0]['xchan_photo_m'])),
-					),
-			));
-
-			$private = (($arr['allow_cid'] || $arr['allow_gid'] || $arr['deny_cid'] || $arr['deny_gid']) ? 1 : 0);
-
-
-			q("UPDATE item SET title = '%s', body = '%s', object = '%s', allow_cid = '%s', allow_gid = '%s', deny_cid = '%s', deny_gid = '%s', edited = '%s', item_flags = %d, item_private = %d  WHERE id = %d AND uid = %d LIMIT 1",
-				dbesc($arr['summary']),
-				dbesc(format_event_bbcode($arr)),
-				dbesc($object),
-				dbesc($arr['allow_cid']),
-				dbesc($arr['allow_gid']),
-				dbesc($arr['deny_cid']),
-				dbesc($arr['deny_gid']),
-				dbesc($arr['edited']),
-				intval($r[0]['item_flags']),
-				intval($private),
-				intval($r[0]['id']),
-				intval($arr['uid'])
-			);
-
-			$item_id = $r[0]['id'];
-		}
-		else
-			$item_id = 0;
-
-		call_hooks('event_updated', $arr['id']);
-dbg(0);
+		$item_id = $r[0]['id'];
+		call_hooks('event_updated', $event['id']);
 		return $item_id;
 	}
 	else {
 
-
 		$z = q("select * from channel where channel_hash = '%s' and channel_id = %d limit 1",
-			dbesc($arr['event_xchan']),
+			dbesc($event['event_xchan']),
 			intval($arr['uid'])
 		);
 
@@ -377,8 +371,6 @@ dbg(0);
 		$private = (($arr['allow_cid'] || $arr['allow_gid'] || $arr['deny_cid'] || $arr['deny_gid']) ? 1 : 0);
 				
 		$item_arr = array();
-
-
 
 		if($item) {
 			$item_arr['id'] = $item['id'];
@@ -440,16 +432,12 @@ dbg(0);
 			));
 		}
 
-
-		if($item)
-			$res = item_store_update($item_arr);
-		else
-			$res = item_store($item_arr);
+		$res = item_store($item_arr);
 
 		$item_id = $res['item_id'];
 
 		call_hooks("event_created", $event['id']);
-dbg(0);
+
 		return $item_id;
 	}
 }
