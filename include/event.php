@@ -130,7 +130,7 @@ function ev_compare($a,$b) {
 
 function event_store_event($arr) {
 	// Existing event being modified
-dbg(1);
+
 	if($arr['id'] || $arr['event_hash']) {
 
 		// has the event actually changed?
@@ -147,17 +147,17 @@ dbg(1);
 				intval($arr['uid'])
 			);
 		}
-dbg(0);
+
 		if(! $r)
-			return 0;
+			return false;
 
 		if($r[0]['edited'] === $arr['edited']) {
 			// Nothing has changed. Return the ID.
-			return $r[0]['id'];
+			return $r[0];
 		}
 
 		$event_hash = $r[0]['event_hash'];
-dbg(1);		
+		
 		// The event changed. Update it.
 
 		$r = q("UPDATE `event` SET
@@ -202,7 +202,7 @@ dbg(1);
 		if(! $arr['mid'])
 			$arr['mid'] = item_message_id();
 
-dbg(1);
+
 		$r = q("INSERT INTO event ( uid,aid,event_xchan,event_hash,created,edited,start,finish,summary,description,location,type,
 			adjust,nofinish,allow_cid,allow_gid,deny_cid,deny_gid)
 			VALUES ( %d, %d, '%s', '%s', '%s', '%s', '%s', '%s', '%s', '%s', '%s', '%s', %d, %d, '%s', '%s', '%s', '%s' ) ",
@@ -239,7 +239,53 @@ dbg(1);
 
 }
 
+function event_addtocal($item_id, $uid) {
 
+	$c = q("select * from channel where channel_id = %d limit 1",
+		intval($uid)
+	);
+
+	if(! $c)
+		return false;
+
+	$channel = $c[0];
+
+	$r = q("select * from item where id = %d and uid = %d limit 1",
+		intval($item_id),
+		intval($channel['channel_id'])
+	);
+
+	if((! $r) || (! activity_match($r[0]['obj_type'],ACTIVITY_OBJ_EVENT)))
+		return false;
+
+	$item = $r[0];
+
+	$ev = bbtoevent($r[0]['body']);
+	if(x($ev,'description') && x($ev,'start')) {
+		$ev['event_xchan'] = $item['author_xchan'];
+		$ev['uid']         = $channel['channel_id'];
+		$ev['account']     = $channel['channel_account_id'];
+		$ev['edited']      = $item['edited'];
+		$ev['mid']         = $item['mid'];
+		$ev['private']     = $item['item_private'];
+
+		// is this an edit?
+
+		if($item['resource_type'] === 'event') {
+			$ev['event_hash'] = $item['resource_id'];
+		}
+
+		$event = event_store_event($ev);
+		if($event) {
+			$r = q("update item set resource_id = '%s', resource_type = 'event' where id = %d and uid = %d limit 1",
+				intval($item['id']),
+				intval($channel['channel_id'])
+			);
+			return true;
+		}
+	}
+	return false;
+}
 
 
 
