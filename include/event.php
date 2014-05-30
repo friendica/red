@@ -135,6 +135,8 @@ function event_store_event($arr) {
 	$arr['type']        = (($arr['type'])        ? $arr['type']        : 'event' );	
 	$arr['event_xchan'] = (($arr['event_xchan']) ? $arr['event_xchan'] : '');
 
+
+
 	// Existing event being modified
 
 	if($arr['id'] || $arr['event_hash']) {
@@ -153,6 +155,7 @@ function event_store_event($arr) {
 				intval($arr['uid'])
 			);
 		}
+
 
 		if(! $r)
 			return false;
@@ -204,9 +207,6 @@ function event_store_event($arr) {
 		// New event. Store it. 
 
 		$hash = random_string();
-
-		if(! $arr['mid'])
-			$arr['mid'] = item_message_id();
 
 
 		$r = q("INSERT INTO event ( uid,aid,event_xchan,event_hash,created,edited,start,finish,summary,description,location,type,
@@ -261,13 +261,14 @@ function event_addtocal($item_id, $uid) {
 		intval($channel['channel_id'])
 	);
 
-	if((! $r) || (! activity_match($r[0]['obj_type'],ACTIVITY_OBJ_EVENT)))
+	if((! $r) || ($r[0]['obj_type'] !== ACTIVITY_OBJ_EVENT))
 		return false;
 
 	$item = $r[0];
 
 	$ev = bbtoevent($r[0]['body']);
-	if(x($ev,'description') && x($ev,'start')) {
+
+	if(x($ev,'summary') && x($ev,'start')) {
 		$ev['event_xchan'] = $item['author_xchan'];
 		$ev['uid']         = $channel['channel_id'];
 		$ev['account']     = $channel['channel_account_id'];
@@ -284,6 +285,7 @@ function event_addtocal($item_id, $uid) {
 		$event = event_store_event($ev);
 		if($event) {
 			$r = q("update item set resource_id = '%s', resource_type = 'event' where id = %d and uid = %d limit 1",
+				dbesc($event['event_hash']),
 				intval($item['id']),
 				intval($channel['channel_id'])
 			);
@@ -317,7 +319,7 @@ function event_store_item($arr,$event) {
 	}
 
 	$r = q("SELECT * FROM item left join xchan on author_xchan = xchan_hash WHERE resource_id = '%s' AND resource_type = 'event' and uid = %d LIMIT 1",
-        dbesc($event['hash']),
+        dbesc($event['event_hash']),
 		intval($arr['uid'])
 	);
 
@@ -385,6 +387,10 @@ function event_store_item($arr,$event) {
 			}
 			$item_arr['item_flags']    = $item_flags;
 		}
+
+		if(! $arr['mid'])
+			$arr['mid'] = item_message_id();
+
 
 		$item_arr['uid']           = $arr['uid'];
 		$item_arr['author_xchan']  = $arr['event_xchan'];

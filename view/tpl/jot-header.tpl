@@ -301,7 +301,7 @@ function enableOnUser(){
 	}
 
 	function itemAddToCal(id) {
-		$.get('{{$baseurl}}/event/add/' + id);
+		$.get('{{$baseurl}}/events/add/' + id);
 		if(timer) clearTimeout(timer);
 		timer = setTimeout(NavUpdate,1000);
 	}

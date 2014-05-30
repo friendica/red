@@ -201,7 +201,7 @@ class Item extends BaseObject {
 		}
 
 		$has_event = false;
-		if(activity_compare($item['obj_type'],ACTIVITY_OBJ_EVENT) && $conv->get_profile_owner() == local_user())
+		if(($item['obj_type'] === ACTIVITY_OBJ_EVENT) && $conv->get_profile_owner() == local_user())
 			$has_event = true;
 
 		if($this->is_commentable()) {
