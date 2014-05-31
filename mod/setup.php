@@ -547,7 +547,7 @@ function check_htaccess(&$checks) {
 	$help = "";
 	$ssl_error = false;
 
-	$url = $a->get_baseurl() . '/test/rewrite';
+	$url = $a->get_baseurl() . '/setup/testrewrite';
 
 	if (function_exists('curl_init')){
         $test = z_fetch_url($url);
