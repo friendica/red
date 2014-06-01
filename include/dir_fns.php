@@ -249,7 +249,7 @@ function local_dir_update($uid,$force) {
 	}
 
 	$ud_hash = random_string() . '@' . get_app()->get_hostname();
-	update_modtime($hash,$ud_hash,$p[0]['channel_address'] . '@' . get_app()->get_hostname(),(($force) ? (-1) : 1));
+	update_modtime($hash,$ud_hash,$p[0]['channel_address'] . '@' . get_app()->get_hostname(),(($force) ? UPDATE_FLAGS_FORCED : UPDATE_FLAGS_UPDATED));
 
 }
 	
