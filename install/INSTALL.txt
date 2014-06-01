@@ -49,8 +49,12 @@ by the internet browser of users they get a warning message complaining about
 some security issues. Although these complains are not the real truth - there
 are no security issues with your encryption! - the users may be confused,
 nerved or even worse may become scared about Red Matrix having security issues.
-Use one of the free certification instances!
+Free "browser-valid" certificates are available from providers such as StartSSL. 
  
+If you do NOT use SSL, there may be a delay of up to a minute for the initial
+install script - while we check the SSL port to see if anything responds there.
+When communicating with new sites, Red Matrix always attempts connection on the
+SSL port first, before falling back to a less secure connection.  
 
 1. Requirements
 	- Apache with mod-rewrite enabled and "AllowOverride All" so you can use a 

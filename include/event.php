@@ -391,7 +391,7 @@ function event_store_item($arr,$event) {
 		if(! $arr['mid'])
 			$arr['mid'] = item_message_id();
 
-
+		$item_arr['aid']           = $z[0]['channel_account_id'];
 		$item_arr['uid']           = $arr['uid'];
 		$item_arr['author_xchan']  = $arr['event_xchan'];
 		$item_arr['mid']           = $arr['mid'];
@@ -409,7 +409,7 @@ function event_store_item($arr,$event) {
 		$item_arr['verb']          = ACTIVITY_POST;
 
 		$item_arr['resource_type'] = 'event';
-		$item_arr['resource_id']   = $hash;
+		$item_arr['resource_id']   = $event['event_hash'];
 
 		$item_arr['obj_type']      = ACTIVITY_OBJ_EVENT;
 		$item_arr['body']          = format_event_bbcode($arr);
