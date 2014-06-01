@@ -1472,7 +1472,7 @@ msgstr[1] "%d gemeenschappelijke connecties"
 #: ../../include/contact_widgets.php:130 ../../include/js_strings.php:7
 #: ../../include/ItemObject.php:316
 msgid "show more"
-msgstr "meer weergeven"
+msgstr "meer reacties weergeven"
 
 #: ../../include/reddav.php:1045
 msgid "Edit File properties"
@@ -2314,7 +2314,7 @@ msgstr "Reactie"
 
 #: ../../include/js_strings.php:8
 msgid "show fewer"
-msgstr "minder tonen"
+msgstr "minder reacties weergeven"
 
 #: ../../include/js_strings.php:9
 msgid "+ Show More"

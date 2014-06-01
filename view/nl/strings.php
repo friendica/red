@@ -338,7 +338,7 @@ $a->strings["%d connection in common"] = array(
 	0 => "%d gemeenschappelijke connectie",
 	1 => "%d gemeenschappelijke connecties",
 );
-$a->strings["show more"] = "meer weergeven";
+$a->strings["show more"] = "meer reacties weergeven";
 $a->strings["Edit File properties"] = "Bestandseigenschappen bewerken";
 $a->strings["Miscellaneous"] = "Diversen";
 $a->strings["year"] = "jaar";
@@ -533,7 +533,7 @@ $a->strings["Work/employment:"] = "Werk/beroep:";
 $a->strings["School/education:"] = "School/opleiding:";
 $a->strings["Delete this item?"] = "Dit item verwijderen?";
 $a->strings["Comment"] = "Reactie";
-$a->strings["show fewer"] = "minder tonen";
+$a->strings["show fewer"] = "minder reacties weergeven";
 $a->strings["+ Show More"] = "+ Toon meer";
 $a->strings["- Show Less"] = "- Toon minder";
 $a->strings["Password too short"] = "Wachtwoord te kort";
