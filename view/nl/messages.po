@@ -1063,7 +1063,7 @@ msgstr "%s - klik om uit te loggen"
 
 #: ../../include/nav.php:116
 msgid "Click to authenticate to your home hub"
-msgstr "Klik om jezelf te verifiëren via jouw eigen Red-Matrix-hub"
+msgstr "Klik om jezelf te verifiëren via jouw eigen Red Matrix-hub"
 
 #: ../../include/nav.php:130
 msgid "Home Page"
@@ -3638,7 +3638,7 @@ msgstr "Beleid"
 
 #: ../../mod/admin.php:449
 msgid "Site name"
-msgstr "Naam van deze Red-Matrix-hub"
+msgstr "Naam van deze Red Matrix-hub"
 
 #: ../../mod/admin.php:450
 msgid "Banner/Logo"
@@ -3736,7 +3736,7 @@ msgstr "Toegestane domeinen"
 msgid ""
 "Comma separated list of domains which are allowed to establish friendships "
 "with this site. Wildcards are accepted. Empty to allow any domains"
-msgstr "Komma-gescheiden lijst van domeinen waarvan kanalen connecties kunnen aangaan met kanalen op deze Red-Matrix-hub. Wildcards zijn toegestaan.\nLaat leeg om alle domeinen toe te laten."
+msgstr "Komma-gescheiden lijst van domeinen waarvan kanalen connecties kunnen aangaan met kanalen op deze Red Matrix-hub. Wildcards zijn toegestaan.\nLaat leeg om alle domeinen toe te laten."
 
 #: ../../mod/admin.php:464
 msgid "Allowed email domains"
