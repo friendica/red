@@ -1553,31 +1553,31 @@ msgstr "%1$d %2$s geleden"
 
 #: ../../include/dir_fns.php:36
 msgid "Sort Options"
-msgstr ""
+msgstr "Sorteeropties"
 
 #: ../../include/dir_fns.php:37
 msgid "Alphabetic"
-msgstr ""
+msgstr "Alfabetisch"
 
 #: ../../include/dir_fns.php:38
 msgid "Reverse Alphabetic"
-msgstr ""
+msgstr "Omgekeerd alfabetisch"
 
 #: ../../include/dir_fns.php:39
 msgid "Newest to Oldest"
-msgstr ""
+msgstr "Nieuw naar oud"
 
 #: ../../include/dir_fns.php:51
 msgid "Enable Safe Search"
-msgstr ""
+msgstr "Veilig zoeken inschakelen"
 
 #: ../../include/dir_fns.php:53
 msgid "Disable Safe Search"
-msgstr ""
+msgstr "Veilig zoeken uitschakelen"
 
 #: ../../include/dir_fns.php:55
 msgid "Safe Mode"
-msgstr ""
+msgstr "Veilig zoeken"
 
 #: ../../include/enotify.php:41
 msgid "Red Matrix Notification"
@@ -1585,7 +1585,7 @@ msgstr "Red Matrix-notificatie"
 
 #: ../../include/enotify.php:42
 msgid "redmatrix"
-msgstr ""
+msgstr "redmatrix"
 
 #: ../../include/enotify.php:44
 msgid "Thank You,"
@@ -1609,7 +1609,7 @@ msgstr "[Red:Notificatie] Nieuw privébericht ontvangen op %s"
 #: ../../include/enotify.php:87
 #, php-format
 msgid "%1$s, %2$s sent you a new private message at %3$s."
-msgstr ""
+msgstr "%1$s, %2$s zond jou een nieuw privébericht om %3$s."
 
 #: ../../include/enotify.php:88
 #, php-format
@@ -1628,17 +1628,17 @@ msgstr "Bezoek %s om je privéberichten te bekijken en/of er op te reageren."
 #: ../../include/enotify.php:144
 #, php-format
 msgid "%1$s, %2$s commented on [zrl=%3$s]a %4$s[/zrl]"
-msgstr ""
+msgstr "%1$s, %2$s gaf een reactie op [zrl=%3$s]een %4$s[/zrl]"
 
 #: ../../include/enotify.php:152
 #, php-format
 msgid "%1$s, %2$s commented on [zrl=%3$s]%4$s's %5$s[/zrl]"
-msgstr ""
+msgstr "%1$s, %2$s gaf een reactie op [zrl=%3$s]een %5$s van %4$s[/zrl]"
 
 #: ../../include/enotify.php:161
 #, php-format
 msgid "%1$s, %2$s commented on [zrl=%3$s]your %4$s[/zrl]"
-msgstr ""
+msgstr "%1$s, %2$s gaf een reactie op [zrl=%3$s]jouw %4$s[/zrl]"
 
 #: ../../include/enotify.php:172
 #, php-format
@@ -1648,7 +1648,7 @@ msgstr "[Red:Notificatie] Reactie op conversatie #%1$d door %2$s"
 #: ../../include/enotify.php:173
 #, php-format
 msgid "%1$s, %2$s commented on an item/conversation you have been following."
-msgstr ""
+msgstr "%1$s, %2$s gaf een reactie op een bericht/conversatie die jij volgt."
 
 #: ../../include/enotify.php:176 ../../include/enotify.php:191
 #: ../../include/enotify.php:217 ../../include/enotify.php:236
@@ -1680,12 +1680,12 @@ msgstr "[Red:Notificatie] %s heeft je genoemd"
 #: ../../include/enotify.php:211
 #, php-format
 msgid "%1$s, %2$s tagged you at %3$s"
-msgstr ""
+msgstr "%1$s, %2$s noemde jou om %3$s"
 
 #: ../../include/enotify.php:212
 #, php-format
 msgid "%1$s, %2$s [zrl=%3$s]tagged you[/zrl]."
-msgstr ""
+msgstr "%1$s, %2$s [zrl=%3$s]noemde jou[/zrl]."
 
 #: ../../include/enotify.php:225
 #, php-format
@@ -1710,12 +1710,12 @@ msgstr "[Red:Notificatie] %s heeft jouw bericht gelabeld"
 #: ../../include/enotify.php:244
 #, php-format
 msgid "%1$s, %2$s tagged your post at %3$s"
-msgstr ""
+msgstr "%1$s, %2$s labelde jouw bericht om %3$s"
 
 #: ../../include/enotify.php:245
 #, php-format
 msgid "%1$s, %2$s tagged [zrl=%3$s]your post[/zrl]"
-msgstr ""
+msgstr "%1$s, %2$s labelde [zrl=%3$s]jouw bericht[/zrl]"
 
 #: ../../include/enotify.php:257
 msgid "[Red:Notify] Introduction received"
@@ -1777,11 +1777,11 @@ msgstr "Algemene functies"
 
 #: ../../include/features.php:25
 msgid "Content Expiration"
-msgstr ""
+msgstr "Inhoud laten verlopen"
 
 #: ../../include/features.php:25
 msgid "Remove posts/comments and/or private messages at a future time"
-msgstr ""
+msgstr "Berichten, reacties en/of privéberichten na een bepaalde tijd verwijderen"
 
 #: ../../include/features.php:26
 msgid "Multiple Profiles"
@@ -1801,11 +1801,11 @@ msgstr "Sta beheerde webpagina's op jouw kanaal toe"
 
 #: ../../include/features.php:28
 msgid "Private Notes"
-msgstr ""
+msgstr "Privé-aantekeningen"
 
 #: ../../include/features.php:28
 msgid "Enables a tool to store notes and reminders"
-msgstr ""
+msgstr "Schakelt een eenvoudige toepassing in om aantekeningen en herinneringen in op te slaan"
 
 #: ../../include/features.php:33
 msgid "Extended Identity Sharing"
@@ -1815,7 +1815,7 @@ msgstr "Uitgebreid identiteit delen"
 msgid ""
 "Share your identity with all websites on the internet. When disabled, "
 "identity is only shared with sites in the matrix."
-msgstr ""
+msgstr "Deel jouw Red Matrix-identiteit met alle websites op het internet. Wanneer dit is uitgeschakeld wordt je identiteit alleen binnen het Red Matrix-netwerk gedeeld. Schakel dit alleen als je weet wat je doet."
 
 #: ../../include/features.php:34
 msgid "Expert Mode"
@@ -1827,7 +1827,7 @@ msgstr "Zet de expertmodus aan voor geavanceerde instellingen"
 
 #: ../../include/features.php:35
 msgid "Premium Channel"
-msgstr ""
+msgstr "Premiumkanaal"
 
 #: ../../include/features.php:35
 msgid ""
@@ -1862,16 +1862,16 @@ msgstr "Kanaalbronnen"
 
 #: ../../include/features.php:43
 msgid "Automatically import channel content from other channels or feeds"
-msgstr ""
+msgstr "Automatisch inhoud uit andere kanalen of feeds importeren."
 
 #: ../../include/features.php:44
 msgid "Even More Encryption"
-msgstr ""
+msgstr "Extra versleuteling"
 
 #: ../../include/features.php:44
 msgid ""
 "Allow optional encryption of content end-to-end with a shared secret key"
-msgstr ""
+msgstr "Sta toe dat inhoud extra end-to-end wordt versleuteld met een gedeelde geheime sleutel."
 
 #: ../../include/features.php:49
 msgid "Network and Stream Filtering"
@@ -3020,7 +3020,7 @@ msgstr "Voorbeeld: bob@example.com, http://example.com/barbara"
 
 #: ../../include/widgets.php:183
 msgid "Notes"
-msgstr "Opmerkingen"
+msgstr "Aantekeningen"
 
 #: ../../include/widgets.php:255
 msgid "Remove term"
@@ -5976,35 +5976,35 @@ msgstr ""
 
 #: ../../mod/setup.php:433
 msgid "Generate encryption keys"
-msgstr ""
+msgstr "Versleutelingssleutels aanmaken"
 
 #: ../../mod/setup.php:440
 msgid "libCurl PHP module"
-msgstr ""
+msgstr "libCurl PHP-module"
 
 #: ../../mod/setup.php:441
 msgid "GD graphics PHP module"
-msgstr ""
+msgstr "GD graphics PHP-module"
 
 #: ../../mod/setup.php:442
 msgid "OpenSSL PHP module"
-msgstr ""
+msgstr "OpenSSL PHP-module"
 
 #: ../../mod/setup.php:443
 msgid "mysqli PHP module"
-msgstr ""
+msgstr "mysqli PHP-module"
 
 #: ../../mod/setup.php:444
 msgid "mb_string PHP module"
-msgstr ""
+msgstr "mb_string PHP-module"
 
 #: ../../mod/setup.php:445
 msgid "mcrypt PHP module"
-msgstr ""
+msgstr "mcrypt PHP-module"
 
 #: ../../mod/setup.php:450 ../../mod/setup.php:452
 msgid "Apache mod_rewrite module"
-msgstr ""
+msgstr "Apache mod_rewrite-module"
 
 #: ../../mod/setup.php:450
 msgid ""
@@ -6193,11 +6193,11 @@ msgstr "Item niet gevonden"
 
 #: ../../mod/editblock.php:77
 msgid "Edit Block"
-msgstr ""
+msgstr "Blok bewerken"
 
 #: ../../mod/editblock.php:87
 msgid "Delete block?"
-msgstr ""
+msgstr "Blok verwijderen"
 
 #: ../../mod/editblock.php:115 ../../mod/editlayout.php:110
 #: ../../mod/editpost.php:116 ../../mod/editwebpage.php:147
@@ -6216,11 +6216,11 @@ msgstr "Vorbis-audio [.ogg] invoegen"
 
 #: ../../mod/editblock.php:153
 msgid "Delete Block"
-msgstr ""
+msgstr "Blok verwijderen"
 
 #: ../../mod/pdledit.php:13
 msgid "Layout updated."
-msgstr ""
+msgstr "Layout bijgewerkt."
 
 #: ../../mod/pdledit.php:28 ../../mod/pdledit.php:53
 msgid "Edit System Page Description"
@@ -6228,27 +6228,27 @@ msgstr ""
 
 #: ../../mod/pdledit.php:48
 msgid "Layout not found."
-msgstr ""
+msgstr "Lay-out niet gevonden."
 
 #: ../../mod/pdledit.php:54
 msgid "Module Name:"
-msgstr ""
+msgstr "Modulenaam:"
 
 #: ../../mod/pdledit.php:55 ../../mod/layouts.php:59
 msgid "Layout Help"
-msgstr ""
+msgstr "Lay-out-hulp"
 
 #: ../../mod/editlayout.php:72
 msgid "Edit Layout"
-msgstr ""
+msgstr "Lay-out bewerken"
 
 #: ../../mod/editlayout.php:82
 msgid "Delete layout?"
-msgstr ""
+msgstr "Lay-out verwijderen?"
 
 #: ../../mod/editlayout.php:146
 msgid "Delete Layout"
-msgstr ""
+msgstr "Lay-out verwijderen"
 
 #: ../../mod/editpost.php:31
 msgid "Item is not editable"
@@ -6256,62 +6256,62 @@ msgstr "Item is niet te bewerken"
 
 #: ../../mod/editpost.php:53
 msgid "Delete item?"
-msgstr ""
+msgstr "Item verwijderen?"
 
 #: ../../mod/editwebpage.php:106
 msgid "Edit Webpage"
-msgstr ""
+msgstr "Webpagina bewerken"
 
 #: ../../mod/editwebpage.php:116
 msgid "Delete webpage?"
-msgstr ""
+msgstr "Webpagina verwijderen?"
 
 #: ../../mod/editwebpage.php:187
 msgid "Delete Webpage"
-msgstr ""
+msgstr "Webpagina verwijderen"
 
 #: ../../mod/siteinfo.php:57
 #, php-format
 msgid "Version %s"
-msgstr ""
+msgstr "Versie %s"
 
 #: ../../mod/siteinfo.php:76
 msgid "Installed plugins/addons/apps:"
-msgstr ""
+msgstr "Ingeschakelde plug-ins/add-ons/apps:"
 
 #: ../../mod/siteinfo.php:89
 msgid "No installed plugins/addons/apps"
-msgstr ""
+msgstr "Geen ingeschakelde plug-ins/add-ons/apps"
 
 #: ../../mod/siteinfo.php:97
 msgid "Red"
-msgstr ""
+msgstr "Red"
 
 #: ../../mod/siteinfo.php:98
 msgid ""
 "This is a hub of the Red Matrix - a global cooperative network of "
 "decentralised privacy enhanced websites."
-msgstr ""
+msgstr "Dit is een Red Matrix-hub - een wereldwijd coöperatief netwerk van gedecentraliseerde websites met verbeterende privacy."
 
 #: ../../mod/siteinfo.php:101
 msgid "Running at web location"
-msgstr ""
+msgstr "Draaiend op weblocatie"
 
 #: ../../mod/siteinfo.php:102
 msgid ""
 "Please visit <a href=\"http://getzot.com\">GetZot.com</a> to learn more "
 "about the Red Matrix."
-msgstr ""
+msgstr "Bezoek <a href=\"http://redmatrix.me\">RedMatrix.me</a> om meer te leren over de Red Matrix."
 
 #: ../../mod/siteinfo.php:103
 msgid "Bug reports and issues: please visit"
-msgstr ""
+msgstr "Bugrapporten en andere kwesties: bezoek"
 
 #: ../../mod/siteinfo.php:106
 msgid ""
 "Suggestions, praise, etc. - please email \"redmatrix\" at librelist - dot "
 "com"
-msgstr "Voorstellen, lofbetuigigen, enz. - e-mail  \"redmatrix\" at librelist - dot com"
+msgstr "Voorstellen, lofbetuigingen, enz. - e-mail  \"redmatrix\" at librelist - dot com"
 
 #: ../../mod/siteinfo.php:108
 msgid "Site Administrators"
@@ -6452,19 +6452,19 @@ msgstr "Deel deze gebeurtenis"
 
 #: ../../mod/filestorage.php:68
 msgid "Permission Denied."
-msgstr ""
+msgstr "Toegang geweigerd"
 
 #: ../../mod/filestorage.php:85
 msgid "File not found."
-msgstr ""
+msgstr "Bestand niet gevonden."
 
 #: ../../mod/filestorage.php:121
 msgid "Edit file permissions"
-msgstr ""
+msgstr "Bestandsrechten bewerken"
 
 #: ../../mod/filestorage.php:129
 msgid "Set/edit permissions"
-msgstr ""
+msgstr "Rechten instellen/bewerken"
 
 #: ../../mod/filestorage.php:130
 msgid "Include all files and sub folders"
