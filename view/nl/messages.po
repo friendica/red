@@ -1215,7 +1215,7 @@ msgstr "Instellingen"
 
 #: ../../include/nav.php:186
 msgid "Account/Channel Settings"
-msgstr "Account-/kanaalinstellingen"
+msgstr "Account-/kanaal-instellingen"
 
 #: ../../include/nav.php:188
 msgid "Manage/Edit Friends and Connections"
@@ -3060,11 +3060,11 @@ msgstr "Iedereen"
 
 #: ../../include/widgets.php:435
 msgid "Account settings"
-msgstr "Accountinstellingen"
+msgstr "Account"
 
 #: ../../include/widgets.php:441
 msgid "Channel settings"
-msgstr "Kanaalinstellingen"
+msgstr "Kanaal"
 
 #: ../../include/widgets.php:447
 msgid "Additional features"
@@ -3072,11 +3072,11 @@ msgstr "Extra functies"
 
 #: ../../include/widgets.php:453
 msgid "Feature settings"
-msgstr "Plugin-instellingen"
+msgstr "Plug-ins"
 
 #: ../../include/widgets.php:459
 msgid "Display settings"
-msgstr "Weergave-instellingen"
+msgstr "Weergave"
 
 #: ../../include/widgets.php:465
 msgid "Connected apps"
@@ -3084,7 +3084,7 @@ msgstr "Verbonden applicaties"
 
 #: ../../include/widgets.php:471
 msgid "Export channel"
-msgstr "Exporteer kanaal"
+msgstr "Kanaal exporteren"
 
 #: ../../include/widgets.php:483
 msgid "Automatic Permissions (Advanced)"
@@ -5489,11 +5489,11 @@ msgstr "Plugin-instellingen"
 
 #: ../../mod/settings.php:623
 msgid "Account Settings"
-msgstr "Accountinstellingen"
+msgstr "Account-instellingen"
 
 #: ../../mod/settings.php:624
 msgid "Password Settings"
-msgstr "Wachtwoordinstellingen"
+msgstr "Wachtwoord-instellingen"
 
 #: ../../mod/settings.php:625
 msgid "New Password:"
@@ -5618,11 +5618,11 @@ msgstr "Jouw kanaaladres is"
 
 #: ../../mod/settings.php:924
 msgid "Channel Settings"
-msgstr "Kanaalinstellingen"
+msgstr "Kanaal-instellingen"
 
 #: ../../mod/settings.php:933
 msgid "Basic Settings"
-msgstr "Basisinstellingen"
+msgstr "Basis-instellingen"
 
 #: ../../mod/settings.php:936
 msgid "Your Timezone:"
@@ -5652,7 +5652,7 @@ msgstr "Dit kanaal publiceert regelmatig of vaak materiaal dat alleen geschikt i
 
 #: ../../mod/settings.php:942
 msgid "Security and Privacy Settings"
-msgstr "Veiligheids- privacyinstellingen"
+msgstr "Veiligheids- privacy-instellingen"
 
 #: ../../mod/settings.php:944
 msgid "Hide my online presence"
@@ -5922,7 +5922,7 @@ msgstr ""
 
 #: ../../mod/setup.php:328
 msgid "Site settings"
-msgstr "Instellingen hub"
+msgstr "Hub-instellingen"
 
 #: ../../mod/setup.php:387
 msgid "Could not find a command line version of PHP in the web server PATH."
