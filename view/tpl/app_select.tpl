@@ -1,3 +1,4 @@
+{{if $authed}}
 <div class="widget">
 <h3>{{$title}}</h3>
 <ul>
@@ -8,4 +9,5 @@
 <li><a href="apps/personal/edit">{{$edit}}</a></li>
 </ul>
 </div>
+{{/if}}
 

@@ -78,6 +78,7 @@ function widget_appselect($arr) {
 	return replace_macros(get_markup_template('app_select.tpl'),array(
 		'$title' => t('Apps'),
 		'$system' => t('System'),
+		'$authed' => ((local_user()) ? true : false),
 		'$personal' => t('Personal'),
 		'$new' => t('Create Personal App'),
 		'$edit' => t('Edit Personal App')
