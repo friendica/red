@@ -24,7 +24,7 @@ We need much more than this, but here are areas where developers can help. Pleas
 
 [li]templatise and translate the Web interface to webDAV[/li]
 
-[li]Extend WebDAV to provide desktop access to photo albums]/li]
+[li]Extend WebDAV to provide desktop access to photo albums[/li]
 
 [li]External post connectors - create standard interface[/li]
 
