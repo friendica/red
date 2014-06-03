@@ -45,14 +45,14 @@ function setup_post(&$a) {
 			break; // just in case return don't return :)
 		case 3:
 			$urlpath = $a->get_path();
-			$dbhost = notags(trim($_POST['dbhost']));
-			$dbport = intval(notags(trim($_POST['dbport'])));
-			$dbuser = notags(trim($_POST['dbuser']));
-			$dbpass = notags(trim($_POST['dbpass']));
-			$dbdata = notags(trim($_POST['dbdata']));
-			$phpath = notags(trim($_POST['phpath']));
-			$adminmail = notags(trim($_POST['adminmail']));
-			$siteurl = notags(trim($_POST['siteurl']));
+			$dbhost = trim($_POST['dbhost']);
+			$dbport = intval(trim($_POST['dbport']));
+			$dbuser = trim($_POST['dbuser']);
+			$dbpass = trim($_POST['dbpass']);
+			$dbdata = trim($_POST['dbdata']);
+			$phpath = trim($_POST['phpath']);
+			$adminmail = trim($_POST['adminmail']);
+			$siteurl = trim($_POST['siteurl']);
 
 			require_once('include/dba/dba_driver.php');
 			unset($db);
