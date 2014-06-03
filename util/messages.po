@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: 2014-06-02.694\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2014-06-03 11:59+0000\n"
+"POT-Creation-Date: 2014-06-03 15:30+0000\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -931,11 +931,11 @@ msgid "[-] show less"
 msgstr ""
 
 #: ../../include/js_strings.php:9
-msgid "[+] expand post"
+msgid "[+] expand"
 msgstr ""
 
 #: ../../include/js_strings.php:10
-msgid "[-] collapse post"
+msgid "[-] collapse"
 msgstr ""
 
 #: ../../include/js_strings.php:11

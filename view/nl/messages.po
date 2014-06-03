@@ -932,12 +932,12 @@ msgid "[-] show less"
 msgstr "[-] minder reacties weergeven"
 
 #: ../../include/js_strings.php:9
-msgid "[+] expand post"
-msgstr "[+] bericht uitvouwen"
+msgid "[+] expand"
+msgstr "[+] uitklappen"
 
 #: ../../include/js_strings.php:10
-msgid "[-] collapse post"
-msgstr "[-] bericht invouwen"
+msgid "[-] collapse"
+msgstr "[-] inklappen"
 
 #: ../../include/js_strings.php:11
 msgid "Password too short"
