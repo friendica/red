@@ -313,7 +313,7 @@ class Item extends BaseObject {
 			if(($nb_children > 2) || ($thread_level > 1)) {
 				$result['children'][0]['comment_firstcollapsed'] = true;
 				$result['children'][0]['num_comments'] = sprintf( tt('%d comment','%d comments',$total_children),$total_children );
-				$result['children'][0]['hide_text'] = t('[+] show more comments');
+				$result['children'][0]['hide_text'] = t('[+] show all');
 				if($thread_level > 1) {
 					$result['children'][$nb_children - 1]['comment_lastcollapsed'] = true;
 				}

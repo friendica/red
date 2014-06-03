@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: 2014-06-02.694\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2014-06-03 05:06+0000\n"
+"POT-Creation-Date: 2014-06-03 11:59+0000\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -923,19 +923,19 @@ msgid "Comment"
 msgstr ""
 
 #: ../../include/js_strings.php:7 ../../include/ItemObject.php:316
-msgid "[+] show more comments"
+msgid "[+] show all"
 msgstr ""
 
 #: ../../include/js_strings.php:8
-msgid "[-] show fewer comments"
+msgid "[-] show less"
 msgstr ""
 
 #: ../../include/js_strings.php:9
-msgid "[+] show more"
+msgid "[+] expand post"
 msgstr ""
 
 #: ../../include/js_strings.php:10
-msgid "[-] show less"
+msgid "[-] collapse post"
 msgstr ""
 
 #: ../../include/js_strings.php:11
