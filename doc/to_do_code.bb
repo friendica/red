@@ -34,7 +34,7 @@ We need much more than this, but here are areas where developers can help. Pleas
 
 [li]service classes - account overview page showing resources consumed by channel. With special consideration this page can also be accessed at a meta level by the site admin to drill down on problematic accounts/channels.[/li]
 
-[li]Events module - bring back birthday reminders for friends, fix permissions on events, and provide JS translation support for the calendar overview; integrate with calDAV[/li]
+[li]Events module - fix permissions on events, and provide JS translation support for the calendar overview; integrate with calDAV[/li]
 
 [li]Events module - event followups and RSVP[/li]
 
