@@ -318,7 +318,22 @@ function event_store_item($arr,$event) {
 		}
 	}
 
-	$prefix = (($event['type'] === 'birthday') ? t('This event has been added to your calendar.') . "\n\n" : '');
+	$item_arr = array();
+	$prefix = '';
+	$birthday = false;
+
+	if($event['type'] === 'birthday') {
+		$prefix =  t('This event has been added to your calendar.');
+		$birthday = true;
+
+		// The event is created on your own site by the system, but appears to belong 
+		// to the birthday person. It also isn't propagated - so we need to prevent
+		// folks from trying to comment on it. If you're looking at this and trying to 
+		// fix it, you'll need to completely change the way birthday events are created
+		// and send them out from the source. This has its own issues. 
+
+		$item_arr['comment_policy'] = 'none';
+	}
 
 	$r = q("SELECT * FROM item left join xchan on author_xchan = xchan_hash WHERE resource_id = '%s' AND resource_type = 'event' and uid = %d LIMIT 1",
         dbesc($event['event_hash']),
@@ -373,7 +388,6 @@ function event_store_item($arr,$event) {
 
 		$private = (($arr['allow_cid'] || $arr['allow_gid'] || $arr['deny_cid'] || $arr['deny_gid']) ? 1 : 0);
 				
-		$item_arr = array();
 
 		if($item) {
 			$item_arr['id'] = $item['id'];
@@ -387,6 +401,7 @@ function event_store_item($arr,$event) {
 				$item_flags |= ITEM_ORIGIN;
 			}
 			$item_arr['item_flags']    = $item_flags;
+
 		}
 
 		if(! $arr['mid'])
