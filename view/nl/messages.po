@@ -1469,9 +1469,12 @@ msgid_plural "%d connections in common"
 msgstr[0] "%d gemeenschappelijke connectie"
 msgstr[1] "%d gemeenschappelijke connecties"
 
-#: ../../include/contact_widgets.php:130 ../../include/js_strings.php:7
-#: ../../include/ItemObject.php:316
+#: ../../include/contact_widgets.php:130
 msgid "show more"
+msgstr "meer connecties weergeven"
+
+#: ../../include/js_strings.php:7 ../../include/ItemObject.php:316
+msgid "[+] show more comments"
 msgstr "[+] meer reacties weergeven"
 
 #: ../../include/reddav.php:1045
@@ -2313,15 +2316,15 @@ msgid "Comment"
 msgstr "Reactie"
 
 #: ../../include/js_strings.php:8
-msgid "show fewer"
+msgid "[-] show fewer comments"
 msgstr "[-] minder reacties weergeven"
 
 #: ../../include/js_strings.php:9
-msgid "+ Show More"
+msgid "[+] show more"
 msgstr "[+] meer weergeven"
 
 #: ../../include/js_strings.php:10
-msgid "- Show Less"
+msgid "[-] show less"
 msgstr "[-] minder weergeven"
 
 #: ../../include/js_strings.php:11
