@@ -9,7 +9,7 @@ msgstr ""
 "Project-Id-Version: Red Matrix\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2014-05-30 00:02-0700\n"
-"PO-Revision-Date: 2014-06-01 17:51+0000\n"
+"PO-Revision-Date: 2014-06-02 12:03+0000\n"
 "Last-Translator: jeroenpraat <>\n"
 "Language-Team: Dutch (http://www.transifex.com/projects/p/red-matrix/language/nl/)\n"
 "MIME-Version: 1.0\n"
@@ -1215,7 +1215,7 @@ msgstr "Instellingen"
 
 #: ../../include/nav.php:186
 msgid "Account/Channel Settings"
-msgstr "Account-/kanaalinstellingen"
+msgstr "Account-/kanaal-instellingen"
 
 #: ../../include/nav.php:188
 msgid "Manage/Edit Friends and Connections"
@@ -1405,7 +1405,7 @@ msgstr[1] "%d uitnodigingen beschikbaar"
 
 #: ../../include/contact_widgets.php:19 ../../mod/admin.php:445
 msgid "Advanced"
-msgstr ""
+msgstr "Geavanceerd"
 
 #: ../../include/contact_widgets.php:22
 msgid "Find Channels"
@@ -1430,7 +1430,7 @@ msgstr "Vinden"
 
 #: ../../include/contact_widgets.php:27 ../../mod/suggest.php:59
 msgid "Channel Suggestions"
-msgstr "Kanaalsuggesties"
+msgstr "Voorgestelde kanalen"
 
 #: ../../include/contact_widgets.php:29
 msgid "Random Profile"
@@ -1472,7 +1472,7 @@ msgstr[1] "%d gemeenschappelijke connecties"
 #: ../../include/contact_widgets.php:130 ../../include/js_strings.php:7
 #: ../../include/ItemObject.php:316
 msgid "show more"
-msgstr "meer reacties weergeven"
+msgstr "[+] meer reacties weergeven"
 
 #: ../../include/reddav.php:1045
 msgid "Edit File properties"
@@ -1553,31 +1553,31 @@ msgstr "%1$d %2$s geleden"
 
 #: ../../include/dir_fns.php:36
 msgid "Sort Options"
-msgstr ""
+msgstr "Sorteeropties"
 
 #: ../../include/dir_fns.php:37
 msgid "Alphabetic"
-msgstr ""
+msgstr "Alfabetisch"
 
 #: ../../include/dir_fns.php:38
 msgid "Reverse Alphabetic"
-msgstr ""
+msgstr "Omgekeerd alfabetisch"
 
 #: ../../include/dir_fns.php:39
 msgid "Newest to Oldest"
-msgstr ""
+msgstr "Nieuw naar oud"
 
 #: ../../include/dir_fns.php:51
 msgid "Enable Safe Search"
-msgstr ""
+msgstr "Veilig zoeken inschakelen"
 
 #: ../../include/dir_fns.php:53
 msgid "Disable Safe Search"
-msgstr ""
+msgstr "Veilig zoeken uitschakelen"
 
 #: ../../include/dir_fns.php:55
 msgid "Safe Mode"
-msgstr ""
+msgstr "Veilig zoeken"
 
 #: ../../include/enotify.php:41
 msgid "Red Matrix Notification"
@@ -1585,7 +1585,7 @@ msgstr "Red Matrix-notificatie"
 
 #: ../../include/enotify.php:42
 msgid "redmatrix"
-msgstr ""
+msgstr "redmatrix"
 
 #: ../../include/enotify.php:44
 msgid "Thank You,"
@@ -1609,7 +1609,7 @@ msgstr "[Red:Notificatie] Nieuw privébericht ontvangen op %s"
 #: ../../include/enotify.php:87
 #, php-format
 msgid "%1$s, %2$s sent you a new private message at %3$s."
-msgstr ""
+msgstr "%1$s, %2$s zond jou een nieuw privébericht om %3$s."
 
 #: ../../include/enotify.php:88
 #, php-format
@@ -1628,17 +1628,17 @@ msgstr "Bezoek %s om je privéberichten te bekijken en/of er op te reageren."
 #: ../../include/enotify.php:144
 #, php-format
 msgid "%1$s, %2$s commented on [zrl=%3$s]a %4$s[/zrl]"
-msgstr ""
+msgstr "%1$s, %2$s gaf een reactie op [zrl=%3$s]een %4$s[/zrl]"
 
 #: ../../include/enotify.php:152
 #, php-format
 msgid "%1$s, %2$s commented on [zrl=%3$s]%4$s's %5$s[/zrl]"
-msgstr ""
+msgstr "%1$s, %2$s gaf een reactie op [zrl=%3$s]een %5$s van %4$s[/zrl]"
 
 #: ../../include/enotify.php:161
 #, php-format
 msgid "%1$s, %2$s commented on [zrl=%3$s]your %4$s[/zrl]"
-msgstr ""
+msgstr "%1$s, %2$s gaf een reactie op [zrl=%3$s]jouw %4$s[/zrl]"
 
 #: ../../include/enotify.php:172
 #, php-format
@@ -1648,7 +1648,7 @@ msgstr "[Red:Notificatie] Reactie op conversatie #%1$d door %2$s"
 #: ../../include/enotify.php:173
 #, php-format
 msgid "%1$s, %2$s commented on an item/conversation you have been following."
-msgstr ""
+msgstr "%1$s, %2$s gaf een reactie op een bericht/conversatie die jij volgt."
 
 #: ../../include/enotify.php:176 ../../include/enotify.php:191
 #: ../../include/enotify.php:217 ../../include/enotify.php:236
@@ -1680,12 +1680,12 @@ msgstr "[Red:Notificatie] %s heeft je genoemd"
 #: ../../include/enotify.php:211
 #, php-format
 msgid "%1$s, %2$s tagged you at %3$s"
-msgstr ""
+msgstr "%1$s, %2$s noemde jou om %3$s"
 
 #: ../../include/enotify.php:212
 #, php-format
 msgid "%1$s, %2$s [zrl=%3$s]tagged you[/zrl]."
-msgstr ""
+msgstr "%1$s, %2$s [zrl=%3$s]noemde jou[/zrl]."
 
 #: ../../include/enotify.php:225
 #, php-format
@@ -1710,12 +1710,12 @@ msgstr "[Red:Notificatie] %s heeft jouw bericht gelabeld"
 #: ../../include/enotify.php:244
 #, php-format
 msgid "%1$s, %2$s tagged your post at %3$s"
-msgstr ""
+msgstr "%1$s, %2$s labelde jouw bericht om %3$s"
 
 #: ../../include/enotify.php:245
 #, php-format
 msgid "%1$s, %2$s tagged [zrl=%3$s]your post[/zrl]"
-msgstr ""
+msgstr "%1$s, %2$s labelde [zrl=%3$s]jouw bericht[/zrl]"
 
 #: ../../include/enotify.php:257
 msgid "[Red:Notify] Introduction received"
@@ -1744,19 +1744,19 @@ msgstr "Bezoek %s om het connectieverzoek goed of af te keuren."
 
 #: ../../include/enotify.php:272
 msgid "[Red:Notify] Friend suggestion received"
-msgstr "[Red:Notificatie] Vriendsuggestie ontvangen"
+msgstr "[Red:Notificatie] Kanaalvoorstel ontvangen"
 
 #: ../../include/enotify.php:273
 #, php-format
 msgid "%1$s, you've received a friend suggestion from '%2$s' at %3$s"
-msgstr ""
+msgstr "%1$s, je hebt een kanaalvoorstel ontvangen van '%2$s' om %3$s"
 
 #: ../../include/enotify.php:274
 #, php-format
 msgid ""
 "%1$s, you've received [zrl=%2$s]a friend suggestion[/zrl] for %3$s from "
 "%4$s."
-msgstr ""
+msgstr "%1$s, je hebt [zrl=%2$s]een kanaalvoorstel[/zrl] ontvangen voor %3$s van %4$s."
 
 #: ../../include/enotify.php:280
 msgid "Name:"
@@ -1769,7 +1769,7 @@ msgstr "Foto:"
 #: ../../include/enotify.php:284
 #, php-format
 msgid "Please visit %s to approve or reject the suggestion."
-msgstr "Bezoek %s om de suggestie te accepteren of te verwerpen."
+msgstr "Bezoek %s om het voorstel te accepteren of te verwerpen."
 
 #: ../../include/features.php:23
 msgid "General Features"
@@ -1777,11 +1777,11 @@ msgstr "Algemene functies"
 
 #: ../../include/features.php:25
 msgid "Content Expiration"
-msgstr ""
+msgstr "Inhoud laten verlopen"
 
 #: ../../include/features.php:25
 msgid "Remove posts/comments and/or private messages at a future time"
-msgstr ""
+msgstr "Berichten, reacties en/of privéberichten na een bepaalde tijd verwijderen"
 
 #: ../../include/features.php:26
 msgid "Multiple Profiles"
@@ -1801,11 +1801,11 @@ msgstr "Sta beheerde webpagina's op jouw kanaal toe"
 
 #: ../../include/features.php:28
 msgid "Private Notes"
-msgstr ""
+msgstr "Privé-aantekeningen"
 
 #: ../../include/features.php:28
 msgid "Enables a tool to store notes and reminders"
-msgstr ""
+msgstr "Schakelt een eenvoudige toepassing in om aantekeningen en herinneringen in op te slaan"
 
 #: ../../include/features.php:33
 msgid "Extended Identity Sharing"
@@ -1815,7 +1815,7 @@ msgstr "Uitgebreid identiteit delen"
 msgid ""
 "Share your identity with all websites on the internet. When disabled, "
 "identity is only shared with sites in the matrix."
-msgstr ""
+msgstr "Deel jouw Red Matrix-identiteit met alle websites op het internet. Wanneer dit is uitgeschakeld wordt je identiteit alleen binnen het Red Matrix-netwerk gedeeld. Schakel dit alleen als je weet wat je doet."
 
 #: ../../include/features.php:34
 msgid "Expert Mode"
@@ -1827,7 +1827,7 @@ msgstr "Zet de expertmodus aan voor geavanceerde instellingen"
 
 #: ../../include/features.php:35
 msgid "Premium Channel"
-msgstr ""
+msgstr "Premiumkanaal"
 
 #: ../../include/features.php:35
 msgid ""
@@ -1862,16 +1862,16 @@ msgstr "Kanaalbronnen"
 
 #: ../../include/features.php:43
 msgid "Automatically import channel content from other channels or feeds"
-msgstr ""
+msgstr "Automatisch inhoud uit andere kanalen of feeds importeren."
 
 #: ../../include/features.php:44
 msgid "Even More Encryption"
-msgstr ""
+msgstr "Extra versleuteling"
 
 #: ../../include/features.php:44
 msgid ""
 "Allow optional encryption of content end-to-end with a shared secret key"
-msgstr ""
+msgstr "Sta toe dat inhoud extra end-to-end wordt versleuteld met een gedeelde geheime sleutel."
 
 #: ../../include/features.php:49
 msgid "Network and Stream Filtering"
@@ -1927,11 +1927,11 @@ msgstr "Filter streamactiviteit op mate van relationele verwantschap"
 
 #: ../../include/features.php:56
 msgid "Suggest Channels"
-msgstr "Stel kanalen voor"
+msgstr "Kanalen voorstellen"
 
 #: ../../include/features.php:56
 msgid "Show channel suggestions"
-msgstr "Toon suggesties voor te volgen kanalen"
+msgstr "Voor jou mogelijk interessante kanalen voorstellen"
 
 #: ../../include/features.php:61
 msgid "Post/Comment Tools"
@@ -2026,7 +2026,7 @@ msgstr ""
 
 #: ../../include/group.php:223
 msgid "Default privacy group for new contacts"
-msgstr ""
+msgstr "Standaard collectie voor nieuwe kanalen"
 
 #: ../../include/group.php:242 ../../mod/admin.php:762
 msgid "All Channels"
@@ -2042,11 +2042,11 @@ msgstr "Collecties"
 
 #: ../../include/group.php:286
 msgid "Edit collection"
-msgstr "Bewerk collectie"
+msgstr "Collectie bewerken"
 
 #: ../../include/group.php:287
 msgid "Create a new collection"
-msgstr "Creeer een nieuwe collectie"
+msgstr "Nieuwe collectie aanmaken"
 
 #: ../../include/group.php:288
 msgid "Channels not in any collection"
@@ -2165,7 +2165,7 @@ msgstr "Homepagina:"
 
 #: ../../include/identity.php:731 ../../mod/dirprofile.php:151
 msgid "Online Now"
-msgstr ""
+msgstr "Nu online"
 
 #: ../../include/identity.php:796 ../../include/identity.php:876
 #: ../../mod/ping.php:262
@@ -2179,7 +2179,7 @@ msgstr ""
 #: ../../include/identity.php:842 ../../include/identity.php:917
 #: ../../mod/ping.php:284
 msgid "[today]"
-msgstr ""
+msgstr "[vandaag]"
 
 #: ../../include/identity.php:854
 msgid "Birthday Reminders"
@@ -2187,15 +2187,15 @@ msgstr ""
 
 #: ../../include/identity.php:855
 msgid "Birthdays this week:"
-msgstr ""
+msgstr "Verjaardagen deze week:"
 
 #: ../../include/identity.php:910
 msgid "[No description]"
-msgstr ""
+msgstr "[Geen omschrijving]"
 
 #: ../../include/identity.php:928
 msgid "Event Reminders"
-msgstr ""
+msgstr "Herinneringen voor gebeurtenissen"
 
 #: ../../include/identity.php:929
 msgid "Events this week:"
@@ -2241,7 +2241,7 @@ msgstr "Woonplaats:"
 
 #: ../../include/identity.php:992
 msgid "Tags:"
-msgstr "Labels:"
+msgstr "Trefwoorden:"
 
 #: ../../include/identity.php:994 ../../mod/profiles.php:529
 msgid "Political Views:"
@@ -2314,15 +2314,15 @@ msgstr "Reactie"
 
 #: ../../include/js_strings.php:8
 msgid "show fewer"
-msgstr "minder reacties weergeven"
+msgstr "[-] minder reacties weergeven"
 
 #: ../../include/js_strings.php:9
 msgid "+ Show More"
-msgstr "+ Toon meer"
+msgstr "[+] meer weergeven"
 
 #: ../../include/js_strings.php:10
 msgid "- Show Less"
-msgstr "- Toon minder"
+msgstr "[-] minder weergeven"
 
 #: ../../include/js_strings.php:11
 msgid "Password too short"
@@ -2864,7 +2864,7 @@ msgstr "Klik om te openen of te sluiten"
 
 #: ../../include/text.php:1485 ../../mod/events.php:355
 msgid "Link to Source"
-msgstr "Naar bron linken"
+msgstr "Originele locatie"
 
 #: ../../include/text.php:1504
 msgid "Select a page layout: "
@@ -2876,7 +2876,7 @@ msgstr "standaard"
 
 #: ../../include/text.php:1543
 msgid "Page content type: "
-msgstr ""
+msgstr "Opmaakcode pagina"
 
 #: ../../include/text.php:1584
 msgid "Select an alternate language"
@@ -2995,11 +2995,11 @@ msgstr "Negeren/Verbergen"
 
 #: ../../include/widgets.php:135 ../../mod/connections.php:266
 msgid "Suggestions"
-msgstr "Voorstellen"
+msgstr "Voorgestelde kanalen"
 
 #: ../../include/widgets.php:136
 msgid "See more..."
-msgstr "Meer weergeven..."
+msgstr "Meer..."
 
 #: ../../include/widgets.php:158
 #, php-format
@@ -3020,7 +3020,7 @@ msgstr "Voorbeeld: bob@example.com, http://example.com/barbara"
 
 #: ../../include/widgets.php:183
 msgid "Notes"
-msgstr "Opmerkingen"
+msgstr "Aantekeningen"
 
 #: ../../include/widgets.php:255
 msgid "Remove term"
@@ -3060,11 +3060,11 @@ msgstr "Iedereen"
 
 #: ../../include/widgets.php:435
 msgid "Account settings"
-msgstr "Accountinstellingen"
+msgstr "Account"
 
 #: ../../include/widgets.php:441
 msgid "Channel settings"
-msgstr "Kanaalinstellingen"
+msgstr "Kanaal"
 
 #: ../../include/widgets.php:447
 msgid "Additional features"
@@ -3072,19 +3072,19 @@ msgstr "Extra functies"
 
 #: ../../include/widgets.php:453
 msgid "Feature settings"
-msgstr "Plugin-instellingen"
+msgstr "Plug-ins"
 
 #: ../../include/widgets.php:459
 msgid "Display settings"
-msgstr "Weergave-instellingen"
+msgstr "Weergave"
 
 #: ../../include/widgets.php:465
 msgid "Connected apps"
-msgstr "Verbonden toepassingen"
+msgstr "Verbonden applicaties"
 
 #: ../../include/widgets.php:471
 msgid "Export channel"
-msgstr "Exporteer kanaal"
+msgstr "Kanaal exporteren"
 
 #: ../../include/widgets.php:483
 msgid "Automatic Permissions (Advanced)"
@@ -3511,7 +3511,7 @@ msgstr "Thema-instellingen aangepast."
 
 #: ../../mod/admin.php:92 ../../mod/admin.php:440
 msgid "Site"
-msgstr "Hub"
+msgstr "Hub-instellingen"
 
 #: ../../mod/admin.php:93
 msgid "Accounts"
@@ -3531,7 +3531,7 @@ msgstr "Thema's"
 
 #: ../../mod/admin.php:97 ../../mod/admin.php:540
 msgid "Server"
-msgstr ""
+msgstr "Hubbeheer"
 
 #: ../../mod/admin.php:98
 msgid "DB updates"
@@ -3551,34 +3551,34 @@ msgstr ""
 
 #: ../../mod/admin.php:197
 msgid "Message queues"
-msgstr ""
+msgstr "Berichtenwachtrij"
 
 #: ../../mod/admin.php:202 ../../mod/admin.php:439 ../../mod/admin.php:539
 #: ../../mod/admin.php:748 ../../mod/admin.php:882 ../../mod/admin.php:973
 #: ../../mod/admin.php:1015 ../../mod/admin.php:1178 ../../mod/admin.php:1214
 #: ../../mod/admin.php:1301
 msgid "Administration"
-msgstr ""
+msgstr "Beheer"
 
 #: ../../mod/admin.php:203
 msgid "Summary"
-msgstr ""
+msgstr "Samenvatting"
 
 #: ../../mod/admin.php:205
 msgid "Registered users"
-msgstr ""
+msgstr "Geregistreerde gebruikers"
 
 #: ../../mod/admin.php:207 ../../mod/admin.php:543
 msgid "Pending registrations"
-msgstr ""
+msgstr "Accounts die op goedkeuring wachten"
 
 #: ../../mod/admin.php:208
 msgid "Version"
-msgstr ""
+msgstr "Versie"
 
 #: ../../mod/admin.php:210 ../../mod/admin.php:544
 msgid "Active plugins"
-msgstr ""
+msgstr "Ingeschakelde plug-ins"
 
 #: ../../mod/admin.php:360
 msgid "Site settings updated."
@@ -3600,7 +3600,7 @@ msgstr "Nee"
 
 #: ../../mod/admin.php:420
 msgid "Yes - with approval"
-msgstr ""
+msgstr "Ja - met goedkeuring"
 
 #: ../../mod/admin.php:421 ../../mod/api.php:105 ../../mod/profiles.php:483
 #: ../../mod/settings.php:876 ../../mod/settings.php:881
@@ -4628,36 +4628,36 @@ msgstr ""
 
 #: ../../mod/chat.php:178
 msgid "Leave Room"
-msgstr ""
+msgstr "Chatkanaal verlaten"
 
 #: ../../mod/chat.php:179
 msgid "Delete This Room"
-msgstr ""
+msgstr "Chatkanaal verwijderen"
 
 #: ../../mod/chat.php:180
 msgid "I am away right now"
-msgstr ""
+msgstr "Ik ben momenteel afwezig"
 
 #: ../../mod/chat.php:181
 msgid "I am online"
-msgstr ""
+msgstr "Ik ben online"
 
 #: ../../mod/chat.php:183
 msgid "Bookmark this room"
-msgstr ""
+msgstr "Chatkanaal aan bladwijzers toevoegen"
 
 #: ../../mod/chat.php:207 ../../mod/chat.php:229
 msgid "New Chatroom"
-msgstr ""
+msgstr "Nieuw chatkanaal"
 
 #: ../../mod/chat.php:208
 msgid "Chatroom Name"
-msgstr ""
+msgstr "Naam chatkanaal"
 
 #: ../../mod/chat.php:225
 #, php-format
 msgid "%1$s's Chatrooms"
-msgstr ""
+msgstr "Chatkanalen van %1$s"
 
 #: ../../mod/register.php:43
 msgid "Maximum daily site registrations exceeded. Please try again tomorrow."
@@ -4736,7 +4736,7 @@ msgstr "Geef het wachtwoord opnieuw op"
 
 #: ../../mod/chatsvc.php:111
 msgid "Away"
-msgstr "Weg"
+msgstr "Afwezig"
 
 #: ../../mod/chatsvc.php:115
 msgid "Online"
@@ -4758,25 +4758,25 @@ msgstr "Verwijder dit kanaal"
 msgid ""
 "This will completely remove this channel from the network. Once this has "
 "been done it is not recoverable."
-msgstr ""
+msgstr "Dit zal dit kanaal compleet van deze hub en uit het Red Matrix-netwerk verwijderen. Dit kan hierna niet meer te ongedaan gemaakt worden."
 
 #: ../../mod/removeme.php:51
 msgid "Please enter your password for verification:"
-msgstr ""
+msgstr "Vul je wachtwoord in voor verificatie:"
 
 #: ../../mod/removeme.php:52
 msgid "Remove this channel and all its clones from the network"
-msgstr ""
+msgstr "Dit kanaal en alle klonen hiervan uit het Red Matrix-netwerk verwijderen"
 
 #: ../../mod/removeme.php:52
 msgid ""
 "By default only the instance of the channel located on this hub will be "
 "removed from the network"
-msgstr ""
+msgstr "Standaard wordt alleen het kanaal dat zich op deze hub bevindt uit het Red Matrix-netwerk verwijderd."
 
 #: ../../mod/removeme.php:53
 msgid "Remove Channel"
-msgstr ""
+msgstr "Kanaal verwijderen"
 
 #: ../../mod/common.php:10
 msgid "No channel."
@@ -4925,7 +4925,7 @@ msgstr "Niet verbonden"
 
 #: ../../mod/connections.php:269
 msgid "Suggest new connections"
-msgstr "Stel nieuwe connecties voor"
+msgstr "Nieuwe kanalen voorstellen"
 
 #: ../../mod/connections.php:272
 msgid "New Connections"
@@ -5423,53 +5423,53 @@ msgstr ""
 #: ../../mod/settings.php:514 ../../mod/settings.php:540
 #: ../../mod/settings.php:576
 msgid "Add application"
-msgstr ""
+msgstr "Applicatie toevoegen"
 
 #: ../../mod/settings.php:517
 msgid "Name of application"
-msgstr ""
+msgstr "Naam van applicatie"
 
 #: ../../mod/settings.php:518 ../../mod/settings.php:544
 msgid "Consumer Key"
-msgstr ""
+msgstr "Consumer key"
 
 #: ../../mod/settings.php:518 ../../mod/settings.php:519
 msgid "Automatically generated - change if desired. Max length 20"
-msgstr ""
+msgstr "Automatische gegenereerd - verander wanneer gewenst. Maximale lengte is 20"
 
 #: ../../mod/settings.php:519 ../../mod/settings.php:545
 msgid "Consumer Secret"
-msgstr ""
+msgstr "Consumer secret"
 
 #: ../../mod/settings.php:520 ../../mod/settings.php:546
 msgid "Redirect"
-msgstr ""
+msgstr "Redirect/doorverwijzing"
 
 #: ../../mod/settings.php:520
 msgid ""
 "Redirect URI - leave blank unless your application specifically requires "
 "this"
-msgstr ""
+msgstr "URI voor redirect - laat leeg, behalve wanneer de applicatie dit vereist"
 
 #: ../../mod/settings.php:521 ../../mod/settings.php:547
 msgid "Icon url"
-msgstr ""
+msgstr "URL van pictogram"
 
 #: ../../mod/settings.php:521
 msgid "Optional"
-msgstr ""
+msgstr "Optioneel"
 
 #: ../../mod/settings.php:532
 msgid "You can't edit this application."
-msgstr ""
+msgstr "Je kan deze applicatie niet bewerken"
 
 #: ../../mod/settings.php:575
 msgid "Connected Apps"
-msgstr "Verbonden apps"
+msgstr "Verbonden applicaties"
 
 #: ../../mod/settings.php:579
 msgid "Client key starts with"
-msgstr ""
+msgstr "Client key begint met"
 
 #: ../../mod/settings.php:580
 msgid "No name"
@@ -5489,11 +5489,11 @@ msgstr "Plugin-instellingen"
 
 #: ../../mod/settings.php:623
 msgid "Account Settings"
-msgstr "Accountinstellingen"
+msgstr "Account-instellingen"
 
 #: ../../mod/settings.php:624
 msgid "Password Settings"
-msgstr "Wachtwoordinstellingen"
+msgstr "Wachtwoord-instellingen"
 
 #: ../../mod/settings.php:625
 msgid "New Password:"
@@ -5505,7 +5505,7 @@ msgstr "Bevestigen:"
 
 #: ../../mod/settings.php:626
 msgid "Leave password fields blank unless changing"
-msgstr ""
+msgstr "Laat de wachtwoordvelden leeg, behalve wanneer je deze wil veranderen"
 
 #: ../../mod/settings.php:628 ../../mod/settings.php:935
 msgid "Email Address:"
@@ -5513,11 +5513,11 @@ msgstr "E-mailadres:"
 
 #: ../../mod/settings.php:629
 msgid "Remove Account"
-msgstr ""
+msgstr "Kanaal verwijderen (neem contact op met de beheerder van deze hub om je account te verwijderen)"
 
 #: ../../mod/settings.php:630
 msgid "Warning: This action is permanent and cannot be reversed."
-msgstr ""
+msgstr "Waarschuwing: Deze handeling is van permanente aard en kan niet meer worden teruggedraaid."
 
 #: ../../mod/settings.php:646
 msgid "Off"
@@ -5606,11 +5606,11 @@ msgstr ""
 
 #: ../../mod/settings.php:876
 msgid "Publish your default profile in the network directory"
-msgstr ""
+msgstr "Publiceer je standaardprofiel in de kanalengids"
 
 #: ../../mod/settings.php:881
 msgid "Allow us to suggest you as a potential friend to new members?"
-msgstr ""
+msgstr "Sta ons toe om jouw kanaal als mogelijke connectie voor te stellen aan nieuwe kanalen"
 
 #: ../../mod/settings.php:890
 msgid "Your channel address is"
@@ -5618,11 +5618,11 @@ msgstr "Jouw kanaaladres is"
 
 #: ../../mod/settings.php:924
 msgid "Channel Settings"
-msgstr "Kanaalinstellingen"
+msgstr "Kanaal-instellingen"
 
 #: ../../mod/settings.php:933
 msgid "Basic Settings"
-msgstr "Basisinstellingen"
+msgstr "Basis-instellingen"
 
 #: ../../mod/settings.php:936
 msgid "Your Timezone:"
@@ -5652,7 +5652,7 @@ msgstr "Dit kanaal publiceert regelmatig of vaak materiaal dat alleen geschikt i
 
 #: ../../mod/settings.php:942
 msgid "Security and Privacy Settings"
-msgstr "Veiligheids- privacyinstellingen"
+msgstr "Veiligheids- privacy-instellingen"
 
 #: ../../mod/settings.php:944
 msgid "Hide my online presence"
@@ -5772,7 +5772,7 @@ msgstr "Je een privé-bericht ontvangt"
 
 #: ../../mod/settings.php:984
 msgid "You receive a friend suggestion"
-msgstr "Je een connectiesuggestie ontvangt"
+msgstr "Je een kanaalvoorstel ontvangt"
 
 #: ../../mod/settings.php:985
 msgid "You are tagged in a post"
@@ -5798,11 +5798,11 @@ msgstr ""
 
 #: ../../mod/settings.php:994
 msgid "Miscellaneous Settings"
-msgstr ""
+msgstr "Diverse instellingen"
 
 #: ../../mod/settings.php:996
 msgid "Personal menu to display in your channel pages"
-msgstr ""
+msgstr "Persoonlijk menu dat op je kanaalpagina's wordt weergegeven"
 
 #: ../../mod/setup.php:162
 msgid "Red Matrix Server - Setup"
@@ -5922,7 +5922,7 @@ msgstr ""
 
 #: ../../mod/setup.php:328
 msgid "Site settings"
-msgstr "Instellingen hub"
+msgstr "Hub-instellingen"
 
 #: ../../mod/setup.php:387
 msgid "Could not find a command line version of PHP in the web server PATH."
@@ -5976,35 +5976,35 @@ msgstr ""
 
 #: ../../mod/setup.php:433
 msgid "Generate encryption keys"
-msgstr ""
+msgstr "Versleutelingssleutels aanmaken"
 
 #: ../../mod/setup.php:440
 msgid "libCurl PHP module"
-msgstr ""
+msgstr "libCurl PHP-module"
 
 #: ../../mod/setup.php:441
 msgid "GD graphics PHP module"
-msgstr ""
+msgstr "GD graphics PHP-module"
 
 #: ../../mod/setup.php:442
 msgid "OpenSSL PHP module"
-msgstr ""
+msgstr "OpenSSL PHP-module"
 
 #: ../../mod/setup.php:443
 msgid "mysqli PHP module"
-msgstr ""
+msgstr "mysqli PHP-module"
 
 #: ../../mod/setup.php:444
 msgid "mb_string PHP module"
-msgstr ""
+msgstr "mb_string PHP-module"
 
 #: ../../mod/setup.php:445
 msgid "mcrypt PHP module"
-msgstr ""
+msgstr "mcrypt PHP-module"
 
 #: ../../mod/setup.php:450 ../../mod/setup.php:452
 msgid "Apache mod_rewrite module"
-msgstr ""
+msgstr "Apache mod_rewrite-module"
 
 #: ../../mod/setup.php:450
 msgid ""
@@ -6193,11 +6193,11 @@ msgstr "Item niet gevonden"
 
 #: ../../mod/editblock.php:77
 msgid "Edit Block"
-msgstr ""
+msgstr "Blok bewerken"
 
 #: ../../mod/editblock.php:87
 msgid "Delete block?"
-msgstr ""
+msgstr "Blok verwijderen"
 
 #: ../../mod/editblock.php:115 ../../mod/editlayout.php:110
 #: ../../mod/editpost.php:116 ../../mod/editwebpage.php:147
@@ -6216,11 +6216,11 @@ msgstr "Vorbis-audio [.ogg] invoegen"
 
 #: ../../mod/editblock.php:153
 msgid "Delete Block"
-msgstr ""
+msgstr "Blok verwijderen"
 
 #: ../../mod/pdledit.php:13
 msgid "Layout updated."
-msgstr ""
+msgstr "Layout bijgewerkt."
 
 #: ../../mod/pdledit.php:28 ../../mod/pdledit.php:53
 msgid "Edit System Page Description"
@@ -6228,27 +6228,27 @@ msgstr ""
 
 #: ../../mod/pdledit.php:48
 msgid "Layout not found."
-msgstr ""
+msgstr "Lay-out niet gevonden."
 
 #: ../../mod/pdledit.php:54
 msgid "Module Name:"
-msgstr ""
+msgstr "Modulenaam:"
 
 #: ../../mod/pdledit.php:55 ../../mod/layouts.php:59
 msgid "Layout Help"
-msgstr ""
+msgstr "Lay-out-hulp"
 
 #: ../../mod/editlayout.php:72
 msgid "Edit Layout"
-msgstr ""
+msgstr "Lay-out bewerken"
 
 #: ../../mod/editlayout.php:82
 msgid "Delete layout?"
-msgstr ""
+msgstr "Lay-out verwijderen?"
 
 #: ../../mod/editlayout.php:146
 msgid "Delete Layout"
-msgstr ""
+msgstr "Lay-out verwijderen"
 
 #: ../../mod/editpost.php:31
 msgid "Item is not editable"
@@ -6256,66 +6256,66 @@ msgstr "Item is niet te bewerken"
 
 #: ../../mod/editpost.php:53
 msgid "Delete item?"
-msgstr ""
+msgstr "Item verwijderen?"
 
 #: ../../mod/editwebpage.php:106
 msgid "Edit Webpage"
-msgstr ""
+msgstr "Webpagina bewerken"
 
 #: ../../mod/editwebpage.php:116
 msgid "Delete webpage?"
-msgstr ""
+msgstr "Webpagina verwijderen?"
 
 #: ../../mod/editwebpage.php:187
 msgid "Delete Webpage"
-msgstr ""
+msgstr "Webpagina verwijderen"
 
 #: ../../mod/siteinfo.php:57
 #, php-format
 msgid "Version %s"
-msgstr ""
+msgstr "Versie %s"
 
 #: ../../mod/siteinfo.php:76
 msgid "Installed plugins/addons/apps:"
-msgstr ""
+msgstr "Ingeschakelde plug-ins/add-ons/apps:"
 
 #: ../../mod/siteinfo.php:89
 msgid "No installed plugins/addons/apps"
-msgstr ""
+msgstr "Geen ingeschakelde plug-ins/add-ons/apps"
 
 #: ../../mod/siteinfo.php:97
 msgid "Red"
-msgstr ""
+msgstr "Red"
 
 #: ../../mod/siteinfo.php:98
 msgid ""
 "This is a hub of the Red Matrix - a global cooperative network of "
 "decentralised privacy enhanced websites."
-msgstr ""
+msgstr "Dit is een Red Matrix-hub - een wereldwijd coöperatief netwerk van gedecentraliseerde websites met verbeterende privacy."
 
 #: ../../mod/siteinfo.php:101
 msgid "Running at web location"
-msgstr ""
+msgstr "Draaiend op weblocatie"
 
 #: ../../mod/siteinfo.php:102
 msgid ""
 "Please visit <a href=\"http://getzot.com\">GetZot.com</a> to learn more "
 "about the Red Matrix."
-msgstr ""
+msgstr "Bezoek <a href=\"http://redmatrix.me\">RedMatrix.me</a> om meer te leren over de Red Matrix."
 
 #: ../../mod/siteinfo.php:103
 msgid "Bug reports and issues: please visit"
-msgstr ""
+msgstr "Bugrapporten en andere kwesties: bezoek"
 
 #: ../../mod/siteinfo.php:106
 msgid ""
 "Suggestions, praise, etc. - please email \"redmatrix\" at librelist - dot "
 "com"
-msgstr ""
+msgstr "Voorstellen, lofbetuigingen, enz. - e-mail  \"redmatrix\" at librelist - dot com"
 
 #: ../../mod/siteinfo.php:108
 msgid "Site Administrators"
-msgstr ""
+msgstr "Hubbeheerders"
 
 #: ../../mod/sources.php:32
 msgid "Failed to create source. No channel selected."
@@ -6452,19 +6452,19 @@ msgstr "Deel deze gebeurtenis"
 
 #: ../../mod/filestorage.php:68
 msgid "Permission Denied."
-msgstr ""
+msgstr "Toegang geweigerd"
 
 #: ../../mod/filestorage.php:85
 msgid "File not found."
-msgstr ""
+msgstr "Bestand niet gevonden."
 
 #: ../../mod/filestorage.php:121
 msgid "Edit file permissions"
-msgstr ""
+msgstr "Bestandsrechten bewerken"
 
 #: ../../mod/filestorage.php:129
 msgid "Set/edit permissions"
-msgstr ""
+msgstr "Rechten instellen/bewerken"
 
 #: ../../mod/filestorage.php:130
 msgid "Include all files and sub folders"
@@ -6513,75 +6513,75 @@ msgstr "Contact niet gevonden"
 
 #: ../../mod/fsuggest.php:63
 msgid "Friend suggestion sent."
-msgstr "Vriendschapsvoorstel verzonden."
+msgstr "Kanaalvoorstel verzonden."
 
 #: ../../mod/fsuggest.php:97
 msgid "Suggest Friends"
-msgstr "Vrienden voorstellen"
+msgstr "Kanalen voorstellen"
 
 #: ../../mod/fsuggest.php:99
 #, php-format
 msgid "Suggest a friend for %s"
-msgstr "Stel een vriend voor aan %s"
+msgstr "Stel een kanaal voor aan %s"
 
 #: ../../mod/suggest.php:35
 msgid ""
 "No suggestions available. If this is a new site, please try again in 24 "
 "hours."
-msgstr ""
+msgstr "Geen voorgestelde kanalen gevonden. Wanneer dit een nieuwe hub is, probeer het dan over 24 uur weer."
 
 #: ../../mod/group.php:20
 msgid "Collection created."
-msgstr ""
+msgstr "Collectie aangemaakt"
 
 #: ../../mod/group.php:26
 msgid "Could not create collection."
-msgstr ""
+msgstr "Collectie kon niet aangemaakt worden"
 
 #: ../../mod/group.php:54
 msgid "Collection updated."
-msgstr ""
+msgstr "Collectie bijgewerkt."
 
 #: ../../mod/group.php:86
 msgid "Create a collection of channels."
-msgstr ""
+msgstr "Kanaalcollectie aanmaken"
 
 #: ../../mod/group.php:87 ../../mod/group.php:183
 msgid "Collection Name: "
-msgstr ""
+msgstr "Naam collectie:"
 
 #: ../../mod/group.php:89 ../../mod/group.php:186
 msgid "Members are visible to other channels"
-msgstr ""
+msgstr "Kanalen in deze collectie zijn zichtbaar voor andere kanalen"
 
 #: ../../mod/group.php:107
 msgid "Collection removed."
-msgstr ""
+msgstr "Collectie verwijderd"
 
 #: ../../mod/group.php:109
 msgid "Unable to remove collection."
-msgstr ""
+msgstr "Verwijderen collectie mislukt"
 
 #: ../../mod/group.php:182
 msgid "Collection Editor"
-msgstr ""
+msgstr "Collectiebewerker"
 
 #: ../../mod/group.php:196
 msgid "Members"
-msgstr "Leden"
+msgstr "Kanalen"
 
 #: ../../mod/group.php:198
 msgid "All Connected Channels"
-msgstr ""
+msgstr "Alle kanaalconnecties"
 
 #: ../../mod/group.php:231
 msgid "Click on a channel to add or remove."
-msgstr ""
+msgstr "Klik op een kanaal om deze toe te voegen of te verwijderen."
 
 #: ../../mod/tagger.php:98
 #, php-format
 msgid "%1$s tagged %2$s's %3$s with %4$s"
-msgstr ""
+msgstr "%1$s labelde %2$s's %3$s met %4$s"
 
 #: ../../mod/help.php:43 ../../mod/help.php:49 ../../mod/help.php:55
 msgid "Help:"
