@@ -6,9 +6,9 @@
 #, fuzzy
 msgid ""
 msgstr ""
-"Project-Id-Version: 2014-05-30.691\n"
+"Project-Id-Version: 2014-06-02.694\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2014-05-30 00:02-0700\n"
+"POT-Creation-Date: 2014-06-02 18:00-0700\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -489,7 +489,7 @@ msgstr ""
 msgid "Sort by Post Date"
 msgstr ""
 
-#: ../../include/conversation.php:1415 ../../include/widgets.php:81
+#: ../../include/conversation.php:1415 ../../include/widgets.php:82
 msgid "Personal"
 msgstr ""
 
@@ -1181,7 +1181,7 @@ msgstr ""
 msgid "Outbox"
 msgstr ""
 
-#: ../../include/nav.php:177 ../../include/widgets.php:535
+#: ../../include/nav.php:177 ../../include/widgets.php:536
 msgid "New Message"
 msgstr ""
 
@@ -1206,7 +1206,7 @@ msgid "Manage Your Channels"
 msgstr ""
 
 #: ../../include/nav.php:186 ../../include/apps.php:121
-#: ../../include/widgets.php:513 ../../mod/admin.php:976
+#: ../../include/widgets.php:514 ../../mod/admin.php:976
 #: ../../mod/admin.php:1181
 msgid "Settings"
 msgstr ""
@@ -1447,12 +1447,12 @@ msgid "Advanced Find"
 msgstr ""
 
 #: ../../include/contact_widgets.php:58 ../../include/features.php:66
-#: ../../include/widgets.php:295
+#: ../../include/widgets.php:296
 msgid "Saved Folders"
 msgstr ""
 
 #: ../../include/contact_widgets.php:61 ../../include/contact_widgets.php:95
-#: ../../include/widgets.php:298
+#: ../../include/widgets.php:299
 msgid "Everything"
 msgstr ""
 
@@ -1470,6 +1470,10 @@ msgstr[1] ""
 #: ../../include/contact_widgets.php:130 ../../include/js_strings.php:7
 #: ../../include/ItemObject.php:316
 msgid "show more"
+msgstr ""
+
+#: ../../include/event.php:321
+msgid "This event has been added to your calendar."
 msgstr ""
 
 #: ../../include/reddav.php:1045
@@ -1547,6 +1551,16 @@ msgstr ""
 #: ../../include/datetime.php:299
 #, php-format
 msgid "%1$d %2$s ago"
+msgstr ""
+
+#: ../../include/datetime.php:499
+#, php-format
+msgid "%1$s's birthday"
+msgstr ""
+
+#: ../../include/datetime.php:500
+#, php-format
+msgid "Happy Birthday %1$s"
 msgstr ""
 
 #: ../../include/dir_fns.php:36
@@ -1852,7 +1866,7 @@ msgstr ""
 msgid "Allow previewing posts and comments before publishing them"
 msgstr ""
 
-#: ../../include/features.php:43 ../../include/widgets.php:502
+#: ../../include/features.php:43 ../../include/widgets.php:503
 #: ../../mod/sources.php:88
 msgid "Channel Sources"
 msgstr ""
@@ -1890,7 +1904,7 @@ msgstr ""
 msgid "Enable widget to display Network posts only from selected collections"
 msgstr ""
 
-#: ../../include/features.php:52 ../../include/widgets.php:264
+#: ../../include/features.php:52 ../../include/widgets.php:265
 msgid "Saved Searches"
 msgstr ""
 
@@ -2049,7 +2063,7 @@ msgstr ""
 msgid "Channels not in any collection"
 msgstr ""
 
-#: ../../include/group.php:290 ../../include/widgets.php:265
+#: ../../include/group.php:290 ../../include/widgets.php:266
 msgid "add"
 msgstr ""
 
@@ -2090,7 +2104,7 @@ msgstr ""
 msgid "Default Profile"
 msgstr ""
 
-#: ../../include/identity.php:342 ../../include/widgets.php:399
+#: ../../include/identity.php:342 ../../include/widgets.php:400
 #: ../../include/profile_selectors.php:42 ../../mod/connedit.php:431
 msgid "Friends"
 msgstr ""
@@ -2106,8 +2120,8 @@ msgstr ""
 msgid "Requested profile is not available."
 msgstr ""
 
-#: ../../include/identity.php:675 ../../include/widgets.php:127
-#: ../../include/widgets.php:167 ../../include/Contact.php:107
+#: ../../include/identity.php:675 ../../include/widgets.php:128
+#: ../../include/widgets.php:168 ../../include/Contact.php:107
 #: ../../mod/directory.php:183 ../../mod/dirprofile.php:164
 #: ../../mod/suggest.php:51 ../../mod/match.php:62
 msgid "Connect"
@@ -2630,7 +2644,7 @@ msgid "View Connections"
 msgstr ""
 
 #: ../../include/text.php:815 ../../include/text.php:829
-#: ../../include/widgets.php:185 ../../mod/rbmark.php:28
+#: ../../include/widgets.php:186 ../../mod/rbmark.php:28
 #: ../../mod/rbmark.php:98 ../../mod/filer.php:50
 msgid "Save"
 msgstr ""
@@ -2933,15 +2947,15 @@ msgstr ""
 msgid "Unknown"
 msgstr ""
 
-#: ../../include/zot.php:587
+#: ../../include/zot.php:596
 msgid "Invalid data packet"
 msgstr ""
 
-#: ../../include/zot.php:597
+#: ../../include/zot.php:606
 msgid "Unable to verify channel signature"
 msgstr ""
 
-#: ../../include/zot.php:794
+#: ../../include/zot.php:803
 #, php-format
 msgid "Unable to verify site signature for %s"
 msgstr ""
@@ -2978,132 +2992,132 @@ msgstr ""
 msgid "System"
 msgstr ""
 
-#: ../../include/widgets.php:82
+#: ../../include/widgets.php:83
 msgid "Create Personal App"
 msgstr ""
 
-#: ../../include/widgets.php:83
+#: ../../include/widgets.php:84
 msgid "Edit Personal App"
 msgstr ""
 
-#: ../../include/widgets.php:129 ../../mod/suggest.php:53
+#: ../../include/widgets.php:130 ../../mod/suggest.php:53
 msgid "Ignore/Hide"
 msgstr ""
 
-#: ../../include/widgets.php:135 ../../mod/connections.php:266
+#: ../../include/widgets.php:136 ../../mod/connections.php:266
 msgid "Suggestions"
 msgstr ""
 
-#: ../../include/widgets.php:136
+#: ../../include/widgets.php:137
 msgid "See more..."
 msgstr ""
 
-#: ../../include/widgets.php:158
+#: ../../include/widgets.php:159
 #, php-format
 msgid "You have %1$.0f of %2$.0f allowed connections."
 msgstr ""
 
-#: ../../include/widgets.php:164
+#: ../../include/widgets.php:165
 msgid "Add New Connection"
 msgstr ""
 
-#: ../../include/widgets.php:165
+#: ../../include/widgets.php:166
 msgid "Enter the channel address"
 msgstr ""
 
-#: ../../include/widgets.php:166
+#: ../../include/widgets.php:167
 msgid "Example: bob@example.com, http://example.com/barbara"
 msgstr ""
 
-#: ../../include/widgets.php:183
+#: ../../include/widgets.php:184
 msgid "Notes"
 msgstr ""
 
-#: ../../include/widgets.php:255
+#: ../../include/widgets.php:256
 msgid "Remove term"
 msgstr ""
 
-#: ../../include/widgets.php:334
+#: ../../include/widgets.php:335
 msgid "Archives"
 msgstr ""
 
-#: ../../include/widgets.php:396
+#: ../../include/widgets.php:397
 msgid "Refresh"
 msgstr ""
 
-#: ../../include/widgets.php:397 ../../mod/connedit.php:428
+#: ../../include/widgets.php:398 ../../mod/connedit.php:428
 msgid "Me"
 msgstr ""
 
-#: ../../include/widgets.php:398 ../../mod/connedit.php:430
+#: ../../include/widgets.php:399 ../../mod/connedit.php:430
 msgid "Best Friends"
 msgstr ""
 
-#: ../../include/widgets.php:400
+#: ../../include/widgets.php:401
 msgid "Co-workers"
 msgstr ""
 
-#: ../../include/widgets.php:401 ../../mod/connedit.php:432
+#: ../../include/widgets.php:402 ../../mod/connedit.php:432
 msgid "Former Friends"
 msgstr ""
 
-#: ../../include/widgets.php:402 ../../mod/connedit.php:433
+#: ../../include/widgets.php:403 ../../mod/connedit.php:433
 msgid "Acquaintances"
 msgstr ""
 
-#: ../../include/widgets.php:403
+#: ../../include/widgets.php:404
 msgid "Everybody"
 msgstr ""
 
-#: ../../include/widgets.php:435
+#: ../../include/widgets.php:436
 msgid "Account settings"
 msgstr ""
 
-#: ../../include/widgets.php:441
+#: ../../include/widgets.php:442
 msgid "Channel settings"
 msgstr ""
 
-#: ../../include/widgets.php:447
+#: ../../include/widgets.php:448
 msgid "Additional features"
 msgstr ""
 
-#: ../../include/widgets.php:453
+#: ../../include/widgets.php:454
 msgid "Feature settings"
 msgstr ""
 
-#: ../../include/widgets.php:459
+#: ../../include/widgets.php:460
 msgid "Display settings"
 msgstr ""
 
-#: ../../include/widgets.php:465
+#: ../../include/widgets.php:466
 msgid "Connected apps"
 msgstr ""
 
-#: ../../include/widgets.php:471
+#: ../../include/widgets.php:472
 msgid "Export channel"
 msgstr ""
 
-#: ../../include/widgets.php:483
+#: ../../include/widgets.php:484
 msgid "Automatic Permissions (Advanced)"
 msgstr ""
 
-#: ../../include/widgets.php:493
+#: ../../include/widgets.php:494
 msgid "Premium Channel Settings"
 msgstr ""
 
-#: ../../include/widgets.php:530
+#: ../../include/widgets.php:531
 msgid "Check Mail"
 msgstr ""
 
-#: ../../include/widgets.php:611
+#: ../../include/widgets.php:612
 msgid "Chat Rooms"
 msgstr ""
 
-#: ../../include/widgets.php:629
+#: ../../include/widgets.php:630
 msgid "Bookmarked Chatrooms"
 msgstr ""
 
-#: ../../include/widgets.php:647
+#: ../../include/widgets.php:648
 msgid "Suggested Chatrooms"
 msgstr ""
 
