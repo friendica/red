@@ -99,7 +99,8 @@ function network_content(&$a, $update = 0, $load = false) {
 	$conv = ((x($_GET,'conv')) ? intval($_GET['conv']) : 0);
 	$spam = ((x($_GET,'spam')) ? intval($_GET['spam']) : 0);
 	$cmin = ((x($_GET,'cmin')) ? intval($_GET['cmin']) : 0);
-	$cmax = ((x($_GET,'cmax')) ? intval($_GET['cmax']) : 99);
+        $cmax = get_pconfig(local_user(), system, cmax);
+        if (! $cmax) $cmax = ((x($_GET,'cmax')) ? intval($_GET['cmax']) : 99);
 	$firehose = ((x($_GET,'fh')) ? intval($_GET['fh']) : 0);
 	$file = ((x($_GET,'file')) ? $_GET['file'] : '');
 
