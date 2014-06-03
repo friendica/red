@@ -123,6 +123,8 @@ function poller_run($argv, $argc){
 
 		}
 
+		update_birthdays();
+
 		// expire any read notifications over a month old
 
 		q("delete from notify where seen = 1 and date < UTC_TIMESTAMP() - INTERVAL 30 DAY");

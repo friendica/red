@@ -318,6 +318,8 @@ function event_store_item($arr,$event) {
 		}
 	}
 
+	$prefix = (($event['type'] === 'birthday') ? t('This event has been added to your calendar.') . "\n\n" : '');
+
 	$r = q("SELECT * FROM item left join xchan on author_xchan = xchan_hash WHERE resource_id = '%s' AND resource_type = 'event' and uid = %d LIMIT 1",
         dbesc($event['event_hash']),
 		intval($arr['uid'])
@@ -342,10 +344,9 @@ function event_store_item($arr,$event) {
 
 		$private = (($arr['allow_cid'] || $arr['allow_gid'] || $arr['deny_cid'] || $arr['deny_gid']) ? 1 : 0);
 
-
 		q("UPDATE item SET title = '%s', body = '%s', object = '%s', allow_cid = '%s', allow_gid = '%s', deny_cid = '%s', deny_gid = '%s', edited = '%s', item_flags = %d, item_private = %d  WHERE id = %d AND uid = %d LIMIT 1",
 			dbesc($arr['summary']),
-			dbesc(format_event_bbcode($arr)),
+			dbesc($prefix . format_event_bbcode($arr)),
 			dbesc($object),
 			dbesc($arr['allow_cid']),
 			dbesc($arr['allow_gid']),
@@ -412,7 +413,8 @@ function event_store_item($arr,$event) {
 		$item_arr['resource_id']   = $event['event_hash'];
 
 		$item_arr['obj_type']      = ACTIVITY_OBJ_EVENT;
-		$item_arr['body']          = format_event_bbcode($arr);
+
+		$item_arr['body']          = $prefix . format_event_bbcode($arr);
 
 		$item_arr['plink'] = z_root() . '/channel/' . $z[0]['channel_address'] . '/?f=&mid=' . $item_arr['mid'];
 

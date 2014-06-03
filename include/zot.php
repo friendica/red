@@ -355,14 +355,22 @@ function zot_refresh($them,$channel = null, $force = false) {
 				intval(ABOOK_FLAG_SELF)
 			);
 
+			if(array_key_exists('profile',$j) && array_key_exists('next_birthday',$j['profile'])) {	
+				$next_birthday = datetime_convert('UTC','UTC',$j['profile']['next_birthday']);
+			}
+			else {
+				$next_birthday = '0000-00-00 00:00:00';
+			}
+
 			if($r) {
 
 				$current_abook_connected = (($r[0]['abook_flags'] & ABOOK_FLAG_UNCONNECTED) ? 0 : 1);
 		
-				$y = q("update abook set abook_their_perms = %d
+				$y = q("update abook set abook_their_perms = %d, abook_dob = '%s'
 					where abook_xchan = '%s' and abook_channel = %d 
 					and not (abook_flags & %d) limit 1",
 					intval($their_perms),
+					dbesc($next_birthday),
 					dbesc($x['hash']),
 					intval($channel['channel_id']),
 					intval(ABOOK_FLAG_SELF)
@@ -402,7 +410,7 @@ function zot_refresh($them,$channel = null, $force = false) {
 				if($z)
 					$default_perms = intval($z[0]['abook_my_perms']);		
 
-				$y = q("insert into abook ( abook_account, abook_channel, abook_xchan, abook_their_perms, abook_my_perms, abook_created, abook_updated, abook_flags ) values ( %d, %d, '%s', %d, %d, '%s', '%s', %d )",
+				$y = q("insert into abook ( abook_account, abook_channel, abook_xchan, abook_their_perms, abook_my_perms, abook_created, abook_updated, abook_dob, abook_flags ) values ( %d, %d, '%s', %d, %d, '%s', '%s', '%s', %d )",
 					intval($channel['channel_account_id']),
 					intval($channel['channel_id']),
 					dbesc($x['hash']),
@@ -410,6 +418,7 @@ function zot_refresh($them,$channel = null, $force = false) {
 					intval($default_perms),
 					dbesc(datetime_convert()),
 					dbesc(datetime_convert()),
+					dbesc($next_birthday),
 					intval(($default_perms) ? 0 : ABOOK_FLAG_PENDING)
 				);
 
