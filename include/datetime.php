@@ -484,11 +484,16 @@ function z_birthday($dob,$tz,$format="Y-m-d H:i:s") {
 function update_birthdays() {
 
 	require_once('include/event.php');
+	require_once('include/permissions.php');
 
     $r = q("SELECT * FROM abook left join xchan on abook_xchan = xchan_hash 
 		WHERE abook_dob > utc_timestamp() + interval 7 day and abook_dob < utc_timestamp() + interval 14 day");
 	if($r) {
 		foreach($r as $rr) {
+			
+			if(! perm_is_allowed($rr['abook_channel'],$rr['xchan_hash'],'send_stream'))
+				continue;
+
 			$ev = array();
 			$ev['uid'] = $rr['abook_channel'];
 			$ev['account'] = $rr['abook_account'];
