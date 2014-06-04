@@ -39,7 +39,8 @@ function search_content(&$a,$update = 0, $load = false) {
 		$search = ((x($_GET,'tag')) ? trim(rawurldecode($_GET['tag'])) : '');
 	}
 
-	$o .= search($search,'search-box','/search',((local_user()) ? true : false));
+	if((! local_user()) || (! feature_enabled(local_user(),'savedsearch')))
+		$o .= search($search,'search-box','/search',((local_user()) ? true : false));
 
 	if(strpos($search,'#') === 0) {
 		$tag = true;

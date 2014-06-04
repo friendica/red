@@ -264,7 +264,7 @@ function widget_savedsearch($arr) {
 	$o = replace_macros($tpl, array(
 		'$title'	 => t('Saved Searches'),
 		'$add'		 => t('add'),
-		'$searchbox' => searchbox('','netsearch-box',$srchurl . (($hasq) ? '' : '?f='),true),
+		'$searchbox' => searchbox($search,'netsearch-box',$srchurl . (($hasq) ? '' : '?f='),true),
 		'$saved' 	 => $saved,
 	));
 
