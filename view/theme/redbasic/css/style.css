@@ -43,6 +43,10 @@ abbr {
   text-indent: 0px;
 }
 
+.connect-icon {
+	margin-right: 5px;
+}
+
 a, a:visited, a:link, .fakelink, .fakelink:visited, .fakelink:link { 
 	font-weight: bold;
 	color: $link_colour; 

@@ -254,12 +254,18 @@ function import_post(&$a) {
 	
 			require_once('include/photo/photo_driver.php');
 			$photos = import_profile_photo($xchan['xchan_photo_l'],$xchan['xchan_hash']);
-			$r = q("update xchan set xchan_photo_l = '%s', xchan_photo_m = '%s', xchan_photo_s = '%s', xchan_photo_mimetype = '%s'
+			if($photos[4])
+				$photodate = '0000-00-00 00:00:00';
+			else
+				$photodate = $xchan['xchan_photo_date'];
+
+			$r = q("update xchan set xchan_photo_l = '%s', xchan_photo_m = '%s', xchan_photo_s = '%s', xchan_photo_mimetype = '%s', xchan_photo_date = '%s'
 				where xchan_hash = '%s' limit 1",
 				dbesc($photos[0]),
 				dbesc($photos[1]),
 				dbesc($photos[2]),
 				dbesc($photos[3]),
+				dbesc($photodate),
 				dbesc($xchan_hash)
 			);
 			

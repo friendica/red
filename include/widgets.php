@@ -196,7 +196,7 @@ function widget_savedsearch($arr) {
 	$a = get_app();
 
 	$search = ((x($_GET,'search')) ? $_GET['search'] : '');
-
+	
 	if(x($_GET,'searchsave') && $search) {
 		$r = q("select * from `term` where `uid` = %d and `type` = %d and `term` = '%s' limit 1",
 			intval(local_user()),
@@ -264,7 +264,7 @@ function widget_savedsearch($arr) {
 	$o = replace_macros($tpl, array(
 		'$title'	 => t('Saved Searches'),
 		'$add'		 => t('add'),
-		'$searchbox' => searchbox('','netsearch-box',$srchurl . (($hasq) ? '' : '?f='),true),
+		'$searchbox' => searchbox($search,'netsearch-box',$srchurl . (($hasq) ? '' : '?f='),true),
 		'$saved' 	 => $saved,
 	));
 

@@ -39,7 +39,8 @@ function search_content(&$a,$update = 0, $load = false) {
 		$search = ((x($_GET,'tag')) ? trim(rawurldecode($_GET['tag'])) : '');
 	}
 
-	$o .= search($search,'search-box','/search',((local_user()) ? true : false));
+	if((! local_user()) || (! feature_enabled(local_user(),'savedsearch')))
+		$o .= search($search,'search-box','/search',((local_user()) ? true : false));
 
 	if(strpos($search,'#') === 0) {
 		$tag = true;
@@ -114,6 +115,10 @@ function search_content(&$a,$update = 0, $load = false) {
 
 	$pub_sql = public_permissions_sql(get_observer_hash());
 
+	require_once('include/identity.php');
+
+	$sys = get_sys_channel();
+
 	if(($update) && ($load)) {
 		$itemspage = get_pconfig(local_user(),'system','itemspage');
 		$a->set_pager_itemspage(((intval($itemspage)) ? $itemspage : 20));
@@ -125,24 +130,24 @@ function search_content(&$a,$update = 0, $load = false) {
 			if(local_user()) {
 				$r = q("SELECT distinct mid, item.id as item_id, item.* from item
 					WHERE item_restrict = 0
-					AND (( `item`.`allow_cid` = ''  AND `item`.`allow_gid` = '' AND `item`.`deny_cid`  = '' AND `item`.`deny_gid`  = '' AND item_private = 0 ) 
-					OR ( `item`.`uid` = %d ))
+					AND ((( `item`.`allow_cid` = ''  AND `item`.`allow_gid` = '' AND `item`.`deny_cid`  = '' AND `item`.`deny_gid`  = '' AND item_private = 0 ) 
+					OR ( `item`.`uid` = %d )) OR item.owner_xchan = '%s' )
 					$sql_extra
 					group by mid ORDER BY created DESC $pager_sql ",
 					intval(local_user()),
-					intval(ABOOK_FLAG_BLOCKED)
-
+					dbesc($sys['xchan_hash'])
 				);
 			}
 			if($r === null) {
                $r = q("SELECT distinct mid, item.id as item_id, item.* from item
                     WHERE item_restrict = 0
-                    AND ((( `item`.`allow_cid` = ''  AND `item`.`allow_gid` = '' AND `item`.`deny_cid`  = ''
+                    AND (((( `item`.`allow_cid` = ''  AND `item`.`allow_gid` = '' AND `item`.`deny_cid`  = ''
                     AND `item`.`deny_gid`  = '' AND item_private = 0 )
                     and owner_xchan in ( " . stream_perms_xchans(($observer) ? PERMS_NETWORK : PERMS_PUBLIC) . " ))
-					$pub_sql )
+					$pub_sql ) OR owner_xchan = '%s')
                     $sql_extra 
-                    group by mid ORDER BY created DESC $pager_sql"
+                    group by mid ORDER BY created DESC $pager_sql",
+					dbesc($sys['xchan_hash'])
                 );
 			}
 		}
