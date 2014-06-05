@@ -1,6 +1,6 @@
 function commentOpenRedbasic(obj,id) {
 
-	$(document).unbind( "click", handler );
+	$(document).unbind( "click.commentOpen", handler );
 
 	var handler = function() {
 		if(obj.value == aStr['comment']) {
@@ -10,13 +10,13 @@ function commentOpenRedbasic(obj,id) {
 		}
 	};
 
-	$(document).bind( "click", handler );
+	$(document).bind( "click.commentOpen", handler );
 
 }
 
 function commentCloseRedbasic(obj,id) {
 
-	$(document).unbind( "click", handler );
+	$(document).unbind( "click.commentClose", handler );
 
 	var handler = function() {
 		if(obj.value == '') {
@@ -26,7 +26,7 @@ function commentCloseRedbasic(obj,id) {
 		}
 	};
 
-	$(document).bind( "click", handler );
+	$(document).bind( "click.commentClose", handler );
 
 }
 
