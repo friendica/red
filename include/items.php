@@ -2334,6 +2334,34 @@ function tag_deliver($uid,$item_id) {
 	}
 
 
+	if (stristr($item['verb'],ACTIVITY_POKE)) {
+		$poke_notify = true;
+
+		if(($item['obj_type'] == "") || ($item['obj_type'] !== ACTIVITY_OBJ_PERSON) || (! $item['object'])) 
+				$poke_notify = false;
+
+		$obj = json_decode_plus($item['object']);
+		if($obj) {
+			if($obj['id'] !== $u[0]['channel_hash'])
+				$poke_notify = false;
+		}
+
+		$verb = urldecode(substr($item['verb'],strpos($item['verb'],'#')+1));
+		if($poke_notify) {
+			require_once('include/enotify.php');
+			notification(array(
+				'to_xchan'     => $u[0]['channel_hash'],
+				'from_xchan'   => $item['author_xchan'],
+				'type'         => NOTIFY_POKE,
+				'item'         => $item,
+				'link'         => $i[0]['llink'],
+				'verb'         => ACTIVITY_POKE,
+				'activity'     => $verb,
+				'otype'        => 'item'
+			));
+		}
+	}
+
 	if($item['obj_type'] === ACTIVITY_OBJ_TAGTERM) {
 
 		// We received a community tag activity for a post.

@@ -364,6 +364,13 @@ function zot_refresh($them,$channel = null, $force = false) {
 
 			if($r) {
 
+				// if the dob is the same as what we have stored (disregarding the year), keep the one 
+				// we have as we may have updated the year after sending a notification; and resetting
+				// to the one we just received would cause us to create duplicated events. 
+
+				if(substr($r[0]['abook_dob'],5) == substr($next_birthday,5))
+					$next_birthday = $r[0]['abook_dob'];
+
 				$current_abook_connected = (($r[0]['abook_flags'] & ABOOK_FLAG_UNCONNECTED) ? 0 : 1);
 		
 				$y = q("update abook set abook_their_perms = %d, abook_dob = '%s'

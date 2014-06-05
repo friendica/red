@@ -1,21 +1,33 @@
 function commentOpenRedbasic(obj,id) {
-	$(document).click(function() {
+
+	$(document).unbind( "click.commentOpen", handler );
+
+	var handler = function() {
 		if(obj.value == aStr['comment']) {
 			obj.value = '';
 			$("#comment-edit-text-" + id).addClass("comment-edit-text-full").removeClass("comment-edit-text-empty");
 			$("#comment-tools-" + id).show();
 		}
-	});
+	};
+
+	$(document).bind( "click.commentOpen", handler );
+
 }
 
 function commentCloseRedbasic(obj,id) {
-	$(document).click(function() {
+
+	$(document).unbind( "click.commentClose", handler );
+
+	var handler = function() {
 		if(obj.value == '') {
 		obj.value = aStr['comment'];
 			$("#comment-edit-text-" + id).removeClass("comment-edit-text-full").addClass("comment-edit-text-empty");
 			$("#comment-tools-" + id).hide();
 		}
-	});
+	};
+
+	$(document).bind( "click.commentClose", handler );
+
 }
 
 $(document).ready(function() {
