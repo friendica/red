@@ -105,6 +105,9 @@ function poller_run($argv, $argc){
 
 	if($d2 != intval($d1)) {
 
+		call_hooks('cron_daily',datetime_convert());
+
+
 		$d3 = intval(datetime_convert('UTC','UTC','now','N'));
 		if($d3 == 7) {
 		
@@ -114,6 +117,11 @@ function poller_run($argv, $argc){
 			 * Actions in the following block are executed once per day only on Sunday (once per week).
 			 *
 			 */
+
+
+			call_hooks('cron_weekly',datetime_convert());
+
+
 
 			require_once('include/hubloc.php');
 			prune_hub_reinstalls();
@@ -204,7 +212,7 @@ function poller_run($argv, $argc){
 
 	$d = datetime_convert();
 
-//TODO check to see if there are any cronhooks before wasting a process
+	//TODO check to see if there are any cronhooks before wasting a process
 
 	if(! $restart)
 		proc_run('php','include/cronhooks.php');

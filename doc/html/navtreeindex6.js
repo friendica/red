@@ -1,5 +1,6 @@
 var NAVTREEINDEX6 =
 {
+"layouts_8php.html":[5,0,1,48],
 "layouts_8php.html#a6e0193759ad9eef76d3df2db24237b50":[5,0,1,48,0],
 "like_8php.html":[5,0,1,49],
 "like_8php.html#a9d7dd268f21c21e9d29dd2aca2dd9538":[5,0,1,49,0],
@@ -89,8 +90,8 @@ var NAVTREEINDEX6 =
 "mytheme_2php_2style_8php.html":[5,0,3,1,2,0,1],
 "mytheme_2php_2theme_8php.html":[5,0,3,1,2,0,2],
 "mytheme_2php_2theme_8php.html#a6ce5df8ece6acc09c1fddaccbeb244e8":[5,0,3,1,2,0,2,0],
-"namespaceFriendica.html":[4,0,1],
 "namespaceFriendica.html":[3,0,1],
+"namespaceFriendica.html":[4,0,1],
 "namespaceacl__selectors.html":[4,0,0],
 "namespaceacl__selectors.html":[3,0,0],
 "namespacefriendica-to-smarty-tpl.html":[4,0,2],
@@ -248,6 +249,5 @@ var NAVTREEINDEX6 =
 "post__to__red_8php.html#a99811555b30bde504a863e44015f2f19":[5,0,2,1,0,0,20],
 "post__to__red_8php.html#aa97aeda12ef080665f16311a4e1eb901":[5,0,2,1,0,0,14],
 "post__to__red_8php.html#aacba7a0646fc00ae6ac4f5dc383fccab":[5,0,2,1,0,0,8],
-"post__to__red_8php.html#ada8a7130088351710bb02ed622d6bf65":[5,0,2,1,0,0,19],
-"post__to__red_8php.html#ae0b881461afbdba93d9329068ea52136":[5,0,2,1,0,0,7]
+"post__to__red_8php.html#ada8a7130088351710bb02ed622d6bf65":[5,0,2,1,0,0,19]
 };

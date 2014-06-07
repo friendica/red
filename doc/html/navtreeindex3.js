@@ -138,12 +138,13 @@ var NAVTREEINDEX3 =
 "datetime_8php.html#a7df24d72ea05922d3127363e2295174c":[5,0,0,27,7],
 "datetime_8php.html#a8ae8dc95ace7ac27fa5a1ecf42b78c82":[5,0,0,27,9],
 "datetime_8php.html#aa51b5a7ea4f931b23acbdfcea46e9865":[5,0,0,27,12],
-"datetime_8php.html#ab55e545b72ec8c097e052ea7d373491f":[5,0,0,27,13],
+"datetime_8php.html#ab55e545b72ec8c097e052ea7d373491f":[5,0,0,27,14],
 "datetime_8php.html#aba971b67f17fecf050813f1eba72367f":[5,0,0,27,8],
 "datetime_8php.html#abc1652f96799cec6fce8797ba2ebc2df":[5,0,0,27,0],
 "datetime_8php.html#ac265b86f384ee094ed5479aae02aa5c8":[5,0,0,27,2],
 "datetime_8php.html#ad6301e74b0f9267d52f8d432b5beb226":[5,0,0,27,4],
 "datetime_8php.html#aea356409ba69f9de412298c998595dd2":[5,0,0,27,1],
+"datetime_8php.html#af1cd77c97c901d9239cb7a61f97f9826":[5,0,0,27,13],
 "db__update_8php.html":[5,0,2,2],
 "dba__driver_8php.html":[5,0,0,0,0],
 "dba__driver_8php.html#a2c09a731d3b4fef41fed0e83db01be1f":[5,0,0,0,0,8],
@@ -248,6 +249,5 @@ var NAVTREEINDEX3 =
 "extract_8php.html#a9590b15215a21e9b42eb546aeef79704":[5,0,2,4,1],
 "fbrowser_8php.html":[5,0,1,32],
 "fbrowser_8php.html#aee476addcf7a3e0fe9454f7dfd5a56c4":[5,0,1,32,0],
-"features_8php.html":[5,0,0,35],
-"features_8php.html#a52b5bdfb61b256713efecf7a7b20b0c0":[5,0,0,35,0]
+"features_8php.html":[5,0,0,35]
 };
