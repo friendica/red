@@ -2951,7 +2951,7 @@ msgstr[1] "%d reacties"
 
 #: ../../include/ItemObject.php:316 ../../include/js_strings.php:7
 msgid "[+] show all"
-msgstr ""
+msgstr "[+] alle reacties weergeven"
 
 #: ../../include/ItemObject.php:580 ../../mod/photos.php:990
 #: ../../mod/photos.php:1077
@@ -3024,15 +3024,15 @@ msgstr "Dit item verwijderen?"
 
 #: ../../include/js_strings.php:8
 msgid "[-] show less"
-msgstr ""
+msgstr "[-] minder reacties weergeven"
 
 #: ../../include/js_strings.php:9
 msgid "[+] expand"
-msgstr ""
+msgstr "[+] uitklappen"
 
 #: ../../include/js_strings.php:10
 msgid "[-] collapse"
-msgstr ""
+msgstr "[-] inklappen"
 
 #: ../../include/js_strings.php:11
 msgid "Password too short"
