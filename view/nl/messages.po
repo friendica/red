@@ -1063,7 +1063,7 @@ msgstr "%s - klik om uit te loggen"
 
 #: ../../include/nav.php:116
 msgid "Click to authenticate to your home hub"
-msgstr "Klik om jezelf te verifiëren via jouw eigen Red Matrix-hub"
+msgstr "Klik om jezelf te authenticeren via jouw eigen Red Matrix-hub"
 
 #: ../../include/nav.php:130
 msgid "Home Page"
@@ -3377,7 +3377,7 @@ msgstr "Uitgelogd."
 
 #: ../../include/auth.php:198
 msgid "Failed authentication"
-msgstr "Mislukte identificatie"
+msgstr "Mislukte authenticatie"
 
 #: ../../include/auth.php:213 ../../mod/openid.php:188
 msgid "Login failed."
@@ -3476,7 +3476,7 @@ msgstr "URL of link"
 
 #: ../../mod/mitem.php:138 ../../mod/mitem.php:182
 msgid "Use Red magic-auth if available"
-msgstr "Gebruik Red magic-auth wanneer aanwezig"
+msgstr "Gebruik Reds magische authenticatie wanneer aanwezig"
 
 #: ../../mod/mitem.php:139 ../../mod/mitem.php:183
 msgid "Open link in new window"
@@ -4199,12 +4199,12 @@ msgstr ""
 msgid ""
 "Remote authentication blocked. You are logged into this site locally. Please"
 " logout and retry."
-msgstr "Identificatie op afstand geblokkeerd. Je bent lokaal op deze hub ingelogd. Uitloggen en opnieuw proberen."
+msgstr "Authenticatie op afstand geblokkeerd. Je bent lokaal op deze hub ingelogd. Uitloggen en opnieuw proberen."
 
 #: ../../mod/post.php:257 ../../mod/openid.php:72 ../../mod/openid.php:178
 #, php-format
 msgid "Welcome %s. Remote authentication successful."
-msgstr "Welkom %s. Identificatie op afstand geslaagd."
+msgstr "Welkom %s. Authenticatie op afstand geslaagd."
 
 #: ../../mod/attach.php:9
 msgid "Item not available."
@@ -4827,11 +4827,11 @@ msgstr ""
 
 #: ../../mod/rmagic.php:42
 msgid "Authentication failed."
-msgstr "Identificatie mislukt."
+msgstr "Authenticatie mislukt."
 
 #: ../../mod/rmagic.php:78
 msgid "Remote Authentication"
-msgstr "Identificatie op afstand"
+msgstr "Authenticatie op afstand"
 
 #: ../../mod/rmagic.php:79
 msgid "Enter your channel address (e.g. channel@example.com)"
@@ -4839,7 +4839,7 @@ msgstr ""
 
 #: ../../mod/rmagic.php:80
 msgid "Authenticate"
-msgstr ""
+msgstr "Authenticeren"
 
 #: ../../mod/connect.php:55 ../../mod/connect.php:103
 msgid "Continue"
@@ -5615,19 +5615,19 @@ msgstr ""
 
 #: ../../mod/settings.php:796
 msgid "Anybody on this website"
-msgstr ""
+msgstr "Iedereen op deze hub"
 
 #: ../../mod/settings.php:797
 msgid "Anybody in this network"
-msgstr ""
+msgstr "Iedereen in dit netwerk"
 
 #: ../../mod/settings.php:798
 msgid "Anybody authenticated"
-msgstr ""
+msgstr "Geauthenticeerd"
 
 #: ../../mod/settings.php:799
 msgid "Anybody on the internet"
-msgstr ""
+msgstr "Iedereen op het internet"
 
 #: ../../mod/settings.php:876
 msgid "Publish your default profile in the network directory"
