@@ -66,7 +66,7 @@ function appman_content(&$a) {
 		notice( t('Permission denied.') . EOL);
 		return;
 	}
-logger('content');
+
 	$channel = $a->get_channel();
 	$app = null;
 	$embed = null;

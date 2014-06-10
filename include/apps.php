@@ -201,16 +201,29 @@ function app_render($papp,$mode = 'view') {
 		}
 	}
 
+	$hosturl = '';
+
 	if(local_user()) {
 		$installed = app_installed(local_user(),$papp);
+		$hosturl = z_root() . '/';
+	}
+	elseif(remote_user()) {
+		$channel = get_app()->get_channel();
+		if($channel) {
+			$x = parse_url($channel['xchan_connurl']);
+			if($x) {
+				$hosturl = $x['scheme'] . '://' . $x['host'] . '/';
+			}
+		} 
 	}
 
 	$install_action = (($installed) ? t('Update') : t('Install'));
 
 	return replace_macros(get_markup_template('app.tpl'),array(
 		'$app' => $papp,
+		'$hosturl' => $hosturl,
 		'$purchase' => (($papp['page'] && (! $installed)) ? t('Purchase') : ''),
-		'$install' => ((local_user() && $mode == 'view') ? $install_action : ''),
+		'$install' => (((local_user() || $hosturl) && $mode == 'view') ? $install_action : ''),
 		'$edit' => ((local_user() && $installed && $mode == 'edit') ? t('Edit') : ''),
 		'$delete' => ((local_user() && $installed && $mode == 'edit') ? t('Delete') : '')
 	));

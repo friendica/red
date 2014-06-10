@@ -6,7 +6,7 @@
 <a href="{{$app.page}}" class="btn btn-default" title="{{$purchase}}" ><i class="icon-external"></i></a>
 {{/if}}
 {{if $install || $update || $delete }}
-<form action="appman" method="post">
+<form action="{{$hosturl}}appman" method="post">
 <input type="hidden" name="papp" value="{{$app.papp}}" />
 {{if $install}}<button type="submit" name="install" value="{{$install}}" class="btn btn-default" title="{{$install}}" ><i class="icon-download-alt" ></i></button>{{/if}}
 {{if $edit}}<input type="hidden" name="appid" value="{{$app.guid}}" /><button type="submit" name="edit" value="{{$edit}}" class="btn btn-default" title="{{$edit}}" ><i class="icon-pencil" ></i></button>{{/if}}
