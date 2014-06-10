@@ -5991,7 +5991,7 @@ msgstr ""
 msgid ""
 "Error: the \"openssl_pkey_new\" function on this system is not able to "
 "generate encryption keys"
-msgstr "Fout: de functie \"openssl_pkey_new\" op dit systeem is niet in staat om encryptie-sleutels aan te maken" 
+msgstr "Fout: de functie \"openssl_pkey_new\" op dit systeem is niet in staat om encryptie-sleutels aan te maken"
 
 #: ../../mod/setup.php:431
 msgid ""
