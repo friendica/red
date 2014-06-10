@@ -208,9 +208,10 @@ function app_render($papp,$mode = 'view') {
 		$hosturl = z_root() . '/';
 	}
 	elseif(remote_user()) {
-		$channel = get_app()->get_channel();
-		if($channel) {
-			$x = parse_url($channel['xchan_connurl']);
+		$observer = get_app()->get_get_observer();
+		if($observer && $observer['xchan_network'] === 'zot') {
+			// some folks might have xchan_url redirected offsite, use the connurl
+			$x = parse_url($observer['xchan_connurl']);
 			if($x) {
 				$hosturl = $x['scheme'] . '://' . $x['host'] . '/';
 			}
@@ -223,7 +224,7 @@ function app_render($papp,$mode = 'view') {
 		'$app' => $papp,
 		'$hosturl' => $hosturl,
 		'$purchase' => (($papp['page'] && (! $installed)) ? t('Purchase') : ''),
-		'$install' => (((local_user() || $hosturl) && $mode == 'view') ? $install_action : ''),
+		'$install' => (($hosturl && $mode == 'view') ? $install_action : ''),
 		'$edit' => ((local_user() && $installed && $mode == 'edit') ? t('Edit') : ''),
 		'$delete' => ((local_user() && $installed && $mode == 'edit') ? t('Delete') : '')
 	));
