@@ -62,18 +62,21 @@ function parse_app_description($f) {
 	}
 
 
-
 	if(! $ret['photo'])
 		$ret['photo'] = $baseurl . '/' . get_default_profile_photo(80);
 
+	$ret['type'] = 'system';
 
 	foreach($ret as $k => $v) {
 		if(strpos($v,'http') === 0)
 			$ret[$k] = zid($v);
 	}
 
-	if(array_key_exists('hover',$ret))
-		$ret['hover'] = str_replace(array('\'','"'),array('&#39;','&dquot;'),$ret['hover']);
+	if(array_key_exists('desc',$ret))
+		$ret['desc'] = str_replace(array('\'','"'),array('&#39;','&dquot;'),$ret['desc']);
+
+	if(array_key_exists('target',$ret))
+		$ret['target'] = str_replace(array('\'','"'),array('&#39;','&dquot;'),$ret['target']);
 
 	if(array_key_exists('requires',$ret)) {
 		$require = trim(strtolower($ret['requires']));
@@ -270,6 +273,11 @@ function app_list($uid) {
 	$r = q("select * from app where app_channel = %d order by app_name asc",
 		intval($uid)
 	);
+	if($r) {
+		for($x = 0; $x < count($r); $x ++) {
+			$r[$x]['type'] = 'personal';
+		}
+	}
 	return($r);
 }
 
@@ -390,6 +398,8 @@ function app_update($arr) {
 function app_encode($app,$embed = false) {
 
 	$ret = array();
+
+	$ret['type'] = 'personal';
 
 	if($app['app_id'])
 		$ret['guid'] = $app['app_id'];
