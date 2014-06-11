@@ -643,7 +643,7 @@ msgstr "Kan mijn \"openbare\" fotoalbums zien"
 
 #: ../../include/permissions.php:16
 msgid "Can view my \"public\" address book"
-msgstr "Kan mijn \"openbaar\" adresboek zien"
+msgstr "Kan een lijst met mijn \"openbare\" connecties zien"
 
 #: ../../include/permissions.php:17
 msgid "Can view my \"public\" file storage"
@@ -655,7 +655,7 @@ msgstr "Kan mijn \"openbare\" pagina's zien"
 
 #: ../../include/permissions.php:21
 msgid "Can send me their channel stream and posts"
-msgstr "Kan mij hun kanaalstream en berichten sturen"
+msgstr "Kan mij de inhoud van hun kanaal en berichten sturen"
 
 #: ../../include/permissions.php:22
 msgid "Can post on my channel page (\"wall\")"
@@ -2639,7 +2639,7 @@ msgstr "Hubbeheerder"
 
 #: ../../include/apps.php:117
 msgid "Address Book"
-msgstr "Adresboek"
+msgstr "Connecties"
 
 #: ../../include/apps.php:131 ../../mod/mood.php:131
 msgid "Mood"
@@ -3532,7 +3532,7 @@ msgstr "netwerk"
 
 #: ../../mod/admin.php:52
 msgid "Theme settings updated."
-msgstr "Thema-instellingen aangepast."
+msgstr "Thema-instellingen bijgewerkt."
 
 #: ../../mod/admin.php:92 ../../mod/admin.php:440
 msgid "Site"
@@ -3607,7 +3607,7 @@ msgstr "Ingeschakelde plug-ins"
 
 #: ../../mod/admin.php:360
 msgid "Site settings updated."
-msgstr "Hub-instellingen aangepast"
+msgstr "Hub-instellingen bijgewerkt."
 
 #: ../../mod/admin.php:389 ../../mod/settings.php:708
 msgid "No special theme for mobile devices"
@@ -4134,7 +4134,7 @@ msgstr "[Niet ondersteund]"
 
 #: ../../mod/admin.php:1248
 msgid "Log settings updated."
-msgstr ""
+msgstr "Logboek-instellingen bijgewerkt."
 
 #: ../../mod/admin.php:1304
 msgid "Clear"
@@ -5015,7 +5015,7 @@ msgstr "Bericht bewerken"
 
 #: ../../mod/connedit.php:243
 msgid "Could not access address book record."
-msgstr "Kon geen toegang krijgen tot het adresboek-record."
+msgstr "Kon geen toegang krijgen tot de record van de connectie."
 
 #: ../../mod/connedit.php:257
 msgid "Refresh failed - channel is currently unavailable."
@@ -5033,7 +5033,7 @@ msgstr "Kanaal is geblokkeerd"
 #: ../../mod/connedit.php:293 ../../mod/connedit.php:305
 #: ../../mod/connedit.php:320
 msgid "Unable to set address book parameters."
-msgstr "Niet in staat om de adresboek-parameters in te stellen."
+msgstr "Niet in staat om de parameters van connecties in te stellen."
 
 #: ../../mod/connedit.php:276
 msgid "Channel has been unignored"
@@ -5443,7 +5443,7 @@ msgstr "Systeemfout opslaan van nieuwe e-mail. Probeer het nog een keer."
 
 #: ../../mod/settings.php:443
 msgid "Settings updated."
-msgstr ""
+msgstr "Instellingen bijgewerkt."
 
 #: ../../mod/settings.php:514 ../../mod/settings.php:540
 #: ../../mod/settings.php:576
@@ -5595,23 +5595,23 @@ msgstr "Maximaal 100 conversaties"
 
 #: ../../mod/settings.php:757
 msgid "Don't show emoticons"
-msgstr ""
+msgstr "Geen emoticons weergeven"
 
 #: ../../mod/settings.php:758
 msgid "System Page Layout Editor - (advanced)"
-msgstr ""
+msgstr "Lay-out bewerken van systeempagina's (geavanceerd)"
 
 #: ../../mod/settings.php:793
 msgid "Nobody except yourself"
-msgstr ""
+msgstr "Niemand, behalve jezelf"
 
 #: ../../mod/settings.php:794
 msgid "Only those you specifically allow"
-msgstr ""
+msgstr "Alleen connecties met uitdrukkelijke toestemming"
 
 #: ../../mod/settings.php:795
 msgid "Anybody in your address book"
-msgstr ""
+msgstr "Al jouw connecties"
 
 #: ../../mod/settings.php:796
 msgid "Anybody on this website"
@@ -6249,7 +6249,7 @@ msgstr "Layout bijgewerkt."
 
 #: ../../mod/pdledit.php:28 ../../mod/pdledit.php:53
 msgid "Edit System Page Description"
-msgstr ""
+msgstr "Systeempagina's bewerken"
 
 #: ../../mod/pdledit.php:48
 msgid "Layout not found."
