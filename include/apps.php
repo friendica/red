@@ -208,7 +208,7 @@ function app_render($papp,$mode = 'view') {
 		$hosturl = z_root() . '/';
 	}
 	elseif(remote_user()) {
-		$observer = get_app()->get_get_observer();
+		$observer = get_app()->get_observer();
 		if($observer && $observer['xchan_network'] === 'zot') {
 			// some folks might have xchan_url redirected offsite, use the connurl
 			$x = parse_url($observer['xchan_connurl']);
