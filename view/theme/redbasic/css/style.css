@@ -556,9 +556,11 @@ aside li {
 .pager_last,
 .pager_prev,
 .pager_next,
-.pager_n {
-	border: 1px solid black;
-	background: #EEE;
+.pager-prev,
+.pager-next,
+.pager_n { 
+	border: 1px solid $editbuttons_bordercolour;
+	background: $editbuttons_bgcolour;
 	padding: 4px;
 }
 
@@ -567,12 +569,11 @@ aside li {
 .pager_prev a,
 .pager_next a,
 .pager_n a {
-	text-decoration: none;
 }
 
 .pager_current {
-  border: 1px solid black;
-  background: #FFCCCC;
+  border: 1px solid transparent;
+  background: transparent;
   padding: 4px;
 }
 
@@ -988,6 +989,15 @@ aside li {
 .today {
 	font-weight: bold;
 	color: #FF0000;
+}
+
+.fc-state-highlight {
+    background: none repeat scroll 0% 0% $cal_bgcolour !important;
+}
+
+#fancybox-content {
+	border: 0px solid $fancybox_bgcolour;
+	background-color: $fancybox_bgcolour;
 }
 
 .settings-block {
@@ -2286,6 +2296,12 @@ blockquote {
 
 .btn-default.btn-sm:hover, .btn-default.btn-sm:focus, .btn-default.btn-sm:active .btn-default.btn-sm.active {
     	text-decoration: none;
+}
+
+.well {
+	background-color: $advperm_bgcolour;
+	border: 1px solid $advperm_bordercol;
+	background-image: linear-gradient(to bottom, $advperm_gradientcol 0px, $advperm_bgcolour 100%);
 }
 
 
