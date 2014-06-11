@@ -2002,6 +2002,13 @@ img.mail-list-sender-photo {
 	color: black;
 }
 
+.divgrow-showmore {
+	display: block;
+	width: 100%;
+	border-top: 1px dashed #ccc;
+	text-align: center;
+}
+
 /* widgets */
 
 .widget {
