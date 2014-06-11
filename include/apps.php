@@ -31,7 +31,7 @@ function get_system_apps() {
 			}
 		}
 	}
-	usort($ret,'app_name_compare');
+
 	return $ret;
 
 }

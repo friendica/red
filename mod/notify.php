@@ -11,15 +11,14 @@ function notify_init(&$a) {
 			intval(local_user())
 		);
 		if($r) {
-			q("update notify set seen = 1 where ( link = '%s' or ( parent != '' and parent = '%s' and otype = '%s' )) and uid = %d",
-				dbesc($r[0]['link']),
-				intval($r[0]['parent']),
+			q("update notify set seen = 1 where (( parent != '' and parent = '%s' and otype = '%s' ) or link = '%s' ) and uid = %d",
+				dbesc($r[0]['parent']),
 				dbesc($r[0]['otype']),
+				dbesc($r[0]['link']),
 				intval(local_user())
 			);
 			goaway($r[0]['link']);
 		}
-
 		goaway($a->get_baseurl(true));
 	}
 

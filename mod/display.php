@@ -166,6 +166,7 @@ function display_content(&$a, $update = 0, $load = false) {
 					$updateable = true;
 
 				}
+
 			}
 			if($r === null) {
 

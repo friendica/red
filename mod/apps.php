@@ -23,7 +23,7 @@ function apps_content(&$a) {
 	}
 	usort($syslist,'app_name_compare');
 
-	logger('apps: ' . print_r($syslist,true));
+//	logger('apps: ' . print_r($syslist,true));
 
 	foreach($syslist as $app) {
 		$apps[] = app_render($app,$mode);
