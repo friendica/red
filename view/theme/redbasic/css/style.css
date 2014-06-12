@@ -2006,8 +2006,15 @@ img.mail-list-sender-photo {
 	display: block;
 	width: 100%;
 	border-top: 1px dashed #ccc;
+	border-bottom-right-radius: $radiuspx;
+	border-bottom-left-radius: $radiuspx;
 	text-align: center;
 }
+
+.divgrow-showmore:hover {
+	background-color: $editbuttons_bghover;
+}
+
 
 /* widgets */
 
