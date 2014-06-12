@@ -984,7 +984,7 @@ msgstr "Start:"
 
 #: ../../include/bb2diaspora.php:455 ../../include/event.php:30
 msgid "Finishes:"
-msgstr "Eindigt:"
+msgstr "Einde:"
 
 #: ../../include/bb2diaspora.php:463 ../../include/event.php:40
 #: ../../include/identity.php:726 ../../mod/directory.php:156
@@ -6444,7 +6444,7 @@ msgstr "Volgorde is %s %s. Begintijd en titel zijn vereist."
 
 #: ../../mod/events.php:473
 msgid "Event Starts:"
-msgstr "Gebeurtenis begint:"
+msgstr "Begin gebeurtenis:"
 
 #: ../../mod/events.php:473 ../../mod/events.php:487 ../../mod/appman.php:91
 #: ../../mod/appman.php:92
@@ -6457,7 +6457,7 @@ msgstr "Einddatum/-tijd is niet bekend of niet relevant"
 
 #: ../../mod/events.php:478
 msgid "Event Finishes:"
-msgstr "Gebeurtenis eindigt:"
+msgstr "Einde gebeurtenis:"
 
 #: ../../mod/events.php:481
 msgid "Adjust for viewer timezone"
