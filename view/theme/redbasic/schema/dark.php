@@ -47,13 +47,19 @@
 	if (! $bgcolour)
 		$bgcolour = "#111";
 	if (! $item_colour)
-		$item_colour = "#111";
+		$item_colour = "rgba(28,28,28,0.8)";
+	if (! $comment_item_colour)
+		$comment_item_colour = "rgba(18,18,18,0.4)";
+	if (! $comment_border_colour)
+		$comment_border_colour = "rgba(28,28,28,0.8)";
 	if (! $toolicon_colour)
 		$toolicon_colour = '#999';
 	if (! $toolicon_activecolour)
 		$toolicon_activecolour = '#fff';
 	if (! $font_colour)
 		$font_colour = "#ccc";
+	if (! $widget_brdrcolour)
+		$widget_brdrcolour = "#333";
 	if (! $blockquote_colour)
 		$blockquote_colour = "#ccc";
 	if (! $blockquote_bgcolour)
@@ -66,6 +72,12 @@
 		$code_bgcolour = "#000";
 	if (! $code_txtcolour)
 		$code_txtcolour = "#fff";
+	if (! $pre_borderc)
+		$pre_borderc = "#090909";
+	if (! $pre_bgcolour)
+		$pre_bgcolour = "#000";
+	if (! $pre_txtcolour)
+		$pre_txtcolour = "#fff";
 	if (! $item_bordercolour)
 		$item_bordercolour = "#333";
 	if (! $notif_itemcolour)
@@ -84,8 +96,26 @@
 		$editbuttons_bgcolour = "#1e1e1e";
 	if (! $editbuttons_bordercolour)
 		$editbuttons_bordercolour = "#222";
+	if (! $editbuttons_colour)
+		$editbuttons_colour = "#ccc";
 	if (! $editbuttons_bghover)
 		$editbuttons_bghover = "#222";
+	if (! $dropdown_bgcolour)
+		$dropdown_bgcolour = "#222";
+	if (! $dropdown_textcolour)
+		$dropdown_textcolour = "#ccc";
+	if (! $dropdown_txtcolhover)
+		$dropdown_txtcolhover = "#ddd";
+	if (! $dropdown_bgcolhover)
+		$dropdown_bgcolhover = "#333";
+	if (! $dropdown_bgimghover)
+		$dropdown_bgimghover = "background-image: none;";
+	if (! $dropdown_togglecol)
+		$dropdown_togglecol = "#ccc";
+	if (! $dropdown_togglebgcol)
+		$dropdown_togglebgcol = "#222";
+	if (! $dropdown_bordercol)
+		$dropdown_bordercol = "#222";
 	if (! $preview_backgroundimg)
 		$preview_backgroundimg = "gray_and_black_diagonal_stripes_background_seamless.gif";
 	if (! $notify_bgcolour)
@@ -122,3 +152,15 @@
 		$aclbutton_linkcolour = "color: #fff;";
 	if (! $abookself_bgcolour)
 		$abookself_bgcolour = "#251111";
+	if(! $infomess_bgcolour)
+		$infomess_bgcolour = "#333";
+        if(! $advperm_bgcolour)
+                $advperm_bgcolour = "#1E1E1E";
+        if(! $advperm_bordercol)
+                $advperm_bordercol = "#222";
+        if(! $advperm_gradientcol)
+                $advperm_gradientcol = "#111";
+        if(! $cal_bgcolour)
+                 $cal_bgcolour = "#333";
+        if(! $fancybox_bgcolour)
+                $fancybox_bgcolour = "#1E1E1E";

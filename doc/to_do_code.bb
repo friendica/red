@@ -2,8 +2,6 @@
 
 We need much more than this, but here are areas where developers can help. Please edit this page when items are finished. Another place for developers to start is with the issues list.
 
-[li]Turn top-level Apps menu into an Apps page - which will probably require App plugins to have icons. Add documentation specifically to the plugin/addon documentation for creating apps. Add links to the App Store (which doesn't currently exist).[/li]
-
 [li]Documentation - see Red Documentation Project To-Do List[/li]
 
 [li]Infinite scroll to the directory pages[/li]
@@ -26,7 +24,7 @@ We need much more than this, but here are areas where developers can help. Pleas
 
 [li]templatise and translate the Web interface to webDAV[/li]
 
-[li]Extend WebDAV to provide desktop access to photo albums]/li]
+[li]Extend WebDAV to provide desktop access to photo albums[/li]
 
 [li]External post connectors - create standard interface[/li]
 
@@ -36,7 +34,7 @@ We need much more than this, but here are areas where developers can help. Pleas
 
 [li]service classes - account overview page showing resources consumed by channel. With special consideration this page can also be accessed at a meta level by the site admin to drill down on problematic accounts/channels.[/li]
 
-[li]Events module - bring back birthday reminders for friends, fix permissions on events, and provide JS translation support for the calendar overview; integrate with calDAV[/li]
+[li]Events module - fix permissions on events, and provide JS translation support for the calendar overview; integrate with calDAV[/li]
 
 [li]Events module - event followups and RSVP[/li]
 

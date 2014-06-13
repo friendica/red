@@ -73,7 +73,7 @@
 	});
 </script>
 
-
+{{if $editselect != 'none'}}
 <script language="javascript" type="text/javascript"
           src="{{$baseurl}}/library/tinymce/jscripts/tiny_mce/tiny_mce_src.js"></script>
 <script language="javascript" type="text/javascript">
@@ -81,7 +81,7 @@
 
 	tinyMCE.init({
 		theme : "advanced",
-		mode : "textareas",
+		mode : "{{$editselect}}",
 		plugins : "bbcode,paste",
 		theme_advanced_buttons1 : "bold,italic,underline,undo,redo,link,unlink,image,forecolor,formatselect,code",
 		theme_advanced_buttons2 : "",
@@ -106,7 +106,9 @@
 		}
 
 	});
-
+	{{else}}
+	<script language="javascript" type="text/javascript">
+	{{/if}}
 
 	$(document).ready(function() { 
 

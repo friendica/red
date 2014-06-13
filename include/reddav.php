@@ -892,7 +892,7 @@ class RedBrowser extends DAV\Browser\Plugin {
         $html .= "
 <body>
   <h1>Index for " . $this->escapeHTML($path) . "/</h1>
-  <table>
+  <table id=\"cloud-index\">
     <tr><th width=\"24\"></th><th>Name</th><th>Type</th><th>Size</th><th>Last modified</th></tr>
     <tr><td colspan=\"5\"><hr /></td></tr>";
 
@@ -1038,6 +1038,14 @@ class RedBrowser extends DAV\Browser\Plugin {
 
     public function htmlActionsPanel(DAV\INode $node, &$output) {
 
+
+	if($this->auth->owner_id && $this->auth->owner_id == $this->auth->channel_id) {
+			$channel = get_app()->get_channel();
+		if($channel) {
+			$output .= '<tr><td colspan="2"><a href="filestorage/' . $channel['channel_address'] . '" >' . t('Edit File properties') . '</a></td></tr><tr><td>&nbsp;</td></tr>';
+		}
+	}
+
         if (!$node instanceof DAV\ICollection)
             return;
 
@@ -1061,14 +1069,6 @@ class RedBrowser extends DAV\Browser\Plugin {
             <input type="submit" value="upload" />
             </form>
             </td></tr>';
-
-
-		if($this->auth->owner_id && $this->auth->owner_id == $this->auth->channel_id) {
-			$channel = get_app()->get_channel();
-			if($channel) {
-				$output .= '<tr><td>&nbsp;</td></tr><tr><td colspan="2"><a href="filestorage/' . $channel['channel_address'] . '" >' . t('Edit File properties') . '</a></td></tr>';
-			}
-		}
 
     }
 

@@ -62,6 +62,17 @@ function rpost_content(&$a) {
 		unset($_SESSION['rpost']);
 	}
 
+	if(array_key_exists('channel',$_REQUEST)) {
+		$r = q("select channel_id from channel where channel_account_id = %d and channel_address = '%s' limit 1",
+			intval(get_account_id()),
+			dbesc($_REQUEST['channel'])
+		);
+		if($r) {
+			require_once('include/security.php');
+			$change = change_channel($r[0]['channel_id']);
+		}
+	}
+
 	if($_REQUEST['remote_return']) {
 		$_SESSION['remote_return'] = $_REQUEST['remote_return'];
 	}

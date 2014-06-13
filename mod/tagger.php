@@ -97,6 +97,9 @@ function tagger_content(&$a) {
 
 	$bodyverb = t('%1$s tagged %2$s\'s %3$s with %4$s');
 
+	// saving here for reference
+	// also check out x22d5 and x0d6b and x0db8 and x24d0 and xff20 !!!
+
 	$termlink = html_entity_decode('&#x2317;') . '[zrl=' . $a->get_baseurl() . '/search?tag=' . urlencode($term) . ']'. $term . '[/zrl]';
 
 	$channel = $a->get_channel();

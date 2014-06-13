@@ -1,0 +1,6 @@
+url: $baseurl/randprof
+name: Random Channel
+target: randprof
+photo: $baseurl/app/randprof.png
+
+

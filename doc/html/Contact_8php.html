@@ -134,6 +134,8 @@ Functions</h2></td></tr>
 <tr class="separator:a6e64de7db60b7243dce45fb6347636ff"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a186162051a5127069cc851d78740f205"><td class="memItemLeft" align="right" valign="top">&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="Contact_8php.html#a186162051a5127069cc851d78740f205">channel_remove</a> ($channel_id, $local=true)</td></tr>
 <tr class="separator:a186162051a5127069cc851d78740f205"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a08845ce8c5b997d5edac38ae7118b5c8"><td class="memItemLeft" align="right" valign="top">&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="Contact_8php.html#a08845ce8c5b997d5edac38ae7118b5c8">mark_orphan_hubsxchans</a> ()</td></tr>
+<tr class="separator:a08845ce8c5b997d5edac38ae7118b5c8"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:acc12cda999c88c4d6185cca967c15125"><td class="memItemLeft" align="right" valign="top">&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="Contact_8php.html#acc12cda999c88c4d6185cca967c15125">remove_all_xchan_resources</a> ($xchan, $channel_id=0)</td></tr>
 <tr class="separator:acc12cda999c88c4d6185cca967c15125"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a28e062c884331dbb5dfa713228c25ad6"><td class="memItemLeft" align="right" valign="top">&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="Contact_8php.html#a28e062c884331dbb5dfa713228c25ad6">contact_remove</a> ($channel_id, $abook_id)</td></tr>
@@ -350,6 +352,24 @@ Functions</h2></td></tr>
 </div><div class="memdoc">
 
 <p>Referenced by <a class="el" href="connedit_8php.html#a795acb3d9d841f55c255d7611681ab67">connedit_content()</a>, and <a class="el" href="post_8php.html#af59e6a1dc22d19d9257b01cd7ccedb75">post_post()</a>.</p>
+
+</div>
+</div>
+<a class="anchor" id="a08845ce8c5b997d5edac38ae7118b5c8"></a>
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">mark_orphan_hubsxchans </td>
+          <td>(</td>
+          <td class="paramname"></td><td>)</td>
+          <td></td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+<p>mark any hubs "offline" that haven't been heard from in more than 30 days Allow them to redeem themselves if they come back later. Then go through all those that are newly marked and see if any other hubs are attached to the controlling xchan that are still alive. If not, they're dead (although they could come back some day). </p>
+
+<p>Referenced by <a class="el" href="poller_8php.html#a5f12df3a4738124b6c039971e87e76da">poller_run()</a>.</p>
 
 </div>
 </div>

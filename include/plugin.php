@@ -94,6 +94,17 @@ function load_plugin($plugin) {
 
 }
 
+function plugin_is_installed($name) {
+	$r = q("select name from addon where name = '%s' and installed = 1 limit 1",
+		dbesc($name)
+	);
+	if($r)
+		return true;
+	return false;
+}
+
+
+
 // reload all updated plugins
 
 function reload_plugins() {

@@ -1,0 +1,4 @@
+url: $baseurl/rpost?f=&body=%0A
+requires: observer
+name: Post
+photo: $baseurl/app/post.png

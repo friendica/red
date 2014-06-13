@@ -1,6 +1,7 @@
 var bbcode_8php =
 [
     [ "bb_location", "bbcode_8php.html#a3435c82a6c7693557800cdeb6848d0bd", null ],
+    [ "bb_parse_app", "bbcode_8php.html#abb02f1044ff1c635d12af690d0f2cfa2", null ],
     [ "bb_parse_crypt", "bbcode_8php.html#a851f5aafefe52474201b83f9fd65931f", null ],
     [ "bb_qr", "bbcode_8php.html#a98d0eecc620c19561639f06cfbe8e74c", null ],
     [ "bb_sanitize_style", "bbcode_8php.html#a3a989cbf308a32468d171d83e9c51d1e", null ],

@@ -124,8 +124,12 @@ Functions</h2></td></tr>
 <tr class="separator:a018ea4484910a873a7c1eaa126de9b1a"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a32ba1b9ddf7a744a9a1512b052e5f850"><td class="memItemLeft" align="right" valign="top">&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="event_8php.html#a32ba1b9ddf7a744a9a1512b052e5f850">ev_compare</a> ($a, $b)</td></tr>
 <tr class="separator:a32ba1b9ddf7a744a9a1512b052e5f850"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a89ef533faf345db8d64a58d4856bde3a"><td class="memItemLeft" align="right" valign="top">&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="event_8php.html#a89ef533faf345db8d64a58d4856bde3a">event_store</a> ($arr)</td></tr>
-<tr class="separator:a89ef533faf345db8d64a58d4856bde3a"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:af5ac41e7ea3f7131088fe6333fd2846c"><td class="memItemLeft" align="right" valign="top">&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="event_8php.html#af5ac41e7ea3f7131088fe6333fd2846c">event_store_event</a> ($arr)</td></tr>
+<tr class="separator:af5ac41e7ea3f7131088fe6333fd2846c"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:ac9f206819186b65952ac1869f0da8c6e"><td class="memItemLeft" align="right" valign="top">&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="event_8php.html#ac9f206819186b65952ac1869f0da8c6e">event_addtocal</a> ($item_id, $uid)</td></tr>
+<tr class="separator:ac9f206819186b65952ac1869f0da8c6e"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a7378e839ac3de9d55579eb3ec48eaf92"><td class="memItemLeft" align="right" valign="top">&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="event_8php.html#a7378e839ac3de9d55579eb3ec48eaf92">event_store_item</a> ($arr, $event)</td></tr>
+<tr class="separator:a7378e839ac3de9d55579eb3ec48eaf92"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table>
 <h2 class="groupheader">Function Documentation</h2>
 <a class="anchor" id="a180cccd63c2a2f00ff432b03113531f3"></a>
@@ -142,7 +146,7 @@ Functions</h2></td></tr>
       </table>
 </div><div class="memdoc">
 
-<p>Referenced by <a class="el" href="bbcode_8php.html#a009f61aaf78771737ed0765c8463911b">bbcode()</a>, <a class="el" href="event_8php.html#a184d6b9690e5b6dee35a0aa9edd47279">bbtovcal()</a>, <a class="el" href="items_8php.html#a8794863cdf8ce1333040933d3a3f66bd">consume_feed()</a>, and <a class="el" href="zot_8php.html#a4d9e6ca295e443b740d9960c304b3474">process_delivery()</a>.</p>
+<p>Referenced by <a class="el" href="bbcode_8php.html#a009f61aaf78771737ed0765c8463911b">bbcode()</a>, <a class="el" href="event_8php.html#a184d6b9690e5b6dee35a0aa9edd47279">bbtovcal()</a>, <a class="el" href="items_8php.html#a8794863cdf8ce1333040933d3a3f66bd">consume_feed()</a>, and <a class="el" href="event_8php.html#ac9f206819186b65952ac1869f0da8c6e">event_addtocal()</a>.</p>
 
 </div>
 </div>
@@ -188,12 +192,40 @@ Functions</h2></td></tr>
 
 </div>
 </div>
-<a class="anchor" id="a89ef533faf345db8d64a58d4856bde3a"></a>
+<a class="anchor" id="ac9f206819186b65952ac1869f0da8c6e"></a>
 <div class="memitem">
 <div class="memproto">
       <table class="memname">
         <tr>
-          <td class="memname">event_store </td>
+          <td class="memname">event_addtocal </td>
+          <td>(</td>
+          <td class="paramtype">&#160;</td>
+          <td class="paramname"><em>$item_id</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">&#160;</td>
+          <td class="paramname"><em>$uid</em>&#160;</td>
+        </tr>
+        <tr>
+          <td></td>
+          <td>)</td>
+          <td></td><td></td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+<p>Referenced by <a class="el" href="events_8php.html#a1d293fb217ae6bc9e3858c4b32e363ec">events_content()</a>.</p>
+
+</div>
+</div>
+<a class="anchor" id="af5ac41e7ea3f7131088fe6333fd2846c"></a>
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">event_store_event </td>
           <td>(</td>
           <td class="paramtype">&#160;</td>
           <td class="paramname"><em>$arr</em></td><td>)</td>
@@ -202,7 +234,35 @@ Functions</h2></td></tr>
       </table>
 </div><div class="memdoc">
 
-<p>Referenced by <a class="el" href="events_8php.html#ab3e8a8f901175f8e40a8089eea45c075">events_post()</a>, and <a class="el" href="zot_8php.html#a4d9e6ca295e443b740d9960c304b3474">process_delivery()</a>.</p>
+<p>Referenced by <a class="el" href="event_8php.html#ac9f206819186b65952ac1869f0da8c6e">event_addtocal()</a>, <a class="el" href="events_8php.html#ab3e8a8f901175f8e40a8089eea45c075">events_post()</a>, and <a class="el" href="datetime_8php.html#af1cd77c97c901d9239cb7a61f97f9826">update_birthdays()</a>.</p>
+
+</div>
+</div>
+<a class="anchor" id="a7378e839ac3de9d55579eb3ec48eaf92"></a>
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">event_store_item </td>
+          <td>(</td>
+          <td class="paramtype">&#160;</td>
+          <td class="paramname"><em>$arr</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">&#160;</td>
+          <td class="paramname"><em>$event</em>&#160;</td>
+        </tr>
+        <tr>
+          <td></td>
+          <td>)</td>
+          <td></td><td></td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+<p>Referenced by <a class="el" href="events_8php.html#ab3e8a8f901175f8e40a8089eea45c075">events_post()</a>, and <a class="el" href="datetime_8php.html#af1cd77c97c901d9239cb7a61f97f9826">update_birthdays()</a>.</p>
 
 </div>
 </div>
@@ -220,7 +280,7 @@ Functions</h2></td></tr>
       </table>
 </div><div class="memdoc">
 
-<p>Referenced by <a class="el" href="event_8php.html#a89ef533faf345db8d64a58d4856bde3a">event_store()</a>.</p>
+<p>Referenced by <a class="el" href="event_8php.html#a7378e839ac3de9d55579eb3ec48eaf92">event_store_item()</a>.</p>
 
 </div>
 </div>

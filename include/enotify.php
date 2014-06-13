@@ -345,6 +345,8 @@ function notification($params) {
 	$datarray['verb']   = $params['verb'];
 	$datarray['otype']  = $params['otype'];
  	$datarray['abort']  = false;
+
+	$datarray['item'] = $params['item'];
  
 	call_hooks('enotify_store', $datarray);
 

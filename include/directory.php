@@ -48,13 +48,7 @@ function directory_run($argv, $argc){
 	}
 
 	$directory = find_upstream_directory($dirmode);
-
-	if($directory) {
-		$url = $directory['url'] . '/post';
-	}
-	else {
-		$url = DIRECTORY_FALLBACK_MASTER . '/post';
-	}
+	$url = $directory['url'] . '/post';
 
 	// ensure the upstream directory is updated
 

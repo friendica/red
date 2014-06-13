@@ -223,3 +223,28 @@ function comanche_region(&$a,$s) {
 	return $s;
 }
 
+
+/*
+ * @function register_page_template($arr)
+ *   Registers a page template/variant for use by Comanche selectors
+ * @param array $arr
+ *    'template' => template name
+ *    'variant' => array(
+ *           'name' => variant name
+ *           'desc' => text description
+ *           'regions' => array(
+ *               'name' => name
+ *               'desc' => text description
+ *           )
+ *    )
+ */
+
+
+function register_page_template($arr) {
+	get_app()->page_layouts[$arr['template']] = array($arr['variant']);
+	return;
+}
+
+
+
+

@@ -171,6 +171,10 @@ function zot_finger($webbie,$channel,$autofallback = true) {
 		return array('success' => false);
 	}		
 
+	// potential issue here; the xchan_addr points to the primary hub.
+	// The webbie we were called with may not, so it might not be found
+	// unless we query for hubloc_addr instead of xchan_addr
+
 	$r = q("select xchan.*, hubloc.* from xchan 
 			left join hubloc on xchan_hash = hubloc_hash
 			where xchan_addr = '%s' and (hubloc_flags & %d) limit 1",
@@ -351,14 +355,29 @@ function zot_refresh($them,$channel = null, $force = false) {
 				intval(ABOOK_FLAG_SELF)
 			);
 
+			if(array_key_exists('profile',$j) && array_key_exists('next_birthday',$j['profile'])) {	
+				$next_birthday = datetime_convert('UTC','UTC',$j['profile']['next_birthday']);
+			}
+			else {
+				$next_birthday = '0000-00-00 00:00:00';
+			}
+
 			if($r) {
+
+				// if the dob is the same as what we have stored (disregarding the year), keep the one 
+				// we have as we may have updated the year after sending a notification; and resetting
+				// to the one we just received would cause us to create duplicated events. 
+
+				if(substr($r[0]['abook_dob'],5) == substr($next_birthday,5))
+					$next_birthday = $r[0]['abook_dob'];
 
 				$current_abook_connected = (($r[0]['abook_flags'] & ABOOK_FLAG_UNCONNECTED) ? 0 : 1);
 		
-				$y = q("update abook set abook_their_perms = %d
+				$y = q("update abook set abook_their_perms = %d, abook_dob = '%s'
 					where abook_xchan = '%s' and abook_channel = %d 
 					and not (abook_flags & %d) limit 1",
 					intval($their_perms),
+					dbesc($next_birthday),
 					dbesc($x['hash']),
 					intval($channel['channel_id']),
 					intval(ABOOK_FLAG_SELF)
@@ -398,7 +417,7 @@ function zot_refresh($them,$channel = null, $force = false) {
 				if($z)
 					$default_perms = intval($z[0]['abook_my_perms']);		
 
-				$y = q("insert into abook ( abook_account, abook_channel, abook_xchan, abook_their_perms, abook_my_perms, abook_created, abook_updated, abook_flags ) values ( %d, %d, '%s', %d, %d, '%s', '%s', %d )",
+				$y = q("insert into abook ( abook_account, abook_channel, abook_xchan, abook_their_perms, abook_my_perms, abook_created, abook_updated, abook_dob, abook_flags ) values ( %d, %d, '%s', %d, %d, '%s', '%s', '%s', %d )",
 					intval($channel['channel_account_id']),
 					intval($channel['channel_id']),
 					dbesc($x['hash']),
@@ -406,6 +425,7 @@ function zot_refresh($them,$channel = null, $force = false) {
 					intval($default_perms),
 					dbesc(datetime_convert()),
 					dbesc(datetime_convert()),
+					dbesc($next_birthday),
 					intval(($default_perms) ? 0 : ABOOK_FLAG_PENDING)
 				);
 
@@ -425,7 +445,7 @@ function zot_refresh($them,$channel = null, $force = false) {
 						intval($channel['channel_id']),
 						dbesc($x['hash'])
 					);
-					if(($new_connection) && (! $default_perms)) {
+					if($new_connection) {
 						require_once('include/enotify.php');
 						notification(array(
 							'type'         => NOTIFY_INTRO,
@@ -836,6 +856,24 @@ function import_xchan($arr,$ud_flags = UPDATE_FLAGS_UPDATED) {
 						intval($r[0]['hubloc_id'])
 					);
 				}
+				if($r[0]['hubloc_status'] & HUBLOC_OFFLINE) {
+					q("update hubloc set hubloc_status = (hubloc_status ^ %d) where hubloc_id = %d limit 1",
+						intval(HUBLOC_OFFLINE),
+						intval($r[0]['hubloc_id'])
+					);
+					if($r[0]['hubloc_flags'] & HUBLOC_FLAGS_ORPHANCHECK) {
+						q("update hubloc set hubloc_flags = (hubloc_flags ^ %d) where hubloc_id = %d limit 1",
+							intval(HUBLOC_FLAGS_ORPHANCHECK),
+							intval($r[0]['hubloc_id'])
+						);
+					}
+					q("update xchan set xchan_flags = (xchan_flags ^ %d) where (xchan_flags & %d) and xchan_hash = '%s' limit 1",
+						intval(XCHAN_FLAGS_ORPHAN),
+						intval(XCHAN_FLAGS_ORPHAN),
+						dbesc($xchan_hash)
+					);
+
+				} 
 
 				// Remove pure duplicates
 				if(count($r) > 1) {
@@ -1448,37 +1486,6 @@ function process_delivery($sender,$arr,$deliveries,$relay,$public = false) {
 			continue;
 		}
 
-		// for events, extract the event info and create an event linked to an item 
-
-		if((x($arr,'obj_type')) && (activity_match($arr['obj_type'],ACTIVITY_OBJ_EVENT))) {
-			require_once('include/event.php');
-			$ev = bbtoevent($arr['body']);
-		if(x($ev,'desc') && x($ev,'start')) {
-				$ev['event_xchan'] = $arr['author_xchan'];
-				$ev['uid']         = $channel['channel_id'];
-				$ev['account']     = $channel['channel_account_id'];
-				$ev['edited']      = $arr['edited'];
-				$ev['mid']         = $arr['mid'];
-				$ev['private']     = $arr['item_private'];
-
-				// is this an edit?
-
-				$r = q("SELECT resource_id FROM item where mid = '%s' and uid = %d and resource_type = 'event' limit 1",
-					dbesc($arr['mid']),
-					intval($channel['channel_id'])
-				);
-				if($r) {
-					$ev['event_hash'] = $r[0]['resource_id'];
-				}
-
-				$xyz = event_store($ev);
-				add_source_route($xyz,$sender['hash']);
-
-				$result = array($d['hash'],'event processed',$channel['channel_name'] . ' <' . $channel['channel_address'] . '@' . get_app()->get_hostname() . '>',$arr['mid']);
-				continue;
-			}
-		}
-
 		$r = q("select id, edited from item where mid = '%s' and uid = %d limit 1",
 			dbesc($arr['mid']),
 			intval($channel['channel_id'])
@@ -1497,6 +1504,9 @@ function process_delivery($sender,$arr,$deliveries,$relay,$public = false) {
 			$arr['uid'] = $channel['channel_id'];
 			$item_result = item_store($arr);
 			$item_id = $item_result['item_id'];
+			$parr = array('item_id' => $item_id,'item' => $arr,'sender' => $sender,'channel' => $channel);
+			call_hooks('activity_received',$parr);
+
 			add_source_route($item_id,$sender['hash']);
 
 			$result[] = array($d['hash'],(($item_id) ? 'posted' : 'storage failed:' . $item_result['message']),$channel['channel_name'] . ' <' . $channel['channel_address'] . '@' . get_app()->get_hostname() . '>',$arr['mid']);

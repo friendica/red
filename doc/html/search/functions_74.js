@@ -1,6 +1,6 @@
 var searchData=
 [
-  ['t',['t',['../language_8php.html#aae0c3638fb476ae1e31f8d242f5dac04',1,'language.php']]],
+  ['t',['t',['../language_8php.html#ac6ae482ee54fa2764d5c2e77305aeb96',1,'language.php']]],
   ['tag_5fdeliver',['tag_deliver',['../items_8php.html#ab1bce4261bcf75ad62753b498a144d17',1,'items.php']]],
   ['tag_5fsort_5flength',['tag_sort_length',['../text_8php.html#ac2ff88e800f74b22e9cc091c10809c54',1,'text.php']]],
   ['tagadelic',['tagadelic',['../taxonomy_8php.html#aaf90ba8b839d6459065f39a4f1109b8a',1,'taxonomy.php']]],
@@ -31,8 +31,9 @@ var searchData=
   ['toggle_5fmobile_5finit',['toggle_mobile_init',['../toggle__mobile_8php.html#aca53ade8971802b45c31e722b22c6254',1,'toggle_mobile.php']]],
   ['toggle_5fsafesearch_5finit',['toggle_safesearch_init',['../toggle__safesearch_8php.html#a23d5cfb2727a266e44993ffbf5595a79',1,'toggle_safesearch.php']]],
   ['toggle_5ftheme',['toggle_theme',['../admin_8php.html#af81f081851791cd15e49e8ff6722dc27',1,'admin.php']]],
+  ['translate_5fsystem_5fapps',['translate_system_apps',['../include_2apps_8php.html#a48289d5cc44b7638191738106ac5d030',1,'apps.php']]],
   ['tryoembed',['tryoembed',['../bbcode_8php.html#a55b0cb6973f1ec731de0e726bcc0efa7',1,'bbcode.php']]],
   ['tryzrlaudio',['tryzrlaudio',['../bbcode_8php.html#a39de4de32a9456d1ca914d0dc52bd322',1,'bbcode.php']]],
   ['tryzrlvideo',['tryzrlvideo',['../bbcode_8php.html#aa92f119341f4c69dcef2768a013079b8',1,'bbcode.php']]],
-  ['tt',['tt',['../language_8php.html#ae310fb3880484ee1cc4faefe0c63c06d',1,'language.php']]]
+  ['tt',['tt',['../language_8php.html#a686bcafa6b0d5c86d37b38a1db5b6997',1,'language.php']]]
 ];

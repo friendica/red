@@ -11,7 +11,11 @@ $session_expire = 180000;
 
 function new_cookie($time) {
     $old_sid = session_id();
-    session_set_cookie_params("$time");
+
+// ??? This shouldn't have any effect if called after session_start()
+// We probably need to set the session expiration and change the PHPSESSID cookie.
+
+    session_set_cookie_params($time);
     session_regenerate_id(false);
 
     q("UPDATE session SET sid = '%s' WHERE sid = '%s'", dbesc(session_id()), dbesc($old_sid));

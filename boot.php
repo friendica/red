@@ -47,11 +47,10 @@ define ( 'RED_PLATFORM',            'Red Matrix' );
 define ( 'RED_VERSION',             trim(file_get_contents('version.inc')) . 'R');
 define ( 'ZOT_REVISION',            1     );
 
-define ( 'DB_UPDATE_VERSION',       1107  );
+define ( 'DB_UPDATE_VERSION',       1112  );
 
 define ( 'EOL',                    '<br />' . "\r\n"     );
 define ( 'ATOM_TIME',              'Y-m-d\TH:i:s\Z' );
-
 
 
 define ( 'DIRECTORY_MODE_NORMAL',      0x0000);  // This is technically DIRECTORY_MODE_TERTIARY, but it's the default, hence 0x0000
@@ -66,6 +65,14 @@ define ( 'DIRECTORY_MODE_STANDALONE',  0x0100);
 
 define ( 'DIRECTORY_REALM',            'RED_GLOBAL');
 define ( 'DIRECTORY_FALLBACK_MASTER',  'https://zothub.com');
+
+$DIRECTORY_FALLBACK_SERVERS = array( 
+	'https://zothub.com', 
+	'https://zotid.net', 
+	'https://redmatrix.nl', 
+	'https://whogotzot.com', 
+	'https://red.mariovavti.com'
+);
 
 
 /**
@@ -339,7 +346,7 @@ define ( 'DROPITEM_PHASE2',      2);
  * Maximum number of "people who like (or don't like) this"  that we will list by name
  */
 
-define ( 'MAX_LIKERS',    75);
+define ( 'MAX_LIKERS',    10);
 
 /**
  * Communication timeout
@@ -376,6 +383,7 @@ define ( 'NOTIFY_SYSTEM',   0x8000 );
 
 define ( 'HUBLOC_FLAGS_PRIMARY',      0x0001);
 define ( 'HUBLOC_FLAGS_UNVERIFIED',   0x0002);
+define ( 'HUBLOC_FLAGS_ORPHANCHECK',  0x0004); 
 define ( 'HUBLOC_FLAGS_DELETED',      0x1000);
 
 define ( 'XCHAN_FLAGS_NORMAL',		  0x0000);
@@ -389,12 +397,11 @@ define ( 'XCHAN_FLAGS_DELETED',       0x1000);
  * Traficlights for Administration of HubLoc
  * to detect problems in inter server communication
  */
-define ('HUBLOC_NOTUSED',	0x0000);
-define ('HUBLOC_SEND_ERROR',	0x0001);
-define ('HUBLOC_RECEIVE_ERROR',	0x0002);
-define ('HUBLOC_WORKS',		0x0004);
-define ('HUBLOC_OFFLINE',	0x0008);
-
+define ('HUBLOC_NOTUSED',             0x0000);
+define ('HUBLOC_SEND_ERROR',          0x0001);
+define ('HUBLOC_RECEIVE_ERROR',       0x0002);
+define ('HUBLOC_WORKS',               0x0004);
+define ('HUBLOC_OFFLINE',             0x0008);
 
 /**
  * Tag/term types
@@ -416,6 +423,7 @@ define ( 'TERM_OBJ_PROFILE', 3 );
 define ( 'TERM_OBJ_CHANNEL', 4 );
 define ( 'TERM_OBJ_OBJECT',  5 );
 define ( 'TERM_OBJ_THING',   6 );
+define ( 'TERM_OBJ_APP',     7 );
 
 
 /**

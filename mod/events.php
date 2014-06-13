@@ -125,9 +125,10 @@ function events_post(&$a) {
 	$datarray['created'] = $created;
 	$datarray['edited'] = $edited;
 
-	$item_id = event_store($datarray);
+	$event = event_store_event($datarray);
+	$item_id = event_store_item($datarray,$event);
 
-	if(! $cid)
+	if($share)
 		proc_run('php',"include/notifier.php","event","$item_id");
 
 }
@@ -158,8 +159,18 @@ function events_content(&$a) {
 	}
 
 
+	$plaintext = true;
+
+	if(feature_enabled(local_user(),'richtext'))
+		$plaintext = false;
+
+
+
 	$htpl = get_markup_template('event_head.tpl');
-	$a->page['htmlhead'] .= replace_macros($htpl,array('$baseurl' => $a->get_baseurl()));
+	$a->page['htmlhead'] .= replace_macros($htpl,array(
+		'$baseurl' => $a->get_baseurl(),
+		'$editselect' => (($plaintext) ? 'none' : 'textareas')
+	));
 
 	$o ="";
 	// tabs
@@ -180,6 +191,10 @@ function events_content(&$a) {
 			$mode = 'edit';
 			$event_id = argv(2);
 		}
+		if(argc() > 2 && argv(1) === 'add') {
+			$mode = 'add';
+			$item_id = intval(argv(2));
+		}
 		if(argv(1) === 'new') {
 			$mode = 'new';
 			$event_id = '';
@@ -189,6 +204,11 @@ function events_content(&$a) {
 			$y = intval(argv(1));
 			$m = intval(argv(2));
 		}
+	}
+
+	if($mode === 'add') {
+		event_addtocal($item_id,local_user());
+		killme();
 	}
 
 	if($mode == 'view') {
@@ -332,7 +352,7 @@ function events_content(&$a) {
 					'is_first'=>$is_first,
 					'item'=>$rr,
 					'html'=>$html,
-					'plink' => array($rr['plink'],t('link to source'),'',''),
+					'plink' => array($rr['plink'],t('Link to Source'),'',''),
 				);
 
 
@@ -400,7 +420,6 @@ function events_content(&$a) {
 		if($orig_event['event_xchan'])
 			$sh_checked .= ' disabled="disabled" ';
 
-		$tpl = get_markup_template('event_form.tpl');
 
 		$sdt = ((x($orig_event)) ? $orig_event['start'] : 'now');
 		$fdt = ((x($orig_event)) ? $orig_event['finish'] : 'now');
@@ -439,6 +458,7 @@ function events_content(&$a) {
 			'deny_gid' => $channel['channel_deny_gid']
 		); 
 
+		$tpl = get_markup_template('event_form.tpl');
 
 
 		$o .= replace_macros($tpl,array(

@@ -3,6 +3,10 @@
 function _well_known_init(&$a){
 
 	if(argc() > 1) {
+
+		$arr = array('server' => $_SERVER, 'request' => $_REQUEST);
+		call_hooks('well_known', $arr);
+
 		switch(argv(1)) {
 			case 'zot-info':
 				$a->argc -= 1;
@@ -19,6 +23,7 @@ function _well_known_init(&$a){
 				require_once('mod/wfinger.php');
 				wfinger_init($a);
 				break;
+
 			case 'host-meta':
 				$a->argc -= 1;
 				array_shift($a->argv);
@@ -26,6 +31,7 @@ function _well_known_init(&$a){
 				require_once('mod/hostxrd.php');
 				hostxrd_init($a);
 				break;
+
 			default:
 				break;
 

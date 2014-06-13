@@ -953,15 +953,20 @@ function advanced_profile(&$a) {
 		
 
 		if(($a->profile['dob']) && ($a->profile['dob'] != '0000-00-00')) {
+
+			$val = '';
+
+			if((substr($a->profile['dob'],5,2) === '00') || (substr($a->profile['dob'],8,2) === '00'))
+				$val = substr($a->profile['dob'],0,4);
 		
 			$year_bd_format = t('j F, Y');
 			$short_bd_format = t('j F');
 
-		
-			$val = ((intval($a->profile['dob'])) 
-				? day_translate(datetime_convert('UTC','UTC',$a->profile['dob'] . ' 00:00 +00:00',$year_bd_format))
-				: day_translate(datetime_convert('UTC','UTC','2001-' . substr($a->profile['dob'],5) . ' 00:00 +00:00',$short_bd_format)));
-
+			if(! $val) {
+				$val = ((intval($a->profile['dob'])) 
+					? day_translate(datetime_convert('UTC','UTC',$a->profile['dob'] . ' 00:00 +00:00',$year_bd_format))
+					: day_translate(datetime_convert('UTC','UTC','2001-' . substr($a->profile['dob'],5) . ' 00:00 +00:00',$short_bd_format)));
+			}
 			$profile['birthday'] = array( t('Birthday:'), $val);
 
 		}

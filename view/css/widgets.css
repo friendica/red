@@ -45,8 +45,11 @@
 	margin: 10px 0 7px 0;
 }
 
-#search-save {
-	margin: 10px 0 7px 5px;
+#netsearch-box #search-save {
+	margin: 9px 0 7px 6px;
+}
+.search-save {
+	margin: 7px 0 7px 7px;
 }
 
 .saved-search-li {
@@ -90,6 +93,10 @@
 
 
 /* posted date */
+
+.posted-date-selector-months {
+	margin-left: 10px;
+}
 
 #datebrowse-sidebar select {
 	width: 190px;
@@ -162,4 +169,10 @@ li:hover .group-edit-icon {
 
 #photo-albums-upload-link {
 	margin-top: 10px;
+}
+
+/* Chatrooms */
+
+.chatroomlist td {
+	padding: 0 5px 0;
 }

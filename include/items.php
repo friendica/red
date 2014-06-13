@@ -9,13 +9,6 @@ require_once('include/permissions.php');
 
 function collect_recipients($item,&$private) {
 
-// FIXME - this needs a revision to handle public scope (this site, this network, etc.)
-// We'll be changing this to return an array of
-// - recipients
-// - private
-// - scope if message is public ('global', 'network: red', 'site: $sitename', 'connections')
-// The receiving site will need to check the scope before creating a list of local recipients
-
 	require_once('include/group.php');
 
 	$private = ((intval($item['item_private'])) ? true : false);
@@ -113,6 +106,7 @@ function collect_recipients($item,&$private) {
  * If it is, you should be able to use perm_is_allowed( ... 'post_comments'), and if it isn't you need to call 
  * can_comment_on_post()
  */
+
 function can_comment_on_post($observer_xchan,$item) {
 
 //	logger('can_comment_on_post: comment_policy: ' . $item['comment_policy'], LOGGER_DEBUG);
@@ -153,6 +147,21 @@ function can_comment_on_post($observer_xchan,$item) {
 	return false;
 }
 
+/**
+ * @function add_source_route($iid,$hash)
+ *    Adds $hash to the item source route specified by $iid
+ * @param integer $iid 
+ *    item['id'] of target item
+ * @param string $hash
+ *    xchan_hash of the channel that sent the item
+ * Modifies item pointed to by $iid
+ *
+ * $item['route'] contains a comma-separated list of xchans that sent the current message, 
+ * somewhat analogous to the * Received: header line in email. We can use this to perform
+ * loop detection and to avoid sending a particular item to any "upstream" sender (they 
+ * already have a copy because they sent it to us).  
+ *
+ */
 
 function add_source_route($iid,$hash) {
 //	logger('add_source_route ' . $iid . ' ' . $hash, LOGGER_DEBUG);
@@ -228,6 +237,31 @@ function red_unescape_codeblock($m) {
 	return '[' . $m[2] . base64_decode($m[1]) . '[/' . $m[2] . ']';
 	
 }
+
+
+function red_zrlify_img_callback($matches) {
+	$m = @parse_url($matches[2]);
+	$zrl = false;
+	if($m['host']) {
+		$r = q("select hubloc_url from hubloc where hubloc_host = '%s' limit 1",
+			dbesc($m['host'])
+		);
+		if($r)
+			$zrl = true;
+	}
+
+	$t = strip_zids($matches[2]);
+	if($t !== $matches[2]) {
+		$zrl = true;
+		$matches[2] = $t;
+	}
+
+	if($zrl)
+		return '[zmg' . $matches[1] . ']' . $matches[2] . '[/zmg]';
+	return $matches[0];
+}
+
+
 
 
 /**
@@ -352,6 +386,10 @@ function post_activity_item($arr) {
 
 }
 
+/**
+ * @function get_public_feed($channel,$params)
+ *     generate an Atom feed
+ */
 
 function get_public_feed($channel,$params) {
 
@@ -387,6 +425,9 @@ function get_public_feed($channel,$params) {
 	
 	return get_feed_for($channel,get_observer_hash(),$params);
 }
+
+
+
 
 function get_feed_for($channel, $observer_hash, $params) {
 
@@ -1822,6 +1863,9 @@ function item_store($arr,$allow_exec = false) {
 		return $ret;
 	}
 
+	call_hooks('item_store',$arr);
+
+	// This hook remains for backward compatibility.
 	call_hooks('post_remote',$arr);
 
 	if(x($arr,'cancel')) {
@@ -1951,8 +1995,6 @@ function item_store($arr,$allow_exec = false) {
 
 
 function item_store_update($arr,$allow_exec = false) {
-
-
 
 	$d = array('item' => $arr, 'allow_exec' => $allow_exec);
 	call_hooks('item_store_update', $d );
@@ -2100,7 +2142,7 @@ function item_store_update($arr,$allow_exec = false) {
 //	$arr['item_flags']    = ((x($arr,'item_flags'))    ? intval($arr['item_flags'])          : $orig[0]['item_flags'] );
 	
 	$arr['sig']           = ((x($arr,'sig'))           ? $arr['sig']                         : '');
-	$arr['layout_mid']     = ((x($arr,'layout_mid'))    ? dbesc($arr['layout_mid'])           : $orig[0]['layout_mid'] );
+	$arr['layout_mid']    = ((array_key_exists('layout_mid',$arr)) ? dbesc($arr['layout_mid'])           : $orig[0]['layout_mid'] );
 
 	call_hooks('post_remote_update',$arr);
 
@@ -2284,27 +2326,6 @@ function tag_deliver($uid,$item_id) {
 
 	$item = $i[0];
 
-
-	$terms = get_terms_oftype($item['term'],TERM_BOOKMARK);
-
-	if($terms && (! $item['item_restrict'])) {
-		logger('tag_deliver: found bookmark');
-		$bookmark_self = intval(get_pconfig($uid,'system','bookmark_self'));
-		if(perm_is_allowed($u[0]['channel_id'],$item['author_xchan'],'bookmark') && (($item['author_xchan'] != $u[0]['channel_hash']) || ($bookmark_self))) {
-			require_once('include/bookmarks.php');
-			require_once('include/Contact.php');
-
-			$s = q("select * from xchan where xchan_hash = '%s' limit 1",
-				dbesc($item['author_xchan'])
-			);
-			if($s) {
-				foreach($terms as $t) {
-					bookmark_add($u[0],$s[0],$t,$item['item_private']);
-				}
-			}
-		}
-	}
-
 	if(($item['source_xchan']) && ($item['item_flags'] & ITEM_UPLINK) && ($item['item_flags'] & ITEM_THREAD_TOP) && ($item['edited'] != $item['created'])) {
 		// this is an update to a post which was already processed by us and has a second delivery chain
 		// Just start the second delivery chain to deliver the updated post
@@ -2312,6 +2333,34 @@ function tag_deliver($uid,$item_id) {
 		return;
 	}
 
+
+	if (stristr($item['verb'],ACTIVITY_POKE)) {
+		$poke_notify = true;
+
+		if(($item['obj_type'] == "") || ($item['obj_type'] !== ACTIVITY_OBJ_PERSON) || (! $item['object'])) 
+				$poke_notify = false;
+
+		$obj = json_decode_plus($item['object']);
+		if($obj) {
+			if($obj['id'] !== $u[0]['channel_hash'])
+				$poke_notify = false;
+		}
+
+		$verb = urldecode(substr($item['verb'],strpos($item['verb'],'#')+1));
+		if($poke_notify) {
+			require_once('include/enotify.php');
+			notification(array(
+				'to_xchan'     => $u[0]['channel_hash'],
+				'from_xchan'   => $item['author_xchan'],
+				'type'         => NOTIFY_POKE,
+				'item'         => $item,
+				'link'         => $i[0]['llink'],
+				'verb'         => ACTIVITY_POKE,
+				'activity'     => $verb,
+				'otype'        => 'item'
+			));
+		}
+	}
 
 	if($item['obj_type'] === ACTIVITY_OBJ_TAGTERM) {
 
@@ -2417,7 +2466,7 @@ function tag_deliver($uid,$item_id) {
 
 	if($terms) {
 		foreach($terms as $term) {
-			if((strcasecmp($term['term'],$u[0]['channel_name']) == 0) && link_compare($term['url'],$link)) {			
+			if(link_compare($term['url'],$link)) {			
 				$mention = true;
 				break;
 			}
@@ -2453,11 +2502,11 @@ function tag_deliver($uid,$item_id) {
 		$tagged = false;
 		$plustagged = false;
 
-		$pattern = '/@\!?\[zrl\=' . preg_quote($term['url'],'/') . '\]' . preg_quote($u[0]['channel_name'],'/') . '\[\/zrl\]/';
+		$pattern = '/@\!?\[zrl\=' . preg_quote($term['url'],'/') . '\]' . preg_quote($term['term'],'/') . '\[\/zrl\]/';
 		if(preg_match($pattern,$body,$matches)) 
 			$tagged = true;
 
-		$pattern = '/@\!?\[zrl\=' . preg_quote($term['url'],'/') . '\]' . preg_quote($u[0]['channel_name'] . '+','/') . '\[\/zrl\]/';
+		$pattern = '/@\!?\[zrl\=' . preg_quote($term['url'],'/') . '\]' . preg_quote($term['term'] . '+','/') . '\[\/zrl\]/';
 		if(preg_match($pattern,$body,$matches)) 
 			$plustagged = true;
 
@@ -2466,6 +2515,8 @@ function tag_deliver($uid,$item_id) {
 			return;
 		}
 
+		$arr = array('channel_id' => $uid, 'item' => $item, 'body' => $body);
+		call_hooks('tagged',$arr);
 
 		// Valid tag. Send a notification
 
@@ -2584,7 +2635,7 @@ function tgroup_check($uid,$item) {
 
 	if($terms) {
 		foreach($terms as $term) {
-			if(($term['term'] == $u[0]['channel_name']) && link_compare($term['url'],$link)) {			
+			if(link_compare($term['url'],$link)) {			
 				$mention = true;
 				break;
 			}
@@ -2602,7 +2653,7 @@ function tgroup_check($uid,$item) {
 
 	$body = preg_replace('/\[share(.*?)\[\/share\]/','',$item['body']);
 
-	$pattern = '/@\!?\[zrl\=' . preg_quote($term['url'],'/') . '\]' . preg_quote($u[0]['channel_name'] . '+','/') . '\[\/zrl\]/';
+	$pattern = '/@\!?\[zrl\=' . preg_quote($term['url'],'/') . '\]' . preg_quote($term['term'] . '+','/') . '\[\/zrl\]/';
 
 	if(! preg_match($pattern,$body,$matches)) {
 		logger('tgroup_check: mention was in a reshare - ignoring');
@@ -3723,12 +3774,52 @@ function first_post_date($uid,$wall = false) {
 		intval($uid)
 
 	);
-	if(count($r)) {
+	if($r) {
 //		logger('first_post_date: ' . $r[0]['id'] . ' ' . $r[0]['created'], LOGGER_DATA);
 		return substr(datetime_convert('',date_default_timezone_get(),$r[0]['created']),0,10);
 	}
 	return false;
 }
+
+/**
+ * modified posted_dates() {below} to arrange the list in years, which we'll eventually 
+ * use to make a menu of years with collapsible sub-menus for the months instead of the 
+ * current flat list of all representative dates.
+ */
+
+function list_post_dates($uid,$wall) {
+	$dnow = datetime_convert('',date_default_timezone_get(),'now','Y-m-d');
+
+	$dthen = first_post_date($uid,$wall);
+	if(! $dthen)
+		return array();
+
+	// If it's near the end of a long month, backup to the 28th so that in 
+	// consecutive loops we'll always get a whole month difference.
+
+	if(intval(substr($dnow,8)) > 28)
+		$dnow = substr($dnow,0,8) . '28';
+	if(intval(substr($dthen,8)) > 28)
+		$dnow = substr($dthen,0,8) . '28';
+
+	$ret = array();
+	// Starting with the current month, get the first and last days of every
+	// month down to and including the month of the first post
+	while(substr($dnow, 0, 7) >= substr($dthen, 0, 7)) {
+		$dyear = intval(substr($dnow,0,4));
+		$dstart = substr($dnow,0,8) . '01';
+		$dend = substr($dnow,0,8) . get_dim(intval($dnow),intval(substr($dnow,5)));
+		$start_month = datetime_convert('','',$dstart,'Y-m-d');
+		$end_month = datetime_convert('','',$dend,'Y-m-d');
+		$str = day_translate(datetime_convert('','',$dnow,'F'));
+		if(! $ret[$dyear])
+			$ret[$dyear] = array();
+ 		$ret[$dyear][] = array($str,$end_month,$start_month);
+		$dnow = datetime_convert('','',$dnow . ' -1 month', 'Y-m-d');
+	}
+	return $ret;
+}
+
 
 function posted_dates($uid,$wall) {
 	$dnow = datetime_convert('',date_default_timezone_get(),'now','Y-m-d');

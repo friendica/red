@@ -259,11 +259,17 @@ function item_post(&$a) {
 	}
 		
 
+
+
 	if($orig_post) {
-		$str_group_allow   = $orig_post['allow_gid'];
-		$str_contact_allow = $orig_post['allow_cid'];
-		$str_group_deny    = $orig_post['deny_gid'];
-		$str_contact_deny  = $orig_post['deny_cid'];
+		$str_group_allow   = ((array_key_exists('group_allow',$_REQUEST)) 
+			? perms2str($_REQUEST['group_allow']) : $orig_post['allow_gid']);
+		$str_contact_allow = ((array_key_exists('contact_allow',$_REQUEST)) 
+			? perms2str($_REQUEST['contact_allow']) : $orig_post['allow_cid']);
+		$str_group_deny    = ((array_key_exists('group_deny',$_REQUEST)) 
+			? perms2str($_REQUEST['group_deny']) : $orig_post['deny_gid']);
+		$str_contact_deny  = ((array_key_exists('contact_deny',$_REQUEST)) 
+			? perms2str($_REQUEST['contact_deny']) : $orig_post['deny_cid']);
 		$location          = $orig_post['location'];
 		$coord             = $orig_post['coord'];
 		$verb              = $orig_post['verb'];
@@ -304,6 +310,7 @@ function item_post(&$a) {
 			$str_group_deny    = perms2str($_REQUEST['group_deny']);
 			$str_contact_deny  = perms2str($_REQUEST['contact_deny']);
 		}
+
 
 		$location          = notags(trim($_REQUEST['location']));
 		$coord             = notags(trim($_REQUEST['coord']));
@@ -432,6 +439,11 @@ function item_post(&$a) {
 		$body = preg_replace_callback('/\[\$b64zrl(.*?)\[\/(zrl)\]/ism','red_unescape_codeblock',$body);
 		$body = preg_replace_callback('/\[\$b64url(.*?)\[\/(url)\]/ism','red_unescape_codeblock',$body);
 		$body = preg_replace_callback('/\[\$b64code(.*?)\[\/(code)\]/ism','red_unescape_codeblock',$body);
+
+		// fix any img tags that should be zmg
+
+		$body = preg_replace_callback('/\[img(.*?)\](.*?)\[\/img\]/ism','red_zrlify_img_callback',$body);
+
 
 
 		/**
@@ -636,11 +648,11 @@ function item_post(&$a) {
 	$datarray['owner_xchan']    = (($owner_hash) ? $owner_hash : $owner_xchan['xchan_hash']);
 	$datarray['author_xchan']   = $observer['xchan_hash'];
 	$datarray['created']        = $created;
-	$datarray['edited']         = datetime_convert();
+	$datarray['edited']         = (($orig_post) ? datetime_convert() : $created);
 	$datarray['expires']        = $expires;
-	$datarray['commented']      = datetime_convert();
-	$datarray['received']       = datetime_convert();
-	$datarray['changed']        = datetime_convert();
+	$datarray['commented']      = (($orig_post) ? datetime_convert() : $created);
+	$datarray['received']       = (($orig_post) ? datetime_convert() : $created);
+	$datarray['changed']        = (($orig_post) ? datetime_convert() : $created);
 	$datarray['mid']            = $mid;
 	$datarray['parent_mid']     = $parent_mid;
 	$datarray['mimetype']       = $mimetype;
@@ -840,10 +852,10 @@ function item_content(&$a) {
 	require_once('include/security.php');
 
 	if((argc() == 3) && (argv(1) === 'drop') && intval(argv(2))) {
+
 		require_once('include/items.php');
-		$i = q("select id, uid, author_xchan, owner_xchan, source_xchan, item_restrict from item where id = %d and uid = %d limit 1",
-			intval(argv(2)),
-			intval(local_user())
+		$i = q("select id, uid, author_xchan, owner_xchan, source_xchan, item_restrict from item where id = %d limit 1",
+			intval(argv(2))
 		);
 
 		if($i) {

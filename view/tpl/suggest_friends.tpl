@@ -11,6 +11,6 @@
 	</div>
 	<div class="profile-match-end"></div>
 	{{if $entry.connlnk}}
-	<div class="profile-match-connect"><a href="{{$entry.connlnk}}" title="{{$entry.conntxt}}">{{$entry.conntxt}}</a></div>
+	<div class="profile-match-connect"><a href="{{$entry.connlnk}}" title="{{$entry.conntxt}}"><i class="icon-plus connect-icon"></i> {{$entry.conntxt}}</a></div>
 	{{/if}}
 </div>

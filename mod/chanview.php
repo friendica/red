@@ -84,15 +84,17 @@ function chanview_content(&$a) {
 		$url = zid($url);
 
 	// let somebody over-ride the iframed viewport presentation
+	// or let's just declare this a failed experiment.
 
-	if((! local_user()) || (get_pconfig(local_user(),'system','chanview_full')))
-		goaway($url);
+//	if((! local_user()) || (get_pconfig(local_user(),'system','chanview_full')))
+	
+	goaway($url);
 
-	$o = replace_macros(get_markup_template('chanview.tpl'),array(
-		'$url' => $url,
-		'$full' => t('toggle full screen mode')
-	));
+//	$o = replace_macros(get_markup_template('chanview.tpl'),array(
+//		'$url' => $url,
+//		'$full' => t('toggle full screen mode')
+//	));
 
-	return $o;
+//	return $o;
 
 }

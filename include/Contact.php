@@ -141,24 +141,6 @@ function abook_toggle_flag($abook,$flag) {
 }
 
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 // Included here for completeness, but this is a very dangerous operation.
 // It is the caller's responsibility to confirm the requestor's intent and
 // authorisation to do this.
@@ -304,6 +286,76 @@ function channel_remove($channel_id, $local = true) {
 	}
 
 }
+
+/**
+ * mark any hubs "offline" that haven't been heard from in more than 30 days
+ * Allow them to redeem themselves if they come back later.
+ * Then go through all those that are newly marked and see if any other hubs
+ * are attached to the controlling xchan that are still alive.
+ * If not, they're dead (although they could come back some day).
+ */
+
+
+function mark_orphan_hubsxchans() {
+
+	$dirmode = intval(get_config('system','directory_mode'));
+	if($dirmode == DIRECTORY_MODE_NORMAL)
+		return;
+
+    $r = q("update hubloc set hubloc_status = (hubloc_status | %d) where not (hubloc_status & %d) 
+		and hubloc_connected < utc_timestamp() - interval 36 day",
+        intval(HUBLOC_OFFLINE),
+        intval(HUBLOC_OFFLINE)
+    );
+
+	$r = q("select hubloc_id, hubloc_hash from hubloc where (hubloc_status & %d) and not (hubloc_flags & %d)",
+		intval(HUBLOC_OFFLINE),
+		intval(HUBLOC_FLAGS_ORPHANCHECK)
+	);
+
+	if($r) {
+		foreach($r as $rr) {
+
+			// see if any other hublocs are still alive for this channel
+
+			$x = q("select * from hubloc where hubloc_hash = '%s' and not (hubloc_status & %d)",
+				dbesc($rr['hubloc_hash']),
+				intval(HUBLOC_OFFLINE)
+			);
+			if($x) {
+
+				// yes - if the xchan was marked as an orphan, undo it
+
+				$y = q("update xchan set xchan_flags = (xchan_flags ^ %d) where (xchan_flags & %d) and xchan_hash = '%s' limit 1",
+					intval(XCHAN_FLAGS_ORPHAN),
+					intval(XCHAN_FLAGS_ORPHAN),
+					dbesc($rr['hubloc_hash'])
+				);
+
+			}
+			else {
+
+				// nope - mark the xchan as an orphan
+
+				$y = q("update xchan set xchan_flags = (xchan_flags | %d) where xchan_hash = '%s' limit 1",
+					intval(XCHAN_FLAGS_ORPHAN),
+					dbesc($rr['hubloc_hash'])
+				);
+			}
+
+			// mark that we've checked this entry so we don't need to do it again
+
+			$y = q("update hubloc set hubloc_flags = (hubloc_flags | %d) where hubloc_id = %d limit 1",
+				intval(HUBLOC_FLAGS_ORPHANCHECK),
+				dbesc($rr['hubloc_id'])
+			);
+		}
+	}
+
+}
+
+
+
 
 function remove_all_xchan_resources($xchan, $channel_id = 0) {
 
@@ -510,7 +562,7 @@ function unmark_for_death($contact) {
 }}
 
 function random_profile() {
-	$r = q("select xchan_url from xchan where 1 order by rand() limit 1");
+	$r = q("select xchan_url from xchan left join hubloc on hubloc_hash = xchan_hash where hubloc_connected > UTC_TIMESTAMP() - interval 30 day order by rand() limit 1");
 	if($r)
 		return $r[0]['xchan_url'];
 	return '';

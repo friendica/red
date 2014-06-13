@@ -281,6 +281,14 @@ function bb2diaspora($Text,$preserve_nl = false, $fordiaspora = true) {
 	$Text = preg_replace("/\[img\](.*?)\[\/img\]/", '![' . t('image/photo') . '](' . '$1' . ')', $Text);
 	$Text = preg_replace("/\[img\=(.*?)\](.*?)\[\/img\]/", '![' . t('image/photo') . '](' . '$2' . ')', $Text);
 
+	$Text = preg_replace("/\[zrl\]([$URLSearchString]*)\[\/zrl\]/ism", '[$1]($1)', $Text);
+	$Text = preg_replace("/\#\[zrl\=([$URLSearchString]*)\](.*?)\[\/zrl\]/ism", '[#$2]($1)', $Text);
+	$Text = preg_replace("/\[zrl\=([$URLSearchString]*)\](.*?)\[\/zrl\]/ism", '[$2]($1)', $Text);
+
+
+	$Text = preg_replace("/\[zmg\](.*?)\[\/zmg\]/", '![' . t('image/photo') . '](' . '$1' . ')', $Text);
+	$Text = preg_replace("/\[zmg\=(.*?)\](.*?)\[\/zmg\]/", '![' . t('image/photo') . '](' . '$2' . ')', $Text);
+
 	// Perform MAIL Search
 	$Text = preg_replace("(\[mail\]([$MAILSearchString]*)\[/mail\])", '[$1](mailto:$1)', $Text);
 	$Text = preg_replace("/\[mail\=([$MAILSearchString]*)\](.*?)\[\/mail\]/", '[$2](mailto:$1)', $Text);

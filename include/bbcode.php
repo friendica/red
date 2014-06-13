@@ -63,7 +63,7 @@ function bb_spacefy($st) {
 }
 
 // The previously spacefied [noparse][ i ]italic[ /i ][/noparse],
-// now turns back and the [noparse] tags are trimed
+// now turns back and the [noparse] tags are trimmed
 // returning [i]italic[/i]
 
 function bb_unspacefy_and_trim($st) {
@@ -166,6 +166,15 @@ function bb_parse_crypt($match) {
 
 }
 
+function bb_parse_app($match) {
+	require_once('include/apps.php');
+
+	$app = app_decode($match[1]);
+	if($app)
+		return app_render($app);
+
+}
+
 function bb_qr($match) {
 	return '<img class="zrl" src="' . z_root() . '/photo/qr?f=&qr=' . urlencode($match[1]) . '" alt="' . t('QR code') . '" title="' . htmlspecialchars($match[1],ENT_QUOTES,'UTF-8') . '" />';
 } 	
@@ -199,6 +208,12 @@ function bb_ShareAttributes($match) {
 	preg_match("/posted='(.*?)'/ism", $attributes, $matches);
 	if ($matches[1] != "")
 		$posted = $matches[1];
+
+	$message_id = "";
+	preg_match("/message_id='(.*?)'/ism", $attributes, $matches);
+	if ($matches[1] != "")
+		$message_id = $matches[1];
+
 
 	// FIXME - this should really be a wall-item-ago so it will get updated on the client
 	$reldate = (($posted) ? relative_date($posted) : ''); 
@@ -501,6 +516,30 @@ function bbcode($Text,$preserve_nl = false, $tryoembed = true) {
 		$Text = preg_replace("(\[size=(\d*?)\](.*?)\[\/size\])ism","<span style=\"font-size: $1px;\">$2</span>",$Text);
 		$Text = preg_replace("(\[size=(.*?)\](.*?)\[\/size\])ism","<span style=\"font-size: $1;\">$2</span>",$Text);
 	}
+	// Check for h1
+	if (strpos($Text,'[h1]') !== false) {
+		$Text = preg_replace("(\[h1\](.*?)\[\/h1\])ism",'<h1>$1</h1>',$Text);
+	}
+	// Check for h2
+	if (strpos($Text,'[h2]') !== false) {
+		$Text = preg_replace("(\[h2\](.*?)\[\/h2\])ism",'<h2>$1</h2>',$Text);
+	}
+	// Check for h3
+	if (strpos($Text,'[h3]') !== false) {
+		$Text = preg_replace("(\[h3\](.*?)\[\/h3\])ism",'<h3>$1</h3>',$Text);
+	}
+	// Check for h4
+	if (strpos($Text,'[h4]') !== false) {
+		$Text = preg_replace("(\[h4\](.*?)\[\/h4\])ism",'<h4>$1</h4>',$Text);
+	}
+	// Check for h5
+	if (strpos($Text,'[h5]') !== false) {
+		$Text = preg_replace("(\[h5\](.*?)\[\/h5\])ism",'<h5>$1</h5>',$Text);
+	}
+	// Check for h6
+	if (strpos($Text,'[h6]') !== false) {
+		$Text = preg_replace("(\[h6\](.*?)\[\/h6\])ism",'<h6>$1</h6>',$Text);
+	}
 	// Check for centered text
 	if (strpos($Text,'[/center]') !== false) {	
 	$Text = preg_replace("(\[center\](.*?)\[\/center\])ism","<div style=\"text-align:center;\">$1</div>",$Text);
@@ -600,24 +639,24 @@ function bbcode($Text,$preserve_nl = false, $tryoembed = true) {
 	// Images
 	// [img]pathtoimage[/img]
 	if (strpos($Text,'[/img]') !== false) {
-		$Text = preg_replace("/\[img\](.*?)\[\/img\]/ism", '<img src="$1" alt="' . t('Image/photo') . '" />', $Text);
+		$Text = preg_replace("/\[img\](.*?)\[\/img\]/ism", '<img style="max-width=100%;" src="$1" alt="' . t('Image/photo') . '" />', $Text);
 	}
 	if (strpos($Text,'[/zmg]') !== false) {
-		$Text = preg_replace("/\[zmg\](.*?)\[\/zmg\]/ism", '<img class="zrl" src="$1" alt="' . t('Image/photo') . '" />', $Text);
+		$Text = preg_replace("/\[zmg\](.*?)\[\/zmg\]/ism", '<img class="zrl" style="max-width=100%;" src="$1" alt="' . t('Image/photo') . '" />', $Text);
 	}
 
 	// [img float={left, right}]pathtoimage[/img]
 	if (strpos($Text,'[/img]') !== false) {
-		$Text = preg_replace("/\[img float=left\](.*?)\[\/img\]/ism", '<img src="$1" style="float: left;" alt="' . t('Image/photo') . '" />', $Text);
+		$Text = preg_replace("/\[img float=left\](.*?)\[\/img\]/ism", '<img style="max-width=100%;" src="$1" style="float: left;" alt="' . t('Image/photo') . '" />', $Text);
 	}
 	if (strpos($Text,'[/img]') !== false) {
-		$Text = preg_replace("/\[img float=right\](.*?)\[\/img\]/ism", '<img src="$1" style="float: right;" alt="' . t('Image/photo') . '" />', $Text);
+		$Text = preg_replace("/\[img float=right\](.*?)\[\/img\]/ism", '<img style="max-width=100%;" src="$1" style="float: right;" alt="' . t('Image/photo') . '" />', $Text);
 	}
 	if (strpos($Text,'[/zmg]') !== false) {
-		$Text = preg_replace("/\[zmg float=left\](.*?)\[\/zmg\]/ism", '<img class="zrl" src="$1" style="float: left;" alt="' . t('Image/photo') . '" />', $Text);
+		$Text = preg_replace("/\[zmg float=left\](.*?)\[\/zmg\]/ism", '<img style="max-width=100%;" class="zrl" src="$1" style="float: left;" alt="' . t('Image/photo') . '" />', $Text);
 	}
 	if (strpos($Text,'[/zmg]') !== false) {
-		$Text = preg_replace("/\[zmg float=right\](.*?)\[\/zmg\]/ism", '<img class="zrl" src="$1" style="float: right;" alt="' . t('Image/photo') . '" />', $Text);
+		$Text = preg_replace("/\[zmg float=right\](.*?)\[\/zmg\]/ism", '<img style="max-width=100%;" class="zrl" src="$1" style="float: right;" alt="' . t('Image/photo') . '" />', $Text);
 	}
 
 	// [img=widthxheight]pathtoimage[/img]
@@ -653,6 +692,11 @@ function bbcode($Text,$preserve_nl = false, $tryoembed = true) {
 		$Text = preg_replace("/\[crypt\](.*?)\[\/crypt\]/ism",'<br/><div id="' . $x . '"><img src="' .$a->get_baseurl() . '/images/lock_icon.gif" onclick="red_decrypt(\'rot13\',\'\',\'$1\',\'#' . $x . '\');" alt="' . t('Encrypted content') . '" title="' . t('Encrypted content') . '" /><br /></div>', $Text);
 		$Text = preg_replace_callback("/\[crypt (.*?)\](.*?)\[\/crypt\]/ism", 'bb_parse_crypt', $Text);
 	}
+
+	if(strpos($Text,'[/app]') !== false) {
+		$Text = preg_replace_callback("/\[app\](.*?)\[\/app\]/ism",'bb_parse_app', $Text);
+	}
+
 
 	// html5 video and audio
 	if (strpos($Text,'[/video]') !== false) {	

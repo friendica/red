@@ -3,8 +3,6 @@ Project Code To-Do List
 
 We need much more than this, but here are areas where developers can help. Please edit this page when items are finished. Another place for developers to start is with the issues list.
 
-* Turn top-level Apps menu into an Apps page - which will probably require App plugins to have icons. Add documentation specifically to the plugin/addon documentation for creating apps. Add links to the App Store (which doesn't currently exist). 
-
 * Documentation - see [Red Documentation Project To-Do List](help/To-Do)
 
 * Infinite scroll to the directory pages
@@ -35,7 +33,7 @@ We need much more than this, but here are areas where developers can help. Pleas
 
 * service classes - account overview page showing resources consumed by channel. With special consideration this page can also be accessed at a meta level by the site admin to drill down on problematic accounts/channels. 
 
-* Events module - bring back birthday reminders for friends, fix permissions on events, and provide JS translation support for the calendar overview; integrate with calDAV
+* Events module - fix permissions on events, and provide JS translation support for the calendar overview; integrate with calDAV
 
 * Events module - event followups and RSVP
 

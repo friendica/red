@@ -1,8 +1,9 @@
 <?php
 
+if(! function_exists("string_plural_select_sv")) {
 function string_plural_select_sv($n){
 	return ($n != 1);;
-}
+}}
 ;
 $a->strings["Categories"] = "Kategorier";
 $a->strings["Connect"] = "Ta kontakt";

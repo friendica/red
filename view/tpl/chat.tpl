@@ -5,8 +5,19 @@
     	<div id="chatLineHolder"></div>
 	</div>
 
-    <div id="chatUsers"></div>
+	<div id="chatSide">
+	{{if $is_owner}} 
+	<div id="chatDrop">
+	<form id="chat-destroy" method="post" action="chat">
+		<input type="hidden" name="room_name" value="{{$room_name}}" />
+		<input type="hidden" name="action" value="drop" />
+        <input type="submit" name="submit" value="{{$drop}}" onclick="return confirmDelete();"/>
+	</form>
+	</div><br />		
+	{{/if}}
 
+    <div id="chatUsers"></div><br />
+	</div>
 	<div class="clear"></div>
     <div id="chatBottomBar">
         <div class="tip"></div>

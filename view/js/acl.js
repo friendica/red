@@ -258,10 +258,15 @@ ACL.prototype.populate = function(data){
 	that.list_content.height(height);
 	$(data.items).each(function(){
 		html = "<div class='acl-list-item {4} {7} {5}' title='{6}' id='{2}{3}'>"+that.item_tpl+"</div>";
-		html = html.format( this.photo, this.name, this.type, this.xid, '', this.self, this.link, this.taggable );
+		html = html.format(this.photo, this.name, this.type, this.xid, '', this.self, this.link, this.taggable);
 		if (this.uids!=undefined) that.group_uids[this.id] = this.uids;
 		//console.log(html);
 		that.list_content.append(html);
+	});
+	$("#acl-list-content .acl-list-item img[data-src]").each(function(i, el){
+		// Replace data-src attribute with src attribute for every image
+		$(el).attr('src', $(el).data("src"));
+		$(el).removeAttr("data-src");
 	});
 	that.update_view();
 }

@@ -13,5 +13,6 @@ var datetime_8php =
     [ "select_timezone", "datetime_8php.html#a633dadba426fa2f60b25fabdb19ebc1f", null ],
     [ "timesel", "datetime_8php.html#a36d3d6dff8d76b5f295bb3d9c535a5b1", null ],
     [ "timezone_cmp", "datetime_8php.html#aa51b5a7ea4f931b23acbdfcea46e9865", null ],
+    [ "update_birthdays", "datetime_8php.html#af1cd77c97c901d9239cb7a61f97f9826", null ],
     [ "z_birthday", "datetime_8php.html#ab55e545b72ec8c097e052ea7d373491f", null ]
 ];

@@ -115,7 +115,7 @@ class Item extends BaseObject {
 			);
 		}
 
-		$filer = (($conv->get_profile_owner() == local_user()) ? t("save to folder") : false);
+		$filer = (($conv->get_profile_owner() == local_user()) ? t("Save to Folder") : false);
 
 		$profile_avatar = $item['author']['xchan_photo_m'];
 		$profile_link   = chanlink_url($item['author']['xchan_url']);
@@ -123,6 +123,27 @@ class Item extends BaseObject {
 
 		$location = format_location($item);
 
+		$like_count = ((x($alike,$item['mid'])) ? $alike[$item['mid']] : '');
+		$like_list = ((x($alike,$item['mid'])) ? $alike[$item['mid'] . '-l'] : '');
+		if (count($like_list) > MAX_LIKERS) {
+			$like_list_part = array_slice($like_list, 0, MAX_LIKERS);
+			array_push($like_list_part, '<a href="#" data-toggle="modal" data-target="#likeModal-' . $this->get_id() . '"><b>' . t('View all') . '</b></a>');
+		} else {
+			$like_list_part = '';
+		}
+		$like_button_label = tt('Like','Likes',$like_count,'noun');
+
+		if (feature_enabled($conv->get_profile_owner(),'dislike')) {
+			$dislike_count = ((x($dlike,$item['mid'])) ? $dlike[$item['mid']] : '');
+			$dislike_list = ((x($dlike,$item['mid'])) ? $dlike[$item['mid'] . '-l'] : '');
+			$dislike_button_label = tt('Dislike','Dislikes',$dislike_count,'noun');
+			if (count($dislike_list) > MAX_LIKERS) {
+				$dislike_list_part = array_slice($dislike_list, 0, MAX_LIKERS);
+				array_push($dislike_list_part, '<a href="#" data-toggle="modal" data-target="#dislikeModal-' . $this->get_id() . '"><b>' . t('View all') . '</b></a>');
+			} else {
+				$dislike_list_part = '';
+			}
+		}
 
 		$showlike    = ((x($alike,$item['mid'])) ? format_like($alike[$item['mid']],$alike[$item['mid'] . '-l'],'like',$item['mid']) : '');
 		$showdislike = ((x($dlike,$item['mid']) && feature_enabled($conv->get_profile_owner(),'dislike'))  
@@ -143,9 +164,9 @@ class Item extends BaseObject {
 // FIXME we don't need all this stuff, some can be done in the template
 
 				$star = array(
-					'do' => t("add star"),
-					'undo' => t("remove star"),
-					'toggle' => t("toggle star status"),
+					'do' => t("Add Star"),
+					'undo' => t("Remove Star"),
+					'toggle' => t("Toggle Star Status"),
 					'classdo' => (($item['item_flags'] & ITEM_STARRED) ? "hidden" : ""),
 					'classundo' => (($item['item_flags'] & ITEM_STARRED) ? "" : "hidden"),
 					'isstarred' => (($item['item_flags'] & ITEM_STARRED) ? "starred icon-star" : "unstarred icon-star-empty"),
@@ -166,7 +187,7 @@ class Item extends BaseObject {
 		// FIXME - check this permission
 		if($conv->get_profile_owner() == local_user()) {
 			$tagger = array(
-				'tagit' => t("add tag"),
+				'tagit' => t("Add Tag"),
 				'classtagger' => "",
 			);
 		}
@@ -179,12 +200,15 @@ class Item extends BaseObject {
 			}
 		}
 
+		$has_event = false;
+		if(($item['obj_type'] === ACTIVITY_OBJ_EVENT) && $conv->get_profile_owner() == local_user())
+			$has_event = true;
 
 		if($this->is_commentable()) {
 			$like = array( t("I like this \x28toggle\x29"), t("like"));
 			$dislike = array( t("I don't like this \x28toggle\x29"), t("dislike"));
 			if ($shareable)
-				$share = array( t('Share this'), t('share'));
+				$share = array( t('Share This'), t('share'));
 		}
 
 		if(strcmp(datetime_convert('UTC','UTC',$item['created']),datetime_convert('UTC','UTC','now - 12 hours')) > 0)
@@ -247,11 +271,22 @@ class Item extends BaseObject {
 			'star'      => ((feature_enabled($conv->get_profile_owner(),'star_posts')) ? $star : ''),
 			'tagger'    => ((feature_enabled($conv->get_profile_owner(),'commtag')) ? $tagger : ''),
 			'filer'     => ((feature_enabled($conv->get_profile_owner(),'filing')) ? $filer : ''),
-			'bookmark'  => (($conv->get_profile_owner() == local_user() && $has_bookmarks) ? t('Bookmark Links') : ''),
+			'bookmark'  => (($conv->get_profile_owner() == local_user() && $has_bookmarks) ? t('Save Bookmarks') : ''),
+			'addtocal'  => (($has_event) ? t('Add to Calendar') : ''),
 			'drop'      => $drop,
 			'multidrop' => ((feature_enabled($conv->get_profile_owner(),'multi_delete')) ? $multidrop : ''),
 // end toolbar buttons
-
+			'like_count' => $like_count,
+			'like_list' => $like_list,
+			'like_list_part' => $like_list_part,
+			'like_button_label' => $like_button_label,
+			'like_modal_title' => t('Likes','noun'),
+			'dislike_modal_title' => t('Dislikes','noun'),
+			'dislike_count' => ((feature_enabled($conv->get_profile_owner(),'dislike')) ? $dislike_count : ''),
+			'dislike_list' => ((feature_enabled($conv->get_profile_owner(),'dislike')) ? $dislike_list : ''),
+			'dislike_list_part' => ((feature_enabled($conv->get_profile_owner(),'dislike')) ? $dislike_list_part : ''),
+			'dislike_button_label' => ((feature_enabled($conv->get_profile_owner(),'dislike')) ? $dislike_button_label : ''),
+			'modal_dismiss' => t('Close'),
 			'showlike' => $showlike,
 			'showdislike' => $showdislike,
 			'comment' => $this->get_comment_box($indent),
@@ -278,7 +313,7 @@ class Item extends BaseObject {
 			if(($nb_children > 2) || ($thread_level > 1)) {
 				$result['children'][0]['comment_firstcollapsed'] = true;
 				$result['children'][0]['num_comments'] = sprintf( tt('%d comment','%d comments',$total_children),$total_children );
-				$result['children'][0]['hide_text'] = t('show more');
+				$result['children'][0]['hide_text'] = t('[+] show all');
 				if($thread_level > 1) {
 					$result['children'][$nb_children - 1]['comment_lastcollapsed'] = true;
 				}

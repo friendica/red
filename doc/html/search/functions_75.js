@@ -9,6 +9,7 @@ var searchData=
   ['unobscure',['unobscure',['../text_8php.html#a8264348059abd1d4d5bb521323d3b19a',1,'text.php']]],
   ['unregister_5fhook',['unregister_hook',['../plugin_8php.html#a56f71fe5adf9586ce950523d8180443e',1,'plugin.php']]],
   ['unxmlify',['unxmlify',['../text_8php.html#a1360fed7f918d859daaca1c9f384f9af',1,'text.php']]],
+  ['update_5fbirthdays',['update_birthdays',['../datetime_8php.html#af1cd77c97c901d9239cb7a61f97f9826',1,'datetime.php']]],
   ['update_5fchannel_5fcontent',['update_channel_content',['../update__channel_8php.html#aca52a9da500f0db2f0a8666af5bc06ba',1,'update_channel.php']]],
   ['update_5fdirectory_5fentry',['update_directory_entry',['../dir__fns_8php.html#a44062d4b471d1e83f92f6c184585aa13',1,'dir_fns.php']]],
   ['update_5fdisplay_5fcontent',['update_display_content',['../update__display_8php.html#aa36ac524059e209d5d75a03c16206246',1,'update_display.php']]],

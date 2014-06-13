@@ -15,7 +15,7 @@
 					<span id="acl-fields"></span>
 				</div>
 				<div class="acl-list-item" rel="acl-template" style="display:none">
-					<img src="{0}"><p>{1}</p>
+					<img data-src="{0}"><p>{1}</p>
 					<button class="acl-button-hide btn btn-xs btn-default"><i class="icon-remove"></i> {{$hide}}</button>
 					<button class="acl-button-show btn btn-xs btn-default"><i class="icon-ok"></i> {{$show}}</button>
 				</div>
@@ -23,7 +23,7 @@
 				{{$jotnets}}
 				{{/if}}
 			</div>
-			<div class="modal-footer">
+			<div class="modal-footer clear">
 				<button type="button" class="btn btn-default" data-dismiss="modal">{{$aclModalDismiss}}</button>
 			</div>
 		</div><!-- /.modal-content -->

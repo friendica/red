@@ -162,7 +162,7 @@ FO_statuses_home_timeline () {
     $(OAuth_param 'screen_name' $screen_name)
     $(OAuth_param 'count' $count)
     )
-g
+
   local auth_header=$(OAuth_authorization_header 'Authorization' "$redmatrix_url" '' '' 'GET' "$F_STATUSES_HOME_TIMELINE.$format" ${params[@]})
 
   convscreen=$(OAuth_PE "$screen_name");
@@ -171,3 +171,21 @@ g
 
   return $FO_rval
   }
+
+FO_command () {
+	local command="$1"
+
+	local params=(
+		$(OAuth_param 'screen_name' $screen_name)
+		$(OAuth_param 'count' $count)
+	)
+
+
+	local auth_header=$(OAuth_authorization_header 'Authorization' "$redmatrix_url" '' '' 'GET' "${redmatrix_url}/api/${command}.json" ${params[@]})
+
+	convscreen=$(OAuth_PE "$screen_name");
+  	FO_ret=$(curl -s --get "${redmatrix_url}/api/${command}.json" --data "screen_name=${convscreen}&count=${count}" --header "${auth_header}")
+	FO_rval=$?
+
+	return $FO_rval
+}

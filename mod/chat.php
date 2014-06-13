@@ -49,6 +49,7 @@ function chat_post(&$a) {
 
 
 	if($_POST['action'] === 'drop') {
+		logger('delete chatroom');
 		chatroom_destroy($channel,array('cr_name' => $room));
 		goaway(z_root() . '/chat/' . $channel['channel_address']);
 	}
@@ -168,12 +169,14 @@ function chat_content(&$a) {
 		}
 
 		$o = replace_macros(get_markup_template('chat.tpl'),array(
+			'$is_owner' => ((local_user() && local_user() == $x[0]['cr_uid']) ? true : false),
 			'$room_name' => $room_name,
 			'$room_id' => $room_id,
 			'$baseurl' => z_root(),
 			'$nickname' => argv(1),
 			'$submit' => t('Submit'),
 			'$leave' => t('Leave Room'),
+			'$drop' => t('Delete This Room'),
 			'$away' => t('I am away right now'),
 			'$online' => t('I am online'),
 			'$bookmark_link' => $bookmark_link,

@@ -24,8 +24,10 @@ if(! $a->install) {
 		$background_image = get_pconfig($uid, "redbasic", "background_image");	
 		$toolicon_colour = get_pconfig($uid,'redbasic','toolicon_colour');
 		$toolicon_activecolour = get_pconfig($uid,'redbasic','toolicon_activecolour');
-		$item_colour = get_pconfig($uid, "redbasic", "item_colour");	
-		$item_opacity = get_pconfig($uid, "redbasic", "item_opacity");	
+		$item_colour = get_pconfig($uid, "redbasic", "item_colour");
+		$comment_item_colour = get_pconfig($uid, "redbasic", "comment_item_colour");
+		$comment_border_colour = get_pconfig($uid, "redbasic", "comment_border_colour");
+		$comment_indent = get_pconfig($uid, "redbasic", "comment_indent");
 		$body_font_size = get_pconfig($uid, "redbasic", "body_font_size");	
 		$font_size = get_pconfig($uid, "redbasic", "font_size");	
 		$font_colour = get_pconfig($uid, "redbasic", "font_colour");	
@@ -92,11 +94,11 @@ if(! $a->install) {
 	if (! $navmenu_bgimage)
 		$navmenu_bgimage = "";
 	if (! $navtabs_borderc)
-		$navtabs_borderc = "#ddd";
+		$navtabs_borderc = "rgba(204,204,204,0.8)";
 	if (! $navtabs_fontcolour)
 		$navtabs_fontcolour = "#555";
 	if (! $navtabs_bgcolour)
-		$navtabs_bgcolour = "#fff";
+		$navtabs_bgcolour = "rgba(254,254,254,0.4)";
 	if (! $navtabs_linkcolour)
 		$navtabs_linkcolour = "";
 	if (! $navtabs_linkchover)
@@ -104,9 +106,9 @@ if(! $a->install) {
 	if (! $navtabs_decohover)
 		$navtabs_decohover = "none";
 	if (! $navtabs_bgchover)
-		$navtabs_bgchover = "#eee";
+		$navtabs_bgchover = "rgba(238,238,238,0.8)";
 	if (! $link_colour)
-		$link_colour = "#0080ff";
+		$link_colour = "#428BCA";
 	if (! $banner_colour)
 		$banner_colour = "#fff";
 	if (! $search_background)
@@ -116,15 +118,17 @@ if(! $a->install) {
 	if (! $background_image)
 		$background_image ='';
 	if (! $item_colour)
-		$item_colour = "#fdfdfd";
+		$item_colour = "rgba(238,238,238,0.8)";
+	if (! $comment_item_colour)
+		$comment_item_colour = "rgba(254,254,254,0.4)";
+	if (! $comment_border_colour)
+		$comment_border_colour = "rgba(238,238,238,0.8)";
 	if (! $toolicon_colour)
 		$toolicon_colour = '#777';
 	if (! $toolicon_activecolour)
 		$toolicon_activecolour = '#000';
 	if (! $item_opacity)
 		$item_opacity = "1";
-	if (! $item_bordercolour)
-		$item_bordercolour = "#f4f4f4";
 	if (! $font_size)
 		$font_size = "1.0em";
 	if (! $body_font_size)
@@ -135,6 +139,8 @@ if(! $a->install) {
 		$selected_active_colour = "#444";
 	if (! $selected_active_deco)
 		$selected_active_deco = "none";
+	if (! $widget_brdrcolour)
+		$widget_brdrcolour = "#eec";
 	if (! $blockquote_colour)
 		$blockquote_colour = "#000";
 	if (! $blockquote_bgcolour)
@@ -147,16 +153,42 @@ if(! $a->install) {
 		$code_bgcolour = "#EEE";
 	if (! $code_txtcolour)
 		$code_txtcolour = "#444";
+	if (! $pre_borderc)
+		$pre_borderc = "#ccc";
+	if (! $pre_bgcolour)
+		$pre_bgcolour = "#F5F5F5";
+	if (! $pre_txtcolour)
+		$pre_txtcolour = "#333";
 	if (! $notif_itemcolour)
 		$notif_itemcolour = "#000";
 	if (! $notif_itemhovercolour)
 		$notif_itemhovercolour = "#000";
 	if (! $editbuttons_bgcolour)
-		$editbuttons_bgcolour = "#fff";
+		$editbuttons_bgcolour = "transparent";
 	if (! $editbuttons_bordercolour)
 		$editbuttons_bordercolour = "#ccc";
+	if (! $editbuttons_bordercolourhover)
+		$editbuttons_bordercolourhover = "#adadad";
+	if (! $editbuttons_colour)
+		$editbuttons_colour = "#333";
 	if (! $editbuttons_bghover)
 		$editbuttons_bghover = "#ebebeb";
+	if (! $dropdown_bgcolour)
+		$dropdown_bgcolour = "#FFF";
+	if (! $dropdown_textcolour)
+		$dropdown_textcolour = "#333";
+	if (! $dropdown_txtcolhover)
+		$dropdown_txtcolhover = "#262626";
+	if (! $dropdown_bgcolhover)
+		$dropdown_bgcolhover = "#F5F5F5";
+	if (! $dropdown_bgimghover)
+		$dropdown_bgimghover = "";
+	if (! $dropdown_togglecol)
+		$dropdown_togglecol = "#333";
+	if (! $dropdown_togglebgcol)
+		$dropdown_togglebgcol = "#EBEBEB";
+	if (! $dropdown_bordercol)
+		$dropdown_bordercol = "#ADADAD";
 	if (! $preview_backgroundimg)
 		$preview_backgroundimg = "gray_and_white_diagonal_stripes_background_seamless.gif";
 	if (! $acpopup_bgcolour)
@@ -194,7 +226,7 @@ if(! $a->install) {
 	if (! $input_decohover)
 		$input_decohover = "none";
 	if (! $radius)
-		$radius = "0";
+		$radius = "4";
 	if (! $shadow)
 		$shadow = "0";
 	if(! $active_colour)
@@ -212,14 +244,33 @@ if(! $a->install) {
 		$abookself_bgcolour = "#ffdddd";
 	if(! $top_photo)
 		$top_photo = '48px';
-	$pmenu_top = intval($top_photo) - 16 . 'px';
-	$wwtop = intval($top_photo) - 15 . 'px';
-	$comment_indent = intval($top_photo) + 10 . 'px';
-
+	if(! $comment_indent)
+		$comment_indent = '0px';
 	if(! $reply_photo)
 		$reply_photo = '32px';
-	$pmenu_reply = intval($reply_photo) - 16 . 'px';
-	
+	if(! $infomess_bgcolour)
+		$infomess_bgcolour = "#F0F0F0";
+       	if(! $advperm_bgcolour)
+                $advperm_bgcolour = "#F5F5F5";
+        if(! $advperm_bordercol)
+                $advperm_bordercol = "#E3E3E3";
+        if(! $advperm_gradientcol)
+                $advperm_gradientcol = "#E8E8E8";
+        if(! $cal_bgcolour)
+		 $cal_bgcolour = "#FCF8E3";
+        if(! $fancybox_bgcolour)
+                $fancybox_bgcolour = "#FFF";
+	if (!$comment_padding)
+		$comment_padding="0px";	
+	if (!$comment_border_left)
+		$comment_border_left="3px solid";
+	if (!$comment_border_right)
+		$comment_border_right="0px solid";	
+	if (!$comment_border_top)
+		$comment_border_top="0px solid";		
+	if (!$comment_border_bottom)
+		$comment_border_bottom="0px solid";	
+		
 	if($nav_min_opacity === false || $nav_min_opacity === '') {
 		$nav_float_min_opacity = 1.0;
 		$nav_percent_min_opacity = 100;
@@ -259,8 +310,8 @@ $options = array (
 '$bgcolour' => $bgcolour,
 '$background_image' => $background_image,
 '$item_colour' => $item_colour,
-'$item_opacity' => $item_opacity,
-'$item_bordercolour' => $item_bordercolour,
+'$comment_item_colour' => $comment_item_colour,
+'$comment_border_colour' => $comment_border_colour,
 '$toolicon_colour' => $toolicon_colour,
 '$toolicon_activecolour' => $toolicon_activecolour,
 '$font_size' => $font_size,
@@ -268,6 +319,7 @@ $options = array (
 '$selected_active_colour' => $selected_active_colour,
 '$selected_active_deco' => $selected_active_deco,
 '$body_font_size' => $body_font_size,
+'$widget_brdrcolour' => $widget_brdrcolour,
 '$blockquote_colour' => $blockquote_colour,
 '$blockquote_bgcolour' => $blockquote_bgcolour,
 '$blockquote_bordercolour' => $blockquote_bordercolour,
@@ -275,11 +327,24 @@ $options = array (
 '$code_borderc' => $code_borderc,
 '$code_bgcolour' => $code_bgcolour,
 '$code_txtcolour' => $code_txtcolour,
+'$pre_borderc' => $pre_borderc,
+'$pre_bgcolour' => $pre_bgcolour,
+'$pre_txtcolour' => $pre_txtcolour,
 '$notif_itemcolour' => $notif_itemcolour,
 '$notif_itemhovercolour' => $notif_itemhovercolour,
 '$editbuttons_bgcolour' => $editbuttons_bgcolour,
 '$editbuttons_bordercolour' => $editbuttons_bordercolour,
+'$editbuttons_bordercolourhover' => $editbuttons_bordercolourhover,
+'$editbuttons_colour' => $editbuttons_colour,
 '$editbuttons_bghover' => $editbuttons_bghover,
+'$dropdown_bgcolour' => $dropdown_bgcolour,
+'$dropdown_textcolour' => $dropdown_textcolour,
+'$dropdown_txtcolhover' => $dropdown_txtcolhover,
+'$dropdown_bgcolhover' => $dropdown_bgcolhover,
+'$dropdown_bgimghover' => $dropdown_bgimghover,
+'$dropdown_togglecol' => $dropdown_togglecol,
+'$dropdown_togglebgcol' => $dropdown_togglebgcol,
+'$dropdown_bordercol' => $dropdown_bordercol,
 '$preview_backgroundimg' => $preview_backgroundimg,
 '$acpopup_bgcolour' => $acpopup_bgcolour,
 '$acpopup_bordercolour' => $acpopup_bordercolour,
@@ -310,11 +375,22 @@ $options = array (
 '$nav_percent_min_opacity' => $nav_percent_min_opacity,
 '$top_photo' => $top_photo,
 '$reply_photo' => $reply_photo,
+'$infomess_bgcolour' => $infomess_bgcolour,
+'$advperm_bgcolour' => $advperm_bgcolour,
+'$advperm_bordercol' => $advperm_bordercol,
+'$advperm_gradientcol' => $advperm_gradientcol,
+'$cal_bgcolour' => $cal_bgcolour,
+'$fancybox_bgcolour' => $fancybox_bgcolour,
 '$pmenu_top' => $pmenu_top,
 '$pmenu_reply' => $pmenu_reply,
 '$wwtop' => $wwtop,
 '$comment_indent' => $comment_indent,
-'$body_width' => $body_width
+'$body_width' => $body_width,
+'$comment_padding' => $comment_padding,
+'$comment_border_left' =>$comment_border_left,
+'$comment_border_right' =>$comment_border_right,
+'$comment_border_top' =>$comment_border_top,
+'$comment_border_bottom' =>$comment_border_bottom,
 );
 
 echo str_replace(array_keys($options), array_values($options), $x);    

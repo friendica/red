@@ -41,13 +41,22 @@ function chatsvc_post(&$a) {
 	if(! $r)
 		json_return_and_die($ret);
 
+	$arr = array(
+		'chat_room' => $a->data['chat']['room_id'],
+		'chat_xchan' => get_observer_hash(),
+		'chat_text' => $text
+	);
+
+	call_hooks('chat_post',$arr);
+
 	$x = q("insert into chat ( chat_room, chat_xchan, created, chat_text )
 		values( %d, '%s', '%s', '%s' )",
 		intval($a->data['chat']['room_id']),
 		dbesc(get_observer_hash()),
 		dbesc(datetime_convert()),
-		dbesc($text)		
+		dbesc($arr['chat_text'])		
 	);
+
 	$ret['success'] = true;
 	json_return_and_die($ret);
 }

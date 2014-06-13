@@ -443,6 +443,12 @@ function cal($y = 0,$m = 0, $links = false, $class='') {
 }
 
 
+/**
+ * Return the next birthday, converted from the owner's timezone to UTC. 
+ * This makes it globally portable.
+ * If the provided birthday lacks a month and or day, return an empty string.
+ * A missing year is acceptable.
+ */
 
 
 function z_birthday($dob,$tz,$format="Y-m-d H:i:s") {
@@ -450,8 +456,10 @@ function z_birthday($dob,$tz,$format="Y-m-d H:i:s") {
 	if(! strlen($tz))
 		$tz = 'UTC';
 
+	$birthday = '';
 	$tmp_dob = substr($dob,5);
-	if(intval($tmp_dob)) {
+	$tmp_d = substr($dob,8);
+	if(intval($tmp_dob) && intval($tmp_d)) {
 		$y = datetime_convert($tz,$tz,'now','Y');
 		$bd = $y . '-' . $tmp_dob . ' 00:00';
 		$t_dob = strtotime($bd);
@@ -463,4 +471,49 @@ function z_birthday($dob,$tz,$format="Y-m-d H:i:s") {
 
 	return $birthday;
 
+}
+
+/**
+ *
+ * Create a birthday event for any connections with a birthday in the next 1-2 weeks.
+ * Update the year so that we don't create another event until next year.
+ *
+ */
+
+
+function update_birthdays() {
+
+	require_once('include/event.php');
+	require_once('include/permissions.php');
+
+    $r = q("SELECT * FROM abook left join xchan on abook_xchan = xchan_hash 
+		WHERE abook_dob > utc_timestamp() + interval 7 day and abook_dob < utc_timestamp() + interval 14 day");
+	if($r) {
+		foreach($r as $rr) {
+			
+			if(! perm_is_allowed($rr['abook_channel'],$rr['xchan_hash'],'send_stream'))
+				continue;
+
+			$ev = array();
+			$ev['uid'] = $rr['abook_channel'];
+			$ev['account'] = $rr['abook_account'];
+			$ev['event_xchan'] = $rr['xchan_hash'];
+			$ev['start'] = datetime_convert('UTC','UTC', $rr['abook_dob']);
+			$ev['finish'] = datetime_convert('UTC','UTC', $rr['abook_dob'] . ' + 1 day ');
+			$ev['adjust'] = 1;
+            $ev['summary'] = sprintf( t('%1$s\'s birthday'), $rr['xchan_name']);
+            $ev['description'] = sprintf( t('Happy Birthday %1$s'), 
+				'[zrl=' . $rr['xchan_url'] . ']' . $rr['xchan_name'] . '[/zrl]') ;
+			$ev['type'] = 'birthday';
+			
+			$z = event_store_event($ev);
+			if($z) {
+				$item_id = event_store_item($ev,$z);
+				q("update abook set abook_dob = '%s' where abook_id = %d limit 1",
+					dbesc(intval($rr['abook_dob']) + 1 . substr($rr['abook_dob'],4)),
+					intval($rr['abook_id'])
+				);
+			}
+		}
+	}
 }

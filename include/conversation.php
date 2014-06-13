@@ -255,7 +255,7 @@ function localize_item(&$item){
 
 		$A = '[zrl=' . chanlink_url($Alink) . ']' . $Aname . '[/zrl]';
 		
-		$txt = t('%1$s is currently %2$s');
+		$txt = t('%1$s is %2$s','mood');
 
 		$item['body'] = sprintf($txt, $A, t($verb));
 	}

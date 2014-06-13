@@ -105,6 +105,9 @@ function poller_run($argv, $argc){
 
 	if($d2 != intval($d1)) {
 
+		call_hooks('cron_daily',datetime_convert());
+
+
 		$d3 = intval(datetime_convert('UTC','UTC','now','N'));
 		if($d3 == 7) {
 		
@@ -115,12 +118,20 @@ function poller_run($argv, $argc){
 			 *
 			 */
 
+
+			call_hooks('cron_weekly',datetime_convert());
+
+
+
 			require_once('include/hubloc.php');
 			prune_hub_reinstalls();
 
+			require_once('include/Contact.php');
+			mark_orphan_hubsxchans();
 
 		}
 
+		update_birthdays();
 
 		// expire any read notifications over a month old
 
@@ -201,7 +212,7 @@ function poller_run($argv, $argc){
 
 	$d = datetime_convert();
 
-//TODO check to see if there are any cronhooks before wasting a process
+	//TODO check to see if there are any cronhooks before wasting a process
 
 	if(! $restart)
 		proc_run('php','include/cronhooks.php');

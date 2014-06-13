@@ -287,4 +287,4 @@ function html2bbcode($message)
 
 	return(trim($message));
 }
-?>
+

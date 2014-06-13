@@ -23,6 +23,7 @@ Currently there are three layout templates, unless your site provides additional
 	The choklet template provides a number of fluid layout styles which can be specified by flavour:
 
 			(default flavour) - a two column layout similar to the "default" template, but more fluid
+            bannertwo - a two column layout with a banner region, compatible with the "default" template on small displays
 			three - three column layout (adds a "right_aside" region to the default template)
 			edgestwo - two column layout with fixed side margins
 			edgesthree - three column layout with fixed side margins

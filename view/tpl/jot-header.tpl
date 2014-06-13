@@ -300,6 +300,12 @@ function enableOnUser(){
 		timer = setTimeout(NavUpdate,1000);
 	}
 
+	function itemAddToCal(id) {
+		$.get('{{$baseurl}}/events/add/' + id);
+		if(timer) clearTimeout(timer);
+		timer = setTimeout(NavUpdate,1000);
+	}
+
 
 	function jotClearLocation() {
 		$('#jot-coord').val('');

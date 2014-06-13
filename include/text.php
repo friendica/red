@@ -705,12 +705,22 @@ function contact_block() {
 	if($shown == 0)
 		return;
 
+
+	$is_owner = ((local_user() && local_user() == $a->profile['uid']) ? true : false);
+
+	$abook_flags = ABOOK_FLAG_PENDING|ABOOK_FLAG_SELF;
+	$xchan_flags = XCHAN_FLAGS_ORPHAN|XCHAN_FLAGS_DELETED;
+	if(! $is_owner) {
+		$abook_flags = $abook_flags | ABOOK_FLAGS_HIDDEN;
+		$xchan_flags = $xchan_flags | XCHAN_FLAGS_HIDDEN;
+	}
+
 	if((! is_array($a->profile)) || ($a->profile['hide_friends']))
 		return $o;
 	$r = q("SELECT COUNT(abook_id) AS total FROM abook left join xchan on abook_xchan = xchan_hash WHERE abook_channel = %d and not ( abook_flags & %d ) and not (xchan_flags & %d)",
 			intval($a->profile['uid']),
-			intval(ABOOK_FLAG_HIDDEN|ABOOK_FLAG_PENDING|ABOOK_FLAG_SELF),
-			intval(XCHAN_FLAGS_HIDDEN|XCHAN_FLAGS_ORPHAN|XCHAN_FLAGS_DELETED)
+			intval($abook_flags),
+			intval($xchan_flags)
 	);
 	if(count($r)) {
 		$total = intval($r[0]['total']);
@@ -723,8 +733,8 @@ function contact_block() {
 
 		$r = q("SELECT abook.*, xchan.* FROM abook left join xchan on abook.abook_xchan = xchan.xchan_hash WHERE abook_channel = %d AND not ( abook_flags & %d) and not (xchan_flags & %d ) ORDER BY RAND() LIMIT %d",
 				intval($a->profile['uid']),
-				intval(ABOOK_FLAG_HIDDEN|ABOOK_FLAG_PENDING|ABOOK_FLAG_SELF),
-				intval(XCHAN_FLAGS_HIDDEN|XCHAN_FLAGS_ORPHAN|XCHAN_FLAGS_DELETED),
+				intval($abook_flags),
+				intval($xchan_flags),
 				intval($shown)
 		);
 
@@ -800,9 +810,9 @@ function search($s,$id='search-box',$url='/search',$save = false) {
 	$o  = '<div id="' . $id . '">';
 	$o .= '<form action="' . $a->get_baseurl((stristr($url,'network')) ? true : false) . $url . '" method="get" >';
 	$o .= '<input type="text" class="icon-search" name="search" id="search-text" placeholder="&#xf002;" value="' . $s .'" onclick="this.submit();" />';
-	$o .= '<input type="submit" name="submit" id="search-submit" value="' . t('Search') . '" />'; 
+	$o .= '<input class="search-submit btn btn-default" type="submit" name="submit" id="search-submit" value="' . t('Search') . '" />'; 
 	if(feature_enabled(local_user(),'savedsearch'))
-		$o .= '<input type="submit" name="save" id="search-save" value="' . t('Save') . '" />'; 
+		$o .= '<input class="search-save btn btn-default" type="submit" name="save" id="search-save" value="' . t('Save') . '" />'; 
 	$o .= '</form></div>';
 	return $o;
 }
@@ -895,9 +905,6 @@ function get_poke_verbs() {
 
 function get_mood_verbs() {
 	
-	// index is present tense verb
-	// value is array containing past tense verb, translation of present, translation of past
-
 	$arr = array(
 		'happy'      => t('happy'),
 		'sad'        => t('sad'),
@@ -916,6 +923,7 @@ function get_mood_verbs() {
 		'cranky'     => t('cranky'),
 		'disturbed'  => t('disturbed'),
 		'frustrated' => t('frustrated'),
+		'depressed'  => t('depressed'),
 		'motivated'  => t('motivated'),
 		'relaxed'    => t('relaxed'),
 		'surprised'  => t('surprised'),
@@ -1474,7 +1482,7 @@ function get_plink($item,$conversation_mode = true) {
 	if(x($item,$key)) {
 		return array(
 			'href' => zid($item[$key]),
-			'title' => t('link to source'),
+			'title' => t('Link to Source'),
 		);
 	} 
 	else {

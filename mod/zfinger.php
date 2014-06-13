@@ -74,10 +74,15 @@ function zfinger_init(&$a) {
 			 */
 
 			$r = q("select channel.*, xchan.* from channel left join xchan on channel_hash = xchan_hash
-				where (( channel_pageflags & %d ) or not ( channel_pageflags & %d )) order by channel_id limit 1",
-				intval(PAGE_SYSTEM),
-				intval(PAGE_REMOVED)
+				where ( channel_pageflags & %d ) order by channel_id limit 1",
+				intval(PAGE_SYSTEM)
 			);
+			if(! $r) {
+				$r = q("select channel.*, xchan.* from channel left join xchan on channel_hash = xchan_hash
+					where not ( channel_pageflags & %d ) order by channel_id limit 1",
+					intval(PAGE_REMOVED)
+				);
+			}
 		} 
 	}
 	else {
@@ -116,8 +121,8 @@ function zfinger_init(&$a) {
 
 		$profile['description']   = $p[0]['pdesc'];
 		$profile['birthday']      = $p[0]['dob'];
-		if($profile['birthday'] != '0000-00-00')
-			$profile['next_birthday'] = z_birthday($p[0]['dob'],$e['channel_timezone']);
+		if(($profile['birthday'] != '0000-00-00') && (($bd = z_birthday($p[0]['dob'],$e['channel_timezone'])) !== ''))
+			$profile['next_birthday'] = $bd;
 
 		if($age = age($p[0]['dob'],$e['channel_timezone'],''))  
 			$profile['age'] = $age;

@@ -1,0 +1,4 @@
+url: $baseurl/profile_photo
+requires: local_user
+name: Profile Photo
+photo: $baseurl/app/pphoto.png

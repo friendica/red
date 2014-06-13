@@ -9,7 +9,7 @@
 
 <div class="contact-name" id="directory-name-{{$entry.id}}"  ><span onclick="dirdetails('{{$entry.hash}}');" class="fakelink" >{{$entry.name}}</span></div>
 {{if $entry.connect}}
-<div class="directory-connect btn btn-default"><a href="{{$entry.connect}}">{{$entry.conn_label}}</a></div>
+<div class="directory-connect btn btn-default"><a href="{{$entry.connect}}"><i class="icon-plus connect-icon"></i> {{$entry.conn_label}}</a></div>
 {{/if}}
 <div class="contact-details">{{$entry.details}}</div>
 </div>

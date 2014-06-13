@@ -84,6 +84,9 @@ function chatroom_destroy($channel,$arr) {
 		q("delete from chatpresence where cp_room = %d",
 			intval($r[0]['cr_id'])
 		);
+		q("delete from chat where chat_room = %d",
+			intval($r[0]['cr_id'])
+		);
 	}
 	$ret['success'] = true;
 	return $ret;
@@ -181,4 +184,45 @@ function chatroom_list($uid) {
 	);
 
 	return $r;
+}
+
+/**
+ * create a chat message via API.
+ * It is the caller's responsibility to enter the room.
+ */
+
+function chat_message($uid,$room_id,$xchan,$text) {
+
+	$ret = array('success' => false);
+
+	if(! $text)
+		return;
+
+	$sql_extra = permissions_sql($uid);
+
+	$r = q("select * from chatroom where cr_uid = %d and cr_id = %d $sql_extra",
+		intval($uid),
+		intval($room_id)
+	);
+	if(! $r)
+		return $ret;
+
+	$arr = array(
+		'chat_room' => $room_id,
+		'chat_xchan' => $xchan,
+		'chat_text' => $text
+	);
+
+	call_hooks('chat_message',$arr);
+
+	$x = q("insert into chat ( chat_room, chat_xchan, created, chat_text )
+		values( %d, '%s', '%s', '%s' )",
+		intval($room_id),
+		dbesc($xchan),
+		dbesc(datetime_convert()),
+		dbesc($arr['chat_text'])		
+	);
+
+	$ret['success'] = true;
+	return $ret;
 }

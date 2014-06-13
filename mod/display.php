@@ -77,8 +77,8 @@ function display_content(&$a, $update = 0, $load = false) {
 
 	$target_item = null;
 
-	$r = q("select id, uid, mid, parent_mid, item_restrict from item where mid = '%s' limit 1",
-		dbesc($item_hash)
+	$r = q("select id, uid, mid, parent_mid, item_restrict from item where mid like '%s' limit 1",
+		dbesc($item_hash . '%')
 	);
 
 	if($r) {
@@ -149,6 +149,10 @@ function display_content(&$a, $update = 0, $load = false) {
 
 		if($load || ($_COOKIE['jsAvailable'] != 1)) {
 			$r = null;
+
+			require_once('include/identity.php');
+			$sys = get_sys_channel();
+
 			if(local_user()) {
 				$r = q("SELECT * from item
 					WHERE item_restrict = 0
@@ -162,22 +166,24 @@ function display_content(&$a, $update = 0, $load = false) {
 					$updateable = true;
 
 				}
+
 			}
 			if($r === null) {
 
 				$r = q("SELECT * from item
 					WHERE item_restrict = 0
 					and mid = '%s'
-					AND ((( `item`.`allow_cid` = ''  AND `item`.`allow_gid` = '' AND `item`.`deny_cid`  = '' 
+					AND (((( `item`.`allow_cid` = ''  AND `item`.`allow_gid` = '' AND `item`.`deny_cid`  = '' 
 					AND `item`.`deny_gid`  = '' AND item_private = 0 ) 
 					and owner_xchan in ( " . stream_perms_xchans(($observer) ? PERMS_NETWORK : PERMS_PUBLIC) . " ))
+					OR owner_xchan = '%s')
 					$sql_extra )
 					group by mid limit 1",
-					dbesc($target_item['parent_mid'])
+					dbesc($target_item['parent_mid']),
+					dbesc($sys['xchan_hash'])
 				);
 
 			}
-
 		}
 		else {
 			$r = array();

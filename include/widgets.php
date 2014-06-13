@@ -74,6 +74,19 @@ function widget_collections($args) {
 }
 
 
+function widget_appselect($arr) {
+	return replace_macros(get_markup_template('app_select.tpl'),array(
+		'$title' => t('Apps'),
+		'$system' => t('System'),
+		'$authed' => ((local_user()) ? true : false),
+		'$personal' => t('Personal'),
+		'$new' => t('Create Personal App'),
+		'$edit' => t('Edit Personal App')
+	));
+}
+
+
+
 function widget_suggestions($arr) {
 
 	if((! local_user()) || (! feature_enabled(local_user(),'suggest')))
@@ -183,7 +196,7 @@ function widget_savedsearch($arr) {
 	$a = get_app();
 
 	$search = ((x($_GET,'search')) ? $_GET['search'] : '');
-
+	
 	if(x($_GET,'searchsave') && $search) {
 		$r = q("select * from `term` where `uid` = %d and `type` = %d and `term` = '%s' limit 1",
 			intval(local_user()),
@@ -251,7 +264,7 @@ function widget_savedsearch($arr) {
 	$o = replace_macros($tpl, array(
 		'$title'	 => t('Saved Searches'),
 		'$add'		 => t('add'),
-		'$searchbox' => searchbox('','netsearch-box',$srchurl . (($hasq) ? '' : '?f='),true),
+		'$searchbox' => searchbox($search,'netsearch-box',$srchurl . (($hasq) ? '' : '?f='),true),
 		'$saved' 	 => $saved,
 	));
 
@@ -313,7 +326,7 @@ function widget_archive($arr) {
 	$url = z_root() . '/' . $a->cmd;
 
 
-	$ret = posted_dates($uid,$wall);
+	$ret = list_post_dates($uid,$wall);
 
 	if(! count($ret))
 		return '';
@@ -721,4 +734,51 @@ return $o;
 
 }
 
+
+/**
+ * @function widget_photo($arr)
+ *    widget to display a single photo.
+ * @param array $arr;
+ *    'src' => URL of photo
+ *    'zrl' => true or false, use zid in url
+ *    'style' => CSS string
+ * URL must be an http or https URL
+ */
+
+
+function widget_photo($arr) {
+
+	$style = $zrl = false;
+	$params = '';
+	if(array_key_exists('src',$arr) && isset($arr['src']))
+		$url = $arr['src'];
+
+	if(strpos($url,'http') !== 0)
+		return '';
+
+	if(array_key_exists('style',$arr) && isset($arr['style']))
+		$style = $arr['style'];
+
+	// ensure they can't sneak in an eval(js) function
+
+	if(strpos($style,'(') !== false)
+		return '';
+
+	if(array_key_exists('zrl',$arr) && isset($arr['zrl']))
+		$zrl = (($arr['zrl']) ? true : false);
+
+	if($zrl)
+		$url = zid($url);
+
+	$o = '<div class="widget">';
+
+	$o .= '<img ' . (($zrl) ? ' class="zrl" ' : '') 
+				  . (($style) ? ' style="' . $style . '"' : '') 
+				  . ' src="' . $url . '" />';
+
+	$o .= '</div>';
+
+	return $o;
+}
 call_hooks('widgets', $arr);
+

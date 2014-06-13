@@ -43,6 +43,10 @@ abbr {
   text-indent: 0px;
 }
 
+.connect-icon {
+	margin-right: 5px;
+}
+
 a, a:visited, a:link, .fakelink, .fakelink:visited, .fakelink:link { 
 	font-weight: bold;
 	color: $link_colour; 
@@ -100,6 +104,12 @@ code {
 	max-width: 80%;
 }
 
+pre {
+	background: $pre_bgcolour;
+	color: $pre_txtcolour;
+	border:1px solid $pre_borderc;
+}
+
 blockquote {
 	background-color: $blockquote_bgcolour;
 	border-left: 4px solid $blockquote_bordercolour;
@@ -146,7 +156,7 @@ header {
 .info-message {
 	font-size: 1.1em;
 	border: 1px solid #444;
-	background-color: #F0F0F0;
+	background-color: $infomess_bgcolour;
 	padding: 10px;
 	-moz-border-radius: $radiuspx;
 	border-radius: $radiuspx;	
@@ -262,7 +272,6 @@ aside li {
 }
 
 #main-login {
-	margin-left: 100px;
 	margin-top: 50px;
 }
 
@@ -381,6 +390,7 @@ aside li {
 
 .vcard dl {
 	clear: both;
+	word-wrap:break-word;
 }
 
 .vcard-profile-edit-icon {
@@ -529,6 +539,12 @@ aside li {
 	font-size: 0.7em;
 }
 
+.app-name {
+	width: 125px;
+	overflow: none;
+}
+
+
 .pager {
   padding: 10px;
   text-align: center;
@@ -540,9 +556,11 @@ aside li {
 .pager_last,
 .pager_prev,
 .pager_next,
-.pager_n {
-	border: 1px solid black;
-	background: #EEE;
+.pager-prev,
+.pager-next,
+.pager_n { 
+	border: 1px solid $editbuttons_bordercolour;
+	background: $editbuttons_bgcolour;
 	padding: 4px;
 }
 
@@ -551,12 +569,11 @@ aside li {
 .pager_prev a,
 .pager_next a,
 .pager_n a {
-	text-decoration: none;
 }
 
 .pager_current {
-  border: 1px solid black;
-  background: #FFCCCC;
+  border: 1px solid transparent;
+  background: transparent;
   padding: 4px;
 }
 
@@ -974,6 +991,15 @@ aside li {
 	color: #FF0000;
 }
 
+.fc-state-highlight {
+    background: none repeat scroll 0% 0% $cal_bgcolour !important;
+}
+
+#fancybox-content {
+	border: 0px solid $fancybox_bgcolour;
+	background-color: $fancybox_bgcolour;
+}
+
 .settings-block {
 	border: 1px solid #AAA;
 	margin: 10px;
@@ -1006,7 +1032,7 @@ aside li {
 .profile-match-name {
 	text-align: center;
 	width: 120px;
-	height: 18px;
+	height: 1.5em;
 	overflow: hidden !important;
 }
 
@@ -1028,7 +1054,7 @@ aside li {
 	float: left;
 	padding: 10px;
 	width: 120px;
-	height: 120px;
+	min-height: 120px;
 	scroll: auto;
 }
 #profile-match-wrapper-end {
@@ -1174,6 +1200,9 @@ brain is weird like that */
 	margin-bottom: 15px;
 }
 
+#cloud-index td {
+	padding:5px;
+}
 
 
 /**
@@ -1364,10 +1393,6 @@ brain is weird like that */
 .tagged { background-position: -48px -48px; }
 .yellow { background-position: -64px -48px; }
 
-.starred {
-	color: gold;
-}
-
 .icon.dim { opacity: 0.3;filter:alpha(opacity=30); }
 
 
@@ -1383,7 +1408,6 @@ brain is weird like that */
 	max-height:150px;
 	background-color:$acpopup_bgcolour;
 	overflow:auto;
-	z-index:100000;
 	border:1px solid $acpopup_bordercolour;
 }
 .acpopupitem {
@@ -1463,7 +1487,7 @@ div.jGrowl div.jGrowl-notification {
 
 .autocomplete {
 	color: $font_colour;
-	background: #FFF;
+	background: $dropdown_bgcolour;
 	cursor: pointer;
 	text-align: left;
 	max-height: 350px;
@@ -1539,21 +1563,6 @@ header {
 	width: 32px;
 	height: 32px;
 	padding: 7px 7px 0px 0px;
-}
-
-
-#nav-notify-menu, #nav-network-menu, #nav-home-menu {
-	background-color: $notify_bgcolour;
-	border-top: none;
-	margin-top: $notify_topmargin;
-}
- 	
-#nav-notify-menu a, #nav-network-menu a, #nav-home-menu a {
-	color: $notify_linkcolour;
-}
-
-#nav-notify-menu a:hover, #nav-network-menu a:hover, #nav-home-menu a:hover {
-	background: $notify_bghover;
 }
 
 .notify-seen a {
@@ -1662,7 +1671,7 @@ header {
 
 .profile-match-connect { margin-top: 5px; }
 
-.reshared-content { margin-left: 30px; }
+.reshared-content { margin-left: 20px; }
 .shared_header img { margin-right: 10px; }
 
 .tag1 {
@@ -1715,19 +1724,6 @@ header {
 .profile-thing-list {
 	list-style-type: none;
 }
-/*
-.profile-thing-list li {
-	float: left;
-	margin-right: 25px;
-}
-*/
-
-
-div#pagelist-content-wrapper {
-width: 80%;
-margin-left: auto;
-margin-right: auto;
-}
 
 div.page-list-item {
 margin: 20px;
@@ -1735,9 +1731,6 @@ margin: 20px;
 
 div#write-pages {
 display: block;
-position: fixed;
-top: 24px;
-z-index: 99;
 background: silver;
 width: 100%;
 }
@@ -1788,10 +1781,6 @@ a .drop-icons:hover {
 	font-size: 1.8em;
 }
 
-.item-category {
-	margin-right: 10px;
-}
-
 .design-tools ul {
 	list-style-type: none;
 }
@@ -1821,6 +1810,10 @@ img.mail-list-sender-photo {
 }
 
 /* jot */
+
+#profile-jot-wrapper {
+	max-width: $converse_width;
+}
 
 #jot-title,
 #jot-category,
@@ -1871,11 +1864,11 @@ img.mail-list-sender-photo {
 }
 
 #profile-jot-text::-webkit-input-placeholder {
-	font-size:1.5em;
+	font-size:18px;
 }
 
 #profile-jot-text::-moz-placeholder {
-	font-size:1.5em;
+	font-size:18px;
 }
 
 #profile-jot-text:focus::-webkit-input-placeholder {
@@ -1902,6 +1895,7 @@ img.mail-list-sender-photo {
 
 /* conversation */
 
+.hide-comments-outer,
 .thread-wrapper .wall-item-comment-wrapper,
 .wall-item-content-wrapper.comment {
 	margin-left: $comment_indent;
@@ -1912,52 +1906,45 @@ img.mail-list-sender-photo {
 }
 
 .wall-item-content-wrapper {
-	border-radius: $radiuspx;
 	background-color: $item_colour;
-	opacity: $item_opacity;
-	border-left: 2px solid $item_bordercolour;
-	border-bottom: 1px solid $item_bordercolour;
+	padding: 10px;
+}
+
+.wall-item-content-wrapper {
+	border-top-right-radius: $radiuspx;
+	border-top-left-radius: $radiuspx;
+}
+
+.comment .wall-item-body {
+	padding-left: $comment_padding;
+}
+
+.hide-comments-outer,
+.wall-item-content-wrapper.comment {
+	background-color: $comment_item_colour;
+	border-left: $comment_border_left $comment_border_colour;
+	border-right: $comment_border_right $comment_border_colour;
+	border-bottom: $comment_border_bottom $comment_border_colour;
+	border-radius: 0px;
+	padding: 7px 10px 7px 7px;
 }
 
 .wall-item-comment-wrapper {
-	margin-top: 10px;
-	border-left: 2px solid $item_bordercolour;
-	border-bottom: 1px solid $item_bordercolour; 
+	padding: 7px 10px;
+	background-color: $item_colour;
+	border-radius: 0px;
+	border-bottom-right-radius: $radiuspx;
+	border-bottom-left-radius: $radiuspx;
+	margin-top: 3px;
 }
 
-.wallwall .wwto {
-	top: $wwtop;
+.wall-item-comment-wrapper-wc {
+	margin-top: 0px;
 }
 
-.wall-item-photo-menu-button {
-	background-image: url("../img/photo-menu.jpg");
-	background-position: top left;
-	background-repeat: no-repeat;
-	top: $pmenu_top;
-}
-
-.wall-item-photo-menu {
-	border: 2px solid #444444;
-	background: #FFFFFF;
-	top: $top_photo;
-}
-
-.wall-item-photo-menu ul {
-	list-style: none
-}
-
-.wall-item-photo-menu li a:hover {
-	color: #FFFFFF;
-	background: #3465A4;
-	text-decoration: none;
-}
-
-.comment .wall-item-photo-menu-button {
-	top: $pmenu_reply;
-}
-
-.comment .wall-item-photo-menu {
-	top: $reply_photo;
+.wall-item-like,
+.wall-item-dislike {
+	font-size: 11px;
 }
 
 .wall-item-photo {
@@ -1978,15 +1965,6 @@ img.mail-list-sender-photo {
     box-shadow: $shadowpx $shadowpx $shadowpx 0 #444444;
 }
 
-.wall-item-arrowphoto-wrapper {
-	top: $wwtop;
-}
-
-.wall-item-lock {
-	font-size: 1.2em;
-	color: $toolicon_colour;
-}
-
 .wall-item-ago .icon-ok {
 	color: darkgreen;
 }
@@ -1997,11 +1975,12 @@ img.mail-list-sender-photo {
 }
 
 .wall-item-ago i {
-	font-size: 0.6em;
+	font-size: 0.8em;
 }
 
 .wall-item-content {
 	font-size: $font_size;
+	clear: both;
 }
 
 .item-tool {
@@ -2009,35 +1988,13 @@ img.mail-list-sender-photo {
 	color: $toolicon_colour;
 }
 
-.item-tool:hover {
-	color: $toolicon_activecolour;
-}
-
 .like-rotator {
 	color: $toolicon_colour;
 }
 
-.my-comment-photo {
-    border-radius: $radiuspx;
-    -moz-border-radius: $radiuspx;
-    box-shadow: $shadowpx $shadowpx $shadowpx 0 #444444;
-}
-
-.comment-edit-photo img {
-	width: $reply_photo;
-}
-
-[class^="comment-edit-bb"] {
-	list-style: none;
-}
-
 .comment-icon {
-	font-size: 1.2em;
+	font-size: 0.8em;
 	color: $toolicon_colour;
-}
-
-.comment-icon:hover {
-	color: $toolicon_activecolour;
 }
 
 .comment-edit-text-empty,
@@ -2048,16 +2005,31 @@ img.mail-list-sender-photo {
 
 .comment-edit-text-empty {
 	color: gray;
+	font-size: 11px;
 }
 
 .comment-edit-text-full {
 	color: black;
 }
 
+.divgrow-showmore {
+	display: block;
+	width: 100%;
+	border-top: 1px dashed #ccc;
+	border-bottom-right-radius: $radiuspx;
+	border-bottom-left-radius: $radiuspx;
+	text-align: center;
+}
+
+.divgrow-showmore:hover {
+	background-color: $editbuttons_bghover;
+}
+
+
 /* widgets */
 
 .widget {
-	border-bottom: 1px solid #eec;
+	border-bottom: 1px solid $widget_brdrcolour;
 	-moz-border-radius: $radiuspx;
 	-webkit-border-radius: $radiuspx;
 	border-radius: $radiuspx;
@@ -2147,8 +2119,6 @@ nav .dropdown-menu {
 	border-bottom-right-radius: $radiuspx;
 	border-bottom-left-radius: $radiuspx;
 	background-color: $notify_bgcolour;
-	border-top: none;
-	margin-top: $notify_topmargin;
 }
 
 nav .dropdown-menu .divider{
@@ -2173,6 +2143,15 @@ nav .dropdown-menu>li>a:hover,nav .dropdown-menu>li>a:focus{
 	color: $nav_active_icon_colour;
 }
 
+/* Files */
+
+#attach-edit-perms {
+	margin-top: 25px;
+	margin-bottom: 20px;
+	font-weight: bold;
+	font-size: 17px;
+}
+
 /* bootstrap overrides */
 blockquote {
 	font-size: $body_font_size;
@@ -2181,12 +2160,28 @@ blockquote {
 .dropdown-menu {
 	font-size: $body_font_size;
 	border-radius: $radiuspx;
+	background-color: $dropdown_bgcolour; 
+}
+
+.dropdown-menu >li > a {
+	color: $dropdown_textcolour; 
 }
 
 
+.dropdown-menu > li > a:hover, .dropdown-menu > li > a:focus {
+    	color: $dropdown_txtcolhover; 
+    	background-color: $dropdown_bgcolhover; 
+	$dropdown_bgimghover
+}
 
 .dropdown-menu img {
 	border-radius: $radiuspx;
+}
+
+.open .dropdown-toggle.btn-default {
+    color: $dropdown_togglecol; 
+    background-color: $dropdown_togglebgcol; 
+    border-color: $dropdown_bordercol; 
 }
 
 .navbar-inverse {
@@ -2257,43 +2252,51 @@ blockquote {
 }
 
 .nav-tabs{
-	border-bottom:1px solid $navtabs_borderc !important;
+	border-bottom:1px solid $navtabs_borderc;
 }
 
 .nav-tabs>li.active>a,.nav-tabs>li.active>a:hover,.nav-tabs>li.active>a:focus{
-	color: $navtabs_fontcolour !important; 
+	color: $navtabs_fontcolour;
 	background-color: $navtabs_bgcolour; 
 }
 
 .nav-tabs.nav-justified>.active>a,.nav-tabs.nav-justified>.active>a:hover,.nav-tabs.nav-justified>.active>a:focus{
-	border:1px solid $navtabs_borderc !important;
-	border-bottom:1px solid transparent !important;
-	bottom: -1px !important;
+	border:1px solid $navtabs_borderc;
 }
 
 .nav-tabs.nav-justified > li > a {
-    	border-bottom: none;
 	$navtabs_linkcolour
 }
 
 .nav-tabs > li > a:hover, .nav-tabs > li > a:focus {
     	text-decoration: $navtabs_decohover;
     	background-color: $navtabs_bgchover;
-   	border-bottom: 1px solid $navtabs_bgchover;
-	border-color: $navtabs_bgchover;
+	border-color: transparent;
 	$navtabs_linkchover
+}
+
+@media (min-width: 768px) {
+  .nav-tabs.nav-justified > li > a {
+    border-bottom: 1px solid $navtabs_borderc;
+  }
+  .nav-tabs.nav-justified > .active > a,
+  .nav-tabs.nav-justified > .active > a:hover,
+  .nav-tabs.nav-justified > .active > a:focus {
+    border-bottom-color: transparent;
+  }
 }
 
 .btn-default {
     	background-color: $editbuttons_bgcolour;
     	border-color: $editbuttons_bordercolour;
+	color: $editbuttons_colour;
     	text-shadow: none;
     	box-shadow: none;
 }
 
 .btn-default:hover, .btn-default:focus, .btn-default:active .btn-default.active {
     	background-color: $editbuttons_bghover;
-    	border-color: $editbuttons_bordercolour;
+	border-color: $editbuttons_bordercolourhover;
 	color: $input_colourhover;
 	text-decoration: $input_decohover;
 }
@@ -2302,9 +2305,12 @@ blockquote {
     	text-decoration: none;
 }
 
-.btn-preview, .btn-preview:hover, .btn-preview:focus, .btn-preview:active {
-	margin-right: 1px;
+.well {
+	background-color: $advperm_bgcolour;
+	border: 1px solid $advperm_bordercol;
+	background-image: linear-gradient(to bottom, $advperm_gradientcol 0px, $advperm_bgcolour 100%);
 }
+
 
 @media screen and (max-width: 767px) {
 	aside#region_1 {
@@ -2329,15 +2335,7 @@ blockquote {
 
 	.thread-wrapper.toplevel_item {
 		width: 100%;
-	}
-
-	.thread-wrapper .wall-item-comment-wrapper,
-	.wall-item-content-wrapper.comment {
-		margin-left: 18px;
-	}
-
-	.hide-comments-outer {
-		margin-left: 18px;
+		border:1px;
 	}
 
 	.wall-item-photo {
