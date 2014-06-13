@@ -720,3 +720,5 @@ EOT;
 return $o;
 
 }
+
+call_hooks('widgets', $arr);
