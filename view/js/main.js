@@ -618,7 +618,7 @@ function updateConvItems(mode,data) {
 			$("#page-spinner").spin('small');
 
 		$.get(update_url,function(data) {
-			var update_mode = ((page_load) ? 'replace' : 'update');
+			var update_mode = ((page_load && bParam_page == 1) ? 'replace' : 'update');
 			if(scroll_next)
 				update_mode = 'append';
 			page_load = false;

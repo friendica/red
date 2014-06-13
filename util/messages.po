@@ -6,9 +6,9 @@
 #, fuzzy
 msgid ""
 msgstr ""
-"Project-Id-Version: 2014-06-06.698\n"
+"Project-Id-Version: 2014-06-13.705\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2014-06-06 00:02-0700\n"
+"POT-Creation-Date: 2014-06-13 00:02-0700\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -137,7 +137,7 @@ msgstr ""
 msgid "Select"
 msgstr ""
 
-#: ../../include/conversation.php:632 ../../include/apps.php:215
+#: ../../include/conversation.php:632 ../../include/apps.php:232
 #: ../../include/ItemObject.php:108 ../../mod/admin.php:757
 #: ../../mod/admin.php:886 ../../mod/connedit.php:398
 #: ../../mod/settings.php:578 ../../mod/filestorage.php:175
@@ -239,7 +239,7 @@ msgstr ""
 msgid "Send PM"
 msgstr ""
 
-#: ../../include/conversation.php:942 ../../include/apps.php:132
+#: ../../include/conversation.php:942 ../../include/apps.php:135
 msgid "Poke"
 msgstr ""
 
@@ -539,7 +539,7 @@ msgid "Profile Details"
 msgstr ""
 
 #: ../../include/conversation.php:1501 ../../include/nav.php:84
-#: ../../include/apps.php:126 ../../mod/fbrowser.php:25
+#: ../../include/apps.php:129 ../../mod/fbrowser.php:25
 msgid "Photos"
 msgstr ""
 
@@ -548,7 +548,7 @@ msgid "Photo Albums"
 msgstr ""
 
 #: ../../include/conversation.php:1510 ../../include/nav.php:85
-#: ../../include/apps.php:122 ../../mod/fbrowser.php:114
+#: ../../include/apps.php:125 ../../mod/fbrowser.php:114
 msgid "Files"
 msgstr ""
 
@@ -561,7 +561,7 @@ msgid "Chatrooms"
 msgstr ""
 
 #: ../../include/conversation.php:1532 ../../include/nav.php:87
-#: ../../include/nav.php:180 ../../include/apps.php:127
+#: ../../include/nav.php:180 ../../include/apps.php:130
 #: ../../mod/events.php:377
 msgid "Events"
 msgstr ""
@@ -571,7 +571,7 @@ msgid "Events and Calendar"
 msgstr ""
 
 #: ../../include/conversation.php:1540 ../../include/nav.php:88
-#: ../../include/apps.php:116
+#: ../../include/apps.php:119
 msgid "Bookmarks"
 msgstr ""
 
@@ -580,7 +580,7 @@ msgid "Saved Bookmarks"
 msgstr ""
 
 #: ../../include/conversation.php:1551 ../../include/nav.php:90
-#: ../../include/apps.php:123 ../../mod/webpages.php:79
+#: ../../include/apps.php:126 ../../mod/webpages.php:79
 msgid "Webpages"
 msgstr ""
 
@@ -593,7 +593,7 @@ msgid "New Page"
 msgstr ""
 
 #: ../../include/page_widgets.php:8 ../../include/page_widgets.php:36
-#: ../../include/apps.php:214 ../../include/menu.php:42
+#: ../../include/apps.php:231 ../../include/menu.php:42
 #: ../../include/ItemObject.php:96 ../../mod/blocks.php:94
 #: ../../mod/connections.php:392 ../../mod/settings.php:577
 #: ../../mod/editblock.php:111 ../../mod/editlayout.php:106
@@ -1026,7 +1026,7 @@ msgstr ""
 msgid "Your files"
 msgstr ""
 
-#: ../../include/nav.php:86 ../../include/apps.php:133
+#: ../../include/nav.php:86 ../../include/apps.php:136
 msgid "Chat"
 msgstr ""
 
@@ -1046,7 +1046,7 @@ msgstr ""
 msgid "Your webpages"
 msgstr ""
 
-#: ../../include/nav.php:94 ../../include/apps.php:118 ../../boot.php:1452
+#: ../../include/nav.php:94 ../../include/apps.php:121 ../../boot.php:1452
 msgid "Login"
 msgstr ""
 
@@ -1075,7 +1075,7 @@ msgstr ""
 msgid "Create an account"
 msgstr ""
 
-#: ../../include/nav.php:139 ../../include/apps.php:129 ../../mod/help.php:60
+#: ../../include/nav.php:139 ../../include/apps.php:132 ../../mod/help.php:60
 #: ../../mod/help.php:65
 msgid "Help"
 msgstr ""
@@ -1085,7 +1085,7 @@ msgid "Help and documentation"
 msgstr ""
 
 #: ../../include/nav.php:142 ../../include/widgets.php:79
-#: ../../mod/apps.php:17 ../../mod/apps.php:36
+#: ../../mod/apps.php:33
 msgid "Apps"
 msgstr ""
 
@@ -1094,7 +1094,7 @@ msgid "Applications, utilities, links, games"
 msgstr ""
 
 #: ../../include/nav.php:144 ../../include/text.php:813
-#: ../../include/text.php:827 ../../include/apps.php:134
+#: ../../include/text.php:827 ../../include/apps.php:137
 #: ../../mod/search.php:29
 msgid "Search"
 msgstr ""
@@ -1103,7 +1103,7 @@ msgstr ""
 msgid "Search site content"
 msgstr ""
 
-#: ../../include/nav.php:147 ../../include/apps.php:128
+#: ../../include/nav.php:147 ../../include/apps.php:131
 #: ../../mod/directory.php:210
 msgid "Directory"
 msgstr ""
@@ -1112,7 +1112,7 @@ msgstr ""
 msgid "Channel Locator"
 msgstr ""
 
-#: ../../include/nav.php:158 ../../include/apps.php:120
+#: ../../include/nav.php:158 ../../include/apps.php:123
 msgid "Matrix"
 msgstr ""
 
@@ -1124,7 +1124,7 @@ msgstr ""
 msgid "Mark all matrix notifications seen"
 msgstr ""
 
-#: ../../include/nav.php:161 ../../include/apps.php:124
+#: ../../include/nav.php:161 ../../include/apps.php:127
 msgid "Channel Home"
 msgstr ""
 
@@ -1157,7 +1157,7 @@ msgstr ""
 msgid "Mark all system notifications seen"
 msgstr ""
 
-#: ../../include/nav.php:172 ../../include/apps.php:130
+#: ../../include/nav.php:172 ../../include/apps.php:133
 msgid "Mail"
 msgstr ""
 
@@ -1197,7 +1197,7 @@ msgstr ""
 msgid "Mark all events seen"
 msgstr ""
 
-#: ../../include/nav.php:184 ../../include/apps.php:119
+#: ../../include/nav.php:184 ../../include/apps.php:122
 msgid "Channel Select"
 msgstr ""
 
@@ -1205,7 +1205,7 @@ msgstr ""
 msgid "Manage Your Channels"
 msgstr ""
 
-#: ../../include/nav.php:186 ../../include/apps.php:121
+#: ../../include/nav.php:186 ../../include/apps.php:124
 #: ../../include/widgets.php:514 ../../mod/admin.php:976
 #: ../../mod/admin.php:1181
 msgid "Settings"
@@ -2212,7 +2212,7 @@ msgid "Events this week:"
 msgstr ""
 
 #: ../../include/identity.php:942 ../../include/identity.php:1031
-#: ../../include/apps.php:125 ../../mod/profperm.php:112
+#: ../../include/apps.php:128 ../../mod/profperm.php:112
 msgid "Profile"
 msgstr ""
 
@@ -2630,40 +2630,40 @@ msgstr ""
 msgid "Pages"
 msgstr ""
 
-#: ../../include/apps.php:115
+#: ../../include/apps.php:118
 msgid "Site Admin"
 msgstr ""
 
-#: ../../include/apps.php:117
+#: ../../include/apps.php:120
 msgid "Address Book"
 msgstr ""
 
-#: ../../include/apps.php:131 ../../mod/mood.php:131
+#: ../../include/apps.php:134 ../../mod/mood.php:131
 msgid "Mood"
 msgstr ""
 
-#: ../../include/apps.php:135
+#: ../../include/apps.php:138
 msgid "Probe"
 msgstr ""
 
-#: ../../include/apps.php:136
+#: ../../include/apps.php:139
 msgid "Suggest"
 msgstr ""
 
-#: ../../include/apps.php:208 ../../mod/settings.php:79
+#: ../../include/apps.php:224 ../../mod/settings.php:79
 #: ../../mod/settings.php:541
 msgid "Update"
 msgstr ""
 
-#: ../../include/apps.php:208
+#: ../../include/apps.php:224
 msgid "Install"
 msgstr ""
 
-#: ../../include/apps.php:212
+#: ../../include/apps.php:229
 msgid "Purchase"
 msgstr ""
 
-#: ../../include/apps.php:291 ../../include/apps.php:342
+#: ../../include/apps.php:313 ../../include/apps.php:364
 #: ../../mod/connedit.php:434
 msgid "Unknown"
 msgstr ""
@@ -5005,7 +5005,7 @@ msgstr ""
 msgid "Finding: "
 msgstr ""
 
-#: ../../mod/rpost.php:86 ../../mod/editpost.php:42
+#: ../../mod/rpost.php:97 ../../mod/editpost.php:42
 msgid "Edit post"
 msgstr ""
 
@@ -7371,11 +7371,11 @@ msgstr ""
 msgid "Discard"
 msgstr ""
 
-#: ../../mod/notifications.php:94 ../../mod/notify.php:54
+#: ../../mod/notifications.php:94 ../../mod/notify.php:53
 msgid "No more system notifications."
 msgstr ""
 
-#: ../../mod/notifications.php:98 ../../mod/notify.php:58
+#: ../../mod/notifications.php:98 ../../mod/notify.php:57
 msgid "System Notifications"
 msgstr ""
 
