@@ -3,20 +3,31 @@
 require_once('include/permissions.php');
 
 function find_upstream_directory($dirmode) {
+	global $DIRECTORY_FALLBACK_SERVERS;
+
 	$preferred = get_config('system','directory_server');
-	if($preferred)
-		return array('url' => $preferred);
-	// If we haven't got a preferred directory, pick one at random to spread the load
 	if(! $preferred) {
-		$r = q("select site_url from site where (site_flags & %d) order by rand() limit 1",
-                intval(DIRECTORY_MODE_PRIMARY|DIRECTORY_MODE_SECONDARY)
-        	);
-		$preferred = $r[0]['site_url'];
-	return array('url' => $preferred);
+
+		/**
+		 * No directory has yet been set. For most sites, pick one at random
+		 * from our list of directory servers. However, if we're a directory
+		 * server ourself, point at the local instance
+		 * We will then set this value so this should only ever happen once.
+		 * Ideally there will be an admin setting to change to a different 
+		 * directory server if you don't like our choice or if circumstances change.
+		 */
+
+		$dirmode = intval(get_config('system','directory_mode'));
+		if($dirmode == DIRECTORY_MODE_NORMAL) {
+			$toss = mt_rand(0,count($DIRECTORY_FALLBACK_SERVERS));
+			$preferred = $DIRECTORY_FALLBACK_SERVERS[$toss];
+			set_config('system','directory_server',$preferred);
+		}
+		else{
+			set_config('system','directory_server',z_root());
+		}
 	}
-	
-	//Still found nothing, give up and fall back to the primary directory
-	return '';
+	return array('url' => $preferred);
 }
 
 function dir_sort_links() {
@@ -238,7 +249,7 @@ function local_dir_update($uid,$force) {
 	}
 
 	$ud_hash = random_string() . '@' . get_app()->get_hostname();
-	update_modtime($hash,$ud_hash,$p[0]['channel_address'] . '@' . get_app()->get_hostname(),(($force) ? (-1) : 1));
+	update_modtime($hash,$ud_hash,$p[0]['channel_address'] . '@' . get_app()->get_hostname(),(($force) ? UPDATE_FLAGS_FORCED : UPDATE_FLAGS_UPDATED));
 
 }
 	
