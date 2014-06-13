@@ -445,7 +445,7 @@ function zot_refresh($them,$channel = null, $force = false) {
 						intval($channel['channel_id']),
 						dbesc($x['hash'])
 					);
-					if(($new_connection) && (! $default_perms)) {
+					if($new_connection) {
 						require_once('include/enotify.php');
 						notification(array(
 							'type'         => NOTIFY_INTRO,
