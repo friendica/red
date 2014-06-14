@@ -73,8 +73,6 @@ EOT;
 	$nav['usermenu']=array();
 	$userinfo = null;
 
-
-
 	if(local_user()) {
 		$nav['logout'] = Array('logout',t('Logout'), "", t('End this session'));
 		

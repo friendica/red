@@ -1527,7 +1527,6 @@ function profile_tabs($a, $is_owner=False, $nickname=Null){
 		);
 	}
 
-
 	if($is_owner) {
 		$tabs[] = array(
 			'label' => t('Bookmarks'),
