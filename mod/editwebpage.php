@@ -169,7 +169,6 @@ function editwebpage_content(&$a) {
 		'$placeholdercategory' => t('Categories (comma-separated list)'),
 		'$emtitle' => t('Example: bob@example.com, mary@example.com'),
 		'lockstate' => (((strlen($itm[0]['allow_cid'])) || (strlen($itm[0]['allow_gid'])) || (strlen($itm[0]['deny_cid'])) || (strlen($itm[0]['deny_gid']))) ? 'lock' : 'unlock'),
-		'$acl' => populate_acl($itm[0]), 
 		'$bang' => '',
 		'$profile_uid' => (intval($owner)),
 		'$preview' => ((feature_enabled(local_user(),'preview')) ? t('Preview') : ''),
