@@ -1517,25 +1517,17 @@ function profile_tabs($a, $is_owner=False, $nickname=Null){
 
 	require_once('include/chat.php');
 	$chats = chatroom_list($uid);
-	$subdued = ((count($chats)) ? '' : ' subdued');
-	$tabs[] = array(
-		'label' => t('Chatrooms'),
-		'url'	=> $a->get_baseurl() . '/chat/' . $nickname,
-		'sel' 	=> ((argv(0) == 'chat') ? 'active' . $subdued : '' . $subdued),
-		'title' => t('Chatrooms'),
-		'id'    => 'chat-tab',
-	);
-
+	if (count($chats)) {
+		$tabs[] = array(
+			'label' => t('Chatrooms'),
+			'url'	=> $a->get_baseurl() . '/chat/' . $nickname,
+			'sel' 	=> ((argv(0) == 'chat') ? 'active' : '' ),
+			'title' => t('Chatrooms'),
+			'id'    => 'chat-tab',
+		);
+	}
 
 	if($is_owner) {
-		$tabs[] = array(
-			'label' => t('Events'),
-			'url'	=> $a->get_baseurl() . '/events',
-			'sel' 	=> ((argv(0) == 'events') ? 'active' : ''),
-			'title' => t('Events and Calendar'),
-			'id'    => 'events-tab',
-		);
-
 		$tabs[] = array(
 			'label' => t('Bookmarks'),
 			'url'	=> $a->get_baseurl() . '/bookmarks',

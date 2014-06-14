@@ -233,6 +233,7 @@ function connections_content(&$a) {
 					$a->argc = 1;
 					unset($a->argv[1]);
 				}
+				nav_set_selected('intros');
 				break;
 			case 'unconnected':
 				$search_flags = ABOOK_FLAG_UNCONNECTED;

@@ -83,8 +83,13 @@ EOT;
 			$nav['usermenu'][]   = Array('profiles', t('Edit Profiles'),"", t('Manage/Edit profiles'));
 		$nav['usermenu'][] = Array('photos/' . $channel['channel_address'], t('Photos'), "", t('Your photos'));
 		$nav['usermenu'][] = Array('cloud/' . $channel['channel_address'],t('Files'),"",t('Your files'));
-		$nav['usermenu'][] = Array('chat/' . $channel['channel_address'],t('Chat'),"",t('Your chatrooms'));
-		$nav['usermenu'][] = Array('events', t('Events'), "", t('Your events'));
+
+		require_once('include/chat.php');
+		$chats = chatroom_list(local_user());
+		if (count($chats)) {
+			$nav['usermenu'][] = Array('chat/' . $channel['channel_address'],t('Chat'),"",t('Your chatrooms'));
+		}
+
 		$nav['usermenu'][] = Array('bookmarks', t('Bookmarks'), "", t('Your bookmarks'));
 		if(feature_enabled($channel['channel_id'],'webpages'))
 			$nav['usermenu'][] = Array('webpages/' . $channel['channel_address'],t('Webpages'),"",t('Your webpages'));	
@@ -185,7 +190,6 @@ EOT;
 
 		$nav['settings'] = array('settings', t('Settings'),"", t('Account/Channel Settings'));
 
-		$nav['contacts'] = array('connections', t('Connections'),"", t('Manage/Edit Friends and Connections'));
 	}
 
 	/**
