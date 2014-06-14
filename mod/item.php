@@ -46,7 +46,7 @@ function item_post(&$a) {
 
 	call_hooks('post_local_start', $_REQUEST);
 
-//	 logger('postvars ' . print_r($_REQUEST,true), LOGGER_DATA);
+	 logger('postvars ' . print_r($_REQUEST,true), LOGGER_DATA);
 
 	$api_source = ((x($_REQUEST,'api_source') && $_REQUEST['api_source']) ? true : false);
 
@@ -262,14 +262,19 @@ function item_post(&$a) {
 
 
 	if($orig_post) {
-		$str_group_allow   = ((array_key_exists('group_allow',$_REQUEST)) 
-			? perms2str($_REQUEST['group_allow']) : $orig_post['allow_gid']);
-		$str_contact_allow = ((array_key_exists('contact_allow',$_REQUEST)) 
-			? perms2str($_REQUEST['contact_allow']) : $orig_post['allow_cid']);
-		$str_group_deny    = ((array_key_exists('group_deny',$_REQUEST)) 
-			? perms2str($_REQUEST['group_deny']) : $orig_post['deny_gid']);
-		$str_contact_deny  = ((array_key_exists('contact_deny',$_REQUEST)) 
-			? perms2str($_REQUEST['contact_deny']) : $orig_post['deny_cid']);
+		// webpages are allowed to change ACLs after the fact. Normal conversation items aren't. 
+		if($webpage) {
+			$str_group_allow   = perms2str($_REQUEST['group_allow']); 
+			$str_contact_allow = perms2str($_REQUEST['contact_allow']);
+			$str_group_deny    = perms2str($_REQUEST['group_deny']);
+			$str_contact_deny  = perms2str($_REQUEST['contact_deny']);
+		}
+		else {
+			$str_group_allow   = $orig_post['allow_gid'];
+			$str_contact_allow = $orig_post['allow_cid'];
+			$str_group_deny    = $orig_post['deny_gid'];
+			$str_contact_deny  = $orig_post['deny_cid'];
+		}
 		$location          = $orig_post['location'];
 		$coord             = $orig_post['coord'];
 		$verb              = $orig_post['verb'];
