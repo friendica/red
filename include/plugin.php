@@ -573,10 +573,24 @@ function head_get_js() {
 	$str = '';
 	$sources = get_app()->js_sources;
 	if(count($sources)) 
-		foreach($sources as $source)
+		foreach($sources as $source) {
+			if($source === 'main.js')
+				continue;
 			$str .= format_js_if_exists($source);
+		}
 	return $str;
 }
+
+function head_get_main_js() {
+	$str = '';
+	$sources = array('main.js');
+	if(count($sources)) 
+		foreach($sources as $source)
+			$str .= format_js_if_exists($source,true);
+	return $str;
+}
+
+
 
 function format_js_if_exists($source) {
 

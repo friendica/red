@@ -986,6 +986,10 @@ class App {
 			'$js_strings' => js_strings(),
 			'$zid' => get_my_address(),
 		)) . $this->page['htmlhead'];
+
+		// always put main.js at the end
+		$this->page['htmlhead'] .= head_get_main_js();
+
 	}
 
 	/**
