@@ -1850,3 +1850,4 @@ $a->strings["Forgot your password?"] = "Забыли пароль или лог�
 $a->strings["permission denied"] = "доступ запрещен";
 $a->strings["Got Zot?"] = "Got Zot?";
 $a->strings["toggle mobile"] = "мобильное подключение";
+
