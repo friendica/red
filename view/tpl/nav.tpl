@@ -18,11 +18,14 @@
 					{{foreach $nav.usermenu as $usermenu}}
 					<li role="presentation"><a href="{{$usermenu.0}}" title="{{$usermenu.3}}" role="menuitem">{{$usermenu.1}}</a></li>
 					{{/foreach}}
+					<li role="presentation" class="divider"></li>
 					{{if $nav.profiles}}<li role="presentation"><a href="{{$nav.profiles.0}}" title="{{$nav.profiles.3}}" role="menuitem">{{$nav.profiles.1}}</a></li>{{/if}}
 					{{if $nav.manage}}<li role="presentation"><a href="{{$nav.manage.0}}" title="{{$nav.manage.3}}" role="menuitem">{{$nav.manage.1}}</a></li>{{/if}}	
-					{{if $nav.contacts}}<li role="presentation"><a href="{{$nav.contacts.0}}" title="{{$nav.contacts.3}}" role="menuitem">{{$nav.contacts.1}}</a></li>{{/if}}
 					{{if $nav.settings}}<li role="presentation"><a href="{{$nav.settings.0}}" title="{{$nav.settings.3}}" role="menuitem">{{$nav.settings.1}}</a></li>{{/if}}
-					{{if $nav.admin}}<li role="presentation"><a href="{{$nav.admin.0}}" title="{{$nav.admin.3}}" role="menuitem">{{$nav.admin.1}}</a></li>{{/if}}
+					{{if $nav.admin}}
+					<li role="presentation" class="divider"></li>
+					<li role="presentation"><a href="{{$nav.admin.0}}" title="{{$nav.admin.3}}" role="menuitem">{{$nav.admin.1}}</a></li>
+					{{/if}}
 					{{if $nav.logout}}
 					<li role="presentation" class="divider"></li>
 					<li role="presentation"><a href="{{$nav.logout.0}}" title="{{$nav.logout.3}}" role="menuitem">{{$nav.logout.1}}</a></li>
