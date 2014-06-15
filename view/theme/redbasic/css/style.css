@@ -1919,7 +1919,6 @@ img.mail-list-sender-photo {
 	padding-left: $comment_padding;
 }
 
-.hide-comments-outer,
 .wall-item-content-wrapper.comment {
 	background-color: $comment_item_colour;
 	border-left: $comment_border_left $comment_border_colour;
@@ -1927,6 +1926,20 @@ img.mail-list-sender-photo {
 	border-bottom: $comment_border_bottom $comment_border_colour;
 	border-radius: 0px;
 	padding: 7px 10px 7px 7px;
+}
+
+.hide-comments-outer {
+	background-color: $comment_item_colour;
+	border-left: $comment_border_left $comment_border_colour;
+	border-right: $comment_border_right $comment_border_colour;
+	border-bottom: $comment_border_bottom $comment_border_colour;
+	border-top: 1px dashed #ccc;
+	text-align: center;
+	border-radius: 0px;
+}
+
+.hide-comments-outer:hover {
+	border-top: 1px dashed #adadad;
 }
 
 .wall-item-comment-wrapper {
@@ -2022,7 +2035,7 @@ img.mail-list-sender-photo {
 }
 
 .divgrow-showmore:hover {
-	background-color: $editbuttons_bghover;
+	border-top: 1px dashed #adadad;
 }
 
 
