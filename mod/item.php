@@ -262,6 +262,7 @@ function item_post(&$a) {
 
 
 	if($orig_post) {
+		$private = 0;
 		// webpages are allowed to change ACLs after the fact. Normal conversation items aren't. 
 		if($webpage) {
 			$str_group_allow   = perms2str($_REQUEST['group_allow']); 
@@ -275,13 +276,21 @@ function item_post(&$a) {
 			$str_group_deny    = $orig_post['deny_gid'];
 			$str_contact_deny  = $orig_post['deny_cid'];
 		}
+
+		if((strlen($str_group_allow)) 
+			|| strlen($str_contact_allow) 
+			|| strlen($str_group_deny) 
+			|| strlen(str_contact_deny)) {
+			$private = 1;
+		}
+
+
 		$location          = $orig_post['location'];
 		$coord             = $orig_post['coord'];
 		$verb              = $orig_post['verb'];
 		$app               = $orig_post['app'];
 		$title             = $_REQUEST['title'];
 		$body              = $_REQUEST['body'];
-		$private           = $orig_post['item_private'];
 		$item_flags        = $orig_post['item_flags'];
 		$item_restrict     = $orig_post['item_restrict'];
 		$postopts          = $orig_post['postopts'];
