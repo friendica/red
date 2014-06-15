@@ -591,7 +591,7 @@ function photos_content(&$a) {
 		} 
 
 		$albumselect_e = $albumselect;
-		$aclselect_e = (($_is_owner) ? populate_acl($channel_acl) : '');
+		$aclselect_e = (($_is_owner) ? populate_acl($channel_acl,false) : '');
 
 		$tpl = get_markup_template('photos_upload.tpl');
 		$o .= replace_macros($tpl,array(

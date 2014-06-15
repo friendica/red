@@ -211,7 +211,7 @@ function fixacl(&$item) {
 	$item = str_replace(array('<','>'),array('',''),$item);
 }
 
-function populate_acl($defaults = null,$unused = false) {
+function populate_acl($defaults = null,$show_jotnets = true) {
 
 	$allow_cid = $allow_gid = $deny_cid = $deny_gid = false;
 
@@ -231,7 +231,9 @@ function populate_acl($defaults = null,$unused = false) {
 	}
 	
 	$jotnets = '';
-	call_hooks('jot_networks', $jotnets);
+	if($show_jotnets) {
+		call_hooks('jot_networks', $jotnets);
+	}
 
 	$tpl = get_markup_template("acl_selector.tpl");
 	$o = replace_macros($tpl, array(

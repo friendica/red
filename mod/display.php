@@ -55,7 +55,7 @@ function display_content(&$a, $update = 0, $load = false) {
 			'nickname' => $channel['channel_address'],
 			'lockstate' => (($group || $cid || $channel['channel_allow_cid'] || $channel['channel_allow_gid'] || $channel['channel_deny_cid'] || $channel['channel_deny_gid']) ? 'lock' : 'unlock'),
 
-			'acl' => populate_acl($channel_acl, false),
+			'acl' => populate_acl($channel_acl),
 			'bang' => '',
 			'visitor' => true,
 			'profile_uid' => local_user(),

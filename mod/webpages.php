@@ -84,7 +84,7 @@ function webpages_content(&$a) {
 		'nickname' => $a->profile['channel_address'],
 		'lockstate' => (($group || $cid || $channel['channel_allow_cid'] || $channel['channel_allow_gid'] || $channel['channel_deny_cid'] || $channel['channel_deny_gid']) ? 'lock' : 'unlock'),
 		'bang' => (($group || $cid) ? '!' : ''),
-		'acl' => ((local_user() && local_user() == $owner) ? populate_acl($channel_acl) : ''),
+		'acl' => ((local_user() && local_user() == $owner) ? populate_acl($channel_acl,false) : ''),
 		'visitor' => true,
 		'profile_uid' => intval($owner),
 		'mimetype' => $mimetype,

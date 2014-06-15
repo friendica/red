@@ -92,8 +92,8 @@ var r = 0;
 var g = 0;
 var b = 0;
 
-var speed = 2;
-var delay = 1000;
+var speed = 10;
+var delay = 150;
 
 var timer = null;
 var holdid = 0;
@@ -113,7 +113,7 @@ function update_element() {
 
 	var id = document.getElementById(element);
 	id.innerHTML = curr;
-	timer = setTimeout('fadein();',5);
+	timer = setTimeout('fadein();',3);
 }
 
 function fadeout() {
@@ -124,7 +124,7 @@ function fadeout() {
   b = (((b + speed) < 255) ? b + speed : 255);
 
   if((r != 255) && (g != 255) && (b != 255)) {
-    timer = setTimeout('fadeout();',10);
+    timer = setTimeout('fadeout();',5);
   }
   else
     update_element();
@@ -138,7 +138,7 @@ function fadein() {
   b = (((b - speed) > 0) ? b - speed : 0);
 
   if(r && g && b) {
-    timer = setTimeout('fadein();',10);
+    timer = setTimeout('fadein();',5);
   }
   else {
     timer = setTimeout('fadeout();',delay);

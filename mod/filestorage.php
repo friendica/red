@@ -111,7 +111,7 @@ function filestorage_content(&$a) {
 
 		$cloudpath = get_cloudpath($f) . (($f['flags'] & ATTACH_FLAG_DIR) ? '?f=&davguest=1' : '');
 
-		$aclselect_e = populate_acl($f);
+		$aclselect_e = populate_acl($f,false);
 		$is_a_dir = (($f['flags'] & ATTACH_FLAG_DIR) ? true : false);
 
 		$lockstate = (($f['allow_cid'] || $f['allow_gid'] || $f['deny_cid'] || $f['deny_gid']) ? 'lock' : 'unlock'); 

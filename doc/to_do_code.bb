@@ -40,6 +40,8 @@ We need much more than this, but here are areas where developers can help. Pleas
 
 [li]Uploads - integrate #^[url=https://github.com/blueimp/jQuery-File-Upload]https://github.com/blueimp/jQuery-File-Upload[/url][/li]
 
+[li]App taxonomy[/li]
+
 [li]replace the tinymce visual editor and/or make the visual editor pluggable and responsive to different output formats. We probably want library/bbedit for bbcode. This needs a fair bit of work to catch up with our &quot;enhanced bbcode&quot;, but start with images, links, bold and highlight and work from there.[/li]
 
 [li]Photos module - turn photos into normal conversations and fix tagging[/li]

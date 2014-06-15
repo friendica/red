@@ -157,7 +157,7 @@ function editwebpage_content(&$a) {
 		'$baseurl' => $a->get_baseurl(),
 		'$defloc' => $itm[0]['location'],
 		'$visitor' => ($is_owner) ? true : false,
-		'$acl' => populate_acl($itm[0]),
+		'$acl' => populate_acl($itm[0],false),
 		'$showacl' => ($is_owner) ? true : false,
 		'$public' => t('Public post'),
 		'$jotnets' => $jotnets,

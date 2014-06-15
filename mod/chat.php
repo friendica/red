@@ -207,7 +207,7 @@ function chat_content(&$a) {
 			'$header' => t('New Chatroom'),
 			'$name' => array('room_name',t('Chatroom Name'),'', ''),
 			'$permissions' =>  t('Permissions'),
-			'$acl' => populate_acl($channel_acl),
+			'$acl' => populate_acl($channel_acl,false),
 			'$submit' => t('Submit')
 		));
 		return $o;

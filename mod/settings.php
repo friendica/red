@@ -957,7 +957,7 @@ function settings_content(&$a) {
 			'$maxreq' 	=> array('maxreq', t('Maximum Friend Requests/Day:'), intval($channel['channel_max_friend_req']) , t('May reduce spam activity')),
 			'$permissions' => t('Default Post Permissions'),
 			'$permdesc' => t("\x28click to open/close\x29"),
-			'$aclselect' => populate_acl($perm_defaults),
+			'$aclselect' => populate_acl($perm_defaults,false),
 			'$suggestme' => $suggestme,
 
 			'$group_select' => $group_select,
