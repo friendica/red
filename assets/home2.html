@@ -1,0 +1,195 @@
+<style>
+section { position: relative; margin-left: 15px;} 
+nav { z-index: 9999; position: fixed; width: 100%; top: 0; left: 0; } 
+header { z-index: 10000; }
+
+.tr {
+  clear: both;
+}
+.tab {
+  float: left;
+  width: 25px;
+}
+.td {
+  float: left;
+  width: 200px;
+  font-size: 1.8em;
+  margin-bottom: 5px;
+  margin-right: 25px;
+	color: #808080;
+
+}
+
+body::after {
+	content: '';
+/*	background-image:url(assets/uluru2.jpg); */
+	background-position: 50% 50%;
+	background-repeat: no-repeat;
+	top: 0;
+	left: 0;
+	bottom: 0;
+	right: 0;
+	position: absolute;
+	opacity: 0.5;
+	z-index: -1;
+}
+
+.heart {
+	color: #ff0000;
+}
+
+
+</style>
+
+<script>
+
+var terms = new Array(
+"Internet-scale Privacy",
+"Social Networking",
+"Single Sign-On",
+"Photo Albums",
+"Decentralised",
+"Cloud Storage",
+"Own Your Content",
+"Blogging",
+"Decent Encryption",
+"Chatrooms",
+"Cross-Site Access Control",
+"Unsend Private Mail",
+"Webpage Creation",
+"Content Management",
+"Message Expiration",
+"Games and Utilities",
+"Unincorporated",
+"Forums",
+"Like + Dislike",
+"Share Anything Digital",
+"Communications",
+"Identity-Aware Content",
+"Pseudonyms",
+"Multiple Identities",
+"No Advertising",
+"Rich Text Post/Comment",
+"Event Calendar",
+"Bookmarking",
+"Community Tagging",
+"Mirrored Directory",
+"Nomadic Identity",
+"Derivative Channels",
+"Customised Encryption",
+"Multiple Profiles",
+"Privacy Groups",
+"File Sharing",
+"MIT license",
+"Autonomy",
+"Affinity Filtering",
+"Friend Suggestions",
+"Cross-Site Auth",
+"Themes",
+"Plugins",
+"External API",
+"3rd Party Apps",
+"Open Source",
+null
+);
+
+var r = 0;
+var g = 0;
+var b = 0;
+
+var speed = 2;
+var delay = 1000;
+
+var timer = null;
+var holdid = 0;
+var element = 'word-flasher';
+var custom = '';
+var seq = 0;
+var nindex = 0;
+
+var curr = null;
+
+function update_element() {
+
+	curr = terms[nindex];
+	nindex ++;
+	if(terms[nindex] == null)
+		nindex = 0
+
+	var id = document.getElementById(element);
+	id.innerHTML = curr;
+	timer = setTimeout('fadein();',5);
+}
+
+function fadeout() {
+
+  var id = document.getElementById(element);
+  r = (((r + speed) < 255) ? r + speed : 255);
+  g = (((g + speed) < 255) ? g + speed : 255);
+  b = (((b + speed) < 255) ? b + speed : 255);
+
+  if((r != 255) && (g != 255) && (b != 255)) {
+    timer = setTimeout('fadeout();',10);
+  }
+  else
+    update_element();
+  id.style.color = "rgb(" + r + "," + g + "," + b + ")";
+}
+
+function fadein() {
+  var id = document.getElementById(element);
+  r = (((r - speed) > 0) ? r - speed : 0);
+  g = (((g - speed) > 0) ? g - speed : 0);
+  b = (((b - speed) > 0) ? b - speed : 0);
+
+  if(r && g && b) {
+    timer = setTimeout('fadein();',10);
+  }
+  else {
+    timer = setTimeout('fadeout();',delay);
+  }
+
+  id.style.color = "rgb(" + r + "," + g + "," + b + ")";
+}
+
+
+$(document).ready(function() {
+	update_element();
+	$('.cb').colorbox({width: '50%',inline: true,href:"#farmer"});
+});
+
+
+</script>
+
+
+<div style="margin-top: 50px;"></div>
+
+<center>
+<!--img style="width: 450px; margin-top: 30px; margin-bottom: 30px;" src="assets/logo_simplifiedap.png" -->
+<div style="width: 450px; margin-top: 30px; margin-bottom: 30px; font-size: 7em; font-weight: bold;" >red<span class="heart" style="font-size:120%; font-family: helvetica;">&hearts;</span>matrix</div>
+
+<div style="color:#808080;font-weight:bold;font-size:3.0em; margin-bottom:30px;">Follow your heart</div>
+<div id="word-flasher" style="font-size: 3.0em; font-weight: bold; margin-bottom: 30px;">RedMatrix</div>
+<div class="tr" style="font-size: 1.6em; color: #666; margin-left: 75px; margin-right: 75px;">
+The RedMatrix (aka "red") is an open source webapp providing a complete <strong>decentralised</strong> publishing, sharing, and communications system. It combines communications (private messaging, chat and social networking), and media management (photos, events, files, web pages) with enough features to make your head spin.
+</div>
+<br />
+<div class="tr" style="font-size: 1.6em; color: #666; margin-left: 75px; margin-right: 75px;">
+What makes the RedMatrix unique is what we call "magic authentication" - which is based on our groundbreaking work in decentralised identity services. This ties all RedMatrix sites and channels together into a single super-network where the boundaries between different websites are blurred or seemingly non-existent; where "who you are" has nothing to do with "what computer you're connected to", and where website content can adapt itself according to who is viewing it.  
+</div>
+<br />
+<div class="tr" style="font-size: 1.6em; color: #666; margin-left: 75px; margin-right: 75px;">
+Warning: After experiencing magic authentication and nomadic identity, you may find it disconcerting and a bit "primitive" to go back to the old internet. You shouldn't need hundreds of different passwords to use the web ... or be totally isolated from your friends and family because a server or router in another country is having "<em>issues</em>".
+</div>
+<br />
+<div class="tr" style="font-size: 1.6em; color: #666; margin-left: 75px; margin-right: 75px;">
+For the average person, the biggest advantage of decentralised identity is that you decide who you want to share your stuff with, and if somebody isn't on your list, they're not going to see it. It's all under your control (we're big on privacy). Use the RedMatrix as a social network or a business website or for personal cloud storage or media publishing - or any number of other uses; limited only by your imagination.<br />
+</div>
+<br />
+
+<div style="margin-top: 15px; color: #808080; font-size: 1.8em;">Welcome to the matrix. Welcome to red.</div>
+<div style="font-size: 1.4em;"><a href="pubsites">Sign up now!</a></div>
+
+
+<div style="margin-top: 15px; margin-bottom: 15px;"><a href="pubsites">Public Sites</a> | <a href="https://redmatrix.me">Project Home</a> | <a href="https://github.com/friendica/red">Code</a> | <a href="https://zothub.com/channel/one">Developers</a></div></center>
+
