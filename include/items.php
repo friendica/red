@@ -2001,8 +2001,6 @@ function item_store_update($arr,$allow_exec = false) {
 	$arr = $d['item'];
 	$allow_exec = $d['allow_exec'];
 
-
-
 	$ret = array('success' => false, 'item_id' => 0);
 	if(! intval($arr['uid'])) {
 		logger('item_store_update: no uid');
@@ -2035,6 +2033,10 @@ function item_store_update($arr,$allow_exec = false) {
 
 	if($orig[0]['item_flags'] & ITEM_VERIFIED)
 		$orig[0]['item_flags'] = $orig[0]['item_flags'] ^ ITEM_VERIFIED;
+
+	if($orig[0]['item_flags'] & ITEM_OBSCURED)
+		$orig[0]['item_flags'] = $orig[0]['item_flags'] ^ ITEM_OBSCURED;
+
 
 	$arr['item_flags'] = intval($arr['item_flags']) | $orig[0]['item_flags'];
 	$arr['item_restrict'] = intval($arr['item_restrict']) | $orig[0]['item_restrict'];

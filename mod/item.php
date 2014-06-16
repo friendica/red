@@ -280,10 +280,9 @@ function item_post(&$a) {
 		if((strlen($str_group_allow)) 
 			|| strlen($str_contact_allow) 
 			|| strlen($str_group_deny) 
-			|| strlen(str_contact_deny)) {
+			|| strlen($str_contact_deny)) {
 			$private = 1;
 		}
-
 
 		$location          = $orig_post['location'];
 		$coord             = $orig_post['coord'];
@@ -292,12 +291,19 @@ function item_post(&$a) {
 		$title             = $_REQUEST['title'];
 		$body              = $_REQUEST['body'];
 		$item_flags        = $orig_post['item_flags'];
+
+		// force us to recalculate if we need to obscure this post
+
+		if($item_flags & ITEM_OBSCURED)
+			$item_flags = ($item_flags ^ ITEM_OBSCURED);
+
 		$item_restrict     = $orig_post['item_restrict'];
 		$postopts          = $orig_post['postopts'];
 		$created           = $orig_post['created'];
 		$mid               = $orig_post['mid'];
 		$parent_mid        = $orig_post['parent_mid'];
 		$plink             = $orig_post['plink'];
+
 	}
 	else {
 
