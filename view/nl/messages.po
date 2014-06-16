@@ -2947,11 +2947,11 @@ msgstr "vinden dit niet leuk"
 msgid "%d comment"
 msgid_plural "%d comments"
 msgstr[0] "%d reactie"
-msgstr[1] "%d reacties"
+msgstr[1] "%d reacties weergeven"
 
 #: ../../include/ItemObject.php:316 ../../include/js_strings.php:7
 msgid "[+] show all"
-msgstr "[+] alle reacties weergeven"
+msgstr "[+] alle"
 
 #: ../../include/ItemObject.php:580 ../../mod/photos.php:990
 #: ../../mod/photos.php:1077

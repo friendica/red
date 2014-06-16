@@ -697,9 +697,9 @@ $a->strings["__ctx:noun__ Likes"] = "vinden dit leuk";
 $a->strings["__ctx:noun__ Dislikes"] = "vinden dit niet leuk";
 $a->strings["%d comment"] = array(
 	0 => "%d reactie",
-	1 => "%d reacties",
+	1 => "%d reacties weergeven",
 );
-$a->strings["[+] show all"] = "[+] alle reacties weergeven";
+$a->strings["[+] show all"] = "[+] alle";
 $a->strings["This is you"] = "Dit ben jij";
 $a->strings["Comment"] = "Reactie";
 $a->strings["Submit"] = "Opslaan";
