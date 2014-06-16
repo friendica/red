@@ -1315,6 +1315,9 @@ function prepare_page($item) {
 		// ... other possible options
 	}
 
+	// prepare_body calls unobscure() as a side effect. Do it here so that
+	// the template will get passed an unobscured title.
+
 	$body = prepare_body($item,true);
 
 	return replace_macros(get_markup_template('page_display.tpl'),array(
