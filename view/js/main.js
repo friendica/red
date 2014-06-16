@@ -136,10 +136,12 @@
 		if( $('#collapsed-comments-' + id).is(':visible')) {
 			$('#collapsed-comments-' + id).hide();
 			$('#hide-comments-' + id).html(aStr['showmore']);
+			$('#hide-comments-total-' + id).show();
 		}
 		else {
 			$('#collapsed-comments-' + id).show();
 			$('#hide-comments-' + id).html(aStr['showfewer']);
+			$('#hide-comments-total-' + id).hide();
 		}
 	}
 
