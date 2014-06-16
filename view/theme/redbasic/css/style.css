@@ -174,7 +174,7 @@ nav #banner #logo-text a {
 nav #banner #logo-text a:hover { text-decoration: none; }
 
 header #banner {
-  overflow: hidden;
+/*  overflow: hidden; */
   text-align: center;
   font-size: 14px;
   font-family: tahoma, "Lucida Sans", sans;
