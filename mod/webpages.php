@@ -106,6 +106,7 @@ function webpages_content(&$a) {
 	if($r) {
 		$pages = array();
 		foreach($r as $rr) {
+			unobscure($rr);
 			$pages[$rr['iid']][] = array('url' => $rr['iid'],'pagetitle' => $rr['sid'],'title' => $rr['title'],'created' => datetime_convert('UTC',date_default_timezone_get(),$rr['created']),'edited' => datetime_convert('UTC',date_default_timezone_get(),$rr['edited']));
 		}
 	}
