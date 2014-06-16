@@ -269,8 +269,14 @@ if(! $a->install) {
 	if (!$comment_border_top)
 		$comment_border_top="0px solid";		
 	if (!$comment_border_bottom)
-		$comment_border_bottom="0px solid";	
-		
+		$comment_border_bottom="0px solid";
+	if (!$admintable_hoverbgcol)
+		$admintable_hoverbgcol="#BBC7D7";
+	if (!$dirpopup_txtcol)
+		$dirpopup_txtcol="";
+	if (!$dirpopup_linkcol)
+		$dirpopup_linkcol="";
+
 	if($nav_min_opacity === false || $nav_min_opacity === '') {
 		$nav_float_min_opacity = 1.0;
 		$nav_percent_min_opacity = 100;
@@ -387,10 +393,13 @@ $options = array (
 '$comment_indent' => $comment_indent,
 '$body_width' => $body_width,
 '$comment_padding' => $comment_padding,
-'$comment_border_left' =>$comment_border_left,
-'$comment_border_right' =>$comment_border_right,
-'$comment_border_top' =>$comment_border_top,
-'$comment_border_bottom' =>$comment_border_bottom,
+'$comment_border_left' => $comment_border_left,
+'$comment_border_right' => $comment_border_right,
+'$comment_border_top' => $comment_border_top,
+'$comment_border_bottom' => $comment_border_bottom,
+'$admintable_hoverbgcol' => $admintable_hoverbgcol,
+'$dirpopup_txtcol' => $dirpopup_txtcol,
+'$dirpopup_linkcol' => $dirpopup_linkcol,
 );
 
 echo str_replace(array_keys($options), array_values($options), $x);    
