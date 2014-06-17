@@ -780,3 +780,5 @@ function widget_photo($arr) {
 
 	return $o;
 }
+call_hooks('widgets', $arr);
+
