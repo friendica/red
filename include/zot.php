@@ -314,10 +314,7 @@ function zot_refresh($them,$channel = null, $force = false) {
 		if(! $x['success'])
 			return false;
 
-		$xchan_hash = $x['hash'];
-
 		$their_perms = 0;
-
 
 		if($channel) {
 			$global_perms = get_perms();
@@ -417,6 +414,9 @@ function zot_refresh($them,$channel = null, $force = false) {
 				if($z)
 					$default_perms = intval($z[0]['abook_my_perms']);		
 
+				// Keep original perms to check if we need to notify them
+				$previous_perms = get_all_perms($channel['channel_id'],$x['hash']);
+
 				$y = q("insert into abook ( abook_account, abook_channel, abook_xchan, abook_their_perms, abook_my_perms, abook_created, abook_updated, abook_dob, abook_flags ) values ( %d, %d, '%s', %d, %d, '%s', '%s', '%s', %d )",
 					intval($channel['channel_account_id']),
 					intval($channel['channel_id']),
@@ -431,8 +431,9 @@ function zot_refresh($them,$channel = null, $force = false) {
 
 				if($y) {
 					logger("New introduction received for {$channel['channel_name']}");
-					if($default_perms) {
-						// send back a permissions update for auto-friend/auto-permissions
+					$new_perms = get_all_perms($channel['channel_id'],$x['hash']);
+					if($new_perms != $previous_perms) {
+						// Send back a permissions update if permissions have changed
 						$z = q("select * from abook where abook_xchan = '%s' and abook_channel = %d and not (abook_flags & %d) limit 1",
 							dbesc($x['hash']),
 							intval($channel['channel_id']),
@@ -455,8 +456,11 @@ function zot_refresh($them,$channel = null, $force = false) {
 						));
 					}
 
-					if($new_connection && (! ($new_connection[0]['abook_flags'] & ABOOK_FLAG_PENDING)) && ($their_perms & PERMS_R_STREAM))
+					if($new_connection && ($their_perms & PERMS_R_STREAM)) {
+						if(($channel['channel_w_stream'] & PERMS_PENDING)
+							|| (! ($new_connection[0]['abook_flags'] & ABOOK_FLAG_PENDING)) )
 							proc_run('php','include/onepoll.php',$new_connection[0]['abook_id']); 
+					}
 
 				}
 			}
@@ -1135,7 +1139,7 @@ function zot_import($arr, $sender_url) {
 
 	if(array_key_exists('iv',$data)) {
 		$data = json_decode(crypto_unencapsulate($data,get_config('system','prvkey')),true);
-    }
+	}
 
 	$incoming = $data['pickup'];
 
@@ -1147,7 +1151,7 @@ function zot_import($arr, $sender_url) {
 
 			if(array_key_exists('iv',$i['notify'])) {
 				$i['notify'] = json_decode(crypto_unencapsulate($i['notify'],get_config('system','prvkey')),true);
-    		}
+	  		}
 
 			logger('zot_import: notify: ' . print_r($i['notify'],true), LOGGER_DATA);
 
@@ -1329,7 +1333,7 @@ function public_recips($msg) {
 	if(! $r)
 		$r = array();
 
-	$x = q("select channel_hash as hash from channel left join abook on abook_channel = channel_id where abook_xchan = '%s' and not ( channel_pageflags & " . PAGE_REMOVED . " ) and (( " . $col . " & " . PERMS_SPECIFIC . " )  and ( abook_my_perms & " . $field . " )) OR ( " . $col . " & " . PERMS_CONTACTS . " ) ",
+	$x = q("select channel_hash as hash from channel left join abook on abook_channel = channel_id where abook_xchan = '%s' and not ( channel_pageflags & " . PAGE_REMOVED . " ) and (( " . $col . " & " . PERMS_SPECIFIC . " )  and ( abook_my_perms & " . $field . " )) OR ( " . $col . " & " . PERMS_PENDING . " ) OR (( " . $col . " & " . PERMS_CONTACTS . " ) and not ( abook_flags & " . ABOOK_FLAG_PENDING . " )) ",
 		dbesc($msg['notify']['sender']['hash'])
 	); 
 
@@ -2044,12 +2048,12 @@ function build_sync_packet($uid = 0, $packet = null) {
 	if(! $uid)
 		return;
 
-    $r = q("select * from channel where channel_id = %d limit 1",
+	$r = q("select * from channel where channel_id = %d limit 1",
 		intval($uid)
 	);
 	if(! $r)
 		return;
- 
+
 	$channel = $r[0];
 
 	$h = q("select * from hubloc where hubloc_hash = '%s'",
