@@ -534,9 +534,16 @@ aside li {
 
 }
 
-
 .directory-details {
 	font-size: 0.7em;
+}
+
+#cboxContent {
+    color: $dirpopup_txtcol;
+}
+
+#cboxContent a {
+    color: $dirpopup_linkcol;
 }
 
 .app-name {
@@ -1800,6 +1807,10 @@ text-decoration: none;
 .admin-icons {
 	color: $toolicon_colour;
 	margin-right: 10px;
+}
+
+#adminpage table tr:hover {
+    background-color: $admintable_hoverbgcol;
 }
 
 /* message */

@@ -755,7 +755,7 @@ msgstr "jouw registratiewachtwoord"
 #: ../../include/account.php:300 ../../include/account.php:357
 #, php-format
 msgid "Registration details for %s"
-msgstr "Registratiedetails voor %s"
+msgstr "Registratiegegevens voor %s"
 
 #: ../../include/account.php:366
 msgid "Account approved."
@@ -994,7 +994,7 @@ msgstr "Plaats:"
 
 #: ../../include/nav.php:77 ../../include/nav.php:96 ../../boot.php:1451
 msgid "Logout"
-msgstr "Uitloggen:"
+msgstr "Uitloggen"
 
 #: ../../include/nav.php:77 ../../include/nav.php:96
 msgid "End this session"

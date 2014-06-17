@@ -164,3 +164,9 @@
                  $cal_bgcolour = "#333";
         if(! $fancybox_bgcolour)
                 $fancybox_bgcolour = "#1E1E1E";
+	if (!$admintable_hoverbgcol)
+		$admintable_hoverbgcol="#222";
+	if (!$dirpopup_txtcol)
+		$dirpopup_txtcol="#111";
+	if (!$dirpopup_linkcol)
+		$dirpopup_linkcol="#000";
