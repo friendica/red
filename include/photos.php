@@ -277,6 +277,7 @@ function photos_albums_list($channel,$observer) {
 
 	if($albums) {
 		$ret['success'] = true;
+		$ret['albums'] = array();
 		foreach($albums as $k => $album) {
 			$entry = array(
 				'text' => $album['album'],
@@ -284,7 +285,7 @@ function photos_albums_list($channel,$observer) {
 				'url' => z_root() . '/photos/' . $channel['channel_address'] . '/album/' . bin2hex($album['album']), 
 				'urlencode' => urlencode($album['album']),
 				'bin2hex' => bin2hex($album['album']));
-			$ret[] = $entry;
+			$ret['albums'][] = $entry;
 		}
 	}
 	return $ret;
@@ -306,11 +307,11 @@ function photos_album_widget($channelx,$observer,$albums = null) {
 			$albums = photos_albums_list($channelx,$observer);
 	}
 
-	if($albums) {
+	if($albums['success']) {
 		$o = replace_macros(get_markup_template('photo_albums.tpl'),array(
 			'$nick'    => $channelx['channel_address'],
 			'$title'   => t('Photo Albums'),
-			'$albums'  => $albums,
+			'$albums'  => $albums['albums'],
 			'$baseurl' => z_root(),
 			'$upload'  => ((perm_is_allowed($channelx['channel_id'],(($observer) ? $observer['xchan_hash'] : ''),'post_photos')) 
 				? t('Upload New Photos') : '')

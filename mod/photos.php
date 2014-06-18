@@ -539,16 +539,14 @@ function photos_content(&$a) {
 		$albumselect = '<select id="photos-upload-album-select" name="album" size="4">';
 		
 		$albumselect .= '<option value="" ' . ((! $selname) ? ' selected="selected" ' : '') . '>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</option>';
-		if(count($albums)) {
-			foreach($albums as $album) {
+		if(count($albums['albums'])) {
+			foreach($albums['albums'] as $album) {
 				if(! $album['text']) 
 					continue;
 				$selected = (($selname === $album['text']) ? ' selected="selected" ' : '');
 				$albumselect .= '<option value="' . $album['text'] . '"' . $selected . '>' . $album['text'] . '</option>';
 			}
 		}
-
-		$celeb = ((($a->user['page-flags'] == PAGE_SOAPBOX) || ($a->user['page-flags'] == PAGE_COMMUNITY)) ? true : false);
 
 		$albumselect .= '</select>';
 

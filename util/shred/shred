@@ -112,10 +112,14 @@ load_config () {
 	# Source Config
 	[[ -f "$FCLI_RC" ]] && . "$FCLI_RC" || show_config_help 1
 
+	THISDIR=$(dirname $0)
+	if [ $THISDIR != '' ]; then THISDIR=. ; fi
+	PATH=$THISDIR:$PATH
 
-	# Source FriendicaOAuth.sh
-	OAuth_sh=$(which FriendicaOAuth.sh)
-	(( $? != 0 )) && echo 'Unable to locate FriendicaOAuth.sh! Make sure it is in searching PATH.' && exit 1
+
+	# Source ShredOAuth.sh
+	OAuth_sh=$(which ShredOAuth.sh)
+	(( $? != 0 )) && echo 'Unable to locate ShredOAuth.sh! Make sure it is in searching PATH.' && exit 1
 	source "$OAuth_sh"
 
 	# Source JSON.sh
@@ -213,7 +217,9 @@ main () {
 	*)
 		FO_command $fcli_command
 
-        JS_Parsed=$(echo "$FO_ret" | tokenize | parse)
+		echo $FO_ret
+
+#        JS_Parsed=$(echo "$FO_ret" | tokenize | parse)
 
 #		for a in ${JS_Parsed[@]}; do
 
@@ -222,7 +228,7 @@ main () {
 #					echo "$JS_Parsed" | js ${a} ${b}
 #				done
 #			else 
-				echo "$JS_Parsed"
+#				echo "$JS_Parsed"
 #			fi
 #		done
 		return $FO_rval
