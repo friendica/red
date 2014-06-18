@@ -196,17 +196,6 @@
 
 		msie = false; // $.browser.msie ;
 		
-		/* setup tooltips *//*
-		$("a,.tt").each(function(){
-			var e = $(this);
-			var pos="bottom";
-			if (e.hasClass("tttop")) pos="top";
-			if (e.hasClass("ttbottom")) pos="bottom";
-			if (e.hasClass("ttleft")) pos="left";
-			if (e.hasClass("ttright")) pos="right";
-			e.tipTip({defaultPosition: pos, edgeOffset: 8});
-		});*/
-		
 		var e = document.getElementById('content-complete');
 		if(e)
 			pageHasMoreContent = false;		
@@ -600,7 +589,7 @@ function updateConvItems(mode,data) {
 
 		var update_url;
 
-		if(typeof buildCmd == 'function') {
+//		if(typeof buildCmd == 'function') {
 			if(scroll_next) {
 				bParam_page = next_page;
 				page_load = true;
@@ -609,12 +598,12 @@ function updateConvItems(mode,data) {
 				bParam_page = 1;
 			}
 			update_url = buildCmd();
-		}
-		else {
-			page_load = false;
-			var udargs = ((page_load) ? '/load' : '');
-			update_url = 'update_' + src + udargs + '&p=' + profile_uid + '&page=' + profile_page + '&msie=' + ((msie) ? 1 : 0);
-		}
+//		}
+//		else {
+//			page_load = false;
+//			var udargs = ((page_load) ? '/load' : '');
+//			update_url = 'update_' + src + udargs + '&p=' + profile_uid + '&page=' + profile_page + '&msie=' + ((msie) ? 1 : 0);
+//		}
 
 		if(page_load)
 			$("#page-spinner").spin('small');
@@ -646,15 +635,6 @@ function updateConvItems(mode,data) {
 		});
 
 
-	}
-
-
-	function imgbright(node) {
-//		$(node).removeClass("drophide").addClass("drop");
-	}
-
-	function imgdull(node) {
-//		$(node).removeClass("drop").addClass("drophide");
 	}
 
 	function notify_popup_loader(notifyType) {
