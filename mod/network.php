@@ -104,7 +104,6 @@ function network_content(&$a, $update = 0, $load = false) {
 	$file = ((x($_GET,'file')) ? $_GET['file'] : '');
 
 
-
 	if(x($_GET,'search') || x($_GET,'file'))
 		$nouveau = true;
 	if($cid)
@@ -205,25 +204,11 @@ function network_content(&$a, $update = 0, $load = false) {
 		// We only launch liveUpdate if you aren't filtering in some incompatible 
 		// way and also you aren't writing a comment (discovered in javascript).
 
+		if($gid || $cid || $cmin || ($cmax != 99) || $star || $liked || $conv || $spam || $nouveau || $list)
+			$firehose = 0; 
+
 		$o .= '<div id="live-network"></div>' . "\r\n";
-		$o .= "<script> var profile_uid = " . $_SESSION['uid'] 
-			. "; var netargs = '" . substr($a->cmd,8)
-			. '?f='
-			. ((x($_GET,'cid'))    ? '&cid='    . $_GET['cid']    : '')
-			. ((x($_GET,'search')) ? '&search=' . $_GET['search'] : '') 
-			. ((x($_GET,'star'))   ? '&star='   . $_GET['star']   : '') 
-			. ((x($_GET,'order'))  ? '&order='  . $_GET['order']  : '') 
-			. ((x($_GET,'liked'))  ? '&liked='  . $_GET['liked']  : '') 
-			. ((x($_GET,'conv'))   ? '&conv='   . $_GET['conv']   : '') 
-			. ((x($_GET,'spam'))   ? '&spam='   . $_GET['spam']   : '') 
-			. ((x($_GET,'cmin'))   ? '&cmin='   . $_GET['cmin']   : '') 
-			. ((x($_GET,'cmax'))   ? '&cmax='   . $_GET['cmax']   : '') 
-			. ((x($_GET,'file'))   ? '&file='   . $_GET['file']   : '') 
-			. ((x($_GET,'fh'))     ? '&fh='     . $_GET['fh']   : '') 
-
-			. "'; var profile_page = " . $a->pager['page'] . ";</script>";
-
-
+		$o .= "<script> var profile_uid = " . $_SESSION['uid'] . "; var profile_page = " . $a->pager['page'] . ";</script>";
 
 		$a->page['htmlhead'] .= replace_macros(get_markup_template("build_query.tpl"),array(
 			'$baseurl' => z_root(),
@@ -329,12 +314,9 @@ function network_content(&$a, $update = 0, $load = false) {
 		$uids = " and item.uid = " . local_user() . " ";
 	}
 
-
 	$simple_update = (($update) ? " and ( item.item_flags & " . intval(ITEM_UNSEEN) . " ) " : '');
 	if($load)
 		$simple_update = '';
-
-	$start = dba_timer();
 
 	if($nouveau && $load) {
 		// "New Item View" - show all items unthreaded in reverse created date order
@@ -389,8 +371,6 @@ function network_content(&$a, $update = 0, $load = false) {
 			}
 		}
 
-		$first = dba_timer();
-
 		// Then fetch all the children of the parents that are on this page
 		$parents_str = '';
 		$update_unseen = '';
@@ -406,22 +386,9 @@ function network_content(&$a, $update = 0, $load = false) {
 				dbesc($parents_str)
 			);
 
-			$second = dba_timer();
-
 			xchan_query($items);
-
-			$third = dba_timer();
-
 			$items = fetch_post_tags($items,true);
-
-			$fourth = dba_timer();
-
 			$items = conv_sort($items,$ordering);
-
-			
-
-			//logger('items: ' . print_r($items,true));
-
 		} 
 		else {
 			$items = array();
@@ -431,8 +398,6 @@ function network_content(&$a, $update = 0, $load = false) {
 			$update_unseen = ' AND parent IN ( ' . dbesc($parents_str) . ' )';
 
 	}
-
-//	logger('items: ' . count($items));
 
 	if(($update_unseen) && (! $firehose))
 		$r = q("UPDATE `item` SET item_flags = ( item_flags ^ %d)
@@ -444,28 +409,10 @@ function network_content(&$a, $update = 0, $load = false) {
 
 	$mode = (($nouveau) ? 'network-new' : 'network');
 
-	$fifth = dba_timer();
-
 	$o .= conversation($a,$items,$mode,$update,'client');
-
-	$sixth = dba_timer();
-
 
 	if(($items) && (! $update)) 
         $o .= alt_pager($a,count($items));
-
-	if($load) {
-//		logger('mod_network: load: ' . count($items) . ' items', LOGGER_DATA);
-
-		profiler($start,$first,'network parents');
-		profiler($first,$second,'network children');
-		profiler($second,$third,'network authors');
-		profiler($third,$fourth,'network tags');
-		profiler($fourth,$fifth,'network sort');
-		profiler($fifth,$sixth,'network render');
-		profiler($start,$sixth,'network total');
-		profiler(1,1,'-- ' . count($items));
-	}
 
 	return $o;
 }
