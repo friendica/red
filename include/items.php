@@ -4302,3 +4302,38 @@ function update_remote_id($channel,$post_id,$webpage,$pagetitle,$namespace,$remo
 }
 
 
+
+/**
+ * change access control for item with message_id $mid and channel_id $uid
+ */
+
+
+function item_add_cid($xchan_hash,$mid,$uid) {
+	$r = q("select id from item where mid = '%s' and uid = %d and allow_cid like '%s'",
+		dbesc($mid),
+		intval($uid),
+		dbesc('<' . $xchan_hash . '>')
+	);
+	if(! $r) {
+		$r = q("update item set allow_cid = concat(allow_cid,'%s') where mid = '%s' and uid = %d limit 1",
+			dbesc('<' . $xchan_hash . '>'),
+			dbesc($mid),
+			intval($uid)
+		);
+	}
+}
+
+function item_remove_cid($xchan_hash,$mid,$uid) {
+	$r = q("select allow_cid from item where mid = '%s' and uid = %d and allow_cid like '%s'",
+		dbesc($mid),
+		intval($uid),
+		dbesc('<' . $xchan_hash . '>')
+	);
+	if($r) {
+		$x = q("update item set allow_cid = '%s' where mid = '%s' and uid = %d limit 1",
+			dbesc(str_replace('<' . $xchan_hash . '>','',$r[0]['allow_cid'])),
+			dbesc($mid),
+			intval($uid)
+		);
+	}
+}

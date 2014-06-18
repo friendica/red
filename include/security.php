@@ -397,3 +397,4 @@ function stream_perms_xchans($perms_min = PERMS_SITE) {
 	logger('stream_perms_xchans: ' . $str, LOGGER_DEBUG);
 	return $str;
 }
+
