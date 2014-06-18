@@ -264,7 +264,7 @@ function photos_albums_list($channel,$observer) {
 
 	$sql_extra = permissions_sql($channel_id);
 
-	$albums = q("SELECT distinct album from photo where uid = %d and ( photo_flags = %d or photo_flags = %d ) $sql_extra order by created desc",
+	$albums = q("SELECT count( distinct resource_id ) as total, album from photo where uid = %d and ( photo_flags = %d or photo_flags = %d ) $sql_extra group by album order by created desc",
 		intval($channel_id),
 		intval(PHOTO_NORMAL),
 		intval(PHOTO_PROFILE)
@@ -279,7 +279,8 @@ function photos_albums_list($channel,$observer) {
 		$ret['success'] = true;
 		foreach($albums as $k => $album) {
 			$entry = array(
-				'text' => $album['album'], 
+				'text' => $album['album'],
+				'total' => $album['total'], 
 				'url' => z_root() . '/photos/' . $channel['channel_address'] . '/album/' . bin2hex($album['album']), 
 				'urlencode' => urlencode($album['album']),
 				'bin2hex' => bin2hex($album['album']));
