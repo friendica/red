@@ -2254,6 +2254,45 @@ function process_channel_sync_delivery($sender,$arr,$deliveries) {
 				}
 			}
 		}
+
+		if(array_key_exists('profile',$arr) && is_array($arr['profile']) && count($arr['profile'])) {
+
+			$disallowed = array('id','aid','uid');
+
+			foreach($arr['profile'] as $profile) {
+				$x = q("select * from profile where profile_guid = '%s' and uid = %d limit 1",
+					dbesc($profile['profile_guid']),
+					intval($channel['channel_id'])
+				);
+				if(! $x) {
+					q("insert into profile ( profile_guid, aid, uid ) values ('%s', %d, %d)",
+						dbesc($profile['profile_guid']),
+						intval($channel['channel_account_id']),		
+						intval($channel['channel_id'])
+					);
+					$x = q("select * from profile where profile_guid = '%s' and uid = %d limit 1",
+						dbesc($profile['profile_guid']),
+						intval($channel['channel_id'])
+					);
+					if(! $x)
+						continue;
+				}
+				$clean = array();
+				foreach($profile as $k => $v) {
+					if(in_array($k,$disallowed))
+						continue;
+					$clean[$k] = $v;
+					// TODO - check if these are allowed, otherwise we'll error
+				}
+				if(count($clean)) {
+					foreach($clean as $k => $v) {
+						$r = dbq("UPDATE profile set " . dbesc($k) . " = '" . dbesc($v) 
+						. "' where profile_guid = '" . dbesc($profile['profile_guid']) . "' and uid = " . intval($channel['channel_id']) 
+						. " limit 1");
+					}
+				}
+			}
+		}
 		
 		$result[] = array($d['hash'],'channel sync updated',$channel['channel_name'],'');
 

@@ -419,12 +419,21 @@ function profiles_post(&$a) {
 			dbesc($work),
 			dbesc($education),
 			intval($hide_friends),
-			intval($a->argv[1]),
+			intval(argv(1)),
 			intval(local_user())
 		);
 
 		if($r)
 			info( t('Profile updated.') . EOL);
+
+		$r = q("select * from profile where id = %d and uid = %d limit 1",
+			intval(argv(1)),
+			intval(local_user())
+		);
+		if($r) {
+			require_once('include/zot.php');
+			build_sync_packet(local_user(),array('profile' => $r));
+		}
 
 		$channel = $a->get_channel();
 
