@@ -2283,6 +2283,7 @@ function process_channel_sync_delivery($sender,$arr,$deliveries) {
 						continue;
 					$clean[$k] = $v;
 					// TODO - check if these are allowed, otherwise we'll error
+					// We also need to import local photos if a custom photo is selected
 				}
 				if(count($clean)) {
 					foreach($clean as $k => $v) {
