@@ -909,7 +909,7 @@ function item_photo_menu($item){
 	}
 
 	if((local_user()) && local_user() == $item['uid']) {
-		$vsrc_link = $a->get_baseurl() . '/viewsrc/' . $item['id'];
+		$vsrc_link = 'javascript:viewsrc(' . $item['id'] . '); return false;';
 		if($item['parent'] == $item['id'] && $channel && ($channel_hash != $item['author_xchan'])) {
 			$sub_link = 'javascript:dosubthread(' . $item['id'] . '); return false;';
 		}

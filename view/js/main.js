@@ -112,8 +112,9 @@
 		return true;
 	}
 
-
-
+	function viewsrc(id) {
+		$.colorbox({href: 'viewsrc/' + id });
+	}
 
 	function qCommentInsert(obj,id) {
 		var tmpStr = $("#comment-edit-text-" + id).val();
