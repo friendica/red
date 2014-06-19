@@ -113,8 +113,9 @@ load_config () {
 	[[ -f "$FCLI_RC" ]] && . "$FCLI_RC" || show_config_help 1
 
 	THISDIR=$(dirname $0)
-	if [ $THISDIR != '' ]; then THISDIR=. ; fi
+	if [ $THISDIR == '' ]; then THISDIR=. ; fi
 	PATH=$THISDIR:$PATH
+
 
 
 	# Source ShredOAuth.sh
