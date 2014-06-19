@@ -289,6 +289,7 @@ define ( 'PERMS_SITE'       , 0x0004 );
 define ( 'PERMS_CONTACTS'   , 0x0008 );
 define ( 'PERMS_SPECIFIC'   , 0x0080 );
 define ( 'PERMS_AUTHED'     , 0x0100 );
+define ( 'PERMS_PENDING'    , 0x0200 );
 
 
 // Address book flags

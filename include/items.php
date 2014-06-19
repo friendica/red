@@ -943,6 +943,8 @@ function map_scope($scope) {
 			return 'network: red';
 		case PERMS_SITE:
 			return 'site: ' . get_app()->get_hostname();
+		case PERMS_PENDING:
+			return 'any connections';
 		case PERMS_CONTACTS:
 		default:
 			return 'contacts';
@@ -4085,7 +4087,7 @@ function items_fetch($arr,$channel = null,$observer_hash = null,$client_mode = C
     }
 
 	if(! array_key_exists('nouveau',$arr)) {
-	    $sql_extra2 = " AND item.parent = item.id ";
+		$sql_extra2 = " AND item.parent = item.id ";
 		$sql_extra3 = '';
 	}
 
@@ -4126,12 +4128,12 @@ function items_fetch($arr,$channel = null,$observer_hash = null,$client_mode = C
         $pager_sql = sprintf(" LIMIT %d, %d ",intval($arr['start']), intval($arr['records']));
 
 	if(array_key_exists('cmin',$arr) || array_key_exists('cmax',$arr)) {
-	    if(($arr['cmin'] != 0) || ($arr['cmax'] != 99)) {
+		if(($arr['cmin'] != 0) || ($arr['cmax'] != 99)) {
 
-    	    // Not everybody who shows up in the network stream will be in your address book.
-        	// By default those that aren't are assumed to have closeness = 99; but this isn't
-	        // recorded anywhere. So if cmax is 99, we'll open the search up to anybody in
-    	    // the stream with a NULL address book entry.
+			// Not everybody who shows up in the network stream will be in your address book.
+			// By default those that aren't are assumed to have closeness = 99; but this isn't
+			// recorded anywhere. So if cmax is 99, we'll open the search up to anybody in
+			// the stream with a NULL address book entry.
 
 			$sql_nets .= " AND ";
 

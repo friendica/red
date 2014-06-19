@@ -177,32 +177,36 @@ function get_all_perms($uid,$observer_xchan,$internal_use = true) {
 			continue;
 		}	
 
-		// If PERMS_CONTACTS or PERMS_SPECIFIC, they need to be in your address book
-		// $x is a valid address book entry
+		// From here on we require that the observer be a connection and
+		// handle whether we're allowing any, approved or specific ones
 
 		if(! $x) {
 			$ret[$perm_name] = false;
 			continue;
 		}
-		
+
 		// They are in your address book, but haven't been approved
+
+		if($r[0][$channel_perm] & PERMS_PENDING) {
+			$ret[$perm_name] = true;
+			continue;
+		}
 
 		if($x[0]['abook_flags'] & ABOOK_FLAG_PENDING) {
 			$ret[$perm_name] = false;
 			continue;
 		}
 
-		if(($r) && ($r[0][$channel_perm] & PERMS_CONTACTS)) {
+		// They're a contact, so they have permission
 
-			// They're a contact, so they have permission
-
+		if($r[0][$channel_perm] & PERMS_CONTACTS) {
 			$ret[$perm_name] = true;
 			continue;
 		}
 
 		// Permission granted to certain channels. Let's see if the observer is one of them
 
-		if(($r) && ($r[0][$channel_perm] & PERMS_SPECIFIC)) {
+		if($r[0][$channel_perm] & PERMS_SPECIFIC) {
 			if(($x[0]['abook_my_perms'] & $global_perms[$perm_name][1])) {
 				$ret[$perm_name] = true;
 				continue;
@@ -216,7 +220,6 @@ function get_all_perms($uid,$observer_xchan,$internal_use = true) {
 
 	}
 
-
 	$arr = array(
 		'channel_id'    => $uid,
 		'observer_hash' => $observer_xchan,
@@ -228,7 +231,6 @@ function get_all_perms($uid,$observer_xchan,$internal_use = true) {
 
 
 function perm_is_allowed($uid,$observer_xchan,$permission) {
-
 
 	$arr = array(
 		'channel_id'    => $uid,
@@ -280,7 +282,6 @@ function perm_is_allowed($uid,$observer_xchan,$permission) {
 		}
 	}
 
-
 	// Check if this $uid is actually the $observer_xchan
 
 	if($r[0]['channel_hash'] === $observer_xchan)
@@ -312,15 +313,26 @@ function perm_is_allowed($uid,$observer_xchan,$permission) {
 		if($c)
 			return true;
 		return false;
-	}	
+	}
+
+	// From here on we require that the observer be a connection and
+	// handle whether we're allowing any, approved or specific ones
 
 	if(! $x) {
 		return false;
 	}
 
+	// They are in your address book, but haven't been approved
+
+	if($r[0][$channel_perm] & PERMS_PENDING) {
+		return true;
+	}
+
 	if($x[0]['abook_flags'] & ABOOK_FLAG_PENDING) {
 		return false;
 	}
+
+	// They're a contact, so they have permission
 
 	if($r[0][$channel_perm] & PERMS_CONTACTS) {
 		return true;
@@ -333,13 +345,9 @@ function perm_is_allowed($uid,$observer_xchan,$permission) {
 			return true;
 	}
 
-
-
-
 	// No permissions allowed.
 
 	return false;		
-
 }
 
 
@@ -354,7 +362,6 @@ function check_list_permissions($uid,$arr,$perm) {
 				$result[] = $x;
 	return($result);
 }
-
 
 
 function site_default_perms() {
@@ -377,7 +384,6 @@ function site_default_perms() {
 		'write_pages'   => 0,
 		'delegate'      => 0,
 	);
-
 
 	$global_perms = get_perms();
 	$ret = array();
