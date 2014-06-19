@@ -116,8 +116,6 @@ load_config () {
 	if [ $THISDIR == '' ]; then THISDIR=. ; fi
 	PATH=$THISDIR:$PATH
 
-
-
 	# Source ShredOAuth.sh
 	OAuth_sh=$(which ShredOAuth.sh)
 	(( $? != 0 )) && echo 'Unable to locate ShredOAuth.sh! Make sure it is in searching PATH.' && exit 1
@@ -160,7 +158,7 @@ main () {
 	JS_Fields=()
 	fcli_opts=
 
-	while getopts "C:c:s:r:f:i:q:h" name
+	while getopts "C:c:s:r:f:q:h" name
 	do
 		case $name in
 		c)	fcli_command="$OPTARG";;
@@ -170,7 +168,6 @@ main () {
 		f)	fcli_file="$OPTARG";;
 		h)  fcli_help_flag="1";;
 		q)  fcli_opts=("${fcli_opts[@]}" "$OPTARG");;
-		i)  JS_Fields=("${JS_Fields[@]}" "$OPTARG");;
 		?)	usage
 			exit 2;;
 		esac
@@ -222,18 +219,6 @@ main () {
 
 		echo $FO_ret
 
-#        JS_Parsed=$(echo "$FO_ret" | tokenize | parse)
-
-#		for a in ${JS_Parsed[@]}; do
-
-#		if [ ${#JS_Fields[@]} != 0 ]; then
-#			for b in ${JS_Fields[@]}; do 
-#					echo "$JS_Parsed" | js ${a} ${b}
-#				done
-#			else 
-#				echo "$JS_Parsed"
-#			fi
-#		done
 		return $FO_rval
 
 		;;
