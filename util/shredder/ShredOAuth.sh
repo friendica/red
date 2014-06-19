@@ -174,17 +174,34 @@ FO_statuses_home_timeline () {
 
 FO_command () {
 	local command="$1"
-
+	local opts="$2"
 	local params=(
 		$(OAuth_param 'screen_name' $screen_name)
 		$(OAuth_param 'count' $count)
 	)
 
+#echo ${opts[@]}
+
+	convscreen=$(OAuth_PE "$screen_name");
+	data="screen_name=${convscreen}&count=${count}"
+
+   if [ ${#opts[@]} != 0 ]; then
+		for b in ${opts[@]}; do
+			lhs=`echo $b | awk -F= '{print $1};'`
+			rhs=`echo $b | awk -F= '{print $2};'`
+			params=("${params[@]}" $(OAuth_param $lhs $rhs))
+			data=$data"&"$lhs=$rhs
+		done
+	fi
+ 
+#echo ${params[@]}
+
+#echo $data
+
 
 	local auth_header=$(OAuth_authorization_header 'Authorization' "$redmatrix_url" '' '' 'GET' "${redmatrix_url}/api/${command}.json" ${params[@]})
 
-	convscreen=$(OAuth_PE "$screen_name");
-  	FO_ret=$(curl -s --get "${redmatrix_url}/api/${command}.json" --data "screen_name=${convscreen}&count=${count}" --header "${auth_header}")
+  	FO_ret=$(curl -s --get "${redmatrix_url}/api/${command}.json" --data "${data}" --header "${auth_header}")
 	FO_rval=$?
 
 	return $FO_rval

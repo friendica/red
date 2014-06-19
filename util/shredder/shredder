@@ -158,8 +158,9 @@ main () {
 	fcli_file=
 	fcli_help_flag=
 	JS_Fields=()
+	fcli_opts=
 
-	while getopts "C:c:s:r:f:h:i" name
+	while getopts "C:c:s:r:f:i:q:h" name
 	do
 		case $name in
 		c)	fcli_command="$OPTARG";;
@@ -168,6 +169,7 @@ main () {
 		r)	fcli_in_reply_to_status_id="$OPTARG";;
 		f)	fcli_file="$OPTARG";;
 		h)  fcli_help_flag="1";;
+		q)  fcli_opts=("${fcli_opts[@]}" "$OPTARG");;
 		i)  JS_Fields=("${JS_Fields[@]}" "$OPTARG");;
 		?)	usage
 			exit 2;;
@@ -216,7 +218,7 @@ main () {
 		return $FO_rval
 		;;
 	*)
-		FO_command $fcli_command
+		FO_command $fcli_command ${fcli_opts[@]}
 
 		echo $FO_ret
 
