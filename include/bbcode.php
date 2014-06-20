@@ -344,9 +344,15 @@ function bbcode($Text,$preserve_nl = false, $tryoembed = true) {
 
 	$a = get_app();
 
-	// Move all spaces out of the tags
-	$Text = preg_replace("/\[(\w*)\](\s*)/ism", '$2[$1]', $Text);
-	$Text = preg_replace("/(\s*)\[\/(\w*)\]/ism", '[/$2]$1', $Text);
+	// Move all spaces out of the tags 
+	// ....Uhm why?
+	// This is basically doing a trim() on the stuff in between tags, but it messes up 
+	// carefully crafted bbcode and especially other pre-formatted code. 
+	// Commenting out until we come up with a use case where it's needed. Then let's try and
+	// special case rather than a heavy-handed approach like this. 
+
+//	$Text = preg_replace("/\[(\w*)\](\s*)/ism", '$2[$1]', $Text);
+//	$Text = preg_replace("/(\s*)\[\/(\w*)\]/ism", '[/$2]$1', $Text);
 
 	// Hide all [noparse] contained bbtags by spacefying them
 	if (strpos($Text,'[noparse]') !== false) {
