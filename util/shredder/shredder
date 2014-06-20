@@ -155,10 +155,10 @@ main () {
 	fcli_in_reply_to_status_id=
 	fcli_file=
 	fcli_help_flag=
-	JS_Fields=()
 	fcli_opts=
+	fcli_post=
 
-	while getopts "C:c:s:r:f:q:h" name
+	while getopts "C:c:s:r:f:q:hp" name
 	do
 		case $name in
 		c)	fcli_command="$OPTARG";;
@@ -167,6 +167,7 @@ main () {
 		r)	fcli_in_reply_to_status_id="$OPTARG";;
 		f)	fcli_file="$OPTARG";;
 		h)  fcli_help_flag="1";;
+		p)  fcli_post="1";;
 		q)  fcli_opts=("${fcli_opts[@]}" "$OPTARG");;
 		?)	usage
 			exit 2;;
@@ -175,9 +176,9 @@ main () {
 	load_config
 
 	if [[ "$fcli_help_flag" == "1" ]]; then case $fcli_command in
-	statuses_update)
-		show_statuses_update 0
-		;;
+#	statuses_update)
+#		show_statuses_update 0
+#		;;
 	home_timeline)
 	    show_home_timeline 0
 	    ;;
@@ -202,20 +203,24 @@ main () {
         
 		return $FO_rval
 		;;
-	statuses_update)
-		[[ "$fcli_status" == "" ]] && show_statuses_update 1
-		FO_statuses_update 'json' "$fcli_status" "$fcli_in_reply_to_status_id"
-        JS_Parsed=$(echo "$FO_ret" | tokenize | parse)
-        echo "$JS_Parsed" | js "user" "name" ,
-	    echo -n " - "
-	    echo "$JS_Parsed" | js "created_at"
-        echo "$JS_Parsed" | js "text"
-	    echo ""
-	    echo "------------------------------------------------------------------------------"
-		return $FO_rval
-		;;
+#	statuses_update)
+#		[[ "$fcli_status" == "" ]] && show_statuses_update 1
+#		FO_statuses_update 'json' "$fcli_status" "$fcli_in_reply_to_status_id"
+#        JS_Parsed=$(echo "$FO_ret" | tokenize | parse)
+#        echo "$JS_Parsed" | js "user" "name" ,
+#	    echo -n " - "
+#	    echo "$JS_Parsed" | js "created_at"
+#        echo "$JS_Parsed" | js "text"
+#	    echo ""
+#	    echo "------------------------------------------------------------------------------"
+#		return $FO_rval
+#		;;
+
 	*)
-		FO_command $fcli_command ${fcli_opts[@]}
+
+#	echo "${fcli_opts[@]}"
+
+		FO_command "$fcli_command" "$fcli_post" fcli_opts[@]
 
 		echo $FO_ret
 
