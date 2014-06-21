@@ -224,6 +224,7 @@ var boot_8php =
     [ "PERMS_AUTHED", "boot_8php.html#a852d4036a3bed66af1534d014c4ecde2", null ],
     [ "PERMS_CONTACTS", "boot_8php.html#ab2d0e8a9b81ee548ef2ce8e4560da2f6", null ],
     [ "PERMS_NETWORK", "boot_8php.html#a6df1102664f64b274810db85197c2755", null ],
+    [ "PERMS_PENDING", "boot_8php.html#a205d013103997adfa72953d2f20c01e1", null ],
     [ "PERMS_PUBLIC", "boot_8php.html#aff210e8403dd72368522b17fb6e5d4e7", null ],
     [ "PERMS_R_ABOOK", "boot_8php.html#a3d6d4fc5fafcc9156811669158541caf", null ],
     [ "PERMS_R_PAGES", "boot_8php.html#ab51965fabe54dc031e9a0ce1142ee83e", null ],

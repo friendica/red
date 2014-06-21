@@ -40,6 +40,7 @@ var searchData=
   ['is_5fwall_5fto_5fwall',['is_wall_to_wall',['../classItem.html#aabf87ded59c25b5fe2b2296678e70509',1,'Item']]],
   ['is_5fwindows',['is_windows',['../boot_8php.html#ac5e74f899f6e98d8e91b14ba1c08bc08',1,'boot.php']]],
   ['is_5fwritable',['is_writable',['../classConversation.html#a5879199008b96bee7550b576d614e1c1',1,'Conversation']]],
+  ['item_5fadd_5fcid',['item_add_cid',['../items_8php.html#a02ca33c31ed535d24894f8a9a91ce9df',1,'items.php']]],
   ['item_5fcheck_5fservice_5fclass',['item_check_service_class',['../item_8php.html#a5b1b36cb301a94b38150074f0d424e74',1,'item.php']]],
   ['item_5fcontent',['item_content',['../item_8php.html#a764bbb2e9a885a86fb23d0b5e4a09221',1,'item.php']]],
   ['item_5fexpire',['item_expire',['../items_8php.html#a6f7e1334af5d684a987fa6a3eb37f4cc',1,'items.php']]],
@@ -52,6 +53,7 @@ var searchData=
   ['item_5fpost',['item_post',['../item_8php.html#a693cd09805755ab85bbb5ecae69a48c3',1,'item.php']]],
   ['item_5fpost_5ftype',['item_post_type',['../text_8php.html#ac1dbf2e37e8069bea2c0f557fdbf203e',1,'text.php']]],
   ['item_5fredir_5fand_5freplace_5fimages',['item_redir_and_replace_images',['../conversation_8php.html#adda79b75bf1ccf6ce9503aa310953533',1,'conversation.php']]],
+  ['item_5fremove_5fcid',['item_remove_cid',['../items_8php.html#a5ed782ff5b9cf050bec931e06de12c00',1,'items.php']]],
   ['item_5fstore',['item_store',['../items_8php.html#a2541e6861a56d145c9281877cc501615',1,'items.php']]],
   ['item_5fstore_5fupdate',['item_store_update',['../items_8php.html#acf0bf7c9d21ac84f32effb754f7ad484',1,'items.php']]],
   ['items_5ffetch',['items_fetch',['../items_8php.html#a756738301f2ed96be50232500677d58a',1,'items.php']]]

@@ -19,7 +19,7 @@ function mood_init(&$a) {
 
 	$verbs = get_mood_verbs();
 
-	if(! in_array($verb,$verbs))
+	if(! array_key_exists($verb,$verbs))
 		return;
 
 	$activity = ACTIVITY_MOOD . '#' . urlencode($verb);

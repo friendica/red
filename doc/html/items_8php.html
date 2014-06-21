@@ -236,6 +236,10 @@ Functions</h2></td></tr>
 <tr class="separator:a756738301f2ed96be50232500677d58a"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a2baa9e05f1e8aa3dd61c85803ae39bd6"><td class="memItemLeft" align="right" valign="top">&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="items_8php.html#a2baa9e05f1e8aa3dd61c85803ae39bd6">update_remote_id</a> ($channel, $post_id, $webpage, $pagetitle, $namespace, $remote_id, $mid)</td></tr>
 <tr class="separator:a2baa9e05f1e8aa3dd61c85803ae39bd6"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a02ca33c31ed535d24894f8a9a91ce9df"><td class="memItemLeft" align="right" valign="top">&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="items_8php.html#a02ca33c31ed535d24894f8a9a91ce9df">item_add_cid</a> ($xchan_hash, $mid, $uid)</td></tr>
+<tr class="separator:a02ca33c31ed535d24894f8a9a91ce9df"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a5ed782ff5b9cf050bec931e06de12c00"><td class="memItemLeft" align="right" valign="top">&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="items_8php.html#a5ed782ff5b9cf050bec931e06de12c00">item_remove_cid</a> ($xchan_hash, $mid, $uid)</td></tr>
+<tr class="separator:a5ed782ff5b9cf050bec931e06de12c00"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table>
 <h2 class="groupheader">Function Documentation</h2>
 <a class="anchor" id="a36e656667193c83aa2cc03a024fc131b"></a>
@@ -1197,6 +1201,39 @@ Functions</h2></td></tr>
 
 </div>
 </div>
+<a class="anchor" id="a02ca33c31ed535d24894f8a9a91ce9df"></a>
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">item_add_cid </td>
+          <td>(</td>
+          <td class="paramtype">&#160;</td>
+          <td class="paramname"><em>$xchan_hash</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">&#160;</td>
+          <td class="paramname"><em>$mid</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">&#160;</td>
+          <td class="paramname"><em>$uid</em>&#160;</td>
+        </tr>
+        <tr>
+          <td></td>
+          <td>)</td>
+          <td></td><td></td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+<p>change access control for item with message_id $mid and channel_id $uid </p>
+
+</div>
+</div>
 <a class="anchor" id="a6f7e1334af5d684a987fa6a3eb37f4cc"></a>
 <div class="memitem">
 <div class="memproto">
@@ -1251,6 +1288,38 @@ Functions</h2></td></tr>
           <td class="paramtype">&#160;</td>
           <td class="paramname"><em>$item</em></td><td>)</td>
           <td></td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+</div>
+</div>
+<a class="anchor" id="a5ed782ff5b9cf050bec931e06de12c00"></a>
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">item_remove_cid </td>
+          <td>(</td>
+          <td class="paramtype">&#160;</td>
+          <td class="paramname"><em>$xchan_hash</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">&#160;</td>
+          <td class="paramname"><em>$mid</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">&#160;</td>
+          <td class="paramname"><em>$uid</em>&#160;</td>
+        </tr>
+        <tr>
+          <td></td>
+          <td>)</td>
+          <td></td><td></td>
         </tr>
       </table>
 </div><div class="memdoc">
