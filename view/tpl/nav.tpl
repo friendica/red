@@ -74,7 +74,7 @@
 				</li>
 				<li class="{{$sel.home}} visible-xs">
 					<a class="{{$nav.home.2}}" href="{{$nav.home.0}}" title="{{$nav.home.3}}" ><i class="icon-home"></i></a>
-					<span class="home-update badge"rel="#nav-home-menu"></span>
+					<span class="home-update badge" rel="#nav-home-menu"></span>
 				</li>
 			{{/if}}
 
@@ -173,5 +173,3 @@
 			</ul>
 		</div>
 	</div>
-
-
