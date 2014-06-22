@@ -50,11 +50,11 @@ This permission determines who can view your contacts. These are the connections
 
 [i]Can view my &quot;public&quot; file storage.[/i]
 
-This permission determines who can view your public files. This isn't done yet, so this is placeholder text.
+This permission determines who can view your public files stored in your cloud.
 
 [i]Can view my &quot;public&quot; pages.[/i]
 
-This permission determines who can view your public web pages. This isn't done yet, so this is placeholder text.
+This permission determines who can view your public web pages. 
 
 [i]Can send me their channel stream and posts.[/i]
 
@@ -86,7 +86,7 @@ This determines who can join the public chat rooms created by your channel.
 
 [i]Can write to my &quot;public&quot; file storage.[/i]
 
-This determines who can upload files to your public file storage. This isn't done yet, so this is placeholder text.
+This determines who can upload files to your public file storage, or 'cloud'.
 
 [i]Can edit my &quot;public&quot; pages.[/i]
 
