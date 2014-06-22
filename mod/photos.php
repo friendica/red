@@ -927,6 +927,10 @@ function photos_content(&$a) {
 
 		$edit = null;
 		if($can_post) {
+			if(array_key_exists('albums', $a->data))
+                        	$albums = get_app()->data['albums'];
+	                else
+        	                $albums = photos_albums_list($a->data['channel'],$a->data['observer']);
 
 			$album_e = $ph[0]['album'];
 			$caption_e = $ph[0]['description'];
@@ -937,6 +941,7 @@ function photos_content(&$a) {
 				'id' => $ph[0]['id'],
 				'rotatecw' => t('Rotate CW (right)'),
 				'rotateccw' => t('Rotate CCW (left)'),
+				'albums' => $albums['albums'],
 				'album' => $album_e,
 				'newalbum' => t('New album name'), 
 				'nickname' => $a->data['channel']['channel_address'],
