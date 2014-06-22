@@ -47,7 +47,7 @@ define ( 'RED_PLATFORM',            'Red Matrix' );
 define ( 'RED_VERSION',             trim(file_get_contents('version.inc')) . 'R');
 define ( 'ZOT_REVISION',            1     );
 
-define ( 'DB_UPDATE_VERSION',       1112  );
+define ( 'DB_UPDATE_VERSION',       1113  );
 
 define ( 'EOL',                    '<br />' . "\r\n"     );
 define ( 'ATOM_TIME',              'Y-m-d\TH:i:s\Z' );
@@ -289,6 +289,7 @@ define ( 'PERMS_SITE'       , 0x0004 );
 define ( 'PERMS_CONTACTS'   , 0x0008 );
 define ( 'PERMS_SPECIFIC'   , 0x0080 );
 define ( 'PERMS_AUTHED'     , 0x0100 );
+define ( 'PERMS_PENDING'    , 0x0200 );
 
 
 // Address book flags

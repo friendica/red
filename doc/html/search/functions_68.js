@@ -7,6 +7,7 @@ var searchData=
   ['head_5fget_5fcss',['head_get_css',['../plugin_8php.html#af92789f559b89a380e49d303218aeeca',1,'plugin.php']]],
   ['head_5fget_5ficon',['head_get_icon',['../classApp.html#af17df107f2216ddf5ad2a7e0f2ba2166',1,'App\head_get_icon()'],['../boot_8php.html#a24a7a70afedd5d85fe0eadc85afa9f77',1,'head_get_icon():&#160;boot.php']]],
   ['head_5fget_5fjs',['head_get_js',['../plugin_8php.html#a65ab52cb1a7030d5190e247211bef2a1',1,'plugin.php']]],
+  ['head_5fget_5fmain_5fjs',['head_get_main_js',['../plugin_8php.html#a67ca417634de2d0beffffc54aeb951ff',1,'plugin.php']]],
   ['head_5fremove_5fcss',['head_remove_css',['../plugin_8php.html#a9ab6caae31935f6cf781ce7872db7cdf',1,'plugin.php']]],
   ['head_5fremove_5fjs',['head_remove_js',['../plugin_8php.html#a4a0ae7b881e7c8af99a69e3b03f898b4',1,'plugin.php']]],
   ['head_5fset_5ficon',['head_set_icon',['../classApp.html#a8863703a0305eaa45eb970dbd2046291',1,'App\head_set_icon()'],['../boot_8php.html#a0e4701c9742c3ef88f02ac450a042a84',1,'head_set_icon():&#160;boot.php']]],

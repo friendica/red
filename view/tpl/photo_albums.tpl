@@ -3,7 +3,9 @@
 {{if $albums}}
 <ul>
 {{foreach $albums as $al}}
-<li><a href="{{$baseurl}}/photos/{{$nick}}/album/{{$al.bin2hex}}">{{$al.text}}</a></li>
+{{if $al.text}}
+<li><a href="{{$baseurl}}/photos/{{$nick}}/album/{{$al.bin2hex}}">{{$al.text}}</a> ({{$al.total}})</li>
+{{/if}}
 {{/foreach}}
 </ul>
 {{/if}}

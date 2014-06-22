@@ -133,6 +133,19 @@ function abook_toggle_flag($abook,$flag) {
 		intval($abook['abook_id']),
 		intval($abook['abook_channel'])
 	);
+
+	// if unsetting the archive bit, update the timestamps so we'll try to connect for an additional 30 days. 
+
+	if(($flag === ABOOK_FLAG_ARCHIVED) && ($abook['abook_flags'] & ABOOK_FLAG_ARCHIVED)) {
+		$r = q("update abook set abook_connected = '%s', abook_updated = '%s' 
+			where abook_id = %d and abook_channel = %d limit 1",
+			dbesc(datetime_convert()),
+			dbesc(datetime_convert()),
+			intval($abook['abook_id']),
+			intval($abook['abook_channel'])
+		);
+	}
+
 	$a = get_app();
 	if($a->data['abook'])
 		$a->data['abook']['abook_flags'] = $a->data['abook']['abook_flags'] ^ $flag;

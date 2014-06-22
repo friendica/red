@@ -46,7 +46,7 @@ function item_post(&$a) {
 
 	call_hooks('post_local_start', $_REQUEST);
 
-	 logger('postvars ' . print_r($_REQUEST,true), LOGGER_DATA);
+//	 logger('postvars ' . print_r($_REQUEST,true), LOGGER_DATA);
 
 	$api_source = ((x($_REQUEST,'api_source') && $_REQUEST['api_source']) ? true : false);
 
@@ -376,6 +376,7 @@ function item_post(&$a) {
 		}
 	}
 
+
 	$expires = '0000-00-00 00:00:00';
 
 	if(feature_enabled($profile_uid,'content_expire')) {
@@ -395,6 +396,7 @@ function item_post(&$a) {
 	if($preview) {
 		$body = z_input_filter($profile_uid,$body,$mimetype);
 	}
+
 
 	// Verify ability to use html or php!!!
 
@@ -416,6 +418,7 @@ function item_post(&$a) {
 			}
 		}
 	}
+
 
 	if($mimetype === 'text/bbcode') {
 
@@ -465,7 +468,6 @@ function item_post(&$a) {
 		$body = preg_replace_callback('/\[img(.*?)\](.*?)\[\/img\]/ism','red_zrlify_img_callback',$body);
 
 
-
 		/**
 		 *
 		 * When a photo was uploaded into the message using the (profile wall) ajax 
@@ -512,6 +514,7 @@ function item_post(&$a) {
 		$body = preg_replace('/\[\/code\]\s*\[code\]/ism',"\n",$body); 
 
 		$body = scale_external_images($body,false);
+
 
 		/**
 		 * Look for any tags and linkify them
@@ -602,7 +605,6 @@ function item_post(&$a) {
 	}
 
 // BBCODE end alert
-
 
 	if(strlen($categories)) {
 		$cats = explode(',',$categories);

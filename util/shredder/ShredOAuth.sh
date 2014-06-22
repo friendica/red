@@ -174,17 +174,45 @@ FO_statuses_home_timeline () {
 
 FO_command () {
 	local command="$1"
-
+	local post="$2"
+	declare -a opts=("${!3}")
 	local params=(
 		$(OAuth_param 'screen_name' $screen_name)
 		$(OAuth_param 'count' $count)
 	)
 
-
-	local auth_header=$(OAuth_authorization_header 'Authorization' "$redmatrix_url" '' '' 'GET' "${redmatrix_url}/api/${command}.json" ${params[@]})
+#echo "$3"
+#echo '---'
+#echo "${opts[@]}"
 
 	convscreen=$(OAuth_PE "$screen_name");
-  	FO_ret=$(curl -s --get "${redmatrix_url}/api/${command}.json" --data "screen_name=${convscreen}&count=${count}" --header "${auth_header}")
+	data="screen_name=${convscreen}&count=${count}"
+
+   if [ ${#opts[@]} != 0 ]; then
+		for b in ${opts[@]}; do
+			lhs=`echo $b | awk -F= '{print $1};'`
+			rhs=`echo $b | awk -F= '{print $2};'`
+			params=("${params[@]}" $(OAuth_param "$lhs" "$rhs"))
+			data=$data"&""$lhs"="$rhs"
+		done
+	fi
+ 
+#echo 'params: ' ${params[@]}
+
+#echo 'data: ' $data
+
+	local auth_header='';
+
+	if [ "$post" == '1' ]; then
+		auth_header=$(OAuth_authorization_header 'Authorization' "$redmatrix_url" '' '' 'POST' "${redmatrix_url}/api/${command}.json" ${params[@]})
+		FO_ret=$(curl -s "${redmatrix_url}/api/${command}.json" --data-urlencode "${data}" --header "${auth_header}")
+
+	else
+		auth_header=$(OAuth_authorization_header 'Authorization' "$redmatrix_url" '' '' 'GET' "${redmatrix_url}/api/${command}.json" ${params[@]})
+		FO_ret=$(curl -s --get "${redmatrix_url}/api/${command}.json" --data "${data}" --header "${auth_header}")
+
+	fi
+
 	FO_rval=$?
 
 	return $FO_rval

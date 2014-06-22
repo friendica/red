@@ -311,7 +311,7 @@ function check_form_security_token_redirectOnErr($err_redirect, $typename = '', 
 }
 function check_form_security_token_ForbiddenOnErr($typename = '', $formname = 'form_security_token') {
 	if (!check_form_security_token($typename, $formname)) {
-	    $a = get_app();
+		$a = get_app();
 		logger('check_form_security_token failed: user ' . $a->user['guid'] . ' - form element ' . $typename);
 		logger('check_form_security_token failed: _REQUEST data: ' . print_r($_REQUEST, true), LOGGER_DATA);
 		header('HTTP/1.1 403 Forbidden');
@@ -342,19 +342,22 @@ function init_groups_visitor($contact_id) {
 
 
 // This is used to determine which uid have posts which are visible to the logged in user (from the API) for the 
-// public_timeline, and we can use this in a community page by making $perms_min = PERMS_NETWORK unless logged in. 
+// public_timeline, and we can use this in a community page by making
+// $perms = (PERMS_NETWORK|PERMS_PUBLIC) unless logged in. 
 // Collect uids of everybody on this site who has opened their posts to everybody on this site (or greater visibility)
 // We always include yourself if logged in because you can always see your own posts
 // resolving granular permissions for the observer against every person and every post on the site
 // will likely be too expensive. 
 // Returns a string list of comma separated channel_ids suitable for direct inclusion in a SQL query
 
-function stream_perms_api_uids($perms_min = PERMS_SITE) {
+function stream_perms_api_uids($perms = NULL ) {
+	$perms = is_null($perms) ? (PERMS_SITE|PERMS_NETWORK|PERMS_PUBLIC) : $perms;
+
 	$ret = array();
 	if(local_user())
 		$ret[] = local_user();
-	$r = q("select channel_id from channel where channel_r_stream > 0 and channel_r_stream <= %d and not (channel_pageflags & %d)",
-		intval($perms_min),
+	$r = q("select channel_id from channel where channel_r_stream > 0 and (channel_r_stream & %d) and not (channel_pageflags & %d)",
+		intval($perms),
 		intval(PAGE_CENSORED|PAGE_SYSTEM|PAGE_REMOVED)
 	);
 	if($r)
@@ -373,13 +376,15 @@ function stream_perms_api_uids($perms_min = PERMS_SITE) {
 	return $str;
 }
 
-function stream_perms_xchans($perms_min = PERMS_SITE) {
+function stream_perms_xchans($perms = NULL ) {
+	$perms = is_null($perms) ? (PERMS_SITE|PERMS_NETWORK|PERMS_PUBLIC) : $perms;
+
 	$ret = array();
 	if(local_user())
 		$ret[] = get_observer_hash();
 
-	$r = q("select channel_hash from channel where channel_r_stream > 0 and channel_r_stream <= %d and not (channel_pageflags & %d)",
-		intval($perms_min),
+	$r = q("select channel_hash from channel where channel_r_stream > 0 and (channel_r_stream & %d) and not (channel_pageflags & %d)",
+		intval($perms),
 		intval(PAGE_CENSORED|PAGE_SYETEM|PAGE_REMOVED)
 	);
 	if($r)
