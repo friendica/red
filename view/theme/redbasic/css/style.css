@@ -1743,6 +1743,14 @@ header {
 	list-style-type: none;
 }
 
+.profile-thing-list img {
+	margin-bottom: 5px;
+}
+
+.profile-thing-list li {
+	margin-bottom: 15px;
+}
+
 div.page-list-item {
 margin: 20px;
 }

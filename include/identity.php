@@ -1044,10 +1044,12 @@ function advanced_profile(&$a) {
 
 		$things = get_things($a->profile['profile_guid'],$a->profile['profile_uid']);
 
-		logger('mod_profile: things: ' . print_r($things,true), LOGGER_DATA); 
+//		logger('mod_profile: things: ' . print_r($things,true), LOGGER_DATA); 
 
         return replace_macros($tpl, array(
             '$title' => t('Profile'),
+			'$canlike' => (($profile['canlike'])? true : false),
+			'$likethis' => t('Like this thing'),
             '$profile' => $profile,
 			'$things' => $things
         ));

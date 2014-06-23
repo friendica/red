@@ -581,6 +581,7 @@ CREATE TABLE IF NOT EXISTS `likes` (
   `iid` int(10) unsigned NOT NULL DEFAULT '0',
   `verb` char(255) NOT NULL DEFAULT '',
   `target_type` char(255) NOT NULL DEFAULT '',
+  `target_id` char(128) NOT NULL DEFAULT '',
   `target` mediumtext NOT NULL,
   PRIMARY KEY (`id`),
   KEY `channel_id` (`channel_id`),
@@ -588,7 +589,8 @@ CREATE TABLE IF NOT EXISTS `likes` (
   KEY `likee` (`likee`),
   KEY `iid` (`iid`),
   KEY `verb` (`verb`),
-  KEY `target_type` (`target_type`)
+  KEY `target_type` (`target_type`),
+  KEY `target_id` (`target_id`)
 ) ENGINE=MyISAM DEFAULT CHARSET=utf8;
 
 CREATE TABLE IF NOT EXISTS `mail` (

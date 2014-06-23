@@ -322,9 +322,21 @@ function get_things($profile_hash,$uid) {
 		foreach($v as $k => $foo)
 			$things[$k] = null;
 		foreach($r as $rr) {
+
+			$l = q("select xchan_name, xchan_url from likes left join xchan on likee = xchan_hash where
+				target_type = '%s' and target_id = '%s' and channel_id = %d",
+				dbesc(ACTIVITY_OBJ_THING),
+				dbesc($rr['term_hash']),
+				intval($uid)
+			);
+
+			for($x = 0; $x < count($l); $x ++) 
+				$l[$x]['xchan_url'] = zid($l[$x]['xchan_url']);
+					
 			if(! $things[$rr['obj_verb']])
 				$things[$rr['obj_verb']] = array();
-			$things[$rr['obj_verb']][] = array('term' => $rr['term'],'url' => $rr['url'],'img' => $rr['imgurl'], 'profile' => $rr['profile_name']);
+			$things[$rr['obj_verb']][] = array('term' => $rr['term'],'url' => $rr['url'],'img' => $rr['imgurl'], 'profile' => $rr['profile_name'],'term_hash' => $rr['term_hash'], 'likes' => $l,'like_count' => count($l),'like_label' => tt('Like','Likes',count($l),'noun'));
+
 		} 
 		$sorted_things = array();
 		if($things) {
@@ -335,7 +347,7 @@ function get_things($profile_hash,$uid) {
 			}
 		}
 	}
-
+//logger('things: ' . print_r($sorted_things,true));
 	return $sorted_things;
 
 }

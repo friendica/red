@@ -151,12 +151,12 @@ function like_content(&$a) {
 
 		// second like of the same thing is "undo" for the first like
 
-		$z = q("select * from likes where channel_id = %d and liker = '%s' and verb = '%s' and target_type = '%s' and target = '%s' limit 1",
+		$z = q("select * from likes where channel_id = %d and liker = '%s' and verb = '%s' and target_type = '%s' and target_id = '%s' limit 1",
 			intval($ch[0]['channel_id']),
 			dbesc($observer['xchan_hash']),
 			dbesc($activity),
 			dbesc(($tgttype)?$tgttype:$objtype),
-			dbesc(json_encode(($target)?$target:$object))
+			dbesc($obj_id)
 		);
 
 		if($z) {
@@ -328,6 +328,10 @@ function like_content(&$a) {
 
 	
 	$arr['body']          =  sprintf( $bodyverb, $alink, $ulink, $plink );
+	if($obj_type === 'thing' && $r[0]['imgurl']) {
+		$arr['body'] .= "\n\n[zmg=80x80]" . $r[0]['imgurl'] . '[/zmg]';
+	}	
+
 
 	$arr['verb']          = $activity;
 	$arr['obj_type']      = $objtype;
@@ -354,13 +358,14 @@ function like_content(&$a) {
 
 
 	if($extended_like) {
-		$r = q("insert into likes (channel_id,liker,likee,iid,verb,target_type,target) values (%d,'%s','%s',%d,'%s','%s','%s')",
+		$r = q("insert into likes (channel_id,liker,likee,iid,verb,target_type,target_id,target) values (%d,'%s','%s',%d,'%s','%s','%s','%s')",
 			intval($ch[0]['channel_id']),
 			dbesc($observer['xchan_hash']),
 			dbesc($ch[0]['channel_hash']),
 			intval($post_id),
 			dbesc($activity),
 			dbesc(($tgttype)?$tgttype:$objtype),
+			dbesc($obj_id),
 			dbesc(json_encode(($target)?$target:$object))
 		);
 	};

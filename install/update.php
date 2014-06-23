@@ -1,6 +1,6 @@
 <?php
 
-define( 'UPDATE_VERSION' , 1114 );
+define( 'UPDATE_VERSION' , 1115 );
 
 /**
  *
@@ -1283,3 +1283,11 @@ ADD INDEX ( `channel_id` )");
 	return UPDATE_FAILED;
 }
 
+function update_r1114() {
+	$r = q("ALTER TABLE `likes` ADD `target_id` CHAR( 128 ) NOT NULL DEFAULT '' AFTER `target_type` ,
+ADD INDEX ( `target_id` )");
+	if($r)
+		return UPDATE_SUCCESS;
+	return UPDATE_FAILED;
+}
+	
