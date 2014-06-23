@@ -615,10 +615,11 @@ function updateConvItems(mode,data) {
 				update_mode = 'append';
 			page_load = false;
 			scroll_next = false;
-			in_progress = false;
 			updateConvItems(update_mode,data);
 			$("#page-spinner").spin(false);
 			$("#profile-jot-text-loading").spin(false);
+
+			in_progress = false;
 
 			// FIXME - the following lines were added so that almost
 			// immediately after we update the posts on the page, we
