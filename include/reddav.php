@@ -890,11 +890,18 @@ class RedBrowser extends DAV\Browser\Plugin {
 			$html = profile_tabs(get_app(),(($this->auth->owner_id == local_user()) ? true : false),$this->auth->owner_nick);
 
         $html .= "
-<body>
-  <h1>Index for " . $this->escapeHTML($path) . "/</h1>
-  <table id=\"cloud-index\">
-    <tr><th width=\"24\"></th><th>Name</th><th>Type</th><th>Size</th><th>Last modified</th></tr>
-    <tr><td colspan=\"5\"><hr /></td></tr>";
+	<body>
+		<h1>".t('Files').": ".$this->escapeHTML($path) . "/</h1>
+		<table id=\"cloud-index\">
+		<tr>
+			<th></th>
+			<th>".t('Name')."</th>
+			<th></th><th></th><th></th>
+			<th>Type</th>
+			<th>Size</th>
+			<th>Last modified</th>
+		</tr>
+		<tr><td colspan=\"8\"><hr /></td></tr>";
 
         $files = $this->server->getPropertiesForPath($path,array(
             '{DAV:}displayname',
@@ -913,13 +920,15 @@ class RedBrowser extends DAV\Browser\Plugin {
             $fullPath = DAV\URLUtil::encodePath($this->server->getBaseUri() . $parentUri);
 
             $icon = $this->enableAssets?'<a href="' . $fullPath . '"><img src="' . $this->getAssetUrl('icons/parent' . $this->iconExtension) . '" width="24" alt="Parent" /></a>':'';
-            $html.= "<tr>
-    <td>$icon</td>
-    <td><a href=\"{$fullPath}\">..</a></td>
-    <td>[parent]</td>
-    <td></td>
-    <td></td>
-    </tr>";
+            $html.= "
+	<tr>
+		<td>$icon</td>
+		<td><a href=\"{$fullPath}\">..</a></td>
+		<td></td><td></td><th></td>
+		<td>[parent]</td>
+		<td></td>
+		<td></td>
+	</tr>";
 
         }
 
@@ -1005,18 +1014,34 @@ class RedBrowser extends DAV\Browser\Plugin {
                 }
 
             }
-
-            $html.= "<tr>
-    <td>$icon</td>
-    <td><a href=\"{$fullPath}\">{$displayName}</a></td>
-    <td>{$type}</td>
-    <td>{$size}</td>
-    <td>" . (($lastmodified) ? datetime_convert('UTC', date_default_timezone_get(),$lastmodified) : '') . "</td>
-    </tr>";
+	
+	$parentHash="";
+	$owner=$this->auth->owner_id;
+	$splitPath = split("/",$fullPath);
+	if (count($splitPath) > 3) {
+		for ($i=3; $i<count($splitPath); $i++) {
+			$attachName = urldecode($splitPath[$i]);
+			$attachHash = $this->findAttachHash($owner,$parentHash,$attachName);
+			$parentHash = $attachHash;
+		}
+	}
+	$attachId = $this->findAttachIdByHash($attachHash);
+	$fileStorageUrl = str_replace("cloud/","filestorage/",$path);
+	$attachIcon = "<a href=\"attach/".$attachHash."\" title=\"".$displayName."\"><i class=\"icon-download\"></i></a>";
+	$html.= "<tr>
+		<td>$icon</td>
+		<td><a href=\"{$fullPath}\">{$displayName}</a></td>
+		<td>" . (($size) ? $attachIcon : '') . "</td>
+		<td><a href=\"".$fileStorageUrl."/".$attachId."/edit\" title=\"".t('Edit')."\"><i class=\"icon-pencil\"></i></a></td>
+		<td><a href=\"".$fileStorageUrl."/".$attachId."/delete\" title=\"".t('Delete')."\"><i class=\"icon-remove drop-icons\"></i></a></td>
+		<td>{$type}</td>
+		<td>". $size ."</td>
+		<td>" . (($lastmodified) ? datetime_convert('UTC', date_default_timezone_get(),$lastmodified) : '') . "</td>
+	</tr>";
 
         }
 
-        $html.= "<tr><td colspan=\"5\"><hr /></td></tr>";
+        $html.= "<tr><td colspan=\"8\"><hr /></td></tr>";
 
         $output = '';
 
@@ -1039,12 +1064,13 @@ class RedBrowser extends DAV\Browser\Plugin {
     public function htmlActionsPanel(DAV\INode $node, &$output) {
 
 
-	if($this->auth->owner_id && $this->auth->owner_id == $this->auth->channel_id) {
-			$channel = get_app()->get_channel();
-		if($channel) {
-			$output .= '<tr><td colspan="2"><a href="filestorage/' . $channel['channel_address'] . '" >' . t('Edit File properties') . '</a></td></tr><tr><td>&nbsp;</td></tr>';
-		}
-	}
+	//Removed link to filestorage page
+	//if($this->auth->owner_id && $this->auth->owner_id == $this->auth->channel_id) {
+	//		$channel = get_app()->get_channel();
+	//	if($channel) {
+	//		$output .= '<tr><td colspan="2"><a href="filestorage/' . $channel['channel_address'] . '" >' . t('Edit File properties') . '</a></td></tr><tr><td>&nbsp;</td></tr>';
+	//	}
+	//}
 
         if (!$node instanceof DAV\ICollection)
             return;
@@ -1083,4 +1109,29 @@ class RedBrowser extends DAV\Browser\Plugin {
         return z_root() .'/cloud/?sabreAction=asset&assetName=' . urlencode($assetName);
     }
 
+    protected function findAttachHash($owner, $parentHash, $attachName) {
+	$r = q("select * from attach where uid = %d and folder = '%s' and filename = '%s' order by edited desc limit 1",
+		intval($owner), dbesc($parentHash), dbesc($attachName)
+	);
+	$hash = "";
+	if($r) {
+		foreach($r as $rr) {
+			$hash = $rr['hash'];
+		}
+	}
+        return $hash;
+    }
+    
+    protected function findAttachIdByHash($attachHash) {
+	$r = q("select * from attach where hash = '%s' order by edited desc limit 1",
+		dbesc($attachHash)
+	);
+	$id = "";
+	if($r) {
+		foreach($r as $rr) {
+			$id = $rr['id'];
+		}
+	}
+        return $id;
+    }
 }
