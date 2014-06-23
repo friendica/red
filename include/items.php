@@ -3722,6 +3722,15 @@ function delete_item_lowlevel($item,$stage = DROPITEM_NORMAL) {
 			break;
 	}
 
+
+	// immediately remove any undesired profile likes. 
+
+	q("delete from likes where iid = %d and channel_id = %d limit 1",
+		intval($item['id']),
+		intval($item['uid'])
+	);
+
+
 	// network deletion request. Keep the message structure so that we can deliver delete notifications.
 	// Come back after several days (or perhaps a month) to do the lowlevel delete (DROPITEM_PHASE2).
 
