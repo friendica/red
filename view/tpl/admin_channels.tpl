@@ -30,7 +30,7 @@
 				{{foreach $channels as $c}}
 					<tr>
 						<td class='channel_id'>{{$c.channel_id}}</td>
-						<td class='channel_name'>{{$c.channel_name}}</td>
+						<td class='channel_name'><a href="channel/{{$c.channel_address}}">{{$c.channel_name}}</a></td>
 						<td class='channel_address'>{{$c.channel_address}}</td>
 						<td class="checkbox"><input type="checkbox" class="channels_ckbx" id="id_channel_{{$c.channel_id}}" name="channel[]" value="{{$c.channel_id}}"/></td>
 						<td class="tools">
