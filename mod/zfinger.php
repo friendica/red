@@ -101,10 +101,11 @@ function zfinger_init(&$a) {
 
 	$special_channel = (($e['channel_pageflags'] & PAGE_PREMIUM)  ? true : false);
 	$adult_channel   = (($e['channel_pageflags'] & PAGE_ADULT)    ? true : false);
+	$censored        = (($e['channel_pageflags'] & PAGE_CENSORED) ? true : false);
 	$searchable      = (($e['channel_pageflags'] & PAGE_HIDDEN)   ? false : true);
 	$deleted         = (($e['xchan_flags'] & XCHAN_FLAGS_DELETED) ? true : false);
 
-	if(($e['xchan_flags'] & XCHAN_FLAGS_HIDDEN) || $deleted)
+	if(($e['xchan_flags'] & XCHAN_FLAGS_HIDDEN) || $deleted || $censored)
 		$searchable = false;
 	 
 	//  This is for birthdays and keywords, but must check access permissions

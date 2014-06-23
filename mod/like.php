@@ -16,7 +16,6 @@ function like_content(&$a) {
 	if(! $verb)
 		$verb = 'like';
 
-
 	switch($verb) {
 		case 'like':
 		case 'unlike':
@@ -31,80 +30,148 @@ function like_content(&$a) {
 			break;
 	}
 
+	$extended_like = false;
 
-	$item_id = ((argc() > 1) ? notags(trim(argv(1))) : 0);
+	if(argc() == 3) {
 
-	logger('like: verb ' . $verb . ' item ' . $item_id, LOGGER_DEBUG);
+		$observer = $a->get_observer();
 
-
-	$r = q("SELECT * FROM item WHERE id = %d and item_restrict = 0 LIMIT 1",
-		dbesc($item_id)
-	);
-
-	if(! $item_id || (! $r)) {
-		logger('like: no item ' . $item_id);
-		killme();
-	}
-
-	$item = $r[0];
-
-	$sys = get_sys_channel();
-
-	$owner_uid = $item['uid'];
-	$owner_aid = $item['aid'];
-
-	// if this is a "discover" item, (item['uid'] is the sys channel),
-	// fallback to the item comment policy, which should've been
-	// respected when generating the conversation thread.
-	// Even if the activity is rejected by the item owner, it should still get attached
-	// to the local discover conversation on this site. 
-
-	if(($owner_uid != $sys['channel_id']) && (! perm_is_allowed($owner_uid,$observer['xchan_hash'],'post_comments'))) {
-			notice( t('Permission denied') . EOL);
+		if(! $observer)
 			killme();
+
+		$extended_like = true;
+		$obj_type = argv(1);
+		$obj_id = argv(2);
+		$public = true;
+
+		if($obj_type == 'profile') {
+			$r = q("select * from profile where profile_guid = '%s' limit 1",
+				dbesc(argv(2))
+			);
+			if(! $r)
+				killme();			
+			$owner_id = $r[0]['uid'];
+			if($r[0]['is_default'])
+				$public = true;
+			if(! $public) {
+				$d = q("select abook_xchan from abook where abook_profile = '%s' and abook_channel = %d",
+					dbesc($r[0]['profile_guid']),
+					intval($owner_id)
+				);
+				if(! $d) {
+					// forgery - illegal
+					killme();
+				}
+				// $d now contains a list of those who can see this profile - only send the status notification
+				// to them.
+				$allow_cid = $allow_gid = $deny_cid = $deny_gid = '';
+				foreach($d as $dd) {
+					$allow_gid .= '<' . $dd['abook_xchan'] . '>';
+				}
+
+			}
+
+
+		}
+		elseif($obj_type == 'thing') {
+			$r = q("select * from obj where obj_id = %d limit 1",
+				intval(argv(2))
+			);
+			if(! $r)
+				killme();		
+
+			$owner_id = $r[0]['obj_channel'];
+
+			$allow_cid = $r[0]['allow_cid'];
+			$allow_gid = $r[0]['allow_gid'];
+			$deny_cid = $r[0]['deny_cid'];
+			$deny_gid = $r[0]['deny_gid'];
+			if($allow_cid || $allow_gid || $deny_cid || $deny_gid)			
+				$public = false;
+
+
+		}
+		else
+			killme();
+
 	}
+	else {
 
-	$r = q("select * from xchan where xchan_hash = '%s' limit 1",
-		dbesc($item['owner_xchan'])
-	);
-	if($r)
-		$thread_owner = $r[0];
-	else
-		killme();
+		$item_id = ((argc() == 2) ? notags(trim(argv(1))) : 0);
 
-	$r = q("select * from xchan where xchan_hash = '%s' limit 1",
-		dbesc($item['author_xchan'])
-	);
-	if($r)
-		$item_author = $r[0];
-	else
-		killme();
+		logger('like: verb ' . $verb . ' item ' . $item_id, LOGGER_DEBUG);
 
 
-
-	$r = q("SELECT * FROM item WHERE verb = '%s' AND item_restrict = 0 
-		AND author_xchan = '%s' AND ( parent = %d OR thr_parent = '%s') LIMIT 1",
-		dbesc($activity),
-		dbesc($observer['xchan_hash']),
-		intval($item_id),
-		dbesc($item['mid'])
-	);
-	if($r) {
-		$like_item = $r[0];
-
-		// Already liked/disliked it, delete it
-
-		$r = q("UPDATE item SET item_restrict = ( item_restrict ^ %d ), changed = '%s' WHERE id = %d LIMIT 1",
-			intval(ITEM_DELETED),
-			dbesc(datetime_convert()),
-			intval($like_item['id'])
+		$r = q("SELECT * FROM item WHERE id = %d and item_restrict = 0 LIMIT 1",
+			dbesc($item_id)
 		);
 
-		proc_run('php',"include/notifier.php","like",$like_item['id']);
-		return;
+		if(! $item_id || (! $r)) {
+			logger('like: no item ' . $item_id);
+			killme();
+		}
+
+
+		$item = $r[0];
+		$owner_uid = $item['uid'];
+		$owner_aid = $item['aid'];
+
+
+
+		$sys = get_sys_channel();
+
+
+		// if this is a "discover" item, (item['uid'] is the sys channel),
+		// fallback to the item comment policy, which should've been
+		// respected when generating the conversation thread.
+		// Even if the activity is rejected by the item owner, it should still get attached
+		// to the local discover conversation on this site. 
+
+		if(($owner_uid != $sys['channel_id']) && (! perm_is_allowed($owner_uid,$observer['xchan_hash'],'post_comments'))) {
+			notice( t('Permission denied') . EOL);
+			killme();
+		}
+
+		$r = q("select * from xchan where xchan_hash = '%s' limit 1",
+			dbesc($item['owner_xchan'])
+		);
+		if($r)
+			$thread_owner = $r[0];
+		else
+			killme();
+
+		$r = q("select * from xchan where xchan_hash = '%s' limit 1",
+			dbesc($item['author_xchan'])
+		);
+		if($r)
+			$item_author = $r[0];
+		else
+			killme();
+
+
+		$r = q("SELECT * FROM item WHERE verb = '%s' AND item_restrict = 0 
+			AND author_xchan = '%s' AND ( parent = %d OR thr_parent = '%s') LIMIT 1",
+			dbesc($activity),
+			dbesc($observer['xchan_hash']),
+			intval($item_id),
+			dbesc($item['mid'])
+		);
+		if($r) {
+			$like_item = $r[0];
+
+			// Already liked/disliked it, delete it
+
+			$r = q("UPDATE item SET item_restrict = ( item_restrict ^ %d ), changed = '%s' WHERE id = %d LIMIT 1",
+				intval(ITEM_DELETED),
+				dbesc(datetime_convert()),
+				intval($like_item['id'])
+			);
+
+			proc_run('php',"include/notifier.php","like",$like_item['id']);
+			return;
+		}
+
 	}
-
-
 
 	$mid = item_message_id();
 

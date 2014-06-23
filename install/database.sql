@@ -575,13 +575,15 @@ CREATE TABLE IF NOT EXISTS `item_id` (
 
 CREATE TABLE IF NOT EXISTS `likes` (
   `id` int(10) unsigned NOT NULL AUTO_INCREMENT,
+  `channel_id` int(11) unsigned NOT NULL DEFAULT '0', 
   `liker` char(128) NOT NULL DEFAULT '',
   `likee` char(128) NOT NULL DEFAULT '',
-  `iid` int(11) NOT NULL DEFAULT '0',
+  `iid` int(10) unsigned NOT NULL DEFAULT '0',
   `verb` char(255) NOT NULL DEFAULT '',
   `target_type` char(255) NOT NULL DEFAULT '',
   `target` mediumtext NOT NULL,
   PRIMARY KEY (`id`),
+  KEY `channel_id` (`channel_id`),
   KEY `liker` (`liker`),
   KEY `likee` (`likee`),
   KEY `iid` (`iid`),
