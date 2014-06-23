@@ -880,6 +880,8 @@ class RedBrowser extends DAV\Browser\Plugin {
 
     public function generateDirectoryIndex($path) {
 
+		$is_owner = ((local_user() && $this->auth->owner_id == local_user()) ? true : false);
+
 		if($this->auth->timezone)
 			date_default_timezone_set($this->auth->timezone);
 
@@ -887,7 +889,7 @@ class RedBrowser extends DAV\Browser\Plugin {
 		require_once('include/conversation.php');
 
 		if($this->auth->channel_name)
-			$html = profile_tabs(get_app(),(($this->auth->owner_id == local_user()) ? true : false),$this->auth->owner_nick);
+			$html = profile_tabs(get_app(),(($is_owner) ? true : false),$this->auth->owner_nick);
 
         $html .= "
 	<body>
@@ -1027,14 +1029,21 @@ class RedBrowser extends DAV\Browser\Plugin {
 	}
 	$attachId = $this->findAttachIdByHash($attachHash);
 	$fileStorageUrl = str_replace("cloud/","filestorage/",$path);
-	$attachIcon = "<a href=\"attach/".$attachHash."\" title=\"".$displayName."\"><i class=\"icon-download\"></i></a>";
+	$attachIcon = ""; // "<a href=\"attach/".$attachHash."\" title=\"".$displayName."\"><i class=\"icon-download\"></i></a>";
 	$html.= "<tr>
 		<td>$icon</td>
-		<td><a href=\"{$fullPath}\">{$displayName}</a></td>
-		<td>" . (($size) ? $attachIcon : '') . "</td>
-		<td><a href=\"".$fileStorageUrl."/".$attachId."/edit\" title=\"".t('Edit')."\"><i class=\"icon-pencil\"></i></a></td>
-		<td><a href=\"".$fileStorageUrl."/".$attachId."/delete\" title=\"".t('Delete')."\"><i class=\"icon-remove drop-icons\"></i></a></td>
-		<td>{$type}</td>
+		<td><a href=\"{$fullPath}\">{$displayName}</a></td>";
+
+	if($is_owner) {
+		$html .= "<td>" . (($size) ? $attachIcon : '') . "</td>
+		<td><a href=\"".$fileStorageUrl."/".$attachId."/edit\" title=\"".t('Edit')."\"><i class=\"icon-pencil btn btn-default\"></i></a></td>
+		<td><a href=\"".$fileStorageUrl."/".$attachId."/delete\" title=\"".t('Delete')."\"><i class=\"icon-remove btn btn-default drop-icons\"></i></a></td>";
+	}
+	else {
+		$html .= "<td></td><td></td><td></td>";
+	}
+	$html .=
+		"<td>{$type}</td>
 		<td>". $size ."</td>
 		<td>" . (($lastmodified) ? datetime_convert('UTC', date_default_timezone_get(),$lastmodified) : '') . "</td>
 	</tr>";
