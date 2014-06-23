@@ -95,7 +95,10 @@ function localize_item(&$item){
 	
 		if(! $item['object'])
 			return;
-	
+
+		if($item['item_flags'] & ITEM_THREAD_TOP)
+			return;	
+
 		$obj = json_decode_plus($item['object']);
 		if((! $obj) && ($item['object'])) {
 			logger('localize_item: failed to decode object: ' . print_r($item['object'],true));

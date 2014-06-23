@@ -372,6 +372,14 @@ aside li {
 	margin-top: 10px;
 }
 
+#profile-like {
+	margin-left: 15px;
+}
+
+#profile-like-wrapper {
+	margin-bottom: 15px;
+}
+
 
 .fn {
 	padding: 0px 0px 5px 0px;
