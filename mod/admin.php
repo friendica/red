@@ -794,6 +794,7 @@ function admin_page_channels_post(&$a){
 				intval(PAGE_CENSORED),
 				intval( $uid )
 				);
+			proc_run('php','include/directory.php',$uid,'nopush');
 		}
 		notice( sprintf( tt("%s channel censored/uncensored", "%s channelss censored/uncensored", count($channels)), count($channels)) );
 	}

@@ -14,8 +14,14 @@ function directory_run($argv, $argc){
 		return;
 
 	$force = false;
-	if(($argc > 2) && ($argv[2] === 'force'))
-		$force = true;
+	$pushall = true;
+
+	if($argc > 2) {
+		if($argv[2] === 'force')
+			$force = true;
+		if($argv[2] === 'nopush')
+			$pushall = false;
+	}
 
 	logger('directory update', LOGGER_DEBUG);
 
@@ -41,9 +47,10 @@ function directory_run($argv, $argc){
 			intval($channel['channel_id'])
 		);
 
-
 		// Now update all the connections
-		proc_run('php','include/notifier.php','refresh_all',$channel['channel_id']);
+		if($pushall) 
+			proc_run('php','include/notifier.php','refresh_all',$channel['channel_id']);
+
 		return;
 	}
 
@@ -85,8 +92,8 @@ function directory_run($argv, $argc){
 	}
 
 	// Now update all the connections
-
-	proc_run('php','include/notifier.php','refresh_all',$channel['channel_id']);
+	if($pushall)
+		proc_run('php','include/notifier.php','refresh_all',$channel['channel_id']);
 
 }
 
