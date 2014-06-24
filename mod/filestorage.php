@@ -29,7 +29,6 @@ function filestorage_post(&$a) {
 	//Build directory tree and redirect
 	$channel = $a->get_channel();
 	$cloudPath = get_parent_cloudpath($channel_id, $channel['channel_address'], $resource) ;
-	echo $cloudPath;die;
 	goaway($cloudPath);
 }
 

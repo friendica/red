@@ -834,20 +834,26 @@ function get_cloudpath($arr) {
 	return $path;
 }
 
+/**
+ * @brief Returns path to parent folder in cloud/.
+ * 
+ * @param $arr
+ * @return string with the folder path
+ */
 function get_parent_cloudpath($channel_id, $channel_name, $attachHash) {
 	//Build directory tree and redirect
 	$parentHash = $attachHash;
 	do {
-		$parentHash = findFolderHashByAttachHash($channel_id, $parentHash);
+		$parentHash = find_folder_hash_by_attach_hash($channel_id, $parentHash);
 		if ($parentHash) {
-			$parentName = findFilenameByHash($channel_id, $parentHash);
+			$parentName = find_filename_by_hash($channel_id, $parentHash);
 			$parentFullPath = $parentName."/".$parentFullPath;
 		}
 	} while ($parentHash);
 	$parentFullPath = z_root() . "/cloud/" . $channel_name . "/" . $parentFullPath;
-	goaway($parentFullPath);
+	return $parentFullPath;
 }
-function findFolderHashByAttachHash($channel_id, $attachHash) {
+function find_folder_hash_by_attach_hash($channel_id, $attachHash) {
 	$r = q("select * from attach where uid = %d and hash = '%s' limit 1",
 		intval($channel_id), dbesc($attachHash)
 	);
@@ -859,7 +865,7 @@ function findFolderHashByAttachHash($channel_id, $attachHash) {
 	}
         return $hash;
 }
-function findFilenameByHash($channel_id, $attachHash) {
+function find_filename_by_hash($channel_id, $attachHash) {
 	$r = q("select * from attach where uid = %d and hash = '%s' limit 1",
 		intval($channel_id), dbesc($attachHash)
 	);
