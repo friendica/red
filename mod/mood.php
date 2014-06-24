@@ -11,6 +11,7 @@ function mood_init(&$a) {
 		return;
 
 	$uid = local_user();
+	$channel = $a->get_channel();
 	$verb = notags(trim($_GET['verb']));
 	
 	if(! $verb) 
@@ -18,7 +19,7 @@ function mood_init(&$a) {
 
 	$verbs = get_mood_verbs();
 
-	if(! in_array($verb,$verbs))
+	if(! array_key_exists($verb,$verbs))
 		return;
 
 	$activity = ACTIVITY_MOOD . '#' . urlencode($verb);
@@ -30,15 +31,15 @@ function mood_init(&$a) {
 
 
 	if($parent) {
-		$r = q("select uri, owner_xchan, private, allow_cid, allow_gid, deny_cid, deny_gid 
+		$r = q("select mid, owner_xchan, private, allow_cid, allow_gid, deny_cid, deny_gid 
 			from item where id = %d and parent = %d and uid = %d limit 1",
 			intval($parent),
 			intval($parent),
 			intval($uid)
 		);
 		if(count($r)) {
-			$parent_uri = $r[0]['uri'];
-			$private    = $r[0]['private'];
+			$parent_mid = $r[0]['mid'];
+			$private    = $r[0]['item_private'];
 			$allow_cid  = $r[0]['allow_cid'];
 			$allow_gid  = $r[0]['allow_gid'];
 			$deny_cid   = $r[0]['deny_cid'];
@@ -48,7 +49,6 @@ function mood_init(&$a) {
 	else {
 
 		$private       = 0;
-		$channel       = $a->get_channel();
 
 		$allow_cid     =  $channel['channel_allow_cid'];
 		$allow_gid     =  $channel['channel_allow_gid'];
@@ -58,11 +58,11 @@ function mood_init(&$a) {
 
 	$poster = $a->get_observer();
 
-	$uri = item_message_id();
+	$mid = item_message_id();
 
-	$action = sprintf( t('%1$s is currently %2$s'), '[url=' . $poster['xchan_url'] . ']' . $poster['xchan_name'] . '[/url]' , $verbs[$verb]); 
+	$action = sprintf( t('%1$s is %2$s','mood'), '[zrl=' . $poster['xchan_url'] . ']' . $poster['xchan_name'] . '[/zrl]' , $verbs[$verb]); 
 	$item_flags = ITEM_WALL|ITEM_ORIGIN|ITEM_UNSEEN;
-	if(! $parent_uri)
+	if(! $parent_mid)
 		$item_flags |= ITEM_THREAD_TOP;
 
 
@@ -70,29 +70,30 @@ function mood_init(&$a) {
 
 	$arr['aid']           = get_account_id();
 	$arr['uid']           = $uid;
-	$arr['uri']           = $uri;
-	$arr['parent_uri']    = (($parent_uri) ? $parent_uri : $uri);
+	$arr['mid']           = $mid;
+	$arr['parent_mid']    = (($parent_mid) ? $parent_mid : $mid);
 	$arr['item_flags']    = $item_flags;
 	$arr['author_xchan']  = $poster['xchan_hash'];
-	$arr['owner_xchan']   = (($parent_uri) ? $r[0]['owner_xchan'] : $poster['xchan_hash']);
+	$arr['owner_xchan']   = (($parent_mid) ? $r[0]['owner_xchan'] : $poster['xchan_hash']);
 	$arr['title']         = '';
 	$arr['allow_cid']     = $allow_cid;
 	$arr['allow_gid']     = $allow_gid;
 	$arr['deny_cid']      = $deny_cid;
 	$arr['deny_gid']      = $deny_gid;
+	$arr['item_private']  = $private;
 	$arr['verb']          = $activity;
 	$arr['body']          = $action;
 
-	$item_id = item_store($arr);
+	if ((! $arr['plink']) && ($arr['item_flags'] & ITEM_THREAD_TOP)) {
+		$arr['plink'] = z_root() . '/channel/' . $channel['channel_address'] . '/?f=&mid=' . $arr['mid'];
+	}
+
+
+	$post = item_store($arr);
+	$item_id = $post['item_id'];
+
 	if($item_id) {
-//		q("UPDATE `item` SET `plink` = '%s' WHERE `uid` = %d AND `id` = %d LIMIT 1",
-//			dbesc($a->get_baseurl() . '/display/' . $poster['nickname'] . '/' . $item_id),
-//			intval($uid),
-//			intval($item_id)
-//		);
-
 		proc_run('php',"include/notifier.php","activity", $item_id);
-
 	}
 
 	call_hooks('post_local_end', $arr);

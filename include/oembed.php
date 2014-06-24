@@ -1,12 +1,10 @@
-<?php
+<?php /** @file */
 function oembed_replacecb($matches){
-//	logger('oembedcb');
+
 	$embedurl=$matches[1];
 	$j = oembed_fetch_url($embedurl);
-	$s =  oembed_format_object($j);
-	return $s;//oembed_iframe($s,$j->width,$j->height);
-
-
+	$s = oembed_format_object($j);
+	return $s;  
 }
 
 
@@ -15,6 +13,10 @@ function oembed_fetch_url($embedurl){
 	$a = get_app();
 
 	$txt = Cache::get($a->videowidth . $embedurl);
+
+	if(strstr($txt,'youtu')) {
+		$txt = str_replace('http:','https:',$txt);
+	}
 
 	// These media files should now be caught in bbcode.php
 	// left here as a fallback in case this is called from another source
@@ -26,10 +28,28 @@ function oembed_fetch_url($embedurl){
 	if(is_null($txt)){
 		$txt = "";
 		
-		if (!in_array($ext, $noexts)){
+		if (in_array($ext, $noexts)) {
+			$m = @parse_url($embedurl);
+			$zrl = false;
+			if($m['host']) {
+				$r = q("select hubloc_url from hubloc where hubloc_host = '%s' limit 1",
+					dbesc($m['host'])
+				);
+				if($r)
+					$zrl = true;
+			}
+			if($zrl) {
+				$embedurl = zid($embedurl);
+			}			
+		}
+		else {
 			// try oembed autodiscovery
 			$redirects = 0;
-			$html_text = fetch_url($embedurl, false, $redirects, 15, "text/*");
+
+			$result = z_fetch_url($embedurl, false, $redirects, array('timeout' => 15, 'accept_content' => "text/*", 'novalidate' => true ));
+			if($result['success'])
+				$html_text = $result['body'];
+
 			if($html_text){
 				$dom = @DOMDocument::loadHTML($html_text);
 				if ($dom){
@@ -40,17 +60,19 @@ function oembed_fetch_url($embedurl){
 					$entries = $xpath->query("//link[@type='application/json+oembed']");
 					foreach($entries as $e){
 						$href = $e->getAttributeNode("href")->nodeValue;
-						$txt = fetch_url($href . '&maxwidth=' . $a->videowidth);
+						$x = z_fetch_url($href . '&maxwidth=' . $a->videowidth);
+						$txt = $x['body'];
 						break;
 					}
 				}
 			}
 		}
 		
-		if ($txt==false || $txt==""){
-			// try oohembed service
-			$ourl = "http://oohembed.com/oohembed/?url=".urlencode($embedurl).'&maxwidth=' . $a->videowidth;  
-			$txt = fetch_url($ourl);
+		if ($txt==false || $txt=="") {
+			$x = array('url' => $embedurl,'videowidth' => $a->videowidth);
+			call_hooks('oembed_probe',$x);
+			if(array_key_exists('embed',$x))
+				$txt = $x['embed'];
 		}
 		
 		$txt=trim($txt);
@@ -70,6 +92,7 @@ function oembed_format_object($j){
 	$a = get_app();
     $embedurl = $j->embedurl;
 	$jhtml = oembed_iframe($j->embedurl,(isset($j->width) ? $j->width : null), (isset($j->height) ? $j->height : null) );
+
 	$ret="<span class='oembed ".$j->type."'>";
 	switch ($j->type) {
 		case "video": {
@@ -80,6 +103,13 @@ function oembed_format_object($j){
 				
 				$th=120; $tw = $th*$tr;
 				$tpl=get_markup_template('oembed_video.tpl');
+				if(strstr($embedurl,'youtu')) {
+					$embedurl = str_replace('http:','https:',$embedurl);
+					$j->thumbnail_url = str_replace('http:','https:', $j->thumbnail_url);
+					$jhtml = str_replace('http:','https:', $jhtml);
+					$j->html = str_replace('http:','https:', $j->html);
+				
+				}
 				$ret.=replace_macros($tpl, array(
                     '$baseurl' => $a->get_baseurl(),
 					'$embedurl'=>$embedurl,
@@ -112,6 +142,7 @@ function oembed_format_object($j){
 	if (  $j->type!='rich' || !strpos($j->html,$embedurl) ){
 		$embedlink = (isset($j->title))?$j->title:$embedurl;
 		$ret .= "<a href='$embedurl' rel='oembed'>$embedlink</a>";
+		$ret .= "<br>";
 		if (isset($j->author_name)) $ret.=" by ".$j->author_name;
 		if (isset($j->provider_name)) $ret.=" on ".$j->provider_name;
 	} else {
@@ -133,8 +164,11 @@ function oembed_iframe($src,$width,$height) {
 
 	$a = get_app();
 
+	$sandbox = ((strpos($src,get_app()->get_hostname())) ? ' sandbox="allow-scripts" ' : '');
+
 	$s = $a->get_baseurl()."/oembed/".base64url_encode($src);
-	return '<iframe height="' . $height . '" width="' . $width . '" src="' . $s . '" frameborder="no" >' . t('Embedded content') . '</iframe>'; 
+
+	return '<iframe ' . $sandbox . ' height="' . $height . '" width="' . $width . '" src="' . $s . '" frameborder="no" >' . t('Embedded content') . '</iframe>'; 
 
 }
 

@@ -1,11 +1,11 @@
-<link rel='stylesheet' type='text/css' href='$baseurl/library/fullcalendar/fullcalendar.css' />
+<link rel='stylesheet' type='text/css' href='{{$baseurl}}/library/fullcalendar/fullcalendar.css' />
 <script language="javascript" type="text/javascript"
-          src="$baseurl/library/fullcalendar/fullcalendar.min.js"></script>
+          src="{{$baseurl}}/library/fullcalendar/fullcalendar.min.js"></script>
 
 <script>
 	function showEvent(eventid) {
 		$.get(
-			'$baseurl/events/?id='+eventid,
+			'{{$baseurl}}/events/?id='+eventid,
 			function(data){
 				$.fancybox(data);
 			}
@@ -14,7 +14,7 @@
 	
 	$(document).ready(function() {
 		$('#events-calendar').fullCalendar({
-			events: '$baseurl/events/json/',
+			events: '{{$baseurl}}/events/json/',
 			header: {
 				left: 'prev,next today',
 				center: 'title',
@@ -27,21 +27,21 @@
 			
 			eventRender: function(event, element, view) {
 				//console.log(view.name);
-				if (event.item['author-name']==null) return;
+				if (event.item['author']['xchan_name']==null) return;
 				switch(view.name){
 					case "month":
 					element.find(".fc-event-title").html(
 						"<img src='{0}' style='height:10px;width:10px'>{1} : {2}".format(
-							event.item['author-avatar'],
-							event.item['author-name'],
+							event.item['author']['xchan_photo_s'],
+							event.item['author']['xchan_name'],
 							event.title
 					));
 					break;
 					case "agendaWeek":
 					element.find(".fc-event-title").html(
 						"<img src='{0}' style='height:12px; width:12px'>{1}<p>{2}</p><p>{3}</p>".format(
-							event.item['author-avatar'],
-							event.item['author-name'],
+							event.item['author']['xchan_photo_s'],
+							event.item['author']['xchan_name'],
 							event.item.desc,
 							event.item.location
 					));
@@ -49,8 +49,8 @@
 					case "agendaDay":
 					element.find(".fc-event-title").html(
 						"<img src='{0}' style='height:24px;width:24px'>{1}<p>{2}</p><p>{3}</p>".format(
-							event.item['author-avatar'],
-							event.item['author-name'],
+							event.item['author']['xchan_photo_s'],
+							event.item['author']['xchan_name'],
 							event.item.desc,
 							event.item.location
 					));
@@ -73,15 +73,15 @@
 	});
 </script>
 
-
+{{if $editselect != 'none'}}
 <script language="javascript" type="text/javascript"
-          src="$baseurl/library/tinymce/jscripts/tiny_mce/tiny_mce_src.js"></script>
+          src="{{$baseurl}}/library/tinymce/jscripts/tiny_mce/tiny_mce_src.js"></script>
 <script language="javascript" type="text/javascript">
 
 
 	tinyMCE.init({
 		theme : "advanced",
-		mode : "textareas",
+		mode : "{{$editselect}}",
 		plugins : "bbcode,paste",
 		theme_advanced_buttons1 : "bold,italic,underline,undo,redo,link,unlink,image,forecolor,formatselect,code",
 		theme_advanced_buttons2 : "",
@@ -97,7 +97,7 @@
 		force_p_newlines : false,
 		force_br_newlines : true,
 		forced_root_block : '',
-		content_css: "$baseurl/view/custom_tinymce.css",
+		content_css: "{{$baseurl}}/view/custom_tinymce.css",
 		theme_advanced_path : false,
 		setup : function(ed) {
 			ed.onInit.add(function(ed) {
@@ -106,7 +106,9 @@
 		}
 
 	});
-
+	{{else}}
+	<script language="javascript" type="text/javascript">
+	{{/if}}
 
 	$(document).ready(function() { 
 

@@ -1,134 +1,140 @@
-<h1>$ptitle</h1>
+<div class="generic-content-wrapper">
+<h1>{{$ptitle}}</h1>
 
-$nickname_block
+{{$nickname_block}}
 
 <form action="settings" id="settings-form" method="post" autocomplete="off" >
-<input type='hidden' name='form_security_token' value='$form_security_token'>
+<input type='hidden' name='form_security_token' value='{{$form_security_token}}' />
 
-<h3 class="settings-heading">$h_basic</h3>
+<h3 class="settings-heading">{{$h_basic}}</h3>
 
-{{inc field_input.tpl with $field=$username }}{{endinc}}
-{{inc field_custom.tpl with $field=$timezone }}{{endinc}}
-{{inc field_input.tpl with $field=$defloc }}{{endinc}}
-{{inc field_checkbox.tpl with $field=$allowloc }}{{endinc}}
+{{include file="field_input.tpl" field=$username}}
+{{include file="field_custom.tpl" field=$timezone}}
+{{include file="field_input.tpl" field=$defloc}}
+{{include file="field_checkbox.tpl" field=$allowloc}}
 
-
-<div class="settings-submit-wrapper" >
-<input type="submit" name="submit" class="settings-submit" value="$submit" />
-</div>
-
-
-<h3 class="settings-heading">$h_prv</h3>
-
-
-<input type="hidden" name="visibility" value="$visibility" />
-
-
-
-<div id="settings-permissions-wrapper">
-{{ for $permiss_arr as $permit }}
-{{inc field_select.tpl with $field=$permit }}{{endinc}}
-{{ endfor }}
-</div>
-
+{{include file="field_checkbox.tpl" field=$adult}}
 
 <div class="settings-submit-wrapper" >
-<input type="submit" name="submit" class="settings-submit" value="$submit" />
+<input type="submit" name="submit" class="settings-submit" value="{{$submit}}"{{if !$expert}} onclick="$('select').prop('disabled', false);"{{/if}} />
 </div>
 
 
+<h3 class="settings-heading">{{$h_prv}}</h3>
 
-$profile_in_dir
-
-$blocktags
-
-$suggestme
+{{include file="field_checkbox.tpl" field=$hide_presence}}
 
 
-{{inc field_input.tpl with $field=$maxreq }}{{endinc}}
+<h3 id="settings-privacy-macros">{{$lbl_pmacro}}</h3>
+<ul id="settings-privacy-macros">
+<li><a href="#" onclick="channel_privacy_macro(2); return false" id="settings_pmacro2">{{$pmacro2}}</a></li>
+<li><a href="#" onclick="channel_privacy_macro(1); return false" id="settings_pmacro1">{{$pmacro1}}</a></li>
+<li><a href="#" onclick="channel_privacy_macro(3); return false" id="settings_pmacro3">{{$pmacro3}}</a></li>
+<li><a href="#" onclick="channel_privacy_macro(0); return false" id="settings_pmacro0">{{$pmacro0}}</a></li>
+</ul>
 
-{{inc field_input.tpl with $field=$cntunkmail }}{{endinc}}
 
-{{inc field_input.tpl with $field=$expire.days }}{{endinc}}
+<button type="button" class="btn btn-xs btn-default" data-toggle="collapse" data-target="#settings-permissions-wrapper">{{$lbl_p2macro}}</button>
 
 
-<div class="field input">
-	<span class="field_help"><a href="#advanced-expire-popup" id="advanced-expire" class='popupbox' title="$expire.advanced">$expire.label</a></span>
-	<div style="display: none;">
-		<div id="advanced-expire-popup" style="width:auto;height:auto;overflow:auto;">
-			<h3>$expire.advanced</h3>
-			{{ inc field_yesno.tpl with $field=$expire.items }}{{endinc}}
-			{{ inc field_yesno.tpl with $field=$expire.notes }}{{endinc}}
-			{{ inc field_yesno.tpl with $field=$expire.starred }}{{endinc}}
-			{{ inc field_yesno.tpl with $field=$expire.network_only }}{{endinc}}
-		</div>
+
+<div class="collapse well" id="settings-permissions-wrapper">
+{{if !$expert}}
+	<div class="alert alert-info">{{$hint}}</div>
+{{/if}}
+
+{{foreach $permiss_arr as $permit}}
+	{{if $expert}}
+		{{include file="field_select.tpl" field=$permit}}
+	{{else}}
+		{{include file="field_select_disabled.tpl" field=$permit}}
+	{{/if}}
+{{/foreach}}
+
+{{if $expert}}
+	<div class="settings-submit-wrapper" >
+	<input type="submit" name="submit" class="settings-submit" value="{{$submit}}" />
 	</div>
+{{/if}}
+
+</div>
+<div class="settings-common-perms">
+
+
+{{$profile_in_dir}}
+
+{{$suggestme}}
+
+{{include file="field_yesno.tpl" field=$blocktags}}
+
+
+{{include file="field_input.tpl" field=$expire}}
 
 </div>
 
 <div id="settings-default-perms" class="settings-default-perms" >
-	<a href="#profile-jot-acl-wrapper" id="settings-default-perms-menu" class='popupbox'>$permissions $permdesc</a>
+	<button class="btn btn-default btn-xs" data-toggle="modal" data-target="#aclModal" onclick="return false;">{{$permissions}}</button>
+	{{$aclselect}}
 	<div id="settings-default-perms-menu-end"></div>
-
-	<div id="settings-default-perms-select" style="display: none; margin-bottom: 20px" >
-	
-	<div style="display: none;">
-		<div id="profile-jot-acl-wrapper" style="width:auto;height:auto;overflow:auto;">
-			$aclselect
-		</div>
-	</div>
-
-	</div>
 </div>
 <br/>
 <div id="settings-default-perms-end"></div>
 
-$group_select
+{{$group_select}}
 
 
 <div class="settings-submit-wrapper" >
-<input type="submit" name="submit" class="settings-submit" value="$submit" />
+<input type="submit" name="submit" class="settings-submit" value="{{$submit}}"{{if !$expert}} onclick="$('select').prop('disabled', false);"{{/if}} />
 </div>
 
 
 
-<h3 class="settings-heading">$h_not</h3>
+<h3 class="settings-heading">{{$h_not}}</h3>
 <div id="settings-notifications">
 
-<div id="settings-activity-desc">$activity_options</div>
+<div id="settings-activity-desc">{{$activity_options}}</div>
+{{*the next two aren't yet implemented *}}
+{{*include file="field_checkbox.tpl" field=$post_newfriend*}}
+{{*include file="field_checkbox.tpl" field=$post_joingroup*}}
+{{include file="field_checkbox.tpl" field=$post_profilechange}}
 
-{{inc field_checkbox.tpl with $field=$post_newfriend }}{{endinc}}
-{{inc field_checkbox.tpl with $field=$post_joingroup }}{{endinc}}
-{{inc field_checkbox.tpl with $field=$post_profilechange }}{{endinc}}
 
-
-<div id="settings-notify-desc">$lbl_not</div>
+<div id="settings-notify-desc">{{$lbl_not}}</div>
 
 <div class="group">
-{{inc field_intcheckbox.tpl with $field=$notify1 }}{{endinc}}
-{{inc field_intcheckbox.tpl with $field=$notify2 }}{{endinc}}
-{{inc field_intcheckbox.tpl with $field=$notify3 }}{{endinc}}
-{{inc field_intcheckbox.tpl with $field=$notify4 }}{{endinc}}
-{{inc field_intcheckbox.tpl with $field=$notify5 }}{{endinc}}
-{{inc field_intcheckbox.tpl with $field=$notify6 }}{{endinc}}
-{{inc field_intcheckbox.tpl with $field=$notify7 }}{{endinc}}
-{{inc field_intcheckbox.tpl with $field=$notify8 }}{{endinc}}
+{{include file="field_intcheckbox.tpl" field=$notify1}}
+{{include file="field_intcheckbox.tpl" field=$notify2}}
+{{include file="field_intcheckbox.tpl" field=$notify3}}
+{{include file="field_intcheckbox.tpl" field=$notify4}}
+{{include file="field_intcheckbox.tpl" field=$notify5}}
+{{include file="field_intcheckbox.tpl" field=$notify6}}
+{{include file="field_intcheckbox.tpl" field=$notify7}}
+{{include file="field_intcheckbox.tpl" field=$notify8}}
 </div>
 
 </div>
 
 <div class="settings-submit-wrapper" >
-<input type="submit" name="submit" class="settings-submit" value="$submit" />
+<input type="submit" name="submit" class="settings-submit" value="{{$submit}}"{{if !$expert}} onclick="$('select').prop('disabled', false);"{{/if}} />
 </div>
 
 
-<h3 class="settings-heading">$h_advn</h3>
-<div id="settings-pagetype-desc">$h_descadvn</div>
+{{if $menus}}
+<h3 class="settings-heading">{{$lbl_misc}}</h3>
 
-$pagetype
-
+<div id="settings-menu-desc">{{$menu_desc}}</div>
+<div class="settings-channel-menu-div">
+<select name="channel_menu" class="settings-channel-menu-sel">
+{{foreach $menus as $menu }}
+<option value="{{$menu.name}}" {{$menu.selected}} >{{$menu.name}} </option>
+{{/foreach}}
+</select>
+</div>
 <div class="settings-submit-wrapper" >
-<input type="submit" name="submit" class="settings-submit" value="$submit" />
+<input type="submit" name="submit" class="settings-submit" value="{{$submit}}"{{if !$expert}} onclick="$('select').prop('disabled', false);"{{/if}} />
 </div>
+<div id="settings-channel-menu-end"></div>
+{{/if}}
 
 
+</div>

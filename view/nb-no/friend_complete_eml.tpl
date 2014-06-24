@@ -1,22 +1,22 @@
 
-Kjære $[username],
+Dear {{$username}},
 
-	Gode nyheter... '$[fn]' ved '$[dfrn_url]' har godtatt 
-din forespørsel om kobling hos '$[sitename]'.
+	Great news... '{{$fn}}' at '{{$dfrn_url}}' has accepted 
+your connection request at '{{$sitename}}'.
 
-Dere er nå gjensidige venner og kan utveksle statusoppdateringer, bilder og e-post
-uten hindringer.
+You are now mutual friends and may exchange status updates, photos, and email
+without restriction.
 
-Vennligst besøk din side "Kontakter" ved $[sitename] hvis du ønsker å gjøre  
-noen endringer på denne forbindelsen. 
+Please visit your 'Connnections' page at {{$sitename}} if you wish to make 
+any changes to this relationship. 
 
-$[siteurl]
+{{$siteurl}}
 
-[For eksempel, så kan du lage en egen profil med informasjon som ikke er
-tilgjengelig for alle - og angi visningsrettigheter til '$[fn]'].
+[For instance, you may create a separate profile with information that is not
+available to the general public - and assign viewing rights to '{{$fn}}'].
 
-Med vennlig hilsen,
+Sincerely,
 
-	$[sitename] administrator
+	{{$sitename}} Administrator
 
  

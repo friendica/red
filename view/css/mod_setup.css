@@ -1,0 +1,34 @@
+#install-dbhost-label,
+#install-dbuser-label,
+#install-dbpass-label,
+#install-dbdata-label,
+#install-tz-desc {
+       float: left;
+       width: 250px;
+       margin-top: 10px;
+       margin-bottom: 10px;
+
+}
+
+#install-dbhost,
+#install-dbuser,
+#install-dbpass,
+#install-dbdata {
+       float: left;
+       width: 200px;
+       margin-left: 20px;
+}
+
+#install-dbhost-end,
+#install-dbuser-end,
+#install-dbpass-end,
+#install-dbdata-end,
+#install-tz-end {
+       clear: both;
+}
+
+#install-form select#timezone_select {
+       float: left;
+       margin-top: 18px;
+       margin-left: 20px;
+}

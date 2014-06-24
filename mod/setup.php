@@ -4,7 +4,25 @@ $install_wizard_pass=1;
 
 
 function setup_init(&$a){
+
+	// Ensure that if somebody hasn't read the install documentation and doesn't have all 
+	// the required modules or has a totally borked shared hosting provider and they can't 
+	// figure out what the hell is going on - that we at least spit out an error message which
+	// we can inquire about when they write to tell us that our software doesn't work.
+
+	// The worst thing we can do at this point is throw a white screen of death and rely on 
+	// them knowing about servers and php modules and logfiles enough so that we can guess 
+	// at the source of the problem. As ugly as it may be, we need to throw a technically worded
+	// PHP error message in their face. Once installation is complete application errors will 
+	// throw a white screen because these error messages divulge information which can 
+	// potentially be useful to hackers.       
 	
+	
+	error_reporting(E_ERROR | E_WARNING | E_PARSE ); 
+	ini_set('log_errors','0'); 
+	ini_set('display_errors', '1');
+
+
 	// $baseurl/setup/testrwrite to test if rewite in .htaccess is working
 	if (argc() ==2  && argv(1)=="testrewrite") {
 		echo "ok";
@@ -13,6 +31,7 @@ function setup_init(&$a){
 	global $install_wizard_pass;
 	if (x($_POST,'pass'))
 		$install_wizard_pass = intval($_POST['pass']);
+
 
 }
 
@@ -26,20 +45,25 @@ function setup_post(&$a) {
 			break; // just in case return don't return :)
 		case 3:
 			$urlpath = $a->get_path();
-			$dbhost = notags(trim($_POST['dbhost']));
-			$dbuser = notags(trim($_POST['dbuser']));
-			$dbpass = notags(trim($_POST['dbpass']));
-			$dbdata = notags(trim($_POST['dbdata']));
-			$phpath = notags(trim($_POST['phpath']));
-			$adminmail = notags(trim($_POST['adminmail']));
-			$siteurl = notags(trim($_POST['siteurl']));
+			$dbhost = trim($_POST['dbhost']);
+			$dbport = intval(trim($_POST['dbport']));
+			$dbuser = trim($_POST['dbuser']);
+			$dbpass = trim($_POST['dbpass']);
+			$dbdata = trim($_POST['dbdata']);
+			$phpath = trim($_POST['phpath']);
+			$adminmail = trim($_POST['adminmail']);
+			$siteurl = trim($_POST['siteurl']);
 
-			require_once("dba.php");
+			require_once('include/dba/dba_driver.php');
 			unset($db);
-			$db = new dba($dbhost, $dbuser, $dbpass, $dbdata, true);
+			$db = dba_factory($dbhost, $dbport, $dbuser, $dbpass, $dbdata, true);
+			if(! $db->connected) {
+				echo "Database Connect failed: " . $db->error;
+				killme();
+			}
 			/*if(get_db_errno()) {
 				unset($db);
-				$db = new dba($dbhost, $dbuser, $dbpass, '', true);
+				$db = dba_factory($dbhost, $dbport, $dbuser, $dbpass, '', true);
 
 				if(! get_db_errno()) {
 					$r = q("CREATE DATABASE '%s'",
@@ -47,7 +71,7 @@ function setup_post(&$a) {
 					);
 					if($r) {
 						unset($db);
-						$db = new dba($dbhost, $dbuser, $dbpass, $dbdata, true);
+						$db = new dba($dbhost, $dbport, $dbuser, $dbpass, $dbdata, true);
 					} else {
 						$a->data['db_create_failed']=true;
 					}
@@ -65,6 +89,7 @@ function setup_post(&$a) {
 		case 4:
 			$urlpath = $a->get_path();
 			$dbhost = notags(trim($_POST['dbhost']));
+			$dbport = intval(notags(trim($_POST['dbport'])));
 			$dbuser = notags(trim($_POST['dbuser']));
 			$dbpass = notags(trim($_POST['dbpass']));
 			$dbdata = notags(trim($_POST['dbdata']));
@@ -74,13 +99,27 @@ function setup_post(&$a) {
 			$siteurl = notags(trim($_POST['siteurl']));
 			
 
+			if($siteurl != z_root()) {
+		        $test = z_fetch_url($siteurl."/setup/testrewrite");
+				if((! $test['success']) || ($test['body'] != 'ok'))  {
+					$a->data['url_fail'] = true;
+					$a->data['url_error'] = $test['error'];
+					return;
+				}
+			}
 
 			// connect to db
-			$db = new dba($dbhost, $dbuser, $dbpass, $dbdata, true);
+			$db = dba_factory($dbhost, $dbport, $dbuser, $dbpass, $dbdata, true);
+
+			if(! $db->connected) {
+				echo 'CRITICAL: DB not connected.';
+				killme();
+			}
 
 			$tpl = get_intltext_template('htconfig.tpl');
 			$txt = replace_macros($tpl,array(
 				'$dbhost' => $dbhost,
+				'$dbport' => $dbport,
 				'$dbuser' => $dbuser,
 				'$dbpass' => $dbpass,
 				'$dbdata' => $dbdata,
@@ -120,7 +159,7 @@ function setup_content(&$a) {
 	global $install_wizard_pass, $db;
 	$o = '';
 	$wizard_status = "";
-	$install_title = t('Friendica Red Communications Server - Setup');
+	$install_title = t('Red Matrix Server - Setup');
 	
 
 	
@@ -128,6 +167,13 @@ function setup_content(&$a) {
 		$install_wizard_pass = 2;
 		$wizard_status =  t('Could not connect to database.');
 	}
+	if(x($a->data,'url_fail')) {
+		$install_wizard_pass = 3;
+		$wizard_status =  t('Could not connect to specified site URL. Possible SSL certificate or DNS issue.');
+		if($a->data['url_error'])
+			$wizard_status .= ' ' . $a->data['url_error'];
+	}
+
 	if(x($a->data,'db_create_failed')) {
 		$install_wizard_pass = 2;
 		$wizard_status =  t('Could not create table.');
@@ -136,7 +182,7 @@ function setup_content(&$a) {
 	$db_return_text="";
 	if(x($a->data,'db_installed')) {
 		$txt = '<p style="font-size: 130%;">';
-		$txt .= t('Your Friendica site database has been installed.') . EOL;
+		$txt .= t('Your site database has been installed.') . EOL;
 		$db_return_text .= $txt;
 	}
 
@@ -148,7 +194,7 @@ function setup_content(&$a) {
 	}
 	
 	if($db && $db->connected) {
-		$r = q("SELECT COUNT(*) as `total` FROM `user`");
+		$r = q("SELECT COUNT(*) as `total` FROM `account`");
 		if($r && count($r) && $r[0]['total']) {
 			$tpl = get_markup_template('install.tpl');
 			return replace_macros($tpl, array(
@@ -182,6 +228,10 @@ function setup_content(&$a) {
 			check_funcs($checks);
 
 			check_htconfig($checks);
+
+			check_smarty3($checks);
+
+			check_store($checks);
 
 			check_keys($checks);
 			
@@ -220,6 +270,7 @@ function setup_content(&$a) {
 
 			$dbhost = ((x($_POST,'dbhost')) ? notags(trim($_POST['dbhost'])) : 'localhost');
 			$dbuser = notags(trim($_POST['dbuser']));
+			$dbport = intval(notags(trim($_POST['dbport'])));
 			$dbpass = notags(trim($_POST['dbpass']));
 			$dbdata = notags(trim($_POST['dbdata']));
 			$phpath = notags(trim($_POST['phpath']));
@@ -231,13 +282,14 @@ function setup_content(&$a) {
 			$o .= replace_macros($tpl, array(
 				'$title' => $install_title,
 				'$pass' => t('Database connection'),
-				'$info_01' => t('In order to install Friendica we need to know how to connect to your database.'),
+				'$info_01' => t('In order to install Red Matrix we need to know how to connect to your database.'),
 				'$info_02' => t('Please contact your hosting provider or site administrator if you have questions about these settings.'),
 				'$info_03' => t('The database you specify below should already exist. If it does not, please create it before continuing.'),
 
 				'$status' => $wizard_status,
 				
-				'$dbhost' => array('dbhost', t('Database Server Name'), $dbhost, ''),
+				'$dbhost' => array('dbhost', t('Database Server Name'), $dbhost, t('Default is localhost')),
+				'$dbport' => array('dbport', t('Database Port'), $dbport, t('Communication port number - use 0 for default')),
 				'$dbuser' => array('dbuser', t('Database Login Name'), $dbuser, ''),
 				'$dbpass' => array('dbpass', t('Database Login Password'), $dbpass, ''),
 				'$dbdata' => array('dbdata', t('Database Name'), $dbdata, ''),
@@ -258,8 +310,9 @@ function setup_content(&$a) {
 			return $o;
 		}; break;
 		case 3: { // Site settings
-			require_once('datetime.php');
+			require_once('include/datetime.php');
 			$dbhost = ((x($_POST,'dbhost')) ? notags(trim($_POST['dbhost'])) : 'localhost');
+			$dbport = intval(notags(trim($_POST['dbuser'])));
 			$dbuser = notags(trim($_POST['dbuser']));
 			$dbpass = notags(trim($_POST['dbpass']));
 			$dbdata = notags(trim($_POST['dbdata']));
@@ -277,6 +330,7 @@ function setup_content(&$a) {
 				'$status' => $wizard_status,
 				
 				'$dbhost' => $dbhost, 
+				'$dbport' => $dbport, 
 				'$dbuser' => $dbuser,
 				'$dbpass' => $dbpass,
 				'$dbdata' => $dbdata,
@@ -322,13 +376,16 @@ function check_php(&$phpath, &$checks) {
 	if (strlen($phpath)){
 		$passed = file_exists($phpath);
 	} else {
-		$phpath = trim(shell_exec('which php'));
+		if(is_windows())
+			$phpath = trim(shell_exec('where php'));
+		else
+			$phpath = trim(shell_exec('which php'));
 		$passed = strlen($phpath);
 	}
 	$help = "";
 	if(!$passed) {
 		$help .= t('Could not find a command line version of PHP in the web server PATH.'). EOL;
-		$help .= t("If you don't have a command line version of PHP installed on server, you will not be able to run background polling via cron. See <a href='http://friendica.com/node/27'>'Activating scheduled tasks'</a>") . EOL ;
+		$help .= t("If you don't have a command line version of PHP installed on server, you will not be able to run background polling via cron.") . EOL;
 		$help .= EOL . EOL ;
 		$tpl = get_markup_template('field_input.tpl');
 		$help .= replace_macros($tpl, array(
@@ -385,6 +442,7 @@ function check_funcs(&$checks) {
 	check_add($ck_funcs, t('OpenSSL PHP module'), true, true, "");
 	check_add($ck_funcs, t('mysqli PHP module'), true, true, "");
 	check_add($ck_funcs, t('mb_string PHP module'), true, true, "");
+	check_add($ck_funcs, t('mcrypt PHP module'), true, true, "");
 		
 	
 	if(function_exists('apache_get_modules')){
@@ -393,6 +451,12 @@ function check_funcs(&$checks) {
 		} else {
 			check_add($ck_funcs, t('Apache mod_rewrite module'), true, true, "");
 		}
+	}
+	if((! function_exists('proc_open')) || strstr(ini_get('disable_functions'),'proc_open')) {
+		check_add($ck_funcs, t('proc_open'), false, true, t('Error: proc_open is required but is either not installed or has been disabled in php.ini'));
+	}
+	else {
+		check_add($ck_funcs, t('proc_open'), true, true, "");
 	}
 
 	if(! function_exists('curl_init')){
@@ -415,6 +479,10 @@ function check_funcs(&$checks) {
 		$ck_funcs[4]['status']= false;
 		$ck_funcs[4]['help']= t('Error: mb_string PHP module required but not installed.');
 	}
+	if(! function_exists('mcrypt_encrypt')){
+		$ck_funcs[5]['status']= false;
+		$ck_funcs[5]['help']= t('Error: mcrypt PHP module required but not installed.');
+	}
 	
 	$checks = array_merge($checks, $ck_funcs);
 	
@@ -431,7 +499,7 @@ function check_htconfig(&$checks) {
 		$status=false;
 		$help = t('The web installer needs to be able to create a file called ".htconfig.php" in the top folder of your web server and it is unable to do so.') .EOL;
 		$help .= t('This is most often a permission setting, as the web server may not be able to write files in your folder - even if you can.').EOL;
-		$help .= t('At the end of this procedure, we will give you a text to save in a file named .htconfig.php in your Friendica top folder.').EOL;
+		$help .= t('At the end of this procedure, we will give you a text to save in a file named .htconfig.php in your Red top folder.').EOL;
 		$help .= t('You can alternatively skip this procedure and perform a manual installation. Please see the file "install/INSTALL.txt" for instructions.').EOL; 
 	}
     
@@ -439,13 +507,77 @@ function check_htconfig(&$checks) {
 
 }
 
+function check_smarty3(&$checks) {
+	$status = true;
+	$help = "";
+	if(	!is_writable('view/tpl/smarty3') ) {
+	
+		$status=false;
+		$help = t('Red uses the Smarty3 template engine to render its web views. Smarty3 compiles templates to PHP to speed up rendering.') .EOL;
+		$help .= t('In order to store these compiled templates, the web server needs to have write access to the directory view/tpl/smarty3/ under the Red top level folder.').EOL;
+		$help .= t('Please ensure that the user that your web server runs as (e.g. www-data) has write access to this folder.').EOL;
+		$help .= t('Note: as a security measure, you should give the web server write access to view/tpl/smarty3/ only--not the template files (.tpl) that it contains.').EOL; 
+	}
+    
+	check_add($checks, t('view/tpl/smarty3 is writable'), $status, true, $help);
+
+}
+
+function check_store(&$checks) {
+	$status = true;
+	$help = "";
+
+	@mkdir('store',STORAGE_DEFAULT_PERMISSIONS);
+
+	if(	!is_writable('store') ) {
+	
+		$status=false;
+		$help = t('Red uses the store directory to save uploaded files. The web server needs to have write access to the store directory under the Red top level folder') . EOL;
+		$help .= t('Please ensure that the user that your web server runs as (e.g. www-data) has write access to this folder.').EOL;
+	}
+    
+	check_add($checks, t('store is writable'), $status, true, $help);
+
+}
+
+
 function check_htaccess(&$checks) {
 	$a = get_app();
 	$status = true;
 	$help = "";
+	$ssl_error = false;
+
+	$url = $a->get_baseurl() . '/setup/testrewrite';
+
 	if (function_exists('curl_init')){
-        $test = fetch_url($a->get_baseurl()."/setup/testrewrite");
-        if ($test!="ok") {
+        $test = z_fetch_url($url);
+		if(! $test['success']) {
+			if(strstr($url,'https://')) {
+				$test = z_fetch_url($url,false,0,array('novalidate' => true));
+				if($test['success']) {
+					$ssl_error = true;
+				}
+			}
+			else {
+				$test = z_fetch_url(str_replace('http://','https://',$url),false,0,array('novalidate' => true));
+				if($test['success']) {
+					$ssl_error = true;
+				}
+			}
+
+			if($ssl_error) {
+				$help = t('SSL certificate cannot be validated. Fix certificate or disable https access to this site.') . EOL;
+				$help .= t('If you have https access to your website or allow connections to TCP port 443 (the https: port), you MUST use a browser-valid certificate. You MUST NOT use self-signed certificates!') . EOL;
+				$help .= t('This restriction is incorporated because public posts from you may for example contain references to images on your own hub.') . EOL;
+				$help .= t('If your certificate is not recognised, members of other sites (who may themselves have valid certificates) will get a warning message on their own site complaining about security issues.') . EOL;
+				$help .= t('This can cause usability issues elsewhere (not just on your own site) so we must insist on this requirement.') .EOL;
+				$help .= t('Providers are available that issue free certificates which are browser-valid.'). EOL;
+
+				check_add($checks, t('SSL certificate validation'),false,true, $help);
+			}
+		}		
+
+        if ((! $test['success']) || ($test['body'] != "ok")) {
             $status = false;
             $help = t('Url rewrite in .htaccess is not working. Check your server configuration.');
         }
@@ -458,7 +590,7 @@ function check_htaccess(&$checks) {
 
 	
 function manual_config(&$a) {
-	$data = htmlentities($a->data['txt']);
+	$data = htmlspecialchars($a->data['txt'],ENT_COMPAT,'UTF-8');
 	$o = t('The database configuration file ".htconfig.php" could not be written. Please use the enclosed text to create a configuration file in your web server root.');
 	$o .= "<textarea rows=\"24\" cols=\"80\" >$data</textarea>";
 	return $o;
@@ -492,13 +624,37 @@ function load_database($db) {
 
 function what_next() {
 	$a = get_app();
+	// install the standard theme
+	set_config('system','allowed_themes','redbasic');
+
+	// Set a lenient list of ciphers if using openssl. Other ssl engines
+	// (e.g. NSS used in RedHat) require different syntax, so hopefully 
+	// the default curl cipher list will work for most sites. If not, 
+	// this can set via config. Many distros are now disabling RC4,
+	// but many Red sites still use it and are unable to change it.
+	// We do not use SSL for encryption, only to protect session cookies.
+	// z_fetch_url() is also used to import shared links and other content 
+	// so in theory most any cipher could show up and we should do our best
+	// to make the content available rather than tell folks that there's a 
+	// weird SSL error which they can't do anything about. 
+
+	$x = curl_version();
+	if(stristr($x['ssl_version'],'openssl'))
+		set_config('system','curl_ssl_ciphers','ALL:!eNULL');
+
+
+	// Create a system channel
+	require_once ('include/identity.php');
+	create_sys_channel();	
+
+
 	$baseurl = $a->get_baseurl();
 	return 
 		t('<h1>What next</h1>')
 		."<p>".t('IMPORTANT: You will need to [manually] setup a scheduled task for the poller.')
 		.t('Please see the file "install/INSTALL.txt".')			
 		."</p><p>"
-		.t("Go to your new Friendica node <a href='$baseurl/register'>registration page</a> and register as new user. Remember to use the same email you have entered as administrator email. This will allow you to enter the site admin panel.")
+		.t("Go to your new Red node <a href='$baseurl/register'>registration page</a> and register as new user. Remember to use the same email you have entered as administrator email. This will allow you to enter the site admin panel.")
 		."</p>";
 }
 

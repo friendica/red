@@ -1,22 +1,28 @@
-<h1>$ptitle</h1>
+<div class="generic-content-wrapper">
+<h1>{{$ptitle}}</h1>
 
 <form action="settings/display" id="settings-form" method="post" autocomplete="off" >
-<input type='hidden' name='form_security_token' value='$form_security_token'>
+<input type='hidden' name='form_security_token' value='{{$form_security_token}}'>
 
-{{inc field_themeselect.tpl with $field=$theme }}{{endinc}}
-{{inc field_themeselect.tpl with $field=$mobile_theme }}{{endinc}}
-{{inc field_input.tpl with $field=$ajaxint }}{{endinc}}
-{{inc field_input.tpl with $field=$itemspage }}{{endinc}}
-{{inc field_checkbox.tpl with $field=$nosmile}}{{endinc}}
+{{include file="field_themeselect.tpl" field=$theme}}
+{{include file="field_themeselect.tpl" field=$mobile_theme}}
+{{include file="field_input.tpl" field=$ajaxint}}
+{{include file="field_input.tpl" field=$itemspage}}
+{{include file="field_checkbox.tpl" field=$nosmile}}
 
 
 <div class="settings-submit-wrapper" >
-<input type="submit" name="submit" class="settings-submit" value="$submit" />
+<input type="submit" name="submit" class="settings-submit" value="{{$submit}}" />
 </div>
 
-{{ if $theme_config }}
+<br />
+<a href="pdledit">{{$layout_editor}}</a>
+<br />
+
+{{if $theme_config}}
 <h2>Theme settings</h2>
-$theme_config
-{{ endif }}
+{{$theme_config}}
+{{/if}}
 
 </form>
+</div>

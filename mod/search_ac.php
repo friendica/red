@@ -27,43 +27,27 @@ function search_ac_init(&$a){
 	// Priority to people searches
 
 	if ($search) {
-		$people_sql_extra = protect_sprintf(" AND `name` LIKE '%". dbesc($search) . "%' ");
+		$people_sql_extra = protect_sprintf(" AND `xchan_name` LIKE '%". dbesc($search) . "%' ");
 		$tag_sql_extra = protect_sprintf(" AND term LIKE '%". dbesc($search) . "%' ");
 	}
 
-	$r = q("SELECT `id`, `name`, `micro`, `url` FROM `contact` 
-		WHERE `uid` = %d AND `pending` = 0
+
+	$r = q("SELECT `abook_id`, `xchan_name`, `xchan_photo_s`, `xchan_url` FROM `abook` left join xchan on abook_xchan = xchan_hash WHERE abook_channel = %d 
 		$people_sql_extra
-		ORDER BY `name` ASC ",
+		ORDER BY `xchan_name` ASC ",
 		intval(local_user())
 	);
 
-	if(count($r)) {
+	if($r) {
 		foreach($r as $g) {
-			$x['photos'][] = $g['micro'];
-			$x['links'][] = $g['url'];
-			$x['suggestions'][] = '@' . $g['name'];
-			$x['data'][] = intval($g['id']);
-		}
-	}
-	else {
-
-		$r = q("SELECT `id`, `name`, `photo`, `url` FROM `gcontact` where 1
-			$people_sql_extra
-			ORDER BY `name` ASC "
-		);
-
-		if(count($r)) {
-			foreach($r as $g) {
-				$x['photos'][] = $g['photo'];
-				$x['links'][] = $g['url'];
-				$x['suggestions'][] = '@' . $g['name'];
-				$x['data'][] = intval($g['id']);
-			}
+			$x['photos'][] = $g['xchan_photo_s'];
+			$x['links'][] = $g['xchan_url'];
+			$x['suggestions'][] = '@' . $g['xchan_name'];
+			$x['data'][] = 'cid=' . intval($g['abook_id']);
 		}
 	}
 
-	$r = q("select tid, term, url from term where type = %d $tag_sql_extra order by term asc",
+	$r = q("select distinct term, tid, url from term where type = %d $tag_sql_extra group by term order by term asc",
 		intval(TERM_HASHTAG)
 	);
 

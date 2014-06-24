@@ -1,8 +1,11 @@
-<?php
+<?php /** @file */
 
 require_once('boot.php');
 require_once('include/cli_startup.php');
 require_once('include/zot.php');
+require_once('include/socgraph.php');
+require_once('include/Contact.php');
+
 
 function onepoll_run($argv, $argc){
 
@@ -26,29 +29,24 @@ function onepoll_run($argv, $argc){
 		return;
 	}
 	
-
 	$d = datetime_convert();
-
-
 
 	$contacts = q("SELECT abook.*, xchan.*, account.*
 		FROM abook LEFT JOIN account on abook_account = account_id left join xchan on xchan_hash = abook_xchan 
 		where abook_id = %d
-		AND (( abook_flags = %d ) OR ( abook_flags = %d )) 
-		AND (( account_flags = %d ) OR ( account_flags = %d )) ORDER BY RAND()",
+		AND (( abook_flags & %d ) OR ( abook_flags = %d ))
+		AND (( account_flags = %d ) OR ( account_flags = %d )) limit 1",
 		intval($contact_id),
-		intval(ABOOK_FLAG_HIDDEN),
+		intval(ABOOK_FLAG_HIDDEN|ABOOK_FLAG_PENDING|ABOOK_FLAG_UNCONNECTED),
 		intval(0),
 		intval(ACCOUNT_OK),
 		intval(ACCOUNT_UNVERIFIED)
 	);
 
 	if(! $contacts) {
+		logger('onepoll: abook_id not found: ' . $contact_id);
 		return;
 	}
-
-	if(! $contacts)
-		return;
 
 	$contact = $contacts[0];
 
@@ -67,40 +65,62 @@ function onepoll_run($argv, $argc){
 
 	logger("onepoll: poll: ({$contact['id']}) IMPORTER: {$importer['xchan_name']}, CONTACT: {$contact['xchan_name']}");
 
-	$last_update = (($contact['last_update'] === '0000-00-00 00:00:00') 
+	$last_update = ((($contact['abook_updated'] === $contact['abook_created']) || ($contact['abook_updated'] === '0000-00-00 00:00:00'))
 		? datetime_convert('UTC','UTC','now - 7 days')
-		: datetime_convert('UTC','UTC',$contact['abook_updated'])
+		: datetime_convert('UTC','UTC',$contact['abook_updated'] . ' - 2 days')
 	);
 
 	// update permissions
 
 	$x = zot_refresh($contact,$importer);
 
+	$responded = false;
+	$updated = datetime_convert();
 	if(! $x) {
-		// mark for death
-
-	}
-	else {
+		// mark for death by not updating abook_connected, this is caught in include/poller.php
 		q("update abook set abook_updated = '%s' where abook_id = %d limit 1",
-			dbesc(datetime_convert()),
+			dbesc($updated),
 			intval($contact['abook_id'])
 		);
-
-		// if marked for death, reset
-
+	}
+	else {
+		q("update abook set abook_updated = '%s', abook_connected = '%s' where abook_id = %d limit 1",
+			dbesc($updated),
+			dbesc($updated),
+			intval($contact['abook_id'])
+		);
+		$responded = true;
 	}
 
+	if(! $responded)
+		return;
+
 	if($contact['xchan_connurl']) {
-		$feedurl = str_replace('/poco/','/zotfeed/',$channel['xchan_connurl']);
-		
-		$x = z_fetch_url($feedurl . '?f=$mindate=' . $last_update);
-		if($x['success']) {
+		$fetch_feed = true;
+		$x = null;
+
+		if(! ($contact['abook_their_perms'] & PERMS_R_STREAM ))
+			$fetch_feed = false;
+
+		if($fetch_feed) {
+
+			$feedurl = str_replace('/poco/','/zotfeed/',$contact['xchan_connurl']);		
+			$x = z_fetch_url($feedurl . '?f=&mindate=' . urlencode($last_update));
+
+			logger('feed_update: ' . print_r($x,true), LOGGER_DATA);
+
+		}
+
+		if(($x) && ($x['success'])) {
 			$total = 0;
+			logger('onepoll: feed update ' . $contact['xchan_name']);
+
 			$j = json_decode($x['body'],true);
 			if($j['success'] && $j['messages']) {
 				foreach($j['messages'] as $message) {
-					$results = process_delivery(array('hash' => $contact['xchan_hash']),$message,
+					$results = process_delivery(array('hash' => $contact['xchan_hash']), get_item_elements($message),
 						array(array('hash' => $importer['xchan_hash'])), false);
+					logger('onepoll: feed_update: process_delivery: ' . print_r($results,true));
 					$total ++;
 				}
 				logger("onepoll: $total messages processed");
@@ -113,16 +133,14 @@ function onepoll_run($argv, $argc){
 	// set last updated timestamp
 
 
-	$r = null;
-
 	if($contact['xchan_connurl']) {	
 		$r = q("SELECT xlink_id from xlink 
-			where xlink_xchan = '%s' and xlink_updated > UTC_TIMESTAMP() - INTERVAL 1 DAY",
+			where xlink_xchan = '%s' and xlink_updated > UTC_TIMESTAMP() - INTERVAL 1 DAY limit 1",
 			intval($contact['xchan_hash'])
 		);
-	}
-	if($r) {
-		poco_load($contact['xchan_hash'],$contact['xchan_connurl']);
+		if(! $r) {
+			poco_load($contact['xchan_hash'],$contact['xchan_connurl']);
+		}
 	}
 
 	return;

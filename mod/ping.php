@@ -43,10 +43,86 @@ function ping_init(&$a) {
 		unset($_SESSION['sysmsg_info']);
 	}
 
+	if($a->install) {
+		echo json_encode($result);
+		killme();
+	}
+
+
+	if(get_observer_hash() && (! $result['invalid'])) {
+		$r = q("select cp_id, cp_room from chatpresence where cp_xchan = '%s' and cp_client = '%s' and cp_room = 0 limit 1",
+			dbesc(get_observer_hash()),
+			dbesc($_SERVER['REMOTE_ADDR'])
+		);
+		$basic_presence = false;
+		if($r) {
+			$basic_presence = true;	
+			q("update chatpresence set cp_last = '%s' where cp_id = %d limit 1",
+				dbesc(datetime_convert()),
+				intval($r[0]['cp_id'])
+			);
+		}
+		if(! $basic_presence) {
+			q("insert into chatpresence ( cp_xchan, cp_last, cp_status, cp_client)
+				values( '%s', '%s', '%s', '%s' ) ",
+				dbesc(get_observer_hash()),
+				dbesc(datetime_convert()),
+				dbesc('online'),
+				dbesc($_SERVER['REMOTE_ADDR'])
+			);
+		}
+	}
+
+	q("delete from chatpresence where cp_last < UTC_TIMESTAMP() - INTERVAL 3 MINUTE and cp_client != 'auto' "); 
+
 	if((! local_user()) || ($result['invalid'])) {
 		echo json_encode($result);
 		killme();
 	}
+
+	if(x($_REQUEST,'markRead') && local_user()) {
+
+		switch($_REQUEST['markRead']) {
+			case 'network':
+				$r = q("update item set item_flags = ( item_flags ^ %d ) where (item_flags & %d) and uid = %d", 
+					intval(ITEM_UNSEEN),
+					intval(ITEM_UNSEEN),
+					intval(local_user())
+				);
+				break;
+
+			case 'home':
+				$r = q("update item set item_flags = ( item_flags ^ %d ) where (item_flags & %d) and (item_flags & %d) and uid = %d", 
+					intval(ITEM_UNSEEN),
+					intval(ITEM_UNSEEN),
+					intval(ITEM_WALL),
+					intval(local_user())
+				);
+				break;
+			case 'messages':
+				$r = q("update mail set mail_flags = ( mail_flags ^ %d ) where channel_id = %d and not (mail_flags & %d)",
+					intval(MAIL_SEEN),
+					intval(local_user()),
+					intval(MAIL_SEEN)
+				);
+				break;
+			case 'all_events':
+				$r = q("update event set `ignore` = 1 where `ignore` = 0 and uid = %d", 
+					intval(local_user())
+				);
+				break;
+
+			case 'notify':
+				$r = q("update notify set seen = 1 where uid = %d",
+					intval(local_user())
+				);
+				break;
+
+			default:
+				break;
+		}
+	}
+
 
 	if(argc() > 1 && argv(1) === 'notify') {
 		$t = q("select count(*) as total from notify where uid = %d and seen = 0",
@@ -75,7 +151,7 @@ function ping_init(&$a) {
 			foreach($z as $zz) {
 				$notifs[] = array(
 					'notify_link' => $a->get_baseurl() . '/notify/view/' . $zz['id'], 
-					'name' => $zz['name'],
+					'name' => '', // not required here because the name is in the message
 					'url' => $zz['url'],
 					'photo' => $zz['photo'],
 					'when' => relative_date($zz['date']), 
@@ -89,6 +165,42 @@ function ping_init(&$a) {
 		killme();
 
 	}
+
+
+	if(argc() > 1 && argv(1) === 'messages') {
+
+		$channel = $a->get_channel();
+		$t = q("select mail.*, xchan.* from mail left join xchan on xchan_hash = from_xchan 
+			where channel_id = %d and not ( mail_flags & %d ) and not (mail_flags & %d ) 
+			and from_xchan != '%s' order by created desc limit 0,50",
+			intval(local_user()),
+			intval(MAIL_SEEN),
+			intval(MAIL_DELETED),
+			dbesc($channel['channel_hash'])
+		);
+
+		if($t) {
+			foreach($t as $zz) {
+//				$msg = sprintf( t('sent you a private message.'), $zz['xchan_name']);
+				$notifs[] = array(
+					'notify_link' => $a->get_baseurl() . '/mail/' . $zz['id'], 
+					'name' => $zz['xchan_name'],
+					'url' => $zz['xchan_url'],
+					'photo' => $zz['xchan_photo_s'],
+					'when' => relative_date($zz['created']), 
+					'class' => (($zz['mail_flags'] & MAIL_SEEN) ? 'notify-seen' : 'notify-unseen'), 
+					'message' => t('sent you a private message'),
+				);
+			}
+		}
+
+		echo json_encode(array('notify' => $notifs));
+		killme();
+
+	}
+
+
+
 
 	if(argc() > 1 && (argv(1) === 'network' || argv(1) === 'home')) {
 
@@ -110,12 +222,12 @@ function ping_init(&$a) {
 			}
 		}			
 		logger('ping: ' . print_r($result,true));
-		echo json_encode(array( argv(1) => $result));
+		echo json_encode(array('notify' => $result));
 		killme();
 
 	}
 
-	if(argc() > 1 && (argv(1) === 'connect')) {
+	if(argc() > 1 && (argv(1) === 'intros')) {
 
 		$result = array();
 
@@ -129,18 +241,62 @@ function ping_init(&$a) {
 		if($r) {
 			foreach($r as $rr) {
 				$result[] = array(
-					'notify_link' => $a->get_baseurl() . '/notify/view-intro/' . $rr['abook_id'],
+					'notify_link' => $a->get_baseurl() . '/connedit/' . $rr['abook_id'],
 					'name' => $rr['xchan_name'],
 					'url' => $rr['xchan_url'],
 					'photo' => $rr['xchan_photo_s'],
 					'when' => relative_date($rr['abook_created']), 
 					'class' => ('notify-unseen'), 
-					'message' => strip_tags(sprintf( t("Connection request from %s"), $rr['xchan_name']))
+					'message' => t('added your channel')
 				);
 			}
 		}			
 		logger('ping: ' . print_r($result,true));
-		echo json_encode(array( argv(1) => $result));
+		echo json_encode(array('notify' => $result));
+		killme();
+
+	}
+
+	if(argc() > 1 && (argv(1) === 'all_events')) {
+
+		$bd_format = t('g A l F d') ; // 8 AM Friday January 18
+
+		$result = array();
+
+		$r = q("SELECT * FROM event left join xchan on event_xchan = xchan_hash
+			WHERE `event`.`uid` = %d AND start < '%s' AND start > '%s' and `ignore` = 0
+			ORDER BY `start` DESC ",
+			intval(local_user()),
+			dbesc(datetime_convert('UTC',date_default_timezone_get(),'now + 7 days')),
+			dbesc(datetime_convert('UTC',date_default_timezone_get(),'now - 1 days'))
+		);
+
+		if($r) {
+			foreach($r as $rr) {
+				if($rr['adjust'])
+					$md = datetime_convert('UTC',date_default_timezone_get(),$rr['start'],'Y/m');
+				else
+					$md = datetime_convert('UTC','UTC',$rr['start'],'Y/m');
+
+				$strt = datetime_convert('UTC',$rr['convert'] ? date_default_timezone_get() : 'UTC',$rr['start']);
+				$today = ((substr($strt,0,10) === datetime_convert('UTC',date_default_timezone_get(),'now','Y-m-d')) ? true : false);
+				
+				$when = day_translate(datetime_convert('UTC', $rr['adjust'] ? date_default_timezone_get() : 'UTC', $rr['start'], $bd_format)) . (($today) ?  ' ' . t('[today]') : '');
+
+
+				$result[] = array(
+					'notify_link' => $a->get_baseurl() . '/events', // FIXME this takes you to an edit page and it may not be yours, we really want to just view the single event  --> '/events/event/' . $rr['event_hash'],
+					'name'        => $rr['xchan_name'],
+					'url'         => $rr['xchan_url'],
+					'photo'       => $rr['xchan_photo_s'],
+					'when'        => $when,
+					'class'       => ('notify-unseen'), 
+					'message'     => t('posted an event')
+				);
+			}
+		}			
+		logger('ping: ' . print_r($result,true));
+		echo json_encode(array('notify' => $result));
 		killme();
 
 	}
@@ -202,8 +358,10 @@ function ping_init(&$a) {
 	if($mails)
 		$result['mail'] = intval($mails[0]['total']);
 		
-	if ($a->config['system']['register_policy'] == REGISTER_APPROVE && is_site_admin()){
-		$regs = q("SELECT `contact`.`name`, `contact`.`url`, `contact`.`micro`, `register`.`created`, COUNT(*) as `total` FROM `contact` RIGHT JOIN `register` ON `register`.`uid`=`contact`.`uid` WHERE `contact`.`self`=1");
+	if ($a->config['system']['register_policy'] == REGISTER_APPROVE && is_site_admin()) {
+		$regs = q("SELECT count(account_id) as total from account where (account_flags & %d)",
+			intval(ACCOUNT_PENDING)
+		);
 		if($regs)
 			$result['register'] = intval($regs[0]['total']);
 	} 
@@ -211,11 +369,11 @@ function ping_init(&$a) {
 	$t5 = dba_timer();
 
 	$events = q("SELECT type, start, adjust FROM `event`
-		WHERE `event`.`uid` = %d AND `start` < '%s' AND `finish` > '%s' and `ignore` = 0
+		WHERE `event`.`uid` = %d AND start < '%s' AND start > '%s' and `ignore` = 0
 		ORDER BY `start` ASC ",
 			intval(local_user()),
-			dbesc(datetime_convert('UTC','UTC','now + 7 days')),
-			dbesc(datetime_convert('UTC','UTC','now'))
+			dbesc(datetime_convert('UTC',date_default_timezone_get(),'now + 7 days')),
+			dbesc(datetime_convert('UTC',date_default_timezone_get(),'now - 1 days'))
 	);
 
 	if($events) {

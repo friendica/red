@@ -55,34 +55,18 @@ function completeurl($url, $scheme) {
 function parseurl_getsiteinfo($url) {
 	$siteinfo = array();
 
-	$ch = curl_init();
-	curl_setopt($ch, CURLOPT_URL, $url);
-	curl_setopt($ch, CURLOPT_HEADER, 1);
-	curl_setopt($ch, CURLOPT_NOBODY, 0);
-	curl_setopt($ch, CURLOPT_TIMEOUT, 3);
-	curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
-	curl_setopt($ch,CURLOPT_USERAGENT,'Opera/9.64(Windows NT 5.1; U; de) Presto/2.1.1');
 
-	$header = curl_exec($ch);
-	curl_close($ch);
+	$result = z_fetch_url($url,false,0,array('novalidate' => true));
+	if(! $result['success'])
+		return $siteinfo;
 
-	// Fetch the first mentioned charset. Can be in body or header
-	if (preg_match('/charset=(.*?)['."'".'"\s\n]/', $header, $matches))
-		$charset = trim(array_pop($matches));
-	else
-		$charset = "utf-8";
+	$header = $result['header'];
+	$body   = $result['body'];
 
-	$pos = strpos($header, "\r\n\r\n");
+	$body   = mb_convert_encoding($body, 'UTF-8', 'UTF-8');
+	$body   = mb_convert_encoding($body, 'HTML-ENTITIES', "UTF-8");
 
-	if ($pos)
-		$body = trim(substr($header, $pos));
-	else
-		$body = $header;
-
-	$body = mb_convert_encoding($body, "UTF-8", $charset);
-	$body = mb_convert_encoding($body, 'HTML-ENTITIES', "UTF-8");
-
-	$doc = new DOMDocument();
+	$doc    = new DOMDocument();
 	@$doc->loadHTML($body);
 
 	deletenode($doc, 'style');
@@ -115,6 +99,9 @@ function parseurl_getsiteinfo($url) {
 		$attr["content"] = html_entity_decode($attr["content"], ENT_QUOTES, "UTF-8");
 
 		switch (strtolower($attr["name"])) {
+			case 'generator':
+				$siteinfo['generator'] = $attr['content'];
+				break;
 			case "fulltitle":
 				$siteinfo["title"] = $attr["content"];
 				break;
@@ -245,6 +232,10 @@ function parse_url_content(&$a) {
 	else
 		$url = trim($_GET['url']);
 
+	if((substr($url,0,1) != '/') && (substr($url,0,4) != 'http'))
+		$url = 'http://' . $url;
+
+
 	if($_GET['title'])
 		$title = strip_tags(trim($_GET['title']));
 
@@ -261,7 +252,7 @@ function parse_url_content(&$a) {
 
 	logger('parse_url: ' . $url);
 
-	$template = $br . '[url=%s]%s[/url]%s' . $br;
+	$template = $br . '#^[url=%s]%s[/url]%s' . $br;
 
 	$arr = array('url' => $url, 'text' => '');
 
@@ -289,6 +280,11 @@ function parse_url_content(&$a) {
 	}
 
 	$siteinfo = parseurl_getsiteinfo($url);
+
+	// If this is a Red site, use zrl rather than url so they get zids sent to them by default
+
+	if( x($siteinfo,'generator') && (strpos($siteinfo['generator'],RED_PLATFORM . ' ') === 0))
+		$template = str_replace('url','zrl',$template);
 
 	if($siteinfo["title"] == "") {
 		echo sprintf($template,$url,$url,'') . $str_tags;

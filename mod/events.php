@@ -1,5 +1,6 @@
 <?php
 
+require_once('include/conversation.php');
 require_once('include/bbcode.php');
 require_once('include/datetime.php');
 require_once('include/event.php');
@@ -11,7 +12,7 @@ function events_post(&$a) {
 		return;
 
 	$event_id = ((x($_POST,'event_id')) ? intval($_POST['event_id']) : 0);
-	$cid = ((x($_POST,'cid')) ? intval($_POST['cid']) : 0);
+	$xchan = ((x($_POST,'xchan')) ? dbesc($_POST['xchan']) : '');
 	$uid      = local_user();
 	$startyear = intval($_POST['startyear']);
 	$startmonth = intval($_POST['startmonth']);
@@ -27,6 +28,11 @@ function events_post(&$a) {
 
 	$adjust   = intval($_POST['adjust']);
 	$nofinish = intval($_POST['nofinish']);
+
+	// only allow editing your own events. 
+
+	if(($xchan) && ($xchan !== get_observer_hash()))
+		return;
 
 	// The default setting for the `private` field in event_store() is false, so mirror that	
 	$private_event = false;
@@ -69,14 +75,7 @@ function events_post(&$a) {
 
 	$share = ((intval($_POST['share'])) ? intval($_POST['share']) : 0);
 
-	$c = q("select id from contact where uid = %d and self = 1 limit 1",
-		intval(local_user())
-	);
-	if(count($c))
-		$self = $c[0]['id'];
-	else
-		$self = 0;
-
+	$channel = $a->get_channel();
 
 	if($share) {
 		$str_group_allow   = perms2str($_POST['group_allow']);
@@ -85,9 +84,9 @@ function events_post(&$a) {
 		$str_contact_deny  = perms2str($_POST['contact_deny']);
 
 		// Undo the pseudo-contact of self, since there are real contacts now
-		if( strpos($str_contact_allow, '<' . $self . '>') !== false )
+		if( strpos($str_contact_allow, '<' . $channel['channel_hash'] . '>') !== false )
 		{
-			$str_contact_allow = str_replace('<' . $self . '>', '', $str_contact_allow);
+			$str_contact_allow = str_replace('<' . $channel['channel_hash'] . '>', '', $str_contact_allow);
 		}
 		// Make sure to set the `private` field as true. This is necessary to
 		// have the posts show up correctly in Diaspora if an event is created
@@ -100,23 +99,23 @@ function events_post(&$a) {
 	else {
 		// Note: do not set `private` field for self-only events. It will
 		// keep even you from seeing them!
-		$str_contact_allow = '<' . $self . '>';
+		$str_contact_allow = '<' . $channel['channel_hash'] . '>';
 		$str_group_allow = $str_contact_deny = $str_group_deny = '';
 	}
 
 
 	$datarray = array();
-	$datarray['hash'] = random_string();
 	$datarray['start'] = $start;
 	$datarray['finish'] = $finish;
 	$datarray['summary'] = $summary;
-	$datarray['desc'] = $desc;
+	$datarray['description'] = $desc;
 	$datarray['location'] = $location;
 	$datarray['type'] = $type;
 	$datarray['adjust'] = $adjust;
 	$datarray['nofinish'] = $nofinish;
-	$datarray['uid'] = $uid;
-	$datarray['cid'] = $cid;
+	$datarray['uid'] = local_user();
+	$datarray['account'] = get_account_id();
+	$datarray['event_xchan'] = $channel['channel_hash'];
 	$datarray['allow_cid'] = $str_contact_allow;
 	$datarray['allow_gid'] = $str_group_allow;
 	$datarray['deny_cid'] = $str_contact_deny;
@@ -126,9 +125,10 @@ function events_post(&$a) {
 	$datarray['created'] = $created;
 	$datarray['edited'] = $edited;
 
-	$item_id = event_store($datarray);
+	$event = event_store_event($datarray);
+	$item_id = event_store_item($datarray,$event);
 
-	if(! $cid)
+	if($share)
 		proc_run('php',"include/notifier.php","event","$item_id");
 
 }
@@ -142,27 +142,42 @@ function events_content(&$a) {
 		return;
 	}
 
-	if(($a->argc > 2) && ($a->argv[1] === 'ignore') && intval($a->argv[2])) {
+	nav_set_selected('all_events');
+
+	if((argc() > 2) && (argv(1) === 'ignore') && intval(argv(2))) {
 		$r = q("update event set ignore = 1 where id = %d and uid = %d limit 1",
-			intval($a->argv[2]),
+			intval(argv(2)),
 			intval(local_user())
 		);
 	}
 
-	if(($a->argc > 2) && ($a->argv[1] === 'unignore') && intval($a->argv[2])) {
+	if((argc() > 2) && (argv(1) === 'unignore') && intval(argv(2))) {
 		$r = q("update event set ignore = 0 where id = %d and uid = %d limit 1",
-			intval($a->argv[2]),
+			intval(argv(2)),
 			intval(local_user())
 		);
 	}
+
+
+	$plaintext = true;
+
+	if(feature_enabled(local_user(),'richtext'))
+		$plaintext = false;
+
 
 
 	$htpl = get_markup_template('event_head.tpl');
-	$a->page['htmlhead'] .= replace_macros($htpl,array('$baseurl' => $a->get_baseurl()));
+	$a->page['htmlhead'] .= replace_macros($htpl,array(
+		'$baseurl' => $a->get_baseurl(),
+		'$editselect' => (($plaintext) ? 'none' : 'textareas')
+	));
 
 	$o ="";
 	// tabs
-	$tabs = profile_tabs($a, True);	
+
+	$channel = $a->get_channel();
+
+	$tabs = profile_tabs($a, True, $channel['channel_address']);	
 
 
 
@@ -171,20 +186,29 @@ function events_content(&$a) {
 	$m = 0;
 	$ignored = ((x($_REQUEST,'ignored')) ? intval($_REQUEST['ignored']) : 0);
 
-	if($a->argc > 1) {
-		if($a->argc > 2 && $a->argv[1] == 'event') {
+	if(argc() > 1) {
+		if(argc() > 2 && argv(1) == 'event') {
 			$mode = 'edit';
-			$event_id = intval($a->argv[2]);
+			$event_id = argv(2);
 		}
-		if($a->argv[1] === 'new') {
+		if(argc() > 2 && argv(1) === 'add') {
+			$mode = 'add';
+			$item_id = intval(argv(2));
+		}
+		if(argv(1) === 'new') {
 			$mode = 'new';
-			$event_id = 0;
+			$event_id = '';
 		}
-		if($a->argc > 2 && intval($a->argv[1]) && intval($a->argv[2])) {
+		if(argc() > 2 && intval(argv(1)) && intval(argv(2))) {
 			$mode = 'view';
-			$y = intval($a->argv[1]);
-			$m = intval($a->argv[2]);
+			$y = intval(argv(1));
+			$m = intval(argv(2));
 		}
+	}
+
+	if($mode === 'add') {
+		event_addtocal($item_id,local_user());
+		killme();
 	}
 
 	if($mode == 'view') {
@@ -225,7 +249,7 @@ function events_content(&$a) {
 		$finish = sprintf('%d-%d-%d %d:%d:%d',$y,$m,$dim,23,59,59);
 
 
-		if ($a->argv[1] === 'json'){
+		if (argv(1) === 'json'){
 			if (x($_GET,'start'))	$start = date("Y-m-d h:i:s", $_GET['start']);
 			if (x($_GET,'end'))	$finish = date("Y-m-d h:i:s", $_GET['end']);
 		}
@@ -236,20 +260,24 @@ function events_content(&$a) {
 		$adjust_start = datetime_convert('UTC', date_default_timezone_get(), $start);
 		$adjust_finish = datetime_convert('UTC', date_default_timezone_get(), $finish);
 
-
 		if (x($_GET,'id')){
-			$r = q("SELECT `event`.*, `item`.`id` AS `itemid`,`item`.`plink`,
-				`item`.`author-name`, `item`.`author-avatar`, `item`.`author-link` FROM `event` LEFT JOIN `item` ON `item`.`event-id` = `event`.`id` 
-				WHERE `event`.`uid` = %d AND `event`.`id` = %d",
+		  	$r = q("SELECT event.*, item.plink, item.item_flags, item.author_xchan, item.owner_xchan
+                                from event left join item on resource_id = event_hash where resource_type = 'event' and event.uid = %d and event.id = %d limit 1",
 				intval(local_user()),
 				intval($_GET['id'])
 			);
 		} else {
-			$r = q("SELECT `event`.*, `item`.`id` AS `itemid`,`item`.`plink`,
-				`item`.`author-name`, `item`.`author-avatar`, `item`.`author-link` FROM `event` LEFT JOIN `item` ON `item`.`event-id` = `event`.`id` 
-				WHERE `event`.`uid` = %d and ignore = %d
-				AND (( `adjust` = 0 AND `finish` >= '%s' AND `start` <= '%s' ) 
-				OR  (  `adjust` = 1 AND `finish` >= '%s' AND `start` <= '%s' )) ",
+
+			// fixed an issue with "nofinish" events not showing up in the calendar.
+			// There's still an issue if the finish date crosses the end of month.
+			// Noting this for now - it will need to be fixed here and in Friendica.
+			// Ultimately the finish date shouldn't be involved in the query. 
+
+			$r = q("SELECT event.*, item.plink, item.item_flags, item.author_xchan, item.owner_xchan
+                              from event left join item on event_hash = resource_id 
+				where resource_type = 'event' and event.uid = %d and event.ignore = %d 
+				AND (( `adjust` = 0 AND ( `finish` >= '%s' or nofinish ) AND `start` <= '%s' ) 
+				OR  (  `adjust` = 1 AND ( `finish` >= '%s' or nofinish ) AND `start` <= '%s' )) ",
 				intval(local_user()),
 				intval($ignored),
 				dbesc($start),
@@ -257,12 +285,17 @@ function events_content(&$a) {
 				dbesc($adjust_start),
 				dbesc($adjust_finish)
 			);
+
 		}
 
 		$links = array();
 
-		if(count($r)) {
+		if($r) {
+			xchan_query($r);
+			$r = fetch_post_tags($r,true);
+
 			$r = sort_by_date($r);
+
 			foreach($r as $rr) {
 				$j = (($rr['adjust']) ? datetime_convert('UTC',date_default_timezone_get(),$rr['start'], 'j') : datetime_convert('UTC','UTC',$rr['start'],'j'));
 				if(! x($links,$j)) 
@@ -276,10 +309,9 @@ function events_content(&$a) {
 		$last_date = '';
 		$fmt = t('l, F j');
 
-		if(count($r)) {
-			$r = sort_by_date($r);
+		if($r) {
+
 			foreach($r as $rr) {
-				
 				
 				$j = (($rr['adjust']) ? datetime_convert('UTC',date_default_timezone_get(),$rr['start'], 'j') : datetime_convert('UTC','UTC',$rr['start'],'j'));
 				$d = (($rr['adjust']) ? datetime_convert('UTC',date_default_timezone_get(),$rr['start'], $fmt) : datetime_convert('UTC','UTC',$rr['start'],$fmt));
@@ -296,7 +328,8 @@ function events_content(&$a) {
 				$is_first = ($d !== $last_date);
 					
 				$last_date = $d;
-				$edit = ((! $rr['cid']) ? array($a->get_baseurl().'/events/event/'.$rr['id'],t('Edit event'),'','') : null);
+// FIXME
+				$edit = (($rr['item_flags'] & ITEM_WALL) ? array($a->get_baseurl().'/events/event/'.$rr['event_hash'],t('Edit event'),'','') : null);
 				$title = strip_tags(html_entity_decode(bbcode($rr['summary']),ENT_QUOTES,'UTF-8'));
 				if(! $title) {
 					list($title, $_trash) = explode("<br",bbcode($rr['desc']),2);
@@ -307,6 +340,7 @@ function events_content(&$a) {
 				$rr['location'] = bbcode($rr['location']);
 				$events[] = array(
 					'id'=>$rr['id'],
+					'hash' => $rr['event_hash'],
 					'start'=> $start,
 					'end' => $end,
 					'allDay' => false,
@@ -318,7 +352,7 @@ function events_content(&$a) {
 					'is_first'=>$is_first,
 					'item'=>$rr,
 					'html'=>$html,
-					'plink' => array($rr['plink'],t('link to source'),'',''),
+					'plink' => array($rr['plink'],t('Link to Source'),'',''),
 				);
 
 
@@ -332,13 +366,11 @@ function events_content(&$a) {
 		// links: array('href', 'text', 'extra css classes', 'title')
 		if (x($_GET,'id')){
 			$tpl =  get_markup_template("event.tpl");
-		} else {
-//			if (get_config('experimentals','new_calendar')==1){
-				$tpl = get_markup_template("events-js.tpl");
-//			} else {
-//				$tpl = get_markup_template("events.tpl");
-//			}
+		} 
+		else {
+			$tpl = get_markup_template("events-js.tpl");
 		}
+
 		$o = replace_macros($tpl, array(
 			'$baseurl'	=> $a->get_baseurl(),
 			'$tabs'		=> $tabs,
@@ -346,8 +378,7 @@ function events_content(&$a) {
 			'$new_event'=> array($a->get_baseurl().'/events/new',t('Create New Event'),'',''),
 			'$previus'	=> array($a->get_baseurl()."/events/$prevyear/$prevmonth",t('Previous'),'',''),
 			'$next'		=> array($a->get_baseurl()."/events/$nextyear/$nextmonth",t('Next'),'',''),
-			'$calendar' => cal($y,$m,$links, ' eventcal'),
-			
+			'$calendar' => cal($y,$m,$links, ' eventcal'),			
 			'$events'	=> $events,
 			
 			
@@ -360,13 +391,15 @@ function events_content(&$a) {
 	}
 
 	if($mode === 'edit' && $event_id) {
-		$r = q("SELECT * FROM `event` WHERE `id` = %d AND `uid` = %d LIMIT 1",
-			intval($event_id),
+		$r = q("SELECT * FROM `event` WHERE event_hash = '%s' AND `uid` = %d LIMIT 1",
+			dbesc($event_id),
 			intval(local_user())
 		);
 		if(count($r))
 			$orig_event = $r[0];
 	}
+
+	$channel = $a->get_channel();
 
 	if($mode === 'edit' || $mode === 'new') {
 
@@ -376,21 +409,17 @@ function events_content(&$a) {
 		$d_orig = ((x($orig_event)) ? $orig_event['desc'] : '');
 		$l_orig = ((x($orig_event)) ? $orig_event['location'] : '');
 		$eid = ((x($orig_event)) ? $orig_event['id'] : 0);
-		$cid = ((x($orig_event)) ? $orig_event['cid'] : 0);
-		$uri = ((x($orig_event)) ? $orig_event['uri'] : '');
-
+		$event_xchan = ((x($orig_event)) ? $orig_event['event_xchan'] : $channel['channel_hash']);
+		$mid = ((x($orig_event)) ? $orig_event['mid'] : '');
 
 		if(! x($orig_event))
 			$sh_checked = '';
 		else
-			$sh_checked = (($orig_event['allow_cid'] === '<' . local_user() . '>' && (! $orig_event['allow_gid']) && (! $orig_event['deny_cid']) && (! $orig_event['deny_gid'])) ? '' : ' checked="checked" ' );
+			$sh_checked = (($orig_event['allow_cid'] === '<' . $channel['channel_hash'] . '>' && (! $orig_event['allow_gid']) && (! $orig_event['deny_cid']) && (! $orig_event['deny_gid'])) ? '' : ' checked="checked" ' );
 
-		if($cid)
+		if($orig_event['event_xchan'])
 			$sh_checked .= ' disabled="disabled" ';
 
-
-
-		$tpl = get_markup_template('event_form.tpl');
 
 		$sdt = ((x($orig_event)) ? $orig_event['start'] : 'now');
 		$fdt = ((x($orig_event)) ? $orig_event['finish'] : 'now');
@@ -422,11 +451,21 @@ function events_content(&$a) {
 
 		require_once('include/acl_selectors.php');
 
+		$perm_defaults = array(
+			'allow_cid' => $channel['channel_allow_cid'], 
+			'allow_gid' => $channel['channel_allow_gid'], 
+			'deny_cid' => $channel['channel_deny_cid'], 
+			'deny_gid' => $channel['channel_deny_gid']
+		); 
+
+		$tpl = get_markup_template('event_form.tpl');
+
+
 		$o .= replace_macros($tpl,array(
 			'$post' => $a->get_baseurl() . '/events',
 			'$eid' => $eid, 
-			'$cid' => $cid,
-			'$uri' => $uri,
+			'$xchan' => $event_xchan,
+			'$mid' => $mid,
 	
 			'$title' => t('Event details'),
 			'$desc' => sprintf( t('Format is %s %s. Starting date and Title are required.'),$dateformat,$timeformat),
@@ -449,7 +488,7 @@ function events_content(&$a) {
 			'$t_orig' => $t_orig,
 			'$sh_text' => t('Share this event'),
 			'$sh_checked' => $sh_checked,
-			'$acl' => (($cid) ? '' : populate_acl(((x($orig_event)) ? $orig_event : $a->user),false)),
+			'$acl' => (($orig_event['event_xchan']) ? '' : populate_acl(((x($orig_event)) ? $orig_event : $perm_defaults),false)),
 			'$submit' => t('Submit')
 
 		));

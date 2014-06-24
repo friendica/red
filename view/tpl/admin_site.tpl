@@ -6,7 +6,7 @@
 			autoDimensions: false,
 			onStart: function(){
 				var theme = $("#id_theme :selected").val();
-				$("#cnftheme").attr('href',"$baseurl/admin/themes/"+theme);
+				$("#cnftheme").attr('href',"{{$baseurl}}/admin/themes/"+theme);
 			}, 
 			onComplete: function(){
 				$("div#fancybox-content form").submit(function(e){
@@ -34,49 +34,52 @@
 		});
 	});
 </script>
-<div id='adminpage'>
-	<h1>$title - $page</h1>
+<div id="adminpage" class="generic-content-wrapper">
+	<h1>{{$title}} - {{$page}}</h1>
 	
-	<form action="$baseurl/admin/site" method="post">
-    <input type='hidden' name='form_security_token' value='$form_security_token'>
+	<form action="{{$baseurl}}/admin/site" method="post">
+    <input type='hidden' name='form_security_token' value='{{$form_security_token}}'>
 
-	{{ inc field_input.tpl with $field=$sitename }}{{ endinc }}
-	{{ inc field_textarea.tpl with $field=$banner }}{{ endinc }}
-	{{ inc field_select.tpl with $field=$language }}{{ endinc }}
-	{{ inc field_select.tpl with $field=$theme }}{{ endinc }}
-	{{ inc field_select.tpl with $field=$ssl_policy }}{{ endinc }}
-	
-	<div class="submit"><input type="submit" name="page_site" value="$submit" /></div>
-	
-	<h3>$registration</h3>
-	{{ inc field_input.tpl with $field=$register_text }}{{ endinc }}
-	{{ inc field_select.tpl with $field=$register_policy }}{{ endinc }}
-	
-	<div class="submit"><input type="submit" name="page_site" value="$submit" /></div>
+	{{include file="field_input.tpl" field=$sitename}}
+	{{include file="field_textarea.tpl" field=$banner}}
+	{{include file="field_textarea.tpl" field=$admininfo}}
+	{{include file="field_select.tpl" field=$language}}
+	{{include file="field_select.tpl" field=$theme}}
+    {{include file="field_select.tpl" field=$theme_mobile}}
+    {{include file="field_select.tpl" field=$theme_accessibility}}
+    {{include file="field_input.tpl" field=$site_channel}}
+    {{include file="field_checkbox.tpl" field=$no_login_on_homepage}}
 
-	<h3>$upload</h3>
-	{{ inc field_input.tpl with $field=$maximagesize }}{{ endinc }}
 	
-	<h3>$corporate</h3>
-	{{ inc field_input.tpl with $field=$allowed_sites }}{{ endinc }}
-	{{ inc field_input.tpl with $field=$allowed_email }}{{ endinc }}
-	{{ inc field_checkbox.tpl with $field=$block_public }}{{ endinc }}
-	{{ inc field_checkbox.tpl with $field=$force_publish }}{{ endinc }}
-	{{ inc field_checkbox.tpl with $field=$no_community_page }}{{ endinc }}
-	{{ inc field_input.tpl with $field=$global_directory }}{{ endinc }}
+	<div class="submit"><input type="submit" name="page_site" value="{{$submit}}" /></div>
 	
-	<div class="submit"><input type="submit" name="page_site" value="$submit" /></div>
+	<h3>{{$registration}}</h3>
+	{{include file="field_input.tpl" field=$register_text}}
+	{{include file="field_select.tpl" field=$register_policy}}
+	{{include file="field_select.tpl" field=$access_policy}}
 	
-	<h3>$advanced</h3>
-	{{ inc field_input.tpl with $field=$proxy }}{{ endinc }}
-	{{ inc field_input.tpl with $field=$proxyuser }}{{ endinc }}
-	{{ inc field_input.tpl with $field=$timeout }}{{ endinc }}
-	{{ inc field_input.tpl with $field=$delivery_interval }}{{ endinc }}
-	{{ inc field_input.tpl with $field=$poll_interval }}{{ endinc }}
-	{{ inc field_input.tpl with $field=$maxloadavg }}{{ endinc }}
-	{{ inc field_input.tpl with $field=$abandon_days }}{{ endinc }}
+	<div class="submit"><input type="submit" name="page_site" value="{{$submit}}" /></div>
+
+	<h3>{{$upload}}</h3>
+	{{include file="field_input.tpl" field=$maximagesize}}
 	
-	<div class="submit"><input type="submit" name="page_site" value="$submit" /></div>
+	<h3>{{$corporate}}</h3>
+	{{include file="field_checkbox.tpl" field=$block_public}}
+	{{include file="field_checkbox.tpl" field=$force_publish}}
+	{{include file="field_checkbox.tpl" field=$disable_discover_tab}}
+	
+	<div class="submit"><input type="submit" name="page_site" value="{{$submit}}" /></div>
+	
+	<h3>{{$advanced}}</h3>
+	{{include file="field_input.tpl" field=$proxy}}
+	{{include file="field_input.tpl" field=$proxyuser}}
+	{{include file="field_input.tpl" field=$timeout}}
+	{{include file="field_input.tpl" field=$delivery_interval}}
+	{{include file="field_input.tpl" field=$poll_interval}}
+	{{include file="field_input.tpl" field=$maxloadavg}}
+	{{include file="field_input.tpl" field=$abandon_days}}
+	
+	<div class="submit"><input type="submit" name="page_site" value="{{$submit}}" /></div>
 	
 	</form>
 </div>

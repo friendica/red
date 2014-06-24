@@ -1,4 +1,4 @@
-{{ inc field_combobox.tpl }}{{ endinc }}
+{{include file="field_combobox.tpl"}}
 <div class="settings-submit-wrapper" >
-	<input id="filer_save" type="button" class="settings-submit" value="$submit" />
+	<input id="filer_save" type="button" class="settings-submit" value="{{$submit}}" />
 </div>

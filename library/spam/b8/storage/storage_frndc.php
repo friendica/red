@@ -205,7 +205,7 @@ class b8_storage_frndc extends b8_storage_base
 			foreach($to_create as $term) {
 				if(strlen($sql))
 					$sql .= ',';
-				$sql .= sprintf("(term,datetime,uid) values('%s','%s',%d)",
+				$sql .= sprintf("(term,date,uid) values('%s','%s',%d)",
 					dbesc(str_tolower($term))
 					dbesc(datetime_convert()),
 					intval($uid)
@@ -280,16 +280,16 @@ class b8_storage_frndc extends b8_storage_base
 
 			$result = q('
 				DELETE FROM ' . $this->config['table_name'] . '
-				WHERE token IN ("' . implode('", "', $this->_deletes) . '") AND uid = ' . $this->uid);
+				WHERE term IN ("' . implode('", "', $this->_deletes) . '") AND uid = ' . $this->uid);
 
 			$this->_deletes = array();
 
 		}
 
 		if(count($this->_puts) > 0) {
-
+//fixme
 			$result = q('
-				INSERT INTO ' . $this->config['table_name'] . '(token, count, uid)
+				INSERT INTO ' . $this->config['table_name'] . '(term, count, uid)
 				VALUES ' . implode(', ', $this->_puts));
 
 			$this->_puts = array();

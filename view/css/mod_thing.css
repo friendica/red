@@ -1,0 +1,21 @@
+
+
+.thing-profile #contact-profile-selector {
+	margin-left: 0;
+}
+
+
+.thing-label, .field label, .thing-verb-label, .thing-profile-label{
+	float: left;
+	width: 350px;
+}
+
+.thing-input, .thing-verb, .thing-profile{
+	float: left;
+	margin-bottom: 15px;
+	width: 400px;
+}
+
+.thing-field-end {
+	clear: both;
+}

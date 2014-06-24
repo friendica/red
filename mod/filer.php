@@ -19,6 +19,20 @@ function filer_content(&$a) {
 	if($item_id && strlen($term)){
 		// file item
 		store_item_tag(local_user(),$item_id,TERM_OBJ_POST,TERM_FILE,$term,'');
+
+		// protect the entire conversation from periodic expiration
+
+		$r = q("select parent from item where id = %d and uid = %d limit 1",
+			intval($item_id),
+			intval(local_user())
+		);
+		if($r) {
+			$x = q("update item set item_flags = ( item_flags | %d ) where id = %d and uid = %d limit 1",
+				intval(ITEM_RETAINED),
+				intval($r[0]['parent']),
+				intval(local_user())
+			);
+		}
 	} 
 	else {
 		$filetags = array();

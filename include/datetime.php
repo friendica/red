@@ -1,8 +1,8 @@
-<?php
+<?php /** @file */
 
 // two-level sort for timezones.
 
-if(! function_exists('timezone_cmp')) {
+
 function timezone_cmp($a, $b) {
 	if(strstr($a,'/') && strstr($b,'/')) {
 		if ( t($a) == t($b)) return 0;
@@ -12,10 +12,10 @@ function timezone_cmp($a, $b) {
 	if(strstr($b,'/')) return  1;
 	if ( t($a) == t($b)) return 0;
 	return ( t($a) < t($b)) ? -1 : 1;
-}}
+}
 
 // emit a timezone selector grouped (primarily) by continent
-if(! function_exists('select_timezone')) {
+
 function select_timezone($current = 'America/Los_Angeles') {
 
 	$timezone_identifiers = DateTimeZone::listIdentifiers();
@@ -52,13 +52,13 @@ function select_timezone($current = 'America/Los_Angeles') {
 	}    
 	$o .= '</optgroup></select>';
 	return $o;
-}}
+}
 
 // return a select using 'field_select_raw' template, with timezones 
 // groupped (primarily) by continent
 // arguments follow convetion as other field_* template array:
 // 'name', 'label', $value, 'help'
-if (!function_exists('field_timezone')){
+
 function field_timezone($name='timezone', $label='', $current = 'America/Los_Angeles', $help){
 	$options = select_timezone($current);
 	$options = str_replace('<select id="timezone_select" name="timezone">','', $options);
@@ -69,7 +69,7 @@ function field_timezone($name='timezone', $label='', $current = 'America/Los_Ang
 		'$field' => array($name, $label, $current, $help, $options),
 	));
 	
-}}
+}
 
 // General purpose date parse/convert function.
 // $from = source timezone
@@ -77,7 +77,7 @@ function field_timezone($name='timezone', $label='', $current = 'America/Los_Ang
 // $s    = some parseable date/time string
 // $fmt  = output format
 
-if(! function_exists('datetime_convert')) {
+
 function datetime_convert($from = 'UTC', $to = 'UTC', $s = 'now', $fmt = "Y-m-d H:i:s") {
 
 	// Defaults to UTC if nothing is set, but throws an exception if set to empty string.
@@ -124,7 +124,7 @@ function datetime_convert($from = 'UTC', $to = 'UTC', $s = 'now', $fmt = "Y-m-d 
 
 	$d->setTimeZone($to_obj);
 	return($d->format($fmt));
-}}
+}
 
 // wrapper for date selector, tailored for use in birthday fields
 
@@ -180,7 +180,7 @@ function datesel_format($f) {
 // $m           = already selected month
 // $d           = already selected day
 
-if(! function_exists('datesel')) {
+
 function datesel($f,$pre,$ymin,$ymax,$allow_blank,$y,$m,$d) {
 
 	$o = '';
@@ -231,9 +231,9 @@ function datesel($f,$pre,$ymin,$ymax,$allow_blank,$y,$m,$d) {
 
 	$o .= "</select>";
 	return $o;
-}}
+}
 
-if(! function_exists('timesel')) {
+
 function timesel($pre,$h,$m) {
 
 	$o = '';
@@ -250,7 +250,7 @@ function timesel($pre,$h,$m) {
 
 	$o .= "</select>";
 	return $o;
-}}
+}
 
 
 
@@ -264,7 +264,7 @@ function timesel($pre,$h,$m) {
 // Results relative to current timezone
 // Limited to range of timestamps
 
-if(! function_exists('relative_date')) {
+
 function relative_date($posted_date,$format = null) {
 
 	$localtime = datetime_convert('UTC',date_default_timezone_get(),$posted_date); 
@@ -300,7 +300,7 @@ function relative_date($posted_date,$format = null) {
 			return sprintf( $format,$r, (($r == 1) ? $str[0] : $str[1]));
         }
     }
-}}
+}
 
 
 
@@ -341,7 +341,7 @@ function age($dob,$owner_tz = '',$viewer_tz = '') {
 // $month[1] = 'January'; 
 //   to match human usage.
 
-if(! function_exists('get_dim')) {
+
 function get_dim($y,$m) {
 
   $dim = array( 0,
@@ -353,7 +353,7 @@ function get_dim($y,$m) {
   if(((($y % 4) == 0) && (($y % 100) != 0)) || (($y % 400) == 0))
     return 29;
   return $dim[2];
-}}
+}
 
 
 // Returns the first day in month for a given month, year
@@ -361,11 +361,11 @@ function get_dim($y,$m) {
 // returns 0 = Sunday through 6 = Saturday
 // Months start at 1.
 
-if(! function_exists('get_first_dim')) {
+
 function get_first_dim($y,$m) {
   $d = sprintf('%04d-%02d-01 00:00', intval($y), intval($m));
   return datetime_convert('UTC','UTC',$d,'w');
-}}
+}
 
 // output a calendar for the given month, year.
 // if $links are provided (array), e.g. $links[12] => 'http://mylink' , 
@@ -376,8 +376,6 @@ function get_first_dim($y,$m) {
 
 // TODO: provide (prev,next) links, define class variations for different size calendars
 
-
-if(! function_exists('cal')) {
 function cal($y = 0,$m = 0, $links = false, $class='') {
 
 
@@ -442,6 +440,80 @@ function cal($y = 0,$m = 0, $links = false, $class='') {
   $o .= '</tr></table>'."\r\n";  
   
   return $o;
-}}
+}
 
 
+/**
+ * Return the next birthday, converted from the owner's timezone to UTC. 
+ * This makes it globally portable.
+ * If the provided birthday lacks a month and or day, return an empty string.
+ * A missing year is acceptable.
+ */
+
+
+function z_birthday($dob,$tz,$format="Y-m-d H:i:s") {
+
+	if(! strlen($tz))
+		$tz = 'UTC';
+
+	$birthday = '';
+	$tmp_dob = substr($dob,5);
+	$tmp_d = substr($dob,8);
+	if(intval($tmp_dob) && intval($tmp_d)) {
+		$y = datetime_convert($tz,$tz,'now','Y');
+		$bd = $y . '-' . $tmp_dob . ' 00:00';
+		$t_dob = strtotime($bd);
+		$now = strtotime(datetime_convert($tz,$tz,'now'));
+		if($t_dob < $now)
+			$bd = $y + 1 . '-' . $tmp_dob . ' 00:00';
+		$birthday = datetime_convert($tz,'UTC',$bd,$format);
+	}
+
+	return $birthday;
+
+}
+
+/**
+ *
+ * Create a birthday event for any connections with a birthday in the next 1-2 weeks.
+ * Update the year so that we don't create another event until next year.
+ *
+ */
+
+
+function update_birthdays() {
+
+	require_once('include/event.php');
+	require_once('include/permissions.php');
+
+    $r = q("SELECT * FROM abook left join xchan on abook_xchan = xchan_hash 
+		WHERE abook_dob > utc_timestamp() + interval 7 day and abook_dob < utc_timestamp() + interval 14 day");
+	if($r) {
+		foreach($r as $rr) {
+			
+			if(! perm_is_allowed($rr['abook_channel'],$rr['xchan_hash'],'send_stream'))
+				continue;
+
+			$ev = array();
+			$ev['uid'] = $rr['abook_channel'];
+			$ev['account'] = $rr['abook_account'];
+			$ev['event_xchan'] = $rr['xchan_hash'];
+			$ev['start'] = datetime_convert('UTC','UTC', $rr['abook_dob']);
+			$ev['finish'] = datetime_convert('UTC','UTC', $rr['abook_dob'] . ' + 1 day ');
+			$ev['adjust'] = 1;
+            $ev['summary'] = sprintf( t('%1$s\'s birthday'), $rr['xchan_name']);
+            $ev['description'] = sprintf( t('Happy Birthday %1$s'), 
+				'[zrl=' . $rr['xchan_url'] . ']' . $rr['xchan_name'] . '[/zrl]') ;
+			$ev['type'] = 'birthday';
+			
+			$z = event_store_event($ev);
+			if($z) {
+				$item_id = event_store_item($ev,$z);
+				q("update abook set abook_dob = '%s' where abook_id = %d limit 1",
+					dbesc(intval($rr['abook_dob']) + 1 . substr($rr['abook_dob'],4)),
+					intval($rr['abook_id'])
+				);
+			}
+		}
+	}
+}

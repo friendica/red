@@ -1,22 +1,22 @@
 
-Kara $[username],
+Dear {{$username}},
 
-	'$[fn]' ĉe '$[dfrn_url]' akceptis 
-vian kontaktpeton ĉe '$[sitename]'.
+	'{{$fn}}' at '{{$dfrn_url}}' has accepted 
+your connection request at '{{$sitename}}'.
 
-	'$[fn]' elektis vin kiel "admiranto", kio malpermesas 
-kelkajn komunikilojn - ekzemple privataj mesaĝoj kaj kelkaj profilrilataj
-agoj. Se tio estas konto de komunumo aŭ de eminentulo, tiaj agordoj
-aŭtomate aktiviĝis.
+	'{{$fn}}' has chosen to accept you a "fan", which restricts 
+some forms of communication - such as private messaging and some profile
+interactions. If this is a celebrity or community page, these settings were
+applied automatically.
 
-	'$[fn]' eblas konverti la rilaton al ambaŭdirekta rilato 
-aŭ apliki pli da permesoj. 
+	'{{$fn}}' may choose to extend this into a two-way or more permissive 
+relationship in the future. 
 
-	Vi ekricevos publikajn afiŝojn de '$[fn]', 
-kiuj aperos sur via 'Reto' paĝo ĉe  
+	You will start receiving public status updates from '{{$fn}}', 
+which will appear on your 'Matrix' page at  
 
-$[siteurl]
+{{$siteurl}}
 
-Salutoj,
+Sincerely,
 
-	$[sitename] administranto
+	{{$sitename}} Administrator

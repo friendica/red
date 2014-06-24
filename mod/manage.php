@@ -36,8 +36,9 @@ function manage_content(&$a) {
 	$channels = null;
 
 	if(local_user()) {
-		$r = q("select channel.*, xchan.* from channel left join xchan on channel.channel_hash = xchan.xchan_hash where channel.channel_account_id = %d order by channel_name ",
-			intval(get_account_id())
+		$r = q("select channel.*, xchan.* from channel left join xchan on channel.channel_hash = xchan.xchan_hash where channel.channel_account_id = %d and not ( channel_pageflags & %d ) order by channel_name ",
+			intval(get_account_id()),
+			intval(PAGE_REMOVED)
 		);
 
 		$selected_channel = null;
@@ -53,6 +54,18 @@ function manage_content(&$a) {
 				$channels[$x]['default_links'] = '1';
 			}
 		}
+		
+	    $r = q("select count(channel_id) as total from channel where channel_account_id = %d and not ( channel_pageflags & %d )",
+			intval(get_account_id()),
+			intval(PAGE_REMOVED)
+		);
+		$limit = service_class_fetch(local_user(),'total_identities');
+		if($limit !== false) {
+			$channel_usage_message = sprintf( t("You have created %1$.0f of %2$.0f allowed channels."), $r[0]['total'], $limit);
+		}
+		else {
+			$channel_usage_message = '';
+ 		}
 	}
 
 	$links = array(
@@ -69,6 +82,7 @@ function manage_content(&$a) {
 		'$msg_make_default' => t('Make Default'),
 		'$links'            => $links,
 		'$all_channels'     => $channels,
+		'$channel_usage_message' => $channel_usage_message,
 	));
 
 

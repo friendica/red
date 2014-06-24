@@ -1,4 +1,4 @@
-<?php
+<?php /** @file */
 require_once "html2bbcode.php";
 
 function breaklines($line, $level, $wraplength = 75)
@@ -205,7 +205,7 @@ function html2plain($html, $wraplength = 75, $compact = false)
 	if (!$compact) {
 		$counter = 1;
 		foreach ($urls as $id=>$url)
-			if (strpos($message, $url) == false)
+			if ($url && strpos($message, $url) === false)
 				$message .= "\n".$url." ";
 				//$message .= "\n[".($counter++)."] ".$url;
 	}
@@ -219,4 +219,4 @@ function html2plain($html, $wraplength = 75, $compact = false)
 
 	return(trim($message));
 }
-?>
+

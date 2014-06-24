@@ -1,7 +1,9 @@
 <?php
 
 
-function display_content(&$a) {
+function display_content(&$a, $update = 0, $load = false) {
+
+//	logger("mod-display: update = $update load = $load");
 
 	if(intval(get_config('system','block_public')) && (! local_user()) && (! remote_user())) {
 		notice( t('Public access denied.') . EOL);
@@ -14,13 +16,16 @@ function display_content(&$a) {
 	require_once('include/acl_selectors.php');
 	require_once('include/items.php');
 
-	$o = '<div id="live-display"></div>' . "\r\n";
 
-	$a->page['htmlhead'] .= get_markup_template('display-head.tpl');
+	$a->page['htmlhead'] .= replace_macros(get_markup_template('display-head.tpl'), array());
 
-
-	if(argc() > 1)
+	if(argc() > 1 && argv(1) !== 'load')
 		$item_hash = argv(1);
+
+
+	if($_REQUEST['mid'])
+		$item_hash = $_REQUEST['mid'];
+
 
 	if(! $item_hash) {
 		$a->error = 404;
@@ -30,6 +35,37 @@ function display_content(&$a) {
 
 	$observer_is_owner = false;
 
+
+	if(local_user() && (! $update)) {
+
+		$channel = $a->get_channel();
+
+
+		$channel_acl = array(
+			'allow_cid' => $channel['channel_allow_cid'], 
+			'allow_gid' => $channel['channel_allow_gid'], 
+			'deny_cid' => $channel['channel_deny_cid'], 
+			'deny_gid' => $channel['channel_deny_gid']
+		); 
+
+		$x = array(
+			'is_owner' => true,
+			'allow_location' => ((intval(get_pconfig($channel['channel_id'],'system','use_browser_location'))) ? '1' : ''),
+			'default_location' => $channel['channel_location'],
+			'nickname' => $channel['channel_address'],
+			'lockstate' => (($group || $cid || $channel['channel_allow_cid'] || $channel['channel_allow_gid'] || $channel['channel_deny_cid'] || $channel['channel_deny_gid']) ? 'lock' : 'unlock'),
+
+			'acl' => populate_acl($channel_acl),
+			'bang' => '',
+			'visitor' => true,
+			'profile_uid' => local_user(),
+			'return_path' => 'channel/' . $channel['channel_address']
+		);
+
+		$o .= status_editor($a,$x);
+
+	}
+
 	// This page can be viewed by anybody so the query could be complicated
 	// First we'll see if there is a copy of the item which is owned by us - if we're logged in locally.
 	// If that fails (or we aren't logged in locally), 
@@ -37,136 +73,173 @@ function display_content(&$a) {
 	// and if that fails, look for a copy of the post that has no privacy restrictions.  
 	// If we find the post, but we don't find a copy that we're allowed to look at, this fact needs to be reported.
 
-// FIXME - on the short term, we'll only do the first query.
+	// find a copy of the item somewhere
 
 	$target_item = null;
 
-	if(local_user()) {
-		$r = q("select * from item where uri = '%s' and uid = %d limit 1",
-			dbesc($item_hash),
-			intval(local_user())
+	$r = q("select id, uid, mid, parent_mid, item_restrict from item where mid like '%s' limit 1",
+		dbesc($item_hash . '%')
+	);
+
+	if($r) {
+		$target_item = $r[0];
+	}
+
+	if($target_item['item_restrict'] & ITEM_WEBPAGE) {
+		$x = q("select * from channel where channel_id = %d limit 1",
+			intval($target_item['uid'])
 		);
-		if($r) {
-			$owner = local_user();
-			$observer_is_owner = true;		
-			$target_item = $r[0];
+		$y = q("select * from item_id where uid = %d and service = 'WEBPAGE' and iid = %d limit 1",
+			intval($target_item['uid']),
+			intval($target_item['id'])
+		);
+		if($x && $y) {
+			goaway(z_root() . '/page/' . $x[0]['channel_address'] . '/' . $y[0]['sid']);
+		}
+		else {
+			notice( t('Page not found.') . EOL);
+		 	return '';
 		}
 	}
 
 
-	// Checking for visitors is a bit harder, we'll look for this item from any of their friends that they've auth'd
-	// against and see if any of them are writeable.
-	// This will be messy.
-
-//	$nick = (($a->argc > 1) ? $a->argv[1] : '');
-//	profile_load($a,$nick);
-
-//	$item_id = (($a->argc > 2) ? intval($a->argv[2]) : 0);
-
-//	if(! $item_id) {
-//		$a->error = 404;
-//		notice( t('Item not found.') . EOL);
-//		return;
-//	}
-
-//	$groups = array();
-
-//	$contact = null;
-//	$remote_contact = false;
-
-//	$contact_id = 0;
-
-//	if(is_array($_SESSION['remote'])) {
-//		foreach($_SESSION['remote'] as $v) {
-//			if($v['uid'] == $a->profile['uid']) {
-//				$contact_id = $v['cid'];
-//				break;
-//			}
-//		}
-//	}
-
-//	if($contact_id) {
-//		$groups = init_groups_visitor($contact_id);
-//		$r = q("SELECT * FROM `contact` WHERE `id` = %d AND `uid` = %d LIMIT 1",
-//			intval($contact_id),
-//			intval($a->profile['uid'])
-//		);
-//		if(count($r)) {
-//			$contact = $r[0];
-//			$remote_contact = true;
-//		}
-//	}
-
-//	if(! $remote_contact) {
-
-//		if(local_user()) {
-//			$contact_id = $_SESSION['cid'];
-//			$contact = $a->contact;
-//		}
-//	}
-
-//	$r = q("SELECT * FROM `contact` WHERE `uid` = %d AND `self` = 1 LIMIT 1",
-//		intval($a->profile['uid'])
-//	);
-//	if(count($r))
-//		$a->page_contact = $r[0];
-
-//	$is_owner = ((local_user()) && (local_user() == $a->profile['profile_uid']) ? true : false);
-
-	if($a->profile['hidewall'] && (! $is_owner) && (! $remote_contact)) {
-		notice( t('Access to this profile has been restricted.') . EOL);
-		return;
-	}
-	
-//	if ($is_owner)
-//		$celeb = ((($a->user['page-flags'] == PAGE_SOAPBOX) || ($a->user['page-flags'] == PAGE_COMMUNITY)) ? true : false);
-
-//		$x = array(
-//			'is_owner' => true,
-//			'allow_location' => $a->user['allow_location'],
-//			'default_location' => $a->user['default-location'],
-//			'nickname' => $a->user['nickname'],
-//			'lockstate' => ( (is_array($a->user)) && ((strlen($a->user['allow_cid'])) || (strlen($a->user['allow_gid'])) || (strlen($a->user['deny_cid'])) || (strlen($a->user['deny_gid']))) ? 'lock' : 'unlock'),
-//			'acl' => populate_acl($a->user, $celeb),
-//			'bang' => '',
-//			'visitor' => 'block',
-//			'profile_uid' => local_user()
-//		);	
-//		$o .= status_editor($a,$x,true);
+	if((! $update) && (! $load)) {
 
 
-// FIXME
-//	$sql_extra = item_permissions_sql($a->profile['uid']);
+		$o .= '<div id="live-display"></div>' . "\r\n";
+		$o .= "<script> var profile_uid = " . ((intval(local_user())) ? local_user() : (-1))
+			. "; var netargs = '?f='; var profile_page = " . $a->pager['page'] . "; </script>\r\n";
 
-	if($target_item) {
-		$r = q("SELECT * from item where parent = %d",
-			intval($target_item['parent'])
-		);
+		$a->page['htmlhead'] .= replace_macros(get_markup_template("build_query.tpl"),array(
+			'$baseurl' => z_root(),
+			'$pgtype' => 'display',
+			'$uid' => '0',
+			'$gid' => '0',
+			'$cid' => '0',
+			'$cmin' => '0',
+			'$cmax' => '99',
+			'$star' => '0',
+			'$liked' => '0',
+			'$conv' => '0',
+			'$spam' => '0',
+			'$fh' => '0',
+			'$nouveau' => '0',
+			'$wall' => '0',
+			'$page' => (($a->pager['page'] != 1) ? $a->pager['page'] : 1),
+			'$list' => ((x($_REQUEST,'list')) ? intval($_REQUEST['list']) : 0),
+			'$search' => '',
+			'$order' => '',
+			'$file' => '',
+			'$cats' => '',
+			'$dend' => '',
+			'$dbegin' => '',
+			'$mid' => $item_hash
+		));
+
+
 	}
 
+	$sql_extra = public_permissions_sql(get_observer_hash());
+
+	if(($update && $load) || ($_COOKIE['jsAvailable'] != 1)) {
+
+		$updateable = false;
+
+		$pager_sql = sprintf(" LIMIT %d, %d ",intval($a->pager['start']), intval($a->pager['itemspage']));
+
+		if($load || ($_COOKIE['jsAvailable'] != 1)) {
+			$r = null;
+
+			require_once('include/identity.php');
+			$sys = get_sys_channel();
+
+			if(local_user()) {
+				$r = q("SELECT * from item
+					WHERE item_restrict = 0
+					and uid = %d
+					and mid = '%s'
+					limit 1",
+					intval(local_user()),
+					dbesc($target_item['parent_mid'])
+				);
+				if($r) {
+					$updateable = true;
+
+				}
+
+			}
+			if($r === null) {
+
+				$r = q("SELECT * from item
+					WHERE item_restrict = 0
+					and mid = '%s'
+					AND (((( `item`.`allow_cid` = ''  AND `item`.`allow_gid` = '' AND `item`.`deny_cid`  = '' 
+					AND `item`.`deny_gid`  = '' AND item_private = 0 ) 
+					and owner_xchan in ( " . stream_perms_xchans(($observer) ? (PERMS_NETWORK|PERMS_PUBLIC) : PERMS_PUBLIC) . " ))
+					OR owner_xchan = '%s')
+					$sql_extra )
+					group by mid limit 1",
+					dbesc($target_item['parent_mid']),
+					dbesc($sys['xchan_hash'])
+				);
+
+			}
+		}
+		else {
+			$r = array();
+		}
+	}
 
 	if($r) {
 
-		if((local_user()) && (local_user() == $owner)) {
-//			q("UPDATE `item` SET `unseen` = 0 
-//				WHERE `parent` = %d AND `unseen` = 1",
-//				intval($r[0]['parent'])
-//			);
+		$parents_str = ids_to_querystr($r,'id');
+		if($parents_str) {
+
+			$items = q("SELECT `item`.*, `item`.`id` AS `item_id` 
+				FROM `item`
+				WHERE item_restrict = 0 and parent in ( %s ) ",
+				dbesc($parents_str)
+			);
+
+			xchan_query($items);
+			$items = fetch_post_tags($items,true);
+			$items = conv_sort($items,'created');
 		}
-
-		xchan_query($r);
-		$r = fetch_post_tags($r);
-
-		$o .= conversation($a,$r,'display', false);
-
+	} else {
+		$items = array();
 	}
-	else {
-		$r = q("SELECT `id`,`deleted` FROM `item` WHERE `id` = '%s' OR `uri` = '%s' LIMIT 1",
-			dbesc($item_id),
-			dbesc($item_id)
+
+
+	if ($_COOKIE['jsAvailable'] == 1) {
+		$o .= conversation($a, $items, 'display', $update, 'client');
+	} else {
+		$o .= conversation($a, $items, 'display', $update, 'traditional');
+	}
+
+	if($updateable) {
+		$x = q("UPDATE item SET item_flags = ( item_flags ^ %d )
+			WHERE (item_flags & %d) AND uid = %d and parent = %d ",
+			intval(ITEM_UNSEEN),
+			intval(ITEM_UNSEEN),
+			intval(local_user()),
+			intval($r[0]['parent'])
 		);
-		if(count($r)) {
-			if($r[0]['deleted']) {
+	}
+
+	$o .= '<div id="content-complete"></div>';
+
+	return $o;
+
+
+/*
+	elseif((! $update) && (!  {
+		
+		$r = q("SELECT `id`, item_flags FROM `item` WHERE `id` = '%s' OR `mid` = '%s' LIMIT 1",
+			dbesc($item_hash),
+			dbesc($item_hash)
+		);
+		if($r) {
+			if($r[0]['item_flags'] & ITEM_DELETED) {
 				notice( t('Item has been removed.') . EOL );
 			}
 			else {	
@@ -178,7 +251,7 @@ function display_content(&$a) {
 		}
 
 	}
-
+*/
 	return $o;
 }
 

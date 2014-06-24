@@ -1,10 +1,10 @@
 <script language="javascript" type="text/javascript"
-          src="$baseurl/library/tinymce/jscripts/tiny_mce/tiny_mce_src.js"></script>
+          src="{{$baseurl}}/library/tinymce/jscripts/tiny_mce/tiny_mce_src.js"></script>
           <script language="javascript" type="text/javascript">
 
 tinyMCE.init({
 	theme : "advanced",
-	mode : "$editselect",
+	mode : "{{$editselect}}",
 	elements: "contact-edit-info",
 	plugins : "bbcode",
 	theme_advanced_buttons1 : "bold,italic,underline,undo,redo,link,unlink,image,forecolor",
@@ -20,7 +20,7 @@ tinyMCE.init({
 	force_p_newlines : false,
 	force_br_newlines : true,
 	forced_root_block : '',
-	content_css: "$baseurl/view/custom_tinymce.css"
+	content_css: "{{$baseurl}}/view/custom_tinymce.css"
 
 
 });

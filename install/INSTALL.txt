@@ -1,60 +1,130 @@
 
-Friendica Installation
+Red Matrix Installation
 
-We've tried very hard to ensure that Friendica will run on commodity hosting 
-platforms - such as those used to host Wordpress blogs and Drupal websites. 
-But be aware that Friendica is more than a simple web application. It is a 
+We've tried very hard to ensure that the Red Matrix will run on commodity
+hosting platforms - such as those used to host Wordpress blogs and Drupal 
+websites. It will run on most any Linux VPS system. Windows LAMP platforms
+such as XAMPP and WAMP are not officially supported at this time - however 
+we welcome patches if you manage to get it working. 
+
+Be aware that the Red Matrix is more than a simple web application. It is a 
 complex communications system which more closely resembles an email server 
 than a web server. For reliability and performance, messages are delivered in
 the background and are queued for later delivery when sites are down. This
 kind of functionality requires a bit more of the host system than the typical
-blog. Not every PHP/MySQL hosting provider will be able to support Friendica. 
-Many will. But please review the requirements and confirm these with your 
-hosting provider prior to installation.
+blog. Not every PHP/MySQL hosting provider will be able to support the 
+Red Matrix. Many will - but please review the requirements and confirm these 
+with your hosting provider prior to installation. (And preferably before 
+entering into a long-term contract.)
+
+If you encounter installation issues, please let us know via the Github issue 
+tracker (https://github.com/friendica/red/issues). Please be as clear as you 
+can about your operating environment and provide as much detail as possible
+about any error messages you may see, so that we can prevent it from happening 
+in the future. Due to the large variety of operating systems and PHP platforms 
+in existence we may have only limited ability to debug your PHP installation or 
+acquire any missing modules - but we will do our best to solve any general code 
+issues.
+
+
 
 Before you begin: Choose a domain name or subdomain name for your server.
-Put some thought into this - because changing it is currently not-supported.
-Things will break, and some of your friends may have difficulty communicating
-with you. We plan to address this limitation in a future release. Also decide
-if you wish to connect with members of the Diaspora network, as this will 
-impact the installation requirements.
 
-Decide if you will use SSL and obtain an SSL cert. Communications with the
-Diaspora network MAY require both SSL AND an SSL cert signed by a CA which is 
-recognised by the major browsers. Friendica will work with self-signed certs
-but Diaspora communication may not. For best results, install your cert PRIOR
-to installing Friendica and when visiting your site for the initial 
-installation in step 5, please use the https: link. (Use the http: or non-SSL 
-link if your cert is self-signed). 
+The Red Matrix can only be installed into the root of a domain or
+sub-domain, and can not be installed using alternate TCP ports. 
+
+Decide if you will use SSL and obtain an SSL certificate before software
+installation.  You SHOULD use SSL. If you use SSL, you MUST use a
+"browser-valid" certificate.  You MUST NOT use self-signed certificates!
+
+Please test your certificate prior to installation. A web tool for testing your
+certificate is available at "http://www.digicert.com/help/". When visiting your
+site for the first time, please use the SSL ("https://") URL if SSL is
+available. This will avoid problems later. The installation routine will not
+allow you to use a non browser-valid certificate.
+
+This restriction is incorporated because public posts from you may for example
+contain references to images on your own hub. If your certificate is not known
+by the internet browser of users they get a warning message complaining about
+some security issues. Although these complains are not the real truth - there
+are no security issues with your encryption! - the users may be confused,
+nerved or even worse may become scared about Red Matrix having security issues.
+Free "browser-valid" certificates are available from providers such as StartSSL. 
  
+If you do NOT use SSL, there may be a delay of up to a minute for the initial
+install script - while we check the SSL port to see if anything responds there.
+When communicating with new sites, Red Matrix always attempts connection on the
+SSL port first, before falling back to a less secure connection.  
 
 1. Requirements
-	- Apache with mod-rewrite enabled and "Options All" so you can use a 
+	- Apache with mod-rewrite enabled and "AllowOverride All" so you can use a 
 local .htaccess file
 
 	- PHP 5.3+. The later the better. 
 
 	- PHP *command line* access with register_argc_argv set to true in the 
-php.ini file [or see 'poormancron' in section 8]
+php.ini file - and with no hosting provider restrictions on the use of exec()
+and proc_open().
 
-	- curl, gd (with at least jpeg support), mysql, mbstring, mcrypt, and openssl extensions
+	- curl, gd (with at least jpeg support), mysqli, mbstring, mcrypt, and openssl extensions. The imagick extension is not required but desirable. 
 
 	- some form of email server or email gateway such that PHP mail() works
 
-	- Mysql 5.x
+	- Mysql 5.x or MariaDB
 
-	- ability to schedule jobs with cron (Linux/Mac) or Scheduled Tasks
-(Windows) [Note: other options are presented in Section 8 of this document]
+	- ability to schedule jobs with cron.
 
 	- Installation into a top-level domain or sub-domain (without a 
-directory/path component in the URL) is preferred. This is REQUIRED if
-you wish to communicate with the Diaspora network.
+directory/path component in the URL) is REQUIRED.
 
-2. Unpack the Friendica files into the root of your web server document area.
+2. Unpack the Red Matrix files into the root of your web server document area.
 
 	- If you copy the directory tree to your webserver, make sure
 	that you also copy .htaccess - as "dot" files are often hidden 
 	and aren't normally copied.
+
+    - If you are able to do so, we recommend using git to clone the 
+	source repository rather than to use a packaged tar or zip file.
+	This makes the software much easier to update. The Linux command
+	to clone the repository into a directory "mywebsite" would be
+
+        git clone https://github.com/friendica/red.git mywebsite
+
+    - and then you can pick up the latest changes at any time with
+
+        git pull
+
+    - make sure folders *view/tpl/smarty3* and *store* exist and are writable by webserver
+
+        mkdir view/tpl/smarty3
+		mkdir store
+
+        chmod 777 view/tpl/smarty3
+		chmod 777 store
+
+		[This permission (777) is very dangerous and if you have sufficient
+		privilege and knowledge you should make this directory writeable only
+		by the webserver. In many shared hosting environments this may be
+		difficult without opening a trouble ticket with your provider. The
+		above permissions will allow the software to work, but are not
+		optimal.]
+ 
+    - For installing addons
+
+        - First you should be **on** your website folder
+
+            cd mywebsite
+
+        - Then you should clone the addon repository (separately)
+
+            git clone https://github.com/friendica/red-addons.git addon
+
+        - For keeping the addon tree updated, you should be on you addon tree and issue a git pull
+
+            cd mywebsite/addon
+
+			git pull
+
 
 3. Create an empty database and note the access details (hostname, username, 
 password, database name).
@@ -66,8 +136,8 @@ write or create files in your web directory, create an empty file called
 
 5. Visit your website with a web browser and follow the instructions. Please 
 note any error messages and correct these before continuing. If you are using
-SSL with a known signature authority (recommended), use the https: link to your
-website. If you are using a self-signed cert or no cert, use the http: link. 
+SSL with a known signature authority, use the https: link to your
+website. 
 
 6. *If* the automated installation fails for any reason, check the following:
 
@@ -107,29 +177,11 @@ You can generally find the location of PHP by executing "which php". If you
 have troubles with this section please contact your hosting provider for 
 assistance. Friendica will not work correctly if you cannot perform this step.
 
-You should also be sure that $a->config['php_path'] is set correctly, it should
+You should also be sure that $a->config['system']['php_path'] is set correctly, it should
 look like (changing it to the correct PHP location)
 
-$a->config['php_path'] = '/usr/local/php53/bin/php'
+$a->config['system']['php_path'] = '/usr/local/php53/bin/php';
   
-Alternative: You may be able to use the 'poormancron' plugin to perform this
-step if you are using a recent Friendica release. 'poormancron' may result in
-perfomance and memory issues and is only suitable for small sites with one or
-two users and a handful of contacts. To do this, edit the file 
-".htconfig.php" and look for a line describing your plugins. On a fresh 
-installation, it will look like
-
-$a->config['system']['addon'] = 'js_upload';
-
-This indicates the "js_upload" addon module is enabled. You may add additional 
-addons/plugins using this same line in the configuration file. Change it to 
-read
-
-$a->config['system']['addon'] = 'js_upload,poormancron';
-
-and save your changes.
-
-
  
 #####################################################################
 
@@ -145,7 +197,7 @@ and save your changes.
 	
 	Check your database settings. It usually means your database could not 
 be opened or accessed. If the database resides on the same machine, check that
-the database server name is "localhost". 
+the database server name is the word "localhost". 
 
 #####################################################################
 - 500 Internal Error
@@ -153,8 +205,6 @@ the database server name is "localhost".
 
 	This could be the result of one of our Apache directives not being 
 supported by your version of Apache. Examine your apache server logs.
-	You might remove the line "Options -Indexes" from the .htaccess file if 
-you are using a Windows server as this has been known to cause problems.
 Also check your file permissions. Your website and all contents must generally 
 be world-readable.
 
@@ -191,7 +241,7 @@ configuration for your site. This will need to be changed to
 	If you do not see the word "test", your .htaccess is working, but it is 
 likely that mod-rewrite is not installed in your web server or is not working.
 
-	On most flavour of Linux,
+	On most flavours of Linux,
 
 % a2enmod rewrite
 % /etc/init.d/apache2 restart
@@ -200,8 +250,7 @@ likely that mod-rewrite is not installed in your web server or is not working.
 distribution or (if Windows) the provider of your Apache server software if 
 you need to change either of these and can not figure out how. There is 
 a lot of help available on the web. Google "mod-rewrite" along with the 
-name of your operating system distribution or Apache package (if using 
-Windows).
+name of your operating system distribution or Apache package.
 
   
 #####################################################################
@@ -223,7 +272,7 @@ Retry the installation. As soon as the database has been created,
 
 #####################################################################
 - Some configurations with "suhosin" security are configured without
-an ability to run external processes. Friendica requires this ability.
+an ability to run external processes. The Red Matrix requires this ability.
 Following are some notes provided by one of our members.
 #####################################################################
 
@@ -233,26 +282,26 @@ certain functions like proc_open, as configured in /etc/php5/conf.d/suhosin.ini:
 
  suhosin.executor.func.blacklist = proc_open, ...
 
-For those sites like Friendica that really need these functions they can be
-enabled, e.g. in /etc/apache2/sites-available/friendica:
+For those sites like Red Matrix that really need these functions they can be
+enabled, e.g. in /etc/apache2/sites-available/redmatrix:
 
- <Directory /var/www/friendica/>
+ <Directory /var/www/redmatrix/>
   php_admin_value suhosin.executor.func.blacklist none
   php_admin_value suhosin.executor.eval.blacklist none
  </Directory>
 
-This enables every function for Friendica if accessed via browser, but not for
+This enables every function for Red Matrix if accessed via browser, but not for
 the cronjob that is called via php command line. I attempted to enable it for
 cron by using something like
 
- */10 * * * * cd /var/www/friendica/friendica/ && sudo -u www-data /usr/bin/php
+ */10 * * * * cd /var/www/redmatrix/ && sudo -u www-data /usr/bin/php
 -d suhosin.executor.func.blacklist=none -d suhosin.executor.eval.blacklist=none
 -f include/poller.php
 
-This worked well for simple test cases, but the friendica-cron still failed with
+This worked well for simple test cases, but the cron job still failed with
 a fatal error:
 suhosin[22962]: ALERT - function within blacklist called: proc_open() (attacker
-'REMOTE_ADDR not set', file '/var/www/friendica/friendica/boot.php', line 1341)
+'REMOTE_ADDR not set', file '/var/www/redmatrix/boot.php', line 1341)
 
 After a while I noticed, that include/poller.php calls further php script via
 proc_open. These scripts themselves also use proc_open and fail, because they
@@ -260,11 +309,11 @@ are NOT called with -d suhosin.executor.func.blacklist=none.
 
 So the simple solution is to put the correct parameters into .htconfig.php:
  // Location of PHP command line processor
- $a->config['php_path'] = '/usr/bin/php -d suhosin.executor.func.blacklist=none
+ $a->config['system']['php_path'] = '/usr/bin/php -d suhosin.executor.func.blacklist=none
 -d suhosin.executor.eval.blacklist=none';
 
 
-This is obvious as soon as you notice that the friendica-cron uses proc_open to
+This is obvious as soon as you notice that the cron uses proc_open to
 execute php-scripts that also use proc_open, but it took me quite some time to
 find that out. I hope this saves some time for other people using suhosin with
 function blacklists.

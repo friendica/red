@@ -1,10 +1,17 @@
-<?php
+<?php /** @file */
 
+require_once('include/dir_fns.php');
 require_once('include/zot.php');
 
 /*
  * poco_load
  *
+ * xchan is your connection
+ * We will load their friend list, and store in xlink_xchan your connection hash and xlink_link the hash for each connection
+ * If xchan isn't provided we will load the list of people from url who have indicated they are willing to be friends with
+ * new folks and add them to xlink with no xlink_xchan.
+ *
+ * Old behaviour: (documentation only):
  * Given a contact-id (minimum), load the PortableContacts friend list for that contact,
  * and add the entries to the gcontact (Global Contact) table, or update existing entries
  * if anything (name or photo) has changed.
@@ -19,53 +26,96 @@ require_once('include/zot.php');
 
 
 
-function poco_load($xchan = null,$url = null) {
+function poco_load($xchan = '',$url = null) {
 	$a = get_app();
 
 	if($xchan && ! $url) {
-		$r = q("select xchan_connurl from xchan where xchan_hash = %d limit 1",
-			intval($xchan)
+		$r = q("select xchan_connurl from xchan where xchan_hash = '%s' limit 1",
+			dbesc($xchan)
 		);
 		if($r) {
 			$url = $r[0]['xchan_connurl'];
-			$uid = $r[0]['abook_channel'];
 		}
 	}
 
-	if(! $url)
+	if(! $url) {
+		logger('poco_load: no url');
 		return;
+	}
 
 
-	$url = $url . '?fields=displayName,hash,urls,photos' ;
+	$url = $url . '?f=&fields=displayName,hash,urls,photos,rating' ;
 
 	logger('poco_load: ' . $url, LOGGER_DEBUG);
 
 	$s = z_fetch_url($url);
 
-	logger('poco_load: returns ' . print_r($s,true), LOGGER_DATA);
-
-	if(! $s['success'])
+	if(! $s['success']) {
+		if($s['return_code'] == 401)
+			logger('poco_load: protected');
+		elseif($s['return_code'] == 404)
+			logger('poco_load: nothing found');
+		else
+			logger('poco_load: returns ' . print_r($s,true));
 		return;
+	}
 
 	$j = json_decode($s['body'],true);
 
+	if(! $j) {
+		logger('poco_load: unable to json_decode returned data.');
+		return;
+	}
+
 	logger('poco_load: ' . print_r($j,true),LOGGER_DATA);
 
-	if(! x($j,'entry') && is_array($j['entry']))
+	if($xchan) {
+		if(array_key_exists('chatrooms',$j) && is_array($j['chatrooms'])) {
+			foreach($j['chatrooms'] as $room) {
+				$r = q("select * from xchat where xchat_url = '%s' and xchat_xchan = '%s' limit 1",
+					dbesc($room['url']),
+					dbesc($xchan)
+				);
+				if($r) {
+					q("update xchat set xchat_edited = '%s' where xchat_id = %d limit 1",
+						dbesc(datetime_convert()),
+						intval($r[0]['xchat_id'])
+					);
+				}
+				else {
+					$x = q("insert into xchat ( xchat_url, xchat_desc, xchat_xchan, xchat_edited )
+						values ( '%s', '%s', '%s', '%s' ) ",
+						dbesc(escape_tags($room['url'])),
+						dbesc(escape_tags($room['desc'])),
+						dbesc($xchan),
+						dbesc(datetime_convert())
+					);
+				}
+			}
+		}
+		q("delete from xchat where xchat_edited < UTC_TIMESTAMP() - INTERVAL 7 DAY and xchat_xchan = '%s' ",
+			dbesc($xchan)
+		);
+	}
+
+	if(! ((x($j,'entry')) && (is_array($j['entry'])))) {
+		logger('poco_load: no entries');
 		return;
+	}
 
 	$total = 0;
 	foreach($j['entry'] as $entry) {
 
-		$total ++;
 		$profile_url = '';
 		$profile_photo = '';
 		$address = '';
 		$name = '';
 		$hash = '';
+		$rating = 0;
 
-		$name = $entry['displayName'];
-		$hash = $entry['hash'];
+		$name   = $entry['displayName'];
+		$hash   = $entry['hash'];
+		$rating = ((array_key_exists('rating',$entry)) ? intval($entry['rating']) : 0);
 
 		if(x($entry,'urls') && is_array($entry['urls'])) {
 			foreach($entry['urls'] as $url) {
@@ -88,8 +138,10 @@ function poco_load($xchan = null,$url = null) {
 			}
 		}
 
-		if((! $name) || (! $profile_url) || (! $profile_photo) || (! $hash) || (! $address))
+		if((! $name) || (! $profile_url) || (! $profile_photo) || (! $hash) || (! $address)) {
+			logger('poco_load: missing data');
 			continue; 
+		}
 		 
 		$x = q("select xchan_hash from xchan where xchan_hash = '%s' limit 1",
 			dbesc($hash)
@@ -105,73 +157,77 @@ function poco_load($xchan = null,$url = null) {
 					if($j)
 						import_xchan($j);
 				}
+				$x = q("select xchan_hash from xchan where xchan_hash = '%s' limit 1",
+					dbesc($hash)
+				);
+				if(! $x) {
+					continue;
+				}
+			}
+			else {
+				continue;
 			}
 		}
 	
+		$total ++;
+
 
 		$r = q("select * from xlink where xlink_xchan = '%s' and xlink_link = '%s' limit 1",
 			dbesc($xchan),
 			dbesc($hash)
 		);
+
 		if(! $r) {
-			q("insert into xlink ( xlink_xchan, xlink_link, xlink_updated ) values ( '%s', '%s', '%s' ) ",
+			q("insert into xlink ( xlink_xchan, xlink_link, xlink_rating, xlink_updated ) values ( '%s', '%s', %d, '%s' ) ",
 				dbesc($xchan),
 				dbesc($hash),
+				intval($rating),
 				dbesc(datetime_convert())
 			);
 		}
 		else {
-			q("update xlink set xlink_updated = '%s' where xlink_id = %d limit 1",
+			q("update xlink set xlink_updated = '%s', xlink_rating = %d where xlink_id = %d limit 1",
 				dbesc(datetime_convert()),
+				intval($rating),
 				intval($r[0]['xlink_id'])
 			);
 		}
-
 	}
 	logger("poco_load: loaded $total entries",LOGGER_DEBUG);
 
-	q("delete from xlink where xlink_xchan = '%s' and xlink_updated` < UTC_TIMESTAMP - INTERVAL 2 DAY",
+	q("delete from xlink where xlink_xchan = '%s' and xlink_updated < UTC_TIMESTAMP() - INTERVAL 2 DAY",
 		dbesc($xchan)
 	);
 }
 
 
-function count_common_friends($uid,$cid) {
+function count_common_friends($uid,$xchan) {
 
-	$r = q("SELECT count(*) as `total`
-		FROM `glink` left join `gcontact` on `glink`.`gcid` = `gcontact`.`id`
-		where `glink`.`cid` = %d and `glink`.`uid` = %d
-		and `gcontact`.`nurl` in (select nurl from contact where uid = %d and self = 0 and blocked = 0 and hidden = 0 and id != %d ) ",
-		intval($cid),
-		intval($uid),
-		intval($uid),
-		intval($cid)
+	$r = q("SELECT count(xlink_id) as total from xlink where xlink_xchan = '%s' and xlink_link in
+		(select abook_xchan from abook where abook_xchan != '%s' and abook_channel = %d and abook_flags = 0 )",
+		dbesc($xchan),
+		dbesc($xchan),
+		intval($uid)
 	);
 
-//	logger("count_common_friends: $uid $cid {$r[0]['total']}"); 
-	if(count($r))
+	if($r)
 		return $r[0]['total'];
 	return 0;
-
 }
 
 
-function common_friends($uid,$cid,$start = 0,$limit=9999,$shuffle = false) {
+function common_friends($uid,$xchan,$start = 0,$limit=100000000,$shuffle = false) {
 
 	if($shuffle)
 		$sql_extra = " order by rand() ";
 	else
-		$sql_extra = " order by `gcontact`.`name` asc "; 
+		$sql_extra = " order by xchan_name asc "; 
 
-	$r = q("SELECT `gcontact`.* 
-		FROM `glink` left join `gcontact` on `glink`.`gcid` = `gcontact`.`id`
-		where `glink`.`cid` = %d and `glink`.`uid` = %d
-		and `gcontact`.`nurl` in (select nurl from contact where uid = %d and self = 0 and blocked = 0 and hidden = 0 and id != %d ) 
-		$sql_extra limit %d, %d",
-		intval($cid),
+	$r = q("SELECT * from xchan left join xlink on xlink_link = xchan_hash where xlink_xchan = '%s' and xlink_link in
+		(select abook_xchan from abook where abook_xchan != '%s' and abook_channel = %d and abook_flags = 0 ) $sql_extra limit %d, %d",
+		dbesc($xchan),
+		dbesc($xchan),
 		intval($uid),
-		intval($uid),
-		intval($cid),
 		intval($start),
 		intval($limit)
 	);
@@ -253,79 +309,90 @@ function all_friends($uid,$cid,$start = 0, $limit = 80) {
 
 
 
-function suggestion_query($uid, $start = 0, $limit = 80) {
+function suggestion_query($uid, $myxchan, $start = 0, $limit = 80) {
 
-	if(! $uid)
+	if((! $uid) || (! $myxchan))
 		return array();
 
-	$r = q("SELECT count(glink.gcid) as `total`, gcontact.* from gcontact 
-		left join glink on glink.gcid = gcontact.id 
-		where uid = %d and not gcontact.nurl in ( select nurl from contact where uid = %d )
-		and not gcontact.name in ( select name from contact where uid = %d )
-		and not gcontact.id in ( select gcid from gcign where uid = %d )
-		group by glink.gcid order by total desc limit %d, %d ",
+	$r = q("SELECT count(xlink_xchan) as `total`, xchan.* from xchan
+		left join xlink on xlink_link = xchan_hash
+		where xlink_xchan in ( select abook_xchan from abook where abook_channel = %d )
+		and not xlink_link in ( select abook_xchan from abook where abook_channel = %d )
+		and not xlink_link in ( select xchan from xign where uid = %d )
+		and xlink_xchan != ''
+		and not ( xchan_flags & %d )
+		and not ( xchan_flags & %d )
+		group by xchan_hash order by total desc limit %d, %d ",
 		intval($uid),
 		intval($uid),
 		intval($uid),
-		intval($uid),
+		intval(XCHAN_FLAGS_HIDDEN),
+		intval(XCHAN_FLAGS_DELETED),
 		intval($start),
 		intval($limit)
 	);
 
-	if(count($r) && count($r) >= ($limit -1))
+	if($r && count($r) >= ($limit -1))
 		return $r;
 
-	$r2 = q("SELECT gcontact.* from gcontact 
-		left join glink on glink.gcid = gcontact.id 
-		where glink.uid = 0 and glink.cid = 0 and glink.zcid = 0 and not gcontact.nurl in ( select nurl from contact where uid = %d )
-		and not gcontact.name in ( select name from contact where uid = %d )
-		and not gcontact.id in ( select gcid from gcign where uid = %d )
-		order by rand() limit %d, %d ",
+	$r2 = q("SELECT count(xlink_link) as `total`, xchan.* from xchan
+		left join xlink on xlink_link = xchan_hash
+		where xlink_xchan = ''
+		and not xlink_link in ( select abook_xchan from abook where abook_channel = %d )
+		and not xlink_link in ( select xchan from xign where uid = %d )
+		and not ( xchan_flags & %d )
+		and not ( xchan_flags & %d )
+		group by xchan_hash order by total desc limit %d, %d ",
 		intval($uid),
 		intval($uid),
-		intval($uid),
+		intval(XCHAN_FLAGS_HIDDEN),
+		intval(XCHAN_FLAGS_DELETED),
 		intval($start),
 		intval($limit)
 	);
 
+	if(is_array($r) && is_array($r2))
+		return array_merge($r,$r2);
 
-	return array_merge($r,$r2);
-
+	return array();
 }
 
 function update_suggestions() {
 
 	$a = get_app();
 
-	$done = array();
+	$dirmode = get_config('system','directory_mode');
+	if($dirmode === false)
+		$dirmode = DIRECTORY_MODE_NORMAL;
 
-	poco_load(0,0,0,$a->get_baseurl() . '/poco');
-
-	$done[] = $a->get_baseurl() . '/poco';
-
-	if(strlen(get_config('system','directory_submit_url'))) {
-		$x = fetch_url('http://dir.friendica.com/pubsites');
-		if($x) {
-			$j = json_decode($x);
-			if($j->entries) {
-				foreach($j->entries as $entry) {
-					$url = $entry->url . '/poco';
-					if(! in_array($url,$done))
-						poco_load(0,0,0,$entry->url . '/poco');
-				}
-			}
-		}
+	if(($dirmode == DIRECTORY_MODE_PRIMARY) || ($dirmode == DIRECTORY_MODE_STANDALONE)) {
+		$url = z_root() . '/sitelist';
 	}
+	else {
+		$directory = find_upstream_directory($dirmode);
+		$url = $directory['url'] . '/sitelist';
+	}
+	if(! $url)
+		return;
 
-	$r = q("select distinct(poco) as poco from contact where network = '%s'",
-		dbesc(NETWORK_DFRN)
-	);
 
-	if(count($r)) {
-		foreach($r as $rr) {
-			$base = substr($rr['poco'],0,strrpos($rr['poco'],'/'));
-			if(! in_array($base,$done))
-				poco_load(0,0,0,$base);
+
+	$ret = z_fetch_url($url);
+
+	if($ret['success']) {
+
+		// We will grab fresh data once a day via the poller. Remove anything over a week old because
+		// the targets may have changed their preferences and don't want to be suggested - and they 
+		// may have simply gone away. 
+
+		$r = q("delete from xlink where xlink_xchan = '' and xlink_updated < UTC_TIMESTAMP() - INTERVAL 7 DAY");
+
+
+		$j = json_decode($ret['body'],true);
+		if($j && $j['success']) {
+			foreach($j['entries'] as $host) {
+				poco_load('',$host['url'] . '/poco');
+			}
 		}
 	}
 }

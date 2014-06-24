@@ -1,6 +1,5 @@
 <?php
 
-require_once('include/Scrape.php');
 require_once('include/zot.php');
 
 function probe_content(&$a) {
@@ -16,11 +15,22 @@ function probe_content(&$a) {
 	if(x($_GET,'addr')) {
 		$channel = $a->get_channel();
 		$addr = trim($_GET['addr']);
-		$res = zot_finger($addr,$channel);
+		$res = zot_finger($addr,$channel,false);
 		$o .= '<pre>';
-		$j = json_decode($res['body'],true);
+		if($res['success'])
+			$j = json_decode($res['body'],true);
+		else {
+			$o .= sprintf( t('Fetching URL returns error: %1$s'),$res['error'] . "\r\n\r\n");
+			$o .= "<strong>https connection failed. Trying again with auto failover to http.</strong>\r\n\r\n";
+			$res = zot_finger($addr,$channel,true);
+			if($res['success'])
+				$j = json_decode($res['body'],true);
+			else
+				$o .= sprintf( t('Fetching URL returns error: %1$s'),$res['error'] . "\r\n\r\n");
+
+		}
 		if($j && $j['permissions'] && $j['permissions']['iv'])
-			$j['permissions'] = json_decode(aes_unencapsulate($j['permissions'],$channel['channel_prvkey']),true);
+			$j['permissions'] = json_decode(crypto_unencapsulate($j['permissions'],$channel['channel_prvkey']),true);
 		$o .= str_replace("\n",'<br />',print_r($j,true));
 		$o .= '</pre>';
 	}

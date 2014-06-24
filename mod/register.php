@@ -7,6 +7,14 @@ function register_init(&$a) {
 	$result = null;
 	$cmd = ((argc() > 1) ? argv(1) : '');
 
+	// Provide a stored request for somebody desiring a connection
+	// when they first need to register someplace. Once they've
+	// created a channel, we'll try to revive the connection request 
+	// and process it.
+
+	if($_REQUEST['connect'])
+		$_SESSION['connect'] = $_REQUEST['connect'];
+
 	switch($cmd) {
 		case 'invite_check.json':
 			$result = check_account_invite($_REQUEST['invite_code']);
@@ -30,7 +38,7 @@ function register_post(&$a) {
 
 	$max_dailies = intval(get_config('system','max_daily_registrations'));
 	if($max_dailies) {
-		$r = q("select count(*) as total from account where account_created > UTC_TIMESTAMP - INTERVAL 1 day");
+		$r = q("select count(account_id) as total from account where account_created > UTC_TIMESTAMP() - INTERVAL 1 day");
 		if($r && $r[0]['total'] >= $max_dailies) {
 			notice( t('Maximum daily site registrations exceeded. Please try again tomorrow.') . EOL);
 			return;
@@ -51,7 +59,7 @@ function register_post(&$a) {
 			break;
 
 		case REGISTER_APPROVE:
-			$flags = ACCOUNT_UNVERIFIED | ACCOUNT_BLOCKED;
+			$flags = ACCOUNT_UNVERIFIED | ACCOUNT_BLOCKED | ACCOUNT_PENDING;
 			break;
 
 		default:
@@ -62,6 +70,12 @@ function register_post(&$a) {
 			}
 			$flags = ACCOUNT_UNVERIFIED | ACCOUNT_BLOCKED;
 			break;
+	}
+
+
+	if((! $_POST['password']) || ($_POST['password'] !== $_POST['password2'])) {
+		notice( t('Passwords do not match.') . EOL);
+		return;
 	}
 
 	$arr = $_POST;
@@ -121,15 +135,22 @@ function register_post(&$a) {
 
 function register_content(&$a) {
 
+	$registration_is = '';
+	$other_sites = '';
 
 	if(get_config('system','register_policy') == REGISTER_CLOSED) {
-		notice("Permission denied." . EOL);
-		return;
+		require_once('mod/pubsites.php');
+		return pubsites_content($a);
+	}
+
+	if(get_config('system','register_policy') == REGISTER_APPROVE) {
+		$registration_is = t('Registration on this site/hub is by approval only.');
+		$other_sites = t('<a href="pubsites">Register at another affiliated site/hub</a>'); 
 	}
 
 	$max_dailies = intval(get_config('system','max_daily_registrations'));
 	if($max_dailies) {
-		$r = q("select count(*) as total from account where account_created > UTC_TIMESTAMP - INTERVAL 1 day");
+		$r = q("select count(account_id) as total from account where account_created > UTC_TIMESTAMP() - INTERVAL 1 day");
 		if($r && $r[0]['total'] >= $max_dailies) {
 			logger('max daily registrations exceeded.');
 			notice( t('This site has exceeded the number of allowed daily account registrations. Please try again tomorrow.') . EOL);
@@ -161,10 +182,14 @@ function register_content(&$a) {
 	$invite_code  = ((x($_REQUEST,'invite_code')) ? strip_tags(trim($_REQUEST['invite_code'])) :  "" );
 
 
+
+
 	$o = replace_macros(get_markup_template('register.tpl'), array(
 
 		'$title'        => t('Registration'),
+		'$reg_is'       => $registration_is,
 		'$registertext' => get_config('system','register_text'),
+		'$other_sites'  => $other_sites,
 		'$invitations'  => get_config('system','invitation_only'),
 		'$invite_desc'  => t('Membership on this site is by invitation only.'),
 		'$label_invite' => t('Please enter your invitation code'),

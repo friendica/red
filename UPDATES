@@ -1,2 +1,0 @@
-alter table `group` add hash char(255) not null default '' after id, add index (hash);
-alter table photo add size int(10) unsigned not null default '0' after width, add index (size);

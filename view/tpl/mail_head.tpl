@@ -1,3 +1,3 @@
-<h3>$messages</h3>
+<h3>{{$messages}}</h3>
 
-$tab_content
+{{$tab_content}}

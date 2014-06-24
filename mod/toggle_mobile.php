@@ -3,9 +3,9 @@
 function toggle_mobile_init(&$a) {
 
 	if(isset($_GET['off']))
-		$_SESSION['show-mobile'] = false;
+		$_SESSION['show_mobile'] = false;
 	else
-		$_SESSION['show-mobile'] = true;
+		$_SESSION['show_mobile'] = true;
 
 	if(isset($_GET['address']))
 		$address = $_GET['address'];

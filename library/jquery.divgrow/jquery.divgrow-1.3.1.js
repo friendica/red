@@ -32,7 +32,7 @@
 (function ($) {
     var divgrowid = 0;
     $.fn.divgrow = function (options) {
-        var options = $.extend({}, { initialHeight: 100, moreText: "+ Show More", lessText: "- Show Less", speed: 1000, showBrackets: true }, options);
+        var options = $.extend({}, { initialHeight: 100, moreText: "+ Show More", lessText: "- Show Less", speed: 400, showBrackets: true }, options);
 
         return this.each(function () {
             divgrowid++;

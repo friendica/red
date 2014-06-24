@@ -1,22 +1,32 @@
-<h3>$header</h3>
+<h3>{{$header}}</h3>
 
 
-{{ if $links }}
-{{ for $links as $l }}
-<a class="channels-links" href="$l.0" title="$l.1">$l.2</a>
-{{ endfor }}
-{{ endif }} 
+{{if $links}}
+{{foreach $links as $l}}
+<a class="channels-links" href="{{$l.0}}" title="{{$l.1}}">{{$l.2}}</a>
+{{/foreach}}
+{{/if}} 
+<div class="channels-break"></div>
 
-{{ if $selected }}
-<div id="channels-selected">$msg_selected</div>
-{{ inc channel.tpl with $channel=$selected }}{{ endinc }}
+{{if $channel_usage_message}}
+<div id="channel-usage-message" class="usage-message">
+{{$channel_usage_message}}
+</div>
+{{/if}}
+{{if $selected}}
+<div id="selected-channel">
+<div id="channels-selected">{{$msg_selected}}</div>
+{{include file="channel.tpl" channel=$selected}}
+</div>
 <div class="channels-end selected"></div>
-{{ endif }}
+{{/if}}
+<br />
+<div id="channels-desc" class="descriptive-text">{{$desc}}</div>
 
-<div id="channels-desc" class="descriptive-text">$desc</div>
-
-{{ for $all_channels as $chn }}
-{{ inc channel.tpl with $channel=$chn }}{{ endinc }}
-{{ endfor }} 
+<div id="all-channels">
+{{foreach $all_channels as $chn}}
+{{include file="channel.tpl" channel=$chn}}
+{{/foreach}} 
+</div>
 
 <div class="channels-end all"></div>

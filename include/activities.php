@@ -1,4 +1,4 @@
-<?php
+<?php /** @file */
 
 function profile_activity($changed, $value) {
 	$a = get_app();
@@ -17,13 +17,15 @@ function profile_activity($changed, $value) {
 		return;
 
 	$arr = array();
-	$arr['uri']         = $arr['parent_uri'] = item_message_id();
+	$arr['mid']         = $arr['parent_mid'] = item_message_id();
 	$arr['uid']         = local_user();
 	$arr['aid']         = $self['channel_account_id'];
 	$arr['owner_xchan'] = $arr['author_xchan'] = $self['xchan_hash'];
 	$arr['item_flags']  = ITEM_WALL|ITEM_ORIGIN|ITEM_THREAD_TOP;
 	$arr['verb']        = ACTIVITY_UPDATE;
 	$arr['obj_type']    = ACTIVITY_OBJ_PROFILE;
+
+	$arr['$plink'] = z_root() . '/channel/' . $self['channel_address'] . '/?f=&mid=' . $arr['mid'];
 				
 	$A = '[url=' . z_root() . '/channel/' . $self['channel_address'] . ']' . $self['channel_name'] . '[/url]';
 
@@ -45,6 +47,8 @@ function profile_activity($changed, $value) {
 	$prof = '[url=' . z_root() . '/profile/' . $self['channel_address'] . ']' . t('public profile') . '[/url]';	
 
 	if($t == 1 && strlen($value)) {
+		// if it's a url, the HTML quotes will mess it up, so link it and don't try and zidify it because we don't know what it points to.
+		$value = linkify($value); 
 		$message = sprintf( t('%1$s changed %2$s to &ldquo;%3$s&rdquo;'), $A, $changes, $value);
 		$message .= "\n\n" . sprintf( t('Visit %1$s\'s %2$s'), $A, $prof);
 	}
@@ -73,7 +77,8 @@ function profile_activity($changed, $value) {
 	$arr['deny_cid']  = $self['channel_deny_cid'];
 	$arr['deny_gid']  = $self['channel_deny_gid'];
 
-	$i = item_store($arr);
+	$res = item_store($arr);
+	$i = $res['item_id'];
 
 	if($i) {
 		// FIXME - limit delivery in notifier.php to those specificed in the perms argument

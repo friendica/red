@@ -1,14 +1,14 @@
 
-Kjære $[myname],
+Dear {{$myname}},
 
-Du har en ny følgesvenn på $[sitename] - '$[requestor]'.
+You have a new follower at {{$sitename}} -  '{{$requestor}}'.
 
-Du kan besøke profilen deres på $[url]. 
+You may visit their profile at {{$url}}.
 
-Vennligst logg inn på ditt sted for å godkjenne eller ignorere/avbryte forespørselen.
+Please login to your site to approve or ignore/cancel the request.
 
-$[siteurl]
+{{$siteurl}}
 
-Med vennlig hilsen,
+Regards,
 
-	$[sitename] administrator
+	{{$sitename}} administrator

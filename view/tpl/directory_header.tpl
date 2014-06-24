@@ -1,14 +1,14 @@
-<h1>$dirlbl</h1>
+<h1>{{$dirlbl}}</h1>
 
-{{ if $search }}
-<h4>$finddsc $safetxt</h4> 
-{{ endif }}
+{{if $search}}
+<h4>{{$finddsc}} {{$safetxt}}</h4> 
+{{/if}}
 
-{{for $entries as $entry}}
+{{foreach $entries as $entry}}
 
-{{ inc direntry.tpl }}{{ endinc }}
+{{include file="direntry.tpl"}}
 
-{{ endfor }}
+{{/foreach}}
 
 
 

@@ -1,6 +1,9 @@
-<?php
+<?php /** @file */
 
 require_once('acl_selectors.php');
+require_once('include/crypto.php');
+require_once('include/items.php');
+require_once('include/taxonomy.php');
 
 function editpost_content(&$a) {
 
@@ -18,19 +21,22 @@ function editpost_content(&$a) {
 		return;
 	}
 
-	$itm = q("SELECT * FROM `item` WHERE `id` = %d AND `uid` = %d LIMIT 1",
+	$itm = q("SELECT * FROM `item` WHERE `id` = %d AND `uid` = %d and author_xchan = '%s' LIMIT 1",
 		intval($post_id),
-		intval(local_user())
+		intval(local_user()),
+		dbesc(get_observer_hash())
 	);
 
 	if(! count($itm)) {
-		notice( t('Item not found') . EOL);
+		notice( t('Item is not editable') . EOL);
 		return;
 	}
 
 	$plaintext = true;
 	if(feature_enabled(local_user(),'richtext'))
 		$plaintext = false;
+
+	$channel = $a->get_channel();
 
 	$o .= replace_macros(get_markup_template('edpost_head.tpl'), array(
 		'$title' => t('Edit post')
@@ -42,9 +48,20 @@ function editpost_content(&$a) {
 		'$editselect' =>  (($plaintext) ? 'none' : '/(profile-jot-text|prvmail-text)/'),
 		'$ispublic' => '&nbsp;', // t('Visible to <strong>everybody</strong>'),
 		'$geotag' => $geotag,
-		'$nickname' => $a->user['nickname']
+		'$nickname' => $channel['channel_address'],
+		'$expireswhen' => t('Expires YYYY-MM-DD HH:MM'),
+	    '$confirmdelete' => t('Delete item?'),
 	));
 
+
+
+	if($itm[0]['item_flags'] & ITEM_OBSCURED) {
+		$key = get_config('system','prvkey');
+		if($itm[0]['title'])
+			$itm[0]['title'] = crypto_unencapsulate(json_decode_plus($itm[0]['title']),$key);
+		if($itm[0]['body'])
+			$itm[0]['body'] = crypto_unencapsulate(json_decode_plus($itm[0]['body']),$key);
+	}
 
 	$tpl = get_markup_template("jot.tpl");
 		
@@ -58,6 +75,36 @@ function editpost_content(&$a) {
 
 	//$tpl = replace_macros($tpl,array('$jotplugins' => $jotplugins));	
 	
+
+	$category = '';
+	$catsenabled = ((feature_enabled(local_user(),'categories')) ? 'categories' : '');
+
+	if ($catsenabled){
+	        $itm = fetch_post_tags($itm);
+
+                $cats = get_terms_oftype($itm[0]['term'], TERM_CATEGORY);
+
+	        foreach ($cats as $cat) {
+	                if (strlen($category))
+	                        $category .= ', ';
+	                $category .= $cat['term'];
+	        }
+
+	}
+
+	if($itm[0]['attach']) {
+		$j = json_decode($itm[0]['attach'],true);
+		if($j) {
+			foreach($j as $jj) {
+				$itm[0]['body'] .= "\n" . '[attachment]' . basename($jj['href']) . ',' . $jj['revision'] . '[/attachment]' . "\n";
+			}
+		}
+	}
+
+	$cipher = get_pconfig(get_app()->profile['profile_uid'],'system','default_cipher');
+	if(! $cipher)
+		$cipher = 'aes256';
+
 
 	$o .= replace_macros($tpl,array(
 		'$return_path' => $_SESSION['return_url'],
@@ -78,13 +125,12 @@ function editpost_content(&$a) {
 		'$post_id' => $post_id,
 		'$baseurl' => $a->get_baseurl(),
 		'$defloc' => $channel['channel_location'],
-		'$visitor' => 'none',
-		'$pvisit' => 'none',
+		'$visitor' => false,
 		'$public' => t('Public post'),
 		'$jotnets' => $jotnets,
-		'$title' => $itm[0]['title'],
+		'$title' => htmlspecialchars($itm[0]['title'],ENT_COMPAT,'UTF-8'),
 		'$placeholdertitle' => t('Set title'),
-		'$category' => file_tag_file_to_list($itm[0]['file'], 'category'),
+		'$category' => $category,
 		'$placeholdercategory' => t('Categories (comma-separated list)'),
 		'$emtitle' => t('Example: bob@example.com, mary@example.com'),
 		'$lockstate' => $lockstate,
@@ -94,6 +140,15 @@ function editpost_content(&$a) {
 		'$preview' => ((feature_enabled(local_user(),'preview')) ? t('Preview') : ''),
 		'$jotplugins' => $jotplugins,
 		'$sourceapp' => t($a->sourcename),
+		'$catsenabled' => $catsenabled,
+		'$defexpire' => datetime_convert('UTC', date_default_timezone_get(),$itm[0]['expires']),
+		'$feature_expire' => ((feature_enabled(get_app()->profile['profile_uid'],'content_expire') && (! $webpage)) ? true : false),
+		'$expires' => t('Set expiration date'),
+		'$feature_encrypt' => ((feature_enabled(get_app()->profile['profile_uid'],'content_encrypt') && (! $webpage)) ? true : false),
+		'$encrypt' => t('Encrypt text'),
+		'$cipher' => $cipher,
+		'$expiryModalOK' => t('OK'),
+		'$expiryModalCANCEL' => t('Cancel'),
 	));
 
 	return $o;

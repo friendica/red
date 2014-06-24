@@ -1,11 +1,11 @@
-<h1>$header</h1>
+<h1>{{$header}}</h1>
 
-{{ for $contacts as $contact }}
-	{{ inc contact_template.tpl }}{{ endinc }}
-{{ endfor }}
+{{foreach $contacts as $contact}}
+	{{include file="contact_template.tpl"}}
+{{/foreach}}
 <div id="contact-edit-end"></div>
 
-$paginate
+{{$paginate}}
 
 
 

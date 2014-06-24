@@ -1,13 +1,17 @@
-$myname,
 
-Du har just fått en kontaktförfrågan på $sitename från '$requestor'
+Hej {{$myname}},
 
-Profilen finns på $url.
+Du har precis fått en kontaktförfrågan på {{$sitename}}
 
-Logga in för att se hela förfrågan och godkänna eller 
-avslå den.
+från '{{$requestor}}'.
 
-$siteurl
+Du kan besöka profilen på {{$url}}.
+
+Logga in på din server och se hela presentationen och
+godkänn eller ignorera/avslå förfrågan.
+
+{{$siteurl}}
 
 Hälsningar,
-$sitename admin
+
+	{{$sitename}}-administratören

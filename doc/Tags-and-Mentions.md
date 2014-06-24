@@ -1,36 +1,24 @@
 Tags and Mentions
 =================
 
-
-* [Home](help)
-
-
-Like many other modern social networks, Friendica uses a special notation inside messages to indicate "tags" or contextual links to other entities.
+Like many other platforms, Red uses a special notation inside messages to indicate "tags" or contextual links to other entities.
 
 **Mentions**
 
-People are tagged by preceding their name with the @ character.
+Channels are tagged by simply preceding their name with the @ character.  Unless their system blocks unsolicited "mentions", the person tagged will likely receive a "Mention" post/activity or become a direct participant in the conversation in the case of public posts.
 
-The following are various ways of indicating a person:
+When you start to mention somebody, it will create an auto-complete box to select from your immediate connections. Select one as appropriate. Some connections will be displayed in different colours. A light blue entry (using the default theme) indicates a channel which will redeliver to others if tagged. This is generally a conversation group or forum. But be aware that when tagged, the message will also go to anybody they choose, in addition to anybody you choose.    
 
-* @mike - indicates a known contact in your social circle whose nickname is "mike"
-* @mike_macgirvin - indicates a known contact in your social circle whose  full name is "Mike Macgirvin". Note that spaces cannot be used inside tags.
-* @mike+151 - this form is used by the drop-down tag completion tool. It indicates the contact whose nickname is mike and whose contact identifier number is 151. The drop-down tool may be used to resolve people with duplicate nicknames. 
-* @mike@macgirvin.com - indicates the Identity Address of a person on a different network, or one that is *not* in your social circle. This is called a "remote mention" and can only be an email-style locator, not a web URL.
+**Private Mentions**
 
-Unless their system blocks unsolicited "mentions", the person tagged will likely receive a "Mention" post/activity or become a direct participant in the conversation in the case of public posts. Please note that Friendica blocks incoming "mentions" from people with no relationship to you. This is a spam prevention measure.
+If you wish to restrict a post to a single person or a number of people, you can do this by selecting channels or collections from the privacy tool. You can also just tag them with a privacy tag. A privacy tag is a name preceded by the two characters @! - and in addition to tagging these channels, will also change the privacy permissions of the post to include them (and perhaps restrict the post from "everybody" if this was the default). You can have more than one privacy tag, for instance @!bob and @!linda will send the post only to Bob and Linda (in addition to any recipients you selected with the privacy selector - if any). 
 
-Remote mentions are delivered using the OStatus protocol. This protocol is used by Friendica and StatusNet and several other systems, but is not currently implemented in Diaspora. 
+You may also tag public collections. When you create or edit a collection, there is a checkbox to allow the group members to be seen by others. If this box is checked for a collection and you tag (for instance) @!Friends - the post will be restricted to the Friends collection. Check that the collection is public before doing this - as there is no way to take back a post except to delete it. The collection name will appear in the post and will alert members of that collection that they are members of it.    
 
-Friendica makes no distinction between people and groups for the purpose of tagging. (Some other networks use !group to indicate a group.)
+
 
 **Topical Tags**
 
-Topical tags are indicated by preceding the tag name with the  # character. This will create a link in the post to a generalised site search for the term provided. For example, #cars will provide a search link for all posts mentioning 'cars' on your site. Topical tags are generally a minimum of three characters in length.  Shorter search terms are not likely to yield any search results, although this depends on the database configuration. The same rules apply as with names that spaces within tags are represented by the underscore character. It is therefore not possible to create a tag whose target contains an underscore.
+Topical tags are indicated by preceding the tag name with the  # character. This will create a link in the post to a generalised site search for the term provided.  For example, #cars will provide a search link for all posts mentioning 'cars' on your site. Topical tags are generally a minimum of three characters in length.  Shorter search terms are not likely to yield any search results, although this depends on the database configuration. The same rules apply as with names that spaces within tags are represented by the underscore character. It is therefore not possible to create a tag whose target contains an underscore.
 
 Topical tags are also not linked if they are purely numeric, e.g. #1. If you wish to use a numerica hashtag, please add some descriptive text such as #2012-elections. 
- 
-
-
- 
-

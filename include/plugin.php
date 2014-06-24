@@ -1,25 +1,43 @@
-<?php
+<?php /** @file */
 
+require_once("include/friendica_smarty.php");
 
 // install and uninstall plugin
-if (! function_exists('uninstall_plugin')){
-function uninstall_plugin($plugin){
-	logger("Addons: uninstalling " . $plugin, LOGGER_DEBUG);
-	q("DELETE FROM `addon` WHERE `name` = '%s' ",
-		dbesc($plugin)
-	);
+
+function unload_plugin($plugin){
+	logger("Addons: unloading " . $plugin, LOGGER_DEBUG);
     
+	@include_once('addon/' . $plugin . '/' . $plugin . '.php');
+	if(function_exists($plugin . '_unload')) {
+		$func = $plugin . '_unload';
+		$func();
+	}
+}
+
+
+
+function uninstall_plugin($plugin) {
+
+	unload_plugin($plugin);
+
+	if(! file_exists('addon/' . $plugin . '/' . $plugin . '.php'))
+		return false;
+
+	logger("Addons: uninstalling " . $plugin);
+	$t = @filemtime('addon/' . $plugin . '/' . $plugin . '.php');
 	@include_once('addon/' . $plugin . '/' . $plugin . '.php');
 	if(function_exists($plugin . '_uninstall')) {
 		$func = $plugin . '_uninstall';
 		$func();
 	}
-}}
 
-if (! function_exists('install_plugin')){
+	q("DELETE FROM `addon` WHERE `name` = '%s' ",
+		dbesc($plugin)
+	);
+
+}
+
 function install_plugin($plugin) {
-	// silently fail if plugin was removed
-
 	if(! file_exists('addon/' . $plugin . '/' . $plugin . '.php'))
 		return false;
 
@@ -29,14 +47,34 @@ function install_plugin($plugin) {
 	if(function_exists($plugin . '_install')) {
 		$func = $plugin . '_install';
 		$func();
+	}
+
+	$plugin_admin = (function_exists($plugin . "_plugin_admin") ? 1 : 0);
 		
-		$plugin_admin = (function_exists($plugin . "_plugin_admin") ? 1 : 0);
+	$r = q("INSERT INTO `addon` (`name`, `installed`, `timestamp`, `plugin_admin`) VALUES ( '%s', 1, %d , %d ) ",
+		dbesc($plugin),
+		intval($t),
+		$plugin_admin
+	);
+
+	load_plugin($plugin);
+			
+}
+
+
+function load_plugin($plugin) {
+	// silently fail if plugin was removed
+
+	if(! file_exists('addon/' . $plugin . '/' . $plugin . '.php'))
+		return false;
+
+	logger("Addons: loading " . $plugin);
+	$t = @filemtime('addon/' . $plugin . '/' . $plugin . '.php');
+	@include_once('addon/' . $plugin . '/' . $plugin . '.php');
+	if(function_exists($plugin . '_load')) {
+		$func = $plugin . '_load';
+		$func();
 		
-		$r = q("INSERT INTO `addon` (`name`, `installed`, `timestamp`, `plugin_admin`) VALUES ( '%s', 1, %d , %d ) ",
-			dbesc($plugin),
-			intval($t),
-			$plugin_admin
-		);
 
 		// we can add the following with the previous SQL
 		// once most site tables have been updated.
@@ -50,15 +88,25 @@ function install_plugin($plugin) {
 		return true;
 	}
 	else {
-		logger("Addons: FAILED installing " . $plugin);
+		logger("Addons: FAILED loading " . $plugin);
 		return false;
 	}
 
-}}
+}
+
+function plugin_is_installed($name) {
+	$r = q("select name from addon where name = '%s' and installed = 1 limit 1",
+		dbesc($name)
+	);
+	if($r)
+		return true;
+	return false;
+}
+
+
 
 // reload all updated plugins
 
-if(! function_exists('reload_plugins')) {
 function reload_plugins() {
 	$plugins = get_config('system','addon');
 	if(strlen($plugins)) {
@@ -85,12 +133,12 @@ function reload_plugins() {
 							logger('Reloading plugin: ' . $i['name']);
 							@include_once($fname);
 
-							if(function_exists($pl . '_uninstall')) {
-								$func = $pl . '_uninstall';
+							if(function_exists($pl . '_unload')) {
+								$func = $pl . '_unload';
 								$func();
 							}
-							if(function_exists($pl . '_install')) {
-								$func = $pl . '_install';
+							if(function_exists($pl . '_load')) {
+								$func = $pl . '_load';
 								$func();
 							}
 							q("UPDATE `addon` SET `timestamp` = %d WHERE `id` = %d LIMIT 1",
@@ -103,14 +151,13 @@ function reload_plugins() {
 			}
 		}
 	}
-
-}}
+}
 				
 
 
 
 
-if(! function_exists('register_hook')) {
+
 function register_hook($hook,$file,$function,$priority=0) {
 
 	$r = q("SELECT * FROM `hook` WHERE `hook` = '%s' AND `file` = '%s' AND `function` = '%s' LIMIT 1",
@@ -128,47 +175,82 @@ function register_hook($hook,$file,$function,$priority=0) {
 		dbesc($priority)
 	);
 	return $r;
-}}
+}
 
-if(! function_exists('unregister_hook')) {
+
 function unregister_hook($hook,$file,$function) {
 
-	$r = q("DELETE FROM `hook` WHERE `hook` = '%s' AND `file` = '%s' AND `function` = '%s' LIMIT 1",
+	$r = q("DELETE FROM hook WHERE hook = '%s' AND `file` = '%s' AND `function` = '%s' LIMIT 1",
 		dbesc($hook),
 		dbesc($file),
 		dbesc($function)
 	);
 	return $r;
-}}
+}
 
 
 //
 // It might not be obvious but themes can manually add hooks to the $a->hooks
 // array in their theme_init() and use this to customise the app behaviour.  
+// UPDATE: use insert_hook($hookname,$function_name) to do this
 //
 
-if(! function_exists('load_hooks')) {
+
 function load_hooks() {
 	$a = get_app();
-	$a->hooks = array();
-	$r = q("SELECT * FROM `hook` WHERE 1 ORDER BY `priority` DESC");
-	if(count($r)) {
+//	if(! is_array($a->hooks))
+		$a->hooks = array();
+	$r = q("SELECT * FROM hook WHERE true ORDER BY priority DESC");
+	if($r) {
 		foreach($r as $rr) {
 			if(! array_key_exists($rr['hook'],$a->hooks))
 				$a->hooks[$rr['hook']] = array();
 			$a->hooks[$rr['hook']][] = array($rr['file'],$rr['function']);
 		}
 	}
-}}
+//logger('hooks: ' . print_r($a->hooks,true));
+
+}
+
+/**
+ *
+ * @function insert_hook($hook,$fn)
+ *
+ * Insert a short-lived hook into the running page request. 
+ * Hooks are normally persistent so that they can be called 
+ * across asynchronous processes such as delivery and poll
+ * processes.
+ *
+ * insert_hook lets you attach a hook callback immediately
+ * which will not persist beyond the life of this page request
+ * or the current process. 
+ *
+ * @param string $hook;
+ *     name of hook to attach callback
+ * @param string $fn;
+ *     function name of callback handler
+ *
+ */ 
+
+function insert_hook($hook,$fn) {
+	$a = get_app();
+	if(! is_array($a->hooks))
+		$a->hooks = array();
+	if(! array_key_exists($hook,$a->hooks))
+		$a->hooks[$hook] = array();
+	$a->hooks[$hook][] = array('',$fn);
+}
+	
 
 
-if(! function_exists('call_hooks')) {
+
 function call_hooks($name, &$data = null) {
 	$a = get_app();
 
 	if((is_array($a->hooks)) && (array_key_exists($name,$a->hooks))) {
 		foreach($a->hooks[$name] as $hook) {
-			@include_once($hook[0]);
+			if($hook[0])
+				@include_once($hook[0]);
 			if(function_exists($hook[1])) {
 				$func = $hook[1];
 				$func($a,$data);
@@ -184,7 +266,7 @@ function call_hooks($name, &$data = null) {
 		}
 	}
 
-}}
+}
 
 
 /*
@@ -200,7 +282,7 @@ function call_hooks($name, &$data = null) {
  *   *
  */
 
-if (! function_exists('get_plugin_info')){
+
 function get_plugin_info($plugin){
 	$info=Array(
 		'name' => $plugin,
@@ -240,7 +322,7 @@ function get_plugin_info($plugin){
 		
 	}
 	return $info;
-}}
+}
 
 
 /*
@@ -256,16 +338,16 @@ function get_plugin_info($plugin){
  *   *
  */
 
-if (! function_exists('get_theme_info')){
+
 function get_theme_info($theme){
 	$info=Array(
 		'name' => $theme,
 		'description' => "",
 		'author' => array(),
-		'maintainer' => array(),
 		'version' => "",
-		'credits' => "",
 		'compat' => "",
+		'credits' => "",
+		'maintainer' => array(),
 		'experimental' => false,
 		'unsupported' => false
 	);
@@ -315,7 +397,7 @@ function get_theme_info($theme){
 		
 	}
 	return $info;
-}}
+}
 
 
 function get_theme_screenshot($theme) {
@@ -338,12 +420,14 @@ function get_theme_screenshot($theme) {
 
 
 function service_class_allows($uid,$property,$usage = false) {
-
+	$a = get_app();
 	if($uid == local_user()) {
-		$service_class = $a->user['service_class'];
+		$service_class = $a->account['account_service_class'];
 	}
 	else {
-		$r = q("select service_class from user where uid = %d limit 1",
+		$r = q("select account_service_class as service_class 
+				from channel c, account a 
+				where c.channel_account_id=a.account_id and c.channel_id= %d limit 1",
 			intval($uid)
 		);
 		if($r !== false and count($r)) {
@@ -368,13 +452,15 @@ function service_class_allows($uid,$property,$usage = false) {
 
 
 function service_class_fetch($uid,$property) {
-
+	$a = get_app();
 	if($uid == local_user()) {
-		$service_class = $a->user['service_class'];
+		$service_class = $a->account['account_service_class'];
 	}
 	else {
-		$r = q("select service_class from user where uid = %d limit 1",
-			intval($uid)
+		$r = q("select account_service_class as service_class 
+				from channel c, account a 
+				where c.channel_account_id=a.account_id and c.channel_id= %d limit 1",
+				intval($uid)
 		);
 		if($r !== false and count($r)) {
 			$service_class = $r[0]['service_class'];
@@ -384,6 +470,7 @@ function service_class_fetch($uid,$property) {
 		return false; // everything is allowed
 
 	$arr = get_config('service_class',$service_class);
+
 	if(! is_array($arr) || (! count($arr)))
 		return false;
 
@@ -396,7 +483,7 @@ function upgrade_link($bbcode = false) {
 	if(! $l)
 		return '';
 	if($bbcode)
-		$t = sprintf('[url=%s]' . t('Click here to upgrade.') . '[/url]', $l);
+		$t = sprintf('[zrl=%s]' . t('Click here to upgrade.') . '[/zrl]', $l);
 	else
 		$t = sprintf('<a href="%s">' . t('Click here to upgrade.') . '</div>', $l);
 	return $t;
@@ -418,6 +505,15 @@ function head_add_css($src,$media = 'screen') {
 	get_app()->css_sources[] = array($src,$media);
 }
 
+
+function head_remove_css($src,$media = 'screen') {
+	$a = get_app();
+	$index = array_search(array($src,$media),$a->css_sources);
+	if($index !== false)
+		unset($a->css_sources[$index]);
+
+}
+
 function head_get_css() {
 	$str = '';
 	$sources = get_app()->css_sources;
@@ -435,23 +531,66 @@ function format_css_if_exists($source) {
 		$path = theme_include($source[0]);
 
 	if($path)
-		return '<link rel="stylesheet" href="' . z_root() . '/' . $path . '" type="text/css" media="' . $source[1] . '" />' . "\r\n";
+		return '<link rel="stylesheet" href="' . script_path() . '/' . $path . '" type="text/css" media="' . $source[1] . '" />' . "\r\n";
 		
 }
 
+function script_path() {
+	if(x($_SERVER,'HTTPS') && $_SERVER['HTTPS'])
+		$scheme = 'https';
+	elseif(x($_SERVER,'SERVER_PORT') && (intval($_SERVER['SERVER_PORT']) == 443))
+		$scheme = 'https';
+	else
+		$scheme = 'http';
+
+	if(x($_SERVER,'SERVER_NAME')) {
+			$hostname = $_SERVER['SERVER_NAME'];
+	}
+	else {
+		return z_root();
+	}
+
+	if(x($_SERVER,'SERVER_PORT') && $_SERVER['SERVER_PORT'] != 80 && $_SERVER['SERVER_PORT'] != 443) {
+		$hostname .= ':' . $_SERVER['SERVER_PORT'];
+	}
+
+	return $scheme . '://' . $hostname;
+}
 
 function head_add_js($src) {
 	get_app()->js_sources[] = $src;
+}
+
+function head_remove_js($src) {
+	$a = get_app();
+	$index = array_search($src,$a->js_sources);
+	if($index !== false)
+		unset($a->js_sources[$index]);
+
 }
 
 function head_get_js() {
 	$str = '';
 	$sources = get_app()->js_sources;
 	if(count($sources)) 
-		foreach($sources as $source)
+		foreach($sources as $source) {
+			if($source === 'main.js')
+				continue;
 			$str .= format_js_if_exists($source);
+		}
 	return $str;
 }
+
+function head_get_main_js() {
+	$str = '';
+	$sources = array('main.js');
+	if(count($sources)) 
+		foreach($sources as $source)
+			$str .= format_js_if_exists($source,true);
+	return $str;
+}
+
+
 
 function format_js_if_exists($source) {
 
@@ -460,68 +599,63 @@ function format_js_if_exists($source) {
 	else
 		$path = theme_include($source);
 	if($path)
-		return '<script src="' . z_root() . '/' . $path . '" ></script>' . "\r\n" ;
+		return '<script src="' . script_path() . '/' . $path . '" ></script>' . "\r\n" ;
 
 }
 
 
-function theme_include($file) {
+function theme_include($file, $root = '') {
 
-	global $t; // use builtin template processor
+	$a = get_app();
 
-	$paths = array(
-		'view/theme/$theme/$ext/$file',
-		'view/theme/$theme/$file',
-		'view/theme/$parent/$ext/$file',
-		'view/theme/$parent/$file',
-		'view/$ext/$file',
-		'view/$file'
-	);
+	// Make sure $root ends with a slash / if it's not blank
+	if($root !== '' && $root[strlen($root)-1] !== '/')
+		$root = $root . '/';
 
-	$theme_info = get_app()->theme_info;
+	$theme_info = $a->theme_info;
 
 	if(array_key_exists('extends',$theme_info))
 		$parent = $theme_info['extends'];
 	else
 		$parent = 'NOPATH';
 
+	$theme = current_theme();
+
+	$ext = substr($file,strrpos($file,'.')+1);
+
+	$paths = array(
+		"{$root}view/theme/$theme/$ext/$file",
+		"{$root}view/theme/$parent/$ext/$file",
+		"{$root}view/$ext/$file",
+	);
+
 	foreach($paths as $p) {
-		$f = $t->replace($p,array(
-			'$theme' => current_theme(),
-			'$ext' => substr($file,strrpos($file,'.')+1),
-			'$parent' => $parent,
-			'$file' => $file
-		));
-		if(strstr($f,'NOPATH'))
+		// strpos() is faster than strstr when checking if one string is in another (http://php.net/manual/en/function.strstr.php)
+		if(strpos($p,'NOPATH') !== false)
 			continue;
-		if(file_exists($f))
-			return $f;
+		if(file_exists($p))
+			return $p;
 	}
 	return '';
 }
 
 
 
-if(! function_exists('get_intltext_template')) {
-function get_intltext_template($s) {
-	global $a;
 
-	if(! isset($a->language))
-		$a->language = 'en';
+function get_intltext_template($s, $root = '') {
+	$a = get_app();
+	$t = $a->template_engine();
 
-	if(file_exists("view/{$a->language}/$s"))
-		return file_get_contents("view/{$a->language}/$s");
-	elseif(file_exists("view/en/$s"))
-		return file_get_contents("view/en/$s");
-	else
-		return file_get_contents("view/$s");
-}}
+	$template = $t->get_intltext_template($s, $root);
+	return $template;
 
-if(! function_exists('get_markup_template')) {
-function get_markup_template($s) {
+}
 
-	$x = theme_include($s);
-	if($x)
-		return file_get_contents($x);
-}}
+
+function get_markup_template($s, $root = '') {
+	$a = get_app();
+	$t = $a->template_engine();
+	$template = $t->get_markup_template($s, $root);
+	return $template;
+}
 

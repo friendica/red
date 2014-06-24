@@ -12,15 +12,29 @@
 	
 	$a = new App();
 
-	echo "Directory: mod\n";
-	$files = glob('mod/*.php');
+	echo "Directory: include\n";
+	$files = glob('include/*.php');
 	foreach($files as $file) {
 		echo $file . "\n";
 		include_once($file);
 	}
 
-	echo "Directory: include\n";
-	$files = glob('include/*.php');
+	echo "Directory: include/dba\n";
+	$files = glob('include/dba/*.php');
+	foreach($files as $file) {
+		echo $file . "\n";
+		include_once($file);
+	}
+
+	echo "Directory: include/photo\n";
+	$files = glob('include/photo/*.php');
+	foreach($files as $file) {
+		echo $file . "\n";
+		include_once($file);
+	}
+
+	echo "Directory: mod\n";
+	$files = glob('mod/*.php');
 	foreach($files as $file) {
 		echo $file . "\n";
 		include_once($file);
@@ -38,8 +52,8 @@
 		}
 	}
 
-	if(x($a->config,'php_path'))
-		$phpath = $a->config['php_path'];
+	if(x($a->config,'system') && x($a->config['system'],'php_path'))
+		$phpath = $a->config['system']['php_path'];
 	else
 		$phpath = 'php';
 

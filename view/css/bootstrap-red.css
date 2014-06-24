@@ -1,0 +1,111 @@
+/* override some bootstrap settings */
+
+html {
+font-size: 100%;
+}
+
+h1,
+.h1 {
+  font-size: 24px;
+}
+
+h2,
+.h2 {
+  font-size: 18px;
+}
+
+h3,
+.h3 {
+  font-size: 16px;
+}
+
+h4,
+.h4 {
+  font-size: 14px;
+}
+
+h5,
+.h5 {
+  font-size: 12px;
+}
+
+h6,
+.h6 {
+  font-size: 10px;
+}
+textarea {
+line-height: initial;
+}
+
+.radio, .checkbox{
+padding-left: 0px;
+margin-left: 0px;
+}
+
+.checkbox input[type="checkbox"], inline input[type="checkbox"]{
+float:none;
+margin-left:0px;
+}
+
+/* nav overrides */
+
+nav .badge {
+	position: relative;
+	top: -48px;
+	float: left;
+	font-size: 10px;
+	padding: 2px 6px;
+	cursor: pointer;
+}
+
+nav .dropdown-menu {
+	top: 50px;
+	max-height: 450px;
+	max-width: 300px;
+	overflow-y: auto;
+	margin-top: 0px;
+}
+
+nav .dropdown-menu .contactname {
+	padding-top: 2px;
+	font-weight: bold;
+	display: block;
+}
+
+nav .dropdown-menu img {
+	float: left;
+	margin-right: 5px;
+	width: 32px;
+	height: 32px;
+}
+
+nav .dropdown-menu li a {
+	overflow: hidden;
+	text-overflow: ellipsis;
+	line-height: 1em;
+	padding: 5px 10px;
+}
+
+nav .navbar-collapse .navbar-left {
+	float: left;
+}
+
+nav .navbar-collapse .navbar-right {
+	float: right;
+}
+
+/* nav overrides end */
+
+.dropdown-menu img {
+	width: 32px;
+	height: 32px;
+	margin-right: 5px;
+}
+
+.nav-tabs.nav-justified > li {
+	white-space: nowrap;
+}
+
+code {
+	white-space: normal;
+}

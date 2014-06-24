@@ -1,12 +1,12 @@
 <div id="contact-block">
-<div id="contact-block-numcontacts">$contacts</div>
-{{ if $micropro }}
-		<a class="allcontact-link" href="viewcontacts/$nickname">$viewcontacts</a>
+<div id="contact-block-numcontacts">{{$contacts}}</div>
+{{if $micropro}}
+		<a class="allcontact-link" href="viewconnections/{{$nickname}}">{{$viewconnections}}</a>
 		<div class='contact-block-content'>
-		{{ for $micropro as $m }}
-			$m
-		{{ endfor }}
+		{{foreach $micropro as $m}}
+			{{$m}}
+		{{/foreach}}
 		</div>
-{{ endif }}
+{{/if}}
 </div>
 <div class="clear"></div>

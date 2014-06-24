@@ -1,14 +1,22 @@
 <div id="peoplefind-sidebar" class="widget">
-	<h3>$findpeople</h3>
-	<div id="peoplefind-desc">$desc</div>
-	<form action="dirfind" method="post" />
-		<input id="side-peoplefind-url" type="text" name="search" size="24" title="$hint" /><input id="side-peoplefind-submit" type="submit" name="submit" value="$findthem" />
+	<h3>{{$findpeople}}</h3>
+	<div class="descriptive-text">{{$desc}}</div>
+	<form action="directory" method="post" />
+		<input class="icon-search" id="side-peoplefind-url" type="text" name="search" size="24" title="{{$hint}}" placeholder="&#xf002;"/>
+		<input id="side-peoplefind-submit" class="btn btn-default" type="submit" name="submit" value="{{$findthem}}" />
+		<br />
+		{{if $advanced_search}}
+		<a href="#" onclick="openClose('advanced-people-search-div'); return false;">{{$advanced_search}}</a>
+		<div id="advanced-people-search-div" style="display: none;">
+		<input class="icon-search" id="side-advanced-peoplefind-url" type="text" name="query" size="24" title="{{$advanced_hint}}" placeholder="&#xf002;"/>
+		<input id="side-advanced-peoplefind-submit" class="btn btn-default" type="submit" name="submit" value="{{$find_advanced}}" />
+		</div>
+		<br />
+		{{/if}}
 	</form>
-	<div class="side-link" id="side-match-link"><a href="match" >$similar</a></div>
-	<div class="side-link" id="side-suggest-link"><a href="suggest" >$suggest</a></div>
-	<div class="side-link" id="side-random-profile-link" ><a href="randprof" target="extlink" >$random</a></div>
-	{{ if $inv }} 
-	<div class="side-link" id="side-invite-link" ><a href="invite" >$inv</a></div>
-	{{ endif }}
+	{{if $similar}}<a href="match" >{{$similar}}</a><br />{{/if}}
+	{{if $loggedin}}<a href="suggest" >{{$suggest}}</a><br />{{/if}}
+	<a href="randprof" >{{$random}}</a><br />
+	{{if $loggedin}}{{if $inv}}<a href="invite" >{{$inv}}</a>{{/if}}{{/if}}
 </div>
 

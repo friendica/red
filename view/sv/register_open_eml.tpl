@@ -1,17 +1,19 @@
-$username,
-Tack för att du registrerat dig på $sitename. Kontot har skapats. 
-Här är dina inloggningsuppgifter:
 
-Webbplats:	$siteurl
-Användarnamn:	$email
-Lösenord:	$password
+Ett konto för den här e-postadressen har skapats på {{$sitename}}.
+Inloggningsuppgifterna är:
 
-Lösenordet kan ändras på sidan Inställningar efter att du loggat in.
+Serveradress:	{{$siteurl}}
+Användarnamn:	{{$email}}
+Lösenord: (lösenordet som angavs vid registreringen)
 
-Ägna en liten stund åt att gå igenom alla kontoinställningar där. 
+Om kontot skapades utan din vetskap och inte är önskat kan du besöka
+webbplatsen och återställa lösenordet. Det låter dig ta bort kontot via
+länkarna på sidan Inställningar, och vi ber om ursäkt om detta har lett
+till besvär.
 
-Välkommen till $sitename.
+Tack och välkommen till {{$sitename}}.
 
 Hälsningar,
-$sitename admin
+	{{$sitename}}-administratören
 
+ 

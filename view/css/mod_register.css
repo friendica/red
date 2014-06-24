@@ -1,13 +1,20 @@
 
 h2 {
-	margin-left: 15%;
-	margin-top: 15%;
+	margin-left: 5%;
+	margin-top: 5%;
 }
 
 #register-form {
 	font-size: 1.4em;	
-	margin-left: 15%;
+	margin-left: 10%;
 	margin-top: 5%;
+}
+
+#register-desc, #register-text, #register-sites {
+	font-weight: bold;
+	margin-bottom: 15px;
+	padding: 8px;
+	border: 1px solid #ccc;
 }
 
 .register-label {

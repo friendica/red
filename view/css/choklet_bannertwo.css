@@ -1,0 +1,62 @@
+header #banner {
+	position: fixed;
+	top: 0;
+	width: 250px;
+	margin-left: auto;
+	margin-right: auto;
+}
+#blog-banner {
+	position: relative; 
+	width: 100%;
+	margin-bottom: 20px;
+	margin-left: auto;
+	margin-right: auto;
+	overflow-x: hidden;
+}
+
+#blog-banner .widget {
+	border: none;
+}
+
+main {
+	display: table;
+	table-layout: fixed;
+	position: relative;
+	width: 100%;
+	height: 100%;
+}
+
+nav.navbar { 
+	width: 100%;
+}
+
+#nav-backer {
+	width: 100%;
+}
+
+aside#region_1 {
+	min-width: 231px;
+	max-width: 231px;
+	display: table-cell;
+	width: 231px;
+	margin-left: 10px;
+}
+
+aside input[type='text'] {
+ width: 174px;
+}
+
+
+section {
+	margin-left: 15px;
+	margin-right: 15px;
+	width: 100%;
+	display: table-cell;
+	padding: 0 10px 200px 10px;
+}
+
+#region_3 {
+	display: none;
+}
+
+

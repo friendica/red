@@ -1,20 +1,20 @@
 
-Cher(e) $username,
+Dear {{$username}},
+	Your password has been changed as requested. Please retain this 
+information for your records (or change your password immediately to 
+something that you will remember).
 
-	Votre mot de passe a été modifié comme demandé. Merci de conserver
-cette information pour un usage ultérieur (ou bien de changer votre mot de 
-passe immédiatement en quelque chose dont vous vous souviendrez).
 
-Vos informations de connexion sont désormais :
+Your login details are as follows:
 
-Site :			$siteurl
-Pseudo/Courriel :	$email
-Mot de passe :		$new_password
+Site Location:	{{$siteurl}}
+Login Name:	{{$email}}
+Password:	{{$new_password}}
 
-Vous pouvez changer ce mot de passe depuis la page des « réglages » de votre compte, 
-après connexion
+You may change that password from your account settings page after logging in.
 
-Sincèrement votre,
-	l'administrateur de $sitename
+
+Sincerely,
+	{{$sitename}} Administrator
 
  

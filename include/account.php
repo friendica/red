@@ -1,4 +1,4 @@
-<?php
+<?php /** @file */
 
 require_once('include/config.php');
 require_once('include/network.php');
@@ -6,6 +6,7 @@ require_once('include/plugin.php');
 require_once('include/text.php');
 require_once('include/language.php');
 require_once('include/datetime.php');
+require_once('include/crypto.php');
 
 
 function check_account_email($email) {
@@ -26,7 +27,7 @@ function check_account_email($email) {
 		$r = q("select account_email from account where account_email = '%s' limit 1",
 			dbesc($email)
 		);
-		if(count($r)) {
+		if($r) {
 			$result['message'] .= t('Your email address is already registered at this site.');
 		}
 	}
@@ -80,9 +81,16 @@ function check_account_invite($invite_code) {
 function check_account_admin($arr) {
 	if(is_site_admin())
 		return true;
-	$admin_mail = trim(get_config('system','admin_email'));
+	$admin_email = trim(get_config('system','admin_email'));
 	if(strlen($admin_email) && $admin_email === trim($arr['email']))
 		return true;
+	return false;
+}
+
+function account_total() {
+	$r = q("select account_id from account where true");
+	if(is_array($r))
+		return count($r);
 	return false;
 }
 
@@ -100,8 +108,10 @@ function create_account($arr) {
 	$parent      = ((x($arr,'parent'))        ? intval($arr['parent'])             : 0 );
 	$flags       = ((x($arr,'account_flags')) ? intval($arr['account_flags'])      : ACCOUNT_OK);
 	$roles       = ((x($arr,'account_roles')) ? intval($arr['account_roles'])      : 0 );
-
+	$expires     = ((x($arr,'expires'))       ? intval($arr['expires'])            : '0000-00-00 00:00:00');
+	
 	$default_service_class = get_config('system','default_service_class');
+
 	if($default_service_class === false)
 		$default_service_class = '';
 
@@ -110,12 +120,28 @@ function create_account($arr) {
 		return $result;
 	}
 
+	// prevent form hackery
+
 	if($roles & ACCOUNT_ROLE_ADMIN) {
 		$admin_result = check_account_admin($arr);
 		if(! $admin_result) {
 			$roles = 0;
 		}
 	}
+
+	// allow the admin_email account to be admin, but only if it's the first account.
+
+	$c = account_total();
+	if(($c === 0) && (check_account_admin($arr)))
+		$roles |= ACCOUNT_ROLE_ADMIN;
+
+    // Ensure that there is a host keypair.
+
+    if((! get_config('system','pubkey')) && (! get_config('system','prvkey'))) {
+        $hostkey = new_keypair(4096);
+        set_config('system','pubkey',$hostkey['pubkey']);
+        set_config('system','prvkey',$hostkey['prvkey']);
+    }
 
 	$invite_result = check_account_invite($invite_code);
 	if($invite_result['error']) {
@@ -218,9 +244,14 @@ function send_reg_approval_email($arr) {
 		dbesc($hash),
 		dbesc(datetime_convert()),
 		intval($arr['account']['account_id']),
-		dbesc($arr['password']),
+		dbesc(''),
 		dbesc($arr['account']['account_language'])
 	);
+
+	$ip = $_SERVER['REMOTE_ADDR'];
+
+	$details = (($ip) ? $ip . ' [' . gethostbyaddr($ip) . ']' : '[unknown or stealth IP]');
+
 
 	$delivered = 0;
 
@@ -230,16 +261,16 @@ function send_reg_approval_email($arr) {
 		else
 			push_lang('en');
 
-
-		$email_msg = replace_macros(get_intltext_template('register_verify_email.tpl'), array(
-			'$sitename' => get_config('config','sitename'),
+		$email_msg = replace_macros(get_intltext_template('register_verify_eml.tpl'), array(
+			'$sitename' => get_config('system','sitename'),
 			'$siteurl'  =>  z_root(),
 			'$email'    => $arr['email'],
 			'$uid'      => $arr['account']['account_id'],
-			'$hash'     => $hash
+			'$hash'     => $hash,
+			'$details'  => $details
 		 ));
 
-		$res = mail($admin['email'], sprintf( t('Registration request at %s'), get_config('config','sitename')),
+		$res = mail($admin['email'], sprintf( t('Registration request at %s'), get_config('system','sitename')),
 			$email_msg,
 			'From: ' . t('Administrator') . '@' . get_app()->get_hostname() . "\n"
 			. 'Content-type: text/plain; charset=UTF-8' . "\n"
@@ -248,6 +279,9 @@ function send_reg_approval_email($arr) {
 
 		if($res)
 			$delivered ++;
+		else
+			logger('send_reg_approval_email: failed to ' . $admin['email'] . 'account_id: ' . $arr['account']['account_id']);
+
 		pop_lang();
 	}
 
@@ -257,10 +291,10 @@ function send_reg_approval_email($arr) {
 function send_verification_email($email,$password) {
 
 	$email_msg = replace_macros(get_intltext_template('register_open_eml.tpl'), array(
-		'$sitename' => get_config('config','sitename'),
+		'$sitename' => get_config('system','sitename'),
 		'$siteurl' =>  z_root(),
 		'$email'    => $email,
-		'$password' => $password,
+		'$password' => t('your registration password'),
 	));
 
 	$res = mail($email, sprintf( t('Registration details for %s'), get_config('system','sitename')),
@@ -271,3 +305,154 @@ function send_verification_email($email,$password) {
 	);
 	return($res ? true : false);
 }
+
+
+function user_allow($hash) {
+
+	$a = get_app();
+
+	$ret = array('success' => false);
+
+	$register = q("SELECT * FROM `register` WHERE `hash` = '%s' LIMIT 1",
+		dbesc($hash)
+	);
+
+	if(! $register)
+		return $ret;
+
+	$account = q("SELECT * FROM account WHERE account_id = %d LIMIT 1",
+		intval($register[0]['uid'])
+	);
+	
+	if(! $account)
+		return $ret;
+
+	$r = q("DELETE FROM register WHERE hash = '%s' LIMIT 1",
+		dbesc($register[0]['hash'])
+	);
+
+	$r = q("update account set account_flags = (account_flags ^ %d) where (account_flags & %d) and account_id = %d limit 1",
+		intval(ACCOUNT_BLOCKED),
+		intval(ACCOUNT_BLOCKED),
+		intval($register[0]['uid'])
+	);
+	$r = q("update account set account_flags = (account_flags ^ %d) where (account_flags & %d) and account_id = %d limit 1",
+		intval(ACCOUNT_PENDING),
+		intval(ACCOUNT_PENDING),
+		intval($register[0]['uid'])
+	);
+	
+	push_lang($register[0]['language']);
+
+	$email_tpl = get_intltext_template("register_open_eml.tpl");
+	$email_tpl = replace_macros($email_tpl, array(
+			'$sitename' => get_config('system','sitename'),
+			'$siteurl' =>  z_root(),
+			'$username' => $account[0]['account_email'],
+			'$email' => $account[0]['account_email'],
+			'$password' => '',
+			'$uid' => $account[0]['account_id']
+	));
+
+	$res = mail($account[0]['account_email'], sprintf( t('Registration details for %s'), get_config('system','sitename')),
+		$email_tpl,
+			'From: ' . t('Administrator') . '@' . $_SERVER['SERVER_NAME'] . "\n"
+			. 'Content-type: text/plain; charset=UTF-8' . "\n"
+			. 'Content-transfer-encoding: 8bit' );
+
+	pop_lang();
+
+	if($res) {
+		info( t('Account approved.') . EOL );
+		return true;
+	}	
+
+}
+
+
+// This does not have to go through user_remove() and save the nickname
+// permanently against re-registration, as the person was not yet
+// allowed to have friends on this system
+
+function user_deny($hash) {
+
+	$register = q("SELECT * FROM register WHERE hash = '%s' LIMIT 1",
+		dbesc($hash)
+	);
+
+	if(! count($register))
+		return false;
+
+	$account = q("SELECT account_id FROM account WHERE account_id = %d LIMIT 1",
+		intval($register[0]['uid'])
+	);
+	
+	if(! $account)
+		return false;
+
+	$r = q("DELETE FROM account WHERE account_id = %d LIMIT 1",
+		intval($register[0]['uid'])
+	);
+
+	$r = q("DELETE FROM `register` WHERE id = %d LIMIT 1",
+		dbesc($register[0]['id'])
+	);
+	notice( sprintf(t('Registration revoked for %s'), $account[0]['account_email']) . EOL);
+	return true;
+	
+}
+
+
+/**
+ * @function downgrade_accounts()
+ *    Checks for accounts that have past their expiration date.
+ * If the account has a service class which is not the site default, 
+ * the service class is reset to the site default and expiration reset to never.
+ * If the account has no service class it is expired and subsequently disabled.
+ * called from include/poller.php as a scheduled task.
+ *
+ * Reclaiming resources which are no longer within the service class limits is
+ * not the job of this function, but this can be implemented by plugin if desired. 
+ * Default behaviour is to stop allowing additional resources to be consumed. 
+ */
+ 
+
+function downgrade_accounts() {
+
+	$r = q("select * from account where not ( account_flags & %d ) 
+		and account_expires != '0000-00-00 00:00:00' 
+		and account_expires < UTC_TIMESTAMP() ",
+		intval(ACCOUNT_EXPIRED)
+	);
+
+	if(! $r)
+		return;
+
+	$basic = get_config('system','default_service_class');
+
+
+	foreach($r as $rr) {
+
+		if(($basic) && ($rr['account_service_class']) && ($rr['account_service_class'] != $basic)) {
+			$x = q("UPDATE account set account_service_class = '%s', account_expires = '%s'
+				where account_id = %d limit 1",
+				dbesc($basic),
+				dbesc('0000-00-00 00:00:00'),
+				intval($rr['account_id'])
+			);
+			$ret = array('account' => $rr);
+			call_hooks('account_downgrade', $ret );
+			logger('downgrade_accounts: Account id ' . $rr['account_id'] . ' downgraded.');
+		}
+		else {
+			$x = q("UPDATE account SET account_flags = (account_flags | %d) where account_id = %d limit 1",
+				intval(ACCOUNT_EXPIRED),
+				intval($rr['account_id'])
+			);
+			$ret = array('account' => $rr);
+			call_hooks('account_downgrade', $ret);
+			logger('downgrade_accounts: Account id ' . $rr['account_id'] . ' expired.');
+		}
+	}
+}
+

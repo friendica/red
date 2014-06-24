@@ -1,17 +1,23 @@
-<?php
+<?php /** @file */
 
 function js_strings() {
 	return replace_macros(get_markup_template('js_strings.tpl'), array(
-		'$delitem'   => t('Delete this item?'),
-		'$comment'   => t('Comment'),
-		'$showmore'  => t('show more'),
-		'$showfewer' => t('show fewer'),
-		'$pwshort'   => t("Password too short"),
-		'$pwnomatch' => t("Passwords do not match"),
-		'$everybody' => t('everybody'),
+		'$delitem'     => t('Delete this item?'),
+		'$comment'     => t('Comment'),
+		'$showmore'    => t('[+] show all'),
+		'$showfewer'   => t('[-] show less'),
+		'$divgrowmore' => t('[+] expand'),
+		'$divgrowless' => t('[-] collapse'),
+		'$pwshort'     => t("Password too short"),
+		'$pwnomatch'   => t("Passwords do not match"),
+		'$everybody'   => t('everybody'),
+		'$passphrase'  => t('Secret Passphrase'),
+		'$passhint'    => t('Passphrase hint'),
+		'$permschange' => t('Notice: Permissions have changed but have not yet been submitted.'),
+		'$closeAll'    => t('close all'),
 
-		'$t01' => ((t('timeago.prefixAgo') != 'timeago.prefixAgo') ? t('timeago.prefixAgo') : 'null'),
-		'$t02' => ((t('timeago.suffixAgo') != 'timeago.suffixAgo') ? t('timeago.suffixAgo') : 'null'),
+		'$t01' => ((t('timeago.prefixAgo') != 'timeago.prefixAgo') ? t('timeago.prefixAgo') : ''),
+		'$t02' => ((t('timeago.prefixFromNow') != 'timeago.prefixFromNow') ? t('timeago.prefixFromNow') : ''),
 		'$t03' => t('ago'),
 		'$t04' => t('from now'),
 		'$t05' => t('less than a minute'),
@@ -27,7 +33,6 @@ function js_strings() {
 		'$t15' => t('%d years'),
 		'$t16' => t(' '), // wordSeparator
 		'$t17' => ((t('timeago.numbers') != 'timeago.numbers') ? t('timeago.numbers') : '[]')
-
 
 	));
 }

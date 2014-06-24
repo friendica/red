@@ -1,17 +1,25 @@
-En registreringsförfrågan som kräver svar har mottagits 
-på $sitename 
+
+En begäran om registrering av en ny användare har mottagits på
+{{$sitename}} och behöver ditt godkännande.
 
 
-Här är inloggningsuppgifterna:
+Inloggningsuppgifterna är:
 
-Fullständigt namn:	$username
-Webbplats:		$siteurl
-Användarnamn:		$email
+Serveradress:	{{$siteurl}}
+Användarnamn:	{{$email}}
+IP-adress: {{$details}}
+
+För att godkänna begäran, följ följande länk:
 
 
-Gå till denna adress om du vill godkänna:
-$siteurl/regmod/allow/$hash 
+{{$siteurl}}/regmod/allow/{{$hash}} 
 
-Gå till denna adress om du vill avslå förfrågan och ta bort kontot:
-$siteurl/regmod/deny/$hash
+
+För att avslå begäran och ta bort kontot, besök:
+
+
+{{$siteurl}}/regmod/deny/{{$hash}}
+
+
+Tack.
 

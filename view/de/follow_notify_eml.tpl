@@ -1,14 +1,14 @@
 
-Hallo $[myname],
+Dear {{$myname}},
 
-Du hast einen neuen Anhänger auf $[sitename] -  '$[requestor]'.
+You have a new follower at {{$sitename}} -  '{{$requestor}}'.
 
-Du kannst das Profil unter $[url] besuchen.
+You may visit their profile at {{$url}}.
 
-Bitte melde dich an um die Anfrage zu bestätigen oder sie zu ignorieren bzw. abzulehnen.
+Please login to your site to approve or ignore/cancel the request.
 
-$[siteurl]
+{{$siteurl}}
 
-beste Grüße,
+Regards,
 
-	$[sitename] Administrator
+	{{$sitename}} administrator

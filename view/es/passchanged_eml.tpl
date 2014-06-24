@@ -1,19 +1,20 @@
 
-Estimado/a $username,
-
-    Tu contraseña ha sido modificada como has solicitado. Anota esta información
-(o cambia inmediatamente la contraseña con algo que recuerdes).
-
-
-Tus datos de acceso son los siguientes:
-
-Sitio:	$siteurl
-Nombre:	$email
-Contraseña:	$new_password
-
-Después de acceder puedes cambiar la contraseña desde la página de configuración de tu perfil.
+Dear {{$username}},
+	Your password has been changed as requested. Please retain this 
+information for your records (or change your password immediately to 
+something that you will remember).
 
 
-	$sitename
+Your login details are as follows:
+
+Site Location:	{{$siteurl}}
+Login Name:	{{$email}}
+Password:	{{$new_password}}
+
+You may change that password from your account settings page after logging in.
+
+
+Sincerely,
+	{{$sitename}} Administrator
 
  

@@ -1,8 +1,7 @@
-
-<script language="javascript" type="text/javascript" src="$baseurl/library/tinymce/jscripts/tiny_mce/tiny_mce_src.js"></script>
+<script language="javascript" type="text/javascript" src="{{$baseurl}}/library/tinymce/jscripts/tiny_mce/tiny_mce_src.js"></script>
 <script language="javascript" type="text/javascript">
 
-var plaintext = '$editselect';
+var plaintext = '{{$editselect}}';
 
 if(plaintext != 'none') {
 	tinyMCE.init({
@@ -25,7 +24,7 @@ if(plaintext != 'none') {
 		force_br_newlines : true,
 		forced_root_block : '',
 		convert_urls: false,
-		content_css: "$baseurl/view/custom_tinymce.css",
+		content_css: "{{$baseurl}}/view/custom_tinymce.css",
 		     //Character count
 		theme_advanced_path : false,
 		setup : function(ed) {
@@ -46,17 +45,29 @@ else
 
 
 </script>
-<script type="text/javascript" src="js/ajaxupload.js" ></script>
+<script type="text/javascript" src="view/js/ajaxupload.js" ></script>
 <script>
 	$(document).ready(function() {
 		var uploader = new window.AjaxUpload(
 			'prvmail-upload',
-			{ action: 'wall_upload/$nickname',
+			{ action: 'wall_upload/{{$nickname}}',
 				name: 'userfile',
-				onSubmit: function(file,ext) { $('#profile-rotator').show(); },
+				onSubmit: function(file,ext) { $('#profile-rotator').spin('tiny'); },
 				onComplete: function(file,response) {
-					tinyMCE.execCommand('mceInsertRawHTML',false,response);
-					$('#profile-rotator').hide();
+					addeditortext(response);
+					$('#profile-rotator').spin(false);
+				}				 
+			}
+		);
+
+		var file_uploader = new window.AjaxUpload(
+			'prvmail-attach',
+			{ action: 'wall_attach/{{$nickname}}',
+				name: 'userfile',
+				onSubmit: function(file,ext) { $('#profile-rotator').spin('tiny'); },
+				onComplete: function(file,response) {
+					addeditortext(response);
+					$('#profile-rotator').spin(false);
 				}				 
 			}
 		);
@@ -64,13 +75,20 @@ else
 	});
 
 	function jotGetLink() {
-		reply = prompt("$linkurl");
+		reply = prompt("{{$linkurl}}");
 		if(reply && reply.length) {
-			$('#profile-rotator').show();
+			$('#profile-rotator').spin('tiny');
 			$.get('parse_url?url=' + reply, function(data) {
-				tinyMCE.execCommand('mceInsertRawHTML',false,data);
-				$('#profile-rotator').hide();
+				addeditortext(response);
+				$('#profile-rotator').spin(false);
 			});
+		}
+	}
+
+	function prvmailGetExpiry() {
+		reply = prompt("{{$expireswhen}}", $('#inp-prvmail-expires').val());
+		if(reply && reply.length) {
+			$('#inp-prvmail-expires').val(reply);
 		}
 	}
 
@@ -85,13 +103,24 @@ else
 		event.target.textContent = reply;
 		event.preventDefault();
 		if(reply && reply.length) {
-			$('#profile-rotator').show();
+			$('#profile-rotator').spin('tiny');
 			$.get('parse_url?url=' + reply, function(data) {
-				tinyMCE.execCommand('mceInsertRawHTML',false,data);
-				$('#profile-rotator').hide();
+				addeditortext(response);
+				$('#profile-rotator').spin(false);
 			});
 		}
 	}
+
+	function addeditortext(data) {
+		if(plaintext == 'none') {
+			var currentText = $("#prvmail-text").val();
+			$("#prvmail-text").val(currentText + data);
+		}
+		else
+			tinyMCE.execCommand('mceInsertRawHTML',false,data);
+	}	
+
+
 
 </script>
 

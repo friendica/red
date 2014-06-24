@@ -1,4 +1,4 @@
-<?php
+<?php /** @file */
 
 require_once('include/cli_startup.php');
 require_once('include/zot.php');
@@ -15,13 +15,13 @@ function gprobe_run($argv, $argc){
 	$url = hex2bin($argv[1]);
 
 	$r = q("select * from xchan where xchan_addr = '%s' limit 1",
-		dbesc(normalise_link($url))
+		dbesc($url)
 	);
 
 	if(! $r) {
 		$x = zot_finger($url,null);
-		if($x) {
-			$j = json_decode($x,true);
+		if($x['success']) {
+			$j = json_decode($x['body'],true);
 			$y = import_xchan($j);
 		}
 	}

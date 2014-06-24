@@ -1,4 +1,5 @@
-g<?php
+<?php /** @file */
+
 require_once('boot.php');
 require_once('include/zot.php');
 require_once('include/cli_startup.php');
@@ -9,17 +10,24 @@ function directory_run($argv, $argc){
 
 	cli_startup();		 
 
-	if($argc != 2)
+	if($argc < 2)
 		return;
+
+	$force = false;
+	$pushall = true;
+
+	if($argc > 2) {
+		if($argv[2] === 'force')
+			$force = true;
+		if($argv[2] === 'nopush')
+			$pushall = false;
+	}
+
+	logger('directory update', LOGGER_DEBUG);
 
 	$dirmode = get_config('system','directory_mode');
 	if($dirmode === false)
 		$dirmode = DIRECTORY_MODE_NORMAL;
-
-	if(($dirmode == DIRECTORY_MODE_PRIMARY) || ($dirmode == DIRECTORY_MODE_STANDALONE)) {
-		syncdirs($argv[1]);
-		return;
-	}
 
 	$x = q("select * from channel where channel_id = %d limit 1",
 		intval($argv[1])
@@ -29,25 +37,63 @@ function directory_run($argv, $argc){
 
 	$channel = $x[0];
 
-	// is channel profile visible to the public?
-	// FIXME - remove dir entry if permission is revoked
 
-	if(! perm_is_allowed($channel['channel_id'],null,'view_profile'))
+	if(($dirmode == DIRECTORY_MODE_PRIMARY) || ($dirmode == DIRECTORY_MODE_STANDALONE)) {
+
+		local_dir_update($argv[1],$force);
+
+		q("update channel set channel_dirdate = '%s' where channel_id = %d limit 1",
+			dbesc(datetime_convert()),
+			intval($channel['channel_id'])
+		);
+
+		// Now update all the connections
+		if($pushall) 
+			proc_run('php','include/notifier.php','refresh_all',$channel['channel_id']);
+
 		return;
+	}
 
 	$directory = find_upstream_directory($dirmode);
+	$url = $directory['url'] . '/post';
 
-	if($directory) {
-		$url = $directory['url'];
-	}
-	else {
-		$url = DIRECTORY_FALLBACK_MASTER . '/post';
-	}
+	// ensure the upstream directory is updated
 
-	$packet = zot_build_packet($channel,'refresh');
+	$packet = zot_build_packet($channel,(($force) ? 'force_refresh' : 'refresh'));
 	$z = zot_zot($url,$packet);
 
 	// re-queue if unsuccessful
+
+	if(! $z['success']) {
+
+		// FIXME - we aren't updating channel_dirdate if we have to queue
+		// the directory packet. That means we'll try again on the next poll run.
+
+		$hash = random_string();
+		q("insert into outq ( outq_hash, outq_account, outq_channel, outq_driver, outq_posturl, outq_async, outq_created, outq_updated, outq_notify, outq_msg ) 
+			values ( '%s', %d, %d, '%s', '%s', %d, '%s', '%s', '%s', '%s' )",
+			dbesc($hash),
+			intval($channel['channel_account_id']),
+			intval($channel['channel_id']),
+			dbesc('zot'),
+			dbesc($url),
+			intval(1),
+			dbesc(datetime_convert()),
+			dbesc(datetime_convert()),
+			dbesc($packet),
+			dbesc('')
+		);
+	}
+	else {
+		q("update channel set channel_dirdate = '%s' where channel_id = %d limit 1",
+			dbesc(datetime_convert()),
+			intval($channel['channel_id'])
+		);
+	}
+
+	// Now update all the connections
+	if($pushall)
+		proc_run('php','include/notifier.php','refresh_all',$channel['channel_id']);
 
 }
 

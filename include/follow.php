@@ -1,4 +1,4 @@
-<?php
+<?php /** @file */
 
 
 //
@@ -11,11 +11,13 @@
 
 require_once('include/zot.php');
 
-function new_contact($uid,$url,$channel,$interactive = false) {
+function new_contact($uid,$url,$channel,$interactive = false, $confirm = false) {
 
 	$result = array('success' => false,'message' => '');
 
 	$a = get_app();
+	$is_red = false;
+
 
 	if(! allowed_url($url)) {
 		$result['message'] = t('Channel is blocked on this site.');
@@ -37,72 +39,110 @@ function new_contact($uid,$url,$channel,$interactive = false) {
 		$ret = zot_finger($url,$channel);
 
 	if($ret['success']) {
-		$j = json_decode($ret['body']);
-
+		$is_red = true;
+		$j = json_decode($ret['body'],true);
 	}
 
-	logger('follow: ' . $url . ' ' . print_r($j,true));
+	if($is_red && $j) {
 
-	if(! ($j->success && $j->guid)) {
-		$result['message'] = t('Unable to communicate with requested channel.');
-		return $result;
-	}
+		$my_perms = PERMS_W_STREAM|PERMS_W_MAIL;
 
-
-	// check service class limits
-
-	$r = q("select count(*) as total from abook where abook_channel = %d and not (abook_flags & %d) ",
-		intval($uid),
-		intval(ABOOK_FLAG_SELF)
-	);
-	if($r)
-		$total_channels = $r[0]['total'];
-
-	if(! service_class_allows($uid,'total_channels',$total_channels)) {
-		$result['message'] = upgrade_message();
-		return $result;
-	}
-
-	// do we have an xchan and hubloc?
-	// If not, create them.	
-
-	$x = import_xchan_from_json($j);
-
-	if(! $x['success']) 
-		return $x;
-
-	$xchan_hash = $x['hash'];
+		logger('follow: ' . $url . ' ' . print_r($j,true), LOGGER_DEBUG);
 
 
-	$their_perms = 0;
-
-	$global_perms = get_perms();
-
-	if($j->permissions->data) {
-		$permissions = aes_unencapsulate(array(
-			'data' => $j->permissions->data,
-			'key'  => $j->permissions->key,
-			'iv'   => $j->permissions->iv),
-			$channel['channel_prvkey']);
-		if($permissions)
-			$permissions = json_decode($permissions);
-		logger('decrypted permissions: ' . print_r($permissions,true), LOGGER_DATA);
-	}
-	else
-		$permissions = $j->permissions;
-
-	foreach($permissions as $k => $v) {
-		if($v) {
-			$their_perms = $their_perms | intval($global_perms[$k][1]);
+		if(! ($j['success'] && $j['guid'])) {
+			$result['message'] = t('Response from remote channel was incomplete.');
+			logger('mod_follow: ' . $result['message']);
+			return $result;
 		}
+
+		// Premium channel, set confirm before callback to avoid recursion
+
+		if(array_key_exists('connect_url',$j) && (! $confirm))
+			goaway(zid($j['connect_url']));
+
+		// check service class limits
+
+		$r = q("select count(*) as total from abook where abook_channel = %d and not (abook_flags & %d) ",
+			intval($uid),
+			intval(ABOOK_FLAG_SELF)
+		);
+		if($r)
+			$total_channels = $r[0]['total'];
+
+		if(! service_class_allows($uid,'total_channels',$total_channels)) {
+			$result['message'] = upgrade_message();
+			return $result;
+		}
+
+
+		// do we have an xchan and hubloc?
+		// If not, create them.	
+
+		$x = import_xchan($j);
+
+		if(array_key_exists('deleted',$j) && intval($j['deleted'])) {
+			$result['message'] = t('Channel was deleted and no longer exists.');
+			return $result;
+		}
+
+		if(! $x['success']) 
+			return $x;
+
+		$xchan_hash = $x['hash'];
+
+
+		$their_perms = 0;
+
+		$global_perms = get_perms();
+
+		if( array_key_exists('permissions',$j) && array_key_exists('data',$j['permissions'])) {
+			$permissions = crypto_unencapsulate(array(
+				'data' => $j['permissions']['data'],
+				'key'  => $j['permissions']['key'],
+				'iv'   => $j['permissions']['iv']),
+				$channel['channel_prvkey']);
+			if($permissions)
+				$permissions = json_decode($permissions,true);
+			logger('decrypted permissions: ' . print_r($permissions,true), LOGGER_DATA);
+		}
+		else
+			$permissions = $j['permissions'];
+
+		foreach($permissions as $k => $v) {
+			if($v) {
+				$their_perms = $their_perms | intval($global_perms[$k][1]);
+			}
+		}
+	}
+	else {
+
+		// attempt network auto-discovery
+		
+		$my_perms = 0;
+		$their_perms = 0;
+		$xchan_hash = '';
+		
+
+
+
+	}
+
+	if(! $xchan_hash) {
+		$result['message'] = t('Channel discovery failed.');
+		logger('follow: ' . $result['message']);
+		return $result;
 	}
 
 	if((local_user()) && $uid == local_user()) {
 		$aid = get_account_id();
-		$hash = $a->observer['xchan_hash'];
+		$hash = get_observer_hash();
+		$ch = $a->get_channel();
+		$default_group = $ch['channel_default_group'];
+
 	}
 	else {
-		$r = q("select * from channel where uid = %d limit 1",
+		$r = q("select * from channel where channel_id = %d limit 1",
 			intval($uid)
 		);
 		if(! $r) {
@@ -111,6 +151,7 @@ function new_contact($uid,$url,$channel,$interactive = false) {
 		}
 		$aid = $r[0]['channel_account_id'];
 		$hash = $r[0]['channel_hash'];			
+		$default_group = $r[0]['channel_default_group'];
 	}
 	
 	if($hash == $xchan_hash) {
@@ -129,12 +170,13 @@ function new_contact($uid,$url,$channel,$interactive = false) {
 		);		
 	}
 	else {
-		$r = q("insert into abook ( abook_account, abook_channel, abook_xchan, abook_their_perms, abook_created, abook_updated )
-			values( %d, %d, '%s', %d, '%s', '%s' ) ",
+		$r = q("insert into abook ( abook_account, abook_channel, abook_xchan, abook_their_perms, abook_my_perms, abook_created, abook_updated )
+			values( %d, %d, '%s', %d, %d, '%s', '%s' ) ",
 			intval($aid),
 			intval($uid),
 			dbesc($xchan_hash),
 			intval($their_perms),
+			intval($my_perms),
 			dbesc(datetime_convert()),
 			dbesc(datetime_convert())
 		);
@@ -148,67 +190,25 @@ function new_contact($uid,$url,$channel,$interactive = false) {
 		dbesc($xchan_hash),
 		intval($uid)
 	);
-	if($r)
+	if($r) {
 		$result['abook'] = $r[0];
-
-	// Then send a ping/message to the other side
-
-
-/*
-
-	$r = q("INSERT INTO `contact` ( `uid`, `created`, `url`, `nurl`, `addr`, `alias`, `batch`, `notify`, `poll`, `poco`, `name`, `nick`, `photo`, `network`, `pubkey`, `rel`, `priority`,
-			`writable`, `hidden`, `blocked`, `readonly`, `pending` )
-			VALUES ( %d, '%s', '%s', '%s', '%s', '%s', '%s', '%s', '%s', '%s', '%s', '%s', '%s', '%s', '%s', %d, %d, %d, %d, 0, 0, 0) ",
-			intval($uid),
-			dbesc(datetime_convert()),
-			dbesc($ret['url']),
-			dbesc(normalise_link($ret['url'])),
-			dbesc($ret['addr']),
-			dbesc($ret['alias']),
-			dbesc($ret['batch']),
-			dbesc($ret['notify']),
-			dbesc($ret['poll']),
-			dbesc($ret['poco']),
-			dbesc($ret['name']),
-			dbesc($ret['nick']),
-			dbesc($ret['photo']),
-			dbesc($ret['network']),
-			dbesc($ret['pubkey']),
-			intval($new_relation),
-			intval($ret['priority']),
-			intval($writeable),
-			intval($hidden)
-		);
+		if($is_red)
+			proc_run('php', 'include/notifier.php', 'permission_update', $result['abook']['abook_id']);
 	}
 
-	$r = q("SELECT * FROM `contact` WHERE `url` = '%s' AND `uid` = %d LIMIT 1",
-		dbesc($ret['url']),
-		intval($uid)
-	);
+	$arr = array('channel_id' => $uid, 'abook' => $result['abook']);
 
-	if(! count($r)) {
-		$result['message'] .=  t('Unable to retrieve contact information.') . EOL;
-		return $result;
-	}
+	call_hooks('follow', $arr);
 
-	$contact = $r[0];
-	$contact_id  = $r[0]['id'];
+	/** If there is a default group for this channel, add this member to it */
 
-
-	$g = q("select def_gid from user where uid = %d limit 1",
-		intval($uid)
-	);
-	if($g && intval($g[0]['def_gid'])) {
+	if($default_group) {
 		require_once('include/group.php');
-		group_add_member($uid,'',$contact_id,$g[0]['def_gid']);
+		$g = group_rec_byhash($uid,$default_group);
+		if($g)
+			group_add_member($uid,'',$xchan_hash,$g['id']);
 	}
-
-*/
-
 
 	$result['success'] = true;
 	return $result;
-
-
-
 }

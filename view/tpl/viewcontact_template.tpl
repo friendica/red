@@ -1,9 +1,9 @@
-<h3>$title</h3>
+<h3>{{$title}}</h3>
 
-{{ for $contacts as $contact }}
-	{{ inc contact_template.tpl }}{{ endinc }}
-{{ endfor }}
+{{foreach $contacts as $contact}}
+	{{include file="contact_template.tpl"}}
+{{/foreach}}
 
 <div id="view-contact-end"></div>
 
-$paginate
+{{$paginate}}

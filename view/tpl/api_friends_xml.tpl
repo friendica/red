@@ -1,5 +1,5 @@
 <users type="array">
-	{{for $users as $user }}
-	{{inc api_user_xml.tpl }}{{endinc}}
-	{{endfor}}
+	{{foreach $users as $user}}
+	{{include file="api_user_xml.tpl"}}
+	{{/foreach}}
 </users>

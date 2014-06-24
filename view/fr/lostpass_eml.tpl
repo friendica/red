@@ -1,34 +1,32 @@
 
-Cher(e) $username,
+Dear {{$username}},
+	A request was recently received at {{$sitename}} to reset your account 
+password. In order to confirm this request, please select the verification link
+below or paste it into your web browser address bar. 
 
-	Nous avons récemment reçu, chez $sitename, une demande de remise
-à zéro du mot de passe protégeant votre compte. Pour confirmer cette 
-demande, merci de cliquer sur le lien de vérification suivant, ou de le
-coller dans la barre d'adresse de votre navigateur web.
+If you did NOT request this change, please DO NOT follow the link
+provided and ignore and/or delete this email. 
 
-Si vous n'êtes PAS à l'origine de cette demande, merci de NE PAS suivre
-le lien en question, et d'ignorer/supprimer ce courriel.
+Your password will not be changed unless we can verify that you
+issued this request. 
 
-Votre mot de passe ne sera réinitialisé qu'une fois que nous aurons pu
-nous assurer que vous êtes bien à l'origine de cette demande.
+Follow this link to verify your identity:
 
-Merci de suivre le lien suivant pour confirmer votre identité :
+{{$reset_link}}
 
-$reset_link
+You will then receive a follow-up message containing the new password.
 
-Vous recevrez en retour un message avec votre nouveau mot de passe.
+You may change that password from your account settings page after logging in.
 
-Vous pourrez ensuite changer ce mot de passe, après connexion, dans la 
-page des réglages du compte.
+The login details are as follows:
 
-Les informations du compte concerné sont :
-
-Site :			$siteurl
-Pseudo/Courriel :	$email
+Site Location:	{{$siteurl}}
+Login Name:	{{$email}}
 
 
 
-Sincèrement votre,
-	l'administrateur de $sitename
+
+Sincerely,
+	{{$sitename}} Administrator
 
  

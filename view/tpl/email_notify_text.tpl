@@ -1,13 +1,12 @@
-
-$preamble
+{{$preamble}}
 	
-$title
+{{$title}}
 
-$textversion
+{{$textversion}}
 				
-$tsitelink
-$titemlink
+{{$tsitelink}}
+{{$titemlink}}
 
-$thanks
-$site_admin
+{{$thanks}}
+{{$site_admin}}
 

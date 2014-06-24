@@ -1,22 +1,19 @@
 
-Cher(e) $username,
+An account has been created at {{$sitename}} for this email address. 
+The login details are as follows:
 
-	Merci de votre inscription à $sitename. Votre compte a été créé.
-Les informations de connexion sont les suivantes :
+Site Location:	{{$siteurl}}
+Login:	{{$email}}
+Password: (the password which was provided during registration)
 
-Site :			$siteurl
-Pseudo/Courriel :	$email
-Mot de passe :		$password
+If this account was created without your knowledge and is not desired, you may 
+visit this site and reset the password. This will allow you to remove the 
+account from the links on the Settings page, and we 
+apologise for any inconvenience. 
 
-Vous pouvez changer de mot de passe dans la page des « Réglages » de votre compte,
-après connexion.
+Thank you and welcome to {{$sitename}}.
 
-Merci de prendre quelques minutes pour découvrir les autres réglages disponibles
-sur cette page.
-
-Merci, et bienvenue sur $sitename.
-
-Sincèrement votre,
-	l'administrateur de $sitename
+Sincerely,
+	{{$sitename}} Administrator
 
  

@@ -1,24 +1,35 @@
-
-nav {
-	height: 94px;
-	display: block;
+header #banner {
+	position: fixed;
+	top: 0;
+	width: 250px;
+	margin-left: auto;
+	margin-right: auto;
 }
 
-aside {
-	display: block;
-	width: 200px;
-	position: absolute;
-	top: 48px;
-	left: 0;
-	margin-left: 10px;
-/*	float: left; */
+main {
+	display: table;
+	table-layout: fixed;
+	position: relative;
+	width: 100%;
+	height: 100%;
 }
 
+aside#region_1 {
+	width: 231px;
+	min-width: 231px;
+	max-width: 231px;
+	display: table-cell;
+	vertical-align: top;
+	padding: 65px 7px 0px 7px;
+}
+
+aside input[type='text'] {
+	width: 100%;
+}
 
 section {
-	position: absolute;
-	top: 48px;
-	left: 250px;
-	display: block;
-	right: 15px;
+	width: 100%;
+	display: table-cell;
+	vertical-align: top;
+	padding: 65px 10px 200px 10px;
 }

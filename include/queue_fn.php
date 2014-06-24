@@ -1,4 +1,4 @@
-<?php
+<?php /** @file */
 
 function update_queue_time($id) {
 	logger('queue: requeue item ' . $id);

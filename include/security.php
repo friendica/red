@@ -1,4 +1,4 @@
-<?php
+<?php /** @file */
 
 function authenticate_success($user_record, $login_initial = false, $interactive = false,$return = false,$update_lastlog = false) {
 
@@ -6,11 +6,7 @@ function authenticate_success($user_record, $login_initial = false, $interactive
 
 	$_SESSION['addr'] = $_SERVER['REMOTE_ADDR'];
 
-//	logger('authenticate_success: ' . print_r($user_record,true));
-//	logger('authenticate_success: ' . print_r($_SESSION,true));
-
 	if(x($user_record,'account_id')) {
-//		logger('authenticate_success: Red-style');
 		$a->account = $user_record;
 		$_SESSION['account_id'] = $user_record['account_id'];
 		$_SESSION['authenticated'] = 1;
@@ -35,91 +31,13 @@ function authenticate_success($user_record, $login_initial = false, $interactive
 		}
 
 	}
-	else {
-		$_SESSION['uid'] = $user_record['uid'];
-		$_SESSION['theme'] = $user_record['theme'];
-		$_SESSION['authenticated'] = 1;
-		$_SESSION['page_flags'] = $user_record['page-flags'];
-		$_SESSION['my_url'] = $a->get_baseurl() . '/channel/' . $user_record['nickname'];
-		$_SESSION['my_address'] = $user_record['nickname'] . '@' . substr($a->get_baseurl(),strpos($a->get_baseurl(),'://')+3);
 
-		$a->user = $user_record;
+	if($login_initial) {
 
-		if($interactive) {
-			if($a->user['login_date'] === '0000-00-00 00:00:00') {
-				$_SESSION['return_url'] = 'profile_photo/new';
-				$a->module = 'profile_photo';
-				info( t("Welcome ") . $a->user['username'] . EOL);
-				info( t('Please upload a profile photo.') . EOL);
-			}
-			else
-				info( t("Welcome back ") . $a->user['username'] . EOL);
-		}
+		call_hooks('logged_in', $user_record);
 
-		$member_since = strtotime($a->user['register_date']);
-		if(time() < ($member_since + ( 60 * 60 * 24 * 14)))
-			$_SESSION['new_member'] = true;
-		else
-			$_SESSION['new_member'] = false;
-		if(strlen($a->user['timezone'])) {
-			date_default_timezone_set($a->user['timezone']);
-			$a->timezone = $a->user['timezone'];
-		}
-
-		$master_record = $a->user;	
-
-		if((x($_SESSION,'submanage')) && intval($_SESSION['submanage'])) {
-			$r = q("select * from user where uid = %d limit 1",
-				intval($_SESSION['submanage'])
-			);
-			if(count($r))
-				$master_record = $r[0];
-		}
-
-		$r = q("SELECT `uid`,`username`,`nickname` FROM `user` WHERE `password` = '%s' AND `email` = '%s'",
-			dbesc($master_record['password']),
-			dbesc($master_record['email'])
-		);
-		if($r && count($r))
-			$a->identities = $r;
-		else
-			$a->identities = array();
-
-		$r = q("select `user`.`uid`, `user`.`username`, `user`.`nickname` 
-			from manage left join user on manage.mid = user.uid 
-			where `manage`.`uid` = %d",
-			intval($master_record['uid'])
-		);
-		if($r && count($r))
-			$a->identities = array_merge($a->identities,$r);
-
-		if($login_initial)
-			logger('auth_identities: ' . print_r($a->identities,true), LOGGER_DEBUG);
-
-		$r = q("SELECT * FROM `contact` WHERE `uid` = %d AND `self` = 1 LIMIT 1",
-			intval($_SESSION['uid']));
-		if(count($r)) {
-			$a->contact = $r[0];
-			$a->cid = $r[0]['id'];
-			$_SESSION['cid'] = $a->cid;
-		}
-
-		header('X-Account-Management-Status: active; name="' . $a->user['username'] . '"; id="' . $a->user['nickname'] .'"');
-
-		if($login_initial) {
-			$l = get_browser_language();
-
-			q("UPDATE `user` SET `login_date` = '%s', `language` = '%s' WHERE `uid` = %d LIMIT 1",
-				dbesc(datetime_convert()),
-				dbesc($l),
-				intval($_SESSION['uid'])
-			);
-
-			call_hooks('logged_in', $a->user);
-
-		}
+		// might want to log success here
 	}
-	
 
 	if($return || x($_SESSION,'workflow')) {
 		unset($_SESSION['workflow']);
@@ -132,6 +50,18 @@ function authenticate_success($user_record, $login_initial = false, $interactive
 		goaway($a->get_baseurl() . '/' . $return_url);
 	}
 
+	/* This account has never created a channel. Send them to new_channel by default */
+
+	if($a->module === 'login') {
+		$r = q("select count(channel_id) as total from channel where channel_account_id = %d and not ( channel_pageflags & %d)",
+			intval($a->account['account_id']),
+			intval(PAGE_REMOVED)
+		);
+		if(($r) && (! $r[0]['total']))
+			goaway(z_root() . '/new_channel');
+	}
+
+	/* else just return */
 }
 
 
@@ -140,15 +70,18 @@ function change_channel($change_channel) {
 	$ret = false;
 
 	if($change_channel) {
-		$r = q("select channel.*, xchan.* from channel left join xchan on channel.channel_hash = xchan.xchan_hash where channel_id = %d and channel_account_id = %d limit 1",
+		$r = q("select channel.*, xchan.* from channel left join xchan on channel.channel_hash = xchan.xchan_hash where channel_id = %d and channel_account_id = %d and not ( channel_pageflags & %d) limit 1",
 			intval($change_channel),
-			intval(get_account_id())
+			intval(get_account_id()),
+			intval(PAGE_REMOVED)
 		);
+
 		if($r) {
 			$hash = $r[0]['channel_hash'];
 			$_SESSION['uid'] = intval($r[0]['channel_id']);
 			get_app()->set_channel($r[0]);
 			$_SESSION['theme'] = $r[0]['channel_theme'];
+			$_SESSION['mobile_theme'] = get_pconfig(local_user(),'system', 'mobile_theme');
 			date_default_timezone_set($r[0]['channel_timezone']);
 			$ret = $r[0];
 		}
@@ -157,18 +90,26 @@ function change_channel($change_channel) {
 		);
 		if($x) {
 			$_SESSION['my_url'] = $x[0]['xchan_url'];
-			$_SESSION['my_address'] = $x[0]['xchan_addr'];
+			$_SESSION['my_address'] = $r[0]['channel_address'] . '@' . substr(get_app()->get_baseurl(),strpos(get_app()->get_baseurl(),'://')+3);
 
 			get_app()->set_observer($x[0]);
 			get_app()->set_perms(get_all_perms(local_user(),$hash));
 		}
+		if(! is_dir('store/' . $r[0]['channel_address']))
+			@mkdir('store/' . $r[0]['channel_address'], STORAGE_DEFAULT_PERMISSIONS,true);
+
 	}
 
 	return $ret;
 
 }
 
+
+
 function permissions_sql($owner_id,$remote_verified = false,$groups = null) {
+
+	if(defined('STATUSNET_PRIVACY_COMPATIBILITY'))
+		return '';
 
 	$local_user = local_user();
 	$remote_user = remote_user();
@@ -204,30 +145,36 @@ function permissions_sql($owner_id,$remote_verified = false,$groups = null) {
 
 
 	else {
-		$observer = get_app()->get_observer();
-		$groups = init_groups_visitor($remote_user);
+		$observer = get_observer_hash();
+		if($observer) {
+			$groups = init_groups_visitor($observer);
 
-		$gs = '<<>>'; // should be impossible to match
+			$gs = '<<>>'; // should be impossible to match
 
-		if(is_array($groups) && count($groups)) {
-			foreach($groups as $g)
-				$gs .= '|<' . $g . '>';
-		} 
-		$sql = sprintf(
-			" AND ( NOT (deny_cid like '<%s>' OR deny_gid REGEXP '%s')
-			  AND ( allow_cid like '<%s>' OR allow_gid REGEXP '%s' OR ( allow_cid = '' AND allow_gid = '') )
-			  )
-			",
-			dbesc(protect_sprintf( '%' . $remote_user . '%')),
-			dbesc($gs),
-			dbesc(protect_sprintf( '%' . $remote_user . '%')),
-			dbesc($gs)
-		);
+			if(is_array($groups) && count($groups)) {
+				foreach($groups as $g)
+					$gs .= '|<' . $g . '>';
+			} 
+			$sql = sprintf(
+				" AND ( NOT (deny_cid like '%s' OR deny_gid REGEXP '%s')
+				  AND ( allow_cid like '%s' OR allow_gid REGEXP '%s' OR ( allow_cid = '' AND allow_gid = '') )
+				  )
+				",
+				dbesc(protect_sprintf( '%<' . $observer . '>%')),
+				dbesc($gs),
+				dbesc(protect_sprintf( '%<' . $observer . '>%')),
+				dbesc($gs)
+			);
+		}
 	}
+
 	return $sql;
 }
 
 function item_permissions_sql($owner_id,$remote_verified = false,$groups = null) {
+
+	if(defined('STATUSNET_PRIVACY_COMPATIBILITY'))
+		return '';
 
 	$local_user = local_user();
 	$remote_user = remote_user();
@@ -238,7 +185,7 @@ function item_permissions_sql($owner_id,$remote_verified = false,$groups = null)
 	 * default permissions - anonymous user
 	 */
 
-	$sql = " AND not (item_flags & " . ITEM_PRIVATE . ") ";  
+	$sql = " AND not item_private ";
 			
 
 	/**
@@ -259,29 +206,59 @@ function item_permissions_sql($owner_id,$remote_verified = false,$groups = null)
 
 
 	else {
-		$observer = get_app()->get_observer();
-		$groups = init_groups_visitor($remote_user);
+		$observer = get_observer_hash();
 
-		$gs = '<<>>'; // should be impossible to match
+		if($observer) {
+			$groups = init_groups_visitor($observer);
 
-		if(is_array($groups) && count($groups)) {
-			foreach($groups as $g)
-				$gs .= '|<' . $g . '>';
-		} 
-		$sql = sprintf(
-			" AND ( NOT (deny_cid like '<%s>' OR deny_gid REGEXP '%s')
-			  AND ( allow_cid like '<%s>' OR allow_gid REGEXP '%s' OR ( allow_cid = '' AND allow_gid = '') )
-			  )
-			",
-			dbesc(protect_sprintf( '%' . $remote_user . '%')),
-			dbesc($gs),
-			dbesc(protect_sprintf( '%' . $remote_user . '%')),
-			dbesc($gs)
-		);
+			$gs = '<<>>'; // should be impossible to match
+
+			if(is_array($groups) && count($groups)) {
+				foreach($groups as $g)
+					$gs .= '|<' . $g . '>';
+			} 
+			$sql = sprintf(
+				" AND ( NOT (deny_cid like '%s' OR deny_gid REGEXP '%s')
+				  AND ( allow_cid like '%s' OR allow_gid REGEXP '%s' OR ( allow_cid = '' AND allow_gid = '') )
+				  )
+				",
+				dbesc(protect_sprintf( '%<' . $observer . '>%')),
+				dbesc($gs),
+				dbesc(protect_sprintf( '%<' . $observer . '>%')),
+				dbesc($gs)
+			);
+		}
 	}
 	return $sql;
 }
 
+function public_permissions_sql($observer_hash) {
+
+	$observer = get_app()->get_observer();
+	$groups = init_groups_visitor($observer_hash);
+
+	$gs = '<<>>'; // should be impossible to match
+
+	if(is_array($groups) && count($groups)) {
+		foreach($groups as $g)
+			$gs .= '|<' . $g . '>';
+	} 
+	$sql = '';
+	if($observer_hash) {
+		$sql = sprintf(
+			" OR (( NOT (deny_cid like '%s' OR deny_gid REGEXP '%s')
+			  AND ( allow_cid like '%s' OR allow_gid REGEXP '%s' OR ( allow_cid = '' AND allow_gid = '') )
+			  ))
+			",
+			dbesc(protect_sprintf( '%<' . $observer_hash . '>%')),
+			dbesc($gs),
+			dbesc(protect_sprintf( '%<' . $observer_hash . '>%')),
+			dbesc($gs)
+		);
+	}
+
+	return $sql;
+}
 
 
 /*
@@ -300,7 +277,7 @@ function get_form_security_token($typename = '') {
 	
 	$timestamp = time();
 	$sec_hash = hash('whirlpool', $a->user['guid'] . $a->user['prvkey'] . session_id() . $timestamp . $typename);
-	
+
 	return $timestamp . '.' . $sec_hash;
 }
 
@@ -334,7 +311,7 @@ function check_form_security_token_redirectOnErr($err_redirect, $typename = '', 
 }
 function check_form_security_token_ForbiddenOnErr($typename = '', $formname = 'form_security_token') {
 	if (!check_form_security_token($typename, $formname)) {
-	    $a = get_app();
+		$a = get_app();
 		logger('check_form_security_token failed: user ' . $a->user['guid'] . ' - form element ' . $typename);
 		logger('check_form_security_token failed: _REQUEST data: ' . print_r($_REQUEST, true), LOGGER_DATA);
 		header('HTTP/1.1 403 Forbidden');
@@ -350,14 +327,79 @@ function check_form_security_token_ForbiddenOnErr($typename = '', $formname = 'f
 if(! function_exists('init_groups_visitor')) {
 function init_groups_visitor($contact_id) {
 	$groups = array();
-	$r = q("SELECT gid FROM group_member WHERE xchan = '%s' ",
-		intval($contact_id)
+	$r = q("SELECT hash FROM `groups` left join group_member on groups.id = group_member.gid WHERE xchan = '%s' ",
+		dbesc($contact_id)
 	);
 	if(count($r)) {
 		foreach($r as $rr)
-			$groups[] = $rr['gid'];
+			$groups[] = $rr['hash'];
 	}
 	return $groups;
 }}
 
+
+
+
+
+// This is used to determine which uid have posts which are visible to the logged in user (from the API) for the 
+// public_timeline, and we can use this in a community page by making
+// $perms = (PERMS_NETWORK|PERMS_PUBLIC) unless logged in. 
+// Collect uids of everybody on this site who has opened their posts to everybody on this site (or greater visibility)
+// We always include yourself if logged in because you can always see your own posts
+// resolving granular permissions for the observer against every person and every post on the site
+// will likely be too expensive. 
+// Returns a string list of comma separated channel_ids suitable for direct inclusion in a SQL query
+
+function stream_perms_api_uids($perms = NULL ) {
+	$perms = is_null($perms) ? (PERMS_SITE|PERMS_NETWORK|PERMS_PUBLIC) : $perms;
+
+	$ret = array();
+	if(local_user())
+		$ret[] = local_user();
+	$r = q("select channel_id from channel where channel_r_stream > 0 and (channel_r_stream & %d) and not (channel_pageflags & %d)",
+		intval($perms),
+		intval(PAGE_CENSORED|PAGE_SYSTEM|PAGE_REMOVED)
+	);
+	if($r)
+		foreach($r as $rr)
+			if(! in_array($rr['channel_id'],$ret))
+				$ret[] = $rr['channel_id']; 
+
+	$str = '';
+	if($ret)
+		foreach($ret as $rr) {
+			if($str)
+				$str .= ',';
+			$str .= intval($rr); 
+		}
+	logger('stream_perms_api_uids: ' . $str, LOGGER_DEBUG);
+	return $str;
+}
+
+function stream_perms_xchans($perms = NULL ) {
+	$perms = is_null($perms) ? (PERMS_SITE|PERMS_NETWORK|PERMS_PUBLIC) : $perms;
+
+	$ret = array();
+	if(local_user())
+		$ret[] = get_observer_hash();
+
+	$r = q("select channel_hash from channel where channel_r_stream > 0 and (channel_r_stream & %d) and not (channel_pageflags & %d)",
+		intval($perms),
+		intval(PAGE_CENSORED|PAGE_SYETEM|PAGE_REMOVED)
+	);
+	if($r)
+		foreach($r as $rr)
+			if(! in_array($rr['channel_hash'],$ret))
+				$ret[] = $rr['channel_hash']; 
+
+	$str = '';
+	if($ret)
+		foreach($ret as $rr) {
+			if($str)
+				$str .= ',';
+			$str .= "'" . dbesc($rr) . "'"; 
+		}
+	logger('stream_perms_xchans: ' . $str, LOGGER_DEBUG);
+	return $str;
+}
 

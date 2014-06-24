@@ -1,17 +1,15 @@
-<h3>$lbl1</h3>
+<h3>{{$lbl1}}</h3>
 
 <p>
-$lbl2
+{{$lbl2}}
 </p>
 <p>
-$lbl3
+{{$lbl3}}
+</p>
+<p>{{$newpass}}</p>
+<p>
+{{$lbl4}} {{$lbl5}}
 </p>
 <p>
-$newpass
-</p>
-<p>
-$lbl4 $lbl5
-</p>
-<p>
-$lbl6
+{{$lbl6}}
 </p>

@@ -1,4 +1,4 @@
-{{ for $threads as $item }}
-{{ inc $item.template }}{{ endinc }}
-{{ endfor }}
+{{foreach $threads as $item}}
+{{include file="{{$item.template}}"}}
+{{/foreach}}
 

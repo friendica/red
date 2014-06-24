@@ -1,17 +1,17 @@
 
-Kjære $[myname],
+Dear {{$myname}},
 
-Du har akkurat mottatt en kontaktforespørsel hos $[sitename] 
+You have just received a connection request at {{$sitename}} 
 
-fra '$[requestor]'.
+from '{{$requestor}}'.
 
-Du kan besøke profilen på $[url].
+You may visit their profile at {{$url}}.
 
-Vennligst logg inn på ditt nettsted for å se hele introduksjonen 
-og godkjenne eller ignorere/avbryte forespørselen.
+Please login to your site to view the complete introduction 
+and approve or ignore/cancel the request.
 
-$[siteurl]
+{{$siteurl}}
 
-Beste hilsen,
+Regards,
 
-	$[siteurl] administrator
+	{{$sitename}} administrator

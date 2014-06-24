@@ -1,22 +1,28 @@
 <?php
 
+require_once('include/contact_widgets.php');
+require_once('include/items.php');
+require_once("include/bbcode.php");
+require_once('include/security.php');
+require_once('include/conversation.php');
+require_once('include/acl_selectors.php');
+require_once('include/permissions.php');
+
+
 function channel_init(&$a) {
 
-	$a->page['htmlhead'] .= '<link rel="alternate" type="application/atom+xml" href="' . $a->get_baseurl() . '/feed/' . $which .'" />' . "\r\n" ;
-
-}
-
-
-function channel_aside(&$a) {
-
-	require_once('include/contact_widgets.php');
-	require_once('include/items.php');
-
+	$which = null;
 	if(argc() > 1)
 		$which = argv(1);
-	else {
-		notice( t('Requested profile is not available.') . EOL );
-		$a->error = 404;
+	if(! $which) {
+		if(local_user()) {
+			$channel = $a->get_channel();
+			if($channel && $channel['channel_address'])
+			$which = $channel['channel_address'];
+		}
+	}
+	if(! $which) {
+		notice( t('You must be logged in to see this page.') . EOL );
 		return;
 	}
 
@@ -28,54 +34,33 @@ function channel_aside(&$a) {
 		$profile = argv(1);		
 	}
 
-	$cat = ((x($_REQUEST,'cat')) ? htmlspecialchars($_REQUEST['cat']) : '');
+	$a->page['htmlhead'] .= '<link rel="alternate" type="application/atom+xml" href="' . $a->get_baseurl() . '/feed/' . $which .'" />' . "\r\n" ;
+
+	// Run profile_load() here to make sure the theme is set before
+	// we start loading content
 
 	profile_load($a,$which,$profile);
 
-	$a->set_widget('archive',posted_date_widget($a->get_baseurl(true) . '/channel/' . $a->profile['nickname'],$a->profile['profile_uid'],true));	
-	$a->set_widget('categories',categories_widget($a->get_baseurl(true) . '/channel/' . $a->profile['nickname'],$cat));
-
 }
-
 
 function channel_content(&$a, $update = 0, $load = false) {
 
 	$category = $datequery = $datequery2 = '';
 
-	if(argc() > 2) {
-		for($x = 2; $x < argc(); $x ++) {
-			if(is_a_date_arg(argv($x))) {
-				if($datequery)
-					$datequery2 = escape_tags(argv($x));
-				else
-					$datequery = escape_tags(argv($x));
-			}
-		}
-	}
+	$mid = $_GET['mid'];
 
+	$datequery = ((x($_GET,'dend') && is_a_date_arg($_GET['dend'])) ? notags($_GET['dend']) : '');
+	$datequery2 = ((x($_GET,'dbegin') && is_a_date_arg($_GET['dbegin'])) ? notags($_GET['dbegin']) : '');
 
 	if(get_config('system','block_public') && (! get_account_id()) && (! remote_user())) {
 			return login();
 	}
 
-
-
-	require_once("include/bbcode.php");
-	require_once('include/security.php');
-	require_once('include/conversation.php');
-	require_once('include/acl_selectors.php');
-	require_once('include/items.php');
-	require_once('include/permissions.php');
-
+	$category = ((x($_REQUEST,'cat')) ? $_REQUEST['cat'] : '');
 
 	$groups = array();
 
-
-	$tab = 'posts';
 	$o = '';
-
-
-	$is_owner = (((local_user()) && ($a->profile['profile_uid'] == local_user())) ? true : false);
 
 	if($update) {
 		// Ensure we've got a profile owner if updating.
@@ -87,12 +72,20 @@ function channel_content(&$a, $update = 0, $load = false) {
 		}
 	}
 
+	$is_owner = (((local_user()) && ($a->profile['profile_uid'] == local_user())) ? true : false);
+
+	$channel = $a->get_channel();
 	$observer = $a->get_observer();
 	$ob_hash = (($observer) ? $observer['xchan_hash'] : '');
 
 	$perms = get_all_perms($a->profile['profile_uid'],$ob_hash);
 
 	if(! $perms['view_stream']) {
+			// We may want to make the target of this redirect configurable
+			if($perms['view_profile']) {
+				notice( t('Insufficient permissions.  Request redirected to profile page.') . EOL);
+				goaway (z_root() . "/profile/" . $a->profile['channel_address']);
+			}
 		notice( t('Permission denied.') . EOL);
 		return;
 	}
@@ -100,23 +93,34 @@ function channel_content(&$a, $update = 0, $load = false) {
 
 	if(! $update) {
 
-
 		$o .= profile_tabs($a, $is_owner, $a->profile['channel_address']);
 
 		$o .= common_friends_visitor_widget($a->profile['profile_uid']);
+
+		if($channel && $is_owner) {
+			$channel_acl = array(
+				'allow_cid' => $channel['channel_allow_cid'], 
+				'allow_gid' => $channel['channel_allow_gid'], 
+				'deny_cid' => $channel['channel_deny_cid'], 
+				'deny_gid' => $channel['channel_deny_gid']
+			);
+		}
+		else
+			$channel_acl = array(); 
 
 
 		if($perms['post_wall']) {
 
 			$x = array(
 				'is_owner' => $is_owner,
-            	'allow_location' => ((($is_owner || $observer) && $a->profile['allow_location']) ? true : false),
-	            'default_location' => (($is_owner) ? $a->user['default-location'] : ''),
+            	'allow_location' => ((($is_owner || $observer) && (intval(get_pconfig($a->profile['profile_uid'],'system','use_browser_location')))) ? true : false),
+	            'default_location' => (($is_owner) ? $a->profile['channel_location'] : ''),
     	        'nickname' => $a->profile['channel_address'],
         	    'lockstate' => (((strlen($a->profile['channel_allow_cid'])) || (strlen($a->profile['channel_allow_gid'])) || (strlen($a->profile['channel_deny_cid'])) || (strlen($a->profile['channel_deny_gid']))) ? 'lock' : 'unlock'),
-            	'acl' => (($is_owner) ? populate_acl($channel, false) : ''),
+            	'acl' => (($is_owner) ? populate_acl($channel_acl) : ''),
+				'showacl' => (($is_owner) ? 'yes' : ''),
 	            'bang' => '',
-    	        'visitor' => (($is_owner || $observer) ? 'block' : 'none'),
+				'visitor' => (($is_owner || $observer) ? true : false),
         	    'profile_uid' => $a->profile['profile_uid']
         	);
 
@@ -135,25 +139,35 @@ function channel_content(&$a, $update = 0, $load = false) {
 
 
 	if(($update) && (! $load)) {
-		$r = q("SELECT distinct(parent) AS `item_id` from item
-			left join abook on item.author_xchan = abook.abook_xchan
-			WHERE uid = %d AND item_restrict = 0
-			AND (item_flags &  %d) AND ( item_flags & %d ) AND ( item_flags & %d )
-			AND ((abook.abook_flags & %d) = 0 or abook.abook_flags is null)
-			$sql_extra
-			ORDER BY created DESC",
-			intval($a->profile['profile_uid']),
-			intval(ITEM_WALL),
-			intval(ITEM_UNSEEN),
-			intval(ITEM_THREAD_TOP),
-			intval(ABOOK_FLAG_BLOCKED)
-		);
+		if ($mid) {
+			$r = q("SELECT parent AS item_id from item where mid = '%s' and uid = %d AND item_restrict = 0
+				AND (item_flags &  %d) AND (item_flags & %d) $sql_extra limit 1",
+				dbesc($mid),
+				intval($a->profile['profile_uid']),
+				intval(ITEM_WALL),
+				intval(ITEM_UNSEEN)
+			);
+		} else {
+			$r = q("SELECT distinct parent AS `item_id` from item
+				left join abook on item.author_xchan = abook.abook_xchan
+				WHERE uid = %d AND item_restrict = 0
+				AND (item_flags &  %d) AND ( item_flags & %d ) 
+				AND ((abook.abook_flags & %d) = 0 or abook.abook_flags is null)
+				$sql_extra
+				ORDER BY created DESC",
+				intval($a->profile['profile_uid']),
+				intval(ITEM_WALL),
+				intval(ITEM_UNSEEN),
+				intval(ABOOK_FLAG_BLOCKED)
+			);
+		}
 
 	}
 	else {
 
+
 		if(x($category)) {
-			$sql_extra .= protect_sprintf(file_tag_file_query('item',$category,'category'));
+		        $sql_extra .= protect_sprintf(term_query('item', $category, TERM_CATEGORY));
 		}
 
 		if($datequery) {
@@ -163,25 +177,36 @@ function channel_content(&$a, $update = 0, $load = false) {
 			$sql_extra2 .= protect_sprintf(sprintf(" AND item.created >= '%s' ", dbesc(datetime_convert(date_default_timezone_get(),'',$datequery2))));
 		}
 
-
-		$a->set_pager_itemspage(40);
-
+		$itemspage = get_pconfig(local_user(),'system','itemspage');
+		$a->set_pager_itemspage(((intval($itemspage)) ? $itemspage : 20));
 		$pager_sql = sprintf(" LIMIT %d, %d ",intval($a->pager['start']), intval($a->pager['itemspage']));
 
-		if($load) {
-			$r = q("SELECT id AS item_id FROM item 
-				left join abook on item.author_xchan = abook.abook_xchan
-				WHERE uid = %d AND item_restrict = 0
-				AND (item_flags &  %d) and (item_flags & %d)
-				AND ((abook.abook_flags & %d) = 0 or abook.abook_flags is null)
-				$sql_extra $sql_extra2
-				ORDER BY created DESC $pager_sql ",
-				intval($a->profile['profile_uid']),
-				intval(ITEM_WALL),
-				intval(ITEM_THREAD_TOP),
-				intval(ABOOK_FLAG_BLOCKED)
+		if($load || ($_COOKIE['jsAvailable'] != 1)) {
+			if ($mid) {
+				$r = q("SELECT parent AS item_id from item where mid = '%s' and uid = %d AND item_restrict = 0
+					AND (item_flags &  %d) $sql_extra limit 1",
+					dbesc($mid),
+					intval($a->profile['profile_uid']),
+					intval(ITEM_WALL)
+				);
+				if (! $r) {
+					notice( t('Permission denied.') . EOL);
+				}
 
-			);
+			} else {
+				$r = q("SELECT distinct id AS item_id FROM item 
+					left join abook on item.author_xchan = abook.abook_xchan
+					WHERE uid = %d AND item_restrict = 0
+					AND (item_flags &  %d) and (item_flags & %d)
+					AND ((abook.abook_flags & %d) = 0 or abook.abook_flags is null)
+					$sql_extra $sql_extra2
+					ORDER BY created DESC $pager_sql ",
+					intval($a->profile['profile_uid']),
+					intval(ITEM_WALL),
+					intval(ITEM_THREAD_TOP),
+					intval(ABOOK_FLAG_BLOCKED)
+				);
+			}
 		}
 		else {
 			$r = array();
@@ -202,8 +227,14 @@ function channel_content(&$a, $update = 0, $load = false) {
 		);
 
 		xchan_query($items);
-		$items = fetch_post_tags($items);
+		$items = fetch_post_tags($items, true);
 		$items = conv_sort($items,'created');
+
+		if ($load && $mid && (! count($items))) {
+			// This will happen if we don't have sufficient permissions
+			// to view the parent item (or the item itself if it is toplevel)
+			notice( t('Permission denied.') . EOL);
+		}
 
 	} else {
 		$items = array();
@@ -233,11 +264,14 @@ function channel_content(&$a, $update = 0, $load = false) {
 			'$spam' => '0',
 			'$nouveau' => '0',
 			'$wall' => '1',
+			'$fh' => '0',
 			'$page' => (($a->pager['page'] != 1) ? $a->pager['page'] : 1),
 			'$search' => '',
 			'$order' => '',
+			'$list' => ((x($_REQUEST,'list')) ? intval($_REQUEST['list']) : 0),
 			'$file' => '',
 			'$cats' => (($category) ? $category : ''),
+			'$mid' => $mid,
 			'$dend' => $datequery,
 			'$dbegin' => $datequery2
 		));
@@ -248,6 +282,7 @@ function channel_content(&$a, $update = 0, $load = false) {
 
 
 	if($is_owner) {
+
 		$r = q("UPDATE item SET item_flags = (item_flags ^ %d)
 			WHERE (item_flags & %d) AND (item_flags & %d) AND uid = %d ",
 			intval(ITEM_UNSEEN),
@@ -258,10 +293,17 @@ function channel_content(&$a, $update = 0, $load = false) {
 	}
 
 
-	$o .= conversation($a,$items,'channel',$update,'client');
+	if($_COOKIE['jsAvailable'] == 1) {
+		$o .= conversation($a,$items,'channel',$update,'client');
+	} else {
+		$o .= conversation($a,$items,'channel',$update,'traditional');
+	}
 
-	if(! $update)
+	if((! $update) || ($_COOKIE['jsAvailable'] != 1))
 		$o .= alt_pager($a,count($items));
+
+	if($mid) 
+		$o .= '<div id="content-complete"></div>';
 
 	return $o;
 }

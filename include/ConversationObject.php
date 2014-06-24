@@ -1,4 +1,5 @@
-<?php
+<?php /** @file */
+
 if(class_exists('Conversation'))
 	return;
 
@@ -6,22 +7,35 @@ require_once('boot.php');
 require_once('include/BaseObject.php');
 require_once('include/ItemObject.php');
 require_once('include/text.php');
+require_once('include/items.php');
 
 /**
  * A list of threads
  *
- * We should think about making this a SPL Iterator
  */
+
 class Conversation extends BaseObject {
 	private $threads = array();
 	private $mode = null;
+	private $observer = null;
 	private $writable = false;
+	private $commentable = false;
 	private $profile_owner = 0;
 	private $preview = false;
+	private $prepared_item = '';
+	private $cipher = 'aes256';
 
-	public function __construct($mode, $preview) {
+	// $prepared_item is for use by alternate conversation structures such as photos
+	// wherein we've already prepared a top level item which doesn't look anything like
+	// a normal "post" item
+
+	public function __construct($mode, $preview, $prepared_item = '') {
 		$this->set_mode($mode);
 		$this->preview = $preview;
+		$this->prepared_item = $prepared_item;
+		$c = ((local_user()) ? get_pconfig(local_user(),'system','default_cipher') : '');
+		if($c)
+			$this->cipher = $c;
 	}
 
 	/**
@@ -33,19 +47,32 @@ class Conversation extends BaseObject {
 
 		$a = $this->get_app();
 
-		$observer = $a->get_observer();
-		$ob_hash = (($observer) ? $observer['xchan_hash'] : '');
+		$this->observer = $a->get_observer();
+		$ob_hash = (($this->observer) ? $this->observer['xchan_hash'] : '');
 
 		switch($mode) {
 			case 'network':
-				$this->profile_owner = local_user();
-				$this->writable = true;
+				if(array_key_exists('firehose',$a->data) && intval($a->data['firehose'])) {
+					$this->profile_owner = intval($a->data['firehose']);
+					$this->writable = false;
+				}
+				else {
+					$this->profile_owner = local_user();
+					$this->writable = true;
+				}
 				break;
 			case 'channel':
 				$this->profile_owner = $a->profile['profile_uid'];
 				$this->writable = perm_is_allowed($this->profile_owner,$ob_hash,'post_comments');
 				break;
 			case 'display':
+				// in this mode we set profile_owner after initialisation (from conversation()) and then 
+				// pull some trickery which allows us to re-invoke this function afterward
+				// it's an ugly hack so FIXME
+//				$this->profile_owner = $a->profile['uid'];
+				$this->writable = perm_is_allowed($this->profile_owner,$ob_hash,'post_comments');
+				break;
+			case 'page':
 				$this->profile_owner = $a->profile['uid'];
 				$this->writable = perm_is_allowed($this->profile_owner,$ob_hash,'post_comments');
 				break;
@@ -71,6 +98,10 @@ class Conversation extends BaseObject {
 		return $this->writable;
 	}
 
+	public function is_commentable() {
+		return $this->commentable;
+	}
+
 	/**
 	 * Check if page is a preview
 	 */
@@ -84,6 +115,22 @@ class Conversation extends BaseObject {
 	public function get_profile_owner() {
 		return $this->profile_owner;
 	}
+
+	public function set_profile_owner($uid) {
+		$this->profile_owner = $uid;
+		$mode = $this->get_mode();
+		$this->mode = null;
+		$this->set_mode($mode);
+	}
+
+	public function get_observer() {
+		return $this->observer;
+	}
+
+	public function get_cipher() {
+		return $this->cipher;
+	}
+
 
 	/**
 	 * Add a thread to the conversation
@@ -104,12 +151,43 @@ class Conversation extends BaseObject {
 		}
 
 		/*
-		 * Only add will be displayed
+		 * Only add things that will be displayed
 		 */
 
-		if(activity_match($item->get_data_value('verb'),ACTIVITY_LIKE) || activity_match($item->get_data_value('verb'),ACTIVITY_DISLIKE)) {
+		
+		if(($item->get_data_value('id') != $item->get_data_value('parent')) && (activity_match($item->get_data_value('verb'),ACTIVITY_LIKE) || activity_match($item->get_data_value('verb'),ACTIVITY_DISLIKE))) {
 			return false;
 		}
+
+//		if(local_user() && $item->get_data_value('uid') == local_user()) 
+//			$this->commentable = true;
+
+//		if($this->writable)
+//			$this->commentable = true;
+
+		$item->set_commentable(false);
+		$ob_hash = (($this->observer) ? $this->observer['xchan_hash'] : '');
+		
+		if(($item->get_data_value('author_xchan') === $ob_hash) || ($item->get_data_value('owner_xchan') === $ob_hash))
+			$item->set_commentable(true);
+
+		if($item->get_data_value('item_flags') & ITEM_NOCOMMENT) {
+			$item->set_commentable(false);
+		}
+		elseif(($this->observer) && (! $item->is_commentable())) {
+			if((array_key_exists('owner',$item->data)) && ($item->data['owner']['abook_flags'] & ABOOK_FLAG_SELF))
+				$item->set_commentable(perm_is_allowed($this->profile_owner,$this->observer['xchan_hash'],'post_comments'));
+			else
+				$item->set_commentable(can_comment_on_post($this->observer['xchan_hash'],$item->data));
+		}
+
+		require_once('include/identity.php');
+		$sys = get_sys_channel();
+
+		if($sys && $item->get_data_value('uid') == $sys['channel_id']) {
+			$item->set_commentable(false);
+		}
+
 		$item->set_conversation($this);
 		$this->threads[] = $item;
 		return end($this->threads);
@@ -129,7 +207,12 @@ class Conversation extends BaseObject {
 
 		foreach($this->threads as $item) {
 
-			$item_data = $item->get_template_data($alike, $dlike);
+			if(($item->get_data_value('id') == $item->get_data_value('parent')) && $this->prepared_item) {
+				$item_data = $this->prepared_item;
+			}
+			else {
+				$item_data = $item->get_template_data($alike, $dlike);
+			}
 			if(!$item_data) {
 				logger('[ERROR] Conversation::get_template_data : Failed to get item template data ('. $item->get_id() .').', LOGGER_DEBUG);
 				return false;

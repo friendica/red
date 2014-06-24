@@ -1,357 +1,260 @@
-**Friendica Addon/Plugin development**
+Creating Plugins/Addons for the Red Matrix
+==========================================
 
-Please see the sample addon 'randplace' for a working example of using some of these features. The facebook addon provides an example of integrating both "addon" and "module" functionality. Addons work by intercepting event hooks - which must be registered. Modules work by intercepting specific page requests (by URL path). 
 
+So you want to make the Red Matrix do something it doesn't already do. There are lots of ways. But let's learn how to write a plugin or addon. 
 
-Plugin names cannot contain spaces or other punctuation and are used as filenames and function names. You may supply a "friendly" name within the comment block. Each addon must contain both an install and an uninstall function based on the addon/plugin name. For instance "plugin1name_install()". These two functions take no arguments and are usually responsible for registering (and unregistering) event hooks that your plugin will require. The install and uninstall functions will also be called (i.e. re-installed) if the plugin changes after installation - therefore your uninstall should not destroy data and install should consider that data may already exist. Future extensions may provide for "setup" amd "remove". 
 
-Plugins should contain a comment block with the four following parameters: 
+In your Red Matrix folder/directory, you will probably see a sub-directory called 'addon'. If you don't have one already, go ahead and create it. 
 
-	/*
-	* Name: My Great Plugin 
- 	* Description: This is what my plugin does. It's really cool
- 	* Version: 1.0
- 	* Author: John Q. Public <john@myfriendicasite.com>
-	*/
+	mkdir addon
 
+Then figure out a name for your addon. You probably have at least a vague idea of what you want it to do. For our example I'm going to create a plugin called 'randplace' that provides a somewhat random location for each of your posts. The name of your plugin is used to find the functions we need to access and is part of the function names, so to be safe, use only simple text characters.
 
+Once you've chosen a name, create a directory beneath 'addon' to hold your working file or files.
 
+	mkdir addon/randplace
 
-Register your plugin hooks during installation.
+Now create your plugin file. It needs to have the same name, and it's a PHP script, so using your favourite editor, create the file
 
-    register_hook($hookname, $file, $function);
+	addon/randplace/randplace.php
 
-$hookname is a string and corresponds to a known Friendica hook.
+The very first line of this file needs to be
 
-$file is a pathname relative to the top-level Friendica directory. This *should* be 'addon/plugin_name/plugin_name.php' in most cases.
+	<?php
 
-$function is a string and is the name of the function which will be executed when the hook is called.
+Then we're going to create a comment block to describe the plugin. There's a special format for this. We use /* ... */ comment-style and some tagged lines consisting of
 
+	/**
+	 *
+	 * Name: Random Place (here you can use better descriptions than you could in the filename)
+	 * Description: Sample Red Matrix plugin, Sets a random place when posting.
+	 * Version: 1.0
+	 * Author: Mike Macgirvin <mike@zothub.com>
+	 *
+	 */
 
-Your hook callback functions will be called with at least one and possibly two arguments
+These tags will be seen by the site administrator when he/she installs or manages plugins from the admin panel. There can be more than one author. Just add another line starting with 'Author:'.
 
+The typical plugin will have at least the following functions:
 
-    function myhook_function(&$a, &$b) {
+* pluginname_load()
+* pluginname_unload()
 
+In our case, we'll call them randplace_load() and randplace_unload(), as that is the name of our plugin. These functions are called whenever we wish to either initialise the plugin or remove it from the current webpage. Also if your plugin requires things like altering the database schema before it can run for the very first time, you would likely place these instructions in the functions named
 
-    }
+* pluginname_install()
+* pluginname_uninstall()
 
 
-If you wish to make changes to the calling data, you must declare them as
-reference variables (with '&') during function declaration.
+Next we'll talk about **hooks**. Hooks are places in the Red Matrix code where we allow plugins to do stuff. There are a [lot of these](help/Hooks), and they each have a name. What we normally do is use the pluginname_load() function to register a "handler function" for any hooks you are interested in. Then when any of these hooks are triggered, your code will be called.
 
-$a is the Friendica 'App' class - which contains a wealth of information
-about the current state of Friendica, such as which module has been called,
-configuration info, the page contents at the point the hook was invoked, profile
-and user information, etc. It is recommeded you call this '$a' to match its usage
-elsewhere.
+We register hook handlers with the 'register_hook()' function. It takes 3 arguments. The first is the hook we wish to catch, the second is the filename of the file to find our handler function (relative to the base of your Red Matrix installation), and the third is the function name of your handler function. So let's create our randplace_load() function right now. 
 
-$b can be called anything you like. This is information which is specific to the hook
-currently being processed, and generally contains information that is being immediately
-processed or acted on that you can use, display, or alter. Remember to declare it with
-'&' if you wish to alter it.
 
-**Modules**
+	function randplace_load() {
+	    register_hook('post_local', 'addon/randplace/randplace.php', 'randplace_post_hook');
 
-Plugins/addons may also act as "modules" and intercept all page requests for a given URL path. In order for a plugin to act as a module it needs to define a function "plugin_name_module()" which takes no arguments and need not do anything.
+    	register_hook('feature_settings', 'addon/randplace/randplace.php', 'randplace_settings');
+    	register_hook('feature_settings_post', 'addon/randplace/randplace.php', 'randplace_settings_post');
 
-If this function exists, you will now receive all page requests for "http://my.web.site/plugin_name" - with any number of URL components as additional arguments. These are parsed into an array $a->argv, with a corresponding $a->argc indicating the number of URL components. So http://my.web.site/plugin/arg1/arg2 would look for a module named "plugin" and pass its module functions the $a App structure (which is available to many components). This will include:
-     $a->argc = 3
-     $a->argv = array(0 => 'plugin', 1 => 'arg1', 2 => 'arg2');
+	}
 
-Your module functions will often contain the function plugin_name_content(&$a), which defines and returns the page body content. They may also contain plugin_name_post(&$a) which is called before the _content function and typically handles the results of POST forms. You may also have plugin_name_init(&$a) which is called very early on and often does module initialisation. 
 
+So we're going to catch three events, 'post_local' which is triggered when a post is made on the local system, 'feature_settings' to set some preferences for our plugin, and 'feature_settings_post' to store those settings. 
 
+Next we'll create an unload function. This is easy, as it just unregisters our hooks. It takes exactly the same arguments. 
 
-**Current hooks:**
+	function randplace_unload() {
+	    unregister_hook('post_local', 'addon/randplace/randplace.php', 'randplace_post_hook');
 
-**'authenticate'** - called when a user attempts to login.
-    $b is an array
-        'username' => the supplied username
-        'password' => the supplied password
-        'authenticated' => set this to non-zero to authenticate the user.
-        'user_record' => successful authentication must also return a valid user record from the database
+    	unregister_hook('feature_settings', 'addon/randplace/randplace.php', 'randplace_settings');
+    	unregister_hook('feature_settings_post', 'addon/randplace/randplace.php', 'randplace_settings_post');
 
-**'logged_in'** - called after a user has successfully logged in.
-    $b contains the $a->user array
+	}
 
 
-**'display_item'** - called when formatting a post for display.
-    $b is an array
-        'item' => The item (array) details pulled from the database
-        'output' => the (string) HTML representation of this item prior to adding it to the page
+Hooks are called with two arguments. The first is always $a, which is our global App structure and contains a huge amount of information about the state of the web request we are processing; as well as who the viewer is, and what our login state is, and the current contents of the web page we're probably constructing.
 
-**'post_local'** - called when a status post or comment is entered on the local system
-    $b is the item array of the information to be stored in the database
-        {Please note: body contents are bbcode - not HTML)
+The second argument is specific to the hook you're calling. It contains information relevant to that particular place in the program, and often allows you to look at, and even change it. In order to change it, you need to add '&' to the variable name so it is passed to your function by reference. Otherwise it will create a copy and any changes you make will be lost when the hook process returns. Usually (but not always) the second argument is a named array of data structures. Please see the "hook reference" (not yet written as of this date) for details on any specific hook. Occasionally you may need to view the program source to see precisely how a given hook is called and how the results are processed. 
 
-**'post_local_end'** - called when a local status post or comment has been stored on the local system
-    $b is the item array of the information which has just been stored in the database
-        {Please note: body contents are bbcode - not HTML)
+Let's go ahead and add some code to implement our post_local hook handler. 
 
-**'post_remote'** - called when receiving a post from another source. This may also be used to post local activity or system generated messages.
-    $b is the item array of information to be stored in the database and the item
-    body is bbcode.
+	function randplace_post_hook($a, &$item) {
 
-**'settings_form'** - called when generating the HTML for the user Settings page
-    $b is the (string) HTML of the settings page before the final '</form>' tag.
+	    /**
+    	 *
+	     * An item was posted on the local system.
+    	 * We are going to look for specific items:
+	     *      - A status post by a profile owner
+    	 *      - The profile owner must have allowed our plugin
+	     *
+    	 */
 
-**'settings_post'** - called when the Settings pages are submitted.
-    $b is the $_POST array
+	    logger('randplace invoked');
 
-**'plugin_settings'** - called when generating the HTML for the addon settings page
-    $b is the (string) HTML of the addon settings page before the final '</form>' tag.
+	    if(! local_user())   /* non-zero if this is a logged in user of this system */
+	        return;
 
-**'plugin_settings_post'** - called when the Addon Settings pages are submitted.
-    $b is the $_POST array
+	    if(local_user() != $item['uid'])    /* Does this person own the post? */
+	        return;
 
-**'profile_post'** - called when posting a profile page.
-    $b is the $_POST array
+	    if(($item['parent']) || ($item['item_restrict'])) {
+		    /* If the item has a parent, or item_restrict is non-zero, this is a comment or something else, not a status post. */
+	        return;
+		}
 
-**'profile_edit'** - called prior to output of profile edit page
-    $b is array
-        'profile' => profile (array) record from the database
-        'entry' => the (string) HTML of the generated entry
+	    /* Retrieve our personal config setting */
 
+	    $active = get_pconfig(local_user(), 'randplace', 'enable');
 
-**'profile_advanced'** - called when the HTML is generated for the 'Advanced profile', corresponding to the 'Profile' tab within a person's profile page.
-    $b is the (string) HTML representation of the generated profile
-    (The profile array details are in $a->profile)
+    	if(! $active)
+        	return;
+	    /**
+    	 *
+	     * OK, we're allowed to do our stuff.
+    	 * Here's what we are going to do:
+	     * load the list of timezone names, and use that to generate a list of world cities.
+    	 * Then we'll pick one of those at random and put it in the "location" field for the post.
+	     *
+    	 */
 
-**'directory_item'** - called from the Directory page when formatting an item for display
-    $b is an array
-        'contact' => contact (array) record for the person from the database
-        'entry' => the (string) HTML of the generated entry
+	    $cities = array();
+    	$zones = timezone_identifiers_list();
+	    foreach($zones as $zone) {
+    	    if((strpos($zone,'/')) && (! stristr($zone,'US/')) && (! stristr($zone,'Etc/')))
+        	    $cities[] = str_replace('_', ' ',substr($zone,strpos($zone,'/') + 1));
+	    }
 
-**'profile_sidebar_enter'** - called prior to generating the sidebar "short" profile for a page
-    $b is (array) the person's profile array
+    	if(! count($cities))
+        	return;
+	    $city = array_rand($cities,1);
+    	$item['location'] = $cities[$city];
 
-**'profile_sidebar'** - called when generating the sidebar "short" profile for a page
-    $b is an array
-        'profile' => profile (array) record for the person from the database
-        'entry' => the (string) HTML of the generated entry
+	    return;
+	}
 
-**'contact_block_end'** - called when formatting the block of contacts/friends on a profile sidebar has completed
-    $b is an array
-          'contacts' => array of contacts
-          'output' => the (string) generated HTML of the contact block
 
-**'bbcode'** - called during conversion of bbcode to html
-    $b is (string) converted text
+Now let's add our functions to create and store preference settings.
 
-**'html2bbcode'** - called during conversion of html to bbcode (e.g. remote message posting)
-    $b is (string) converted text
+	/**
+	 *
+	 * Callback from the settings post function.
+	 * $post contains the global $_POST array.
+	 * We will make sure we've got a valid user account 
+	 * and that only our own submit button was clicked
+	 * and if so set our configuration setting for this person.
+	 *
+	 */
 
-**'page_header'** - called after building the page navigation section
-    $b is (string) HTML of nav region
+	function randplace_settings_post($a,$post) {
+	    if(! local_user())
+	        return;
+	    if($_POST['randplace-submit'])
+	        set_pconfig(local_user(),'randplace','enable',intval($_POST['randplace']));
+	}
 
-**'personal_xrd'** - called prior to output of personal XRD file.
-    $b is an array
-        'user' => the user record for the person
-        'xml' => the complete XML to be output
 
-**'home_content'** - called prior to output home page content, shown to unlogged users
-    $b is (string) HTML of section region
 
-**'contact_edit'** - called when editing contact details on an individual from the Contacts page
-    $b is (array)
-        'contact' => contact record (array) of target contact
-        'output' => the (string) generated HTML of the contact edit page
+	/**
+	 *
+	 * Called from the Feature Setting form.
+	 * The second argument is a string in this case, the HTML content region of the page.
+	 * Add our own settings info to the string.
+	 *
+	 * For uniformity of settings pages, we use the following convention
+     *     <div class="settings-block">
+	 *       <h3>title</h3>
+	 *       .... settings html - many elements will be floated...
+	 *       <div class="clear"></div> <!-- generic class which clears all floats -->
+	 *       <input type="submit" name="pluginnname-submit" class="settings-submit" ..... />
+	 *     </div>
+	 */
 
-**'contact_edit_post'** - called when posting the contact edit page
-    $b is the $_POST array
 
-**'init_1'** - called just after DB has been opened and before session start
-    $b is not used or passed
 
-**'page_end'** - called after HTML content functions have completed
-    $b is (string) HTML of content div
+	function randplace_settings(&$a,&$s) {
 
-**'avatar_lookup'** - called when looking up the avatar
-    $b is (array)
-        'size' => the size of the avatar that will be looked up
-        'email' => email to look up the avatar for
-        'url' => the (string) generated URL of the avatar
+	    if(! local_user())
+	        return;
 
+	    /* Add our stylesheet to the page so we can make our settings look nice */
 
-A complete list of all hook callbacks with file locations (generated 14-Feb-2012): Please see the source for details of any hooks not documented above.
+	    head_add_css(/addon/randplace/randplace.css');
 
+	    /* Get the current state of our config variable */
 
-boot.php:	call_hooks('login_hook',$o);
+	    $enabled = get_pconfig(local_user(),'randplace','enable');
 
-boot.php:	call_hooks('profile_sidebar_enter', $profile);
+	    $checked = (($enabled) ? ' checked="checked" ' : '');
 
-boot.php:	call_hooks('profile_sidebar', $arr);
+	    /* Add some HTML to the existing form */
 
-boot.php:	call_hooks("proc_run", $arr);
+	    $s .= '<div class="settings-block">';
+	    $s .= '<h3>' . t('Randplace Settings') . '</h3>';
+	    $s .= '<div id="randplace-enable-wrapper">';
+	    $s .= '<label id="randplace-enable-label" for="randplace-checkbox">' . t('Enable Randplace Plugin') . '</label>';
+	    $s .= '<input id="randplace-checkbox" type="checkbox" name="randplace" value="1" ' . $checked . '/>';
+	    $s .= '</div><div class="clear"></div>';
 
-include/contact_selectors.php:	call_hooks('network_to_name', $nets);
+	    /* provide a submit button */
 
-include/api.php:				call_hooks('logged_in', $a->user);
+	    $s .= '<div class="settings-submit-wrapper" ><input type="submit" name="randplace-submit" class="settings-submit" value="' . t('Submit') . '" /></div></div>';
 
-include/api.php:		call_hooks('logged_in', $a->user);
+	}
 
-include/queue.php:		call_hooks('queue_predeliver', $a, $r);
 
-include/queue.php:				call_hooks('queue_deliver', $a, $params);
+   
 
-include/text.php:	call_hooks('contact_block_end', $arr);
 
-include/text.php:	call_hooks('smilie', $s);
+***Advanced Plugins***
 
-include/text.php:	call_hooks('prepare_body_init', $item); 
+Sometimes your plugins want to provide a range of new functionality which isn't provided at all or is clumsy to provide using hooks. In this case your plugin can also act as a 'module'. A module in our case refers to a structured webpage handler which responds to a given URL. Then anything which accesses that URL will be handled completely by your plugin.
 
-include/text.php:	call_hooks('prepare_body', $prep_arr);
+The key to this is to create a simple function named pluginname_module() which does nothing. 
 
-include/text.php:	call_hooks('prepare_body_final', $prep_arr);
+	function randplace_module() { return; }
 
-include/nav.php:	call_hooks('page_header', $a->page['nav']);
+Once this function exists, the URL https://yoursite/randplace will access your plugin as a module. Then you can define functions which are called at various points to build a webpage just like the modules in the mod/ directory. The typical functions and the order which they are called is
 
-include/auth.php:		call_hooks('authenticate', $addon_auth);
+	modulename_init($a)    // (e.g. randplace_init($a);) called first - if you wish to emit json or xml, 
+	                       // you should do it here, followed by killme() which will avoid the default action of building a webpage
+	modulename_aside($a)   // Often used to create sidebar content
+	modulename_post($a)    // Called whenever the page is accessed via the "post" method
+	modulename_content($a) // called to generate the central page content. This function should return a string 
+	                       // consisting of the central page content.
 
-include/bbcode.php:	call_hooks('bbcode',$Text);
+Your module functions have access to the URL path as if they were standalone programs in the Unix operating system. For instance if you visit the page
+	
+	https://yoursite/randplace/something/somewhere/whatever
 
-include/oauth.php:		call_hooks('logged_in', $a->user);		
+we will create an argc/argv list for use by your module functions
 
-include/acl_selectors.php:	call_hooks($a->module . '_pre_' . $selname, $arr);
+	$x = argc(); $x will be 4, the number of path arguments after the sitename
 
-include/acl_selectors.php:	call_hooks($a->module . '_post_' . $selname, $o);
+	for($x = 0; $x < argc(); $x ++)
+		echo $x . ' ' . argv($x);
 
-include/acl_selectors.php:	call_hooks('contact_select_options', $x);
 
-include/acl_selectors.php:	call_hooks($a->module . '_pre_' . $selname, $arr);
+	0 randplace
+	1 something
+	2 somewhere
+	3 whatever
 
-include/acl_selectors.php:	call_hooks($a->module . '_post_' . $selname, $o);
 
-include/acl_selectors.php:	call_hooks($a->module . '_pre_' . $selname, $arr);
+***Porting Friendica Plugins***
 
-include/acl_selectors.php:	call_hooks($a->module . '_post_' . $selname, $o);
+The Red Matrix uses a similar plugin architecture to the Friendica project. The authentication, identity, and permissions systems are completely different. Many Friendica can be ported reasonably easily by renaming a few functions - and then ensuring that the permissions model is adhered to. The functions which need to be renamed are:
 
-include/notifier.php:		call_hooks('notifier_normal',$target_item);
+* Friendica's pluginname_install() is pluginname_load()
 
-include/notifier.php:	call_hooks('notifier_end',$target_item);
+* Friendica's pluginname_uninstall() is pluginname_unload()
 
-include/items.php:	call_hooks('atom_feed', $atom);
+The Red Matrix has _install and _uninstall functions but these are used differently.
 
-include/items.php:		call_hooks('atom_feed_end', $atom);
+* Friendica's "plugin_settings" hook is called "feature_settings"
 
-include/items.php:	call_hooks('atom_feed_end', $atom);
+* Friendica's "plugin_settings_post" hook is called "feature_settings_post"
 
-include/items.php:	call_hooks('parse_atom', $arr);
-
-include/items.php:	call_hooks('post_remote',$arr);
-
-include/items.php:	call_hooks('atom_author', $o);
-
-include/items.php:	call_hooks('atom_entry', $o);
-
-include/bb2diaspora.php:	call_hooks('bb2diaspora',$Text);
-
-include/cronhooks.php:	call_hooks('cron', $d);
-
-include/security.php:		call_hooks('logged_in', $a->user);
-
-include/html2bbcode.php:	call_hooks('html2bbcode', $text);
-
-include/Contact.php:	call_hooks('remove_user',$r[0]);
-
-include/Contact.php:	call_hooks('contact_photo_menu', $args);
-
-include/conversation.php:	call_hooks('conversation_start',$cb);
-
-include/conversation.php:				call_hooks('render_location',$locate);
-
-include/conversation.php:				call_hooks('display_item', $arr);
-
-include/conversation.php:				call_hooks('render_location',$locate);
-
-include/conversation.php:				call_hooks('display_item', $arr);
-
-include/conversation.php:	call_hooks('item_photo_menu', $args);
-
-include/conversation.php:	call_hooks('jot_tool', $jotplugins);
-
-include/conversation.php:	call_hooks('jot_networks', $jotnets);
-
-include/plugin.php:if(! function_exists('call_hooks')) {
-
-include/plugin.php:function call_hooks($name, &$data = null) {
-
-index.php:	call_hooks('init_1');
-
-index.php:call_hooks('app_menu', $arr);
-
-index.php:call_hooks('page_end', $a->page['content']);
-
-mod/photos.php:	call_hooks('photo_post_init', $_POST);
-
-mod/photos.php:	call_hooks('photo_post_file',$ret);
-
-mod/photos.php:		call_hooks('photo_post_end',$foo);
-
-mod/photos.php:		call_hooks('photo_post_end',$foo);
-
-mod/photos.php:		call_hooks('photo_post_end',$foo);
-
-mod/photos.php:	call_hooks('photo_post_end',intval($item_id));
-
-mod/photos.php:		call_hooks('photo_upload_form',$ret);
-
-mod/friendica.php:	call_hooks('about_hook', $o); 	
-
-mod/editpost.php:	call_hooks('jot_tool', $jotplugins);
-
-mod/editpost.php:	call_hooks('jot_networks', $jotnets);
-
-mod/parse_url.php:	call_hooks('parse_link', $arr);
-
-mod/home.php:	call_hooks('home_init',$ret);
-
-mod/home.php:	call_hooks("home_content",$o);
-
-mod/contacts.php:	call_hooks('contact_edit_post', $_POST);
-
-mod/contacts.php:		call_hooks('contact_edit', $arr);
-
-mod/settings.php:		call_hooks('plugin_settings_post', $_POST);
-
-mod/settings.php:		call_hooks('connector_settings_post', $_POST);
-
-mod/settings.php:	call_hooks('settings_post', $_POST);
-
-mod/settings.php:		call_hooks('plugin_settings', $settings_addons);
-
-mod/settings.php:		call_hooks('connector_settings', $settings_connectors);
-
-mod/settings.php:	call_hooks('settings_form',$o);
-
-mod/register.php:	call_hooks('register_account', $newuid);
-
-mod/like.php:	call_hooks('post_local_end', $arr);
-
-mod/xrd.php:	call_hooks('personal_xrd', $arr);
-
-mod/item.php:	call_hooks('post_local_start', $_REQUEST);
-
-mod/item.php:	call_hooks('post_local',$datarray);
-
-mod/item.php:	call_hooks('post_local_end', $datarray);
-
-mod/profile.php:			call_hooks('profile_advanced',$o);
-
-mod/profiles.php:	call_hooks('profile_post', $_POST);
-
-mod/profiles.php:		call_hooks('profile_edit', $arr);
-
-mod/tagger.php:	call_hooks('post_local_end', $arr);
-
-mod/cb.php:	call_hooks('cb_init');
-
-mod/cb.php:	call_hooks('cb_post', $_POST);
-
-mod/cb.php:	call_hooks('cb_afterpost');
-
-mod/cb.php:	call_hooks('cb_content', $o);
-
-mod/directory.php:			call_hooks('directory_item', $arr);
+Changing these will often allow your plugin to function, but please double check all your permission and identity code because the concepts behind it are completely different in the Red Matrix. Many structured data names (especially DB schema columns) are also quite different. 
 

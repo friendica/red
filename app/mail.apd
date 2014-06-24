@@ -1,0 +1,4 @@
+url: $baseurl/message
+requires: local_user
+name: Mail
+photo: $baseurl/app/mail.png

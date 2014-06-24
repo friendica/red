@@ -43,7 +43,7 @@ msgstr "Fracassà l'actualització de Contacte"
 #: ../../mod/settings.php:49 ../../mod/settings.php:411
 #: ../../mod/settings.php:416 ../../mod/manage.php:86 ../../mod/network.php:6
 #: ../../mod/notes.php:20 ../../mod/attach.php:33 ../../mod/group.php:19
-#: ../../mod/viewcontacts.php:22 ../../mod/register.php:36
+#: ../../mod/viewconnections.php:22 ../../mod/register.php:36
 #: ../../mod/regmod.php:111 ../../mod/item.php:124 ../../mod/item.php:140
 #: ../../mod/profile_photo.php:19 ../../mod/profile_photo.php:137
 #: ../../mod/profile_photo.php:148 ../../mod/profile_photo.php:159
@@ -412,7 +412,7 @@ msgid "Image upload failed."
 msgstr "Actualització de la imatge fracassada."
 
 #: ../../mod/photos.php:759 ../../mod/community.php:16
-#: ../../mod/dfrn_request.php:625 ../../mod/viewcontacts.php:17
+#: ../../mod/dfrn_request.php:625 ../../mod/viewconnections.php:17
 #: ../../mod/display.php:7 ../../mod/search.php:71 ../../mod/directory.php:33
 msgid "Public access denied."
 msgstr "Accés públic denegat."
@@ -1467,7 +1467,7 @@ msgid "Edit contact notes"
 msgstr "Editar notes de contactes"
 
 #: ../../mod/contacts.php:328 ../../mod/contacts.php:497
-#: ../../mod/viewcontacts.php:60
+#: ../../mod/viewconnections.php:60
 #, php-format
 msgid "Visit %s's profile [%s]"
 msgstr "Visitar perfil de %s [%s]"
@@ -2362,11 +2362,11 @@ msgstr "Visible Per"
 msgid "All Contacts (with secure profile access)"
 msgstr "Tots els Contactes (amb accés segur al perfil)"
 
-#: ../../mod/viewcontacts.php:39
+#: ../../mod/viewconnections.php:39
 msgid "No contacts."
 msgstr "Sense Contactes"
 
-#: ../../mod/viewcontacts.php:74 ../../include/text.php:584
+#: ../../mod/viewconnections.php:74 ../../include/text.php:584
 msgid "View Contacts"
 msgstr "Veure Contactes"
 

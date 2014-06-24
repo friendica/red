@@ -1,0 +1,12 @@
+#attach-edit-backlink, #cutpasteinput, #linkpasteinput {
+	margin-bottom: 10px;
+}
+
+#attach-edit-submit {
+	margin-top: 20px;
+}
+
+#cutpasteinput, #linkpasteinput {
+	width: 600px;
+}
+

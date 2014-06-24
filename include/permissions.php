@@ -1,4 +1,4 @@
-<?php
+<?php /** @file */
 
 
 function get_perms() {
@@ -15,6 +15,7 @@ function get_perms() {
 		'view_photos'   => array('channel_r_photos',  intval(PERMS_R_PHOTOS),  true, t('Can view my "public" photo albums'), ''),
 		'view_contacts' => array('channel_r_abook',   intval(PERMS_R_ABOOK),   true, t('Can view my "public" address book'), ''),
 		'view_storage' => array('channel_r_storage',   intval(PERMS_R_STORAGE),   true, t('Can view my "public" file storage'), ''),
+		'view_pages' => array('channel_r_pages',   intval(PERMS_R_PAGES),   true, t('Can view my "public" pages'), ''),
 
 		// Write permissions
 		'send_stream'   => array('channel_w_stream',  intval(PERMS_W_STREAM),  false, t('Can send me their channel stream and posts'), ''),
@@ -22,26 +23,31 @@ function get_perms() {
 		'post_comments' => array('channel_w_comment', intval(PERMS_W_COMMENT), false, t('Can comment on my posts'), ''),
 		'post_mail'     => array('channel_w_mail',    intval(PERMS_W_MAIL),    false, t('Can send me private mail messages'), ''),
 		'post_photos'   => array('channel_w_photos',  intval(PERMS_W_PHOTOS),  false, t('Can post photos to my photo albums'), ''),
-		'tag_deliver'   => array('channel_w_tagwall', intval(PERMS_W_TAGWALL), false, t('Can forward to all my channel contacts via post tags'), t('Advanced - useful for creating group forum channels')),
-		'chat'          => array('channel_w_chat',    intval(PERMS_W_CHAT),    false, t('Can chat with me (when available)'), t('Requires compatible chat plugin')),
+		'tag_deliver'   => array('channel_w_tagwall', intval(PERMS_W_TAGWALL), false, t('Can forward to all my channel contacts via post @mentions'), t('Advanced - useful for creating group forum channels')),
+		'chat'          => array('channel_w_chat',    intval(PERMS_W_CHAT),    false, t('Can chat with me (when available)'), t('')),
 		'write_storage' => array('channel_w_storage',   intval(PERMS_W_STORAGE),   false, t('Can write to my "public" file storage'), ''),
+		'write_pages' => array('channel_w_pages',   intval(PERMS_W_PAGES),   false, t('Can edit my "public" pages'), ''),
+
+		'republish' => array('channel_a_republish', intval(PERMS_A_REPUBLISH), false, t('Can source my "public" posts in derived channels'), t('Somewhat advanced - very useful in open communities')),
 
 		'delegate'      => array('channel_a_delegate', intval(PERMS_A_DELEGATE),    false, t('Can administer my channel resources'), t('Extremely advanced. Leave this alone unless you know what you are doing')),
 	);
-	return $global_perms;
+	$ret = array('global_permissions' => $global_perms);
+	call_hooks('global_permissions',$ret);
+	return $ret['global_permissions'];
 }
 
 
 /**
- * get_all_perms($uid,$observer)
+ * get_all_perms($uid,$observer_xchan)
  *
  * @param $uid : The channel_id associated with the resource owner
- * @param $observer: The xchan_hash representing the observer
+ * @param $observer_xchan: The xchan_hash representing the observer
  *
  * @returns: array of all permissions, key is permission name, value is true or false
  */
 
-function get_all_perms($uid,$observer,$internal_use = true) {
+function get_all_perms($uid,$observer_xchan,$internal_use = true) {
 
 	$global_perms = get_perms();
 
@@ -81,13 +87,26 @@ function get_all_perms($uid,$observer,$internal_use = true) {
 		// Next we're going to check for blocked or ignored contacts.
 		// These take priority over all other settings.
 
-		if($observer) {
+		if($observer_xchan) {
+			if($r[0][$channel_perm] & PERMS_AUTHED) {
+				$ret[$perm_name] = true;
+				continue;
+			}
+			
 			if(! $abook_checked) {
-				$x = q("select abook_my_perms, abook_flags from abook 
-					where abook_channel = %d and abook_xchan = '%s' limit 1",
+				$x = q("select abook_my_perms, abook_flags, xchan_network from abook left join xchan on abook_xchan = xchan_hash
+					where abook_channel = %d and abook_xchan = '%s' and not ( abook_flags & %d ) limit 1",
 					intval($uid),
-					dbesc($observer)
+					dbesc($observer_xchan),
+					intval(ABOOK_FLAG_SELF)
 				);
+				if(! $x) {
+					// not in address book, see if they've got an xchan
+					$y = q("select xchan_network from xchan where xchan_hash = '%s' limit 1",
+	            		dbesc($observer_xchan)
+					);
+				}
+
 				$abook_checked = true;
 			}
 
@@ -107,10 +126,10 @@ function get_all_perms($uid,$observer,$internal_use = true) {
 			}
 		}
 
-		// Check if this $uid is actually the $observer - if it's your content
+		// Check if this $uid is actually the $observer_xchan - if it's your content
 		// you always have permission to do anything
 
-		if(($observer) && ($r[0]['channel_hash'] === $observer)) {
+		if(($observer_xchan) && ($r[0]['channel_hash'] === $observer_xchan)) {
 			$ret[$perm_name] = true;
 			continue;
 		}
@@ -125,16 +144,18 @@ function get_all_perms($uid,$observer,$internal_use = true) {
 		// From here on out, we need to know who they are. If we can't figure it
 		// out, permission is denied.
 
-		if(! $observer) {
+		if(! $observer_xchan) {
 			$ret[$perm_name] = false;
 			continue;
 		}
 
-		// If we're still here, we have an observer, which means they're in the network.
+		// If we're still here, we have an observer, check the network.
 
 		if($r[0][$channel_perm] & PERMS_NETWORK) {
-			$ret[$perm_name] = true;
-			continue;
+			if(($x && $x[0]['xchan_network'] === 'zot') || ($y && $y[0]['xchan_network'] === 'zot')) {
+				$ret[$perm_name] = true;
+				continue;
+			}
 		}
 
 		// If PERMS_SITE is specified, find out if they've got an account on this hub
@@ -142,7 +163,7 @@ function get_all_perms($uid,$observer,$internal_use = true) {
 		if($r[0][$channel_perm] & PERMS_SITE) {
 			if(! $onsite_checked) {
 				$c = q("select channel_hash from channel where channel_hash = '%s' limit 1",
-					dbesc($observer)
+					dbesc($observer_xchan)
 				);
 
 				$onsite_checked = true;
@@ -156,25 +177,36 @@ function get_all_perms($uid,$observer,$internal_use = true) {
 			continue;
 		}	
 
-		// If PERMS_CONTACTS or PERMS_SPECIFIC, they need to be in your address book
-		// $x is a valid address book entry
+		// From here on we require that the observer be a connection and
+		// handle whether we're allowing any, approved or specific ones
 
 		if(! $x) {
 			$ret[$perm_name] = false;
 			continue;
 		}
 
-		if(($r) && ($r[0][$channel_perm] & PERMS_CONTACTS)) {
+		// They are in your address book, but haven't been approved
 
-			// They're a contact, so they have permission
+		if($r[0][$channel_perm] & PERMS_PENDING) {
+			$ret[$perm_name] = true;
+			continue;
+		}
 
+		if($x[0]['abook_flags'] & ABOOK_FLAG_PENDING) {
+			$ret[$perm_name] = false;
+			continue;
+		}
+
+		// They're a contact, so they have permission
+
+		if($r[0][$channel_perm] & PERMS_CONTACTS) {
 			$ret[$perm_name] = true;
 			continue;
 		}
 
 		// Permission granted to certain channels. Let's see if the observer is one of them
 
-		if(($r) && ($r[0][$channel_perm] & PERMS_SPECIFIC)) {
+		if($r[0][$channel_perm] & PERMS_SPECIFIC) {
 			if(($x[0]['abook_my_perms'] & $global_perms[$perm_name][1])) {
 				$ret[$perm_name] = true;
 				continue;
@@ -188,11 +220,27 @@ function get_all_perms($uid,$observer,$internal_use = true) {
 
 	}
 
-	return $ret;
+	$arr = array(
+		'channel_id'    => $uid,
+		'observer_hash' => $observer_xchan,
+		'permissions'   => $ret);
+
+	call_hooks('get_all_perms',$arr);
+	return $arr['permissions'];
 }
 
 
-function perm_is_allowed($uid,$observer,$permission) {
+function perm_is_allowed($uid,$observer_xchan,$permission) {
+
+	$arr = array(
+		'channel_id'    => $uid,
+		'observer_hash' => $observer_xchan,
+		'permission'    => $permission,
+		'result'        => false);
+
+	call_hooks('perm_is_allowed',$arr);
+	if($arr['result'])
+		return true;
 
 	$global_perms = get_perms();
 
@@ -207,10 +255,15 @@ function perm_is_allowed($uid,$observer,$permission) {
 	if(! $r)
 		return false;
 
-	if($observer) {
-		$x = q("select abook_my_perms, abook_flags from abook where abook_channel = %d and abook_xchan = '%s' limit 1",
+	if($observer_xchan) {
+		if($r[0][$channel_perm] & PERMS_AUTHED)
+			return true;
+
+		$x = q("select abook_my_perms, abook_flags, xchan_network from abook left join xchan on abook_xchan = xchan_hash 
+			where abook_channel = %d and abook_xchan = '%s' and not ( abook_flags & %d ) limit 1",
 			intval($uid),
-			dbesc($observer)
+			dbesc($observer_xchan),
+			intval(ABOOK_FLAG_SELF)
 		);
 
 		// If they're blocked - they can't read or write
@@ -221,12 +274,17 @@ function perm_is_allowed($uid,$observer,$permission) {
 		if(($x) && (! $global_perms[$permission][2]) && ($x[0]['abook_flags'] & ABOOK_FLAG_IGNORED))
 			return false;
 
+		if(! $x) {
+			// not in address book, see if they've got an xchan
+			$y = q("select xchan_network from xchan where xchan_hash = '%s' limit 1",
+	            dbesc($observer_xchan)
+			);
+		}
 	}
 
+	// Check if this $uid is actually the $observer_xchan
 
-	// Check if this $uid is actually the $observer
-
-	if($r[0]['channel_hash'] === $observer)
+	if($r[0]['channel_hash'] === $observer_xchan)
 		return true;
 
 	
@@ -235,30 +293,46 @@ function perm_is_allowed($uid,$observer,$permission) {
 
 	// If it's an unauthenticated observer, we only need to see if PERMS_PUBLIC is set
 
-	if(! $observer) {
+	if(! $observer_xchan) {
 		return false;
 	}
 
-	// If we're still here, we have an observer, which means they're in the network.
+	// If we're still here, we have an observer, check the network.
 
-	if($r[0][$channel_perm] & PERMS_NETWORK)
-		return true;
-
+	if($r[0][$channel_perm] & PERMS_NETWORK) {
+		if (($x && $x[0]['xchan_network'] === 'zot') || ($y && $y[0]['xchan_network'] === 'zot'))
+			return true;
+	}
 
 	// If PERMS_SITE is specified, find out if they've got an account on this hub
 
 	if($r[0][$channel_perm] & PERMS_SITE) {
 		$c = q("select channel_hash from channel where channel_hash = '%s' limit 1",
-			dbesc($observer)
+			dbesc($observer_xchan)
 		);
 		if($c)
 			return true;
 		return false;
-	}	
+	}
+
+	// From here on we require that the observer be a connection and
+	// handle whether we're allowing any, approved or specific ones
 
 	if(! $x) {
 		return false;
 	}
+
+	// They are in your address book, but haven't been approved
+
+	if($r[0][$channel_perm] & PERMS_PENDING) {
+		return true;
+	}
+
+	if($x[0]['abook_flags'] & ABOOK_FLAG_PENDING) {
+		return false;
+	}
+
+	// They're a contact, so they have permission
 
 	if($r[0][$channel_perm] & PERMS_CONTACTS) {
 		return true;
@@ -274,9 +348,51 @@ function perm_is_allowed($uid,$observer,$permission) {
 	// No permissions allowed.
 
 	return false;		
-
 }
 
 
+// Check a simple array of observers against a permissions
+// return a simple array of those with permission
+
+function check_list_permissions($uid,$arr,$perm) {
+	$result = array();
+	if($arr)
+		foreach($arr as $x)
+			if(perm_is_allowed($uid,$x,$perm))
+				$result[] = $x;
+	return($result);
+}
 
 
+function site_default_perms() {
+
+	$typical = array(
+		'view_stream'   => PERMS_PUBLIC,
+		'view_profile'  => PERMS_PUBLIC,
+		'view_photos'   => PERMS_PUBLIC,
+		'view_contacts' => PERMS_PUBLIC,
+		'view_storage'  => PERMS_PUBLIC,
+		'view_pages'    => PERMS_PUBLIC,
+		'send_stream'   => PERMS_SPECIFIC,
+		'post_wall'     => PERMS_SPECIFIC,
+		'post_comments' => PERMS_SPECIFIC,
+		'post_mail'     => PERMS_SPECIFIC,
+		'post_photos'   => 0,
+		'tag_deliver'   => PERMS_SPECIFIC,
+		'chat'          => PERMS_SPECIFIC,
+		'write_storage' => 0,
+		'write_pages'   => 0,
+		'delegate'      => 0,
+	);
+
+	$global_perms = get_perms();
+	$ret = array();
+
+	foreach($global_perms as $perm => $v) {
+		$x = get_config('default_perms',$perm);
+		if($x === false)
+			$x = $typical[$perm];
+		$ret[$perm] = $x;
+	}
+	return $ret;
+}

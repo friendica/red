@@ -14,9 +14,10 @@ CREATE TABLE IF NOT EXISTS `abook` (
   `abook_my_perms` int(11) NOT NULL DEFAULT '0',
   `abook_their_perms` int(11) NOT NULL DEFAULT '0',
   `abook_closeness` tinyint(3) unsigned NOT NULL DEFAULT '99',
+  `abook_rating` int(11) NOT NULL DEFAULT '0',
   `abook_created` datetime NOT NULL DEFAULT '0000-00-00 00:00:00',
   `abook_updated` datetime NOT NULL DEFAULT '0000-00-00 00:00:00',
-  `abook_connnected` datetime NOT NULL DEFAULT '0000-00-00 00:00:00',
+  `abook_connected` datetime NOT NULL DEFAULT '0000-00-00 00:00:00',
   `abook_dob` datetime NOT NULL DEFAULT '0000-00-00 00:00:00',
   `abook_flags` int(11) NOT NULL DEFAULT '0',
   `abook_profile` char(64) NOT NULL DEFAULT '',
@@ -29,10 +30,11 @@ CREATE TABLE IF NOT EXISTS `abook` (
   KEY `abook_closeness` (`abook_closeness`),
   KEY `abook_created` (`abook_created`),
   KEY `abook_updated` (`abook_updated`),
-  KEY `abook_connnected` (`abook_connnected`),
   KEY `abook_flags` (`abook_flags`),
   KEY `abook_profile` (`abook_profile`),
-  KEY `abook_dob` (`abook_dob`)
+  KEY `abook_dob` (`abook_dob`),
+  KEY `abook_connected` (`abook_connected`),
+  KEY `abook_rating` (`abook_rating`)
 ) ENGINE=MyISAM  DEFAULT CHARSET=utf8;
 
 CREATE TABLE IF NOT EXISTS `account` (
@@ -42,6 +44,7 @@ CREATE TABLE IF NOT EXISTS `account` (
   `account_salt` char(32) NOT NULL DEFAULT '',
   `account_password` char(255) NOT NULL DEFAULT '',
   `account_email` char(255) NOT NULL DEFAULT '',
+  `account_external` char(255) NOT NULL DEFAULT '',
   `account_language` char(16) NOT NULL DEFAULT 'en',
   `account_created` datetime NOT NULL DEFAULT '0000-00-00 00:00:00',
   `account_lastlog` datetime NOT NULL DEFAULT '0000-00-00 00:00:00',
@@ -51,6 +54,7 @@ CREATE TABLE IF NOT EXISTS `account` (
   `account_expires` datetime NOT NULL DEFAULT '0000-00-00 00:00:00',
   `account_expire_notified` datetime NOT NULL DEFAULT '0000-00-00 00:00:00',
   `account_service_class` char(32) NOT NULL DEFAULT '',
+  `account_level` int(10) unsigned NOT NULL DEFAULT '0',
   PRIMARY KEY (`account_id`),
   KEY `account_email` (`account_email`),
   KEY `account_service_class` (`account_service_class`),
@@ -59,7 +63,9 @@ CREATE TABLE IF NOT EXISTS `account` (
   KEY `account_roles` (`account_roles`),
   KEY `account_lastlog` (`account_lastlog`),
   KEY `account_expires` (`account_expires`),
-  KEY `account_default_channel` (`account_default_channel`)
+  KEY `account_default_channel` (`account_default_channel`),
+  KEY `account_external` (`account_external`),
+  KEY `account_level` (`account_level`)
 ) ENGINE=MyISAM  DEFAULT CHARSET=utf8;
 
 CREATE TABLE IF NOT EXISTS `addon` (
@@ -74,16 +80,47 @@ CREATE TABLE IF NOT EXISTS `addon` (
   KEY `hidden` (`hidden`),
   KEY `name` (`name`),
   KEY `installed` (`installed`)
+) ENGINE=MyISAM  DEFAULT CHARSET=utf8;
+
+
+CREATE TABLE IF NOT EXISTS `app` (
+  `id` int(11) NOT NULL AUTO_INCREMENT,
+  `app_id` char(255) NOT NULL DEFAULT '',
+  `app_sig` char(255) NOT NULL DEFAULT '',
+  `app_author` char(255) NOT NULL DEFAULT '',
+  `app_name` char(255) NOT NULL DEFAULT '',
+  `app_desc` text NOT NULL,
+  `app_url` char(255) NOT NULL DEFAULT '',
+  `app_photo` char(255) NOT NULL DEFAULT '',
+  `app_version` char(255) NOT NULL DEFAULT '',
+  `app_channel` int(11) NOT NULL DEFAULT '0',
+  `app_addr` char(255) NOT NULL DEFAULT '',
+  `app_price` char(255) NOT NULL DEFAULT '',
+  `app_page` char(255) NOT NULL DEFAULT '',
+  `app_requires` char(255) NOT NULL DEFAULT '',
+  PRIMARY KEY (`id`),
+  KEY `app_id` (`app_id`),
+  KEY `app_name` (`app_name`),
+  KEY `app_url` (`app_url`),
+  KEY `app_photo` (`app_photo`),
+  KEY `app_version` (`app_version`),
+  KEY `app_channel` (`app_channel`),
+  KEY `app_price` (`app_price`)
 ) ENGINE=MyISAM DEFAULT CHARSET=utf8;
+
 
 CREATE TABLE IF NOT EXISTS `attach` (
   `id` int(10) unsigned NOT NULL AUTO_INCREMENT,
   `aid` int(10) unsigned NOT NULL DEFAULT '0',
   `uid` int(10) unsigned NOT NULL DEFAULT '0',
   `hash` char(64) NOT NULL DEFAULT '',
+  `creator` char(128) NOT NULL DEFAULT '',
   `filename` char(255) NOT NULL DEFAULT '',
   `filetype` char(64) NOT NULL DEFAULT '',
   `filesize` int(10) unsigned NOT NULL DEFAULT '0',
+  `revision` int(10) unsigned NOT NULL DEFAULT '0',
+  `folder` char(64) NOT NULL DEFAULT '',
+  `flags` int(10) unsigned NOT NULL DEFAULT '0',
   `data` longblob NOT NULL,
   `created` datetime NOT NULL DEFAULT '0000-00-00 00:00:00',
   `edited` datetime NOT NULL DEFAULT '0000-00-00 00:00:00',
@@ -94,7 +131,16 @@ CREATE TABLE IF NOT EXISTS `attach` (
   PRIMARY KEY (`id`),
   KEY `aid` (`aid`),
   KEY `uid` (`uid`),
-  KEY `hash` (`hash`)
+  KEY `hash` (`hash`),
+  KEY `filename` (`filename`),
+  KEY `filetype` (`filetype`),
+  KEY `filesize` (`filesize`),
+  KEY `created` (`created`),
+  KEY `edited` (`edited`),
+  KEY `revision` (`revision`),
+  KEY `folder` (`folder`),
+  KEY `flags` (`flags`),
+  KEY `creator` (`creator`)
 ) ENGINE=MyISAM  DEFAULT CHARSET=utf8;
 
 CREATE TABLE IF NOT EXISTS `auth_codes` (
@@ -113,16 +159,6 @@ CREATE TABLE IF NOT EXISTS `cache` (
   PRIMARY KEY (`k`)
 ) ENGINE=MyISAM DEFAULT CHARSET=utf8;
 
-CREATE TABLE IF NOT EXISTS `challenge` (
-  `id` int(10) unsigned NOT NULL AUTO_INCREMENT,
-  `challenge` char(255) NOT NULL,
-  `dfrn-id` char(255) NOT NULL,
-  `expire` int(11) NOT NULL,
-  `type` char(255) NOT NULL,
-  `last_update` char(255) NOT NULL,
-  PRIMARY KEY (`id`)
-) ENGINE=MyISAM  DEFAULT CHARSET=utf8;
-
 CREATE TABLE IF NOT EXISTS `channel` (
   `channel_id` int(10) unsigned NOT NULL AUTO_INCREMENT,
   `channel_account_id` int(10) unsigned NOT NULL DEFAULT '0',
@@ -140,34 +176,40 @@ CREATE TABLE IF NOT EXISTS `channel` (
   `channel_prvkey` text NOT NULL,
   `channel_notifyflags` int(10) unsigned NOT NULL DEFAULT '65535',
   `channel_pageflags` int(10) unsigned NOT NULL DEFAULT '0',
+  `channel_dirdate` datetime NOT NULL DEFAULT '0000-00-00 00:00:00',
+  `channel_deleted` datetime NOT NULL DEFAULT '0000-00-00 00:00:00',
   `channel_max_anon_mail` int(10) unsigned NOT NULL DEFAULT '10',
   `channel_max_friend_req` int(10) unsigned NOT NULL DEFAULT '10',
   `channel_expire_days` int(11) NOT NULL DEFAULT '0',
   `channel_passwd_reset` char(255) NOT NULL DEFAULT '',
-  `channel_default_gid` int(10) unsigned NOT NULL DEFAULT '0',
+  `channel_default_group` char(255) NOT NULL DEFAULT '',
   `channel_allow_cid` mediumtext NOT NULL,
   `channel_allow_gid` mediumtext NOT NULL,
   `channel_deny_cid` mediumtext NOT NULL,
   `channel_deny_gid` mediumtext NOT NULL,
-  `channel_r_stream` tinyint(3) unsigned NOT NULL DEFAULT '128',
-  `channel_r_profile` tinyint(3) unsigned NOT NULL DEFAULT '128',
-  `channel_r_photos` tinyint(3) unsigned NOT NULL DEFAULT '128',
-  `channel_r_abook` tinyint(3) unsigned NOT NULL DEFAULT '128',
-  `channel_w_stream` tinyint(3) unsigned NOT NULL DEFAULT '128',
-  `channel_w_wall` tinyint(3) unsigned NOT NULL DEFAULT '128',
-  `channel_w_tagwall` tinyint(3) unsigned NOT NULL DEFAULT '128',
-  `channel_w_comment` tinyint(3) unsigned NOT NULL DEFAULT '128',
-  `channel_w_mail` tinyint(3) unsigned NOT NULL DEFAULT '128',
-  `channel_w_photos` tinyint(3) unsigned NOT NULL DEFAULT '128',
-  `channel_w_chat` tinyint(3) unsigned NOT NULL DEFAULT '128',
-  `channel_a_delegate` tinyint(3) unsigned NOT NULL DEFAULT '0',
+  `channel_r_stream` int(10) unsigned NOT NULL DEFAULT '128',
+  `channel_r_profile` int(10) unsigned NOT NULL DEFAULT '128',
+  `channel_r_photos` int(10) unsigned NOT NULL DEFAULT '128',
+  `channel_r_abook` int(10) unsigned NOT NULL DEFAULT '128',
+  `channel_w_stream` int(10) unsigned NOT NULL DEFAULT '128',
+  `channel_w_wall` int(10) unsigned NOT NULL DEFAULT '128',
+  `channel_w_tagwall` int(10) unsigned NOT NULL DEFAULT '128',
+  `channel_w_comment` int(10) unsigned NOT NULL DEFAULT '128',
+  `channel_w_mail` int(10) unsigned NOT NULL DEFAULT '128',
+  `channel_w_photos` int(10) unsigned NOT NULL DEFAULT '128',
+  `channel_w_chat` int(10) unsigned NOT NULL DEFAULT '128',
+  `channel_a_delegate` int(10) unsigned NOT NULL DEFAULT '0',
   `channel_r_storage` int(10) unsigned NOT NULL DEFAULT '128',
   `channel_w_storage` int(10) unsigned NOT NULL DEFAULT '128',
+  `channel_r_pages` int(10) unsigned NOT NULL DEFAULT '128',
+  `channel_w_pages` int(10) unsigned NOT NULL DEFAULT '128',
+  `channel_a_republish` int(10) unsigned NOT NULL DEFAULT '128',
+  `channel_a_bookmark` int(10) unsigned NOT NULL DEFAULT '128',
   PRIMARY KEY (`channel_id`),
+  UNIQUE KEY `channel_address_unique` (`channel_address`),
   KEY `channel_account_id` (`channel_account_id`),
   KEY `channel_primary` (`channel_primary`),
   KEY `channel_name` (`channel_name`),
-  KEY `channel_address` (`channel_address`),
   KEY `channel_timezone` (`channel_timezone`),
   KEY `channel_location` (`channel_location`),
   KEY `channel_theme` (`channel_theme`),
@@ -175,7 +217,7 @@ CREATE TABLE IF NOT EXISTS `channel` (
   KEY `channel_pageflags` (`channel_pageflags`),
   KEY `channel_max_anon_mail` (`channel_max_anon_mail`),
   KEY `channel_max_friend_req` (`channel_max_friend_req`),
-  KEY `channel_default_gid` (`channel_default_gid`),
+  KEY `channel_default_gid` (`channel_default_group`),
   KEY `channel_r_stream` (`channel_r_stream`),
   KEY `channel_r_profile` (`channel_r_profile`),
   KEY `channel_r_photos` (`channel_r_photos`),
@@ -192,8 +234,61 @@ CREATE TABLE IF NOT EXISTS `channel` (
   KEY `channel_expire_days` (`channel_expire_days`),
   KEY `channel_a_delegate` (`channel_a_delegate`),
   KEY `channel_r_storage` (`channel_r_storage`),
-  KEY `channel_w_storage` (`channel_w_storage`)
+  KEY `channel_w_storage` (`channel_w_storage`),
+  KEY `channel_r_pages` (`channel_r_pages`),
+  KEY `channel_w_pages` (`channel_w_pages`),
+  KEY `channel_deleted` (`channel_deleted`),
+  KEY `channel_a_republish` (`channel_a_republish`),
+  KEY `channel_a_bookmark` (`channel_a_bookmark`),
+  KEY `channel_dirdate` (`channel_dirdate`)
 ) ENGINE=MyISAM  DEFAULT CHARSET=utf8;
+
+CREATE TABLE IF NOT EXISTS `chat` (
+  `chat_id` int(10) unsigned NOT NULL AUTO_INCREMENT,
+  `chat_room` int(10) unsigned NOT NULL DEFAULT '0',
+  `chat_xchan` char(255) NOT NULL DEFAULT '',
+  `chat_text` mediumtext NOT NULL,
+  `created` datetime NOT NULL DEFAULT '0000-00-00 00:00:00',
+  PRIMARY KEY (`chat_id`),
+  KEY `chat_room` (`chat_room`),
+  KEY `chat_xchan` (`chat_xchan`),
+  KEY `created` (`created`)
+) ENGINE=MyISAM DEFAULT CHARSET=utf8;
+
+CREATE TABLE IF NOT EXISTS `chatpresence` (
+  `cp_id` int(10) unsigned NOT NULL AUTO_INCREMENT,
+  `cp_room` int(10) unsigned NOT NULL DEFAULT '0',
+  `cp_xchan` char(255) NOT NULL DEFAULT '',
+  `cp_last` datetime NOT NULL DEFAULT '0000-00-00 00:00:00',
+  `cp_status` char(255) NOT NULL,
+  `cp_client` char(128) NOT NULL DEFAULT '',
+  PRIMARY KEY (`cp_id`),
+  KEY `cp_room` (`cp_room`),
+  KEY `cp_xchan` (`cp_xchan`),
+  KEY `cp_last` (`cp_last`),
+  KEY `cp_status` (`cp_status`)
+) ENGINE=MyISAM DEFAULT CHARSET=utf8;
+
+CREATE TABLE IF NOT EXISTS `chatroom` (
+  `cr_id` int(10) unsigned NOT NULL AUTO_INCREMENT,
+  `cr_aid` int(10) unsigned NOT NULL DEFAULT '0',
+  `cr_uid` int(10) unsigned NOT NULL DEFAULT '0',
+  `cr_name` char(255) NOT NULL DEFAULT '',
+  `cr_created` datetime NOT NULL DEFAULT '0000-00-00 00:00:00',
+  `cr_edited` datetime NOT NULL DEFAULT '0000-00-00 00:00:00',
+  `cr_expire` int(10) unsigned NOT NULL DEFAULT '0',
+  `allow_cid` mediumtext NOT NULL,
+  `allow_gid` mediumtext NOT NULL,
+  `deny_cid` mediumtext NOT NULL,
+  `deny_gid` mediumtext NOT NULL,
+  PRIMARY KEY (`cr_id`),
+  KEY `cr_aid` (`cr_aid`),
+  KEY `cr_uid` (`cr_uid`),
+  KEY `cr_name` (`cr_name`),
+  KEY `cr_created` (`cr_created`),
+  KEY `cr_edited` (`cr_edited`),
+  KEY `cr_expire` (`cr_expire`)
+) ENGINE=MyISAM DEFAULT CHARSET=utf8;
 
 CREATE TABLE IF NOT EXISTS `clients` (
   `client_id` varchar(20) NOT NULL,
@@ -218,14 +313,14 @@ CREATE TABLE IF NOT EXISTS `event` (
   `id` int(11) NOT NULL AUTO_INCREMENT,
   `aid` int(10) unsigned NOT NULL DEFAULT '0',
   `uid` int(11) NOT NULL,
-  `cid` int(11) NOT NULL,
-  `message_id` char(255) NOT NULL,
+  `event_xchan` char(255) NOT NULL DEFAULT '',
+  `event_hash` char(255) NOT NULL DEFAULT '',
   `created` datetime NOT NULL,
   `edited` datetime NOT NULL,
   `start` datetime NOT NULL,
   `finish` datetime NOT NULL,
   `summary` text NOT NULL,
-  `desc` text NOT NULL,
+  `description` text NOT NULL,
   `location` text NOT NULL,
   `type` char(255) NOT NULL,
   `nofinish` tinyint(1) NOT NULL DEFAULT '0',
@@ -237,15 +332,15 @@ CREATE TABLE IF NOT EXISTS `event` (
   `deny_gid` mediumtext NOT NULL,
   PRIMARY KEY (`id`),
   KEY `uid` (`uid`),
-  KEY `cid` (`cid`),
-  KEY `uri` (`message_id`),
   KEY `type` (`type`),
   KEY `start` (`start`),
   KEY `finish` (`finish`),
   KEY `adjust` (`adjust`),
   KEY `nofinish` (`nofinish`),
   KEY `ignore` (`ignore`),
-  KEY `aid` (`aid`)
+  KEY `aid` (`aid`),
+  KEY `event_hash` (`event_hash`),
+  KEY `event_xchan` (`event_xchan`)
 ) ENGINE=MyISAM DEFAULT CHARSET=utf8;
 
 CREATE TABLE IF NOT EXISTS `fcontact` (
@@ -288,7 +383,6 @@ CREATE TABLE IF NOT EXISTS `fserver` (
   `key` text NOT NULL,
   PRIMARY KEY (`id`),
   KEY `server` (`server`),
-  KEY `server_2` (`server`),
   KEY `posturl` (`posturl`)
 ) ENGINE=MyISAM DEFAULT CHARSET=utf8;
 
@@ -305,44 +399,7 @@ CREATE TABLE IF NOT EXISTS `fsuggest` (
   PRIMARY KEY (`id`)
 ) ENGINE=MyISAM DEFAULT CHARSET=utf8;
 
-CREATE TABLE IF NOT EXISTS `gcign` (
-  `id` int(11) NOT NULL AUTO_INCREMENT,
-  `uid` int(11) NOT NULL,
-  `gcid` int(11) NOT NULL,
-  PRIMARY KEY (`id`),
-  KEY `uid` (`uid`),
-  KEY `gcid` (`gcid`)
-) ENGINE=MyISAM DEFAULT CHARSET=utf8;
-
-CREATE TABLE IF NOT EXISTS `gcontact` (
-  `id` int(10) unsigned NOT NULL AUTO_INCREMENT,
-  `name` char(255) NOT NULL,
-  `url` char(255) NOT NULL,
-  `nurl` char(255) NOT NULL,
-  `photo` char(255) NOT NULL,
-  `connect` char(255) NOT NULL,
-  PRIMARY KEY (`id`),
-  KEY `nurl` (`nurl`),
-  KEY `name` (`name`),
-  KEY `url` (`url`)
-) ENGINE=MyISAM  DEFAULT CHARSET=utf8;
-
-CREATE TABLE IF NOT EXISTS `glink` (
-  `id` int(10) unsigned NOT NULL AUTO_INCREMENT,
-  `cid` int(11) NOT NULL,
-  `uid` int(11) NOT NULL,
-  `gcid` int(11) NOT NULL,
-  `zcid` int(11) NOT NULL,
-  `updated` datetime NOT NULL,
-  PRIMARY KEY (`id`),
-  KEY `cid` (`cid`),
-  KEY `uid` (`uid`),
-  KEY `gcid` (`gcid`),
-  KEY `zcid` (`zcid`),
-  KEY `updated` (`updated`)
-) ENGINE=MyISAM  DEFAULT CHARSET=utf8;
-
-CREATE TABLE IF NOT EXISTS `group` (
+CREATE TABLE IF NOT EXISTS `groups` (
   `id` int(10) unsigned NOT NULL AUTO_INCREMENT,
   `hash` char(255) NOT NULL DEFAULT '',
   `uid` int(10) unsigned NOT NULL,
@@ -375,7 +432,7 @@ CREATE TABLE IF NOT EXISTS `hook` (
   `priority` int(11) unsigned NOT NULL DEFAULT '0',
   PRIMARY KEY (`id`),
   KEY `hook` (`hook`)
-) ENGINE=MyISAM DEFAULT CHARSET=utf8;
+) ENGINE=MyISAM  DEFAULT CHARSET=utf8;
 
 CREATE TABLE IF NOT EXISTS `hubloc` (
   `hubloc_id` int(10) unsigned NOT NULL AUTO_INCREMENT,
@@ -384,51 +441,51 @@ CREATE TABLE IF NOT EXISTS `hubloc` (
   `hubloc_hash` char(255) NOT NULL,
   `hubloc_addr` char(255) NOT NULL DEFAULT '',
   `hubloc_flags` int(10) unsigned NOT NULL DEFAULT '0',
+  `hubloc_status` int(10) unsigned NOT NULL DEFAULT '0',
   `hubloc_url` char(255) NOT NULL DEFAULT '',
   `hubloc_url_sig` text NOT NULL,
   `hubloc_host` char(255) NOT NULL DEFAULT '',
   `hubloc_callback` char(255) NOT NULL DEFAULT '',
   `hubloc_connect` char(255) NOT NULL DEFAULT '',
   `hubloc_sitekey` text NOT NULL,
+  `hubloc_updated` datetime NOT NULL DEFAULT '0000-00-00 00:00:00',
+  `hubloc_connected` datetime NOT NULL DEFAULT '0000-00-00 00:00:00',
   PRIMARY KEY (`hubloc_id`),
   KEY `hubloc_url` (`hubloc_url`),
   KEY `hubloc_guid` (`hubloc_guid`),
   KEY `hubloc_flags` (`hubloc_flags`),
   KEY `hubloc_connect` (`hubloc_connect`),
   KEY `hubloc_host` (`hubloc_host`),
-  KEY `hubloc_addr` (`hubloc_addr`)
+  KEY `hubloc_addr` (`hubloc_addr`),
+  KEY `hubloc_updated` (`hubloc_updated`),
+  KEY `hubloc_connected` (`hubloc_connected`),
+  KEY `hubloc_status` (`hubloc_status`)
 ) ENGINE=MyISAM  DEFAULT CHARSET=utf8;
 
-CREATE TABLE IF NOT EXISTS `intro` (
-  `id` int(10) unsigned NOT NULL AUTO_INCREMENT,
-  `uid` int(10) unsigned NOT NULL,
-  `fid` int(11) NOT NULL DEFAULT '0',
-  `contact-id` int(11) NOT NULL,
-  `knowyou` tinyint(1) NOT NULL,
-  `duplex` tinyint(1) NOT NULL DEFAULT '0',
-  `note` text NOT NULL,
-  `hash` char(255) NOT NULL,
-  `datetime` datetime NOT NULL,
-  `blocked` tinyint(1) NOT NULL DEFAULT '1',
-  `ignore` tinyint(1) NOT NULL DEFAULT '0',
-  PRIMARY KEY (`id`),
-  KEY `uid` (`uid`),
-  KEY `fid` (`fid`),
-  KEY `hash` (`hash`),
-  KEY `datetime` (`datetime`),
-  KEY `blocked` (`blocked`),
-  KEY `ignore` (`ignore`),
-  KEY `contact-id` (`contact-id`)
-) ENGINE=MyISAM  DEFAULT CHARSET=utf8;
+CREATE TABLE IF NOT EXISTS `issue` (
+  `issue_id` int(10) unsigned NOT NULL AUTO_INCREMENT,
+  `issue_created` datetime NOT NULL DEFAULT '0000-00-00 00:00:00',
+  `issue_updated` datetime NOT NULL DEFAULT '0000-00-00 00:00:00',
+  `issue_assigned` char(255) NOT NULL,
+  `issue_priority` int(11) NOT NULL,
+  `issue_status` int(11) NOT NULL,
+  `issue_component` char(255) NOT NULL,
+  PRIMARY KEY (`issue_id`),
+  KEY `issue_created` (`issue_created`),
+  KEY `issue_updated` (`issue_updated`),
+  KEY `issue_assigned` (`issue_assigned`),
+  KEY `issue_priority` (`issue_priority`),
+  KEY `issue_status` (`issue_status`),
+  KEY `issue_component` (`issue_component`)
+) ENGINE=MyISAM DEFAULT CHARSET=utf8;
 
 CREATE TABLE IF NOT EXISTS `item` (
   `id` int(10) unsigned NOT NULL AUTO_INCREMENT,
-  `uri` char(255) CHARACTER SET ascii NOT NULL DEFAULT '',
+  `mid` char(255) CHARACTER SET ascii NOT NULL DEFAULT '',
   `aid` int(10) unsigned NOT NULL DEFAULT '0',
   `uid` int(10) unsigned NOT NULL DEFAULT '0',
-  `wall` tinyint(1) NOT NULL DEFAULT '0',
   `parent` int(10) unsigned NOT NULL DEFAULT '0',
-  `parent_uri` char(255) CHARACTER SET ascii NOT NULL DEFAULT '',
+  `parent_mid` char(255) CHARACTER SET ascii NOT NULL DEFAULT '',
   `thr_parent` char(255) NOT NULL DEFAULT '',
   `created` datetime NOT NULL DEFAULT '0000-00-00 00:00:00',
   `edited` datetime NOT NULL DEFAULT '0000-00-00 00:00:00',
@@ -438,54 +495,63 @@ CREATE TABLE IF NOT EXISTS `item` (
   `changed` datetime NOT NULL DEFAULT '0000-00-00 00:00:00',
   `owner_xchan` char(255) NOT NULL DEFAULT '',
   `author_xchan` char(255) NOT NULL DEFAULT '',
-  `title` char(255) NOT NULL DEFAULT '',
-  `body` mediumtext NOT NULL,
+  `source_xchan` char(255) NOT NULL DEFAULT '',
+  `mimetype` char(255) NOT NULL DEFAULT '',
+  `title` text NOT NULL DEFAULT '',
+  `body` mediumtext NOT NULL DEFAULT '',
   `app` char(255) NOT NULL DEFAULT '',
   `lang` char(64) NOT NULL DEFAULT '',
+  `revision` int(10) unsigned NOT NULL DEFAULT '0',
   `verb` char(255) NOT NULL DEFAULT '',
   `obj_type` char(255) NOT NULL DEFAULT '',
-  `object` text NOT NULL,
+  `object` text NOT NULL DEFAULT '',
   `tgt_type` char(255) NOT NULL DEFAULT '',
-  `target` text NOT NULL,
-  `postopts` text NOT NULL,
+  `target` text NOT NULL DEFAULT '',
+  `layout_mid` char(255) NOT NULL DEFAULT '',
+  `postopts` text NOT NULL DEFAULT '',
+  `route` text NOT NULL DEFAULT '',
   `llink` char(255) NOT NULL DEFAULT '',
   `plink` char(255) NOT NULL DEFAULT '',
   `resource_id` char(255) NOT NULL DEFAULT '',
   `resource_type` char(16) NOT NULL DEFAULT '',
-  `attach` mediumtext NOT NULL,
-  `inform` mediumtext NOT NULL,
+  `attach` mediumtext NOT NULL DEFAULT '',
+  `sig` text NOT NULL DEFAULT '',
   `location` char(255) NOT NULL DEFAULT '',
   `coord` char(255) NOT NULL DEFAULT '',
-  `allow_cid` mediumtext NOT NULL,
-  `allow_gid` mediumtext NOT NULL,
-  `deny_cid` mediumtext NOT NULL,
-  `deny_gid` mediumtext NOT NULL,
+  `comment_policy` char(255) NOT NULL DEFAULT '',
+  `allow_cid` mediumtext NOT NULL DEFAULT '',
+  `allow_gid` mediumtext NOT NULL DEFAULT '',
+  `deny_cid` mediumtext NOT NULL DEFAULT '',
+  `deny_gid` mediumtext NOT NULL DEFAULT '',
   `item_restrict` int(11) NOT NULL DEFAULT '0',
   `item_flags` int(11) NOT NULL DEFAULT '0',
   `item_private` tinyint(4) NOT NULL DEFAULT '0',
   PRIMARY KEY (`id`),
-  KEY `uri` (`uri`),
   KEY `uid` (`uid`),
   KEY `parent` (`parent`),
   KEY `created` (`created`),
   KEY `edited` (`edited`),
   KEY `received` (`received`),
-  KEY `wall` (`wall`),
   KEY `uid_commented` (`uid`,`commented`),
   KEY `uid_created` (`uid`,`created`),
-  KEY `parent_uri` (`parent_uri`),
   KEY `aid` (`aid`),
   KEY `owner_xchan` (`owner_xchan`),
   KEY `author_xchan` (`author_xchan`),
   KEY `resource_type` (`resource_type`),
   KEY `item_restrict` (`item_restrict`),
   KEY `item_flags` (`item_flags`),
-  KEY `uid_uri` (`uri`,`uid`),
   KEY `commented` (`commented`),
   KEY `verb` (`verb`),
   KEY `item_private` (`item_private`),
   KEY `llink` (`llink`),
   KEY `expires` (`expires`),
+  KEY `revision` (`revision`),
+  KEY `mimetype` (`mimetype`),
+  KEY `mid` (`mid`),
+  KEY `parent_mid` (`parent_mid`),
+  KEY `uid_mid` (`mid`,`uid`),
+  KEY `comment_policy` (`comment_policy`),
+  KEY `layout_mid` (`layout_mid`),
   FULLTEXT KEY `title` (`title`),
   FULLTEXT KEY `body` (`body`),
   FULLTEXT KEY `allow_cid` (`allow_cid`),
@@ -505,6 +571,26 @@ CREATE TABLE IF NOT EXISTS `item_id` (
   KEY `sid` (`sid`),
   KEY `service` (`service`),
   KEY `iid` (`iid`)
+) ENGINE=MyISAM  DEFAULT CHARSET=utf8;
+
+CREATE TABLE IF NOT EXISTS `likes` (
+  `id` int(10) unsigned NOT NULL AUTO_INCREMENT,
+  `channel_id` int(11) unsigned NOT NULL DEFAULT '0', 
+  `liker` char(128) NOT NULL DEFAULT '',
+  `likee` char(128) NOT NULL DEFAULT '',
+  `iid` int(10) unsigned NOT NULL DEFAULT '0',
+  `verb` char(255) NOT NULL DEFAULT '',
+  `target_type` char(255) NOT NULL DEFAULT '',
+  `target_id` char(128) NOT NULL DEFAULT '',
+  `target` mediumtext NOT NULL,
+  PRIMARY KEY (`id`),
+  KEY `channel_id` (`channel_id`),
+  KEY `liker` (`liker`),
+  KEY `likee` (`likee`),
+  KEY `iid` (`iid`),
+  KEY `verb` (`verb`),
+  KEY `target_type` (`target_type`),
+  KEY `target_id` (`target_id`)
 ) ENGINE=MyISAM DEFAULT CHARSET=utf8;
 
 CREATE TABLE IF NOT EXISTS `mail` (
@@ -514,30 +600,63 @@ CREATE TABLE IF NOT EXISTS `mail` (
   `to_xchan` char(255) NOT NULL DEFAULT '',
   `account_id` int(10) unsigned NOT NULL DEFAULT '0',
   `channel_id` int(10) unsigned NOT NULL,
-  `title` char(255) NOT NULL,
+  `title` text NOT NULL,
   `body` mediumtext NOT NULL,
-  `uri` char(255) NOT NULL,
-  `parent_uri` char(255) NOT NULL,
+  `attach` mediumtext NOT NULL,
+  `mid` char(255) NOT NULL,
+  `parent_mid` char(255) NOT NULL,
   `created` datetime NOT NULL DEFAULT '0000-00-00 00:00:00',
+  `expires` datetime NOT NULL DEFAULT '0000-00-00 00:00:00',
   PRIMARY KEY (`id`),
-  KEY `uri` (`uri`),
   KEY `created` (`created`),
   KEY `mail_flags` (`mail_flags`),
   KEY `account_id` (`account_id`),
   KEY `channel_id` (`channel_id`),
-  KEY `parent_uri` (`parent_uri`),
   KEY `from_xchan` (`from_xchan`),
-  KEY `to_xchan` (`to_xchan`)
+  KEY `to_xchan` (`to_xchan`),
+  KEY `mid` (`mid`),
+  KEY `parent_mid` (`parent_mid`),
+  KEY `expires` (`expires`)
 ) ENGINE=MyISAM  DEFAULT CHARSET=utf8;
 
 CREATE TABLE IF NOT EXISTS `manage` (
   `id` int(11) NOT NULL AUTO_INCREMENT,
   `uid` int(11) NOT NULL,
-  `mid` int(11) NOT NULL,
+  `xchan` char(255) NOT NULL DEFAULT '',
   PRIMARY KEY (`id`),
   KEY `uid` (`uid`),
-  KEY `mid` (`mid`)
+  KEY `xchan` (`xchan`)
 ) ENGINE=MyISAM DEFAULT CHARSET=utf8;
+
+CREATE TABLE IF NOT EXISTS `menu` (
+  `menu_id` int(10) unsigned NOT NULL AUTO_INCREMENT,
+  `menu_channel_id` int(10) unsigned NOT NULL DEFAULT '0',
+  `menu_name` char(255) NOT NULL DEFAULT '',
+  `menu_desc` char(255) NOT NULL DEFAULT '',
+  `menu_flags` int(11) NOT NULL DEFAULT '0',
+  PRIMARY KEY (`menu_id`),
+  KEY `menu_channel_id` (`menu_channel_id`),
+  KEY `menu_name` (`menu_name`),
+  KEY `menu_flags` (`menu_flags`)
+) ENGINE=MyISAM  DEFAULT CHARSET=utf8;
+
+CREATE TABLE IF NOT EXISTS `menu_item` (
+  `mitem_id` int(10) unsigned NOT NULL AUTO_INCREMENT,
+  `mitem_link` char(255) NOT NULL DEFAULT '',
+  `mitem_desc` char(255) NOT NULL DEFAULT '',
+  `mitem_flags` int(11) NOT NULL DEFAULT '0',
+  `allow_cid` mediumtext NOT NULL,
+  `allow_gid` mediumtext NOT NULL,
+  `deny_cid` mediumtext NOT NULL,
+  `deny_gid` mediumtext NOT NULL,
+  `mitem_channel_id` int(10) unsigned NOT NULL,
+  `mitem_menu_id` int(10) unsigned NOT NULL DEFAULT '0',
+  `mitem_order` int(11) NOT NULL DEFAULT '0',
+  PRIMARY KEY (`mitem_id`),
+  KEY `mitem_channel_id` (`mitem_channel_id`),
+  KEY `mitem_menu_id` (`mitem_menu_id`),
+  KEY `mitem_flags` (`mitem_flags`)
+) ENGINE=MyISAM  DEFAULT CHARSET=utf8;
 
 CREATE TABLE IF NOT EXISTS `notify` (
   `id` int(11) NOT NULL AUTO_INCREMENT,
@@ -547,9 +666,10 @@ CREATE TABLE IF NOT EXISTS `notify` (
   `photo` char(255) NOT NULL,
   `date` datetime NOT NULL,
   `msg` mediumtext NOT NULL,
+  `aid` int(11) NOT NULL,
   `uid` int(11) NOT NULL,
   `link` char(255) NOT NULL,
-  `parent` int(11) NOT NULL,
+  `parent` char(255) NOT NULL DEFAULT '',
   `seen` tinyint(1) NOT NULL DEFAULT '0',
   `type` int(11) NOT NULL,
   `verb` char(255) NOT NULL,
@@ -562,13 +682,34 @@ CREATE TABLE IF NOT EXISTS `notify` (
   KEY `hash` (`hash`),
   KEY `parent` (`parent`),
   KEY `link` (`link`),
-  KEY `otype` (`otype`)
-) ENGINE=MyISAM DEFAULT CHARSET=utf8;
+  KEY `otype` (`otype`),
+  KEY `aid` (`aid`)
+) ENGINE=MyISAM  DEFAULT CHARSET=utf8;
+
+CREATE TABLE IF NOT EXISTS `obj` (
+  `obj_id` int(10) unsigned NOT NULL AUTO_INCREMENT,
+  `obj_page` char(64) NOT NULL DEFAULT '',
+  `obj_verb` char(255) NOT NULL DEFAULT '',
+  `obj_type` int(10) unsigned NOT NULL DEFAULT '0',
+  `obj_obj` char(255) NOT NULL DEFAULT '',
+  `obj_channel` int(10) unsigned NOT NULL DEFAULT '0',
+  `allow_cid` mediumtext NOT NULL,
+  `allow_gid` mediumtext NOT NULL,
+  `deny_cid` mediumtext NOT NULL,
+  `deny_gid` mediumtext NOT NULL,
+  PRIMARY KEY (`obj_id`),
+  KEY `obj_verb` (`obj_verb`),
+  KEY `obj_page` (`obj_page`),
+  KEY `obj_type` (`obj_type`),
+  KEY `obj_channel` (`obj_channel`),
+  KEY `obj_obj` (`obj_obj`)
+) ENGINE=MyISAM  DEFAULT CHARSET=utf8;
 
 CREATE TABLE IF NOT EXISTS `outq` (
   `outq_hash` char(255) NOT NULL,
   `outq_account` int(10) unsigned NOT NULL DEFAULT '0',
   `outq_channel` int(10) unsigned NOT NULL DEFAULT '0',
+  `outq_driver` char(32) NOT NULL DEFAULT '',
   `outq_posturl` char(255) NOT NULL DEFAULT '',
   `outq_async` tinyint(1) NOT NULL DEFAULT '0',
   `outq_delivered` tinyint(1) NOT NULL DEFAULT '0',
@@ -601,13 +742,11 @@ CREATE TABLE IF NOT EXISTS `photo` (
   `aid` int(10) unsigned NOT NULL DEFAULT '0',
   `uid` int(10) unsigned NOT NULL,
   `xchan` char(255) NOT NULL DEFAULT '',
-  `contact-id` int(10) unsigned NOT NULL DEFAULT '0',
-  `guid` char(64) NOT NULL,
   `resource_id` char(255) NOT NULL,
   `created` datetime NOT NULL,
   `edited` datetime NOT NULL,
   `title` char(255) NOT NULL,
-  `desc` text NOT NULL,
+  `description` text NOT NULL,
   `album` char(255) NOT NULL,
   `filename` char(255) NOT NULL,
   `type` char(128) NOT NULL DEFAULT 'image/jpeg',
@@ -617,22 +756,46 @@ CREATE TABLE IF NOT EXISTS `photo` (
   `data` mediumblob NOT NULL,
   `scale` tinyint(3) NOT NULL,
   `profile` tinyint(1) NOT NULL DEFAULT '0',
+  `photo_flags` int(10) unsigned NOT NULL DEFAULT '0',
   `allow_cid` mediumtext NOT NULL,
   `allow_gid` mediumtext NOT NULL,
   `deny_cid` mediumtext NOT NULL,
   `deny_gid` mediumtext NOT NULL,
   PRIMARY KEY (`id`),
   KEY `uid` (`uid`),
-  KEY `resource-id` (`resource_id`),
   KEY `album` (`album`),
   KEY `scale` (`scale`),
   KEY `profile` (`profile`),
+  KEY `photo_flags` (`photo_flags`),
   KEY `type` (`type`),
-  KEY `contact-id` (`contact-id`),
   KEY `aid` (`aid`),
   KEY `xchan` (`xchan`),
-  KEY `size` (`size`)
+  KEY `size` (`size`),
+  KEY `resource_id` (`resource_id`)
 ) ENGINE=MyISAM  DEFAULT CHARSET=utf8;
+
+CREATE TABLE IF NOT EXISTS `poll` (
+  `poll_id` int(10) unsigned NOT NULL AUTO_INCREMENT,
+  `poll_channel` int(10) unsigned NOT NULL DEFAULT '0',
+  `poll_desc` text NOT NULL,
+  `poll_flags` int(11) NOT NULL DEFAULT '0',
+  `poll_votes` int(11) NOT NULL DEFAULT '0',
+  PRIMARY KEY (`poll_id`),
+  KEY `poll_channel` (`poll_channel`),
+  KEY `poll_flags` (`poll_flags`),
+  KEY `poll_votes` (`poll_votes`)
+) ENGINE=MyISAM DEFAULT CHARSET=utf8;
+
+CREATE TABLE IF NOT EXISTS `poll_elm` (
+  `pelm_id` int(10) unsigned NOT NULL AUTO_INCREMENT,
+  `pelm_poll` int(10) unsigned NOT NULL DEFAULT '0',
+  `pelm_desc` text NOT NULL,
+  `pelm_flags` int(11) NOT NULL DEFAULT '0',
+  `pelm_result` float NOT NULL DEFAULT '0',
+  PRIMARY KEY (`pelm_id`),
+  KEY `pelm_poll` (`pelm_poll`),
+  KEY `pelm_result` (`pelm_result`)
+) ENGINE=MyISAM DEFAULT CHARSET=utf8;
 
 CREATE TABLE IF NOT EXISTS `profile` (
   `id` int(11) NOT NULL AUTO_INCREMENT,
@@ -644,6 +807,7 @@ CREATE TABLE IF NOT EXISTS `profile` (
   `hide_friends` tinyint(1) NOT NULL DEFAULT '0',
   `name` char(255) NOT NULL,
   `pdesc` char(255) NOT NULL,
+  `chandesc` text NOT NULL,
   `dob` char(32) NOT NULL DEFAULT '0000-00-00',
   `dob_tz` char(255) NOT NULL DEFAULT 'UTC',
   `address` char(255) NOT NULL,
@@ -673,6 +837,7 @@ CREATE TABLE IF NOT EXISTS `profile` (
   `work` text NOT NULL,
   `education` text NOT NULL,
   `contact` text NOT NULL,
+  `channels` text NOT NULL,
   `homepage` char(255) NOT NULL,
   `photo` char(255) NOT NULL,
   `thumb` char(255) NOT NULL,
@@ -709,22 +874,6 @@ CREATE TABLE IF NOT EXISTS `profile_check` (
   KEY `expire` (`expire`)
 ) ENGINE=MyISAM DEFAULT CHARSET=utf8;
 
-CREATE TABLE IF NOT EXISTS `queue` (
-  `id` int(11) NOT NULL AUTO_INCREMENT,
-  `cid` int(11) NOT NULL,
-  `network` char(32) NOT NULL,
-  `created` datetime NOT NULL,
-  `last` datetime NOT NULL,
-  `content` mediumtext NOT NULL,
-  `batch` tinyint(1) NOT NULL DEFAULT '0',
-  PRIMARY KEY (`id`),
-  KEY `cid` (`cid`),
-  KEY `network` (`network`),
-  KEY `created` (`created`),
-  KEY `last` (`last`),
-  KEY `batch` (`batch`)
-) ENGINE=MyISAM DEFAULT CHARSET=utf8;
-
 CREATE TABLE IF NOT EXISTS `register` (
   `id` int(10) unsigned NOT NULL AUTO_INCREMENT,
   `hash` char(255) NOT NULL,
@@ -742,22 +891,54 @@ CREATE TABLE IF NOT EXISTS `session` (
   `id` bigint(20) unsigned NOT NULL AUTO_INCREMENT,
   `sid` char(255) NOT NULL,
   `data` text NOT NULL,
-  `expire` int(10) unsigned NOT NULL,
+  `expire` bigint(20) unsigned NOT NULL,
   PRIMARY KEY (`id`),
   KEY `sid` (`sid`),
   KEY `expire` (`expire`)
 ) ENGINE=MyISAM  DEFAULT CHARSET=utf8;
 
+CREATE TABLE IF NOT EXISTS `shares` (
+  `share_id` int(10) unsigned NOT NULL AUTO_INCREMENT,
+  `share_type` int(11) NOT NULL DEFAULT '0',
+  `share_target` int(10) unsigned NOT NULL DEFAULT '0',
+  `share_xchan` char(255) NOT NULL DEFAULT '',
+  PRIMARY KEY (`share_id`),
+  KEY `share_type` (`share_type`),
+  KEY `share_target` (`share_target`),
+  KEY `share_xchan` (`share_xchan`)
+) ENGINE=MyISAM DEFAULT CHARSET=utf8;
+
 CREATE TABLE IF NOT EXISTS `site` (
   `site_url` char(255) NOT NULL,
+  `site_access` int(11) NOT NULL DEFAULT '0',
   `site_flags` int(11) NOT NULL DEFAULT '0',
   `site_update` datetime NOT NULL DEFAULT '0000-00-00 00:00:00',
+  `site_pull` datetime NOT NULL DEFAULT '0000-00-00 00:00:00',
+  `site_sync` datetime NOT NULL DEFAULT '0000-00-00 00:00:00',
   `site_directory` char(255) NOT NULL DEFAULT '',
+  `site_register` int(11) NOT NULL DEFAULT '0',
+  `site_sellpage` char(255) NOT NULL DEFAULT '',
+  `site_location` char(255) NOT NULL DEFAULT '',
   PRIMARY KEY (`site_url`),
   KEY `site_flags` (`site_flags`),
   KEY `site_update` (`site_update`),
-  KEY `site_directory` (`site_directory`)
+  KEY `site_directory` (`site_directory`),
+  KEY `site_register` (`site_register`),
+  KEY `site_access` (`site_access`),
+  KEY `site_sellpage` (`site_sellpage`)
 ) ENGINE=MyISAM DEFAULT CHARSET=utf8;
+
+CREATE TABLE IF NOT EXISTS `source` (
+  `src_id` int(10) unsigned NOT NULL AUTO_INCREMENT,
+  `src_channel_id` int(10) unsigned NOT NULL DEFAULT '0',
+  `src_channel_xchan` char(255) NOT NULL DEFAULT '',
+  `src_xchan` char(255) NOT NULL DEFAULT '',
+  `src_patt` mediumtext NOT NULL,
+  PRIMARY KEY (`src_id`),
+  KEY `src_channel_id` (`src_channel_id`),
+  KEY `src_channel_xchan` (`src_channel_xchan`),
+  KEY `src_xchan` (`src_xchan`)
+) ENGINE=MyISAM  DEFAULT CHARSET=utf8;
 
 CREATE TABLE IF NOT EXISTS `spam` (
   `id` int(11) NOT NULL AUTO_INCREMENT,
@@ -773,6 +954,15 @@ CREATE TABLE IF NOT EXISTS `spam` (
   KEY `term` (`term`)
 ) ENGINE=MyISAM DEFAULT CHARSET=utf8;
 
+CREATE TABLE IF NOT EXISTS `sys_perms` (
+  `id` int(10) unsigned NOT NULL AUTO_INCREMENT,
+  `cat` char(255) NOT NULL,
+  `k` char(255) NOT NULL,
+  `v` mediumtext NOT NULL,
+  `public_perm` tinyint(1) unsigned NOT NULL,
+  PRIMARY KEY (`id`)
+) ENGINE=MyISAM DEFAULT CHARSET=utf8;
+
 CREATE TABLE IF NOT EXISTS `term` (
   `tid` int(10) unsigned NOT NULL AUTO_INCREMENT,
   `aid` int(10) unsigned NOT NULL DEFAULT '0',
@@ -782,20 +972,26 @@ CREATE TABLE IF NOT EXISTS `term` (
   `type` tinyint(3) unsigned NOT NULL,
   `term` char(255) NOT NULL,
   `url` char(255) NOT NULL,
+  `imgurl` char(255) NOT NULL,
+  `term_hash` char(255) NOT NULL DEFAULT '',
+  `parent_hash` char(255) NOT NULL DEFAULT '',
   PRIMARY KEY (`tid`),
   KEY `oid` (`oid`),
   KEY `otype` (`otype`),
   KEY `type` (`type`),
   KEY `term` (`term`),
   KEY `uid` (`uid`),
-  KEY `aid` (`aid`)
+  KEY `aid` (`aid`),
+  KEY `imgurl` (`imgurl`),
+  KEY `term_hash` (`term_hash`),
+  KEY `parent_hash` (`parent_hash`)
 ) ENGINE=MyISAM  DEFAULT CHARSET=utf8;
 
 CREATE TABLE IF NOT EXISTS `tokens` (
   `id` varchar(40) NOT NULL,
   `secret` text NOT NULL,
   `client_id` varchar(20) NOT NULL,
-  `expires` int(11) NOT NULL,
+  `expires` bigint(20) unsigned NOT NULL,
   `scope` varchar(200) NOT NULL,
   `uid` int(11) NOT NULL,
   PRIMARY KEY (`id`),
@@ -803,6 +999,23 @@ CREATE TABLE IF NOT EXISTS `tokens` (
   KEY `expires` (`expires`),
   KEY `uid` (`uid`)
 ) ENGINE=MyISAM DEFAULT CHARSET=utf8;
+
+CREATE TABLE IF NOT EXISTS `updates` (
+  `ud_id` int(10) unsigned NOT NULL AUTO_INCREMENT,
+  `ud_hash` char(128) NOT NULL,
+  `ud_guid` char(255) NOT NULL DEFAULT '',
+  `ud_date` datetime NOT NULL DEFAULT '0000-00-00 00:00:00',
+  `ud_last` datetime NOT NULL DEFAULT '0000-00-00 00:00:00',
+  `ud_flags` int(11) NOT NULL DEFAULT '0',
+  `ud_addr` char(255) NOT NULL DEFAULT '',
+  PRIMARY KEY (`ud_id`),
+  KEY `ud_date` (`ud_date`),
+  KEY `ud_guid` (`ud_guid`),
+  KEY `ud_hash` (`ud_hash`),
+  KEY `ud_flags` (`ud_flags`),
+  KEY `ud_addr` (`ud_addr`),
+  KEY `ud_last` (`ud_last`)
+) ENGINE=MyISAM  DEFAULT CHARSET=utf8;
 
 CREATE TABLE IF NOT EXISTS `verify` (
   `id` int(10) unsigned NOT NULL AUTO_INCREMENT,
@@ -817,6 +1030,18 @@ CREATE TABLE IF NOT EXISTS `verify` (
   KEY `token` (`token`),
   KEY `meta` (`meta`),
   KEY `created` (`created`)
+) ENGINE=MyISAM  DEFAULT CHARSET=utf8;
+
+CREATE TABLE IF NOT EXISTS `vote` (
+  `vote_id` int(10) unsigned NOT NULL AUTO_INCREMENT,
+  `vote_poll` int(11) NOT NULL DEFAULT '0',
+  `vote_element` int(11) NOT NULL DEFAULT '0',
+  `vote_result` text NOT NULL,
+  `vote_xchan` char(255) NOT NULL DEFAULT '',
+  PRIMARY KEY (`vote_id`),
+  UNIQUE KEY `vote_vote` (`vote_poll`,`vote_element`,`vote_xchan`),
+  KEY `vote_poll` (`vote_poll`),
+  KEY `vote_element` (`vote_element`)
 ) ENGINE=MyISAM DEFAULT CHARSET=utf8;
 
 CREATE TABLE IF NOT EXISTS `xchan` (
@@ -831,8 +1056,11 @@ CREATE TABLE IF NOT EXISTS `xchan` (
   `xchan_addr` char(255) NOT NULL DEFAULT '',
   `xchan_url` char(255) NOT NULL DEFAULT '',
   `xchan_connurl` char(255) NOT NULL DEFAULT '',
+  `xchan_follow` char(255) NOT NULL DEFAULT '',
+  `xchan_connpage` char(255) NOT NULL DEFAULT '',
   `xchan_name` char(255) NOT NULL DEFAULT '',
   `xchan_network` char(255) NOT NULL DEFAULT '',
+  `xchan_instance_url` char(255) NOT NULL DEFAULT '',
   `xchan_flags` int(10) unsigned NOT NULL DEFAULT '0',
   `xchan_photo_date` datetime NOT NULL DEFAULT '0000-00-00 00:00:00',
   `xchan_name_date` datetime NOT NULL DEFAULT '0000-00-00 00:00:00',
@@ -843,22 +1071,61 @@ CREATE TABLE IF NOT EXISTS `xchan` (
   KEY `xchan_network` (`xchan_network`),
   KEY `xchan_url` (`xchan_url`),
   KEY `xchan_flags` (`xchan_flags`),
-  KEY `xchan_connurl` (`xchan_connurl`)
+  KEY `xchan_connurl` (`xchan_connurl`),
+  KEY `xchan_instance_url` (`xchan_instance_url`),
+  KEY `xchan_follow` (`xchan_follow`)
+) ENGINE=MyISAM DEFAULT CHARSET=utf8;
+
+CREATE TABLE IF NOT EXISTS `xchat` (
+  `xchat_id` int(10) unsigned NOT NULL AUTO_INCREMENT,
+  `xchat_url` char(255) NOT NULL DEFAULT '',
+  `xchat_desc` char(255) NOT NULL DEFAULT '',
+  `xchat_xchan` char(255) NOT NULL DEFAULT '',
+  `xchat_edited` datetime NOT NULL DEFAULT '0000-00-00 00:00:00',
+  PRIMARY KEY (`xchat_id`),
+  KEY `xchat_url` (`xchat_url`),
+  KEY `xchat_desc` (`xchat_desc`),
+  KEY `xchat_xchan` (`xchat_xchan`),
+  KEY `xchat_edited` (`xchat_edited`)
+) ENGINE=MyISAM DEFAULT CHARSET=utf8;
+
+CREATE TABLE IF NOT EXISTS `xconfig` (
+  `id` int(10) unsigned NOT NULL AUTO_INCREMENT,
+  `xchan` char(255) NOT NULL,
+  `cat` char(255) NOT NULL,
+  `k` char(255) NOT NULL,
+  `v` mediumtext NOT NULL,
+  PRIMARY KEY (`id`),
+  KEY `xchan` (`xchan`),
+  KEY `cat` (`cat`),
+  KEY `k` (`k`)
+) ENGINE=MyISAM  DEFAULT CHARSET=utf8;
+
+CREATE TABLE IF NOT EXISTS `xign` (
+  `id` int(10) unsigned NOT NULL AUTO_INCREMENT,
+  `uid` int(11) NOT NULL DEFAULT '0',
+  `xchan` char(255) NOT NULL DEFAULT '',
+  PRIMARY KEY (`id`),
+  KEY `uid` (`uid`),
+  KEY `xchan` (`xchan`)
 ) ENGINE=MyISAM DEFAULT CHARSET=utf8;
 
 CREATE TABLE IF NOT EXISTS `xlink` (
   `xlink_id` int(10) unsigned NOT NULL AUTO_INCREMENT,
   `xlink_xchan` char(255) NOT NULL DEFAULT '',
   `xlink_link` char(255) NOT NULL DEFAULT '',
+  `xlink_rating` int(11) NOT NULL DEFAULT '0',
   `xlink_updated` datetime NOT NULL DEFAULT '0000-00-00 00:00:00',
   PRIMARY KEY (`xlink_id`),
-  KEY `xlink_xchan` ( `xlink_xchan` ),
-  KEY `xlink_link` ( `xlink_link` ),
-  KEY `xlink_updated` ( `xlink_updated` )
-) ENGINE=MyISAM DEFAULT CHARSET=utf8;
+  KEY `xlink_xchan` (`xlink_xchan`),
+  KEY `xlink_link` (`xlink_link`),
+  KEY `xlink_updated` (`xlink_updated`),
+  KEY `xlink_rating` (`xlink_rating`)
+) ENGINE=MyISAM  DEFAULT CHARSET=utf8;
 
 CREATE TABLE IF NOT EXISTS `xprof` (
   `xprof_hash` char(255) NOT NULL,
+  `xprof_age` tinyint(3) unsigned NOT NULL DEFAULT '0',
   `xprof_desc` char(255) NOT NULL DEFAULT '',
   `xprof_dob` char(12) NOT NULL DEFAULT '',
   `xprof_gender` char(255) NOT NULL DEFAULT '',
@@ -869,6 +1136,9 @@ CREATE TABLE IF NOT EXISTS `xprof` (
   `xprof_postcode` char(32) NOT NULL DEFAULT '',
   `xprof_country` char(255) NOT NULL DEFAULT '',
   `xprof_keywords` text NOT NULL,
+  `xprof_about` text NOT NULL,
+  `xprof_homepage` char(255) NOT NULL DEFAULT '',
+  `xprof_hometown` char(255) NOT NULL DEFAULT '',
   PRIMARY KEY (`xprof_hash`),
   KEY `xprof_desc` (`xprof_desc`),
   KEY `xprof_dob` (`xprof_dob`),
@@ -878,12 +1148,18 @@ CREATE TABLE IF NOT EXISTS `xprof` (
   KEY `xprof_locale` (`xprof_locale`),
   KEY `xprof_region` (`xprof_region`),
   KEY `xprof_postcode` (`xprof_postcode`),
-  KEY `xprof_country` (`xprof_country`)
+  KEY `xprof_country` (`xprof_country`),
+  KEY `xprof_age` (`xprof_age`),
+  KEY `xprof_hometown` (`xprof_hometown`)
 ) ENGINE=MyISAM DEFAULT CHARSET=utf8;
 
 CREATE TABLE IF NOT EXISTS `xtag` (
+  `xtag_id` int(10) unsigned NOT NULL AUTO_INCREMENT,
   `xtag_hash` char(255) NOT NULL,
   `xtag_term` char(255) NOT NULL DEFAULT '',
-  PRIMARY KEY (`xtag_hash`),
-  KEY `xtag_term` (`xtag_term`)
-) ENGINE=MyISAM DEFAULT CHARSET=utf8;
+  `xtag_flags` int(11) NOT NULL DEFAULT '0',
+  PRIMARY KEY (`xtag_id`),
+  KEY `xtag_term` (`xtag_term`),
+  KEY `xtag_hash` (`xtag_hash`),
+  KEY `xtag_flags` (`xtag_flags`)
+) ENGINE=MyISAM  DEFAULT CHARSET=utf8;

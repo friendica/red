@@ -1,16 +1,57 @@
-<?php
-	require_once("bbcode.php");
-	require_once("datetime.php");
-	require_once("conversation.php");
-	require_once("oauth.php");
-	require_once("html2plain.php");
+<?php /** @file */
+
+require_once("bbcode.php");
+require_once("datetime.php");
+require_once("conversation.php");
+require_once("oauth.php");
+require_once("html2plain.php");
+require_once('include/security.php');
+require_once('include/photos.php');
+require_once('include/items.php');
+
 	/*
-	 * Twitter-Like API
+	 *
+	 * Red API. Loosely based on and possibly compatible with a Twitter-Like API but all similarities end there. 
 	 *
 	 */
 
-	$API = Array();
+
+	/**
+	 ** TWITTER API
+	 */
+
+	$API = array();
+
 	$called_api = Null;
+
+	// All commands which require authentication accept a "channel" parameter
+	// which is the left hand side of the channel address/nickname.
+	// If provided, the desired channel is selected before caarying out the command.
+	// If not provided, the default channel associated with the account is used.   
+	// If channel selection fails, the API command requiring login will fail. 
+
+	function api_user() {
+		$aid = get_account_id();
+		$channel = get_app()->get_channel();
+		
+		if(($aid) && (x($_REQUEST,'channel'))) {
+
+			// Only change channel if it is different than the current channel
+
+			if($channel && x($channel,'channel_address') && $channel['channel_address'] != $_REQUEST['channel']) {
+				$c = q("select channel_id from channel where channel_address = '%s' and channel_account_id = %d limit 1",
+					dbesc($_REQUEST['channel']),
+					intval($aid)
+				);
+				if((! $c) || (! change_channel($c[0]['channel_id'])))
+					return false;
+			}
+		}			
+		if ($_SESSION["allow_api"])
+			return local_user();
+		return false;
+	}
+
 
 	function api_date($str){
 		//Wed May 23 06:01:13 +0000 2007
@@ -30,21 +71,24 @@
 
 	function api_login(&$a){
 		// login with oauth
-		try{
+		try {
 			$oauth = new FKOAuth1();
-			list($consumer,$token) = $oauth->verify_request(OAuthRequest::from_request());
+			$req = OAuthRequest::from_request();
+			list($consumer,$token) = $oauth->verify_request($req);
+//			list($consumer,$token) = $oauth->verify_request(OAuthRequest::from_request());
 			if (!is_null($token)){
 				$oauth->loginUser($token->uid);
 				call_hooks('logged_in', $a->user);
 				return;
 			}
-			echo __file__.__line__.__function__."<pre>"; var_dump($consumer, $token); die();
-		}catch(Exception $e){
+			echo __file__.__line__.__function__."<pre>"; 
+			var_dump($consumer, $token); 
+			die();
+		}
+		catch(Exception $e) {
 			logger(__file__.__line__.__function__."\n".$e);
-			//die(__file__.__line__.__function__."<pre>".$e); die();
 		}
 
-		
 		
 		// workaround for HTTP-auth in CGI mode
 		if(x($_SERVER,'REDIRECT_REMOTE_USER')) {
@@ -56,48 +100,42 @@
 			}
 		}
 
+		if(x($_SERVER,'HTTP_AUTHORIZATION')) {
+		 	$userpass = base64_decode(substr($_SERVER["HTTP_AUTHORIZATION"],6)) ;
+			if(strlen($userpass)) {
+			 	list($name, $password) = explode(':', $userpass);
+				$_SERVER['PHP_AUTH_USER'] = $name;
+				$_SERVER['PHP_AUTH_PW'] = $password;
+			}
+		}
+
+
 		if (!isset($_SERVER['PHP_AUTH_USER'])) {
 		   logger('API_login: ' . print_r($_SERVER,true), LOGGER_DEBUG);
-		    header('WWW-Authenticate: Basic realm="Friendica"');
+		    header('WWW-Authenticate: Basic realm="Red"');
 		    header('HTTP/1.0 401 Unauthorized');
 		    die('This api requires login');
 		}
 		
-		$user = $_SERVER['PHP_AUTH_USER'];
-		$encrypted = hash('whirlpool',trim($_SERVER['PHP_AUTH_PW']));
-    		
-		
-			/**
-			 *  next code from mod/auth.php. needs better solution
-			 */
-			
 		// process normal login request
-
-		$r = q("SELECT * FROM `user` WHERE ( `email` = '%s' OR `nickname` = '%s' ) 
-			AND `password` = '%s' AND `blocked` = 0 AND `account_expired` = 0 AND `verified` = 1 LIMIT 1",
-			dbesc(trim($user)),
-			dbesc(trim($user)),
-			dbesc($encrypted)
-		);
-		if(count($r)){
-			$record = $r[0];
-		} else {
+		require_once('include/auth.php');
+		$record = account_verify_password($_SERVER['PHP_AUTH_USER'],$_SERVER['PHP_AUTH_PW']);
+		if(! $record) {
 		   logger('API_login failure: ' . print_r($_SERVER,true), LOGGER_DEBUG);
-		    header('WWW-Authenticate: Basic realm="Friendica"');
+		    header('WWW-Authenticate: Basic realm="Red"');
 		    header('HTTP/1.0 401 Unauthorized');
 		    die('This api requires login');
 		}
 
 		require_once('include/security.php');
 		authenticate_success($record);
-
-		call_hooks('logged_in', $a->user);
-
+		$_SESSION['allow_api'] = true;
 	}
 	
 	/**************************
 	 *  MAIN API ENTRY POINT  *
 	 **************************/
+
 	function api_call(&$a){
 		GLOBAL $API, $called_api;
 
@@ -108,15 +146,19 @@
 			if (strpos($a->query_string, $p)===0){
 				$called_api= explode("/",$p);
 				//unset($_SERVER['PHP_AUTH_USER']);
-				if ($info['auth']===true && local_user()===false) {
+				if ($info['auth'] === true && api_user() === false) {
 						api_login($a);
 				}
 
-				load_contact_links(local_user());
+				load_contact_links(api_user());
 
-				logger('API call for ' . $a->user['username'] . ': ' . $a->query_string);
+				$channel = $a->get_channel();
+
+				logger('API call for ' . $channel['channel_name'] . ': ' . $a->query_string);
 				logger('API parameters: ' . print_r($_REQUEST,true));
+
 				$type="json";
+
 				if (strpos($a->query_string, ".xml")>0) $type="xml";
 				if (strpos($a->query_string, ".json")>0) $type="json";
 				if (strpos($a->query_string, ".rss")>0) $type="rss";
@@ -133,7 +175,7 @@
 						return '<?xml version="1.0" encoding="UTF-8"?>'."\n".$r;
 						break;
 					case "json":
-						//header ("Content-Type: application/json");
+						header ("Content-Type: application/json");
 						foreach($r as $rr)
 						    return json_encode($rr);
 						break;
@@ -192,7 +234,7 @@
 			'updated' => api_date(null),
 			'atom_updated' => datetime_convert('UTC','UTC','now',ATOM_TIME),
 			'language' => $user_info['language'],
-			'logo'	=> $a->get_baseurl()."/images/friendica-32.png",
+			'logo'	=> $a->get_baseurl()."/images/rm-64.png",
 		);
 		
 		return $arr;
@@ -201,6 +243,7 @@
 	/**
 	 * Returns user info array.
 	 */
+
 	function api_get_user(&$a, $contact_id = Null){
 		global $called_api;
 		$user = null;
@@ -209,46 +252,48 @@
 
 		if(!is_null($contact_id)){
 			$user=$contact_id;
-			$extra_query = "AND `contact`.`id` = %d ";
+			$extra_query = " AND abook_id = %d ";
 		}
 		
 		if(is_null($user) && x($_GET, 'user_id')) {
 			$user = intval($_GET['user_id']);	
-			$extra_query = "AND `contact`.`id` = %d ";
+			$extra_query = " AND abook_id = %d ";
 		}
 		if(is_null($user) && x($_GET, 'screen_name')) {
 			$user = dbesc($_GET['screen_name']);	
-			$extra_query = "AND `contact`.`nick` = '%s' ";
-			if (local_user()!==false)  $extra_query .= "AND `contact`.`uid`=".intval(local_user());
-			
+			$extra_query = " AND xchan_addr like '%s@%%' ";
+			if (api_user()!==false)
+				$extra_query .= " AND abook_channel = ".intval(api_user());
 		}
 		
-		if (is_null($user) && $a->argc > (count($called_api)-1)){
+		if (is_null($user) && argc() > (count($called_api)-1)){
 			$argid = count($called_api);
-			list($user, $null) = explode(".",$a->argv[$argid]);
+			list($user, $null) = explode(".",argv($argid));
 			if(is_numeric($user)){
 				$user = intval($user);
-				$extra_query = "AND `contact`.`id` = %d ";
+				$extra_query = " AND abook_id = %d ";
 			} else {
 				$user = dbesc($user);
-				$extra_query = "AND `contact`.`nick` = '%s' ";
-				if (local_user()!==false)  $extra_query .= "AND `contact`.`uid`=".intval(local_user());
+				$extra_query = " AND xchan_addr like '%s@%%' ";
+				if (api_user() !== false)
+					$extra_query .= " AND abook_channel = ".intval(api_user());
 			}
 		}
 		
 		if (! $user) {
-			if (local_user()===false) {
-				api_login($a); return False;
+			if (api_user() === false) {
+				api_login($a); 
+				return False;
 			} else {
-				$user = $_SESSION['uid'];
-				$extra_query = "AND `contact`.`uid` = %d AND `contact`.`self` = 1 ";
+				$user = local_user();
+				$extra_query = " AND abook_channel = %d AND (abook_flags & " . ABOOK_FLAG_SELF . " ) ";
 			}
 			
 		}
 		
 		logger('api_user: ' . $extra_query . ', user: ' . $user);
 		// user info		
-		$uinfo = q("SELECT *, `contact`.`id` as `cid` FROM `contact`
+		$uinfo = q("SELECT * from abook left join xchan on abook_xchan = xchan_hash 
 				WHERE 1
 				$extra_query",
 				$user
@@ -257,81 +302,77 @@
 			return False;
 		}
 		
-		if($uinfo[0]['self']) {
-			$usr = q("select * from user where uid = %d limit 1",
-				intval(local_user())
+		if($uinfo[0]['abook_flags'] & ABOOK_FLAG_SELF) {
+			$usr = q("select * from channel where channel_id = %d limit 1",
+				intval(api_user())
 			);
 			$profile = q("select * from profile where uid = %d and `is_default` = 1 limit 1",
-				intval(local_user())
+				intval(api_user())
 			);
 
 			// count public wall messages
 			$r = q("SELECT COUNT(`id`) as `count` FROM `item`
-					WHERE  `uid` = %d
-					AND `type`='wall' 
+					WHERE `uid` = %d
+					AND ( item_flags & %d ) and item_restrict = 0 
 					AND `allow_cid`='' AND `allow_gid`='' AND `deny_cid`='' AND `deny_gid`=''",
-					intval($uinfo[0]['uid'])
+					intval($usr[0]['channel_id']),
+					intval(ITEM_WALL)
 			);
 			$countitms = $r[0]['count'];
 		}
 		else {
 			$r = q("SELECT COUNT(`id`) as `count` FROM `item`
-					WHERE  `contact-id` = %d
+					WHERE author_xchan = '%s'
 					AND `allow_cid`='' AND `allow_gid`='' AND `deny_cid`='' AND `deny_gid`=''",
-					intval($uinfo[0]['id'])
+					intval($uinfo[0]['xchan_hash'])
 			);
 			$countitms = $r[0]['count'];
 		}
 
+
 		// count friends
-		$r = q("SELECT COUNT(`id`) as `count` FROM `contact`
-				WHERE  `uid` = %d AND `rel` IN ( %d, %d )
-				AND `self`=0 AND `blocked`=0 AND `pending`=0 AND `hidden`=0", 
-				intval($uinfo[0]['uid']),
-				intval(CONTACT_IS_SHARING),
-				intval(CONTACT_IS_FRIEND)
-		);
-		$countfriends = $r[0]['count'];
+		if($usr) {
+			$r = q("SELECT COUNT(abook_id) as `count` FROM abook
+					WHERE abook_channel = %d AND abook_flags = 0 ",
+					intval($usr[0]['channel_id'])
+			);
+			$countfriends = $r[0]['count'];
+			$countfollowers = $r[0]['count'];
+		}
 
-		$r = q("SELECT COUNT(`id`) as `count` FROM `contact`
-				WHERE  `uid` = %d AND `rel` IN ( %d, %d )
-				AND `self`=0 AND `blocked`=0 AND `pending`=0 AND `hidden`=0", 
-				intval($uinfo[0]['uid']),
-				intval(CONTACT_IS_FOLLOWER),
-				intval(CONTACT_IS_FRIEND)
-		);
-		$countfollowers = $r[0]['count'];
-
-		$r = q("SELECT count(`id`) as `count` FROM item where starred = 1 and uid = %d and deleted = 0",
-			intval($uinfo[0]['uid'])
+		$r = q("SELECT count(`id`) as `count` FROM item where ( item_flags & %d ) and uid = %d and item_restrict = 0",
+			intval($uinfo[0]['channel_id']),
+			intval(ITEM_STARRED)
 		);
 		$starred = $r[0]['count'];
 	
 
-		if(! $uinfo[0]['self']) {
+		if(! ($uinfo[0]['abook_flags'] & ABOOK_FLAG_SELF)) {
 			$countfriends = 0;
 			$countfollowers = 0;
 			$starred = 0;
 		}
 
 		$ret = Array(
-			'id' => intval($uinfo[0]['cid']),
-			'self' => intval($uinfo[0]['self']),
-			'uid' => intval($uinfo[0]['uid']),
-			'name' => (($uinfo[0]['name']) ? $uinfo[0]['name'] : $uinfo[0]['nick']),
-			'screen_name' => (($uinfo[0]['nick']) ? $uinfo[0]['nick'] : $uinfo[0]['name']),
-			'location' => ($usr) ? $usr[0]['default-location'] : '',
-			'profile_image_url' => $uinfo[0]['micro'],
-			'url' => $uinfo[0]['url'],
-			'contact_url' => $a->get_baseurl()."/contacts/".$uinfo[0]['cid'],
+			'id' => intval($uinfo[0]['abook_id']),
+			'self' => (($uinfo[0]['abook_flags'] & ABOOK_FLAG_SELF) ? 1 : 0),
+			'uid' => intval($uinfo[0]['abook_channel']),
+			'guid' => $uinfo[0]['xchan_hash'],
+			'name' => (($uinfo[0]['xchan_name']) ? $uinfo[0]['xchan_name'] : substr($uinfo[0]['xchan_addr'],0,strpos($uinfo[0]['xchan_addr'],'@'))),
+			'screen_name' => substr($uinfo[0]['xchan_addr'],0,strpos($uinfo[0]['xchan_addr'],'@')),
+			'location' => ($usr) ? $usr[0]['channel_location'] : '',
+			'profile_image_url' => $uinfo[0]['xchan_photo_l'],
+			'url' => $uinfo[0]['xchan_url'],
+//FIXME
+			'contact_url' => $a->get_baseurl() . "/connections/".$uinfo[0]['abook_id'],
 			'protected' => false,	
 			'friends_count' => intval($countfriends),
-			'created_at' => api_date($uinfo[0]['name_date']),
+			'created_at' => api_date($uinfo[0]['abook_created']),
 			'utc_offset' => "+00:00",
 			'time_zone' => 'UTC', //$uinfo[0]['timezone'],
 			'geo_enabled' => false,
 			'statuses_count' => intval($countitms), #XXX: fix me 
-			'lang' => 'en', #XXX: fix me
+			'lang' => get_app()->language,
 			'description' => (($profile) ? $profile[0]['pdesc'] : ''),
 			'followers_count' => intval($countfollowers),
 			'favourites_count' => intval($starred),
@@ -355,30 +396,20 @@
 		
 	}
 
+
 	function api_item_get_user(&$a, $item) {
 		global $usercache;
 
 		// The author is our direct contact, in a conversation with us.
-		if(link_compare($item['url'],$item['author-link'])) {
-			return api_get_user($a,$item['cid']);
-		}
-		else {
-			// The author may be a contact of ours, but is replying to somebody else. 
-			// Figure out if we know him/her.
-			$normalised = normalise_link((strlen($item['author-link'])) ? $item['author-link'] : $item['url']);
-            if(($normalised != 'mailbox') && (x($a->contacts[$normalised])))
-				return api_get_user($a,$a->contacts[$normalised]['id']);
-		}
+
+		if($item['author']['abook_id']) {
+			return api_get_user($a,$item['author']['abook_id']);
+		}	
+		
 		// We don't know this person directly.
 		
-		list($nick, $name) = array_map("trim",explode("(",$item['author-name']));
-		$name=str_replace(")","",$name);
-
-		if ($name == '')
-			$name = $nick;
-
-		if ($nick == '')
-			$nick = $name;
+		$nick = substr($item['author']['xchan_addr'],0,strpos($item['author']['xchan_addr'],'@'));
+		$name = $item['author']['xchan_name'];
 
 		// Generating a random ID
 		if (is_null($usercache[$nick]) or !array_key_exists($nick, $usercache))
@@ -390,8 +421,8 @@
 			'screen_name' => $nick,
 			'location' => '', //$uinfo[0]['default-location'],
 			'description' => '',
-			'profile_image_url' => $item['author-avatar'],
-			'url' => $item['author-link'],
+			'profile_image_url' => $item['author']['xchan_photo_m'],
+			'url' => $item['author']['xchan_url'],
 			'protected' => false,	#
 			'followers_count' => 0,
 			'friends_count' => 0,
@@ -448,9 +479,6 @@
 		return $ret;
 	}
 	
-	/**
-	 ** TWITTER API
-	 */
 	
 	/**
 	 * Returns an HTTP 200 OK response code and a representation of the requesting user if authentication was successful; 
@@ -458,77 +486,143 @@
 	 * http://developer.twitter.com/doc/get/account/verify_credentials
 	 */
 	function api_account_verify_credentials(&$a, $type){
-		if (local_user()===false) return false;
+		if (api_user()===false) return false;
 		$user_info = api_get_user($a);
 		
 		return api_apply_template("user", $type, array('$user' => $user_info));
 
 	}
 	api_register_func('api/account/verify_credentials','api_account_verify_credentials', true);
+
+
+	function api_account_logout(&$a, $type){
+		require_once('include/auth.php');
+		nuke_session();
+		return api_apply_template("user", $type, array('$user' => null));
+
+	}
+	api_register_func('api/account/logout','api_account_logout', false);
 	 	
 
+
 	/**
-	 * get data from $_POST or $_GET
+	 * get data from $_REQUEST ( e.g. $_POST or $_GET )
 	 */
-	function requestdata($k){
-		if (isset($_POST[$k])){
-			return $_POST[$k];
-		}
-		if (isset($_GET[$k])){
-			return $_GET[$k];
-		}
+	function requestdata($k) {
+		if(array_key_exists($k,$_REQUEST))
+			return $_REQUEST[$k];
 		return null;
 	}
 
 
-    function api_statuses_mediap(&$a, $type) {
-                if (local_user()===false) {
-                        logger('api_statuses_update: no user');
-                        return false;
-                }
-                $user_info = api_get_user($a);
+	/*
+	 * Red basic channel export
+	 */
 
-                $_REQUEST['type'] = 'wall';
-                $_REQUEST['profile_uid'] = local_user();
-                $_REQUEST['api_source'] = true;
-                $txt = requestdata('status');
-                //$txt = urldecode(requestdata('status'));
-
-                require_once('library/HTMLPurifier.auto.php');
-                require_once('include/html2bbcode.php');
-
-                if((strpos($txt,'<') !== false) || (strpos($txt,'>') !== false)) {
-			$txt = html2bb_video($txt);
-			$config = HTMLPurifier_Config::createDefault();
-                        $config->set('Cache.DefinitionImpl', null);
-			$purifier = new HTMLPurifier($config);
-                        $txt = $purifier->purify($txt);
+	function api_export_basic(&$a, $type) {
+		if(api_user() === false) {
+			logger('api_export_basic: no user');
+			return false;
 		}
-		$txt = html2bbcode($txt);
-		
-                $a->argv[1]=$user_info['screen_name']; //should be set to username?
-		
-		$_REQUEST['silent']='1'; //tell wall_upload function to return img info instead of echo
-                require_once('mod/wall_upload.php');
-		$bebop = wall_upload_post($a);
-                
-		//now that we have the img url in bbcode we can add it to the status and insert the wall item.
-                $_REQUEST['body']=$txt."\n\n".$bebop;
-                require_once('mod/item.php');
-                item_post($a);
 
-                // this should output the last post (the one we just posted).
-                return api_status_show($a,$type);
-        }
-        api_register_func('api/statuses/mediap','api_statuses_mediap', true);
+		require_once('include/identity.php');
+
+		json_return_and_die(identity_basic_export(api_user()));	
+	}
+	api_register_func('api/export/basic','api_export_basic', true);
+	api_register_func('api/red/channel/export/basic','api_export_basic', true);
 
 
+	function api_channel_stream(&$a, $type) {
+		if(api_user() === false) {
+			logger('api_channel_stream: no user');
+			return false;
+		}
 
-	function api_statuses_update(&$a, $type) {
-		if (local_user()===false) {
+		if($_SERVER['REQUEST_METHOD'] == 'POST') {
+			json_return_and_die(post_activity_item($_REQUEST));
+		}
+		else {
+			// fetch stream
+
+		}
+	}
+	api_register_func('api/red/channel/stream','api_channel_stream', true);
+
+
+	function api_albums(&$a,$type) {
+		json_return_and_die(photos_albums_list($a->get_channel(),$a->get_observer()));
+	}
+	api_register_func('api/red/albums','api_albums', true);
+
+	function api_photos(&$a,$type) {
+		$album = $_REQUEST['album'];
+		json_return_and_die(photos_list_photos($a->get_channel(),$a->get_observer(),$album));
+	}
+	api_register_func('api/red/photos','api_photos', true);
+
+
+
+
+
+
+
+    function api_statuses_mediap(&$a, $type) {
+		if (api_user() === false) {
 			logger('api_statuses_update: no user');
 			return false;
 		}
+		$user_info = api_get_user($a);
+
+		$_REQUEST['type'] = 'wall';
+		$_REQUEST['profile_uid'] = api_user();
+		$_REQUEST['api_source'] = true;
+                
+		$txt = requestdata('status');
+
+		require_once('library/HTMLPurifier.auto.php');
+		require_once('include/html2bbcode.php');
+
+		if((strpos($txt,'<') !== false) || (strpos($txt,'>') !== false)) {
+			$txt = html2bb_video($txt);
+			$config = HTMLPurifier_Config::createDefault();
+			$config->set('Cache.DefinitionImpl', null);
+			$purifier = new HTMLPurifier($config);
+			$txt = $purifier->purify($txt);
+		}
+		$txt = html2bbcode($txt);
+		
+        $a->argv[1] = $user_info['screen_name'];
+		
+		$_REQUEST['silent']='1'; //tell wall_upload function to return img info instead of echo
+		require_once('mod/wall_upload.php');
+		$posted = wall_upload_post($a);
+                
+		//now that we have the img url in bbcode we can add it to the status and insert the wall item.
+		$_REQUEST['body']=$txt."\n\n".$posted;
+		require_once('mod/item.php');
+		item_post($a);
+
+		// this should output the last post (the one we just posted).
+		return api_status_show($a,$type);
+	}
+	api_register_func('api/statuses/mediap','api_statuses_mediap', true);
+
+	function api_statuses_update(&$a, $type) {
+		if (api_user() === false) {
+			logger('api_statuses_update: no user');
+			return false;
+		}
+
+		logger('api_statuses_update: REQUEST ' . print_r($_REQUEST,true));
+		logger('api_statuses_update: FILES ' . print_r($_FILES,true));
+
+
+		// set this so that the item_post() function is quiet and doesn't redirect or emit json
+
+		$_REQUEST['api_source'] = true;
+
+
 		$user_info = api_get_user($a);
 
 		// convert $_POST array items to the form we use for web posts.
@@ -557,23 +651,26 @@
 		}
 		else
 			$_REQUEST['body'] = requestdata('status');
-			//$_REQUEST['body'] = urldecode(requestdata('status'));
 
 		$parent = requestdata('in_reply_to_status_id');
+
 		if(ctype_digit($parent))
 			$_REQUEST['parent'] = $parent;
 		else
-			$_REQUEST['parent_uri'] = $parent;
+			$_REQUEST['parent_mid'] = $parent;
 
 		if(requestdata('lat') && requestdata('long'))
 			$_REQUEST['coord'] = sprintf("%s %s",requestdata('lat'),requestdata('long'));
-		$_REQUEST['profile_uid'] = local_user();
+
+		$_REQUEST['profile_uid'] = api_user();
 
 		if($parent)
 			$_REQUEST['type'] = 'net-comment';
 		else {
 			$_REQUEST['type'] = 'wall';
+		
 			if(x($_FILES,'media')) {
+				$_FILES['userfile'] = $_FILES['media'];
 				// upload the image if we have one
 				$_REQUEST['silent']='1'; //tell wall_upload function to return img info instead of echo
 				require_once('mod/wall_upload.php');
@@ -582,10 +679,6 @@
 					$_REQUEST['body'] .= "\n\n".$media;
 			}
 		}
-
-		// set this so that the item_post() function is quiet and doesn't redirect or emit json
-
-		$_REQUEST['api_source'] = true;
 
 		// call out normal post function
 
@@ -598,40 +691,99 @@
 	api_register_func('api/statuses/update','api_statuses_update', true);
 
 
+	function red_item_new(&$a, $type) {
+
+		if (api_user() === false) {
+			logger('api_red_item_new: no user');
+			return false;
+		}
+
+		logger('api_red_item_new: REQUEST ' . print_r($_REQUEST,true));
+		logger('api_red_item_new: FILES ' . print_r($_FILES,true));
+
+
+		// set this so that the item_post() function is quiet and doesn't redirect or emit json
+
+		$_REQUEST['api_source'] = true;
+		$_REQUEST['profile_uid'] = api_user();
+
+		if(x($_FILES,'media')) {
+			$_FILES['userfile'] = $_FILES['media'];
+			// upload the image if we have one
+			$_REQUEST['silent']='1'; //tell wall_upload function to return img info instead of echo
+			require_once('mod/wall_upload.php');
+			$media = wall_upload_post($a);
+			if(strlen($media)>0)
+				$_REQUEST['body'] .= "\n\n".$media;
+		}
+
+		require_once('mod/item.php');
+		$x = item_post($a);	
+		json_return_and_die($x);
+	}
+
+	api_register_func('api/red/item/new','red_item_new', true);
+
+
+
+
+
+
+
+
+
+
 	function api_status_show(&$a, $type){
 		$user_info = api_get_user($a);
-		// get last public wall message
-		$lastwall = q("SELECT `item`.*, `i`.`contact-id` as `reply_uid`, `i`.`nick` as `reply_author`
-				FROM `item`, `contact`,
-					(SELECT `item`.`id`, `item`.`contact-id`, `contact`.`nick` FROM `item`,`contact` WHERE `contact`.`id`=`item`.`contact-id`) as `i` 
-				WHERE `item`.`contact-id` = %d
-					AND `i`.`id` = `item`.`parent`
-					AND `contact`.`id`=`item`.`contact-id` AND `contact`.`self`=1
-					AND `type`!='activity'
-					AND `item`.`allow_cid`='' AND `item`.`allow_gid`='' AND `item`.`deny_cid`='' AND `item`.`deny_gid`=''
-				ORDER BY `created` DESC 
-				LIMIT 1",
-				intval($user_info['id'])
+
+		// get last public message
+
+		require_once('include/security.php');
+
+		$lastwall = q("SELECT * from item where 1
+			and item_private = 0 and item_restrict = 0
+			and author_xchan = '%s'
+			and allow_cid = '' and allow_gid = '' and deny_cid = '' and deny_gid = ''
+			and verb = '%s'
+			and uid in ( " . stream_perms_api_uids() . " )
+			order by created desc limit 1",
+			dbesc($user_info['guid']),
+			dbesc(ACTIVITY_POST)
 		);
 
-		if (count($lastwall)>0){
+		if($lastwall){
 			$lastwall = $lastwall[0];
 			
 			$in_reply_to_status_id = '';
 			$in_reply_to_user_id = '';
 			$in_reply_to_screen_name = '';
+
+			if($lastwall['author_xchan'] != $lastwall['owner_xchan']) {
+				$w = q("select * from abook left join xchan on abook_xchan = xchan_hash where
+					xchan_hash = '%s' limit 1",
+					dbesc($lastwall['owner_xchan'])
+				);
+				if($w) {
+					$in_reply_to_user_id = $w[0]['abook_id'];
+					$in_reply_to_screen_name = substr($w[0]['xchan_addr'],0,strpos($w[0]['xchan_addr'],'@'));
+				}
+			}
+			
 			if ($lastwall['parent']!=$lastwall['id']) {
-				$in_reply_to_status_id=$lastwall['parent'];
-				$in_reply_to_user_id = $lastwall['reply_uid'];
-				$in_reply_to_screen_name = $lastwall['reply_author'];
-			}  
+				$in_reply_to_status_id=$lastwall['thr_parent'];
+				if(! $in_reply_to_user_id) {
+					$in_reply_to_user_id = $user_info['id'];
+					$in_reply_to_screen_name = $user_info['screen_name'];
+				}
+			}
+			unobscure($lastwall);  
 			$status_info = array(
-				'text' => html2plain(bbcode($lastwall['body']), 0),
+				'text' => html2plain(prepare_text($lastwall['body'],$lastwall['mimetype']), 0),
 				'truncated' => false,
 				'created_at' => api_date($lastwall['created']),
 				'in_reply_to_status_id' => $in_reply_to_status_id,
 				'source' => (($lastwall['app']) ? $lastwall['app'] : 'web'),
-				'id' => $lastwall['contact-id'],
+				'id' => ($lastwall['id']),
 				'in_reply_to_user_id' => $in_reply_to_user_id,
 				'in_reply_to_screen_name' => $in_reply_to_screen_name,
 				'geo' => '',
@@ -642,12 +794,10 @@
 			);
 			$status_info['user'] = $user_info;
 		}
+
 		return  api_apply_template("status", $type, array('$status' => $status_info));
 		
 	}
-
-
-
 
 		
 	/**
@@ -655,48 +805,68 @@
 	 * The author's most recent status will be returned inline.
 	 * http://developer.twitter.com/doc/get/users/show
 	 */
+
+// FIXME - this is essentially the same as api_status_show except for the template formatting at the end. Consolidate.
+ 
+
 	function api_users_show(&$a, $type){
 		$user_info = api_get_user($a);
-		// get last public wall message
-		$lastwall = q("SELECT `item`.*, `i`.`contact-id` as `reply_uid`, `i`.`nick` as `reply_author`
-				FROM `item`, `contact`,
-					(SELECT `item`.`id`, `item`.`contact-id`, `contact`.`nick` FROM `item`,`contact` WHERE `contact`.`id`=`item`.`contact-id`) as `i` 
-				WHERE `item`.`contact-id` = %d
-					AND `i`.`id` = `item`.`parent`
-					AND `contact`.`id`=`item`.`contact-id` AND `contact`.`self`=1
-					AND `type`!='activity'
-					AND `item`.`allow_cid`='' AND `item`.`allow_gid`='' AND `item`.`deny_cid`='' AND `item`.`deny_gid`=''
-				ORDER BY `created` DESC 
-				LIMIT 1",
-				intval($user_info['id'])
+
+		require_once('include/security.php');
+
+		$lastwall = q("SELECT * from item where 1
+			and item_private != 0 and item_restrict = 0
+			and author_xchan = '%s'
+			and allow_cid = '' and allow_gid = '' and deny_cid = '' and deny_gid = ''
+			and verb = '%s'
+			and uid in ( " . stream_perms_api_uids() . " )
+			order by created desc limit 1",
+			dbesc($user_info['guid']),
+			dbesc(ACTIVITY_POST)
 		);
 
-		if (count($lastwall)>0){
+		if($lastwall){
 			$lastwall = $lastwall[0];
 			
 			$in_reply_to_status_id = '';
 			$in_reply_to_user_id = '';
 			$in_reply_to_screen_name = '';
+
+			if($lastwall['author_xchan'] != $lastwall['owner_xchan']) {
+				$w = q("select * from abook left join xchan on abook_xchan = xchan_hash where
+					xchan_hash = '%s' limit 1",
+					dbesc($lastwall['owner_xchan'])
+				);
+				if($w) {
+					$in_reply_to_user_id = $w[0]['abook_id'];
+					$in_reply_to_screen_name = substr($w[0]['xchan_addr'],0,strpos($w[0]['xchan_addr'],'@'));
+				}
+			}
+			
 			if ($lastwall['parent']!=$lastwall['id']) {
-				$in_reply_to_status_id=$lastwall['parent'];
-				$in_reply_to_user_id = $lastwall['reply_uid'];
-				$in_reply_to_screen_name = $lastwall['reply_author'];
+				$in_reply_to_status_id=$lastwall['thr_parent'];
+				if(! $in_reply_to_user_id) {
+					$in_reply_to_user_id = $user_info['id'];
+					$in_reply_to_screen_name = $user_info['screen_name'];
+				}
 			}  
+			unobscure($lastwall);
 			$user_info['status'] = array(
-				'created_at' => api_date($lastwall['created']),
-				'id' => $lastwall['contact-id'],
-				'text' => html2plain(bbcode($lastwall['body']), 0),
-				'source' => (($lastwall['app']) ? $lastwall['app'] : 'web'),
+				'text' => html2plain(prepare_text($lastwall['body'],$lastwall['mimetype']), 0),
 				'truncated' => false,
+				'created_at' => api_date($lastwall['created']),
 				'in_reply_to_status_id' => $in_reply_to_status_id,
+				'source' => (($lastwall['app']) ? $lastwall['app'] : 'web'),
+				'id' => (($w) ? $w[0]['abook_id'] : $user_info['id']),
 				'in_reply_to_user_id' => $in_reply_to_user_id,
-				'favorited' => false,
 				'in_reply_to_screen_name' => $in_reply_to_screen_name,
 				'geo' => '',
+				'favorited' => false,
 				'coordinates' => $lastwall['coord'],
 				'place' => $lastwall['location'],
-				'contributors' => ''
+				'contributors' => ''					
 			);
+
 		}
 		return  api_apply_template("user", $type, array('$user' => $user_info));
 
@@ -710,19 +880,22 @@
 	 * TODO: Optional parameters
 	 * TODO: Add reply info
 	 */
+
 	function api_statuses_home_timeline(&$a, $type){
-		if (local_user()===false) return false;
+		if (api_user() === false) 
+			return false;
 
 		$user_info = api_get_user($a);
-		// get last newtork messages
+		// get last network messages
 
 
 		// params
-		$count = (x($_REQUEST,'count')?$_REQUEST['count']:20);
-		$page = (x($_REQUEST,'page')?$_REQUEST['page']-1:0);
-		if ($page<0) $page=0;
-		$since_id = (x($_REQUEST,'since_id')?$_REQUEST['since_id']:0);
-		$max_id = (x($_REQUEST,'max_id')?$_REQUEST['max_id']:0);
+		$count           = (x($_REQUEST,'count')?$_REQUEST['count']:20);
+		$page            = (x($_REQUEST,'page')?$_REQUEST['page']-1:0);
+		if($page < 0) 
+			$page = 0;
+		$since_id        = (x($_REQUEST,'since_id')?$_REQUEST['since_id']:0);
+		$max_id          = (x($_REQUEST,'max_id')?$_REQUEST['max_id']:0);
 		$exclude_replies = (x($_REQUEST,'exclude_replies')?1:0);
 		//$since_id = 0;//$since_id = (x($_REQUEST,'since_id')?$_REQUEST['since_id']:0);
 
@@ -736,22 +909,25 @@
 		if ($exclude_replies > 0)
 			$sql_extra .= ' AND `item`.`parent` = `item`.`id`';
 
-		$r = q("SELECT `item`.*, `item`.`id` AS `item_id`,
-			`contact`.`name`, `contact`.`photo`, `contact`.`url`, `contact`.`rel`,
-			`contact`.`network`, `contact`.`thumb`, `contact`.`dfrn_id`, `contact`.`self`,
-			`contact`.`id` AS `cid`, `contact`.`uid` AS `contact-uid`
-			FROM `item`, `contact`
-			WHERE `item`.`uid` = %d
-			AND `item`.`visible` = 1 and `item`.`moderated` = 0 AND `item`.`deleted` = 0
-			AND `contact`.`id` = `item`.`contact-id`
-			AND `contact`.`blocked` = 0 AND `contact`.`pending` = 0
+		if (api_user() != $user_info['uid']) {
+			$observer = get_app()->get_observer();
+			require_once('include/permissions.php');
+			if(! perm_is_allowed($user_info['uid'],(($observer) ? $observer['xchan_hash'] : ''),'view_stream'))
+				return '';
+			$sql_extra .= " and item_private = 0 ";
+		}
+
+		$r = q("SELECT * from item WHERE uid = %d and item_restrict = 0
 			$sql_extra
-			AND `item`.`id`>%d
-			ORDER BY `item`.`received` DESC LIMIT %d ,%d ",
+			AND id > %d
+			ORDER BY received DESC LIMIT %d ,%d ",
 			intval($user_info['uid']),
 			intval($since_id),
-			intval($start),	intval($count)
+			intval($start),	
+			intval($count)
 		);
+
+		xchan_query($r,true);
 
 		$ret = api_format_items($r,$user_info);
 
@@ -759,10 +935,14 @@
 		// level which items you've seen and which you haven't. If you're looking
 		// at the network timeline just mark everything seen. 
 	
-		$r = q("UPDATE `item` SET `unseen` = 0 
-			WHERE `unseen` = 1 AND `uid` = %d",
-			intval($user_info['uid'])
-		);
+		if (api_user() == $user_info['uid']) {
+			$r = q("UPDATE `item` SET item_flags = ( item_flags ^ %d )
+				WHERE item_flags & %d and uid = %d",
+				intval(ITEM_UNSEEN),
+				intval(ITEM_UNSEEN),
+				intval($user_info['uid'])
+			);
+		}
 
 
 		$data = array('$statuses' => $ret);
@@ -785,7 +965,7 @@
 	api_register_func('api/statuses/friends_timeline','api_statuses_home_timeline', true);
 
 	function api_statuses_public_timeline(&$a, $type){
-		if (local_user()===false) return false;
+		if (api_user()===false) return false;
 
 		$user_info = api_get_user($a);
 		// get last newtork messages
@@ -805,42 +985,22 @@
 
 		if ($max_id > 0)
 			$sql_extra = 'AND `item`.`id` <= '.intval($max_id);
+		require_once('include/security.php');
 
-		/*$r = q("SELECT `item`.*, `item`.`id` AS `item_id`,
-			`contact`.`name`, `contact`.`photo`, `contact`.`url`, `contact`.`rel`,
-			`contact`.`network`, `contact`.`thumb`, `contact`.`dfrn_id`, `contact`.`self`,
-			`contact`.`id` AS `cid`, `contact`.`uid` AS `contact-uid`
-			FROM `item`, `contact`
-			WHERE `item`.`visible` = 1 and `item`.`moderated` = 0 AND `item`.`deleted` = 0
-			AND `item`.`allow_cid` = ''  AND `item`.`allow_gid` = '' 
-			AND `item`.`deny_cid`  = '' AND `item`.`deny_gid`  = '' 
-			AND `item`.`private` = 0 AND `item`.`wall` = 1 AND `user`.`hidewall` = 0
-			AND `contact`.`id` = `item`.`contact-id`
-			AND `contact`.`blocked` = 0 AND `contact`.`pending` = 0
+        $r = q("select * from item where item_restrict = 0
+			and allow_cid = ''  and allow_gid = ''
+			and deny_cid  = ''  and deny_gid  = ''
+            and item_private = 0
+			and uid in ( " . stream_perms_api_uids() . " )
 			$sql_extra
-			AND `item`.`id`>%d
-			ORDER BY `item`.`received` DESC LIMIT %d ,%d ",
+			AND id > %d group by mid
+            order by received desc LIMIT %d, %d ",
 			intval($since_id),
-			intval($start),	intval($count)
-		);*/
-	        $r = q("SELECT `item`.*, `item`.`id` AS `item_id`,
-	                `contact`.`name`, `contact`.`photo`, `contact`.`url`, `contact`.`rel`,
-        	        `contact`.`network`, `contact`.`thumb`, `contact`.`self`, `contact`.`writable`,
-                	`contact`.`id` AS `cid`, `contact`.`uid` AS `contact-uid`,
-                	`user`.`nickname`, `user`.`hidewall`
-                	FROM `item` LEFT JOIN `contact` ON `contact`.`id` = `item`.`contact-id`
-                	LEFT JOIN `user` ON `user`.`uid` = `item`.`uid`
-                	WHERE `item`.`visible` = 1 AND `item`.`deleted` = 0 and `item`.`moderated` = 0
-                	AND `item`.`allow_cid` = ''  AND `item`.`allow_gid` = ''
-                	AND `item`.`deny_cid`  = '' AND `item`.`deny_gid`  = ''
-                	AND `item`.`private` = 0 AND `item`.`wall` = 1 AND `user`.`hidewall` = 0
-                	AND `contact`.`blocked` = 0 AND `contact`.`pending` = 0
-			$sql_extra
-			AND `item`.`id`>%d
-                	ORDER BY `received` DESC LIMIT %d, %d ",
-			intval($since_id),
-                	intval($start),
-                	intval($count));
+			intval($start),
+			intval($count)
+		);
+
+		xchan_query($r,true);
 
 		$ret = api_format_items($r,$user_info);
 
@@ -853,7 +1013,7 @@
 				break;
 			case "as":
 				$as = api_format_as($a, $ret, $user_info);
-				$as['title'] = $a->config['sitename']." Public Timeline";
+				$as['title'] = $a->config['sitename']. " " . t('Public Timeline');
 				$as['link']['url'] = $a->get_baseurl()."/";
 				return($as);
 				break;
@@ -865,14 +1025,15 @@
 
 	/**
 	 * 
+
 	 */
 	function api_statuses_show(&$a, $type){
-		if (local_user()===false) return false;
+		if (api_user()===false) return false;
 
 		$user_info = api_get_user($a);
 
 		// params
-		$id = intval($a->argv[3]);
+		$id = intval(argv(3));
 
 		logger('API: api_statuses_show: '.$id);
 
@@ -885,17 +1046,10 @@
 		else
 			$sql_extra .= " AND `item`.`id` = %d";
 
-		$r = q("SELECT `item`.*, `item`.`id` AS `item_id`,
-			`contact`.`name`, `contact`.`photo`, `contact`.`url`, `contact`.`rel`,
-			`contact`.`network`, `contact`.`thumb`, `contact`.`dfrn_id`, `contact`.`self`,
-			`contact`.`id` AS `cid`, `contact`.`uid` AS `contact-uid`
-			FROM `item`, `contact`
-			WHERE `item`.`visible` = 1 and `item`.`moderated` = 0 AND `item`.`deleted` = 0
-			AND `contact`.`id` = `item`.`contact-id`
-			AND `contact`.`blocked` = 0 AND `contact`.`pending` = 0
-			$sql_extra",
+		$r = q("select * from item where item_restrict = 0 $sql_extra",
 			intval($id)
 		);
+		xchan_query($r,true);
 
 		$ret = api_format_items($r,$user_info);
 
@@ -919,39 +1073,36 @@
 	 * 
 	 */
 	function api_statuses_repeat(&$a, $type){
-		if (local_user()===false) return false;
+		if (api_user()===false) return false;
 
 		$user_info = api_get_user($a);
 
 		// params
-		$id = intval($a->argv[3]);
+		$id = intval(argv(3));
 
 		logger('API: api_statuses_repeat: '.$id);
 
 		//$include_entities = (x($_REQUEST,'include_entities')?$_REQUEST['include_entities']:false);
 
-		$r = q("SELECT `item`.*, `item`.`id` AS `item_id`, `contact`.`nick` as `reply_author`,
-			`contact`.`name`, `contact`.`photo`, `contact`.`url` as `reply_url`, `contact`.`rel`,
-			`contact`.`network`, `contact`.`thumb`, `contact`.`dfrn_id`, `contact`.`self`,
-			`contact`.`id` AS `cid`, `contact`.`uid` AS `contact-uid`
-			FROM `item`, `contact`
-			WHERE `item`.`visible` = 1 and `item`.`moderated` = 0 AND `item`.`deleted` = 0
-			AND `contact`.`id` = `item`.`contact-id`
-			AND `contact`.`blocked` = 0 AND `contact`.`pending` = 0
-			$sql_extra
-			AND `item`.`id`=%d",
+		$observer = get_app()->get_observer();
+
+		$r = q("SELECT * from item where item_restrict = 0 and id = %d limit 1",
 			intval($id)
 		);
 
-		if ($r[0]['body'] != "") {
-			$_REQUEST['body'] = html_entity_decode("&#x2672; ", ENT_QUOTES, 'UTF-8')."[url=".$r[0]['reply_url']."]".$r[0]['reply_author']."[/url] \n".$r[0]['body'];
-			$_REQUEST['profile_uid'] = local_user();
-			$_REQUEST['type'] = 'wall';
-			$_REQUEST['api_source'] = true;
+		if(perm_is_allowed($r[0]['uid'],$observer['xchan_hash'],'view_stream')) {
+			if ($r[0]['body'] != "") {
+				$_REQUEST['body'] = html_entity_decode("&#x2672; ", ENT_QUOTES, 'UTF-8')."[zrl=".$r[0]['reply_url']."]".$r[0]['reply_author']."[/zrl] \n".$r[0]['body'];
+				$_REQUEST['profile_uid'] = api_user();
+				$_REQUEST['type'] = 'wall';
+				$_REQUEST['api_source'] = true;
 
-			require_once('mod/item.php');
-			item_post($a);
+				require_once('mod/item.php');
+				item_post($a);
+			}
 		}
+		else
+			return false;
 
 		if ($type == 'xml')
 			$ok = "true";
@@ -965,18 +1116,53 @@
 	/**
 	 * 
 	 */
+
 	function api_statuses_destroy(&$a, $type){
-		if (local_user()===false) return false;
+		if (api_user()===false) return false;
 
 		$user_info = api_get_user($a);
 
 		// params
-		$id = intval($a->argv[3]);
+		$id = intval(argv(3));
+		if($id) {
+			// first prove that we own the item
+
+			$r = q("select * from item where id = %d and uid = %d limit 1",
+				intval($id),
+				intval($user_info['uid'])
+			);
+			if(! $r)
+				return false;
+		}
+		else {
+			if($_REQUEST['namespace'] && $_REQUEST['remote_id']) {
+				$r = q("select * from item_id where service = '%s' and sid = '%s' and uid = %d limit 1",
+					dbesc($_REQUEST['namespace']),
+					dbesc($_REQUEST['remote_id']),
+					intval($user_info['uid'])
+				);
+				if(! $r)
+					return false;
+				$id = $r[0]['iid'];
+			}
+			if($_REQUEST['namespace'] && $_REQUEST['comment_id']) {
+				$r = q("select * from item_id left join item on item.id = item_id.iid where service = '%s' and sid = '%s' and uid = %d and item.id != item.parent limit 1",
+					dbesc($_REQUEST['namespace']),
+					dbesc($_REQUEST['comment_id']),
+					intval($user_info['uid'])
+				);
+				if(! $r)
+					return false;
+				$id = $r[0]['iid'];
+			}
+		}
+		if(! $id)
+			return false;
 
 		logger('API: api_statuses_destroy: '.$id);
-
 		require_once('include/items.php');
 		drop_item($id, false);
+
 
 		if ($type == 'xml')
 			$ok = "true";
@@ -992,11 +1178,13 @@
 	 * http://developer.twitter.com/doc/get/statuses/mentions
 	 * 
 	 */
+
+// FIXME
 	function api_statuses_mentions(&$a, $type){
-		if (local_user()===false) return false;
+		if (api_user()===false) return false;
 				
 		$user_info = api_get_user($a);
-		// get last newtork messages
+		// get last network messages
 
 
 		// params
@@ -1069,17 +1257,18 @@
 		return  api_apply_template("timeline", $type, $data);
 	}
 	api_register_func('api/statuses/mentions','api_statuses_mentions', true);
+	// FIXME?? I don't think mentions and replies are congruent in this case
 	api_register_func('api/statuses/replies','api_statuses_mentions', true);
 
 
 	function api_statuses_user_timeline(&$a, $type){
-		if (local_user()===false) return false;
+		if (api_user()===false) return false;
 		
 		$user_info = api_get_user($a);
-		// get last newtork messages
+		// get last network messages
 
 
-		logger("api_statuses_user_timeline: local_user: ". local_user() .
+		logger("api_statuses_user_timeline: api_user: ". api_user() .
 			   "\nuser_info: ".print_r($user_info, true) .
 			   "\n_REQUEST:  ".print_r($_REQUEST, true),
 			   LOGGER_DEBUG);
@@ -1096,27 +1285,43 @@
 
 		$sql_extra = '';
 		if ($user_info['self']==1) $sql_extra .= " AND `item`.`wall` = 1 ";
+
+//FIXME - this isn't yet implemented
 		if ($exclude_replies > 0)  $sql_extra .= ' AND `item`.`parent` = `item`.`id`';
 
-		$r = q("SELECT `item`.*, `item`.`id` AS `item_id`, 
-			`contact`.`name`, `contact`.`photo`, `contact`.`url`, `contact`.`rel`,
-			`contact`.`network`, `contact`.`thumb`, `contact`.`dfrn_id`, `contact`.`self`,
-			`contact`.`id` AS `cid`, `contact`.`uid` AS `contact-uid`
-			FROM `item`, `contact`
-			WHERE `item`.`uid` = %d
-			AND `item`.`contact-id` = %d
-			AND `item`.`visible` = 1 and `item`.`moderated` = 0 AND `item`.`deleted` = 0
-			AND `contact`.`id` = `item`.`contact-id`
-			AND `contact`.`blocked` = 0 AND `contact`.`pending` = 0
-			$sql_extra
-			AND `item`.`id`>%d
-			ORDER BY `item`.`received` DESC LIMIT %d ,%d ",
-			intval(local_user()),
-			intval($user_info['id']),
-			intval($since_id),
-			intval($start),	intval($count)
-		);
+// 	$r = q("SELECT `item`.*, `item`.`id` AS `item_id`, 
+// 			`contact`.`name`, `contact`.`photo`, `contact`.`url`, `contact`.`rel`,
+// 			`contact`.`network`, `contact`.`thumb`, `contact`.`dfrn_id`, `contact`.`self`,
+// 			`contact`.`id` AS `cid`, `contact`.`uid` AS `contact-uid`
+// 			FROM `item`, `contact`
+// 			WHERE `item`.`uid` = %d
+// 			AND `item`.`contact-id` = %d
+// 			AND `item`.`visible` = 1 and `item`.`moderated` = 0 AND `item`.`deleted` = 0
+// 			AND `contact`.`id` = `item`.`contact-id`
+// 			AND `contact`.`blocked` = 0 AND `contact`.`pending` = 0
+// 			$sql_extra
+// 			AND `item`.`id`>%d
+// 			ORDER BY `item`.`received` DESC LIMIT %d ,%d ",
+// 			intval(api_user()),
+// 			intval($user_info['id']),
+// 			intval($since_id),
+// 			intval($start),	intval($count)
+// 		);
 
+		$arr = array(
+          'uid' => api_user(),
+          'since_id' => $since_id,
+          'start' => $start,
+          'records' => $count);
+	
+		if ($user_info['self']==1)
+			$arr['wall'] = 1;
+		else
+			$arr['cid'] = $user_info['id'];
+
+
+		$r = items_fetch($arr,get_app()->get_channel(),get_observer_hash());
+        
 		$ret = api_format_items($r,$user_info);
 
 
@@ -1134,7 +1339,7 @@
 
 
 	function api_favorites(&$a, $type){
-		if (local_user()===false) return false;
+		if (api_user()===false) return false;
 
 		$user_info = api_get_user($a);
 		// in friendica starred item are private
@@ -1252,7 +1457,7 @@
 
 	function api_format_messages($item, $recipient, $sender) {
 		// standard meta information
-		$ret=Array(
+		$ret = array(
 				'id'                    => $item['id'],
 				'created_at'            => api_date($item['created']),
 				'sender_id'             => $sender['id'] ,
@@ -1262,19 +1467,19 @@
 				'recipient_screen_name' => $recipient['screen_name'],
 				'recipient'             => $recipient,
 		);
-
+		unobscure($item);
 		//don't send title to regular StatusNET requests to avoid confusing these apps
 		if (x($_GET, 'getText')) {
 			$ret['title'] = $item['title'] ;
 			if ($_GET["getText"] == "html") {
-				$ret['text'] = bbcode($item['body']);
+				$ret['text'] = prepare_text($item['body'],$item['mimetype']);
 			}
 			elseif ($_GET["getText"] == "plain") {
-				$ret['text'] = html2plain(bbcode($item['body']), 0);
+				$ret['text'] = html2plain(prepare_text($item['body'],$item['mimetype']), 0);
 			}
 		}
 		else {
-			$ret['text'] = $item['title']."\n".html2plain(bbcode($item['body']), 0);
+			$ret['text'] = $item['title']."\n".html2plain(prepare_text($item['body'],$item['mimetype']), 0);
 		}
 		if (isset($_GET["getUserObjects"]) && $_GET["getUserObjects"] == "false") {
 			unset($ret['sender']);
@@ -1291,34 +1496,36 @@
 		//logger('api_format_items: ' . print_r($user_info,true));
 
 		$a = get_app();
-		$ret = Array();
+		$ret = array();
 
 		foreach($r as $item) {
 			localize_item($item);
-			$status_user = (($item['cid']==$user_info['id'])?$user_info: api_item_get_user($a,$item));
 
-			if ($item['parent']!=$item['id']) {
-				$r = q("select id from item where parent=%s and id<%s order by id desc limit 1",
-					intval($item['parent']), intval($item['id']));
+			$status_user = (($item['author_xchan']==$user_info['guid'])?$user_info: api_item_get_user($a,$item));
+
+			if($item['parent'] != $item['id']) {
+				$r = q("select id from item where parent= %d and id < %d order by id desc limit 1",
+					intval($item['parent']), 
+					intval($item['id'])
+				);
 				if ($r)
 					$in_reply_to_status_id = $r[0]['id'];
 				else
 					$in_reply_to_status_id = $item['parent'];
 
-				$r = q("select `item`.`contact-id`, `contact`.nick, `item`.`author-name` from item, contact
-					where `contact`.`id` = `item`.`contact-id` and `item`.id=%d", intval($in_reply_to_status_id));
+				xchan_query($r,true);
 
-				$in_reply_to_screen_name = $r[0]['author-name'];
-				$in_reply_to_user_id = $r[0]['contact-id'];
+				$in_reply_to_screen_name = $r[0]['author']['xchan_name'];
+				$in_reply_to_user_id = $r[0]['author']['abook_id'];
 
 			} else {
 				$in_reply_to_screen_name = '';
 				$in_reply_to_user_id = 0;
 				$in_reply_to_status_id = 0;
 			}
-
+			unobscure($item);
 			// Workaround for ostatus messages where the title is identically to the body
-			$statusbody = trim(html2plain(bbcode($item['body']), 0));
+			$statusbody = trim(html2plain(prepare_text($item['body'],$item['mimetype']), 0));
 			$statustitle = trim($item['title']);
 
 			if (($statustitle != '') and (strpos($statusbody, $statustitle) !== false))
@@ -1326,41 +1533,40 @@
 			else
 				$statustext = trim($statustitle."\n\n".$statusbody);
 
-			if (($item["network"] == NETWORK_FEED) and (strlen($statustext)> 1000))
-				$statustext = substr($statustext, 0, 1000)."... \n".$item["plink"];
 
 			$status = array(
-				'text'		=> $statustext,
-				'truncated' => False,
-				'created_at'=> api_date($item['created']),
-				'in_reply_to_status_id' => $in_reply_to_status_id,
-				'source'    => (($item['app']) ? $item['app'] : 'web'),
-				'id'		=> intval($item['id']),
-				'in_reply_to_user_id' => $in_reply_to_user_id,
-				'in_reply_to_screen_name' => $in_reply_to_screen_name,
-				'geo' => '',
-				'favorited' => $item['starred'] ? true : false,
-				'user' =>  $status_user ,
-				'statusnet_html'		=> trim(bbcode($item['body'])),
+				'text'		                => $statustext,
+				'truncated'                 => False,
+				'created_at'                => api_date($item['created']),
+				'in_reply_to_status_id'     => $in_reply_to_status_id,
+				'source'                    => (($item['app']) ? $item['app'] : 'web'),
+				'id'		                => intval($item['id']),
+				'in_reply_to_user_id'       => $in_reply_to_user_id,
+				'in_reply_to_screen_name'   => $in_reply_to_screen_name,
+				'geo'                       => '',
+				'favorited'                 => (($item['item_flags'] & ITEM_STARRED) ? true : false),
+				'user'                      =>  $status_user ,
+				'statusnet_html'		    => trim(prepare_text($item['body'],$item['mimetype'])),
+
 				'statusnet_conversation_id'	=> $item['parent'],
 			);
 
 			// Seesmic doesn't like the following content
 			if ($_SERVER['HTTP_USER_AGENT'] != 'Seesmic') {
 				$status2 = array(
-					'updated'   => api_date($item['edited']),
-					'published' => api_date($item['created']),
-					'message_id' => $item['uri'],
-					'url'		=> ($item['plink']!=''?$item['plink']:$item['author-link']),
-					'coordinates' => $item['coord'],
-					'place' => $item['location'],
+					'updated'      => api_date($item['edited']),
+					'published'    => api_date($item['created']),
+					'message_id'   => $item['mid'],
+					'url'		   => $item['plink'],
+					'coordinates'  => $item['coord'],
+					'place'        => $item['location'],
 					'contributors' => '',
 					'annotations'  => '',
-					'entities'  => '',
-					'objecttype' => (($item['obj_type']) ? $item['obj_type'] : ACTIVITY_OBJ_NOTE),
-					'verb' => (($item['verb']) ? $item['verb'] : ACTIVITY_POST),
-					'self' => $a->get_baseurl()."/api/statuses/show/".$item['id'].".".$type,
-					'edit' => $a->get_baseurl()."/api/statuses/show/".$item['id'].".".$type,
+					'entities'     => '',
+					'objecttype'   => (($item['obj_type']) ? $item['obj_type'] : ACTIVITY_OBJ_NOTE),
+					'verb'         => (($item['verb']) ? $item['verb'] : ACTIVITY_POST),
+					'self'         => $a->get_baseurl()."/api/statuses/show/".$item['id'].".".$type,
+					'edit'         => $a->get_baseurl()."/api/statuses/show/".$item['id'].".".$type,
 				);
 
 				$status = array_merge($status, $status2);
@@ -1398,7 +1604,7 @@
 		return api_apply_template('test', $type, array('$ok' => $ok));
 
 	}
-	api_register_func('api/help/test','api_help_test',true);
+	api_register_func('api/help/test','api_help_test',false);
 
 	/**
 	 *  https://dev.twitter.com/docs/api/1/get/statuses/friends 
@@ -1406,7 +1612,7 @@
 	 *  returns: json, xml 
 	 **/
 	function api_statuses_f(&$a, $type, $qtype) {
-		if (local_user()===false) return false;
+		if (api_user()===false) return false;
 		$user_info = api_get_user($a);
 		
 		
@@ -1426,18 +1632,20 @@
 			return false;
 		}
 		
+		// For Red, the closest thing we can do to figure out if you're friends is if both of you are sending each other your streams.
+		// This won't work if either of you send your stream to everybody on the network
 		if($qtype == 'friends')
-			$sql_extra = sprintf(" AND ( `rel` = %d OR `rel` = %d ) ", intval(CONTACT_IS_SHARING), intval(CONTACT_IS_FRIEND));
+			$sql_extra = sprintf(" AND ( abook_their_perms & %d ) and ( abook_my_perms & %d ) ", intval(PERMS_W_STREAM), intval(PERMS_W_STREAM));
 		if($qtype == 'followers')
-			$sql_extra = sprintf(" AND ( `rel` = %d OR `rel` = %d ) ", intval(CONTACT_IS_FOLLOWER), intval(CONTACT_IS_FRIEND));
+			$sql_extra = sprintf(" AND ( abook_my_perms & %d ) and not ( abook_their_perms & %d ) ", intval(PERMS_W_STREAM), intval(PERMS_W_STREAM));
  
-		$r = q("SELECT id FROM `contact` WHERE `uid` = %d AND `self` = 0 AND `blocked` = 0 AND `pending` = 0 $sql_extra",
-			intval(local_user())
+		$r = q("SELECT abook_id FROM abook where abook_flags = 0 and abook_channel = %d $sql_extra",
+			intval(api_user())
 		);
 
 		$ret = array();
 		foreach($r as $cid){
-			$ret[] = api_get_user($a, $cid['id']);
+			$ret[] = api_get_user($a, $cid['abook_id']);
 		}
 
 		
@@ -1463,37 +1671,41 @@
 
 
 	function api_statusnet_config(&$a,$type) {
-		$name = $a->config['sitename'];
+
+		load_config('system');
+
+		$name   = get_config('system','sitename');
 		$server = $a->get_hostname();
-		$logo = $a->get_baseurl() . '/images/friendica-64.png';
-		$email = $a->config['admin_email'];
-		$closed = (($a->config['system']['register_policy'] == REGISTER_CLOSED) ? 'true' : 'false');
-		$private = (($a->config['system']['block_public']) ? 'true' : 'false');
-		$textlimit = (string) (($a->config['max_import_size']) ? $a->config['max_import_size'] : 200000);
-		if($a->config['api_import_size'])
-			$texlimit = string($a->config['api_import_size']);
-		$ssl = (($a->config['system']['have_ssl']) ? 'true' : 'false');
+		$logo   = $a->get_baseurl() . '/images/rm-64.png';
+		$email  = get_config('system','admin_email');
+		$closed = ((get_config('system','register_policy') == REGISTER_CLOSED) ? 'true' : 'false');
+		$private = ((get_config('system','block_public')) ? 'true' : 'false');
+		$textlimit = (string) ((get_config('system','max_import_size')) ? get_config('system','max_import_size') : 200000);
+		if(get_config('system','api_import_size'))
+			$texlimit = string(get_config('system','api_import_size'));
+		$ssl = ((get_config('system','have_ssl')) ? 'true' : 'false');
 		$sslserver = (($ssl === 'true') ? str_replace('http:','https:',$a->get_baseurl()) : '');
 
 		$config = array(
 			'site' => array('name' => $name,'server' => $server, 'theme' => 'default', 'path' => '',
-				'logo' => $logo, 'fancy' => 'true', 'language' => 'en', 'email' => $email, 'broughtby' => '',
-				'broughtbyurl' => '', 'timezone' => 'UTC', 'closed' => $closed, 'inviteonly' => 'false',
-				'private' => $private, 'textlimit' => $textlimit, 'sslserver' => $sslserver, 'ssl' => $ssl,
-				'shorturllength' => '30',
-        'friendica' => array(
-                             'FRIENDICA_PLATFORM' => FRIENDICA_PLATFORM,
-                             'FRIENDICA_VERSION' => FRIENDICA_VERSION,
-                             'DFRN_PROTOCOL_VERSION' => DFRN_PROTOCOL_VERSION,
-                             'DB_UPDATE_VERSION' => DB_UPDATE_VERSION
-                             )
-			),
-		);  
+			'logo' => $logo, 'fancy' => 'true', 'language' => 'en', 'email' => $email, 'broughtby' => '',
+			'broughtbyurl' => '', 'timezone' => 'UTC', 'closed' => $closed, 'inviteonly' => 'false',
+			'private' => $private, 'textlimit' => $textlimit, 'sslserver' => $sslserver, 'ssl' => $ssl,
+			'shorturllength' => '30',
+        	'redmatrix' => array(
+				'RED_PLATFORM' => RED_PLATFORM,
+				'RED_VERSION' => RED_VERSION,
+				'ZOT_REVISION' => ZOT_REVISION,
+				'DB_UPDATE_VERSION' => DB_UPDATE_VERSION
+			)
+		));  
 
 		return api_apply_template('config', $type, array('$config' => $config));
 
 	}
 	api_register_func('api/statusnet/config','api_statusnet_config',false);
+	api_register_func('api/friendica/config','api_statusnet_config',false);
+	api_register_func('api/red/config','api_statusnet_config',false);
 
 	function api_statusnet_version(&$a,$type) {
 
@@ -1513,18 +1725,38 @@
 	api_register_func('api/statusnet/version','api_statusnet_version',false);
 
 
+	function api_friendica_version(&$a,$type) {
+
+		if($type === 'xml') {
+			header("Content-type: application/xml");
+			echo '<?xml version="1.0" encoding="UTF-8"?>' . "\r\n" . '<version>' . RED_VERSION . '</version>' . "\r\n";
+			killme();
+		}
+		elseif($type === 'json') {
+			header("Content-type: application/json");
+			echo '"' . RED_VERSION . '"';
+			killme();
+		}
+	}
+	api_register_func('api/friendica/version','api_friendica_version',false);
+	api_register_func('api/red/version','api_friendica_version',false);
+
+
 	function api_ff_ids(&$a,$type,$qtype) {
-		if(! local_user())
+		if(! api_user())
 			return false;
 
-		if($qtype == 'friends')
-			$sql_extra = sprintf(" AND ( `rel` = %d OR `rel` = %d ) ", intval(CONTACT_IS_SHARING), intval(CONTACT_IS_FRIEND));
-		if($qtype == 'followers')
-			$sql_extra = sprintf(" AND ( `rel` = %d OR `rel` = %d ) ", intval(CONTACT_IS_FOLLOWER), intval(CONTACT_IS_FRIEND));
- 
 
-		$r = q("SELECT id FROM `contact` WHERE `uid` = %d AND `self` = 0 AND `blocked` = 0 AND `pending` = 0 $sql_extra",
-			intval(local_user())
+		// For Red, the closest thing we can do to figure out if you're friends is if both of you are sending each other your streams.
+		// This won't work if either of you send your stream to everybody on the network
+
+		if($qtype == 'friends')
+			$sql_extra = sprintf(" AND ( abook_their_perms & %d ) and ( abook_my_perms & %d ) ", intval(PERMS_W_STREAM), intval(PERMS_W_STREAM));
+		if($qtype == 'followers')
+			$sql_extra = sprintf(" AND ( abook_my_perms & %d ) and not ( abook_their_perms & %d ) ", intval(PERMS_W_STREAM), intval(PERMS_W_STREAM));
+ 
+		$r = q("SELECT abook_id FROM abook where abook_flags = 0 and abook_channel = %d $sql_extra",
+			intval(api_user())
 		);
 
 		if(is_array($r)) {
@@ -1532,14 +1764,14 @@
 				header("Content-type: application/xml");
 				echo '<?xml version="1.0" encoding="UTF-8"?>' . "\r\n" . '<ids>' . "\r\n";
 				foreach($r as $rr)
-					echo '<id>' . $rr['id'] . '</id>' . "\r\n";
+					echo '<id>' . $rr['abook_id'] . '</id>' . "\r\n";
 				echo '</ids>' . "\r\n";
 				killme();
 			}
 			elseif($type === 'json') {
 				$ret = array();
 				header("Content-type: application/json");
-				foreach($r as $rr) $ret[] = $rr['id'];
+				foreach($r as $rr) $ret[] = $rr['abook_id'];
 				echo json_encode($ret);
 				killme();
 			}
@@ -1557,7 +1789,7 @@
 
 
 	function api_direct_messages_new(&$a, $type) {
-		if (local_user()===false) return false;
+		if (api_user()===false) return false;
 		
 		if (!x($_POST, "text") || !x($_POST,"screen_name")) return;
 
@@ -1566,17 +1798,17 @@
 		require_once("include/message.php");
 
 		$r = q("SELECT `id` FROM `contact` WHERE `uid`=%d AND `nick`='%s'",
-				intval(local_user()),
+				intval(api_user()),
 				dbesc($_POST['screen_name']));
 
 		$recipient = api_get_user($a, $r[0]['id']);			
 		$replyto = '';
 		$sub     = '';
 		if (x($_REQUEST,'replyto')) {
-			$r = q('SELECT `parent_uri`, `title` FROM `mail` WHERE `uid`=%d AND `id`=%d',
-					intval(local_user()),
+			$r = q('SELECT `parent_mid`, `title` FROM `mail` WHERE `uid`=%d AND `id`=%d',
+					intval(api_user()),
 					intval($_REQUEST['replyto']));
-			$replyto = $r[0]['parent_uri'];
+			$replyto = $r[0]['parent_mid'];
 			$sub     = $r[0]['title'];
 		}
 		else {
@@ -1612,7 +1844,7 @@
 	api_register_func('api/direct_messages/new','api_direct_messages_new',true);
 
 	function api_direct_messages_box(&$a, $type, $box) {
-		if (local_user()===false) return false;
+		if (api_user()===false) return false;
 		
 		$user_info = api_get_user($a);
 		
@@ -1628,7 +1860,7 @@
 			$sql_extra = "`from-url`='".dbesc( $profile_url )."'";
 		}
 		elseif ($box=="conversation") {
-			$sql_extra = "`parent_uri`='".dbesc( $_GET["uri"] )  ."'";
+			$sql_extra = "`parent_mid`='".dbesc( $_GET["uri"] )  ."'";
 		}
 		elseif ($box=="all") {
 			$sql_extra = "true";
@@ -1638,7 +1870,7 @@
 		}
 		
 		$r = q("SELECT * FROM `mail` WHERE uid=%d AND $sql_extra ORDER BY created DESC LIMIT %d,%d",
-				intval(local_user()),
+				intval(api_user()),
 				intval($start),	intval($count)
 		);
 		
@@ -1690,9 +1922,13 @@
 	function api_oauth_request_token(&$a, $type){
 		try{
 			$oauth = new FKOAuth1();
-			$r = $oauth->fetch_request_token(OAuthRequest::from_request());
+			$req = OAuthRequest::from_request();
+logger('Req: ' . var_export($req,true));
+			$r = $oauth->fetch_request_token($req);
 		}catch(Exception $e){
-			echo "error=". OAuthUtil::urlencode_rfc3986($e->getMessage()); killme();
+			logger('oauth_exception: ' . print_r($e->getMessage(),true));
+			echo "error=". OAuthUtil::urlencode_rfc3986($e->getMessage()); 
+			killme();
 		}
 		echo $r;
 		killme();	
@@ -1700,7 +1936,8 @@
 	function api_oauth_access_token(&$a, $type){
 		try{
 			$oauth = new FKOAuth1();
-			$r = $oauth->fetch_access_token(OAuthRequest::from_request());
+			$req = OAuthRequest::from_request();
+			$r = $oauth->fetch_access_token($req);
 		}catch(Exception $e){
 			echo "error=". OAuthUtil::urlencode_rfc3986($e->getMessage()); killme();
 		}

@@ -1,29 +1,32 @@
-$username,
 
-En begäran om återställning av lösenord på $sitename har mottagits. 
-Gå till adressen nedan för att bekräfta denna begäran. Du kan också 
-klistra in länken i adressfältet i din webbläsare. 
+Hej {{$username}},
+    En begäran mottogs nyligen på {{$sitename}} om att återställa ditt
+kontolösenord. För att bekräfta begäran, följ länken nedan eller klistra
+in den i din webbläsares adressfält.
 
-Gå INTE till länken nedan om du INTE har begärt lösenordsåterställning. 
-Då kan du ignorera det här meddelandet. 
+Om du INTE begärde den här ändringen, följ INTE länken och ignorera och/eller
+radera det här mailet.
 
-Ditt lösenord kommer inte att återställas om vi inte kan säkerställa att du 
-initierat detta.
+Ditt lösenord kommer inte att ändras om vi inte kan verifiera att det
+var du som gjorde begäran.
 
-Med den här länken kan du bekräfta din identitet:
+Följ den här länken för att bekräfta din identitet:
 
-$reset_link
+{{$reset_link}}
 
-Sedan kommer du att få ett meddelande med ett nytt lösenord.
+Du kommer sedan att få ett nytt meddelande som innehåller det nya lösenordet.
 
-Lösenordet kan sedan ändras i dina inställningar efter att du loggat in.
+Du kan ändra lösenordet från kontoinställningarna när du har loggat in.
 
-Detaljerna ser ut så här:
+Inloggningsuppgifterna är:
 
-Webbplats:		$siteurl
-Inloggningsnamn:	$email
+Serveradress:	{{$siteurl}}
+Användarnamn:	{{$email}}
+
+
+
 
 Hälsningar,
-$sitename admin
+	{{$sitename}}-administratören
 
  

@@ -1,10 +1,13 @@
 <form action="invite" method="post" id="invite-form" >
+
+<input type='hidden' name='form_security_token' value='{{$form_security_token}}'>
+
 <div id="invite-wrapper">
 
-<h3>$invite</h3>
+<h3>{{$invite}}</h3>
 
 <div id="invite-recipient-text">
-$addr_text
+{{$addr_text}}
 </div>
 
 <div id="invite-recipient-textarea">
@@ -12,15 +15,15 @@ $addr_text
 </div>
 
 <div id="invite-message-text">
-$msg_text
+{{$msg_text}}
 </div>
 
 <div id="invite-message-textarea">
-<textarea id="invite-message" name="message" rows="10" cols="72" >$default_message</textarea>
+<textarea id="invite-message" name="message" rows="10" cols="72" >{{$default_message}}</textarea>
 </div>
 
 <div id="invite-submit-wrapper">
-<input type="submit" name="submit" value="$submit" />
+<input type="submit" name="submit" value="{{$submit}}" />
 </div>
 
 </div>

@@ -1,1 +1,1 @@
-<div class="contact-block-textdiv{{if $class}} $class{{endif}}"><a class="contact-block-link{{if $class}} $class{{endif}}{{if $click}} fakelink{{endif}}" href="{{if $click}}#{{else}}$url{{endif}}" {{if $click}}onclick="$click"{{endif}} title="$title">$name</a></div>
+<div class="contact-block-textdiv{{if $class}} {{$class}}{{/if}}"><a class="contact-block-link{{if $class}} {{$class}}{{/if}}{{if $click}} fakelink{{/if}}" href="{{if $click}}#{{else}}{{$url}}{{/if}}" {{if $click}}onclick="{{$click}}"{{/if}} title="{{$title}}">{{$name}}</a></div>

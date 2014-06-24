@@ -1,0 +1,55 @@
+#blog-banner {
+	position: relative;
+	margin-top: 45px;
+	width: 100%;
+	height: 100px;
+	margin-bottom: 20px;
+}
+
+nav.navbar { 
+	width: 90%;
+	margin-left: 5%;
+	margin-right: 5%;
+}
+
+#nav-backer { 
+	width: 90%;
+	margin-left: 5%;
+	margin-right: 5%;
+}
+
+aside#region_1 {
+	display: block;
+	min-width: 210px;
+	max-width: 220px;
+	width: 20%;
+	float: left;
+	margin-left: 10px;
+}
+
+aside input[type='text'] {
+ width: 174px;
+}
+
+
+section {
+	margin-left: 15px;
+	margin-right: 15px;
+	float: left;
+	min-width: 650px;
+	width: 60%;
+	display: block;
+	padding-bottom: 350px;
+}
+
+#region_3 {
+	float: right;
+	min-width: 210px;
+	max-width: 220px;
+	width: 20%;
+}
+
+#blog-margin {
+	margin-right: 5%;
+	margin-left: 5%;
+}

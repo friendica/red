@@ -1,7 +1,7 @@
 <?php
 
 require_once('include/security.php');
-require_once('include/Photo.php');
+require_once('include/photo/photo_driver.php');
 
 function photo_init(&$a) {
 
@@ -22,13 +22,23 @@ function photo_init(&$a) {
 			// NOTREACHED
 	}
 
-	$default = 'images/person-175.jpg';
+	if($photo === 'qr') {
+		$t = $_GET['qr'];
+		require_once('library/phpqrcode/phpqrcode.php');
+		header("Content-type: image/png");
+		QRcode::png(($t) ? $t : '.');
+		killme();
+	}
+
+	$observer_xchan = get_observer_hash();
+
+	$default = get_default_profile_photo();
 
 	if(isset($type)) {
 
-
 		/**
-		 * Profile photos
+		 * Profile photos - Access controls on default profile photos are not honoured since they need to be exchanged with remote sites.
+		 * 
 		 */
 
 		if($type === 'profile') {
@@ -36,11 +46,11 @@ function photo_init(&$a) {
 
 				case 'm':
 					$resolution = 5;
-					$default = 'images/person-80.jpg';
+					$default = get_default_profile_photo(80);
 					break;
 				case 's':
 					$resolution = 6;
-					$default = 'images/person-48.jpg';
+					$default = get_default_profile_photo(48);
 					break;
 				case 'l':
 				default:
@@ -70,6 +80,22 @@ function photo_init(&$a) {
 		 * Other photos
 		 */
 
+	        /* Check for a cookie to indicate display pixel density, in order to detect high-resolution
+		   displays. This procedure was derived from the "Retina Images" by Jeremey Worboys,
+		   used in accordance with the Creative Commons Attribution 3.0 Unported License.
+		   Project link: https://github.com/Retina-Images/Retina-Images
+		   License link: http://creativecommons.org/licenses/by/3.0/
+		*/
+		$cookie_value = false;
+		if (isset($_COOKIE['devicePixelRatio'])) {
+		  $cookie_value = intval($_COOKIE['devicePixelRatio']);
+		}
+		else {
+		  // Force revalidation of cache on next request
+		  $cache_directive = 'no-cache';
+		  $status = 'no cookie';
+		}
+
 		$resolution = 0;
 
 		if(strpos($photo,'.') !== false)
@@ -78,14 +104,32 @@ function photo_init(&$a) {
 		if(substr($photo,-2,1) == '-') {
 			$resolution = intval(substr($photo,-1,1));
 			$photo = substr($photo,0,-2);
+			// If viewing on a high-res screen, attempt to serve a higher resolution image:
+			if ($resolution == 2 && ($cookie_value > 1))
+			  {
+			    $resolution = 1;
+			  }
 		}
+		
+		// If using resolution 1, make sure it exists before proceeding:
+		if ($resolution == 1)
+		  {
+		    $r = q("SELECT uid FROM photo WHERE resource_id = '%s' AND scale = %d LIMIT 1",
+			   dbesc($photo),
+			   intval($resolution)
+			   );
+		    if (!($r))
+		      $resolution = 2;
+		  }
 
 		$r = q("SELECT uid FROM photo WHERE resource_id = '%s' AND scale = %d LIMIT 1",
 			dbesc($photo),
 			intval($resolution)
 		);
-		if(count($r)) {
+		if($r) {
 			
+			$allowed = (($r[0]['uid']) ? perm_is_allowed($r[0]['uid'],$observer_xchan,'view_photos') : true);
+
 			$sql_extra = permissions_sql($r[0]['uid']);
 
 			// Now we'll see if we can access the photo
@@ -95,7 +139,7 @@ function photo_init(&$a) {
 				intval($resolution)
 			);
 
-			if(count($r)) {
+			if($r && $allowed) {
 				$data = $r[0]['data'];
 				$mimetype = $r[0]['type'];
 			}
@@ -108,14 +152,18 @@ function photo_init(&$a) {
 				// There won't be many completely unauthorised people seeing this because
 				// they won't have the photo link, so there's a reasonable chance that the person
 				// might be able to obtain permission to view it.
- 
+
 				$r = q("SELECT * FROM `photo` WHERE `resource_id` = '%s' AND `scale` = %d LIMIT 1",
 					dbesc($photo),
 					intval($resolution)
 				);
-				if(count($r)) {
-					$data = file_get_contents('images/nosign.jpg');
-					$mimetype = 'image/jpeg';
+ 
+				if($r) {
+					logger('mod_photo: forbidden. ' . $a->query_string);
+					$observer = $a->get_observer();
+					logger('mod_photo: observer = ' . (($observer) ? $observer['xchan_addr'] : '(not authenticated)'));
+					$data = file_get_contents('images/nosign.png');
+					$mimetype = 'image/png';
 					$prvcachecontrol = true;
 				}
 			}
@@ -127,15 +175,15 @@ function photo_init(&$a) {
 			switch($resolution) {
 
 				case 4:
-					$data = file_get_contents('images/person-175.jpg');
+					$data = file_get_contents(get_default_profile_photo());
 					$mimetype = 'image/jpeg';
 					break;
 				case 5:
-					$data = file_get_contents('images/person-80.jpg');
+					$data = file_get_contents(get_default_profile_photo(80));
 					$mimetype = 'image/jpeg';
 					break;
 				case 6:
-					$data = file_get_contents('images/person-48.jpg');
+					$data = file_get_contents(get_default_profile_photo(48));
 					$mimetype = 'image/jpeg';
 					break;
 				default:
@@ -147,7 +195,7 @@ function photo_init(&$a) {
 	}
 
 	if(isset($res) && intval($res) && $res < 500) {
-		$ph = new Photo($data, $mimetype);
+		$ph = photo_factory($data, $mimetype);
 		if($ph->is_valid()) {
 			$ph->scaleImageSquare($res);
 			$data = $ph->imageString();

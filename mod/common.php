@@ -2,107 +2,66 @@
 
 require_once('include/socgraph.php');
 
+function common_init(&$a) {
+
+	if(argc() > 1 && intval(argv(1)))
+		$channel_id = intval(argv(1));
+	else {
+		notice( t('No channel.') . EOL );
+		$a->error = 404;
+		return;
+	}
+
+	$x = q("select channel_address from channel where channel_id = %d limit 1",
+		intval($channel_id)
+	);
+
+	if($x)
+		profile_load($a,$x[0]['channel_address'],0);
+
+}
+
 function common_content(&$a) {
 
 	$o = '';
 
-	$cmd = $a->argv[1];
-	$uid = intval($a->argv[2]);
-	$cid = intval($a->argv[3]);
-	$zcid = 0;
-
-	if($cmd !== 'loc' && $cmd != 'rem')
-		return;
-	if(! $uid)
+	if(! $a->profile['profile_uid'])
 		return;
 
-	if($cmd === 'loc' && $cid) {	
-		$c = q("select name, url, photo from contact where id = %d and uid = %d limit 1",
-			intval($cid),
-			intval($uid)
-		);
-	}
-	else {
-		$c = q("select name, url, photo from contact where self = 1 and uid = %d limit 1",
-			intval($uid)
-		);
-	}	
+	$observer_hash = get_observer_hash();
 
-	$a->page['aside'] .= '<div class="vcard">' 
-		. '<div class="fn label">' . $c[0]['name'] . '</div>' 
-		. '<div id="profile-photo-wrapper">'
-		. '<img class="photo" width="175" height="175" 
-		src="' . $c[0]['photo'] . '" alt="' . $c[0]['name'] . '" /></div>'
-		. '</div>';
-	
 
-	if(! count($c))
+	if(! perm_is_allowed($a->profile['profile_uid'],$observer_hash,'view_contacts')) {
+		notice( t('Permission denied.') . EOL);
 		return;
-
-	$o .= '<h2>' . t('Common Friends') . '</h2>';
-
-
-	if(! $cid) {
-		if(get_my_url()) {
-			$r = q("select id from contact where nurl = '%s' and uid = %d limit 1",
-				dbesc(normalise_link(get_my_url())),
-				intval($profile_uid)
-			);
-			if(count($r))
-				$cid = $r[0]['id'];
-			else {
-				$r = q("select id from gcontact where nurl = '%s' limit 1",
-					dbesc(normalise_link(get_my_url()))
-				);
-				if(count($r))
-					$zcid = $r[0]['id'];
-			}
-		}
 	}
 
+	$o .= '<h2>' . t('Common connections') . '</h2>';
 
-
-	if($cid == 0 && $zcid == 0)
-		return; 
-
-
-	if($cid)
-		$t = count_common_friends($uid,$cid);
-	else
-		$t = count_common_friends_zcid($uid,$zcid);
-
-
-	$a->set_pager_total($t);
+	$t = count_common_friends($a->profile['profile_uid'],$observer_hash);
 
 	if(! $t) {
-		notice( t('No contacts in common.') . EOL);
+		notice( t('No connections in common.') . EOL);
 		return $o;
 	}
 
+	$r = common_friends($a->profile['profile_uid'],$observer_hash);
 
-	if($cid)
-		$r = common_friends($uid,$cid);
-	else
-		$r = common_friends_zcid($uid,$zcid);
+	if($r) {
 
+		$tpl = get_markup_template('common_friends.tpl');
 
-	if(! count($r)) {
-		return $o;
+		foreach($r as $rr) {
+			$o .= replace_macros($tpl,array(
+				'$url'   => $rr['xchan_url'],
+				'$name'  => $rr['xchan_name'],
+				'$photo' => $rr['xchan_photo_m'],
+				'$tags'  => ''
+			));
+		}
+
+		$o .= cleardiv();
 	}
 
-	$tpl = get_markup_template('common_friends.tpl');
-
-	foreach($r as $rr) {
-			
-		$o .= replace_macros($tpl,array(
-			'$url' => $rr['url'],
-			'$name' => $rr['name'],
-			'$photo' => $rr['photo'],
-			'$tags' => ''
-		));
-	}
-
-	$o .= cleardiv();
-//	$o .= paginate($a);
 	return $o;
 }

@@ -1,22 +1,22 @@
 
-Kara $[username],
+Dear {{$username}},
 
-	Boegaj novaĵoj.... '$[fn]' ĉe '$[dfrn_url]' aprobis 
-vian kontaktpeton ĉe '$[sitename]'.
+	Great news... '{{$fn}}' at '{{$dfrn_url}}' has accepted 
+your connection request at '{{$sitename}}'.
 
-Vi nun estas reciprokaj amikoj kaj povas interŝanĝi afiŝojn, bildojn kaj mesaĝojn
-senkatene.
+You are now mutual friends and may exchange status updates, photos, and email
+without restriction.
 
-Bonvolu viziti vian 'Kontaktoj' paĝon ĉe $[sitename] se vi volas 
-ŝangi la rilaton. 
+Please visit your 'Connnections' page at {{$sitename}} if you wish to make 
+any changes to this relationship. 
 
-$[siteurl]
+{{$siteurl}}
 
-[Ekzempe, vi eble volas krei disiĝintan profilon kun informoj kiu ne
-haveblas al la komuna publiko - kaj rajtigi '$[fn]' al ĝi]'
+[For instance, you may create a separate profile with information that is not
+available to the general public - and assign viewing rights to '{{$fn}}'].
 
-Salutoj,
+Sincerely,
 
-	$[sitename] administranto
+	{{$sitename}} Administrator
 
  

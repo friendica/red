@@ -1,25 +1,25 @@
 
-Nova peto por registrado atendas ĉe $[sitename] 
-kaj bezonas vian aprobon. 
+A new user registration request was received at {{$sitename}} which requires 
+your approval. 
 
 
-Jen la detaloj de la peto:
+The login details are as follows:
 
-Plena Nomo:»$[username]
-Retejo:»$[siteurl]
-Salutnomo:»$[email]
+Site Location:	{{$siteurl}}
+Login Name:	{{$email}}
+IP Address: {{$details}}
 
-
-Aprobonte la peton, bonvolu klaki tiun ligilon:
-
-
-$[siteurl]/regmod/allow/$[hash] 
+To approve this request please visit the following link:
 
 
-Malaprobonte kaj forviŝonte la konton, bonvolu klaki:
+{{$siteurl}}/regmod/allow/{{$hash}} 
 
 
-$[siteurl]/regmod/deny/$[hash]
+To deny the request and remove the account, please visit:
 
 
-Dankon!
+{{$siteurl}}/regmod/deny/{{$hash}}
+
+
+Thank you.
+

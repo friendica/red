@@ -10,20 +10,20 @@
       xmlns:ostatus="http://ostatus.org/schema/1.0" 
 	  xmlns:statusnet="http://status.net/schema/api/1/" > 
 
-  <id>$feed_id</id>
-  <title>$feed_title</title>
-  <generator uri="http://friendica.com" version="$version">Friendica</generator>
+  <id>{{$feed_id}}</id>
+  <title>{{$feed_title}}</title>
+  <generator uri="http://friendica.com" version="{{$version}}">Friendica</generator>
   <link rel="license" href="http://creativecommons.org/licenses/by/3.0/" />
-  $hub
-  $salmon
-  $community
+  {{$hub}}
+  {{$salmon}}
+  {{$community}}
 
-  <updated>$feed_updated</updated>
+  <updated>{{$feed_updated}}</updated>
 
   <author>
-    <name dfrn:updated="$namdate" >$name</name>
-    <uri dfrn:updated="$uridate" >$profile_page</uri>
-    <link rel="photo"  type="image/jpeg" dfrn:updated="$picdate" media:width="175" media:height="175" href="$photo" />
-    <link rel="avatar" type="image/jpeg" dfrn:updated="$picdate" media:width="175" media:height="175" href="$photo" />
-    $birthday
+    <name dfrn:updated="{{$namdate}}" >{{$name}}</name>
+    <uri dfrn:updated="{{$uridate}}" >{{$profile_page}}</uri>
+    <link rel="photo"  type="image/jpeg" dfrn:updated="{{$picdate}}" media:width="175" media:height="175" href="{{$photo}}" />
+    <link rel="avatar" type="image/jpeg" dfrn:updated="{{$picdate}}" media:width="175" media:height="175" href="{{$photo}}" />
+    {{$birthday}}
   </author>

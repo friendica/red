@@ -1,6 +1,151 @@
 <?php
 
 
+function profiles_init(&$a) {
+
+	nav_set_selected('profiles');
+
+	if(! local_user()) {
+		return;
+	}
+
+	if((argc() > 2) && (argv(1) === "drop") && intval(argv(2))) {
+		$r = q("SELECT * FROM `profile` WHERE `id` = %d AND `uid` = %d AND `is_default` = 0 LIMIT 1",
+			intval($a->argv[2]),
+			intval(local_user())
+		);
+		if(! count($r)) {
+			notice( t('Profile not found.') . EOL);
+			goaway($a->get_baseurl(true) . '/profiles');
+			return; // NOTREACHED
+		}
+		$profile_guid = $r['profile_guid'];
+		
+		check_form_security_token_redirectOnErr('/profiles', 'profile_drop', 't');
+
+		// move every contact using this profile as their default to the user default
+
+		$r = q("UPDATE abook SET abook_profile = (SELECT profile_guid AS FROM profile WHERE is_default = 1 AND uid = %d LIMIT 1) WHERE abook_profile = '%s' AND abook_channel = %d ",
+			intval(local_user()),
+			dbesc($profile_guid),
+			intval(local_user())
+		);
+		$r = q("DELETE FROM `profile` WHERE `id` = %d AND `uid` = %d LIMIT 1",
+			intval(argv(2)),
+			intval(local_user())
+		);
+		if($r)
+			info( t('Profile deleted.') . EOL);
+
+		goaway($a->get_baseurl(true) . '/profiles');
+		return; // NOTREACHED
+	}
+
+
+
+
+
+	if((argc() > 1) && (argv(1) === 'new')) {
+		
+//		check_form_security_token_redirectOnErr('/profiles', 'profile_new', 't');
+
+		$r0 = q("SELECT `id` FROM `profile` WHERE `uid` = %d",
+			intval(local_user()));
+		$num_profiles = count($r0);
+
+		$name = t('Profile-') . ($num_profiles + 1);
+
+		$r1 = q("SELECT `name`, `photo`, `thumb` FROM `profile` WHERE `uid` = %d AND `is_default` = 1 LIMIT 1",
+			intval(local_user()));
+		
+		$r2 = q("INSERT INTO `profile` (`aid`, `uid` , `profile_guid`, `profile_name` , `name`, `photo`, `thumb`)
+			VALUES ( %d, '%s', '%s', '%s', '%s', '%s', '%s' )",
+			intval(get_account_id()),
+			intval(local_user()),
+			dbesc(random_string()),
+			dbesc($name),
+			dbesc($r1[0]['name']),
+			dbesc($r1[0]['photo']),
+			dbesc($r1[0]['thumb'])
+		);
+
+		$r3 = q("SELECT `id` FROM `profile` WHERE `uid` = %d AND `profile_name` = '%s' LIMIT 1",
+			intval(local_user()),
+			dbesc($name)
+		);
+
+		info( t('New profile created.') . EOL);
+		if(count($r3) == 1)
+			goaway($a->get_baseurl(true) . '/profiles/' . $r3[0]['id']);
+		
+		goaway($a->get_baseurl(true) . '/profiles');
+	} 
+
+	if((argc() > 2) && (argv(1) === 'clone')) {
+		
+		check_form_security_token_redirectOnErr('/profiles', 'profile_clone', 't');
+
+		$r0 = q("SELECT `id` FROM `profile` WHERE `uid` = %d",
+			intval(local_user()));
+		$num_profiles = count($r0);
+
+		$name = t('Profile-') . ($num_profiles + 1);
+		$r1 = q("SELECT * FROM `profile` WHERE `uid` = %d AND `id` = %d LIMIT 1",
+			intval(local_user()),
+			intval($a->argv[2])
+		);
+		if(! count($r1)) {
+			notice( t('Profile unavailable to clone.') . EOL);
+			$a->error = 404;
+			return;
+		}
+		unset($r1[0]['id']);
+		$r1[0]['is_default'] = 0;
+		$r1[0]['publish'] = 0;	
+		$r1[0]['profile_name'] = dbesc($name);
+		$r1[0]['profile_guid'] = dbesc(random_string());
+
+		dbesc_array($r1[0]);
+
+		$r2 = dbq("INSERT INTO `profile` (`" 
+			. implode("`, `", array_keys($r1[0])) 
+			. "`) VALUES ('" 
+			. implode("', '", array_values($r1[0])) 
+			. "')" );
+
+		$r3 = q("SELECT `id` FROM `profile` WHERE `uid` = %d AND `profile_name` = '%s' LIMIT 1",
+			intval(local_user()),
+			dbesc($name)
+		);
+		info( t('New profile created.') . EOL);
+		if(count($r3) == 1)
+			goaway($a->get_baseurl(true) . '/profiles/' . $r3[0]['id']);
+		
+		goaway($a->get_baseurl(true) . '/profiles');
+		
+		return; // NOTREACHED
+	}
+
+
+	// Run profile_load() here to make sure the theme is set before
+	// we start loading content
+	if((argc() > 1) && (intval(argv(1)))) {
+		$r = q("SELECT * FROM `profile` WHERE `id` = %d AND `uid` = %d LIMIT 1",
+			intval($a->argv[1]),
+			intval(local_user())
+		);
+		if(! count($r)) {
+			notice( t('Profile not found.') . EOL);
+			$a->error = 404;
+			return;
+		}
+
+		$chan = $a->get_channel();
+
+		profile_load($a,$chan['channel_address'],$r[0]['id']);
+	}
+}
+
 function profiles_post(&$a) {
 
 	if(! local_user()) {
@@ -44,31 +189,36 @@ function profiles_post(&$a) {
 		$day = intval($_POST['day']);
 			if(($day > $mtab[$month]) || ($day < 0))
 				$day = 0;
+
+//		if($year && (! ($month && $day))) {
+//			$month = 1; $day = 1;
+//		}
+
 		$dob = '0000-00-00';
 		$dob = sprintf('%04d-%02d-%02d',$year,$month,$day);
 
 			
-		$name = notags(trim($_POST['name']));
+		$name = escape_tags(trim($_POST['name']));
 
 		if($orig[0]['name'] != $name)
 			$namechanged = true;
 
 
-		$pdesc        = notags(trim($_POST['pdesc']));
-		$gender       = notags(trim($_POST['gender']));
-		$address      = notags(trim($_POST['address']));
-		$locality     = notags(trim($_POST['locality']));
-		$region       = notags(trim($_POST['region']));
-		$postal_code  = notags(trim($_POST['postal_code']));
-		$country_name = notags(trim($_POST['country_name']));
-		$keywords     = notags(trim($_POST['keywords']));
-		$marital      = notags(trim($_POST['marital']));
-		$howlong      = notags(trim($_POST['howlong']));
-		$sexual       = notags(trim($_POST['sexual']));
-		$homepage     = notags(trim($_POST['homepage']));
-		$hometown     = notags(trim($_POST['hometown']));
-		$politic      = notags(trim($_POST['politic']));
-		$religion     = notags(trim($_POST['religion']));
+		$pdesc        = escape_tags(trim($_POST['pdesc']));
+		$gender       = escape_tags(trim($_POST['gender']));
+		$address      = escape_tags(trim($_POST['address']));
+		$locality     = escape_tags(trim($_POST['locality']));
+		$region       = escape_tags(trim($_POST['region']));
+		$postal_code  = escape_tags(trim($_POST['postal_code']));
+		$country_name = escape_tags(trim($_POST['country_name']));
+		$keywords     = escape_tags(trim($_POST['keywords']));
+		$marital      = escape_tags(trim($_POST['marital']));
+		$howlong      = escape_tags(trim($_POST['howlong']));
+		$sexual       = escape_tags(trim($_POST['sexual']));
+		$homepage     = escape_tags(trim($_POST['homepage']));
+		$hometown     = escape_tags(trim($_POST['hometown']));
+		$politic      = escape_tags(trim($_POST['politic']));
+		$religion     = escape_tags(trim($_POST['religion']));
 
 		$likes        = fix_mce_lf(escape_tags(trim($_POST['likes'])));
 		$dislikes     = fix_mce_lf(escape_tags(trim($_POST['dislikes'])));
@@ -76,6 +226,7 @@ function profiles_post(&$a) {
 		$about        = fix_mce_lf(escape_tags(trim($_POST['about'])));
 		$interest     = fix_mce_lf(escape_tags(trim($_POST['interest'])));
 		$contact      = fix_mce_lf(escape_tags(trim($_POST['contact'])));
+		$channels     = fix_mce_lf(escape_tags(trim($_POST['channels'])));
 		$music        = fix_mce_lf(escape_tags(trim($_POST['music'])));
 		$book         = fix_mce_lf(escape_tags(trim($_POST['book'])));
 		$tv           = fix_mce_lf(escape_tags(trim($_POST['tv'])));
@@ -86,7 +237,7 @@ function profiles_post(&$a) {
 
 		$hide_friends = (($_POST['hide_friends'] == 1) ? 1: 0);
 
-		$with         = ((x($_POST,'with')) ? notags(trim($_POST['with'])) : '');
+		$with         = ((x($_POST,'with')) ? escape_tags(trim($_POST['with'])) : '');
 
 		if(! strlen($howlong))
 			$howlong = '0000-00-00 00:00:00';
@@ -105,35 +256,23 @@ function profiles_post(&$a) {
 				if(strpos($lookup,'@') === 0)
 					$lookup = substr($lookup,1);
 				$lookup = str_replace('_',' ', $lookup);
-				if(strpos($lookup,'@') || (strpos($lookup,'http://'))) {
-					$newname = $lookup;
-					$links = @lrdd($lookup);
-					if(count($links)) {
-						foreach($links as $link) {
-							if($link['@attributes']['rel'] === 'http://webfinger.net/rel/profile-page') {
-            	       			$prf = $link['@attributes']['href'];
-							}
-						}
-					}
-				}
-				else {
-					$newname = $lookup;
+				$newname = $lookup;
 
-					$r = q("SELECT * FROM `contact` WHERE `name` = '%s' AND `uid` = %d LIMIT 1",
-						dbesc($newname),
+				$r = q("SELECT * FROM abook left join xchan on abook_xchan = xchan_hash WHERE xchan_name = '%s' AND abook_channel = %d LIMIT 1",
+					dbesc($newname),
+					intval(local_user())
+				);
+				if(! $r) {
+					$r = q("SELECT * FROM abook left join xchan on abook_xchan = xchan_hash WHERE xchan_addr = '%s' AND abook_channel = %d LIMIT 1",
+						dbesc($lookup . '@%'),
 						intval(local_user())
 					);
-					if(! $r) {
-						$r = q("SELECT * FROM `contact` WHERE `nick` = '%s' AND `uid` = %d LIMIT 1",
-							dbesc($lookup),
-							intval(local_user())
-						);
-					}
-					if(count($r)) {
-						$prf = $r[0]['url'];
-						$newname = $r[0]['name'];
-					}
 				}
+				if($r) {
+					$prf = $r[0]['xchan_url'];
+					$newname = $r[0]['xchan_name'];
+				}
+
 	
 				if($prf) {
 					$with = str_replace($lookup,'<a href="' . $prf . '">' . $newname	. '</a>', $with);
@@ -237,6 +376,7 @@ function profiles_post(&$a) {
 			`about` = '%s',
 			`interest` = '%s',
 			`contact` = '%s',
+			`channels` = '%s',
 			`music` = '%s',
 			`book` = '%s',
 			`tv` = '%s',
@@ -270,6 +410,7 @@ function profiles_post(&$a) {
 			dbesc($about),
 			dbesc($interest),
 			dbesc($contact),
+			dbesc($channels),
 			dbesc($music),
 			dbesc($book),
 			dbesc($tv),
@@ -278,17 +419,26 @@ function profiles_post(&$a) {
 			dbesc($work),
 			dbesc($education),
 			intval($hide_friends),
-			intval($a->argv[1]),
+			intval(argv(1)),
 			intval(local_user())
 		);
 
 		if($r)
 			info( t('Profile updated.') . EOL);
 
+		$r = q("select * from profile where id = %d and uid = %d limit 1",
+			intval(argv(1)),
+			intval(local_user())
+		);
+		if($r) {
+			require_once('include/zot.php');
+			build_sync_packet(local_user(),array('profile' => $r));
+		}
+
 		$channel = $a->get_channel();
 
 		if($namechanged && $is_default) {
-			$r = q("UPDATE xchan SET xchan_name = '%s', xchan_name_date` = '%s' WHERE xchan_hash = '%s' limit 1",
+			$r = q("UPDATE xchan SET xchan_name = '%s', xchan_name_date = '%s' WHERE xchan_hash = '%s' limit 1",
 				dbesc($name),
 				dbesc(datetime_convert()),
 				dbesc($channel['xchan_hash'])
@@ -307,129 +457,11 @@ function profiles_post(&$a) {
 function profiles_content(&$a) {
 
 	$o = '';
-	nav_set_selected('profiles');
 
 	if(! local_user()) {
 		notice( t('Permission denied.') . EOL);
 		return;
 	}
-
-	if((argc() > 2) && (argv(1) === "drop") && intval(argv(2))) {
-		$r = q("SELECT * FROM `profile` WHERE `id` = %d AND `uid` = %d AND `is_default` = 0 LIMIT 1",
-			intval($a->argv[2]),
-			intval(local_user())
-		);
-		if(! count($r)) {
-			notice( t('Profile not found.') . EOL);
-			goaway($a->get_baseurl(true) . '/profiles');
-			return; // NOTREACHED
-		}
-		$profile_guid = $r['profile_guid'];
-		
-		check_form_security_token_redirectOnErr('/profiles', 'profile_drop', 't');
-
-		// move every contact using this profile as their default to the user default
-
-		$r = q("UPDATE abook SET abook_profile = (SELECT profile_guid AS FROM profile WHERE is_default = 1 AND uid = %d LIMIT 1) WHERE abook_profile = '%s' AND abook_channel = %d ",
-			intval(local_user()),
-			dbesc($profile_guid),
-			intval(local_user())
-		);
-		$r = q("DELETE FROM `profile` WHERE `id` = %d AND `uid` = %d LIMIT 1",
-			intval(argv(2)),
-			intval(local_user())
-		);
-		if($r)
-			info( t('Profile deleted.') . EOL);
-
-		goaway($a->get_baseurl(true) . '/profiles');
-		return; // NOTREACHED
-	}
-
-
-
-
-
-	if((argc() > 1) && (argv(1) === 'new')) {
-		
-		check_form_security_token_redirectOnErr('/profiles', 'profile_new', 't');
-
-		$r0 = q("SELECT `id` FROM `profile` WHERE `uid` = %d",
-			intval(local_user()));
-		$num_profiles = count($r0);
-
-		$name = t('Profile-') . ($num_profiles + 1);
-
-		$r1 = q("SELECT `name`, `photo`, `thumb` FROM `profile` WHERE `uid` = %d AND `is_default` = 1 LIMIT 1",
-			intval(local_user()));
-		
-		$r2 = q("INSERT INTO `profile` (`aid`, `uid` , `profile_guid`, `profile_name` , `name`, `photo`, `thumb`)
-			VALUES ( %d, '%s', '%s', '%s', '%s' )",
-			intval(get_account_id()),
-			intval(local_user()),
-			dbesc(random_string()),
-			dbesc($name),
-			dbesc($r1[0]['name']),
-			dbesc($r1[0]['photo']),
-			dbesc($r1[0]['thumb'])
-		);
-
-		$r3 = q("SELECT `id` FROM `profile` WHERE `uid` = %d AND `profile_name` = '%s' LIMIT 1",
-			intval(local_user()),
-			dbesc($name)
-		);
-
-		info( t('New profile created.') . EOL);
-		if(count($r3) == 1)
-			goaway($a->get_baseurl(true) . '/profiles/' . $r3[0]['id']);
-		
-		goaway($a->get_baseurl(true) . '/profiles');
-	} 
-
-	if((argc() > 2) && (argv(1) === 'clone')) {
-		
-		check_form_security_token_redirectOnErr('/profiles', 'profile_clone', 't');
-
-		$r0 = q("SELECT `id` FROM `profile` WHERE `uid` = %d",
-			intval(local_user()));
-		$num_profiles = count($r0);
-
-		$name = t('Profile-') . ($num_profiles + 1);
-		$r1 = q("SELECT * FROM `profile` WHERE `uid` = %d AND `id` = %d LIMIT 1",
-			intval(local_user()),
-			intval($a->argv[2])
-		);
-		if(! count($r1)) {
-			notice( t('Profile unavailable to clone.') . EOL);
-			return;
-		}
-		unset($r1[0]['id']);
-		$r1[0]['is_default'] = 0;
-		$r1[0]['publish'] = 0;	
-		$r1[0]['profile_name'] = dbesc($name);
-		$r1[0]['profile_guid'] = dbesc(random_string());
-
-		dbesc_array($r1[0]);
-
-		$r2 = dbq("INSERT INTO `profile` (`" 
-			. implode("`, `", array_keys($r1[0])) 
-			. "`) VALUES ('" 
-			. implode("', '", array_values($r1[0])) 
-			. "')" );
-
-		$r3 = q("SELECT `id` FROM `profile` WHERE `uid` = %d AND `profile_name` = '%s' LIMIT 1",
-			intval(local_user()),
-			dbesc($name)
-		);
-		info( t('New profile created.') . EOL);
-		if(count($r3) == 1)
-			goaway($a->get_baseurl(true) . '/profiles/' . $r3[0]['id']);
-		
-		goaway($a->get_baseurl(true) . '/profiles');
-		
-		return; // NOTREACHED
-	}
-
 
 	if((argc() > 1) && (intval(argv(1)))) {
 		$r = q("SELECT * FROM `profile` WHERE `id` = %d AND `uid` = %d LIMIT 1",
@@ -440,10 +472,6 @@ function profiles_content(&$a) {
 			notice( t('Profile not found.') . EOL);
 			return;
 		}
-
-		$chan = $a->get_channel();
-
-		profile_load($a,$chan['channel_address'],$r[0]['id']);
 
 		require_once('include/profile_selectors.php');
 
@@ -482,6 +510,7 @@ function profiles_content(&$a) {
 			'$profile_drop_link'   => 'profiles/drop/' . $r[0]['id'] . '?t=' 
 				. get_form_security_token("profile_drop"),
 
+			'$guid'         => $r[0]['profile_guid'],
 			'$banner'       => t('Edit Profile Details'),
 			'$submit'       => t('Submit'),
 			'$viewprof'     => t('View this profile'),
@@ -516,6 +545,7 @@ function profiles_content(&$a) {
 			'$lbl_about'    => t('Tell us about yourself...'),
 			'$lbl_hobbies'  => t('Hobbies/Interests'),
 			'$lbl_social'   => t('Contact information and Social Networks'),
+			'$lbl_channels' => t('My other channels'),
 			'$lbl_music'    => t('Musical interests'),
 			'$lbl_book'     => t('Books, literature'),
 			'$lbl_tv'       => t('Television'),
@@ -540,7 +570,7 @@ function profiles_content(&$a) {
 			'$age'          => ((intval($r[0]['dob'])) ? '(' . t('Age: ') . age($r[0]['dob'],$a->user['timezone'],$a->user['timezone']) . ')' : ''),
 			'$gender'       => gender_selector($r[0]['gender']),
 			'$marital'      => marital_selector($r[0]['marital']),
-			'$with'         => strip_tags($r[0]['with']),
+			'$with'         => $r[0]['with'],
 			'$howlong'      => ($r[0]['howlong'] === '0000-00-00 00:00:00' ? '' : datetime_convert('UTC',date_default_timezone_get(),$r[0]['howlong'])),
 			'$sexual'       => sexpref_selector($r[0]['sexual']),
 			'$about'        => $r[0]['about'],
@@ -559,7 +589,8 @@ function profiles_content(&$a) {
 			'$romance'      => $r[0]['romance'],
 			'$work'         => $r[0]['work'],
 			'$education'    => $r[0]['education'],
-			'$contact'      => $r[0]['contact']
+			'$contact'      => $r[0]['contact'],
+			'$channels'     => $r[0]['channels'],
 		));
 
 		$arr = array('profile' => $r[0], 'entry' => $o);
@@ -576,6 +607,8 @@ function profiles_content(&$a) {
 			$tpl_header = get_markup_template('profile_listing_header.tpl');
 			$o .= replace_macros($tpl_header,array(
 				'$header' => t('Edit/Manage Profiles'),
+				'$addstuff' => t('Add profile things'),
+				'$stuff_desc' => t('Include desirable objects in your profile'),
 				'$chg_photo' => t('Change profile photo'),
 				'$cr_new' => t('Create New Profile'),
 				'$cr_new_link' => 'profiles/new?t=' . get_form_security_token("profile_new")
@@ -586,7 +619,7 @@ function profiles_content(&$a) {
 
 			foreach($r as $rr) {
 				$o .= replace_macros($tpl, array(
-					'$photo' => $a->get_cached_avatar_image($rr['thumb']),
+					'$photo' => $rr['thumb'],
 					'$id' => $rr['id'],
 					'$alt' => t('Profile Image'),
 					'$profile_name' => $rr['profile_name'],

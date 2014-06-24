@@ -35,6 +35,7 @@
     this.ignoreValueChange = false;
     this.serviceUrl = options.serviceUrl;
     this.isLocal = false;
+    this.id = options.id;
     this.options = {
       autoSubmit: false,
       minChars: 1,
@@ -45,7 +46,7 @@
       params: {},
       fnFormatResult: fnFormatResult,
       delimiter: null,
-      zIndex: 9999
+      zIndex: 999
     };
     this.initialize();
     this.setOptions(options);
@@ -77,7 +78,7 @@
       if (!this.options.width) { this.options.width = this.el.width(); }
       this.mainContainerId = 'AutocompleteContainter_' + uid;
 
-      $('<div id="' + this.mainContainerId + '" style="position:absolute;z-index:9999;"><div class="autocomplete-w1"><div class="autocomplete" id="' + autocompleteElId + '" style="display:none; width:300px;"></div></div></div>').appendTo('body');
+      $('<div id="' + this.mainContainerId + '" style="position:absolute;z-index:999;"><div class="autocomplete-w1" id="'+this.id+'"><div class="autocomplete" id="' + autocompleteElId + '" style="display:none; width:300px;"></div></div></div>').appendTo('body');
 
       this.container = $('#' + autocompleteElId);
       this.fixPosition();
@@ -242,6 +243,7 @@
       } else if (!this.isBadQuery(q)) {
         me = this;
         me.options.params.query = q;
+		$('#nav-search-spinner').spin('tiny');
         $.get(this.serviceUrl, me.options.params, function(txt) { me.processResponse(txt); }, 'text');
       }
     },
@@ -304,6 +306,7 @@
         this.data = response.data;
         this.suggest(); 
       }
+	  $('#nav-search-spinner').spin(false);
     },
 
     activate: function(index) {

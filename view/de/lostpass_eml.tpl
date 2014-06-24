@@ -1,32 +1,32 @@
 
-Hallo $[username],
-	Auf $[sitename] wurde eine Anfrage zum Zurücksetzen deines 
-Passworts empfangen. Um diese zu bestätigen folge bitte dem Link
-weiter unten oder kopiere ihn in die Adressleiste deines Browsers. 
+Dear {{$username}},
+	A request was recently received at {{$sitename}} to reset your account 
+password. In order to confirm this request, please select the verification link
+below or paste it into your web browser address bar. 
 
-Wenn du die Anfrage NICHT gesendet haben solltest, dann IGNORIERE
-bitte diese Mail und den Link. 
+If you did NOT request this change, please DO NOT follow the link
+provided and ignore and/or delete this email. 
 
-Dein Passwort wird nicht geändert werden solange wir nicht überprüfen
-konnten, dass du die Anfrage gestellt hast. 
+Your password will not be changed unless we can verify that you
+issued this request. 
 
-Folge diesem Link um deine Identität zu verifizieren:
+Follow this link to verify your identity:
 
-$[reset_link]
+{{$reset_link}}
 
-Du wirst eine weitere Email erhalten mit dem neuen Passwort.
+You will then receive a follow-up message containing the new password.
 
-Das Passwort kannst du anschließend wie gewohnt in deinen Account Einstellungen ändern.
+You may change that password from your account settings page after logging in.
 
-Die Login-Details sind die folgenden:
+The login details are as follows:
 
-Adresse der Seite:	$[siteurl]
-Login Name:	$[email]
-
-
+Site Location:	{{$siteurl}}
+Login Name:	{{$email}}
 
 
-Grüße,
-	$[sitename] Administrator
+
+
+Sincerely,
+	{{$sitename}} Administrator
 
  

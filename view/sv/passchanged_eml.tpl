@@ -1,18 +1,19 @@
 
-$username,
-
-Lösenordet har ändrats enligt din begäran. Behåll den här 
-informationen om den skulle behövas i framtiden. (eller ändra lösenord 
-på en gång till något som du kommer ihåg).
+Hej {{$username}},
+	Ditt lösenord har bytts enligt begäran. Spara den här informationen
+(eller byt genast lösenordet till något du kan komma ihåg).
 
 
-Här är dina inloggningsuppgifter:
+Dina inloggningsuppgifter är:
 
-Webbplats:	$siteurl
-Användarnamn:	$email
-Lösenord:	$new_password
+Serveradress:	{{$siteurl}}
+Användarnamn:	{{$email}}
+Lösenord:	{{$new_password}}
 
-När du loggat in kan du byta lösenord bland inställningarna.
+Du kan ändra lösenordet från kontoinställningarna när du har loggat in.
+
 
 Hälsningar,
-$sitename admin
+	{{$sitename}}-administratören
+
+ 

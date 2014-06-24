@@ -4,87 +4,143 @@
 
 function magic_init(&$a) {
 
-	$url = ((x($_REQUEST,'url')) ? $_REQUEST['url'] : '');
+	$ret = array('success' => false, 'url' => '', 'message' => '');
+	logger('mod_magic: invoked', LOGGER_DEBUG);
+
+	logger('mod_magic: args: ' . print_r($_REQUEST,true),LOGGER_DATA);
+
 	$addr = ((x($_REQUEST,'addr')) ? $_REQUEST['addr'] : '');
 	$hash = ((x($_REQUEST,'hash')) ? $_REQUEST['hash'] : '');
 	$dest = ((x($_REQUEST,'dest')) ? $_REQUEST['dest'] : '');
+	$test = ((x($_REQUEST,'test')) ? intval($_REQUEST['test']) : 0);
+	$rev  = ((x($_REQUEST,'rev'))  ? intval($_REQUEST['rev'])  : 0);
 
 
-	if(local_user()) { 
+	$parsed = parse_url($dest);
+	if(! $parsed) {
+		if($test) {
+			$ret['message'] .= 'could not parse ' . $dest . EOL;
+			return($ret);
+		}
+		goaway($dest);
+	}
 
-		if($hash) {
-			$x = q("select xchan.xchan_url, hubloc.* from xchan left join hubloc on xchan_hash = hubloc_hash
-				where hublock_hash = '%s' and (hubloc_flags & %d) limit 1",
-				intval(HUBLOC_FLAGS_PRIMARY)
+	$basepath = $parsed['scheme'] . '://' . $parsed['host'] . (($parsed['port']) ? ':' . $parsed['port'] : ''); 
+
+	$x = q("select * from hubloc where hubloc_url = '%s' order by hubloc_connected desc limit 1",
+		dbesc($basepath)
+	);
+	
+	if(! $x) {
+
+		/*
+		 * We have no records for, or prior communications with this hub. 
+		 * If an address was supplied, let's finger them to create a hub record. 
+		 * Otherwise we'll use the special address '[system]' which will return
+		 * either a system channel or the first available normal channel. We don't
+		 * really care about what channel is returned - we need the hub information 
+		 * from that response so that we can create signed auth packets destined 
+		 * for that hub.
+		 *
+		 */
+
+		$ret = zot_finger((($addr) ? $addr : '[system]@' . $parsed['host']),null);
+		if($ret['success']) {
+			$j = json_decode($ret['body'],true);
+			if($j)
+				import_xchan($j);
+
+			// Now try again
+
+			$x = q("select * from hubloc where hubloc_url = '%s' order by hubloc_connected desc limit 1",
+				dbesc($basepath)
 			);
 		}
-		elseif($addr) {
-			$x = q("select hubloc.* from xchan left join hubloc on xchan_hash = hubloc_hash 
-				where xchan_addr = '%s' and (hubloc_flags & %d) limit 1",
-				dbesc($addr),
-				intval(HUBLOC_FLAGS_PRIMARY)
-			);
-		}
+	}
 
-		if(! $x) {
-			notice( t('Channel not found.') . EOL);
+	if(! $x) {
+		if($rev)
+			goaway($dest);
+		else {
+			logger('mod_magic: no channels found for requested hub.' . print_r($_REQUEST,true));
+			if($test) {
+				$ret['message'] .= 'This site has no previous connections with ' . $basepath . EOL;
+				return $ret;
+			} 
+			notice( t('Hub not found.') . EOL);
 			return;
 		}
+	}
 
-		if($x[0]['hubloc_url'] === z_root()) {
-			$webbie = substr($x[0]['hubloc_addr'],0,strpos('@',$x[0]['hubloc_addr']));
-			switch($dest) {
-				case 'channel':
-					$desturl = z_root() . '/channel/' . $webbie;
-					break;
-				case 'photos':
-					$desturl = z_root() . '/photos/' . $webbie;
-					break;
-				case 'profile':
-					$desturl = z_root() . '/profile/' . $webbie;
-					break;
-				default:
-					$desturl = $dest;
-					break;
-			}
-			// We are already authenticated on this site and a registered observer.
-			// Just redirect.
-			goaway($desturl);
+	// This is ready-made for a plugin that provides a blacklist or "ask me" before blindly authenticating. 
+	// By default, we'll proceed without asking.
+
+	$arr = array(
+		'channel_id' => local_user(),
+		'xchan' => $x[0],
+		'destination' => $dest, 
+		'proceed' => true
+	);
+
+	call_hooks('magic_auth',$arr);
+	$dest = $arr['destination'];
+	if(! $arr['proceed']) {
+		if($test) {
+			$ret['message'] .= 'cancelled by plugin.' . EOL;
+			return $ret;
 		}
+		goaway($dest);
+	}
+
+	if((get_observer_hash()) && ($x[0]['hubloc_url'] === z_root())) {
+		// We are already authenticated on this site and a registered observer.
+		// Just redirect.
+		if($test) {
+			$ret['success'] = true;
+			$ret['message'] .= 'Local site - you are already authenticated.' . EOL;
+			return $ret;
+		}
+		goaway($dest);
+	}
+
+	if(local_user()) {
+		$channel = $a->get_channel();
 
 		$token = random_string();
-
-		$recip = array(array('guid' => $x[0]['hubloc_guid'],'guid_sig' => $x[0]['hubloc_guid_sig']));
- 		$channel = $a->get_channel();
-		$hash = random_string();
+		$token_sig = base64url_encode(rsa_sign($token,$channel['channel_prvkey']));
+ 
+		$channel['token'] = $token;
+		$channel['token_sig'] = $token_sig;
 
 		$r = q("insert into verify ( type, channel, token, meta, created) values ('%s','%d','%s','%s','%s')",
 			dbesc('auth'),
 			intval($channel['channel_id']),
 			dbesc($token),
-			dbesc($hubloc['hubloc_hash']),
+			dbesc($x[0]['hubloc_url']),
 			dbesc(datetime_convert())
 		);
 
-		$packet = zot_build_packet($channel,'auth',$recip,$x[0]['hubloc_sitekey'],$hash);
-		$result = zot_zot($x[0]['hubloc_callback'],$packet);
-		if($result['success']) {
-			$j = json_decode($result['body'],true);
-			if($j['iv']) {
-				$y = aes_unencapsulate($j,$channel['prvkey']);
-				$j = json_decode($y,true);
-			}
-			if($j['token'] && $j['ticket'] && $j['token'] === $token) {
-				$r = q("delete from verify where token = '%s' and type = '%s' and channel = %d limit 1",
-					dbesc($token),
-					dbesc('auth'),
-					intval($channel['channel_id'])
-				);				
-				goaway($x[0]['callback'] . '?f=&ticket=' . $ticket . '&dest=' . $dest);
-			}
+		$target_url = $x[0]['hubloc_callback'] . '/?f=&auth=' . urlencode($channel['channel_address'] . '@' . $a->get_hostname())
+			. '&sec=' . $token . '&dest=' . urlencode($dest) . '&version=' . ZOT_REVISION;
+
+		logger('mod_magic: redirecting to: ' . $target_url, LOGGER_DEBUG); 
+
+		if($test) {
+			$ret['success'] = true;
+			$ret['url'] = $target_url;
+			$ret['message'] = 'token ' . $token . ' created for channel ' . $channel['channel_id'] . ' for url ' . $x[0]['hubloc_url'] . EOL;
+			return $ret;
 		}
-		goaway($dest);
+
+		goaway($target_url);
+			
 	}
 
-	goaway(z_root());
+	if($test) {
+		$ret['message'] = 'Not authenticated or invalid arguments to mod_magic' . EOL;
+		return $ret;
+	}
+
+	goaway($dest);
+
 }

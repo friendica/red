@@ -1,115 +1,189 @@
 {{if $item.comment_firstcollapsed}}
-	<div class="hide-comments-outer">
-	<span id="hide-comments-total-$item.id" class="hide-comments-total">$item.num_comments</span> <span id="hide-comments-$item.id" class="hide-comments fakelink" onclick="showHideComments($item.id);">$item.hide_text</span>
-	</div>
-	<div id="collapsed-comments-$item.id" class="collapsed-comments" style="display: none;">
-{{endif}}
-<div id="thread-wrapper-$item.id" class="thread-wrapper $item.toplevel">
-<a name="$item.id" ></a>
-<div class="wall-item-outside-wrapper $item.indent$item.previewing{{ if $item.owner_url }} wallwall{{ endif }}" id="wall-item-outside-wrapper-$item.id" >
-	<div class="wall-item-content-wrapper $item.indent" id="wall-item-content-wrapper-$item.id" >
-		<div class="wall-item-info{{ if $item.owner_url }} wallwall{{ endif }}" id="wall-item-info-$item.id">
-			{{ if $item.owner_url }}
-			<div class="wall-item-photo-wrapper wwto" id="wall-item-ownerphoto-wrapper-$item.id" >
-				<a href="$item.owner_url" title="$item.olinktitle" class="wall-item-photo-link" id="wall-item-ownerphoto-link-$item.id">
-				<img src="$item.owner_photo" class="wall-item-photo$item.osparkle" id="wall-item-ownerphoto-$item.id" style="height: 80px; width: 80px;" alt="$item.owner_name" /></a>
-			</div>
-			<div class="wall-item-arrowphoto-wrapper" ><img src="images/larrow.gif" alt="$item.wall" /></div>
-			{{ endif }}
-			<div class="wall-item-photo-wrapper{{ if $item.owner_url }} wwfrom{{ endif }}" id="wall-item-photo-wrapper-$item.id" 
-				onmouseover="if (typeof t$item.id != 'undefined') clearTimeout(t$item.id); openMenu('wall-item-photo-menu-button-$item.id')"
-                onmouseout="t$item.id=setTimeout('closeMenu(\'wall-item-photo-menu-button-$item.id\'); closeMenu(\'wall-item-photo-menu-$item.id\');',200)">
-				<a href="$item.profile_url" title="$item.linktitle" class="wall-item-photo-link" id="wall-item-photo-link-$item.id">
-				<img src="$item.thumb" class="wall-item-photo$item.sparkle" id="wall-item-photo-$item.id" style="height: 80px; width: 80px;" alt="$item.name" /></a>
-				<span onclick="openClose('wall-item-photo-menu-$item.id');" class="fakelink wall-item-photo-menu-button" id="wall-item-photo-menu-button-$item.id">menu</span>
-                <div class="wall-item-photo-menu" id="wall-item-photo-menu-$item.id">
-                    <ul>
-                        $item.item_photo_menu
-                    </ul>
-                </div>
-
-			</div>
-			<div class="wall-item-photo-end"></div>
-			<div class="wall-item-wrapper" id="wall-item-wrapper-$item.id" >
-				{{ if $item.lock }}<div class="wall-item-lock"><img src="images/lock_icon.gif" class="lockview" alt="$item.lock" onclick="lockview(event,$item.id);" /></div>
-				{{ else }}<div class="wall-item-lock"></div>{{ endif }}	
-				<div class="wall-item-location" id="wall-item-location-$item.id">$item.location</div>
-			</div>
-		</div>
-		<div class="wall-item-author">
-				<a href="$item.profile_url" title="$item.linktitle" class="wall-item-name-link"><span class="wall-item-name$item.sparkle" id="wall-item-name-$item.id" >$item.name</span></a>{{ if $item.owner_url }} $item.to <a href="$item.owner_url" title="$item.olinktitle" class="wall-item-name-link"><span class="wall-item-name$item.osparkle" id="wall-item-ownername-$item.id">$item.owner_name</span></a> $item.vwall{{ endif }}<br />
-				<div class="wall-item-ago"  id="wall-item-ago-$item.id" title="$item.localtime">$item.ago</div>				
-		</div>			
-		<div class="wall-item-content" id="wall-item-content-$item.id" >
-			<div class="wall-item-title" id="wall-item-title-$item.id">$item.title</div>
-			<div class="wall-item-title-end"></div>
-			<div class="wall-item-body" id="wall-item-body-$item.id" >$item.body
-					<div class="body-tag">
-						{{ for $item.tags as $tag }}
-							<span class='tag'>$tag</span>
-						{{ endfor }}
+<div class="hide-comments-outer fakelink" onclick="showHideComments({{$item.id}});">
+	<span id="hide-comments-{{$item.id}}" class="hide-comments">{{$item.hide_text}}</span>&nbsp;<span id="hide-comments-total-{{$item.id}}" class="hide-comments-total">{{$item.num_comments}}</span>
+</div>
+<div id="collapsed-comments-{{$item.id}}" class="collapsed-comments" style="display: none;">
+{{/if}}
+	<div id="thread-wrapper-{{$item.id}}" class="thread-wrapper {{$item.toplevel}}">
+		<a name="{{$item.id}}" ></a>
+		<div class="wall-item-outside-wrapper {{$item.indent}}{{$item.previewing}}" id="wall-item-outside-wrapper-{{$item.id}}" >
+			<div class="wall-item-content-wrapper {{$item.indent}}" id="wall-item-content-wrapper-{{$item.id}}" style="clear:both;">
+				<div class="wall-item-info" id="wall-item-info-{{$item.id}}" >
+					<div class="wall-item-photo-wrapper{{if $item.owner_url}} wwfrom{{/if}}" id="wall-item-photo-wrapper-{{$item.id}}">
+						<a href="{{$item.profile_url}}" title="{{$item.linktitle}}" class="wall-item-photo-link" id="wall-item-photo-link-{{$item.id}}"><img src="{{$item.thumb}}" class="wall-item-photo{{$item.sparkle}}" id="wall-item-photo-{{$item.id}}" alt="{{$item.name}}" /></a>
 					</div>
-			{{ if $item.has_cats }}
-			<div class="categorytags"><span>$item.txt_cats {{ for $item.categories as $cat }}$cat.name <a href="$cat.removeurl" title="$remove">[$remove]</a> {{ if $cat.last }}{{ else }}, {{ endif }}{{ endfor }}
+					<div class="wall-item-photo-end" style="clear:both"></div>
+				</div>
+				{{if $item.title}}
+				<div class="wall-item-title" id="wall-item-title-{{$item.id}}"><h3>{{$item.title}}</h3></div>
+				{{/if}}
+				{{if $item.lock}}
+				<div class="wall-item-lock dropdown">
+					<i class="icon-lock lockview dropdown-toggle" data-toggle="dropdown" title="{{$item.lock}}" onclick="lockview(event,{{$item.id}});" ></i><ul id="panel-{{$item.id}}" class="lockview-panel dropdown-menu"></ul>&nbsp;
+				</div>
+				{{/if}}
+				<div class="wall-item-author">
+					<a href="{{$item.profile_url}}" title="{{$item.linktitle}}" class="wall-item-name-link"><span class="wall-item-name{{$item.sparkle}}" id="wall-item-name-{{$item.id}}" >{{$item.name}}</span></a>{{if $item.owner_url}}&nbsp;{{$item.via}}&nbsp;<a href="{{$item.owner_url}}" title="{{$item.olinktitle}}" class="wall-item-name-link"><span class="wall-item-name{{$item.osparkle}}" id="wall-item-ownername-{{$item.id}}">{{$item.owner_name}}</span></a>{{/if}}
+				</div>
+				<div class="wall-item-ago"  id="wall-item-ago-{{$item.id}}">
+					{{if $item.verified}}<i class="icon-ok" title="{{$item.verified}}"></i>&nbsp;{{/if}}{{if $item.location}}<span class="wall-item-location" id="wall-item-location-{{$item.id}}">{{$item.location}},&nbsp;</span>{{/if}}<span class="autotime" title="{{$item.isotime}}">{{$item.localtime}}{{if $item.editedtime}}&nbsp;{{$item.editedtime}}{{/if}}{{if $item.expiretime}}&nbsp;{{$item.expiretime}}{{/if}}</span>&nbsp;{{if $item.app}}<span class="item.app">{{$item.str_app}}</span>{{/if}}
+				</div>
+				<div class="wall-item-content" id="wall-item-content-{{$item.id}}">
+					<div class="wall-item-title-end"></div>
+					<div class="wall-item-body" id="wall-item-body-{{$item.id}}" >
+						{{$item.body}}
+						{{if $item.tags}}
+						<div class="body-tag">
+						{{foreach $item.tags as $tag}}
+							<span class='tag'>{{$tag}}</span>
+						{{/foreach}}
+						</div>
+						{{/if}}
+						{{if $item.has_cats}}
+						<div class="categorytags">
+							<span>{{$item.txt_cats}} {{foreach $item.categories as $cat}}{{$cat.name}} <a href="{{$cat.removeurl}}" title="{{$remove}}">[{{$remove}}]</a> {{if $cat.last}}{{else}}, {{/if}}{{/foreach}}
+						</div>
+						{{/if}}
+							{{if $item.has_folders}}
+						<div class="filesavetags">
+							<span>{{$item.txt_folders}} {{foreach $item.folders as $cat}}{{$cat.name}} <a href="{{$cat.removeurl}}" title="{{$remove}}">[{{$remove}}]</a> {{if $cat.last}}{{else}}, {{/if}}{{/foreach}}
+						</div>
+						{{/if}}
+					</div>
+				</div>
+				<div class="wall-item-tools">
+					<div class="wall-item-tools-right btn-group pull-right">
+						{{if $item.like}}
+						<button type="button" class="btn btn-default btn-sm" onclick="dolike({{$item.id}},'like'); return false">
+							<i class="icon-thumbs-up-alt" title="{{$item.like.0}}"></i>
+						</button>
+						{{/if}}
+						{{if $item.dislike}}
+						<button type="button" class="btn btn-default btn-sm" onclick="dolike({{$item.id}},'dislike'); return false">
+							<i class="icon-thumbs-down-alt" title="{{$item.dislike.0}}"></i>
+						</button>
+						{{/if}}
+						<button type="button" class="btn btn-default btn-sm dropdown-toggle" data-toggle="dropdown" id="wall-item-menu-{{$item.id}}">
+							<i class="icon-caret-down"></i>
+						</button>
+						<ul class="dropdown-menu" role="menu" aria-labelledby="wall-item-menu-{{$item.id}}">
+							{{if $item.share}}
+							<li role="presentation"><a role="menuitem" href="#" onclick="jotShare({{$item.id}}); return false"><i class="icon-retweet" title="{{$item.share.0}}"></i> {{$item.share.0}}</a></li>
+							{{/if}}
+							{{if $item.plink}}
+							<li role="presentation"><a role="menuitem" href="{{$item.plink.href}}" title="{{$item.plink.title}}" ><i class="icon-external-link"></i> {{$item.plink.title}}</a></li>
+							{{/if}}
+							{{if $item.edpost}}
+							<li role="presentation"><a role="menuitem" href="{{$item.edpost.0}}" title="{{$item.edpost.1}}"><i class="editpost icon-pencil"></i> {{$item.edpost.1}}</a></li>
+							{{/if}}
+							{{if $item.tagger}}
+							<li role="presentation"><a role="menuitem" href="#"  onclick="itemTag({{$item.id}}); return false;"><i id="tagger-{{$item.id}}" class="icon-tag" title="{{$item.tagger.tagit}}"></i> {{$item.tagger.tagit}}</a></li>
+							{{/if}}
+							{{if $item.filer}}
+							<li role="presentation"><a role="menuitem" href="#" onclick="itemFiler({{$item.id}}); return false;"><i id="filer-{{$item.id}}" class="icon-folder-open" title="{{$item.filer}}"></i> {{$item.filer}}</a></li>
+							{{/if}}
+							{{if $item.bookmark}}
+							<li role="presentation"><a role="menuitem" href="#" onclick="itemBookmark({{$item.id}}); return false;"><i id="bookmarker-{{$item.id}}" class="icon-bookmark" title="{{$item.bookmark}}"></i> {{$item.bookmark}}</a></li>
+							{{/if}}
+							{{if $item.addtocal}}
+							<li role="presentation"><a role="menuitem" href="#" onclick="itemAddToCal({{$item.id}}); return false;"><i id="addtocal-{{$item.id}}" class="icon-calendar" title="{{$item.addtocal}}"></i> {{$item.addtocal}}</a></li>
+							{{/if}}
+							{{if $item.star}}
+							<li role="presentation"><a role="menuitem" href="#" onclick="dostar({{$item.id}}); return false;"><i id="starred-{{$item.id}}" class="icon-star {{$item.star.isstarred}}" title="{{$item.star.toggle}}"></i> {{$item.star.toggle}}</a></li>
+							{{/if}}
+							{{if $item.item_photo_menu}}
+							<li role="presentation" class="divider"></li>
+							{{$item.item_photo_menu}}
+							{{/if}}
+							{{if $item.drop.dropping}}
+							<li role="presentation" class="divider"></li>
+							<li role="presentation"><a role="menuitem" href="item/drop/{{$item.id}}" onclick="return confirmDelete();" title="{{$item.drop.delete}}" ><i class="icon-remove"></i> {{$item.drop.delete}}</a></li>
+							{{/if}}
+						</ul>
+					</div>
+					<div id="like-rotator-{{$item.id}}" class="like-rotator"></div>
+					<div class="wall-item-tools-left{{if $item.like_count &&  $item.dislike_count}} btn-group{{/if}}">
+						{{if $item.like_count}}
+						<div class="btn-group">
+							<button type="button" class="btn btn-default btn-sm wall-item-like dropdown-toggle" data-toggle="dropdown" id="wall-item-like-{{$item.id}}">{{$item.like_count}} {{$item.like_button_label}}</button>
+							{{if $item.like_list_part}}
+							<ul class="dropdown-menu" role="menu" aria-labelledby="wall-item-like-{{$item.id}}">{{foreach $item.like_list_part as $liker}}<li role="presentation">{{$liker}}</li>{{/foreach}}</ul>
+							{{else}}
+							<ul class="dropdown-menu" role="menu" aria-labelledby="wall-item-like-{{$item.id}}">{{foreach $item.like_list as $liker}}<li role="presentation">{{$liker}}</li>{{/foreach}}</ul>
+							{{/if}}
+						</div>
+						{{/if}}
+						{{if $item.dislike_count}}
+						<div class="btn-group">
+							<button type="button" class="btn btn-default btn-sm wall-item-dislike dropdown-toggle" data-toggle="dropdown" id="wall-item-dislike-{{$item.id}}">{{$item.dislike_count}} {{$item.dislike_button_label}}</button>
+							{{if $item.dislike_list_part}}
+							<ul class="dropdown-menu" role="menu" aria-labelledby="wall-item-dislike-{{$item.id}}">{{foreach $item.dislike_list_part as $disliker}}<li role="presentation">{{$disliker}}</li>{{/foreach}}</ul>
+							{{else}}
+							<ul class="dropdown-menu" role="menu" aria-labelledby="wall-item-dislike-{{$item.id}}">{{foreach $item.dislike_list as $disliker}}<li role="presentation">{{$disliker}}</li>{{/foreach}}</ul>
+							{{/if}}
+						</div>
+						{{/if}}
+					</div>
+					{{if $item.like_list_part}}
+					<div class="modal" id="likeModal-{{$item.id}}">
+						<div class="modal-dialog">
+							<div class="modal-content">
+								<div class="modal-header">
+									<button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
+									<h4 class="modal-title">{{$item.like_modal_title}}</h4>
+								</div>
+								<div class="modal-body">
+									<ul>{{foreach $item.like_list as $liker}}<li role="presentation">{{$liker}}</li>{{/foreach}}</ul>
+								</div>
+								<div class="modal-footer clear">
+									<button type="button" class="btn btn-default" data-dismiss="modal">{{$item.modal_dismiss}}</button>
+								</div>
+							</div><!-- /.modal-content -->
+						</div><!-- /.modal-dialog -->
+					</div><!-- /.modal -->
+					{{/if}}
+					{{if $item.dislike_list_part}}
+					<div class="modal" id="dislikeModal-{{$item.id}}">
+						<div class="modal-dialog">
+							<div class="modal-content">
+								<div class="modal-header">
+									<button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
+									<h4 class="modal-title">{{$item.dislike_modal_title}}</h4>
+								</div>
+								<div class="modal-body">
+									<ul>{{foreach $item.dislike_list as $disliker}}<li role="presentation">{{$disliker}}</li>{{/foreach}}</ul>
+								</div>
+								<div class="modal-footer clear">
+									<button type="button" class="btn btn-default" data-dismiss="modal">{{$item.modal_dismiss}}</button>
+								</div>
+							</div><!-- /.modal-content -->
+						</div><!-- /.modal-dialog -->
+					</div><!-- /.modal -->
+					{{/if}}
+				</div>
+				{{* we dont' use this do we?
+				{{if $item.drop.pagedrop}}
+				<input type="checkbox" onclick="checkboxhighlight(this);" title="{{$item.drop.select}}" class="item-select" name="itemselected[]" value="{{$item.id}}" />
+				{{/if}}
+				*}}
+				<div class="clear"></div>
 			</div>
-			{{ endif }}
-
-			{{ if $item.has_folders }}
-			<div class="filesavetags"><span>$item.txt_folders {{ for $item.folders as $cat }}$cat.name <a href="$cat.removeurl" title="$remove">[$remove]</a> {{ if $cat.last }}{{ else }}, {{ endif }}{{ endfor }}
-			</div>
-			{{ endif }}
-			</div>
+			<div class="wall-item-wrapper-end"></div>
+			<div class="wall-item-outside-wrapper-end {{$item.indent}}" ></div>
 		</div>
-		<div class="wall-item-tools" id="wall-item-tools-$item.id">
-			{{ if $item.like }}
-				<a href="#" class="icon like item-tool" title="$item.like.0" onclick="dolike($item.id,'like'); return false"></a>
-			{{ endif }}
-			{{ if $item.dislike }}
-				<a href="#" class="icon dislike item-tool" title="$item.dislike.0" onclick="dolike($item.id,'dislike'); return false"></a>
-			{{ endif }}
-			{{ if $item.share }}
-				<a href="#" class="icon recycle item-tool" title="$item.share.0" onclick="jotShare($item.id); return false"></a>
-			{{ endif }}
-			{{ if $item.plink }}
-				<a href="$item.plink.href" title="$item.plink.title" target="external-link" class="icon item-tool remote-link$item.sparkle"></a>
-			{{ endif }}
-			{{ if $item.edpost }}
-				<a class="editpost icon pencil item-tool" href="$item.edpost.0" title="$item.edpost.1"></a>
-			{{ endif }}			 
-			{{ if $item.star }}
-			<a href="#" id="starred-$item.id" onclick="dostar($item.id); return false;" class="star-item icon item-tool $item.star.isstarred" title="$item.star.toggle"></a>
-			{{ endif }}
-			{{ if $item.tagger }}
-			<a href="#" id="tagger-$item.id" onclick="itemTag($item.id); return false;" class="tag-item icon item-tool tagged" title="$item.tagger.tagit"></a>
-			{{ endif }}
-			{{ if $item.filer }}
-			<a href="#" id="filer-$item.id" onclick="itemFiler($item.id); return false;" class="filer-item filer-icon item-tool" title="$item.filer"></a>
-			{{ endif }}			
-			<img id="like-rotator-$item.id" class="like-rotator" src="images/rotator.gif" alt="$item.wait" title="$item.wait" style="display: none;" />
-
-			<div class="wall-item-delete-wrapper" id="wall-item-delete-wrapper-$item.id" >
-				{{ if $item.drop.dropping }}<a href="item/drop/$item.id" onclick="return confirmDelete();" class="icon drophide" title="$item.drop.delete" onmouseover="imgbright(this);" onmouseout="imgdull(this);" ></a>{{ endif }}
-			</div>
-				{{ if $item.drop.pagedrop }}<input type="checkbox" onclick="checkboxhighlight(this);" title="$item.drop.select" class="item-select" name="itemselected[]" value="$item.id" />{{ endif }}
-			<div class="wall-item-delete-end"></div>
+		{{if $item.toplevel}}
+		{{foreach $item.children as $child}}
+			{{include file="{{$child.template}}" item=$child}}
+		{{/foreach}}
+		{{/if}}
+		{{if $item.comment}}
+		<div class="wall-item-comment-wrapper{{if $item.children}} wall-item-comment-wrapper-wc{{/if}}" >
+			{{$item.comment}}
 		</div>
-	</div>	
-	<div class="wall-item-wrapper-end"></div>
-	<div class="wall-item-like $item.indent" id="wall-item-like-$item.id">$item.showlike</div>
-	<div class="wall-item-dislike $item.indent" id="wall-item-dislike-$item.id">$item.showdislike</div>
-
-<div class="wall-item-outside-wrapper-end $item.indent" ></div>
+		<div id="comment-edit-preview-{{$item.id}}" class="comment-edit-preview"></div>
+		<div class="clear"></div>
+		{{/if}}
+	</div>
+{{if $item.comment_lastcollapsed}}
 </div>
-{{ if $item.toplevel }}
-{{ for $item.children as $item }}
-	{{ inc $item.template }}{{ endinc }}
-{{ endfor }}
-{{ endif }}
-
-<div class="wall-item-comment-wrapper" >
-	$item.comment
-</div>
-
-
-</div>
-{{if $item.comment_lastcollapsed}}</div>{{endif}}
+{{/if}}

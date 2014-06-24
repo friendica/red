@@ -1,15 +1,6 @@
-<?php
+<?php /** @file */
 
-function follow_widget() {
 
-	return replace_macros(get_markup_template('follow.tpl'),array(
-		'$connect' => t('Add New Connection'),
-		'$desc' => t('Enter the channel address'),
-		'$hint' => t('Example: bob@example.com, http://example.com/barbara'),
-		'$follow' => t('Connect')
-	));
-
-}
 
 function findpeople_widget() {
 	require_once('include/Contact.php');
@@ -24,6 +15,8 @@ function findpeople_widget() {
 			. '</div>' . $inv;
 		}
 	}
+
+	$advanced_search = ((local_user() && get_pconfig(local_user(),'feature','expert')) ? t('Advanced') : false);
  
 	return replace_macros(get_markup_template('peoplefind.tpl'),array(
 		'$findpeople' => t('Find Channels'),
@@ -32,48 +25,17 @@ function findpeople_widget() {
 		'$hint' => t('Examples: Robert Morgenstein, Fishing'),
 		'$findthem' => t('Find'),
 		'$suggest' => t('Channel Suggestions'),
-		'$similar' => t('Similar Interests'),
+		'$similar' => '', // FIXME and uncomment when mod/match working // t('Similar Interests'),
 		'$random' => t('Random Profile'),
-		'$inv' => t('Invite Friends')
+		'$inv' => t('Invite Friends'),
+		'$advanced_search' => $advanced_search,
+		'$advanced_hint' => t('Exammple: name=fred and country=iceland'),
+		'$find_advanced' => t('Advanced Find'),
+		'$loggedin' => local_user()
 	));
 
 }
 
-
-function networks_widget($baseurl,$selected = '') {
-
-	$a = get_app();
-
-	if(! local_user())
-		return '';
-
-	
-	$r = q("select distinct(network) from contact where uid = %d and self = 0",
-		intval(local_user())
-	);
-
-	$nets = array();
-	if(count($r)) {
-		require_once('include/contact_selectors.php');
-		foreach($r as $rr) {
-				if($rr['network'])
-					$nets[] = array('ref' => $rr['network'], 'name' => network_to_name($rr['network']), 'selected' => (($selected == $rr['network']) ? 'selected' : '' ));
-		}
-	}
-
-	if(count($nets) < 2)
-		return '';
-
-	return replace_macros(get_markup_template('nets.tpl'),array(
-		'$title' => t('Networks'),
-		'$desc' => '',
-		'$sel_all' => (($selected == '') ? 'selected' : ''),
-		'$all' => t('All Networks'),
-		'$nets' => $nets,
-		'$base' => $baseurl,
-
-	));
-}
 
 function fileas_widget($baseurl,$selected = '') {
 	$a = get_app();
@@ -105,15 +67,22 @@ function fileas_widget($baseurl,$selected = '') {
 
 function categories_widget($baseurl,$selected = '') {
 
+	$a = get_app();
+	
 	if(! feature_enabled($a->profile['profile_uid'],'categories'))
 		return '';
 
-	$a = get_app();
-
 	$terms = array();
-	$r = q("select distinct(term) from term where uid = %d and type = %d order by term asc",
+	$r = q("select distinct(term.term)
+                from term join item on term.oid = item.id
+                where item.uid = %d
+                and term.uid = item.uid
+                and term.type = %d
+                and item.author_xchan = '%s'
+                order by term.term asc",
 		intval($a->profile['profile_uid']),
-		intval(TERM_CATEGORY)
+	        intval(TERM_CATEGORY),
+	        dbesc($a->profile['channel_hash'])
 	);
 	if($r && count($r)) {
 		foreach($r as $rr)
@@ -139,60 +108,29 @@ function common_friends_visitor_widget($profile_uid) {
 	if(local_user() == $profile_uid)
 		return;
 
-	$cid = $zcid = 0;
+	$observer_hash = get_observer_hash();
 
-	if(is_array($_SESSION['remote'])) {
-		foreach($_SESSION['remote'] as $visitor) {
-			if($visitor['uid'] == $profile_uid) {
-				$cid = $visitor['cid'];
-				break;
-			}
-		}
-	}
-
-	if(! $cid) {
-		if(get_my_url()) {
-			$r = q("select id from contact where nurl = '%s' and uid = %d limit 1",
-				dbesc(normalise_link(get_my_url())),
-				intval($profile_uid)
-			);
-			if(count($r))
-				$cid = $r[0]['id'];
-			else {
-				$r = q("select id from gcontact where nurl = '%s' limit 1",
-					dbesc(normalise_link(get_my_url()))
-				);
-				if(count($r))
-					$zcid = $r[0]['id'];
-			}
-		}
-	}
-
-	if($cid == 0 && $zcid == 0)
-		return; 
+	if((! $observer_hash) || (! perm_is_allowed($profile_uid,$observer_hash,'view_contacts')))
+		return;
 
 	require_once('include/socgraph.php');
 
-	if($cid)
-		$t = count_common_friends($profile_uid,$cid);
-	else
-		$t = count_common_friends_zcid($profile_uid,$zcid);
+	$t = count_common_friends($profile_uid,$observer_hash);
 	if(! $t)
 		return;
 
-	if($cid)
-		$r = common_friends($profile_uid,$cid,0,5,true);
-	else
-		$r = common_friends_zcid($profile_uid,$zcid,0,5,true);
+	$r = common_friends($profile_uid,$observer_hash,0,5,true);
 
 	return replace_macros(get_markup_template('remote_friends_common.tpl'), array(
-		'$desc' =>  sprintf( tt("%d contact in common", "%d contacts in common", $t), $t),
+		'$desc' =>  sprintf( tt("%d connection in common", "%d connections in common", $t), $t),
 		'$base' => $a->get_baseurl(),
 		'$uid' => $profile_uid,
-		'$cid' => (($cid) ? $cid : '0'),
+		'$cid' => $observer,
 		'$linkmore' => (($t > 5) ? 'true' : ''),
 		'$more' => t('show more'),
 		'$items' => $r
 	)); 
 
 };
+
+

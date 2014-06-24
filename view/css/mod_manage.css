@@ -1,8 +1,7 @@
 #channels-selected {
 	color: #666666;
-	font-size: 1.2em;
-	margin-top: 20px;
-	margin-bottom: 10px;
+	font-size: 0.8em;
+
 }
 
 #channels-desc {
@@ -12,14 +11,33 @@
 	margin-bottom: 20px;
 }
 
+.channels-break {
+	margin-bottom: 15px;
+}
+#selected-channel {
+	float: left;
+	margin-left: 0;
+}
+
+.channels-end.selected {
+	clear: both;
+}
+
+#selected-channel .channel-selection {
+	clear: both;
+	width: 120px;
+	margin: 0px auto 0px auto;
+}
+
 .channel-selection-default {
 	font-size: 0.8em;
 	margin-bottom: 10px;
 }
 
-.channel-selection {
+#all-channels .channel-selection {
 	width: 120px;
 	float: left;
+	margin-bottom: 15px;
 }
 .channels-end {
 	clear: both;

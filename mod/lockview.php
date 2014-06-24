@@ -3,12 +3,12 @@
 
 function lockview_content(&$a) {
   
-	$type = (($a->argc > 1) ? $a->argv[1] : 0);
+	$type = ((argc() > 1) ? argv(1) : 0);
 	if (is_numeric($type)) {
 		$item_id = intval($type);
 		$type='item';
 	} else {
-		$item_id = (($a->argc > 2) ? intval($a->argv[2]) : 0);
+		$item_id = ((argc() > 2) ? intval(argv(2)) : 0);
 	}
   
 	if(! $item_id)
@@ -17,21 +17,23 @@ function lockview_content(&$a) {
 	if (!in_array($type, array('item','photo','event')))
 		killme();
      
-	$r = q("SELECT * FROM `%s` WHERE `id` = %d LIMIT 1",
+	$r = q("SELECT * FROM %s WHERE id = %d LIMIT 1",
 		dbesc($type),
 		intval($item_id)
 	);
-	if(! count($r))
+	if(! $r)
 		killme();
+
 	$item = $r[0];
-	if($item['uid'] != local_user())
+
+	if($item['uid'] != local_user()) {
+		echo '<li>' . t('Remote privacy information not available.') . '</li>';
 		killme();
+	}
 
-
-	if(($item['private'] == 1) && (! strlen($item['allow_cid'])) && (! strlen($item['allow_gid'])) 
+	if(($item['item_private'] == 1) && (! strlen($item['allow_cid'])) && (! strlen($item['allow_gid'])) 
 		&& (! strlen($item['deny_cid'])) && (! strlen($item['deny_gid']))) {
-
-		echo t('Remote privacy information not available.') . '<br />';
+		echo '<li>' . t('Remote privacy information not available.') . '</li>';
 		killme();
 	}
 
@@ -40,46 +42,40 @@ function lockview_content(&$a) {
 	$deny_users = expand_acl($item['deny_cid']);
 	$deny_groups = expand_acl($item['deny_gid']);
 
-	$o = t('Visible to:') . '<br />';
+	$o = '<li>' . t('Visible to:') . '</li>';
 	$l = array();
 
+	stringify_array_elms($allowed_groups,true);
+	stringify_array_elms($allowed_users,true);
+	stringify_array_elms($deny_groups,true);
+	stringify_array_elms($deny_users,true);
+
 	if(count($allowed_groups)) {
-		$r = q("SELECT `name` FROM `group` WHERE `id` IN ( %s )",
-			dbesc(implode(', ', $allowed_groups))
-		);
-		if(count($r))
+		$r = q("SELECT name FROM `groups` WHERE hash IN ( " . implode(', ', $allowed_groups) . " )");
+		if($r)
 			foreach($r as $rr) 
-				$l[] = '<b>' . $rr['name'] . '</b>';
+				$l[] = '<li><b>' . $rr['name'] . '</b></li>';
 	}
 	if(count($allowed_users)) {
-		$r = q("SELECT `name` FROM `contact` WHERE `id` IN ( %s )",
-			dbesc(implode(', ',$allowed_users))
-		);
-		if(count($r))
+		$r = q("SELECT xchan_name FROM xchan WHERE xchan_hash IN ( " . implode(', ',$allowed_users) . " )");
+		if($r)
 			foreach($r as $rr) 
-				$l[] = $rr['name'];
-
+				$l[] = '<li>' . $rr['xchan_name'] . '</li>';
 	}
-
 	if(count($deny_groups)) {
-		$r = q("SELECT `name` FROM `group` WHERE `id` IN ( %s )",
-			dbesc(implode(', ', $deny_groups))
-		);
-		if(count($r))
+		$r = q("SELECT name FROM `groups` WHERE hash IN ( " . implode(', ', $deny_groups) . " )");
+		if($r)
 			foreach($r as $rr) 
-				$l[] = '<b><strike>' . $rr['name'] . '</strike></b>';
+				$l[] = '<li><b><strike>' . $rr['name'] . '</strike></b></li>';
 	}
 	if(count($deny_users)) {
-		$r = q("SELECT `name` FROM `contact` WHERE `id` IN ( %s )",
-			dbesc(implode(', ',$deny_users))
-		);
-		if(count($r))
+		$r = q("SELECT xchan_name FROM xchan WHERE xchan_hash IN ( " . implode(', ', $deny_users) . " )");
+		if($r)
 			foreach($r as $rr) 
-				$l[] = '<strike>' . $rr['name'] . '</strike>';
-
+				$l[] = '<li><strike>' . $rr['xchan_name'] . '</strike></li>';
 	}
 
-	echo $o . implode(', ', $l);
+	echo $o . implode($l);
 	killme();
 
 }

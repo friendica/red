@@ -1,4 +1,4 @@
-<?php
+<?php /** @file */
 /**
  * 
  */
@@ -14,7 +14,7 @@ function group_select($selname,$selclass,$preselected = false,$size = 4) {
 
 	$o .= "<select name=\"{$selname}[]\" id=\"$selclass\" class=\"$selclass\" multiple=\"multiple\" size=\"$size\" >\r\n";
 
-	$r = q("SELECT * FROM `group` WHERE `deleted` = 0 AND `uid` = %d ORDER BY `name` ASC",
+	$r = q("SELECT * FROM `groups` WHERE `deleted` = 0 AND `uid` = %d ORDER BY `name` ASC",
 		intval(local_user())
 	);
 
@@ -25,7 +25,7 @@ function group_select($selname,$selclass,$preselected = false,$size = 4) {
 
 	call_hooks($a->module . '_pre_' . $selname, $arr);
 
-	if(count($r)) {
+	if($r) {
 		foreach($r as $rr) {
 			if((is_array($preselected)) && in_array($rr['id'], $preselected))
 				$selected = " selected=\"selected\" ";
@@ -45,7 +45,7 @@ function group_select($selname,$selclass,$preselected = false,$size = 4) {
 	return $o;
 }
 
-
+/* MicMee 20130114 function contact_selector no longer in use, sql table contact does no longer exist
 function contact_selector($selname, $selclass, $preselected = false, $options) {
 
 	$a = get_app();
@@ -148,7 +148,7 @@ function contact_selector($selname, $selclass, $preselected = false, $options) {
 	call_hooks($a->module . '_post_' . $selname, $o);
 
 	return $o;
-}
+}*/
 
 
 
@@ -163,17 +163,6 @@ function contact_select($selname, $selclass, $preselected = false, $size = 4, $p
 
 	$sql_extra = '';
 
-	if($privmail || $celeb) {
-		$sql_extra .= sprintf(" AND `rel` = %d ", intval(CONTACT_IS_FRIEND));
-	}
-
-	if($privmail) {
-		$sql_extra .= " AND `network` IN ( 'dfrn', 'dspr' ) ";
-	}
-	elseif($privatenet) {	
-		$sql_extra .= " AND `network` IN ( 'dfrn', 'mail', 'face', 'dspr' ) ";
-	}
-
 	$tabindex = ($tabindex > 0 ? "tabindex=\"$tabindex\"" : "");
 
 	if($privmail)
@@ -181,10 +170,11 @@ function contact_select($selname, $selclass, $preselected = false, $size = 4, $p
 	else 
 		$o .= "<select name=\"{$selname}[]\" id=\"$selclass\" class=\"$selclass\" multiple=\"multiple\" size=\"$size\" $tabindex >\r\n";
 
-	$r = q("SELECT `id`, `name`, `url`, `network` FROM `contact` 
-		WHERE `uid` = %d AND `self` = 0 AND `blocked` = 0 AND `pending` = 0 AND `archive` = 0 AND `notify` != ''
+	$r = q("SELECT abook_id, xchan_name, xchan_url, xchan_photo_s from abook left join xchan on abook_xchan = xchan_hash
+		where abook_flags = 0 or not ( abook_flags & %d ) and abook_channel = %d
 		$sql_extra
-		ORDER BY `name` ASC ",
+		ORDER BY xchan_name ASC ",
+		intval(ABOOK_FLAG_SELF),
 		intval(local_user())
 	);
 
@@ -195,16 +185,16 @@ function contact_select($selname, $selclass, $preselected = false, $size = 4, $p
 
 	call_hooks($a->module . '_pre_' . $selname, $arr);
 
-	if(count($r)) {
+	if($r) {
 		foreach($r as $rr) {
 			if((is_array($preselected)) && in_array($rr['id'], $preselected))
 				$selected = " selected=\"selected\" ";
 			else
 				$selected = '';
 
-			$trimmed = mb_substr($rr['name'],0,20);
+			$trimmed = mb_substr($rr['xchan_name'],0,20);
 
-			$o .= "<option value=\"{$rr['id']}\" $selected title=\"{$rr['name']}|{$rr['url']}\" >$trimmed</option>\r\n";
+			$o .= "<option value=\"{$rr['abook_id']}\" $selected title=\"{$rr['xchan_name']}|{$rr['xchan_url']}\" >$trimmed</option>\r\n";
 		}
 	
 	}
@@ -218,72 +208,45 @@ function contact_select($selname, $selclass, $preselected = false, $size = 4, $p
 
 
 function fixacl(&$item) {
-	$item = intval(str_replace(array('<','>'),array('',''),$item));
+	$item = str_replace(array('<','>'),array('',''),$item);
 }
 
-function populate_acl($user = null,$celeb = false) {
+function populate_acl($defaults = null,$show_jotnets = true) {
 
 	$allow_cid = $allow_gid = $deny_cid = $deny_gid = false;
 
-	if(is_array($user)) {
-		$allow_cid = ((strlen($user['allow_cid'])) 
-			? explode('><', $user['allow_cid']) : array() );
-		$allow_gid = ((strlen($user['allow_gid']))
-			? explode('><', $user['allow_gid']) : array() );
-		$deny_cid  = ((strlen($user['deny_cid']))
-			? explode('><', $user['deny_cid']) : array() );
-		$deny_gid  = ((strlen($user['deny_gid']))
-			? explode('><', $user['deny_gid']) : array() );
+	if(is_array($defaults)) {
+		$allow_cid = ((strlen($defaults['allow_cid'])) 
+			? explode('><', $defaults['allow_cid']) : array() );
+		$allow_gid = ((strlen($defaults['allow_gid']))
+			? explode('><', $defaults['allow_gid']) : array() );
+		$deny_cid  = ((strlen($defaults['deny_cid']))
+			? explode('><', $defaults['deny_cid']) : array() );
+		$deny_gid  = ((strlen($defaults['deny_gid']))
+			? explode('><', $defaults['deny_gid']) : array() );
 		array_walk($allow_cid,'fixacl');
 		array_walk($allow_gid,'fixacl');
 		array_walk($deny_cid,'fixacl');
 		array_walk($deny_gid,'fixacl');
 	}
-
-	/*$o = '';
-	$o .= '<div id="acl-wrapper">';
-	$o .= '<div id="acl-permit-outer-wrapper">';
-	$o .= '<div id="acl-permit-text">' . t('Visible To:') . '</div><div id="jot-public">' . t('everybody') . '</div>';
-	$o .= '<div id="acl-permit-text-end"></div>';
-	$o .= '<div id="acl-permit-wrapper">';
-	$o .= '<div id="group_allow_wrapper">';
-	$o .= '<label id="acl-allow-group-label" for="group_allow" >' . t('Groups') . '</label>';
-	$o .= group_select('group_allow','group_allow',$allow_gid);
-	$o .= '</div>';
-	$o .= '<div id="contact_allow_wrapper">';
-	$o .= '<label id="acl-allow-contact-label" for="contact_allow" >' . t('Contacts') . '</label>';
-	$o .= contact_select('contact_allow','contact_allow',$allow_cid,4,false,$celeb,true);
-	$o .= '</div>';
-	$o .= '</div>' . "\r\n";
-	$o .= '<div id="acl-allow-end"></div>' . "\r\n";
-	$o .= '</div>';
-	$o .= '<div id="acl-deny-outer-wrapper">';
-	$o .= '<div id="acl-deny-text">' . t('Except For:') . '</div>';
-	$o .= '<div id="acl-deny-text-end"></div>';
-	$o .= '<div id="acl-deny-wrapper">';
-	$o .= '<div id="group_deny_wrapper" >';
-	$o .= '<label id="acl-deny-group-label" for="group_deny" >' . t('Groups') . '</label>';
-	$o .= group_select('group_deny','group_deny', $deny_gid);
-	$o .= '</div>';
-	$o .= '<div id="contact_deny_wrapper" >';
-	$o .= '<label id="acl-deny-contact-label" for="contact_deny" >' . t('Contacts') . '</label>';
-	$o .= contact_select('contact_deny','contact_deny', $deny_cid,4,false, $celeb,true);
-	$o .= '</div>';
-	$o .= '</div>' . "\r\n";
-	$o .= '<div id="acl-deny-end"></div>' . "\r\n";
-	$o .= '</div>';
-	$o .= '</div>' . "\r\n";
-	$o .= '<div id="acl-wrapper-end"></div>' . "\r\n";*/
 	
+	$jotnets = '';
+	if($show_jotnets) {
+		call_hooks('jot_networks', $jotnets);
+	}
+
 	$tpl = get_markup_template("acl_selector.tpl");
 	$o = replace_macros($tpl, array(
 		'$showall'=> t("Visible to everybody"),
-		'$show'		 => t("show"),
-		'$hide'		 => t("don't show"),
+		'$show'		 => t("Show"),
+		'$hide'		 => t("Don't show"),
 		'$allowcid' => json_encode($allow_cid),
 		'$allowgid' => json_encode($allow_gid),
 		'$denycid' => json_encode($deny_cid),
 		'$denygid' => json_encode($deny_gid),
+		'$jotnets' => $jotnets,
+		'$aclModalTitle' => t('Permissions'),
+		'$aclModalDismiss' => t('Close')
 	));
 	
 	

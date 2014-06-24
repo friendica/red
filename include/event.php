@@ -1,4 +1,4 @@
-<?php
+<?php /** @file */
 
 
 function format_event_html($ev) {
@@ -8,14 +8,14 @@ function format_event_html($ev) {
 	if(! ((is_array($ev)) && count($ev)))
 		return '';
 
-	$bd_format = t('l F d, Y \@ g:i A') ; // Friday January 18, 2011 @ 8 AM
+	$bd_format = t('l F d, Y \@ g:i A') ; // Friday January 18, 2011 @ 8:01 AM
 
 	$o = '<div class="vevent">' . "\r\n";
 
 
 	$o .= '<p class="summary event-summary">' . bbcode($ev['summary']) .  '</p>' . "\r\n";
 
-	$o .= '<p class="description event-description">' . bbcode($ev['desc']) .  '</p>' . "\r\n";
+	$o .= '<p class="description event-description">' . bbcode($ev['description']) .  '</p>' . "\r\n";
 
 	$o .= '<p class="event-start">' . t('Starts:') . ' <abbr class="dtstart" title="'
 		. datetime_convert('UTC','UTC',$ev['start'], (($ev['adjust']) ? ATOM_TIME : 'Y-m-d\TH:i:s' ))
@@ -45,74 +45,6 @@ function format_event_html($ev) {
 	return $o;
 }
 
-/*
-function parse_event($h) {
-
-	require_once('include/Scrape.php');
-	require_once('library/HTMLPurifier.auto.php');
-	require_once('include/html2bbcode');
-
-	$h = '<html><body>' . $h . '</body></html>';
-
-	$ret = array();
-
-
-	try {
-		$dom = HTML5_Parser::parse($h);
-	} catch (DOMException $e) {
-		logger('parse_event: parse error: ' . $e);
-	}
-
-	if(! $dom)
- 		return $ret;
-
-	$items = $dom->getElementsByTagName('*');
-
-	foreach($items as $item) {
-		if(attribute_contains($item->getAttribute('class'), 'vevent')) {
-			$level2 = $item->getElementsByTagName('*');
-			foreach($level2 as $x) {
-				if(attribute_contains($x->getAttribute('class'),'dtstart') && $x->getAttribute('title')) {
-					$ret['start'] = $x->getAttribute('title');
-					if(! strpos($ret['start'],'Z'))
-						$ret['adjust'] = true;
-				}
-				if(attribute_contains($x->getAttribute('class'),'dtend') && $x->getAttribute('title'))
-					$ret['finish'] = $x->getAttribute('title');
-
-				if(attribute_contains($x->getAttribute('class'),'description'))
-					$ret['desc'] = $x->textContent;
-				if(attribute_contains($x->getAttribute('class'),'location'))
-					$ret['location'] = $x->textContent;
-			}
-		}
-	}
-
-	// sanitise
-
-	if((x($ret,'desc')) && ((strpos($ret['desc'],'<') !== false) || (strpos($ret['desc'],'>') !== false))) {
-		$config = HTMLPurifier_Config::createDefault();
-		$config->set('Cache.DefinitionImpl', null);
-		$purifier = new HTMLPurifier($config);
-		$ret['desc'] = html2bbcode($purifier->purify($ret['desc']));
-	}
-
-	if((x($ret,'location')) && ((strpos($ret['location'],'<') !== false) || (strpos($ret['location'],'>') !== false))) {
-		$config = HTMLPurifier_Config::createDefault();
-		$config->set('Cache.DefinitionImpl', null);
-		$purifier = new HTMLPurifier($config);
-		$ret['location'] = html2bbcode($purifier->purify($ret['location']));
-	}
-
-	if(x($ret,'start'))
-		$ret['start'] = datetime_convert('UTC','UTC',$ret['start']);
-	if(x($ret,'finish'))
-		$ret['finish'] = datetime_convert('UTC','UTC',$ret['finish']);
-
-	return $ret;
-}
-*/
-
 function format_event_bbcode($ev) {
 
 	$o = '';
@@ -120,8 +52,8 @@ function format_event_bbcode($ev) {
 	if($ev['summary'])
 		$o .= '[event-summary]' . $ev['summary'] . '[/event-summary]';
 
-	if($ev['desc'])
-		$o .= '[event-description]' . $ev['desc'] . '[/event-description]';
+	if($ev['description'])
+		$o .= '[event-description]' . $ev['description'] . '[/event-description]';
 
 	if($ev['start'])
 		$o .= '[event-start]' . $ev['start'] . '[/event-start]';
@@ -143,7 +75,7 @@ function format_event_bbcode($ev) {
 function bbtovcal($s) {
 	$o = '';
 	$ev = bbtoevent($s);
-	if($ev['desc'])
+	if($ev['description'])
 		$o = format_event_html($ev);
 	return $o;
 }
@@ -158,7 +90,7 @@ function bbtoevent($s) {
 		$ev['summary'] = $match[1];
 	$match = '';
 	if(preg_match("/\[event\-description\](.*?)\[\/event\-description\]/is",$s,$match))
-		$ev['desc'] = $match[1];
+		$ev['description'] = $match[1];
 	$match = '';
 	if(preg_match("/\[event\-start\](.*?)\[\/event\-start\]/is",$s,$match))
 		$ev['start'] = $match[1];
@@ -177,10 +109,10 @@ function bbtoevent($s) {
 }
 
 
-function sort_by_date($a) {
-
-	usort($a,'ev_compare');
-	return $a;
+function sort_by_date($arr) {
+	if(is_array($arr))
+		usort($arr,'ev_compare');
+	return $arr;
 }
 
 
@@ -190,63 +122,51 @@ function ev_compare($a,$b) {
 	$date_b = (($b['adjust']) ? datetime_convert('UTC',date_default_timezone_get(),$b['start']) : $b['start']);
 
 	if($date_a === $date_b)
-		return strcasecmp($a['desc'],$b['desc']);
+		return strcasecmp($a['description'],$b['description']);
 	
 	return strcmp($date_a,$date_b);
 }
 
 
+function event_store_event($arr) {
 
-function event_store($arr) {
+	$arr['created']     = (($arr['created'])     ? $arr['created']     : datetime_convert());
+	$arr['edited']      = (($arr['edited'])      ? $arr['edited']      : datetime_convert());
+	$arr['type']        = (($arr['type'])        ? $arr['type']        : 'event' );	
+	$arr['event_xchan'] = (($arr['event_xchan']) ? $arr['event_xchan'] : '');
 
-	require_once('include/datetime.php');
-	require_once('include/items.php');
-	require_once('include/bbcode.php');
-
-	$a = get_app();
-
-	$arr['created'] = (($arr['created']) ? $arr['created'] : datetime_convert());
-	$arr['edited']  = (($arr['edited']) ? $arr['edited'] : datetime_convert());
-	$arr['type']    = (($arr['type']) ? $arr['type'] : 'event' );	
-	$arr['cid']     = ((intval($arr['cid'])) ? intval($arr['cid']) : 0);
-	$arr['message_id'] = (x($arr,'message_id') ? $arr['message_id'] : get_message_id());
-	$arr['private'] = ((x($arr,'private')) ? intval($arr['private']) : 0);
-
-	if($arr['cid'])
-		$c = q("SELECT * FROM `contact` WHERE `id` = %d AND `uid` = %d LIMIT 1",
-			intval($arr['cid']),
-			intval($arr['uid'])
-		);
-	else
-		$c = q("SELECT * FROM `contact` WHERE `self` = 1 AND `uid` = %d LIMIT 1",
-			intval($arr['uid'])
-		);
-
-	if(count($c))
-		$contact = $c[0];
 
 
 	// Existing event being modified
 
-	if($arr['id']) {
+	if($arr['id'] || $arr['event_hash']) {
 
 		// has the event actually changed?
 
-		$r = q("SELECT * FROM `event` WHERE `id` = %d AND `uid` = %d LIMIT 1",
-			intval($arr['id']),
-			intval($arr['uid'])
-		);
-		if((! count($r)) || ($r[0]['edited'] === $arr['edited'])) {
-
-			// Nothing has changed. Grab the item id to return.
-
-			$r = q("SELECT * FROM `item` WHERE `event-id` = %d AND `uid` = %d LIMIT 1",
+		if($arr['event_hash']) {
+			$r = q("SELECT * FROM event WHERE event_hash = '%s' AND uid = %d LIMIT 1",
+				dbesc($arr['event_hash']),
+				intval($arr['uid'])
+			);
+		}
+		else {
+			$r = q("SELECT * FROM event WHERE id = %d AND uid = %d LIMIT 1",
 				intval($arr['id']),
 				intval($arr['uid'])
 			);
-			return((count($r)) ? $r[0]['id'] : 0);
 		}
 
+
+		if(! $r)
+			return false;
+
+		if($r[0]['edited'] === $arr['edited']) {
+			// Nothing has changed. Return the ID.
+			return $r[0];
+		}
+
+		$event_hash = $r[0]['event_hash'];
+		
 		// The event changed. Update it.
 
 		$r = q("UPDATE `event` SET
@@ -254,7 +174,7 @@ function event_store($arr) {
 			`start` = '%s',
 			`finish` = '%s',
 			`summary` = '%s',
-			`desc` = '%s',
+			`description` = '%s',
 			`location` = '%s',
 			`type` = '%s',
 			`adjust` = %d,
@@ -269,7 +189,7 @@ function event_store($arr) {
 			dbesc($arr['start']),
 			dbesc($arr['finish']),
 			dbesc($arr['summary']),
-			dbesc($arr['desc']),
+			dbesc($arr['description']),
 			dbesc($arr['location']),
 			dbesc($arr['type']),
 			intval($arr['adjust']),
@@ -278,58 +198,30 @@ function event_store($arr) {
 			dbesc($arr['allow_gid']),
 			dbesc($arr['deny_cid']),
 			dbesc($arr['deny_gid']),
-			intval($arr['id']),
+			intval($r[0]['id']),
 			intval($arr['uid'])
 		);
-		$r = q("SELECT * FROM `item` WHERE `event-id` = %d AND `uid` = %d LIMIT 1",
-			intval($arr['id']),
-			intval($arr['uid'])
-		);
-		if(count($r)) {
-			$object = '<object><type>' . xmlify(ACTIVITY_OBJ_EVENT) . '</type><title></title><id>' . xmlify($arr['message_id']) . '</id>';
-			$object .= '<content>' . xmlify(format_event_bbcode($arr)) . '</content>';
-			$object .= '</object>' . "\n";
-
-
-			q("UPDATE `item` SET `body` = '%s', `object` = '%s', `allow_cid` = '%s', `allow_gid` = '%s', `deny_cid` = '%s', `deny_gid` = '%s', `edited` = '%s', `private` = %d WHERE `id` = %d AND `uid` = %d LIMIT 1",
-				dbesc(format_event_bbcode($arr)),
-				dbesc($object),
-				dbesc($arr['allow_cid']),
-				dbesc($arr['allow_gid']),
-				dbesc($arr['deny_cid']),
-				dbesc($arr['deny_gid']),
-				dbesc($arr['edited']),
-				intval($arr['private']),
-				intval($r[0]['id']),
-				intval($arr['uid'])
-			);
-
-			$item_id = $r[0]['id'];
-		}
-		else
-			$item_id = 0;
-
-		call_hooks("event_updated", $arr['id']);
-
-		return $item_id;
 	}
 	else {
 
 		// New event. Store it. 
 
-		$r = q("INSERT INTO `event` ( `uid`,`account`,`cid`,`message_id`,`created`,`edited`,`start`,`finish`,`summary`, `desc`,`location`,`type`,
-			`adjust`,`nofinish`,`allow_cid`,`allow_gid`,`deny_cid`,`deny_gid`)
-			VALUES ( %d, %d, %d, '%s', '%s', '%s', '%s', '%s', '%s', '%s', '%s', '%s', %d, %d, '%s', '%s', '%s', '%s' ) ",
-			intval($arr['account']),
+		$hash = random_string();
+
+
+		$r = q("INSERT INTO event ( uid,aid,event_xchan,event_hash,created,edited,start,finish,summary,description,location,type,
+			adjust,nofinish,allow_cid,allow_gid,deny_cid,deny_gid)
+			VALUES ( %d, %d, '%s', '%s', '%s', '%s', '%s', '%s', '%s', '%s', '%s', '%s', %d, %d, '%s', '%s', '%s', '%s' ) ",
 			intval($arr['uid']),
-			intval($arr['cid']),
-			dbesc($arr['uri']),
+			intval($arr['account']),
+			dbesc($arr['event_xchan']),
+			dbesc($hash),
 			dbesc($arr['created']),
 			dbesc($arr['edited']),
 			dbesc($arr['start']),
 			dbesc($arr['finish']),
 			dbesc($arr['summary']),
-			dbesc($arr['desc']),
+			dbesc($arr['description']),
 			dbesc($arr['location']),
 			dbesc($arr['type']),
 			intval($arr['adjust']),
@@ -340,65 +232,232 @@ function event_store($arr) {
 			dbesc($arr['deny_gid'])
 
 		);
+	}
 
-		$r = q("SELECT * FROM `event` WHERE `hash` = '%s' AND `uid` = %d LIMIT 1",
-			dbesc($arr['hash']),
+	$r = q("SELECT * FROM event WHERE event_hash = '%s' AND uid = %d LIMIT 1",
+		dbesc($hash),
+		intval($arr['uid'])
+	);
+	if($r)
+		return $r[0];
+
+	return false;
+
+}
+
+function event_addtocal($item_id, $uid) {
+
+	$c = q("select * from channel where channel_id = %d limit 1",
+		intval($uid)
+	);
+
+	if(! $c)
+		return false;
+
+	$channel = $c[0];
+
+	$r = q("select * from item where id = %d and uid = %d limit 1",
+		intval($item_id),
+		intval($channel['channel_id'])
+	);
+
+	if((! $r) || ($r[0]['obj_type'] !== ACTIVITY_OBJ_EVENT))
+		return false;
+
+	$item = $r[0];
+
+	$ev = bbtoevent($r[0]['body']);
+
+	if(x($ev,'summary') && x($ev,'start')) {
+		$ev['event_xchan'] = $item['author_xchan'];
+		$ev['uid']         = $channel['channel_id'];
+		$ev['account']     = $channel['channel_account_id'];
+		$ev['edited']      = $item['edited'];
+		$ev['mid']         = $item['mid'];
+		$ev['private']     = $item['item_private'];
+
+		// is this an edit?
+
+		if($item['resource_type'] === 'event') {
+			$ev['event_hash'] = $item['resource_id'];
+		}
+
+		$event = event_store_event($ev);
+		if($event) {
+			$r = q("update item set resource_id = '%s', resource_type = 'event' where id = %d and uid = %d limit 1",
+				dbesc($event['event_hash']),
+				intval($item['id']),
+				intval($channel['channel_id'])
+			);
+			return true;
+		}
+	}
+	return false;
+}
+
+
+
+function event_store_item($arr,$event) {
+
+	require_once('include/datetime.php');
+	require_once('include/items.php');
+	require_once('include/bbcode.php');
+
+	$a = get_app();
+
+	$item = null;
+
+	if($arr['mid'] && $arr['uid']) {
+		$i = q("select * from item where mid = '%s' and uid = %d limit 1",
+			dbesc($arr['mid']),
 			intval($arr['uid'])
 		);
-		if(count($r))
-			$event = $r[0];
+		if($i) {
+			xchan_query($i);
+			$item = fetch_post_tags($i,true);
+		}
+	}
 
-		$item_arr = array();
+	$item_arr = array();
+	$prefix = '';
+	$birthday = false;
+
+	if($event['type'] === 'birthday') {
+		$prefix =  t('This event has been added to your calendar.');
+		$birthday = true;
+
+		// The event is created on your own site by the system, but appears to belong 
+		// to the birthday person. It also isn't propagated - so we need to prevent
+		// folks from trying to comment on it. If you're looking at this and trying to 
+		// fix it, you'll need to completely change the way birthday events are created
+		// and send them out from the source. This has its own issues. 
+
+		$item_arr['comment_policy'] = 'none';
+	}
+
+	$r = q("SELECT * FROM item left join xchan on author_xchan = xchan_hash WHERE resource_id = '%s' AND resource_type = 'event' and uid = %d LIMIT 1",
+        dbesc($event['event_hash']),
+		intval($arr['uid'])
+	);
+
+	if($r) {
+		$obj = json_encode(array(
+			'type'    => ACTIVITY_OBJ_EVENT,
+			'id'      => z_root() . '/event/' . $r[0]['resource_id'],
+			'title'   => $arr['summary'],
+			'content' => format_event_bbcode($arr),
+			'author'  => array(
+			'name'     => $r[0]['xchan_name'],
+			'address'  => $r[0]['xchan_addr'],
+			'guid'     => $r[0]['xchan_guid'],
+			'guid_sig' => $r[0]['xchan_guid_sig'],
+			'link'     => array(
+				array('rel' => 'alternate', 'type' => 'text/html', 'href' => $r[0]['xchan_url']),
+				array('rel' => 'photo', 'type' => $r[0]['xchan_photo_mimetype'], 'href' => $r[0]['xchan_photo_m'])),
+			),
+		));
+
+		$private = (($arr['allow_cid'] || $arr['allow_gid'] || $arr['deny_cid'] || $arr['deny_gid']) ? 1 : 0);
+
+		q("UPDATE item SET title = '%s', body = '%s', object = '%s', allow_cid = '%s', allow_gid = '%s', deny_cid = '%s', deny_gid = '%s', edited = '%s', item_flags = %d, item_private = %d  WHERE id = %d AND uid = %d LIMIT 1",
+			dbesc($arr['summary']),
+			dbesc($prefix . format_event_bbcode($arr)),
+			dbesc($object),
+			dbesc($arr['allow_cid']),
+			dbesc($arr['allow_gid']),
+			dbesc($arr['deny_cid']),
+			dbesc($arr['deny_gid']),
+			dbesc($arr['edited']),
+			intval($r[0]['item_flags']),
+			intval($private),
+			intval($r[0]['id']),
+			intval($arr['uid'])
+		);
+
+		$item_id = $r[0]['id'];
+		call_hooks('event_updated', $event['id']);
+		return $item_id;
+	}
+	else {
+
+		$z = q("select * from channel where channel_hash = '%s' and channel_id = %d limit 1",
+			dbesc($event['event_xchan']),
+			intval($arr['uid'])
+		);
 
 
+		$private = (($arr['allow_cid'] || $arr['allow_gid'] || $arr['deny_cid'] || $arr['deny_gid']) ? 1 : 0);
+				
+
+		if($item) {
+			$item_arr['id'] = $item['id'];
+		}
+		else {
+			$wall = (($z) ? true : false);
+
+			$item_flags = ITEM_THREAD_TOP;
+			if($wall) {
+				$item_flags |= ITEM_WALL;
+				$item_flags |= ITEM_ORIGIN;
+			}
+			$item_arr['item_flags']    = $item_flags;
+
+		}
+
+		if(! $arr['mid'])
+			$arr['mid'] = item_message_id();
+
+		$item_arr['aid']           = $z[0]['channel_account_id'];
 		$item_arr['uid']           = $arr['uid'];
-		$item_arr['contact-id']    = $arr['cid'];
-		$item_arr['uri']           = $arr['message_id'];
-		$item_arr['parent_uri']    = $arr['message_id'];
-		$item_arr['type']          = 'activity';
-		$item_arr['wall']          = (($arr['cid']) ? 0 : 1);
-		$item_arr['contact-id']    = $contact['id'];
-		$item_arr['owner-name']    = $contact['name'];
-		$item_arr['owner-link']    = $contact['url'];
-		$item_arr['owner-avatar']  = $contact['thumb'];
-		$item_arr['author-name']   = $contact['name'];
-		$item_arr['author-link']   = $contact['url'];
-		$item_arr['author-avatar'] = $contact['thumb'];
-		$item_arr['title']         = '';
+		$item_arr['author_xchan']  = $arr['event_xchan'];
+		$item_arr['mid']           = $arr['mid'];
+		$item_arr['parent_mid']    = $arr['mid'];
+
+
+		$item_arr['owner_xchan']   = (($wall) ? $z[0]['channel_hash'] : $arr['event_xchan']);
+		$item_arr['author_xchan']  = $arr['event_xchan'];
+		$item_arr['title']         = $arr['summary'];
 		$item_arr['allow_cid']     = $arr['allow_cid'];
 		$item_arr['allow_gid']     = $arr['allow_gid'];
 		$item_arr['deny_cid']      = $arr['deny_cid'];
 		$item_arr['deny_gid']      = $arr['deny_gid'];
-		$item_arr['private']       = $arr['private'];
-		$item_arr['last-child']    = 1;
-		$item_arr['visible']       = 1;
+		$item_arr['item_private']  = $private;
 		$item_arr['verb']          = ACTIVITY_POST;
-		$item_arr['obj_type']   = ACTIVITY_OBJ_EVENT;
-		$item_arr['origin']        = ((intval($arr['cid']) == 0) ? 1 : 0);
-		$item_arr['body']          = format_event_bbcode($event);
 
+		$item_arr['resource_type'] = 'event';
+		$item_arr['resource_id']   = $event['event_hash'];
 
-		$item_arr['object'] = '<object><type>' . xmlify(ACTIVITY_OBJ_EVENT) . '</type><title></title><id>' . xmlify($arr['message_id']) . '</id>';
-		$item_arr['object'] .= '<content>' . xmlify(format_event_bbcode($event)) . '</content>';
-		$item_arr['object'] .= '</object>' . "\n";
+		$item_arr['obj_type']      = ACTIVITY_OBJ_EVENT;
 
-		$item_id = item_store($item_arr);
+		$item_arr['body']          = $prefix . format_event_bbcode($arr);
 
-		$r = q("SELECT * FROM `user` WHERE `uid` = %d LIMIT 1",
-			intval($arr['uid'])
+		$item_arr['plink'] = z_root() . '/channel/' . $z[0]['channel_address'] . '/?f=&mid=' . $item_arr['mid'];
+
+		$x = q("select * from xchan where xchan_hash = '%s' limit 1",
+				dbesc($arr['event_xchan'])
 		);
-		if(count($r))
-			$plink = $a->get_baseurl() . '/display/' . $r[0]['nickname'] . '/' . $item_id;
+		if($x) {
 
-
-		if($item_id) {
-			q("UPDATE `item` SET `plink` = '%s', `event-id` = %d  WHERE `uid` = %d AND `id` = %d LIMIT 1",
-				dbesc($plink),
-				intval($event['id']),
-				intval($arr['uid']),
-				intval($item_id)
-			);
+			$item_arr['object'] = json_encode(array(
+				'type'    => ACTIVITY_OBJ_EVENT,
+				'id'      => z_root() . '/event/' . $hash,
+				'title'   => $arr['summary'],
+				'content' => format_event_bbcode($arr),
+				'author'  => array(
+					'name'     => $x[0]['xchan_name'],
+					'address'  => $x[0]['xchan_addr'],
+					'guid'     => $x[0]['xchan_guid'],
+					'guid_sig' => $x[0]['xchan_guid_sig'],
+					'link'     => array(
+						array('rel' => 'alternate', 'type' => 'text/html', 'href' => $x[0]['xchan_url']),
+						array('rel' => 'photo', 'type' => $x[0]['xchan_photo_mimetype'], 'href' => $x[0]['xchan_photo_m'])),
+					),
+			));
 		}
+
+		$res = item_store($item_arr);
+
+		$item_id = $res['item_id'];
 
 		call_hooks("event_created", $event['id']);
 

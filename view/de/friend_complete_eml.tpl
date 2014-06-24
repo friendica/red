@@ -1,22 +1,22 @@
 
-Hallo $[username],
+Dear {{$username}},
 
-	Großartige Neuigkeiten... '$[fn]' auf '$[dfrn_url]' hat 
-deine Kontaktanfrage auf '$[sitename]' bestätigt.
+	Great news... '{{$fn}}' at '{{$dfrn_url}}' has accepted 
+your connection request at '{{$sitename}}'.
 
-Ihr seid nun beidseitige Freunde und könnt Statusmitteilungen, Bilder und Emails
-ohne Einschränkungen austauschen.
+You are now mutual friends and may exchange status updates, photos, and email
+without restriction.
 
-Rufe deine 'Kontakte' Seite auf $[sitename] auf, wenn du 
-Änderungen an diesem Kontakt vornehmen willst. 
+Please visit your 'Connnections' page at {{$sitename}} if you wish to make 
+any changes to this relationship. 
 
-$[siteurl]
+{{$siteurl}}
 
-[Du könntest z.B. ein spezielles Profil anlegen, das Informationen enthält,
-die nicht für die breite Öffentlichkeit sichtbar sein sollen und es für '$[fn]' zum Betrachten freigeben].
+[For instance, you may create a separate profile with information that is not
+available to the general public - and assign viewing rights to '{{$fn}}'].
 
-Beste Grüße,
+Sincerely,
 
-	$[sitename] Administrator
+	{{$sitename}} Administrator
 
  

@@ -1,86 +1,19 @@
 <?php
 
-function search_saved_searches() {
-
-	if(! feature_enabled(local_user(),'savedsearch'))
-		return '';
-
-	$o = '';
-
-	$r = q("select `tid`,`term` from `term` WHERE `uid` = %d and type = %d",
-		intval(local_user()),
-		intval(TERM_SAVEDSEARCH)
-	);
-
-	if(count($r)) {
-		$o .= '<div id="saved-search-list" class="widget">';
-		$o .= '<h3>' . t('Saved Searches') . '</h3>' . "\r\n";
-		$o .= '<ul id="saved-search-ul">' . "\r\n";
-		foreach($r as $rr) {
-			$o .= '<li class="saved-search-li clear"><a href="search/?f=&remove=1&search=' . $rr['term'] . '" class="icon drophide savedsearchdrop" title="' . t('Remove term') . '" onclick="return confirmDelete();" onmouseover="imgbright(this);" onmouseout="imgdull(this);" ></a> <a href="search/?f=&search=' . $rr['term'] . '" class="savedsearchterm" >' . htmlspecialchars($rr['term']) . '</a></li>' . "\r\n";
-		}
-		$o .= '</ul><div class="clear"></div></div>' . "\r\n";
-	}		
-
-	return $o;
-
-}
-
-
 function search_init(&$a) {
-
-	$search = ((x($_GET,'search')) ? trim(rawurldecode($_GET['search'])) : '');
-
-	if(local_user()) {
-		if(x($_GET,'save') && $search) {
-			$r = q("select `tid` from `term` where `uid` = %d and `type` = %d and `term` = '%s' limit 1",
-				intval(local_user()),
-				intval(TERM_SAVEDSEARCH),
-				dbesc($search)
-			);
-			if(! count($r)) {
-				q("insert into `term` ( `uid`,`type`,`term` ) values ( %d, %d, '%s') ",
-					intval(local_user()),
-					intval(TERM_SAVEDSEARCH),
-					dbesc($search)
-				);
-			}
-		}
-		if(x($_GET,'remove') && $search) {
-			q("delete from `term` where `uid` = %d and `type` = %d and `term` = '%s' limit 1",
-				intval(local_user()),
-				intval(TERM_SAVEDSEARCH),
-				dbesc($search)
-			);
-		}
-
-		$a->page['aside'] .= search_saved_searches();
-
-	}
-	else {
-		unset($_SESSION['theme']);
-		unset($_SESSION['mobile-theme']);
-	}
-
-
-
+	if(x($_REQUEST,'search'))
+		$a->data['search'] = $_REQUEST['search'];
 }
 
 
+function search_content(&$a,$update = 0, $load = false) {
 
-function search_post(&$a) {
-	if(x($_POST,'search'))
-		$a->data['search'] = $_POST['search'];
-}
-
-
-function search_content(&$a) {
-
-	if((get_config('system','block_public')) && (! local_user()) && (! remote_user())) {
-		notice( t('Public access denied.') . EOL);
+	if((get_config('system','block_public')) || (get_config('system','block_public_search'))) {
+		if ((! local_user()) && (! remote_user())) {
+			notice( t('Public access denied.') . EOL);
 		return;
+		}
 	}
-
 	nav_set_selected('search');
 
 	require_once("include/bbcode.php");
@@ -106,15 +39,21 @@ function search_content(&$a) {
 		$search = ((x($_GET,'tag')) ? trim(rawurldecode($_GET['tag'])) : '');
 	}
 
-	$o .= search($search,'search-box','/search',((local_user()) ? true : false));
+	if((! local_user()) || (! feature_enabled(local_user(),'savedsearch')))
+		$o .= search($search,'search-box','/search',((local_user()) ? true : false));
 
 	if(strpos($search,'#') === 0) {
 		$tag = true;
 		$search = substr($search,1);
 	}
 	if(strpos($search,'@') === 0) {
-		require_once('mod/dirfind.php');
-		return dirfind_content($a);
+		$search = substr($search,1);
+		goaway(z_root() . '/directory' . '?f=1&search=' . $search);
+	}
+
+	// look for a naked webbie
+	if(strpos($search,'@') !== false) {
+		goaway(z_root() . '/directory' . '?f=1&search=' . $search);
 	}
 
 	if(! $search)
@@ -128,10 +67,7 @@ function search_content(&$a) {
 		);
 	}
 	else {
-		if (get_config('system','use_fulltext_engine'))
-			$sql_extra = sprintf(" AND MATCH (`item`.`body`) AGAINST ('".'"%s"'."' in boolean mode) ", dbesc(protect_sprintf($search)));
-		else
-			$sql_extra = sprintf(" AND `item`.`body` REGEXP '%s' ", dbesc(protect_sprintf(preg_quote($search))));
+		$sql_extra = sprintf(" AND `item`.`body` REGEXP '%s' ", dbesc(protect_sprintf(preg_quote($search))));
 	}
 
 	// Here is the way permissions work in the search module...
@@ -139,16 +75,13 @@ function search_content(&$a) {
 	// OR your own posts if you are a logged in member
 	// No items will be shown if the member has a blocked profile wall. 
 
-
-
-
 	if((! $update) && (! $load)) {
 
 		// This is ugly, but we can't pass the profile_uid through the session to the ajax updater,
 		// because browser prefetching might change it on us. We have to deliver it with the page.
 
-		$o .= '<div id="live-channel"></div>' . "\r\n";
-		$o .= "<script> var profile_uid = " . $a->profile['profile_uid'] 
+		$o .= '<div id="live-search"></div>' . "\r\n";
+		$o .= "<script> var profile_uid = " . ((intval(local_user())) ? local_user() : (-1))
 			. "; var netargs = '?f='; var profile_page = " . $a->pager['page'] . "; </script>\r\n";
 
 		$a->page['htmlhead'] .= replace_macros(get_markup_template("build_query.tpl"),array(
@@ -163,13 +96,16 @@ function search_content(&$a) {
 			'$liked' => '0',
 			'$conv' => '0',
 			'$spam' => '0',
+			'$fh' => '0',
 			'$nouveau' => '0',
 			'$wall' => '0',
+			'$list' => ((x($_REQUEST,'list')) ? intval($_REQUEST['list']) : 0),
 			'$page' => (($a->pager['page'] != 1) ? $a->pager['page'] : 1),
-			'$search' => (($tag) ? '#' : '') . $search,
+			'$search' => (($tag) ? urlencode('#') : '') . $search,
 			'$order' => '',
 			'$file' => '',
 			'$cats' => '',
+			'$mid' => '',
 			'$dend' => '',
 			'$dbegin' => ''
 		));
@@ -177,24 +113,43 @@ function search_content(&$a) {
 
 	}
 
+	$pub_sql = public_permissions_sql(get_observer_hash());
 
+	require_once('include/identity.php');
+
+	$sys = get_sys_channel();
 
 	if(($update) && ($load)) {
-
+		$itemspage = get_pconfig(local_user(),'system','itemspage');
+		$a->set_pager_itemspage(((intval($itemspage)) ? $itemspage : 20));
 		$pager_sql = sprintf(" LIMIT %d, %d ",intval($a->pager['start']), intval($a->pager['itemspage']));
 
 		if($load) {
-			$r = q("SELECT distinct(uri), item.* from item
-				WHERE item_restrict = 0
-				AND (( `item`.`allow_cid` = ''  AND `item`.`allow_gid` = '' AND `item`.`deny_cid`  = '' AND `item`.`deny_gid`  = '' AND not ( item_flags & %d )) 
-				OR ( `item`.`uid` = %d ))
-				$sql_extra
-				group by uri ORDER BY created DESC $pager_sql ",
-				intval(ITEM_PRIVATE),
-				intval(local_user()),
-				intval(ABOOK_FLAG_BLOCKED)
+			$r = null;
 
-			);
+			if(local_user()) {
+				$r = q("SELECT distinct mid, item.id as item_id, item.* from item
+					WHERE item_restrict = 0
+					AND ((( `item`.`allow_cid` = ''  AND `item`.`allow_gid` = '' AND `item`.`deny_cid`  = '' AND `item`.`deny_gid`  = '' AND item_private = 0 ) 
+					OR ( `item`.`uid` = %d )) OR item.owner_xchan = '%s' )
+					$sql_extra
+					group by mid ORDER BY created DESC $pager_sql ",
+					intval(local_user()),
+					dbesc($sys['xchan_hash'])
+				);
+			}
+			if($r === null) {
+               $r = q("SELECT distinct mid, item.id as item_id, item.* from item
+                    WHERE item_restrict = 0
+                    AND (((( `item`.`allow_cid` = ''  AND `item`.`allow_gid` = '' AND `item`.`deny_cid`  = ''
+                    AND `item`.`deny_gid`  = '' AND item_private = 0 )
+                    and owner_xchan in ( " . stream_perms_xchans(($observer) ? (PERMS_NETWORK|PERMS_PUBLIC) : PERMS_PUBLIC) . " ))
+					$pub_sql ) OR owner_xchan = '%s')
+                    $sql_extra 
+                    group by mid ORDER BY created DESC $pager_sql",
+					dbesc($sys['xchan_hash'])
+                );
+			}
 		}
 		else {
 			$r = array();
@@ -202,64 +157,18 @@ function search_content(&$a) {
 	}
 
 	if($r) {
-
-		$parents_str = ids_to_querystr($r,'item_id');
- 
-		$items = q("SELECT `item`.*, `item`.`id` AS `item_id` 
-			FROM `item`
-			WHERE item_restrict = 0 and 
-			$sql_extra ",
-			intval($a->profile['profile_uid']),
-			dbesc($parents_str)
-		);
-
-		xchan_query($items);
-		$items = fetch_post_tags($items);
-		$items = conv_sort($items,'created');
-
+		xchan_query($r);
+		$items = fetch_post_tags($r,true);
 	} else {
 		$items = array();
 	}
 
-
-
-	$r = q("SELECT distinct(`item`.`uri`), `item`.*, `item`.`id` AS `item_id`, 
-		`contact`.`name`, `contact`.`photo`, `contact`.`url`, `contact`.`alias`, `contact`.`rel`,
-		`contact`.`network`, `contact`.`thumb`, `contact`.`self`, `contact`.`writable`, 
-		`contact`.`id` AS `cid`, `contact`.`uid` AS `contact-uid`,
-		`user`.`nickname`
-		FROM `item` LEFT JOIN `contact` ON `contact`.`id` = `item`.`contact-id`
-		LEFT JOIN `user` ON `user`.`uid` = `item`.`uid`
-		WHERE `item`.`visible` = 1 AND `item`.`deleted` = 0 and `item`.`moderated` = 0
-		AND (( `item`.`allow_cid` = ''  AND `item`.`allow_gid` = '' AND `item`.`deny_cid`  = '' AND `item`.`deny_gid`  = '' AND `item`.`private` = 0 AND `user`.`hidewall` = 0 ) 
-			OR `item`.`uid` = %d )
-		AND `contact`.`blocked` = 0 AND `contact`.`pending` = 0
-		$sql_extra
-		group by `item`.`uri`	
-		ORDER BY `received` DESC LIMIT %d , %d ",
-		intval(local_user()),
-		intval($a->pager['start']),
-		intval($a->pager['itemspage'])
-
-	);
-
-
-//	$a = fetch_post_tags($a);
-
-	if(! count($r)) {
-		info( t('No results.') . EOL);
-		return $o;
-	}
-
-
 	if($tag) 
-		$o .= '<h2>Items tagged with: ' . htmlspecialchars($search) . '</h2>';
+		$o .= '<h2>Items tagged with: ' . htmlspecialchars($search, ENT_COMPAT,'UTF-8') . '</h2>';
 	else
-		$o .= '<h2>Search results for: ' . htmlspecialchars($search) . '</h2>';
+		$o .= '<h2>Search results for: ' . htmlspecialchars($search, ENT_COMPAT,'UTF-8') . '</h2>';
 
-	$o .= conversation($a,$r,'search',false);
-
-	$o .= alt_pager($a,count($r));
+	$o .= conversation($a,$items,'search',$update,'client');
 
 	return $o;
 }

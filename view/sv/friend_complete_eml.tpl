@@ -1,17 +1,22 @@
-$username,
 
-Goda nyheter... '$fn' på '$dfrn_url' har accepterat din kontaktförfrågan på '$sitename'.
+Hej {{$username}},
 
-Ni är nu ömsesidiga vänner och kan se varandras statusuppdateringar samt skicka foton och meddelanden
-utan begränsningar.
+	Goda nyheter... '{{$fn}}' med '{{$dfrn_url}}' har accepterat 
+din kontaktförfrågan på '{{$sitename}}'.
 
-Gå in på din sida 'Kontakter' på $sitename om du vill göra några 
-ändringar när det gäller denna kontakt. 
+Ni är nu ömsesidiga vänner och kan dela statusuppdateringar, foton och
+e-post utan restriktioner.
 
-$siteurl
+Besök sidan 'Kontakter' på {{$sitename}} om du önskar göra några
+förändringar av den här relationen.
 
-[Du kan exempelvis skapa en separat profil med information som inte
-är tillgänglig för vem som helst, och ge visningsrättigheter till '$fn'].
+{{$siteurl}}
+
+[Du kan till exempel skapa en separat profil med information som inte är
+tillgänglig för allmänheten - och ge '{{$fn}}' visningsrättigheter].
 
 Hälsningar,
-$sitename admin
+
+	{{$sitename}}-administratören
+
+ 

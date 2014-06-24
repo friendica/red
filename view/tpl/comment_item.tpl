@@ -1,68 +1,66 @@
-		{{ if $threaded }}
-		<div class="comment-wwedit-wrapper threaded" id="comment-edit-wrapper-$id" style="display: block;">
-		{{ else }}
-		<div class="comment-wwedit-wrapper" id="comment-edit-wrapper-$id" style="display: block;">
-		{{ endif }}
-			<form class="comment-edit-form" style="display: block;" id="comment-edit-form-$id" action="item" method="post" onsubmit="post_comment($id); return false;">
-				<input type="hidden" name="type" value="$type" />
-				<input type="hidden" name="profile_uid" value="$profile_uid" />
-				<input type="hidden" name="parent" value="$parent" />
-				<input type="hidden" name="return" value="$return_path" />
-				<input type="hidden" name="jsreload" value="$jsreload" />
-				<input type="hidden" name="preview" id="comment-preview-inp-$id" value="0" />
-				<input type="hidden" name="post_id_random" value="$rand_num" />
-
-				<div class="comment-edit-photo" id="comment-edit-photo-$id" >
-					<a class="comment-edit-photo-link" href="$mylink" title="$mytitle"><img class="my-comment-photo" src="$myphoto" alt="$mytitle" title="$mytitle" /></a>
-				</div>
-				<div class="comment-edit-photo-end"></div>
-				<ul class="comment-edit-bb-$id">
-					<li><a class="editicon boldbb shadow"
-						style="cursor: pointer;" title="$edbold"
-						onclick="insertFormatting('$comment','b', $id);"></a></li>
-					<li><a class="editicon italicbb shadow"
-						style="cursor: pointer;" title="$editalic"
-						onclick="insertFormatting('$comment','i', $id);"></a></li>
-					<li><a class="editicon underlinebb shadow"
-						style="cursor: pointer;" title="$eduline"
-						onclick="insertFormatting('$comment','u', $id);"></a></li>
-					<li><a class="editicon quotebb shadow"
-						style="cursor: pointer;" title="$edquote"
-						onclick="insertFormatting('$comment','quote', $id);"></a></li>
-					<li><a class="editicon codebb shadow"
-						style="cursor: pointer;" title="$edcode"
-						onclick="insertFormatting('$comment','code', $id);"></a></li>
-					<li><a class="editicon imagebb shadow"
-						style="cursor: pointer;" title="$edimg"
-						onclick="insertFormatting('$comment','img', $id);"></a></li>
-					<li><a class="editicon urlbb shadow"
-						style="cursor: pointer;" title="$edurl"
-						onclick="insertFormatting('$comment','url', $id);"></a></li>
-					<li><a class="editicon videobb shadow"
-						style="cursor: pointer;" title="$edvideo"
-						onclick="insertFormatting('$comment','video', $id);"></a></li>
-				</ul>	
-				<div class="comment-edit-bb-end"></div>
-				<textarea id="comment-edit-text-$id" class="comment-edit-text-empty" name="body" onFocus="commentOpen(this,$id);cmtBbOpen(this, $id);" onBlur="commentClose(this,$id);cmtBbClose(this,$id);" >$comment</textarea>			
-				{{ if $qcomment }}
-					<select id="qcomment-select-$id" name="qcomment-$id" class="qcomment" onchange="qCommentInsert(this,$id);" >
+		{{if $threaded}}
+		<div class="comment-wwedit-wrapper threaded" id="comment-edit-wrapper-{{$id}}" style="display: block;">
+		{{else}}
+		<div class="comment-wwedit-wrapper" id="comment-edit-wrapper-{{$id}}" style="display: block;">
+		{{/if}}
+			<form class="comment-edit-form" style="display: block;" id="comment-edit-form-{{$id}}" action="item" method="post" onsubmit="post_comment({{$id}}); return false;">
+				<input type="hidden" name="type" value="{{$type}}" />
+				<input type="hidden" name="profile_uid" value="{{$profile_uid}}" />
+				<input type="hidden" name="parent" value="{{$parent}}" />
+				<input type="hidden" name="return" value="{{$return_path}}" />
+				<input type="hidden" name="jsreload" value="{{$jsreload}}" />
+				<input type="hidden" name="preview" id="comment-preview-inp-{{$id}}" value="0" />
+				<textarea id="comment-edit-text-{{$id}}" class="comment-edit-text-empty" name="body" onFocus="commentOpenUI(this,{{$id}});" onBlur="commentCloseUI(this,{{$id}});" >{{$comment}}</textarea>
+				{{if $qcomment}}
+					<select id="qcomment-select-{{$id}}" name="qcomment-{{$id}}" class="qcomment" onchange="qCommentInsert(this,{{$id}});" >
 					<option value=""></option>
-				{{ for $qcomment as $qc }}
-					<option value="$qc">$qc</option>				
-				{{ endfor }}
+				{{foreach $qcomment as $qc}}
+					<option value="{{$qc}}">{{$qc}}</option>				
+				{{/foreach}}
 					</select>
-				{{ endif }}
-
-				<div class="comment-edit-text-end"></div>
-				<div class="comment-edit-submit-wrapper" id="comment-edit-submit-wrapper-$id" style="display: none;" >
-					<input type="submit" onclick="post_comment($id); return false;" id="comment-edit-submit-$id" class="comment-edit-submit" name="submit" value="$submit" />
-					{{ if $preview }}
-					<span onclick="preview_comment($id);" id="comment-edit-preview-link-$id" class="fakelink">$preview</span>
-					<div id="comment-edit-preview-$id" class="comment-edit-preview" style="display:none;"></div>
-					{{ endif }}
+				{{/if}}
+				<div class="clear"></div>
+				<div id="comment-tools-{{$id}}" class="comment-tools">
+					<div id="comment-edit-bb-{{$id}}" class="btn-group pull-left">
+						<button class="btn btn-default btn-xs" title="{{$edbold}}" onclick="insertbbcomment('{{$comment}}','b', {{$id}}); return false;">
+							<i class="icon-bold comment-icon"></i>
+						</button>
+						<button class="btn btn-default btn-xs" title="{{$editalic}}" onclick="insertbbcomment('{{$comment}}','i', {{$id}}); return false;">
+							<i class="icon-italic comment-icon"></i>
+						</button>
+						<button class="btn btn-default btn-xs" title="{{$eduline}}" onclick="insertbbcomment('{{$comment}}','u', {{$id}}); return false;">
+							<i class="icon-underline comment-icon"></i>
+						</button>
+						<button class="btn btn-default btn-xs" title="{{$edquote}}" onclick="insertbbcomment('{{$comment}}','quote', {{$id}}); return false;">
+							<i class="icon-quote-left comment-icon"></i>
+						</button>
+						<button class="btn btn-default btn-xs" title="{{$edcode}}" onclick="insertbbcomment('{{$comment}}','code', {{$id}}); return false;">
+							<i class="icon-terminal comment-icon"></i>
+						</button>
+						<button class="btn btn-default btn-xs" title="{{$comment}}" onclick="insertbbcomment('{{$comment}}','img', {{$id}}); return false;">
+							<i class="icon-camera comment-icon"></i>
+						</button>
+						<button class="btn btn-default btn-xs" title="{{$edurl}}" onclick="insertbbcomment('{{$comment}}','url', {{$id}}); return false;">
+							<i class="icon-link comment-icon"></i>
+						</button>
+						<button class="btn btn-default btn-xs" title="{{$edvideo}}" onclick="insertbbcomment('{{$comment}}','video', {{$id}}); return false;">
+							<i class="icon-facetime-video comment-icon"></i>
+						</button>
+						{{if $feature_encrypt}}
+						<button class="btn btn-default btn-xs" title="{{$encrypt}}" onclick="red_encrypt('{{$cipher}}','#comment-edit-text-' + '{{$id}}',''); return false;">
+							<i class="icon-key comment-icon"></i>
+						</button>
+						{{/if}}
+					</div>
+					<div class="btn-group pull-right" id="comment-edit-submit-wrapper-{{$id}}">
+						{{if $preview}}
+						<button id="comment-edit-submit-{{$id}}" class="btn btn-default btn-xs" onclick="preview_comment({{$id}}); return false;" title="{{$preview}}">
+							<i class="icon-eye-open comment-icon" ></i>
+						</button>
+						{{/if}}
+						<button id="comment-edit-submit-{{$id}}" class="btn btn-primary btn-xs" type="submit" name="submit" onclick="post_comment({{$id}}); return false;">{{$submit}}</button>
+					</div>
 				</div>
-
-				<div class="comment-edit-end"></div>
+				<div class="clear"></div>
 			</form>
-
 		</div>

@@ -1,4 +1,4 @@
-<?php
+<?php /** @file */
 
 
 require_once('include/security.php');
@@ -14,13 +14,16 @@ function nuke_session() {
 	unset($_SESSION['administrator']);
 	unset($_SESSION['cid']);
 	unset($_SESSION['theme']);
-	unset($_SESSION['mobile-theme']);
+	unset($_SESSION['mobile_theme']);
+	unset($_SESSION['show_mobile']);
 	unset($_SESSION['page_flags']);
 	unset($_SESSION['submanage']);
 	unset($_SESSION['my_url']);
 	unset($_SESSION['my_address']);
 	unset($_SESSION['addr']);
 	unset($_SESSION['return_url']);
+	unset($_SESSION['remote_service_class']);
+	unset($_SESSION['remote_hub']);
 }
 
 /**
@@ -31,6 +34,7 @@ function nuke_session() {
  */
 
 function account_verify_password($email,$pass) {
+
 	$r = q("select * from account where account_email = '%s'",
 		dbesc($email)
 	);
@@ -39,51 +43,88 @@ function account_verify_password($email,$pass) {
 	foreach($r as $record) {
 		if(($record['account_flags'] == ACCOUNT_OK) || ($record['account_flags'] == ACCOUNT_UNVERIFIED)
 			&& (hash('whirlpool',$record['account_salt'] . $pass) === $record['account_password'])) {
+			logger('password verified for ' . $email);
 			return $record;
 		}
 	}
+	$error = 'password failed for ' . $email;
+	logger($error);
+	// Also log failed logins to a separate auth log to reduce overhead for server side intrusion prevention
+	$authlog = get_config('system', 'authlog');
+	if ($authlog)
+		@file_put_contents($authlog, datetime_convert() . ':' . session_id() . ' ' . $error . "\n", FILE_APPEND);
+
 	return null;
 }
 
 
-// login/logout 
-
-
-
-
+/**
+ * Inline - not a function
+ * look for auth parameters or re-validate an existing session
+ * also handles logout
+ */
 
 
 if((isset($_SESSION)) && (x($_SESSION,'authenticated')) && ((! (x($_POST,'auth-params'))) || ($_POST['auth-params'] !== 'login'))) {
 
+
+	// process a logout request
+
 	if(((x($_POST,'auth-params')) && ($_POST['auth-params'] === 'logout')) || ($a->module === 'logout')) {
 	
 		// process logout request
-		call_hooks("logging_out");
+		$args = array('channel_id' => local_user());
+		call_hooks('logging_out', $args);
 		nuke_session();
 		info( t('Logged out.') . EOL);
 		goaway(z_root());
 	}
 
-//	if(x($_SESSION,'visitor_id') && (! x($_SESSION,'uid'))) {
-//		$r = q("SELECT * FROM `contact` WHERE `id` = %d LIMIT 1",
-//			intval($_SESSION['visitor_id'])
-//		);
-//		if(count($r)) {
-//			$a->contact = $r[0];
-//		}
-//	}
+	// re-validate a visitor, optionally invoke "su" if permitted to do so
+
+	if(x($_SESSION,'visitor_id') && (! x($_SESSION,'uid'))) {
+		// if our authenticated guest is allowed to take control of the admin channel, make it so.
+		$admins = get_config('system','remote_admin');
+		if($admins && is_array($admins) && in_array($_SESSION['visitor_id'],$admins)) {
+			$x = q("select * from account where account_email = '%s' and account_email != '' and ( account_flags & %d ) limit 1",
+				dbesc(get_config('system','admin_email')),
+				intval(ACCOUNT_ROLE_ADMIN)
+			);
+			if($x) {
+				new_cookie(60*60*24); // one day
+				$_SESSION['last_login_date'] = datetime_convert();
+				unset($_SESSION['visitor_id']); // no longer a visitor
+				authenticate_success($x[0], true, true);
+			}
+		}
+
+		$r = q("select * from xchan left join hubloc on xchan_hash = hubloc_hash where xchan_hash = '%s' limit 1",
+			dbesc($_SESSION['visitor_id'])
+		);
+		if($r) {
+			get_app()->set_observer($r[0]);
+		}
+		else {
+			unset($_SESSION['visitor_id']);
+			unset($_SESSION['authenticated']);
+		}
+		$a->set_groups(init_groups_visitor($_SESSION['visitor_id']));
+	}
+
+	// already logged in user returning
 
 	if(x($_SESSION,'uid') || x($_SESSION,'account_id')) {
 
-		// already logged in user returning
+		// first check if we're enforcing that sessions can't change IP address
 
-		$check = get_config('system','paranoia');
-		// extra paranoia - if the IP changed, log them out
-		if($check && ($_SESSION['addr'] != $_SERVER['REMOTE_ADDR'])) {
-			logger('Session address changed. Paranoid setting in effect, blocking session. ' 
-				. $_SESSION['addr'] . ' != ' . $_SERVER['REMOTE_ADDR']);
-			nuke_session();
-			goaway(z_root());
+		if($_SESSION['addr'] != $_SERVER['REMOTE_ADDR']) {
+			logger('SECURITY: Session IP address changed: ' . $_SESSION['addr'] . ' != ' . $_SERVER['REMOTE_ADDR']);
+			if(get_config('system','paranoia')) {
+				logger('Session address changed. Paranoid setting in effect, blocking session. ' 
+					. $_SESSION['addr'] . ' != ' . $_SERVER['REMOTE_ADDR']);
+				nuke_session();
+				goaway(z_root());
+			}
 		}
 
 		$r = q("select * from account where account_id = %d limit 1",
@@ -116,6 +157,8 @@ else {
 	if(isset($_SESSION)) {
 		nuke_session();
 	}
+
+	// handle a fresh login request
 
 	if((x($_POST,'password')) && strlen($_POST['password']))
 		$encrypted = hash('whirlpool',trim($_POST['password']));
@@ -155,12 +198,18 @@ else {
 				notice( t('Failed authentication') . EOL);
 			}
 
-			logger('authenticate: ' . print_r(get_app()->account,true));
+			logger('authenticate: ' . print_r(get_app()->account,true), LOGGER_DEBUG);
 
 		}
 
 		if((! $record) || (! count($record))) {
-			logger('authenticate: failed login attempt: ' . notags(trim($_POST['username'])) . ' from IP ' . $_SERVER['REMOTE_ADDR']); 
+			$error = 'authenticate: failed login attempt: ' . notags(trim($_POST['username'])) . ' from IP ' . $_SERVER['REMOTE_ADDR'];
+			logger($error); 
+			// Also log failed logins to a separate auth log to reduce overhead for server side intrusion prevention
+		        $authlog = get_config('system', 'authlog');
+		        if ($authlog)
+		        @file_put_contents($authlog, datetime_convert() . ':' . session_id() . ' ' . $error . "\n", FILE_APPEND);
+
 			notice( t('Login failed.') . EOL );
 			goaway(z_root());
   		}
@@ -193,11 +242,11 @@ else {
 }
 
 
-function new_cookie($time) {
-    $old_sid = session_id();
-    session_set_cookie_params("$time");
-    session_regenerate_id(false);
-
-    q("UPDATE session SET sid = '%s' WHERE sid = '%s'", dbesc(session_id()), dbesc($old_sid));
-}
-
+function match_openid($authid) {
+	$r = q("select * from pconfig where cat = 'system' and k = 'openid' and v = '%s' limit 1",
+		dbesc($authid)
+	);
+	if($r)
+		return $r[0]['uid'];
+	return false;
+}					

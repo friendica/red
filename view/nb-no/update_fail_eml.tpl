@@ -1,11 +1,13 @@
-Hei,  
-jeg er $sitename.   
-Friendica-utviklerne slapp nylig oppdateringen $update, 
-men da jeg prøvde å installere den, gikk noe forferdelig galt.  
-Dette trenger å bli fikset raskt og jeg kan ikke gjøre det alene. Vennligst kontakt en 
-Friendica-utvikler hvis du ikke kan hjelpe meg på egenhånd. Databasen min er kanskje ugyldig. 
+Hey, 
+I'm the web server at {{$sitename}};
+   
+The Red Matrix developers released update {{$update}} recently, 
+but when I tried to install it, something went terribly wrong.  
+This needs to be fixed soon and it requires human intervention. 
+Please contact a Red developer if you can not figure out how to 
+fix it on your own. My database might be invalid. 
 
-Feilmeldingen er '$error'.   
+The error message is '{{$error}}'.   
 
-Jeg beklager,  
-din Friendica-tjener hos $siteurl 
+Apologies for the inconvenience, 
+	your web server at {{$siteurl}}

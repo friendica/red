@@ -1,0 +1,4 @@
+url: $baseurl/admin
+requires: admin
+name: Site Admin
+photo: $baseurl/app/admin.png

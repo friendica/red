@@ -1,4 +1,4 @@
-<?php
+<?php /** @file */
 /*
 html2bbcode.php
 Converter for HTML to BBCode
@@ -287,4 +287,4 @@ function html2bbcode($message)
 
 	return(trim($message));
 }
-?>
+

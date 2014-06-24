@@ -1,0 +1,4 @@
+url: $baseurl/manage
+requires: local_user
+name: Channel Select
+photo: $baseurl/app/manage.png

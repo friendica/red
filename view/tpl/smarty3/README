@@ -1,0 +1,4 @@
+view/tpl/smarty3
+
+This directory must exist and be writeable by the webserver in order to store compiled template files, which are created dynamically. Please see the installation instructions. 
+

@@ -4,9 +4,10 @@ function poco_init(&$a) {
 
 	$system_mode = false;
 
-	if(intval(get_config('system','block_public')))
+	if(intval(get_config('system','block_public')) && (! local_user()) && (! remote_user())) {
+		logger('mod_poco: block_public');
 		http_status_exit(401);
-
+	}
 
 	$observer = $a->get_observer();
 
@@ -15,8 +16,10 @@ function poco_init(&$a) {
 	}
 	if(! x($user)) {
 		$c = q("select * from pconfig where cat = 'system' and k = 'suggestme' and v = 1");
-		if(! count($c))
-			http_status_exit(401);
+		if(! $c) {
+			logger('mod_poco: system mode. No candidates.', LOGGER_DEBUG);
+			http_status_exit(404);
+		}
 		$system_mode = true;
 	}
 
@@ -36,19 +39,23 @@ function poco_init(&$a) {
 	if(argc() > 4 && intval(argv(4)) && $justme == false)
 		$cid = intval(argv(4));
  		
-
 	if(! $system_mode) {
 
-		$r = q("SELECT channel.channel_id from channel where channel_address = '%s' limit 1",
+		$r = q("SELECT channel_id from channel where channel_address = '%s' limit 1",
 			dbesc($user)
 		);
-		if(! $r)
+		if(! $r) {
+			logger('mod_poco: user mode. Account not found. ' . $user);
 			http_status_exit(404);
+		}
 
 		$channel_id = $r[0]['channel_id'];
+		$ohash = (($observer) ? $observer['xchan_hash'] : '');
 
-		if(! perm_is_allowed($channel_id,$observer,'view_contacts'))
-			http_status_exit(404);
+		if(! perm_is_allowed($channel_id,$ohash,'view_contacts')) {
+			logger('mod_poco: user mode. Permission denied for ' . $ohash . ' user: ' . $user);
+			http_status_exit(401);
+		}
 
 	}
 
@@ -67,6 +74,9 @@ function poco_init(&$a) {
 	else {
 		$r = q("SELECT count(*) as `total` from abook where abook_channel = %d 
 			$sql_extra ",
+			intval($channel_id)
+		);
+		$c = q("select * from menu_item where ( mitem_flags & " . intval(MENU_ITEM_CHATROOM) . " ) and allow_cid = '' and allow_gid = '' and deny_cid = '' and deny_gid = '' and mitem_channel_id = %d",
 			intval($channel_id)
 		);
 	}
@@ -108,6 +118,14 @@ function poco_init(&$a) {
 	$ret['startIndex']   = (string) $startIndex;
 	$ret['itemsPerPage'] = (string) $itemsPerPage;
 	$ret['totalResults'] = (string) $totalResults;
+
+	if($c) {
+		$ret['chatrooms'] = array();
+		foreach($c as $d) {
+			$ret['chatrooms'][] = array('url' => $d['mitem_link'], 'desc' => $d['mitem_desc']);
+		}
+	}
+
 	$ret['entry']        = array();
 
 
@@ -119,10 +137,8 @@ function poco_init(&$a) {
 		'displayName' => false,
 		'urls' => false,
 		'preferredUsername' => false,
-		'photos' => false
-
-
-
+		'photos' => false,
+		'rating' => false
 	);
 
 	if((! x($_GET,'fields')) || ($_GET['fields'] === '@all'))
@@ -158,6 +174,12 @@ function poco_init(&$a) {
 					$entry['preferredUsername'] = substr($rr['xchan_addr'],0,strpos($rr['xchan_addr'],'@'));
 				if($fields_ret['photos'])
 					$entry['photos'] = array(array('value' => $rr['xchan_photo_l'], 'mimetype' => $rr['xchan_photo_mimetype'], 'type' => 'profile'));
+				if($fields_ret['rating']) {
+					$entry['rating'] = ((array_key_exists('abook_rating',$rr)) ? array(intval($rr['abook_rating'])) : 0);
+					// maybe this should be a composite calculated rating in $system_mode
+					if($system_mode)
+						$entry['rating'] = 0;
+				}
 				$ret['entry'][] = $entry;
 			}
 		}

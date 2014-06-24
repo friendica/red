@@ -1,8 +1,8 @@
-<?php
+<?php /** @file */
 
 /**
  *
- * Friendica Red
+ * Red Matrix
  *
  */
 
@@ -19,17 +19,13 @@ $a = new App;
 /**
  *
  * Load the configuration file which contains our DB credentials.
- * Ignore errors. If the file doesn't exist or is empty, we are running in installation mode.
+ * Ignore errors. If the file doesn't exist or is empty, we are running in installation mode.'
  *
  */
 
-$install = ((file_exists('.htconfig.php') && filesize('.htconfig.php')) ? false : true);
+$a->install = ((file_exists('.htconfig.php') && filesize('.htconfig.php')) ? false : true);
 
 @include(".htconfig.php");
-
-$a->language = get_best_language();
-	
-load_translation_table($a->language);
 
 /**
  *
@@ -37,11 +33,11 @@ load_translation_table($a->language);
  *
  */
 
-require_once("dba.php");
+require_once("include/dba/dba_driver.php");
 
-if(! $install) {
-	$db = new dba($db_host, $db_user, $db_pass, $db_data, $install);
-    	    unset($db_host, $db_user, $db_pass, $db_data);
+if(! $a->install) {
+	$db = dba_factory($db_host, $db_port, $db_user, $db_pass, $db_data, $a->install);
+    	    unset($db_host, $db_port, $db_user, $db_pass, $db_data);
 
 	/**
 	 * Load configs from db. Overwrite configs from .htconfig.php
@@ -49,10 +45,30 @@ if(! $install) {
 
 	load_config('config');
 	load_config('system');
+	load_config('feature');
 
-	require_once("session.php");
+	require_once("include/session.php");
 	load_hooks();
 	call_hooks('init_1');
+	
+	$a->language = get_best_language();
+	load_translation_table($a->language);
+	// Force the cookie to be secure (https only) if this site is SSL enabled. Must be done before session_start().
+
+	if(intval($a->config['system']['ssl_cookie_protection'])) {
+		$arr = session_get_cookie_params();
+		session_set_cookie_params(
+			((isset($arr['lifetime']))  ? $arr['lifetime'] : 0),
+			((isset($arr['path']))      ? $arr['path']     : '/'),
+			((isset($arr['domain']))    ? $arr['domain']   : $a->get_hostname()),
+			((isset($_SERVER['HTTPS']) && strtolower($_SERVER['HTTPS']) == 'on') ? true : false),
+			((isset($arr['httponly']))  ? $arr['httponly'] : true));
+	}
+}
+else {
+	// load translations but do not check plugins as we have no database
+	$a->language = get_best_language();
+	load_translation_table($a->language,true);
 }
 
 
@@ -85,8 +101,8 @@ if((x($_SESSION,'language')) && ($_SESSION['language'] !== $lang)) {
 	load_translation_table($a->language);
 }
 
-if((x($_GET,'zid')) && (! $install)) {
-	$a->query_string = preg_replace('/[\?&]zid=(.*?)([\?&]|$)/is','',$a->query_string);
+if((x($_GET,'zid')) && (! $a->install)) {
+	$a->query_string = strip_zids($a->query_string);
 	if(! local_user()) {
 		$_SESSION['my_address'] = $_GET['zid'];
 		zid_init($a);
@@ -94,14 +110,7 @@ if((x($_GET,'zid')) && (! $install)) {
 }
 
 if((x($_SESSION,'authenticated')) || (x($_POST,'auth-params')) || ($a->module === 'login'))
-	require("auth.php");
-
-/*
- * Create the page head after setting the language
- * and getting any auth credentials
- */
-
-$a->init_pagehead();
+	require("include/auth.php");
 
 
 if(! x($_SESSION,'sysmsg'))
@@ -117,8 +126,11 @@ if(! x($_SESSION,'sysmsg_info'))
  */
 
 
-if($install)
-	$a->module = 'setup';
+if($a->install) {
+	/* Allow an exception for the view module so that pcss will be interpreted during installation */
+	if($a->module != 'view')
+		$a->module = 'setup';
+}
 else
 	check_config($a);
 
@@ -180,7 +192,6 @@ if(strlen($a->module)) {
 	 * Otherwise, look for the standard program module in the 'mod' directory
 	 */
 
-
 	if(! $a->module_loaded) {
 		if(file_exists("custom/{$a->module}.php")) {
 			include_once("custom/{$a->module}.php");
@@ -241,8 +252,22 @@ if (file_exists($theme_info_file)){
 if(! x($a->page,'content'))
 	$a->page['content'] = '';
 
-if(! $install)
+
+
+if(! ($a->module === 'setup')) {
+	/* set JS cookie */
+	if($_COOKIE['jsAvailable'] != 1) {
+		$a->page['content'] .= '<script>document.cookie="jsAvailable=1; path=/"; var jsMatch = /\&JS=1/; if (!jsMatch.exec(location.href)) { location.href = location.href + "&JS=1"; }</script>';
+		/* emulate JS cookie if cookies are not accepted */
+		if ($_GET['JS'] == 1) {
+			$_COOKIE['jsAvailable'] = 1;
+		}
+	}
 	call_hooks('page_content_top',$a->page['content']);
+}
+
+
+
 
 /**
  * Call module functions
@@ -280,18 +305,28 @@ if($a->module_loaded) {
 
 
 	if(! $a->error) {
+		// If a theme has defined an _aside() function, run that first
+		//
+		// If the theme function doesn't exist, see if this theme extends another,
+		// and see if that other theme has an _aside() function--if it does, run it
+		//
+		// If $aside_default is not False after the theme _aside() function, run the
+		// module's _aside() function too
+		//
+		// This gives themes more control over how the sidebar looks
+
 		$aside_default = true;
 		call_hooks($a->module . '_mod_aside',$placeholder);
 		if(function_exists(str_replace('-','_',current_theme()) . '_' . $a->module . '_aside')) {
 			$func = str_replace('-','_',current_theme()) . '_' . $a->module . '_aside';
 			$aside_default = $func($a);
 		}
-		elseif(x($a->theme_info,"extends") && $aside_default 
+		elseif($aside_default && x($a->theme_info,"extends") 
 			&& (function_exists(str_replace('-','_',$a->theme_info["extends"]) . '_' . $a->module . '_aside'))) {
 			$func = str_replace('-','_',$a->theme_info["extends"]) . '_' . $a->module . '_aside';
 			$aside_default = $func($a);
 		}
-		elseif(function_exists($a->module . '_aside') && $aside_default) {
+		if($aside_default && function_exists($a->module . '_aside')) {
 			$func = $a->module . '_aside';
 			$func($a);
 		}
@@ -314,7 +349,7 @@ if($a->module_loaded) {
 if(x($_SESSION,'visitor_home'))
 	$homebase = $_SESSION['visitor_home'];
 elseif(local_user())
-	$homebase = $a->get_baseurl() . '/channel/' . $a->user['nickname'];
+	$homebase = $a->get_baseurl() . '/channel/' . $a->channel['channel_address'];
 
 if(isset($homebase))
 	$a->page['content'] .= '<script>var homebase="' . $homebase . '" ; </script>';
@@ -328,7 +363,6 @@ if(stristr( implode("",$_SESSION['sysmsg']), t('Permission denied'))) {
 
 
 call_hooks('page_end', $a->page['content']);
-
 
 construct_page($a);
 

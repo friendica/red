@@ -1,0 +1,163 @@
+#!/usr/bin/env php
+<?php
+
+// Red cli interpreter
+
+require_once('include/cli_startup.php');
+require_once('include/zot.php');
+
+cli_startup();
+
+$prompt = 'fresh% ';
+
+function fresh_main($argc,$argv) {
+	global $prompt;
+
+	while(!feof(STDIN)) {
+
+
+		if(function_exists('readline'))
+			$line = readline($prompt);
+		else {
+			echo "\n" . $prompt;
+			$line = fgets(STDIN);
+		}
+
+	
+		if($line === FALSE) {
+			if(feof(STDIN)) {
+				break;
+			}
+			continue;
+		}
+
+		$line = trim($line);
+ 		if($line == 'quit' || $line == 'exit')
+			exit();
+		
+		process_command($line);
+	}
+
+}
+
+fresh_main($argc,$argv);
+
+function process_command($line) {
+
+	$a = get_app();
+
+	// split args
+
+	$a->cmd = $line;
+	$a->argv = explode(' ',$line);
+	$a->argc = count($a->argv);
+
+	$authenticated = false;
+	$channel = null;
+
+	if($line == 'version') {
+		echo 'Fresh version 0.1';
+		return;
+	}
+
+	switch(argv(0)) {
+		case '?':
+		case 'help':
+			fresh_help();
+			break;	
+
+		case 'finger':
+			if(argv(1)) {
+				$x = zot_finger(argv(1),$channel);
+				if($x['success'])
+					echo jindent($x['body']);
+			}
+			break;
+
+		case 'login':
+			if(argv(1)) {
+				echo 'Password: ';
+				exec('/bin/stty -echo');
+				$x = fgets(STDIN);
+				exec('/bin/stty echo');
+				echo "\n";
+				require_once('include/auth.php');
+				$record = get_app()->account = account_verify_password(argv(1),trim($x,"\n"));
+
+				if($record) {
+					$_SESSION['account_id'] = get_app()->account['account_id'];
+					$_SESSION['last_login_date'] = datetime_convert();
+					authenticate_success($record, true, true);
+					echo 'logged in';
+					$channel = $a->get_channel();
+					if($channel)
+						echo ' as ' . $channel['channel_name'];					
+				}
+				else
+					echo 'login failed.';
+
+			}
+			break;				
+		case 'channel':
+			if(! local_user())
+					echo 'Permission denied.';
+			if(argv(1)) {
+				$r = q("select * from channel where channel_address = '%s' and channel_account_id = %d limit 1",
+					dbesc(argv(1)),
+					intval(get_account_id())
+				);
+				if($r) {
+					change_channel($r[0]['channel_id']);
+					$channel = $a->get_channel();
+					echo 'Logged in as ' . $channel['channel_name'];
+				}
+				else
+					echo 'Channel not found.';
+			}
+			break;	
+		case 'conn':
+			if(! local_user()) {
+				echo "Permission denied.";
+				break;
+			}
+			if(argc() > 1) {
+				for($x = 1; $x < argc(); $x ++) { 
+					$r = q("select * from abook left join xchan on abook_xchan = xchan_hash where abook_id = %d and abook_channel = %d",
+						intval(argv($x)),
+						intval(local_user())
+					);
+					if($r) echo jindent(json_encode($r[0])) . "\n";	
+				}
+			}
+			else {
+				$r = q("select * from abook left join xchan on abook_xchan = xchan_hash where abook_channel = %d order by abook_id",
+					intval(local_user())
+				);
+				if($r) {
+					foreach($r as $rr)
+						echo $rr['abook_id'] . "\t" . $rr['xchan_name'] . "\n";
+				}
+			}
+			break;
+
+		default:
+			break;
+
+	}	
+
+
+}
+
+	
+function fresh_help() {
+
+	if(argc() == 1) {
+		echo "help - this text\n";
+		echo "login email_address - login with email_address, prompts for password\n";
+		echo "finger channel_address - lookup channel_address remotely\n";
+		echo "channel new_channel - change active channel to new_channel (nickname)\n";
+		echo "conn [id1] [id2...] - without args list connections, or report detail of connection id1 (etc.)\n";
+		echo "quit|exit - terminate fresh\n";
+
+	}
+}

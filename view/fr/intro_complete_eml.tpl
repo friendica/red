@@ -1,22 +1,22 @@
 
-Cher(e) $username,
+Dear {{$username}},
 
-	« $fn » du site « $dfrn_url » a accepté votre
-demande de mise en relation sur « $sitename ».
+	'{{$fn}}' at '{{$dfrn_url}}' has accepted 
+your connection request at '{{$sitename}}'.
 
-	« $fn » a décidé de vous accepter comme « fan », ce qui restreint
-certains de vos moyens de communication - tels que les messages privés et
-certaines interactions avec son profil. S'il s'agit de la page d'une
-célébrité et/ou communauté, ces réglages ont été définis automatiquement.
+	'{{$fn}}' has chosen to accept you a "fan", which restricts 
+some forms of communication - such as private messaging and some profile
+interactions. If this is a celebrity or community page, these settings were
+applied automatically.
 
-	« $fn » pourra choisir d'étendre votre relation à quelque chose de 
-plus permissif dans l'avenir.
+	'{{$fn}}' may choose to extend this into a two-way or more permissive 
+relationship in the future. 
 
-	Vous allez commencer à recevoir les mises à jour publiques du 
-statut de « $fn », lesquelles apparaîtront sur votre page « Réseau » sur
+	You will start receiving public status updates from '{{$fn}}', 
+which will appear on your 'Matrix' page at  
 
-$siteurl
+{{$siteurl}}
 
-Sincèrement votre,
+Sincerely,
 
-	l'administrateur de $sitename
+	{{$sitename}} Administrator

@@ -1,0 +1,100 @@
+/* message */
+
+#mail-list-wrapper {
+	border-top: 1px solid #ccc;
+	padding: 5px 5px 5px 5px;
+}
+
+span.mail-list {
+	float: left;
+	width: 20%;
+}
+
+img.mail-list-sender-photo {
+	height: 24px;
+	width: 24px;
+	float: left;
+	margin-right: 30px;
+}
+
+.mail-list-remove {
+	width: 5% !important;
+}
+
+/* message/new */
+
+#prvmail-to-label,
+#prvmail-subject-label,
+#prvmail-expires-label,
+#prvmail-message-label {
+	margin-bottom: 10px;
+	margin-top: 20px;
+}
+
+#prvmail-submit {
+	float: left;
+	margin-top: 10px;
+	margin-right: 30px;
+}
+
+#prvmail-upload-wrapper,
+#prvmail-attach-wrapper,
+#prvmail-link-wrapper,
+#prvmail-expire-wrapper,
+#prvmail-encrypt-wrapper,
+#prvmail-rotator-wrapper {
+	float: left;
+	margin-top: 10px;
+	margin-right: 10px;
+	width: 24px;
+	cursor: pointer;
+}
+
+#prvmail-end {
+	clear: both;
+}
+
+/* message/id */
+
+.mail-conv-outside-wrapper {
+	margin-top: 30px;
+}
+
+.mail-conv-sender,
+.mail-conv-detail {
+	float: left;
+}
+
+.mail-conv-detail {
+	margin-left: 20px;
+	width: 500px;
+}
+
+.mail-conv-subject {
+    font-size: 1.4em;
+    margin: 10px 0;
+}
+
+.mail-conv-delete-wrapper {
+	float: right;
+	margin-right: 30px;
+	margin-top: 15px;
+}
+
+.mail-conv-delete-icon {
+	border: none;
+}
+
+.mail-conv-recall-wrapper {
+	float: right;
+	margin-right: 10px;
+	margin-top: 15px;
+}
+
+.mail-conv-outside-wrapper-end {
+	clear: both;
+}
+
+.mail-conv-break {
+	clear: both;
+}
