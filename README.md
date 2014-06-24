@@ -1,4 +1,4 @@
-![the Red Matrix](images/rm-480x115.png)
+![the Red Matrix](images/rm.png)
 
 The RedMatrix (aka "red") is an open source webapp platform providing a complete **decentralised** publishing, sharing, and communications system. It combines communications (private messaging, chat and social networking), and media management (photos, events, files, web pages, app distribution) with enough features to make your head spin.
 
