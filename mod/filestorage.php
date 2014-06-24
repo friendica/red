@@ -26,11 +26,12 @@ function filestorage_post(&$a) {
  
 	attach_change_permissions($channel_id,$resource,$str_contact_allow,$str_group_allow,$str_contact_deny,$str_group_deny,$recurse = false);
 
+	//Build directory tree and redirect
+	$channel = $a->get_channel();
+	$cloudPath = get_parent_cloudpath($channel_id, $channel['channel_address'], $resource) ;
+	echo $cloudPath;die;
+	goaway($cloudPath);
 }
-
-
-
-
 
 function filestorage_content(&$a) {
 
@@ -83,12 +84,12 @@ function filestorage_content(&$a) {
 		);
 		if(! $r) {
 			notice( t('File not found.') . EOL);
-			goaway(z_root() . '/filestorage/' . $which);
+			goaway(z_root() . '/cloud/' . $which);
 		}
 
 		attach_delete($owner,$r[0]['hash']);
 		
-		goaway(z_root() . '/filestorage/' . $which);
+		goaway(z_root() . '/cloud/' . $which);
 	}	
 
 
@@ -139,45 +140,6 @@ function filestorage_content(&$a) {
 		return $o;
 	}	
 
-	$r = q("select * from attach where uid = %d order by edited desc",
-		intval($owner)
-	);
-
-	$files = null;
-
-	if($r) {
-		$files = array();
-		foreach($r as $rr) {
-			$files[$rr['id']][] = array(
-				'id' => $rr['id'],
-				'download' => $rr['hash'], 
-				'title' => $rr['filename'], 
-				'size' => $rr['filesize'],
-				'rev' => $rr['revision'],
-				'dir' => (($rr['flags'] & ATTACH_FLAG_DIR) ? true : false)
-			);
-		} 
-	}
-
-	$limit = service_class_fetch ($owner,'attach_upload_limit'); 
-		$r = q("select sum(filesize) as total from attach where aid = %d ",
-		intval($channel['channel_account_id'])
-	);
-	$used = $r[0]['total'];
-
-	$url = z_root() . "/filestorage/" . $which; 
-	return $o . replace_macros(get_markup_template("filestorage.tpl"), array(
-		'$baseurl' => $url,
-		'$download' => t('Download'),
-		'$files' => $files,
-		'$channel' => $which,
-		'$edit' => t('Edit'),
-		'$delete' => t('Delete'),
-		'$used' => $used,
-		'$usedlabel' => t('Used: '),
-		'$directory' => t('[directory]'),
-		'$limit' => $limit,
-		'$limitlabel' => t('Limit: '),
-	));
+	goaway(z_root() . '/cloud/' . $which);
     
 }

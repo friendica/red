@@ -1028,16 +1028,16 @@ class RedBrowser extends DAV\Browser\Plugin {
 		}
 	}
 	$attachId = $this->findAttachIdByHash($attachHash);
-	$fileStorageUrl = str_replace("cloud/","filestorage/",$path);
+	$fileStorageUrl = substr($fullPath, 0, strpos($fullPath,"cloud/")) . "filestorage/".$this->auth->channel_name;
 	$attachIcon = ""; // "<a href=\"attach/".$attachHash."\" title=\"".$displayName."\"><i class=\"icon-download\"></i></a>";
 	$html.= "<tr>
 		<td>$icon</td>
-		<td><a href=\"{$fullPath}\">{$displayName}</a></td>";
+		<td style=\"min-width: 15em\"><a href=\"{$fullPath}\">{$displayName}</a></td>";
 
 	if($is_owner) {
 		$html .= "<td>" . (($size) ? $attachIcon : '') . "</td>
 		<td><a href=\"".$fileStorageUrl."/".$attachId."/edit\" title=\"".t('Edit')."\"><i class=\"icon-pencil btn btn-default\"></i></a></td>
-		<td><a href=\"".$fileStorageUrl."/".$attachId."/delete\" title=\"".t('Delete')."\"><i class=\"icon-remove btn btn-default drop-icons\"></i></a></td>";
+		<td><a href=\"".$fileStorageUrl."/".$attachId."/delete\" title=\"".t('Delete')."\" onclick=\"return confirm('Are you sure you want to delete this item?');\"><i class=\"icon-remove btn btn-default drop-icons\"></i></a></td>";
 	}
 	else {
 		$html .= "<td></td><td></td><td></td>";
@@ -1090,20 +1090,24 @@ class RedBrowser extends DAV\Browser\Plugin {
         if (get_class($node)==='Sabre\\DAV\\SimpleCollection')
             return;
 
-        $output.= '<tr><td colspan="2"><form method="post" action="">
-            <h3>Create new folder</h3>
-            <input type="hidden" name="sabreAction" value="mkcol" />
-            Name: <input type="text" name="name" />
-            <input type="submit" value="create" />
-            </form>
-            <form method="post" action="" enctype="multipart/form-data">
-            <h3>Upload file</h3>
-            <input type="hidden" name="sabreAction" value="put" />
-            Name (optional): <input type="text" name="name" /><br />
-            File: <input type="file" name="file" /><br />
-            <input type="submit" value="upload" />
-            </form>
-            </td></tr>';
+        $output.= '<table>
+	<tr>
+	<td><strong>Create new folder</strong>&nbsp;&nbsp;&nbsp;</td>
+	<td><form method="post" action="">
+		<input type="text" name="name" />
+		<input type="submit" value="create" />
+		<input type="hidden" name="sabreAction" value="mkcol" />
+	</form></td>
+	</tr><tr>
+	<td><strong>Upload file</strong>&nbsp;&nbsp;&nbsp;</td>
+	<td><form method="post" action="" enctype="multipart/form-data">
+		<input type="file" name="file" style="display: inline;"/>
+		<input type="submit" value="upload" />
+		<input type="hidden" name="sabreAction" value="put" />
+		<!-- Name (optional): <input type="text" name="name" /> we should rather provide a rename action in edit form-->
+        </form></td>
+	</tr>
+	</table>';
 
     }
 
