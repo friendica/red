@@ -14,7 +14,7 @@ msgstr ""
 "Project-Id-Version: Red Matrix\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2014-06-20 00:03-0700\n"
-"PO-Revision-Date: 2014-06-22 11:41+0000\n"
+"PO-Revision-Date: 2014-06-23 08:47+0000\n"
 "Last-Translator: tuscanhobbit <pynolo@tarine.net>\n"
 "Language-Team: Italian (http://www.transifex.com/projects/p/red-matrix/language/it/)\n"
 "MIME-Version: 1.0\n"
@@ -1293,7 +1293,7 @@ msgstr "Scrivi un nome o un interesse"
 
 #: ../../include/contact_widgets.php:24
 msgid "Connect/Follow"
-msgstr "Entra in contatto"
+msgstr "Aggiungi"
 
 #: ../../include/contact_widgets.php:25
 msgid "Examples: Robert Morgenstein, Fishing"
@@ -2003,7 +2003,7 @@ msgstr "Il profilo richiesto non è disponibile."
 #: ../../mod/directory.php:183 ../../mod/dirprofile.php:164
 #: ../../mod/suggest.php:51 ../../mod/match.php:62
 msgid "Connect"
-msgstr "Entra in contatto"
+msgstr "Aggiungi"
 
 #: ../../include/identity.php:689 ../../mod/profiles.php:612
 msgid "Change profile photo"
