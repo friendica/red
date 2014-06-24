@@ -50,8 +50,6 @@ We need much more than this, but here are areas where developers can help. Pleas
 
 [li]Create mobile clients for the top platforms - which involves extending the API so that we can do stuff far beyond the current crop of Twitter/Statusnet clients. Ditto for mobile themes. We can probably use something like the Friendica Android app as a base to start from.[/li]
 
-[li]Activity Stream generation for liking things, liking channels and other combinations.[/li]
-
 [li]Implement owned and exchangeable &quot;things&quot;.[/li]
 
 [li]Family Account creation - using service classes (an account holder can create a certain number of sub-accounts which are all tied to their subscription - if the subscription lapses they all go away).[/li]
