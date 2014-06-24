@@ -266,7 +266,7 @@ function obj_verb_selector($current = '') {
 	$o .= '<select class="obj-verb-selector" name="verb" >';
 	foreach($verbs as $k => $v) {
 		$selected = (($k == $current) ? ' selected="selected" ' : '');
-		$o .= '<option value="' . urlencode($k) . '"' . $selected . '>' . $v[0] . '</option>';
+		$o .= '<option value="' . urlencode($k) . '"' . $selected . '>' . $v[1] . '</option>';
 	}
 	$o .= '</select>';
 	return $o;

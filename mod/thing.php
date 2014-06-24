@@ -243,12 +243,15 @@ function thing_content(&$a) {
 		}
 	}
 
-	if(! local_user()) {
+	$channel = $a->get_channel();
+
+	if(! (local_user() && $channel)) {
 		notice( t('Permission denied.') . EOL);
 		return;
 	}
 
 	$thing_hash = '';
+	
 
 	if(argc() == 3 && argv(1) === 'edit') {
 		$thing_hash = argv(2);
@@ -270,7 +273,7 @@ function thing_content(&$a) {
 			'$multiprof' => feature_enabled(local_user(),'multi_profiles'),
 			'$profile_lbl' => t('Select a profile'),
 			'$profile_select' => contact_profile_assign($r[0]['obj_page']),
-			'$verb_lbl' => t('Select a category of stuff. e.g. I ______ something'),
+			'$verb_lbl' => $channel['channel_name'],
 			'$verb_select' => obj_verb_selector($r[0]['obj_verb']),
 			'$activity' => array('activity',t('Post an activity'),true,t('Only sends to viewers of the applicable profile')),
 			'$thing_hash' => $thing_hash,
@@ -317,7 +320,7 @@ function thing_content(&$a) {
 		'$multiprof' => feature_enabled(local_user(),'multi_profiles'),
 		'$profile_lbl' => t('Select a profile'),
 		'$profile_select' => contact_profile_assign(''),
-		'$verb_lbl' => t('Select a category of stuff. e.g. I ______ something'),
+		'$verb_lbl' => $channel['channel_name'],
 		'$activity' => array('activity',t('Post an activity'),true,t('Only sends to viewers of the applicable profile')),
 		'$verb_select' => obj_verb_selector(),
 		'$thing_lbl' => t('Name of thing e.g. something'),
