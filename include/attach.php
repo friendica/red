@@ -835,6 +835,51 @@ function get_cloudpath($arr) {
 }
 
 /**
+ * @brief Returns path to parent folder in cloud/.
+ * 
+ * @param $arr
+ * @return string with the folder path
+ */
+function get_parent_cloudpath($channel_id, $channel_name, $attachHash) {
+	//Build directory tree and redirect
+	$parentHash = $attachHash;
+	do {
+		$parentHash = find_folder_hash_by_attach_hash($channel_id, $parentHash);
+		if ($parentHash) {
+			$parentName = find_filename_by_hash($channel_id, $parentHash);
+			$parentFullPath = $parentName."/".$parentFullPath;
+		}
+	} while ($parentHash);
+	$parentFullPath = z_root() . "/cloud/" . $channel_name . "/" . $parentFullPath;
+	return $parentFullPath;
+}
+function find_folder_hash_by_attach_hash($channel_id, $attachHash) {
+	$r = q("select * from attach where uid = %d and hash = '%s' limit 1",
+		intval($channel_id), dbesc($attachHash)
+	);
+	$hash = "";
+	if($r) {
+		foreach($r as $rr) {
+			$hash = $rr['folder'];
+		}
+	}
+        return $hash;
+}
+function find_filename_by_hash($channel_id, $attachHash) {
+	$r = q("select * from attach where uid = %d and hash = '%s' limit 1",
+		intval($channel_id), dbesc($attachHash)
+	);
+	$filename = "";
+	if($r) {
+		foreach($r as $rr) {
+			$filename = $rr['filename'];
+		}
+	}
+        return $filename;
+}
+
+
+/**
  * 
  * @param $in
  * @param $out

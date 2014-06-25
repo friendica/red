@@ -15,7 +15,7 @@ Red Matrix Documentation and Resources
 * [Web Pages](help/Webpages)
 * [Remove Account](help/Remove-Account)
 * [BBcode reference for posts and comments](help/bbcode)
-
+* [Help With Addons](help/addons)
 **Technical Documentation**
 
 * [Install](help/Install)

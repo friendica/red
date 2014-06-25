@@ -1,4 +1,4 @@
-<div id="attach-edit-backlink">< <a href="filestorage/{{$channelnick}}">{{$backlink}}</a></div>
+<div id="attach-edit-backlink">< <a href="{{$parentpath}}">{{$backlink}}</a></div>
 
 <h1>{{$header}}</h1>
 
