@@ -352,18 +352,18 @@
 				if(data.events == 0) { data.events = ''; $('.events-update').removeClass('show') } else { $('.events-update').addClass('show') }
 				$('.events-update').html(data.events);
 
-				if(data.events_today == 0) { data.events_today = ''; $('.events-today-update').removeClass('show') } else { $('.events-today-update').addClass('show') }
+				if(data.events_today == 0) { data.events_today = ''; $('.events-today-update').removeClass('show') } else { $('.events-today-update').addClass('show'); $('.events-update').html(data.events + '*'); }
 				$('.events-today-update').html(data.events_today);
 
-				if(data.birthdays == 0) { data.birthdays = ''; $('.birthdays-update').removeClass('show') } else { $('.birthdays-update').addClass('show') }
+				if(data.birthdays == 0) { data.birthdays = ''; $('.birthdays-update').removeClass('show') } else { $('.birthdays-update').addClass('show'); }
 				$('.birthdays-update').html(data.birthdays);
 
-				if(data.birthdays_today == 0) { data.birthdays_today = ''; $('.birthdays-today-update').removeClass('show') } else { $('.birthdays-today-update').addClass('show') }
+				if(data.birthdays_today == 0) { data.birthdays_today = ''; $('.birthdays-today-update').removeClass('show') } else { $('.birthdays-today-update').addClass('show'); $('.birthdays-update').html(data.birthdays + '*'); }
 				$('.birthdays-today-update').html(data.birthdays_today);
 
 				if(data.all_events == 0) { data.all_events = ''; $('.all_events-update').removeClass('show') } else { $('.all_events-update').addClass('show') }
 				$('.all_events-update').html(data.all_events);
-				if(data.all_events_today == 0) { data.all_events_today = ''; $('.all_events-today-update').removeClass('show') } else { $('.all_events-today-update').addClass('show') }
+				if(data.all_events_today == 0) { data.all_events_today = ''; $('.all_events-today-update').removeClass('show') } else { $('.all_events-today-update').addClass('show'); $('.all_events-update').html(data.all_events + '*'); }
 				$('.all_events-today-update').html(data.all_events_today);
 
 				$.jGrowl.defaults.closerTemplate = '<div>[ ' + aStr['closeAll'] + ']</div>';

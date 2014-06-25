@@ -110,6 +110,7 @@ function filestorage_content(&$a) {
 		$channel = $a->get_channel();
 
 		$cloudpath = get_cloudpath($f) . (($f['flags'] & ATTACH_FLAG_DIR) ? '?f=&davguest=1' : '');
+		$parentpath = get_parent_cloudpath($channel['channel_id'], $channel['channel_address'], $f['hash']);
 
 		$aclselect_e = populate_acl($f,false);
 		$is_a_dir = (($f['flags'] & ATTACH_FLAG_DIR) ? true : false);
@@ -121,6 +122,7 @@ function filestorage_content(&$a) {
 			'$header' => t('Edit file permissions'),
 			'$file' => $f,
 			'$cloudpath' => z_root() . '/' . $cloudpath,
+			'$parentpath' => $parentpath,
 			'$uid' => $channel['channel_id'],
 			'$channelnick' => $channel['channel_address'],
 			'$permissions' => t('Permissions'),
