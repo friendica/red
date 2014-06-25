@@ -897,11 +897,11 @@ class RedBrowser extends DAV\Browser\Plugin {
 		<table id=\"cloud-index\">
 		<tr>
 			<th></th>
-			<th>".t('Name')."</th>
+			<th>".t('Name')."&nbsp;&nbsp;&nbsp;</th>
 			<th></th><th></th><th></th>
-			<th>Type</th>
-			<th>Size</th>
-			<th>Last modified</th>
+			<th>".t('Type')."&nbsp;&nbsp;&nbsp;</th>
+			<th>".t('Size')."&nbsp;&nbsp;&nbsp;</th>
+			<th>".t('Last modified')."</th>
 		</tr>
 		<tr><td colspan=\"8\"><hr /></td></tr>";
 
@@ -917,21 +917,19 @@ class RedBrowser extends DAV\Browser\Plugin {
 
 
         if ($path) {
-
             list($parentUri) = DAV\URLUtil::splitPath($path);
             $fullPath = DAV\URLUtil::encodePath($this->server->getBaseUri() . $parentUri);
 
             $icon = $this->enableAssets?'<a href="' . $fullPath . '"><img src="' . $this->getAssetUrl('icons/parent' . $this->iconExtension) . '" width="24" alt="Parent" /></a>':'';
-            $html.= "
-	<tr>
-		<td>$icon</td>
-		<td><a href=\"{$fullPath}\">..</a></td>
-		<td></td><td></td><th></td>
-		<td>[parent]</td>
-		<td></td>
-		<td></td>
-	</tr>";
-
+		$html.= "
+		<tr>
+			<td>$icon</td>
+			<td><a href=\"{$fullPath}\">..</a></td>
+			<td></td><td></td><th></td>
+			<td>[".t('parent')."]</td>
+			<td></td>
+			<td></td>
+		</tr>";
         }
 
         foreach($files as $file) {
@@ -955,22 +953,22 @@ class RedBrowser extends DAV\Browser\Plugin {
                     // Some name mapping is preferred
                     switch($v) {
                         case '{DAV:}collection' :
-                            $type[$k] = 'Collection';
+                            $type[$k] = t('Collection');
                             break;
                         case '{DAV:}principal' :
-                            $type[$k] = 'Principal';
+                            $type[$k] = t('Principal');
                             break;
                         case '{urn:ietf:params:xml:ns:carddav}addressbook' :
-                            $type[$k] = 'Addressbook';
+                            $type[$k] = t('Addressbook');
                             break;
                         case '{urn:ietf:params:xml:ns:caldav}calendar' :
-                            $type[$k] = 'Calendar';
+                            $type[$k] = t('Calendar');
                             break;
                         case '{urn:ietf:params:xml:ns:caldav}schedule-inbox' :
-                            $type[$k] = 'Schedule Inbox';
+                            $type[$k] = t('Schedule Inbox');
                             break;
                         case '{urn:ietf:params:xml:ns:caldav}schedule-outbox' :
-                            $type[$k] = 'Schedule Outbox';
+                            $type[$k] = t('Schedule Outbox');
                             break;
                         case '{http://calendarserver.org/ns/}calendar-proxy-read' :
                             $type[$k] = 'Proxy-Read';
@@ -1012,7 +1010,6 @@ class RedBrowser extends DAV\Browser\Plugin {
                         break;
                     }
 
-
                 }
 
             }
@@ -1037,38 +1034,70 @@ class RedBrowser extends DAV\Browser\Plugin {
 	if($is_owner) {
 		$html .= "<td>" . (($size) ? $attachIcon : '') . "</td>
 		<td><a href=\"".$fileStorageUrl."/".$attachId."/edit\" title=\"".t('Edit')."\"><i class=\"icon-pencil btn btn-default\"></i></a></td>
-		<td><a href=\"".$fileStorageUrl."/".$attachId."/delete\" title=\"".t('Delete')."\" onclick=\"return confirm('Are you sure you want to delete this item?');\"><i class=\"icon-remove btn btn-default drop-icons\"></i></a></td>";
+		<td><a href=\"".$fileStorageUrl."/".$attachId."/delete\" title=\"".t('Delete')."\" onclick=\"return confirm('".t('Are you sure you want to delete this item?')."');\"><i class=\"icon-remove btn btn-default drop-icons\"></i></a></td>";
 	}
 	else {
 		$html .= "<td></td><td></td><td></td>";
 	}
 	$html .=
 		"<td>{$type}</td>
-		<td>". $size ."</td>
+		<td>". $this->userReadableSize($size) ."</td>
 		<td>" . (($lastmodified) ? datetime_convert('UTC', date_default_timezone_get(),$lastmodified) : '') . "</td>
 	</tr>";
 
         }
 
-        $html.= "<tr><td colspan=\"8\"><hr /></td></tr>";
+        $html.= "<tr><td colspan=\"8\"><hr /></td></tr>
+		</table>";
 
-        $output = '';
-
+	$limit = service_class_fetch ($owner,'attach_upload_limit');
+	$r = q("select sum(filesize) as total from attach where aid = %d ",
+		intval($this->auth->channel_account_id)
+	);
+	$used = $r[0]['total'];
+	if ($used) {
+		$quotaDesc = t('%1$s used');
+		$quotaDesc = sprintf($quotaDesc,
+			$this->userReadableSize($used));
+	}
+	if ($limit && $used) {
+		$quotaDesc = t('%1$s used of %2$s (%3$s&#37;)');
+		$quotaDesc = sprintf($quotaDesc,
+			$this->userReadableSize($used),
+			$this->userReadableSize($limit),
+			round($used / $limit, 1));
+	}
+	if ($limit || $used) {
+		$html.= "<p><strong>".t('Total')."</strong> ".$quotaDesc."</p>";
+	}
+	
+	$output = '';
         if ($this->enablePost) {
             $this->server->broadcastEvent('onHTMLActionsPanel',array($parent, &$output));
         }
-
         $html.=$output;
-
-        $html.= "</table>";
-
-		get_app()->page['content'] = $html;
-		construct_page(get_app());
+	
+	get_app()->page['content'] = $html;
+	construct_page(get_app());
 
 //        return $html;
 
     }
 
+	function userReadableSize($size){
+		if (is_numeric($size)) {
+			$incr = 0;
+			$k = 1024;
+			$unit = array('bytes','KB','MB','GB','TB','PB');
+			while(($size / $k) >= 1){
+				$incr++;
+				$size = round($size / $k, 2);
+			}
+			return $size." ".$unit[$incr];
+		} else {
+			return "";
+		}
+	}
 
     public function htmlActionsPanel(DAV\INode $node, &$output) {
 
@@ -1092,17 +1121,17 @@ class RedBrowser extends DAV\Browser\Plugin {
 
         $output.= '<table>
 	<tr>
-	<td><strong>Create new folder</strong>&nbsp;&nbsp;&nbsp;</td>
+	<td><strong>'.t('Create new folder').'</strong>&nbsp;&nbsp;&nbsp;</td>
 	<td><form method="post" action="">
 		<input type="text" name="name" />
-		<input type="submit" value="create" />
+		<input type="submit" value="'.t('Create').'" />
 		<input type="hidden" name="sabreAction" value="mkcol" />
 	</form></td>
 	</tr><tr>
-	<td><strong>Upload file</strong>&nbsp;&nbsp;&nbsp;</td>
+	<td><strong>'.t('Upload file').'</strong>&nbsp;&nbsp;&nbsp;</td>
 	<td><form method="post" action="" enctype="multipart/form-data">
 		<input type="file" name="file" style="display: inline;"/>
-		<input type="submit" value="upload" />
+		<input type="submit" value="'.t('Upload').'" />
 		<input type="hidden" name="sabreAction" value="put" />
 		<!-- Name (optional): <input type="text" name="name" /> we should rather provide a rename action in edit form-->
         </form></td>
