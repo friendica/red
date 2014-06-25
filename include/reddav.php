@@ -1034,7 +1034,7 @@ class RedBrowser extends DAV\Browser\Plugin {
 	if($is_owner) {
 		$html .= "<td>" . (($size) ? $attachIcon : '') . "</td>
 		<td><a href=\"".$fileStorageUrl."/".$attachId."/edit\" title=\"".t('Edit')."\"><i class=\"icon-pencil btn btn-default\"></i></a></td>
-		<td><a href=\"".$fileStorageUrl."/".$attachId."/delete\" title=\"".t('Delete')."\" onclick=\"return confirm(".t('Are you sure you want to delete this item?').");\"><i class=\"icon-remove btn btn-default drop-icons\"></i></a></td>";
+		<td><a href=\"".$fileStorageUrl."/".$attachId."/delete\" title=\"".t('Delete')."\" onclick=\"return confirm('".t('Are you sure you want to delete this item?')."');\"><i class=\"icon-remove btn btn-default drop-icons\"></i></a></td>";
 	}
 	else {
 		$html .= "<td></td><td></td><td></td>";
