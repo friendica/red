@@ -562,9 +562,17 @@ function startup() {
 	// Some hosting providers block/disable this
 	@set_time_limit(0);
 
-	// This has to be quite large to deal with embedded private photos
-	ini_set('pcre.backtrack_limit', 500000);
+	if(function_exists ('ini_set')) {
 
+		// This has to be quite large to deal with embedded private photos
+		@ini_set('pcre.backtrack_limit', 500000);
+
+		// Use cookies to store the session ID on the client side
+		@ini_set('session.use_only_cookies', 1);
+
+		// Disable transparent Session ID support
+		@ini_set('session.use_trans_sid',    0);
+	}
 
 	if (get_magic_quotes_gpc()) {
 		$process = array(&$_GET, &$_POST, &$_COOKIE, &$_REQUEST);
