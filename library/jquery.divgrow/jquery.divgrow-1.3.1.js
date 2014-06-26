@@ -43,7 +43,7 @@
 
             obj.css('height', options.initialHeight).css('overflow', 'hidden');
             if (options.showBrackets) {
-                obj.after('<p class="divgrow-brackets">[&hellip;]</p><a href="#" class="divgrow-showmore' + " divgrow-obj-" + divgrowid + '"' + '></a>');
+                obj.after('<p class="divgrow-brackets">[&hellip;]</p><div href="#" class="divgrow-showmore' + " divgrow-obj-" + divgrowid + '"' + '></div>');
             }
             else {
                 obj.after('<div class="divgrow-showmore' + " divgrow-obj-" + divgrowid + '"' + '></div>');
