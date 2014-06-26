@@ -24,6 +24,7 @@
 [zrl=[baseurl]/help/checking_account_quota_usage]Checking Account Quota Usage[/zrl]
 [zrl=[baseurl]/help/cloud_desktop_clients]Cloud Desktop Clients[/zrl]
 [zrl=[baseurl]/help/AdvancedSearch]Advanced Directory Search[/zrl]
+[zrl=[baseurl]/help/addons[/zrl]Help With Addons[/zrl]
 
 [b]For Hub Administrators[/b]
 
