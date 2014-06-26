@@ -878,211 +878,191 @@ class RedBrowser extends DAV\Browser\Plugin {
 
 	}
 
-    public function generateDirectoryIndex($path) {
+	/**
+	 * Creates the directory listing for the given path.
+	 *
+	 * @param String $path
+	 */
+	public function generateDirectoryIndex($path) {
 
 		$is_owner = ((local_user() && $this->auth->owner_id == local_user()) ? true : false);
 
-		if($this->auth->timezone)
+		if ($this->auth->timezone)
 			date_default_timezone_set($this->auth->timezone);
 
-        $version = '';
+		$version = '';
 		require_once('include/conversation.php');
 
-		if($this->auth->channel_name)
+		if ($this->auth->channel_name)
 			$html = profile_tabs(get_app(),(($is_owner) ? true : false),$this->auth->owner_nick);
 
-        $html .= "
-	<body>
-		<h1>".t('Files').": ".$this->escapeHTML($path) . "/</h1>
-		<table id=\"cloud-index\">
-		<tr>
-			<th></th>
-			<th>".t('Name')."&nbsp;&nbsp;&nbsp;</th>
-			<th></th><th></th><th></th>
-			<th>".t('Type')."&nbsp;&nbsp;&nbsp;</th>
-			<th>".t('Size')."&nbsp;&nbsp;&nbsp;</th>
-			<th>".t('Last modified')."</th>
-		</tr>
-		<tr><td colspan=\"8\"><hr /></td></tr>";
+		$files = $this->server->getPropertiesForPath($path,array(
+			'{DAV:}displayname',
+			'{DAV:}resourcetype',
+			'{DAV:}getcontenttype',
+			'{DAV:}getcontentlength',
+			'{DAV:}getlastmodified',
+			),1);
 
-        $files = $this->server->getPropertiesForPath($path,array(
-            '{DAV:}displayname',
-            '{DAV:}resourcetype',
-            '{DAV:}getcontenttype',
-            '{DAV:}getcontentlength',
-            '{DAV:}getlastmodified',
-        ),1);
+		$parent = $this->server->tree->getNodeForPath($path);
 
-        $parent = $this->server->tree->getNodeForPath($path);
+		$parentpath = array();
+		// only show parent if not leaving /cloud/; TODO how to improve this? 
+		if ($path && $path != "cloud") {
+			list($parentUri) = DAV\URLUtil::splitPath($path);
+			$fullPath = DAV\URLUtil::encodePath($this->server->getBaseUri() . $parentUri);
 
+			$parentpath['icon'] = $this->enableAssets?'<a href="' . $fullPath . '"><img src="' . $this->getAssetUrl('icons/parent' . $this->iconExtension) . '" width="24" alt="'.t('parent').'"></a>':'';
+			$parentpath['path'] = $fullPath;
+	        }
 
-        if ($path) {
-            list($parentUri) = DAV\URLUtil::splitPath($path);
-            $fullPath = DAV\URLUtil::encodePath($this->server->getBaseUri() . $parentUri);
+		$f = array();
+		foreach ($files as $file) {
+			$ft = array();
 
-            $icon = $this->enableAssets?'<a href="' . $fullPath . '"><img src="' . $this->getAssetUrl('icons/parent' . $this->iconExtension) . '" width="24" alt="Parent" /></a>':'';
-		$html.= "
-		<tr>
-			<td>$icon</td>
-			<td><a href=\"{$fullPath}\">..</a></td>
-			<td></td><td></td><th></td>
-			<td>[".t('parent')."]</td>
-			<td></td>
-			<td></td>
-		</tr>";
-        }
+			// This is the current directory, we can skip it
+			if (rtrim($file['href'],'/')==$path) continue;
 
-        foreach($files as $file) {
+			list(, $name) = DAV\URLUtil::splitPath($file['href']);
 
-            // This is the current directory, we can skip it
-            if (rtrim($file['href'],'/')==$path) continue;
+			$type = null;
 
-            list(, $name) = DAV\URLUtil::splitPath($file['href']);
+			if (isset($file[200]['{DAV:}resourcetype'])) {
+				$type = $file[200]['{DAV:}resourcetype']->getValue();
 
-            $type = null;
+				// resourcetype can have multiple values
+				if (!is_array($type)) $type = array($type);
 
+				foreach ($type as $k=>$v) {
+					// Some name mapping is preferred
+					switch($v) {
+	                        	case '{DAV:}collection' :
+	                        	    $type[$k] = t('Collection');
+	                	            break;
+        		                case '{DAV:}principal' :
+        	        	            $type[$k] = t('Principal');
+	                        	    break;
+	                        	case '{urn:ietf:params:xml:ns:carddav}addressbook' :
+        	        	            $type[$k] = t('Addressbook');
+                		            break;
+        	                	case '{urn:ietf:params:xml:ns:caldav}calendar' :
+		                            $type[$k] = t('Calendar');
+        	                	    break;
+	                	        case '{urn:ietf:params:xml:ns:caldav}schedule-inbox' :
+        		                    $type[$k] = t('Schedule Inbox');
+        	        	            break;
+	                        	case '{urn:ietf:params:xml:ns:caldav}schedule-outbox' :
+	                        	    $type[$k] = t('Schedule Outbox');
+        	        	            break;
+                		        case '{http://calendarserver.org/ns/}calendar-proxy-read' :
+        	                	    $type[$k] = 'Proxy-Read';
+		                            break;
+        	                	case '{http://calendarserver.org/ns/}calendar-proxy-write' :
+                		            $type[$k] = 'Proxy-Write';
+        	                	    break;
+					}
+				}
+				$type = implode(', ', $type);
+			}
 
-            if (isset($file[200]['{DAV:}resourcetype'])) {
-                $type = $file[200]['{DAV:}resourcetype']->getValue();
+			// If no resourcetype was found, we attempt to use
+			// the contenttype property
+			if (!$type && isset($file[200]['{DAV:}getcontenttype'])) {
+				$type = $file[200]['{DAV:}getcontenttype'];
+			}
+			if (!$type) $type = 'Unknown';
 
-                // resourcetype can have multiple values
-                if (!is_array($type)) $type = array($type);
+			$size = isset($file[200]['{DAV:}getcontentlength'])?(int)$file[200]['{DAV:}getcontentlength']:'';
+			$lastmodified = ((isset($file[200]['{DAV:}getlastmodified']))? $file[200]['{DAV:}getlastmodified']->getTime()->format('Y-m-d H:i:s') :'');
 
-                foreach($type as $k=>$v) {
+			$fullPath = DAV\URLUtil::encodePath('/' . trim($this->server->getBaseUri() . ($path?$path . '/':'') . $name,'/'));
 
-                    // Some name mapping is preferred
-                    switch($v) {
-                        case '{DAV:}collection' :
-                            $type[$k] = t('Collection');
-                            break;
-                        case '{DAV:}principal' :
-                            $type[$k] = t('Principal');
-                            break;
-                        case '{urn:ietf:params:xml:ns:carddav}addressbook' :
-                            $type[$k] = t('Addressbook');
-                            break;
-                        case '{urn:ietf:params:xml:ns:caldav}calendar' :
-                            $type[$k] = t('Calendar');
-                            break;
-                        case '{urn:ietf:params:xml:ns:caldav}schedule-inbox' :
-                            $type[$k] = t('Schedule Inbox');
-                            break;
-                        case '{urn:ietf:params:xml:ns:caldav}schedule-outbox' :
-                            $type[$k] = t('Schedule Outbox');
-                            break;
-                        case '{http://calendarserver.org/ns/}calendar-proxy-read' :
-                            $type[$k] = 'Proxy-Read';
-                            break;
-                        case '{http://calendarserver.org/ns/}calendar-proxy-write' :
-                            $type[$k] = 'Proxy-Write';
-                            break;
-                    }
+			$displayName = isset($file[200]['{DAV:}displayname'])?$file[200]['{DAV:}displayname']:$name;
 
-                }
-                $type = implode(', ', $type);
-            }
+			$displayName = $this->escapeHTML($displayName);
+			$type = $this->escapeHTML($type);
 
-            // If no resourcetype was found, we attempt to use
-            // the contenttype property
-            if (!$type && isset($file[200]['{DAV:}getcontenttype'])) {
-                $type = $file[200]['{DAV:}getcontenttype'];
-            }
-            if (!$type) $type = 'Unknown';
-
-            $size = isset($file[200]['{DAV:}getcontentlength'])?(int)$file[200]['{DAV:}getcontentlength']:'';
-            $lastmodified = ((isset($file[200]['{DAV:}getlastmodified']))? $file[200]['{DAV:}getlastmodified']->getTime()->format('Y-m-d H:i:s') :'');
-
-            $fullPath = DAV\URLUtil::encodePath('/' . trim($this->server->getBaseUri() . ($path?$path . '/':'') . $name,'/'));
-
-            $displayName = isset($file[200]['{DAV:}displayname'])?$file[200]['{DAV:}displayname']:$name;
-
-            $displayName = $this->escapeHTML($displayName);
-            $type = $this->escapeHTML($type);
-
-            $icon = '';
-
-            if ($this->enableAssets) {
-                $node = $this->server->tree->getNodeForPath(($path?$path.'/':'') . $name);
-                foreach(array_reverse($this->iconMap) as $class=>$iconName) {
-
-                    if ($node instanceof $class) {
-                        $icon = '<a href="' . $fullPath . '"><img src="' . $this->getAssetUrl($iconName . $this->iconExtension) . '" alt="" width="24" /></a>';
-                        break;
-                    }
-
-                }
-
-            }
+			$icon = '';
+			if ($this->enableAssets) {
+				$node = $this->server->tree->getNodeForPath(($path?$path.'/':'') . $name);
+				foreach (array_reverse($this->iconMap) as $class=>$iconName) {
+					if ($node instanceof $class) {
+						$icon = '<a href="' . $fullPath . '"><img src="' . $this->getAssetUrl($iconName . $this->iconExtension) . '" alt="" width="24"></a>';
+						break;
+					}
+				}
+			}
 	
-	$parentHash="";
-	$owner=$this->auth->owner_id;
-	$splitPath = split("/",$fullPath);
-	if (count($splitPath) > 3) {
-		for ($i=3; $i<count($splitPath); $i++) {
-			$attachName = urldecode($splitPath[$i]);
-			$attachHash = $this->findAttachHash($owner,$parentHash,$attachName);
-			$parentHash = $attachHash;
+			$parentHash="";
+			$owner=$this->auth->owner_id;
+			$splitPath = split("/",$fullPath);
+			if (count($splitPath) > 3) {
+				for ($i=3; $i<count($splitPath); $i++) {
+					$attachName = urldecode($splitPath[$i]);
+					$attachHash = $this->findAttachHash($owner,$parentHash,$attachName);
+					$parentHash = $attachHash;
+				}
+			}
+
+			$attachIcon = ""; // "<a href=\"attach/".$attachHash."\" title=\"".$displayName."\"><i class=\"icon-download\"></i></a>";
+
+			// put the array for this file together
+			$ft['attachId'] = $this->findAttachIdByHash($attachHash);
+			$ft['fileStorageUrl'] = substr($fullPath, 0, strpos($fullPath,"cloud/")) ."filestorage/".$this->auth->channel_name;
+			$ft['icon'] = $icon;
+			$ft['attachIcon'] = (($size) ? $attachIcon : '');
+			// is global or per item?
+			$ft['is_owner'] = $is_owner;
+			$ft['fullPath'] = $fullPath;
+			$ft['displayName'] = $displayName;
+			$ft['type'] = $type;
+			$ft['size'] = $size;
+			$ft['sizeFormatted'] = $this->userReadableSize($size);
+			$ft['lastmodified'] = (($lastmodified) ? datetime_convert('UTC', date_default_timezone_get(), $lastmodified) : '');
+
+			$f[] = $ft;
 		}
-	}
-	$attachId = $this->findAttachIdByHash($attachHash);
-	$fileStorageUrl = substr($fullPath, 0, strpos($fullPath,"cloud/")) . "filestorage/".$this->auth->channel_name;
-	$attachIcon = ""; // "<a href=\"attach/".$attachHash."\" title=\"".$displayName."\"><i class=\"icon-download\"></i></a>";
-	$html.= "<tr>
-		<td>$icon</td>
-		<td style=\"min-width: 15em\"><a href=\"{$fullPath}\">{$displayName}</a></td>";
 
-	if($is_owner) {
-		$html .= "<td>" . (($size) ? $attachIcon : '') . "</td>
-		<td><a href=\"".$fileStorageUrl."/".$attachId."/edit\" title=\"".t('Edit')."\"><i class=\"icon-pencil btn btn-default\"></i></a></td>
-		<td><a href=\"".$fileStorageUrl."/".$attachId."/delete\" title=\"".t('Delete')."\" onclick=\"return confirm('".t('Are you sure you want to delete this item?')."');\"><i class=\"icon-remove btn btn-default drop-icons\"></i></a></td>";
-	}
-	else {
-		$html .= "<td></td><td></td><td></td>";
-	}
-	$html .=
-		"<td>{$type}</td>
-		<td>". $this->userReadableSize($size) ."</td>
-		<td>" . (($lastmodified) ? datetime_convert('UTC', date_default_timezone_get(),$lastmodified) : '') . "</td>
-	</tr>";
+		// Storage and Quota
+		$limit = service_class_fetch($owner, 'attach_upload_limit');
+		$r = q("select sum(filesize) as total from attach where aid = %d ",
+			intval($this->auth->channel_account_id)
+		);
+		$used = $r[0]['total'];
+		if ($used) {
+			$quotaDesc = t('%1$s used');
+			$quotaDesc = sprintf($quotaDesc,
+				$this->userReadableSize($used));
+		}
+		if ($limit && $used) {
+			$quotaDesc = t('%1$s used of %2$s (%3$s&#37;)');
+			$quotaDesc = sprintf($quotaDesc,
+				$this->userReadableSize($used),
+				$this->userReadableSize($limit),
+				round($used / $limit, 1));
+		}
 
-        }
+		// quota for template
+		$quota['used'] = $used;
+		$quota['limit'] = $limit;
+		$quota['desc'] = $quotaDesc;
 
-        $html.= "<tr><td colspan=\"8\"><hr /></td></tr>
-		</table>";
+		$html .= replace_macros(get_markup_template('cloud_directory.tpl'), array(
+                        '$header' => t('Files').": ".$this->escapeHTML($path) . "/",
+                        '$parentpath' => $parentpath,
+                        '$entries' => $f,
+                        '$quota' => $quota
+                	));
 
-	$limit = service_class_fetch ($owner,'attach_upload_limit');
-	$r = q("select sum(filesize) as total from attach where aid = %d ",
-		intval($this->auth->channel_account_id)
-	);
-	$used = $r[0]['total'];
-	if ($used) {
-		$quotaDesc = t('%1$s used');
-		$quotaDesc = sprintf($quotaDesc,
-			$this->userReadableSize($used));
-	}
-	if ($limit && $used) {
-		$quotaDesc = t('%1$s used of %2$s (%3$s&#37;)');
-		$quotaDesc = sprintf($quotaDesc,
-			$this->userReadableSize($used),
-			$this->userReadableSize($limit),
-			round($used / $limit, 1));
-	}
-	if ($limit || $used) {
-		$html.= "<p><strong>".t('Total')."</strong> ".$quotaDesc."</p>";
-	}
+		$output = '';
+		if ($this->enablePost) {
+			$this->server->broadcastEvent('onHTMLActionsPanel',array($parent, &$output));
+		}
+		$html.=$output;
 	
-	$output = '';
-        if ($this->enablePost) {
-            $this->server->broadcastEvent('onHTMLActionsPanel',array($parent, &$output));
-        }
-        $html.=$output;
-	
-	get_app()->page['content'] = $html;
-	construct_page(get_app());
-
-//        return $html;
-
-    }
+		get_app()->page['content'] = $html;
+		construct_page(get_app());
+	}
 
 	function userReadableSize($size){
 		if (is_numeric($size)) {
