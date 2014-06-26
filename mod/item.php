@@ -781,7 +781,11 @@ function item_post(&$a) {
 		logger('mod_item: saved item ' . $post_id);
 
 		if($parent) {
-			if($datarray['owner_xchan'] != $datarray['author_xchan']) {
+
+			// only send comment notification if this is a wall-to-wall comment,
+			// otherwise it will happen during delivery
+
+			if(($datarray['owner_xchan'] != $datarray['author_xchan']) && ($parent_item['item_flags'] & ITEM_WALL)) {
 				notification(array(
 					'type'         => NOTIFY_COMMENT,
 					'from_xchan'   => $datarray['author_xchan'],

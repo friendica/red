@@ -3603,6 +3603,7 @@ function drop_items($items) {
 
 function drop_item($id,$interactive = true,$stage = DROPITEM_NORMAL) {
 
+
 	$a = get_app();
 
 	// locate item to be deleted
