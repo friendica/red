@@ -2062,10 +2062,14 @@ img.mail-list-sender-photo {
 	border-bottom-right-radius: $radiuspx;
 	border-bottom-left-radius: $radiuspx;
 	text-align: center;
+	font-weight: bold;
+	color: $link_colour;
+	cursor: pointer;	
 }
 
 .divgrow-showmore:hover {
 	border-top: 1px dashed #adadad;
+	text-decoration: underline;
 }
 
 

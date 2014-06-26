@@ -43,12 +43,12 @@
 
             obj.css('height', options.initialHeight).css('overflow', 'hidden');
             if (options.showBrackets) {
-                obj.after('<p class="divgrow-brackets">[&hellip;]</p><a href="#" class="divgrow-showmore' + " divgrow-obj-" + divgrowid + '"' + '></a>');
+                obj.after('<p class="divgrow-brackets">[&hellip;]</p><div href="#" class="divgrow-showmore' + " divgrow-obj-" + divgrowid + '"' + '></div>');
             }
             else {
-                obj.after('<a href="#" class="divgrow-showmore' + " divgrow-obj-" + divgrowid + '"' + '></a>');
+                obj.after('<div class="divgrow-showmore' + " divgrow-obj-" + divgrowid + '"' + '></div>');
             }
-            $("a.divgrow-showmore").html(options.moreText);
+            $("div.divgrow-showmore").html(options.moreText);
 
             $("." + "divgrow-obj-" + divgrowid).toggle(function () {
                 //alert(obj.attr('class'));
@@ -61,7 +61,7 @@
                     if (options.showBrackets) {
                         $(this).nextAll("p.divgrow-brackets:first").fadeOut();
                     }
-                    $(this).nextAll("a.divgrow-showmore:first").html(options.lessText);
+                    $(this).nextAll("div.divgrow-showmore:first").html(options.lessText);
 
                 });
 
@@ -74,7 +74,7 @@
                     if (options.showBrackets) {
                         $(this).nextAll("p.divgrow-brackets:first").stop(true, false).fadeIn();
                     }
-                    $(this).nextAll("a.divgrow-showmore:first").stop(true, false).html(options.moreText);
+                    $(this).nextAll("div.divgrow-showmore:first").stop(true, false).html(options.moreText);
 
                 });
             });
