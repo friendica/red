@@ -16,6 +16,8 @@ function home_init(&$a) {
 		if(! $dest)
 			$dest = get_pconfig(local_user(),'system','startpage');
 		if(! $dest)
+			$dest = get_config('system','startpage');
+		if(! $dest)
 			$dest = z_root() . '/apps';
 
 		goaway($dest);
