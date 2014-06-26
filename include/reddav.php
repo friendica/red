@@ -893,7 +893,7 @@ class RedBrowser extends DAV\Browser\Plugin {
 		$version = '';
 		require_once('include/conversation.php');
 
-		if ($this->auth->channel_name)
+		if ($this->auth->owner_nick)
 			$html = profile_tabs(get_app(),(($is_owner) ? true : false),$this->auth->owner_nick);
 
 		$files = $this->server->getPropertiesForPath($path,array(

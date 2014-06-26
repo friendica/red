@@ -1469,7 +1469,6 @@ function network_tabs() {
 
 function profile_tabs($a, $is_owner=False, $nickname=Null){
 	//echo "<pre>"; var_dump($a->user); killme();
-
 		
 	$channel = $a->get_channel();
 
@@ -1564,7 +1563,6 @@ function profile_tabs($a, $is_owner=False, $nickname=Null){
 
 
 	}
-
 
 	$arr = array('is_owner' => $is_owner, 'nickname' => $nickname, 'tab' => (($tab) ? $tab : false), 'tabs' => $tabs);
 	call_hooks('profile_tabs', $arr);
