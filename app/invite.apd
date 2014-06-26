@@ -1,0 +1,4 @@
+url: $baseurl/invite
+requires: local_user
+name: Invite
+photo: $baseurl/app/invite.png
