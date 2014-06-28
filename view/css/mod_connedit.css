@@ -3,12 +3,12 @@
 	color: #000;
 }
 .abook-them {
-	margin-left: 375px;
-	margin-bottom: 15px;
+	padding: 5px;
+	text-align: center;
 }
 .abook-me {
-	margin-left: 36px;
-	margin-bottom: 15px;
+	padding: 5px 5px 5px 15px;
+	text-align: center;
 }
 .acheckbox {
 	margin-bottom: 5px !important;
@@ -27,7 +27,8 @@
 
 .abook-edit-them, .abook-edit-me {
 	float: left;
-	width: 100px !important;
+	margin-left: 10px;
+	margin-right: 10px;
 }
 .field_abook_help {
 	float: left;
