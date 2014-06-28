@@ -1029,8 +1029,8 @@ function status_editor($a,$x,$popup=false) {
 
 	$plaintext = true;
 
-	if(feature_enabled(local_user(),'richtext'))
-		$plaintext = false;
+//	if(feature_enabled(local_user(),'richtext'))
+//		$plaintext = false;
 
 	$mimeselect = '';
 	if(array_key_exists('mimetype',$x) && $x['mimetype']) {

@@ -58,8 +58,8 @@ function editblock_content(&$a) {
 	$plaintext = true;
 
 	// You may or may not be a local user.
-	if(local_user() && feature_enabled(local_user(),'richtext'))
-		$plaintext = false;
+//	if(local_user() && feature_enabled(local_user(),'richtext'))
+//		$plaintext = false;
 
 	$mimeselect = '';
 	$mimetype = $itm[0]['mimetype'];

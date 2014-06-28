@@ -83,8 +83,8 @@ function rpost_content(&$a) {
 	}
 
 	$plaintext = true;
-	if(feature_enabled(local_user(),'richtext'))
-		$plaintext = false;
+//	if(feature_enabled(local_user(),'richtext'))
+//		$plaintext = false;
 
 	if(array_key_exists('type', $_REQUEST) && $_REQUEST['type'] === 'html') {
 		require_once('include/html2bbcode.php');

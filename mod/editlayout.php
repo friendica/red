@@ -65,8 +65,8 @@ function editlayout_content(&$a) {
 
 	$plaintext = true;
 // You may or may not be a local user.  This won't work,
-	if(feature_enabled(local_user(),'richtext'))
-		$plaintext = false;
+//	if(feature_enabled(local_user(),'richtext'))
+//		$plaintext = false;
 
 	$o .= replace_macros(get_markup_template('edpost_head.tpl'), array(
 		'$title' => t('Edit Layout')
