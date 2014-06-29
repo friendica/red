@@ -1,13 +1,16 @@
 <?php
+/**
+ * @file mod/cloud.php
+ * @brief Initialize Red Matrix's cloud (SabreDAV)
+ *
+ */
 
 	use Sabre\DAV;
-
-    require_once('vendor/autoload.php');
-
+	require_once('vendor/autoload.php');
 
 	// workaround for HTTP-auth in CGI mode
 	if(x($_SERVER,'REDIRECT_REMOTE_USER')) {
-	 	$userpass = base64_decode(substr($_SERVER["REDIRECT_REMOTE_USER"],6)) ;
+	 	$userpass = base64_decode(substr($_SERVER["REDIRECT_REMOTE_USER"], 6)) ;
 		if(strlen($userpass)) {
 		 	list($name, $password) = explode(':', $userpass);
 			$_SERVER['PHP_AUTH_USER'] = $name;
@@ -16,18 +19,19 @@
 	}
 
 	if(x($_SERVER,'HTTP_AUTHORIZATION')) {
-	 	$userpass = base64_decode(substr($_SERVER["HTTP_AUTHORIZATION"],6)) ;
+		$userpass = base64_decode(substr($_SERVER["HTTP_AUTHORIZATION"], 6)) ;
 		if(strlen($userpass)) {
-		 	list($name, $password) = explode(':', $userpass);
+			list($name, $password) = explode(':', $userpass);
 			$_SERVER['PHP_AUTH_USER'] = $name;
 			$_SERVER['PHP_AUTH_PW'] = $password;
 		}
 	}
 
-
-
-
-
+/**
+ * @brief Fires up the SabreDAV server.
+ *
+ * @param App &$a
+ */
 function cloud_init(&$a) {
 
 	require_once('include/reddav.php');
@@ -42,13 +46,10 @@ function cloud_init(&$a) {
 	$profile = 0;
 	$channel = $a->get_channel();
 
-	$a->page['htmlhead'] .= '<link rel="alternate" type="application/atom+xml" href="' . $a->get_baseurl() . '/feed/' . $which .'" />' . "\r\n" ;
+	$a->page['htmlhead'] .= '<link rel="alternate" type="application/atom+xml" href="' . $a->get_baseurl() . '/feed/' . $which . '" />' . "\r\n" ;
 
 	if($which)
-		profile_load($a,$which,$profile);
-
-
-
+		profile_load($a, $which, $profile);
 
 	$auth = new RedBasicAuth();
 
@@ -64,14 +65,12 @@ function cloud_init(&$a) {
 			$auth->channel_account_id = $channel['channel_account_id'];
 			if($channel['channel_timezone'])
 				$auth->timezone = $channel['channel_timezone'];
-		}	
+		}
 		$auth->observer = $ob_hash;
-	}	
+	}
 
 	if($_GET['davguest'])
 		$_SESSION['davguest'] = true;
-
-
 
 	$_SERVER['QUERY_STRING'] = str_replace(array('?f=','&f='),array('',''),$_SERVER['QUERY_STRING']);
 	$_SERVER['QUERY_STRING'] = strip_zids($_SERVER['QUERY_STRING']);
@@ -81,8 +80,11 @@ function cloud_init(&$a) {
 	$_SERVER['REQUEST_URI'] = strip_zids($_SERVER['REQUEST_URI']);
 	$_SERVER['REQUEST_URI'] = preg_replace('/[\?&]davguest=(.*?)([\?&]|$)/ism','',$_SERVER['REQUEST_URI']);
 
-	$rootDirectory = new RedDirectory('/',$auth);
+	$rootDirectory = new RedDirectory('/', $auth);
+
+	// A SabreDAV server-object
 	$server = new DAV\Server($rootDirectory);
+	// prevent overwriting changes each other with a lock backend
 	$lockBackend = new DAV\Locks\Backend\File('store/[data]/locks');
 	$lockPlugin = new DAV\Locks\Plugin($lockBackend);
 
@@ -95,11 +97,11 @@ function cloud_init(&$a) {
 	// In order to avoid prompting for passwords for viewing a DIRECTORY, add the URL query parameter 'davguest=1'
 
 	$isapublic_file = false;
-	$davguest = ((x($_SESSION,'davguest')) ? true : false);
+	$davguest = ((x($_SESSION, 'davguest')) ? true : false);
 
 	if((! $auth->observer) && ($_SERVER['REQUEST_METHOD'] === 'GET')) {
 		try { 
-			$x = RedFileData('/' . $a->cmd,$auth);
+			$x = RedFileData('/' . $a->cmd, $auth);
 			if($x instanceof RedFile)
 				$isapublic_file = true;
 		}
@@ -113,20 +115,18 @@ function cloud_init(&$a) {
 			$auth->Authenticate($server, t('Red Matrix - Guests: Username: {your email address}, Password: +++'));
 		}
 		catch ( Exception $e) {
-			logger('mod_cloud: auth exception' .  $e->getMessage());
-			http_status_exit($e->getHTTPCode(),$e->getMessage());
+			logger('mod_cloud: auth exception' . $e->getMessage());
+			http_status_exit($e->getHTTPCode(), $e->getMessage());
 		}
 	}
 
-//	$browser = new DAV\Browser\Plugin();
 
+	// provide a directory view for the cloud in Red Matrix
 	$browser = new RedBrowser($auth);
 
 	$auth->setBrowserPlugin($browser);
 
-
 	$server->addPlugin($browser);
-
 
 	// All we need to do now, is to fire up the server
 	$server->exec();

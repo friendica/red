@@ -356,8 +356,12 @@ class RedDirectory extends DAV\Node implements DAV\ICollection, DAV\IQuota {
 	}
 
 	/**
-	 * @brief Returns the last modification time for the directory, as a unix
+	 * @brief Returns the last modification time for the directory, as a UNIX
 	 *        timestamp.
+	 *
+	 * It looks for the last edited file in the folder. If it is an empty folder
+	 * it returns the lastmodified time of the folder itself, to prevent zero
+	 * timestamps.
 	 *
 	 * @return int last modification time in UNIX timestamp
 	 */
@@ -366,9 +370,15 @@ class RedDirectory extends DAV\Node implements DAV\ICollection, DAV\IQuota {
 			dbesc($this->folder_hash),
 			intval($this->auth->owner_id)
 		);
-		if ($r)
-			return datetime_convert('UTC', 'UTC', $r[0]['edited'], 'U');
-		return '';
+		if (! $r) {
+			$r = q("SELECT edited FROM attach WHERE hash = '%s' AND uid = %d LIMIT 1",
+				dbesc($this->folder_hash),
+				intval($this->auth->owner_id)
+			);
+			if (! $r)
+				return '';
+		}
+		return datetime_convert('UTC', 'UTC', $r[0]['edited'], 'U');
 	}
 
 	/**
@@ -997,11 +1007,17 @@ class RedBasicAuth extends DAV\Auth\Backend\AbstractBasic {
 		$this->currentUser = $name;
 	}
 
-	function setBrowserPlugin($browser) {
+	/**
+	 * @brief Set browser plugin.
+	 *
+	 * @see RedBrowser::set_writeable()
+	 * @param DAV\Browser\Plugin $browser
+	 */
+	public function setBrowserPlugin($browser) {
 		$this->browser = $browser;
 	}
 
-	// internal? loggin function
+	// internal? logging function
 	function log() {
 		logger('dav: auth: channel_name ' . $this->channel_name, LOGGER_DATA);
 		logger('dav: auth: channel_id ' . $this->channel_id, LOGGER_DATA);
@@ -1045,9 +1061,7 @@ class RedBrowser extends DAV\Browser\Plugin {
 	}
 
 	/**
-	 * Creates the directory listing for the given path.
-	 *
-	 * @todo Why not use RedDirectory for this?
+	 * @brief Creates the directory listing for the given path.
 	 *
 	 * @param string $path which should be displayed
 	 */
