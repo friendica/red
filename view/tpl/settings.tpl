@@ -135,6 +135,8 @@
 </div>
 <div id="settings-channel-menu-end"></div>
 {{/if}}
-
+<div id="settings-remove-account-link">
+<button title="{{$permanent}}" class="btn btn-danger" type="submit" formaction="removeme">{{$removeme}}</button>
+</div>
 
 </div>

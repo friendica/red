@@ -2,9 +2,7 @@
 <h1>{{$title}}</h1>
 
 
-<div id="settings-remove-account-link">
-<a href="removeme" title="{{$permanent}}" >{{$removeme}}</a>
-</div>
+
 
 
 <form action="settings/account" id="settings-account-form" method="post" autocomplete="off" >
