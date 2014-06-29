@@ -552,12 +552,12 @@ function z_readdir($channel_id, $observer_hash, $pathname, $parent_hash = '') {
 
 /**
  * @function attach_mkdir($channel,$observer_hash,$arr);
- * 
+ *
  * @brief Create directory.
- *  
- * @param $channel channel array of owner
- * @param $observer_hash hash of current observer
- * @param $arr parameter array to fulfil request
+ *
+ * @param array $channel channel array of owner
+ * @param string $observer_hash hash of current observer
+ * @param array $arr parameter array to fulfil request
  * Required:
  *    $arr['filename']
  *    $arr['folder'] // hash of parent directory, empty string for root directory
@@ -641,7 +641,7 @@ function attach_mkdir($channel, $observer_hash, $arr = null) {
 
 	$path .= $arr['hash'];
 
-	$created = datetime_convert();		
+	$created = datetime_convert();
 
 	$r = q("INSERT INTO attach ( aid, uid, hash, creator, filename, filetype, filesize, revision, folder, flags, data, created, edited, allow_cid, allow_gid, deny_cid, deny_gid )
 		VALUES ( %d, %d, '%s', '%s', '%s', '%s', %d, %d, '%s', '%s', '%s', '%s', '%s', '%s', '%s', '%s', '%s' ) ",
@@ -665,20 +665,28 @@ function attach_mkdir($channel, $observer_hash, $arr = null) {
 	);
 
 	if($r) {
-		if(mkdir($path,STORAGE_DEFAULT_PERMISSIONS, true)) {
+		if(mkdir($path, STORAGE_DEFAULT_PERMISSIONS, true)) {
 			$ret['success'] = true;
 			$ret['data'] = $arr;
+
+			// update the parent folder's lastmodified timestamp
+			$e = q("UPDATE attach SET edited = '%s' WHERE hash = '%s' AND uid = %d LIMIT 1",
+				dbesc($created),
+				dbesc($arr['folder']),
+				intval($channel_id)
+			);
 		}
 		else {
 			logger('attach_mkdir: ' . mkdir . ' ' . $path . 'failed.');
 			$ret['message'] = t('mkdir failed.');
 		}
 	}
-	else
+	else {
 		$ret['message'] = t('database storage failed.');
+	}
 
 	return $ret;
- 
+
 }
 
 /**
@@ -727,31 +735,30 @@ function attach_change_permissions($channel_id, $resource, $allow_cid, $allow_gi
 
 	return;
 }
-			 	
+
 /**
- * @brief Delete a file.
+ * @brief Delete a file/directory.
  * 
- * @param $channel_id
- * @param $resource
+ * @param int $channel_id
+ * @param string $resource a hash to delete
  */
 function attach_delete($channel_id, $resource) {
 
-
-	$c = q("select channel_address from channel where channel_id = %d limit 1",
+	$c = q("SELECT channel_address FROM channel WHERE channel_id = %d LIMIT 1",
 		intval($channel_id)
 	);
 
 	$channel_address = (($c) ? $c[0]['channel_address'] : 'notfound');
 
-	$r = q("select hash, flags from attach where hash = '%s' and uid = %d limit 1",
+	$r = q("SELECT hash, flags, folder FROM attach WHERE hash = '%s' AND uid = %d limit 1",
 		dbesc($resource),
 		intval($channel_id)
 	);
 
-
 	if(! $r)
 		return;
 
+	// If resource is a directory delete everything in the directory recursive
 	if($r[0]['flags'] & ATTACH_FLAG_DIR) {
 		$x = q("select hash, flags from attach where folder = '%s' and uid = %d",
 			dbesc($resource),
@@ -763,8 +770,10 @@ function attach_delete($channel_id, $resource) {
 			}
 		}
 	}
+
+	// delete a file from filesystem
 	if($r[0]['flags'] & ATTACH_FLAG_OS) {
-		$y = q("select data from attach where hash = '%s' and uid = %d limit 1",
+		$y = q("SELECT data FROM attach WHERE hash = '%s' AND uid = %d LIMIT 1",
 			dbesc($resource),
 			intval($channel_id)
 		);
@@ -778,14 +787,22 @@ function attach_delete($channel_id, $resource) {
 		}
 	}
 
-	$z = q("delete from attach where hash = '%s' and uid = %d limit 1",
+	// delete from database
+	$z = q("DELETE FROM attach WHERE hash = '%s' AND uid = %d LIMIT 1",
 		dbesc($resource),
+		intval($channel_id)
+	);
+
+	// update the parent folder's lastmodified timestamp
+	$e = q("UPDATE attach SET edited = '%s' WHERE hash = '%s' AND uid = %d LIMIT 1",
+		dbesc(datetime_convert()),
+		dbesc($r[0]['folder']),
 		intval($channel_id)
 	);
 
 	return;
 }
-			 	
+
 /**
  * @brief Returns path to file in cloud/.
  * 
