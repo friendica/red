@@ -83,13 +83,14 @@
 
 <div id="abook-advanced-panel" style="display: block;">
 
-<span class="abook-them">{{$them}}</span><span class="abook-me">{{$me}}</span>
-<br />
-<br />
+<table>
+<tr><td></td><td class="abook-them">{{$them}}</td><td colspan="2" class="abook-me">{{$me}}</td><td></td></tr>
+<tr><td colspan="5"><hr /></td></tr>
 {{foreach $perms as $prm}}
 {{include file="field_acheckbox.tpl" field=$prm}}
 {{/foreach}}
-<br />
+<tr><td colspan="5"><hr /></td></tr>
+</table>
 
 </div>
 
