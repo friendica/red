@@ -3,10 +3,16 @@
 namespace Sabre;
 
 require_once 'Sabre/HTTP/ResponseMock.php';
-require_once 'Sabre/CalDAV/Backend/Mock.php';
-require_once 'Sabre/CardDAV/Backend/Mock.php';
-require_once 'Sabre/DAVACL/PrincipalBackend/Mock.php';
+
 require_once 'Sabre/DAV/Auth/Backend/Mock.php';
+require_once 'Sabre/DAV/Mock/File.php';
+require_once 'Sabre/DAV/Mock/Collection.php';
+
+require_once 'Sabre/DAVACL/PrincipalBackend/Mock.php';
+
+require_once 'Sabre/CalDAV/Backend/Mock.php';
+
+require_once 'Sabre/CardDAV/Backend/Mock.php';
 
 /**
  * This class may be used as a basis for other webdav-related unittests.
@@ -16,7 +22,7 @@ require_once 'Sabre/DAV/Auth/Backend/Mock.php';
  *
  * @copyright Copyright (C) 2007-2014 fruux GmbH (https://fruux.com/).
  * @author Evert Pot (http://evertpot.com/)
- * @license http://code.google.com/p/sabredav/wiki/License Modified BSD License
+ * @license http://sabre.io/license/ Modified BSD License
  */
 abstract class DAVServerTest extends \PHPUnit_Framework_TestCase {
 

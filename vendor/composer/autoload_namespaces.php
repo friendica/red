@@ -12,5 +12,4 @@ return array(
     'Sabre\\DAV' => array($vendorDir . '/sabre/dav/lib'),
     'Sabre\\CardDAV' => array($vendorDir . '/sabre/dav/lib'),
     'Sabre\\CalDAV' => array($vendorDir . '/sabre/dav/lib'),
-    'Monolog' => array($vendorDir . '/monolog/monolog/src'),
 );
