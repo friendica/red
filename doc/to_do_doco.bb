@@ -19,3 +19,5 @@
     Administration Guide (post-install)
 
     Administration Guide (pre-install)
+
+Return to the [url=[baseurl]/help/main]Main documentation page[/url]

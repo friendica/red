@@ -27,3 +27,5 @@ For intitial server setup run
 To install Red for domain example.com, after the initial server setup run
 
 [code]bash setup-debian.sh red example.com[/code]
+
+Return to the [url=[baseurl]/help/main]Main documentation page[/url]

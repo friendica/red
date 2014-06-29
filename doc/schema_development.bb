@@ -72,3 +72,5 @@ theme are as follows:
 [li] reply_photo[/li]
 [li] sloppy_photos
 	Determins whether photos are &quot;sloppy&quot; or aligned.  Set or unset (1 or '')[/li]
+
+Return to the [url=[baseurl]/help/main]Main documentation page[/url]

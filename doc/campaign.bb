@@ -232,3 +232,6 @@ Raising more than our initial goal of funds, will speed up our development effor
 [b]12. I have additional Questions[/]
 
 Awesome. We'd be more than happy to chat. You can find us {HERE}
+
+Return to the [url=[baseurl]/help/main]Main documentation page[/url]
+

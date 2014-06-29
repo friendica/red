@@ -97,3 +97,5 @@ Oh, and don't forget to rename the _init function in /php/theme.php to be _init(
 At that point, if you need to add javascript or css files, add them to /js or /css, and then &quot;register&quot; them in _init() through head_add_js('file.js') and head_add_css('file.css').
 
 Now you'll probably want to alter a template. These can be found in in /view/tpl OR view//tpl. All you should have to do is copy whatever you want to tweak from the first place to your theme's own tpl directory.
+
+Return to the [url=[baseurl]/help/main]Main documentation page[/url]

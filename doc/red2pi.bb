@@ -347,3 +347,5 @@ Save and exit.
 
 Follow the instructions here:
 #^[url=https://github.com/friendica/friendica/wiki/Running-Friendica-with-SSL]https://github.com/friendica/friendica/wiki/Running-Friendica-with-SSL[/url]
+
+Return to the [url=[baseurl]/help/main]Main documentation page[/url]

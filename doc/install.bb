@@ -101,3 +101,5 @@ one shown, substituting for your unique paths and settings:
 You can generally find the location of PHP by executing &quot;which php&quot;. If you
 have troubles with this section please contact your hosting provider for
 assistance. Red will not work correctly if you cannot perform this step.
+
+Return to the [url=[baseurl]/help/main]Main documentation page[/url]

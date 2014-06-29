@@ -19,3 +19,5 @@
 
 [b]Utilities[/b]
 [*][url=http://beardyunixer.com:1234/?p=debian-install-script.git;a=tree]Debian Install Script[/url]
+
+Return to the [url=[baseurl]/help/main]Main documentation page[/url]

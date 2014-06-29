@@ -59,3 +59,6 @@ You now have several options to choose, if you desire, and those will need to be
 If you don't choose this option, you will have an option to send a post to your GNUsocial instance by first opening the post (by clicking in the post text area) and clicking on the lock icon next to the Share button. Select the GNUsocial icon made up of three colored dialog baloons. Close that window, then make your post.
 
 If all goes well, you have just cross-posted your RedMatrix post to your account on a GNUsocial instance.
+
+Return to the [url=[baseurl]/help/main]Main documentation page[/url]
+

@@ -36,3 +36,5 @@ You have disabled third party cookies.
 3) Rsync everything in store/
 4) Rsync everything in custom/ (this will only exist if you have custom modules)
 5) Dump and restore DB.
+
+Return to the [url=[baseurl]/help/main]Main documentation page[/url]
