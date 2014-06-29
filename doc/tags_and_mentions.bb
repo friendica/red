@@ -66,3 +66,5 @@ will tag Robert Johnson, but we can only match one space. If the name was "Blind
 [/code]
 
 are both equivalent.  
+
+Return to the [url=[baseurl]/help/main]Main documentation page[/url]

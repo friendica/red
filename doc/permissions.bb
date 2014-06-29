@@ -106,3 +106,5 @@ If you have set any of these permissions to &quot;only those I specifically allo
 The connection edit screen offers a slider to select a degree of friendship with the connnection (this tool is enabled through the &quot;Extra Features&quot; tab of your Settings page). Think of this as a measure of how much you like or dislike them. 1 is for people you like, whose posts you want to see all the time. 99 is for people you don't care for, and whose posts you might only wish to look at occasionally. Once you've assigned a value here, you can use the affinity tool on the matrix page to filter content based on this number.
 
 The slider on the matrix page has both a minimum and maximum value. Posts will only be shown from people who fall between this range. Affinity has no relation to permissions, and is only useful in conjunction with the affinity tool feature.
+
+Return to the [url=[baseurl]/help/main]Main documentation page[/url]

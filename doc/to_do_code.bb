@@ -57,3 +57,5 @@ We need much more than this, but here are areas where developers can help. Pleas
 [li]Put mod_admin under Comanche[/li]
 
 In many cases some of the work has already been started and code exists so that you needn't start from scratch. Please contact one of the developer channels like Channel One (one@zothub.com) before embarking and we can tell you what we already have and provide some insights on how we envision these features fitting together.
+
+Return to the [url=[baseurl]/help/main]Main documentation page[/url]

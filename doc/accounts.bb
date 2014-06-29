@@ -1,5 +1,4 @@
-* [zrl=[baseurl]/help/addons_gnusocial]Posting To Gnu Social[/zrl]
+This one still needs to be written.
 
 Return to the [url=[baseurl]/help/main]Main documentation page[/url]
-
 

@@ -128,3 +128,6 @@ Red proposed API extensions to the Twitter API
     api/albums/permissions/update (R),J
     api/albums/destroy (R),J
     api/friends/permissions (R),J
+
+Return to the [url=[baseurl]/help/main]Main documentation page[/url]
+

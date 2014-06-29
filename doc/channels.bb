@@ -25,3 +25,6 @@ Once you have done this, your channel is ready to use. At [observer.url] you wil
 The &quot;Matrix&quot; page contains all recent posts from across the matrix, again in reverse chronologial order. The exact posts that appear here depend largely on your permissions. At their most permissive, you will receive posts from complete strangers. At the other end of the scale, you may see posts from only your friends - or if you're feeling really anti-social, only your own posts.
 
 As mentioned at the start, many other kinds of channel are possible, however, the creation procedure is the same. The difference between channels lies primarily in the permissions assigned. For example, a channel for sharing documents with colleagues at work would probably want more permissive settings for &quot;Can write to my &quot;public&quot; file storage&quot; than a personal account. For more information, see the permissions section.
+
+Return to the [url=[baseurl]/help/main]Main documentation page[/url]
+

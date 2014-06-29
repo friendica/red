@@ -101,3 +101,5 @@ Ability to mark special posts with a star indicator
 [b]Tag Cloud[/b]
 
 Provide a personal tag cloud on your channel page
+
+Return to the [url=[baseurl]/help/main]Main documentation page[/url]
