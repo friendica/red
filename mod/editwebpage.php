@@ -73,8 +73,8 @@ function editwebpage_content(&$a) {
 
 	$plaintext = true;
 
-	if(feature_enabled($itm[0]['uid'],'richtext'))
-		$plaintext = false;
+//	if(feature_enabled($itm[0]['uid'],'richtext'))
+//		$plaintext = false;
 
 	$mimetype = $itm[0]['mimetype'];
 

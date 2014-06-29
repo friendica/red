@@ -430,10 +430,14 @@ function item_post(&$a) {
 		// First figure out if it's a status post that would've been
 		// created using tinymce. Otherwise leave it alone. 
 
-		$plaintext = ((feature_enabled($profile_uid,'richtext')) ? false : true);
-		if((! $parent) && (! $api_source) && (! $plaintext)) {
-			$body = fix_mce_lf($body);
-		}
+		$plaintext = true;
+
+//		$plaintext = ((feature_enabled($profile_uid,'richtext')) ? false : true);
+//		if((! $parent) && (! $api_source) && (! $plaintext)) {
+//			$body = fix_mce_lf($body);
+//		}
+
+
 
 		// If we're sending a private top-level message with a single @-taggable channel as a recipient, @-tag it, if our pconfig is set.
 

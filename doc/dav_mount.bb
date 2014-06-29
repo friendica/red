@@ -25,14 +25,14 @@ Edit /etc/fstab
  to include your cloud directory by adding
 
 [code]
-example.com/cloud/ /mount/point davfs user,noauto,uid=&lt;DesktopUser&gt;,file_mode=600,dir_mode=700 0 1
+[baseurl]/cloud/ /mount/point davfs user,noauto,uid=&lt;DesktopUser&gt;,file_mode=600,dir_mode=700 0 1
 [/code]
 
-Where example.com is the URL of your hub, /mount/point is the location you want to mount the cloud, and &lt;DesktopUser&gt; is the user you log in to one your computer.  Note that if you are mounting as a normal user (not root) the mount point must be in your home directory.
+Where [baseurl] is the URL of your hub, /mount/point is the location you want to mount the cloud, and &lt;DesktopUser&gt; is the user you log in to one your computer.  Note that if you are mounting as a normal user (not root) the mount point must be in your home directory.
 
 For example, if I wanted to mount my cloud to a directory called 'cloud' in my home directory, and my username was bob, my fstab would be 
 
-[code]example.com/cloud/ /home/bob/cloud davfs user,noauto,uid=bob,file_mode=600,dir_mode=700 0 1[/code]
+[code][baseurl]/cloud/ /home/bob/cloud davfs user,noauto,uid=bob,file_mode=600,dir_mode=700 0 1[/code]
 
 Now, create the mount point.
 
@@ -49,7 +49,7 @@ Create a file called 'secrets'
 and add your cloud login credentials
 
 [code]
-example.com/cloud &lt;username&gt; &lt;password&gt;
+[baseurl]/cloud &lt;username&gt; &lt;password&gt;
 [/code]
 
 Where &lt;username&gt; and &lt;password&gt; are the username and password [i]for your hub[/i].
@@ -60,7 +60,7 @@ Don't let this file be writeable by anyone who doesn't need it with
 
 Finally, mount the drive.
 
-[code]mount example.com/cloud[/code]
+[code]mount [baseurl]/cloud[/code]
 
 You can now find your cloud at /home/bob/cloud and use it as though it were part of your local filesystem - even if the applications you are using have no dav support themselves.
 

@@ -477,8 +477,8 @@ function profiles_content(&$a) {
 
 
 		$editselect = 'none';
-		if(feature_enabled(local_user(),'richtext'))
-			$editselect = 'textareas';
+//		if(feature_enabled(local_user(),'richtext'))
+//			$editselect = 'textareas';
 
 		$a->page['htmlhead'] .= replace_macros(get_markup_template('profed_head.tpl'), array(
 			'$baseurl'    => $a->get_baseurl(true),
