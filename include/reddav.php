@@ -476,8 +476,8 @@ class RedFile extends DAV\Node implements DAV\IFile {
 
 		// @todo only 3 values are needed
 		$c = q("SELECT * FROM channel WHERE channel_id = %d AND NOT (channel_pageflags & %d) LIMIT 1",
-			intval(PAGE_REMOVED),
-			intval($this->auth->owner_id)
+			intval($this->auth->owner_id),
+			intval(PAGE_REMOVED)
 		);
 
 		$r = q("SELECT flags, folder, data FROM attach WHERE hash = '%s' AND uid = %d LIMIT 1",
@@ -518,7 +518,7 @@ class RedFile extends DAV\Node implements DAV\IFile {
 		);
 
 		// update the folder's lastmodified timestamp
-		$e = q("UPDATE attach SET edited = '%s' WHERE folder = '%s' AND uid = %d LIMIT 1",
+		$e = q("UPDATE attach SET edited = '%s' WHERE hash = '%s' AND uid = %d LIMIT 1",
 			dbesc($edited),
 			dbesc($r[0]['folder']),
 			intval($c[0]['channel_id'])
@@ -628,12 +628,14 @@ class RedFile extends DAV\Node implements DAV\IFile {
 	}
 
 	/**
-	 * @brief Delete the current file.
+	 * @brief Delete the file.
 	 *
 	 * @throw DAV\Exception\Forbidden
 	 * @return void
 	 */
 	public function delete() {
+		logger('RedFile::delete(): ' . basename($this->name), LOGGER_DEBUG);
+
 		if ((! $this->auth->owner_id) || (! perm_is_allowed($this->auth->owner_id, $this->auth->observer, 'write_storage'))) {
 			throw new DAV\Exception\Forbidden('Permission denied.');
 		}
@@ -732,7 +734,7 @@ function RedCollectionData($file, &$auth) {
 	$permission_error = false;
 
 	for ($x = 1; $x < count($path_arr); $x++) {
-		$r = q("select id, hash, filename, flags from attach where folder = '%s' and filename = '%s' and uid = %d and (flags & %d) $perms limit 1",
+		$r = q("SELECT id, hash, filename, flags FROM attach WHERE folder = '%s' AND filename = '%s' AND uid = %d AND (flags & %d) $perms LIMIT 1",
 			dbesc($folder),
 			dbesc($path_arr[$x]),
 			intval($channel_id),
