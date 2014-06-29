@@ -113,8 +113,13 @@ class RedDirectory extends DAV\Node implements DAV\ICollection, DAV\IQuota {
 		throw new DAV\Exception\NotFound('The file with name: ' . $name . ' could not be found.');
 	}
 
+	/**
+	 * @brief Returns the name of the directory.
+	 *
+	 * @return string
+	 */
 	public function getName() {
-		logger('RedDirectory::getName returns: ' . basename($this->red_path), LOGGER_DATA);
+		logger('RedDirectory::getName() returns: ' . basename($this->red_path), LOGGER_DATA);
 		return (basename($this->red_path));
 	}
 
@@ -204,7 +209,7 @@ class RedDirectory extends DAV\Node implements DAV\ICollection, DAV\IQuota {
 		);
 
 		// update the folder's lastmodified timestamp
-		$e = q("UPDATE attach SET edited = '%s' WHERE folder = '%s' AND uid = %d LIMIT 1",
+		$e = q("UPDATE attach SET edited = '%s' WHERE hash = '%s' AND uid = %d LIMIT 1",
 			dbesc($edited),
 			dbesc($this->folder_hash),
 			intval($c[0]['channel_id'])
@@ -250,8 +255,9 @@ class RedDirectory extends DAV\Node implements DAV\ICollection, DAV\IQuota {
 
 		if ($r) {
 			$result = attach_mkdir($r[0], $this->auth->observer, array('filename' => $name, 'folder' => $this->folder_hash));
-			if (! $result['success'])
+			if (! $result['success']) {
 				logger('RedDirectory::createDirectory(): ' . print_r($result, true), LOGGER_DEBUG);
+			}
 		}
 	}
 

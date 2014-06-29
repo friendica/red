@@ -552,9 +552,9 @@ function z_readdir($channel_id, $observer_hash, $pathname, $parent_hash = '') {
 
 /**
  * @function attach_mkdir($channel,$observer_hash,$arr);
- * 
+ *
  * @brief Create directory.
- *  
+ *
  * @param $channel channel array of owner
  * @param $observer_hash hash of current observer
  * @param $arr parameter array to fulfil request
@@ -641,7 +641,7 @@ function attach_mkdir($channel, $observer_hash, $arr = null) {
 
 	$path .= $arr['hash'];
 
-	$created = datetime_convert();		
+	$created = datetime_convert();
 
 	$r = q("INSERT INTO attach ( aid, uid, hash, creator, filename, filetype, filesize, revision, folder, flags, data, created, edited, allow_cid, allow_gid, deny_cid, deny_gid )
 		VALUES ( %d, %d, '%s', '%s', '%s', '%s', %d, %d, '%s', '%s', '%s', '%s', '%s', '%s', '%s', '%s', '%s' ) ",
@@ -678,7 +678,7 @@ function attach_mkdir($channel, $observer_hash, $arr = null) {
 		$ret['message'] = t('database storage failed.');
 
 	return $ret;
- 
+
 }
 
 /**
