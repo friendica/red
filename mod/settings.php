@@ -994,7 +994,9 @@ function settings_content(&$a) {
 			'$hint' => t('Please enable expert mode (in <a href="settings/features">Settings > Additional features</a>) to adjust!'),
 			'$lbl_misc' => t('Miscellaneous Settings'),
 			'$menus' => $menu,
-			'$menu_desc' => t('Personal menu to display in your channel pages'),		
+			'$menu_desc' => t('Personal menu to display in your channel pages'),
+			'$removeme' => t('Remove this channel'),
+			'$permanent' => t('Warning: This action is permanent and cannot be reversed.'),		
 		));
 
 		call_hooks('settings_form',$o);
