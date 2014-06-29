@@ -23,22 +23,33 @@ require_once('include/attach.php');
  */
 class RedDirectory extends DAV\Node implements DAV\ICollection, DAV\IQuota {
 
+	/**
+	 * @brief The path inside /cloud
+	 */
 	private $red_path;
 	private $folder_hash;
-	// @todo I think this is not used anywhere, we always strip '/cloud' and only use it in debug
+	/**
+	 * @brief The full path as seen in the browser.
+	 * /cloud + $red_path
+	 * @todo I think this is not used anywhere, we always strip '/cloud' and only use it in debug
+	 */
 	private $ext_path;
 	private $root_dir = '';
 	private $auth;
+	/**
+	 * @brief The real path on the filesystem.
+	 * The actual path in store/ with the hashed names.
+	 */
 	private $os_path = '';
 
 	/**
-	 * Sets up the directory node, expects a full path.
+	 * @brief Sets up the directory node, expects a full path.
 	 *
 	 * @param string $ext_path a full path
-	 * @param $auth_plugin
+	 * @param RedBasicAuth &$auth_plugin
 	 */
 	public function __construct($ext_path, &$auth_plugin) {
-		logger('RedDirectory::__construct() ' . $ext_path, LOGGER_DEBUG);
+		logger('RedDirectory::__construct() ' . $ext_path, LOGGER_DATA);
 		$this->ext_path = $ext_path;
 		// remove "/cloud" from the beginning of the path
 		$this->red_path = ((strpos($ext_path, '/cloud') === 0) ? substr($ext_path, 6) : $ext_path);
@@ -54,7 +65,7 @@ class RedDirectory extends DAV\Node implements DAV\ICollection, DAV\IQuota {
 		}
 	}
 
-	function log() {
+	private function log() {
 		logger('RedDirectory::log() ext_path ' . $this->ext_path, LOGGER_DATA);
 		logger('RedDirectory::log() os_path ' . $this->os_path, LOGGER_DATA);
 		logger('RedDirectory::log() red_path ' . $this->red_path, LOGGER_DATA);
@@ -122,6 +133,40 @@ class RedDirectory extends DAV\Node implements DAV\ICollection, DAV\IQuota {
 		logger('RedDirectory::getName() returns: ' . basename($this->red_path), LOGGER_DATA);
 		return (basename($this->red_path));
 	}
+	
+	/**
+	 * @brief Renames the directory.
+	 *
+	 * @todo handle duplicate directory name
+	 *
+	 * @throw DAV\Exception\Forbidden
+	 * @param string $name The new name of the directory.
+	 * @return void
+	 */
+	public function setName($name) {
+		logger('RedDirectory::setName(): ' . basename($this->red_path) . ' -> ' . $name, LOGGER_DATA);
+
+		if ((! $name) || (! $this->auth->owner_id)) {
+			logger('RedDirectory::setName(): permission denied');
+			throw new DAV\Exception\Forbidden('Permission denied.');
+		}
+
+		if (! perm_is_allowed($this->auth->owner_id, $this->auth->observer, 'write_storage')) {
+			logger('RedDirectory::setName(): permission denied');
+			throw new DAV\Exception\Forbidden('Permission denied.');
+		}
+
+		list($parent_path, ) = DAV\URLUtil::splitPath($this->red_path);
+		$new_path = $parent_path . '/' . $name;
+
+		$r = q("UPDATE attach SET filename = '%s' WHERE hash = '%s' AND uid = %d LIMIT 1",
+			dbesc($name),
+			dbesc($this->folder_hash),
+			intval($this->auth->owner_id)
+		);
+
+		$this->red_path = $new_path;
+	}
 
 	/**
 	 * @brief Creates a new file in the directory.
@@ -135,18 +180,18 @@ class RedDirectory extends DAV\Node implements DAV\ICollection, DAV\IQuota {
 	 * @throws DAV\Exception\Forbidden
 	 * @param string $name Name of the file
 	 * @param resource|string $data Initial payload
-	 * @return null|string
+	 * @return null|string ETag
 	 */
 	public function createFile($name, $data = null) {
-		logger('RedDirectory::createFile(): ' . $name, LOGGER_DEBUG);
+		logger('RedDirectory::createFile(): ' . $name, LOGGER_DATA);
 
 		if (! $this->auth->owner_id) {
-			logger('createFile: permission denied');
+			logger('RedDirectory::createFile(): permission denied');
 			throw new DAV\Exception\Forbidden('Permission denied.');
 		}
 
 		if (! perm_is_allowed($this->auth->owner_id, $this->auth->observer, 'write_storage')) {
-			logger('createFile: permission denied');
+			logger('RedDirectory::createFile(): permission denied');
 			throw new DAV\Exception\Forbidden('Permission denied.');
 		}
 
@@ -311,7 +356,7 @@ class RedDirectory extends DAV\Node implements DAV\ICollection, DAV\IQuota {
 		if (! $path_arr)
 			return;
 
-		logger('RedDirectory::getDir(): path: ' . print_r($path_arr, true), LOGGER_DEBUG);
+		logger('RedDirectory::getDir(): path: ' . print_r($path_arr, true), LOGGER_DATA);
 
 		$channel_name = $path_arr[0];
 
@@ -321,7 +366,7 @@ class RedDirectory extends DAV\Node implements DAV\ICollection, DAV\IQuota {
 		);
 
 		if (! $r) {
-			throw new DAV\Exception\NotFound('The file with name: ' . $channel_name . ' could not be found');
+			throw new DAV\Exception\NotFound('The file with name: ' . $channel_name . ' could not be found.');
 			return;
 		}
 
@@ -534,7 +579,10 @@ class RedFile extends DAV\Node implements DAV\IFile {
 			intval($c[0]['channel_id'])
 		);
 
-		// @todo do we really want to remove the whole file if an update fails because of maxfilesize or quota?
+		// @todo do we really want to remove the whole file if an update fails
+		// because of maxfilesize or quota?
+		// There is an Exception "InsufficientStorage" or "PaymentRequired" for
+		// our service class from SabreDAV we could use.
 
 		$maxfilesize = get_config('system', 'maxfilesize');
 		if (($maxfilesize) && ($size > $maxfilesize)) {

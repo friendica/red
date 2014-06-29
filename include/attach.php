@@ -555,9 +555,9 @@ function z_readdir($channel_id, $observer_hash, $pathname, $parent_hash = '') {
  *
  * @brief Create directory.
  *
- * @param $channel channel array of owner
- * @param $observer_hash hash of current observer
- * @param $arr parameter array to fulfil request
+ * @param array $channel channel array of owner
+ * @param string $observer_hash hash of current observer
+ * @param array $arr parameter array to fulfil request
  * Required:
  *    $arr['filename']
  *    $arr['folder'] // hash of parent directory, empty string for root directory
