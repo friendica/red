@@ -19,7 +19,7 @@ Standard-Profil, das alle Profilbesucher zu sehen bekommen, könnte nur
 Dein Vorname stehen, sonst keine weiteren Informationen. Freunde und
 Bekannte könnten Deinen kompletten Realnamen und Deine Postadresse zu
 sehen bekommen, und im Profil für Deinen engsten Freundeskreis könnten
-peinliche Hobbies Trinkrekorde ihren Platz finden.
+peinliche Hobbies und Trinkrekorde ihren Platz finden.
 
 Jeder Kanal hat ein Standard-Profil (öffentliches Profil), das vor niemandem
 versteckt werden kann (außer evtl. auf privaten Servern, die nicht mit der
