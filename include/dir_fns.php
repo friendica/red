@@ -99,6 +99,8 @@ function sync_directories($dirmode) {
 		if(! $rr['site_directory'])
 			continue;
 
+		logger('sync directories: ' . $rr['site_directory']);
+
 		// for brand new directory servers, only load the last couple of days. Everything before that will be repeats.
 
 		$syncdate = (($rr['site_sync'] === '0000-00-00 00:00:00') ? datetime_convert('UTC','UTC','now - 2 days') : $rr['site_sync']);
