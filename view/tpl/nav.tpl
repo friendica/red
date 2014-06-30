@@ -12,36 +12,44 @@
 				<i class="icon-circle-arrow-right" id="expand-aside-icon"></i>
 			</button>
 			{{if $userinfo}}
-			<img class="dropdown-toggle fakelink" data-toggle="dropdown" id="avatar" src="{{$userinfo.icon}}" alt="{{$userinfo.name}}"><span class="caret" id="usermenu-caret"></span>
+				<img class="dropdown-toggle fakelink" data-toggle="dropdown" id="avatar" src="{{$userinfo.icon}}" alt="{{$userinfo.name}}"><span class="caret" id="usermenu-caret"></span>
 				{{if $localuser}}
-				<ul class="dropdown-menu" role="menu" aria-labelledby="avatar">
-					{{foreach $nav.usermenu as $usermenu}}
-					<li role="presentation"><a href="{{$usermenu.0}}" title="{{$usermenu.3}}" role="menuitem">{{$usermenu.1}}</a></li>
-					{{/foreach}}
-					<li role="presentation" class="divider"></li>
-					{{if $nav.profiles}}<li role="presentation"><a href="{{$nav.profiles.0}}" title="{{$nav.profiles.3}}" role="menuitem">{{$nav.profiles.1}}</a></li>{{/if}}
-					{{if $nav.manage}}<li role="presentation"><a href="{{$nav.manage.0}}" title="{{$nav.manage.3}}" role="menuitem">{{$nav.manage.1}}</a></li>{{/if}}	
-					{{if $nav.settings}}<li role="presentation"><a href="{{$nav.settings.0}}" title="{{$nav.settings.3}}" role="menuitem">{{$nav.settings.1}}</a></li>{{/if}}
-					{{if $nav.admin}}
-					<li role="presentation" class="divider"></li>
-					<li role="presentation"><a href="{{$nav.admin.0}}" title="{{$nav.admin.3}}" role="menuitem">{{$nav.admin.1}}</a></li>
+					<ul class="dropdown-menu" role="menu" aria-labelledby="avatar">
+						{{foreach $nav.usermenu as $usermenu}}
+						<li role="presentation"><a href="{{$usermenu.0}}" title="{{$usermenu.3}}" role="menuitem">{{$usermenu.1}}</a></li>
+						{{/foreach}}
+						<li role="presentation" class="divider"></li>
+						{{if $nav.profiles}}<li role="presentation"><a href="{{$nav.profiles.0}}" title="{{$nav.profiles.3}}" role="menuitem">{{$nav.profiles.1}}</a></li>{{/if}}
+						{{if $nav.manage}}<li role="presentation"><a href="{{$nav.manage.0}}" title="{{$nav.manage.3}}" role="menuitem">{{$nav.manage.1}}</a></li>{{/if}}	
+						{{if $nav.settings}}<li role="presentation"><a href="{{$nav.settings.0}}" title="{{$nav.settings.3}}" role="menuitem">{{$nav.settings.1}}</a></li>{{/if}}
+						{{if $nav.admin}}
+						<li role="presentation" class="divider"></li>
+						<li role="presentation"><a href="{{$nav.admin.0}}" title="{{$nav.admin.3}}" role="menuitem">{{$nav.admin.1}}</a></li>
+						{{/if}}
+						{{if $nav.logout}}
+						<li role="presentation" class="divider"></li>
+						<li role="presentation"><a href="{{$nav.logout.0}}" title="{{$nav.logout.3}}" role="menuitem">{{$nav.logout.1}}</a></li>
+						{{/if}}
+					</ul>
+				{{else}}
+					{{if $nav.lock}}
+						<ul class="dropdown-menu" role="menu" aria-labelledby="avatar">
+							<li role="presentation"><a href="{{$nav.lock.0}}" title="{{$nav.lock.3}}" role="menuitem">{{$nav.lock.3}}</a></li>
+						</ul>
 					{{/if}}
-					{{if $nav.logout}}
-					<li role="presentation" class="divider"></li>
-					<li role="presentation"><a href="{{$nav.logout.0}}" title="{{$nav.logout.3}}" role="menuitem">{{$nav.logout.1}}</a></li>
-					{{/if}}
-				</ul>
 				{{/if}}
 			{{/if}}
 		</div>
 		<div class="collapse navbar-collapse" id="navbar-collapse-1">
 			<ul class="nav navbar-nav navbar-left">
-			{{if $nav.lock}}
-				<li>
-					<a title="{{$nav.lock.3}}" href="{{$nav.lock.0}}"><i class="{{if $nav.locked}}icon-lock{{else}}icon-unlock{{/if}}"></i></a>
-				</li>
+			{{if !$userinfo}}
+				{{if $nav.lock}}
+					<li>
+						<a title="{{$nav.lock.3}}" href="{{$nav.lock.0}}"><i class="{{if $nav.locked}}icon-lock{{else}}icon-unlock{{/if}}"></i></a>
+					</li>
+				{{/if}}
 			{{/if}}
-
+			
 			{{if $nav.login}}<li class="{{$nav.login.2}}"><a href="{{$nav.login.0}}" title="{{$nav.login.3}}" >{{$nav.login.1}}</a><li>{{/if}}
 
 			{{if $nav.alogout}}<li class="{{$nav}}-alogout.2"><a href="{{$nav.alogout.0}}" title="{{$nav.alogout.3}}" >{{$nav.alogout.1}}</a></li>{{/if}}
