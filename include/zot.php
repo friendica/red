@@ -1,4 +1,4 @@
-<?php /** @file */
+32;278;2c<?php /** @file */
 
 require_once('include/crypto.php');
 require_once('include/items.php');
@@ -601,6 +601,7 @@ function import_xchan($arr,$ud_flags = UPDATE_FLAGS_UPDATED) {
 
 	$changed = false;
 	$what = '';
+	$addresses = array();
 
 	if(! (is_array($arr) && array_key_exists('success',$arr) && $arr['success'])) {
 		logger('import_xchan: invalid data packet: ' . print_r($arr,true));
@@ -837,6 +838,8 @@ function import_xchan($arr,$ud_flags = UPDATE_FLAGS_UPDATED) {
 			if(strpos($location['address'],'/') !== false)
 				$location['address'] = substr($location['address'],0,strpos($location['address'],'/'));
 
+			$addresses[] = $location['address'];
+
 			// match as many fields as possible in case anything at all changed. 
 
 			$r = q("select * from hubloc where hubloc_hash = '%s' and hubloc_guid = '%s' and hubloc_guid_sig = '%s' and hubloc_url = '%s' and hubloc_url_sig = '%s' and hubloc_host = '%s' and hubloc_addr = '%s' and hubloc_callback = '%s' and hubloc_sitekey = '%s' ",
@@ -997,16 +1000,25 @@ function import_xchan($arr,$ud_flags = UPDATE_FLAGS_UPDATED) {
 	
 	if(($changed) || ($ud_flags == UPDATE_FLAGS_FORCED)) {
 		$guid = random_string() . '@' . get_app()->get_hostname();		
-		update_modtime($xchan_hash,$guid,$arr['address'],$ud_flags);
+		if($addresses) {
+			foreach($addresses as $address) {
+				update_modtime($xchan_hash,$guid,$address,$ud_flags);
+			}
+		}
 		logger('import_xchan: changed: ' . $what,LOGGER_DEBUG);
 	}
 	elseif(! $ud_flags) {
 		// nothing changed but we still need to update the updates record
-		q("update updates set ud_flags = ( ud_flags | %d ) where ud_addr = '%s' and not (ud_flags & %d) ",
-			intval(UPDATE_FLAGS_UPDATED),
-			dbesc($arr['address']),
-			intval(UPDATE_FLAGS_UPDATED)
-		);
+		if($addresses) {
+			foreach($addresses as $address) {
+
+				q("update updates set ud_flags = ( ud_flags | %d ) where ud_addr = '%s' and not (ud_flags & %d) ",
+					intval(UPDATE_FLAGS_UPDATED),
+					dbesc($address),
+					intval(UPDATE_FLAGS_UPDATED)
+				);
+			}
+		}
 	}
 
 	if(! x($ret,'message')) {
