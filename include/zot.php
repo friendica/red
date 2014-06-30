@@ -1,4 +1,4 @@
-32;278;2c<?php /** @file */
+<?php /** @file */
 
 require_once('include/crypto.php');
 require_once('include/items.php');
