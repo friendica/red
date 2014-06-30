@@ -999,9 +999,9 @@ function import_xchan($arr,$ud_flags = UPDATE_FLAGS_UPDATED) {
 	}
 	
 	if(($changed) || ($ud_flags == UPDATE_FLAGS_FORCED)) {
-		$guid = random_string() . '@' . get_app()->get_hostname();		
 		if($addresses) {
 			foreach($addresses as $address) {
+				$guid = random_string() . '@' . get_app()->get_hostname();		
 				update_modtime($xchan_hash,$guid,$address,$ud_flags);
 			}
 		}
