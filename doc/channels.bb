@@ -26,5 +26,5 @@ The &quot;Matrix&quot; page contains all recent posts from across the matrix, ag
 
 As mentioned at the start, many other kinds of channel are possible, however, the creation procedure is the same. The difference between channels lies primarily in the permissions assigned. For example, a channel for sharing documents with colleagues at work would probably want more permissive settings for &quot;Can write to my &quot;public&quot; file storage&quot; than a personal account. For more information, see the permissions section.
 
-Return to the [url=[baseurl]/help/main]Main documentation page[/url]
+Return to the [zrl=[baseurl]/help/main]Main documentation page[/zrl]
 

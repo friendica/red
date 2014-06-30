@@ -60,5 +60,5 @@ If you don't choose this option, you will have an option to send a post to your 
 
 If all goes well, you have just cross-posted your RedMatrix post to your account on a GNUsocial instance.
 
-Return to the [url=[baseurl]/help/main]Main documentation page[/url]
+Return to the [zrl=[baseurl]/help/main]Main documentation page[/zrl]
 

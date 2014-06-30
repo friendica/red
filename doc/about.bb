@@ -14,11 +14,11 @@ In other words, the Red Matrix can run on any computing platform that comes with
 
 Along the way, Red offers a number of unique goodies: 
 
-[b][color= grey]Single-click user identification:[/color][/b] meaning you can access sites on the Red Matrix simply by clicking on links to remote sites. Authentication just happens automagically behind the scenes. Forget about remembering multiple user names with multiple passwords when accessing different sites online.
+[b]Single-click user identification:[/b] meaning you can access sites on the Red Matrix simply by clicking on links to remote sites. Authentication just happens automagically behind the scenes. Forget about remembering multiple user names with multiple passwords when accessing different sites online.
 
-[b][color= grey]Cloning:[/color][/b] of online identities. Your online presence no longer has to be tied to a single server, domain name or IP address.  You can clone and import your identity (or channel as we call it) to another server (or, a hub as servers are known in the Red Matrix).  Now, should your primary hub go down, no worries, your contacts, posts[i]*[/i], and messages[i]*[/i] will automagically continue to be available and accessible under your cloned channel. [i](*: only posts and messages as from the moment you cloned your channel)[/i]
+[b]Cloning:[/b] of online identities. Your online presence no longer has to be tied to a single server, domain name or IP address.  You can clone and import your identity (or channel as we call it) to another server (or, a hub as servers are known in the Red Matrix).  Now, should your primary hub go down, no worries, your contacts, posts[i]*[/i], and messages[i]*[/i] will automagically continue to be available and accessible under your cloned channel. [i](*: only posts and messages as from the moment you cloned your channel)[/i]
 
-[b][color= grey]Privacy:[/color][/b]  Red identities (Zot IDs) can be deleted, backed up/downloaded, and cloned.  The user is in full control of their data. Should you decide to delete all your content and erase your Zot ID, all you have to do is click on a link and it's immediately deleted from the hub.  No questions, no fuss. 
+[b]Privacy:[/b]  Red identities (Zot IDs) can be deleted, backed up/downloaded, and cloned.  The user is in full control of their data. Should you decide to delete all your content and erase your Zot ID, all you have to do is click on a link and it's immediately deleted from the hub.  No questions, no fuss. 
 
-Return to the [url=[baseurl]/help/main]Main documentation page[/url]
+Return to the [zrl=[baseurl]/help/main]Main documentation page[/zrl]
 

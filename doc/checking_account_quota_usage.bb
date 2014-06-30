@@ -4,23 +4,14 @@ Your hub might implement service class limits, assigning limits to the total siz
 
 Here's how you can quickly check how much of your assigned quota you're currently using:
  
-[b][color= grey]Check file storage quota levels[/color][/b]
+[b]Check file storage quota levels[/b]
 Visit the following URL in your browser:
-[code]
-https://{Red-domain}/filestorage/{your_username}
-[/code]
+[observer.baseurl]/filestorage/webname
+
+[b]Check uploaded photos storage quota levels[/b]
+[observer.baseurl]/photos/webname
 
 Example:
-[code]https://friendicared.net/filestorage/test2
-[/code]
+[observer.baseurl]/filestorage/webname
 
-[b][color= grey]Check uploaded photos storage quota levels[/color][/b]
-[code]
-https://{Red-domain}photos/{your_username}/upload/
-[/code]
-
-Example:
-[code]https://friendicared.net/photos/test2/upload/
-[/code]
-
-Return to the [url=[baseurl]/help/main]Main documentation page[/url]
+Return to the [zrl=[baseurl]/help/main]Main documentation page[/zrl]
