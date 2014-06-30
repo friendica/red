@@ -1,9 +1,21 @@
 <?php
-
+/**
+ * @file mod/ping.php
+ *
+ */
 
 require_once('include/bbcode.php');
 require_once('include/notify.php');
 
+/**
+ * @brief do several updates when pinged.
+ *
+ * This function does several tasks. Whenever called it checks for new messages,
+ * introductions, notifications, etc. and returns a json with the results.
+ *
+ * @param App &$a
+ * @result JSON
+ */
 function ping_init(&$a) {
 
 	$result = array();
@@ -30,13 +42,13 @@ function ping_init(&$a) {
 
 	$result['invalid'] = ((intval($_GET['uid'])) && (intval($_GET['uid']) != local_user()) ? 1 : 0);
 
-	if(x($_SESSION,'sysmsg')){
+	if(x($_SESSION, 'sysmsg')){
 		foreach ($_SESSION['sysmsg'] as $m){
 			$result['notice'][] = array('message' => $m);
 		}
 		unset($_SESSION['sysmsg']);
 	}
-	if(x($_SESSION,'sysmsg_info')){
+	if(x($_SESSION, 'sysmsg_info')){
 		foreach ($_SESSION['sysmsg_info'] as $m){
 			$result['info'][] = array('message' => $m);
 		}
@@ -47,7 +59,6 @@ function ping_init(&$a) {
 		echo json_encode($result);
 		killme();
 	}
-
 
 	if(get_observer_hash() && (! $result['invalid'])) {
 		$r = q("select cp_id, cp_room from chatpresence where cp_xchan = '%s' and cp_client = '%s' and cp_room = 0 limit 1",
@@ -80,8 +91,8 @@ function ping_init(&$a) {
 		killme();
 	}
 
-	if(x($_REQUEST,'markRead') && local_user()) {
-
+	// mark all items read
+	if(x($_REQUEST, 'markRead') && local_user()) {
 		switch($_REQUEST['markRead']) {
 			case 'network':
 				$r = q("update item set item_flags = ( item_flags ^ %d ) where (item_flags & %d) and uid = %d", 
@@ -90,7 +101,6 @@ function ping_init(&$a) {
 					intval(local_user())
 				);
 				break;
-
 			case 'home':
 				$r = q("update item set item_flags = ( item_flags ^ %d ) where (item_flags & %d) and (item_flags & %d) and uid = %d", 
 					intval(ITEM_UNSEEN),
@@ -111,18 +121,15 @@ function ping_init(&$a) {
 					intval(local_user())
 				);
 				break;
-
 			case 'notify':
 				$r = q("update notify set seen = 1 where uid = %d",
 					intval(local_user())
 				);
 				break;
-
 			default:
 				break;
 		}
 	}
-
 
 	if(argc() > 1 && argv(1) === 'notify') {
 		$t = q("select count(*) as total from notify where uid = %d and seen = 0",
@@ -163,12 +170,9 @@ function ping_init(&$a) {
 
 		echo json_encode(array('notify' => $notifs));
 		killme();
-
 	}
 
-
 	if(argc() > 1 && argv(1) === 'messages') {
-
 		$channel = $a->get_channel();
 		$t = q("select mail.*, xchan.* from mail left join xchan on xchan_hash = from_xchan 
 			where channel_id = %d and not ( mail_flags & %d ) and not (mail_flags & %d ) 
@@ -196,14 +200,9 @@ function ping_init(&$a) {
 
 		echo json_encode(array('notify' => $notifs));
 		killme();
-
 	}
 
-
-
-
 	if(argc() > 1 && (argv(1) === 'network' || argv(1) === 'home')) {
-
 		$result = array();
 
 		$r = q("SELECT * FROM item
@@ -220,15 +219,13 @@ function ping_init(&$a) {
 					continue;
 				$result[] = format_notification($item);
 			}
-		}			
-		logger('ping: ' . print_r($result,true));
+		}
+		logger('ping (network||home): ' . print_r($result, true), LOGGER_DATA);
 		echo json_encode(array('notify' => $result));
 		killme();
-
 	}
 
 	if(argc() > 1 && (argv(1) === 'intros')) {
-
 		$result = array();
 
 		$r = q("SELECT abook.*, xchan.* FROM abook left join xchan on abook_xchan = xchan_hash
@@ -250,15 +247,13 @@ function ping_init(&$a) {
 					'message' => t('added your channel')
 				);
 			}
-		}			
-		logger('ping: ' . print_r($result,true));
+		}
+		logger('ping (intros): ' . print_r($result, true), LOGGER_DATA);
 		echo json_encode(array('notify' => $result));
 		killme();
-
 	}
 
 	if(argc() > 1 && (argv(1) === 'all_events')) {
-
 		$bd_format = t('g A l F d') ; // 8 AM Friday January 18
 
 		$result = array();
@@ -267,22 +262,21 @@ function ping_init(&$a) {
 			WHERE `event`.`uid` = %d AND start < '%s' AND start > '%s' and `ignore` = 0
 			ORDER BY `start` DESC ",
 			intval(local_user()),
-			dbesc(datetime_convert('UTC',date_default_timezone_get(),'now + 7 days')),
-			dbesc(datetime_convert('UTC',date_default_timezone_get(),'now - 1 days'))
+			dbesc(datetime_convert('UTC', date_default_timezone_get(), 'now + 7 days')),
+			dbesc(datetime_convert('UTC', date_default_timezone_get(), 'now - 1 days'))
 		);
 
 		if($r) {
 			foreach($r as $rr) {
 				if($rr['adjust'])
-					$md = datetime_convert('UTC',date_default_timezone_get(),$rr['start'],'Y/m');
+					$md = datetime_convert('UTC', date_default_timezone_get(), $rr['start'], 'Y/m');
 				else
-					$md = datetime_convert('UTC','UTC',$rr['start'],'Y/m');
+					$md = datetime_convert('UTC', 'UTC', $rr['start'], 'Y/m');
 
-				$strt = datetime_convert('UTC',$rr['convert'] ? date_default_timezone_get() : 'UTC',$rr['start']);
-				$today = ((substr($strt,0,10) === datetime_convert('UTC',date_default_timezone_get(),'now','Y-m-d')) ? true : false);
+				$strt = datetime_convert('UTC', $rr['convert'] ? date_default_timezone_get() : 'UTC', $rr['start']);
+				$today = ((substr($strt, 0, 10) === datetime_convert('UTC', date_default_timezone_get(), 'now', 'Y-m-d')) ? true : false);
 				
 				$when = day_translate(datetime_convert('UTC', $rr['adjust'] ? date_default_timezone_get() : 'UTC', $rr['start'], $bd_format)) . (($today) ?  ' ' . t('[today]') : '');
-
 
 				$result[] = array(
 					'notify_link' => $a->get_baseurl() . '/events', // FIXME this takes you to an edit page and it may not be yours, we really want to just view the single event  --> '/events/event/' . $rr['event_hash'],
@@ -294,22 +288,18 @@ function ping_init(&$a) {
 					'message'     => t('posted an event')
 				);
 			}
-		}			
-		logger('ping: ' . print_r($result,true));
+		}
+		logger('ping (all_events): ' . print_r($result, true), LOGGER_DATA);
 		echo json_encode(array('notify' => $result));
 		killme();
-
 	}
 
-
 	// Normal ping - just the counts
-
 	$t = q("select count(*) as total from notify where uid = %d and seen = 0",
 		intval(local_user())
 	);
 	if($t)
 		$result['notify'] = intval($t[0]['total']);
-
 
 	$t1 = dba_timer();
 
@@ -321,7 +311,6 @@ function ping_init(&$a) {
 	);
 
 	if(count($r)) {	
-
 		$arr = array('items' => $r);
 		call_hooks('network_ping', $arr);
 	
@@ -332,7 +321,6 @@ function ping_init(&$a) {
 				$result['network'] ++;
 		}
 	}
-
 
 	$t2 = dba_timer();
 
@@ -372,15 +360,15 @@ function ping_init(&$a) {
 		WHERE `event`.`uid` = %d AND start < '%s' AND start > '%s' and `ignore` = 0
 		ORDER BY `start` ASC ",
 			intval(local_user()),
-			dbesc(datetime_convert('UTC',date_default_timezone_get(),'now + 7 days')),
-			dbesc(datetime_convert('UTC',date_default_timezone_get(),'now - 1 days'))
+			dbesc(datetime_convert('UTC', date_default_timezone_get(), 'now + 7 days')),
+			dbesc(datetime_convert('UTC', date_default_timezone_get(), 'now - 1 days'))
 	);
 
 	if($events) {
 		$result['all_events'] = count($events);
 
 		if($result['all_events']) {
-			$str_now = datetime_convert('UTC',$a->timezone,'now','Y-m-d');
+			$str_now = datetime_convert('UTC', $a->timezone, 'now', 'Y-m-d');
 			foreach($events as $x) {
 				$bd = false;
 				if($x['type'] === 'birthday') {
@@ -390,7 +378,7 @@ function ping_init(&$a) {
 				else {
 					$result['events'] ++;
 				}
-				if(datetime_convert('UTC',((intval($x['adjust'])) ? $a->timezone : 'UTC'), $x['start'],'Y-m-d') === $str_now) {
+				if(datetime_convert('UTC', ((intval($x['adjust'])) ? $a->timezone : 'UTC'), $x['start'], 'Y-m-d') === $str_now) {
 					$result['all_events_today'] ++;
 					if($bd)
 						$result['birthdays_today'] ++;
@@ -409,6 +397,4 @@ function ping_init(&$a) {
 
 	echo $x;
 	killme();
-
 }
-
