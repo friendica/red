@@ -445,14 +445,20 @@ function bbcode($Text,$preserve_nl = false, $tryoembed = true) {
 		$Text = str_replace('[observer.url]',$observer['xchan_url'], $Text);
 		$Text = str_replace('[observer.name]',$observer['xchan_name'], $Text);
 		$Text = str_replace('[observer.address]',$observer['xchan_addr'], $Text);
+		$Text = str_replace('[observer.webname]',substr($observer['xchan_addr'],0,strpos($observer['xchan_addr'],'@')), $Text);
 		$Text = str_replace('[observer.photo]','[zmg]'.$observer['xchan_photo_l'].'[/zmg]', $Text);				
 	} else {
 		$Text = str_replace('[observer.baseurl]', '', $Text);
 		$Text = str_replace('[observer.url]','', $Text);
 		$Text = str_replace('[observer.name]','', $Text);
 		$Text = str_replace('[observer.address]','', $Text);
+		$Text = str_replace('[observer.webname]','',$Text);
 		$Text = str_replace('[observer.photo]','', $Text);		
 	}
+
+
+
+
 
 	// Perform URL Search
 
