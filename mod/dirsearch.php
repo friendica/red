@@ -176,7 +176,7 @@ function dirsearch_content(&$a) {
 
 	if($sync) {
 		$spkt = array('transactions' => array());
-		$r = q("select * from updates where ud_date >= '%s' and ud_guid != '' order by ud_date desc",
+		$r = q("select * from updates where ud_date >= '%s' and ud_guid != '' group by ud_addr order by ud_date desc",
 			dbesc($sync)
 		);
 		if($r) {
