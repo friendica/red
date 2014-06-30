@@ -1,12 +1,21 @@
-<?php /** @file */
+<?php
+/**
+ * @file include/plugin.php
+ *
+ * @brief Some functions to handle addons and themes.
+ */
 
 require_once("include/friendica_smarty.php");
 
-// install and uninstall plugin
-
+/**
+ * @brief unloads an addon.
+ *
+ * @param string $plugin name of the addon
+ * @return void
+ */
 function unload_plugin($plugin){
 	logger("Addons: unloading " . $plugin, LOGGER_DEBUG);
-    
+
 	@include_once('addon/' . $plugin . '/' . $plugin . '.php');
 	if(function_exists($plugin . '_unload')) {
 		$func = $plugin . '_unload';
@@ -14,10 +23,13 @@ function unload_plugin($plugin){
 	}
 }
 
-
-
+/**
+ * @brief uninstalls an addon.
+ *
+ * @param string $plugin name of the addon
+ * @return bool
+ */
 function uninstall_plugin($plugin) {
-
 	unload_plugin($plugin);
 
 	if(! file_exists('addon/' . $plugin . '/' . $plugin . '.php'))
@@ -34,9 +46,14 @@ function uninstall_plugin($plugin) {
 	q("DELETE FROM `addon` WHERE `name` = '%s' ",
 		dbesc($plugin)
 	);
-
 }
 
+/**
+ * @brief installs an addon.
+ *
+ * @param string $plugin name of the addon
+ * @return bool
+ */
 function install_plugin($plugin) {
 	if(! file_exists('addon/' . $plugin . '/' . $plugin . '.php'))
 		return false;
@@ -50,7 +67,7 @@ function install_plugin($plugin) {
 	}
 
 	$plugin_admin = (function_exists($plugin . "_plugin_admin") ? 1 : 0);
-		
+
 	$r = q("INSERT INTO `addon` (`name`, `installed`, `timestamp`, `plugin_admin`) VALUES ( '%s', 1, %d , %d ) ",
 		dbesc($plugin),
 		intval($t),
@@ -58,23 +75,25 @@ function install_plugin($plugin) {
 	);
 
 	load_plugin($plugin);
-			
 }
 
-
+/**
+ * @brief loads an addon by it's name.
+ *
+ * @param string $plugin name of the addon
+ * @return bool
+ */
 function load_plugin($plugin) {
 	// silently fail if plugin was removed
-
 	if(! file_exists('addon/' . $plugin . '/' . $plugin . '.php'))
 		return false;
 
-	logger("Addons: loading " . $plugin);
+	logger("Addons: loading " . $plugin, LOGGER_DEBUG);
 	$t = @filemtime('addon/' . $plugin . '/' . $plugin . '.php');
 	@include_once('addon/' . $plugin . '/' . $plugin . '.php');
 	if(function_exists($plugin . '_load')) {
 		$func = $plugin . '_load';
 		$func();
-		
 
 		// we can add the following with the previous SQL
 		// once most site tables have been updated.
@@ -91,7 +110,6 @@ function load_plugin($plugin) {
 		logger("Addons: FAILED loading " . $plugin);
 		return false;
 	}
-
 }
 
 function plugin_is_installed($name) {
@@ -104,24 +122,21 @@ function plugin_is_installed($name) {
 }
 
 
-
 // reload all updated plugins
 
 function reload_plugins() {
-	$plugins = get_config('system','addon');
+	$plugins = get_config('system', 'addon');
 	if(strlen($plugins)) {
-
 		$r = q("SELECT * FROM `addon` WHERE `installed` = 1");
 		if(count($r))
 			$installed = $r;
 		else
 			$installed = array();
 
-		$parr = explode(',',$plugins);
+		$parr = explode(',', $plugins);
 
 		if(count($parr)) {
 			foreach($parr as $pl) {
-
 				$pl = trim($pl);
 
 				$fname = 'addon/' . $pl . '/' . $pl . '.php';
@@ -152,14 +167,18 @@ function reload_plugins() {
 		}
 	}
 }
-				
 
 
-
-
-
-function register_hook($hook,$file,$function,$priority=0) {
-
+/**
+ * @brief registers a hook.
+ *
+ * @param string $hook the name of the hook
+ * @param string $file the name of the file that hooks into
+ * @param string $function the name of the function that the hook will call
+ * @param int $priority A priority (defaults to 0)
+ * @return mixed|bool
+ */
+function register_hook($hook, $file, $function, $priority = 0) {
 	$r = q("SELECT * FROM `hook` WHERE `hook` = '%s' AND `file` = '%s' AND `function` = '%s' LIMIT 1",
 		dbesc($hook),
 		dbesc($file),
@@ -178,8 +197,15 @@ function register_hook($hook,$file,$function,$priority=0) {
 }
 
 
-function unregister_hook($hook,$file,$function) {
-
+/**
+ * @brief unregisters a hook.
+ * 
+ * @param string $hook the name of the hook
+ * @param string $file the name of the file that hooks into
+ * @param string $function the name of the function that the hook called
+ * @return mixed
+ */
+function unregister_hook($hook, $file, $function) {
 	$r = q("DELETE FROM hook WHERE hook = '%s' AND `file` = '%s' AND `function` = '%s' LIMIT 1",
 		dbesc($hook),
 		dbesc($file),
@@ -209,7 +235,6 @@ function load_hooks() {
 		}
 	}
 //logger('hooks: ' . print_r($a->hooks,true));
-
 }
 
 /**
@@ -231,7 +256,6 @@ function load_hooks() {
  *     function name of callback handler
  *
  */ 
-
 function insert_hook($hook,$fn) {
 	$a = get_app();
 	if(! is_array($a->hooks))
@@ -240,8 +264,6 @@ function insert_hook($hook,$fn) {
 		$a->hooks[$hook] = array();
 	$a->hooks[$hook][] = array('',$fn);
 }
-	
-
 
 
 function call_hooks($name, &$data = null) {
@@ -265,80 +287,79 @@ function call_hooks($name, &$data = null) {
 			}
 		}
 	}
-
 }
 
 
-/*
- * parse plugin comment in search of plugin infos.
+/**
+ * @brief parse plugin comment in search of plugin infos.
+ *
  * like
- * 	
- * 	 * Name: Plugin
+ *   * Name: Plugin
  *   * Description: A plugin which plugs in
- * 	 * Version: 1.2.3
+ *   * Version: 1.2.3
  *   * Author: John <profile url>
  *   * Author: Jane <email>
  *   * Compat: Red [(version)], Friendica [(version)]
  *   *
+ *
+ * @param string $plugin the name of the plugin
+ * @return array with the plugin information
  */
-
-
 function get_plugin_info($plugin){
-	$info=Array(
+	$info = Array(
 		'name' => $plugin,
 		'description' => "",
 		'author' => array(),
 		'version' => "",
 		'compat' => ""
 	);
-	
+
 	if (!is_file("addon/$plugin/$plugin.php")) return $info;
 	
 	$f = file_get_contents("addon/$plugin/$plugin.php");
 	$r = preg_match("|/\*.*\*/|msU", $f, $m);
-	
+
 	if ($r){
 		$ll = explode("\n", $m[0]);
 		foreach( $ll as $l ) {
-			$l = trim($l,"\t\n\r */");
-			if ($l!=""){
-				list($k,$v) = array_map("trim", explode(":",$l,2));
-				$k= strtolower($k);
-				if ($k=="author"){
-					$r=preg_match("|([^<]+)<([^>]+)>|", $v, $m);
+			$l = trim($l, "\t\n\r */");
+			if ($l != ""){
+				list($k, $v) = array_map("trim", explode(":", $l, 2));
+				$k = strtolower($k);
+				if ($k == "author"){
+					$r = preg_match("|([^<]+)<([^>]+)>|", $v, $m);
 					if ($r) {
-						$info['author'][] = array('name'=>$m[1], 'link'=>$m[2]);
+						$info['author'][] = array('name' => $m[1], 'link' => $m[2]);
 					} else {
-						$info['author'][] = array('name'=>$v);
+						$info['author'][] = array('name' => $v);
 					}
 				} else {
-					if (array_key_exists($k,$info)){
-						$info[$k]=$v;
+					if (array_key_exists($k, $info)){
+						$info[$k] = $v;
 					}
 				}
-				
 			}
 		}
-		
 	}
 	return $info;
 }
 
 
-/*
- * parse theme comment in search of theme infos.
+/**
+ * @brief parse theme comment in search of theme infos.
+ *
  * like
- * 	
- * 	 * Name: My Theme
+ *   * Name: My Theme
  *   * Description: My Cool Theme
- * 	 * Version: 1.2.3
+ *   * Version: 1.2.3
  *   * Author: John <profile url>
  *   * Maintainer: Jane <profile url>
  *   * Compat: Friendica [(version)], Red [(version)]
  *   *
+ *
+ * @param string $theme the name of the theme
+ * @return array
  */
-
-
 function get_theme_info($theme){
 	$info=Array(
 		'name' => $theme,
@@ -358,43 +379,39 @@ function get_theme_info($theme){
 		$info['unsupported'] = true;
 
 	if (!is_file("view/theme/$theme/php/theme.php")) return $info;
-	
+
 	$f = file_get_contents("view/theme/$theme/php/theme.php");
 	$r = preg_match("|/\*.*\*/|msU", $f, $m);
-	
-	
+
 	if ($r){
 		$ll = explode("\n", $m[0]);
 		foreach( $ll as $l ) {
-			$l = trim($l,"\t\n\r */");
-			if ($l!=""){
-				list($k,$v) = array_map("trim", explode(":",$l,2));
-				$k= strtolower($k);
-				if ($k=="author"){
-
-					$r=preg_match("|([^<]+)<([^>]+)>|", $v, $m);
+			$l = trim($l, "\t\n\r */");
+			if ($l != ""){
+				list($k, $v) = array_map("trim", explode(":", $l, 2));
+				$k = strtolower($k);
+				if ($k == "author"){
+					$r = preg_match("|([^<]+)<([^>]+)>|", $v, $m);
 					if ($r) {
-						$info['author'][] = array('name'=>$m[1], 'link'=>$m[2]);
+						$info['author'][] = array('name' => $m[1], 'link' => $m[2]);
 					} else {
-						$info['author'][] = array('name'=>$v);
+						$info['author'][] = array('name' => $v);
 					}
 				}
-				elseif ($k=="maintainer"){
-					$r=preg_match("|([^<]+)<([^>]+)>|", $v, $m);
+				elseif ($k == "maintainer"){
+					$r = preg_match("|([^<]+)<([^>]+)>|", $v, $m);
 					if ($r) {
-						$info['maintainer'][] = array('name'=>$m[1], 'link'=>$m[2]);
+						$info['maintainer'][] = array('name' => $m[1], 'link' => $m[2]);
 					} else {
-						$info['maintainer'][] = array('name'=>$v);
+						$info['maintainer'][] = array('name' => $v);
 					}
 				} else {
-					if (array_key_exists($k,$info)){
-						$info[$k]=$v;
+					if (array_key_exists($k, $info)){
+						$info[$k] = $v;
 					}
 				}
-				
 			}
 		}
-		
 	}
 	return $info;
 }
@@ -402,7 +419,7 @@ function get_theme_info($theme){
 
 function get_theme_screenshot($theme) {
 	$a = get_app();
-	$exts = array('.png','.jpg');
+	$exts = array('.png', '.jpg');
 	foreach($exts as $ext) {
 		if(file_exists('view/theme/' . $theme . '/img/screenshot' . $ext))
 			return($a->get_baseurl() . '/view/theme/' . $theme . '/img/screenshot' . $ext);
@@ -475,7 +492,6 @@ function service_class_fetch($uid,$property) {
 		return false;
 
 	return((array_key_exists($property,$arr)) ? $arr[$property] : false);
-
 }
 
 function upgrade_link($bbcode = false) {
@@ -499,19 +515,22 @@ function upgrade_bool_message($bbcode = false) {
 	return t('This action is not available under your subscription plan.') . (($x) ? ' ' . $x : '') ;
 }
 
-
-
-function head_add_css($src,$media = 'screen') {
-	get_app()->css_sources[] = array($src,$media);
+/**
+ * @brief add CSS to <head>
+ *
+ * @param string $src
+ * @param string $media change media attribute (default to 'screen')
+ * @return void
+ */
+function head_add_css($src, $media = 'screen') {
+	get_app()->css_sources[] = array($src, $media);
 }
 
-
-function head_remove_css($src,$media = 'screen') {
+function head_remove_css($src, $media = 'screen') {
 	$a = get_app();
-	$index = array_search(array($src,$media),$a->css_sources);
+	$index = array_search(array($src, $media), $a->css_sources);
 	if($index !== false)
 		unset($a->css_sources[$index]);
-
 }
 
 function head_get_css() {
@@ -524,15 +543,13 @@ function head_get_css() {
 }
 
 function format_css_if_exists($source) {
-	
 	if(strpos($source[0],'/') !== false)
 		$path = $source[0];
 	else
 		$path = theme_include($source[0]);
 
 	if($path)
-		return '<link rel="stylesheet" href="' . script_path() . '/' . $path . '" type="text/css" media="' . $source[1] . '" />' . "\r\n";
-		
+		return '<link rel="stylesheet" href="' . script_path() . '/' . $path . '" type="text/css" media="' . $source[1] . '">' . "\r\n";
 }
 
 function script_path() {
@@ -544,7 +561,7 @@ function script_path() {
 		$scheme = 'http';
 
 	if(x($_SERVER,'SERVER_NAME')) {
-			$hostname = $_SERVER['SERVER_NAME'];
+		$hostname = $_SERVER['SERVER_NAME'];
 	}
 	else {
 		return z_root();
@@ -563,10 +580,9 @@ function head_add_js($src) {
 
 function head_remove_js($src) {
 	$a = get_app();
-	$index = array_search($src,$a->js_sources);
+	$index = array_search($src, $a->js_sources);
 	if($index !== false)
 		unset($a->js_sources[$index]);
-
 }
 
 function head_get_js() {
@@ -590,22 +606,17 @@ function head_get_main_js() {
 	return $str;
 }
 
-
-
 function format_js_if_exists($source) {
-
 	if(strpos($source,'/') !== false)
 		$path = $source;
 	else
 		$path = theme_include($source);
 	if($path)
 		return '<script src="' . script_path() . '/' . $path . '" ></script>' . "\r\n" ;
-
 }
 
 
 function theme_include($file, $root = '') {
-
 	$a = get_app();
 
 	// Make sure $root ends with a slash / if it's not blank
@@ -640,15 +651,12 @@ function theme_include($file, $root = '') {
 }
 
 
-
-
 function get_intltext_template($s, $root = '') {
 	$a = get_app();
 	$t = $a->template_engine();
 
 	$template = $t->get_intltext_template($s, $root);
 	return $template;
-
 }
 
 
@@ -658,4 +666,3 @@ function get_markup_template($s, $root = '') {
 	$template = $t->get_markup_template($s, $root);
 	return $template;
 }
-
