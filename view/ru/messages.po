@@ -10,8 +10,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Red Matrix\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2014-06-20 00:03-0700\n"
-"PO-Revision-Date: 2014-06-23 06:24+0000\n"
+"POT-Creation-Date: 2014-06-27 00:02-0700\n"
+"PO-Revision-Date: 2014-06-30 12:10+0000\n"
 "Last-Translator: Alex <info@pixelbits.de>\n"
 "Language-Team: Russian (http://www.transifex.com/projects/p/red-matrix/language/ru/)\n"
 "MIME-Version: 1.0\n"
@@ -80,191 +80,192 @@ msgstr "создал новое сообщение"
 msgid "commented on %s's post"
 msgstr "прокомментировал %s's сообщение"
 
-#: ../../include/conversation.php:117 ../../include/text.php:1705
+#: ../../include/conversation.php:120 ../../include/text.php:1705
 #: ../../mod/subthread.php:72 ../../mod/subthread.php:174
-#: ../../mod/tagger.php:45 ../../mod/like.php:111
+#: ../../mod/tagger.php:45 ../../mod/like.php:254
 msgid "photo"
 msgstr "фото"
 
-#: ../../include/conversation.php:120 ../../include/text.php:1708
+#: ../../include/conversation.php:123 ../../include/text.php:1708
 #: ../../mod/tagger.php:49
 msgid "event"
 msgstr "мероприятие"
 
-#: ../../include/conversation.php:123
+#: ../../include/conversation.php:126 ../../mod/like.php:72
 msgid "channel"
 msgstr "канал"
 
-#: ../../include/conversation.php:145 ../../include/text.php:1711
+#: ../../include/conversation.php:148 ../../include/text.php:1711
 #: ../../mod/subthread.php:72 ../../mod/subthread.php:174
-#: ../../mod/tagger.php:53 ../../mod/like.php:111
+#: ../../mod/tagger.php:53 ../../mod/like.php:254
 msgid "status"
 msgstr "статус"
 
-#: ../../include/conversation.php:147 ../../include/text.php:1713
+#: ../../include/conversation.php:150 ../../include/text.php:1713
 #: ../../mod/tagger.php:55
 msgid "comment"
 msgstr "комментарий"
 
-#: ../../include/conversation.php:161 ../../mod/like.php:142
+#: ../../include/conversation.php:164 ../../mod/like.php:291
 #, php-format
 msgid "%1$s likes %2$s's %3$s"
 msgstr "%1$s нравится %2$s's %3$s"
 
-#: ../../include/conversation.php:164 ../../mod/like.php:144
+#: ../../include/conversation.php:167 ../../mod/like.php:293
 #, php-format
 msgid "%1$s doesn't like %2$s's %3$s"
 msgstr "%1$s не нравится %2$s's %3$s"
 
-#: ../../include/conversation.php:201
+#: ../../include/conversation.php:204
 #, php-format
 msgid "%1$s is now connected with %2$s"
 msgstr "%1$s теперь соединен с %2$s"
 
-#: ../../include/conversation.php:236
+#: ../../include/conversation.php:239
 #, php-format
 msgid "%1$s poked %2$s"
 msgstr "%1$s подпихнул %2$s"
 
-#: ../../include/conversation.php:240 ../../include/text.php:895
+#: ../../include/conversation.php:243 ../../include/text.php:895
 msgid "poked"
 msgstr "подпихнул"
 
-#: ../../include/conversation.php:258 ../../mod/mood.php:63
+#: ../../include/conversation.php:261 ../../mod/mood.php:63
 #, php-format
 msgctxt "mood"
 msgid "%1$s is %2$s"
 msgstr ""
 
-#: ../../include/conversation.php:631 ../../include/ItemObject.php:114
+#: ../../include/conversation.php:634 ../../include/ItemObject.php:114
 msgid "Select"
 msgstr "Выбрать"
 
-#: ../../include/conversation.php:632 ../../include/apps.php:232
+#: ../../include/conversation.php:635 ../../include/apps.php:232
 #: ../../include/ItemObject.php:108 ../../mod/settings.php:578
-#: ../../mod/connedit.php:398 ../../mod/filestorage.php:175
-#: ../../mod/group.php:176 ../../mod/admin.php:758 ../../mod/admin.php:887
-#: ../../mod/thing.php:236 ../../mod/photos.php:1041
+#: ../../mod/connedit.php:398 ../../mod/photos.php:1046
+#: ../../mod/group.php:176 ../../mod/admin.php:758 ../../mod/admin.php:888
+#: ../../mod/thing.php:236
+#: ../../view/tpl/smarty3/compiled/de0b699d2fc212753c3f166003476a343ca00174.file.cloud_directory.tpl.php:84
 msgid "Delete"
 msgstr "Удалить"
 
-#: ../../include/conversation.php:639 ../../include/ItemObject.php:89
+#: ../../include/conversation.php:642 ../../include/ItemObject.php:89
 #: ../../mod/photos.php:844
 msgid "Private Message"
 msgstr "Личное сообщение"
 
-#: ../../include/conversation.php:646 ../../include/ItemObject.php:182
+#: ../../include/conversation.php:649 ../../include/ItemObject.php:182
 msgid "Message is verified"
 msgstr "Сообщение проверено"
 
-#: ../../include/conversation.php:666
+#: ../../include/conversation.php:669
 #, php-format
 msgid "View %s's profile @ %s"
 msgstr "Просмотр %s's профиля @ %s"
 
-#: ../../include/conversation.php:680
+#: ../../include/conversation.php:683
 msgid "Categories:"
 msgstr "Категории:"
 
-#: ../../include/conversation.php:681
+#: ../../include/conversation.php:684
 msgid "Filed under:"
 msgstr "Хранить под:"
 
-#: ../../include/conversation.php:690 ../../include/ItemObject.php:250
+#: ../../include/conversation.php:693 ../../include/ItemObject.php:250
 #, php-format
 msgid " from %s"
 msgstr " от %s"
 
-#: ../../include/conversation.php:693 ../../include/ItemObject.php:253
+#: ../../include/conversation.php:696 ../../include/ItemObject.php:253
 #, php-format
 msgid "last edited: %s"
 msgstr ""
 
-#: ../../include/conversation.php:694 ../../include/ItemObject.php:254
+#: ../../include/conversation.php:697 ../../include/ItemObject.php:254
 #, php-format
 msgid "Expires: %s"
 msgstr ""
 
-#: ../../include/conversation.php:709
+#: ../../include/conversation.php:712
 msgid "View in context"
 msgstr "Показать в контексте"
 
-#: ../../include/conversation.php:711 ../../include/conversation.php:1127
+#: ../../include/conversation.php:714 ../../include/conversation.php:1130
 #: ../../include/ItemObject.php:294 ../../mod/editblock.php:120
 #: ../../mod/editlayout.php:115 ../../mod/editpost.php:121
-#: ../../mod/editwebpage.php:152 ../../mod/mail.php:222 ../../mod/mail.php:336
-#: ../../mod/photos.php:972
+#: ../../mod/editwebpage.php:152 ../../mod/photos.php:977
+#: ../../mod/mail.php:222 ../../mod/mail.php:336
 msgid "Please wait"
 msgstr "Подождите пожалуйста"
 
-#: ../../include/conversation.php:838
+#: ../../include/conversation.php:841
 msgid "remove"
 msgstr "удалить"
 
-#: ../../include/conversation.php:842
+#: ../../include/conversation.php:845
 msgid "Loading..."
 msgstr "Загрузка..."
 
-#: ../../include/conversation.php:843
+#: ../../include/conversation.php:846
 msgid "Delete Selected Items"
 msgstr "Удалить выбранные элементы"
 
-#: ../../include/conversation.php:934
+#: ../../include/conversation.php:937
 msgid "View Source"
-msgstr ""
+msgstr "Просмотр источника"
 
-#: ../../include/conversation.php:935
+#: ../../include/conversation.php:938
 msgid "Follow Thread"
-msgstr "Следобать теме"
+msgstr "Следовать теме"
 
-#: ../../include/conversation.php:936
+#: ../../include/conversation.php:939
 msgid "View Status"
 msgstr "Просмотр состояния"
 
-#: ../../include/conversation.php:937 ../../include/nav.php:81
+#: ../../include/conversation.php:940 ../../include/nav.php:81
 #: ../../mod/connedit.php:351 ../../mod/connedit.php:465
 msgid "View Profile"
 msgstr "Просмотр профиля"
 
-#: ../../include/conversation.php:938
+#: ../../include/conversation.php:941
 msgid "View Photos"
 msgstr "Просмотр фотографий"
 
-#: ../../include/conversation.php:939
+#: ../../include/conversation.php:942
 msgid "Matrix Activity"
 msgstr "Активность матрицы"
 
-#: ../../include/conversation.php:940
+#: ../../include/conversation.php:943
 msgid "Edit Contact"
 msgstr "Редактировать контакт"
 
-#: ../../include/conversation.php:941
+#: ../../include/conversation.php:944
 msgid "Send PM"
 msgstr "Отправить личное сообщение"
 
-#: ../../include/conversation.php:942 ../../include/apps.php:135
+#: ../../include/conversation.php:945 ../../include/apps.php:135
 msgid "Poke"
 msgstr "Подпихнуть"
 
-#: ../../include/conversation.php:998
+#: ../../include/conversation.php:1001
 #, php-format
 msgid "%s likes this."
 msgstr "%s нравится это."
 
-#: ../../include/conversation.php:998
+#: ../../include/conversation.php:1001
 #, php-format
 msgid "%s doesn't like this."
 msgstr "%s не нравится это."
 
-#: ../../include/conversation.php:1002
+#: ../../include/conversation.php:1005
 #, php-format
 msgid "<span  %1$s>%2$d people</span> like this."
 msgid_plural "<span  %1$s>%2$d people</span> like this."
-msgstr[0] ""
-msgstr[1] ""
+msgstr[0] "<span  %1$s>%2$d чел.</span> нравится это."
+msgstr[1] "<span  %1$s>%2$d чел.</span> нравится это."
 msgstr[2] "<span  %1$s>%2$d чел.</span> нравится это."
 
-#: ../../include/conversation.php:1004
+#: ../../include/conversation.php:1007
 #, php-format
 msgid "<span  %1$s>%2$d people</span> don't like this."
 msgid_plural "<span  %1$s>%2$d people</span> don't like this."
@@ -272,11 +273,11 @@ msgstr[0] ""
 msgstr[1] ""
 msgstr[2] "<span  %1$s>%2$d чел.</span> не нравится это."
 
-#: ../../include/conversation.php:1010
+#: ../../include/conversation.php:1013
 msgid "and"
 msgstr "и"
 
-#: ../../include/conversation.php:1013
+#: ../../include/conversation.php:1016
 #, php-format
 msgid ", and %d other people"
 msgid_plural ", and %d other people"
@@ -284,303 +285,304 @@ msgstr[0] ""
 msgstr[1] ""
 msgstr[2] ", и %d другие люди"
 
-#: ../../include/conversation.php:1014
+#: ../../include/conversation.php:1017
 #, php-format
 msgid "%s like this."
 msgstr "%s нравится это."
 
-#: ../../include/conversation.php:1014
+#: ../../include/conversation.php:1017
 #, php-format
 msgid "%s don't like this."
 msgstr "%s не нравится это."
 
-#: ../../include/conversation.php:1071
+#: ../../include/conversation.php:1074
 msgid "Visible to <strong>everybody</strong>"
 msgstr "Видно для <strong>всех</strong>"
 
-#: ../../include/conversation.php:1072 ../../mod/mail.php:171
+#: ../../include/conversation.php:1075 ../../mod/mail.php:171
 #: ../../mod/mail.php:269
 msgid "Please enter a link URL:"
 msgstr "Пожалуйста, введите URL ссылки:"
 
-#: ../../include/conversation.php:1073
+#: ../../include/conversation.php:1076
 msgid "Please enter a video link/URL:"
 msgstr "Пожалуйста, введите URL видео-ссылки:"
 
-#: ../../include/conversation.php:1074
+#: ../../include/conversation.php:1077
 msgid "Please enter an audio link/URL:"
 msgstr "Пожалуйста, введите URL аудио-ссылки:"
 
-#: ../../include/conversation.php:1075
+#: ../../include/conversation.php:1078
 msgid "Tag term:"
 msgstr "Теги:"
 
-#: ../../include/conversation.php:1076 ../../mod/filer.php:49
+#: ../../include/conversation.php:1079 ../../mod/filer.php:49
 msgid "Save to Folder:"
 msgstr "Сохранить в папку:"
 
-#: ../../include/conversation.php:1077
+#: ../../include/conversation.php:1080
 msgid "Where are you right now?"
 msgstr "Где вы сейчас?"
 
-#: ../../include/conversation.php:1078 ../../mod/editpost.php:52
+#: ../../include/conversation.php:1081 ../../mod/editpost.php:52
 #: ../../mod/mail.php:172 ../../mod/mail.php:270
 msgid "Expires YYYY-MM-DD HH:MM"
 msgstr ""
 
-#: ../../include/conversation.php:1088 ../../include/page_widgets.php:40
+#: ../../include/conversation.php:1091 ../../include/page_widgets.php:40
 #: ../../include/ItemObject.php:592 ../../mod/editblock.php:141
 #: ../../mod/editlayout.php:135 ../../mod/editpost.php:140
-#: ../../mod/editwebpage.php:174 ../../mod/webpages.php:124
-#: ../../mod/photos.php:992
+#: ../../mod/editwebpage.php:174 ../../mod/photos.php:997
+#: ../../mod/webpages.php:124
 msgid "Preview"
 msgstr "Предварительный просмотр"
 
-#: ../../include/conversation.php:1102 ../../mod/layouts.php:113
-#: ../../mod/photos.php:971
+#: ../../include/conversation.php:1105 ../../mod/photos.php:976
+#: ../../mod/layouts.php:113
 msgid "Share"
 msgstr "Поделиться"
 
-#: ../../include/conversation.php:1104 ../../mod/editwebpage.php:139
+#: ../../include/conversation.php:1107 ../../mod/editwebpage.php:139
 msgid "Page link title"
 msgstr "Ссылка заголовока страницы"
 
-#: ../../include/conversation.php:1107
+#: ../../include/conversation.php:1110
 msgid "Post as"
 msgstr ""
 
-#: ../../include/conversation.php:1108 ../../mod/editblock.php:112
+#: ../../include/conversation.php:1111 ../../mod/editblock.php:112
 #: ../../mod/editlayout.php:107 ../../mod/editpost.php:113
 #: ../../mod/editwebpage.php:144 ../../mod/mail.php:219 ../../mod/mail.php:332
 msgid "Upload photo"
 msgstr "Загрузить фотографию"
 
-#: ../../include/conversation.php:1109
+#: ../../include/conversation.php:1112
 msgid "upload photo"
 msgstr "загрузить фотографию"
 
-#: ../../include/conversation.php:1110 ../../mod/editblock.php:113
+#: ../../include/conversation.php:1113 ../../mod/editblock.php:113
 #: ../../mod/editlayout.php:108 ../../mod/editpost.php:114
 #: ../../mod/editwebpage.php:145 ../../mod/mail.php:220 ../../mod/mail.php:333
 msgid "Attach file"
 msgstr "Прикрепить файл"
 
-#: ../../include/conversation.php:1111
+#: ../../include/conversation.php:1114
 msgid "attach file"
 msgstr "прикрепить файл"
 
-#: ../../include/conversation.php:1112 ../../mod/editblock.php:114
+#: ../../include/conversation.php:1115 ../../mod/editblock.php:114
 #: ../../mod/editlayout.php:109 ../../mod/editpost.php:115
 #: ../../mod/editwebpage.php:146 ../../mod/mail.php:221 ../../mod/mail.php:334
 msgid "Insert web link"
 msgstr "Вставить веб-ссылку"
 
-#: ../../include/conversation.php:1113
+#: ../../include/conversation.php:1116
 msgid "web link"
 msgstr "веб-ссылка"
 
-#: ../../include/conversation.php:1114
+#: ../../include/conversation.php:1117
 msgid "Insert video link"
 msgstr "Вставить видео-ссылку"
 
-#: ../../include/conversation.php:1115
+#: ../../include/conversation.php:1118
 msgid "video link"
 msgstr "видео-ссылка"
 
-#: ../../include/conversation.php:1116
+#: ../../include/conversation.php:1119
 msgid "Insert audio link"
 msgstr "Вставить аудио-ссылку"
 
-#: ../../include/conversation.php:1117
+#: ../../include/conversation.php:1120
 msgid "audio link"
 msgstr "аудио-ссылка"
 
-#: ../../include/conversation.php:1118 ../../mod/editblock.php:118
+#: ../../include/conversation.php:1121 ../../mod/editblock.php:118
 #: ../../mod/editlayout.php:113 ../../mod/editpost.php:119
 #: ../../mod/editwebpage.php:150
 msgid "Set your location"
 msgstr "Указание своего расположения"
 
-#: ../../include/conversation.php:1119
+#: ../../include/conversation.php:1122
 msgid "set location"
 msgstr "указание расположения"
 
-#: ../../include/conversation.php:1120 ../../mod/editblock.php:119
+#: ../../include/conversation.php:1123 ../../mod/editblock.php:119
 #: ../../mod/editlayout.php:114 ../../mod/editpost.php:120
 #: ../../mod/editwebpage.php:151
 msgid "Clear browser location"
 msgstr "Стереть указание расположения"
 
-#: ../../include/conversation.php:1121
+#: ../../include/conversation.php:1124
 msgid "clear location"
 msgstr "стереть указание расположения"
 
-#: ../../include/conversation.php:1123 ../../mod/editblock.php:132
+#: ../../include/conversation.php:1126 ../../mod/editblock.php:132
 #: ../../mod/editlayout.php:126 ../../mod/editpost.php:132
 #: ../../mod/editwebpage.php:167
 msgid "Set title"
 msgstr "Заголовок"
 
-#: ../../include/conversation.php:1126 ../../mod/editblock.php:135
+#: ../../include/conversation.php:1129 ../../mod/editblock.php:135
 #: ../../mod/editlayout.php:129 ../../mod/editpost.php:134
 #: ../../mod/editwebpage.php:169
 msgid "Categories (comma-separated list)"
 msgstr "Категории (список через запятую)"
 
-#: ../../include/conversation.php:1128 ../../mod/editblock.php:121
+#: ../../include/conversation.php:1131 ../../mod/editblock.php:121
 #: ../../mod/editlayout.php:116 ../../mod/editpost.php:122
 #: ../../mod/editwebpage.php:153
 msgid "Permission settings"
 msgstr "Настройки разрешений"
 
-#: ../../include/conversation.php:1129
+#: ../../include/conversation.php:1132
 msgid "permissions"
 msgstr "разрешения"
 
-#: ../../include/conversation.php:1136 ../../mod/editblock.php:129
+#: ../../include/conversation.php:1139 ../../mod/editblock.php:129
 #: ../../mod/editlayout.php:123 ../../mod/editpost.php:129
 #: ../../mod/editwebpage.php:162
 msgid "Public post"
 msgstr "Публичное сообщение"
 
-#: ../../include/conversation.php:1138 ../../mod/editblock.php:136
+#: ../../include/conversation.php:1141 ../../mod/editblock.php:136
 #: ../../mod/editlayout.php:130 ../../mod/editpost.php:135
 #: ../../mod/editwebpage.php:170
 msgid "Example: bob@example.com, mary@example.com"
 msgstr "Пример: bob@example.com, mary@example.com"
 
-#: ../../include/conversation.php:1151 ../../mod/editblock.php:146
+#: ../../include/conversation.php:1154 ../../mod/editblock.php:146
 #: ../../mod/editlayout.php:140 ../../mod/editpost.php:146
 #: ../../mod/editwebpage.php:179 ../../mod/mail.php:226 ../../mod/mail.php:339
 msgid "Set expiration date"
 msgstr ""
 
-#: ../../include/conversation.php:1153 ../../include/ItemObject.php:595
+#: ../../include/conversation.php:1156 ../../include/ItemObject.php:595
 #: ../../mod/editpost.php:148 ../../mod/mail.php:228 ../../mod/mail.php:341
 msgid "Encrypt text"
 msgstr ""
 
-#: ../../include/conversation.php:1155 ../../mod/editpost.php:150
+#: ../../include/conversation.php:1158 ../../mod/editpost.php:150
 msgid "OK"
 msgstr "OK"
 
-#: ../../include/conversation.php:1156 ../../mod/settings.php:516
+#: ../../include/conversation.php:1159 ../../mod/settings.php:516
 #: ../../mod/settings.php:542 ../../mod/editpost.php:151
 #: ../../mod/fbrowser.php:82 ../../mod/fbrowser.php:117 ../../mod/tagrm.php:11
 #: ../../mod/tagrm.php:94
 msgid "Cancel"
 msgstr "Отменить"
 
-#: ../../include/conversation.php:1398
+#: ../../include/conversation.php:1401
 msgid "Discover"
 msgstr "Обнаруженные"
 
-#: ../../include/conversation.php:1401
+#: ../../include/conversation.php:1404
 msgid "Imported public streams"
 msgstr ""
 
-#: ../../include/conversation.php:1406
+#: ../../include/conversation.php:1409
 msgid "Commented Order"
 msgstr "По комментариям"
 
-#: ../../include/conversation.php:1409
+#: ../../include/conversation.php:1412
 msgid "Sort by Comment Date"
 msgstr "Сортировка по дате создания комментариев"
 
-#: ../../include/conversation.php:1413
+#: ../../include/conversation.php:1416
 msgid "Posted Order"
 msgstr "По добавлениям"
 
-#: ../../include/conversation.php:1416
+#: ../../include/conversation.php:1419
 msgid "Sort by Post Date"
 msgstr "Сортировка по дате создания сообщения"
 
-#: ../../include/conversation.php:1421 ../../include/widgets.php:82
+#: ../../include/conversation.php:1424 ../../include/widgets.php:82
 msgid "Personal"
 msgstr "Личные"
 
-#: ../../include/conversation.php:1424
+#: ../../include/conversation.php:1427
 msgid "Posts that mention or involve you"
 msgstr "Сообщения, в которых упоминули или вовлекли вас"
 
-#: ../../include/conversation.php:1430 ../../mod/connections.php:211
+#: ../../include/conversation.php:1433 ../../mod/connections.php:211
 #: ../../mod/connections.php:224 ../../mod/menu.php:61
 msgid "New"
 msgstr "Новые"
 
-#: ../../include/conversation.php:1433
+#: ../../include/conversation.php:1436
 msgid "Activity Stream - by date"
 msgstr "Лента активности - по дате"
 
-#: ../../include/conversation.php:1439
+#: ../../include/conversation.php:1442
 msgid "Starred"
 msgstr "Помеченные"
 
-#: ../../include/conversation.php:1442
+#: ../../include/conversation.php:1445
 msgid "Favourite Posts"
 msgstr "Фаворит-сообщения"
 
-#: ../../include/conversation.php:1449
+#: ../../include/conversation.php:1452
 msgid "Spam"
 msgstr "Спам"
 
-#: ../../include/conversation.php:1452
+#: ../../include/conversation.php:1455
 msgid "Posts flagged as SPAM"
 msgstr "Как СПАМ помеченные сообщения"
 
-#: ../../include/conversation.php:1486 ../../mod/admin.php:891
+#: ../../include/conversation.php:1488 ../../mod/admin.php:892
 msgid "Channel"
 msgstr "Канал"
 
-#: ../../include/conversation.php:1489
+#: ../../include/conversation.php:1491
 msgid "Status Messages and Posts"
 msgstr ""
 
-#: ../../include/conversation.php:1498
+#: ../../include/conversation.php:1500
 msgid "About"
 msgstr "О себе"
 
-#: ../../include/conversation.php:1501
+#: ../../include/conversation.php:1503
 msgid "Profile Details"
 msgstr "Сведения о профиле"
 
-#: ../../include/conversation.php:1507 ../../include/nav.php:84
+#: ../../include/conversation.php:1509 ../../include/nav.php:84
 #: ../../include/apps.php:129 ../../mod/fbrowser.php:25
 msgid "Photos"
 msgstr "Фотографии"
 
-#: ../../include/conversation.php:1510 ../../include/photos.php:313
+#: ../../include/conversation.php:1512 ../../include/photos.php:313
 msgid "Photo Albums"
 msgstr "Фотоальбомы"
 
-#: ../../include/conversation.php:1516 ../../include/nav.php:85
-#: ../../include/apps.php:125 ../../mod/fbrowser.php:114
+#: ../../include/conversation.php:1518 ../../include/nav.php:85
+#: ../../include/reddav.php:1051 ../../include/apps.php:125
+#: ../../mod/fbrowser.php:114
 msgid "Files"
 msgstr "Файлы"
 
-#: ../../include/conversation.php:1519
+#: ../../include/conversation.php:1521
 msgid "Files and Storage"
 msgstr ""
 
-#: ../../include/conversation.php:1528 ../../include/conversation.php:1531
+#: ../../include/conversation.php:1530 ../../include/conversation.php:1533
 msgid "Chatrooms"
 msgstr "Чаты"
 
-#: ../../include/conversation.php:1538 ../../include/nav.php:93
+#: ../../include/conversation.php:1540 ../../include/nav.php:93
 #: ../../include/apps.php:119
 msgid "Bookmarks"
 msgstr "Закладки"
 
-#: ../../include/conversation.php:1541
+#: ../../include/conversation.php:1543
 msgid "Saved Bookmarks"
 msgstr "Сохранённые закладки"
 
-#: ../../include/conversation.php:1549 ../../include/nav.php:95
+#: ../../include/conversation.php:1551 ../../include/nav.php:95
 #: ../../include/apps.php:126 ../../mod/webpages.php:79
 msgid "Webpages"
 msgstr "Веб-страницы"
 
-#: ../../include/conversation.php:1552
+#: ../../include/conversation.php:1554
 msgid "Manage Webpages"
 msgstr "Управление веб-страниц"
 
@@ -594,8 +596,9 @@ msgstr "Новая страница"
 #: ../../mod/blocks.php:94 ../../mod/connections.php:393
 #: ../../mod/editblock.php:111 ../../mod/editlayout.php:106
 #: ../../mod/editpost.php:112 ../../mod/editwebpage.php:143
-#: ../../mod/filestorage.php:174 ../../mod/thing.php:235
-#: ../../mod/layouts.php:112 ../../mod/menu.php:59 ../../mod/webpages.php:120
+#: ../../mod/thing.php:235 ../../mod/layouts.php:112 ../../mod/menu.php:59
+#: ../../mod/webpages.php:120
+#: ../../view/tpl/smarty3/compiled/de0b699d2fc212753c3f166003476a343ca00174.file.cloud_directory.tpl.php:80
 msgid "Edit"
 msgstr "Редактировать"
 
@@ -610,11 +613,11 @@ msgstr ""
 
 #: ../../include/page_widgets.php:42 ../../mod/webpages.php:126
 msgid "Page Link"
-msgstr ""
+msgstr "Ссылка страницы"
 
 #: ../../include/page_widgets.php:43 ../../mod/webpages.php:127
 msgid "Title"
-msgstr ""
+msgstr "Заголовок"
 
 #: ../../include/page_widgets.php:44 ../../mod/webpages.php:128
 msgid "Created"
@@ -622,7 +625,7 @@ msgstr "Создано"
 
 #: ../../include/page_widgets.php:45 ../../mod/webpages.php:129
 msgid "Edited"
-msgstr ""
+msgstr "Отредактирован"
 
 #: ../../include/security.php:301
 msgid ""
@@ -691,7 +694,7 @@ msgstr "Регистрация отозвана для %s"
 #: ../../include/attach.php:243 ../../include/attach.php:283
 #: ../../include/attach.php:297 ../../include/attach.php:322
 #: ../../include/attach.php:513 ../../include/attach.php:585
-#: ../../include/chat.php:116 ../../include/items.php:3679
+#: ../../include/chat.php:116 ../../include/items.php:3680
 #: ../../mod/mood.php:112 ../../mod/mitem.php:73 ../../mod/achievements.php:27
 #: ../../mod/settings.php:492 ../../mod/poke.php:128 ../../mod/api.php:26
 #: ../../mod/api.php:31 ../../mod/authtest.php:13 ../../mod/profile.php:64
@@ -707,19 +710,19 @@ msgstr "Регистрация отозвана для %s"
 #: ../../mod/page.php:80 ../../mod/setup.php:203 ../../mod/editblock.php:34
 #: ../../mod/pdledit.php:21 ../../mod/editlayout.php:48
 #: ../../mod/editpost.php:13 ../../mod/editwebpage.php:44
-#: ../../mod/editwebpage.php:83 ../../mod/sources.php:66
-#: ../../mod/events.php:141 ../../mod/filestorage.php:10
-#: ../../mod/filestorage.php:59 ../../mod/filestorage.php:75
-#: ../../mod/filestorage.php:98 ../../mod/fsuggest.php:78
-#: ../../mod/suggest.php:26 ../../mod/group.php:9 ../../mod/thing.php:247
-#: ../../mod/thing.php:263 ../../mod/thing.php:298 ../../mod/invite.php:13
-#: ../../mod/invite.php:104 ../../mod/item.php:179 ../../mod/item.php:187
-#: ../../mod/item.php:894 ../../mod/layouts.php:27 ../../mod/layouts.php:39
-#: ../../mod/viewconnections.php:22 ../../mod/viewconnections.php:27
-#: ../../mod/viewsrc.php:12 ../../mod/mail.php:108 ../../mod/manage.php:6
-#: ../../mod/menu.php:44 ../../mod/webpages.php:40 ../../mod/message.php:16
+#: ../../mod/editwebpage.php:83 ../../mod/photos.php:68
+#: ../../mod/photos.php:526 ../../mod/sources.php:66 ../../mod/events.php:141
+#: ../../mod/filestorage.php:10 ../../mod/filestorage.php:59
+#: ../../mod/filestorage.php:75 ../../mod/filestorage.php:98
+#: ../../mod/fsuggest.php:78 ../../mod/suggest.php:26 ../../mod/group.php:9
+#: ../../mod/thing.php:249 ../../mod/thing.php:266 ../../mod/thing.php:301
+#: ../../mod/invite.php:13 ../../mod/invite.php:104 ../../mod/item.php:179
+#: ../../mod/item.php:187 ../../mod/item.php:898 ../../mod/layouts.php:27
+#: ../../mod/layouts.php:39 ../../mod/viewconnections.php:22
+#: ../../mod/viewconnections.php:27 ../../mod/viewsrc.php:12
+#: ../../mod/mail.php:108 ../../mod/manage.php:6 ../../mod/menu.php:44
+#: ../../mod/webpages.php:40 ../../mod/message.php:16
 #: ../../mod/new_channel.php:66 ../../mod/new_channel.php:97
-#: ../../mod/photos.php:68 ../../mod/photos.php:526
 #: ../../mod/notifications.php:66 ../../mod/appman.php:66 ../../index.php:186
 #: ../../index.php:361
 msgid "Permission denied."
@@ -740,10 +743,10 @@ msgstr "Не удается обработать изображение"
 
 #: ../../include/photos.php:186
 msgid "Photo storage failed."
-msgstr ""
+msgstr "Ошибка в банке фотографий"
 
 #: ../../include/photos.php:317 ../../mod/photos.php:691
-#: ../../mod/photos.php:1188
+#: ../../mod/photos.php:1193
 msgid "Upload New Photos"
 msgstr "Загрузить новые фотографии"
 
@@ -753,21 +756,21 @@ msgstr "Видно всем"
 
 #: ../../include/acl_selectors.php:241
 msgid "Show"
-msgstr ""
+msgstr "Показывать"
 
 #: ../../include/acl_selectors.php:242
 msgid "Don't show"
-msgstr ""
+msgstr "Не показывать"
 
 #: ../../include/acl_selectors.php:248 ../../mod/chat.php:209
-#: ../../mod/filestorage.php:126 ../../mod/photos.php:604
-#: ../../mod/photos.php:947
+#: ../../mod/photos.php:604 ../../mod/photos.php:952
+#: ../../mod/filestorage.php:128
 msgid "Permissions"
 msgstr "Разрешения"
 
 #: ../../include/acl_selectors.php:249 ../../include/ItemObject.php:289
 msgid "Close"
-msgstr ""
+msgstr "Закрыть"
 
 #: ../../include/activities.php:39
 msgid " and "
@@ -848,7 +851,7 @@ msgstr "Путь не найден."
 
 #: ../../include/attach.php:674
 msgid "mkdir failed."
-msgstr ""
+msgstr "mkdir безуспешно."
 
 #: ../../include/attach.php:678
 msgid "database storage failed."
@@ -872,7 +875,7 @@ msgstr "\t\nКонец:"
 msgid "Location:"
 msgstr "Откуда:"
 
-#: ../../include/nav.php:77 ../../include/nav.php:101 ../../boot.php:1456
+#: ../../include/nav.php:77 ../../include/nav.php:101 ../../boot.php:1464
 msgid "Logout"
 msgstr "Выход"
 
@@ -898,7 +901,7 @@ msgstr "Редактирование профилей"
 
 #: ../../include/nav.php:83
 msgid "Manage/Edit profiles"
-msgstr ""
+msgstr "Управление / Редактирование профилей"
 
 #: ../../include/nav.php:84
 msgid "Your photos"
@@ -924,7 +927,7 @@ msgstr "Ваши закладки"
 msgid "Your webpages"
 msgstr "Ваши веб-страницы"
 
-#: ../../include/nav.php:99 ../../include/apps.php:121 ../../boot.php:1457
+#: ../../include/nav.php:99 ../../include/apps.php:121 ../../boot.php:1465
 msgid "Login"
 msgstr "Войти"
 
@@ -945,7 +948,7 @@ msgstr ""
 msgid "Home Page"
 msgstr "Моя страница"
 
-#: ../../include/nav.php:139 ../../mod/register.php:206 ../../boot.php:1433
+#: ../../include/nav.php:139 ../../mod/register.php:206 ../../boot.php:1441
 msgid "Register"
 msgstr "Регистрация"
 
@@ -1004,11 +1007,11 @@ msgstr "Пометить все оповещения матрицы как пр�
 
 #: ../../include/nav.php:166 ../../include/apps.php:127
 msgid "Channel Home"
-msgstr ""
+msgstr "Главная канала"
 
 #: ../../include/nav.php:166
 msgid "Channel home"
-msgstr ""
+msgstr "Главная канала"
 
 #: ../../include/nav.php:167
 msgid "Mark all channel notifications seen"
@@ -1088,8 +1091,8 @@ msgid "Manage Your Channels"
 msgstr "Управление каналов"
 
 #: ../../include/nav.php:191 ../../include/apps.php:124
-#: ../../include/widgets.php:514 ../../mod/admin.php:977
-#: ../../mod/admin.php:1182
+#: ../../include/widgets.php:514 ../../mod/admin.php:978
+#: ../../mod/admin.php:1183
 msgid "Settings"
 msgstr "Настройки"
 
@@ -1178,6 +1181,15 @@ msgstr "не-нравится"
 msgid "dislikes"
 msgstr "не-нравится"
 
+#: ../../include/taxonomy.php:338 ../../include/identity.php:968
+#: ../../include/ItemObject.php:134
+msgctxt "noun"
+msgid "Like"
+msgid_plural "Likes"
+msgstr[0] "нравится"
+msgstr[1] "нравится"
+msgstr[2] "нравится"
+
 #: ../../include/comanche.php:35 ../../view/theme/apw/php/config.php:185
 #: ../../view/theme/redbasic/php/config.php:84
 msgid "Default"
@@ -1244,7 +1256,7 @@ msgid "RSS/Atom"
 msgstr "RSS/Atom"
 
 #: ../../include/contact_selectors.php:77 ../../mod/admin.php:754
-#: ../../mod/admin.php:763 ../../boot.php:1459
+#: ../../mod/admin.php:763 ../../boot.php:1467
 msgid "Email"
 msgstr "E-mail"
 
@@ -1323,7 +1335,7 @@ msgstr ""
 
 #: ../../include/contact_widgets.php:33
 msgid "Advanced Find"
-msgstr ""
+msgstr "Расширенный поиск"
 
 #: ../../include/contact_widgets.php:58 ../../include/features.php:66
 #: ../../include/widgets.php:296
@@ -1354,10 +1366,6 @@ msgstr "показать все"
 #: ../../include/event.php:326
 msgid "This event has been added to your calendar."
 msgstr "Это событие было добавлено в календарь."
-
-#: ../../include/reddav.php:1045
-msgid "Edit File properties"
-msgstr ""
 
 #: ../../include/datetime.php:43 ../../include/datetime.php:45
 msgid "Miscellaneous"
@@ -1435,16 +1443,16 @@ msgstr "%1$d %2$s назад"
 #: ../../include/datetime.php:504
 #, php-format
 msgid "%1$s's birthday"
-msgstr ""
+msgstr "%1$s's День Рождения"
 
 #: ../../include/datetime.php:505
 #, php-format
 msgid "Happy Birthday %1$s"
-msgstr ""
+msgstr "С Днем Рождения %1$s"
 
 #: ../../include/dir_fns.php:36
 msgid "Sort Options"
-msgstr ""
+msgstr "Параметры сортировки"
 
 #: ../../include/dir_fns.php:37
 msgid "Alphabetic"
@@ -1662,6 +1670,63 @@ msgstr "Фото:"
 msgid "Please visit %s to approve or reject the suggestion."
 msgstr ""
 
+#: ../../include/reddav.php:915
+#: ../../view/tpl/smarty3/compiled/de0b699d2fc212753c3f166003476a343ca00174.file.cloud_directory.tpl.php:52
+#: ../../view/tpl/smarty3/compiled/de0b699d2fc212753c3f166003476a343ca00174.file.cloud_directory.tpl.php:55
+msgid "parent"
+msgstr ""
+
+#: ../../include/reddav.php:940
+msgid "Collection"
+msgstr "Коллекция"
+
+#: ../../include/reddav.php:943
+msgid "Principal"
+msgstr ""
+
+#: ../../include/reddav.php:946
+msgid "Addressbook"
+msgstr "Адресная книга"
+
+#: ../../include/reddav.php:949
+msgid "Calendar"
+msgstr "Календарь"
+
+#: ../../include/reddav.php:952
+msgid "Schedule Inbox"
+msgstr ""
+
+#: ../../include/reddav.php:955
+msgid "Schedule Outbox"
+msgstr ""
+
+#: ../../include/reddav.php:1033
+#, php-format
+msgid "%1$s used"
+msgstr ""
+
+#: ../../include/reddav.php:1038
+#, php-format
+msgid "%1$s used of %2$s (%3$s&#37;)"
+msgstr ""
+
+#: ../../include/reddav.php:1104
+msgid "Create new folder"
+msgstr "Создать новую папку"
+
+#: ../../include/reddav.php:1107 ../../mod/mitem.php:142 ../../mod/menu.php:84
+#: ../../mod/new_channel.php:117
+msgid "Create"
+msgstr "Создать"
+
+#: ../../include/reddav.php:1111
+msgid "Upload file"
+msgstr "Загрузить файл"
+
+#: ../../include/reddav.php:1114 ../../mod/profile_photo.php:361
+msgid "Upload"
+msgstr "Загрузка"
+
 #: ../../include/features.php:23
 msgid "General Features"
 msgstr "Главные функции"
@@ -1749,7 +1814,7 @@ msgstr "Разрешить предварительный просмотр со�
 #: ../../include/features.php:43 ../../include/widgets.php:503
 #: ../../mod/sources.php:88
 msgid "Channel Sources"
-msgstr ""
+msgstr "Источники канала"
 
 #: ../../include/features.php:43
 msgid "Automatically import channel content from other channels or feeds"
@@ -1757,7 +1822,7 @@ msgstr ""
 
 #: ../../include/features.php:44
 msgid "Even More Encryption"
-msgstr ""
+msgstr "Еще больше шифрования"
 
 #: ../../include/features.php:44
 msgid ""
@@ -1842,7 +1907,7 @@ msgstr "Пометка"
 
 #: ../../include/features.php:64
 msgid "Ability to tag existing posts"
-msgstr ""
+msgstr "Возможность использовать теги"
 
 #: ../../include/features.php:65
 msgid "Post Categories"
@@ -1862,7 +1927,7 @@ msgstr "Сообщение не нравится"
 
 #: ../../include/features.php:67
 msgid "Ability to dislike posts/comments"
-msgstr ""
+msgstr "Возможность выбора нравится/не-нравится"
 
 #: ../../include/features.php:68
 msgid "Star Posts"
@@ -1947,7 +2012,7 @@ msgstr "Контакты не в какой коллекции"
 msgid "add"
 msgstr "добавить"
 
-#: ../../include/identity.php:30 ../../mod/item.php:1266
+#: ../../include/identity.php:30 ../../mod/item.php:1270
 msgid "Unable to obtain identity information from database"
 msgstr "Невозможно получить идентификационную информацию из базы данных"
 
@@ -2044,12 +2109,12 @@ msgstr "Редактировать видимость"
 msgid "Gender:"
 msgstr "Пол:"
 
-#: ../../include/identity.php:729 ../../include/identity.php:977
+#: ../../include/identity.php:729 ../../include/identity.php:996
 #: ../../mod/directory.php:160
 msgid "Status:"
 msgstr "Статус:"
 
-#: ../../include/identity.php:730 ../../include/identity.php:988
+#: ../../include/identity.php:730 ../../include/identity.php:1007
 #: ../../mod/directory.php:162
 msgid "Homepage:"
 msgstr "Домашняя страница:"
@@ -2092,7 +2157,7 @@ msgstr "Напоминания мероприятий"
 msgid "Events this week:"
 msgstr "Мероприятия на этой неделе:"
 
-#: ../../include/identity.php:942 ../../include/identity.php:1031
+#: ../../include/identity.php:942 ../../include/identity.php:1050
 #: ../../include/apps.php:128 ../../mod/profperm.php:112
 msgid "Profile"
 msgstr "Профиль"
@@ -2101,98 +2166,106 @@ msgstr "Профиль"
 msgid "Full Name:"
 msgstr "Полное имя:"
 
-#: ../../include/identity.php:962
+#: ../../include/identity.php:957
+msgid "Like this channel"
+msgstr "нравиться этот канал"
+
+#: ../../include/identity.php:981
 msgid "j F, Y"
 msgstr "j F, Y"
 
-#: ../../include/identity.php:963
+#: ../../include/identity.php:982
 msgid "j F"
 msgstr "j F"
 
-#: ../../include/identity.php:970
+#: ../../include/identity.php:989
 msgid "Birthday:"
 msgstr "День Рождения:"
 
-#: ../../include/identity.php:974
+#: ../../include/identity.php:993
 msgid "Age:"
 msgstr "Возраст:"
 
-#: ../../include/identity.php:983
+#: ../../include/identity.php:1002
 #, php-format
 msgid "for %1$d %2$s"
 msgstr "для %1$d %2$s"
 
-#: ../../include/identity.php:986 ../../mod/profiles.php:535
+#: ../../include/identity.php:1005 ../../mod/profiles.php:535
 msgid "Sexual Preference:"
 msgstr "Сексуальная ориентация:"
 
-#: ../../include/identity.php:990 ../../mod/profiles.php:537
+#: ../../include/identity.php:1009 ../../mod/profiles.php:537
 msgid "Hometown:"
 msgstr "Родной город:"
 
-#: ../../include/identity.php:992
+#: ../../include/identity.php:1011
 msgid "Tags:"
 msgstr "Тэги:"
 
-#: ../../include/identity.php:994 ../../mod/profiles.php:538
+#: ../../include/identity.php:1013 ../../mod/profiles.php:538
 msgid "Political Views:"
 msgstr "Политические взгляды:"
 
-#: ../../include/identity.php:996
+#: ../../include/identity.php:1015
 msgid "Religion:"
 msgstr "Религия:"
 
-#: ../../include/identity.php:998 ../../mod/directory.php:164
+#: ../../include/identity.php:1017 ../../mod/directory.php:164
 msgid "About:"
 msgstr "О себе:"
 
-#: ../../include/identity.php:1000
+#: ../../include/identity.php:1019
 msgid "Hobbies/Interests:"
 msgstr "Хобби / интересы:"
 
-#: ../../include/identity.php:1002 ../../mod/profiles.php:541
+#: ../../include/identity.php:1021 ../../mod/profiles.php:541
 msgid "Likes:"
 msgstr "Что вам нравится:"
 
-#: ../../include/identity.php:1004 ../../mod/profiles.php:542
+#: ../../include/identity.php:1023 ../../mod/profiles.php:542
 msgid "Dislikes:"
 msgstr "Что вам не нравится:"
 
-#: ../../include/identity.php:1007
+#: ../../include/identity.php:1026
 msgid "Contact information and Social Networks:"
 msgstr "Информация и социальные сети контакта:"
 
-#: ../../include/identity.php:1009
+#: ../../include/identity.php:1028
 msgid "My other channels:"
 msgstr "Мои другие каналы:"
 
-#: ../../include/identity.php:1011
+#: ../../include/identity.php:1030
 msgid "Musical interests:"
 msgstr "Музыкальные интересы:"
 
-#: ../../include/identity.php:1013
+#: ../../include/identity.php:1032
 msgid "Books, literature:"
 msgstr "Книги, литература:"
 
-#: ../../include/identity.php:1015
+#: ../../include/identity.php:1034
 msgid "Television:"
 msgstr "Телевидение:"
 
-#: ../../include/identity.php:1017
+#: ../../include/identity.php:1036
 msgid "Film/dance/culture/entertainment:"
 msgstr "Кино / танцы / культура / развлечения:"
 
-#: ../../include/identity.php:1019
+#: ../../include/identity.php:1038
 msgid "Love/Romance:"
 msgstr "Любовь / Романс:"
 
-#: ../../include/identity.php:1021
+#: ../../include/identity.php:1040
 msgid "Work/employment:"
 msgstr "Работа / Занятость:"
 
-#: ../../include/identity.php:1023
+#: ../../include/identity.php:1042
 msgid "School/education:"
 msgstr "Школа / образование:"
+
+#: ../../include/identity.php:1052
+msgid "Like this thing"
+msgstr "нравится этo"
 
 #: ../../include/network.php:652
 msgid "view full size"
@@ -2470,7 +2543,7 @@ msgstr "Нажмите, чтобы открыть/закрыть"
 
 #: ../../include/text.php:1485 ../../mod/events.php:355
 msgid "Link to Source"
-msgstr ""
+msgstr "Ссылка на источник"
 
 #: ../../include/text.php:1504
 msgid "Select a page layout: "
@@ -2498,15 +2571,15 @@ msgstr "Дизайн"
 
 #: ../../include/text.php:1979
 msgid "Blocks"
-msgstr ""
+msgstr "Блоки"
 
 #: ../../include/text.php:1980
 msgid "Menus"
-msgstr ""
+msgstr "Меню"
 
 #: ../../include/text.php:1981
 msgid "Layouts"
-msgstr ""
+msgstr "Шаблоны"
 
 #: ../../include/text.php:1982
 msgid "Pages"
@@ -2514,7 +2587,7 @@ msgstr "Страницы"
 
 #: ../../include/apps.php:118
 msgid "Site Admin"
-msgstr ""
+msgstr "Админ сайта"
 
 #: ../../include/apps.php:120
 msgid "Address Book"
@@ -2539,7 +2612,7 @@ msgstr "Обновление"
 
 #: ../../include/apps.php:224
 msgid "Install"
-msgstr ""
+msgstr "Установка"
 
 #: ../../include/apps.php:229
 msgid "Purchase"
@@ -2593,15 +2666,15 @@ msgstr ""
 
 #: ../../include/widgets.php:80
 msgid "System"
-msgstr ""
+msgstr "Система"
 
 #: ../../include/widgets.php:83
 msgid "Create Personal App"
-msgstr ""
+msgstr "Создать собственное приложение"
 
 #: ../../include/widgets.php:84
 msgid "Edit Personal App"
-msgstr ""
+msgstr "Редактировать собственное приложение"
 
 #: ../../include/widgets.php:130 ../../mod/suggest.php:53
 msgid "Ignore/Hide"
@@ -2726,39 +2799,31 @@ msgstr "Рекомендуемые чаты"
 
 #: ../../include/ItemObject.php:118
 msgid "Save to Folder"
-msgstr ""
+msgstr "Сохранить в папку"
 
 #: ../../include/ItemObject.php:130 ../../include/ItemObject.php:142
 msgid "View all"
-msgstr ""
-
-#: ../../include/ItemObject.php:134
-msgctxt "noun"
-msgid "Like"
-msgid_plural "Likes"
-msgstr[0] ""
-msgstr[1] ""
-msgstr[2] ""
+msgstr "Просмотреть все"
 
 #: ../../include/ItemObject.php:139
 msgctxt "noun"
 msgid "Dislike"
 msgid_plural "Dislikes"
-msgstr[0] ""
-msgstr[1] ""
-msgstr[2] ""
+msgstr[0] "не-нравится"
+msgstr[1] "не-нравится"
+msgstr[2] "не-нравится"
 
 #: ../../include/ItemObject.php:167
 msgid "Add Star"
-msgstr ""
+msgstr "Добавить маркировку"
 
 #: ../../include/ItemObject.php:168
 msgid "Remove Star"
-msgstr ""
+msgstr "Удалить маркировку"
 
 #: ../../include/ItemObject.php:169
 msgid "Toggle Star Status"
-msgstr ""
+msgstr "Переключить статус маркировки"
 
 #: ../../include/ItemObject.php:173
 msgid "starred"
@@ -2766,19 +2831,19 @@ msgstr "помеченные"
 
 #: ../../include/ItemObject.php:190
 msgid "Add Tag"
-msgstr ""
+msgstr "Добавить тег"
 
-#: ../../include/ItemObject.php:208 ../../mod/photos.php:969
+#: ../../include/ItemObject.php:208 ../../mod/photos.php:974
 msgid "I like this (toggle)"
 msgstr "мне это нравится (переключение)"
 
-#: ../../include/ItemObject.php:209 ../../mod/photos.php:970
+#: ../../include/ItemObject.php:209 ../../mod/photos.php:975
 msgid "I don't like this (toggle)"
 msgstr "мне это не нравится (переключение)"
 
 #: ../../include/ItemObject.php:211
 msgid "Share This"
-msgstr ""
+msgstr "Поделиться этим"
 
 #: ../../include/ItemObject.php:211
 msgid "share"
@@ -2807,21 +2872,21 @@ msgstr "через Стена-к-Стене:"
 
 #: ../../include/ItemObject.php:274
 msgid "Save Bookmarks"
-msgstr ""
+msgstr "Сохранить закладки"
 
 #: ../../include/ItemObject.php:275
 msgid "Add to Calendar"
-msgstr ""
+msgstr "Добавить в календарь"
 
 #: ../../include/ItemObject.php:283
 msgctxt "noun"
 msgid "Likes"
-msgstr ""
+msgstr "нравится"
 
 #: ../../include/ItemObject.php:284
 msgctxt "noun"
 msgid "Dislikes"
-msgstr ""
+msgstr "не-нравится"
 
 #: ../../include/ItemObject.php:315
 #, php-format
@@ -2833,15 +2898,15 @@ msgstr[2] "%d комментариев"
 
 #: ../../include/ItemObject.php:316 ../../include/js_strings.php:7
 msgid "[+] show all"
-msgstr ""
+msgstr "[+] показать все"
 
-#: ../../include/ItemObject.php:580 ../../mod/photos.php:988
-#: ../../mod/photos.php:1075
+#: ../../include/ItemObject.php:580 ../../mod/photos.php:993
+#: ../../mod/photos.php:1080
 msgid "This is you"
 msgstr "Это вы"
 
 #: ../../include/ItemObject.php:582 ../../include/js_strings.php:6
-#: ../../mod/photos.php:990 ../../mod/photos.php:1077
+#: ../../mod/photos.php:995 ../../mod/photos.php:1082
 msgid "Comment"
 msgstr "Комментарий"
 
@@ -2852,15 +2917,15 @@ msgstr "Комментарий"
 #: ../../mod/poke.php:166 ../../mod/profiles.php:515 ../../mod/chat.php:177
 #: ../../mod/chat.php:211 ../../mod/connect.php:92 ../../mod/connedit.php:476
 #: ../../mod/setup.php:307 ../../mod/setup.php:350 ../../mod/pdledit.php:58
+#: ../../mod/photos.php:563 ../../mod/photos.php:668 ../../mod/photos.php:956
+#: ../../mod/photos.php:996 ../../mod/photos.php:1083
 #: ../../mod/sources.php:104 ../../mod/sources.php:138
-#: ../../mod/events.php:492 ../../mod/filestorage.php:135
+#: ../../mod/events.php:492 ../../mod/filestorage.php:137
 #: ../../mod/fsuggest.php:108 ../../mod/group.php:81 ../../mod/admin.php:442
-#: ../../mod/admin.php:751 ../../mod/admin.php:885 ../../mod/admin.php:1018
-#: ../../mod/admin.php:1217 ../../mod/admin.php:1304 ../../mod/thing.php:283
-#: ../../mod/thing.php:326 ../../mod/import.php:393 ../../mod/invite.php:156
-#: ../../mod/mail.php:223 ../../mod/mail.php:335 ../../mod/photos.php:563
-#: ../../mod/photos.php:668 ../../mod/photos.php:951 ../../mod/photos.php:991
-#: ../../mod/photos.php:1078 ../../mod/appman.php:99
+#: ../../mod/admin.php:751 ../../mod/admin.php:886 ../../mod/admin.php:1019
+#: ../../mod/admin.php:1218 ../../mod/admin.php:1305 ../../mod/thing.php:286
+#: ../../mod/thing.php:329 ../../mod/import.php:393 ../../mod/invite.php:156
+#: ../../mod/mail.php:223 ../../mod/mail.php:335 ../../mod/appman.php:99
 #: ../../view/theme/apw/php/config.php:256
 #: ../../view/theme/blogga/php/config.php:67
 #: ../../view/theme/blogga/view/theme/blog/config.php:67
@@ -2906,15 +2971,15 @@ msgstr "Удалить этот элемент?"
 
 #: ../../include/js_strings.php:8
 msgid "[-] show less"
-msgstr ""
+msgstr "[-] показать меньше"
 
 #: ../../include/js_strings.php:9
 msgid "[+] expand"
-msgstr ""
+msgstr "[+] развернуть"
 
 #: ../../include/js_strings.php:10
 msgid "[-] collapse"
-msgstr ""
+msgstr "[-] свернуть"
 
 #: ../../include/js_strings.php:11
 msgid "Password too short"
@@ -2930,7 +2995,7 @@ msgstr "все"
 
 #: ../../include/js_strings.php:14
 msgid "Secret Passphrase"
-msgstr ""
+msgstr "Тайный пароль"
 
 #: ../../include/js_strings.php:15
 msgid "Passphrase hint"
@@ -2942,7 +3007,7 @@ msgstr ""
 
 #: ../../include/js_strings.php:17
 msgid "close all"
-msgstr ""
+msgstr "закрыть все"
 
 #: ../../include/js_strings.php:19
 msgid "timeago.prefixAgo"
@@ -2950,7 +3015,7 @@ msgstr "timeago.prefixAgo"
 
 #: ../../include/js_strings.php:20
 msgid "timeago.prefixFromNow"
-msgstr ""
+msgstr "timeago.prefixFromNow"
 
 #: ../../include/js_strings.php:21
 msgid "ago"
@@ -3266,41 +3331,41 @@ msgid "Login failed."
 msgstr "Не удалось войти."
 
 #: ../../include/items.php:306 ../../mod/profperm.php:23
-#: ../../mod/subthread.php:49 ../../mod/group.php:68 ../../mod/like.php:63
+#: ../../mod/subthread.php:49 ../../mod/group.php:68 ../../mod/like.php:202
 #: ../../index.php:360
 msgid "Permission denied"
 msgstr "Доступ запрещен"
 
 #: ../../include/items.php:830
 msgid "(Unknown)"
-msgstr ""
+msgstr "(Неизвестный)"
 
-#: ../../include/items.php:3617 ../../mod/display.php:32
-#: ../../mod/filestorage.php:18 ../../mod/home.php:65 ../../mod/admin.php:159
-#: ../../mod/admin.php:922 ../../mod/admin.php:1125 ../../mod/thing.php:78
+#: ../../include/items.php:3618 ../../mod/home.php:67 ../../mod/display.php:32
+#: ../../mod/filestorage.php:18 ../../mod/admin.php:159
+#: ../../mod/admin.php:923 ../../mod/admin.php:1126 ../../mod/thing.php:78
 #: ../../mod/viewsrc.php:18
 msgid "Item not found."
 msgstr "Элемент не найден."
 
-#: ../../include/items.php:4041 ../../mod/group.php:38 ../../mod/group.php:140
+#: ../../include/items.php:4051 ../../mod/group.php:38 ../../mod/group.php:140
 msgid "Collection not found."
 msgstr "Коллекция не найдена."
 
-#: ../../include/items.php:4056
+#: ../../include/items.php:4066
 msgid "Collection is empty."
 msgstr "Коллекция пуста."
 
-#: ../../include/items.php:4063
+#: ../../include/items.php:4073
 #, php-format
 msgid "Collection: %s"
 msgstr "Коллекции: %s"
 
-#: ../../include/items.php:4074
+#: ../../include/items.php:4084
 #, php-format
 msgid "Connection: %s"
 msgstr "Контакты: %s"
 
-#: ../../include/items.php:4077
+#: ../../include/items.php:4087
 msgid "Connection not found."
 msgstr "Контакт не найден."
 
@@ -3468,7 +3533,7 @@ msgstr "Текст ссылки"
 
 #: ../../mod/mitem.php:137 ../../mod/mitem.php:181
 msgid "URL of link"
-msgstr ""
+msgstr "URL ссылки"
 
 #: ../../mod/mitem.php:138 ../../mod/mitem.php:182
 msgid "Use Red magic-auth if available"
@@ -3476,7 +3541,7 @@ msgstr ""
 
 #: ../../mod/mitem.php:139 ../../mod/mitem.php:183
 msgid "Open link in new window"
-msgstr ""
+msgstr "Открыть ссылку в новом окне"
 
 #: ../../mod/mitem.php:141 ../../mod/mitem.php:185
 msgid "Order in list"
@@ -3485,10 +3550,6 @@ msgstr ""
 #: ../../mod/mitem.php:141 ../../mod/mitem.php:185
 msgid "Higher numbers will sink to bottom of listing"
 msgstr ""
-
-#: ../../mod/mitem.php:142 ../../mod/menu.php:84 ../../mod/new_channel.php:117
-msgid "Create"
-msgstr "Создать"
 
 #: ../../mod/mitem.php:154
 msgid "Menu item not found."
@@ -3524,7 +3585,7 @@ msgstr ""
 
 #: ../../mod/acl.php:239
 msgid "network"
-msgstr ""
+msgstr "сеть"
 
 #: ../../mod/settings.php:71
 msgid "Name is required"
@@ -3556,7 +3617,7 @@ msgstr "Не действительный адрес электронной по
 
 #: ../../mod/settings.php:231
 msgid "Protected email address. Cannot change to that email."
-msgstr ""
+msgstr "Защищенный адрес электронной почты. Нельзя изменить."
 
 #: ../../mod/settings.php:240
 msgid "System failure storing new email. Please try again."
@@ -3572,7 +3633,8 @@ msgid "Add application"
 msgstr "Добавить приложения"
 
 #: ../../mod/settings.php:517 ../../mod/settings.php:543
-#: ../../mod/admin.php:892
+#: ../../mod/admin.php:893
+#: ../../view/tpl/smarty3/compiled/de0b699d2fc212753c3f166003476a343ca00174.file.cloud_directory.tpl.php:35
 msgid "Name"
 msgstr "Имя"
 
@@ -3693,7 +3755,7 @@ msgstr "Нет специальной темы для мобильных уст�
 #: ../../mod/settings.php:717
 #, php-format
 msgid "%s - (Experimental)"
-msgstr ""
+msgstr "%s - (экспериментальный)"
 
 #: ../../mod/settings.php:747
 msgid "Display Settings"
@@ -3741,11 +3803,11 @@ msgstr "Только комы вы разрешили"
 
 #: ../../mod/settings.php:795
 msgid "Approved connections"
-msgstr ""
+msgstr "Утвержденные контакты"
 
 #: ../../mod/settings.php:796
 msgid "Any connections"
-msgstr ""
+msgstr "Все контакты"
 
 #: ../../mod/settings.php:797
 msgid "Anybody on this website"
@@ -3862,7 +3924,7 @@ msgstr ""
 
 #: ../../mod/settings.php:953
 msgid "Allow others to tag your posts"
-msgstr ""
+msgstr "Разрешить другим помечать сообщения"
 
 #: ../../mod/settings.php:953
 msgid ""
@@ -3943,11 +4005,11 @@ msgstr ""
 
 #: ../../mod/settings.php:984
 msgid "You receive a private message"
-msgstr ""
+msgstr "Вы получили личное сообщение"
 
 #: ../../mod/settings.php:985
 msgid "You receive a friend suggestion"
-msgstr ""
+msgstr "Вы получили предложение дружить"
 
 #: ../../mod/settings.php:986
 msgid "You are tagged in a post"
@@ -4042,7 +4104,7 @@ msgid "Invalid item."
 msgstr "Недействительный элемент."
 
 #: ../../mod/block.php:39 ../../mod/chanview.php:77 ../../mod/page.php:47
-#: ../../mod/home.php:52 ../../mod/wall_upload.php:28
+#: ../../mod/home.php:54 ../../mod/wall_upload.php:28
 msgid "Channel not found."
 msgstr "Канал не найден."
 
@@ -4090,10 +4152,6 @@ msgstr "Выберите профиль:"
 msgid "Upload Profile Photo"
 msgstr "Загрузить фотографию профиля"
 
-#: ../../mod/profile_photo.php:361
-msgid "Upload"
-msgstr "Загрузка"
-
 #: ../../mod/profile_photo.php:365
 msgid "skip this step"
 msgstr "пропустить этот шаг"
@@ -4129,7 +4187,7 @@ msgstr ""
 
 #: ../../mod/blocks.php:66
 msgid "Block Name"
-msgstr ""
+msgstr "Название блока"
 
 #: ../../mod/profiles.php:18 ../../mod/profiles.php:138
 #: ../../mod/profiles.php:168 ../../mod/profiles.php:472
@@ -4200,7 +4258,7 @@ msgstr "Домашняя страница"
 msgid "Interests"
 msgstr "Интересы"
 
-#: ../../mod/profiles.php:337 ../../mod/admin.php:892
+#: ../../mod/profiles.php:337 ../../mod/admin.php:893
 msgid "Address"
 msgstr "Адрес"
 
@@ -4291,7 +4349,7 @@ msgstr "Кто: (если это применимо)"
 
 #: ../../mod/profiles.php:533
 msgid "Examples: cathy123, Cathy Williams, cathy@example.com"
-msgstr ""
+msgstr "Примеры: cathy123, Cathy Williams, cathy@example.com"
 
 #: ../../mod/profiles.php:534
 msgid "Since [date]:"
@@ -4386,7 +4444,7 @@ msgstr ""
 
 #: ../../mod/bookmarks.php:38
 msgid "Bookmark added"
-msgstr ""
+msgstr "Закладка добавлена"
 
 #: ../../mod/bookmarks.php:58
 msgid "My Bookmarks"
@@ -4418,7 +4476,7 @@ msgstr "Все контакты"
 
 #: ../../mod/pubsites.php:16
 msgid "Public Sites"
-msgstr ""
+msgstr "Публичные сайты"
 
 #: ../../mod/pubsites.php:19
 msgid ""
@@ -4435,7 +4493,7 @@ msgstr "URL веб-сайта"
 
 #: ../../mod/pubsites.php:25
 msgid "Access Type"
-msgstr ""
+msgstr "Тип доступа"
 
 #: ../../mod/pubsites.php:25
 msgid "Registration Policy"
@@ -4455,7 +4513,7 @@ msgstr ""
 
 #: ../../mod/rbmark.php:93
 msgid "Save Bookmark"
-msgstr ""
+msgstr "Сохранить закладки"
 
 #: ../../mod/rbmark.php:94
 msgid "URL of bookmark"
@@ -4549,7 +4607,7 @@ msgstr ""
 
 #: ../../mod/register.php:167
 msgid "Terms of Service"
-msgstr ""
+msgstr "Условия предоставления услуг"
 
 #: ../../mod/register.php:173
 #, php-format
@@ -4587,17 +4645,17 @@ msgstr "Пожалуйста, введите пароль еще раз"
 
 #: ../../mod/chatsvc.php:111
 msgid "Away"
-msgstr ""
+msgstr "Нет на месте"
 
 #: ../../mod/chatsvc.php:115
 msgid "Online"
-msgstr ""
+msgstr "Сейчас в сети"
 
 #: ../../mod/regmod.php:12
 msgid "Please login."
 msgstr "Войдите пожалуйста."
 
-#: ../../mod/cloud.php:112
+#: ../../mod/cloud.php:113
 msgid "Red Matrix - Guests: Username: {your email address}, Password: +++"
 msgstr ""
 
@@ -4627,7 +4685,7 @@ msgstr ""
 
 #: ../../mod/removeme.php:53
 msgid "Remove Channel"
-msgstr ""
+msgstr "Удалить канал"
 
 #: ../../mod/common.php:10
 msgid "No channel."
@@ -4649,11 +4707,11 @@ msgstr ""
 
 #: ../../mod/rmagic.php:38
 msgid "The error message was:"
-msgstr ""
+msgstr "Сообщение об ошибке было:"
 
 #: ../../mod/rmagic.php:42
 msgid "Authentication failed."
-msgstr ""
+msgstr "Ошибка проверки подлинности."
 
 #: ../../mod/rmagic.php:78
 msgid "Remote Authentication"
@@ -4708,7 +4766,7 @@ msgstr ""
 
 #: ../../mod/connect.php:108
 msgid "Restricted or Premium Channel"
-msgstr ""
+msgstr "Ограниченный или Премиум канал"
 
 #: ../../mod/network.php:79
 msgid "No such group"
@@ -4772,7 +4830,7 @@ msgstr "Все"
 
 #: ../../mod/connections.php:240 ../../mod/connections.php:320
 msgid "Unconnected"
-msgstr ""
+msgstr "Неприсоединенные"
 
 #: ../../mod/connections.php:270
 msgid "Suggest new connections"
@@ -5175,7 +5233,7 @@ msgstr ""
 msgid "Potential Delegates"
 msgstr ""
 
-#: ../../mod/delegate.php:130 ../../mod/tagrm.php:93 ../../mod/photos.php:906
+#: ../../mod/delegate.php:130 ../../mod/photos.php:906 ../../mod/tagrm.php:93
 msgid "Remove"
 msgstr "Удалить"
 
@@ -5188,8 +5246,8 @@ msgid "No entries."
 msgstr "Нет записей."
 
 #: ../../mod/search.php:13 ../../mod/directory.php:15
-#: ../../mod/dirprofile.php:9 ../../mod/display.php:9
-#: ../../mod/viewconnections.php:17 ../../mod/photos.php:443
+#: ../../mod/dirprofile.php:9 ../../mod/display.php:9 ../../mod/photos.php:443
+#: ../../mod/viewconnections.php:17
 msgid "Public access denied."
 msgstr "Общественный доступ запрещен."
 
@@ -5215,7 +5273,7 @@ msgstr ""
 
 #: ../../mod/dirprofile.php:108
 msgid "Status: "
-msgstr ""
+msgstr "Статус:"
 
 #: ../../mod/dirprofile.php:109
 msgid "Sexual Preference: "
@@ -5240,6 +5298,15 @@ msgstr "Ключевые слова:"
 #: ../../mod/dirsearch.php:21
 msgid "This site is not a directory server"
 msgstr "Этот сайт не является сервером каталога"
+
+#: ../../mod/home.php:81
+msgid "Red Matrix - &quot;The Network&quot;"
+msgstr ""
+
+#: ../../mod/home.php:94
+#, php-format
+msgid "Welcome to %s"
+msgstr "Добро пожаловать в %s"
 
 #: ../../mod/setup.php:162
 msgid "Red Matrix Server - Setup"
@@ -5634,7 +5701,7 @@ msgstr "Редактировать блок"
 
 #: ../../mod/editblock.php:87
 msgid "Delete block?"
-msgstr ""
+msgstr "Удалить блок?"
 
 #: ../../mod/editblock.php:115 ../../mod/editlayout.php:110
 #: ../../mod/editpost.php:116 ../../mod/editwebpage.php:147
@@ -5657,7 +5724,7 @@ msgstr "Удалить блок"
 
 #: ../../mod/pdledit.php:13
 msgid "Layout updated."
-msgstr ""
+msgstr "Шаблон обновлен."
 
 #: ../../mod/pdledit.php:28 ../../mod/pdledit.php:53
 msgid "Edit System Page Description"
@@ -5665,27 +5732,27 @@ msgstr ""
 
 #: ../../mod/pdledit.php:48
 msgid "Layout not found."
-msgstr ""
+msgstr "Шаблон не найден"
 
 #: ../../mod/pdledit.php:54
 msgid "Module Name:"
-msgstr ""
+msgstr "Имя модуля:"
 
 #: ../../mod/pdledit.php:55 ../../mod/layouts.php:59
 msgid "Layout Help"
-msgstr ""
+msgstr "Помощь к шаблону"
 
 #: ../../mod/editlayout.php:72
 msgid "Edit Layout"
-msgstr ""
+msgstr "Редактировать шаблон"
 
 #: ../../mod/editlayout.php:82
 msgid "Delete layout?"
-msgstr ""
+msgstr "Удалить шаблон?"
 
 #: ../../mod/editlayout.php:146
 msgid "Delete Layout"
-msgstr ""
+msgstr "Удалить шаблон"
 
 #: ../../mod/editpost.php:31
 msgid "Item is not editable"
@@ -5697,7 +5764,7 @@ msgstr "Удалить элемент?"
 
 #: ../../mod/editwebpage.php:106
 msgid "Edit Webpage"
-msgstr ""
+msgstr "Редактировать веб-страницу"
 
 #: ../../mod/editwebpage.php:116
 msgid "Delete webpage?"
@@ -5705,7 +5772,7 @@ msgstr "Удалить веб-страницу?"
 
 #: ../../mod/editwebpage.php:186
 msgid "Delete Webpage"
-msgstr ""
+msgstr "Удалить веб-страницу"
 
 #: ../../mod/siteinfo.php:57
 #, php-format
@@ -5738,7 +5805,7 @@ msgstr ""
 msgid ""
 "Please visit <a href=\"http://getzot.com\">GetZot.com</a> to learn more "
 "about the Red Matrix."
-msgstr ""
+msgstr "Пожалуйста посетите <a href=\"http://getzot.com\">GetZot.com</a> чтобы узнать больше о Red Matrix."
 
 #: ../../mod/siteinfo.php:103
 msgid "Bug reports and issues: please visit"
@@ -5752,7 +5819,135 @@ msgstr ""
 
 #: ../../mod/siteinfo.php:108
 msgid "Site Administrators"
+msgstr "Администратор сайта"
+
+#: ../../mod/photos.php:77
+msgid "Page owner information could not be retrieved."
 msgstr ""
+
+#: ../../mod/photos.php:97
+msgid "Album not found."
+msgstr "Альбом не найден."
+
+#: ../../mod/photos.php:119 ../../mod/photos.php:669
+msgid "Delete Album"
+msgstr "Удалить альбом"
+
+#: ../../mod/photos.php:159 ../../mod/photos.php:957
+msgid "Delete Photo"
+msgstr "Удалить фотографию"
+
+#: ../../mod/photos.php:453
+msgid "No photos selected"
+msgstr "Никакие фотографии не выбраны"
+
+#: ../../mod/photos.php:500
+msgid "Access to this item is restricted."
+msgstr "Доступ к этому элементу ограничен."
+
+#: ../../mod/photos.php:574
+#, php-format
+msgid "You have used %1$.2f Mbytes of %2$.2f Mbytes photo storage."
+msgstr "Вы использовали %1$.2f мегабайт из %2$.2f для хранения фото."
+
+#: ../../mod/photos.php:577
+#, php-format
+msgid "You have used %1$.2f Mbytes of photo storage."
+msgstr "Вы использовали %1$.2f мегабайт для хранения фото."
+
+#: ../../mod/photos.php:596
+msgid "Upload Photos"
+msgstr "Загрузить фотографии"
+
+#: ../../mod/photos.php:600 ../../mod/photos.php:664
+msgid "New album name: "
+msgstr "Название нового альбома:"
+
+#: ../../mod/photos.php:601
+msgid "or existing album name: "
+msgstr "или существующий альбом:"
+
+#: ../../mod/photos.php:602
+msgid "Do not show a status post for this upload"
+msgstr "Не показывать пост о состоянии этой загрузки"
+
+#: ../../mod/photos.php:653 ../../mod/photos.php:675 ../../mod/photos.php:1129
+#: ../../mod/photos.php:1144
+msgid "Contact Photos"
+msgstr "Фотографии контакта"
+
+#: ../../mod/photos.php:679
+msgid "Edit Album"
+msgstr "Редактировать Фотоальбом"
+
+#: ../../mod/photos.php:685
+msgid "Show Newest First"
+msgstr "Показать новые первыми"
+
+#: ../../mod/photos.php:687
+msgid "Show Oldest First"
+msgstr "Показать старые первыми"
+
+#: ../../mod/photos.php:730 ../../mod/photos.php:1176
+msgid "View Photo"
+msgstr "Посмотреть фотографию"
+
+#: ../../mod/photos.php:776
+msgid "Permission denied. Access to this item may be restricted."
+msgstr ""
+
+#: ../../mod/photos.php:778
+msgid "Photo not available"
+msgstr "Фотография не доступна"
+
+#: ../../mod/photos.php:838
+msgid "Use as profile photo"
+msgstr "Использовать в качестве фотографии профиля"
+
+#: ../../mod/photos.php:862
+msgid "View Full Size"
+msgstr "Посмотреть в полный размер"
+
+#: ../../mod/photos.php:940
+msgid "Edit photo"
+msgstr "Редактировать фотографию"
+
+#: ../../mod/photos.php:942
+msgid "Rotate CW (right)"
+msgstr "Повернуть CW (направо)"
+
+#: ../../mod/photos.php:943
+msgid "Rotate CCW (left)"
+msgstr "Повернуть CCW (налево)"
+
+#: ../../mod/photos.php:946
+msgid "New album name"
+msgstr "Новое название альбома:"
+
+#: ../../mod/photos.php:949
+msgid "Caption"
+msgstr "Подпись"
+
+#: ../../mod/photos.php:951
+msgid "Add a Tag"
+msgstr "Добавить тег"
+
+#: ../../mod/photos.php:954
+msgid ""
+"Example: @bob, @Barbara_Jensen, @jim@example.com, #California, #camping"
+msgstr "Например: @bob, @Barbara_Jensen, @jim@example.com, #California, #camping"
+
+#: ../../mod/photos.php:1107
+msgid "In This Photo:"
+msgstr ""
+
+#: ../../mod/photos.php:1182
+msgid "View Album"
+msgstr "Посмотреть фотоальбом"
+
+#: ../../mod/photos.php:1191
+msgid "Recent Photos"
+msgstr "Последние фотографии"
 
 #: ../../mod/sources.php:32
 msgid "Failed to create source. No channel selected."
@@ -5764,11 +5959,11 @@ msgstr "Источник создан"
 
 #: ../../mod/sources.php:57
 msgid "Source updated."
-msgstr ""
+msgstr "Источник обновлен."
 
 #: ../../mod/sources.php:82
 msgid "*"
-msgstr ""
+msgstr "*"
 
 #: ../../mod/sources.php:89
 msgid "Manage remote sources of content for your channel."
@@ -5895,45 +6090,29 @@ msgstr "Доступ запрещен."
 msgid "File not found."
 msgstr "Файл не найден."
 
-#: ../../mod/filestorage.php:121
+#: ../../mod/filestorage.php:122
 msgid "Edit file permissions"
 msgstr "Редактировать разрешения файла"
 
-#: ../../mod/filestorage.php:129
+#: ../../mod/filestorage.php:131
 msgid "Set/edit permissions"
 msgstr ""
 
-#: ../../mod/filestorage.php:130
+#: ../../mod/filestorage.php:132
 msgid "Include all files and sub folders"
 msgstr ""
 
-#: ../../mod/filestorage.php:131
+#: ../../mod/filestorage.php:133
 msgid "Return to file list"
 msgstr ""
 
-#: ../../mod/filestorage.php:133
+#: ../../mod/filestorage.php:135
 msgid "Copy/paste this code to attach file to a post"
 msgstr ""
 
-#: ../../mod/filestorage.php:134
+#: ../../mod/filestorage.php:136
 msgid "Copy/paste this URL to link file from a web page"
 msgstr ""
-
-#: ../../mod/filestorage.php:171
-msgid "Download"
-msgstr "Загрузка"
-
-#: ../../mod/filestorage.php:177
-msgid "Used: "
-msgstr "Использовано:"
-
-#: ../../mod/filestorage.php:178
-msgid "[directory]"
-msgstr ""
-
-#: ../../mod/filestorage.php:180
-msgid "Limit: "
-msgstr "Предел: "
 
 #: ../../mod/follow.php:25
 msgid "Channel added."
@@ -6040,15 +6219,6 @@ msgstr "Удалить Тег"
 msgid "Select a tag to remove: "
 msgstr "Выбрать тег для удаления: "
 
-#: ../../mod/home.php:79
-msgid "Red Matrix - &quot;The Network&quot;"
-msgstr ""
-
-#: ../../mod/home.php:92
-#, php-format
-msgid "Welcome to %s"
-msgstr "Добро пожаловать в %s"
-
 #: ../../mod/admin.php:52
 msgid "Theme settings updated."
 msgstr "Настройки темы обновленны."
@@ -6061,15 +6231,15 @@ msgstr "Сайт"
 msgid "Accounts"
 msgstr "Пользователи"
 
-#: ../../mod/admin.php:94 ../../mod/admin.php:884
+#: ../../mod/admin.php:94 ../../mod/admin.php:885
 msgid "Channels"
 msgstr "Каналы"
 
-#: ../../mod/admin.php:95 ../../mod/admin.php:975 ../../mod/admin.php:1017
+#: ../../mod/admin.php:95 ../../mod/admin.php:976 ../../mod/admin.php:1018
 msgid "Plugins"
 msgstr "Плагины"
 
-#: ../../mod/admin.php:96 ../../mod/admin.php:1180 ../../mod/admin.php:1216
+#: ../../mod/admin.php:96 ../../mod/admin.php:1181 ../../mod/admin.php:1217
 msgid "Themes"
 msgstr "Темы"
 
@@ -6081,7 +6251,7 @@ msgstr "Серверы"
 msgid "DB updates"
 msgstr "Обновление базы данных"
 
-#: ../../mod/admin.php:112 ../../mod/admin.php:119 ../../mod/admin.php:1303
+#: ../../mod/admin.php:112 ../../mod/admin.php:119 ../../mod/admin.php:1304
 msgid "Logs"
 msgstr "Журналы"
 
@@ -6098,9 +6268,9 @@ msgid "Message queues"
 msgstr "Очередь недоставленных сообщений"
 
 #: ../../mod/admin.php:202 ../../mod/admin.php:440 ../../mod/admin.php:540
-#: ../../mod/admin.php:749 ../../mod/admin.php:883 ../../mod/admin.php:974
-#: ../../mod/admin.php:1016 ../../mod/admin.php:1179 ../../mod/admin.php:1215
-#: ../../mod/admin.php:1302
+#: ../../mod/admin.php:749 ../../mod/admin.php:884 ../../mod/admin.php:975
+#: ../../mod/admin.php:1017 ../../mod/admin.php:1180 ../../mod/admin.php:1216
+#: ../../mod/admin.php:1303
 msgid "Administration"
 msgstr "Администрация"
 
@@ -6170,7 +6340,7 @@ msgstr "Баннер / логотип"
 
 #: ../../mod/admin.php:452
 msgid "Administrator Information"
-msgstr ""
+msgstr "Информация об администраторе"
 
 #: ../../mod/admin.php:452
 msgid ""
@@ -6459,7 +6629,7 @@ msgstr "Пользователь '%s' заблокирован"
 msgid "Users"
 msgstr "Пользователи"
 
-#: ../../mod/admin.php:752 ../../mod/admin.php:886
+#: ../../mod/admin.php:752 ../../mod/admin.php:887
 msgid "select all"
 msgstr "выбрать все"
 
@@ -6511,7 +6681,7 @@ msgid ""
 "site will be permanently deleted!\\n\\nAre you sure?"
 msgstr ""
 
-#: ../../mod/admin.php:798
+#: ../../mod/admin.php:799
 #, php-format
 msgid "%s channel censored/uncensored"
 msgid_plural "%s channelss censored/uncensored"
@@ -6519,7 +6689,7 @@ msgstr[0] ""
 msgstr[1] ""
 msgstr[2] ""
 
-#: ../../mod/admin.php:805
+#: ../../mod/admin.php:806
 #, php-format
 msgid "%s channel deleted"
 msgid_plural "%s channels deleted"
@@ -6527,117 +6697,117 @@ msgstr[0] "%s канал удален"
 msgstr[1] "%s канала удалены"
 msgstr[2] "%s каналы удалены"
 
-#: ../../mod/admin.php:824
+#: ../../mod/admin.php:825
 msgid "Channel not found"
 msgstr "Канал не найден"
 
-#: ../../mod/admin.php:835
+#: ../../mod/admin.php:836
 #, php-format
 msgid "Channel '%s' deleted"
-msgstr ""
+msgstr "Канал '%s' удален"
 
-#: ../../mod/admin.php:845
+#: ../../mod/admin.php:846
 #, php-format
 msgid "Channel '%s' uncensored"
 msgstr ""
 
-#: ../../mod/admin.php:845
+#: ../../mod/admin.php:846
 #, php-format
 msgid "Channel '%s' censored"
 msgstr ""
 
-#: ../../mod/admin.php:888
+#: ../../mod/admin.php:889
 msgid "Censor"
 msgstr ""
 
-#: ../../mod/admin.php:889
+#: ../../mod/admin.php:890
 msgid "Uncensor"
 msgstr ""
 
-#: ../../mod/admin.php:892
+#: ../../mod/admin.php:893
 msgid "UID"
-msgstr ""
+msgstr "UID"
 
-#: ../../mod/admin.php:894
+#: ../../mod/admin.php:895
 msgid ""
 "Selected channels will be deleted!\\n\\nEverything that was posted in these "
 "channels on this site will be permanently deleted!\\n\\nAre you sure?"
 msgstr ""
 
-#: ../../mod/admin.php:895
+#: ../../mod/admin.php:896
 msgid ""
 "The channel {0} will be deleted!\\n\\nEverything that was posted in this "
 "channel on this site will be permanently deleted!\\n\\nAre you sure?"
 msgstr ""
 
-#: ../../mod/admin.php:934
+#: ../../mod/admin.php:935
 #, php-format
 msgid "Plugin %s disabled."
 msgstr "Плагин %s отключен."
 
-#: ../../mod/admin.php:938
+#: ../../mod/admin.php:939
 #, php-format
 msgid "Plugin %s enabled."
 msgstr "Плагин %s включен."
 
-#: ../../mod/admin.php:948 ../../mod/admin.php:1150
+#: ../../mod/admin.php:949 ../../mod/admin.php:1151
 msgid "Disable"
 msgstr "Запретить"
 
-#: ../../mod/admin.php:950 ../../mod/admin.php:1152
+#: ../../mod/admin.php:951 ../../mod/admin.php:1153
 msgid "Enable"
 msgstr "Разрешить"
 
-#: ../../mod/admin.php:976 ../../mod/admin.php:1181
+#: ../../mod/admin.php:977 ../../mod/admin.php:1182
 msgid "Toggle"
 msgstr "Переключить"
 
-#: ../../mod/admin.php:984 ../../mod/admin.php:1191
+#: ../../mod/admin.php:985 ../../mod/admin.php:1192
 msgid "Author: "
 msgstr "Автор: "
 
-#: ../../mod/admin.php:985 ../../mod/admin.php:1192
+#: ../../mod/admin.php:986 ../../mod/admin.php:1193
 msgid "Maintainer: "
 msgstr "Обслуживающий: "
 
-#: ../../mod/admin.php:1114
+#: ../../mod/admin.php:1115
 msgid "No themes found."
 msgstr "Темы не найдены."
 
-#: ../../mod/admin.php:1173
+#: ../../mod/admin.php:1174
 msgid "Screenshot"
 msgstr "Скриншот"
 
-#: ../../mod/admin.php:1221
+#: ../../mod/admin.php:1222
 msgid "[Experimental]"
 msgstr "[экспериментальный]"
 
-#: ../../mod/admin.php:1222
+#: ../../mod/admin.php:1223
 msgid "[Unsupported]"
 msgstr "[неподдерживаемый]"
 
-#: ../../mod/admin.php:1249
+#: ../../mod/admin.php:1250
 msgid "Log settings updated."
 msgstr "Настройки журнала обновленны."
 
-#: ../../mod/admin.php:1305
+#: ../../mod/admin.php:1306
 msgid "Clear"
 msgstr "Очистить"
 
-#: ../../mod/admin.php:1311
+#: ../../mod/admin.php:1312
 msgid "Debugging"
 msgstr "Включить/Выключить"
 
-#: ../../mod/admin.php:1312
+#: ../../mod/admin.php:1313
 msgid "Log file"
 msgstr "Файл журнала"
 
-#: ../../mod/admin.php:1312
+#: ../../mod/admin.php:1313
 msgid ""
 "Must be writable by web server. Relative to your Red top-level directory."
 msgstr "Должна быть доступна для записи веб-сервером. Относительно верхнего уровня веб-сайта."
 
-#: ../../mod/admin.php:1313
+#: ../../mod/admin.php:1314
 msgid "Log level"
 msgstr "Уровень журнала"
 
@@ -6666,39 +6836,35 @@ msgstr ""
 msgid "item not found."
 msgstr "Элемент не найден."
 
-#: ../../mod/thing.php:269
+#: ../../mod/thing.php:272
 msgid "Edit Thing"
 msgstr ""
 
-#: ../../mod/thing.php:271 ../../mod/thing.php:318
+#: ../../mod/thing.php:274 ../../mod/thing.php:321
 msgid "Select a profile"
 msgstr "Выберите профиль"
 
-#: ../../mod/thing.php:273 ../../mod/thing.php:320
-msgid "Select a category of stuff. e.g. I ______ something"
-msgstr ""
-
-#: ../../mod/thing.php:275 ../../mod/thing.php:321
+#: ../../mod/thing.php:278 ../../mod/thing.php:324
 msgid "Post an activity"
 msgstr ""
 
-#: ../../mod/thing.php:275 ../../mod/thing.php:321
+#: ../../mod/thing.php:278 ../../mod/thing.php:324
 msgid "Only sends to viewers of the applicable profile"
 msgstr ""
 
-#: ../../mod/thing.php:277 ../../mod/thing.php:323
+#: ../../mod/thing.php:280 ../../mod/thing.php:326
 msgid "Name of thing e.g. something"
 msgstr ""
 
-#: ../../mod/thing.php:279 ../../mod/thing.php:324
+#: ../../mod/thing.php:282 ../../mod/thing.php:327
 msgid "URL of thing (optional)"
 msgstr ""
 
-#: ../../mod/thing.php:281 ../../mod/thing.php:325
+#: ../../mod/thing.php:284 ../../mod/thing.php:328
 msgid "URL for photo of thing (optional)"
 msgstr ""
 
-#: ../../mod/thing.php:316
+#: ../../mod/thing.php:319
 msgid "Add Thing to your Profile"
 msgstr ""
 
@@ -6757,7 +6923,7 @@ msgstr ""
 
 #: ../../mod/import.php:386
 msgid "Your old identity address (xyz@example.com)"
-msgstr ""
+msgstr "Ваш старый адрес идентичности (xyz@example.com)"
 
 #: ../../mod/import.php:387
 msgid "Your old login email address"
@@ -6869,16 +7035,16 @@ msgstr "Отказаться от пустой почты."
 msgid "Executable content type not permitted to this channel."
 msgstr ""
 
-#: ../../mod/item.php:828
+#: ../../mod/item.php:832
 msgid "System error. Post not saved."
 msgstr "Системная ошибка. Сообщение не сохранено."
 
-#: ../../mod/item.php:1271
+#: ../../mod/item.php:1275
 #, php-format
 msgid "You have reached your limit of %1$.0f top level posts."
 msgstr ""
 
-#: ../../mod/item.php:1277
+#: ../../mod/item.php:1281
 #, php-format
 msgid "You have reached your limit of %1$.0f webpages."
 msgstr ""
@@ -6894,6 +7060,10 @@ msgstr ""
 
 #: ../../mod/layouts.php:84
 msgid "Layout Name"
+msgstr "Название шаблона"
+
+#: ../../mod/like.php:97
+msgid "thing"
 msgstr ""
 
 #: ../../mod/lockview.php:30 ../../mod/lockview.php:36
@@ -6941,7 +7111,7 @@ msgid ""
 "Password reset failed."
 msgstr ""
 
-#: ../../mod/lostpass.php:85 ../../boot.php:1467
+#: ../../mod/lostpass.php:85 ../../boot.php:1475
 msgid "Password Reset"
 msgstr "Сбросить пароль"
 
@@ -7199,7 +7369,7 @@ msgstr "Меню удалено."
 
 #: ../../mod/menu.php:100
 msgid "Menu could not be deleted."
-msgstr ""
+msgstr "Меню не может быть удален."
 
 #: ../../mod/menu.php:106
 msgid "Edit Menu"
@@ -7251,134 +7421,6 @@ msgstr ""
 msgid "Or <a href=\"import\">import an existing channel</a> from another location"
 msgstr ""
 
-#: ../../mod/photos.php:77
-msgid "Page owner information could not be retrieved."
-msgstr ""
-
-#: ../../mod/photos.php:97
-msgid "Album not found."
-msgstr "Альбом не найден."
-
-#: ../../mod/photos.php:119 ../../mod/photos.php:669
-msgid "Delete Album"
-msgstr "Удалить альбом"
-
-#: ../../mod/photos.php:159 ../../mod/photos.php:952
-msgid "Delete Photo"
-msgstr "Удалить фотографию"
-
-#: ../../mod/photos.php:453
-msgid "No photos selected"
-msgstr "Никакие фотографии не выбраны"
-
-#: ../../mod/photos.php:500
-msgid "Access to this item is restricted."
-msgstr "Доступ к этому элементу ограничен."
-
-#: ../../mod/photos.php:574
-#, php-format
-msgid "You have used %1$.2f Mbytes of %2$.2f Mbytes photo storage."
-msgstr "Вы использовали %1$.2f мегабайт из %2$.2f для хранения фото."
-
-#: ../../mod/photos.php:577
-#, php-format
-msgid "You have used %1$.2f Mbytes of photo storage."
-msgstr "Вы использовали %1$.2f мегабайт для хранения фото."
-
-#: ../../mod/photos.php:596
-msgid "Upload Photos"
-msgstr "Загрузить фотографии"
-
-#: ../../mod/photos.php:600 ../../mod/photos.php:664
-msgid "New album name: "
-msgstr "Название нового альбома:"
-
-#: ../../mod/photos.php:601
-msgid "or existing album name: "
-msgstr "или существующий альбом:"
-
-#: ../../mod/photos.php:602
-msgid "Do not show a status post for this upload"
-msgstr "Не показывать пост о состоянии этой загрузки"
-
-#: ../../mod/photos.php:653 ../../mod/photos.php:675 ../../mod/photos.php:1124
-#: ../../mod/photos.php:1139
-msgid "Contact Photos"
-msgstr "Фотографии контакта"
-
-#: ../../mod/photos.php:679
-msgid "Edit Album"
-msgstr "Редактировать Фотоальбом"
-
-#: ../../mod/photos.php:685
-msgid "Show Newest First"
-msgstr "Показать новые первыми"
-
-#: ../../mod/photos.php:687
-msgid "Show Oldest First"
-msgstr "Показать старые первыми"
-
-#: ../../mod/photos.php:730 ../../mod/photos.php:1171
-msgid "View Photo"
-msgstr "Посмотреть фотографию"
-
-#: ../../mod/photos.php:776
-msgid "Permission denied. Access to this item may be restricted."
-msgstr ""
-
-#: ../../mod/photos.php:778
-msgid "Photo not available"
-msgstr "Фотография не доступна"
-
-#: ../../mod/photos.php:838
-msgid "Use as profile photo"
-msgstr "Использовать в качестве фотографии профиля"
-
-#: ../../mod/photos.php:862
-msgid "View Full Size"
-msgstr "Посмотреть в полный размер"
-
-#: ../../mod/photos.php:936
-msgid "Edit photo"
-msgstr "Редактировать фотографию"
-
-#: ../../mod/photos.php:938
-msgid "Rotate CW (right)"
-msgstr "Повернуть CW (направо)"
-
-#: ../../mod/photos.php:939
-msgid "Rotate CCW (left)"
-msgstr "Повернуть CCW (налево)"
-
-#: ../../mod/photos.php:941
-msgid "New album name"
-msgstr "Новое название альбома:"
-
-#: ../../mod/photos.php:944
-msgid "Caption"
-msgstr "Подпись"
-
-#: ../../mod/photos.php:946
-msgid "Add a Tag"
-msgstr "Добавить тег"
-
-#: ../../mod/photos.php:949
-msgid ""
-"Example: @bob, @Barbara_Jensen, @jim@example.com, #California, #camping"
-msgstr "Например: @bob, @Barbara_Jensen, @jim@example.com, #California, #camping"
-
-#: ../../mod/photos.php:1102
-msgid "In This Photo:"
-msgstr ""
-
-#: ../../mod/photos.php:1177
-msgid "View Album"
-msgstr "Посмотреть фотоальбом"
-
-#: ../../mod/photos.php:1186
-msgid "Recent Photos"
-msgstr "Последние фотографии"
-
 #: ../../mod/notifications.php:26
 msgid "Invalid request identifier."
 msgstr ""
@@ -7413,7 +7455,7 @@ msgstr ""
 
 #: ../../mod/appman.php:28 ../../mod/appman.php:44
 msgid "App installed."
-msgstr ""
+msgstr "Приложение установлено ."
 
 #: ../../mod/appman.php:37
 msgid "Malformed app."
@@ -7425,15 +7467,15 @@ msgstr "Код для вставки"
 
 #: ../../mod/appman.php:86
 msgid "Edit App"
-msgstr ""
+msgstr "Редактировать приложение"
 
 #: ../../mod/appman.php:86
 msgid "Create App"
-msgstr ""
+msgstr "Создать приложение"
 
 #: ../../mod/appman.php:91
 msgid "Name of app"
-msgstr ""
+msgstr "Название приложения"
 
 #: ../../mod/appman.php:92
 msgid "Location (URL) of app"
@@ -7445,11 +7487,11 @@ msgstr ""
 
 #: ../../mod/appman.php:94
 msgid "80 x 80 pixels - optional"
-msgstr ""
+msgstr "80 x 80 pixels - необязательно"
 
 #: ../../mod/appman.php:95
 msgid "Version ID"
-msgstr ""
+msgstr "Версия ID"
 
 #: ../../mod/appman.php:96
 msgid "Price of app"
@@ -7613,7 +7655,7 @@ msgstr ""
 #: ../../view/theme/blogga/php/config.php:70
 #: ../../view/theme/blogga/view/theme/blog/config.php:70
 msgid "Header image"
-msgstr ""
+msgstr "Графика заголовока"
 
 #: ../../view/theme/blogga/php/config.php:71
 #: ../../view/theme/blogga/view/theme/blog/config.php:71
@@ -7740,41 +7782,61 @@ msgstr ""
 msgid "Are you a clean desk or a messy desk person?"
 msgstr ""
 
-#: ../../boot.php:1265
+#: ../../view/tpl/smarty3/compiled/de0b699d2fc212753c3f166003476a343ca00174.file.cloud_directory.tpl.php:38
+msgid "Type"
+msgstr "Тип"
+
+#: ../../view/tpl/smarty3/compiled/de0b699d2fc212753c3f166003476a343ca00174.file.cloud_directory.tpl.php:40
+msgid "Size"
+msgstr "Размер"
+
+#: ../../view/tpl/smarty3/compiled/de0b699d2fc212753c3f166003476a343ca00174.file.cloud_directory.tpl.php:42
+msgid "Last modified"
+msgstr "Последнее изменение"
+
+#: ../../view/tpl/smarty3/compiled/de0b699d2fc212753c3f166003476a343ca00174.file.cloud_directory.tpl.php:85
+msgid "Are you sure you want to delete this item?"
+msgstr "Вы уверены, что хотите удалить этот элемент?"
+
+#: ../../view/tpl/smarty3/compiled/de0b699d2fc212753c3f166003476a343ca00174.file.cloud_directory.tpl.php:103
+msgid "Total"
+msgstr "Всего"
+
+#: ../../boot.php:1273
 #, php-format
 msgid "Update %s failed. See error logs."
 msgstr ""
 
-#: ../../boot.php:1268
+#: ../../boot.php:1276
 #, php-format
 msgid "Update Error at %s"
 msgstr "Ошибка обновления на %s"
 
-#: ../../boot.php:1432
+#: ../../boot.php:1440
 msgid ""
 "Create an account to access services and applications within the Red Matrix"
 msgstr ""
 
-#: ../../boot.php:1460
+#: ../../boot.php:1468
 msgid "Password"
 msgstr "Пароль"
 
-#: ../../boot.php:1461
+#: ../../boot.php:1469
 msgid "Remember me"
 msgstr "Запомнить"
 
-#: ../../boot.php:1466
+#: ../../boot.php:1474
 msgid "Forgot your password?"
 msgstr "Забыли пароль или логин?"
 
-#: ../../boot.php:1531
+#: ../../boot.php:1539
 msgid "permission denied"
 msgstr "доступ запрещен"
 
-#: ../../boot.php:1532
+#: ../../boot.php:1540
 msgid "Got Zot?"
 msgstr "Got Zot?"
 
-#: ../../boot.php:1962
+#: ../../boot.php:1970
 msgid "toggle mobile"
 msgstr "мобильное подключение"
