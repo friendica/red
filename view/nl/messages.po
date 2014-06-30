@@ -9,7 +9,7 @@ msgstr ""
 "Project-Id-Version: Red Matrix\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2014-06-27 00:02-0700\n"
-"PO-Revision-Date: 2014-06-29 15:00+0000\n"
+"PO-Revision-Date: 2014-06-30 20:27+0000\n"
 "Last-Translator: jeroenpraat <>\n"
 "Language-Team: Dutch (http://www.transifex.com/projects/p/red-matrix/language/nl/)\n"
 "MIME-Version: 1.0\n"
@@ -4791,7 +4791,7 @@ msgstr ""
 
 #: ../../mod/connections.php:94 ../../mod/connedit.php:131
 msgid "Connection updated."
-msgstr ""
+msgstr "Connectie bijgewerkt."
 
 #: ../../mod/connections.php:96 ../../mod/connedit.php:133
 msgid "Failed to update connection record."
@@ -5497,12 +5497,12 @@ msgstr "mcrypt PHP-module"
 
 #: ../../mod/setup.php:450 ../../mod/setup.php:452
 msgid "Apache mod_rewrite module"
-msgstr "Apache mod_rewrite-module"
+msgstr "Apache-module mod_rewrite"
 
 #: ../../mod/setup.php:450
 msgid ""
 "Error: Apache webserver mod-rewrite module is required but not installed."
-msgstr ""
+msgstr "Fout: De Apache-module mod-rewrite is vereist, maar niet geïnstalleerd."
 
 #: ../../mod/setup.php:456 ../../mod/setup.php:459
 msgid "proc_open"
@@ -5512,44 +5512,44 @@ msgstr "proc_open"
 msgid ""
 "Error: proc_open is required but is either not installed or has been "
 "disabled in php.ini"
-msgstr ""
+msgstr "Fout: proc_open is vereist, maar is niet geïnstalleerd of uitgeschakeld in php.ini"
 
 #: ../../mod/setup.php:464
 msgid "Error: libCURL PHP module required but not installed."
-msgstr ""
+msgstr "Fout: de PHP-module libCURL is vereist, maar niet geïnstalleerd."
 
 #: ../../mod/setup.php:468
 msgid ""
 "Error: GD graphics PHP module with JPEG support required but not installed."
-msgstr ""
+msgstr "Fout: de PHP-module GD graphics (met JPEG-ondersteuning) is vereist, maar niet geïnstalleerd."
 
 #: ../../mod/setup.php:472
 msgid "Error: openssl PHP module required but not installed."
-msgstr ""
+msgstr "Fout: de PHP-module openssl is vereist, maar niet geïnstalleerd."
 
 #: ../../mod/setup.php:476
 msgid "Error: mysqli PHP module required but not installed."
-msgstr ""
+msgstr "Fout: de PHP-module mysqli is vereist, maar niet geïnstalleerd."
 
 #: ../../mod/setup.php:480
 msgid "Error: mb_string PHP module required but not installed."
-msgstr ""
+msgstr "Fout: de PHP-module mb_string is vereist, maar niet geïnstalleerd."
 
 #: ../../mod/setup.php:484
 msgid "Error: mcrypt PHP module required but not installed."
-msgstr ""
+msgstr "Fout: de PHP-module mcrypt is vereist, maar niet geïnstalleerd."
 
 #: ../../mod/setup.php:500
 msgid ""
 "The web installer needs to be able to create a file called \".htconfig.php\""
 " in the top folder of your web server and it is unable to do so."
-msgstr ""
+msgstr "Der web-installer moet in staat zijn om het bestand \".htconfig.php\" (in de bovenste map van je webserver) aan te maken, maar was daar niet toe in staat."
 
 #: ../../mod/setup.php:501
 msgid ""
 "This is most often a permission setting, as the web server may not be able "
 "to write files in your folder - even if you can."
-msgstr ""
+msgstr "Dit komt meestal door een probleem met de bestandsrechten. De webserver is niet in staat om bestanden te bewerken in de Red Matrix-map. Zorg ervoor dat (bijv.) gebruiker www-data lees- en schrijfrechten heeft in deze en onderliggende mappen."
 
 #: ../../mod/setup.php:502
 msgid ""
@@ -6238,7 +6238,7 @@ msgstr "Hubbeheer"
 
 #: ../../mod/admin.php:98
 msgid "DB updates"
-msgstr ""
+msgstr "Database-updates"
 
 #: ../../mod/admin.php:112 ../../mod/admin.php:119 ../../mod/admin.php:1304
 msgid "Logs"
@@ -6246,11 +6246,11 @@ msgstr "Logboeken"
 
 #: ../../mod/admin.php:118
 msgid "Plugin Features"
-msgstr ""
+msgstr "Plug-in-opties"
 
 #: ../../mod/admin.php:120
 msgid "User registrations waiting for confirmation"
-msgstr ""
+msgstr "Accountregistraties die op goedkeuring wachten"
 
 #: ../../mod/admin.php:197
 msgid "Message queues"
@@ -6289,7 +6289,7 @@ msgstr "Hub-instellingen bijgewerkt."
 
 #: ../../mod/admin.php:392
 msgid "No special theme for accessibility"
-msgstr ""
+msgstr "Geen speciaal thema voor universele toegang"
 
 #: ../../mod/admin.php:421
 msgid "Yes - with approval"
@@ -7411,7 +7411,7 @@ msgstr ""
 
 #: ../../mod/notifications.php:35
 msgid "Discard"
-msgstr ""
+msgstr "Afwijzen"
 
 #: ../../mod/notifications.php:94 ../../mod/notify.php:53
 msgid "No more system notifications."
