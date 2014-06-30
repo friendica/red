@@ -6,7 +6,7 @@ Dokumentation und Ressourcen zur Red-Matrix
 
 * [Grundlagen zu Red-Konten](help/Kontengrundlagen)
 * [Profile](help/Profile)
-* [Channels](help/Channels)
+* [Kanäle](help/kanaele)
 * [Connecting to Channels](help/Connecting-to-Channels)
 * [Permissions](help/Permissions)
 * [Cloud Storage](help/Cloud)
