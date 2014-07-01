@@ -16,6 +16,7 @@ require_once('include/notify.php');
  * @param App &$a
  * @result JSON
  */
+
 function ping_init(&$a) {
 
 	$result = array();
@@ -40,7 +41,23 @@ function ping_init(&$a) {
 
 	header("content-type: application/json");
 
+	/**
+	 * If you have several windows open to this site and switch to a different channel
+	 * in one of them, the others may get into a confused state showing you a page or options 
+	 * on that page which were only valid under the old identity. You session has changed.
+	 * Therefore we send a notification of this fact back to the browser where it is picked up
+	 * in javascript and which reloads the page it is on so that it is valid under the context
+	 * of the now current channel. 
+	 */
+
 	$result['invalid'] = ((intval($_GET['uid'])) && (intval($_GET['uid']) != local_user()) ? 1 : 0);
+
+	/**
+	 * Send all system messages (alerts) to the browser.
+	 * Some are marked as informational and some represent
+	 * errors or serious notifications. These typically
+	 * will popup on the current page (no matter what page it is)
+	 */
 
 	if(x($_SESSION, 'sysmsg')){
 		foreach ($_SESSION['sysmsg'] as $m){
@@ -59,6 +76,10 @@ function ping_init(&$a) {
 		echo json_encode($result);
 		killme();
 	}
+
+	/**
+	 * Update chat presence indication (if applicable)
+	 */
 
 	if(get_observer_hash() && (! $result['invalid'])) {
 		$r = q("select cp_id, cp_room from chatpresence where cp_xchan = '%s' and cp_client = '%s' and cp_room = 0 limit 1",
@@ -84,12 +105,26 @@ function ping_init(&$a) {
 		}
 	}
 
+	/**
+	 * Chatpresence continued... if somebody hasn't pinged recently, they've most likely left the page
+	 * and shouldn't count as online anymore. We allow an expection for bots.
+	 */
+
 	q("delete from chatpresence where cp_last < UTC_TIMESTAMP() - INTERVAL 3 MINUTE and cp_client != 'auto' "); 
 
 	if((! local_user()) || ($result['invalid'])) {
 		echo json_encode($result);
 		killme();
 	}
+
+	/**
+	 * Everything following is only permitted under the context of a locally authenticated site member.
+	 */
+
+
+	/**
+	 * Handle "mark all xyz notifications read" requests.
+	 */
 
 	// mark all items read
 	if(x($_REQUEST, 'markRead') && local_user()) {
@@ -130,6 +165,13 @@ function ping_init(&$a) {
 				break;
 		}
 	}
+
+
+
+	/**
+	 * URL ping/something will return detail for "something", e.g. a json list with which to populate a notification
+	 * dropdown menu.
+	 */
 
 	if(argc() > 1 && argv(1) === 'notify') {
 		$t = q("select count(*) as total from notify where uid = %d and seen = 0",
@@ -185,7 +227,6 @@ function ping_init(&$a) {
 
 		if($t) {
 			foreach($t as $zz) {
-//				$msg = sprintf( t('sent you a private message.'), $zz['xchan_name']);
 				$notifs[] = array(
 					'notify_link' => $a->get_baseurl() . '/mail/' . $zz['id'], 
 					'name' => $zz['xchan_name'],
@@ -273,10 +314,10 @@ function ping_init(&$a) {
 				else
 					$md = datetime_convert('UTC', 'UTC', $rr['start'], 'Y/m');
 
-				$strt = datetime_convert('UTC', $rr['convert'] ? date_default_timezone_get() : 'UTC', $rr['start']);
+				$strt = datetime_convert('UTC', (($rr['adjust']) ? date_default_timezone_get() : 'UTC'), $rr['start']);
 				$today = ((substr($strt, 0, 10) === datetime_convert('UTC', date_default_timezone_get(), 'now', 'Y-m-d')) ? true : false);
 				
-				$when = day_translate(datetime_convert('UTC', $rr['adjust'] ? date_default_timezone_get() : 'UTC', $rr['start'], $bd_format)) . (($today) ?  ' ' . t('[today]') : '');
+				$when = day_translate(datetime_convert('UTC', (($rr['adjust']) ? date_default_timezone_get() : 'UTC'), $rr['start'], $bd_format)) . (($today) ?  ' ' . t('[today]') : '');
 
 				$result[] = array(
 					'notify_link' => $a->get_baseurl() . '/events', // FIXME this takes you to an edit page and it may not be yours, we really want to just view the single event  --> '/events/event/' . $rr['event_hash'],
@@ -294,7 +335,12 @@ function ping_init(&$a) {
 		killme();
 	}
 
-	// Normal ping - just the counts
+
+
+	/**
+	 * Normal ping - just the counts, no detail
+	 */
+
 	$t = q("select count(*) as total from notify where uid = %d and seen = 0",
 		intval(local_user())
 	);
@@ -368,7 +414,7 @@ function ping_init(&$a) {
 		$result['all_events'] = count($events);
 
 		if($result['all_events']) {
-			$str_now = datetime_convert('UTC', $a->timezone, 'now', 'Y-m-d');
+			$str_now = datetime_convert('UTC', date_default_timezone_get(), 'now', 'Y-m-d');
 			foreach($events as $x) {
 				$bd = false;
 				if($x['type'] === 'birthday') {
@@ -378,7 +424,7 @@ function ping_init(&$a) {
 				else {
 					$result['events'] ++;
 				}
-				if(datetime_convert('UTC', ((intval($x['adjust'])) ? $a->timezone : 'UTC'), $x['start'], 'Y-m-d') === $str_now) {
+				if(datetime_convert('UTC', ((intval($x['adjust'])) ? date_default_timezone_get() : 'UTC'), $x['start'], 'Y-m-d') === $str_now) {
 					$result['all_events_today'] ++;
 					if($bd)
 						$result['birthdays_today'] ++;
