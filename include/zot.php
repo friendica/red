@@ -582,16 +582,19 @@ function zot_register_hub($arr) {
  * 
  * @param array $arr => json_decoded discovery packet
  * @param int $ud_flags
- *    Determines whether to create a directory update record if any changes occur, default is UPDATE_FLAGS_UPDATED (true)
+ *    Determines whether to create a directory update record if any changes occur, default is UPDATE_FLAGS_UPDATED
  *    $ud_flags = UPDATE_FLAGS_FORCED indicates a forced refresh where we unconditionally create a directory update record
  *      this typically occurs once a month for each channel as part of a scheduled ping to notify the directory
  *      that the channel still exists
+ * @param array $ud_arr
+ *    If set [typically by update_directory_entry()] indicates a specific update table row and more particularly 
+ *    contains a particular address (ud_addr) which needs to be updated in that table.
  *
  * @returns array =>  'success' (boolean true or false)
  *                    'message' (optional error string only if success is false)
  */
 
-function import_xchan($arr,$ud_flags = UPDATE_FLAGS_UPDATED) {
+function import_xchan($arr,$ud_flags = UPDATE_FLAGS_UPDATED, $ud_arr = null) {
 
 
 	call_hooks('import_xchan', $arr);
@@ -601,7 +604,6 @@ function import_xchan($arr,$ud_flags = UPDATE_FLAGS_UPDATED) {
 
 	$changed = false;
 	$what = '';
-	$addresses = array();
 
 	if(! (is_array($arr) && array_key_exists('success',$arr) && $arr['success'])) {
 		logger('import_xchan: invalid data packet: ' . print_r($arr,true));
@@ -838,8 +840,6 @@ function import_xchan($arr,$ud_flags = UPDATE_FLAGS_UPDATED) {
 			if(strpos($location['address'],'/') !== false)
 				$location['address'] = substr($location['address'],0,strpos($location['address'],'/'));
 
-			$addresses[] = $location['address'];
-
 			// match as many fields as possible in case anything at all changed. 
 
 			$r = q("select * from hubloc where hubloc_hash = '%s' and hubloc_guid = '%s' and hubloc_guid_sig = '%s' and hubloc_url = '%s' and hubloc_url_sig = '%s' and hubloc_host = '%s' and hubloc_addr = '%s' and hubloc_callback = '%s' and hubloc_sitekey = '%s' ",
@@ -964,15 +964,16 @@ function import_xchan($arr,$ud_flags = UPDATE_FLAGS_UPDATED) {
 
 	}
 
+	// Which entries in the update table are we interested in updating?
 
-
+	$address = (($ud_arr && $ud_arr['ud_addr']) ? $ud_arr['ud_addr'] : $arr['address']);
 
 
 	// Are we a directory server of some kind?
 
 	if($dirmode != DIRECTORY_MODE_NORMAL) {
 		if(array_key_exists('profile',$arr) && is_array($arr['profile'])) {
-			$profile_changed = import_directory_profile($xchan_hash,$arr['profile'],$arr['address'],$ud_flags, 1);
+			$profile_changed = import_directory_profile($xchan_hash,$arr['profile'],$address,$ud_flags, 1);
 			if($profile_changed) {
 				$what .= 'profile ';
 				$changed = true;
@@ -998,27 +999,19 @@ function import_xchan($arr,$ud_flags = UPDATE_FLAGS_UPDATED) {
 		}
 	}
 	
+
 	if(($changed) || ($ud_flags == UPDATE_FLAGS_FORCED)) {
-		if($addresses) {
-			foreach($addresses as $address) {
-				$guid = random_string() . '@' . get_app()->get_hostname();		
-				update_modtime($xchan_hash,$guid,$address,$ud_flags);
-			}
-		}
+		$guid = random_string() . '@' . get_app()->get_hostname();		
+		update_modtime($xchan_hash,$guid,$address,$ud_flags);
 		logger('import_xchan: changed: ' . $what,LOGGER_DEBUG);
 	}
 	elseif(! $ud_flags) {
 		// nothing changed but we still need to update the updates record
-		if($addresses) {
-			foreach($addresses as $address) {
-
-				q("update updates set ud_flags = ( ud_flags | %d ) where ud_addr = '%s' and not (ud_flags & %d) ",
-					intval(UPDATE_FLAGS_UPDATED),
-					dbesc($address),
-					intval(UPDATE_FLAGS_UPDATED)
-				);
-			}
-		}
+		q("update updates set ud_flags = ( ud_flags | %d ) where ud_addr = '%s' and not (ud_flags & %d) ",
+			intval(UPDATE_FLAGS_UPDATED),
+			dbesc($address),
+			intval(UPDATE_FLAGS_UPDATED)
+		);
 	}
 
 	if(! x($ret,'message')) {
