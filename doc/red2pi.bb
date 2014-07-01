@@ -19,18 +19,18 @@ Then this page is for you! You will:
 
 [size=large]1. Install Raspberry OS (Debian Linux)[/size]
 
-instructions under #^[url=http://www.raspberrypi.org/downloads]http://www.raspberrypi.org/downloads[/url]
+instructions under [url=http://www.raspberrypi.org/downloads]http://www.raspberrypi.org/downloads[/url]
 This page links to the quick start containing detailed instruction.
 
 [b]Format SD card[/b]
 
-using the programm gparted under Linux Mint 15
+using the program gparted under Linux Mint 15
 
 format as FAT32
 
 [b]Download NOOBS (offline and network install)[/b]
 
-#^[url=http://downloads.raspberrypi.org/noobs]http://downloads.raspberrypi.org/noobs[/url]
+[url=http://downloads.raspberrypi.org/noobs]http://downloads.raspberrypi.org/noobs[/url]
 
 unzip
 
@@ -62,7 +62,7 @@ in raspi-config (optional) &gt; Internationalisation options &gt; Change Timezoe
 
 in raspi-config (optional) &gt; Overlock &gt; medium
 
-(Source #^[url=http://www.manfred-steger.de/tuts/20-der-eigene-webserver-mit-dem-raspberry-pi#]http://www.manfred-steger.de/tuts/20-der-eigene-webserver-mit-dem-raspberry-pi#[/url])
+(Source [url=http://www.manfred-steger.de/tuts/20-der-eigene-webserver-mit-dem-raspberry-pi#]http://www.manfred-steger.de/tuts/20-der-eigene-webserver-mit-dem-raspberry-pi#[/url])
 
 
 [b]More[/b]
@@ -86,7 +86,7 @@ Hint: use the router admin tool to find out the IP of your PI[code]ssh pi@192.16
 sudo apt-get update
 sudo apt-get dist-upgrade[/code]
 
-(Source #^[url=http://www.manfred-steger.de/tuts/20-der-eigene-webserver-mit-dem-raspberry-pi#]http://www.manfred-steger.de/tuts/20-der-eigene-webserver-mit-dem-raspberry-pi#[/url])
+(Source [url=http://www.manfred-steger.de/tuts/20-der-eigene-webserver-mit-dem-raspberry-pi#]http://www.manfred-steger.de/tuts/20-der-eigene-webserver-mit-dem-raspberry-pi#[/url])
 
 
 
@@ -105,10 +105,10 @@ wait...
 reconnect via ssh, example: [code]ssh pi@192.168.178.37
 sudo apt-get install apache2 apache2-doc apache2-utils[/code]
 
-Open webbrowser on PC and check #^[url=http://192.168.178.37]http://192.168.178.37[/url]
+Open webbrowser on PC and check [url=http://192.168.178.37]http://192.168.178.37[/url]
 Should show you a page like &quot;It works&quot;
 
-(Source #^[url=http://www.manfred-steger.de/tuts/20-der-eigene-webserver-mit-dem-raspberry-pi#]http://www.manfred-steger.de/tuts/20-der-eigene-webserver-mit-dem-raspberry-pi#[/url])
+(Source [url=http://www.manfred-steger.de/tuts/20-der-eigene-webserver-mit-dem-raspberry-pi#]http://www.manfred-steger.de/tuts/20-der-eigene-webserver-mit-dem-raspberry-pi#[/url])
 
 
 [b]Install PHP, MaySQL, phpMyAdmin[/b]
@@ -124,7 +124,7 @@ Configuring phpmyadmin
 - Select apache2
 - Configure database for phpmyadmin with dbconfig-common?: Choose Yes
 
-(Source #^[url=http://www.manfred-steger.de/tuts/20-der-eigene-webserver-mit-dem-raspberry-pi#]http://www.manfred-steger.de/tuts/20-der-eigene-webserver-mit-dem-raspberry-pi#[/url])
+(Source [url=http://www.manfred-steger.de/tuts/20-der-eigene-webserver-mit-dem-raspberry-pi#]http://www.manfred-steger.de/tuts/20-der-eigene-webserver-mit-dem-raspberry-pi#[/url])
 
 
 [b]Test installation[/b]
@@ -140,7 +140,7 @@ Insert into the file:[code]
 [/code]
 (save CTRL+0, ENTER, CTRL+X)
 
-open webbrowser on PC and try #^[url=http://192.168.178.37/phpinfo.php]http://192.168.178.37/phpinfo.php[/url] (page shows infos on php)
+open webbrowser on PC and try [url=http://192.168.178.37/phpinfo.php]http://192.168.178.37/phpinfo.php[/url] (page shows infos on php)
 
 connect phpMyAdmin with MySQL database [code]nano /etc/apache2/apache2.conf[/code]
 - CTRL+V... to the end of the file
@@ -151,14 +151,14 @@ sudo apt-get update
 sudo apt-get upgrade
 sudo reboot[/code]
 
-(Source #^[url=http://www.manfred-steger.de/tuts/20-der-eigene-webserver-mit-dem-raspberry-pi#]http://www.manfred-steger.de/tuts/20-der-eigene-webserver-mit-dem-raspberry-pi#[/url])
+(Source [url=http://www.manfred-steger.de/tuts/20-der-eigene-webserver-mit-dem-raspberry-pi#]http://www.manfred-steger.de/tuts/20-der-eigene-webserver-mit-dem-raspberry-pi#[/url])
 
 
 [b]phpMyAdmin[/b]
 
 open webbrowser on PC and try #^[url=http://192.168.178.37/phpmyadmin]http://192.168.178.37/phpmyadmin[/url]
 
-(Source #^[url=http://www.manfred-steger.de/tuts/20-der-eigene-webserver-mit-dem-raspberry-pi#]http://www.manfred-steger.de/tuts/20-der-eigene-webserver-mit-dem-raspberry-pi#[/url])
+(Source [url=http://www.manfred-steger.de/tuts/20-der-eigene-webserver-mit-dem-raspberry-pi#]http://www.manfred-steger.de/tuts/20-der-eigene-webserver-mit-dem-raspberry-pi#[/url])
 
 
 [b]Create an empty database... that is later used by RED[/b]
@@ -174,7 +174,7 @@ Note the access details (hostname, username, password, database name).
 
 (Source: #^[url=http://www.techjawab.com/2013/06/setup-dynamic-dns-dyndns-for-free-on.html]http://www.techjawab.com/2013/06/setup-dynamic-dns-dyndns-for-free-on.html[/url])
 
-#^[url=http://freedns.afraid.org/signup/]http://freedns.afraid.org/signup/[/url]
+[url=http://freedns.afraid.org/signup/]http://freedns.afraid.org/signup/[/url]
 
 [b]Step 1[/b]
 Register for a Free domain at #^[url=http://freedns.afraid.org/signup/]http://freedns.afraid.org/signup/[/url]
@@ -229,7 +229,7 @@ To check the logs you can use this:
 
 [size=large]4. Install RED [/size] 
 
-(Source: #^[zrl=https://friendicared.net/help/Install]https://friendicared.net/help/Install[/zrl])
+(Source: [zrl=https://friendicared.net/help/Install]https://friendicared.net/help/Install[/zrl])
 
 Linux Appache document root is /var/www/
 Two files exist there (created by the steps above): index.html, phpinfo.php
@@ -267,19 +267,6 @@ Create .htconfig.php and is writable by the webserver
 [code]pi@pi /var/www $ sudo touch .htconfig.php
 pi@pi /var/www $ sudo chmod ou+w .htconfig.php[/code]
 
-Prevent search engines from indexing your site. Why? This can fill up your database.
-(Source: [url=http://wiki.pixelbits.de/redmatrix]Pixelbits[/url] )
-[code]pi@pi /var/www $ sudo touch robots.txt[/code]
-Open the file.
-[code]pi@pi /var/www $ sudo nano robots.txt[/code]
-Paste this text and save.
-[code]
-# Prevent search engines to index this site
-  User-agent: *
-  Disallow: /search
-[/code]
-
-
 [b]First start and initial configuration of your RED Matrix hub[/b]
 
 In browser open #^[zrl=http://einervonvielen.mooo.com/]http://einervonvielen.mooo.com/[/zrl]
@@ -294,7 +281,7 @@ apt-get install php5-curl
 
 Error: Apache webserver mod-rewrite module is required but not installed.
 Solution
-(Source: #^[url=http://xmodulo.com/2013/01/how-to-enable-mod_rewrite-in-apache2-on-debian-ubuntu.html]http://xmodulo.com/2013/01/how-to-enable-mod_rewrite-in-apache2-on-debian-ubuntu.html[/url])
+(Source: [url=http://xmodulo.com/2013/01/how-to-enable-mod_rewrite-in-apache2-on-debian-ubuntu.html]http://xmodulo.com/2013/01/how-to-enable-mod_rewrite-in-apache2-on-debian-ubuntu.html[/url])
 The default installation of Apache2 comes with mod_rewrite installed. To check whether this is the case, verify the existence of /etc/apache2/mods-available/rewrite.load
 - pi@pi /var/www $ nano /etc/apache2/mods-available/rewrite.load
  (You should find the contendt: LoadModule rewrite_module /usr/lib/apache2/modules/mod_rewrite.so)
@@ -327,6 +314,13 @@ Enter
 - */15 * * * * cd /var/www/; /usr/bin/php include/poller.php
 - Save and exit.
 
+Prevent search engines from indexing your site. Why?  This can cause heavy resource use.
+
+[code]
+php util/config system block_public_search 1
+[/code]
+
+
 
 [size=large]5. Keep your Raspberry Pi and your Redmatrix up-to-date[/size] 
 
@@ -346,6 +340,6 @@ Save and exit.
 [size=large]6. Running Friendica with SSL[/size] 
 
 Follow the instructions here:
-#^[url=https://github.com/friendica/friendica/wiki/Running-Friendica-with-SSL]https://github.com/friendica/friendica/wiki/Running-Friendica-with-SSL[/url]
+[url=https://github.com/friendica/friendica/wiki/Running-Friendica-with-SSL]https://github.com/friendica/friendica/wiki/Running-Friendica-with-SSL[/url]
 
-Return to the [url=[baseurl]/help/main]Main documentation page[/url]
+Return to the [zrl=[baseurl]/help/main]Main documentation page[/zrl]
