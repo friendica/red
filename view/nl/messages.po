@@ -9,7 +9,7 @@ msgstr ""
 "Project-Id-Version: Red Matrix\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2014-06-27 00:02-0700\n"
-"PO-Revision-Date: 2014-07-01 15:42+0000\n"
+"PO-Revision-Date: 2014-07-01 22:53+0000\n"
 "Last-Translator: jeroenpraat <>\n"
 "Language-Team: Dutch (http://www.transifex.com/projects/p/red-matrix/language/nl/)\n"
 "MIME-Version: 1.0\n"
@@ -2018,7 +2018,7 @@ msgstr "Naam te lang"
 
 #: ../../include/identity.php:166
 msgid "No account identifier"
-msgstr "Geen account-identifier"
+msgstr "Geen account-identificator"
 
 #: ../../include/identity.php:176
 msgid "Nickname is required."
@@ -2048,7 +2048,7 @@ msgstr "Vrienden"
 
 #: ../../include/identity.php:509
 msgid "Requested channel is not available."
-msgstr "Aangevraagd kanaal is niet beschikbaar."
+msgstr "Opgevraagd kanaal is niet beschikbaar."
 
 #: ../../include/identity.php:557 ../../mod/achievements.php:8
 #: ../../mod/profile.php:16 ../../mod/blocks.php:10 ../../mod/connect.php:13
@@ -2245,7 +2245,7 @@ msgstr "Films/dansen/cultuur/vermaak:"
 
 #: ../../include/identity.php:1038
 msgid "Love/Romance:"
-msgstr "Liefde/romance:"
+msgstr "Liefde/romantiek:"
 
 #: ../../include/identity.php:1040
 msgid "Work/employment:"
@@ -2620,12 +2620,12 @@ msgstr "Datapakket ongeldig"
 
 #: ../../include/zot.php:617
 msgid "Unable to verify channel signature"
-msgstr "Kanaal-kenmerk kon niet worden geverifieerd.  "
+msgstr "Kanaal-kenmerk (channel signature) kon niet worden geverifieerd.  "
 
 #: ../../include/zot.php:814
 #, php-format
 msgid "Unable to verify site signature for %s"
-msgstr "Hub-kenmerk voor %s kon niet worden geverifieerd"
+msgstr "Hub-kenmerk (site signature) voor %s kon niet worden geverifieerd"
 
 #: ../../include/message.php:18
 msgid "No recipient provided."
@@ -4155,7 +4155,7 @@ msgstr "Afbeelding bijsnijden"
 
 #: ../../mod/profile_photo.php:380
 msgid "Please adjust the image cropping for optimum viewing."
-msgstr ""
+msgstr "Snij de afbeelding zo uit dat deze optimaal wordt weergegeven."
 
 #: ../../mod/profile_photo.php:382
 msgid "Done Editing"
@@ -4172,7 +4172,7 @@ msgstr "Uploaden afbeelding mislukt"
 #: ../../mod/profile_photo.php:436
 #, php-format
 msgid "Image size reduction [%s] failed."
-msgstr ""
+msgstr "Verkleinen [%s] van afbeelding mislukt."
 
 #: ../../mod/blocks.php:66
 msgid "Block Name"
@@ -4445,7 +4445,7 @@ msgstr "Bladwijzers van mijn connecties"
 
 #: ../../mod/profperm.php:29 ../../mod/profperm.php:58
 msgid "Invalid profile identifier."
-msgstr "Ongeldige profiel-identifier"
+msgstr "Ongeldige profiel-identificator"
 
 #: ../../mod/profperm.php:110
 msgid "Profile Visibility Editor"
@@ -4494,7 +4494,7 @@ msgstr "Je moet zijn ingelogd om deze pagina te kunnen bekijken."
 
 #: ../../mod/channel.php:86
 msgid "Insufficient permissions.  Request redirected to profile page."
-msgstr "Onvoldoende rechten.  Verzoek doorgestuurd naar profielpagina."
+msgstr "Onvoldoende rechten.  Doorgestuurd naar profielpagina."
 
 #: ../../mod/rbmark.php:88
 msgid "Select a bookmark folder"
@@ -4708,7 +4708,7 @@ msgstr "Authenticatie op afstand"
 
 #: ../../mod/rmagic.php:79
 msgid "Enter your channel address (e.g. channel@example.com)"
-msgstr ""
+msgstr "Vul jouw kanaaladres in (bijv. channel@example.com)"
 
 #: ../../mod/rmagic.php:80
 msgid "Authenticate"
@@ -4730,28 +4730,28 @@ msgstr "Restricties voor connecties van premiumkanaal toestaan"
 msgid ""
 "Please enter your restrictions or conditions, such as paypal receipt, usage "
 "guidelines, etc."
-msgstr ""
+msgstr "Vul je restricties of voorwaarden in, zoals een paypal-afschrift, gebruikersvoorschriften, enz."
 
 #: ../../mod/connect.php:89 ../../mod/connect.php:109
 msgid ""
 "This channel may require additional steps or acknowledgement of the "
 "following conditions prior to connecting:"
-msgstr ""
+msgstr "Dit kanaal kan extra stappen of het accepteren van de volgende voorwaarden vereisen, voordat de connectie wordt geaccepteerd:"
 
 #: ../../mod/connect.php:90
 msgid ""
 "Potential connections will then see the following text before proceeding:"
-msgstr ""
+msgstr "Mogelijke connecties zullen dan de volgende tekst zien voordat ze verder kunnen:"
 
 #: ../../mod/connect.php:91 ../../mod/connect.php:112
 msgid ""
 "By continuing, I certify that I have complied with any instructions provided"
 " on this page."
-msgstr ""
+msgstr "Door verder te gaan ga ik automatisch akkoord met alle voorwaarden en aanwijzingen op deze pagina."
 
 #: ../../mod/connect.php:100
 msgid "(No specific instructions have been provided by the channel owner.)"
-msgstr ""
+msgstr "(Er zijn geen speciale voorwaarden en aanwijzingen door de kanaal-eigenaar verstrekt) "
 
 #: ../../mod/connect.php:108
 msgid "Restricted or Premium Channel"
@@ -6497,7 +6497,7 @@ msgid ""
 "Delay background delivery processes by this many seconds to reduce system "
 "load. Recommend: 4-5 for shared hosts, 2-3 for virtual private servers. 0-1 "
 "for large dedicated servers."
-msgstr ""
+msgstr "Vertraag de achtergrondprocessen voor het afleveren met een aantal seconden om de systeembelasting te verminderen. Aanbevolen: 4-5 voor shared hosts, 2-3 voor virtual private servers (VPS) en 0-1 voor grote dedicated servers."
 
 #: ../../mod/admin.php:475
 msgid "Poll interval"
@@ -6507,7 +6507,7 @@ msgstr "Poll-interval"
 msgid ""
 "Delay background polling processes by this many seconds to reduce system "
 "load. If 0, use delivery interval."
-msgstr ""
+msgstr "De achtergrondprocessen voor het afleveren met zoveel seconden vertragen om de systeembelasting te verminderen. 0 om de afleveringsinterval te gebruiken."
 
 #: ../../mod/admin.php:476
 msgid "Maximum Load Average"
@@ -6517,7 +6517,7 @@ msgstr "Maximaal gemiddelde systeembelasting"
 msgid ""
 "Maximum system load before delivery and poll processes are deferred - "
 "default 50."
-msgstr ""
+msgstr "Maximale systeembelasting voordat de afleverings- en polllingsprocessen worden uitgesteld. Standaard is 50."
 
 #: ../../mod/admin.php:532
 msgid "No server found"
@@ -6790,7 +6790,7 @@ msgstr "Logbestand"
 #: ../../mod/admin.php:1313
 msgid ""
 "Must be writable by web server. Relative to your Red top-level directory."
-msgstr ""
+msgstr "Moet door de webserver beschrijfbaar zijn. Relatief ten opzichte van de bovenste map van je Red Matrix-installatie."
 
 #: ../../mod/admin.php:1314
 msgid "Log level"
@@ -6855,28 +6855,28 @@ msgstr "Object aan je profiel toevoegen"
 
 #: ../../mod/import.php:36
 msgid "Nothing to import."
-msgstr ""
+msgstr "Niets gevonden om te importeren"
 
 #: ../../mod/import.php:58
 msgid "Unable to download data from old server"
-msgstr ""
+msgstr "Niet in staat om gegevens van de oude hub te downloaden"
 
 #: ../../mod/import.php:64
 msgid "Imported file is empty."
-msgstr ""
+msgstr "Geïmporteerde bestand is leeg"
 
 #: ../../mod/import.php:88
 msgid ""
 "Cannot create a duplicate channel identifier on this system. Import failed."
-msgstr ""
+msgstr "Kan geen dubbele kanaal-identificator op deze hub aanmaken. Importeren mislukt."
 
 #: ../../mod/import.php:106
 msgid "Channel clone failed. Import failed."
-msgstr ""
+msgstr "Het klonen van het kanaal is mislukt. Importeren mislukt."
 
 #: ../../mod/import.php:116
 msgid "Cloned channel not found. Import failed."
-msgstr ""
+msgstr "Gekloond kanaal niet gevonden. Importeren mislukt."
 
 #: ../../mod/import.php:364
 msgid "Import completed."
@@ -6896,19 +6896,19 @@ msgid ""
 " may retrieve the channel identity from the old server/hub via the network "
 "or provide an export file. Only identity and connections/relationships will "
 "be imported. Importation of content is not yet available."
-msgstr ""
+msgstr "Gebruik dit formulier om een bestaand kanaal te importeren van een andere hub. Je kan de kanaal-identiteit van de oude hub via het netwerk ontvangen of een exportbestand verstrekken. Alleen de identiteit en de connecties zullen geïmporteerd worden. Het importeren van inhoud is nog niet beschikbaar."
 
 #: ../../mod/import.php:384
 msgid "File to Upload"
-msgstr ""
+msgstr "Bestand om te uploaden"
 
 #: ../../mod/import.php:385
 msgid "Or provide the old server/hub details"
-msgstr ""
+msgstr "Of vul de gegevens van de oude hub in"
 
 #: ../../mod/import.php:386
 msgid "Your old identity address (xyz@example.com)"
-msgstr ""
+msgstr "Jouw oude kanaaladres (xyz@example.com)"
 
 #: ../../mod/import.php:387
 msgid "Your old login email address"
@@ -6916,7 +6916,7 @@ msgstr "Het e-mailadres van je oude account"
 
 #: ../../mod/import.php:388
 msgid "Your old login password"
-msgstr ""
+msgstr "Wachtwoord van jouw oude account"
 
 #: ../../mod/import.php:389
 msgid ""
@@ -6924,11 +6924,11 @@ msgid ""
 "address, or whether your old location should continue this role. You will be"
 " able to post from either location, but only one can be marked as the "
 "primary location for files, photos, and media."
-msgstr ""
+msgstr "Voor elke optie geldt dat je moet kiezen of je jouw primaire kanaaladres op deze hub wil instellen of dat jouw oude hub deze rol blijft vervullen."
 
 #: ../../mod/import.php:390
 msgid "Make this hub my primary location"
-msgstr ""
+msgstr "Stel deze hub als mijn primaire locatie in"
 
 #: ../../mod/invite.php:25
 msgid "Total invitation limit exceeded."
@@ -6965,7 +6965,7 @@ msgstr "Je hebt geen uitnodigingen meer beschikbaar"
 
 #: ../../mod/invite.php:141
 msgid "Send invitations"
-msgstr "Uitnodiginen verzonden"
+msgstr "Uitnodigingen verzenden"
 
 #: ../../mod/invite.php:142
 msgid "Enter email addresses, one per line:"
@@ -7087,13 +7087,13 @@ msgstr "Lid van hub (%s)"
 #: ../../mod/lostpass.php:40
 #, php-format
 msgid "Password reset requested at %s"
-msgstr ""
+msgstr "Verzoek tot het opnieuw instellen van een wachtwoord op %s is ingediend"
 
 #: ../../mod/lostpass.php:63
 msgid ""
 "Request could not be verified. (You may have previously submitted it.) "
 "Password reset failed."
-msgstr ""
+msgstr "Het verzoek kon niet worden geverifieerd. (Mogelijk heb je al eerder een verzoek ingediend.) Opnieuw instellen van wachtwoord is mislukt."
 
 #: ../../mod/lostpass.php:85 ../../boot.php:1475
 msgid "Password Reset"
@@ -7101,34 +7101,34 @@ msgstr "Wachtwoord vergeten?"
 
 #: ../../mod/lostpass.php:86
 msgid "Your password has been reset as requested."
-msgstr ""
+msgstr "Jouw wachtwoord is opnieuw ingesteld zoals je had verzocht."
 
 #: ../../mod/lostpass.php:87
 msgid "Your new password is"
-msgstr ""
+msgstr "Jouw nieuwe wachtwoord is"
 
 #: ../../mod/lostpass.php:88
 msgid "Save or copy your new password - and then"
-msgstr ""
+msgstr "Kopieer of sla je nieuwe wachtwoord op - en"
 
 #: ../../mod/lostpass.php:89
 msgid "click here to login"
-msgstr ""
+msgstr "klik dan hier om in te loggen"
 
 #: ../../mod/lostpass.php:90
 msgid ""
 "Your password may be changed from the <em>Settings</em> page after "
 "successful login."
-msgstr ""
+msgstr "Jouw wachtwoord kan worden veranderd onder <em>instellingen</em>, nadat je succesvol bent ingelogd."
 
 #: ../../mod/lostpass.php:107
 #, php-format
 msgid "Your password has changed at %s"
-msgstr ""
+msgstr "Jouw wachtwoord op %s is veranderd"
 
 #: ../../mod/lostpass.php:122
 msgid "Forgot your Password?"
-msgstr ""
+msgstr "Wachtwoord vergeten?"
 
 #: ../../mod/lostpass.php:123
 msgid ""
@@ -7142,7 +7142,7 @@ msgstr "E-mailadres"
 
 #: ../../mod/lostpass.php:125
 msgid "Reset"
-msgstr ""
+msgstr "Opnieuw instellen"
 
 #: ../../mod/magic.php:70
 msgid "Hub not found."
@@ -7233,7 +7233,7 @@ msgstr "Antwoord versturen"
 #: ../../mod/manage.php:64
 #, php-format
 msgid "You have created %1$.0f of %2$.0f allowed channels."
-msgstr ""
+msgstr "Je hebt %1$.0f van totaal %2$.0f toegestane kanalen aangemaakt."
 
 #: ../../mod/manage.php:72
 msgid "Create a new channel"
@@ -7249,7 +7249,7 @@ msgstr "Huidig kanaal"
 
 #: ../../mod/manage.php:80
 msgid "Attach to one of your channels by selecting it."
-msgstr ""
+msgstr "Gebruik een van jouw kanalen door op een te klikken."
 
 #: ../../mod/manage.php:81
 msgid "Default Channel"
@@ -7385,7 +7385,7 @@ msgid ""
 " to hold social network profiles, blogs, conversation groups and forums, "
 "celebrity pages, and much more. You may create as many channels as your "
 "service provider allows."
-msgstr ""
+msgstr "Een kanaal is jouw eigen verzameling gerelateerde webpagina's. Een kanaal kan gebruikt worden voor een sociaal netwerk, weblog, discussiegroep of  forum, een pagina over een beroemdheid, en voor veel meer. Je kan net zoveel kanalen aanmaken als dat de eigenaar/beheerder van jouw hub toestaat."
 
 #: ../../mod/new_channel.php:111
 msgid "Examples: \"Bob Jameson\", \"Lisa and her Horses\", \"Soccer\", \"Aviation Group\" "
@@ -7403,11 +7403,11 @@ msgstr "Jouw bijnaam wordt gebruikt om een makkelijk te onthouden kanaaladres (z
 
 #: ../../mod/new_channel.php:114
 msgid "Or <a href=\"import\">import an existing channel</a> from another location"
-msgstr ""
+msgstr "Of <a href=\"import\">importeer een bestaand kanaal</a> vanaf een andere locatie."
 
 #: ../../mod/notifications.php:26
 msgid "Invalid request identifier."
-msgstr ""
+msgstr "Ongeldige aanvraag-identificator (request identifier)"
 
 #: ../../mod/notifications.php:35
 msgid "Discard"
@@ -7431,7 +7431,7 @@ msgstr "Verzenden bericht geslaagd."
 
 #: ../../mod/zfinger.php:23
 msgid "invalid target signature"
-msgstr ""
+msgstr "ongeldig doel-kenmerk (target signature)"
 
 #: ../../mod/openid.php:26
 msgid "OpenID protocol error. No ID returned."
