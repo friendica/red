@@ -314,7 +314,7 @@ Enter
 - */15 * * * * cd /var/www/; /usr/bin/php include/poller.php
 - Save and exit.
 
-Prevent search engines from indexing your site. Why?  This can cause heavy resource use.
+Prevent search engines from indexing your search pages. Why?  This can cause heavy resource use.
 
 [code]
 php util/config system block_public_search 1
