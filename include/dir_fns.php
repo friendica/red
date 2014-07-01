@@ -157,7 +157,7 @@ function update_directory_entry($ud) {
 			$j = json_decode($x['body'],true);
 			if($j)
 				$success = true;
-			$y = import_xchan($j,0);
+			$y = import_xchan($j,0,$ud);
 		}
 		if(! $success) {
 			$r = q("update updates set ud_last = '%s' where ud_addr = '%s'",
