@@ -18,10 +18,6 @@ Provides the ability to use web page design feaures and create custom webpages f
 
 On pages where it is available (your matrix page and personal web pages) provide a &quot;widget&quot; to create and store personal reminders and notes.
 
-[b]Enhanced Photo Albums[/b]
-
-Provides a photo album viewer that is a bit prettier than the normal interface.
-
 [b]Extended Identity Sharing[/b]
 
 By default your identity travels with you as you browse the matrix to remote sites - and they know who you are and can show you content that only you can see. With Extended Identity Sharing you can provide this information to any website you visit from within the matrix.
@@ -33,10 +29,6 @@ This allows you to see some advanced configuration options that would confuse so
 [b]Premium Channel[/b]
 
 This allows you to set restrictions and terms on those that connect with your channel. This may be used by celebrities or anybody else who wishes to describe their channel to people who wish to connect with it. In certain cases you may be asked for payment in order to connect.
-
-[b]Richtext Editor[/b]
-
-The status post editor is plaintext, but the matrix allows a wide range of markup using BBcode. The visual editor provides &quot;what you see is what you get&quot; for many of the most frequently used markup tags.
 
 [b]Post Preview[/b]
 
@@ -102,4 +94,4 @@ Ability to mark special posts with a star indicator
 
 Provide a personal tag cloud on your channel page
 
-Return to the [url=[baseurl]/help/main]Main documentation page[/url]
+Return to the [zrl=[baseurl]/help/main]Main documentation page[/zrl]
