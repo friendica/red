@@ -312,7 +312,7 @@ $a->strings["%d connection in common"] = array(
 	0 => "%d gemeenschappelijke connectie",
 	1 => "%d gemeenschappelijke connecties",
 );
-$a->strings["show more"] = "[+] meer reacties weergeven";
+$a->strings["show more"] = "meer connecties weergeven";
 $a->strings["This event has been added to your calendar."] = "Dit evenement is aan jouw agenda toegevoegd.";
 $a->strings["Miscellaneous"] = "Diversen";
 $a->strings["year"] = "jaar";
