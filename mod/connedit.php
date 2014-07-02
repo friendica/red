@@ -24,7 +24,7 @@ function connedit_init(&$a) {
 	if(! local_user())
 		return;
 
-	if((argc() == 2) && intval(argv(1))) {
+	if((argc() >= 2) && intval(argv(1))) {
 		$r = q("SELECT abook.*, xchan.* 
 			FROM abook left join xchan on abook_xchan = xchan_hash
 			WHERE abook_channel = %d and abook_id = %d LIMIT 1",
