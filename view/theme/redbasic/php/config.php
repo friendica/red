@@ -81,7 +81,7 @@ function theme_post(&$a) {
 
 function redbasic_form(&$a, $arr) {
 	$scheme_choices = array();
-	$scheme_choices["---"] = t("Light (global default)");
+	$scheme_choices["---"] = t("Light (Red Matrix default)");
 	$files = glob('view/theme/redbasic/schema/*.php');
 	if($files) {
 		foreach($files as $file) {
