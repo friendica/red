@@ -32,11 +32,9 @@ function collect_recipients($item,&$private) {
 		// as that would allow the denied person to see the post by logging out. 
 
 		if((! $item['allow_cid']) && (! $item['allow_gid'])) {
-			$r = q("select * from abook where abook_channel = %d and not (abook_flags & %d) and not (abook_flags & %d) and not (abook_flags & %d)",
+			$r = q("select * from abook where abook_channel = %d and not (abook_flags & %d) ",
 				intval($item['uid']),
-				intval(ABOOK_FLAG_SELF),
-				intval(ABOOK_FLAG_PENDING),
-				intval(ABOOK_FLAG_ARCHIVED)
+				intval(ABOOK_FLAG_SELF|ABOOK_FLAG_PENDING|ABOOK_FLAG_ARCHIVED)
 			);
 
 			if($r) {
@@ -55,11 +53,9 @@ function collect_recipients($item,&$private) {
 	}
 	else {
 		if(! $private) {
-			$r = q("select abook_xchan from abook where abook_channel = %d and not (abook_flags & %d) and not (abook_flags & %d) and not (abook_flags & %d)",
+			$r = q("select abook_xchan from abook where abook_channel = %d and not (abook_flags & %d) ",
 				intval($item['uid']),
-				intval(ABOOK_FLAG_SELF),
-				intval(ABOOK_FLAG_PENDING),
-				intval(ABOOK_FLAG_ARCHIVED)
+				intval(ABOOK_FLAG_SELF|ABOOK_FLAG_PENDING|ABOOK_FLAG_ARCHIVED)
 			);
 			if($r) {
 				foreach($r as $rr) {

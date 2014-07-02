@@ -375,7 +375,7 @@ function item_post(&$a) {
 			killme();
 		}
 	}
-
+	
 
 	$expires = '0000-00-00 00:00:00';
 
@@ -421,6 +421,13 @@ function item_post(&$a) {
 
 
 	if($mimetype === 'text/bbcode') {
+
+		if(local_user() && local_user() == $profile_uid && get_pconfig(local_user(),'editor','use_markdown')) {
+			require_once('include/bb2diaspora.php');
+			$body = diaspora2bb($body,true);
+		}
+
+
 
 		// BBCODE alert: the following functions assume bbcode input
 		// and will require alternatives for alternative content-types (text/html, text/markdown, text/plain, etc.)

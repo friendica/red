@@ -1998,7 +1998,7 @@ function appdirpath() {
 function head_set_icon($icon) {
 	global $a;
 	$a->data['pageicon'] = $icon;
-	logger('head_set_icon: ' . $icon);
+//	logger('head_set_icon: ' . $icon);
 }
 
 function head_get_icon() {

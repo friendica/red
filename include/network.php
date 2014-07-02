@@ -597,21 +597,21 @@ function scale_external_images($s, $include_link = true, $scale_replace = false)
 	$s = htmlspecialchars_decode($s, ENT_COMPAT);
 
 	$matches = null;
-	$c = preg_match_all('/\[img(.*?)\](.*?)\[\/img\]/ism',$s,$matches,PREG_SET_ORDER);
+	$c = preg_match_all('/\[([zi])mg(.*?)\](.*?)\[\/[zi]mg\]/ism',$s,$matches,PREG_SET_ORDER);
 	if($c) {
 		require_once('include/photo/photo_driver.php');
 
 		foreach($matches as $mtch) {
-			logger('scale_external_image: ' . $mtch[1] . ' ' . $mtch[2]);
+			logger('scale_external_image: ' . $mtch[2] . ' ' . $mtch[3]);
 			
 			if(substr($mtch[1],0,1) == '=') {
-				$owidth = intval(substr($mtch[1],1));
+				$owidth = intval(substr($mtch[2],1));
 				if(intval($owidth) > 0 && intval($owidth) < 640)
 					continue;
 			}
 
 			$hostname = str_replace('www.','',substr($a->get_baseurl(),strpos($a->get_baseurl(),'://')+3));
-			if(stristr($mtch[2],$hostname))
+			if(stristr($mtch[3],$hostname))
 				continue;
 
 			// $scale_replace, if passed, is an array of two elements. The
@@ -620,9 +620,9 @@ function scale_external_images($s, $include_link = true, $scale_replace = false)
 			// This allows Friendica to display the smaller remote image if
 			// one exists, while still linking to the full-size image
 			if($scale_replace)
-				$scaled = str_replace($scale_replace[0], $scale_replace[1], $mtch[2]);
+				$scaled = str_replace($scale_replace[0], $scale_replace[1], $mtch[3]);
 			else
-				$scaled = $mtch[2];
+				$scaled = $mtch[3];
 			$i = z_fetch_url($scaled);
 
 
@@ -633,7 +633,7 @@ function scale_external_images($s, $include_link = true, $scale_replace = false)
 			}
 
 			// guess mimetype from headers or filename
-			$type = guess_image_type($mtch[2],$i['header']);
+			$type = guess_image_type($mtch[3],$i['header']);
 			
 			if($i['success']) {
 				$ph = photo_factory($i['body'], $type);
@@ -642,12 +642,12 @@ function scale_external_images($s, $include_link = true, $scale_replace = false)
 					$orig_height = $ph->getHeight();
 
 					if($orig_width > 640 || $orig_height > 640) {
-
+						$tag = (($match[1] == 'z') ? 'zmg' : 'img');
 						$ph->scaleImage(640);
 						$new_width = $ph->getWidth();
 						$new_height = $ph->getHeight();
 						logger('scale_external_images: ' . $orig_width . '->' . $new_width . 'w ' . $orig_height . '->' . $new_height . 'h' . ' match: ' . $mtch[0], LOGGER_DEBUG);
-						$s = str_replace($mtch[0],'[img=' . $new_width . 'x' . $new_height. ']' . $scaled . '[/img]'
+						$s = str_replace($mtch[0],'[' . $tag . '=' . $new_width . 'x' . $new_height. ']' . $scaled . '[/' . $tag . ']'
 							. "\n" . (($include_link) 
 								? '[zrl=' . $mtch[2] . ']' . t('view full size') . '[/zrl]' . "\n"
 								: ''),$s);

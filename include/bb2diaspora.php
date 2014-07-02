@@ -72,11 +72,8 @@ function bb_tag_preg_replace($pattern, $replace, $name, $s) {
 // So we'll use that to convert to HTML, then convert the HTML back to bbcode,
 // and then clean up a few Diaspora specific constructs.
 
-function diaspora2bb($s) {
+function diaspora2bb($s,$use_zrl = false) {
 
-	// for testing purposes: Collect raw markdown articles
-	// $file = tempnam("/tmp/friendica/", "markdown");
-	// file_put_contents($file, $s);
 
 	$s = html_entity_decode($s,ENT_COMPAT,'UTF-8');
 
@@ -87,6 +84,7 @@ function diaspora2bb($s) {
 
 	// <br/> is invalid. Replace it with the valid expression
 	$s = str_replace("<br/>","<br />",$s);
+	$s = str_replace("\n","<br />",$s);
 
 	$s = preg_replace('/\@\{(.+?)\; (.+?)\@(.+?)\}/','@[url=https://$3/u/$2]$1[/url]',$s);
 
@@ -108,7 +106,14 @@ function diaspora2bb($s) {
 	$s = str_replace('&#x2672;',html_entity_decode('&#x2672;',ENT_QUOTES,'UTF-8'),$s);
 
 	// Convert everything that looks like a link to a link
-	$s = preg_replace("/([^\]\=]|^)(https?\:\/\/)([a-zA-Z0-9\:\/\-\?\&\;\.\=\_\~\#\%\$\!\+\,]+)/ism", '$1[url=$2$3]$2$3[/url]',$s);
+	if($use_zrl) {
+		$s = str_replace(array('[img','/img]'),array('[zmg','/zmg]'),$s);
+		$s = preg_replace("/([^\]\=]|^)(https?\:\/\/)([a-zA-Z0-9\:\/\-\?\&\;\.\=\_\~\#\%\$\!\+\,]+)/ism", '$1[zrl=$2$3]$2$3[/zrl]',$s);
+	}
+	else {
+		$s = preg_replace("/([^\]\=]|^)(https?\:\/\/)([a-zA-Z0-9\:\/\-\?\&\;\.\=\_\~\#\%\$\!\+\,]+)/ism", '$1[url=$2$3]$2$3[/url]',$s);
+
+	}
 
 	//$s = preg_replace("/([^\]\=]|^)(https?\:\/\/)(vimeo|youtu|www\.youtube|soundcloud)([a-zA-Z0-9\:\/\-\?\&\;\.\=\_\~\#\%\$\!\+\,]+)/ism", '$1[url=$2$3$4]$2$3$4[/url]',$s);
 	$s = bb_tag_preg_replace("/\[url\=?(.*?)\]https?:\/\/www.youtube.com\/watch\?v\=(.*?)\[\/url\]/ism",'[youtube]$2[/youtube]','url',$s);
