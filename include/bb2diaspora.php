@@ -74,9 +74,6 @@ function bb_tag_preg_replace($pattern, $replace, $name, $s) {
 
 function diaspora2bb($s) {
 
-	// for testing purposes: Collect raw markdown articles
-	// $file = tempnam("/tmp/friendica/", "markdown");
-	// file_put_contents($file, $s);
 
 	$s = html_entity_decode($s,ENT_COMPAT,'UTF-8');
 
@@ -87,6 +84,7 @@ function diaspora2bb($s) {
 
 	// <br/> is invalid. Replace it with the valid expression
 	$s = str_replace("<br/>","<br />",$s);
+	$s = str_replace("\n","<br />",$s);
 
 	$s = preg_replace('/\@\{(.+?)\; (.+?)\@(.+?)\}/','@[url=https://$3/u/$2]$1[/url]',$s);
 
