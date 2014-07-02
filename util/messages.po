@@ -6,9 +6,9 @@
 #, fuzzy
 msgid ""
 msgstr ""
-"Project-Id-Version: 2014-06-30.722\n"
+"Project-Id-Version: 2014-07-01.723\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2014-07-01 23:12+0000\n"
+"POT-Creation-Date: 2014-07-02 13:21+0000\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -70,7 +70,7 @@ msgid "Total"
 msgstr ""
 
 #: ../../view/theme/redbasic/php/config.php:84
-msgid "Light (global default)"
+msgid "Light (Red Matrix default)"
 msgstr ""
 
 #: ../../view/theme/redbasic/php/config.php:99
@@ -301,7 +301,7 @@ msgstr ""
 msgid "Default"
 msgstr ""
 
-#: ../../include/photos.php:15 ../../include/items.php:3680
+#: ../../include/photos.php:15 ../../include/items.php:3676
 #: ../../include/attach.php:119 ../../include/attach.php:166
 #: ../../include/attach.php:229 ../../include/attach.php:243
 #: ../../include/attach.php:283 ../../include/attach.php:297
@@ -327,7 +327,7 @@ msgstr ""
 #: ../../mod/editwebpage.php:44 ../../mod/editwebpage.php:83
 #: ../../mod/poke.php:128 ../../mod/blocks.php:29 ../../mod/blocks.php:44
 #: ../../mod/group.php:9 ../../mod/item.php:179 ../../mod/item.php:187
-#: ../../mod/item.php:902 ../../mod/appman.php:66 ../../mod/sources.php:66
+#: ../../mod/item.php:909 ../../mod/appman.php:66 ../../mod/sources.php:66
 #: ../../mod/page.php:30 ../../mod/page.php:80 ../../mod/mail.php:108
 #: ../../mod/channel.php:89 ../../mod/channel.php:193
 #: ../../mod/channel.php:236 ../../mod/profiles.php:152
@@ -474,42 +474,42 @@ msgstr ""
 msgid "%1$s has an updated %2$s, changing %3$s."
 msgstr ""
 
-#: ../../include/items.php:306 ../../mod/subthread.php:49
+#: ../../include/items.php:302 ../../mod/subthread.php:49
 #: ../../mod/profperm.php:23 ../../mod/group.php:68 ../../mod/like.php:202
 #: ../../index.php:360
 msgid "Permission denied"
 msgstr ""
 
-#: ../../include/items.php:830
+#: ../../include/items.php:826
 msgid "(Unknown)"
 msgstr ""
 
-#: ../../include/items.php:3618 ../../mod/filestorage.php:18
+#: ../../include/items.php:3614 ../../mod/filestorage.php:18
 #: ../../mod/home.php:67 ../../mod/admin.php:159 ../../mod/admin.php:923
 #: ../../mod/admin.php:1126 ../../mod/thing.php:78 ../../mod/display.php:32
 #: ../../mod/viewsrc.php:18
 msgid "Item not found."
 msgstr ""
 
-#: ../../include/items.php:4051 ../../mod/group.php:38 ../../mod/group.php:140
+#: ../../include/items.php:4047 ../../mod/group.php:38 ../../mod/group.php:140
 msgid "Collection not found."
 msgstr ""
 
-#: ../../include/items.php:4066
+#: ../../include/items.php:4062
 msgid "Collection is empty."
 msgstr ""
 
-#: ../../include/items.php:4073
+#: ../../include/items.php:4069
 #, php-format
 msgid "Collection: %s"
 msgstr ""
 
-#: ../../include/items.php:4084
+#: ../../include/items.php:4080
 #, php-format
 msgid "Connection: %s"
 msgstr ""
 
-#: ../../include/items.php:4087
+#: ../../include/items.php:4083
 msgid "Connection not found."
 msgstr ""
 
@@ -611,7 +611,7 @@ msgstr ""
 msgid "Happy Birthday %1$s"
 msgstr ""
 
-#: ../../include/identity.php:30 ../../mod/item.php:1274
+#: ../../include/identity.php:30 ../../mod/item.php:1281
 msgid "Unable to obtain identity information from database"
 msgstr ""
 
@@ -697,7 +697,7 @@ msgid "Edit visibility"
 msgstr ""
 
 #: ../../include/identity.php:726 ../../include/event.php:40
-#: ../../include/bb2diaspora.php:463 ../../mod/dirprofile.php:105
+#: ../../include/bb2diaspora.php:468 ../../mod/dirprofile.php:105
 #: ../../mod/directory.php:156 ../../mod/events.php:485
 msgid "Location:"
 msgstr ""
@@ -1318,15 +1318,15 @@ msgstr ""
 msgid "MySpace"
 msgstr ""
 
-#: ../../include/event.php:11 ../../include/bb2diaspora.php:441
+#: ../../include/event.php:11 ../../include/bb2diaspora.php:446
 msgid "l F d, Y \\@ g:i A"
 msgstr ""
 
-#: ../../include/event.php:20 ../../include/bb2diaspora.php:447
+#: ../../include/event.php:20 ../../include/bb2diaspora.php:452
 msgid "Starts:"
 msgstr ""
 
-#: ../../include/event.php:30 ../../include/bb2diaspora.php:455
+#: ../../include/event.php:30 ../../include/bb2diaspora.php:460
 msgid "Finishes:"
 msgstr ""
 
@@ -6748,16 +6748,16 @@ msgstr ""
 msgid "Executable content type not permitted to this channel."
 msgstr ""
 
-#: ../../mod/item.php:836
+#: ../../mod/item.php:843
 msgid "System error. Post not saved."
 msgstr ""
 
-#: ../../mod/item.php:1279
+#: ../../mod/item.php:1286
 #, php-format
 msgid "You have reached your limit of %1$.0f top level posts."
 msgstr ""
 
-#: ../../mod/item.php:1285
+#: ../../mod/item.php:1292
 #, php-format
 msgid "You have reached your limit of %1$.0f webpages."
 msgstr ""

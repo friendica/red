@@ -1,15 +1,10 @@
-[size=24][b]Grundlagen zu Red-Konten[/b][/size]
-
-[zrl=[baseurl]/help]Zurück zur Hilfe-Startseite[/zrl]
-
-
-[b]Registrieren[/b]
+[size=large][b]Registrieren[/b][/size]
 
 Nicht alle Server in der Red-Matrix erlauben jedem, sich zu registrieren. Wenn eine Registrierung möglich ist, erscheint unter dem Anmelde-Formular ein Link mit dem Titel „Registrieren“, der Dich zur Registrierungs-Seite des Servers führt. Auf manchen Servern wirst Du auf einen anderen Server weitergeleitet, der Registrierungen erlaubt. Da alle Red-Server miteinander verbunden sind, ist es egal, auf welchem Du Dich registrierst.
 
 [b]Deine E-Mail-Adresse[/b]
 
-Bitte gib eine funktionierende E-Mail-Adresse an. Sie wird [b]nie[/b] veröffentlicht. Wenn Du willst, kannst Du Dir an diese Adresse Benachrichtigungen schicken lassen, wenn Du neue Nachrichten oder Beiträge erhalten hast. Sie wird außerdem benutzt, um vergessene Passwörter wiederherstellen zu können.
+Bitte gib eine funktionierende E-Mail-Adresse an. Sie wird [b]nie[/b] veröffentlicht. Sie wird benutzt, um Dein Konto zu aktivieren, und wenn Du willst, kannst Du Dir an diese Adresse Benachrichtigungen schicken lassen, wenn Du neue Nachrichten oder Beiträge erhalten hast. Sie wird außerdem benutzt, um vergessene Passwörter wiederherstellen zu können.
 
 [b]Passwort[/b]
 
@@ -31,8 +26,11 @@ Der Kanal-Name ist der Titel oder eine kurze Beschreibung des Kanals. Der „Spi
 
 Wenn Dein Kanal angelegt ist, geht es direkt weiter zu den Einstellungen. Dort kannst Du Zugriffsrechte setzen, Funktionen zu- oder abschalten und so weiter. Diese Punkte werden auf den entsprechenden Hilfeseiten erklärt.  
 
-[b]Siehe auch[/b]
+Siehe auch
+[zrl=[baseurl]/help/accounts_profiles_channels_basics]Konten, Profile und Kanäle kurz erklärt[/zrl]
+[zrl=[baseurl]/help/accounts]Konten[/zrl]
+[zrl=[baseurl]/help/profiles]Profile[/zrl]
+[zrl=[baseurl]/help/permissions]Zugriffsrechte[/zrl]
+[zrl=[baseurl]/help/remove_account]Konto löschen[/zrl]
 
-[zrl=[baseurl]/help/permissions]Permissions[/zrl]
-[zrl=[baseurl]/help/profile]Profile[/zrl]
-[zrl=[baseurl]/help/remove_account]Remove Account[/zrl]
+[url=[baseurl]/help]Zurück zur Hilfe-Startseite[/url]
