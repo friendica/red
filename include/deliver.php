@@ -13,7 +13,7 @@ function deliver_run($argv, $argc) {
 	if($argc < 2)
 		return;
 
-	logger('deliver: invoked: ' . print_r($argv,true), LOGGER_DEBUG);
+	logger('deliver: invoked: ' . print_r($argv,true), LOGGER_DATA);
 
 	for($x = 1; $x < $argc; $x ++) {
 		$r = q("select * from outq where outq_hash = '%s' limit 1",
@@ -21,6 +21,7 @@ function deliver_run($argv, $argc) {
 		);
 		if($r) {
 			if($r[0]['outq_posturl'] === z_root() . '/post') {
+				logger('deliver: local delivery', LOGGER_DEBUG);
 				// local delivery
 				// we should probably batch these and save a few delivery processes
 				// If there is no outq_msg, this is a refresh_all message which does not require local handling
@@ -34,6 +35,7 @@ function deliver_run($argv, $argc) {
 				}
 			}
 			else {
+				logger('deliver: dest: ' . $r[0]['outq_posturl'], LOGGER_DEBUG);
 				$result = zot_zot($r[0]['outq_posturl'],$r[0]['outq_notify']); 
 				if($result['success']) {
 					zot_process_response($r[0]['outq_posturl'],$result, $r[0]);				
