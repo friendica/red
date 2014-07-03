@@ -153,6 +153,7 @@ function post_init(&$a) {
 		$remote_service_class = '';
 		$remote_level = 0;
 		$remote_hub = $x[0]['hubloc_url'];
+		$DNT = 0;
 
 		// Also check that they are coming from the same site as they authenticated with originally.
 
@@ -214,6 +215,8 @@ function post_init(&$a) {
 					$remote_service_class = $j['service_class'];
 				if(array_key_exists('level',$j))
 					$remote_level = $j['level'];
+				if(array_key_exists('DNT',$j))
+					$DNT = $j['DNT'];
 			}
 			// everything is good... maybe
 			if(local_user()) {
@@ -248,6 +251,7 @@ function post_init(&$a) {
 			$_SESSION['remote_service_class'] = $remote_service_class;
 			$_SESSION['remote_level'] = $remote_level;
 			$_SESSION['remote_hub'] = $remote_hub;
+			$_SESSION['DNT'] = $DNT;
 			
 			$arr = array('xchan' => $x[0], 'url' => $desturl, 'session' => $_SESSION);
 			call_hooks('magic_auth_success',$arr);
