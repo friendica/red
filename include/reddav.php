@@ -1280,7 +1280,15 @@ class RedBrowser extends DAV\Browser\Plugin {
 				'$header' => t('Files') . ": " . $this->escapeHTML($path) . "/",
 				'$parentpath' => $parentpath,
 				'$entries' => $f,
-				'$quota' => $quota
+				'$quota' => $quota,
+				'$name' => t('Name'),
+				'$type' => t('Type'),
+				'$size' => t('Size'),
+				'$lastmod' => t('Last Modified'),
+				'$parent' => t('parent'),
+				'$edit' => t('Edit'),
+				'$delete' => t('Delete'),
+				'$total' => t('Total')		
 			));
 
 		$output = '';
