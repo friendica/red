@@ -221,6 +221,45 @@ function create_account($arr) {
 
 
 
+function verify_email_address($arr) {
+
+	$hash = random_string();
+
+	$r = q("INSERT INTO register ( hash, created, uid, password, language ) VALUES ( '%s', '%s', %d, '%s', '%s' ) ",
+		dbesc($hash),
+		dbesc(datetime_convert()),
+		intval($arr['account']['account_id']),
+		dbesc('verify'),
+		dbesc($arr['account']['account_language'])
+	);
+
+	$email_msg = replace_macros(get_intltext_template('register_verify_member.tpl'), array(
+		'$sitename' => get_config('system','sitename'),
+		'$siteurl'  =>  z_root(),
+		'$email'    => $arr['email'],
+		'$uid'      => $arr['account']['account_id'],
+		'$hash'     => $hash,
+		'$details'  => $details
+	 ));
+
+	$res = mail($arr['email'], email_header_encode(sprintf( t('Registration confirmation for %s'), get_config('system','sitename'))),
+		$email_msg,
+		'From: ' . 'Administrator' . '@' . get_app()->get_hostname() . "\n"
+		. 'Content-type: text/plain; charset=UTF-8' . "\n"
+		. 'Content-transfer-encoding: 8bit' 
+	);
+
+	if($res)
+		$delivered ++;
+	else
+		logger('send_reg_approval_email: failed to ' . $admin['email'] . 'account_id: ' . $arr['account']['account_id']);
+
+
+}
+
+
+
+
 function send_reg_approval_email($arr) {
 
 	$r = q("select * from account where account_roles & " . intval(ACCOUNT_ROLE_ADMIN));
@@ -401,6 +440,51 @@ function user_deny($hash) {
 	return true;
 	
 }
+
+
+function user_approve($hash) {
+
+	$a = get_app();
+
+	$ret = array('success' => false);
+
+	$register = q("SELECT * FROM `register` WHERE `hash` = '%s' and password = 'verify' LIMIT 1",
+		dbesc($hash)
+	);
+
+	if(! $register)
+		return $ret;
+
+	$account = q("SELECT * FROM account WHERE account_id = %d LIMIT 1",
+		intval($register[0]['uid'])
+	);
+	
+	if(! $account)
+		return $ret;
+
+	$r = q("DELETE FROM register WHERE hash = '%s' and password = 'verify' LIMIT 1",
+		dbesc($register[0]['hash'])
+	);
+
+	$r = q("update account set account_flags = (account_flags ^ %d) where (account_flags & %d) and account_id = %d limit 1",
+		intval(ACCOUNT_BLOCKED),
+		intval(ACCOUNT_BLOCKED),
+		intval($register[0]['uid'])
+	);
+	$r = q("update account set account_flags = (account_flags ^ %d) where (account_flags & %d) and account_id = %d limit 1",
+		intval(ACCOUNT_PENDING),
+		intval(ACCOUNT_PENDING),
+		intval($register[0]['uid'])
+	);
+	
+	info( t('Account approved.') . EOL );
+	return true;
+
+}
+
+
+
+
 
 
 /**
