@@ -126,6 +126,13 @@ function get_all_perms($uid,$observer_xchan,$internal_use = true) {
 			}
 		}
 
+		// system is blocked to anybody who is not authenticated
+
+		if((! $observer_xchan) && intval(get_config('system','block_public'))) {
+			$ret[$perm_name] = false;
+			continue;
+		}
+
 		// Check if this $uid is actually the $observer_xchan - if it's your content
 		// you always have permission to do anything
 
@@ -281,6 +288,11 @@ function perm_is_allowed($uid,$observer_xchan,$permission) {
 			);
 		}
 	}
+
+	// system is blocked to anybody who is not authenticated
+
+	if((! $observer_xchan) && intval(get_config('system','block_public')))
+		return false;
 
 	// Check if this $uid is actually the $observer_xchan
 
