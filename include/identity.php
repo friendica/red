@@ -1300,3 +1300,15 @@ function identity_selector() {
 
 	return '';
 }
+
+
+function is_public_profile() {
+	if(! local_user())
+		return false;
+	if(intval(get_config('system','block_public')))
+		return false;
+	$channel = get_app()->get_channel();
+	if($channel && $channel['channel_r_profile'] == PERMS_PUBLIC)
+		return true;
+	return false;
+}

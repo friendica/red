@@ -6,6 +6,7 @@
  */
 
 require_once('include/plugin.php');
+require_once('include/identity.php');
 
 function get_system_apps() {
 
@@ -91,6 +92,10 @@ function parse_app_description($f) {
 				break;
 			case 'local_user':
 				if(! local_user())
+					unset($ret);
+				break;
+			case 'public_profile':
+				if(! is_public_profile())
 					unset($ret);
 				break;
 			case 'observer':
@@ -187,6 +192,10 @@ function app_render($papp,$mode = 'view') {
 					break;
 				case 'local_user':
 					if(! local_user())
+						return '';
+					break;
+				case 'public_profile':
+					if(! is_public_profile())
 						return '';
 					break;
 				case 'observer':
