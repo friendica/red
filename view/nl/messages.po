@@ -8,8 +8,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Red Matrix\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2014-07-01 23:12+0000\n"
-"PO-Revision-Date: 2014-07-02 13:16+0000\n"
+"POT-Creation-Date: 2014-07-02 13:21+0000\n"
+"PO-Revision-Date: 2014-07-03 22:32+0000\n"
 "Last-Translator: jeroenpraat <>\n"
 "Language-Team: Dutch (http://www.transifex.com/projects/p/red-matrix/language/nl/)\n"
 "MIME-Version: 1.0\n"
@@ -72,7 +72,7 @@ msgstr "Totaal"
 
 #: ../../view/theme/redbasic/php/config.php:84
 msgid "Light (Red Matrix default)"
-msgstr "Light (Red Matrix-standaard)"
+msgstr ""
 
 #: ../../view/theme/redbasic/php/config.php:99
 #: ../../include/ItemObject.php:583 ../../mod/settings.php:515
@@ -302,7 +302,7 @@ msgstr "Inloggen mislukt."
 msgid "Default"
 msgstr "Standaard"
 
-#: ../../include/photos.php:15 ../../include/items.php:3680
+#: ../../include/photos.php:15 ../../include/items.php:3676
 #: ../../include/attach.php:119 ../../include/attach.php:166
 #: ../../include/attach.php:229 ../../include/attach.php:243
 #: ../../include/attach.php:283 ../../include/attach.php:297
@@ -328,7 +328,7 @@ msgstr "Standaard"
 #: ../../mod/editwebpage.php:44 ../../mod/editwebpage.php:83
 #: ../../mod/poke.php:128 ../../mod/blocks.php:29 ../../mod/blocks.php:44
 #: ../../mod/group.php:9 ../../mod/item.php:179 ../../mod/item.php:187
-#: ../../mod/item.php:902 ../../mod/appman.php:66 ../../mod/sources.php:66
+#: ../../mod/item.php:909 ../../mod/appman.php:66 ../../mod/sources.php:66
 #: ../../mod/page.php:30 ../../mod/page.php:80 ../../mod/mail.php:108
 #: ../../mod/channel.php:89 ../../mod/channel.php:193
 #: ../../mod/channel.php:236 ../../mod/profiles.php:152
@@ -475,42 +475,42 @@ msgstr "Bezoek het %2$s van %1$s"
 msgid "%1$s has an updated %2$s, changing %3$s."
 msgstr "%1$s heeft een aangepaste %2$s, %3$s veranderd."
 
-#: ../../include/items.php:306 ../../mod/subthread.php:49
+#: ../../include/items.php:302 ../../mod/subthread.php:49
 #: ../../mod/profperm.php:23 ../../mod/group.php:68 ../../mod/like.php:202
 #: ../../index.php:360
 msgid "Permission denied"
 msgstr "Toegang geweigerd"
 
-#: ../../include/items.php:830
+#: ../../include/items.php:826
 msgid "(Unknown)"
 msgstr "(Onbekend)"
 
-#: ../../include/items.php:3618 ../../mod/filestorage.php:18
+#: ../../include/items.php:3614 ../../mod/filestorage.php:18
 #: ../../mod/home.php:67 ../../mod/admin.php:159 ../../mod/admin.php:923
 #: ../../mod/admin.php:1126 ../../mod/thing.php:78 ../../mod/display.php:32
 #: ../../mod/viewsrc.php:18
 msgid "Item not found."
 msgstr "Item niet gevonden."
 
-#: ../../include/items.php:4051 ../../mod/group.php:38 ../../mod/group.php:140
+#: ../../include/items.php:4047 ../../mod/group.php:38 ../../mod/group.php:140
 msgid "Collection not found."
 msgstr "Collectie niet gevonden."
 
-#: ../../include/items.php:4066
+#: ../../include/items.php:4062
 msgid "Collection is empty."
 msgstr "Collectie is leeg"
 
-#: ../../include/items.php:4073
+#: ../../include/items.php:4069
 #, php-format
 msgid "Collection: %s"
 msgstr "Collectie: %s"
 
-#: ../../include/items.php:4084
+#: ../../include/items.php:4080
 #, php-format
 msgid "Connection: %s"
 msgstr "Connectie: %s"
 
-#: ../../include/items.php:4087
+#: ../../include/items.php:4083
 msgid "Connection not found."
 msgstr "Connectie niet gevonden."
 
@@ -612,7 +612,7 @@ msgstr "Verjaardag van %1$s"
 msgid "Happy Birthday %1$s"
 msgstr "Gefeliciteerd met je verjaardag %1$s"
 
-#: ../../include/identity.php:30 ../../mod/item.php:1274
+#: ../../include/identity.php:30 ../../mod/item.php:1281
 msgid "Unable to obtain identity information from database"
 msgstr "Niet in staat om identiteitsinformatie uit de database te verkrijgen"
 
@@ -698,7 +698,7 @@ msgid "Edit visibility"
 msgstr "Zichtbaarheid bewerken"
 
 #: ../../include/identity.php:726 ../../include/event.php:40
-#: ../../include/bb2diaspora.php:463 ../../mod/dirprofile.php:105
+#: ../../include/bb2diaspora.php:468 ../../mod/dirprofile.php:105
 #: ../../mod/directory.php:156 ../../mod/events.php:485
 msgid "Location:"
 msgstr "Plaats:"
@@ -1076,7 +1076,7 @@ msgstr "Wachtwoordhint"
 
 #: ../../include/js_strings.php:16
 msgid "Notice: Permissions have changed but have not yet been submitted."
-msgstr "Mededeling: de rechten zijn veranderd, maar zijn nog niet opgeslagen."
+msgstr "Mededeling: de privacy-rechten zijn veranderd, maar zijn nog niet opgeslagen."
 
 #: ../../include/js_strings.php:17
 msgid "close all"
@@ -1201,7 +1201,7 @@ msgstr "Kan foto's aan mijn fotoalbums toevoegen"
 
 #: ../../include/permissions.php:26
 msgid "Can forward to all my channel contacts via post @mentions"
-msgstr "Kan naar al mijn kanaalconnecties berichten doorsturen met behulp van @vermeldingen"
+msgstr "Kan naar al mijn kanaalconnecties berichten doorsturen met behulp van @vermeldingen+"
 
 #: ../../include/permissions.php:26
 msgid "Advanced - useful for creating group forum channels"
@@ -1320,15 +1320,15 @@ msgstr "XMPP/IM"
 msgid "MySpace"
 msgstr "MySpace"
 
-#: ../../include/event.php:11 ../../include/bb2diaspora.php:441
+#: ../../include/event.php:11 ../../include/bb2diaspora.php:446
 msgid "l F d, Y \\@ g:i A"
 msgstr "l d F Y \\@ G:i"
 
-#: ../../include/event.php:20 ../../include/bb2diaspora.php:447
+#: ../../include/event.php:20 ../../include/bb2diaspora.php:452
 msgid "Starts:"
 msgstr "Start:"
 
-#: ../../include/event.php:30 ../../include/bb2diaspora.php:455
+#: ../../include/event.php:30 ../../include/bb2diaspora.php:460
 msgid "Finishes:"
 msgstr "Einde:"
 
@@ -3317,11 +3317,11 @@ msgstr "Categorieën (door komma's gescheiden lijst)"
 #: ../../mod/editwebpage.php:153 ../../mod/editblock.php:121
 #: ../../mod/editlayout.php:116
 msgid "Permission settings"
-msgstr "Instellingen rechten"
+msgstr "Privacy-rechten"
 
 #: ../../include/conversation.php:1132
 msgid "permissions"
-msgstr "rechten"
+msgstr "privacy-rechten"
 
 #: ../../include/conversation.php:1139 ../../mod/editpost.php:129
 #: ../../mod/editwebpage.php:162 ../../mod/editblock.php:129
@@ -3456,7 +3456,7 @@ msgstr "Niet tonen"
 #: ../../include/acl_selectors.php:248 ../../mod/filestorage.php:128
 #: ../../mod/photos.php:604 ../../mod/photos.php:952 ../../mod/chat.php:209
 msgid "Permissions"
-msgstr "Rechten"
+msgstr "Privacy-rechten"
 
 #: ../../include/widgets.php:80
 msgid "System"
@@ -3569,7 +3569,7 @@ msgstr "Kanaal exporteren"
 
 #: ../../include/widgets.php:484
 msgid "Automatic Permissions (Advanced)"
-msgstr "Automatische rechten (geavanceerd)"
+msgstr "Automatische privacy-rechten (geavanceerd)"
 
 #: ../../include/widgets.php:494
 msgid "Premium Channel Settings"
@@ -4002,7 +4002,7 @@ msgstr "Kan eventuele spam verminderen"
 
 #: ../../mod/settings.php:959
 msgid "Default Post Permissions"
-msgstr "Standaardrechten voor nieuwe berichten"
+msgstr "Standaard privacy-rechten voor nieuwe berichten"
 
 #: ../../mod/settings.php:960 ../../mod/mitem.php:134 ../../mod/mitem.php:177
 msgid "(click to open/close)"
@@ -5168,7 +5168,7 @@ msgstr "Nieuw menu-element"
 
 #: ../../mod/mitem.php:133 ../../mod/mitem.php:176
 msgid "Menu Item Permissions"
-msgstr "Rechten menu-item"
+msgstr "Privacy-rechten menu-item"
 
 #: ../../mod/mitem.php:136 ../../mod/mitem.php:180
 msgid "Link text"
@@ -5332,7 +5332,7 @@ msgstr "Snij de afbeelding zo uit dat deze optimaal wordt weergegeven."
 
 #: ../../mod/profile_photo.php:382
 msgid "Done Editing"
-msgstr "Klaar met bewerkeb"
+msgstr "Klaar met bewerken"
 
 #: ../../mod/profile_photo.php:425
 msgid "Image uploaded successfully."
@@ -5528,11 +5528,11 @@ msgstr "Profiel van %s weergeven"
 
 #: ../../mod/connedit.php:358
 msgid "Refresh Permissions"
-msgstr "Rechten vernieuwen"
+msgstr "Privacy-rechten vernieuwen"
 
 #: ../../mod/connedit.php:361
 msgid "Fetch updated permissions"
-msgstr "Aangepaste rechten ophalen"
+msgstr "Aangepaste privacy-rechten ophalen"
 
 #: ../../mod/connedit.php:365
 msgid "Recent Activity"
@@ -5597,7 +5597,7 @@ msgstr "Keur deze connectie goed om communicatie toe te staan"
 
 #: ../../mod/connedit.php:460
 msgid "Automatic Permissions Settings"
-msgstr "Automatische instellingen van rechten"
+msgstr "Automatische privacy-rechten"
 
 #: ../../mod/connedit.php:460
 #, php-format
@@ -5609,7 +5609,7 @@ msgid ""
 "When receiving a channel introduction, any permissions provided here will be"
 " applied to the new connection automatically and the introduction approved. "
 "Leave this page if you do not wish to use this feature."
-msgstr "Wanneer je een connectieverzoek voor een kanaal ontvangt, zullen alle rechten hier automatisch op de nieuwe connectie worden toegepast en het connectieverzoek worden geaccepteerd. Verlaat deze pagina wanneer je geen gebruik wil maken van deze functie."
+msgstr "Wanneer je een connectieverzoek voor een kanaal ontvangt, zullen alle privacy-rechten hier automatisch op de nieuwe connectie worden toegepast en het connectieverzoek worden geaccepteerd. Verlaat deze pagina wanneer je geen gebruik wil maken van deze functie."
 
 #: ../../mod/connedit.php:466
 msgid "Slide to adjust your degree of friendship"
@@ -5621,7 +5621,7 @@ msgstr "geërfd"
 
 #: ../../mod/connedit.php:474
 msgid "Connection has no individual permissions!"
-msgstr "Connectie heeft geen individuele rechten!"
+msgstr "Connectie heeft geen individuele privacy-rechten!"
 
 #: ../../mod/connedit.php:475
 msgid ""
@@ -5658,7 +5658,7 @@ msgstr "Mijn instellingen"
 
 #: ../../mod/connedit.php:485
 msgid "Clear/Disable Automatic Permissions"
-msgstr "Verwijderen/uitschakelen automatische rechten"
+msgstr "Verwijderen/uitschakelen automatische privacy-rechten"
 
 #: ../../mod/connedit.php:486
 msgid "Forum Members"
@@ -5682,7 +5682,7 @@ msgstr "Alleen volgen"
 
 #: ../../mod/connedit.php:491
 msgid "Individual Permissions"
-msgstr "Individuele rechten"
+msgstr "Individuele privacy-rechten"
 
 #: ../../mod/connedit.php:492
 msgid ""
@@ -5690,15 +5690,15 @@ msgid ""
 "href=\"settings\">privacy settings</a>, which have higher priority than "
 "individual settings. Changing those inherited settings on this page will "
 "have no effect."
-msgstr "Sommige rechten kunnen worden overgeërfd van de <a href=\"settings\">privacy-instellingen</a> van jouw kanaal. Wanneer je deze geërfde instellingen op deze pagina veranderd heeft dat geen effect."
+msgstr "Sommige privacy-rechten kunnen worden overgeërfd van de <a href=\"settings\">privacy-instellingen</a> van jouw kanaal. Wanneer je deze geërfde instellingen op deze pagina veranderd heeft dat geen effect."
 
 #: ../../mod/connedit.php:493
 msgid "Advanced Permissions"
-msgstr "Geavanceerde rechten"
+msgstr "Geavanceerde privacy-rechten"
 
 #: ../../mod/connedit.php:494
 msgid "Simple Permissions (select one and submit)"
-msgstr "Eenvoudige rechten (selecteer er één en opslaan)"
+msgstr "Eenvoudige privacy-rechten (selecteer er één en opslaan)"
 
 #: ../../mod/connedit.php:498
 #, php-format
@@ -6754,16 +6754,16 @@ msgstr "Leeg bericht geannuleerd"
 msgid "Executable content type not permitted to this channel."
 msgstr "Uitvoerbare bestanden zijn niet toegestaan op dit kanaal."
 
-#: ../../mod/item.php:836
+#: ../../mod/item.php:843
 msgid "System error. Post not saved."
 msgstr "Systeemfout. Bericht niet opgeslagen."
 
-#: ../../mod/item.php:1279
+#: ../../mod/item.php:1286
 #, php-format
 msgid "You have reached your limit of %1$.0f top level posts."
 msgstr "Je hebt jouw limiet van %1$.0f berichten bereikt."
 
-#: ../../mod/item.php:1285
+#: ../../mod/item.php:1292
 #, php-format
 msgid "You have reached your limit of %1$.0f webpages."
 msgstr "Je hebt jouw limiet van %1$.0f webpagina's bereikt."
@@ -7156,7 +7156,7 @@ msgstr "Je moet zijn ingelogd om deze pagina te kunnen bekijken."
 
 #: ../../mod/channel.php:86
 msgid "Insufficient permissions.  Request redirected to profile page."
-msgstr "Onvoldoende rechten.  Doorgestuurd naar profielpagina."
+msgstr "Onvoldoende privacy-rechten.  Doorgestuurd naar profielpagina."
 
 #: ../../mod/profiles.php:18 ../../mod/profiles.php:138
 #: ../../mod/profiles.php:168 ../../mod/profiles.php:472
