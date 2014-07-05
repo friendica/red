@@ -105,9 +105,11 @@ function zfinger_init(&$a) {
 	$searchable      = (($e['channel_pageflags'] & PAGE_HIDDEN)   ? false : true);
 	$deleted         = (($e['xchan_flags'] & XCHAN_FLAGS_DELETED) ? true : false);
 
-	if(($e['xchan_flags'] & XCHAN_FLAGS_HIDDEN) || $deleted || $censored)
+	if($deleted || $censored)
 		$searchable = false;
 	 
+
+
 	//  This is for birthdays and keywords, but must check access permissions
 	$p = q("select * from profile where uid = %d and is_default = 1",
 		intval($e['channel_id'])
@@ -251,7 +253,6 @@ function zfinger_init(&$a) {
 	if($dirmode != DIRECTORY_MODE_STANDALONE) {
 
 		$register_policy = intval(get_config('system','register_policy'));
-
 
 		if($register_policy == REGISTER_CLOSED)
 			$ret['site']['register_policy'] = 'closed';
