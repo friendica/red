@@ -130,6 +130,7 @@ Public Member Functions</h2></td></tr>
 <tr class="memitem:a40fdbb9d9fe6c1243bbf135dd5b0a06f"><td class="memItemLeft" align="right" valign="top">&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classRedBrowser.html#a40fdbb9d9fe6c1243bbf135dd5b0a06f">set_writeable</a> ()</td></tr>
 <tr class="separator:a40fdbb9d9fe6c1243bbf135dd5b0a06f"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a1f7daf50bb9bfcde7345b3b1908dbd7e"><td class="memItemLeft" align="right" valign="top">&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classRedBrowser.html#a1f7daf50bb9bfcde7345b3b1908dbd7e">generateDirectoryIndex</a> ($path)</td></tr>
+<tr class="memdesc:a1f7daf50bb9bfcde7345b3b1908dbd7e"><td class="mdescLeft">&#160;</td><td class="mdescRight">Creates the directory listing for the given path.  <a href="#a1f7daf50bb9bfcde7345b3b1908dbd7e">More...</a><br/></td></tr>
 <tr class="separator:a1f7daf50bb9bfcde7345b3b1908dbd7e"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:ad3418b8ccad42a1ef4ad0079e15b2e64"><td class="memItemLeft" align="right" valign="top">&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classRedBrowser.html#ad3418b8ccad42a1ef4ad0079e15b2e64">userReadableSize</a> ($size)</td></tr>
 <tr class="separator:ad3418b8ccad42a1ef4ad0079e15b2e64"><td class="memSeparator" colspan="2">&#160;</td></tr>
@@ -150,7 +151,9 @@ Private Attributes</h2></td></tr>
 <tr class="memitem:ab6d6d1e2a67e06b344a4cede1bd00b35"><td class="memItemLeft" align="right" valign="top">&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classRedBrowser.html#ab6d6d1e2a67e06b344a4cede1bd00b35">$auth</a></td></tr>
 <tr class="separator:ab6d6d1e2a67e06b344a4cede1bd00b35"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table>
-<h2 class="groupheader">Constructor &amp; Destructor Documentation</h2>
+<a name="details" id="details"></a><h2 class="groupheader">Detailed Description</h2>
+<div class="textblock"><p><a class="el" href="classRedBrowser.html">RedBrowser</a> class. </p>
+</div><h2 class="groupheader">Constructor &amp; Destructor Documentation</h2>
 <a class="anchor" id="a4b76be9ccef0262cf78fffb4129eda93"></a>
 <div class="memitem">
 <div class="memproto">
@@ -249,10 +252,11 @@ Private Attributes</h2></td></tr>
         </tr>
       </table>
 </div><div class="memdoc">
-<p>Creates the directory listing for the given path.</p>
+
+<p>Creates the directory listing for the given path. </p>
 <dl class="params"><dt>Parameters</dt><dd>
   <table class="params">
-    <tr><td class="paramtype">String</td><td class="paramname">$path</td><td></td></tr>
+    <tr><td class="paramtype">string</td><td class="paramname">$path</td><td>which should be displayed </td></tr>
   </table>
   </dd>
 </dl>
@@ -316,6 +320,14 @@ Private Attributes</h2></td></tr>
         </tr>
       </table>
 </div><div class="memdoc">
+<p>Creates a form to add new folders and upload files.</p>
+<dl class="params"><dt>Parameters</dt><dd>
+  <table class="params">
+    <tr><td class="paramtype">DAV\INode</td><td class="paramname">$node</td><td></td></tr>
+    <tr><td class="paramtype">string</td><td class="paramname">&amp;$output</td><td></td></tr>
+  </table>
+  </dd>
+</dl>
 
 </div>
 </div>

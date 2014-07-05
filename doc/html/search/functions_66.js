@@ -45,6 +45,7 @@ var searchData=
   ['format_5fjs_5fif_5fexists',['format_js_if_exists',['../plugin_8php.html#ad9ff8ba554576383c5911a4bce068c1f',1,'plugin.php']]],
   ['format_5flike',['format_like',['../conversation_8php.html#a3d8e30cc94f9a175054c021305d3aca3',1,'conversation.php']]],
   ['format_5flocation',['format_location',['../conversation_8php.html#a0891aaa4492cba2b51eda12fe01957f3',1,'conversation.php']]],
+  ['format_5fmentions',['format_mentions',['../text_8php.html#ad8c6e13d6accf057136c5f30a23a5f08',1,'text.php']]],
   ['format_5fnotification',['format_notification',['../include_2notify_8php.html#a0e61728e487df50c72e6434f911a57d3',1,'notify.php']]],
   ['format_5fterm_5ffor_5fdisplay',['format_term_for_display',['../taxonomy_8php.html#adfead45e3b8a3dfb2b4a4b9281d0dbe1',1,'taxonomy.php']]],
   ['fsuggest_5fcontent',['fsuggest_content',['../fsuggest_8php.html#aa6c49ed4b50a387f1845f36844dd7998',1,'fsuggest.php']]],

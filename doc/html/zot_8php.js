@@ -8,7 +8,7 @@ var zot_8php =
     [ "import_directory_keywords", "zot_8php.html#a3bf11286c2619b4ca28e49d5b5ab374a", null ],
     [ "import_directory_profile", "zot_8php.html#a20750dd2c36961013fd382fb34e1366c", null ],
     [ "import_site", "zot_8php.html#a2657e141d62d5f67ad3c87651b585299", null ],
-    [ "import_xchan", "zot_8php.html#a71d82d0bec204cdf2bd56e4fd0e0ef8a", null ],
+    [ "import_xchan", "zot_8php.html#a528e97ca5d69c3b7f35c5d954afde315", null ],
     [ "process_channel_sync_delivery", "zot_8php.html#ac301c67864917c35922257950ae0f95c", null ],
     [ "process_delivery", "zot_8php.html#a4d9e6ca295e443b740d9960c304b3474", null ],
     [ "process_mail_delivery", "zot_8php.html#aa6ae96db8cbbdbb10e6876d206bbf7cc", null ],

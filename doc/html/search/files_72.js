@@ -8,6 +8,7 @@ var searchData=
   ['reddav_2ephp',['reddav.php',['../reddav_8php.html',1,'']]],
   ['register_2ephp',['register.php',['../register_8php.html',1,'']]],
   ['regmod_2ephp',['regmod.php',['../regmod_8php.html',1,'']]],
+  ['regver_2ephp',['regver.php',['../regver_8php.html',1,'']]],
   ['removeme_2ephp',['removeme.php',['../removeme_8php.html',1,'']]],
   ['rmagic_2ephp',['rmagic.php',['../rmagic_8php.html',1,'']]],
   ['rpost_2ephp',['rpost.php',['../rpost_8php.html',1,'']]],

@@ -128,8 +128,8 @@ Functions</h2></td></tr>
 <tr class="separator:a55056e863a7860bc0cf922e78fcce073"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a5bcdfef419b16075a0eca990956223dc"><td class="memItemLeft" align="right" valign="top">&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="zot_8php.html#a5bcdfef419b16075a0eca990956223dc">zot_register_hub</a> ($arr)</td></tr>
 <tr class="separator:a5bcdfef419b16075a0eca990956223dc"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a71d82d0bec204cdf2bd56e4fd0e0ef8a"><td class="memItemLeft" align="right" valign="top">&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="zot_8php.html#a71d82d0bec204cdf2bd56e4fd0e0ef8a">import_xchan</a> ($arr, $ud_flags=<a class="el" href="boot_8php.html#a9690d73434125ce594a1f5e7c2a4f7c0">UPDATE_FLAGS_UPDATED</a>)</td></tr>
-<tr class="separator:a71d82d0bec204cdf2bd56e4fd0e0ef8a"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a528e97ca5d69c3b7f35c5d954afde315"><td class="memItemLeft" align="right" valign="top">&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="zot_8php.html#a528e97ca5d69c3b7f35c5d954afde315">import_xchan</a> ($arr, $ud_flags=<a class="el" href="boot_8php.html#a9690d73434125ce594a1f5e7c2a4f7c0">UPDATE_FLAGS_UPDATED</a>, $ud_arr=null)</td></tr>
+<tr class="separator:a528e97ca5d69c3b7f35c5d954afde315"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a928f5643ca66ae9635d85aeb2be62e03"><td class="memItemLeft" align="right" valign="top">&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="zot_8php.html#a928f5643ca66ae9635d85aeb2be62e03">zot_process_response</a> ($hub, $arr, $outq)</td></tr>
 <tr class="separator:a928f5643ca66ae9635d85aeb2be62e03"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a61cdc1ec843663c423ed2d8160ae5aea"><td class="memItemLeft" align="right" valign="top">&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="zot_8php.html#a61cdc1ec843663c423ed2d8160ae5aea">zot_fetch</a> ($arr)</td></tr>
@@ -357,7 +357,7 @@ Functions</h2></td></tr>
       </table>
 </div><div class="memdoc">
 
-<p>Referenced by <a class="el" href="zot_8php.html#a71d82d0bec204cdf2bd56e4fd0e0ef8a">import_xchan()</a>, <a class="el" href="dir__fns_8php.html#acd37b17dce3bdec6d5a6344a20598c1e">local_dir_update()</a>, and <a class="el" href="zot_8php.html#a9a57b40669351c9791126b925cb7ef3b">process_profile_delivery()</a>.</p>
+<p>Referenced by <a class="el" href="zot_8php.html#a528e97ca5d69c3b7f35c5d954afde315">import_xchan()</a>, <a class="el" href="dir__fns_8php.html#acd37b17dce3bdec6d5a6344a20598c1e">local_dir_update()</a>, and <a class="el" href="zot_8php.html#a9a57b40669351c9791126b925cb7ef3b">process_profile_delivery()</a>.</p>
 
 </div>
 </div>
@@ -385,11 +385,11 @@ Functions</h2></td></tr>
       </table>
 </div><div class="memdoc">
 
-<p>Referenced by <a class="el" href="zot_8php.html#a71d82d0bec204cdf2bd56e4fd0e0ef8a">import_xchan()</a>.</p>
+<p>Referenced by <a class="el" href="zot_8php.html#a528e97ca5d69c3b7f35c5d954afde315">import_xchan()</a>.</p>
 
 </div>
 </div>
-<a class="anchor" id="a71d82d0bec204cdf2bd56e4fd0e0ef8a"></a>
+<a class="anchor" id="a528e97ca5d69c3b7f35c5d954afde315"></a>
 <div class="memitem">
 <div class="memproto">
       <table class="memname">
@@ -403,7 +403,13 @@ Functions</h2></td></tr>
           <td class="paramkey"></td>
           <td></td>
           <td class="paramtype">&#160;</td>
-          <td class="paramname"><em>$ud_flags</em> = <code><a class="el" href="boot_8php.html#a9690d73434125ce594a1f5e7c2a4f7c0">UPDATE_FLAGS_UPDATED</a></code>&#160;</td>
+          <td class="paramname"><em>$ud_flags</em> = <code><a class="el" href="boot_8php.html#a9690d73434125ce594a1f5e7c2a4f7c0">UPDATE_FLAGS_UPDATED</a></code>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">&#160;</td>
+          <td class="paramname"><em>$ud_arr</em> = <code>null</code>&#160;</td>
         </tr>
         <tr>
           <td></td>
@@ -416,7 +422,8 @@ Functions</h2></td></tr>
 <dl class="params"><dt>Parameters</dt><dd>
   <table class="params">
     <tr><td class="paramtype">array</td><td class="paramname">$arr</td><td>=&gt; json_decoded discovery packet </td></tr>
-    <tr><td class="paramtype">int</td><td class="paramname">$ud_flags</td><td>Determines whether to create a directory update record if any changes occur, default is UPDATE_FLAGS_UPDATED (true) $ud_flags = UPDATE_FLAGS_FORCED indicates a forced refresh where we unconditionally create a directory update record this typically occurs once a month for each channel as part of a scheduled ping to notify the directory that the channel still exists</td></tr>
+    <tr><td class="paramtype">int</td><td class="paramname">$ud_flags</td><td>Determines whether to create a directory update record if any changes occur, default is UPDATE_FLAGS_UPDATED $ud_flags = UPDATE_FLAGS_FORCED indicates a forced refresh where we unconditionally create a directory update record this typically occurs once a month for each channel as part of a scheduled ping to notify the directory that the channel still exists </td></tr>
+    <tr><td class="paramtype">array</td><td class="paramname">$ud_arr</td><td>If set [typically by <a class="el" href="dir__fns_8php.html#a44062d4b471d1e83f92f6c184585aa13">update_directory_entry()</a>] indicates a specific update table row and more particularly contains a particular address (ud_addr) which needs to be updated in that table.</td></tr>
   </table>
   </dd>
 </dl>
@@ -696,7 +703,7 @@ Functions</h2></td></tr>
       </table>
 </div><div class="memdoc">
 
-<p>Referenced by <a class="el" href="zot_8php.html#a20750dd2c36961013fd382fb34e1366c">import_directory_profile()</a>, <a class="el" href="zot_8php.html#a71d82d0bec204cdf2bd56e4fd0e0ef8a">import_xchan()</a>, and <a class="el" href="dir__fns_8php.html#acd37b17dce3bdec6d5a6344a20598c1e">local_dir_update()</a>.</p>
+<p>Referenced by <a class="el" href="zot_8php.html#a20750dd2c36961013fd382fb34e1366c">import_directory_profile()</a>, <a class="el" href="zot_8php.html#a528e97ca5d69c3b7f35c5d954afde315">import_xchan()</a>, and <a class="el" href="dir__fns_8php.html#acd37b17dce3bdec6d5a6344a20598c1e">local_dir_update()</a>.</p>
 
 </div>
 </div>

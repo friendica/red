@@ -10,5 +10,7 @@ var account_8php =
     [ "send_reg_approval_email", "account_8php.html#a014de2d5d5c9785de5bf547a485822fa", null ],
     [ "send_verification_email", "account_8php.html#aa9c29c497c17d8f9344dce8631ad8761", null ],
     [ "user_allow", "account_8php.html#ac5c570a2d46446bad4dd2501e9c5a4b1", null ],
-    [ "user_deny", "account_8php.html#ac1653efba62493b9d87513e1b6c04c83", null ]
+    [ "user_approve", "account_8php.html#ad07be417ac7eda939768804106ddea3d", null ],
+    [ "user_deny", "account_8php.html#ac1653efba62493b9d87513e1b6c04c83", null ],
+    [ "verify_email_address", "account_8php.html#acd6b8d2124ba5ea4f4794d2c58ae8bf5", null ]
 ];

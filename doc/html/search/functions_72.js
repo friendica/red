@@ -34,6 +34,7 @@ var searchData=
   ['register_5fpost',['register_post',['../register_8php.html#a51731dcc1917c58a790eb1c0f6132271',1,'register.php']]],
   ['register_5ftemplate_5fengine',['register_template_engine',['../classApp.html#abf46a653d8499e7c253cc1be894a6d83',1,'App']]],
   ['regmod_5fcontent',['regmod_content',['../regmod_8php.html#a7953df4e32e63946565e90cdd5d50409',1,'regmod.php']]],
+  ['regver_5fcontent',['regver_content',['../regver_8php.html#ad2c5f644fd1b099abd7c715b7df6f50f',1,'regver.php']]],
   ['relative_5fdate',['relative_date',['../datetime_8php.html#a8ae8dc95ace7ac27fa5a1ecf42b78c82',1,'datetime.php']]],
   ['reload_5fplugins',['reload_plugins',['../plugin_8php.html#af9ac19004dca49adae1ac7a0d9f3b025',1,'plugin.php']]],
   ['reltoabs',['reltoabs',['../text_8php.html#ad855a32bee22c3f3b9734e3a334b96f2',1,'text.php']]],

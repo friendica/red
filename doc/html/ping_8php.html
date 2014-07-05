@@ -113,6 +113,7 @@ $(document).ready(function(){initNavTree('ping_8php.html','');});
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a name="func-members"></a>
 Functions</h2></td></tr>
 <tr class="memitem:a77217b1b190b4c5d8770867b45f0c0a1"><td class="memItemLeft" align="right" valign="top">&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="ping_8php.html#a77217b1b190b4c5d8770867b45f0c0a1">ping_init</a> (&amp;$a)</td></tr>
+<tr class="memdesc:a77217b1b190b4c5d8770867b45f0c0a1"><td class="mdescLeft">&#160;</td><td class="mdescRight">do several updates when pinged.  <a href="#a77217b1b190b4c5d8770867b45f0c0a1">More...</a><br/></td></tr>
 <tr class="separator:a77217b1b190b4c5d8770867b45f0c0a1"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table>
 <h2 class="groupheader">Function Documentation</h2>
@@ -129,6 +130,24 @@ Functions</h2></td></tr>
         </tr>
       </table>
 </div><div class="memdoc">
+
+<p>do several updates when pinged. </p>
+<p>This function does several tasks. Whenever called it checks for new messages, introductions, notifications, etc. and returns a json with the results.</p>
+<dl class="params"><dt>Parameters</dt><dd>
+  <table class="params">
+    <tr><td class="paramtype"><a class="el" href="classApp.html">App</a></td><td class="paramname">&amp;$a</td><td></td></tr>
+  </table>
+  </dd>
+</dl>
+<dl class="section return"><dt>Returns</dt><dd>JSON </dd></dl>
+<p>If you have several windows open to this site and switch to a different channel in one of them, the others may get into a confused state showing you a page or options on that page which were only valid under the old identity. You session has changed. Therefore we send a notification of this fact back to the browser where it is picked up in javascript and which reloads the page it is on so that it is valid under the context of the now current channel.</p>
+<p>Send all system messages (alerts) to the browser. Some are marked as informational and some represent errors or serious notifications. These typically will popup on the current page (no matter what page it is)</p>
+<p>Update chat presence indication (if applicable)</p>
+<p>Chatpresence continued... if somebody hasn't pinged recently, they've most likely left the page and shouldn't count as online anymore. We allow an expection for bots.</p>
+<p>Everything following is only permitted under the context of a locally authenticated site member.</p>
+<p>Handle "mark all xyz notifications read" requests.</p>
+<p>URL ping/something will return detail for "something", e.g. a json list with which to populate a notification dropdown menu.</p>
+<p>Normal ping - just the counts, no detail</p>
 
 </div>
 </div>

@@ -50,7 +50,7 @@ var searchData=
   ['setbrowserplugin',['setBrowserPlugin',['../classRedBasicAuth.html#a358ddad4abb5aa8c1382cf49a907adbc',1,'RedBasicAuth']]],
   ['setcurrentuser',['setCurrentUser',['../classRedBasicAuth.html#a072e8244a9a7f191b32d3db5ac94f857',1,'RedBasicAuth']]],
   ['setdimensions',['setDimensions',['../classphoto__driver.html#ae663867d2c4eaa2fae50d60670920143',1,'photo_driver\setDimensions()'],['../classphoto__gd.html#a1c75304bd15f3b9986f0b315fb59271e',1,'photo_gd\setDimensions()'],['../classphoto__imagick.html#af92901d252c1e6ab5b54eebedbed23bb',1,'photo_imagick\setDimensions()']]],
-  ['setname',['setName',['../classRedFile.html#a38a82bfc1b30028ea6ac75923e90fa25',1,'RedFile']]],
+  ['setname',['setName',['../classRedDirectory.html#adc48035679e52c55d9881f83de535553',1,'RedDirectory\setName()'],['../classRedFile.html#a38a82bfc1b30028ea6ac75923e90fa25',1,'RedFile\setName()']]],
   ['settings_5finit',['settings_init',['../settings_8php.html#a3a4cde287482fced008583f54ba2a722',1,'settings.php']]],
   ['settings_5fpost',['settings_post',['../settings_8php.html#aa7ee94d88ac088edb04ccf3a26de3586',1,'settings.php']]],
   ['setup_5fcontent',['setup_content',['../setup_8php.html#a88247384a96e14516f474d7af6a465c1',1,'setup.php']]],

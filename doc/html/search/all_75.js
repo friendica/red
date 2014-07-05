@@ -36,6 +36,7 @@ var searchData=
   ['upgrade_5flink',['upgrade_link',['../plugin_8php.html#a4fc13e528367f510fcb6d8bbfc559040',1,'plugin.php']]],
   ['upgrade_5fmessage',['upgrade_message',['../plugin_8php.html#a901657dd078e070516cf97285e0bada7',1,'plugin.php']]],
   ['user_5fallow',['user_allow',['../account_8php.html#ac5c570a2d46446bad4dd2501e9c5a4b1',1,'account.php']]],
+  ['user_5fapprove',['user_approve',['../account_8php.html#ad07be417ac7eda939768804106ddea3d',1,'account.php']]],
   ['user_5fdeny',['user_deny',['../account_8php.html#ac1653efba62493b9d87513e1b6c04c83',1,'account.php']]],
   ['user_5fremove',['user_remove',['../Contact_8php.html#a2fc191067dd571a79603c66b04b1ca15',1,'Contact.php']]],
   ['userreadablesize',['userReadableSize',['../classRedBrowser.html#ad3418b8ccad42a1ef4ad0079e15b2e64',1,'RedBrowser']]],

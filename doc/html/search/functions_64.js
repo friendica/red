@@ -26,7 +26,7 @@ var searchData=
   ['design_5ftools',['design_tools',['../text_8php.html#a87a3cefc603302c78982f1d8e1245265',1,'text.php']]],
   ['destroy',['destroy',['../classphoto__driver.html#ae1a9edaf846983780dc65ea77d99e813',1,'photo_driver\destroy()'],['../classphoto__gd.html#a724703ecf71b1f1d04a80e86c76db6b1',1,'photo_gd\destroy()'],['../classphoto__imagick.html#afd49d64751ee3a298eac0c0ce0ba0207',1,'photo_imagick\destroy()']]],
   ['detect_5flanguage',['detect_language',['../language_8php.html#a632da17c7ac0d2dc1a00a4706870194b',1,'language.php']]],
-  ['diaspora2bb',['diaspora2bb',['../bb2diaspora_8php.html#a26c09c218413610e62e60754c579f6c6',1,'bb2diaspora.php']]],
+  ['diaspora2bb',['diaspora2bb',['../bb2diaspora_8php.html#ac9061ee10fcfcdac69566b649614e625',1,'bb2diaspora.php']]],
   ['diaspora_5fol',['diaspora_ol',['../bb2diaspora_8php.html#a8b96bd45884fa1c40b942939354197d4',1,'bb2diaspora.php']]],
   ['diaspora_5ful',['diaspora_ul',['../bb2diaspora_8php.html#adc92ccda5f85ed27e64fcc17712c89cc',1,'bb2diaspora.php']]],
   ['dir_5fparse_5fquery',['dir_parse_query',['../dirsearch_8php.html#a7d4cd9890d5ed23c3efc58e2a778a305',1,'dirsearch.php']]],
