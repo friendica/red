@@ -3727,19 +3727,7 @@ function delete_item_lowlevel($item,$stage = DROPITEM_NORMAL) {
 		intval($item['uid'])
 	);
 
-
-	// network deletion request. Keep the message structure so that we can deliver delete notifications.
-	// Come back after several days (or perhaps a month) to do the lowlevel delete (DROPITEM_PHASE2).
-
-	if($stage == DROPITEM_PHASE1)
-		return true;
-
-	$r = q("delete from term where otype = %d and oid = %d limit 1",
-		intval(TERM_OBJ_POST),
-		intval($item['id'])
-	);
-
-	// If item is a link to a photo resource, nuke all the associated photos 
+	// If item is a link to a photo/event resource, nuke all the associated photos/events 
 	// This only applies to photos uploaded from the photos page. Photos inserted into a post do not
 	// generate a resource_id and therefore aren't intimately linked to the item. 
 
@@ -3757,6 +3745,18 @@ function delete_item_lowlevel($item,$stage = DROPITEM_NORMAL) {
 			);
 		}
 	}
+
+
+	// network deletion request. Keep the message structure so that we can deliver delete notifications.
+	// Come back after several days (or perhaps a month) to do the lowlevel delete (DROPITEM_PHASE2).
+
+	if($stage == DROPITEM_PHASE1)
+		return true;
+
+	$r = q("delete from term where otype = %d and oid = %d limit 1",
+		intval(TERM_OBJ_POST),
+		intval($item['id'])
+	);
 
 	q("delete from item_id where iid = %d and uid = %d limit 1",
 		intval($item['id']),
