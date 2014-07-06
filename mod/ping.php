@@ -269,11 +269,11 @@ function ping_init(&$a) {
 	if(argc() > 1 && (argv(1) === 'intros')) {
 		$result = array();
 
-		$r = q("SELECT abook.*, xchan.* FROM abook left join xchan on abook_xchan = xchan_hash
-			WHERE abook_channel = %d and (abook_flags & %d) and not (abook_flags & %d)",
+		$r = q("SELECT * FROM abook left join xchan on abook.abook_xchan = xchan.xchan_hash where abook_channel = %d and (abook_flags & %d) and not ((abook_flags & %d) or (xchan_flags & %d))",
 			intval(local_user()),
 			intval(ABOOK_FLAG_PENDING),
-			intval(ABOOK_FLAG_SELF)
+			intval(ABOOK_FLAG_SELF|ABOOK_FLAG_IGNORED),
+			intval(XCHAN_FLAGS_DELETED|XCHAN_FLAGS_ORPHAN)
 		);
 
 		if($r) {
@@ -370,9 +370,11 @@ function ping_init(&$a) {
 
 	$t2 = dba_timer();
 
-	$intr = q("select count(abook_id) as total from abook where (abook_flags & %d) and abook_channel = %d",
+	$intr = q("SELECT COUNT(abook.abook_id) AS total FROM abook left join xchan on abook.abook_xchan = xchan.xchan_hash where abook_channel = %d and (abook_flags & %d) and not ((abook_flags & %d) or (xchan_flags & %d))",
+		intval(local_user()),
 		intval(ABOOK_FLAG_PENDING),
-		intval(local_user())
+		intval(ABOOK_FLAG_SELF|ABOOK_FLAG_IGNORED),
+		intval(XCHAN_FLAGS_DELETED|XCHAN_FLAGS_ORPHAN)
 	);
 
 	$t3 = dba_timer();
