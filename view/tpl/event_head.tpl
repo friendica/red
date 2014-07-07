@@ -7,7 +7,7 @@
 		$.get(
 			'{{$baseurl}}/events/?id='+eventid,
 			function(data){
-				$.fancybox(data);
+				$.colorbox({ maxWidth: "50%", maxHeight: "75%", html: data });
 			}
 		);			
 	}

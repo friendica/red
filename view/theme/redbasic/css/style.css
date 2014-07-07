@@ -935,7 +935,11 @@ aside li {
 }
 
 #event-summary {
-	width: 400px;
+	min-width: 400px;
+}
+
+.event-wrapper {
+	padding: 25px;
 }
 
 .vevent {
