@@ -934,15 +934,16 @@ aside li {
 	margin-bottom: 10px;
 }
 
-#event-summary {
-	min-width: 400px;
-}
-
 .event-wrapper {
-	padding: 25px;
+	width: 400px;
+	height: auto;
+	padding: 10px;
 }
 
 .vevent {
+	max-width: 100%; 
+	margin-left: 10px;
+	margin-right: 10px;
 	border: 1px solid #CCCCCC;
 }
 
@@ -979,8 +980,17 @@ aside li {
 
 .event-start, .event-end {
 	margin-left: 10px;
-	width: 330px;
+	width: 300px;
 	clear: both;
+}
+
+.event-owner img {
+	padding: 10px;
+}
+
+.event-buttons {
+	margin-top: 10px;
+	margin-left: 10px;
 }
 
 .event-start .dtstart, .event-end .dtend {

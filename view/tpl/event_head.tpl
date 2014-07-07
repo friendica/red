@@ -7,7 +7,7 @@
 		$.get(
 			'{{$baseurl}}/events/?id='+eventid,
 			function(data){
-				$.colorbox({ maxWidth: "50%", maxHeight: "75%", html: data });
+				$.colorbox({ html: data });
 			}
 		);			
 	}
