@@ -77,32 +77,51 @@ function events_post(&$a) {
 
 	$channel = $a->get_channel();
 
-	if($share) {
-		$str_group_allow   = perms2str($_POST['group_allow']);
-		$str_contact_allow = perms2str($_POST['contact_allow']);
-		$str_group_deny    = perms2str($_POST['group_deny']);
-		$str_contact_deny  = perms2str($_POST['contact_deny']);
-
-		// Undo the pseudo-contact of self, since there are real contacts now
-		if( strpos($str_contact_allow, '<' . $channel['channel_hash'] . '>') !== false )
-		{
-			$str_contact_allow = str_replace('<' . $channel['channel_hash'] . '>', '', $str_contact_allow);
+	if($event_id) {
+		$x = q("select * from event where id = %d and uid = %d limit 1",
+			intval($event_id),
+			intval(local_user())
+		);
+		if(! $x) {
+			notice( t('Event not found.') . EOL);
+			return;
 		}
-		// Make sure to set the `private` field as true. This is necessary to
-		// have the posts show up correctly in Diaspora if an event is created
-		// as visible only to self at first, but then edited to display to others.
-		if( strlen($str_group_allow) or strlen($str_contact_allow) or strlen($str_group_deny) or strlen($str_contact_deny) )
-		{
-			$private_event = true;
+		if($x[0]['allow_cid'] === '<' . $channel['channel_hash'] . '>' 
+			&& $x[0]['allow_gid'] === '' && $x[0]['deny_cid'] === '' && $x[0]['deny_gid'] === '') {
+			$share = false;
+		}
+		else {
+			$share = true;
+			$str_group_allow = $x[0]['allow_gid'];
+			$str_contact_allow = $x[0]['allow_cid'];
+			$str_group_deny = $x[0]['deny_gid'];
+			$str_contact_deny = $x[0]['deny_cid'];
+
+			if(strlen($str_group_allow) || strlen($str_contact_allow) 
+				|| strlen($str_group_deny) || strlen($str_contact_deny)) {
+				$private_event = true;
+			}
 		}
 	}
 	else {
-		// Note: do not set `private` field for self-only events. It will
-		// keep even you from seeing them!
-		$str_contact_allow = '<' . $channel['channel_hash'] . '>';
-		$str_group_allow = $str_contact_deny = $str_group_deny = '';
-	}
+		if($share) {
+			$str_group_allow   = perms2str($_POST['group_allow']);
+			$str_contact_allow = perms2str($_POST['contact_allow']);
+			$str_group_deny    = perms2str($_POST['group_deny']);
+			$str_contact_deny  = perms2str($_POST['contact_deny']);
 
+			if(strlen($str_group_allow) || strlen($str_contact_allow) 
+				|| strlen($str_group_deny) || strlen($str_contact_deny)) {
+				$private_event = true;
+			}
+		}
+		else {
+			// Note: do not set `private` field for self-only events. It will
+			// keep even you from seeing them!
+			$str_contact_allow = '<' . $channel['channel_hash'] . '>';
+			$str_group_allow = $str_contact_deny = $str_group_deny = '';
+		}
+	}
 
 	$datarray = array();
 	$datarray['start'] = $start;
@@ -406,7 +425,7 @@ function events_content(&$a) {
 		$n_checked = ((x($orig_event) && $orig_event['nofinish']) ? ' checked="checked" ' : '');
 		$a_checked = ((x($orig_event) && $orig_event['adjust']) ? ' checked="checked" ' : '');
 		$t_orig = ((x($orig_event)) ? $orig_event['summary'] : '');
-		$d_orig = ((x($orig_event)) ? $orig_event['desc'] : '');
+		$d_orig = ((x($orig_event)) ? $orig_event['description'] : '');
 		$l_orig = ((x($orig_event)) ? $orig_event['location'] : '');
 		$eid = ((x($orig_event)) ? $orig_event['id'] : 0);
 		$event_xchan = ((x($orig_event)) ? $orig_event['event_xchan'] : $channel['channel_hash']);

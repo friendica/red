@@ -165,7 +165,7 @@ function event_store_event($arr) {
 			return $r[0];
 		}
 
-		$event_hash = $r[0]['event_hash'];
+		$hash = $r[0]['event_hash'];
 		
 		// The event changed. Update it.
 
