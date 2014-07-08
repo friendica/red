@@ -6,12 +6,12 @@ Here's how you can quickly check how much of your assigned quota you're currentl
  
 [b]Check file storage quota levels[/b]
 Visit the following URL in your browser:
-[observer.baseurl]/filestorage/webname
+[observer.baseurl]/filestorage/[observer.webname]
 
 [b]Check uploaded photos storage quota levels[/b]
-[observer.baseurl]/photos/webname
+[observer.baseurl]/photos/[observer.webname]
 
 Example:
-[observer.baseurl]/filestorage/webname
+[observer.baseurl]/filestorage/[observer.webname]
 
 Return to the [zrl=[baseurl]/help/main]Main documentation page[/zrl]
