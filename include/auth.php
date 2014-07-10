@@ -35,13 +35,18 @@ function nuke_session() {
 
 function account_verify_password($email,$pass) {
 
+	$email_verify = get_config('system','verify_email');
+
+	if($email_verify && $record['account_flags'] & ACCOUNT_UNVERIFIED)
+		return null;
+
 	$r = q("select * from account where account_email = '%s'",
 		dbesc($email)
 	);
 	if(! ($r && count($r)))
 		return null;
 	foreach($r as $record) {
-		if(($record['account_flags'] == ACCOUNT_OK) || ($record['account_flags'] == ACCOUNT_UNVERIFIED)
+		if(($record['account_flags'] == ACCOUNT_OK)
 			&& (hash('whirlpool',$record['account_salt'] . $pass) === $record['account_password'])) {
 			logger('password verified for ' . $email);
 			return $record;

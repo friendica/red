@@ -52,14 +52,17 @@ function register_post(&$a) {
 
 	$policy = get_config('system','register_policy');
 
+	$email_verify = get_config('system','verify_email');
+
+
 	switch($policy) {
 
 		case REGISTER_OPEN:
-			$flags = ACCOUNT_UNVERIFIED;
+			$flags = ACCOUNT_OK;
 			break;
 
 		case REGISTER_APPROVE:
-			$flags = ACCOUNT_UNVERIFIED | ACCOUNT_BLOCKED | ACCOUNT_PENDING;
+			$flags = ACCOUNT_BLOCKED | ACCOUNT_PENDING;
 			break;
 
 		default:
@@ -68,10 +71,13 @@ function register_post(&$a) {
 				notice( t('Permission denied.') . EOL );
 				return;
 			}
-			$flags = ACCOUNT_UNVERIFIED | ACCOUNT_BLOCKED;
+			$flags = ACCOUNT_BLOCKED;
 			break;
 	}
 
+	if($email_verify)
+		$flags = $flags | ACCOUNT_UNVERIFIED;
+		
 
 	if((! $_POST['password']) || ($_POST['password'] !== $_POST['password2'])) {
 		notice( t('Passwords do not match.') . EOL);
@@ -100,7 +106,12 @@ function register_post(&$a) {
 	}
 
 	if($policy == REGISTER_OPEN ) {
-		$res = send_verification_email($result['email'],$result['password']);
+		if($email_verify) {
+			$res = verify_email_address($result);
+		}
+		else {
+			$res = send_verification_email($result['email'],$result['password']);
+		}
 		if($res) {
 			info( t('Registration successful. Please check your email for validation instructions.') . EOL ) ;
 		}
@@ -113,6 +124,10 @@ function register_post(&$a) {
 		else {
 			notice( t('Your registration can not be processed.') . EOL);
 		}
+		goaway(z_root());
+	}
+
+	if($email_verify) {
 		goaway(z_root());
 	}
 

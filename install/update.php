@@ -1,6 +1,6 @@
 <?php
 
-define( 'UPDATE_VERSION' , 1115 );
+define( 'UPDATE_VERSION' , 1116 );
 
 /**
  *
@@ -1291,3 +1291,11 @@ ADD INDEX ( `target_id` )");
 	return UPDATE_FAILED;
 }
 	
+function update_r1115() {
+
+	// Introducing email verification. Mark all existing accounts as verified or they
+	// won't be able to login.
+
+	$r = q("update account set account_flags = (account_flags ^ 1) where (account_flags & 1) ");
+	return UPDATE_SUCCESS;
+}

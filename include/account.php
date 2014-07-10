@@ -254,6 +254,7 @@ function verify_email_address($arr) {
 	else
 		logger('send_reg_approval_email: failed to ' . $admin['email'] . 'account_id: ' . $arr['account']['account_id']);
 
+	return $res;
 
 }
 
@@ -476,8 +477,14 @@ function user_approve($hash) {
 		intval(ACCOUNT_PENDING),
 		intval($register[0]['uid'])
 	);
+	$r = q("update account set account_flags = (account_flags ^ %d) where (account_flags & %d) and account_id = %d limit 1",
+		intval(ACCOUNT_UNVERIFIED),
+		intval(ACCOUNT_UNVERIFIED),
+		intval($register[0]['uid'])
+	);
 	
-	info( t('Account approved.') . EOL );
+	info( t('Account verified. Please login.') . EOL );
+
 	return true;
 
 }
