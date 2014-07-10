@@ -75,7 +75,7 @@ function register_post(&$a) {
 			break;
 	}
 
-	if($email_verify)
+	if($email_verify && $policy == REGISTER_OPEN)
 		$flags = $flags | ACCOUNT_UNVERIFIED;
 		
 
