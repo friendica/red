@@ -9,7 +9,7 @@ msgstr ""
 "Project-Id-Version: Red Matrix\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2014-07-04 00:02-0700\n"
-"PO-Revision-Date: 2014-07-06 18:23+0000\n"
+"PO-Revision-Date: 2014-07-09 18:59+0000\n"
 "Last-Translator: jeroenpraat <>\n"
 "Language-Team: Dutch (http://www.transifex.com/projects/p/red-matrix/language/nl/)\n"
 "MIME-Version: 1.0\n"
@@ -1085,7 +1085,7 @@ msgstr "Beheer"
 
 #: ../../include/nav.php:199
 msgid "Site Setup and Configuration"
-msgstr "Red Matrix-hub opzetten en configureren"
+msgstr "Hub instellen en beheren"
 
 #: ../../include/nav.php:224
 msgid "Nothing new here"
