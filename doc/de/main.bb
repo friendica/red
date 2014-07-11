@@ -18,6 +18,7 @@ Zot ist das großartige neue Kommunikationsprotokoll, das extra für die Red-Mat
 [zrl=[baseurl]/help/channels]Kanäle[/zrl]
 [zrl=[baseurl]/help/first-post]Dein erster Beitrag[/zrl]
 [zrl=[baseurl]/help/connecting_to_channels]Sich mit anderen Kanälen verbinden[/zrl]
+[zrl=[baseurl]/help/privacy]Privatsphäre[/zrl]
 [zrl=[baseurl]/help/permissions]Zugriffsrechte und Verschlüsselung: Du hast alles unter Kontrolle[/zrl]
 [zrl=[baseurl]/help/cloud]Cloud-Speicher[/zrl]
 [zrl=[baseurl]/help/remove_account]Konto löschen[/zrl]
