@@ -260,8 +260,8 @@ Check if you can update the addons
 [code]pi@pi /var/www $ cd addon/
 pi@pi /var/www/addon $ sudo git pull[/code]
 
-Make sure folder view/tpl/smarty3 exists and is writable by the webserver
-[code]pi@pi /var/www $ sudo chmod ou+w view/tpl/smarty3/[/code]
+Make sure folder store/[data]/smarty3 exists and is writable by the webserver
+[code]pi@pi /var/www $ sudo chmod ou+w "store/\[data\]/smarty3"[/code]
 
 Create .htconfig.php and is writable by the webserver
 [code]pi@pi /var/www $ sudo touch .htconfig.php

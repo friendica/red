@@ -47,11 +47,12 @@ define ( 'RED_PLATFORM',            'Red Matrix' );
 define ( 'RED_VERSION',             trim(file_get_contents('version.inc')) . 'R');
 define ( 'ZOT_REVISION',            1     );
 
-define ( 'DB_UPDATE_VERSION',       1116  );
+define ( 'DB_UPDATE_VERSION',       1117  );
 
 define ( 'EOL',                    '<br />' . "\r\n"     );
 define ( 'ATOM_TIME',              'Y-m-d\TH:i:s\Z' );
 
+define ( 'TEMPLATE_BUILD_PATH',    'store/[data]/smarty3' );
 
 define ( 'DIRECTORY_MODE_NORMAL',      0x0000);  // This is technically DIRECTORY_MODE_TERTIARY, but it's the default, hence 0x0000
 define ( 'DIRECTORY_MODE_PRIMARY',     0x0001);
@@ -1062,8 +1063,8 @@ class App {
 
 		/*if ($engine) {
 			case 'smarty3':
-				if(!is_writable('view/tpl/smarty3/'))
-					echo "<b>ERROR</b> folder <tt>view/tpl/smarty3/</tt> must be writable by webserver."; killme();
+				if(!is_writable(TEMPLATE_BUILD_PATH))
+					echo "<b>ERROR</b> folder <tt>" . TEMPLATE_BUILD_PATH . "</tt> must be writable by webserver."; killme();
 
 				break;
 			default:
@@ -1256,10 +1257,11 @@ function check_config(&$a) {
 						$func = 'update_r' . $x;
 						$retval = $func();
 						if($retval) {
+
 							// Prevent sending hundreds of thousands of emails by creating
-							// a lockfile.  view/tpl/smarty3 is the only place we can
-							// guarantee the server can write to.
-							$lockfile = 'view/tpl/smarty3/mailsent';
+							// a lockfile.  
+
+							$lockfile = 'store/[data]/mailsent';
 
 							if ((file_exists($lockfile)) && (filemtime($lockfile) > (time() - 86400)))
 									return;

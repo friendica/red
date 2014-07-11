@@ -17,9 +17,9 @@ $s = new Smarty();
 
 $s->setTemplateDir($folders);
 
-$s->setCompileDir('view/tpl/smarty3/compiled/');
-$s->setConfigDir('view/tpl/smarty3/config/');
-$s->setCacheDir('view/tpl/smarty3/cache/');
+$s->setCompileDir(TEMPLATE_BUILD_PATH . '/compiled/');
+$s->setConfigDir(TEMPLATE_BUILD_PATH . '/config/');
+$s->setCacheDir(TEMPLATE_BUILD_PATH . '/cache/');
 
 $s->left_delimiter = "{{";
 $s->right_delimiter = "}}";

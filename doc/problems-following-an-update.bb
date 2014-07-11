@@ -24,7 +24,7 @@ Symptoms:
 
 2) Missing icons, tabs, menus or features.
 
-We use the Smarty3 template engine to generate pages.  These templates are compiled before they are displayed.  Occasionally, a new or modified template will fail to overwrite the old compiled version.  To clear the Smarty cache, delete all the files in view/tpl/smarty3/compiled [b]but do not delete the directory itself[/b].  Templates will then be recompiled on their next access.
+We use the Smarty3 template engine to generate pages.  These templates are compiled before they are displayed.  Occasionally, a new or modified template will fail to overwrite the old compiled version.  To clear the Smarty cache, delete all the files in store/[data]/smarty3/compiled [b]but do not delete the directory itself[/b].  Templates will then be recompiled on their next access.
 
 [b]Theme Issues[/b]
 

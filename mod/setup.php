@@ -510,16 +510,16 @@ function check_htconfig(&$checks) {
 function check_smarty3(&$checks) {
 	$status = true;
 	$help = "";
-	if(	!is_writable('view/tpl/smarty3') ) {
+	if(	!is_writable(TEMPLATE_BUILD_PATH) ) {
 	
 		$status=false;
 		$help = t('Red uses the Smarty3 template engine to render its web views. Smarty3 compiles templates to PHP to speed up rendering.') .EOL;
-		$help .= t('In order to store these compiled templates, the web server needs to have write access to the directory view/tpl/smarty3/ under the Red top level folder.').EOL;
+		$help .= sprintf( t('In order to store these compiled templates, the web server needs to have write access to the directory %s under the Red top level folder.'), TEMPLATE_BUILD_PATH) . EOL;
 		$help .= t('Please ensure that the user that your web server runs as (e.g. www-data) has write access to this folder.').EOL;
-		$help .= t('Note: as a security measure, you should give the web server write access to view/tpl/smarty3/ only--not the template files (.tpl) that it contains.').EOL; 
+		$help .= sprintf( t('Note: as a security measure, you should give the web server write access to %s only--not the template files (.tpl) that it contains.'), TEMPLATE_BUILD_PATH) . EOL; 
 	}
     
-	check_add($checks, t('view/tpl/smarty3 is writable'), $status, true, $help);
+	check_add($checks, sprintf( t('%s is writable'), TEMPLATE_BUILD_PATH), $status, true, $help);
 
 }
 

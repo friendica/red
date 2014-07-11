@@ -41,11 +41,11 @@ you might have trouble getting everything to work.]
 
         `git pull`
         
-    - make sure folder *view/tpl/smarty3* exists and is writable by webserver
+    - make sure folder *store/[data]/smarty3* exists and is writable by webserver
         
-        `mkdir view/tpl/smarty3`
+        `mkdir -p "store/\[data\]/smarty3"`
         
-        `chmod 777 view/smarty3`
+        `chmod 777 "store/\[data\]/smarty3"`
     
     - For installing addons
     

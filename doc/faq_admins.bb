@@ -17,7 +17,7 @@ Most likely, your session table has crashed.  Run the MySQL command [code]repair
 
 [*][b]When I switch theme, I sometimes get elements of one theme superimposed on top of the other[/b]
 
-a) view/tpl/smarty3 isn't writeable by the webserver.  Make it so.
+a) store/[data]/smarty3 isn't writeable by the webserver.  Make it so.
 
 b) You're using Midori, or with certain themes, Konqueror in KHTML mode.  
 
