@@ -122,6 +122,7 @@ function purify_html($s) {
 
 	$config = HTMLPurifier_Config::createDefault();
 	$config->set('Cache.DefinitionImpl', null);
+	$config->set('Attr.EnableID', true);
 
 	$purifier = new HTMLPurifier($config);
 	return $purifier->purify($s);
