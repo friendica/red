@@ -36,8 +36,14 @@ function nuke_session() {
 function account_verify_password($email,$pass) {
 
 	$email_verify = get_config('system','verify_email');
+	$register_policy = get_config('system','register_policy');
 
-	if($email_verify && $record['account_flags'] & ACCOUNT_UNVERIFIED)
+	// Currently we only verify email address if there is an open registration policy.
+	// This isn't because of any policy - it's because the workflow gets too complicated if 
+	// you have to verify the email and then go through the account approval workflow before
+	// letting them login.  
+
+	if(($email_verify) && ($register_policy == REGISTER_OPEN) && ($record['account_flags'] & ACCOUNT_UNVERIFIED))
 		return null;
 
 	$r = q("select * from account where account_email = '%s'",
