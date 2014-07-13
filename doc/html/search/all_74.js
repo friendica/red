@@ -13,6 +13,7 @@ var searchData=
   ['tags_5fsort',['tags_sort',['../taxonomy_8php.html#aaeded36bcc983b35d9205fe5b6c18c43',1,'taxonomy.php']]],
   ['taxonomy_2ephp',['taxonomy.php',['../taxonomy_8php.html',1,'']]],
   ['template',['Template',['../classTemplate.html',1,'']]],
+  ['template_5fbuild_5fpath',['TEMPLATE_BUILD_PATH',['../boot_8php.html#a1200c1f968ff3d52ef878de5fc5c30c1',1,'boot.php']]],
   ['template_5fengine',['template_engine',['../classApp.html#a94a1ed2dc493c58612d17035b74ae736',1,'App']]],
   ['template_5fescape',['template_escape',['../template__processor_8php.html#ab2bcd8738f20f293636a6ae8e1099db5',1,'template_processor.php']]],
   ['template_5fprocessor_2ephp',['template_processor.php',['../template__processor_8php.html',1,'']]],

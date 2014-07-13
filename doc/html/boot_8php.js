@@ -261,6 +261,7 @@ var boot_8php =
     [ "SSL_POLICY_NONE", "boot_8php.html#af86c651547aa8f9e549ee40a09455549", null ],
     [ "SSL_POLICY_SELFSIGN", "boot_8php.html#adca48aee78465ae3064ca4432c0d87b5", null ],
     [ "STORAGE_DEFAULT_PERMISSIONS", "boot_8php.html#aecaa1b6945b317ba8f1daf4af2aed8e6", null ],
+    [ "TEMPLATE_BUILD_PATH", "boot_8php.html#a1200c1f968ff3d52ef878de5fc5c30c1", null ],
     [ "TERM_BOOKMARK", "boot_8php.html#a115faf8797718c3165498abbd6895843", null ],
     [ "TERM_CATEGORY", "boot_8php.html#af33d1b2e98a1e21af672005525d46dfe", null ],
     [ "TERM_FILE", "boot_8php.html#afb97615e985a013799839b68b99018d7", null ],

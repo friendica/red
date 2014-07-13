@@ -6,9 +6,9 @@
 #, fuzzy
 msgid ""
 msgstr ""
-"Project-Id-Version: 2014-07-04.726\n"
+"Project-Id-Version: 2014-07-11.733\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2014-07-04 00:02-0700\n"
+"POT-Creation-Date: 2014-07-11 00:03-0700\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -627,32 +627,36 @@ msgstr ""
 msgid "Registration confirmation for %s"
 msgstr ""
 
-#: ../../include/account.php:312
+#: ../../include/account.php:313
 #, php-format
 msgid "Registration request at %s"
 msgstr ""
 
-#: ../../include/account.php:314 ../../include/account.php:341
-#: ../../include/account.php:398
+#: ../../include/account.php:315 ../../include/account.php:342
+#: ../../include/account.php:399
 msgid "Administrator"
 msgstr ""
 
-#: ../../include/account.php:336
+#: ../../include/account.php:337
 msgid "your registration password"
 msgstr ""
 
-#: ../../include/account.php:339 ../../include/account.php:396
+#: ../../include/account.php:340 ../../include/account.php:397
 #, php-format
 msgid "Registration details for %s"
 msgstr ""
 
-#: ../../include/account.php:405 ../../include/account.php:480
+#: ../../include/account.php:406
 msgid "Account approved."
 msgstr ""
 
-#: ../../include/account.php:439
+#: ../../include/account.php:440
 #, php-format
 msgid "Registration revoked for %s"
+msgstr ""
+
+#: ../../include/account.php:486
+msgid "Account verified. Please login."
 msgstr ""
 
 #: ../../include/photos.php:15 ../../include/attach.php:119
@@ -670,14 +674,14 @@ msgstr ""
 #: ../../mod/profiles.php:462 ../../mod/bookmarks.php:46
 #: ../../mod/channel.php:89 ../../mod/channel.php:193
 #: ../../mod/channel.php:236 ../../mod/chat.php:90 ../../mod/chat.php:95
-#: ../../mod/register.php:68 ../../mod/regmod.php:18 ../../mod/common.php:35
+#: ../../mod/register.php:71 ../../mod/regmod.php:18 ../../mod/common.php:35
 #: ../../mod/network.php:12 ../../mod/connections.php:169
 #: ../../mod/connedit.php:221 ../../mod/delegate.php:6 ../../mod/page.php:30
 #: ../../mod/page.php:80 ../../mod/setup.php:203 ../../mod/editblock.php:34
 #: ../../mod/pdledit.php:21 ../../mod/editlayout.php:48
 #: ../../mod/editpost.php:13 ../../mod/editwebpage.php:44
 #: ../../mod/editwebpage.php:83 ../../mod/photos.php:68
-#: ../../mod/photos.php:526 ../../mod/sources.php:66 ../../mod/events.php:141
+#: ../../mod/photos.php:526 ../../mod/sources.php:66 ../../mod/events.php:160
 #: ../../mod/filestorage.php:10 ../../mod/filestorage.php:59
 #: ../../mod/filestorage.php:75 ../../mod/filestorage.php:98
 #: ../../mod/fsuggest.php:78 ../../mod/suggest.php:26 ../../mod/group.php:9
@@ -849,11 +853,11 @@ msgstr ""
 
 #: ../../include/bb2diaspora.php:468 ../../include/event.php:40
 #: ../../include/identity.php:726 ../../mod/directory.php:156
-#: ../../mod/dirprofile.php:105 ../../mod/events.php:485
+#: ../../mod/dirprofile.php:105 ../../mod/events.php:504
 msgid "Location:"
 msgstr ""
 
-#: ../../include/nav.php:77 ../../include/nav.php:101 ../../boot.php:1466
+#: ../../include/nav.php:77 ../../include/nav.php:101 ../../boot.php:1468
 msgid "Logout"
 msgstr ""
 
@@ -905,7 +909,7 @@ msgstr ""
 msgid "Your webpages"
 msgstr ""
 
-#: ../../include/nav.php:99 ../../include/apps.php:126 ../../boot.php:1467
+#: ../../include/nav.php:99 ../../include/apps.php:126 ../../boot.php:1469
 msgid "Login"
 msgstr ""
 
@@ -926,7 +930,7 @@ msgstr ""
 msgid "Home Page"
 msgstr ""
 
-#: ../../include/nav.php:139 ../../mod/register.php:206 ../../boot.php:1443
+#: ../../include/nav.php:139 ../../mod/register.php:221 ../../boot.php:1445
 msgid "Register"
 msgstr ""
 
@@ -1044,7 +1048,7 @@ msgid "New Message"
 msgstr ""
 
 #: ../../include/nav.php:185 ../../include/apps.php:135
-#: ../../mod/events.php:377
+#: ../../mod/events.php:396
 msgid "Events"
 msgstr ""
 
@@ -1232,7 +1236,7 @@ msgid "RSS/Atom"
 msgstr ""
 
 #: ../../include/contact_selectors.php:77 ../../mod/admin.php:754
-#: ../../mod/admin.php:763 ../../boot.php:1469
+#: ../../mod/admin.php:763 ../../boot.php:1471
 msgid "Email"
 msgstr ""
 
@@ -2550,7 +2554,7 @@ msgstr ""
 msgid "Click to open/close"
 msgstr ""
 
-#: ../../include/text.php:1510 ../../mod/events.php:355
+#: ../../include/text.php:1510 ../../mod/events.php:374
 msgid "Link to Source"
 msgstr ""
 
@@ -2928,7 +2932,7 @@ msgstr ""
 #: ../../mod/photos.php:563 ../../mod/photos.php:668 ../../mod/photos.php:956
 #: ../../mod/photos.php:996 ../../mod/photos.php:1083
 #: ../../mod/sources.php:104 ../../mod/sources.php:138
-#: ../../mod/events.php:492 ../../mod/filestorage.php:137
+#: ../../mod/events.php:511 ../../mod/filestorage.php:137
 #: ../../mod/fsuggest.php:108 ../../mod/group.php:81 ../../mod/admin.php:442
 #: ../../mod/admin.php:751 ../../mod/admin.php:886 ../../mod/admin.php:1019
 #: ../../mod/admin.php:1218 ../../mod/admin.php:1305 ../../mod/thing.php:286
@@ -3326,15 +3330,15 @@ msgstr ""
 msgid "Ask me"
 msgstr ""
 
-#: ../../include/auth.php:79
+#: ../../include/auth.php:90
 msgid "Logged out."
 msgstr ""
 
-#: ../../include/auth.php:198
+#: ../../include/auth.php:209
 msgid "Failed authentication"
 msgstr ""
 
-#: ../../include/auth.php:213 ../../mod/openid.php:188
+#: ../../include/auth.php:224 ../../mod/openid.php:188
 msgid "Login failed."
 msgstr ""
 
@@ -4577,72 +4581,72 @@ msgid ""
 "Please indicate acceptance of the Terms of Service. Registration failed."
 msgstr ""
 
-#: ../../mod/register.php:77
+#: ../../mod/register.php:83
 msgid "Passwords do not match."
 msgstr ""
 
-#: ../../mod/register.php:105
+#: ../../mod/register.php:116
 msgid ""
 "Registration successful. Please check your email for validation instructions."
 msgstr ""
 
-#: ../../mod/register.php:111
+#: ../../mod/register.php:122
 msgid "Your registration is pending approval by the site owner."
 msgstr ""
 
-#: ../../mod/register.php:114
+#: ../../mod/register.php:125
 msgid "Your registration can not be processed."
 msgstr ""
 
-#: ../../mod/register.php:147
+#: ../../mod/register.php:162
 msgid "Registration on this site/hub is by approval only."
 msgstr ""
 
-#: ../../mod/register.php:148
+#: ../../mod/register.php:163
 msgid "<a href=\"pubsites\">Register at another affiliated site/hub</a>"
 msgstr ""
 
-#: ../../mod/register.php:156
+#: ../../mod/register.php:171
 msgid ""
 "This site has exceeded the number of allowed daily account registrations. "
 "Please try again tomorrow."
 msgstr ""
 
-#: ../../mod/register.php:167
+#: ../../mod/register.php:182
 msgid "Terms of Service"
 msgstr ""
 
-#: ../../mod/register.php:173
+#: ../../mod/register.php:188
 #, php-format
 msgid "I accept the %s for this website"
 msgstr ""
 
-#: ../../mod/register.php:175
+#: ../../mod/register.php:190
 #, php-format
 msgid "I am over 13 years of age and accept the %s for this website"
 msgstr ""
 
-#: ../../mod/register.php:189 ../../mod/admin.php:443
+#: ../../mod/register.php:204 ../../mod/admin.php:443
 msgid "Registration"
 msgstr ""
 
-#: ../../mod/register.php:194
+#: ../../mod/register.php:209
 msgid "Membership on this site is by invitation only."
 msgstr ""
 
-#: ../../mod/register.php:195
+#: ../../mod/register.php:210
 msgid "Please enter your invitation code"
 msgstr ""
 
-#: ../../mod/register.php:198
+#: ../../mod/register.php:213
 msgid "Your email address"
 msgstr ""
 
-#: ../../mod/register.php:199
+#: ../../mod/register.php:214
 msgid "Choose a password"
 msgstr ""
 
-#: ../../mod/register.php:200
+#: ../../mod/register.php:215
 msgid "Please re-enter your password"
 msgstr ""
 
@@ -5346,7 +5350,7 @@ msgstr ""
 msgid "System check"
 msgstr ""
 
-#: ../../mod/setup.php:261 ../../mod/events.php:380
+#: ../../mod/setup.php:261 ../../mod/events.php:399
 msgid "Next"
 msgstr ""
 
@@ -5587,10 +5591,10 @@ msgid ""
 msgstr ""
 
 #: ../../mod/setup.php:517
+#, php-format
 msgid ""
 "In order to store these compiled templates, the web server needs to have "
-"write access to the directory view/tpl/smarty3/ under the Red top level "
-"folder."
+"write access to the directory %s under the Red top level folder."
 msgstr ""
 
 #: ../../mod/setup.php:518 ../../mod/setup.php:536
@@ -5600,13 +5604,15 @@ msgid ""
 msgstr ""
 
 #: ../../mod/setup.php:519
+#, php-format
 msgid ""
 "Note: as a security measure, you should give the web server write access to "
-"view/tpl/smarty3/ only--not the template files (.tpl) that it contains."
+"%s only--not the template files (.tpl) that it contains."
 msgstr ""
 
 #: ../../mod/setup.php:522
-msgid "view/tpl/smarty3 is writable"
+#, php-format
+msgid "%s is writable"
 msgstr ""
 
 #: ../../mod/setup.php:535
@@ -6018,65 +6024,69 @@ msgstr ""
 msgid "Event title and start time are required."
 msgstr ""
 
-#: ../../mod/events.php:310
+#: ../../mod/events.php:86
+msgid "Event not found."
+msgstr ""
+
+#: ../../mod/events.php:329
 msgid "l, F j"
 msgstr ""
 
-#: ../../mod/events.php:332
+#: ../../mod/events.php:351
 msgid "Edit event"
 msgstr ""
 
-#: ../../mod/events.php:378
+#: ../../mod/events.php:397
 msgid "Create New Event"
 msgstr ""
 
-#: ../../mod/events.php:379
+#: ../../mod/events.php:398
 msgid "Previous"
 msgstr ""
 
-#: ../../mod/events.php:450
+#: ../../mod/events.php:469
 msgid "hour:minute"
 msgstr ""
 
-#: ../../mod/events.php:470
+#: ../../mod/events.php:489
 msgid "Event details"
 msgstr ""
 
-#: ../../mod/events.php:471
+#: ../../mod/events.php:490
 #, php-format
 msgid "Format is %s %s. Starting date and Title are required."
 msgstr ""
 
-#: ../../mod/events.php:473
+#: ../../mod/events.php:492
 msgid "Event Starts:"
 msgstr ""
 
-#: ../../mod/events.php:473 ../../mod/events.php:487 ../../mod/appman.php:91
+#: ../../mod/events.php:492 ../../mod/events.php:506 ../../mod/appman.php:91
 #: ../../mod/appman.php:92
 msgid "Required"
 msgstr ""
 
-#: ../../mod/events.php:476
+#: ../../mod/events.php:495
 msgid "Finish date/time is not known or not relevant"
 msgstr ""
 
-#: ../../mod/events.php:478
+#: ../../mod/events.php:497
 msgid "Event Finishes:"
 msgstr ""
 
-#: ../../mod/events.php:481
+#: ../../mod/events.php:500
 msgid "Adjust for viewer timezone"
 msgstr ""
 
-#: ../../mod/events.php:483
+#: ../../mod/events.php:502
 msgid "Description:"
 msgstr ""
 
-#: ../../mod/events.php:487
+#: ../../mod/events.php:506
 msgid "Title:"
 msgstr ""
 
-#: ../../mod/events.php:489
+#: ../../mod/events.php:508
 msgid "Share this event"
 msgstr ""
 
@@ -7104,7 +7114,7 @@ msgid ""
 "Password reset failed."
 msgstr ""
 
-#: ../../mod/lostpass.php:85 ../../boot.php:1477
+#: ../../mod/lostpass.php:85 ../../boot.php:1479
 msgid "Password Reset"
 msgstr ""
 
@@ -7782,41 +7792,41 @@ msgstr ""
 msgid "Are you a clean desk or a messy desk person?"
 msgstr ""
 
-#: ../../boot.php:1275
+#: ../../boot.php:1277
 #, php-format
 msgid "Update %s failed. See error logs."
 msgstr ""
 
-#: ../../boot.php:1278
+#: ../../boot.php:1280
 #, php-format
 msgid "Update Error at %s"
 msgstr ""
 
-#: ../../boot.php:1442
+#: ../../boot.php:1444
 msgid ""
 "Create an account to access services and applications within the Red Matrix"
 msgstr ""
 
-#: ../../boot.php:1470
+#: ../../boot.php:1472
 msgid "Password"
 msgstr ""
 
-#: ../../boot.php:1471
+#: ../../boot.php:1473
 msgid "Remember me"
 msgstr ""
 
-#: ../../boot.php:1476
+#: ../../boot.php:1478
 msgid "Forgot your password?"
 msgstr ""
 
-#: ../../boot.php:1541
+#: ../../boot.php:1543
 msgid "permission denied"
 msgstr ""
 
-#: ../../boot.php:1542
+#: ../../boot.php:1544
 msgid "Got Zot?"
 msgstr ""
 
-#: ../../boot.php:1972
+#: ../../boot.php:1974
 msgid "toggle mobile"
 msgstr ""
