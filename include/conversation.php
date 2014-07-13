@@ -1476,7 +1476,10 @@ function profile_tabs($a, $is_owner=False, $nickname=Null){
 		$nickname  = $channel['channel_address'];
 
 	$uid = (($a->profile['profile_uid']) ? $a->profile['profile_uid'] : local_user());
-		
+	
+	if (get_pconfig($uid,system,noprofiletabs))
+		return;
+	
 	if(x($_GET,'tab'))
 		$tab = notags(trim($_GET['tab']));
 	
