@@ -1477,7 +1477,7 @@ function profile_tabs($a, $is_owner=False, $nickname=Null){
 
 	$uid = (($a->profile['profile_uid']) ? $a->profile['profile_uid'] : local_user());
 	
-	if (get_pconfig($uid,system,noprofiletabs))
+	if (get_pconfig($uid,'system','noprofiletabs'))
 		return;
 	
 	if(x($_GET,'tab'))
