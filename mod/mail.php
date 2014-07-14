@@ -170,6 +170,19 @@ function mail_content(&$a) {
 	
 		$preselect = (isset($a->argv[2])?array($a->argv[2]):false);
 			
+		if(x($_REQUEST,'hash')) {
+			$r = q("select abook.*, xchan.* from abook left join xchan on abook_xchan = xchan_hash
+				where abook_channel = %d and abook_xchan = '%s' limit 1",
+				intval(local_user()),
+				intval(argv(2))
+			);
+			if($r) {
+				$prename = $r[0]['xchan_name'];
+				$preurl = $r[0]['xchan_url'];
+				$preid = $r[0]['abook_id'];
+				$preselect = array($preid);
+			}
+		}
 
 		$prename = $preurl = $preid = '';
 
