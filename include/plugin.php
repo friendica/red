@@ -5,7 +5,7 @@
  * @brief Some functions to handle addons and themes.
  */
 
-require_once("include/friendica_smarty.php");
+require_once("include/smarty.php");
 
 /**
  * @brief unloads an addon.
@@ -13,6 +13,7 @@ require_once("include/friendica_smarty.php");
  * @param string $plugin name of the addon
  * @return void
  */
+
 function unload_plugin($plugin){
 	logger("Addons: unloading " . $plugin, LOGGER_DEBUG);
 
@@ -29,6 +30,7 @@ function unload_plugin($plugin){
  * @param string $plugin name of the addon
  * @return bool
  */
+
 function uninstall_plugin($plugin) {
 	unload_plugin($plugin);
 
