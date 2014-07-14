@@ -2041,7 +2041,7 @@ function import_site($arr,$pubkey) {
  * such things as personal settings, channel permissions, address book updates, etc.
  */
 
-function build_sync_packet($uid = 0, $packet = null) {
+function build_sync_packet($uid = 0, $packet = null, $groups_changed = false) {
 
 	$a = get_app();
 
@@ -2116,6 +2116,20 @@ function build_sync_packet($uid = 0, $packet = null) {
 
 			$info['channel'][$k] = $v;
 		}
+	}
+
+	if($groups_changed) {
+		$r = q("select * from groups where uid = %d",
+			intval($uid)
+		);
+		if($r)
+			$info['collections'] = $r;
+		$r = q("select * from group_member where uid = %d",
+			intval($uid)
+		);
+		if($r)
+			$info['collection_members'] = $r;
+			
 	}
 
 	$interval = ((get_config('system','delivery_interval') !== false) 
