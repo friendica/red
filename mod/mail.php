@@ -175,7 +175,7 @@ function mail_content(&$a) {
 			$r = q("select abook.*, xchan.* from abook left join xchan on abook_xchan = xchan_hash
 				where abook_channel = %d and abook_xchan = '%s' limit 1",
 				intval(local_user()),
-				intval(argv(2))
+				dbesc($_REQUEST['hash'])
 			);
 			if($r) {
 				$prename = $r[0]['xchan_name'];
