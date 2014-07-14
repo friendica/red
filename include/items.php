@@ -189,15 +189,8 @@ function add_source_route($iid,$hash) {
 
 
 function red_zrl_callback($matches) {
-	$m = @parse_url($matches[2]);
-	$zrl = false;
-	if($m['host']) {
-		$r = q("select hubloc_url from hubloc where hubloc_host = '%s' limit 1",
-			dbesc($m['host'])
-		);
-		if($r)
-			$zrl = true;
-	}
+	require_once('include/hubloc.php');
+	$zrl = is_matrix_url($matches[2]);
 
 	$t = strip_zids($matches[2]);
 	if($t !== $matches[2]) {
@@ -236,15 +229,8 @@ function red_unescape_codeblock($m) {
 
 
 function red_zrlify_img_callback($matches) {
-	$m = @parse_url($matches[2]);
-	$zrl = false;
-	if($m['host']) {
-		$r = q("select hubloc_url from hubloc where hubloc_host = '%s' limit 1",
-			dbesc($m['host'])
-		);
-		if($r)
-			$zrl = true;
-	}
+	require_once('include/hubloc.php');
+	$zrl = is_matrix_url($matches[2]);
 
 	$t = strip_zids($matches[2]);
 	if($t !== $matches[2]) {

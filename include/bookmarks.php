@@ -23,15 +23,8 @@ function bookmark_add($channel,$sender,$taxonomy,$private,$opts = null) {
 	$iarr['mitem_desc'] = $taxonomy['term'];
 	$iarr['mitem_flags'] = (($ischat) ? MENU_ITEM_CHATROOM : 0);
 
-	$m = @parse_url($taxonomy['url']);
-    $zrl = false;
-    if($m['host']) {
-        $r = q("select hubloc_url from hubloc where hubloc_host = '%s' limit 1",
-            dbesc($m['host'])
-        );
-        if($r)
-            $zrl = true;
-	}
+	require_once('include/hubloc.php');
+	$zrl = is_matrix_url($taxonomy['url']);
 
 	if($zrl)
 		$iarr['mitem_flags'] |= MENU_ITEM_ZID;

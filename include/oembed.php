@@ -29,18 +29,10 @@ function oembed_fetch_url($embedurl){
 		$txt = "";
 		
 		if (in_array($ext, $noexts)) {
-			$m = @parse_url($embedurl);
-			$zrl = false;
-			if($m['host']) {
-				$r = q("select hubloc_url from hubloc where hubloc_host = '%s' limit 1",
-					dbesc($m['host'])
-				);
-				if($r)
-					$zrl = true;
-			}
-			if($zrl) {
-				$embedurl = zid($embedurl);
-			}			
+			require_once('include/hubloc.php');
+			$zrl = is_matrix_url($embedurl);
+			if($zrl) 
+				$embedurl = zid($embedurl);	
 		}
 		else {
 			// try oembed autodiscovery

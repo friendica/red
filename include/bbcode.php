@@ -3,7 +3,7 @@
 require_once("include/oembed.php");
 require_once('include/event.php');
 require_once('include/zot.php');
-
+require_once('include/hubloc.php');
 
 function tryoembed($match) {
 	$url = ((count($match)==2)?$match[1]:$match[2]);
@@ -19,15 +19,7 @@ function tryoembed($match) {
 function tryzrlaudio($match) {
 
 	$link = $match[1];
-	$m = @parse_url($link);
-	$zrl = false;
-	if($m['host']) {
-		$r = q("select hubloc_url from hubloc where hubloc_host = '%s' limit 1",
-			dbesc($m['host'])
-		);
-		if($r)
-			$zrl = true;
-	}
+	$zrl = is_matrix_url($link);
 	if($zrl)
 		$link = zid($link);
 	return	'<audio src="' .  $link . '" controls="controls" ><a href="' . $link . '">' . $link . '</a></audio>';
@@ -35,15 +27,7 @@ function tryzrlaudio($match) {
 
 function tryzrlvideo($match) {
 	$link = $match[1];
-	$m = @parse_url($link);
-	$zrl = false;
-	if($m['host']) {
-		$r = q("select hubloc_url from hubloc where hubloc_host = '%s' limit 1",
-			dbesc($m['host'])
-		);
-		if($r)
-			$zrl = true;
-	}
+	$zrl = is_matrix_url($link);
 	if($zrl)
 		$link = zid($link);
 	return	'<video controls="controls" src="' . $link . '" style="width:100%; max-width:' . get_app()->videowidth . 'px"><a href="' . $link . '">' . $link . '</a></video>';
