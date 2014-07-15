@@ -2138,7 +2138,7 @@ function build_sync_packet($uid = 0, $packet = null, $groups_changed = false) {
 		);
 		if($r)
 			$info['collections'] = $r;
-		$r = q("select * from group_member where uid = %d",
+		$r = q("select groups.hash as collection, group_member.xchan as member from groups left join group_member on groups.id = group_member.gid where group_member.uid = %d",
 			intval($uid)
 		);
 		if($r)
