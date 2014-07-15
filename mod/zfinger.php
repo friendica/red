@@ -188,7 +188,7 @@ function zfinger_init(&$a) {
 	$ret['follow_url'] = z_root() . '/follow?f=&url=%s';
 
 	$ztarget_hash = (($ztarget && $zsig) 
-			? base64url_encode(hash('whirlpool',$ztarget . $zsig,true)) 
+			? make_xchan_hash($ztarget,$zsig)
 			: '' ); 
 
 	$permissions = get_all_perms($e['channel_id'],$ztarget_hash,false);

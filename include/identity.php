@@ -201,7 +201,7 @@ function create_identity($arr) {
 
 
 	$sig = base64url_encode(rsa_sign($guid,$key['prvkey']));
-	$hash = base64url_encode(hash('whirlpool',$guid . $sig,true));
+	$hash = make_xchan_hash($guid,$sig);
 
 	// Force a few things on the short term until we can provide a theme or app with choice
 

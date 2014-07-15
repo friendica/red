@@ -734,7 +734,7 @@ function get_item_elements($x) {
 		return array();
 
 	// save a potentially expensive lookup if author == owner
-	if($arr['author_xchan'] === base64url_encode(hash('whirlpool',$x['owner']['guid'] . $x['owner']['guid_sig'], true)))
+	if($arr['author_xchan'] === make_xchan_hash($x['owner']['guid'],$x['owner']['guid_sig']))
 		$arr['owner_xchan'] = $arr['author_xchan'];
 	else {
 		if(($xchan_hash = import_author_xchan($x['owner'])) !== false)

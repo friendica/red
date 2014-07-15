@@ -715,7 +715,7 @@ function post_post(&$a) {
 		}
 		
 		$arr = $data['sender'];
-		$sender_hash = base64url_encode(hash('whirlpool',$arr['guid'] . $arr['guid_sig'], true));
+		$sender_hash = make_xchan_hash($arr['guid'],$arr['guid_sig']);
 
 		// garbage collect any old unused notifications
 		q("delete from verify where type = 'auth' and created < UTC_TIMESTAMP() - INTERVAL 10 MINUTE");
@@ -742,7 +742,7 @@ function post_post(&$a) {
 		if($data['recipients']) {
 
 			$arr = $data['recipients'][0];
-			$recip_hash = base64url_encode(hash('whirlpool',$arr['guid'] . $arr['guid_sig'], true));
+			$recip_hash = make_xchan_hash($arr['guid'],$arr['guid_sig']);
 			$c = q("select channel_id, channel_account_id, channel_prvkey from channel where channel_hash = '%s' limit 1",
 				dbesc($recip_hash)
 			);
@@ -787,6 +787,8 @@ function post_post(&$a) {
 				$ret['DNT'] = true;
 			if(! perm_is_allowed($c[0]['channel_id'],'','view_profile'))
 				$ret['DNT'] = true;
+			if(get_pconfig($c[0]['channel_id'],'system','do_not_track'))
+				$ret['DNT'] = true;
 
 			json_return_and_die($ret);
 
@@ -808,7 +810,7 @@ function post_post(&$a) {
 				if($r) {
 					$r = q("select abook_id from abook where uid = %d and abook_xchan = '%s' limit 1",
 						intval($r[0]['channel_id']),
-						dbesc(base64url_encode(hash('whirlpool',$sender['guid'] . $sender['guid_sig'], true)))
+						dbesc(make_xchan_hash($sender['guid'],$sender['guid_sig']))
 					);
 					if($r) {
 						contact_remove($r[0]['channel_id'],$r[0]['abook_id']);
@@ -819,7 +821,7 @@ function post_post(&$a) {
 		else {
 			// Unfriend everybody - basically this means the channel has committed suicide
 			$arr = $data['sender'];
-			$sender_hash = base64url_encode(hash('whirlpool',$arr['guid'] . $arr['guid_sig'], true));
+			$sender_hash = make_xchan_hash($arr['guid'],$arr['guid_sig']);
 		
 			require_once('include/Contact.php');
 			remove_all_xchan_resources($sender_hash);	

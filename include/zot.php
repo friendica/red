@@ -35,6 +35,20 @@ function zot_new_uid($channel_nick) {
 
 
 /**
+ *
+ * function make_xchan_hash($guid,$guid_sig)
+ *
+ * Generates a portable hash identifier for the channel identified by $guid and signed with $guid_sig
+ * This ID is portable across the network but MUST be calculated locally by verifying the signature
+ * and can not be trusted as an identity.
+ *
+ */
+
+function make_xchan_hash($guid,$guid_sig) {
+	return base64url_encode(hash('whirlpool',$guid . $guid_sig, true));
+}
+
+/**
  * @function zot_get_hublocs($hash)
  *     Given a zot hash, return all distinct hubs. 
  *     This function is used in building the zot discovery packet
@@ -538,7 +552,7 @@ function zot_register_hub($arr) {
 
 	if($arr['url'] && $arr['url_sig'] && $arr['guid'] && $arr['guid_sig']) {
 
-		$guid_hash = base64url_encode(hash('whirlpool',$arr['guid'] . $arr['guid_sig'], true));
+		$guid_hash = make_xchan_hash($arr['guid'],$arr['guid_sig']);
 
 		$url = $arr['url'] . '/.well-known/zot-info/?f=&guid_hash=' . $guid_hash;
 
@@ -612,7 +626,7 @@ function import_xchan($arr,$ud_flags = UPDATE_FLAGS_UPDATED, $ud_arr = null) {
 	}
 
 
-	$xchan_hash = base64url_encode(hash('whirlpool',$arr['guid'] . $arr['guid_sig'], true));
+	$xchan_hash = make_xchan_hash($arr['guid'],$arr['guid_sig']);
 	$import_photos = false;
 
 	if(! rsa_verify($arr['guid'],base64url_decode($arr['guid_sig']),$arr['key'])) {
@@ -1167,14 +1181,14 @@ function zot_import($arr, $sender_url) {
 			}
 
 
-			$i['notify']['sender']['hash'] = base64url_encode(hash('whirlpool',$i['notify']['sender']['guid'] . $i['notify']['sender']['guid_sig'], true));
+			$i['notify']['sender']['hash'] = make_xchan_hash($i['notify']['sender']['guid'],$i['notify']['sender']['guid_sig']);
 			$deliveries = null;
 
 			if(array_key_exists('recipients',$i['notify']) && count($i['notify']['recipients'])) {
 				logger('specific recipients');
 				$recip_arr = array();
 				foreach($i['notify']['recipients'] as $recip) {
-					$recip_arr[] =  base64url_encode(hash('whirlpool',$recip['guid'] . $recip['guid_sig'], true));
+					$recip_arr[] =  make_xchan_hash($recip['guid'],$recip['guid_sig']);
 				}
 				stringify_array_elms($recip_arr);
 				$recips = implode(',',$recip_arr);
@@ -1390,7 +1404,7 @@ function allowed_public_recips($msg) {
 	if(array_key_exists('public_scope',$msg['message']))
 		$scope = $msg['message']['public_scope'];
 
-	$hash = base64url_encode(hash('whirlpool',$msg['notify']['sender']['guid'] . $msg['notify']['sender']['guid_sig'], true));
+	$hash = make_xchan_hash($msg['notify']['sender']['guid'],$msg['notify']['sender']['guid_sig']);
 
 	if($scope === 'public' || $scope === 'network: red')
 		return $recips;
@@ -2336,7 +2350,7 @@ function get_rpost_path($observer) {
 }
 
 function import_author_zot($x) {
-	$hash = base64url_encode(hash('whirlpool',$x['guid'] . $x['guid_sig'], true));
+	$hash = make_xchan_hash($x['guid'],$x['guid_sig']);
 	$r = q("select hubloc_url from hubloc where hubloc_guid = '%s' and hubloc_guid_sig = '%s' and (hubloc_flags & %d) limit 1",
 		dbesc($x['guid']),
 		dbesc($x['guid_sig']),
