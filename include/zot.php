@@ -2133,7 +2133,7 @@ function build_sync_packet($uid = 0, $packet = null, $groups_changed = false) {
 	}
 
 	if($groups_changed) {
-		$r = q("select * from groups where uid = %d",
+		$r = q("select hash as collection, visible, deleted, name from groups where uid = %d",
 			intval($uid)
 		);
 		if($r)
