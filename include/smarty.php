@@ -49,8 +49,12 @@ class FriendicaSmartyEngine implements ITemplateEngine {
 	
 	public function __construct(){
         $a = get_app();
+
+		// Cannot use get_config() here because it is called during installation when there is no DB.
+		// FIXME: this may leak private information such as system pathnames.
+
         $basecompiledir = ((array_key_exists('smarty3_folder',$a->config['system'])) ? $a->config['system']['smarty3_folder'] : '');
-        if (!$basecompiledir) $basecompiledir = dirname(__dir__)."/store/[data]/smarty3";
+        if (!$basecompiledir) $basecompiledir = dirname(__dir__) . "/" . TEMPLATE_BUILD_PATH;
         if (!is_dir($basecompiledir)) {
             echo "<b>ERROR:</b> folder <tt>$basecompiledir</tt> does not exist."; killme();
         }

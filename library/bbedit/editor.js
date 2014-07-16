@@ -27,6 +27,44 @@ ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT
 SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 */
 
+
+
+
+function REDITOR(elm,wysiwyg) {
+
+	this.elm = elm;
+	this.wysiwyg = wysiwyg;
+
+
+
+}
+
+REDITOR.prototype.showEditor = function() {
+    if (! this.enableWysiwyg) return;
+    this.editorVisible = true;
+    this.content = document.getElementById(this.body_id).value;
+    this.myeditor = this.ifm.contentWindow.document;
+    bbcode2html();
+    this.myeditor.designMode = "on";
+    this.myeditor.open();
+    this.myeditor.write('<html><head><link href="editor.css" rel="Stylesheet" type="text/css" /></head>');
+    this.myeditor.write('<body style="margin:0px 0px 0px 0px" class="editorWYSIWYG">');
+    this.myeditor.write(content);
+    this.myeditor.write('</body></html>');
+    this.myeditor.close();
+    if (this.myeditor.attachEvent) {
+        if(parent.ProcessKeyPress)
+            this.myeditor.attachEvent("onkeydown", parent.ProcessKeyPress);
+		this.myeditor.attachEvent("onkeypress", kp);
+    }
+    else if (this.myeditor.addEventListener) {
+        if (parent.ProcessKeyPress)
+            this.myeditor.addEventListener("keydown", parent.ProcessKeyPress, true);
+		this.myeditor.addEventListener("keypress",kp,true);
+    }
+}
+
+
 var myeditor, ifm;
 var body_id, textboxelement;
 var content;

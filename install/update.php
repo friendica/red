@@ -995,7 +995,7 @@ ADD INDEX ( `menu_flags` )");
 }
 
 function update_r1091() {
-	@mkdir('store/[data]/smarty3',STORAGE_DEFAULT_PERMISSIONS,true);
+	@os_mkdir('store/[data]/smarty3',STORAGE_DEFAULT_PERMISSIONS,true);
 	@file_put_contents('store/[data]/locks','');
 	return UPDATE_SUCCESS;
 }
@@ -1301,6 +1301,6 @@ function update_r1115() {
 }
 
 function update_r1116() {
-	@mkdir('store/[data]/smarty3',STORAGE_DEFAULT_PERMISSIONS,true);
+	@os_mkdir('store/[data]/smarty3',STORAGE_DEFAULT_PERMISSIONS,true);
 	return UPDATE_SUCCESS;
 } 

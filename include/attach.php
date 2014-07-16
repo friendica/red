@@ -579,7 +579,7 @@ function attach_mkdir($channel, $observer_hash, $arr = null) {
 	logger('attach_mkdir: basepath: ' . $basepath);
 
 	if(! is_dir($basepath))
-		mkdir($basepath,STORAGE_DEFAULT_PERMISSIONS, true);
+		os_mkdir($basepath,STORAGE_DEFAULT_PERMISSIONS, true);
 
 	if(! perm_is_allowed($channel_id, $observer_hash, 'write_storage')) {
 		$ret['message'] = t('Permission denied.');
@@ -665,7 +665,7 @@ function attach_mkdir($channel, $observer_hash, $arr = null) {
 	);
 
 	if($r) {
-		if(mkdir($path, STORAGE_DEFAULT_PERMISSIONS, true)) {
+		if(os_mkdir($path, STORAGE_DEFAULT_PERMISSIONS, true)) {
 			$ret['success'] = true;
 			$ret['data'] = $arr;
 

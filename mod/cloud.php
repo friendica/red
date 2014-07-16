@@ -37,7 +37,7 @@ function cloud_init(&$a) {
 	require_once('include/reddav.php');
 
 	if(! is_dir('store'))
-		mkdir('store',STORAGE_DEFAULT_PERMISSIONS,false);
+		os_mkdir('store',STORAGE_DEFAULT_PERMISSIONS,false);
 
 	$which = null;
 	if(argc() > 1)

@@ -1168,6 +1168,15 @@ function absurl($path) {
 	return $path;
 }
 
+function os_mkdir($path,$mode = 0777,$recursive = false) {
+	$oldumask = @umask(0);
+	@mkdir($path, $mode, $recursive);
+	@umask($oldumask); 
+}
+
+
+
+
 function is_ajax() {
 	return (!empty($_SERVER['HTTP_X_REQUESTED_WITH']) && strtolower($_SERVER['HTTP_X_REQUESTED_WITH']) == 'xmlhttprequest');
 }

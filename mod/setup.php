@@ -527,7 +527,7 @@ function check_store(&$checks) {
 	$status = true;
 	$help = "";
 
-	@mkdir('store',STORAGE_DEFAULT_PERMISSIONS);
+	@os_mkdir('store',STORAGE_DEFAULT_PERMISSIONS);
 
 	if(	!is_writable('store') ) {
 	
