@@ -91,8 +91,14 @@ function poller_run($argv, $argc){
 	// FIXME: add birthday updates, both locally and for xprof for use
 	// by directory servers
 
-	$d1 = get_config('system','last_expire_day');
+	$d1 = intval(get_config('system','last_expire_day'));
 	$d2 = intval(datetime_convert('UTC','UTC','now','d'));
+
+	// Allow somebody to staggger daily activities if they have more than one site on their server,
+	// or if it happens at an inconvenient (busy) hour.
+
+	$h1 = intval(get_config('system','cron_hour'));
+	$h2 = intval(datetime_convert('UTC','UTC','now','G'));
 
 	$dirmode = get_config('system','directory_mode');
 
@@ -103,7 +109,7 @@ function poller_run($argv, $argc){
 	 *
 	 */
 
-	if($d2 != intval($d1)) {
+	if(($d2 != $d1) && ($h1 == $h2)) {
 
 		call_hooks('cron_daily',datetime_convert());
 
@@ -129,6 +135,10 @@ function poller_run($argv, $argc){
 			require_once('include/Contact.php');
 			mark_orphan_hubsxchans();
 
+
+			/**
+			 * End Cron Weekly
+			 */
 		}
 
 		update_birthdays();
@@ -156,6 +166,9 @@ function poller_run($argv, $argc){
 		proc_run('php','include/expire.php');
 		proc_run('php','include/cli_suggest.php');
 
+		/**
+		 * End Cron Daily
+		 */
 	}
 
 	// update any photos which didn't get imported properly
@@ -180,7 +193,8 @@ function poller_run($argv, $argc){
 
 
 	// pull in some public posts
-        if(! get_config('system','disable_discover_tab'))
+
+	if(! get_config('system','disable_discover_tab'))
 		proc_run('php','include/externals.php');
 
 
