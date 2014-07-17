@@ -67,6 +67,17 @@ function bb_tag_preg_replace($pattern, $replace, $name, $s) {
 	return $string;
 }
 
+function share_shield($m) {
+	return str_replace($m[1],'!=+=+=!' . base64url_encode($m[1]) . '=+!=+!=',$m[0]);
+} 
+
+function share_unshield($m) {
+	$x = str_replace(array('!=+=+=!','=+!=+!='),array('',''),$m[1]);
+	return str_replace($m[1], base64url_decode($x), $m[0]);
+}
+
+
+
 // we don't want to support a bbcode specific markdown interpreter
 // and the markdown library we have is pretty good, but provides HTML output.
 // So we'll use that to convert to HTML, then convert the HTML back to bbcode,
@@ -92,6 +103,8 @@ function diaspora2bb($s,$use_zrl = false) {
 	// $s = preg_replace('/\#([^\s\#])/','\\#$1',$s);
 	// This seems to work
 	$s = preg_replace('/\#([^\s\#])/','&#35;$1',$s);
+
+	$s = preg_replace_callback('/\[share(.*?)\]/ism','share_shield',$s);
 
 	$s = Markdown($s);
 
@@ -122,6 +135,10 @@ function diaspora2bb($s,$use_zrl = false) {
 	$s = bb_tag_preg_replace("/\[url\=https?:\/\/vimeo.com\/([0-9]+)\](.*?)\[\/url\]/ism",'[vimeo]$1[/vimeo]','url',$s);
 	// remove duplicate adjacent code tags
 	$s = preg_replace("/(\[code\])+(.*?)(\[\/code\])+/ism","[code]$2[/code]", $s);
+
+
+	$s = preg_replace_callback('/\[share(.*?)\]/ism','share_unshield',$s);
+
 
 	// Don't show link to full picture (until it is fixed)
 	$s = scale_external_images($s, false);
