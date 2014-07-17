@@ -2337,6 +2337,31 @@ function process_channel_sync_delivery($sender,$arr,$deliveries) {
            				dbesc($cl['name'])
        				);
 				}
+
+				// now look for any collections locally which weren't in the list we just received.
+				// They need to be removed by marking deleted and removing the members.
+				// This shouldn't happen except for clones created before this function was written.
+
+				if($x) {
+					$found_local = false;
+					foreach($x as $y) {
+						foreach($arr['collections'] as $cl) {
+							if($cl['collection'] == $y['hash']) {
+								$found_local = true;
+								break;
+							}
+						}
+						if(! $found_local) {			
+							q("delete from group_member where gid = %d",
+								intval($y['id'])
+							);  
+							q("update groups set deleted = 1 where id = %d and uid = %d limit 1",
+								intval($y['id']),
+								intval($channel['channel_id'])
+							);
+						}
+					}
+				}
 			}
 
 			// reload the group list with any updates
