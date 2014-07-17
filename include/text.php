@@ -712,7 +712,7 @@ function contact_block() {
 	$abook_flags = ABOOK_FLAG_PENDING|ABOOK_FLAG_SELF;
 	$xchan_flags = XCHAN_FLAGS_ORPHAN|XCHAN_FLAGS_DELETED;
 	if(! $is_owner) {
-		$abook_flags = $abook_flags | ABOOK_FLAGS_HIDDEN;
+		$abook_flags = $abook_flags | ABOOK_FLAG_HIDDEN;
 		$xchan_flags = $xchan_flags | XCHAN_FLAGS_HIDDEN;
 	}
 
@@ -734,7 +734,7 @@ function contact_block() {
 
 		$r = q("SELECT abook.*, xchan.* FROM abook left join xchan on abook.abook_xchan = xchan.xchan_hash WHERE abook_channel = %d AND not ( abook_flags & %d) and not (xchan_flags & %d ) ORDER BY RAND() LIMIT %d",
 				intval($a->profile['uid']),
-				intval($abook_flags|ABOOK_FLAGS_ARCHIVED),
+				intval($abook_flags|ABOOK_FLAG_ARCHIVED),
 				intval($xchan_flags),
 				intval($shown)
 		);
@@ -743,6 +743,7 @@ function contact_block() {
 			$contacts = sprintf( tt('%d Connection','%d Connections', $total),$total);
 			$micropro = Array();
 			foreach($r as $rr) {
+				$rr['archived'] = (($rr['abook_flags'] & ABOOK_FLAG_ARCHIVED) ? true : false);
 				$micropro[] = micropro($rr,true,'mpfriend');
 			}
 		}

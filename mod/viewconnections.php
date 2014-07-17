@@ -33,7 +33,7 @@ function viewconnections_content(&$a) {
 	$abook_flags = ABOOK_FLAG_PENDING|ABOOK_FLAG_SELF;
 	$xchan_flags = XCHAN_FLAGS_ORPHAN|XCHAN_FLAGS_DELETED;
 	if(! $is_owner) {
-		$abook_flags = $abook_flags | ABOOK_FLAGS_HIDDEN;
+		$abook_flags = $abook_flags | ABOOK_FLAG_HIDDEN;
 		$xchan_flags = $xchan_flags | XCHAN_FLAGS_HIDDEN;
 	}
 
@@ -67,6 +67,7 @@ function viewconnections_content(&$a) {
 		if($url) {
 			$contacts[] = array(
 				'id' => $rr['abook_id'],
+				'archived' => (($rr['abook_flags'] & ABOOK_FLAG_ARCHIVED) ? true : false),
 				'img_hover' => sprintf( t('Visit %s\'s profile [%s]'), $rr['xchan_name'], $rr['xchan_url']),
 				'thumb' => $rr['xchan_photo_m'], 
 				'name' => substr($rr['xchan_name'],0,20),
