@@ -2226,6 +2226,7 @@ function process_channel_sync_delivery($sender,$arr,$deliveries) {
 		}
 
 
+
 		if(array_key_exists('abook',$arr) && is_array($arr['abook']) && count($arr['abook'])) {
 
 			$disallowed = array('abook_id','abook_account','abook_channel');
@@ -2287,6 +2288,119 @@ function process_channel_sync_delivery($sender,$arr,$deliveries) {
 						$r = dbq("UPDATE abook set " . dbesc($k) . " = '" . dbesc($v) 
 						. "' where abook_xchan = '" . dbesc($clean['abook_xchan']) . "' and abook_channel = " . intval($channel['channel_id']) 
 						. " limit 1");
+					}
+				}
+			}
+		}
+
+		// sync collections (privacy groups) oh joy...
+
+		if(array_key_exists('collections',$arr) && is_array($arr['collections']) && count($arr['collections'])) {
+			$x = q("select * from groups where uid = %d",
+				intval($channel['channel_id'])
+			);
+			foreach($arr['collections'] as $cl) {
+				$found = false;
+				if($x) {
+					foreach($x as $y) {
+						if($cl['collection'] == $y['hash']) {
+							$found = true;
+							break;
+						}
+					}
+					if($found) {
+						if(($y['name'] != $cl['name']) 
+							|| ($y['visible'] != $cl['visible']) 
+							|| ($y['deleted'] != $cl['deleted'])) {
+							q("update groups set name = '%s', visible = %d, deleted = %d where hash = '%s' and uid = %d limit 1",
+								dbesc($cl['name']),
+								intval($cl['visible']),
+								intval($cl['deleted']),
+								dbesc($cl['hash']),
+								intval($channel['channel_id'])
+							);
+						}
+						if(intval($cl['deleted']) && (! intval($y['deleted']))) {
+							q("delete from group_member where gid = %d",
+								intval($y['id'])
+							);  
+						}
+					}
+				}
+				if(! $found) {
+					$r = q("INSERT INTO `groups` ( hash, uid, visible, deleted, name )
+						VALUES( '%s', %d, %d, %d, '%s' ) ",
+						dbesc($cl['collection']),
+						intval($channel['channel_id']),
+						intval($cl['visible']),
+						intval($cl['deleted']),
+           				dbesc($cl['name'])
+       				);
+				}
+			}
+
+			// reload the group list with any updates
+			$x = q("select * from groups where uid = %d",
+				intval($channel['channel_id'])
+			);
+
+			// now sync the members
+
+			if(array_key_exists('collection_members',$arr) && 
+				is_array($arr['collection_members']) && count($arr['collection_members'])) {
+
+				// first sort into groups keyed by the group hash
+				$members = array();
+				foreach($arr['collection_members'] as $cm) {
+					if(! array_key_exists($cm['collection'],$members))
+						$members[$cm['collection']] = array();
+					$members[$cm['collection']][] = $cm['member'];	
+				}
+
+				// our group list is already synchronised
+				if($x) {
+					foreach($x as $y) {
+
+						// for each group, loop on members list we just received
+						foreach($members[$y['hash']] as $member) {
+							$found = false;
+							$z = q("select xchan from group_member where gid = %d and uid = %d and xchan = '%s' limit 1",
+								intval($y['id']),
+								intval($channel['channel_id']),
+								dbesc($member)
+							);
+							if($z)
+								$found = true;
+
+							// if somebody is in the group that wasn't before - add them
+
+							if(! $found) {
+								q("INSERT INTO `group_member` (`uid`, `gid`, `xchan`)
+									VALUES( %d, %d, '%s' ) ",
+									intval($channel['channel_id']),
+									intval($y['id']),
+									dbesc($member)
+								);
+							}
+						}
+
+						// now retrieve a list of members we have on this site
+						$m = q("select xchan from group_member where gid = %d and uid = %d",
+							intval($y['id']),
+							intval($channel['channel_id'])
+						);
+						if($m) {
+							foreach($m as $mm) {
+								// if the local existing member isn't in the list we just received - remove them
+								if(! in_array($mm['xchan'],$members[$y['hash']])) {
+									q("delete from group_member where xchan = '%s' and gid = %d and uid = %d limit 1",
+										dbesc($mm['xchan']),
+										intval($y['id']),
+										intval($channel['channel_id'])
+									);
+								}
+							}
+						}
 					}
 				}
 			}
