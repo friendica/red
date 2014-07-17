@@ -734,7 +734,7 @@ function contact_block() {
 
 		$r = q("SELECT abook.*, xchan.* FROM abook left join xchan on abook.abook_xchan = xchan.xchan_hash WHERE abook_channel = %d AND not ( abook_flags & %d) and not (xchan_flags & %d ) ORDER BY RAND() LIMIT %d",
 				intval($a->profile['uid']),
-				intval($abook_flags),
+				intval($abook_flags|ABOOK_FLAGS_ARCHIVED),
 				intval($xchan_flags),
 				intval($shown)
 		);
@@ -795,7 +795,7 @@ function micropro($contact, $redirect = false, $class = '', $textmode = false) {
 
 	return replace_macros(get_markup_template(($textmode)?'micropro_txt.tpl':'micropro_img.tpl'),array(
 		'$click' => (($contact['click']) ? $contact['click'] : ''),
-		'$class' => $class,
+		'$class' => $class . (($contact['archived']) ? ' archived' : ''),
 		'$url' => $url,
 		'$photo' => $contact['xchan_photo_s'],
 		'$name' => $contact['xchan_name'],

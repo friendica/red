@@ -203,6 +203,7 @@ function group_content(&$a) {
 	$textmode = (($switchtotext && (count($members) > $switchtotext)) ? true : false);
 	foreach($members as $member) {
 		if($member['xchan_url']) {
+			$member['archived'] = (($member['abook_flags'] & ABOOK_FLAG_ARCHIVED) ? true : false);
 			$member['click'] = 'groupChangeMember(' . $group['id'] . ',\'' . $member['xchan_hash'] . '\',\'' . $sec_token . '\'); return false;';
 			$groupeditor['members'][] = micropro($member,true,'mpgroup', $textmode);
 		}
@@ -221,6 +222,7 @@ function group_content(&$a) {
 		$textmode = (($switchtotext && (count($r) > $switchtotext)) ? true : false);
 		foreach($r as $member) {
 			if(! in_array($member['xchan_hash'],$preselected)) {
+				$member['archived'] = (($member['abook_flags'] & ABOOK_FLAG_ARCHIVED) ? true : false);
 				$member['click'] = 'groupChangeMember(' . $group['id'] . ',\'' . $member['xchan_hash'] . '\',\'' . $sec_token . '\'); return false;';
 				$groupeditor['contacts'][] = micropro($member,true,'mpall', $textmode);
 			}
