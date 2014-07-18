@@ -7,13 +7,16 @@ require_once('include/items.php');
 
 function like_content(&$a) {
 
+	$o = '';
 
 	$observer = $a->get_observer();
 	$interactive = $_REQUEST['interactive'];
 	if($interactive) {
+		$o .= '<h1>' . t('Like/Dislike') . '</h1>';
+		$o .= EOL . EOL;
+
 		if(! $observer) {
-			$o .= '<h1>' . t('Like/Dislike') . '</h1>';
-			$o .= EOL . EOL;
+			$_SESSION['return_url'] = $a->query_string;
 			$o .= t('This action is restricted to members.') . EOL;
 			$o .= t('Please <a href="rmagic">login with your RedMatrix ID</a> or <a href="register">register as a new RedMatrix member</a> to continue.') . EOL;
 			return $o;
@@ -72,7 +75,7 @@ function like_content(&$a) {
 					// forgery - illegal
 					if($interactive) {
 						notice( t('Invalid request.') . EOL);
-						return;
+						return $o;
 					}
 					killme();
 				}
@@ -99,7 +102,7 @@ function like_content(&$a) {
 			if(! $r) {
 				if($interactive) {
 					notice( t('Invalid request.') . EOL);
-					return;
+					return $o;
 				}
 				killme();		
 			}
@@ -137,7 +140,7 @@ function like_content(&$a) {
 		if(! ($owner_uid && $r)) {
 			if($interactive) {
 				notice( t('Invalid request.') . EOL);
-				return;
+				return $o;
 			}
 			killme();
 		}
@@ -149,7 +152,7 @@ function like_content(&$a) {
 		if(! ($perms['post_wall'] && $perms['view_profile'])) {
 			if($interactive) {
 				notice( t('Permission denied.') . EOL);
-				return;
+				return $o;
 			}
 			killme();
 		}
@@ -160,7 +163,7 @@ function like_content(&$a) {
 		if(! $ch) {
 			if($interactive) {
 				notice( t('Channel unavailable.') . EOL);
-				return;
+				return $o;
 			}
 			killme();
 		}
@@ -199,7 +202,7 @@ function like_content(&$a) {
 			drop_item($z[0]['iid'],false);
 			if($interactive) {
 				notice( t('Previous action reversed.') . EOL);
-				return;
+				return $o;
 			}
 			killme();
 		}
@@ -411,11 +414,9 @@ function like_content(&$a) {
 	proc_run('php',"include/notifier.php","like","$post_id");
 
 	if($interactive) {
-			notice( t('Action completed.') . EOL);
-			$o .= '<h1>' . t('Like/Dislike') . '</h1>';
-			$o .= EOL . EOL;
-			$o .= t('Thank you.');
-			return $o;
+		notice( t('Action completed.') . EOL);
+		$o .= t('Thank you.');
+		return $o;
 	}
 
 	killme();

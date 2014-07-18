@@ -65,7 +65,11 @@ function rmagic_post(&$a) {
 		}	
 
 		if($url) {	
-			$dest = z_root() . '/' . str_replace('zid=','zid_=',$a->query_string);
+			if($_SESSION['return_url']) 
+				$dest = urlencode(z_root() . '/' . str_replace('zid=','zid_=',$_SESSION['return_url']));
+			else
+				$dest = urlencode(z_root() . '/' . str_replace('zid=','zid_=',$a->query_string));
+
 			goaway($url . '/magic' . '?f=&dest=' . $dest);
 		}
 	}
