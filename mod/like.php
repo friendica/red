@@ -410,6 +410,14 @@ function like_content(&$a) {
 
 	proc_run('php',"include/notifier.php","like","$post_id");
 
+	if($interactive) {
+			notice( t('Action completed.') . EOL);
+			$o .= '<h1>' . t('Like/Dislike') . '</h1>';
+			$o .= EOL . EOL;
+			$o .= t('Thank you.');
+			return $o;
+	}
+
 	killme();
 }
 
