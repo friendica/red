@@ -354,7 +354,7 @@ function zot_refresh($them,$channel = null, $force = false) {
 						$connected_set = intval($v);
 						continue;
 					}	
-					if($v) {
+					if(($v) && (array_key_exists($k,$global_perms))) {
 						$their_perms = $their_perms | intval($global_perms[$k][1]);
 					}
 				}
