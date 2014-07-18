@@ -20,9 +20,11 @@ function get_perms() {
 		// Write permissions
 		'send_stream'   => array('channel_w_stream',  intval(PERMS_W_STREAM),  false, t('Can send me their channel stream and posts'), ''),
 		'post_wall'     => array('channel_w_wall',    intval(PERMS_W_WALL),    false, t('Can post on my channel page ("wall")'), ''),
-		'post_comments' => array('channel_w_comment', intval(PERMS_W_COMMENT), false, t('Can comment on my posts'), ''),
+		'post_comments' => array('channel_w_comment', intval(PERMS_W_COMMENT), false, t('Can comment on or like my posts'), ''),
 		'post_mail'     => array('channel_w_mail',    intval(PERMS_W_MAIL),    false, t('Can send me private mail messages'), ''),
 		'post_photos'   => array('channel_w_photos',  intval(PERMS_W_PHOTOS),  false, t('Can post photos to my photo albums'), ''),
+		'post_like'   => array('channel_w_like',  intval(PERMS_W_LIKE),  false, t('Can like/dislike stuff'), 'Profiles and things other than posts/comments'),
+
 		'tag_deliver'   => array('channel_w_tagwall', intval(PERMS_W_TAGWALL), false, t('Can forward to all my channel contacts via post @mentions'), t('Advanced - useful for creating group forum channels')),
 		'chat'          => array('channel_w_chat',    intval(PERMS_W_CHAT),    false, t('Can chat with me (when available)'), t('')),
 		'write_storage' => array('channel_w_storage',   intval(PERMS_W_STORAGE),   false, t('Can write to my "public" file storage'), ''),
@@ -395,6 +397,7 @@ function site_default_perms() {
 		'write_storage' => 0,
 		'write_pages'   => 0,
 		'delegate'      => 0,
+		'post_like'     => PERMS_NETWORK
 	);
 
 	$global_perms = get_perms();

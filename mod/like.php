@@ -149,7 +149,7 @@ function like_content(&$a) {
 
 		$perms = get_all_perms($owner_uid,$observer['xchan_hash']);
 
-		if(! ($perms['post_wall'] && $perms['view_profile'])) {
+		if(! ($perms['post_like'] && $perms['view_profile'])) {
 			if($interactive) {
 				notice( t('Permission denied.') . EOL);
 				return $o;

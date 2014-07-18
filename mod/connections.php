@@ -235,11 +235,11 @@ function connections_content(&$a) {
 				}
 				nav_set_selected('intros');
 				break;
-			case 'unconnected':
-				$search_flags = ABOOK_FLAG_UNCONNECTED;
-				$head = t('Unconnected');
-				$unconnected = true;
-				break;
+//			case 'unconnected':
+//				$search_flags = ABOOK_FLAG_UNCONNECTED;
+//				$head = t('Unconnected');
+//				$unconnected = true;
+//				break;
 
 			case 'all':
 				$head = t('All');
@@ -316,12 +316,12 @@ function connections_content(&$a) {
 			'title' => t('Only show hidden connections'),
 		),
 
-		array(
-			'label' => t('Unconnected'),
-			'url'   => z_root() . '/connections/unconnected',
-			'sel'   => ($unconnected) ? 'active' : '',
-			'title' => t('Only show one-way connections'),
-		),
+//		array(
+//			'label' => t('Unconnected'),
+//			'url'   => z_root() . '/connections/unconnected',
+//			'sel'   => ($unconnected) ? 'active' : '',
+//			'title' => t('Only show one-way connections'),
+//		),
 
 
 	);

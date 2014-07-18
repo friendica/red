@@ -1,6 +1,6 @@
 <?php
 
-define( 'UPDATE_VERSION' , 1117 );
+define( 'UPDATE_VERSION' , 1118 );
 
 /**
  *
@@ -1304,3 +1304,13 @@ function update_r1116() {
 	@os_mkdir('store/[data]/smarty3',STORAGE_DEFAULT_PERMISSIONS,true);
 	return UPDATE_SUCCESS;
 } 
+
+function update_r1117() {
+	$r = q("ALTER TABLE `channel` CHANGE `channel_a_bookmark` `channel_w_like` INT( 10 ) UNSIGNED NOT NULL DEFAULT '128',
+DROP INDEX `channel_a_bookmark` , ADD INDEX `channel_w_like` ( `channel_w_like` ) ");
+	if($r)
+		return UPDATE_SUCCESS;
+	return UPDATE_FAILED;
+
+}
+

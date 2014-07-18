@@ -47,7 +47,7 @@ define ( 'RED_PLATFORM',            'Red Matrix' );
 define ( 'RED_VERSION',             trim(file_get_contents('version.inc')) . 'R');
 define ( 'ZOT_REVISION',            1     );
 
-define ( 'DB_UPDATE_VERSION',       1117  );
+define ( 'DB_UPDATE_VERSION',       1118  );
 
 define ( 'EOL',                    '<br />' . "\r\n"     );
 define ( 'ATOM_TIME',              'Y-m-d\TH:i:s\Z' );
@@ -282,7 +282,7 @@ define ( 'PERMS_W_STORAGE',        0x02000);
 define ( 'PERMS_R_PAGES',          0x04000);
 define ( 'PERMS_W_PAGES',          0x08000);
 define ( 'PERMS_A_REPUBLISH',      0x10000);
-define ( 'PERMS_A_BOOKMARK',       0x20000);
+define ( 'PERMS_W_LIKE',           0x20000);
 
 // General channel permissions
 

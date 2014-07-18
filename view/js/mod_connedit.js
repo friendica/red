@@ -33,6 +33,7 @@ function connectFullShare() {
 	$('#me_id_perms_chat').attr('checked','checked');
 	$('#me_id_perms_view_storage').attr('checked','checked');
 	$('#me_id_perms_republish').attr('checked','checked');
+	$('#me_id_perms_post_like').attr('checked','checked');
 
 	$('.abook-permschange').show();
 	$('.abook-permschange').html(aStr['permschange']);
@@ -52,6 +53,7 @@ function connectCautiousShare() {
 	$('#me_id_perms_send_stream').attr('checked','checked');
 	$('#me_id_perms_post_comments').attr('checked','checked');
 	$('#me_id_perms_post_mail').attr('checked','checked');
+	$('#me_id_perms_post_like').attr('checked','checked');
 	$('.abook-permschange').show();
 	$('.abook-permschange').html(aStr['permschange']);
 
@@ -75,6 +77,7 @@ function connectForum() {
 	$('#me_id_perms_post_mail').attr('checked','checked');
 	$('#me_id_perms_tag_deliver').attr('checked','checked');
 	$('#me_id_perms_republish').attr('checked','checked');
+	$('#me_id_perms_post_like').attr('checked','checked');
 	$('.abook-permschange').show();
 	$('.abook-permschange').html(aStr['permschange']);
 
