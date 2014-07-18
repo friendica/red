@@ -952,7 +952,7 @@ function advanced_profile(&$a) {
 		if($a->profile['gender']) $profile['gender'] = array( t('Gender:'),  $a->profile['gender'] );
 		
 		$ob_hash = get_observer_hash();
-		if($ob_hash && perm_is_allowed($a->profile['profile_uid'],$ob_hash,'post_wall')) {
+		if($ob_hash && perm_is_allowed($a->profile['profile_uid'],$ob_hash,'post_like')) {
 			$profile['canlike'] = true;
 			$profile['likethis'] = t('Like this channel');
 			$profile['profile_guid'] = $a->profile['profile_guid'];
