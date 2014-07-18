@@ -9,6 +9,16 @@ function like_content(&$a) {
 
 
 	$observer = $a->get_observer();
+	$interactive = $_REQUEST['interactive'];
+	if($interactive) {
+		if(! $observer) {
+			$o .= '<h1>' . t('Like/Dislike') . '</h1>';
+			$o .= EOL . EOL;
+			$o .= t('This action is restricted to members.') . EOL;
+			$o .= t('Please <a href="rmagic">login with your RedMatrix ID</a> or <a href="register">register as a new RedMatrix member</a> to continue.') . EOL;
+			return $o;
+		}
+	}
 
 	$verb = notags(trim($_GET['verb']));
 
@@ -60,6 +70,10 @@ function like_content(&$a) {
 				);
 				if(! $d) {
 					// forgery - illegal
+					if($interactive) {
+						notice( t('Invalid request.') . EOL);
+						return;
+					}
 					killme();
 				}
 				// $d now contains a list of those who can see this profile - only send the status notification
@@ -82,8 +96,13 @@ function like_content(&$a) {
             	dbesc(argv(2))
         	);
 
-			if(! $r)
+			if(! $r) {
+				if($interactive) {
+					notice( t('Invalid request.') . EOL);
+					return;
+				}
 				killme();		
+			}
 
 			$owner_uid = $r[0]['obj_channel'];
 
@@ -115,23 +134,37 @@ function like_content(&$a) {
 
 		}
 		
-		if(! ($owner_uid && $r))
+		if(! ($owner_uid && $r)) {
+			if($interactive) {
+				notice( t('Invalid request.') . EOL);
+				return;
+			}
 			killme();
+		}
 
 		// The resultant activity is going to be a wall-to-wall post, so make sure this is allowed
 
 		$perms = get_all_perms($owner_uid,$observer['xchan_hash']);
 
-		if(! ($perms['post_wall'] && $perms['view_profile']))
+		if(! ($perms['post_wall'] && $perms['view_profile'])) {
+			if($interactive) {
+				notice( t('Permission denied.') . EOL);
+				return;
+			}
 			killme();
+		}
 
 		$ch = q("select * from channel left join xchan on channel_hash = xchan_hash where channel_id = %d limit 1",
 			intval($owner_uid)
 		);
-		if(! $ch)
+		if(! $ch) {
+			if($interactive) {
+				notice( t('Channel unavailable.') . EOL);
+				return;
+			}
 			killme();
-
-
+		}
+			
 		if(! $plink)
 			$plink = '[zrl=' . z_root() . '/profile/' . $ch[0]['channel_address'] . ']' . $post_type . '[/zrl]';
 	
@@ -164,6 +197,10 @@ function like_content(&$a) {
 				intval($z[0]['id'])
 			);
 			drop_item($z[0]['iid'],false);
+			if($interactive) {
+				notice( t('Previous action reversed.') . EOL);
+				return;
+			}
 			killme();
 		}
 	}
