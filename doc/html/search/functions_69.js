@@ -29,6 +29,7 @@ var searchData=
   ['is_5fcommentable',['is_commentable',['../classConversation.html#a8b47c92b69459d461ea3cc9aae9597a3',1,'Conversation\is_commentable()'],['../classItem.html#ac04525a8be24c12b0a2ae4ca1ba4b967',1,'Item\is_commentable()']]],
   ['is_5fdeveloper',['is_developer',['../boot_8php.html#a6252d8eca67c689d9035ec6da544cf46',1,'boot.php']]],
   ['is_5fforeigner',['is_foreigner',['../identity_8php.html#ae2b140df652a55ca11bb6a99005fce35',1,'identity.php']]],
+  ['is_5fmatrix_5furl',['is_matrix_url',['../hubloc_8php.html#aebd244b4616ded022cbbee5e82926951',1,'hubloc.php']]],
   ['is_5fmember',['is_member',['../identity_8php.html#a9637c557e13d9671f3eeb124ab98212a',1,'identity.php']]],
   ['is_5fpreview',['is_preview',['../classConversation.html#adf25ce023b69a166c63c6e84e02c136a',1,'Conversation']]],
   ['is_5fpublic_5fprofile',['is_public_profile',['../identity_8php.html#a4e996e44b50330098a04b467367a559f',1,'identity.php']]],

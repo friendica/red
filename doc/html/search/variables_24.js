@@ -81,7 +81,7 @@ var searchData=
   ['_24mode',['$mode',['../classConversation.html#afb03d1648dbfafe62caa1e30f32f2b1a',1,'Conversation']]],
   ['_24module',['$module',['../classApp.html#a9bf62f8e39585c0aa48fcffc3bf3484d',1,'App']]],
   ['_24module_5floaded',['$module_loaded',['../classApp.html#a6e4f0fbfa3cf6c11baebe22a03db6165',1,'App']]],
-  ['_24name',['$name',['../classFriendicaSmartyEngine.html#aaba6a42101bc9ae32e36b7fa2e243f02',1,'FriendicaSmartyEngine\$name()'],['../classRedFile.html#acc48c05cd5a70951cb3c615ad84f03ba',1,'RedFile\$name()'],['../classTemplate.html#a6eb301a51cc94d8b94f4548fbad85eae',1,'Template\$name()']]],
+  ['_24name',['$name',['../classRedFile.html#acc48c05cd5a70951cb3c615ad84f03ba',1,'RedFile\$name()'],['../classFriendicaSmartyEngine.html#aaba6a42101bc9ae32e36b7fa2e243f02',1,'FriendicaSmartyEngine\$name()'],['../classTemplate.html#a6eb301a51cc94d8b94f4548fbad85eae',1,'Template\$name()']]],
   ['_24nav_5fpercent_5fmin_5fopacity',['$nav_percent_min_opacity',['../redbasic_2php_2style_8php.html#a01c151bf47f7da2b979aaa4cb868da4c',1,'style.php']]],
   ['_24nav_5fsel',['$nav_sel',['../classApp.html#a33a8e90b60ec4438f6fbf299d0f6839c',1,'App']]],
   ['_24navheight',['$navheight',['../apw_2php_2style_8php.html#a1c8a7c0db8c174239f3909cb931cb872',1,'style.php']]],

@@ -1,7 +1,7 @@
 var zot_8php =
 [
     [ "allowed_public_recips", "zot_8php.html#a703f528ade8382cf374e4119bd6f7859", null ],
-    [ "build_sync_packet", "zot_8php.html#ac34e479d27f32b82dd6b33542f81a6a7", null ],
+    [ "build_sync_packet", "zot_8php.html#aa97b33b619dd7132a9274f852af6ceb5", null ],
     [ "delete_imported_item", "zot_8php.html#adfeb9400ae6b726beec89f8f1e8fde72", null ],
     [ "get_rpost_path", "zot_8php.html#a8e22dbc6f884be3644a892a876cbd972", null ],
     [ "import_author_zot", "zot_8php.html#ad149f1e98c0c5b88ff9147e6ee3f330d", null ],
@@ -9,6 +9,7 @@ var zot_8php =
     [ "import_directory_profile", "zot_8php.html#a20750dd2c36961013fd382fb34e1366c", null ],
     [ "import_site", "zot_8php.html#a2657e141d62d5f67ad3c87651b585299", null ],
     [ "import_xchan", "zot_8php.html#a528e97ca5d69c3b7f35c5d954afde315", null ],
+    [ "make_xchan_hash", "zot_8php.html#a0fc2211c5309d9f925ecc4115e3fdb75", null ],
     [ "process_channel_sync_delivery", "zot_8php.html#ac301c67864917c35922257950ae0f95c", null ],
     [ "process_delivery", "zot_8php.html#a4d9e6ca295e443b740d9960c304b3474", null ],
     [ "process_mail_delivery", "zot_8php.html#aa6ae96db8cbbdbb10e6876d206bbf7cc", null ],

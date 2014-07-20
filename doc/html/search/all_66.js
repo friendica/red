@@ -68,7 +68,6 @@ var searchData=
   ['friendica',['Friendica',['../namespaceFriendica.html',1,'']]],
   ['friendica_2dto_2dsmarty_2dtpl',['friendica-to-smarty-tpl',['../namespacefriendica-to-smarty-tpl.html',1,'']]],
   ['friendica_2dto_2dsmarty_2dtpl_2epy',['friendica-to-smarty-tpl.py',['../friendica-to-smarty-tpl_8py.html',1,'']]],
-  ['friendica_5fsmarty_2ephp',['friendica_smarty.php',['../friendica__smarty_8php.html',1,'']]],
   ['friendicasmarty',['FriendicaSmarty',['../classFriendicaSmarty.html',1,'']]],
   ['friendicasmartyengine',['FriendicaSmartyEngine',['../classFriendicaSmartyEngine.html',1,'']]],
   ['fsuggest_2ephp',['fsuggest.php',['../fsuggest_8php.html',1,'']]],
