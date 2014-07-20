@@ -1,20 +1,20 @@
 
-Dear {{$username}},
-	Your password has been changed as requested. Please retain this 
-information for your records (or change your password immediately to 
-something that you will remember).
+Ciao {{$username}},
+	Come richiesto, la tua password è stata cambiata. 
+ Prendi nota di questo cambiamento oppure  
+sostituisci subito la password con quella che preferisci.
 
 
-Your login details are as follows:
+Questi sono i dettagli che ti serviranno a effettuare l'accesso:
 
-Site Location:	{{$siteurl}}
-Login Name:	{{$email}}
+Sito:	{{$siteurl}}
+Nome utente:	{{$email}}
 Password:	{{$new_password}}
 
-You may change that password from your account settings page after logging in.
+Ricorda che potrai sempre cambiare la password dalla pagina delle 'Impostazioni'.
 
 
-Sincerely,
-	{{$sitename}} Administrator
+Saluti,
+	L'amministratore di {{$sitename}}
 
  

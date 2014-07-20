@@ -1,13 +1,13 @@
-Hey, 
-I'm the web server at {{$sitename}};
+Ehilà! 
+Sono il tuo fedele server {{$sitename}};
    
-The Red Matrix developers released update {{$update}} recently, 
-but when I tried to install it, something went terribly wrong.  
-This needs to be fixed soon and it requires human intervention. 
-Please contact a Red developer if you can not figure out how to 
-fix it on your own. My database might be invalid. 
+Gli sviluppatori di Red Matrix hanno rilasciato l'update {{$update}}, 
+ma quando ho cercato di installarlo c'è stato qualcosa che non è affatto filato liscio, per usare un eufemismo.  
+La riparazione dovrebbe essere effettuata al più presto, ma necessita dell'intervento umano. 
+Ti consiglio di contattare uno sviluppatore di Red se non riesci a capire come risolvere 
+il problema per conto tuo. Per esempio, il database potrebbe non essere più valido. 
 
-The error message is '{{$error}}'.   
+Il messaggio di errore è '{{$error}}'.   
 
-Apologies for the inconvenience, 
-	your web server at {{$siteurl}}
+Sono mortificato per l'inconveniente, 
+	Il tuo povero web server {{$siteurl}}
