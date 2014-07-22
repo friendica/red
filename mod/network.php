@@ -329,7 +329,7 @@ function network_content(&$a, $update = 0, $load = false) {
 	// which are both ITEM_UNSEEN and have "changed" since that time. Cross fingers...
 
 	if($update && $_SESSION['loadtime']) 
-		$simple_update .= " and item.changed > " . datetime_convert('UTC','UTC',$_SESSION['loadtime']); 
+		$simple_update .= " and item.changed > '" . datetime_convert('UTC','UTC',$_SESSION['loadtime']) . "' "; 
 	if($load)
 		$simple_update = '';
 
