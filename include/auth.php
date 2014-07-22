@@ -128,13 +128,17 @@ if((isset($_SESSION)) && (x($_SESSION,'authenticated')) && ((! (x($_POST,'auth-p
 
 		// first check if we're enforcing that sessions can't change IP address
 
-		if($_SESSION['addr'] != $_SERVER['REMOTE_ADDR']) {
+		if($_SESSION['addr'] && $_SESSION['addr'] != $_SERVER['REMOTE_ADDR']) {
 			logger('SECURITY: Session IP address changed: ' . $_SESSION['addr'] . ' != ' . $_SERVER['REMOTE_ADDR']);
 
 			$partial1 = substr($_SESSION['addr'],0,strrpos($_SESSION['addr'],'.')); 
 			$partial2 = substr($_SERVER['REMOTE_ADDR'],0,strrpos($_SERVER['REMOTE_ADDR'],'.')); 
 
-			$paranoia = intval(get_config('system','paranoia'));
+
+			$paranoia = intval(get_pconfig($_SESSION['uid'],'system','paranoia'));
+			if(! $paranoia)
+				$paranoia = intval(get_config('system','paranoia'));
+
 			switch($paranoia) {
 				case 0:
 					// no IP checking
