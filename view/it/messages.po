@@ -2993,7 +2993,7 @@ msgstr "Mostra la nuvola dei tag che usi di più sulla pagina del tuo canale"
 
 #: ../../include/notify.php:23
 msgid "created a new post"
-msgstr "Ha creato un nuovo articolo"
+msgstr "ha creato un nuovo articolo"
 
 #: ../../include/notify.php:24
 #, php-format
