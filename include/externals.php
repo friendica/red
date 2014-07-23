@@ -33,7 +33,29 @@ function externals_run($argv, $argc){
 				$url = $r[0]['site_url'];
 		}
 
+		// Note: blacklisted sites must be stored in the config as an array. 
+
+		$blacklisted = false;
+		$bl1 = get_config('system','blacklisted_sites');
+		if(is_array($bl1) && $bl1) {
+			foreach($bl1 as $bl) {
+				if(strpos($url,$bl) !== false) {
+					$blacklisted = true;
+					break;
+				}
+			}
+		}
+
 		$attempts ++;
+
+		// make sure we can eventually break out if somebody blacklists all known sites
+
+		if($blacklisted) {
+			if($attempts > 20)
+				break;
+			$attempts --;
+			continue;
+		}
 
 		if($url) {
 			if($r[0]['site_pull'] !== '0000-00-00 00:00:00')
