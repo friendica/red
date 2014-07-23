@@ -384,6 +384,20 @@
 	}
 
 
+
+function updatePageItems(mode,data) {
+	if(mode === 'append') {
+		$(data).each(function() {
+			$('#page-end').before($(this));
+		});
+
+		if(loadingPage) {
+			loadingPage = false;
+		}
+	}
+}
+
+
 function updateConvItems(mode,data) {
 
 	if(mode === 'update') {
@@ -560,8 +574,6 @@ function updateConvItems(mode,data) {
 
 
 
-
-
 	function liveUpdate() {
 		if((src == null) || (stopped) || (! profile_uid)) { $('.like-rotator').spin(false); return; }
 		if(($('.comment-edit-text-full').length) || (in_progress)) {
@@ -627,6 +639,37 @@ function updateConvItems(mode,data) {
 
 
 	}
+
+	function pageUpdate() {
+
+		in_progress = true;
+
+		var update_url;
+		var update_mode;
+
+		if(scroll_next) {
+			bParam_page = next_page;
+			page_load = true;
+		}
+		else {
+			bParam_page = 1;
+		}
+
+		update_url = baseurl + '/directory/?f=&page=' + bParam_page;
+
+		$("#page-spinner").spin('small');
+		update_mode = 'append';
+
+		$.get(update_url,function(data) {
+			page_load = false;
+			scroll_next = false;
+			updatePageItems(update_mode,data);
+			$("#page-spinner").spin(false);
+			in_progress = false;
+		});
+
+	}
+
 
 	function notify_popup_loader(notifyType) {
 
@@ -1014,6 +1057,7 @@ $(document).ready(function() {
 
 $(window).scroll(function () {                 
 	if(typeof buildCmd == 'function') {
+		// This is a content page with items and/or conversations
 		$('#more').hide();                 
 		$('#no-more').hide();                 
 	
@@ -1026,7 +1070,7 @@ $(window).scroll(function () {
 			if((pageHasMoreContent) && (! loadingPage)) {
 				$('#more').hide();
 				$('#no-more').hide();
-				//			alert('scroll');
+
 				next_page++;
 				scroll_next = true;
 				loadingPage = true;
@@ -1034,6 +1078,27 @@ $(window).scroll(function () {
 			}
 		}
 	}
+	else {
+		// This is some other kind of page - perhaps a directory
+
+		if($(window).scrollTop() + $(window).height() > $(document).height() - 200) {
+			$('#more').css("top","400");
+			$('#more').show();
+		}
+	
+		if($(window).scrollTop() + $(window).height() > $(document).height() - 100) {
+			if((pageHasMoreContent) && (! loadingPage)) {
+				$('#more').hide();
+				$('#no-more').hide();
+
+				next_page++;
+				scroll_next = true;
+				loadingPage = true;
+				pageUpdate();
+			}
+		}
+	}
+
 });
 
 var chanviewFullSize = false;
