@@ -35,6 +35,10 @@
 <input id="contact-closeness-mirror" type="hidden" name="closeness" value="{{$close}}" />
 
 <div class="abook-permschange" style="display: none;"></div>
+<div class="abook-permssave" style="display: none;">
+<input class="contact-edit-submit" type="submit" name="done" value="{{$submit}}" />
+</div>
+
 
 {{if $is_pending}}
 <div class="abook-pending-contact">
