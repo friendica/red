@@ -34,6 +34,8 @@ function externals_run($argv, $argc){
 		}
 
 		// Note: blacklisted sites must be stored in the config as an array. 
+		// No simple way to turn this into a personal config because we have no identity here.
+		// For that we probably need a variant of superblock.
 
 		$blacklisted = false;
 		$bl1 = get_config('system','blacklisted_sites');
