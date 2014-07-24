@@ -1,20 +1,19 @@
 
-Dear {{$username}},
-	Your password has been changed as requested. Please retain this 
-information for your records (or change your password immediately to 
-something that you will remember).
+Cher {{$username}},
+	Votre mot de passe a bien été réinitialisé. 
+Veuillez conserver cette information (ou changer immédiatement ce mot de passe temporaire).
 
 
-Your login details are as follows:
+Voici les détails de connections:
 
-Site Location:	{{$siteurl}}
-Login Name:	{{$email}}
-Password:	{{$new_password}}
+Emplacement du site:⇥{{$siteurl}}
+Usager:⇥{{$email}}
+Mot de passe:⇥{{$new_password}}
 
-You may change that password from your account settings page after logging in.
+Vous pouvez changez ce mot de passe à partir des réglages du profil après vous être connecté.
 
 
-Sincerely,
-	{{$sitename}} Administrator
+Sincèrement,
+	Administrateur {{$sitename}}
 
  
