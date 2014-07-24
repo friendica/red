@@ -838,6 +838,7 @@ function import_author_rss($x) {
 function encode_item($item) {
 	$x = array();
 	$x['type'] = 'activity';
+	$x['encoding'] = 'zot';
 
 //	logger('encode_item: ' . print_r($item,true));
 
@@ -1069,6 +1070,7 @@ function encode_item_flags($item) {
 function encode_mail($item) {
 	$x = array();
 	$x['type'] = 'mail';
+	$x['encoding'] = 'zot';
 
 	if(array_key_exists('mail_flags',$item) && ($item['mail_flags'] & MAIL_OBSCURED)) {
 		$key = get_config('system','prvkey');
