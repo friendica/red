@@ -505,8 +505,8 @@ function profiles_content(&$a) {
 		$o .= replace_macros($tpl,array(
 
 			'$form_security_token' => get_form_security_token("profile_edit"),
-			'$profile_clone_link'  => 'profiles/clone/' . $r[0]['id'] . '?t=' 
-				. get_form_security_token("profile_clone"),
+			'$profile_clone_link'  => ((feature_enabled(local_user(),'multi_profiles')) ? 'profiles/clone/' . $r[0]['id'] . '?t=' 
+				. get_form_security_token("profile_clone") : ''),
 			'$profile_drop_link'   => 'profiles/drop/' . $r[0]['id'] . '?t=' 
 				. get_form_security_token("profile_drop"),
 

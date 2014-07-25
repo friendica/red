@@ -34,6 +34,10 @@ EOT;
 	if(local_user()) {
 		$channel = $a->get_channel();
 		$observer = $a->get_observer();
+		$prof = q("select id from profile where uid = %d and is_default = 1",
+			intval($channel['channel_id'])
+		);
+
 	}
 	elseif(remote_user())
 		$observer = $a->get_observer();
@@ -81,6 +85,9 @@ EOT;
 		$nav['usermenu'][] = Array('profile/' . $channel['channel_address'], t('View Profile'), "", t('Your profile page'));
 		if(feature_enabled(local_user(),'multi_profiles'))
 			$nav['usermenu'][]   = Array('profiles', t('Edit Profiles'),"", t('Manage/Edit profiles'));
+		else
+			$nav['usermenu'][]   = Array('profiles/' . $prof[0]['id'], t('Edit Profile'),"", t('Edit your profile'));
+
 		$nav['usermenu'][] = Array('photos/' . $channel['channel_address'], t('Photos'), "", t('Your photos'));
 		$nav['usermenu'][] = Array('cloud/' . $channel['channel_address'],t('Files'),"",t('Your files'));
 
