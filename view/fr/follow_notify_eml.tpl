@@ -1,14 +1,14 @@
 
-Dear {{$myname}},
+Cher {{$myname}},
 
-You have a new follower at {{$sitename}} -  '{{$requestor}}'.
+Vous avez un nouvel admirateur  {{$sitename}} - '{{$requestor}}'.
 
-You may visit their profile at {{$url}}.
+Vous pouvez visiter son profil ici {{$url}}.
 
-Please login to your site to approve or ignore/cancel the request.
+Veuillez vous enregistrer sur votre hub pour approuver ou ignorer/supprimer cette requête.
 
 {{$siteurl}}
 
-Regards,
+Bien à vous,
 
-	{{$sitename}} administrator
+	Administrateur {{$sitename}}
