@@ -1,7 +1,9 @@
 <?php
 
 // Set the following for your MySQL installation
+// Utilisez ces informations pour configurer votre instance de BD (MySQL)
 // Copy or rename this file to .htconfig.php
+// Copier ou renomer ce fichier .htconfig.php et placer le à la racine de l'installation de la Matrice Rouge.
 
 $db_host = '{{$dbhost}}';
 $db_port = '{{$dbport}}';
@@ -10,61 +12,60 @@ $db_pass = '{{$dbpass}}';
 $db_data = '{{$dbdata}}';
 
 /*
- * Notice: Many of the following settings will be available in the admin panel 
- * after a successful site install. Once they are set in the admin panel, they
- * are stored in the DB - and the DB setting will over-ride any corresponding
- * setting in this file
+ * Note: Plusieurs de ces réglages seront disponibles via le panneau d'administration
+ * après l'installation. Lorsque des modifications sont apportés à travers le panneau d'administration
+ * elle sont automatiquement enregistrées dans la base de données.
+ * Les configurations inscrites dans la BD prévalent sur celles de ce fichier de configuration.
  *
- * The command-line tool util/config is able to query and set the DB items 
- * directly if for some reason the admin panel is not available and a system
- * setting requires modification. 
+ * En cas de difficultés d'accès au panneau d'administration, nous mettons à votre disposition,
+ * un outil en ligne de commande est disponible [util/config] pour rechercher et apporter des modifications
+ * sur les entrées dans la BD.
  *
  */ 
 
-
-// Choose a legal default timezone. If you are unsure, use "America/Los_Angeles".
-// It can be changed later and only applies to timestamps for anonymous viewers.
+// Choisissez votre emplacement géographique. Si vous n'êtes pas certain, utilisez "America/Los_Angeles".
+// Vous pourrez le changer plus tard et ce réglage n'affecte que les visiteurs anonymes.
 
 $default_timezone = '{{$timezone}}';
 
-// What is your site name?
+// Quel sera le nom de votre site?
 
 $a->config['system']['baseurl'] = '{{$siteurl}}';
-$a->config['system']['sitename'] = "Red Matrix";
+$a->config['system']['sitename'] = "Matrice Rouge";
 $a->config['system']['location_hash'] = '{{$site_id}}';
 
-// Your choices are REGISTER_OPEN, REGISTER_APPROVE, or REGISTER_CLOSED.
-// Be certain to create your own personal account before setting 
-// REGISTER_CLOSED. 'register_text' (if set) will be displayed prominently on 
-// the registration page. REGISTER_APPROVE requires you set 'admin_email'
-// to the email address of an already registered person who can authorise
-// and/or approve/deny the request.
+// Vos choix sont REGISTER_OPEN, REGISTER_APPROVE, ou REGISTER_CLOSED.
+// Soyez certains de créer votre compte personnel avant de déclarer
+// votre site REGISTER_CLOSED. 'register_text' (si vous décider de l'utiliser) 
+// renvois son contenu systématiquement sur la page d'enregistrement des nouveaux membres.
+// REGISTER_APPROVE requiert la configuration de 'admin_email' avec l'adresse de courriel
+// d'un membre déjà inscrit qui pourra autoriser et/ou approuver/supprimer la demande.
 
 $a->config['system']['register_policy'] = REGISTER_OPEN;
 $a->config['system']['register_text'] = '';
 $a->config['system']['admin_email'] = '{{$adminmail}}';
 
-// Maximum size of an imported message, 0 is unlimited
+// taille maximale pour l'importation d'un message, 0 est illimité
 
 $a->config['system']['max_import_size'] = 200000;
 
-// maximum size of uploaded photos
+// taille maximale pour le téléversement de photos
 
 $a->config['system']['maximagesize'] = 800000;
 
-// Location of PHP command line processor
+// Lien absolu vers le compilateur PHP
 
 $a->config['system']['php_path'] = '{{$phpath}}';
 
-// Configure how we communicate with directory servers.
-// DIRECTORY_MODE_NORMAL     = directory client, we will find a directory
-// DIRECTORY_MODE_SECONDARY  = caching directory or mirror
-// DIRECTORY_MODE_PRIMARY    = main directory server
-// DIRECTORY_MODE_STANDALONE = "off the grid" or private directory services
+// configurez la façon dont votre site communique avec les autres serveurs. [Répertoire des membres inscrits à la Matrice]
+// DIRECTORY_MODE_NORMAL     = client du répertoire de membres, nous vous trouverons un répertoire accessible autre serveur.
+// DIRECTORY_MODE_SECONDARY  = copie mirroir du répertoire des membres.
+// DIRECTORY_MODE_PRIMARY    = répertoire des membres principal.
+// DIRECTORY_MODE_STANDALONE = "autonome/déconnecté" ou répertoire de membres privés
 
 $a->config['system']['directory_mode']  = DIRECTORY_MODE_NORMAL;
 
-// default system theme
+// Thème par défaut
 
 $a->config['system']['theme'] = 'redbasic';
 

@@ -201,18 +201,27 @@ function directory_content(&$a) {
 
 //					logger('mod_directory: entries: ' . print_r($entries,true), LOGGER_DATA);
 
-					$o .= replace_macros($tpl, array(
-						'$search' => $search,
-						'$desc' => t('Find'),
-						'$finddsc' => t('Finding:'),
-						'$safetxt' => htmlspecialchars($search,ENT_QUOTES,'UTF-8'),
-						'$entries' => $entries,
-						'$dirlbl' => t('Directory'),
-						'$submit' => t('Find')
-					));
+
+					if($dynamic) {
 
 
-					$o .= alt_pager($a,$j['records'], t('next page'), t('previous page'));
+					}
+					else {
+
+						$o .= "<script> var page_query_args = '" . $a->query_string . "'; </script>";
+						$o .= replace_macros($tpl, array(
+							'$search' => $search,
+							'$desc' => t('Find'),
+							'$finddsc' => t('Finding:'),
+							'$safetxt' => htmlspecialchars($search,ENT_QUOTES,'UTF-8'),
+							'$entries' => $entries,
+							'$dirlbl' => t('Directory'),
+							'$submit' => t('Find')
+						));
+
+						$o .= alt_pager($a,$j['records'], t('next page'), t('previous page'));
+
+					}
 
 				}
 				else {

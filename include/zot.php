@@ -1648,11 +1648,6 @@ function delete_imported_item($sender,$item,$uid) {
 		
 	require_once('include/items.php');
 
-	// FIXME issue #230 is related
-	// Chicken/egg problem because we have to drop_item, but this removes information that tag_deliver may need to do its stuff.
-	// We can't reverse the order because drop_item refuses to run if the item already has the deleted flag set and we need to
-	// set that flag prior to calling tag_deliver.
-
 	// Use phased deletion to set the deleted flag, call both tag_deliver and the notifier to notify downstream channels
 	// and then clean up after ourselves with a cron job after several days to do the delete_item_lowlevel() (DROPITEM_PHASE2).
 
@@ -2104,6 +2099,7 @@ function build_sync_packet($uid = 0, $packet = null, $groups_changed = false) {
 
 	$info = (($packet) ? $packet : array());
 	$info['type'] = 'channel_sync';
+	$info['encoding'] = 'red'; // note: not zot, this packet is very red specific
 
 	if(array_key_exists($uid,$a->config) && array_key_exists('transient',$a->config[$uid])) {
 		$settings = $a->config[$uid]['transient'];

@@ -1,17 +1,17 @@
 
-Dear {{$myname}},
+Cher {{$myname}},
 
-You have just received a connection request at {{$sitename}} 
+Vous venez de recevoir une demande de relation sur {{$sitename}} 
 
-from '{{$requestor}}'.
+de '{{$requestor}}'.
 
-You may visit their profile at {{$url}}.
+Vous pouvez visiter son profil ici {{$url}}.
 
-Please login to your site to view the complete introduction 
-and approve or ignore/cancel the request.
+Veuillez vos connecter pour voir son profil 
+et approuver ou ignorer/supprimer cette requête.
 
 {{$siteurl}}
 
-Regards,
+Bien à vous,
 
-	{{$sitename}} administrator
+	Administrateur {{$sitename}}

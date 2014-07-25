@@ -433,6 +433,7 @@ aside li {
 	opacity: 0.3;
 	filter:alpha(opacity=30);
 	float: right;
+	margin-top: -3px;
 }
 .profile-edit-side-link:hover {
 	opacity: 1.0;

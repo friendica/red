@@ -2,7 +2,7 @@
 
 	{{if $profile.edit}}
 	<div class="dropdown">
-	<a class="profile-edit-side-link dropdown-toggle" data-toggle="dropdown" title="{{$profile.edit.3}}" href="#" ><i class="icon-pencil" title="{{$profile.edit.1}}" ></i></a>
+	<a class="profile-edit-side-link dropdown-toggle" data-toggle="dropdown" title="{{$profile.edit.3}}" href="#" ><i class="icon-pencil btn btn-default btn-xs" title="{{$profile.edit.1}}" ></i></a>
 	<ul class="dropdown-menu" role="menu">
 		{{foreach $profile.menu.entries as $e}}
 		<li>

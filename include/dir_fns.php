@@ -185,6 +185,7 @@ function local_dir_update($uid,$force) {
 	);
 
 	$profile = array();
+	$profile['encoding'] = 'zot';
 
 	if($p) {
 		$hash = $p[0]['channel_hash'];
