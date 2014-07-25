@@ -1,7 +1,7 @@
 Options -Indexes
 AddType application/x-java-archive .jar
 AddType audio/ogg .oga
-SSLCipherSuite HIGH:AES256-SHA:AES128-SHA:RC4:!aNULL:!eNULL:!EDH
+#SSLCipherSuite HIGH:AES256-SHA:AES128-SHA:RC4:!aNULL:!eNULL:!EDH
 
 # don't allow any web access to logfiles, even after rotation/compression
 <FilesMatch "\.(out|log|gz)$">
@@ -24,16 +24,4 @@ Deny from all
   RewriteRule ^(.*)$ index.php?q=$1 [E=REMOTE_USER:%{HTTP:Authorization},L,QSA]
 
 </IfModule>
-
-# Set Apache compression
-# compress text, html, javascript, css, xml:
-AddOutputFilterByType DEFLATE text/plain
-AddOutputFilterByType DEFLATE text/html
-AddOutputFilterByType DEFLATE text/xml
-AddOutputFilterByType DEFLATE text/css
-AddOutputFilterByType DEFLATE application/xml
-AddOutputFilterByType DEFLATE application/xhtml+xml
-AddOutputFilterByType DEFLATE application/rss+xml
-AddOutputFilterByType DEFLATE application/javascript
-AddOutputFilterByType DEFLATE application/x-javascript
 

@@ -1,7 +1,5 @@
+<meta http-equiv="Content-Type" content="text/html;charset=utf-8" />
 <base href="{{$baseurl}}/" />
-<META NAME="description" CONTENT="The RedMatrix is a super network created from a huge number of smaller independent and autonomous websites - which are linked together...">
-<META NAME="keywords" CONTENT="network,matrix,social,communications,social networking,content ownership,privacy and content ownership">
-<META NAME="robot" CONTENT="index,follow">
 <meta name="viewport" content="width=device-width, height=device-height, initial-scale=1, user-scalable=0" />
 <meta name="generator" content="{{$generator}}" />
 
