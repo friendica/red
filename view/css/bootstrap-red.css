@@ -1,5 +1,9 @@
 /* override some bootstrap settings */
 
+html {
+	font-size: 100%;
+}
+
 h1,
 .h1 {
   font-size: 24px;
