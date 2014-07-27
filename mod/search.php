@@ -23,6 +23,7 @@ function search_content(&$a,$update = 0, $load = false) {
 
 
 	$observer = $a->get_observer();
+	$observer_hash = (($observer) ? $observer['xchan_hash'] : '');
 
 	$o = '<div id="live-search"></div>' . "\r\n";
 
@@ -113,7 +114,7 @@ function search_content(&$a,$update = 0, $load = false) {
 
 	}
 
-	$pub_sql = public_permissions_sql(get_observer_hash());
+	$pub_sql = public_permissions_sql($observer_hash);
 
 	require_once('include/identity.php');
 
@@ -123,6 +124,11 @@ function search_content(&$a,$update = 0, $load = false) {
 		$itemspage = get_pconfig(local_user(),'system','itemspage');
 		$a->set_pager_itemspage(((intval($itemspage)) ? $itemspage : 20));
 		$pager_sql = sprintf(" LIMIT %d, %d ",intval($a->pager['start']), intval($a->pager['itemspage']));
+
+		// in case somebody turned off public access to sys channel content with permissions
+
+		if(! perm_is_allowed($sys['channel_id'],$observer_hash,'view_stream'))
+			$sys['xchan_hash'] .= 'disabled';
 
 		if($load) {
 			$r = null;
