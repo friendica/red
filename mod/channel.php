@@ -25,7 +25,7 @@ function channel_init(&$a) {
 		notice( t('You must be logged in to see this page.') . EOL );
 		return;
 	}
-
+	if (strcmp($which,"sys") == 0) return; //Prevents against eavesdropping on /channel/sys
 	$profile = 0;
 	$channel = $a->get_channel();
 
