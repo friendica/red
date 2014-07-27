@@ -81,12 +81,16 @@ input[type="submit"] {
 	font-weight: bold;
 	color: $input_linksubmit;
 	text-decoration: none;
+	padding: 6px 12px;
+}
+
+input[type="submit"]:hover {
+	text-decoration: underline;
 }
 
 button, input, optgroup, select, textarea {
 	color: #000;
 }
-
 
 pre code {
 	border: none;
@@ -637,12 +641,12 @@ aside li {
 
 
 .photo-album-image-wrapper .caption {
- 	background-color: rgba(245, 245, 255, 0.8);
- 	border-bottom: 2px solid #CCC;
+ 	background-color: $acpopup_bgcolour;
+ 	border-bottom: 2px solid $acpopup_bordercolour;
 }
 
 .photo-top-album-name {
- 	background-color: rgb(255, 255, 255);
+ 	background-color: $acpopup_bgcolour;
 }
 
 #photos-upload-perms-menu, #photos-upload-perms-menu:visited, #photos-upload-perms-menu:link {
@@ -1235,7 +1239,6 @@ brain is weird like that */
 #cloud-index td {
 	padding:5px;
 }
-
 
 /**
  * Plugins settings
@@ -2347,19 +2350,27 @@ blockquote {
   }
 }
 
+.btn {
+	font-size: $body_font_size;
+}
+
+.btn-xs {
+	font-size: 12px;
+}
+
 .btn-default {
     	background-color: $editbuttons_bgcolour;
     	border-color: $editbuttons_bordercolour;
-	color: $editbuttons_colour;
+		color: $editbuttons_colour;
     	text-shadow: none;
     	box-shadow: none;
 }
 
 .btn-default:hover, .btn-default:focus, .btn-default:active .btn-default.active {
     	background-color: $editbuttons_bghover;
-	border-color: $editbuttons_bordercolourhover;
-	color: $input_colourhover;
-	text-decoration: $input_decohover;
+		border-color: $editbuttons_bordercolourhover;
+		color: $input_colourhover;
+		text-decoration: $input_decohover;
 }
 
 .btn-default.btn-sm:hover, .btn-default.btn-sm:focus, .btn-default.btn-sm:active .btn-default.btn-sm.active {

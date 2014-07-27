@@ -132,7 +132,7 @@ if(! $a->install) {
 	if (! $font_size)
 		$font_size = "1.0em";
 	if (! $body_font_size)
-		$body_font_size = "11px";
+		$body_font_size = "14px";
 	if (! $font_colour)
 		$font_colour = "#4d4d4d";
 	if (! $selected_active_colour)

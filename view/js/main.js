@@ -156,6 +156,15 @@
     } 
   }
 
+  function closeOpen(theID) {
+    if(document.getElementById(theID).style.display == "none") { 
+      document.getElementById(theID).style.display = "block" 
+    }
+    else { 
+      document.getElementById(theID).style.display = "none" 
+    } 
+  }
+
   function openMenu(theID) {
       document.getElementById(theID).style.display = "block" 
   }

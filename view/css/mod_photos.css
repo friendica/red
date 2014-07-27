@@ -11,6 +11,12 @@
 	margin-bottom: 25px;
 }
 
+#photo-view-wrapper {
+	float:left;
+	min-width: 300px;
+	overflow: hidden;
+}
+
 #photo-prev-link, #photo-next-link {
 	padding: 10px;
 	float: left;
@@ -136,8 +142,19 @@
 }
 
 #photo-edit-delete-button {
-	margin-left: 200px;
+	float: right;
 }
+
+#photo-edit-edit-wrapper {
+	margin-top: 10px;
+	margin-bottom: 30px;
+}
+
+#photo-photo-delete-button {
+	float: right;
+	margin-top: -64px;
+}
+
 #photo-edit-end {
 	margin-bottom: 35px;
 }
