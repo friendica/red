@@ -75,12 +75,11 @@
 	<div id="photo-edit-end"></div>
 </form>
 </div>
-{{/if}}
-
 
 <form action="photos/{{$edit.nickname}}/{{$edit.resource_id}}" method="post">
 	<input id="photo-photo-delete-button" type="submit" name="delete" value="{{$edit.delete}}" onclick="return confirmDelete();">
 </form>
+{{/if}}
 
 {{if $likebuttons}}
 <div id="photo-like-div">
