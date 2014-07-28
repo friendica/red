@@ -96,5 +96,7 @@
 
 {{if $nextlink}}<div id="photo-next-link"><a href="{{$nextlink.0}}"><i class="icon-forward photo-icons"></i></a></div>{{/if}}
 
+<div class="clear"></div>
+
 {{$paginate}}
 
