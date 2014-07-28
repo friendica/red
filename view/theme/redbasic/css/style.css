@@ -289,6 +289,7 @@ aside li {
 	padding: 0;
 	margin-top: 15px;
 	margin-bottom: 0;
+	margin-left: 0;
 	width: 20px;
 }
 
@@ -297,6 +298,7 @@ aside li {
 	margin-bottom: 0;
 	float: left;
 	width: 100px;
+	padding-left: 0;
 }
 
 #main-login .field_end {
