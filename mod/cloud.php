@@ -34,6 +34,17 @@
  */
 function cloud_init(&$a) {
 
+	// call ($currenttheme)_init since we're operating outside of index.php
+
+	$theme_info_file = "view/theme/".current_theme()."/php/theme.php";
+	if (file_exists($theme_info_file)){
+		require_once($theme_info_file);
+		if(function_exists(str_replace('-','_',current_theme()) . '_init')) {
+			$func = str_replace('-','_',current_theme()) . '_init';
+			$func($a);
+		}
+	}
+
 	require_once('include/reddav.php');
 
 	if(! is_dir('store'))
