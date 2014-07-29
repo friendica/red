@@ -1,7 +1,7 @@
 <meta http-equiv="Content-Type" content="text/html;charset=utf-8" />
 <base href="{{$baseurl}}/" />
 <meta name="viewport" content="width=device-width, height=device-height, initial-scale=1" />
-<meta name="generator" content="Bluefish 2.2.5" />
+<meta name="generator" content="{{$generator}}" />
 
 <!--[if IE]>
 <script src="https://html5shiv.googlecode.com/svn/trunk/html5.js"></script>
