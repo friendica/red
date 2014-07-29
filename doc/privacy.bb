@@ -1,4 +1,4 @@
-[b]Privacy[/b]
+[b]Network Privacy[/b]
 
 Online privacy has many aspects. The Red Matrix let you control all these aspects. You can fine-tune the privacy of your posts, pages and other items in many ways; from making your content as public as possible to only sharing stuff with yourself. Permissions can be set for messages, web pages, events, photos, every item you can think of. If you make something private in the Red Matrix, it will be really private. [zrl=[baseurl]/help/permissions]See the permissions documentation[/zrl] for comprehensive help with permissions
 
