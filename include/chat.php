@@ -235,6 +235,7 @@ function chat_message($uid,$room_id,$xchan,$text) {
  */
 
 function chatroom_flush($room_id,$xchan) {
+	$date_limit = date('Y-m-d H:i:s', time() - 3600 * MAX_CHATROOM_HOURS);
 	$d = q("delete from chat where chat_room = %d and chat_xchan = '%s' and created < '%s'",
 		intval($room_id),
 		dbesc($xchan),
