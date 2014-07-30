@@ -54,6 +54,15 @@ Comments to posts that were created by others and posts which are designated as 
 
 RedMatrix developers will ensure that any content you provide which is designated as PRIVATE will be protected against eavesdropping - to the best of their ability. Private content is generally hidden or obscured even from hub administrators. It is also stripped from email notifications. It is difficult but NOT impossible for this content to be seen by a hub administrator who is determined to monitor your communications. We consider this like the lock on the door of a house. It will generally keep the house safe, but a determined burgler will ignore the lock on the door and instead break a window. 
 
+##Identity Privacy
+
+Privacy for your identity is another aspect. Because you have a decentralized identity in the Red Matrix, your privacy extends beyond your home hub. If you want to have complete control of your privacy and security you should run your own hub on a dedicated server. For many people, this is complicated and may stretch their technical abilities. So let's list a few precautions you can make to assure your privacy as much as possible.
+
+A decentralized identity has a lot of advantages and gives you al lot of interesting features, but you should be aware of the fact that your identity is known by other hubs in the Red Matrix network. One of those advantages is that other channels can serve you customized content and allow you to see private things (such as private photos which others wish to share with you). Because of this those channels need to know who you are. But we understand that sometimes those other channels know more from you than you might desire. For instance the plug-in Visage that can tell a channel owner the last time you visit their profile. You can easily OPT-OUT of this low level and we think, harmless tracking.
+
+* You can enable [Do Not Track (DNT)](http://donottrack.us/) in your web browser. We respect this new privacy policy proposal. All modern browsers support DNT. You will find it in the privacy settings of your browsers or else you can consult the web browser's manual. This will not affect the functionality of the Red Matrix. This setting is probably enough for most people.
+*You can [disable publication](settings) of your channel in our channel directory. If you want people to find your channel, you should give your channel address directly to them. We think this is a good indication that you prefer extra privacy and automatically enable "Do Not Track" if this is the case.
+*You can have a blocked hub. That means that all channels and content on that hub is not public, and not visible to the outside world. This is something only your hub administrator can do. We also respect this and automatically enable "Do Not Track" if it is set.
 
 ###Censorship
 
