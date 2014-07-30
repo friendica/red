@@ -79,7 +79,7 @@ function categories_widget($baseurl,$selected = '') {
                 and term.uid = item.uid
                 and term.type = %d
                 and item.author_xchan = '%s'
-				and item.restrict = 0
+				and item.item_restrict = 0
                 order by term.term asc",
 		intval($a->profile['profile_uid']),
 	        intval(TERM_CATEGORY),
