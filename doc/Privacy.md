@@ -62,7 +62,7 @@ A decentralized identity has a lot of advantages and gives you al lot of interes
 
 * You can enable [Do Not Track (DNT)](http://donottrack.us/) in your web browser. We respect this new privacy policy proposal. All modern browsers support DNT. You will find it in the privacy settings of your browsers or else you can consult the web browser's manual. This will not affect the functionality of the Red Matrix. This setting is probably enough for most people.
 *You can [disable publication](settings) of your channel in our channel directory. If you want people to find your channel, you should give your channel address directly to them. We think this is a good indication that you prefer extra privacy and automatically enable "Do Not Track" if this is the case.
-*You can have a blocked hub. That means that all channels and content on that hub is not public, and not visible to the outside world. This is something only your hub administrator can do. We also respect this and automatically enable "Do Not Track" if it is set.
+* You can have a blocked hub. That means that all channels and content on that hub is not public, and not visible to the outside world. This is something only your hub administrator can do. We also respect this and automatically enable "Do Not Track" if it is set.
 
 ###Censorship
 
