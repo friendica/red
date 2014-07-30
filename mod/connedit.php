@@ -157,43 +157,32 @@ function connedit_post(&$a) {
 		);
 		if(($pr) && (! ($abook_flags & ABOOK_FLAG_HIDDEN)) 
 			&& (intval(get_pconfig($channel['channel_id'],'system','post_newfriend')))) {
-			$objtype = ACTIVITY_OBJ_PERSON;
-			$t = q("select * from abook left join xchan on xchan_hash = abook_xchan where abook_id = %d and abook_channel = %d limit 1",
-				intval($a->poi['abook_id']),
-				intval($channel['channel_id'])
-			);
-			if($t) {
-				$xarr = array();
-				$xarr['verb'] = ACTIVITY_FRIEND;
-				$xarr['item_flags'] = ITEM_WALL|ITEM_ORIGIN|ITEM_THREAD_TOP;
-				$xarr['owner_xchan'] = $xarr['author_xchan'] = $channel['channel_hash'];
-				$xarr['allow_cid'] = $channel['channel_allow_cid'];
-				$xarr['allow_gid'] = $channel['channel_allow_gid'];
-				$xarr['deny_cid'] = $channel['channel_deny_cid'];
-				$xarr['deny_gid'] = $channel['channel_deny_gid'];
-				$xarr['item_private'] = (($xarr['allow_cid']||$xarr['allow_gid']||$xarr['deny_cid']||$xarr['deny_gid']) ? 1 : 0);
+			$xarr = array();
+			$xarr['verb'] = ACTIVITY_FRIEND;
+			$xarr['item_flags'] = ITEM_WALL|ITEM_ORIGIN|ITEM_THREAD_TOP;
+			$xarr['owner_xchan'] = $xarr['author_xchan'] = $channel['channel_hash'];
+			$xarr['allow_cid'] = $channel['channel_allow_cid'];
+			$xarr['allow_gid'] = $channel['channel_allow_gid'];
+			$xarr['deny_cid'] = $channel['channel_deny_cid'];
+			$xarr['deny_gid'] = $channel['channel_deny_gid'];
+			$xarr['item_private'] = (($xarr['allow_cid']||$xarr['allow_gid']||$xarr['deny_cid']||$xarr['deny_gid']) ? 1 : 0);
+			$obj = array(
+				'type' => ACTIVITY_OBJ_PERSON,
+				'title' => $a->poi['xchan_name'],
+				'id' => $a->poi['xchan_hash'],
+				'link' => array(
+					array('rel' => 'alternate', 'type' => 'text/html', 'href' => $a->poi['xchan_url']),
+					array('rel' => 'photo', 'type' => $a->poi['xchan_photo_mimetype'], 'href' => $a->poi['xchan_photo_l'])
+       			),
+   			);
+			$xarr['object'] = json_encode($obj);
+			$xarr['obj_type'] = ACTIVITY_OBJ_PERSON;
 
+			$xarr['body'] = '[zrl=' . $channel['xchan_url'] . ']' . $channel['xchan_name'] . '[/zrl]' . ' ' . t('is now connected to') . ' ' . '[zrl=' . $a->poi['xchan_url'] . ']' . $a->poi['xchan_name'] . '[/zrl]';
 
-				$obj = array(
-					'type' => ACTIVITY_OBJ_PERSON,
-					'title' => $t[0]['xchan_name'],
-					'id' => $t[0]['xchan_hash'],
-					'link' => array(
-						array('rel' => 'alternate', 'type' => 'text/html', 'href' => $t[0]['xchan_url']),
-						array('rel' => 'photo', 'type' => $t[0]['xchan_photo_mimetype'], 'href' => $t[0]['xchan_photo_l'])
-        			),
-    			);
-				$xarr['object'] = json_encode($obj);
-				$xarr['obj_type'] = ACTIVITY_OBJ_PERSON;
+			$xarr['body'] .= "\n\n\n" . '[zrl=' . $a->poi['xchan_url'] . '][zmg=80x80]' . $a->poi['xchan_photo_m'] . '[/zmg][/zrl]';
 
-
-				$xarr['body'] = '[zrl=' . $channel['xchan_url'] . ']' . $channel['xchan_name'] . '[/zrl]' . ' ' . t('is now connected to') . ' ' . '[zrl=' . $t[0]['xchan_url'] . ']' . $t[0]['xchan_name'] . '[/zrl]';
-
-				$xarr['body'] .= "\n\n\n" . '[zrl=' . $t[0]['xchan_url'] . '][zmg=80x80]' . $t[0]['xchan_photo_m'] . '[/zmg][/zrl]';
-
-				post_activity_item($xarr);
-
-			}
+			post_activity_item($xarr);
 
 		}
 
