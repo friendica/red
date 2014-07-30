@@ -118,13 +118,14 @@ function connedit_post(&$a) {
 		intval(local_user())
 	);
 
-	if($orig_record[0]['abook_profile'] != $profile_id) { //Update profile photo permissions
+	if($orig_record[0]['abook_profile'] != $profile_id) { 
+		//Update profile photo permissions
 
-                logger('As a new profile was assigned updateing profile photos');
-                require_once('mod/profile_photo.php');
-                profile_photo_set_profile_perms($profile_id);
+		logger('As a new profile was assigned updateing profile photos');
+		require_once('mod/profile_photo.php');
+		profile_photo_set_profile_perms($profile_id);
 
-        }
+	}
 
 
 	if($r)
@@ -147,12 +148,55 @@ function connedit_post(&$a) {
 				group_add_member(local_user(),'',$a->poi['abook_xchan'],$g['id']);
 		}
 
-
-
 		// Check if settings permit ("post new friend activity" is allowed, and 
 		// friends in general or this friend in particular aren't hidden) 
 		// and send out a new friend activity
-		// TODO
+
+		$pr = q("select * from profile where uid = %d and is_default = 1 and hide_friends = 0",
+			intval($channel['channel_id'])
+		);
+		if(($pr) && (! ($abook_flags & ABOOK_FLAG_HIDDEN)) 
+			&& (intval(get_pconfig($channel['channel_id'],'system','post_newfriend')))) {
+			$objtype = ACTIVITY_OBJ_PERSON;
+			$t = q("select * from abook left join xchan on xchan_hash = abook_xchan where abook_id = %d and abook_channel = %d limit 1",
+				intval($a->poi['abook_id']),
+				intval($channel['channel_id'])
+			);
+			if($t) {
+				$xarr = array();
+				$xarr['verb'] = ACTIVITY_FRIEND;
+				$xarr['item_flags'] = ITEM_WALL|ITEM_ORIGIN|ITEM_THREAD_TOP;
+				$xarr['owner_xchan'] = $xarr['author_xchan'] = $channel['channel_hash'];
+				$xarr['allow_cid'] = $channel['channel_allow_cid'];
+				$xarr['allow_gid'] = $channel['channel_allow_gid'];
+				$xarr['deny_cid'] = $channel['channel_deny_cid'];
+				$xarr['deny_gid'] = $channel['channel_deny_gid'];
+				$xarr['item_private'] = (($xarr['allow_cid']||$xarr['allow_gid']||$xarr['deny_cid']||$xarr['deny_gid']) ? 1 : 0);
+
+
+				$obj = array(
+					'type' => ACTIVITY_OBJ_PERSON,
+					'title' => $t[0]['xchan_name'],
+					'id' => $t[0]['xchan_hash'],
+					'link' => array(
+						array('rel' => 'alternate', 'type' => 'text/html', 'href' => $t[0]['xchan_url']),
+						array('rel' => 'photo', 'type' => $t[0]['xchan_photo_mimetype'], 'href' => $t[0]['xchan_photo_l'])
+        			),
+    			);
+				$xarr['object'] = json_encode($obj);
+				$xarr['obj_type'] = ACTIVITY_OBJ_PERSON;
+
+
+				$xarr['body'] = '[zrl=' . $channel['xchan_url'] . ']' . $channel['xchan_name'] . '[/zrl]' . ' ' . t('is now connected to') . ' ' . '[zrl=' . $t[0]['xchan_url'] . ']' . $t[0]['xchan_name'] . '[/zrl]';
+
+				$xarr['body'] .= "\n\n\n" . '[zrl=' . $t[0]['xchan_url'] . '][zmg=80x80]' . $t[0]['xchan_photo_m'] . '[/zmg][/zrl]';
+
+				post_activity_item($xarr);
+
+			}
+
+		}
+
 
 		// pull in a bit of content if there is any to pull in
 		proc_run('php','include/onepoll.php',$contact_id);
