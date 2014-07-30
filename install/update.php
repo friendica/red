@@ -1,6 +1,6 @@
 <?php
 
-define( 'UPDATE_VERSION' , 1118 );
+define( 'UPDATE_VERSION' , 1119 );
 
 /**
  *
@@ -1313,4 +1313,13 @@ DROP INDEX `channel_a_bookmark` , ADD INDEX `channel_w_like` ( `channel_w_like` 
 	return UPDATE_FAILED;
 
 }
+
+function update_r1118() {
+	$r = q("ALTER TABLE `account` ADD `account_password_changed` DATETIME NOT NULL DEFAULT '0000-00-00 00:00:00',
+ADD INDEX ( `account_password_changed` )");
+	if($r)
+		return UPDATE_SUCCESS;
+	return UPDATE_FAILED;
+}
+
 

@@ -55,6 +55,7 @@ CREATE TABLE IF NOT EXISTS `account` (
   `account_expire_notified` datetime NOT NULL DEFAULT '0000-00-00 00:00:00',
   `account_service_class` char(32) NOT NULL DEFAULT '',
   `account_level` int(10) unsigned NOT NULL DEFAULT '0',
+  `account_password_changed` datetime NOT NULL DEFAULT '0000-00-00 00:00:00',
   PRIMARY KEY (`account_id`),
   KEY `account_email` (`account_email`),
   KEY `account_service_class` (`account_service_class`),
@@ -65,7 +66,8 @@ CREATE TABLE IF NOT EXISTS `account` (
   KEY `account_expires` (`account_expires`),
   KEY `account_default_channel` (`account_default_channel`),
   KEY `account_external` (`account_external`),
-  KEY `account_level` (`account_level`)
+  KEY `account_level` (`account_level`),
+  KEY `account_password_changed` (`account_password_changed`)
 ) ENGINE=MyISAM  DEFAULT CHARSET=utf8;
 
 CREATE TABLE IF NOT EXISTS `addon` (

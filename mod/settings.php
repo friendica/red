@@ -202,10 +202,11 @@ function settings_post(&$a) {
 			if(! $errs) {
 				$salt = random_string(32);
 				$password_encoded = hash('whirlpool', $salt . $newpass);
-				$r = q("update account set account_salt = '%s', account_password = '%s' 
+				$r = q("update account set account_salt = '%s', account_password = '%s', account_password_changed = '%s' 
 					where account_id = %d limit 1",
 					dbesc($salt),
 					dbesc($password_encoded),
+					dbesc(datetime_convert()),
 					intval(get_account_id())
 				);
 				if($r)
