@@ -9,7 +9,7 @@ msgstr ""
 "Project-Id-Version: Red Matrix\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2014-07-25 00:03-0700\n"
-"PO-Revision-Date: 2014-07-30 22:24+0000\n"
+"PO-Revision-Date: 2014-07-30 23:36+0000\n"
 "Last-Translator: jeroenpraat <>\n"
 "Language-Team: Dutch (http://www.transifex.com/projects/p/red-matrix/language/nl/)\n"
 "MIME-Version: 1.0\n"
@@ -2530,7 +2530,7 @@ msgstr "Seksuele voorkeur:"
 
 #: ../../include/identity.php:1009 ../../mod/profiles.php:537
 msgid "Hometown:"
-msgstr "Woonplaats:"
+msgstr "Oorspronkelijk uit:"
 
 #: ../../include/identity.php:1011
 msgid "Tags:"
@@ -5297,7 +5297,7 @@ msgstr "Homepage: "
 
 #: ../../mod/dirprofile.php:112
 msgid "Hometown: "
-msgstr "Woonplaats: "
+msgstr "Oorspronkelijk uit: "
 
 #: ../../mod/dirprofile.php:114
 msgid "About: "
