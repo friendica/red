@@ -8,8 +8,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Red Matrix\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2014-07-18 00:03-0700\n"
-"PO-Revision-Date: 2014-07-23 12:43+0000\n"
+"POT-Creation-Date: 2014-07-25 00:03-0700\n"
+"PO-Revision-Date: 2014-07-30 22:24+0000\n"
 "Last-Translator: jeroenpraat <>\n"
 "Language-Team: Dutch (http://www.transifex.com/projects/p/red-matrix/language/nl/)\n"
 "MIME-Version: 1.0\n"
@@ -87,7 +87,7 @@ msgid "View Connections"
 msgstr "Connecties weergeven"
 
 #: ../../include/text.php:815 ../../include/text.php:829
-#: ../../include/nav.php:149 ../../include/apps.php:142
+#: ../../include/nav.php:156 ../../include/apps.php:142
 #: ../../mod/search.php:29
 msgid "Search"
 msgstr "Zoeken"
@@ -452,11 +452,11 @@ msgstr "Geen geldig e-mailadres"
 
 #: ../../include/account.php:25
 msgid "Your email domain is not among those allowed on this site"
-msgstr "Jouw e-maildomein is op deze Red Matrix-hub niet toegestaan"
+msgstr "Jouw e-maildomein is op deze RedMatrix-hub niet toegestaan"
 
 #: ../../include/account.php:31
 msgid "Your email address is already registered at this site."
-msgstr "Jouw e-mailadres is al op deze Red Matrix-hub geregistreerd ."
+msgstr "Jouw e-mailadres is al op deze RedMatrix-hub geregistreerd ."
 
 #: ../../include/account.php:64
 msgid "An invitation is required."
@@ -516,7 +516,7 @@ msgstr "Account is geverifieerd. Je kan inloggen."
 #: ../../include/attach.php:243 ../../include/attach.php:283
 #: ../../include/attach.php:297 ../../include/attach.php:322
 #: ../../include/attach.php:513 ../../include/attach.php:585
-#: ../../include/chat.php:116 ../../include/items.php:3662
+#: ../../include/chat.php:116 ../../include/items.php:3664
 #: ../../mod/mood.php:112 ../../mod/mitem.php:73 ../../mod/achievements.php:27
 #: ../../mod/settings.php:492 ../../mod/poke.php:128 ../../mod/api.php:26
 #: ../../mod/api.php:31 ../../mod/authtest.php:13 ../../mod/profile.php:64
@@ -713,264 +713,272 @@ msgstr "Einde:"
 msgid "Location:"
 msgstr "Plaats:"
 
-#: ../../include/nav.php:77 ../../include/nav.php:101 ../../boot.php:1487
+#: ../../include/nav.php:81 ../../include/nav.php:108 ../../boot.php:1487
 msgid "Logout"
 msgstr "Uitloggen"
 
-#: ../../include/nav.php:77 ../../include/nav.php:101
+#: ../../include/nav.php:81 ../../include/nav.php:108
 msgid "End this session"
 msgstr "Beëindig deze sessie"
 
-#: ../../include/nav.php:80 ../../include/nav.php:135
+#: ../../include/nav.php:84 ../../include/nav.php:142
 msgid "Home"
 msgstr "Home"
 
-#: ../../include/nav.php:80
+#: ../../include/nav.php:84
 msgid "Your posts and conversations"
 msgstr "Jouw berichten en conversaties"
 
-#: ../../include/nav.php:81 ../../include/conversation.php:940
+#: ../../include/nav.php:85 ../../include/conversation.php:940
 #: ../../mod/connedit.php:351 ../../mod/connedit.php:465
 msgid "View Profile"
 msgstr "Profiel weergeven"
 
-#: ../../include/nav.php:81
+#: ../../include/nav.php:85
 msgid "Your profile page"
 msgstr "Jouw profielpagina"
 
-#: ../../include/nav.php:83
+#: ../../include/nav.php:87
 msgid "Edit Profiles"
 msgstr "Bewerk profielen"
 
-#: ../../include/nav.php:83
+#: ../../include/nav.php:87
 msgid "Manage/Edit profiles"
 msgstr "Beheer/wijzig profielen"
 
-#: ../../include/nav.php:84 ../../include/conversation.php:1512
+#: ../../include/nav.php:89 ../../include/identity.php:699
+msgid "Edit Profile"
+msgstr "Profiel bewerken"
+
+#: ../../include/nav.php:89
+msgid "Edit your profile"
+msgstr "Jouw profiel bewerken"
+
+#: ../../include/nav.php:91 ../../include/conversation.php:1512
 #: ../../include/apps.php:134 ../../mod/fbrowser.php:25
 msgid "Photos"
 msgstr "Foto's"
 
-#: ../../include/nav.php:84
+#: ../../include/nav.php:91
 msgid "Your photos"
 msgstr "Jouw foto's"
 
-#: ../../include/nav.php:85 ../../include/reddav.php:1280
+#: ../../include/nav.php:92 ../../include/reddav.php:1280
 #: ../../include/conversation.php:1521 ../../include/apps.php:130
 #: ../../mod/fbrowser.php:114
 msgid "Files"
 msgstr "Bestanden"
 
-#: ../../include/nav.php:85
+#: ../../include/nav.php:92
 msgid "Your files"
 msgstr "Jouw bestanden"
 
-#: ../../include/nav.php:90 ../../include/apps.php:141
+#: ../../include/nav.php:97 ../../include/apps.php:141
 msgid "Chat"
 msgstr "Chatten"
 
-#: ../../include/nav.php:90
+#: ../../include/nav.php:97
 msgid "Your chatrooms"
 msgstr "Jouw chatkanalen"
 
-#: ../../include/nav.php:93 ../../include/conversation.php:1543
+#: ../../include/nav.php:100 ../../include/conversation.php:1543
 #: ../../include/apps.php:124
 msgid "Bookmarks"
 msgstr "Bladwijzers"
 
-#: ../../include/nav.php:93
+#: ../../include/nav.php:100
 msgid "Your bookmarks"
 msgstr "Jouw bladwijzers"
 
-#: ../../include/nav.php:95 ../../include/conversation.php:1554
+#: ../../include/nav.php:102 ../../include/conversation.php:1554
 #: ../../include/apps.php:131 ../../mod/webpages.php:79
 msgid "Webpages"
 msgstr "Webpagina's"
 
-#: ../../include/nav.php:95
+#: ../../include/nav.php:102
 msgid "Your webpages"
 msgstr "Jouw webpagina's"
 
-#: ../../include/nav.php:99 ../../include/apps.php:126 ../../boot.php:1488
+#: ../../include/nav.php:106 ../../include/apps.php:126 ../../boot.php:1488
 msgid "Login"
 msgstr "Inloggen"
 
-#: ../../include/nav.php:99
+#: ../../include/nav.php:106
 msgid "Sign in"
 msgstr "Inloggen"
 
-#: ../../include/nav.php:116
+#: ../../include/nav.php:123
 #, php-format
 msgid "%s - click to logout"
 msgstr "%s - klik om uit te loggen"
 
-#: ../../include/nav.php:121
+#: ../../include/nav.php:128
 msgid "Click to authenticate to your home hub"
-msgstr "Klik om jezelf te authenticeren via jouw eigen Red Matrix-hub"
+msgstr "Klik om jezelf te authenticeren via jouw eigen RedMatrix-hub"
 
-#: ../../include/nav.php:135
+#: ../../include/nav.php:142
 msgid "Home Page"
 msgstr "Homepage"
 
-#: ../../include/nav.php:139 ../../mod/register.php:221 ../../boot.php:1464
+#: ../../include/nav.php:146 ../../mod/register.php:221 ../../boot.php:1464
 msgid "Register"
 msgstr "Registreren "
 
-#: ../../include/nav.php:139
+#: ../../include/nav.php:146
 msgid "Create an account"
 msgstr "Maak een account aan"
 
-#: ../../include/nav.php:144 ../../include/apps.php:137 ../../mod/help.php:60
+#: ../../include/nav.php:151 ../../include/apps.php:137 ../../mod/help.php:60
 #: ../../mod/help.php:65
 msgid "Help"
 msgstr "Hulp"
 
-#: ../../include/nav.php:144
+#: ../../include/nav.php:151
 msgid "Help and documentation"
 msgstr "Hulp en documentatie"
 
-#: ../../include/nav.php:147 ../../include/widgets.php:79
+#: ../../include/nav.php:154 ../../include/widgets.php:79
 #: ../../mod/apps.php:33
 msgid "Apps"
 msgstr "Apps"
 
-#: ../../include/nav.php:147
+#: ../../include/nav.php:154
 msgid "Applications, utilities, links, games"
 msgstr "Apps"
 
-#: ../../include/nav.php:149
+#: ../../include/nav.php:156
 msgid "Search site content"
-msgstr "Inhoud van deze Red Matrix-hub doorzoeken"
+msgstr "Inhoud van deze RedMatrix-hub doorzoeken"
 
-#: ../../include/nav.php:152 ../../include/apps.php:136
-#: ../../mod/directory.php:210
+#: ../../include/nav.php:159 ../../include/apps.php:136
+#: ../../mod/directory.php:218
 msgid "Directory"
 msgstr "Gids"
 
-#: ../../include/nav.php:152
+#: ../../include/nav.php:159
 msgid "Channel Locator"
 msgstr "Kanalengids"
 
-#: ../../include/nav.php:163 ../../include/apps.php:128
+#: ../../include/nav.php:170 ../../include/apps.php:128
 msgid "Matrix"
 msgstr "Matrix"
 
-#: ../../include/nav.php:163
+#: ../../include/nav.php:170
 msgid "Your matrix"
 msgstr "Jouw matrix"
 
-#: ../../include/nav.php:164
+#: ../../include/nav.php:171
 msgid "Mark all matrix notifications seen"
 msgstr "Markeer alle matrixnotificaties als bekeken"
 
-#: ../../include/nav.php:166 ../../include/apps.php:132
+#: ../../include/nav.php:173 ../../include/apps.php:132
 msgid "Channel Home"
 msgstr "Tijdlijn kanaal"
 
-#: ../../include/nav.php:166
+#: ../../include/nav.php:173
 msgid "Channel home"
 msgstr "Tijdlijn kanaal"
 
-#: ../../include/nav.php:167
+#: ../../include/nav.php:174
 msgid "Mark all channel notifications seen"
 msgstr "Alle kanaalnotificaties als gelezen markeren"
 
-#: ../../include/nav.php:170 ../../mod/connections.php:386
+#: ../../include/nav.php:177 ../../mod/connections.php:386
 msgid "Connections"
 msgstr "Connecties"
 
-#: ../../include/nav.php:173
+#: ../../include/nav.php:180
 msgid "Notices"
 msgstr "Notificaties"
 
-#: ../../include/nav.php:173
+#: ../../include/nav.php:180
 msgid "Notifications"
 msgstr "Notificaties"
 
-#: ../../include/nav.php:174
+#: ../../include/nav.php:181
 msgid "See all notifications"
 msgstr "Alle notificaties weergeven"
 
-#: ../../include/nav.php:175 ../../mod/notifications.php:99
+#: ../../include/nav.php:182 ../../mod/notifications.php:99
 msgid "Mark all system notifications seen"
 msgstr "Markeer alle systeemnotificaties als bekeken"
 
-#: ../../include/nav.php:177 ../../include/apps.php:138
+#: ../../include/nav.php:184 ../../include/apps.php:138
 msgid "Mail"
 msgstr "Privéberichten"
 
-#: ../../include/nav.php:177
+#: ../../include/nav.php:184
 msgid "Private mail"
 msgstr "Privéberichten"
 
-#: ../../include/nav.php:178
+#: ../../include/nav.php:185
 msgid "See all private messages"
 msgstr "Alle privéberichten weergeven"
 
-#: ../../include/nav.php:179
+#: ../../include/nav.php:186
 msgid "Mark all private messages seen"
 msgstr "Markeer alle privéberichten als bekeken"
 
-#: ../../include/nav.php:180
+#: ../../include/nav.php:187
 msgid "Inbox"
 msgstr "Postvak IN"
 
-#: ../../include/nav.php:181
+#: ../../include/nav.php:188
 msgid "Outbox"
 msgstr "Postvak UIT"
 
-#: ../../include/nav.php:182 ../../include/widgets.php:536
+#: ../../include/nav.php:189 ../../include/widgets.php:536
 msgid "New Message"
 msgstr "Nieuw bericht"
 
-#: ../../include/nav.php:185 ../../include/apps.php:135
+#: ../../include/nav.php:192 ../../include/apps.php:135
 #: ../../mod/events.php:396
 msgid "Events"
 msgstr "Gebeurtenissen"
 
-#: ../../include/nav.php:185
+#: ../../include/nav.php:192
 msgid "Event Calendar"
 msgstr "Agenda"
 
-#: ../../include/nav.php:186
+#: ../../include/nav.php:193
 msgid "See all events"
 msgstr "Alle gebeurtenissen weergeven"
 
-#: ../../include/nav.php:187
+#: ../../include/nav.php:194
 msgid "Mark all events seen"
 msgstr "Markeer alle gebeurtenissen als bekeken"
 
-#: ../../include/nav.php:189 ../../include/apps.php:127
+#: ../../include/nav.php:196 ../../include/apps.php:127
 msgid "Channel Select"
 msgstr "Kanaalkiezer"
 
-#: ../../include/nav.php:189
+#: ../../include/nav.php:196
 msgid "Manage Your Channels"
 msgstr "Beheer je kanalen"
 
-#: ../../include/nav.php:191 ../../include/apps.php:129
+#: ../../include/nav.php:198 ../../include/apps.php:129
 #: ../../include/widgets.php:514 ../../mod/admin.php:978
 #: ../../mod/admin.php:1183
 msgid "Settings"
 msgstr "Instellingen"
 
-#: ../../include/nav.php:191
+#: ../../include/nav.php:198
 msgid "Account/Channel Settings"
 msgstr "Account-/kanaal-instellingen"
 
-#: ../../include/nav.php:199 ../../mod/admin.php:117
+#: ../../include/nav.php:206 ../../mod/admin.php:117
 msgid "Admin"
 msgstr "Beheer"
 
-#: ../../include/nav.php:199
+#: ../../include/nav.php:206
 msgid "Site Setup and Configuration"
 msgstr "Hub instellen en beheren"
 
-#: ../../include/nav.php:224
+#: ../../include/nav.php:231
 msgid "Nothing new here"
 msgstr "Niets nieuw hier"
 
-#: ../../include/nav.php:228
+#: ../../include/nav.php:235
 msgid "Please wait..."
 msgstr "Wachten aub..."
 
@@ -1168,7 +1176,7 @@ msgid "Examples: Robert Morgenstein, Fishing"
 msgstr "Voorbeeld: Robert Morgenstein, vissen"
 
 #: ../../include/contact_widgets.php:26 ../../mod/connections.php:392
-#: ../../mod/directory.php:206 ../../mod/directory.php:211
+#: ../../mod/directory.php:214 ../../mod/directory.php:219
 msgid "Find"
 msgstr "Vinden"
 
@@ -1347,11 +1355,11 @@ msgstr "Veilig zoeken"
 
 #: ../../include/enotify.php:41
 msgid "Red Matrix Notification"
-msgstr "Red Matrix-notificatie"
+msgstr "RedMatrix-notificatie"
 
 #: ../../include/enotify.php:42
 msgid "redmatrix"
-msgstr "redmatrix"
+msgstr "RedMatrix"
 
 #: ../../include/enotify.php:44
 msgid "Thank You,"
@@ -1739,7 +1747,7 @@ msgstr "Foto's weergeven"
 
 #: ../../include/conversation.php:942
 msgid "Matrix Activity"
-msgstr "Activiteit in de matrix"
+msgstr "Activiteit in de Matrix"
 
 #: ../../include/conversation.php:943
 msgid "Edit Contact"
@@ -2100,7 +2108,7 @@ msgstr "Uitgebreid identiteit delen"
 msgid ""
 "Share your identity with all websites on the internet. When disabled, "
 "identity is only shared with sites in the matrix."
-msgstr "Deel jouw Red Matrix-identiteit met alle websites op het internet. Wanneer dit is uitgeschakeld wordt je identiteit alleen binnen het Red Matrix-netwerk gedeeld. Schakel dit alleen als je weet wat je doet."
+msgstr "Deel jouw RedMatrix-identiteit met alle websites op het internet. Wanneer dit is uitgeschakeld wordt je identiteit alleen binnen het RedMatrix-netwerk gedeeld. Schakel dit alleen als je weet wat je doet."
 
 #: ../../include/features.php:34
 msgid "Expert Mode"
@@ -2208,7 +2216,7 @@ msgstr "Verwantschapsfilter"
 
 #: ../../include/features.php:56
 msgid "Filter stream activity by depth of relationships"
-msgstr "Filter wat je in de matrix ziet op goed je iemand kent of mag"
+msgstr "Filter wat je in de Matrix ziet op hoe goed je iemand kent of mag"
 
 #: ../../include/features.php:57
 msgid "Suggest Channels"
@@ -2341,7 +2349,7 @@ msgstr "Kanalen die zich in geen enkele collectie bevinden"
 msgid "add"
 msgstr "toevoegen"
 
-#: ../../include/identity.php:30 ../../mod/item.php:1280
+#: ../../include/identity.php:30 ../../mod/item.php:1289
 msgid "Unable to obtain identity information from database"
 msgstr "Niet in staat om identiteitsinformatie uit de database te verkrijgen"
 
@@ -2416,10 +2424,6 @@ msgstr "Profielen beheren/bewerken"
 #: ../../include/identity.php:696 ../../mod/profiles.php:613
 msgid "Create New Profile"
 msgstr "Nieuw profiel aanmaken"
-
-#: ../../include/identity.php:699
-msgid "Edit Profile"
-msgstr "Profiel bewerken"
 
 #: ../../include/identity.php:710 ../../mod/profiles.php:624
 msgid "Profile Image"
@@ -2594,7 +2598,7 @@ msgstr "School/opleiding:"
 
 #: ../../include/identity.php:1052
 msgid "Like this thing"
-msgstr "Vind dit object leuk"
+msgstr "Vind dit ding leuk"
 
 #: ../../include/network.php:652
 msgid "view full size"
@@ -3336,11 +3340,11 @@ msgstr "Vraag het me"
 msgid "Logged out."
 msgstr "Uitgelogd."
 
-#: ../../include/auth.php:209
+#: ../../include/auth.php:236
 msgid "Failed authentication"
 msgstr "Mislukte authenticatie"
 
-#: ../../include/auth.php:224 ../../mod/openid.php:188
+#: ../../include/auth.php:251 ../../mod/openid.php:188
 msgid "Login failed."
 msgstr "Inloggen mislukt."
 
@@ -3354,32 +3358,32 @@ msgstr "Toegang geweigerd"
 msgid "(Unknown)"
 msgstr "(Onbekend)"
 
-#: ../../include/items.php:3600 ../../mod/home.php:67 ../../mod/display.php:32
+#: ../../include/items.php:3602 ../../mod/home.php:67 ../../mod/display.php:32
 #: ../../mod/filestorage.php:18 ../../mod/admin.php:159
 #: ../../mod/admin.php:923 ../../mod/admin.php:1126 ../../mod/thing.php:78
 #: ../../mod/viewsrc.php:18
 msgid "Item not found."
 msgstr "Item niet gevonden."
 
-#: ../../include/items.php:4033 ../../mod/group.php:38 ../../mod/group.php:140
+#: ../../include/items.php:4035 ../../mod/group.php:38 ../../mod/group.php:140
 msgid "Collection not found."
 msgstr "Collectie niet gevonden."
 
-#: ../../include/items.php:4048
+#: ../../include/items.php:4050
 msgid "Collection is empty."
 msgstr "Collectie is leeg"
 
-#: ../../include/items.php:4055
+#: ../../include/items.php:4057
 #, php-format
 msgid "Collection: %s"
 msgstr "Collectie: %s"
 
-#: ../../include/items.php:4066
+#: ../../include/items.php:4068
 #, php-format
 msgid "Connection: %s"
 msgstr "Connectie: %s"
 
-#: ../../include/items.php:4069
+#: ../../include/items.php:4071
 msgid "Connection not found."
 msgstr "Connectie niet gevonden."
 
@@ -3909,7 +3913,7 @@ msgstr "Verberg mijn aanwezigheid"
 
 #: ../../mod/settings.php:945
 msgid "Prevents displaying in your profile that you are online"
-msgstr "Voorkomt dat op je kanaal te zien valt dat je momenteel op de Red Matrix aanwezig bent"
+msgstr "Voorkomt dat op je kanaal te zien valt dat je momenteel op de RedMatrix aanwezig bent"
 
 #: ../../mod/settings.php:947
 msgid "Simple Privacy Settings:"
@@ -4452,7 +4456,7 @@ msgstr "Profielen bewerken/beheren"
 
 #: ../../mod/profiles.php:610
 msgid "Add profile things"
-msgstr "Profiel-objecten toevoegen"
+msgstr "Dingen aan je profiel toevoegen"
 
 #: ../../mod/profiles.php:611
 msgid "Include desirable objects in your profile"
@@ -4501,7 +4505,7 @@ msgid ""
 "in the matrix as a whole. Some sites may require subscription or provide "
 "tiered service plans. The provider links <strong>may</strong> provide "
 "additional details."
-msgstr "Op de hier weergegeven hubs kan iedereen zich voor de Red Matrix aanmelden. Alle hubs in de matrix zijn met elkaar verbonden, dus maakt het qua lidmaatschap niet uit waar je je aanmeldt. Op sommige hubs heb je eerst goedkeuring nodig en sommige hubs vereisen betaalde abonnementen voor uitbreidingen. <strong>Mogelijk</strong> wordt hierover op de hub zelf meer informatie gegeven."
+msgstr "Op de hier weergegeven hubs kan iedereen zich voor de RedMatrix aanmelden. Alle hubs in de Matrix zijn met elkaar verbonden, dus maakt het qua lidmaatschap niet uit waar je je aanmeldt. Op sommige hubs heb je eerst goedkeuring nodig en sommige hubs vereisen betaalde abonnementen voor uitbreidingen. <strong>Mogelijk</strong> wordt hierover op de hub zelf meer informatie gegeven."
 
 #: ../../mod/pubsites.php:25
 msgid "Site URL"
@@ -4582,7 +4586,7 @@ msgstr "Chatkanalen van %1$s"
 
 #: ../../mod/register.php:43
 msgid "Maximum daily site registrations exceeded. Please try again tomorrow."
-msgstr "Maximum toegestane dagelijkse registraties op deze Red Matrix-hub bereikt. Probeer het morgen (UTC) nogmaals."
+msgstr "Maximum toegestane dagelijkse registraties op deze RedMatrix-hub bereikt. Probeer het morgen (UTC) nogmaals."
 
 #: ../../mod/register.php:49
 msgid ""
@@ -4601,7 +4605,7 @@ msgstr "Registratie geslaagd. Controleer je e-mail voor instructies om je e-mail
 
 #: ../../mod/register.php:122
 msgid "Your registration is pending approval by the site owner."
-msgstr "Jouw accountregistratie wacht op goedkeuring van de beheerder van deze Red Matrix-hub."
+msgstr "Jouw accountregistratie wacht op goedkeuring van de beheerder van deze RedMatrix-hub."
 
 #: ../../mod/register.php:125
 msgid "Your registration can not be processed."
@@ -4609,17 +4613,17 @@ msgstr "Jouw registratie kan niet verwerkt worden."
 
 #: ../../mod/register.php:162
 msgid "Registration on this site/hub is by approval only."
-msgstr "Registraties op deze Red Matrix-hub moeten eerst worden goedgekeurd."
+msgstr "Registraties op deze RedMatrix-hub moeten eerst worden goedgekeurd."
 
 #: ../../mod/register.php:163
 msgid "<a href=\"pubsites\">Register at another affiliated site/hub</a>"
-msgstr "<a href=\"pubsites\">Registreer op een andere Red Matrix-hub</a>"
+msgstr "<a href=\"pubsites\">Registreer op een andere RedMatrix-hub</a>"
 
 #: ../../mod/register.php:171
 msgid ""
 "This site has exceeded the number of allowed daily account registrations. "
 "Please try again tomorrow."
-msgstr "Deze Red Matrix-hub heeft het maximum aantal dagelijks toegestane registraties bereikt. Probeer het morgen (UTC) nogmaals."
+msgstr "Deze RedMatrix-hub heeft het maximum aantal dagelijks toegestane registraties bereikt. Probeer het morgen (UTC) nogmaals."
 
 #: ../../mod/register.php:182
 msgid "Terms of Service"
@@ -4628,12 +4632,12 @@ msgstr "Gebruiksvoorwaarden"
 #: ../../mod/register.php:188
 #, php-format
 msgid "I accept the %s for this website"
-msgstr "Ik accepteer de %s van deze Red Matrix-hub"
+msgstr "Ik accepteer de %s van deze RedMatrix-hub"
 
 #: ../../mod/register.php:190
 #, php-format
 msgid "I am over 13 years of age and accept the %s for this website"
-msgstr "Ik accepteer de %s van deze Red Matrix-hub"
+msgstr "Ik accepteer de %s van deze RedMatrix-hub"
 
 #: ../../mod/register.php:204 ../../mod/admin.php:443
 msgid "Registration"
@@ -4641,7 +4645,7 @@ msgstr "Registratie"
 
 #: ../../mod/register.php:209
 msgid "Membership on this site is by invitation only."
-msgstr "Registreren op deze Red Matrix-hub kan alleen op uitnodiging."
+msgstr "Registreren op deze RedMatrix-hub kan alleen op uitnodiging."
 
 #: ../../mod/register.php:210
 msgid "Please enter your invitation code"
@@ -4673,7 +4677,7 @@ msgstr "Inloggen."
 
 #: ../../mod/cloud.php:115
 msgid "Red Matrix - Guests: Username: {your email address}, Password: +++"
-msgstr "Red Matrix - gasten: Gebruikersnaam: {jouw e-mailadres}, wachtwoord: +++"
+msgstr "RedMatrix - gasten: Gebruikersnaam: {jouw e-mailadres}, wachtwoord: +++"
 
 #: ../../mod/removeme.php:49
 msgid "Remove This Channel"
@@ -4683,7 +4687,7 @@ msgstr "Verwijder dit kanaal"
 msgid ""
 "This will completely remove this channel from the network. Once this has "
 "been done it is not recoverable."
-msgstr "Dit zal dit kanaal compleet van deze hub en uit het Red Matrix-netwerk verwijderen. Dit kan hierna niet meer te ongedaan gemaakt worden."
+msgstr "Dit zal dit kanaal compleet van deze hub en uit het RedMatrix-netwerk verwijderen. Dit kan hierna niet meer te ongedaan gemaakt worden."
 
 #: ../../mod/removeme.php:51
 msgid "Please enter your password for verification:"
@@ -4691,13 +4695,13 @@ msgstr "Vul je wachtwoord in voor verificatie:"
 
 #: ../../mod/removeme.php:52
 msgid "Remove this channel and all its clones from the network"
-msgstr "Dit kanaal en alle klonen hiervan uit het Red Matrix-netwerk verwijderen"
+msgstr "Dit kanaal en alle klonen hiervan uit het RedMatrix-netwerk verwijderen"
 
 #: ../../mod/removeme.php:52
 msgid ""
 "By default only the instance of the channel located on this hub will be "
 "removed from the network"
-msgstr "Standaard wordt alleen het kanaal dat zich op deze hub bevindt uit het Red Matrix-netwerk verwijderd."
+msgstr "Standaard wordt alleen het kanaal dat zich op deze hub bevindt uit het RedMatrix-netwerk verwijderd."
 
 #: ../../mod/removeme.php:53
 msgid "Remove Channel"
@@ -5263,19 +5267,19 @@ msgstr "Openbare toegang geweigerd."
 msgid "Gender: "
 msgstr "Geslacht:"
 
-#: ../../mod/directory.php:207
+#: ../../mod/directory.php:215
 msgid "Finding:"
 msgstr "Gezocht naar:"
 
-#: ../../mod/directory.php:215
+#: ../../mod/directory.php:222
 msgid "next page"
 msgstr "volgende pagina"
 
-#: ../../mod/directory.php:215
+#: ../../mod/directory.php:222
 msgid "previous page"
 msgstr "vorige pagina"
 
-#: ../../mod/directory.php:222
+#: ../../mod/directory.php:231
 msgid "No entries (some entries may be hidden)."
 msgstr "Niets gevonden (sommige kanalen kunnen verborgen zijn)."
 
@@ -5309,7 +5313,7 @@ msgstr "Deze hub is geen kanalengidshub (directoryserver)"
 
 #: ../../mod/home.php:81
 msgid "Red Matrix - &quot;The Network&quot;"
-msgstr "Red Matrix - &quot;The Network&quot;"
+msgstr "RedMatrix - &quot;The Network&quot;"
 
 #: ../../mod/home.php:94
 #, php-format
@@ -5318,7 +5322,7 @@ msgstr "Welkom op %s"
 
 #: ../../mod/setup.php:162
 msgid "Red Matrix Server - Setup"
-msgstr "Red Matrix Server - Setup"
+msgstr "RedMatrix Server - Setup"
 
 #: ../../mod/setup.php:168
 msgid "Could not connect to database."
@@ -5368,7 +5372,7 @@ msgstr "Database connection"
 msgid ""
 "In order to install Red Matrix we need to know how to connect to your "
 "database."
-msgstr "In order to install Red Matrix we need to know how to connect to your database."
+msgstr "In order to install RedMatrix we need to know how to connect to your database."
 
 #: ../../mod/setup.php:286
 msgid ""
@@ -5805,7 +5809,7 @@ msgstr "Red"
 msgid ""
 "This is a hub of the Red Matrix - a global cooperative network of "
 "decentralised privacy enhanced websites."
-msgstr "Dit is een Red Matrix-hub - een wereldwijd coöperatief netwerk van gedecentraliseerde websites met verbeterende privacy."
+msgstr "Dit is een RedMatrix-hub - een wereldwijd coöperatief netwerk van gedecentraliseerde websites met verbeterende privacy."
 
 #: ../../mod/siteinfo.php:101
 msgid "Running at web location"
@@ -5815,7 +5819,7 @@ msgstr "Draaiend op weblocatie"
 msgid ""
 "Please visit <a href=\"http://getzot.com\">GetZot.com</a> to learn more "
 "about the Red Matrix."
-msgstr "Bezoek <a href=\"http://redmatrix.me\">RedMatrix.me</a> om meer te leren over de Red Matrix."
+msgstr "Bezoek <a href=\"http://redmatrix.me\">RedMatrix.me</a> om meer te leren over de RedMatrix."
 
 #: ../../mod/siteinfo.php:103
 msgid "Bug reports and issues: please visit"
@@ -6322,19 +6326,19 @@ msgstr "Ja - met goedkeuring"
 
 #: ../../mod/admin.php:427
 msgid "My site is not a public server"
-msgstr "Mijn Red Matrix-hub is niet openbaar"
+msgstr "Mijn RedMatrix-hub is niet openbaar"
 
 #: ../../mod/admin.php:428
 msgid "My site has paid access only"
-msgstr "Mijn Red Matrix-hub kent alleen betaalde toegang"
+msgstr "Mijn RedMatrix-hub kent alleen betaalde toegang"
 
 #: ../../mod/admin.php:429
 msgid "My site has free access only"
-msgstr "Mijn Red Matrix-hub kent alleen gratis toegang"
+msgstr "Mijn RedMatrix-hub kent alleen gratis toegang"
 
 #: ../../mod/admin.php:430
 msgid "My site offers free accounts with optional paid upgrades"
-msgstr "Mijn Red Matrix-hub biedt gratis accounts aan met betaalde uitbreidingen als optie"
+msgstr "Mijn RedMatrix-hub biedt gratis accounts aan met betaalde uitbreidingen als optie"
 
 #: ../../mod/admin.php:444
 msgid "File upload"
@@ -6346,7 +6350,7 @@ msgstr "Beleid"
 
 #: ../../mod/admin.php:450
 msgid "Site name"
-msgstr "Naam van deze Red Matrix-hub"
+msgstr "Naam van deze RedMatrix-hub"
 
 #: ../../mod/admin.php:451
 msgid "Banner/Logo"
@@ -6374,7 +6378,7 @@ msgstr "Standaardthema"
 msgid ""
 "Default system theme - may be over-ridden by user profiles - <a href='#' "
 "id='cnftheme'>change theme settings</a>"
-msgstr "Standaardthema voor Red Matrix-hub (kan door gebruiker veranderd worden) - <a href='#' id='cnftheme'>verander thema-instellingen</a>"
+msgstr "Standaardthema voor RedMatrix-hub (kan door gebruiker veranderd worden) - <a href='#' id='cnftheme'>verander thema-instellingen</a>"
 
 #: ../../mod/admin.php:455
 msgid "Mobile system theme"
@@ -6398,7 +6402,7 @@ msgstr "Kanaal die op deze hub als statische pagina op de homepage gebruikt moet
 
 #: ../../mod/admin.php:457
 msgid "Site Channel"
-msgstr "Kanaal op deze Red Matrix-hub"
+msgstr "Kanaal op deze RedMatrix-hub"
 
 #: ../../mod/admin.php:459
 msgid "Maximum image size"
@@ -6416,7 +6420,7 @@ msgstr "Staat deze hub registratie van nieuwe accounts toe?"
 
 #: ../../mod/admin.php:461
 msgid "Which best describes the types of account offered by this hub?"
-msgstr "Wat voor soort accounts biedt deze Red Matrix-hub aan? Kies wat het meest in de buurt komt."
+msgstr "Wat voor soort accounts biedt deze RedMatrix-hub aan? Kies wat het meest in de buurt komt."
 
 #: ../../mod/admin.php:462
 msgid "Register text"
@@ -6444,7 +6448,7 @@ msgstr "Toegestane domeinen"
 msgid ""
 "Comma separated list of domains which are allowed to establish friendships "
 "with this site. Wildcards are accepted. Empty to allow any domains"
-msgstr "Komma-gescheiden lijst van domeinen waarvan kanalen connecties kunnen aangaan met kanalen op deze Red Matrix-hub. Wildcards zijn toegestaan.\nLaat leeg om alle domeinen toe te laten."
+msgstr "Komma-gescheiden lijst van domeinen waarvan kanalen connecties kunnen aangaan met kanalen op deze RedMatrix-hub. Wildcards zijn toegestaan.\nLaat leeg om alle domeinen toe te laten."
 
 #: ../../mod/admin.php:465
 msgid "Allowed email domains"
@@ -6495,7 +6499,7 @@ msgid ""
 "Check to hide the login form from your sites homepage when visitors arrive "
 "who are not logged in (e.g. when you put the content of the homepage in via "
 "the site channel)."
-msgstr "Vink dit aan om het inlogformulier op de homepage van deze hub, die niet-ingelogde gebruikers te zien krijgen, te verbergen. (bijvoorbeeld wanneer je een kanaal op deze Red Matrix-hub als homepage gebruikt)"
+msgstr "Vink dit aan om het inlogformulier op de homepage van deze hub, die niet-ingelogde gebruikers te zien krijgen, te verbergen. (bijvoorbeeld wanneer je een kanaal op deze RedMatrix-hub als homepage gebruikt)"
 
 #: ../../mod/admin.php:471
 msgid "Proxy user"
@@ -6815,7 +6819,7 @@ msgstr "Logbestand"
 #: ../../mod/admin.php:1313
 msgid ""
 "Must be writable by web server. Relative to your Red top-level directory."
-msgstr "Moet door de webserver beschrijfbaar zijn. Relatief ten opzichte van de bovenste map van je Red Matrix-installatie."
+msgstr "Moet door de webserver beschrijfbaar zijn. Relatief ten opzichte van de bovenste map van je RedMatrix-installatie."
 
 #: ../../mod/admin.php:1314
 msgid "Log level"
@@ -6823,7 +6827,7 @@ msgstr "Logniveau"
 
 #: ../../mod/thing.php:98
 msgid "Thing updated"
-msgstr "Objekt bijgewerkt"
+msgstr "Ding bijgewerkt"
 
 #: ../../mod/thing.php:158
 msgid "Object store: failed"
@@ -6831,7 +6835,7 @@ msgstr "Opslaan object mislukt"
 
 #: ../../mod/thing.php:162
 msgid "Thing added"
-msgstr "Object toegevoegd"
+msgstr "Ding toegevoegd"
 
 #: ../../mod/thing.php:182
 #, php-format
@@ -6840,7 +6844,7 @@ msgstr "OBJ: %1$s %2$s %3$s"
 
 #: ../../mod/thing.php:234
 msgid "Show Thing"
-msgstr "Object weergeven"
+msgstr "Ding weergeven"
 
 #: ../../mod/thing.php:241
 msgid "item not found."
@@ -6848,7 +6852,7 @@ msgstr "Item niet gevonden"
 
 #: ../../mod/thing.php:272
 msgid "Edit Thing"
-msgstr "Object bewerken"
+msgstr "Ding bewerken"
 
 #: ../../mod/thing.php:274 ../../mod/thing.php:321
 msgid "Select a profile"
@@ -6864,19 +6868,19 @@ msgstr "Toont dit alleen aan diegene die het gekozen profiel mogen zien."
 
 #: ../../mod/thing.php:280 ../../mod/thing.php:326
 msgid "Name of thing e.g. something"
-msgstr "Naam van object."
+msgstr "Naam van ding"
 
 #: ../../mod/thing.php:282 ../../mod/thing.php:327
 msgid "URL of thing (optional)"
-msgstr "URL van object (optioneel)"
+msgstr "URL van ding (optioneel)"
 
 #: ../../mod/thing.php:284 ../../mod/thing.php:328
 msgid "URL for photo of thing (optional)"
-msgstr "URL van objectfoto (optioneel)"
+msgstr "URL van foto van ding (optioneel)"
 
 #: ../../mod/thing.php:319
 msgid "Add Thing to your Profile"
-msgstr "Object aan je profiel toevoegen"
+msgstr "Ding aan je profiel toevoegen"
 
 #: ../../mod/import.php:36
 msgid "Nothing to import."
@@ -6966,7 +6970,7 @@ msgstr "%s : Geen geldig e-mailadres."
 
 #: ../../mod/invite.php:76
 msgid "Please join us on Red"
-msgstr "Kom op de Red Matrix"
+msgstr "Kom op de RedMatrix"
 
 #: ../../mod/invite.php:87
 msgid "Invitation limit exceeded. Please contact your site administrator."
@@ -7005,7 +7009,7 @@ msgid ""
 "You are cordially invited to join me and some other close friends on the Red"
 " Matrix - a revolutionary new decentralised communication and information "
 "tool."
-msgstr "Je bent hierbij uitgenodigd om mij, en enkele goede vrienden, te komen vergezellen op de Red Matrix - een revolutionaire nieuwe communicatie- en informatietool."
+msgstr "Je bent hierbij uitgenodigd om mij, en enkele goede vrienden, te komen vergezellen op de RedMatrix - een revolutionaire nieuwe communicatie- en informatietool."
 
 #: ../../mod/invite.php:146
 msgid "You will need to supply this invitation code: $invite_code"
@@ -7019,7 +7023,7 @@ msgstr "Bezoek mijn kanaal op"
 msgid ""
 "Once you have registered (on ANY Red Matrix site - they are all inter-"
 "connected), please connect with my Red Matrix channel address:"
-msgstr "Wanneer je je eenmaal hebt geregistreerd (maakt niet uit op welke Red Matrix-hub, want ze zijn allemaal met elkaar verbonden), kan je je met mijn Red Matrix-kanaal verbinden:"
+msgstr "Wanneer je je eenmaal hebt geregistreerd (maakt niet uit op welke RedMatrix-hub, want ze zijn allemaal met elkaar verbonden), kan je je met mijn RedMatrix-kanaal verbinden:"
 
 #: ../../mod/invite.php:153
 msgid "Click the [Register] link on the following page to join."
@@ -7030,7 +7034,7 @@ msgid ""
 "For more information about the Red Matrix Project and why it has the "
 "potential to change the internet as we know it, please visit "
 "http://getzot.com"
-msgstr "Bezoek http://getzot.com voor meer informatie over het Red Matrix-project en waarom het de potentie heeft het internet voor altijd te veranderen."
+msgstr "Bezoek http://getzot.com voor meer informatie over het RedMatrix-project en waarom het de potentie heeft het internet voor altijd te veranderen."
 
 #: ../../mod/item.php:147
 msgid "Unable to locate original post."
@@ -7048,12 +7052,12 @@ msgstr "Uitvoerbare bestanden zijn niet toegestaan op dit kanaal."
 msgid "System error. Post not saved."
 msgstr "Systeemfout. Bericht niet opgeslagen."
 
-#: ../../mod/item.php:1285
+#: ../../mod/item.php:1294
 #, php-format
 msgid "You have reached your limit of %1$.0f top level posts."
 msgstr "Je hebt jouw limiet van %1$.0f berichten bereikt."
 
-#: ../../mod/item.php:1291
+#: ../../mod/item.php:1300
 #, php-format
 msgid "You have reached your limit of %1$.0f webpages."
 msgstr "Je hebt jouw limiet van %1$.0f webpagina's bereikt."
@@ -7077,13 +7081,13 @@ msgstr "Leuk/niet leuk"
 
 #: ../../mod/like.php:20
 msgid "This action is restricted to members."
-msgstr "Deze actie kan alleen door mensen met een Red Matrix-account worden uitgevoerd."
+msgstr "Deze actie kan alleen door mensen met een RedMatrix-account worden uitgevoerd."
 
 #: ../../mod/like.php:21
 msgid ""
 "Please <a href=\"rmagic\">login with your RedMatrix ID</a> or <a "
 "href=\"register\">register as a new RedMatrix member</a> to continue."
-msgstr "Je dient <a href=\"rmagic\">in te loggen met je Red Matrix-account</a> of <a href=\"register\">een nieuw Red Matrix-account te registreren</a> om verder te kunnen gaan."
+msgstr "Je dient <a href=\"rmagic\">in te loggen met je RedMatrix-account</a> of <a href=\"register\">een nieuw RedMatrix-account te registreren</a> om verder te kunnen gaan."
 
 #: ../../mod/like.php:77 ../../mod/like.php:104 ../../mod/like.php:142
 msgid "Invalid request."
@@ -7091,7 +7095,7 @@ msgstr "Ongeldig verzoek"
 
 #: ../../mod/like.php:119
 msgid "thing"
-msgstr "object"
+msgstr "ding"
 
 #: ../../mod/like.php:165
 msgid "Channel unavailable."
@@ -7715,7 +7719,7 @@ msgstr "Header-afbeelding alleen op profielpagina's weergeven"
 
 #: ../../view/theme/redbasic/php/config.php:84
 msgid "Light (Red Matrix default)"
-msgstr "Light (Red Matrix-standaard)"
+msgstr "Light (RedMatrix-standaard)"
 
 #: ../../view/theme/redbasic/php/config.php:104
 msgid "Narrow navbar"
@@ -7850,7 +7854,7 @@ msgstr "Update-fout op %s"
 #: ../../boot.php:1463
 msgid ""
 "Create an account to access services and applications within the Red Matrix"
-msgstr "Maak een account aan om toegang te krijgen tot diensten en toepassingen van de Red Matrix"
+msgstr "Maak een account aan om toegang te krijgen tot diensten en toepassingen van de RedMatrix"
 
 #: ../../boot.php:1491
 msgid "Password"
