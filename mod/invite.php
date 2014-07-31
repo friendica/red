@@ -141,7 +141,7 @@ function invite_content(&$a) {
 		'$invite' => t('Send invitations'),
 		'$addr_text' => t('Enter email addresses, one per line:'),
 		'$msg_text' => t('Your message:'),
-		'$default_message' => t('You are cordially invited to join me and some other close friends on the Red Matrix - a revolutionary new decentralised communication and information tool.') . "\r\n" . "\r\n"
+		'$default_message' => t('You are cordially invited to join me and some other close friends on the Red Matrix - a revolutionary new decentralized communication and information tool.') . "\r\n" . "\r\n"
 			. $linktxt
 			. (($invonly) ? "\r\n" . "\r\n" . t('You will need to supply this invitation code: $invite_code') . "\r\n" . "\r\n" : '') 
 			. t('Please visit my channel at')
