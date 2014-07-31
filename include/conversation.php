@@ -179,8 +179,8 @@ function localize_item(&$item){
 
 	if (activity_match($item['verb'],ACTIVITY_FRIEND)) {
 
-
-//		if ($item['obj_type']=="" || $item['obj_type']!== ACTIVITY_OBJ_PERSON) return;
+		if ($item['obj_type'] == "" || $item['obj_type'] !== ACTIVITY_OBJ_PERSON) 
+			return;
 
 		$Aname = $item['author']['xchan_name'];
 		$Alink = $item['author']['xchan_url'];

@@ -569,7 +569,7 @@ function check_htaccess(&$checks) {
 				$help = t('SSL certificate cannot be validated. Fix certificate or disable https access to this site.') . EOL;
 				$help .= t('If you have https access to your website or allow connections to TCP port 443 (the https: port), you MUST use a browser-valid certificate. You MUST NOT use self-signed certificates!') . EOL;
 				$help .= t('This restriction is incorporated because public posts from you may for example contain references to images on your own hub.') . EOL;
-				$help .= t('If your certificate is not recognised, members of other sites (who may themselves have valid certificates) will get a warning message on their own site complaining about security issues.') . EOL;
+				$help .= t('If your certificate is not recognized, members of other sites (who may themselves have valid certificates) will get a warning message on their own site complaining about security issues.') . EOL;
 				$help .= t('This can cause usability issues elsewhere (not just on your own site) so we must insist on this requirement.') .EOL;
 				$help .= t('Providers are available that issue free certificates which are browser-valid.'). EOL;
 
