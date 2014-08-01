@@ -41,7 +41,11 @@
 
 <div id="profile-edit-gender-wrapper" >
 <label id="profile-edit-gender-label" for="gender-select" >{{$lbl_gender}} </label>
+{{if $advanced}}
 {{$gender}}
+{{else}}
+{{$gender_min}}
+{{/if}}
 </div>
 <div id="profile-edit-gender-end"></div>
 
@@ -106,7 +110,11 @@
 
 <div id="profile-edit-marital-wrapper" >
 <label id="profile-edit-marital-label" for="profile-edit-marital" >{{$lbl_marital}} </label>
+{{if $advanced}}
 {{$marital}}
+{{else}}
+{{$marital_min}}
+{{/if}}
 </div>
 <div class="clear"></div>
 <label id="profile-edit-with-label" for="profile-edit-with" > {{$lbl_with}} </label>
@@ -119,7 +127,11 @@
 
 <div id="profile-edit-sexual-wrapper" >
 <label id="profile-edit-sexual-label" for="sexual-select" >{{$lbl_sexual}} </label>
+{{if $advanced}}
 {{$sexual}}
+{{else}}
+{{$sexual_min}}
+{{/if}}
 </div>
 <div id="profile-edit-sexual-end"></div>
 
@@ -130,6 +142,8 @@
 <input type="text" size="32" name="homepage" id="profile-edit-homepage" value="{{$homepage}}" />
 </div>
 <div id="profile-edit-homepage-end"></div>
+
+{{if $advanced}}
 
 <div id="profile-edit-politic-wrapper" >
 <label id="profile-edit-politic-label" for="profile-edit-politic" >{{$lbl_politic}} </label>
@@ -142,6 +156,8 @@
 <input type="text" size="32" name="religion" id="profile-edit-religion" value="{{$religion}}" />
 </div>
 <div id="profile-edit-religion-end"></div>
+
+{{/if}}
 
 <div id="profile-edit-pubkeywords-wrapper" >
 <label id="profile-edit-pubkeywords-label" for="profile-edit-pubkeywords" >{{$lbl_pubkey}} </label>
@@ -164,6 +180,19 @@
 </div>
 <div id="about-jot-end"></div>
 
+
+
+<div id="contact-jot-wrapper" >
+<p id="contact-jot-desc" >
+{{$lbl_social}}
+</p>
+
+<textarea rows="10" cols="72" id="contact-jot-text" name="contact" >{{$contact}}</textarea>
+
+</div>
+<div id="contact-jot-end"></div>
+
+{{if $advanced}}
 
 <div id="interest-jot-wrapper" >
 <p id="interest-jot-desc" >
@@ -197,16 +226,6 @@
 </div>
 <div id="dislikes-jot-end"></div>
 
-
-<div id="contact-jot-wrapper" >
-<p id="contact-jot-desc" >
-{{$lbl_social}}
-</p>
-
-<textarea rows="10" cols="72" id="contact-jot-text" name="contact" >{{$contact}}</textarea>
-
-</div>
-<div id="contact-jot-end"></div>
 
 <div id="channels-jot-wrapper" >
 <p id="channels-jot-desc" >
@@ -309,7 +328,7 @@
 </div>
 <div id="education-jot-end"></div>
 
-
+{{/if}}
 
 <div class="profile-edit-submit-wrapper" >
 <input type="submit" name="submit" class="profile-edit-submit-button" value="{{$submit}}" />

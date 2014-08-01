@@ -24,6 +24,8 @@ function get_features() {
 // This is per post, and different from fixed expiration 'expire' which isn't working yet
 			array('content_expire',         t('Content Expiration'),		t('Remove posts/comments and/or private messages at a future time')),
 			array('multi_profiles', t('Multiple Profiles'),			t('Ability to create multiple profiles')),
+			array('advanced_profiles', t('Advanced Profiles'),			t('Additional profile sections and selections')),
+
 			array('webpages',       t('Web Pages'),                 t('Provide managed web pages on your channel')),
 			array('private_notes',  t('Private Notes'),             t('Enables a tool to store notes and reminders')),
 // prettyphoto has licensing issues and will no longer be provided in core - 

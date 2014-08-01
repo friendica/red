@@ -485,6 +485,7 @@ function profiles_content(&$a) {
 			'$editselect' => $editselect,
 		));
 
+		$advanced = ((feature_enabled(local_user(),'advanced_profiles')) ? true : false);
 
 		$opt_tpl = get_markup_template("profile-hide_friends.tpl");
 		$hide_friends = replace_macros($opt_tpl,array(
@@ -558,6 +559,7 @@ function profiles_content(&$a) {
 			'$profile_id'   => $r[0]['id'],
 			'$profile_name' => $r[0]['profile_name'],
 			'$default'      => (($is_default) ? '<p id="profile-edit-default-desc">' . t('This is your <strong>public</strong> profile.<br />It <strong>may</strong> be visible to anybody using the internet.') . '</p>' : ""),
+			'$advanced'     => $advanced,
 			'$name'         => $r[0]['name'],
 			'$pdesc'        => $r[0]['pdesc'],
 			'$dob'          => dob($r[0]['dob']),
@@ -569,10 +571,13 @@ function profiles_content(&$a) {
 			'$country_name' => $r[0]['country_name'],
 			'$age'          => ((intval($r[0]['dob'])) ? '(' . t('Age: ') . age($r[0]['dob'],$a->user['timezone'],$a->user['timezone']) . ')' : ''),
 			'$gender'       => gender_selector($r[0]['gender']),
+			'$gender_min'       => gender_selector_min($r[0]['gender']),
 			'$marital'      => marital_selector($r[0]['marital']),
+			'$marital_min'      => marital_selector_min($r[0]['marital']),
 			'$with'         => $r[0]['with'],
 			'$howlong'      => ($r[0]['howlong'] === '0000-00-00 00:00:00' ? '' : datetime_convert('UTC',date_default_timezone_get(),$r[0]['howlong'])),
 			'$sexual'       => sexpref_selector($r[0]['sexual']),
+			'$sexual_min'       => sexpref_selector_min($r[0]['sexual']),
 			'$about'        => $r[0]['about'],
 			'$homepage'     => $r[0]['homepage'],
 			'$hometown'     => $r[0]['hometown'],
