@@ -5,7 +5,7 @@ Ciao {{$myname}},
 
 Se vuoi, puoi vedere il suo profilo su {{$url}}.
 
-Per approvare la richiesta o per cancellarla devi accedere al tuo sito.
+Per approvare o cancellare la richiesta devi accedere al tuo sito.
 
 {{$siteurl}}
 
